@@ -1,0 +1,6 @@
+if doing multiplayer vendors in a market place, need to ensure that placement of vendors isn't within 1 tile of another vendor (so can't box in a vendor)
+and that when a player opens a vendor's shop, allow second player to browse the shop to see what's for sale, but not buy anything until the first player has finished or timed out (not a visual clue to identify when they can buy). if no activity on the player who has the window open after 60 secnds, then the window closes and another player can open the panel
+
+
+ 
+let players set a 'will buy list' to list items their vendor will buy and for how much (and a maximum, so they don't end up buying 1000s of a cheap item)

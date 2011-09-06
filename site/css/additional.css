@@ -1,0 +1,331 @@
+html {
+text-align: center;
+background-color: #000000;
+}
+
+body {
+width: 780px;
+margin: 0 auto;
+padding: 12px 8px;
+text-align: left;
+background: #3D3220;
+}
+
+a[href^="http://"] {
+background: url(/assets/external_link.gif) no-repeat center right;
+padding: 0 18px 0 0;
+margin: 0 8px 0 0;
+}
+
+a[href^="http://www.autumnearth.com"] {
+background: none;
+padding: 0;
+margin: 0;
+}
+
+/* change highlight selection colour: */
+::selection{ /* Safari and Opera */
+	background:#c3effd;
+	color:#000;
+}
+::-moz-selection{ /* Firefox */
+	background:#c3effd;
+	color:#000;
+}
+
+
+.imageplace {
+position: absolute;
+left: 0px;
+top: 0px;
+}
+
+.Sticky {
+color: #ffffff;
+font-weight: bold;
+letter-spacing: 0.02em;
+}
+
+.Error {
+background: #3f3f3f;
+border: 1px solid #999966;
+margin: 4px auto;
+padding: 8px 0;
+width: 380px;
+}
+
+.Notify {
+background: #3f3f3f;
+border: 1px solid #999966;
+margin: 4px auto;
+padding: 8px 0;
+width: 380px;
+text-align: center;
+font-size: 1.4em;
+}
+
+#BreadCrumb {
+background: #3f3f3f;
+margin: 4px auto;
+padding: 8px 0;
+width: 380px;
+}
+
+#LoginBlock {
+background: #3f3f3f;
+margin: 4px auto;
+padding: 8px 0;
+width: 380px;
+}
+
+#SearchBox {
+background: #4C342D;
+margin: 4px auto;
+padding: 8px 0;
+width: 380px;
+}
+
+.Highlight {
+background-color: #ffffff;
+}
+
+input:focus, select:focus, textarea:focus {
+background-color: #F1F1DD;
+}
+
+#PromptWrapper, #PromptImgWrapper, #QuantityPromptWrapper {
+display: none;
+border: 2px outset gray;
+padding: 0px;
+width: 200px;
+height: 100px;
+background: #cecece;
+position: absolute;
+top: 20px;
+left: 30px;
+}
+
+del {
+text-decoration: line-through;
+}
+
+.Underline {
+text-decoration: underline;
+}
+
+.Header {
+font-size: 1.4em;
+font-variant: small-caps;
+}
+
+.StyledTable {
+margin: 0;
+padding: 0;
+border-collapse: collapse;
+font-size: 1em;
+}
+
+.StyledTable td {
+padding: 3px 12px;
+text-align: left;
+}
+
+.ttip {
+position: absolute;
+display: none;
+width: 100px;
+/* IE 6 doesn't like the background image being on this tag */
+/* background: url(ttip_repeater.gif) repeat-y top left; */
+font-size: smaller;
+color: #cecece;
+cursor: pointer;
+/* opera 9 needs initial positions: */
+top: 100px;
+left: 100px;
+/* apply browser specific opacity here: 
+opacity: .70;
+filter: alpha(opacity=70);
+-moz-opacity:.70;
+*/
+}
+
+.ttiptop {
+width: 100px;
+background: url(/assets/tooltips/ttip_topbig.gif) no-repeat top left;
+}
+
+.ttipbottom {
+width: 100px;
+height: 10px;
+overflow: hidden;
+background: url(/assets/tooltips/ttip_bottom.gif) no-repeat top left;
+}
+
+.ttip p {
+padding: 10px;
+margin: 0;
+}
+
+
+blockquote {
+border: 1px solid #cecece;
+background: #eeeeee;
+margin: 8px 0;
+padding: 8px;
+}
+
+.LinkedImage {
+/* constrain the width of any images that are displayed within a post: */
+overflow: hidden;
+width: 250px;
+margin: 8px auto;
+}
+
+.Unreadmail {
+background-color: #cecece;
+}
+
+.FakeInput {
+border: 2px inset #000000;
+background: #ffffff;
+}
+
+#Calendar {
+border: 1px solid #cecece;
+font-size: 0.9em;
+width: 189px;
+border-collapse: collapse;
+}
+
+.DateItem {
+padding: 0px;
+margin: 0;
+height: 25px;
+width: 25px;
+border: 1px solid #cccccc;
+line-height: 25px;
+}
+
+#CHalloween {
+background: #dddddd;
+}
+
+#CHalloween a {
+display: block;
+width: 25px;
+height: 25px;
+}
+
+#today {
+background: url(calendar/today.gif) no-repeat top left;
+color: #ffffff;
+padding: 0px;
+margin: 0;
+height: 25px;
+width: 25px;
+border: 0px;
+line-height: 25px;
+float: left;
+}
+
+.BarChart {
+border: 1px solid #cecece;
+width: 100px;
+height: 12px;
+text-align: left;
+}
+
+.InventorySlot {
+width: 64px;
+height: 64px;
+background-repeat: no-repeat;
+float: left;
+}
+
+#attachedslot, #attacheditem {
+width: 64px;
+height: 64px;
+background-repeat: no-repeat;
+}
+
+#InvPanel {
+width: 222px;
+background: url(/assets/inventory/inv_repeat.gif) repeat-y top right;
+}
+
+#InvPanelPadding {
+padding: 0 15px;
+}
+
+#InvTop {
+width: 222px;
+height: 59px;
+overflow: hidden;
+background: url(/assets/inventory/inv_top.gif) no-repeat top right;
+}
+
+#InvBottom {
+width: 222px;
+height: 15px;
+overflow: hidden;
+background: url(/assets/inventory/inv_bottom.gif) no-repeat top right;
+}
+
+/* http://www.soxiam.com/Code/CSSSuperscriptLineheightAdjustment */
+sup {
+font-size: 0.8em;
+vertical-align: baseline;
+position: relative;
+bottom: 0.33em;
+}
+
+sub {
+font-size: 0.8em;
+vertical-align: baseline;
+position: relative;
+bottom: -0.25em;
+}
+
+.ContextHelp {
+width: 251px;
+background: url(/assets/help/context_repeat.gif) repeat-y top left;
+}
+
+.ContextHelp p {
+font-size: 0.9em;
+margin: 0;
+padding: 9px 35px 0px 9px;
+color: #000000;
+background: url(/assets/help/context_top.gif) no-repeat top left;
+}
+
+.ContextHelpBottom {
+height: 9px;
+width: 251px;
+background: url(/assets/help/context_bottom.gif) no-repeat top left;
+overflow: hidden;
+}
+
+/* html editor styles: */
+#SourceMode {
+display: none;
+background: #ffcece;
+border: 1px solid #aaa;
+position: absolute;
+top: 12px;
+left: 0px;
+width: 300px;
+padding: 8px;
+}
+
+#customWrapper {
+background: #fff;
+color: #000;
+width: 600px;
+margin: 0 auto;
+}
+
+.JsHidden {
+/* used on elements that need to be revealed by JS but don't need to be shown if JS is disabled */
+display: none;
+}

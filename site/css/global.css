@@ -1,0 +1,66 @@
+/* autumn earth core style */
+
+* {
+padding: 0;
+margin: 0;
+}
+
+body {
+font-family: "trebuchet ms", palatino, georgia, "times new roman", serif;
+color: #999966;
+letter-spacing: 0em;
+}
+
+h1, h2, h3, h4 {
+font-family: georgia, palatino, "times new roman", serif;
+letter-spacing: 0.02em;
+font-variant: small-caps;
+font-weight: normal;
+color: #CD740B;
+}
+
+textarea, input, select {
+font-family: "trebuchet ms", palatino, georgia, "times new roman", serif;
+font-size: 1em;
+}
+
+table {
+font-size: 1em;
+border-collapse: collapse;
+}
+
+img { 
+border: 0 
+} 
+
+strong {
+letter-spacing: 0.02em;
+font-weight: bold;
+}
+
+a:link, a:visited {
+color: #666666;
+text-decoration: underline;
+}
+
+a:hover, a:active {
+color: #666666;
+text-decoration: underline;
+background-color: transparent;
+}
+
+.Clearer {
+height: 1px;
+overflow: hidden;
+clear: both;
+}
+
+object {
+/* remove dotted line in firefox */
+outline: none;
+}
+
+/* fix old firefox bug where it borders hidden input fields */
+input[type=hidden] {
+display: none;
+} 

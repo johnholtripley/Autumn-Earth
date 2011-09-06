@@ -1,0 +1,32 @@
+feed {
+display: block;
+font-family: verdana, arial;
+}
+
+title, id {
+display: block;
+margin: 5px;
+padding: 2px;
+color: gray;
+border-bottom: 1px solid silver;
+}
+
+link, name, email {
+display: block;
+font-size: small;
+padding-left: 10px;
+}
+
+entry {
+display: block;
+padding: 2px 30px 2px 30px;
+border-bottom: 1px solid silver;
+border-top: 1px solid silver;
+}
+
+author {
+border: 1px solid #cecece;
+padding: 6px;
+display: block;
+margin: 8px;
+}
