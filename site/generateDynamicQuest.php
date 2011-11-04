@@ -13,8 +13,9 @@ array('buy',array('gold:25','at:blacksmith'))
 // needs - [verb][noun][value/reward]:
 $thisNPCsNeeds = array(array("use","axe","0"));
 $thisNPCsItems = array("pineapple");
+$thisNPCsLocation = "blacksmith";
 
-$herosItems = array("axe");
+$herosItems = array("hat");
 
 // if more than 1 need, determine which is the most urgent:
 // ###############
@@ -25,6 +26,46 @@ array_push($needList,$thisNPCsNeeds[$mostImportantNeed]);
 
 $currentPlan = array();
 
+
+
+
+
+
+
+
+
+/* a star method
+
+add current need to queue:
+need[use+"_"+axe] = {parent = null}
+push to uncheckedlist
+
+while uncheckedlist.length > 0
+uncheckedlist.shift
+see if this is the goal.
+if not, add preconditions to uncheckedlist as objects
+
+if found end need, then 
+while objectParent != null,
+grab parent details
+unshift to array of ordered needs
+make the parent the new objectParent
+
+
+/*
+
+
+
+
+
+
+
+
+
+
+
+
+
 do {
 
 $thisNounRef = $needList[0][1];
@@ -33,50 +74,82 @@ if (array_key_exists($thisNounRef ,$itemsAvailable)) {
   $thisNoun = $itemsAvailable[$thisNounRef];
 }
 
-switch($needList[0][0]) {
+$currentNeeds = explode(":", $needList[0][0]);
+$currentNeed = $currentNeeds[0];
+if(count($currentNeeds)>1) {
+$currentParameter = $currentNeeds[1];
+}
+
+$specialConditionsMet = false;
+switch($currentNeed) {
+
   case "own":
   // npc needs to own the noun
   array_push($currentPlan, "I need to own ".$thisNoun);
   // check if npc has this item in their inventory:
   if (in_array($thisNounRef ,$thisNPCsItems)) {
     array_push($currentPlan,  "i have one!");
+    $specialConditionsMet = true;
+    
   } else {
   
   // see if hero has one:
   if (in_array($thisNounRef ,$herosItems)) {
     array_push($currentPlan,  "hero has one!");
-  } else {
-  
-    // look through actions to find a way to get one:
-    // ########################
-    }
+   $specialConditionsMet = true;
+   
+  } 
   }
   break;
-  case "use":
-  // npc needs to use the noun
-  array_push($currentPlan,  "I want to use ".$thisNoun);
-  // look through actions to determine what needs to happen to use object:
   
-  $actionFound = -1;
+  case "at":
+  array_push($currentPlan, "I need to be at ".$currentParameter);
+  if($thisNPCsLocation == $currentParameter) {
+  array_push($currentPlan, "I am there already!");
+  $specialConditionsMet = true;
+  } else {
+   // see if NPC can move there:
+   // ##################
+  }
+  break;
+  
+  case "gold":
+  array_push($currentPlan, "I need ".$currentParameter." gold");
+  break;
+  
+ }
+ 
+ if(!$specialConditionsMet) {
+  // other, generic actions
+  array_push($currentPlan,  "I want to ".$currentNeed." ".$thisNoun);
+  // look through actions:
+  
+  $actionFound = array();
   for ($i=0; $i<count($actionsAvailable); $i++) {
-  if($actionsAvailable[$i][0] == "use") {
-    $actionFound = $i;
-    break;
+  if($actionsAvailable[$i][0] == $currentNeed) {
+    array_push($actionFound, $i);
+ 
   }
   }
-  if ($actionFound != -1) {
+
+
+
+  if (count($actionFound) != 0) {
     // check what preconditions are:
-    for ($i=0;$i<count($actionsAvailable[$actionFound][1]);$i++) {
-    $thisPrecondition = $actionsAvailable[$actionFound][1][$i];
-      // array_push($currentPlan,  "precondition: ".$thisPrecondition);
+    for ($i=0; $i<count($actionFound); $i++) {
+    for ($j=0;$j<count($actionsAvailable[$actionFound[$i]][1]);$j++) {
+    $thisPrecondition = $actionsAvailable[$actionFound[$i]][1][$j];
+     //  array_push($currentPlan,  "precondition: (".$i.") ".$thisPrecondition);
       // add this to the need list:
+      
       array_push($needList, array($thisPrecondition,$thisNounRef));
     }
+    }
   } else {
-      echo "no corresponding action found";
+      array_push($currentPlan, "dead end");
   }
   
-  break;
+  
 }
 
 array_shift($needList);
