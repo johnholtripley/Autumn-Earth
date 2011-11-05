@@ -56,10 +56,18 @@ $needsQueue[$thisArrayKey] = "null";
 
 array_push($uncheckedQueue,$thisArrayKey);
 
-while (count($uncheckedQueue) >0) {
+do {
+$hasFoundPlan = false;
 
 // remove this from list
 $thisNeed = array_shift($uncheckedQueue);
+
+
+// if this need can be met, and all of its siblings, then success
+// ############
+if (!$hasFoundPlan) {
+// keep looking
+
 $theseParameters = explode("_", $thisNeed);
 // add all preconditions that match this need to the list:
 
@@ -88,12 +96,20 @@ $theseParameters = explode("_", $thisNeed);
   }
 
 }
+}
+// keep looping while not success and still options to check
+} while ((count($uncheckedQueue) >0) && (!$hasFoundPlan));
 
 
 
-
-
-
+if (!$hasFoundPlan) {
+echo "no plan found found";
+// see how the plan got, and then create quest for un-met need
+// #######################
+} else {
+// iterate through parents to plan
+// ###################
+}
 
 
 
