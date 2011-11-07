@@ -56,6 +56,8 @@ $needsQueue[$thisArrayKey] = "null";
 
 array_push($uncheckedQueue,$thisArrayKey);
 
+
+
 do {
 $hasFoundPlan = false;
 
@@ -63,12 +65,31 @@ $hasFoundPlan = false;
 $thisNeed = array_shift($uncheckedQueue);
 
 
+
+$theseParameters = explode("_", $thisNeed);
+
 // if this need can be met, and all of its siblings, then success
-// ############
+
+
+switch($theseParameters[0]) {
+ case "own":
+// check inventory:
+if (in_array($theseParameters[1], $thisNPCsItems)) {
+// check siblings
+// #############
+$hasFoundPlan = true;
+}
+
+break;
+  
+  }
+
+
+
 if (!$hasFoundPlan) {
 // keep looking
 
-$theseParameters = explode("_", $thisNeed);
+
 // add all preconditions that match this need to the list:
 
 
@@ -78,16 +99,38 @@ $theseParameters = explode("_", $thisNeed);
     
     // check if a noun exists for this precondition, if not, use the parent's noun:
     
-    if(stristr($actionsAvailable[1][$j], ':') === FALSE) {
+    /*
+    
+    
+    
+    
+    // [result], [array of pre-conditions]
+$actionsAvailable = array(
+array('use',array('own')),
+array('own',array('buy')),
+array('own',array('steal')),
+array('buy',array('gold:25','at:blacksmith'))
+);
+    
+    
+    */
+    
+    
+    
+    if(stristr($actionsAvailable[$i][1][$j], ':') === FALSE) {
+    echo "false - ";
     $thisNoun = $theseParameters[1];
-    $thisVerb = $actionsAvailable[1][$j];
+    $thisVerb = $actionsAvailable[$i][1][$j];
     } else {
-    $splitParameters = explode(":",$actionsAvailable[1][$j]);
+ 
+    $splitParameters = explode(":",$actionsAvailable[$i][1][$j]);
     $thisNoun = $splitParameters[0];
     $thisVerb = $splitParameters[1];
     }
     
     $thisArrayKey = $thisVerb."_".$thisNoun;
+    
+    echo "for ".$thisNeed." now adding ".$thisArrayKey."<br />";
     
     // add to array with reference to parent:
     $needsQueue[$thisArrayKey] = $thisNeed;
@@ -103,12 +146,13 @@ $theseParameters = explode("_", $thisNeed);
 
 
 if (!$hasFoundPlan) {
-echo "no plan found found";
+echo "no plan found";
 // see how the plan got, and then create quest for un-met need
 // #######################
 } else {
 // iterate through parents to plan
 // ###################
+echo "found a plan";
 }
 
 
