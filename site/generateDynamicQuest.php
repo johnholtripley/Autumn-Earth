@@ -1,4 +1,13 @@
 <?PHP
+// TO DO
+//
+// some actions need a cost for things that are particularly difficult or lengthy to do, thes would then only be used when no other route (cost as in A* terms, and keep array sorted for low cost items first)
+//
+// check if a need has sibling conditions that need fulfillin as well before determining that a need has been fulfilled
+
+// ====================
+
+
 
 $itemsAvailable = array('axe' => 'an axe', 'oak' => 'an oak tree');
 
@@ -9,6 +18,9 @@ array('own',array('buy')),
 array('own',array('steal')),
 array('buy',array('gold:25','at:blacksmith'))
 );
+
+
+
 
 // needs - [verb][noun][value/reward]:
 $thisNPCsNeeds = array(array("use","axe","0"));
@@ -37,7 +49,7 @@ if not, add preconditions to uncheckedlist as objects
 
 if found end need, then 
 while objectParent != null,
-grab parent details
+grab parent details ($thisNeedsParent = $needsQueue[$thisNeed];)
 unshift to array of ordered needs
 make the parent the new objectParent
 
@@ -64,8 +76,6 @@ $hasFoundPlan = false;
 // remove this from list
 $thisNeed = array_shift($uncheckedQueue);
 
-
-
 $theseParameters = explode("_", $thisNeed);
 
 // if this need can be met, and all of its siblings, then success
@@ -75,14 +85,32 @@ switch($theseParameters[0]) {
  case "own":
 // check inventory:
 if (in_array($theseParameters[1], $thisNPCsItems)) {
-// check siblings
-// #############
 $hasFoundPlan = true;
 }
 
 break;
+
+case "at":
+if ($thisNPCsLocation == $theseParameters[1]) {
+$hasFoundPlan = true;
+}
+break;
   
   }
+
+
+
+
+if ($hasFoundPlan) {
+  // see if this precondition had any 'sibling' conditions:
+  for ($i=0; $i<count($actionsAvailable); $i++) {
+    if($actionsAvailable[$i][0] == $theseParameters[0]) {
+      if( count($actionsAvailable[$i][1])>1) {
+        echo "this need has siblings - need to check these too... ###########";
+      }
+    }
+  }
+}
 
 
 
@@ -98,34 +126,16 @@ if (!$hasFoundPlan) {
     for ($j=0; $j<count($actionsAvailable[$i][1]); $j++) {
     
     // check if a noun exists for this precondition, if not, use the parent's noun:
-    
-    /*
-    
-    
-    
-    
-    // [result], [array of pre-conditions]
-$actionsAvailable = array(
-array('use',array('own')),
-array('own',array('buy')),
-array('own',array('steal')),
-array('buy',array('gold:25','at:blacksmith'))
-);
-    
-    
-    */
-    
-    
-    
+   
     if(stristr($actionsAvailable[$i][1][$j], ':') === FALSE) {
-    echo "false - ";
+   
     $thisNoun = $theseParameters[1];
     $thisVerb = $actionsAvailable[$i][1][$j];
     } else {
  
     $splitParameters = explode(":",$actionsAvailable[$i][1][$j]);
-    $thisNoun = $splitParameters[0];
-    $thisVerb = $splitParameters[1];
+    $thisNoun = $splitParameters[1];
+    $thisVerb = $splitParameters[0];
     }
     
     $thisArrayKey = $thisVerb."_".$thisNoun;
@@ -143,7 +153,7 @@ array('buy',array('gold:25','at:blacksmith'))
 // keep looping while not success and still options to check
 } while ((count($uncheckedQueue) >0) && (!$hasFoundPlan));
 
-
+echo "<hr />";
 
 if (!$hasFoundPlan) {
 echo "no plan found";
@@ -151,8 +161,21 @@ echo "no plan found";
 // #######################
 } else {
 // iterate through parents to plan
-// ###################
-echo "found a plan";
+echo "found a plan<br />";
+$thisPlan = array();
+
+
+array_push($thisPlan, $thisNeed);
+do {
+$thisNeedsParent = $needsQueue[$thisNeed];
+array_push($thisPlan, $thisNeedsParent);
+$thisNeed = $thisNeedsParent;
+
+} while($needsQueue[$thisNeed] != "null");
+ echo "<pre>";
+ print_r(array_values($thisPlan));
+  echo "</pre>";
+
 }
 
 
