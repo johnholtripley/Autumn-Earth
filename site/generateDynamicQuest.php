@@ -4,6 +4,7 @@
 // some actions need a cost for things that are particularly difficult or lengthy to do, thes would then only be used when no other route (cost as in A* terms, and keep array sorted for low cost items first)
 //
 // check if a need has sibling conditions that need fulfillin as well before determining that a need has been fulfilled
+// but ... first, Find a way to handle branching needs when have multiple preconditions.
 
 // ====================
 
