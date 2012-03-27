@@ -5,6 +5,7 @@
 // fix issue with single letter at start of sentence meaning next word starts wih capital too
 // trigger words to respond to player's dialogue - maye vowels swapped to make it more like chosen language
 // Check rendered words so no swearimg. 
+// prevent more than 2 occurences of the same letter appearing sequentially
 
 /*
 ---------------------
