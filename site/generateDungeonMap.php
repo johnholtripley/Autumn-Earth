@@ -6,6 +6,7 @@
 
 // TO DO
 
+// tunnels shouldn't go through stairs
 
 // refine the height determination of walls to be clearer and not obstruct view as much:
 // - if the tile is walkable, then it shouldn't take account of tiles that will be blanked out, but if it's going to be wall tile, then it should take account of these when averaging
@@ -26,6 +27,8 @@
 
 // don't place items adjacent to stairs
 
+
+// the tunnelling to and from stairs routine shouldn't jump between -1 and +1, it should be gentler and move through -1, to 0, to +1
 
 // save changes in Flash for random maps
 
@@ -1365,8 +1368,8 @@ function createNewDungeonMap($mapID) {
 $dungeonDetails = array(
 'the-barrow-mines' => array(
 "1",
-array("25","0"),
-array("16,18","17,18","18,18"),
+array("25","35"),
+array("16,20","17,20","18,20"),
 array(1,1,2,2,3,4,5,6,7,8,9),
 array("6","6","6","6","2","2","3","3","4","5")
 )

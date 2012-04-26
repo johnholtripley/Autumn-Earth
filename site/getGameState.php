@@ -34,7 +34,7 @@ print $returnString;
 
 
  
- $gamestate = "playsounds=true&amp;herox=17&amp;heroy=16&amp;dowseskill=0&amp;famskill=70&amp;currentmapnumber=1&amp;heightgained=0";
+ $gamestate = "playsounds=true&amp;herox=17&amp;heroy=22&amp;dowseskill=0&amp;famskill=70&amp;currentmapnumber=1&amp;heightgained=0";
  $journalstate = "travel to the coast";
  $queststate = "0/0/0/0/0/0";
  $petstate = "2,0,100,21,13,-1,0,0,0,0,pet,15,12,13";
