@@ -920,6 +920,16 @@ for ($j = ($mapMaxHeight-1);$j >= 0;$j--) {
   }
 
 
+// find stairs:
+   for ($i = 0;$i < $mapMaxWidth;$i++) {
+    for ($j = 0;$j < $mapMaxHeight;$j++) {
+               
+                if (($dungeonOutputMap[$i][$j] == ">") || ($dungeonOutputMap[$i][$j] == "^")) {
+     
+                  $dungeonOutputMap[$i][$j] = "160";
+                }
+            }
+        }
 
 
 
@@ -935,8 +945,8 @@ for ($k = 0; $k<2; $k++) {
   }
   for ($i = 0;$i < $mapMaxWidth;$i++) {
   for ($j = 0;$j < $mapMaxHeight;$j++) {
-  // if it's a nonwalkable tile, but not a blanked tile:
-  if (($dungeonOutputMap[$i][$j] >= 100) && ($dungeonOutputMap[$i][$j] != 999)) {
+  // if it's a nonwalkable tile, not a stairs tile or a blanked tile:
+  if (($dungeonOutputMap[$i][$j] >= 100) && ($dungeonOutputMap[$i][$j] < 160)) {
   $thisAverageCount = 0;
   $thisAverageTotal = 0;
   checkAverageNeighbours($i-1,$j,$dungeonOutputMap[$i][$j]);
