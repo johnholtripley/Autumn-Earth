@@ -773,7 +773,7 @@ function floodFillHeight($startPointX, $startPointY, $heightToUse) {
 }
 
 function outputDungeon() {
-  global $dungeonMap, $dungeonOutputMap, $heightMap, $itemMap, $mapMaxHeight, $mapMaxWidth, $thisDungeonsName,$thisMapsId, $thisPlayersId, $thisAverageCount, $thisAverageTotal, $doorsOut, $doorsIn, $dungeonDetails, $thisOriginatingMapId, $outputMode;
+  global $dungeonMap, $dungeonOutputMap, $heightMap, $itemMap, $mapMaxHeight, $mapMaxWidth, $thisDungeonsName,$thisMapsId, $thisPlayersId, $thisAverageCount, $thisAverageTotal, $doorsOut, $doorsIn, $dungeonDetails, $thisOriginatingMapId, $outputMode, $allStairs, $stairsWidth;
 
   
   if ($outputMode == "test") {
@@ -920,16 +920,76 @@ for ($j = ($mapMaxHeight-1);$j >= 0;$j--) {
   }
 
 
-// find stairs:
-   for ($i = 0;$i < $mapMaxWidth;$i++) {
-    for ($j = 0;$j < $mapMaxHeight;$j++) {
-               
-                if (($dungeonOutputMap[$i][$j] == ">") || ($dungeonOutputMap[$i][$j] == "^")) {
-     
-                  $dungeonOutputMap[$i][$j] = "160";
-                }
-            }
-        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// draw stairs:
+for ($i = 0;$i < count($allStairs);$i++) {
+  $thisCaseStartX = $allStairs[$i][0];
+  $thisCaseStartY = $allStairs[$i][1];
+  $thisCaseLength = $allStairs[$i][2];
+  $caseRotation = $allStairs[$i][3];
+  if ($caseRotation == 0) {
+  $horizLength = $thisCaseLength;
+  $vertLength = $stairsWidth;
+  $stairsBase = 160;
+  } else {
+  $horizLength = $stairsWidth;
+  $vertLength = $thisCaseLength;
+  $stairsBase = 180;
+  }
+  for ($j = 0;$j < $horizLength;$j++) {
+    for ($k = 0;$k < $vertLength;$k++) {
+      if (($j < 0) || ($k < 0) || ($j >= $horizLength) || ($k >= $vertLength)) {
+      // draw standard tunnel tile here
+        $dungeonOutputMap[$i][$j] = "2";
+      } else {
+        $dungeonOutputMap[($thisCaseStartX + $j) ][($thisCaseStartY + $k) ] = $stairsBase;
+      }
+    }
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1660,6 +1720,10 @@ if ($startDoorY == 0) {
                     case 1:
                         // can be placed anywhere within safe zone (at least 6 tiles away from edge)
                         $thisCaseLength = rand(3, floor(12 / $numberOfStairs));
+                        
+                        
+                       
+                        
                         if ($caseRotation == 0) {
                             // east west stairs
                             $horizLength = $thisCaseLength;
@@ -1802,7 +1866,7 @@ if ($startDoorY == 0) {
                             $horizLength = $thisCaseLength;
                             $vertLength = $stairsWidth;
                            // $tunnelAddonX = 2;
-                            $stairsChar = "^";
+                            $stairsChar = "s";
                             /*
                             // preserve stair edge:
                             for ($j = - 1;$j < $horizLength + 1;$j++) {
@@ -1816,7 +1880,7 @@ if ($startDoorY == 0) {
                         } else {
                             $horizLength = $stairsWidth;
                             $vertLength = $thisCaseLength;
-                            $stairsChar = ">";
+                            $stairsChar = "s";
                          //   $tunnelAddonY = 2;
                             /*
                             for ($j = - 1;$j < $vertLength + 1;$j++) {
