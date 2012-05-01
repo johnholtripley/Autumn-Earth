@@ -775,7 +775,7 @@ function floodFillHeight($startPointX, $startPointY, $heightToUse) {
 function outputDungeon() {
   global $dungeonMap, $dungeonOutputMap, $heightMap, $itemMap, $mapMaxHeight, $mapMaxWidth, $thisDungeonsName,$thisMapsId, $thisPlayersId, $thisAverageCount, $thisAverageTotal, $doorsOut, $doorsIn, $dungeonDetails, $thisOriginatingMapId, $outputMode, $allStairs, $stairsWidth;
 
-  
+  $outputMode="xml";
   if ($outputMode == "test") {
   echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">' . "\n";
 echo '<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">' . "\n";
@@ -863,7 +863,9 @@ echo '</html>' . "\n";
 
 
 
-
+echo "++++++++++++++++";
+echo count($allStairs);
+echo "++++++++++++++++";
 
 
 
@@ -943,7 +945,11 @@ for ($j = ($mapMaxHeight-1);$j >= 0;$j--) {
 
 
 // draw stairs:
+$stairsWidth = 3;
 for ($i = 0;$i < count($allStairs);$i++) {
+
+
+
   $thisCaseStartX = $allStairs[$i][0];
   $thisCaseStartY = $allStairs[$i][1];
   $thisCaseLength = $allStairs[$i][2];
@@ -951,24 +957,33 @@ for ($i = 0;$i < count($allStairs);$i++) {
   if ($caseRotation == 0) {
   $horizLength = $thisCaseLength;
   $vertLength = $stairsWidth;
-  $stairsBase = 160;
+  $stairsBase = 180;
   } else {
   $horizLength = $stairsWidth;
   $vertLength = $thisCaseLength;
-  $stairsBase = 180;
+  $stairsBase = 160;
   }
+  $heightOffset = $thisCaseLength;
   for ($j = 0;$j < $horizLength;$j++) {
     for ($k = 0;$k < $vertLength;$k++) {
-      if (($j < 0) || ($k < 0) || ($j >= $horizLength) || ($k >= $vertLength)) {
-      // draw standard tunnel tile here
-        $dungeonOutputMap[$i][$j] = "2";
-      } else {
-        $dungeonOutputMap[($thisCaseStartX + $j) ][($thisCaseStartY + $k) ] = $stairsBase;
-      }
+   $thisStairTile = $stairsBase + $heightOffset;
+        $dungeonOutputMap[($thisCaseStartX + $j) ][($thisCaseStartY + $k) ] = $thisStairTile;
+        
+         if ($caseRotation == 1) {
+         $heightOffset --;
+         }
+        
     }
+      if ($caseRotation == 0) {
+         $heightOffset --;
+         }
   }
-}
+  
+  
 
+ 
+  
+}
 
 
 
@@ -1047,43 +1062,30 @@ for ($k = 0; $k<2; $k++) {
 // create string so it can be output immediately for Flash to read, and then saved for later recall
 $outputString = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><map mname=\"".str_ireplace("-"," ",$thisDungeonsName)."\" inside=\"f\">";
  
-   for ($i = 0;$i < $mapMaxWidth;$i++) {
-  
-  $outputString .= "<row>";
-  for ($j = 0;$j < $mapMaxHeight;$j++) {
-    
-     
-      if($dungeonOutputMap[$i][$j] == "999") {
-      // add blank tile:
-      $outputString .= "1,";
-      
-      } else {
+for ($i = 0;$i < $mapMaxWidth;$i++) {
+$outputString .= "<row>";
+for ($j = 0;$j < $mapMaxHeight;$j++) {
+  if($dungeonOutputMap[$i][$j] == "999") {
+    // add blank tile:
+    $outputString .= "1,";
+  } else {
     // add feature tile:
-      
     if($dungeonOutputMap[$i][$j]=="O") {
     // is a door - create walkable tile here:
-    
     $outputString .= "2,";
-    } else {
-    
+  } else {
     $outputString .= $dungeonOutputMap[$i][$j].",";
-    }
-    
-    
-    
-      }
-      
-    
-    
-    }
-    // remove final comma:
-    $outputString = substr($outputString, 0, -1);
-    $outputString .= "</row>";
-    }
+  }
+  }
+}
+// remove final comma:
+$outputString = substr($outputString, 0, -1);
+$outputString .= "</row>\n";
+}
     
     
     for ($j = 0;$j < $mapMaxHeight;$j++) {
-   $outputString .= "<farm>-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-</farm>";
+   $outputString .= "<farm>-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-</farm>\n";
     }
     
     // re do loop for items:
@@ -1429,7 +1431,7 @@ function placeItems() {
 }
 
 function createNewDungeonMap($mapID) {
-    global $dungeonMap, $itemMap, $tunnelMaxLength, $mapMaxWidth, $mapMaxHeight, $inX, $inY, $outX, $outY, $templateRows, $exitDoorX, $exitDoorY, $heightMap, $entranceHeight, $exitHeight, $debugMode, $dungeonDetails, $doorsIn, $doorsOut, $connectingDoorX, $connectingDoorY, $dungeonDetails, $thisDungeonsName, $thisMapsId, $outputMode;
+    global $dungeonMap, $itemMap, $tunnelMaxLength, $mapMaxWidth, $mapMaxHeight, $inX, $inY, $outX, $outY, $templateRows, $exitDoorX, $exitDoorY, $heightMap, $entranceHeight, $exitHeight, $debugMode, $dungeonDetails, $doorsIn, $doorsOut, $connectingDoorX, $connectingDoorY, $dungeonDetails, $thisDungeonsName, $thisMapsId, $outputMode, $allStairs;
     $outputMode = "xml";
   if(isset($_GET["outputMode"])) {
   $outputMode = $_GET["outputMode"];
@@ -1476,6 +1478,7 @@ $doorsOut = array();
         $dungeonMap = array();
         $heightMap = array();
         $itemMap = array();
+        $allStairs = array();
         for ($i = 0;$i < $mapMaxWidth;$i++) {
             $dungeonMap[$i] = array();
             $heightMap[$i] = array();
@@ -1706,7 +1709,7 @@ if ($startDoorY == 0) {
                 // give width appropriate to tunnel widths:
                 $stairsWidth = 3;
                
-                $allStairs = array();
+                
                 $totalStairsHeight = 0;
                 $caseRotation = rand(0, 1);
                 
@@ -2078,7 +2081,9 @@ if ($startDoorY == 0) {
                 }
                 
                 
-          
+          echo "£££££££";
+          echo count($allStairs);
+          echo "£££££££";
       
       
       if($thisMapsId == -1) {
