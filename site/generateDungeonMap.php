@@ -966,7 +966,7 @@ for ($i = 0;$i < count($allStairs);$i++) {
   $heightOffset = $thisCaseLength;
   for ($j = 0;$j < $horizLength;$j++) {
     for ($k = 0;$k < $vertLength;$k++) {
-   $thisStairTile = $stairsBase + $heightOffset;
+   $thisStairTile = $stairsBase + $heightOffset -1;
         $dungeonOutputMap[($thisCaseStartX + $j) ][($thisCaseStartY + $k) ] = $thisStairTile;
         
          if ($caseRotation == 1) {
