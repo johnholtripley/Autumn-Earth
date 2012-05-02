@@ -6,8 +6,7 @@
 
 // TO DO
 
-
-// items need to be raised up on tiles with a height
+// bug - can get untraversable maps where a tunnel goes back through a staircase
 
 // hero needs to start at correct height - this means when a height map is created, that it opens the map that leads to it and alters the door height
 
@@ -17,6 +16,7 @@
 // - if the tile is walkable, then it shouldn't take account of tiles that will be blanked out, but if it's going to be wall tile, then it should take account of these when averaging
 // loop through and set outputdungeonmap to have the blanked tiles so xml and the averaging function don't repeat the same tests
 
+// bug - occassionally get the odd stair tile at right angles to main case
 
 // have some sort of persistence between dungeon visits. keep track of creature populations etc.
 
@@ -1057,7 +1057,17 @@ $outputString .= "</row>\n";
     for ($i = 0;$i < $mapMaxWidth;$i++) {
     for ($j = 0;$j < $mapMaxHeight;$j++) {
    if($itemMap[$i][$j] != "") {
-   $outputString .= "<item>".$i.",".$j.",".$itemMap[$i][$j].",1,0,0</item>";
+   $itemHeight = 0;
+   if($heightMap[$i][$j]>0) {
+   $itemHeight = 24*$heightMap[$i][$j];
+   
+   
+   
+   // testing ############################
+      $itemHeight = 66;
+   
+   }
+   $outputString .= "<item>".$i.",".$j.",".$itemMap[$i][$j].",1,".$itemHeight.",0</item>";
    }
     }
     }
@@ -1281,6 +1291,9 @@ function placeItems() {
    $itemsAvailable = $dungeonDetails[$thisDungeonsName][4];
    
   $numberOfItems = $itemChance[(rand(0,count($itemChance)-1))];
+  
+  
+  
   if ($itemChance > 0) {
     for ($i = 1; $i<=$numberOfItems; $i++) {
       $thisTime = time();
