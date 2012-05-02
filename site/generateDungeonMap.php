@@ -6,6 +6,11 @@
 
 // TO DO
 
+
+// items need to be raised up on tiles with a height
+
+// hero needs to start at correct height - this means when a height map is created, that it opens the map that leads to it and alters the door height
+
 // tunnels shouldn't go through stairs
 
 // refine the height determination of walls to be clearer and not obstruct view as much:
@@ -773,9 +778,9 @@ function floodFillHeight($startPointX, $startPointY, $heightToUse) {
 }
 
 function outputDungeon() {
-  global $dungeonMap, $dungeonOutputMap, $heightMap, $itemMap, $mapMaxHeight, $mapMaxWidth, $thisDungeonsName,$thisMapsId, $thisPlayersId, $thisAverageCount, $thisAverageTotal, $doorsOut, $doorsIn, $dungeonDetails, $thisOriginatingMapId, $outputMode, $allStairs, $stairsWidth;
+  global $dungeonMap, $dungeonOutputMap, $heightMap, $itemMap, $mapMaxHeight, $mapMaxWidth, $thisDungeonsName, $thisMapsId, $thisPlayersId, $thisAverageCount, $thisAverageTotal, $doorsOut, $doorsIn, $dungeonDetails, $thisOriginatingMapId, $outputMode, $allStairs, $stairsWidth;
 
-  $outputMode="xml";
+
   if ($outputMode == "test") {
   echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">' . "\n";
 echo '<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">' . "\n";
@@ -863,12 +868,6 @@ echo '</html>' . "\n";
 
 
 
-echo "++++++++++++++++";
-echo count($allStairs);
-echo "++++++++++++++++";
-
-
-
       $dungeonOutputMap = array();
        
         for ($i = 0;$i < $mapMaxWidth;$i++) {
@@ -923,33 +922,9 @@ for ($j = ($mapMaxHeight-1);$j >= 0;$j--) {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // draw stairs:
 $stairsWidth = 3;
 for ($i = 0;$i < count($allStairs);$i++) {
-
-
-
   $thisCaseStartX = $allStairs[$i][0];
   $thisCaseStartY = $allStairs[$i][1];
   $thisCaseLength = $allStairs[$i][2];
@@ -957,6 +932,7 @@ for ($i = 0;$i < count($allStairs);$i++) {
   if ($caseRotation == 0) {
   $horizLength = $thisCaseLength;
   $vertLength = $stairsWidth;
+  // this StairsBase is the corresponding first frame in the tile set in Flash for this direction of stairs:
   $stairsBase = 180;
   } else {
   $horizLength = $stairsWidth;
@@ -968,44 +944,15 @@ for ($i = 0;$i < count($allStairs);$i++) {
     for ($k = 0;$k < $vertLength;$k++) {
    $thisStairTile = $stairsBase + $heightOffset -1;
         $dungeonOutputMap[($thisCaseStartX + $j) ][($thisCaseStartY + $k) ] = $thisStairTile;
-        
          if ($caseRotation == 1) {
          $heightOffset --;
          }
-        
     }
       if ($caseRotation == 0) {
          $heightOffset --;
          }
   }
-  
-  
-
- 
-  
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 // average out transitions between flat front non-walkable tiles and tall background non-walkable tiles:
@@ -1051,11 +998,25 @@ for ($k = 0; $k<2; $k++) {
 }
 
 
+// check height map and raise levels appropriately:
+// first tile is on frame 200, but height of '1' will need to be tile 200:
+$raisedBase = 199;
 
 
+ for ($i = 0;$i < $mapMaxWidth;$i++) {
+    for ($j = 0;$j < $mapMaxHeight;$j++) {
+     
+     if($dungeonOutputMap[$i][$j] == "2") {
+     // is walkable - add height if required:
+     if($heightMap[$i][$j]>0) {
+     $dungeonOutputMap[$i][$j] = $heightMap[$i][$j]+$raisedBase;
+     }
+     
+     }
 
-
-
+      
+}
+}
 
 
 
@@ -1714,7 +1675,7 @@ if ($startDoorY == 0) {
                 $caseRotation = rand(0, 1);
                 
                 
-                
+                // testing ###############
                  $numberOfStairs = 1;
                  
                 
@@ -1723,6 +1684,14 @@ if ($startDoorY == 0) {
                     case 1:
                         // can be placed anywhere within safe zone (at least 6 tiles away from edge)
                         $thisCaseLength = rand(3, floor(12 / $numberOfStairs));
+                        
+                        
+                        
+                        
+                        
+                        // testing ###############
+                 $thisCaseLength = 3;
+                        
                         
                         
                        
@@ -2081,9 +2050,7 @@ if ($startDoorY == 0) {
                 }
                 
                 
-          echo "£££££££";
-          echo count($allStairs);
-          echo "£££££££";
+
       
       
       if($thisMapsId == -1) {
