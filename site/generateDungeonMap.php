@@ -11,7 +11,6 @@
 // hero needs to start at correct height - this means when a height map is created, that it opens the map that leads to it and alters the door height
 // tunnels shouldn't go through stairs
 // bug - can get untraversable maps where a tunnel goes back through a staircase
-// don't place items adjacent to stairs
 
 
 
@@ -328,6 +327,14 @@ $dungeonMap[$thisCaseStartX+1+$thisOffset][$thisCaseStartY-$i-1] = ",";
 $dungeonMap[$thisCaseStartX+2+$thisOffset][$thisCaseStartY-$i-1] = ",";
 }
 
+// ensure that the tiles either side of the stairs are walkable:
+$dungeonMap[$thisCaseStartX][$thisCaseStartY+$vertLength] = ",";
+$dungeonMap[$thisCaseStartX+1][$thisCaseStartY+$vertLength] = ",";
+$dungeonMap[$thisCaseStartX+2][$thisCaseStartY+$vertLength] = ",";
+$dungeonMap[$thisCaseStartX][$thisCaseStartY-1] = ",";
+$dungeonMap[$thisCaseStartX+1][$thisCaseStartY-1] = ",";
+$dungeonMap[$thisCaseStartX+2][$thisCaseStartY-1] = ",";
+
 } else {
 
 
@@ -365,9 +372,13 @@ $dungeonMap[$thisCaseStartX-$i-1][$thisCaseStartY-$thisOffset+2] = ",";
 
 }
 
-
-
-
+// ensure that either side is walkable:
+$dungeonMap[$thisCaseStartX+$horizLength][$thisCaseStartY] = ",";
+$dungeonMap[$thisCaseStartX+$horizLength][$thisCaseStartY+1] = ",";
+$dungeonMap[$thisCaseStartX+$horizLength][$thisCaseStartY+2] = ",";
+$dungeonMap[$thisCaseStartX-1][$thisCaseStartY] = ",";
+$dungeonMap[$thisCaseStartX-1][$thisCaseStartY+1] = ",";
+$dungeonMap[$thisCaseStartX-1][$thisCaseStartY+2] = ",";
 
 
 }
@@ -1393,6 +1404,16 @@ function placeItems() {
           if(!$tileEastWalkable && !$tileNorthEastWalkable && !$tileNorthWalkable) {
       
        $isAValidItemPosition = true;
+       }
+       }
+       
+       // check this position isn't adjacent to some stairs:
+       
+       for ($ix=-1; $ix<2; $ix++) {
+       for ($iy=-1; $iy<2; $iy++) {
+       if ($dungeonMap[($nodesPosition[0])+$ix][($nodesPosition[1])+$iy] == "s") {
+         $isAValidItemPosition = false;
+       }
        }
        }
        
