@@ -6,11 +6,14 @@
 
 // TO DO
 
-// bug - can get untraversable maps where a tunnel goes back through a staircase
+
+
+// first map *can't* be a stairs map as the door leading to it hard codes the start height to zero
 
 // hero needs to start at correct height - this means when a height map is created, that it opens the map that leads to it and alters the door height
 
 // tunnels shouldn't go through stairs
+// bug - can get untraversable maps where a tunnel goes back through a staircase
 
 // refine the height determination of walls to be clearer and not obstruct view as much:
 // - if the tile is walkable, then it shouldn't take account of tiles that will be blanked out, but if it's going to be wall tile, then it should take account of these when averaging
@@ -1064,7 +1067,7 @@ $outputString .= "</row>\n";
    
    
    // testing ############################
-      $itemHeight = 66;
+      $itemHeight = 72;
    
    }
    $outputString .= "<item>".$i.",".$j.",".$itemMap[$i][$j].",1,".$itemHeight.",0</item>";
