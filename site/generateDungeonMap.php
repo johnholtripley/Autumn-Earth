@@ -6,20 +6,22 @@
 
 // TO DO
 
-
-
+// determine why it's always a stairs map and why always pointing down to SE
 // first map *can't* be a stairs map as the door leading to it hard codes the start height to zero
-
 // hero needs to start at correct height - this means when a height map is created, that it opens the map that leads to it and alters the door height
-
 // tunnels shouldn't go through stairs
 // bug - can get untraversable maps where a tunnel goes back through a staircase
+// don't place items adjacent to stairs
+
+
+
+
+
+
 
 // refine the height determination of walls to be clearer and not obstruct view as much:
 // - if the tile is walkable, then it shouldn't take account of tiles that will be blanked out, but if it's going to be wall tile, then it should take account of these when averaging
 // loop through and set outputdungeonmap to have the blanked tiles so xml and the averaging function don't repeat the same tests
-
-// bug - occassionally get the odd stair tile at right angles to main case
 
 // have some sort of persistence between dungeon visits. keep track of creature populations etc.
 
@@ -33,7 +35,7 @@
 
 // caves could branch if coordinates for each map are saved and checked against before determining exit doors - just to ensure that the maps don't intersect incorrectly
 
-// don't place items adjacent to stairs
+
 
 
 // the tunnelling to and from stairs routine shouldn't jump between -1 and +1, it should be gentler and move through -1, to 0, to +1
@@ -1224,7 +1226,8 @@ function checkAverageNeighbours($tileCheckX,$tileCheckY,$currentTileValue) {
             $thisAverageCount++;
               $thisAverageTotal += $currentTileValue;    
             }
-           } else {
+           } else if($dungeonOutputMap[$tileCheckX][$tileCheckY] < 160) {
+           // ...and it's not a stairs or elevated tile:
               $thisAverageCount++;
               $thisAverageTotal += $dungeonOutputMap[$tileCheckX][$tileCheckY]; 
               }      
