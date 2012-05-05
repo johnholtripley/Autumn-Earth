@@ -6,7 +6,7 @@
 
 // TO DO
 
-// determine why it's always a stairs map and why always pointing down to SE
+// determine why always pointing down to SE
 // first map *can't* be a stairs map as the door leading to it hard codes the start height to zero
 // hero needs to start at correct height - this means when a height map is created, that it opens the map that leads to it and alters the door height
 // tunnels shouldn't go through stairs
@@ -794,7 +794,7 @@ function floodFillHeight($startPointX, $startPointY, $heightToUse) {
 }
 
 function outputDungeon() {
-  global $dungeonMap, $dungeonOutputMap, $heightMap, $itemMap, $mapMaxHeight, $mapMaxWidth, $thisDungeonsName, $thisMapsId, $thisPlayersId, $thisAverageCount, $thisAverageTotal, $doorsOut, $doorsIn, $dungeonDetails, $thisOriginatingMapId, $outputMode, $allStairs, $stairsWidth;
+  global $dungeonMap, $dungeonOutputMap, $heightMap, $itemMap, $mapMaxHeight, $mapMaxWidth, $thisDungeonsName, $thisMapsId, $thisPlayersId, $thisAverageCount, $thisAverageTotal, $doorsOut, $doorsIn, $dungeonDetails, $thisOriginatingMapId, $outputMode, $allStairs, $stairsWidth, $mapMode;
 
 
   if ($outputMode == "test") {
@@ -813,7 +813,7 @@ echo '<head>' . "\n";
 echo '</head>' . "\n";
 echo '<body style="background: #000; color: #fff;">' . "\n";
   
-  
+
   echo '<code><pre style="font-family: courier; line-height: 0.75em;">' . "\n";
   
     for ($i = 0;$i < $mapMaxWidth;$i++) {
@@ -937,7 +937,7 @@ for ($j = ($mapMaxHeight-1);$j >= 0;$j--) {
   }
 
 
-
+if($mapMode == "stairs") {
 // draw stairs:
 $stairsWidth = 3;
 for ($i = 0;$i < count($allStairs);$i++) {
@@ -968,6 +968,7 @@ for ($i = 0;$i < count($allStairs);$i++) {
          $heightOffset --;
          }
   }
+}
 }
 
 
@@ -1512,12 +1513,13 @@ $doorsOut = array();
         }
         
         
+        
         // development force mode:
     
         if(isset($_GET["forceMode"])) {
           $mapMode = $_GET["forceMode"];
         }
-        
+  
            
         $turning = 0;
         if (rand(0, 4) == 0) {
@@ -2104,10 +2106,13 @@ if ($startDoorY == 0) {
                 
                 $isFullyConnected = checkPathIsConnected($startDoorX,$startDoorY);
             
+            
+            if($mapMode == "stairs") {
             // check if stairs, and if so, if height of entrance and exit are the same - if so, path has run through stairs, need to abort
             // if more than 1 stair case, check each flight #####################
        if($heightMap[$startDoorX][$startDoorY] == $heightMap[$exitDoorX][$exitDoorY]) {
        $isFullyConnected = false;
+       }
        }
             
             
