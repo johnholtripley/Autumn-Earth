@@ -6,12 +6,12 @@
 
 // TO DO
 
-// determine why always pointing down to SE
-// first map *can't* be a stairs map as the door leading to it hard codes the start height to zero
+// determine why always pointing down to SE 
+
 // hero needs to start at correct height - this means when a height map is created, that it opens the map that leads to it and alters the door height
 // tunnels shouldn't go through stairs
 // bug - can get untraversable maps where a tunnel goes back through a staircase
-
+// the pathfinding check to see if the map is traversable needs to look at height differences as well
 
 
 
@@ -37,7 +37,6 @@
 
 
 
-// the tunnelling to and from stairs routine shouldn't jump between -1 and +1, it should be gentler and move through -1, to 0, to +1
 
 // save changes in Flash for random maps
 
@@ -301,30 +300,45 @@ $tunnelHorizLength = 6;
 
 if ($caseRotation == 1) {
 // horizontal stairs (as far as demo output is concerned)
-
+$thisExitOffset = 0;
+$thisEntranceOffset = 0;
 for ($i = 0;$i < $tunnelVertLength;$i++) {
 // exit block
-$thisOffset = 0;
+
 $randomOffset = rand(0,7);
 if($randomOffset==0) {
-$thisOffset=-1;
+$thisExitOffset++;
 } else if($randomOffset==1) {
-$thisOffset=1;
+$thisExitOffset--;
 }
-$dungeonMap[$thisCaseStartX+$thisOffset][$thisCaseStartY+$i+$vertLength] = ",";
-$dungeonMap[$thisCaseStartX+1+$thisOffset][$thisCaseStartY+$i+$vertLength] = ",";
-$dungeonMap[$thisCaseStartX+2+$thisOffset][$thisCaseStartY+$i+$vertLength] = ",";
+$randomOffset = rand(0,7);
+if($randomOffset==0) {
+$thisEntranceOffset=-1;
+} else if($randomOffset==1) {
+$thisEntranceOffset=1;
+}
+if($thisExitOffset<-1) {
+$thisExitOffset = 0;
+}
+if($thisExitOffset>1) {
+$thisExitOffset = 0;
+}
+if($thisEntranceOffset<-1) {
+$thisEntranceOffset = 0;
+}
+if($thisEntranceOffset>1) {
+$thisEntranceOffset = 0;
+}
+
+$dungeonMap[$thisCaseStartX+$thisExitOffset][$thisCaseStartY+$i+$vertLength] = ",";
+$dungeonMap[$thisCaseStartX+1+$thisExitOffset][$thisCaseStartY+$i+$vertLength] = ",";
+$dungeonMap[$thisCaseStartX+2+$thisExitOffset][$thisCaseStartY+$i+$vertLength] = ",";
 // entrance block:
-$thisOffset = 0;
-$randomOffset = rand(0,7);
-if($randomOffset==0) {
-$thisOffset=-1;
-} else if($randomOffset==1) {
-$thisOffset=1;
-}
-$dungeonMap[$thisCaseStartX+$thisOffset][$thisCaseStartY-$i-1] = ",";
-$dungeonMap[$thisCaseStartX+1+$thisOffset][$thisCaseStartY-$i-1] = ",";
-$dungeonMap[$thisCaseStartX+2+$thisOffset][$thisCaseStartY-$i-1] = ",";
+
+
+$dungeonMap[$thisCaseStartX+$thisEntranceOffset][$thisCaseStartY-$i-1] = ",";
+$dungeonMap[$thisCaseStartX+1+$thisEntranceOffset][$thisCaseStartY-$i-1] = ",";
+$dungeonMap[$thisCaseStartX+2+$thisEntranceOffset][$thisCaseStartY-$i-1] = ",";
 }
 
 // ensure that the tiles either side of the stairs are walkable:
@@ -343,32 +357,48 @@ $dungeonMap[$thisCaseStartX+2][$thisCaseStartY-1] = ",";
 
 
 
-
-
+$thisExitOffset = 0;
+$thisEntranceOffset = 0;
 for ($i = 0;$i < $tunnelHorizLength;$i++) {
 // exit block
-$thisOffset = 0;
+
 $randomOffset = rand(0,7);
 if($randomOffset==0) {
-$thisOffset=-1;
+$thisExitOffset--;
 } else if($randomOffset==1) {
-$thisOffset=1;
+$thisExitOffset++;
 }
-$dungeonMap[$thisCaseStartX+$horizLength+$i][$thisCaseStartY+$thisOffset] = ",";
-$dungeonMap[$thisCaseStartX+$horizLength+$i][$thisCaseStartY+$thisOffset+1] = ",";
-$dungeonMap[$thisCaseStartX+$horizLength+$i][$thisCaseStartY+$thisOffset+2] = ",";
+
+$randomOffset = rand(0,7);
+if($randomOffset==0) {
+$thisEntranceOffset--;
+} else if($randomOffset==1) {
+$thisEntranceOffset++;
+}
+if($thisExitOffset<-1) {
+$thisExitOffset = 0;
+}
+if($thisExitOffset>1) {
+$thisExitOffset = 0;
+}
+if($thisEntranceOffset<-1) {
+$thisEntranceOffset = 0;
+}
+if($thisEntranceOffset>1) {
+$thisEntranceOffset = 0;
+}
+
+
+$dungeonMap[$thisCaseStartX+$horizLength+$i][$thisCaseStartY+$thisExitOffset] = ",";
+$dungeonMap[$thisCaseStartX+$horizLength+$i][$thisCaseStartY+$thisExitOffset+1] = ",";
+$dungeonMap[$thisCaseStartX+$horizLength+$i][$thisCaseStartY+$thisExitOffset+2] = ",";
 
 // entrance block:
-$thisOffset = 0;
-$randomOffset = rand(0,7);
-if($randomOffset==0) {
-$thisOffset=-1;
-} else if($randomOffset==1) {
-$thisOffset=1;
-}
-$dungeonMap[$thisCaseStartX-$i-1][$thisCaseStartY-$thisOffset] = ",";
-$dungeonMap[$thisCaseStartX-$i-1][$thisCaseStartY-$thisOffset+1] = ",";
-$dungeonMap[$thisCaseStartX-$i-1][$thisCaseStartY-$thisOffset+2] = ",";
+
+
+$dungeonMap[$thisCaseStartX-$i-1][$thisCaseStartY-$thisEntranceOffset] = ",";
+$dungeonMap[$thisCaseStartX-$i-1][$thisCaseStartY-$thisEntranceOffset+1] = ",";
+$dungeonMap[$thisCaseStartX-$i-1][$thisCaseStartY-$thisEntranceOffset+2] = ",";
 
 }
 
@@ -721,6 +751,7 @@ function checkPathIsConnected($doorStartX, $doorStartY) {
     return $connectionFound;
 }
 function floodFillHeight($startPointX, $startPointY, $heightToUse) {
+
     global $dungeonMap, $heightMap, $mapMaxWidth, $mapMaxHeight, $exitDoorX, $exitDoorY, $debugMode;
     $exitFound = false;
     $openList = array($startPointX . "_" . $startPointY);
@@ -789,12 +820,12 @@ function floodFillHeight($startPointX, $startPointY, $heightToUse) {
         }
     }
     while ($stillWorking);
-    // if the exit is reached on this pass then abort this map as the stairs can be by-passed:
+    // if the exit then might need to abort this map as the stairs can be by-passed:
     return $exitFound;
 }
 
 function outputDungeon() {
-  global $dungeonMap, $dungeonOutputMap, $heightMap, $itemMap, $mapMaxHeight, $mapMaxWidth, $thisDungeonsName, $thisMapsId, $thisPlayersId, $thisAverageCount, $thisAverageTotal, $doorsOut, $doorsIn, $dungeonDetails, $thisOriginatingMapId, $outputMode, $allStairs, $stairsWidth, $mapMode;
+  global $dungeonMap, $dungeonOutputMap, $heightMap, $itemMap, $mapMaxHeight, $mapMaxWidth, $thisDungeonsName, $thisMapsId, $thisPlayersId, $thisAverageCount, $thisAverageTotal, $doorsOut, $doorsIn, $dungeonDetails, $thisOriginatingMapId, $outputMode, $allStairs, $stairsWidth;
 
 
   if ($outputMode == "test") {
@@ -937,7 +968,7 @@ for ($j = ($mapMaxHeight-1);$j >= 0;$j--) {
   }
 
 
-if($mapMode == "stairs") {
+
 // draw stairs:
 $stairsWidth = 3;
 for ($i = 0;$i < count($allStairs);$i++) {
@@ -966,10 +997,12 @@ for ($i = 0;$i < count($allStairs);$i++) {
     }
       if ($caseRotation == 0) {
          $heightOffset --;
+         } else {
+           $heightOffset = $thisCaseLength;
          }
   }
 }
-}
+
 
 
 // average out transitions between flat front non-walkable tiles and tall background non-walkable tiles:
@@ -1519,6 +1552,17 @@ $doorsOut = array();
         if(isset($_GET["forceMode"])) {
           $mapMode = $_GET["forceMode"];
         }
+        
+        if($mapID == -1) {
+          // first map can't be a stairs map as the height of the start doors is hardcoded to zero:
+          if ($mapMode == "stairs") {
+          $mapMode = "standard";
+          }
+        }
+        
+        
+        // testing #############################
+        $mapMode = "stairs";
   
            
         $turning = 0;
@@ -1719,7 +1763,7 @@ if ($startDoorY == 0) {
                 
                 // testing ###############
                  $numberOfStairs = 1;
-                 
+                 $caseRotation = 1;
                 
                 
                 switch ($numberOfStairs) {
@@ -1874,47 +1918,29 @@ if ($startDoorY == 0) {
                         $thisCaseStartY = $allStairs[$i][1];
                         $thisCaseLength = $allStairs[$i][2];
                         $caseRotation = $allStairs[$i][3];
-                        $tunnelAddonX = 0;
-                        $tunnelAddonY = 0;
+                       
                         if ($caseRotation == 0) {
                             $horizLength = $thisCaseLength;
                             $vertLength = $stairsWidth;
-                           // $tunnelAddonX = 2;
-                            $stairsChar = "s";
-                            /*
-                            // preserve stair edge:
-                            for ($j = - 1;$j < $horizLength + 1;$j++) {
-                                $dungeonMap[($thisCaseStartX + $j) ][($thisCaseStartY - 1) ] = "#";
-                                $dungeonMap[($thisCaseStartX + $j) ][($thisCaseStartY + $vertLength) ] = "#";
-                            }
-                            */
-                            
+                          
+                           
+                          
                            
                             
                         } else {
                             $horizLength = $stairsWidth;
                             $vertLength = $thisCaseLength;
-                            $stairsChar = "s";
-                         //   $tunnelAddonY = 2;
-                            /*
-                            for ($j = - 1;$j < $vertLength + 1;$j++) {
-                                $dungeonMap[($thisCaseStartX - 1) ][($thisCaseStartY + $j) ] = "#";
-                                $dungeonMap[($thisCaseStartX + $horizLength) ][($thisCaseStartY + $j) ] = "#";
-                            }
-                            */
+                        
+                       
                         }
                         
                         drawStairEndTunnel($thisCaseStartX,$thisCaseStartY,$horizLength,$vertLength, $caseRotation);
                         
                         
-                        for ($j = (0 - $tunnelAddonX);$j < $horizLength + $tunnelAddonX;$j++) {
-                            for ($k = (0 - $tunnelAddonY);$k < $vertLength + $tunnelAddonY;$k++) {
-                                $thisStairsChar = $stairsChar;
-                                if (($j < 0) || ($k < 0) || ($j >= $horizLength) || ($k >= $vertLength)) {
-                                    // draw standard tunnel tile here
-                                    $thisStairsChar = ".";
-                                }
-                                $dungeonMap[($thisCaseStartX + $j) ][($thisCaseStartY + $k) ] = $thisStairsChar;
+                        for ($j = (0);$j < $horizLength;$j++) {
+                            for ($k = (0);$k < $vertLength;$k++) {
+                                
+                                $dungeonMap[($thisCaseStartX + $j) ][($thisCaseStartY + $k) ] = "s";
                             }
                         }
                         
@@ -1931,7 +1957,7 @@ if ($startDoorY == 0) {
                     
                     for ($i = 0;$i < count($allStairs);$i++) {
                         if (floodFillHeight($tunnelStartX, $tunnelStartY, $totalStairsHeight - $lastCaseHeight)) {
-                            // abort this map:
+                            // found the exit - so stairs were by-passed - abort this map:
                             $stairsAreOk = false;
                         }
                         $thisCaseStartX = $allStairs[$i][0];
