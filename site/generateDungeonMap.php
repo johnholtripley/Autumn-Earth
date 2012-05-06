@@ -6,7 +6,7 @@
 
 // TO DO
 
-// determine why always pointing down to SE 
+// determine why always pointing down to SE (caseRotation = 1 stairs are the wrong way around?)
 
 // hero needs to start at correct height - this means when a height map is created, that it opens the map that leads to it and alters the door height
 // tunnels shouldn't go through stairs
@@ -976,31 +976,58 @@ for ($i = 0;$i < count($allStairs);$i++) {
   $thisCaseStartY = $allStairs[$i][1];
   $thisCaseLength = $allStairs[$i][2];
   $caseRotation = $allStairs[$i][3];
+
+  
+  
+  
+  
   if ($caseRotation == 0) {
-  $horizLength = $thisCaseLength;
+   $horizLength = $thisCaseLength;
   $vertLength = $stairsWidth;
   // this StairsBase is the corresponding first frame in the tile set in Flash for this direction of stairs:
   $stairsBase = 180;
-  } else {
-  $horizLength = $stairsWidth;
-  $vertLength = $thisCaseLength;
-  $stairsBase = 160;
-  }
   $heightOffset = $thisCaseLength;
-  for ($j = 0;$j < $horizLength;$j++) {
+  
+    for ($j = 0;$j < $horizLength;$j++) {
     for ($k = 0;$k < $vertLength;$k++) {
    $thisStairTile = $stairsBase + $heightOffset -1;
         $dungeonOutputMap[($thisCaseStartX + $j) ][($thisCaseStartY + $k) ] = $thisStairTile;
-         if ($caseRotation == 1) {
-         $heightOffset --;
-         }
+        
     }
-      if ($caseRotation == 0) {
+      
          $heightOffset --;
-         } else {
-           $heightOffset = $thisCaseLength;
-         }
+       
   }
+  
+  
+  } else {
+    $horizLength = $stairsWidth;
+  $vertLength = $thisCaseLength;
+  $stairsBase = 160;
+   $heightOffset = $thisCaseLength;
+    for ($j = 0;$j < $horizLength;$j++) {
+    for ($k = 0;$k < $vertLength;$k++) {
+   $thisStairTile = $stairsBase + $heightOffset -1;
+        $dungeonOutputMap[($thisCaseStartX + $j) ][($thisCaseStartY + $k) ] = $thisStairTile;
+        
+         $heightOffset --;
+         
+    }
+      
+           $heightOffset = $thisCaseLength;
+         
+  }
+  
+  
+  }
+  
+  
+  
+  
+  
+  
+  
+
 }
 
 
@@ -1056,10 +1083,11 @@ $raisedBase = 199;
  for ($i = 0;$i < $mapMaxWidth;$i++) {
     for ($j = 0;$j < $mapMaxHeight;$j++) {
      
-     if($dungeonOutputMap[$i][$j] == "2") {
+     if(($dungeonOutputMap[$i][$j] == "2") || ($dungeonOutputMap[$i][$j] == "O")) {
      // is walkable - add height if required:
      if($heightMap[$i][$j]>0) {
      $dungeonOutputMap[$i][$j] = $heightMap[$i][$j]+$raisedBase;
+     
      }
      
      }
@@ -1071,7 +1099,7 @@ $raisedBase = 199;
 
 
 // create string so it can be output immediately for Flash to read, and then saved for later recall
-$outputString = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><map mname=\"".str_ireplace("-"," ",$thisDungeonsName)."\" inside=\"f\">";
+$outputString = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><map mname=\"".str_ireplace("-"," ",$thisDungeonsName)."\" inside=\"f\">\n";
  
 for ($i = 0;$i < $mapMaxWidth;$i++) {
 $outputString .= "<row>";
