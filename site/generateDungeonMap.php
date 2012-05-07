@@ -847,8 +847,17 @@ echo '<body style="background: #000; color: #fff;">' . "\n";
 
   echo '<code><pre style="font-family: courier; line-height: 0.75em;">' . "\n";
   
+  
+  
+  $dungeonMap[0][0]="1";
+  $dungeonMap[($mapMaxWidth-1)][0]="2";
+  $dungeonMap[($mapMaxWidth-1)][($mapMaxHeight-1)]="3";
+  $dungeonMap[0][($mapMaxHeight-1)]="4";
+
+ 
+  for ($j = 0;$j < $mapMaxHeight;$j++) {
     for ($i = 0;$i < $mapMaxWidth;$i++) {
-    for ($j = 0;$j < $mapMaxHeight;$j++) {
+    
       if ($itemMap[$i][$j] != "") {
        echo "<span style=\"color:#8B600D;\">".$itemMap[$i][$j]."</span>";
       } else {
@@ -976,58 +985,33 @@ for ($i = 0;$i < count($allStairs);$i++) {
   $thisCaseStartY = $allStairs[$i][1];
   $thisCaseLength = $allStairs[$i][2];
   $caseRotation = $allStairs[$i][3];
-
-  
-  
-  
-  
   if ($caseRotation == 0) {
-   $horizLength = $thisCaseLength;
-  $vertLength = $stairsWidth;
-  // this StairsBase is the corresponding first frame in the tile set in Flash for this direction of stairs:
-  $stairsBase = 180;
-  $heightOffset = $thisCaseLength;
-  
+    $horizLength = $thisCaseLength;
+    $vertLength = $stairsWidth;
+    // this StairsBase is the corresponding first frame in the tile set in Flash for this direction of stairs:
+    $stairsBase = 180;
+    $heightOffset = $thisCaseLength;
     for ($j = 0;$j < $horizLength;$j++) {
-    for ($k = 0;$k < $vertLength;$k++) {
-   $thisStairTile = $stairsBase + $heightOffset -1;
-        $dungeonOutputMap[($thisCaseStartX + $j) ][($thisCaseStartY + $k) ] = $thisStairTile;
-        
+      for ($k = 0;$k < $vertLength;$k++) {
+        $thisStairTile = $stairsBase + $heightOffset -1;
+        $dungeonOutputMap[($thisCaseStartX + $j) ][($thisCaseStartY + $k) ] = $thisStairTile; 
+      }
+      $heightOffset --;
     }
-      
-         $heightOffset --;
-       
-  }
-  
-  
   } else {
     $horizLength = $stairsWidth;
-  $vertLength = $thisCaseLength;
-  $stairsBase = 160;
-   $heightOffset = $thisCaseLength;
+    $vertLength = $thisCaseLength;
+    $stairsBase = 160;
+    $heightOffset = $thisCaseLength;
     for ($j = 0;$j < $horizLength;$j++) {
-    for ($k = 0;$k < $vertLength;$k++) {
-   $thisStairTile = $stairsBase + $heightOffset -1;
-        $dungeonOutputMap[($thisCaseStartX + $j) ][($thisCaseStartY + $k) ] = $thisStairTile;
-        
-         $heightOffset --;
-         
+      for ($k = 0;$k < $vertLength;$k++) {
+        $thisStairTile = $stairsBase + $heightOffset -1;
+        $dungeonOutputMap[($thisCaseStartX + $j) ][($thisCaseStartY - $k) ] = $thisStairTile;
+        $heightOffset --;
+      }
+      $heightOffset = $thisCaseLength;
     }
-      
-           $heightOffset = $thisCaseLength;
-         
   }
-  
-  
-  }
-  
-  
-  
-  
-  
-  
-  
-
 }
 
 
@@ -1557,19 +1541,16 @@ $doorsOut = array();
         $mapMode = "standard";
         if (rand(0, 4) == 0) {
             // is a feature map:
-            $whichFeature = rand(0,2);
+            $whichFeature = rand(0,4);
             switch ($whichFeature) {
               case 0:
               $mapMode = "template";
               break;
               case 1:
-              $mapMode = "stairs";
-              break;
-              case 2:
               $mapMode = "nest";
               break;
               default:
-              $mapMode = "standard";
+              $mapMode = "stairs";
             }
         }
         
@@ -1779,7 +1760,7 @@ if ($startDoorY == 0) {
    
         switch ($mapMode) {
             case "stairs":
-                // determine number of stairs rand(1,3) - determine position and length of each stair case. length should be modified by number of other stiar cases so more likely to get 1 long case or 3 shorter cases. tunnel routine modified to only tunnel over unassigned height tiles. tunnel from entrance to first stairs. height level must be calculated based on total length of all stair cases. flood fill this area (only adding neightbours if current != "#" so only tunnel edge # tiles get heights assigned. repeat and link remaining stairs - flood filling heights before going on to next.
+              
                 $numberOfStairs = rand(1, 3);
                 // give width appropriate to tunnel widths:
                 $stairsWidth = 3;
@@ -1815,7 +1796,7 @@ if ($startDoorY == 0) {
                             $horizLength = $thisCaseLength;
                             $vertLength = $stairsWidth;
                         } else {
-                            // north south stairs
+                            // north south stairs - it's the y value that's increasing for the array
                             $horizLength = $stairsWidth;
                             $vertLength = $thisCaseLength;
                         }
@@ -1841,11 +1822,11 @@ if ($startDoorY == 0) {
                             $exitPointY = $thisCaseStartY;
                         } else {
                             $exitPointX = $thisCaseStartX;
-                            $exitPointY = $thisCaseStartY + ($tunnelVertLength *2);
+                            $exitPointY = $thisCaseStartY - ($tunnelVertLength *2);
                         }
                         
                         
-                        
+                    //    echo "test: ".$thisCaseStartX.",".$thisCaseStartY." => ".$exitPointX.",".$exitPointY."<br/>";
                         
                         // tunnel from entrance to stair case tunnel:
                         $tunnelSuccess = false;
@@ -1940,6 +1921,11 @@ if ($startDoorY == 0) {
                         } while (!$tunnelSuccess);
                         break;
                     }
+                    
+                    
+                    
+                    
+                    
                     // draw stairs:
                     for ($i = 0;$i < count($allStairs);$i++) {
                         $thisCaseStartX = $allStairs[$i][0];
@@ -1950,31 +1936,29 @@ if ($startDoorY == 0) {
                         if ($caseRotation == 0) {
                             $horizLength = $thisCaseLength;
                             $vertLength = $stairsWidth;
-                          
-                           
-                          
-                           
                             
                         } else {
                             $horizLength = $stairsWidth;
                             $vertLength = $thisCaseLength;
                         
-                       
                         }
                         
+                         // tunnel away from both ends of the staircase in the same direction as the stairs to give the stairs more meaning:
                         drawStairEndTunnel($thisCaseStartX,$thisCaseStartY,$horizLength,$vertLength, $caseRotation);
                         
                         
                         for ($j = (0);$j < $horizLength;$j++) {
                             for ($k = (0);$k < $vertLength;$k++) {
-                                
+                                if ($caseRotation == 0) {
                                 $dungeonMap[($thisCaseStartX + $j) ][($thisCaseStartY + $k) ] = "s";
+                                } else {
+                                $dungeonMap[($thisCaseStartX + $j) ][($thisCaseStartY - $k) ] = "s";
+                                }
                             }
                         }
                         
                         
-                        
-                        // tunnel away from both ends of the staircase in the same direction as the stairs to give the stairs more meaning:
+                       
                         
                         
                         
