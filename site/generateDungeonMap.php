@@ -1985,28 +1985,30 @@ if ($startDoorY == 0) {
                         }
                         $lastCaseHeight = $thisCaseLength;
                     }
+                    
+                   
+                    
                     // assign height from end of last case to exit:
                     // (ignore the false that this will return as the exit should be reached here)
-                    floodFillHeight($exitCaseX, $exitCaseY, $totalStairsHeight - $lastCaseHeight);
+                   // floodFillHeight($exitCaseX, $exitCaseY, $totalStairsHeight - $lastCaseHeight);
                     $exitHeight = $totalStairsHeight - $lastCaseHeight;
                     // assign height to stairs - should all be the lowest height that the stairs touch
                     if ($caseRotation == 0) {
                         $horizLength = $thisCaseLength;
                         $vertLength = $stairsWidth;
-                        // start $i at 0 so the very top preserved walkable edge is the height of the upper section:
-                        for ($i = 0;$i < $horizLength + 1;$i++) {
-                            for ($j = - 1;$j < $vertLength + 1;$j++) {
+                        for ($i = 0;$i < $horizLength ;$i++) {
+                            for ($j = 0;$j < $vertLength ;$j++) {
                                 $heightMap[($thisCaseStartX + $i) ][($thisCaseStartY + $j) ] = $exitHeight;
-                                $heightMap[($thisCaseStartX + $i) ][($thisCaseStartY + $j) ] = $exitHeight;
+                             
                             }
                         }
                     } else {
                         $horizLength = $stairsWidth;
                         $vertLength = $thisCaseLength;
-                        for ($i = 0;$i < $vertLength + 1;$i++) {
-                            for ($j = - 1;$j < $horizLength + 1;$j++) {
-                                $heightMap[($thisCaseStartX + $j) ][($thisCaseStartY + $i) ] = $exitHeight;
-                                $heightMap[($thisCaseStartX + $j) ][($thisCaseStartY + $i) ] = $exitHeight;
+                        for ($i = 0;$i < $horizLength;$i++) {
+                            for ($j = 0;$j < $vertLength;$j++) {
+                                $heightMap[($thisCaseStartX + $i) ][($thisCaseStartY - $j) ] = $exitHeight;
+                                
                             }
                         }
                     }
