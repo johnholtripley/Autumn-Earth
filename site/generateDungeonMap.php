@@ -768,6 +768,11 @@ function floodFillHeight($startPointX, $startPointY, $heightToUse) {
             // add valid neighbours to the open list:
             $nodesPosition = explode("_", $thisNode);
             $heightMap[$nodesPosition[0]][$nodesPosition[1]] = $heightToUse;
+            
+            
+          if (($nodesPosition[0]>=0) && ($nodesPosition[1]>=0) && ($nodesPosition[0]<$mapMaxWidth) && ($nodesPosition[1]<$mapMaxHeight)) {
+            
+            
             // add neighbours if this is walkable:
             if (($dungeonMap[($nodesPosition[0]) ][($nodesPosition[1]) ] == ".") || ($dungeonMap[($nodesPosition[0]) ][($nodesPosition[1]) ] == ",")) {
                 if ($nodesPosition[0] >= 1) {
@@ -813,7 +818,51 @@ function floodFillHeight($startPointX, $startPointY, $heightToUse) {
                         }
                     }
                 }
-            }
+                
+                
+                
+                
+               if (($nodesPosition[0] >= 1) && ($nodesPosition[1] >= 1)) {
+                    if (!(in_array(($nodesPosition[0]-1) . "_" . ($nodesPosition[1] - 1), $closedList))) {
+                        if (!(in_array(($nodesPosition[0]-1) . "_" . ($nodesPosition[1] - 1), $openList))) {
+                            array_unshift($openList, ($nodesPosition[0]-1) . "_" . ($nodesPosition[1] - 1));
+                            
+                        }
+                    }
+                }
+                
+               if (($nodesPosition[0] >= 1) && ($nodesPosition[1] <= $mapMaxHeight - 2)) {
+                    if (!(in_array(($nodesPosition[0]-1) . "_" . ($nodesPosition[1] + 1), $closedList))) {
+                        if (!(in_array(($nodesPosition[0]-1) . "_" . ($nodesPosition[1] + 1), $openList))) {
+                            array_unshift($openList, ($nodesPosition[0]-1) . "_" . ($nodesPosition[1] + 1));
+                            
+                        }
+                    }
+                }
+                
+                 if (($nodesPosition[0] <= $mapMaxWidth - 2) && ($nodesPosition[1] >= 1)) {
+                    if (!(in_array(($nodesPosition[0]+1) . "_" . ($nodesPosition[1] + 1), $closedList))) {
+                        if (!(in_array(($nodesPosition[0]+1) . "_" . ($nodesPosition[1] + 1), $openList))) {
+                            array_unshift($openList, ($nodesPosition[0]+1) . "_" . ($nodesPosition[1] + 1));
+                            
+                        }
+                    }
+                }
+                
+                     if (($nodesPosition[0] <= $mapMaxWidth - 2) && ($nodesPosition[1] <= $mapMaxHeight - 2)) {
+                    if (!(in_array(($nodesPosition[0]+1) . "_" . ($nodesPosition[1] - 1), $closedList))) {
+                        if (!(in_array(($nodesPosition[0]+1) . "_" . ($nodesPosition[1] - 1), $openList))) {
+                            array_unshift($openList, ($nodesPosition[0]+1) . "_" . ($nodesPosition[1] - 1));
+                            
+                        }
+                    }
+                }
+                
+                
+                
+                
+           }
+           }
         } else {
             // run out of open tiles:
             $stillWorking = false;
@@ -989,7 +1038,7 @@ for ($i = 0;$i < count($allStairs);$i++) {
     $horizLength = $thisCaseLength;
     $vertLength = $stairsWidth;
     // this StairsBase is the corresponding first frame in the tile set in Flash for this direction of stairs:
-    $stairsBase = 380;
+    $stairsBase = 580;
     $heightOffset = $thisCaseLength;
     for ($j = 0;$j < $horizLength;$j++) {
       for ($k = 0;$k < $vertLength;$k++) {
@@ -1001,7 +1050,7 @@ for ($i = 0;$i < count($allStairs);$i++) {
   } else {
     $horizLength = $stairsWidth;
     $vertLength = $thisCaseLength;
-    $stairsBase = 360;
+    $stairsBase = 560;
     $heightOffset = $thisCaseLength;
     for ($j = 0;$j < $horizLength;$j++) {
       for ($k = 0;$k < $vertLength;$k++) {
@@ -1029,7 +1078,7 @@ for ($k = 0; $k<2; $k++) {
   for ($i = 0;$i < $mapMaxWidth;$i++) {
   for ($j = 0;$j < $mapMaxHeight;$j++) {
   // if it's a nonwalkable tile, not a stairs tile or a blanked tile:
-  if (($dungeonOutputMap[$i][$j] >= 100) && ($dungeonOutputMap[$i][$j] < 360)) {
+  if (($dungeonOutputMap[$i][$j] >= 100) && ($dungeonOutputMap[$i][$j] < 560)) {
   $thisAverageCount = 0;
   $thisAverageTotal = 0;
   checkAverageNeighbours($i-1,$j,$dungeonOutputMap[$i][$j]);
@@ -1060,9 +1109,8 @@ for ($k = 0; $k<2; $k++) {
 
 
 // check height map and raise levels appropriately:
-// first tile is on frame 400, but height of '1' will need to be tile 200:
-$raisedBase = 399;
-
+// first tile is on frame 600, but height of '1' will need to be tile 600:
+$raisedBase = 599;
 
  for ($i = 0;$i < $mapMaxWidth;$i++) {
     for ($j = 0;$j < $mapMaxHeight;$j++) {
@@ -1071,9 +1119,14 @@ $raisedBase = 399;
      // is walkable - add height if required:
      if($heightMap[$i][$j]>0) {
      $dungeonOutputMap[$i][$j] = $heightMap[$i][$j]+$raisedBase;
-     
      }
      
+     } else if (($dungeonOutputMap[$i][$j] >= 100) && ($dungeonOutputMap[$i][$j] < 560)) {
+     // is a wall tile, raise these up as well:
+     if($heightMap[$i][$j]>0) {
+     $dungeonOutputMap[$i][$j] += ($heightMap[$i][$j]*30);
+     }
+    
      }
 
       
