@@ -989,7 +989,7 @@ for ($i = 0;$i < count($allStairs);$i++) {
     $horizLength = $thisCaseLength;
     $vertLength = $stairsWidth;
     // this StairsBase is the corresponding first frame in the tile set in Flash for this direction of stairs:
-    $stairsBase = 180;
+    $stairsBase = 380;
     $heightOffset = $thisCaseLength;
     for ($j = 0;$j < $horizLength;$j++) {
       for ($k = 0;$k < $vertLength;$k++) {
@@ -1001,7 +1001,7 @@ for ($i = 0;$i < count($allStairs);$i++) {
   } else {
     $horizLength = $stairsWidth;
     $vertLength = $thisCaseLength;
-    $stairsBase = 160;
+    $stairsBase = 360;
     $heightOffset = $thisCaseLength;
     for ($j = 0;$j < $horizLength;$j++) {
       for ($k = 0;$k < $vertLength;$k++) {
@@ -1029,7 +1029,7 @@ for ($k = 0; $k<2; $k++) {
   for ($i = 0;$i < $mapMaxWidth;$i++) {
   for ($j = 0;$j < $mapMaxHeight;$j++) {
   // if it's a nonwalkable tile, not a stairs tile or a blanked tile:
-  if (($dungeonOutputMap[$i][$j] >= 100) && ($dungeonOutputMap[$i][$j] < 160)) {
+  if (($dungeonOutputMap[$i][$j] >= 100) && ($dungeonOutputMap[$i][$j] < 360)) {
   $thisAverageCount = 0;
   $thisAverageTotal = 0;
   checkAverageNeighbours($i-1,$j,$dungeonOutputMap[$i][$j]);
@@ -1060,8 +1060,8 @@ for ($k = 0; $k<2; $k++) {
 
 
 // check height map and raise levels appropriately:
-// first tile is on frame 200, but height of '1' will need to be tile 200:
-$raisedBase = 199;
+// first tile is on frame 400, but height of '1' will need to be tile 200:
+$raisedBase = 399;
 
 
  for ($i = 0;$i < $mapMaxWidth;$i++) {
@@ -1124,9 +1124,7 @@ $outputString .= "</row>\n";
    $itemHeight = 24*$heightMap[$i][$j];
    
    
-   
-   // testing ############################
-      $itemHeight = 72;
+
    
    }
    $outputString .= "<item>".$i.",".$j.",".$itemMap[$i][$j].",1,".$itemHeight.",0</item>";
@@ -1283,7 +1281,7 @@ function checkAverageNeighbours($tileCheckX,$tileCheckY,$currentTileValue) {
             $thisAverageCount++;
               $thisAverageTotal += $currentTileValue;    
             }
-           } else if($dungeonOutputMap[$tileCheckX][$tileCheckY] < 160) {
+           } else if($dungeonOutputMap[$tileCheckX][$tileCheckY] < 360) {
            // ...and it's not a stairs or elevated tile:
               $thisAverageCount++;
               $thisAverageTotal += $dungeonOutputMap[$tileCheckX][$tileCheckY]; 
