@@ -6,9 +6,10 @@
 
 // TO DO
 
-// determine why always pointing down to SE (caseRotation = 1 stairs are the wrong way around?)
 
-// hero needs to start at correct height - this means when a height map is created, that it opens the map that leads to it and alters the door height
+
+// hero needs to start at correct height - scrollclip jumps vertically to correct position on first keypress. also hero 'jumps' up to correct height once tiles exist. be better to not start transition out of faded black until hero is correctly placed.
+// going down a long stair case, the _y offset of scrollclip goes out of sync - presumably the offset isn't in propoertion to the new height of the stairs. might need to be a multiple of distance travelled across tile multiplied to height of new tiles (*24)
 // tunnels shouldn't go through stairs
 // bug - can get untraversable maps where a tunnel goes back through a staircase
 // the pathfinding check to see if the map is traversable needs to look at height differences as well
@@ -1211,18 +1212,12 @@ $doorsOut = array_values($doorsOut);
       }
     } else {
     // write door positions implied from what was passed from flash:
-    
-    
-    
-    
-  
-  for ($doorLoop=0; $doorLoop<count($doorsIn); $doorLoop++) {
+      for ($doorLoop=0; $doorLoop<count($doorsIn); $doorLoop++) {
 
       $outputString .= "<door>";
       $outputString .= $thisOriginatingMapId.",";
       $outputString .= $doorsIn[$doorLoop].",";
-      
-      
+
       $doorArray = explode(",",$doorsIn[$doorLoop]);
       $doorX = $doorArray[0];
       $doorY = $doorArray[1];
@@ -1243,6 +1238,7 @@ $doorsOut = array_values($doorsOut);
       $outputStartDoorY = 1;
       }
       
+      // doors back to a previous level will start the hero at height level 0:
       $outputString .= $outputStartDoorX.",".$outputStartDoorY.",0";
       
       $outputString .= "</door>";
@@ -1289,8 +1285,8 @@ $newStartDoorY = 1;
 
 
 
-
-      $outputString .= $newStartDoorX.",".$newStartDoorY.",0";
+// don't know what the start height on the next map will be yet:
+      $outputString .= $newStartDoorX.",".$newStartDoorY.",-1";
       
       
       $outputString .= "</door>";
@@ -1823,25 +1819,15 @@ if ($startDoorY == 0) {
                 
                 // testing ###############
                  $numberOfStairs = 1;
-                 $caseRotation = 1;
+           
                 
                 
                 switch ($numberOfStairs) {
                     case 1:
                         // can be placed anywhere within safe zone (at least 6 tiles away from edge)
                         $thisCaseLength = rand(3, floor(12 / $numberOfStairs));
-                        
-                        
-                        
-                        
-                        
-                        // testing ###############
-                 $thisCaseLength = 3;
-                        
-                        
-                        
-                       
-                        
+                    
+           
                         if ($caseRotation == 0) {
                             // east west stairs
                             $horizLength = $thisCaseLength;
