@@ -7,8 +7,6 @@
 // TO DO
 
 
-
-// hero needs to start at correct height - scrollclip jumps vertically to correct position on first keypress. also hero 'jumps' up to correct height once tiles exist. be better to not start transition out of faded black until hero is correctly placed.
 // going down a long stair case, the _y offset of scrollclip goes out of sync - presumably the offset isn't in propoertion to the new height of the stairs. might need to be a multiple of distance travelled across tile multiplied to height of new tiles (*24)
 // tunnels shouldn't go through stairs
 // bug - can get untraversable maps where a tunnel goes back through a staircase
@@ -875,7 +873,7 @@ function floodFillHeight($startPointX, $startPointY, $heightToUse) {
 }
 
 function outputDungeon() {
-  global $dungeonMap, $dungeonOutputMap, $heightMap, $itemMap, $mapMaxHeight, $mapMaxWidth, $thisDungeonsName, $thisMapsId, $thisPlayersId, $thisAverageCount, $thisAverageTotal, $doorsOut, $doorsIn, $dungeonDetails, $thisOriginatingMapId, $outputMode, $allStairs, $stairsWidth;
+  global $dungeonMap, $dungeonOutputMap, $heightMap, $itemMap, $mapMaxHeight, $mapMaxWidth, $thisDungeonsName, $thisMapsId, $thisPlayersId, $thisAverageCount, $thisAverageTotal, $doorsOut, $doorsIn, $dungeonDetails, $thisOriginatingMapId, $outputMode, $allStairs, $stairsWidth, $entranceHeight, $tileHeight;
 
 
   if ($outputMode == "test") {
@@ -1137,7 +1135,7 @@ $raisedBase = 599;
 
 
 // create string so it can be output immediately for Flash to read, and then saved for later recall
-$outputString = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><map mname=\"".str_ireplace("-"," ",$thisDungeonsName)."\" inside=\"f\">\n";
+$outputString = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><map mname=\"".str_ireplace("-"," ",$thisDungeonsName)."\" inside=\"f\" maxheight=\"".($entranceHeight*$tileHeight)."\">\n";
  
 for ($i = 0;$i < $mapMaxWidth;$i++) {
 $outputString .= "<row>";
@@ -1175,7 +1173,7 @@ $outputString .= "</row>\n";
    if($itemMap[$i][$j] != "") {
    $itemHeight = 0;
    if($heightMap[$i][$j]>0) {
-   $itemHeight = 24*$heightMap[$i][$j];
+   $itemHeight = $tileHeight*$heightMap[$i][$j];
    
    
 
@@ -1525,7 +1523,7 @@ function placeItems() {
 }
 
 function createNewDungeonMap($mapID) {
-    global $dungeonMap, $itemMap, $tunnelMaxLength, $mapMaxWidth, $mapMaxHeight, $inX, $inY, $outX, $outY, $templateRows, $exitDoorX, $exitDoorY, $heightMap, $entranceHeight, $exitHeight, $debugMode, $dungeonDetails, $doorsIn, $doorsOut, $connectingDoorX, $connectingDoorY, $dungeonDetails, $thisDungeonsName, $thisMapsId, $outputMode, $allStairs;
+    global $dungeonMap, $itemMap, $tunnelMaxLength, $mapMaxWidth, $mapMaxHeight, $inX, $inY, $outX, $outY, $templateRows, $exitDoorX, $exitDoorY, $heightMap, $entranceHeight, $exitHeight, $debugMode, $dungeonDetails, $doorsIn, $doorsOut, $connectingDoorX, $connectingDoorY, $dungeonDetails, $thisDungeonsName, $thisMapsId, $outputMode, $allStairs, $tileHeight;
     $outputMode = "xml";
   if(isset($_GET["outputMode"])) {
   $outputMode = $_GET["outputMode"];
@@ -1546,6 +1544,8 @@ if (isset($_GET["connectingDoorX"])) {
    $connectingDoorX = $_GET["connectingDoorX"];
    $connectingDoorY = $_GET["connectingDoorY"];
 }
+
+$tileHeight = 24;
      
      
      session_start();
@@ -1826,6 +1826,8 @@ if ($startDoorY == 0) {
                     case 1:
                         // can be placed anywhere within safe zone (at least 6 tiles away from edge)
                         $thisCaseLength = rand(3, floor(12 / $numberOfStairs));
+                    
+                    
                     
            
                         if ($caseRotation == 0) {
