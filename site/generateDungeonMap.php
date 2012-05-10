@@ -7,7 +7,6 @@
 // TO DO
 
 
-// going down a long stair case, the _y offset of scrollclip goes out of sync - presumably the offset isn't in propoertion to the new height of the stairs. might need to be a multiple of distance travelled across tile multiplied to height of new tiles (*24)
 // tunnels shouldn't go through stairs
 // bug - can get untraversable maps where a tunnel goes back through a staircase
 // the pathfinding check to see if the map is traversable needs to look at height differences as well
