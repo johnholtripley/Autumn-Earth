@@ -32,7 +32,7 @@
 
 // caves could branch if coordinates for each map are saved and checked against before determining exit doors - just to ensure that the maps don't intersect incorrectly
 
-
+// templates might need to double up on details so that the first part indicates walkable or not (just '#' or '.') and then the second has the final tile numbers (so different decorative tiles can be used)
 
 
 
@@ -1616,8 +1616,7 @@ $doorsOut = array();
         }
         
         
-        // testing #############################
-        $mapMode = "stairs";
+       
   
            
         $turning = 0;
