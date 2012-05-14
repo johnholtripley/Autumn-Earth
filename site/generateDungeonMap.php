@@ -1823,7 +1823,7 @@ if ($startDoorY == 0) {
                 switch ($numberOfStairs) {
                     case 1:
                         // can be placed anywhere within safe zone (at least 6 tiles away from edge)
-                        $thisCaseLength = rand(3, floor(12 / $numberOfStairs));
+                        $thisCaseLength = rand(3,8);
                     
                     
                     
