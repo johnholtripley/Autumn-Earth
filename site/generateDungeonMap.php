@@ -12,7 +12,7 @@
 // the pathfinding check to see if the map is traversable needs to look at height differences as well
 
 
-
+// add chests
 
 
 
@@ -1133,6 +1133,20 @@ $raisedBase = 599;
 
 
 
+   for ($i = 0;$i < $mapMaxWidth;$i++) {
+    for ($j = 0;$j < $mapMaxHeight;$j++) {
+               if($dungeonOutputMap[$i][$j] == "2") {
+               // randomly mix up the walkable tiles:
+               if(rand(0,6)==0) {
+               $dungeonOutputMap[$i][$j] = rand(3,7);
+               }
+               }
+                }
+                }
+
+
+
+
 // create string so it can be output immediately for Flash to read, and then saved for later recall
 $outputString = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><map mname=\"".str_ireplace("-"," ",$thisDungeonsName)."\" inside=\"f\" maxheight=\"".($entranceHeight*$tileHeight)."\">\n";
  
@@ -1585,19 +1599,20 @@ $doorsOut = array();
         $exitHeight = "*";
         // determine what type of map this will be:
         $mapMode = "standard";
-        if (rand(0, 4) == 0) {
+        if (rand(0, 2) == 0) {
             // is a feature map:
-            $whichFeature = rand(0,4);
-            switch ($whichFeature) {
-              case 0:
-              $mapMode = "template";
-              break;
-              case 1:
-              $mapMode = "nest";
-              break;
-              default:
-              $mapMode = "stairs";
+            $whichFeature = rand(0,6);
+            
+            
+            if($whichFeature==0) {
+            $mapMode = "template";
+            } else if ($whichFeature<4) {
+            $mapMode = "nest";
+            } else {
+            $mapMode = "stairs";
             }
+            
+     
         }
         
         
