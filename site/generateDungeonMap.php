@@ -1206,14 +1206,22 @@ $outputString .= "</row>\n";
   $chestContents .= $thisItemType.".".$thisQuantity.".4.100.4.-1.0.0.0.0.-|";
    }
    for ($k = $numberOfItems;$k < $chestSize;$k++) {
-   // fill with empty slots:
+   // fill remainder with empty slots:
   $chestContents .= "1.0.0.0.0.0.0.0.0.0.-|";
    }
    
    // remove final "|":
    $chestContents = substr($chestContents, 0, -1);
- 
-   $outputString .= "<item>".$i.",".$j.",".$itemMap[$i][$j].",1,".$itemHeight.",".$chestContents."</item>";
+   
+   // determine this chest's facing:
+ $thisFacing = "1";
+//john   
+$tileSouthIsWalkable = isEmptyTile($i,$j+1);
+ $tileNorthIsWalkable = isEmptyTile($i,$j-1);  
+ $tileEastIsWalkable = isEmptyTile($i+1,$j);  
+ $tileWestIsWalkable = isEmptyTile($i-1,$j);  
+   
+   $outputString .= "<item>".$i.",".$j.",".$itemMap[$i][$j].",".$thisFacing.",".$itemHeight.",".$chestContents."</item>";
    } else {
    $outputString .= "<item>".$i.",".$j.",".$itemMap[$i][$j].",1,".$itemHeight.",0</item>";
    }
@@ -1349,6 +1357,25 @@ echo $outputString;
 
 
 
+}
+
+function isEmptyTile($tileCheckX,$tileCheckY) {
+  global $dungeonOutputMap, $mapMaxHeight, $mapMaxWidth, $itemMap;
+  if($tileCheckX>=0) {
+    if($tileCheckY>=0) {
+      if($tileCheckX<$mapMaxWidth) {
+      if($tileCheckY<$mapMaxHeight) { 
+        if($dungeonOutputMap[$tileCheckX][$tileCheckY] < 100) {
+          // is walkable tile
+          if($itemMap[$tileCheckX][$tileCheckY] =="") {
+            return true;
+          }
+        }
+      }
+      }
+    }
+  }
+  return false;
 }
 
 function checkAverageNeighbours($tileCheckX,$tileCheckY,$currentTileValue) {
