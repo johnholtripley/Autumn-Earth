@@ -12,7 +12,7 @@
 // the pathfinding check to see if the map is traversable needs to look at height differences as well
 
 
-// add chests
+// sort out facing for chests
 
 
 
@@ -872,7 +872,7 @@ function floodFillHeight($startPointX, $startPointY, $heightToUse) {
 }
 
 function outputDungeon() {
-  global $dungeonMap, $dungeonOutputMap, $heightMap, $itemMap, $mapMaxHeight, $mapMaxWidth, $thisDungeonsName, $thisMapsId, $thisPlayersId, $thisAverageCount, $thisAverageTotal, $doorsOut, $doorsIn, $dungeonDetails, $thisOriginatingMapId, $outputMode, $allStairs, $stairsWidth, $entranceHeight, $tileHeight;
+  global $dungeonMap, $dungeonOutputMap, $heightMap, $itemMap, $mapMaxHeight, $mapMaxWidth, $thisDungeonsName, $thisMapsId, $thisPlayersId, $thisAverageCount, $thisAverageTotal, $doorsOut, $doorsIn, $dungeonDetails, $thisOriginatingMapId, $outputMode, $allStairs, $stairsWidth, $entranceHeight, $tileHeight, $itemsAvailable;
 
 
   if ($outputMode == "test") {
@@ -1192,7 +1192,31 @@ $outputString .= "</row>\n";
 
    
    }
+   if($itemMap[$i][$j] == "22") {
+   // it's a chest - build contents:
+   $chestSize = rand(1,4);
+   $numberOfItems = rand(1,$chestSize);
+   $chestContents = "";
+   for ($k = 0;$k < $numberOfItems;$k++) {
+   $thisQuantity = rand(1,3);
+   do {
+   // pick a random type from this dungeon's possible items - as long as it's not another chest:
+        $thisItemType = $itemsAvailable[(rand(0,count($itemsAvailable)-1))];
+   } while ($thisItemType=="22");
+  $chestContents .= $thisItemType.".".$thisQuantity.".4.100.4.-1.0.0.0.0.-|";
+   }
+   for ($k = $numberOfItems;$k < $chestSize;$k++) {
+   // fill with empty slots:
+  $chestContents .= "1.0.0.0.0.0.0.0.0.0.-|";
+   }
+   
+   // remove final "|":
+   $chestContents = substr($chestContents, 0, -1);
+ 
+   $outputString .= "<item>".$i.",".$j.",".$itemMap[$i][$j].",1,".$itemHeight.",".$chestContents."</item>";
+   } else {
    $outputString .= "<item>".$i.",".$j.",".$itemMap[$i][$j].",1,".$itemHeight.",0</item>";
+   }
    }
     }
     }
@@ -1404,7 +1428,7 @@ function tileIsSurrounded($tileCheckX,$tileCheckY) {
 
 function placeItems() {
 
-  global $dungeonMap, $itemMap, $mapMaxHeight, $mapMaxWidth, $savedWalkableAreas, $startTime, $dungeonDetails, $thisDungeonsName;
+  global $dungeonMap, $itemMap, $mapMaxHeight, $mapMaxWidth, $savedWalkableAreas, $startTime, $dungeonDetails, $thisDungeonsName, $itemsAvailable;
  
 
    
@@ -1548,7 +1572,7 @@ $dungeonDetails = array(
 array("25","35"),
 array("16,20","17,20","18,20"),
 array(1,1,2,2,3,4,5,6,7,8,9),
-array("6","6","6","6","2","2","3","3","4","5")
+array("6","6","6","6","2","2","3","3","4","5","22")
 )
 );
 
