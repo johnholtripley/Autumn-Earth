@@ -1214,6 +1214,7 @@ $outputString .= "</row>\n";
    $chestContents = substr($chestContents, 0, -1);
    
    // determine this chest's facing:
+   // (facing - 1 = towards SW, 2 = towards SE, 3 = towards NE, 4 = towards NW)
  $thisFacing = "1";
 //john   
 $tileSouthIsWalkable = isEmptyTile($i,$j+1);
@@ -1599,7 +1600,8 @@ $dungeonDetails = array(
 array("25","35"),
 array("16,20","17,20","18,20"),
 array(1,1,2,2,3,4,5,6,7,8,9),
-array("6","6","6","6","2","2","3","3","4","5","22")
+//array("6","6","6","6","2","2","3","3","4","5","22")
+array("6","22")
 )
 );
 
