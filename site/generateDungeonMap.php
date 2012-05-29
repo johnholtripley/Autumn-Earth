@@ -12,7 +12,6 @@
 // the pathfinding check to see if the map is traversable needs to look at height differences as well
 
 
-// sort out facing for chests
 
 // treasure maps for deeper levels (need to create map ahead of time, then ensure new maps check to see if the next deeper exists, if it does, then get entrance doors and make their own exit doors match to that. treasure map levels won't turn as won't know which direction previous maps had taken)
 
@@ -1216,7 +1215,7 @@ $outputString .= "</row>\n";
    // determine this chest's facing:
    // (facing - 1 = towards SW, 2 = towards SE, 3 = towards NE, 4 = towards NW)
  $thisFacing = "1";
-//john   
+
 $tileSouthIsWalkable = isEmptyTile($i,$j+1);
  $tileNorthIsWalkable = isEmptyTile($i,$j-1);  
  $tileEastIsWalkable = isEmptyTile($i+1,$j);  
@@ -1224,30 +1223,34 @@ $tileSouthIsWalkable = isEmptyTile($i,$j+1);
  
  
  
-if ((!$tileNorthIsWalkable) && (!$tileWestIsWalkable)) {
-  if(!($tileSouthIsWalkable)) {
-    $thisFacing = "1";
-  } else {
-    $thisFacing = "2";
-  }
-} else if ((!$tileSouthIsWalkable) && (!$tileWestIsWalkable)) {
-  if(!($tileEastIsWalkable)) {
-    $thisFacing = "3";
-  } else {
-    $thisFacing = "1";
-  }
-} else if ((!$tileSouthIsWalkable) && (!$tileEastIsWalkable)) {
-  if(!($tileNorthIsWalkable)) {
-    $thisFacing = "3";
-  } else {
-    $thisFacing = "4";
-  }
-} else if ((!$tileNorthIsWalkable) && (!$tileEastIsWalkable)) {
-  if(!($tileWestIsWalkable)) {
-    $thisFacing = "2";
-  } else {
-    $thisFacing = "3";
-  }
+if (!$tileNorthIsWalkable) {
+  if (!$tileWestIsWalkable) {
+    if ($tileSouthIsWalkable) {
+      $thisFacing = "1";
+    } else {
+      $thisFacing = "2";
+    }
+  } else if (!$tileEastIsWalkable) {
+    if ($tileWestIsWalkable) {
+      $thisFacing = "4";
+    } else {
+      $thisFacing = "1";
+    }
+  } 
+} else if (!$tileSouthIsWalkable) {
+  if (!$tileWestIsWalkable) {
+    if ($tileEastIsWalkable) {
+      $thisFacing = "2";
+    } else {
+      $thisFacing = "1";
+    }
+  } else if (!$tileEastIsWalkable) {
+    if ($tileNorthIsWalkable) {
+      $thisFacing = "1";
+    } else {
+      $thisFacing = "4";
+    }
+  } 
 }
  
   
@@ -1495,8 +1498,7 @@ function placeItems() {
    
   $numberOfItems = $itemChance[(rand(0,count($itemChance)-1))];
   
-  // testing -----------------------------------------
-  $numberOfItems = 30;
+
   
   
   
@@ -1633,8 +1635,7 @@ $dungeonDetails = array(
 array("25","35"),
 array("16,20","17,20","18,20"),
 array(1,1,2,2,3,4,5,6,7,8,9),
-//array("6","6","6","6","2","2","3","3","4","5","22")
-array("6","22")
+array("6","6","6","6","2","2","3","3","4","5","22")
 )
 );
 
