@@ -14,7 +14,7 @@
 
 // sort out facing for chests
 
-
+// treasure maps for deeper levels (need to create map ahead of time, then ensure new maps check to see if the next deeper exists, if it does, then get entrance doors and make their own exit doors match to that. treasure map levels won't turn as won't know which direction previous maps had taken)
 
 // refine the height determination of walls to be clearer and not obstruct view as much:
 // - if the tile is walkable, then it shouldn't take account of tiles that will be blanked out, but if it's going to be wall tile, then it should take account of these when averaging
@@ -1220,7 +1220,37 @@ $outputString .= "</row>\n";
 $tileSouthIsWalkable = isEmptyTile($i,$j+1);
  $tileNorthIsWalkable = isEmptyTile($i,$j-1);  
  $tileEastIsWalkable = isEmptyTile($i+1,$j);  
- $tileWestIsWalkable = isEmptyTile($i-1,$j);  
+ $tileWestIsWalkable = isEmptyTile($i-1,$j); 
+ 
+ 
+ 
+if ((!$tileNorthIsWalkable) && (!$tileWestIsWalkable)) {
+  if(!($tileSouthIsWalkable)) {
+    $thisFacing = "1";
+  } else {
+    $thisFacing = "2";
+  }
+} else if ((!$tileSouthIsWalkable) && (!$tileWestIsWalkable)) {
+  if(!($tileEastIsWalkable)) {
+    $thisFacing = "3";
+  } else {
+    $thisFacing = "1";
+  }
+} else if ((!$tileSouthIsWalkable) && (!$tileEastIsWalkable)) {
+  if(!($tileNorthIsWalkable)) {
+    $thisFacing = "3";
+  } else {
+    $thisFacing = "4";
+  }
+} else if ((!$tileNorthIsWalkable) && (!$tileEastIsWalkable)) {
+  if(!($tileWestIsWalkable)) {
+    $thisFacing = "2";
+  } else {
+    $thisFacing = "3";
+  }
+}
+ 
+  
    
    $outputString .= "<item>".$i.",".$j.",".$itemMap[$i][$j].",".$thisFacing.",".$itemHeight.",".$chestContents."</item>";
    } else {
@@ -1464,6 +1494,9 @@ function placeItems() {
    $itemsAvailable = $dungeonDetails[$thisDungeonsName][4];
    
   $numberOfItems = $itemChance[(rand(0,count($itemChance)-1))];
+  
+  // testing -----------------------------------------
+  $numberOfItems = 30;
   
   
   
