@@ -1256,6 +1256,11 @@ if (!$tileNorthIsWalkable) {
   
    
    $outputString .= "<item>".$i.",".$j.",".$itemMap[$i][$j].",".$thisFacing.",".$itemHeight.",".$chestContents."</item>";
+   } else if($itemMap[$i][$j] == "35") {
+   
+   // it's a treasure map:
+   // ["35", "1", "4", "100", "4", "-1", "0", "1|12|14", "0", "0", "-"]
+   $outputString .= "<item>".$i.",".$j.",35,1,".$itemHeight.",35.1.4.100.4.-1.0.1|7|22.0.0.0</item>";
    } else {
    $outputString .= "<item>".$i.",".$j.",".$itemMap[$i][$j].",1,".$itemHeight.",0</item>";
    }
@@ -1635,7 +1640,8 @@ $dungeonDetails = array(
 array("25","35"),
 array("16,20","17,20","18,20"),
 array(1,1,2,2,3,4,5,6,7,8,9),
-array("6","6","6","6","2","2","3","3","4","5","22")
+//array("6","6","6","6","2","2","3","3","4","5","22","35")
+array("35")
 )
 );
 
