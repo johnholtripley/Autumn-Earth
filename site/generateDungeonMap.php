@@ -15,6 +15,12 @@
 
 // treasure maps for deeper levels (need to create map ahead of time, then ensure new maps check to see if the next deeper exists, if it does, then get entrance doors and make their own exit doors match to that. treasure map levels won't turn as won't know which direction previous maps had taken)
 
+// need a system so that any maps that still have undisocvered treasure in them aren't deleted when the player leaves the dungeon
+
+// get treasure maps placed in chests to work
+
+// restrict 1 treasure map maximum per map
+
 // refine the height determination of walls to be clearer and not obstruct view as much:
 // - if the tile is walkable, then it shouldn't take account of tiles that will be blanked out, but if it's going to be wall tile, then it should take account of these when averaging
 // loop through and set outputdungeonmap to have the blanked tiles so xml and the averaging function don't repeat the same tests
@@ -98,6 +104,7 @@ if ($clearOldMaps) {
     if ($thisDirectory = opendir($dir)) {
       while (($file = readdir($thisDirectory)) !== false) {
       if(is_file($dir."/".$file)) {
+      // don't delete any maps that have undiscovered treasure still on ###########################
         unlink($dir."/".$file);
       }
     }
@@ -1259,8 +1266,12 @@ if (!$tileNorthIsWalkable) {
    } else if($itemMap[$i][$j] == "35") {
    
    // it's a treasure map:
-   // ["35", "1", "4", "100", "4", "-1", "0", "1|12|14", "0", "0", "-"]
-   $outputString .= "<item>".$i.",".$j.",35,1,".$itemHeight.",35.1.4.100.4.-1.0.1|7|22.0.0.0</item>";
+   $thisTreasureLocation="1|7|22";
+   // dungeon id (randomDungeons array in Flash - this is found with $dungeonDetails[$thisDungeonsName][5]), map level, tile x, tile y
+   // in format:
+   // 1*15|x|y so that it splits on | as conventional treasure maps do
+   // detect indexOf("*") in element [0] to know if it's a random map
+   $outputString .= "<item>".$i.",".$j.",35,1,".$itemHeight.",35.1.4.100.4.-1.0.".$thisTreasureLocation.".0.0.0</item>";
    } else {
    $outputString .= "<item>".$i.",".$j.",".$itemMap[$i][$j].",1,".$itemHeight.",0</item>";
    }
@@ -1633,7 +1644,7 @@ function createNewDungeonMap($mapID) {
   if(isset($_GET["outputMode"])) {
   $outputMode = $_GET["outputMode"];
   }
-    // set up exit doors from each dungeon to the originating map: [destination map number][centre entrance door x and y][tile x and y when leaving dungeon][item frequency][items available]
+    // set up exit doors from each dungeon to the originating map: [destination map number][centre entrance door x and y][tile x and y when leaving dungeon][item frequency][items available][index for this dungeon in Flash's randomDungeons array] 
 $dungeonDetails = array(
 'the-barrow-mines' => array(
 "1",
@@ -1641,9 +1652,11 @@ array("25","35"),
 array("16,20","17,20","18,20"),
 array(1,1,2,2,3,4,5,6,7,8,9),
 //array("6","6","6","6","2","2","3","3","4","5","22","35")
-array("35")
+array("35"),
+"1"
 )
 );
+
 
 
 if (isset($_GET["connectingDoorX"])) {
