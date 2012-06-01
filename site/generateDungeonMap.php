@@ -86,7 +86,10 @@ if(isset($_GET["clearMaps"])) {
 }
 
 
-
+$isTreasureMap = false;
+if(isset($_GET["isTreasureMap"])) {
+  $isTreasureMap = true;
+}
 
 $debugMode = false;
 if(isset($_GET["debug"])) {
@@ -1266,11 +1269,10 @@ if (!$tileNorthIsWalkable) {
    } else if($itemMap[$i][$j] == "35") {
    
    // it's a treasure map:
-   $thisTreasureLocation="1|7|22";
    // dungeon id (randomDungeons array in Flash - this is found with $dungeonDetails[$thisDungeonsName][5]), map level, tile x, tile y
-   // in format:
-   // 1*15|x|y so that it splits on | as conventional treasure maps do
-   // detect indexOf("*") in element [0] to know if it's a random map
+   // in format: 1R15|x|y so that it splits on | as conventional treasure maps do
+   $thisTreasureLocation=$dungeonDetails[$thisDungeonsName][5]."R1|7|21";
+   
    $outputString .= "<item>".$i.",".$j.",35,1,".$itemHeight.",35.1.4.100.4.-1.0.".$thisTreasureLocation.".0.0.0</item>";
    } else {
    $outputString .= "<item>".$i.",".$j.",".$itemMap[$i][$j].",1,".$itemHeight.",0</item>";
