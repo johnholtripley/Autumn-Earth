@@ -1271,7 +1271,7 @@ if (!$tileNorthIsWalkable) {
    // it's a treasure map:
    // dungeon id (randomDungeons array in Flash - this is found with $dungeonDetails[$thisDungeonsName][5]), map level, tile x, tile y
    // in format: 1R15|x|y so that it splits on | as conventional treasure maps do
-   $thisTreasureLocation=$dungeonDetails[$thisDungeonsName][5]."R1|25|32";
+   $thisTreasureLocation=$dungeonDetails[$thisDungeonsName][5]."R1|24|31";
    
    $outputString .= "<item>".$i.",".$j.",35,1,".$itemHeight.",35.1.4.100.4.-1.0.".$thisTreasureLocation.".0.0.0</item>";
    } else {
