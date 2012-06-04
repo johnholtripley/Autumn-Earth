@@ -19,7 +19,7 @@
 
 // get treasure maps placed in chests to work
 
-// restrict 1 treasure map maximum per map
+
 
 // refine the height determination of walls to be clearer and not obstruct view as much:
 // - if the tile is walkable, then it shouldn't take account of tiles that will be blanked out, but if it's going to be wall tile, then it should take account of these when averaging
@@ -1188,7 +1188,7 @@ $outputString .= "</row>\n";
     // re do loop for items:
 
 
-
+$hasPlacedATreasureMap = false;
 
     for ($i = 0;$i < $mapMaxWidth;$i++) {
     for ($j = 0;$j < $mapMaxHeight;$j++) {
@@ -1211,8 +1211,15 @@ $outputString .= "</row>\n";
    do {
    // pick a random type from this dungeon's possible items - as long as it's not another chest:
         $thisItemType = $itemsAvailable[(rand(0,count($itemsAvailable)-1))];
-   } while ($thisItemType=="22");
+   } while (($thisItemType=="22") || (($thisItemType=="35") && $hasPlacedATreasureMap));
+  
+  if($thisItemType=="35") {
+  $hasPlacedATreasureMap = true;
+  $thisQuantity = 1;
+  }
+  
   $chestContents .= $thisItemType.".".$thisQuantity.".4.100.4.-1.0.0.0.0.-|";
+  
    }
    for ($k = $numberOfItems;$k < $chestSize;$k++) {
    // fill remainder with empty slots:
@@ -1267,13 +1274,24 @@ if (!$tileNorthIsWalkable) {
    
    $outputString .= "<item>".$i.",".$j.",".$itemMap[$i][$j].",".$thisFacing.",".$itemHeight.",".$chestContents."</item>";
    } else if($itemMap[$i][$j] == "35") {
-   
+   if(!$hasPlacedATreasureMap) {
    // it's a treasure map:
    // dungeon id (randomDungeons array in Flash - this is found with $dungeonDetails[$thisDungeonsName][5]), map level, tile x, tile y
    // in format: 1R15|x|y so that it splits on | as conventional treasure maps do
    $thisTreasureLocation=$dungeonDetails[$thisDungeonsName][5]."R1|24|31";
-   
    $outputString .= "<item>".$i.",".$j.",35,1,".$itemHeight.",35.1.4.100.4.-1.0.".$thisTreasureLocation.".0.0.0</item>";
+   $hasPlacedATreasureMap = true;
+   } else {
+   // choose another item type:
+      do {
+  // while not a chest or treasure map:
+        $thisItemType = $itemsAvailable[(rand(0,count($itemsAvailable)-1))];
+   } while ($thisItemType=="22" || $thisItemType == "35");
+   $outputString .= "<item>".$i.",".$j.",".$thisItemType.",1,".$itemHeight.",0</item>";
+   }
+   
+   
+   
    } else {
    $outputString .= "<item>".$i.",".$j.",".$itemMap[$i][$j].",1,".$itemHeight.",0</item>";
    }
