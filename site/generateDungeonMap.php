@@ -14,6 +14,7 @@
 
 
 // treasure maps for deeper levels (need to create map ahead of time, then ensure new maps check to see if the next deeper exists, if it does, then get entrance doors and make their own exit doors match to that. treasure map levels won't turn as won't know which direction previous maps had taken)
+// treasure map will have start door on the same side as the dungeon's entrance did - this ensures that a connecting path can be made on the previous map
 
 // need a system so that any maps that still have undisocvered treasure in them aren't deleted when the player leaves the dungeon
 
@@ -56,8 +57,8 @@
 
 // to allow unique template maps to used with the relevant quest objectives on - flash map swf will have an array with the relevant quests for the dungeon that can be entered from that map. flash will request a new map and check the status and pass through any open quests. php will have a table with quest number and the range that that template could be found on - if map level exceeds this range, then use this template so will definintely be used (or have a random chance of it occuring that the liklihood increases with the 'depth' of the current map until it's 100% that this map will be used). table might also have another quest that is opened once this template has been used - so can chain templates in correct order. open quests are stored in database - if map #0 is requested then these are cleared and any new ones from flash are used. once template is used then this is removed from database entry - chained quest template will be added to database entry
 
-// be nice not to have such obviously large circles - or do they look ok in iso?
-// error handle script timeout in function abortScript() and default to a fully templated map so that flash has something to load. These template maps would need to have very wide entrance chambers, so that wherever the door was placed to match up with the previous map, a path is connected up.
+
+// error handle script timeout in function abortScript() and default to a fully templated map so that flash has something to load. These template maps would need to have very wide entrance chambers, so that wherever the door was placed to match up with the previous map, a path is connected up. also need to be aware that a treasure map location might need to exist somewhere on the map
 // optimise (if required - it does run pretty fast currently)
 // after placing items there is no check on the path not being blocked. make sure that the item placement logic is sound
 // place NPCs and creatures
@@ -86,9 +87,11 @@ if(isset($_GET["clearMaps"])) {
 }
 
 
-$isTreasureMap = false;
+$isTreasureMapLevel = false;
 if(isset($_GET["isTreasureMap"])) {
-  $isTreasureMap = true;
+  $isTreasureMapLevel = true;
+  $treasureLocX = $_GET["treasureLocX"];
+  $treasureLocY = $_GET["treasureLocY"];
 }
 
 $debugMode = false;
@@ -881,7 +884,7 @@ function floodFillHeight($startPointX, $startPointY, $heightToUse) {
 }
 
 function outputDungeon() {
-  global $dungeonMap, $dungeonOutputMap, $heightMap, $itemMap, $mapMaxHeight, $mapMaxWidth, $thisDungeonsName, $thisMapsId, $thisPlayersId, $thisAverageCount, $thisAverageTotal, $doorsOut, $doorsIn, $dungeonDetails, $thisOriginatingMapId, $outputMode, $allStairs, $stairsWidth, $entranceHeight, $tileHeight, $itemsAvailable;
+  global $dungeonMap, $dungeonOutputMap, $heightMap, $itemMap, $mapMaxHeight, $mapMaxWidth, $thisDungeonsName, $thisMapsId, $thisPlayersId, $thisAverageCount, $thisAverageTotal, $doorsOut, $doorsIn, $dungeonDetails, $thisOriginatingMapId, $outputMode, $allStairs, $stairsWidth, $entranceHeight, $tileHeight, $itemsAvailable, $isTreasureMapLevel, $startTime;
 
 
   if ($outputMode == "test") {
@@ -1209,9 +1212,9 @@ $hasPlacedATreasureMap = false;
    for ($k = 0;$k < $numberOfItems;$k++) {
    $thisQuantity = rand(1,3);
    do {
-   // pick a random type from this dungeon's possible items - as long as it's not another chest:
+   // pick a random type from this dungeon's possible items - as long as it's not another chest: (don't place treasure maps in a map that is the destination for another treasure map)
         $thisItemType = $itemsAvailable[(rand(0,count($itemsAvailable)-1))];
-   } while (($thisItemType=="22") || (($thisItemType=="35") && $hasPlacedATreasureMap));
+   } while (($thisItemType=="22") || (($thisItemType=="35") && $hasPlacedATreasureMap) || (($isTreasureMapLevel) && ($thisItemType=="35")));
   
   if($thisItemType=="35") {
   $hasPlacedATreasureMap = true;
@@ -1274,11 +1277,26 @@ if (!$tileNorthIsWalkable) {
    
    $outputString .= "<item>".$i.",".$j.",".$itemMap[$i][$j].",".$thisFacing.",".$itemHeight.",".$chestContents."</item>";
    } else if($itemMap[$i][$j] == "35") {
-   if(!$hasPlacedATreasureMap) {
+   if((!$hasPlacedATreasureMap) && (!$isTreasureMapLevel)) {
    // it's a treasure map:
    // dungeon id (randomDungeons array in Flash - this is found with $dungeonDetails[$thisDungeonsName][5]), map level, tile x, tile y
    // in format: 1R15|x|y so that it splits on | as conventional treasure maps do
-   $thisTreasureLocation=$dungeonDetails[$thisDungeonsName][5]."R1|24|31";
+   
+   // find target map - make sure it doesn't already exist (might have already been created as a another treasure containing map)
+   var $treasureDepthInc = 5;
+   do {
+   var $newTargetTreasureMap = $thisMapsId + (rand(2,$treasureDepthInc));
+   var $treasureMapFilename = "data/chr" . $thisPlayersId . "/dungeon/".$thisDungeonsName."/" . $newTargetTreasureMap . ".xml";
+   // increase depth to get deeper if map already exists:
+   $treasureDepthInc += 5;
+   } while(is_file($treasureMapFilename));
+   
+   
+   
+   var $treasuresLocX = rand(8,($mapMaxWidth-8));
+   var $treasuresLocY = rand(8,($mapMaxHeight-8));
+   
+   $thisTreasureLocation=$dungeonDetails[$thisDungeonsName][5]."R".$newTargetTreasureMap."|".$treasuresLocX."|".$treasuresLocY;
    $outputString .= "<item>".$i.",".$j.",35,1,".$itemHeight.",35.1.4.100.4.-1.0.".$thisTreasureLocation.".0.0.0</item>";
    $hasPlacedATreasureMap = true;
    } else {
@@ -1410,9 +1428,10 @@ $newStartDoorY = 1;
     
     $outputString .= "<weather>1</weather></map>";
 
-// echo for immediate use by Flash:
+if (!$isTreasureMapLevel) {
+// echo for immediate use by Flash: (treasure maps only need creating ready for flash, not passing back for immediate use)
 echo $outputString;
-
+}
 // write this to file:
 
         $mapFilename = "data/chr" . $thisPlayersId . "/dungeon/".$thisDungeonsName."/" . $thisMapsId . ".xml";
@@ -1425,7 +1444,21 @@ echo $outputString;
 		fclose($filename);
 }
 
+if ($hasPlacedATreasureMap) {
+ // create the target treasure map now, so that it's ready for flash when needed to draw the treasure map hint graphic:
+ // reset timer for new map:
+ $startTime = time();
 
+ $thisOriginatingMapId = ($newTargetTreasureMap-1);
+$thisMapsId = $newTargetTreasureMap;
+  $isTreasureMapLevel = true;
+  $treasureLocX = $treasuresLocX;
+  $treasureLocY = $treasuresLocY;
+  
+  createNewDungeonMap($thisMapsId);
+ 
+ 
+}
 
 }
 
