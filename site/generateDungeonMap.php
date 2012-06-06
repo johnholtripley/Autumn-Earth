@@ -11,7 +11,7 @@
 // bug - can get untraversable maps where a tunnel goes back through a staircase
 // the pathfinding check to see if the map is traversable needs to look at height differences as well
 
-
+// create a single new template with some tent graphics on it - double up on info so that the graphic frame numbers can be hard coded
 
 // treasure maps for deeper levels (need to create map ahead of time, then ensure new maps check to see if the next deeper exists, if it does, then get entrance doors and make their own exit doors match to that. treasure map levels won't turn as won't know which direction previous maps had taken)
 // treasure map will have start door on the same side as the dungeon's entrance did - this ensures that a connecting path can be made on the previous map
@@ -30,7 +30,7 @@
 
 // ensure session saving turning value is unique to each dungeon instance
 
-// templates should be able to place items
+// templates should be able to place items and NPCs
 
 // be really nice to have a league table on the website of which characters have achieved the deepest level in each dungeon - could create competition.
 
@@ -192,6 +192,64 @@ function pickTemplate() {
     while (!$xmlParsedOk);
     xml_parser_free($xmlparser);
 }
+
+
+
+
+
+
+
+
+function XMLMapStartTag($parser, $name) {
+global $storeValues;
+    if ($name == "DOOR") {
+    $storeValues = true;
+    }
+}
+function XMLMapEndTag($parser, $name) {
+    global $storeValues;
+    $storeValues = false;
+}
+function XMLMapTagContents($parser, $data) {
+    global $loadedDoorData, $storeValues;
+    // remove whitespace from data:
+   if($storeValues) {
+   array_push($loadedDoorData, str_ireplace(" ", "", $data));
+   }
+}
+
+
+function loadPreviouslyCreatedMap($whichMap) {
+global $loadedDoorData, $storeValues;
+    $loadedDoorData = array();
+    $storeValues = false;
+    $xmlparser = xml_parser_create();
+    xml_set_element_handler($xmlparser, "XMLMapStartTag", "XMLMapEndTag");
+    xml_set_character_data_handler($xmlparser, "XMLMapTagContents");
+    
+    $fp = fopen($whichMap, "r");
+     while ($data = fread($fp, 4096)) {
+            // remove whitespace:
+            $data = eregi_replace(">" . "[[:space:]]+" . "<", "><", $data);
+            if (!xml_parse($xmlparser, $data, feof($fp))) {
+                // error handling #################
+                
+            } 
+        }
+    
+    xml_parser_free($xmlparser);
+    
+   
+}
+
+
+
+
+
+
+
+
+
 function headForDest() {
     global $xDir, $yDir, $targetX, $targetY, $currX, $currY;
     // randomise horizontal or vertical preference:
@@ -884,7 +942,7 @@ function floodFillHeight($startPointX, $startPointY, $heightToUse) {
 }
 
 function outputDungeon() {
-  global $dungeonMap, $dungeonOutputMap, $heightMap, $itemMap, $mapMaxHeight, $mapMaxWidth, $thisDungeonsName, $thisMapsId, $thisPlayersId, $thisAverageCount, $thisAverageTotal, $doorsOut, $doorsIn, $dungeonDetails, $thisOriginatingMapId, $outputMode, $allStairs, $stairsWidth, $entranceHeight, $tileHeight, $itemsAvailable, $isTreasureMapLevel, $startTime;
+  global $dungeonMap, $dungeonOutputMap, $heightMap, $itemMap, $mapMaxHeight, $mapMaxWidth, $thisDungeonsName, $thisMapsId, $thisPlayersId, $thisAverageCount, $thisAverageTotal, $doorsOut, $doorsIn, $dungeonDetails, $thisOriginatingMapId, $outputMode, $allStairs, $stairsWidth, $entranceHeight, $tileHeight, $itemsAvailable, $isTreasureMapLevel, $startTime, $treasureLocX, $treasureLocY;
 
 
   if ($outputMode == "test") {
@@ -963,6 +1021,13 @@ echo '<body style="background: #000; color: #fff;">' . "\n";
         break;
         default:
             $thisHeightCol = "463F3F";
+      }
+      if($isTreasureMapLevel) {
+      if($j == $treasureLocY) {
+      if($i == $treasureLocX) {
+      $thisHeightCol = "FFFFFF";
+      }
+      }
       }
       echo '<span style="color:#' . $thisHeightCol . ';">';
       echo $dungeonMap[$i][$j];
@@ -1277,24 +1342,24 @@ if (!$tileNorthIsWalkable) {
    
    $outputString .= "<item>".$i.",".$j.",".$itemMap[$i][$j].",".$thisFacing.",".$itemHeight.",".$chestContents."</item>";
    } else if($itemMap[$i][$j] == "35") {
-   if((!$hasPlacedATreasureMap) && (!$isTreasureMapLevel)) {
+   if (!($hasPlacedATreasureMap) && (!$isTreasureMapLevel)) {
    // it's a treasure map:
    // dungeon id (randomDungeons array in Flash - this is found with $dungeonDetails[$thisDungeonsName][5]), map level, tile x, tile y
    // in format: 1R15|x|y so that it splits on | as conventional treasure maps do
    
    // find target map - make sure it doesn't already exist (might have already been created as a another treasure containing map)
-   var $treasureDepthInc = 5;
+    $treasureDepthInc = 5;
    do {
-   var $newTargetTreasureMap = $thisMapsId + (rand(2,$treasureDepthInc));
-   var $treasureMapFilename = "data/chr" . $thisPlayersId . "/dungeon/".$thisDungeonsName."/" . $newTargetTreasureMap . ".xml";
+    $newTargetTreasureMap = $thisMapsId + (rand(2,$treasureDepthInc));
+    $treasureMapFilename = "data/chr" . $thisPlayersId . "/dungeon/".$thisDungeonsName."/" . $newTargetTreasureMap . ".xml";
    // increase depth to get deeper if map already exists:
    $treasureDepthInc += 5;
    } while(is_file($treasureMapFilename));
    
    
    
-   var $treasuresLocX = rand(8,($mapMaxWidth-8));
-   var $treasuresLocY = rand(8,($mapMaxHeight-8));
+    $treasuresLocX = rand(8,($mapMaxWidth-8));
+    $treasuresLocY = rand(8,($mapMaxHeight-8));
    
    $thisTreasureLocation=$dungeonDetails[$thisDungeonsName][5]."R".$newTargetTreasureMap."|".$treasuresLocX."|".$treasuresLocY;
    $outputString .= "<item>".$i.",".$j.",35,1,".$itemHeight.",35.1.4.100.4.-1.0.".$thisTreasureLocation.".0.0.0</item>";
@@ -1692,7 +1757,7 @@ function placeItems() {
 }
 
 function createNewDungeonMap($mapID) {
-    global $dungeonMap, $itemMap, $tunnelMaxLength, $mapMaxWidth, $mapMaxHeight, $inX, $inY, $outX, $outY, $templateRows, $exitDoorX, $exitDoorY, $heightMap, $entranceHeight, $exitHeight, $debugMode, $dungeonDetails, $doorsIn, $doorsOut, $connectingDoorX, $connectingDoorY, $dungeonDetails, $thisDungeonsName, $thisMapsId, $outputMode, $allStairs, $tileHeight;
+    global $dungeonMap, $itemMap, $tunnelMaxLength, $mapMaxWidth, $mapMaxHeight, $inX, $inY, $outX, $outY, $templateRows, $exitDoorX, $exitDoorY, $heightMap, $entranceHeight, $exitHeight, $debugMode, $dungeonDetails, $doorsIn, $doorsOut, $connectingDoorX, $connectingDoorY, $dungeonDetails, $thisDungeonsName, $thisMapsId, $outputMode, $allStairs, $tileHeight, $isTreasureMapLevel, $treasureLocX, $treasureLocY, $thisPlayersId, $loadedDoorData;
     $outputMode = "xml";
   if(isset($_GET["outputMode"])) {
   $outputMode = $_GET["outputMode"];
@@ -1705,7 +1770,7 @@ array("25","35"),
 array("16,20","17,20","18,20"),
 array(1,1,2,2,3,4,5,6,7,8,9),
 //array("6","6","6","6","2","2","3","3","4","5","22","35")
-array("35"),
+array("6","35"),
 "1"
 )
 );
@@ -1719,7 +1784,8 @@ if (isset($_GET["connectingDoorX"])) {
 
 $tileHeight = 24;
      
-     
+     if(!$isTreasureMapLevel) {
+     // session will already be set, and map won't turn
      session_start();
      if (isset($_SESSION['whichTurn'])) {
       $whichDirectionToTurn = (0-$_SESSION['whichTurn']);
@@ -1729,7 +1795,7 @@ $tileHeight = 24;
      }
      $_SESSION['whichTurn'] = $whichDirectionToTurn;
      
-     
+     }
      
      
      
@@ -1789,20 +1855,18 @@ $doorsOut = array();
           }
         }
         
-        
-       
-  
-           
         $turning = 0;
+       if($isTreasureMapLevel) {
+        $mapMode = "nest";
+        // won't turn
+        } else {
         if (rand(0, 4) == 0) {
             // this map will turn:
             $turning = $whichDirectionToTurn;
         }
-        
-        if($isTreasureMapLevel) {
-        $mapMode = "nest";
-        $turning = 0;
         }
+        
+        
         
         
 if($thisMapsId == -1) {
@@ -1878,6 +1942,41 @@ if($turning == 0) {
   }
 }
       
+   
+   
+   // check to see if the map after this one already exists (ie. the next map has treasure on it and has already been created)
+
+
+   
+       $testNextMapFilename = "data/chr" . $thisPlayersId . "/dungeon/".$thisDungeonsName."/" . ($thisMapsId-1) . ".xml";
+        if (is_file($testNextMapFilename)) {
+           // load the xml for the next map and find the entrance doors, and connect to these
+           loadPreviouslyCreatedMap($testNextMapFilename);
+           
+           
+           
+           // print_r ($loadedDoorData);
+            $doorX = 0;
+            $doorY = 0;
+            for ($d = 0;$d < count($loadedDoorData);$d++) {
+            // find doors that connect to this map:
+            $doorData = explode(",", $loadedDoorData[$d]);
+            if($doorData[0] == $thisMapsId) {
+            $doorX += $doorData[1];
+            $doorY += $doorData[2];
+            }
+            }
+            // get the average door locations to find the centre of the door:
+            $doorX /= 3;
+            $doorY /= 3;
+            echo "door centre is ".$doorX.",".$doorY;
+              // #############################
+              // john
+              
+              $exitDoorX = $mapMaxWidth - 1;
+      $exitDoorY = $randomPointY;
+        } else {
+   
    
    
 if ($startDoorY == 0) {
@@ -1961,7 +2060,7 @@ if ($startDoorY == 0) {
 
 }
         
-        
+   }    
  
   
        // create indented points to tunnel to:
@@ -2040,8 +2139,7 @@ if ($startDoorY == 0) {
                             $exitPointY = $thisCaseStartY - ($tunnelVertLength *2);
                         }
                         
-                        
-                    //    echo "test: ".$thisCaseStartX.",".$thisCaseStartY." => ".$exitPointX.",".$exitPointY."<br/>";
+       
                         
                         // tunnel from entrance to stair case tunnel:
                         $tunnelSuccess = false;
