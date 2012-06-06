@@ -1799,6 +1799,10 @@ $doorsOut = array();
             $turning = $whichDirectionToTurn;
         }
         
+        if($isTreasureMapLevel) {
+        $mapMode = "nest";
+        $turning = 0;
+        }
         
         
 if($thisMapsId == -1) {
@@ -1989,7 +1993,7 @@ if ($startDoorY == 0) {
                 $caseRotation = rand(0, 1);
                 
                 
-                // testing ###############
+                // temporary: ###############
                  $numberOfStairs = 1;
            
                 
@@ -2290,6 +2294,19 @@ if ($startDoorY == 0) {
                     } while (!$tunnelSuccess);
                     
                     }
+                    
+                    if($isTreasureMapLevel) {
+                     // create a new chamber for the treasure to be hidden in:
+                     $caveRadius = rand (3,4);
+                     drawFilledCircle($treasureLocX, $treasureLocY, $caveRadius);
+                       // tunnel to this chamber from hub spot:
+                    $tunnelSuccess = false;
+                    do {
+                        $tunnelSuccess = makeTunnel($hubPointX, $hubPointY, $treasureLocX, $treasureLocY, 1, 3, 1146);
+                    } while (!$tunnelSuccess);
+                    }
+                    
+                    
                     break;
                 default:
                     // standard map:
