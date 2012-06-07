@@ -1350,7 +1350,10 @@ if (!$tileNorthIsWalkable) {
    // find target map - make sure it doesn't already exist (might have already been created as a another treasure containing map)
     $treasureDepthInc = 5;
    do {
-    $newTargetTreasureMap = $thisMapsId + (rand(2,$treasureDepthInc));
+    $newTargetTreasureMap = $thisMapsId - (rand(2,$treasureDepthInc));
+    
+
+    
     $treasureMapFilename = "data/chr" . $thisPlayersId . "/dungeon/".$thisDungeonsName."/" . $newTargetTreasureMap . ".xml";
    // increase depth to get deeper if map already exists:
    $treasureDepthInc += 5;
@@ -1892,8 +1895,69 @@ if($thisMapsId == -1) {
     $startDoorY = 0;
     }
 }
+
+if($isTreasureMapLevel) {
+
+
+$testNextMapFilename = "data/chr" . $thisPlayersId . "/dungeon/".$thisDungeonsName."/" . ($thisMapsId+1) . ".xml";
+        if (is_file($testNextMapFilename)) {
+        // previous map exists - get the exit doors for that map and create corresponding entrances doors for this current map to connect up nicely
         
-       
+        
+        
+        loadPreviouslyCreatedMap($testNextMapFilename);
+           
+            $doorX = 0;
+            $doorY = 0;
+            for ($d = 0;$d < count($loadedDoorData);$d++) {
+            // find doors that connect to this map:
+            $doorData = explode(",", $loadedDoorData[$d]);
+            if($doorData[0] == $thisMapsId) {
+              $doorX += $doorData[1];
+              $doorY += $doorData[2];
+            }
+            }
+            // get the average door locations to find the centre of the door:
+            $doorX /= 3;
+            $doorY /= 3;
+               
+        // find the corresponding entrance door to match to this exit:
+         $startDoorX = $doorX;
+         $startDoorY = $doorY;
+        
+   
+        
+        if ($doorX == 0) {
+// north wall:
+$startDoorX = ($mapMaxWidth - 1);
+} else if ($doorX == ($mapMaxWidth - 1)) {
+// south wall:
+$startDoorX = 0;
+}
+if ($doorY == 0) {
+// west wall:
+$startDoorY = ($mapMaxHeight - 1);
+} else if ($doorY == ($mapMaxHeight - 1)) {
+// east wall:
+$startDoorY = 0;
+}
+
+        
+        } else {
+        // make start doors be on the same edge as the first level of this dungeon, so that any of the possible map directions can connect up to it
+            $originalStartDoorX = $dungeonDetails[$thisDungeonsName][1][0];
+    $originalStartDoorY = $dungeonDetails[$thisDungeonsName][1][1];
+    $startDoorX = $originalStartDoorX;
+    $startDoorY = $originalStartDoorY;
+    // randomise this, but keep it on the same edge: 
+    if (($startDoorX == 0) || ($startDoorX == ($mapMaxWidth - 1))) {
+   $startDoorY  = rand(5,($mapMaxHeight - 5));
+   } else if (($startDoorY == 0) || ($startDoorY == ($mapMaxHeight - 1))) {
+   $startDoorX  = rand(5,($mapMaxWidth - 5));
+   }
+        }
+}
+
        // create indented points to tunnel from:
        $tunnelStartX = $startDoorX;
        $tunnelStartY = $startDoorY;
@@ -1942,39 +2006,48 @@ if($turning == 0) {
   }
 }
       
-   
-   
+
    // check to see if the map after this one already exists (ie. the next map has treasure on it and has already been created)
-
-
-   
        $testNextMapFilename = "data/chr" . $thisPlayersId . "/dungeon/".$thisDungeonsName."/" . ($thisMapsId-1) . ".xml";
         if (is_file($testNextMapFilename)) {
            // load the xml for the next map and find the entrance doors, and connect to these
            loadPreviouslyCreatedMap($testNextMapFilename);
            
-           
-           
-           // print_r ($loadedDoorData);
             $doorX = 0;
             $doorY = 0;
             for ($d = 0;$d < count($loadedDoorData);$d++) {
             // find doors that connect to this map:
             $doorData = explode(",", $loadedDoorData[$d]);
             if($doorData[0] == $thisMapsId) {
-            $doorX += $doorData[1];
-            $doorY += $doorData[2];
+              $doorX += $doorData[1];
+              $doorY += $doorData[2];
             }
             }
             // get the average door locations to find the centre of the door:
             $doorX /= 3;
             $doorY /= 3;
-            echo "door centre is ".$doorX.",".$doorY;
-              // #############################
-              // john
-              
-              $exitDoorX = $mapMaxWidth - 1;
-      $exitDoorY = $randomPointY;
+               
+        // find the corresponding exit door to match to this entrance:
+         $exitDoorX = $doorX;
+         $exitDoorY = $doorY;
+      
+    
+if ($doorX == 0) {
+// north wall:
+$exitDoorX = ($mapMaxWidth - 1);
+} else if ($doorX == ($mapMaxWidth - 1)) {
+// south wall:
+$exitDoorX = 0;
+}
+if ($doorY == 0) {
+// west wall:
+$exitDoorY = ($mapMaxHeight - 1);
+} else if ($doorY == ($mapMaxHeight - 1)) {
+// east wall:
+$exitDoorY = 0;
+}
+        
+
         } else {
    
    
