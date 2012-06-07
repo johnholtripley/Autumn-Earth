@@ -1871,6 +1871,9 @@ $doorsOut = array();
         
         
         
+ 
+        
+        
         
 if($thisMapsId == -1) {
     // hard code door position of first map:
@@ -2429,7 +2432,7 @@ if ($startDoorY == 0) {
                         for ($j = 0;$j < $templateHeight;$j++) {
                             if ($thisRow[$j] != "X") {
                                 // X means leave the terrain underneath untouched
-                                $dungeonMap[($i + $topLeftXPos) ][($j + $topLeftYPos) ] = $thisRow[$j];
+                                $dungeonMap[($j + $topLeftXPos) ][($i + $topLeftYPos) ] = $thisRow[$j];
                             }
                         }
                     }
