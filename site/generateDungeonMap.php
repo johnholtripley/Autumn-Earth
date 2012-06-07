@@ -1153,7 +1153,7 @@ for ($k = 0; $k<2; $k++) {
   for ($i = 0;$i < $mapMaxWidth;$i++) {
   for ($j = 0;$j < $mapMaxHeight;$j++) {
   // if it's a nonwalkable tile, not a stairs tile or a blanked tile:
-  if (($dungeonOutputMap[$i][$j] >= 100) && ($dungeonOutputMap[$i][$j] < 560)) {
+  if (($dungeonOutputMap[$i][$j] >= 100) && ($dungeonOutputMap[$i][$j] < 500)) {
   $thisAverageCount = 0;
   $thisAverageTotal = 0;
   checkAverageNeighbours($i-1,$j,$dungeonOutputMap[$i][$j]);
@@ -1196,7 +1196,7 @@ $raisedBase = 599;
      $dungeonOutputMap[$i][$j] = $heightMap[$i][$j]+$raisedBase;
      }
      
-     } else if (($dungeonOutputMap[$i][$j] >= 100) && ($dungeonOutputMap[$i][$j] < 560)) {
+     } else if (($dungeonOutputMap[$i][$j] >= 100) && ($dungeonOutputMap[$i][$j] < 500)) {
      // is a wall tile, raise these up as well:
      if($heightMap[$i][$j]>0) {
      $dungeonOutputMap[$i][$j] += ($heightMap[$i][$j]*30);
