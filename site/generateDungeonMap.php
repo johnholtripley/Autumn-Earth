@@ -14,11 +14,7 @@
 
 
 
-
-
-// create a single new template with some tent graphics on it - double up on info so that the graphic frame numbers can be hard coded
-// templates might need to double up on details so that the first part indicates walkable or not (just '#' or '.') and then the second has the final tile numbers (so different decorative tiles can be used)
-// read these values in, and then use them to override defaults during the xml creation
+// bug - maps connecting to treasure maps don't link up correctly
 
 
 
