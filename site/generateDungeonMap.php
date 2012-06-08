@@ -14,8 +14,6 @@
 
 
 
-// bug - maps connecting to treasure maps don't link up correctly (seem to favour top right corner as the exit point?)
-
 // bug - rotation of chests isn't always the way it should be
 
 // are stair maps being picked?
@@ -1556,7 +1554,7 @@ if ($hasPlacedATreasureMap) {
  // reset timer for new map:
  $startTime = time();
 
- $thisOriginatingMapId = ($newTargetTreasureMap-1);
+ $thisOriginatingMapId = ($newTargetTreasureMap+1);
 $thisMapsId = $newTargetTreasureMap;
   $isTreasureMapLevel = true;
   $treasureLocX = $treasuresLocX;
