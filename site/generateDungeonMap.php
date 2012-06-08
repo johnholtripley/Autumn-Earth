@@ -163,9 +163,9 @@ function XMLTagContents($parser, $data) {
     global $templateRows, $elementType, $templateTiles;
     if ($elementType == "map") {
     // remove whitespace from data:
-    array_push($templateRows, str_ireplace(" ", "", $data));
+    array_unshift($templateRows, str_ireplace(" ", "", $data));
     } else if ($elementType == "tiles") {
-    array_push($templateTiles, str_ireplace(" ", "", $data));
+    array_unshift($templateTiles, str_ireplace(" ", "", $data));
     }
 }
 function getXMLFile() {
@@ -1164,14 +1164,14 @@ if($mapMode=="template") {
 
 
 
-$templateHeight = count($templateTiles);
-$templateWidth = count(explode(",",$templateTiles[0]));
+$templateWidth = count($templateTiles);
+$templateHeight = count(explode(",",$templateTiles[0]));
 
 
 
-for ($ti = 0;$ti < $templateHeight;$ti++) {
+for ($ti = 0;$ti < $templateWidth;$ti++) {
   $thisRow = explode(",",$templateTiles[$ti]);
-  for ($tj = 0;$tj < $templateWidth;$tj++) {
+  for ($tj = 0;$tj < $templateHeight;$tj++) {
     $dungeonOutputMap[($tj + $topLeftXPos) ][($ti + $topLeftYPos) ] = $thisRow[$tj];
   }
 }
@@ -1912,11 +1912,7 @@ $doorsOut = array();
         }
         }
         
-        
-        // testing ################################
- $mapMode = "template";
-        
-        
+ 
         
 if($thisMapsId == -1) {
     // hard code door position of first map:
