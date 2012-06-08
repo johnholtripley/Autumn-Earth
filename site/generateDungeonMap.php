@@ -11,10 +11,23 @@
 // bug - can get untraversable maps where a tunnel goes back through a staircase
 // the pathfinding check to see if the map is traversable needs to look at height differences as well
 
-// create a single new template with some tent graphics on it - double up on info so that the graphic frame numbers can be hard coded
 
-// treasure maps for deeper levels (need to create map ahead of time, then ensure new maps check to see if the next deeper exists, if it does, then get entrance doors and make their own exit doors match to that. treasure map levels won't turn as won't know which direction previous maps had taken)
-// treasure map will have start door on the same side as the dungeon's entrance did - this ensures that a connecting path can be made on the previous map
+
+
+
+
+// create a single new template with some tent graphics on it - double up on info so that the graphic frame numbers can be hard coded
+// templates might need to double up on details so that the first part indicates walkable or not (just '#' or '.') and then the second has the final tile numbers (so different decorative tiles can be used)
+// read these values in, and then use them to override defaults during the xml creation
+
+
+
+// are stair maps being picked?
+
+
+
+
+
 
 // need a system so that any maps that still have undisocvered treasure in them aren't deleted when the player leaves the dungeon
 
@@ -38,7 +51,6 @@
 
 // caves could branch if coordinates for each map are saved and checked against before determining exit doors - just to ensure that the maps don't intersect incorrectly
 
-// templates might need to double up on details so that the first part indicates walkable or not (just '#' or '.') and then the second has the final tile numbers (so different decorative tiles can be used)
 
 
 
@@ -131,13 +143,16 @@ if (is_numeric($thisPlayersId)) {
     }
 }
 function XMLStartTag($parser, $name, $attribs) {
-    global $inX, $inY, $outX, $outY;
+    global $inX, $inY, $outX, $outY, $elementType;
     if ($name == "MAP") {
         // read attributes:
         $inX = $attribs["INX"];
         $inY = $attribs["INY"];
         $outX = $attribs["OUTX"];
         $outY = $attribs["OUTY"];
+        $elementType = "map";
+    } else if ($name == "TILES") {
+    $elementType = "tiles";
     }
 }
 function XMLEndTag($parser, $name) {
@@ -145,12 +160,16 @@ function XMLEndTag($parser, $name) {
     
 }
 function XMLTagContents($parser, $data) {
-    global $templateRows;
+    global $templateRows, $elementType, $templateTiles;
+    if ($elementType == "map") {
     // remove whitespace from data:
     array_push($templateRows, str_ireplace(" ", "", $data));
+    } else if ($elementType == "tiles") {
+    array_push($templateTiles, str_ireplace(" ", "", $data));
+    }
 }
 function getXMLFile() {
-    global $templateRows, $fileToUse;
+    global $templateRows, $fileToUse, $templateTiles;
     // read contents of dir and find number of files:
     $dir = "templates/dungeon/area";
     $filesFound = array();
@@ -166,6 +185,7 @@ function getXMLFile() {
     }
     $fileToUse = $dir . "/" . $filesFound[(rand(0, count($filesFound) - 1)) ];
     $templateRows = array();
+    $templateTiles = array();
 }
 function pickTemplate() {
     global $inX, $inY, $outX, $outY, $templateRows, $fileToUse;
@@ -238,16 +258,8 @@ global $loadedDoorData, $storeValues;
         }
     
     xml_parser_free($xmlparser);
-    
-   
+      
 }
-
-
-
-
-
-
-
 
 
 function headForDest() {
@@ -942,7 +954,7 @@ function floodFillHeight($startPointX, $startPointY, $heightToUse) {
 }
 
 function outputDungeon() {
-  global $dungeonMap, $dungeonOutputMap, $heightMap, $itemMap, $mapMaxHeight, $mapMaxWidth, $thisDungeonsName, $thisMapsId, $thisPlayersId, $thisAverageCount, $thisAverageTotal, $doorsOut, $doorsIn, $dungeonDetails, $thisOriginatingMapId, $outputMode, $allStairs, $stairsWidth, $entranceHeight, $tileHeight, $itemsAvailable, $isTreasureMapLevel, $startTime, $treasureLocX, $treasureLocY;
+  global $dungeonMap, $dungeonOutputMap, $heightMap, $itemMap, $mapMaxHeight, $mapMaxWidth, $thisDungeonsName, $thisMapsId, $thisPlayersId, $thisAverageCount, $thisAverageTotal, $doorsOut, $doorsIn, $dungeonDetails, $thisOriginatingMapId, $outputMode, $allStairs, $stairsWidth, $entranceHeight, $tileHeight, $itemsAvailable, $isTreasureMapLevel, $startTime, $treasureLocX, $treasureLocY, $templateTiles, $mapMode, $topLeftXPos, $topLeftYPos;
 
 
   if ($outputMode == "test") {
@@ -1137,6 +1149,37 @@ for ($i = 0;$i < count($allStairs);$i++) {
     }
   }
 }
+
+
+
+
+
+
+
+if($mapMode=="template") {
+
+// insert the template tiles here - so that the dungeon walls get averaged in smoothly
+// john
+
+
+
+
+$templateHeight = count($templateTiles);
+$templateWidth = count(explode(",",$templateTiles[0]));
+
+
+
+for ($ti = 0;$ti < $templateHeight;$ti++) {
+  $thisRow = explode(",",$templateTiles[$ti]);
+  for ($tj = 0;$tj < $templateWidth;$tj++) {
+    $dungeonOutputMap[($tj + $topLeftXPos) ][($ti + $topLeftYPos) ] = $thisRow[$tj];
+  }
+}
+
+
+}
+
+
 
 
 
@@ -1760,7 +1803,7 @@ function placeItems() {
 }
 
 function createNewDungeonMap($mapID) {
-    global $dungeonMap, $itemMap, $tunnelMaxLength, $mapMaxWidth, $mapMaxHeight, $inX, $inY, $outX, $outY, $templateRows, $exitDoorX, $exitDoorY, $heightMap, $entranceHeight, $exitHeight, $debugMode, $dungeonDetails, $doorsIn, $doorsOut, $connectingDoorX, $connectingDoorY, $dungeonDetails, $thisDungeonsName, $thisMapsId, $outputMode, $allStairs, $tileHeight, $isTreasureMapLevel, $treasureLocX, $treasureLocY, $thisPlayersId, $loadedDoorData;
+    global $dungeonMap, $itemMap, $tunnelMaxLength, $mapMaxWidth, $mapMaxHeight, $inX, $inY, $outX, $outY, $templateRows, $exitDoorX, $exitDoorY, $heightMap, $entranceHeight, $exitHeight, $debugMode, $dungeonDetails, $doorsIn, $doorsOut, $connectingDoorX, $connectingDoorY, $dungeonDetails, $thisDungeonsName, $thisMapsId, $outputMode, $allStairs, $tileHeight, $isTreasureMapLevel, $treasureLocX, $treasureLocY, $thisPlayersId, $loadedDoorData, $mapMode, $topLeftXPos, $topLeftYPos;
     $outputMode = "xml";
   if(isset($_GET["outputMode"])) {
   $outputMode = $_GET["outputMode"];
@@ -1870,8 +1913,8 @@ $doorsOut = array();
         }
         
         
-        
- 
+        // testing ################################
+ $mapMode = "template";
         
         
         
