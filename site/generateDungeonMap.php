@@ -12,15 +12,7 @@
 // the pathfinding check to see if the map is traversable needs to look at height differences as well
 
 
-
-
 // bug - rotation of chests isn't always the way it should be
-
-// are stair maps being picked?
-
-
-
-
 
 
 // need a system so that any maps that still have undisocvered treasure in them aren't deleted when the player leaves the dungeon
