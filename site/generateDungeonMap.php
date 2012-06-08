@@ -14,9 +14,9 @@
 
 
 
-// bug - maps connecting to treasure maps don't link up correctly
+// bug - maps connecting to treasure maps don't link up correctly (seem to favour top right corner as the exit point?)
 
-
+// bug - rotation of chests isn't always the way it should be
 
 // are stair maps being picked?
 
