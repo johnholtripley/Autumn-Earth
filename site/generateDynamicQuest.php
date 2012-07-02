@@ -32,7 +32,7 @@ array('buy',array('gold:25','at:blacksmith'))
 $thisNPCsNeeds = array(array("use","axe","0"));
 $thisNPCsItems = array("pineapple");
 $thisNPCsLocation = "blacksmith";
-
+$thisNPCsGold = 300;
 $herosItems = array("hat");
 
 // if more than 1 need, determine which is the most urgent:
@@ -74,7 +74,7 @@ $needsQueue[$thisArrayKey] = "null";
 
 array_push($uncheckedQueue,$thisArrayKey);
 
-
+$currentGold = $thisNPCsGold;
 
 do {
 $hasFoundPlan = false;
@@ -101,6 +101,16 @@ if ($thisNPCsLocation == $theseParameters[1]) {
 $hasFoundPlan = true;
 }
 break;
+
+
+
+case "gold":
+if ($currentGold >= intval($theseParameters[1])) {
+$currentGold -= intval($theseParameters[1]);
+$hasFoundPlan = true;
+}
+break;
+
   
   }
 
@@ -117,6 +127,9 @@ if ($hasFoundPlan) {
     }
   }
 }
+
+
+
 
 
 
