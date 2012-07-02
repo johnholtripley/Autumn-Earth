@@ -6,6 +6,11 @@
 // check if a need has sibling conditions that need fulfillin as well before determining that a need has been fulfilled
 // but ... first, Find a way to handle branching needs when have multiple preconditions.
 
+
+
+// build NPC path follower, put in a reasonable fall back path for them to start on, then request this need driven path that will over-write this. Need to pass NPC's id to ensure the path is applied to correct NPC, and a start tile (so the relative movements make sense) Probably need to path find to this start tile to ensure it all works.
+
+
 // ====================
 
 
@@ -158,7 +163,7 @@ echo "<hr />";
 
 if (!$hasFoundPlan) {
 echo "no plan found";
-// see how the plan got, and then create quest for un-met need
+// see how far the plan got, and then create quest for un-met need
 // #######################
 } else {
 // iterate through parents to plan
@@ -183,91 +188,4 @@ $thisNeed = $thisNeedsParent;
 
 
 
-
-
-
-
-
-
-
-
-
-/*
-$needList = array();
-array_push($needList,$thisNPCsNeeds[$mostImportantNeed]);
-$currentPlan = array();
-do {
-$thisNounRef = $needList[0][1];
-// see if the noun is an item:
-if (array_key_exists($thisNounRef ,$itemsAvailable)) {
-  $thisNoun = $itemsAvailable[$thisNounRef];
-}
-$currentNeeds = explode(":", $needList[0][0]);
-$currentNeed = $currentNeeds[0];
-if(count($currentNeeds)>1) {
-$currentParameter = $currentNeeds[1];
-}
-$specialConditionsMet = false;
-switch($currentNeed) {
- case "own":
-  // npc needs to own the noun
-  array_push($currentPlan, "I need to own ".$thisNoun);
-  // check if npc has this item in their inventory:
-  if (in_array($thisNounRef ,$thisNPCsItems)) {
-    array_push($currentPlan,  "i have one!");
-    $specialConditionsMet = true;
-  } else {
-  // see if hero has one:
-  if (in_array($thisNounRef ,$herosItems)) {
-    array_push($currentPlan,  "hero has one!");
-   $specialConditionsMet = true;
-  } 
-  }
-  break;
-  case "at":
-  array_push($currentPlan, "I need to be at ".$currentParameter);
-  if($thisNPCsLocation == $currentParameter) {
-  array_push($currentPlan, "I am there already!");
-  $specialConditionsMet = true;
-  } else {
-   // see if NPC can move there:
-   // ##################
-  }
-  break;
-  case "gold":
-  array_push($currentPlan, "I need ".$currentParameter." gold");
-  break;
- }
- if(!$specialConditionsMet) {
-  // other, generic actions
-  array_push($currentPlan,  "I want to ".$currentNeed." ".$thisNoun);
-  // look through actions:
-  $actionFound = array();
-  for ($i=0; $i<count($actionsAvailable); $i++) {
-  if($actionsAvailable[$i][0] == $currentNeed) {
-    array_push($actionFound, $i);
-  }
-  }
-  if (count($actionFound) != 0) {
-    // check what preconditions are:
-    for ($i=0; $i<count($actionFound); $i++) {
-    for ($j=0;$j<count($actionsAvailable[$actionFound[$i]][1]);$j++) {
-    $thisPrecondition = $actionsAvailable[$actionFound[$i]][1][$j];
-     //  array_push($currentPlan,  "precondition: (".$i.") ".$thisPrecondition);
-      // add this to the need list:
-      array_push($needList, array($thisPrecondition,$thisNounRef));
-    }
-    }
-  } else {
-      array_push($currentPlan, "dead end");
-  }
-}
-array_shift($needList);
-} while (count($needList)>0);
-echo '<ul>';
-for ($i=0;$i<count($currentPlan);$i++) {
-echo '<li>'.$currentPlan[$i].'</li>';
-}
-echo '</ul>';
-*/
 ?>
