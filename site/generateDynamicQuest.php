@@ -15,29 +15,155 @@
 
 
 
-$itemsAvailable = array('axe' => 'an axe', 'oak' => 'an oak tree');
-
+$itemsAvailable = array('wheat' => 'some wheat', 'field' => 'an empty field', 'wheatfield' => 'a wheat field', 'wheatseeds' => 'some wheat seeds');
+$priceList = array('wheat' => '100','eggs' => '200','wheatseeds' => '100');
 // [result], [array of pre-conditions]
 $actionsAvailable = array(
 array('use',array('own')),
 array('own',array('buy')),
+array('own',array('gather')),
 array('own',array('steal')),
-array('buy',array('gold:25','at:blacksmith'))
+array('buy',array('gold','at:market')),
+array('gather:wheat',array('at:wheatfield')),
+array('gather:wheat',array('at:field','plant:wheatseeds')),
+array('plant',array('own'))
 );
 
 
 
 
 // needs - [verb][noun][value/reward]:
-$thisNPCsNeeds = array(array("use","axe","0"));
+$thisNPCsNeeds = array(array("own","wheat","0"));
 $thisNPCsItems = array("pineapple");
-$thisNPCsLocation = "blacksmith";
-$thisNPCsGold = 300;
-$herosItems = array("hat");
+$thisNPCsLocation = "market";
+$thisNPCsGold = 500;
+$herosItems = array("eggs");
 
 // if more than 1 need, determine which is the most urgent:
 // ###############
 $mostImportantNeed = 0;
+
+
+
+
+
+
+
+$needsQueue = array();
+$uncheckedQueue = array();
+
+// build array key:
+$thisArrayKey = $thisNPCsNeeds[$mostImportantNeed][0]."_".$thisNPCsNeeds[$mostImportantNeed][1];
+// add array key in with value of parent:
+$needsQueue[$thisArrayKey] = "null";
+
+array_push($uncheckedQueue,$thisArrayKey);
+
+$currentGold = $thisNPCsGold;
+
+
+
+
+
+
+do {
+
+$thisNeedHasBeenMet = false;
+
+// remove this from list
+$thisNeed = array_shift($uncheckedQueue);
+
+$theseParameters = explode("_", $thisNeed);
+
+$thisParent = $needsQueue[$thisNeed];
+
+switch($theseParameters[0]) {
+ case "own":
+// check inventory:
+if (in_array($theseParameters[1], $thisNPCsItems)) {
+$thisNeedHasBeenMet = true;
+}
+break;
+
+ case "buy":
+// see if NPC can afford it
+if($currentGold>=$priceList[$theseParameters[1]]) {
+$thisNeedHasBeenMet = true;
+$currentGold -=$priceList[$theseParameters[1]];
+}
+break;
+
+case "at":
+if ($thisNPCsLocation == $theseParameters[1]) {
+$thisNeedHasBeenMet = true;
+}
+break;
+  
+  }
+    
+    
+    
+if (!$thisNeedHasBeenMet) {
+ for ($i=0; $i<count($actionsAvailable); $i++) {
+  if($actionsAvailable[$i][0] == $theseParameters[0]) {
+    for ($j=0; $j<count($actionsAvailable[$i][1]); $j++) {
+    
+    // check if a noun exists for this precondition, if not, use the parent's noun:
+   
+    if(stristr($actionsAvailable[$i][1][$j], ':') === FALSE) {
+   
+    $thisNoun = $theseParameters[1];
+    $thisVerb = $actionsAvailable[$i][1][$j];
+    } else {
+ 
+    $splitParameters = explode(":",$actionsAvailable[$i][1][$j]);
+    $thisNoun = $splitParameters[1];
+    $thisVerb = $splitParameters[0];
+    }
+    
+    $thisArrayKey = $thisVerb."_".$thisNoun;
+    
+    echo "for ".$thisNeed." now adding ".$thisArrayKey."<br />";
+    
+    array_push($uncheckedQueue,$thisArrayKey);
+  
+    // add reference to parent:
+    
+  
+    
+    }
+  }
+
+}
+} 
+
+
+
+// keep looping while still options to check
+} while (count($uncheckedQueue) >0);
+
+echo "<hr />";
+
+
+// iterate through parents to determine plan
+
+$thisPlan = array();
+
+
+array_push($thisPlan, $thisNeed);
+/*
+do {
+$thisNeedsParent = $needsQueue[$thisNeed];
+echo $thisNeedsParent."<br />";
+array_push($thisPlan, $thisNeedsParent);
+$thisNeed = $thisNeedsParent;
+
+} while($needsQueue[$thisNeed] != "null");
+*/
+ echo "<pre>";
+ print_r(array_values($thisPlan));
+  echo "</pre>";
+
 
 
 
@@ -63,18 +189,7 @@ make the parent the new objectParent
 */
 
 
-
-$needsQueue = array();
-$uncheckedQueue = array();
-
-// build array key:
-$thisArrayKey = $thisNPCsNeeds[$mostImportantNeed][0]."_".$thisNPCsNeeds[$mostImportantNeed][1];
-// add array key in with value of parent:
-$needsQueue[$thisArrayKey] = "null";
-
-array_push($uncheckedQueue,$thisArrayKey);
-
-$currentGold = $thisNPCsGold;
+/*
 
 do {
 $hasFoundPlan = false;
@@ -172,33 +287,8 @@ if (!$hasFoundPlan) {
 // keep looping while not success and still options to check
 } while ((count($uncheckedQueue) >0) && (!$hasFoundPlan));
 
-echo "<hr />";
 
-if (!$hasFoundPlan) {
-echo "no plan found";
-// see how far the plan got, and then create quest for un-met need
-// #######################
-} else {
-// iterate through parents to plan
-echo "found a plan<br />";
-$thisPlan = array();
-
-
-array_push($thisPlan, $thisNeed);
-do {
-$thisNeedsParent = $needsQueue[$thisNeed];
-array_push($thisPlan, $thisNeedsParent);
-$thisNeed = $thisNeedsParent;
-
-} while($needsQueue[$thisNeed] != "null");
- echo "<pre>";
- print_r(array_values($thisPlan));
-  echo "</pre>";
-
-}
-
-
-
+*/
 
 
 ?>
