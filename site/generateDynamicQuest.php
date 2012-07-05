@@ -73,9 +73,11 @@ $thisNeedHasBeenMet = false;
 // remove this from list
 $thisNeed = array_shift($uncheckedQueue);
 
+echo "<br>checking ".$thisNeed ."...<br>";
+
 $theseParameters = explode("_", $thisNeed);
 
-$thisParent = $needsQueue[$thisNeed];
+
 
 switch($theseParameters[0]) {
  case "own":
@@ -85,13 +87,15 @@ $thisNeedHasBeenMet = true;
 }
 break;
 
- case "buy":
+ case "gold":
 // see if NPC can afford it
 if($currentGold>=$priceList[$theseParameters[1]]) {
 $thisNeedHasBeenMet = true;
 $currentGold -=$priceList[$theseParameters[1]];
 }
 break;
+
+
 
 case "at":
 if ($thisNPCsLocation == $theseParameters[1]) {
@@ -104,38 +108,32 @@ break;
     
     
 if (!$thisNeedHasBeenMet) {
- for ($i=0; $i<count($actionsAvailable); $i++) {
-  if($actionsAvailable[$i][0] == $theseParameters[0]) {
-    for ($j=0; $j<count($actionsAvailable[$i][1]); $j++) {
-    
-    // check if a noun exists for this precondition, if not, use the parent's noun:
-   
-    if(stristr($actionsAvailable[$i][1][$j], ':') === FALSE) {
-   
-    $thisNoun = $theseParameters[1];
-    $thisVerb = $actionsAvailable[$i][1][$j];
-    } else {
- 
-    $splitParameters = explode(":",$actionsAvailable[$i][1][$j]);
-    $thisNoun = $splitParameters[1];
-    $thisVerb = $splitParameters[0];
-    }
-    
-    $thisArrayKey = $thisVerb."_".$thisNoun;
-    
-    echo "for ".$thisNeed." now adding ".$thisArrayKey."<br />";
-    
-    array_push($uncheckedQueue,$thisArrayKey);
-  
-    // add reference to parent:
-    
-  
-    
+  for ($i=0; $i<count($actionsAvailable); $i++) {
+    if($actionsAvailable[$i][0] == $theseParameters[0]) {
+      for ($j=0; $j<count($actionsAvailable[$i][1]); $j++) {
+        // check if a noun exists for this precondition, if not, use the parent's noun:
+        if(stristr($actionsAvailable[$i][1][$j], ':') === FALSE) {
+        $thisNoun = $theseParameters[1];
+        $thisVerb = $actionsAvailable[$i][1][$j];
+        } else {
+        $splitParameters = explode(":",$actionsAvailable[$i][1][$j]);
+        $thisNoun = $splitParameters[1];
+        $thisVerb = $splitParameters[0];
+        }
+        $thisArrayKey = $thisVerb."_".$thisNoun;
+        array_push($uncheckedQueue,$thisArrayKey);
+        // add reference to parent:
+        echo "adding ".$thisArrayKey." from ".$thisNeed." to queue<br />";
+        $needsQueue[$thisArrayKey] = $thisNeed; 
+      }
     }
   }
-
+} else {
+$needsQueue[$thisNeed] = "end"; 
+echo "need met at ".$thisNeed.".<br>";
 }
-} 
+
+
 
 
 
@@ -149,23 +147,32 @@ echo "<hr />";
 
 $thisPlan = array();
 
+// find an end node in the need queue:
+$endNode = array_search('end', $needsQueue);
+if($endNode !== false) {
+array_push($thisPlan, array_search('end', $needsQueue));
 
-array_push($thisPlan, $thisNeed);
-/*
+
+
+
+
+
 do {
-$thisNeedsParent = $needsQueue[$thisNeed];
+$thisNeedsParent = $needsQueue[array_search('end', $needsQueue)];
 echo $thisNeedsParent."<br />";
 array_push($thisPlan, $thisNeedsParent);
-$thisNeed = $thisNeedsParent;
+$endNode = $thisNeedsParent;
 
 } while($needsQueue[$thisNeed] != "null");
-*/
+
  echo "<pre>";
  print_r(array_values($thisPlan));
   echo "</pre>";
 
 
-
+} else {
+echo "<br>no plan found.<br>";
+}
 
 
 /* a star method
