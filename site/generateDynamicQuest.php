@@ -23,7 +23,9 @@ array('use',array('own')),
 array('own',array('buy')),
 array('own',array('gather')),
 array('own',array('steal')),
+array('own:gold',array('sell')),
 array('buy',array('gold','at:market')),
+array('sell',array('x','at:market')),
 array('gather:wheat',array('at:wheatfield')),
 array('gather:wheat',array('at:field','plant:wheatseeds')),
 array('plant',array('own'))
@@ -46,24 +48,18 @@ $mostImportantNeed = 0;
 
 
 
-
-
-
 $needsQueue = array();
 $uncheckedQueue = array();
+$endNodeList = array();
 
 // build array key:
 $thisArrayKey = $thisNPCsNeeds[$mostImportantNeed][0]."_".$thisNPCsNeeds[$mostImportantNeed][1];
 // add array key in with value of parent:
-$needsQueue[$thisArrayKey] = "null";
+$needsQueue[$thisArrayKey] = "targetNeed";
 
 array_push($uncheckedQueue,$thisArrayKey);
 
 $currentGold = $thisNPCsGold;
-
-
-
-
 
 
 do {
@@ -92,6 +88,12 @@ break;
 if($currentGold>=$priceList[$theseParameters[1]]) {
 $thisNeedHasBeenMet = true;
 $currentGold -=$priceList[$theseParameters[1]];
+} else {
+// add a need of acquiring some gold:
+$thisArrayKey = "own_gold";
+        array_push($uncheckedQueue,$thisArrayKey);
+echo "adding ".$thisArrayKey." from ".$thisNeed." to queue<br />";
+        $needsQueue[$thisArrayKey] = $thisNeed; 
 }
 break;
 
@@ -129,7 +131,11 @@ if (!$thisNeedHasBeenMet) {
     }
   }
 } else {
-$needsQueue[$thisNeed] = "end"; 
+
+
+
+array_push($endNodeList,$thisNeed);
+
 echo "need met at ".$thisNeed.".<br>";
 }
 
@@ -147,23 +153,29 @@ echo "<hr />";
 
 $thisPlan = array();
 
-// find an end node in the need queue:
-$endNode = array_search('end', $needsQueue);
-if($endNode !== false) {
-array_push($thisPlan, array_search('end', $needsQueue));
+// find an end node:
+if( count($endNodeList) != 0) {
+$thisNode = $endNodeList[0];
+array_push($thisPlan, $thisNode);
 
+ echo "<pre>";
 
+ foreach($needsQueue as $paramName => $paramValue)
+  echo $paramName . " => ".$paramValue ."<br>";
 
+ 
+  echo "</pre>";
+echo "<hr />";
 
 
 
 do {
-$thisNeedsParent = $needsQueue[array_search('end', $needsQueue)];
-echo $thisNeedsParent."<br />";
-array_push($thisPlan, $thisNeedsParent);
-$endNode = $thisNeedsParent;
+$thisNeedsParent = $needsQueue[$thisNode];
 
-} while($needsQueue[$thisNeed] != "null");
+array_push($thisPlan, $thisNeedsParent);
+$thisNode = $thisNeedsParent;
+
+} while($needsQueue[$thisNode] != "targetNeed");
 
  echo "<pre>";
  print_r(array_values($thisPlan));
