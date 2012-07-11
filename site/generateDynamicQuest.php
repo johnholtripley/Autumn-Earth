@@ -32,7 +32,7 @@ array('plant',array('own'))
 // needs - [verb][noun][value/reward]:
 $thisNPCsNeeds = array(array("own","wheat","0"));
 $thisNPCsItems = array("pineapple");
-$thisNPCsLocation = "market";
+$thisNPCsLocation = "house";
 $thisNPCsGold = 500;
 $herosItems = array("eggs");
 
@@ -92,11 +92,20 @@ echo "adding ".$thisArrayKey." from ".$thisNeed." to queue<br />";
 }
 break;
 
-
+case "goto":
+$thisNPCsLocation = $theseParameters[1];
+$thisNeedHasBeenMet = true;
+break;
 
 case "at":
 if ($thisNPCsLocation == $theseParameters[1]) {
 $thisNeedHasBeenMet = true;
+} else {
+// add a need of getting to location:
+$thisArrayKey = "goto_".$theseParameters[1];
+        array_push($uncheckedQueue,$thisArrayKey);
+echo "adding ".$thisArrayKey." from ".$thisNeed." to queue<br />";
+        $needsQueue[$thisArrayKey] = $thisNeed; 
 }
 break;
   
