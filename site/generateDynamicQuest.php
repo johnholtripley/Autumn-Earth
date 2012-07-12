@@ -190,7 +190,7 @@ $thisPlan = array_merge($thisPlan, $thisLoopsPlan);
 // find the node to insert fragment at:
 $insertNode = array_search($thisChainInEntirety, $thisPlan);
 // need to insert before this node:
-array_splice($thisPlan, $insertNode, 0, $thisLoopsPlan);
+array_splice($thisPlan, ($insertNode-1), 0, $thisLoopsPlan);
 
 
 }
