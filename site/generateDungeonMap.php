@@ -1282,6 +1282,83 @@ $outputString .= "</row>\n";
    $outputString .= "<farm>-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-</farm>\n";
     }
     
+    
+    // add NPCs:
+    // [0 - speed][1 - npc type][2 - graphic][3 - xtile][4 - ytile][5 - xdir][6 - ydir] [7 - path][8 - (saved position along path?)][9 - ][10 - name][11 - standard card deck][12 - unique cards owned (joined by full stop)][13 - card skill level] [(NPCStartSpeechIndex-1) - card challenge dialogue][NPCStartSpeechIndex + ... speech]
+    
+    $numberOfNPCs = rand(4,10);
+    // get number of NPCs from dungeon type to have variety ###########
+    
+    $npcStartPoints = array();
+    
+    for ($i = 0; $i<$numberOfNPCs; $i++) {
+    
+    
+    // pick an empty start spot:
+    
+    $testStartX = rand(2,($mapMaxWidth-3));
+    $testStartY = rand(2,($mapMaxWidth-2));
+    $isAValidStartSpot = false;
+    $numberOfAttempts = 0;
+    do {
+    
+    
+       $testStartX++;
+    if($testStartX >= ($mapMaxWidth-2)) {
+    $testStartX = 2;
+    $testStartY ++;
+    
+    if($testStartY >= ($mapMaxHeight-2)) {
+    $mapMaxHeight = 2;
+    }
+    
+    }
+    // test this spot and ordinals:
+    
+    // horribly inefficient ##################
+    
+if(($dungeonOutputMap[$testStartX][$testStartY] > 2) && ($dungeonOutputMap[$testStartX][$testStartY]<7)) {
+  if($testStartXtemMap[$testStartX][$testStartY] == "") {
+    if(($dungeonOutputMap[$testStartX+1][$testStartY] > 2) && ($dungeonOutputMap[$testStartX+1][$testStartY]<7)) {
+      if($testStartXtemMap[$testStartX+1][$testStartY] == "") {
+        if(($dungeonOutputMap[$testStartX-1][$testStartY] > 2) && ($dungeonOutputMap[$testStartX-1][$testStartY]<7)) {
+          if($testStartXtemMap[$testStartX-1][$testStartY] == "") {
+            if(($dungeonOutputMap[$testStartX][$testStartY+1] > 2) && ($dungeonOutputMap[$testStartX][$testStartY+1]<7)) {
+              if($testStartXtemMap[$testStartX][$testStartY+1] == "") {
+                if(($dungeonOutputMap[$testStartX][$testStartY-1] > 2) && ($dungeonOutputMap[$testStartX][$testStartY-1]<7)) {
+                  if($testStartXtemMap[$testStartX][$testStartY-1] == "") {
+                    if(!(in_array($testStartX."-".$testStartY, $npcStartPoints))) {
+                      $isAValidStartSpot = true;
+                      array_push($npcStartPoints, $testStartX."-".$testStartY);
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+    
+ 
+    
+    
+    
+    $numberOfAttempts++;
+    } while(($numberOfAttempts<50) && ($isAValidStartSpot == false));
+    
+    if($isAValidStartSpot) {
+
+    $outputString .= "<npc>2,1,1,".$testStartX.",".$testStartY.",0,-1,0,0,0,dwarven miner,0,4.3,10,11,1,2,3</npc>\n";
+    
+    }
+    
+    }
+    
+    
+    
     // re do loop for items:
 
 
