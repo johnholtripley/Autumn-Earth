@@ -1680,6 +1680,8 @@ function placeItemsandNPCs() {
   // get this from $dungeonDetails: #######################
   $numberOfNPCs = rand(4,8);
 
+$npcPositionsTaken = array();
+
   $loopIterations = $numberOfItems + $numberOfNPCs;
   
   
@@ -1708,51 +1710,54 @@ function placeItemsandNPCs() {
        // try and find an open space where 3 tiles on a corner are walkable while the 3 in the opposite corner aren't:
        // make sure existing items aren't over the walkable tiles as well
        
-       if ((($dungeonMap[($nodesPosition[0])][($nodesPosition[1])+1] == ".") || ($dungeonMap[($nodesPosition[0])][($nodesPosition[1])+1] == ",")) && ($itemMap[($nodesPosition[0])][($nodesPosition[1])+1] == "")) {
+       
+        
+       
+       if ((($dungeonMap[($nodesPosition[0])][($nodesPosition[1])+1] == ".") || ($dungeonMap[($nodesPosition[0])][($nodesPosition[1])+1] == ",")) && (($itemMap[($nodesPosition[0])][($nodesPosition[1])+1] == "") && (!(in_array(($nodesPosition[0])."_".(($nodesPosition[1])+1), $npcPositionsTaken))))) {
 		$tileSouthWalkable = true;
        } else {
        $tileSouthWalkable = false;
        }
        
-              if ((($dungeonMap[($nodesPosition[0])][($nodesPosition[1])-1] == ".") || ($dungeonMap[($nodesPosition[0])][($nodesPosition[1])-1] == ",")) && ($itemMap[($nodesPosition[0])][($nodesPosition[1])-1] == "")) {
+              if ((($dungeonMap[($nodesPosition[0])][($nodesPosition[1])-1] == ".") || ($dungeonMap[($nodesPosition[0])][($nodesPosition[1])-1] == ",")) && (($itemMap[($nodesPosition[0])][($nodesPosition[1])-1] == "") && (!(in_array(($nodesPosition[0])."_".(($nodesPosition[1])-1), $npcPositionsTaken))))) {
 		$tileNorthWalkable = true;
        } else {
        $tileNorthWalkable = false;
        }
        
        
-                if ((($dungeonMap[($nodesPosition[0])+1][($nodesPosition[1])] == ".") || ($dungeonMap[($nodesPosition[0])+1][($nodesPosition[1])] == ",")) && ($itemMap[($nodesPosition[0])+1][($nodesPosition[1])] == "")) {
+                if ((($dungeonMap[($nodesPosition[0])+1][($nodesPosition[1])] == ".") || ($dungeonMap[($nodesPosition[0])+1][($nodesPosition[1])] == ",")) && (($itemMap[($nodesPosition[0])+1][($nodesPosition[1])] == "") && (!(in_array((($nodesPosition[0])+1)."_".($nodesPosition[1]), $npcPositionsTaken))))) {
 		$tileEastWalkable = true;
        } else {
        $tileEastWalkable = false;
        }
        
-              if ((($dungeonMap[($nodesPosition[0])-1][($nodesPosition[1])] == ".") || ($dungeonMap[($nodesPosition[0])-1][($nodesPosition[1])] == ",")) && ($itemMap[($nodesPosition[0])-1][($nodesPosition[1])] == "")) {
+              if ((($dungeonMap[($nodesPosition[0])-1][($nodesPosition[1])] == ".") || ($dungeonMap[($nodesPosition[0])-1][($nodesPosition[1])] == ",")) && (($itemMap[($nodesPosition[0])-1][($nodesPosition[1])] == "") && (!(in_array((($nodesPosition[0])-1)."_".($nodesPosition[1]), $npcPositionsTaken))))) {
 		$tileWestWalkable = true;
        } else {
        $tileWestWalkable = false;
        }
        
        
-               if ((($dungeonMap[($nodesPosition[0])-1][($nodesPosition[1])-1] == ".") || ($dungeonMap[($nodesPosition[0])-1][($nodesPosition[1])-1] == ",")) && ($itemMap[($nodesPosition[0])-1][($nodesPosition[1])-1] == "")) {
+               if ((($dungeonMap[($nodesPosition[0])-1][($nodesPosition[1])-1] == ".") || ($dungeonMap[($nodesPosition[0])-1][($nodesPosition[1])-1] == ",")) && (($itemMap[($nodesPosition[0])-1][($nodesPosition[1])-1] == "") && (!(in_array((($nodesPosition[0])-1)."_".(($nodesPosition[1])-1), $npcPositionsTaken))))) {
 		$tileNorthWestWalkable = true;
        } else {
        $tileNorthWestWalkable = false;
        }
        
-            if ((($dungeonMap[($nodesPosition[0])+1][($nodesPosition[1])-1] == ".") || ($dungeonMap[($nodesPosition[0])+1][($nodesPosition[1])-1] == ",")) && ($itemMap[($nodesPosition[0])+1][($nodesPosition[1])-1] == "")) {
+            if ((($dungeonMap[($nodesPosition[0])+1][($nodesPosition[1])-1] == ".") || ($dungeonMap[($nodesPosition[0])+1][($nodesPosition[1])-1] == ",")) && (($itemMap[($nodesPosition[0])+1][($nodesPosition[1])-1] == "") && (!(in_array((($nodesPosition[0])+1)."_".(($nodesPosition[1])-1), $npcPositionsTaken))))) {
 		$tileNorthEastWalkable = true;
        } else {
        $tileNorthEastWalkable = false;
        }
        
-       if ((($dungeonMap[($nodesPosition[0])+1][($nodesPosition[1])+1] == ".") || ($dungeonMap[($nodesPosition[0])+1][($nodesPosition[1])+1] == ",")) && ($itemMap[($nodesPosition[0])+1][($nodesPosition[1])+1] == "")) {
+       if ((($dungeonMap[($nodesPosition[0])+1][($nodesPosition[1])+1] == ".") || ($dungeonMap[($nodesPosition[0])+1][($nodesPosition[1])+1] == ",")) && (($itemMap[($nodesPosition[0])+1][($nodesPosition[1])+1] == "") && (!(in_array((($nodesPosition[0])+1)."_".(($nodesPosition[1])+1), $npcPositionsTaken))))) {
 		$tileSouthEastWalkable = true;
        } else {
        $tileSouthEastWalkable = false;
        }
        
-        if ((($dungeonMap[($nodesPosition[0])-1][($nodesPosition[1])+1] == ".") || ($dungeonMap[($nodesPosition[0])-1][($nodesPosition[1])+1] == ",")) && ($itemMap[($nodesPosition[0])-1][($nodesPosition[1])+1] == "")) {
+        if ((($dungeonMap[($nodesPosition[0])-1][($nodesPosition[1])+1] == ".") || ($dungeonMap[($nodesPosition[0])-1][($nodesPosition[1])+1] == ",")) && (($itemMap[($nodesPosition[0])-1][($nodesPosition[1])+1] == "") && (!(in_array((($nodesPosition[0])-1)."_".(($nodesPosition[1])+1), $npcPositionsTaken))))) {
 		$tileSouthWestWalkable = true;
        } else {
        $tileSouthWestWalkable = false;
@@ -1806,7 +1811,7 @@ function placeItemsandNPCs() {
         }
         } else {
         // place NPC:
-
+array_push($npcPositionsTaken,($nodesPosition[0])."_".($nodesPosition[1]));
          $npcMap[($nodesPosition[0])][($nodesPosition[1])] = "n";
         }
       }
