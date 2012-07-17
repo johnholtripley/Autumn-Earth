@@ -19,7 +19,7 @@
 
 // get treasure maps placed in chests to work
 
-
+// checking path is connected will need to also take account of static NPCs
 
 // refine the height determination of walls to be clearer and not obstruct view as much:
 // - if the tile is walkable, then it shouldn't take account of tiles that will be blanked out, but if it's going to be wall tile, then it should take account of these when averaging
@@ -940,7 +940,7 @@ function floodFillHeight($startPointX, $startPointY, $heightToUse) {
 }
 
 function outputDungeon() {
-  global $dungeonMap, $dungeonOutputMap, $heightMap, $itemMap, $mapMaxHeight, $mapMaxWidth, $thisDungeonsName, $thisMapsId, $thisPlayersId, $thisAverageCount, $thisAverageTotal, $doorsOut, $doorsIn, $dungeonDetails, $thisOriginatingMapId, $outputMode, $allStairs, $stairsWidth, $entranceHeight, $tileHeight, $itemsAvailable, $isTreasureMapLevel, $startTime, $treasureLocX, $treasureLocY, $templateTiles, $mapMode, $topLeftXPos, $topLeftYPos;
+  global $dungeonMap, $dungeonOutputMap, $heightMap, $itemMap, $npcMap, $mapMaxHeight, $mapMaxWidth, $thisDungeonsName, $thisMapsId, $thisPlayersId, $thisAverageCount, $thisAverageTotal, $doorsOut, $doorsIn, $dungeonDetails, $thisOriginatingMapId, $outputMode, $allStairs, $stairsWidth, $entranceHeight, $tileHeight, $itemsAvailable, $isTreasureMapLevel, $startTime, $treasureLocX, $treasureLocY, $templateTiles, $mapMode, $topLeftXPos, $topLeftYPos;
 
 
   if ($outputMode == "test") {
@@ -975,6 +975,8 @@ echo '<body style="background: #000; color: #fff;">' . "\n";
     
       if ($itemMap[$i][$j] != "") {
        echo "<span style=\"color:#8B600D;\">".$itemMap[$i][$j]."</span>";
+       } else if ($npcMap[$i][$j] != "") {
+       echo "<span style=\"color:#ffffff;\">n</span>";
       } else {
       // show height of this tile (lighter = higher):
       switch ($heightMap[$i][$j]) {
@@ -1283,80 +1285,15 @@ $outputString .= "</row>\n";
     }
     
     
-    // add NPCs:
-    // [0 - speed][1 - npc type][2 - graphic][3 - xtile][4 - ytile][5 - xdir][6 - ydir] [7 - path][8 - (saved position along path?)][9 - ][10 - name][11 - standard card deck][12 - unique cards owned (joined by full stop)][13 - card skill level] [(NPCStartSpeechIndex-1) - card challenge dialogue][NPCStartSpeechIndex + ... speech]
     
-    $numberOfNPCs = rand(4,10);
-    // get number of NPCs from dungeon type to have variety ###########
-    
-    $npcStartPoints = array();
-    
-    for ($i = 0; $i<$numberOfNPCs; $i++) {
-    
-    
-    // pick an empty start spot:
-    
-    $testStartX = rand(2,($mapMaxWidth-3));
-    $testStartY = rand(2,($mapMaxWidth-2));
-    $isAValidStartSpot = false;
-    $numberOfAttempts = 0;
-    do {
-    
-    
-       $testStartX++;
-    if($testStartX >= ($mapMaxWidth-2)) {
-    $testStartX = 2;
-    $testStartY ++;
-    
-    if($testStartY >= ($mapMaxHeight-2)) {
-    $mapMaxHeight = 2;
-    }
-    
-    }
-    // test this spot and ordinals:
-    
-    // horribly inefficient ##################
-    
-if(($dungeonOutputMap[$testStartX][$testStartY] > 2) && ($dungeonOutputMap[$testStartX][$testStartY]<7)) {
-  if($testStartXtemMap[$testStartX][$testStartY] == "") {
-    if(($dungeonOutputMap[$testStartX+1][$testStartY] > 2) && ($dungeonOutputMap[$testStartX+1][$testStartY]<7)) {
-      if($testStartXtemMap[$testStartX+1][$testStartY] == "") {
-        if(($dungeonOutputMap[$testStartX-1][$testStartY] > 2) && ($dungeonOutputMap[$testStartX-1][$testStartY]<7)) {
-          if($testStartXtemMap[$testStartX-1][$testStartY] == "") {
-            if(($dungeonOutputMap[$testStartX][$testStartY+1] > 2) && ($dungeonOutputMap[$testStartX][$testStartY+1]<7)) {
-              if($testStartXtemMap[$testStartX][$testStartY+1] == "") {
-                if(($dungeonOutputMap[$testStartX][$testStartY-1] > 2) && ($dungeonOutputMap[$testStartX][$testStartY-1]<7)) {
-                  if($testStartXtemMap[$testStartX][$testStartY-1] == "") {
-                    if(!(in_array($testStartX."-".$testStartY, $npcStartPoints))) {
-                      $isAValidStartSpot = true;
-                      array_push($npcStartPoints, $testStartX."-".$testStartY);
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-}
-    
- 
-    
-    
-    
-    $numberOfAttempts++;
-    } while(($numberOfAttempts<50) && ($isAValidStartSpot == false));
-    
-    if($isAValidStartSpot) {
-
-    $outputString .= "<npc>2,1,1,".$testStartX.",".$testStartY.",0,-1,0,0,0,dwarven miner,0,4.3,10,11,1,2,3</npc>\n";
-    
-    }
-    
-    }
-    
+    // re do loop for npcs:
+       for ($i = 0;$i < $mapMaxWidth;$i++) {
+    for ($j = 0;$j < $mapMaxHeight;$j++) {
+   if($npcMap[$i][$j] != "") {
+       $outputString .= "<npc>2,1,1,".$i.",".$j.",0,-1,0,0,0,dwarven miner,0,4.3,10,11,1,2,3</npc>\n";
+   }
+   }
+   }
     
     
     // re do loop for items:
@@ -1730,23 +1667,27 @@ function tileIsSurrounded($tileCheckX,$tileCheckY) {
   return $thisTileIsSurrounded;
 }
 
-function placeItems() {
+function placeItemsandNPCs() {
 
-  global $dungeonMap, $itemMap, $mapMaxHeight, $mapMaxWidth, $savedWalkableAreas, $startTime, $dungeonDetails, $thisDungeonsName, $itemsAvailable;
- 
+  global $dungeonMap, $itemMap, $npcMap, $mapMaxHeight, $mapMaxWidth, $savedWalkableAreas, $startTime, $dungeonDetails, $thisDungeonsName, $itemsAvailable;
 
-   
    $itemChance = $dungeonDetails[$thisDungeonsName][3];
    $itemsAvailable = $dungeonDetails[$thisDungeonsName][4];
    
   $numberOfItems = $itemChance[(rand(0,count($itemChance)-1))];
   
+  
+  // get this from $dungeonDetails: #######################
+  $numberOfNPCs = rand(4,8);
 
+  $loopIterations = $numberOfItems + $numberOfNPCs;
   
   
-  
-  if ($itemChance > 0) {
-    for ($i = 1; $i<=$numberOfItems; $i++) {
+    for ($i = 1; $i<=$loopIterations; $i++) {
+
+    
+   
+    
       $thisTime = time();
       $totalTimeSoFar = $thisTime - $startTime;
       if ($totalTimeSoFar>25) {
@@ -1856,17 +1797,27 @@ function placeItems() {
       } while (($isAValidItemPosition == false) && ($attempts<10));
       if ($isAValidItemPosition) {
      
+     
+      if ($i<=$numberOfItems) {
+    if($itemChance>0) {
+     // place item:
         $itemType = $itemsAvailable[(rand(0,count($itemsAvailable)-1))];
         $itemMap[($nodesPosition[0])][($nodesPosition[1])] = $itemType;
+        }
+        } else {
+        // place NPC:
+
+         $npcMap[($nodesPosition[0])][($nodesPosition[1])] = "n";
+        }
       }
     }
-  }
+  
 }
 
 }
 
 function createNewDungeonMap($mapID) {
-    global $dungeonMap, $itemMap, $tunnelMaxLength, $mapMaxWidth, $mapMaxHeight, $inX, $inY, $outX, $outY, $templateRows, $exitDoorX, $exitDoorY, $heightMap, $entranceHeight, $exitHeight, $debugMode, $dungeonDetails, $doorsIn, $doorsOut, $connectingDoorX, $connectingDoorY, $dungeonDetails, $thisDungeonsName, $thisMapsId, $outputMode, $allStairs, $tileHeight, $isTreasureMapLevel, $treasureLocX, $treasureLocY, $thisPlayersId, $loadedDoorData, $mapMode, $topLeftXPos, $topLeftYPos;
+    global $dungeonMap, $itemMap, $npcMap, $tunnelMaxLength, $mapMaxWidth, $mapMaxHeight, $inX, $inY, $outX, $outY, $templateRows, $exitDoorX, $exitDoorY, $heightMap, $entranceHeight, $exitHeight, $debugMode, $dungeonDetails, $doorsIn, $doorsOut, $connectingDoorX, $connectingDoorY, $dungeonDetails, $thisDungeonsName, $thisMapsId, $outputMode, $allStairs, $tileHeight, $isTreasureMapLevel, $treasureLocX, $treasureLocY, $thisPlayersId, $loadedDoorData, $mapMode, $topLeftXPos, $topLeftYPos;
     $outputMode = "xml";
   if(isset($_GET["outputMode"])) {
   $outputMode = $_GET["outputMode"];
@@ -1918,6 +1869,7 @@ $doorsOut = array();
         $dungeonMap = array();
         $heightMap = array();
         $itemMap = array();
+        $npcMap = array();
         $allStairs = array();
         for ($i = 0;$i < $mapMaxWidth;$i++) {
             $dungeonMap[$i] = array();
@@ -1926,6 +1878,7 @@ $doorsOut = array();
                 $dungeonMap[$i][$j] = "#";
                 $heightMap[$i][$j] = "*";
                 $itemMap[$i][$j] = "";
+                $npcMap[$i][$j] = "";
             }
         }
         $entranceHeight = "*";
@@ -2660,7 +2613,7 @@ if ($startDoorY == 0) {
             
             
             } while ((!$isFullyConnected) || (!$stairsAreOk));
-            placeItems();
+            placeItemsandNPCs();
             outputDungeon();
             
             // save which direction to turn to database: ####################
