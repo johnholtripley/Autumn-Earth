@@ -1811,8 +1811,12 @@ $npcPositionsTaken = array();
         }
         } else {
         // place NPC:
+        // double check no item here - can happen. shouldn't need this check - need to fix code above instead #######################
+        
+        if($itemMap[($nodesPosition[0])][($nodesPosition[1])] == "") {        
 array_push($npcPositionsTaken,($nodesPosition[0])."_".($nodesPosition[1]));
          $npcMap[($nodesPosition[0])][($nodesPosition[1])] = "n";
+         }
         }
       }
     }
