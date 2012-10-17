@@ -1,0 +1,40 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<title>swfobject template</title>
+<meta http-equiv="content-type" content="text/html; charset=iso-8859-1"  />
+<meta http-equiv="imagetoolbar" content="no"  />
+<meta name="MSSmartTagsPreventParsing" content="TRUE"  />
+<meta name="robots" content="noodp" />
+		<script language="javascript" type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js"></script>
+		<script language="javascript" type="text/javascript">
+		
+		
+		function outputStatus(e) {
+		// callback function
+			 alert("e.success = " + e.success +"\ne.id = "+ e.id +"\ne.ref = "+ e.ref);
+			}
+		
+		
+		/* remove 'language' if moving this to the BODY */
+		var flashvars = {};
+		flashvars.name1 = "hello";
+		flashvars.name2 = "john";
+		var params = {};
+		params.menu = "false";
+		params.quality = "high";
+			params.wmode = "transparent";
+		var attributes = {};
+		attributes.id = "newFlashMoviesId";
+		swfobject.embedSWF("test.swf", "replaceThisWithFlash", "300", "120", "9.0.0", "expressInstall.swf", flashvars, params, attributes, outputStatus);
+		</script>
+	</head>
+	<body>
+		<div id="replaceThisWithFlash">
+			<h1>Alternative content - no flash or no javascript</h1>
+			<p><a href="http://www.adobe.com/go/getflashplayer"><img src="http://www.adobe.com/images/shared/download_buttons/get_flash_player.gif" alt="Get Adobe Flash player" /></a></p>
+			<p><a href="http://www.google.com/support/bin/answer.py?answer=23852">how do i enable javascript?</a></p>
+		</div>
+	</body>
+</html>
