@@ -17,7 +17,7 @@
 
 // need a system so that any maps that still have undisocvered treasure in them aren't deleted when the player leaves the dungeon
 
-// get treasure maps placed in chests to work
+// write code so that treasure maps placed in chests work
 
 // checking path is connected will need to also take account of static NPCs
 
