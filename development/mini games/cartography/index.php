@@ -58,19 +58,55 @@ for ($j = 0;$j < $mapMaxHeight;$j++) {
 $walkable = 10;
 // loop through all tiles and check the right and bottom edges to see if they transition from walkable to non-walkable and if so, draw an edge
 
-for ($i = 0;$i < ($mapMaxWidth-1);$i++) {
-for ($j = 0;$j < ($mapMaxHeight-1);$j++) {
+for ($i = 0;$i < ($mapMaxWidth);$i++) {
+
+for ($j = 0;$j < ($mapMaxHeight);$j++) {
+
+
 $thisTile = $dungeonArray[$i][$j]<=$walkable;
+
+
+
+if($i==($mapMaxWidth-1)) {
+// edge isn't walkable:
+$thisTileRight = false;
+} else {
 $thisTileRight = $dungeonArray[$i+1][$j]<=$walkable;
+// 1 is not walkable for random maps:
+if($dungeonArray[$i+1][$j] == 1) {
+$thisTileRight = false;
+}
+}
+
+if($j==($mapMaxHeight-1)) {
+// edge isn't walkable:
+$thisTileBottom = false;
+} else {
 $thisTileBottom = $dungeonArray[$i][$j+1]<=$walkable;
+
+if($dungeonArray[$i][$j+1] == 1) {
+$thisTileBottom = false;
+}
+}
+
+
+
+// 1 is not walkable for random maps:
+
+if($dungeonArray[$i][$j] == 1) {
+$thisTile = false;
+}
+
+
+
 
 if($thisTile != $thisTileRight) {
 // draw line to right:
-imageline($mapCanvas, ($i+1)*$tileLineDimension, ($j)*$tileLineDimension, ($i+1)*$tileLineDimension, ($j+1)*$tileLineDimension, $lineColour);
+imageline($mapCanvas, ($i+1)*$tileLineDimension, ($mapMaxHeight-$j)*$tileLineDimension, ($i+1)*$tileLineDimension, ($mapMaxHeight-($j+1))*$tileLineDimension, $lineColour);
 }
 if($thisTile != $thisTileBottom) {
 // draw line to bottom:
-imageline($mapCanvas, ($i)*$tileLineDimension, ($j+1)*$tileLineDimension, ($i+1)*$tileLineDimension, ($j+1)*$tileLineDimension, $lineColour);
+imageline($mapCanvas, ($i)*$tileLineDimension, ($mapMaxHeight-($j+1))*$tileLineDimension, ($i+1)*$tileLineDimension, ($mapMaxHeight-($j+1))*$tileLineDimension, $lineColour);
 }
 
 }
