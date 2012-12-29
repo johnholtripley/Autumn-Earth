@@ -12,12 +12,12 @@ $ground = imagecolorallocate($mapCanvas, 253, 243, 178);
 imagefilledrectangle($mapCanvas, 0, 0, $canvaDimension, $canvaDimension, $ground);
 
 
-$lineColour  = imagecolorallocate($mapCanvas, 20, 0, 1);
+$lineColour  = imagecolorallocate($mapCanvas, 96, 35, 14);
 
 
 
 
-
+// imageantialias($mapCanvas, true);
 
 
 
@@ -113,7 +113,15 @@ imageline($mapCanvas, ($i)*$tileLineDimension, ($mapMaxHeight-($j+1))*$tileLineD
 
 }
 
+ imagefilter($mapCanvas, IMG_FILTER_GAUSSIAN_BLUR);
+ imagefilter($mapCanvas, IMG_FILTER_GAUSSIAN_BLUR);
+ imagefilter($mapCanvas, IMG_FILTER_GAUSSIAN_BLUR);
+ imagefilter($mapCanvas, IMG_FILTER_MEAN_REMOVAL);
+ imagefilter($mapCanvas, IMG_FILTER_CONTRAST, -20);
 
+$overlayTexture = imagecreatefrompng("temp-overlay.png");
+imageAlphaBlending($overlayTexture, false);
+imagecopy($mapCanvas, $overlayTexture, 0, 0, 0, 0, $canvaDimension, $canvaDimension);
 
 // Output image to the browser
 header('Content-type: image/png');
