@@ -3,10 +3,10 @@
 
 $canvaDimension = 250;
 
-// Create the main image, 100x100
+// Create the main image
 $mapCanvas = imagecreatetruecolor($canvaDimension, $canvaDimension);
 
-// Fill the background with white
+// Fill the background
 $ground = imagecolorallocate($mapCanvas, 253, 243, 178);
 
 imagefilledrectangle($mapCanvas, 0, 0, $canvaDimension, $canvaDimension, $ground);
@@ -57,6 +57,23 @@ for ($j = 0;$j < $mapMaxHeight;$j++) {
 
 $walkable = 10;
 // loop through all tiles and check the right and bottom edges to see if they transition from walkable to non-walkable and if so, draw an edge
+
+
+
+
+
+
+
+// loop through and check walkable tiles against neighbours. binary edges, set graphic number, then look for special cases (eg 3 x '8' in a row)
+
+
+
+
+
+
+
+
+
 
 for ($i = 0;$i < ($mapMaxWidth);$i++) {
 
