@@ -156,10 +156,6 @@ $needsBottomLine = true;
 
 }
 
-if($needsRightLine && $needsBottomLine) {
-// draw diagonal line:
-imageline($mapCanvas, ($i+1)*$tileLineDimension, ($mapMaxHeight-$j)*$tileLineDimension, ($i)*$tileLineDimension, ($mapMaxHeight-($j+1))*$tileLineDimension, $lineColour);
-} else {
 
 if($needsRightLine) {
 // draw line to right:
@@ -169,7 +165,7 @@ if($needsBottomLine) {
 // draw line to bottom:
 imageline($mapCanvas, ($i)*$tileLineDimension, ($mapMaxHeight-($j+1))*$tileLineDimension, ($i+1)*$tileLineDimension, ($mapMaxHeight-($j+1))*$tileLineDimension, $lineColour);
 }
-}
+
 
 
 

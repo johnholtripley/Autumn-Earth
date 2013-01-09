@@ -1,0 +1,143 @@
+<?php
+
+
+
+
+
+// need to find all coordinates
+// path find to find linked coordinates
+// remove unrequired nodes so only corner nodes remain
+
+
+
+
+
+
+
+
+
+
+
+
+
+// canvas size should be twice required size as it will be downsampled to anti alias:
+$canvaDimension = 500;
+
+// Create the main image
+$mapCanvas = imagecreatetruecolor($canvaDimension, $canvaDimension);
+
+//imageantialias($mapCanvas, true);
+
+// Fill the background
+$ground = imagecolorallocate($mapCanvas, 253, 243, 178);
+
+imagefilledrectangle($mapCanvas, 0, 0, $canvaDimension, $canvaDimension, $ground);
+
+
+$brush = imagecreate(100,100);
+
+  $brushtrans = imagecolorallocate($brush, 0, 0, 0);
+  imagecolortransparent($brush, $brushtrans);
+
+  $color = imagecolorallocate($brush, 96, 35, 14);
+    imagefilledellipse($brush, 15, 15, 5, 5, $color);
+  
+
+  imagesetbrush($mapCanvas, $brush);
+// bezier curves:
+// http://stackoverflow.com/questions/7054272/how-to-draw-smooth-curve-through-n-points-using-javascript-html5-canvas
+
+// php draw quad bezier:
+// http://spottedsun.com/quadratic-bezier-curve-in-php/
+
+
+function quadBezier($im, $x1, $y1, $x2, $y2, $x3, $y3) {
+    $b = $pre1 = $pre2 = $pre3 = 0;
+    $prevx = 0;
+    $prevy = 0;
+    $d = sqrt(($x1 - $x2) * ($x1 - $x2) + ($y1 - $y2) * ($y1 - $y2)) +
+        sqrt(($x2 - $x3) * ($x2 - $x3) + ($y2 - $y3) * ($y2 - $y3));
+    $resolution = (1/$d) * 10;
+    for ($a = 1; $a >0; $a-=$resolution) {
+        $b=1-$a;
+        $pre1=($a*$a);
+        $pre2=2*$a*$b;
+        $pre3=($b*$b);
+        $x = $pre1*$x1 + $pre2*$x2  + $pre3*$x3;
+        $y = $pre1*$y1 + $pre2*$y2 + $pre3*$y3;
+        if ($prevx != 0 && $prevy != 0)
+            imageline ($im, $x, $y, $prevx,$prevy, IMG_COLOR_BRUSHED);
+        $prevx = $x;
+        $prevy = $y;
+    }
+    imageline ($im, $prevx, $prevy, $x3, $y3, IMG_COLOR_BRUSHED);
+}
+
+
+// quadBezier($mapCanvas, 40, 100, 150, 450, 490, 100, $lineColour);
+
+
+$points = array(
+array(250,500),
+
+
+array(250,350),
+array(300,350),
+array(300,300),
+array(300,200),
+array(250,200),
+array(250,100)
+);
+
+$previousX = $points[0][0];
+$previousY = $points[0][1];
+for ($i = 1; $i<count($points)-2; $i++) {
+
+  $controlX = ($points[$i][0] + $points[$i+1][0]) / 2;
+  $controlY = ($points[$i][1] + $points[$i+1][1]) / 2;
+quadBezier($mapCanvas, $previousX, $previousY, $points[$i][0], $points[$i][1], $controlX, $controlY);
+
+$previousX = $controlX;
+$previousY = $controlY;
+
+}
+
+quadBezier($mapCanvas, $previousX, $previousY,$points[$i][0], $points[$i][1], $points[$i+1][0],$points[$i+1][1]);
+
+/*
+// move to the first point
+   ctx.moveTo(points[0].x, points[0].y);
+
+
+   for (i = 1; i < points.length - 2; i ++)
+   {
+      var xc = (points[i].x + points[i + 1].x) / 2;
+      var yc = (points[i].y + points[i + 1].y) / 2;
+      ctx.quadraticCurveTo(points[i].x, points[i].y, xc, yc);
+   }
+ // curve through the last two points
+ ctx.quadraticCurveTo(points[i].x, points[i].y, points[i+1].x,points[i+1].y);
+*/
+
+ imagefilter($mapCanvas, IMG_FILTER_GAUSSIAN_BLUR);
+$imageResampled = imagecreatetruecolor($canvaDimension/2, $canvaDimension/2);
+
+imagecopyresampled($imageResampled, $mapCanvas, 0, 0, 0, 0, $canvaDimension/2, $canvaDimension/2, $canvaDimension, $canvaDimension);
+
+$overlayTexture = imagecreatefrompng("temp-overlay.png");
+imageAlphaBlending($overlayTexture, false);
+imagecopy($imageResampled, $overlayTexture, 0, 0, 0, 0, $canvaDimension, $canvaDimension);
+
+// Output image to the browser
+header('Content-type: image/png');
+
+imagepng($imageResampled);
+imagedestroy($mapCanvas);
+imagedestroy($overlayTexture);
+imagedestroy($imageResampled);
+imagedestroy($brush);
+
+
+
+
+?>
