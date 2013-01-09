@@ -6,6 +6,7 @@
 
 // need to find all coordinates
 // path find to find linked coordinates
+// check all coordinates have been pathed
 // remove unrequired nodes so only corner nodes remain
 
 
@@ -141,6 +142,8 @@ $walkable = 10;
 
 $points = array();
 
+// $points = [[[start1x,start1y],[end1x,end1y]],[[start2x,start2y],[end2x,end2y]]];
+
 
 for ($i = 0;$i < ($mapMaxWidth);$i++) {
   for ($j = 0;$j < ($mapMaxHeight);$j++) {
@@ -193,6 +196,37 @@ for ($i = 0;$i < ($mapMaxWidth);$i++) {
       }
     }
     
+    
+    
+    if($thisTileLeft != $thisTile) {
+     // add left edge coordinates:
+     array_push($points, array(
+     array($i*$tileLineDimension, ($mapMaxHeight-$j)*$tileLineDimension),
+     array($i*$tileLineDimension, ($mapMaxHeight-($j+1))*$tileLineDimension)
+     ));
+    }
+    if($thisTileRight != $thisTile) {
+     // add right edge coordinates:
+     array_push($points, array(
+     array(($i+1)*$tileLineDimension, ($mapMaxHeight-$j)*$tileLineDimension),
+     array(($i+1)*$tileLineDimension, ($mapMaxHeight-($j+1))*$tileLineDimension)
+     ));
+    }
+    if($thisTileBottom != $thisTile) {
+     // add bottom edge coordinates:
+     array_push($points, array(
+     array($i*$tileLineDimension, ($mapMaxHeight-($j+1))*$tileLineDimension),
+     array(($i+1)*$tileLineDimension, ($mapMaxHeight-($j+1))*$tileLineDimension)
+     ));
+    }
+    if($thisTileTop != $thisTile) {
+     // add top edge coordinates:
+     array_push($points, array(
+     array($i*$tileLineDimension, ($mapMaxHeight-$j)*$tileLineDimension),
+     array(($i+1)*$tileLineDimension, ($mapMaxHeight-$j)*$tileLineDimension)
+     ));
+    }
+    
 
   }
 }
@@ -200,22 +234,67 @@ for ($i = 0;$i < ($mapMaxWidth);$i++) {
 
 
 
+// ---------------------------------------------------
+// find a path through points:
+// find a start point that's on an edge:
+
+
+for ($i = 0;$i < (count($points));$i++) {
+  // check all sides to find a start point #####################
+  if($points[$i][0][1] == 0) {
+    $openList = array($points[$i][0][0]."_" . $points[$i][0][1]."-".$points[$i][1][0]."_" . $points[$i][1][1]);
+    break;
+  }
+}
+
+$closedList = array();
+
+$stillWorking = true;
+do {
+        if (count($openList) > 0) {
+            $thisEdge = array_pop($openList);
+            // add to closed list:
+            array_unshift($closedList, $thisEdge);
+            
+            // determine this edge's points:
+                $edgePoints = explode("-", $thisEdge);
+        //    $startPoints = explode("_",$edgePoints[0]);
+        //    $endPoints = explode("_",$edgePoints[1]);
+            
+            // find another edge that has this edge's end point as it's start point:
+            for ($i = 0;$i < (count($points));$i++) {
+            if($points[$i][0][0]."_" . $points[$i][0][1] == $edgePoints[1]) {
+            array_unshift($openList, $points[$i][0][0]."_" . $points[$i][0][1]."-".$points[$i][1][0]."_" . $points[$i][1][1]);
+            break;
+            }
+            }
+            
+            
+               } else {
+        
+            $stillWorking = false;
+         
+        }
+            
+           } while ($stillWorking);
 
 
 
 
+$orderedPoints = array();
+for ($i = 0;$i < (count($closedList));$i++) {
+$edgePoints = explode("-", $closedList[$i]);
+$startPoints = explode("_",$edgePoints[0]);
+$endPoints = explode("_",$edgePoints[1]);
+array_push($orderedPoints,array($startPoints[0],$startPoints[1]),array($endPoints[0],$endPoints[1]));
+}
 
 
+echo "<pre>".var_export($orderedPoints, true)."</pre>";
 
 
-
-
-
-
-
-
-
-$points = array(
+/*
+$orderedPoints = array(
 array(250,500),
 
 
@@ -226,26 +305,26 @@ array(300,200),
 array(250,200),
 array(250,100)
 );
-
+*/
 
 
 // bezier curves:
 // http://stackoverflow.com/questions/7054272/how-to-draw-smooth-curve-through-n-points-using-javascript-html5-canvas
 
-$previousX = $points[0][0];
-$previousY = $points[0][1];
-for ($i = 1; $i<count($points)-2; $i++) {
+$previousX = $orderedPoints[0][0];
+$previousY = $orderedPoints[0][1];
+for ($i = 1; $i<count($orderedPoints)-2; $i++) {
 
-  $controlX = ($points[$i][0] + $points[$i+1][0]) / 2;
-  $controlY = ($points[$i][1] + $points[$i+1][1]) / 2;
-quadBezier($mapCanvas, $previousX, $previousY, $points[$i][0], $points[$i][1], $controlX, $controlY);
+  $controlX = ($orderedPoints[$i][0] + $orderedPoints[$i+1][0]) / 2;
+  $controlY = ($orderedPoints[$i][1] + $orderedPoints[$i+1][1]) / 2;
+quadBezier($mapCanvas, $previousX, $previousY, $orderedPoints[$i][0], $orderedPoints[$i][1], $controlX, $controlY);
 
 $previousX = $controlX;
 $previousY = $controlY;
 
 }
 
-quadBezier($mapCanvas, $previousX, $previousY,$points[$i][0], $points[$i][1], $points[$i+1][0],$points[$i+1][1]);
+quadBezier($mapCanvas, $previousX, $previousY,$orderedPoints[$i][0], $orderedPoints[$i][1], $orderedPoints[$i+1][0],$orderedPoints[$i+1][1]);
 
 /*
 // move to the first point
@@ -271,10 +350,16 @@ $overlayTexture = imagecreatefrompng("temp-overlay.png");
 imageAlphaBlending($overlayTexture, false);
 imagecopy($imageResampled, $overlayTexture, 0, 0, 0, 0, $canvaDimension, $canvaDimension);
 
+
+
+/*
 // Output image to the browser
 header('Content-type: image/png');
-
 imagepng($imageResampled);
+*/
+
+
+
 imagedestroy($mapCanvas);
 imagedestroy($overlayTexture);
 imagedestroy($imageResampled);
