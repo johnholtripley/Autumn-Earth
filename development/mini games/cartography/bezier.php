@@ -1,5 +1,6 @@
 <?php
 
+$debug = false;
 
 
 
@@ -233,6 +234,12 @@ for ($i = 0;$i < ($mapMaxWidth);$i++) {
 
 
 
+  if($debug) {
+echo "<hr>";
+echo "<pre>".var_export($points, true)."</pre>";
+
+echo "<hr>";
+}
 
 // ---------------------------------------------------
 // find a path through points:
@@ -241,11 +248,21 @@ for ($i = 0;$i < ($mapMaxWidth);$i++) {
 
 for ($i = 0;$i < (count($points));$i++) {
   // check all sides to find a start point #####################
-  if($points[$i][0][1] == 0) {
+  if($points[$i][0][1] == $canvaDimension) {
     $openList = array($points[$i][0][0]."_" . $points[$i][0][1]."-".$points[$i][1][0]."_" . $points[$i][1][1]);
+    if($debug) {
+    echo "start ".$openList[0]."<br>";
+    }
     break;
   }
 }
+
+
+
+
+
+$openList[0] = "333.33333333333_208.33333333333-333.33333333333_194.44444444444";
+
 
 $closedList = array();
 
@@ -254,22 +271,29 @@ do {
         if (count($openList) > 0) {
             $thisEdge = array_pop($openList);
             // add to closed list:
-            array_unshift($closedList, $thisEdge);
-            
+            array_push($closedList, $thisEdge);
+            if($debug) {
+            echo "adding ".$thisEdge."(".count($openList).")<br>";
+            }
             // determine this edge's points:
                 $edgePoints = explode("-", $thisEdge);
         //    $startPoints = explode("_",$edgePoints[0]);
         //    $endPoints = explode("_",$edgePoints[1]);
             
             // find another edge that has this edge's end point as it's start point:
+            $foundNeighbour = false;
             for ($i = 0;$i < (count($points));$i++) {
             if($points[$i][0][0]."_" . $points[$i][0][1] == $edgePoints[1]) {
             array_unshift($openList, $points[$i][0][0]."_" . $points[$i][0][1]."-".$points[$i][1][0]."_" . $points[$i][1][1]);
+            $foundNeighbour = true;
             break;
             }
             }
-            
-            
+            if(!$foundNeighbour) {
+            if($debug) {
+            echo "no neighbour";
+            }
+            }
                } else {
         
             $stillWorking = false;
@@ -286,12 +310,14 @@ for ($i = 0;$i < (count($closedList));$i++) {
 $edgePoints = explode("-", $closedList[$i]);
 $startPoints = explode("_",$edgePoints[0]);
 $endPoints = explode("_",$edgePoints[1]);
-array_push($orderedPoints,array($startPoints[0],$startPoints[1]),array($endPoints[0],$endPoints[1]));
+array_push($orderedPoints,array($startPoints[0],$startPoints[1]));
 }
-
-
+// add last point:
+array_push($orderedPoints,array($endPoints[0],$endPoints[1]));
+  if($debug) {
+echo "<hr>";
 echo "<pre>".var_export($orderedPoints, true)."</pre>";
-
+}
 
 /*
 $orderedPoints = array(
@@ -306,6 +332,10 @@ array(250,200),
 array(250,100)
 );
 */
+
+
+
+
 
 
 // bezier curves:
@@ -352,11 +382,11 @@ imagecopy($imageResampled, $overlayTexture, 0, 0, 0, 0, $canvaDimension, $canvaD
 
 
 
-/*
+if(!$debug) {
 // Output image to the browser
 header('Content-type: image/png');
 imagepng($imageResampled);
-*/
+}
 
 
 
