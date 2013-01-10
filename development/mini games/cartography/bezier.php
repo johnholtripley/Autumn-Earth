@@ -14,7 +14,7 @@ $debug = false;
 
 
 
-
+// start points and end points aren't the same way - depends which way the path finder is running. either need to store edges in a different way, or need to check the edge is not itself (or one already checked) and look at either start or end point to find a match ...but need to know current direction?
 
 
 
@@ -146,6 +146,9 @@ $points = array();
 // $points = [[[start1x,start1y],[end1x,end1y]],[[start2x,start2y],[end2x,end2y]]];
 
 
+
+
+
 for ($i = 0;$i < ($mapMaxWidth);$i++) {
   for ($j = 0;$j < ($mapMaxHeight);$j++) {
     $thisTile = $dungeonArray[$i][$j]<=$walkable;
@@ -153,6 +156,9 @@ for ($i = 0;$i < ($mapMaxWidth);$i++) {
     if($dungeonArray[$i][$j] == 1) {
     $thisTile = false;
     }
+    
+
+    
     
     if($i==0) {
       // edge isn't walkable:
@@ -196,51 +202,99 @@ for ($i = 0;$i < ($mapMaxWidth);$i++) {
         $thisTileTop = false;
       }
     }
+    // to avoid duplicate edges, don't check to see if the adjoining tiles are different, only draw an edge where current tile is walkable and neighbour is not:
+    if($thisTile) {
     
     
+
     
-    if($thisTileLeft != $thisTile) {
-     // add left edge coordinates:
-     array_push($points, array(
-     array($i*$tileLineDimension, ($mapMaxHeight-$j)*$tileLineDimension),
-     array($i*$tileLineDimension, ($mapMaxHeight-($j+1))*$tileLineDimension)
-     ));
+    
+      if(!$thisTileLeft) {
+       // add left edge coordinates:
+       array_push($points, array(
+       array($i*$tileLineDimension, ($mapMaxHeight-$j)*$tileLineDimension),
+       array($i*$tileLineDimension, ($mapMaxHeight-($j+1))*$tileLineDimension)
+       ));
+       
+       
+
+       
+       
+      }
+      if(!$thisTileRight) {
+       // add right edge coordinates:
+       array_push($points, array(
+       array(($i+1)*$tileLineDimension, ($mapMaxHeight-$j)*$tileLineDimension),
+       array(($i+1)*$tileLineDimension, ($mapMaxHeight-($j+1))*$tileLineDimension)
+       ));
+       
+       
+       
+
+       
+       
+      }
+      if(!$thisTileBottom) {
+       // add bottom edge coordinates:
+       array_push($points, array(
+       array($i*$tileLineDimension, ($mapMaxHeight-($j+1))*$tileLineDimension),
+       array(($i+1)*$tileLineDimension, ($mapMaxHeight-($j+1))*$tileLineDimension)
+       ));
+       
+       
+
+       
+       
+      }
+      if(!$thisTileTop) {
+       // add top edge coordinates:
+       array_push($points, array(
+       array($i*$tileLineDimension, ($mapMaxHeight-$j)*$tileLineDimension),
+       array(($i+1)*$tileLineDimension, ($mapMaxHeight-$j)*$tileLineDimension)
+       ));
+       
+    
+       
+       
+      }
     }
-    if($thisTileRight != $thisTile) {
-     // add right edge coordinates:
-     array_push($points, array(
-     array(($i+1)*$tileLineDimension, ($mapMaxHeight-$j)*$tileLineDimension),
-     array(($i+1)*$tileLineDimension, ($mapMaxHeight-($j+1))*$tileLineDimension)
-     ));
-    }
-    if($thisTileBottom != $thisTile) {
-     // add bottom edge coordinates:
-     array_push($points, array(
-     array($i*$tileLineDimension, ($mapMaxHeight-($j+1))*$tileLineDimension),
-     array(($i+1)*$tileLineDimension, ($mapMaxHeight-($j+1))*$tileLineDimension)
-     ));
-    }
-    if($thisTileTop != $thisTile) {
-     // add top edge coordinates:
-     array_push($points, array(
-     array($i*$tileLineDimension, ($mapMaxHeight-$j)*$tileLineDimension),
-     array(($i+1)*$tileLineDimension, ($mapMaxHeight-$j)*$tileLineDimension)
-     ));
-    }
+
     
 
   }
 }
 
 
-
   if($debug) {
-echo "<hr>";
-echo "<pre>".var_export($points, true)."</pre>";
+ echo "<br>~~~~~~~~~~~~~~~~~~~~~~~~~~~<br>";
 
-echo "<hr>";
+echo $dungeonArray[30][31]."<br>";
+echo $dungeonArray[29][31]."<br>";
+echo $dungeonArray[31][31]."<br>";
+echo $dungeonArray[30][32]."<br>";
+echo $dungeonArray[30][30]."<br>";
+
+ echo "<br>~~~~~~~~~~~~~~~~~~~~~~~~~~~<br>";
+
+echo "<pre>";
+
+for ($i = 0;$i < ($mapMaxWidth);$i++) {
+  for ($j = 0;$j < ($mapMaxHeight);$j++) {
+  
+  $thisTile = $dungeonArray[$i][$j];
+  if($thisTile < 10) {
+  $thisTile = " ".$thisTile." ";
+  }
+
+echo $thisTile." ";
+
+}
+echo"<br>";
 }
 
+echo "</pre>";
+ echo "<br>~~~~~~~~~~~~~~~~~~~~~~~~~~~<br>";
+}
 // ---------------------------------------------------
 // find a path through points:
 // find a start point that's on an edge:
@@ -260,7 +314,7 @@ for ($i = 0;$i < (count($points));$i++) {
 
 
 
-
+// ###################
 $openList[0] = "333.33333333333_208.33333333333-333.33333333333_194.44444444444";
 
 
@@ -273,7 +327,7 @@ do {
             // add to closed list:
             array_push($closedList, $thisEdge);
             if($debug) {
-            echo "adding ".$thisEdge."(".count($openList).")<br>";
+            echo "adding ".$thisEdge."<br>";
             }
             // determine this edge's points:
                 $edgePoints = explode("-", $thisEdge);
@@ -281,19 +335,17 @@ do {
         //    $endPoints = explode("_",$edgePoints[1]);
             
             // find another edge that has this edge's end point as it's start point:
-            $foundNeighbour = false;
+      
+            
+            
+           
             for ($i = 0;$i < (count($points));$i++) {
-            if($points[$i][0][0]."_" . $points[$i][0][1] == $edgePoints[1]) {
-            array_unshift($openList, $points[$i][0][0]."_" . $points[$i][0][1]."-".$points[$i][1][0]."_" . $points[$i][1][1]);
-            $foundNeighbour = true;
-            break;
+              if($points[$i][0][0]."_" . $points[$i][0][1] == $edgePoints[1]) {
+                array_unshift($openList, $points[$i][0][0]."_" . $points[$i][0][1]."-".$points[$i][1][0]."_" . $points[$i][1][1]);
+                break;
+              } 
             }
-            }
-            if(!$foundNeighbour) {
-            if($debug) {
-            echo "no neighbour";
-            }
-            }
+        
                } else {
         
             $stillWorking = false;
