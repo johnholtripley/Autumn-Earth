@@ -100,7 +100,7 @@ function quadBezier($im, $x1, $y1, $x2, $y2, $x3, $y3) {
     $mapMaxHeight = 36;
     
     
-    $tileLineDimension = $canvaDimension/$mapMaxWidth;
+    $tileLineDimension = floor($canvaDimension/$mapMaxWidth);
 
 $dungeonArray = array();
 for ($i = 0;$i < $mapMaxWidth;$i++) {
@@ -298,12 +298,15 @@ echo "</pre>";
 // ---------------------------------------------------
 // find a path through points:
 // find a start point that's on an edge:
-
+$orderedPoints = array();
 
 for ($i = 0;$i < (count($points));$i++) {
   // check all sides to find a start point #####################
   if($points[$i][0][1] == $canvaDimension) {
-    $openList = array($points[$i][0][0]."_" . $points[$i][0][1]."-".$points[$i][1][0]."_" . $points[$i][1][1]);
+  // on bottom edge
+    $currentEdge = array($points[$i][0][0]."_" . $points[$i][0][1], $points[$i][1][0]."_" . $points[$i][1][1]);
+    array_push($orderedPoints,array($points[$i][0][0],$points[$i][1][0]));
+    $direction = "up";
     if($debug) {
     echo "start ".$openList[0]."<br>";
     }
@@ -314,14 +317,135 @@ for ($i = 0;$i < (count($points));$i++) {
 
 
 
-// ###################
-$openList[0] = "333.33333333333_208.33333333333-333.33333333333_194.44444444444";
 
 
-$closedList = array();
+
+
+// get target end point - this is the new start point
+// from $direction, determine the 3 possible end points.
+// look for that edge.
+// if found, update direction, and get this end point
+// keep track of used edges ####
+
+
+
+$stillWorking = true;
+
+do {
+
+$newStartPoint = explode("_",$currentEdge[1]);
+
+
+switch ($direction) {
+    case "up":
+        $targetEndPoint1 = array(($newStartPoint[0]-$tileLineDimension),$newStartPoint[1]);
+        $targetEndPoint2 = array(($newStartPoint[0]+$tileLineDimension),$newStartPoint[1]);
+        $targetEndPoint3 = array($newStartPoint[0],($newStartPoint[1]-$tileLineDimension));
+        break;
+        
+            case "down":
+        $targetEndPoint1 = array(($newStartPoint[0]-$tileLineDimension),$newStartPoint[1]);
+        $targetEndPoint2 = array(($newStartPoint[0]+$tileLineDimension),$newStartPoint[1]);
+        $targetEndPoint3 = array($newStartPoint[0],($newStartPoint[1]+$tileLineDimension));
+        break;
+        
+            case "left":
+        $targetEndPoint1 = array(($newStartPoint[0]-$tileLineDimension),$newStartPoint[1]);
+        $targetEndPoint2 = array($newStartPoint[0],($newStartPoint[1]-$tileLineDimension));
+        $targetEndPoint3 = array($newStartPoint[0],($newStartPoint[1]+$tileLineDimension));
+        break;
+        
+            case "right":
+        $targetEndPoint1 = array(($newStartPoint[0]+$tileLineDimension),$newStartPoint[1]);
+        $targetEndPoint2 = array($newStartPoint[0],($newStartPoint[1]-$tileLineDimension));
+        $targetEndPoint3 = array($newStartPoint[0],($newStartPoint[1]+$tileLineDimension));
+        break;
+   
+}
+$matchedEdge = -1;
+for ($i = 0;$i < (count($points));$i++) {
+
+// try either coord of this point to see if they the start coords:
+if(($points[$i][0][0] == $newStartPoint[0]) && ($points[$i][0][1] == $newStartPoint[1])) {
+ // try and match the other point to one of the targets:
+ 
+ if((($points[$i][1][0] == $targetEndPoint1[0]) && ($points[$i][1][1] == $targetEndPoint1[1])) ||  (($points[$i][1][0] == $targetEndPoint1[1]) && ($points[$i][1][1] == $targetEndPoint1[0]))) {
+ $matchedEdge = 1;
+ $startPoint = 0;
+ $endCoordinate = $points[$i][1][0];
+ }
+  if((($points[$i][1][0] == $targetEndPoint2[0]) && ($points[$i][1][1] == $targetEndPoint2[1])) ||  (($points[$i][1][0] == $targetEndPoint2[1]) && ($points[$i][1][1] == $targetEndPoint2[0]))) {
+ $matchedEdge = 2;
+  $startPoint = 0;
+  $endCoordinate = $points[$i][1][0];
+ }
+   if((($points[$i][1][0] == $targetEndPoint3[0]) && ($points[$i][1][1] == $targetEndPoint3[1])) ||  (($points[$i][1][0] == $targetEndPoint3[1]) && ($points[$i][1][1] == $targetEndPoint3[0]))) {
+ $matchedEdge = 3;
+  $startPoint = 0;
+  $endCoordinate = $points[$i][1][0];
+ }
+ 
+ 
+} else if(($points[$i][1][0] == $newStartPoint[0]) && ($points[$i][1][1] == $newStartPoint[1])) {
+// try and match the other point to one of the targets:
+
+
+ if((($points[$i][0][0] == $targetEndPoint1[0]) && ($points[$i][0][1] == $targetEndPoint1[1])) ||  (($points[$i][0][0] == $targetEndPoint1[1]) && ($points[$i][0][1] == $targetEndPoint1[0]))) {
+ $matchedEdge = 1;
+  $startPoint = 1;
+  $endCoordinate = $points[$i][0][0];
+ }
+  if((($points[$i][0][0] == $targetEndPoint2[0]) && ($points[$i][0][1] == $targetEndPoint2[1])) ||  (($points[$i][0][0] == $targetEndPoint2[1]) && ($points[$i][0][1] == $targetEndPoint2[0]))) {
+ $matchedEdge = 2;
+ $startPoint = 1;
+ $endCoordinate = $points[$i][0][0];
+ }
+   if((($points[$i][0][0] == $targetEndPoint3[0]) && ($points[$i][0][1] == $targetEndPoint3[1])) ||  (($points[$i][0][0] == $targetEndPoint3[1]) && ($points[$i][0][1] == $targetEndPoint3[0]))) {
+ $matchedEdge = 3;
+ $startPoint = 1;
+ $endCoordinate = $points[$i][0][0];
+ }
+
+
+}
+
+if($matchedEdge != -1) {
+ // construct this edge in correct order:
+ 
+ $startCoordinate = $newStartPoint[$startPoint];
+ 
+ array_push($orderedPoints,array($startPoints[0],$startPoints[1]));
+ 
+  break;
+ 
+}
+
+}
+
+if($matchedEdge == -1) {
+// no matching edges found
+$stillWorking = false;
+}
+
+} while ($stillWorking);
+
+/*
+
 
 $stillWorking = true;
 do {
+
+
+
+
+
+
+
+
+
+
+
+
         if (count($openList) > 0) {
             $thisEdge = array_pop($openList);
             // add to closed list:
@@ -355,8 +479,8 @@ do {
            } while ($stillWorking);
 
 
-
-
+*/
+/*
 $orderedPoints = array();
 for ($i = 0;$i < (count($closedList));$i++) {
 $edgePoints = explode("-", $closedList[$i]);
@@ -370,7 +494,7 @@ array_push($orderedPoints,array($endPoints[0],$endPoints[1]));
 echo "<hr>";
 echo "<pre>".var_export($orderedPoints, true)."</pre>";
 }
-
+*/
 /*
 $orderedPoints = array(
 array(250,500),
