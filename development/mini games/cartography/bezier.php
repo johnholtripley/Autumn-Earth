@@ -462,10 +462,22 @@ echo "</pre>";
 for ($i = 1; $i<(count($orderedDirections)-1); $i++) {
 if(strtolower($orderedDirections[$i]) == strtolower($orderedDirections[$i+1])) {
 if(strtolower($orderedDirections[$i]) == strtolower($orderedDirections[$i-1])) {
-strtolower($orderedDirections[$i] = strtoupper($orderedDirections[$i]));
+$orderedDirections[$i] = strtoupper($orderedDirections[$i]);
 }
 }
 }
+
+// remove any diagonals
+for ($i = 1; $i<(count($orderedDirections)-1); $i++) {
+if(strtolower($orderedDirections[$i-1]) == strtolower($orderedDirections[$i+1])) {
+//if(strtolower($orderedDirections[$i+1]) == strtolower($orderedDirections[$i+1])) {
+$orderedDirections[$i] = strtoupper($orderedDirections[$i]);
+//}
+}
+}
+
+
+
 
 
 if($debug) {
