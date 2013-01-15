@@ -42,7 +42,7 @@ $brush = imagecreate(100,100);
   imagecolortransparent($brush, $brushtrans);
 
   $color = imagecolorallocate($brush, 96, 35, 14);
-    imagefilledellipse($brush, 15, 15, 5, 5, $color);
+    imagefilledellipse($brush, 50, 50, 2, 2, $color);
   
 
   imagesetbrush($mapCanvas, $brush);
@@ -261,16 +261,14 @@ for ($i = 0;$i < ($mapMaxWidth);$i++) {
 // find a path through points:
 // find a start point that's on an edge:
 $orderedPoints = array();
+$orderedDirections = array();
 $usedEdges = array();
 for ($i = 0;$i < (count($edges));$i++) {
   // check all sides to find a start point #####################
   
   $points = explode("|", $edges[$i]);
   
-  if($debug) {
- // var_dump($points);
- // echo "<hr>";
-  }
+ 
   
   $startPoint = explode(",", $points[0]);
   $endPoint = explode(",", $points[1]);
@@ -279,8 +277,7 @@ for ($i = 0;$i < (count($edges));$i++) {
  // echo $startPoint[1].",".$canvaDimension."<br>";
   }
   
-  if(!$debug) {
-  
+ 
   
    // ################################
   //if($startPoint[1] == $canvaDimension) {
@@ -293,9 +290,10 @@ for ($i = 0;$i < (count($edges));$i++) {
      array_push($orderedPoints,array($startPoint[0],$startPoint[1]));
       array_push($usedEdges,$edges[$i]);
     $direction = "north";
+    array_push($orderedDirections,$direction);
     break;
   }
-  }
+  
   
   
 
@@ -440,114 +438,71 @@ $direction = "north";
 
 }
 
-// ##########
-
+array_push($orderedDirections,$direction);
 }
 
 } while ($stillWorking);
 
-/*
 
 
-$stillWorking = true;
-do {
-
-
-
-
-
-
-
-
-
-
-
-
-        if (count($openList) > 0) {
-            $thisEdge = array_pop($openList);
-            // add to closed list:
-            array_push($closedList, $thisEdge);
-            if($debug) {
-            echo "adding ".$thisEdge."<br>";
-            }
-            // determine this edge's points:
-                $edgePoints = explode("-", $thisEdge);
-        //    $startPoints = explode("_",$edgePoints[0]);
-        //    $endPoints = explode("_",$edgePoints[1]);
-            
-            // find another edge that has this edge's end point as it's start point:
-      
-            
-            
-           
-            for ($i = 0;$i < (count($points));$i++) {
-              if($points[$i][0][0]."_" . $points[$i][0][1] == $edgePoints[1]) {
-                array_unshift($openList, $points[$i][0][0]."_" . $points[$i][0][1]."-".$points[$i][1][0]."_" . $points[$i][1][1]);
-                break;
-              } 
-            }
-        
-               } else {
-        
-            $stillWorking = false;
-         
-        }
-            
-           } while ($stillWorking);
-
-
-*/
-/*
-$orderedPoints = array();
-for ($i = 0;$i < (count($closedList));$i++) {
-$edgePoints = explode("-", $closedList[$i]);
-$startPoints = explode("_",$edgePoints[0]);
-$endPoints = explode("_",$edgePoints[1]);
-array_push($orderedPoints,array($startPoints[0],$startPoints[1]));
+if($debug) {
+echo "<pre>";
+var_dump($orderedDirections);
+echo "</pre>";
 }
-// add last point:
-array_push($orderedPoints,array($endPoints[0],$endPoints[1]));
-  if($debug) {
+
+// check all edges have been used
+// #####################
+
+
+// remove any intermediary points
+// #####################
+
+// find any intermediatry directions and convert these to uppercase:
+for ($i = 1; $i<(count($orderedDirections)-1); $i++) {
+if(strtolower($orderedDirections[$i]) == strtolower($orderedDirections[$i+1])) {
+if(strtolower($orderedDirections[$i]) == strtolower($orderedDirections[$i-1])) {
+strtolower($orderedDirections[$i] = strtoupper($orderedDirections[$i]));
+}
+}
+}
+
+
+if($debug) {
 echo "<hr>";
-echo "<pre>".var_export($orderedPoints, true)."</pre>";
+echo "<pre>";
+var_dump($orderedDirections);
+echo "</pre>";
 }
-*/
-/*
-$orderedPoints = array(
-array(250,500),
 
 
-array(250,350),
-array(300,350),
-array(300,300),
-array(300,200),
-array(250,200),
-array(250,100)
-);
-*/
-
-
-
+$directionsToRemove = array("NORTH","EAST","SOUTH","WEST");
+$tidiedOrderedPoints = array();
+for ($i = 0; $i<count($orderedPoints); $i++) {
+if (!(in_array($orderedDirections[$i], $directionsToRemove))) {
+array_push($tidiedOrderedPoints,array($orderedPoints[$i][0],$orderedPoints[$i][1]));
+}
+}
 
 
 
 // bezier curves:
 // http://stackoverflow.com/questions/7054272/how-to-draw-smooth-curve-through-n-points-using-javascript-html5-canvas
 
-$previousX = $orderedPoints[0][0];
-$previousY = $orderedPoints[0][1];
-for ($i = 1; $i<count($orderedPoints)-2; $i++) {
+$previousX = $tidiedOrderedPoints[0][0];
+$previousY = $tidiedOrderedPoints[0][1];
+for ($i = 1; $i<count($tidiedOrderedPoints)-2; $i++) {
 
-  $controlX = ($orderedPoints[$i][0] + $orderedPoints[$i+1][0]) / 2;
-  $controlY = ($orderedPoints[$i][1] + $orderedPoints[$i+1][1]) / 2;
-quadBezier($mapCanvas, $previousX, $previousY, $orderedPoints[$i][0], $orderedPoints[$i][1], $controlX, $controlY);
+  $controlX = ($tidiedOrderedPoints[$i][0] + $tidiedOrderedPoints[$i+1][0]) / 2;
+  $controlY = ($tidiedOrderedPoints[$i][1] + $tidiedOrderedPoints[$i+1][1]) / 2;
+quadBezier($mapCanvas, $previousX, $previousY, $tidiedOrderedPoints[$i][0], $tidiedOrderedPoints[$i][1], $controlX, $controlY);
 
 $previousX = $controlX;
 $previousY = $controlY;
 
 }
 
-quadBezier($mapCanvas, $previousX, $previousY,$orderedPoints[$i][0], $orderedPoints[$i][1], $orderedPoints[$i+1][0],$orderedPoints[$i+1][1]);
+quadBezier($mapCanvas, $previousX, $previousY,$tidiedOrderedPoints[$i][0], $tidiedOrderedPoints[$i][1], $tidiedOrderedPoints[$i+1][0],$tidiedOrderedPoints[$i+1][1]);
 
 /*
 // move to the first point
