@@ -486,6 +486,7 @@ array_push($tidiedOrderedPoints,array($orderedPoints[$i][0],$orderedPoints[$i][1
 
 
 
+
 // bezier curves:
 // http://stackoverflow.com/questions/7054272/how-to-draw-smooth-curve-through-n-points-using-javascript-html5-canvas
 
