@@ -256,54 +256,52 @@ for ($i = 0;$i < ($mapMaxWidth);$i++) {
 }
 
 
-  if($debug) {
 
-echo "<pre>";
-
-for ($i = 0;$i < ($mapMaxWidth);$i++) {
-  for ($j = 0;$j < ($mapMaxHeight);$j++) {
-  
-  $thisTile = $dungeonArray[$i][$j];
-  if($thisTile < 10) {
-  $thisTile = " ".$thisTile." ";
-  }
-
-echo $thisTile." ";
-
-}
-echo"<br>";
-}
-
-echo "</pre>";
- echo "<br>~~~~~~~~~~~~~~~~~~~~~~~~~~~<br>";
-}
 // ---------------------------------------------------
 // find a path through points:
 // find a start point that's on an edge:
 $orderedPoints = array();
-
+$usedEdges = array();
 for ($i = 0;$i < (count($edges));$i++) {
   // check all sides to find a start point #####################
   
   $points = explode("|", $edges[$i]);
+  
+  if($debug) {
+ // var_dump($points);
+ // echo "<hr>";
+  }
+  
   $startPoint = explode(",", $points[0]);
   $endPoint = explode(",", $points[1]);
   
-  if($startPoint[1] == $canvaDimension) {
+  if($debug) {
+ // echo $startPoint[1].",".$canvaDimension."<br>";
+  }
+  
+  if(!$debug) {
+  
+  
+   // ################################
+  //if($startPoint[1] == $canvaDimension) {
+ if($startPoint[1] == 468) {
+ // ################################
+ 
+ 
+ 
   // on bottom edge
-
-   
      array_push($orderedPoints,array($startPoint[0],$startPoint[1]));
+      array_push($usedEdges,$edges[$i]);
     $direction = "north";
-    
-    
-    
-    
-    if($debug) {
-    echo "start ".$openList[0]."<br>";
-    }
     break;
   }
+  }
+  
+  
+
+  
+  
+  
 }
 
 
@@ -381,12 +379,19 @@ $foundNewPoint = "";
 // check if any of these are valid edges
 for ($i = 0;$i < (count($possibleEdges));$i++) {
 
-if (in_array($possibleEdges[$i],$edges)) {
+if ((in_array($possibleEdges[$i],$edges)) && (!(in_array($possibleEdges[$i],$usedEdges)))){
+ 
+ if($debug) {
+ echo "<br>found next edge: ".$possibleEdges[$i];
+ }
  
  $foundNewPoint = $possibleEdges[$i];
+ 
+  array_push($usedEdges,$possibleEdges[$i]);
+ 
  // add which point isn't the current point to the list, and set up for the next iteration:
  
-  $points = explode("|", $edges[$i]);
+  $points = explode("|", $possibleEdges[$i]);
 $startEdge = implode(",",$thisEdgesStartPoint);
  if($points[0] == $startEdge) {
  // add the other point:
@@ -406,8 +411,37 @@ $startEdge = implode(",",$thisEdgesStartPoint);
 }
 
 
+
+
 if($foundNewPoint == "") {
 $stillWorking = false;
+} else {
+// determine new direction:
+
+
+$startX = $thisEdgesStartPoint[0];
+$startY = $thisEdgesStartPoint[1];
+$endX = $newPoint[0];
+$endY = $newPoint[1];
+
+if ($startY == $endY) {
+if ($startX < $endX) {
+$direction = "east";
+} else {
+$direction = "west";
+}
+} else {
+
+if ($startY < $endY) {
+$direction = "south";
+} else {
+$direction = "north";
+}
+
+}
+
+// ##########
+
 }
 
 } while ($stillWorking);
