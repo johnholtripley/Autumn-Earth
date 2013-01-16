@@ -2,13 +2,11 @@
 
 $debug = false;
 
+if(isset($_GET["debug"])) {
+$debug = $_GET["debug"];
+}
 
-
-
-// don't add edges that run along the map edge
-
-
-
+// read xml file and use that data instead
 
 
 
@@ -117,6 +115,12 @@ function quadBezier($im, $x1, $y1, $x2, $y2, $x3, $y3) {
     
     
     $tileLineDimension = floor($canvaDimension/($mapMaxWidth-1));
+
+
+if($debug) {
+echo $tileLineDimension;
+echo "<hr>";
+}
 
 $dungeonArray = array();
 for ($i = 0;$i < $mapMaxWidth;$i++) {
@@ -228,35 +232,40 @@ for ($i = 0;$i < ($mapMaxWidth);$i++) {
     
       if(!$thisTileLeft) {
        // add left edge coordinates:
-       if($i*$tileLineDimension != 0) {
+      if($i*$tileLineDimension > 0) {
        // ...if it's not on the edge of the canvas
        array_push($edges, $i*$tileLineDimension.",".(($mapMaxHeight-$j)*$tileLineDimension)."|".$i*$tileLineDimension.",".($mapMaxHeight-($j+1))*$tileLineDimension);
        }
       }
       if(!$thisTileRight) {
        // add right edge coordinates:
-       if(($i+1)*$tileLineDimension != $canvaDimension){
+if(($i+1)*$tileLineDimension < $canvaDimension){
+
+//if($debug) {
+  //    echo "<br>adding right ".($i+1)*$tileLineDimension." != ".$canvaDimension;
+    //   }
+
         array_push($edges, ($i+1)*$tileLineDimension.",".(($mapMaxHeight-$j)*$tileLineDimension)."|".($i+1)*$tileLineDimension.",".($mapMaxHeight-($j+1))*$tileLineDimension);
-       }
+      }
       }
       if(!$thisTileBottom) {
        // add bottom edge coordinates:
-       if((($mapMaxHeight-$j)*$tileLineDimension) != $canvaDimension) {
+      if((($mapMaxHeight-($j+1))*$tileLineDimension) >0) {
        
-        if($debug) {
-       echo "<br>adding bottom ".(($mapMaxHeight-($j+1))*$tileLineDimension)." != ".$canvaDimension;
-       }
+     //   if($debug) {
+    //   echo "<br>adding bottom ".(($mapMaxHeight-($j+1))*$tileLineDimension)." != ".$canvaDimension;
+    //  }
        
        array_push($edges, $i*$tileLineDimension.",".(($mapMaxHeight-($j+1))*$tileLineDimension)."|".($i+1)*$tileLineDimension.",".($mapMaxHeight-($j+1))*$tileLineDimension);
-       } 
+      } 
       }
       if(!$thisTileTop) {
        // add top edge coordinates:
-       if((($mapMaxHeight-$j)*$tileLineDimension) != 0) {
+     if((($mapMaxHeight-$j)*$tileLineDimension) < $canvaDimension) {
        
-        if($debug) {
-       echo "<br>adding top ".(($mapMaxHeight-$j)*$tileLineDimension)." != 0";
-       }
+    //    if($debug) {
+     // echo "<br>adding top ".(($mapMaxHeight-$j)*$tileLineDimension)." != ".$canvaDimension;
+     //  }
        
            array_push($edges, $i*$tileLineDimension.",".(($mapMaxHeight-$j)*$tileLineDimension)."|".($i+1)*$tileLineDimension.",".($mapMaxHeight-$j)*$tileLineDimension);
        } 
