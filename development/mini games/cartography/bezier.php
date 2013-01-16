@@ -5,16 +5,15 @@ $debug = false;
 
 
 
-// need to find all coordinates
-// path find to find linked coordinates
-// check all coordinates have been pathed
-// remove unrequired nodes so only corner nodes remain
+// sort out scale/offset issue
+// don't add edges that run along the map edge
+// look for all start points
+// look for unused edges
 
 
 
 
 
-// start points and end points aren't the same way - depends which way the path finder is running. either need to store edges in a different way, or need to check the edge is not itself (or one already checked) and look at either start or end point to find a match ...but need to know current direction?
 
 
 
@@ -46,6 +45,25 @@ $brush = imagecreate(100,100);
   
 
   imagesetbrush($mapCanvas, $brush);
+
+
+function  findDirection($startX,$startY,$endX,$endY) {
+if ($startY == $endY) {
+if ($startX < $endX) {
+return "east";
+} else {
+return "west";
+}
+} else {
+
+if ($startY < $endY) {
+return "south";
+} else {
+return "north";
+}
+
+}
+}
 
 
 
@@ -257,26 +275,28 @@ for ($i = 0;$i < ($mapMaxWidth);$i++) {
 
 
 
+$usedEdges = array();
+$unusedEdges = $edges;
+
+do {
+
 // ---------------------------------------------------
 // find a path through points:
 // find a start point that's on an edge:
 $orderedPoints = array();
 $orderedDirections = array();
-$usedEdges = array();
-for ($i = 0;$i < (count($edges));$i++) {
+    $foundStartPoint = false;
+for ($i = 0;$i < (count($unusedEdges));$i++) {
   // check all sides to find a start point #####################
   
-  $points = explode("|", $edges[$i]);
+  $points = explode("|", $unusedEdges[$i]);
   
  
   
   $startPoint = explode(",", $points[0]);
   $endPoint = explode(",", $points[1]);
   
-  if($debug) {
- // echo $startPoint[1].",".$canvaDimension."<br>";
-  }
-  
+
  
   
    // ################################
@@ -288,18 +308,43 @@ for ($i = 0;$i < (count($edges));$i++) {
  
   // on bottom edge
      array_push($orderedPoints,array($startPoint[0],$startPoint[1]));
-      array_push($usedEdges,$edges[$i]);
+      array_push($usedEdges,$unusedEdges[$i]);
     $direction = "north";
     array_push($orderedDirections,$direction);
+    if($debug) {
+echo "found start edge";
+}
+    
+    $foundStartPoint = true;
     break;
   }
   
-  
-  
+}
 
-  
-  
-  
+if(!$foundStartPoint) {
+
+
+if($debug) {
+echo "picking from reminaing edges";
+}
+
+// just pick first point of remaining edges:
+$points = explode("|", $unusedEdges[0]);
+    $startPoint = explode(",", $points[0]);
+  $endPoint = explode(",", $points[1]);
+  array_push($orderedPoints,array($startPoint[0],$startPoint[1]));
+      array_push($usedEdges,$unusedEdges[0]);
+      
+      
+      $startX = $startPoint[0];
+$startY = $startPoint[1];
+$endX = $endPoint[0];
+$endY = $endPoint[1];
+$direction = findDirection($startX,$startY,$endX,$endY);
+      
+      
+      
+    array_push($orderedDirections,$direction);
 }
 
 
@@ -380,7 +425,7 @@ for ($i = 0;$i < (count($possibleEdges));$i++) {
 if ((in_array($possibleEdges[$i],$edges)) && (!(in_array($possibleEdges[$i],$usedEdges)))){
  
  if($debug) {
- echo "<br>found next edge: ".$possibleEdges[$i];
+ //echo "<br>found next edge: ".$possibleEdges[$i];
  }
  
  $foundNewPoint = $possibleEdges[$i];
@@ -422,21 +467,14 @@ $startY = $thisEdgesStartPoint[1];
 $endX = $newPoint[0];
 $endY = $newPoint[1];
 
-if ($startY == $endY) {
-if ($startX < $endX) {
-$direction = "east";
-} else {
-$direction = "west";
-}
-} else {
 
-if ($startY < $endY) {
-$direction = "south";
-} else {
-$direction = "north";
-}
 
-}
+
+$direction = findDirection($startX,$startY,$endX,$endY);
+
+
+
+
 
 array_push($orderedDirections,$direction);
 }
@@ -446,14 +484,10 @@ array_push($orderedDirections,$direction);
 
 
 if($debug) {
-echo "<pre>";
-var_dump($orderedDirections);
-echo "</pre>";
+//echo "<pre>";
+//var_dump($orderedDirections);
+//echo "</pre>";
 }
-
-// check all edges have been used
-// #####################
-
 
 
 
@@ -478,10 +512,10 @@ $orderedDirections[$i] = strtoupper($orderedDirections[$i]);
 
 
 if($debug) {
-echo "<hr>";
-echo "<pre>";
-var_dump($orderedDirections);
-echo "</pre>";
+//echo "<hr>";
+//echo "<pre>";
+//var_dump($orderedDirections);
+//echo "</pre>";
 }
 
 
@@ -513,6 +547,38 @@ $previousY = $controlY;
 }
 
 quadBezier($mapCanvas, $previousX, $previousY,$tidiedOrderedPoints[$i][0], $tidiedOrderedPoints[$i][1], $tidiedOrderedPoints[$i+1][0],$tidiedOrderedPoints[$i+1][1]);
+
+
+// check all edges have been used
+
+
+
+
+$unusedEdges = array();
+
+for ($i = 0;$i < (count($edges));$i++) {
+if(!(in_array($edges[$i],$usedEdges))) {
+array_push($unusedEdges,$edges[$i]);
+}
+
+
+}
+
+
+
+if($debug) {
+echo "<hr>";
+echo "Unused edges: (".count($unusedEdges).")<br><pre>";
+var_dump($unusedEdges);
+echo "</pre>";
+}
+
+
+
+} while (count($unusedEdges)>0);
+
+
+
 
 /*
 // move to the first point
