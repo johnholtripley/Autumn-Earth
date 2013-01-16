@@ -5,10 +5,8 @@ $debug = false;
 
 
 
-// sort out scale/offset issue
 // don't add edges that run along the map edge
-// look for all start points
-// look for unused edges
+
 
 
 
@@ -35,13 +33,13 @@ $ground = imagecolorallocate($mapCanvas, 253, 243, 178);
 imagefilledrectangle($mapCanvas, 0, 0, $canvaDimension, $canvaDimension, $ground);
 
 
-$brush = imagecreate(100,100);
+$brush = imagecreate(2,2);
 
   $brushtrans = imagecolorallocate($brush, 0, 0, 0);
   imagecolortransparent($brush, $brushtrans);
 
   $color = imagecolorallocate($brush, 96, 35, 14);
-    imagefilledellipse($brush, 50, 50, 2, 2, $color);
+    imagefilledellipse($brush, 1, 1, 2, 2, $color);
   
 
   imagesetbrush($mapCanvas, $brush);
@@ -118,7 +116,7 @@ function quadBezier($im, $x1, $y1, $x2, $y2, $x3, $y3) {
     $mapMaxHeight = 36;
     
     
-    $tileLineDimension = floor($canvaDimension/$mapMaxWidth);
+    $tileLineDimension = floor($canvaDimension/($mapMaxWidth-1));
 
 $dungeonArray = array();
 for ($i = 0;$i < $mapMaxWidth;$i++) {
@@ -218,52 +216,50 @@ for ($i = 0;$i < ($mapMaxWidth);$i++) {
         $thisTileTop = false;
       }
     }
+    
+    
+    
+    
+    
+    
+    
     // to avoid duplicate edges, don't check to see if the adjoining tiles are different, only draw an edge where current tile is walkable and neighbour is not:
     if($thisTile) {
     
-    
-
-    
-    
       if(!$thisTileLeft) {
        // add left edge coordinates:
+       if($i*$tileLineDimension != 0) {
+       // ...if it's not on the edge of the canvas
        array_push($edges, $i*$tileLineDimension.",".(($mapMaxHeight-$j)*$tileLineDimension)."|".$i*$tileLineDimension.",".($mapMaxHeight-($j+1))*$tileLineDimension);
-       
-
-       
-       
-
-       
-       
+       }
       }
       if(!$thisTileRight) {
        // add right edge coordinates:
-    
-       
+       if(($i+1)*$tileLineDimension != $canvaDimension){
         array_push($edges, ($i+1)*$tileLineDimension.",".(($mapMaxHeight-$j)*$tileLineDimension)."|".($i+1)*$tileLineDimension.",".($mapMaxHeight-($j+1))*$tileLineDimension);
-       
-
-       
-       
+       }
       }
       if(!$thisTileBottom) {
        // add bottom edge coordinates:
-  
+       if((($mapMaxHeight-$j)*$tileLineDimension) != $canvaDimension) {
+       
+        if($debug) {
+       echo "<br>adding bottom ".(($mapMaxHeight-($j+1))*$tileLineDimension)." != ".$canvaDimension;
+       }
        
        array_push($edges, $i*$tileLineDimension.",".(($mapMaxHeight-($j+1))*$tileLineDimension)."|".($i+1)*$tileLineDimension.",".($mapMaxHeight-($j+1))*$tileLineDimension);
-       
-
-       
-       
+       } 
       }
       if(!$thisTileTop) {
        // add top edge coordinates:
-    
+       if((($mapMaxHeight-$j)*$tileLineDimension) != 0) {
        
-    array_push($edges, $i*$tileLineDimension.",".(($mapMaxHeight-$j)*$tileLineDimension)."|".($i+1)*$tileLineDimension.",".($mapMaxHeight-$j)*$tileLineDimension);
+        if($debug) {
+       echo "<br>adding top ".(($mapMaxHeight-$j)*$tileLineDimension)." != 0";
+       }
        
-
-       
+           array_push($edges, $i*$tileLineDimension.",".(($mapMaxHeight-$j)*$tileLineDimension)."|".($i+1)*$tileLineDimension.",".($mapMaxHeight-$j)*$tileLineDimension);
+       } 
        
       }
     }
@@ -299,22 +295,36 @@ for ($i = 0;$i < (count($unusedEdges));$i++) {
 
  
   
-   // ################################
-  //if($startPoint[1] == $canvaDimension) {
- if($startPoint[1] == 468) {
- // ################################
- 
- 
- 
+  if($startPoint[1] == $canvaDimension) {
   // on bottom edge
      array_push($orderedPoints,array($startPoint[0],$startPoint[1]));
       array_push($usedEdges,$unusedEdges[$i]);
     $direction = "north";
-    array_push($orderedDirections,$direction);
-    if($debug) {
-echo "found start edge";
-}
-    
+    array_push($orderedDirections,$direction);    
+    $foundStartPoint = true;
+    break;
+  } else if($startPoint[1] == 0) {
+  // on top edge
+     array_push($orderedPoints,array($startPoint[0],$startPoint[1]));
+      array_push($usedEdges,$unusedEdges[$i]);
+    $direction = "south";
+    array_push($orderedDirections,$direction);    
+    $foundStartPoint = true;
+    break;
+  } else if($startPoint[0] == 0) {
+  // on left edge
+     array_push($orderedPoints,array($startPoint[0],$startPoint[1]));
+      array_push($usedEdges,$unusedEdges[$i]);
+    $direction = "east";
+    array_push($orderedDirections,$direction);    
+    $foundStartPoint = true;
+    break;
+  } else if($startPoint[0] == $canvaDimension) {
+  // on right edge
+     array_push($orderedPoints,array($startPoint[0],$startPoint[1]));
+      array_push($usedEdges,$unusedEdges[$i]);
+    $direction = "west";
+    array_push($orderedDirections,$direction);    
     $foundStartPoint = true;
     break;
   }
