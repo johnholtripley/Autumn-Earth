@@ -1,14 +1,28 @@
 <?php
 
+// bug with -2 saved to desktop
+// see if saved jpeg exists and redirect to that
+// save jpeg as well as render for flash
+// plot chests (if variable sent in GET data)
+
+
+
+
 $debug = false;
 
 if(isset($_GET["debug"])) {
-$debug = $_GET["debug"];
+$debug = true;
 }
 
-// read xml file and use that data instead
+$requestedMap = $_GET["requestedMap"];
+$playerId=$_GET["playerId"];
+$dungeonName=$_GET["dungeonName"];
+
+// data/chr1001/dungeon/the-barrow-mines/-1.xml
 
 
+
+$fileToUse = "data/chr".$playerId."/dungeon/".$dungeonName."/".$requestedMap.".xml";
 
 
 
@@ -117,10 +131,76 @@ function quadBezier($im, $x1, $y1, $x2, $y2, $x3, $y3) {
     $tileLineDimension = floor($canvaDimension/($mapMaxWidth-1));
 
 
-if($debug) {
-echo $tileLineDimension;
-echo "<hr>";
+
+
+
+function XMLMapStartTag($parser, $name) {
+global $nodeType;
+
+$nodeType = $name;
+
+
 }
+function XMLMapEndTag($parser, $name) {
+  global $nodeType;
+  $nodeType = "";
+}
+function XMLMapTagContents($parser, $data) {
+   global $loadedMapData, $loadedItemData, $nodeType;
+   
+   if ($nodeType == "ROW") {
+
+   array_push($loadedMapData, str_ireplace(" ", "", $data));
+} else if ($nodeType == "ITEM") {
+
+   array_push($loadedItemData, str_ireplace(" ", "", $data));
+}
+   
+   
+   
+}
+
+
+
+    $xmlparser = xml_parser_create();
+    $nodeType = "";
+    $loadedMapData = array();
+    $loadedItemData = array();
+    xml_set_element_handler($xmlparser, "XMLMapStartTag", "XMLMapEndTag");
+    xml_set_character_data_handler($xmlparser, "XMLMapTagContents");
+$fp = fopen($fileToUse, "r");
+        while ($data = fread($fp, 4096)) {
+            // remove whitespace:
+            $data = eregi_replace(">" . "[[:space:]]+" . "<", "><", $data);
+            xml_parse($xmlparser, $data, feof($fp));
+   
+        }
+
+xml_parser_free($xmlparser);
+
+
+if($debug) {
+echo "<pre>";
+var_dump($loadedMapData);
+echo "</pre>";
+echo "<hr>";
+echo "<pre>";
+var_dump($loadedItemData);
+echo "</pre>";
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 $dungeonArray = array();
 for ($i = 0;$i < $mapMaxWidth;$i++) {
@@ -131,14 +211,15 @@ for ($i = 0;$i < $mapMaxWidth;$i++) {
 }
 
 
-
+/*
 $xmlString="1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1||1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1||1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1||1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1||1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1||1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1||1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1||1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1||1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,116,116,119,120,120,1,1,1,1,1,1,1,1,1||1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,113,113,2,2,5,120,120,1,1,1,1,1,1,1,1||1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,111,2,2,6,2,2,119,1,1,1,1,1,1,1,1||1,1,1,1,1,1,1,1,1,1,1,1,1,116,117,119,1,1,1,1,1,109,2,2,2,2,2,116,1,1,1,1,1,1,1,1||1,1,1,1,1,1,1,1,1,1,1,1,1,112,2,119,120,120,120,118,112,109,2,2,2,2,115,116,1,1,1,1,1,1,1,1||1,1,1,1,1,1,1,1,1,1,1,1,1,111,7,2,2,2,2,2,2,2,2,2,2,113,114,1,1,1,1,1,1,1,1,1||1,1,1,1,1,1,1,1,1,1,1,1,1,110,107,106,106,2,2,2,2,100,100,2,2,115,1,1,1,1,1,1,1,1,1,1||120,120,120,120,120,120,119,1,117,117,119,119,115,111,109,107,106,2,7,2,2,2,2,2,115,116,1,1,1,1,1,1,1,1,1,1||2,2,2,2,2,2,119,118,117,2,2,2,2,2,2,2,2,2,2,2,7,2,2,2,116,1,1,1,1,1,1,1,1,1,1,1||2,2,2,2,2,2,6,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,115,116,1,1,1,1,1,1,1,1,1,1,1||2,5,2,2,2,2,2,2,2,2,2,2,2,2,2,3,2,2,4,2,2,2,2,117,1,1,1,1,1,1,1,1,1,1,1,1||100,100,100,100,100,100,2,2,2,2,107,105,103,100,100,100,100,100,100,2,2,2,114,117,118,1,1,1,1,1,1,1,1,1,1,1||1,1,1,1,1,100,100,100,103,105,108,1,1,1,1,1,1,1,100,100,7,2,2,2,119,1,1,1,1,1,1,1,1,1,1,1||1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,100,2,2,2,4,120,1,1,1,1,1,1,1,1,1,1,1||1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,100,2,6,2,2,120,120,1,1,1,116,116,119,120,120,1,1||1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,100,3,2,2,2,2,120,1,1,1,112,2,2,2,120,120,120||1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,100,100,100,5,2,2,120,120,1,1,109,2,2,2,2,2,2||1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,100,100,2,2,2,119,118,1,105,2,2,7,3,2,2||1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,100,2,3,3,2,115,111,109,2,2,2,2,2,2||1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,100,100,2,2,2,2,110,3,2,4,109,110,109,112||1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,100,100,2,7,2,2,2,2,2,112,1,1,1||1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,100,100,2,2,2,2,2,2,117,1,1,1||1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,100,100,2,2,2,2,2,116,1,1,1||1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,100,100,100,100,106,112,116,1,1,1||1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1||1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1||1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1||1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1";
 
 $xmlRows = explode("||", $xmlString);
 
 // code that created the xml:
+*/
 for ($i = 0;$i < $mapMaxWidth;$i++) {
-$thisRow = explode(",", $xmlRows[$i]);
+$thisRow = explode(",", $loadedMapData[$i]);
 for ($j = 0;$j < $mapMaxHeight;$j++) {
   
   $dungeonArray[$i][$j] = $thisRow[$j];
@@ -343,9 +424,7 @@ for ($i = 0;$i < (count($unusedEdges));$i++) {
 if(!$foundStartPoint) {
 
 
-if($debug) {
-echo "picking from reminaing edges";
-}
+
 
 // just pick first point of remaining edges:
 $points = explode("|", $unusedEdges[0]);
@@ -585,12 +664,7 @@ array_push($unusedEdges,$edges[$i]);
 
 
 
-if($debug) {
-echo "<hr>";
-echo "Unused edges: (".count($unusedEdges).")<br><pre>";
-var_dump($unusedEdges);
-echo "</pre>";
-}
+
 
 
 
@@ -619,7 +693,7 @@ $imageResampled = imagecreatetruecolor($canvaDimension/2, $canvaDimension/2);
 
 imagecopyresampled($imageResampled, $mapCanvas, 0, 0, 0, 0, $canvaDimension/2, $canvaDimension/2, $canvaDimension, $canvaDimension);
 
-$overlayTexture = imagecreatefrompng("temp-overlay.png");
+$overlayTexture = imagecreatefrompng("images/cartography-map-overlay.png");
 imageAlphaBlending($overlayTexture, false);
 imagecopy($imageResampled, $overlayTexture, 0, 0, 0, 0, $canvaDimension, $canvaDimension);
 
