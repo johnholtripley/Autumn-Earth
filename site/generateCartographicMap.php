@@ -1,6 +1,11 @@
 <?php
 
-// bug with -2 saved to desktop
+// bug with -2 saved to development folder because of stairs
+// bug with -4 saved to development folder unkown reason (exit on east edge?)
+// bug with -6 saved to development folder - doesn't extend to left edge
+// bug with -7 saved to development folder - single tile loop chooses the wrong direction. needs some logic to determine which of the two directions possible to take
+
+// ---------------------------------
 // see if saved jpeg exists and redirect to that
 // save jpeg as well as render for flash
 // plot chests (if variable sent in GET data)
