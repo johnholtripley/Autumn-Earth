@@ -304,7 +304,7 @@ for ($i = 0;$i < (count($unusedEdges));$i++) {
 
  
   
-  if($startPoint[1] == $canvaDimension) {
+  if($startPoint[1] >= $canvaDimension) {
   // on bottom edge
      array_push($orderedPoints,array($startPoint[0],$startPoint[1]));
       array_push($usedEdges,$unusedEdges[$i]);
@@ -312,7 +312,7 @@ for ($i = 0;$i < (count($unusedEdges));$i++) {
     array_push($orderedDirections,$direction);    
     $foundStartPoint = true;
     break;
-  } else if($startPoint[1] == 0) {
+  } else if($startPoint[1] <= 0) {
   // on top edge
      array_push($orderedPoints,array($startPoint[0],$startPoint[1]));
       array_push($usedEdges,$unusedEdges[$i]);
@@ -320,7 +320,7 @@ for ($i = 0;$i < (count($unusedEdges));$i++) {
     array_push($orderedDirections,$direction);    
     $foundStartPoint = true;
     break;
-  } else if($startPoint[0] == 0) {
+  } else if($startPoint[0] <= 0) {
   // on left edge
      array_push($orderedPoints,array($startPoint[0],$startPoint[1]));
       array_push($usedEdges,$unusedEdges[$i]);
@@ -328,7 +328,7 @@ for ($i = 0;$i < (count($unusedEdges));$i++) {
     array_push($orderedDirections,$direction);    
     $foundStartPoint = true;
     break;
-  } else if($startPoint[0] == $canvaDimension) {
+  } else if($startPoint[0] >= $canvaDimension) {
   // on right edge
      array_push($orderedPoints,array($startPoint[0],$startPoint[1]));
       array_push($usedEdges,$unusedEdges[$i]);
