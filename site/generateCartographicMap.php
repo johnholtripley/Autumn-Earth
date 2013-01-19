@@ -607,7 +607,7 @@ $endY = $newPoint[1];
 
 
 
-
+if($stillWorking) {
 
 // determine new direction:
 
@@ -627,7 +627,7 @@ $direction = findDirection($startX,$startY,$endX,$endY);
 
 
 array_push($orderedDirections,$direction);
-
+}
 
 } while ($stillWorking);
 
