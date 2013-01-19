@@ -1,7 +1,7 @@
 <?php
 
 // bug with -4 saved to development folder unknown reason (exit on east edge?)
-// bug with -6 saved to development folder - doesn't extend to left edge
+
 
 // ---------------------------------
 // see if saved jpeg exists and redirect to that
@@ -186,11 +186,11 @@ xml_parser_free($xmlparser);
 
 if($debug) {
 echo "<pre>";
-var_dump($loadedMapData);
+//var_dump($loadedMapData);
 echo "</pre>";
 echo "<hr>";
 echo "<pre>";
-var_dump($loadedItemData);
+//var_dump($loadedItemData);
 echo "</pre>";
 }
 
@@ -391,6 +391,18 @@ if(($i+1)*$tileLineDimension < $canvaDimension){
 
 
 
+
+if($debug) {
+echo "<pre>";
+var_dump($edges);
+echo "</pre>";
+
+}
+
+
+
+
+
 $usedEdges = array();
 $unusedEdges = $edges;
 
@@ -478,7 +490,12 @@ $direction = findDirection($startX,$startY,$endX,$endY);
 
 
 
+if($debug) {
+echo "<hr><pre>";
+var_dump($orderedPoints);
+echo "</pre>";
 
+}
 
 
 
@@ -661,12 +678,7 @@ $orderedDirections[$i] = strtoupper($orderedDirections[$i]);
 
 
 
-if($debug) {
-//echo "<hr>";
-//echo "<pre>";
-//var_dump($orderedDirections);
-//echo "</pre>";
-}
+
 
 
 $directionsToRemove = array("NORTH","EAST","SOUTH","WEST");
@@ -677,7 +689,12 @@ array_push($tidiedOrderedPoints,array($orderedPoints[$i][0],$orderedPoints[$i][1
 }
 }
 
-
+if($debug) {
+echo "<hr>";
+echo "<pre>";
+var_dump($tidiedOrderedPoints);
+echo "</pre>";
+}
 
 
 // bezier curves:
@@ -685,6 +702,11 @@ array_push($tidiedOrderedPoints,array($orderedPoints[$i][0],$orderedPoints[$i][1
 
 $previousX = $tidiedOrderedPoints[0][0];
 $previousY = $tidiedOrderedPoints[0][1];
+if($previousX == 0) {
+
+// drawing routine doesn't like zero
+$previousX = 0.01;
+}
 for ($i = 1; $i<count($tidiedOrderedPoints)-2; $i++) {
 
   $controlX = ($tidiedOrderedPoints[$i][0] + $tidiedOrderedPoints[$i+1][0]) / 2;
