@@ -3,12 +3,13 @@
 // bug with -2 saved to development folder because of stairs
 // bug with -4 saved to development folder unkown reason (exit on east edge?)
 // bug with -6 saved to development folder - doesn't extend to left edge
-// bug with -7 saved to development folder - single tile loop chooses the wrong direction. needs some logic to determine which of the two directions possible to take
 
 // ---------------------------------
 // see if saved jpeg exists and redirect to that
 // save jpeg as well as render for flash
 // plot chests (if variable sent in GET data)
+// move plotting and output code to a function and into an include so it can be called by generateRandomMap.php
+// variation in line thickness
 
 
 
@@ -318,7 +319,7 @@ for ($i = 0;$i < ($mapMaxWidth);$i++) {
     
       if(!$thisTileLeft) {
        // add left edge coordinates:
-      if($i*$tileLineDimension > 0) {
+      if($i*$tileLineDimension >0) {
        // ...if it's not on the edge of the canvas
        array_push($edges, $i*$tileLineDimension.",".(($mapMaxHeight-$j)*$tileLineDimension)."|".$i*$tileLineDimension.",".($mapMaxHeight-($j+1))*$tileLineDimension);
        }
@@ -476,13 +477,9 @@ $thisEdgesStartPoint = $endPoint;
 // from $direction, determine the 3 possible end points:
 $possibleEdges = array();
 
-
-// array_push($edges, $i*$tileLineDimension.",".($mapMaxHeight-$j)*$tileLineDimension)."|".($i+1)*$tileLineDimension.",".($mapMaxHeight-$j)*$tileLineDimension);
-
 if(($direction=="north") || ($direction=="east") || ($direction=="west")) {
 // add 'north' point:
-// array_push($possibleEdges,array(($thisEdgesStartPoint[0]),($thisEdgesStartPoint[1])-1));
- 
+
  
  array_push($possibleEdges,$thisEdgesStartPoint[0].",".$thisEdgesStartPoint[1]."|".($thisEdgesStartPoint[0]).",".(($thisEdgesStartPoint[1])-$tileLineDimension));
  // and add the edge in reverse in case the path finding is travelling in a different direction to the initial edge detection:
@@ -491,9 +488,7 @@ if(($direction=="north") || ($direction=="east") || ($direction=="west")) {
 }
 if(($direction=="south") || ($direction=="east") || ($direction=="west")) {
 // add 'south' point:
- //array_push($possibleEdges,array(($thisEdgesStartPoint[0]),($thisEdgesStartPoint[1])+1));
- 
- 
+
   array_push($possibleEdges,$thisEdgesStartPoint[0].",".(($thisEdgesStartPoint[1])+$tileLineDimension)."|".($thisEdgesStartPoint[0]).",".($thisEdgesStartPoint[1]));
   array_push($possibleEdges,($thisEdgesStartPoint[0]).",".(($thisEdgesStartPoint[1]))."|".$thisEdgesStartPoint[0].",".($thisEdgesStartPoint[1]+$tileLineDimension));
  
@@ -502,9 +497,7 @@ if(($direction=="south") || ($direction=="east") || ($direction=="west")) {
 }
 if(($direction=="north") || ($direction=="east") || ($direction=="south")) {
 // add 'east' point:
-// array_push($possibleEdges,array(($thisEdgesStartPoint[0])+1,($thisEdgesStartPoint[1])));
- 
- 
+
    array_push($possibleEdges,($thisEdgesStartPoint[0]+$tileLineDimension).",".(($thisEdgesStartPoint[1]))."|".($thisEdgesStartPoint[0]).",".($thisEdgesStartPoint[1]));
   array_push($possibleEdges,($thisEdgesStartPoint[0]).",".(($thisEdgesStartPoint[1]))."|".($thisEdgesStartPoint[0]+$tileLineDimension).",".($thisEdgesStartPoint[1]));
  
@@ -513,7 +506,6 @@ if(($direction=="north") || ($direction=="east") || ($direction=="south")) {
 }
 if(($direction=="north") || ($direction=="south") || ($direction=="west")) {
 // add 'west' point:
-// array_push($possibleEdges,array(($thisEdgesStartPoint[0])-1,($thisEdgesStartPoint[1])));
 
   array_push($possibleEdges,($thisEdgesStartPoint[0]-$tileLineDimension).",".(($thisEdgesStartPoint[1]))."|".($thisEdgesStartPoint[0]).",".($thisEdgesStartPoint[1]));
   array_push($possibleEdges,($thisEdgesStartPoint[0]).",".(($thisEdgesStartPoint[1]))."|".($thisEdgesStartPoint[0]-$tileLineDimension).",".($thisEdgesStartPoint[1]));
@@ -521,47 +513,78 @@ if(($direction=="north") || ($direction=="south") || ($direction=="west")) {
 }
 // 
 
-$foundNewPoint = "";
+$foundNewPoint = array();
 // check if any of these are valid edges
 for ($i = 0;$i < (count($possibleEdges));$i++) {
-
-if ((in_array($possibleEdges[$i],$edges)) && (!(in_array($possibleEdges[$i],$usedEdges)))){
- 
- if($debug) {
- //echo "<br>found next edge: ".$possibleEdges[$i];
- }
- 
- $foundNewPoint = $possibleEdges[$i];
- 
-  array_push($usedEdges,$possibleEdges[$i]);
- 
- // add which point isn't the current point to the list, and set up for the next iteration:
- 
-  $points = explode("|", $possibleEdges[$i]);
-$startEdge = implode(",",$thisEdgesStartPoint);
- if($points[0] == $startEdge) {
- // add the other point:
- 
- $newPoint = explode(",", $points[1]);
-   
- 
- 
- } else {
- $newPoint = explode(",", $points[0]);
- }
- array_push($orderedPoints,array($newPoint[0],$newPoint[1]));
-  $endPoint = $newPoint;
- break;
-}
-
+  if ((in_array($possibleEdges[$i],$edges)) && (!(in_array($possibleEdges[$i],$usedEdges)))){
+    array_push($foundNewPoint,$i);
+  }
 }
 
 
 
 
-if($foundNewPoint == "") {
+if(count($foundNewPoint) == 0) {
 $stillWorking = false;
+} else if(count($foundNewPoint) == 1) {
+    array_push($usedEdges,$possibleEdges[$foundNewPoint[0]]);
+    // add which point isn't the current point to the list, and set up for the next iteration:
+    $points = explode("|", $possibleEdges[$foundNewPoint[0]]);
+    $startEdge = implode(",",$thisEdgesStartPoint);
+    if($points[0] == $startEdge) {
+      // add the other point:
+      $newPoint = explode(",", $points[1]);
+    } else {
+      $newPoint = explode(",", $points[0]);
+    }
+    array_push($orderedPoints,array($newPoint[0],$newPoint[1]));
+    $endPoint = $newPoint;
+
 } else {
+// choose the direction that involves a turn (ie, isn't in the same direction as the current edge):
+
+  for ($i = 0;$i < (count($foundNewPoint));$i++) {
+  // add which point isn't the current point to the list, and set up for the next iteration:
+    $points = explode("|", $possibleEdges[$foundNewPoint[$i]]);
+    $startEdge = implode(",",$thisEdgesStartPoint);
+    if($points[0] == $startEdge) {
+      // add the other point:
+      $newPoint = explode(",", $points[1]);
+    } else {
+      $newPoint = explode(",", $points[0]);
+    }
+  $startX = $thisEdgesStartPoint[0];
+$startY = $thisEdgesStartPoint[1];
+$endX = $newPoint[0];
+$endY = $newPoint[1];
+  
+  $thisEdgesDirection = findDirection($startX,$startY,$endX,$endY);
+  // if not the same direction, or it's the last valid edge:
+  if(($thisEdgesDirection != $direction) || ($i == (count($foundNewPoint)-1))) {
+  // use this edge:
+  
+  array_push($usedEdges,$possibleEdges[$foundNewPoint[$i]]);
+    
+    array_push($orderedPoints,array($newPoint[0],$newPoint[1]));
+    $endPoint = $newPoint;
+  
+  break;
+  }
+  }
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
 // determine new direction:
 
 
@@ -580,7 +603,7 @@ $direction = findDirection($startX,$startY,$endX,$endY);
 
 
 array_push($orderedDirections,$direction);
-}
+
 
 } while ($stillWorking);
 
