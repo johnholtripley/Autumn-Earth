@@ -1,7 +1,6 @@
 <?php
 
-// bug with -2 saved to development folder because of stairs
-// bug with -4 saved to development folder unkown reason (exit on east edge?)
+// bug with -4 saved to development folder unknown reason (exit on east edge?)
 // bug with -6 saved to development folder - doesn't extend to left edge
 
 // ---------------------------------
@@ -10,7 +9,7 @@
 // plot chests (if variable sent in GET data)
 // move plotting and output code to a function and into an include so it can be called by generateRandomMap.php
 // variation in line thickness
-
+// mark stairs
 
 
 
@@ -240,6 +239,7 @@ $walkable = 10;
 
 
 
+$stairTiles = 560;
 
 
 
@@ -262,7 +262,10 @@ for ($i = 0;$i < ($mapMaxWidth);$i++) {
     $thisTile = false;
     }
     
-
+    // stairs are walkable:
+if($dungeonArray[$i][$j]>=$stairTiles) {
+$thisTile = true;
+}
     
     
     if($i==0) {
@@ -274,6 +277,13 @@ for ($i = 0;$i < ($mapMaxWidth);$i++) {
       if($dungeonArray[$i-1][$j] == 1) {
         $thisTileLeft = false;
       }
+      
+      // stairs are walkable:
+if($dungeonArray[$i-1][$j]>=$stairTiles) {
+$thisTileLeft = true;
+}
+      
+      
     }
     
     
@@ -286,6 +296,10 @@ for ($i = 0;$i < ($mapMaxWidth);$i++) {
       if($dungeonArray[$i+1][$j] == 1) {
         $thisTileRight = false;
       }
+         // stairs are walkable:
+if($dungeonArray[$i+1][$j]>=$stairTiles) {
+$thisTileRight = true;
+}
     }
     
     if($j==($mapMaxHeight-1)) {
@@ -296,6 +310,12 @@ for ($i = 0;$i < ($mapMaxWidth);$i++) {
       if($dungeonArray[$i][$j+1] == 1) {
         $thisTileBottom = false;
       }
+      
+        // stairs are walkable:
+        if($dungeonArray[$i][$j+1]>=$stairTiles) {
+$thisTileBottom = true;
+}
+      
     }
     
     if($j==0) {
@@ -306,6 +326,10 @@ for ($i = 0;$i < ($mapMaxWidth);$i++) {
       if($dungeonArray[$i][$j-1] == 1) {
         $thisTileTop = false;
       }
+      // stairs are walkable:
+      if($dungeonArray[$i][$j-1]>=$stairTiles) {
+$thisTileTop = true;
+}
     }
     
     
