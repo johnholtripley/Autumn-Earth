@@ -1,6 +1,5 @@
 <?php
 
-// bug with -4 saved to development folder unknown reason - full edge not added, only point 266,14 and not the corresponding 266,0 - altohugh that edge exists as a possibility
 
 
 // ---------------------------------
@@ -265,7 +264,7 @@ if(($i+1)*$tileLineDimension < $canvaDimension){
 
 if($debug) {
 echo "<pre>";
-var_dump($edges);
+//var_dump($edges);
 echo "</pre>";
 
 }
@@ -296,6 +295,9 @@ for ($i = 0;$i < (count($unusedEdges));$i++) {
   $endPoint = explode(",", $points[1]);
   
 
+ // "266,14|266,0"
+ 
+
  
   
   if($startPoint[1] >= $canvaDimension) {
@@ -314,6 +316,7 @@ for ($i = 0;$i < (count($unusedEdges));$i++) {
     array_push($orderedDirections,$direction);    
     $foundStartPoint = true;
     break;
+    
   } else if($startPoint[0] <= 0) {
   // on left edge
      array_push($orderedPoints,array($startPoint[0],$startPoint[1]));
@@ -333,6 +336,74 @@ for ($i = 0;$i < (count($unusedEdges));$i++) {
   }
   
 }
+
+
+if(!$foundStartPoint) {
+// try again with points reversed to check end points to see if they're on a canvas boundary
+for ($i = 0;$i < (count($unusedEdges));$i++) {
+  
+  $points = explode("|", $unusedEdges[$i]);
+  
+ 
+  
+  $startPoint = explode(",", $points[1]);
+  $endPoint = explode(",", $points[0]);
+  
+
+  
+  if($startPoint[1] >= $canvaDimension) {
+  // on bottom edge
+     array_push($orderedPoints,array($startPoint[0],$startPoint[1]));
+      array_push($usedEdges,$unusedEdges[$i]);
+    $direction = "north";
+    array_push($orderedDirections,$direction);    
+    $foundStartPoint = true;
+    break;
+  } else if($startPoint[1] <= 0) {
+  // on top edge
+     array_push($orderedPoints,array($startPoint[0],$startPoint[1]));
+      array_push($usedEdges,$unusedEdges[$i]);
+    $direction = "south";
+    array_push($orderedDirections,$direction);    
+    $foundStartPoint = true;
+    break;
+    
+  } else if($startPoint[0] <= 0) {
+  // on left edge
+     array_push($orderedPoints,array($startPoint[0],$startPoint[1]));
+      array_push($usedEdges,$unusedEdges[$i]);
+    $direction = "east";
+    array_push($orderedDirections,$direction);    
+    $foundStartPoint = true;
+    break;
+  } else if($startPoint[0] >= $canvaDimension) {
+  // on right edge
+     array_push($orderedPoints,array($startPoint[0],$startPoint[1]));
+      array_push($usedEdges,$unusedEdges[$i]);
+    $direction = "west";
+    array_push($orderedDirections,$direction);    
+    $foundStartPoint = true;
+    break;
+  }
+  
+}
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 if(!$foundStartPoint) {
 
@@ -366,15 +437,15 @@ $direction = findDirection($startX,$startY,$endX,$endY);
 }
 
 
-/*
+
 
 if($debug) {
-echo "<hr><pre>";
+echo "<hr><h1>start</h1><pre>";
 var_dump($orderedPoints);
 echo "</pre>";
 
 }
-*/
+
 
 
 // get target end point - this is the new start point
