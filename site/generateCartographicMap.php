@@ -10,6 +10,7 @@
 // move plotting and output code to a function and into an include so it can be called by generateRandomMap.php
 // variation in line thickness
 // mark stairs
+// Create session txt file, so can have multiple map drawings. Also could store the direction last turned
 
 
 
@@ -23,22 +24,63 @@ $requestedMap = $_GET["requestedMap"];
 $playerId=$_GET["playerId"];
 $dungeonName=$_GET["dungeonName"];
 
-// data/chr1001/dungeon/the-barrow-mines/-1.xml
-
-
-
 $fileToUse = "data/chr".$playerId."/dungeon/".$dungeonName."/".$requestedMap.".xml";
 
 
 
+    $mapMaxWidth = 36;
+    $mapMaxHeight = 36;
+    
+    
+      $xmlparser = xml_parser_create();
+    $nodeType = "";
+    $loadedMapData = array();
+    $loadedItemData = array();
+    xml_set_element_handler($xmlparser, "XMLMapStartTag", "XMLMapEndTag");
+    xml_set_character_data_handler($xmlparser, "XMLMapTagContents");
+$fp = fopen($fileToUse, "r");
+        while ($data = fread($fp, 4096)) {
+            // remove whitespace:
+            $data = eregi_replace(">" . "[[:space:]]+" . "<", "><", $data);
+            xml_parse($xmlparser, $data, feof($fp));
+   
+        }
+
+xml_parser_free($xmlparser);
+
+
+
+$dungeonArray = array();
+for ($i = 0;$i < $mapMaxWidth;$i++) {
+  $dungeonArray[$i] = array();
+  for ($j = 0;$j < $mapMaxHeight;$j++) {
+    $dungeonArray[$i][$j] = "";
+  }
+}
+
+for ($i = 0;$i < $mapMaxWidth;$i++) {
+$thisRow = explode(",", $loadedMapData[$i]);
+for ($j = 0;$j < $mapMaxHeight;$j++) {
+  
+  $dungeonArray[$i][$j] = $thisRow[$j];
+  
+  }
+}
+
+
+createCartographicMap();
 
 
 
 
 
+
+
+function createCartographicMap() {
+global $mapMaxWidth, $mapMaxHeight, $dungeonArray, $debug;
 // canvas size should be twice required size as it will be downsampled to anti alias:
 $canvaDimension = 500;
-
+  $tileLineDimension = floor($canvaDimension/($mapMaxWidth-1));
 // Create the main image
 $mapCanvas = imagecreatetruecolor($canvaDimension, $canvaDimension);
 
@@ -60,177 +102,6 @@ $brush = imagecreate(2,2);
   
 
   imagesetbrush($mapCanvas, $brush);
-
-
-function  findDirection($startX,$startY,$endX,$endY) {
-if ($startY == $endY) {
-if ($startX < $endX) {
-return "east";
-} else {
-return "west";
-}
-} else {
-
-if ($startY < $endY) {
-return "south";
-} else {
-return "north";
-}
-
-}
-}
-
-
-
-
-
-function quadBezier($im, $x1, $y1, $x2, $y2, $x3, $y3) {
-// php draw quad bezier:
-// http://spottedsun.com/quadratic-bezier-curve-in-php/
-    $b = $pre1 = $pre2 = $pre3 = 0;
-    $prevx = 0;
-    $prevy = 0;
-    $d = sqrt(($x1 - $x2) * ($x1 - $x2) + ($y1 - $y2) * ($y1 - $y2)) +
-        sqrt(($x2 - $x3) * ($x2 - $x3) + ($y2 - $y3) * ($y2 - $y3));
-    $resolution = (1/$d) * 10;
-    for ($a = 1; $a >0; $a-=$resolution) {
-        $b=1-$a;
-        $pre1=($a*$a);
-        $pre2=2*$a*$b;
-        $pre3=($b*$b);
-        $x = $pre1*$x1 + $pre2*$x2  + $pre3*$x3;
-        $y = $pre1*$y1 + $pre2*$y2 + $pre3*$y3;
-        if ($prevx != 0 && $prevy != 0)
-            imageline ($im, $x, $y, $prevx,$prevy, IMG_COLOR_BRUSHED);
-        $prevx = $x;
-        $prevy = $y;
-    }
-    imageline ($im, $prevx, $prevy, $x3, $y3, IMG_COLOR_BRUSHED);
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    $mapMaxWidth = 36;
-    $mapMaxHeight = 36;
-    
-    
-    $tileLineDimension = floor($canvaDimension/($mapMaxWidth-1));
-
-
-
-
-
-function XMLMapStartTag($parser, $name) {
-global $nodeType;
-
-$nodeType = $name;
-
-
-}
-function XMLMapEndTag($parser, $name) {
-  global $nodeType;
-  $nodeType = "";
-}
-function XMLMapTagContents($parser, $data) {
-   global $loadedMapData, $loadedItemData, $nodeType;
-   
-   if ($nodeType == "ROW") {
-
-   array_push($loadedMapData, str_ireplace(" ", "", $data));
-} else if ($nodeType == "ITEM") {
-
-   array_push($loadedItemData, str_ireplace(" ", "", $data));
-}
-   
-   
-   
-}
-
-
-
-    $xmlparser = xml_parser_create();
-    $nodeType = "";
-    $loadedMapData = array();
-    $loadedItemData = array();
-    xml_set_element_handler($xmlparser, "XMLMapStartTag", "XMLMapEndTag");
-    xml_set_character_data_handler($xmlparser, "XMLMapTagContents");
-$fp = fopen($fileToUse, "r");
-        while ($data = fread($fp, 4096)) {
-            // remove whitespace:
-            $data = eregi_replace(">" . "[[:space:]]+" . "<", "><", $data);
-            xml_parse($xmlparser, $data, feof($fp));
-   
-        }
-
-xml_parser_free($xmlparser);
-
-
-if($debug) {
-echo "<pre>";
-//var_dump($loadedMapData);
-echo "</pre>";
-echo "<hr>";
-echo "<pre>";
-//var_dump($loadedItemData);
-echo "</pre>";
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-$dungeonArray = array();
-for ($i = 0;$i < $mapMaxWidth;$i++) {
-  $dungeonArray[$i] = array();
-  for ($j = 0;$j < $mapMaxHeight;$j++) {
-    $dungeonArray[$i][$j] = "";
-  }
-}
-
-
-/*
-$xmlString="1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1||1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1||1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1||1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1||1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1||1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1||1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1||1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1||1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,116,116,119,120,120,1,1,1,1,1,1,1,1,1||1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,113,113,2,2,5,120,120,1,1,1,1,1,1,1,1||1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,111,2,2,6,2,2,119,1,1,1,1,1,1,1,1||1,1,1,1,1,1,1,1,1,1,1,1,1,116,117,119,1,1,1,1,1,109,2,2,2,2,2,116,1,1,1,1,1,1,1,1||1,1,1,1,1,1,1,1,1,1,1,1,1,112,2,119,120,120,120,118,112,109,2,2,2,2,115,116,1,1,1,1,1,1,1,1||1,1,1,1,1,1,1,1,1,1,1,1,1,111,7,2,2,2,2,2,2,2,2,2,2,113,114,1,1,1,1,1,1,1,1,1||1,1,1,1,1,1,1,1,1,1,1,1,1,110,107,106,106,2,2,2,2,100,100,2,2,115,1,1,1,1,1,1,1,1,1,1||120,120,120,120,120,120,119,1,117,117,119,119,115,111,109,107,106,2,7,2,2,2,2,2,115,116,1,1,1,1,1,1,1,1,1,1||2,2,2,2,2,2,119,118,117,2,2,2,2,2,2,2,2,2,2,2,7,2,2,2,116,1,1,1,1,1,1,1,1,1,1,1||2,2,2,2,2,2,6,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,115,116,1,1,1,1,1,1,1,1,1,1,1||2,5,2,2,2,2,2,2,2,2,2,2,2,2,2,3,2,2,4,2,2,2,2,117,1,1,1,1,1,1,1,1,1,1,1,1||100,100,100,100,100,100,2,2,2,2,107,105,103,100,100,100,100,100,100,2,2,2,114,117,118,1,1,1,1,1,1,1,1,1,1,1||1,1,1,1,1,100,100,100,103,105,108,1,1,1,1,1,1,1,100,100,7,2,2,2,119,1,1,1,1,1,1,1,1,1,1,1||1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,100,2,2,2,4,120,1,1,1,1,1,1,1,1,1,1,1||1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,100,2,6,2,2,120,120,1,1,1,116,116,119,120,120,1,1||1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,100,3,2,2,2,2,120,1,1,1,112,2,2,2,120,120,120||1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,100,100,100,5,2,2,120,120,1,1,109,2,2,2,2,2,2||1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,100,100,2,2,2,119,118,1,105,2,2,7,3,2,2||1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,100,2,3,3,2,115,111,109,2,2,2,2,2,2||1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,100,100,2,2,2,2,110,3,2,4,109,110,109,112||1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,100,100,2,7,2,2,2,2,2,112,1,1,1||1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,100,100,2,2,2,2,2,2,117,1,1,1||1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,100,100,2,2,2,2,2,116,1,1,1||1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,100,100,100,100,106,112,116,1,1,1||1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1||1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1||1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1||1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1";
-
-$xmlRows = explode("||", $xmlString);
-
-// code that created the xml:
-*/
-for ($i = 0;$i < $mapMaxWidth;$i++) {
-$thisRow = explode(",", $loadedMapData[$i]);
-for ($j = 0;$j < $mapMaxHeight;$j++) {
-  
-  $dungeonArray[$i][$j] = $thisRow[$j];
-  
-  }
-}
 
 
 
@@ -703,9 +574,11 @@ echo "</pre>";
 $previousX = $tidiedOrderedPoints[0][0];
 $previousY = $tidiedOrderedPoints[0][1];
 if($previousX == 0) {
-
 // drawing routine doesn't like zero
 $previousX = 0.01;
+}
+if($previousY == 0) {
+$previousY = 0.01;
 }
 for ($i = 1; $i<count($tidiedOrderedPoints)-2; $i++) {
 
@@ -767,7 +640,7 @@ $imageResampled = imagecreatetruecolor($canvaDimension/2, $canvaDimension/2);
 
 imagecopyresampled($imageResampled, $mapCanvas, 0, 0, 0, 0, $canvaDimension/2, $canvaDimension/2, $canvaDimension, $canvaDimension);
 
-$overlayTexture = imagecreatefrompng("images/cartography-map-overlay.png");
+$overlayTexture = imagecreatefrompng("http://".$_SERVER['SERVER_NAME']."/images/cartography-map-overlay.png");
 imageAlphaBlending($overlayTexture, false);
 imagecopy($imageResampled, $overlayTexture, 0, 0, 0, 0, $canvaDimension, $canvaDimension);
 
@@ -785,6 +658,114 @@ imagedestroy($mapCanvas);
 imagedestroy($overlayTexture);
 imagedestroy($imageResampled);
 imagedestroy($brush);
+
+
+}
+
+
+
+function  findDirection($startX,$startY,$endX,$endY) {
+if ($startY == $endY) {
+if ($startX < $endX) {
+return "east";
+} else {
+return "west";
+}
+} else {
+
+if ($startY < $endY) {
+return "south";
+} else {
+return "north";
+}
+
+}
+}
+
+
+
+
+
+function quadBezier($im, $x1, $y1, $x2, $y2, $x3, $y3) {
+// php draw quad bezier:
+// http://spottedsun.com/quadratic-bezier-curve-in-php/
+    $b = $pre1 = $pre2 = $pre3 = 0;
+    $prevx = 0;
+    $prevy = 0;
+    $d = sqrt(($x1 - $x2) * ($x1 - $x2) + ($y1 - $y2) * ($y1 - $y2)) +
+        sqrt(($x2 - $x3) * ($x2 - $x3) + ($y2 - $y3) * ($y2 - $y3));
+    $resolution = (1/$d) * 10;
+    for ($a = 1; $a >0; $a-=$resolution) {
+        $b=1-$a;
+        $pre1=($a*$a);
+        $pre2=2*$a*$b;
+        $pre3=($b*$b);
+        $x = $pre1*$x1 + $pre2*$x2  + $pre3*$x3;
+        $y = $pre1*$y1 + $pre2*$y2 + $pre3*$y3;
+        if ($prevx != 0 && $prevy != 0)
+            imageline ($im, $x, $y, $prevx,$prevy, IMG_COLOR_BRUSHED);
+        $prevx = $x;
+        $prevy = $y;
+    }
+    imageline ($im, $prevx, $prevy, $x3, $y3, IMG_COLOR_BRUSHED);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function XMLMapStartTag($parser, $name) {
+global $nodeType;
+
+$nodeType = $name;
+
+
+}
+function XMLMapEndTag($parser, $name) {
+  global $nodeType;
+  $nodeType = "";
+}
+function XMLMapTagContents($parser, $data) {
+   global $loadedMapData, $loadedItemData, $nodeType;
+   
+   if ($nodeType == "ROW") {
+
+   array_push($loadedMapData, str_ireplace(" ", "", $data));
+} else if ($nodeType == "ITEM") {
+
+   array_push($loadedItemData, str_ireplace(" ", "", $data));
+}
+   
+   
+   
+}
+
+
+
+
+
 
 
 
