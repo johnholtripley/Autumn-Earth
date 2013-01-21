@@ -571,6 +571,9 @@ echo "</pre>";
 // bezier curves:
 // http://stackoverflow.com/questions/7054272/how-to-draw-smooth-curve-through-n-points-using-javascript-html5-canvas
 
+
+if (count($tidiedOrderedPoints)>1) {
+
 $previousX = $tidiedOrderedPoints[0][0];
 $previousY = $tidiedOrderedPoints[0][1];
 if($previousX == 0) {
@@ -593,6 +596,14 @@ $previousY = $controlY;
 
 quadBezier($mapCanvas, $previousX, $previousY,$tidiedOrderedPoints[$i][0], $tidiedOrderedPoints[$i][1], $tidiedOrderedPoints[$i+1][0],$tidiedOrderedPoints[$i+1][1]);
 
+
+
+
+
+} else {
+// draw single line
+// #################
+}
 
 // check all edges have been used
 
