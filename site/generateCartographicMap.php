@@ -763,7 +763,7 @@ $mapFilename = "data/chr".$playerId."/cartography/".$dungeonName."/".$session."/
 
 if(!$debug) {
 //save image:
-imagejpeg($imageResampled,$mapFilename,95);
+imagejpeg($imageResampled,$mapFilename,100);
 // Output image to the browser
 header('Content-type: image/jpg');
 imagejpeg($imageResampled);
