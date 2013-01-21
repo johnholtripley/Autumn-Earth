@@ -3,10 +3,8 @@
 
 
 // ---------------------------------
-// see if saved jpeg exists and redirect to that
-// save jpeg as well as render for flash
 // plot chests (if variable sent in GET data)
-// move plotting and output code to a function and into an include so it can be called by generateRandomMap.php
+// move plotting and output code into an include so it can be called by generateRandomMap.php
 // variation in line thickness
 // mark stairs
 // Create session txt file, so can have multiple map drawings. Also could store the direction last turned
@@ -25,6 +23,16 @@ $dungeonName=$_GET["dungeonName"];
 
 $fileToUse = "data/chr".$playerId."/dungeon/".$dungeonName."/".$requestedMap.".xml";
 
+
+// make this dynamic ##################
+$session = "session1";
+
+$mapFilename = "data/chr".$playerId."/cartography/".$dungeonName."/".$session."/".$requestedMap.".jpg";
+  if (is_file($mapFilename)) {
+            header("Location: http://www.autumnearth.com/" . $mapFilename);
+        } else {
+           
+        
 
 
     $mapMaxWidth = 36;
@@ -68,7 +76,7 @@ for ($j = 0;$j < $mapMaxHeight;$j++) {
 
 
 createCartographicMap();
-
+}
 
 
 
@@ -76,7 +84,9 @@ createCartographicMap();
 
 
 function createCartographicMap() {
-global $mapMaxWidth, $mapMaxHeight, $dungeonArray, $debug;
+global $mapMaxWidth, $mapMaxHeight, $dungeonArray, $debug, $playerId, $dungeonName, $session, $requestedMap;
+
+
 // canvas size should be twice required size as it will be downsampled to anti alias:
 $canvaDimension = 500;
   $tileLineDimension = floor($canvaDimension/($mapMaxWidth-1));
@@ -745,10 +755,18 @@ imagecopy($imageResampled, $overlayTexture, 0, 0, 0, 0, $canvaDimension, $canvaD
 
 
 
+
+
+$mapFilename = "data/chr".$playerId."/cartography/".$dungeonName."/".$session."/".$requestedMap.".jpg";
+
+
+
 if(!$debug) {
+//save image:
+imagejpeg($imageResampled,$mapFilename,95);
 // Output image to the browser
-header('Content-type: image/png');
-imagepng($imageResampled);
+header('Content-type: image/jpg');
+imagejpeg($imageResampled);
 }
 
 
