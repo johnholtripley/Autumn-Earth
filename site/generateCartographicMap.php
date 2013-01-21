@@ -1,6 +1,6 @@
 <?php
 
-// bug with -4 saved to development folder unknown reason (exit on east edge?)
+// bug with -4 saved to development folder unknown reason - full edge not added, only point 266,14 and not the corresponding 266,0 - altohugh that edge exists as a possibility
 
 
 // ---------------------------------
@@ -343,6 +343,13 @@ if(!$foundStartPoint) {
 $points = explode("|", $unusedEdges[0]);
     $startPoint = explode(",", $points[0]);
   $endPoint = explode(",", $points[1]);
+  
+  if($debug) {
+  echo "<br>#######";
+  echo $startPoint[0].",".$startPoint[1];
+  echo "<br>#######";
+  }
+  
   array_push($orderedPoints,array($startPoint[0],$startPoint[1]));
       array_push($usedEdges,$unusedEdges[0]);
       
@@ -359,7 +366,7 @@ $direction = findDirection($startX,$startY,$endX,$endY);
 }
 
 
-
+/*
 
 if($debug) {
 echo "<hr><pre>";
@@ -367,7 +374,7 @@ var_dump($orderedPoints);
 echo "</pre>";
 
 }
-
+*/
 
 
 // get target end point - this is the new start point
@@ -572,7 +579,16 @@ echo "</pre>";
 // http://stackoverflow.com/questions/7054272/how-to-draw-smooth-curve-through-n-points-using-javascript-html5-canvas
 
 
+
+
+
+// shouldn't need this - all edges should have 2 points
+// ############################
 if (count($tidiedOrderedPoints)>1) {
+
+
+
+
 
 $previousX = $tidiedOrderedPoints[0][0];
 $previousY = $tidiedOrderedPoints[0][1];
@@ -600,10 +616,11 @@ quadBezier($mapCanvas, $previousX, $previousY,$tidiedOrderedPoints[$i][0], $tidi
 
 
 
-} else {
-// draw single line
-// #################
-}
+} 
+
+
+
+
 
 // check all edges have been used
 
