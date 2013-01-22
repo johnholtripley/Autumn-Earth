@@ -1,11 +1,10 @@
 <?php
 
-
+// plot chests (map 7 has one) - in correct place?
 
 // ---------------------------------
-// plot chests (if variable sent in GET data)
+
 // move plotting and output code into an include so it can be called by generateRandomMap.php
-// variation in line thickness
 // mark stairs
 // Create session txt file, so can have multiple map drawings. Also could store the direction last turned
 
@@ -24,12 +23,24 @@ $dungeonName=$_GET["dungeonName"];
 $fileToUse = "data/chr".$playerId."/dungeon/".$dungeonName."/".$requestedMap.".xml";
 
 
+$plotChests = false;
+if(isset($_GET["plotChests"])) {
+$plotChests = true;
+}
+
+
 // make this dynamic ##################
 $session = "session1";
 
+if (is_numeric($playerId)) {
+    if (is_numeric($requestedMap)) {
+
+
 $mapFilename = "data/chr".$playerId."/cartography/".$dungeonName."/".$session."/".$requestedMap.".jpg";
   if (is_file($mapFilename)) {
+  if(!$debug) {
             header("Location: http://www.autumnearth.com/" . $mapFilename);
+            }
         } else {
            
         
@@ -57,6 +68,13 @@ xml_parser_free($xmlparser);
 
 
 
+if($debug) {
+echo "<pre>";
+var_dump($loadedItemData);
+echo "</pre>";
+}
+
+
 $dungeonArray = array();
 for ($i = 0;$i < $mapMaxWidth;$i++) {
   $dungeonArray[$i] = array();
@@ -79,12 +97,14 @@ createCartographicMap();
 }
 
 
+}
+}
 
 
 
 
 function createCartographicMap() {
-global $mapMaxWidth, $mapMaxHeight, $dungeonArray, $debug, $playerId, $dungeonName, $session, $requestedMap;
+global $mapMaxWidth, $mapMaxHeight, $dungeonArray, $loadedItemData, $debug, $playerId, $dungeonName, $session, $requestedMap, $plotChests;
 
 
 // canvas size should be twice required size as it will be downsampled to anti alias:
@@ -305,8 +325,7 @@ for ($i = 0;$i < (count($unusedEdges));$i++) {
   $endPoint = explode(",", $points[1]);
   
 
- // "266,14|266,0"
- 
+
 
  
   
@@ -425,11 +444,7 @@ $points = explode("|", $unusedEdges[0]);
     $startPoint = explode(",", $points[0]);
   $endPoint = explode(",", $points[1]);
   
-  if($debug) {
-  echo "<br>#######";
-  echo $startPoint[0].",".$startPoint[1];
-  echo "<br>#######";
-  }
+
   
   array_push($orderedPoints,array($startPoint[0],$startPoint[1]));
       array_push($usedEdges,$unusedEdges[0]);
@@ -449,12 +464,7 @@ $direction = findDirection($startX,$startY,$endX,$endY);
 
 
 
-if($debug) {
-echo "<hr><h1>start</h1><pre>";
-var_dump($orderedPoints);
-echo "</pre>";
 
-}
 
 
 
@@ -651,7 +661,7 @@ array_push($tidiedOrderedPoints,array($orderedPoints[$i][0],$orderedPoints[$i][1
 if($debug) {
 echo "<hr>";
 echo "<pre>";
-var_dump($tidiedOrderedPoints);
+//var_dump($tidiedOrderedPoints);
 echo "</pre>";
 }
 
@@ -685,6 +695,11 @@ for ($i = 1; $i<count($tidiedOrderedPoints)-2; $i++) {
   $controlX = ($tidiedOrderedPoints[$i][0] + $tidiedOrderedPoints[$i+1][0]) / 2;
   $controlY = ($tidiedOrderedPoints[$i][1] + $tidiedOrderedPoints[$i+1][1]) / 2;
 quadBezier($mapCanvas, $previousX, $previousY, $tidiedOrderedPoints[$i][0], $tidiedOrderedPoints[$i][1], $controlX, $controlY);
+// thicken some lines:
+
+$thickerOffset = (rand(0,6))-3;
+quadBezier($mapCanvas, $previousX, $previousY, ($tidiedOrderedPoints[$i][0])+$thickerOffset, ($tidiedOrderedPoints[$i][1])+$thickerOffset, $controlX, $controlY);
+
 
 $previousX = $controlX;
 $previousY = $controlY;
@@ -729,6 +744,11 @@ array_push($unusedEdges,$edges[$i]);
 
 
 
+
+
+
+
+
 /*
 // move to the first point
    ctx.moveTo(points[0].x, points[0].y);
@@ -757,6 +777,41 @@ imagecopy($imageResampled, $overlayTexture, 0, 0, 0, 0, $canvaDimension, $canvaD
 
 
 
+if($plotChests) {
+
+$chestLocator = imagecreatefrompng("http://".$_SERVER['SERVER_NAME']."/images/cartography-map-location.png");
+imageAlphaBlending($chestLocator, false);
+
+
+
+for ($i = 0;$i < (count($loadedItemData));$i++) {
+
+$thisItem = explode(",",$loadedItemData[$i]);
+
+if($thisItem[2] == 22) {
+// is a chest
+$chestX = $thisItem[0];
+$chestY = $thisItem[0];
+imagecopy($imageResampled, $chestLocator, ($chestX)*$tileLineDimension, ($chestY)*$tileLineDimension, 0, 0, 7, 7);
+}
+/*
+if($debug) {
+echo "<pre>";
+var_dump($thisItem);
+echo "</pre>";
+}
+*/
+
+
+}
+
+}
+
+
+
+
+
+
 $mapFilename = "data/chr".$playerId."/cartography/".$dungeonName."/".$session."/".$requestedMap.".jpg";
 
 
@@ -775,6 +830,11 @@ imagedestroy($mapCanvas);
 imagedestroy($overlayTexture);
 imagedestroy($imageResampled);
 imagedestroy($brush);
+
+if($plotChests) {
+imagedestroy($chestLocator);
+}
+
 
 
 }
