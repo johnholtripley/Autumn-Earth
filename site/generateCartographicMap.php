@@ -698,8 +698,9 @@ quadBezier($mapCanvas, $previousX, $previousY, $tidiedOrderedPoints[$i][0], $tid
 // thicken some lines:
 
 $thickerOffset = (rand(0,6))-3;
+if($thickerOffset != 0) {
 quadBezier($mapCanvas, $previousX, $previousY, ($tidiedOrderedPoints[$i][0])+$thickerOffset, ($tidiedOrderedPoints[$i][1])+$thickerOffset, $controlX, $controlY);
-
+}
 
 $previousX = $controlX;
 $previousY = $controlY;
