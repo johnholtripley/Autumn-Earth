@@ -7,7 +7,7 @@
 // move plotting and output code into an include so it can be called by generateRandomMap.php
 // mark stairs
 // Create session txt file, so can have multiple map drawings. Also could store the direction last turned
-
+// different terrain types are ignored - eg the 'tents' in the template are just seen as non-walkable and blend into the surrounding terrain
 
 
 $debug = false;
@@ -37,10 +37,10 @@ if (is_numeric($playerId)) {
 
 
 $mapFilename = "data/chr".$playerId."/cartography/".$dungeonName."/".$session."/".$requestedMap.".jpg";
-  if (is_file($mapFilename)) {
-  if(!$debug) {
+  if ((is_file($mapFilename)) && (!$debug)) {
+  
             header("Location: http://www.autumnearth.com/" . $mapFilename);
-            }
+            
         } else {
            
         
@@ -68,11 +68,7 @@ xml_parser_free($xmlparser);
 
 
 
-if($debug) {
-echo "<pre>";
-var_dump($loadedItemData);
-echo "</pre>";
-}
+
 
 
 $dungeonArray = array();
@@ -780,6 +776,12 @@ imagecopy($imageResampled, $overlayTexture, 0, 0, 0, 0, $canvaDimension, $canvaD
 
 if($plotChests) {
 
+if($debug) {
+echo "<pre>";
+//var_dump($loadedItemData);
+echo "</pre>";
+}
+
 $chestLocator = imagecreatefrompng("http://".$_SERVER['SERVER_NAME']."/images/cartography-map-location.png");
 imageAlphaBlending($chestLocator, false);
 
@@ -792,16 +794,20 @@ $thisItem = explode(",",$loadedItemData[$i]);
 if($thisItem[2] == 22) {
 // is a chest
 $chestX = $thisItem[0];
-$chestY = $thisItem[0];
-imagecopy($imageResampled, $chestLocator, ($chestX)*$tileLineDimension, ($chestY)*$tileLineDimension, 0, 0, 7, 7);
-}
-/*
+$chestY = $thisItem[1];
+imagecopy($imageResampled, $chestLocator, ($chestX)*$tileLineDimension/2, ($mapMaxHeight -1 - $chestY)*$tileLineDimension/2, 0, 0, 7, 7);
+
+
 if($debug) {
-echo "<pre>";
+echo "<pre>item    ";
 var_dump($thisItem);
 echo "</pre>";
 }
-*/
+
+}
+
+
+
 
 
 }
