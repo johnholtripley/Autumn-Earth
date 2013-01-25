@@ -8,6 +8,7 @@
 // mark stairs
 // Create session txt file, so can have multiple map drawings. Also could store the direction last turned
 // different terrain types are ignored - eg the 'tents' in the template are just seen as non-walkable and blend into the surrounding terrain
+// before placing chest - look at pixel colours of the boundaries, and nudge accordingly so that the chest doesn't overlay a wall where the curve has come in slightly
 
 
 $debug = false;
