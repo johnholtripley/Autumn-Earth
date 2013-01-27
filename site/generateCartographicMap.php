@@ -105,7 +105,7 @@ global $mapMaxWidth, $mapMaxHeight, $dungeonArray, $loadedItemData, $debug, $pla
 
 
 // canvas size should be twice required size as it will be downsampled to anti alias:
-$canvaDimension = 500;
+$canvaDimension = 492;
   $tileLineDimension = floor($canvaDimension/($mapMaxWidth-1));
 // Create the main image
 $mapCanvas = imagecreatetruecolor($canvaDimension, $canvaDimension);
