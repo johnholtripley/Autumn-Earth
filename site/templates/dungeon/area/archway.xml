@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map inx="3" iny="0" outx="3" outy="8">
+<row>##..##</row>
+<row>##..##</row>
+<row>##..##</row>
+<row>##..##</row>
+<row>##..##</row>
+<row>##..##</row>
+<row>##..##</row>
+<row>##..##</row>
+<row>##..##</row>
+<tiles>100,100,2,2,100,100</tiles>
+<tiles>100,100,2,2,100,100</tiles>
+<tiles>100,100,2,2,100,100</tiles>
+<tiles>100,100,2,2,100,100</tiles>
+<tiles>100,503,2,2,504,100</tiles>
+<tiles>100,100,2,2,100,100</tiles>
+<tiles>100,100,2,2,100,100</tiles>
+<tiles>100,100,2,2,100,100</tiles>
+<tiles>100,100,2,2,100,100</tiles>
+</map>
