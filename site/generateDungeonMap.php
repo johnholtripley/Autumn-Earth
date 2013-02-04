@@ -37,7 +37,7 @@
 
 // caves could branch if coordinates for each map are saved and checked against before determining exit doors - just to ensure that the maps don't intersect incorrectly
 
-
+// which npcs (and frequency) should be determined in the dungeon's config
 
 
 // save changes in Flash for random maps
@@ -1290,7 +1290,11 @@ $outputString .= "</row>\n";
        for ($i = 0;$i < $mapMaxWidth;$i++) {
     for ($j = 0;$j < $mapMaxHeight;$j++) {
    if($npcMap[$i][$j] != "") {
+   if(rand(0,6) == 0) {
+       $outputString .= "<npc>1,1,2,".$i.",".$j.",0,-1,0,0,0,golem,0,4.3,10,11,4</npc>\n";
+       } else {
        $outputString .= "<npc>1,1,1,".$i.",".$j.",0,-1,0,0,0,dwarven miner,0,4.3,10,11,1,2,3</npc>\n";
+       }
    }
    }
    }
