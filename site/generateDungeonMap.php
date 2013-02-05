@@ -1291,7 +1291,7 @@ $outputString .= "</row>\n";
     for ($j = 0;$j < $mapMaxHeight;$j++) {
    if($npcMap[$i][$j] != "") {
    if(rand(0,6) == 0) {
-       $outputString .= "<npc>1,1,2,".$i.",".$j.",0,-1,0,0,0,golem,0,4.3,10,11,4</npc>\n";
+       $outputString .= "<npc>0.25,1,2,".$i.",".$j.",0,-1,0,0,0,golem,0,4.3,10,11,4</npc>\n";
        } else {
        $outputString .= "<npc>1,1,1,".$i.",".$j.",0,-1,0,0,0,dwarven miner,0,4.3,10,11,1,2,3</npc>\n";
        }
