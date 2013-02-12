@@ -1293,7 +1293,10 @@ $outputString .= "</row>\n";
    if(rand(0,6) == 0) {
        $outputString .= "<npc>0.25,1,2,".$i.",".$j.",0,-1,0,0,0,golem,0,4.3,10,11,4</npc>\n";
        } else {
-       $outputString .= "<npc>1,2,1,".$i.",".$j.",0,-1,1Adigg10#2Adigg10#3Adigg10#4Adigg10#x,0,0,dwarven miner,0,4.3,10,11,1,2,3</npc>\n";
+       $outputString .= "<npc>1,2,1,".$i.",".$j.",0,-1,1Adigg3#2Adigg3#3Adigg3#4Adigg3#X,0,0,dwarven miner,0,4.3,10,11,1,2,3</npc>\n";
+       
+ 
+       
        }
    }
    }
