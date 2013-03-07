@@ -13,8 +13,6 @@
 
 // pathfinding NPCs should do collision detection between themselves and choose one to move out of the way if they get stuck
 
-// NPCs that aren't initially visible on the map don't path find properly (because islocationproperty relies on the tile existing - be better to have a copy of a tile that floats off stage, and jump this to the relevant frame number and then read the .p from that)
-
 // run a few iterations to see if a 'mine cart' can be placed in a suitably clear area, if it can, set a flag and alter all NPC pathfinders to carry to that as well
 
 
@@ -1312,7 +1310,7 @@ $outputString .= "</row>\n";
  //  if(rand(0,6) == 0) {
  //      $outputString .= "<npc>0.25,1,2,".$i.",".$j.",0,-1,0,0,0,golem,0,4.3,10,11,4</npc>\n";
   //     } else {
-       $outputString .= "<npc>1,2,1,".$i.",".$j.",0,-1,P105-120#Adigg99#x,0,0,dwarven miner,0,4.3,10,11,1,2,3</npc>\n";
+       $outputString .= "<npc>1,2,1,".$i.",".$j.",0,-1,P105-120#Adigg999#x,0,0,dwarven miner,0,4.3,10,11,1,2,3</npc>\n";
        
  
        
