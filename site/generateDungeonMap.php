@@ -12,10 +12,11 @@
 
 
 // pathfinding NPCs should do collision detection between themselves and choose one to move out of the way if they get stuck
+// and collision detect around items
 
 // with a mine cart, all npcs tend to then aim for the same bit of rock - might need to store a list of 'occupied' tiles and avoid these
 
-
+// NPCs mine and drop off at the tile edge
 
 
 
@@ -1255,10 +1256,11 @@ $raisedBase = 599;
 }
 
 
-
+$atLeastOneCart = false;
 // see if a 'mine cart' can be placed in an open space:
 for ($i = 0;$i < 10;$i++) {
 $mineCartPlaced = true;
+
 $tryTileX = rand(2,($mapMaxWidth-3));
 $tryTileY = rand(2,($mapMaxHeight-3));
 for($tx = $tryTileX-1; $tx <= $tryTileX+1; $tx++) {
@@ -1270,7 +1272,8 @@ $mineCartPlaced = false;
 }
 if($mineCartPlaced) {
 $dungeonOutputMap[$tryTileX][$tryTileY] = 505;
-break;
+$atLeastOneCart = true;
+//break;
 }
 }
 
@@ -1329,9 +1332,9 @@ $outputString .= "</row>\n";
  //      $outputString .= "<npc>0.25,1,2,".$i.",".$j.",0,-1,0,0,0,golem,0,4.3,10,11,4</npc>\n";
   //     } else {
   
-  if($mineCartPlaced) {
+  if($atLeastOneCart) {
   // mine and return to cart:
-   $outputString .= "<npc>1,2,1,".$i.",".$j.",0,-1,P105-120#acaryAdigg3#P505-505#rAdigg3#x,0,0,dwarven miner,0,4.3,10,11,1,2,3</npc>\n";
+   $outputString .= "<npc>1,2,1,".$i.",".$j.",0,-1,P105-120#acaryAdigg3#P505-505#rAdrop3#x,0,0,dwarven miner,0,4.3,10,11,1,2,3</npc>\n";
      
   } else {
   // just find wall and mine:
