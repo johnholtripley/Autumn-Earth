@@ -12,11 +12,9 @@
 
 
 // pathfinding NPCs should do collision detection between themselves and choose one to move out of the way if they get stuck
-// and collision detect around items
 
 // with a mine cart, all npcs tend to then aim for the same bit of rock - might need to store a list of 'occupied' tiles and avoid these
 
-// NPCs mine and drop off at the tile edge
 
 
 
