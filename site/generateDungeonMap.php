@@ -13,9 +13,7 @@
 
 // pathfinding NPCs should do collision detection between themselves and choose one to move out of the way if they get stuck
 
-// run a few iterations to see if a 'mine cart' can be placed in a suitably clear area, if it can, set a flag and alter all NPC pathfinders to carry to that as well
-
-
+// with a mine cart, all npcs tend to then aim for the same bit of rock - might need to store a list of 'occupied' tiles and avoid these
 
 
 
@@ -1258,6 +1256,26 @@ $raisedBase = 599;
 
 
 
+// see if a 'mine cart' can be placed in an open space:
+for ($i = 0;$i < 10;$i++) {
+$mineCartPlaced = true;
+$tryTileX = rand(2,($mapMaxWidth-3));
+$tryTileY = rand(2,($mapMaxHeight-3));
+for($tx = $tryTileX-1; $tx <= $tryTileX+1; $tx++) {
+for($ty = $tryTileY-1; $ty <= $tryTileY+1; $ty++) {
+if($dungeonOutputMap[$tx][$ty] != "2") {
+$mineCartPlaced = false;
+}
+}
+}
+if($mineCartPlaced) {
+$dungeonOutputMap[$tryTileX][$tryTileY] = 505;
+break;
+}
+}
+
+
+
    for ($i = 0;$i < $mapMaxWidth;$i++) {
     for ($j = 0;$j < $mapMaxHeight;$j++) {
                if($dungeonOutputMap[$i][$j] == "2") {
@@ -1310,8 +1328,15 @@ $outputString .= "</row>\n";
  //  if(rand(0,6) == 0) {
  //      $outputString .= "<npc>0.25,1,2,".$i.",".$j.",0,-1,0,0,0,golem,0,4.3,10,11,4</npc>\n";
   //     } else {
+  
+  if($mineCartPlaced) {
+  // mine and return to cart:
+   $outputString .= "<npc>1,2,1,".$i.",".$j.",0,-1,P105-120#acaryAdigg3#P505-505#rAdigg3#x,0,0,dwarven miner,0,4.3,10,11,1,2,3</npc>\n";
+     
+  } else {
+  // just find wall and mine:
        $outputString .= "<npc>1,2,1,".$i.",".$j.",0,-1,P105-120#Adigg999#x,0,0,dwarven miner,0,4.3,10,11,1,2,3</npc>\n";
-       
+       }
  
        
   //    }
