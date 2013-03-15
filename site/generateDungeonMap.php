@@ -15,7 +15,7 @@
 
 // with a mine cart, all npcs tend to then aim for the same bit of rock - might need to store a list of 'occupied' tiles and avoid these
 
-
+// have a tile that looks identical to walkable tiles, but set these for doors, and have them non-npc walkable
 
 
 
