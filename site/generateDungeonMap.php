@@ -1275,7 +1275,7 @@ $atLeastOneCart = true;
 }
 
 
-
+/*
    for ($i = 0;$i < $mapMaxWidth;$i++) {
     for ($j = 0;$j < $mapMaxHeight;$j++) {
                if($dungeonOutputMap[$i][$j] == "2") {
@@ -1286,7 +1286,7 @@ $atLeastOneCart = true;
                }
                 }
                 }
-
+*/
 
 
 
