@@ -17,6 +17,11 @@ if(isset($_GET["debug"])) {
 $debug = true;
 }
 
+$update = false;
+if(isset($_GET["update"])) {
+$update = true;
+}
+
 $requestedMap = $_GET["requestedMap"];
 $playerId=$_GET["playerId"];
 $dungeonName=$_GET["dungeonName"];
@@ -38,7 +43,7 @@ if (is_numeric($playerId)) {
 
 
 $mapFilename = "data/chr".$playerId."/cartography/".$dungeonName."/".$session."/".$requestedMap.".jpg";
-  if ((is_file($mapFilename)) && (!$debug)) {
+  if ((is_file($mapFilename)) && (!$debug) && (!$update)) {
   
             header("Location: http://www.autumnearth.com/" . $mapFilename);
             
@@ -101,7 +106,7 @@ createCartographicMap();
 
 
 function createCartographicMap() {
-global $mapMaxWidth, $mapMaxHeight, $dungeonArray, $loadedItemData, $debug, $playerId, $dungeonName, $session, $requestedMap, $plotChests;
+global $mapMaxWidth, $mapMaxHeight, $dungeonArray, $loadedItemData, $debug, $playerId, $dungeonName, $session, $requestedMap, $plotChests, $update;
 
 
 // canvas size should be twice required size as it will be downsampled to anti alias:
@@ -112,11 +117,37 @@ $mapCanvas = imagecreatetruecolor($canvaDimension, $canvaDimension);
 
 //imageantialias($mapCanvas, true);
 
+
+
+
+
+if($update) {
+// use previous map as the ground
+$originalMap = imagecreatefromjpeg("data/chr".$playerId."/cartography/".$dungeonName."/".$session."/".$requestedMap.".jpg");
+// double the size of this to match the newly drawn one:
+
+
+imagecopyresampled($mapCanvas, $originalMap, 0, 0, 0, 0, $canvaDimension, $canvaDimension, $canvaDimension/2, $canvaDimension/2);
+
+
+
+$updateFade = imagecreatefrompng("http://".$_SERVER['SERVER_NAME']."/images/cartography-map-fade.png");
+imageAlphaBlending($updateFade, false);
+imagecopy($mapCanvas, $updateFade, 0, 0, 0, 0, $canvaDimension, $canvaDimension);
+
+
+} else {
+
+
+
+
+
+
 // Fill the background
 $ground = imagecolorallocate($mapCanvas, 253, 243, 178);
 
 imagefilledrectangle($mapCanvas, 0, 0, $canvaDimension, $canvaDimension, $ground);
-
+}
 
 $brush = imagecreate(2,2);
 
@@ -290,9 +321,9 @@ if(($i+1)*$tileLineDimension < $canvaDimension){
 
 
 if($debug) {
-echo "<pre>";
+//echo "<pre>";
 //var_dump($edges);
-echo "</pre>";
+//echo "</pre>";
 
 }
 
@@ -656,10 +687,10 @@ array_push($tidiedOrderedPoints,array($orderedPoints[$i][0],$orderedPoints[$i][1
 }
 
 if($debug) {
-echo "<hr>";
-echo "<pre>";
+//echo "<hr>";
+//echo "<pre>";
 //var_dump($tidiedOrderedPoints);
-echo "</pre>";
+//echo "</pre>";
 }
 
 
@@ -762,6 +793,7 @@ array_push($unusedEdges,$edges[$i]);
  ctx.quadraticCurveTo(points[i].x, points[i].y, points[i+1].x,points[i+1].y);
 */
 
+
  imagefilter($mapCanvas, IMG_FILTER_GAUSSIAN_BLUR);
 $imageResampled = imagecreatetruecolor($canvaDimension/2, $canvaDimension/2);
 
@@ -778,9 +810,9 @@ imagecopy($imageResampled, $overlayTexture, 0, 0, 0, 0, $canvaDimension, $canvaD
 if($plotChests) {
 
 if($debug) {
-echo "<pre>";
+//echo "<pre>";
 //var_dump($loadedItemData);
-echo "</pre>";
+//echo "</pre>";
 }
 
 $chestLocator = imagecreatefrompng("http://".$_SERVER['SERVER_NAME']."/images/cartography-map-location.png");
@@ -800,9 +832,9 @@ imagecopy($imageResampled, $chestLocator, ($chestX)*$tileLineDimension/2, ($mapM
 
 
 if($debug) {
-echo "<pre>item    ";
-var_dump($thisItem);
-echo "</pre>";
+//echo "<pre>item    ";
+//var_dump($thisItem);
+//echo "</pre>";
 }
 
 }
@@ -826,7 +858,17 @@ $mapFilename = "data/chr".$playerId."/cartography/".$dungeonName."/".$session."/
 
 if(!$debug) {
 //save image:
+
 imagejpeg($imageResampled,$mapFilename,100);
+
+
+}
+
+if($update) {
+// Output image to the browser
+
+ print "changeswassuccess=true";
+} else {
 // Output image to the browser
 header('Content-type: image/jpg');
 imagejpeg($imageResampled);
@@ -842,7 +884,11 @@ imagedestroy($brush);
 if($plotChests) {
 imagedestroy($chestLocator);
 }
+if($update) {
+imagedestroy($updateFade);
+imagedestroy($originalMap);
 
+}
 
 
 }
