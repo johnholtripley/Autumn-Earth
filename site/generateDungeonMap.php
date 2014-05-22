@@ -1726,6 +1726,85 @@ function placeItemsandNPCs() {
   $numberOfItems = $itemChance[(rand(0,count($itemChance)-1))];
   
   
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  // http://ideone.com/Kd2jSo
+  
+  
+// check for level-locked NPCs
+// whether the NPC has already been placed will be in database
+
+if(count($dungeonDetails[$thisDungeonsName][6])>0) {
+  for ($ll = 0;$ll < count($dungeonDetails[$thisDungeonsName][6]);$ll++) {
+
+    // check current level against NPC max and min
+    $thisMinLevel = $dungeonDetails[$thisDungeonsName][6][1];
+    $thisMaxLevel = $dungeonDetails[$thisDungeonsName][6][2];
+
+    $thisCurrentLevel = abs($thisMapsId);
+
+    $thisLevelStepPercent = 100/($thisMaxLevel+1-$thisMinLevel);
+
+    $chanceOfEncounter = $thisLevelStepPercent * ($thisCurrentLevel-$thisMinLevel);
+    
+ if(rand(0,100) <= $chanceOfEncounter) {
+    // add NPC
+    }
+    
+  }
+}  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
   // get this from $dungeonDetails: #######################
   $numberOfNPCs = rand(4,8);
 
@@ -1880,17 +1959,9 @@ function createNewDungeonMap($mapID) {
   if(isset($_GET["outputMode"])) {
   $outputMode = $_GET["outputMode"];
   }
-    // set up exit doors from each dungeon to the originating map: [destination map number][centre entrance door x and y][tile x and y when leaving dungeon][item frequency][items available][index for this dungeon in Flash's randomDungeons array] 
-$dungeonDetails = array(
-'the-barrow-mines' => array(
-"1",
-array("25","35"),
-array("16,20","17,20","18,20"),
-array(1,1,2,2,3,4,5,6,7,8,9),
-array("6","6","6","6","2","2","3","22","35"),
-"1"
-)
-);
+  
+  
+  include($_SERVER[DOCUMENT_ROOT]."/includes/dungeonMapConfig.inc");
 
 
 
