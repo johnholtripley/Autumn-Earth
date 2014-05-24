@@ -988,8 +988,11 @@ echo '<body style="background: #000; color: #fff;">' . "\n";
     
       if ($itemMap[$i][$j] != "") {
        echo "<span style=\"color:#8B600D;\">".$itemMap[$i][$j]."</span>";
-       } else if ($npcMap[$i][$j] != "") {
+       } else if ($npcMap[$i][$j] == "n") {
        echo "<span style=\"color:#ffffff;\">n</span>";
+       
+       }else if ($npcMap[$i][$j] == "n-0") {
+        echo "<span style=\"color:#00ff00;\">N</span>";
       } else {
       // show height of this tile (lighter = higher):
       switch ($heightMap[$i][$j]) {
@@ -1329,7 +1332,18 @@ $outputString .= "</row>\n";
  //      $outputString .= "<npc>0.25,1,2,".$i.",".$j.",0,-1,0,0,0,golem,0,4.3,10,11,4</npc>\n";
   //     } else {
   
-  if($atLeastOneCart) {
+  
+  // check for level locked NPC:
+  
+  $llnpc = strrpos($npcMap[$i][$j], "n-");
+  
+  if ($llnpc !== false) {
+  // add specific NPC - get id:
+  $npcId = substr($npcMap[$i][$j], $llnpc);
+  $outputString .= "<npc>".$levelLockedNPCs[$npcId]."</npc>\n";
+
+  
+  } else if($atLeastOneCart) {
   // mine and return to cart:
    $outputString .= "<npc>1,2,1,".$i.",".$j.",0,-1,P105-120#acaryAdigg3#P505-505#rAdrop3#x,0,0,dwarven miner,0,4.3,10,11,1,2,3</npc>\n";
      
@@ -1718,7 +1732,7 @@ function tileIsSurrounded($tileCheckX,$tileCheckY) {
 
 function placeItemsandNPCs() {
 
-  global $dungeonMap, $itemMap, $npcMap, $mapMaxHeight, $mapMaxWidth, $savedWalkableAreas, $startTime, $dungeonDetails, $thisDungeonsName, $itemsAvailable;
+  global $dungeonMap, $itemMap, $npcMap, $mapMaxHeight, $mapMaxWidth, $savedWalkableAreas, $startTime, $dungeonDetails, $thisDungeonsName, $itemsAvailable, $thisMapsId;
 
    $itemChance = $dungeonDetails[$thisDungeonsName][3];
    $itemsAvailable = $dungeonDetails[$thisDungeonsName][4];
@@ -1739,10 +1753,11 @@ function placeItemsandNPCs() {
   
   
   
+  $levelLockedNPCs = array();
+  // get this from $dungeonDetails: #######################
+  $numberOfNPCs = rand(4,8);
   
-  
-  
-  
+  $npcPositionsTaken = array();
   
   
   
@@ -1753,21 +1768,48 @@ function placeItemsandNPCs() {
 // check for level-locked NPCs
 // whether the NPC has already been placed will be in database
 
+
+
+
+
 if(count($dungeonDetails[$thisDungeonsName][6])>0) {
   for ($ll = 0;$ll < count($dungeonDetails[$thisDungeonsName][6]);$ll++) {
 
     // check current level against NPC max and min
-    $thisMinLevel = $dungeonDetails[$thisDungeonsName][6][1];
-    $thisMaxLevel = $dungeonDetails[$thisDungeonsName][6][2];
+    $thisMinLevel = $dungeonDetails[$thisDungeonsName][6][$ll][1];
+    $thisMaxLevel = $dungeonDetails[$thisDungeonsName][6][$ll][2];
+
 
     $thisCurrentLevel = abs($thisMapsId);
 
+
+
+
     $thisLevelStepPercent = 100/($thisMaxLevel+1-$thisMinLevel);
 
-    $chanceOfEncounter = $thisLevelStepPercent * ($thisCurrentLevel-$thisMinLevel);
+    $chanceOfEncounter = $thisLevelStepPercent * (($thisCurrentLevel+1)-$thisMinLevel);
+    
+    
+  
     
  if(rand(0,100) <= $chanceOfEncounter) {
     // add NPC
+    $numberOfNPCs --;
+    
+    
+    $thisNpcXTile = 20;
+    $thisNpcYTile = 6;
+
+
+$npcString = $dungeonDetails[$thisDungeonsName][6][$ll][1];
+$npcString = str_replace("posAndDir", $thisNpcXTile.",".$thisNpcYTile.",0,1", $npcString);
+
+$npcMap[($thisNpcXTile)][($thisNpcYTile)] = "n-".count($levelLockedNPCs);
+array_push($levelLockedNPCs, $npcString );
+
+    array_push($npcPositionsTaken,($thisNpcXTile)."_".($thisNpcYTile));
+    
+    
     }
     
   }
@@ -1785,30 +1827,8 @@ if(count($dungeonDetails[$thisDungeonsName][6])>0) {
   
   
   
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  // get this from $dungeonDetails: #######################
-  $numberOfNPCs = rand(4,8);
 
-$npcPositionsTaken = array();
+
 
   $loopIterations = $numberOfItems + $numberOfNPCs;
   
@@ -1961,7 +1981,7 @@ function createNewDungeonMap($mapID) {
   }
   
   
-  include($_SERVER[DOCUMENT_ROOT]."/includes/dungeonMapConfig.inc");
+  include("includes/dungeonMapConfig.inc");
 
 
 
