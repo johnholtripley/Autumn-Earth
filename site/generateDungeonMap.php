@@ -127,6 +127,13 @@ if ($clearOldMaps) {
     }
     closedir($thisDirectory);
     }
+    
+    // restore session file:
+    if (!copy('data/source/session.inc', $dir.'/session.inc')) {
+    // error handling ########
+    }
+    
+    
   }
 }
 
@@ -170,7 +177,7 @@ function XMLTagContents($parser, $data) {
 function getXMLFile() {
     global $templateRows, $fileToUse, $templateTiles;
     // read contents of dir and find number of files:
-    $dir = "templates/dungeon/area";
+    $dir = "templates/dungeon/".$thisDungeonsName."/";
     $filesFound = array();
     if (is_dir($dir)) {
         if ($dirHandle = opendir($dir)) {
@@ -953,7 +960,7 @@ function floodFillHeight($startPointX, $startPointY, $heightToUse) {
 }
 
 function outputDungeon() {
-  global $dungeonMap, $dungeonOutputMap, $heightMap, $itemMap, $npcMap, $mapMaxHeight, $mapMaxWidth, $thisDungeonsName, $thisMapsId, $thisPlayersId, $thisAverageCount, $thisAverageTotal, $doorsOut, $doorsIn, $dungeonDetails, $thisOriginatingMapId, $outputMode, $allStairs, $stairsWidth, $entranceHeight, $tileHeight, $itemsAvailable, $isTreasureMapLevel, $startTime, $treasureLocX, $treasureLocY, $templateTiles, $mapMode, $topLeftXPos, $topLeftYPos;
+  global $dungeonMap, $dungeonOutputMap, $heightMap, $itemMap, $npcMap, $mapMaxHeight, $mapMaxWidth, $thisDungeonsName, $thisMapsId, $thisPlayersId, $thisAverageCount, $thisAverageTotal, $doorsOut, $doorsIn, $dungeonDetails, $thisOriginatingMapId, $outputMode, $allStairs, $stairsWidth, $entranceHeight, $tileHeight, $itemsAvailable, $isTreasureMapLevel, $startTime, $treasureLocX, $treasureLocY, $templateTiles, $mapMode, $topLeftXPos, $topLeftYPos, $levelLockedNPCs;
 
 
   if ($outputMode == "test") {
@@ -1163,7 +1170,7 @@ for ($i = 0;$i < count($allStairs);$i++) {
 if($mapMode=="template") {
 
 // insert the template tiles here - so that the dungeon walls get averaged in smoothly
-// john
+// ######
 
 
 
@@ -1339,7 +1346,13 @@ $outputString .= "</row>\n";
   
   if ($llnpc !== false) {
   // add specific NPC - get id:
-  $npcId = substr($npcMap[$i][$j], $llnpc);
+  $npcId = substr($npcMap[$i][$j], ($llnpc+2));
+  
+// john
+// level locked array is NULL?
+
+
+
   $outputString .= "<npc>".$levelLockedNPCs[$npcId]."</npc>\n";
 
   
@@ -1732,7 +1745,7 @@ function tileIsSurrounded($tileCheckX,$tileCheckY) {
 
 function placeItemsandNPCs() {
 
-  global $dungeonMap, $itemMap, $npcMap, $mapMaxHeight, $mapMaxWidth, $savedWalkableAreas, $startTime, $dungeonDetails, $thisDungeonsName, $itemsAvailable, $thisMapsId;
+  global $dungeonMap, $itemMap, $npcMap, $mapMaxHeight, $mapMaxWidth, $savedWalkableAreas, $startTime, $dungeonDetails, $thisDungeonsName, $itemsAvailable, $thisMapsId, $levelLockedNPCs, $npcPositionsTaken, $isAValidItemPosition, $nodesPosition;
 
    $itemChance = $dungeonDetails[$thisDungeonsName][3];
    $itemsAvailable = $dungeonDetails[$thisDungeonsName][4];
@@ -1760,9 +1773,6 @@ function placeItemsandNPCs() {
   $npcPositionsTaken = array();
   
   
-  
-  
-  // http://ideone.com/Kd2jSo
   
   
 // check for level-locked NPCs
@@ -1797,18 +1807,38 @@ if(count($dungeonDetails[$thisDungeonsName][6])>0) {
     $numberOfNPCs --;
     
     
-    $thisNpcXTile = 20;
-    $thisNpcYTile = 6;
+    
+    
+    
+    
+    
+     $isAValidItemPosition = false;
+     
+   
+   
+   
+   findAValidPosition();
+      
+      
+      
+      if ($isAValidItemPosition) {
+      $thisNpcXTile = $nodesPosition[0];
+    $thisNpcYTile = $nodesPosition[1];
+      
+    
+    
+    
+    
 
 
-$npcString = $dungeonDetails[$thisDungeonsName][6][$ll][1];
-$npcString = str_replace("posAndDir", $thisNpcXTile.",".$thisNpcYTile.",0,1", $npcString);
+$npcString = $dungeonDetails[$thisDungeonsName][6][$ll][0];
+$npcString = str_replace("lockedNPCPos", $thisNpcXTile.",".$thisNpcYTile, $npcString);
+$npcString = str_replace("lockedNPCDir", "0,1", $npcString);
 
 $npcMap[($thisNpcXTile)][($thisNpcYTile)] = "n-".count($levelLockedNPCs);
 array_push($levelLockedNPCs, $npcString );
-
-    array_push($npcPositionsTaken,($thisNpcXTile)."_".($thisNpcYTile));
-    
+array_push($npcPositionsTaken,($thisNpcXTile)."_".($thisNpcYTile));
+    }
     
     }
     
@@ -1846,8 +1876,51 @@ array_push($levelLockedNPCs, $npcString );
       
       // have 10 goes at finding a suitable spot, else skip this item:
       $isAValidItemPosition = false;
-      $attempts = 0;
-      do {
+    
+   
+   
+   
+   findAValidPosition();
+      
+      
+      
+      if ($isAValidItemPosition) {
+     
+     
+      if ($i<=$numberOfItems) {
+    if($itemChance>0) {
+     // place item:
+        $itemType = $itemsAvailable[(rand(0,count($itemsAvailable)-1))];
+        $itemMap[($nodesPosition[0])][($nodesPosition[1])] = $itemType;
+        }
+        } else {
+        // place NPC:
+        // double check no item here - can happen. shouldn't need this check - need to fix code above instead #######################
+        
+        if($itemMap[($nodesPosition[0])][($nodesPosition[1])] == "") {        
+array_push($npcPositionsTaken,($nodesPosition[0])."_".($nodesPosition[1]));
+         $npcMap[($nodesPosition[0])][($nodesPosition[1])] = "n";
+         }
+        }
+      }
+      
+      // end else:
+    }
+  
+}
+
+}
+
+
+
+
+
+
+
+function findAValidPosition() {
+global $savedWalkableAreas, $isAValidItemPosition, $mapMaxWidth, $mapMaxHeight, $dungeonMap, $itemMap, $npcPositionsTaken, $isAValidItemPosition, $nodesPosition;
+ $attempts = 0;
+ do {
       // pick random walkable region:
       $thisNode = $savedWalkableAreas[(rand(0,count($savedWalkableAreas)-1))];
         $nodesPosition = explode("_", $thisNode);
@@ -1948,30 +2021,19 @@ array_push($levelLockedNPCs, $npcString );
        }
         $attempts ++;
       } while (($isAValidItemPosition == false) && ($attempts<10));
-      if ($isAValidItemPosition) {
-     
-     
-      if ($i<=$numberOfItems) {
-    if($itemChance>0) {
-     // place item:
-        $itemType = $itemsAvailable[(rand(0,count($itemsAvailable)-1))];
-        $itemMap[($nodesPosition[0])][($nodesPosition[1])] = $itemType;
-        }
-        } else {
-        // place NPC:
-        // double check no item here - can happen. shouldn't need this check - need to fix code above instead #######################
-        
-        if($itemMap[($nodesPosition[0])][($nodesPosition[1])] == "") {        
-array_push($npcPositionsTaken,($nodesPosition[0])."_".($nodesPosition[1]));
-         $npcMap[($nodesPosition[0])][($nodesPosition[1])] = "n";
-         }
-        }
-      }
-    }
-  
+      
+    
+      
 }
 
-}
+
+
+
+
+
+
+
+
 
 function createNewDungeonMap($mapID) {
     global $dungeonMap, $itemMap, $npcMap, $tunnelMaxLength, $mapMaxWidth, $mapMaxHeight, $inX, $inY, $outX, $outY, $templateRows, $exitDoorX, $exitDoorY, $heightMap, $entranceHeight, $exitHeight, $debugMode, $dungeonDetails, $doorsIn, $doorsOut, $connectingDoorX, $connectingDoorY, $dungeonDetails, $thisDungeonsName, $thisMapsId, $outputMode, $allStairs, $tileHeight, $isTreasureMapLevel, $treasureLocX, $treasureLocY, $thisPlayersId, $loadedDoorData, $mapMode, $topLeftXPos, $topLeftYPos;
@@ -1994,6 +2056,17 @@ $tileHeight = 24;
      
      if(!$isTreasureMapLevel) {
      // session will already be set, and map won't turn
+  
+  
+//  $whichDirectionToTurn = - 1;
+  
+ 
+  
+    include("data/chr" . $thisPlayersId . "/dungeon/".$thisDungeonsName."/session.inc");
+  
+  
+  
+  /*
      session_start();
      if (isset($_SESSION['whichTurn'])) {
       $whichDirectionToTurn = (0-$_SESSION['whichTurn']);
@@ -2002,8 +2075,9 @@ $tileHeight = 24;
         $whichDirectionToTurn = - 1;
      }
      $_SESSION['whichTurn'] = $whichDirectionToTurn;
-     
+     */
      }
+     
      
      
      
