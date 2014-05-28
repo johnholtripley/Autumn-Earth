@@ -43,6 +43,7 @@
 // ensure session saving turning value is unique to each dungeon instance
 
 // templates should be able to place items and NPCs
+// template areas could include mines, temples and - template objects and npcs too eg. dwarven expedition
 
 // be really nice to have a league table on the website of which characters have achieved the deepest level in each dungeon - could create competition.
 
@@ -64,7 +65,7 @@
 
 // randomDungeonName needs to be saved with save game in flash so that it is pulled through when starting a new game session from within the dungeon
 
-// template areas could include mines, temples and - template objects and npcs too eg. dwarven expedition
+
 
 // to allow unique template maps to used with the relevant quest objectives on - flash map swf will have an array with the relevant quests for the dungeon that can be entered from that map. flash will request a new map and check the status and pass through any open quests. php will have a table with quest number and the range that that template could be found on - if map level exceeds this range, then use this template so will definintely be used (or have a random chance of it occuring that the liklihood increases with the 'depth' of the current map until it's 100% that this map will be used). table might also have another quest that is opened once this template has been used - so can chain templates in correct order. open quests are stored in database - if map #0 is requested then these are cleared and any new ones from flash are used. once template is used then this is removed from database entry - chained quest template will be added to database entry
 
@@ -175,21 +176,33 @@ function XMLTagContents($parser, $data) {
     }
 }
 function getXMLFile() {
-    global $templateRows, $fileToUse, $templateTiles;
+    global $templateRows, $fileToUse, $templateTiles, $thisDungeonsName, $templatesAlreadyPlaced, $templateChosen;
     // read contents of dir and find number of files:
     $dir = "templates/dungeon/".$thisDungeonsName."/";
+    
+    
     $filesFound = array();
     if (is_dir($dir)) {
         if ($dirHandle = opendir($dir)) {
             while (($file = readdir($dirHandle)) !== false) {
                 if ((is_file($dir . '/' . $file)) && ($file != 'index.php')) {
+                if (!(in_array($file,$templatesAlreadyPlaced))) {
                     array_push($filesFound, $file);
+                    }
                 }
             }
             closedir($dirHandle);
         }
     }
-    $fileToUse = $dir . "/" . $filesFound[(rand(0, count($filesFound) - 1)) ];
+    
+    
+    $randomFile = rand(0, count($filesFound) - 1);
+    $fileToUse = $dir . $filesFound[$randomFile];
+    
+    $templateChosen = $filesFound[$randomFile];
+    
+  
+    
     $templateRows = array();
     $templateTiles = array();
 }
@@ -960,7 +973,7 @@ function floodFillHeight($startPointX, $startPointY, $heightToUse) {
 }
 
 function outputDungeon() {
-  global $dungeonMap, $dungeonOutputMap, $heightMap, $itemMap, $npcMap, $mapMaxHeight, $mapMaxWidth, $thisDungeonsName, $thisMapsId, $thisPlayersId, $thisAverageCount, $thisAverageTotal, $doorsOut, $doorsIn, $dungeonDetails, $thisOriginatingMapId, $outputMode, $allStairs, $stairsWidth, $entranceHeight, $tileHeight, $itemsAvailable, $isTreasureMapLevel, $startTime, $treasureLocX, $treasureLocY, $templateTiles, $mapMode, $topLeftXPos, $topLeftYPos, $levelLockedNPCs;
+  global $dungeonMap, $dungeonOutputMap, $heightMap, $itemMap, $npcMap, $mapMaxHeight, $mapMaxWidth, $thisDungeonsName, $thisMapsId, $thisPlayersId, $thisAverageCount, $thisAverageTotal, $doorsOut, $doorsIn, $dungeonDetails, $thisOriginatingMapId, $outputMode, $allStairs, $stairsWidth, $entranceHeight, $tileHeight, $itemsAvailable, $isTreasureMapLevel, $startTime, $treasureLocX, $treasureLocY, $templateTiles, $mapMode, $topLeftXPos, $topLeftYPos, $levelLockedNPCs, $turning, $whichDirectionToTurn, $NPCsAlreadyPlaced, $templatesAlreadyPlaced, $levelLockedTemplatesAlreadyPlaced, $templateChosen;
 
 
   if ($outputMode == "test") {
@@ -1170,10 +1183,6 @@ for ($i = 0;$i < count($allStairs);$i++) {
 if($mapMode=="template") {
 
 // insert the template tiles here - so that the dungeon walls get averaged in smoothly
-// ######
-
-
-
 
 $templateWidth = count($templateTiles);
 $templateHeight = count(explode(",",$templateTiles[0]));
@@ -1348,8 +1357,6 @@ $outputString .= "</row>\n";
   // add specific NPC - get id:
   $npcId = substr($npcMap[$i][$j], ($llnpc+2));
   
-// john
-// level locked array is NULL?
 
 
 
@@ -1629,6 +1636,51 @@ echo $outputString;
 		
 		fwrite($filename, $outputString); 
 		fclose($filename);
+		
+		
+		
+		
+		
+		// update session details:
+		  if($turning !=0) {
+            // this map did turn:
+            $whichDirectionToTurn = 0-$whichDirectionToTurn;
+            }
+            
+            if($templateChosen != "") {
+            // template has been used:
+             array_push($templatesAlreadyPlaced, $templateChosen);
+   }
+            
+            
+            $sessionOutput = '<?php'."\n";
+$sessionOutput .= '// alternate which direction maps turn so don\'t double back and cross:'."\n";
+$sessionOutput .= '$whichDirectionToTurn = '.$whichDirectionToTurn.';'."\n";
+$sessionOutput .= '// save templates placed:'."\n";
+
+$sessionArray = "";
+if(count($templatesAlreadyPlaced)>0) {
+$sessionArray = '"'.implode('","',$templatesAlreadyPlaced).'"';
+}
+
+$sessionOutput .= '$templatesAlreadyPlaced = array('.$sessionArray.');'."\n";
+$sessionOutput .= '// save level locked NPCs placed:'."\n";
+$sessionOutput .= '$NPCsAlreadyPlaced = array('.implode(',',$NPCsAlreadyPlaced).');'."\n";
+$sessionOutput .= '// save level locked templates placed:'."\n";
+$sessionOutput .= '$levelLockedTemplatesAlreadyPlaced = array('.implode(',',$levelLockedTemplatesAlreadyPlaced).');'."\n";
+$sessionOutput .= '?>';
+
+
+		
+		$sessionFilename = "data/chr" . $thisPlayersId . "/dungeon/".$thisDungeonsName."/session.inc";    
+	if(!($sessionFilename=fopen($sessionFilename,"w"))) {
+			// error handling?
+		}
+		fwrite($sessionFilename, $sessionOutput); 
+		fclose($sessionFilename);
+		
+	
+		
 }
 
 if ($hasPlacedATreasureMap) {
@@ -1647,6 +1699,8 @@ $thisMapsId = $newTargetTreasureMap;
  
 }
 
+
+        
 }
 
 function isEmptyTile($tileCheckX,$tileCheckY) {
@@ -1745,7 +1799,7 @@ function tileIsSurrounded($tileCheckX,$tileCheckY) {
 
 function placeItemsandNPCs() {
 
-  global $dungeonMap, $itemMap, $npcMap, $mapMaxHeight, $mapMaxWidth, $savedWalkableAreas, $startTime, $dungeonDetails, $thisDungeonsName, $itemsAvailable, $thisMapsId, $levelLockedNPCs, $npcPositionsTaken, $isAValidItemPosition, $nodesPosition;
+  global $dungeonMap, $itemMap, $npcMap, $mapMaxHeight, $mapMaxWidth, $savedWalkableAreas, $startTime, $dungeonDetails, $thisDungeonsName, $itemsAvailable, $thisMapsId, $levelLockedNPCs, $npcPositionsTaken, $isAValidItemPosition, $nodesPosition, $NPCsAlreadyPlaced, $templatesAlreadyPlaced, $levelLockedTemplatesAlreadyPlaced;
 
    $itemChance = $dungeonDetails[$thisDungeonsName][3];
    $itemsAvailable = $dungeonDetails[$thisDungeonsName][4];
@@ -1778,58 +1832,30 @@ function placeItemsandNPCs() {
 // check for level-locked NPCs
 // whether the NPC has already been placed will be in database
 
-
-
-
-
 if(count($dungeonDetails[$thisDungeonsName][6])>0) {
   for ($ll = 0;$ll < count($dungeonDetails[$thisDungeonsName][6]);$ll++) {
+
+// see if it's already placed:
+if (!(in_array($ll, $NPCsAlreadyPlaced))) {
 
     // check current level against NPC max and min
     $thisMinLevel = $dungeonDetails[$thisDungeonsName][6][$ll][1];
     $thisMaxLevel = $dungeonDetails[$thisDungeonsName][6][$ll][2];
-
-
     $thisCurrentLevel = abs($thisMapsId);
-
-
-
-
     $thisLevelStepPercent = 100/($thisMaxLevel+1-$thisMinLevel);
-
     $chanceOfEncounter = $thisLevelStepPercent * (($thisCurrentLevel+1)-$thisMinLevel);
-    
-    
-  
-    
+     
  if(rand(0,100) <= $chanceOfEncounter) {
+      $isAValidItemPosition = false;
+        findAValidPosition();
+            if ($isAValidItemPosition) {
+      $thisNpcXTile = $nodesPosition[0];
+    $thisNpcYTile = $nodesPosition[1];
+       
     // add NPC
     $numberOfNPCs --;
     
-    
-    
-    
-    
-    
-    
-     $isAValidItemPosition = false;
-     
-   
-   
-   
-   findAValidPosition();
-      
-      
-      
-      if ($isAValidItemPosition) {
-      $thisNpcXTile = $nodesPosition[0];
-    $thisNpcYTile = $nodesPosition[1];
-      
-    
-    
-    
-    
-
+    array_push($NPCsAlreadyPlaced,$ll);
 
 $npcString = $dungeonDetails[$thisDungeonsName][6][$ll][0];
 $npcString = str_replace("lockedNPCPos", $thisNpcXTile.",".$thisNpcYTile, $npcString);
@@ -1841,7 +1867,7 @@ array_push($npcPositionsTaken,($thisNpcXTile)."_".($thisNpcYTile));
     }
     
     }
-    
+    }
   }
 }  
   
@@ -2036,7 +2062,7 @@ global $savedWalkableAreas, $isAValidItemPosition, $mapMaxWidth, $mapMaxHeight, 
 
 
 function createNewDungeonMap($mapID) {
-    global $dungeonMap, $itemMap, $npcMap, $tunnelMaxLength, $mapMaxWidth, $mapMaxHeight, $inX, $inY, $outX, $outY, $templateRows, $exitDoorX, $exitDoorY, $heightMap, $entranceHeight, $exitHeight, $debugMode, $dungeonDetails, $doorsIn, $doorsOut, $connectingDoorX, $connectingDoorY, $dungeonDetails, $thisDungeonsName, $thisMapsId, $outputMode, $allStairs, $tileHeight, $isTreasureMapLevel, $treasureLocX, $treasureLocY, $thisPlayersId, $loadedDoorData, $mapMode, $topLeftXPos, $topLeftYPos;
+    global $dungeonMap, $itemMap, $npcMap, $tunnelMaxLength, $mapMaxWidth, $mapMaxHeight, $inX, $inY, $outX, $outY, $templateRows, $exitDoorX, $exitDoorY, $heightMap, $entranceHeight, $exitHeight, $debugMode, $dungeonDetails, $doorsIn, $doorsOut, $connectingDoorX, $connectingDoorY, $dungeonDetails, $thisDungeonsName, $thisMapsId, $outputMode, $allStairs, $tileHeight, $isTreasureMapLevel, $treasureLocX, $treasureLocY, $thisPlayersId, $loadedDoorData, $mapMode, $topLeftXPos, $topLeftYPos, $turning, $whichDirectionToTurn, $NPCsAlreadyPlaced, $templatesAlreadyPlaced, $levelLockedTemplatesAlreadyPlaced, $templateChosen;
     $outputMode = "xml";
   if(isset($_GET["outputMode"])) {
   $outputMode = $_GET["outputMode"];
@@ -2086,6 +2112,7 @@ $tileHeight = 24;
     $tunnelMaxLength = 150;
     $isFullyConnected = false;
     do {
+    $templateChosen = "";
     $doorsIn = array();
 $doorsOut = array();
         $stairsAreOk = true;
@@ -2121,6 +2148,9 @@ $doorsOut = array();
             $mapMode = "stairs";
             }
             
+            
+     
+            
      
         }
         
@@ -2151,6 +2181,9 @@ $doorsOut = array();
         }
         
  
+        
+        
+        
         
 if($thisMapsId == -1) {
     // hard code door position of first map:
@@ -2430,6 +2463,9 @@ if ($startDoorY == 0) {
        } else if ($exitDoorY == ($mapMaxHeight - 1)) {
        $exitPointToConnectToY = ($mapMaxHeight - 2);
        }      
+        
+        
+        
         
         
    
@@ -2839,8 +2875,9 @@ if ($startDoorY == 0) {
             placeItemsandNPCs();
             outputDungeon();
             
-            // save which direction to turn to database: ####################
-            // $whichDirectionToTurn
+           
+            
+          
             
         }
        
