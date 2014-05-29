@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map inx="3" iny="1" outx="3" outy="1">
+<row>##..</row>
+<row>#...</row>
+<row>#...</row>
+<tiles>506,507,2,2</tiles>
+<tiles>508,2,2,2</tiles>
+<tiles>507,2,2,2</tiles>
+<item>6,1,2,1,0,0</item>
+<npc>2,0,5,1,1,0,1,0,0,0,Dwarven Quartermaster,0,4.3,1,5,8,9</npc>
+</map>

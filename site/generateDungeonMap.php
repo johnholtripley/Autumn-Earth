@@ -973,7 +973,7 @@ function floodFillHeight($startPointX, $startPointY, $heightToUse) {
 }
 
 function outputDungeon() {
-  global $dungeonMap, $dungeonOutputMap, $heightMap, $itemMap, $npcMap, $mapMaxHeight, $mapMaxWidth, $thisDungeonsName, $thisMapsId, $thisPlayersId, $thisAverageCount, $thisAverageTotal, $doorsOut, $doorsIn, $dungeonDetails, $thisOriginatingMapId, $outputMode, $allStairs, $stairsWidth, $entranceHeight, $tileHeight, $itemsAvailable, $isTreasureMapLevel, $startTime, $treasureLocX, $treasureLocY, $templateTiles, $mapMode, $topLeftXPos, $topLeftYPos, $levelLockedNPCs, $turning, $whichDirectionToTurn, $NPCsAlreadyPlaced, $templatesAlreadyPlaced, $levelLockedTemplatesAlreadyPlaced, $templateChosen;
+  global $dungeonMap, $dungeonOutputMap, $heightMap, $itemMap, $npcMap, $mapMaxHeight, $mapMaxWidth, $thisDungeonsName, $thisMapsId, $thisPlayersId, $thisAverageCount, $thisAverageTotal, $doorsOut, $doorsIn, $dungeonDetails, $thisOriginatingMapId, $outputMode, $allStairs, $stairsWidth, $entranceHeight, $tileHeight, $itemsAvailable, $isTreasureMapLevel, $startTime, $treasureLocX, $treasureLocY, $templateTiles, $mapMode, $topLeftXPos, $topLeftYPos, $levelLockedNPCs, $turning, $whichDirectionToTurn, $NPCsAlreadyPlaced, $templatesAlreadyPlaced, $levelLockedTemplatesAlreadyPlaced, $templateChosen, $levelLockedTemplateChosen;
 
 
   if ($outputMode == "test") {
@@ -1651,6 +1651,13 @@ echo $outputString;
             // template has been used:
              array_push($templatesAlreadyPlaced, $templateChosen);
    }
+   
+   
+   
+     if($levelLockedTemplateChosen != "") {
+            // template has been used:
+             array_push($levelLockedTemplatesAlreadyPlaced, $levelLockedTemplateChosen);
+   }
             
             
             $sessionOutput = '<?php'."\n";
@@ -1667,7 +1674,15 @@ $sessionOutput .= '$templatesAlreadyPlaced = array('.$sessionArray.');'."\n";
 $sessionOutput .= '// save level locked NPCs placed:'."\n";
 $sessionOutput .= '$NPCsAlreadyPlaced = array('.implode(',',$NPCsAlreadyPlaced).');'."\n";
 $sessionOutput .= '// save level locked templates placed:'."\n";
-$sessionOutput .= '$levelLockedTemplatesAlreadyPlaced = array('.implode(',',$levelLockedTemplatesAlreadyPlaced).');'."\n";
+
+
+
+$sessionArray = "";
+if(count($levelLockedTemplatesAlreadyPlaced)>0) {
+$sessionArray = '"'.implode('","',$levelLockedTemplatesAlreadyPlaced).'"';
+}
+
+$sessionOutput .= '$levelLockedTemplatesAlreadyPlaced = array('.$sessionArray.');'."\n";
 $sessionOutput .= '?>';
 
 
@@ -2062,7 +2077,7 @@ global $savedWalkableAreas, $isAValidItemPosition, $mapMaxWidth, $mapMaxHeight, 
 
 
 function createNewDungeonMap($mapID) {
-    global $dungeonMap, $itemMap, $npcMap, $tunnelMaxLength, $mapMaxWidth, $mapMaxHeight, $inX, $inY, $outX, $outY, $templateRows, $exitDoorX, $exitDoorY, $heightMap, $entranceHeight, $exitHeight, $debugMode, $dungeonDetails, $doorsIn, $doorsOut, $connectingDoorX, $connectingDoorY, $dungeonDetails, $thisDungeonsName, $thisMapsId, $outputMode, $allStairs, $tileHeight, $isTreasureMapLevel, $treasureLocX, $treasureLocY, $thisPlayersId, $loadedDoorData, $mapMode, $topLeftXPos, $topLeftYPos, $turning, $whichDirectionToTurn, $NPCsAlreadyPlaced, $templatesAlreadyPlaced, $levelLockedTemplatesAlreadyPlaced, $templateChosen;
+    global $dungeonMap, $itemMap, $npcMap, $tunnelMaxLength, $mapMaxWidth, $mapMaxHeight, $inX, $inY, $outX, $outY, $templateRows, $exitDoorX, $exitDoorY, $heightMap, $entranceHeight, $exitHeight, $debugMode, $dungeonDetails, $doorsIn, $doorsOut, $connectingDoorX, $connectingDoorY, $dungeonDetails, $thisDungeonsName, $thisMapsId, $outputMode, $allStairs, $tileHeight, $isTreasureMapLevel, $treasureLocX, $treasureLocY, $thisPlayersId, $loadedDoorData, $mapMode, $topLeftXPos, $topLeftYPos, $turning, $whichDirectionToTurn, $NPCsAlreadyPlaced, $templatesAlreadyPlaced, $levelLockedTemplatesAlreadyPlaced, $templateChosen, $levelLockedTemplateChosen;
     $outputMode = "xml";
   if(isset($_GET["outputMode"])) {
   $outputMode = $_GET["outputMode"];
@@ -2113,6 +2128,7 @@ $tileHeight = 24;
     $isFullyConnected = false;
     do {
     $templateChosen = "";
+    $levelLockedTemplateChosen = "";
     $doorsIn = array();
 $doorsOut = array();
         $stairsAreOk = true;
