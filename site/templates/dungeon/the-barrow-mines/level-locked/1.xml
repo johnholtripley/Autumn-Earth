@@ -8,5 +8,6 @@
 <tiles>2,2,2,508</tiles>
 <tiles>2,2,2,507</tiles>
 <tiles>2,2,2,2</tiles>
-<npc>2,0,5,2,1,0,1,0,0,0,Dwarven Scout,0,4.3,1,5,10,11</npc>
+<npc>2,0,5,2,1,0,1,0,0,0,Dwarven Pathfinder,0,4.3,1,5,10,11</npc>
+<npc>1,0,1,0,2,0,1,0,0,0,Dwarven miner,0,4.3,1,5,12</npc>
 </map>

@@ -1011,7 +1011,7 @@ echo '<body style="background: #000; color: #fff;">' . "\n";
        } else if ($npcMap[$i][$j] == "n") {
        echo "<span style=\"color:#ffffff;\">n</span>";
        
-       }else if ($npcMap[$i][$j] == "n-0") {
+       }else if (substr($npcMap[$i][$j], 0, 2) == "n-") {
         echo "<span style=\"color:#00ff00;\">N</span>";
       } else {
       // show height of this tile (lighter = higher):
@@ -1654,9 +1654,11 @@ echo $outputString;
    
    
    
-     if($levelLockedTemplateChosen != "") {
+     if(count($levelLockedTemplateChosen) == 0) {
+      for ($lloop = 0;$lloop < count($levelLockedTemplateChosen);$lloop++) {
             // template has been used:
-             array_push($levelLockedTemplatesAlreadyPlaced, $levelLockedTemplateChosen);
+             array_push($levelLockedTemplatesAlreadyPlaced, $levelLockedTemplateChosen[$lloop]);
+             }
    }
             
             
@@ -1904,6 +1906,10 @@ array_push($npcPositionsTaken,($thisNpcXTile)."_".($thisNpcYTile));
   $loopIterations = $numberOfItems + $numberOfNPCs;
   
   
+  if($loopIterations<1) {
+  $loopIterations = 1;
+  }
+  
     for ($i = 1; $i<=$loopIterations; $i++) {
 
     
@@ -2128,7 +2134,7 @@ $tileHeight = 24;
     $isFullyConnected = false;
     do {
     $templateChosen = "";
-    $levelLockedTemplateChosen = "";
+    $levelLockedTemplateChosen = array();
     $doorsIn = array();
 $doorsOut = array();
         $stairsAreOk = true;
@@ -2163,12 +2169,33 @@ $doorsOut = array();
             } else {
             $mapMode = "stairs";
             }
-            
-            
-     
-            
-     
+         
         }
+        
+        // check if a level-locked template should go here, and override Mode if so:
+        
+            if(count($dungeonDetails[$thisDungeonsName][7])>0) {
+  for ($llt = 0;$llt < count($dungeonDetails[$thisDungeonsName][7]);$llt++) {
+
+// see if it's already placed:
+if (!(in_array($llt, $levelLockedTemplatesAlreadyPlaced))) {
+            
+    $thisMinLevel = $dungeonDetails[$thisDungeonsName][7][$llt][1];
+    $thisMaxLevel = $dungeonDetails[$thisDungeonsName][7][$llt][2];
+    $thisCurrentLevel = abs($thisMapsId);
+    $thisLevelStepPercent = 100/($thisMaxLevel+1-$thisMinLevel);
+    $chanceOfLevel = $thisLevelStepPercent * (($thisCurrentLevel+1)-$thisMinLevel);
+     
+ if(rand(0,100) <= $chanceOfLevel) {
+ 
+ $mapMode = "lltemplate";
+ 
+ }
+ }
+ }
+ }
+        
+        
         
         
         
@@ -2731,6 +2758,17 @@ if ($startDoorY == 0) {
                         }
                     }
                     break;
+                    
+                    
+                  case "lltemplate":
+                  
+                  echo "level locked template";
+                  die();
+                  break;  
+                    
+                    
+                    
+                    
                 case "template":
                     pickTemplate();
                     $templateWidth = count($templateRows);
