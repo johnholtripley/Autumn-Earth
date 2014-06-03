@@ -2187,7 +2187,7 @@ if (!(in_array($llt, $levelLockedTemplatesAlreadyPlaced))) {
     $chanceOfLevel = $thisLevelStepPercent * (($thisCurrentLevel+1)-$thisMinLevel);
      
  if(rand(0,100) <= $chanceOfLevel) {
- 
+ array_push($levelLockedTemplateChosen, array($llt));
  $mapMode = "lltemplate";
  
  }
@@ -2761,9 +2761,42 @@ if ($startDoorY == 0) {
                     
                     
                   case "lltemplate":
+                 
+                 // create 2d array of the map, all filled with 0s
                   
-                  echo "level locked template";
-                  die();
+                  // $numberOfAttempts = 0;
+                  
+                 // loop count($levelLockedTemplateChosen) {
+                 
+                 // read xml for this template
+                 
+                 // do {
+                 // get random coords
+                 
+                 // $numberOfAttempts ++;
+                 // } while (any covered positions are 1) and ($numberOfAttempts < 10)
+                 
+                 // push to new array that stores templates that were ACTUALLY placed - use this to determine if session file should be updated
+                 // push top left coords to array
+                 // push entrance and exit points to array
+               // push template data in
+                 // fill in array with covered positions to '1'
+                 
+                 // }
+                 
+                 // pick random point
+                 // tunnel from entrance to this
+                 // tunnel from this to exit
+                     // loop count($levelLockedTemplateChosen) {
+                     // tunnel from this to entrance point
+                     // tunnel from this to exit point
+                     // }
+                     
+                       // loop count($levelLockedTemplateChosen) {
+                  // place templates
+                  // }
+                 
+                 }
                   break;  
                     
                     
