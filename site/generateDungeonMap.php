@@ -216,8 +216,7 @@ switch ($elementType) {
          array_unshift($levelLockedTemplatePossible[$whichLLTemplate]["row"], str_ireplace(" ", "", $data));
         break;
   
-  // count rows for Size ####
-  // how to get number of elements in a row for Size? #####
+
   
     case "tiles":
          array_unshift($levelLockedTemplatePossible[$whichLLTemplate]["tiles"], str_ireplace(" ", "", $data));
@@ -254,7 +253,7 @@ $levelLockedTemplatePossible[$whichLLTemplate]["row"] = array();
 $levelLockedTemplatePossible[$whichLLTemplate]["tiles"] = array();
 $levelLockedTemplatePossible[$whichLLTemplate]["npc"] = array();
 $levelLockedTemplatePossible[$whichLLTemplate]["item"] = array();
-$levelLockedTemplatePossible[$whichLLTemplate]["size"] = array();
+
 
 
 
@@ -278,9 +277,7 @@ $levelLockedTemplatePossible[$whichLLTemplate]["size"] = array();
    
     xml_parser_free($xmlparser);
 
-echo "<code><pre>";
-var_dump($levelLockedTemplatePossible[$whichLLTemplate]);
-echo "</pre></code>";
+
 
 }
 
@@ -2898,26 +2895,68 @@ if ($startDoorY == 0) {
                  
                  getXMLTemplate($levelLockedTemplatePossible[$i]);
                  
-                 // do {
-                 // get random coords away from map edge
                  
-                 // all full edge-to-edge templates:
-                 // if width of template == mapwidth {
-                 //xcoord = 0;
-                 // }
-                 // if height of template == mapheight {
-                 //ycoord = 0;
-                 // }
+                 // determine size of this template:
+                 $thisTemplateHeight = count($levelLockedTemplatePossible[$i]["tiles"]);
+                 $thisTemplateWidth = count(explode(",",$levelLockedTemplatePossible[$i]["tiles"][0]));
                  
-                 // $numberOfAttempts ++;
-                 // } while (any covered positions are 1) and ($numberOfAttempts < 10)
+            $levelLockedTemplatePossible[$i]["size"] = array($thisTemplateWidth, $thisTemplateHeight);
                  
-                 // push to $levelLockedTemplateChosen
-                 // push top left coords to array
-                 // push entrance and exit points to array
-               // push template data in
-                 // fill in array with covered positions to '1'
                  
+                 
+                 
+                 
+                  do {
+                
+                
+                 // find a location for this template: (allow room for the tunnel to get between template and map edge)
+                    $topLeftXPos = rand(5, $mapMaxWidth - $thisTemplateWidth - 5);
+                    $topLeftYPos = rand(5, $mapMaxHeight - $thisTemplateHeight - 5);
+                    // check if the template stretches across the full map:
+                    if ($thisTemplateWidth == $mapMaxWidth) {
+                        $topLeftXPos = 0;
+                    }
+                    if ($thisTemplateHeight == $mapMaxHeight) {
+                        $topLeftYPos = 0;
+                    }
+                 
+                 $allTilesAreClear = true;
+                 
+                 
+                 for ($j = $topLeftXPos; $j < ($topLeftXPos+$thisTemplateWidth); $j++) {
+                 for ($k = $topLeftYPos; $k < ($topLeftYPos+$thisTemplateHeight); $k++) {
+                 if($templatePlacedMap[$i][$j] == "1") {
+                  $allTilesAreClear = false; 
+                  }
+                 }
+                 }
+                 
+                 
+                 
+                  $numberOfAttempts ++;
+                  } while ((!$allTilesAreClear) and ($numberOfAttempts < 10));
+                 
+                 if($allTilesAreClear) {
+                 // push data to $levelLockedTemplateChosen
+                 
+                 array_push($levelLockedTemplateChosen, $levelLockedTemplatePossible[$i]);
+                 
+                 
+                 // push top left coords to array:
+                  $levelLockedTemplateChosen[count($levelLockedTemplateChosen)-1]["coords"] = array($topLeftXPos, $topLeftYPos);
+                 
+                 
+                 // mark these as filled:
+               
+                    for ($j = $topLeftXPos; $j < ($topLeftXPos+$thisTemplateWidth); $j++) {
+                 for ($k = $topLeftYPos; $k < ($topLeftYPos+$thisTemplateHeight); $k++) {
+                 $templatePlacedMap[$i][$j] = "1";
+                  
+                 }
+                 }
+                 
+                 
+                 }
                   }
                  
                  // pick random point
@@ -2931,6 +2970,17 @@ if ($startDoorY == 0) {
                        // loop count($levelLockedTemplateChosen) {
                   // place templates
                   // }
+                  
+                  
+                  echo '<code style="float:left;width:45%;"><pre>';
+var_dump($levelLockedTemplatePossible);
+echo "</pre></code>";
+                  
+                  
+                 echo '<code style="float:left;width:45%;"><pre>';
+var_dump($levelLockedTemplateChosen);
+echo "</pre></code>";
+                  
                  die();
                
                   break;  
