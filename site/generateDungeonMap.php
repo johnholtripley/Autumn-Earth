@@ -2962,26 +2962,81 @@ if ($startDoorY == 0) {
                  // pick random point
                  // tunnel from entrance to this
                  // tunnel from this to exit
-                     // loop count($levelLockedTemplateChosen) {
-                     // tunnel from this to entrance point
+                 
+                 
+                 
+                 
+                        $hubPointX = rand(3, $mapMaxWidth - 3);
+                    $hubPointY = rand(3, $mapMaxHeight - 3);
+                    // tunnel to and from this point
+                    $tunnelSuccess = false;
+                     do {
+                       
+                        $tunnelSuccess = makeTunnel($tunnelStartX, $tunnelStartY, $hubPointX, $hubPointY, 3, 3, 1128);
+                    } while (!$tunnelSuccess);
+                    $tunnelSuccess = false;
+                     do {
+                        $tunnelSuccess = makeTunnel($hubPointX,$hubPointY,$exitPointToConnectToX,$exitPointToConnectToY,3,3,1132);
+                     } while (!$tunnelSuccess);
+                 
+                 
+                 // draw circle here to add interest:
+                   $caveRadius = rand (3,5);
+                   
+                    drawFilledCircle($hubPointX, $hubPointY, $caveRadius);
+                 
+                 
+                
+                 for ($j = 0;$j < count($levelLockedTemplateChosen);$j++) {
+                  // tunnel from this to entrance point:
+                  
+                   $tunnelSuccess = false;
+                     do {
+                       
+                        $tunnelSuccess = makeTunnel($levelLockedTemplateChosen[$j]["doors"][0] + $levelLockedTemplateChosen[$j]["coords"][0], $levelLockedTemplateChosen[$j]["doors"][1] + $levelLockedTemplateChosen[$j]["coords"][1], $hubPointX, $hubPointY, 3, 3, 1128);
+                    } while (!$tunnelSuccess);
+                  
                      // tunnel from this to exit point
-                     // }
                      
-                       // loop count($levelLockedTemplateChosen) {
+                         $tunnelSuccess = false;
+                     do {
+                       
+                        $tunnelSuccess = makeTunnel($levelLockedTemplateChosen[$j]["doors"][2] + $levelLockedTemplateChosen[$j]["coords"][0], $levelLockedTemplateChosen[$j]["doors"][3] + $levelLockedTemplateChosen[$j]["coords"][1], $hubPointX, $hubPointY, 3, 3, 1128);
+                    } while (!$tunnelSuccess);
+                     
+                 }
+                 
+                    
+                     
+                       for ($j = 0;$j < count($levelLockedTemplateChosen);$j++) {
                   // place templates
-                  // }
+                  
+                  for ($k = 0;$k < ($levelLockedTemplateChosen[$j]["size"][1]);$k++) {
+                  $templateArray = str_split($levelLockedTemplateChosen[$j]["row"][$k]);
+                  for ($l = 0;$l < $levelLockedTemplateChosen[$j]["size"][0];$l++) {
+                  
+                  $dungeonMap[$l + $levelLockedTemplateChosen[$j]["coords"][0]][$k + $levelLockedTemplateChosen[$j]["coords"][1]] = $templateArray[$l];
+                  
+                  // seems to render these upside down on the browser preview #####
+                  
+                  }
+                  }
                   
                   
+                  }
+                  
+                  /*
                   echo '<code style="float:left;width:45%;"><pre>';
 var_dump($levelLockedTemplatePossible);
 echo "</pre></code>";
-                  
+                 
                   
                  echo '<code style="float:left;width:45%;"><pre>';
 var_dump($levelLockedTemplateChosen);
 echo "</pre></code>";
                   
                  die();
+                  */
                
                   break;  
                     
