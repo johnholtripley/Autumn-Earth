@@ -11,6 +11,31 @@
 
 
 
+
+
+
+
+// lltemplate added to session
+// lltemplate check that template hasn't already been placed before adding it to possibles
+// lltemplate add items from placed templates
+// lltemplate sometimes npc doesn't get placed even if tiles are
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // pathfinding NPCs should do collision detection between themselves and choose one to move out of the way if they get stuck
 
 // with a mine cart, all npcs tend to then aim for the same bit of rock - might need to store a list of 'occupied' tiles and avoid these
@@ -170,6 +195,10 @@ function XMLTagContents($parser, $data) {
     global $templateRows, $elementType, $templateTiles;
     if ($elementType == "map") {
     // remove whitespace from data:
+    
+
+    
+    
     array_unshift($templateRows, str_ireplace(" ", "", $data));
     } else if ($elementType == "tiles") {
     array_unshift($templateTiles, str_ireplace(" ", "", $data));
@@ -219,14 +248,15 @@ switch ($elementType) {
 
   
     case "tiles":
+    // use unshift to match the isometric projection to the xml layout
          array_unshift($levelLockedTemplatePossible[$whichLLTemplate]["tiles"], str_ireplace(" ", "", $data));
         break;
         
           case "npc":
-         array_unshift($levelLockedTemplatePossible[$whichLLTemplate]["npc"], str_ireplace(" ", "", $data));
+         array_push($levelLockedTemplatePossible[$whichLLTemplate]["npc"], str_ireplace(" ", "", $data));
         break;
           case "item":
-         array_unshift($levelLockedTemplatePossible[$whichLLTemplate]["item"], str_ireplace(" ", "", $data));
+         array_push($levelLockedTemplatePossible[$whichLLTemplate]["item"], str_ireplace(" ", "", $data));
         break;
   
 }
@@ -1290,23 +1320,41 @@ for ($i = 0;$i < count($allStairs);$i++) {
 
 
 if($mapMode=="template") {
-
 // insert the template tiles here - so that the dungeon walls get averaged in smoothly
-
 $templateWidth = count($templateTiles);
 $templateHeight = count(explode(",",$templateTiles[0]));
-
-
-
 for ($ti = 0;$ti < $templateWidth;$ti++) {
   $thisRow = explode(",",$templateTiles[$ti]);
   for ($tj = 0;$tj < $templateHeight;$tj++) {
     $dungeonOutputMap[($tj + $topLeftXPos) ][($ti + $topLeftYPos) ] = $thisRow[$tj];
   }
 }
+}
+
+
+
+
+
+
+
+if($mapMode=="lltemplate") {
+// insert the template tiles here - so that the dungeon walls get averaged in smoothly
+
+
+ for ($j = 0;$j < count($levelLockedTemplateChosen);$j++) {
+   // place templates
+  for ($k = 0;$k < ($levelLockedTemplateChosen[$j]["size"][1]);$k++) {
+  $templateArray = explode(",",$levelLockedTemplateChosen[$j]["tiles"][$k]);
+  for ($l = 0;$l < $levelLockedTemplateChosen[$j]["size"][0];$l++) {
+  $dungeonOutputMap[$l + $levelLockedTemplateChosen[$j]["coords"][0]][$k + $levelLockedTemplateChosen[$j]["coords"][1]] = $templateArray[$l];
+  }
+  }
+}
+
 
 
 }
+
 
 
 
@@ -1925,7 +1973,7 @@ function tileIsSurrounded($tileCheckX,$tileCheckY) {
 
 function placeItemsandNPCs() {
 
-  global $dungeonMap, $itemMap, $npcMap, $mapMaxHeight, $mapMaxWidth, $savedWalkableAreas, $startTime, $dungeonDetails, $thisDungeonsName, $itemsAvailable, $thisMapsId, $levelLockedNPCs, $npcPositionsTaken, $isAValidItemPosition, $nodesPosition, $NPCsAlreadyPlaced, $templatesAlreadyPlaced, $levelLockedTemplatesAlreadyPlaced;
+  global $dungeonMap, $itemMap, $npcMap, $mapMaxHeight, $mapMaxWidth, $savedWalkableAreas, $startTime, $dungeonDetails, $thisDungeonsName, $itemsAvailable, $thisMapsId, $levelLockedNPCs, $npcPositionsTaken, $isAValidItemPosition, $nodesPosition, $NPCsAlreadyPlaced, $templatesAlreadyPlaced, $levelLockedTemplatesAlreadyPlaced, $mapMode, $levelLockedTemplateChosen;
 
    $itemChance = $dungeonDetails[$thisDungeonsName][3];
    $itemsAvailable = $dungeonDetails[$thisDungeonsName][4];
@@ -1951,6 +1999,54 @@ function placeItemsandNPCs() {
   $numberOfNPCs = rand(4,8);
   
   $npcPositionsTaken = array();
+  
+  
+  
+  // check for level-locked template NPCs
+  
+  if($mapMode=="lltemplate") {
+
+
+ for ($jl = 0;$jl < count($levelLockedTemplateChosen);$jl++) {
+ 
+ if(count($levelLockedTemplateChosen[$jl]["npc"])>0) {
+ for ($kl = 0;$kl < count($levelLockedTemplateChosen[$jl]["npc"]);$kl++) {
+ $numberOfNPCs --;
+ 
+ 
+ 
+
+// determine coords:
+
+$thisNpcArray = explode(",", $levelLockedTemplateChosen[$jl]["npc"][$kl]);
+// replace elements 3 and 4 for x and y coords
+
+ $thisNpcXTile = $thisNpcArray[3]+ $levelLockedTemplateChosen[$jl]["coords"][0];
+ $thisNpcYTile = $thisNpcArray[4]+ $levelLockedTemplateChosen[$jl]["coords"][1];
+
+$thisNpcArray[3] = $thisNpcXTile;
+$thisNpcArray[4] = $thisNpcYTile;
+
+$npcString = implode(",",$thisNpcArray);
+
+
+
+$npcMap[($thisNpcXTile)][($thisNpcYTile)] = "n-".count($levelLockedNPCs);
+array_push($levelLockedNPCs, $npcString );
+array_push($npcPositionsTaken,($thisNpcXTile)."_".($thisNpcYTile));
+ 
+ 
+ 
+ 
+ }
+ }
+ 
+
+  }
+  
+  }
+  
+  
   
   
   
@@ -3017,8 +3113,7 @@ if ($startDoorY == 0) {
                   
                   $dungeonMap[$l + $levelLockedTemplateChosen[$j]["coords"][0]][$k + $levelLockedTemplateChosen[$j]["coords"][1]] = $templateArray[$l];
                   
-                  // seems to render these upside down on the browser preview #####
-                  
+                 
                   }
                   }
                   

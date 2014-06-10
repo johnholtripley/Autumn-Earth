@@ -10,7 +10,7 @@ array(1,1,2,2,3,4,5,6,7,8,9),
 array("6","6","6","6","2","2","3","22","35","25","26","27"),
 "1",
 array(array("2,0,5,lockedNPCPos,lockedNPCDir,0,0,0,Red Diamond collector,0,4.3,1,5,6,7",1,1)),
-array(array(0,3,3), array(1,4,4))
+array(array(0,1,1), array(1,2,2))
 )
 );
 
