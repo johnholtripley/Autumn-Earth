@@ -8,34 +8,6 @@
 
 
 
-
-
-
-
-
-
-
-// lltemplate added to session
-// lltemplate check that template hasn't already been placed before adding it to possibles
-// lltemplate add items from placed templates
-// lltemplate sometimes npc doesn't get placed even if tiles are
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // pathfinding NPCs should do collision detection between themselves and choose one to move out of the way if they get stuck
 
 // with a mine cart, all npcs tend to then aim for the same bit of rock - might need to store a list of 'occupied' tiles and avoid these
@@ -272,7 +244,8 @@ $whichLLTemplate = $whichtemplate;
 
   $dir = "templates/dungeon/".$thisDungeonsName."/level-locked/";
     
-$templateToLoad = $dir.$dungeonDetails[$thisDungeonsName][7][$whichLLTemplate][0].".xml";
+$templateToLoad = $dir.$dungeonDetails[$thisDungeonsName][7][$levelLockedTemplatePossible[$whichLLTemplate]][0].".xml";
+
 
 
 
@@ -1112,7 +1085,7 @@ function floodFillHeight($startPointX, $startPointY, $heightToUse) {
 }
 
 function outputDungeon() {
-  global $dungeonMap, $dungeonOutputMap, $heightMap, $itemMap, $npcMap, $mapMaxHeight, $mapMaxWidth, $thisDungeonsName, $thisMapsId, $thisPlayersId, $thisAverageCount, $thisAverageTotal, $doorsOut, $doorsIn, $dungeonDetails, $thisOriginatingMapId, $outputMode, $allStairs, $stairsWidth, $entranceHeight, $tileHeight, $itemsAvailable, $isTreasureMapLevel, $startTime, $treasureLocX, $treasureLocY, $templateTiles, $mapMode, $topLeftXPos, $topLeftYPos, $levelLockedNPCs, $turning, $whichDirectionToTurn, $NPCsAlreadyPlaced, $templatesAlreadyPlaced, $levelLockedTemplatesAlreadyPlaced, $templateChosen, $levelLockedTemplateChosen, $levelLockedTemplatePossible;
+  global $dungeonMap, $dungeonOutputMap, $heightMap, $itemMap, $npcMap, $mapMaxHeight, $mapMaxWidth, $thisDungeonsName, $thisMapsId, $thisPlayersId, $thisAverageCount, $thisAverageTotal, $doorsOut, $doorsIn, $dungeonDetails, $thisOriginatingMapId, $outputMode, $allStairs, $stairsWidth, $entranceHeight, $tileHeight, $itemsAvailable, $isTreasureMapLevel, $startTime, $treasureLocX, $treasureLocY, $templateTiles, $mapMode, $topLeftXPos, $topLeftYPos, $levelLockedNPCs, $turning, $whichDirectionToTurn, $NPCsAlreadyPlaced, $templatesAlreadyPlaced, $levelLockedTemplatesAlreadyPlaced, $templateChosen, $levelLockedTemplateChosen, $levelLockedTemplatePossible, $newTargetTreasureMap, $treasuresLocX, $treasuresLocY;
 
 
   if ($outputMode == "test") {
@@ -1809,17 +1782,24 @@ echo $outputString;
              array_push($templatesAlreadyPlaced, $templateChosen);
    }
    
-   
-   
-     if(count($levelLockedTemplateChosen) == 0) {
+  
+  
+     if(count($levelLockedTemplateChosen) > 0) {
       for ($lloop = 0;$lloop < count($levelLockedTemplateChosen);$lloop++) {
             // template has been used:
-             array_push($levelLockedTemplatesAlreadyPlaced, $levelLockedTemplateChosen[$lloop]);
+             array_push($levelLockedTemplatesAlreadyPlaced, $levelLockedTemplateChosen[$lloop]["ref"]);
+             
+           //  $sessionOutput .= '// pushing'.$levelLockedTemplateChosen[$lloop]["ref"]."-".$lloop."\n";
+             
              }
    }
+   
+  
+
+   
             
             
-            $sessionOutput = '<?php'."\n";
+           $sessionOutput = '<?php'."\n";
 $sessionOutput .= '// alternate which direction maps turn so don\'t double back and cross:'."\n";
 $sessionOutput .= '$whichDirectionToTurn = '.$whichDirectionToTurn.';'."\n";
 $sessionOutput .= '// save templates placed:'."\n";
@@ -1835,13 +1815,23 @@ $sessionOutput .= '$NPCsAlreadyPlaced = array('.implode(',',$NPCsAlreadyPlaced).
 $sessionOutput .= '// save level locked templates placed:'."\n";
 
 
-
+/*
 $sessionArray = "";
 if(count($levelLockedTemplatesAlreadyPlaced)>0) {
 $sessionArray = '"'.implode('","',$levelLockedTemplatesAlreadyPlaced).'"';
 }
 
 $sessionOutput .= '$levelLockedTemplatesAlreadyPlaced = array('.$sessionArray.');'."\n";
+*/
+
+
+
+
+$sessionOutput .= '$levelLockedTemplatesAlreadyPlaced = array('.implode(',',$levelLockedTemplatesAlreadyPlaced).');'."\n";
+
+
+
+
 $sessionOutput .= '?>';
 
 
@@ -1995,8 +1985,14 @@ function placeItemsandNPCs() {
   
   
   $levelLockedNPCs = array();
-  // get this from $dungeonDetails: #######################
-  $numberOfNPCs = rand(4,8);
+
+
+
+
+  $numberOfNPCs = rand($dungeonDetails[$thisDungeonsName][8][0],$dungeonDetails[$thisDungeonsName][8][1]);
+  
+
+  
   
   $npcPositionsTaken = array();
   
@@ -2029,7 +2025,7 @@ $thisNpcArray[4] = $thisNpcYTile;
 
 $npcString = implode(",",$thisNpcArray);
 
-
+ //echo "<br>lltemplate npc: ".$npcString." at ".$thisNpcXTile.", ".$thisNpcYTile;
 
 $npcMap[($thisNpcXTile)][($thisNpcYTile)] = "n-".count($levelLockedNPCs);
 array_push($levelLockedNPCs, $npcString );
@@ -2041,8 +2037,47 @@ array_push($npcPositionsTaken,($thisNpcXTile)."_".($thisNpcYTile));
  }
  }
  
+ 
+ 
+ 
+ // check for level-locked template items:
+  if(count($levelLockedTemplateChosen[$jl]["item"])>0) {
+ for ($kl = 0;$kl < count($levelLockedTemplateChosen[$jl]["item"]);$kl++) {
+ 
+ 
+ // determine coords:
+ $thisItemArray = explode(",", $levelLockedTemplateChosen[$jl]["item"][$kl]);
+ 
+ $thisItemXTile = $thisItemArray[0]+ $levelLockedTemplateChosen[$jl]["coords"][0];
+ $thisItemYTile = $thisItemArray[1]+ $levelLockedTemplateChosen[$jl]["coords"][1];
+ 
+ $thisItemArray[0] = $thisItemXTile;
+ $thisItemArray[1] = $thisItemYTile;
+ 
+ $itemString = implode(",",$thisItemArray);
+ 
+ $itemMap[$thisItemXTile][$thisItemYTile] = $thisItemArray[2];
+ 
+ }
+ }
+ 
+ 
+ 
+ 
+ 
+ 
 
   }
+  
+  
+  
+
+  
+  
+  
+  
+  
+  
   
   }
   
@@ -2068,7 +2103,7 @@ if (!(in_array($ll, $NPCsAlreadyPlaced))) {
     $chanceOfEncounter = $thisLevelStepPercent * (($thisCurrentLevel+1)-$thisMinLevel);
      
  if(rand(0,100) <= $chanceOfEncounter) {
-      $isAValidItemPosition = false;
+     
         findAValidPosition();
             if ($isAValidItemPosition) {
       $thisNpcXTile = $nodesPosition[0];
@@ -2082,6 +2117,9 @@ if (!(in_array($ll, $NPCsAlreadyPlaced))) {
 $npcString = $dungeonDetails[$thisDungeonsName][6][$ll][0];
 $npcString = str_replace("lockedNPCPos", $thisNpcXTile.",".$thisNpcYTile, $npcString);
 $npcString = str_replace("lockedNPCDir", "0,1", $npcString);
+
+
+ // echo "<br>loose ll npc: ".$npcString." at ".$thisNpcXTile.", ".$thisNpcYTile;
 
 $npcMap[($thisNpcXTile)][($thisNpcYTile)] = "n-".count($levelLockedNPCs);
 array_push($levelLockedNPCs, $npcString );
@@ -2126,8 +2164,7 @@ array_push($npcPositionsTaken,($thisNpcXTile)."_".($thisNpcYTile));
         abortScript();
       } else {
       
-      // have 10 goes at finding a suitable spot, else skip this item:
-      $isAValidItemPosition = false;
+  
     
    
    
@@ -2144,6 +2181,10 @@ array_push($npcPositionsTaken,($thisNpcXTile)."_".($thisNpcYTile));
      // place item:
         $itemType = $itemsAvailable[(rand(0,count($itemsAvailable)-1))];
         $itemMap[($nodesPosition[0])][($nodesPosition[1])] = $itemType;
+        
+          // ############### item can overwrite level locked here
+     //    echo "<br>item at ".$nodesPosition[0].", ".$nodesPosition[1];
+        
         }
         } else {
         // place NPC:
@@ -2153,7 +2194,13 @@ array_push($npcPositionsTaken,($thisNpcXTile)."_".($thisNpcYTile));
 array_push($npcPositionsTaken,($nodesPosition[0])."_".($nodesPosition[1]));
          $npcMap[($nodesPosition[0])][($nodesPosition[1])] = "n";
          }
+        
+        
+        
+        // ############### standard npc can overwrite level locked here
+      //   echo "<br>standard npc: at ".$nodesPosition[0].", ".$nodesPosition[1];
         }
+        
       }
       
       // end else:
@@ -2170,13 +2217,13 @@ array_push($npcPositionsTaken,($nodesPosition[0])."_".($nodesPosition[1]));
 
 
 function findAValidPosition() {
-global $savedWalkableAreas, $isAValidItemPosition, $mapMaxWidth, $mapMaxHeight, $dungeonMap, $itemMap, $npcPositionsTaken, $isAValidItemPosition, $nodesPosition;
+global $savedWalkableAreas, $isAValidItemPosition, $mapMaxWidth, $mapMaxHeight, $dungeonMap, $itemMap, $npcPositionsTaken, $nodesPosition;
  $attempts = 0;
  do {
       // pick random walkable region:
       $thisNode = $savedWalkableAreas[(rand(0,count($savedWalkableAreas)-1))];
         $nodesPosition = explode("_", $thisNode);
-       
+       $isAValidItemPosition = false;
        // make sure this node is well away from edges (ie. away from doors)
        if ($nodesPosition[0]>2 && $nodesPosition[0]<$mapMaxWidth-3 && $nodesPosition[1]>2 && $nodesPosition[1]<$mapMaxHeight-3) {
      
@@ -2236,6 +2283,18 @@ global $savedWalkableAreas, $isAValidItemPosition, $mapMaxWidth, $mapMaxHeight, 
        $tileSouthWestWalkable = false;
        }
        
+       
+       
+       // check this tile:
+        if ((($dungeonMap[($nodesPosition[0])][($nodesPosition[1])] == ".") || ($dungeonMap[($nodesPosition[0])][($nodesPosition[1])] == ",")) && (($itemMap[($nodesPosition[0])][($nodesPosition[1])] == "") && (!(in_array((($nodesPosition[0]))."_".(($nodesPosition[1])), $npcPositionsTaken))))) {
+		$thisTileIsClear = true;
+       } else {
+       $thisTileIsClear = false;
+       }
+       
+       
+       
+       if($thisTileIsClear ) {
        if($tileWestWalkable && $tileNorthWestWalkable && $tileNorthWalkable) {
        if(!$tileEastWalkable && !$tileSouthEastWalkable && !$tileSouthWalkable) {
        $isAValidItemPosition = true;
@@ -2258,6 +2317,8 @@ global $savedWalkableAreas, $isAValidItemPosition, $mapMaxWidth, $mapMaxHeight, 
       
        $isAValidItemPosition = true;
        }
+       }
+       
        }
        
        // check this position isn't adjacent to some stairs:
@@ -2393,15 +2454,18 @@ if (!(in_array($llt, $levelLockedTemplatesAlreadyPlaced))) {
     $chanceOfLevel = $thisLevelStepPercent * (($thisCurrentLevel+1)-$thisMinLevel);
      
  if(rand(0,100) <= $chanceOfLevel) {
+ 
  array_push($levelLockedTemplatePossible, $llt);
+
  $mapMode = "lltemplate";
  
  }
  }
  }
  }
-        
-        
+ 
+    
+       
         
         
         
@@ -2968,6 +3032,8 @@ if ($startDoorY == 0) {
                     
                   case "lltemplate":
                  
+          
+                 
                  // create 2d array of the map, all filled with 0s
                  $templatePlacedMap = array();
                  for ($i = 0;$i < $mapMaxWidth;$i++) {
@@ -2989,18 +3055,18 @@ if ($startDoorY == 0) {
                  for ($i = 0;$i < count($levelLockedTemplatePossible);$i++) {
                  // read xml for this template
                  
-                 getXMLTemplate($levelLockedTemplatePossible[$i]);
+            $thisTemplateRef = $levelLockedTemplatePossible[$i];
+                 getXMLTemplate($i);
                  
                  
                  // determine size of this template:
                  $thisTemplateHeight = count($levelLockedTemplatePossible[$i]["tiles"]);
                  $thisTemplateWidth = count(explode(",",$levelLockedTemplatePossible[$i]["tiles"][0]));
-                 
+                
             $levelLockedTemplatePossible[$i]["size"] = array($thisTemplateWidth, $thisTemplateHeight);
                  
                  
-                 
-                 
+                  
                  
                   do {
                 
@@ -3021,7 +3087,7 @@ if ($startDoorY == 0) {
                  
                  for ($j = $topLeftXPos; $j < ($topLeftXPos+$thisTemplateWidth); $j++) {
                  for ($k = $topLeftYPos; $k < ($topLeftYPos+$thisTemplateHeight); $k++) {
-                 if($templatePlacedMap[$i][$j] == "1") {
+                 if($templatePlacedMap[$j][$k] == "1") {
                   $allTilesAreClear = false; 
                   }
                  }
@@ -3041,18 +3107,21 @@ if ($startDoorY == 0) {
                  // push top left coords to array:
                   $levelLockedTemplateChosen[count($levelLockedTemplateChosen)-1]["coords"] = array($topLeftXPos, $topLeftYPos);
                  
+                 // store reference to which map was chosen:
+                 $levelLockedTemplateChosen[count($levelLockedTemplateChosen)-1]["ref"] = $thisTemplateRef;
                  
                  // mark these as filled:
                
                     for ($j = $topLeftXPos; $j < ($topLeftXPos+$thisTemplateWidth); $j++) {
                  for ($k = $topLeftYPos; $k < ($topLeftYPos+$thisTemplateHeight); $k++) {
-                 $templatePlacedMap[$i][$j] = "1";
+                 $templatePlacedMap[$j][$k] = "1";
                   
                  }
                  }
                  
                  
                  }
+           
                   }
                  
                  // pick random point
@@ -3120,7 +3189,8 @@ if ($startDoorY == 0) {
                   
                   }
                   
-                  /*
+                 
+                 /*
                   echo '<code style="float:left;width:45%;"><pre>';
 var_dump($levelLockedTemplatePossible);
 echo "</pre></code>";
