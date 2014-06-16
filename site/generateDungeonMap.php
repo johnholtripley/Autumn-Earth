@@ -8,12 +8,59 @@
 
 
 
+
+
+/*
+
+add a/ready completed state to collection quests 
+Add reward if turning in a second or third time (if 'R' then use as if the first time ie. repeatable collection
+have list of breakpoints for awarding titles according to how many collections have been completed
+create collection interface
+
+add questEvents system so that quests can react to entering a location (either a whole map or part of one) or to triggers being actviated (levers pulled, chests opened etc)
+
+check if hotspots can be dynamic - add to Dungeons for some template NPCs (eg collector NPCs who won't move and are always reactive to that 'quest')
+fae should react to npcs with active quest dialogue, without needing a hotspot 
+
+add cataloge quests - NPC gives player item. Check if item needs 'filling' - go to PHP to return list of all items in current location, and populate the item then.
+need systrem to reacting to proximity (or examining?) these items easily and efficiceltny
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+*/
+
+
+
+
 // pathfinding NPCs should do collision detection between themselves and choose one to move out of the way if they get stuck
 
 // with a mine cart, all npcs tend to then aim for the same bit of rock - might need to store a list of 'occupied' tiles and avoid these
 
 
-
+// the xml files for level locked templates have tiles in the right order, but items and npcs are placed with the y axis being from the bottom.
 
 
 
