@@ -12,9 +12,6 @@
 
 /*
 
-add a/ready completed state to collection quests 
-Add reward if turning in a second or third time (if 'R' then use as if the first time ie. repeatable collection
-have list of breakpoints for awarding titles according to how many collections have been completed
 create collection interface
 
 add questEvents system so that quests can react to entering a location (either a whole map or part of one) or to triggers being actviated (levers pulled, chests opened etc)
