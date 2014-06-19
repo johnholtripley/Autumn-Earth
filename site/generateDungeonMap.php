@@ -12,7 +12,7 @@
 
 /*
 
-create collection interface
+
 
 add questEvents system so that quests can react to entering a location (either a whole map or part of one) or to triggers being actviated (levers pulled, chests opened etc)
 
