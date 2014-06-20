@@ -9,7 +9,7 @@ array("16,20","17,20","18,20"),
 array(1,1,2,2,3,4,5,6,7,8,9),
 array("6","6","6","6","2","2","3","22","35","25","26","27"),
 "1",
-array(array("2,0,5,lockedNPCPos,lockedNPCDir,0,0,0,Red Diamond Collector,0,4.3,1,5,6,7",1,1), array("2,0,5,lockedNPCPos,lockedNPCDir,0,0,0,Dwarven Curator,0,4.3,1,5,13",1,1)),
+array(array("2,0,5,lockedNPCPos,lockedNPCDir,0,0,0,Red Diamond Collector,0,4.3,1,5,6,7",1,1), array("2,0,5,lockedNPCPos,lockedNPCDir,0,0,0,Dwarven Curator,0,4.3,1,5,13",1,1), array("2,0,4,lockedNPCPos,lockedNPCDir,0,0,0,Tourist,0,4.3,1,5,14,15",1,1)),
 array(array(0,1,1), array(1,2,2)),
 array(4,8)
 )
