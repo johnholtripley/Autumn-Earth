@@ -1,12 +1,65 @@
 // http://www.smashingmagazine.com/2012/10/19/design-your-own-mobile-game/
 // https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial
 
+
+
+
+
+
+
+
+// -----------------------------------------------------------
+// http://paulirish.com/2011/requestanimationframe-for-smart-animating/
+// http://my.opera.com/emoller/blog/2011/12/20/requestanimationframe-for-smart-er-animating
+// requestAnimationFrame polyfill by Erik Möller
+// fixes from Paul Irish and Tino Zijdel
+ 
+(function() {
+    var lastTime = 0;
+    var vendors = ['ms', 'moz', 'webkit', 'o'];
+    for(var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
+        window.requestAnimationFrame = window[vendors[x]+'RequestAnimationFrame'];
+        window.cancelAnimationFrame = window[vendors[x]+'CancelAnimationFrame']
+                                   || window[vendors[x]+'CancelRequestAnimationFrame'];
+    }
+ 
+    if (!window.requestAnimationFrame)
+        window.requestAnimationFrame = function(callback, element) {
+            var currTime = new Date().getTime();
+            var timeToCall = Math.max(0, 16 - (currTime - lastTime));
+            var id = window.setTimeout(function() { callback(currTime + timeToCall); },
+              timeToCall);
+            lastTime = currTime + timeToCall;
+            return id;
+        };
+ 
+    if (!window.cancelAnimationFrame)
+        window.cancelAnimationFrame = function(id) {
+            clearTimeout(id);
+        };
+}());
+// -----------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
 // namespace our game
 var AE = {
 
     // set up some initial values
     WIDTH: 320, 
     HEIGHT:  480, 
+        framesPerSecond: 1,
+        isPaused: false,
+    documentTitle: document.title,
+pausedDocumentTitle: "[paused] - " + document.title,
     // we'll set the rest of these
     // in the init function
     RATIO:  null,
@@ -14,6 +67,21 @@ var AE = {
     currentHeight:  null,
     canvas: null,
     ctx:  null,
+
+
+windowVisible: function() {
+// don't run the game if the tab isn't active
+if(document.hidden) {
+document.title = AE.pausedDocumentTitle;
+AE.isPaused = true;
+} else {
+document.title = AE.documentTitle;
+AE.isPaused = false;
+}
+
+
+},
+
 
     init: function() {
 
@@ -38,7 +106,7 @@ AE.ctx.imageSmoothingEnabled = false;
         
         
 } else {
-  // canvas-unsupported code here
+  // canvas not supported - fallback code here
   // ###############
 }
         
@@ -81,10 +149,25 @@ window.requestAnimationFrame(AE.core.gameLoop);
 AE.core = {
 gameLoop: function() {
 
+
+    setTimeout(function() {
+    
+         window.requestAnimationFrame(AE.core.gameLoop);
+        // Drawing code goes here
+   if(!AE.isPaused) {
 AE.Draw.clear();
   AE.ctx.drawImage(hero,Math.random()*AE.WIDTH,Math.random()*AE.HEIGHT);
+        }
+       
+    }, (1000 / AE.framesPerSecond));
 
-  window.requestAnimationFrame(AE.core.gameLoop);
+
+
+
+
+
+
+
 } 
 };
 
@@ -92,8 +175,7 @@ AE.Draw.clear();
 AE.Draw = {
 
     clear: function() {
-       // AE.ctx.clearRect(0, 0, AE.WIDTH, AE.HEIGHT);
-  //  AE.ctx.restore();
+
     AE.ctx.fillRect(0,0,AE.currentWidth,AE.currentHeight);
     },
 
@@ -116,32 +198,10 @@ loadSprites: function() {
  hero = new Image();
 hero.src = 'images/sprite.png';
 }
-  /*  rect: function(x, y, w, h, col) {
-        AE.ctx.fillStyle = col;
-        AE.ctx.fillRect(x, y, w, h);
-    },
 
-    circle: function(x, y, r, col) {
-        AE.ctx.fillStyle = col;
-        AE.ctx.beginPath();
-        AE.ctx.arc(x, y, r, 0,  Math.PI * 2, true);
-     
-     // fill automatically closes the path
-     //   AE.ctx.closePath();
-       
-       
-        AE.ctx.fill();
-    },
-
-
-    text: function(string, x, y, size, col) {
-        AE.ctx.font = 'bold '+size+'px Monospace';
-        AE.ctx.fillStyle = col;
-        AE.ctx.fillText(string, x, y);
-    }
-    */
 
 };
 
 window.addEventListener('load', AE.init, false);
 window.addEventListener('resize', AE.resize, false);
+document.addEventListener("visibilitychange", AE.windowVisible, false);
