@@ -55,7 +55,7 @@ var AE = {
 
     // set up some initial values
     WIDTH: 320, 
-    HEIGHT:  480, 
+    HEIGHT:  480,
         framesPerSecond: 1,
         isPaused: false,
     documentTitle: document.title,
@@ -156,6 +156,7 @@ gameLoop: function() {
         // Drawing code goes here
    if(!AE.isPaused) {
 AE.Draw.clear();
+console.log();
   AE.ctx.drawImage(hero,Math.random()*AE.WIDTH,Math.random()*AE.HEIGHT);
         }
        
