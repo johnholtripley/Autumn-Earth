@@ -1,0 +1,1034 @@
+ACTUAL BUGS:
+PAUSING - doesn't stop npcs moving
+RAISED SECTIONS - can get stuck if hanging over the edge and then turning left or right and trying to move
+NPCsafter a short pause, the random moving npc wanders off while the hero is talking to it
+ITEMS - player isn't notified about receiving the trowel after completing quest
+RUNNING/SPIKES if move back towards spikes and tiles now display them, for the all spikes are up and moving down
+SPIKES - don't react to hero
+SPIKES - Once you have silence boots, the spikes aren’t up as they become visible again when moving back towards them
+NPC MOVE - path follower doesn't count round properly - seems to go too slowly.
+NPC DIALOGUE - NPCs are too difficult to get to stop and talk - might be improved if CTRL is pressed in adjacent square, regardless of hero facing, that a dialogue is initiated, and both NPC and hero are turned to face each other
+NPCs whose animations stop them moving stray off tile-centres -Random jumping npc is changing direction before its reached the destination tile’s centre
+LOADING - Shared library doesn’t always load - need error handling (re-try)
+NPC moving on looping path - path had got offset by 1 tile or by huge amount
+HEIGHTS - negative height tiles don't work perfectly eg. going down stairs from map 4 - the hero moves down too suddenly on entering that tile
+PAUSING - When unpausing – door animations start when then shouldn’t – need to check that they are moving (_currentframe) and continue movement
+hero occasssionally doesn't appear in the first floor level - the pet does though
+after repeatedly re-entering map1 the hero gets stuck - possibly path follower npc being placed somewhere that causes a conflict 
+BUG - door graphics depth sort over hero (eg. when entering shop)
+
+sound effects from talking to an npc can be repeatedly started - need to ensure that it only plays once
+
+dialoguebox expansion doesn't allow for \n characters
+
+BUG - during transition, the hero moves upwards (esp. when running)
+
+
+
+probably need to block movement across the tile edge on stairs (on the direction perpendicular to the stair's direction)
+
+tile property 128 was for locked doors and isn't used now - so can be used for something else
+
+
+to make a real connection with the hero, make the player go through the same feelings. eg. in FFVII when Cloud is manipulated and made to try and kill Aeris, the player is forced to make Cloud do this, despite not wanting to
+
+
+if the game is going to be non-linear, then it must offer the player non-lineraity in another aspect. eg. in character development. The player can choose whether the character develops in terra-magic or spirit summoning, or lock picking or cartography
+
+
+
+blurred distance scrol probably needs to be absolutely positioned so it's in the same place regardless of where the hero starts on the map
+
+items will need to be in shared library if they can be dropped on any map
+
+
+using 
+ j = (j<0) ? 0:j;
+is faster (just) than having if statement, and definitely faster than math min
+
+
+
+
+determine sale price modifiers (selling modifier / buying from specialist modifier / selling to specialist modifier)
+
+have shout out dialogue box as semi-transparent so hero isn't obscured if going under it?
+
+jump between various height levels
+
+the player can create new plans by first buying equipment (parchment, pen and ink eg.) then selecting 2 or more items to combine. these items can be checked against the requirements in the inventoryitems array to see if it's a valid combination.
+research - add items to panel (if have parchment and ink), click 'create plan' and if the requirements for an item match those on the panel, then a plan is made, otherwise a worthless plan is made.
+need to cap sale amount of created plans, otherwise player can inifintely create the same plan and keep selling them
+
+animation for npc item creation
+
+player needs to see on plans:
+graphic of plan - description of what it makes and the type of plan (clothing/engineering etc)
+
+
+
+
+make plans that the player creates very cheap, so no incentive to sell lots of them. can be cheap as won't be bought anywhere
+
+
+Need to loop through requirements to see if the player has got all of them, if they haven’t, the npc should respond appropriately (if possibly, specifically with ‘you need to find some more alloy’)
+Eg. If requirements is an array within the list, then can do
+	Var missingrequirement:String = “”;
+	For (var I in requirements) {
+	If (requirements[i].indexOf(“£”) {
+	// Then requirement is gold:
+	If (display.gold<parseInt(requirements[i].substring(1,requirements[i].length))) {
+	Missingrequirement = “gold”;
+	Break;
+	}
+	} else {
+	// is an item requirement:
+	If (hasgotitem(requirements[i]) == -1) {
+	Missingrequirement = requirements[i];
+	Break;
+	}
+	}
+	If (missingrequirement == “”) {
+	// Then all ok to proceed:
+	// Run through requirements again, and remove the items/gold needed
+	} else {
+	Displaytext (“you don’t have enough “+missingrequirement);
+	}
+
+ 
+
+  can set up chains, so 1 npc will work and produce v.good items or research if you give them an item that has been made by someone else implement some sort of ingredient list that the player needs to find (multi-item quest in map specific loop - to see if all items are held by hero, if there are, remove them, and ad 'super' item to be the next item to be created in the item creation array for that npc))
+
+
+
+very large towers etc. can be shown by panning down them on the first instance of the hero being on that map, and then the actual game map will just show the base of the tower
+
+
+
+
+devise a way so that entire response dialogue can be 1 in element of quest dialogue. (ie. needs to be parsed twice) -
+so a shopkeeper could respond to a hidden quest event - the open quest and quest is open dialogue is just refering to the shop (response - do you want to open the shop?) but once the quest is closed, they will say that bit of dialogue.
+
+
+
+
+
+does shared library need to be loaded in for each map?
+can check if shared library has loaded by if (scrollclip.hero) { ...
+
+
+ensure that random mover npcs don't start the map on the hero's (or pet's) start point - set these tiles to non-walkable for NPCs
+
+have ui movement controls separate from hero movement controls, so people who don't like the up = NE movement pattern can change it without affecting the inventory movement pattern etc.
+
+
+test png optimisers (actually reducing flash filesize)
+test swf optimiser (reducing filesize without affecting graphic quality)
+
+
+
+
+
+
+
+need to ensure consitency in resource gathering to the player - eg. all collectable herbs and flowers respawn, otherwise the player could be waiting around for a particular plant that never respawns. or at least leave a visible marker to show that it will respawn (eg, show a seed or shoot)
+
+
+
+perhaps need to differentiate speech and in-game messages visually
+
+
+
+
+before dropping a breadcrumb trail, check if there is an item there, if so, don't drop one (ie. hero goes through a tile with a signpost in the corner, pet can't necessarily follow (if moving at exact tile centre) so should path-find around it) - if this is needed (ie. a pet is larger than hero)
+
+pet need to take into account height differences before moving into a tile (pathfinding included)
+
+
+have to place walkable resource placeholders in dead ends so that the pet doesn't try and follow over them
+- or just set resources on non-pet walkable tiles
+
+put all non-moving npcs on non-walkable tiles so that they are avoided when pathfinding
+
+if move too far away then pet's current tile won't exist, so it won't determine that it's at tile centre
+if pet gets too far off map it won't path find (because its tile doesn't exist anymore?)
+
+
+ 
+
+maps can be loaded into memory from an xml file - each one will need sale price once complete (get more when sold to a cartographer), and a boolean to determine if it's should be displayed in the atlas (ie the player has started that map). once a map is complete, it can be moved to the inventory and the one in memory reset, but just checking for any visited tiles and setting them to non-visited (avoids reloading any files)
+
+
+
+
+
+
+
+
+If I remember correctly, setVolume changes all sound objects in that timeline. If sounds are in the _root level then it changes all of them. To change each of them separately you need to put each sound object into separate movie clip. I usually have "music_mc" and "soundeffects_mc" which contain music and effects sound objects and both can have their own volume settings.
+Any sound you want to mess with ( Volume, panning etc. ) shove in it's own mc.
+
+
+referencing variables from an object is faster than from MC
+
+
+
+
+
+ghost needs to depth offset like the familiar
+
+
+
+check pet stops at tile centre even if it's speed isn't a multiple of spacing
+
+to have npcs who only appear at certain times (eg. Stitches appearing at midnight in WoW), need to use map-specific loop and a quest. if time is midnight-1am and the quest isn't closed, then have the character appear. if it's this time and the quest isn't open, then close the quest. if it isn't this time and the quest isn't closed, then set the quest to not open again (so NPCs will still fear him appearing that night again).
+
+
+npcs who have a stop and occassionally move routine need to have their isMoving flag set to false when stationary, so that the pet knows that if colliding with them to turn around
+
+whether a pet waits or turns around when colliding with an npc should be based on the npc's ismoving value, not their type (eg. could be a path follower who is waiting to be spoken to) 
+
+when press key for pet inventory, need to check its in range, or that an NPC with isapet==true is in range
+need to convert all current pet's data back into its array before saving (eg. inventory items etc.)
+when a pet is initially tamed open a window to allow the player to name the pet
+there is no pets array as all non-current pets will be added to currentnpcs array with isaPet = true
+abandoned pets are moved to that map's currentnpc array, if they are stabled, then isMoving is set to false, otherwise they will move in their normal way - after the elapsed time then they will lose any inventory contents, have their taming rate increased, and isaPet is reset to false.
+implement hovering pets (ie. animation doesn't stop when they're not moving)
+have pet sellers
+once a pet is abandoned, loyalty drop to zero (or negative?), inventory contents lost and skill required to tame goes up
+if facing the current pet, and pressing ACTION then the pet will be abandoned. A value in their array is set to the current game counter (use this counter to time the length the hero was in a building for cycling NPCs - what happens if the player saves while in a building, and then re-loads - does the default value still work?)
+then when entering a new map, the pet array is checked for any pets on that map, if there are and their TimeAbandoned value != -1, then check what tile they're on, if the tile isn't a stable tile (will need another tile property for this), then check to see if the current game counter - TimeAbandoned is greater than that pet's loyalty value. if it  is then remove the pet - it has wandered off. this will make stabling more valuable.
+currentPet = index to which pet from pet array is currently following the hero
+Pet array: which map the pet is held on. Tilex. Tiley. Graphic. Speed. Loyalty/trust. Time owned (to check if old enough to be ridden). TimeAbandoned.
+Pet state:
+1: following breadcrumb
+2: moving to tile centre to start calculating path
+3: calculating path
+4: moving on path
+5: abandoned
+If pet gets stuck, then start calculating breadth path, but only do 1 block through each loop (so there isn’t a huge pause while the path is calculated), once the full path is determined, the pet moves along that, get checks for breadcrumb, if one is found, the breadth path is abandoned and the breadcrumb followed again
+All pets and creatures that can become pets need to have graphics in the shared library
+pets need to do collision detection. if stuck against an npc then find breadth path, if stuck on terrain, set a flag that petIsStuck. If the hero leaves the map while pet is stuck, set the pet to being in an abandoned state and start the timer.
+if a pet reaches its abandoned timer, then remove it from the pet array and add it to the map array, and allow it to move around as it would normally. Add 10 to its value to be re-tamed.
+npcs need a 'taming value' - this is the taming skill that the hero must exceed to be able to tame the creature. human npcs therefore need a value above the maximum possible taming skill. also need a value that the pet's loyatly must exceed for it to be ridden. So can make some creatures more quickly rideable than others.
+when attempting to tame a creature, need to calculate the difference: 
+tamingdifference = tamingskill - creature's taming value; 
+if tamingskill>0 then creature tamed. copy npc array to next slot in pet array, along with loyalty, inventory slots, current map, tilex, tiley.
+if tamingdifference >10 then no skill increase is received, but if <=10 then tamingskill++ 
+this means the player has to find newer, harder animals to tame to raise the level in taming 
+if hero had a pet while taming another, then the first is abandoned. 
+can have tamable creatures that initially are just visible as bubbles in water. If stand near and high enough tame skill, then show animation of them surfacing, and then replace with on-land graphic creature
+need to determine if a pet can enter a building or not - can check if its width or height exceeds tilewidth/spacing as appropriate for the door width
+once pathfinding for pet is set up - the player can then Call the pet - and this initiates a pathfinding routine, just in case the pet gets stuck and doesn't realise - then the player can get the pet to find a path towards the hero.
+pets could grow into mounts, and if their trust of the hero is high enough, will let the hero ride them. if the pet is stabled, they will grow, but their trust won't increase (so could sell them as mounts, but couldn't ride them)
+
+
+
+
+need to check hero's current height offset to see if the pet needs to be placed higher when starting a new map (or on the initial map)
+
+
+
+
+
+if the hero moves along the side of stairs and then moves up them, the pet will attempt to move from the flat floor to a stair tile that has a height difference that should block it (might need a kind of look ahead routine that checks height differences before deciding on which breadcrumb tile to move to)
+
+
+
+
+
+
+
+
+set visually clues that are visible from a path to indicate that there is something of interest off the path. it can be an unexpected NPC walking about, a flag, or some ruined architecture that leads towards an encampment or area of interest
+
+have a geomantic skill to freeze water - so lakes can be frozen and then moved across, allowing access to previously in-accessible regions
+
+
+
+
+
+have world events that the player can manipulate (eg. Wow's race where the players can bet on the outcome and then do mini-quests to try and help their chosen team (or hinder the other)
+
+
+have idlying animations for the hero if the player doesn't press a key for a while
+
+need to introduce some element of risk and danger (which combat normally brings)
+
+sometimes flash tries to draw invisible movieclips (things like dialgue box can be moved off stage to prevent this)
+
+mp3s have to be decompressed on playback so can cause slow-down
+
+
+
+
+
+have an early quest where an npc lends the player a pack animal with goods in and ask them to deliver it to a friend in another city. if pet name can only be entered when the pet is initially tamed, then this could be set to 'bob's pony' and used as an identifier at the quest's destiniation (need to check that the player hasn't rtemoved the items 
+though) then outside that city have some wild ponies that the player can tame now that they see the benefit
+
+
+
+
+
+
+if having a large-scale transport system then it makes the game more immersive to see NPCs using it. (eg. when approaching a flight-master, an NPC just ahead of the hero walks up and then flies off, leaving one-less griffon available)
+
+
+
+hero's graphical stride needs to match the distance it moves each frame
+
+random movers may be just colliding when game is saved, and so be paced on the same tile - need to check and avoid this
+
+allow a default character, so that players who just want to get on and play can do so without having to create a character.
+
+
+artisan/scultping skill (buy marble, sell statue...)
+
+when dropping an item for a quest - if there are multiples of this item (ie could be a split quantity drop) then the map specific item drop function will need to add the item into a blank slot (add to item array should do it) and then visually update the inventory
+
+if having dynamic events, then each map should have the graphics for a messenger, and the quest list and inventory item lists should be loaded in (not cached) - dialogue could be added in xml, and speech display checks if the npc array contains a number, and if so, references the dialgoue array, otherwise displays the contents of the arrat element (so can put the full text into the messenger's xml entry)
+var url = 'myswf.swf'
+if ( useSpecialEvent ) {
+url += new Date().getTime()
+}
+
+loadMovie ( url )
+
+
+
+
+
+
+need some sort of post (letters and parcel) system (mail / moggles / harry potter owls etc.)
+
+
+need to have a quick transport system - which makes certain buildings/people very useful (eg flight paths, or hearthstones/port-keys) (hearthstones - finding inns becomes important and creates a base that the player operates from)
+
+hero can still move during transition into and out of card game
+
+have wanted posters etc., that can be read and initiate quests
+signposts can be used to initiate quests - if there is a need to do that?
+
+
+have fae graphics expand and contract slightly so it looks like they're more animated (almost 'beating'?)
+
+hotkeys
+0 - special (bank/house storage), 1 - inventory, 2 - equip, 3 - pet, 4-9 and open orders
+
+have a main inventory array that has [name][description][price code] - then any inventory entries just need to have a number that refers to the index of this main array and a quantity (the number will also be the frame number of the inventory slot graphic.)
+
+order requests need to managed by player with interaction with the inventory
+for NPC order requests for crafted items (eg. maps) - let the player manage fulfilling the order, so they can choose whether to add the item to the order, or whether to use it for something else. The player would be able to remove the item from an inventory and add it to the order. check if it is the correct ite, if it is, then increase the completed items count. if count = number required, then close the quest for that order.
+orders will need 4 bits of information:
+[quest index][current count][required count][required item name]
+
+equip slots should have a maximum of 1 quantity
+ 
+
+ 
+
+
+
+
+
+
+random mover  can look ahead to check for terrain in destination tiles, as well as items by checking if "i_"+tilex"_"+tiley exists
+
+
+need an ifItemIsEquipped function as well as ifIteminInventory function
+
+
+try adding the whichkeyreleased as an 'OR' with the if KeyIsDown to catch when one key is pressed very quickly
+
+each spirit-jar will be a unique item with its own entry in the inventory reference array. all will need the same identifying code, and then a unique number which is an index to a contents-of-spirit-jar array (which will need to be saved)
+when a spirit is caught, a check is made for a spirit jar being in the inventory, any found are checked for being empty, if so, then the spirit is placed within, if not, then the player could be given the option to release one in favour of the newly caught spirit.
+they should be a visually clue to the spirit jar having a spirit within it when the jar is viewed in the inventory (the jar graphic is a movieclip in itself, with several animated frames of different spirits in)
+
+
+
+depth-sorting of multi-tile objects (if required?)
+
+On loading a game, check if that map is in a building, and if so, set the building counter to start, so that looping NPCs will move round a bit
+
+
+
+Do nudging/jumping to new tile height
+
+
+
+
+check odd lengthed maps are positioned correctly
+
+
+
+
+adding an item to inventory currently only allows 1 item to be added at a time - is there an occassion when multiple items would need to be picked up in 1 go?
+
+
+
+Need to check terrain heights when familiar is moving away or towards the hero. (ie. If hero is on raised terrain and the item is on flat ground, then the familiar will need to move down heights) - except that the familiar's LOS will be blocked by any raised tiles.
+need to allow pet and familiar to check terrain when following breadcrumb (and LoS?) so that they can follow the hero up/down raised terrain tiles
+
+
+
+
+
+if (j<0) { 
+	j = 0; 
+} 
+if faster than math.min(0,j);
+
+
+
+
+
+'the Mara Jade' (a boat name)
+
+
+
+'wishbone' - unique item
+(mage's) bauble 
+wayfarer's rest
+
+House building –
+Have a life-size house designer application (set which map in this app) which then creates plans, which become an inventory item. Taking these to a builder will let him cost it, and if have the money, will build the house
+Plans will need to store the data as an ‘overlay’ to the map. This way if the map changes inbetween designing the house and having it built (or another house is built on the same map) then those changes aren’t lost. Any new data shoud be included in the house_plan.xml, and anything that hasn’t changed is marked as ‘#’ – wherever a ‘#’ is found, then the current map data is used, otherwise the plan data is used.
+Player would have to be on the map they want to build upon when entering the house-designer.
+House decoration would be nicer if it was done in-game … but needs to be quick and intuitive – taking items directly from inventory
+If doing customized houses, then doors will need to be in the xml so they can be added/removed etc. - (need to keep track if a door tile is erased in the designer, that the door reference is removed as well)
+Have items be able to be dropped, by selecting them in the inventory and selecting ‘drop’. Can be picked up straight away, unless in a house where a “pick up y/n” message should appear, because some items once in a house (eg, forge, pestle and mortar) might have a function.
+How would wall hangings/paintings etc. be dropped? (search for wall in front and attach painting MC into that wall tile.
+Could I write php so player can upload image, it’s distorted to iso angle and can be displayed on a wall in their house?
+Could the player hire NPC shopkeepers?
+Items placed in a house need to be rotatable to alternate facings - need a way to store their rotation
+for custom items, use a graphic identifier with a 'c' in (eg. 3c12) then before placing the item, do indexOf("c") and then load in the 3rd item clip and load into that the 12th custom graphic.
+Need a text file to keep track of how many custom graphics there are in a folder, this way flash can read this value, and then keep loading in "custom"+loopcounter+".jpg" etc., in a loop.
+rugs etc. will be ordinary floor tiles.
+paintings and tapestries are items that are placed on the wall tile that they are attached to. (ie. the itemxtile and itemytile will be the same as the wall tile), then depth sort this item to walldepth+1.
+most items (rugs, custom tapestries etc.) will have to be placed in the housedesigner
+all house clips would need to be in an external shared library. this is loaded into a single clip in the tile movieclip (eg. tile #100), then can check if currentmap[x][y]>100, if so, tile gotoandplay(100). tile.house.gotoandplay(currentmap[x][y]-100). also need to duplicate .p and .h values (eg. tile_x_y.p = tile_x_y.house.p
+The house builder will have to separate tiles that have the full-height graphic for placement, and then analyise those once the plans are completed to have the split tiles (walkable structures – so that tall wall tiles etc. don’t suddenly appear when scrolling) – how to store the relation between the tall tiles and the final finished tiles? (xml? – because of indefinite number of tiles that are affected by a wall tile)
+The original placement will need to be stored as well, so that the plans can be edited.
+For house builder, replacing tile tiles, first:
+Check that the map is large enough to scroll.
+The loop from back to front, but start at the iso horizontal line (as anything behind this won’t need altering – is this true?)
+Then move through each tile, checking what tile the user has requested, and then check this in an array.
+Eg. If user placed tile 136 at posx,posy
+For (var i=0; i<replacementArray[136].length;i++) {
+Map[posx][posy+i] = replacementArray[136][i];
+}
+When loading map to have house built on it, need to run through all structure tiles, all NPC paths, and items, and also all tiles which have a ‘non-buildable-on’ property (so that NPCs and items can be placed dynamically) and create an array of non-buildable tiles. These tiles should be visually marked on the house designer screen.
+When placing the house on a game map, run through the currentNPCs array, and check for random movers. Look at their current tile and check this on the plan array to see if they will be on a tile that’s about to have a structure placed on it. If they are, spiral out (like breadth search) until a clear tile is found.
+
+
+
+
+
+
+
+
+
+
+Fenn
+Glades
+
+
+
+
+
+
+
+
+
+
+
+need a function that checks if the npc is within range and facing a certain item - this can be used for speaking to  NPCs and checking against chests/items etc.
+// write a locate-and-turn-towards routine, based on coords, not tiles as NPCs might not respond if just sharing the same tile as the hero.
+
+ 
+
+Split out npctype 2 to have looping path followers and those that follow one-off paths. Looping npc type then can use the existing method to find where it had got to while the hero was in a building, and the other type needs to find it’s end location and stop (or be removed or whatever)
+
+ 
+
+***completely redesign npcs. Plan. Flowcharts. ***
+
+ 
+
+
+
+
+
+
+using targettile1x etc after checking islocation property seems overly complex, set targettile1x etc by checking xdir and ydir, and then just do a single islocationprooperty using these values. do this for both hero and npcs
+
+
+what should happen if hero is blocking npc's path before it can start to move?
+need to have a system to know if these comments/paths are one-offs, or if should be repeated (eg. explaining story is one off, but an npc making something could repeat the same actions)
+
+When hero leaves a map check pathfollowers - find the string of the path remaining, and check that for indexOf(“T”) or indexOf(“/”) – if found work out and place npc at its end location for that range (ie up to that T as there may be more. Set it so that the player can speak to it by walking up to them as usual. ELSE if indexOf(“>”), then remove that npc and place on new map 
+can check for pathfollowers by checking if thisnpc.pathmarker<indexOf("T").
+also need to check for indexOf(">") in the remaining path to catch path followers who are moving to end
+if npc is being removedwhen the hero goes to a new map, check if the destination map for the npc is the map that the hero has moved to, and if so, apply a path to start the npc on the door (ie. behind the hero) and move to where it would have been moved to if the hero had followed it through instead.
+
+Implement some sort of port-key / hearth-stone device to enable rapid transport to locations. This enables the player to get quickly to stabled pets/mounts to swap them
+
+
+implement a stop moving and play a specific animation for npcs, so they can walk up to something, stop in front of it, make it look like they're interacting with it, then walk across to another area.
+will this need some sort of internal timer to time how long they wait for?
+
+
+
+do npcs need to have predefined what items they'd want to trade?
+
+
+
+need a setup with custom keys and volume controls
+find the most intuitive way to have the user enter custom key choices
+
+
+
+
+NPCs currently check for all corners before moving - only need to check the 2 relavent ones
+
+
+
+
+
+
+for a cartography skill, each map would need which map set it belongs to and the x and y coords of that map set. when the hero visits that map then that location is set to 1. when that map set is complete then the player can move that map to the inventory and can be sold to map shops or exchanged for much more valuable treasure maps which show item locations. Would be nice to have some sort of item that showed the hero's current location of the current map set. once a map is complete and moved to the inventory, then, as long as the hero has parchment, ink and quill, then can start to make another map from that map set - it will be identical, but multiple maps can be sold/exchanged.
+to check if a map is complete, join the map set array together and then use indexOf to check for any '0' entries. if none, then the map is complete.
+maps will be loaded from xml file - holding sale price for that map once complete, and then map data with either x or 0 in. x means no game map for that location, and 0 means it needs to be filled in by player. when player completes a map, load the xml and then replace the map in memeory with the blank x and 0 map from the xml.
+maps should be viewable, while being created in the atlas
+all maps held in the atlas, any special treasure maps will be copied into the atlas by the cartographer. once a map is complete, then the player can select to copy it onto a blank piece of parchment (if they have any in their inventory), and then this single map is placed in the inventory and can be sold/used in a quest etc.
+map parchments when bought should go straight into loose-leaf atlas. new map area can be started if there are blank parchment sheets available. once complete a sheet can be moved to the inventory
+
+
+
+
+Can recover items from shipwrecks…
+
+
+using 'C' to challenge, and then having to move to 'CTRL' to close/respond the dialogue box isn't intuitive.
+
+
+
+the story should be sufficiently compelling to those who are interested, but if the player wants to go off and do whatever they want (eg. things like Fort Condor or Chocobo Breeding and Racing) then they can, knowing that the story will wait for them and nothing will be missed by taking a detour.
+
+
+treasure maps might not have any names on - so it would require the area to have been explored for the player to recognise the region from a map that they'd already created
+
+
+Have some sort of destroyable terrain (but in-keeping with the game, so maybe have terrain manipulated by the nemesis that is blocking a ley-line) and have mining charges that can destroy them.
+Need an NPC to explain how to use them – with some terrain on the same map. Can check the map array to see if that tile has been altered or not. The NPC’s quest-not-completed text could be a question and response (eg. ‘do you need me to explain it again?)
+Probably need to have the non-destroyed terrain and the destroyed terrain at a constant frame distance from each other (so that the main code can just do currentmap[locx][locy] -= 20 (or whatever it is))
+need to ensure that the area that the bomb is placed as non-walkable (placed immediately in front of hero)
+
+if having alternate hero grpahics so the player can choose what their avatar looks like, then just need to reference specific shared library (ie. "shared"+whichAvatarChoosen+".swf" )
+- but this will make cut scenes harder (...will mean multiple cut scenes are required).
+
+when receiving an item (especially as a quest completition with an npc) a small sound effect would be helpful to clarify that an item has been received
+
+If displaying names in dialogue boxes, then it would be nice to have them initially described as ‘shop keeper’ or whatever, and then once they’ve said their name (which can be detected in map specific loop), change their name from ‘shop keeper’ to whatever their name is.
+- Need to ensure that it’s only added once:
+Eg:
+
+If dialogue==”my name is bob” {
+If currentnpcs[0][x] != “bob” {
+currentnpcs[0][x] = “bob”;
+addtochanges(npc data)
+}
+}
+
+"memoriall" instead of "journal" (makes it into a more unique item)
+
+
+what to have instead of boss fights? need some mini-climatic feat to complete each section.
+
+Preloaders don’t have to be bars – eg. Could be a spiral that fills in
+
+
+If a whole map needs to change graphically, (eg. A town is partially destroyed), then doors array will need to be moved into the xml, so that which map the door points to can be changed.
+If it just needs to change how an NPC behaves after an event, then an addtochanges can be added with the new NPC information
+
+
+
+
+
+
+
+
+flash kit post:
+I just found something quite interseting regarding distance checks.
+I've been doing some equation of circle things in math lately, and I figured out a way to speed up simple distance checks. From what I found it it takes 3/4 of the normal time.
+Though you might be able to optimize both more, but here it is.
+function distsquare(x1,y1,x2,y2,mindif){
+if((x2-x1)*(x2-x1)+(y2-y1)*(y2-y1)<mindif*mindif){
+return true;
+}else{
+return false;
+}
+}
+function dist(x1,y1,x2,y2,mindif){
+if(Math.sqrt((x2-x1)*(x2-x1)+(y2-y1)*(y2-y1))<mindif){
+return true;
+}else{
+return false;
+}
+}
+t=getTimer()
+for(i=0;i<=10000;i++){
+dist(0,0,8,8,12); //About 100ms on my comp
+//If you change it to distsquare it runs at 75ms
+}
+trace(getTimer()-t)
+I though this might be handy to someone, without the square root it sure goes a lot faster.
+
+
+
+
+
+
+
+
+
+
+create creatures who hop away from the hero and then have to be 'herded' into dead ends to be caught?
+
+If a creature moves by flying or hovering then when their MC sets the storedxdir and storedydir to 0 to stop them moving tiles, then the animation can continue to show it moving vertically back to land.
+
+
+
+
+
+
+
+As long as stairs have a nonwalkable ‘banister’ (ie. Visible reason and a programmed reason why you can’t walk off the stairs sideways, and if the hero has a jump animation when reaching the edge of a tile before a height change, which puts then in the destination tile’s centre, then no nudging will be required.
+need to calculate the difference in terrain height and x or y distance and increment towards those over however many frames the animation lasts (though need to keep these to even values). Once nearly at the destination tile's centre, then the hero should be nudged to the exact centre.
+
+replace setInterval onLoad return with actual MovieClipLoader
+- currently there is no error handling if these MCs don't load
+- MovieClipLoader seems to have issues with Shared Library assets (ie. Hero clip insn't attached) - or, it's possible that loadmovie.onload fires before the reference to the shared asset has a chance to load. Perhaps need to loadmovie.onload fire - that then loads the shared assets, and the onload for the shared asset triggers the building of the map
+
+During an intro movie, the next few maps could be preloaded into cache
+
+test in earlier version of flash player
+
+
+
+
+if hero starts a new map in shallows then the graphic will be wrong as this isn't being checked for. Only needs implementing if this will ever arise.
+
+
+
+
+
+can use quality medium when all graphics are bitmaps as these won't be anti aliased, but text will be - if needed
+
+
+need to ensure that username is only comprised of alphanumeric characters as it will be the directory name
+
+ 
+
+
+do the original graphics need to be exported in shared libraries in they are held in a movieclip?
+
+
+Check if there is a POST limit
+
+
+
+optimise bresenham algorithm - maybe it only needs to run every time the hero moves into a new tile?
+
+
+replace 'random' with 'math.random'
+
+
+set permissions of PHP so that writable text and xml files don't need to be publicly writable
+
+Avoid sticky keys problem when using CTRL
+
+
+new user account creation - set up user and password, copy maps to new unique location
+
+
+For moving tiles (eg. Ferry), need to check that the 2 corners are walkable normally, or if they’re not, to test if they are within the moving tile. Only if not walkable and not within moving tile should moveok = 0. If the centre of the hero is within the moving tile, then the hero should be moved with the tile
+
+
+allow swfs to be cached once engine is complete (xml and txt must not be cached though)
+
+
+
+
+
+
+if using npcs that are wider than 2 tiles, they'll need to do terrain collision detection on the mid-point of their direction of travel as well as the usual corner checks (unless they're following a pre-determined path
+
+
+
+
+Familiar:
+if familiarfoundindex >= 0 when a new map is started, then it would be nice to have a quick animation of the familiar returning to the hero (just moving through the door during the fade in)
+
+? - Have familiar offset at ._x +1 for depth. Just ensure that there are no things for them to target when a ghost is on that map.
+
+might need a transition animation (increased glow etc.) when shifting from inidivual clip to familiar as part of hero clip
+
+(if gets stuck can just teleport back to hero?) 
+
+At greater distances, (ie target is off the screen), then the path only needs to be found within visible range, and then can just be placed at target location (as long as the hero can’t catch up if running in the same direction, and see this leap take place)
+
+
+Pet follower:
+Use the hero-leaves-trail method, but need to have the pet cry or have some notification if it gets stuck (like familiar it can be seen on the next map running up to the hero) – so the hero can go back and get it. If the hero walks into the pet, then the pet should move into the tile headed for by the player (to avoid the pet blocking the hero in a dead end)
+Use:
+// remove last item:
+myarray.pop();
+// add new first item:
+myarray.unshift(new coo-rds);
+// instead of looping through the array to update the breadcrumb trail.
+Pet can check: if hero isinrange, if not, check ifcanfindbreadcrumbtrail, and if not, play sound effect hope hero returns.
+Still needs to do collision detection, and have collision detection made against it – special conditions if hero collides though – pet should move away
+
+
+
+
+stairs in both directions
+not allowing movement over 2 different terrain heights
+
+
+card game (ai)
+screen size
+figure size
+ 
+
+
+
+ 
+user defined keys
+ 
+inventory display.
+journal display.
+map display 
+card album display.
+card game display/transition
+how dialogue is displayed
+how user notifications are displayed (eg. inventory is full)
+
+
+create a map showing areas that the player has been to - this can add a sense of accomplishment as more areas are uncovered. (maybe has points marking entries in the journal on it as well?)
+To enable a map to be build up as the player moves through the area, can have a 2d array with either 0 (not visited) or 1 (visited).
+Each map swf has a reference to the x and y position in this array. Whenever visited this position is set to 1 (no check needed, if revisited, it will just be set to 1 again, so no difference).
+On the map, the current position is displayed. Any buildings within a map will have the same x and y array position as the map they are placed in, so that the current location is still valid.
+The map shouldn’t be drawn dynamically, so that any movieclips with names in can be placed above their neighbours, so that if the text exceeds the width of the map ‘tile’  itself, the text isn’t obscured by neighbouring tiles.
+
+
+
+ 
+hunger and fatigue systems
+
+creating marsh (or heavy snow) (frogs?) and ocean-swimming (frogs again?) that wander about, and with certain items the hero can mount them and then travel across the marsh/water
+
+Grade weather so that seasonal effects can be applied (eg. Normal weather for map is 3 (windy) – season adds 2 so 5 (snowy)
+
+
+Can have thin walls/hedges as long as they are enclosed, and the hero will only come in contact with the edge that is against the tile edge. Anything (sheep or whatever) inside the fencing must move on a fixed path so that they don’t collision detect against the fence tile
+
+// 
+// error handling if xml data doesn't load
+//
+// split frame 1 code over several frames - there might be a 64kb limit per frame
+// 
+// need to confirm that save was successful
+//
+
+//
+// Use NPCs to block access to something (ie. Standing in doorway etc.) and will only move once certain quest is complete
+// Map specific: add or change the NPCs dialogue, and change type and add path - Need to develop a 
+// ‘move to position and stop’ NPC type (just use a code to stop in the path – maybe already implemented in the pathfinding NPC)
+//
+// check if non-returning functions need :Void
+//
+// non-square sprites will need to swap their aheights and awidths according to which direction they are facing
+//
+
+// heightgained should only affect graphic placement, not collisions
+//
+// hero running animation
+// 
+// Can create fog effect by having a fog layer over hero graphic (just over legs) that is usually visible=false,
+// but when entering a fog tile it’s set to visible=true, and alpha set to 25% for a light fog tile, or 
+// alpha 50% for heavier fog
+//
+
+Fishing sub-game.
+or dowsing? (scrying?)
+Cast rod by pressing appropriate key. Lands in tile in front of hero. If water, and hero remains standing still, after random time will bob, if key pressed sufficiently quickly, then fish will be caught. Each map specific swf can have a fish array and 1 is picked from there at random. Chefs at inns (or people with camp fires) could cook them, or in dangerous waters can have rare spiritfish (or seaweed) that could be used to make unique and otherwise unavailable cards.
+
+To have random finds from an area (such as fishing from a lake), every map can have a fish array, for example with 20 elements in. If a fish is successfully caught, then the fish received is determined by random(10)+skill_level so that at early levels you can only get common fish, and as your skill increases the rarer fish become more available. Getting better equipment (rods, bait etc) will add to the number picked as well
+
+
+
+
+Could have a geomantic skill called summon-forth (or spirit-trust) or similar, that calls harder to locate spirits to the hero;s location – (essentially just means that chances of finding rarer spirit is improved temporarily)
+
+
+
+
+
+
+
+
+Harp player (and have music playing while in the house)
+If having music within a house, it would be good to have the music played quietly on the map outside the house, with the volume swelling slightly as the hero gets closer to the house
+
+
+Have a location/path/door that only exists under certain conditions (item in inventory etc.)
+
+
+
+
+
+
+
+
+use indexOf to detect if a price code is present or not - it's faster than reading the last character of the string
+price codes are lower case
+
+
+the cards that an npc has can be saved as a string within each npc's array (if simple)
+eg. "A492" means that the npc has cards from the basic 'A' set and then special cards 4,9 and 2
+
+//
+
+//
+// can have carryable items for puzzles. have whatever being carried stored in ...hero.carrying. if carrying != nothing then reduce herospeed,
+// use [action] to pick up and drop - store non-iso coords and collision detect from these.
+// would essentially be items (unless moving like zelda chicken catching) but placed by coords and not just tile centres
+//
+Can get reasonable looking animation (for intros/cut scenes etc.) by just separating the different depths and moving them and different speeds (for parallax)
+
+//
+// Can have fake walls etc. graphics look like ordinary walls, but properties are walkable 
+//– obtaining an item allows the hero to see things as they are – changing graphics for a short period/temporarily
+//
+// Butterflys don’t need collision detection against hero, NPCs etc., but does need to collision detect against terrain (if random movement) – (otherwise no collision detection and is a path follower)
+//
+// Birds, animation within 1 tile of pecking, then if iswithinrange of hero, change to flying off animation and then this.removeMovieClip when off screen. can be depthsorted above all tiles (needs to be placed so it won't need to fly behind any structures as it takes off)
+//
+// Ghost don’t need any collision detection (if random, need to check that doesn’t go outside map)
+//
+// Have different characters move at different speeds – kids running, old people much slower, some people sitting, someone injured and having trouble moving around
+//
+//
+// ICE TERRAIN
+//If (xmove == 0) && (slidingxmove != 0) {
+//Xmove = slidingxmove;
+//Slidingxmove *= 0.8;
+// -ensure that slidingxmove is always even for the 1 pixel offset thing
+//}
+// If !moveok {
+//Slidingxmove = 0;
+//Slidingymove = 0;
+//}
+//hero still needs to slide even if the player hasn't pressed a key (ie. this check is outside that loop)
+//
+//
+//
+//
+// SAVE GAME - user defined key arrangement needs to be saved
+// which areas of the map that have been uncovered will also need to be saved
+//
+//
+//
+
+
+
+can have doors on stairs - the tranision should continue to move the hero up the stairs, and then on the level that the hero is taken to, have the floor of this level at a raised height, so that the stairs will come down from this level,
+and it will look like the hero smoothly walks down the stairs through the transition.
+
+
+
+Can have carpenters etc. build the hero a house. Create a movieclip structure, change map data appropriately, then use timer as
+in invention process to add built levels - alter graphic using gotoAndStop. last thing to create is the door (have it visibly blocked)
+Can have hero buy furnishings (posters etc.), again using wall tiles that are blank, but check inventory and gotoAndStop poster display frame if bought
+plots are predfined within a city - hero has to speak to an offical to view and buy plots. plots can be of different sizes and costs. houses can be used to store items.
+would be nice for players to be able to show their houses off to others (maybe other players can load just that map with the house in, ir could detail a player's id and have that house loaded into their map)
+
+
+
+*/
+// check that all NPCs,hero,items etc are placed at even numbers and move at even speeds, but that walkable structures are
+//placed at odd pixel placings (or depth sorted at _x+1).
+//ghost racer can be at odd pixel placing as if it's a pathfollower, it will never move over the tile 0,0 and if it's odd, the hero and ghost will
+//never be at the same pixel placing
+// NEED TO CONFIRM THIS
+Ghost racer – 
+can be initiated by dowsing - and when successful, instead of spirit being captured in the vessel, he will appear and challenge the hero to a race
+Use gotoAndStop for the wall-mounted lights (hard code information) – this also means that can have animated flames in sconces, and use dynamic setcolortransform for the ghost-held light so this will brighten wall mounted lights as well. 
+
+Snow footprints need to all be contained in a single clip that is just above terrain tiles (so below all structures/characters)
+
+
+How do wall mounted lights get triggered? If just by ghost passing, then hero can just stop running and wait for these to be illuminated. unless they're extinguished quickly after the ghost passes
+
+//
+//
+//
+// Container to hold short lived items (such as Zelda bottles holding gas/fire/fairies)
+//
+// Moving raised platform, which hero was to move within its boundaries to stay on. 
+// Can have items on static raised platforms which are connected by these moving platforms
+//
+// readable signs/posters
+//
+// remove FPScounter from display clip
+// and call to FPS function in detectkeys
+// 
+// do blocks that raise and lower according to switches (gotoAndStop and pass current height level variable from frame stopped at)
+// have to careful about depth sorting during raising/lowering if the hero can stand on them while they move
+// - could lead to a puzzle where 3 40-height blocks are in a row and then a 40-height platform to a reward/exit
+// solving 1 puzzle makes the first move down to a 10-height, solving another puzzle makes the second move to a 20-height,
+// and solving the last makes the third move to a 30-height, so that hero can access the platform.
+// Once the blocks have moved to their final heights, they should be replaced with ordinary static height blocks, and saved
+// as these in the array, so that they aren't reset if the hero leaves the map.
+// 
+
+// 
+// when Paused - need to ensure that tile animations stop as well (eg flickering torches etc. - name all tile animations
+// as 'tileanime' then they can be referenced by running through all visible tiles all having t[x+y].tileanime.stop() )
+// check when un-pausing that it doesn't animations that shouldn't start (eg. static npcs)
+/*
+// pause spikes:
+ 
+on pause:
+Stop();a ll
+ 
+on un-pause:
+if (.moving) {
+Play();
+}
+*/
+// 'quests' needn't be as obvious, they could be whether the player has been to a certain location yet,
+// this allows the NPC to prompt them to go there and then 'react' once they have
+// 
+// a shifting area (forest or swamp) that either randomly generates paths (fixed entrance, exit and miidle tile and a* paths between them,
+// or pulls in fixed map data randomly from a choice of several (would be faster)			
+// 
+// Text displayed within game area – no pause, but have a confirm that it’s been read
+// (except for npc initiated conversation, then use set interval / timerto remove after short time)
+//
+// For multiple item quests (ie. Find 3 items before quest complete), use map specific function, check that all
+// quest elements are complete and then .push response into NPC’s dialogue
+//
+// "PROTECT FROM IMPORT" once complete
+// remove non-URL checking once complete on play button
+// 
+
+// 
+
+// 
+
+// all speeds need to be even to ensure that they don't end up over a terrain tile's (0,0).
+// 
+
+// 
+// 
+// OPTIMISE:
+// NPC pathfinding sequences
+// **** the entire NPC movement function ****
+// rain clip needs optimising
+// reduce variable name lengths once complete
+// convert variables to constants if possible, once complete
+// use separate if statements rather than lots of AND
+// Not all code has to run every frame, use flip flops for non-100% time critical things ( Even collision detection ! )
+// is Robust Tracing better (ie. quicker in flash)?
+// optimise advance path routine in createNPCs
+// hero will always be at tile centre upon entering a new map, so initialheightsetup can be optimised to reflect this
+// 
+// 
+
+
+
+
+//
+
+// THINGS TO LOOK OUT FOR
+// graphic tiles where sprites can move under a structure (gateway etc.), the height clearance needs to be sufficient
+// so that the top of the sprite doesn't appear over the bottom of the structure
+// 
+// set weather conditions 0 = no conditions 1 = fog, 2 = snow, 3 = lightning
+//
+// doors array is as follows - maps they refer to, pos of door and new char start pos
+//
+// speeds of pathfollowers need to be factors of spacing otherwise they will miss the tile centre
+//
+// walls of buildings that are obscured by the closer walls don't need any graphics
+// they can have just an empty non-walkable tile - should reduce the number of movieclips to be scrolled
+// 
+// path follower npcs don't do collision detection against terrain
+//
+// if having 2 npcs talking to each other, they need to be npc[0] and npc[1] for that map
+// and no quest detection/response can occur during that paired cnversation as it just displays the paired text, without parsing it
+//
+// circular buildings can be created in water as no collision detection is required
+//
+// Ensure that either side of door tile is a non-walkable, so the door can’t be entered from the side
+//
+// NPCs can share the same quest number so that several of them can 'react' to an event (either in the plot, or something that the player has done)
+// 
+// pathfollower npcs don't need to do terrain collision detection. If going off an 'open' doorway, then need to have that tile as a walkable structure with a faded black gradient above it.
+//
+// quest can be completed before hero speaks to appropriate NPC to 'open' it, therefore the 'quest complete' dialogue needs to explicit state what has been achieved
+// tall graphics may not appear until their base is within visible range, so may suddenly appear
+// (if large enough, they won't be able to move into the tile to take the tile's coordinates)
+// pathfinding NPC could get stuck blocking path following NPCs - ie. keep pathfinders sufficiently away from path followers
+// pathfinding doesn't register items
+// 
+// target_holder is the name of the movieclip in the preloader - so toplevel variables can be referenced with _root.target_holder...
+// 
+// if running speed and NPC max speed are greater than width of any of the sprites,
+// or if running speed is greater than the width of the smallest item, then collision detection will fail
+// 
+// with hero running, hero can stop before a wall, then move forward a bit more once not running. So could try and move hero as close to wall as possible when running
+// 
+// if need a pathfollowing NPC within a building, then the level that they are on must be designated 'outside' - but will need an 'inside' map
+// between itself and the actual 'outside' map
+// 
+// set items - type of item and position, and contents and quest number contained object closes if a chest
+//
+// ensure two path following NPCs' paths don't overlap (or hero can't enter map along path etc.) - otherwise random placement could cause them to start on the same tile
+// 
+
+// paths need to return to their start point
+// 
+
+// if sprite can't move into a tile, move it as close to the tile as possible
+
+// should covering frame obscure tall objects?
+
+// pathfinder can double back on itself once a new path is found - make it turn to 1 side so is more realistic
+// 
+
+// return random integer between 0-99: 
+ randomnumber = Math.floor(Math.random()*100);
+
+
+-------------
+Also, if php is available, use session cookies on a page (with different hashing functions of course). Then create "unique" swf-file with GDLib:
+a) If the session cookies is valid (created in last 5 seconds), start the real swf-file.
+b) if not, start swf-file that says only "hotlinking not allowed".
+The "swf"-file is seen in html-code as "game.php".
+The real swf-file (exp. my_basketball_game.swf) is not seen in any of html-code, so it's harder to copy.
+-------------
+//
+
+
+
+can use a list of custom cursors using css for the html surrounds:
+cursor : url("first.cur"), url("second.cur"), pointer
+
+
+
+if implementing combat:
+press tab to target nearest enemy
+need to target specific tile for area effect (start spell, cursor keys then move totem to marke tile), press action to cast on that tile

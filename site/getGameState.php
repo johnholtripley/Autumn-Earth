@@ -36,10 +36,10 @@ print $returnString;
  
  $gamestate = "playsounds=true&amp;herox=17&amp;heroy=22&amp;dowseskill=0&amp;famskill=70&amp;currentmapnumber=1&amp;heightgained=0";
  $journalstate = "travel to the coast";
- $queststate = "0/0/0/0/0/0/0/0";
+ $queststate = "0/0/0/0/0/0/0/0/0/0/0";
  $petstate = "2,0,100,21,13,-1,0,0,0,0,pet,15,12,13";
  $currentbag = "16,1,4,4,4,-1,10,0,0";
- $inventorystate = "38,1,4,100,4,-1,0,0,0,0,-/40,1,4,2,4,-1,4,papyrus,0,0,0<||>25<||>34<||>100<||>-45[*^*]1<||>25<||>34<||>Aldershall/21,1,3,100,4,-1,0,0,0,0,-/19,10,4,100,4,-1,0,1,0,0,-/43,1,4,1234,4,-1,0,John,0,0,More news from Nowhere/12,10,4,100,4,-1,0,16,0,0,-/13,10,4,100,4,-1,0,32,0,0,-/28,1,4,100,4,-1,0,0,0,0,A damaged parchment<||>The damaged parchment's contents/29,4,4,4,4,-1,0,0,0,0,-";
+ $inventorystate = "38,1,4,100,4,-1,0,0,0,0,-/40,1,4,2,4,-1,4,papyrus,0,0,0<||>25<||>34<||>100<||>-45[*^*]1<||>25<||>34<||>Aldershall/21,1,3,100,4,-1,0,0,0,0,-/19,10,4,100,4,-1,0,1,0,0,-/43,1,4,1234,4,-1,0,John,0,0,More news from Nowhere/12,10,4,100,4,-1,0,16,0,0,-/13,10,4,100,4,-1,0,32,0,0,-/28,1,4,100,4,-1,0,0,0,0,A damaged parchment[**]The damaged parchment's contents/29,4,4,4,4,-1,0,0,0,0,-/1/1/1";
  $money = "299";
  $minutesplayed = "1125";
  $charName = "angel";

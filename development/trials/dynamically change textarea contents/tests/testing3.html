@@ -1,0 +1,24 @@
+<html>
+<head>
+<title>get bold</title>
+
+<script language="JavaScript" type="text/javascript">
+    
+function dothings() {
+// http://www.webreference.com/js/column12/crossbrowser.html
+
+	
+		var thisselection = document.selection.createRange().duplicate();
+		alert(thisselection.text);
+	
+}
+
+</script>
+</head>
+<body>
+<a href="no_javascript.html" onclick="dothings();return false;"><img src="icon_editor_bold.gif" alt="Bold" title="Bold" align="top" border="0" height="22" width="23"></a>
+<form name="PostTopic">
+<textarea cols="70" name="Message" rows="12" wrap="soft"></textarea>
+</form>
+</body>
+</html>

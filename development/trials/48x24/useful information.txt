@@ -1,0 +1,125 @@
+
+item xml array:
+[x coord][y coord][inventory array reference][chest contents item #1][chest contents item #2][chest contents item ...]
+
+
+
+// h = height
+// c = 0 - non-chest, 1 - chest closed, 2 - chest opened, 3 - harvestable resource, 4 - isn't collectable, and hero can walk over it, 5 - is a signpost
+// sp = whether its an item that the familiar will react to or not
+// w = in-game width of the object (ie. its base width/2)
+
+
+
+
+// set up main array to hold details of every item in the game:
+// [short name],[description],[price and code],[position on tile offset x],[position on tile offset y],[game world graphic]
+
+
+graphics - isometric distortion:
+iso right - width: 89.443%, height: 100%, V -26.6
+iso left - width: 89.443%, height: 100%, V +26.6
+iso top - rotate 45. apply then: width: 126.5%, height: 63.2%
+
+poser: aux camera - focal 0
+zOrbit 0
+facing NW: xOrbit -30, yOrbit 135
+facing NE: xOrbit -30, yOrbit 225
+facing SE: xOrbit -30, yOrbit -45
+facing NW: xOrbit -30, yOrbit 45
+
+bryce setup:
+Group everything.
+Go into attributes and set the origin to x=0 y=0 z=0
+rotate the group to 0:45:-30 and viewing from Right View
+http://market.renderosity.com/mod/forumpro/showthread.php?thread_id=1773796
+
+
+
+question response dialogues must be in the form of:
+[question],[hero yes],[hero no],[response to yes],[response to no]
+(string delimited by / )
+
+card challenge [question],[response if no],[npc wins],[hero wins]
+(string delimited by / )
+
+quest dialogue must be in the form of:
+questnumber#request to go on quest~NPC response if quest not complete~NPC response if hero completes quest~thanks on exchange of item (optional)
+`  this can't close quests (ie. if found then don't check if hero has items to complete the quest)
+¬  this can't open quests (so say the next bit of dialogue in the dialogue array instead if quest isn't open)
+
+@ add to journal
+
+% remove this speech after it's said the first time. this code must be before any other codes
+
+^ replace this bit of dialogue with the dialogue following it after it's been said. this code must be before any other codes.
+
+] this dialogue is said if the hero is within range - and doesn't stop the hero moving - must be at start, but after % or ^
+
+; play sound effect instead of displaying speech
+
+{ workshop related speech - the npc will check currentplans[0] to see if they have anything ready for the hero
+dialogue[0] is what's said when the hero speaks to the npc, and dialogue[1] is the shout out immediately after it's completed
+
+chest and resources:
+21.1/21.2/21.1|22.1
+slot 1 =  1 x 21
+slot 2 = 2 x 21
+slot 3 = 1 x 21 and 1 x 22
+
+
+
+item inventory codes:
+q - quest item - can't be dropped or put in chests
+u - unqiue item - can't be dropped but can be put in chest
+b - bag - number following the code is the number of slots
+p - potion - for selling purposes
+h - herb - for selling purposes
+r - recipe/plan - number following the code is the item that this plan makes
+
+
+
+quests:
+[status, what happens on completion, quantity.item required for completion|quantity.item additional item required for completion|..., quantity|item received from npc on completion]
+status: 0   1-quest has been opened but not complete   2-player has completed task but not spoken to npc   3-completely closed
+what happens on completion: 1-receive item from npc   2-exchange item with npc    default-just speaking
+
+
+
+doors:
+[new map number][tile x][tile y][new herox][new hero y][initial hero height]
+
+
+next map:
+[east edge map][east edge map initial height][west edge map][west edge map initial height][west edge startx][north edge map][north edge map initial height][south edge map][south edge map initial height][south edge starty]
+
+
+
+Familiar state:
+0: familiar is with hero looking for items
+1: fam. Is travelling to found item
+2: fam is over found item – checking distance and LoS to make a return if needed
+3: fam. Is returning to hero as the hero moved too far away – either by LoS or now by breadcrumb
+4: fam came to the end of the path and the breadcrumb trail has faded. looks for LoS to return to hero.
+
+
+
+
+plans[0] in xml always refers to the currently made item on that map
+
+add to changes:
+5 - [plans change]   if [0][2] == 1 then add [0][3] to array, otherwise change plans[0] (currently made item) t0 [0][3]
+4 - [weather change]
+3 - [item change]
+2 - [tile change]
+1 - [npc change]
+
+
+
+
+stairs - direction codes in tile clip:
+s =
+0 - up towards NE
+1 - up towards NW
+2 - up towards SW
+3 - up towards SE

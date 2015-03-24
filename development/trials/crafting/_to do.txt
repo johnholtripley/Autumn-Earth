@@ -1,0 +1,11 @@
+average quality of resources (items being combined) and set this as the quality maximum - most common buffs won't allow quality to exceed this limit
+
+Some kind of system to set buffs against a set of circumstances
+Eg – buff to reduce magic damage (but in crafting terms)
+Possibility of accidents/bad reactions that ruin the item or reduce the time remaining that need reacting to, or preempting
+
+
+Hold down the shift key and click on the stack you want to split. A new window will pop up asking you how many you want to split. Select a number by clicking on the arrows or typing the number and then hit Okay. You need to put the new stack into your inventory before you trade it or you will trade all of them.
+
+
+ensure double click timer is localised to that button

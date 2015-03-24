@@ -1,0 +1,20 @@
+<html>
+<head>
+<title>get bold</title>
+
+<script language="JavaScript" type="text/javascript">
+    
+function insertAtCursor() {
+// IE replace current selection with new content:
+document.selection.createRange().text = 'Some new text';
+}
+
+</script>
+</head>
+<body>
+<a href="no_javascript.html" onclick="insertAtCursor();return false;"><img src="icon_editor_bold.gif" alt="Bold" title="Bold" align="top" border="0" height="22" width="23"></a>
+<form name="PostTopic">
+<textarea cols="70" name="Message" rows="12" wrap="soft"></textarea>
+</form>
+</body>
+</html>

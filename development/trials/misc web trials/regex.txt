@@ -1,0 +1,26 @@
+\s".* will match ' "x'	returns "x
+
+^".* will match '"x'		returns "x (start of string)
+
+
+open quotes = ((\s".)+)|((^".)+)
+close quotes = ((."\s)+)|((."$)+)
+
+
+
+
+."\s* will match 'x" '	returns x"
+
+."$* will match 'x"'		returns x" (end of string)
+
+[0-9]"* will match '2"'	returns 2" (unneccessary as ."\s will match it anyway)
+
+
+| = or
+
+
+safely find html tags
+<[^>]+>
+
+safely find bbcode tags
+\[[^\]]+\]

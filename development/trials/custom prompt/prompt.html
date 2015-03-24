@@ -1,0 +1,70 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<title>custom prompt</title>
+
+<script language="JavaScript" type="text/javascript">
+<!--
+function closePrompt() {
+// thanks to http://www.netlobo.com/div_hiding.html
+
+	if (window.document.getElementById) {
+	// this is the way the standards work
+	var thiselement = window.document.getElementById('PromptBox').style;
+	thiselement.display = "none";
+	} else if (window.document.all) {
+	// this is the way old msie versions work
+	var thiselement = window.document.all['PromptBox'].style;
+	thiselement.display = "none";
+	} else if (window.document.layers) {
+	// this is the way nn4 works
+	var thiselement = window.document.layers['PromptBox'].style;
+	thiselement.display = "none";
+	}
+	alert(window.document.InputPrompt.userinput.value);
+}
+
+function showPrompt() {
+	window.document.InputPrompt.userinput.value = "";
+	if (window.document.getElementById) {
+	// this is the way the standards work
+	var thiselement = window.document.getElementById('PromptBox').style;
+	thiselement.display = "block";
+	} else if (window.document.all) {
+	// this is the way old msie versions work
+	var thiselement = window.document.all['PromptBox'].style;
+	thiselement.display = "block";
+	} else if (window.document.layers) {
+	// this is the way nn4 works
+	var thiselement = window.document.layers['PromptBox'].style;
+	thiselement.display = "block";
+	}
+}
+
+
+//-->
+</script>
+
+<style type="text/css">
+#PromptBox {
+display: none;
+border: 1px solid grey;
+padding: 10px;
+width: 200px;
+}
+</style>
+
+</head>
+<body>
+<p>before form</p>
+<div id="PromptBox">
+<form name="InputPrompt">
+<input name="userinput" id="userinput" type="text">
+</form>
+<a href="no_javascript.html" onclick="closePrompt();return false;">close prompt</a>
+</div>
+<p>after form</p>
+<p><a href="no_javascript.html" onclick="showPrompt();return false;">show prompt</a></p>
+</body>
+</html>

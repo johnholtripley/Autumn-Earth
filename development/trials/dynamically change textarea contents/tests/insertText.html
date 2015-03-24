@@ -1,0 +1,37 @@
+<html>
+<head>
+<title>get bold</title>
+
+<script language="JavaScript" type="text/javascript">
+    
+function insertAtCursor(myField, myValue) {
+//IE support
+if (document.selection) {
+myField.focus();
+sel = document.selection.createRange();
+sel.text = myValue;
+}
+//MOZILLA/NETSCAPE support
+else if (myField.selectionStart || myField.selectionStart == '0') {
+var startPos = myField.selectionStart;
+var endPos = myField.selectionEnd;
+myField.value = myField.value.substring(0, startPos)
++ myValue
++ myField.value.substring(endPos, myField.value.length);
+} else {
+myField.value += myValue;
+}
+}
+
+
+
+
+</script>
+</head>
+<body>
+<a href="no_javascript.html" onclick="insertAtCursor(document.PostTopic.Message, 'inserted');return false;"><img src="icon_editor_bold.gif" alt="Bold" title="Bold" align="top" border="0" height="22" width="23"></a>
+<form name="PostTopic">
+<textarea cols="70" name="Message" rows="12" wrap="soft"></textarea>
+</form>
+</body>
+</html>

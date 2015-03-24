@@ -1,0 +1,1 @@
+codeversion=$1$XXF.N0F8$OPVPgdqZh5zoVkSUQCk2m.&playsounds=true&herox=14&heroy=31&money=520&dowseskill=0&famskill=70&currentmapnumber=1&heightgained=0&currentbag=16&inventorysave=32,4/2,8/5,3/11,2/10,3/33,1&journalsave=travel%20to%20the%20coast&questsstatus=0/0/0/0/0/0/0&petsave=2,0,100,18,2,0,1,0,0,0,pet,15,12,13&charname=john

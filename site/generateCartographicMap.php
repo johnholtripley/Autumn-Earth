@@ -34,6 +34,10 @@ if(isset($_GET["plotChests"])) {
 $plotChests = true;
 }
 
+$useOverlay = true;
+if(isset($_GET["overlay"])) {
+$useOverlay = false;
+}
 
 // make this dynamic ##################
 $session = "session1";
@@ -106,7 +110,7 @@ createCartographicMap();
 
 
 function createCartographicMap() {
-global $mapMaxWidth, $mapMaxHeight, $dungeonArray, $loadedItemData, $debug, $playerId, $dungeonName, $session, $requestedMap, $plotChests, $update;
+global $mapMaxWidth, $mapMaxHeight, $dungeonArray, $loadedItemData, $debug, $playerId, $dungeonName, $session, $requestedMap, $plotChests, $update, $useOverlay;
 
 
 // canvas size should be twice required size as it will be downsampled to anti alias:
@@ -801,8 +805,9 @@ imagecopyresampled($imageResampled, $mapCanvas, 0, 0, 0, 0, $canvaDimension/2, $
 
 $overlayTexture = imagecreatefrompng("http://".$_SERVER['SERVER_NAME']."/images/cartography-map-overlay.png");
 imageAlphaBlending($overlayTexture, false);
+if($useOverlay) {
 imagecopy($imageResampled, $overlayTexture, 0, 0, 0, 0, $canvaDimension, $canvaDimension);
-
+}
 
 
 

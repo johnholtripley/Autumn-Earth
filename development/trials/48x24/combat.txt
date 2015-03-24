@@ -1,0 +1,5 @@
+if having combat need to define what losing a fight actually means (death?)
+restore to save points or spirit system?
+
+npcs would need additional attributes (eg. respawn:boolean and various defence/attack skills/types currently employed weapons, aggrevation range etc)
+

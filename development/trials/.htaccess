@@ -1,0 +1,3 @@
+<Files "red.jpg">
+   Header set Cache-control "no-cache"
+</Files>

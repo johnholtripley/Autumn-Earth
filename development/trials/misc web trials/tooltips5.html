@@ -1,0 +1,182 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"><head>
+
+
+
+	
+	<script type="text/javascript">
+	/*<![CDATA[*/
+	
+	
+	
+	/* opera 9 doesn't remove part of the background images in top left
+	opera 5 & 6 nothing - rendering off page?
+	NS4.7 nothing but no errors
+	
+	ideally need to move ttip before display:block is activated
+	
+	*/
+	
+	
+	function getElement(elementName) {
+	// thanks to http://www.netlobo.com/div_hiding.html
+		if (window.document.getElementById) {
+		// this is the way the standards work
+		thiselement = window.document.getElementById(elementName);
+		return true;
+		} else if (window.document.all) {
+		// this is the way old msie versions work
+		thiselement = window.document.all[elementName];
+		return true;
+		} else if (window.document.layers) {
+		// this is the way nn4 works
+		thiselement = window.document.layers[elementName];
+		return true;
+		}
+		return false;
+	}
+	
+	
+	var offsetx = 12;										  
+	var offsety =  8;										
+		
+	
+	
+	
+	function getmouseposition(e) {
+	
+	
+	var iebody = document.body;
+	if (document.documentElement) {
+	if (document.documentElement.scrollLeft) {
+			iebody = document.documentElement;
+	}
+	}
+	
+	var posx = 0;
+	var posy = 0;
+	if (!e) var e = window.event;
+	if (e.pageX || e.pageY)
+	{
+		posx = e.pageX;
+		posy = e.pageY;
+	}
+	else if (e.clientX || e.clientY)
+	{
+		posx = e.clientX + iebody.scrollLeft;
+		posy = e.clientY + iebody.scrollTop;
+	}
+	
+	// thanks to http://www.quirksmode.org/js/events_properties.html
+	
+			if (getElement(currenttooltip)) {
+				thiselement.style.left = posx+offsetx + 'px';
+				thiselement.style.top = posy+offsety + 'px';
+			}
+		}
+	
+	function tooltip(tipdiv) {
+	//
+		if (getElement(tipdiv)) {
+			
+			document.onmousemove = getmouseposition;
+			thiselement.style.display = 'block';
+			currenttooltip = tipdiv;
+			}
+	}
+	//
+	function exit(tipdiv) {
+		if (getElement(tipdiv)) {
+			thiselement.style.display = 'none';
+			// remove event
+			document.onmousemove = null;
+		}
+	}
+	
+	
+		/*]]>*/
+	</script>
+	<style type="text/css">
+	/*<![CDATA[*/
+
+		body {
+		background: #3f3f3f;
+		color: #ffffff;
+		}
+		
+		img {
+		border: 0;
+		}
+		
+		
+		.ttip {
+		position: absolute;
+		display: none;
+		width: 100px;
+		/* IE 6 doesn't like the background image being on this tag */
+		/*background: url(ttip_repeater.gif) repeat-y top left;*/
+		font-size: smaller;
+		color: #cecece;
+		cursor: pointer;
+		/* opera 9 needs initial positions: */
+		top: 100px;
+		left: 100px;
+		}
+		
+		.ttiptop {
+		width: 100px;
+		background: url(ttip_topbig.gif) no-repeat top left;
+		}
+		
+		.ttipbottom {
+		width: 100px;
+		height: 10px;
+		overflow: hidden;
+		background: url(ttip_bottom.gif) no-repeat top left;
+		}
+		
+		.ttip p {
+		padding: 10px;
+		margin: 0;
+		}
+		
+		.ttipanchor {
+		/*cursor: pointer;*/
+				}
+		
+		#tooltipone, #tooltiptwo {
+			
+			
+			/* apply browser specific opacity here: 
+			opacity: .70;
+			filter: alpha(opacity=70);
+			-moz-opacity:.70;
+			*/
+	
+		}
+		
+		
+
+		/*]]>*/
+	</style></head>
+	
+	
+	
+	
+<body>
+
+<div id="tooltipone" class="ttip">
+<div class="ttiptop">
+<!-- preload any images used in the tooltip? /-->
+	<p>you have unread mail</p></div>
+	<div class="ttipbottom">&nbsp;</div>
+</div>
+
+
+
+
+<div align="center"><br /><br /><br /><br />
+<a href="#" class="ttipanchor" onmouseover="tooltip('tooltipone');" onmouseout="exit('tooltipone');"><img src="http://autumnearth.metafocusclients.co.uk/assets/mail/new_mail.gif" /></a>
+</div>
+
+</body></html>

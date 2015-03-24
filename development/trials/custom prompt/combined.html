@@ -1,0 +1,226 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<title>custom prompt</title>
+<script language="JavaScript" type="text/javascript">
+<!--
+
+// TO DO #########################
+// test for scrollLeft before using as it breaks IE4
+// fix Opera text selection bug
+// fix IE 5 initial placement bug
+// #########################
+
+// http://dunnbypaul.net/js_mouse/
+
+function falsefunc() {
+	// used to block cascading events
+	return false;
+}
+
+function init() {
+	bordermargin = 5;
+	promptwindowboxwidth = 200;
+	promptwindowboxheight = 120;
+	screenwidth = 1024;
+	screenheight = 768;
+	// override default screen size if they can be determined:
+	if (screen.width) {
+	screenwidth = screen.width;
+	screenheight = screen.height;
+	}
+	if (window.innerWidth) {
+	screenwidth = window.innerWidth;
+	screenheight = window.innerHeight;
+	}
+	if (window.document.documentElement) {
+	screenwidth = window.document.documentElement.clientWidth;
+	screenheight = window.document.documentElement.clientHeight;
+	}
+		
+	var mousex = 0;
+	var mousey = 0;
+	var grabx = 0;
+	var graby = 0;
+	var orix = 0;
+	var oriy = 0;
+	var elex = 0;
+	var eley = 0;
+	// var algor = 0;
+	
+	var dragobj = null;
+	
+	window.document.onmousemove = update; // update(event) implied on NS, update(null) implied on IE
+	update();
+}
+
+function getMouseXY(e) { 
+// works on IE6,FF,Moz,Opera7
+
+  if (!e) e = window.event; // works on IE, but not NS (we rely on NS passing us the event)
+ 
+  if (e) { 
+    if (e.pageX || e.pageY)
+    { // this doesn't work on IE6!! (works on FF,Moz,Opera7)
+      mousex = e.pageX;
+      mousey = e.pageY;
+     }
+    else if (e.clientX || e.clientY)
+    { // works on IE6,FF,Moz,Opera7
+      // Note: I am adding together both the "body" and "documentElement" scroll positions
+      //       this lets me cover for the quirks that happen based on the "doctype" of the html page.
+      //         (example: IE6 in compatibility mode or strict)
+      //       Based on the different ways that IE,FF,Moz,Opera use these ScrollValues for body and documentElement
+      //       it looks like they will fill EITHER ONE SCROLL VALUE OR THE OTHER, NOT BOTH 
+      //         (from info at http://www.quirksmode.org/js/doctypes.html)
+      mousex = e.clientX + window.document.body.scrollLeft + window.document.documentElement.scrollLeft;
+      mousey = e.clientY + window.document.body.scrollTop + window.document.documentElement.scrollTop;
+    }
+  }
+}
+
+function update(e) {
+	getMouseXY(e);
+	// NS is passing (event), while IE is passing (null)
+}
+
+function grab(context) {
+	window.document.onmousedown = falsefunc; // in NS this prevents cascading of events, thus disabling text selection
+	if (getElement(context)) {
+	dragobj = thiselement;
+	}
+	
+	dragobj.style.zIndex = 10; // move it to the top
+	window.document.onmousemove = drag;
+	window.document.onmouseup = drop;
+	grabx = mousex;
+	graby = mousey;
+	elex = orix = dragobj.offsetLeft;
+	eley = oriy = dragobj.offsetTop;
+	update();
+}
+
+function drag(e) {
+	// parameter passing is important for NS family
+		if (dragobj) {
+		elex = orix + (mousex-grabx);
+		eley = oriy + (mousey-graby);
+		// dragobj.style.position = "absolute";
+		dragobj.style.left = (elex).toString(10) + 'px';
+		dragobj.style.top  = (eley).toString(10) + 'px';
+		
+		// stop dragging if near the edge:
+		if (elex <= bordermargin) {
+			dragobj.style.left = bordermargin + 'px';
+		} else if (elex >= (screenwidth-bordermargin-promptwindowboxwidth-20)) {
+			// the -20 allows for scrollbar
+			dragobj.style.left = screenwidth-bordermargin-promptwindowboxwidth-20 + 'px';
+		}
+		if (eley <= bordermargin) {
+			dragobj.style.top = bordermargin + 'px';
+		} else if (eley >= (screenheight-bordermargin-promptwindowboxheight)) {
+			dragobj.style.top = screenheight-bordermargin-promptwindowboxheight + 'px';
+		}
+	}
+	update(e);
+	return false; // in IE this prevents cascading of events, thus text selection is disabled
+}
+
+function drop() {
+  if (dragobj)   {
+    dragobj.style.zIndex = 0;
+    dragobj = null;
+  }
+  update();
+  window.document.onmousemove = update;
+  window.document.onmouseup = null;
+  window.document.onmousedown = null;   // re-enables text selection on NS
+}
+
+function getElement(elementName) {
+if (window.document.getElementById) {
+	// this is the way the standards work
+	thiselement = window.document.getElementById(elementName);
+	return true;
+	} else if (window.document.all) {
+	// this is the way old msie versions work
+	thiselement = window.document.all[elementName];
+	return true;
+	} else if (window.document.layers) {
+	// this is the way nn4 works
+	thiselement = window.document.layers[elementName];
+	return true;
+	}
+	return false;
+}
+
+function closePrompt() {
+// thanks to http://www.netlobo.com/div_hiding.html
+if (getElement("PromptWrapper")) {
+	thiselement.style.display = "none";
+}
+alert(window.document.InputPrompt.userinput.value);
+}
+
+function showPrompt() {
+	window.document.InputPrompt.userinput.value = "";
+	var posTop = (screenheight-promptwindowboxheight)/2;
+	var posLeft = (screenwidth-promptwindowboxwidth)/2;
+	//
+	if (getElement("PromptWrapper")) {
+		thiselement.style.top = posTop+"px";
+		thiselement.style.left = posLeft+"px";
+		thiselement.style.display = "block";
+	}
+	// focus text field:
+	window.document.InputPrompt.userinput.focus();
+}
+
+//-->
+</script>
+
+<style type="text/css">
+#PromptWrapper {
+border: 1px solid grey;
+width: 200px;
+position: absolute;
+padding: 0;
+color: #ffffff;
+display: none;
+height: 120px;
+left: 20px;
+top: 20px;
+}
+
+#DragStrip {
+height: 20px;
+background: #666666;
+cursor: pointer;
+color: #ffffff;
+}
+
+#PromptBlock {
+background: gray;
+padding: 0;
+height: 100px;
+}
+</style>
+</head>
+<body onload="init()">
+<div id="PromptWrapper">
+  <div onmousedown="grab('PromptWrapper')" id="DragStrip">...click to drag...</div>
+  <div id="PromptBlock">
+    <form name="InputPrompt">
+      <input name="userinput" id="userinput" type="text">
+    </form>
+    <a href="no_javascript.html" onclick="closePrompt();return false;">close prompt</a> </div>
+</div>
+<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Nunc arcu est, lobortis vel, dapibus gravida, sagittis vitae, leo. Donec eget tellus eu metus iaculis vestibulum. Morbi tincidunt eleifend mauris. Aenean lorem purus, ultricies in, consequat consequat, feugiat ac, velit. Ut a lorem. Curabitur sodales nulla eu arcu. Sed interdum feugiat nisl. Pellentesque semper ante ut risus. Praesent blandit nunc sed pede. Pellentesque dictum nisl et orci. Nullam vitae arcu. Donec justo justo, suscipit ut, aliquam in, malesuada in, risus. Vivamus quis velit. Morbi quis tortor. Curabitur in enim. Quisque lectus. Pellentesque velit tellus, fringilla nec, sodales sed, aliquam ut, dui. Nunc et arcu. Vivamus augue lectus, tempor et, eleifend id, hendrerit pretium, ligula. </p>
+<p> Praesent commodo vestibulum urna. Proin urna. Praesent volutpat felis in sapien pharetra pretium. Aenean pede. Curabitur sem lorem, condimentum eget, mollis non, scelerisque vitae, orci. Quisque id velit. Maecenas tempor nunc condimentum ipsum. Curabitur tempus felis sed arcu. Nullam laoreet fringilla orci. Vestibulum tempor fermentum lectus. Aliquam sollicitudin consectetuer massa. Aenean condimentum porta elit. Etiam laoreet. </p>
+<p><a href="no_javascript.html" onclick="showPrompt();return false;">show prompt</a></p>
+<p> Curabitur a risus faucibus nibh pulvinar tristique. Quisque ac nunc eu lorem commodo congue. Fusce dictum, tortor ut ultrices placerat, libero lacus semper nunc, sed viverra nunc ante vitae pede. Mauris vel tortor. Aliquam tincidunt. Mauris posuere, purus eget ornare pellentesque, lectus ante interdum metus, a tristique nunc odio a mi. In placerat. Aenean elementum varius magna. Integer a diam. Sed vitae ante. Aenean risus nibh, dictum at, consectetuer non, pulvinar sit amet, pede. Aenean molestie mauris a metus. </p>
+<p> Vestibulum ac eros eu mi porttitor rhoncus. Sed quis enim. Sed vitae lorem. Donec egestas, ipsum sit amet ultrices vehicula, lacus tellus ullamcorper purus, a cursus nibh eros nec leo. Praesent risus. Praesent at felis. Proin sagittis. Ut varius sollicitudin risus. Nunc feugiat. Nulla iaculis, orci at semper mollis, dui pede convallis dui, nec fermentum enim orci non diam. Fusce vitae nulla vitae urna aliquet tincidunt. Curabitur ut enim eu mi porta semper. Mauris vel leo tempor enim eleifend molestie. Integer elit. Nam porta sodales orci. Suspendisse potenti. Sed eu est id elit nonummy dignissim. Nullam augue metus, vestibulum sed, luctus eu, congue et, magna. </p>
+<p> Integer dignissim. Cras elit. Sed tincidunt pede. Sed nec tellus. Ut scelerisque leo vel massa. Donec lacinia, nisi nec blandit tincidunt, nisi elit luctus augue, vitae semper ipsum tellus a est. Donec adipiscing, enim quis tristique pharetra, urna mi consequat odio, a feugiat sapien urna quis nisi. Aliquam enim ligula, interdum ac, varius id, viverra non, libero. Aenean accumsan, arcu sit amet eleifend volutpat, nisl velit facilisis purus, ac rutrum neque sapien vitae urna. Donec nisl. Fusce ornare eros sed turpis. </p>
+</body>
+</html>

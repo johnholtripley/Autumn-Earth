@@ -1,0 +1,108 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<title>custom prompt</title>
+
+<script language="JavaScript" type="text/javascript">
+<!--
+function closePrompt() {
+// thanks to http://www.netlobo.com/div_hiding.html
+
+	if (window.document.getElementById) {
+	// this is the way the standards work
+	var thiselement = window.document.getElementById('PromptBox').style;
+	thiselement.display = "none";
+	} else if (window.document.all) {
+	// this is the way old msie versions work
+	var thiselement = window.document.all['PromptBox'].style;
+	thiselement.display = "none";
+	} else if (window.document.layers) {
+	// this is the way nn4 works
+	var thiselement = window.document.layers['PromptBox'].style;
+	thiselement.display = "none";
+	}
+	alert(window.document.InputPrompt.userinput.value);
+}
+
+function showPrompt() {
+	window.document.InputPrompt.userinput.value = "";
+	// position the prompt:
+	var promptwidth = 200;
+	var promptheight = 100;
+	var screenwidth = 1024;
+	var screenheight = 768;
+	
+	if (screen.width) {
+		screenwidth = screen.width;
+		screenheight = screen.height;
+	}
+	if (window.innerWidth) {
+		screenwidth = window.innerWidth;
+		screenheight = window.innerHeight;
+	}
+	if (window.document.documentElement) {
+		screenwidth = window.document.documentElement.clientWidth;
+		screenheight = window.document.documentElement.clientHeight;
+	}
+	var posTop = (screenheight-promptheight)/2;
+	var posLeft = (screenwidth-promptwidth)/2;
+	//
+	if (window.document.getElementById) {
+	// this is the way the standards work
+	var thiselement = window.document.getElementById('PromptBox').style;
+	thiselement.top = posTop+"px";
+	thiselement.left = posLeft+"px";
+	thiselement.display = "block";
+	} else if (window.document.all) {
+	// this is the way old msie versions work
+	var thiselement = window.document.all['PromptBox'].style;
+	thiselement.top = posTop+"px";
+	thiselement.left = posLeft+"px";
+	thiselement.display = "block";
+	} else if (window.document.layers) {
+	// this is the way nn4 works
+	var thiselement = window.document.layers['PromptBox'].style;
+	thiselement.top = posTop+"px";
+	thiselement.left = posLeft+"px";
+	thiselement.display = "block";
+	}
+	// focus text field:
+	window.document.InputPrompt.userinput.focus();
+}
+
+
+//-->
+</script>
+
+<style type="text/css">
+#PromptBox {
+display: none;
+border: 1px solid gray;
+padding: 0px;
+width: 200px;
+height: 100px;
+background: #cecece;
+position: absolute;
+top: 20px;
+left: 30px;
+}
+</style>
+
+</head>
+<body>
+<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Proin pharetra pede ut orci suscipit vehicula. Nunc ac dolor ac quam consequat sagittis. Maecenas euismod. Aliquam libero. Mauris eget metus quis purus sollicitudin nonummy. Sed dictum. Aenean a lectus. Mauris a risus sed erat aliquet bibendum. Nullam id tortor nec orci porttitor pellentesque. Sed sollicitudin. Phasellus vitae urna nec odio convallis congue. Vivamus eros massa, auctor nec, mollis vel, pharetra id, sapien. Pellentesque congue sapien a massa. Nulla est mauris, ornare non, mollis at, ullamcorper vel, eros. Suspendisse vehicula mi et lorem fringilla semper.
+<p></p>
+Curabitur adipiscing. Aliquam iaculis. Nulla at diam feugiat orci pulvinar pulvinar. Duis pulvinar, sapien sit amet tempus pulvinar, metus lorem dictum ipsum, non ultrices nisi nibh nec dolor. Phasellus sed lacus. Sed rhoncus, nunc scelerisque convallis pellentesque, tortor augue laoreet nisi, accumsan lacinia turpis quam ut tortor. Integer congue orci vehicula velit. Etiam mollis pretium magna. Suspendisse at mauris. Donec odio augue, placerat ut, dictum in, egestas semper, sem. </p>
+<div id="PromptBox">
+<form name="InputPrompt">
+<input name="userinput" id="userinput" type="text">
+</form>
+<a href="no_javascript.html" onclick="closePrompt();return false;">close prompt</a>
+</div>
+<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Proin pharetra pede ut orci suscipit vehicula. Nunc ac dolor ac quam consequat sagittis. Maecenas euismod. Aliquam libero. Mauris eget metus quis purus sollicitudin nonummy. Sed dictum. Aenean a lectus. Mauris a risus sed erat aliquet bibendum. Nullam id tortor nec orci porttitor pellentesque. Sed sollicitudin. Phasellus vitae urna nec odio convallis congue. Vivamus eros massa, auctor nec, mollis vel, pharetra id, sapien. Pellentesque congue sapien a massa. Nulla est mauris, ornare non, mollis at, ullamcorper vel, eros. Suspendisse vehicula mi et lorem fringilla semper.
+<p></p>
+Curabitur adipiscing. Aliquam iaculis. Nulla at diam feugiat orci pulvinar pulvinar. Duis pulvinar, sapien sit amet tempus pulvinar, metus lorem dictum ipsum, non ultrices nisi nibh nec dolor. Phasellus sed lacus. Sed rhoncus, nunc scelerisque convallis pellentesque, tortor augue laoreet nisi, accumsan lacinia turpis quam ut tortor. Integer congue orci vehicula velit. Etiam mollis pretium magna. Suspendisse at mauris. Donec odio augue, placerat ut, dictum in, egestas semper, sem. </p>
+<p><a href="no_javascript.html" onclick="showPrompt();return false;">show prompt</a></p>
+</body>
+</html>

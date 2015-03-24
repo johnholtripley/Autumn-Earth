@@ -1,0 +1,87 @@
+
+#######################
+
+NPC types
+
+#######################
+
+?? stationary - could be another type with isMoving = false
+random mover - continuosly moving
+random mover - mostly stationary, but randomly moves to an adjoining tile
+looping path follower
+unique path follower 
+
+
+
+#######################
+
+NPC requirements
+always use booleans if possible, using 'if (isMoving) {' is faster than testing for a value
+
+#######################
+
+boolean isMoving
+boolean canBeSpokenTo
+start tile x
+start tile y
+facing xdir
+facing ydir
+references to dialogue
+references to card challenge responses (initial response / comment if NPC wins / comment if hero wins)
+graphic to use
+name
+slot for inventory slots (used for pets/baggage animals)
+taming value - taming skill required to tame this creature
+loyalty required before being rideable
+sale value - if this creature is sold - would be multiplied by time owned (ie. loyalty)
+speechcounter - not saved
+speed
+boolean does terrain collision detection
+boolean does item/hero other NPC collision detection (for ghosts and fae)
+boolean is larger than a tile (ie. would require additional collision detection points when moving)
+pathmarker
+cards carried (base set and variable number of unique cards)
+boolean - is a Pet
+boolean - has a movement dependant animation (ie. is jumping, and if hits something, needs to turn round at the same height it hit at)
+reaction radius - shop keepers will need a wider reaction distance so that the hero can speak to them when they're behind a counter/desk
+npcs need an isSpeaking boolean (set to true when a new map is initiliased)
+
+width - this can't always be derived from the movieclip - if the npc is wider than its base etc.
+height - as above
+
+shouldPlayAnimationWhenBlocked boolean - not saved. used for NPCs who have a movement triggered by the hero talking to them, but the hero might be in the way. This way the NPC will animate and indicate that the hero is blocking their path
+
+#######################
+
+path codes
+
+#######################
+
+>	remove NPC from map and add to another map
+/	termination of path. NPC set to be stationary
+T	NPC stops, turns and speaks. If found at current pathmarker position when dialogue is closed, then NPC should move off along its path
+X	end of looping path - go back to the start
+A	NPC waits for a while - performs a special animation while doing so
+    need an NPC movement trigger to set off special events (controlled in map specific loop)
+	need a code to trigger another npc along its scripted path (to set up dramatic events/sequences) - needs a code to identify this action, and then a index indicating which npc should now move.
+
+
+
+#######################
+
+dialogue codes
+
+#######################
+
+@	add to journal
+/	question and response: [question],[hero yes],[hero no],[response to yes],[response to no]
+(string delimited by / )
+/	card challenge: [question],[response if no],[npc wins],[hero wins]
+(string delimited by / )
+#	quest dialogue: questnumber#request to go on quest~NPC response if quest not complete~NPC response if hero completes quest~thanks on exchange of item (optional)
++	continuation text
+*	paired conversation between 2 NPCs
+%	remove this bit of text once initially displayed
+
+
+possibly need a code for initiating an order request - unless this can be handled within the quest system

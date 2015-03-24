@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map mname="meadows%20house-firstfloor" inside="t">
+<row>129,129,129,129,129,129,127</row>
+<row>128,3,131,162,91,3,130</row>
+<row>128,3,3,3,3,3,130</row>
+<row>128,3,3,3,3,3,130</row>
+<row>128,3,3,3,3,3,130</row>
+<row>90,3,3,3,3,3,130</row>
+<row>128,128,128,128,128,128,130</row>
+<npc>2,0,1,2,2,1,0,0,0,0,potion%20expert,4,1,2,3</npc>
+<item>4,4,7</item>
+<weather>1</weather>
+</map>

@@ -1,0 +1,60 @@
+/* layout style for isometric game */
+
+body {
+background-color: #333333;
+margin-top: 2%;
+margin-right: 0%;
+margin-bottom: 2%;
+margin-left: 0%;
+font-family: palatino, georgia, "times new roman", serif;
+font-size: 9px;
+color: #999966;
+text-align: center;
+line-height: 170%;
+letter-spacing: 2px;
+}
+
+img { 
+border: 0 
+} 
+
+
+.blockcentred {
+position: absolute;
+top: 50%;
+left: 50%;
+height: 510px;
+width: 800px;
+margin-top: -255px;
+margin-left: -400px;
+overflow: visible;
+}
+
+.imageplace {
+position: absolute; left: 0px; top: 0px;
+}
+
+a:link {
+color: #666666;
+text-decoration: underline;
+background-color: transparent;
+}
+
+a:visited {
+color: #666666;
+text-decoration: line-through;
+background-color: transparent;
+}
+
+a:hover {
+color: #666666;
+text-decoration: underline;
+background-color: transparent;
+}
+
+a:active {
+color: #666666;
+text-decoration: underline;
+background-color: transparent;
+}
+

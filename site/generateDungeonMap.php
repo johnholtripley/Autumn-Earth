@@ -14,22 +14,25 @@
 
 
 
-add questEvents system so that quests can react to entering a location (either a whole map or part of one) or to triggers being actviated (levers pulled, chests opened etc)
+
+
+
+
+
+
+
+// the code for determining whether an area should be black or a solid terrain piece needs to look at height differences as well, as a lower floor piece next to a raised section will need the solid edging visually
+
+// Flash code for Pet to have its own heightgained value to be positioned on raised terrain
+
+graphics
+
+
+
+level locked NPCs can be hemmed in by later placed NPCs - something like these should check they aren't immediately adjacent to an already placed NPC
 
 check if hotspots can be dynamic - add to Dungeons for some template NPCs (eg collector NPCs who won't move and are always reactive to that 'quest')
 fae should react to npcs with active quest dialogue, without needing a hotspot 
-
-add cataloge quests - NPC gives player item. Check if item needs 'filling' - go to PHP to return list of all items in current location, and populate the item then.
-need systrem to reacting to proximity (or examining?) these items easily and efficiceltny
-
-
-
-
-
-
-
-
-
 
 
 
@@ -50,7 +53,9 @@ need systrem to reacting to proximity (or examining?) these items easily and eff
 */
 
 
+// Level locked templates should mark the position of items and static npcs with a # for determining if the map is valid. 
 
+// need to pathfind to the centre of placed templates as part of the validation of the map
 
 // pathfinding NPCs should do collision detection between themselves and choose one to move out of the way if they get stuck
 
@@ -83,8 +88,8 @@ need systrem to reacting to proximity (or examining?) these items easily and eff
 
 // ensure session saving turning value is unique to each dungeon instance
 
-// templates should be able to place items and NPCs
-// template areas could include mines, temples and - template objects and npcs too eg. dwarven expedition
+
+// template areas could include mines, temples and eg. dwarven expedition
 
 // be really nice to have a league table on the website of which characters have achieved the deepest level in each dungeon - could create competition.
 
@@ -108,13 +113,12 @@ need systrem to reacting to proximity (or examining?) these items easily and eff
 
 
 
-// to allow unique template maps to used with the relevant quest objectives on - flash map swf will have an array with the relevant quests for the dungeon that can be entered from that map. flash will request a new map and check the status and pass through any open quests. php will have a table with quest number and the range that that template could be found on - if map level exceeds this range, then use this template so will definintely be used (or have a random chance of it occuring that the liklihood increases with the 'depth' of the current map until it's 100% that this map will be used). table might also have another quest that is opened once this template has been used - so can chain templates in correct order. open quests are stored in database - if map #0 is requested then these are cleared and any new ones from flash are used. once template is used then this is removed from database entry - chained quest template will be added to database entry
-
 
 // error handle script timeout in function abortScript() and default to a fully templated map so that flash has something to load. These template maps would need to have very wide entrance chambers, so that wherever the door was placed to match up with the previous map, a path is connected up. also need to be aware that a treasure map location might need to exist somewhere on the map
 // optimise (if required - it does run pretty fast currently)
 // after placing items there is no check on the path not being blocked. make sure that the item placement logic is sound
 // place NPCs and creatures
+// lock-and-key regions (if not annoying?)
 // water features - templated or 'tunnel' a river's course?
 // mazes? tend to be annoying, but might provide interest - algorithms at http://www.astrolog.org/labyrnth/algrithm.htm
 //
@@ -184,7 +188,10 @@ if (is_numeric($thisPlayersId)) {
     if (is_numeric($thisMapsId)) {
         $mapFilename = "data/chr" . $thisPlayersId . "/dungeon/".$thisDungeonsName."/" . $thisMapsId . ".xml";
         if (is_file($mapFilename)) {
+        // 'none' is used for the overview map, as it's the cartographic map required as output:
+        if($_GET["outputMode"] != "none") {
             header("Location: http://www.autumnearth.com/" . $mapFilename);
+            }
         } else {
             createNewDungeonMap($thisMapsId);
         }
@@ -274,6 +281,9 @@ switch ($elementType) {
           case "item":
          array_push($levelLockedTemplatePossible[$whichLLTemplate]["item"], str_ireplace(" ", "", $data));
         break;
+        case "questhotspot":
+         array_push($levelLockedTemplatePossible[$whichLLTemplate]["questHotSpot"], str_ireplace(" ", "", $data));
+        break;
   
 }
 
@@ -300,6 +310,7 @@ $levelLockedTemplatePossible[$whichLLTemplate]["row"] = array();
 $levelLockedTemplatePossible[$whichLLTemplate]["tiles"] = array();
 $levelLockedTemplatePossible[$whichLLTemplate]["npc"] = array();
 $levelLockedTemplatePossible[$whichLLTemplate]["item"] = array();
+$levelLockedTemplatePossible[$whichLLTemplate]["questHotSpot"] = array();
 
 
 
@@ -927,7 +938,6 @@ function checkPathIsConnected($doorStartX, $doorStartY) {
     global $dungeonMap, $itemMap, $mapMaxWidth, $mapMaxHeight, $exitDoorX, $exitDoorY, $savedWalkableAreas;
     $connectionFound = false;
  
-
     $openList = array($doorStartX."_" . $doorStartY);
    
 
@@ -1002,7 +1012,7 @@ function checkPathIsConnected($doorStartX, $doorStartY) {
     
     // save closed list for item placement:
     $savedWalkableAreas = $closedList;
-    
+   
     return $connectionFound;
 }
 function floodFillHeight($startPointX, $startPointY, $heightToUse) {
@@ -1129,7 +1139,7 @@ function floodFillHeight($startPointX, $startPointY, $heightToUse) {
 }
 
 function outputDungeon() {
-  global $dungeonMap, $dungeonOutputMap, $heightMap, $itemMap, $npcMap, $mapMaxHeight, $mapMaxWidth, $thisDungeonsName, $thisMapsId, $thisPlayersId, $thisAverageCount, $thisAverageTotal, $doorsOut, $doorsIn, $dungeonDetails, $thisOriginatingMapId, $outputMode, $allStairs, $stairsWidth, $entranceHeight, $tileHeight, $itemsAvailable, $isTreasureMapLevel, $startTime, $treasureLocX, $treasureLocY, $templateTiles, $mapMode, $topLeftXPos, $topLeftYPos, $levelLockedNPCs, $turning, $whichDirectionToTurn, $NPCsAlreadyPlaced, $templatesAlreadyPlaced, $levelLockedTemplatesAlreadyPlaced, $templateChosen, $levelLockedTemplateChosen, $levelLockedTemplatePossible, $newTargetTreasureMap, $treasuresLocX, $treasuresLocY;
+  global $dungeonMap, $dungeonOutputMap, $heightMap, $itemMap, $npcMap, $mapMaxHeight, $mapMaxWidth, $thisDungeonsName, $thisMapsId, $thisPlayersId, $thisAverageCount, $thisAverageTotal, $doorsOut, $doorsIn, $dungeonDetails, $thisOriginatingMapId, $outputMode, $allStairs, $stairsWidth, $entranceHeight, $tileHeight, $itemsAvailable, $isTreasureMapLevel, $startTime, $treasureLocX, $treasureLocY, $templateTiles, $mapMode, $topLeftXPos, $topLeftYPos, $levelLockedNPCs, $levelLockedItems, $turning, $whichDirectionToTurn, $NPCsAlreadyPlaced, $templatesAlreadyPlaced, $levelLockedTemplatesAlreadyPlaced, $templateChosen, $levelLockedTemplateChosen, $levelLockedTemplatePossible, $newTargetTreasureMap, $treasuresLocX, $treasuresLocY;
 
 
   if ($outputMode == "test") {
@@ -1456,7 +1466,9 @@ $tryTileY = rand(2,($mapMaxHeight-3));
 for($tx = $tryTileX-1; $tx <= $tryTileX+1; $tx++) {
 for($ty = $tryTileY-1; $ty <= $tryTileY+1; $ty++) {
 if($dungeonOutputMap[$tx][$ty] != "2") {
+if($itemMap[$tx][$ty] == "") {
 $mineCartPlaced = false;
+}
 }
 }
 }
@@ -1676,6 +1688,17 @@ if (!$tileNorthIsWalkable) {
    $outputString .= "<item>".$i.",".$j.",".$thisItemType.",1,".$itemHeight.",0</item>";
    }
    
+   } else if (strrpos($itemMap[$i][$j], "i*") !== false) {
+   
+
+  $llitem = strrpos($itemMap[$i][$j], "i*");
+ 
+   
+   
+   // level locked item with specific details
+   
+ $itemId = substr($itemMap[$i][$j], ($llitem+2));
+   $outputString .= "<item>".$levelLockedItems[$itemId]."</item>";
    
    
    } else {
@@ -1790,6 +1813,45 @@ $newStartDoorY = 1;
       
       $outputString .= "</door>";
       }
+    
+    
+    
+  
+    
+    if($mapMode=="lltemplate") {
+ for ($j = 0;$j < count($levelLockedTemplateChosen);$j++) {
+  for ($k = 0;$k < count($levelLockedTemplateChosen[$j]["questHotSpot"]);$k++) {
+  
+  $outputString .= "<questHotSpot>";
+  
+  
+  $questHotSpotValues = explode(",", $levelLockedTemplateChosen[$j]["questHotSpot"][$k]);
+
+  if($questHotSpotValues[2] != 'all') {
+  // adjust coords to match template
+  
+  $questHotSpotValues[2] = intval($questHotSpotValues[2]) + intval($levelLockedTemplateChosen[$j]["coords"][0]);
+  $questHotSpotValues[3] = intval($questHotSpotValues[3]) + intval($levelLockedTemplateChosen[$j]["coords"][1]);
+  
+  }
+  
+  
+  $questHotSpotString = implode(",",$questHotSpotValues);
+  
+  $outputString .= $questHotSpotString;
+  $outputString .= "</questHotSpot>";
+  
+  }
+  }
+    }
+    
+    
+    
+    
+    
+    
+    
+    
     
     if ($outputMode == "xml") {
     
@@ -2007,29 +2069,15 @@ function tileIsSurrounded($tileCheckX,$tileCheckY) {
 
 function placeItemsandNPCs() {
 
-  global $dungeonMap, $itemMap, $npcMap, $mapMaxHeight, $mapMaxWidth, $savedWalkableAreas, $startTime, $dungeonDetails, $thisDungeonsName, $itemsAvailable, $thisMapsId, $levelLockedNPCs, $npcPositionsTaken, $isAValidItemPosition, $nodesPosition, $NPCsAlreadyPlaced, $templatesAlreadyPlaced, $levelLockedTemplatesAlreadyPlaced, $mapMode, $levelLockedTemplateChosen;
+  global $dungeonMap, $itemMap, $npcMap, $mapMaxHeight, $mapMaxWidth, $savedWalkableAreas, $startTime, $dungeonDetails, $thisDungeonsName, $itemsAvailable, $thisMapsId, $levelLockedNPCs, $levelLockedItems, $npcPositionsTaken, $isAValidItemPosition, $nodesPosition, $NPCsAlreadyPlaced, $templatesAlreadyPlaced, $levelLockedTemplatesAlreadyPlaced, $mapMode, $levelLockedTemplateChosen, $heightMap;
 
    $itemChance = $dungeonDetails[$thisDungeonsName][3];
    $itemsAvailable = $dungeonDetails[$thisDungeonsName][4];
    
   $numberOfItems = $itemChance[(rand(0,count($itemChance)-1))];
   
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
   $levelLockedNPCs = array();
-
+$levelLockedItems = array();
 
 
 
@@ -2069,13 +2117,15 @@ $thisNpcArray[4] = $thisNpcYTile;
 
 $npcString = implode(",",$thisNpcArray);
 
+
+
  //echo "<br>lltemplate npc: ".$npcString." at ".$thisNpcXTile.", ".$thisNpcYTile;
 
 $npcMap[($thisNpcXTile)][($thisNpcYTile)] = "n-".count($levelLockedNPCs);
 array_push($levelLockedNPCs, $npcString );
 array_push($npcPositionsTaken,($thisNpcXTile)."_".($thisNpcYTile));
  
- 
+
  
  
  }
@@ -2100,7 +2150,11 @@ array_push($npcPositionsTaken,($thisNpcXTile)."_".($thisNpcYTile));
  
  $itemString = implode(",",$thisItemArray);
  
- $itemMap[$thisItemXTile][$thisItemYTile] = $thisItemArray[2];
+ //$itemMap[$thisItemXTile][$thisItemYTile] = $thisItemArray[2];
+ $itemMap[$thisItemXTile][$thisItemYTile] = "i*".count($levelLockedItems);
+ 
+ array_push($levelLockedItems, $itemString );
+ 
  
  }
  }
@@ -2115,19 +2169,7 @@ array_push($npcPositionsTaken,($thisNpcXTile)."_".($thisNpcYTile));
   
   
   
-
-  
-  
-  
-  
-  
-  
-  
   }
-  
-  
-  
-  
   
   
 // check for level-locked NPCs
@@ -2174,14 +2216,6 @@ array_push($npcPositionsTaken,($thisNpcXTile)."_".($thisNpcYTile));
     }
   }
 }  
-  
-  
-  
-  
-  
-  
-  
-  
   
   
   
@@ -2234,11 +2268,13 @@ array_push($npcPositionsTaken,($thisNpcXTile)."_".($thisNpcYTile));
         // place NPC:
         // double check no item here - can happen. shouldn't need this check - need to fix code above instead #######################
         
-        if($itemMap[($nodesPosition[0])][($nodesPosition[1])] == "") {        
+        if($itemMap[($nodesPosition[0])][($nodesPosition[1])] == "") {   
+        // check height of this tile - currently Flash code doesn't support NPCs on raised sections
+if($heightMap[$nodesPosition[0]][$nodesPosition[1]] == "*") {     
 array_push($npcPositionsTaken,($nodesPosition[0])."_".($nodesPosition[1]));
          $npcMap[($nodesPosition[0])][($nodesPosition[1])] = "n";
          }
-        
+        }
         
         
         // ############### standard npc can overwrite level locked here
@@ -2483,6 +2519,21 @@ $doorsOut = array();
          
         }
         
+        
+        
+        
+        // check config to see if the first map needs to be forced to a particular mode (for visual effect)
+        
+        if($mapID == -1) {
+        if ($dungeonDetails[$thisDungeonsName][9] != "") {
+       $mapMode = $dungeonDetails[$thisDungeonsName][9];
+        }
+        
+        }
+        
+        
+        
+        
         // check if a level-locked template should go here, and override Mode if so:
         
             if(count($dungeonDetails[$thisDungeonsName][7])>0) {
@@ -2519,12 +2570,12 @@ if (!(in_array($llt, $levelLockedTemplatesAlreadyPlaced))) {
           $mapMode = $_GET["forceMode"];
         }
         
-        if($mapID == -1) {
+      /*  if($mapID == -1) {
           // first map can't be a stairs map as the height of the start doors is hardcoded to zero:
           if ($mapMode == "stairs") {
           $mapMode = "standard";
           }
-        }
+        }*/
         
         $turning = 0;
        if($isTreasureMapLevel) {
@@ -3154,6 +3205,15 @@ if ($startDoorY == 0) {
                  // store reference to which map was chosen:
                  $levelLockedTemplateChosen[count($levelLockedTemplateChosen)-1]["ref"] = $thisTemplateRef;
                  
+                 // store a reference to the entrance point to check if can reach it from the map's start door:
+                 $levelLockedTemplateChosen[count($levelLockedTemplateChosen)-1]["doorsIn"] = array(($levelLockedTemplateChosen[$i]["doors"][0] + $levelLockedTemplateChosen[$i]["coords"][0]), ($levelLockedTemplateChosen[$i]["doors"][1] + $levelLockedTemplateChosen[$i]["coords"][1]));
+                 
+               //  echo '<pre>';
+               //  var_dump($levelLockedTemplatePossible[$i]["doors"]);
+              //  echo '<hr />';
+                //     var_dump($levelLockedTemplateChosen);
+                 // echo '</pre>';
+                 
                  // mark these as filled:
                
                     for ($j = $topLeftXPos; $j < ($topLeftXPos+$thisTemplateWidth); $j++) {
@@ -3396,7 +3456,37 @@ echo "</pre></code>";
       
     markDoors($exitDoorX, $exitDoorY, "out");
                 
-                $isFullyConnected = checkPathIsConnected($startDoorX,$startDoorY);
+               
+           $isTemplateConnected = true;
+          
+if($mapMode=="lltemplate") {
+  // check can reach the template start point 
+  for ($lltchkconnect = 0;$lltchkconnect < count($levelLockedTemplateChosen);$lltchkconnect++) {
+ 
+    $isTemplateConnected = checkPathIsConnected($levelLockedTemplateChosen[$lltchkconnect]["doorsIn"][0],$levelLockedTemplateChosen[$lltchkconnect]["doorsIn"][1]);
+    
+     
+    if(!$isTemplateConnected) {
+  
+      // don't check any more if this one isn't accessible:
+      break;
+    }
+  }
+}
+
+
+
+if($mapMode=="template") {
+// check can reach the template start point 
+$isTemplateConnected = checkPathIsConnected($exitPointToConnectToX,$exitPointToConnectToY);
+}
+
+
+
+            $isFullyConnected = checkPathIsConnected($startDoorX,$startDoorY);
+            
+            
+         //   testOutputDungeon();
             
             
             if($mapMode == "stairs") {
@@ -3408,7 +3498,8 @@ echo "</pre></code>";
        }
             
             
-            } while ((!$isFullyConnected) || (!$stairsAreOk));
+            
+            } while (!($isFullyConnected && $stairsAreOk && $isTemplateConnected));
             placeItemsandNPCs();
             outputDungeon();
             
@@ -3417,5 +3508,117 @@ echo "</pre></code>";
           
             
         }
+        
+        
+        
+        
+        
+        function testOutputDungeon() {
+         global $dungeonMap, $dungeonOutputMap, $mapMaxHeight, $mapMaxWidth, $doorsOut, $doorsIn, $dungeonDetails, $thisOriginatingMapId, $outputMode, $levelLockedTemplateChosen, $levelLockedTemplatePossible;
+         if ($outputMode == "test") {
+  echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">' . "\n";
+echo '<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">' . "\n";
+echo '<head>' . "\n";
+    echo '<meta content="text/html; charset=iso-8859-1" http-equiv="content-type" />' . "\n";
+    echo '<meta content="no" http-equiv="imagetoolbar" />' . "\n";
+    echo '<meta content="TRUE" name="MSSmartTagsPreventParsing" />' . "\n";
+    echo '<meta name="robots" content="noodp" />' . "\n";
+    echo '<title>Autumn Earth - random map</title>' . "\n";
+    echo '<meta name="keywords" content="" />' . "\n";
+    echo '<meta name="description" content="" />' . "\n";
+    echo '<meta http-equiv="content-language" content="en" />' . "\n";
+    echo '<meta name="language" content="english" />' . "\n";
+    
+    echo '<style>'."\n";
+    echo 'span.cell {display: block; float:left;width: 9px;height:9px;border:1px solid #000;border-left:0;border-top:0;border-radius:3px;}'."\n";
+    echo 'span.templateCell {display: block; position: absolute;width: 9px;height:9px;border:1px solid #000;border-left:0;border-top:0;border-radius:3px;background: #463F3F;}'."\n";
+    echo 'span.templateEntranceCell {display: block; position: absolute;width: 9px;height:9px;border:1px solid #000;border-left:0;border-top:0;border-radius:3px;background: yellow;}'."\n";
+    echo 'span.filled {background:#fff;}'."\n";
+    echo 'span.door {background:#8B600D;}'."\n";
+    echo '.clearer {width:100%;clear:both;height:0;}'."\n";
+    echo '#wrapper {position:relative;margin: 0 0 40px 0;}'."\n";
+    echo '</style>'."\n";
+    
+echo '</head>' . "\n";
+echo '<body style="background: #000; color: #fff;">' . "\n";
+  
+
+  echo '<div id="wrapper">' . "\n";
+  
+  
+  /*
+  $dungeonMap[0][0]="1";
+  $dungeonMap[($mapMaxWidth-1)][0]="2";
+  $dungeonMap[($mapMaxWidth-1)][($mapMaxHeight-1)]="3";
+  $dungeonMap[0][($mapMaxHeight-1)]="4";
+*/
+ 
+  for ($j = 0;$j < $mapMaxHeight;$j++) {
+    for ($i = 0;$i < $mapMaxWidth;$i++) {
+    
+    $thisClass="cell";
+    if($dungeonMap[$i][$j] == "#") {
+    $thisClass .= " filled";
+    }
+    
+    // plot doors:
+    if($dungeonMap[$i][$j] == "O") {
+    $thisClass .= " door";
+    }
+    
+    
+    echo '<span class="'.$thisClass.'"></span>';
+    }
+    echo '<div class="clearer"></div>';
+    }
+         
+         
+         // plot template(s):
+          for ($j = 0;$j < count($levelLockedTemplateChosen);$j++) {
+   // place templates
+  for ($k = 0;$k < ($levelLockedTemplateChosen[$j]["size"][1]);$k++) {
+  $templateArray = explode(",",$levelLockedTemplateChosen[$j]["tiles"][$k]);
+  for ($l = 0;$l < $levelLockedTemplateChosen[$j]["size"][0];$l++) {
+  
+  $leftPos = ($l + $levelLockedTemplateChosen[$j]["coords"][0])*10;
+  $topPos = ($k + $levelLockedTemplateChosen[$j]["coords"][1])*10;
+  
+  if($templateArray[$l] > 2) {
+  echo '<span class="templateCell" style="left:'.$leftPos.'px;top:'.$topPos.'px;"></span>';
+  }
+  
+ // $dungeonOutputMap[$l + $levelLockedTemplateChosen[$j]["coords"][0]]      [$k + $levelLockedTemplateChosen[$j]["coords"][1]] = $templateArray[$l];
+  }
+  }
+}
+// ---------------------
+
+
+// plot template entrances:
+
+  for ($lltchkconnect = 0;$lltchkconnect < count($levelLockedTemplateChosen);$lltchkconnect++) {
+  
+    $leftPos = ($levelLockedTemplateChosen[$lltchkconnect]["doorsIn"][0])*10;
+  $topPos = ($levelLockedTemplateChosen[$lltchkconnect]["doorsIn"][1])*10;
+  
+  echo '<span class="templateEntranceCell" style="left:'.$leftPos.'px;top:'.$topPos.'px;"></span>';
+   
+  }
+// ---------------------
+
+
+         
+        echo "</div>" . "\n";
+
+echo '</body>'. "\n";
+echo '</html>' . "\n";
+         
+         
+         
+         }
+        }
+        
+        
+        
        
 ?>

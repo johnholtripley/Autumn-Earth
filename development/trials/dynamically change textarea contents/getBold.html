@@ -1,0 +1,63 @@
+<html>
+<head>
+<title>get bold</title>
+
+<script language="JavaScript" type="text/javascript">
+<!--
+function AddTags(tagStart,tagEnd) {
+	// thanks to http://www.alexking.org/blog/2004/06/03/js-quicktags-under-lgpl/ for the Opera support
+	var tarea = document.PostTopic.Message;
+	browsersafe = true;
+	// try and catch IE 4 as this adds the tags to the link instead of the text
+	if (document.all) {
+		var detect = navigator.userAgent.toLowerCase();
+		versionplacement = detect.indexOf('msie');
+		if (versionplacement != -1) {
+			if (detect.substr(versionplacement+5, 1) == "4") {
+			browsersafe = false;
+			}
+		}
+	}
+	//	
+	// IE
+	if (document.selection && browsersafe) {
+		tarea.focus();
+		sel = document.selection.createRange();
+		if (sel.text.length > 0) {
+			sel.text = tagStart + sel.text + tagEnd;
+		} else {
+			sel.text = tagStart+tagEnd;
+		}
+	tarea.focus();
+	} else if (tarea.selectionStart || tarea.selectionStart == '0') {
+		// MOZILLA/NETSCAPE support
+		var startPos = tarea.selectionStart;
+		var endPos = tarea.selectionEnd;
+		var cursorPos = endPos;
+		var scrollTop = tarea.scrollTop;
+		if (startPos != endPos) {
+			tarea.value = tarea.value.substring(0, startPos) + tagStart + tarea.value.substring(startPos, endPos) + tagEnd + tarea.value.substring(endPos, tarea.value.length);
+			cursorPos += tagStart.length + tagEnd.length;
+		} else {
+			tarea.value = tarea.value.substring(0, startPos) + tagStart + tagEnd + tarea.value.substring(endPos, tarea.value.length);
+			cursorPos = startPos + tagStart.length;
+		}
+		tarea.focus();
+		tarea.selectionStart = cursorPos;
+		tarea.selectionEnd = cursorPos;
+		tarea.scrollTop = scrollTop;
+	} else {
+		tarea.value += tagStart+tagEnd;
+		tarea.focus();
+	}
+}
+//-->
+</script>
+</head>
+<body>
+<a href="no_javascript.html" onclick="AddTags('[b]','[/b]');return false;">make bold</a>
+<form name="PostTopic">
+<textarea cols="70" name="Message" rows="12" wrap="soft">Moves one or more words. A word is a collection of characters terminated by a space or other white-space character, such as a tab</textarea>
+</form>
+</body>
+</html>

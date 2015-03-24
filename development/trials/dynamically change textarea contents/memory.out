@@ -1,0 +1,26 @@
+Thread Summary on Mon Jul 17 22:37:50 2006
+
+
+--Thread---------------ID-------Pri-State--------------------------------------
+Current:
+  "AWT-EventQueue-0"        c04  15 running
+RunQ:
+  finalizer                 c3c  11 condwait inf [Monitor gc-lock 19f5868]
+  NSPR:WinSockMessageThread      b78  12 running
+  mocha-thread              ea0  13 condwait inf [Monitor lm-queue-monitor e8a3b0]
+  mozilla                    b8  15 running
+  "AWT-EventQueue-0"        c04  15 running
+  "AWT-Windows"             740  15 running
+  "Applet Thread Killer"      c0c  15 condwait inf [Monitor mc-                  e392d0]
+-------------------------------------------------------------------------------
+
+--Monitors---------------------------------------------------------------------
+-------------------------------------------------------------------------------
+
+--Monitor-Cache----------------------------------------------------------------
+  40074298 -> [Monitor mc-                  e392d0]
+-------------------------------------------------------------------------------
+
+
+================================================================================
+

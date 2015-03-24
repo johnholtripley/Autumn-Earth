@@ -1,0 +1,367 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<title>Autumn Earth</title>
+<meta content="Autumn Earth Community Forums" name="description" />
+
+<meta content="text/html; charset=iso-8859-1" http-equiv="content-type" />
+<meta content="no" http-equiv="imagetoolbar" />
+<meta content="TRUE" name="MSSmartTagsPreventParsing" />
+
+<style type="text/css">
+td, th {
+border: 1px dotted #cecece;
+padding: 4px 8px;
+}
+</style>
+
+<script type="text/javascript">
+function getElement(elementName) {
+// thanks to http://www.netlobo.com/div_hiding.html
+if (window.document.getElementById) {
+	// this is the way the standards work
+	thiselement = window.document.getElementById(elementName);
+	return true;
+	} else if (window.document.all) {
+	// this is the way old msie versions work
+	thiselement = window.document.all[elementName];
+	return true;
+	} else if (window.document.layers) {
+	// this is the way nn4 works
+	thiselement = window.document.layers[elementName];
+	return true;
+	}
+	return false;
+}
+//
+function getCellDetails(whichCell) {
+ if (getElement(whichCell)) {
+ thisCell = thiselement.cellIndex;
+ thisRow = thiselement.parentNode.rowIndex;
+ // a cell's parent table should be parent.parent.parent (tr, tbody and then table)
+ thisTable = thiselement.parentNode.parentNode.parentNode;
+	}
+}
+//
+function addRow(beforeAfter,whichCellSelected) {
+  getCellDetails(whichCellSelected);
+  // get max number of columns:
+  maxcols = -1;
+  for (var i=0; i<thisTable.rows.length; i++) {
+    if (thisTable.rows[i].cells.length>maxcols) {
+      maxcols = thisTable.rows[i].cells.length;
+    }
+  }
+  // create new row:
+  var newRow = document.createElement('tr');
+  for (var i=0; i<maxcols; i++) {
+    var newCell = document.createElement('td');
+    var newCellContents = document.createTextNode("added "+i);
+    newCell.appendChild(newCellContents);
+    newRow.appendChild(newCell);
+  }
+  if (getElement(whichCellSelected)) {
+    thisRow = thiselement.parentNode;
+    // need to insert from the tbody
+    if (beforeAfter == "before") {
+      thisTable.tBodies[0].insertBefore(newRow,thisRow);
+    } else {
+      insertAfter(thisTable.tBodies[0],newRow,thisRow);
+    }
+  }
+}
+//
+function insertAfter(parent, node, referenceNode) {
+  // thanks to http://javascript.internet.com/snippets/insertafter.html
+  parent.insertBefore(node, referenceNode.nextSibling);
+}
+//
+function deleteRow(whichCellSelected) {
+  getCellDetails(whichCellSelected);
+  // need to remove from the tbody
+  thisTable.tBodies[0].removeChild(thiselement.parentNode);
+}
+//
+function addColumn(beforeAfter,whichCellSelected) {
+	getCellDetails(whichCellSelected);
+  colspanOffset = 0;
+  // loop through preceeding cells in this row to look for 'colspan' attribute:
+  for (var i=0; i<thisCell; i++) {
+    thisColspan = thisTable.rows[thisRow].cells[i].getAttribute('colspan');
+    if (thisColspan) {
+      // is a colspan:
+      colspanOffset = colspanOffset+(thisColspan-1);
+    }
+  }
+  for (var i=0; i<thisTable.rows.length; i++) {
+    var newCell = document.createElement('td');
+    var newCellContents = document.createTextNode("col added "+i);
+    // check for colspans on this row:
+    thisRowColspanOffset = 0;
+    for (var j=0; j<(thisCell+colspanOffset); j++) {
+      thisColspan = thisTable.rows[i].cells[j].getAttribute('colspan');
+      if (thisColspan) {
+        // is a colspan:
+        thisRowColspanOffset = thisRowColspanOffset+(thisColspan-1);
+      }
+    }
+    newCell.appendChild(newCellContents);
+    if (beforeAfter == "before") {
+      thisTable.rows[i].insertBefore(newCell,thisTable.rows[i].cells[(thisCell+colspanOffset-thisRowColspanOffset)]);
+      // alternative method:
+      // thisTable.rows[i].insertCell(thisCell);
+    } else {
+      insertAfter(thisTable.rows[i],newCell,thisTable.rows[i].cells[(thisCell+colspanOffset-thisRowColspanOffset)]);
+    }
+  }
+}
+//
+function deleteColumn(whichCellSelected) {
+  getCellDetails(whichCellSelected);
+  colspanOffset = 0;
+  // loop through preceeding cells in this row to look for 'colspan' attribute:
+  for (var i=0; i<thisCell; i++) {
+    thisColspan = thisTable.rows[thisRow].cells[i].getAttribute('colspan');
+    if (thisColspan) {
+      // is a colspan:
+      colspanOffset = colspanOffset+(thisColspan-1);
+    }
+  } 
+  for (var i=0; i<thisTable.rows.length; i++) {
+    // check for colspans on this row:
+    thisRowColspanOffset = 0;
+    for (var j=0; j<(thisCell+colspanOffset); j++) {
+      thisColspan = thisTable.rows[i].cells[j].getAttribute('colspan');
+      if (thisColspan) {
+        // is a colspan:
+        thisRowColspanOffset = thisRowColspanOffset+(thisColspan-1);
+      }
+    }
+    thisCellToRemove = thisTable.rows[i].cells[(thisCell+colspanOffset-thisRowColspanOffset)];
+    // check if this cell has a colspan - if so need to reduce the value by one instead of removing the cell:
+    thisColspan = thisCellToRemove.getAttribute('colspan');
+    if (thisColspan) {
+      if (thisColspan == '2') {
+        // this would create colspan="1" so to remove the attribute instead:
+        thisCellToRemove.removeAttribute('colspan');
+      } else {
+        thisCellToRemove.setAttribute('colspan',(thisColspan-1));
+      }
+    } else {
+      thisTable.rows[i].removeChild(thisCellToRemove);
+    }
+  }
+}
+//
+function mergeCells(startCellSelected, endCellSelected) {
+  getCellDetails(startCellSelected);
+  startCell = thisCell;
+  startRow = thisRow; 
+  getCellDetails(endCellSelected);
+  endCell = thisCell;
+  endRow = thisRow;
+  // check that start and end cell are on the same row:
+  if (startRow == endRow) {
+    // make sure it isn't the same cell:
+    if (startCell != endCell) {
+      // order the cells left to right (in case the user selected right to left):
+      if (endCell < startCell) {
+        var savedEndCell = endCell;
+        endCell = startCell;
+        startCell = savedEndCell;
+      }
+      // check if there's a colspan on the first cell:
+      thisColspan = thisTable.rows[startRow].cells[startCell].getAttribute('colspan');
+      startCellColspan = 1;
+      if (thisColspan) {
+        startCellColspan = thisColspan;
+      }
+      // loop through next cell up to endCell:
+      cellCount = 0;
+      for (var i=(startCell+1); i<=endCell; i++) {
+        thisCellToRemove = thisTable.rows[startRow].cells[i];
+        thisColspan = thisCellToRemove.getAttribute('colspan');
+        if (thisColspan) {
+          cellCount = parseInt(thisColspan)+1;
+        } else {
+          cellCount = parseInt(cellCount)+1;
+        }
+      }
+      // now remove cells in reverse order to maintain the cell indexes
+      for (var i=endCell; i>=startCell+1; i--) {
+        thisCellToRemove = thisTable.rows[startRow].cells[i];
+        thisTable.rows[startRow].removeChild(thisCellToRemove);
+      }
+      // setAttribute of first cell to new colspan:
+      thisTable.rows[startRow].cells[startCell].setAttribute('colspan',(startCellColspan+cellCount));
+    }
+  } else {
+    // merge vertically - forst, order the cells top to bottom (in case the user selected bottom to top):
+    if (endCell < startCell) {
+      var savedEndCell = endCell;
+      endCell = startCell;
+      startCell = savedEndCell;
+    }
+    // check the cells are in the same column
+    startCellsColumn = 0;
+    for (var i=0; i<=startCell; i++) {
+      thisCell = thisTable.rows[startRow].cells[i];
+      thisColspan = thisCell.getAttribute('colspan');
+      if (thisColspan) {
+        startCellsColumn = parseInt(startCellsColumn)+parseInt(thisColspan);
+      } else {
+        startCellsColumn = parseInt(startCellsColumn)+1;
+      }
+    }
+    endCellsColumn = 0;
+    for (var i=0; i<=endCell; i++) {
+      thisCell = thisTable.rows[endRow].cells[i];
+      thisColspan = thisCell.getAttribute('colspan');
+      if (thisColspan) {
+        endCellsColumn = parseInt(endCellsColumn)+parseInt(thisColspan);
+      } else {
+        endCellsColumn = parseInt(endCellsColumn)+1;
+      }
+    }
+    if (endCellsColumn == startCellsColumn) {
+      // need to check that the cells involved have identical (or no) colspans:
+      var startCellColspan = thisTable.rows[startRow].cells[startCell].getAttribute('colspan');
+      var endCellColspan = thisTable.rows[endRow].cells[endCell].getAttribute('colspan');
+      if (startCellColspan == endCellColspan) {
+        // count number of rows (including any rowspans already added)
+        var numberOfRows = 0;
+        for (var i=startRow; i<=endRow; i++) {
+          // find the cell in this row that corresponds to the column selected:
+          var thisNumberOfColumns = 0;
+          var thisRowsCellRef = -1;
+          do {
+            thisRowsCellRef = parseInt(thisRowsCellRef)+1;
+            thisCell = thisTable.rows[i].cells[thisRowsCellRef];
+            thisColspan = thisCell.getAttribute('colspan');
+            if (thisColspan) {
+              thisNumberOfColumns = parseInt(thisNumberOfColumns)+parseInt(thisColspan);
+            } else {
+              thisNumberOfColumns = parseInt(thisNumberOfColumns)+1;
+            }
+          } while (thisNumberOfColumns<startCellsColumn);
+          thisCell = thisTable.rows[i].cells[thisRowsCellRef];
+          thisRowspan = thisCell.getAttribute('rowspan');
+          if (thisRowspan) {
+            numberOfRows = parseInt(numberOfRows)+parseInt(thisRowspan);
+          } else {
+            numberOfRows = parseInt(numberOfRows)+1;
+          }
+          if (i != startRow) {
+            // remove this cell if it's not the first one
+            var thisCellToRemove = thisTable.rows[i].cells[thisRowsCellRef];
+            thisTable.rows[i].removeChild(thisCellToRemove);
+          }
+        }
+        // set rowspan attribute on first cell
+        thisCell = thisTable.rows[startRow].cells[startCell];
+        thisCell.setAttribute('rowspan',numberOfRows);
+      }
+    }
+  }
+}
+//
+function splitCells(whichCellSelected) {
+  // determine if this cell does have a colspan:
+  getCellDetails(whichCellSelected);
+  thisCellSelected = thisTable.rows[thisRow].cells[thisCell];
+  thisColspan = thisCellSelected.getAttribute('colspan');
+   if (thisColspan) {
+    if (thisColspan > 1) {
+      cellOneColspan = Math.ceil(thisColspan/2);
+      cellTwoColspan = thisColspan-cellOneColspan;
+      // change first cell's properties
+      if (cellOneColspan == 1) {
+        thisCellSelected.removeAttribute('colspan');
+      } else {
+        thisCellSelected.setAttribute('colspan',cellOneColspan);
+      }
+      // add new cell to the right of selected cell:
+      var newCell = document.createElement('td');
+      var newCellContents = document.createTextNode("new split cell");
+      newCell.appendChild(newCellContents);
+      
+      if (cellTwoColspan > 1) {
+        newCell.setAttribute('colspan',cellTwoColspan);
+      }
+      
+      insertAfter(thisTable.rows[thisRow],newCell,thisTable.rows[thisRow].cells[thisCell]);
+    }
+  }
+}
+//
+function styleCell(whichCellSelected) {
+  getCellDetails(whichCellSelected);
+  thisCellSelected = thisTable.rows[thisRow].cells[thisCell];
+  thisCellSelected.style.border = "1px solid red";
+}
+//
+function styleRow(whichCellSelected) {
+  getCellDetails(whichCellSelected);
+  thisRowSelected = thisTable.rows[thisRow];
+  thisRowSelected.style.background = "teal";
+}
+</script>
+
+</head>
+<body>
+
+<table id="thisTable">
+<tbody>
+<tr>
+<td id="numberTwo" colspan="4">1</td>
+</tr>
+<tr id="myTR">
+<td id="numberFour" colspan="2">4</td>
+<td id="numberFive">5</td>
+<td id="numberSix">6</td>
+</tr>
+<tr>
+<td id="numberSeven">7</td>
+<td id="numberEight">8</td>
+<td id="numberNine">9</td>
+<td id="numberTen">10</td>
+</tr>
+<tr>
+<td id="numberEleven">11</td>
+<td id="numberTwelve">12</td>
+<td id="numberThirteen">13</td>
+<td id="numberFourteen">14</td>
+</tr>
+</tbody>
+</table>
+<!-- <button onclick="addRow();">add row</button> /-->
+<hr />
+<button onclick="addRow('before','numberFive');">add row before current</button>
+<button onclick="addRow('after','numberFive');">add row after current</button>
+<button onclick="deleteRow('numberFive');">delete current row</button><br />
+<button onclick="addColumn('before','numberFour');">add column before current</button>
+<button onclick="addColumn('after','numberFour');">add column after current</button>
+<button onclick="deleteColumn('numberFour')">delete current column</button><br />
+<button onclick="mergeCells('numberEleven','numberFourteen')">merge cells (horiz)</button>
+<button onclick="mergeCells('numberFive','numberThirteen')">merge cells (vert)</button>
+<button onclick="splitCells('numberEleven')">split previously merged cells</button>
+<hr />
+<p>to do:</p>
+
+
+<p>style row (valign, height, colours, borders) - needs modal dialogue/colour pickers? (give visual choice of a few common border widths and also an input for all other thicknesses)</p>
+
+<button onclick="styleRow('numberFour')">style current row</button><br />
+
+<p>style cell (valign, halign, height, width, colours, borders) - needs modal dialogue/colour pickers?</p>
+
+<button onclick="styleCell('numberFour')">style current cell</button><br />
+
+<p>merge cells vertically</p>
+<p>check for rowspans before adding/removing rows and merging cells</p>
+<p>edit table attributes (colour, border, size)</p>
+
+<p>allow merge/split cells across rows (ie. vertically)</p>
+</body>
+</html>

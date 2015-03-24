@@ -1,0 +1,35 @@
+<html>
+<head>
+</head>
+<body>
+
+<script type="text/javascript">
+ // Initial color value.
+
+function startFade() {
+startFadeTimeOut = setTimeout("fadetext();",3000);
+}
+
+function fadetext(){ 
+  if(colourValue<255) { //If color is not black yet
+    colourValue+=11; // increase color darkness
+    document.getElementById("sample").style.color=
+                      "rgb("+colourValue+","+colourValue+","+colourValue+")";
+    fadeTimeOut = setTimeout("fadetext();",60); 
+  }
+  
+}
+
+</script>
+
+<script type="text/javascript">
+colourValue=0;
+startFade();
+</script>
+
+<div id="sample"><h3>slowly faded out of view</h3></div>
+
+
+
+</body>
+</html>

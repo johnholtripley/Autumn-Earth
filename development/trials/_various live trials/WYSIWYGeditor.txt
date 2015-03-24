@@ -1,0 +1,46 @@
+http://www.themaninblue.com/experiment/widgEditor/
+
+
+
+
+
+set background colour and fore ground colour (set in a wraping div using css ... but needs to be editable)
+
+
+
+
+
+
+http://www.devguru.com/features/tutorials/wysiwyg/wysiwyg6.asp
+innerText is IE only
+possible fix: http://www.hanselman.com/blog/AJavaScriptImplementationOfInnerTextNotInnerHtmlForFireFoxAndNonIEBrowsers.aspx
+or use .textContent 
+
+thus:
+function getObjInnerText(obj){ 
+if (obj.innerText) { // IE; 
+return obj.innerText; 
+} 
+else{ 
+if (obj.textContent) 
+{ 
+return obj.textContent; 
+} 
+else 
+alert("Error: This application does not support your browser. Try again using IE or Firefox."); 
+} 
+} 
+
+http://geekswithblogs.net/TimH/archive/2006/01/19/66383.aspx
+
+
+
+
+
+
+
+http://www.quirksmode.org/dom/w3c_html.html:
+ When setting the innerHTML of an element in Explorer 5 Mac, the element may become much larger than it was at first. This does not happen in the test page, but I encountered it often enough.
+Solve this by first setting innerHTML to an empty string and then setting it to the new value.
+x.innerHTML = '';
+x.innerHTML = 'The <b>new</b> text' 

@@ -1,0 +1,3 @@
+centre hero and NPCs at their lowest point - this should make walkable structures and terrain height tiles work. It also removes the need for flat terrain to be depth-sorted differently, so all can be placed with the same function. needs thoroughly testing!
+when hero clip is centred bottom-most point, then get do getDepth of tile. then offset +1 for hero, +2 NPCs and +3 ghosts etc.
+need to check the interval available between tiles to see what offset range there can be

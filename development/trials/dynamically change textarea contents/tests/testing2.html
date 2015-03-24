@@ -1,0 +1,30 @@
+<html>
+<head>
+<title>get bold</title>
+
+<script language="JavaScript" type="text/javascript">
+    
+function dothings() {
+// http://www.webreference.com/js/column12/crossbrowser.html
+
+	if (document.getSelection) {
+	  // the Navigator 4.0x code
+	  var str = document.getSelection();
+	} else if (document.selection && document.selection.createRange) {
+		// the Internet Explorer 4.0x code
+		var thisselection = document.selection.createRange();
+		thisselection.text = '[b]'+thisselection.text+'[/b]';
+	} else {
+	  // the alternative code
+	}
+}
+
+</script>
+</head>
+<body>
+<a href="no_javascript.html" onclick="dothings();return false;"><img src="icon_editor_bold.gif" alt="Bold" title="Bold" align="top" border="0" height="22" width="23"></a>
+<form name="PostTopic">
+<textarea cols="70" name="Message" rows="12" wrap="soft"></textarea>
+</form>
+</body>
+</html>

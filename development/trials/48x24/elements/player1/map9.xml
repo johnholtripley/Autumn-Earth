@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map mname="workshop" inside="t">
+<row>122,122,122,122,122,122,122</row>
+<row>122,3,3,3,3,3,122</row>
+<row>122,3,3,3,3,3,122</row>
+<row>90,3,3,3,3,3,122</row>
+<row>122,3,3,3,3,3,122</row>
+<row>122,3,3,3,3,3,122</row>
+<row>122,122,122,122,122,122,122</row>
+<npc>2,0,1,4,2,0,-1,0,0,0,Workshop%20Owner,4,3</npc>
+<plans>0,30,31</plans>
+<weather>1</weather>
+</map>

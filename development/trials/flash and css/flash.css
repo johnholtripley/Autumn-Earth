@@ -1,0 +1,24 @@
+.one {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 8px;
+	font-weight: bold;
+	color: #396780;
+}
+.two {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-weight: bold;
+	color: #2D5164;
+}
+.three {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 16px;
+	font-weight: bold;
+	color: #1D3441;
+}
+.four {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 24px;
+	font-weight: bold;
+	color: #cecece;
+}

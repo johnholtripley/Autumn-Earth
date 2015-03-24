@@ -8,7 +8,7 @@
 <meta content="text/html; charset=iso-8859-1" http-equiv="content-type" />
 <meta content="no" http-equiv="imagetoolbar" />
 <meta content="TRUE" name="MSSmartTagsPreventParsing" />
-<link rel="stylesheet" href="/assets/base.css" type="text/css" media="all" />
+<link rel="stylesheet" href="/css/global.css" type="text/css" media="all" />
 
 <style type="text/css">
 a:link, a:visited {

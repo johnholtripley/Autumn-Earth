@@ -1,0 +1,74 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<title>Autumn Earth</title>
+<meta content="salmacis" name="keywords" />
+<meta content="john@salmacis.co.uk" name="author" />
+<meta content="isometric world" name="description" />
+<meta content="text/html; charset=iso-8859-1" http-equiv="content-type" />
+<meta content="no" http-equiv="imagetoolbar" />
+
+<link rel="stylesheet" href="/assets/ae.css" type="text/css" />
+
+<script type="text/javascript">
+<!--
+function showAnimation() {
+// don't use getElementByID #####
+//document.progressImg.src="anim_progress.gif";
+document.hiddenImg.style.display='block';
+}
+//
+function selectConversion() {
+	document.imageUpload.convert.checked = true;
+}
+//
+function cancelConversion() {
+	if (document.imageUpload.convert.checked == false) {
+		document.imageUpload.skew1.checked = false;
+		document.imageUpload.skew2.checked = false;
+	}
+}
+//-->
+</script>
+
+</head>
+
+<body onload="document.hiddenImg.style.display='none';">
+
+<div align="center" class="blockcentred">
+
+
+<form enctype="multipart/form-data" name="imageUpload" action="http://www.autumnearth.com/development/architect/upload.php" method="post">
+<br />
+<input type="radio" name="skew" id="skew1" value="1" onclick="selectConversion();" /> <label for="skew1">skew left</label>
+ | 
+<input type="radio" name="skew" id="skew2" value="-1" onclick="selectConversion();" /> <label for="skew2">skew right</label>
+<br />
+<label for="convert">resize and convert to isometric view:</label> <input type="checkbox" name="convert" id="convert" value="true" onclick="cancelConversion();" />
+<br />
+<br />
+<input type="radio" name="imagesizing" id="imgsizing1" value="crop" /> <label for="imgsizing1">crop image</label>
+ | 
+<input type="radio" name="imagesizing" id="imgsizing2" value="scale" checked="checked" /> <label for="imgsizing2">scale image</label>
+<br />
+<br />
+<input type="hidden" name="MAX_FILE_SIZE" value="102400" />
+<input type="file" name="imagefile" /> 
+<br />
+<br />
+<input type="submit" value="upload image" onclick="showAnimation();" />
+</form>
+<!--
+<img src="blank_progress.gif" width="45" height="45" alt="" name="progressImg" id="progressImg" />
+//-->
+<img src="anim_progress.gif" width="45" height="45" alt="" name="hiddenImg" id="hiddenImg" />
+
+
+
+</div>
+
+
+
+</body>
+</html>

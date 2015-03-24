@@ -1,0 +1,73 @@
+Erase tool highlights existing tile red – no tile attached to cursor
+
+
+
+
+
+Gold cost (or refunded) if design is applied
+
+Eyedropper also displays that tile’s category in the tile browser
+
+
+
+
+Theatres, libraries, shops, houses, trade workshop, farms, pub/restaurant, hotel, 
+
+
+
+
+Remove all objects when in edit mode? Seems a bit drastic
+
+Place multiple items on single tile, with depth sort controlled by player stacking
+
+
+
+
+chimney stacks
+water features, farm  buildings - stables, bee hives, bridge, wharf, farmable land, pet lodgings, water barrels, sheds, seasonal decorations, fences, balcony rails, shop counter, vaults, statues (player generaed?)
+all players to purchase trade stations to put i their house. if placing these in a house means they can then only be moved or destroued, use hallmark of placing player, so only they benefit from being able to use it - could be a split to an array to allow friends to use them as well
+
+
+
+all maps to be converted to be framed to be hung on walls
+
+carpets & rugs, furniture, wall hangings, lighting, trade stations, vendors, garden items, windows, doors, stairs, floor, wall, roof, signs & shopfront titles, awnings
+
+Undo feature - -on release save state of tiles
+
+
+How to place floors with walls/doors on them? (2 graphical tiles at same location)
+
+
+And price to clips as they are placed and painted. Need to differentiate betwwn tiles added and then removed (no cost incurred) and part refunding originally placed tiles that are removed
+
+How to do half walls? if withinHouse then collision detect on quarters of a tile? each house clip can have 4 values for the 4 quarters?
+
+
+Delete houseobject when exit builder
+
+Cancel | Save | (or if enough money) Apply      (maybe backup and restore?)
+
+Floor elevations to do. New clip for each elevation so can show/hide/semi-transparent levels while working.
+Toggle walls opaque/semi-transparent how to know which are walls?.h>0
+
+Differentiate walls from floors, so can show/hde walls while working
+
+player generated carpets, paintings and tapestrys
+
+
+show cost over tile in browser
+
+can't erase without having a tile selected
+
+
+non-house tiles and house tiles need a y offset value to enable roof tiles etc to be raised/lowered to make rising slopes
+
+don't use tiles above 10,000 as house tiles - check for | delimiter. 
+House exterior uses a megaclip that within itself stacks the required tiles for all floors and walls for each level. (and within this the tiles can be offset vertically as well)
+interior level can then just show the appropriate floor and wall clips for that level
+
+bug - can't erase after flood filling
+
+
+statue designer - choose plinth, (material?), arms, legs, heads, wings, accessories etc. (like a house tile megaclip, with multiple clips all gotoandstop to show the chosen settings

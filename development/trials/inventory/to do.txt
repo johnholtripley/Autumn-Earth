@@ -1,0 +1,12 @@
+
+
+
+?????Also, the most recently selected one is pushed to the end. You might want to make it closest to the bank because a player who toggles it probably wants to use it with the bank.
+
+
+
+?????when you press shift on an item that has 1 quantity. It doesn't work the same way as ctrl would (i.e. it doesn't go down if you press shift again). I also think that when pressing shift it should deselect the same way as ctrl would. So pressing shift again should act like a cancel button.
+
+http://www.flashkit.com/board/showthread.php?p=3511124#post3511124
+
+

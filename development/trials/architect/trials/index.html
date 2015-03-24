@@ -1,0 +1,62 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<title>Autumn Earth</title>
+<meta content="salmacis" name="keywords" />
+<meta content="john@salmacis.co.uk" name="author" />
+<meta content="isometric world" name="description" />
+<meta content="text/html; charset=iso-8859-1" http-equiv="content-type" />
+<meta content="no" http-equiv="imagetoolbar" />
+
+<link rel="stylesheet" href="/assets/ae.css" type="text/css" />
+
+<script type="text/javascript">
+<!--
+function showAnimation() {
+// don't use getElementByID #####
+//document.progressImg.src="anim_progress.gif";
+document.hiddenImg.style.display='block';
+}
+//-->
+</script>
+
+</head>
+
+<body onload="document.getElementById('username').focus();document.hiddenImg.style.display='none';">
+
+<div align="center" class="blockcentred">
+
+
+<form enctype="multipart/form-data" action="http://www.autumnearth.com/development/architect/upload.php" method="post">
+<label for="username">username:</label> <input type="text" name="username" id="username" />
+<br />
+<label for="password">password:</label> <input type="password" name="password" id="password" />
+<br />
+<br />
+<input type="radio" name="design" id="design1" value="1" /> <label for="design1">design1</label>
+ | 
+<input type="radio" name="design" id="design2" value="2" /> <label for="design2">design2</label>
+<br />
+<label for="convert">resize and convert to isometric view:</label> <input type="checkbox" name="convert" id="convert" value="true" checked />
+<br />
+<br />
+<input type="hidden" name="MAX_FILE_size" value="102400" />
+<input type="file" name="imagefile" size="20" /> 
+<br />
+<br />
+<input type="submit" value="upload image" onclick="showAnimation();" />
+</form>
+<!--
+<img src="blank_progress.gif" width="45" height="45" alt="" name="progressImg" id="progressImg" />
+//-->
+<img src="anim_progress.gif" width="45" height="45" alt="" name="hiddenImg" id="hiddenImg" />
+
+
+
+</div>
+
+
+
+</body>
+</html>

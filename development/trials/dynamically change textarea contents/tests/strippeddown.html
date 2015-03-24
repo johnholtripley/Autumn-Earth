@@ -1,0 +1,59 @@
+<html>
+<head>
+<title>get bold</title>
+
+<script language="JavaScript" type="text/javascript">
+    
+function AddText(text) {
+	var tarea = document.PostTopic.Message;
+	if (typeof tarea.selectionStart != 'undefined'){ // if it supports DOM2
+		start = tarea.selectionStart;
+		end = tarea.selectionEnd;
+		tarea.value = tarea.value.substr(0,tarea.selectionStart)
+			+ text + tarea.value.substr(tarea.selectionEnd);
+		tarea.focus();
+		tarea.selectionStart = ((start - end) == 0) ? start + text.length : start;
+		tarea.selectionEnd = start + text.length;
+	} else {
+		if (tarea.createTextRange && tarea.caretPos) {
+			var caretPos = tarea.caretPos;
+			caretPos.text = caretPos.text.charAt(caretPos.text.length - 1) == ' ' ?   text + ' ' : text;
+		}
+		else {
+			tarea.value += text;
+		}
+		tarea.focus(caretPos);
+	}
+}
+
+function bold() {
+	var text = getText();
+	AddTxt="[b]" + text + "[/b]";
+	AddText(AddTxt);
+}
+
+function storeCaret(ftext) {
+	if (ftext.createTextRange) {
+		ftext.caretPos = document.selection.createRange().duplicate();
+	}
+}
+
+function getText() {
+	var tarea = document.PostTopic.Message;
+	if (tarea.createTextRange && tarea.caretPos) {
+		return tarea.caretPos.text;
+	} else if (typeof tarea.selectionStart != 'undefined'){
+		return tarea.value.substr(tarea.selectionStart,tarea.selectionEnd-tarea.selectionStart)
+	}
+	return '';
+}
+
+</script>
+</head>
+<body>
+<a href="no_javascript.html" onclick="bold();return false;"><img src="icon_editor_bold.gif" alt="Bold" title="Bold" align="top" border="0" height="22" width="23"></a>
+<form name="PostTopic">
+<textarea cols="70" name="Message" rows="12" wrap="soft" onselect="storeCaret(this);" onclick="storeCaret(this);" onkeyup="storeCaret(this);" onchange="storeCaret(this);"></textarea>
+</form>
+</body>
+</html>

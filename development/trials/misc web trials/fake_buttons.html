@@ -1,0 +1,79 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<title>buttons</title>
+
+
+<style type="text/css">
+
+body {
+font-family: verdana, geneva, arial, helvetica, sans-serif;
+}
+
+.StyledButton {
+border: 0;
+margin: 0 4px 0 0;
+padding: 0px 6px;
+background: #ECE8E0;
+color: #22007A;
+display: inline;
+font-family: verdana, geneva, arial, helvetica, sans-serif;
+font-size: 1em;
+/* use overflow: visible to force IE to apply the correct padding: */
+overflow: visible;
+float: left;
+height: 40px;
+line-height: 40px;
+cursor: pointer;
+} 
+
+/* any identical border applied to submit or the link will be handled differently (eg, inside or outside box) */
+/* IE 5 and 6 need slightly different height applying */
+
+a.FakeButton {
+color: #22007A;
+margin: 0 4px 0 0;
+padding: 0px 6px;
+border: 0;
+display: block;
+background: #ECE8E0;
+font-family: verdana, geneva, arial, helvetica, sans-serif;
+text-decoration: none;
+float: left;
+height: 40px;
+line-height: 40px;
+overflow: visible;
+} 
+
+form {
+margin: 30px 0;
+border: 0;
+padding: 0;
+}
+
+.Clearer {
+height: 1px;
+overflow: hidden;
+clear: both;
+}
+
+</style>
+
+
+
+</head>
+<body>
+
+					<form>
+					
+				
+				  <input type="submit" class="StyledButton" name="subbutton" value="Add a Booking" /> 
+				 <a class="FakeButton" href="#">Cancel</a><a class="FakeButton" href="#">Undo</a>
+				 <div class="Clearer">&nbsp;</div>
+			</form>
+			
+		
+		</body>
+		</html>
+		
+

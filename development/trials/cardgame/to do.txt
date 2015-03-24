@@ -1,0 +1,1 @@
+have the 'card just flipped glow' linked in library. attach when a card is flipped. this clip removes itself at end of animation. this way all cards flipped in a single move will have a glow

@@ -74,7 +74,7 @@ for ($i=0; $i<=255; $i=$i+51) {
 for ($j=0; $j<=255; $j=$j+51) {
 for ($k=0; $k<=255; $k=$k+51) {
   $thisWebColour = sprintf('%02X%02X%02X', $k, $j, $i);
-  echo '<div class="paletteElem" style="background: #'.$thisWebColour.'"><a href="'.$paletteActionBefore.$thisWebColour.$paletteActionAfter.'" title="#'.$thisWebColour.'"><img src="/assets/htmlEditor/palette_overlay.gif" alt="#'.$thisWebColour.'" width="12" height="12"></a></div>'."\n";
+  echo '<div class="paletteElem" style="background: #'.$thisWebColour.'"><a href="'.$paletteActionBefore.$thisWebColour.$paletteActionAfter.'" title="#'.$thisWebColour.'"><img src="/images/htmlEditor/palette_overlay.gif" alt="#'.$thisWebColour.'" width="12" height="12"></a></div>'."\n";
 }
 
 }

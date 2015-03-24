@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map mname="meadows%20house" inside="t">
+<row>122,122,122,122,122,122,122</row>
+<row>122,3,160,161,220,162,122</row>
+<row>122,3,3,3,3,3,122</row>
+<row>90,3,3,3,3,3,122</row>
+<row>122,3,3,3,3,3,122</row>
+<row>122,3,3,3,3,3,122</row>
+<row>122,122,122,122,122,122,122</row>
+<npc>2,1,1,4,5,0,-1,0,0,0,home%20owner,4,1,2,3</npc>
+<item>2,5,23,8.1|1.0|1.0</item>
+<weather>1</weather>
+</map>

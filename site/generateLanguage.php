@@ -7,6 +7,8 @@
 // Check rendered words so no swearimg. 
 // prevent more than 2 occurences of the same letter appearing sequentially
 
+// use this method to translate text? Need to store words already translated to re-use them.
+
 /*
 ---------------------
 inspired by http://www.raphkoster.com/2006/06/09/why-dont-our-npcs/
