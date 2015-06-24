@@ -1,6 +1,6 @@
 <?php
 
-include($_SERVER[DOCUMENT_ROOT]."/includes/signalnoise.php");
+include($_SERVER['DOCUMENT_ROOT']."/includes/signalnoise.php");
 $password="";
 ?>
  <!-- Program Name:  mysql_send.php

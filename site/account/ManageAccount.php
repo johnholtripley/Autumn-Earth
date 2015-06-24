@@ -1,8 +1,8 @@
 <?php
-include($_SERVER[DOCUMENT_ROOT]."/includes/session.inc");
-include($_SERVER[DOCUMENT_ROOT]."/includes/signalnoise.php");
-include($_SERVER[DOCUMENT_ROOT]."/includes/connect.php");
-include($_SERVER[DOCUMENT_ROOT]."/includes/functions.inc");
+include($_SERVER['DOCUMENT_ROOT']."/includes/session.inc");
+include($_SERVER['DOCUMENT_ROOT']."/includes/signalnoise.php");
+include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
+include($_SERVER['DOCUMENT_ROOT']."/includes/functions.inc");
 
 
 
@@ -130,7 +130,7 @@ $error = "Couldn't load account information - please try again later";
 }
 
 $pagetitle="Manage Account";
-include($_SERVER[DOCUMENT_ROOT]."/includes/header.inc");
+include($_SERVER['DOCUMENT_ROOT']."/includes/header.inc");
 ?>
 
 <h1>Manage Account</h1>
@@ -256,6 +256,6 @@ $numberofrows = mysql_num_rows($result);
 <p><a href="ManageSubscriptions.php">Manage Subscriptions</a></p>
 <p>please email <a href="#">support@</a> if you have any difficulties with your account</p>
 <?php
-include($_SERVER[DOCUMENT_ROOT]."/includes/close.php");
-include($_SERVER[DOCUMENT_ROOT]."/includes/footer.inc");
+include($_SERVER['DOCUMENT_ROOT']."/includes/close.php");
+include($_SERVER['DOCUMENT_ROOT']."/includes/footer.inc");
 ?>

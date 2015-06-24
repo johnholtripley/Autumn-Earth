@@ -1,13 +1,13 @@
 <?php
-include($_SERVER[DOCUMENT_ROOT]."/includes/session.inc");
-include($_SERVER[DOCUMENT_ROOT]."/includes/signalnoise.php");
-include($_SERVER[DOCUMENT_ROOT]."/includes/connect.php");
-include($_SERVER[DOCUMENT_ROOT]."/includes/functions.inc");
+include($_SERVER['DOCUMENT_ROOT']."/includes/session.inc");
+include($_SERVER['DOCUMENT_ROOT']."/includes/signalnoise.php");
+include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
+include($_SERVER['DOCUMENT_ROOT']."/includes/functions.inc");
 $pagetitle="Manage Subscriptions";
 $jsinclude="core";
-include($_SERVER[DOCUMENT_ROOT]."/includes/header.inc");
-include($_SERVER[DOCUMENT_ROOT]."/includes/login.inc");
-include($_SERVER[DOCUMENT_ROOT]."/includes/search.inc");
+include($_SERVER['DOCUMENT_ROOT']."/includes/header.inc");
+include($_SERVER['DOCUMENT_ROOT']."/includes/login.inc");
+include($_SERVER['DOCUMENT_ROOT']."/includes/search.inc");
 ?>
 
 <h1>Manage Subscriptions</h1>
@@ -110,6 +110,6 @@ if (@$HTTP_SESSION_VARS['username']) {
 	echo '<div class="Error">you must be logged in to manage your subscriptions</div>';
 }
 
-include($_SERVER[DOCUMENT_ROOT]."/includes/close.php");
-include($_SERVER[DOCUMENT_ROOT]."/includes/footer.inc");
+include($_SERVER['DOCUMENT_ROOT']."/includes/close.php");
+include($_SERVER['DOCUMENT_ROOT']."/includes/footer.inc");
 ?>

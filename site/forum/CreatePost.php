@@ -1,8 +1,8 @@
 <?php
-include($_SERVER[DOCUMENT_ROOT]."/includes/session.inc");
-include($_SERVER[DOCUMENT_ROOT]."/includes/signalnoise.php");
-include($_SERVER[DOCUMENT_ROOT]."/includes/connect.php");
-include($_SERVER[DOCUMENT_ROOT]."/includes/functions.inc");
+include($_SERVER['DOCUMENT_ROOT']."/includes/session.inc");
+include($_SERVER['DOCUMENT_ROOT']."/includes/signalnoise.php");
+include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
+include($_SERVER['DOCUMENT_ROOT']."/includes/functions.inc");
 
 // check if submit button has been pressed:
 if ($_POST["subbutton"] == 'submit reply') {
@@ -126,9 +126,9 @@ header("Location: ViewThread.php?thread=" . $threadID . "&page=".$totalpages."#p
 
 $jsinclude="addTags";
 $onloadfunc="init";
-include($_SERVER[DOCUMENT_ROOT]."/includes/header.inc");
-include($_SERVER[DOCUMENT_ROOT]."/includes/login.inc");
-include($_SERVER[DOCUMENT_ROOT]."/includes/search.inc");
+include($_SERVER['DOCUMENT_ROOT']."/includes/header.inc");
+include($_SERVER['DOCUMENT_ROOT']."/includes/login.inc");
+include($_SERVER['DOCUMENT_ROOT']."/includes/search.inc");
 echo '<br /><br />';
 
 // check if username exists in session or they've just logged in:
@@ -250,7 +250,7 @@ echo '<div class="Error">you must be logged in to make a post</div>';
 
 echo '<br /><br />';
 
-include($_SERVER[DOCUMENT_ROOT]."/includes/close.php");
-include($_SERVER[DOCUMENT_ROOT]."/includes/footer.inc");
+include($_SERVER['DOCUMENT_ROOT']."/includes/close.php");
+include($_SERVER['DOCUMENT_ROOT']."/includes/footer.inc");
 }
 ?>

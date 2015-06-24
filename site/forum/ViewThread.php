@@ -1,16 +1,16 @@
 <?php
 
-include($_SERVER[DOCUMENT_ROOT]."/includes/session.inc");
-include($_SERVER[DOCUMENT_ROOT]."/includes/signalnoise.php");
-include($_SERVER[DOCUMENT_ROOT]."/includes/connect.php");
-include($_SERVER[DOCUMENT_ROOT]."/includes/functions.inc");
+include($_SERVER['DOCUMENT_ROOT']."/includes/session.inc");
+include($_SERVER['DOCUMENT_ROOT']."/includes/signalnoise.php");
+include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
+include($_SERVER['DOCUMENT_ROOT']."/includes/functions.inc");
 /*
 $pagetitle="Autumn Earth Community Forum - ".stripslashes($forumTitle)." - ".stripslashes($threadTitle);
 $metadesc = stripCode(stripslashes($postContent));
 */
-include($_SERVER[DOCUMENT_ROOT]."/includes/header.inc");
-include($_SERVER[DOCUMENT_ROOT]."/includes/login.inc");
-include($_SERVER[DOCUMENT_ROOT]."/includes/search.inc");
+include($_SERVER['DOCUMENT_ROOT']."/includes/header.inc");
+include($_SERVER['DOCUMENT_ROOT']."/includes/login.inc");
+include($_SERVER['DOCUMENT_ROOT']."/includes/search.inc");
 
 $threadID = $_GET["thread"];
 // check that a valid number has been passed:
@@ -196,6 +196,6 @@ echo '<div class="Error">not a valid thread id</div>'."\n";
 }
 
 
-include($_SERVER[DOCUMENT_ROOT]."/includes/close.php");
-include($_SERVER[DOCUMENT_ROOT]."/includes/footer.inc");
+include($_SERVER['DOCUMENT_ROOT']."/includes/close.php");
+include($_SERVER['DOCUMENT_ROOT']."/includes/footer.inc");
 ?>

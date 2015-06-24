@@ -1,8 +1,8 @@
 <?php
-include($_SERVER[DOCUMENT_ROOT]."/includes/session.inc");
-include($_SERVER[DOCUMENT_ROOT]."/includes/signalnoise.php");
-include($_SERVER[DOCUMENT_ROOT]."/includes/connect.php");
-include($_SERVER[DOCUMENT_ROOT]."/includes/functions.inc");
+include($_SERVER['DOCUMENT_ROOT']."/includes/session.inc");
+include($_SERVER['DOCUMENT_ROOT']."/includes/signalnoise.php");
+include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
+include($_SERVER['DOCUMENT_ROOT']."/includes/functions.inc");
 
 $months = array("null","January","February","March","April","May","June","July","August","September","October","November","December");
 
@@ -193,7 +193,7 @@ $ebyear = $_POST["byear"];
 $pagetitle="Create Account";
 // hide the contextual help boxes:
 $onloadfunc = "hideHelp";
-include($_SERVER[DOCUMENT_ROOT]."/includes/header.inc");
+include($_SERVER['DOCUMENT_ROOT']."/includes/header.inc");
 ?>
 
 <h1>Create Account</h1>
@@ -309,6 +309,6 @@ echo'<input type="radio" name="htmlemail" id="htmlemail1" value="1" /> <label fo
 
 
 <?php
-include($_SERVER[DOCUMENT_ROOT]."/includes/close.php");
-include($_SERVER[DOCUMENT_ROOT]."/includes/footer.inc");
+include($_SERVER['DOCUMENT_ROOT']."/includes/close.php");
+include($_SERVER['DOCUMENT_ROOT']."/includes/footer.inc");
 ?>

@@ -79,7 +79,7 @@ border: 0;
 
 
 
-$directoryPath = $_SERVER[DOCUMENT_ROOT]."/community/guilds/content/".$thisGuildName;
+$directoryPath = $_SERVER['DOCUMENT_ROOT']."/community/guilds/content/".$thisGuildName;
 if (is_dir($directoryPath)) {
     if ($thisDirectory = opendir($directoryPath)) {
     echo '<div style="width: 370px; height: 150px; overflow: auto;">'."\n";

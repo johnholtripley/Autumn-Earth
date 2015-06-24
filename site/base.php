@@ -1,8 +1,8 @@
 <?php
 /* need to be careful of whitespace before and after php tags as these will be sent to flash */
-include($_SERVER[DOCUMENT_ROOT]."/includes/signalnoise.php");
-include($_SERVER[DOCUMENT_ROOT]."/includes/connect.php");
-include($_SERVER[DOCUMENT_ROOT]."/includes/functions.inc");
+include($_SERVER['DOCUMENT_ROOT']."/includes/signalnoise.php");
+include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
+include($_SERVER['DOCUMENT_ROOT']."/includes/functions.inc");
 
 
 
@@ -30,6 +30,6 @@ $BaseSavedOk = "true";
 $BaseSavedOk = "false";
 }
 
-include($_SERVER[DOCUMENT_ROOT]."/includes/close.php");
+include($_SERVER['DOCUMENT_ROOT']."/includes/close.php");
 print ("basewassuccess=".$BaseSavedOk);
 ?>

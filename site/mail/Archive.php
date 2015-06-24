@@ -1,12 +1,12 @@
 <?php
 
-include($_SERVER[DOCUMENT_ROOT]."/includes/session.inc");
-include($_SERVER[DOCUMENT_ROOT]."/includes/signalnoise.php");
-include($_SERVER[DOCUMENT_ROOT]."/includes/connect.php");
-include($_SERVER[DOCUMENT_ROOT]."/includes/functions.inc");
+include($_SERVER['DOCUMENT_ROOT']."/includes/session.inc");
+include($_SERVER['DOCUMENT_ROOT']."/includes/signalnoise.php");
+include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
+include($_SERVER['DOCUMENT_ROOT']."/includes/functions.inc");
 $pagetitle="Autumn Earth Mail";
-include($_SERVER[DOCUMENT_ROOT]."/includes/header.inc");
-include($_SERVER[DOCUMENT_ROOT]."/includes/login.inc");
+include($_SERVER['DOCUMENT_ROOT']."/includes/header.inc");
+include($_SERVER['DOCUMENT_ROOT']."/includes/login.inc");
 
 
 
@@ -79,6 +79,6 @@ WHERE tblacct.accountName='".$HTTP_SESSION_VARS['username']."' AND tblMail.mailR
 }
 
 
-include($_SERVER[DOCUMENT_ROOT]."/includes/close.php");
-include($_SERVER[DOCUMENT_ROOT]."/includes/footer.inc");
+include($_SERVER['DOCUMENT_ROOT']."/includes/close.php");
+include($_SERVER['DOCUMENT_ROOT']."/includes/footer.inc");
 ?>

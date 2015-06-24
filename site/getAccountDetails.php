@@ -1,6 +1,6 @@
 <?php
 
-include($_SERVER[DOCUMENT_ROOT]."/includes/session.inc");
+include($_SERVER['DOCUMENT_ROOT']."/includes/session.inc");
 
 // check if the user is logged in:
 if (@$HTTP_SESSION_VARS['username']) {

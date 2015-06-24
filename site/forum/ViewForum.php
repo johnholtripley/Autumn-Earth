@@ -1,9 +1,9 @@
 <?php
 $title="Autumn Earth Forum";
-include($_SERVER[DOCUMENT_ROOT]."/includes/session.inc");
-include($_SERVER[DOCUMENT_ROOT]."/includes/signalnoise.php");
-include($_SERVER[DOCUMENT_ROOT]."/includes/connect.php");
-include($_SERVER[DOCUMENT_ROOT]."/includes/functions.inc");
+include($_SERVER['DOCUMENT_ROOT']."/includes/session.inc");
+include($_SERVER['DOCUMENT_ROOT']."/includes/signalnoise.php");
+include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
+include($_SERVER['DOCUMENT_ROOT']."/includes/functions.inc");
 
 $forumID = $_GET["forum"];
 // check that a valid number has been passed:
@@ -30,9 +30,9 @@ if (is_numeric($forumID)) {
 		
 		$pagetitle = "Autumn Earth Community Forum - ".stripslashes($title);
 		$metadesc = "Autumn Earth Community Forum - discussions in the " . stripslashes($title) . " forum";
-	include($_SERVER[DOCUMENT_ROOT]."/includes/header.inc");
-	include($_SERVER[DOCUMENT_ROOT]."/includes/login.inc");
-	include($_SERVER[DOCUMENT_ROOT]."/includes/search.inc");
+	include($_SERVER['DOCUMENT_ROOT']."/includes/header.inc");
+	include($_SERVER['DOCUMENT_ROOT']."/includes/login.inc");
+	include($_SERVER['DOCUMENT_ROOT']."/includes/search.inc");
 	
 	// show breadcrumb:
 	echo '<div id="BreadCrumb"><a href="index.php" title="Forum Lists">Forum</a> &gt; '.stripslashes($title).'</div>';
@@ -172,17 +172,17 @@ $CreationTime = strtotime($CreationTime);
 			
 			
 		} else {
-		include($_SERVER[DOCUMENT_ROOT]."/includes/header.inc");
-include($_SERVER[DOCUMENT_ROOT]."/includes/login.inc");
-include($_SERVER[DOCUMENT_ROOT]."/includes/search.inc");
+		include($_SERVER['DOCUMENT_ROOT']."/includes/header.inc");
+include($_SERVER['DOCUMENT_ROOT']."/includes/login.inc");
+include($_SERVER['DOCUMENT_ROOT']."/includes/search.inc");
 			echo '<p>This forum has been closed.</p>';
 			echo '<a href="http://www.autumnearth.com" title="Click to return to the homepage">Return to the homepage</a>'."\n";
 		}
 	
 	} else {
-	include($_SERVER[DOCUMENT_ROOT]."/includes/header.inc");
-include($_SERVER[DOCUMENT_ROOT]."/includes/login.inc");
-include($_SERVER[DOCUMENT_ROOT]."/includes/search.inc");
+	include($_SERVER['DOCUMENT_ROOT']."/includes/header.inc");
+include($_SERVER['DOCUMENT_ROOT']."/includes/login.inc");
+include($_SERVER['DOCUMENT_ROOT']."/includes/search.inc");
 		echo '<div class="Error">forum could not be located</div>'."\n";
 	}
 	
@@ -190,13 +190,13 @@ include($_SERVER[DOCUMENT_ROOT]."/includes/search.inc");
 	
 
 } else {
-include($_SERVER[DOCUMENT_ROOT]."/includes/header.inc");
-include($_SERVER[DOCUMENT_ROOT]."/includes/login.inc");
-include($_SERVER[DOCUMENT_ROOT]."/includes/search.inc");
+include($_SERVER['DOCUMENT_ROOT']."/includes/header.inc");
+include($_SERVER['DOCUMENT_ROOT']."/includes/login.inc");
+include($_SERVER['DOCUMENT_ROOT']."/includes/search.inc");
 echo 'not a valid forum id';
 }
 
 
-include($_SERVER[DOCUMENT_ROOT]."/includes/close.php");
-include($_SERVER[DOCUMENT_ROOT]."/includes/footer.inc");
+include($_SERVER['DOCUMENT_ROOT']."/includes/close.php");
+include($_SERVER['DOCUMENT_ROOT']."/includes/footer.inc");
 ?>

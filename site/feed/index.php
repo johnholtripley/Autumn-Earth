@@ -1,8 +1,8 @@
 <?php
 /*
-include($_SERVER[DOCUMENT_ROOT]."/includes/signalnoise.php");
-include($_SERVER[DOCUMENT_ROOT]."/includes/connect.php");
-include($_SERVER[DOCUMENT_ROOT]."/includes/functions.inc");
+include($_SERVER['DOCUMENT_ROOT']."/includes/signalnoise.php");
+include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
+include($_SERVER['DOCUMENT_ROOT']."/includes/functions.inc");
 
 $query = "select * from tblNews WHERE status='1' order by timeAdded DESC limit 5";
 $result = mysql_query($query) or die ("couldn't execute query");
@@ -69,7 +69,7 @@ while ($row = mysql_fetch_array($result)) {
 echo '</channel>'."\n";
 echo '</rss>'."\n";
 } 
-include($_SERVER[DOCUMENT_ROOT]."/includes/close.php");
+include($_SERVER['DOCUMENT_ROOT']."/includes/close.php");
 */
 
 

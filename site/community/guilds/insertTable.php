@@ -213,7 +213,7 @@ font-weight: bold;
 <body onload="drawPreview();">
 
 <?php
-include($_SERVER[DOCUMENT_ROOT]."/includes/functions.inc");
+include($_SERVER['DOCUMENT_ROOT']."/includes/functions.inc");
 
 // set up default values:
 $tableWidth = "200";

@@ -1,6 +1,6 @@
 <?php
-include($_SERVER[DOCUMENT_ROOT]."/includes/signalnoise.php");
-include($_SERVER[DOCUMENT_ROOT]."/includes/connect.php");
+include($_SERVER['DOCUMENT_ROOT']."/includes/signalnoise.php");
+include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -46,7 +46,7 @@ echo '</style>'."\n";
 	} else {
 	echo 'invalid page id';
 	}
-	include($_SERVER[DOCUMENT_ROOT]."/includes/close.php");
+	include($_SERVER['DOCUMENT_ROOT']."/includes/close.php");
 ?>
 </body>
 </html>

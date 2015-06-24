@@ -1,9 +1,9 @@
 <?php
 $title="Autumn Earth News";
-include($_SERVER[DOCUMENT_ROOT]."/includes/session.inc");
-include($_SERVER[DOCUMENT_ROOT]."/includes/signalnoise.php");
-include($_SERVER[DOCUMENT_ROOT]."/includes/connect.php");
-include($_SERVER[DOCUMENT_ROOT]."/includes/functions.inc");
+include($_SERVER['DOCUMENT_ROOT']."/includes/session.inc");
+include($_SERVER['DOCUMENT_ROOT']."/includes/signalnoise.php");
+include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
+include($_SERVER['DOCUMENT_ROOT']."/includes/functions.inc");
 
 // check if submit button has been pressed:
 if (isset($_POST["savedContent"])) {
@@ -57,7 +57,7 @@ if ($_POST["publicPage"] == "1") {
     $result = mysql_query($query) or die ("couldn't execute query");
 $jsinclude = "htmlEditor";
 $onloadfunc = "editorSetup";
-    include($_SERVER[DOCUMENT_ROOT]."/includes/header.inc");
+    include($_SERVER['DOCUMENT_ROOT']."/includes/header.inc");
     echo '<h2 style="color: #000;background:#fff;" id="textToFade" name="textToFade">Changes made</h2>'."\n";
     // write JS out for text fade:
     echo '<script type="text/javascript">//<![CDATA[
@@ -74,13 +74,13 @@ $onloadfunc = "editorSetup";
     $result = mysql_query($query) or die ("couldn't execute query");
     $jsinclude = "htmlEditor";
 $onloadfunc = "editorSetup";
-    include($_SERVER[DOCUMENT_ROOT]."/includes/header.inc");
+    include($_SERVER['DOCUMENT_ROOT']."/includes/header.inc");
     echo '<p class="Error">'.$error.'</p>'."\n";
     }
 } else {
 $jsinclude = "htmlEditor";
 $onloadfunc = "editorSetup";
-include($_SERVER[DOCUMENT_ROOT]."/includes/header.inc");
+include($_SERVER['DOCUMENT_ROOT']."/includes/header.inc");
 }
 // check for login:
 $hasAccess = false;
@@ -122,7 +122,7 @@ $hasAccess = false;
 			
 			
 			// show list of all pages this guild has:
-			include($_SERVER[DOCUMENT_ROOT]."/includes/displayGuildPages.php");
+			include($_SERVER['DOCUMENT_ROOT']."/includes/displayGuildPages.php");
 			
 			echo '<iframe src ="editableContent.php?whichpage='.$pageID.'" frameborder="0" id="customWrapper" name="customWrapper">'."\n";
 			?>
@@ -328,7 +328,7 @@ echo'<p class="Error">you must be logged in to edit a page</p>';
 
 
 
-include($_SERVER[DOCUMENT_ROOT]."/includes/login.inc");
-include($_SERVER[DOCUMENT_ROOT]."/includes/close.php");
-include($_SERVER[DOCUMENT_ROOT]."/includes/footer.inc");
+include($_SERVER['DOCUMENT_ROOT']."/includes/login.inc");
+include($_SERVER['DOCUMENT_ROOT']."/includes/close.php");
+include($_SERVER['DOCUMENT_ROOT']."/includes/footer.inc");
 ?>

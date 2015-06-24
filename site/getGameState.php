@@ -4,8 +4,8 @@
 // from live database:
 
 /*
-include($_SERVER[DOCUMENT_ROOT]."/includes/signalnoise.php");
-include($_SERVER[DOCUMENT_ROOT]."/includes/connect.php");
+include($_SERVER['DOCUMENT_ROOT']."/includes/signalnoise.php");
+include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
 
 $returnString="error";
 $query="select * from tblcharacters where charid='".$_POST['chrid']."'";
@@ -26,7 +26,7 @@ $result = mysql_query($query) or die ("couldn't execute query");
 		$returnString .= '&charname='.$charName;
 	}
 
-include($_SERVER[DOCUMENT_ROOT]."/includes/close.php");
+include($_SERVER['DOCUMENT_ROOT']."/includes/close.php");
 print $returnString;
 */
 
