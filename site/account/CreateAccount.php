@@ -123,7 +123,7 @@ if ($_POST["createbutton"] == 'Create Account') {
 		
 		
 		// set session value:
-		$HTTP_SESSION_VARS['username'] = $processedaccname;
+		$_SESSION['username'] = $processedaccname;
 		// 
 		
 		if ($processedhtmlemail == "1") {

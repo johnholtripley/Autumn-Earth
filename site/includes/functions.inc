@@ -228,6 +228,7 @@ $SmilieReplace = array('<img src="/assets/forum/smilie_grin.gif" width="20" heig
 
 
 $splittext = explode("[", $amendedtext);
+$linkpos = null;
 if (count($splittext) > 0) {
 	$i = 0;
 	while ($i < count($splittext)) {

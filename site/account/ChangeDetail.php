@@ -10,7 +10,7 @@ $error = "";
 // set up values for the form
 $thisurl = $_SERVER["PHP_SELF"];
 
-$eaccname = $HTTP_SESSION_VARS['username'];
+$eaccname = $_SESSION['username'];
 
 
 // check if submit button has been pressed:

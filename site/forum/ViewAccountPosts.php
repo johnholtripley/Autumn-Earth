@@ -15,7 +15,7 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/functions.inc");
 	include($_SERVER['DOCUMENT_ROOT']."/includes/search.inc");
 	
 	
-	$accname = $HTTP_SESSION_VARS['username'];
+	$accname = $_SESSION['username'];
 	if (!(isset($accname))) {
 	 echo '<p>You must been signed in to view your own posts</p>';
 	} else {
@@ -109,7 +109,7 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/functions.inc");
 			
 			echo '</a>';
 			
-			echo ' - posted by ' . $userName . " on " . date('jS F Y',$CreationTime) .' at '.  date('G:i',$CreationTime). '<br />'."\n";
+			echo ' - posted by ' . $accname . " on " . date('jS F Y',$CreationTime) .' at '.  date('G:i',$CreationTime). '<br />'."\n";
 			echo 'viewed ' . $viewCount . ' times.';
 				
 			

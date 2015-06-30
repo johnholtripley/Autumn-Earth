@@ -12,19 +12,20 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/header.inc");
 include($_SERVER['DOCUMENT_ROOT']."/includes/login.inc");
 include($_SERVER['DOCUMENT_ROOT']."/includes/search.inc");
 
+if(isset($_GET["thread"])) {
 $threadID = $_GET["thread"];
 // check that a valid number has been passed:
 
 if (is_numeric($threadID)) {
 
-if (isset($HTTP_SESSION_VARS['username'])) {
+if (isset($_SESSION['username'])) {
 // check the status of this user and this thread - if the user is subscribed to this thread, there their status for this thread should be set to 0
 $query = "
 SELECT tblsubscribedthreads.*, tblacct.accountName, tblacct.accountID AS useracctid, tblthreads.threadid
 FROM tblsubscribedthreads
 INNER JOIN tblacct on tblsubscribedthreads.accountID = tblacct.accountID
 INNER JOIN tblthreads on tblsubscribedthreads.threadid = tblthreads.threadid
-WHERE tblacct.accountID = tblsubscribedthreads.accountID AND tblthreads.ThreadID = '".$threadID."' AND tblsubscribedthreads.status='1' AND tblacct.accountName = '".$HTTP_SESSION_VARS['username']."'";
+WHERE tblacct.accountID = tblsubscribedthreads.accountID AND tblthreads.ThreadID = '".$threadID."' AND tblsubscribedthreads.status='1' AND tblacct.accountName = '".$_SESSION['username']."'";
 
 $result = mysql_query($query) or die ("couldn't execute query1");
 $numberofrows = mysql_num_rows($result);
@@ -109,10 +110,11 @@ WHERE tblposts.ThreadID = " . $threadID . " ORDER BY tblposts.Sticky DESC, tblpo
 			
 				
 			
-				// add anchor with the post id:
-				echo '<a id="post' . $postID . '" name="post' . $postID . '"></a>';
+			
+			
 				$creationTime = strtotime($creationTime);
-				echo '<p><strong>' . $acctusername . '</strong> posted on ' . date('jS F Y',$creationTime) .' at '.  date('G:i',$creationTime).'<br />'."\n";
+					// add anchor with the post id:
+				echo '<p id="post' . $postID . '"><strong>' . $acctusername . '</strong> posted on ' . date('jS F Y',$creationTime) .' at '.  date('G:i',$creationTime).'<br />'."\n";
 				if ($status>0) {
 					echo parseCode(stripslashes($postContent));
 				} else {
@@ -121,7 +123,7 @@ WHERE tblposts.ThreadID = " . $threadID . " ORDER BY tblposts.Sticky DESC, tblpo
 				echo '</p>'."\n";
 				echo '<img src="/data/chr'.$currentcharid.'/portrait.jpg" width="84" height="85" alt="'.$acctusername.'\'s portrait" /><br />'."\n".'<strong>'.$charname.'</strong> - currently in '.$charlocation.'<br />'."\n";
 				echo '<em>'.parseCode(stripslashes($acctsignature)).'</em>';
-				if (strtolower($acctusername) == strtolower($HTTP_SESSION_VARS['username'])) {
+				if (strtolower($acctusername) == strtolower($_SESSION['username'])) {
 				// add edit link
 				echo '<br /><a href="EditPost.php?post='.$postID.'&amp;page='.$pagenumber.'" title="Edit post">edit post</a>'."\n";
 				}
@@ -148,7 +150,8 @@ WHERE tblposts.ThreadID = " . $threadID . " ORDER BY tblposts.Sticky DESC, tblpo
 			// determine URL (but ignore &page = if one exists)
 		
 			$getdata = "";
-			foreach($HTTP_GET_VARS as $key => $value) {
+			if(isset($_GET)) {
+			foreach($_GET as $key => $value) {
 
 				if ($key != "page") {
 				
@@ -159,8 +162,10 @@ WHERE tblposts.ThreadID = " . $threadID . " ORDER BY tblposts.Sticky DESC, tblpo
 				$getdata .= $key . "=" . $value;
 				}
 			}
+		}
 			// create full URL with GET data added (if any)
 			$thisurl = $_SERVER['PHP_SELF'];
+			$thispageurl = $thisurl;
 			if ($getdata != "") {
 				$thispageurl .= "?".$getdata;
 			}
@@ -183,7 +188,7 @@ WHERE tblposts.ThreadID = " . $threadID . " ORDER BY tblposts.Sticky DESC, tblpo
 	}
 	
 	
-if (($threadstatus > 1) || ($HTTP_SESSION_VARS['isadmin']) || ($HTTP_SESSION_VARS['ismod'])) {
+if (($threadstatus > 1) || ($_SESSION['isadmin']) || ($_SESSION['ismod'])) {
 		echo '<a href="CreatePost.php?thread=' . $threadID . '" title="post a reply">post reply</a>'."\n";
 		
 		}
@@ -194,7 +199,7 @@ if (($threadstatus > 1) || ($HTTP_SESSION_VARS['isadmin']) || ($HTTP_SESSION_VAR
 
 echo '<div class="Error">not a valid thread id</div>'."\n";
 }
-
+}
 
 include($_SERVER['DOCUMENT_ROOT']."/includes/close.php");
 include($_SERVER['DOCUMENT_ROOT']."/includes/footer.inc");

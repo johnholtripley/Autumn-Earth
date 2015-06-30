@@ -15,10 +15,10 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/search.inc");
 
 
 // check if username exists in session or they've just logged in:
-if (@$HTTP_SESSION_VARS['username']) {
+if (@$_SESSION['username']) {
 
 	// get user's account ID:
-	$query = "select * from tblacct where accountName='".$HTTP_SESSION_VARS['username']."'";
+	$query = "select * from tblacct where accountName='".$_SESSION['username']."'";
 	$result = mysql_query($query) or die ("couldn't execute query1");
 	$row = mysql_fetch_array($result);
 	extract ($row);

@@ -5,6 +5,9 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
 include($_SERVER['DOCUMENT_ROOT']."/includes/functions.inc");
 
 // check if submit button has been pressed:
+
+
+if(isset($_POST["subbutton"])) {
 if ($_POST["subbutton"] == 'submit reply') {
 // process form:
 $threadID = $_POST["thread"];
@@ -53,7 +56,7 @@ SELECT tblsubscribedthreads.*, tblacct.accountID as useracctid, tblacct.emailale
 FROM tblsubscribedthreads
 INNER JOIN tblacct on tblsubscribedthreads.accountID = tblacct.accountID
 INNER JOIN tblthreads on tblsubscribedthreads.threadid = tblthreads.threadid
-WHERE tblacct.accountID = tblsubscribedthreads.accountID AND tblthreads.ThreadID = '".$threadID."' AND tblacct.emailalerts='1' AND tblsubscribedthreads.status='0' AND tblacct.accountName != '".$HTTP_SESSION_VARS['username']."'";
+WHERE tblacct.accountID = tblsubscribedthreads.accountID AND tblthreads.ThreadID = '".$threadID."' AND tblacct.emailalerts='1' AND tblsubscribedthreads.status='0' AND tblacct.accountName != '".$_SESSION['username']."'";
 
 
 
@@ -73,7 +76,7 @@ if ($numberofrows > 0) {
 		</head>
 		<body>
 		<p>
-		'.$useracctname.' - a new posting has been made into a thread you have subscribed to - "'.$thisthreadTitle.'."</p><p><strong>'.$HTTP_SESSION_VARS['username'].'</strong> posted: "'.stripCode($postcontents).'"</p>
+		'.$useracctname.' - a new posting has been made into a thread you have subscribed to - "'.$thisthreadTitle.'."</p><p><strong>'.$_SESSION['username'].'</strong> posted: "'.stripCode($postcontents).'"</p>
 		<p>There may be more posts since then, but you will not receive further notifications until you have viewed the thread in the forum.</p><p>
 			Click <a href="http://autumnearth.metafocusclients.co.uk/forum/ViewThread.php?thread='.$thisthreadid.'" title="Click to visit the thread" target="_blank">here</a> to view the thread</p>
 			
@@ -87,7 +90,7 @@ if ($numberofrows > 0) {
 		$headers = "From:Autumn Earth<alerts@autumnearth.com>\r\nContent-type:text/html;charset=iso-8859-1";
 		} else {
 			// text email
-			$message = $useracctname." - a new posting has been made into a thread you have subscribed to - '".$thisthreadTitle."'.".$HTTP_SESSION_VARS['username']." posted: '".stripCode($postcontents).".
+			$message = $useracctname." - a new posting has been made into a thread you have subscribed to - '".$thisthreadTitle."'.".$_SESSION['username']." posted: '".stripCode($postcontents).".
 			there may be more posts since then, but you will not receive further notifications until you have viewed the thread in the forum.
 			Click below to view the thread:
 			http://autumnearth.metafocusclients.co.uk/ViewThread.php?thread=".$thisthreadid."
@@ -119,6 +122,7 @@ $numberofrows = mysql_num_rows($result);
 $totalpages = ceil($numberofrows/$resultsperpage);
 
 header("Location: ViewThread.php?thread=" . $threadID . "&page=".$totalpages."#post" . $thispostid);
+}
 } else {
 
 
@@ -133,10 +137,10 @@ echo '<br /><br />';
 
 // check if username exists in session or they've just logged in:
 
-if (@$HTTP_SESSION_VARS['username']) {
+if ($_SESSION['username']) {
 
 // check the user's status to see if they can post:
-$query = "SELECT * from tblAcct WHERE accountname = '" . $HTTP_SESSION_VARS['username'] . "'";
+$query = "SELECT * from tblAcct WHERE accountname = '" . $_SESSION['username'] . "'";
 $result = mysql_query($query) or die ("couldn't execute query");
 
 $row = mysql_fetch_array($result);
@@ -164,7 +168,7 @@ $threadID = $_GET["thread"];
 	
 
 	
-	if (($status > 1) || ($HTTP_SESSION_VARS['isadmin']) || ($HTTP_SESSION_VARS['ismod'])) {
+	if (($status > 1) || ($_SESSION['isadmin']) || ($_SESSION['ismod'])) {
 	
 	// check for any quote data
 	$quotedata = "";

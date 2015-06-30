@@ -152,7 +152,9 @@ if ($_SERVER['PHP_SELF'] == '/forum/ViewThread.php') {
 	$pagetitle = 'Autumn Earth Community Forum Thread';
 	$metadesc = 'A discussion on the Autumn Earth Community Site';
 	// query database to find meta information
+		if(isset($_GET["thread"])) {
 	$metathread = $_GET["thread"];
+
 	if (is_numeric($metathread)) {
 		$query = "select tblthreads.*, tblposts.postcontent, tblposts.CreationTime from 
 		tblthreads inner join
@@ -168,6 +170,7 @@ if ($_SERVER['PHP_SELF'] == '/forum/ViewThread.php') {
 			$metadesc = '\''.stripcode($postcontent).'\' - a discussion on the Autumn Earth Community Site';
 		}
 	}
+}
 }
 
 

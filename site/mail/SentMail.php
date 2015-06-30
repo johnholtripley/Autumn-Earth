@@ -16,7 +16,7 @@ echo'<h1>Sent Mail</h1>';
 echo'<p><a href="SendMail.php" title="Send Mail">Send Mail</a> | <a href="/mail/" title="View your Mail">View Mail</a></p>';
 
 // ensure that the user is logged in:
-if (@$HTTP_SESSION_VARS['username']) {
+if (@$_SESSION['username']) {
 	// display mail 
 
 
@@ -24,7 +24,7 @@ if (@$HTTP_SESSION_VARS['username']) {
 // get sender account id
 	
 	
-	$query = "SELECT * from tblacct WHERE accountName='".$HTTP_SESSION_VARS['username']."'";
+	$query = "SELECT * from tblacct WHERE accountName='".$_SESSION['username']."'";
 	$result = mysql_query($query) or die ("couldn't execute query");
 			$returned = mysql_num_rows($result);
 			if ($returned > 0) {

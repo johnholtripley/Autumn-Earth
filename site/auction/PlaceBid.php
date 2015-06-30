@@ -14,7 +14,7 @@ if (@$_POST["subbutton"] =="log out" ) {
 	setcookie("rememberp", "", time()-2592000, "/");
 	// log out and remove session
 	session_destroy();
-	unset($username, $HTTP_SESSION_VARS['username'], $isadmin, $HTTP_SESSION_VARS['isadmin'], $ismod, $HTTP_SESSION_VARS['ismod'], $hasmail, $HTTP_SESSION_VARS['hasmail']);
+	unset($username, $_SESSION['username'], $isadmin, $_SESSION['isadmin'], $ismod, $_SESSION['ismod'], $hasmail, $_SESSION['hasmail']);
 	$loggedout = true;
 header("Location: /auction/index.php");
 }
@@ -157,14 +157,14 @@ $itemGraphic = $_POST["itemgraphic"];
 $quantity = $_POST["itemquantity"];
 
 // check if username exists in session:
-if (@$HTTP_SESSION_VARS['username']) {
+if (@$_SESSION['username']) {
 
 
 // get current character for this account:
 $query = "select tblacct.accountID, tblacct.accountName, tblacct.currentCharID, tblcharacters.charID, tblcharacters.money as charsmoney, tblcharacters.charName AS thisCharName, tblcharacters.accountID AS charAcctID
 from tblacct
 inner join tblcharacters on  tblacct.currentCharID = tblcharacters.charID
-where tblacct.accountName='".$HTTP_SESSION_VARS['username']."'";
+where tblacct.accountName='".$_SESSION['username']."'";
 $result = mysql_query($query) or die ("couldn't execute query");
 	
 

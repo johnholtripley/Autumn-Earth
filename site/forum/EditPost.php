@@ -50,8 +50,8 @@ if (!(is_numeric($postid))) {
 
 
 // ...and matches the session user
-if (@$HTTP_SESSION_VARS['username']) {
-$thisuser = $HTTP_SESSION_VARS['username'];
+if (@$_SESSION['username']) {
+$thisuser = $_SESSION['username'];
 
 $query = "SELECT tblposts.*, tblacct.Accountname AS acctusername
 FROM tblposts
@@ -86,7 +86,7 @@ if ($error != "") {
  echo '<p>'.$error.'</p>';
 } else {
 // just check they haven't just logged out:
-if (@$HTTP_SESSION_VARS['username']) {
+if (@$_SESSION['username']) {
 // show form:
 		echo'<div id="PromptWrapper">';
 		echo'<p>Please enter the link address</p>';

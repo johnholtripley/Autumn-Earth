@@ -3,7 +3,7 @@
 include($_SERVER['DOCUMENT_ROOT']."/includes/session.inc");
 
 // check if the user is logged in:
-if (@$HTTP_SESSION_VARS['username']) {
+if (@$_SESSION['username']) {
 	echo 'Accreturn=logged';
 } else {
 	echo 'Accreturn=notlogged';

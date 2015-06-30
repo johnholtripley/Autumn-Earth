@@ -35,7 +35,7 @@ echo'<h1>Mail</h1>';
 echo'<p><a href="SendMail.php" title="Send Mail">Send Mail</a> | <a href="Archive.php" title="View your Archive">View Archive</a> | <a href="SentMail.php" title="View your sent mail">View Sent Mail</a></p>';
 
 // ensure that the user is logged in:
-if (@$HTTP_SESSION_VARS['username']) {
+if (@$_SESSION['username']) {
 	// display mail 
 
 // check for any GET data from mail being sent successfully etc.
@@ -50,7 +50,7 @@ FROM tblMail
 INNER JOIN tblacct on tblMail.accountID = tblacct.accountID
 left join tblcharacters
 on tblmail.characterID=tblcharacters.charID
-WHERE tblacct.accountName='".$HTTP_SESSION_VARS['username']."' AND tblMail.mailRead < '2' ORDER BY tblMail.sentTime DESC";
+WHERE tblacct.accountName='".$_SESSION['username']."' AND tblMail.mailRead < '2' ORDER BY tblMail.sentTime DESC";
 
 
 
@@ -76,7 +76,7 @@ WHERE tblacct.accountName='".$HTTP_SESSION_VARS['username']."' AND tblMail.mailR
 		
 		if ($characterID=='0') {
 			// use account name:
-			$characterID = $HTTP_SESSION_VARS['username'];
+			$characterID = $_SESSION['username'];
 			// ##### show account mail icon
 		} else {
 			// ############ use character name derived from query

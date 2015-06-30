@@ -16,7 +16,7 @@ $okToRemoveItem = false;
 if ($_POST["refreshInv"] == "true") {
 	$mailfrom = $_POST["from"];
 	if ($mailfrom == "0") {
-		$mailfromname = $HTTP_SESSION_VARS['username'];
+		$mailfromname = $_SESSION['username'];
 	} else {
 		// get character name:
 		$query = "SELECT * from tblcharacters WHERE charID='".$mailfrom."'";
@@ -170,7 +170,7 @@ if ($okToRemoveItem) {
 	} else {
 		$mailfrom = $_POST["from"];
 		if ($mailfrom == "0") {
-			$mailfromname = $HTTP_SESSION_VARS['username'];
+			$mailfromname = $_SESSION['username'];
 		} else {
 			// get character name:
 			$query = "SELECT * from tblcharacters WHERE charID='".$mailfrom."'";
@@ -184,7 +184,7 @@ if ($okToRemoveItem) {
 			$error='Please enter the name of the person this message is for';
 		} else {
 			// get sender account id
-			$query = "SELECT * from tblacct WHERE accountName='".$HTTP_SESSION_VARS['username']."'";
+			$query = "SELECT * from tblacct WHERE accountName='".$_SESSION['username']."'";
 			$result = mysql_query($query) or die ("couldn't execute query");
 			$returned = mysql_num_rows($result);
 			if ($returned > 0) {
@@ -347,7 +347,7 @@ echo'<div class="Error">'.$error.'</div>';
 }
 
 // ensure that the user is logged in:
-if (@$HTTP_SESSION_VARS['username']) {
+if (@$_SESSION['username']) {
 	// don't need to preserve GET data
 	$thisurl = $_SERVER['PHP_SELF'];
 
@@ -427,7 +427,7 @@ if (@$HTTP_SESSION_VARS['username']) {
 			$query = "SELECT tblCharacters.*, tblacct.accountid, tblacct.accountname, tblacct.currentCharID
 			from tblcharacters
 			inner join tblacct on tblacct.accountid = tblcharacters.accountid
-			WHERE tblacct.accountname='".$HTTP_SESSION_VARS['username']."'";
+			WHERE tblacct.accountname='".$_SESSION['username']."'";
 			$result = mysql_query($query) or die ("couldn't execute query");
 			
 			echo '<label for="from">From </label><select onchange="charchange()" name="from" id="from">';
@@ -437,7 +437,7 @@ if (@$HTTP_SESSION_VARS['username']) {
 				echo ' selected="selected"';
 			}
 			echo '>';
-			echo $HTTP_SESSION_VARS['username'];
+			echo $_SESSION['username'];
 			echo '</option>';
 			while ($row = mysql_fetch_array($result)) {
 				extract($row);
@@ -481,7 +481,7 @@ on tblmail.characterID=tblcharacters.charID where tblmail.mailID = '".$replyto."
 			$originalsendername = $senderName;
 			//
 			if (!isset($charname)) {
-				$charname=$HTTP_SESSION_VARS['username'];
+				$charname=$_SESSION['username'];
 				// find primary character id
 				$query = "SELECT currentCharID from tblacct where accountName = '".$charname."'";
 				$result8 = mysql_query($query) or die ("couldn't execute query");

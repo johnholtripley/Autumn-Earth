@@ -12,9 +12,15 @@ $error = "";
 // set up values for the form
 $thisurl = $_SERVER["PHP_SELF"];
 
-$eaccname = $HTTP_SESSION_VARS['username'];
+$eaccname = $_SESSION['username'];
+
+$processedbirthday = null;
+if(isset($processedbirthday)) {
 $processedbirthday = $_POST["processedbirthdate"];
+}
 // check if submit button has been pressed:
+
+if(isset($_POST["createbutton"])){
 if ($_POST["createbutton"] == 'Update Account') {
 	// validate form:
 	if ($_POST["pword"] == "") {
@@ -99,7 +105,7 @@ if ($_POST["createbutton"] == 'Update Account') {
 		
 	}
 
-
+}
 } else {
 
 // get data
@@ -200,7 +206,7 @@ echo'<input type="radio" name="htmlemail" id="htmlemail1" value="1" /> <label fo
 $query = "SELECT tblCharacters.*, tblacct.accountid, tblacct.accountname, tblacct.currentCharID
 from tblcharacters
 inner join tblacct on tblacct.accountid = tblcharacters.accountid
-WHERE tblacct.accountname='".$HTTP_SESSION_VARS['username']."'";
+WHERE tblacct.accountname='".$_SESSION['username']."'";
 	$result = mysql_query($query) or die ("couldn't execute query");
 $numberofrows = mysql_num_rows($result);
 

@@ -246,7 +246,7 @@ echo'<h1>Mail</h1>';
 echo'<p><a href="/mail/" title="View Mail">View inbox</a> | <a href="SendMail.php" title="Send Mail">Send Mail</a> | <a href="Archive.php" title="View your Archive">View Archive</a> | <a href="SentMail.php" title="View your sent mail">View Sent Mail</a></p>';
 
 // ensure that the user is logged in:
-if (@$HTTP_SESSION_VARS['username']) {
+if (@$_SESSION['username']) {
 	// display mail 
 
 // get GET data - check it's numeric and check that it does belong to the session user:
@@ -259,7 +259,7 @@ FROM tblMail
 INNER JOIN tblacct on tblMail.accountID = tblacct.accountID
 left join tblcharacters
 on tblmail.characterID=tblcharacters.charID
-WHERE (tblacct.accountName='".$HTTP_SESSION_VARS['username']."' OR  tblMail.senderName='".$HTTP_SESSION_VARS['username']."') AND tblMail.mailid = '".$mailarticle."'";
+WHERE (tblacct.accountName='".$_SESSION['username']."' OR  tblMail.senderName='".$_SESSION['username']."') AND tblMail.mailid = '".$mailarticle."'";
 
 
 
@@ -351,7 +351,7 @@ $result = mysql_query($query) or die ("couldn't execute query2");
 		
 		if ($returned3 == 0) {
 		 // user has no more mail un-read - alter session:
-		 $HTTP_SESSION_VARS['hasmail'] = "false";
+		 $_SESSION['hasmail'] = "false";
 		}
 	
 	}

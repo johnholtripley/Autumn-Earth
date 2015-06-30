@@ -38,9 +38,9 @@ $row = mysql_fetch_array($result);
 		$hasAccess = true;
 	} else {
 	
-		if (@$HTTP_SESSION_VARS['username']) {
+		if (@$_SESSION['username']) {
 			// check to see if the user logged in's current character is the correct guild for this page:
-			$loggedInName = $HTTP_SESSION_VARS['username'];
+			$loggedInName = $_SESSION['username'];
 			$query2 = "select tblAcct.currentCharID, tblAcct.accountName, tblGuildMembers.guildID
 			from tblAcct
 			inner join tblGuildMembers on tblGuildMembers.charID = tblAcct.currentCharID

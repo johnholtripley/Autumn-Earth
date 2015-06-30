@@ -121,7 +121,7 @@ order by tblauctionbids.bidAmount DESC limit 2
 			$query = "select tblacct.accountID, tblacct.accountName, tblacct.currentCharID, tblcharacters.charID, tblcharacters.charName AS thisCharName, tblcharacters.accountID AS charAcctID
 from tblacct
 inner join tblcharacters on  tblacct.currentCharID = tblcharacters.charID
-where tblacct.accountName='".$HTTP_SESSION_VARS['username']."'";
+where tblacct.accountName='".$_SESSION['username']."'";
 $result = mysql_query($query) or die ("couldn't execute query");
 	
 	
