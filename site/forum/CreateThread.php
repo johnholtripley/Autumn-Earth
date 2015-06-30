@@ -6,11 +6,15 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/functions.inc");
 $error ="";
 $postedcontents = @$_POST["postcontents"];
 // check if submit button has been pressed:
+if (isset($_POST["subbutton"])) {
 if ($_POST["subbutton"] == 'create thread') {
 $forumID = $_POST["forum"];
 
+
+if (isset($_POST["threadtitle"])) {
 if ($_POST["threadtitle"] =="") {
  $error="please enter a title for your new thread";
+}
 }
 
 if ($error=="") {
@@ -64,6 +68,7 @@ $result = mysql_query($query) or die ("couldn't execute query4");
 // as a new thread this will be post #1, so don't need to pass which page this post will be on
 
 header("Location: ViewThread.php?thread=" . $thisthreadid);
+}
 }
 } 
 

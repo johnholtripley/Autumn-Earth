@@ -1,7 +1,8 @@
 <?php
-$user="StanMurph";
-$host="85.189.54.8";
-$password="ZW3N87BB";
+$user="root";
+$host="127.0.0.1";
+$cryptSalt = "$7hgRt%£:oP";
+$password="";
 $database="autumnearth";
 $dbpk ="AsOiD";
 $resultsperpage = 10;

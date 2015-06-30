@@ -17,6 +17,7 @@ $phtmlemail = "1";
 
 $error = "";
 // check if submit button has been pressed:
+if (isset($_POST["createbutton"])) {
 if ($_POST["createbutton"] == 'Create Account') {
 	// validate form:
 	if ($_POST["pword"] == "") {
@@ -37,9 +38,13 @@ if ($_POST["createbutton"] == 'Create Account') {
 	
 	}
 	
+	if (isset($_POST["terms"])) {
 	if ($_POST["terms"] != "agreed") {
 		$error = "you must agree to the terms and conditions";
 	}
+} else {
+	$error = "you must agree to the terms and conditions";
+}
 	
 	if ($_POST["accname"] == "") {
 		$error = "please enter a name for this account";
@@ -180,14 +185,30 @@ $headers = "From:Autumn Earth<admin@autumnearth.com>";
 	
 	
 }
+}
 
 // set up values for the form, including what the user has already entered if the form is submitted before it's complete
 
+
+$ebday = -1;
+$ebmonth = -1;
+$ebyear = -1;
+
+if (isset($_POST["accname"])) {
 $eaccname = $_POST["accname"];
+}
+if (isset($_POST["emailaddr"])) {
 $eemailaddr = $_POST["emailaddr"];
+}
+if (isset($_POST["bday"])) {
 $ebday = $_POST["bday"];
+}
+if (isset($_POST["bmonth"])) {
 $ebmonth = $_POST["bmonth"];
+}
+if (isset($_POST["byear"])) {
 $ebyear = $_POST["byear"];
+}
 
 	
 $pagetitle="Create Account";

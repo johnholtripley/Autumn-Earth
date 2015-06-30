@@ -187,11 +187,11 @@ if ($clearOldMaps) {
 if (is_numeric($thisPlayersId)) {
     if (is_numeric($thisMapsId)) {
         $mapFilename = "data/chr" . $thisPlayersId . "/dungeon/".$thisDungeonsName."/" . $thisMapsId . ".xml";
-        if (is_file($mapFilename)) {
-        // 'none' is used for the overview map, as it's the cartographic map required as output:
-        if(($_GET["outputMode"] != "none") && ($_GET["outputMode"] != "test")) {
+        if ((is_file($mapFilename)) && ($_GET["outputMode"] != "test")) {
+ 
+       
             header("Location: http://www.autumnearth.com/" . $mapFilename);
-            }
+            
         } else {
             createNewDungeonMap($thisMapsId);
         }

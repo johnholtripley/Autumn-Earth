@@ -16,14 +16,14 @@ echo '<div class="Error">'.$loginerror.'</div>'."\n";
 <?php
 
 // check if username exists in session:
-if (@$HTTP_SESSION_VARS['username']) {
-	echo "logged in as " . stripslashes($HTTP_SESSION_VARS['username'])."\n";
+if (@$_SESSION['username']) {
+	echo "logged in as " . stripslashes($_SESSION['username'])."\n";
 	
 	
 	
-	if ($HTTP_SESSION_VARS['isadmin']) {
+	if ($_SESSION['isadmin']) {
 		echo '- <em>administrator</em>';
-	} else if ($HTTP_SESSION_VARS['ismod']) {
+	} else if ($_SESSION['ismod']) {
 		echo '- <em>moderator</em>';
 	} 
 	
@@ -33,7 +33,7 @@ if (@$HTTP_SESSION_VARS['username']) {
 			$query = "SELECT tblMail.*, tblacct.accountID, tblacct.accountName as useracctid
 FROM tblMail
 INNER JOIN tblacct on tblMail.accountID = tblacct.accountID
-WHERE tblacct.accountName='".$HTTP_SESSION_VARS['username']."' and tblmail.mailread = '0'";
+WHERE tblacct.accountName='".$_SESSION['username']."' and tblmail.mailread = '0'";
 	$result2 = mysql_query($query) or die ("couldn't execute query2");
 	
 		$returned2 = mysql_num_rows($result2);
@@ -56,7 +56,7 @@ WHERE tblacct.accountName='".$HTTP_SESSION_VARS['username']."' and tblmail.mailr
 </div>
 	<?php 
 		
-		$HTTP_SESSION_VARS['hasmail'] = $hasmail;
+		$_SESSION['hasmail'] = $hasmail;
 	
 	
 
@@ -133,23 +133,23 @@ WHERE tblacct.accountName='".$processedlogin."' and tblmail.mailread = '0'";
 
 		
 		// set session values
-		$HTTP_SESSION_VARS['username'] = $processedlogin;
-		$HTTP_SESSION_VARS['ismod'] = $ismod;
-		$HTTP_SESSION_VARS['isadmin'] = $isadmin;
-		$HTTP_SESSION_VARS['hasmail'] = $hasmail;
+		$_SESSION['username'] = $processedlogin;
+		$_SESSION['ismod'] = $ismod;
+		$_SESSION['isadmin'] = $isadmin;
+		$_SESSION['hasmail'] = $hasmail;
 
 		
 		
 			
 		echo "logged in as " . stripslashes($processedlogin);
 
-	if ($HTTP_SESSION_VARS['isadmin']) {
+	if ($_SESSION['isadmin']) {
 		echo '- <em>administrator</em>';
-	} else if ($HTTP_SESSION_VARS['ismod']) {
+	} else if ($_SESSION['ismod']) {
 		echo '- <em>moderator</em>';
 	} 
 	
-	if ($HTTP_SESSION_VARS['hasmail'] == "true" ) {
+	if ($_SESSION['hasmail'] == "true" ) {
 	// show new mail icon
 	 echo '<br /><a href="/mail/" class="ttipanchor" onmouseover="tooltip(\'tooltipone\');" onmouseout="exit(\'tooltipone\');"><img src="/assets/mail/new_mail.gif" width="31" height="31" alt="you have new mail" /></a>'."\n";
 	}
