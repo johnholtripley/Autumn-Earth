@@ -177,8 +177,12 @@ padding: 8px;
 .LinkedImage {
 /* constrain the width of any images that are displayed within a post: */
 overflow: hidden;
-width: 250px;
+width: 100%;
 margin: 8px auto;
+}
+
+.LinkedImage img {
+	margin: 0 auto;
 }
 
 .Unreadmail {

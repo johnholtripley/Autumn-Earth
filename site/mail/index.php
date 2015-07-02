@@ -11,7 +11,7 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/login.inc");
 
 
 
-
+if(isset($_POST["subbutton"])) {
 if ($_POST["subbutton"] == 'archive mail') {
 	if (count($_POST) > 1) {
 		// (the submit button counts as 1 value)
@@ -24,6 +24,7 @@ if ($_POST["subbutton"] == 'archive mail') {
 		}
 		echo '<p>you have archived the selected mail item(s)</p>';
 	}
+}
 }
 
 

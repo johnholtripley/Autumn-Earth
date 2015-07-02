@@ -7,7 +7,11 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/functions.inc");
 include($_SERVER['DOCUMENT_ROOT']."/includes/header.inc");
 include($_SERVER['DOCUMENT_ROOT']."/includes/login.inc");
 
+
+$articleId = "default";
+if(isset($_GET["article"])) {
 $articleId = $_GET["article"];
+}
 // check that a valid number has been passed:
 
 if (!(is_numeric($articleId))) {

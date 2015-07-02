@@ -64,17 +64,32 @@ if ($_POST["logincheck"] == 'posted') {
 
 
 	// check for remember me feature - cookies need to be set before any output
-
+if(isset($_POST["rememberme"])) {
 	if ($_POST["rememberme"] == "yes") {
 		// set cookie:
 		// expires in 30 days (60*60*24*30)
 		// encrypt password for cookie:
 		$processedpassword = crypt(trim($_POST["pword"]), $cryptSalt);
 		$processedlogin = trim($_POST["loginname"]);
+
+
+
+
 		//$cookiepwd = crypt($processedpassword);
 		setcookie("remembername", $processedlogin, time()+2592000, "/");
 		setcookie("rememberp", $processedpassword, time()+2592000, "/");
+
+
+
+
+
+
+
+
+
+
 	}
+}
 
 		
 	} else {

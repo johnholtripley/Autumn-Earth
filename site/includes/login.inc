@@ -7,23 +7,17 @@ if (isset($loginerror)) {
 echo '<div class="Error">'.$loginerror.'</div>'."\n";
 }
 
-?>
 
-
-
-
-
-<?php
 
 // check if username exists in session:
 if (@$_SESSION['username']) {
 	echo "logged in as " . stripslashes($_SESSION['username'])."\n";
 	
+
 	
-	
-	if ($_SESSION['isadmin']) {
+	if (@ $_SESSION['isadmin']) {
 		echo '- <em>administrator</em>';
-	} else if ($_SESSION['ismod']) {
+	} else if (@ $_SESSION['ismod']) {
 		echo '- <em>moderator</em>';
 	} 
 	
@@ -69,6 +63,8 @@ WHERE tblacct.accountName='".$_SESSION['username']."' and tblmail.mailread = '0'
 	echo '<input type="submit" name="subbutton" value="log out" />'."\n";
 	echo '</form>';
 } else if (isset($_COOKIE['remembername']) && isset($_COOKIE['rememberp']) && $loggedout==false) {
+
+
 	// details exist in cookies - and the user hasn't just logged out
 	// don't trust the information - validate it:
       $processedlogin = htmlCharsToEntities($_COOKIE['remembername']);
@@ -81,6 +77,9 @@ WHERE tblacct.accountName='".$_SESSION['username']."' and tblmail.mailread = '0'
 		$query = "select AES_DECRYPT(password,'".$pwordkey."') AS encpword, accountid from tblacct where accountName='" . $processedlogin . "'";
 		
 		
+
+
+
 		
 		
 		
@@ -88,6 +87,8 @@ WHERE tblacct.accountName='".$_SESSION['username']."' and tblmail.mailread = '0'
 	
 	$returned = mysql_num_rows($result);
 	
+
+
 	if ($returned > 0) {
 		// name exists, 
 
@@ -96,9 +97,14 @@ WHERE tblacct.accountName='".$_SESSION['username']."' and tblmail.mailread = '0'
 		$row = mysql_fetch_array($result);
 		extract($row);
 		
-			
+	
 		// check password matches 
-		if (crypt($encpword, $processedpassword) == $processedpassword) {
+if(!isset($accountType)) {
+	$accountType = 0;
+}
+
+
+		if (crypt($encpword, $cryptSalt) == $processedpassword) {
 			// check account type:
 		switch ($accountType) {
 		case "1":
