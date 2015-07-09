@@ -10,8 +10,35 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/functions.inc");
 
 
 
-// check for GET data:
+
+
+if(isset($_GET["cleaned"])) {
+// uses clean URLS - find pageId from the URL
+
+
+$query = "select tblguilds.*, tblfreeformpages.*
+from tblFreeformPages
+inner join tblGuilds on tblFreeformPages.guildID = tblGuilds.guildID
+WHERE tblFreeformPages.status='1' AND tblFreeformPages.cleanURL='".$_GET["page"]."' AND tblguilds.cleanURL='".$_GET["guild"]."'";
+
+$result = mysql_query($query) or die ("couldn't execute query");
+
+if (mysql_num_rows($result) > 0) {
+
+
+$row = mysql_fetch_array($result);
+
+	extract($row);
+// gives $pageID;
+}
+
+
+	
+} else {
+	// check for GET data:
 $pageID = $_GET["whichpage"];
+}
+
 // check that a valid number has been passed:
 
 if (is_numeric($pageID)) {

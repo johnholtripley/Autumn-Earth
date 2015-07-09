@@ -10,7 +10,7 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/login.inc");
 include($_SERVER['DOCUMENT_ROOT']."/includes/inventoryArray.php");
 
 // check to see if any attachment needs to be added:
-if (($_POST["subbutton"] == "add to inventory") || ($_POST["jssubmit"] == 'true')) {
+if ((@ $_POST["subbutton"] == "add to inventory") || (@ $_POST["jssubmit"] == 'true')) {
 $primarycharid = $_POST["primarycharid"];
 // get the character's name:
 $query = "SELECT charName from tblcharacters where charID = '".$primarycharid."'";

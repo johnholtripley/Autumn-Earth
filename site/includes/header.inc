@@ -212,8 +212,8 @@ echo '<meta content="'.$metadesc.'" name="description" />'."\n";
 <meta name="robots" content="noodp" />
 
 <?php // allows for animated favicons in firefox: ?>
-<link rel="shortcut icon" href="favicon.ico" />
-<link rel="shortcut icon" href="favicon.gif" type="image/gif" />
+<link rel="shortcut icon" href="/favicon.ico" />
+<link rel="shortcut icon" href="/favicon.gif" type="image/gif" />
 
 
 <?php
