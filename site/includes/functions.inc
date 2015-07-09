@@ -584,6 +584,9 @@ function validHexColour($hexvalue) {
 }
 //
 function cleanURL($string) {
+
+// limit to 255 chars #######
+
 	$string=trim($string);
 	// http://stackoverflow.com/questions/11330480/strip-php-variable-replace-white-spaces-with-dashes
    //Lower case everything
