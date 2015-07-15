@@ -175,7 +175,7 @@ if ($clearOldMaps) {
     }
     
     // restore session file:
-    if (!copy('data/source/session.inc', $dir.'/session.inc')) {
+    if (!copy('data/source/session.php', $dir.'/session.php')) {
     // error handling ########
     }
     
@@ -1942,7 +1942,7 @@ $sessionOutput .= '?>';
 
 
 		
-		$sessionFilename = "data/chr" . $thisPlayersId . "/dungeon/".$thisDungeonsName."/session.inc";    
+		$sessionFilename = "data/chr" . $thisPlayersId . "/dungeon/".$thisDungeonsName."/session.php";    
 	if(!($sessionFilename=fopen($sessionFilename,"w"))) {
 			// error handling?
 		}
@@ -2436,7 +2436,7 @@ function createNewDungeonMap($mapID) {
   }
   
   
-  include("includes/dungeonMapConfig.inc");
+  include("includes/dungeonMapConfig.php");
 
 
 
@@ -2455,7 +2455,7 @@ $tileHeight = 24;
   
  
   
-    include("data/chr" . $thisPlayersId . "/dungeon/".$thisDungeonsName."/session.inc");
+    include("data/chr" . $thisPlayersId . "/dungeon/".$thisDungeonsName."/session.php");
   
   
   

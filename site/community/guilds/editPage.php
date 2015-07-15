@@ -1,9 +1,9 @@
 <?php
 $title="Autumn Earth News";
-include($_SERVER['DOCUMENT_ROOT']."/includes/session.inc");
+include($_SERVER['DOCUMENT_ROOT']."/includes/session.php");
 include($_SERVER['DOCUMENT_ROOT']."/includes/signalnoise.php");
 include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
-include($_SERVER['DOCUMENT_ROOT']."/includes/functions.inc");
+include($_SERVER['DOCUMENT_ROOT']."/includes/functions.php");
 
 // check if submit button has been pressed:
 if (isset($_POST["savedContent"])) {
@@ -52,12 +52,12 @@ if ($_POST["publicPage"] == "1") {
 
     
 
-    $query = "update tblFreeformPages SET pageContent = '".$postcontents."', textColour = '".$thisTextColour."', bgColour='".$thisBGColour."', freeformPageTitle='".$thisPageTitle."', public='".$processedPublic."',fontfamily='".$thisSelectedFont."'  WHERE pageID='".$thispageid."'";
+    $query = "update tblFreeformPages SET pageContent = '".$postcontents."', textColour = '".$thisTextColour."', bgColour='".$thisBGColour."', freeformPageTitle='".$thisPageTitle."', public='".$processedPublic."',fontfamily='".$thisSelectedFont."', creationTime=NOW() WHERE pageID='".$thispageid."'";
 
     $result = mysql_query($query) or die ("couldn't execute query");
 $jsinclude = "htmlEditor";
 $onloadfunc = "editorSetup";
-    include($_SERVER['DOCUMENT_ROOT']."/includes/header.inc");
+    include($_SERVER['DOCUMENT_ROOT']."/includes/header.php");
     echo '<h2 style="color: #000;background:#fff;" id="textToFade" name="textToFade">Changes made</h2>'."\n";
     // write JS out for text fade:
     echo '<script type="text/javascript">//<![CDATA[
@@ -74,13 +74,13 @@ $onloadfunc = "editorSetup";
     $result = mysql_query($query) or die ("couldn't execute query");
     $jsinclude = "htmlEditor";
 $onloadfunc = "editorSetup";
-    include($_SERVER['DOCUMENT_ROOT']."/includes/header.inc");
+    include($_SERVER['DOCUMENT_ROOT']."/includes/header.php");
     echo '<p class="Error">'.$error.'</p>'."\n";
     }
 } else {
 $jsinclude = "htmlEditor";
 $onloadfunc = "editorSetup";
-include($_SERVER['DOCUMENT_ROOT']."/includes/header.inc");
+include($_SERVER['DOCUMENT_ROOT']."/includes/header.php");
 }
 // check for login:
 $hasAccess = false;
@@ -328,7 +328,7 @@ echo'<p class="Error">you must be logged in to edit a page</p>';
 
 
 
-include($_SERVER['DOCUMENT_ROOT']."/includes/login.inc");
+include($_SERVER['DOCUMENT_ROOT']."/includes/login.php");
 include($_SERVER['DOCUMENT_ROOT']."/includes/close.php");
-include($_SERVER['DOCUMENT_ROOT']."/includes/footer.inc");
+include($_SERVER['DOCUMENT_ROOT']."/includes/footer.php");
 ?>

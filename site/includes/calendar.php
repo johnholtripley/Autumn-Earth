@@ -52,11 +52,13 @@ while ($row = mysql_fetch_array($result)) {
 $dayevents = array();
 // set up which days have an event:
 
+
 for ($i=1; $i<=($monthdays); $i++) {
 	$dayevents[$i] = "-100";
 	// -100 because -1 can be a cell within the loop if the month doesn't start on monday
 	$thisday = mktime(0,0,0,$thismonth,$i,$thisyear);
 	for ($j = 0; $j<=count($events); $j++) {
+		if(isset($events[$j]['startdate'])) {
 		$thiseventstart = strtotime($events[$j]['startdate']);
 		$thiseventend = strtotime($events[$j]['enddate']);
 		if ($thisday >= $thiseventstart) {
@@ -64,6 +66,7 @@ for ($i=1; $i<=($monthdays); $i++) {
 				$dayevents[$i] = $j;
 			}
 		}
+	}
 	}
 }
 

@@ -1,9 +1,9 @@
 <?php
 
-include($_SERVER['DOCUMENT_ROOT']."/includes/session.inc");
+include($_SERVER['DOCUMENT_ROOT']."/includes/session.php");
 include($_SERVER['DOCUMENT_ROOT']."/includes/signalnoise.php");
 include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
-include($_SERVER['DOCUMENT_ROOT']."/includes/functions.inc");
+include($_SERVER['DOCUMENT_ROOT']."/includes/functions.php");
 
 $error="";
 $multiplelist= false;
@@ -336,8 +336,8 @@ if ($moneyattached) {
 $jsinclude="addTags";
 $onloadfunc="init";
 
-include($_SERVER['DOCUMENT_ROOT']."/includes/header.inc");
-include($_SERVER['DOCUMENT_ROOT']."/includes/login.inc");
+include($_SERVER['DOCUMENT_ROOT']."/includes/header.php");
+include($_SERVER['DOCUMENT_ROOT']."/includes/login.php");
 
 echo'<h1>Send Mail</h1>';
 echo'<p><a href="/mail/" title="View Mail">View Mail</a> | <a href="Archive.php" title="View your Archive">View Archive</a> | <a href="SentMail.php" title="View your sent mail">View Sent Mail</a></p>';
@@ -568,5 +568,5 @@ on tblmail.characterID=tblcharacters.charID where tblmail.mailID = '".$replyto."
 
 
 include($_SERVER['DOCUMENT_ROOT']."/includes/close.php");
-include($_SERVER['DOCUMENT_ROOT']."/includes/footer.inc");
+include($_SERVER['DOCUMENT_ROOT']."/includes/footer.php");
 ?>

@@ -16,7 +16,7 @@ if(is_numeric($thisMapsId)) {
 // is a random map and the clean URL of the name is passed through
   $thisDungeonsName = $thisMapsId;
   // load config for this dungeon:
-  include("includes/dungeonMapConfig.inc");
+  include("includes/dungeonMapConfig.php");
   $allStandardItems = $dungeonDetails[$thisDungeonsName][4];
   // get level locked items:
   $dir = "templates/dungeon/".$thisDungeonsName."/level-locked/";

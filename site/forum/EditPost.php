@@ -1,8 +1,8 @@
 <?php
-include($_SERVER['DOCUMENT_ROOT']."/includes/session.inc");
+include($_SERVER['DOCUMENT_ROOT']."/includes/session.php");
 include($_SERVER['DOCUMENT_ROOT']."/includes/signalnoise.php");
 include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
-include($_SERVER['DOCUMENT_ROOT']."/includes/functions.inc");
+include($_SERVER['DOCUMENT_ROOT']."/includes/functions.php");
 
 
 // check if submit button has been pressed:
@@ -77,9 +77,9 @@ $error = "you must log in to change a post";
 
 $jsinclude="addTags";
 $onloadfunc="init";
-include($_SERVER['DOCUMENT_ROOT']."/includes/header.inc");
-include($_SERVER['DOCUMENT_ROOT']."/includes/login.inc");
-include($_SERVER['DOCUMENT_ROOT']."/includes/search.inc");
+include($_SERVER['DOCUMENT_ROOT']."/includes/header.php");
+include($_SERVER['DOCUMENT_ROOT']."/includes/login.php");
+include($_SERVER['DOCUMENT_ROOT']."/includes/search.php");
 
 if ($error != "") {
 
@@ -125,6 +125,6 @@ if (@$_SESSION['username']) {
 }
 
 include($_SERVER['DOCUMENT_ROOT']."/includes/close.php");
-include($_SERVER['DOCUMENT_ROOT']."/includes/footer.inc");
+include($_SERVER['DOCUMENT_ROOT']."/includes/footer.php");
 
 ?>

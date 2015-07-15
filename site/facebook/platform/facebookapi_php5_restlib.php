@@ -2496,7 +2496,7 @@ function toggleDisplay(id, type) {
                                      $key,
                                      $prop_name,
                                      $increment = 1) {
-    return $this->call_method('facebook.data.incHashValue',
+    return $this->call_method('facebook.data.phpHashValue',
        array('obj_type' => $obj_type,
              'key' => $key,
              'prop_name' => $prop_name,

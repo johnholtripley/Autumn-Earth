@@ -1,8 +1,8 @@
 <?php
-include($_SERVER['DOCUMENT_ROOT']."/includes/session.inc");
+include($_SERVER['DOCUMENT_ROOT']."/includes/session.php");
 include($_SERVER['DOCUMENT_ROOT']."/includes/signalnoise.php");
 include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
-include($_SERVER['DOCUMENT_ROOT']."/includes/functions.inc");
+include($_SERVER['DOCUMENT_ROOT']."/includes/functions.php");
 $error ="";
 $postedcontents = @$_POST["postcontents"];
 // check if submit button has been pressed:
@@ -27,9 +27,31 @@ $threadtitle = htmlCharsToEntities(cleanText($_POST["threadtitle"]));
 
 //
 
-//
-$query = "INSERT INTO tblthreads (forumID,accountID,viewcount,creationTime,title,status,sticky,postcount)
-VALUES ('" . $forumID . "','" . $useraccountID . "','0',NOW(),'".$threadtitle."','2','0','1')";
+
+// make sure that cleanURL is unique ###############
+
+
+$threadURL = "";
+
+$forumURLQuery = "select tblforums.title as forumTitle from tblforums where forumID = '".$forumID."'";
+$result = mysql_query($forumURLQuery) or die ("couldn't execute query1");
+if (mysql_num_rows($result) > 0) {
+	while ($row = mysql_fetch_array($result)) {
+
+	extract($row);
+	$threadURL = cleanURL($forumTitle)."/";
+}
+
+	}
+
+
+
+$cleanedURL = $threadURL.cleanURL($threadtitle);
+
+
+
+$query = "INSERT INTO tblthreads (forumID,accountID,viewcount,creationTime,title,cleanURL,status,sticky,postcount)
+VALUES ('" . $forumID . "','" . $useraccountID . "','0',NOW(),'".$threadtitle."','".$cleanedURL."','2','0','1')";
 $result = mysql_query($query) or die ("couldn't execute query1");
 
 // find what the id of this thread was:
@@ -77,9 +99,9 @@ header("Location: ViewThread.php?thread=" . $thisthreadid);
 
 $jsinclude="addTags";
 $onloadfunc="init";
-include($_SERVER['DOCUMENT_ROOT']."/includes/header.inc");
-include($_SERVER['DOCUMENT_ROOT']."/includes/login.inc");
-include($_SERVER['DOCUMENT_ROOT']."/includes/search.inc");
+include($_SERVER['DOCUMENT_ROOT']."/includes/header.php");
+include($_SERVER['DOCUMENT_ROOT']."/includes/login.php");
+include($_SERVER['DOCUMENT_ROOT']."/includes/search.php");
 echo '<br /><br />';
 
 // check if username exists in session or they've just logged in:
@@ -161,6 +183,6 @@ echo 'you must be logged in to make a post';
 echo '<br /><br />';
 
 include($_SERVER['DOCUMENT_ROOT']."/includes/close.php");
-include($_SERVER['DOCUMENT_ROOT']."/includes/footer.inc");
+include($_SERVER['DOCUMENT_ROOT']."/includes/footer.php");
 
 ?>

@@ -1,9 +1,9 @@
 <?php
 
-include($_SERVER['DOCUMENT_ROOT']."/includes/session.inc");
+include($_SERVER['DOCUMENT_ROOT']."/includes/session.php");
 include($_SERVER['DOCUMENT_ROOT']."/includes/signalnoise.php");
 include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
-include($_SERVER['DOCUMENT_ROOT']."/includes/functions.inc");
+include($_SERVER['DOCUMENT_ROOT']."/includes/functions.php");
 
 $error="";
 
@@ -134,11 +134,11 @@ $error = "Please enter a number";
 
 
 $pagetitle = "Autumn Earth Auction House";
-include($_SERVER['DOCUMENT_ROOT']."/includes/header.inc");
+include($_SERVER['DOCUMENT_ROOT']."/includes/header.php");
 // set this value to include the POST data if logging in on this page
 $placebid = true;
 
-include($_SERVER['DOCUMENT_ROOT']."/includes/login.inc");
+include($_SERVER['DOCUMENT_ROOT']."/includes/login.php");
 
 echo'<h1>Autumn Earth Auction</h1>';
 
@@ -336,11 +336,11 @@ echo'<p class="Error">You must be logged in to place a bid</p>';
 
 } else {
 $pagetitle = "Autumn Earth Auction House";
-include($_SERVER['DOCUMENT_ROOT']."/includes/header.inc");
+include($_SERVER['DOCUMENT_ROOT']."/includes/header.php");
 // set this value to include the POST data if logging in on this page
 $placebid = true;
 
-include($_SERVER['DOCUMENT_ROOT']."/includes/login.inc");
+include($_SERVER['DOCUMENT_ROOT']."/includes/login.php");
 
 echo'<h1>Autumn Earth Auction</h1>';
 echo'<p class="Error">Not a valid auction number</p>';
@@ -348,5 +348,5 @@ echo'<p class="Error">Not a valid auction number</p>';
 
 
 include($_SERVER['DOCUMENT_ROOT']."/includes/close.php");
-include($_SERVER['DOCUMENT_ROOT']."/includes/footer.inc");
+include($_SERVER['DOCUMENT_ROOT']."/includes/footer.php");
 ?>

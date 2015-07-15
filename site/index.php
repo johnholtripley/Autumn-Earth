@@ -1,74 +1,21 @@
 <?php
-/*
-include("includes/session.inc");
-include("includes/signalnoise.php");
-include("includes/connect.php");
-include("includes/functions.inc");
-include("includes/header.inc");
-include("includes/pagehead.inc");
 
-echo'<h1>Autumn Earth</h1>';
+include($_SERVER['DOCUMENT_ROOT']."/includes/session.php");
+include($_SERVER['DOCUMENT_ROOT']."/includes/signalnoise.php");
+include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
+include($_SERVER['DOCUMENT_ROOT']."/includes/functions.php");
+include($_SERVER['DOCUMENT_ROOT']."/includes/header.php");
+include($_SERVER['DOCUMENT_ROOT']."/includes/pagehead.php");
+include($_SERVER['DOCUMENT_ROOT']."/includes/login.php");
+include($_SERVER['DOCUMENT_ROOT']."/includes/search.php");
 
-echo smartPunctuation('"Autumn Earth\'s site is still being developed"');
-echo '<br />';
-echo '<a href="http://www.autumnearth.com/feed/" title="Subscribe to the RSS 2.0 feed"><img src="/assets/feeds/rss2.gif" width="46" height="15" alt="RSS 2.0 icon" /></a>'."\n";
-echo '<a href="http://www.autumnearth.com/feed/atom.php" title="Subscribe to the Atom 1.0 feed"><img src="/assets/feeds/atom1.gif" width="52" height="15" alt="Atom 1.0 icon" /></a>'."\n";
-echo '<br />';
-
-echo'<a href="/forum/" title="Click to view the forums">Forum</a> | <a href="/mail/" title="Click to view your mail">Mail</a> | <a href="/auction/" title="Click to visit the Auction House">Auction</a>'."\n";
-
-include("includes/news.php");
-include("includes/calendar.php");
-include("includes/mainPoll.php");
-
-include("includes/login.inc");
-
-include("includes/close.php");
-include("includes/footer.inc");
-*/
 ?>
 
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
-
-<head>
-<meta content="Autumn Earth" name="description" />
-<meta http-equiv="content-type" content="text/html;charset=utf-8" />
-<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-<meta http-equiv="imagetoolbar" content="no"  />
-<meta name="MSSmartTagsPreventParsing" content="true"  />
-<meta name="robots" content="noodp" />
-
-<title>Autumn Earth</title>
-
-<link rel="meta" type="application/rdf+xml" title="dublin" href="meta.rdf" />
-<link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="http://feeds.feedburner.com/autumnearth" />
-<link rel="shortcut icon" href="favicon.ico" />
-<link rel="apple-touch-icon" href="apple-touch-icon-precomposed.png" />
 
 
-<style type="text/css">
 
-html {
-height: 100%;
-}
 
-* {
-padding: 0;
-margin: 0;
-}
-
-body {
-background: #000 url(images/autumn-earth.gif) no-repeat center center;
-height: 100%;
-}
-
-h1 {
-position: absolute;
-text-indent: -9999px;
-}
-</style>
 
 <?php
 // http://mathiasbynens.be/notes/async-analytics-snippet
@@ -85,9 +32,148 @@ flush();
 </head>
 <body>
 
-<h1>Autumn Earth</h1>
 
 
+
+<h2>Latest forum threads with new posts</h2>
+
+
+<?php
+
+
+$forumQuery = "select * from tblthreads where tblthreads.status>0 order by tblthreads.CreationTime DESC limit 5";
+$result = mysql_query($forumQuery) or die ("couldn't execute query");
+
+if (mysql_num_rows($result) > 0) {
+
+echo "<ul>";
+while ($row = mysql_fetch_array($result)) {
+	extract($row);
+echo '<li><a href="/forum/'.$cleanURL.'/">'.$title.'</a></li>';
+}
+	echo "</ul>";
+}
+?>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<hr/>
+<h2>Latest community pages</h2>
+<?php
+// find all publically visible pages, group by guild and show a list of clean URLs for them:
+
+$communityQuery = "select tblguilds.*, tblfreeformpages.*, tblguilds.cleanURL as guildURL, tblfreeformpages.cleanURL as pageURL from tblFreeformPages inner join tblGuilds on tblFreeformPages.guildID = tblGuilds.guildID WHERE tblFreeformPages.public='1' order by tblfreeformpages.creationTime DESC limit 5";
+
+$result = mysql_query($communityQuery) or die ("couldn't execute query");
+
+if (mysql_num_rows($result) > 0) {
+
+echo "<ul>";
+
+
+
+while ($row = mysql_fetch_array($result)) {
+
+	extract($row);
+
+
+	
+
+echo '<li><a href="/community/'.$guildURL.'/'.$pageURL.'/">'.$guildName.' - '.$freeformPageTitle.'</a></li>';
+
+}
+
+	echo "</ul>";
+
+}
+
+?>
+<hr/>
+<h2>Latest news</h2>
+<?php
+$newsQuery = "select * from tblNews WHERE status='1' order by timeAdded DESC limit 5";
+$result = mysql_query($newsQuery) or die ("couldn't execute query");
+
+if (mysql_num_rows($result) > 0) {
+echo "<ul>";
+while ($row = mysql_fetch_array($result)) {
+extract($row);
+echo '<li><a href="/news/'.$cleanURL.'/">'.$newsTitle.'</a></li>';
+
+
+	
+
+
+}
+echo "</ul>";
+
+}
+?>
+<hr>
+
+
+<div style="width:50%;float:left">
+	<h2>Auction items ending soon</h2>
+	<?php
+	displayAuctionItemsEndingSoon(3);
+	?>
+</div>
+<div style="width:50%;float:left">
+	<h2>new Auction items</h2>
+	<?php
+displayAuctionNewestItems(3);
+	?>
+</div>
+<hr style="clear:both;width:100%">
+
+
+<div style="width:50%;float:left">
+	<h2>		Contracts about to expire</h2>
+</div>
+<div style="width:50%;float:left">
+	<h2>Latest contracts</h2>
+</div>
+<hr style="clear:both;width:100%">
+
+<?php
+include($_SERVER['DOCUMENT_ROOT']."/includes/calendar.php");
+?>
 
 
 <?php
@@ -96,7 +182,6 @@ echo '<!-- <script type="text/javascript" src="http://static.ak.connect.facebook
 */
 
 
-
+include($_SERVER['DOCUMENT_ROOT']."/includes/close.php");
+include($_SERVER['DOCUMENT_ROOT']."/includes/footer.php");
 ?>
-</body>
-</html>

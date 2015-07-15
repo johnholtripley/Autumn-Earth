@@ -1,19 +1,47 @@
 <?php
 
-include($_SERVER['DOCUMENT_ROOT']."/includes/session.inc");
+include($_SERVER['DOCUMENT_ROOT']."/includes/session.php");
 include($_SERVER['DOCUMENT_ROOT']."/includes/signalnoise.php");
 include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
-include($_SERVER['DOCUMENT_ROOT']."/includes/functions.inc");
+include($_SERVER['DOCUMENT_ROOT']."/includes/functions.php");
 /*
 $pagetitle="Autumn Earth Community Forum - ".stripslashes($forumTitle)." - ".stripslashes($threadTitle);
 $metadesc = stripCode(stripslashes($postContent));
 */
-include($_SERVER['DOCUMENT_ROOT']."/includes/header.inc");
-include($_SERVER['DOCUMENT_ROOT']."/includes/login.inc");
-include($_SERVER['DOCUMENT_ROOT']."/includes/search.inc");
+include($_SERVER['DOCUMENT_ROOT']."/includes/header.php");
+include($_SERVER['DOCUMENT_ROOT']."/includes/login.php");
+include($_SERVER['DOCUMENT_ROOT']."/includes/search.php");
 
+
+if(isset($_GET["cleaned"])) {
+$threadURL = $_GET["threadName"];
+$forumURL = $_GET["forumName"];
+$fullCleanedURL = $forumURL."/".$threadURL;
+
+
+$query = "select threadID, cleanURL from tblthreads WHERE cleanURL = '".$fullCleanedURL."'";
+$result = mysql_query($query) or die ("couldn't execute query");
+
+if (mysql_num_rows($result) > 0) {
+
+
+$row = mysql_fetch_array($result);
+
+$threadID = $row["threadID"];
+
+}
+
+
+
+} else {
 if(isset($_GET["thread"])) {
 $threadID = $_GET["thread"];
+}
+}
+
+
+
+
 // check that a valid number has been passed:
 
 if (is_numeric($threadID)) {
@@ -199,8 +227,8 @@ if (($threadstatus > 1) || ($_SESSION['isadmin']) || ($_SESSION['ismod'])) {
 
 echo '<div class="Error">not a valid thread id</div>'."\n";
 }
-}
+
 
 include($_SERVER['DOCUMENT_ROOT']."/includes/close.php");
-include($_SERVER['DOCUMENT_ROOT']."/includes/footer.inc");
+include($_SERVER['DOCUMENT_ROOT']."/includes/footer.php");
 ?>
