@@ -679,9 +679,9 @@ order by tblauctionbids.bidAmount DESC limit 2
 			
 			
 			echo'<div class="InventorySlot" style="background-image: url(/images/inventory/'.$itemID.'.jpg);">';
-			echo'<a href="ViewItem.php?item='.$auctionID.'" title="more information"><img src="/images/inventory/quantity'.$quantity.'.gif" width="64" height="64" /></a></div>'."\n";
+			echo'<a href="/auction/ViewItem.php?item='.$auctionID.'" title="more information"><img src="/images/inventory/quantity'.$quantity.'.gif" width="64" height="64" /></a></div>'."\n";
 			echo'<div class="Clearer">&nbsp;</div>'."\n";
-			echo'<p><a href="ViewItem.php?item='.$auctionID.'" title="more information">'.$shortname.'</a>'."\n";
+			echo'<p><a href="/auction/ViewItem.php?item='.$auctionID.'" title="more information">'.$shortname.'</a>'."\n";
 			echo'<br />Current price: '.formatCurrency($currentprice);
 			
 			if ($reservePrice != "-1") {
@@ -783,9 +783,9 @@ order by tblauctionbids.bidAmount DESC limit 2
 			
 			
 			echo'<div class="InventorySlot" style="background-image: url(/images/inventory/'.$itemID.'.jpg);">';
-			echo'<a href="ViewItem.php?item='.$auctionID.'" title="more information"><img src="/images/inventory/quantity'.$quantity.'.gif" width="64" height="64" /></a></div>'."\n";
+			echo'<a href="/auction/ViewItem.php?item='.$auctionID.'" title="more information"><img src="/images/inventory/quantity'.$quantity.'.gif" width="64" height="64" /></a></div>'."\n";
 			echo'<div class="Clearer">&nbsp;</div>'."\n";
-			echo'<p><a href="ViewItem.php?item='.$auctionID.'" title="more information">'.$shortname.'</a>'."\n";
+			echo'<p><a href="/auction/ViewItem.php?item='.$auctionID.'" title="more information">'.$shortname.'</a>'."\n";
 			echo'<br />Current price: '.formatCurrency($currentprice);
 			
 			if ($reservePrice != "-1") {

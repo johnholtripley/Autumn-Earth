@@ -67,12 +67,13 @@ $result = mysql_query($query) or die ("couldn't execute query2");
 	}
 	
 	// get all the information required in one query:
-	$query = "SELECT tblposts.*, tblThreads.title AS threadTitle, tblThreads.status AS threadstatus, tblForums.title AS forumTitle, tblForums.imagePath, tblforums.ForumID AS thisforumid, tblacct.Accountname AS acctusername, tblacct.signature AS acctsignature, tblacct.currentCharID as currentcharid, tblCharacters.location AS charlocation, tblCharacters.charname AS charname 
+	$query = "SELECT tblposts.*, tblThreads.title AS threadTitle, tblThreads.status AS threadstatus, tblForums.title AS forumTitle, tblForums.imagePath, tblforums.ForumID AS thisforumid, tblacct.Accountname AS acctusername, tblacct.signature AS acctsignature, tblacct.currentCharID as currentcharid, tbllocations.locName AS charlocation, tblCharacters.charname AS charname 
 FROM tblposts
 INNER JOIN tblthreads on tblposts.ThreadID = tblthreads.ThreadID
 INNER JOIN tblforums on tblthreads.ForumID = tblforums.ForumID
 INNER JOIN tblacct on tblacct.accountID = tblposts.accountID
 INNER JOIN tblCharacters on tblCharacters.charID = tblacct.currentcharid
+INNER JOIN tbllocations on tblCharacters.location = tbllocations.locID
 WHERE tblposts.ThreadID = " . $threadID . " ORDER BY tblposts.Sticky DESC, tblposts.CreationTime ASC";
 
 
