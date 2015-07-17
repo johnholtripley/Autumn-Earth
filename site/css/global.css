@@ -24,6 +24,10 @@ font-family: "trebuchet ms", palatino, georgia, "times new roman", serif;
 font-size: 1em;
 }
 
+fieldset {
+	border: 0;
+}
+
 table {
 font-size: 1em;
 border-collapse: collapse;

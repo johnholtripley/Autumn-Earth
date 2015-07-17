@@ -28,7 +28,7 @@ $threadtitle = htmlCharsToEntities(cleanText($_POST["threadtitle"]));
 //
 
 
-// make sure that cleanURL is unique ###############
+
 
 
 $threadURL = "";
@@ -46,7 +46,30 @@ if (mysql_num_rows($result) > 0) {
 
 
 
-$cleanedURL = $threadURL.cleanURL($threadtitle);
+// make sure that cleanURL is unique:
+$tempURL = $threadURL.cleanURL($threadtitle);
+$checkQuery = "select * from tblthreads where cleanURL='".$tempURL."'";
+$result = mysql_query($checkQuery) or die ("couldn't execute query1");
+if (mysql_num_rows($result) > 0) {
+$i = mysql_num_rows($result) + 1;
+do {
+$tryURL = $tempURL."-".$i;
+$checkQuery = "select * from tblthreads where cleanURL='".$tryURL."'";
+$result = mysql_query($checkQuery) or die ("couldn't execute query1");
+
+$i++;
+} while (mysql_num_rows($result) > 0);
+$cleanedURL = $tryURL;
+	} else {
+		$cleanedURL = $tempURL;
+	}
+
+
+
+
+
+
+
 
 
 

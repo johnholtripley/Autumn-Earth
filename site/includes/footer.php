@@ -6,6 +6,7 @@
 <li><a href="/auction/">Auction</a></li>
 <li><a href="/mail/">Mail</a></li>
 <li><a href="/news/">News</a></li>
+<li><a href="/contracts/CreateContract.php">Contract</a></li>
 
 </ul>
 
