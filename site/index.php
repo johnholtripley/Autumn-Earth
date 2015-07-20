@@ -57,42 +57,6 @@ echo '<li><a href="/forum/'.$cleanURL.'/">'.$title.'</a></li>';
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 <hr/>
 <h2>Latest community pages</h2>
 <?php
@@ -164,10 +128,21 @@ displayAuctionNewestItems(3);
 
 
 <div style="width:50%;float:left">
-	<h2>		Contracts about to expire</h2>
+	<h2>		Contracts ending soon</h2>
+
+
+	<?php
+displayContractItemsEndingSoon(3);
+	?>
 </div>
 <div style="width:50%;float:left">
-	<h2>Latest contracts</h2>
+	<h2>New contracts</h2>
+
+<?php
+displayContractNewestItems(3);
+	?>
+
+
 </div>
 <hr style="clear:both;width:100%">
 

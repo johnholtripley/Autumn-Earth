@@ -812,5 +812,252 @@ order by tblauctionbids.bidAmount DESC limit 2
 }
 
 
+function displayContractNewestItems($itemLimit) {
+
+	$query = "SELECT tblcontracts.*, tblinventoryitems.itemID, tbllocations.locName as startLocName, tbllocations.locName as LocName, tblinventoryitems.shortname
+	FROM tblcontracts
+	inner join tblinventoryitems on tblcontracts.itemid = tblinventoryitems.itemid
+	inner join tbllocations on tbllocations.locID = tblcontracts.startLocation
+	WHERE tblcontracts.contractEnd > NOW()
+	ORDER BY tblcontracts.contractStart DESC
+	LIMIT ".$itemLimit;
+
+
+
+	$result = mysql_query($query) or die ("couldn't execute query");
+	
+	$numberofrows = mysql_num_rows($result);
+	if ($numberofrows>0) {
+	
+	
+	
+		while ($row = mysql_fetch_array($result)) {
+			extract($row);
+
+
+
+$endTime = strtotime($contractEnd);
+			$timeToEnd = $endTime-time();
+
+
+
+		echo'<div class="InventorySlot" style="background-image: url(/images/inventory/'.$itemID.'.jpg);">';
+			echo'<a href="/contracts/ViewItem.php?item='.$contractID.'" title="more information"><img src="/images/inventory/quantity'.$quantity.'.gif" width="64" height="64" /></a></div>'."\n";
+			echo'<div class="Clearer">&nbsp;</div>'."\n";
+		echo'<p><a href="/contracts/ViewItem.php?item='.$contractID.'" title="more information">'.$shortname.'</a>'."\n";
+
+echo'<br />Ends in '.timeRemaining($timeToEnd);
+		echo'</p>'."\n";
+
+
+
+
+
+
+
+
+
+
+
+if($contractType == 1) {
+// transportation - get end location
+	$query = "Select tblcontracts.*, tbllocations.locName as endLocName
+FROM tblcontracts
+	inner join tbllocations on tbllocations.locID = tblcontracts.endLocation
+	where tblcontracts.contractID = '".$contractID."'
+	";
+
+
+	$innerresult = mysql_query($query) or die ("couldn't execute inner query");
+	
+	$innernumberofrows = mysql_num_rows($innerresult);
+	if ($innernumberofrows>0) {
+$innerrow = mysql_fetch_array($innerresult);
+extract($innerrow);
+	}
+
+
+	echo "<p>Transportation from ".$startLocName." to ".$endLocName."</p>";
+
+
+// transportation - get current lowest bid:
+
+$query3 = "select tblcontractbids.contractID, min(tblcontractbids.bidAmount) as bidAmount, tblcharacters.charName, tblcharacters.charID
+from tblcontractbids
+inner join tblcharacters on tblcontractbids.characterID = tblcharacters.charID
+where tblcontractbids.contractID = '".$contractID."'
+group by tblcontractbids.characterID 
+order by tblcontractbids.bidAmount DESC limit 1
+			";
+		
+
+$innerresult = mysql_query($query3) or die ("couldn't execute inner query");
+	
+	$innernumberofrows = mysql_num_rows($innerresult);
+	if ($innernumberofrows>0) {
+$innerrow = mysql_fetch_array($innerresult);
+extract($innerrow);
+echo "<p>Current best offer: ".$bidAmount."</p>";
+	} else {
+		echo "<p>No bids so far</p>";
+	}
+
+
+
+} else {
+	// want to buy
+	echo "<p>wanted</p>";
+
+
+// want to buy - get current highest bid:
+
+$query3 = "select tblcontractbids.contractID, max(tblcontractbids.bidAmount) as bidAmount, tblcharacters.charName, tblcharacters.charID
+from tblcontractbids
+inner join tblcharacters on tblcontractbids.characterID = tblcharacters.charID
+where tblcontractbids.contractID = '".$contractID."'
+group by tblcontractbids.characterID 
+order by tblcontractbids.bidAmount DESC limit 1
+			";
+		
+
+$innerresult = mysql_query($query3) or die ("couldn't execute inner query");
+	
+	$innernumberofrows = mysql_num_rows($innerresult);
+	if ($innernumberofrows>0) {
+$innerrow = mysql_fetch_array($innerresult);
+extract($innerrow);
+echo "<p>Current best offer: ".$bidAmount."</p>";
+	} else {
+		echo "<p>No bids so far</p>";
+	}
+
+
+}
+
+
+		}
+	}
+
+
+}
+
+
+function displayContractItemsEndingSoon($itemLimit) {
+
+	$query = "SELECT tblcontracts.*, tblinventoryitems.itemID, tbllocations.locName as startLocName, tbllocations.locName as LocName, tblinventoryitems.shortname
+	FROM tblcontracts
+	inner join tblinventoryitems on tblcontracts.itemid = tblinventoryitems.itemid
+	inner join tbllocations on tbllocations.locID = tblcontracts.startLocation
+	WHERE tblcontracts.contractEnd > NOW()
+	ORDER BY tblcontracts.contractEnd ASC
+	LIMIT ".$itemLimit;
+
+
+
+
+
+
+
+	$result = mysql_query($query) or die ("couldn't execute query");
+	
+	$numberofrows = mysql_num_rows($result);
+	if ($numberofrows>0) {
+	
+	
+	
+		while ($row = mysql_fetch_array($result)) {
+			extract($row);
+
+
+
+$endTime = strtotime($contractEnd);
+			$timeToEnd = $endTime-time();
+
+
+
+		echo'<div class="InventorySlot" style="background-image: url(/images/inventory/'.$itemID.'.jpg);">';
+			echo'<a href="/contracts/ViewItem.php?item='.$contractID.'" title="more information"><img src="/images/inventory/quantity'.$quantity.'.gif" width="64" height="64" /></a></div>'."\n";
+			echo'<div class="Clearer">&nbsp;</div>'."\n";
+		echo'<p><a href="/contracts/ViewItem.php?item='.$contractID.'" title="more information">'.$shortname.'</a>'."\n";
+
+echo'<br />Ends in '.timeRemaining($timeToEnd);
+		echo'</p>'."\n";
+
+if($contractType == 1) {
+// transportation - get end location
+	$query = "Select tblcontracts.*, tbllocations.locName as endLocName
+FROM tblcontracts
+	inner join tbllocations on tbllocations.locID = tblcontracts.endLocation
+	where tblcontracts.contractID = '".$contractID."'
+	";
+
+
+	$innerresult = mysql_query($query) or die ("couldn't execute inner query");
+	
+	$innernumberofrows = mysql_num_rows($innerresult);
+	if ($innernumberofrows>0) {
+$innerrow = mysql_fetch_array($innerresult);
+extract($innerrow);
+	}
+
+
+	echo "<p>Transportation from ".$startLocName." to ".$endLocName."</p>";
+
+// transportation - get current lowest bid:
+
+$query3 = "select tblcontractbids.contractID, min(tblcontractbids.bidAmount) as bidAmount, tblcharacters.charName, tblcharacters.charID
+from tblcontractbids
+inner join tblcharacters on tblcontractbids.characterID = tblcharacters.charID
+where tblcontractbids.contractID = '".$contractID."'
+group by tblcontractbids.characterID 
+order by tblcontractbids.bidAmount DESC limit 1
+			";
+		
+
+$innerresult = mysql_query($query3) or die ("couldn't execute inner query");
+	
+	$innernumberofrows = mysql_num_rows($innerresult);
+	if ($innernumberofrows>0) {
+$innerrow = mysql_fetch_array($innerresult);
+extract($innerrow);
+echo "<p>Current best offer: ".$bidAmount."</p>";
+	} else {
+		echo "<p>No bids so far</p>";
+	}
+	
+} else {
+	// want to buy
+	echo "<p>wanted</p>";
+
+	// want to buy - get current highest bid:
+
+$query3 = "select tblcontractbids.contractID, max(tblcontractbids.bidAmount) as bidAmount, tblcharacters.charName, tblcharacters.charID
+from tblcontractbids
+inner join tblcharacters on tblcontractbids.characterID = tblcharacters.charID
+where tblcontractbids.contractID = '".$contractID."'
+group by tblcontractbids.characterID 
+order by tblcontractbids.bidAmount DESC limit 1
+			";
+		
+
+$innerresult = mysql_query($query3) or die ("couldn't execute inner query");
+	
+	$innernumberofrows = mysql_num_rows($innerresult);
+	if ($innernumberofrows>0) {
+$innerrow = mysql_fetch_array($innerresult);
+extract($innerrow);
+echo "<p>Current best offer: ".$bidAmount."</p>";
+	} else {
+		echo "<p>No bids so far</p>";
+	}
+}
+
+
+		}
+	}
+
+
+}
+
 
 ?>
