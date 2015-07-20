@@ -230,6 +230,6 @@ echo '<div class="Error">not a valid thread id</div>'."\n";
 }
 
 
-include($_SERVER['DOCUMENT_ROOT']."/includes/close.php");
+
 include($_SERVER['DOCUMENT_ROOT']."/includes/footer.php");
 ?>

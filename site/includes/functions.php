@@ -897,7 +897,7 @@ $innerresult = mysql_query($query3) or die ("couldn't execute inner query");
 	if ($innernumberofrows>0) {
 $innerrow = mysql_fetch_array($innerresult);
 extract($innerrow);
-echo "<p>Current best offer: ".$bidAmount."</p>";
+echo "<p>Current best offer: ".formatCurrency($bidAmount)."</p>";
 	} else {
 		echo "<p>No bids so far</p>";
 	}
@@ -926,7 +926,7 @@ $innerresult = mysql_query($query3) or die ("couldn't execute inner query");
 	if ($innernumberofrows>0) {
 $innerrow = mysql_fetch_array($innerresult);
 extract($innerrow);
-echo "<p>Current best offer: ".$bidAmount."</p>";
+echo "<p>Current best offer: ".formatCurrency($bidAmount)."</p>";
 	} else {
 		echo "<p>No bids so far</p>";
 	}
@@ -1020,7 +1020,7 @@ $innerresult = mysql_query($query3) or die ("couldn't execute inner query");
 	if ($innernumberofrows>0) {
 $innerrow = mysql_fetch_array($innerresult);
 extract($innerrow);
-echo "<p>Current best offer: ".$bidAmount."</p>";
+echo "<p>Current best offer: ".formatCurrency($bidAmount)."</p>";
 	} else {
 		echo "<p>No bids so far</p>";
 	}
@@ -1046,7 +1046,7 @@ $innerresult = mysql_query($query3) or die ("couldn't execute inner query");
 	if ($innernumberofrows>0) {
 $innerrow = mysql_fetch_array($innerresult);
 extract($innerrow);
-echo "<p>Current best offer: ".$bidAmount."</p>";
+echo "<p>Current best offer: ".formatCurrency($bidAmount)."</p>";
 	} else {
 		echo "<p>No bids so far</p>";
 	}
