@@ -1,0 +1,41 @@
+tblacct:
+accountstatus -
+0 ... ordinary user
+1 ... moderator
+2 ... administrator
+
+accounttype -
+0 ... hide all user's posts - and no new posts
+1 ... show posts, but not allowed to make any new ones
+2 ... show posts, and can post new ones
+
+
+
+
+tblforums:
+status -
+0 ... hide
+1 ... locked (no new threads) but show
+2 ... show, and can have new threads added 
+
+
+
+tblthreads:
+status -
+0 ... hide
+1 ... locked - no new posts, but show
+2 ... show, and can have new posts
+
+
+
+tblposts:
+status -
+0 ... don't show
+1 ... show
+
+
+
+tblSubscribedThreads:
+status -
+0 ... not sent an email for this thread
+1 ... has been sent an email

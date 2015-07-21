@@ -1,0 +1,24 @@
+// colours:
+$baseColour: #fff;
+$accentColour: #CD740B;
+$titleColor: #999966;
+
+$siteRoot: "http://www.autumnearth.com";
+
+// typography:
+$titleFont: georgia, palatino, "times new roman", serif;
+$bodyFont: "trebuchet ms", palatino, georgia, "times new roman", serif;
+
+// grid:
+$gutter: 3%;
+
+// breakpoints:
+$medium: 30em;
+$wide: 54em;
+$widest: 70em;
+
+$maxWidth: 80em;
+
+// which breakpoints should older IE use:
+$triggerIEAt: $widest;
+

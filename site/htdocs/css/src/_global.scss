@@ -1,0 +1,317 @@
+body {
+    margin: 0;
+   background: #3D3220;
+    text-align: left;
+
+}
+
+hr {
+    display: block;
+    height: 1px;
+    border: 0;
+    border-top: 1px solid #beb19e;
+    margin: 1em;
+    padding: 0;
+}
+
+ins {
+    background: #ff9;
+    color: #000;
+    text-decoration: none;
+}
+
+html,
+button,
+input,
+select,
+textarea {
+    font-family: $bodyFont;
+    color: $baseColour;
+}
+
+::-moz-selection {
+    background: $accentColour;
+    color: #fff;
+    -moz-text-shadow: none;
+}
+
+::selection {
+    background: $accentColour;
+    color: #fff;
+    -webkit-text-shadow: none;
+    text-shadow: none;
+}
+/* =============================================================================
+   Links
+   ========================================================================== */
+
+a {
+    color: $baseColour;
+    &:visited {
+          color: $baseColour;
+    }
+
+    @include transition(color 0.4s ease);
+    @include attention() {
+        color: $accentColour;
+        outline: thin dotted;
+    }
+}
+
+
+
+
+
+/* #Typography
+================================================== */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: $titleFont;
+    color: $titleColor;
+padding: 0;
+
+}
+
+h1 em,
+h2 em,
+h3 em,
+h4 em,
+h5 em,
+h6 em {
+
+    font-style: italic;
+}
+
+h1 a,
+h2 a,
+h3 a,
+h4 a,
+h5 a,
+h6 a {
+    font-weight: inherit;
+}
+
+
+
+
+
+
+
+
+p {
+    font-family: $bodyFont;
+    @include pxRem("font-size", 16);
+    line-height: 1.35em;
+    letter-spacing: 0.02em;
+    padding: 0;
+    
+    color: $baseColour;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  @include pxRem("margin", 8 0 12 0);  
+}
+
+p, ol, ul, dl {
+@include pxRem("margin", 0 0 12 0);
+}
+
+/* #Helpers
+================================================== */
+
+
+
+.noWidows {
+    white-space: nowrap;
+}
+
+.ellipsis {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.skip-links {
+    @extend .visibleHide;
+}
+
+// responsive video:
+.videoWrapper {
+    position: relative;
+    // 16:9 ratio:
+    padding-bottom: 56.25%;
+    height: 0;
+    width: 100%;
+}
+
+.videoWrapper object,
+.videoWrapper embed,
+.videoWrapper iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+
+
+
+
+
+
+
+
+
+
+// styled selects
+// http://jsbin.com/juvixufu/10/edit?html,output
+.selectWrapper {
+    position: relative;
+    display: block;
+    margin-top: 0.5em;
+    overflow: hidden;
+    width: 100%;
+    max-width: 100%;
+}
+
+.selectWrapper select {
+    /* Make sure the select is wider than the container so we can clip the arrow */
+    
+    width: 110%;
+    max-width: 110%;
+    min-width: 110%;
+    /* Remove select styling */
+    
+    appearance: none;
+    -webkit-appearance: none;
+    /* Ugly Firefox way of doing it */
+    
+    -moz-appearance: window;
+    text-indent: 0.01px;
+    text-overflow: "";
+    /* Magic font size number to prevent iOS text zoom */
+    
+    font-size: 16px;
+    background: none;
+    border: none;
+    color: #444;
+    outline: none;
+    /* Padding works surpringly well */
+    
+    padding: .4em 19% .4em .8em;
+    font-family: helvetica, sans-serif;
+    line-height: 1.2;
+    margin: .2em;
+}
+/* This hides native dropdown button arrow in IE */
+
+.selectWrapper select::-ms-expand {
+    display: none;
+}
+
+/* Custom arrow - could be an image, SVG, icon font, etc. */
+
+.selectWrapper:after {
+    background: none;
+    color: #bbb;
+    content: "\25BE";
+    font-size: 1.5em;
+    padding: 0;
+    position: absolute;
+    right: 0.4em;
+    top: 0.2em;
+    bottom: .3em;
+    z-index: 1;
+    /* This hack makes the select behind the arrow clickable in some browsers */
+    
+    pointer-events: none;
+}
+/* Hover style - tricky because we're clipping the overflow */
+
+.selectWrapper:hover {
+    border: 1px solid #888;
+}
+/* Focus style */
+
+.selectWrapper select:focus {
+    outline: none;
+    box-shadow: 0 0 3px 3px rgba(180, 222, 250, 0.85);
+}
+/* This hides focus around selected option in FF */
+
+.selectWrapper select:-moz-focusring {
+    color: transparent;
+    text-shadow: 0 0 0 #000;
+}
+/* #example font-face embed
+================================================== */
+/*
+
+
+@font-face {
+    font-family: 'LatoBold';
+    src: url('../fonts/lato-bol-webfont.eot');
+    src: url('../fonts/lato-bol-webfont.eot?#iefix') format('embedded-opentype'),
+    url('../fonts/lato-bol-webfont.svg#lato') format('svg'),
+         url('../fonts/lato-bol-webfont.woff') format('woff'),
+         url('../fonts/lato-bol-webfont.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'LatoBoldItalic';
+    src: url('../fonts/lato-bolita-webfont.eot');
+    src: url('../fonts/lato-bolita-webfont.eot?#iefix') format('embedded-opentype'),
+    url('../fonts/lato-bolita-webfont.svg#lato') format('svg'),
+         url('../fonts/lato-bolita-webfont.woff') format('woff'),
+         url('../fonts/lato-bolita-webfont.ttf') format('truetype');
+    font-weight: bold;
+    font-style: italic;
+}
+
+
+
+@font-face {
+    font-family: 'asapRegular';
+    src: url('../fonts/asap-regular-webfont.eot');
+    src: url('../fonts/asap-regular-webfont.eot?#iefix') format('embedded-opentype'),
+    url('../fonts/asap-regular-webfont.svg#asapRegular') format('svg'),
+         url('../fonts/asap-regular-webfont.woff') format('woff'),
+         url('../fonts/asap-regular-webfont.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'asapItalic';
+    src: url('../fonts/asap-italic-webfont.eot');
+    src: url('../fonts/asap-italic-webfont.eot?#iefix') format('embedded-opentype'),
+    url('../fonts/asap-italic-webfont.svg#asapItalic') format('svg'),
+         url('../fonts/asap-italic-webfont.woff') format('woff'),
+         url('../fonts/asap-italic-webfont.ttf') format('truetype');
+    font-weight: normal;
+    font-style: italic;
+}
+
+
+*/
+
+
+
+
+
+
+
+
+.InventorySlot {
+    width: 64px;
+    height: 64px;
+}
+
