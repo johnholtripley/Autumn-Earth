@@ -1,6 +1,0 @@
-/* autumn earth accessible style */
-
-/* write access key after links */
-.IsAccessKey:after {
-content: " [" attr(accesskey) "]";
-}

@@ -1,4 +1,0 @@
-User-agent: *
-Sitemap: http://www.autumnearth.com/sitemap.xml
-Disallow: /includes/
-Disallow: /data/

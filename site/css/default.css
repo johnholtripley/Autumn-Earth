@@ -1,6 +1,0 @@
-@import url(additional.css);
-/* the above loads in styles which aren't safe for NS4 */
-
-body {
-font-size: 0.75em;
-}

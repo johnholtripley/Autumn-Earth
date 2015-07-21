@@ -1,8 +1,0 @@
-/* styles that are included only if JavaScript is enabled to hide/place dynamic elements */
-
-#Help1 {
-display: none;
-position: absolute;
-top: 160px;
-left: 250px;
-}
