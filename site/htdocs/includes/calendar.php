@@ -72,7 +72,7 @@ for ($i=1; $i<=($monthdays); $i++) {
 
 echo'<img src="/assets/calendar/'.$monthname.'.jpg" width="175" height="84" alt="Events being held in '.$monthname.'" /><br />'."\n";
 echo'<a href="'.$_SERVER['PHP_SELF'].'?year='.$thisyear.'&amp;month='.($thismonth-1).'">&lt; </a>'.$monthname.' '.$thisyear.'<a href="'.$_SERVER['PHP_SELF'].'?year='.$thisyear.'&amp;month='.($thismonth+1).'"> &gt;</a>'."\n";
-echo'<table id="Calendar" summary="Events Calendar for '.$monthname.'">'."\n";
+echo'<table id="Calendar">'."\n";
 echo'<tr><td class="DateItem">Mon</td><td class="DateItem">Tue</td><td class="DateItem">Wed</td><td class="DateItem">Thu</td><td class="DateItem">Fri</td><td class="DateItem">Sat</td><td class="DateItem">Sun</td></tr>'."\n";
 // calculate number of table cells required:
 $blankstart = ($firstdaynumeric-1);
@@ -137,7 +137,7 @@ echo'</table>'."\n";
 ?>
 <div id="tooltipevent" class="ttip">
 <div class="ttiptop">
-<div id="ttipdyn" name="ttipdyn"><p>click for event details</p></div>
+<div id="ttipdyn"><p>click for event details</p></div>
 	</div>
 	<div class="ttipbottom">&nbsp;</div>
 </div>

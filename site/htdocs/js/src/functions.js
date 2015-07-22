@@ -1,3 +1,4 @@
+
 /*
 function viewport() {
  
@@ -36,7 +37,8 @@ document.documentElement.className +=" canvas" ;
 
 */
 
-
+// create Juno object for scoping:
+var ae = new Object();
 
 
 // ---------------------
@@ -71,7 +73,7 @@ function hasParent(element, id) {
     while ((element = element.parentNode));
   }
   return false;
-};
+}
 // with magento, may as well use jQuery or Prototype
 /*
     

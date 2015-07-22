@@ -1,0 +1,148 @@
+#wrapper {
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+}
+
+.js #offCanvasWrapper {
+    position: relative;
+    width: 100%;
+    left: 0;
+    @include transition("left 0.4s ease-out, right 0.4s ease-out");
+}
+
+#navigation, #basket {
+    position: absolute;
+    top: 0;
+}
+
+@include mq($useOffCanvasUpTo) {
+    #menuToggle, #basketToggle {
+        display: none;
+    }
+}
+
+@media (max-width: $useOffCanvasUpTo - 0.01em) {
+    .js #navigation {
+        left: -$offCanvasWidth;
+        background: $accentColour;
+        height: 100%;
+        width: $offCanvasWidth;
+    }
+    .js #basket {
+        right: -$offCanvasWidth;
+        background: $accentColour;
+        height: 100%;
+        width: $offCanvasWidth;
+    }
+    .offCanvas #offCanvasWrapper {
+        right: -$offCanvasWidth;
+        left: auto;
+    }
+    .offCanvasBasket #offCanvasWrapper {
+        left: -$offCanvasWidth;
+
+    }
+    
+    @supports (transform: translate3d(0, 0, 0)) {
+        .js #navigation {
+            left: 0;
+            transform: translate3d(-100%, 0, 0);
+            backface-visibility: hidden;
+        }
+        .js #basket {
+            right: 0;
+            transform: translate3d(100%, 0, 0);
+            backface-visibility: hidden;
+        }
+        .js #offCanvasWrapper {
+            left: 0;
+            transform: translate3d(0, 0, 0);
+            transition: transform 0.4s ease-out;
+            backface-visibility: hidden;
+        }
+        .offCanvas #offCanvasWrapper {
+            transform: translate3d($offCanvasWidth, 0, 0) scale3d(1, 1, 1);
+        }
+        .offCanvasBasket #offCanvasWrapper {
+            transform: translate3d((0-$offCanvasWidth), 0, 0) scale3d(1, 1, 1);
+        }
+        .js #offCanvasWrapper #navigationInner {
+            transition: transform 0.5s ease-out;
+            transform: translate3d(-5%, 0, 0) scale3d(0.9, 0.9, 0.9);
+            transform-origin: 100% 0%;
+        }
+        .js #offCanvasWrapper #basketInner {
+            transition: transform 0.5s ease-out;
+            transform: translate3d(5%, 0, 0) scale3d(0.9, 0.9, 0.9);
+            transform-origin: 100% 0%;
+        }
+        .offCanvas #offCanvasWrapper #navigationInner {
+            transform: translate3d(0, 0, 0);
+        }
+        .offCanvasBasket #offCanvasWrapper #basketInner {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+    
+}
+
+
+@media (max-width: $useOffCanvasUpTo - 0.01em) and (-webkit-transform-3d),
+(max-width: $useOffCanvasUpTo - 0.01em) and (transform-3d) {
+    .js #navigation {
+        left: 0;
+        -webkit-transform: translate3d(-100%, 0, 0);
+        transform: translate3d(-100%, 0, 0);
+        -webkit-backface-visibility: hidden;
+        backface-visibility: hidden;
+    }
+    .js #basket {
+        right: 0;
+        -webkit-transform: translate3d(100%, 0, 0);
+        transform: translate3d(100%, 0, 0);
+        -webkit-backface-visibility: hidden;
+        backface-visibility: hidden;
+    }
+    .js #offCanvasWrapper {
+        left: 0;
+        -webkit-transform: translate3d(0, 0, 0);
+        transform: translate3d(0, 0, 0);
+        -webkit-transition: -webkit-transform 0.4s ease-out;
+        transition: transform 0.4s ease-out;
+        -webkit-backface-visibility: hidden;
+        backface-visibility: hidden;
+    }
+    .offCanvas #offCanvasWrapper {
+        -webkit-transform: translate3d($offCanvasWidth, 0, 0) scale3d(1, 1, 1);
+        transform: translate3d($offCanvasWidth, 0, 0) scale3d(1, 1, 1);
+    }
+    .offCanvasBasket #offCanvasWrapper {
+        -webkit-transform: translate3d(0-$offCanvasWidth, 0, 0) scale3d(1, 1, 1);
+        transform: translate3d(0-$offCanvasWidth, 0, 0) scale3d(1, 1, 1);
+    }
+    .js #offCanvasWrapper #navigationInner {
+        -webkit-transition: -webkit-transform 0.5s ease-out;
+        transition: transform 0.5s ease-out;
+        -webkit-transform: translate3d(-5%, 0, 0) scale3d(0.9, 0.9, 0.9);
+        transform: translate3d(-5%, 0, 0) scale3d(0.9, 0.9, 0.9);
+        -webkit-transform-origin: 100% 0%;
+        transform-origin: 100% 0%;
+    }
+    .js #offCanvasWrapper #basketInner {
+        -webkit-transition: -webkit-transform 0.5s ease-out;
+        transition: transform 0.5s ease-out;
+        -webkit-transform: translate3d(5%, 0, 0) scale3d(0.9, 0.9, 0.9);
+        transform: translate3d(5%, 0, 0) scale3d(0.9, 0.9, 0.9);
+        -webkit-transform-origin: 100% 0%;
+        transform-origin: 100% 0%;
+    }
+    .offCanvas #offCanvasWrapper #navigationInner {
+        -webkit-transform: translate3d(0, 0, 0);
+        transform: translate3d(0, 0, 0);
+    }
+    .offCanvasBasket #offCanvasWrapper #navigationInner {
+        -webkit-transform: translate3d(0, 0, 0);
+        transform: translate3d(0, 0, 0);
+    }
+}

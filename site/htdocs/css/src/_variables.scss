@@ -19,6 +19,7 @@ $widest: 70em;
 
 $maxWidth: 80em;
 
-// which breakpoints should older IE use:
 $triggerIEAt: $widest;
 
+$useOffCanvasUpTo: $wide;
+$offCanvasWidth: 70%;

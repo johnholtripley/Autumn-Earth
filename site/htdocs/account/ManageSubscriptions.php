@@ -81,7 +81,7 @@ if (@$_SESSION['username']) {
 	// remove any GET data as this will have been handled by now
 	echo'<form name="Subscriptions" action="' . $thisposturl . '" method="post">';
 	
-		echo'<table cellspacing="0" cellpadding="0" class="StyledTable" summary="This table displays the threads that are currently subscribed to">';
+		echo'<table cellspacing="0" cellpadding="0" class="StyledTable">';
 		// display output:
 		$checkcounter = 0;
 		while ($row = mysql_fetch_array($result)) {

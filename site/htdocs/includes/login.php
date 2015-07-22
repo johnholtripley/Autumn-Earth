@@ -59,7 +59,7 @@ WHERE tblacct.accountName='".$_SESSION['username']."' and tblmail.mailread = '0'
 	echo '<br />'."\n";
 	echo '<a href="/account/ManageAccount.php" title="Click to change your Account details">Manage your Account</a>'."\n";
 
-	echo '<form action="' . $thisurl . '" method="post" name="logoutform" id="logoutform" />'."\n";
+	echo '<form action="' . $thisurl . '" method="post" name="logoutform" id="logoutform">'."\n";
 	echo '<input type="submit" name="subbutton" value="log out" />'."\n";
 	echo '</form>';
 } else if (isset($_COOKIE['remembername']) && isset($_COOKIE['rememberp']) && $loggedout==false) {
@@ -166,8 +166,8 @@ WHERE tblacct.accountName='".$processedlogin."' and tblmail.mailread = '0'";
 	echo '<br />'."\n";
 	echo '<a href="/account/ManageAccount.php" title="Click to change your Account details">Manage your Account</a>'."\n";
 	echo '<br /><br />'."\n";
-	echo '<form action="' . $thisurl . '" method="post" name="logoutform" />'."\n";
-	echo '<input type="submit" name="subbutton" value="log out" />'."\n";
+	echo '<form action="' . $thisurl . '" method="post" name="logoutform">'."\n";
+	echo '<input type="submit" name="subbutton" value="log out">'."\n";
 	echo '</form>'."\n";
 		} else {
 		

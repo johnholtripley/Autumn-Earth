@@ -1,0 +1,117 @@
+ae.navigationIsRevealed = false;
+ae.basketIsRevealed = false;
+// toggle with the menu button:
+document.getElementById("menuToggle").addEventListener("click", function(e) {
+	ae.checkToggleNavigation();
+	if (e) {
+		e.preventDefault();
+	}
+}, false);
+document.getElementById("basketToggle").addEventListener("click", function(e) {
+	ae.checkToggleBasketNavigation();
+	if (e) {
+		e.preventDefault();
+	}
+}, false);
+ae.checkToggleNavigation = function() {
+	if (ae.navigationIsRevealed) {
+		// hide navigation:
+		removeClass(document.documentElement, "offCanvas");
+		ae.navigationIsRevealed = false;
+	} else {
+		// reveal navigation:
+		addClass(document.documentElement, "offCanvas");
+		ae.navigationIsRevealed = true;
+	}
+};
+ae.checkToggleBasketNavigation = function() {
+	if (ae.basketIsRevealed) {
+		// hide navigation:
+		removeClass(document.documentElement, "offCanvasBasket");
+		ae.basketIsRevealed = false;
+	} else {
+		// reveal navigation:
+		addClass(document.documentElement, "offCanvasBasket");
+		ae.basketIsRevealed = true;
+	}
+};
+ae.checkCloseNavigation = function(e) {
+	if (ae.navigationIsRevealed) {
+		// check it's not the menu icon itself as this will trigger independently (and would cause the event to be fired twice)
+		if (e.target.id != "menuToggle") {
+			// check the click isn't within the nav panel:
+			if (!hasParent(e.target, 'navigation')) {
+				// hide navigation:
+				removeClass(document.documentElement, "offCanvas");
+				ae.navigationIsRevealed = false;
+			}
+		}
+	}
+};
+ae.checkCloseBasketNavigation = function(e) {
+		if (ae.basketIsRevealed) {
+			// check it's not the menu icon itself as this will trigger independently (and would cause the event to be fired twice)
+			if (e.target.id != "basketToggle") {
+				// check the click isn't within the nav panel:
+				if (!hasParent(e.target, 'basket')) {
+					// hide navigation:
+					removeClass(document.documentElement, "offCanvasBasket");
+					ae.basketIsRevealed = false;
+				}
+			}
+		}
+	};
+	// close by touching the visible part of the content:
+document.addEventListener("click", function(e) {
+	ae.checkCloseNavigation(e);
+	ae.checkCloseBasketNavigation(e);
+}, true);
+// double up for mobile event:
+document.addEventListener("touchend", function(e) {
+	ae.checkCloseNavigation(e);
+	ae.checkCloseBasketNavigation(e);
+});
+ae.swipeLeft = function() {
+	if (ae.navigationIsRevealed) {
+		removeClass(document.documentElement, "offCanvas");
+		ae.navigationIsRevealed = false;
+	}
+};
+ae.swipeRight = function() {
+		if (ae.basketIsRevealed) {
+			removeClass(document.documentElement, "offCanvasBasket");
+			ae.basketIsRevealed = false;
+		}
+	};
+	// init touch:
+if ("ontouchstart" in document.documentElement) {
+	document.body.addEventListener("touchstart", function(a) {
+		startPointX = a.touches[0].pageX;
+		startPointY = a.touches[0].pageY;
+		isScrolling = "";
+		deltaX = 0;
+	}, false);
+	document.body.addEventListener("touchmove", function(a) {
+		if (a.touches.length > 1 || a.scale && a.scale !== 1) {
+			return;
+		}
+		deltaX = a.touches[0].pageX - startPointX;
+		if (isScrolling === "") {
+			isScrolling = (isScrolling || Math.abs(deltaX) < Math.abs(a.touches[0].pageY - startPointY));
+		}
+		if (!isScrolling) {
+			a.preventDefault();
+		}
+	}, false);
+	document.body.addEventListener("touchend", function(a) {
+		if (!isScrolling) {
+			if ((Math.abs(deltaX)) > 100) {
+				if (deltaX < 0) {
+					ae.swipeLeft();
+				} else {
+					ae.swipeRight();
+				}
+			}
+		}
+	}, false);
+}

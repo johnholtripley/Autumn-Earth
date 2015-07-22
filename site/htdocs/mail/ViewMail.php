@@ -290,7 +290,7 @@ $result = mysql_query($query) or die ("couldn't execute query2");
 	
 	<div id="tooltipinv" class="ttip">
 <div class="ttiptop">
-<div id="ttipdyn" name="ttipdyn"><p>click to add to inventory</p></div>
+<div id="ttipdyn"><p>click to add to inventory</p></div>
 	</div>
 	<div class="ttipbottom">&nbsp;</div>
 </div>

@@ -163,7 +163,7 @@ echo'<div id="removeAttach"><a href="/no_javascript.html" title="Remove this att
 
 <div id="tooltipinv" class="ttip">
 <div class="ttiptop">
-<div id="ttipdyn" name="ttipdyn"><p>click to add to mail</p></div>
+<div id="ttipdyn"><p>click to add to mail</p></div>
 	</div>
 	<div class="ttipbottom">&nbsp;</div>
 </div>

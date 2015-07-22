@@ -213,7 +213,7 @@ $validTags = array('[b]','[i]','[u]','[s]','[h]','[/b]','[/i]','[/u]','[/s]','[/
 $replaceTags = array('<strong>','<em>','<span class="Underline">','<del>','<span class="Header">','</strong>','</em>','</span>','</del>','</span>','</a>','</p></blockquote><p>');
 // for smilies:
 $validSmilieCode = array(':)',':(');
-$SmilieReplace = array('<img src="/assets/forum/smilie_grin.gif" width="20" height="20" alt="Happy Smilie" />','<img src="/assets/forum/smilie_sad.gif" width="20" height="20" alt="Sad Smilie" />');
+$SmilieReplace = array('<img src="/assets/forum/smilie_grin.gif" width="20" height="20" alt="Happy Smilie" />','<img src="/assets/forum/smilie_sad.gif" width="20" height="20" alt="Sad Smilie">');
 
 	
 	for ($i = 0; $i<count($validTags); $i++) {
@@ -292,7 +292,7 @@ if (count($splittext) > 0) {
 				$splittext[$i] = substr($splittext[$i], 0, $linkpos) . substr($splittext[$i], ($closetag+1));
 				} else {
 				// do replacement:
-			 $splittext[$i] = substr($splittext[$i], 0, $linkpos) . "</p><div class=\"LinkedImage\"><img src=\"" . $attribute. "\" alt=\"Image - " . $attribute . "\" /></div><p>" .substr($splittext[$i], ($closetag+1));
+			 $splittext[$i] = substr($splittext[$i], 0, $linkpos) . "</p><div class=\"LinkedImage\"><img src=\"" . $attribute. "\" alt=\"Image - " . $attribute . "\"></div><p>" .substr($splittext[$i], ($closetag+1));
 				}
 			 
 			 
@@ -567,7 +567,7 @@ function writeFlash($Fwidth, $Fheight, $Fpath, $Faltimage, $Falttext, $Fobjectna
 	echo '<param name="movie" value="'.$Fpath.'" />'."\n";
 	echo '<param name="wmode" value="transparent" />'."\n";
 	echo '<param name="quality" value="high" />'."\n";
-	echo '<img src="'.$Faltimage.'" width="'.$Fwidth.'" height="'.$Fheight.'" alt="'.$Falttext.'" />'."\n";
+	echo '<img src="'.$Faltimage.'" width="'.$Fwidth.'" height="'.$Fheight.'" alt="'.$Falttext.'">'."\n";
 	echo '</object>'."\n";
 	echo '</noscript>'."\n";
 }
@@ -679,7 +679,7 @@ order by tblauctionbids.bidAmount DESC limit 2
 			
 			
 			echo'<div class="InventorySlot" style="background-image: url(/images/inventory/'.$itemID.'.jpg);">';
-			echo'<a href="/auction/ViewItem.php?item='.$auctionID.'" title="more information"><img src="/images/inventory/quantity'.$quantity.'.gif" width="64" height="64" /></a></div>'."\n";
+			echo'<a href="/auction/ViewItem.php?item='.$auctionID.'" title="more information"><img src="/images/inventory/quantity'.$quantity.'.gif" width="64" height="64" alt="'.$shortname.'"></a></div>'."\n";
 			echo'<div class="Clearer">&nbsp;</div>'."\n";
 			echo'<p><a href="/auction/ViewItem.php?item='.$auctionID.'" title="more information">'.$shortname.'</a>'."\n";
 			echo'<br />Current price: '.formatCurrency($currentprice);
@@ -783,7 +783,7 @@ order by tblauctionbids.bidAmount DESC limit 2
 			
 			
 			echo'<div class="InventorySlot" style="background-image: url(/images/inventory/'.$itemID.'.jpg);">';
-			echo'<a href="/auction/ViewItem.php?item='.$auctionID.'" title="more information"><img src="/images/inventory/quantity'.$quantity.'.gif" width="64" height="64" /></a></div>'."\n";
+			echo'<a href="/auction/ViewItem.php?item='.$auctionID.'" title="more information"><img src="/images/inventory/quantity'.$quantity.'.gif" width="64" height="64" alt="'.$shortname.'"></a></div>'."\n";
 			echo'<div class="Clearer">&nbsp;</div>'."\n";
 			echo'<p><a href="/auction/ViewItem.php?item='.$auctionID.'" title="more information">'.$shortname.'</a>'."\n";
 			echo'<br />Current price: '.formatCurrency($currentprice);
@@ -842,7 +842,7 @@ $endTime = strtotime($contractEnd);
 
 
 		echo'<div class="InventorySlot" style="background-image: url(/images/inventory/'.$itemID.'.jpg);">';
-			echo'<a href="/contracts/ViewItem.php?item='.$contractID.'" title="more information"><img src="/images/inventory/quantity'.$quantity.'.gif" width="64" height="64" /></a></div>'."\n";
+			echo'<a href="/contracts/ViewItem.php?item='.$contractID.'" title="more information"><img src="/images/inventory/quantity'.$quantity.'.gif" width="64" height="64" alt="'.$shortname.'"></a></div>'."\n";
 			echo'<div class="Clearer">&nbsp;</div>'."\n";
 		echo'<p><a href="/contracts/ViewItem.php?item='.$contractID.'" title="more information">'.$shortname.'</a>'."\n";
 
@@ -976,7 +976,7 @@ $endTime = strtotime($contractEnd);
 
 
 		echo'<div class="InventorySlot" style="background-image: url(/images/inventory/'.$itemID.'.jpg);">';
-			echo'<a href="/contracts/ViewItem.php?item='.$contractID.'" title="more information"><img src="/images/inventory/quantity'.$quantity.'.gif" width="64" height="64" /></a></div>'."\n";
+			echo'<a href="/contracts/ViewItem.php?item='.$contractID.'" title="more information"><img src="/images/inventory/quantity'.$quantity.'.gif" width="64" height="64" alt="'.$shortname.'"></a></div>'."\n";
 			echo'<div class="Clearer">&nbsp;</div>'."\n";
 		echo'<p><a href="/contracts/ViewItem.php?item='.$contractID.'" title="more information">'.$shortname.'</a>'."\n";
 

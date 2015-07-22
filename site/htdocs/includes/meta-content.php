@@ -2,7 +2,7 @@
 
 
 
-echo '<meta content="'.$metadesc.'" name="description" />'."\n";
+echo '<meta content="'.$longDescription.'" name="description">'."\n";
 
 
 ?>
@@ -25,22 +25,22 @@ echo '<meta content="'.$metadesc.'" name="description" />'."\n";
 <link rel="shortcut icon" sizes="196x196" href="/images/icons/196.png">
 <link rel="shortcut icon" sizes="228x228" href="/images/icons/228.png">
 /-->
-<meta name="description" content="<?php echo longDescription; ?>" />
 
 
 
-<meta name="twitter:card" content="summary" />
-<meta name="twitter:site" content="@autumnearth" />
-<meta name="twitter:title" content="<?php echo $pagetitle; ?>" />
-<meta name="twitter:description" content="<?php echo longDescription; ?>" />
-<meta name="twitter:image" content="http://www.autumnearth.com/images/icons/120.png" />
+
+<meta name="twitter:card" content="summary">
+<meta name="twitter:site" content="@autumnearth">
+<meta name="twitter:title" content="<?php echo $pagetitle; ?>">
+<meta name="twitter:description" content="<?php echo $longDescription; ?>">
+<meta name="twitter:image" content="<?php echo $shareImagePath; ?>">
 
 
-<meta property="og:title" content="<?php echo $pagetitle; ?>" />
-<meta property="og:image" content="http://unicode.johnholtripley.co.uk/shared/dynamic-favicon.php" />
-<meta property="og:description" content="<?php echo longDescription; ?>" />
+<meta property="og:title" content="<?php echo $pagetitle; ?>">
+<meta property="og:image" content="<?php echo $shareImagePath; ?>">
+<meta property="og:description" content="<?php echo $longDescription; ?>">
 <meta property="og:type" content="website">
-<meta property="og:url" content="http://unicode.johnholtripley.co.uk/">
+<meta property="og:url" content="<?php echo $thisBuiltURL; ?>">
 <meta itemprop="name" content="<?php echo $pagetitle; ?>">
-<meta itemprop="description" content="<?php echo longDescription; ?>">
-<meta itemprop="image" content="http://unicode.johnholtripley.co.uk/shared/dynamic-favicon.php?fb=true">
+<meta itemprop="description" content="<?php echo $longDescription; ?>">
+<meta itemprop="image" content="<?php echo $shareImagePath; ?>">
