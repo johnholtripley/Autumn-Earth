@@ -158,7 +158,16 @@ if ($_POST["mainPollButton"] == "Vote") {
 
 
 include($_SERVER['DOCUMENT_ROOT']."/includes/html-header.php");
-
+include($_SERVER['DOCUMENT_ROOT']."/includes/pagehead.php");
 ?>
+<div class="row">
+	<?php
+include($_SERVER['DOCUMENT_ROOT']."/includes/login.php");
+include($_SERVER['DOCUMENT_ROOT']."/includes/search.php");
+?>
+
+</div>
+
+
 
 

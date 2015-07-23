@@ -10,16 +10,7 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/header.php");
 
 
 
-include($_SERVER['DOCUMENT_ROOT']."/includes/pagehead.php");
 ?>
-<div class="row">
-	<?php
-include($_SERVER['DOCUMENT_ROOT']."/includes/login.php");
-include($_SERVER['DOCUMENT_ROOT']."/includes/search.php");
-?>
-
-</div>
-
 
 
 
