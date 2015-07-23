@@ -16,7 +16,7 @@
 			"attrs": [],
 			"properties": {
 				"id": 224,
-				"order": 4,
+				"order": 1,
 				"prevSize": 20,
 				"code": 8801,
 				"name": "menu",
@@ -58,6 +58,6 @@
 		},
 		"historySize": 100,
 		"showCodes": true,
-		"showLiga": false
+		"showLiga": true
 	}
 }

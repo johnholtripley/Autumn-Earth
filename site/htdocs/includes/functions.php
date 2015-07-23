@@ -1060,4 +1060,40 @@ echo "<p>Current best offer: ".formatCurrency($bidAmount)."</p>";
 }
 
 
+
+function displayUpcomingEvents($limit) {
+	$query = "select * from tblevents where eventEnd > Now() order by eventstart ASC limit ".$limit;
+
+	$result = mysql_query($query) or die ("couldn't execute query");
+	
+	$numberofrows = mysql_num_rows($result);
+	if ($numberofrows>0) {
+	
+	?>
+	<ul class="h-event">
+	
+<?php
+		while ($row = mysql_fetch_array($result)) {
+			extract($row);
+echo '<li><a class="u-url" href="'.$link.'"><h4 class="p-name">'.$title.'</h4><p class="p-summary">'.$summary.'</p>';
+
+
+
+$startDateOutput = date('j', strtotime($eventStart))."<sup>".date('S', strtotime($eventStart))."</sup> ".date('F Y', strtotime($eventStart));
+$endDateOutput = date('j', strtotime($eventEnd))."<sup>".date('S', strtotime($eventEnd))."</sup> ".date('F Y', strtotime($eventEnd));
+
+echo '<p>From <time class="dt-start" datetime="'.$eventStart.'">'.$startDateOutput.'</time>
+    to <time class="dt-end" datetime="'.$eventEnd.'">'.$endDateOutput.'</time></p>';
+
+
+    echo '</a></li>';
+
+
+		}
+		echo "</ul>";
+	}
+
+}
+
+
 ?>

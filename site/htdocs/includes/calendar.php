@@ -46,7 +46,7 @@ $events = array();
 //
 while ($row = mysql_fetch_array($result)) {
 	extract($row);
-	array_push($events, array('startdate' => $eventStart, 'enddate' => $eventEnd, 'cssclass' => $css, 'tooltip' => $tooltip, 'link' => $link));
+	array_push($events, array('startdate' => $eventStart, 'enddate' => $eventEnd, 'cssclass' => $css, 'tooltip' => $title, 'link' => $link));
 }
 
 $dayevents = array();

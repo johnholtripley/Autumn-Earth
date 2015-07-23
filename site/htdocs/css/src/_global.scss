@@ -330,14 +330,35 @@ p, ol, ul, dl {
     -moz-osx-font-smoothing: grayscale;
 }
 
-#menuToggle:before {
-    content: "\2261";
+
+#mastHead {
+background: #000;
+}
+#mastHead h1 {
+    background: url(../images/autumn-earth.gif) no-repeat 0 50%;
+
 }
 
 
+@include mq($wide){
+#navigation ul {
+    float: right;
+width: 50%;
+position: relative;
+z-index: 1;
+li {
+    display: inline;
+}
+}
 
+#mastHead h1 {
+width: 50%;
+float: left;
+position: relative;
+z-index: 2;
+}
 
-
+}
 
 
 

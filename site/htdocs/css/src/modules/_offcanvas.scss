@@ -4,6 +4,10 @@
     width: 100%;
 }
 
+#menuToggle {
+    text-decoration: none;
+}
+
 .js #offCanvasWrapper {
     position: relative;
     width: 100%;
@@ -11,9 +15,10 @@
     @include transition("left 0.4s ease-out, right 0.4s ease-out");
 }
 
-#navigation, #basket {
+.js #navigation {
     position: absolute;
     top: 0;
+    width: 100%;
 }
 
 @include mq($useOffCanvasUpTo) {

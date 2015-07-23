@@ -1,4 +1,7 @@
-
+<div id="mastHead" role="banner">
 <div class="row">
-<h1 style="background: #000 url(images/autumn-earth.gif) no-repeat center center;text-indent: -9999px;">Autumn Earth</h1>
+	<a id="menuToggle" class="icon" href="#navigation">Menu</a>
+<h1 id="logo"><a href="/"><span class="ir">Autumn Earth</span></a></h1>
 </div>
+</div>
+<div id="pageContent" role="main">

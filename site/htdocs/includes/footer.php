@@ -1,3 +1,5 @@
+</div>
+<div id="navigation" role="navigation">
 <div class="row">
 <ul>
 <li><a href="/">Home</a></li>
@@ -8,7 +10,20 @@
 <li><a href="/contracts/CreateContract.php">Contract</a></li>
 </ul>
 </div>
-<script src="/js/core.min.js"></script>
+</div>
+<div id="footer" role="contentinfo">
+	<div class="row">
+&copy; 2015 Autumn Earth
+	</div>
+	</div>
+
+
+</div>
+</div>
+
+
+
+<script src="/js/core.js"></script>
 <?php
 include($_SERVER['DOCUMENT_ROOT']."/includes/google-analytics.php");
 ?>

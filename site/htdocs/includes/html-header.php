@@ -45,3 +45,5 @@ $bodyClass = "";
 echo '<body'.$bodyClass.'>'."\n";
 include($_SERVER['DOCUMENT_ROOT']."/includes/build-url.php");
 ?>
+<div id="wrapper">
+	<div id="offCanvasWrapper">

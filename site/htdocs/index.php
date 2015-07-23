@@ -151,7 +151,7 @@ displayContractNewestItems(3);
 
 <div class="row">
 <?php
-include($_SERVER['DOCUMENT_ROOT']."/includes/calendar.php");
+displayUpcomingEvents(3);
 ?>
 </div>
 
