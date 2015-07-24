@@ -12,21 +12,9 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/header.php");
 
 ?>
 
+<div class="row medium-2up wide-4up equalHeights">
 
-
-
-
-
-
-
-
-
-
-
-<div class="row">
-
-
-<h2>Latest forum threads with new posts</h2>
+	<div class="column"><div><h2>Latest forum threads with new posts</h2>
 
 
 <?php
@@ -45,12 +33,9 @@ echo '<li><a href="/forum/'.$cleanURL.'/">'.$title.'</a></li>';
 	echo "</ul>";
 }
 ?>
+</div></div>
 
-
-
-</div>
-<div class="row">
-<h2>Latest community pages</h2>
+<div class="column"><div><h2>Latest community pages</h2>
 <?php
 // find all publically visible pages, group by guild and show a list of clean URLs for them:
 
@@ -80,8 +65,9 @@ echo '<li><a href="/community/'.$guildURL.'/'.$pageURL.'/">'.$guildName.' - '.$f
 }
 
 ?>
-</div>
-<div class="row">
+</div></div>
+
+<div class="column"><div>
 <h2>Latest news</h2>
 <?php
 $newsQuery = "select * from tblNews WHERE status='1' order by timeAdded DESC limit 5";
@@ -102,49 +88,77 @@ echo "</ul>";
 
 }
 ?>
+</div></div>
+
+<div class="column"><div><h2>Upcoming Events</h2>
+	<?php
+displayUpcomingEvents(3);
+?>
+</div></div>
+
 </div>
 
-<div class="row">
-<div style="width:50%;float:left">
-	<h2>Auction items ending soon</h2>
+
+
+<div class="row medium-2up wide-4up widest-5up equalHeights">
+
+
+
+<div class="column"><div><h2>Auction items ending soon</h2>
 	<?php
 	displayAuctionItemsEndingSoon(3);
 	?>
-</div>
-<div style="width:50%;float:left">
-	<h2>new Auction items</h2>
+</div></div>
+
+<div class="column"><div><h2>new Auction items</h2>
 	<?php
 displayAuctionNewestItems(3);
 	?>
-</div>
-</div>
-<div class="row">
+</div></div>
 
-
-<div style="width:50%;float:left">
-	<h2>		Contracts ending soon</h2>
-
-
-	<?php
-displayContractItemsEndingSoon(3);
-	?>
-</div>
-<div style="width:50%;float:left">
-	<h2>New contracts</h2>
+<div class="column"><div>	<h2>New contracts</h2>
 
 <?php
 displayContractNewestItems(3);
 	?>
 
+</div></div>
 
-</div>
-</div>
 
-<div class="row">
+<div class="column"><div>	<h2>Contracts ending soon</h2>
+
 <?php
-displayUpcomingEvents(3);
-?>
+displayContractItemsEndingSoon(3);
+	?>
+
+</div></div>
+
+
+
+
+
+<div class="column"><div><h2>Deepest delvers</h2>
+	<?php
+displayDeepestDelvers();
+	?>
+</div></div>
+
+
+
 </div>
+
+
+
+
+
+
+
+
+</div>
+
+
+
+
 
 <?php
 /*

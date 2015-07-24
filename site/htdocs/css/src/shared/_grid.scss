@@ -5,10 +5,120 @@
   margin-right: ($gutter/2);
 }
 
+.row .row {
+  width: (100%+$gutter);
+  margin-left: 0-($gutter/2);
+  margin-right: 0-($gutter/2);
+}
+
 @include mq($widest) {
   .row {
     width: 100%;
     max-width: $maxWidth;
     margin: 0 auto;
+  }
+}
+
+.column, .columns {
+  @include border-box;
+  padding-left: ($gutter/2);
+  padding-right: ($gutter/2);
+  width: (100%-$gutter);
+  float: left;
+  min-height: 1px;
+}
+
+.centred {
+  float: none;
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+}
+
+@for $i from 1 through $gridColumns {
+  .small-#{$i} {
+    width: 100% * ($i/$gridColumns);
+  }
+}
+
+@include mq($medium) {
+  @for $i from 1 through $gridColumns {
+    .medium-#{$i} {
+      width: 100% * ($i/$gridColumns);
+    }
+  }
+}
+
+@include mq($wide) {
+  @for $i from 1 through $gridColumns {
+    .wide-#{$i} {
+      width: 100% * ($i/$gridColumns);
+    }
+  }
+}
+
+@include mq($widest) {
+  @for $i from 1 through $gridColumns {
+    .widest-#{$i} {
+      width: 100% * ($i/$gridColumns);
+    }
+  }
+}
+
+@for $i from 1 through $gridColumns {
+  .small-#{$i}up > .column {
+    width: 100% / ($i);
+  }
+}
+
+// clear uneven columns:
+@include mq((($medium)-0.01em), max) {
+  @for $i from 2 through $gridColumns {
+    .small-#{$i}up > .column:nth-child(#{$i}n+1) {
+      clear: left;
+    }
+  }
+}
+
+@include mq($medium) {
+  @for $i from 1 through $gridColumns {
+    .medium-#{$i}up > .column {
+      width: 100% / ($i);
+    }
+  }
+}
+
+@include mq($medium, min, (($wide)-0.01em), max) {
+  @for $i from 2 through $gridColumns {
+    .medium-#{$i}up > .column:nth-child(#{$i}n+1) {
+      clear: left;
+    }
+  }
+}
+
+@include mq($wide) {
+  @for $i from 1 through $gridColumns {
+    .wide-#{$i}up > .column {
+      width: 100% / ($i);
+    }
+  }
+}
+
+@include mq($wide, min, (($widest)-0.01em), max) {
+  @for $i from 2 through $gridColumns {
+    .wide-#{$i}up > .column:nth-child(#{$i}n+1) {
+      clear: left;
+    }
+  }
+}
+
+@include mq($widest) {
+  @for $i from 1 through $gridColumns {
+    .widest-#{$i}up > .column {
+      width: 100% / ($i);
+      &:nth-child(#{$i}n+1) {
+        clear: left;
+      }
+    }
   }
 }

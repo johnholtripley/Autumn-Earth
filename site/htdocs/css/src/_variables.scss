@@ -12,13 +12,14 @@ $bodyFont: "trebuchet ms", palatino, georgia, "times new roman", serif;
 
 // grid:
 $gutter: 3%;
+$gridColumns: 12;
 
 // breakpoints:
 $medium: 30em;
 $wide: 54em;
 $widest: 70em;
 
-$maxWidth: 80em;
+$maxWidth: 102em;
 
 $triggerIEAt: $widest;
 

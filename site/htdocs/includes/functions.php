@@ -1063,34 +1063,6 @@ echo "<p>Current best offer: ".formatCurrency($bidAmount)."</p>";
 
 function displayUpcomingEvents($limit) {
 
-// re-do with Rich Snippets:
-	// https://developers.google.com/structured-data/rich-snippets/events
-	// http://schema.org/Event
-	/*
-	    <div itemscope itemtype="http://schema.org/Event">
-      <a itemprop="url" href="nba-miami-philidelphia-game3.html">
-      NBA Eastern Conference First Round Playoff Tickets:
-      <span itemprop="name"> Miami Heat at Philadelphia 76ers - Game 3 (Home Game 1) </span>
-      </a>
-      <meta itemprop="startDate" content="2016-04-21T20:00">
-        Thu, 04/21/16
-        8:00 p.m.
-      <div itemprop="location" itemscope itemtype="http://schema.org/Place">
-        <a itemprop="url" href="wells-fargo-center.html">
-        Wells Fargo Center
-        </a>
-        <div itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">
-          <span itemprop="addressLocality">Philadelphia</span>,
-          <span itemprop="addressRegion">PA</span>
-        </div>
-      </div>
-      <div itemprop="offers" itemscope itemtype="http://schema.org/AggregateOffer">
-        Priced from: <span itemprop="lowPrice">$35</span>
-        <span itemprop="offerCount">1938</span> tickets left
-      </div>
-    </div>
-	*/
-
 
 	$query = "select * from tblevents where eventEnd > Now() order by eventstart ASC limit ".$limit;
 
@@ -1100,17 +1072,20 @@ function displayUpcomingEvents($limit) {
 	if ($numberofrows>0) {
 	
 	?>
-	<ul class="h-event">
+	<ul>
 	
 <?php
 		while ($row = mysql_fetch_array($result)) {
 			extract($row);
 
-echo '<li><a class="u-url" href="'.$link.'"><h4 class="p-name">'.$title.'</h4><p class="p-summary">'.$summary.'</p>';
+// https://productforums.google.com/forum/#!topic/webmasters/hqXyipukFOg;context-place=forum/webmasters
+
+echo '<li itemscope itemtype="http://schema.org/Event"><a itemprop="url" href="'.$link.'"><h4 itemprop="name">'.$title.'</h4><p itemprop="description">'.$summary.'</p>';
 $startDateOutput = date('j', strtotime($eventStart))."<sup>".date('S', strtotime($eventStart))."</sup> ".date('F Y', strtotime($eventStart));
 $endDateOutput = date('j', strtotime($eventEnd))."<sup>".date('S', strtotime($eventEnd))."</sup> ".date('F Y', strtotime($eventEnd));
-echo '<p>From <time class="dt-start" datetime="'.$eventStart.'">'.$startDateOutput.'</time>
-    to <time class="dt-end" datetime="'.$eventEnd.'">'.$endDateOutput.'</time></p>';
+echo '<span>From <span itemprop="startDate" content="'.$eventStart.'">'.$startDateOutput.'</span>
+    to <span itemprop="endDate" content="'.$eventEnd.'">'.$endDateOutput.'</span></span>';
+ echo '<span itemprop="location" itemscope itemtype="http://schema.org/Place"><span itemprop="url" href="'.$link.'">'.$link.'</span></span>';
     echo '</a></li>';
 
 
@@ -1119,6 +1094,56 @@ echo '<p>From <time class="dt-start" datetime="'.$eventStart.'">'.$startDateOutp
 	}
 
 }
+
+
+
+
+function displayDeepestDelvers() {
+	// get all dungeons:
+	$query = "select * from tbldungeonmapconfig";
+$result = mysql_query($query) or die ("couldn't execute query");
+	
+	$numberofrows = mysql_num_rows($result);
+	if ($numberofrows>0) {
+	
+	?>
+	<ul>
+		<?php
+	
+		while ($row = mysql_fetch_array($result)) {
+			extract($row);
+
+// get newest, deepest map for this map
+			$innerQuery = "select tbldungeonachievements.mapReached as maxReached, tblcharacters.charName as charName
+from tbldungeonachievements
+inner join tblcharacters on tbldungeonachievements.charID = tblcharacters.charID
+			where tbldungeonachievements.dungeonId='".$dungeonId."' order by tbldungeonachievements.mapReached DESC limit 1";
+		
+			$innerresult = mysql_query($innerQuery) or die ("couldn't execute innerQuery");
+			$innernumberofrows = mysql_num_rows($innerresult);
+	if ($innernumberofrows>0) {
+		while ($innerrow = mysql_fetch_array($innerresult)) {
+			extract($innerrow);
+		
+
+echo '<li>'.$dungeonName.': '.$charName." - ".$maxReached.'</li>';
+
+		}
+	}
+
+
+		}
+
+?>
+	</ul>
+		<?php
+
+	}
+
+
+}
+
+
 
 
 ?>

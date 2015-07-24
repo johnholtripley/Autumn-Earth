@@ -1,5 +1,6 @@
 </div>
 <div id="navigation" role="navigation">
+<div id="navigationInner">
 <div class="row">
 <ul>
 <li><a href="/">Home</a></li>
@@ -9,6 +10,7 @@
 <li><a href="/news/">News</a></li>
 <li><a href="/contracts/CreateContract.php">Contract</a></li>
 </ul>
+</div>
 </div>
 </div>
 <div id="footer" role="contentinfo">
@@ -23,7 +25,7 @@
 
 
 
-<script src="/js/core.js"></script>
+<script src="/js/core.min.js"></script>
 <?php
 include($_SERVER['DOCUMENT_ROOT']."/includes/google-analytics.php");
 ?>
