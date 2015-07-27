@@ -1,4 +1,11 @@
 <?php
+/**
+ * C:\Users\hp\AppData\Roaming\Sublime Text 2\Packages/PhpTidy/phptidy-sublime-buffer.php
+ *
+ * @author Morgan Estes <morgan.estes@gmail.com>
+ * @package default
+ */
+
 
 include($_SERVER['DOCUMENT_ROOT']."/includes/session.php");
 include($_SERVER['DOCUMENT_ROOT']."/includes/signalnoise.php");
@@ -25,11 +32,11 @@ $result = mysql_query($forumQuery) or die ("couldn't execute query");
 
 if (mysql_num_rows($result) > 0) {
 
-echo "<ul>";
-while ($row = mysql_fetch_array($result)) {
-	extract($row);
-echo '<li><a href="/forum/'.$cleanURL.'/">'.$title.'</a></li>';
-}
+	echo "<ul>";
+	while ($row = mysql_fetch_array($result)) {
+		extract($row);
+		echo '<li><a href="/forum/'.$cleanURL.'/">'.$title.'</a></li>';
+	}
 	echo "</ul>";
 }
 ?>
@@ -45,20 +52,20 @@ $result = mysql_query($communityQuery) or die ("couldn't execute query");
 
 if (mysql_num_rows($result) > 0) {
 
-echo "<ul>";
+	echo "<ul>";
 
 
 
-while ($row = mysql_fetch_array($result)) {
+	while ($row = mysql_fetch_array($result)) {
 
-	extract($row);
+		extract($row);
 
 
-	
 
-echo '<li><a href="/community/'.$guildURL.'/'.$pageURL.'/">'.$guildName.' - '.$freeformPageTitle.'</a></li>';
 
-}
+		echo '<li><a href="/community/'.$guildURL.'/'.$pageURL.'/">'.$guildName.' - '.$freeformPageTitle.'</a></li>';
+
+	}
 
 	echo "</ul>";
 
@@ -74,17 +81,17 @@ $newsQuery = "select * from tblNews WHERE status='1' order by timeAdded DESC lim
 $result = mysql_query($newsQuery) or die ("couldn't execute query");
 
 if (mysql_num_rows($result) > 0) {
-echo "<ul>";
-while ($row = mysql_fetch_array($result)) {
-extract($row);
-echo '<li><a href="/news/'.$cleanURL.'/">'.$newsTitle.'</a></li>';
+	echo "<ul>";
+	while ($row = mysql_fetch_array($result)) {
+		extract($row);
+		echo '<li><a href="/news/'.$cleanURL.'/">'.$newsTitle.'</a></li>';
 
 
-	
 
 
-}
-echo "</ul>";
+
+	}
+	echo "</ul>";
 
 }
 ?>
@@ -106,21 +113,21 @@ displayUpcomingEvents(3);
 
 <div class="column"><div><h2>Auction items ending soon</h2>
 	<?php
-	displayAuctionItemsEndingSoon(3);
-	?>
+displayAuctionItemsEndingSoon(3);
+?>
 </div></div>
 
 <div class="column"><div><h2>new Auction items</h2>
 	<?php
 displayAuctionNewestItems(3);
-	?>
+?>
 </div></div>
 
 <div class="column"><div>	<h2>New contracts</h2>
 
 <?php
 displayContractNewestItems(3);
-	?>
+?>
 
 </div></div>
 
@@ -129,7 +136,7 @@ displayContractNewestItems(3);
 
 <?php
 displayContractItemsEndingSoon(3);
-	?>
+?>
 
 </div></div>
 
@@ -140,7 +147,7 @@ displayContractItemsEndingSoon(3);
 <div class="column"><div><h2>Deepest delvers</h2>
 	<?php
 displayDeepestDelvers();
-	?>
+?>
 </div></div>
 
 
@@ -154,7 +161,7 @@ displayDeepestDelvers();
 
 
 
-</div>
+
 
 
 
