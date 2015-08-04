@@ -1,5 +1,5 @@
 <?php
-/*
+
 include($_SERVER['DOCUMENT_ROOT']."/includes/signalnoise.php");
 include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
 include($_SERVER['DOCUMENT_ROOT']."/includes/functions.php");
@@ -12,7 +12,7 @@ if (mysql_num_rows($result) > 0) {
 header("Content-type: text/xml; charset=iso-8859-1");
 echo '<?xml version="1.0" encoding="iso-8859-1"?>'."\n";
 echo '<?xml-stylesheet type="text/css" href="http://www.autumnearth.com/assets/feeds/rss.css" ?>'."\n";
-echo '<rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/">'."\n";
+echo '<rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom">'."\n";
 	echo '<channel>'."\n";
 		echo '<title>Autumn Earth News</title>'."\n";
 		echo '<link>http://www.autumnearth.com/feed/</link>'."\n";
@@ -26,7 +26,7 @@ echo '<rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/
 			echo '<width>20</width>'."\n";
 			echo '<height>20</height>'."\n";
 		echo '</image>'."\n";
-		
+		echo '<atom:link href="http://www.autumnearth.com/feed/" rel="self" type="application/rss+xml" />'."\n";
 // get each item:
 $isFirstTime = true;
 while ($row = mysql_fetch_array($result)) {
@@ -42,7 +42,7 @@ while ($row = mysql_fetch_array($result)) {
 		echo '<title>'.$newsTitle.'</title>'."\n";
 		echo '<link>http://www.autumnearth.com/feed/</link>'."\n";
 		echo '<description>'.$newsSynopsis.'</description>'."\n";
-		echo '<author>feeds@autumnearth.com</author>'."\n";
+		echo '<author>feeds@autumnearth.com (Autumn Earth)</author>'."\n";
 		if ($postedBy != "") {
 			// in game news
 			echo '<category>Events</category>'."\n";
@@ -52,7 +52,7 @@ while ($row = mysql_fetch_array($result)) {
 		echo '<comments>http://www.autumnearth.com/forum/ViewThread.php?thread=34</comments>'."\n";
 		// encode date correctly:
 		echo '<pubDate>'.strftime("%a, %d %b %Y %H:%M:%S",$timeAdded).' GMT</pubDate>'."\n";
-		echo '<guid isPermaLink="true">http://www.autumnearth.com/news/index.php?article='.$newsID.'</guid>'."\n";
+		echo '<guid isPermaLink="true">http://www.autumnearth.com/news/'.$cleanURL.'</guid>'."\n";
 		// replace any relative paths in the news content:
 		$newsContent = str_ireplace("href=\"/","href=\"http://www.autumnearth.com/",$newsContent);
 		$newsContent = str_ireplace("src=\"/","src=\"http://www.autumnearth.com/",$newsContent);
@@ -66,29 +66,11 @@ while ($row = mysql_fetch_array($result)) {
 		echo '</content:encoded>'."\n";
 	echo '</item>'."\n";
 }
+
 echo '</channel>'."\n";
 echo '</rss>'."\n";
 } 
 
-*/
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-echo '<?xml version="1.0" encoding="iso-8859-1"?><rss version="2.0"><channel><title>Autumn Earth</title><link>http://www.autumnearth.com/feed</link><description>Autumn Earth Feed</description><language>en</language><pubDate>Tue, 13 Oct 2009 00:00:00 +0000</pubDate><lastBuildDate>Mon, 09 Nov 2009 18:23:10 +0000</lastBuildDate><item><title>Autumn Earth Feed place holder</title><link>http://www.autumnearth.com/news/</link><description>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed aliquam metus sed arcu dictum non vehicula turpis adipiscing. Curabitur vel diam tortor. Fusce at ligula sit amet metus accumsan ullamcorper vitae at arcu. Nulla tincidunt orci accumsan quam fringilla ultrices.</description><pubDate>Mon, 09 Nov 2009 00:00:00 +0000</pubDate><guid>http://www.autumnearth.com/news/</guid></item></channel></rss>';
 
 ?>

@@ -17,7 +17,8 @@ gulp.task('sass', function() {
 
 // js:
 gulp.task('scripts', function() {
-  return gulp.src('htdocs/js/src/**/*.js')
+    // make sure that init is compiled last after all modules are loaded:
+  return gulp.src(['htdocs/js/src/**/!(init)*.js','htdocs/js/src/init.js'])
     .pipe(sourcemaps.init())
     .pipe(concat('core.js'))
     .pipe(sourcemaps.write({includeContent: false, sourceRoot: 'htdocs/js/src/**/*.js'}))
@@ -29,7 +30,7 @@ gulp.task('scripts', function() {
 
 // lints:
 gulp.task('jshint', function() {
-  return gulp.src('htdocs/js/src/**/*.js')
+  return gulp.src(['htdocs/js/src/**/!(init)*.js','htdocs/js/src/init.js'])
     .pipe(jshint())
     .pipe(jshint.reporter('default'))
 });

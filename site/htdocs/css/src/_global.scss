@@ -1,6 +1,6 @@
 body {
     margin: 0;
-   background: #3D3220;
+   background: #212121;
     text-align: left;
 
 }
@@ -46,15 +46,15 @@ textarea {
    ========================================================================== */
 
 a {
-    color: $baseColour;
+    color: $accentColour;
     &:visited {
-          color: $baseColour;
+          color: $accentColour;
     }
 
     @include transition(color 0.4s ease);
     @include attention() {
         color: $accentColour;
-        outline: thin dotted;
+      //  outline: thin dotted;
     }
 }
 
@@ -104,23 +104,26 @@ h6 a {
 
 
 
-p {
+p, ol, ul, dl {
     font-family: $bodyFont;
-    @include pxRem("font-size", 16);
-    line-height: 1.35em;
+    @include pxRem("font-size", 14);
+    @include pxRem("line-height", 22);
+  @include pxRem("margin", 0 0 12 0);
     letter-spacing: 0.02em;
     padding: 0;
     
     color: $baseColour;
 }
 
+.fontsLoaded p, .fontsLoaded ol, .fontsLoaded ul, .fontsLoaded dl {
+    font-family: $bodyFontLoaded;
+    }
+
 h1, h2, h3, h4, h5, h6 {
   @include pxRem("margin", 8 0 12 0);  
 }
 
-p, ol, ul, dl {
-@include pxRem("margin", 0 0 12 0);
-}
+
 
 /* #Helpers
 ================================================== */
@@ -284,59 +287,26 @@ p, ol, ul, dl {
 
 
 
-/* #example font-face embed
-================================================== */
-/*
-
 
 @font-face {
-    font-family: 'LatoBold';
-    src: url('../fonts/lato-bol-webfont.eot');
-    src: url('../fonts/lato-bol-webfont.eot?#iefix') format('embedded-opentype'),
-    url('../fonts/lato-bol-webfont.svg#lato') format('svg'),
-         url('../fonts/lato-bol-webfont.woff') format('woff'),
-         url('../fonts/lato-bol-webfont.ttf') format('truetype');
-    font-weight: bold;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'LatoBoldItalic';
-    src: url('../fonts/lato-bolita-webfont.eot');
-    src: url('../fonts/lato-bolita-webfont.eot?#iefix') format('embedded-opentype'),
-    url('../fonts/lato-bolita-webfont.svg#lato') format('svg'),
-         url('../fonts/lato-bolita-webfont.woff') format('woff'),
-         url('../fonts/lato-bolita-webfont.ttf') format('truetype');
-    font-weight: bold;
-    font-style: italic;
-}
-
-
-
-@font-face {
-    font-family: 'asapRegular';
-    src: url('../fonts/asap-regular-webfont.eot');
-    src: url('../fonts/asap-regular-webfont.eot?#iefix') format('embedded-opentype'),
-    url('../fonts/asap-regular-webfont.svg#asapRegular') format('svg'),
-         url('../fonts/asap-regular-webfont.woff') format('woff'),
-         url('../fonts/asap-regular-webfont.ttf') format('truetype');
+    font-family: 'forolight';
+    src: url('../fonts/ForoLig-webfont.eot');
+    src: url('../fonts/ForoLig-webfont.eot?#iefix') format('embedded-opentype'),
+    url('../fonts/ForoLig-webfont.svg#lato') format('svg'),
+         url('../fonts/ForoLig-webfont.woff2') format('woff2'),
+         url('../fonts/ForoLig-webfont.woff') format('woff'),
+         url('../fonts/ForoLig-webfont.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
 }
 
-@font-face {
-    font-family: 'asapItalic';
-    src: url('../fonts/asap-italic-webfont.eot');
-    src: url('../fonts/asap-italic-webfont.eot?#iefix') format('embedded-opentype'),
-    url('../fonts/asap-italic-webfont.svg#asapItalic') format('svg'),
-         url('../fonts/asap-italic-webfont.woff') format('woff'),
-         url('../fonts/asap-italic-webfont.ttf') format('truetype');
-    font-weight: normal;
-    font-style: italic;
-}
 
 
-*/
+
+
+
+
+
 
 
 @font-face {
@@ -409,7 +379,9 @@ z-index: 2;
 
 
 
-
+#magicSquare td {
+    padding: 10px;
+}
 
 
 .inventorySlot {

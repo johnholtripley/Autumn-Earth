@@ -1155,7 +1155,90 @@ function relativePastDate( $time ) {
 
 
 
+function createMagicSquare() {
+	// https://en.wikipedia.org/wiki/Magic_square#Method_for_constructing_a_magic_square_of_order_3
 
+
+
+
+// check current character has -1 for this, otherwise they've already seen it:
+
+
+$magicSquareNumber = -1;
+// get current character for this account:
+$query = "select tblcharacters.404MagicSquareSum as magicSquareNumber, tblcharacters.charId as charID
+from tblcharacters
+inner join tblacct on tblacct.currentCharID = tblcharacters.charID
+where tblacct.accountName='".$_SESSION['username']."'";
+$result = mysql_query($query) or die ("couldn't execute query");
+	
+
+	
+		$returned = mysql_num_rows($result);
+	
+	if ($returned > 0) {
+	
+	$row = mysql_fetch_array($result);
+	
+		extract($row); 
+}
+
+
+
+
+
+
+
+
+
+
+
+if($magicSquareNumber == -1) {
+// if search for this number sends a mail with an item that starts a quest
+
+
+do {
+$a = rand(1,16);
+$c = rand(32, 78);
+$b = rand(($a+1), ($c-$a));
+//  0 < a < b < c - a and b ≠ 2a
+} while ($b == (2*$a));
+
+$saveString = $a."|".$b."|".$c;
+
+	$query = "UPDATE tblcharacters SET 404MagicSquareSum='".$saveString."' WHERE charId = '" . $charID . "'";
+	$result = mysql_query($query) or die ("couldn't execute query");
+
+} else {
+	$magicNumberSplits = explode("|", $magicSquareNumber);
+	$a = $magicNumberSplits[0];
+	$b = $magicNumberSplits[1];
+	$c = $magicNumberSplits[2];
+}
+	?>
+	<div class="row">
+	<p>Are you lost? Maybe this will help:</p>
+	<table id="magicSquare">
+		<tr>
+			<?php
+
+echo '<td>'.($c-$b).'</td><td>'.($c+$b+$a).'</td><td>'.($c-$a).'</td>';
+?>
+</tr><tr>
+
+<?php
+
+echo '<td>'.($c-$a+$b).'</td><td>'.($c).'</td><td>'.($c+$a-$b).'</td>';
+?>
+</tr><tr>
+
+<?php
+
+echo '<td>'.($c+$a).'</td><td>'.($c-$b-$a).'</td><td>'.($c+$b).'</td>';
+?>
+</tr></table></div>
+<?php
+}
 
 
 

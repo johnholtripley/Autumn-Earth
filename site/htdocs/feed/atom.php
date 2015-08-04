@@ -40,7 +40,7 @@ while ($row = mysql_fetch_array($result)) {
 	echo '<entry>'."\n";
 	echo '<title>'.$newsTitle.'</title>'."\n";
 	echo '<link href="http://www.autumnearth.com/feed/atom.php"/>'."\n";
-	echo '<id>http://www.autumnearth.com/news/index.php?article='.$newsID.'</id>'."\n";
+	echo '<id>http://www.autumnearth.com/news/'.$cleanURL.'</id>'."\n";
 	
 	echo '<published>'.date("Y-m-d\TH:i:s\Z",$timeAdded).'</published>'."\n";
 	echo '<updated>'.date("Y-m-d\TH:i:s\Z",$timeAdded).'</updated>'."\n";
