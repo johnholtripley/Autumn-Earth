@@ -32,8 +32,6 @@ $longDescription="Autumn Earth community site";
 	// query database to find meta information
 		
 
-if(isset($_GET["forumName"])) {
-// could be search results page
 
 
 
@@ -58,10 +56,7 @@ $thisBuiltURL = $thisBuiltURL."forum/".$cleanURL."/";
 		}
 	
 
-} else if (isset($_GET["searchterms"])) {
-// get search results and show those
-	// ###
-}
+
 
 
         break;

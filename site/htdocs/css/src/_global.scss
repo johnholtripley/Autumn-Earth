@@ -123,7 +123,10 @@ h1, h2, h3, h4, h5, h6 {
   @include pxRem("margin", 8 0 12 0);  
 }
 
-
+input, select {
+    background: #fff;
+    color: #212121;
+}
 
 /* #Helpers
 ================================================== */
@@ -389,3 +392,7 @@ z-index: 2;
     height: 64px;
 }
 
+.highlight {
+    background: $accentColour;
+    color: #212121;
+}

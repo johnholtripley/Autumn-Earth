@@ -1,0 +1,100 @@
+<?php
+
+header('Content-Type: text/xml');
+
+include($_SERVER['DOCUMENT_ROOT']."/includes/session.php");
+include($_SERVER['DOCUMENT_ROOT']."/includes/signalnoise.php");
+include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
+include($_SERVER['DOCUMENT_ROOT']."/includes/functions.php");
+
+
+
+
+
+
+?>
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset
+      xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+            http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+
+
+<url><loc>http://www.autumnearth.com/</loc><priority>1.0</priority></url>
+
+<url><loc>http://www.autumnearth.com/auction/</loc><priority>0.7</priority></url>
+
+
+
+
+
+
+
+<?php
+
+
+// get all forum paginated clean urls ####
+
+
+
+
+// get all forum clean urls
+echo'<url><loc>http://www.autumnearth.com/forum/</loc><priority>0.7</priority></url>'."\n";
+$query = "select * from tblthreads where tblthreads.status>0";
+$result = mysql_query( $query ) or die ( "couldn't execute inner query" );
+if ( mysql_num_rows( $result )>0 ) {
+while ( $row = mysql_fetch_array( $result ) ) {
+extract( $row );
+echo '<url><loc>http://www.autumnearth.com/forum/'.$cleanURL.'</loc><priority>0.5</priority></url>'."\n";
+}
+}
+
+
+// get News
+echo'<url><loc>http://www.autumnearth.com/news/</loc><priority>0.7</priority></url>'."\n";
+$query = "select * from tblNews";
+$result = mysql_query( $query ) or die ( "couldn't execute inner query" );
+if ( mysql_num_rows( $result )>0 ) {
+while ( $row = mysql_fetch_array( $result ) ) {
+extract( $row );
+echo '<url><loc>http://www.autumnearth.com/news/'.$cleanURL.'</loc><priority>0.5</priority></url>'."\n";
+}
+}
+
+// get Events
+echo'<url><loc>http://www.autumnearth.com/events/</loc><priority>0.7</priority></url>'."\n";
+$query = "select * from tblEvents";
+$result = mysql_query( $query ) or die ( "couldn't execute inner query" );
+if ( mysql_num_rows( $result )>0 ) {
+while ( $row = mysql_fetch_array( $result ) ) {
+extract( $row );
+echo '<url><loc>http://www.autumnearth.com'.$link.'</loc><priority>0.5</priority></url>'."\n";
+}
+}
+
+
+
+// get top search results pages
+$query = "select * from tblSavedSearches order by searchCount DESC LIMIT 10";
+$result = mysql_query( $query ) or die ( "couldn't execute inner query" );
+if ( mysql_num_rows( $result )>0 ) {
+while ( $row = mysql_fetch_array( $result ) ) {
+extract( $row );
+echo '<url><loc>http://www.autumnearth.com/search/'.cleanURL($searchTerm).'</loc><priority>0.3</priority></url>'."\n";
+}
+}
+
+
+?>
+
+<url><loc>http://www.autumnearth.com/mail/</loc><priority>0.7</priority></url>
+	<url><loc>http://www.autumnearth.com/guide/</loc><priority>0.7</priority></url>
+<url><loc>http://www.autumnearth.com/the-world/</loc><priority>0.7</priority></url>
+<url><loc>http://www.autumnearth.com/contracts/</loc><priority>0.7</priority></url>
+	</urlset>
+
+	
+	<?php
+mysql_close($connection);
+?>

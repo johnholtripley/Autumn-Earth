@@ -25,6 +25,9 @@
 }
 
 @include mq($useOffCanvasUpTo) {
+    #wrapper {
+     overflow: visible;
+}
     #menuToggle {
         display: none;
     }

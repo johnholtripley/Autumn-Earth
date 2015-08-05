@@ -429,7 +429,7 @@ function highlight( $textcontent, $highlight ) {
 		$check = substr( $textcontent, $i, $hilightlen );
 		if ( strcasecmp( $check, $highlight ) == 0 ) {
 			// have a case in-sensitive match:
-			$tempstring .= '<span class="Highlight">'.$check.'</span>';
+			$tempstring .= '<span class="highlight">'.$check.'</span>';
 			$i += $hilightlen;
 		} else {
 			$tempstring .= substr( $textcontent, $i, 1 );

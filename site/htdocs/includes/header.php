@@ -1,6 +1,18 @@
 <?php
 
 
+
+if(isset($_GET["searchterms"])) {
+if(!(isset($_GET["searchcleaned"]))) {
+
+// user has searched for something, construct clean URL and re-direct
+	header("Location: /search/".cleanURL($_GET["searchterms"]));
+}
+}
+
+
+
+
 // check if submit button has been pressed:
 // (use hidden form field not submit button as IE doesn't recognise the 'value'
 if (isset($_POST["logincheck"])) {
@@ -106,27 +118,6 @@ if(isset($_POST["rememberme"])) {
 } 
 
 
-// check for style selection:
-$stylecookie = "";
-if (isset($_POST["style"])) {
-
-	if (isset($_POST["styleDefault"])) {
-		$chosenstyle = $_POST["style"];
-	} else {
-		$chosenstyle = $_POST["default"];
-	}
-	if (($chosenstyle == "default") || ($chosenstyle == "accessible")) {
-		//  write cookie:
-		// expires in 365 days (60*60*24*365)
-		setcookie("stylechosen", $chosenstyle, time()+31536000, "/");
-		$stylecookie = $chosenstyle;
-	}
-} else {
-	// try and read style cookie:
-	if (isset($_COOKIE['stylechosen'])) {
-		$stylecookie = $_COOKIE['stylechosen'];
-	}
-}
 
 
 
