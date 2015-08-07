@@ -2,6 +2,7 @@ body {
     margin: 0;
    background: #212121;
     text-align: left;
+ color: $baseColour;
 
 }
 
@@ -20,13 +21,13 @@ ins {
     text-decoration: none;
 }
 
-html,
+
 button,
 input,
 select,
 textarea {
-    font-family: $bodyFont;
-    color: $baseColour;
+     background: #fff;
+    color: #212121;
 }
 
 ::-moz-selection {
@@ -123,10 +124,7 @@ h1, h2, h3, h4, h5, h6 {
   @include pxRem("margin", 8 0 12 0);  
 }
 
-input, select {
-    background: #fff;
-    color: #212121;
-}
+
 
 /* #Helpers
 ================================================== */

@@ -35,8 +35,8 @@ $longDescription="Autumn Earth community site";
 
 
 
-
-	$cleanURL = $_GET["forumName"]."/".$_GET["threadName"];
+if(isset($_GET["threadName"])) {
+$cleanURL = $_GET["forumName"]."/".$_GET["threadName"];
 
 $thisBuiltURL = $thisBuiltURL."forum/".$cleanURL."/";
 
@@ -54,9 +54,21 @@ $thisBuiltURL = $thisBuiltURL."forum/".$cleanURL."/";
 			$longDescription = stripcode($postcontent);
 
 		}
+} else {
 	
+	//top level forum:
 
+$query = "select * from tblforums WHERE cleanURL = '".cleanURL($_GET["forum"])."'";
+$result = mysql_query($query) or die ("couldn't execute query1");
+		$numberofrows = mysql_num_rows($result);
+		if ($numberofrows > 0) {
+			$row = mysql_fetch_array($result);
+			extract ($row);
+		
+			$pagetitle = stripCode($title).' - Autumn Earth community site';
+		}
 
+}
 
 
         break;

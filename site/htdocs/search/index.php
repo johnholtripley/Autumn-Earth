@@ -8,6 +8,7 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/header.php");
 
 
 echo '<div class="row">';
+echo '<div class="column">';
 echo '<h1>Search Results</h1>';
 $searchterms = htmlCharsToEntities(trim($_GET["searchterms"]));
 
@@ -61,10 +62,10 @@ $showSearchResults = false;
 if($showSearchResults) {
 
 // do search:
-$query = "select distinct tblposts.*, tblthreads.title AS threadtitle
+$query = "select distinct tblposts.*, tblthreads.title AS threadtitle, tblthreads.cleanURL as cleanURL
 FROM tblposts
 INNER JOIN tblthreads on tblposts.threadid = tblthreads.threadid
-where (((tblposts.postContent like '%".$searchterms."%') or (tblthreads.title like '%".$searchterms."%')) AND tblposts.status>0)";
+where (((tblposts.postContent like '%".$searchterms."%') or (tblthreads.title like '%".$searchterms."%')) AND tblposts.status>0) order by tblthreads.creationtime DESC";
 $result = mysql_query($query) or die ("couldn't execute query1");
 
 
@@ -123,7 +124,51 @@ if (($rowcount>= $startpoint) && ($rowcount<$endpoint)) {
 extract($row);
 
 $thispostcontent = highlight(stripslashes($postContent),stripslashes($searchterms));
-echo '<p><strong>'.highlight(stripslashes($threadtitle),stripslashes($searchterms)).'</strong> - <a href="/forum/ViewThread.php?thread='.$threadID.'" title="Click to view this thread">view this thread</a><br />'.$thispostcontent.'</p>';
+echo '<h3><a href="/forum/'.$cleanURL.'" title="Click to view this thread">'.highlight(stripslashes($threadtitle),stripslashes($searchterms)).'</a></h3>'."\n";
+
+// trim the post content to show so many characters before the first occurence and after the last occurence
+$firstOccurence = strpos($postContent, $searchterms);
+$lastOccurence = strrpos ($postContent, $searchterms);
+$postLength = strlen($postContent);
+$endPoint = $postLength;
+$startPoint = 0;
+$characterCountEitherSide = 250;
+$prefix = "";
+$suffix = "";
+
+
+
+if($firstOccurence !== false) {
+if($firstOccurence > $characterCountEitherSide) {
+$startPoint = $firstOccurence - $characterCountEitherSide;
+$prefix = "&hellip;";
+}
+}
+
+if($lastOccurence !== false) {
+if(($postLength - $lastOccurence)>$characterCountEitherSide) {
+$endPoint = $lastOccurence + $characterCountEitherSide;
+$suffix = "&hellip;";
+}
+} else {
+	// trim to max:
+	if($postLength > ($characterCountEitherSide*2)) {
+	$endPoint = ($characterCountEitherSide*2);
+	$suffix = "&hellip;";
+}
+}
+
+
+
+if($endPoint<$postLength) {
+echo '<p>'.$prefix.trim(substr($thispostcontent,$startPoint,$endPoint-$startPoint)).$suffix.'</p>'."\n";
+} else {
+	echo '<p>'.$prefix.trim(substr($thispostcontent,$startPoint)).$suffix.'</p>'."\n";
+}
+
+
+
+echo '<p><a href="/forum/'.$cleanURL.'" title="Click to view this thread">View this thread</a></p>';
 }
 $rowcount++;
 }
@@ -200,6 +245,7 @@ echo '<p>Did you mean <a href="SearchResults.php?searchterms='.$closestMatchEnco
 }
 	
 }
+echo '</div>';
 echo '</div>';
 
 include($_SERVER['DOCUMENT_ROOT']."/includes/footer.php");

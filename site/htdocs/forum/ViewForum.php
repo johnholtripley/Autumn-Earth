@@ -5,8 +5,45 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/signalnoise.php");
 include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
 include($_SERVER['DOCUMENT_ROOT']."/includes/functions.php");
 
+
+
+if(isset($_GET["cleaned"])) {
+
 $forumID = $_GET["forum"];
+
+
+
+$query = "select * from tblforums WHERE cleanURL = '".$forumID."'";
+
+
+
+$result = mysql_query($query) or die ("couldn't execute query");
+
+if (mysql_num_rows($result) > 0) {
+
+
+$row = mysql_fetch_array($result);
+
+$forumID = $row["forumID"];
+
+}
+
+
+
+
+} else {
+
+
+$forumID = $_GET["forum"];
+}
 // check that a valid number has been passed:
+
+
+
+
+
+
+
 
 if (is_numeric($forumID)) {
 

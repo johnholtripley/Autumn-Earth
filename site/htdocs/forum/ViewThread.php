@@ -9,8 +9,7 @@ $pagetitle="Autumn Earth Community Forum - ".stripslashes($forumTitle)." - ".str
 $metadesc = stripCode(stripslashes($postContent));
 */
 include($_SERVER['DOCUMENT_ROOT']."/includes/header.php");
-include($_SERVER['DOCUMENT_ROOT']."/includes/login.php");
-include($_SERVER['DOCUMENT_ROOT']."/includes/search.php");
+
 
 
 if(isset($_GET["cleaned"])) {
@@ -124,7 +123,7 @@ WHERE tblposts.ThreadID = " . $threadID . " ORDER BY tblposts.Sticky DESC, tblpo
 			
 			
 			// show breadcrumb:
-	echo '<div id="BreadCrumb"><a href="index.php" title="Forum Lists">Forum</a> &gt; <a href="ViewForum.php?forum='.$thisforumid.'" title="View '.stripslashes($forumTitle).'">'.stripslashes($forumTitle).'</a> &gt; '.stripCode(stripslashes($threadTitle)).'</div>'."\n";
+	echo '<div id="BreadCrumb"><a href="/forum/" title="Forum Lists">Forum</a> &gt; <a href="/forum/'.cleanURL($forumTitle).'" title="View '.stripslashes($forumTitle).'">'.stripslashes($forumTitle).'</a> &gt; '.stripCode(stripslashes($threadTitle)).'</div>'."\n";
 			
 			// only display headers on the first row
 			

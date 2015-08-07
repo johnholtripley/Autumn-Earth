@@ -39,14 +39,31 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/functions.php");
 
 
 
-// get all forum clean urls
+
+
+
+
 echo'<url><loc>http://www.autumnearth.com/forum/</loc><priority>0.7</priority></url>'."\n";
+
+
+// get top level forum clean urls:
+$query = "select * from tblforums where tblforums.status>0";
+$result = mysql_query( $query ) or die ( "couldn't execute inner query" );
+if ( mysql_num_rows( $result )>0 ) {
+while ( $row = mysql_fetch_array( $result ) ) {
+extract( $row );
+echo '<url><loc>http://www.autumnearth.com/forum/'.$cleanURL.'/</loc><priority>0.7</priority></url>'."\n";
+}
+}
+
+
+// get all forum clean urls
 $query = "select * from tblthreads where tblthreads.status>0";
 $result = mysql_query( $query ) or die ( "couldn't execute inner query" );
 if ( mysql_num_rows( $result )>0 ) {
 while ( $row = mysql_fetch_array( $result ) ) {
 extract( $row );
-echo '<url><loc>http://www.autumnearth.com/forum/'.$cleanURL.'</loc><priority>0.5</priority></url>'."\n";
+echo '<url><loc>http://www.autumnearth.com/forum/'.$cleanURL.'/</loc><priority>0.5</priority></url>'."\n";
 }
 }
 
@@ -58,7 +75,7 @@ $result = mysql_query( $query ) or die ( "couldn't execute inner query" );
 if ( mysql_num_rows( $result )>0 ) {
 while ( $row = mysql_fetch_array( $result ) ) {
 extract( $row );
-echo '<url><loc>http://www.autumnearth.com/news/'.$cleanURL.'</loc><priority>0.5</priority></url>'."\n";
+echo '<url><loc>http://www.autumnearth.com/news/'.$cleanURL.'/</loc><priority>0.5</priority></url>'."\n";
 }
 }
 
@@ -81,7 +98,7 @@ $result = mysql_query( $query ) or die ( "couldn't execute inner query" );
 if ( mysql_num_rows( $result )>0 ) {
 while ( $row = mysql_fetch_array( $result ) ) {
 extract( $row );
-echo '<url><loc>http://www.autumnearth.com/search/'.cleanURL($searchTerm).'</loc><priority>0.3</priority></url>'."\n";
+echo '<url><loc>http://www.autumnearth.com/search/'.cleanURL($searchTerm).'/</loc><priority>0.3</priority></url>'."\n";
 }
 }
 
