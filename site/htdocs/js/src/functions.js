@@ -21,9 +21,10 @@ function viewport() {
     }
   */
 // helpers:
-function supportsSVG() {
+/*function supportsSVG() {
   return !!document.createElementNS && !!document.createElementNS('http://www.w3.org/2000/svg', "svg").createSVGRect;
 }
+*/
 
 function supportsCanvas() {
   // http://diveintohtml5.info/detect.html#canvas
