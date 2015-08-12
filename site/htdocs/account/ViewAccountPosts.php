@@ -92,7 +92,7 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/functions.php");
 		extract($row);
 		$CreationTime = strtotime($CreationTime);
 			
-			echo '<a href="View.php?thread=' . $threadID . '" title="Click to view this thread">'."\n";
+			echo '<a href="/forum/' . $cleanURL . '/" title="Click to view this thread">'."\n";
 					
 			if ($sticky == "1") {
 			echo '<span class="Sticky">';

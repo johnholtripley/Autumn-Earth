@@ -258,7 +258,7 @@ $numberofrows = mysql_num_rows($result);
 
 
 <p><a href="ChangeDetail.php">Change password</a></p>
-<p><a href="/forum/ViewAccountPosts.php">View all threads you have posted in</a></p>
+<p><a href="/account/ViewAccountPosts.php">View all threads you have posted in</a></p>
 <p><a href="ManageSubscriptions.php">Manage Subscriptions</a></p>
 <p>please email <a href="#">support@</a> if you have any difficulties with your account</p>
 <?php
