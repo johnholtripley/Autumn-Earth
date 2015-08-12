@@ -8,11 +8,8 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/functions.php");
 
 
 	
-	$pagetitle = "Autumn Earth Community Forum";
-		$metadesc = "Autumn Earth Community Forum";
 	include($_SERVER['DOCUMENT_ROOT']."/includes/header.php");
-	include($_SERVER['DOCUMENT_ROOT']."/includes/login.php");
-	include($_SERVER['DOCUMENT_ROOT']."/includes/search.php");
+
 	
 	
 	$accname = $_SESSION['username'];

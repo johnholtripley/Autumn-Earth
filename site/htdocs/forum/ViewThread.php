@@ -10,7 +10,7 @@ $metadesc = stripCode(stripslashes($postContent));
 */
 include($_SERVER['DOCUMENT_ROOT']."/includes/header.php");
 
-
+$pageNumber = 1;
 
 if(isset($_GET["cleaned"])) {
 $threadURL = $_GET["threadName"];
@@ -30,7 +30,10 @@ $threadID = $row["threadID"];
 
 }
 
+if (isset($_GET["pageNumber"])) {
+$pageNumber = $_GET["pageNumber"];
 
+}
 
 } else {
 if(isset($_GET["thread"])) {
@@ -48,7 +51,7 @@ if (is_numeric($threadID)) {
 if (isset($_SESSION['username'])) {
 // check the status of this user and this thread - if the user is subscribed to this thread, there their status for this thread should be set to 0
 $query = "
-SELECT tblsubscribedthreads.*, tblacct.accountName, tblacct.accountID AS useracctid, tblthreads.threadid
+SELECT tblsubscribedthreads.*, tblacct.accountName, tblacct.accountID AS useracctid, tblthreads.threadid, tblthreads.cleanURL as cleanURL
 FROM tblsubscribedthreads
 INNER JOIN tblacct on tblsubscribedthreads.accountID = tblacct.accountID
 INNER JOIN tblthreads on tblsubscribedthreads.threadid = tblthreads.threadid
@@ -90,18 +93,14 @@ WHERE tblposts.ThreadID = " . $threadID . " ORDER BY tblposts.Sticky DESC, tblpo
 		$totalpages = ceil($numberofrows/$resultsperpage);
 		
 		// check if this page is paginated:
-		if(isset($_GET['page'])) {
-		$pagenumber = $_GET['page'];
-		} else {
-		$pagenumber = 1;
-		}
+	
 		
-		if ($pagenumber > $totalpages) {
-		$pagenumber = 1;
+		if ($pageNumber > $totalpages) {
+		$pageNumber = 1;
 		}
 			
-		$startpoint = ($pagenumber - 1) * $resultsperpage;
-		$endpoint = $pagenumber * $resultsperpage;
+		$startpoint = ($pageNumber - 1) * $resultsperpage;
+		$endpoint = $pageNumber * $resultsperpage;
 		if ($endpoint > $numberofrows) {
 		$endpoint = $numberofrows;
 		}
@@ -149,11 +148,11 @@ WHERE tblposts.ThreadID = " . $threadID . " ORDER BY tblposts.Sticky DESC, tblpo
 					echo 'This post has been hidden by a Moderator.';
 				}
 				echo '</p>'."\n";
-				echo '<img src="/data/chr'.$currentcharid.'/portrait.jpg" width="84" height="85" alt="'.$acctusername.'\'s portrait" /><br />'."\n".'<strong>'.$charname.'</strong> - currently in '.$charlocation.'<br />'."\n";
+				echo '<img src="/data/chr'.$currentcharid.'/portrait.jpg" class="characterPortrait" alt="'.$acctusername.'\'s portrait" /><br />'."\n".'<strong>'.$charname.'</strong> - currently in '.$charlocation.'<br />'."\n";
 				echo '<em>'.parseCode(stripslashes($acctsignature)).'</em>';
 				if (strtolower($acctusername) == strtolower($_SESSION['username'])) {
 				// add edit link
-				echo '<br /><a href="EditPost.php?post='.$postID.'&amp;page='.$pagenumber.'" title="Edit post">edit post</a>'."\n";
+				echo '<br /><a href="EditPost.php?post='.$postID.'&amp;page='.$pageNumber.'" title="Edit post">edit post</a>'."\n";
 				}
 				if ($edited != "0000-00-00 00:00:00") {
 					// add edited time:
@@ -175,6 +174,9 @@ WHERE tblposts.ThreadID = " . $threadID . " ORDER BY tblposts.Sticky DESC, tblpo
 		// display page numbers if required
 		if ($totalpages>1) {
 		
+
+
+/*
 			// determine URL (but ignore &page = if one exists)
 		
 			$getdata = "";
@@ -197,17 +199,18 @@ WHERE tblposts.ThreadID = " . $threadID . " ORDER BY tblposts.Sticky DESC, tblpo
 			if ($getdata != "") {
 				$thispageurl .= "?".$getdata;
 			}
+			*/
 					
 		
-			echo '<br />| ';
+			echo '<ul class="pagination">'."\n";
 			for($i = 1; $i <= $totalpages; $i++) {
-				if($i == $pagenumber) { 
-				echo $i.' | ';
+				if($i == $pageNumber) { 
+				echo '<li class="current">'.$i.'</li>'."\n";
 				} else {
-				echo '<a href="'.$thispageurl.'&page='.$i.'" title="View page '.$i.'">'.$i.'</a> | ';
+				echo '<li><a href="/forum/'.$cleanURL.'/'.$i.'/" title="View page '.$i.'">'.$i.'</a></li>'."\n";
 				}
 			} 
-			echo '<br /><hr />'."\n";
+			echo '</ul>'."\n";
 		}
 	} else {
 

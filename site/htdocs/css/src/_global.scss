@@ -1,6 +1,6 @@
 body {
     margin: 0;
-   background: #212121;
+   background: $secondaryColour;
     text-align: left;
  color: $baseColour;
 
@@ -28,11 +28,12 @@ select,
 textarea {
      background: #fff;
     color: #212121;
+    border: 0;
 }
 
 ::-moz-selection {
     background: $accentColour;
-    color: #fff;
+    color: $secondaryColour;
     -moz-text-shadow: none;
 }
 
@@ -374,10 +375,17 @@ z-index: 2;
 
 
 
+// temp stuff:
 
-
-
-
+@include mq($wide) {
+#autumnEarth {
+    position: relative;
+    z-index: 2;
+}
+#navigation {
+    z-index: 1;
+}
+}
 
 
 #magicSquare td {
@@ -385,12 +393,12 @@ z-index: 2;
 }
 
 
-.inventorySlot {
+.inventorySlot, .characterPortrait {
     width: 64px;
     height: 64px;
 }
 
 .highlight {
-    background: $accentColour;
-    color: #212121;
+    background: darken($accentColour,40);
+   // color: #212121;
 }

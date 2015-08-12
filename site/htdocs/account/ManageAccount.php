@@ -241,7 +241,7 @@ $numberofrows = mysql_num_rows($result);
 	} else if ($numberofrows == 1) {
 	$row = mysql_fetch_array($result);
 	extract($row);
-	echo '<img src="/data/chr'.$charID.'/portrait.jpg" width="84" height="85" alt="'.$charName.'\'s portrait" />';
+	echo '<img src="/data/chr'.$charID.'/portrait.jpg" class="characterPortrait" alt="'.$charName.'\'s portrait" />';
 	
 	echo '<input type="hidden" value="'.$charID.'" name="charselect" id="charsel0" />';
 	}

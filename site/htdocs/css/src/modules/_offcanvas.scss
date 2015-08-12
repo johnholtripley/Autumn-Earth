@@ -36,7 +36,7 @@
 @media (max-width: $useOffCanvasUpTo - 0.01em) {
     .js #navigation {
         left: -$offCanvasWidth;
-        background: $secondaryColour;
+        background: #330000;
         height: 100%;
         width: $offCanvasWidth;
     }

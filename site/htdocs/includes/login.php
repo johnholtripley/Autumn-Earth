@@ -1,7 +1,7 @@
 <?php
 
 $thisloginisvalid = false;
-echo'<div id="LoginBlock">'."\n";
+echo'<div class="small-12 wide-6 columns">'."\n";
 
 if (isset($loginerror)) {
 echo '<div class="Error">'.$loginerror.'</div>'."\n";

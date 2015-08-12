@@ -153,7 +153,7 @@ $result = mysql_query($query) or die ("couldn't execute query");
 			echo'Ends in '.timeRemaining($timeToEnd)."\n";
 			}
 			echo'<br />Seller: '.$sellerName."\n";
-			echo '<img src="/data/chr'.$sellerID.'/portrait.jpg" width="84" height="85" alt="'.$sellerName.'\'s portrait" />';
+			echo '<img src="/data/chr'.$sellerID.'/portrait.jpg" class="characterPortrait" alt="'.$sellerName.'\'s portrait" />';
 			
 
 

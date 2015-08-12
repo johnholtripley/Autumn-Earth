@@ -64,6 +64,22 @@ if ( mysql_num_rows( $result )>0 ) {
 while ( $row = mysql_fetch_array( $result ) ) {
 extract( $row );
 echo '<url><loc>http://www.autumnearth.com/forum/'.$cleanURL.'/</loc><priority>0.5</priority></url>'."\n";
+
+// get pagination URLs:
+$query2 = "select tblposts.*, tblthreads.ThreadID FROM tblposts INNER JOIN tblthreads on tblposts.ThreadID = tblthreads.ThreadID WHERE tblposts.ThreadID = " . $threadID;
+$result2 = mysql_query($query2) or die ("couldn't execute query3");
+$numberofrows2 = mysql_num_rows($result2);
+if ($numberofrows2 > 0) {
+$totalpages = ceil($numberofrows2/$resultsperpage);
+if($totalpages > 1) {
+// show pagination URLs
+for ($j=2;$j<=$totalpages;$j++) {
+	echo '<url><loc>http://www.autumnearth.com/forum/'.$cleanURL.'/'.$j.'/</loc><priority>0.5</priority></url>'."\n";
+}
+
+}
+}
+
 }
 }
 

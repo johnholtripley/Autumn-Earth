@@ -17,7 +17,9 @@
 </div>
 <div id="footer" role="contentinfo">
 	<div class="row">
+	<div class="small-12 column">
 <p>&copy; 2015 Autumn Earth</p>
+	</div>
 	</div>
 	</div>
 

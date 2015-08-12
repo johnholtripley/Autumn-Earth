@@ -22,6 +22,7 @@ RewriteEngine On
 RewriteRule    ^community/([A-Za-z0-9-]+)/([A-Za-z0-9-]+)/?$    community/guilds/viewpage.php?cleaned=1&guild=$1&page=$2    [NC,L]  
 RewriteRule    ^news/([A-Za-z0-9-]+)/?$     news/index.php?cleaned=1&articleName=$1 [NC,L]
 RewriteRule    ^forum/([A-Za-z0-9-]+)/?$     forum/viewforum.php?cleaned=1&forum=$1 [NC,L]
+RewriteRule    ^forum/([A-Za-z0-9-]+)/([A-Za-z0-9-]+)/([0-9]+)/?$     forum/viewthread.php?cleaned=1&forumName=$1&threadName=$2&pageNumber=$3 [NC,L]
 RewriteRule    ^forum/([A-Za-z0-9-]+)/([A-Za-z0-9-]+)/?$     forum/viewthread.php?cleaned=1&forumName=$1&threadName=$2 [NC,L]
 RewriteRule    ^search/([A-Za-z0-9-]+)/?$     search/index.php?searchcleaned=1&searchterms=$1 [NC,L]
 RewriteRule    ^sitemap.xml     sitemap.php [NC,L]
@@ -32,7 +33,6 @@ ErrorDocument 404 /404.php
 <IfModule headers_module>
     header set X-Clacks-Overhead "GNU Terry Pratchett"
 </IfModule>
-
 
 
 # ------------------------------------------------------------------------------

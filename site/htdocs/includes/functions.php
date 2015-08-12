@@ -1072,7 +1072,7 @@ function displayUpcomingEvents( $limit ) {
 			$endDateOutput = date( 'j', strtotime( $eventEnd ) )."<sup>".date( 'S', strtotime( $eventEnd ) )."</sup> ".date( 'F Y', strtotime( $eventEnd ) );
 			echo '<span>From <span itemprop="startDate" content="'.$eventStart.'">'.$startDateOutput.'</span>
     to <span itemprop="endDate" content="'.$eventEnd.'">'.$endDateOutput.'</span></span>';
-			echo '<span itemprop="location" itemscope itemtype="http://schema.org/Place"><span itemprop="url" href="'.$link.'">'.$link.'</span></span>';
+			// echo '<span itemprop="location" itemscope itemtype="http://schema.org/Place"><span itemprop="url" href="'.$link.'">'.$link.'</span></span>';
 			echo '</a></li>';
 
 
