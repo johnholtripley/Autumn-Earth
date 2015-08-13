@@ -102,7 +102,7 @@ $result = mysql_query( $query ) or die ( "couldn't execute inner query" );
 if ( mysql_num_rows( $result )>0 ) {
 while ( $row = mysql_fetch_array( $result ) ) {
 extract( $row );
-echo '<url><loc>http://www.autumnearth.com'.$link.'</loc><priority>0.5</priority></url>'."\n";
+echo '<url><loc>http://www.autumnearth.com/events/'.$cleanURL.'/</loc><priority>0.5</priority></url>'."\n";
 }
 }
 

@@ -5,19 +5,18 @@
 
 
 
-
-// ##############
-
-
-
 $thisURL = $_SERVER['PHP_SELF'];
 $thisURLSection = explode("/",$thisURL);
-$thisSection = $thisURLSection[1];
+$thisSection = trim($thisURLSection[1]);
+
 $thisBuiltURL = "http://www.autumnearth.com/";
 $shareImagePath = "http://www.autumnearth.com/images/icons/120.png";
 
   $pagetitle="Autumn Earth";
 $longDescription="Autumn Earth Community Site";
+
+
+
 
 switch ($thisSection) {
     case "index.php":
@@ -92,6 +91,29 @@ $longDescription = $description;
           case "mail":
     // default
         break;
+
+
+case "events":
+
+
+
+$query = "select * from tblEvents where cleanURL='".$_GET["eventName"]."'";
+$result = mysql_query($query) or die ("couldn't execute query");
+
+if (mysql_num_rows($result) > 0) {
+
+
+
+while ($row = mysql_fetch_array($result)) {
+extract ($row);
+	$pagetitle = $title." - an Event in Autumn Earth";
+	$longDescription = stripcode($eventContent);
+}
+}
+
+break;
+
+
           case "news":
     
 $pagetitle = 'Autumn Earth latest news';
