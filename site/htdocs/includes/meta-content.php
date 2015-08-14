@@ -44,3 +44,7 @@ echo '<meta content="'.$longDescription.'" name="description">'."\n";
 <meta itemprop="name" content="<?php echo $pagetitle; ?>">
 <meta itemprop="description" content="<?php echo $longDescription; ?>">
 <meta itemprop="image" content="<?php echo $shareImagePath; ?>">
+
+
+
+<link rel="canonical" href="<?php echo $thisBuiltURL; ?>" />
