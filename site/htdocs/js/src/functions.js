@@ -26,6 +26,18 @@ function viewport() {
 }
 */
 
+function createCookie(name,value,days) {
+  // http://www.quirksmode.org/js/cookies.html
+  if (days) {
+    var date = new Date();
+    date.setTime(date.getTime()+(days*24*60*60*1000));
+    var expires = "; expires="+date.toGMTString();
+  }
+  else var expires = "";
+  document.cookie = name+"="+value+expires+"; path=/";
+}
+
+
 function supportsCanvas() {
   // http://diveintohtml5.info/detect.html#canvas
   return !!document.createElement('canvas').getContext;

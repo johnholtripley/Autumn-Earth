@@ -1,5 +1,12 @@
 <!doctype html>
-<html lang="en-gb">
+<?php
+$htmlClass = "";
+// check if font has already been loaded, and the cookie set. If so, add the class so the font shows immediately as it's probably in cache:
+if($_COOKIE['fontLoaded'] == "true") {
+$htmlClass = ' class="fontsLoaded"';
+}
+?>
+<html lang="en-gb"<?php echo $htmlClass; ?>>
 <head>
 
 <?php
@@ -15,7 +22,7 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/title-tag.php");
     var cutsTheMustard = false;
     if('querySelector' in document && 'localStorage' in window && 'addEventListener' in window) {
      cutsTheMustard = true;
-      document.documentElement.className = "js";
+      document.documentElement.className += " js";
      }
   </script>
 

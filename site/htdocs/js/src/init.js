@@ -5,4 +5,6 @@ var observer = new FontFaceObserver( "forolight" )
     .check()
     .then( function(){
         document.documentElement.className += " fontsLoaded";
+        // set a cookie as the font should now be in cache and can be displayed immediately subsequently
+        createCookie("fontLoaded","true",1);
     });
