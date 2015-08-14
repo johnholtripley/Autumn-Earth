@@ -103,21 +103,24 @@ h6 a {
 
 
 
-
-
-
 p, ol, ul, dl {
-    font-family: $bodyFont;
+    // load web font if JS is disabled:
+    font-family: $bodyFontLoaded;
     @include pxRem("font-size", 14);
     @include pxRem("line-height", 22);
   @include pxRem("margin", 0 0 12 0);
     letter-spacing: 0.02em;
-    padding: 0;
-    
+    padding: 0; 
     color: $baseColour;
 }
 
+.js p, .js ol, .js ul, .js dl {
+    // delay using the web font if JS is enabled:
+    font-family: $bodyFont;
+}
+
 .fontsLoaded p, .fontsLoaded ol, .fontsLoaded ul, .fontsLoaded dl {
+    // web font loaded and JS enabled:
     font-family: $bodyFontLoaded;
     }
 

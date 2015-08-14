@@ -23,6 +23,13 @@
     top: 0;
     width: 100%;
 }
+@include mq($useOffCanvasUpTo) {
+#navigation {
+    position: absolute;
+    top: 0;
+    width: 100%;
+}
+    }
 
 @include mq($useOffCanvasUpTo) {
     #wrapper {
