@@ -2,8 +2,10 @@
 <?php
 $htmlClass = "";
 // check if font has already been loaded, and the cookie set. If so, add the class so the font shows immediately as it's probably in cache:
+if(isset($_COOKIE['fontLoaded'])) {
 if($_COOKIE['fontLoaded'] == "true") {
 $htmlClass = ' class="fontsLoaded"';
+}
 }
 ?>
 <html lang="en-gb"<?php echo $htmlClass; ?>>
