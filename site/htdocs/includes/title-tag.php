@@ -65,8 +65,9 @@ $result = mysql_query($query) or die ("couldn't execute query1");
 		$thisBuiltURL = $thisBuiltURL."forum/".$cleanURL."/";
 			$pagetitle = stripCode($title).' - Autumn Earth community site';
 		}
-} else {
 
+
+} else if (isset($_GET["forum"])) {
 	//top level forum:
 
 $query = "select * from tblforums WHERE cleanURL = '".cleanURL($_GET["forum"])."'";
@@ -78,6 +79,10 @@ $result = mysql_query($query) or die ("couldn't execute query1");
 		$thisBuiltURL = $thisBuiltURL."forum/".$cleanURL."/";
 			$pagetitle = stripCode($title).' - Autumn Earth community site';
 		}
+} else {
+// forum home
+	$pagetitle = 'Autumn Earth community forum';
+	$longDescription = 'Discussions on the Autumn Earth community site';
 
 }
 }

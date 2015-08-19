@@ -5,9 +5,8 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/signalnoise.php");
 include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
 include($_SERVER['DOCUMENT_ROOT']."/includes/functions.php");
 include($_SERVER['DOCUMENT_ROOT']."/includes/header.php");
-include($_SERVER['DOCUMENT_ROOT']."/includes/pagehead.php");
-include($_SERVER['DOCUMENT_ROOT']."/includes/login.php");
-include($_SERVER['DOCUMENT_ROOT']."/includes/search.php");
+
+
 
 ?>
 
@@ -29,12 +28,12 @@ while ($row = mysql_fetch_array($result)) {
 		echo '<img src="' . $imagePath . '" width="24" height="24" alt="" />'."\n"; 
 		echo '<p>' . stripslashes($description);
 		echo '<br />'."\n";
-		echo '<a href="ViewForum.php?forum='. $forumID .'" title="click to view the ' . $title . ' forum">click to view forum...</a>'."\n";
+		echo '<a href="/forum/'. $cleanURL .'/" title="click to view the ' . $title . ' forum">click to view forum...</a>'."\n";
 		echo '</p>'."\n";
 	
 	}
 
 }
-include("../includes/close.php");
+
 include("../includes/footer.php");
 ?>
