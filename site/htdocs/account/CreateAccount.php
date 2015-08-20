@@ -286,7 +286,7 @@ echo 'checked="checked"';
 }
 echo '/> ';
 
-echo '<label for="alerts">Send an email when a new post has been made in a subscribed thread</label><br />';
+echo '<label for="alerts"><span></span>Send an email when a new post has been made in a subscribed thread</label><br />';
 
 
 
@@ -296,7 +296,7 @@ echo 'checked="checked"';
 }
 echo '/> ';
 
-echo '<label for="newsletter">Send me the newsletter and notice of in-game events</label><br />';
+echo '<label for="newsletter"><span></span>Send me the newsletter and notice of in-game events</label><br />';
 
 
 echo '<input type="checkbox" value="1" name="updates" id="updates"';
@@ -305,7 +305,7 @@ echo 'checked="checked"';
 }
 echo '/> ';
 ?>
-<label for="updates">Send me details of updates and patch releases as they occur</label>
+<label for="updates"><span></span>Send me details of updates and patch releases as they occur</label>
 <br /><br />
 
 send emails as

@@ -258,10 +258,7 @@ h1, h2, h3, h4, h5, h6 {
 #mastHead {
 background: #000;
 }
-#mastHead h1 {
-    background: url(../images/autumn-earth.gif) no-repeat 0 50%;
 
-}
 
 
 @include mq($wide){
