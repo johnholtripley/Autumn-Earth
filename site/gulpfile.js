@@ -1,49 +1,124 @@
-
 var gulp = require('gulp'),
     sass = require('gulp-sass'),
     jshint = require('gulp-jshint'),
     uglify = require('gulp-uglify'),
     rename = require('gulp-rename'),
-    sourcemaps  = require('gulp-sourcemaps'),
+    sourcemaps = require('gulp-sourcemaps'),
     csslint = require('gulp-csslint'),
     concat = require('gulp-concat'),
-    combine = require('gulp-combine-media-queries'),
-    minify = require('gulp-minify-css');
-    
+    minify = require('gulp-minify-css'),
+    download = require('gulp-download'),
+    uncss = require('gulp-uncss'),
+    xml2js = require('gulp-xml2js'),
+    gutil = require('gulp-util'),
+    clean = require('gulp-clean');
+
 // css:
 gulp.task('sass', function() {
     return gulp.src('htdocs/css/src/**/*.scss')
-        .pipe(sass())
-        .pipe(combine())
-        .pipe(minify({compatibility: 'ie7'}))
+    .pipe(sourcemaps.init())
+        .pipe(sass({outputStyle: 'compressed'}))
+      //   .pipe(sourcemaps.write({
+      //      includeContent: false,
+      //      sourceRoot: 'htdocs/css/src/**/*.css'
+      //  }))
         .pipe(gulp.dest('htdocs/css'));
 });
 
 // js:
 gulp.task('scripts', function() {
     // make sure that init is compiled last after all modules are loaded:
-  return gulp.src(['htdocs/js/src/**/!(init)*.js','htdocs/js/src/init.js'])
-    .pipe(sourcemaps.init())
-    .pipe(concat('core.js'))
-    .pipe(sourcemaps.write({includeContent: false, sourceRoot: 'htdocs/js/src/**/*.js'}))
-    .pipe(gulp.dest('htdocs/js'))
-    .pipe(rename({ suffix: '.min' }))
-    .pipe(uglify())
-    .pipe(gulp.dest('htdocs/js'));
+    return gulp.src(['htdocs/js/src/**/!(init)*.js', 'htdocs/js/src/init.js'])
+        .pipe(sourcemaps.init())
+        .pipe(concat('core.js'))
+        .pipe(sourcemaps.write({
+            includeContent: false,
+            sourceRoot: 'htdocs/js/src/**/*.js'
+        }))
+        .pipe(gulp.dest('htdocs/js'))
+        .pipe(rename({
+            suffix: '.min'
+        }))
+        .pipe(uglify())
+        .pipe(gulp.dest('htdocs/js'));
 });
 
 // lints:
 gulp.task('jshint', function() {
-  return gulp.src(['htdocs/js/src/**/!(init)*.js','htdocs/js/src/init.js'])
-    .pipe(jshint())
-    .pipe(jshint.reporter('default'))
+    return gulp.src(['htdocs/js/src/**/!(init)*.js', 'htdocs/js/src/init.js'])
+        .pipe(jshint())
+        .pipe(jshint.reporter('default'))
 });
 
 gulp.task('csslint', function() {
-  gulp.src('htdocs/css/*.css')
-    .pipe(csslint())
-    .pipe(csslint.reporter());
+    gulp.src('htdocs/css/*.css')
+        .pipe(csslint())
+        .pipe(csslint.reporter());
 });
+
+
+
+
+
+// to do:
+// download sitemap.xml and wait until complete before running createSitemap
+// // http://jegtnes.co.uk/blog/using-gulp-with-uncss-in-ghost-for-tiny-assets/
+
+
+// download the sitemap locally:
+gulp.task('getSitemap', function(callback) {
+    download('http://ae.dev/sitemap.xml')
+        .pipe(gulp.dest("htdocs/"));
+});
+
+// convert the xml to json:
+gulp.task('createSitemap', function() {
+    return gulp.src('htdocs/sitemap.xml')
+        .pipe(xml2js())
+        .pipe(rename('rss.json'))
+        .pipe(gulp.dest("htdocs/gulp-processing/"));
+});
+
+// any pages with unique styling that aren't in in the sitemap
+filesToUncss = ['http://ae.dev/account/CreateAccount.php'];
+gulp.task('removeUnusedCSS', ['createSitemap'], function() {
+    var json = require('./htdocs/gulp-processing/rss.json');
+    json.urlset.url.forEach(function(value) {
+        link = value.loc[0];
+
+        link = link.replace('http://www.autumnearth.com/', 'http://ae.dev/');
+        gutil.log(link);
+        filesToUncss.push(link);
+    })
+    return gulp.src('htdocs/css/base.css')
+        .pipe(uncss({
+            html: filesToUncss,
+            ignore: [ 
+                '/\.offCanvas/',
+                '/\.js/',
+                '/\.fontsLoaded/'
+            ]
+
+           
+        }))
+
+    .pipe(minify({
+            compatibility: 'ie7'
+        }))
+        .pipe(rename('base.css'))
+        .pipe(gulp.dest('htdocs/css/'));
+
+});
+
+gulp.task('removeUnused', ['removeUnusedCSS'], function() {
+    // tidy up and remove working files
+    return gulp.src('htdocs/gulp-processing/', {
+            read: false
+        })
+        .pipe(clean());
+});
+
+
 
 
 
@@ -52,8 +127,8 @@ gulp.task('csslint', function() {
 
 // Watch
 gulp.task('watch', function() {
-  gulp.watch('htdocs/css/src/**/*.scss', ['sass']);
-  gulp.watch('htdocs/js/src/**/*.js', ['scripts']);
+    gulp.watch('htdocs/css/src/**/*.scss', ['sass']);
+    gulp.watch('htdocs/js/src/**/*.js', ['scripts']);
 });
 
 
@@ -67,3 +142,8 @@ gulp.task('default', function() {
     gulp.start('sass', 'scripts', 'watch');
 });
 
+// pre-go live task
+// run getSitemap first
+gulp.task('deploy', function() {
+    gulp.start('removeUnused');
+});
