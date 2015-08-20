@@ -6,7 +6,6 @@ var gulp = require('gulp'),
     sourcemaps = require('gulp-sourcemaps'),
     csslint = require('gulp-csslint'),
     concat = require('gulp-concat'),
-    combine = require('gulp-combine-media-queries'),
     minify = require('gulp-minify-css'),
     download = require('gulp-download'),
     uncss = require('gulp-uncss'),
@@ -17,11 +16,12 @@ var gulp = require('gulp'),
 // css:
 gulp.task('sass', function() {
     return gulp.src('htdocs/css/src/**/*.scss')
-        .pipe(sass())
-        .pipe(combine())
-        .pipe(minify({
-            compatibility: 'ie7'
-        }))
+    .pipe(sourcemaps.init())
+        .pipe(sass({outputStyle: 'compressed'}))
+      //   .pipe(sourcemaps.write({
+      //      includeContent: false,
+      //      sourceRoot: 'htdocs/css/src/**/*.css'
+      //  }))
         .pipe(gulp.dest('htdocs/css'));
 });
 
@@ -61,7 +61,6 @@ gulp.task('csslint', function() {
 
 
 // to do:
-// get uncss ignore to work so offCanvas styles are included
 // download sitemap.xml and wait until complete before running createSitemap
 // // http://jegtnes.co.uk/blog/using-gulp-with-uncss-in-ghost-for-tiny-assets/
 
@@ -80,7 +79,8 @@ gulp.task('createSitemap', function() {
         .pipe(gulp.dest("htdocs/gulp-processing/"));
 });
 
-filesToUncss = [];
+// any pages with unique styling that aren't in in the sitemap
+filesToUncss = ['http://ae.dev/account/CreateAccount.php'];
 gulp.task('removeUnusedCSS', ['createSitemap'], function() {
     var json = require('./htdocs/gulp-processing/rss.json');
     json.urlset.url.forEach(function(value) {
@@ -94,9 +94,9 @@ gulp.task('removeUnusedCSS', ['createSitemap'], function() {
         .pipe(uncss({
             html: filesToUncss,
             ignore: [ 
-                '.offCanvas *',
-                '.js *',
-                '.fontsLoaded *'
+                '/\.offCanvas/',
+                '/\.js/',
+                '/\.fontsLoaded/'
             ]
 
            
@@ -105,7 +105,7 @@ gulp.task('removeUnusedCSS', ['createSitemap'], function() {
     .pipe(minify({
             compatibility: 'ie7'
         }))
-        .pipe(rename('base-uncss.css'))
+        .pipe(rename('base.css'))
         .pipe(gulp.dest('htdocs/css/'));
 
 });
