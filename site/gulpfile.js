@@ -6,12 +6,16 @@ var gulp = require('gulp'),
     rename = require('gulp-rename'),
     sourcemaps  = require('gulp-sourcemaps'),
     csslint = require('gulp-csslint'),
-    concat = require('gulp-concat');
+    concat = require('gulp-concat'),
+    combine = require('gulp-combine-media-queries'),
+    minify = require('gulp-minify-css');
     
 // css:
 gulp.task('sass', function() {
     return gulp.src('htdocs/css/src/**/*.scss')
-        .pipe(sass({outputStyle: 'compressed'}))
+        .pipe(sass())
+        .pipe(combine())
+        .pipe(minify({compatibility: 'ie7'}))
         .pipe(gulp.dest('htdocs/css'));
 });
 
