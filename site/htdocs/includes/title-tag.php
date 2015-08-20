@@ -136,11 +136,14 @@ break;
           case "news":
     
 $pagetitle = 'Autumn Earth latest news';
-	$longDescription = 'A news article from the Autumn Earth community site';
+	$longDescription = 'Latest news from the Autumn Earth community site';
+
+
+if(isset($_GET["articleName"])) {
 $cleanURL = $_GET["articleName"];
 
 $thisBuiltURL = $thisBuiltURL."news/".$cleanURL."/";
-
+$longDescription = 'A news article from the Autumn Earth community site';
 $query ="select * from tblnews where cleanURL='".$cleanURL."'";
 $result = mysql_query($query) or die ("couldn't execute query1");
 		$numberofrows = mysql_num_rows($result);
@@ -150,6 +153,12 @@ $result = mysql_query($query) or die ("couldn't execute query1");
 			$pagetitle = stripCode($newsTitle).' - Autumn Earth news';
 			$longDescription = stripcode($newsContent);
 		}
+} else {
+	$thisBuiltURL = $thisBuiltURL."news/";
+
+}
+
+
         break;
           case "contract":
     // if contract item show details for that
