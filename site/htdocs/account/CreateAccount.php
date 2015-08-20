@@ -237,7 +237,7 @@ echo "<p>$error</p>";
 <label for="cpword">Confirm Password* </label><input name="cpword" type="password" id="cpword" /><br />
 <label for="signature">Signature </label><input name="signature" type="text" id="signature" value="<?php echo @$psignature ?>" /><br />
 <label for="bday">Birthday </label>
-<select name="bday" id="bday">
+<div class="selectWrapper"><select name="bday" id="bday">
 
 <?php
 for($di=1; $di<32; $di++) {
@@ -248,8 +248,8 @@ for($di=1; $di<32; $di++) {
 	echo '>' . $di . '</option>';
 }
 
-echo '</select>';
-echo '<select name="bmonth" id="bmonth">';
+echo '</select></div>';
+echo '<div class="selectWrapper"><select name="bmonth" id="bmonth">';
 
 for($di=1; $di<13; $di++) {
 	echo '<option value="' . $di .'"';
@@ -259,13 +259,13 @@ for($di=1; $di<13; $di++) {
 	echo '>' . $months[$di] . '</option>';
 }
 
-echo '</select>';
+echo '</select></div>';
 
 
 // find the current year:
 $thisyear = date("Y", Time());
 
-echo '<select name="byear" id="byear">';
+echo '<div class="selectWrapper"><select name="byear" id="byear">';
 for($di=$thisyear; $di>1900; $di--) {
 	echo '<option value="' . $di .'"';
 	if ($di == $ebyear) {
@@ -274,7 +274,7 @@ for($di=$thisyear; $di>1900; $di--) {
 	echo '>' . $di . '</option>';
 }
 
-echo '</select>';
+echo '</select></div>';
 ?>
 <div class="ContextHelp" id="Help2"><p>If you'd like to receive a birthday present every year, please enter your birthday. (This isn't changeable once it's been entered)</p><div class="ContextHelpBottom">&nbsp;</div></div>
 <br /><br />
@@ -312,9 +312,9 @@ send emails as
 
 <?php
 if ($phtmlemail == "1") {
-echo'<input type="radio" name="htmlemail" id="htmlemail1" value="1" checked="checked" /> <label for="htmlemail1">html</label> <input type="radio" name="htmlemail" id="htmlemail2" value="0" /> <label for="htmlemail2">text</label>';
+echo'<input type="radio" name="htmlemail" id="htmlemail1" value="1" checked="checked" /><label for="htmlemail1"><span></span>html</label> <input type="radio" name="htmlemail" id="htmlemail2" value="0" /> <label for="htmlemail2"><span></span>text</label>';
 } else {
-echo'<input type="radio" name="htmlemail" id="htmlemail1" value="1" /> <label for="htmlemail1">html</label> <input type="radio" name="htmlemail" id="htmlemail2" value="0" checked="checked" /> <label for="htmlemail2">text</label>';
+echo'<input type="radio" name="htmlemail" id="htmlemail1" value="1" /><label for="htmlemail1"><span></span>html</label> <input type="radio" name="htmlemail" id="htmlemail2" value="0" checked="checked" /> <label for="htmlemail2"><span></span>text</label>';
 }
 ?>
  

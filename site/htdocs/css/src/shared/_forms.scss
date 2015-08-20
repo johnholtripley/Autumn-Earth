@@ -1,0 +1,135 @@
+
+
+
+// styled selects
+// http://jsbin.com/juvixufu/10/edit?html,output
+.selectWrapper {
+    position: relative;
+    display: block;
+    margin-top: 0.5em;
+    overflow: hidden;
+    width: 100%;
+    max-width: 100%;
+
+
+ select {
+    /* Make sure the select is wider than the container so we can clip the arrow */
+    
+    width: 110%;
+    max-width: 110%;
+    min-width: 110%;
+    /* Remove select styling */
+    
+    appearance: none;
+    -webkit-appearance: none;
+    /* Ugly Firefox way of doing it */
+    
+    -moz-appearance: window;
+    text-indent: 0.01px;
+    text-overflow: "";
+    /* Magic font size number to prevent iOS text zoom */
+    
+    font-size: 16px;
+    background: none;
+    border: none;
+    color: #444;
+    outline: none;
+    /* Padding works surpringly well */
+    
+    padding: .4em 19% .4em .8em;
+    font-family: helvetica, sans-serif;
+    line-height: 1.2;
+    margin: .2em;
+}
+/* This hides native dropdown button arrow in IE */
+
+ select::-ms-expand {
+    display: none;
+}
+
+/* Custom arrow - could be an image, SVG, icon font, etc. */
+
+&:after {
+    background: none;
+    color: #bbb;
+    content: "\25BE";
+    font-size: 1.5em;
+    padding: 0;
+    position: absolute;
+    right: 0.4em;
+    top: 0.2em;
+    bottom: .3em;
+    z-index: 1;
+    /* This hack makes the select behind the arrow clickable in some browsers */
+    
+    pointer-events: none;
+}
+
+/* Focus style */
+
+ select:focus {
+    outline: none;
+    box-shadow: 0 0 3px 3px rgba(180, 222, 250, 0.85);
+}
+/* This hides focus around selected option in FF */
+
+ select:-moz-focusring {
+    color: transparent;
+    text-shadow: 0 0 0 #000;
+}
+
+
+}
+
+
+
+
+
+
+div:not(#foo)>#pageContent input[type='radio']{opacity:0;width:49px;position:absolute;}
+div:not(#foo)>#pageContent input[type='radio']+label span {clear:none;display:block;cursor:pointer;width:1em;height:1em;border:1px solid #000;background:#fff;position:relative;
+
+  -webkit-border-radius: 1em;
+  -moz-border-radius: 1em;
+  border-radius: 1em;
+
+}
+
+div:not(#foo)>#pageContent input[type='radio']+label span:before {
+    content: " ";width:80%;height:80%;
+    background:$titleColor;
+    display:block;
+ -webkit-border-radius: 1em;
+  -moz-border-radius: 1em;
+  border-radius: 1em;
+  opacity: 0;
+  left: 10%;
+  top: 10%;
+
+  position: absolute;
+  @include transition(opacity 0.3s);
+}
+
+
+
+div:not(#foo)>#pageContent input[type='radio']:checked+label span:before {
+opacity: 1;
+}
+
+
+@supports (transform: scale(1)) {
+// enhance with scale if supported:
+div:not(#foo)>#pageContent input[type='radio']+label span:before {
+    opacity: 1;
+ -ms-transform: scale(0); 
+    -webkit-transform: scale(0); 
+    transform: scale(0);
+  @include transition(transform 0.3s);
+    }
+
+    div:not(#foo)>#pageContent input[type='radio']:checked+label span:before {
+ -ms-transform: scale(1); 
+    -webkit-transform: scale(1); 
+    transform: scale(1);
+}
+}

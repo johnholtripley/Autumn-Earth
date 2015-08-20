@@ -242,8 +242,15 @@ td { vertical-align: top; }
 .clearfix:after { clear: both; }
 .clearfix{ *zoom: 1; }
 
-.ir { display: block; border: 0; text-indent: -999em; overflow: hidden; background-color: transparent; background-repeat: no-repeat; text-align: left; direction: ltr; *line-height: 0; }
-.ir br { display: none; }
+.ir {    border: 0;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+  }
 
 .visibleHide {
 /* http://css-tricks.com/places-its-tempting-to-use-display-none-but-dont/ */
