@@ -79,8 +79,8 @@ gulp.task('createSitemap', function() {
         .pipe(gulp.dest("htdocs/gulp-processing/"));
 });
 
-// any pages with unique styling that aren't in in the sitemap
-filesToUncss = ['http://ae.dev/account/CreateAccount.php'];
+// add any pages here that have unique styling and that aren't in in the sitemap:
+filesToUncss = [];
 gulp.task('removeUnusedCSS', ['createSitemap'], function() {
     var json = require('./htdocs/gulp-processing/rss.json');
     json.urlset.url.forEach(function(value) {
@@ -108,9 +108,34 @@ gulp.task('removeUnusedCSS', ['createSitemap'], function() {
         .pipe(rename('base.css'))
         .pipe(gulp.dest('htdocs/css/'));
 
+
 });
 
-gulp.task('removeUnused', ['removeUnusedCSS'], function() {
+
+gulp.task('removeUnusedIE8CSS', ['removeUnusedCSS'], function() {
+
+    return gulp.src('htdocs/css/IE8Support.css')
+        .pipe(uncss({
+            html: filesToUncss,
+            ignore: [ 
+                '/\.offCanvas/',
+                '/\.js/',
+                '/\.fontsLoaded/'
+            ]
+
+           
+        }))
+
+    .pipe(minify({
+            compatibility: 'ie7'
+        }))
+        .pipe(rename('IE8Support.css'))
+        .pipe(gulp.dest('htdocs/css/'));
+
+
+});
+
+gulp.task('removeUnused', ['removeUnusedIE8CSS'], function() {
     // tidy up and remove working files
     return gulp.src('htdocs/gulp-processing/', {
             read: false
