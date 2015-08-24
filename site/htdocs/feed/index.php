@@ -52,7 +52,7 @@ while ($row = mysql_fetch_array($result)) {
 		echo '<comments>http://www.autumnearth.com/forum/ViewThread.php?thread=34</comments>'."\n";
 		// encode date correctly:
 		echo '<pubDate>'.strftime("%a, %d %b %Y %H:%M:%S",$timeAdded).' GMT</pubDate>'."\n";
-		echo '<guid isPermaLink="true">http://www.autumnearth.com/news/'.$cleanURL.'</guid>'."\n";
+		echo '<guid isPermaLink="true">http://www.autumnearth.com/chronicle/'.$cleanURL.'</guid>'."\n";
 		// replace any relative paths in the news content:
 		$newsContent = str_ireplace("href=\"/","href=\"http://www.autumnearth.com/",$newsContent);
 		$newsContent = str_ireplace("src=\"/","src=\"http://www.autumnearth.com/",$newsContent);

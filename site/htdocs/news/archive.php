@@ -31,7 +31,7 @@ while ($row = mysql_fetch_array($result)) {
 if ($postedBy != "") {
 echo ' - posted by '.$postedBy;
 }
-	echo '<br />'.$newsSynopsis.' <a href="/news/index.php?article='.$newsID.'" title="Click for the full article">read more...</a></p>'."\n";
+	echo '<br />'.$newsSynopsis.' <a href="/chronicle/'.$cleanURL.'/" title="Click for the full article">read more...</a></p>'."\n";
 }
 
 } else {

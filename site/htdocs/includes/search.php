@@ -1,5 +1,5 @@
 <?php
-echo'<div class="small-12 wide-6 columns">'."\n";
+echo'<div class="small-12 wide-6 columns" role="search">'."\n";
 echo '<form action="/search/" method="get">'."\n";
 echo '<label for="searchterms">enter search words</label>'."\n";
 echo '<input id="searchterms" type="text" name="searchterms" />'."\n";

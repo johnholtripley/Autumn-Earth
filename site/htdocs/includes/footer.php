@@ -7,7 +7,7 @@
 <li><a href="/forum/" accesskey="2">Forum</a></li>
 <li><a href="/auction/" accesskey="3">Auction</a></li>
 <li><a href="/mail/" accesskey="4">Mail</a></li>
-<li><a href="/news/" accesskey="5">News</a></li>
+<li><a href="/chronicle/" accesskey="5">News</a></li>
 <li><a href="#" accesskey="6">Guide</a></li>
 <li><a href="#" accesskey="7">The World</a></li>
 <li><a href="/contracts/CreateContract.php" accesskey="8">Contract</a></li>

@@ -21,7 +21,7 @@ echo '<feed xmlns="http://www.w3.org/2005/Atom">'."\n";
 		echo '<name>Autumn Earth</name>'."\n";
 		echo '<email>feeds@autumnearth.com</email>'."\n";
 	echo '</author>'."\n";
-	echo '<id>http://www.autumnearth.com/news/index.php?article=1</id>'."\n";
+	echo '<id>http://www.autumnearth.com/chronicle/index.php?article=1</id>'."\n";
 	echo '<link rel="self" type="application/atom+xml" href="http://www.autumnearth.com/feed/atom.php"/>'."\n";
 	
 	
@@ -40,7 +40,7 @@ while ($row = mysql_fetch_array($result)) {
 	echo '<entry>'."\n";
 	echo '<title>'.$newsTitle.'</title>'."\n";
 	echo '<link href="http://www.autumnearth.com/feed/atom.php"/>'."\n";
-	echo '<id>http://www.autumnearth.com/news/'.$cleanURL.'</id>'."\n";
+	echo '<id>http://www.autumnearth.com/chronicle/'.$cleanURL.'</id>'."\n";
 	
 	echo '<published>'.date("Y-m-d\TH:i:s\Z",$timeAdded).'</published>'."\n";
 	echo '<updated>'.date("Y-m-d\TH:i:s\Z",$timeAdded).'</updated>'."\n";

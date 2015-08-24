@@ -75,7 +75,7 @@ if (mysql_num_rows($result) > 0) {
 </div></div>
 
 <div class="column"><div>
-<h2>Latest news</h2>
+<h2>Latest from the Chronicle</h2>
 <?php
 $newsQuery = "select * from tblNews WHERE status='1' order by timeAdded DESC limit 5";
 $result = mysql_query($newsQuery) or die ("couldn't execute query");
@@ -84,7 +84,7 @@ if (mysql_num_rows($result) > 0) {
 	echo "<ul>";
 	while ($row = mysql_fetch_array($result)) {
 		extract($row);
-		echo '<li><a href="/news/'.$cleanURL.'/">'.$newsTitle.'</a></li>';
+		echo '<li><a href="/chronicle/'.$cleanURL.'/">'.$newsTitle.'</a></li>';
 
 
 

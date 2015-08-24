@@ -122,3 +122,35 @@
     }
   }
 }
+
+
+
+
+
+
+
+// ----------------------------------
+// equal height siblings:
+
+.equalHeights {
+    // provide non-flex solution for older browsers:
+    display: table;
+    // flex box for those browsers that can use it:
+
+  display: flex;        
+    flex-wrap: wrap;
+}
+
+.equalHeights > .column, .equalHeights > .columns {
+    // provide non-flex solution for older browsers:
+    display: table-cell;
+    // flex box for those browsers that can use it:
+
+  display: flex;
+
+}
+
+.equalHeights > .column > div {
+    width: 100%;
+}
+

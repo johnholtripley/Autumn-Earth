@@ -32,7 +32,7 @@ if ($pos === false) {
 $newcontent = smartPunctuation($newsContent);
 } else {
 // one was found:
-$newcontent = smartPunctuation(substr($newsContent, 0, $pos)) . '<br /><a href="/news/index.php?article='.$newsID.'" title="Click for the full article">continues...</a>';
+$newcontent = smartPunctuation(substr($newsContent, 0, $pos)) . '<br /><a href="/chronicle/index.php?article='.$newsID.'" title="Click for the full article">continues...</a>';
 }
 
 echo $newcontent."\n".'<br />';
@@ -47,7 +47,7 @@ echo '----------------';
 if ($postedBy != "") {
 echo ' - posted by '.$postedBy;
 }
-	echo'<br />'.$newsSynopsis.' <a href="/news/index.php?article='.$newsID.'" title="Click for the full article">read more...</a></p>'."\n";
+	echo'<br />'.$newsSynopsis.' <a href="/chronicle/index.php?article='.$newsID.'" title="Click for the full article">read more...</a></p>'."\n";
 }
 
 } else {

@@ -94,6 +94,7 @@ gulp.task('removeUnusedCSS', ['createSitemap'], function() {
         .pipe(uncss({
             html: filesToUncss,
             ignore: [ 
+                '/\@supports/',
                 '/\.offCanvas/',
                 '/\.js/',
                 '/\.fontsLoaded/'
@@ -118,6 +119,7 @@ gulp.task('removeUnusedIE8CSS', ['removeUnusedCSS'], function() {
         .pipe(uncss({
             html: filesToUncss,
             ignore: [ 
+            '/\@supports/',
                 '/\.offCanvas/',
                 '/\.js/',
                 '/\.fontsLoaded/'
