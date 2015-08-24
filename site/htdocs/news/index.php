@@ -6,9 +6,10 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
 include($_SERVER['DOCUMENT_ROOT']."/includes/functions.php");
 include($_SERVER['DOCUMENT_ROOT']."/includes/header.php");
 
-
-
-
+?>
+<div class="row">
+<div class="column">
+<?php
 if(isset($_GET["cleaned"])) {
 // uses clean URLS - find articleId from the URL
 
@@ -57,7 +58,11 @@ $articleId = $row["newsID"];
 	}
 		$row = mysql_fetch_array($result);
 		extract($row);
+
+
+
 		echo '<h1>'.$newsTitle.'</h1>';
+		$thisArticleAdded = $timeAdded;
 		$timeAdded = strtotime($timeAdded);
 		echo '<p>'.date('jS F Y',$timeAdded);
 		
@@ -72,8 +77,46 @@ echo '</p>';
 		echo $newsContent;
 	
 
-echo '<p><a href="archive.php" title="News Archive">News Archive</a></p>';
 
+
+
+// find previous article:
+
+	$query = "SELECT * FROM tblnews WHERE status ='1' AND timeAdded < '".$thisArticleAdded."' order by timeAdded DESC";	
+	$result = mysql_query($query) or die ("couldn't execute query");
+if (mysql_num_rows($result) > 0) {
+	$row = mysql_fetch_array($result);
+	extract($row);
+	?>
+<p><a href="/chronicle/<?php echo $cleanURL; ?>/">Previous article</a></p>
+	<?php
+}
+
+
+ 
+// find next article:
+
+	$query = "SELECT * FROM tblnews WHERE status ='1' AND timeAdded > '".$thisArticleAdded."' order by timeAdded ASC";	
+	$result = mysql_query($query) or die ("couldn't execute query");
+if (mysql_num_rows($result) > 0) {
+	$row = mysql_fetch_array($result);
+	extract($row);
+	?>
+<p><a href="/chronicle/<?php echo $cleanURL; ?>/">Next article</a></p>
+	<?php
+}
+
+
+
+
+
+echo '<p><a href="/chronicle/archive/" title="The Chronicle Archive">The Chronicle Archives</a></p>';
+
+?>
+<?div>
+<?div>
+
+<?php
 
 include($_SERVER['DOCUMENT_ROOT']."/includes/footer.php");
 ?>

@@ -7,10 +7,12 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/functions.php");
 include($_SERVER['DOCUMENT_ROOT']."/includes/header.php");
 
 
+?>
 
-echo'<h1>News Archive</h1>';
-
-
+<div class="row">
+<div class="column">
+<h1>The Chronicle Archive</h1>
+<?php
 
 
 $query = "select * from tblNews WHERE status='1' order by timeAdded DESC";
@@ -42,7 +44,11 @@ echo'<p class="Error">No news items found.</p>';
 
 
 
+?>
 
+</div>
+</div>
+<?php
 
 
 
