@@ -290,10 +290,7 @@ z-index: 2;
 }
 
 
-
-
-@supports (display: wibble) {
-    body {
-        background: lime;
-    }
-    }
+#autumnEarth img {
+// stop the gif getting too wide:
+    width: auto;
+}

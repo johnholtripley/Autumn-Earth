@@ -23,7 +23,7 @@
   @include border-box;
   padding-left: ($gutter/2);
   padding-right: ($gutter/2);
-  width: (100%-$gutter);
+  width: 100%;
   float: left;
   min-height: 1px;
 }

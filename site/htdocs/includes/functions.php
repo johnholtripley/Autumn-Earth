@@ -1159,7 +1159,8 @@ function createMagicSquare() {
 	// https://en.wikipedia.org/wiki/Magic_square#Method_for_constructing_a_magic_square_of_order_3
 
 
-
+// check if logged in:
+	if(isset($_SESSION['username'])) {
 
 // check current character has -1 for this, otherwise they've already seen it:
 
@@ -1240,6 +1241,6 @@ echo '<td>'.($c+$a).'</td><td>'.($c-$b-$a).'</td><td>'.($c+$b).'</td>';
 <?php
 }
 
-
+}
 
 ?>

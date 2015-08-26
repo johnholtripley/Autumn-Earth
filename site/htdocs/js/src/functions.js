@@ -87,7 +87,8 @@ function hasParent(element, id) {
   }
   return false;
 }
-// with magento, may as well use jQuery or Prototype
+
+
 /*
     
     

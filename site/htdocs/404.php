@@ -9,12 +9,19 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/header.php");
 
 ?>
 
+<div class="row">
+<div class="column">
 <h1>Whoops</h1>
+
 
 
 
 <?php
 createMagicSquare();
+?>
+</div>
+</div>
+<?php
 
 include($_SERVER['DOCUMENT_ROOT']."/includes/footer.php");
 ?>

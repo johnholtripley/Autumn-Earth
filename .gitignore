@@ -51,3 +51,5 @@ Temporary Items
 bower_components
 node_modules
 deploy
+
+sitemap.xml

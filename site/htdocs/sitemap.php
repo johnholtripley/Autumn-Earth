@@ -42,7 +42,6 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/functions.php");
 
 
 
-
 echo'<url><loc>http://www.autumnearth.com/forum/</loc><priority>0.7</priority></url>'."\n";
 
 
@@ -86,6 +85,7 @@ for ($j=2;$j<=$totalpages;$j++) {
 
 // get News
 echo'<url><loc>http://www.autumnearth.com/chronicle/</loc><priority>0.7</priority></url>'."\n";
+echo'<url><loc>http://www.autumnearth.com/chronicle/archive/</loc><priority>0.7</priority></url>'."\n";
 $query = "select * from tblNews";
 $result = mysql_query( $query ) or die ( "couldn't execute inner query" );
 if ( mysql_num_rows( $result )>0 ) {
