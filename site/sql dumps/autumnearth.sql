@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 16, 2015 at 11:23 AM
+-- Generation Time: Aug 27, 2015 at 10:11 AM
 -- Server version: 5.6.24
 -- PHP Version: 5.6.8
 
@@ -44,7 +44,7 @@ CREATE TABLE IF NOT EXISTS `tblacct` (
   `emailalerts` char(1) DEFAULT NULL,
   `uniqueID` varchar(255) DEFAULT NULL,
   `usersIPAddress` varchar(15) DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=50 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=51 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblacct`
@@ -79,8 +79,9 @@ INSERT INTO `tblacct` (`accountID`, `accountName`, `accountStatus`, `joinedTime`
 (45, 'dilly10', '2', '2015-07-01 13:03:34', '0', 0, 1, 'john.holtripley@gmail.com', '2015-01-01 00:00:00', '1', '1', '', 'sad', '1', '1', '53f84406edc486c2ecfba47066b306a7', '127.0.0.1'),
 (46, 'dilly11', '2', '2015-07-01 13:07:28', '0', 0, 1, 'john.holtripley@gmail.com', '2001-05-01 00:00:00', '1', '1', 'nÝ|•ÇG©”ª !²n‹*', 'ddd sdas das dsad ', '1', '1', '1bf279b495f3db4e193db87bc53fcd60', '127.0.0.1'),
 (47, 'dilly12', '2', '2015-07-01 13:10:38', '0', 0, 1, 'john.holtripley@gmail.com', '2015-01-01 00:00:00', '1', '1', '`ézz[£WÝu\raôÝ§', 'dilly12', '1', '1', '0b6ad46b1589a181e0402562c0b1d9e1', '127.0.0.1'),
-(48, 'dilly20', '2', '2015-07-03 14:02:41', '0', 1, 15, 'john.holtripley@gmail.com', '2015-01-01 00:00:00', '1', '1', 'ÞÉ/ê;}6Ôx|Ökd', 'dilly20', '1', '1', '3dcbb605f6e3545f33d0e1fe54042f97', '127.0.0.1'),
-(49, 'dilly21', '2', '2015-07-03 14:03:09', '0', 0, 16, 'john.holtripley@gmail.com', '2015-01-01 00:00:00', '1', '1', 'œé+''ÍÍiffA`jÔ@', 'dilly21', '1', '1', '55561f21c5445a16e9e306fae400b08c', '127.0.0.1');
+(48, 'dilly20', '2', '2015-07-03 14:02:41', '0', 13, 15, 'john.holtripley@gmail.com', '2015-01-01 00:00:00', '1', '1', 'ÞÉ/ê;}6Ôx|Ökd', 'dilly20', '1', '1', '3dcbb605f6e3545f33d0e1fe54042f97', '127.0.0.1'),
+(49, 'dilly21', '2', '2015-07-03 14:03:09', '0', 0, 16, 'john.holtripley@gmail.com', '2015-01-01 00:00:00', '1', '1', 'œé+''ÍÍiffA`jÔ@', 'dilly21', '1', '1', '55561f21c5445a16e9e306fae400b08c', '127.0.0.1'),
+(50, 'dilly22', '2', '2015-08-04 15:10:24', '0', 0, 1, 'john.holtripley@gmail.com', '2007-04-03 00:00:00', '1', '1', '.{[ÄX%tl¢"ÔÉF', 'sdsd', '1', '1', 'fb4d713852301b8dff21ff63f376b45f', '127.0.0.1');
 
 -- --------------------------------------------------------
 
@@ -153,7 +154,7 @@ INSERT INTO `tblauctionitems` (`auctionID`, `startTime`, `endTime`, `sellerID`, 
 (6, '2015-07-12 00:00:00', '2015-07-21 21:08:58', 13, 13, 6, -1, -1, 20, 0),
 (7, '2015-07-13 00:00:00', '2015-07-16 21:08:58', 13, 12, 6, -1, -1, 20, 0),
 (8, '2015-07-14 00:00:00', '2015-07-17 00:00:00', 13, 6, 4, -1, -1, 20, 0),
-(9, '2015-07-14 00:00:00', '2015-07-31 00:00:00', 13, 4, 4, -1, -1, 15, 0);
+(9, '2015-07-14 00:00:00', '2015-07-31 00:00:00', 13, 4, 4, 100, -1, 15, 0);
 
 -- --------------------------------------------------------
 
@@ -176,30 +177,131 @@ CREATE TABLE IF NOT EXISTS `tblcharacters` (
   `house` int(11) NOT NULL DEFAULT '0',
   `minutesplayed` int(11) unsigned DEFAULT NULL,
   `guildID` int(11) DEFAULT '0',
-  `guildmembersince` date DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=latin1;
+  `guildmembersince` date DEFAULT NULL,
+  `404MagicSquareSum` varchar(255) NOT NULL DEFAULT '-1'
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblcharacters`
 --
 
-INSERT INTO `tblcharacters` (`charID`, `accountID`, `charName`, `location`, `gamestate`, `journalstate`, `queststate`, `petstate`, `currentbag`, `inventorystate`, `money`, `house`, `minutesplayed`, `guildID`, `guildmembersince`) VALUES
-(1, 5, 'Angel', 1, '&amp;playsounds=true&amp;herox=23&amp;heroy=9&amp;dowseskill=0&amp;famskill=70&amp;currentmapnumber=1&amp;heightgained=0', 'travel to the coast', '0/0/0/0/0/0', '2,0,100,24,7,-1,0,0,0,0,pet,15,12,13', '16', '32,4/2,8/9,1/1,2/10,3/33,1', '299', 0, 1125, 0, '2007-03-30'),
-(2, 5, 'Eleaddai', 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 200, 0, '2007-03-30'),
-(3, 5, 'Alice', 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 200, 0, '2007-03-30'),
-(4, 23, 'Eric', 3, NULL, NULL, NULL, NULL, NULL, NULL, '501', 0, 200, 0, '2007-03-30'),
-(5, 13, 'Adminchar1', 1, NULL, NULL, NULL, NULL, NULL, NULL, '0', 0, 200, 0, '2007-03-30'),
-(6, 13, 'Adminchar2', 3, NULL, NULL, NULL, NULL, NULL, NULL, '20', 0, 200, 0, '2007-03-30'),
-(7, 14, 'modchar1', 3, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 200, 0, '2007-03-30'),
-(8, 14, 'modchar2', 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 200, 0, '2007-03-30'),
-(9, 15, 'johnchar1', 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 200, 0, '2007-03-30'),
-(10, 18, 'newmemberchar1', 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 200, 0, '2007-03-30'),
-(11, 18, 'newmemberchar2', 3, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 200, 0, '2007-03-30'),
-(12, 13, 'Angel', 3, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 200, 0, '2007-03-30'),
-(13, 14, 'Angel', 3, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 200, 0, '2007-03-30'),
-(14, 39, 'eleaddaiMeow', 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 200, 0, '2015-06-30'),
-(15, 39, 'dilly20', 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 200, 0, '2015-06-30'),
-(16, 39, 'dilly21', 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 200, 0, '2015-06-30');
+INSERT INTO `tblcharacters` (`charID`, `accountID`, `charName`, `location`, `gamestate`, `journalstate`, `queststate`, `petstate`, `currentbag`, `inventorystate`, `money`, `house`, `minutesplayed`, `guildID`, `guildmembersince`, `404MagicSquareSum`) VALUES
+(1, 5, 'Angel', 1, '&amp;playsounds=true&amp;herox=23&amp;heroy=9&amp;dowseskill=0&amp;famskill=70&amp;currentmapnumber=1&amp;heightgained=0', 'travel to the coast', '0/0/0/0/0/0', '2,0,100,24,7,-1,0,0,0,0,pet,15,12,13', '16', '32,4/2,8/9,1/1,2/10,3/33,1', '299', 0, 1125, 0, '2007-03-30', '9|17|56'),
+(2, 5, 'Eleaddai', 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 200, 0, '2007-03-30', '-1'),
+(3, 5, 'Alice', 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 200, 0, '2007-03-30', '-1'),
+(4, 23, 'Eric', 3, NULL, NULL, NULL, NULL, NULL, NULL, '501', 0, 200, 0, '2007-03-30', '-1'),
+(5, 13, 'Adminchar1', 1, NULL, NULL, NULL, NULL, NULL, NULL, '0', 0, 200, 0, '2007-03-30', '-1'),
+(6, 13, 'Adminchar2', 3, NULL, NULL, NULL, NULL, NULL, NULL, '20', 0, 200, 0, '2007-03-30', '-1'),
+(7, 14, 'modchar1', 3, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 200, 0, '2007-03-30', '-1'),
+(8, 14, 'modchar2', 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 200, 0, '2007-03-30', '-1'),
+(9, 15, 'johnchar1', 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 200, 0, '2007-03-30', '-1'),
+(10, 18, 'newmemberchar1', 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 200, 0, '2007-03-30', '-1'),
+(11, 18, 'newmemberchar2', 3, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 200, 0, '2007-03-30', '-1'),
+(12, 13, 'Angel', 3, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 200, 0, '2007-03-30', '-1'),
+(13, 14, 'Angel', 3, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 200, 0, '2007-03-30', '-1'),
+(14, 39, 'eleaddaiMeow', 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 200, 0, '2015-06-30', '-1'),
+(15, 39, 'dilly20', 4, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 200, 0, '2015-06-30', '10|38|60'),
+(16, 39, 'dilly21', 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 200, 0, '2015-06-30', '-1'),
+(17, 50, 'dilly22', 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 200, 0, '2015-06-30', '-1');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tblcontractbids`
+--
+
+CREATE TABLE IF NOT EXISTS `tblcontractbids` (
+  `bidID` int(255) NOT NULL,
+  `contractID` int(255) NOT NULL,
+  `characterID` int(255) NOT NULL,
+  `bidAmount` int(255) NOT NULL,
+  `bidPlaced` datetime NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+--
+-- Dumping data for table `tblcontractbids`
+--
+
+INSERT INTO `tblcontractbids` (`bidID`, `contractID`, `characterID`, `bidAmount`, `bidPlaced`) VALUES
+(1, 1, 4, 8, '2015-07-21 00:00:00'),
+(2, 1, 8, 12, '2015-07-21 00:21:00'),
+(3, 1, 10, 17, '2015-07-21 18:00:00'),
+(4, 3, 12, 100, '2015-07-21 18:00:00'),
+(5, 3, 12, 108, '2015-07-21 18:00:00');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tblcontracts`
+--
+
+CREATE TABLE IF NOT EXISTS `tblcontracts` (
+  `contractID` int(255) NOT NULL,
+  `contractStart` datetime NOT NULL,
+  `contractEnd` datetime NOT NULL,
+  `characterID` int(255) NOT NULL,
+  `itemID` int(255) NOT NULL,
+  `quantity` int(255) NOT NULL,
+  `contractType` int(1) NOT NULL,
+  `startLocation` int(255) NOT NULL,
+  `endLocation` int(255) NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+--
+-- Dumping data for table `tblcontracts`
+--
+
+INSERT INTO `tblcontracts` (`contractID`, `contractStart`, `contractEnd`, `characterID`, `itemID`, `quantity`, `contractType`, `startLocation`, `endLocation`) VALUES
+(1, '2015-07-01 00:00:00', '2015-10-22 00:00:00', 15, 6, 6, 1, 1, 4),
+(2, '2015-07-09 00:28:00', '2015-10-30 14:25:00', 8, 16, 1, 1, 4, 2),
+(3, '2015-07-09 00:28:00', '2015-10-30 00:00:00', 8, 11, 4, 2, 3, 3);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tbldungeonachievements`
+--
+
+CREATE TABLE IF NOT EXISTS `tbldungeonachievements` (
+  `index` int(255) NOT NULL,
+  `charId` int(255) NOT NULL,
+  `dungeonId` int(255) NOT NULL,
+  `mapReached` int(255) NOT NULL,
+  `timeStamp` datetime NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+--
+-- Dumping data for table `tbldungeonachievements`
+--
+
+INSERT INTO `tbldungeonachievements` (`index`, `charId`, `dungeonId`, `mapReached`, `timeStamp`) VALUES
+(1, 5, 1, 76, '2015-07-15 00:00:00'),
+(2, 15, 1, 78, '2015-07-02 00:00:00'),
+(3, 16, 1, 133, '2015-07-01 00:00:00'),
+(4, 15, 1, 135, '2015-07-24 11:00:00'),
+(5, 16, 2, 23, '2015-07-23 00:00:00'),
+(6, 16, 3, 12, '2015-06-14 00:00:00');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tbldungeonmapconfig`
+--
+
+CREATE TABLE IF NOT EXISTS `tbldungeonmapconfig` (
+  `dungeonId` int(11) NOT NULL,
+  `dungeonName` varchar(255) COLLATE utf8_bin NOT NULL,
+  `cleanURL` varchar(255) COLLATE utf8_bin NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+--
+-- Dumping data for table `tbldungeonmapconfig`
+--
+
+INSERT INTO `tbldungeonmapconfig` (`dungeonId`, `dungeonName`, `cleanURL`) VALUES
+(1, 'The Barrow Mines', 'the-barrow-mines'),
+(2, 'Wyrmhole', 'wyrmhole'),
+(3, 'Frogmorton Caverns', 'frogmorton-caverns');
 
 -- --------------------------------------------------------
 
@@ -211,21 +313,23 @@ CREATE TABLE IF NOT EXISTS `tblevents` (
   `eventID` int(11) NOT NULL,
   `eventStart` datetime DEFAULT NULL,
   `eventEnd` datetime DEFAULT NULL,
-  `tooltip` varchar(255) DEFAULT NULL,
+  `title` varchar(255) DEFAULT NULL,
+  `summary` varchar(255) NOT NULL,
+  `eventContent` longtext NOT NULL,
   `css` varchar(25) DEFAULT NULL,
-  `link` varchar(255) DEFAULT NULL
+  `cleanURL` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblevents`
 --
 
-INSERT INTO `tblevents` (`eventID`, `eventStart`, `eventEnd`, `tooltip`, `css`, `link`) VALUES
-(1, '2006-08-27 00:00:00', '2006-09-01 00:00:00', 'halloween events part4', 'CHalloween', '/events/index.php#4'),
-(2, '2006-08-03 00:00:00', '2006-08-08 00:00:00', 'halloween events part1', 'CHalloween', '/events/index.php#1'),
-(3, '2006-08-12 00:00:00', '2006-08-12 00:00:00', 'halloween events part2', 'CHalloween', '/events/index.php#2'),
-(4, '2006-07-12 00:00:00', '2006-08-01 00:00:00', 'halloween events part3', 'CHalloween', '/events/index.php#3'),
-(5, '2015-12-21 00:00:00', '2015-12-25 00:00:00', 'Christmas', 'CHalloween', '/events/index.php#5');
+INSERT INTO `tblevents` (`eventID`, `eventStart`, `eventEnd`, `title`, `summary`, `eventContent`, `css`, `cleanURL`) VALUES
+(1, '2006-08-27 00:00:00', '2006-09-01 00:00:00', 'halloween events part4', 'halloween event', ' Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque faucibus commodo venenatis. Maecenas sed sem lorem. Nunc porta, lectus vel tincidunt luctus, dui risus bibendum ipsum, luctus efficitur turpis mauris vitae magna. Phasellus vitae efficitur dui. Aenean sed sagittis nibh, non malesuada magna. Proin faucibus vehicula dolor, at condimentum neque eleifend in. In sed odio vitae odio hendrerit aliquam eleifend sit amet nisi. Morbi ac erat vel enim pretium molestie suscipit sed lorem. Vestibulum in mauris et purus accumsan fermentum.  Praesent quis tempor urna. Quisque a libero ac ex tincidunt interdum quis non libero. Duis nec diam a velit sollicitudin ultrices vel eu metus. Duis at risus eget augue gravida finibus. Phasellus sed elit turpis. Phasellus fringilla orci id libero ullamcorper, euismod sagittis sapien ultrices. Ut sollicitudin elit non lectus pellentesque, ut faucibus lorem hendrerit. Suspendisse a elementum eros. Fusce sit amet metus enim. Quisque at velit nulla. Nunc rutrum justo sit amet tristique ultricies. Maecenas a purus quis libero interdum ultricies. In ligula mi, ornare non iaculis at, condimentum sed elit. Fusce pretium, dui sit amet molestie pellentesque, tortor massa sollicitudin purus, vitae tempor nisl ante vel nisl. ', 'CHalloween', 'halloween-events-part4'),
+(2, '2006-08-03 00:00:00', '2006-08-08 00:00:00', 'halloween events part1', 'halloween event', ' Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque faucibus commodo venenatis. Maecenas sed sem lorem. Nunc porta, lectus vel tincidunt luctus, dui risus bibendum ipsum, luctus efficitur turpis mauris vitae magna. Phasellus vitae efficitur dui. Aenean sed sagittis nibh, non malesuada magna. Proin faucibus vehicula dolor, at condimentum neque eleifend in. In sed odio vitae odio hendrerit aliquam eleifend sit amet nisi. Morbi ac erat vel enim pretium molestie suscipit sed lorem. Vestibulum in mauris et purus accumsan fermentum.  Praesent quis tempor urna. Quisque a libero ac ex tincidunt interdum quis non libero. Duis nec diam a velit sollicitudin ultrices vel eu metus. Duis at risus eget augue gravida finibus. Phasellus sed elit turpis. Phasellus fringilla orci id libero ullamcorper, euismod sagittis sapien ultrices. Ut sollicitudin elit non lectus pellentesque, ut faucibus lorem hendrerit. Suspendisse a elementum eros. Fusce sit amet metus enim. Quisque at velit nulla. Nunc rutrum justo sit amet tristique ultricies. Maecenas a purus quis libero interdum ultricies. In ligula mi, ornare non iaculis at, condimentum sed elit. Fusce pretium, dui sit amet molestie pellentesque, tortor massa sollicitudin purus, vitae tempor nisl ante vel nisl. ', 'CHalloween', 'halloween-events-part1'),
+(3, '2015-08-07 00:00:00', '2015-08-14 00:00:00', 'halloween events part2', 'halloween event', ' Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque faucibus commodo venenatis. Maecenas sed sem lorem. Nunc porta, lectus vel tincidunt luctus, dui risus bibendum ipsum, luctus efficitur turpis mauris vitae magna. Phasellus vitae efficitur dui. Aenean sed sagittis nibh, non malesuada magna. Proin faucibus vehicula dolor, at condimentum neque eleifend in. In sed odio vitae odio hendrerit aliquam eleifend sit amet nisi. Morbi ac erat vel enim pretium molestie suscipit sed lorem. Vestibulum in mauris et purus accumsan fermentum.  Praesent quis tempor urna. Quisque a libero ac ex tincidunt interdum quis non libero. Duis nec diam a velit sollicitudin ultrices vel eu metus. Duis at risus eget augue gravida finibus. Phasellus sed elit turpis. Phasellus fringilla orci id libero ullamcorper, euismod sagittis sapien ultrices. Ut sollicitudin elit non lectus pellentesque, ut faucibus lorem hendrerit. Suspendisse a elementum eros. Fusce sit amet metus enim. Quisque at velit nulla. Nunc rutrum justo sit amet tristique ultricies. Maecenas a purus quis libero interdum ultricies. In ligula mi, ornare non iaculis at, condimentum sed elit. Fusce pretium, dui sit amet molestie pellentesque, tortor massa sollicitudin purus, vitae tempor nisl ante vel nisl. ', 'CHalloween', 'halloween-events-part2'),
+(4, '2016-08-23 00:00:00', '2016-08-31 00:00:00', 'halloween events part3', 'halloween event', ' Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque faucibus commodo venenatis. Maecenas sed sem lorem. Nunc porta, lectus vel tincidunt luctus, dui risus bibendum ipsum, luctus efficitur turpis mauris vitae magna. Phasellus vitae efficitur dui. Aenean sed sagittis nibh, non malesuada magna. Proin faucibus vehicula dolor, at condimentum neque eleifend in. In sed odio vitae odio hendrerit aliquam eleifend sit amet nisi. Morbi ac erat vel enim pretium molestie suscipit sed lorem. Vestibulum in mauris et purus accumsan fermentum.  Praesent quis tempor urna. Quisque a libero ac ex tincidunt interdum quis non libero. Duis nec diam a velit sollicitudin ultrices vel eu metus. Duis at risus eget augue gravida finibus. Phasellus sed elit turpis. Phasellus fringilla orci id libero ullamcorper, euismod sagittis sapien ultrices. Ut sollicitudin elit non lectus pellentesque, ut faucibus lorem hendrerit. Suspendisse a elementum eros. Fusce sit amet metus enim. Quisque at velit nulla. Nunc rutrum justo sit amet tristique ultricies. Maecenas a purus quis libero interdum ultricies. In ligula mi, ornare non iaculis at, condimentum sed elit. Fusce pretium, dui sit amet molestie pellentesque, tortor massa sollicitudin purus, vitae tempor nisl ante vel nisl. ', 'CHalloween', 'halloween-events-part3'),
+(5, '2015-12-21 00:00:00', '2015-12-25 00:00:00', 'Christmas', 'happy christmas', ' Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque faucibus commodo venenatis. Maecenas sed sem lorem. Nunc porta, lectus vel tincidunt luctus, dui risus bibendum ipsum, luctus efficitur turpis mauris vitae magna. Phasellus vitae efficitur dui. Aenean sed sagittis nibh, non malesuada magna. Proin faucibus vehicula dolor, at condimentum neque eleifend in. In sed odio vitae odio hendrerit aliquam eleifend sit amet nisi. Morbi ac erat vel enim pretium molestie suscipit sed lorem. Vestibulum in mauris et purus accumsan fermentum.  Praesent quis tempor urna. Quisque a libero ac ex tincidunt interdum quis non libero. Duis nec diam a velit sollicitudin ultrices vel eu metus. Duis at risus eget augue gravida finibus. Phasellus sed elit turpis. Phasellus fringilla orci id libero ullamcorper, euismod sagittis sapien ultrices. Ut sollicitudin elit non lectus pellentesque, ut faucibus lorem hendrerit. Suspendisse a elementum eros. Fusce sit amet metus enim. Quisque at velit nulla. Nunc rutrum justo sit amet tristique ultricies. Maecenas a purus quis libero interdum ultricies. In ligula mi, ornare non iaculis at, condimentum sed elit. Fusce pretium, dui sit amet molestie pellentesque, tortor massa sollicitudin purus, vitae tempor nisl ante vel nisl. ', 'CHalloween', 'christmas');
 
 -- --------------------------------------------------------
 
@@ -236,6 +340,7 @@ INSERT INTO `tblevents` (`eventID`, `eventStart`, `eventEnd`, `tooltip`, `css`, 
 CREATE TABLE IF NOT EXISTS `tblforums` (
   `forumID` int(11) NOT NULL,
   `title` varchar(255) DEFAULT NULL,
+  `cleanURL` varchar(255) NOT NULL,
   `description` mediumtext,
   `imagePath` varchar(255) DEFAULT NULL,
   `status` char(1) DEFAULT NULL,
@@ -246,10 +351,10 @@ CREATE TABLE IF NOT EXISTS `tblforums` (
 -- Dumping data for table `tblforums`
 --
 
-INSERT INTO `tblforums` (`forumID`, `title`, `description`, `imagePath`, `status`, `sticky`) VALUES
-(1, 'Bug Reports', 'Found a bug? Let us know about it here.', '/assets/forum/bugforum.gif', '2', '1'),
-(2, 'Suggestions', 'Thought of an improvement? Let us know what features you''d like to see in the next update.', '/assets/forum/suggestforum.gif', '2', '1'),
-(3, 'General Discussion', 'Want to meet other players? find and chat to them here.', '/assets/forum/generalforum.gif', '2', '1');
+INSERT INTO `tblforums` (`forumID`, `title`, `cleanURL`, `description`, `imagePath`, `status`, `sticky`) VALUES
+(1, 'Bug Reports', 'bug-reports', 'Found a bug? Let us know about it here.', '/assets/forum/bugforum.gif', '2', '1'),
+(2, 'Suggestions', 'suggestions', 'Thought of an improvement? Let us know what features you''d like to see in the next update.', '/assets/forum/suggestforum.gif', '2', '1'),
+(3, 'General Discussion', 'general-discussion', 'Want to meet other players? find and chat to them here.', '/assets/forum/generalforum.gif', '2', '1');
 
 -- --------------------------------------------------------
 
@@ -408,7 +513,7 @@ INSERT INTO `tblinventoryitems` (`itemID`, `shortname`, `description`, `priceCod
 CREATE TABLE IF NOT EXISTS `tbllocations` (
   `locID` int(255) NOT NULL,
   `locName` varchar(255) COLLATE utf8_bin NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
 -- Dumping data for table `tbllocations`
@@ -417,7 +522,8 @@ CREATE TABLE IF NOT EXISTS `tbllocations` (
 INSERT INTO `tbllocations` (`locID`, `locName`) VALUES
 (1, 'Anvil'),
 (2, 'Anchor'),
-(3, 'Ratchet Hill');
+(3, 'Ratchet Hill'),
+(4, 'Farthingate');
 
 -- --------------------------------------------------------
 
@@ -606,7 +712,7 @@ CREATE TABLE IF NOT EXISTS `tblnews` (
   `status` char(1) DEFAULT NULL,
   `timeAdded` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `postedBy` varchar(50) DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblnews`
@@ -616,7 +722,8 @@ INSERT INTO `tblnews` (`newsID`, `newsTitle`, `cleanURL`, `newsSynopsis`, `newsC
 (1, 'Spring is on its way', 'spring-is-on-its-way', 'Face towards the rising sun and travel eastwards', 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. [CONTINUE]Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.</p><p>\r\nLorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum <a href="/" title="click to view">dolore eu feugiat</a> nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.</p><p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.</p><h3>Lorem ipsum</h3><p>"Dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh", euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.</p>', '1', '2015-07-09 10:19:41', NULL),
 (2, 'New Year spectacular', 'new-year-spectacular', 'Fireworks and plenty of festive cheer', 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.</p><p>\r\nLorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum <a href="/" title="click to view">dolore eu feugiat</a> nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.</p><p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.</p><h3>Lorem ipsum</h3><p>"Dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh", euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.</p>', '1', '2015-07-09 10:19:48', 'The Mayor'),
 (3, 'more seasonal joy', 'more-seasonal-joy', 'brace yourselves!', 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. [CONTINUE]Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.</p><p>\r\nLorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum <a href="/" title="click to view">dolore eu feugiat</a> nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.</p><p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.</p><h3>Lorem ipsum</h3><p>"Dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh", euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.</p>', '1', '2015-07-09 10:19:54', NULL),
-(4, 'April Fools has been and gone', 'april-fools-has-been-and-gone', 'well, we missed that one...', 'april fools has "been" &quot;and&quot; gone again &raquo; arrow', '1', '2015-07-09 10:20:03', NULL);
+(4, 'April Fools has been and gone', 'april-fools-has-been-and-gone', 'well, we missed that one...', 'april fools has been &quot;and&quot; gone again &raquo; arrow', '1', '2015-07-22 12:45:53', NULL),
+(5, 'Dragon flare', 'dragon-flare', 'Look up - in the sky', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque iaculis non elit a tempor. Nam commodo metus eget libero faucibus euismod. Vivamus interdum porta ante non finibus. Nam velit nisi, consectetur et tempor vitae, varius eu tortor. Duis ac eleifend libero, eu sagittis purus. Dragon nunc aliquam ut sapien sit amet molestie. Etiam pellentesque tristique vestibulum. Maecenas lacinia, arcu eu hendrerit eleifend, purus nulla ornare turpis, et bibendum sapien lectus non nulla. Ut facilisis lobortis nisi, id faucibus dolor molestie vel. Aliquam a mi at ligula accumsan pellentesque. Etiam pulvinar mauris ac justo semper efficitur. Ut lobortis egestas laoreet. Curabitur dui ex, placerat id nisl quis, malesuada consectetur lectus. Duis tincidunt congue commodo. In hac habitasse platea dictumst. ', '1', '2017-08-12 12:45:53', NULL);
 
 -- --------------------------------------------------------
 
@@ -633,7 +740,7 @@ CREATE TABLE IF NOT EXISTS `tblposts` (
   `status` char(1) DEFAULT NULL,
   `sticky` char(1) DEFAULT NULL,
   `edited` datetime DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=212 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=224 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblposts`
@@ -735,7 +842,19 @@ INSERT INTO `tblposts` (`postID`, `threadID`, `accountID`, `creationTime`, `post
 (208, 31, 5, '2007-05-09 08:48:11', 'pet development - sounds good', '1', '0', '0000-00-00 00:00:00'),
 (209, 35, 39, '2015-06-30 12:52:16', 'hi, this is Dilly', '1', '0', '0000-00-00 00:00:00'),
 (210, 37, 39, '2015-06-30 16:50:43', 'hi, I&#039;m Dilly.\r\nMeoow.\r\n[image=http://www.autumnearth.com/development/graphics/scene.jpg]\r\ngood eh?', '1', '0', '0000-00-00 00:00:00'),
-(211, 38, 48, '2015-07-15 13:08:12', 'stuff', '1', '0', '0000-00-00 00:00:00');
+(211, 38, 48, '2015-07-15 13:08:12', 'stuff', '1', '0', '0000-00-00 00:00:00'),
+(212, 39, 48, '2015-07-16 13:51:46', 'hi', '1', '0', '0000-00-00 00:00:00'),
+(213, 40, 48, '2015-07-17 15:36:48', 'meow suggest', '1', '0', '0000-00-00 00:00:00'),
+(214, 41, 48, '2015-07-17 15:39:03', 'mew', '1', '0', '0000-00-00 00:00:00'),
+(215, 42, 48, '2015-07-17 15:39:20', 'mew', '1', '0', '0000-00-00 00:00:00'),
+(216, 43, 48, '2015-07-17 15:39:36', 'mew 2', '1', '0', '0000-00-00 00:00:00'),
+(217, 44, 48, '2015-07-22 13:26:29', ' Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed blandit orci ac ultricies ornare. Sed hendrerit lorem at lacus finibus eleifend. Curabitur porta sollicitudin vestibulum. Vestibulum pharetra eleifend sagittis. Phasellus a sapien quam. Curabitur interdum risus nisl, in consequat nibh convallis sed. Donec porta consectetur urna commodo egestas. Donec laoreet arcu vel porta hendrerit. Nullam lobortis metus tristique magna venenatis scelerisque. Maecenas ullamcorper elit nec tortor egestas faucibus. Curabitur vulputate, massa non tempus finibus, nulla magna lacinia arcu, non aliquam metus mi a magna. Nullam rutrum dolor porttitor fermentum placerat. Praesent convallis turpis dapibus nulla rutrum, eget malesuada lacus porttitor. In hac habitasse platea dictumst. Morbi dui orci, tempor vel rhoncus et, porta vel urna.\r\n\r\nQuisque finibus metus mollis iaculis blandit. Nunc consequat pharetra porta. Nulla turpis ipsum, scelerisque vel iaculis in, convallis quis arcu. Sed et posuere nisl. Praesent ac nunc hendrerit, consectetur ipsum ac, mollis libero. Integer ac tempor enim. Vivamus interdum felis ligula, venenatis vestibulum libero euismod id. Ut vulputate dictum ultricies. Fusce laoreet quam nec finibus rhoncus. ', '1', '0', '0000-00-00 00:00:00'),
+(218, 45, 48, '2015-08-06 10:39:31', ' Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed scelerisque dapibus ligula. Cras a enim vitae justo luctus placerat. Aliquam eget rhoncus lacus. Phasellus vel lacus et mauris bibendum maximus id id elit. Integer placerat ut turpis et luctus. Donec quis lacus enim. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Nullam vestibulum quis augue tincidunt laoreet.\r\n\r\nSed vel pretium mauris, tempor faucibus diam. Ut ut est sed sapien facilisis elementum eu nec lectus. Vivamus libero augue, lobortis sit amet auctor at, viverra vel ipsum. Fusce non quam risus. Integer vitae neque dolor. Fusce quis nibh commodo, feugiat elit a, ultrices nisl. Curabitur nibh leo, rhoncus ut est et, feugiat varius orci. ', '1', '0', '0000-00-00 00:00:00'),
+(219, 46, 48, '2015-08-06 10:42:11', ' Etiam laoreet ac nisl vitae rutrum. Nullam eu quam malesuada, mollis nisl eget, elementum augue. In leo nulla, luctus sit amet nibh lacinia, iaculis dignissim felis. Duis vel enim erat. Quisque ut justo purus. Suspendisse id nibh ac mauris blandit fermentum sit amet at metus. Nulla tempor tempus pulvinar. In maximus suscipit quam, ut faucibus mauris. Integer feugiat felis elit, a faucibus justo dapibus eleifend. Nullam gravida tristique massa, vitae cursus sem rhoncus fringilla. Donec sit amet lorem rhoncus, lobortis erat vitae, lacinia felis.\r\n\r\nMaecenas rutrum pellentesque ullamcorper. Mauris molestie, eros quis fermentum pretium, arcu erat imperdiet nunc, eget sollicitudin felis sapien eget odio. Nulla euismod tincidunt orci vitae varius. Aenean hendrerit a nibh at vulputate. Nulla ut euismod mi, a vulputate mi. Donec congue velit a pretium sodales. Donec odio neque, pharetra a convallis in, imperdiet id purus. Etiam et finibus mi. Quisque eget consequat dui. Pellentesque dragon body aliquam pulvinar arcu, eget dictum purus placerat ut. Vivamus quis odio ante. ', '1', '0', '0000-00-00 00:00:00'),
+(220, 47, 48, '2015-08-06 10:42:31', ' Etiam laoreet ac nisl vitae rutrum. Nullam eu quam malesuada, mollis nisl eget, elementum augue. In leo nulla, luctus sit amet nibh lacinia, iaculis dignissim felis. Duis vel enim erat. Quisque ut justo purus. Suspendisse id nibh ac mauris blandit fermentum sit amet at metus. Nulla tempor tempus pulvinar. In maximus suscipit quam, ut faucibus mauris. Integer feugiat felis elit, a faucibus justo dapibus eleifend. Nullam gravida tristique massa, vitae cursus sem rhoncus fringilla. Donec sit amet lorem rhoncus, lobortis erat vitae, lacinia felis.\r\n\r\nMaecenas rutrum pellentesque ullamcorper. Mauris molestie, eros quis fermentum pretium, arcu erat imperdiet nunc, eget sollicitudin felis sapien eget odio. Nulla euismod tincidunt orci vitae varius. Aenean hendrerit a nibh at vulputate. Nulla ut euismod mi, a vulputate mi. Donec congue velit a pretium sodales. Donec odio neque, pharetra a convallis in, imperdiet id purus. Etiam et finibus mi. Quisque eget consequat dui. Pellentesque dragon both aliquam pulvinar arcu, eget dictum purus placerat ut. Vivamus quis odio ante. ', '1', '0', '0000-00-00 00:00:00'),
+(221, 48, 48, '2015-08-07 09:08:42', '\r\n\r\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas non egestas ex. Nulla sollicitudin id felis eleifend laoreet. Proin eleifend leo leo, ultrices varius tellus fringilla id. Fusce congue porta nisl, a egestas mi tincidunt eget. Quisque fringilla convallis tempus. Nam dragon imperdiet in sem ut dapibus. Vestibulum imperdiet semper massa ac condimentum. Sed eu tempus libero, et aliquet leo. Aliquam leo dolor, accumsan et viverra at, faucibus id nibh. Mauris tincidunt, odio eu tempus rhoncus, leo eros rhoncus eros, at condimentum orci lorem at ligula. Quisque erat mi, sollicitudin sit amet varius vel, ultrices nec urna.\r\n\r\nQuisque finibus ante eu blandit accumsan. Nullam vitae tempor ipsum. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Aliquam erat volutpat. Nunc dapibus gravida diam, vulputate blandit ipsum lobortis nec. Cras fringilla ut neque sed tincidunt. Nulla aliquet neque eu orci scelerisque, bibendum laoreet ipsum semper. Nullam dictum dignissim sem, vel efficitur lacus. In hendrerit porta ligula, non sagittis diam tempor a. Nunc tincidunt nec turpis quis elementum. Etiam non blandit sapien, a scelerisque ex. Nunc et nunc eu velit consectetur lacinia. Maecenas quis gravida ex.\r\n\r\nInteger vulputate commodo lorem nec varius. Nulla facilisi. Nullam nec massa ut magna ultrices finibus. Duis dragons sollicitudin pulvinar pulvinar. Nunc ultricies libero posuere lorem scelerisque consectetur. Ut quis pulvinar neque. Nam non volutpat nulla. Phasellus et posuere libero, et fringilla metus. Duis porttitor quis nibh quis pretium.\r\n\r\nNunc ac vulputate libero, vel lobortis lectus. Interdum et malesuada fames ac ante ipsum primis in faucibus. Sed vel pulvinar felis. Proin eu euismod elit. Aliquam erat volutpat. Vivamus porta felis libero, a euismod nunc blandit ut. Pellentesque elementum purus in libero vulputate, quis commodo dolor aliquet. Aliquam aliquet neque a maximus tincidunt. Donec quis velit at quam laoreet semper sed vel neque. Vestibulum a gravida lacus.\r\n\r\nSed consectetur enim in lectus venenatis, in auctor felis dictum. Donec consequat, eros in placerat lobortis, eros libero tempor purus, ac consequat purus ligula eu lacus. In ut nisl dui. Vestibulum ornare, arcu non eleifend aliquam, ex urna egestas sem, ac bibendum lacus dragonkind diam ac dolor. Quisque nibh nisl, eleifend non nunc consectetur, hendrerit suscipit dolor. Integer in turpis quis elit convallis posuere et et ipsum. Aliquam accumsan ullamcorper porta. ', '1', '0', '0000-00-00 00:00:00'),
+(222, 49, 48, '2015-08-07 13:21:23', ' Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris in efficitur mauris. Cras eu lectus dapibus, tincidunt sem eu, consectetur diam. Cras sagittis, tellus vitae euismod maximus, purus mauris consectetur nisi, ac fermentum ligula lectus vitae sem. Proin dapibus purus at tellus tincidunt pretium. In id quam porta ante porttitor commodo vitae ac neque. Donec vulputate sed mauris ac suscipit. Nam ac sapien id tortor ullamcorper suscipit. Fusce maximus, tellus eget suscipit placerat, magna lorem interdum elit, at fermentum felis mi nec ante. Sed semper lectus placerat metus accumsan ultrices. Nulla commodo eleifend risus sit amet rhoncus. Cras sed commodo nulla. Nullam finibus leo sit amet elit dapibus euismod. Integer ornare libero non accumsan aliquam. Morbi commodo blandit iaculis.\r\n\r\nMaecenas nibh ipsum, malesuada ut consequat ac, suscipit vel nulla. Maecenas nisl libero, efficitur ut nulla ut, venenatis mollis risus. Donec eleifend efficitur sagittis. Fusce vel sodales nunc. Phasellus at quam euismod turpis efficitur euismod. Vivamus in felis ac erat dignissim condimentum. Nam sed enim mauris. Praesent nec lorem sit amet nisi vulputate interdum sit amet non ex. Duis ut mauris velit.\r\n\r\nNam interdum ipsum sed purus maximus sollicitudin. Pellentesque sit amet tortor tincidunt, ultricies nunc a, vestibulum dolor. Donec tincidunt rutrum tellus quis porta. Nulla facilisi. Fusce gravida fringilla justo, at pulvinar felis faucibus sed. Nulla facilisi. Etiam blandit egestas placerat. Etiam risus lacus, ultrices at ipsum sed, volutpat molestie massa. Nam ut ante fermentum, fermentum turpis imperdiet, sodales diam. Mauris molestie dui eu dui dapibus, quis imperdiet neque posuere. Sed hendrerit sapien eget dictum interdum. Nam tempor dictum urna egestas ornare. Vivamus tristique mi sit amet velit pharetra pretium. Duis ac condimentum dolor. Fusce porta, mi et fringilla elementum, urna ex semper libero, id aliquam mauris ex sed turpis. Pellentesque orci mi, rhoncus id erat nec, rutrum interdum mauris.\r\n\r\nUt vel imperdiet metus, vel ultrices est. Sed euismod nibh eu turpis pulvinar varius. Proin vel justo nec leo facilisis sagittis nec vitae nibh. Suspendisse faucibus porta maximus. Suspendisse ac vulputate justo. Etiam dignissim velit enim, et viverra quam posuere a. Nam pharetra aliquet consequat. Maecenas et accumsan nulla, sit amet pulvinar massa. Etiam at lorem nunc. Vestibulum lobortis leo id nulla efficitur efficitur quis eu ex.\r\n\r\nInterdum et malesuada fames ac ante ipsum primis in faucibus. Aenean ut eros at ante cursus imperdiet sed eget ex. Phasellus convallis neque dolor, nec varius ex pretium eu. Proin dolor elit, fermentum in turpis id, faucibus egestas tellus. Sed faucibus nulla orci, vitae eleifend tellus mollis sit amet. Sed mauris sapien, volutpat at mollis nec, facilisis eget orci. Aliquam pellentesque hendrerit nunc eget ultrices. Mauris a sapien dictum tortor ultricies rhoncus sit amet quis quam. Nunc fermentum imperdiet ullamcorper. Vivamus tristique mollis sodales. Vestibulum fringilla, sapien sit amet placerat pharetra, purus dolor convallis velit, in lobortis elit tellus interdum ex. Vivamus consequat dapibus sapien, nec faucibus nunc eleifend eu. Nulla consequat porttitor ullamcorper.\r\n\r\nDonec vel magna congue, sagittis leo eget, suscipit massa. Quisque placerat porta est a congue. Aenean mattis fermentum dolor at pretium. In hac habitasse platea dictumst. Sed euismod diam eu metus rutrum eleifend. Suspendisse bibendum at lectus ut vestibulum. Mauris accumsan eleifend turpis ut sagittis. Integer risus massa, maximus eget eros tincidunt, fringilla suscipit sem. Etiam efficitur massa eu eros varius ultrices. Morbi consectetur ante viverra nibh vestibulum consectetur. Sed justo ligula, volutpat quis aliquam vitae, feugiat id magna. Interdum et malesuada fames ac ante ipsum primis in faucibus. Donec molestie velit magna, ut rhoncus neque mollis sit amet. In vitae blandit velit. Sed porttitor enim eget orci dictum, ut mattis velit volutpat.\r\n\r\nSuspendisse et turpis et nunc posuere viverra. Vestibulum imperdiet volutpat ligula, sed tincidunt ante mattis nec. Aenean rutrum nibh in ipsum pellentesque vestibulum. Nulla nec nulla at velit volutpat imperdiet. Mauris mattis pulvinar metus. Pellentesque tristique euismod nibh, sed bibendum arcu hendrerit ac. Nulla facilisi. Suspendisse pretium ex ex, eu laoreet quam mollis ac. Etiam a neque varius, tempor arcu sit amet, vehicula diam. Praesent quis neque consectetur, molestie dolor ut, blandit arcu. Nulla sit amet posuere felis. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Integer ac nisi ut urna malesuada malesuada vel quis tortor. Maecenas cursus ante sed quam suscipit mollis. Pellentesque semper velit laoreet augue mattis, sed tincidunt quam luctus.\r\n\r\nDonec et augue id nisl mattis placerat. Fusce imperdiet leo non enim varius, a rutrum tortor sodales. Suspendisse potenti. Praesent nec consequat diam. Curabitur sodales malesuada arcu convallis pulvinar. Ut volutpat leo non augue placerat cursus. Curabitur id velit molestie, placerat risus et, pretium sem. Sed tincidunt turpis erat, non sollicitudin mi ullamcorper at. Donec ullamcorper lectus orci, vitae rutrum libero dignissim vel. Aliquam erat volutpat.\r\n\r\nVestibulum at venenatis ipsum. Nunc lacinia ipsum a malesuada venenatis. Cras nunc sapien, elementum eget ornare sit amet, ultricies vitae erat. Ut convallis diam lorem, vitae tristique arcu varius ut. Cras fermentum nisi in ante venenatis, vitae eleifend augue tincidunt. Quisque elementum ipsum nec tempus dignissim. Curabitur sit amet est in est porttitor posuere vitae eu odio. Sed hendrerit posuere elit et vestibulum. Quisque blandit eros lectus, quis euismod neque elementum eu. Nullam fermentum nec elit vel efficitur. Nullam aliquam nibh ut elit feugiat, a convallis tellus tempus. Praesent id diam molestie, semper dolor nec, commodo libero. Morbi efficitur efficitur turpis sit amet posuere.\r\n\r\nQuisque auctor tempus enim ut laoreet. Sed nec lacus nisi. Nulla sodales neque diam, dignissim posuere nisi ornare sit amet. Morbi eleifend tellus dapibus varius malesuada. Sed venenatis orci enim, ut eleifend tellus bibendum sit amet. Nam volutpat quis leo eu lobortis. Sed placerat metus et lacus sollicitudin, eget sollicitudin tellus tristique. Curabitur a mi leo. Quisque tempus purus dignissim, finibus purus eu, tempor felis. Nam placerat tellus vitae pellentesque suscipit.\r\n\r\nDonec tristique hendrerit leo ac vehicula. Pellentesque aliquam lorem quis urna imperdiet, accumsan porta urna condimentum. Aenean nec libero purus. Quisque eu mollis turpis. Quisque vitae lectus euismod, vestibulum felis sit amet, ullamcorper nisl. Phasellus id nulla dui. Integer vel odio elementum, euismod tortor et, eleifend leo. Nulla est ante, maximus in massa sed, dignissim lobortis massa. Quisque ut molestie sem. Vestibulum sed mauris dictum, iaculis felis a, fringilla sapien. Cras accumsan purus ac gravida rhoncus. Donec quis dolor dapibus, egestas sem vel, molestie quam. Morbi et aliquet nunc, in scelerisque neque. Nam pulvinar vitae ex eu interdum. Donec vel auctor enim, id efficitur urna. Ut nisi leo, aliquam sed orci nec, commodo tempor quam.\r\n\r\nProin ex massa, eleifend non gravida eget, cursus at libero. Sed vulputate, turpis vel tincidunt molestie, est sapien tristique libero, eu dignissim mi nisi in magna. Mauris ornare augue in mi porta, quis rutrum lacus imperdiet. Suspendisse potenti. Aenean egestas, velit sit amet egestas interdum, massa turpis suscipit metus, ac convallis massa leo sit amet lorem. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Nam fermentum, enim at feugiat efficitur, augue nisi porttitor ex, quis pretium elit odio non orci. Nam consequat metus justo, sit amet tristique nunc bibendum sed. Sed convallis aliquet justo, ut molestie lacus aliquet vitae.\r\n\r\nAenean diam neque, semper posuere dapibus ac, malesuada a lacus. Maecenas commodo convallis pulvinar. Pellentesque eleifend volutpat leo sit amet convallis. Donec id ipsum vitae sapien laoreet luctus. Etiam nulla felis, consectetur sollicitudin malesuada a, facilisis vel dui. Suspendisse eget nibh semper, lobortis nisl et, blandit leo. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec ac volutpat diam. Pellentesque cursus pharetra nunc dragon sit amet porta. Pellentesque aliquam eleifend elit, nec sagittis sem efficitur sit amet. Phasellus venenatis tellus id nulla dignissim, in lacinia neque dignissim. Nunc ultrices id orci ut tincidunt. Quisque vitae dignissim quam\r\n\r\n In eget quam tincidunt, fringilla tortor a, varius nisi. Phasellus eget eros lacus. Quisque mi nunc, consectetur vitae elementum ac, consequat eget lorem. Sed nec elit pulvinar, malesuada odio sit amet, sodales ante. Aliquam rutrum a purus eu condimentum. Nunc condimentum lorem sapien, eget dapibus ante imperdiet tempus. Nam sollicitudin, ante id accumsan consectetur, enim lorem mollis lectus, sit amet suscipit justo magna ut nisl. Sed venenatis sem mauris, nec vehicula nulla vehicula sit amet. Sed ornare sodales nisi ut laoreet.\r\n\r\nProin sagittis sagittis sapien mollis tincidunt. Cras imperdiet arcu vitae tellus rhoncus egestas. Nullam efficitur felis non nulla ultrices finibus. Suspendisse mattis justo vitae risus fringilla interdum non eu ipsum. Curabitur sem elit, malesuada sed facilisis quis, fringilla ut velit. Maecenas et tortor dolor. Suspendisse vel iaculis lectus. Suspendisse mollis tristique risus, quis maximus est congue ut. Ut nec metus ut libero mattis tincidunt nec a justo. Etiam vitae nulla aliquet velit venenatis tincidunt sit amet ut felis. Proin sagittis eros eu felis pharetra semper.\r\n\r\nNullam tellus risus, finibus id venenatis sed, pretium vitae lorem. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec non mollis libero. Duis imperdiet ex at justo tincidunt dignissim. Nulla ac laoreet turpis. Curabitur mauris leo, consectetur molestie massa quis, condimentum efficitur ligula. Cras sit amet tincidunt felis. Sed auctor arcu dignissim felis tempor varius. Praesent venenatis, quam ac mollis lobortis, velit leo consectetur nunc, tempus vehicula justo tortor ut quam. In feugiat facilisis purus vitae vulputate. Duis nec libero turpis. Aliquam pulvinar faucibus nisi, in tempor orci finibus sit amet. Sed quis diam ac metus tempor finibus. Cras fringilla libero in dui luctus, vitae pharetra neque accumsan. Proin risus magna, mattis eu enim non, dictum fringilla lorem.\r\n\r\nQuisque mi dolor, imperdiet vitae velit sed, imperdiet auctor felis. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Donec dictum quam in justo ornare, sit amet eleifend nisi rhoncus. Vestibulum commodo dui justo, quis tincidunt turpis eleifend sed. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Duis nec nibh metus. Etiam consequat id neque sit amet pretium. Duis rutrum volutpat massa. Maecenas eu bibendum nisi, a gravida lorem. Ut sapien purus, convallis in bibendum et, sagittis et libero. Nullam id felis et orci finibus interdum ac sit amet sapien. Ut mi nulla, aliquet non eleifend ac, pellentesque vitae neque. Suspendisse potenti. Aliquam vel tortor ornare, rhoncus mauris quis, vulputate elit.\r\n\r\nUt eu odio sit amet velit condimentum efficitur ut nec diam. Duis sodales metus ut egestas tincidunt. Integer dictum libero vitae enim mollis mollis. Curabitur fermentum elementum ligula, sit amet rutrum urna gravida tincidunt. Etiam sapien mi, rhoncus non hendrerit sed, scelerisque placerat lorem. Ut sollicitudin massa nec ipsum condimentum, nec rhoncus felis malesuada. Nullam at viverra lorem. Ut venenatis tincidunt enim, non vulputate sem. Donec rhoncus pulvinar sagittis. Aliquam iaculis non orci fermentum tempor. Suspendisse potenti. Phasellus cursus dolor non libero rhoncus euismod. Nunc facilisis, mi vitae sodales iaculis, odio leo condimentum risus, vel accumsan nulla odio sit amet metus.\r\n\r\nNunc sollicitudin, sem a fringilla maximus, purus ipsum iaculis turpis, quis volutpat nibh ligula et arcu. Etiam a dolor quis augue ultricies elementum. Donec condimentum nisl et urna imperdiet ultricies feugiat eu eros. Nullam at dapibus ipsum, vitae mollis nisi. Fusce vel malesuada dolor. Nulla facilisi. Nam semper feugiat ipsum quis dictum. In hac habitasse platea dictumst. Duis ut pellentesque ante. Aliquam rhoncus, nisl in posuere fermentum, libero quam gravida mi, vitae malesuada nunc lorem at nisl. Praesent consectetur ante dui, luctus venenatis nibh aliquam sit amet. Phasellus sed mauris iaculis, fringilla nisi eget, fermentum mi.\r\n\r\nDonec a justo lacus. Maecenas placerat congue erat, eget dictum velit aliquam at. Suspendisse potenti. Sed eros tellus, gravida eget metus eu, scelerisque egestas leo. Etiam auctor erat sed aliquet posuere. Cras dui sapien, tristique quis dignissim eu, semper in dui. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Nulla eget nunc enim. Fusce pretium imperdiet purus et ultrices. ', '1', '0', '0000-00-00 00:00:00'),
+(223, 50, 48, '2015-08-07 13:53:47', ' In eget quam tincidunt, fringilla tortor a, varius nisi. Phasellus eget eros lacus. Quisque mi nunc, consectetur vitae elementum ac, consequat eget lorem. Sed nec elit pulvinar, malesuada odio sit amet, sodales ante. Aliquam rutrum a purus eu condimentum. Nunc condimentum lorem sapien, eget dapibus ante imperdiet tempus. Nam sollicitudin, ante id accumsan consectetur, enim lorem mollis lectus, sit amet suscipit justo magna ut nisl. Sed venenatis sem mauris, nec vehicula nulla vehicula sit amet. Sed ornare sodales nisi ut laoreet.\r\n\r\nProin sagittis sagittis sapien mollis tincidunt. Cras imperdiet arcu vitae tellus rhoncus egestas. Nullam efficitur felis non nulla ultrices finibus. Suspendisse mattis justo vitae risus fringilla interdum non eu ipsum. Curabitur sem elit, malesuada sed facilisis quis, fringilla ut velit. Maecenas et tortor dolor. Suspendisse vel iaculis lectus. Suspendisse mollis tristique risus, quis maximus est congue ut. Ut nec metus ut libero mattis tincidunt nec a justo. Etiam vitae nulla aliquet velit venenatis tincidunt sit amet ut felis. Proin sagittis eros eu felis pharetra semper.\r\n\r\nNullam tellus risus, finibus id venenatis sed, pretium vitae lorem. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec non mollis libero. Duis imperdiet ex at justo tincidunt dignissim. Nulla ac laoreet turpis. Curabitur mauris leo, consectetur molestie massa quis, condimentum efficitur ligula. Cras sit amet tincidunt felis. Sed auctor arcu dignissim felis tempor varius. Praesent venenatis, quam ac mollis lobortis, velit leo consectetur nunc, tempus vehicula justo tortor ut quam. In feugiat facilisis purus vitae vulputate. Duis nec libero turpis. Aliquam pulvinar faucibus nisi, in tempor orci finibus sit amet. Sed quis diam ac metus tempor finibus. Cras fringilla libero in dui luctus, vitae pharetra neque accumsan. Proin risus magna, mattis eu enim non, dictum fringilla lorem.\r\n\r\nQuisque mi dolor, imperdiet vitae velit sed, imperdiet auctor felis. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Donec dictum quam in justo ornare, sit amet eleifend nisi rhoncus. Vestibulum commodo dui justo, quis tincidunt turpis eleifend sed. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Duis nec nibh metus. Etiam consequat id neque sit amet pretium. Duis rutrum volutpat massa. Maecenas eu bibendum nisi, a gravida lorem. Ut sapien purus, convallis in bibendum et, sagittis et libero. Nullam id felis et orci finibus interdum ac sit amet sapien. Ut mi nulla, aliquet non eleifend ac, pellentesque vitae neque. Suspendisse potenti. Aliquam vel tortor ornare, rhoncus mauris quis, vulputate elit.\r\n\r\nUt eu odio sit amet velit condimentum efficitur ut nec diam. Duis sodales metus ut egestas tincidunt. Integer dictum libero vitae enim mollis mollis. Curabitur fermentum elementum ligula, sit amet rutrum urna gravida tincidunt. Etiam sapien mi, rhoncus non hendrerit sed, scelerisque placerat lorem. Ut sollicitudin massa nec ipsum condimentum, nec rhoncus felis malesuada. Nullam at viverra lorem. Ut venenatis tincidunt enim, non vulputate sem. Donec rhoncus pulvinar sagittis. Aliquam iaculis non orci fermentum tempor. Suspendisse potenti. Phasellus cursus dolor non libero rhoncus euismod. Nunc facilisis, mi vitae sodales iaculis, odio leo condimentum risus, vel accumsan nulla odio sit amet metus.\r\n\r\nNunc sollicitudin, sem a fringilla maximus, purus ipsum iaculis turpis, quis volutpat nibh ligula et arcu. Etiam a dolor quis augue ultricies elementum. Donec condimentum nisl et urna imperdiet ultricies feugiat eu eros. Nullam at dapibus ipsum, vitae mollis nisi. Fusce vel malesuada dolor. Nulla facilisi. Nam semper feugiat ipsum quis dictum. In hac habitasse platea dictumst. Duis ut pellentesque ante. Aliquam rhoncus, nisl in posuere fermentum, libero quam gravida mi, vitae malesuada nunc lorem at nisl. Praesent consectetur ante dui, luctus venenatis nibh aliquam sit amet. Phasellus sed mauris iaculis, fringilla nisi eget, fermentum mi.\r\n\r\nDonec a justo lacus. Maecenas placerat congue erat, eget dictum velit aliquam at. Suspendisse potenti. Sed eros tellus, gravida eget metus eu, scelerisque egestas leo. Etiam auctor erat sed aliquet posuere. Cras dui sapien, tristique quis dignissim eu, semper in dui. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Nulla eget nunc enim. Fusce pretium imperdiet purus et ultrices dragon  In eget quam tincidunt, fringilla tortor a, varius nisi. Phasellus eget eros lacus. Quisque mi nunc, consectetur vitae elementum ac, consequat eget lorem. Sed nec elit pulvinar, malesuada odio sit amet, sodales ante. Aliquam rutrum a purus eu condimentum. Nunc condimentum lorem sapien, eget dapibus ante imperdiet tempus. Nam sollicitudin, ante id accumsan consectetur, enim lorem mollis lectus, sit amet suscipit justo magna ut nisl. Sed venenatis sem mauris, nec vehicula nulla vehicula sit amet. Sed ornare sodales nisi ut laoreet.\r\n\r\nProin sagittis sagittis sapien mollis tincidunt. Cras imperdiet arcu vitae tellus rhoncus egestas. Nullam efficitur felis non nulla ultrices finibus. Suspendisse mattis justo vitae risus fringilla interdum non eu ipsum. Curabitur sem elit, malesuada sed facilisis quis, fringilla ut velit. Maecenas et tortor dolor. Suspendisse vel iaculis lectus. Suspendisse mollis tristique risus, quis maximus est congue ut. Ut nec metus ut libero mattis tincidunt nec a justo. Etiam vitae nulla aliquet velit venenatis tincidunt sit amet ut felis. Proin sagittis eros eu felis pharetra semper.\r\n\r\nNullam tellus risus, finibus id venenatis sed, pretium vitae lorem. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec non mollis libero. Duis imperdiet ex at justo tincidunt dignissim. Nulla ac laoreet turpis. Curabitur mauris leo, consectetur molestie massa quis, condimentum efficitur ligula. Cras sit amet tincidunt felis. Sed auctor arcu dignissim felis tempor varius. Praesent venenatis, quam ac mollis lobortis, velit leo consectetur nunc, tempus vehicula justo tortor ut quam. In feugiat facilisis purus vitae vulputate. Duis nec libero turpis. Aliquam pulvinar faucibus nisi, in tempor orci finibus sit amet. Sed quis diam ac metus tempor finibus. Cras fringilla libero in dui luctus, vitae pharetra neque accumsan. Proin risus magna, mattis eu enim non, dictum fringilla lorem.\r\n\r\nQuisque mi dolor, imperdiet vitae velit sed, imperdiet auctor felis. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Donec dictum quam in justo ornare, sit amet eleifend nisi rhoncus. Vestibulum commodo dui justo, quis tincidunt turpis eleifend sed. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Duis nec nibh metus. Etiam consequat id neque sit amet pretium. Duis rutrum volutpat massa. Maecenas eu bibendum nisi, a gravida lorem. Ut sapien purus, convallis in bibendum et, sagittis et libero. Nullam id felis et orci finibus interdum ac sit amet sapien. Ut mi nulla, aliquet non eleifend ac, pellentesque vitae neque. Suspendisse potenti. Aliquam vel tortor ornare, rhoncus mauris quis, vulputate elit.\r\n\r\nUt eu odio sit amet velit condimentum efficitur ut nec diam. Duis sodales metus ut egestas tincidunt. Integer dictum libero vitae enim mollis mollis. Curabitur fermentum elementum ligula, sit amet rutrum urna gravida tincidunt. Etiam sapien mi, rhoncus non hendrerit sed, scelerisque placerat lorem. Ut sollicitudin massa nec ipsum condimentum, nec rhoncus felis malesuada. Nullam at viverra lorem. Ut venenatis tincidunt enim, non vulputate sem. Donec rhoncus pulvinar sagittis. Aliquam iaculis non orci fermentum tempor. Suspendisse potenti. Phasellus cursus dolor non libero rhoncus euismod. Nunc facilisis, mi vitae sodales iaculis, odio leo condimentum risus, vel accumsan nulla odio sit amet metus.\r\n\r\nNunc sollicitudin, sem a fringilla maximus, purus ipsum iaculis turpis, quis volutpat nibh ligula et arcu. Etiam a dolor quis augue ultricies elementum. Donec condimentum nisl et urna imperdiet ultricies feugiat eu eros. Nullam at dapibus ipsum, vitae mollis nisi. Fusce vel malesuada dolor. Nulla facilisi. Nam semper feugiat ipsum quis dictum. In hac habitasse platea dictumst. Duis ut pellentesque ante. Aliquam rhoncus, nisl in posuere fermentum, libero quam gravida mi, vitae malesuada nunc lorem at nisl. Praesent consectetur ante dui, luctus venenatis nibh aliquam sit amet. Phasellus sed mauris iaculis, fringilla nisi eget, fermentum mi.\r\n\r\nDonec a justo lacus. Maecenas placerat congue erat, eget dictum velit aliquam at. Suspendisse potenti. Sed eros tellus, gravida eget metus eu, scelerisque egestas leo. Etiam auctor erat sed aliquet posuere. Cras dui sapien, tristique quis dignissim eu, semper in dui. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Nulla eget nunc enim. Fusce pretium imperdiet purus et ultrices. ', '1', '0', '0000-00-00 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -747,21 +866,21 @@ CREATE TABLE IF NOT EXISTS `tblsavedsearches` (
   `searchID` int(11) NOT NULL,
   `searchTerm` varchar(255) DEFAULT NULL,
   `searchCount` int(11) DEFAULT NULL
-) ENGINE=MyISAM AUTO_INCREMENT=25 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=96 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblsavedsearches`
 --
 
 INSERT INTO `tblsavedsearches` (`searchID`, `searchTerm`, `searchCount`) VALUES
-(1, 'crafting', 6),
-(2, 'feeding pets', 2),
-(3, 'image', 7),
-(4, 'autumn', 2),
+(1, 'crafting', 55),
+(2, 'feeding pets', 55),
+(3, 'image', 86),
+(4, 'autumn', 51),
 (5, 'autumn earth', 2),
 (6, 'character development', 0),
 (11, 'pte development', 0),
-(8, 'pet development', 2),
+(8, 'pet development', 51),
 (10, 'pte development', 0),
 (12, 'pet developmetn', 0),
 (13, 'carfting', 0),
@@ -775,7 +894,78 @@ INSERT INTO `tblsavedsearches` (`searchID`, `searchTerm`, `searchCount`) VALUES
 (21, 'speling', 0),
 (22, 'fgf', 1),
 (23, 'gf', 1),
-(24, 'mail', 1);
+(24, 'mail', 1),
+(25, '78', 0),
+(26, '78', 0),
+(27, '78', 0),
+(28, '107', 0),
+(29, 'john', 2),
+(30, 'pete', 0),
+(31, 'pete', 0),
+(32, 'bob', 0),
+(33, 'bob', 0),
+(34, 'petsss', 0),
+(35, 'feed my pets', 0),
+(36, 'feed-my-pets', 0),
+(37, 'feed my lovely pet', 0),
+(38, 'feed-my-lovely-pet', 0),
+(39, 'images', 51),
+(40, 'feeding my pets', 0),
+(41, 'feeding-my-pets', 0),
+(42, 'feeding-pets', 0),
+(43, 'feeding-pets', 0),
+(44, 'how does that work', 55),
+(45, 'does that work', 51),
+(46, 'dragon', 105),
+(47, 'autumn earth', 0),
+(48, 'autumn earth', 0),
+(49, 'autumn earth', 0),
+(50, 'autumn earth', 0),
+(51, 'autumn earth', 0),
+(52, 'autumn earth', 0),
+(53, 'autumn earth', 0),
+(54, 'autumn earth', 0),
+(55, 'autumn earth', 0),
+(56, 'autumn earth', 0),
+(57, 'autumn earth', 0),
+(58, 'autumn earth', 0),
+(59, 'autumn earth', 0),
+(60, 'autumn earth', 0),
+(61, 'autumn earth', 0),
+(62, 'autumn earth', 0),
+(63, 'autumn earth', 0),
+(64, 'autumn earth', 0),
+(65, 'autumn earth', 0),
+(66, 'autumn earth', 0),
+(67, 'autumn earth', 0),
+(68, 'autumn earth', 0),
+(69, 'autumn earth', 0),
+(70, 'autumn earth', 0),
+(71, 'autumn earth', 0),
+(72, 'autumn earth', 0),
+(73, 'autumn earth', 0),
+(74, 'autumn earth', 0),
+(75, 'autumn earth', 0),
+(76, 'autumn earth', 0),
+(77, 'autumn earth', 0),
+(78, 'autumn earth', 0),
+(79, 'autumn earth', 0),
+(80, 'autumn earth', 0),
+(81, 'autumn earth', 0),
+(82, 'autumn earth', 0),
+(83, 'autumn earth', 0),
+(84, 'autumn earth', 0),
+(85, 'autumn earth', 0),
+(86, 'autumn earth', 0),
+(87, 'autumn earth', 0),
+(88, 'autumn earth', 0),
+(89, 'autumn earth', 0),
+(90, 'autumn earth', 0),
+(91, 'autumn earth', 0),
+(92, 'autumn earth', 0),
+(93, 'autumn earth', 0),
+(94, 'autumn earth', 0),
+(95, 'autumn earth', 0);
 
 -- --------------------------------------------------------
 
@@ -788,7 +978,7 @@ CREATE TABLE IF NOT EXISTS `tblsubscribedthreads` (
   `accountID` int(11) DEFAULT NULL,
   `threadID` int(11) DEFAULT NULL,
   `status` char(1) DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=42 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=54 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblsubscribedthreads`
@@ -811,7 +1001,19 @@ INSERT INTO `tblsubscribedthreads` (`subthreadID`, `accountID`, `threadID`, `sta
 (38, 5, 36, '1'),
 (39, 39, 35, '0'),
 (40, 39, 37, '0'),
-(41, 48, 38, '0');
+(41, 48, 38, '0'),
+(42, 48, 39, '0'),
+(43, 48, 40, '0'),
+(44, 48, 41, '0'),
+(45, 48, 42, '0'),
+(46, 48, 43, '0'),
+(47, 48, 44, '0'),
+(48, 48, 45, '0'),
+(49, 48, 46, '0'),
+(50, 48, 47, '0'),
+(51, 48, 48, '0'),
+(52, 48, 49, '0'),
+(53, 48, 50, '0');
 
 -- --------------------------------------------------------
 
@@ -831,7 +1033,7 @@ CREATE TABLE IF NOT EXISTS `tblthreads` (
   `cleanURL` varchar(255) DEFAULT NULL,
   `latestPostID` int(11) DEFAULT NULL,
   `postcount` int(11) DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=39 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=51 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblthreads`
@@ -845,14 +1047,26 @@ INSERT INTO `tblthreads` (`threadID`, `forumID`, `accountID`, `viewCount`, `Crea
 (28, 3, 13, 25, '2006-07-23 09:20:57', '2', '0', 'another thread', 'general-discussion/another-thread', 201, 17),
 (29, 2, 18, 20, '2006-07-23 10:22:42', '2', '0', 'hello', 'suggestions/hello', 195, 3),
 (30, 3, 13, 28, '2006-07-23 14:30:59', '2', '0', 'new thread :)', 'general-discussion/new-thread', 175, 6),
-(31, 1, 5, 48, '2006-07-27 13:26:36', '2', '0', 'showing an image', 'bug-reports/showing-an-image', 208, 25),
+(31, 1, 5, 49, '2006-07-27 13:26:36', '2', '0', 'showing an image', 'bug-reports/showing-an-image', 208, 25),
 (32, 3, 5, 43, '2006-08-13 11:07:19', '2', '0', 'john', 'general-discussion/john', 193, 2),
 (33, 3, 5, 15, '2006-08-13 12:15:14', '2', '0', 'my title', 'general-discussion/my-title', 196, 1),
 (34, 3, 5, 54, '2006-08-13 12:18:38', '2', '0', 'googlelink', 'general-discussion/googlelink', 207, 3),
 (35, 3, 5, 20, '2006-08-13 12:22:03', '2', '0', 'l=img thread', 'general-discussion/l-img-thread', 209, 3),
-(36, 2, 5, 26, '2007-05-08 18:33:13', '2', '0', 'crafting', 'suggestions/crafting', 206, 1),
+(36, 2, 5, 27, '2007-05-08 18:33:13', '2', '0', 'crafting', 'suggestions/crafting', 206, 1),
 (37, 3, 39, 1, '2015-06-30 16:50:43', '2', '0', 'dilly&#039;s here', 'general-discussion/dillys-here', 210, 1),
-(38, 3, 48, 0, '2015-07-15 13:08:11', '2', '0', 'new one', 'general-discussion/new-one', 211, 1);
+(38, 3, 48, 0, '2015-07-15 13:08:11', '2', '0', 'new one', 'general-discussion/new-one', 211, 1),
+(39, 3, 48, 0, '2015-07-16 13:51:46', '2', '0', 'meow', 'general-discussion/meow', 212, 1),
+(40, 2, 48, 0, '2015-07-17 15:36:48', '2', '0', 'meowww', 'suggestions/meowww', 213, 1),
+(41, 3, 48, 0, '2015-07-17 15:39:03', '2', '0', 'mew', 'general-discussion/mew', 214, 1),
+(42, 2, 48, 0, '2015-07-17 15:39:20', '2', '0', 'mew', 'suggestions/mew', 215, 1),
+(43, 2, 48, 0, '2015-07-17 15:39:36', '2', '0', 'mew', 'suggestions/mew-2', 216, 1),
+(44, 1, 48, 0, '2015-07-22 13:26:28', '2', '0', 'a really long title that is going to be too long to fit into the title tag', 'bug-reports/a-really-long-title-that-is-going-to-be-too-long-to-fit-into-the-title-tag', 217, 1),
+(45, 1, 48, 0, '2015-08-06 10:39:31', '2', '0', 'dragon title', 'bug-reports/dragon-title', 218, 1),
+(46, 3, 48, 0, '2015-08-06 10:42:11', '2', '0', 'lorem ip', 'general-discussion/lorem-ip', 219, 1),
+(47, 2, 48, 0, '2015-08-06 10:42:31', '2', '0', 'dragon both', 'suggestions/dragon-both', 220, 1),
+(48, 1, 48, 0, '2015-08-07 09:08:42', '2', '0', 'multiple in body', 'bug-reports/multiple-in-body', 221, 1),
+(49, 1, 48, 0, '2015-08-07 13:21:23', '2', '0', 'massive post', 'bug-reports/massive-post', 222, 1),
+(50, 2, 48, 1, '2015-08-07 13:53:47', '2', '0', 'hidden in the middle', 'suggestions/hidden-in-the-middle', 223, 1);
 
 --
 -- Indexes for dumped tables
@@ -881,6 +1095,30 @@ ALTER TABLE `tblauctionitems`
 --
 ALTER TABLE `tblcharacters`
   ADD PRIMARY KEY (`charID`);
+
+--
+-- Indexes for table `tblcontractbids`
+--
+ALTER TABLE `tblcontractbids`
+  ADD PRIMARY KEY (`bidID`);
+
+--
+-- Indexes for table `tblcontracts`
+--
+ALTER TABLE `tblcontracts`
+  ADD PRIMARY KEY (`contractID`);
+
+--
+-- Indexes for table `tbldungeonachievements`
+--
+ALTER TABLE `tbldungeonachievements`
+  ADD PRIMARY KEY (`index`);
+
+--
+-- Indexes for table `tbldungeonmapconfig`
+--
+ALTER TABLE `tbldungeonmapconfig`
+  ADD PRIMARY KEY (`dungeonId`);
 
 --
 -- Indexes for table `tblevents`
@@ -986,7 +1224,7 @@ ALTER TABLE `tblthreads`
 -- AUTO_INCREMENT for table `tblacct`
 --
 ALTER TABLE `tblacct`
-  MODIFY `accountID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=50;
+  MODIFY `accountID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=51;
 --
 -- AUTO_INCREMENT for table `tblauctionbids`
 --
@@ -1001,7 +1239,27 @@ ALTER TABLE `tblauctionitems`
 -- AUTO_INCREMENT for table `tblcharacters`
 --
 ALTER TABLE `tblcharacters`
-  MODIFY `charID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=17;
+  MODIFY `charID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=18;
+--
+-- AUTO_INCREMENT for table `tblcontractbids`
+--
+ALTER TABLE `tblcontractbids`
+  MODIFY `bidID` int(255) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=6;
+--
+-- AUTO_INCREMENT for table `tblcontracts`
+--
+ALTER TABLE `tblcontracts`
+  MODIFY `contractID` int(255) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
+--
+-- AUTO_INCREMENT for table `tbldungeonachievements`
+--
+ALTER TABLE `tbldungeonachievements`
+  MODIFY `index` int(255) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=7;
+--
+-- AUTO_INCREMENT for table `tbldungeonmapconfig`
+--
+ALTER TABLE `tbldungeonmapconfig`
+  MODIFY `dungeonId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT for table `tblevents`
 --
@@ -1041,7 +1299,7 @@ ALTER TABLE `tblinventoryitems`
 -- AUTO_INCREMENT for table `tbllocations`
 --
 ALTER TABLE `tbllocations`
-  MODIFY `locID` int(255) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
+  MODIFY `locID` int(255) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=5;
 --
 -- AUTO_INCREMENT for table `tblmail`
 --
@@ -1061,27 +1319,27 @@ ALTER TABLE `tblmainpollchoices`
 -- AUTO_INCREMENT for table `tblnews`
 --
 ALTER TABLE `tblnews`
-  MODIFY `newsID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=5;
+  MODIFY `newsID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=6;
 --
 -- AUTO_INCREMENT for table `tblposts`
 --
 ALTER TABLE `tblposts`
-  MODIFY `postID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=212;
+  MODIFY `postID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=224;
 --
 -- AUTO_INCREMENT for table `tblsavedsearches`
 --
 ALTER TABLE `tblsavedsearches`
-  MODIFY `searchID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=25;
+  MODIFY `searchID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=96;
 --
 -- AUTO_INCREMENT for table `tblsubscribedthreads`
 --
 ALTER TABLE `tblsubscribedthreads`
-  MODIFY `subthreadID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=42;
+  MODIFY `subthreadID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=54;
 --
 -- AUTO_INCREMENT for table `tblthreads`
 --
 ALTER TABLE `tblthreads`
-  MODIFY `threadID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=39;
+  MODIFY `threadID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=51;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

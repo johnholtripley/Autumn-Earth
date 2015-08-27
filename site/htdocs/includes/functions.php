@@ -1132,13 +1132,32 @@ inner join tblcharacters on tbldungeonachievements.charID = tblcharacters.charID
 
 
 
+function relativeShortFutureDate($time) {
+	$today = strtotime("now");
 
+	$reldays = ( $time - $today )/86400;
+	$relhours = ( $time - $today )/3600;
+	$relminutes = ( $time - $today )/60;
+if( $reldays > 0 ) {
+if  ( $relhours < 1 ) {
+return " (in ".floor($relminutes) . " minutes' time)";
+		} else if  ( $reldays < 1 ) {
+		return " (in ".floor($relhours) . " hours' time)";
+	} else if ( $reldays < 2 ) {
+			return ' (Tomorrow)';
+		} else if ( ( $reldays ) < 7 ) {
+			$reldays = floor( $reldays );
+			return " (in ".$reldays . " days' time)";
+		} 
+	}
+}
 
 
 
 function relativePastDate( $time ) {
-	$today = strtotime( date( 'M j, Y' ) );
+	$today = strtotime("now");
 	$reldays = ( $today - $time )/86400;
+
 	if ( $reldays < 1 ) {
 		return 'Today';
 	} else if ( $reldays < 2 ) {
@@ -1152,6 +1171,16 @@ function relativePastDate( $time ) {
 		return date( 'j', strtotime( $time ) )."<sup>".date( 'S', strtotime( $time ) )."</sup> ".date( 'F Y', strtotime( $time ) );
 	}
 }
+
+
+
+
+
+
+
+
+
+
 
 
 

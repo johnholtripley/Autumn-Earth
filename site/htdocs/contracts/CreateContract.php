@@ -119,7 +119,7 @@ price <= y
 
 
 } else {
-echo 'you must be logged in to make a post';
+echo 'you must be logged in to create a contract';
 }
 
 echo '<br /><br />';
