@@ -64,13 +64,13 @@ $articleId = $row["newsID"];
 		echo '<h1>'.$newsTitle.'</h1>';
 		$thisArticleAdded = $timeAdded;
 		$timeAdded = strtotime($timeAdded);
-		echo '<p>'.date('jS F Y',$timeAdded);
+		echo '<h2>'.date('jS F Y',$timeAdded);
 		
 		// check for posted by info:
 if ($postedBy != "") {
 echo ' - posted by '.$postedBy;
 }
-echo '</p>';
+echo '</h2>';
 		
 		// remove any [CONTINUE] tag
 		$newsContent = str_ireplace('[CONTINUE]','',$newsContent);
@@ -88,7 +88,7 @@ if (mysql_num_rows($result) > 0) {
 	$row = mysql_fetch_array($result);
 	extract($row);
 	?>
-<p><a href="/chronicle/<?php echo $cleanURL; ?>/">Previous article</a></p>
+<p><a href="/chronicle/<?php echo $cleanURL; ?>/">Previous article <span>(&quot;<?php echo $newsTitle; ?>&quot;)</span></a></p>
 	<?php
 }
 
@@ -102,7 +102,7 @@ if (mysql_num_rows($result) > 0) {
 	$row = mysql_fetch_array($result);
 	extract($row);
 	?>
-<p><a href="/chronicle/<?php echo $cleanURL; ?>/">Next article</a></p>
+<p><a href="/chronicle/<?php echo $cleanURL; ?>/">Next article <span>(&quot;<?php echo $newsTitle; ?>&quot;)</span></a></p>
 	<?php
 }
 

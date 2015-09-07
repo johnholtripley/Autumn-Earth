@@ -43,23 +43,13 @@ p, ol, ul, dl {
     // load web font if JS is disabled:
     font-family: $bodyFontLoaded;
     @include pxRem("font-size", 14);
-    @include pxRem("line-height", 22);
+    @include pxRem("line-height", 21);
   @include pxRem("margin", 0 0 12 0);
     letter-spacing: 0.02em;
     padding: 0; 
     color: $baseColour;
    
 }
-
-p {
-    text-indent: 1em;
-    margin: 0; 
-}
-
-h1 + p, h2 + p, h3 + p, h4 + p, h5 + p, h6 + p, p:first-of-type { 
-    // remove paragraph indentation for the first paragraph or any after a header:
-text-indent: 0;
- }
 
 .js p, .js ol, .js ul, .js dl {
     // delay using the web font if JS is enabled:
@@ -70,6 +60,18 @@ text-indent: 0;
     // web font loaded and JS enabled:
     font-family: $bodyFontLoaded;
     }
+
+p {
+    text-indent: 1.3em;
+    margin: 0; 
+}
+
+h1 + p, h2 + p, h3 + p, h4 + p, h5 + p, h6 + p, p:first-of-type { 
+    // remove paragraph indentation for the first paragraph or any after a header:
+text-indent: 0;
+ }
+
+
 
 h1, h2, h3, h4, h5, h6 {
   @include pxRem("margin", 8 0 12 0);  
