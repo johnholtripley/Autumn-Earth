@@ -113,8 +113,8 @@ if (mysql_num_rows($result) > 0) {
 echo '<p><a href="/chronicle/archive/" title="The Chronicle Archive">The Chronicle Archives</a></p>';
 
 ?>
-<?div>
-<?div>
+</div>
+</div>
 
 <?php
 

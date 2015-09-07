@@ -64,71 +64,6 @@ a {
 
 
 
-/* #Typography
-================================================== */
-
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-    font-family: $titleFont;
-    color: $titleColor;
-padding: 0;
-font-weight: normal;
-
-}
-
-h1 em,
-h2 em,
-h3 em,
-h4 em,
-h5 em,
-h6 em {
-
-    font-style: italic;
-}
-
-h1 a,
-h2 a,
-h3 a,
-h4 a,
-h5 a,
-h6 a {
-    font-weight: inherit;
-}
-
-
-
-
-
-p, ol, ul, dl {
-    // load web font if JS is disabled:
-    font-family: $bodyFontLoaded;
-    @include pxRem("font-size", 14);
-    @include pxRem("line-height", 22);
-  @include pxRem("margin", 0 0 12 0);
-    letter-spacing: 0.02em;
-    padding: 0; 
-    color: $baseColour;
-}
-
-.js p, .js ol, .js ul, .js dl {
-    // delay using the web font if JS is enabled:
-    font-family: $bodyFont;
-}
-
-.fontsLoaded p, .fontsLoaded ol, .fontsLoaded ul, .fontsLoaded dl {
-    // web font loaded and JS enabled:
-    font-family: $bodyFontLoaded;
-    }
-
-h1, h2, h3, h4, h5, h6 {
-  @include pxRem("margin", 8 0 12 0);  
-}
-
-
 
 /* #Helpers
 ================================================== */
@@ -178,18 +113,6 @@ h1, h2, h3, h4, h5, h6 {
 
 
 
-
-@font-face {
-    font-family: 'forolight';
-    src: url('../fonts/ForoLig-webfont.eot');
-    src: url('../fonts/ForoLig-webfont.eot?#iefix') format('embedded-opentype'),
-    url('../fonts/ForoLig-webfont.svg#lato') format('svg'),
-         url('../fonts/ForoLig-webfont.woff2') format('woff2'),
-         url('../fonts/ForoLig-webfont.woff') format('woff'),
-         url('../fonts/ForoLig-webfont.ttf') format('truetype');
-    font-weight: normal;
-    font-style: normal;
-}
 
 
 
