@@ -11,6 +11,7 @@
 <li><a href="#" accesskey="6">Guide</a></li>
 <li><a href="#" accesskey="7">The World</a></li>
 <li><a href="/contracts/CreateContract.php" accesskey="8">Contract</a></li>
+<li><a href="/card-game/" accesskey="9">Card game</a></li>
 </ul>
 </div>
 </div>
@@ -31,6 +32,11 @@
 
 <script src="/js/core.js"></script>
 <?php
+
+if($additionalAssets != "") {
+echo $additionalAssets;
+}
+
 include($_SERVER['DOCUMENT_ROOT']."/includes/google-analytics.php");
 ?>
 

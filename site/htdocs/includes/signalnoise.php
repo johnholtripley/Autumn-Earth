@@ -6,4 +6,5 @@ $password="";
 $database="autumnearth";
 $dbpk ="AsOiD";
 $resultsperpage = 10;
+$additionalAssets = "";
 ?>
