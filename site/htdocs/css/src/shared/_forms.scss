@@ -1,5 +1,16 @@
 
 
+
+button,
+input,
+select, .selectWrapper,
+textarea {
+     background: #fff;
+    color: #212121;
+    border: 0;
+}
+
+
 // select dropdowns --------------------------------
 // http://jsbin.com/juvixufu/10/edit?html,output
 .selectWrapper {
@@ -68,7 +79,7 @@
 
  select:focus {
     outline: none;
-    box-shadow: 0 0 3px 3px rgba(180, 222, 250, 0.85);
+
 }
 /* This hides focus around selected option in FF */
 
