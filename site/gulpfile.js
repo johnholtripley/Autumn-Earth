@@ -67,12 +67,12 @@ gulp.task('csslint', function() {
 
 // download the sitemap locally:
 gulp.task('getSitemap', function(callback) {
-    download('http://ae.dev/sitemap.xml')
+    return download('http://ae.dev/sitemap.xml')
         .pipe(gulp.dest("htdocs/"));
 });
 
 // convert the xml to json:
-gulp.task('createSitemap', function() {
+gulp.task('createSitemap', ['getSitemap'], function() {
     return gulp.src('htdocs/sitemap.xml')
         .pipe(xml2js())
         .pipe(rename('rss.json'))
