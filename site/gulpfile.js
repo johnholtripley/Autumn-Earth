@@ -60,9 +60,6 @@ gulp.task('csslint', function() {
 
 
 
-// to do:
-// download sitemap.xml and wait until complete before running createSitemap
-// // http://jegtnes.co.uk/blog/using-gulp-with-uncss-in-ghost-for-tiny-assets/
 
 
 // download the sitemap locally:
