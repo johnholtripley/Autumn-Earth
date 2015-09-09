@@ -10,10 +10,11 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/header.php");
 <div class="row">
 <div class="column">
 
-
+<div class="canvasWrapper">
 <canvas id="cardGame">
   <img src="/images/card-game-no-canvas.jpg" alt="Card game">
 </canvas>
+</div>
 
 
 </div>
