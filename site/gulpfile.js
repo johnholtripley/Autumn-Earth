@@ -65,12 +65,12 @@ gulp.task('csslint', function() {
 // download the sitemap locally:
 gulp.task('getSitemap', function(callback) {
     return download('http://ae.dev/sitemap.xml')
-        .pipe(gulp.dest("htdocs/"));
+        .pipe(gulp.dest("htdocs/gulp-processing/"));
 });
 
 // convert the xml to json:
 gulp.task('createSitemap', ['getSitemap'], function() {
-    return gulp.src('htdocs/sitemap.xml')
+    return gulp.src('htdocs/gulp-processing/sitemap.xml')
         .pipe(xml2js())
         .pipe(rename('rss.json'))
         .pipe(gulp.dest("htdocs/gulp-processing/"));
