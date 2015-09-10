@@ -68,15 +68,14 @@ if (is_numeric($forumID)) {
 		$pagetitle = "Autumn Earth Community Forum - ".stripslashes($title);
 		$metadesc = "Autumn Earth Community Forum - discussions in the " . stripslashes($title) . " forum";
 	include($_SERVER['DOCUMENT_ROOT']."/includes/header.php");
-	include($_SERVER['DOCUMENT_ROOT']."/includes/login.php");
-	include($_SERVER['DOCUMENT_ROOT']."/includes/search.php");
+	
 	
 	// show breadcrumb:
 	echo '<div id="BreadCrumb"><a href="index.php" title="Forum Lists">Forum</a> &gt; '.stripslashes($title).'</div>';
 		
 			// if the forum is live:
 			echo '<h1>' . stripslashes($title) . '</h1>'."\n";
-			echo '<img src="' . $imagePath . '" width="24" height="24" alt="" />'."\n"; 
+			echo '<img src="' . $imagePath . '" width="24" height="24" class="forumIcon" alt="" />'."\n"; 
 			
 			
 			//

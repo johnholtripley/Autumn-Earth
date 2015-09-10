@@ -38,76 +38,192 @@
 // config ----------------------------------------------------
 
 framesPerSecond = 24;
+playerColours = ["#ffcc00","#ff00cc"];
+numberOfCardsInGame = 6;
+
+
+// image loader -----------------------------------------------------------
+// http://stackoverflow.com/questions/16560397/image-not-drawn-on-canvas-until-user-clicks
+// http://jsfiddle.net/gfcarv/26AmY/
+
+
+window.Loader = (function () {
+    var imageCount = 0;
+    var loading = false;
+    var total = 0;
+
+    // this object will hold all image references
+    var images = {};
+
+    // user defined callback, called each time an image is loaded (if it is not defined the empty function wil be called)
+    function onProgressUpdate() {};
+    // user defined callback, called when all images are loaded (if it is not defined the empty function wil be called)
+    function onComplete() {};
+
+    function onLoadImage(name) {        
+        ++imageCount;
+        // console.log(name + " loaded");
+        
+        // call the user defined callback when an image is loaded
+        onProgressUpdate(getProgress());
+        
+        // check if all images are loaded
+        if (imageCount == total) {
+            loading = false;
+          //  console.log("Load complete.");
+            onComplete();
+        }
+
+    };
+
+    function onImageError(e) {
+        console.log("Error on loading the image: " + e.srcElement);
+    }
+
+    function loadImage(name, src) {
+        try {
+            images[name] = new Image();
+            images[name].onload = function () {
+                onLoadImage(name);
+            };
+            images[name].onerror = onImageError;
+            images[name].src = src;
+        } catch (e) {
+            console.log(e.message);
+        }
+    }
+    
+    function getImage(name){
+        if(images[name]){
+            return (images[name]);
+       }
+        else{
+            return undefined; 
+        }
+    }
+
+    // pre-load all the images and call the onComplete callback when all images are loaded
+    // optionaly set the onProgressUpdate callback to be called each time an image is loaded (useful for loading screens) 
+    function preload( _images, _onComplete, _onProgressUpdate) {
+        if (!loading) {
+
+          //  console.log("Loading...");
+            loading = true;
+
+            try {
+                total = _images.length;
+                onProgressUpdate = _onProgressUpdate || (function(){});
+                onComplete = _onComplete || (function(){});                
+
+                for (var i = 0; i < _images.length; ++i) {
+                    loadImage(_images[i].name, _images[i].src);                    
+                }
+            } catch (e) {
+                console.log(e.message);
+            }
+        } else {
+          //  throw new Error("Acess denied: Cannot call the load function while there are remaining images to load.");
+        }
+    }
+
+    // percentage of progress
+    function getProgress() {
+        return (imageCount / total)*100;
+    };
+
+    // return only the public stuff to create our Loader object
+    return {
+        preload: preload,
+        getProgress: getProgress,
+        getImage: getImage,
+        images: images
+    };
+})();
+
+
+
+
 
 
 
 // -----------------------------------------------------------
 
 
-// http://www.html5rocks.com/en/tutorials/canvas/notearsgame/
 
+
+
+
+
+
+if ((cutsTheMustard) && (supportsCanvas())) {
+// preload all images
+Loader.preload([
+    {name: "img1", src: "http://www.autumnearth.com/images/card-game/cards/bomb.png"}
+  //  {name: "img2", src: "http://www.zombiegames.net/inc/screenshots/Lab-of-the-Dead.png"},
+  //  {name: "img3", src: "http://www.zombiegames.net/inc/screenshots/Zombotron.png"},
+  //  {name: "img4", src: "http://www.zombiegames.net/inc/screenshots/Road-of-the-Dead.png"}
+],initCardGame, loadingProgress); 
+}
+
+function loadingProgress() {
+    // make this graphical ####
+    console.log("loading - "+Loader.getProgress());
+}
 
 function initCardGame() {
-    if ((cutsTheMustard) && (supportsCanvas())) {
+    
         gameCanvas = document.getElementById("cardGame");
         if (gameCanvas.getContext) {
             gameContext = gameCanvas.getContext('2d');
             canvasWidth = gameCanvas.width;
             canvasHeight = gameCanvas.height;
-            gameContext.fillStyle = "rgb(255,255,128)";
-            gameContext.fillRect(0, 0, canvasWidth, canvasHeight);
-            gameContext.fillStyle = "rgb(255,255,255)";
-            gameContext.fillRect(canvasWidth / 2, canvasHeight / 2, canvasWidth / 2, canvasHeight / 2);
+            cardWidth = 84;
+            cardHeight = 102;
         }
-        card = {
-            color: "#ff0000",
-            x: 20,
-            y: 20,
-            width: 84,
-            height: 102,
-            speed: 4,
-            xdir: 1,
-            ydir: 1,
-            draw: function() {
-                gameContext.drawImage(img, this.x, this.y);
-            }
-        };
 
+        
 
-        var img = new Image();
-        img.onload = function() {
-            gameContext.drawImage(img, card.x, card.y);
-        };
-        img.src = 'http://images-mediawiki-sites.thefullwiki.org/00/3/2/5/17135484186351126.jpg';
-
-        //  $(window).load(function() {
-        // start the animations:
-        gameLoop();
-        //  });
+cards = [];
+for (var i = 0; i < numberOfCardsInGame; i++) {
+    cards[i] = {
+        x: (i*40),
+        y: 20,
+        originalOwner: 0,
+        currentOwner: (i>=(numberOfCardsInGame/2) ? 1 : 0),
+        draw: function() {
+            gameContext.fillStyle = playerColours[this.currentOwner];
+            gameContext.fillRect(this.x, this.y, cardWidth, cardHeight);
+            gameContext.drawImage(img1, this.x, this.y);
+        }
     }
+}
+
+
+
+
+
+
+// set up image references:
+img1 = Loader.getImage("img1");
+   
+
+        gameLoop();
+     
+    
 }
 
 
 function update() {
-    card.x += (card.xdir*card.speed);
-    card.y += (card.ydir*card.speed);
-    if ((card.x + card.width) >= canvasWidth) {
-        card.xdir = -1;
-    }
-    if (card.x <= 0) {
-        card.xdir = 1;
-    }
-      if ((card.y + card.height) >= canvasHeight) {
-        card.ydir = -1;
-    }
-    if (card.y <= 0) {
-        card.ydir = 1;
-    }
+    //
 }
 
 function draw() {
     gameContext.clearRect(0, 0, canvasWidth, canvasHeight);
-    card.draw();
+    for (var i = 0; i < numberOfCardsInGame; i++) {
+  cards[i].draw();
+    }
+  
+  
 }
 
 function gameLoop() {
@@ -120,6 +236,3 @@ function gameLoop() {
 
 
 
-// -----------------------------------------------------------
-
-initCardGame();
