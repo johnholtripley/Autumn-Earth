@@ -39,8 +39,15 @@
 
 framesPerSecond = 24;
 playerColours = ["#ffcc00","#ff00cc"];
-numberOfCardsInGame = 6;
-
+ 
+    cardWidth = 84;
+            cardHeight = 102;
+            // player's cards:
+            var player1Cards = [1,2,1,1,1];
+             // NPC's cards:
+            var player2Cards = [1,1,2,2,2];
+            allCardsThisGame = player1Cards.concat(player2Cards);
+            numberOfCardsInGame = allCardsThisGame.length;
 
 // image loader -----------------------------------------------------------
 // http://stackoverflow.com/questions/16560397/image-not-drawn-on-canvas-until-user-clicks
@@ -156,13 +163,15 @@ window.Loader = (function () {
 
 
 if ((cutsTheMustard) && (supportsCanvas())) {
+
+// find non-duplicate card types to load
+// build imagesToLoad array dynamically for cards
+
 // preload all images
-Loader.preload([
-    {name: "img1", src: "http://www.autumnearth.com/images/card-game/cards/bomb.png"}
-  //  {name: "img2", src: "http://www.zombiegames.net/inc/screenshots/Lab-of-the-Dead.png"},
-  //  {name: "img3", src: "http://www.zombiegames.net/inc/screenshots/Zombotron.png"},
-  //  {name: "img4", src: "http://www.zombiegames.net/inc/screenshots/Road-of-the-Dead.png"}
-],initCardGame, loadingProgress); 
+
+var imagesToLoad = [{name: "board", src: "http://www.autumnearth.com/images/card-game/board.jpg"},{name: "card1", src: "http://www.autumnearth.com/images/card-game/cards/1.png"},{name: "card2", src: "http://www.autumnearth.com/images/card-game/cards/2.png"}];
+
+Loader.preload(imagesToLoad,initCardGame, loadingProgress); 
 }
 
 function loadingProgress() {
@@ -177,8 +186,7 @@ function initCardGame() {
             gameContext = gameCanvas.getContext('2d');
             canvasWidth = gameCanvas.width;
             canvasHeight = gameCanvas.height;
-            cardWidth = 84;
-            cardHeight = 102;
+        
         }
 
         
@@ -186,14 +194,16 @@ function initCardGame() {
 cards = [];
 for (var i = 0; i < numberOfCardsInGame; i++) {
     cards[i] = {
-        x: (i*40),
+        x: (i*cardWidth),
         y: 20,
         originalOwner: 0,
+        hasBeenPlaced: false,
+        cardType: allCardsThisGame[i],
         currentOwner: (i>=(numberOfCardsInGame/2) ? 1 : 0),
         draw: function() {
             gameContext.fillStyle = playerColours[this.currentOwner];
             gameContext.fillRect(this.x, this.y, cardWidth, cardHeight);
-            gameContext.drawImage(img1, this.x, this.y);
+            gameContext.drawImage(cardImages[this.cardType], this.x, this.y);
         }
     }
 }
@@ -204,7 +214,12 @@ for (var i = 0; i < numberOfCardsInGame; i++) {
 
 
 // set up image references:
-img1 = Loader.getImage("img1");
+var numberOfCardTypes = imagesToLoad.length;
+cardImages = [];
+for (var i = 1; i <= numberOfCardTypes; i++) {
+cardImages[i] = Loader.getImage("card"+i);
+}
+
    
 
         gameLoop();

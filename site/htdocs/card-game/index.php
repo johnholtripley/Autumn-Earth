@@ -11,7 +11,7 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/header.php");
 <div class="column">
 
 <div class="canvasWrapper">
-<canvas id="cardGame">
+<canvas id="cardGame" width="1000" height="500">
   <img src="/images/card-game-no-canvas.jpg" alt="Card game">
 </canvas>
 </div>
