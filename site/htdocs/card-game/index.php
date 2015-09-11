@@ -48,7 +48,10 @@ $result = mysql_query($query) or die ("couldn't execute query");
 		extract($row); 
 	
 		if ($currentCards != "") {
-$playersCards = explode(",",$currentCards);
+
+// get integer values not strings:
+$playersCards = array_map('intval', explode(',', $currentCards));
+
 		}
 }
 }
