@@ -1,3 +1,35 @@
+
+
+
+
+
+
+// config ----------------------------------------------------
+
+framesPerSecond = 24;
+playerColours = ["#ffcc00","#ff00cc"];
+ 
+    cardWidth = 84;
+            cardHeight = 102;
+        
+            allCardsThisGame = player1Cards.concat(player2Cards);
+            numberOfCardsInGame = allCardsThisGame.length;
+
+
+
+
+
+// helper functions ----------------------------------------------------
+
+// http://stackoverflow.com/questions/9229645/remove-duplicates-from-javascript-array#answer-9229821
+function uniqueValues(a) {
+    var seen = {};
+    return a.filter(function(item) {
+        return seen.hasOwnProperty(item) ? false : (seen[item] = true);
+    });
+}
+
+
 // -----------------------------------------------------------
 // http://paulirish.com/2011/requestanimationframe-for-smart-animating/
 // http://my.opera.com/emoller/blog/2011/12/20/requestanimationframe-for-smart-er-animating
@@ -34,20 +66,6 @@
 
 
 
-
-// config ----------------------------------------------------
-
-framesPerSecond = 24;
-playerColours = ["#ffcc00","#ff00cc"];
- 
-    cardWidth = 84;
-            cardHeight = 102;
-            // player's cards:
-            var player1Cards = [1,2,1,1,1];
-             // NPC's cards:
-            var player2Cards = [1,1,2,2,2];
-            allCardsThisGame = player1Cards.concat(player2Cards);
-            numberOfCardsInGame = allCardsThisGame.length;
 
 // image loader -----------------------------------------------------------
 // http://stackoverflow.com/questions/16560397/image-not-drawn-on-canvas-until-user-clicks
@@ -164,12 +182,23 @@ window.Loader = (function () {
 
 if ((cutsTheMustard) && (supportsCanvas())) {
 
-// find non-duplicate card types to load
-// build imagesToLoad array dynamically for cards
+// find non-duplicate card types to load:
+allCardsToLoadThisGame = uniqueValues(allCardsThisGame);
+var numberOfCardTypes = allCardsToLoadThisGame.length;
+
+
+var imagesToLoad = [{name: "board", src: "http://www.autumnearth.com/images/card-game/board.jpg"}];
+
+// build imagesToLoad array dynamically for cards:
+for (var i = 1; i <= numberOfCardTypes; i++) {
+
+imagesToLoad.push({name: "card"+i, src: "http://www.autumnearth.com/images/card-game/cards/"+i+".png"});
+}
+
 
 // preload all images
 
-var imagesToLoad = [{name: "board", src: "http://www.autumnearth.com/images/card-game/board.jpg"},{name: "card1", src: "http://www.autumnearth.com/images/card-game/cards/1.png"},{name: "card2", src: "http://www.autumnearth.com/images/card-game/cards/2.png"}];
+
 
 Loader.preload(imagesToLoad,initCardGame, loadingProgress); 
 }
@@ -199,11 +228,15 @@ for (var i = 0; i < numberOfCardsInGame; i++) {
         originalOwner: 0,
         hasBeenPlaced: false,
         cardType: allCardsThisGame[i],
+        attack: allCardData[(allCardsThisGame[i])][0],
+        defense: allCardData[(allCardsThisGame[i])][1],
         currentOwner: (i>=(numberOfCardsInGame/2) ? 1 : 0),
         draw: function() {
             gameContext.fillStyle = playerColours[this.currentOwner];
             gameContext.fillRect(this.x, this.y, cardWidth, cardHeight);
-            gameContext.drawImage(cardImages[this.cardType], this.x, this.y);
+           gameContext.drawImage(cardImages[this.cardType], this.x, this.y);
+           
+     
         }
     }
 }
@@ -214,7 +247,7 @@ for (var i = 0; i < numberOfCardsInGame; i++) {
 
 
 // set up image references:
-var numberOfCardTypes = imagesToLoad.length;
+
 cardImages = [];
 for (var i = 1; i <= numberOfCardTypes; i++) {
 cardImages[i] = Loader.getImage("card"+i);

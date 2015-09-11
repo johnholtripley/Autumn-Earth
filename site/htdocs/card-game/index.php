@@ -10,15 +10,75 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/header.php");
 <div class="row">
 <div class="column">
 
+<?php
+// get all card data:
+
+$query = "select * from tblCards";
+$result = mysql_query($query) or die ("couldn't execute query");
+if (mysql_num_rows($result) > 0) {
+
+$cardDataNeeded = array(array(null,null,null));
+while ($row = mysql_fetch_array($result)) {
+
+extract($row);
+
+array_push($cardDataNeeded, array($cardAttack, $cardDefense, $cardName));
+
+
+
+	}
+}
+
+// check if logged in, get character's cards if so, otherwise use the default deck:
+$playersCards = array(1,2,1,1,1);
+
+if(isset($_SESSION['username'])) {
+$query = "select tblcharacters.currentCards as currentCards, tblcharacters.charId as charID
+from tblcharacters
+inner join tblacct on tblacct.currentCharID = tblcharacters.charID
+where tblacct.accountName='".$_SESSION['username']."'";
+$result = mysql_query($query) or die ("couldn't execute query");
+
+		$returned = mysql_num_rows($result);
+	
+	if ($returned > 0) {
+	
+	$row = mysql_fetch_array($result);
+	
+		extract($row); 
+	
+		if ($currentCards != "") {
+$playersCards = explode(",",$currentCards);
+		}
+}
+}
+
+$npcsCards = array(1,1,2,3,2);
+?>
+
+
+
+
+
+
+
 <div class="canvasWrapper">
 <canvas id="cardGame" width="1000" height="500">
   <img src="/images/card-game-no-canvas.jpg" alt="Card game">
 </canvas>
+<script>
+var allCardData = <?php echo json_encode($cardDataNeeded); ?>;
+var player1Cards = <?php echo json_encode($playersCards); ?>;
+var player2Cards = <?php echo json_encode($npcsCards); ?>;
+</script>
 </div>
 
 
 </div>
 </div>
+
+
+
 
 <?php
 $additionalAssets = '<script src="card-game.js"></script>'."\n";
