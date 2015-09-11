@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 27, 2015 at 10:11 AM
+-- Generation Time: Sep 11, 2015 at 02:16 PM
 -- Server version: 5.6.24
 -- PHP Version: 5.6.8
 
@@ -159,6 +159,28 @@ INSERT INTO `tblauctionitems` (`auctionID`, `startTime`, `endTime`, `sellerID`, 
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `tblcards`
+--
+
+CREATE TABLE IF NOT EXISTS `tblcards` (
+  `cardID` int(11) NOT NULL,
+  `cardAttack` int(2) NOT NULL,
+  `cardDefense` int(2) NOT NULL,
+  `cardName` varchar(255) COLLATE utf8_bin NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+--
+-- Dumping data for table `tblcards`
+--
+
+INSERT INTO `tblcards` (`cardID`, `cardAttack`, `cardDefense`, `cardName`) VALUES
+(1, 5, 10, 'Bomb'),
+(2, 5, 10, 'Chocobo'),
+(3, 5, 10, 'Mog');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `tblcharacters`
 --
 
@@ -173,6 +195,7 @@ CREATE TABLE IF NOT EXISTS `tblcharacters` (
   `petstate` longtext,
   `currentbag` varchar(4) DEFAULT NULL,
   `inventorystate` longtext,
+  `currentCards` longtext NOT NULL,
   `money` varchar(12) DEFAULT NULL,
   `house` int(11) NOT NULL DEFAULT '0',
   `minutesplayed` int(11) unsigned DEFAULT NULL,
@@ -185,24 +208,24 @@ CREATE TABLE IF NOT EXISTS `tblcharacters` (
 -- Dumping data for table `tblcharacters`
 --
 
-INSERT INTO `tblcharacters` (`charID`, `accountID`, `charName`, `location`, `gamestate`, `journalstate`, `queststate`, `petstate`, `currentbag`, `inventorystate`, `money`, `house`, `minutesplayed`, `guildID`, `guildmembersince`, `404MagicSquareSum`) VALUES
-(1, 5, 'Angel', 1, '&amp;playsounds=true&amp;herox=23&amp;heroy=9&amp;dowseskill=0&amp;famskill=70&amp;currentmapnumber=1&amp;heightgained=0', 'travel to the coast', '0/0/0/0/0/0', '2,0,100,24,7,-1,0,0,0,0,pet,15,12,13', '16', '32,4/2,8/9,1/1,2/10,3/33,1', '299', 0, 1125, 0, '2007-03-30', '9|17|56'),
-(2, 5, 'Eleaddai', 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 200, 0, '2007-03-30', '-1'),
-(3, 5, 'Alice', 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 200, 0, '2007-03-30', '-1'),
-(4, 23, 'Eric', 3, NULL, NULL, NULL, NULL, NULL, NULL, '501', 0, 200, 0, '2007-03-30', '-1'),
-(5, 13, 'Adminchar1', 1, NULL, NULL, NULL, NULL, NULL, NULL, '0', 0, 200, 0, '2007-03-30', '-1'),
-(6, 13, 'Adminchar2', 3, NULL, NULL, NULL, NULL, NULL, NULL, '20', 0, 200, 0, '2007-03-30', '-1'),
-(7, 14, 'modchar1', 3, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 200, 0, '2007-03-30', '-1'),
-(8, 14, 'modchar2', 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 200, 0, '2007-03-30', '-1'),
-(9, 15, 'johnchar1', 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 200, 0, '2007-03-30', '-1'),
-(10, 18, 'newmemberchar1', 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 200, 0, '2007-03-30', '-1'),
-(11, 18, 'newmemberchar2', 3, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 200, 0, '2007-03-30', '-1'),
-(12, 13, 'Angel', 3, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 200, 0, '2007-03-30', '-1'),
-(13, 14, 'Angel', 3, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 200, 0, '2007-03-30', '-1'),
-(14, 39, 'eleaddaiMeow', 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 200, 0, '2015-06-30', '-1'),
-(15, 39, 'dilly20', 4, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 200, 0, '2015-06-30', '10|38|60'),
-(16, 39, 'dilly21', 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 200, 0, '2015-06-30', '-1'),
-(17, 50, 'dilly22', 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 200, 0, '2015-06-30', '-1');
+INSERT INTO `tblcharacters` (`charID`, `accountID`, `charName`, `location`, `gamestate`, `journalstate`, `queststate`, `petstate`, `currentbag`, `inventorystate`, `currentCards`, `money`, `house`, `minutesplayed`, `guildID`, `guildmembersince`, `404MagicSquareSum`) VALUES
+(1, 5, 'Angel', 1, '&amp;playsounds=true&amp;herox=23&amp;heroy=9&amp;dowseskill=0&amp;famskill=70&amp;currentmapnumber=1&amp;heightgained=0', 'travel to the coast', '0/0/0/0/0/0', '2,0,100,24,7,-1,0,0,0,0,pet,15,12,13', '16', '32,4/2,8/9,1/1,2/10,3/33,1', '', '299', 0, 1125, 0, '2007-03-30', '9|17|56'),
+(2, 5, 'Eleaddai', 1, NULL, NULL, NULL, NULL, NULL, NULL, '', NULL, 0, 200, 0, '2007-03-30', '-1'),
+(3, 5, 'Alice', 2, NULL, NULL, NULL, NULL, NULL, NULL, '', NULL, 0, 200, 0, '2007-03-30', '-1'),
+(4, 23, 'Eric', 3, NULL, NULL, NULL, NULL, NULL, NULL, '', '501', 0, 200, 0, '2007-03-30', '-1'),
+(5, 13, 'Adminchar1', 1, NULL, NULL, NULL, NULL, NULL, NULL, '', '0', 0, 200, 0, '2007-03-30', '-1'),
+(6, 13, 'Adminchar2', 3, NULL, NULL, NULL, NULL, NULL, NULL, '', '20', 0, 200, 0, '2007-03-30', '-1'),
+(7, 14, 'modchar1', 3, NULL, NULL, NULL, NULL, NULL, NULL, '', NULL, 0, 200, 0, '2007-03-30', '-1'),
+(8, 14, 'modchar2', 2, NULL, NULL, NULL, NULL, NULL, NULL, '', NULL, 0, 200, 0, '2007-03-30', '-1'),
+(9, 15, 'johnchar1', 1, NULL, NULL, NULL, NULL, NULL, NULL, '', NULL, 0, 200, 0, '2007-03-30', '-1'),
+(10, 18, 'newmemberchar1', 1, NULL, NULL, NULL, NULL, NULL, NULL, '', NULL, 0, 200, 0, '2007-03-30', '-1'),
+(11, 18, 'newmemberchar2', 3, NULL, NULL, NULL, NULL, NULL, NULL, '', NULL, 0, 200, 0, '2007-03-30', '-1'),
+(12, 13, 'Angel', 3, NULL, NULL, NULL, NULL, NULL, NULL, '', NULL, 0, 200, 0, '2007-03-30', '-1'),
+(13, 14, 'Angel', 3, NULL, NULL, NULL, NULL, NULL, NULL, '', NULL, 0, 200, 0, '2007-03-30', '-1'),
+(14, 39, 'eleaddaiMeow', 1, NULL, NULL, NULL, NULL, NULL, NULL, '', NULL, 0, 200, 0, '2015-06-30', '-1'),
+(15, 39, 'dilly20', 4, NULL, NULL, NULL, NULL, NULL, NULL, '1,2,3,1,2', NULL, 0, 200, 0, '2015-06-30', '10|38|60'),
+(16, 39, 'dilly21', 1, NULL, NULL, NULL, NULL, NULL, NULL, '', NULL, 0, 200, 0, '2015-06-30', '-1'),
+(17, 50, 'dilly22', 1, NULL, NULL, NULL, NULL, NULL, NULL, '', NULL, 0, 200, 0, '2015-06-30', '-1');
 
 -- --------------------------------------------------------
 
@@ -252,8 +275,8 @@ CREATE TABLE IF NOT EXISTS `tblcontracts` (
 --
 
 INSERT INTO `tblcontracts` (`contractID`, `contractStart`, `contractEnd`, `characterID`, `itemID`, `quantity`, `contractType`, `startLocation`, `endLocation`) VALUES
-(1, '2015-07-01 00:00:00', '2015-10-22 00:00:00', 15, 6, 6, 1, 1, 4),
-(2, '2015-07-09 00:28:00', '2015-10-30 14:25:00', 8, 16, 1, 1, 4, 2),
+(1, '2014-07-01 00:00:00', '2014-10-22 00:00:00', 15, 6, 6, 1, 1, 4),
+(2, '2015-07-09 00:28:00', '2015-08-27 19:00:00', 8, 16, 1, 1, 4, 2),
 (3, '2015-07-09 00:28:00', '2015-10-30 00:00:00', 8, 11, 4, 2, 3, 3);
 
 -- --------------------------------------------------------
@@ -352,9 +375,9 @@ CREATE TABLE IF NOT EXISTS `tblforums` (
 --
 
 INSERT INTO `tblforums` (`forumID`, `title`, `cleanURL`, `description`, `imagePath`, `status`, `sticky`) VALUES
-(1, 'Bug Reports', 'bug-reports', 'Found a bug? Let us know about it here.', '/assets/forum/bugforum.gif', '2', '1'),
-(2, 'Suggestions', 'suggestions', 'Thought of an improvement? Let us know what features you''d like to see in the next update.', '/assets/forum/suggestforum.gif', '2', '1'),
-(3, 'General Discussion', 'general-discussion', 'Want to meet other players? find and chat to them here.', '/assets/forum/generalforum.gif', '2', '1');
+(1, 'Bug Reports', 'bug-reports', 'Found a bug? Let us know about it here.', '/images/forum/bugforum.gif', '2', '1'),
+(2, 'Suggestions', 'suggestions', 'Thought of an improvement? Let us know what features you''d like to see in the next update.', '/images/forum/suggestforum.gif', '2', '1'),
+(3, 'General Discussion', 'general-discussion', 'Want to meet other players? find and chat to them here.', '/images/forum/generalforum.gif', '2', '1');
 
 -- --------------------------------------------------------
 
@@ -712,7 +735,7 @@ CREATE TABLE IF NOT EXISTS `tblnews` (
   `status` char(1) DEFAULT NULL,
   `timeAdded` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `postedBy` varchar(50) DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblnews`
@@ -723,7 +746,8 @@ INSERT INTO `tblnews` (`newsID`, `newsTitle`, `cleanURL`, `newsSynopsis`, `newsC
 (2, 'New Year spectacular', 'new-year-spectacular', 'Fireworks and plenty of festive cheer', 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.</p><p>\r\nLorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum <a href="/" title="click to view">dolore eu feugiat</a> nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.</p><p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.</p><h3>Lorem ipsum</h3><p>"Dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh", euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.</p>', '1', '2015-07-09 10:19:48', 'The Mayor'),
 (3, 'more seasonal joy', 'more-seasonal-joy', 'brace yourselves!', 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. [CONTINUE]Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.</p><p>\r\nLorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum <a href="/" title="click to view">dolore eu feugiat</a> nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.</p><p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.</p><h3>Lorem ipsum</h3><p>"Dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh", euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.</p>', '1', '2015-07-09 10:19:54', NULL),
 (4, 'April Fools has been and gone', 'april-fools-has-been-and-gone', 'well, we missed that one...', 'april fools has been &quot;and&quot; gone again &raquo; arrow', '1', '2015-07-22 12:45:53', NULL),
-(5, 'Dragon flare', 'dragon-flare', 'Look up - in the sky', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque iaculis non elit a tempor. Nam commodo metus eget libero faucibus euismod. Vivamus interdum porta ante non finibus. Nam velit nisi, consectetur et tempor vitae, varius eu tortor. Duis ac eleifend libero, eu sagittis purus. Dragon nunc aliquam ut sapien sit amet molestie. Etiam pellentesque tristique vestibulum. Maecenas lacinia, arcu eu hendrerit eleifend, purus nulla ornare turpis, et bibendum sapien lectus non nulla. Ut facilisis lobortis nisi, id faucibus dolor molestie vel. Aliquam a mi at ligula accumsan pellentesque. Etiam pulvinar mauris ac justo semper efficitur. Ut lobortis egestas laoreet. Curabitur dui ex, placerat id nisl quis, malesuada consectetur lectus. Duis tincidunt congue commodo. In hac habitasse platea dictumst. ', '1', '2017-08-12 12:45:53', NULL);
+(5, 'Dragon flare', 'dragon-flare', 'Look up - in the sky', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque iaculis non elit a tempor. Nam commodo metus eget libero faucibus euismod. Vivamus interdum porta ante non finibus. Nam velit nisi, consectetur et tempor vitae, varius eu tortor. Duis ac eleifend libero, eu sagittis purus. Dragon nunc aliquam ut sapien sit amet molestie. Etiam pellentesque tristique vestibulum. Maecenas lacinia, arcu eu hendrerit eleifend, purus nulla ornare turpis, et bibendum sapien lectus non nulla. Ut facilisis lobortis nisi, id faucibus dolor molestie vel. Aliquam a mi at ligula accumsan pellentesque. Etiam pulvinar mauris ac justo semper efficitur. Ut lobortis egestas laoreet. Curabitur dui ex, placerat id nisl quis, malesuada consectetur lectus. Duis tincidunt congue commodo. In hac habitasse platea dictumst. ', '1', '2015-08-12 12:45:53', NULL),
+(6, 'Down the rabbit hole', 'down-the-rabbit-hole', 'Down, down', '<p>Alice was beginning to get very tired of sitting by her sister on the bank, and of having nothing to do: once or twice she had peeped into the book her sister was reading, but it had no pictures or conversations in it, &#8220;and what is the use of a book,&#8221; thought Alice &#8220;without pictures or conversation?&#8221;</p>\n<p>So she was considering in her own mind (as well as she could, for the hot day made her feel very sleepy and stupid), whether the pleasure of <a href="#">making a daisy-chain</a> would be worth the trouble of getting up and picking the daisies, when suddenly a White Rabbit with pink eyes ran close by her.</p>\n<p>There was nothing so <em>very</em> remarkable in that; nor did Alice think it so <em>very</em> much out of the way to hear the Rabbit say to itself, &#8220;Oh dear! Oh dear! I shall be late!&#8221; (when she thought it over afterwards, it occurred to her that she ought to have wondered at this, but at the time it all seemed quite natural); but when the Rabbit actually <em>took a watch out of its waistcoat-pocket</em>, and looked at it, and then hurried on, Alice started to her feet, for <a href="#">it flashed across her</a> mind that she had never before seen a rabbit with either a waistcoat-pocket, or a watch to take out of it, and burning with curiosity, she ran across the field after it, and fortunately was just in time to see it pop down a large rabbit-hole under the hedge.</p>\n<p>In another moment down went Alice after it, never once considering how in the world she was to get out again.</p>\n<h3>And then</h3>\n<p>The rabbit-hole went straight on like a tunnel for some way, and then dipped suddenly down, so suddenly that Alice had not a moment to think about stopping herself before she found herself falling down a very deep well.</p>\n<p>Either the well was very deep, or she fell very slowly, for she had plenty of time as she went down to look about her and to wonder what was going to happen next. First, she tried to look down and make out what she was coming to, but it was too dark to see anything; then she looked at the sides of the well, and noticed that they were filled with cupboards and book-shelves; here and there she saw maps and pictures hung upon pegs. She took down a jar from one of the shelves as she passed; it was labelled &#8220;<a href="#">ORANGE MARMALADE</a>&#8220;, but to her great disappointment it was empty: she did not like to drop the jar for fear of killing somebody, so managed to put it into one of the cupboards as she fell past it.</p>\n<p>&#8220;Well!&#8221; thought Alice to herself, &#8220;after such a fall as this, I shall think nothing of tumbling down stairs! How brave they&#8217;ll all think me at home! Why, I wouldn&#8217;t say anything about it, even if I fell off the top of the house!&#8221; (Which was very likely true.)</p>\n<p>Down, down, down. Would the fall <em>never</em> come to an end! &#8220;I wonder how many miles I&#8217;ve fallen by this time?&#8221; she said aloud. &#8220;I must be getting somewhere near the centre of the earth. Let me see: that would be four thousand miles down, I think &ndash; &#8221; (for, you see, Alice had learnt several things of this sort in her lessons in the schoolroom, and though this was not a <em>very</em> good opportunity for showing off her knowledge, as there was no one to listen to her, still it was good practice to say it over) &#8221; &ndash; yes, that&#8217;s about the right distance &ndash; but then I wonder what Latitude or Longitude I&#8217;ve got to?&#8221; (Alice had no idea what Latitude was, or Longitude either, but thought they were nice grand words to say.)</p>\n<h3>After that</h3>\n<p>Presently she began again. &#8220;I wonder if I shall fall right <em>through</em> the earth! How funny it&#8221;ll seem to come out among the people that walk with their heads downward! The Antipathies, I think &ndash; &#8221; (she was rather glad there <em>was</em> no one listening, this time, as it didn&#8217;t sound at all the right word) &#8221; &ndash; but I shall have to ask them what the name of the country is, you know. Please, Ma&#8217;am, is this New Zealand or Australia?&#8221; (and she tried to curtsey as she spoke &ndash; fancy <em>curtseying</em> as you&#8221;re falling through the air! Do you think you could manage it?) &#8220;And what an <a href="#">ignorant little girl</a> she&#8221;ll think me for asking! No, it&#8217;ll never do to ask: perhaps I shall see it written up somewhere.&#8221;</p>\n<p>Down, down, down. There was nothing else to do, so Alice soon began talking again. &#8220;Dinah&#8217;ll miss me very much to-night, I should think!&#8221; (Dinah was the cat.) &#8220;I hope they&#8217;ll remember her saucer of milk at tea-time. Dinah my dear! I wish you were down here with me! There are no mice in the air, I&#8217;m afraid, but you might catch a bat, and that&#8217;s very like a mouse, you know. But do cats eat bats, I wonder?&#8221; And here Alice began to get rather sleepy, and went on saying to herself, in a dreamy sort of way, &#8220;Do cats eat bats? Do cats eat bats?&#8221; and sometimes, &#8220;Do bats eat cats?&#8221; for, you see, as she couldn&#8217;t answer either question, it didn&#8217;t much matter which way she put it. She felt that she was dozing off, and had just begun to dream that she was walking hand in hand with Dinah, and saying to her very earnestly, &#8220;Now, Dinah, tell me the truth: did you ever eat a bat?&#8221; when suddenly, thump! thump! down she came upon a heap of sticks and dry leaves, and the fall was over.</p>\n<p>Alice was not a bit hurt, and she jumped up on to her feet in a moment: she looked up, but it was all dark overhead; before her was another long passage, and the White Rabbit was still in sight, hurrying down it. There was not a moment to be lost: away went Alice like the wind, and was just in time to hear it say, as it turned a corner, &#8220;Oh my ears and whiskers, how late it&#8217;s getting!&#8221; She was close behind it when she turned the corner, but the Rabbit was no longer to be seen: she found herself in a long, low hall, which was lit up by a row of lamps hanging from the roof.</p>\n<p>There were doors all round the hall, but they were all locked; and when Alice had been all the way down one side and up the other, trying every door, she walked sadly down the middle, wondering how she was ever to get out again.</p>\n<p>Suddenly she came upon a little three-legged table, all made of solid glass; there was nothing on it except a tiny golden key, and Alice&#8217;s first thought was that it might belong to one of the doors of the hall; but, alas! either the locks were too large, or the key was too small, but at any rate it would not open any of them. However, on the second time round, she came upon a low curtain she had not noticed before, and behind it was a little door about fifteen inches high: she tried the little golden key in the lock, and to her great delight it fitted!</p>', '1', '2015-09-07 12:23:36', NULL);
 
 -- --------------------------------------------------------
 
@@ -866,21 +890,21 @@ CREATE TABLE IF NOT EXISTS `tblsavedsearches` (
   `searchID` int(11) NOT NULL,
   `searchTerm` varchar(255) DEFAULT NULL,
   `searchCount` int(11) DEFAULT NULL
-) ENGINE=MyISAM AUTO_INCREMENT=96 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=102 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblsavedsearches`
 --
 
 INSERT INTO `tblsavedsearches` (`searchID`, `searchTerm`, `searchCount`) VALUES
-(1, 'crafting', 55),
-(2, 'feeding pets', 55),
-(3, 'image', 86),
-(4, 'autumn', 51),
+(1, 'crafting', 61),
+(2, 'feeding pets', 61),
+(3, 'image', 92),
+(4, 'autumn', 57),
 (5, 'autumn earth', 2),
 (6, 'character development', 0),
 (11, 'pte development', 0),
-(8, 'pet development', 51),
+(8, 'pet development', 57),
 (10, 'pte development', 0),
 (12, 'pet developmetn', 0),
 (13, 'carfting', 0),
@@ -909,14 +933,14 @@ INSERT INTO `tblsavedsearches` (`searchID`, `searchTerm`, `searchCount`) VALUES
 (36, 'feed-my-pets', 0),
 (37, 'feed my lovely pet', 0),
 (38, 'feed-my-lovely-pet', 0),
-(39, 'images', 51),
+(39, 'images', 57),
 (40, 'feeding my pets', 0),
 (41, 'feeding-my-pets', 0),
 (42, 'feeding-pets', 0),
 (43, 'feeding-pets', 0),
-(44, 'how does that work', 55),
-(45, 'does that work', 51),
-(46, 'dragon', 105),
+(44, 'how does that work', 61),
+(45, 'does that work', 57),
+(46, 'dragon', 111),
 (47, 'autumn earth', 0),
 (48, 'autumn earth', 0),
 (49, 'autumn earth', 0),
@@ -965,7 +989,13 @@ INSERT INTO `tblsavedsearches` (`searchID`, `searchTerm`, `searchCount`) VALUES
 (92, 'autumn earth', 0),
 (93, 'autumn earth', 0),
 (94, 'autumn earth', 0),
-(95, 'autumn earth', 0);
+(95, 'autumn earth', 0),
+(96, 'autumn earth', 0),
+(97, 'autumn earth', 0),
+(98, 'autumn earth', 0),
+(99, 'autumn earth', 0),
+(100, 'autumn earth', 0),
+(101, 'autumn earth', 0);
 
 -- --------------------------------------------------------
 
@@ -1089,6 +1119,12 @@ ALTER TABLE `tblauctionbids`
 --
 ALTER TABLE `tblauctionitems`
   ADD PRIMARY KEY (`auctionID`);
+
+--
+-- Indexes for table `tblcards`
+--
+ALTER TABLE `tblcards`
+  ADD PRIMARY KEY (`cardID`);
 
 --
 -- Indexes for table `tblcharacters`
@@ -1236,6 +1272,11 @@ ALTER TABLE `tblauctionbids`
 ALTER TABLE `tblauctionitems`
   MODIFY `auctionID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=10;
 --
+-- AUTO_INCREMENT for table `tblcards`
+--
+ALTER TABLE `tblcards`
+  MODIFY `cardID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
+--
 -- AUTO_INCREMENT for table `tblcharacters`
 --
 ALTER TABLE `tblcharacters`
@@ -1319,7 +1360,7 @@ ALTER TABLE `tblmainpollchoices`
 -- AUTO_INCREMENT for table `tblnews`
 --
 ALTER TABLE `tblnews`
-  MODIFY `newsID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=6;
+  MODIFY `newsID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=7;
 --
 -- AUTO_INCREMENT for table `tblposts`
 --
@@ -1329,7 +1370,7 @@ ALTER TABLE `tblposts`
 -- AUTO_INCREMENT for table `tblsavedsearches`
 --
 ALTER TABLE `tblsavedsearches`
-  MODIFY `searchID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=96;
+  MODIFY `searchID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=102;
 --
 -- AUTO_INCREMENT for table `tblsubscribedthreads`
 --

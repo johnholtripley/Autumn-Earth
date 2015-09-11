@@ -29,6 +29,8 @@ RewriteRule    ^forum/([A-Za-z0-9-]+)/([A-Za-z0-9-]+)/?$     forum/viewthread.ph
 RewriteRule    ^search/([A-Za-z0-9-]+)/?$     search/index.php?searchcleaned=1&searchterms=$1 [NC,L]
 RewriteRule    ^sitemap.xml     sitemap.php [NC,L]
 RewriteRule    ^account/join/     account/CreateAccount.php      [NC,L]
+RewriteRule    ^card-game/display/     card-game/display-all-cards.php      [NC,L]
+RewriteRule    ^card-game/learn/     card-game/how-to-play.php      [NC,L]
 
 
 

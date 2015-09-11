@@ -1,5 +1,5 @@
 <?php
-$title="Autumn Earth News";
+
 include($_SERVER['DOCUMENT_ROOT']."/includes/session.php");
 include($_SERVER['DOCUMENT_ROOT']."/includes/signalnoise.php");
 include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
@@ -82,5 +82,6 @@ var player2Cards = <?php echo json_encode($npcsCards); ?>;
 
 <?php
 $additionalAssets = '<script src="card-game.js"></script>'."\n";
+include($_SERVER['DOCUMENT_ROOT']."/includes/card-sub-nav.php");
 include($_SERVER['DOCUMENT_ROOT']."/includes/footer.php");
 ?>

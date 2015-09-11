@@ -203,9 +203,14 @@ z-index: 2;
 }
 
 
-.inventorySlot, .characterPortrait {
+.inventorySlot, .characterPortrait, .cardFront {
     width: 64px;
     height: 64px;
+}
+
+#cardList img {
+width: 84px;
+            height: 102px;
 }
 
 .forumIcon {
