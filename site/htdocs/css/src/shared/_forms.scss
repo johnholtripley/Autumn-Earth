@@ -108,7 +108,7 @@ div:not(#foo)>#pageContent input[type='radio']+label span {clear:none;display:in
 
 div:not(#foo)>#pageContent input[type='radio']+label span:before {
     content: " ";width:80%;height:80%;
-    background:$titleColor;
+    background:$titleColour;
     display:block;
  -webkit-border-radius: 1em;
   -moz-border-radius: 1em;
@@ -156,7 +156,7 @@ div:not(#foo)>#pageContent input[type='checkbox']+label span {clear:none;display
 
 div:not(#foo)>#pageContent input[type='checkbox']+label span:before {
     content: '\2713';
-    color: $titleColor;
+    color: $titleColour;
     line-height: 1;
     text-align: center;
   opacity: 0;
@@ -181,4 +181,46 @@ opacity: 1;
     -webkit-transform: scale(1); 
     transform: scale(1);
 }
+}
+
+
+
+// file inputs --------------------------------
+// http://tympanus.net/codrops/2015/09/15/styling-customizing-file-inputs-smart-way/
+.js {
+.fileInput {
+    // hide the input visually but keeping it visible for the browser:
+    width: 0.1px;
+    height: 0.1px;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    z-index: -1;
+}
+
+.fileInputLabel {
+    font-size: 1.25em;
+
+    color: #fff;
+    cursor: pointer;
+    background: #000;
+    display: inline-block;
+}
+
+.fileInput:focus + label,
+.fileInputLabel:hover {
+    background-color: $titleColour
+;
+}
+
+.fileInput:focus + label {
+    // for keyboard browsing:
+    outline: 1px dotted #fff;
+    outline: -webkit-focus-ring-color auto 5px;
+}
+
+.inputfile + label span {
+    pointer-events: none;
+}
+
 }
