@@ -326,13 +326,6 @@ echo'<input type="radio" name="htmlemail" id="htmlemail1" value="1" /><label for
 <br /><br />
 
 
-<h1>test file input:</h1>
-<form>
-	<fieldset>
-		<input type="file" name="file" id="file" class="fileInput" data-multiple-caption="{count} files selected" multiple>
-<label for="file" class="fileInputLabel"><span>Choose a file</span></label>
-	</fieldset>
-</form>
 
 
 <input type='submit' name='createbutton' value='Create Account' />

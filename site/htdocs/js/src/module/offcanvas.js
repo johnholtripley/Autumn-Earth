@@ -1,4 +1,4 @@
-if(cutsTheMustard) {
+if(cutsTheMustard && document.getElementById("menuToggle")) {
 ae.navigationIsRevealed = false;
 
 // toggle with the menu button:
