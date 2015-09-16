@@ -6,9 +6,17 @@
 }
 
 .row .row {
-  width: (100%+$gutter);
-  margin-left: 0-($gutter/2);
-  margin-right: 0-($gutter/2);
+  width: (100%+$gutter*2);
+  margin-left: 0-($gutter);
+  margin-right: 0-($gutter);
+
+// nested columns:
+.column, .columns {
+  @include border-box;
+  padding-left: ($gutter);
+  padding-right: ($gutter);
+}
+
 }
 
 @include mq($widest) {
@@ -27,6 +35,10 @@
   float: left;
   min-height: 1px;
 }
+
+
+
+
 
 .centred {
   float: none;
