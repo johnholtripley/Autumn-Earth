@@ -41,7 +41,7 @@
 			"attrs": [],
 			"properties": {
 				"id": 33,
-				"order": 5,
+				"order": 2,
 				"prevSize": 20,
 				"code": 9662,
 				"name": "chevron-down"
@@ -49,6 +49,33 @@
 			"setIdx": 4,
 			"setId": 5,
 			"iconIdx": 33
+		},
+		{
+			"icon": {
+				"paths": [
+					"M927.936 272.992l-68.288-68.288c-12.608-12.576-32.96-12.576-45.536 0l-409.44 409.44-194.752-196.16c-12.576-12.576-32.928-12.576-45.536 0l-68.288 68.288c-12.576 12.608-12.576 32.96 0 45.536l285.568 287.488c12.576 12.576 32.96 12.576 45.536 0l500.736-500.768c12.576-12.544 12.576-32.96 0-45.536z"
+				],
+				"attrs": [],
+				"isMulticolor": false,
+				"tags": [
+					"checkmark",
+					"tick",
+					"approve",
+					"submit"
+				],
+				"grid": 32
+			},
+			"attrs": [],
+			"properties": {
+				"id": 95,
+				"order": 3,
+				"prevSize": 32,
+				"code": 10003,
+				"name": "checkmark"
+			},
+			"setIdx": 3,
+			"setId": 6,
+			"iconIdx": 95
 		}
 	],
 	"height": 1024,

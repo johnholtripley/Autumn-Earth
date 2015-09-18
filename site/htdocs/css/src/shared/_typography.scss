@@ -36,12 +36,14 @@ h6 a {
 }
 
 
+body, input, select, .selectWrapper, textarea {
+   font-family: $bodyFontLoaded; 
+}
 
 
-
-p, ol, ul, dl, button, input, select, .selectWrapper, textarea {
+p, ol, ul, dl, button, input, select, .selectWrapper, textarea, label {
     // load web font if JS is disabled:
-    font-family: $bodyFontLoaded;
+
     @include pxRem("font-size", 14);
     @include pxRem("line-height", 21);
   @include pxRem("margin", 0 0 12 0);
@@ -55,12 +57,12 @@ p, ol, ul, dl {
     color: $baseColour;
 }
 
-.js p, .js ol, .js ul, .js dl, .js button, .js input, .js select, .js .selectWrapper, .js textarea {
+.js body, .js input, .js select, .js .selectWrapper, .js textarea {
     // delay using the web font if JS is enabled:
-    font-family: $bodyFont;
+ //   font-family: $bodyFont;
 }
 
-.fontsLoaded p, .fontsLoaded ol, .fontsLoaded ul, .fontsLoaded dl, .fontsLoaded button, .fontsLoaded input, .fontsLoaded select, .fontsLoaded .selectWrapper, .fontsLoaded textarea {
+.fontsLoaded body, .fontsLoaded input, .fontsLoaded select, .fontsLoaded .selectWrapper, .fontsLoaded textarea {
     // web font loaded and JS enabled:
     font-family: $bodyFontLoaded;
     }

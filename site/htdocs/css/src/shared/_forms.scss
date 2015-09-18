@@ -155,6 +155,7 @@ div:not(#foo)>#pageContent input[type='checkbox']+label span {clear:none;display
 
 div:not(#foo)>#pageContent input[type='checkbox']+label span:before {
     content: '\2713';
+    @extend .icon;
     color: $titleColour;
     line-height: 1;
     text-align: center;
@@ -198,7 +199,7 @@ opacity: 1;
 }
 
 .fileInputLabel {
-    font-size: 1.25em;
+
 
     color: #fff;
     cursor: pointer;
