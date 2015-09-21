@@ -30,7 +30,7 @@ array_push($cardDataNeeded, array($cardAttack, $cardDefense, $cardName));
 }
 
 // check if logged in, get character's cards if so, otherwise use the default deck:
-$playersCards = array(1,2,1,1,1);
+$playersCards = array(1,2,1,1,1,2,1);
 
 if(isset($_SESSION['username'])) {
 $query = "select tblcharacters.currentCards as currentCards, tblcharacters.charId as charID
@@ -56,7 +56,7 @@ $playersCards = array_map('intval', explode(',', $currentCards));
 }
 }
 
-$npcsCards = array(1,1,2,3,2);
+$npcsCards = array(1,1,2,3,2,1,2);
 ?>
 
 
@@ -66,7 +66,8 @@ $npcsCards = array(1,1,2,3,2);
 
 
 <div class="canvasWrapper">
-<canvas id="cardGame" width="1000" height="500">
+	<!-- canvas initial width and height dervied from the grid multiplied by the card size: /-->
+<canvas id="cardGame" width="1008" height="612">
   <img src="/images/card-game-no-canvas.jpg" alt="Card game">
 </canvas>
 <script>

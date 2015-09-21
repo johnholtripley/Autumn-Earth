@@ -37,12 +37,10 @@ button, input, select, .selectWrapper, textarea {
     -moz-appearance: window;
     text-indent: 0.01px;
     text-overflow: "";
-    /* Magic font size number to prevent iOS text zoom */
-    
-    font-size: 16px;
+ 
     background: none;
     border: none;
-    color: #444;
+   
     outline: none;
     /* Padding works surpringly well */
     

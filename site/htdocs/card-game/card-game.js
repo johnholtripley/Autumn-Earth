@@ -10,12 +10,26 @@ framesPerSecond = 24;
 playerColours = ["#ffcc00","#ff00cc"];
  
     cardWidth = 84;
-            cardHeight = 102;
+cardHeight = 102;
         
             allCardsThisGame = player1Cards.concat(player2Cards);
             numberOfCardsInGame = allCardsThisGame.length;
 
 
+// 'x' = void space
+// '#' = player 1 start position
+// '@' = player 2 start position
+board = [
+['#','#','x','x','x',' ',' ','x','x','x','x','x'],
+['#','#','x','x',' ',' ',' ',' ','x','x','@','@'],
+['#','#','x',' ',' ',' ',' ',' ',' ','x','@','@'],
+['#','#','x',' ',' ',' ',' ',' ',' ','x','@','@'],
+['#','#','x','x',' ',' ',' ',' ','x','x','@','@'],
+['x','x','x','x','x',' ',' ','x','x','x','@','@']
+];
+
+boardWidth = board[0].length;
+boardHeight = board.length;
 
 
 
@@ -196,6 +210,17 @@ imagesToLoad.push({name: "card"+i, src: "http://www.autumnearth.com/images/card-
 }
 
 
+
+// click handler:
+document.getElementById("cardGame").addEventListener("click", function(e) {
+    canvasClick(e);
+    if (e) {
+        e.preventDefault();
+    }
+}, false);
+
+
+
 // preload all images
 
 
@@ -209,7 +234,20 @@ function loadingProgress() {
 }
 
 function initCardGame() {
-    
+    //get position of canvas - needs to change on reSize ###############
+var canvasElemCoords = document.getElementById("cardGame").getBoundingClientRect();
+
+ outerCanvasLeft = canvasElemCoords.left;
+    outerCanvasTop = canvasElemCoords.top;
+
+ outerCanvasWidth = canvasElemCoords.right - canvasElemCoords.left;
+                outerCanvasHeight = canvasElemCoords.bottom - canvasElemCoords.top;
+
+
+    // ----------
+
+
+
         gameCanvas = document.getElementById("cardGame");
         if (gameCanvas.getContext) {
             gameContext = gameCanvas.getContext('2d');
@@ -224,7 +262,9 @@ cards = [];
 for (var i = 0; i < numberOfCardsInGame; i++) {
     cards[i] = {
         x: (i*cardWidth),
-        y: 20,
+        y: 0,
+        boardX: i,
+        boardY: 0,
         originalOwner: 0,
         hasBeenPlaced: false,
         cardType: allCardsThisGame[i],
@@ -239,6 +279,7 @@ for (var i = 0; i < numberOfCardsInGame; i++) {
      
         }
     }
+
 }
 
 
@@ -272,6 +313,26 @@ function draw() {
     }
   
   
+}
+
+function canvasClick(e) {
+
+var gridX = Math.floor(((e.pageX - outerCanvasLeft)/outerCanvasWidth)*boardWidth);
+var gridY = Math.floor(((e.pageY - outerCanvasTop)/outerCanvasHeight)*boardHeight);
+
+   // console.log("clicked on"+clickPositionX+", "+clickPositionY+" relative: " +relativeClickX+", "+relativeClickY+" canvas: "+outerCanvasWidth+", "+outerCanvasHeight);
+
+// loop through cards and find if any at this position:
+for (var i = 0; i < numberOfCardsInGame; i++) {
+if(cards[i].boardX == gridX) {
+if(cards[i].boardY == gridY) {
+    // found it:
+    cards[i].currentOwner = Math.abs(cards[i].currentOwner-1);
+    break;
+}
+}
+    }
+
 }
 
 function gameLoop() {
