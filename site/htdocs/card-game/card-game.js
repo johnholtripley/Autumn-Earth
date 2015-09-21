@@ -221,6 +221,15 @@ document.getElementById("cardGame").addEventListener("click", function(e) {
 
 
 
+// resize handler:
+canvasResizeHandler = debounce(function() {
+    getCanvasPosition();
+}, 250);
+
+window.addEventListener('resize', canvasResizeHandler);
+
+
+
 // preload all images
 
 
@@ -233,8 +242,11 @@ function loadingProgress() {
     console.log("loading - "+Loader.getProgress());
 }
 
-function initCardGame() {
-    //get position of canvas - needs to change on reSize ###############
+
+
+
+function getCanvasPosition() {
+
 var canvasElemCoords = document.getElementById("cardGame").getBoundingClientRect();
 
  outerCanvasLeft = canvasElemCoords.left;
@@ -242,9 +254,20 @@ var canvasElemCoords = document.getElementById("cardGame").getBoundingClientRect
 
  outerCanvasWidth = canvasElemCoords.right - canvasElemCoords.left;
                 outerCanvasHeight = canvasElemCoords.bottom - canvasElemCoords.top;
+          
+}
 
 
-    // ----------
+
+
+
+function initCardGame() {
+
+getCanvasPosition();
+
+
+
+
 
 
 
