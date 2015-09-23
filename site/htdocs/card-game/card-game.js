@@ -1,31 +1,25 @@
-
-
-
-
-
-
 // config ----------------------------------------------------
 
 framesPerSecond = 24;
-playerColours = ["#ffcc00","#ff00cc"];
- 
-    cardWidth = 84;
+playerColours = ["", "#ffcc00", "#ff00cc", "#cccccc"];
+
+cardWidth = 84;
 cardHeight = 102;
-        
-            allCardsThisGame = player1Cards.concat(player2Cards);
-            numberOfCardsInGame = allCardsThisGame.length;
+
+allCardsThisGame = player1Cards.concat(player2Cards);
+numberOfCardsInGame = allCardsThisGame.length;
 
 
 // 'x' = void space
 // '#' = player 1 start position
 // '@' = player 2 start position
 board = [
-['#','#','x','x','x',' ',' ','x','x','x','x','x'],
-['#','#','x','x',' ',' ',' ',' ','x','x','@','@'],
-['#','#','x',' ',' ',' ',' ',' ',' ','x','@','@'],
-['#','#','x',' ',' ',' ',' ',' ',' ','x','@','@'],
-['#','#','x','x',' ',' ',' ',' ','x','x','@','@'],
-['x','x','x','x','x',' ',' ','x','x','x','@','@']
+    ['#', '#', 'x', 'x', 'x', ' ', ' ', 'x', 'x', 'x', 'x', 'x'],
+    ['#', '#', 'x', 'x', ' ', ' ', ' ', ' ', 'x', 'x', '@', '@'],
+    ['#', '#', 'x', ' ', ' ', ' ', ' ', ' ', ' ', 'x', '@', '@'],
+    ['#', '#', 'x', ' ', ' ', ' ', ' ', ' ', ' ', 'x', '@', '@'],
+    ['#', '#', 'x', 'x', ' ', ' ', ' ', ' ', 'x', 'x', '@', '@'],
+    ['x', 'x', 'x', 'x', 'x', ' ', ' ', 'x', 'x', 'x', '@', '@']
 ];
 
 boardWidth = board[0].length;
@@ -86,7 +80,7 @@ function uniqueValues(a) {
 // http://jsfiddle.net/gfcarv/26AmY/
 
 
-window.Loader = (function () {
+window.Loader = (function() {
     var imageCount = 0;
     var loading = false;
     var total = 0;
@@ -99,17 +93,17 @@ window.Loader = (function () {
     // user defined callback, called when all images are loaded (if it is not defined the empty function wil be called)
     function onComplete() {};
 
-    function onLoadImage(name) {        
+    function onLoadImage(name) {
         ++imageCount;
         // console.log(name + " loaded");
-        
+
         // call the user defined callback when an image is loaded
         onProgressUpdate(getProgress());
-        
+
         // check if all images are loaded
         if (imageCount == total) {
             loading = false;
-          //  console.log("Load complete.");
+            //  console.log("Load complete.");
             onComplete();
         }
 
@@ -122,7 +116,7 @@ window.Loader = (function () {
     function loadImage(name, src) {
         try {
             images[name] = new Image();
-            images[name].onload = function () {
+            images[name].onload = function() {
                 onLoadImage(name);
             };
             images[name].onerror = onImageError;
@@ -131,43 +125,42 @@ window.Loader = (function () {
             console.log(e.message);
         }
     }
-    
-    function getImage(name){
-        if(images[name]){
+
+    function getImage(name) {
+        if (images[name]) {
             return (images[name]);
-       }
-        else{
-            return undefined; 
+        } else {
+            return undefined;
         }
     }
 
     // pre-load all the images and call the onComplete callback when all images are loaded
     // optionaly set the onProgressUpdate callback to be called each time an image is loaded (useful for loading screens) 
-    function preload( _images, _onComplete, _onProgressUpdate) {
+    function preload(_images, _onComplete, _onProgressUpdate) {
         if (!loading) {
 
-          //  console.log("Loading...");
+            //  console.log("Loading...");
             loading = true;
 
             try {
                 total = _images.length;
-                onProgressUpdate = _onProgressUpdate || (function(){});
-                onComplete = _onComplete || (function(){});                
+                onProgressUpdate = _onProgressUpdate || (function() {});
+                onComplete = _onComplete || (function() {});
 
                 for (var i = 0; i < _images.length; ++i) {
-                    loadImage(_images[i].name, _images[i].src);                    
+                    loadImage(_images[i].name, _images[i].src);
                 }
             } catch (e) {
                 console.log(e.message);
             }
         } else {
-          //  throw new Error("Acess denied: Cannot call the load function while there are remaining images to load.");
+            //  throw new Error("Acess denied: Cannot call the load function while there are remaining images to load.");
         }
     }
 
     // percentage of progress
     function getProgress() {
-        return (imageCount / total)*100;
+        return (imageCount / total) * 100;
     };
 
     // return only the public stuff to create our Loader object
@@ -196,65 +189,71 @@ window.Loader = (function () {
 
 if ((cutsTheMustard) && (supportsCanvas())) {
 
-// find non-duplicate card types to load:
-allCardsToLoadThisGame = uniqueValues(allCardsThisGame);
-var numberOfCardTypes = allCardsToLoadThisGame.length;
+    // find non-duplicate card types to load:
+    allCardsToLoadThisGame = uniqueValues(allCardsThisGame);
+    var numberOfCardTypes = allCardsToLoadThisGame.length;
 
 
-var imagesToLoad = [{name: "board", src: "http://www.autumnearth.com/images/card-game/board.jpg"}];
+    var imagesToLoad = [{
+        name: "board",
+        src: "http://www.autumnearth.com/images/card-game/board.jpg"
+    }];
 
-// build imagesToLoad array dynamically for cards:
-for (var i = 1; i <= numberOfCardTypes; i++) {
+    // build imagesToLoad array dynamically for cards:
+    for (var i = 1; i <= numberOfCardTypes; i++) {
 
-imagesToLoad.push({name: "card"+i, src: "http://www.autumnearth.com/images/card-game/cards/"+i+".png"});
-}
-
-
-
-// click handler:
-document.getElementById("cardGame").addEventListener("click", function(e) {
-    canvasClick(e);
-    if (e) {
-        e.preventDefault();
+        imagesToLoad.push({
+            name: "card" + i,
+            src: "http://www.autumnearth.com/images/card-game/cards/" + i + ".png"
+        });
     }
-}, false);
 
 
 
-// resize handler:
-canvasResizeHandler = debounce(function() {
-    getCanvasPosition();
-}, 250);
-
-window.addEventListener('resize', canvasResizeHandler);
-
-
-
-// preload all images
+    // click handler:
+    document.getElementById("cardGame").addEventListener("click", function(e) {
+        canvasClick(e);
+        if (e) {
+            e.preventDefault();
+        }
+    }, false);
 
 
 
-Loader.preload(imagesToLoad,initCardGame, loadingProgress); 
+    // resize handler:
+    canvasResizeHandler = debounce(function() {
+        getCanvasPosition();
+    }, 250);
+
+    window.addEventListener('resize', canvasResizeHandler);
+
+    /*
+    window.addEventListener("orientationchange", function() {
+      getCanvasPosition();
+    }, false);
+    */
+
+
+    // preload all images:
+    Loader.preload(imagesToLoad, initCardGame, loadingProgress);
 }
 
 function loadingProgress() {
     // make this graphical ####
-    console.log("loading - "+Loader.getProgress());
+    console.log("loading - " + Loader.getProgress());
 }
 
 
 
 
 function getCanvasPosition() {
-
-var canvasElemCoords = document.getElementById("cardGame").getBoundingClientRect();
-
- outerCanvasLeft = canvasElemCoords.left;
+    canvasElemCoords = document.getElementById("cardGame").getBoundingClientRect();
+    outerCanvasLeft = canvasElemCoords.left;
     outerCanvasTop = canvasElemCoords.top;
-
- outerCanvasWidth = canvasElemCoords.right - canvasElemCoords.left;
-                outerCanvasHeight = canvasElemCoords.bottom - canvasElemCoords.top;
-          
+    outerCanvasWidth = canvasElemCoords.right - canvasElemCoords.left;
+    outerCanvasHeight = canvasElemCoords.bottom - canvasElemCoords.top;
+    pageLoadScroll = document.body.scrollTop + document.documentElement.scrollTop;
+    console.log("canvas at " + outerCanvasLeft + ", " + outerCanvasTop + " at " + pageLoadScroll + " - "+outerCanvasWidth+" x "+outerCanvasHeight);
 }
 
 
@@ -262,66 +261,94 @@ var canvasElemCoords = document.getElementById("cardGame").getBoundingClientRect
 
 
 function initCardGame() {
+    
+    getCanvasPosition();
+    gameCanvas = document.getElementById("cardGame");
+    if (gameCanvas.getContext) {
+        gameContext = gameCanvas.getContext('2d');
+        canvasWidth = gameCanvas.width;
+        canvasHeight = gameCanvas.height;
+    }
+    cards = [];
+    for (var i = 0; i < numberOfCardsInGame; i++) {
+        cards[i] = {
+            x: -100,
+            y: -100,
+            boardX: -1,
+            boardY: -1,
+            originalOwner: 0,
+            hasBeenPlaced: false,
+            cardType: allCardsThisGame[i],
+            attack: allCardData[(allCardsThisGame[i])][0],
+            defense: allCardData[(allCardsThisGame[i])][1],
+            currentOwner: (i >= (numberOfCardsInGame / 2) ? 2 : 1),
+            draw: function() {
+                gameContext.fillStyle = playerColours[this.currentOwner];
+                gameContext.fillRect(this.x, this.y, cardWidth, cardHeight);
+                gameContext.drawImage(cardImages[this.cardType], this.x, this.y);
 
-getCanvasPosition();
 
-
-
-
-
-
-
-        gameCanvas = document.getElementById("cardGame");
-        if (gameCanvas.getContext) {
-            gameContext = gameCanvas.getContext('2d');
-            canvasWidth = gameCanvas.width;
-            canvasHeight = gameCanvas.height;
-        
+            }
         }
 
-        
+    }
 
-cards = [];
-for (var i = 0; i < numberOfCardsInGame; i++) {
-    cards[i] = {
-        x: (i*cardWidth),
-        y: 0,
-        boardX: i,
-        boardY: 0,
-        originalOwner: 0,
-        hasBeenPlaced: false,
-        cardType: allCardsThisGame[i],
-        attack: allCardData[(allCardsThisGame[i])][0],
-        defense: allCardData[(allCardsThisGame[i])][1],
-        currentOwner: (i>=(numberOfCardsInGame/2) ? 1 : 0),
-        draw: function() {
-            gameContext.fillStyle = playerColours[this.currentOwner];
-            gameContext.fillRect(this.x, this.y, cardWidth, cardHeight);
-           gameContext.drawImage(cardImages[this.cardType], this.x, this.y);
-           
-     
+
+
+
+
+
+    // set up image references:
+
+    cardImages = [];
+    for (var i = 1; i <= numberOfCardTypes; i++) {
+        cardImages[i] = Loader.getImage("card" + i);
+    }
+    boardImage = Loader.getImage("board");
+
+
+
+
+    placeCardOnBoard(0, (boardWidth / 2) - 1, (boardHeight / 2) - 1);
+    placeCardOnBoard(1, (boardWidth / 2), (boardHeight / 2));
+
+
+    placeCardOnBoard((numberOfCardsInGame / 2), (boardWidth / 2), (boardHeight / 2) - 1);
+    placeCardOnBoard((numberOfCardsInGame / 2) + 1, (boardWidth / 2) - 1, (boardHeight / 2));
+
+
+
+    var player1CardIndexToPlace = 2;
+    var player2CardIndexToPlace = (numberOfCardsInGame / 2) + 2;
+
+    for (var j = 0; j < boardWidth; j++) {
+        for (var k = 0; k < boardHeight; k++) {
+            if (board[k][j] == "#") {
+                // player 1 card
+                placeCardOnBoard(player1CardIndexToPlace, j, k);
+                player1CardIndexToPlace++;
+            } else if (board[k][j] == "@") {
+                placeCardOnBoard(player2CardIndexToPlace, j, k);
+                player2CardIndexToPlace++;
+            }
         }
     }
 
+
+
+
+
+    gameLoop();
+
+
 }
 
-
-
-
-
-
-// set up image references:
-
-cardImages = [];
-for (var i = 1; i <= numberOfCardTypes; i++) {
-cardImages[i] = Loader.getImage("card"+i);
-}
-
-   
-
-        gameLoop();
-     
-    
+function placeCardOnBoard(cardRef, gridX, gridY) {
+    board[gridY][gridX] = cardRef;
+    cards[cardRef].x = gridX * cardWidth;
+    cards[cardRef].y = gridY * cardHeight;
+    cards[cardRef].boardX = gridX;
+    cards[cardRef].boardY = gridY;
 }
 
 
@@ -330,30 +357,33 @@ function update() {
 }
 
 function draw() {
-    gameContext.clearRect(0, 0, canvasWidth, canvasHeight);
+    //  gameContext.clearRect(0, 0, canvasWidth, canvasHeight);
+
+    // place board:
+    gameContext.drawImage(boardImage, 0, 0);
+
+
     for (var i = 0; i < numberOfCardsInGame; i++) {
-  cards[i].draw();
+        cards[i].draw();
     }
-  
-  
+
+
 }
 
 function canvasClick(e) {
-
-var gridX = Math.floor(((e.pageX - outerCanvasLeft)/outerCanvasWidth)*boardWidth);
-var gridY = Math.floor(((e.pageY - outerCanvasTop)/outerCanvasHeight)*boardHeight);
-
-   // console.log("clicked on"+clickPositionX+", "+clickPositionY+" relative: " +relativeClickX+", "+relativeClickY+" canvas: "+outerCanvasWidth+", "+outerCanvasHeight);
-
-// loop through cards and find if any at this position:
-for (var i = 0; i < numberOfCardsInGame; i++) {
-if(cards[i].boardX == gridX) {
-if(cards[i].boardY == gridY) {
-    // found it:
-    cards[i].currentOwner = Math.abs(cards[i].currentOwner-1);
-    break;
-}
-}
+    var x = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft - outerCanvasLeft;
+    var y = e.clientY + document.body.scrollTop + document.documentElement.scrollTop - outerCanvasTop - pageLoadScroll;
+    gridX = Math.floor((x / outerCanvasWidth) * boardWidth);
+    gridY = Math.floor((y / outerCanvasHeight) * boardHeight);
+    // loop through cards and find if any at this position:
+    for (var i = 0; i < numberOfCardsInGame; i++) {
+        if (cards[i].boardX == gridX) {
+            if (cards[i].boardY == gridY) {
+                // found it:
+                cards[i].currentOwner = 3;
+                break;
+            }
+        }
     }
 
 }
@@ -365,6 +395,3 @@ function gameLoop() {
         draw();
     }, (1000 / framesPerSecond));
 }
-
-
-
