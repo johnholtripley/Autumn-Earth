@@ -1,7 +1,7 @@
 // config ----------------------------------------------------
 
 framesPerSecond = 24;
-playerColours = ["", "#ffcc00", "#ff00cc", "#cccccc"];
+playerColours = ["", "#ffcc00", "#ff00cc"];
 
 cardWidth = 84;
 cardHeight = 102;
@@ -14,12 +14,12 @@ numberOfCardsInGame = allCardsThisGame.length;
 // '#' = player 1 start position
 // '@' = player 2 start position
 board = [
-    ['#', '#', 'x', 'x', 'x', ' ', ' ', 'x', 'x', 'x', 'x', 'x'],
-    ['#', '#', 'x', 'x', ' ', ' ', ' ', ' ', 'x', 'x', '@', '@'],
-    ['#', '#', 'x', ' ', ' ', ' ', ' ', ' ', ' ', 'x', '@', '@'],
-    ['#', '#', 'x', ' ', ' ', ' ', ' ', ' ', ' ', 'x', '@', '@'],
-    ['#', '#', 'x', 'x', ' ', ' ', ' ', ' ', 'x', 'x', '@', '@'],
-    ['x', 'x', 'x', 'x', 'x', ' ', ' ', 'x', 'x', 'x', '@', '@']
+   ['#', '#', 'x', 'x', 'x', '-', '-', 'x', 'x', 'x', 'x', 'x'],
+    ['#', '#', 'x', 'x', '-', '-', '-', '-', 'x', 'x', '@', '@'],
+    ['#', '#', 'x', '-', '-', '-', '-', '-', '-', 'x', '@', '@'],
+    ['#', '#', 'x', '-', '-', '-', '-', '-', '-', 'x', '@', '@'],
+    ['#', '#', 'x', 'x', '-', '-', '-', '-', 'x', 'x', '@', '@'],
+    ['x', 'x', 'x', 'x', 'x', '-', '-', 'x', 'x', 'x', '@', '@']
 ];
 
 boardWidth = board[0].length;
@@ -253,7 +253,7 @@ function getCanvasPosition() {
     outerCanvasWidth = canvasElemCoords.right - canvasElemCoords.left;
     outerCanvasHeight = canvasElemCoords.bottom - canvasElemCoords.top;
     pageLoadScroll = document.body.scrollTop + document.documentElement.scrollTop;
-    console.log("canvas at " + outerCanvasLeft + ", " + outerCanvasTop + " at " + pageLoadScroll + " - "+outerCanvasWidth+" x "+outerCanvasHeight);
+   // console.log("canvas at " + outerCanvasLeft + ", " + outerCanvasTop + " at " + pageLoadScroll + " - " + outerCanvasWidth + " x " + outerCanvasHeight);
 }
 
 
@@ -261,7 +261,7 @@ function getCanvasPosition() {
 
 
 function initCardGame() {
-    
+
     getCanvasPosition();
     gameCanvas = document.getElementById("cardGame");
     if (gameCanvas.getContext) {
@@ -274,9 +274,9 @@ function initCardGame() {
         cards[i] = {
             x: -100,
             y: -100,
-            boardX: -1,
-            boardY: -1,
-            originalOwner: 0,
+            //   boardX: -1,
+            //   boardY: -1,
+            originalOwner: (i >= (numberOfCardsInGame / 2) ? 2 : 1),
             hasBeenPlaced: false,
             cardType: allCardsThisGame[i],
             attack: allCardData[(allCardsThisGame[i])][0],
@@ -309,12 +309,12 @@ function initCardGame() {
 
 
 
-    placeCardOnBoard(0, (boardWidth / 2) - 1, (boardHeight / 2) - 1);
-    placeCardOnBoard(1, (boardWidth / 2), (boardHeight / 2));
+    placeCardOnBoard(0, (boardWidth / 2) - 1, (boardHeight / 2) - 1, true);
+    placeCardOnBoard(1, (boardWidth / 2), (boardHeight / 2), true);
 
 
-    placeCardOnBoard((numberOfCardsInGame / 2), (boardWidth / 2), (boardHeight / 2) - 1);
-    placeCardOnBoard((numberOfCardsInGame / 2) + 1, (boardWidth / 2) - 1, (boardHeight / 2));
+    placeCardOnBoard((numberOfCardsInGame / 2), (boardWidth / 2), (boardHeight / 2) - 1, true);
+    placeCardOnBoard((numberOfCardsInGame / 2) + 1, (boardWidth / 2) - 1, (boardHeight / 2), true);
 
 
 
@@ -325,17 +325,18 @@ function initCardGame() {
         for (var k = 0; k < boardHeight; k++) {
             if (board[k][j] == "#") {
                 // player 1 card
-                placeCardOnBoard(player1CardIndexToPlace, j, k);
+                placeCardOnBoard(player1CardIndexToPlace, j, k, false);
                 player1CardIndexToPlace++;
             } else if (board[k][j] == "@") {
-                placeCardOnBoard(player2CardIndexToPlace, j, k);
+                placeCardOnBoard(player2CardIndexToPlace, j, k, false);
                 player2CardIndexToPlace++;
             }
         }
     }
 
-
-
+    currentlySelectedCard = -1;
+currentTurn = 1;
+currentOpponent = 0;
 
 
     gameLoop();
@@ -343,12 +344,13 @@ function initCardGame() {
 
 }
 
-function placeCardOnBoard(cardRef, gridX, gridY) {
+function placeCardOnBoard(cardRef, gridX, gridY, placedOnGameBoard) {
     board[gridY][gridX] = cardRef;
     cards[cardRef].x = gridX * cardWidth;
     cards[cardRef].y = gridY * cardHeight;
-    cards[cardRef].boardX = gridX;
-    cards[cardRef].boardY = gridY;
+    cards[cardRef].hasBeenPlaced = placedOnGameBoard;
+    //  cards[cardRef].boardX = gridX;
+    //  cards[cardRef].boardY = gridY;
 }
 
 
@@ -370,23 +372,98 @@ function draw() {
 
 }
 
+function isValidMove(checkX, checkY) {
+    console.log("checking " + checkX + ", " + checkY);
+    // check that it adjoins another card (ie. that the board has a number there and not X, - or undefined):
+    var isValid = false;
+
+
+    for (var i = checkX - 1; i <= checkX + 1; i++) {
+        for (var j = checkY - 1; j <= checkY + 1; j++) {
+            // x shouldn't go out of scope, but y might:
+            if (j >= 0) {
+                if (j < boardHeight) {
+                    if (!isNaN(board[j][i])) {
+                        isValid = true;
+                    }
+                }
+            }
+        }
+    }
+
+
+
+    return isValid;
+}
+
+function checkAttacks(checkX, checkY) {
+    checkAttack(checkX, checkY, -1, 0);
+    checkAttack(checkX, checkY, 1, 0);
+    checkAttack(checkX, checkY, 0, -1);
+    checkAttack(checkX, checkY, 0, 1);
+    checkAttack(checkX, checkY, -1, -1);
+    checkAttack(checkX, checkY, 1, 1);
+    checkAttack(checkX, checkY, -1, 1);
+    checkAttack(checkX, checkY, 1, -1);
+}
+
+function checkAttack(placedTileX, placedTileY, xDir, yDir) {
+    var defenceRunningTotal = 0;
+    var opponentsCardsFound = [];
+        // trace a path from selected tile, in direction set until a card that isn't an opponent's is encountered:
+    var lineTracedX = placedTileX+xDir;
+    var lineTracedY = placedTileY+yDir;
+
+    while (cards[(board[lineTracedY][lineTracedX])].currentOwner == currentOpponent) {
+        opponentsCardsFound.push(board[lineTracedY][lineTracedX]);
+        defenceRunningTotal += allCardData([board[lineTracedY][lineTracedX]][1]);
+        lineTracedX += xDir;
+        lineTracedY += yDir;
+    }
+var placedCardsAttack = allCardData([(board[placedTileY][placedTileX])][0]);
+// then check card after is current player's card, not the board edge:
+    if (cards[(board[lineTracedY][lineTracedX])].currentOwner == currentTurn) {
+var existingCardsAttack = allCardData([board[lineTracedY][lineTracedX]][0]);
+if (placedCardsAttack+existingCardsAttack>=defenceRunningTotal) {
+            for (i=0; i<opponentsCardsFound.length; i++) {
+                flipCard(opponentsCardsFound[i], currentTurn);
+            }
+        }
+    }
+}
+
+function flipCard(cardRef, newOwner) {
+cards[cardRef].currentOwner = newOwner;
+}
+
 function canvasClick(e) {
     var x = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft - outerCanvasLeft;
     var y = e.clientY + document.body.scrollTop + document.documentElement.scrollTop - outerCanvasTop - pageLoadScroll;
     gridX = Math.floor((x / outerCanvasWidth) * boardWidth);
     gridY = Math.floor((y / outerCanvasHeight) * boardHeight);
-    // loop through cards and find if any at this position:
-    for (var i = 0; i < numberOfCardsInGame; i++) {
-        if (cards[i].boardX == gridX) {
-            if (cards[i].boardY == gridY) {
-                // found it:
-                cards[i].currentOwner = 3;
-                break;
+
+    var thisBoardRef = board[gridY][gridX];
+
+    if (thisBoardRef == "-") {
+
+        if (currentlySelectedCard != -1) {
+            if (isValidMove(gridX, gridY)) {
+                placeCardOnBoard(currentlySelectedCard, gridX, gridY, true);
+               currentlySelectedCard = -1;
+                checkAttacks(gridX,gridY);
+                
             }
         }
-    }
+    } else if (thisBoardRef != "x") {
 
+        if (!(cards[thisBoardRef].hasBeenPlaced)) {
+
+            currentlySelectedCard = thisBoardRef;
+        }
+    }
 }
+
+
 
 function gameLoop() {
     setTimeout(function() {
