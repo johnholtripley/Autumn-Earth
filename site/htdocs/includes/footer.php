@@ -1,3 +1,11 @@
+
+<div class="row">
+	<?php
+include($_SERVER['DOCUMENT_ROOT']."/includes/login.php");
+include($_SERVER['DOCUMENT_ROOT']."/includes/search.php");
+?>
+
+</div>
 </div>
 <div id="navigation" role="navigation">
 <div id="navigationInner">
