@@ -194,10 +194,11 @@ if ((cutsTheMustard) && (supportsCanvas())) {
     var numberOfCardTypes = allCardsToLoadThisGame.length;
 
 
-    var imagesToLoad = [{
-        name: "board",
-        src: "http://www.autumnearth.com/images/card-game/board.jpg"
-    }];
+    var imagesToLoad = [
+        {name: "board",        src: "http://www.autumnearth.com/images/card-game/board.jpg"},
+        {name: "selected", src: "http://www.autumnearth.com/images/card-game/selected-card.png"},
+        {name: "current", src: "http://www.autumnearth.com/images/card-game/current-player.png"}
+    ];
 
     // build imagesToLoad array dynamically for cards:
     for (var i = 1; i <= numberOfCardTypes; i++) {
@@ -306,7 +307,28 @@ function initCardGame() {
     }
     boardImage = Loader.getImage("board");
 
+currentCardSelectedImage = Loader.getImage("selected");
 
+currentCardSelected = {
+    draw: function() {
+       if(currentlySelectedCard != -1) {
+        gameContext.drawImage(currentCardSelectedImage, cards[currentlySelectedCard].x-20, cards[currentlySelectedCard].y-20);
+       } 
+    }
+}
+
+currentPlayerMarkerImage = Loader.getImage("current");
+
+currentPlayerMarker = {
+    draw: function() {
+       
+
+this.x = (currentPlayersTurn == 1 ? 35 : 875); 
+
+        gameContext.drawImage(currentPlayerMarkerImage, this.x, 20);
+       
+    }
+}
 
 
     placeCardOnBoard(0, (boardWidth / 2) - 1, (boardHeight / 2) - 1, true);
@@ -335,8 +357,8 @@ function initCardGame() {
     }
 
     currentlySelectedCard = -1;
-currentTurn = 1;
-currentOpponent = 0;
+currentPlayersTurn = 2;
+currentOpponent = 1;
 
 
     gameLoop();
@@ -368,6 +390,9 @@ function draw() {
     for (var i = 0; i < numberOfCardsInGame; i++) {
         cards[i].draw();
     }
+
+    currentCardSelected.draw();
+    currentPlayerMarker.draw();
 
 
 }
@@ -422,11 +447,11 @@ function checkAttack(placedTileX, placedTileY, xDir, yDir) {
     }
 var placedCardsAttack = allCardData([(board[placedTileY][placedTileX])][0]);
 // then check card after is current player's card, not the board edge:
-    if (cards[(board[lineTracedY][lineTracedX])].currentOwner == currentTurn) {
+    if (cards[(board[lineTracedY][lineTracedX])].currentOwner == currentPlayersTurn) {
 var existingCardsAttack = allCardData([board[lineTracedY][lineTracedX]][0]);
 if (placedCardsAttack+existingCardsAttack>=defenceRunningTotal) {
             for (i=0; i<opponentsCardsFound.length; i++) {
-                flipCard(opponentsCardsFound[i], currentTurn);
+                flipCard(opponentsCardsFound[i], currentPlayersTurn);
             }
         }
     }
@@ -450,15 +475,23 @@ function canvasClick(e) {
             if (isValidMove(gridX, gridY)) {
                 placeCardOnBoard(currentlySelectedCard, gridX, gridY, true);
                currentlySelectedCard = -1;
-                checkAttacks(gridX,gridY);
+              //  checkAttacks(gridX,gridY);
                 
+                // swap whose go it is:
+var oldCurrentPlayersTurn = currentPlayersTurn;
+currentPlayersTurn = currentOpponent;
+currentOpponent = oldCurrentPlayersTurn;
+
+
             }
         }
     } else if (thisBoardRef != "x") {
 
         if (!(cards[thisBoardRef].hasBeenPlaced)) {
-
+            console.log(cards[thisBoardRef].currentOwner + ", "+currentPlayersTurn);
+if(cards[thisBoardRef].currentOwner == currentPlayersTurn) {
             currentlySelectedCard = thisBoardRef;
+        }
         }
     }
 }
