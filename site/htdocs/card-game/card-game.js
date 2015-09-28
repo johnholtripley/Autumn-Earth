@@ -421,7 +421,7 @@ function isValidMove(checkX, checkY) {
     return isValid;
 }
 
-function checkAttacks(checkX, checkY) {
+function checkAttacksInAllDirections(checkX, checkY) {
     checkAttack(checkX, checkY, -1, 0);
     checkAttack(checkX, checkY, 1, 0);
     checkAttack(checkX, checkY, 0, -1);
@@ -435,31 +435,63 @@ function checkAttacks(checkX, checkY) {
 function checkAttack(placedTileX, placedTileY, xDir, yDir) {
     var defenceRunningTotal = 0;
     var opponentsCardsFound = [];
-        // trace a path from selected tile, in direction set until a card that isn't an opponent's is encountered:
-    var lineTracedX = placedTileX+xDir;
-    var lineTracedY = placedTileY+yDir;
+    // trace a path from selected tile, in direction set until a card that isn't an opponent's is encountered:
+    var lineTracedX = placedTileX + xDir;
+    var lineTracedY = placedTileY + yDir;
+    
+   
+    do {
+        var isAnOpponentCard = false;
+         var thisCheckBoardRef = board[lineTracedY][lineTracedX];
+        // is in bounds:
+        if (lineTracedY >= 0) {
+            if (lineTracedY < boardHeight) {
+                // is numeric?
+                if (!(isNaN(thisCheckBoardRef))) {
+                    if (cards[thisCheckBoardRef].currentOwner == currentOpponent) {
+                        isAnOpponentCard = true;
+                        opponentsCardsFound.push(thisCheckBoardRef);
+                        var defenseCardType = cards[thisCheckBoardRef].cardType;
+                        console.log("found type "+defenseCardType+" at "+lineTracedX+", "+lineTracedY);
+                        defenceRunningTotal += parseInt(allCardData[defenseCardType][1]);
+                        console.log("defence "+defenceRunningTotal);
+                        lineTracedX += xDir;
+                        lineTracedY += yDir;
+                    }
+                }
+            }
+        }
 
-    while (cards[(board[lineTracedY][lineTracedX])].currentOwner == currentOpponent) {
-        opponentsCardsFound.push(board[lineTracedY][lineTracedX]);
-        defenceRunningTotal += allCardData([board[lineTracedY][lineTracedX]][1]);
-        lineTracedX += xDir;
-        lineTracedY += yDir;
-    }
-var placedCardsAttack = allCardData([(board[placedTileY][placedTileX])][0]);
-// then check card after is current player's card, not the board edge:
-    if (cards[(board[lineTracedY][lineTracedX])].currentOwner == currentPlayersTurn) {
-var existingCardsAttack = allCardData([board[lineTracedY][lineTracedX]][0]);
-if (placedCardsAttack+existingCardsAttack>=defenceRunningTotal) {
-            for (i=0; i<opponentsCardsFound.length; i++) {
-                flipCard(opponentsCardsFound[i], currentPlayersTurn);
+    } while (isAnOpponentCard);
+    var attackCardType = cards[(board[placedTileY][placedTileX])].cardType;
+    var placedCardsAttack = allCardData[attackCardType][0];
+    // then check card after is current player's card, not the board edge:
+    if (lineTracedY >= 0) {
+        if (lineTracedY < boardHeight) {
+            // is numeric?
+            if (!(isNaN(board[lineTracedY][lineTracedX]))) {     
+                if (cards[(board[lineTracedY][lineTracedX])].currentOwner == currentPlayersTurn) {
+                    var existingCardType = cards[(board[lineTracedY][lineTracedX])].cardType;
+                    var existingCardsAttack = allCardData[existingCardType][0];
+
+
+
+                    if (placedCardsAttack + existingCardsAttack >= defenceRunningTotal) {
+                        for (i = 0; i < opponentsCardsFound.length; i++) {
+                            flipCard(opponentsCardsFound[i]);
+                        }
+                    }
+                }
             }
         }
     }
 }
 
-function flipCard(cardRef, newOwner) {
-cards[cardRef].currentOwner = newOwner;
+
+function flipCard(cardRef) {
+    cards[cardRef].currentOwner = currentPlayersTurn;
 }
+
 
 function canvasClick(e) {
     var x = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft - outerCanvasLeft;
@@ -474,13 +506,13 @@ function canvasClick(e) {
         if (currentlySelectedCard != -1) {
             if (isValidMove(gridX, gridY)) {
                 placeCardOnBoard(currentlySelectedCard, gridX, gridY, true);
-               currentlySelectedCard = -1;
-              //  checkAttacks(gridX,gridY);
-                
+                currentlySelectedCard = -1;
+                  checkAttacksInAllDirections(gridX,gridY);
+
                 // swap whose go it is:
-var oldCurrentPlayersTurn = currentPlayersTurn;
-currentPlayersTurn = currentOpponent;
-currentOpponent = oldCurrentPlayersTurn;
+                var oldCurrentPlayersTurn = currentPlayersTurn;
+                currentPlayersTurn = currentOpponent;
+                currentOpponent = oldCurrentPlayersTurn;
 
 
             }
@@ -488,13 +520,14 @@ currentOpponent = oldCurrentPlayersTurn;
     } else if (thisBoardRef != "x") {
 
         if (!(cards[thisBoardRef].hasBeenPlaced)) {
-            console.log(cards[thisBoardRef].currentOwner + ", "+currentPlayersTurn);
-if(cards[thisBoardRef].currentOwner == currentPlayersTurn) {
-            currentlySelectedCard = thisBoardRef;
-        }
+            console.log(cards[thisBoardRef].currentOwner + ", " + currentPlayersTurn);
+            if (cards[thisBoardRef].currentOwner == currentPlayersTurn) {
+                currentlySelectedCard = thisBoardRef;
+            }
         }
     }
 }
+
 
 
 
