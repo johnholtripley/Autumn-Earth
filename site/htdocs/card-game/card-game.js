@@ -258,7 +258,9 @@ function getCanvasPosition() {
 }
 
 
-
+function getRandomIntger(min, max) {
+  return Math.floor(Math.random() * (max - min)) + min;
+}
 
 
 function initCardGame() {
@@ -277,6 +279,7 @@ function initCardGame() {
             y: -100,
             //   boardX: -1,
             //   boardY: -1,
+            flippedAnimation: 0,
             originalOwner: (i >= (numberOfCardsInGame / 2) ? 2 : 1),
             hasBeenPlaced: false,
             cardType: allCardsThisGame[i],
@@ -284,9 +287,21 @@ function initCardGame() {
             defense: allCardData[(allCardsThisGame[i])][1],
             currentOwner: (i >= (numberOfCardsInGame / 2) ? 2 : 1),
             draw: function() {
-                gameContext.fillStyle = playerColours[this.currentOwner];
-                gameContext.fillRect(this.x, this.y, cardWidth, cardHeight);
-                gameContext.drawImage(cardImages[this.cardType], this.x, this.y);
+       
+
+offsetX = 0;
+offsetY= 0;
+if(this.flippedAnimation > 0) {
+    randomAmount = this.flippedAnimation*4;
+offsetX = getRandomIntger(0,randomAmount);
+offsetY = getRandomIntger(0,randomAmount);
+
+
+this.flippedAnimation --;
+}
+         gameContext.fillStyle = playerColours[this.currentOwner];
+                gameContext.fillRect(this.x+offsetX, this.y+offsetY, cardWidth, cardHeight);
+                gameContext.drawImage(cardImages[this.cardType], this.x+offsetX, this.y+offsetY);
 
 
             }
@@ -490,6 +505,7 @@ function checkAttack(placedTileX, placedTileY, xDir, yDir) {
 
 function flipCard(cardRef) {
     cards[cardRef].currentOwner = currentPlayersTurn;
+    cards[cardRef].flippedAnimation = 10;
 }
 
 
