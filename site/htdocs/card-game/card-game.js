@@ -280,6 +280,7 @@ function initCardGame() {
             //   boardX: -1,
             //   boardY: -1,
             flippedAnimation: 0,
+            isMovingToBoard: false,
             originalOwner: (i >= (numberOfCardsInGame / 2) ? 2 : 1),
             hasBeenPlaced: false,
             cardType: allCardsThisGame[i],
@@ -393,7 +394,36 @@ function placeCardOnBoard(cardRef, gridX, gridY, placedOnGameBoard) {
 
 function update() {
     //
+    for (var i = 0; i < numberOfCardsInGame; i++) {
+        if (cards[i].isMovingToBoard) {
+
+
+            var targetX = cards[i].gridX * cardWidth;
+            var targetY = cards[i].gridY * cardHeight;
+
+            cards[i].x -= (cards[i].x - targetX) * 0.7;
+            cards[i].y -= (cards[i].y - targetY) * 0.7;
+
+            if (Math.abs(cards[i].x - targetX) < 10) {
+                if (Math.abs(cards[i].y - targetY) < 10) {
+                    // snap in position:
+                    cards[i].isMovingToBoard = false;
+                    cards[i].x = cards[i].gridX * cardWidth;
+                    cards[i].y = cards[i].gridY * cardHeight;
+                    cards[i].hasBeenPlaced = true;
+                    checkAttacksInAllDirections(cards[i].gridX, cards[i].gridY);
+                      // swap whose go it is:
+                var oldCurrentPlayersTurn = currentPlayersTurn;
+                currentPlayersTurn = currentOpponent;
+                currentOpponent = oldCurrentPlayersTurn;
+                }
+            }
+
+        }
+    }
 }
+
+
 
 function draw() {
     //  gameContext.clearRect(0, 0, canvasWidth, canvasHeight);
@@ -437,6 +467,7 @@ function isValidMove(checkX, checkY) {
 }
 
 function checkAttacksInAllDirections(checkX, checkY) {
+  
     checkAttack(checkX, checkY, -1, 0);
     checkAttack(checkX, checkY, 1, 0);
     checkAttack(checkX, checkY, 0, -1);
@@ -521,14 +552,18 @@ function canvasClick(e) {
 
         if (currentlySelectedCard != -1) {
             if (isValidMove(gridX, gridY)) {
-                placeCardOnBoard(currentlySelectedCard, gridX, gridY, true);
-                currentlySelectedCard = -1;
-                  checkAttacksInAllDirections(gridX,gridY);
+                // placeCardOnBoard(currentlySelectedCard, gridX, gridY, true);
 
-                // swap whose go it is:
-                var oldCurrentPlayersTurn = currentPlayersTurn;
-                currentPlayersTurn = currentOpponent;
-                currentOpponent = oldCurrentPlayersTurn;
+cards[currentlySelectedCard].isMovingToBoard = true;
+cards[currentlySelectedCard].gridX = gridX;
+cards[currentlySelectedCard].gridY = gridY;
+             
+
+ board[gridY][gridX] = currentlySelectedCard;
+
+                  
+   currentlySelectedCard = -1;
+              
 
 
             }
