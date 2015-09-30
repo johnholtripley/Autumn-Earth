@@ -233,7 +233,9 @@ if ((cutsTheMustard) && (supportsCanvas())) {
       getCanvasPosition();
     }, false);
     */
+    gameMode = "loading";
 
+    gameLoop();
 
     // preload all images:
     Loader.preload(imagesToLoad, initCardGame, loadingProgress);
@@ -262,7 +264,6 @@ function getRandomIntger(min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
 }
 
-
 function initCardGame() {
 
     getCanvasPosition();
@@ -272,6 +273,9 @@ function initCardGame() {
         canvasWidth = gameCanvas.width;
         canvasHeight = gameCanvas.height;
     }
+
+
+
     cards = [];
     for (var i = 0; i < numberOfCardsInGame; i++) {
         cards[i] = {
@@ -345,7 +349,7 @@ function initCardGame() {
 
         }
     }
-
+    
 
     placeCardOnBoard(0, (boardWidth / 2) - 1, (boardHeight / 2) - 1, true);
     placeCardOnBoard(1, (boardWidth / 2), (boardHeight / 2), true);
@@ -371,16 +375,15 @@ function initCardGame() {
             }
         }
     }
-
+placedCards = 4;
     currentlySelectedCard = -1;
     currentPlayersTurn = 2;
     currentOpponent = 1;
 
-
-    gameLoop();
-
+gameMode = "play";
 
 }
+
 
 
 function placeCardOnBoard(cardRef, gridX, gridY, placedOnGameBoard) {
@@ -408,6 +411,10 @@ function update() {
                     cards[i].y = cards[i].gridY * cardHeight;
                     cards[i].hasBeenPlaced = true;
                     checkAttacksInAllDirections(cards[i].gridX, cards[i].gridY);
+                    placedCards++;
+                    if (placedCards == numberOfCardsInGame) {
+                        gameMode = "gameover";
+                    }
                     // swap whose go it is:
                     var oldCurrentPlayersTurn = currentPlayersTurn;
                     currentPlayersTurn = currentOpponent;
@@ -417,6 +424,7 @@ function update() {
         }
     }
 }
+
 
 
 
@@ -483,9 +491,7 @@ function checkAttack(placedTileX, placedTileY, xDir, yDir) {
                         isAnOpponentCard = true;
                         opponentsCardsFound.push(thisCheckBoardRef);
                         var defenseCardType = cards[thisCheckBoardRef].cardType;
-                        console.log("found type "+defenseCardType+" at "+lineTracedX+", "+lineTracedY);
                         defenceRunningTotal += parseInt(allCardData[defenseCardType][1]);
-                        console.log("defence "+defenceRunningTotal);
                         lineTracedX += xDir;
                         lineTracedY += yDir;
                     }
@@ -543,7 +549,6 @@ function canvasClick(e) {
         }
     } else if (thisBoardRef != "x") {
         if (!(cards[thisBoardRef].hasBeenPlaced)) {
-            console.log(cards[thisBoardRef].currentOwner + ", " + currentPlayersTurn);
             if (cards[thisBoardRef].currentOwner == currentPlayersTurn) {
                 currentlySelectedCard = thisBoardRef;
             }
@@ -554,7 +559,19 @@ function canvasClick(e) {
 function gameLoop() {
     setTimeout(function() {
         window.requestAnimationFrame(gameLoop);
-        update();
-        draw();
+        switch (gameMode) {
+            case "loading":
+            console.log("loading...");
+            //
+            break;
+            case "play":
+                update();
+                draw();
+                break;
+            case "gameover":
+                console.log("game over");
+                break;
+        }
     }, (1000 / framesPerSecond));
 }
+
