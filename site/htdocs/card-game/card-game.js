@@ -288,21 +288,21 @@ function initCardGame() {
             defense: allCardData[(allCardsThisGame[i])][1],
             currentOwner: (i >= (numberOfCardsInGame / 2) ? 2 : 1),
             draw: function() {
-       
-
-offsetX = 0;
-offsetY= 0;
-if(this.flippedAnimation > 0) {
-    randomAmount = this.flippedAnimation*4;
-offsetX = getRandomIntger(0,randomAmount);
-offsetY = getRandomIntger(0,randomAmount);
 
 
-this.flippedAnimation --;
-}
-         gameContext.fillStyle = playerColours[this.currentOwner];
-                gameContext.fillRect(this.x+offsetX, this.y+offsetY, cardWidth, cardHeight);
-                gameContext.drawImage(cardImages[this.cardType], this.x+offsetX, this.y+offsetY);
+                offsetX = 0;
+                offsetY = 0;
+                if (this.flippedAnimation > 0) {
+                    randomAmount = this.flippedAnimation * 4;
+                    offsetX = getRandomIntger(0, randomAmount);
+                    offsetY = getRandomIntger(0, randomAmount);
+
+
+                    this.flippedAnimation--;
+                }
+                gameContext.fillStyle = playerColours[this.currentOwner];
+                gameContext.fillRect(this.x + offsetX, this.y + offsetY, cardWidth, cardHeight);
+                gameContext.drawImage(cardImages[this.cardType], this.x + offsetX, this.y + offsetY);
 
 
             }
@@ -323,28 +323,28 @@ this.flippedAnimation --;
     }
     boardImage = Loader.getImage("board");
 
-currentCardSelectedImage = Loader.getImage("selected");
+    currentCardSelectedImage = Loader.getImage("selected");
 
-currentCardSelected = {
-    draw: function() {
-       if(currentlySelectedCard != -1) {
-        gameContext.drawImage(currentCardSelectedImage, cards[currentlySelectedCard].x-20, cards[currentlySelectedCard].y-20);
-       } 
+    currentCardSelected = {
+        draw: function() {
+            if (currentlySelectedCard != -1) {
+                gameContext.drawImage(currentCardSelectedImage, cards[currentlySelectedCard].x - 20, cards[currentlySelectedCard].y - 20);
+            }
+        }
     }
-}
 
-currentPlayerMarkerImage = Loader.getImage("current");
+    currentPlayerMarkerImage = Loader.getImage("current");
 
-currentPlayerMarker = {
-    draw: function() {
-       
+    currentPlayerMarker = {
+        draw: function() {
 
-this.x = (currentPlayersTurn == 1 ? 35 : 875); 
 
-        gameContext.drawImage(currentPlayerMarkerImage, this.x, 20);
-       
+            this.x = (currentPlayersTurn == 1 ? 35 : 875);
+
+            gameContext.drawImage(currentPlayerMarkerImage, this.x, 20);
+
+        }
     }
-}
 
 
     placeCardOnBoard(0, (boardWidth / 2) - 1, (boardHeight / 2) - 1, true);
@@ -373,14 +373,15 @@ this.x = (currentPlayersTurn == 1 ? 35 : 875);
     }
 
     currentlySelectedCard = -1;
-currentPlayersTurn = 2;
-currentOpponent = 1;
+    currentPlayersTurn = 2;
+    currentOpponent = 1;
 
 
     gameLoop();
 
 
 }
+
 
 function placeCardOnBoard(cardRef, gridX, gridY, placedOnGameBoard) {
     board[gridY][gridX] = cardRef;
@@ -393,17 +394,12 @@ function placeCardOnBoard(cardRef, gridX, gridY, placedOnGameBoard) {
 
 
 function update() {
-    //
     for (var i = 0; i < numberOfCardsInGame; i++) {
         if (cards[i].isMovingToBoard) {
-
-
             var targetX = cards[i].gridX * cardWidth;
             var targetY = cards[i].gridY * cardHeight;
-
             cards[i].x -= (cards[i].x - targetX) * 0.7;
             cards[i].y -= (cards[i].y - targetY) * 0.7;
-
             if (Math.abs(cards[i].x - targetX) < 10) {
                 if (Math.abs(cards[i].y - targetY) < 10) {
                     // snap in position:
@@ -412,42 +408,34 @@ function update() {
                     cards[i].y = cards[i].gridY * cardHeight;
                     cards[i].hasBeenPlaced = true;
                     checkAttacksInAllDirections(cards[i].gridX, cards[i].gridY);
-                      // swap whose go it is:
-                var oldCurrentPlayersTurn = currentPlayersTurn;
-                currentPlayersTurn = currentOpponent;
-                currentOpponent = oldCurrentPlayersTurn;
+                    // swap whose go it is:
+                    var oldCurrentPlayersTurn = currentPlayersTurn;
+                    currentPlayersTurn = currentOpponent;
+                    currentOpponent = oldCurrentPlayersTurn;
                 }
             }
-
         }
     }
 }
 
 
 
+
 function draw() {
     //  gameContext.clearRect(0, 0, canvasWidth, canvasHeight);
-
     // place board:
     gameContext.drawImage(boardImage, 0, 0);
-
-
     for (var i = 0; i < numberOfCardsInGame; i++) {
         cards[i].draw();
     }
-
     currentCardSelected.draw();
     currentPlayerMarker.draw();
-
-
 }
 
+
 function isValidMove(checkX, checkY) {
-    console.log("checking " + checkX + ", " + checkY);
     // check that it adjoins another card (ie. that the board has a number there and not X, - or undefined):
     var isValid = false;
-
-
     for (var i = checkX - 1; i <= checkX + 1; i++) {
         for (var j = checkY - 1; j <= checkY + 1; j++) {
             // x shouldn't go out of scope, but y might:
@@ -460,14 +448,10 @@ function isValidMove(checkX, checkY) {
             }
         }
     }
-
-
-
     return isValid;
 }
 
 function checkAttacksInAllDirections(checkX, checkY) {
-  
     checkAttack(checkX, checkY, -1, 0);
     checkAttack(checkX, checkY, 1, 0);
     checkAttack(checkX, checkY, 0, -1);
@@ -488,10 +472,11 @@ function checkAttack(placedTileX, placedTileY, xDir, yDir) {
    
     do {
         var isAnOpponentCard = false;
-         var thisCheckBoardRef = board[lineTracedY][lineTracedX];
+        
         // is in bounds:
         if (lineTracedY >= 0) {
             if (lineTracedY < boardHeight) {
+                var thisCheckBoardRef = board[lineTracedY][lineTracedX];
                 // is numeric?
                 if (!(isNaN(thisCheckBoardRef))) {
                     if (cards[thisCheckBoardRef].currentOwner == currentOpponent) {
@@ -510,7 +495,7 @@ function checkAttack(placedTileX, placedTileY, xDir, yDir) {
 
     } while (isAnOpponentCard);
     var attackCardType = cards[(board[placedTileY][placedTileX])].cardType;
-    var placedCardsAttack = allCardData[attackCardType][0];
+    var placedCardsAttack = parseInt(allCardData[attackCardType][0]);
     // then check card after is current player's card, not the board edge:
     if (lineTracedY >= 0) {
         if (lineTracedY < boardHeight) {
@@ -518,7 +503,7 @@ function checkAttack(placedTileX, placedTileY, xDir, yDir) {
             if (!(isNaN(board[lineTracedY][lineTracedX]))) {     
                 if (cards[(board[lineTracedY][lineTracedX])].currentOwner == currentPlayersTurn) {
                     var existingCardType = cards[(board[lineTracedY][lineTracedX])].cardType;
-                    var existingCardsAttack = allCardData[existingCardType][0];
+                    var existingCardsAttack = parseInt(allCardData[existingCardType][0]);
 
 
 
@@ -545,31 +530,18 @@ function canvasClick(e) {
     var y = e.clientY + document.body.scrollTop + document.documentElement.scrollTop - outerCanvasTop - pageLoadScroll;
     gridX = Math.floor((x / outerCanvasWidth) * boardWidth);
     gridY = Math.floor((y / outerCanvasHeight) * boardHeight);
-
     var thisBoardRef = board[gridY][gridX];
-
     if (thisBoardRef == "-") {
-
         if (currentlySelectedCard != -1) {
             if (isValidMove(gridX, gridY)) {
-                // placeCardOnBoard(currentlySelectedCard, gridX, gridY, true);
-
-cards[currentlySelectedCard].isMovingToBoard = true;
-cards[currentlySelectedCard].gridX = gridX;
-cards[currentlySelectedCard].gridY = gridY;
-             
-
- board[gridY][gridX] = currentlySelectedCard;
-
-                  
-   currentlySelectedCard = -1;
-              
-
-
+                cards[currentlySelectedCard].isMovingToBoard = true;
+                cards[currentlySelectedCard].gridX = gridX;
+                cards[currentlySelectedCard].gridY = gridY;
+                board[gridY][gridX] = currentlySelectedCard;
+                currentlySelectedCard = -1;
             }
         }
     } else if (thisBoardRef != "x") {
-
         if (!(cards[thisBoardRef].hasBeenPlaced)) {
             console.log(cards[thisBoardRef].currentOwner + ", " + currentPlayersTurn);
             if (cards[thisBoardRef].currentOwner == currentPlayersTurn) {
@@ -578,9 +550,6 @@ cards[currentlySelectedCard].gridY = gridY;
         }
     }
 }
-
-
-
 
 function gameLoop() {
     setTimeout(function() {
