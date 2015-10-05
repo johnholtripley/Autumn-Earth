@@ -100,9 +100,7 @@ gulp.task('removeUnusedCSS', ['createSitemap'], function() {
            
         }))
 
-    .pipe(minify({
-            compatibility: 'ie7'
-        }))
+    .pipe(minify({compatibility: 'ie7',processImport: false}))
         .pipe(rename('base.css'))
         .pipe(gulp.dest('htdocs/css/'));
 
@@ -125,9 +123,7 @@ gulp.task('removeUnusedIE8CSS', ['removeUnusedCSS'], function() {
            
         }))
 
-    .pipe(minify({
-            compatibility: 'ie7'
-        }))
+    .pipe(minify({compatibility: 'ie7',processImport: false}))
         .pipe(rename('IE8Support.css'))
         .pipe(gulp.dest('htdocs/css/'));
 

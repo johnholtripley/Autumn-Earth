@@ -38,6 +38,21 @@ function uniqueValues(a) {
 }
 
 
+
+function compareZIndex(a,b) {
+  if (cards[a].zIndex < cards[b].zIndex)
+    return 1;
+  if (cards[a].zIndex > cards[b].zIndex)
+    return -1;
+  return 0;
+}
+
+
+function getRandomInteger(min, max) {
+  return Math.floor(Math.random() * (max - min)) + min;
+}
+
+
 // -----------------------------------------------------------
 // http://paulirish.com/2011/requestanimationframe-for-smart-animating/
 // http://my.opera.com/emoller/blog/2011/12/20/requestanimationframe-for-smart-er-animating
@@ -260,9 +275,7 @@ function getCanvasPosition() {
 }
 
 
-function getRandomIntger(min, max) {
-  return Math.floor(Math.random() * (max - min)) + min;
-}
+
 
 function initCardGame() {
 
@@ -283,6 +296,7 @@ function initCardGame() {
             y: -100,
             //   boardX: -1,
             //   boardY: -1,
+            zIndex: 0,
             flippedAnimation: 0,
             isMovingToBoard: false,
             originalOwner: (i >= (numberOfCardsInGame / 2) ? 2 : 1),
@@ -298,8 +312,8 @@ function initCardGame() {
                 offsetY = 0;
                 if (this.flippedAnimation > 0) {
                     randomAmount = this.flippedAnimation * 4;
-                    offsetX = getRandomIntger(0, randomAmount);
-                    offsetY = getRandomIntger(0, randomAmount);
+                    offsetX = getRandomInteger(0, randomAmount);
+                    offsetY = getRandomInteger(0, randomAmount);
 
 
                     this.flippedAnimation--;
@@ -379,6 +393,7 @@ placedCards = 4;
     currentlySelectedCard = -1;
     currentPlayersTurn = 2;
     currentOpponent = 1;
+    whoCanClick = 2;
 
 gameMode = "play";
 
@@ -401,8 +416,8 @@ function update() {
         if (cards[i].isMovingToBoard) {
             var targetX = cards[i].gridX * cardWidth;
             var targetY = cards[i].gridY * cardHeight;
-            cards[i].x -= (cards[i].x - targetX) * 0.7;
-            cards[i].y -= (cards[i].y - targetY) * 0.7;
+            cards[i].x -= (cards[i].x - targetX) * 0.3;
+            cards[i].y -= (cards[i].y - targetY) * 0.3;
             if (Math.abs(cards[i].x - targetX) < 10) {
                 if (Math.abs(cards[i].y - targetY) < 10) {
                     // snap in position:
@@ -433,12 +448,22 @@ function draw() {
     //  gameContext.clearRect(0, 0, canvasWidth, canvasHeight);
     // place board:
     gameContext.drawImage(boardImage, 0, 0);
+
+
+
+
+
+// get card indexes sorted by zindex:
+// ##############
+
     for (var i = 0; i < numberOfCardsInGame; i++) {
         cards[i].draw();
     }
+
     currentCardSelected.draw();
     currentPlayerMarker.draw();
 }
+
 
 
 function isValidMove(checkX, checkY) {
@@ -528,33 +553,42 @@ function checkAttack(placedTileX, placedTileY, xDir, yDir) {
 function flipCard(cardRef) {
     cards[cardRef].currentOwner = currentPlayersTurn;
     cards[cardRef].flippedAnimation = 10;
+    cards[cardRef].zIndex = 1;
 }
 
 
 function canvasClick(e) {
     var x = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft - outerCanvasLeft;
     var y = e.clientY + document.body.scrollTop + document.documentElement.scrollTop - outerCanvasTop - pageLoadScroll;
-    gridX = Math.floor((x / outerCanvasWidth) * boardWidth);
-    gridY = Math.floor((y / outerCanvasHeight) * boardHeight);
-    var thisBoardRef = board[gridY][gridX];
-    if (thisBoardRef == "-") {
-        if (currentlySelectedCard != -1) {
-            if (isValidMove(gridX, gridY)) {
-                cards[currentlySelectedCard].isMovingToBoard = true;
-                cards[currentlySelectedCard].gridX = gridX;
-                cards[currentlySelectedCard].gridY = gridY;
-                board[gridY][gridX] = currentlySelectedCard;
-                currentlySelectedCard = -1;
+    switch (gameMode) {
+        case "play":
+            gridX = Math.floor((x / outerCanvasWidth) * boardWidth);
+            gridY = Math.floor((y / outerCanvasHeight) * boardHeight);
+            var thisBoardRef = board[gridY][gridX];
+            if (thisBoardRef == "-") {
+                if (currentlySelectedCard != -1) {
+                    if (isValidMove(gridX, gridY)) {
+                        cards[currentlySelectedCard].isMovingToBoard = true;
+                        cards[currentlySelectedCard].gridX = gridX;
+                        cards[currentlySelectedCard].gridY = gridY;
+                        board[gridY][gridX] = currentlySelectedCard;
+                         cards[currentlySelectedCard].zIndex = 1;
+                        currentlySelectedCard = -1;
+                        whoCanClick = currentOpponent;
+                       
+                    }
+                }
+            } else if (thisBoardRef != "x") {
+                if (!(cards[thisBoardRef].hasBeenPlaced)) {
+                    if (cards[thisBoardRef].currentOwner == whoCanClick) {
+                        currentlySelectedCard = thisBoardRef;
+                    }
+                }
             }
-        }
-    } else if (thisBoardRef != "x") {
-        if (!(cards[thisBoardRef].hasBeenPlaced)) {
-            if (cards[thisBoardRef].currentOwner == currentPlayersTurn) {
-                currentlySelectedCard = thisBoardRef;
-            }
-        }
     }
 }
+
+
 
 function gameLoop() {
     setTimeout(function() {
