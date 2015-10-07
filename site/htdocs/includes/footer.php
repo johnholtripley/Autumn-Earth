@@ -11,15 +11,15 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/search.php");
 <div id="navigationInner">
 <div class="row">
 <ul>
-<li><a href="/" accesskey="1">Home</a></li>
-<li><a href="/forum/" accesskey="2">Forum</a></li>
-<li><a href="/auction/" accesskey="3">Auction</a></li>
-<li><a href="/mail/" accesskey="4">Mail</a></li>
-<li><a href="/chronicle/" accesskey="5">News</a></li>
-<li><a href="#" accesskey="6">Guide</a></li>
-<li><a href="#" accesskey="7">The World</a></li>
-<li><a href="/contracts/CreateContract.php" accesskey="8">Contract</a></li>
-<li><a href="/card-game/" accesskey="9">Card game</a></li>
+<li><a href="/">Home</a></li>
+<li><a href="/forum/">Forum</a></li>
+<li><a href="/auction/">Auction</a></li>
+<li><a href="/mail/">Mail</a></li>
+<li><a href="/chronicle/">News</a></li>
+<li><a href="#">Guide</a></li>
+<li><a href="#">The World</a></li>
+<li><a href="/contracts/CreateContract.php">Contract</a></li>
+<li><a href="/card-game/">Card game</a></li>
 </ul>
 </div>
 </div>
