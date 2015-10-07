@@ -40,7 +40,7 @@ function uniqueValues(a) {
 
 
 function compareZIndex(a,b) {
-if (a.zIndex < b.zIndex)
+  if (a.zIndex < b.zIndex)
     return -1;
   if (a.zIndex > b.zIndex)
     return 1;
@@ -294,6 +294,7 @@ function initCardGame() {
         cards[i] = {
             x: -100,
             y: -100,
+            index: i,
             //   boardX: -1,
             //   boardY: -1,
             zIndex: 0,
@@ -317,6 +318,10 @@ function initCardGame() {
 
 
                     this.flippedAnimation--;
+                    if (this.flippedAnimation == 0) {
+                        // now finished moving:
+                        this.zIndex = 0;
+                    }
                 }
                 gameContext.fillStyle = playerColours[this.currentOwner];
                 gameContext.fillRect(this.x + offsetX, this.y + offsetY, cardWidth, cardHeight);
@@ -327,6 +332,7 @@ function initCardGame() {
         }
 
     }
+
 
 
 
@@ -425,6 +431,7 @@ function update() {
                     cards[i].x = cards[i].gridX * cardWidth;
                     cards[i].y = cards[i].gridY * cardHeight;
                     cards[i].hasBeenPlaced = true;
+                    cards[i].zIndex = 0;
                     checkAttacksInAllDirections(cards[i].gridX, cards[i].gridY);
                     placedCards++;
                     if (placedCards == numberOfCardsInGame) {
@@ -451,14 +458,22 @@ function draw() {
 
 
 
-
-
 // get card indexes sorted by zindex:
-// ##############
 
-    for (var i = 0; i < numberOfCardsInGame; i++) {
-        cards[i].draw();
-    }
+
+var cardsCopyForSorting = cards.slice();
+var cardDrawOrder = cardsCopyForSorting.sort(compareZIndex);
+for (var i = 0; i < numberOfCardsInGame; i++) {
+cards[(cardDrawOrder[i].index)].draw();
+}
+
+
+for (var i = 0; i < numberOfCardsInGame; i++) {
+if(cards[(cardDrawOrder[i].index)].zIndex != 0) {
+    console.log(cardDrawOrder[i].index);
+}
+}
+
 
     currentCardSelected.draw();
     currentPlayerMarker.draw();
