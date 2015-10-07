@@ -40,10 +40,10 @@ function uniqueValues(a) {
 
 
 function compareZIndex(a,b) {
-  if (cards[a].zIndex < cards[b].zIndex)
-    return 1;
-  if (cards[a].zIndex > cards[b].zIndex)
+if (a.zIndex < b.zIndex)
     return -1;
+  if (a.zIndex > b.zIndex)
+    return 1;
   return 0;
 }
 
