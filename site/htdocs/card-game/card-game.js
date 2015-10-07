@@ -350,7 +350,9 @@ function initCardGame() {
     currentCardSelectedImage = Loader.getImage("selected");
 
     currentCardSelected = {
+      
         draw: function() {
+            
             if (currentlySelectedCard != -1) {
                 gameContext.drawImage(currentCardSelectedImage, cards[currentlySelectedCard].x - 20, cards[currentlySelectedCard].y - 20);
             }
@@ -360,13 +362,22 @@ function initCardGame() {
     currentPlayerMarkerImage = Loader.getImage("current");
 
     currentPlayerMarker = {
+        frame: 1,
+        increment: 0.1,
         draw: function() {
-
+// http://codetheory.in/canvas-rotating-and-scaling-images-around-a-particular-point/
+this.frame+=this.increment;
+if(Math.abs(this.frame)>2) {
+    this.increment *= -1;
+}
+            gameContext.save();
 
             this.x = (currentPlayersTurn == 1 ? 35 : 875);
-
-            gameContext.drawImage(currentPlayerMarkerImage, this.x, 20);
-
+            gameContext.translate(this.x, 20);
+           
+gameContext.scale(this.frame,1);
+            gameContext.drawImage(currentPlayerMarkerImage, 0,0);
+gameContext.restore();
         }
     }
     
