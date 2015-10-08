@@ -365,22 +365,20 @@ function initCardGame() {
         xScale: 1,
         increment: -0.05,
         draw: function() {
-// http://codetheory.in/canvas-rotating-and-scaling-images-around-a-particular-point/
-this.xScale+=this.increment;
-if(Math.abs(this.xScale)>1) {
-    this.increment *= -1;
-}
+            // http://codetheory.in/canvas-rotating-and-scaling-images-around-a-particular-point/
+            this.xScale += this.increment;
+            if (Math.abs(this.xScale) > 1) {
+                this.increment *= -1;
+            }
             gameContext.save();
-
             this.x = (currentPlayersTurn == 1 ? 84 : 925);
             gameContext.translate(this.x, 20);
-        
-gameContext.scale(this.xScale,1);
-
-            gameContext.drawImage(currentPlayerMarkerImage, (0-((currentPlayerMarkerImage.width)/2)),0);
-gameContext.restore();
+            gameContext.scale(this.xScale, 1);
+            gameContext.drawImage(currentPlayerMarkerImage, (0 - ((currentPlayerMarkerImage.width) / 2)), 0);
+            gameContext.restore();
         }
     }
+
     
 
     placeCardOnBoard(0, (boardWidth / 2) - 1, (boardHeight / 2) - 1, true);
@@ -408,12 +406,13 @@ gameContext.restore();
         }
     }
 placedCards = 4;
-    currentlySelectedCard = -1;
-    currentPlayersTurn = 2;
-    currentOpponent = 1;
-    whoCanClick = 2;
-
+currentlySelectedCard = -1;
+currentPlayersTurn = 2;
+currentOpponent = 1;
+isPlayer1AI = true;
+whoCanClick = 2;
 gameMode = "play";
+
 
 }
 
@@ -453,11 +452,19 @@ function update() {
                     var oldCurrentPlayersTurn = currentPlayersTurn;
                     currentPlayersTurn = currentOpponent;
                     currentOpponent = oldCurrentPlayersTurn;
+
+                    if (currentPlayersTurn == 1) {
+                        if (isPlayer1AI) {
+                            doAIMove();
+                        }
+                    }
+
                 }
             }
         }
     }
 }
+
 
 
 
@@ -584,6 +591,44 @@ function flipCard(cardRef) {
 }
 
 
+
+
+
+
+// AI -----------------------------------------
+function doAIMove() {
+console.log("AI thinking...");
+    findBestMove(board, currentPlayersTurn, cards);
+}
+
+function findBestMove(boardState, whichPlayerCurrently, cardState) {
+
+// copy arrays so original data isn't changed:
+var cardState = cardState.slice();
+var tempBoard = [];
+for (var i = 0; i < boardState.length; i++) {
+    tempBoard[i] = boardState[i].slice();
+    }
+
+var bestMoveFound = [];
+var listOfPossibleBestMoves = [[-99999999]];
+
+}
+
+
+// -------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
 function canvasClick(e) {
     var x = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft - outerCanvasLeft;
     var y = e.clientY + document.body.scrollTop + document.documentElement.scrollTop - outerCanvasTop - pageLoadScroll;
@@ -599,21 +644,33 @@ function canvasClick(e) {
                         cards[currentlySelectedCard].gridX = gridX;
                         cards[currentlySelectedCard].gridY = gridY;
                         board[gridY][gridX] = currentlySelectedCard;
-                         cards[currentlySelectedCard].zIndex = 1;
+                        cards[currentlySelectedCard].zIndex = 1;
                         currentlySelectedCard = -1;
                         whoCanClick = currentOpponent;
-                       
                     }
                 }
             } else if (thisBoardRef != "x") {
+                var isValidClick = false;
                 if (!(cards[thisBoardRef].hasBeenPlaced)) {
                     if (cards[thisBoardRef].currentOwner == whoCanClick) {
-                        currentlySelectedCard = thisBoardRef;
+                        isValidClick = true;
                     }
                 }
+                // stop player clicking if it's the AI's turn:
+                if (isPlayer1AI) {
+                    if (whoCanClick == 1) {
+                        isValidClick = false;
+                    }
+                }
+                if (isValidClick) {
+                    currentlySelectedCard = thisBoardRef;
+                }
+
             }
     }
 }
+
+
 
 
 
