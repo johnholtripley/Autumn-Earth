@@ -409,7 +409,7 @@ placedCards = 4;
 currentlySelectedCard = -1;
 currentPlayersTurn = 2;
 currentOpponent = 1;
-isPlayer1AI = true;
+isPlayer1AI = false;
 whoCanClick = 2;
 gameMode = "play";
 
@@ -443,10 +443,26 @@ function update() {
                     cards[i].y = cards[i].gridY * cardHeight;
                     cards[i].hasBeenPlaced = true;
                     cards[i].zIndex = 0;
-                    checkAttacksInAllDirections(cards[i].gridX, cards[i].gridY);
+                    checkAttacksInAllDirections(cards[i].gridX, cards[i].gridY, board, cards, currentOpponent, currentPlayersTurn);
                     placedCards++;
                     if (placedCards == numberOfCardsInGame) {
                         gameMode = "gameover";
+
+var player1CardsShown = 0;
+var player2CardsShown = 0;
+for (var j = 0; j < numberOfCardsInGame; j++) {
+    if(cards[j].currentOwner == 1) {
+player1CardsShown ++;
+    } else {
+        player2CardsShown ++;
+    }
+    }
+    if (player2CardsShown > player1CardsShown) {
+        playerColours[1] = "#665200";
+    } else if (player1CardsShown > player2CardsShown) {
+        playerColours[2] = "#660052";
+    }
+draw();
                     }
                     // swap whose go it is:
                     var oldCurrentPlayersTurn = currentPlayersTurn;
@@ -518,18 +534,18 @@ function isValidMove(checkX, checkY) {
     return isValid;
 }
 
-function checkAttacksInAllDirections(checkX, checkY) {
-    checkAttack(checkX, checkY, -1, 0);
-    checkAttack(checkX, checkY, 1, 0);
-    checkAttack(checkX, checkY, 0, -1);
-    checkAttack(checkX, checkY, 0, 1);
-    checkAttack(checkX, checkY, -1, -1);
-    checkAttack(checkX, checkY, 1, 1);
-    checkAttack(checkX, checkY, -1, 1);
-    checkAttack(checkX, checkY, 1, -1);
+function checkAttacksInAllDirections(checkX, checkY, whichBoard, whichCards, whichCurrentOpponent, whichCurrentPlayersTurn) {
+    checkAttack(checkX, checkY, -1, 0, whichBoard, whichCards, whichCurrentOpponent, whichCurrentPlayersTurn);
+    checkAttack(checkX, checkY, 1, 0, whichBoard, whichCards, whichCurrentOpponent, whichCurrentPlayersTurn);
+    checkAttack(checkX, checkY, 0, -1, whichBoard, whichCards, whichCurrentOpponent, whichCurrentPlayersTurn);
+    checkAttack(checkX, checkY, 0, 1, whichBoard, whichCards, whichCurrentOpponent, whichCurrentPlayersTurn);
+    checkAttack(checkX, checkY, -1, -1, whichBoard, whichCards, whichCurrentOpponent, whichCurrentPlayersTurn);
+    checkAttack(checkX, checkY, 1, 1, whichBoard, whichCards, whichCurrentOpponent, whichCurrentPlayersTurn);
+    checkAttack(checkX, checkY, -1, 1, whichBoard, whichCards, whichCurrentOpponent, whichCurrentPlayersTurn);
+    checkAttack(checkX, checkY, 1, -1, whichBoard, whichCards, whichCurrentOpponent, whichCurrentPlayersTurn);
 }
 
-function checkAttack(placedTileX, placedTileY, xDir, yDir) {
+function checkAttack(placedTileX, placedTileY, xDir, yDir, whichBoard, whichCards, whichCurrentOpponent, whichCurrentPlayersTurn) {
     var defenceRunningTotal = 0;
     var opponentsCardsFound = [];
     // trace a path from selected tile, in direction set until a card that isn't an opponent's is encountered:
@@ -543,13 +559,13 @@ function checkAttack(placedTileX, placedTileY, xDir, yDir) {
         // is in bounds:
         if (lineTracedY >= 0) {
             if (lineTracedY < boardHeight) {
-                var thisCheckBoardRef = board[lineTracedY][lineTracedX];
+                var thisCheckBoardRef = whichBoard[lineTracedY][lineTracedX];
                 // is numeric?
                 if (!(isNaN(thisCheckBoardRef))) {
-                    if (cards[thisCheckBoardRef].currentOwner == currentOpponent) {
+                    if (whichCards[thisCheckBoardRef].currentOwner == whichCurrentOpponent) {
                         isAnOpponentCard = true;
                         opponentsCardsFound.push(thisCheckBoardRef);
-                        var defenseCardType = cards[thisCheckBoardRef].cardType;
+                        var defenseCardType = whichCards[thisCheckBoardRef].cardType;
                         defenceRunningTotal += parseInt(allCardData[defenseCardType][1]);
                         lineTracedX += xDir;
                         lineTracedY += yDir;
@@ -559,22 +575,22 @@ function checkAttack(placedTileX, placedTileY, xDir, yDir) {
         }
 
     } while (isAnOpponentCard);
-    var attackCardType = cards[(board[placedTileY][placedTileX])].cardType;
+    var attackCardType = whichCards[(board[placedTileY][placedTileX])].cardType;
     var placedCardsAttack = parseInt(allCardData[attackCardType][0]);
     // then check card after is current player's card, not the board edge:
     if (lineTracedY >= 0) {
         if (lineTracedY < boardHeight) {
             // is numeric?
-            if (!(isNaN(board[lineTracedY][lineTracedX]))) {     
-                if (cards[(board[lineTracedY][lineTracedX])].currentOwner == currentPlayersTurn) {
-                    var existingCardType = cards[(board[lineTracedY][lineTracedX])].cardType;
+            if (!(isNaN(whichBoard[lineTracedY][lineTracedX]))) {     
+                if (whichCards[(whichBoard[lineTracedY][lineTracedX])].currentOwner == whichCurrentPlayersTurn) {
+                    var existingCardType = whichCards[(whichBoard[lineTracedY][lineTracedX])].cardType;
                     var existingCardsAttack = parseInt(allCardData[existingCardType][0]);
 
 
 
                     if (placedCardsAttack + existingCardsAttack >= defenceRunningTotal) {
                         for (i = 0; i < opponentsCardsFound.length; i++) {
-                            flipCard(opponentsCardsFound[i]);
+                            flipCard(opponentsCardsFound[i],whichCards,whichCurrentPlayersTurn);
                         }
                     }
                 }
@@ -584,10 +600,10 @@ function checkAttack(placedTileX, placedTileY, xDir, yDir) {
 }
 
 
-function flipCard(cardRef) {
-    cards[cardRef].currentOwner = currentPlayersTurn;
-    cards[cardRef].flippedAnimation = 10;
-    cards[cardRef].zIndex = 1;
+function flipCard(cardRef,whichCards,whichCurrentPlayersTurn) {
+    whichCards[cardRef].currentOwner = whichCurrentPlayersTurn;
+    whichCards[cardRef].flippedAnimation = 10;
+    whichCards[cardRef].zIndex = 1;
 }
 
 
