@@ -516,7 +516,7 @@ if(cards[(cardDrawOrder[i].index)].zIndex != 0) {
 
 
 
-function isValidMove(checkX, checkY) {
+function isValidMove(checkX, checkY, whichBoard) {
     // check that it adjoins another card (ie. that the board has a number there and not X, - or undefined):
     var isValid = false;
     for (var i = checkX - 1; i <= checkX + 1; i++) {
@@ -524,7 +524,7 @@ function isValidMove(checkX, checkY) {
             // x shouldn't go out of scope, but y might:
             if (j >= 0) {
                 if (j < boardHeight) {
-                    if (!isNaN(board[j][i])) {
+                    if (!isNaN(whichBoard[j][i])) {
                         isValid = true;
                     }
                 }
@@ -610,29 +610,46 @@ function flipCard(cardRef,whichCards,whichCurrentPlayersTurn) {
 
 
 
-
 // AI -----------------------------------------
 function doAIMove() {
-console.log("AI thinking...");
+    console.log("AI thinking...");
     findBestMove(board, currentPlayersTurn, cards);
 }
 
 function findBestMove(boardState, whichPlayerCurrently, cardState) {
-
-// copy arrays so original data isn't changed:
-var cardState = cardState.slice();
-var tempBoard = [];
-for (var i = 0; i < boardState.length; i++) {
-    tempBoard[i] = boardState[i].slice();
+    // copy arrays so original data isn't changed:
+    var cardState = cardState.slice();
+    var tempBoard = [];
+    for (var i = 0; i < boardState.length; i++) {
+        tempBoard[i] = boardState[i].slice();
     }
+    var bestMoveFound = [];
+    var listOfPossibleBestMoves = [[-99999999]];
+    var bestImmediatePlayerMove = [];
 
-var bestMoveFound = [];
-var listOfPossibleBestMoves = [[-99999999]];
+
+// loop through all board tiles
+// if is valid
+// loop through remaining cards
+// try card in position
+// count flips *1.02 so it favours more aggressive moves
+// - try opponent's counter move:
+// - copy board and cards
+// - loop through all board tiles
+// - if is valid
+// - loop through remaining cards
+// - try card in position
+// - count flips *1.0
+// sort all moves based on ai score - opponent's counter move
+// (also weight score if it blocks a player's counter flip *1.01)
+// random pick from that based on AI's skill level
+// make move
 
 }
 
 
 // -------------------------------------------
+
 
 
 
@@ -655,7 +672,7 @@ function canvasClick(e) {
             var thisBoardRef = board[gridY][gridX];
             if (thisBoardRef == "-") {
                 if (currentlySelectedCard != -1) {
-                    if (isValidMove(gridX, gridY)) {
+                    if (isValidMove(gridX, gridY, board)) {
                         cards[currentlySelectedCard].isMovingToBoard = true;
                         cards[currentlySelectedCard].gridX = gridX;
                         cards[currentlySelectedCard].gridY = gridY;
