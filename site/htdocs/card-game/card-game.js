@@ -14,13 +14,14 @@ numberOfCardsInGame = allCardsThisGame.length;
 // '#' = player 1 start position
 // '@' = player 2 start position
 board = [
-   ['#', '#', 'x', 'x', 'x', '-', '-', 'x', 'x', 'x', 'x', 'x'],
+    ['#', '#', 'x', 'x', 'x', '-', '-', 'x', 'x', 'x', 'x', 'x'],
     ['#', '#', 'x', 'x', '-', '-', '-', '-', 'x', 'x', '@', '@'],
     ['#', '#', 'x', '-', '-', '-', '-', '-', '-', 'x', '@', '@'],
     ['#', '#', 'x', '-', '-', '-', '-', '-', '-', 'x', '@', '@'],
     ['#', '#', 'x', 'x', '-', '-', '-', '-', 'x', 'x', '@', '@'],
     ['x', 'x', 'x', 'x', 'x', '-', '-', 'x', 'x', 'x', '@', '@']
 ];
+
 
 boardWidth = board[0].length;
 boardHeight = board.length;
@@ -383,16 +384,10 @@ function initCardGame() {
 
     placeCardOnBoard(0, (boardWidth / 2) - 1, (boardHeight / 2) - 1, true);
     placeCardOnBoard(1, (boardWidth / 2), (boardHeight / 2), true);
-
-
     placeCardOnBoard((numberOfCardsInGame / 2), (boardWidth / 2), (boardHeight / 2) - 1, true);
     placeCardOnBoard((numberOfCardsInGame / 2) + 1, (boardWidth / 2) - 1, (boardHeight / 2), true);
-
-
-
     var player1CardIndexToPlace = 2;
     var player2CardIndexToPlace = (numberOfCardsInGame / 2) + 2;
-
     for (var j = 0; j < boardWidth; j++) {
         for (var k = 0; k < boardHeight; k++) {
             if (board[k][j] == "#") {
@@ -409,7 +404,7 @@ placedCards = 4;
 currentlySelectedCard = -1;
 currentPlayersTurn = 2;
 currentOpponent = 1;
-isPlayer1AI = false;
+isPlayer1AI = true;
 whoCanClick = 2;
 gameMode = "play";
 
@@ -447,22 +442,21 @@ function update() {
                     placedCards++;
                     if (placedCards == numberOfCardsInGame) {
                         gameMode = "gameover";
-
-var player1CardsShown = 0;
-var player2CardsShown = 0;
-for (var j = 0; j < numberOfCardsInGame; j++) {
-    if(cards[j].currentOwner == 1) {
-player1CardsShown ++;
-    } else {
-        player2CardsShown ++;
-    }
-    }
-    if (player2CardsShown > player1CardsShown) {
-        playerColours[1] = "#665200";
-    } else if (player1CardsShown > player2CardsShown) {
-        playerColours[2] = "#660052";
-    }
-draw();
+                        var player1CardsShown = 0;
+                        var player2CardsShown = 0;
+                        for (var j = 0; j < numberOfCardsInGame; j++) {
+                            if (cards[j].currentOwner == 1) {
+                                player1CardsShown++;
+                            } else {
+                                player2CardsShown++;
+                            }
+                        }
+                        if (player2CardsShown > player1CardsShown) {
+                            playerColours[1] = "#665200";
+                        } else if (player1CardsShown > player2CardsShown) {
+                            playerColours[2] = "#660052";
+                        }
+                        draw();
                     }
                     // swap whose go it is:
                     var oldCurrentPlayersTurn = currentPlayersTurn;
@@ -486,6 +480,7 @@ draw();
 
 
 
+
 function draw() {
     //  gameContext.clearRect(0, 0, canvasWidth, canvasHeight);
     // place board:
@@ -501,15 +496,6 @@ var cardDrawOrder = cardsCopyForSorting.sort(compareZIndex);
 for (var i = 0; i < numberOfCardsInGame; i++) {
 cards[(cardDrawOrder[i].index)].draw();
 }
-
-
-for (var i = 0; i < numberOfCardsInGame; i++) {
-if(cards[(cardDrawOrder[i].index)].zIndex != 0) {
-    console.log(cardDrawOrder[i].index);
-}
-}
-
-
     currentCardSelected.draw();
     currentPlayerMarker.draw();
 }
@@ -628,22 +614,81 @@ function findBestMove(boardState, whichPlayerCurrently, cardState) {
     var bestImmediatePlayerMove = [];
 
 
-// loop through all board tiles
-// if is valid
-// loop through remaining cards
-// try card in position
-// count flips *1.02 so it favours more aggressive moves
-// - try opponent's counter move:
-// - copy board and cards
-// - loop through all board tiles
-// - if is valid
-// - loop through remaining cards
-// - try card in position
-// - count flips *1.0
+
+
+// these values might change if the board is vertical - but use them to not include starting grid positions
+var horizInset = 2;
+var vertInset = 0;
+// loop through all board tiles:
+for (var j = horizInset; j < (boardWidth - horizInset); j++) {
+    for (var k = vertInset; k < (boardHeight - vertInset); k++) {
+        // if is valid:
+        if (tempBoard[k][j] == "-") {
+            if (isValidMove(j, k, tempBoard)) {
+                console.log("considering " + j + ", " + k);
+
+                // temp:
+                listOfPossibleBestMoves.push([j, k]);
+                // end temp -----
+                // loop through remaining cards
+                for (var i = 0; i < numberOfCardsInGame; i++) {
+
+                    // if is AI player's card (always player 1)
+                    if (cardState[i].currentOwner == 1) {
+                        // if not placed
+                        if (!cardState[i].hasBeenPlaced) {
+                            // temp:
+                            currentlySelectedCard = i;
+                            // end temp -----
+                        }
+                    }
+                }
+                // try card in position
+                // count flips *1.02 so it favours more aggressive moves
+                // - try opponent's counter move:
+                // - copy board and cards
+                // - loop through all board tiles
+                // - if is valid
+                // - loop through remaining cards
+                // - try card in position
+                // - count flips *1.0
+
+            }
+        }
+    }
+}
+
 // sort all moves based on ai score - opponent's counter move
 // (also weight score if it blocks a player's counter flip *1.01)
+
+
 // random pick from that based on AI's skill level
-// make move
+
+
+
+
+
+
+// temp:
+if(listOfPossibleBestMoves[0] == -99999999) {
+    listOfPossibleBestMoves.shift();
+}
+// randomly pick a move:
+var whichMoveToMake = listOfPossibleBestMoves[Math.floor(Math.random()*listOfPossibleBestMoves.length)];
+// end temp -----
+
+// make move:
+
+
+ cards[currentlySelectedCard].isMovingToBoard = true;
+ cards[currentlySelectedCard].gridX = whichMoveToMake[0];
+ cards[currentlySelectedCard].gridY = whichMoveToMake[1];
+ board[(whichMoveToMake[1])][(whichMoveToMake[0])] = currentlySelectedCard;
+ cards[currentlySelectedCard].zIndex = 1;
+ currentlySelectedCard = -1;
+ // player's turn now:
+ whoCanClick = 2;
+
 
 }
 
