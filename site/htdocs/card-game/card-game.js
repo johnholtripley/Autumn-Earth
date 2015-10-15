@@ -438,7 +438,7 @@ function update() {
                     cards[i].y = cards[i].gridY * cardHeight;
                     cards[i].hasBeenPlaced = true;
                     cards[i].zIndex = 0;
-                    checkAttacksInAllDirections(cards[i].gridX, cards[i].gridY, board, cards, currentOpponent, currentPlayersTurn);
+                    checkAttacksInAllDirections(cards[i].gridX, cards[i].gridY, board, cards, currentOpponent, currentPlayersTurn, false);
                     placedCards++;
                     if (placedCards == numberOfCardsInGame) {
                         gameMode = "gameover";
@@ -510,6 +510,7 @@ function isValidMove(checkX, checkY, whichBoard) {
             // x shouldn't go out of scope, but y might:
             if (j >= 0) {
                 if (j < boardHeight) {
+              //      console.log(i+","+j+" = "+whichBoard[j][i]);
                     if (!isNaN(whichBoard[j][i])) {
                         isValid = true;
                     }
@@ -520,28 +521,25 @@ function isValidMove(checkX, checkY, whichBoard) {
     return isValid;
 }
 
-function checkAttacksInAllDirections(checkX, checkY, whichBoard, whichCards, whichCurrentOpponent, whichCurrentPlayersTurn) {
-    checkAttack(checkX, checkY, -1, 0, whichBoard, whichCards, whichCurrentOpponent, whichCurrentPlayersTurn);
-    checkAttack(checkX, checkY, 1, 0, whichBoard, whichCards, whichCurrentOpponent, whichCurrentPlayersTurn);
-    checkAttack(checkX, checkY, 0, -1, whichBoard, whichCards, whichCurrentOpponent, whichCurrentPlayersTurn);
-    checkAttack(checkX, checkY, 0, 1, whichBoard, whichCards, whichCurrentOpponent, whichCurrentPlayersTurn);
-    checkAttack(checkX, checkY, -1, -1, whichBoard, whichCards, whichCurrentOpponent, whichCurrentPlayersTurn);
-    checkAttack(checkX, checkY, 1, 1, whichBoard, whichCards, whichCurrentOpponent, whichCurrentPlayersTurn);
-    checkAttack(checkX, checkY, -1, 1, whichBoard, whichCards, whichCurrentOpponent, whichCurrentPlayersTurn);
-    checkAttack(checkX, checkY, 1, -1, whichBoard, whichCards, whichCurrentOpponent, whichCurrentPlayersTurn);
+function checkAttacksInAllDirections(checkX, checkY, whichBoard, whichCards, whichCurrentOpponent, whichCurrentPlayersTurn, isAIChecking) {
+    checkAttack(checkX, checkY, -1, 0, whichBoard, whichCards, whichCurrentOpponent, whichCurrentPlayersTurn, isAIChecking);
+    checkAttack(checkX, checkY, 1, 0, whichBoard, whichCards, whichCurrentOpponent, whichCurrentPlayersTurn, isAIChecking);
+    checkAttack(checkX, checkY, 0, -1, whichBoard, whichCards, whichCurrentOpponent, whichCurrentPlayersTurn, isAIChecking);
+    checkAttack(checkX, checkY, 0, 1, whichBoard, whichCards, whichCurrentOpponent, whichCurrentPlayersTurn, isAIChecking);
+    checkAttack(checkX, checkY, -1, -1, whichBoard, whichCards, whichCurrentOpponent, whichCurrentPlayersTurn, isAIChecking);
+    checkAttack(checkX, checkY, 1, 1, whichBoard, whichCards, whichCurrentOpponent, whichCurrentPlayersTurn, isAIChecking);
+    checkAttack(checkX, checkY, -1, 1, whichBoard, whichCards, whichCurrentOpponent, whichCurrentPlayersTurn, isAIChecking);
+    checkAttack(checkX, checkY, 1, -1, whichBoard, whichCards, whichCurrentOpponent, whichCurrentPlayersTurn, isAIChecking);
 }
 
-function checkAttack(placedTileX, placedTileY, xDir, yDir, whichBoard, whichCards, whichCurrentOpponent, whichCurrentPlayersTurn) {
+function checkAttack(placedTileX, placedTileY, xDir, yDir, whichBoard, whichCards, whichCurrentOpponent, whichCurrentPlayersTurn, isAIChecking) {
     var defenceRunningTotal = 0;
     var opponentsCardsFound = [];
     // trace a path from selected tile, in direction set until a card that isn't an opponent's is encountered:
     var lineTracedX = placedTileX + xDir;
     var lineTracedY = placedTileY + yDir;
-    
-   
     do {
         var isAnOpponentCard = false;
-        
         // is in bounds:
         if (lineTracedY >= 0) {
             if (lineTracedY < boardHeight) {
@@ -559,31 +557,35 @@ function checkAttack(placedTileX, placedTileY, xDir, yDir, whichBoard, whichCard
                 }
             }
         }
-
     } while (isAnOpponentCard);
-    var attackCardType = whichCards[(board[placedTileY][placedTileX])].cardType;
+  //  console.log("---------------");
+
+  //  console.log(placedTileX+","+placedTileY);
+    var attackCardType = whichCards[(whichBoard[placedTileY][placedTileX])].cardType;
     var placedCardsAttack = parseInt(allCardData[attackCardType][0]);
     // then check card after is current player's card, not the board edge:
     if (lineTracedY >= 0) {
         if (lineTracedY < boardHeight) {
             // is numeric?
-            if (!(isNaN(whichBoard[lineTracedY][lineTracedX]))) {     
+            if (!(isNaN(whichBoard[lineTracedY][lineTracedX]))) {
                 if (whichCards[(whichBoard[lineTracedY][lineTracedX])].currentOwner == whichCurrentPlayersTurn) {
                     var existingCardType = whichCards[(whichBoard[lineTracedY][lineTracedX])].cardType;
                     var existingCardsAttack = parseInt(allCardData[existingCardType][0]);
-
-
-
                     if (placedCardsAttack + existingCardsAttack >= defenceRunningTotal) {
+                        if(isAIChecking) {
+thisMovesScore += opponentsCardsFound.length;
+                        } else {
                         for (i = 0; i < opponentsCardsFound.length; i++) {
-                            flipCard(opponentsCardsFound[i],whichCards,whichCurrentPlayersTurn);
+                            flipCard(opponentsCardsFound[i], whichCards, whichCurrentPlayersTurn);
                         }
+                    }
                     }
                 }
             }
         }
     }
 }
+
 
 
 function flipCard(cardRef,whichCards,whichCurrentPlayersTurn) {
@@ -603,6 +605,9 @@ function doAIMove() {
 }
 
 function findBestMove(boardState, whichPlayerCurrently, cardState) {
+
+whichOpponentCurrently = (whichPlayerCurrently == 1) ? 2 : 1; 
+
     // copy arrays so original data isn't changed:
     var cardState = cardState.slice();
     var tempBoard = [];
@@ -610,87 +615,92 @@ function findBestMove(boardState, whichPlayerCurrently, cardState) {
         tempBoard[i] = boardState[i].slice();
     }
     var bestMoveFound = [];
-    var listOfPossibleBestMoves = [[-99999999]];
+    // [best score, card ref, gridx, gridy]:
+    var listOfPossibleBestMoves = [
+        [-99999999]
+    ];
     var bestImmediatePlayerMove = [];
 
 
+    // these values might change if the board is vertical - but use them to not include starting grid positions
+    var horizInset = 2;
+    var vertInset = 0;
+    // loop through all board tiles:
+    for (var j = horizInset; j < (boardWidth - horizInset); j++) {
+        for (var k = vertInset; k < (boardHeight - vertInset); k++) {
+            // if is valid:
+            if (tempBoard[k][j] == "-") {
+                if (isValidMove(j, k, tempBoard)) {
+                    // loop through remaining cards
+                    for (var i = 0; i < numberOfCardsInGame; i++) {
+                        // if is AI player's card (always player 1)
+                        if (cardState[i].currentOwner == 1) {
+                            // if not placed
+                            if (!cardState[i].hasBeenPlaced) {
+                                // ### optimisation - don't try this card if a card of this type has already been tried at this position
+                                // try card in position:
+                                tempBoard[k][j] = i;
+                                thisMovesScore = 0;
+                                checkAttacksInAllDirections(j, k, tempBoard, cardState, whichOpponentCurrently, whichPlayerCurrently, true);
+                                // count flips *1.01 so it favours more aggressive moves
+                                thisMovesScore *= 1.01;
+                                console.log("considering " + i + " at " + j + ", " + k + " - flips:" + thisMovesScore);
+                                
 
 
-// these values might change if the board is vertical - but use them to not include starting grid positions
-var horizInset = 2;
-var vertInset = 0;
-// loop through all board tiles:
-for (var j = horizInset; j < (boardWidth - horizInset); j++) {
-    for (var k = vertInset; k < (boardHeight - vertInset); k++) {
-        // if is valid:
-        if (tempBoard[k][j] == "-") {
-            if (isValidMove(j, k, tempBoard)) {
-                console.log("considering " + j + ", " + k);
+                                 // if this count is better than the lowest best score so far, insert it into the arry in order
+                                // if best scores found array > 10 then remove last one
+                                listOfPossibleBestMoves.push([thisMovesScore, i, j, k]);
+                               
+                               
+                                // - try opponent's counter move:
+                                // - copy board and cards
+                                // - loop through all board tiles
+                                // - if is valid
+                                // - loop through remaining cards
+                                // - try card in position
+                                // - count flips *1.0
+                                // - return single highest flip score
 
-                // temp:
-                listOfPossibleBestMoves.push([j, k]);
-                // end temp -----
-                // loop through remaining cards
-                for (var i = 0; i < numberOfCardsInGame; i++) {
 
-                    // if is AI player's card (always player 1)
-                    if (cardState[i].currentOwner == 1) {
-                        // if not placed
-                        if (!cardState[i].hasBeenPlaced) {
-                            // temp:
-                            currentlySelectedCard = i;
-                            // end temp -----
+                                // remove card from this position now it's been tested:
+                                tempBoard[k][j] = "-";
+                            }
                         }
                     }
                 }
-                // try card in position
-                // count flips *1.02 so it favours more aggressive moves
-                // - try opponent's counter move:
-                // - copy board and cards
-                // - loop through all board tiles
-                // - if is valid
-                // - loop through remaining cards
-                // - try card in position
-                // - count flips *1.0
-
             }
         }
     }
-}
-
-// sort all moves based on ai score - opponent's counter move
-// (also weight score if it blocks a player's counter flip *1.01)
 
 
-// random pick from that based on AI's skill level
+    // sort all moves based on ai score - opponent's counter move
+    // (also weight score if it blocks a player's counter flip *1.01)
+    // random pick from that based on AI's skill level
 
+    // temp:
+    if (listOfPossibleBestMoves[0] == -99999999) {
+        listOfPossibleBestMoves.shift();
+    }
+    // randomly pick a move:
+    var whichMoveToMake = listOfPossibleBestMoves[Math.floor(Math.random() * listOfPossibleBestMoves.length)];
+    // end temp -----
 
-
-
-
-
-// temp:
-if(listOfPossibleBestMoves[0] == -99999999) {
-    listOfPossibleBestMoves.shift();
-}
-// randomly pick a move:
-var whichMoveToMake = listOfPossibleBestMoves[Math.floor(Math.random()*listOfPossibleBestMoves.length)];
-// end temp -----
-
-// make move:
-
-
- cards[currentlySelectedCard].isMovingToBoard = true;
- cards[currentlySelectedCard].gridX = whichMoveToMake[0];
- cards[currentlySelectedCard].gridY = whichMoveToMake[1];
- board[(whichMoveToMake[1])][(whichMoveToMake[0])] = currentlySelectedCard;
- cards[currentlySelectedCard].zIndex = 1;
- currentlySelectedCard = -1;
- // player's turn now:
- whoCanClick = 2;
+    // make move:
+    currentlySelectedCard = whichMoveToMake[1];
+    cards[currentlySelectedCard].isMovingToBoard = true;
+    cards[currentlySelectedCard].gridX = whichMoveToMake[2];
+    cards[currentlySelectedCard].gridY = whichMoveToMake[3];
+    board[(whichMoveToMake[3])][(whichMoveToMake[2])] = currentlySelectedCard;
+    cards[currentlySelectedCard].zIndex = 1;
+    currentlySelectedCard = -1;
+    // player's turn now:
+    whoCanClick = 2;
 
 
 }
+
+
 
 
 // -------------------------------------------
