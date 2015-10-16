@@ -599,6 +599,31 @@ function flipCard(cardRef,whichCards,whichCurrentPlayersTurn) {
 
 
 // AI -----------------------------------------
+
+
+function insertNewMove(element, array) {
+  array.splice(locationOfBestScores(element, array) + 1, 0, element);
+  return array;
+}
+
+function locationOfBestScores(element, array, start, end) {
+  start = start || 0;
+  end = end || array.length;
+  var pivot = parseInt(start + (end - start) / 2, 10);
+  if (array[pivot][0] === element[0]) return pivot;
+  if (end - start <= 1)
+    return array[pivot][0] < element[0] ? pivot - 1 : pivot;
+  if (array[pivot][0] > element[0]) {
+    return locationOfBestScores(element, array, pivot, end);
+  } else {
+    return locationOfBestScores(element, array, start, pivot);
+  }
+}
+
+
+
+
+
 function doAIMove() {
     console.log("AI thinking...");
     findBestMove(board, currentPlayersTurn, cards);
@@ -616,9 +641,7 @@ whichOpponentCurrently = (whichPlayerCurrently == 1) ? 2 : 1;
     }
     var bestMoveFound = [];
     // [best score, card ref, gridx, gridy]:
-    var listOfPossibleBestMoves = [
-        [-99999999]
-    ];
+    var listOfPossibleBestMoves = [[-999999,-1,-1,-1]];
     var bestImmediatePlayerMove = [];
 
 
@@ -648,10 +671,17 @@ whichOpponentCurrently = (whichPlayerCurrently == 1) ? 2 : 1;
                                 
 
 
-                                 // if this count is better than the lowest best score so far, insert it into the arry in order
-                                // if best scores found array > 10 then remove last one
-                                listOfPossibleBestMoves.push([thisMovesScore, i, j, k]);
-                               
+                                 // insert this into the array in order
+                                 // http://codepen.io/johnholtripley/pen/avLarg
+                           
+                             
+
+listOfPossibleBestMoves = insertNewMove([thisMovesScore, i, j, k], listOfPossibleBestMoves);
+
+                               // just keep track of the 10 best moves:
+if(listOfPossibleBestMoves.length>10) {
+    listOfPossibleBestMoves.pop();
+}
                                
                                 // - try opponent's counter move:
                                 // - copy board and cards
@@ -678,13 +708,17 @@ whichOpponentCurrently = (whichPlayerCurrently == 1) ? 2 : 1;
     // (also weight score if it blocks a player's counter flip *1.01)
     // random pick from that based on AI's skill level
 
-    // temp:
-    if (listOfPossibleBestMoves[0] == -99999999) {
-        listOfPossibleBestMoves.shift();
-    }
+ 
+  
     // randomly pick a move:
-    var whichMoveToMake = listOfPossibleBestMoves[Math.floor(Math.random() * listOfPossibleBestMoves.length)];
-    // end temp -----
+
+    var pickMoveRange = player2Skill;
+    if (pickMoveRange>listOfPossibleBestMoves.length) {
+        pickMoveRange = listOfPossibleBestMoves.length-1;
+    }
+
+    var whichMoveToMake = listOfPossibleBestMoves[Math.floor(Math.random() * pickMoveRange)];
+  
 
     // make move:
     currentlySelectedCard = whichMoveToMake[1];

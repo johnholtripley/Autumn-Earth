@@ -74,6 +74,7 @@ $npcsCards = array(1,1,2,3,2,1,2,1,1,1,2,1);
 var allCardData = <?php echo json_encode($cardDataNeeded); ?>;
 var player1Cards = <?php echo json_encode($playersCards); ?>;
 var player2Cards = <?php echo json_encode($npcsCards); ?>;
+var player2Skill = 1;
 </script>
 </div>
 
