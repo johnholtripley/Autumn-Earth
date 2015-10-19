@@ -430,6 +430,7 @@ function update() {
     }
     if (aiIsWorking > 0) {
         aiIsWorking++;
+        // simulate a delay while the AI thinks:
         if (aiIsWorking > 36) {
             // make move:
             aiIsWorking = -1;
@@ -582,7 +583,6 @@ function doAIMove() {
     aiIsWorking = 1;
     findBestMove(board, currentPlayersTurn, cards);
 }
-
 function findBestMove(boardState, whichPlayerCurrently, cardState) {
     whichOpponentCurrently = (whichPlayerCurrently == 1) ? 2 : 1;
     // copy arrays so original data isn't changed:
@@ -617,25 +617,55 @@ function findBestMove(boardState, whichPlayerCurrently, cardState) {
                                 tempBoard[k][j] = i;
                                 thisMovesScore = 0;
                                 checkAttacksInAllDirections(j, k, tempBoard, cardState, whichOpponentCurrently, whichPlayerCurrently, true);
-                                // count flips *1.01 so it favours more aggressive moves
-                                thisMovesScore *= 1.01;
+                                // count AI flips *1.01 so it favours more aggressive moves         
+                                AIScore = thisMovesScore * 1.01;
+                                // - try opponent's counter move:
+                                // - copy board and cards
+                                bestCounterMove = 0;
+                                whichCounterPlayerCurrently = whichOpponentCurrently;
+                                whichCounterOpponentCurrently = (whichCounterPlayerCurrently == 1) ? 2 : 1;
+                                var counterCardState = cardState.slice();
+                                var counterTempBoard = [];
+                                for (var p = 0; p < tempBoard.length; p++) {
+                                    counterTempBoard[p] = tempBoard[p].slice();
+                                }
+                                for (var l = horizInset; l < (boardWidth - horizInset); l++) {
+                                    for (var m = vertInset; m < (boardHeight - vertInset); m++) {
+                                        // if is valid:
+                                        if (counterTempBoard[m][l] == "-") {
+                                            if (isValidMove(l, m, counterTempBoard)) {
+                                                // loop through remaining cards
+                                                for (var o = 0; o < numberOfCardsInGame; o++) {
+                                                    // if is not AI player's card (AI is always player 1)
+                                                    if (counterCardState[o].currentOwner == 2) {
+                                                        // if not placed
+                                                        if (!counterCardState[o].hasBeenPlaced) {
+                                                            // ### optimisation - don't try this card if a card of this type has already been tried at this position #######################
+                                                            // try card in position:
+                                                            counterTempBoard[m][l] = o;
+                                                            thisMovesScore = 0;
+                                                            checkAttacksInAllDirections(l, m, counterTempBoard, counterCardState, whichCounterOpponentCurrently, whichCounterPlayerCurrently, true);
+                                                            if (thisMovesScore > bestCounterMove) {
+                                                                bestCounterMove = thisMovesScore;
+                                                            }
+                                                            // remove card from this position now it's been tested:
+                                                            counterTempBoard[m][l] = "-";
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                // end counter move analysis
+                                thisMovesScore = AIScore - bestCounterMove;
+                                console.log("ai this round is " + AIScore + " with player countering with " + bestCounterMove + " (=" + (AIScore - bestCounterMove) + ")");
                                 // insert this into the array in order:
                                 listOfPossibleBestMoves = insertNewMove([thisMovesScore, i, j, k], listOfPossibleBestMoves);
                                 // just keep track of the 10 best moves:
                                 if (listOfPossibleBestMoves.length > 10) {
                                     listOfPossibleBestMoves.pop();
                                 }
-
-                                // - try opponent's counter move:
-                                // - copy board and cards
-                                // - loop through all board tiles
-                                // - if is valid
-                                // - loop through remaining cards
-                                // - try card in position
-                                // - count flips *1.0
-                                // - return single highest flip score
-
-
                                 // remove card from this position now it's been tested:
                                 tempBoard[k][j] = "-";
                             }
@@ -645,15 +675,20 @@ function findBestMove(boardState, whichPlayerCurrently, cardState) {
             }
         }
     }
+    // remove the false entry if it's still in the list:
+    if (listOfPossibleBestMoves[(listOfPossibleBestMoves.length - 1)][0] == -999999) {
+        listOfPossibleBestMoves.pop();
+    }
     // randomly pick a move based on AI's skill level:
     var pickMoveRange = player2Skill;
     if (pickMoveRange > listOfPossibleBestMoves.length) {
         pickMoveRange = listOfPossibleBestMoves.length - 1;
     }
-  
     whichMoveToMake = listOfPossibleBestMoves[Math.floor(Math.random() * pickMoveRange)];
-  
 }
+
+
+
 
 
 
