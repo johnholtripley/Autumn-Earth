@@ -619,11 +619,13 @@ function findBestMove(boardState, whichPlayerCurrently, cardState) {
                                 checkAttacksInAllDirections(j, k, tempBoard, cardState, whichOpponentCurrently, whichPlayerCurrently, true);
                                 // count AI flips *1.01 so it favours more aggressive moves         
                                 AIScore = thisMovesScore * 1.01;
+                                // -----------------------------
                                 // - try opponent's counter move:
-                                // - copy board and cards
                                 bestCounterMove = 0;
+                                // swap whose go it is:
                                 whichCounterPlayerCurrently = whichOpponentCurrently;
-                                whichCounterOpponentCurrently = (whichCounterPlayerCurrently == 1) ? 2 : 1;
+                                whichCounterOpponentCurrently = whichPlayerCurrently;
+                                // copy board and cards:
                                 var counterCardState = cardState.slice();
                                 var counterTempBoard = [];
                                 for (var p = 0; p < tempBoard.length; p++) {
@@ -648,6 +650,7 @@ function findBestMove(boardState, whichPlayerCurrently, cardState) {
                                                             if (thisMovesScore > bestCounterMove) {
                                                                 bestCounterMove = thisMovesScore;
                                                             }
+                                                            console.log("this card can flip "+thisMovesScore+" cards");
                                                             // remove card from this position now it's been tested:
                                                             counterTempBoard[m][l] = "-";
                                                         }
@@ -657,7 +660,8 @@ function findBestMove(boardState, whichPlayerCurrently, cardState) {
                                         }
                                     }
                                 }
-                                // end counter move analysis
+                                // ... of end counter move analysis
+                                // -----------------------------
                                 thisMovesScore = AIScore - bestCounterMove;
                                 console.log("ai this round is " + AIScore + " with player countering with " + bestCounterMove + " (=" + (AIScore - bestCounterMove) + ")");
                                 // insert this into the array in order:
