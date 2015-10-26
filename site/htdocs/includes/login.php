@@ -197,7 +197,7 @@ WHERE tblacct.accountName='".$processedlogin."' and tblmail.mailread = '0'";
 	}
 	
 	echo '<input type="hidden" name="logincheck" value="posted" />'."\n";
-	echo '<input type="image" name="subbutton" value="log in" src="/assets/login.gif" alt="Log in" onmouseover="this.src=\'/assets/login_over.gif\';" onmouseout="this.src=\'/assets/login.gif\'" />'."\n";
+	echo '<input type="submit" name="subbutton" value="log in" alt="Log in" />'."\n";
 
 	
 	
@@ -236,7 +236,7 @@ WHERE tblacct.accountName='".$processedlogin."' and tblmail.mailread = '0'";
 			echo '<input type="hidden" name="itemquantity" value="'.$_POST["itemquantity"].'" />'."\n";
 	}
 	echo '<input type="hidden" name="logincheck" value="posted" />'."\n";
-	echo '<input type="image" name="subbutton" id="subbutton" value="log in" src="/assets/login.gif" alt="log in" onmouseover="this.src=\'/assets/login_over.gif\';" onmouseout="this.src=\'/assets/login.gif\'" />'."\n";
+	echo '<input type="submit" name="subbutton" id="subbutton" value="log in" />'."\n";
 	echo '</form>'."\n";
 	echo '<br />'."\n";
 	echo '<a href="/account/join/" title="Create a new account">Create a new account</a>'."\n";

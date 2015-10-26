@@ -38,7 +38,7 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/search.php");
 
 
 
-<script src="/js/core.js"></script>
+<script src="/js/core.min.js"></script>
 <?php
 
 if($additionalAssets != "") {
