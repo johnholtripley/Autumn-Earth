@@ -501,6 +501,7 @@ function checkAttack(placedTileX, placedTileY, xDir, yDir, whichBoard, whichCard
     // trace a path from selected tile, in direction set until a card that isn't an opponent's is encountered:
     var lineTracedX = placedTileX + xDir;
     var lineTracedY = placedTileY + yDir;
+
     do {
         var isAnOpponentCard = false;
         // is in bounds:
@@ -534,8 +535,13 @@ function checkAttack(placedTileX, placedTileY, xDir, yDir, whichBoard, whichCard
                     if (placedCardsAttack + existingCardsAttack >= defenceRunningTotal) {
                         if (isAIChecking) {
                             thisMovesScore += opponentsCardsFound.length;
+                         //   console.log("ai test flipping "+opponentsCardsFound.length);
+                            for (var i = 0; i < opponentsCardsFound.length; i++) {
+                                whichCards[(opponentsCardsFound[i])].currentOwner = whichCurrentPlayersTurn;
+                            }
                         } else {
-                            for (i = 0; i < opponentsCardsFound.length; i++) {
+                         
+                            for (var i = 0; i < opponentsCardsFound.length; i++) {
                                 flipCard(opponentsCardsFound[i], whichCards, whichCurrentPlayersTurn);
                             }
                         }
@@ -545,6 +551,7 @@ function checkAttack(placedTileX, placedTileY, xDir, yDir, whichBoard, whichCard
         }
     }
 }
+
 
 
 
@@ -583,14 +590,9 @@ function doAIMove() {
     aiIsWorking = 1;
     findBestMove(board, currentPlayersTurn, cards);
 }
-function findBestMove(boardState, whichPlayerCurrently, cardState) {
+function findBestMove(boardState, whichPlayerCurrently) {
     whichOpponentCurrently = (whichPlayerCurrently == 1) ? 2 : 1;
-    // copy arrays so original data isn't changed:
-    var cardState = cardState.slice();
-    var tempBoard = [];
-    for (var i = 0; i < boardState.length; i++) {
-        tempBoard[i] = boardState[i].slice();
-    }
+
     var bestMoveFound = [];
     // [best score, card ref, gridx, gridy]:
     var listOfPossibleBestMoves = [
@@ -604,10 +606,21 @@ function findBestMove(boardState, whichPlayerCurrently, cardState) {
     for (var j = horizInset; j < (boardWidth - horizInset); j++) {
         for (var k = vertInset; k < (boardHeight - vertInset); k++) {
             // if is valid:
-            if (tempBoard[k][j] == "-") {
-                if (isValidMove(j, k, tempBoard)) {
+            if (boardState[k][j] == "-") {
+                if (isValidMove(j, k, boardState)) {
+                
                     // loop through remaining cards
                     for (var i = 0; i < numberOfCardsInGame; i++) {
+
+
+                        // copy arrays so original data isn't changed:
+                        // copy an array of objects: http://stackoverflow.com/questions/597588/how-do-you-clone-an-array-of-objects-in-javascript#answer-23481096
+                        var cardState = JSON.parse(JSON.stringify(cards));
+                        var tempBoard = [];
+                        for (var m = 0; m < boardState.length; m++) {
+                            tempBoard[m] = boardState[m].slice();
+                        }
+
                         // if is AI player's card (always player 1)
                         if (cardState[i].currentOwner == 1) {
                             // if not placed
@@ -615,29 +628,42 @@ function findBestMove(boardState, whichPlayerCurrently, cardState) {
                                 // ### optimisation - don't try this card if a card of this type has already been tried at this position #######################
                                 // try card in position:
                                 tempBoard[k][j] = i;
+
+                                cardState[i].hasBeenPlaced = true;
+
+
+
+
                                 thisMovesScore = 0;
+                              //  console.log("placing " + i + " at " + j + ", " + k);
                                 checkAttacksInAllDirections(j, k, tempBoard, cardState, whichOpponentCurrently, whichPlayerCurrently, true);
                                 // count AI flips *1.01 so it favours more aggressive moves         
                                 AIScore = thisMovesScore * 1.01;
                                 // -----------------------------
                                 // - try opponent's counter move:
                                 bestCounterMove = 0;
+                                
                                 // swap whose go it is:
                                 whichCounterPlayerCurrently = whichOpponentCurrently;
                                 whichCounterOpponentCurrently = whichPlayerCurrently;
-                                // copy board and cards:
-                                var counterCardState = cardState.slice();
-                                var counterTempBoard = [];
-                                for (var p = 0; p < tempBoard.length; p++) {
-                                    counterTempBoard[p] = tempBoard[p].slice();
-                                }
+
                                 for (var l = horizInset; l < (boardWidth - horizInset); l++) {
                                     for (var m = vertInset; m < (boardHeight - vertInset); m++) {
                                         // if is valid:
-                                        if (counterTempBoard[m][l] == "-") {
-                                            if (isValidMove(l, m, counterTempBoard)) {
+                                        if (tempBoard[m][l] == "-") {
+                                            if (isValidMove(l, m, tempBoard)) {
+
+
+
                                                 // loop through remaining cards
                                                 for (var o = 0; o < numberOfCardsInGame; o++) {
+                                                      // copy board and cards:
+                                                    var counterCardState = JSON.parse(JSON.stringify(cardState));
+
+                                                    var counterTempBoard = [];
+                                                    for (var p = 0; p < tempBoard.length; p++) {
+                                                        counterTempBoard[p] = tempBoard[p].slice();
+                                                    }
                                                     // if is not AI player's card (AI is always player 1)
                                                     if (counterCardState[o].currentOwner == 2) {
                                                         // if not placed
@@ -645,14 +671,17 @@ function findBestMove(boardState, whichPlayerCurrently, cardState) {
                                                             // ### optimisation - don't try this card if a card of this type has already been tried at this position #######################
                                                             // try card in position:
                                                             counterTempBoard[m][l] = o;
+                                                            counterCardState[o].hasBeenPlaced = true;
                                                             thisMovesScore = 0;
                                                             checkAttacksInAllDirections(l, m, counterTempBoard, counterCardState, whichCounterOpponentCurrently, whichCounterPlayerCurrently, true);
                                                             if (thisMovesScore > bestCounterMove) {
                                                                 bestCounterMove = thisMovesScore;
                                                             }
-                                                            console.log("this card can flip "+thisMovesScore+" cards");
+                                                          
+                                                            //   console.log("this counter card at "+l+","+m+" can flip "+thisMovesScore+" cards");
+                                                          
                                                             // remove card from this position now it's been tested:
-                                                            counterTempBoard[m][l] = "-";
+                                                            //  counterTempBoard[m][l] = "-";
                                                         }
                                                     }
                                                 }
@@ -660,10 +689,11 @@ function findBestMove(boardState, whichPlayerCurrently, cardState) {
                                         }
                                     }
                                 }
+                                
                                 // ... of end counter move analysis
                                 // -----------------------------
                                 thisMovesScore = AIScore - bestCounterMove;
-                                console.log("ai this round is " + AIScore + " with player countering with " + bestCounterMove + " (=" + (AIScore - bestCounterMove) + ")");
+                             //   console.log("ai this round is " + AIScore + " with player countering with " + bestCounterMove + " (=" + (AIScore - bestCounterMove) + ")");
                                 // insert this into the array in order:
                                 listOfPossibleBestMoves = insertNewMove([thisMovesScore, i, j, k], listOfPossibleBestMoves);
                                 // just keep track of the 10 best moves:
@@ -671,7 +701,7 @@ function findBestMove(boardState, whichPlayerCurrently, cardState) {
                                     listOfPossibleBestMoves.pop();
                                 }
                                 // remove card from this position now it's been tested:
-                                tempBoard[k][j] = "-";
+                                //   tempBoard[k][j] = "-";
                             }
                         }
                     }
@@ -690,6 +720,7 @@ function findBestMove(boardState, whichPlayerCurrently, cardState) {
     }
     whichMoveToMake = listOfPossibleBestMoves[Math.floor(Math.random() * pickMoveRange)];
 }
+
 
 
 
