@@ -590,10 +590,9 @@ function doAIMove() {
     aiIsWorking = 1;
     findBestMove(board, currentPlayersTurn, cards);
 }
+
 function findBestMove(boardState, whichPlayerCurrently) {
     whichOpponentCurrently = (whichPlayerCurrently == 1) ? 2 : 1;
-
-    var bestMoveFound = [];
     // [best score, card ref, gridx, gridy]:
     var listOfPossibleBestMoves = [
         [-999999, -1, -1, -1]
@@ -608,100 +607,91 @@ function findBestMove(boardState, whichPlayerCurrently) {
             // if is valid:
             if (boardState[k][j] == "-") {
                 if (isValidMove(j, k, boardState)) {
-                
+                    var cardTypesTriedInThisPosition = [];
                     // loop through remaining cards
                     for (var i = 0; i < numberOfCardsInGame; i++) {
 
-
-                        // copy arrays so original data isn't changed:
-                        // copy an array of objects: http://stackoverflow.com/questions/597588/how-do-you-clone-an-array-of-objects-in-javascript#answer-23481096
-                        var cardState = JSON.parse(JSON.stringify(cards));
-                        var tempBoard = [];
-                        for (var m = 0; m < boardState.length; m++) {
-                            tempBoard[m] = boardState[m].slice();
-                        }
-
                         // if is AI player's card (always player 1)
-                        if (cardState[i].currentOwner == 1) {
+                        if (cards[i].currentOwner == 1) {
                             // if not placed
-                            if (!cardState[i].hasBeenPlaced) {
-                                // ### optimisation - don't try this card if a card of this type has already been tried at this position #######################
-                                // try card in position:
-                                tempBoard[k][j] = i;
-
-                                cardState[i].hasBeenPlaced = true;
-
-
-
-
-                                thisMovesScore = 0;
-                              //  console.log("placing " + i + " at " + j + ", " + k);
-                                checkAttacksInAllDirections(j, k, tempBoard, cardState, whichOpponentCurrently, whichPlayerCurrently, true);
-                                // count AI flips *1.01 so it favours more aggressive moves         
-                                AIScore = thisMovesScore * 1.01;
-                                // -----------------------------
-                                // - try opponent's counter move:
-                                bestCounterMove = 0;
-                                
-                                // swap whose go it is:
-                                whichCounterPlayerCurrently = whichOpponentCurrently;
-                                whichCounterOpponentCurrently = whichPlayerCurrently;
-
-                                for (var l = horizInset; l < (boardWidth - horizInset); l++) {
-                                    for (var m = vertInset; m < (boardHeight - vertInset); m++) {
-                                        // if is valid:
-                                        if (tempBoard[m][l] == "-") {
-                                            if (isValidMove(l, m, tempBoard)) {
-
-
-
-                                                // loop through remaining cards
-                                                for (var o = 0; o < numberOfCardsInGame; o++) {
-                                                      // copy board and cards:
-                                                    var counterCardState = JSON.parse(JSON.stringify(cardState));
-
-                                                    var counterTempBoard = [];
-                                                    for (var p = 0; p < tempBoard.length; p++) {
-                                                        counterTempBoard[p] = tempBoard[p].slice();
-                                                    }
-                                                    // if is not AI player's card (AI is always player 1)
-                                                    if (counterCardState[o].currentOwner == 2) {
-                                                        // if not placed
-                                                        if (!counterCardState[o].hasBeenPlaced) {
-                                                            // ### optimisation - don't try this card if a card of this type has already been tried at this position #######################
-                                                            // try card in position:
-                                                            counterTempBoard[m][l] = o;
-                                                            counterCardState[o].hasBeenPlaced = true;
-                                                            thisMovesScore = 0;
-                                                            checkAttacksInAllDirections(l, m, counterTempBoard, counterCardState, whichCounterOpponentCurrently, whichCounterPlayerCurrently, true);
-                                                            if (thisMovesScore > bestCounterMove) {
-                                                                bestCounterMove = thisMovesScore;
+                            if (!cards[i].hasBeenPlaced) {
+                                // optimisation - don't try this card if a card of this type has already been tried at this position 
+                                if (cardTypesTriedInThisPosition.indexOf(cards[i].cardType) == -1) {
+                                    cardTypesTriedInThisPosition.push(cards[i].cardType);
+                                    // copy arrays so original data isn't changed:
+                                    // copy an array of objects: http://stackoverflow.com/questions/597588/how-do-you-clone-an-array-of-objects-in-javascript#answer-23481096
+                                    var cardState = JSON.parse(JSON.stringify(cards));
+                                    var tempBoard = [];
+                                    for (var m = 0; m < boardState.length; m++) {
+                                        tempBoard[m] = boardState[m].slice();
+                                    }
+                                    // try card in position:
+                                    tempBoard[k][j] = i;
+                                    cardState[i].hasBeenPlaced = true;
+                                    thisMovesScore = 0;
+                                    //  console.log("placing " + i + " at " + j + ", " + k);
+                                    checkAttacksInAllDirections(j, k, tempBoard, cardState, whichOpponentCurrently, whichPlayerCurrently, true);
+                                    // count AI flips *1.01 so it favours more aggressive moves         
+                                    AIScore = thisMovesScore * 1.01;
+                                    // -----------------------------
+                                    // - try opponent's counter move:
+                                    bestCounterMove = 0;
+                                    // swap whose go it is:
+                                    whichCounterPlayerCurrently = whichOpponentCurrently;
+                                    whichCounterOpponentCurrently = whichPlayerCurrently;
+                                    for (var l = horizInset; l < (boardWidth - horizInset); l++) {
+                                        for (var m = vertInset; m < (boardHeight - vertInset); m++) {
+                                            // if is valid:
+                                            if (tempBoard[m][l] == "-") {
+                                                if (isValidMove(l, m, tempBoard)) {
+                                                    var counterCardTypesTriedInThisPosition = [];
+                                                    // loop through remaining cards
+                                                    for (var o = 0; o < numberOfCardsInGame; o++) {
+                                                        // if is not AI player's card (AI is always player 1)
+                                                        if (cardState[o].currentOwner == 2) {
+                                                            // if not placed
+                                                            if (!cardState[o].hasBeenPlaced) {
+                                                                //  optimisation - don't try this card if a card of this type has already been tried at this position 
+                                                                if (counterCardTypesTriedInThisPosition.indexOf(cardState[o].cardType) == -1) {
+                                                                    counterCardTypesTriedInThisPosition.push(cardState[o].cardType);
+                                                                    // copy board and cards:
+                                                                    var counterCardState = JSON.parse(JSON.stringify(cardState));
+                                                                    var counterTempBoard = [];
+                                                                    for (var p = 0; p < tempBoard.length; p++) {
+                                                                        counterTempBoard[p] = tempBoard[p].slice();
+                                                                    }
+                                                                    // try card in position:
+                                                                    counterTempBoard[m][l] = o;
+                                                                    counterCardState[o].hasBeenPlaced = true;
+                                                                    thisMovesScore = 0;
+                                                                    checkAttacksInAllDirections(l, m, counterTempBoard, counterCardState, whichCounterOpponentCurrently, whichCounterPlayerCurrently, true);
+                                                                    if (thisMovesScore > bestCounterMove) {
+                                                                        bestCounterMove = thisMovesScore;
+                                                                    }
+                                                                    // console.log("this counter card at "+l+","+m+" can flip "+thisMovesScore+" cards");
+                                                                    // remove card from this position now it's been tested:
+                                                                    // counterTempBoard[m][l] = "-";
+                                                                }
                                                             }
-                                                          
-                                                            //   console.log("this counter card at "+l+","+m+" can flip "+thisMovesScore+" cards");
-                                                          
-                                                            // remove card from this position now it's been tested:
-                                                            //  counterTempBoard[m][l] = "-";
                                                         }
                                                     }
                                                 }
                                             }
                                         }
                                     }
+                                    // ... of end counter move analysis
+                                    // -----------------------------
+                                    thisMovesScore = AIScore - bestCounterMove;
+                                    //   console.log("ai this round is " + AIScore + " with player countering with " + bestCounterMove + " (=" + (AIScore - bestCounterMove) + ")");
+                                    // insert this into the array in order:
+                                    listOfPossibleBestMoves = insertNewMove([thisMovesScore, i, j, k], listOfPossibleBestMoves);
+                                    // just keep track of the 10 best moves:
+                                    if (listOfPossibleBestMoves.length > 10) {
+                                        listOfPossibleBestMoves.pop();
+                                    }
+                                    // remove card from this position now it's been tested:
+                                    //   tempBoard[k][j] = "-";
                                 }
-                                
-                                // ... of end counter move analysis
-                                // -----------------------------
-                                thisMovesScore = AIScore - bestCounterMove;
-                             //   console.log("ai this round is " + AIScore + " with player countering with " + bestCounterMove + " (=" + (AIScore - bestCounterMove) + ")");
-                                // insert this into the array in order:
-                                listOfPossibleBestMoves = insertNewMove([thisMovesScore, i, j, k], listOfPossibleBestMoves);
-                                // just keep track of the 10 best moves:
-                                if (listOfPossibleBestMoves.length > 10) {
-                                    listOfPossibleBestMoves.pop();
-                                }
-                                // remove card from this position now it's been tested:
-                                //   tempBoard[k][j] = "-";
                             }
                         }
                     }
@@ -720,6 +710,9 @@ function findBestMove(boardState, whichPlayerCurrently) {
     }
     whichMoveToMake = listOfPossibleBestMoves[Math.floor(Math.random() * pickMoveRange)];
 }
+
+
+
 
 
 
