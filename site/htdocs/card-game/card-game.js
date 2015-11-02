@@ -283,8 +283,6 @@ function initCardGame() {
             originalOwner: (i >= (numberOfCardsInGame / 2) ? 2 : 1),
             hasBeenPlaced: false,
             cardType: allCardsThisGame[i],
-            attack: allCardData[(allCardsThisGame[i])][0],
-            defense: allCardData[(allCardsThisGame[i])][1],
             currentOwner: (i >= (numberOfCardsInGame / 2) ? 2 : 1),
             draw: function() {
                 offsetX = 0;
@@ -610,7 +608,6 @@ function findBestMove(boardState, whichPlayerCurrently) {
                     var cardTypesTriedInThisPosition = [];
                     // loop through remaining cards
                     for (var i = 0; i < numberOfCardsInGame; i++) {
-
                         // if is AI player's card (always player 1)
                         if (cards[i].currentOwner == 1) {
                             // if not placed
@@ -620,7 +617,16 @@ function findBestMove(boardState, whichPlayerCurrently) {
                                     cardTypesTriedInThisPosition.push(cards[i].cardType);
                                     // copy arrays so original data isn't changed:
                                     // copy an array of objects: http://stackoverflow.com/questions/597588/how-do-you-clone-an-array-of-objects-in-javascript#answer-23481096
-                                    var cardState = JSON.parse(JSON.stringify(cards));
+                                    var cardState = [];
+                                    for (var p = 0; p < numberOfCardsInGame; p++) {
+                                        cardState[p] = {
+                                            index: cards[p].index,
+                                            originalOwner: cards[p].originalOwner,
+                                            hasBeenPlaced: cards[p].hasBeenPlaced,
+                                            cardType: cards[p].cardType,
+                                            currentOwner: cards[p].currentOwner
+                                        }
+                                    }
                                     var tempBoard = [];
                                     for (var m = 0; m < boardState.length; m++) {
                                         tempBoard[m] = boardState[m].slice();
@@ -655,7 +661,16 @@ function findBestMove(boardState, whichPlayerCurrently) {
                                                                 if (counterCardTypesTriedInThisPosition.indexOf(cardState[o].cardType) == -1) {
                                                                     counterCardTypesTriedInThisPosition.push(cardState[o].cardType);
                                                                     // copy board and cards:
-                                                                    var counterCardState = JSON.parse(JSON.stringify(cardState));
+                                                                    var counterCardState = [];
+                                                                    for (var p = 0; p < numberOfCardsInGame; p++) {
+                                                                        counterCardState[p] = {
+                                                                            index: cardState[p].index,
+                                                                            originalOwner: cardState[p].originalOwner,
+                                                                            hasBeenPlaced: cardState[p].hasBeenPlaced,
+                                                                            cardType: cardState[p].cardType,
+                                                                            currentOwner: cardState[p].currentOwner
+                                                                        }
+                                                                    }
                                                                     var counterTempBoard = [];
                                                                     for (var p = 0; p < tempBoard.length; p++) {
                                                                         counterTempBoard[p] = tempBoard[p].slice();
@@ -710,6 +725,7 @@ function findBestMove(boardState, whichPlayerCurrently) {
     }
     whichMoveToMake = listOfPossibleBestMoves[Math.floor(Math.random() * pickMoveRange)];
 }
+
 
 
 
