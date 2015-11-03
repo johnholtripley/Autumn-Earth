@@ -361,6 +361,7 @@ function initCardGame() {
     whoCanClick = 2;
     gameMode = "play";
     aiIsWorking = -1;
+    waitForDrawUpdate = false;
 }
 
 
@@ -377,6 +378,11 @@ function placeCardOnBoard(cardRef, gridX, gridY, placedOnGameBoard) {
 
 
 function update() {
+    if (waitForDrawUpdate) {
+        // wait until after the last draw() has been called so the card is fully placed on the board:
+        doAIMove();
+        waitForDrawUpdate = false;
+    }
     for (var i = 0; i < numberOfCardsInGame; i++) {
         if (cards[i].isMovingToBoard) {
             var targetX = cards[i].gridX * cardWidth;
@@ -415,10 +421,10 @@ function update() {
                     var oldCurrentPlayersTurn = currentPlayersTurn;
                     currentPlayersTurn = currentOpponent;
                     currentOpponent = oldCurrentPlayersTurn;
-
                     if (currentPlayersTurn == 1) {
                         if (isPlayer1AI) {
-                            doAIMove();
+                            waitForDrawUpdate = true;
+
                         }
                     }
 
@@ -444,6 +450,7 @@ function update() {
         }
     }
 }
+
 
 
 function draw() {
