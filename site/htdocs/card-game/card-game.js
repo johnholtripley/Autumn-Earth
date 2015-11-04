@@ -727,11 +727,20 @@ function findBestMove(boardState, whichPlayerCurrently) {
     }
     // randomly pick a move based on AI's skill level:
     var pickMoveRange = player2Skill;
+    // check to see if any moves have the same score as the best move - and use these as well so the higher skill AI doesn't just pick the same move every time:
+    var indexToUse = 0;
+    do {
+        indexToUse++;
+    } while (listOfPossibleBestMoves[indexToUse][0] == listOfPossibleBestMoves[0][0]);
+    if (indexToUse > pickMoveRange) {
+        pickMoveRange = indexToUse;
+    }
     if (pickMoveRange > listOfPossibleBestMoves.length) {
         pickMoveRange = listOfPossibleBestMoves.length - 1;
     }
     whichMoveToMake = listOfPossibleBestMoves[Math.floor(Math.random() * pickMoveRange)];
 }
+
 
 
 
