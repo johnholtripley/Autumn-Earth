@@ -50,7 +50,7 @@ function compareZIndex(a,b) {
 
 
 function getRandomInteger(min, max) {
-  return Math.floor(Math.random() * (max - min)) + min;
+   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
 
@@ -355,14 +355,22 @@ function initCardGame() {
     }
     placedCards = 4;
     currentlySelectedCard = -1;
-    currentPlayersTurn = 2;
+    currentPlayersTurn = getRandomInteger(1, 2);
+    
     currentOpponent = 1;
     isPlayer1AI = true;
-    whoCanClick = 2;
+    whoCanClick = currentPlayersTurn;
     gameMode = "play";
     aiIsWorking = -1;
     waitForDrawUpdate = false;
+    if (currentPlayersTurn == 1) {
+        currentOpponent = 2;
+        if (isPlayer1AI) {
+            doAIMove();
+        }
+    }
 }
+
 
 
 
