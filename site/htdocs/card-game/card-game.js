@@ -737,9 +737,22 @@ function findBestMove(boardState, whichPlayerCurrently) {
     var pickMoveRange = player2Skill;
     // check to see if any moves have the same score as the best move - and use these as well so the higher skill AI doesn't just pick the same move every time:
     var indexToUse = 0;
+    console.log(listOfPossibleBestMoves);
     do {
         indexToUse++;
+
+
+if(indexToUse == listOfPossibleBestMoves.length) {
+    break;
+}
+
+        // #### error - listOfPossibleBestMoves[indexToUse] can be undefined ####
     } while (listOfPossibleBestMoves[indexToUse][0] == listOfPossibleBestMoves[0][0]);
+
+
+
+
+
     if (indexToUse > pickMoveRange) {
         pickMoveRange = indexToUse;
     }
