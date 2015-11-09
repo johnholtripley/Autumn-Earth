@@ -14,11 +14,10 @@ AddDefaultCharset utf-8
 AddType image/svg+xml .svg
 
 
+
+
 RewriteEngine On 
 
-
-
- 
 RewriteRule    ^community/([A-Za-z0-9-]+)/([A-Za-z0-9-]+)/?$    community/guilds/viewpage.php?cleaned=1&guild=$1&page=$2    [NC,L]  
 RewriteRule    ^chronicle/archive/?$     news/archive.php      [NC,L]
 RewriteRule    ^chronicle/([A-Za-z0-9-]+)/?$     news/index.php?cleaned=1&articleName=$1 [NC,L]
@@ -32,7 +31,11 @@ RewriteRule    ^account/join/     account/CreateAccount.php      [NC,L]
 RewriteRule    ^card-game/display/     card-game/display-all-cards.php      [NC,L]
 RewriteRule    ^card-game/learn/     card-game/how-to-play.php      [NC,L]
 
-
+<ifmodule mod_expires.c>
+  <FilesMatch "serviceWorker.min.js">
+    ExpiresDefault "now"
+  </FilesMatch>
+</ifmodule>
 
 ErrorDocument 404 /404.php
 

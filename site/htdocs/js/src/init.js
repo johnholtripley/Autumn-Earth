@@ -9,5 +9,7 @@ var observer = new FontFaceObserver("forolight")
 
 // service worker:
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/serviceWorker.js');
+  navigator.serviceWorker.register('/serviceWorker.min.js', {
+    scope: '/'
+  });
 }

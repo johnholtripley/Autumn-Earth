@@ -16,17 +16,19 @@ var gulp = require('gulp'),
 // css:
 gulp.task('sass', function() {
     return gulp.src('htdocs/css/src/**/*.scss')
-    .pipe(sourcemaps.init())
-        .pipe(sass({outputStyle: 'compressed'}))
-      //   .pipe(sourcemaps.write({
-      //      includeContent: false,
-      //      sourceRoot: 'htdocs/css/src/**/*.css'
-      //  }))
+        .pipe(sourcemaps.init())
+        .pipe(sass({
+            outputStyle: 'compressed'
+        }))
+        //   .pipe(sourcemaps.write({
+        //      includeContent: false,
+        //      sourceRoot: 'htdocs/css/src/**/*.css'
+        //  }))
         .pipe(gulp.dest('htdocs/css'));
 });
 
 // js:
-gulp.task('scripts', function() {
+gulp.task('scripts', ['additionalScripts'], function() {
     // make sure that init is compiled last after all modules are loaded:
     return gulp.src(['htdocs/js/src/**/!(init)*.js', 'htdocs/js/src/init.js'])
         .pipe(sourcemaps.init())
@@ -43,6 +45,18 @@ gulp.task('scripts', function() {
         .pipe(gulp.dest('htdocs/js'));
 });
 
+gulp.task('additionalScripts', function() {
+    return gulp.src(['htdocs/serviceWorker.js'])
+        .pipe(sourcemaps.init())
+        .pipe(gulp.dest('htdocs/'))
+        .pipe(rename({
+            suffix: '.min'
+        }))
+        .pipe(uglify())
+        .pipe(gulp.dest('htdocs/'));
+});
+
+
 // lints:
 gulp.task('jshint', function() {
     return gulp.src(['htdocs/js/src/**/!(init)*.js', 'htdocs/js/src/init.js'])
@@ -55,11 +69,6 @@ gulp.task('csslint', function() {
         .pipe(csslint())
         .pipe(csslint.reporter());
 });
-
-
-
-
-
 
 
 // download the sitemap locally:
@@ -90,21 +99,19 @@ gulp.task('removeUnusedCSS', ['createSitemap'], function() {
     return gulp.src('htdocs/css/base.css')
         .pipe(uncss({
             html: filesToUncss,
-            ignore: [ 
+            ignore: [
                 '/\@supports/',
                 '/\.offCanvas/',
                 '/\.js/',
                 '/\.fontsLoaded/'
             ]
-
-           
         }))
-
-    .pipe(minify({compatibility: 'ie7',processImport: false}))
+    .pipe(minify({
+            compatibility: 'ie7',
+            processImport: false
+        }))
         .pipe(rename('base.css'))
         .pipe(gulp.dest('htdocs/css/'));
-
-
 });
 
 
@@ -113,21 +120,19 @@ gulp.task('removeUnusedIE8CSS', ['removeUnusedCSS'], function() {
     return gulp.src('htdocs/css/IE8Support.css')
         .pipe(uncss({
             html: filesToUncss,
-            ignore: [ 
-            '/\@supports/',
+            ignore: [
+                '/\@supports/',
                 '/\.offCanvas/',
                 '/\.js/',
                 '/\.fontsLoaded/'
             ]
-
-           
         }))
-
-    .pipe(minify({compatibility: 'ie7',processImport: false}))
+    .pipe(minify({
+            compatibility: 'ie7',
+            processImport: false
+        }))
         .pipe(rename('IE8Support.css'))
         .pipe(gulp.dest('htdocs/css/'));
-
-
 });
 
 gulp.task('removeUnused', ['removeUnusedIE8CSS'], function() {
@@ -140,17 +145,11 @@ gulp.task('removeUnused', ['removeUnusedIE8CSS'], function() {
 
 
 
-
-
-
-
-
 // Watch
 gulp.task('watch', function() {
     gulp.watch('htdocs/css/src/**/*.scss', ['sass']);
     gulp.watch('htdocs/js/src/**/*.js', ['scripts']);
 });
-
 
 // testing task
 gulp.task('test', function() {
