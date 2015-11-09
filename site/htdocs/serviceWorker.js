@@ -1,5 +1,17 @@
-var version = 'v1.0.8';
-var cacheVersionRoot = 'localCache';
+/*
+TO DO:
+
+when requesting network traffic, check for any file in the /fonts/ folder and cache that
+so that only the relevant font file type is added
+https://developer.mozilla.org/en-US/docs/Web/API/Request/url
+
+
+minify this without it breaking. Add 'use strict' ?
+
+*/
+
+var version = 'v1.0.23';
+var cacheVersionRoot = 'localCache:';
 var fallBackImage = '/images/offline-fallback.jpg';
 
 var URLsToCache = [
@@ -85,10 +97,21 @@ self.addEventListener('fetch', function(event) {
         caches.match(request)
         .then(function(response) {
             return response || fetch(request)
+            /*.then(function(response) {
+                    if (request.url.indexOf("/fonts/") !== -1) {
+                        var copy = response.clone();
+                        caches.open(cacheVersionRoot + version)
+                            .then(function(cache) {
+                                cache.put(request, copy);
+                            });
+                    }
+                    
+                    return response;
+                })*/
                 .catch(function() {
                     // If the request is for an image, show an offline placeholder
                     if (request.headers.get('Accept').indexOf('image') !== -1) {
-                       return caches.match(fallBackImage);
+                        return caches.match(fallBackImage);
                     }
                 });
         })
