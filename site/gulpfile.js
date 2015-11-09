@@ -28,7 +28,7 @@ gulp.task('sass', function() {
 });
 
 // js:
-gulp.task('scripts', ['additionalScripts'], function() {
+gulp.task('scripts', function() {
     // make sure that init is compiled last after all modules are loaded:
     return gulp.src(['htdocs/js/src/**/!(init)*.js', 'htdocs/js/src/init.js'])
         .pipe(sourcemaps.init())
@@ -44,18 +44,6 @@ gulp.task('scripts', ['additionalScripts'], function() {
         .pipe(uglify())
         .pipe(gulp.dest('htdocs/js'));
 });
-
-gulp.task('additionalScripts', function() {
-    return gulp.src(['htdocs/serviceWorker.js'])
-        .pipe(sourcemaps.init())
-        .pipe(gulp.dest('htdocs/'))
-        .pipe(rename({
-            suffix: '.min'
-        }))
-        .pipe(uglify())
-        .pipe(gulp.dest('htdocs/'));
-});
-
 
 // lints:
 gulp.task('jshint', function() {
