@@ -1,103 +1,110 @@
-/*
-TO DO:
-
-when requesting network traffic, check for any file in the /fonts/ folder and cache that
-so that only the relevant font file type is added
-https://developer.mozilla.org/en-US/docs/Web/API/Request/url
 
 
-minify this without it breaking. Add 'use strict' ?
 
-*/
+'use strict';
 
-var version = 'v1.0.23';
-var cacheVersionRoot = 'localCache:';
+(function() {
+
+    var staticCacheName = 'static';
+    var version = 'v3::';
 var fallBackImage = '/images/offline-fallback.jpg';
 
-var URLsToCache = [
-    '/',
+    function updateStaticCache() {
+        return caches.open(version + staticCacheName)
+            .then(function (cache) {
+                // These items won't block the installation of the Service Worker
+            
+                // These items must be cached for the Service Worker to complete installation
+                return cache.addAll([
+                    '/',
     '/images/autumn-earth.svg',
     '/css/base.css',
     '/js/core.min.js',
     '/offline.html',
     fallBackImage
-];
+                ]);
+            });
+    };
 
-function updateStaticCache() {
-    return caches.open(cacheVersionRoot + version)
-        .then(function(cache) {
-            return cache.addAll(URLsToCache);
-        })
-};
+    self.addEventListener('install', function (event) {
+        event.waitUntil(updateStaticCache());
+    });
 
-
-self.addEventListener('install', function(event) {
-    event.waitUntil(updateStaticCache());
-});
-
-// delete any out of date caches:
-self.addEventListener('activate', function(event) {
-    event.waitUntil(
-        caches.keys()
-        .then(function(keys) {
-            return Promise.all(keys
-                .filter(function(key) {
-                    return key.indexOf(version) !== 0;
+    self.addEventListener('activate', function (event) {
+        event.waitUntil(
+            caches.keys()
+                .then(function (keys) {
+                    // Remove caches who's name in no longer valid
+                    return Promise.all(keys
+                        .filter(function (key) {
+                          return key.indexOf(version) !== 0;
+                        })
+                        .map(function (key) {
+                          return caches.delete(key);
+                        })
+                    );
                 })
-                .map(function(key) {
-                    return caches.delete(key);
-                })
-            );
-        })
-    );
-});
-
-
-
-
-
-self.addEventListener('fetch', function(event) {
-    var request = event.request;
-    // Always fetch non-GET requests from the network
-    if (request.method !== 'GET') {
-        event.respondWith(
-            fetch(request)
-            .catch(function() {
-                return caches.match('/offline.html');
-            })
         );
-        return;
-    }
+    });
 
-    // For HTML requests, try the network first, fall back to the cache, finally the offline page
-    if (request.headers.get('Accept').indexOf('text/html') !== -1) {
-        event.respondWith(
-            fetch(request)
-            .then(function(response) {
-                // add a copy of this page in the cache
-                var copy = response.clone();
-                caches.open(cacheVersionRoot + version)
-                    .then(function(cache) {
-                        cache.put(request, copy);
-                    });
-                return response;
-            })
-            .catch(function() {
-                return caches.match(request)
-                    .then(function(response) {
-                        return response || caches.match('/offline.html');
+    self.addEventListener('fetch', function (event) {
+        var request = event.request;
+        // For non-GET requests, try the network first, fall back to the offline page
+        if (request.method !== 'GET') {
+            event.respondWith(
+                fetch(request, { credentials: 'include' })
+                    .catch(function () {
+                        return caches.match('/offline.html');
                     })
-            })
-        );
-        return;
-    }
+            );
+            return;
+        }
 
-    // For non-HTML requests, look in the cache first, fall back to the network
-    event.respondWith(
-        caches.match(request)
-        .then(function(response) {
-            return response || fetch(request)
-            /*.then(function(response) {
+        // For HTML requests, try the network first, fall back to the cache, finally the offline page
+        if (request.headers.get('Accept').indexOf('text/html') !== -1) {
+            event.respondWith(
+                fetch(request, { credentials: 'include' })
+                    .then(function (response) {
+                        // Stash a copy of this page in the cache
+                        var copy = response.clone();
+                        caches.open(version + staticCacheName)
+                            .then(function (cache) {
+                                cache.put(request, copy);
+                            });
+                        return response;
+                    })
+                    .catch(function () {
+                        return caches.match(request)
+                            .then(function (response) {
+                                return response || caches.match('/offline.html');
+                            })
+                    })
+            );
+            return;
+        }
+
+        // For non-HTML requests, look in the cache first, fall back to the network
+        event.respondWith(
+            caches.match(request)
+                .then(function (response) {
+                    return response || fetch(request)
+                        .catch(function () {
+                            // If the request is for an image, show an offline placeholder
+                            if (request.headers.get('Accept').indexOf('image') !== -1) {
+                                return caches.match(fallBackImage);
+                            }
+                        });
+                })
+        );
+    });
+
+})();
+
+
+
+
+
+ /*.then(function(response) {
                     if (request.url.indexOf("/fonts/") !== -1) {
                         var copy = response.clone();
                         caches.open(cacheVersionRoot + version)
@@ -108,12 +115,11 @@ self.addEventListener('fetch', function(event) {
                     
                     return response;
                 })*/
-                .catch(function() {
-                    // If the request is for an image, show an offline placeholder
-                    if (request.headers.get('Accept').indexOf('image') !== -1) {
-                        return caches.match(fallBackImage);
-                    }
-                });
-        })
-    );
-});
+
+
+
+
+
+
+
+

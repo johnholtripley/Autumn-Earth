@@ -368,8 +368,8 @@ function initCardGame() {
 board = [
     ['#', '#', 'x', 'x', 'x', '-', '-', 'x', 'x', 'x', 'x', 'x'],
     ['#', '#', 'x', 'x', '-', '-', '-', '-', 'x', 'x', 'x', 'x'],
-    ['#', '#', 'x', '-', '-', '-', '-', '-', '-', 'x', 'x', 'x'],
     ['#', '#', 'x', '-', '-', '-', '-', '-', '-', 'x', 'x', '@'],
+    ['#', '#', 'x', '-', '-', '-', '-', '-', '-', 'x', '@', '@'],
     ['#', '#', 'x', 'x', '-', '-', '-', '-', 'x', 'x', '@', '@'],
     ['x', 'x', 'x', 'x', 'x', '-', '-', 'x', 'x', 'x', '@', '@']
 ];
@@ -382,12 +382,11 @@ board = [
     placeCardOnBoard(13, 5, 3, true);
     placeCardOnBoard(14, 5, 4, true);
     placeCardOnBoard(15, 4, 3, true);
-    placeCardOnBoard(16, 4, 4, true);
-    placeCardOnBoard(17, 7, 4, true);
-    placeCardOnBoard(18, 7, 3, true);
+    placeCardOnBoard(16, 4, 2, true);
+
 
     var player1CardIndexToPlace = 2;
-    var player2CardIndexToPlace = 19;
+    var player2CardIndexToPlace = 17;
     for (var j = 0; j < boardWidth; j++) {
         for (var k = 0; k < boardHeight; k++) {
             if (board[k][j] == "#") {
@@ -401,7 +400,7 @@ board = [
         }
     }
     placedCards = 6;
- currentPlayersTurn = 1;
+ currentPlayersTurn = 2;
 
 
 // --------------------- end testing AI
