@@ -3,16 +3,23 @@
 
 'use strict';
 
+/*
+To do:
+add fonts when requested so only file type needed is added
+gulp minify this without breaking it
+*/
+
+
 (function() {
 
     var staticCacheName = 'static';
-    var version = 'v3::';
+    var version = 'v9::';
 var fallBackImage = '/images/offline-fallback.jpg';
 
     function updateStaticCache() {
         return caches.open(version + staticCacheName)
             .then(function (cache) {
-                // These items won't block the installation of the Service Worker
+               
             
                 // These items must be cached for the Service Worker to complete installation
                 return cache.addAll([
@@ -65,7 +72,7 @@ var fallBackImage = '/images/offline-fallback.jpg';
             event.respondWith(
                 fetch(request, { credentials: 'include' })
                     .then(function (response) {
-                        // Stash a copy of this page in the cache
+                        // Add a copy of this page in the cache
                         var copy = response.clone();
                         caches.open(version + staticCacheName)
                             .then(function (cache) {
@@ -88,6 +95,17 @@ var fallBackImage = '/images/offline-fallback.jpg';
             caches.match(request)
                 .then(function (response) {
                     return response || fetch(request)
+                     .then(function(response) {
+                    if (request.url.indexOf("/fonts/") !== -1) {
+                        var copy = response.clone();
+                        caches.open(version + staticCacheName)
+                            .then(function(cache) {
+                                cache.put(request, copy);
+                            });
+                    }
+              
+                    return response;
+                })
                         .catch(function () {
                             // If the request is for an image, show an offline placeholder
                             if (request.headers.get('Accept').indexOf('image') !== -1) {
@@ -104,17 +122,7 @@ var fallBackImage = '/images/offline-fallback.jpg';
 
 
 
- /*.then(function(response) {
-                    if (request.url.indexOf("/fonts/") !== -1) {
-                        var copy = response.clone();
-                        caches.open(cacheVersionRoot + version)
-                            .then(function(cache) {
-                                cache.put(request, copy);
-                            });
-                    }
-                    
-                    return response;
-                })*/
+
 
 
 
