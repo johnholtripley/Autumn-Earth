@@ -1,4 +1,5 @@
 // font face loader:
+// https://helloanselm.com/2015/using-webfonts-in-2015/
 var observer = new FontFaceObserver("forolight")
     .check()
     .then(function() {
