@@ -12,12 +12,12 @@ echo '<meta content="'.$longDescription.'" name="description">'."\n";
 <meta name="apple-mobile-web-app-title" content="Autumn Earth">
 <meta name="msapplication-TileColor" content="#ff1972">
 <meta name="msapplication-TileImage" content="/images/icons/144.png">
-<link rel="apple-touch-icon-precomposed" href="/images/icons/152.png">
-<link rel="apple-touch-icon-precomposed" sizes="152x152" href="/images/icons/152.png">
-<link rel="apple-touch-icon-precomposed" sizes="144x144" href="/images/icons/144.png">
-<link rel="apple-touch-icon-precomposed" sizes="120x120" href="/images/icons/120.png">
-<link rel="apple-touch-icon-precomposed" sizes="114x114" href="/images/icons/114.png">
-<link rel="apple-touch-icon-precomposed" sizes="72x72" href="/images/icons/72.png">
+<link sizes="192x192" href="/images/icons/192.png">
+<link sizes="152x152" href="/images/icons/152.png">
+<link sizes="144x144" href="/images/icons/144.png">
+<link sizes="120x120" href="/images/icons/120.png">
+<link sizes="114x114" href="/images/icons/114.png">
+<link sizes="72x72" href="/images/icons/72.png">
 <link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png">
 <!--
 <link rel="shortcut icon" sizes="16x16" href="/images/icons/16.png">
