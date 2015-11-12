@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 11, 2015 at 02:16 PM
+-- Generation Time: Nov 12, 2015 at 12:59 PM
 -- Server version: 5.6.24
 -- PHP Version: 5.6.8
 
@@ -176,7 +176,7 @@ CREATE TABLE IF NOT EXISTS `tblcards` (
 INSERT INTO `tblcards` (`cardID`, `cardAttack`, `cardDefense`, `cardName`) VALUES
 (1, 5, 10, 'Bomb'),
 (2, 5, 10, 'Chocobo'),
-(3, 5, 10, 'Mog');
+(3, 15, 10, 'Mog');
 
 -- --------------------------------------------------------
 
@@ -223,7 +223,7 @@ INSERT INTO `tblcharacters` (`charID`, `accountID`, `charName`, `location`, `gam
 (12, 13, 'Angel', 3, NULL, NULL, NULL, NULL, NULL, NULL, '', NULL, 0, 200, 0, '2007-03-30', '-1'),
 (13, 14, 'Angel', 3, NULL, NULL, NULL, NULL, NULL, NULL, '', NULL, 0, 200, 0, '2007-03-30', '-1'),
 (14, 39, 'eleaddaiMeow', 1, NULL, NULL, NULL, NULL, NULL, NULL, '', NULL, 0, 200, 0, '2015-06-30', '-1'),
-(15, 39, 'dilly20', 4, NULL, NULL, NULL, NULL, NULL, NULL, '1,2,3,1,2', NULL, 0, 200, 0, '2015-06-30', '10|38|60'),
+(15, 39, 'dilly20', 4, NULL, NULL, NULL, NULL, NULL, NULL, '1,2,3,1,2,1,1,1,2,1,2,3', NULL, 0, 200, 0, '2015-06-30', '10|38|60'),
 (16, 39, 'dilly21', 1, NULL, NULL, NULL, NULL, NULL, NULL, '', NULL, 0, 200, 0, '2015-06-30', '-1'),
 (17, 50, 'dilly22', 1, NULL, NULL, NULL, NULL, NULL, NULL, '', NULL, 0, 200, 0, '2015-06-30', '-1');
 
@@ -890,21 +890,21 @@ CREATE TABLE IF NOT EXISTS `tblsavedsearches` (
   `searchID` int(11) NOT NULL,
   `searchTerm` varchar(255) DEFAULT NULL,
   `searchCount` int(11) DEFAULT NULL
-) ENGINE=MyISAM AUTO_INCREMENT=102 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=104 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblsavedsearches`
 --
 
 INSERT INTO `tblsavedsearches` (`searchID`, `searchTerm`, `searchCount`) VALUES
-(1, 'crafting', 61),
-(2, 'feeding pets', 61),
-(3, 'image', 92),
-(4, 'autumn', 57),
+(1, 'crafting', 63),
+(2, 'feeding pets', 63),
+(3, 'image', 94),
+(4, 'autumn', 59),
 (5, 'autumn earth', 2),
 (6, 'character development', 0),
 (11, 'pte development', 0),
-(8, 'pet development', 57),
+(8, 'pet development', 59),
 (10, 'pte development', 0),
 (12, 'pet developmetn', 0),
 (13, 'carfting', 0),
@@ -933,14 +933,14 @@ INSERT INTO `tblsavedsearches` (`searchID`, `searchTerm`, `searchCount`) VALUES
 (36, 'feed-my-pets', 0),
 (37, 'feed my lovely pet', 0),
 (38, 'feed-my-lovely-pet', 0),
-(39, 'images', 57),
+(39, 'images', 59),
 (40, 'feeding my pets', 0),
 (41, 'feeding-my-pets', 0),
 (42, 'feeding-pets', 0),
 (43, 'feeding-pets', 0),
-(44, 'how does that work', 61),
-(45, 'does that work', 57),
-(46, 'dragon', 111),
+(44, 'how does that work', 63),
+(45, 'does that work', 59),
+(46, 'dragon', 113),
 (47, 'autumn earth', 0),
 (48, 'autumn earth', 0),
 (49, 'autumn earth', 0),
@@ -995,7 +995,9 @@ INSERT INTO `tblsavedsearches` (`searchID`, `searchTerm`, `searchCount`) VALUES
 (98, 'autumn earth', 0),
 (99, 'autumn earth', 0),
 (100, 'autumn earth', 0),
-(101, 'autumn earth', 0);
+(101, 'autumn earth', 0),
+(102, 'autumn earth', 0),
+(103, 'autumn earth', 0);
 
 -- --------------------------------------------------------
 
@@ -1370,7 +1372,7 @@ ALTER TABLE `tblposts`
 -- AUTO_INCREMENT for table `tblsavedsearches`
 --
 ALTER TABLE `tblsavedsearches`
-  MODIFY `searchID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=102;
+  MODIFY `searchID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=104;
 --
 -- AUTO_INCREMENT for table `tblsubscribedthreads`
 --

@@ -46,10 +46,8 @@ gulp.task('scripts', ['alternateScripts'],function() {
 });
 
 gulp.task('alternateScripts', function() {
-    // make sure that init is compiled last after all modules are loaded:
-    return gulp.src(['htdocs/serviceWorker.js'])
-       
-        .pipe(gulp.dest('htdocs/js'))
+    // minify predefined list of unique scripts:
+    return gulp.src(['htdocs/**/*(serviceWorker.js|card-game.js)'])
         .pipe(rename({
             suffix: '.min'
         }))
