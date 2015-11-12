@@ -337,8 +337,6 @@ function initCardGame() {
     }
 
 
-// --------------------- testing AI
-/*
 
     placeCardOnBoard(0, (boardWidth / 2) - 1, (boardHeight / 2) - 1, true);
     placeCardOnBoard(1, (boardWidth / 2), (boardHeight / 2), true);
@@ -360,50 +358,11 @@ function initCardGame() {
     }
     placedCards = 4;
  currentPlayersTurn = getRandomInteger(1, 2);
-*/
 
 
 
 
-board = [
-    ['#', '#', 'x', 'x', 'x', '-', '-', 'x', 'x', 'x', 'x', 'x'],
-    ['#', '#', 'x', 'x', '-', '-', '-', '-', 'x', 'x', 'x', 'x'],
-    ['#', '#', 'x', '-', '-', '-', '-', '-', '-', 'x', 'x', '@'],
-    ['#', '#', 'x', '-', '-', '-', '-', '-', '-', 'x', '@', '@'],
-    ['#', '#', 'x', 'x', '-', '-', '-', '-', 'x', 'x', '@', '@'],
-    ['x', 'x', 'x', 'x', 'x', '-', '-', 'x', 'x', 'x', '@', '@']
-];
 
-
-   placeCardOnBoard(0, 5, 2, true);
-    placeCardOnBoard(1, 6, 2, true);
-  
-    placeCardOnBoard(12, 6, 3, true);
-    placeCardOnBoard(13, 5, 3, true);
-    placeCardOnBoard(14, 5, 4, true);
-    placeCardOnBoard(15, 4, 3, true);
-    placeCardOnBoard(16, 4, 2, true);
-
-
-    var player1CardIndexToPlace = 2;
-    var player2CardIndexToPlace = 17;
-    for (var j = 0; j < boardWidth; j++) {
-        for (var k = 0; k < boardHeight; k++) {
-            if (board[k][j] == "#") {
-                // player 1 card
-                placeCardOnBoard(player1CardIndexToPlace, j, k, false);
-                player1CardIndexToPlace++;
-            } else if (board[k][j] == "@") {
-                placeCardOnBoard(player2CardIndexToPlace, j, k, false);
-                player2CardIndexToPlace++;
-            }
-        }
-    }
-    placedCards = 6;
- currentPlayersTurn = 2;
-
-
-// --------------------- end testing AI
     currentlySelectedCard = -1;
    
     
