@@ -742,20 +742,53 @@ function findBestMove(boardState, whichPlayerCurrently) {
     if (listOfPossibleBestMoves[(listOfPossibleBestMoves.length - 1)][0] == -999999) {
         listOfPossibleBestMoves.pop();
     }
+
+// look through the results to make sure a powerful card isn't used when a less powerful one will achieve the same result:
+// [best score, card ref, gridx, gridy]:
+    console.log(listOfPossibleBestMoves);
+
+
+var indexToCheck = 0;
+var previousMovesScore = -9999;
+var previousCardsStrength = -9999;
+do {
+    console.log("checking: " + listOfPossibleBestMoves[indexToCheck]);
+
+
+
+    var thisCardType = cards[(listOfPossibleBestMoves[indexToCheck][1])].cardType;
+    var thisCardsStrength = parseInt(allCardData[thisCardType][0]) + parseInt(allCardData[thisCardType][1]);
+    var thisCheckMovesScore = listOfPossibleBestMoves[indexToCheck][0];
+    var cardBeingDiscarded = false;
+    if (thisCheckMovesScore == previousMovesScore) {
+        if (previousCardsStrength > thisCardsStrength) {
+            // remove the previous card
+            console.log("discarding " + listOfPossibleBestMoves[indexToCheck - 1] + " - " + previousCardsStrength);
+            listOfPossibleBestMoves.splice((indexToCheck - 1), 1);
+            cardBeingDiscarded = true;
+        }
+    }
+    if (!cardBeingDiscarded) {
+        indexToCheck++;
+    }
+    previousMovesScore = thisCheckMovesScore;
+    previousCardsStrength = thisCardsStrength;
+
+} while (indexToCheck < listOfPossibleBestMoves.length);
+
+
+
+
     // randomly pick a move based on AI's skill level:
     var pickMoveRange = player2Skill;
     // check to see if any moves have the same score as the best move - and use these as well so the higher skill AI doesn't just pick the same move every time:
     var indexToUse = 0;
-    //console.log(listOfPossibleBestMoves);
+
     do {
         indexToUse++;
-
-
         if (indexToUse == listOfPossibleBestMoves.length) {
             break;
         }
-
-
     } while (listOfPossibleBestMoves[indexToUse][0] == listOfPossibleBestMoves[0][0]);
     if (indexToUse > pickMoveRange) {
         pickMoveRange = indexToUse;
@@ -765,6 +798,7 @@ function findBestMove(boardState, whichPlayerCurrently) {
     }
     whichMoveToMake = listOfPossibleBestMoves[Math.floor(Math.random() * pickMoveRange)];
 }
+
 
 
 // -------------------------------------------
