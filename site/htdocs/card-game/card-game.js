@@ -749,15 +749,41 @@ function findBestMove(boardState, whichPlayerCurrently) {
 
 
 var indexToCheck = 0;
-var previousMovesScore = -9999;
-var previousCardsStrength = -9999;
+var previousMovesScore = listOfPossibleBestMoves[indexToCheck][0];
+var thisGroupsScore = [];
+var indexesToRemove = [];
 do {
-    console.log("checking: " + listOfPossibleBestMoves[indexToCheck]);
+    //    console.log("checking: " + listOfPossibleBestMoves[indexToCheck]);
+    // group cards together by move score:
+    var thisCheckMovesScore = listOfPossibleBestMoves[indexToCheck][0];
+    if (thisCheckMovesScore == previousMovesScore) {
+        thisGroupsScore.push(indexToCheck);
+    } else {
+
+        // run through the previous group and find the lowest power card that can be used for this score:
+        var lowestGroupScore = 99999;
+        for (var cg = 0; cg < thisGroupsScore.length; cg++) {
+            var thisCardType = cards[(listOfPossibleBestMoves[(thisGroupsScore[cg])][1])].cardType;
+        var thisCardsStrength = parseInt(allCardData[thisCardType][0]) + parseInt(allCardData[thisCardType][1]);
+        if (thisCardsStrength < lowestGroupScore) {
+            lowestGroupScore = thisCardsStrength;
+        }
+    }
+for (var cg = 0; cg < thisGroupsScore.length; cg++) {
+var thisCardType = cards[(listOfPossibleBestMoves[(thisGroupsScore[cg])][1])].cardType;
+        var thisCardsStrength = parseInt(allCardData[thisCardType][0]) + parseInt(allCardData[thisCardType][1]);
+        if (thisCardsStrength != lowestGroupScore) {
+indexesToRemove.push(thisGroupsScore[cg]);
+        }
+}
 
 
-
-    var thisCardType = cards[(listOfPossibleBestMoves[indexToCheck][1])].cardType;
-    var thisCardsStrength = parseInt(allCardData[thisCardType][0]) + parseInt(allCardData[thisCardType][1]);
+    thisGroupsScore = [];
+    thisGroupsScore.push(indexToCheck);
+}
+previousMovesScore = thisCheckMovesScore;
+/*
+    
     var thisCheckMovesScore = listOfPossibleBestMoves[indexToCheck][0];
     var cardBeingDiscarded = false;
     if (thisCheckMovesScore == previousMovesScore) {
@@ -771,10 +797,14 @@ do {
     if (!cardBeingDiscarded) {
         indexToCheck++;
     }
-    previousMovesScore = thisCheckMovesScore;
     previousCardsStrength = thisCardsStrength;
+*/
+indexToCheck++;
+}
+while (indexToCheck < listOfPossibleBestMoves.length);
+console.log("removing: "+indexesToRemove);
 
-} while (indexToCheck < listOfPossibleBestMoves.length);
+
 
 
 
