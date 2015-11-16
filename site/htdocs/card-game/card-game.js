@@ -612,7 +612,6 @@ function doAIMove() {
     aiIsWorking = 1;
     findBestMove(board, currentPlayersTurn, cards);
 }
-
 function findBestMove(boardState, whichPlayerCurrently) {
     whichOpponentCurrently = (whichPlayerCurrently == 1) ? 2 : 1;
     // [best score, card ref, gridx, gridy]:
@@ -708,8 +707,6 @@ function findBestMove(boardState, whichPlayerCurrently) {
                                                                         bestCounterMove = thisMovesScore;
                                                                     }
                                                                     // console.log("this counter card at "+l+","+m+" can flip "+thisMovesScore+" cards");
-                                                                    // remove card from this position now it's been tested:
-                                                                    // counterTempBoard[m][l] = "-";
                                                                 }
                                                             }
                                                         }
@@ -728,8 +725,6 @@ function findBestMove(boardState, whichPlayerCurrently) {
                                     if (listOfPossibleBestMoves.length > 10) {
                                         listOfPossibleBestMoves.pop();
                                     }
-                                    // remove card from this position now it's been tested:
-                                    //   tempBoard[k][j] = "-";
                                 }
                             }
                         }
@@ -742,78 +737,51 @@ function findBestMove(boardState, whichPlayerCurrently) {
     if (listOfPossibleBestMoves[(listOfPossibleBestMoves.length - 1)][0] == -999999) {
         listOfPossibleBestMoves.pop();
     }
-
-// look through the results to make sure a powerful card isn't used when a less powerful one will achieve the same result:
-// [best score, card ref, gridx, gridy]:
-    console.log(listOfPossibleBestMoves);
-
-
-var indexToCheck = 0;
-var previousMovesScore = listOfPossibleBestMoves[indexToCheck][0];
-var thisGroupsScore = [];
-var indexesToRemove = [];
-do {
-    //    console.log("checking: " + listOfPossibleBestMoves[indexToCheck]);
-    // group cards together by move score:
-    var thisCheckMovesScore = listOfPossibleBestMoves[indexToCheck][0];
-    if (thisCheckMovesScore == previousMovesScore) {
-        thisGroupsScore.push(indexToCheck);
-    } else {
-
-        // run through the previous group and find the lowest power card that can be used for this score:
-        var lowestGroupScore = 99999;
-        for (var cg = 0; cg < thisGroupsScore.length; cg++) {
-            var thisCardType = cards[(listOfPossibleBestMoves[(thisGroupsScore[cg])][1])].cardType;
-        var thisCardsStrength = parseInt(allCardData[thisCardType][0]) + parseInt(allCardData[thisCardType][1]);
-        if (thisCardsStrength < lowestGroupScore) {
-            lowestGroupScore = thisCardsStrength;
+    // look through the results to make sure a powerful card isn't used when a less powerful one will achieve the same result:
+    // [best score, card ref, gridx, gridy]:
+    // console.log(listOfPossibleBestMoves);
+    var indexToCheck = 0;
+    var previousMovesScore = listOfPossibleBestMoves[indexToCheck][0];
+    var thisGroupsScore = [];
+    var indexesToRemove = [];
+    do {
+        //    console.log("checking: " + listOfPossibleBestMoves[indexToCheck]);
+        // group cards together by move score:
+        var thisCheckMovesScore = listOfPossibleBestMoves[indexToCheck][0];
+        if (thisCheckMovesScore == previousMovesScore) {
+            thisGroupsScore.push(indexToCheck);
+        } else {
+            // run through the previous group and find the lowest power card that can be used for this score:
+            var lowestGroupScore = 99999;
+            for (var cg = 0; cg < thisGroupsScore.length; cg++) {
+                var thisCardType = cards[(listOfPossibleBestMoves[(thisGroupsScore[cg])][1])].cardType;
+                var thisCardsStrength = parseInt(allCardData[thisCardType][0]) + parseInt(allCardData[thisCardType][1]);
+                if (thisCardsStrength < lowestGroupScore) {
+                    lowestGroupScore = thisCardsStrength;
+                }
+            }
+            for (var cg = 0; cg < thisGroupsScore.length; cg++) {
+                var thisCardType = cards[(listOfPossibleBestMoves[(thisGroupsScore[cg])][1])].cardType;
+                var thisCardsStrength = parseInt(allCardData[thisCardType][0]) + parseInt(allCardData[thisCardType][1]);
+                if (thisCardsStrength != lowestGroupScore) {
+                    indexesToRemove.push(thisGroupsScore[cg]);
+                }
+            }
+            thisGroupsScore = [];
+            thisGroupsScore.push(indexToCheck);
         }
-    }
-for (var cg = 0; cg < thisGroupsScore.length; cg++) {
-var thisCardType = cards[(listOfPossibleBestMoves[(thisGroupsScore[cg])][1])].cardType;
-        var thisCardsStrength = parseInt(allCardData[thisCardType][0]) + parseInt(allCardData[thisCardType][1]);
-        if (thisCardsStrength != lowestGroupScore) {
-indexesToRemove.push(thisGroupsScore[cg]);
-        }
-}
-
-
-    thisGroupsScore = [];
-    thisGroupsScore.push(indexToCheck);
-}
-previousMovesScore = thisCheckMovesScore;
-/*
-    
-    var thisCheckMovesScore = listOfPossibleBestMoves[indexToCheck][0];
-    var cardBeingDiscarded = false;
-    if (thisCheckMovesScore == previousMovesScore) {
-        if (previousCardsStrength > thisCardsStrength) {
-            // remove the previous card
-            console.log("discarding " + listOfPossibleBestMoves[indexToCheck - 1] + " - " + previousCardsStrength);
-            listOfPossibleBestMoves.splice((indexToCheck - 1), 1);
-            cardBeingDiscarded = true;
-        }
-    }
-    if (!cardBeingDiscarded) {
+        previousMovesScore = thisCheckMovesScore;
         indexToCheck++;
     }
-    previousCardsStrength = thisCardsStrength;
-*/
-indexToCheck++;
-}
-while (indexToCheck < listOfPossibleBestMoves.length);
-console.log("removing: "+indexesToRemove);
-
-
-
-
-
-
+    while (indexToCheck < listOfPossibleBestMoves.length);
+    //console.log("removing: "+indexesToRemove);
+    for (var ir = indexesToRemove.length - 1; ir >= 0; ir--) {
+        listOfPossibleBestMoves.splice((indexesToRemove[ir]), 1);
+    }
     // randomly pick a move based on AI's skill level:
     var pickMoveRange = player2Skill;
     // check to see if any moves have the same score as the best move - and use these as well so the higher skill AI doesn't just pick the same move every time:
     var indexToUse = 0;
-
     do {
         indexToUse++;
         if (indexToUse == listOfPossibleBestMoves.length) {
@@ -828,7 +796,6 @@ console.log("removing: "+indexesToRemove);
     }
     whichMoveToMake = listOfPossibleBestMoves[Math.floor(Math.random() * pickMoveRange)];
 }
-
 
 
 // -------------------------------------------
