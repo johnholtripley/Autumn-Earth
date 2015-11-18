@@ -76,7 +76,6 @@
 
 
 
-
 @mixin attention() {
 // http://sassmeister.com/gist/35c9c323d22eefdbf293
 
@@ -115,7 +114,13 @@ transition: $values;
 }
 
 
-
+@mixin backgroundGradient($from, $to) {
+  // simple gradients only - from 0 to 100%
+  // http://codepen.io/thebabydino/full/pjxVWp/
+background: $from; /* old browsers */
+background: -webkit-linear-gradient($from,#$to); /* Chrome 10-25, Safari 5.1-6 */
+background: linear-gradient($from,#$to); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
 
 
 
@@ -257,8 +262,6 @@ box-sizing: border-box;
 // allow border-box to accept %
 // font-face embed
 // background-size
-// gradient - http://lea.verou.me/2013/04/can-we-get-rid-of-gradient-prefixes/
-// transition
 // box shadow
 // gif to svg 
 // placeholder styling
