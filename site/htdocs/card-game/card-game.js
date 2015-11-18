@@ -586,25 +586,44 @@ function flipCard(cardRef,whichCards,whichCurrentPlayersTurn) {
 
 
 // AI -----------------------------------------
-
-
 function insertNewMove(element, array) {
-  array.splice(locationOfBestScores(element, array) + 1, 0, element);
-  return array;
+    array.splice(locationOfBestScores(element, array) + 1, 0, element);
+    return array;
 }
 
 function locationOfBestScores(element, array, start, end) {
-  start = start || 0;
-  end = end || array.length;
-  var pivot = parseInt(start + (end - start) / 2, 10);
-  if (array[pivot][0] === element[0]) return pivot;
-  if (end - start <= 1)
-    return array[pivot][0] < element[0] ? pivot - 1 : pivot;
-  if (array[pivot][0] > element[0]) {
-    return locationOfBestScores(element, array, pivot, end);
-  } else {
-    return locationOfBestScores(element, array, start, pivot);
-  }
+    start = start || 0;
+    end = end || array.length;
+    var pivot = parseInt(start + (end - start) / 2, 10);
+    if (array[pivot][0] === element[0]) return pivot;
+    if (end - start <= 1)
+        return array[pivot][0] < element[0] ? pivot - 1 : pivot;
+    if (array[pivot][0] > element[0]) {
+        return locationOfBestScores(element, array, pivot, end);
+    } else {
+        return locationOfBestScores(element, array, start, pivot);
+    }
+}
+
+function findLowestScoreInGroup() {
+    // run through the previous group and find the lowest power card that can be used for this score:
+    var lowestGroupScore = 99999;
+    for (var cg = 0; cg < thisGroupsScore.length; cg++) {
+        var thisCardType = cards[(listOfPossibleBestMoves[(thisGroupsScore[cg])][1])].cardType;
+        var thisCardsStrength = parseInt(allCardData[thisCardType][0]) + parseInt(allCardData[thisCardType][1]);
+        if (thisCardsStrength < lowestGroupScore) {
+            lowestGroupScore = thisCardsStrength;
+        }
+    }
+    for (var cg = 0; cg < thisGroupsScore.length; cg++) {
+        var thisCardType = cards[(listOfPossibleBestMoves[(thisGroupsScore[cg])][1])].cardType;
+        var thisCardsStrength = parseInt(allCardData[thisCardType][0]) + parseInt(allCardData[thisCardType][1]);
+        if (thisCardsStrength != lowestGroupScore) {
+            indexesToRemove.push(thisGroupsScore[cg]);
+        }
+    }
+    thisGroupsScore = [];
+    thisGroupsScore.push(indexToCheck);
 }
 
 function doAIMove() {
@@ -612,10 +631,11 @@ function doAIMove() {
     aiIsWorking = 1;
     findBestMove(board, currentPlayersTurn, cards);
 }
+
 function findBestMove(boardState, whichPlayerCurrently) {
     whichOpponentCurrently = (whichPlayerCurrently == 1) ? 2 : 1;
     // [best score, card ref, gridx, gridy]:
-    var listOfPossibleBestMoves = [
+    listOfPossibleBestMoves = [
         [-999999, -1, -1, -1]
     ];
     var bestImmediatePlayerMove = [];
@@ -739,11 +759,11 @@ function findBestMove(boardState, whichPlayerCurrently) {
     }
     // look through the results to make sure a powerful card isn't used when a less powerful one will achieve the same result:
     // [best score, card ref, gridx, gridy]:
-    // console.log(listOfPossibleBestMoves);
-    var indexToCheck = 0;
+    //  console.log(listOfPossibleBestMoves);
+    indexToCheck = 0;
     var previousMovesScore = listOfPossibleBestMoves[indexToCheck][0];
-    var thisGroupsScore = [];
-    var indexesToRemove = [];
+    thisGroupsScore = [];
+    indexesToRemove = [];
     do {
         //    console.log("checking: " + listOfPossibleBestMoves[indexToCheck]);
         // group cards together by move score:
@@ -751,33 +771,22 @@ function findBestMove(boardState, whichPlayerCurrently) {
         if (thisCheckMovesScore == previousMovesScore) {
             thisGroupsScore.push(indexToCheck);
         } else {
-            // run through the previous group and find the lowest power card that can be used for this score:
-            var lowestGroupScore = 99999;
-            for (var cg = 0; cg < thisGroupsScore.length; cg++) {
-                var thisCardType = cards[(listOfPossibleBestMoves[(thisGroupsScore[cg])][1])].cardType;
-                var thisCardsStrength = parseInt(allCardData[thisCardType][0]) + parseInt(allCardData[thisCardType][1]);
-                if (thisCardsStrength < lowestGroupScore) {
-                    lowestGroupScore = thisCardsStrength;
-                }
-            }
-            for (var cg = 0; cg < thisGroupsScore.length; cg++) {
-                var thisCardType = cards[(listOfPossibleBestMoves[(thisGroupsScore[cg])][1])].cardType;
-                var thisCardsStrength = parseInt(allCardData[thisCardType][0]) + parseInt(allCardData[thisCardType][1]);
-                if (thisCardsStrength != lowestGroupScore) {
-                    indexesToRemove.push(thisGroupsScore[cg]);
-                }
-            }
-            thisGroupsScore = [];
-            thisGroupsScore.push(indexToCheck);
+            findLowestScoreInGroup();
         }
         previousMovesScore = thisCheckMovesScore;
         indexToCheck++;
     }
     while (indexToCheck < listOfPossibleBestMoves.length);
-    //console.log("removing: "+indexesToRemove);
+    if (thisGroupsScore.length == listOfPossibleBestMoves.length) {
+        // this won't have been called if all scores where the same
+        // console.log("caught it");
+        findLowestScoreInGroup();
+    }
+    //  console.log("removing: "+indexesToRemove.join(", "));
     for (var ir = indexesToRemove.length - 1; ir >= 0; ir--) {
         listOfPossibleBestMoves.splice((indexesToRemove[ir]), 1);
     }
+    //  console.log(listOfPossibleBestMoves);
     // randomly pick a move based on AI's skill level:
     var pickMoveRange = player2Skill;
     // check to see if any moves have the same score as the best move - and use these as well so the higher skill AI doesn't just pick the same move every time:
@@ -796,7 +805,6 @@ function findBestMove(boardState, whichPlayerCurrently) {
     }
     whichMoveToMake = listOfPossibleBestMoves[Math.floor(Math.random() * pickMoveRange)];
 }
-
 
 // -------------------------------------------
 
