@@ -51,4 +51,6 @@ Temporary Items
 bower_components
 node_modules
 deploy
+testSuite/screenshots
+testSuite/failures
 
