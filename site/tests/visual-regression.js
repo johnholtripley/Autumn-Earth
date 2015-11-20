@@ -50,7 +50,16 @@ casper.test.begin('AE visual tests', function(test) {
 
 
 
+    casper.then( function () {
+        casper.click( '#menuToggle' );
 
+
+ this.wait(500, function() {
+       phantomcss.screenshot( 'html', 'mobile 320 - nav open' );
+    });
+
+       
+    } );
 
 
 
