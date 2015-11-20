@@ -118,8 +118,8 @@ transition: $values;
   // simple gradients only - from 0 to 100%
   // http://codepen.io/thebabydino/full/pjxVWp/
 background: $from; /* old browsers */
-background: -webkit-linear-gradient($from,#$to); /* Chrome 10-25, Safari 5.1-6 */
-background: linear-gradient($from,#$to); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+background: -webkit-linear-gradient($from,$to); /* Chrome 10-25, Safari 5.1-6 */
+background: linear-gradient($from,$to); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 }
 
 
