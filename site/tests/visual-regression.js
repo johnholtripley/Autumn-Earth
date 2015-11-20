@@ -25,10 +25,19 @@ casper.test.begin('AE visual tests', function(test) {
     });
 
     // start tests:
-
+    // ----------------------------
     casper.start('http://ae.dev/');
-
-    casper.viewport(1920, 1200);
+    casper.then(function() {
+        casper.evaluate(function() {
+            // remove all transitions so results can be shown immediately:
+            var style = document.createElement('style');
+            style.innerHTML = '* {-webkit-transition-duration: 0.01s !important;-moz-transition-duration: 0.01s !important;-o-transition-duration: 0.01s !important;transition-duration: 0.01s !important;}';
+            document.body.appendChild(style);
+        });
+    });
+    casper.then(function() {
+        casper.viewport(1920, 1200);
+    });
     casper.then(function() {
         phantomcss.screenshot('html', 'desktop 1920');
     });
@@ -47,24 +56,16 @@ casper.test.begin('AE visual tests', function(test) {
         phantomcss.screenshot('html', 'mobile 320');
     });
 
-
-
-
-    casper.then( function () {
-        casper.click( '#menuToggle' );
-
-
- this.wait(500, function() {
-       phantomcss.screenshot( 'html', 'mobile 320 - nav open' );
+    // screen grab of mobile nav open:
+    casper.then(function() {
+        casper.click('#menuToggle');
+        this.wait(500, function() {
+            phantomcss.screenshot('html', 'mobile 320 - nav open');
+        });
     });
 
-       
-    } );
-
-
-
-
-
+    // ----------------------------
+    // end tests, and compare:
     casper.then(function now_check_the_screenshots() {
         // compare screenshots
         phantomcss.compareAll();
