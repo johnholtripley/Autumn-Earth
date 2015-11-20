@@ -1,9 +1,3 @@
-/*
-    Require and initialise PhantomCSS module
-    Paths are relative to CasperJs directory
-*/
-
-
 var phantomcss = require('../node_modules/phantomcss');
 
 casper.test.begin('AE visual tests', function(test) {
@@ -29,28 +23,46 @@ casper.test.begin('AE visual tests', function(test) {
     casper.on('resource.error', function(err) {
         casper.log('Resource load error: ' + err, 'warning');
     });
-    /*
-        The test scenario
-    */
+
+    // start tests:
+
     casper.start('http://ae.dev/');
 
-    casper.viewport(1024, 768);
+    casper.viewport(1920, 1200);
+    casper.then(function() {
+        phantomcss.screenshot('html', 'desktop 1920');
+    });
 
     casper.then(function() {
-        phantomcss.screenshot('#wrapper', 'desktop 1024');
+        casper.viewport(768, 1024);
     });
+    casper.then(function() {
+        phantomcss.screenshot('html', 'tablet 768');
+    });
+
+    casper.then(function() {
+        casper.viewport(320, 468);
+    });
+    casper.then(function() {
+        phantomcss.screenshot('html', 'mobile 320');
+    });
+
+
+
+
+
+
+
+
+
 
     casper.then(function now_check_the_screenshots() {
         // compare screenshots
         phantomcss.compareAll();
     });
 
-    /*
-    Casper runs tests
-    */
     casper.run(function() {
-        console.log('\nTHE END.');
-        // phantomcss.getExitStatus() // pass or fail?
+        phantomcss.getExitStatus();
         casper.test.done();
     });
 });
