@@ -11,7 +11,8 @@ var gulp = require('gulp'),
     uncss = require('gulp-uncss'),
     xml2js = require('gulp-xml2js'),
     gutil = require('gulp-util'),
-    clean = require('gulp-clean');
+    clean = require('gulp-clean'),
+    run = require('gulp-run');
 
 // css:
 gulp.task('sass', function() {
@@ -68,6 +69,15 @@ gulp.task('csslint', function() {
         .pipe(csslint())
         .pipe(csslint.reporter());
 });
+
+
+
+
+// tests
+gulp.task('regressionTest', function () {
+  run('casperjs test tests/visual-regression.js').exec()
+})
+
 
 
 // download the sitemap locally:
@@ -162,6 +172,17 @@ gulp.task('default', function() {
 
 // pre-go live task
 // run getSitemap first
-gulp.task('deploy', function() {
-    gulp.start('removeUnused');
+// then visual regression tests
+gulp.task('deploy', ['removeUnused'], function() {
+    gulp.start('regressionTest');
 });
+
+
+
+
+
+
+
+
+
+// casperjs test tests/visual-regression.js

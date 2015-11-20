@@ -113,7 +113,7 @@ WHERE tblacct.accountName='".$_SESSION['username']."' AND tblMail.mailRead < '2'
 }
 
 
-writeFlash('300', '450', '/assets/mail/mailClient.swf', '/assets/mail/mail_client_alt.gif', 'Autumn Earth Mail','MailClient');
+// writeFlash('300', '450', '/assets/mail/mailClient.swf', '/assets/mail/mail_client_alt.gif', 'Autumn Earth Mail','MailClient');
 
 
 
