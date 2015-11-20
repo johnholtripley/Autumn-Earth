@@ -179,10 +179,3 @@ gulp.task('deploy', ['removeUnused'], function() {
 
 
 
-
-
-
-
-
-
-// casperjs test tests/visual-regression.js

@@ -1,3 +1,8 @@
+
+// TO DO
+//
+// use Slimer JS for web font support?
+
 var phantomcss = require('../node_modules/phantomcss');
 
 casper.test.begin('AE visual tests', function(test) {
@@ -39,31 +44,31 @@ casper.test.begin('AE visual tests', function(test) {
             });
         });
         casper.then(function() {
-            casper.viewport(1920, 1200);
+            casper.viewport(1024, 768);
         });
         casper.then(function() {
-            phantomcss.screenshot('html', 'desktop 1920');
+            phantomcss.screenshot('body', 'desktop 1024');
         });
 
         casper.then(function() {
             casper.viewport(768, 1024);
         });
         casper.then(function() {
-            phantomcss.screenshot('html', 'tablet 768');
+            phantomcss.screenshot('body', 'tablet 768');
         });
 
         casper.then(function() {
             casper.viewport(320, 468);
         });
         casper.then(function() {
-            phantomcss.screenshot('html', 'mobile 320');
+            phantomcss.screenshot('body', 'mobile 320');
         });
 
         // screen grab of mobile nav open:
         casper.then(function() {
             casper.click('#menuToggle');
             this.wait(500, function() {
-                phantomcss.screenshot('html', 'mobile 320 - nav open');
+                phantomcss.screenshot('body', 'mobile 320 - nav open');
             });
         });
 
@@ -74,20 +79,20 @@ casper.test.begin('AE visual tests', function(test) {
                 'input[name="pword"]': 'test'
             }, true);
             casper.then(function() {
-                casper.viewport(1920, 1200);
+                casper.viewport(1024, 768);
             });
             casper.then(function() {
-                phantomcss.screenshot('html', 'desktop 1920 - after login');
+                phantomcss.screenshot('body', 'desktop 1024 - after login');
             });
         });
 
         // try a news page:
         casper.thenOpen('http://ae.dev/chronicle/down-the-rabbit-hole/', function() {
             casper.then(function() {
-                casper.viewport(1920, 1200);
+                casper.viewport(1024, 768);
             });
             casper.then(function() {
-                phantomcss.screenshot('html', 'desktop 1920 - news page');
+                phantomcss.screenshot('body', 'desktop 1024 - news page');
             });
         });
 
@@ -97,11 +102,12 @@ casper.test.begin('AE visual tests', function(test) {
                 'input[name="searchterms"]': 'dragon'
             }, true);
             casper.then(function() {
-                casper.viewport(1920, 1200);
+                casper.viewport(1024, 768);
             });
             casper.then(function() {
-                phantomcss.screenshot('html', 'desktop 1920 - after search');
+                phantomcss.screenshot('body', 'desktop 1024 - after search');
             });
+
         });
 
     });
