@@ -1,10 +1,4 @@
 <?php
-/**
- * C:\Users\hp\AppData\Roaming\Sublime Text 2\Packages/PhpTidy/phptidy-sublime-buffer.php
- *
- * @author Morgan Estes <morgan.estes@gmail.com>
- * @package default
- */
 
 
 include($_SERVER['DOCUMENT_ROOT']."/includes/session.php");
@@ -162,17 +156,7 @@ displayDeepestDelvers();
 
 
 
-
-
-
-
-
 <?php
-/*
-echo '<!-- <script type="text/javascript" src="http://static.ak.connect.facebook.com/js/api_lib/v0.4/FeatureLoader.js.php/en_US"></script><script type="text/javascript">FB.init("f36928a0f3b8ccc280a3097b8894147a");</script><fb:fan profile_id="141824743233" stream="1" connections="10" width="300"></fb:fan><div style="font-size:8px; padding-left:10px"><a href="http://www.facebook.com/pages/Autumn-Earth/141824743233">Autumn Earth on Facebook</a> </div> /--> ';
-*/
-
-
 
 include($_SERVER['DOCUMENT_ROOT']."/includes/footer.php");
 ?>
