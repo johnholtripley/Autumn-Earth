@@ -259,8 +259,6 @@ function getCanvasPosition() {
 }
 
 
-
-
 function initCardGame() {
     getCanvasPosition();
     gameCanvas = document.getElementById("cardGame");
@@ -335,9 +333,6 @@ function initCardGame() {
             gameContext.restore();
         }
     }
-
-
-
     placeCardOnBoard(0, (boardWidth / 2) - 1, (boardHeight / 2) - 1, true);
     placeCardOnBoard(1, (boardWidth / 2), (boardHeight / 2), true);
     placeCardOnBoard((numberOfCardsInGame / 2), (boardWidth / 2), (boardHeight / 2) - 1, true);
@@ -357,15 +352,8 @@ function initCardGame() {
         }
     }
     placedCards = 4;
- currentPlayersTurn = getRandomInteger(1, 2);
-
-
-
-
-
+    currentPlayersTurn = getRandomInteger(1, 2);
     currentlySelectedCard = -1;
-   
-    
     currentOpponent = 1;
     isPlayer1AI = true;
     whoCanClick = currentPlayersTurn;
@@ -379,10 +367,6 @@ function initCardGame() {
         }
     }
 }
-
-
-
-
 
 function placeCardOnBoard(cardRef, gridX, gridY, placedOnGameBoard) {
     board[gridY][gridX] = cardRef;
@@ -575,9 +559,6 @@ function checkAttack(placedTileX, placedTileY, xDir, yDir, whichBoard, whichCard
 }
 
 
-
-
-
 function flipCard(cardRef,whichCards,whichCurrentPlayersTurn) {
     whichCards[cardRef].currentOwner = whichCurrentPlayersTurn;
     whichCards[cardRef].flippedAnimation = 10;
@@ -685,6 +666,7 @@ function findBestMove(boardState, whichPlayerCurrently) {
                                     // -----------------------------
                                     // - try opponent's counter move:
                                     bestCounterMove = 0;
+                                    bestCounterMovePositions = [];
                                     // swap whose go it is:
                                     whichCounterPlayerCurrently = whichOpponentCurrently;
                                     whichCounterOpponentCurrently = whichPlayerCurrently;
@@ -725,6 +707,9 @@ function findBestMove(boardState, whichPlayerCurrently) {
                                                                     checkAttacksInAllDirections(l, m, counterTempBoard, counterCardState, whichCounterOpponentCurrently, whichCounterPlayerCurrently, true);
                                                                     if (thisMovesScore > bestCounterMove) {
                                                                         bestCounterMove = thisMovesScore;
+                                                                        bestCounterMovePositions = [l + "," + m];
+                                                                    } else if (thisMovesScore == bestCounterMove) {
+                                                                        bestCounterMovePositions.push(l + "," + m);
                                                                     }
                                                                     // console.log("this counter card at "+l+","+m+" can flip "+thisMovesScore+" cards");
                                                                 }
@@ -757,9 +742,17 @@ function findBestMove(boardState, whichPlayerCurrently) {
     if (listOfPossibleBestMoves[(listOfPossibleBestMoves.length - 1)][0] == -999999) {
         listOfPossibleBestMoves.pop();
     }
+
+    // loop through the results and if any moves correspond to good blocking positions, then increase the score slightly for those:
+    for (var blockMoveCheck = 0; blockMoveCheck < listOfPossibleBestMoves.length; blockMoveCheck++) {
+        var thisMovesPosition = listOfPossibleBestMoves[blockMoveCheck][2] + "," + listOfPossibleBestMoves[blockMoveCheck][3];
+        if (bestCounterMovePositions.indexOf(thisMovesPosition) != -1) {
+            // is a blocking move:
+            listOfPossibleBestMoves[blockMoveCheck][0] += 0.001;
+        }
+    }
     // look through the results to make sure a powerful card isn't used when a less powerful one will achieve the same result:
     // [best score, card ref, gridx, gridy]:
-    //  console.log(listOfPossibleBestMoves);
     indexToCheck = 0;
     var previousMovesScore = listOfPossibleBestMoves[indexToCheck][0];
     thisGroupsScore = [];
@@ -778,15 +771,14 @@ function findBestMove(boardState, whichPlayerCurrently) {
     }
     while (indexToCheck < listOfPossibleBestMoves.length);
     if (thisGroupsScore.length == listOfPossibleBestMoves.length) {
-        // this won't have been called if all scores where the same
-        // console.log("caught it");
+        // this won't have been called if all scores were the same
         findLowestScoreInGroup();
     }
     //  console.log("removing: "+indexesToRemove.join(", "));
     for (var ir = indexesToRemove.length - 1; ir >= 0; ir--) {
         listOfPossibleBestMoves.splice((indexesToRemove[ir]), 1);
     }
-    //  console.log(listOfPossibleBestMoves);
+    console.log(listOfPossibleBestMoves);
     // randomly pick a move based on AI's skill level:
     var pickMoveRange = player2Skill;
     // check to see if any moves have the same score as the best move - and use these as well so the higher skill AI doesn't just pick the same move every time:
@@ -805,6 +797,7 @@ function findBestMove(boardState, whichPlayerCurrently) {
     }
     whichMoveToMake = listOfPossibleBestMoves[Math.floor(Math.random() * pickMoveRange)];
 }
+
 
 // -------------------------------------------
 
