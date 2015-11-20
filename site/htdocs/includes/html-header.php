@@ -18,7 +18,6 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/title-tag.php");
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="author" href="http://google.com/+JohnHoltRipley">
 <link rel="manifest" href="/manifest.json">
 <script>
     var cutsTheMustard = false;
