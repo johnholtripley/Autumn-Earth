@@ -175,7 +175,7 @@ WHERE tblacct.accountName='".$processedlogin."' and tblmail.mailread = '0'";
 		echo '<div class="Error">not logged in</div>'."\n";
 	echo '<br />';
 	// display log in form:
-	echo '<form action="' . $thisurl . '" method="post" name="loginform">'."\n";
+	echo '<form action="' . $thisurl . '" method="post" id="loginform" name="loginform">'."\n";
 	echo '<label for="loginname">enter user name</label>'."\n";
 	echo '<input id="loginname" type="text" name="loginname" />'."\n";
 	echo '<br />'."\n";
@@ -216,7 +216,7 @@ WHERE tblacct.accountName='".$processedlogin."' and tblmail.mailread = '0'";
 	echo '<div class="Error">not logged in</div>'."\n";
 	echo '<br />'."\n";
 	// display log in form:
-	echo '<form action="' . $thisurl . '" method="post" name="loginform">'."\n";
+	echo '<form action="' . $thisurl . '" method="post" id="loginform" name="loginform">'."\n";
 	echo '<label for="loginname">enter user name</label>'."\n";
 	echo '<input id="loginname" type="text" name="loginname" />'."\n";
 	echo '<br />'."\n";

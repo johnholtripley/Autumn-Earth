@@ -321,7 +321,7 @@ echo'<input type="radio" name="htmlemail" id="htmlemail1" value="1" /><label for
 
 <br />
 <br />
-<input type="checkbox" value="agreed" name="terms" id="terms" /> <label for="terms">I have read and agree to the <a href="terms.php" target="_blank" title="View the Terms and Conditions">Terms and Conditions</a></label>
+<input type="checkbox" value="agreed" name="terms" id="terms" /> <label for="terms"><span></span>I have read and agree to the <a href="terms.php" target="_blank" title="View the Terms and Conditions">Terms and Conditions</a></label>
 <p>You may also wish to view Autumn Earth's <a href="privacy.php" target="_blank" title="View the Privacy Policy">Privacy Policy</a></p>
 <br /><br />
 
