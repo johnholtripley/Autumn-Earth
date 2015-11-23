@@ -38,7 +38,13 @@ function uniqueValues(a) {
     });
 }
 
-
+function sortByHighestValue(a,b) {
+  if (a[0] < b[0])
+    return 1;
+  if (a[0] > b[0])
+    return -1;
+  return 0;
+}
 
 function compareZIndex(a,b) {
   if (a.zIndex < b.zIndex)
@@ -666,6 +672,7 @@ function findBestMove(boardState, whichPlayerCurrently) {
                                     // -----------------------------
                                     // - try opponent's counter move:
                                     bestCounterMove = 0;
+                                    // keep track of the best player positions so blocking moves can be favoured:
                                     bestCounterMovePositions = [];
                                     // swap whose go it is:
                                     whichCounterPlayerCurrently = whichOpponentCurrently;
@@ -751,6 +758,10 @@ function findBestMove(boardState, whichPlayerCurrently) {
             listOfPossibleBestMoves[blockMoveCheck][0] += 0.001;
         }
     }
+
+// resort the array now based on the move's score:
+listOfPossibleBestMoves.sort(sortByHighestValue);
+
     // look through the results to make sure a powerful card isn't used when a less powerful one will achieve the same result:
     // [best score, card ref, gridx, gridy]:
     indexToCheck = 0;
