@@ -339,6 +339,11 @@ function initCardGame() {
             gameContext.restore();
         }
     }
+
+
+
+
+    
     placeCardOnBoard(0, (boardWidth / 2) - 1, (boardHeight / 2) - 1, true);
     placeCardOnBoard(1, (boardWidth / 2), (boardHeight / 2), true);
     placeCardOnBoard((numberOfCardsInGame / 2), (boardWidth / 2), (boardHeight / 2) - 1, true);
@@ -359,6 +364,60 @@ function initCardGame() {
     }
     placedCards = 4;
     currentPlayersTurn = getRandomInteger(1, 2);
+    
+
+
+
+
+
+// testing ----------------------------------
+/*
+board = [
+    ['x', 'x', 'x', 'x', 'x', '-', '-', 'x', 'x', 'x', 'x', 'x'],
+    ['x', 'x', 'x', 'x', '-', '-', '-', '-', 'x', 'x', 'x', 'x'],
+    ['x', 'x', 'x', '-', '-', '-', '-', '-', '-', 'x', 'x', 'x'],
+    ['x', 'x', 'x', '-', '-', '-', '-', '-', '-', 'x', 'x', 'x'],
+    ['x', 'x', 'x', 'x', '-', '-', '-', '-', 'x', 'x', 'x', 'x'],
+    ['x', 'x', 'x', 'x', 'x', '-', '-', 'x', 'x', 'x', 'x', 'x']
+];
+
+   placeCardOnBoard(0, 5, 2, true);
+    placeCardOnBoard(1, 6, 2, true);
+    placeCardOnBoard(2, 7, 2, true);
+    placeCardOnBoard(3, 6, 1, true);
+    placeCardOnBoard(4, 7, 3, true);
+    placeCardOnBoard(5, 6, 3, true);
+    placeCardOnBoard(6, 6, 4, true);
+    placeCardOnBoard(7, 7, 4, true);
+    placeCardOnBoard(8, 5, 4, true);
+   placeCardOnBoard(9, 1, 1, false);
+   placeCardOnBoard(10, 6, 0, true);
+
+placeCardOnBoard(11, 1, 3, false);
+placeCardOnBoard(12, 5, 3, true);
+placeCardOnBoard(13, 4, 4, true);
+placeCardOnBoard(14, 7, 1, true);
+
+placeCardOnBoard(15, 11, 2, false);
+placeCardOnBoard(16, 11, 3, false);
+placeCardOnBoard(17, 11, 4, false);
+placeCardOnBoard(18, 11, 5, false);
+placeCardOnBoard(19, 10, 2, false);
+placeCardOnBoard(20, 10, 3, false);
+placeCardOnBoard(21, 10, 4, false);
+placeCardOnBoard(22, 10, 1, false);
+placeCardOnBoard(23, 11, 1, false);
+
+
+
+
+  placedCards = 4;
+    currentPlayersTurn = 1;
+    */
+// testing ----------------------------------
+
+
+
     currentlySelectedCard = -1;
     currentOpponent = 1;
     isPlayer1AI = true;
@@ -618,7 +677,6 @@ function doAIMove() {
     aiIsWorking = 1;
     findBestMove(board, currentPlayersTurn, cards);
 }
-
 function findBestMove(boardState, whichPlayerCurrently) {
     whichOpponentCurrently = (whichPlayerCurrently == 1) ? 2 : 1;
     // [best score, card ref, gridx, gridy]:
@@ -749,7 +807,6 @@ function findBestMove(boardState, whichPlayerCurrently) {
     if (listOfPossibleBestMoves[(listOfPossibleBestMoves.length - 1)][0] == -999999) {
         listOfPossibleBestMoves.pop();
     }
-
     // loop through the results and if any moves correspond to good blocking positions, then increase the score slightly for those:
     for (var blockMoveCheck = 0; blockMoveCheck < listOfPossibleBestMoves.length; blockMoveCheck++) {
         var thisMovesPosition = listOfPossibleBestMoves[blockMoveCheck][2] + "," + listOfPossibleBestMoves[blockMoveCheck][3];
@@ -758,10 +815,8 @@ function findBestMove(boardState, whichPlayerCurrently) {
             listOfPossibleBestMoves[blockMoveCheck][0] += 0.001;
         }
     }
-
-// resort the array now based on the move's score:
-listOfPossibleBestMoves.sort(sortByHighestValue);
-
+    // resort the array now based on the move's score:
+    listOfPossibleBestMoves.sort(sortByHighestValue);
     // look through the results to make sure a powerful card isn't used when a less powerful one will achieve the same result:
     // [best score, card ref, gridx, gridy]:
     indexToCheck = 0;
@@ -808,7 +863,6 @@ listOfPossibleBestMoves.sort(sortByHighestValue);
     }
     whichMoveToMake = listOfPossibleBestMoves[Math.floor(Math.random() * pickMoveRange)];
 }
-
 
 // -------------------------------------------
 

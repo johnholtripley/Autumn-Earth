@@ -37,17 +37,19 @@ ae.checkCloseNavigation = function(e) {
 
 	// close by touching the visible part of the content:
 document.addEventListener("click", function(e) {
-	ae.checkCloseNavigation(e);
-	if (ae.navigationIsRevealed) {
+		if (ae.navigationIsRevealed) {
 	e.preventDefault();
 }
+	ae.checkCloseNavigation(e);
+
 }, true);
 // double up for mobile event:
 document.addEventListener("touchend", function(e) {
-	ae.checkCloseNavigation(e);
-	if (ae.navigationIsRevealed) {
+		if (ae.navigationIsRevealed) {
 	e.preventDefault();
 }
+	ae.checkCloseNavigation(e);
+
 });
 ae.swipeLeft = function() {
 	if (ae.navigationIsRevealed) {
