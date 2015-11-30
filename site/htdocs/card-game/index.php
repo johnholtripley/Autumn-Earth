@@ -30,7 +30,7 @@ array_push($cardDataNeeded, array($cardAttack, $cardDefense, $cardName));
 }
 
 // check if logged in, get character's cards if so, otherwise use the default deck:
-$playersCards = array(1,1,1,1,1,2,1,1,2,1,3,3);
+$playersCards = array(2,2,1,1,1,1,1,1,1,1,3,3);
 
 if(isset($_SESSION['username'])) {
 $query = "select tblcharacters.currentCards as currentCards, tblcharacters.charId as charID
@@ -56,7 +56,7 @@ $playersCards = array_map('intval', explode(',', $currentCards));
 }
 }
 
-$npcsCards = array(1,1,2,2,2,1,2,1,1,1,3,3);
+$npcsCards = array(1,1,1,1,1,1,1,1,1,3,3,3);
 ?>
 
 

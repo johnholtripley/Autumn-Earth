@@ -30,6 +30,7 @@ ae.checkCloseNavigation = function(e) {
 				// hide navigation:
 				removeClass(document.documentElement, "offCanvas");
 				ae.navigationIsRevealed = false;
+				e.preventDefault();
 			}
 		}
 	}
@@ -37,17 +38,13 @@ ae.checkCloseNavigation = function(e) {
 
 	// close by touching the visible part of the content:
 document.addEventListener("click", function(e) {
-		if (ae.navigationIsRevealed) {
-	e.preventDefault();
-}
+		
 	ae.checkCloseNavigation(e);
 
 }, true);
 // double up for mobile event:
 document.addEventListener("touchend", function(e) {
-		if (ae.navigationIsRevealed) {
-	e.preventDefault();
-}
+	
 	ae.checkCloseNavigation(e);
 
 });

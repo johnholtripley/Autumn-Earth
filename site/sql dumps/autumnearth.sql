@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 12, 2015 at 12:59 PM
+-- Generation Time: Nov 30, 2015 at 10:05 AM
 -- Server version: 5.6.24
 -- PHP Version: 5.6.8
 
@@ -44,7 +44,7 @@ CREATE TABLE IF NOT EXISTS `tblacct` (
   `emailalerts` char(1) DEFAULT NULL,
   `uniqueID` varchar(255) DEFAULT NULL,
   `usersIPAddress` varchar(15) DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=51 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=52 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblacct`
@@ -81,7 +81,8 @@ INSERT INTO `tblacct` (`accountID`, `accountName`, `accountStatus`, `joinedTime`
 (47, 'dilly12', '2', '2015-07-01 13:10:38', '0', 0, 1, 'john.holtripley@gmail.com', '2015-01-01 00:00:00', '1', '1', '`ézz[£WÝu\raôÝ§', 'dilly12', '1', '1', '0b6ad46b1589a181e0402562c0b1d9e1', '127.0.0.1'),
 (48, 'dilly20', '2', '2015-07-03 14:02:41', '0', 13, 15, 'john.holtripley@gmail.com', '2015-01-01 00:00:00', '1', '1', 'ÞÉ/ê;}6Ôx|Ökd', 'dilly20', '1', '1', '3dcbb605f6e3545f33d0e1fe54042f97', '127.0.0.1'),
 (49, 'dilly21', '2', '2015-07-03 14:03:09', '0', 0, 16, 'john.holtripley@gmail.com', '2015-01-01 00:00:00', '1', '1', 'œé+''ÍÍiffA`jÔ@', 'dilly21', '1', '1', '55561f21c5445a16e9e306fae400b08c', '127.0.0.1'),
-(50, 'dilly22', '2', '2015-08-04 15:10:24', '0', 0, 1, 'john.holtripley@gmail.com', '2007-04-03 00:00:00', '1', '1', '.{[ÄX%tl¢"ÔÉF', 'sdsd', '1', '1', 'fb4d713852301b8dff21ff63f376b45f', '127.0.0.1');
+(50, 'dilly22', '2', '2015-08-04 15:10:24', '0', 0, 1, 'john.holtripley@gmail.com', '2007-04-03 00:00:00', '1', '1', '.{[ÄX%tl¢"ÔÉF', 'sdsd', '1', '1', 'fb4d713852301b8dff21ff63f376b45f', '127.0.0.1'),
+(51, 'test', '2', '2015-11-20 14:31:58', '0', 0, 1, 'john.holtripley@gmail.com', '2015-01-01 00:00:00', '1', '1', '®)ª¹ì?¨åÑ·“¯ä¥', '', '1', '1', '9c7129e26978a03b58eb1a6375c50067', '127.0.0.1');
 
 -- --------------------------------------------------------
 
@@ -175,7 +176,7 @@ CREATE TABLE IF NOT EXISTS `tblcards` (
 
 INSERT INTO `tblcards` (`cardID`, `cardAttack`, `cardDefense`, `cardName`) VALUES
 (1, 5, 10, 'Bomb'),
-(2, 5, 10, 'Chocobo'),
+(2, 5, 17, 'Chocobo'),
 (3, 15, 10, 'Mog');
 
 -- --------------------------------------------------------
@@ -890,21 +891,21 @@ CREATE TABLE IF NOT EXISTS `tblsavedsearches` (
   `searchID` int(11) NOT NULL,
   `searchTerm` varchar(255) DEFAULT NULL,
   `searchCount` int(11) DEFAULT NULL
-) ENGINE=MyISAM AUTO_INCREMENT=104 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=120 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblsavedsearches`
 --
 
 INSERT INTO `tblsavedsearches` (`searchID`, `searchTerm`, `searchCount`) VALUES
-(1, 'crafting', 63),
-(2, 'feeding pets', 63),
-(3, 'image', 94),
-(4, 'autumn', 59),
+(1, 'crafting', 79),
+(2, 'feeding pets', 79),
+(3, 'image', 110),
+(4, 'autumn', 75),
 (5, 'autumn earth', 2),
 (6, 'character development', 0),
 (11, 'pte development', 0),
-(8, 'pet development', 59),
+(8, 'pet development', 75),
 (10, 'pte development', 0),
 (12, 'pet developmetn', 0),
 (13, 'carfting', 0),
@@ -933,14 +934,14 @@ INSERT INTO `tblsavedsearches` (`searchID`, `searchTerm`, `searchCount`) VALUES
 (36, 'feed-my-pets', 0),
 (37, 'feed my lovely pet', 0),
 (38, 'feed-my-lovely-pet', 0),
-(39, 'images', 59),
+(39, 'images', 75),
 (40, 'feeding my pets', 0),
 (41, 'feeding-my-pets', 0),
 (42, 'feeding-pets', 0),
 (43, 'feeding-pets', 0),
-(44, 'how does that work', 63),
-(45, 'does that work', 59),
-(46, 'dragon', 113),
+(44, 'how does that work', 79),
+(45, 'does that work', 75),
+(46, 'dragon', 153),
 (47, 'autumn earth', 0),
 (48, 'autumn earth', 0),
 (49, 'autumn earth', 0),
@@ -997,7 +998,23 @@ INSERT INTO `tblsavedsearches` (`searchID`, `searchTerm`, `searchCount`) VALUES
 (100, 'autumn earth', 0),
 (101, 'autumn earth', 0),
 (102, 'autumn earth', 0),
-(103, 'autumn earth', 0);
+(103, 'autumn earth', 0),
+(104, 'autumn earth', 0),
+(105, 'autumn earth', 0),
+(106, 'autumn earth', 0),
+(107, 'autumn earth', 0),
+(108, 'autumn earth', 0),
+(109, 'autumn earth', 0),
+(110, 'autumn earth', 0),
+(111, 'autumn earth', 0),
+(112, 'autumn earth', 0),
+(113, 'autumn earth', 0),
+(114, 'autumn earth', 0),
+(115, 'autumn earth', 0),
+(116, 'autumn earth', 0),
+(117, 'autumn earth', 0),
+(118, 'autumn earth', 0),
+(119, 'autumn earth', 0);
 
 -- --------------------------------------------------------
 
@@ -1262,7 +1279,7 @@ ALTER TABLE `tblthreads`
 -- AUTO_INCREMENT for table `tblacct`
 --
 ALTER TABLE `tblacct`
-  MODIFY `accountID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=51;
+  MODIFY `accountID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=52;
 --
 -- AUTO_INCREMENT for table `tblauctionbids`
 --
@@ -1372,7 +1389,7 @@ ALTER TABLE `tblposts`
 -- AUTO_INCREMENT for table `tblsavedsearches`
 --
 ALTER TABLE `tblsavedsearches`
-  MODIFY `searchID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=104;
+  MODIFY `searchID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=120;
 --
 -- AUTO_INCREMENT for table `tblsubscribedthreads`
 --
