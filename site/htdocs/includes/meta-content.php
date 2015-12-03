@@ -31,6 +31,7 @@ echo '<meta content="'.$longDescription.'" name="description">'."\n";
 
 <meta name="twitter:card" content="summary">
 <meta name="twitter:site" content="@autumnearth">
+<meta name="twitter:url" content="<?php echo $thisBuiltURL; ?>">
 <meta name="twitter:title" content="<?php echo $pagetitle; ?>">
 <meta name="twitter:description" content="<?php echo $longDescription; ?>">
 <meta name="twitter:image" content="<?php echo $shareImagePath; ?>">
