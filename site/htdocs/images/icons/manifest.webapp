@@ -1,0 +1,13 @@
+{
+	"version": "1.0",
+	"name": "Autumn Earth",
+	"description": "Community site",
+	"icons": {
+		"60": "http:\/\/www.autumnearth.com\/images\/icons\/firefox_app_60x60.png",
+		"128": "http:\/\/www.autumnearth.com\/images\/icons\/firefox_app_128x128.png"
+	},
+	"developer": {
+		"name": "TODO",
+		"url": "TODO"
+	}
+}

@@ -4,29 +4,8 @@
 
 echo '<meta content="'.$longDescription.'" name="description">'."\n";
 
-
+include($_SERVER['DOCUMENT_ROOT']."/includes/favicons.html");
 ?>
-
-
-<link rel="shortcut icon" href="/favicon.ico">
-<meta name="apple-mobile-web-app-title" content="Autumn Earth">
-<meta name="msapplication-TileColor" content="#ff1972">
-<meta name="msapplication-TileImage" content="/images/icons/144.png">
-<link sizes="192x192" href="/images/icons/192.png">
-<link sizes="152x152" href="/images/icons/152.png">
-<link sizes="144x144" href="/images/icons/144.png">
-<link sizes="120x120" href="/images/icons/120.png">
-<link sizes="114x114" href="/images/icons/114.png">
-<link sizes="72x72" href="/images/icons/72.png">
-<link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png">
-<!--
-<link rel="shortcut icon" sizes="16x16" href="/images/icons/16.png">
-<link rel="shortcut icon" sizes="32x32" href="/images/icons/32.png">
-<link rel="shortcut icon" sizes="196x196" href="/images/icons/196.png">
-<link rel="shortcut icon" sizes="228x228" href="/images/icons/228.png">
-/-->
-
-
 
 
 <meta name="twitter:card" content="summary">
