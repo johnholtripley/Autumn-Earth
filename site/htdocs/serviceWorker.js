@@ -148,7 +148,7 @@
                             var copy = response.clone();
                             stashInCache(imagesCacheName, request, copy);
                         }
-                        // check if it's js, css, or a font file and added to the assets cache
+                        // check if it's js, css, or a font file and add it to the assets cache
                         if ((request.url.indexOf("/fonts/") !== -1) || (request.url.indexOf("/js/") !== -1) || (request.url.indexOf("/css/") !== -1)) {
                             // cache the font that's required by the browser:
                             var copy = response.clone();
