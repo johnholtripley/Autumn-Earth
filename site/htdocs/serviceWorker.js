@@ -1,5 +1,7 @@
 'use strict';
 
+// thanks to @adactio - https://adactio.com/journal/9888
+
 (function() {
 
     var version = 'v1.10::';
@@ -146,17 +148,12 @@
                             var copy = response.clone();
                             stashInCache(imagesCacheName, request, copy);
                         }
-
-
-// check if it's js, css, or a font file and added to the assets cache
-if ((request.url.indexOf("/fonts/") !== -1) || (request.url.indexOf("/js/") !== -1) || (request.url.indexOf("/css/") !== -1)) {
+                        // check if it's js, css, or a font file and added to the assets cache
+                        if ((request.url.indexOf("/fonts/") !== -1) || (request.url.indexOf("/js/") !== -1) || (request.url.indexOf("/css/") !== -1)) {
                             // cache the font that's required by the browser:
                             var copy = response.clone();
-                           stashInCache(assetsCacheName, request, copy);
+                            stashInCache(assetsCacheName, request, copy);
                         }
-
-
-
                         return response;
                     })
                     .catch(function() {
