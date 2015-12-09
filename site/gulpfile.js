@@ -32,7 +32,7 @@ gulp.task('sass', function() {
 // js:
 gulp.task('scripts', ['alternateScripts'],function() {
     // make sure that init is compiled last after all modules are loaded:
-    return gulp.src(['htdocs/js/src/**/!(init)*.js', 'htdocs/js/src/init.js'])
+    return gulp.src(['htdocs/js/src/**/!(init)*.js', 'htdocs/js/src/**/!(card-game)*.js', 'htdocs/js/src/init.js'])
         .pipe(sourcemaps.init())
         .pipe(concat('core.js'))
         .pipe(sourcemaps.write({
