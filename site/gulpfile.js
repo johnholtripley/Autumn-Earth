@@ -161,31 +161,31 @@ gulp.task('removeUnused', ['removeUnusedIE8CSS'], function() {
 // create favicons:
 gulp.task('favicons', function() {
     gulp.src('./htdocs/images/favicon-source.png').pipe(favicons({
-        appName: "Autumn Earth", // Your application's name. `string`
-        appDescription: "Community site", // Your application's description. `string`
-        developerName: null, // Your (or your developer's) name. `string`
-        developerURL: null, // Your (or your developer's) URL. `string`
-        background: "#212121", // Background colour for flattened icons. `string`
-        path: "http://www.autumnearth.com/images/icons/", // Path for overriding default icons path. `string`
-        url: "http://www.autumnearth.com/", // Absolute URL for OpenGraph image. `string`
-        display: "browser", // Android display: "browser" or "standalone". `string`
-        orientation: "portrait", // Android orientation: "portrait" or "landscape". `string`
-        version: "1.0", // Your application's version number. `number`
-        logging: true, // Print logs to console? `boolean`
-        online: true, // Use RealFaviconGenerator to create favicons? `boolean`
+        appName: "Autumn Earth", // Your application's name. 'string'
+        appDescription: "Community site", // Your application's description. 'string'
+        developerName: null, // Your (or your developer's) name. 'string'
+        developerURL: null, // Your (or your developer's) URL. 'string'
+        background: "#212121", // Background colour for flattened icons. 'string'
+        path: "http://www.autumnearth.com/images/icons/", // Path for overriding default icons path. 'string'
+        url: "http://www.autumnearth.com/", // Absolute URL for OpenGraph image. 'string'
+        display: "browser", // Android display: "browser" or "standalone". 'string'
+        orientation: "portrait", // Android orientation: "portrait" or "landscape". 'string'
+        version: "1.0", // Your application's version number. 'number'
+        logging: true, // Print logs to console? 'boolean'
+        online: true, // Use RealFaviconGenerator to create favicons? 'boolean'
         icons: {
-            android: true, // Create Android homescreen icon. `boolean`
-            appleIcon: true, // Create Apple touch icons. `boolean`
-            appleStartup: true, // Create Apple startup images. `boolean`
-            coast: true, // Create Opera Coast icon. `boolean`
-            favicons: true, // Create regular favicons. `boolean`
-            firefox: true, // Create Firefox OS icons. `boolean`
-            opengraph: true, // Create Facebook OpenGraph image. `boolean`
-            twitter: false, // Create Twitter Summary Card image. `boolean`
-            windows: true, // Create Windows 8 tile icons. `boolean`
-            yandex: true // Create Yandex browser icon. `boolean`
+            android: true, // Create Android homescreen icon. 'boolean'
+            appleIcon: true, // Create Apple touch icons. 'boolean'
+            appleStartup: true, // Create Apple startup images. 'boolean'
+            coast: true, // Create Opera Coast icon. 'boolean'
+            favicons: true, // Create regular favicons. 'boolean'
+            firefox: true, // Create Firefox OS icons. 'boolean'
+            opengraph: true, // Create Facebook OpenGraph image. 'boolean'
+            twitter: false, // Create Twitter Summary Card image. 'boolean'
+            windows: true, // Create Windows 8 tile icons. 'boolean'
+            yandex: true // Create Yandex browser icon. 'boolean'
         },
-        html: "./htdocs/includes/favicons.html"         // HTML files to modify. `string` or `array` 
+        html: "./htdocs/includes/favicons.html"         // HTML files to modify. 'string' or 'array' 
     })).pipe(gulp.dest('./htdocs/images/icons/'))
 });
 // ----------------------------------

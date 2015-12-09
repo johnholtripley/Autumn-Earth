@@ -17,7 +17,7 @@
                     '/images/autumn-earth.svg',
                     '/css/base.css',
                     '/js/core.min.js',
-                    '/offline.html',
+                    '/offline/',
                     fallBackImage
                 ]);
             });
@@ -53,7 +53,7 @@
                     credentials: 'include'
                 })
                 .catch(function() {
-                    return caches.match('/offline.html');
+                    return caches.match('/offline/');
                 })
             );
             return;
@@ -77,7 +77,7 @@
                 .catch(function() {
                     return caches.match(request)
                         .then(function(response) {
-                            return response || caches.match('/offline.html');
+                            return response || caches.match('/offline/');
                         })
                 })
             );
