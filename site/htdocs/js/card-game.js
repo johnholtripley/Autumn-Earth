@@ -214,19 +214,19 @@ if ((cutsTheMustard) && (supportsCanvas())) {
     var numberOfCardTypes = allCardsToLoadThisGame.length;
     var imagesToLoad = [{
         name: "board",
-        src: "http://www.autumnearth.com/images/card-game/board.jpg"
+        src: "/images/card-game/board.jpg"
     }, {
         name: "selected",
-        src: "http://www.autumnearth.com/images/card-game/selected-card.png"
+        src: "/images/card-game/selected-card.png"
     }, {
         name: "current",
-        src: "http://www.autumnearth.com/images/card-game/current-player.png"
+        src: "/images/card-game/current-player.png"
     }];
     // build imagesToLoad array dynamically for cards:
     for (var i = 1; i <= numberOfCardTypes; i++) {
         imagesToLoad.push({
             name: "card" + i,
-            src: "http://www.autumnearth.com/images/card-game/cards/" + i + ".png"
+            src: "/images/card-game/cards/" + i + ".png"
         });
     }
     // click handler:

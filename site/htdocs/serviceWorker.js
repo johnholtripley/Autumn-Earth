@@ -4,7 +4,8 @@
 
 (function() {
 
-    var version = 'v1.10::';
+
+    var version = 'v1.22::';
     var staticCacheName = version + 'static';
     var pagesCacheName = version + 'pages';
     var imagesCacheName = version + 'images';
@@ -16,10 +17,7 @@
             .then(function(cache) {
                 // These items won't block the installation of the Service Worker
                 cache.addAll([
-                    '/card-game/',
-                    '/images/card-game/board.jpg',
-                    '/images/card-game/current-player.png',
-                    '/images/card-game/selected-card.png'
+                    '/chronicle/'
                 ]);
                 // These items must be cached for the Service Worker to complete installation
                 return cache.addAll([
@@ -97,10 +95,14 @@
         var request = event.request;
         var url = new URL(request.url);
 
+
+
+
         // Only deal with requests to my own server
         if (url.origin !== location.origin) {
             return;
         }
+
 
         // For non-GET requests, try the network first, fall back to the offline page
         if (request.method !== 'GET') {
@@ -134,6 +136,10 @@
             );
             return;
         }
+
+
+
+
 
         // For non-HTML requests, look in the cache first, fall back to the network
         event.respondWith(
