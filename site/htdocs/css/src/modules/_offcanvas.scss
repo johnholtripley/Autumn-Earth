@@ -15,7 +15,7 @@
     position: relative;
     width: 100%;
     left: 0;
-    @include transition("left 0.4s ease-out");
+    @include transition(left 0.4s ease-out);
 }
 
 .js #navigation {
