@@ -50,7 +50,7 @@ document.documentElement.className +=" canvas" ;
 
 */
 
-// create Juno object for scoping:
+// create AE object for scoping:
 var ae = new Object();
 
 

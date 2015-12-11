@@ -34,7 +34,7 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/title-tag.php");
     <link href="/css/IE8Support.css" rel="stylesheet" />
 <![endif]-->
 
-<meta name="apple-mobile-web-app-capable" content="yes">
+
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="language" content="english">
 <link rel="dns-prefetch" href="//www.google-analytics.com">

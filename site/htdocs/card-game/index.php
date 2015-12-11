@@ -86,7 +86,7 @@ var player2Skill = 1;
 
 
 <?php
-$additionalAssets = '<script src="card-game.js"></script>'."\n";
+$additionalAssets = '<script src="/js/card-game.js"></script>'."\n";
 include($_SERVER['DOCUMENT_ROOT']."/includes/card-sub-nav.php");
 include($_SERVER['DOCUMENT_ROOT']."/includes/footer.php");
 ?>
