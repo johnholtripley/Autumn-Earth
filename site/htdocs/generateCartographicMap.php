@@ -63,6 +63,7 @@ $mapFilename = "data/chr".$playerId."/cartography/".$dungeonName."/".$session."/
       $xmlparser = xml_parser_create();
     $nodeType = "";
     $loadedMapData = array();
+    $loadedDoorData = array();
     $loadedItemData = array();
     xml_set_element_handler($xmlparser, "XMLMapStartTag", "XMLMapEndTag");
     xml_set_character_data_handler($xmlparser, "XMLMapTagContents");
@@ -110,7 +111,7 @@ createCartographicMap();
 
 
 function createCartographicMap() {
-global $mapMaxWidth, $mapMaxHeight, $dungeonArray, $loadedItemData, $debug, $playerId, $dungeonName, $session, $requestedMap, $plotChests, $update, $useOverlay;
+global $mapMaxWidth, $mapMaxHeight, $dungeonArray, $loadedItemData, $loadedDoorData, $debug, $playerId, $dungeonName, $session, $requestedMap, $plotChests, $update, $useOverlay;
 
 
 // canvas size should be twice required size as it will be downsampled to anti alias:
@@ -148,7 +149,8 @@ imagecopy($mapCanvas, $updateFade, 0, 0, 0, 0, $canvaDimension, $canvaDimension)
 
 
 // Fill the background
-$ground = imagecolorallocate($mapCanvas, 253, 243, 178);
+$ground = imagecolorallocate($mapCanvas, 222, 213, 156);
+$walkableColour = imagecolorallocate($mapCanvas, 253, 243, 178);
 
 imagefilledrectangle($mapCanvas, 0, 0, $canvaDimension, $canvaDimension, $ground);
 }
@@ -169,22 +171,8 @@ $brush = imagecreate(2,2);
 $walkable = 10;
 // loop through all tiles and check the right and bottom edges to see if they transition from walkable to non-walkable and if so, draw an edge
 
-
-
 $stairTiles = 560;
-
-
-
-
-
-
-
-
 $edges = array();
-
-
-
-
 
 for ($i = 0;$i < ($mapMaxWidth);$i++) {
   for ($j = 0;$j < ($mapMaxHeight);$j++) {
@@ -798,6 +786,50 @@ array_push($unusedEdges,$edges[$i]);
 */
 
 
+// flood fill from centre of a door tile:
+
+$firstDoor = explode(",",$loadedDoorData[0]);
+
+$doorX = intval($firstDoor[1])+0.5;
+$doorY = intval($firstDoor[2])+0.5;
+$doorX = $doorX *$tileLineDimension;
+$doorY = ($mapMaxHeight -1 - $doorY)*$tileLineDimension;
+/*
+echo $tileLineDimension." ####";
+
+
+echo "<br>".intval($firstDoor[1]). "===";
+echo "<br>".intval($firstDoor[2]). "===";
+
+var_dump($firstDoor);
+echo "<hr>";
+
+
+
+echo $doorX. " --- ". $doorY;
+die();
+*/
+
+//$doorX = 400;
+//$doorY = 200;
+if($doorX<0) {
+  $doorX=0;
+}
+if($doorY<0) {
+  $doorY=0;
+}
+if($doorX>$canvaDimension) {
+  $doorX=$canvaDimension;
+}
+if($doorY>$canvaDimension) {
+  $doorY=$canvaDimension;
+}
+
+imagefill($mapCanvas, $doorX, $doorY, $walkableColour);
+
+
+
+
  imagefilter($mapCanvas, IMG_FILTER_GAUSSIAN_BLUR);
 $imageResampled = imagecreatetruecolor($canvaDimension/2, $canvaDimension/2);
 
@@ -814,16 +846,20 @@ imagecopy($imageResampled, $overlayTexture, 0, 0, 0, 0, $canvaDimension, $canvaD
 
 if($plotChests) {
 
+/*
 if($debug) {
-//echo "<pre>";
-//var_dump($loadedItemData);
-//echo "</pre>";
+echo "<pre>";
+var_dump($loadedItemData);
+echo "</pre>";
+die();
 }
+*/
 
 $chestLocator = imagecreatefrompng("http://".$_SERVER['SERVER_NAME']."/images/cartography-map-location.png");
 imageAlphaBlending($chestLocator, false);
 
 
+//imagecopy($imageResampled, $chestLocator, ($doorX), $doorY, 0, 0, 7, 7);
 
 for ($i = 0;$i < (count($loadedItemData));$i++) {
 
@@ -984,7 +1020,7 @@ function XMLMapEndTag($parser, $name) {
   $nodeType = "";
 }
 function XMLMapTagContents($parser, $data) {
-   global $loadedMapData, $loadedItemData, $nodeType;
+   global $loadedMapData, $loadedItemData, $loadedDoorData, $nodeType;
    
    if ($nodeType == "ROW") {
 
@@ -992,7 +1028,9 @@ function XMLMapTagContents($parser, $data) {
 } else if ($nodeType == "ITEM") {
 
    array_push($loadedItemData, str_ireplace(" ", "", $data));
-}
+} else if ($nodeType == "DOOR") {
+    array_push($loadedDoorData, str_ireplace(" ", "", $data));
+    }
    
    
    
