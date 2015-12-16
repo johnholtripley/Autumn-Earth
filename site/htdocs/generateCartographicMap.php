@@ -162,8 +162,8 @@ $brush = imagecreate(2,2);
   $brushtrans = imagecolorallocate($brush, 0, 0, 0);
   imagecolortransparent($brush, $brushtrans);
 
-  $color = imagecolorallocate($brush, 96, 35, 14);
-    imagefilledellipse($brush, 1, 1, 2, 2, $color);
+  $colour = imagecolorallocate($brush, 96, 35, 14);
+    imagefilledellipse($brush, 1, 1, 2, 2, $colour);
   
 
   imagesetbrush($mapCanvas, $brush);
@@ -742,10 +742,13 @@ $previousY = $controlY;
 
 quadBezier($mapCanvas, $previousX, $previousY,$tidiedOrderedPoints[$i][0], $tidiedOrderedPoints[$i][1], $tidiedOrderedPoints[$i+1][0],$tidiedOrderedPoints[$i+1][1]);
 } else {
+
+$lineColour = imagecolorallocate($mapCanvas, 96, 35, 14);
+
 // draw elipse at the centre of two opposite corner points:
- imageellipse ( $mapCanvas , ($tidiedOrderedPoints[0][0] + $tidiedOrderedPoints[2][0])/2, ($tidiedOrderedPoints[0][1] + $tidiedOrderedPoints[2][1])/2 , $tileLineDimension , $tileLineDimension , $color );
+ imageellipse ( $mapCanvas , ($tidiedOrderedPoints[0][0] + $tidiedOrderedPoints[2][0])/2, ($tidiedOrderedPoints[0][1] + $tidiedOrderedPoints[2][1])/2 , $tileLineDimension , $tileLineDimension , $lineColour );
  // other lines are drawn at a 2px thickness:
- imageellipse ( $mapCanvas , ($tidiedOrderedPoints[0][0] + $tidiedOrderedPoints[2][0])/2, ($tidiedOrderedPoints[0][1] + $tidiedOrderedPoints[2][1])/2 , $tileLineDimension+2 , $tileLineDimension+2 , $color );
+ imageellipse ( $mapCanvas , ($tidiedOrderedPoints[0][0] + $tidiedOrderedPoints[2][0])/2, ($tidiedOrderedPoints[0][1] + $tidiedOrderedPoints[2][1])/2 , $tileLineDimension+2 , $tileLineDimension+2 , $lineColour );
 
 
 
