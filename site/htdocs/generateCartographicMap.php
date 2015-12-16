@@ -10,6 +10,7 @@
 // different terrain types are ignored - eg the 'tents' in the template are just seen as non-walkable and blend into the surrounding terrain
 // before placing chest - look at pixel colours of the boundaries, and nudge accordingly so that the chest doesn't overlay a wall where the curve has come in slightly
 // islands always start at bottom left
+// find a way to make the single 1x1 tiles less regular - use bezier curves instead? or an arc in one quadrant?
 
 $debug = false;
 
@@ -744,6 +745,7 @@ quadBezier($mapCanvas, $previousX, $previousY,$tidiedOrderedPoints[$i][0], $tidi
  imageellipse ( $mapCanvas , ($tidiedOrderedPoints[0][0] + $tidiedOrderedPoints[2][0])/2, ($tidiedOrderedPoints[0][1] + $tidiedOrderedPoints[2][1])/2 , $tileLineDimension , $tileLineDimension , $color );
  // other lines are drawn at a 2px thickness:
  imageellipse ( $mapCanvas , ($tidiedOrderedPoints[0][0] + $tidiedOrderedPoints[2][0])/2, ($tidiedOrderedPoints[0][1] + $tidiedOrderedPoints[2][1])/2 , $tileLineDimension+2 , $tileLineDimension+2 , $color );
+
 
 
 
