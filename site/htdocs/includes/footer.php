@@ -28,6 +28,16 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/search.php");
 	<div class="row">
 	<div class="small-12 column">
 <p>&copy; 2015 Autumn Earth</p>
+
+<ul>
+	
+	<li><a href="https://twitter.com/autumnearth">Twitter</a></li>
+
+	<li>YouTube</li>
+	<li>Facebook</li>
+</ul>
+
+
 	</div>
 	</div>
 	</div>
