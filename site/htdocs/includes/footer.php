@@ -33,7 +33,7 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/search.php");
 	
 	<li><a href="https://twitter.com/autumnearth">Twitter</a></li>
 
-	<li>YouTube</li>
+	<li><a href="https://www.youtube.com/channel/UCUReqJjDvPDQRI0NRwS8L2A">YouTube</a></li>
 	<li>Facebook</li>
 </ul>
 
