@@ -11,6 +11,7 @@
 // before placing chest - look at pixel colours of the boundaries, and nudge accordingly so that the chest doesn't overlay a wall where the curve has come in slightly
 // islands always start at bottom left
 // find a way to make the single 1x1 tiles less regular - use bezier curves instead? or an arc in one quadrant?
+// have the overlay randomly picked from all files in a /cartography/overlays folder
 
 $debug = false;
 
