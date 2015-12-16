@@ -10,6 +10,7 @@
 // different terrain types are ignored - eg the 'tents' in the template are just seen as non-walkable and blend into the surrounding terrain
 // before placing chest - look at pixel colours of the boundaries, and nudge accordingly so that the chest doesn't overlay a wall where the curve has come in slightly
 // islands always start at bottom left
+// find a way to make the single 1x1 tiles less regular - use bezier curves instead? or an arc in one quadrant?
 
 $debug = false;
 
@@ -697,10 +698,6 @@ if($debug) {
 // ############################
 if (count($tidiedOrderedPoints)>1) {
 
-
-
-
-
 $previousX = $tidiedOrderedPoints[0][0];
 $previousY = $tidiedOrderedPoints[0][1];
 if($previousX == 0) {
@@ -710,6 +707,21 @@ $previousX = 0.01;
 if($previousY == 0) {
 $previousY = 0.01;
 }
+
+
+
+
+$isASingleTile = false;
+if (count($tidiedOrderedPoints) == 4) {
+if($tidiedOrderedPoints[0][0] == $tidiedOrderedPoints[3][0]) {
+if($tidiedOrderedPoints[0][1] == $tidiedOrderedPoints[3][1]) {
+  // is a single 1x1 tile:
+$isASingleTile = true;
+}
+}
+}
+
+if(!$isASingleTile) {
 for ($i = 1; $i<count($tidiedOrderedPoints)-2; $i++) {
 
   $controlX = ($tidiedOrderedPoints[$i][0] + $tidiedOrderedPoints[$i+1][0]) / 2;
@@ -728,10 +740,16 @@ $previousY = $controlY;
 }
 
 quadBezier($mapCanvas, $previousX, $previousY,$tidiedOrderedPoints[$i][0], $tidiedOrderedPoints[$i][1], $tidiedOrderedPoints[$i+1][0],$tidiedOrderedPoints[$i+1][1]);
+} else {
+// draw elipse at the centre of two opposite corner points:
+ imageellipse ( $mapCanvas , ($tidiedOrderedPoints[0][0] + $tidiedOrderedPoints[2][0])/2, ($tidiedOrderedPoints[0][1] + $tidiedOrderedPoints[2][1])/2 , $tileLineDimension , $tileLineDimension , $color );
+ // other lines are drawn at a 2px thickness:
+ imageellipse ( $mapCanvas , ($tidiedOrderedPoints[0][0] + $tidiedOrderedPoints[2][0])/2, ($tidiedOrderedPoints[0][1] + $tidiedOrderedPoints[2][1])/2 , $tileLineDimension+2 , $tileLineDimension+2 , $color );
 
 
 
 
+}
 
 } 
 
@@ -758,10 +776,7 @@ array_push($unusedEdges,$edges[$i]);
 
 
 
-
-
 } while (count($unusedEdges)>0);
-
 
 
 
