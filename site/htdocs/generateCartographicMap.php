@@ -751,7 +751,13 @@ $lineColour = imagecolorallocate($mapCanvas, 96, 35, 14);
  imageellipse ( $mapCanvas , ($tidiedOrderedPoints[0][0] + $tidiedOrderedPoints[2][0])/2, ($tidiedOrderedPoints[0][1] + $tidiedOrderedPoints[2][1])/2 , $tileLineDimension+2 , $tileLineDimension+2 , $lineColour );
 
 
+// add random thickness to make the circle less regular:
 
+$startAngle = rand(0,360);
+$endAngle = rand($startAngle,360);
+
+imagearc (  $mapCanvas , ($tidiedOrderedPoints[0][0] + $tidiedOrderedPoints[2][0])/2, ($tidiedOrderedPoints[0][1] + $tidiedOrderedPoints[2][1])/2 , $tileLineDimension+3 , $tileLineDimension+3 , $startAngle , $endAngle , $lineColour );
+imagearc (  $mapCanvas , ($tidiedOrderedPoints[0][0] + $tidiedOrderedPoints[2][0])/2, ($tidiedOrderedPoints[0][1] + $tidiedOrderedPoints[2][1])/2 , $tileLineDimension-1 , $tileLineDimension-1 , $startAngle , $endAngle , $lineColour );
 
 }
 
