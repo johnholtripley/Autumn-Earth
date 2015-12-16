@@ -11,7 +11,7 @@
 // before placing chest - look at pixel colours of the boundaries, and nudge accordingly so that the chest doesn't overlay a wall where the curve has come in slightly
 // islands always start at bottom left
 // find a way to make the single 1x1 tiles less regular - use bezier curves instead? or an arc in one quadrant?
-// have the overlay randomly picked from all files in a /cartography/overlays folder
+
 
 $debug = false;
 
@@ -138,7 +138,7 @@ imagecopyresampled($mapCanvas, $originalMap, 0, 0, 0, 0, $canvaDimension, $canva
 
 
 
-$updateFade = imagecreatefrompng("http://".$_SERVER['SERVER_NAME']."/images/cartography-map-fade.png");
+$updateFade = imagecreatefrompng("http://".$_SERVER['SERVER_NAME']."/images/cartography/map-fade.png");
 imageAlphaBlending($updateFade, false);
 imagecopy($mapCanvas, $updateFade, 0, 0, 0, 0, $canvaDimension, $canvaDimension);
 
@@ -860,12 +860,29 @@ $imageResampled = imagecreatetruecolor($canvaDimension/2, $canvaDimension/2);
 
 imagecopyresampled($imageResampled, $mapCanvas, 0, 0, 0, 0, $canvaDimension/2, $canvaDimension/2, $canvaDimension, $canvaDimension);
 
-$overlayTexture = imagecreatefrompng("http://".$_SERVER['SERVER_NAME']."/images/cartography-map-overlay.png");
+// pick a random overlay
+$overlayDir = "images/cartography/overlays/";
+ $templatesFound = 0;
+    if (is_dir($overlayDir)) {
+        if ($dirHandle = opendir($overlayDir)) {
+            while (($file = readdir($dirHandle)) !== false) {
+                if (is_file($overlayDir . $file)) {
+                $templatesFound++;
+            }
+            
+        }
+    }
+    closedir($dirHandle);
+  }
+    $templateOverlayToUse = rand(1,$templatesFound);
+
+
+
+$overlayTexture = imagecreatefrompng("http://".$_SERVER['SERVER_NAME']."/images/cartography/overlays/".$templateOverlayToUse.".png");
 imageAlphaBlending($overlayTexture, false);
 if($useOverlay) {
 imagecopy($imageResampled, $overlayTexture, 0, 0, 0, 0, $canvaDimension, $canvaDimension);
 }
-
 
 
 
@@ -880,7 +897,7 @@ die();
 }
 */
 
-$chestLocator = imagecreatefrompng("http://".$_SERVER['SERVER_NAME']."/images/cartography-map-location.png");
+$chestLocator = imagecreatefrompng("http://".$_SERVER['SERVER_NAME']."/images/cartography/map-location.png");
 imageAlphaBlending($chestLocator, false);
 
 
