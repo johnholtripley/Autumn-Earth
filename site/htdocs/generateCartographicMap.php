@@ -51,7 +51,7 @@ if (is_numeric($playerId)) {
 $mapFilename = "data/chr".$playerId."/cartography/".$dungeonName."/".$session."/".$requestedMap.".jpg";
   if ((is_file($mapFilename)) && (!$debug) && (!$update)) {
   
-            header("Location: http://www.autumnearth.com/" . $mapFilename);
+            header("Location: https://www.autumnearth.com/" . $mapFilename);
             
         } else {
            
@@ -138,7 +138,7 @@ imagecopyresampled($mapCanvas, $originalMap, 0, 0, 0, 0, $canvaDimension, $canva
 
 
 
-$updateFade = imagecreatefrompng("http://".$_SERVER['SERVER_NAME']."/images/cartography/map-fade.png");
+$updateFade = imagecreatefrompng("https://".$_SERVER['SERVER_NAME']."/images/cartography/map-fade.png");
 imageAlphaBlending($updateFade, false);
 imagecopy($mapCanvas, $updateFade, 0, 0, 0, 0, $canvaDimension, $canvaDimension);
 
@@ -689,7 +689,7 @@ if($debug) {
 
 
 // bezier curves:
-// http://stackoverflow.com/questions/7054272/how-to-draw-smooth-curve-through-n-points-using-javascript-html5-canvas
+// https://stackoverflow.com/questions/7054272/how-to-draw-smooth-curve-through-n-points-using-javascript-html5-canvas
 
 
 
@@ -878,7 +878,7 @@ $overlayDir = "images/cartography/overlays/";
 
 
 
-$overlayTexture = imagecreatefrompng("http://".$_SERVER['SERVER_NAME']."/images/cartography/overlays/".$templateOverlayToUse.".png");
+$overlayTexture = imagecreatefrompng("https://".$_SERVER['SERVER_NAME']."/images/cartography/overlays/".$templateOverlayToUse.".png");
 imageAlphaBlending($overlayTexture, false);
 if($useOverlay) {
 imagecopy($imageResampled, $overlayTexture, 0, 0, 0, 0, $canvaDimension, $canvaDimension);
@@ -897,7 +897,7 @@ die();
 }
 */
 
-$chestLocator = imagecreatefrompng("http://".$_SERVER['SERVER_NAME']."/images/cartography/map-location.png");
+$chestLocator = imagecreatefrompng("https://".$_SERVER['SERVER_NAME']."/images/cartography/map-location.png");
 imageAlphaBlending($chestLocator, false);
 
 
@@ -1002,7 +1002,7 @@ return "north";
 
 function quadBezier($im, $x1, $y1, $x2, $y2, $x3, $y3) {
 // php draw quad bezier:
-// http://spottedsun.com/quadratic-bezier-curve-in-php/
+// https://spottedsun.com/quadratic-bezier-curve-in-php/
     $b = $pre1 = $pre2 = $pre3 = 0;
     $prevx = 0;
     $prevy = 0;
