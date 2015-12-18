@@ -68,7 +68,7 @@ $npcsCards = array(1,1,1,1,1,1,1,1,1,3,3,3);
 <div class="canvasWrapper">
 	<!-- canvas initial width and height dervied from the grid multiplied by the card size: /-->
 <canvas id="cardGame" width="1008" height="612">
-  <img src="/images/card-game-no-canvas.jpg" alt="Card game">
+  <img src="/images/card-game/no-canvas.jpg" alt="Card game">
 </canvas>
 <script>
 var allCardData = <?php echo json_encode($cardDataNeeded); ?>;
