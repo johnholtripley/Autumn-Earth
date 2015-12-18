@@ -9,7 +9,9 @@ button, input, select, .selectWrapper, textarea {
     border: 0;
 }
 
-
+input:not(:focus):valid {
+  border: 1px solid green;
+}
 
 // select dropdowns --------------------------------
 // http://jsbin.com/juvixufu/10/edit?html,output
