@@ -1,4 +1,4 @@
 User-agent: *
-Sitemap: http://www.autumnearth.com/sitemap.xml
+Sitemap: https://www.autumnearth.com/sitemap.xml
 Disallow: /includes/
 Disallow: /data/

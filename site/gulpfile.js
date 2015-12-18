@@ -102,7 +102,7 @@ gulp.task('removeUnusedCSS', ['createSitemap'], function() {
     json.urlset.url.forEach(function(value) {
         link = value.loc[0];
 
-        link = link.replace('http://www.autumnearth.com/', 'http://ae.dev/');
+        link = link.replace('https://www.autumnearth.com/', 'http://ae.dev/');
         gutil.log(link);
         filesToUncss.push(link);
     })

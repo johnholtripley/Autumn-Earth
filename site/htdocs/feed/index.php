@@ -14,18 +14,18 @@ echo '<?xml version="1.0" encoding="iso-8859-1"?>'."\n";
 echo '<rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom">'."\n";
 	echo '<channel>'."\n";
 		echo '<title>Autumn Earth News</title>'."\n";
-		echo '<link>http://www.autumnearth.com/feed/</link>'."\n";
+		echo '<link>https://www.autumnearth.com/feed/</link>'."\n";
 		echo '<description>Latest News from the world of Autumn Earth</description>'."\n";
 		echo '<language>en</language>'."\n";
 		echo '<docs>http://validator.w3.org/feed/docs/rss2.html</docs>'."\n";
 		echo '<image>'."\n";
-			echo '<url>http://www.autumnearth.com/assets/feeds/icon.gif</url>'."\n";
+			echo '<url>https://www.autumnearth.com/assets/feeds/icon.gif</url>'."\n";
 			echo '<title>Autumn Earth News</title>'."\n";
 			echo '<link>http://www.autumnearth.com/feed/</link>'."\n";
 			echo '<width>20</width>'."\n";
 			echo '<height>20</height>'."\n";
 		echo '</image>'."\n";
-		echo '<atom:link href="http://www.autumnearth.com/feed/" rel="self" type="application/rss+xml" />'."\n";
+		echo '<atom:link href="https://www.autumnearth.com/feed/" rel="self" type="application/rss+xml" />'."\n";
 // get each item:
 $isFirstTime = true;
 while ($row = mysql_fetch_array($result)) {

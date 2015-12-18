@@ -44,8 +44,8 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/title-tag.php");
 include($_SERVER['DOCUMENT_ROOT']."/includes/meta-content.php");
 ?>
 
-<link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="http://www.autumnearth.com/feed/" />
-<link rel="alternate" type="application/atom+xml" title="Atom 1.0" href="http://www.autumnearth.com/feed/atom.php" />
+<link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="https://www.autumnearth.com/feed/" />
+<link rel="alternate" type="application/atom+xml" title="Atom 1.0" href="https://www.autumnearth.com/feed/atom.php" />
 </head>
 
 <?php

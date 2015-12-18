@@ -21,11 +21,11 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/functions.php");
             http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
 
 
-<url><loc>http://www.autumnearth.com/</loc><priority>1.0</priority></url>
+<url><loc>https://www.autumnearth.com/</loc><priority>1.0</priority></url>
 
-<url><loc>http://www.autumnearth.com/auction/</loc><priority>0.7</priority></url>
+<url><loc>https://www.autumnearth.com/auction/</loc><priority>0.7</priority></url>
 
-<url><loc>http://www.autumnearth.com/account/join/</loc><priority>0.7</priority></url>
+<url><loc>https://www.autumnearth.com/account/join/</loc><priority>0.7</priority></url>
 
 
 
@@ -42,7 +42,7 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/functions.php");
 
 
 
-echo'<url><loc>http://www.autumnearth.com/forum/</loc><priority>0.7</priority></url>'."\n";
+echo'<url><loc>https://www.autumnearth.com/forum/</loc><priority>0.7</priority></url>'."\n";
 
 
 // get top level forum clean urls:
@@ -51,7 +51,7 @@ $result = mysql_query( $query ) or die ( "couldn't execute inner query" );
 if ( mysql_num_rows( $result )>0 ) {
 while ( $row = mysql_fetch_array( $result ) ) {
 extract( $row );
-echo '<url><loc>http://www.autumnearth.com/forum/'.$cleanURL.'/</loc><priority>0.7</priority></url>'."\n";
+echo '<url><loc>https://www.autumnearth.com/forum/'.$cleanURL.'/</loc><priority>0.7</priority></url>'."\n";
 }
 }
 
@@ -62,7 +62,7 @@ $result = mysql_query( $query ) or die ( "couldn't execute inner query" );
 if ( mysql_num_rows( $result )>0 ) {
 while ( $row = mysql_fetch_array( $result ) ) {
 extract( $row );
-echo '<url><loc>http://www.autumnearth.com/forum/'.$cleanURL.'/</loc><priority>0.5</priority></url>'."\n";
+echo '<url><loc>https://www.autumnearth.com/forum/'.$cleanURL.'/</loc><priority>0.5</priority></url>'."\n";
 
 // get pagination URLs:
 $query2 = "select tblposts.*, tblthreads.ThreadID FROM tblposts INNER JOIN tblthreads on tblposts.ThreadID = tblthreads.ThreadID WHERE tblposts.ThreadID = " . $threadID;
@@ -73,7 +73,7 @@ $totalpages = ceil($numberofrows2/$resultsperpage);
 if($totalpages > 1) {
 // show pagination URLs
 for ($j=2;$j<=$totalpages;$j++) {
-	echo '<url><loc>http://www.autumnearth.com/forum/'.$cleanURL.'/'.$j.'/</loc><priority>0.5</priority></url>'."\n";
+	echo '<url><loc>https://www.autumnearth.com/forum/'.$cleanURL.'/'.$j.'/</loc><priority>0.5</priority></url>'."\n";
 }
 
 }
@@ -84,25 +84,25 @@ for ($j=2;$j<=$totalpages;$j++) {
 
 
 // get News
-echo'<url><loc>http://www.autumnearth.com/chronicle/</loc><priority>0.7</priority></url>'."\n";
-echo'<url><loc>http://www.autumnearth.com/chronicle/archive/</loc><priority>0.7</priority></url>'."\n";
+echo'<url><loc>https://www.autumnearth.com/chronicle/</loc><priority>0.7</priority></url>'."\n";
+echo'<url><loc>https://www.autumnearth.com/chronicle/archive/</loc><priority>0.7</priority></url>'."\n";
 $query = "select * from tblNews";
 $result = mysql_query( $query ) or die ( "couldn't execute inner query" );
 if ( mysql_num_rows( $result )>0 ) {
 while ( $row = mysql_fetch_array( $result ) ) {
 extract( $row );
-echo '<url><loc>http://www.autumnearth.com/chronicle/'.$cleanURL.'/</loc><priority>0.5</priority></url>'."\n";
+echo '<url><loc>https://www.autumnearth.com/chronicle/'.$cleanURL.'/</loc><priority>0.5</priority></url>'."\n";
 }
 }
 
 // get Events
-echo'<url><loc>http://www.autumnearth.com/events/</loc><priority>0.7</priority></url>'."\n";
+echo'<url><loc>https://www.autumnearth.com/events/</loc><priority>0.7</priority></url>'."\n";
 $query = "select * from tblEvents";
 $result = mysql_query( $query ) or die ( "couldn't execute inner query" );
 if ( mysql_num_rows( $result )>0 ) {
 while ( $row = mysql_fetch_array( $result ) ) {
 extract( $row );
-echo '<url><loc>http://www.autumnearth.com/events/'.$cleanURL.'/</loc><priority>0.5</priority></url>'."\n";
+echo '<url><loc>https://www.autumnearth.com/events/'.$cleanURL.'/</loc><priority>0.5</priority></url>'."\n";
 }
 }
 
@@ -114,17 +114,17 @@ $result = mysql_query( $query ) or die ( "couldn't execute inner query" );
 if ( mysql_num_rows( $result )>0 ) {
 while ( $row = mysql_fetch_array( $result ) ) {
 extract( $row );
-echo '<url><loc>http://www.autumnearth.com/search/'.cleanURL($searchTerm).'/</loc><priority>0.3</priority></url>'."\n";
+echo '<url><loc>https://www.autumnearth.com/search/'.cleanURL($searchTerm).'/</loc><priority>0.3</priority></url>'."\n";
 }
 }
 
 
 ?>
 
-<url><loc>http://www.autumnearth.com/mail/</loc><priority>0.7</priority></url>
-	<url><loc>http://www.autumnearth.com/guide/</loc><priority>0.7</priority></url>
-<url><loc>http://www.autumnearth.com/the-world/</loc><priority>0.7</priority></url>
-<url><loc>http://www.autumnearth.com/contracts/</loc><priority>0.7</priority></url>
+<url><loc>https://www.autumnearth.com/mail/</loc><priority>0.7</priority></url>
+	<url><loc>https://www.autumnearth.com/guide/</loc><priority>0.7</priority></url>
+<url><loc>https://www.autumnearth.com/the-world/</loc><priority>0.7</priority></url>
+<url><loc>https://www.autumnearth.com/contracts/</loc><priority>0.7</priority></url>
 	</urlset>
 
 	
