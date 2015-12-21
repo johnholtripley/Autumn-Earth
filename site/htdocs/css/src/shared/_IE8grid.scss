@@ -1,0 +1,59 @@
+@include mq($wide) {
+    @for $i from 1 through $gridColumns {
+        .wide-#{$i}up {
+            $loop: ".column:first-child";
+            // first 'row':
+            @for $j from 1 through $i {
+                $loop: append($loop, " + .column");
+            }
+            #{$loop} {
+                clear: left;
+            }
+            // second 'row':
+            @for $j from 1 through $i {
+                $loop: append($loop, " + .column");
+            }
+            #{$loop} {
+                clear: left;
+            }
+            // third 'row':
+            @for $j from 1 through $i {
+                $loop: append($loop, " + .column");
+            }
+            #{$loop} {
+                clear: left;
+            }
+            // add more rows if need...
+        }
+    }
+}
+
+@include mq($widest) {
+    @for $i from 1 through $gridColumns {
+        .widest-#{$i}up {
+            $loop: ".column:first-child";
+            // first 'row':
+            @for $j from 1 through $i {
+                $loop: append($loop, " + .column");
+            }
+            #{$loop} {
+                clear: left;
+            }
+            // second 'row':
+            @for $j from 1 through $i {
+                $loop: append($loop, " + .column");
+            }
+            #{$loop} {
+                clear: left;
+            }
+            // third 'row':
+            @for $j from 1 through $i {
+                $loop: append($loop, " + .column");
+            }
+            #{$loop} {
+                clear: left;
+            }
+            // add more rows if need...
+        }
+    }
+}
