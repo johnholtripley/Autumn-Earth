@@ -148,6 +148,10 @@ a {
     /* Better Font Rendering =========== */
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+
+    // enable ligatures (Chrome requires this at least)
+-webkit-font-variant-ligatures: common-ligatures;
+font-variant-ligatures: common-ligatures;
 }
 
 
