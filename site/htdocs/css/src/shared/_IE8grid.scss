@@ -1,6 +1,10 @@
-@include mq($wide) {
+
+
+@if $triggerIEAt >= $widest {
+// use 'widest' layout:
+
     @for $i from 1 through $gridColumns {
-        .wide-#{$i}up {
+        .widest-#{$i}up {
             $loop: ".column:first-child";
             // first 'row':
             @for $j from 1 through $i {
@@ -26,11 +30,11 @@
             // add more rows if need...
         }
     }
-}
 
-@include mq($widest) {
-    @for $i from 1 through $gridColumns {
-        .widest-#{$i}up {
+} else {
+    // use 'wide' layout:
+ @for $i from 1 through $gridColumns {
+        .wide-#{$i}up {
             $loop: ".column:first-child";
             // first 'row':
             @for $j from 1 through $i {
