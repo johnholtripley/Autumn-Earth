@@ -13,9 +13,6 @@
             {
                 weight: 400,
                 style: "italic"
-            },
-            {
-                weight: 700
             }
         ],
         
