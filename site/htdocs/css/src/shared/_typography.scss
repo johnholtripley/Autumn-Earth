@@ -9,7 +9,7 @@ h3,
 h4,
 h5,
 h6 {
-    font-family: $titleFont;
+    font-family: $titleFontLoaded;
     color: $titleColour;
 padding: 0;
 font-weight: normal;
@@ -41,6 +41,7 @@ body, input, select, .selectWrapper, textarea {
 }
 
 
+
 p, ol, ul, dl, button, input, select, .selectWrapper, textarea, label, table {
     // load web font if JS is disabled:
 
@@ -57,15 +58,47 @@ p, ol, ul, dl {
     color: $baseColour;
 }
 
-.js body, .js input, .js select, .js .selectWrapper, .js textarea {
-    // delay using the web font if JS is enabled:
- //   font-family: $bodyFont;
+
+.js {
+    // defaulting to show fonts, but if JS is enabled, then use the font face observer
+    body,
+    input,
+    select,
+    .selectWrapper,
+    textarea {
+        font-family: $bodyFont;
+    }
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        font-family: $titleFont;
+    }
 }
 
-.fontsLoaded body, .fontsLoaded input, .fontsLoaded select, .fontsLoaded .selectWrapper, .fontsLoaded textarea {
+
+.fontsLoaded {
     // web font loaded and JS enabled:
-    font-family: $bodyFontLoaded;
+    body,
+    input,
+    select,
+    .selectWrapper,
+    textarea {
+        font-family: $bodyFontLoaded;
     }
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        font-family: $titleFontLoaded;
+    }
+}
+
+
 
 p {
     text-indent: 1.3em;
@@ -89,14 +122,54 @@ abbr {
 }
 
 
+
+
 @font-face {
-    font-family: 'forolight';
-    src: url('../fonts/ForoLig-webfont.eot');
-    src: url('../fonts/ForoLig-webfont.eot?#iefix') format('embedded-opentype'),
-    url('../fonts/ForoLig-webfont.svg#lato') format('svg'),
-         url('../fonts/ForoLig-webfont.woff2') format('woff2'),
-         url('../fonts/ForoLig-webfont.woff') format('woff'),
-         url('../fonts/ForoLig-webfont.ttf') format('truetype');
+    font-family: 'Merriweather';
+    src: url('../fonts/merriweather_light-webfont.eot');
+    src: url('../fonts/merriweather_light-webfont.eot?#iefix') format('embedded-opentype'),
+    url('../fonts/merriweather_light-webfont.svg#merriweather_lightregular') format('svg'),
+    url('../fonts/merriweather_light-webfont.woff2') format('woff2'),
+    url('../fonts/merriweather_light-webfont.woff') format('woff'),
+    url('../fonts/merriweather_light-webfont.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
+}
+
+@font-face {
+    font-family: 'Merriweather';
+    src: url('../fonts/merriweather-bold-webfont.eot');
+    src: url('../fonts/merriweather-bold-webfont.eot?#iefix') format('embedded-opentype'),
+    url('../fonts/merriweather-bold-webfont.svg#merriweatherbold') format('svg'),
+    url('../fonts/merriweather-bold-webfont.woff2') format('woff2'),
+    url('../fonts/merriweather-bold-webfont.woff') format('woff'),
+    url('../fonts/merriweather-bold-webfont.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Merriweather';
+    src: url('../fonts/merriweather-italic-webfont.eot');
+    src: url('../fonts/merriweather-italic-webfont.eot?#iefix') format('embedded-opentype'),
+    url('../fonts/merriweather-italic-webfont.svg#merriweatheritalic') format('svg'),
+    url('../fonts/merriweather-italic-webfont.woff2') format('woff2'),
+    url('../fonts/merriweather-italic-webfont.woff') format('woff'),
+    url('../fonts/merriweather-italic-webfont.ttf') format('truetype');
+    font-weight: normal;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'AlegreyaSC';
+    src: url('../fonts/alegreyasc-regular-webfont.eot');
+    src: url('../fonts/alegreyasc-regular-webfont.eot?#iefix') format('embedded-opentype'),
+    url('../fonts/alegreyasc-regular-webfont.svg#AlegreyaSC') format('svg'),
+         url('../fonts/alegreyasc-regular-webfont.woff2') format('woff2'),
+         url('../fonts/alegreyasc-regular-webfont.woff') format('woff'),
+         url('../fonts/alegreyasc-regular-webfont.ttf') format('truetype');
+         
+    font-weight: bold;
+    font-style: normal;
+
 }

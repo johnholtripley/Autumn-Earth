@@ -154,6 +154,10 @@ a {
 font-variant-ligatures: common-ligatures;
 }
 
+#menuToggle {
+    // is a ligature so should be spoken
+    speak: normal;
+}
 
 #mastHead {
 background: #000;
