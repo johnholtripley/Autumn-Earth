@@ -1272,4 +1272,75 @@ echo '<td>'.($c+$a).'</td><td>'.($c-$b-$a).'</td><td>'.($c+$b).'</td>';
 
 }
 
+
+
+
+
+// responsive images:
+
+function imageResized($source, $widthRequired) {
+
+$resizedFolder = '/images/resized/'.$widthRequired;
+$lastSlash = strrpos($source,"/");
+$resizedPath = $resizedFolder.'/'.substr($source,$lastSlash+1);
+// check if it already exists, and use that if so:
+if(file_exists ( $_SERVER['DOCUMENT_ROOT'].$resizedPath )) {
+return $resizedPath;
+}
+
+$sourceDimensions = getimagesize($_SERVER['DOCUMENT_ROOT'].$source);
+$sourceWidth = $sourceDimensions[0];
+
+if($widthRequired<$sourceWidth) {
+$sourceHeight = $sourceDimensions[1];
+$heightRequired = floor(($widthRequired*$sourceHeight)/$sourceWidth);
+
+$image = imagecreatetruecolor($widthRequired, $heightRequired);
+$sourceImage = imagecreatefromjpeg($_SERVER['DOCUMENT_ROOT'].$source);
+imagecopyresampled($image, $sourceImage, 0, 0, 0, 0, $widthRequired, $heightRequired, $sourceWidth, $sourceHeight);
+
+
+
+// create folder if it doesn't exist
+if(!file_exists ( $_SERVER['DOCUMENT_ROOT'].$resizedFolder )) {
+ mkdir($_SERVER['DOCUMENT_ROOT'].$resizedFolder);
+}
+
+imagejpeg($image, $_SERVER['DOCUMENT_ROOT'].$resizedPath, 85);
+
+imagedestroy($image);
+imagedestroy($sourceImage);
+
+return $resizedPath;
+} else {
+	// use original:
+	return $source;
+}
+}
+
+
+function picture($source, $alt, $breakpoints) {
+$htmlOutput = '<picture>'."\r\n";
+$htmlOutput .= '<source media="(min-width: '.$breakpoints[(count($breakpoints)-1)].'px)" srcset="'.$source.'">'."\r\n";
+for($i = count($breakpoints)-1; $i>=0;$i--) {
+$htmlOutput .= '<source ';
+if($i>0) {
+$htmlOutput .= 'media="(min-width: '.$breakpoints[$i-1].'px)"';
+}
+$htmlOutput .= ' srcset="'.imageResized($source,$breakpoints[$i]).'">'."\r\n";
+}
+$htmlOutput .= '<img src="'.$source.'" alt="'.$alt.'">'."\r\n";
+$htmlOutput .= '</picture>'."\r\n";
+echo $htmlOutput;
+}
+
+
+
+
+
+
+
+
+
+
 ?>
