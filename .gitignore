@@ -53,4 +53,4 @@ node_modules
 deploy
 site/tests/screenshots
 site/tests/failures
-
+site/htdocs/images/resized
