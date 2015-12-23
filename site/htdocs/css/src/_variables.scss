@@ -11,6 +11,10 @@ $titleFont: georgia, palatino, "times new roman", serif;
 $titleFontLoaded: "AlegreyaSC", georgia, palatino, "times new roman", serif;
 $bodyFont: "new century schoolbook", "century schoolbook", century, georgia, "times new roman", serif;
 $bodyFontLoaded: "Merriweather", "new century schoolbook", "century schoolbook", century, georgia, "times new roman", serif;
+$baseFontSize: 14px;
+// http://www.modularscale.com/?16&px&1.333&web&text
+$typeScale: 1.3;
+$verticalRhythm: 1.5;
 
 // grid:
 $gutter: 3%;

@@ -16,23 +16,28 @@ font-weight: normal;
 
 }
 
-h1 em,
-h2 em,
-h3 em,
-h4 em,
-h5 em,
-h6 em {
 
-    font-style: italic;
+h1 a,h2 a,h3 a,h4 a,h5 a,h6 a {
+    font-weight: inherit;
 }
 
-h1 a,
-h2 a,
-h3 a,
-h4 a,
-h5 a,
-h6 a {
-    font-weight: inherit;
+
+$headingSize: $baseFontSize*$typeScale;
+@for $i from 6 through 1 {
+    $headingSize: $headingSize * $typeScale;
+    h#{$i} {
+        @include pxRem('font-size', round($headingSize));
+        @include pxRem('margin', round($verticalRhythm*(6-$i)*$baseFontSize) 0 round($verticalRhythm*$baseFontSize) 0);
+
+    }
+}
+
+$headingSize: $baseFontSize/($typeScale*$typeScale)+1;
+@for $i from 6 through 1 {
+    $headingSize: $headingSize * $typeScale;
+    h#{$i} {
+        @include pxRem("line-height", round($verticalRhythm*$headingSize));
+    }
 }
 
 
@@ -45,8 +50,9 @@ body, input, select, .selectWrapper, textarea {
 p, ol, ul, dl, button, input, select, .selectWrapper, textarea, label, table {
     // load web font if JS is disabled:
 
-    @include pxRem("font-size", 14);
-    @include pxRem("line-height", 21);
+   
+      @include pxRem("font-size", $baseFontSize);
+     @include pxRem("line-height", round($verticalRhythm*$baseFontSize));
   @include pxRem("margin", 0 0 12 0);
     letter-spacing: 0.02em;
    
@@ -112,9 +118,7 @@ text-indent: 0;
 
 
 
-h1, h2, h3, h4, h5, h6 {
-  @include pxRem("margin", 8 0 12 0);  
-}
+
 
 
 abbr {
