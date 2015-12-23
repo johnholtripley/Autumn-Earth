@@ -88,7 +88,8 @@ a {
 
 .videoWrapper object,
 .videoWrapper embed,
-.videoWrapper iframe {
+.videoWrapper iframe,
+.videoWrapper video {
     position: absolute;
     top: 0;
     left: 0;

@@ -14,7 +14,9 @@ AddDefaultCharset utf-8
 
 
 
-
+AddType video/mp4 .mp4
+AddType video/ogg .ogv
+AddType video/webm .webm
 
 
 
