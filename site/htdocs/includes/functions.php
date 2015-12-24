@@ -1067,7 +1067,7 @@ function displayUpcomingEvents( $limit ) {
 
 			// https://productforums.google.com/forum/#!topic/webmasters/hqXyipukFOg;context-place=forum/webmasters
 
-			echo '<li itemscope itemtype="http://schema.org/Event"><a itemprop="url" href="/events/'.$cleanURL.'/"><h4 itemprop="name">'.$title.'</h4><p itemprop="description">'.$summary.'</p>';
+			echo '<li itemscope itemtype="http://schema.org/Event"><a itemprop="url" href="/events/'.$cleanURL.'/"><h6 itemprop="name">'.$title.'</h6><p itemprop="description">'.$summary.'</p>';
 			$startDateOutput = date( 'j', strtotime( $eventStart ) )."<sup>".date( 'S', strtotime( $eventStart ) )."</sup> ".date( 'F Y', strtotime( $eventStart ) );
 			$endDateOutput = date( 'j', strtotime( $eventEnd ) )."<sup>".date( 'S', strtotime( $eventEnd ) )."</sup> ".date( 'F Y', strtotime( $eventEnd ) );
 			echo '<span>From <span itemprop="startDate" content="'.$eventStart.'">'.$startDateOutput.'</span>

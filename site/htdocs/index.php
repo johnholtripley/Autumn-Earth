@@ -15,7 +15,7 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/header.php");
 
 <div class="row medium-2up wide-4up equalHeights">
 
-	<div class="column"><div><h2>Latest forum threads with new posts</h2>
+	<div class="column"><div><h4>Latest forum threads with new posts</h4>
 
 
 <?php
@@ -36,7 +36,7 @@ if (mysql_num_rows($result) > 0) {
 ?>
 </div></div>
 
-<div class="column"><div><h2>Latest community pages</h2>
+<div class="column"><div><h4>Latest community pages</h4>
 <?php
 // find all publically visible pages, group by guild and show a list of clean URLs for them:
 
@@ -69,7 +69,7 @@ if (mysql_num_rows($result) > 0) {
 </div></div>
 
 <div class="column"><div>
-<h2>Latest from the Chronicle</h2>
+<h4>Latest from the Chronicle</h4>
 <?php
 $newsQuery = "select * from tblNews WHERE status='1' order by timeAdded DESC limit 5";
 $result = mysql_query($newsQuery) or die ("couldn't execute query");
@@ -91,7 +91,7 @@ if (mysql_num_rows($result) > 0) {
 ?>
 </div></div>
 
-<div class="column"><div><h2>Upcoming Events</h2>
+<div class="column"><div><h4>Upcoming Events</h4>
 	<?php
 displayUpcomingEvents(3);
 ?>
@@ -105,19 +105,19 @@ displayUpcomingEvents(3);
 
 
 
-<div class="column"><div><h2>Auction items ending soon</h2>
+<div class="column"><div><h4>Auction items ending soon</h4>
 	<?php
 displayAuctionItemsEndingSoon(3);
 ?>
 </div></div>
 
-<div class="column"><div><h2>new Auction items</h2>
+<div class="column"><div><h4>new Auction items</h4>
 	<?php
 displayAuctionNewestItems(3);
 ?>
 </div></div>
 
-<div class="column"><div>	<h2>New contracts</h2>
+<div class="column"><div>	<h4>New contracts</h4>
 
 <?php
 displayContractNewestItems(3);
@@ -126,7 +126,7 @@ displayContractNewestItems(3);
 </div></div>
 
 
-<div class="column"><div>	<h2>Contracts ending soon</h2>
+<div class="column"><div>	<h4>Contracts ending soon</h4>
 
 <?php
 displayContractItemsEndingSoon(3);
@@ -138,7 +138,7 @@ displayContractItemsEndingSoon(3);
 
 
 
-<div class="column"><div><h2>Deepest delvers</h2>
+<div class="column"><div><h4>Deepest delvers</h4>
 	<?php
 displayDeepestDelvers();
 ?>

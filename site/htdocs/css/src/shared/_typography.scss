@@ -22,23 +22,66 @@ h1 a,h2 a,h3 a,h4 a,h5 a,h6 a {
 }
 
 
+/*
 $headingSize: $baseFontSize*$typeScale;
+$headingLineHeight: $baseFontSize/($typeScale*$typeScale)+1;
 @for $i from 6 through 1 {
     $headingSize: $headingSize * $typeScale;
+    $headingLineHeight: $headingLineHeight * $typeScale;
     h#{$i} {
         @include pxRem('font-size', round($headingSize));
-        @include pxRem('margin', round($verticalRhythm*(6-$i)*$baseFontSize) 0 round($verticalRhythm*$baseFontSize) 0);
-
+        @include pxRem('margin', 0 0 round($verticalRhythm*$headingLineHeight) 0);
+        @include pxRem("line-height", round($verticalRhythm*$headingLineHeight));
     }
 }
+*/
 
-$headingSize: $baseFontSize/($typeScale*$typeScale)+1;
-@for $i from 6 through 1 {
-    $headingSize: $headingSize * $typeScale;
-    h#{$i} {
-        @include pxRem("line-height", round($verticalRhythm*$headingSize));
-    }
+// from typecast:
+h1 {
+   font-size: 111px;
+   line-height: 90px;
+   margin: 38px 0px 19px 0px;
+     padding: 0;
 }
+
+h2 {
+   font-size: 79px;
+   line-height: 46px;
+   margin: 49px 0px 31px 0px;
+     padding: 0;
+}
+
+h3 {
+   font-size: 56px;
+   line-height: 36px;
+   margin: 41px 0px 28px 0px;
+    padding: 0;
+}
+
+h4 {
+  
+   font-size: 39px;
+   margin: 32px 0 27px 0;
+   padding: 0;
+}
+
+h5 {
+   margin: 36px 0px 23px 0px;
+  
+   font-size: 28px;
+   padding: 0;
+}
+
+h6 {
+   font-size: 20px;
+ 
+   line-height: 21px;
+   margin: 40px 0 23px 0;
+   padding: 0;
+}
+
+
+
 
 
 body, input, select, .selectWrapper, textarea {

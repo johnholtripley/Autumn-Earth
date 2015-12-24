@@ -18,7 +18,7 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/search.php");
 <li><a href="/chronicle/">News</a></li>
 <li><a href="#">Guide</a></li>
 <li><a href="#">The World</a></li>
-<li><a href="/contracts/CreateContract.php">Contract</a></li>
+<li><a href="/contracts/CreateContract.php">Contracts</a></li>
 <li><a href="/card-game/">Card game</a></li>
 </ul>
 </div>
