@@ -44,8 +44,10 @@ font-size: 100%;
 
 
 
-
-
+// https://adactio.com/journal/10019
+a, button, input, select, textarea, label, summary {
+  touch-action: manipulation;
+}
 
 
 @-webkit-viewport { width : device-width; }
