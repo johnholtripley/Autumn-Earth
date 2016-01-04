@@ -40,7 +40,10 @@ function createCookie(name,value,days) {
 
 function supportsCanvas() {
   // http://diveintohtml5.info/detect.html#canvas
-  return !!document.createElement('canvas').getContext;
+ // return !!document.createElement('canvas').getContext;
+ // http://stackoverflow.com/questions/2745432/best-way-to-detect-that-html5-canvas-is-not-supported#answer-2745459 
+ // faster way of doing it as no element is created:
+ return !!window.HTMLCanvasElement;
 }
 
 /*
