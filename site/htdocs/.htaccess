@@ -279,6 +279,14 @@ AddDefaultCharset utf-8
 </IfModule>
 
 
+
+
+
+
+
+
+
+
 # ######################################################################
 # # REWRITES                                                           #
 # ######################################################################
@@ -323,7 +331,7 @@ AddDefaultCharset utf-8
     RewriteEngine On
 
     # (2)
-    Options +FollowSymlinks
+    #Options +FollowSymlinks
 
     # (3)
     # Options +SymLinksIfOwnerMatch
@@ -335,10 +343,10 @@ AddDefaultCharset utf-8
     # RewriteOptions <options>
 
     # (6)
-    RewriteCond %{HTTPS} =on
-    RewriteRule ^ - [env=proto:https]
-    RewriteCond %{HTTPS} !=on
-    RewriteRule ^ - [env=proto:http]
+ #   RewriteCond %{HTTPS} =on
+ #   RewriteRule ^ - [env=proto:https]
+  #  RewriteCond %{HTTPS} !=on
+ #   RewriteRule ^ - [env=proto:http]
 
 
 
@@ -362,6 +370,26 @@ RewriteRule    ^card-game/learn/     card-game/how-to-play.php      [NC,L]
 
 </IfModule>
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # ----------------------------------------------------------------------
 # | Forcing `https://`                                                 |
 # ----------------------------------------------------------------------
@@ -369,12 +397,13 @@ RewriteRule    ^card-game/learn/     card-game/how-to-play.php      [NC,L]
 # Redirect from the `http://` to the `https://` version of the URL.
 # https://wiki.apache.org/httpd/RewriteHTTPToHTTPS
 
-# <IfModule mod_rewrite.c>
-#    RewriteEngine On
-RewriteCond %{HTTPS} off
+ <IfModule mod_rewrite.c>
+    RewriteEngine On
+RewriteCond %{HTTPS} !=on
 RewriteCond %{REMOTE_ADDR} !=127.0.0.1
-RewriteRule (.*) https://%{HTTP_HOST}%{REQUEST_URI}
-# </IfModule>
+RewriteCond %{HTTP_HOST} ^[^.]+\.[^.]{3}$
+RewriteRule ^/?(.*) https://%{SERVER_NAME}/$1 [R,L]
+ </IfModule>
 
 # ----------------------------------------------------------------------
 # | Suppressing / Forcing the `www.` at the beginning of URLs          |
@@ -420,6 +449,7 @@ RewriteRule (.*) https://%{HTTP_HOST}%{REQUEST_URI}
 #     RewriteCond %{SERVER_ADDR} !=::1
 #     RewriteRule ^ %{ENV:PROTO}://www.%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
 # </IfModule>
+
 
 
 # ######################################################################
@@ -625,6 +655,39 @@ RewriteRule (.*) https://%{HTTP_HOST}%{REQUEST_URI}
 <IfModule mod_headers.c>
     Header set X-Content-Type-Options "nosniff"
 </IfModule>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # ----------------------------------------------------------------------
 # | Reflected Cross-Site Scripting (XSS) attacks                       |
