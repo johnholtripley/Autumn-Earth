@@ -13,8 +13,8 @@ var gulp = require('gulp'),
     gutil = require('gulp-util'),
     clean = require('gulp-clean'),
     favicons = require('gulp-favicons'),
-    run = require('gulp-run');
-
+    run = require('gulp-run'),
+    fs = require("fs");
 // css:
 gulp.task('sass', function() {
     return gulp.src('htdocs/css/src/**/*.scss')
@@ -192,12 +192,18 @@ gulp.task('favicons', function() {
 
 
 
-
-
-
-
-
-
+// read cache version number and increment it:
+gulp.task('cacheBusting', function() {
+    fs.readFile('htdocs/includes/siteVersion.txt', 'utf8', function(err, data) {
+        if (err) throw err;
+        var oldVersionNumber = parseInt(data);
+        var newVersionNumber = oldVersionNumber + 1;
+        fs.writeFile('htdocs/includes/siteVersion.txt', newVersionNumber, function(err) {
+            if (err) throw err;
+            console.log('cache version updated to ' + newVersionNumber);
+        });
+    });
+});
 
 
 
@@ -221,7 +227,7 @@ gulp.task('default', function() {
 // pre-go live task
 // run getSitemap first
 // then visual regression tests
-gulp.task('deploy', ['removeUnused','favicons'], function() {
+gulp.task('deploy', ['removeUnused','favicons','cacheBusting'], function() {
     gulp.start('regressionTest');
 });
 
