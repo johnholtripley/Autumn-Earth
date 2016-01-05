@@ -5,7 +5,7 @@
 (function() {
 
 
-    var version = 'v1.22::';
+    var version = 'v::102::';
     var staticCacheName = version + 'static';
     var pagesCacheName = version + 'pages';
     var imagesCacheName = version + 'images';

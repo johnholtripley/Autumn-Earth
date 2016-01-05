@@ -197,10 +197,40 @@ gulp.task('cacheBusting', function() {
     fs.readFile('htdocs/includes/siteVersion.txt', 'utf8', function(err, data) {
         if (err) throw err;
         var oldVersionNumber = parseInt(data);
-        var newVersionNumber = oldVersionNumber + 1;
+        newVersionNumber = oldVersionNumber + 1;
         fs.writeFile('htdocs/includes/siteVersion.txt', newVersionNumber, function(err) {
             if (err) throw err;
             console.log('cache version updated to ' + newVersionNumber);
+        });
+    });
+    fs.readFile('htdocs/serviceWorker.js', 'utf8', function(err, data) {
+        if (err) {
+            return console.log(err);
+        }
+        // 'url1'.replace(/\d+$/, function(n){ return ++n });
+        // var result = data.replace(/v103::/g, 'v104::');
+        var result = data.replace(/v::\d+::/, function(fullMatch, n) {
+            return "v::" + newVersionNumber + "::";
+        });
+        fs.writeFile('htdocs/serviceWorker.js', result, 'utf8', function(err) {
+            if (err) {
+                return console.log(err);
+            }
+        });
+    });
+        fs.readFile('htdocs/serviceWorker.min.js', 'utf8', function(err, data) {
+        if (err) {
+            return console.log(err);
+        }
+        // 'url1'.replace(/\d+$/, function(n){ return ++n });
+        // var result = data.replace(/v103::/g, 'v104::');
+        var result = data.replace(/v::\d+::/, function(fullMatch, n) {
+            return "v::" + newVersionNumber + "::";
+        });
+        fs.writeFile('htdocs/serviceWorker.min.js', result, 'utf8', function(err) {
+            if (err) {
+                return console.log(err);
+            }
         });
     });
 });
