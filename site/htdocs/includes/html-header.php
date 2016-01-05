@@ -1,5 +1,8 @@
 <!doctype html>
 <?php
+
+$cacheVersion = file_get_contents($_SERVER["DOCUMENT_ROOT"].'/includes/siteVersion.txt');
+
 $htmlClass = "";
 // check if font has already been loaded, and the cookie set. If so, add the class so the font shows immediately as it's probably in cache:
 if(isset($_COOKIE['fontLoaded'])) {
@@ -25,13 +28,14 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/title-tag.php");
      cutsTheMustard = true;
       document.documentElement.className += " js";
      }
+     cacheVersion = <?php echo $cacheVersion; ?>;
   </script>
 
 <!--[if (gt IE 8) | (IEMobile)]><!-->
-    <link href="/css/base.css" rel="stylesheet" />
+    <link href="/css/base.<?php echo $cacheVersion; ?>.css" rel="stylesheet" />
 <!--<![endif]-->
 <!--[if (lt IE 9) & (!IEMobile)]>
-    <link href="/css/IE8Support.css" rel="stylesheet" />
+    <link href="/css/IE8Support.<?php echo $cacheVersion; ?>.css" rel="stylesheet" />
 <![endif]-->
 
 
