@@ -207,8 +207,6 @@ gulp.task('cacheBusting', function() {
         if (err) {
             return console.log(err);
         }
-        // 'url1'.replace(/\d+$/, function(n){ return ++n });
-        // var result = data.replace(/v103::/g, 'v104::');
         var result = data.replace(/v::\d+::/, function(fullMatch, n) {
             return "v::" + newVersionNumber + "::";
         });
@@ -218,12 +216,11 @@ gulp.task('cacheBusting', function() {
             }
         });
     });
-        fs.readFile('htdocs/serviceWorker.min.js', 'utf8', function(err, data) {
+    // same again for the minified version:
+    fs.readFile('htdocs/serviceWorker.min.js', 'utf8', function(err, data) {
         if (err) {
             return console.log(err);
         }
-        // 'url1'.replace(/\d+$/, function(n){ return ++n });
-        // var result = data.replace(/v103::/g, 'v104::');
         var result = data.replace(/v::\d+::/, function(fullMatch, n) {
             return "v::" + newVersionNumber + "::";
         });
@@ -234,6 +231,7 @@ gulp.task('cacheBusting', function() {
         });
     });
 });
+
 
 
 
