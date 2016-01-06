@@ -343,10 +343,10 @@ AddDefaultCharset utf-8
     # RewriteOptions <options>
 
     # (6)
- #   RewriteCond %{HTTPS} =on
- #   RewriteRule ^ - [env=proto:https]
-  #  RewriteCond %{HTTPS} !=on
- #   RewriteRule ^ - [env=proto:http]
+    RewriteCond %{HTTPS} =on
+    RewriteRule ^ - [env=proto:https]
+    RewriteCond %{HTTPS} !=on
+    RewriteRule ^ - [env=proto:http]
 
 
 
