@@ -216,6 +216,33 @@ input:invalid, textarea:invalid { background-color: #f0dddd; }
 }
 
 
+::-webkit-input-placeholder { /* Safari, Chrome and Opera */
+  color: $placeHolderColour;
+}
+
+:-moz-placeholder { /* Firefox 18- */
+  color: $placeHolderColour;
+}
+
+::-moz-placeholder { /* Firefox 19+ */
+  color: $placeHolderColour;
+}
+
+:-ms-input-placeholder { /* IE 10+ */
+  color: $placeHolderColour
+}
+
+::-ms-input-placeholder { /* Edge */
+  color: $placeHolderColour
+}
+
+:placeholder-shown { /* Standard one last! */
+  color: $placeHolderColour;
+}
+
+
+
+
 fieldset {border:0;}
 
    textarea {
