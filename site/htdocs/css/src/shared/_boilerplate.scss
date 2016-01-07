@@ -229,11 +229,11 @@ input:invalid, textarea:invalid { background-color: #f0dddd; }
 }
 
 :-ms-input-placeholder { /* IE 10+ */
-  color: $placeHolderColour
+  color: $placeHolderColour;
 }
 
 ::-ms-input-placeholder { /* Edge */
-  color: $placeHolderColour
+  color: $placeHolderColour;
 }
 
 :placeholder-shown { /* Standard one last! */
