@@ -5,7 +5,7 @@
 (function() {
 
 // the version number is updated in the Gulp cacheBusting task: 
-    var version = 'v::104::';
+    var version = 'v::113::';
     var staticCacheName = version + 'static';
     var pagesCacheName = version + 'pages';
     var imagesCacheName = version + 'images';
