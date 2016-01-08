@@ -15,7 +15,10 @@ var gulp = require('gulp'),
     favicons = require('gulp-favicons'),
     run = require('gulp-run'),
     fs = require("fs"),
-    access = require('gulp-accessibility');
+    access = require('gulp-accessibility'),
+    psi = require('psi');
+
+
 // css:
 gulp.task('sass', function() {
     return gulp.src('htdocs/css/src/**/*.scss')
@@ -262,10 +265,22 @@ gulp.task('cacheBusting', function() {
 
 
 
-
-
-
-
+gulp.task('pageSpeed', function() {
+    APIkey = 'AIzaSyBnze17k0mkUPk9xzWfJ987BSjQfocetSA';
+    psi('http://www.autumnearth.com', {
+        key: APIkey,
+        strategy: 'mobile'
+    }).then(function(data) {
+        console.log('Mobile speed score: ' + data.ruleGroups.SPEED.score);
+        console.log('Mobile usability score: ' + data.ruleGroups.USABILITY.score);
+    });
+    psi('http://www.autumnearth.com', {
+        key: APIkey,
+        strategy: 'desktop'
+    }).then(function(data) {
+        console.log('Desktop speed score: ' + data.ruleGroups.SPEED.score);
+    });
+});
 
 
 
@@ -290,7 +305,7 @@ gulp.task('default', function() {
 // pre-go live task
 // run getSitemap first
 // then visual regression tests
-gulp.task('deploy', ['removeUnused','favicons','cacheBusting'], function() {
+gulp.task('deploy', ['removeUnused','favicons','cacheBusting','pageSpeed'], function() {
     gulp.start('regressionTest');
 });
 
