@@ -19,42 +19,34 @@ echo '<div class="Error">No search terms entered</div>';
 } else {
 
 
-// check for magic square from 404 page:
 
+// check for magic square from 404 page:
 $showSearchResults = true;
 $magicSquareNumber = -1;
+if(isset($_SESSION['username'])){
+
 // get current character for this account:
 $query = "select tblcharacters.404MagicSquareSum as magicSquareNumber, tblcharacters.charId as charID
 from tblcharacters
 inner join tblacct on tblacct.currentCharID = tblcharacters.charID
 where tblacct.accountName='".$_SESSION['username']."'";
 $result = mysql_query($query) or die ("couldn't execute query");
-	
-
-	
-		$returned = mysql_num_rows($result);
-	
-	if ($returned > 0) {
-	
-	$row = mysql_fetch_array($result);
-	
-		extract($row); 
+			$returned = mysql_num_rows($result);
+		if ($returned > 0) {
+		$row = mysql_fetch_array($result);
+			extract($row); 
 }
 if($magicSquareNumber != -1) {
 	$magicNumberSplits = explode("|", $magicSquareNumber);
 	$summedFigure = $magicNumberSplits[0]+$magicNumberSplits[1]+$magicNumberSplits[2];
-
-
-
 if($searchterms == $summedFigure) {
  echo "<h2>Check your mail for a new quest</h2>";
  // send in game mail with an item that starts a quest ###########
  // as long as the mail has been sent
 $showSearchResults = false;
 }
-
 }
-
+}
 
 
 
