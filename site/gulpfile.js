@@ -156,9 +156,16 @@ gulp.task('removeUnused', ['accessibility'], function() {
 
 
 // accessibility checker:
-gulp.task('accessibility', ['removeUnusedIE8CSS'], function() {
+gulp.task('accessibilityRemoveOld', ['removeUnusedIE8CSS'], function() {
+    // tidy up and remove working files
+    return gulp.src('./reports/*', {
+            read: false
+        })
+        .pipe(clean());
+});
 
 
+gulp.task('accessibility', ['accessibilityRemoveOld'], function() {
 return access({
     urls: filesToUncss,
     force: true,
