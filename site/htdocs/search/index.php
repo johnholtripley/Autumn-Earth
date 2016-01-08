@@ -196,15 +196,15 @@ $rowcount++;
 			}
 					
 		
-			echo '<hr />| ';
+			echo '<ul>';
 			for($i = 1; $i <= $totalpages; $i++) {
 				if($i == $pagenumber) { 
-				echo $i.' | ';
+				echo '<li>'.$i.'</li>';
 				} else {
-				echo '<a href="'.$thispageurl.'&page='.$i.'" title="View page '.$i.'">'.$i.'</a> | ';
+				echo '<li><a href="'.$thispageurl.'&page='.$i.'" title="View page '.$i.'">'.$i.'</a></li>';
 				}
 			} 
-			echo '<br /><hr />';
+			echo '</ul>';
 		}
 
 
