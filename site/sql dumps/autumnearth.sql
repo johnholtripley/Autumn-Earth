@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 30, 2015 at 10:05 AM
+-- Generation Time: Jan 08, 2016 at 11:26 AM
 -- Server version: 5.6.24
 -- PHP Version: 5.6.8
 
@@ -891,21 +891,21 @@ CREATE TABLE IF NOT EXISTS `tblsavedsearches` (
   `searchID` int(11) NOT NULL,
   `searchTerm` varchar(255) DEFAULT NULL,
   `searchCount` int(11) DEFAULT NULL
-) ENGINE=MyISAM AUTO_INCREMENT=120 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=141 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblsavedsearches`
 --
 
 INSERT INTO `tblsavedsearches` (`searchID`, `searchTerm`, `searchCount`) VALUES
-(1, 'crafting', 79),
-(2, 'feeding pets', 79),
-(3, 'image', 110),
-(4, 'autumn', 75),
+(1, 'crafting', 111),
+(2, 'feeding pets', 111),
+(3, 'image', 143),
+(4, 'autumn', 107),
 (5, 'autumn earth', 2),
 (6, 'character development', 0),
 (11, 'pte development', 0),
-(8, 'pet development', 75),
+(8, 'pet development', 107),
 (10, 'pte development', 0),
 (12, 'pet developmetn', 0),
 (13, 'carfting', 0),
@@ -934,14 +934,14 @@ INSERT INTO `tblsavedsearches` (`searchID`, `searchTerm`, `searchCount`) VALUES
 (36, 'feed-my-pets', 0),
 (37, 'feed my lovely pet', 0),
 (38, 'feed-my-lovely-pet', 0),
-(39, 'images', 75),
+(39, 'images', 107),
 (40, 'feeding my pets', 0),
 (41, 'feeding-my-pets', 0),
 (42, 'feeding-pets', 0),
 (43, 'feeding-pets', 0),
-(44, 'how does that work', 79),
-(45, 'does that work', 75),
-(46, 'dragon', 153),
+(44, 'how does that work', 111),
+(45, 'does that work', 107),
+(46, 'dragon', 179),
 (47, 'autumn earth', 0),
 (48, 'autumn earth', 0),
 (49, 'autumn earth', 0),
@@ -1014,7 +1014,28 @@ INSERT INTO `tblsavedsearches` (`searchID`, `searchTerm`, `searchCount`) VALUES
 (116, 'autumn earth', 0),
 (117, 'autumn earth', 0),
 (118, 'autumn earth', 0),
-(119, 'autumn earth', 0);
+(119, 'autumn earth', 0),
+(120, 'autumn earth', 0),
+(121, 'autumn earth', 0),
+(122, 'autumn earth', 0),
+(123, 'autumn earth', 0),
+(124, 'autumn earth', 0),
+(125, 'autumn earth', 0),
+(126, 'autumn earth', 0),
+(127, 'autumn earth', 0),
+(128, 'autumn earth', 0),
+(129, 'autumn earth', 0),
+(130, 'autumn earth', 0),
+(131, 'autumn earth', 0),
+(132, 'autumn earth', 0),
+(133, 'autumn earth', 0),
+(134, 'autumn earth', 0),
+(135, 'autumn earth', 0),
+(136, 'autumn earth', 0),
+(137, 'autumn earth', 0),
+(138, 'autumn earth', 0),
+(139, 'autumn earth', 0),
+(140, 'dilly', 15);
 
 -- --------------------------------------------------------
 
@@ -1389,7 +1410,7 @@ ALTER TABLE `tblposts`
 -- AUTO_INCREMENT for table `tblsavedsearches`
 --
 ALTER TABLE `tblsavedsearches`
-  MODIFY `searchID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=120;
+  MODIFY `searchID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=141;
 --
 -- AUTO_INCREMENT for table `tblsubscribedthreads`
 --
