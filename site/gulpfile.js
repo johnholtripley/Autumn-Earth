@@ -14,7 +14,8 @@ var gulp = require('gulp'),
     clean = require('gulp-clean'),
     favicons = require('gulp-favicons'),
     run = require('gulp-run'),
-    fs = require("fs");
+    fs = require("fs"),
+    access = require('gulp-accessibility');
 // css:
 gulp.task('sass', function() {
     return gulp.src('htdocs/css/src/**/*.scss')
@@ -145,7 +146,7 @@ gulp.task('removeUnusedIE8CSS', ['removeUnusedCSS'], function() {
         .pipe(gulp.dest('htdocs/css/'));
 });
 
-gulp.task('removeUnused', ['removeUnusedIE8CSS'], function() {
+gulp.task('removeUnused', ['accessibility'], function() {
     // tidy up and remove working files
     return gulp.src('htdocs/gulp-processing/', {
             read: false
@@ -154,7 +155,27 @@ gulp.task('removeUnused', ['removeUnusedIE8CSS'], function() {
 });
 
 
+// accessibility checker:
+gulp.task('accessibility', ['removeUnusedIE8CSS'], function() {
 
+
+return access({
+    urls: filesToUncss,
+    force: true,
+    accessibilityLevel: 'WCAG2A',
+            reportType: 'txt',
+            verbose: false,
+            reportLocation: './reports',
+            reportLevels: {
+                notice: false,
+                warning: true,
+                error: true
+            }
+  });
+
+
+
+});
 
 
 // ----------------------------------
@@ -231,6 +252,13 @@ gulp.task('cacheBusting', function() {
         });
     });
 });
+
+
+
+
+
+
+
 
 
 
