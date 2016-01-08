@@ -13,6 +13,12 @@ function correctAttribute( $attr ) {
 }
 //
 
+
+function removeSquareBracketCodes($originaltext) {
+	// remove all forum formating code [b] or [image] etc
+	return preg_replace('/\[.*?\]/','',$originaltext);
+}
+
 function cleanText( $originaltext ) {
 	// for banned word lists
 	$bannedwords = array( "fuck", "piss", "cunt", "wanker", "bastard", "twat", "cock", "rape", "wank", "shit" );

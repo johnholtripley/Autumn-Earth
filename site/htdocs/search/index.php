@@ -115,7 +115,14 @@ if (($rowcount>= $startpoint) && ($rowcount<$endpoint)) {
 // show these results
 extract($row);
 
-$thispostcontent = highlight(stripslashes($postContent),stripslashes($searchterms));
+
+$postContent = removeSquareBracketCodes(stripslashes($postContent));
+
+$thispostcontent = highlight($postContent,stripslashes($searchterms));
+
+
+
+
 echo '<h3><a href="/forum/'.$cleanURL.'" title="Click to view this thread">'.highlight(stripslashes($threadtitle),stripslashes($searchterms)).'</a></h3>'."\n";
 
 // trim the post content to show so many characters before the first occurence and after the last occurence
@@ -171,7 +178,7 @@ $rowcount++;
 			// determine URL (but ignore &page - if one exists)
 		
 			$getdata = "";
-			foreach($HTTP_GET_VARS as $key => $value) {
+			foreach($_GET as $key => $value) {
 
 				if ($key != "page") {
 				
@@ -183,7 +190,7 @@ $rowcount++;
 				}
 			}
 			// create full URL with GET data added (if any)
-			$thisurl = $_SERVER['PHP_SELF'];
+			$thispageurl = $_SERVER['PHP_SELF'];
 			if ($getdata != "") {
 				$thispageurl .= "?".$getdata;
 			}
