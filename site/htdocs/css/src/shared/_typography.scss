@@ -16,13 +16,14 @@ font-weight: normal;
 
 
 // allow headers to wrap so they don't break out of their grid column:
+// https://justmarkup.com/log/2015/07/dealing-with-long-words-in-css/
  overflow-wrap: break-word;
   word-wrap: break-word;
   -webkit-hyphens: auto;
   -ms-hyphens: auto;
   -moz-hyphens: auto;
   hyphens: auto;
-// https://justmarkup.com/log/2015/07/dealing-with-long-words-in-css/
+
 }
 
 

@@ -8,6 +8,7 @@
     "url": "https://github.com/johnholtripley/Autumn-Earth"
   },
   "devDependencies": {
+    "critical": "^0.7.0",
     "download": "^4.2.0",
     "favicons": "^4.2.7",
     "gulp": "^3.9.0",
