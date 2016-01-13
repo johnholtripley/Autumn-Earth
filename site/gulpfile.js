@@ -20,7 +20,8 @@ var gulp = require('gulp'),
     critical = require('critical').stream,
     php2html = require("gulp-php2html"),
      http = require('http'),
-     mkdirp = require('mkdirp');
+     mkdirp = require('mkdirp'),
+     del = require('del');
 
 
 // css:
@@ -319,7 +320,7 @@ mkdirp('./htdocs/static', function(err) {
 });
 
 function doCritical() {
-    gulp.start('generateCritical');
+    gulp.start('tidyUpCritical');
 }
 
 gulp.task('generateCritical', function() {
@@ -341,6 +342,15 @@ gulp.task('generateCritical', function() {
         }))
         .pipe(gulp.dest('htdocs'));
 
+});
+
+gulp.task('tidyUpCritical', ['generateCritical'], function() {
+del(['./htdocs/static/**']).then(paths => {
+    console.log('Deleted files and folders:\n', paths.join('\n'));
+});
+del(['./htdocs/index.css']).then(paths => {
+    console.log('Deleted files and folders:\n', paths.join('\n'));
+});
 });
 
 // ------------------------------------------
