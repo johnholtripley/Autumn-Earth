@@ -297,30 +297,30 @@ gulp.task('pageSpeed', function() {
 // generate critical css -------------------------------------------
 
 var download = function(url, dest, cb) {
-  var file = fs.createWriteStream(dest);
-  var request = http.get(url, function(response) {
-    response.pipe(file);
-    file.on('finish', function() {
-      file.close(cb);  // close() is async, call cb after close completes.
+    var file = fs.createWriteStream(dest);
+    var request = http.get(url, function(response) {
+        response.pipe(file);
+        file.on('finish', function() {
+            file.close(cb); // close() is async, call cb after close completes.
+        });
+    }).on('error', function(err) { // Handle errors
+        fs.unlink(dest); // Delete the file async. (But we don't check the result)
+        console.log("error getting file");
+        if (cb) cb(err.message);
     });
-  }).on('error', function(err) { // Handle errors
-    fs.unlink(dest); // Delete the file async. (But we don't check the result)
-    console.log("error getting file");
-    if (cb) cb(err.message);
-  });
 };
 
 gulp.task('critical', function() {
 
-mkdirp('./htdocs/static', function(err) { 
-    // path was created unless there was error
-});
+    mkdirp('./htdocs/static', function(err) {
+        // path was created unless there was error
+    });
 
- download('http://ae.dev/index.php?useInline=false','./htdocs/static/index.html',doCritical);
+    download('http://ae.dev/index.php?useInline=false', './htdocs/static/index.html', doCritical);
 });
 
 function doCritical() {
-    gulp.start('tidyUpCritical');
+    gulp.start('minifyCritical');
 }
 
 gulp.task('generateCritical', function() {
@@ -337,20 +337,31 @@ gulp.task('generateCritical', function() {
             }],
             css: ['htdocs/css/base.css'],
             dest: 'htdocs/css/critical.css',
-           // ignore: ['@font-face',/url\(/],
-                            minify: 'true',
+            ignore: ['@font-face', '/url\(/'],
+            minify: 'false',
         }))
         .pipe(gulp.dest('htdocs'));
 
 });
 
+
+gulp.task('minifyCritical', ['tidyUpCritical'], function() {
+    return gulp.src('htdocs/css/critical.css')
+        .pipe(minify({
+            compatibility: 'ie7',
+            processImport: false
+        }))
+        .pipe(gulp.dest('htdocs/css/'));
+});
+
 gulp.task('tidyUpCritical', ['generateCritical'], function() {
-del(['./htdocs/static/**']).then(paths => {
-    console.log('Deleted files and folders:\n', paths.join('\n'));
-});
-del(['./htdocs/index.css']).then(paths => {
-    console.log('Deleted files and folders:\n', paths.join('\n'));
-});
+    del(['./htdocs/static/**']).then(paths => {
+        console.log('Deleted files and folders:\n', paths.join('\n'));
+    });
+    del(['./htdocs/index.css']).then(paths => {
+        console.log('Deleted files and folders:\n', paths.join('\n'));
+    });
+    // for some reason, when the 'ignore' parameter is on, then the css isn't minified, so minify it now
 });
 
 // ------------------------------------------
