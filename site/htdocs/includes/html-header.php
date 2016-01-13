@@ -1,6 +1,18 @@
 <!doctype html>
 <?php
 
+$useCriticalCssInling = false;
+
+if($_SERVER['PHP_SELF'] == "/index.php") {
+ $useCriticalCssInling = true; 
+}
+ if (isset($_GET["useInline"])) {
+  // use this parameter so that the Gulp task sees the html without the post-critical modifications
+  if($_GET["useInline"]=="false") {
+    $useCriticalCssInling = false;
+  }
+}
+
 $cacheVersion = file_get_contents($_SERVER["DOCUMENT_ROOT"].'/includes/siteVersion.txt');
 
 $htmlClass = "";
@@ -31,13 +43,19 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/title-tag.php");
      cacheVersion = <?php echo $cacheVersion; ?>;
   </script>
 
+<?php if ($useCriticalCssInling): ?>
+ <style><?php include '/css/critical.css'; ?></style>
+<noscript>
+  <?php  endif;  ?>
 <!--[if (gt IE 8) | (IEMobile)]><!-->
     <link href="/css/base.<?php echo $cacheVersion; ?>.css" rel="stylesheet" />
 <!--<![endif]-->
 <!--[if (lt IE 9) & (!IEMobile)]>
     <link href="/css/IE8Support.<?php echo $cacheVersion; ?>.css" rel="stylesheet" />
 <![endif]-->
-
+<?php if ($useCriticalCssInling) {
+echo '</noscript>'."\n";
+}?>
 
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="language" content="english">

@@ -16,7 +16,11 @@ var gulp = require('gulp'),
     run = require('gulp-run'),
     fs = require("fs"),
     access = require('gulp-accessibility'),
-    psi = require('psi');
+    psi = require('psi'),
+    critical = require('critical').stream,
+    php2html = require("gulp-php2html"),
+     http = require('http'),
+     mkdirp = require('mkdirp');
 
 
 // css:
@@ -286,6 +290,64 @@ gulp.task('pageSpeed', function() {
 
 
 
+
+
+
+// generate critical css -------------------------------------------
+
+var download = function(url, dest, cb) {
+  var file = fs.createWriteStream(dest);
+  var request = http.get(url, function(response) {
+    response.pipe(file);
+    file.on('finish', function() {
+      file.close(cb);  // close() is async, call cb after close completes.
+    });
+  }).on('error', function(err) { // Handle errors
+    fs.unlink(dest); // Delete the file async. (But we don't check the result)
+    console.log("error getting file");
+    if (cb) cb(err.message);
+  });
+};
+
+gulp.task('critical', function() {
+
+mkdirp('./htdocs/static', function(err) { 
+    // path was created unless there was error
+});
+
+ download('http://ae.dev/index.php?useInline=false','./htdocs/static/index.html',doCritical);
+});
+
+function doCritical() {
+    gulp.start('generateCritical');
+}
+
+gulp.task('generateCritical', function() {
+    return gulp.src('htdocs/static/index.html')
+        .pipe(critical({
+            base: 'htdocs/',
+            inline: false,
+            dimensions: [{
+                height: 200,
+                width: 500
+            }, {
+                height: 900,
+                width: 1200
+            }],
+            css: ['htdocs/css/base.css'],
+            dest: 'htdocs/css/critical.css',
+           // ignore: ['@font-face',/url\(/],
+                            minify: 'true',
+        }))
+        .pipe(gulp.dest('htdocs'));
+
+});
+
+// ------------------------------------------
+
+
+
+
 // Watch
 gulp.task('watch', function() {
     gulp.watch('htdocs/css/src/**/*.scss', ['sass']);
@@ -305,7 +367,7 @@ gulp.task('default', function() {
 // pre-go live task
 // run getSitemap first
 // then visual regression tests
-gulp.task('deploy', ['removeUnused','favicons','cacheBusting','pageSpeed'], function() {
+gulp.task('deploy', ['critical','removeUnused','favicons','cacheBusting','pageSpeed'], function() {
     gulp.start('regressionTest');
 });
 

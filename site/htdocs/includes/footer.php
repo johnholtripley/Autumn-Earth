@@ -62,6 +62,23 @@ echo $additionalAssets;
 include($_SERVER['DOCUMENT_ROOT']."/includes/google-analytics.php");
 ?>
 
+<?php if ($useCriticalCssInling): ?>
+
+
+<!--[if (gt IE 8) | (IEMobile)]><!-->
+    <script>
+(function(d,u){for (var i in u) {var l=d.createElement('link');l.type='text/css';l.rel='stylesheet';l.href=u[i]; d.getElementsByTagName('head')[0].appendChild(l);}}(document,['/css/base.<?php echo $cacheVersion; ?>.css']));
+</script>
+<!--<![endif]-->
+<!--[if (lt IE 9) & (!IEMobile)]>
+    <script>
+(function(d,u){for (var i in u) {var l=d.createElement('link');l.type='text/css';l.rel='stylesheet';l.href=u[i]; d.getElementsByTagName('head')[0].appendChild(l);}}(document,['/css/IE8Support.<?php echo $cacheVersion; ?>.css']));
+</script>
+<![endif]-->
+
+  <?php  endif;  ?>
+
+
 </body>
 </html>
 <?php

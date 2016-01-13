@@ -23,6 +23,7 @@
     "gulp-filesize": "0.0.6",
     "gulp-jshint": "^1.10.0",
     "gulp-minify-css": "^1.2.0",
+    "gulp-php2html": "^0.2.0",
     "gulp-rename": "^1.2.2",
     "gulp-run": "^1.6.12",
     "gulp-sass": "^2.1.0",
@@ -33,5 +34,9 @@
     "gulp-xml2js": "^0.1.0",
     "phantomcss": "^0.11.0",
     "psi": "^2.0.2"
+  },
+  "dependencies": {
+    "del": "^2.2.0",
+    "php2html": "0.0.7"
   }
 }
