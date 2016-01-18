@@ -13,7 +13,7 @@ var gulp = require('gulp'),
     gutil = require('gulp-util'),
     clean = require('gulp-clean'),
     favicons = require('gulp-favicons'),
-    run = require('gulp-run'),
+   exec = require('child_process').exec,
     fs = require("fs"),
     access = require('gulp-accessibility'),
     psi = require('psi'),
@@ -84,9 +84,12 @@ gulp.task('csslint', function() {
 
 
 // tests
-gulp.task('regressionTest', function () {
-  run('casperjs test tests/visual-regression.js').exec()
+gulp.task('regressionTest', function() {
+    var child = exec('casperjs test tests/visual-regression.js', function(err, stdout, stderr) {
+        console.log(stdout);
+    });
 })
+
 
 
 
