@@ -92,9 +92,15 @@ gulp.task('regressionTest', function () {
 
 // download the sitemap locally:
 gulp.task('getSitemap', function(callback) {
+
+    mkdirp('./htdocs/gulp-processing', function(err) {
+        // path was created unless there was error
+    });
+
     return download('http://ae.dev/sitemap.xml')
         .pipe(gulp.dest("htdocs/gulp-processing/"));
 });
+
 
 // convert the xml to json:
 gulp.task('createSitemap', ['getSitemap'], function() {
@@ -296,7 +302,7 @@ gulp.task('pageSpeed', function() {
 
 // generate critical css -------------------------------------------
 
-var download = function(url, dest, cb) {
+var FSDownload = function(url, dest, cb) {
     var file = fs.createWriteStream(dest);
     var request = http.get(url, function(response) {
         response.pipe(file);
@@ -316,7 +322,7 @@ gulp.task('critical', function() {
         // path was created unless there was error
     });
 
-    download('http://ae.dev/index.php?useInline=false', './htdocs/static/index.html', doCritical);
+    FSDownload('http://ae.dev/index.php?useInline=false', './htdocs/static/index.html', doCritical);
 });
 
 function doCritical() {
