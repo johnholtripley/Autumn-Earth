@@ -253,3 +253,13 @@ if (supportsSVG()) {
 */
 
 
+
+
+/*
+use the visibility API to change the page title when the user moves to another tab
+var title = document.title,
+newTitle = "Remember to read this " + title;
+document.addEventListener("visibilitychange", function() {
+  document.title = ((document.hidden) ? newTitle : title);
+});
+*/
