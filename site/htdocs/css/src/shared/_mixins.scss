@@ -114,31 +114,61 @@ transition: $values;
 }
 
 
-@mixin backgroundGradient($from, $to) {
-  // simple gradients only - from 0 to 100%
-  // http://codepen.io/thebabydino/full/pjxVWp/
-background: $from; /* old browsers */
-background: -webkit-linear-gradient($from,$to); /* Chrome 10-25, Safari 5.1-6 */
-background: linear-gradient($from,$to); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+@mixin linearGradient($from, $to, $fromPercent:0, $toPercent:100, $direction:to bottom) {
+    // simple 2 colour vertical gradients only
+    // http://codepen.io/thebabydino/full/pjxVWp/
+    //
+    // remove % if given and re-add, so it can accept '0' and '0%':
+    $fromPercent: 0% + strip-units($fromPercent);
+    $toPercent: 0% + strip-units($toPercent);
+    // support for older direction syntax
+    // to right -> left
+    // to bottom -> top etc
+    $oldDirectionSupport: (
+      'to right': left,
+      'to left': right,
+      'to bottom': top,
+      'to top': bottom,
+      'to bottom right': -45deg,
+      'to top left': 135deg,
+      'to bottom left': -135deg,
+      'to top right': 45deg
+      );
+    $oldDirection: map-get($oldDirectionSupport, ''+$direction);
+    // old browsers: 
+    background: $from;
+    // Chrome 10-25, Safari 5.1-6:
+    background: -webkit-linear-gradient($oldDirection, $from $fromPercent, $to $toPercent);
+    // W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ :
+    background: linear-gradient($direction, $from $fromPercent, $to $toPercent);
+}
+
+
+@mixin radialGradient($from, $to, $fromPercent:0, $toPercent:100) {
+    // simple 2 colour radial gradients only
+    //
+    // remove % if given and re-add, so it can accept '0' and '0%':
+    $fromPercent: 0% + strip-units($fromPercent);
+    $toPercent: 0% + strip-units($toPercent);
+    // old browsers: 
+    background: $from;
+    background: -webkit-radial-gradient($from $fromPercent, $to $toPercent);
+    background: radial-gradient($from $fromPercent, $to $toPercent);
 }
 
 
 
 
+
 @mixin border-radius($radius) {
-
-
-
   -webkit-border-radius: 0px + $radius;
   -moz-border-radius: 0px + $radius;
   border-radius: 0px + $radius;
-
   @media only all { 
     -webkit-border-radius: convertPxToRem($radius);
     -moz-border-radius: convertPxToRem($radius);
     border-radius: convertPxToRem($radius);
   }
-
 }
 
 
