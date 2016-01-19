@@ -161,15 +161,25 @@ transition: $values;
 
 
 @mixin border-radius($radius) {
-  -webkit-border-radius: 0px + $radius;
-  -moz-border-radius: 0px + $radius;
-  border-radius: 0px + $radius;
-  @media only all { 
-    -webkit-border-radius: convertPxToRem($radius);
-    -moz-border-radius: convertPxToRem($radius);
-    border-radius: convertPxToRem($radius);
-  }
+  // usage:
+  // @include border-radius(20px)
+  // @include border-radius(5%)
+    @if unit($radius)==% {
+        -webkit-border-radius: $radius;
+        -moz-border-radius: $radius;
+        border-radius: $radius;
+    } @else {
+        -webkit-border-radius: 0px + $radius;
+        -moz-border-radius: 0px + $radius;
+        border-radius: 0px + $radius;
+        @media only all {
+            -webkit-border-radius: convertPxToRem($radius);
+            -moz-border-radius: convertPxToRem($radius);
+            border-radius: convertPxToRem($radius);
+        }
+    }
 }
+
 
 
 @mixin border-box {
@@ -274,6 +284,27 @@ box-sizing: border-box;
 
 
 
+@mixin background-size($first, $second:null) {
+    // usage:
+    // @include background-size(100%, 50%);
+    // @include background-size(100%); (second value is then 'auto')
+    // @include background-size(contain);
+    // @include background-size(auto, 50%);
+    // @include background-size(inherit);
+    @if type-of($first) !=string {
+        @if $second==null {
+            $second: auto;
+        }
+    }
+    // Safari 3.0:
+    -webkit-background-size: $first $second;
+    // Gecko 1.9.2 (Firefox 3.6):
+    -moz-background-size: $first $second;
+    // Opera 9.5:
+    -o-background-size: $first $second;
+    // Gecko 2.0 (Firefox 4.0) and other CSS3-compliant browsers:
+    background-size: $first $second;
+}
 
 
 
@@ -281,17 +312,39 @@ box-sizing: border-box;
 
 
 
+@mixin box-shadow($values) {
+// usage
+// @include box-shadow(inset 0 0 1em gold);
+// @include box-shadow('inset 0 0 1em gold, 0 0 1em red'); - if comma separating, need to add the whole list in quotes
+$values: unquote($values);
+-webkit-box-shadow: $values;
+-moz-box-shadow: $values;
+box-shadow: $values;
+}
+
+
+@mixin text-shadow($values) {
+// if comma separating, need to add the whole list in quotes
+$values: unquote($values);
+// no vendor prefixs needed - just including this mixin to be consistent
+text-shadow: $values;
+}
+
+
+
+
+@mixin opacity($opacity) {
+    @if $understandsMQs==false {
+        // IE8 only:
+        $opacity-ie: $opacity * 100;
+        filter: alpha(opacity=$opacity-ie);
+    } @else {
+      opacity: $opacity;
+    }
+}
 
 
 
 
 
 
-
-// to do:
-// allow border-box to accept %
-// font-face embed
-// background-size
-// box shadow
-// gif to svg 
-// placeholder styling
