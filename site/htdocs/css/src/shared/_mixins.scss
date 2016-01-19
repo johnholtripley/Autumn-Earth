@@ -200,13 +200,6 @@ box-sizing: border-box;
 }
 
 
-@mixin mqTest($firstBP) {
-@if type-of($firstBP) != number {
-@content; 
-}
-}
-
-
 
 @mixin mq($firstBP, $firstMinMax:min, $secondBP:null, $secondMinMax:null) {
   // usage:
