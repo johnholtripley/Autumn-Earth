@@ -2,9 +2,9 @@
 var fs = require('fs');
 
 var options = {
-  key: fs.readFileSync('/etc/ssl/private/autumnearth.com.key'),
-  cert: fs.readFileSync('/etc/ssl/certs/autumnearth.com.crt'),
-  ca: fs.readFileSync('/etc/ssl/certs/ca-bundle.crt')
+  key: fs.readFileSync('/home/autumnearth.com/ssl.key'),
+  cert: fs.readFileSync('/home/autumnearth.com/ssl.cert'),
+  ca: fs.readFileSync('/home/autumnearth.com/ssl.ca')
 };
 
 var app = require('https').createServer(options, handler),
