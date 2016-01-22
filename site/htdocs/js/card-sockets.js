@@ -1,4 +1,3 @@
-
 // https://davidwalsh.name/websocket
 // Create SocketIO instance, connect
 var socket = new io.Socket('www.autumnearth.com',{
@@ -24,4 +23,4 @@ function sendMessageToServer(message) {
 	socket.send(message);
 }
 
-sendMessageToServer("hi");
+//sendMessageToServer("hi");
