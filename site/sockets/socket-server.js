@@ -3,16 +3,17 @@ var fs = require('fs');
 
 var options = {
   key: fs.readFileSync('/etc/ssl/private/autumnearth.com.key'),
-  cert: fs.readFileSync('/etc/ssl/certs/autumnearth.com.crt')
+  cert: fs.readFileSync('/etc/ssl/certs/autumnearth.com.crt'),
+  ca: fs.readFileSync('/etc/ssl/certs/ca-bundle.crt')
 };
 
-var app = require('https').createServer(options, handler)
-  , io = require('socket.io').listen(app);
+var app = require('https').createServer(options, handler),
+io = require('socket.io').listen(app);
 
 app.listen(8080);
 
-//for testing
+
 function handler (req, res) {
       res.writeHead(200);
-    res.end("welcome to ae sockets\n");
+    res.end("<h1>hello</h1>\n");
 }
