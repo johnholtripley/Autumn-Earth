@@ -421,6 +421,7 @@ placeCardOnBoard(23, 11, 1, false);
     currentlySelectedCard = -1;
     currentOpponent = 1;
     isPlayer1AI = true;
+    isNetworkOpponent = false;
     whoCanClick = currentPlayersTurn;
     gameMode = "play";
     aiIsWorking = -1;
