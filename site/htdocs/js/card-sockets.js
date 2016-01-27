@@ -23,4 +23,4 @@ function sendMessageToServer(message) {
 	socket.send(message);
 }
 
-//sendMessageToServer("hi");
+sendMessageToServer("hi");
