@@ -81,6 +81,13 @@
     h3 {
         page-break-after: avoid;
     }
+
+// make the logo solid black when printed:
+#autumnEarth img {
+    -webkit-filter: grayscale(100%) brightness(0%); 
+    filter: grayscale(100%) brightness(0%); 
+}
+
 }
 
 
