@@ -31,4 +31,7 @@ function sendMessageToServer(message) {
 	socket.send(message);
 }
 
-sendMessageToServer("hi");
+sendMessageToServer("hi - connected in");
+
+// successfully connecting and sending messages, but firefox reports
+// "Firefox can't establish a connection to the server at wss://www.autumnearth.com:8080/socket.io/?EIO=3&transport=websocket&sid=Dl4Z1Co15rifYXs5AAAB" error

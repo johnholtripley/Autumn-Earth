@@ -28,7 +28,7 @@ socket.on('connection', function(client){
     console.log('Received message from client!',event);
   });
   client.on('disconnect',function(){
-    clearInterval(interval);
+ //   clearInterval(interval);
     console.log('Server has disconnected');
   });
 
