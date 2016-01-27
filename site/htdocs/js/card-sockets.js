@@ -1,10 +1,18 @@
 // https://davidwalsh.name/websocket
 // Create SocketIO instance, connect
+/*
 var socket = new io.Socket('www.autumnearth.com',{
 	port: 8080
 });
 socket.connect(); 
 
+
+*/
+
+
+var socket = io.connect('www.autumnearth.com:8080');
+
+console.log('Connected');
 // Add a connect listener
 socket.on('connect',function() {
 	console.log('Client has connected to the server!');
