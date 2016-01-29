@@ -12,6 +12,24 @@ http://socket.io/docs/rooms-and-namespaces/
 */
 
 
+
+isANetworkGame = true;
+
+function startNetworkGame() {
+  // need to determine if this player goes first or the opponent - socket will send this through
+  // currentPlayersTurn = whoGoesFirst;
+        whoCanClick = currentPlayersTurn;
+    
+      
+        if (currentPlayersTurn == 1) {
+            currentOpponent = 2;
+          
+        }
+            gameMode = "play";
+}
+
+// ----------------------------
+
 var socket = io.connect('https://www.autumnearth.com:8080');
 
 console.log('Connected');

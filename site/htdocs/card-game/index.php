@@ -94,9 +94,9 @@ var player2Skill = 1;
 
 if($isNetworkGame) {
 	$additionalAssets .= '<script src="/socket.io/socket.io.js"></script>'."\n";
-	$additionalAssets .= '<script src="/js/card-sockets.js"></script>'."\n";
+	$additionalAssets .= '<script src="/js/card-sockets.<?php echo $cacheVersion; ?>.js"></script>'."\n";
 }
-$additionalAssets .= '<script src="/js/card-game.js"></script>'."\n";
+$additionalAssets .= '<script src="/js/card-game.<?php echo $cacheVersion; ?>.js"></script>'."\n";
 include($_SERVER['DOCUMENT_ROOT']."/includes/card-sub-nav.php");
 include($_SERVER['DOCUMENT_ROOT']."/includes/footer.php");
 ?>

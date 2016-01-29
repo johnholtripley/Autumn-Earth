@@ -27,6 +27,10 @@ boardWidth = board[0].length;
 boardHeight = board.length;
 
 
+// isANetworkGameis defined in card-sockets.js so if not a network game, this won't be set:
+if (typeof isANetworkGame === "undefined") {
+    isANetworkGame = false;
+}
 
 // helper functions ----------------------------------------------------
 
@@ -343,7 +347,7 @@ function initCardGame() {
 
 
 
-    
+
     placeCardOnBoard(0, (boardWidth / 2) - 1, (boardHeight / 2) - 1, true);
     placeCardOnBoard(1, (boardWidth / 2), (boardHeight / 2), true);
     placeCardOnBoard((numberOfCardsInGame / 2), (boardWidth / 2), (boardHeight / 2) - 1, true);
@@ -363,76 +367,82 @@ function initCardGame() {
         }
     }
     placedCards = 4;
-    currentPlayersTurn = getRandomInteger(1, 2);
-    
 
 
 
 
 
-// for testing ----------------------------------
-/*
-board = [
-    ['x', 'x', 'x', 'x', 'x', '-', '-', 'x', 'x', 'x', 'x', 'x'],
-    ['x', 'x', 'x', 'x', '-', '-', '-', '-', 'x', 'x', 'x', 'x'],
-    ['x', 'x', 'x', '-', '-', '-', '-', '-', '-', 'x', 'x', 'x'],
-    ['x', 'x', 'x', '-', '-', '-', '-', '-', '-', 'x', 'x', 'x'],
-    ['x', 'x', 'x', 'x', '-', '-', '-', '-', 'x', 'x', 'x', 'x'],
-    ['x', 'x', 'x', 'x', 'x', '-', '-', 'x', 'x', 'x', 'x', 'x']
-];
-
-   placeCardOnBoard(0, 5, 2, true);
-    placeCardOnBoard(1, 6, 2, true);
-    placeCardOnBoard(2, 7, 2, true);
-    placeCardOnBoard(3, 6, 1, true);
-    placeCardOnBoard(4, 7, 3, true);
-    placeCardOnBoard(5, 6, 3, true);
-    placeCardOnBoard(6, 6, 4, true);
-    placeCardOnBoard(7, 7, 4, true);
-    placeCardOnBoard(8, 5, 4, true);
-   placeCardOnBoard(9, 1, 1, false);
-   placeCardOnBoard(10, 6, 0, true);
-
-placeCardOnBoard(11, 1, 3, false);
-placeCardOnBoard(12, 5, 3, true);
-placeCardOnBoard(13, 4, 4, true);
-placeCardOnBoard(14, 7, 1, true);
-
-placeCardOnBoard(15, 11, 2, false);
-placeCardOnBoard(16, 11, 3, false);
-placeCardOnBoard(17, 11, 4, false);
-placeCardOnBoard(18, 11, 5, false);
-placeCardOnBoard(19, 10, 2, false);
-placeCardOnBoard(20, 10, 3, false);
-placeCardOnBoard(21, 10, 4, false);
-placeCardOnBoard(22, 10, 1, false);
-placeCardOnBoard(23, 11, 1, false);
 
 
+    // for testing ----------------------------------
+    /*
+    board = [
+        ['x', 'x', 'x', 'x', 'x', '-', '-', 'x', 'x', 'x', 'x', 'x'],
+        ['x', 'x', 'x', 'x', '-', '-', '-', '-', 'x', 'x', 'x', 'x'],
+        ['x', 'x', 'x', '-', '-', '-', '-', '-', '-', 'x', 'x', 'x'],
+        ['x', 'x', 'x', '-', '-', '-', '-', '-', '-', 'x', 'x', 'x'],
+        ['x', 'x', 'x', 'x', '-', '-', '-', '-', 'x', 'x', 'x', 'x'],
+        ['x', 'x', 'x', 'x', 'x', '-', '-', 'x', 'x', 'x', 'x', 'x']
+    ];
+
+       placeCardOnBoard(0, 5, 2, true);
+        placeCardOnBoard(1, 6, 2, true);
+        placeCardOnBoard(2, 7, 2, true);
+        placeCardOnBoard(3, 6, 1, true);
+        placeCardOnBoard(4, 7, 3, true);
+        placeCardOnBoard(5, 6, 3, true);
+        placeCardOnBoard(6, 6, 4, true);
+        placeCardOnBoard(7, 7, 4, true);
+        placeCardOnBoard(8, 5, 4, true);
+       placeCardOnBoard(9, 1, 1, false);
+       placeCardOnBoard(10, 6, 0, true);
+
+    placeCardOnBoard(11, 1, 3, false);
+    placeCardOnBoard(12, 5, 3, true);
+    placeCardOnBoard(13, 4, 4, true);
+    placeCardOnBoard(14, 7, 1, true);
+
+    placeCardOnBoard(15, 11, 2, false);
+    placeCardOnBoard(16, 11, 3, false);
+    placeCardOnBoard(17, 11, 4, false);
+    placeCardOnBoard(18, 11, 5, false);
+    placeCardOnBoard(19, 10, 2, false);
+    placeCardOnBoard(20, 10, 3, false);
+    placeCardOnBoard(21, 10, 4, false);
+    placeCardOnBoard(22, 10, 1, false);
+    placeCardOnBoard(23, 11, 1, false);
 
 
-  placedCards = 4;
-    currentPlayersTurn = 1;
-    */
-// testing ----------------------------------
 
+
+      placedCards = 4;
+        currentPlayersTurn = 1;
+        */
+    // testing ----------------------------------
 
 
     currentlySelectedCard = -1;
     currentOpponent = 1;
     isPlayer1AI = true;
-    isNetworkOpponent = false;
-    whoCanClick = currentPlayersTurn;
-    gameMode = "play";
-    aiIsWorking = -1;
-    waitForDrawUpdate = false;
-    if (currentPlayersTurn == 1) {
-        currentOpponent = 2;
-        if (isPlayer1AI) {
-            doAIMove();
+     aiIsWorking = -1;
+        waitForDrawUpdate = false;
+    if (isANetworkGame) {
+        isPlayer1AI = false;
+        // will get the play instruction from the socket when it's determined which player starts first
+    } else {
+        currentPlayersTurn = getRandomInteger(1, 2);
+        whoCanClick = currentPlayersTurn;
+        gameMode = "play";
+       
+        if (currentPlayersTurn == 1) {
+            currentOpponent = 2;
+            if (isPlayer1AI) {
+                doAIMove();
+            }
         }
     }
 }
+
 
 function placeCardOnBoard(cardRef, gridX, gridY, placedOnGameBoard) {
     board[gridY][gridX] = cardRef;
