@@ -56,6 +56,18 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/header.php");
 
 
 
+<div class="masonry-cell">
+      <div class="masonry-panel">
+<div class="videoWrapper" style="padding-bottom: 60.88%;">
+  <video preload="auto" controls="controls" muted="muted" poster="/images/placeholder.jpg">
+    <source src="/videos/placeholder.mp4" type="video/mp4"></source>
+    <source src="/videos/placeholder.webm" type="video/webm"></source>
+    <source src="/videos/placeholder.ogv" type="video/ogg"></source>
+  </video>
+</div>
+     </div>
+      </div>
+
     <div class="masonry-cell masonry-cluster">
       <div class="masonry-cluster-cell masonry-cluster-group">
         <div class="masonry-cell">
