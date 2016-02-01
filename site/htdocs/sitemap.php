@@ -22,9 +22,8 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/functions.php");
 
 
 <url><loc>https://www.autumnearth.com/</loc><priority>1.0</priority></url>
-
 <url><loc>https://www.autumnearth.com/auction/</loc><priority>0.7</priority></url>
-
+<url><loc>https://www.autumnearth.com/community/</loc><priority>0.7</priority></url>
 <url><loc>https://www.autumnearth.com/account/join/</loc><priority>0.7</priority></url>
 
 

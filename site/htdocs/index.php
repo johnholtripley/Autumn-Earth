@@ -12,7 +12,6 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/header.php");
 
 
 ?>
-
 <div class="row medium-2up wide-4up equalHeights">
 
 	<div class="column"><div><h4>Latest forum threads with new posts</h4>

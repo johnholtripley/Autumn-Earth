@@ -1,0 +1,106 @@
+// thanks to https://medium.com/@_jh3y/how-to-pure-css-masonry-layouts-a8ede07ba31a#.he611s8ga
+
+.masonry {
+    @include column-count(1);
+    -webkit-column-gap: 0;
+    -moz-column-gap: 0;
+    column-gap: 0;
+    @include mq($medium) {
+        @include column-count(2);
+    }
+    @include mq($wide) {
+        @include column-count(3);
+    }
+    @include mq($widest) {
+        @include column-count(4);
+    }
+    // design specific:
+    max-width: none;
+}
+
+.masonry-cell {
+    margin: 0;
+    padding: 5px;
+    @include mq($medium) {
+            -webkit-column-break-inside: avoid;
+            page-break-inside: avoid;
+            break-inside: avoid;
+    }
+}
+
+.masonry-panel {
+  overflow: hidden;
+  width: 100%;
+  background: #666;
+}
+
+
+
+
+
+// masonry cluster grids:
+
+.masonry-cluster {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    padding: 0;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+}
+
+.masonry-cluster-group {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+     flex-basis: 50%;
+    @include mq($medium) {
+        -webkit-box-orient: horizontal;
+        -webkit-box-direction: normal;
+        -webkit-flex-direction: row;
+        -ms-flex-direction: row;
+        flex-direction: row;
+    }
+}
+
+.masonry-cluster-cell {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    overflow: hidden;
+    -webkit-box-flex: 1;
+    -webkit-flex: 1 1 auto;
+    -ms-flex: 1 1 auto;
+    flex: 1 1 auto;
+}
+
+.masonry-vertical-cluster {
+    @extend .masonry-cluster;
+    @include mq($medium) {
+        -webkit-box-orient: horizontal;
+        -webkit-flex-direction: row;
+        -ms-flex-direction: row;
+        flex-direction: row;
+    }
+    .masonry-cluster-group {
+        -webkit-box-orient: vertical;
+        -webkit-box-direction: normal;
+        -webkit-flex-direction: column;
+        -ms-flex-direction: column;
+        flex-direction: column;
+    }
+}
+
+
+

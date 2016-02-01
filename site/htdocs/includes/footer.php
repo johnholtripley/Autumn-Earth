@@ -12,7 +12,10 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/search.php");
 <div class="row">
 <ul>
 <li><a href="/">Home</a></li>
+<li><a href="/community/">Community</a>
+	<ul>
 <li><a href="/forum/">Forum</a></li>
+</ul></li>
 <li><a href="/auction/">Auction</a></li>
 <li><a href="/mail/">Mail</a></li>
 <li><a href="/chronicle/">News</a></li>

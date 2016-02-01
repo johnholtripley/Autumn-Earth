@@ -340,4 +340,8 @@ text-shadow: $values;
 
 
 
-
+@mixin column-count($columns) {
+    -webkit-column-count: $columns;
+    -moz-column-count: $columns;
+    column-count: $columns;
+}
