@@ -42,7 +42,9 @@ font-size: 100%;
 
 }
 
-
+body {
+  scroll-behavior: smooth
+}
 
 // https://adactio.com/journal/10019
 a, button, input, select, textarea, label, summary {

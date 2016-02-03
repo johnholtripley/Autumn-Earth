@@ -15,7 +15,8 @@ http://socket.io/docs/rooms-and-namespaces/
 
 isANetworkGame = true;
 
-function startNetworkGame() {
+function startNetworkGame(whichPlayerStarts) {
+    console.log(whichPlayerStarts);
   // need to determine if this player goes first or the opponent - socket will send this through
   // currentPlayersTurn = whoGoesFirst;
         whoCanClick = currentPlayersTurn;
@@ -40,6 +41,10 @@ socket.on('connect', function() {
 // Add a connect listener
 socket.on('message', function(data) {
     console.log('Received a message from the server: ', data);
+});
+// Add a connect listener
+socket.on('start', function(data) {
+    startNetworkGame(data);
 });
 // Add a disconnect listener
 socket.on('disconnect', function() {

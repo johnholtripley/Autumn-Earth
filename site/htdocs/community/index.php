@@ -56,17 +56,26 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/social-apis.php");
 
 
 
+<?php
+for ($i=0;$i<count($allYouTubeVideos);$i++) {
+  ?>
 <div class="masonry-cell">
       <div class="masonry-panel">
-<div class="videoWrapper" style="padding-bottom: 60.88%;">
-  <video preload="auto" controls="controls" muted="muted" poster="/images/placeholder.jpg">
-    <source src="/videos/placeholder.mp4" type="video/mp4"></source>
-    <source src="/videos/placeholder.webm" type="video/webm"></source>
-    <source src="/videos/placeholder.ogv" type="video/ogg"></source>
-  </video>
-</div>
-     </div>
+          <div class="videoWrapper" style="padding-bottom: 60.88%;">
+          <?php
+echo '<iframe width="420" height="315" src="https://www.youtube.com/embed/'.$thisVideoId.'?rel=0&amp;controls=0&amp;showinfo=0" frameborder="0" allowfullscreen></iframe>';
+          ?>
+        </div>
+        </div>
       </div>
+
+  <?php
+}
+?>
+
+
+
+      
 
     <div class="masonry-cell masonry-cluster">
       <div class="masonry-cluster-cell masonry-cluster-group">

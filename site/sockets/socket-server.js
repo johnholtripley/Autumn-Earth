@@ -1,4 +1,17 @@
+
+// ----------------------
+// helpers:
+
+function getRandomInteger(min, max) {
+   return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+// ----------------------
+
+
+
 var fs = require('fs');
+
 
 var options = {
     key: fs.readFileSync('/home/autumnearth.com/ssl.key'),
@@ -25,6 +38,14 @@ socket.on('connection', function(client) {
     console.log(io.engine.clientsCount + " open connections");
     // count connections:
     var activeConnections = io.engine.clientsCount;
+
+
+
+
+// send the clients id to the client itself.
+//  socket.io.engine.id
+// http://stackoverflow.com/questions/6979992/how-to-get-session-id-of-socket-io-client-in-client
+
     switch (activeConnections) {
         case 1:
             // if 1 - send message to client saying "waiting for opponent"
@@ -33,6 +54,14 @@ socket.on('connection', function(client) {
         case 2:
             // if 2 - determine who goes first and send that to both clients
             socket.emit('message', 'flipping coin...');
+
+            whichPlayerStarts = getRandomInteger(1, 2);
+
+            // send to just this socket:
+            // socket.emit('start', 'player'+whichPlayerStarts);
+            // send the opposite value to the first connecting socket:
+            // ###
+            // https://gist.github.com/alexpchin/3f257d0bb813e2c8c476
             break;
         default:
             // if 3 or more tell client they are in Spectator Mode
