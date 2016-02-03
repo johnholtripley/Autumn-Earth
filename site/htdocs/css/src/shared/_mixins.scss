@@ -345,3 +345,23 @@ text-shadow: $values;
     -moz-column-count: $columns;
     column-count: $columns;
 }
+
+
+
+
+@mixin centredBlock($paddingFallback:15%) {
+    // has a fallback unlike the flex box method - useful for centring a paragraph vertically against a neighbouring image for example
+    padding-top: $paddingFallback;
+    @supports (transform: translateY(-50%)) {
+        padding-top: 0;
+        transform: translateY(-50%);
+        position: absolute;
+        top: 50%;
+    }
+    @media (-webkit-transform-3d), (transform-3d) {
+        padding-top: 0;
+        -webkit-transform: translateY(-50%);
+        position: absolute;
+        top: 50%;
+    }
+}

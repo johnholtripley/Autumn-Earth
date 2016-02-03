@@ -3,6 +3,7 @@
   width: (100%-$gutter);
   margin-left: ($gutter/2);
   margin-right: ($gutter/2);
+  position: relative;
 }
 
 .row .row {
@@ -165,4 +166,21 @@
 .equalHeights > .column > div {
     width: 100%;
 }
+
+
+
+// --------------------------------
+
+.verticallyCentre {
+    // this is applied to the parent of the elements to be centred
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    -ms-flex-align: center;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    align-items: center;
+}
+
+// also check the centredBlock mixin for better fallback support for individual blocks
 
