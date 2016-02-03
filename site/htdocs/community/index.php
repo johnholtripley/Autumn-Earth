@@ -31,6 +31,12 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/social-apis.php");
 
 
 <div class="row masonry">  
+
+
+<?php
+display_latest_tweets('autumnearth');
+?>
+  
     <div class="masonry-cell">
       <div class="masonry-panel">
         <h1>Here is a masonry layout.</h1>
