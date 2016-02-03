@@ -11,7 +11,8 @@ foreach($json['items'] as $item) {
 	if($item['id']['kind'] == 'youtube#video') {
 		// is a video
 		$thisVideoId = $item['id']['videoId'];
-		array_push($allYouTubeVideos, $thisVideoId);
+		$thisVideoPublishedAt = strtotime($item['snippet']['publishedAt']);
+		array_push($allYouTubeVideos, array($thisVideoId,$thisVideoPublishedAt));
 	}
 }
 ?>
@@ -86,21 +87,23 @@ foreach($json['items'] as $item) {
 	  return $connection;
 	}
 	
+$tweetsList = array();
+
 	// Function to display the latest tweets.
 	function display_latest_tweets(
 		
 		// Function parameters.
 		$twitter_user_id,
 		$cache_file          = '/includes/tweets.txt',  // Change this to the path of your cache file. (Default : ./tweets.txt)
-		$tweets_to_display   = 5,               // Number of tweets you would like to display. (Default : 5)
+		$tweets_to_display   = 10,               // Number of tweets you would like to display. (Default : 5)
 		$ignore_replies      = true,           // Ignore replies from the timeline. (Default : false)
 		$include_rts         = true,           // Include retweets. (Default : false)
 		$twitter_wrap_open   = '',
 		$twitter_wrap_close  = '',
-		$tweet_wrap_open     = '<div class="masonry-cell"><div class="masonry-panel">',
+		$tweet_wrap_open     = '<div class="tweet">',
 		$meta_wrap_open      = '<span class="tweetDate">',
 		$meta_wrap_close     = '</span>',
-		$tweet_wrap_close    = '</div></div>',
+		$tweet_wrap_close    = '</div>',
 		$date_format         = 'g:i A jS F',    // Date formatting. (http://php.net/manual/en/function.date.php)
 		$twitter_style_dates = true){           // Twitter style days. [about an hour ago] (Default : true)
 			
@@ -111,8 +114,9 @@ foreach($json['items'] as $item) {
 		$accesstokensecret   = "B9Jb6hvZgt5bzx05vd0H44PEkpVjsMM7qGZJIBsRxMDxV";
 		
 		// Seconds to cache feed (Default : 3 minutes).
-		$cachetime           = 60*3;
+		$cachetime           = 3*60;
 		
+		global $tweetsList;
 
 $cache_file = $_SERVER['DOCUMENT_ROOT'].$cache_file;
 
@@ -129,7 +133,11 @@ $cache_file = $_SERVER['DOCUMENT_ROOT'].$cache_file;
 	 	
 	 		
 			// Display tweets from the cache.
-			readfile($cache_file);		 
+			//readfile($cache_file);		 
+
+$jsonResults = file_get_contents($cache_file);
+$tweetsList = json_decode($jsonResults, true);
+
 		} else {
 		
 		// Cache file not found, or old. Authenticae app.
@@ -148,16 +156,16 @@ $cache_file = $_SERVER['DOCUMENT_ROOT'].$cache_file;
 					$tweet_count = 0;
  
 					// Start output buffering.
-					ob_start();
+				//	ob_start();
  
 					// Open the twitter wrapping element.
-					$twitter_html = $twitter_wrap_open;
+				//	$twitter_html = $twitter_wrap_open;
  
 
  
 					// Iterate over tweets.
 					foreach($get_tweets as $tweet) {
-						
+						$twitter_html = '';
 							$tweet_found = true;
 							$tweet_count++;
  							$tweet_desc = $tweet->text;
@@ -167,7 +175,7 @@ $cache_file = $_SERVER['DOCUMENT_ROOT'].$cache_file;
 							$tweet_desc = preg_replace("/[#]+([A-Za-z0-9-_]+)/", "<a href=\"http://twitter.com/search?q=%23\\1\" target=\"_blank\">\\0</a>", $tweet_desc );
  
 
-// JHR addition
+// me addition
  
  // replace t.co links with expanded URL
 // https://dev.twitter.com/overview/api/entities-in-twitter-objects#urls
@@ -216,12 +224,13 @@ $tweet_desc = str_replace($entities->urls[0]->url, $entities->urls[0]->expanded_
  
  
  $tweetOutput=html_entity_decode($tweet_desc);
+ /*
  $tweetOutput = str_replace("<img>", "&lt;img&gt;", $tweetOutput);
 $tweetOutput = str_replace("<canvas>", "&lt;canvas&gt;", $tweetOutput);
 $tweetOutput = str_replace("<picture>", "&lt;picture&gt;", $tweetOutput);
 $tweetOutput = str_replace("<td>", "&lt;td&gt;", $tweetOutput);
 $tweetOutput = str_replace("<tr>", "&lt;tr&gt;", $tweetOutput);
-
+*/
 
  
  
@@ -232,20 +241,23 @@ $tweetOutput = str_replace("<tr>", "&lt;tr&gt;", $tweetOutput);
 						if ($tweet_count >= $tweets_to_display){
 							break;
 						}
- 
+ array_push($tweetsList,array($twitter_html,$tweet_time));
+
 					}
  
 					// Close the twitter wrapping element.
-					$twitter_html .= $twitter_wrap_close;
-					echo $twitter_html;
+				//	$twitter_html .= $twitter_wrap_close;
+					
+
+					
  
 					// Generate a new cache file.
 					$file = fopen($cache_file, 'w');
  
 					// Save the contents of output buffer to the file, and flush the buffer. 
-					fwrite($file, ob_get_contents()); 
+					fwrite($file, json_encode($tweetsList)); 
 					fclose($file); 
-					ob_end_flush();
+					//ob_end_flush();
 					
 				}
 				

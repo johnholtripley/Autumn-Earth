@@ -10,6 +10,23 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/header.php");
 
 
 include($_SERVER['DOCUMENT_ROOT']."/includes/social-apis.php");
+display_latest_tweets('autumnearth');
+
+
+
+$socialContent = array();
+for ($i=0;$i<count($allYouTubeVideos);$i++) {
+  array_push($socialContent,array('<div class="videoWrapper"><iframe width="420" height="315" src="https://www.youtube.com/embed/'.$allYouTubeVideos[$i][0].'?rel=0&amp;controls=0&amp;showinfo=0" frameborder="0" allowfullscreen></iframe></div>',$allYouTubeVideos[$i][1]));
+}
+$socialContent = array_merge($socialContent, $tweetsList);
+
+// sort by date: 
+function sortByDate($a, $b) {
+    return $b[1] - $a[1];
+}
+
+usort($socialContent, 'sortByDate');
+
 
 ?>
 
@@ -20,21 +37,23 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/social-apis.php");
 
 
 
-
-
-
-
-
-
-
-
-
-
 <div class="row masonry">  
 
-
 <?php
-display_latest_tweets('autumnearth');
+
+for ($i=0;$i<count($socialContent);$i++) {
+?>
+<div class="masonry-cell">
+      <div class="masonry-panel">
+<?php
+echo $socialContent[$i][0];
+
+?>
+</div>
+</div>
+<?php
+}
+
 ?>
   
     <div class="masonry-cell">
@@ -62,22 +81,6 @@ display_latest_tweets('autumnearth');
 
 
 
-<?php
-for ($i=0;$i<count($allYouTubeVideos);$i++) {
-  ?>
-<div class="masonry-cell">
-      <div class="masonry-panel">
-          <div class="videoWrapper" style="padding-bottom: 60.88%;">
-          <?php
-echo '<iframe width="420" height="315" src="https://www.youtube.com/embed/'.$thisVideoId.'?rel=0&amp;controls=0&amp;showinfo=0" frameborder="0" allowfullscreen></iframe>';
-          ?>
-        </div>
-        </div>
-      </div>
-
-  <?php
-}
-?>
 
 
 
