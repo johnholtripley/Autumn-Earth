@@ -183,6 +183,13 @@ $tweetsList = json_decode($jsonResults, true);
  if(!empty($entities->urls[0]->expanded_url)) {
 $tweet_desc = str_replace($entities->urls[0]->url, $entities->urls[0]->expanded_url, $tweet_desc);
 }
+ if(!empty($entities->media[0]->media_url)) {
+ 	//$tweet_desc .= '<img src="'.$entities->media[0]->media_url_https.'">';
+
+$stringToReplace = '<a href="'.$entities->media[0]->url.'" target="_blank">'.$entities->media[0]->url.'</a>';
+ $tweet_desc = str_replace($stringToReplace, '<img src="'.$entities->media[0]->media_url_https.'">', $tweet_desc);
+
+ 	}
 
 // $tweet_desc = htmlentities($tweet_desc);
 
