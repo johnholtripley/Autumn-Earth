@@ -100,7 +100,7 @@ $tweetsList = array();
 		$include_rts         = true,           // Include retweets. (Default : false)
 		$twitter_wrap_open   = '',
 		$twitter_wrap_close  = '',
-		$tweet_wrap_open     = '<div class="tweet">',
+		$tweet_wrap_open     = '<div class="twitter">',
 		$meta_wrap_open      = '<span class="tweetDate">',
 		$meta_wrap_close     = '</span>',
 		$tweet_wrap_close    = '</div>',
@@ -187,7 +187,7 @@ $tweet_desc = str_replace($entities->urls[0]->url, $entities->urls[0]->expanded_
  	//$tweet_desc .= '<img src="'.$entities->media[0]->media_url_https.'">';
 
 $stringToReplace = '<a href="'.$entities->media[0]->url.'" target="_blank">'.$entities->media[0]->url.'</a>';
- $tweet_desc = str_replace($stringToReplace, '<img src="'.$entities->media[0]->media_url_https.'">', $tweet_desc);
+ $tweet_desc = str_replace($stringToReplace, '<img alt="Twitter image from '.$entities->media[0]->expanded_url.'" src="'.$entities->media[0]->media_url_https.'">', $tweet_desc);
 
  	}
 
