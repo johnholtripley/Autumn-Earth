@@ -21,7 +21,8 @@ var gulp = require('gulp'),
     php2html = require("gulp-php2html"),
      http = require('http'),
      mkdirp = require('mkdirp'),
-     del = require('del');
+     del = require('del'),
+     blc = require("broken-link-checker");
 
 
 // css:
@@ -122,6 +123,7 @@ gulp.task('removeUnusedCSS', ['createSitemap'], function() {
 
         link = link.replace('https://www.autumnearth.com/', 'http://ae.dev/');
         gutil.log(link);
+        htmlUrlChecker.enqueue(link);
         filesToUncss.push(link);
     })
     return gulp.src('htdocs/css/base.css')
@@ -373,9 +375,30 @@ gulp.task('tidyUpCritical', ['generateCritical'], function() {
     // for some reason, when the 'ignore' parameter is on, then the css isn't minified, so minify it now
 });
 
+
+
 // ------------------------------------------
 
+ var htmlUrlChecker = new blc.HtmlUrlChecker("http://www.autumnearth.com/card-game/", {
+    link: function(result){
+    //    console.log(result.html.index, result.broken, result.html.text, result.url.resolved);
+    if(result.broken) {
+        console.log("broken link: "+result.html.text+" - "+result.url.resolved);
+    }
 
+    },
+ //   junk: function(result){},
+ //   item: function(error, htmlUrl){},
+    end: function(){
+        console.log("ended broken link checks");
+    }
+});
+
+
+
+
+
+// ------------------------------------------
 
 
 // Watch
