@@ -1332,5 +1332,21 @@ function picture($source, $alt, $breakpoints) {
 
 
 
+function compress($string) {
+	// thanks http://stackoverflow.com/questions/5815755/how-to-minify-html-code#answer-18418406
+    // Remove html comments
+    $string = preg_replace('/<!--.*-->/', '', $string);
+
+    // Merge multiple spaces into one space
+    $string = preg_replace('/\s+/', ' ', $string);   
+
+    // Remove space between tags. Skip the following if
+    // you want as it will also remove the space 
+    // between <span>Hello</span> <span>World</span>.
+    return preg_replace('/>\s+</', '><', $string);      
+}
+
+
+
 
 ?>

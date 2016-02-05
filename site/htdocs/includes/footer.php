@@ -86,4 +86,5 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/google-analytics.php");
 </html>
 <?php
 mysql_close($connection);
+ob_end_flush();
 ?>

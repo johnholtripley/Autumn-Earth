@@ -1,6 +1,6 @@
 <?php
 
-
+ob_start('compress');
 
 if(isset($_GET["searchterms"])) {
 if(!(isset($_GET["searchcleaned"]))) {
