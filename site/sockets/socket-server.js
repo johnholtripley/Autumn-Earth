@@ -36,6 +36,18 @@ socket.on('connection', function(client) {
     socket.emit('message', 'welcome - you are connected');
     console.log("socket connect success - listening...");
     console.log(io.engine.clientsCount + " open connections");
+
+
+
+    console.log(client.id+" connection id");
+
+
+
+
+
+
+
+
     // count connections:
     var activeConnections = io.engine.clientsCount;
 
@@ -75,3 +87,8 @@ socket.on('connection', function(client) {
         console.log('player has disconnected');
     });
 });
+
+socket.on('error', function(reason) {
+    console.error('Unable to connect socket: ', reason);
+});
+
