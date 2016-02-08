@@ -383,6 +383,8 @@ gulp.task('tidyUpCritical', ['generateCritical'], function() {
     link: function(result){
     //    console.log(result.html.index, result.broken, result.html.text, result.url.resolved);
     if(result.broken) {
+
+        // #### need to show the page the link was on ##############################
         console.log("broken link: "+result.html.text+" - "+result.url.resolved);
     }
 
