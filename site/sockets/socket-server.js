@@ -12,6 +12,7 @@ function getRandomInteger(min, max) {
 
 var fs = require('fs');
 
+var express = require('express');
 
 var options = {
     key: fs.readFileSync('/home/autumnearth.com/ssl.key'),
@@ -19,20 +20,71 @@ var options = {
     ca: fs.readFileSync('/home/autumnearth.com/ssl.ca')
 };
 
-var app = require('https').createServer(options, handler),
-    io = require('socket.io').listen(app);
+var app = express();
 
-app.listen(8080);
+var server = require('https').createServer(options, app);
+    io = require('socket.io')(server);
 
-function handler(req, res) {
-    res.writeHead(200);
-    res.end("<h1>hello</h1>\n");
-    // is this needed? #########
-}
+app.use(express.static(__dirname));
 
-var socket = io.listen(app);
+server.listen(8080);
+
+
+
+
+io.on('connection', function(client) {  
+
+  // count connections:
+    var activeConnections = io.engine.clientsCount;
+
+    client.on('join', function(data) {
+        console.log('join: '+data);
+        // send message to the client that just connected:
+        client.emit('messages', 'Hello from server - you are 1 of '+activeConnections+' people connected with id #'+this.id);
+    });
+
+     client.on('messages', function(data) {
+        // send message to all sockets except the sender:
+           client.broadcast.emit('broad',data);
+    });
+
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+//var socket = io.listen(app);
 // Add a connect listener:
-socket.on('connection', function(client) {
+io.on('connection', function(client) {
     socket.emit('message', 'welcome - you are connected');
     console.log("socket connect success - listening...");
     console.log(io.engine.clientsCount + " open connections");
@@ -92,3 +144,4 @@ socket.on('error', function(reason) {
     console.error('Unable to connect socket: ', reason);
 });
 
+*/

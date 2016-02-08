@@ -33,27 +33,21 @@ function startNetworkGame(whichPlayerStarts) {
 
 var socket = io.connect('https://www.autumnearth.com:8080');
 
-console.log('Connected');
+
 // Add a connect listener
 socket.on('connect', function() {
-    console.log('Client has connected to the server!');
-});
-// Add a connect listener
-socket.on('message', function(data) {
-    console.log('Received a message from the server: ', data);
-});
-// Add a connect listener
-socket.on('start', function(data) {
-    startNetworkGame(data);
-});
-// Add a disconnect listener
-socket.on('disconnect', function() {
-    console.log('The client has disconnected!');
+    console.log('Client has connected to the server');
+    socket.emit('join','client has connected');
 });
 
-// Sends a message to the server via sockets
-function sendMessageToServer(message) {
-    socket.send(message);
-}
 
-sendMessageToServer("hi - connected in");
+socket.on('messages', function(data) {
+         alert('message: '+data);
+   });
+
+socket.on('broad', function(data) {
+         alert('broadcast: '+data);
+   });
+
+
+
