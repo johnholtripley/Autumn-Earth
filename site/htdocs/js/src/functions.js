@@ -46,6 +46,17 @@ function supportsCanvas() {
  return !!window.HTMLCanvasElement;
 }
 
+
+// check for flexbox support:
+var doc = document.body || document.documentElement;
+var style = doc.style;
+if (style.webkitFlexWrap == '' || style.msFlexWrap == '' || style.flexWrap == '') {
+    doc.className += " supports-flex";
+}
+
+
+
+
 /*
     if(supportsCanvas) {
 document.documentElement.className +=" canvas" ;
