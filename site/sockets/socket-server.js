@@ -58,7 +58,7 @@ server.listen(8080);
 io.on('connection', function(client) {
     // count connections:
     var activeConnections = io.engine.clientsCount;
-    var latestSessionId = ''
+    var latestSessionId = '';
     client.on('join', function(data) {
         // send message to the client that just connected:
         switch (activeConnections) {
