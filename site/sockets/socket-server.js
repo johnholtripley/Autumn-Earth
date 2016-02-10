@@ -35,20 +35,20 @@ app.use(session({
 
 // Access the session as req.session
 app.get('/', function(req, res, next) {
-    var sess = req.session;
+    var thisSession = req.session;
     // set cookie to exist for an hour:
-    var hour = 3600000
-    req.session.cookie.expires = new Date(Date.now() + hour);
-    if (sess.views) {
-        sess.views++
-            res.setHeader('Content-Type', 'text/html')
-        res.write('<p>views: ' + sess.views + '</p>')
-        res.write('<p>expires in: ' + (sess.cookie.maxAge / 1000) + 's</p>')
-        res.write('<p>id: ' + (sess.id) + '</p>')
-        res.end()
+    var hour = 3600000;
+    thisSession.cookie.expires = new Date(Date.now() + hour);
+    if (thisSession.views) {
+        thisSession.views++;
+            res.setHeader('Content-Type', 'text/html');
+        res.write('<p>views: ' + thisSession.views + '</p>');
+        res.write('<p>expires in: ' + (thisSession.cookie.maxAge / 1000) + 's</p>');
+        res.write('<p>id: ' + (thisSession.id) + '</p>');
+        res.end();
     } else {
-        sess.views = 1
-        res.end('welcome to the session demo. refresh!')
+        thisSession.views = 1;
+        res.end('welcome to the session demo. refresh!');
     }
 });
 
@@ -59,6 +59,8 @@ io.on('connection', function(client) {
     // count connections:
     var activeConnections = io.engine.clientsCount;
     var latestSessionId = '';
+
+
     client.on('join', function(data) {
         // send message to the client that just connected:
         switch (activeConnections) {

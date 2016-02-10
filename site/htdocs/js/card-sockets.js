@@ -38,6 +38,12 @@ var socket = io.connect('https://www.autumnearth.com:8080');
 socket.on('connect', function() {
     console.log('Client has connected to the server');
     socket.emit('join','client has connected');
+    // read cookie and send to socket server ##########################
+
+sessionCookie = readCookie('connect.sid');
+if(sessionCookie) {
+  console.log(sessionCookie);
+}
 });
 
 
