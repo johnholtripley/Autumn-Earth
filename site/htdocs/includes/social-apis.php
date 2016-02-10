@@ -275,5 +275,37 @@ $tweetOutput = str_replace("<tr>", "&lt;tr&gt;", $tweetOutput);
 	}
 	
 
-	
+
+
+
+// get tumblr images:
+	$tumblrConsumerKey = 'rg4UKpRb10qxlh7eP00CcqfJnYay9ndXC1dm7P1aQA5rqVIlkQ';
+//	$tumblrSecretKey = 'iKx5X4zZqjG8rPhM8vA3n05dTAt50JagZBcvHAc6SyKfrcpkNw';
+
+$tumblrRequest = 'https://api.tumblr.com/v2/blog/autumnearth.tumblr.com/posts/photo?api_key='.$tumblrConsumerKey;
+
+$tumblrJsonResults = file_get_contents($tumblrRequest);
+$tumblrJson = json_decode($tumblrJsonResults, true);
+$allTumblrImages = [];
+
+
+
+foreach($tumblrJson['response']['posts'] as $item) {
+	if($item['type'] == 'photo') {
+		// is a video
+
+
+		$thisImageUrl = $item['photos'][0]['original_size']['url'];
+		$altText = strip_tags($item['caption']);
+
+		$thisImageSource = '<div class="tumblr"><img src="'.$thisImageUrl.'" alt="'.$altText.'"></div>';
+
+		$thisImagePublishedAt = strtotime($item['date']);
+		array_push($allTumblrImages, array($thisImageSource,$thisImagePublishedAt));
+	}
+}
+
+
+
+
 ?>

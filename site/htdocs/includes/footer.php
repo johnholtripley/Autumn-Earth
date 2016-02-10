@@ -41,6 +41,7 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/search.php");
 	<li><a href="https://twitter.com/autumnearth/">Twitter</a></li>
 
 	<li><a href="https://www.youtube.com/c/autumnearth/">YouTube</a></li>
+	<li><a href="https:autumnearth.tumblr.com/">Tumblr</a></li>
 	<li>Facebook</li>
 </ul>
 

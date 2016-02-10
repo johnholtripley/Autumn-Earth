@@ -19,6 +19,9 @@ for ($i=0;$i<count($allYouTubeVideos);$i++) {
   array_push($socialContent,array('<div class="videoWrapper youtube"><iframe width="420" height="315" src="https://www.youtube.com/embed/'.$allYouTubeVideos[$i][0].'?rel=0&amp;showinfo=0&amp;modestbranding=1" frameborder="0" allowfullscreen></iframe></div>',$allYouTubeVideos[$i][1]));
 }
 $socialContent = array_merge($socialContent, $tweetsList);
+$socialContent = array_merge($socialContent, $allTumblrImages);
+
+
 
 
 // get latest news:
