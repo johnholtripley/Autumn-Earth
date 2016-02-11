@@ -380,21 +380,20 @@ gulp.task('tidyUpCritical', ['generateCritical'], function() {
 // ------------------------------------------
 
  var htmlUrlChecker = new blc.HtmlUrlChecker("http://www.autumnearth.com/card-game/", {
-    link: function(result){
-    //    console.log(result.html.index, result.broken, result.html.text, result.url.resolved);
-    if(result.broken) {
+     link: function(result) {
+         //    console.log(result.html.index, result.broken, result.html.text, result.url.resolved);
+         if (result.broken) {
+             console.log('broken link on ' + result.base.original + ': <a href="' + result.url.resolved + '">' + result.html.text + '</a>');
+         }
 
-        // #### need to show the page the link was on ##############################
-        console.log("broken link: "+result.html.text+" - "+result.url.resolved);
-    }
+     },
+     //   junk: function(result){},
+     //   item: function(error, htmlUrl){},
+     end: function() {
+         console.log("ended broken link checks");
+     }
+ });
 
-    },
- //   junk: function(result){},
- //   item: function(error, htmlUrl){},
-    end: function(){
-        console.log("ended broken link checks");
-    }
-});
 
 
 
