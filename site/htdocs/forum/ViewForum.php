@@ -71,11 +71,11 @@ if (is_numeric($forumID)) {
 	
 	
 	// show breadcrumb:
-	echo '<div id="BreadCrumb"><a href="index.php" title="Forum Lists">Forum</a> &gt; '.stripslashes($title).'</div>';
+	echo '<div id="BreadCrumb"><a href="/forum/" title="Forum Lists">Forum</a> &gt; '.stripslashes($title).'</div>';
 		
 			// if the forum is live:
 			echo '<h1>' . stripslashes($title) . '</h1>'."\n";
-			echo '<img src="' . $imagePath . '" width="24" height="24" class="forumIcon" alt="" />'."\n"; 
+		//	echo '<img src="' . $imagePath . '" width="24" height="24" class="forumIcon" alt="" />'."\n"; 
 			
 			
 			//
@@ -84,7 +84,7 @@ if (is_numeric($forumID)) {
 	
 	if ($status > 1) {
 	// can have new threads:
-	echo '<br /><p><a href="CreateThread.php?forum=' . $forumID . '" title="Create a new thread">Create a new thread</a></p>'."\n";
+	echo '<br /><p><a href="/forum/CreateThread.php?forum=' . $forumID . '" title="Create a new thread">Create a new thread</a></p>'."\n";
 	}
 	
 	$query = "SELECT tblThreads.*, tblacct.accountName AS userName
@@ -152,7 +152,7 @@ $CreationTime = strtotime($CreationTime);
 			echo 'viewed ' . $viewCount . ' times.';
 			echo ' Replies: '.($postcount-1);
 			$latestpage = ceil($postcount/$resultsperpage);
-			echo ' <a href="ViewThread.php?thread=' . $threadID . '&amp;page='.$latestpage.'#post'.$latestPostID.'" title="click to view the latest post in this thread">view latest post</a>';
+			echo ' <a href="/forum/ViewThread.php?thread=' . $threadID . '&amp;page='.$latestpage.'#post'.$latestPostID.'" title="click to view the latest post in this thread">view latest post</a>';
 			
 			echo '</p>';
 			

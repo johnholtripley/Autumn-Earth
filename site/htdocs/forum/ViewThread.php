@@ -127,7 +127,7 @@ WHERE tblposts.ThreadID = " . $threadID . " ORDER BY tblposts.Sticky DESC, tblpo
 			// only display headers on the first row
 			
 			echo '<h1>' . stripslashes($forumTitle) . '</h1>'."\n";
-			echo '<img src="' . stripslashes($imagePath) . '" width="24" height="24" alt="" />'."\n"; 
+		//	echo '<img src="' . stripslashes($imagePath) . '" width="24" height="24" alt="" />'."\n"; 
 			echo '<h2>' . stripCode(stripslashes($threadTitle)) . '</h2>'."\n";
 			
 			echo '<hr />'."\n";
@@ -152,7 +152,7 @@ WHERE tblposts.ThreadID = " . $threadID . " ORDER BY tblposts.Sticky DESC, tblpo
 				echo '<em>'.parseCode(stripslashes($acctsignature)).'</em>';
 				if (strtolower($acctusername) == strtolower($_SESSION['username'])) {
 				// add edit link
-				echo '<br /><a href="EditPost.php?post='.$postID.'&amp;page='.$pageNumber.'" title="Edit post">edit post</a>'."\n";
+				echo '<br /><a href="/forum/EditPost.php?post='.$postID.'&amp;page='.$pageNumber.'" title="Edit post">edit post</a>'."\n";
 				}
 				if ($edited != "0000-00-00 00:00:00") {
 					// add edited time:
@@ -160,7 +160,7 @@ WHERE tblposts.ThreadID = " . $threadID . " ORDER BY tblposts.Sticky DESC, tblpo
 					echo '<br />edited on '.date('jS F Y',$edited) .' at '.  date('G:i',$edited).'<br />'."\n";
 				}
 				
-				echo '<br /><a href="CreatePost.php?thread=' . $threadID . '&amp;quote='.$postID.'" title="quote this post">Quote</a> | <a href="#" title="Report this post">Report this post</a>';
+				echo '<br /><a href="/forum/CreatePost.php?thread=' . $threadID . '&amp;quote='.$postID.'" title="quote this post">Quote</a> | <a href="#" title="Report this post">Report this post</a>';
 				
 				echo '<hr />'."\n";
 	
@@ -215,12 +215,12 @@ WHERE tblposts.ThreadID = " . $threadID . " ORDER BY tblposts.Sticky DESC, tblpo
 	} else {
 
 		echo '<p>There are no posts to view in this thread</p>';
-		echo '<a href="http://www.autumnearth.com" title="Click to return to the homepage">Return to the homepage</a>'."\n";
+		echo '<a href="/" title="Click to return to the homepage">Return to the homepage</a>'."\n";
 	}
 	
 	
 if (($threadstatus > 1) || ($_SESSION['isadmin']) || ($_SESSION['ismod'])) {
-		echo '<a href="CreatePost.php?thread=' . $threadID . '" title="post a reply">post reply</a>'."\n";
+		echo '<a href="/forum/CreatePost.php?thread=' . $threadID . '" title="post a reply">post reply</a>'."\n";
 		
 		}
 		

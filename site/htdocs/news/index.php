@@ -35,6 +35,11 @@ $articleId = $_GET["article"];
 }
 // check that a valid number has been passed:
 
+
+if (!(isset($articleId))) {
+	$articleId = 'default';
+}
+
 if (!(is_numeric($articleId))) {
 // get the most recent news article and display that instead:
 $query = "select newsID, status, timeAdded from tblNews WHERE status='1' order by timeAdded DESC limit 1";

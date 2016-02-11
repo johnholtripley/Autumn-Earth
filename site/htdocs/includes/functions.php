@@ -219,7 +219,7 @@ function parseCode( $toparse ) {
 	$replaceTags = array( '<strong>', '<em>', '<span class="Underline">', '<del>', '<span class="Header">', '</strong>', '</em>', '</span>', '</del>', '</span>', '</a>', '</p></blockquote><p>' );
 	// for smilies:
 	$validSmilieCode = array( ':)', ':(' );
-	$SmilieReplace = array( '<img src="/assets/forum/smilie_grin.gif" width="20" height="20" alt="Happy Smilie" />', '<img src="/assets/forum/smilie_sad.gif" width="20" height="20" alt="Sad Smilie">' );
+	$SmilieReplace = array( '<img src="/images/forum/happy-face.gif" width="20" height="20" alt="Happy Smilie" />', '<img src="/images/forum/sad-face.gif" width="20" height="20" alt="Sad Smilie">' );
 
 
 	for ( $i = 0; $i<count( $validTags ); $i++ ) {

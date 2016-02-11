@@ -25,7 +25,7 @@ while ($row = mysql_fetch_array($result)) {
 	if ($status > 0) {
 		// if the forum is live:
 		echo '<h2>' . stripslashes($title) . '</h2>'."\n";
-		echo '<img src="' . $imagePath . '" width="24" height="24" class="forumIcon" alt="" />'."\n"; 
+//		echo '<img src="' . $imagePath . '" width="24" height="24" class="forumIcon" alt="" />'."\n"; 
 		echo '<p>' . stripslashes($description);
 		echo '<br />'."\n";
 		echo '<a href="/forum/'. $cleanURL .'/" title="click to view the ' . $title . ' forum">click to view forum...</a>'."\n";

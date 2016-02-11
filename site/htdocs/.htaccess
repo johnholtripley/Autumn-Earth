@@ -345,6 +345,7 @@ AddDefaultCharset utf-8
 RewriteRule    ^community/([A-Za-z0-9-]+)/([A-Za-z0-9-]+)/?$    community/guilds/viewpage.php?cleaned=1&guild=$1&page=$2    [NC,L]  
 RewriteRule    ^chronicle/archive/?$     news/archive.php      [NC,L]
 RewriteRule    ^chronicle/([A-Za-z0-9-]+)/?$     news/index.php?cleaned=1&articleName=$1 [NC,L]
+RewriteRule    ^chronicle/?$     news/archive.php [NC,L]
 RewriteRule    ^events/([A-Za-z0-9-]+)/?$     events/index.php?cleaned=1&eventName=$1 [NC,L]
 RewriteRule    ^forum/([A-Za-z0-9-]+)/?$     forum/viewforum.php?cleaned=1&forum=$1 [NC,L]
 RewriteRule    ^forum/([A-Za-z0-9-]+)/([A-Za-z0-9-]+)/([0-9]+)/?$     forum/viewthread.php?cleaned=1&forumName=$1&threadName=$2&pageNumber=$3 [NC,L]

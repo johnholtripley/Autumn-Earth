@@ -383,7 +383,7 @@ gulp.task('tidyUpCritical', ['generateCritical'], function() {
      link: function(result) {
          //    console.log(result.html.index, result.broken, result.html.text, result.url.resolved);
          if (result.broken) {
-             console.log('broken link on ' + result.base.original + ': <a href="' + result.url.resolved + '">' + result.html.text + '</a>');
+             console.log('broken link on ' + result.base.original + ' - ' + result.html.tag + ' - ' + result.html.text);
          }
 
      },
