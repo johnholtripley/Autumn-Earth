@@ -117,6 +117,14 @@
 
         // For HTML requests, try the network first, fall back to the cache, finally the offline page
         if (request.headers.get('Accept').indexOf('text/html') !== -1) {
+            // handle re-directs to work around the Chrome bug: https://adactio.com/journal/10204
+            request = new Request(url, {
+                method: 'GET',
+                headers: request.headers,
+                mode: request.mode,
+                credentials: request.credentials,
+                redirect: request.redirect
+            });
             event.respondWith(
                 fetch(request)
                 .then(function(response) {
@@ -136,6 +144,7 @@
             );
             return;
         }
+
 
 
 
