@@ -1340,10 +1340,12 @@ function compress($string) {
     // Merge multiple spaces into one space
     $string = preg_replace('/\s+/', ' ', $string);   
 
-    // Remove space between tags. Skip the following if
-    // you want as it will also remove the space 
-    // between <span>Hello</span> <span>World</span>.
-    return preg_replace('/>\s+</', '><', $string);      
+    // Remove space between tags.
+    // altered to collapse to a single space:
+    return preg_replace('/>\s+</', '> <', $string); 
+
+
+
 }
 
 

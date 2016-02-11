@@ -32,7 +32,7 @@ if (mysql_num_rows($result) > 0) {
   while ($row = mysql_fetch_array($result)) {
     extract($row);
    
-    array_push($socialContent,array('<div class="chronicle"><a href="/chronicle/'.$cleanURL.'/"><h3>'.$newsTitle.'<h3><p>'.$newsSynopsis.'</p></a></div>',strtotime($timeAdded)));
+    array_push($socialContent,array('<div class="chronicle"><a href="/chronicle/'.$cleanURL.'/"><h3>'.$newsTitle.'</h3><p>'.$newsSynopsis.'</p></a></div>',strtotime($timeAdded)));
   }
 }
 
