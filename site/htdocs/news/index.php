@@ -42,11 +42,25 @@ if (!(isset($articleId))) {
 
 if (!(is_numeric($articleId))) {
 // get the most recent news article and display that instead:
-$query = "select newsID, status, timeAdded from tblNews WHERE status='1' order by timeAdded DESC limit 1";
-$result = mysql_query($query) or die ("couldn't execute query");
-$row = mysql_fetch_array($result);
-$articleId = $row["newsID"];
-} 
+	header("HTTP/1.0 404 Not Found");
+?>
+<h1>Whoops</h1>
+<p>Couldn't find that Chronicle entry</p>
+<h2>Recent entries:</h2>
+<?php
+
+$newsQuery = "select * from tblNews WHERE status='1' order by timeAdded DESC limit 4";
+$result = mysql_query($newsQuery) or die ("couldn't execute query");
+if (mysql_num_rows($result) > 0) {
+	echo '<div class="row medium-2up wide-4up equalHeights">';
+	while ($row = mysql_fetch_array($result)) {
+		extract($row);
+		echo '<div class="column"><a href="/chronicle/'.$cleanURL.'/">'.$newsTitle.'</a></div>';
+	}
+	echo '</div>';
+}
+
+} else {
 
 	
 	//
@@ -112,7 +126,7 @@ if (mysql_num_rows($result) > 0) {
 }
 
 
-
+}
 
 
 echo '<p><a href="/chronicle/archive/" title="The Chronicle Archive">The Chronicle Archives</a></p>';
