@@ -43,3 +43,16 @@ if ('serviceWorker' in navigator) {
     scope: '/'
   });
 }
+
+// accessible modal:
+(function () {
+      document.addEventListener('DOMContentLoaded', function () {
+        var modalEl = document.getElementById('my-accessible-modal');
+        var mainEl = document.getElementById('wrapper');
+        var modal = new window.Modal(modalEl, mainEl);
+
+        // To manually control the modal:
+        // modal.show()
+        // modal.hide()
+      });
+    }());

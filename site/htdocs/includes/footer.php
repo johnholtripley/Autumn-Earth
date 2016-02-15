@@ -23,6 +23,7 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/search.php");
 <li><a href="#">The World</a>
 <ul>
 	<li><a href="#">The Bestiary</a></li>
+	<li><a href="#">The Pantheon</a></li>
 </ul>
 </li>
 <li><a href="/contracts/CreateContract.php">Contracts</a></li>
