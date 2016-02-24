@@ -24,6 +24,8 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/search.php");
 <ul>
 	<li><a href="#">The Bestiary</a></li>
 	<li><a href="#">The Pantheon</a></li>
+	<li><a href="#">Atlas</a></li>
+	<li><a href="#">The Codex</a></li>
 </ul>
 </li>
 <li><a href="/contracts/CreateContract.php">Contracts</a></li>
