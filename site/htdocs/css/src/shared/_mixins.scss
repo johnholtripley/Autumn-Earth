@@ -181,50 +181,58 @@ transition: $values;
 }
 
 
-
+// mixins are better than @extends when Gzipped - http://csswizardry.com/2016/02/mixins-better-for-performance/
 @mixin border-box {
-//
-// @include border-box
-// http://www.sitepoint.com/sass-mixin-placeholder/
-//
--webkit-box-sizing:border-box;
--moz-box-sizing: border-box;
-box-sizing: border-box;
+    //
+    // @include border-box
+    // http://www.sitepoint.com/sass-mixin-placeholder/
+    //
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
 }
 
 @mixin visibleHide {
-  /* http://css-tricks.com/places-its-tempting-to-use-display-none-but-dont/ */
- position: absolute; 
-  overflow: hidden; 
-  clip: rect(0 0 0 0); 
-  height: 1px; width: 1px; 
-  margin: -1px; padding: 0; border: 0; 
+    /* http://css-tricks.com/places-its-tempting-to-use-display-none-but-dont/ */
+    position: absolute;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    width: 1px;
+    margin: -1px;
+    padding: 0;
+    border: 0;
 }
 
 @mixin clearfix {
-  /* Contain floats: h5bp.com/q */
-&:before, &:after { content: ""; display: block; }
-&:after { clear: both; }
- *zoom: 1; 
+    /* Contain floats: h5bp.com/q */
+    &:before,
+    &:after {
+        content: "";
+        display: block;
+    }
+    &:after {
+        clear: both;
+    }
+    *zoom: 1;
 }
 
 @mixin iconFont {
-      font-family: 'icomoon';
+    font-family: 'icomoon';
     speak: none;
     font-style: normal;
     font-weight: normal;
     font-variant: normal;
     text-transform: none;
     line-height: 1;
-
     /* Better Font Rendering =========== */
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-
     // enable ligatures (Chrome requires this at least)
--webkit-font-variant-ligatures: common-ligatures;
-font-variant-ligatures: common-ligatures;
+    -webkit-font-variant-ligatures: common-ligatures;
+    font-variant-ligatures: common-ligatures;
 }
+
 
 @mixin mq($firstBP, $firstMinMax:min, $secondBP:null, $secondMinMax:null) {
   // usage:
