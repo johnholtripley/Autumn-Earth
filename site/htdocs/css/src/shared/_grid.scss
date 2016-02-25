@@ -1,5 +1,5 @@
 .row {
-  @extend .clearfix;
+  @include clearfix;
   width: (100%-$gutter);
   margin-left: ($gutter/2);
   margin-right: ($gutter/2);

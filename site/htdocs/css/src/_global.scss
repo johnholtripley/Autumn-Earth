@@ -74,7 +74,7 @@ a {
 }
 
 .skip-links {
-    @extend .visibleHide;
+    @include visibleHide;
 }
 
 // responsive video:
@@ -153,21 +153,7 @@ a[href^="http"]:not([href*="autumnearth.com"]):after {
 }
 
 .icon {
-    font-family: 'icomoon';
-    speak: none;
-    font-style: normal;
-    font-weight: normal;
-    font-variant: normal;
-    text-transform: none;
-    line-height: 1;
-
-    /* Better Font Rendering =========== */
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-
-    // enable ligatures (Chrome requires this at least)
--webkit-font-variant-ligatures: common-ligatures;
-font-variant-ligatures: common-ligatures;
+@include iconFont;
 }
 
 #menuToggle {

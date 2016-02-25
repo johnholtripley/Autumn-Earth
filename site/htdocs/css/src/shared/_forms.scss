@@ -68,7 +68,7 @@ input:not(:focus):valid {
 /* Custom arrow - could be an image, SVG, icon font, etc. */
 
 &:after {
-     @extend .icon;
+    @include iconFont;
     background: none;
     color: #bbb;
     content: "\25BE";
@@ -187,7 +187,7 @@ div:not(#foo)>#pageContent input[type='checkbox']+label span {
 
 div:not(#foo)>#pageContent input[type='checkbox']+label span:before {
     content: '\2713';
-    @extend .icon;
+ @include iconFont;
     color: $titleColour;
     line-height: 1;
     text-align: center;

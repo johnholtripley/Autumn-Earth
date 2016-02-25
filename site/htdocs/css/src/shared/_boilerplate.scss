@@ -268,10 +268,10 @@ td { vertical-align: top; }
 
 
 
-/* Contain floats: h5bp.com/q */
-.clearfix:before, .clearfix:after { content: ""; display: block; }
-.clearfix:after { clear: both; }
-.clearfix{ *zoom: 1; }
+
+.clearfix {
+  @include clearfix;
+}
 
 .ir {    border: 0;
     clip: rect(0 0 0 0);
@@ -284,12 +284,7 @@ td { vertical-align: top; }
   }
 
 .visibleHide {
-/* http://css-tricks.com/places-its-tempting-to-use-display-none-but-dont/ */
- position: absolute; 
-  overflow: hidden; 
-  clip: rect(0 0 0 0); 
-  height: 1px; width: 1px; 
-  margin: -1px; padding: 0; border: 0; 
+  @include visibleHide;
 }
 
 
