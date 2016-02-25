@@ -1,73 +1,65 @@
 <?php
 function splitNodes() {
 	global $openNodes, $depthToStopAt, $branchingAngle, $lengthModifier, $plantCanvas;
-
-
-
 	$thisNode = array_shift($openNodes);
 	if($thisNode[2]<$depthToStopAt) {
 	// draw 2 lines either side of this node's normal
 	// add the end points to the node array
+		$newNodeStartX = $thisNode[0];
+		$newNodeStartY = $thisNode[1];
+		$newNodesLength = intval($thisNode[3]) * $lengthModifier;
 
+		$thisNodesAngle = intval($thisNode[4]) - $branchingAngle;
+		$newNodesEndX = $newNodeStartX - (sin(deg2rad($thisNodesAngle))*$newNodesLength);
+		$newNodesEndY = $newNodeStartX - (cos(deg2rad($thisNodesAngle))*$newNodesLength);
+		imageline($plantCanvas, $newNodeStartX, $newNodeStartY, $newNodesEndX, $newNodesEndY, IMG_COLOR_BRUSHED);
+		array_push($openNodes, array($newNodesEndX,$newNodesEndY,$thisNode[2]+1,$newNodesLength,$thisNodesAngle));
 
-$newNodeStartX = $thisNode[0];
-$newNodeStartY = $thisNode[1];
-$newNodesLength = intval($thisNode[3]) * $lengthModifier;
+		$thisNodesAngle = intval($thisNode[4]) + $branchingAngle;
+		$newNodesEndX = $newNodeStartX - (sin(deg2rad($thisNodesAngle))*$newNodesLength);
+		$newNodesEndY = $newNodeStartX - (cos(deg2rad($thisNodesAngle))*$newNodesLength);
+		imageline($plantCanvas, $newNodeStartX, $newNodeStartY, $newNodesEndX, $newNodesEndY, IMG_COLOR_BRUSHED);
+		array_push($openNodes, array($newNodesEndX,$newNodesEndY,$thisNode[2]+1,$newNodesLength,$thisNodesAngle));
 
-
-$thisNodesAngle = intval($thisNode[4]) - $branchingAngle;
-$newNodesEndX = $newNodeStartX - (sin(deg2rad($thisNodesAngle))*$newNodesLength);
-$newNodesEndY = $newNodeStartX - (cos(deg2rad($thisNodesAngle))*$newNodesLength);
-imageline($plantCanvas, $newNodeStartX, $newNodeStartY, $newNodesEndX, $newNodesEndY, IMG_COLOR_BRUSHED);
-array_push($openNodes, array($newNodesEndX,$newNodesEndY,$thisNode[2]+1,$newNodesLength,$thisNodesAngle));
-
-$thisNodesAngle = intval($thisNode[4]) + $branchingAngle;
-$newNodesEndX = $newNodeStartX - (sin(deg2rad($thisNodesAngle))*$newNodesLength);
-$newNodesEndY = $newNodeStartX - (cos(deg2rad($thisNodesAngle))*$newNodesLength);
-imageline($plantCanvas, $newNodeStartX, $newNodeStartY, $newNodesEndX, $newNodesEndY, IMG_COLOR_BRUSHED);
-array_push($openNodes, array($newNodesEndX,$newNodesEndY,$thisNode[2]+1,$newNodesLength,$thisNodesAngle));
-	
-splitNodes();
-
+		splitNodes();
 	}
 }
 
 function drawPlant() {
 	global $openNodes, $depthToStopAt, $branchingAngle, $plantCanvas, $lengthModifier;
-$canvaDimension = 600;
-$plantCanvas = imagecreatetruecolor($canvaDimension, $canvaDimension);
-$ground = imagecolorallocate($plantCanvas, 222, 213, 156);
-$walkableColour = imagecolorallocate($plantCanvas, 253, 243, 178);
-imagefilledrectangle($plantCanvas, 0, 0, $canvaDimension, $canvaDimension, $ground);
-$brush = imagecreate(2,2);
-$brushtrans = imagecolorallocate($brush, 0, 0, 0);
-imagecolortransparent($brush, $brushtrans);
-$colour = imagecolorallocate($brush, 96, 35, 14);
-imagefilledellipse($brush, 1, 1, 2, 2, $colour);
-imagesetbrush($plantCanvas, $brush);
+	$canvaDimension = 600;
+	$plantCanvas = imagecreatetruecolor($canvaDimension, $canvaDimension);
+	$ground = imagecolorallocate($plantCanvas, 222, 213, 156);
+	$walkableColour = imagecolorallocate($plantCanvas, 253, 243, 178);
+	imagefilledrectangle($plantCanvas, 0, 0, $canvaDimension, $canvaDimension, $ground);
+	$brush = imagecreate(2,2);
+	$brushtrans = imagecolorallocate($brush, 0, 0, 0);
+	imagecolortransparent($brush, $brushtrans);
+	$colour = imagecolorallocate($brush, 96, 35, 14);
+	imagefilledellipse($brush, 1, 1, 2, 2, $colour);
+	imagesetbrush($plantCanvas, $brush);
 
-$lengthModifier = 0.6;
+	$lengthModifier = 0.6;
 
-// draw initial line
-$startX = $canvaDimension/2;
-$startY = $canvaDimension;
-$endX = $startX;
-$endY = $startY * $lengthModifier;
+	// draw initial line
+	$startX = $canvaDimension/2;
+	$startY = $canvaDimension;
+	$endX = $startX;
+	$endY = $startY * $lengthModifier;
 
-imageline($plantCanvas, $startX, $startY, $endX, $endY, IMG_COLOR_BRUSHED);
-$currentDepth = 1;
-$currentLength = ($endY);
+	imageline($plantCanvas, $startX, $startY, $endX, $endY, IMG_COLOR_BRUSHED);
+	$currentDepth = 1;
+	$currentLength = ($endY);
 
-$currentAngle = 0;
-$branchingAngle = 45;
-$depthToStopAt = 6;
+	$currentAngle = 0;
+	$branchingAngle = 45;
+	$depthToStopAt = 6;
 
-$openNodes = array(array($endX,$endY,$currentDepth,$currentLength,$currentAngle));
-splitNodes();
+	$openNodes = array(array($endX,$endY,$currentDepth,$currentLength,$currentAngle));
+	splitNodes();
 
-// output:
-header('Content-Type: image/jpeg');
-imagejpeg($plantCanvas);
+	// output:
+	imagejpeg($plantCanvas,$_SERVER['DOCUMENT_ROOT'].'/images/botany-bot/output.jpg',95);
 }
 
 function findAndReplaceHashes($stringToCheck) {
@@ -94,19 +86,22 @@ function findAndReplaceHashes($stringToCheck) {
 	return $stringToCheck;	
 }
 
-drawPlant(); die();
+drawPlant(); 
 
 $jsonResults = file_get_contents($_SERVER['DOCUMENT_ROOT'].'/includes/botany-bot-description-grammar.json');
 $json = json_decode($jsonResults, true);
 
-echo"<code><pre>";
-var_dump($json);
-echo"</pre></code>";
+
 
 // pick a random item from the Origin to start from:
 $whichElem = rand(0,(count($json['origin'])-1));
 $startingText = $json['origin'][$whichElem];
 $startingText = findAndReplaceHashes($startingText);
 
-echo $startingText;
+echo '<h2>'.$startingText.'</h2>';
+echo '<img src="/images/botany-bot/output.jpg">';
+
+echo"<code><pre>";
+var_dump($json);
+echo"</pre></code>";
 ?>
