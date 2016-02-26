@@ -49,8 +49,8 @@ function drawPlant() {
 	$currentAngle = 0;
 
 	$depthToStopAt = 6;
-	$branchingAngle = 60;
-	$numberOfBranches = 5;
+	$branchingAngle = rand(30,80);
+	$numberOfBranches = rand(3,7);
 
 	if(isset($_GET["depth"])) {
 		$depthToStopAt = $_GET["depth"];
@@ -89,7 +89,7 @@ function findAndReplaceHashes($stringToCheck) {
 			}
 		}
 		// put it back together:
-		$stringToCheck = implode(" ", $hashSplit); 
+		$stringToCheck = implode("", $hashSplit); 
 	}
 	return $stringToCheck;	
 }
@@ -124,11 +124,8 @@ $whichElem = rand(0,(count($json['origin'])-1));
 $startingText = $json['origin'][$whichElem];
 $startingText = findAndReplaceHashes($startingText);
 
-echo '<h2>'.$startingText.'</h2>';
+echo '<p>'.$startingText.'</p>';
 $cacheBustURL = "/images/herbarium/output.jpg?".$depthToStopAt."-".$branchingAngle."-".$numberOfBranches;
 echo '<img src="'.$cacheBustURL.'" width="480" height="480" alt="Latin name">';
 
-echo"<code><pre>";
-var_dump($json);
-echo"</pre></code>";
 ?>

@@ -1,5 +1,9 @@
+
 {
-    "origin": ["this could be a tweet", "this is #|alternatives# tweet", "#|completely different#"],
-    "alternatives" : ["an example", "a different", "another", "a possible", "a generated", "your next"],
-    "completely different" : ["and now for something completely different", "so long and thanks for all the fish", "or, maybe, #|alternatives# badger"]
+    "origin": ["#|physical#, #|longevity#. Found in #|location##|extraLocations#. Medicinal properities: #|medicine#."],
+    "physical" : ["Upright", "Tap-rooted", "Hairless or slightly hairy"],
+    "longevity" : ["short-lived perennial", "long-lived biennial"],
+    "location" : ["open places, especially woodland clearings", "heaths and mountainsides", "lakesides", "wildness areas"],
+    "extraLocations" : ["", " and also waste ground"],
+    "medicine" : ["none", "a source of digitoxin", "a mild anaesthetic"]
 }
