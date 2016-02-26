@@ -11,13 +11,13 @@ function splitNodes() {
 
 		$thisNodesAngle = intval($thisNode[4]) - $branchingAngle;
 		$newNodesEndX = $newNodeStartX - (sin(deg2rad($thisNodesAngle))*$newNodesLength);
-		$newNodesEndY = $newNodeStartX - (cos(deg2rad($thisNodesAngle))*$newNodesLength);
+		$newNodesEndY = $newNodeStartY - (cos(deg2rad($thisNodesAngle))*$newNodesLength);
 		imageline($plantCanvas, $newNodeStartX, $newNodeStartY, $newNodesEndX, $newNodesEndY, IMG_COLOR_BRUSHED);
 		array_push($openNodes, array($newNodesEndX,$newNodesEndY,$thisNode[2]+1,$newNodesLength,$thisNodesAngle));
 
 		$thisNodesAngle = intval($thisNode[4]) + $branchingAngle;
 		$newNodesEndX = $newNodeStartX - (sin(deg2rad($thisNodesAngle))*$newNodesLength);
-		$newNodesEndY = $newNodeStartX - (cos(deg2rad($thisNodesAngle))*$newNodesLength);
+		$newNodesEndY = $newNodeStartY - (cos(deg2rad($thisNodesAngle))*$newNodesLength);
 		imageline($plantCanvas, $newNodeStartX, $newNodeStartY, $newNodesEndX, $newNodesEndY, IMG_COLOR_BRUSHED);
 		array_push($openNodes, array($newNodesEndX,$newNodesEndY,$thisNode[2]+1,$newNodesLength,$thisNodesAngle));
 
@@ -39,7 +39,7 @@ function drawPlant() {
 	imagefilledellipse($brush, 1, 1, 2, 2, $colour);
 	imagesetbrush($plantCanvas, $brush);
 
-	$lengthModifier = 0.6;
+	$lengthModifier = 0.5;
 
 	// draw initial line
 	$startX = $canvaDimension/2;
