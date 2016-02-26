@@ -106,11 +106,11 @@ $numberOfSyllablesAvailable = count($latinSyllables);
 $latinName = "";
 
 for($i=0;$i<=$syllablesInFirstWord;$i++) {
-	$latinName .= $latinSyllables[rand(0,$numberOfSyllablesAvailable)];
+	$latinName .= $latinSyllables[rand(0,$numberOfSyllablesAvailable-1)];
 }
 $latinName = ucfirst($latinName)." ";
 for($i=0;$i<=$syllablesInSecondWord;$i++) {
-	$latinName .= $latinSyllables[rand(0,$numberOfSyllablesAvailable)];
+	$latinName .= $latinSyllables[rand(0,$numberOfSyllablesAvailable-1)];
 }
 
 ?>
@@ -137,6 +137,24 @@ echo "<h1>".$latinName."</h1>";
 $jsonResults = file_get_contents($_SERVER['DOCUMENT_ROOT'].'/includes/herbarium/description-grammar.json');
 $json = json_decode($jsonResults, true);
 
+// create common names:
+$commonPrefixesFile = file($_SERVER['DOCUMENT_ROOT'].'/includes/herbarium/common-name-prefixes.txt');
+$commonSuffixesFile = file($_SERVER['DOCUMENT_ROOT'].'/includes/herbarium/common-name-suffixes.txt');
+$commonPrefixes = explode(", ",$commonPrefixesFile[0]);
+$commonSuffixes = explode(", ",$commonSuffixesFile[0]);
+
+$numberOfCommonNames = rand(1,3);
+$commonNames = array();
+
+for($i=0;$i<=$numberOfCommonNames;$i++) {
+$thisCommonName = $commonPrefixes[rand(0,count($commonPrefixes)-1)];
+$thisCommonName .= $commonSuffixes[rand(0,count($commonSuffixes)-1)];
+$thisCommonName = ucfirst($thisCommonName);
+array_push($commonNames,$thisCommonName);
+}
+
+echo "<h2>Common names: ".implode(", ",$commonNames)."</h2>";
+
 // pick a random item from the Origin to start from:
 $whichElem = rand(0,(count($json['origin'])-1));
 $startingText = $json['origin'][$whichElem];
@@ -144,7 +162,7 @@ $startingText = findAndReplaceHashes($startingText);
 
 echo '<p>'.$startingText.'</p>';
 $cacheBustURL = "/images/herbarium/output.jpg?".$depthToStopAt."-".$branchingAngle."-".$numberOfBranches;
-echo '<img src="'.$cacheBustURL.'" width="480" height="480" alt="Latin name">';
+echo '<img src="'.$cacheBustURL.'" width="480" height="480" alt="'.$latinName.'">';
 
 ?>
 </body>
