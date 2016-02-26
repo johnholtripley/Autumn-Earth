@@ -60,6 +60,12 @@ echo '</noscript>'."\n";
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="language" content="english">
 <link rel="dns-prefetch" href="//www.google-analytics.com">
+
+<link rel="preload" href="/fonts/merriweather_light-webfont.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/merriweather_light-webfont.woff" as="font" type="font/woff" crossorigin>
+<link rel="preload" href="/fonts/merriweather_light-webfont.ttf" as="font" type="font/ttf" crossorigin>
+<link rel="preload" href="/fonts/merriweather_light-webfont.svg" as="font" type="font/svg" crossorigin>
+
 <meta name="robots" content="noodp,noydir">
 
 <?php

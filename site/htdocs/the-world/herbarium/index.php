@@ -1,6 +1,6 @@
 <?php
 function splitNodes() {
-	global $openNodes, $depthToStopAt, $branchAngleIncrement, $lengthModifier, $plantCanvas, $numberOfBranches, $branchingAngle;
+	global $openNodes, $depthToStopAt, $lengthModifier, $plantCanvas, $numberOfBranches, $branchingAngle;
 	$thisNode = array_shift($openNodes);
 	if($thisNode[2]<$depthToStopAt) {
 		// draw 2 lines either side of this node's normal
@@ -21,7 +21,7 @@ function splitNodes() {
 }
 
 function drawPlant() {
-	global $openNodes, $depthToStopAt, $branchAngleIncrement, $plantCanvas, $lengthModifier, $numberOfBranches, $branchingAngle;
+	global $openNodes, $depthToStopAt, $plantCanvas, $lengthModifier, $numberOfBranches, $branchingAngle;
 	$canvaDimension = 600;
 	$plantCanvas = imagecreatetruecolor($canvaDimension, $canvaDimension);
 	$ground = imagecolorallocate($plantCanvas, 222, 213, 156);
@@ -49,15 +49,25 @@ function drawPlant() {
 	$currentAngle = 0;
 
 	$depthToStopAt = 6;
-		$branchingAngle = 60;
+	$branchingAngle = 60;
 	$numberOfBranches = 5;
-	$branchAngleIncrement = 40;
+
+	if(isset($_GET["depth"])) {
+		$depthToStopAt = $_GET["depth"];
+	}
+	if(isset($_GET["angle"])) {
+		$branchingAngle = $_GET["angle"];
+	}
+	if(isset($_GET["branches"])) {
+		$numberOfBranches = $_GET["branches"];
+	}
 
 	$openNodes = array(array($endX,$endY,$currentDepth,$currentLength,$currentAngle));
 	splitNodes();
 
 	// output:
 	imagejpeg($plantCanvas,$_SERVER['DOCUMENT_ROOT'].'/images/herbarium/output.jpg',95);
+	imagedestroy($plantCanvas);
 }
 
 function findAndReplaceHashes($stringToCheck) {
@@ -86,10 +96,28 @@ function findAndReplaceHashes($stringToCheck) {
 
 drawPlant(); 
 
-$jsonResults = file_get_contents($_SERVER['DOCUMENT_ROOT'].'/includes/botany-bot-description-grammar.json');
+// create latin name:
+$latinFile = file($_SERVER['DOCUMENT_ROOT'].'/includes/herbarium/latin-name-syllables.txt');
+$latinSyllables = explode(", ",$latinFile[0]);
+$syllablesInFirstWord = rand(3,6); 
+$syllablesInSecondWord = rand(3,6);
+$numberOfSyllablesAvailable = count($latinSyllables);
+
+$latinName = "";
+
+for($i=0;$i<=$syllablesInFirstWord;$i++) {
+	$latinName .= $latinSyllables[rand(0,$numberOfSyllablesAvailable)];
+}
+$latinName = ucfirst($latinName)." ";
+for($i=0;$i<=$syllablesInSecondWord;$i++) {
+	$latinName .= $latinSyllables[rand(0,$numberOfSyllablesAvailable)];
+}
+
+echo "<h1>".$latinName."</h1>";
+
+// create description:
+$jsonResults = file_get_contents($_SERVER['DOCUMENT_ROOT'].'/includes/herbarium/description-grammar.json');
 $json = json_decode($jsonResults, true);
-
-
 
 // pick a random item from the Origin to start from:
 $whichElem = rand(0,(count($json['origin'])-1));
@@ -97,7 +125,8 @@ $startingText = $json['origin'][$whichElem];
 $startingText = findAndReplaceHashes($startingText);
 
 echo '<h2>'.$startingText.'</h2>';
-echo '<img src="/images/herbarium/output.jpg">';
+$cacheBustURL = "/images/herbarium/output.jpg?".$depthToStopAt."-".$branchingAngle."-".$numberOfBranches;
+echo '<img src="'.$cacheBustURL.'" width="480" height="480" alt="Latin name">';
 
 echo"<code><pre>";
 var_dump($json);
