@@ -1,32 +1,27 @@
 <?php
 function splitNodes() {
-	global $openNodes, $depthToStopAt, $branchingAngle, $lengthModifier, $plantCanvas;
+	global $openNodes, $depthToStopAt, $branchAngleIncrement, $lengthModifier, $plantCanvas, $numberOfBranches, $branchingAngle;
 	$thisNode = array_shift($openNodes);
 	if($thisNode[2]<$depthToStopAt) {
-	// draw 2 lines either side of this node's normal
-	// add the end points to the node array
+		// draw 2 lines either side of this node's normal
+		// add the end points to the node array
 		$newNodeStartX = $thisNode[0];
 		$newNodeStartY = $thisNode[1];
 		$newNodesLength = intval($thisNode[3]) * $lengthModifier;
-
 		$thisNodesAngle = intval($thisNode[4]) - $branchingAngle;
-		$newNodesEndX = $newNodeStartX - (sin(deg2rad($thisNodesAngle))*$newNodesLength);
-		$newNodesEndY = $newNodeStartY - (cos(deg2rad($thisNodesAngle))*$newNodesLength);
-		imageline($plantCanvas, $newNodeStartX, $newNodeStartY, $newNodesEndX, $newNodesEndY, IMG_COLOR_BRUSHED);
-		array_push($openNodes, array($newNodesEndX,$newNodesEndY,$thisNode[2]+1,$newNodesLength,$thisNodesAngle));
-
-		$thisNodesAngle = intval($thisNode[4]) + $branchingAngle;
-		$newNodesEndX = $newNodeStartX - (sin(deg2rad($thisNodesAngle))*$newNodesLength);
-		$newNodesEndY = $newNodeStartY - (cos(deg2rad($thisNodesAngle))*$newNodesLength);
-		imageline($plantCanvas, $newNodeStartX, $newNodeStartY, $newNodesEndX, $newNodesEndY, IMG_COLOR_BRUSHED);
-		array_push($openNodes, array($newNodesEndX,$newNodesEndY,$thisNode[2]+1,$newNodesLength,$thisNodesAngle));
-
+		for($i=0;$i<$numberOfBranches;$i++) {
+			$newNodesEndX = $newNodeStartX - (sin(deg2rad($thisNodesAngle))*$newNodesLength);
+			$newNodesEndY = $newNodeStartY - (cos(deg2rad($thisNodesAngle))*$newNodesLength);
+			imageline($plantCanvas, $newNodeStartX, $newNodeStartY, $newNodesEndX, $newNodesEndY, IMG_COLOR_BRUSHED);
+			array_push($openNodes, array($newNodesEndX,$newNodesEndY,$thisNode[2]+1,$newNodesLength,$thisNodesAngle));
+			$thisNodesAngle += ($branchingAngle*2)/($numberOfBranches-1);
+		}
 		splitNodes();
 	}
 }
 
 function drawPlant() {
-	global $openNodes, $depthToStopAt, $branchingAngle, $plantCanvas, $lengthModifier;
+	global $openNodes, $depthToStopAt, $branchAngleIncrement, $plantCanvas, $lengthModifier, $numberOfBranches, $branchingAngle;
 	$canvaDimension = 600;
 	$plantCanvas = imagecreatetruecolor($canvaDimension, $canvaDimension);
 	$ground = imagecolorallocate($plantCanvas, 222, 213, 156);
@@ -52,8 +47,11 @@ function drawPlant() {
 	$currentLength = ($endY);
 
 	$currentAngle = 0;
-	$branchingAngle = 45;
+
 	$depthToStopAt = 6;
+		$branchingAngle = 60;
+	$numberOfBranches = 5;
+	$branchAngleIncrement = 40;
 
 	$openNodes = array(array($endX,$endY,$currentDepth,$currentLength,$currentAngle));
 	splitNodes();
