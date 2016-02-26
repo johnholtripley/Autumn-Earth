@@ -57,7 +57,7 @@ function drawPlant() {
 	splitNodes();
 
 	// output:
-	imagejpeg($plantCanvas,$_SERVER['DOCUMENT_ROOT'].'/images/botany-bot/output.jpg',95);
+	imagejpeg($plantCanvas,$_SERVER['DOCUMENT_ROOT'].'/images/herbarium/output.jpg',95);
 }
 
 function findAndReplaceHashes($stringToCheck) {
@@ -97,7 +97,7 @@ $startingText = $json['origin'][$whichElem];
 $startingText = findAndReplaceHashes($startingText);
 
 echo '<h2>'.$startingText.'</h2>';
-echo '<img src="/images/botany-bot/output.jpg">';
+echo '<img src="/images/herbarium/output.jpg">';
 
 echo"<code><pre>";
 var_dump($json);
