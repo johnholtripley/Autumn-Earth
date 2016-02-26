@@ -113,6 +113,24 @@ for($i=0;$i<=$syllablesInSecondWord;$i++) {
 	$latinName .= $latinSyllables[rand(0,$numberOfSyllablesAvailable)];
 }
 
+?>
+<!doctype html>
+<html lang="en-gb">
+<head>
+	<title>The Herbarium</title>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<style>
+	img {
+		max-width: 100%;
+		height: auto;
+	}
+	</style>
+</head>
+<body>
+<?php
+
 echo "<h1>".$latinName."</h1>";
 
 // create description:
@@ -129,3 +147,5 @@ $cacheBustURL = "/images/herbarium/output.jpg?".$depthToStopAt."-".$branchingAng
 echo '<img src="'.$cacheBustURL.'" width="480" height="480" alt="Latin name">';
 
 ?>
+</body>
+</html>
