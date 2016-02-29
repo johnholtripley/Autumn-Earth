@@ -101,26 +101,34 @@ $latinFile = file_get_contents($_SERVER['DOCUMENT_ROOT'].'/includes/herbarium/la
 $latinSyllables = unserialize($latinFile);
 $numberOfSyllablesAvailable = count($latinSyllables);
 
-// pick a random start syllable:
-$firstWord = array_rand($latinSyllables);
-
-$latinName = $firstWord;
 
 do {
+$syllableCount = 0;
+// pick a random start syllable:
+$firstWord = array_rand($latinSyllables);
+$latinName = $firstWord;
+do {
+	
 $nextSyllable = $latinSyllables[$firstWord][rand(0,count($latinSyllables[$firstWord])-1)];
 $latinName .= $nextSyllable;
 $firstWord = array_rand($latinSyllables);
+$syllableCount ++;
 } while ($nextSyllable != " ");
+} while (!(($syllableCount>=3) && ($syllableCount<=5)));
 
-
+do {
+$syllableCount = 0;
 $secondWord = array_rand($latinSyllables);
-$latinName .= $secondWord;
+$secondLatinName = $secondWord;
 
 do {
 $nextSyllable = $latinSyllables[$secondWord][rand(0,count($latinSyllables[$secondWord])-1)];
-$latinName .= $nextSyllable;
+$secondLatinName .= $nextSyllable;
 $secondWord = array_rand($latinSyllables);
+$syllableCount ++;
 } while ($nextSyllable != " ");
+} while (!(($syllableCount>=3) && ($syllableCount<=5)));
+$latinName .= $secondLatinName;
 $latinName = ucfirst($latinName);
 ?>
 <!doctype html>
