@@ -1,3 +1,3 @@
 <?php
-$commonSuffixes = array("root", "wort", "apple", "berry", "weed", "cap", "brier", "thorn", "leaf", "bush", "nettle", "needle", "gall", "fern", "bane", "foil", "nip", "nut", "rose", "plum", "tea", "thistle", "wood", "drop", "heart", "grass", "bell", "snare", "moss", "fern", "spray", "star", "whorl", "vine", "comb", "foil", "shade", "horn", "lance", "flax", "seed", "nettle", "frond", "arrow", "lantern", "briar", "down", "stem", "wrack");
+$commonSuffixes = array("root", "wort", "apple", "berry", "weed", "cap", "brier", "thorn", "leaf", "bush", "nettle", "needle", "gall", "fern", "bane", "foil", "nip", "nut", "rose", "plum", "tea", "thistle", "wood", "drop", "heart", "grass", "bell", "snare", "moss", "fern", "spray", "star", "whorl", "vine", "comb", "foil", "shade", "horn", "lance", "flax", "seed", "nettle", "frond", "arrow", "lantern", "briar", "down", "stem", "wrack"," shade");
 ?>

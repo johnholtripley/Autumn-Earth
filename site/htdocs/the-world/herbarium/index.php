@@ -94,25 +94,34 @@ function findAndReplaceHashes($stringToCheck) {
 	return $stringToCheck;	
 }
 
-drawPlant(); 
+//drawPlant(); 
 
 // create latin name:
-$latinFile = file($_SERVER['DOCUMENT_ROOT'].'/includes/herbarium/latin-name-syllables.txt');
-$latinSyllables = explode(", ",$latinFile[0]);
-$syllablesInFirstWord = rand(3,6); 
-$syllablesInSecondWord = rand(3,6);
+$latinFile = file_get_contents($_SERVER['DOCUMENT_ROOT'].'/includes/herbarium/latin-name-syllables.txt');
+$latinSyllables = unserialize($latinFile);
 $numberOfSyllablesAvailable = count($latinSyllables);
 
-$latinName = "";
+// pick a random start syllable:
+$firstWord = array_rand($latinSyllables);
 
-for($i=0;$i<=$syllablesInFirstWord;$i++) {
-	$latinName .= $latinSyllables[rand(0,$numberOfSyllablesAvailable-1)];
-}
-$latinName = ucfirst($latinName)." ";
-for($i=0;$i<=$syllablesInSecondWord;$i++) {
-	$latinName .= $latinSyllables[rand(0,$numberOfSyllablesAvailable-1)];
-}
+$latinName = $firstWord;
 
+do {
+$nextSyllable = $latinSyllables[$firstWord][rand(0,count($latinSyllables[$firstWord])-1)];
+$latinName .= $nextSyllable;
+$firstWord = array_rand($latinSyllables);
+} while ($nextSyllable != " ");
+
+
+$secondWord = array_rand($latinSyllables);
+$latinName .= $secondWord;
+
+do {
+$nextSyllable = $latinSyllables[$secondWord][rand(0,count($latinSyllables[$secondWord])-1)];
+$latinName .= $nextSyllable;
+$secondWord = array_rand($latinSyllables);
+} while ($nextSyllable != " ");
+$latinName = ucfirst($latinName);
 ?>
 <!doctype html>
 <html lang="en-gb">
