@@ -78,7 +78,7 @@
    * @param {Node} main - Main element of the page
    */
   var Modal = function (node, main) {
-    this.$main = main || document.querySelector('#main');
+    this.$main = main || document.querySelector('#wrapper');
     this.$node = node;
     this.$openers = $$('[data-modal-show="' + this.$node.id + '"]');
     this.$closers = $$('[data-modal-hide]', this.$node)
