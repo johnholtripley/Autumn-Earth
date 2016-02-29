@@ -163,7 +163,17 @@ $commonNames = array();
 
 for($i=0;$i<=$numberOfCommonNames;$i++) {
 $thisCommonName = $commonPrefixes[rand(0,count($commonPrefixes)-1)];
-$thisCommonName .= $commonSuffixes[rand(0,count($commonSuffixes)-1)];
+do {
+$thisSecondCommonName = $commonSuffixes[rand(0,count($commonSuffixes)-1)];
+// make sure the first and last words aren't identical:
+} while ($thisCommonName == $thisSecondCommonName);
+
+if (substr($thisCommonName, -1, 1) == substr($thisSecondCommonName, 0, 1)) {
+	// make sure the last character of the first word isn't the same as the first of the last word - so don't get dragonsstar - get dragonstar instead
+$thisCommonName = substr($thisCommonName, 0, -1);
+}
+
+$thisCommonName .= $thisSecondCommonName;
 $thisCommonName = ucfirst($thisCommonName);
 array_push($commonNames,$thisCommonName);
 }
