@@ -138,10 +138,8 @@ $jsonResults = file_get_contents($_SERVER['DOCUMENT_ROOT'].'/includes/herbarium/
 $json = json_decode($jsonResults, true);
 
 // create common names:
-$commonPrefixesFile = file($_SERVER['DOCUMENT_ROOT'].'/includes/herbarium/common-name-prefixes.txt');
-$commonSuffixesFile = file($_SERVER['DOCUMENT_ROOT'].'/includes/herbarium/common-name-suffixes.txt');
-$commonPrefixes = explode(", ",$commonPrefixesFile[0]);
-$commonSuffixes = explode(", ",$commonSuffixesFile[0]);
+include($_SERVER['DOCUMENT_ROOT']."/includes/herbarium/common-name-prefixes.php");
+include($_SERVER['DOCUMENT_ROOT']."/includes/herbarium/common-name-suffixes.php");
 
 $numberOfCommonNames = rand(1,3);
 $commonNames = array();
