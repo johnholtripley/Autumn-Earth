@@ -4404,9 +4404,9 @@ function loadinitialxmlmap(whichxmlmap) {
 	};
 	if (whichxmlmap < 0) {
 		// load random dungeon map - map has already been generated, so just load it directly
-		mapxml.load("http://www.autumnearth.com/data/chr" + charnumber + "/dungeon/" + cleanDungeonURL + "/" + whichxmlmap + ".xml?uniq=" + new Date().getTime());
+		mapxml.load("https://www.autumnearth.com/data/chr" + charnumber + "/dungeon/" + cleanDungeonURL + "/" + whichxmlmap + ".xml?uniq=" + new Date().getTime());
 	} else {
-		mapxml.load("http://www.autumnearth.com/data/chr" + charnumber + "/map" + whichxmlmap + ".xml?uniq=" + new Date().getTime());
+		mapxml.load("https://www.autumnearth.com/data/chr" + charnumber + "/map" + whichxmlmap + ".xml?uniq=" + new Date().getTime());
 	}
 }
 //
@@ -4446,9 +4446,9 @@ function loadxmlmap(whichxmlmap) {
 			// pass door details through:
 			connectingDoorString = "&connectingDoorX=" + DungeonExitDoorX + "&connectingDoorY=" + DungeonExitDoorY;
 		}
-		mapxml.load("http://www.autumnearth.com/generateDungeonMap.php?playerId=" + charnumber + "&originatingMapId=" + oldmap + connectingDoorString + "&requestedMap=" + whichxmlmap + "&dungeonName=" + cleanDungeonURL);
+		mapxml.load("https://www.autumnearth.com/generateDungeonMap.php?playerId=" + charnumber + "&originatingMapId=" + oldmap + connectingDoorString + "&requestedMap=" + whichxmlmap + "&dungeonName=" + cleanDungeonURL);
 	} else {
-		mapxml.load("http://www.autumnearth.com/data/chr" + charnumber + "/map" + whichxmlmap + ".xml?uniq=" + new Date().getTime());
+		mapxml.load("https://www.autumnearth.com/data/chr" + charnumber + "/map" + whichxmlmap + ".xml?uniq=" + new Date().getTime());
 	}
 }
 //
@@ -4473,9 +4473,9 @@ function loadTreasureXmlMap(whichxmlmap, targetXTile, targetYTile) {
 		var randomDungeonName = randomDungeons[(randomTreasureMapDetails[0])][0];
 		var cleanDungeonURL = randomDungeonName.split(" ").join("-").toLowerCase();
 		var dungeonMapRequired = randomTreasureMapDetails[1];
-		mapxml.load("http://www.autumnearth.com/generateDungeonMap.php?playerId=" + charnumber + "&originatingMapId=" + (dungeonMapRequired - 1) + "&requestedMap=" + dungeonMapRequired + "&dungeonName=" + cleanDungeonURL + "&isTreasureMap=true&treasureLocX=" + targetXTile + "&treasureLocY=" + targetYTile);
+		mapxml.load("https://www.autumnearth.com/generateDungeonMap.php?playerId=" + charnumber + "&originatingMapId=" + (dungeonMapRequired - 1) + "&requestedMap=" + dungeonMapRequired + "&dungeonName=" + cleanDungeonURL + "&isTreasureMap=true&treasureLocX=" + targetXTile + "&treasureLocY=" + targetYTile);
 	} else {
-		mapxml.load("http://www.autumnearth.com/data/chr" + charnumber + "/map" + whichxmlmap + ".xml?uniq=" + new Date().getTime());
+		mapxml.load("https://www.autumnearth.com/data/chr" + charnumber + "/map" + whichxmlmap + ".xml?uniq=" + new Date().getTime());
 	}
 }
 //
@@ -4585,7 +4585,7 @@ function savegame() {
 				//
 				savechanges.username = username;
 				//
-				savechanges.sendAndLoad("http://www.autumnearth.com/changes.php",checkchangessavedok);
+				savechanges.sendAndLoad("https://www.autumnearth.com/changes.php",checkchangessavedok);
 			}
 		}
 	};
@@ -4631,7 +4631,7 @@ function savegame() {
 	//remove final '/':
 	queststring = queststring.substr(0, queststring.length - 1);
 	saveobject.questsstatus = queststring;
-	saveobject.sendAndLoad("http://www.autumnearth.com/base.php",checksavedok);
+	saveobject.sendAndLoad("https://www.autumnearth.com/base.php",checksavedok);
 }
 function addtochanges(elementtoadd) {
 	// type 1 = npc change
@@ -11646,7 +11646,7 @@ function postImageData(imageBeingSent) {
 		for (var checkClip in hiddenMapScrollclip) {
 			hiddenMapScrollclip[checkClip].removeMovieClip();
 		}
-		postedImageData.sendAndLoad("http://www.autumnearth.com/createMapImage.php",postedImageDataReturn);
+		postedImageData.sendAndLoad("https://www.autumnearth.com/createMapImage.php",postedImageDataReturn);
 	}
 }
 //
@@ -11679,7 +11679,7 @@ function checkMapPopups() {
 			var thisMap = gamedisplay.treasureMapHolder["map" + currentTreasureMaps[i][0] + "_" + currentTreasureMaps[i][1] + "_" + currentTreasureMaps[i][2]];
 			thisMap._visible = false;
 			// don't loadmovie here - pass file path to new clip and let it handle preloading, then fade map in once loaded:
-			thisMap.treasureMapPath = "http://www.autumnearth.com/data/chr" + charnumber + "/map" + currentTreasureMaps[i][0] + "-" + currentTreasureMaps[i][1] + "-" + currentTreasureMaps[i][2] + ".jpg";
+			thisMap.treasureMapPath = "https://www.autumnearth.com/data/chr" + charnumber + "/map" + currentTreasureMaps[i][0] + "-" + currentTreasureMaps[i][1] + "-" + currentTreasureMaps[i][2] + ".jpg";
 			for (var j = 0; j < treasureMapsAvailable.length; j++) {
 				if (treasureMapsAvailable[j][0] == currentTreasureMaps[i][0]) {
 					thisMap.mapClue.clueText.text = treasureMapsAvailable[j][1];
@@ -11801,7 +11801,7 @@ function getPrizeFundAmount() {
 			currentLotteryAmount = this.prize;
 		}
 	};
-	checkLottery.sendAndLoad("http://www.autumnearth.com/getLotteryFund.php",lotteryResponse);
+	checkLottery.sendAndLoad("https://www.autumnearth.com/getLotteryFund.php",lotteryResponse);
 }
 //
 function submitLotteryNumbers() {
@@ -11838,7 +11838,7 @@ function submitLotteryNumbers() {
 			updatemoney();
 		}
 	};
-	checkLottery.sendAndLoad("http://www.autumnearth.com/checkLottery.php",lotteryCheckWin);
+	checkLottery.sendAndLoad("https://www.autumnearth.com/checkLottery.php",lotteryCheckWin);
 }
 //
 function getRepairCost(repairedItemType, repairedQuantity, repairedItemWear, repairedItemDurability) {
@@ -12012,7 +12012,7 @@ function playSong(thisInstrumentsId, thisSongsId, thisSongsTitle, thisInstrument
 		gamedisplay.musicalInstrument.songTitle.text = thisSongsTitle;
 		gamedisplay.musicalInstrument.invIcon.gotoAndStop(thisInstrument);
 		playNewSong = new Sound(gamedisplay.musicalInstrument.songPlayer);
-		playNewSong.loadSound("http://www.autumnearth.com/music/playSong.php?instrId=" + thisInstrumentsId + "&songId=" + thisSongsId,true);
+		playNewSong.loadSound("https://www.autumnearth.com/music/playSong.php?instrId=" + thisInstrumentsId + "&songId=" + thisSongsId,true);
 		// loop song:
 		playNewSong.onSoundComplete = function() {
 			playNewSong.start(0);
@@ -12226,7 +12226,7 @@ function checkForDoorsToDungeons() {
 					newDungeonMap.connectingDoorY = DungeonExitDoorY;
 				}
 				// newDungeonMap.forceMode = "nest";                                                                                                                                          
-				newDungeonMap.sendAndLoad("http://www.autumnearth.com/generateDungeonMap.php",newDungeonMapResponse,"GET");
+				newDungeonMap.sendAndLoad("https://www.autumnearth.com/generateDungeonMap.php",newDungeonMapResponse,"GET");
 				// only request the map once, even though there may be 3 door tiles to the next map:
 				break;
 			}
@@ -12284,7 +12284,7 @@ function loadCartographyMap() {
 
 	if (currentmapnumber < 0) {
 		// load random dungeon map:
-		gamedisplay.cartographyPanel.mapLoader.cartoMapPath = "http://www.autumnearth.com/generateCartographicMap.php?playerId=" + charnumber + "&dungeonName=" + cleanDungeonURL + "&requestedMap=" + currentmapnumber + "&uniq=" + new Date().getTime();
+		gamedisplay.cartographyPanel.mapLoader.cartoMapPath = "https://www.autumnearth.com/generateCartographicMap.php?playerId=" + charnumber + "&dungeonName=" + cleanDungeonURL + "&requestedMap=" + currentmapnumber + "&uniq=" + new Date().getTime();
 		gamedisplay.cartographyPanel.mapLoader.gotoAndPlay("loadMap");
 	}
 
@@ -12869,7 +12869,7 @@ function destroyTerrain(centreX, centreY, coreRadius, DropoffRadius, terrainType
 							if (currentmapnumber < 0) {
 								// load random dungeon map:
 								// it's working, but Flash is caching the graphic ##########
-								gamedisplay.cartographyPanel.mapLoader.cartoMapPath = "http://www.autumnearth.com/generateCartographicMap.php?playerId=" + charnumber + "&dungeonName=" + cleanDungeonURL + "&requestedMap=" + currentmapnumber + "&uniq=" + new Date().getTime();
+								gamedisplay.cartographyPanel.mapLoader.cartoMapPath = "https://www.autumnearth.com/generateCartographicMap.php?playerId=" + charnumber + "&dungeonName=" + cleanDungeonURL + "&requestedMap=" + currentmapnumber + "&uniq=" + new Date().getTime();
 
 								// this could be loaded in so it overlays rather than the initial fade in ########
 								copiedBitmap.dispose();
@@ -12878,12 +12878,12 @@ function destroyTerrain(centreX, centreY, coreRadius, DropoffRadius, terrainType
 						}
 					}
 				};
-				updateMiniMap.sendAndLoad("http://www.autumnearth.com/generateCartographicMap.php?playerId=" + charnumber + "&dungeonName=" + cleanDungeonURL + "&requestedMap=" + currentmapnumber + "&update=true",updateMiniMapResponse);
+				updateMiniMap.sendAndLoad("https://www.autumnearth.com/generateCartographicMap.php?playerId=" + charnumber + "&dungeonName=" + cleanDungeonURL + "&requestedMap=" + currentmapnumber + "&update=true",updateMiniMapResponse);
 			}
 			//
 		}
 	};
-	updateMap.sendAndLoad("http://www.autumnearth.com/updateMap.php",updateMapResponse);
+	updateMap.sendAndLoad("https://www.autumnearth.com/updateMap.php",updateMapResponse);
 
 
 	// TO DO:
@@ -13037,7 +13037,7 @@ function checkForNewCatalogues() {
 function getCatalogueDetails(catalogueItemDetails) {
 	var catalogueSend = new LoadVars();
 	var catalogueResponse = new LoadVars();
-	catalogueSend.sendAndLoad("http://www.autumnearth.com/generateCollectionQuest.php?requestingZone=" + catalogueItemDetails[10],catalogueResponse);
+	catalogueSend.sendAndLoad("https://www.autumnearth.com/generateCollectionQuest.php?requestingZone=" + catalogueItemDetails[10],catalogueResponse);
 	catalogueResponse.onLoad = function(success) {
 		if (success) {
 			if (this.catalogueListOK == "true") {
