@@ -94,7 +94,7 @@ function findAndReplaceHashes($stringToCheck) {
 	return $stringToCheck;	
 }
 
-//drawPlant(); 
+
 
 // create latin name:
 $latinFile = file_get_contents($_SERVER['DOCUMENT_ROOT'].'/includes/herbarium/latin-name-syllables.txt');
@@ -148,6 +148,8 @@ $latinName = ucfirst($latinName);
 <body>
 <?php
 
+drawPlant(); 
+
 echo "<h1>".$latinName."</h1>";
 
 // create description:
@@ -158,10 +160,13 @@ $json = json_decode($jsonResults, true);
 include($_SERVER['DOCUMENT_ROOT']."/includes/herbarium/common-name-prefixes.php");
 include($_SERVER['DOCUMENT_ROOT']."/includes/herbarium/common-name-suffixes.php");
 
-$numberOfCommonNames = rand(1,3);
+
+$commonNameDistribution = array(1,1,1,1,2,2,3);
+$numberOfCommonNames = $commonNameDistribution[rand(0,count($commonNameDistribution)-1)];
+
 $commonNames = array();
 
-for($i=0;$i<=$numberOfCommonNames;$i++) {
+for($i=0;$i<$numberOfCommonNames;$i++) {
 $thisCommonName = $commonPrefixes[rand(0,count($commonPrefixes)-1)];
 do {
 $thisSecondCommonName = $commonSuffixes[rand(0,count($commonSuffixes)-1)];
