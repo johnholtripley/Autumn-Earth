@@ -20,7 +20,7 @@ $result = $connection->post('statuses/update', $parameters);
 function makeSeed() {
 	// http://php.net/manual/en/function.srand.php
   list($usec, $sec) = explode(' ', microtime());
-  return (float) $sec + ((float) $usec * 100000);
+  return floor((float) $sec + ((float) $usec * 100000));
 }
 
 if(isset($_GET["seed"])) {
