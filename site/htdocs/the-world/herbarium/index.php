@@ -10,7 +10,7 @@ define("OAUTH_SECRET", "7f8t7rXScvWIk1AgXe20Z6AA9vRCaG7Vp2wJM964bZMEj");
 $connection = new TwitterOAuth(CONSUMER_KEY, CONSUMER_SECRET, OAUTH_TOKEN, OAUTH_SECRET);
 $media = $connection->upload('media/upload', ['media' => 'https://autumnearth.com/images/herbarium/output.jpg']);
 $parameters = [
-    'status' => $latinName.'('.implode(", ",$commonNames).')',
+    'status' => $latinName."\r\n".'('.implode(", ",$commonNames).')',
     'media_ids' => $media->media_id_string,
 ];
 $result = $connection->post('statuses/update', $parameters);
