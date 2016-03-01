@@ -26,6 +26,25 @@ function viewport() {
 }
 */
 
+
+/*
+function detectKonamiCode() {
+    // http://codepen.io/jacknumber/pen/BKBjvM
+    var user_keys = [],
+        konami = '38,38,40,40,37,39,37,39,66,65';
+    document.onkeydown = function(e) {
+        user_keys.push(e.keyCode)
+
+        if (user_keys.toString().indexOf(konami) >= 0) {
+            alert('KONAMI!');
+            user_keys = [];
+        }
+    }
+}
+*/
+
+
+
 function createCookie(name,value,days) {
   // http://www.quirksmode.org/js/cookies.html
   if (days) {
