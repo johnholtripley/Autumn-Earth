@@ -1,4 +1,22 @@
 <?php
+require_once $_SERVER['DOCUMENT_ROOT'].'/includes/third-party/twitterOAuth/twitteroauth-0.6.2/autoload.php';
+use Abraham\TwitterOAuth\TwitterOAuth;
+function sendToTwitter() {
+	global $latinName, $commonNames;
+define("CONSUMER_KEY", "tullZGE4wkZibDnr6aXKuFGQ0");
+define("CONSUMER_SECRET","y1S7rffnenpYRJtDQxSv8a5bq3QhAAafqJzEaCQq0nDtw3XtAS");
+define("OAUTH_TOKEN", "703148355749171202-mwDglZzCgERUC6u7DshkqyPrK7nSrkK");
+define("OAUTH_SECRET", "7f8t7rXScvWIk1AgXe20Z6AA9vRCaG7Vp2wJM964bZMEj");
+$connection = new TwitterOAuth(CONSUMER_KEY, CONSUMER_SECRET, OAUTH_TOKEN, OAUTH_SECRET);
+$media = $connection->upload('media/upload', ['media' => 'https://autumnearth.com/images/herbarium/output.jpg']);
+$parameters = [
+    'status' => $latinName.'('.implode(", ",$commonNames).')',
+    'media_ids' => $media->media_id_string,
+];
+$result = $connection->post('statuses/update', $parameters);
+}
+
+
 function splitNodes() {
 	global $openNodes, $depthToStopAt, $lengthModifier, $plantCanvas, $numberOfBranches, $branchingAngle;
 	$thisNode = array_shift($openNodes);
@@ -194,6 +212,8 @@ echo '<p>'.$startingText.'</p>';
 $cacheBustURL = "/images/herbarium/output.jpg?".$depthToStopAt."-".$branchingAngle."-".$numberOfBranches;
 echo '<img src="'.$cacheBustURL.'" width="480" height="480" alt="'.$latinName.'">';
 
+
+sendToTwitter();
 ?>
 </body>
 </html>
