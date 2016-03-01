@@ -17,6 +17,19 @@ $result = $connection->post('statuses/update', $parameters);
 }
 
 
+function makeSeed() {
+	// http://php.net/manual/en/function.srand.php
+  list($usec, $sec) = explode(' ', microtime());
+  return (float) $sec + ((float) $usec * 100000);
+}
+
+if(isset($_GET["seed"])) {
+	$storedSeed = $_GET["seed"];
+} else {
+	$storedSeed = makeSeed();
+}
+srand($storedSeed);
+
 function splitNodes() {
 	global $openNodes, $depthToStopAt, $lengthModifier, $plantCanvas, $numberOfBranches, $branchingAngle;
 	$thisNode = array_shift($openNodes);
@@ -212,6 +225,7 @@ echo '<p>'.$startingText.'</p>';
 $cacheBustURL = "/images/herbarium/output.jpg?".$depthToStopAt."-".$branchingAngle."-".$numberOfBranches;
 echo '<img src="'.$cacheBustURL.'" width="480" height="480" alt="'.$latinName.'">';
 
+echo '<p style="font-size:0.7em;">seed: '.$storedSeed.'</p>';
 
 sendToTwitter();
 ?>
