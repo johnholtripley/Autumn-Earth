@@ -47,12 +47,12 @@ if ('serviceWorker' in navigator) {
 // accessible modal:
 (function () {
       document.addEventListener('DOMContentLoaded', function () {
-        var modalEl = document.getElementById('my-accessible-modal');
+        var dialogEl = document.getElementById('my-accessible-dialog');
         var mainEl = document.getElementById('wrapper');
-        var modal = new window.Modal(modalEl, mainEl);
+        var dialog = new window.A11yDialog(dialogEl, mainEl);
 
-        // To manually control the modal:
-        // modal.show()
-        // modal.hide()
+        // To manually control the dialog:
+        // dialog.show()
+        // dialog.hide()
       });
     }());

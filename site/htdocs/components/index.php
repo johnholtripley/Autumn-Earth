@@ -124,7 +124,7 @@ picture('/images/placeholder.jpg', 'alt text', array(300,600,900));
 
 
 <div class="medium-6 wide-3 columns">
-<button data-modal-show="my-accessible-modal">view the modal window</button>
+<button data-a11y-dialog-show="my-accessible-dialog">open the dialog window</button>
 <hr>
 <ol>
   <li>Ordered list item 1</li>
@@ -252,17 +252,38 @@ picture('/images/placeholder.jpg', 'alt text', array(300,600,900));
 </div>
 
 
-  <div class="modal" aria-hidden="true" id="my-accessible-modal">
-      <div class="modal-overlay" tabindex="-1" data-modal-hide></div>
-      <div class="modal-content" aria-labelledby="modalTitle" aria-describedby="modalDescription" role="dialog">
-        <div role="document">
-          <p id="modalDescription" class="screen-reader-offscreen">Beginning of dialog window. It begins with a heading 1 called &quot;Registration Form&quot;. Escape will cancel and close the window. This form does not collect any actual information.</p>
-<h3>modal</h3>
 
-          <button data-modal-hide class="modal-close" title="Close registration form">&times;</button>
+
+
+
+
+
+
+
+
+
+
+    <div class="dialog" aria-hidden="true" id="my-accessible-dialog">
+      <div class="dialog-overlay" tabindex="-1" data-a11y-dialog-hide></div>
+      <div class="dialog-content" aria-labelledby="dialogTitle" aria-describedby="dialogDescription" role="dialog">
+        <div role="document">
+   <h3>modal</h3>
+          <button data-a11y-dialog-hide class="dialog-close" title="Close registration form">&times;</button>
         </div>
       </div>
     </div>
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 <script src="/js/core.js"></script>

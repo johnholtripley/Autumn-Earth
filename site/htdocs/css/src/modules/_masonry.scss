@@ -6,13 +6,13 @@
     -moz-column-gap: 0;
     column-gap: 0;
     @include mq($medium) {
-        @include column-count(2);
-    }
-    @include mq($wide) {
         @include column-count(3);
     }
-    @include mq($widest) {
+    @include mq($wide) {
         @include column-count(4);
+    }
+    @include mq($widest) {
+        @include column-count(5);
     }
     // design specific:
     max-width: none;

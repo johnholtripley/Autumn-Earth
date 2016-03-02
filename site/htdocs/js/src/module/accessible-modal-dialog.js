@@ -45,7 +45,7 @@
   var A11yDialog = function (node, main) {
     var namespace = 'data-a11y-dialog';
     var that = this;
-    main = main || document.querySelector('#wrapper');
+    main = main || document.querySelector('#main');
 
     this.shown = false;
     this.show = show;
