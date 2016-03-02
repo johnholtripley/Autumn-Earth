@@ -103,12 +103,12 @@ function drawSimpleRecursivePlant() {
 */
 
 function drawPlant() {
+	// thanks to http://www.kevs3d.co.uk/dev/lsystems/
 	global $iterations, $angle;
 	$canvaDimension = 600;
 	$plantCanvas = imagecreatetruecolor($canvaDimension, $canvaDimension);
 	$ground = imagecolorallocate($plantCanvas, 222, 213, 156);
 	imagefilledrectangle($plantCanvas, 0, 0, $canvaDimension, $canvaDimension, $ground);
-
 	/*
 	$brush = imagecreate(2,2);
 	$brushtrans = imagecolorallocate($brush, 0, 0, 0);
@@ -117,91 +117,75 @@ function drawPlant() {
 	imagefilledellipse($brush, 1, 1, 2, 2, $colour);
 	imagesetbrush($plantCanvas, $brush);
 	*/
-
-$penColour0 = imagecolorallocate($plantCanvas, 140, 80, 60);
-$penColour1 = imagecolorallocate($plantCanvas, 24, 180, 24);
-$penColour2 = imagecolorallocate($plantCanvas, 48, 220, 48);
-$penColour3 = imagecolorallocate($plantCanvas, 64, 255, 64);
-
-	//
-
-// generate command string:
+	$penColour0 = imagecolorallocate($plantCanvas, 140, 80, 60);
+	$penColour1 = imagecolorallocate($plantCanvas, 24, 180, 24);
+	$penColour2 = imagecolorallocate($plantCanvas, 48, 220, 48);
+	$penColour3 = imagecolorallocate($plantCanvas, 64, 255, 64);
+	// generate command string:
 	$iterations = 6;
 	$axiom = "X";
 	$rules = array("X"=>"C0F-[C2[X]+C3X]+C1F[C3+FX]-X","F"=>"FF");
 	$angle = 25;
 	$result="";
-for ($i=0;$i<$iterations;$i++) {
-	if($i==0) {
-		$thisAxiom = $axiom;
-	} else {
-		$thisAxiom = $result;
-	}
-	$result="";
-	// process each character of the axiom:
-	for ($j=0;$j<strlen($thisAxiom);$j++) {
-		$c = substr($thisAxiom,$j,1);
-			
-		if(array_key_exists($c,$rules)) {
-			$result.=$rules[$c];
+	for ($i=0;$i<$iterations;$i++) {
+		if($i==0) {
+			$thisAxiom = $axiom;
 		} else {
-			$result.=$c;
+			$thisAxiom = $result;
 		}
+		$result="";
+		// process each character of the axiom:
+		for ($j=0;$j<strlen($thisAxiom);$j++) {
+			$c = substr($thisAxiom,$j,1);
+			if(array_key_exists($c,$rules)) {
+				$result.=$rules[$c];
+			} else {
+				$result.=$c;
+			}
+		}
+	} 
 
-	}
-} 
-
-	//
-
-
-$commandString = $result;
-
-	
-
+	$commandString = $result;
 	$distance = 3;
 	$stack = array();
 	// start at grid 0,0 facing north with no colour index
 	$pos = array("x"=>$canvaDimension/2, "y"=>$canvaDimension, "heading"=>8, "colour"=>-1);
 	for ($i=0;$i<strlen($commandString);$i++) {
-		$c = substr($commandString,$i,1);
-	
+	$c = substr($commandString,$i,1);
 		switch ($c) {
-
-		case "C": 
-			// get colour index from next character
-		$pos["colour"] = substr($commandString,$i+1,1);
-		$i++;
-			break;
-		case "-": 
-			// anticlockwise
-			$pos["heading"] += $angle;
-			break;
-		case "+": 
-			// clockwise
-			$pos["heading"] -= $angle;
-			break;
-		case "[": 
-			// push
-		array_push($stack,array("x"=>$pos["x"], "y"=>$pos["y"], "heading"=>$pos["heading"], "colour"=>$pos["colour"]));
-			
-			break;
-		case "]": 
-			// pop
-			$pos = array_pop($stack);
-			break;
-		default: 
-			$lastX = $pos["x"];
-			$lastY = $pos["y"];
-
-			// move the turtle
-			$rad = deg2rad($pos["heading"]);
-			$pos["x"] -= $distance * sin($rad);
-			$pos["y"] -= $distance * cos($rad);
-			imageline($plantCanvas, $lastX, $lastY, $pos["x"], $pos["y"], ${'penColour'.$pos["colour"]});
-
+			case "C": 
+				// get colour index from next character
+				$pos["colour"] = substr($commandString,$i+1,1);
+				$i++;
+				break;
+			case "-": 
+				// anticlockwise
+				$pos["heading"] += $angle;
+				break;
+			case "+": 
+				// clockwise
+				$pos["heading"] -= $angle;
+				break;
+			case "[": 
+				// push
+				array_push($stack,array("x"=>$pos["x"], "y"=>$pos["y"], "heading"=>$pos["heading"], "colour"=>$pos["colour"]));
+				break;
+			case "]": 
+				// pop
+				$pos = array_pop($stack);
+				break;
+			default: 
+				// (F)
+				$lastX = $pos["x"];
+				$lastY = $pos["y"];
+				// move the turtle
+				$rad = deg2rad($pos["heading"]);
+				$pos["x"] -= $distance * sin($rad);
+				$pos["y"] -= $distance * cos($rad);
+				imageline($plantCanvas, $lastX, $lastY, $pos["x"], $pos["y"], ${'penColour'.$pos["colour"]});
 		}
 	}
-		// output:
+	// output:
 	imagejpeg($plantCanvas,$_SERVER['DOCUMENT_ROOT'].'/images/herbarium/output.jpg',95);
 	imagedestroy($plantCanvas);
 }
