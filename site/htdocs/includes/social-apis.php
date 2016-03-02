@@ -170,21 +170,37 @@ $tweetsList = json_decode($jsonResults, true);
 					// Iterate over tweets.
 					foreach($get_tweets as $tweet) {
 						$twitter_html = '';
+						$retweetScreenName = "";
 							$tweet_found = true;
 							$tweet_count++;
  							$tweet_desc = $tweet->text;
  							$tweetUrl = $tweet->id_str;
+
+// me addtion - check for retweets
+ 							 $entities = $tweet->entities;
+if(isset($tweet->retweeted_status)) {
+	$retweetScreenName = 'Retweeted <a href="https://twitter.com/'.$tweet->retweeted_status->user->screen_name.'">'.$tweet->retweeted_status->user->name .'</a>: ';
+	$tweet_desc = $tweet->retweeted_status->text;
+
+
+}
+
+// --------------
+
+
 							// Add hyperlink html tags to any urls, twitter ids or hashtags in the tweet.
 							$tweet_desc = preg_replace("/((http)+(s)?:\/\/[^<>\s]+)/i", "<a href=\"\\0\" target=\"_blank\">\\0</a>", $tweet_desc );
 							$tweet_desc = preg_replace("/[@]+([A-Za-z0-9-_]+)/", "<a href=\"http://twitter.com/\\1\" target=\"_blank\">\\0</a>", $tweet_desc );
 							$tweet_desc = preg_replace("/[#]+([A-Za-z0-9-_]+)/", "<a href=\"http://twitter.com/search?q=%23\\1\" target=\"_blank\">\\0</a>", $tweet_desc );
  
-
+if($retweetScreenName != '') {
+	$tweet_desc = $retweetScreenName . $tweet_desc;
+}
 // me addition
  
  // replace t.co links with expanded URL
 // https://dev.twitter.com/overview/api/entities-in-twitter-objects#urls
- $entities = $tweet->entities;
+
  if(!empty($entities->urls[0]->expanded_url)) {
 $tweet_desc = str_replace($entities->urls[0]->url, $entities->urls[0]->expanded_url, $tweet_desc);
 }
@@ -198,6 +214,9 @@ $stringToReplace = '<a href="'.$entities->media[0]->url.'" target="_blank">'.$en
 
 // $tweet_desc = htmlentities($tweet_desc);
 
+
+
+ 	
 
 
 // #####################
