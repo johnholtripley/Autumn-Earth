@@ -57,7 +57,6 @@ function drawSimpleRecursivePlant() {
 	$canvaDimension = 600;
 	$plantCanvas = imagecreatetruecolor($canvaDimension, $canvaDimension);
 	$ground = imagecolorallocate($plantCanvas, 222, 213, 156);
-	$walkableColour = imagecolorallocate($plantCanvas, 253, 243, 178);
 	imagefilledrectangle($plantCanvas, 0, 0, $canvaDimension, $canvaDimension, $ground);
 	$brush = imagecreate(2,2);
 	$brushtrans = imagecolorallocate($brush, 0, 0, 0);
@@ -108,22 +107,29 @@ function drawPlant() {
 	$canvaDimension = 600;
 	$plantCanvas = imagecreatetruecolor($canvaDimension, $canvaDimension);
 	$ground = imagecolorallocate($plantCanvas, 222, 213, 156);
-	$walkableColour = imagecolorallocate($plantCanvas, 253, 243, 178);
 	imagefilledrectangle($plantCanvas, 0, 0, $canvaDimension, $canvaDimension, $ground);
+
+	/*
 	$brush = imagecreate(2,2);
 	$brushtrans = imagecolorallocate($brush, 0, 0, 0);
 	imagecolortransparent($brush, $brushtrans);
 	$colour = imagecolorallocate($brush, 96, 35, 14);
 	imagefilledellipse($brush, 1, 1, 2, 2, $colour);
 	imagesetbrush($plantCanvas, $brush);
+	*/
+
+$penColour0 = imagecolorallocate($plantCanvas, 140, 80, 60);
+$penColour1 = imagecolorallocate($plantCanvas, 24, 180, 24);
+$penColour2 = imagecolorallocate($plantCanvas, 48, 220, 48);
+$penColour3 = imagecolorallocate($plantCanvas, 64, 255, 64);
+
 	//
 
 // generate command string:
 	$iterations = 6;
-	
 	$axiom = "X";
 	$rules = array("X"=>"C0F-[C2[X]+C3X]+C1F[C3+FX]-X","F"=>"FF");
-	
+	$angle = 25;
 	$result="";
 for ($i=0;$i<$iterations;$i++) {
 	if($i==0) {
@@ -150,7 +156,7 @@ for ($i=0;$i<$iterations;$i++) {
 
 $commandString = $result;
 
-	$angle = 25;
+	
 
 	$distance = 3;
 	$stack = array();
@@ -163,7 +169,7 @@ $commandString = $result;
 
 		case "C": 
 			// get colour index from next character
-			//   $pos["colour"] = (cmds.charAt(++i) - '0');
+		$pos["colour"] = substr($commandString,$i+1,1);
 		$i++;
 			break;
 		case "-": 
@@ -191,7 +197,7 @@ $commandString = $result;
 			$rad = deg2rad($pos["heading"]);
 			$pos["x"] -= $distance * sin($rad);
 			$pos["y"] -= $distance * cos($rad);
-			imageline($plantCanvas, $lastX, $lastY, $pos["x"], $pos["y"], IMG_COLOR_BRUSHED);
+			imageline($plantCanvas, $lastX, $lastY, $pos["x"], $pos["y"], ${'penColour'.$pos["colour"]});
 
 		}
 	}
