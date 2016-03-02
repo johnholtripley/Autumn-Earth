@@ -114,7 +114,7 @@ $tweetsList = array();
 		$accesstokensecret   = "B9Jb6hvZgt5bzx05vd0H44PEkpVjsMM7qGZJIBsRxMDxV";
 		
 		// Seconds to cache feed (Default : 3 minutes).
-		$cachetime           = 3;
+		$cachetime           = 3*60;
 		
 		global $tweetsList;
 
@@ -196,6 +196,7 @@ if(isset($tweet->retweeted_status)) {
 if($retweetScreenName != '') {
 	$tweet_desc = $retweetScreenName . $tweet_desc;
 }
+$tweet_desc = nl2br($tweet_desc);
 // me addition
  
  // replace t.co links with expanded URL
