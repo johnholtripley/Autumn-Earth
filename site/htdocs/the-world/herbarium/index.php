@@ -29,7 +29,7 @@ if(isset($_GET["seed"])) {
 	$storedSeed = makeSeed();
 }
 srand($storedSeed);
-
+/*
 function splitNodes() {
 	global $openNodes, $depthToStopAt, $lengthModifier, $plantCanvas, $numberOfBranches, $branchingAngle;
 	$thisNode = array_shift($openNodes);
@@ -51,7 +51,8 @@ function splitNodes() {
 	}
 }
 
-function drawPlant() {
+
+function drawSimpleRecursivePlant() {
 	global $openNodes, $depthToStopAt, $plantCanvas, $lengthModifier, $numberOfBranches, $branchingAngle;
 	$canvaDimension = 600;
 	$plantCanvas = imagecreatetruecolor($canvaDimension, $canvaDimension);
@@ -97,6 +98,72 @@ function drawPlant() {
 	splitNodes();
 
 	// output:
+	imagejpeg($plantCanvas,$_SERVER['DOCUMENT_ROOT'].'/images/herbarium/output.jpg',95);
+	imagedestroy($plantCanvas);
+}
+*/
+
+function drawPlant() {
+	global $iterations, $angle;
+	$canvaDimension = 600;
+	$plantCanvas = imagecreatetruecolor($canvaDimension, $canvaDimension);
+	$ground = imagecolorallocate($plantCanvas, 222, 213, 156);
+	$walkableColour = imagecolorallocate($plantCanvas, 253, 243, 178);
+	imagefilledrectangle($plantCanvas, 0, 0, $canvaDimension, $canvaDimension, $ground);
+	$brush = imagecreate(2,2);
+	$brushtrans = imagecolorallocate($brush, 0, 0, 0);
+	imagecolortransparent($brush, $brushtrans);
+	$colour = imagecolorallocate($brush, 96, 35, 14);
+	imagefilledellipse($brush, 1, 1, 2, 2, $colour);
+	imagesetbrush($plantCanvas, $brush);
+	//
+	$commandString = "C0FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF-[C2[C0FFFFFFFFFFFFFFFF-[C2[C0FFFFFFFF-[C2[C0FFFF-[C2[C0FF-[C2[C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C3C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C1FF[C3+FFC0F-[C2[X]+C3X]+C1F[C3+FX]-X]-C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C3C0FF-[C2[C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C3C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C1FF[C3+FFC0F-[C2[X]+C3X]+C1F[C3+FX]-X]-C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C1FFFF[C3+FFFFC0FF-[C2[C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C3C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C1FF[C3+FFC0F-[C2[X]+C3X]+C1F[C3+FX]-X]-C0F-[C2[X]+C3X]+C1F[C3+FX]-X]-C0FF-[C2[C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C3C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C1FF[C3+FFC0F-[C2[X]+C3X]+C1F[C3+FX]-X]-C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C3C0FFFF-[C2[C0FF-[C2[C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C3C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C1FF[C3+FFC0F-[C2[X]+C3X]+C1F[C3+FX]-X]-C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C3C0FF-[C2[C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C3C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C1FF[C3+FFC0F-[C2[X]+C3X]+C1F[C3+FX]-X]-C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C1FFFF[C3+FFFFC0FF-[C2[C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C3C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C1FF[C3+FFC0F-[C2[X]+C3X]+C1F[C3+FX]-X]-C0F-[C2[X]+C3X]+C1F[C3+FX]-X]-C0FF-[C2[C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C3C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C1FF[C3+FFC0F-[C2[X]+C3X]+C1F[C3+FX]-X]-C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C1FFFFFFFF[C3+FFFFFFFFC0FFFF-[C2[C0FF-[C2[C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C3C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C1FF[C3+FFC0F-[C2[X]+C3X]+C1F[C3+FX]-X]-C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C3C0FF-[C2[C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C3C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C1FF[C3+FFC0F-[C2[X]+C3X]+C1F[C3+FX]-X]-C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C1FFFF[C3+FFFFC0FF-[C2[C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C3C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C1FF[C3+FFC0F-[C2[X]+C3X]+C1F[C3+FX]-X]-C0F-[C2[X]+C3X]+C1F[C3+FX]-X]-C0FF-[C2[C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C3C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C1FF[C3+FFC0F-[C2[X]+C3X]+C1F[C3+FX]-X]-C0F-[C2[X]+C3X]+C1F[C3+FX]-X]-C0FFFF-[C2[C0FF-[C2[C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C3C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C1FF[C3+FFC0F-[C2[X]+C3X]+C1F[C3+FX]-X]-C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C3C0FF-[C2[C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C3C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C1FF[C3+FFC0F-[C2[X]+C3X]+C1F[C3+FX]-X]-C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C1FFFF[C3+FFFFC0FF-[C2[C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C3C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C1FF[C3+FFC0F-[C2[X]+C3X]+C1F[C3+FX]-X]-C0F-[C2[X]+C3X]+C1F[C3+FX]-X]-C0FF-[C2[C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C3C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C1FF[C3+FFC0F-[C2[X]+C3X]+C1F[C3+FX]-X]-C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C3C0FFFFFFFF-[C2[C0FFFF-[C2[C0FF-[C2[C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C3C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C1FF[C3+FFC0F-[C2[X]+C3X]+C1F[C3+FX]-X]-C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C3C0FF-[C2[C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C3C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C1FF[C3+FFC0F-[C2[X]+C3X]+C1F[C3+FX]-X]-C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C1FFFF[C3+FFFFC0FF-[C2[C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C3C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C1FF[C3+FFC0F-[C2[X]+C3X]+C1F[C3+FX]-X]-C0F-[C2[X]+C3X]+C1F[C3+FX]-X]-C0FF-[C2[C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C3C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C1FF[C3+FFC0F-[C2[X]+C3X]+C1F[C3+FX]-X]-C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C3C0FFFF-[C2[C0FF-[C2[C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C3C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C1FF[C3+FFC0F-[C2[X]+C3X]+C1F[C3+FX]-X]-C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C3C0FF-[C2[C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C3C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C1FF[C3+FFC0F-[C2[X]+C3X]+C1F[C3+FX]-X]-C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C1FFFF[C3+FFFFC0FF-[C2[C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C3C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C1FF[C3+FFC0F-[C2[X]+C3X]+C1F[C3+FX]-X]-C0F-[C2[X]+C3X]+C1F[C3+FX]-X]-C0FF-[C2[C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C3C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C1FF[C3+FFC0F-[C2[X]+C3X]+C1F[C3+FX]-X]-C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C1FFFFFFFF[C3+FFFFFFFFC0FFFF-[C2[C0FF-[C2[C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C3C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C1FF[C3+FFC0F-[C2[X]+C3X]+C1F[C3+FX]-X]-C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C3C0FF-[C2[C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C3C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C1FF[C3+FFC0F-[C2[X]+C3X]+C1F[C3+FX]-X]-C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C1FFFF[C3+FFFFC0FF-[C2[C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C3C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C1FF[C3+FFC0F-[C2[X]+C3X]+C1F[C3+FX]-X]-C0F-[C2[X]+C3X]+C1F[C3+FX]-X]-C0FF-[C2[C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C3C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C1FF[C3+FFC0F-[C2[X]+C3X]+C1F[C3+FX]-X]-C0F-[C2[X]+C3X]+C1F[C3+FX]-X]-C0FFFF-[C2[C0FF-[C2[C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C3C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C1FF[C3+FFC0F-[C2[X]+C3X]+C1F[C3+FX]-X]-C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C3C0FF-[C2[C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C3C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C1FF[C3+FFC0F-[C2[X]+C3X]+C1F[C3+FX]-X]-C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C1FFFF[C3+FFFFC0FF-[C2[C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C3C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C1FF[C3+FFC0F-[C2[X]+C3X]+C1F[C3+FX]-X]-C0F-[C2[X]+C3X]+C1F[C3+FX]-X]-C0FF-[C2[C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C3C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C1FF[C3+FFC0F-[C2[X]+C3X]+C1F[C3+FX]-X]-C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C1FFFFFFFFFFFFFFFF[C3+FFFFFFFFFFFFFFFFC0FFFFFFFF-[C2[C0FFFF-[C2[C0FF-[C2[C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C3C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C1FF[C3+FFC0F-[C2[X]+C3X]+C1F[C3+FX]-X]-C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C3C0FF-[C2[C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C3C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C1FF[C3+FFC0F-[C2[X]+C3X]+C1F[C3+FX]-X]-C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C1FFFF[C3+FFFFC0FF-[C2[C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C3C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C1FF[C3+FFC0F-[C2[X]+C3X]+C1F[C3+FX]-X]-C0F-[C2[X]+C3X]+C1F[C3+FX]-X]-C0FF-[C2[C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C3C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C1FF[C3+FFC0F-[C2[X]+C3X]+C1F[C3+FX]-X]-C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C3C0FFFF-[C2[C0FF-[C2[C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C3C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C1FF[C3+FFC0F-[C2[X]+C3X]+C1F[C3+FX]-X]-C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C3C0FF-[C2[C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C3C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C1FF[C3+FFC0F-[C2[X]+C3X]+C1F[C3+FX]-X]-C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C1FFFF[C3+FFFFC0FF-[C2[C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C3C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C1FF[C3+FFC0F-[C2[X]+C3X]+C1F[C3+FX]-X]-C0F-[C2[X]+C3X]+C1F[C3+FX]-X]-C0FF-[C2[C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C3C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C1FF[C3+FFC0F-[C2[X]+C3X]+C1F[C3+FX]-X]-C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C1FFFFFFFF[C3+FFFFFFFFC0FFFF-[C2[C0FF-[C2[C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C3C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C1FF[C3+FFC0F-[C2[X]+C3X]+C1F[C3+FX]-X]-C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C3C0FF-[C2[C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C3C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C1FF[C3+FFC0F-[C2[X]+C3X]+C1F[C3+FX]-X]-C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C1FFFF[C3+FFFFC0FF-[C2[C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C3C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C1FF[C3+FFC0F-[C2[X]+C3X]+C1F[C3+FX]-X]-C0F-[C2[X]+C3X]+C1F[C3+FX]-X]-C0FF-[C2[C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C3C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C1FF[C3+FFC0F-[C2[X]+C3X]+C1F[C3+FX]-X]-C0F-[C2[X]+C3X]+C1F[C3+FX]-X]-C0FFFF-[C2[C0FF-[C2[C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C3C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C1FF[C3+FFC0F-[C2[X]+C3X]+C1F[C3+FX]-X]-C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C3C0FF-[C2[C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C3C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C1FF[C3+FFC0F-[C2[X]+C3X]+C1F[C3+FX]-X]-C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C1FFFF[C3+FFFFC0FF-[C2[C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C3C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C1FF[C3+FFC0F-[C2[X]+C3X]+C1F[C3+FX]-X]-C0F-[C2[X]+C3X]+C1F[C3+FX]-X]-C0FF-[C2[C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C3C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C1FF[C3+FFC0F-[C2[X]+C3X]+C1F[C3+FX]-X]-C0F-[C2[X]+C3X]+C1F[C3+FX]-X]-C0FFFFFFFF-[C2[C0FFFF-[C2[C0FF-[C2[C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C3C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C1FF[C3+FFC0F-[C2[X]+C3X]+C1F[C3+FX]-X]-C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C3C0FF-[C2[C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C3C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C1FF[C3+FFC0F-[C2[X]+C3X]+C1F[C3+FX]-X]-C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C1FFFF[C3+FFFFC0FF-[C2[C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C3C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C1FF[C3+FFC0F-[C2[X]+C3X]+C1F[C3+FX]-X]-C0F-[C2[X]+C3X]+C1F[C3+FX]-X]-C0FF-[C2[C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C3C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C1FF[C3+FFC0F-[C2[X]+C3X]+C1F[C3+FX]-X]-C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C3C0FFFF-[C2[C0FF-[C2[C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C3C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C1FF[C3+FFC0F-[C2[X]+C3X]+C1F[C3+FX]-X]-C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C3C0FF-[C2[C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C3C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C1FF[C3+FFC0F-[C2[X]+C3X]+C1F[C3+FX]-X]-C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C1FFFF[C3+FFFFC0FF-[C2[C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C3C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C1FF[C3+FFC0F-[C2[X]+C3X]+C1F[C3+FX]-X]-C0F-[C2[X]+C3X]+C1F[C3+FX]-X]-C0FF-[C2[C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C3C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C1FF[C3+FFC0F-[C2[X]+C3X]+C1F[C3+FX]-X]-C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C1FFFFFFFF[C3+FFFFFFFFC0FFFF-[C2[C0FF-[C2[C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C3C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C1FF[C3+FFC0F-[C2[X]+C3X]+C1F[C3+FX]-X]-C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C3C0FF-[C2[C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C3C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C1FF[C3+FFC0F-[C2[X]+C3X]+C1F[C3+FX]-X]-C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C1FFFF[C3+FFFFC0FF-[C2[C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C3C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C1FF[C3+FFC0F-[C2[X]+C3X]+C1F[C3+FX]-X]-C0F-[C2[X]+C3X]+C1F[C3+FX]-X]-C0FF-[C2[C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C3C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C1FF[C3+FFC0F-[C2[X]+C3X]+C1F[C3+FX]-X]-C0F-[C2[X]+C3X]+C1F[C3+FX]-X]-C0FFFF-[C2[C0FF-[C2[C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C3C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C1FF[C3+FFC0F-[C2[X]+C3X]+C1F[C3+FX]-X]-C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C3C0FF-[C2[C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C3C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C1FF[C3+FFC0F-[C2[X]+C3X]+C1F[C3+FX]-X]-C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C1FFFF[C3+FFFFC0FF-[C2[C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C3C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C1FF[C3+FFC0F-[C2[X]+C3X]+C1F[C3+FX]-X]-C0F-[C2[X]+C3X]+C1F[C3+FX]-X]-C0FF-[C2[C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C3C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C1FF[C3+FFC0F-[C2[X]+C3X]+C1F[C3+FX]-X]-C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C3C0FFFFFFFFFFFFFFFF-[C2[C0FFFFFFFF-[C2[C0FFFF-[C2[C0FF-[C2[C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C3C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C1FF[C3+FFC0F-[C2[X]+C3X]+C1F[C3+FX]-X]-C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C3C0FF-[C2[C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C3C0F-[C2[X]+C3X]+C1F[C3+FX]-X]+C1FF[C3+FFC0F-[C2[X]+";
+	$commandString = "FFFF[+FF-F]-FF";
+	$angle = 25;
+	$iterations = 6;
+	$distance = 50;
+	$stack = array();
+	// start at grid 0,0 facing north with no colour index
+	$pos = array("x"=>$canvaDimension/2, "y"=>$canvaDimension, "heading"=>0.0, "colour"=>-1);
+	for ($i=0;$i<strlen($commandString);$i++) {
+		$c = substr($commandString,$i,1);
+	
+		switch ($c) {
+
+		case "C": 
+			// get colour index from next character
+			//   $pos["colour"] = (cmds.charAt(++i) - '0');
+			break;
+		case "-": 
+			// anticlockwise
+			$pos["heading"] += $angle;
+			break;
+		case "+": 
+			// clockwise
+			$pos["heading"] -= $angle;
+			break;
+		case "[": 
+			// push
+		array_push($stack,array("x"=>$pos["x"], "y"=>$pos["y"], "heading"=>$pos["heading"], "colour"=>$pos["colour"]));
+			
+			break;
+		case "]": 
+			// pop
+			$pos = array_pop($stack);
+			break;
+		default: 
+			$lastX = $pos["x"];
+			$lastY = $pos["y"];
+
+			// move the turtle
+			$rad = deg2rad($pos["heading"]);
+			$pos["x"] -= $distance * sin($rad);
+			$pos["y"] -= $distance * cos($rad);
+			imageline($plantCanvas, $lastX, $lastY, $pos["x"], $pos["y"], IMG_COLOR_BRUSHED);
+
+		}
+	}
+		// output:
 	imagejpeg($plantCanvas,$_SERVER['DOCUMENT_ROOT'].'/images/herbarium/output.jpg',95);
 	imagedestroy($plantCanvas);
 }
@@ -222,12 +289,13 @@ $startingText = $json['origin'][$whichElem];
 $startingText = findAndReplaceHashes($startingText);
 
 echo '<p>'.$startingText.'</p>';
-$cacheBustURL = "/images/herbarium/output.jpg?".$depthToStopAt."-".$branchingAngle."-".$numberOfBranches;
+//$cacheBustURL = "/images/herbarium/output.jpg?".$depthToStopAt."-".$branchingAngle."-".$numberOfBranches;
+$cacheBustURL = "/images/herbarium/output.jpg?".$iterations."-".$angle;
 echo '<img src="'.$cacheBustURL.'" width="480" height="480" alt="'.$latinName.'">';
 
 echo '<p style="font-size:0.7em;">seed: '.$storedSeed.'</p>';
 
-sendToTwitter();
+//sendToTwitter();
 ?>
 </body>
 </html>
