@@ -125,7 +125,7 @@ function drawPlant() {
 	$iterations = 6;
 	$axiom = "X";
 	$rules = array("X"=>"C0F-[C2[X]+C3X]+C1F[C3+FX]-X","F"=>"FF");
-	$angle = 25;
+	$angle = rand(12,40);
 	$result="";
 	for ($i=0;$i<$iterations;$i++) {
 		if($i==0) {
