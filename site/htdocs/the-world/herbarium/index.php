@@ -128,14 +128,6 @@ for ($i=0;$i<$brushColours;$i++) {
 	}
 }
 
-
-	imagesetbrush($plantCanvas, $brushcol0size1);
-/*
-	$penColour0 = imagecolorallocate($plantCanvas, 140, 80, 60);
-	$penColour1 = imagecolorallocate($plantCanvas, 24, 180, 24);
-	$penColour2 = imagecolorallocate($plantCanvas, 48, 220, 48);
-	$penColour3 = imagecolorallocate($plantCanvas, 64, 255, 64);
-*/
 	// generate command string:
 	$iterations = 6;
 	$axiom = "X";
@@ -165,7 +157,7 @@ for ($i=0;$i<$brushColours;$i++) {
 	$distance = 3;
 	$stack = array();
 	// start at grid 0,0 facing north with no colour index
-	$pos = array("x"=>$canvaDimension/2, "y"=>$canvaDimension, "heading"=>8, "colour"=>-1, "size"=>1);
+	$pos = array("x"=>$canvaDimension/2, "y"=>$canvaDimension, "heading"=>8, "colour"=>0, "size"=>0);
 	for ($i=0;$i<strlen($commandString);$i++) {
 	$c = substr($commandString,$i,1);
 		switch ($c) {
