@@ -119,7 +119,10 @@ function drawPlant() {
 	*/
 
 // load brush image:
-	$brush1 = imagecreatefrompng($_SERVER['DOCUMENT_ROOT'].'/images/herbarium/brush1.png');
+	$brush0 = imagecreatefrompng($_SERVER['DOCUMENT_ROOT'].'/images/herbarium/brushes/brush0.png');
+	$brush1 = imagecreatefrompng($_SERVER['DOCUMENT_ROOT'].'/images/herbarium/brushes/brush1.png');
+	$brush2 = imagecreatefrompng($_SERVER['DOCUMENT_ROOT'].'/images/herbarium/brushes/brush2.png');
+	$brush3 = imagecreatefrompng($_SERVER['DOCUMENT_ROOT'].'/images/herbarium/brushes/brush3.png');
 	imagesetbrush($plantCanvas, $brush1);
 
 	$penColour0 = imagecolorallocate($plantCanvas, 140, 80, 60);
@@ -129,7 +132,8 @@ function drawPlant() {
 	// generate command string:
 	$iterations = 6;
 	$axiom = "X";
-	$rules = array("X"=>"C0F-[C2[X]+C3X]+C1F[C3+FX]-X","F"=>"FF");
+	$allPossibleRules = array(array("X"=>"C0F-[C2[X]+C3X]+C1F[C3+FX]-X","F"=>"FF"), array("X"=>"C0F+[C2[X]-C3X]-C1F[C3-FX]+X","F"=>"FF"));
+	$rules = $allPossibleRules[array_rand($allPossibleRules)];
 	$angle = rand(12,40);
 	$result="";
 	for ($i=0;$i<$iterations;$i++) {
@@ -188,6 +192,8 @@ function drawPlant() {
 				$pos["x"] -= $distance * sin($rad);
 				$pos["y"] -= $distance * cos($rad);
 				// imageline($plantCanvas, $lastX, $lastY, $pos["x"], $pos["y"], ${'penColour'.$pos["colour"]});
+
+				imagesetbrush($plantCanvas, ${'brush'.$pos["colour"]});
 				imageline($plantCanvas, $lastX, $lastY, $pos["x"], $pos["y"], IMG_COLOR_BRUSHED);
 		}
 	}
