@@ -331,7 +331,28 @@ $thisCommonName = substr($thisCommonName, 0, -1);
 }
 
 $thisCommonName .= $thisSecondCommonName;
-$thisCommonName = ucfirst($thisCommonName);
+
+$shouldAddPrefix = rand(1,42);
+switch ($shouldAddPrefix) {
+    case 1:
+        $thisCommonName = "Lesser ".$thisCommonName;
+        break;
+    case 2:
+         $thisCommonName = "Greater ".$thisCommonName;
+        break;
+            case 3:
+         $thisCommonName = "Common ".$thisCommonName;
+        break;
+                case 4:
+         $thisCommonName = "Wild ".$thisCommonName;
+        break;
+    default:
+       $thisCommonName = ucfirst($thisCommonName);
+} 
+
+// in case the first name has a space at the end, and the second at the start:
+$thisCommonName = str_replace("  ", " ", $thisCommonName);
+
 array_push($commonNames,$thisCommonName);
 }
 
