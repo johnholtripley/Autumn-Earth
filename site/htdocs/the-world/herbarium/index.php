@@ -117,6 +117,11 @@ function drawPlant() {
 	imagefilledellipse($brush, 1, 1, 2, 2, $colour);
 	imagesetbrush($plantCanvas, $brush);
 	*/
+
+// load brush image:
+	$brush1 = imagecreatefrompng($_SERVER['DOCUMENT_ROOT'].'/images/herbarium/brush1.png');
+	imagesetbrush($plantCanvas, $brush1);
+
 	$penColour0 = imagecolorallocate($plantCanvas, 140, 80, 60);
 	$penColour1 = imagecolorallocate($plantCanvas, 24, 180, 24);
 	$penColour2 = imagecolorallocate($plantCanvas, 48, 220, 48);
@@ -182,12 +187,14 @@ function drawPlant() {
 				$rad = deg2rad($pos["heading"]);
 				$pos["x"] -= $distance * sin($rad);
 				$pos["y"] -= $distance * cos($rad);
-				imageline($plantCanvas, $lastX, $lastY, $pos["x"], $pos["y"], ${'penColour'.$pos["colour"]});
+				// imageline($plantCanvas, $lastX, $lastY, $pos["x"], $pos["y"], ${'penColour'.$pos["colour"]});
+				imageline($plantCanvas, $lastX, $lastY, $pos["x"], $pos["y"], IMG_COLOR_BRUSHED);
 		}
 	}
 	// output:
 	imagejpeg($plantCanvas,$_SERVER['DOCUMENT_ROOT'].'/images/herbarium/output.jpg',95);
 	imagedestroy($plantCanvas);
+	imagedestroy($brush1);
 }
 
 function findAndReplaceHashes($stringToCheck) {
