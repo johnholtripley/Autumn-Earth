@@ -107,7 +107,7 @@ function drawPlant() {
 	global $iterations, $angle;
 	$canvaDimension = 600;
 	$plantCanvas = imagecreatetruecolor($canvaDimension, $canvaDimension);
-	$ground = imagecolorallocate($plantCanvas, 222, 213, 156);
+	$ground = imagecolorallocate($plantCanvas, 240, 240, 240);
 	imagefilledrectangle($plantCanvas, 0, 0, $canvaDimension, $canvaDimension, $ground);
 	/*
 	$brush = imagecreate(2,2);
@@ -119,15 +119,16 @@ function drawPlant() {
 	*/
 
 // load brush images:
-	$brushcol0size1 = imagecreatefrompng($_SERVER['DOCUMENT_ROOT'].'/images/herbarium/brushes/brush0-1.png');
-	$brushcol1size1 = imagecreatefrompng($_SERVER['DOCUMENT_ROOT'].'/images/herbarium/brushes/brush1-1.png');
-	$brushcol2size1 = imagecreatefrompng($_SERVER['DOCUMENT_ROOT'].'/images/herbarium/brushes/brush2-1.png');
-	$brushcol3size1 = imagecreatefrompng($_SERVER['DOCUMENT_ROOT'].'/images/herbarium/brushes/brush3-1.png');
 
-	$brushcol0size2 = imagecreatefrompng($_SERVER['DOCUMENT_ROOT'].'/images/herbarium/brushes/brush0-2.png');
-	$brushcol1size2 = imagecreatefrompng($_SERVER['DOCUMENT_ROOT'].'/images/herbarium/brushes/brush1-2.png');
-	$brushcol2size2 = imagecreatefrompng($_SERVER['DOCUMENT_ROOT'].'/images/herbarium/brushes/brush2-2.png');
-	$brushcol3size2 = imagecreatefrompng($_SERVER['DOCUMENT_ROOT'].'/images/herbarium/brushes/brush3-2.png');
+$brushSizes = 2;
+$brushColours = 4;
+for ($i=0;$i<$brushColours;$i++) {
+	for ($j=0;$j<$brushSizes;$j++) {
+		${'brushcol'.$i.'size'.$j} = imagecreatefrompng($_SERVER['DOCUMENT_ROOT'].'/images/herbarium/brushes/brush'.$i.'-'.$j.'.png');
+	}
+}
+
+
 	imagesetbrush($plantCanvas, $brushcol0size1);
 /*
 	$penColour0 = imagecolorallocate($plantCanvas, 140, 80, 60);
@@ -138,7 +139,7 @@ function drawPlant() {
 	// generate command string:
 	$iterations = 6;
 	$axiom = "X";
-	$allPossibleRules = array(array("X"=>"C0F-[C2[X]+C3X]+S2C1F[S1C3+FX]-X","F"=>"FF"));
+	$allPossibleRules = array(array("X"=>"C0F-[C2[X]+C3X]+S1C1F[S0C3+FX]-X","F"=>"FF"));
 	$rules = $allPossibleRules[array_rand($allPossibleRules)];
 	$angle = rand(12,40);
 	$result="";
@@ -211,14 +212,14 @@ function drawPlant() {
 	// output:
 	imagejpeg($plantCanvas,$_SERVER['DOCUMENT_ROOT'].'/images/herbarium/output.jpg',95);
 	imagedestroy($plantCanvas);
-	imagedestroy($brushcol0size1);
-	imagedestroy($brushcol1size1);
-	imagedestroy($brushcol2size1);
-	imagedestroy($brushcol3size1);
-		imagedestroy($brushcol0size2);
-	imagedestroy($brushcol1size2);
-	imagedestroy($brushcol2size2);
-	imagedestroy($brushcol3size2);
+
+for ($i=0;$i<$brushColours;$i++) {
+	for ($j=0;$j<$brushSizes;$j++) {
+	imagedestroy(${'brushcol'.$i.'size'.$j});
+	}
+}
+
+
 }
 
 function findAndReplaceHashes($stringToCheck) {
