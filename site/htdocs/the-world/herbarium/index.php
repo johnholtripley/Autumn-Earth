@@ -120,19 +120,24 @@ function drawPlant() {
 
 // load brush images:
 
-$brushSizes = 2;
-$brushColours = 4;
-for ($i=0;$i<$brushColours;$i++) {
-	for ($j=0;$j<$brushSizes;$j++) {
-		${'brushcol'.$i.'size'.$j} = imagecreatefrompng($_SERVER['DOCUMENT_ROOT'].'/images/herbarium/brushes/brush'.$i.'-'.$j.'.png');
+$brushSizes = array(20,10);
+$brushColours = array(array(27,113,27),array(24,180,24),array(48,220,48),array(54,220,54));
+for ($i=0;$i<count($brushColours);$i++) {
+	for ($j=0;$j<count($brushSizes);$j++) {
+	//	${'brushcol'.$i.'size'.$j} = imagecreatefrompng($_SERVER['DOCUMENT_ROOT'].'/images/herbarium/brushes/brush'.$i.'-'.$j.'.png');
+		${'brushcol'.$i.'size'.$j} = imagecreate($brushSizes[$j],$brushSizes[$j]);
+	$brushtrans = imagecolorallocate(${'brushcol'.$i.'size'.$j}, 0, 0, 0);
+	imagecolortransparent(${'brushcol'.$i.'size'.$j}, $brushtrans);
+	$thisColour = imagecolorallocate(${'brushcol'.$i.'size'.$j}, $brushColours[$i][0], $brushColours[$i][1], $brushColours[$i][2]);
+	imagefilledellipse(${'brushcol'.$i.'size'.$j}, ($brushSizes[$j]/2), ($brushSizes[$j]/2), $brushSizes[$j], $brushSizes[$j], $thisColour);
 	}
 }
 
 	// generate command string:
 	$iterations = 6;
 	$axiom = "X";
-	//$allPossibleRules = array(array("X"=>"C0F-[C2[X]+C3X]+S1C1F[S0C3+FX]-X","F"=>"FF"));
-	$allPossibleRules = array(array("X"=>"S0FF[--X]F[++X]FFS1FF","F"=>"FF"));
+	$allPossibleRules = array(array("X"=>"C0F-[C2[X]+C3X]+S1C1F[S0C3+FX]-X","F"=>"FF"));
+	//$allPossibleRules = array(array("X"=>"S0FF[--X]F[++X]FFS1FF","F"=>"FF"));
 	
 	$rules = $allPossibleRules[array_rand($allPossibleRules)];
 	$angle = rand(12,40);
@@ -208,8 +213,8 @@ for ($i=0;$i<$brushColours;$i++) {
 	imagejpeg($plantCanvas,$_SERVER['DOCUMENT_ROOT'].'/images/herbarium/output.jpg',95);
 	imagedestroy($plantCanvas);
 
-for ($i=0;$i<$brushColours;$i++) {
-	for ($j=0;$j<$brushSizes;$j++) {
+for ($i=0;$i<count($brushColours);$i++) {
+	for ($j=0;$j<count($brushSizes);$j++) {
 	imagedestroy(${'brushcol'.$i.'size'.$j});
 	}
 }
