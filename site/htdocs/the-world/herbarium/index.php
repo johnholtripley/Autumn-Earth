@@ -134,12 +134,18 @@ for ($i=0;$i<count($brushColours);$i++) {
 }
 
 	// generate command string:
-	$iterations = 6;
+	
 	$axiom = "X";
 	$allPossibleRules = array(array("X"=>"S2X[+X]X[-X]X"),array("X"=>"S2X[+X]X[-X][X]"),array("X"=>"S3XX-[-X+X+X]+[+X-X-X]"),array("X"=>"S2F[+X]F[-X]+X","F"=>"FF"),array("X"=>"S2F[+X][-X]FX","F"=>"FF"),array("X"=>"S2F-[[X]+X]+F[+FX]-X","F"=>"FF"));
+	$allPossibleRuleIterations = array(5,6,4,6,6,6);
+	$allPossibleRuleDistances = array(2,3,8,3,3,3);
 	//$allPossibleRules = array(array("X"=>"S0FF[--X]F[++X]FFS1FF","F"=>"FF"));
 	
-	$rules = $allPossibleRules[array_rand($allPossibleRules)];
+	$whichRules = array_rand($allPossibleRules);
+	$rules = $allPossibleRules[$whichRules];
+	$iterations = $allPossibleRuleIterations[$whichRules];
+$distance = $allPossibleRuleDistances[$whichRules];
+	$startAngle = rand (0,20);
 	$angle = rand(12,40);
 	$result="";
 	for ($i=0;$i<$iterations;$i++) {
@@ -161,8 +167,8 @@ for ($i=0;$i<count($brushColours);$i++) {
 	} 
 
 	$commandString = $result;
-	$distance = 3;
-	$startAngle = rand (0,20);
+	
+
 	$stack = array();
 	// start at grid 0,0 facing north with no colour index
 	$pos = array("x"=>$canvaDimension/2, "y"=>$canvaDimension, "heading"=>$startAngle, "colour"=>0, "size"=>0);
