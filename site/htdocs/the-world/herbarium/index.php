@@ -120,7 +120,7 @@ function drawPlant() {
 
 // load brush images:
 
-$brushSizes = array(20,10);
+$brushSizes = array(20,10,5,1);
 $brushColours = array(array(27,113,27),array(24,180,24),array(48,220,48),array(54,220,54));
 for ($i=0;$i<count($brushColours);$i++) {
 	for ($j=0;$j<count($brushSizes);$j++) {
@@ -136,7 +136,7 @@ for ($i=0;$i<count($brushColours);$i++) {
 	// generate command string:
 	$iterations = 6;
 	$axiom = "X";
-	$allPossibleRules = array(array("X"=>"C0F-[C2[X]+C3X]+S1C1F[S0C3+FX]-X","F"=>"FF"));
+	$allPossibleRules = array(array("X"=>"S2X[+X]X[-X]X"),array("X"=>"S2X[+X]X[-X][X]"),array("X"=>"S3XX-[-X+X+X]+[+X-X-X]"),array("X"=>"S2F[+X]F[-X]+X","F"=>"FF"),array("X"=>"S2F[+X][-X]FX","F"=>"FF"),array("X"=>"S2F-[[X]+X]+F[+FX]-X","F"=>"FF"));
 	//$allPossibleRules = array(array("X"=>"S0FF[--X]F[++X]FFS1FF","F"=>"FF"));
 	
 	$rules = $allPossibleRules[array_rand($allPossibleRules)];
@@ -161,7 +161,7 @@ for ($i=0;$i<count($brushColours);$i++) {
 	} 
 
 	$commandString = $result;
-	$distance =2;
+	$distance = 3;
 	$startAngle = rand (0,20);
 	$stack = array();
 	// start at grid 0,0 facing north with no colour index
@@ -310,7 +310,7 @@ $latinName = ucfirst($latinName);
 
 drawPlant(); 
 
-echo "<h1>".$latinName."</h1>";
+echo "<h1><em>".$latinName."</em></h1>";
 
 // create description:
 $jsonResults = file_get_contents($_SERVER['DOCUMENT_ROOT'].'/includes/herbarium/description-grammar.json');
