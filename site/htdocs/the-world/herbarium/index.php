@@ -136,17 +136,22 @@ for ($i=0;$i<count($brushColours);$i++) {
 	// generate command string:
 	
 	$axiom = "X";
+
 	$allPossibleRules = array(array("X"=>"S2X[+X]X[-X]X"),array("X"=>"S2X[+X]X[-X][X]"),array("X"=>"S3XX-[-X+X+X]+[+X-X-X]"),array("X"=>"S2F[+X]F[-X]+X","F"=>"FF"),array("X"=>"S2F[+X][-X]FX","F"=>"FF"),array("X"=>"S2F-[[X]+X]+F[+FX]-X","F"=>"FF"));
+
+//$allPossibleRules = array(array("X"=>"L"));
+
 	$allPossibleRuleIterations = array(5,6,4,6,6,6);
 	$allPossibleRuleDistances = array(2,3,8,3,3,3);
-	//$allPossibleRules = array(array("X"=>"S0FF[--X]F[++X]FFS1FF","F"=>"FF"));
-	
+	$startAngle = rand (-20,20);
+	$angle = rand(12,40);
+
+
 	$whichRules = array_rand($allPossibleRules);
 	$rules = $allPossibleRules[$whichRules];
 	$iterations = $allPossibleRuleIterations[$whichRules];
 $distance = $allPossibleRuleDistances[$whichRules];
-	$startAngle = rand (0,20);
-	$angle = rand(12,40);
+	
 	$result="";
 	for ($i=0;$i<$iterations;$i++) {
 		if($i==0) {
@@ -196,6 +201,12 @@ $distance = $allPossibleRuleDistances[$whichRules];
 				// change size
 			$pos["size"] = substr($commandString,$i+1,1);
 				$i++;
+			break;
+			case "L":
+			// draw a leaf at the current size and heading
+
+imagefilledarc($plantCanvas, $pos["x"], $pos["y"]-50, 100, 100, 270, 360 , imagecolorallocate($plantCanvas, 24, 244, 24), IMG_ARC_PIE);
+
 			break;
 			case "]": 
 				// pop
