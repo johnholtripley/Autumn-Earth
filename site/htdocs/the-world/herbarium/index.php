@@ -2,18 +2,30 @@
 require_once $_SERVER['DOCUMENT_ROOT'].'/includes/third-party/twitterOAuth/twitteroauth-0.6.2/autoload.php';
 use Abraham\TwitterOAuth\TwitterOAuth;
 function sendToTwitter() {
-	global $latinName, $commonNames;
+	global $latinName, $commonNames, $startingText;
 define("CONSUMER_KEY", "tullZGE4wkZibDnr6aXKuFGQ0");
 define("CONSUMER_SECRET","y1S7rffnenpYRJtDQxSv8a5bq3QhAAafqJzEaCQq0nDtw3XtAS");
 define("OAUTH_TOKEN", "703148355749171202-mwDglZzCgERUC6u7DshkqyPrK7nSrkK");
 define("OAUTH_SECRET", "7f8t7rXScvWIk1AgXe20Z6AA9vRCaG7Vp2wJM964bZMEj");
 $connection = new TwitterOAuth(CONSUMER_KEY, CONSUMER_SECRET, OAUTH_TOKEN, OAUTH_SECRET);
 $media = $connection->upload('media/upload', ['media' => 'https://autumnearth.com/images/herbarium/output.jpg']);
+$textString = $latinName."\r\n".'('.implode(", ",$commonNames).')';
+$textString .= "\r\n".$startingText;
+// allow 24 characters for media URL, and 2 for the line returns
+if(strlen($textString)>114) {
+$textString = substr($textString, 0, 111)."...";
+}
 $parameters = [
-    'status' => $latinName."\r\n".'('.implode(", ",$commonNames).')',
+    'status' => $textString,
     'media_ids' => $media->media_id_string,
 ];
 $result = $connection->post('statuses/update', $parameters);
+if ($connection->getLastHttpCode() == 200) {
+    // Tweet posted succesfully
+} else {
+    // Handle error case
+    echo $connection->getLastHttpCode();
+}
 }
 
 
@@ -139,7 +151,7 @@ for ($i=0;$i<count($brushColours);$i++) {
 
 	$allPossibleRules = array(array("X"=>"S2X[+X]X[-X]X"),array("X"=>"S2X[+X]X[-X][X]"),array("X"=>"S3XX-[-X+X+X]+[+X-X-X]"),array("X"=>"S2F[+X]F[-X]+X","F"=>"FF"),array("X"=>"S2F[+X][-X]FX","F"=>"FF"),array("X"=>"S2F-[[X]+X]+F[+FX]-X","F"=>"FF"));
 
-$allPossibleRules = array(array("X"=>"L"));
+//$allPossibleRules = array(array("X"=>"L"));
 
 	$allPossibleRuleIterations = array(5,6,4,6,6,6);
 	$allPossibleRuleDistances = array(2,3,8,3,3,3);
@@ -395,7 +407,7 @@ echo '<img src="'.$cacheBustURL.'" width="480" height="480" alt="'.$latinName.'"
 
 echo '<p style="font-size:0.7em;">seed: '.$storedSeed.'</p>';
 
-//sendToTwitter();
+sendToTwitter();
 ?>
 </body>
 </html>
