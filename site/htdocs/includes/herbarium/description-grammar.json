@@ -1,9 +1,25 @@
-
 {
-    "origin": ["#|physical#, #|longevity#. Found in #|location##|extraLocations#. Medicinal properities: #|medicine#."],
-    "physical" : ["Upright", "Tap-rooted", "Hairless or slightly hairy"],
-    "longevity" : ["short-lived perennial", "long-lived biennial"],
-    "location" : ["open places, especially woodland clearings", "heaths and mountainsides", "lakesides", "wildness areas"],
-    "extraLocations" : ["", " and also waste ground"],
-    "medicine" : ["none", "a source of digitoxin", "a mild anaesthetic"]
+    "origin": [
+        "A tall, bright yellow #|life# widely naturalised in coastal areas and beside trade routes. Originally from {region}, its oil is used in various herbal remedies. The flowers open in the evening and are visited by a large number of Moth species.",
+        "A beautiful bright blue #|life# found growing on roadsides and waste ground across Britain. The root is prized as a vegetable in Continental Europe where it also grown as animal fodder. The flowers are particularly attractive to Hover Flies.",
+        "Medicinal, Scent of apricots, Good for bees and insects.",
+        "A native #|life# common in England and Wales, usually on light soils, in open woods, grassland and hedgerows.",
+        "A common creeping native #|life# of dry grassland and roadside, with bright yellow flowers, often streaks of red. An excellent nector plant and a catapillar food plant for the Common Blue, Dingy Skipper and #|insects#. Height: 10-40cm (4-16in) Perennial: Flowers May to Sept. Contains plant toxins.",
+        "A native #|life# with creeping stems, common in damp woods and pasture throughout Britain",
+        "The delightful white daisy flowers of this #|life# were once a common sight in cornfields.  It is now much rarer due to widespread use of selective herbicides.",
+        "Glorious delicately scented #|life# wild flower .  Flowers from June to August.  Prolific in its production of flowers.  Slightly fragrant and can be used as cut flowers.",
+        "Seeds itself very prolifically and is related to other campions.",
+        "A once common #|life# weed of cornfields and waste places, now rarely seen.  Bright blue flowers are produced on tall wiry stems with narrow leaves from June to August.  A good butterfly and bee plant.",
+        "A tall, widespread, native #|life#, common in #|habitats#. The fluffy white flowers are the earliest flowering of the common hedge bank parsleys.",
+        "Cowslips are the food plants of the caterpillars of the Duke of Burgundy Fritillary.",
+        "A native #|life# of damp meadows, the flowers appear around the time that cuckoos return in April -May.  The clusters of pink, pale lilac or white flowers attract butterflies and bees.  A caterpillar food plant of the #|insects#.  The leaves can be eaten as watercress",
+        "This small #|life# produces brilliant, unscented purple flowers. It can be found in woods, hedges, pastures, heaths and rocky areas throughout Britain. Its folk-names include ‘Blue Mice’ and ‘Pig Violet’. It is the larval food plant for several species of #|insects#.",
+        "Yellow flower of #|habitats#. Likes calcareous soils.",
+        "Widely used in days gone by to curdle milk for cheese making.",
+        "A scrambling #|life# commonly found in a wide variety of habitats including #|habitats#.",
+        "A spreading native #|life#, which produces long runners, which root at intervals to produce new plants. It produces a white flower and a sweet mini strawberry fruit. It is common in #|habitats# across Britain. It is the larval food plant of the #|insects#."
+    ],
+    "insects": ["Fritillary butterfly", "Grizzled Skipper butterfly", "Clouded yellow butterfly", "orange tip butterfly"],
+    "habitats": ["Ditches, Marsh, Ponds & pond edges, River banks", "woods and hedges", "hedgerows and pathways", "woodlands and grassland", "disturbed ground, farm land and walls"],
+    "life": ["annual", "biennial", "perennial"]
 }
