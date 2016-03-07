@@ -12,9 +12,20 @@ $media = $connection->upload('media/upload', ['media' => 'https://autumnearth.co
 $textString = $latinName."\r\n".'('.implode(", ",$commonNames).')';
 $textString .= "\r\n".$startingText;
 // allow 24 characters for media URL, and 2 for the line returns
-if(strlen($textString)>114) {
-$textString = substr($textString, 0, 111)."...";
+
+$characterLimit = 114;
+if(strlen($textString)>$characterLimit) {
+
+// find the first full stop before this limit
+$pos = strrpos($textString,".",0-(strlen($textString)-$characterLimit));
+if ($pos !== false) {
+$textString = substr($textString, 0, $pos+1);
+} else {
+	// isn't room for the short description:
+	$textString = $latinName."\r\n".'('.implode(", ",$commonNames).')';
 }
+}
+echo "<p>Tweeted content: ".$textString."</p>";
 $parameters = [
     'status' => $textString,
     'media_ids' => $media->media_id_string,
@@ -151,7 +162,7 @@ for ($i=0;$i<count($brushColours);$i++) {
 
 	$allPossibleRules = array(array("X"=>"S2X[+X]X[-X]X"),array("X"=>"S2X[+X]X[-X][X]"),array("X"=>"S3XX-[-X+X+X]+[+X-X-X]"),array("X"=>"S2F[+X]F[-X]+X","F"=>"FF"),array("X"=>"S2F[+X][-X]FX","F"=>"FF"),array("X"=>"S2F-[[X]+X]+F[+FX]-X","F"=>"FF"));
 
-//$allPossibleRules = array(array("X"=>"L"));
+$allPossibleRules = array(array("X"=>"L"));
 
 	$allPossibleRuleIterations = array(5,6,4,6,6,6);
 	$allPossibleRuleDistances = array(2,3,8,3,3,3);
@@ -217,7 +228,7 @@ $distance = $allPossibleRuleDistances[$whichRules];
 			case "L":
 			// draw a leaf at the current size and heading
 
-imagefilledarc($plantCanvas, $pos["x"], $pos["y"]-50, 100, 100, 270, 360 , imagecolorallocate($plantCanvas, 24, 244, 24), IMG_ARC_EDGED);
+imagefilledarc($plantCanvas, $pos["x"], $pos["y"]-50, 150, 100, 180, 360 , imagecolorallocate($plantCanvas, 24, 244, 24), IMG_ARC_EDGED);
 
 			break;
 			case "]": 
