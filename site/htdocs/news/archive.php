@@ -42,6 +42,7 @@ if($pagenumber>1) {
 if($pagenumber<$totalpages) {
 	echo '<a href="'.$thispageurl.'page/'.($pagenumber+1).'" title="View page '.($pagenumber+1).'">next</a> ';
 }
+echo ' (<span id="articlesRemaining">'.($numberOfEntries-$endpoint).'</span> more)';
 echo '</div>';
 
 

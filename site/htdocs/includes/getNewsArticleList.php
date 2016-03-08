@@ -5,8 +5,23 @@ include_once($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
 
 if(isset($_GET['page'])) {
 	$pagenumber = $_GET['page'];
+	
+$pos = strrpos($pagenumber, "-");
+if ($pos !== false) {
+	// is a range
+	$startpagenumber = substr($pagenumber,0,$pos);
+	$endpagenumber = substr($pagenumber,$pos+1);
+
 } else {
-	$pagenumber = 1;
+	$startpagenumber = $pagenumber;
+	$endpagenumber = $pagenumber;
+}
+
+
+
+} else {
+	$startpagenumber = 1;
+	$endpagenumber = 1;
 }
 
 $query = "select * from tblNews WHERE status='1' order by timeAdded DESC";
@@ -14,9 +29,12 @@ $result = mysql_query($query) or die ("couldn't execute query");
 $numberOfEntries = mysql_num_rows($result);
 $resultsperpage = 5;
 $totalpages = ceil($numberOfEntries/$resultsperpage);
-if (($pagenumber>0) && ($pagenumber <= $totalpages)) {
-	$startpoint = ($pagenumber - 1) * $resultsperpage;
-	$endpoint = $pagenumber * $resultsperpage;
+if($endpagenumber > $totalpages) {
+$endpagenumber = $totalpages;
+}
+if (($startpagenumber>0) && ($endpagenumber <= $totalpages)) {
+	$startpoint = ($startpagenumber - 1) * $resultsperpage;
+	$endpoint = $endpagenumber * $resultsperpage;
 	if ($endpoint > $numberOfEntries) {
 		$endpoint = $numberOfEntries;
 	}

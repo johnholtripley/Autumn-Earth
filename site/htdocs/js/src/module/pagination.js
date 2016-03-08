@@ -6,9 +6,20 @@ if (cutsTheMustard && document.getElementById("paginationEnhanced")) {
         var currentPage = window.location.toString();
         var pagePos = currentPage.indexOf("page/");
         if (pagePos != -1) {
-            pageToRequest = parseInt(currentPage.substr(pagePos + 5)) + 1;
+            pageToRequest = currentPage.substr(pagePos + 5);
+            // check if it's a page range
+            var rangePos = pageToRequest.indexOf("-");
+            if (rangePos != -1) {
+                var startRange = pageToRequest.substr(0, rangePos);
+                var endRange = pageToRequest.substr(rangePos + 1);
+                pageToRequest = parseInt(endRange) + 1;
+            } else {
+                startRange = parseInt(pageToRequest);
+                pageToRequest = parseInt(pageToRequest) + 1;
+            }
         } else {
             // currently on the first page
+            startRange = 1;
             pageToRequest = 2;
         }
         request.open('GET', '/includes/getNewsArticleList.php?page=' + pageToRequest, true);
@@ -18,25 +29,27 @@ if (cutsTheMustard && document.getElementById("paginationEnhanced")) {
                     // Success:
                     var response = this.responseText;
                     if (response != "") {
-
-
-var jsonResponse = JSON.parse(response);
-
+                        var jsonResponse = JSON.parse(response);
                         document.getElementById('pageArticleList').insertAdjacentHTML('beforeend', jsonResponse['markup']);
                         // update URL accordingly and update history state
                         if (history.pushState) {
+                       
+               
+                                urlUpdate = startRange + "-" + pageToRequest;
+                         
                             var stateObj = {};
-                            history.pushState(stateObj, "page " + pageToRequest, "/chronicle/page/" + pageToRequest);
+
+                            history.pushState(stateObj, "page " + urlUpdate, "/chronicle/page/" + urlUpdate);
                         } else {
                             // ###
                         }
                         var resultsRemaining = jsonResponse['resultsRemaining'];
-              
-                        if(resultsRemaining==0) {
-                        	// remove load more button:
-document.getElementById("paginationEnhanced").innerHTML = '';
+
+                        if (resultsRemaining == 0) {
+                            // remove load more button:
+                            document.getElementById("paginationEnhanced").innerHTML = '';
                         } else {
-                        	document.getElementById("loadMore").innerHTML = 'load more ('+resultsRemaining+' more)';
+                            document.getElementById("loadMore").innerHTML = 'load more (' + resultsRemaining + ' more)';
                         }
                     }
                 } else {
@@ -48,6 +61,11 @@ document.getElementById("paginationEnhanced").innerHTML = '';
         request.send();
         request = null;
     }
-    document.getElementById("paginationEnhanced").innerHTML = '<button id="loadMore">load more</button>';
-    document.getElementById("loadMore").addEventListener("click", getMoreContent);
+    resultsRemaining = document.getElementById('articlesRemaining').innerHTML;
+    if (resultsRemaining > 0) {
+        document.getElementById("paginationEnhanced").innerHTML = '<button id="loadMore">load more (' + resultsRemaining + ' more)</button>';
+        document.getElementById("loadMore").addEventListener("click", getMoreContent);
+    } else {
+        document.getElementById("paginationEnhanced").innerHTML = '';
+    }
 }
