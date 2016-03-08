@@ -3,17 +3,37 @@ require_once $_SERVER['DOCUMENT_ROOT'].'/includes/third-party/twitterOAuth/twitt
 use Abraham\TwitterOAuth\TwitterOAuth;
 function sendToTwitter() {
 	global $latinName, $commonNames, $startingText;
+
+
+$isLive = false;
+if($_SERVER['SERVER_NAME'] == "autumnearth.com") {
+	$isLive = true;
+}
+
 define("CONSUMER_KEY", "tullZGE4wkZibDnr6aXKuFGQ0");
 define("CONSUMER_SECRET","y1S7rffnenpYRJtDQxSv8a5bq3QhAAafqJzEaCQq0nDtw3XtAS");
 define("OAUTH_TOKEN", "703148355749171202-mwDglZzCgERUC6u7DshkqyPrK7nSrkK");
 define("OAUTH_SECRET", "7f8t7rXScvWIk1AgXe20Z6AA9vRCaG7Vp2wJM964bZMEj");
 $connection = new TwitterOAuth(CONSUMER_KEY, CONSUMER_SECRET, OAUTH_TOKEN, OAUTH_SECRET);
+$connection->setTimeouts(10, 15);
+
+
+if($isLive) {
+// try and get media url length
+// https://dev.twitter.com/rest/reference/get/help/configuration
+$config = $connection->get('help/configuration');
+$mediaURLLength = intval($config->short_url_length_https);
+} else {
+	$mediaURLLength = 23;
+}
+
+
+
 $media = $connection->upload('media/upload', ['media' => 'https://autumnearth.com/images/herbarium/output.jpg']);
 $textString = $latinName."\r\n".'('.implode(", ",$commonNames).')';
 $textString .= "\r\n".$startingText;
-// allow 24 characters for media URL, and 2 for the line returns
 
-$characterLimit = 114;
+$characterLimit = 140-$mediaURLLength;
 if(strlen($textString)>$characterLimit) {
 
 // find the first full stop before this limit
@@ -26,17 +46,34 @@ $textString = substr($textString, 0, $pos+1);
 }
 }
 echo "<p>Tweeted content: ".$textString."</p>";
-$parameters = [
-    'status' => $textString,
-    'media_ids' => $media->media_id_string,
-];
-$result = $connection->post('statuses/update', $parameters);
-if ($connection->getLastHttpCode() == 200) {
-    // Tweet posted succesfully
-} else {
-    // Handle error case
-    echo $connection->getLastHttpCode();
+if($isLive) {
+	$parameters = [
+	    'status' => $textString,
+	    'media_ids' => $media->media_id_string,
+	];
+	$result = $connection->post('statuses/update', $parameters);
+	if ($connection->getLastHttpCode() == 200) {
+	    // Tweet posted succesfully
+	} else {
+	    // Handle error case
+	    echo $connection->getLastHttpCode();
+	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
 
 
