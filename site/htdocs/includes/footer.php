@@ -60,7 +60,7 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/search.php");
 
 
 
-<script src="/js/core.min.<?php echo $cacheVersion; ?>.js"></script>
+<script src="/js/core.<?php echo $cacheVersion; ?>.js"></script>
 <?php
 
 if($additionalAssets != "") {

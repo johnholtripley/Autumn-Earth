@@ -48,9 +48,10 @@ if ('serviceWorker' in navigator) {
 (function () {
       document.addEventListener('DOMContentLoaded', function () {
         var dialogEl = document.getElementById('my-accessible-dialog');
+        if(dialogEl) {
         var mainEl = document.getElementById('wrapper');
         var dialog = new window.A11yDialog(dialogEl, mainEl);
-
+}
         // To manually control the dialog:
         // dialog.show()
         // dialog.hide()
