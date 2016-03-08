@@ -32,6 +32,9 @@ $totalpages = ceil($numberOfEntries/$resultsperpage);
 if($endpagenumber > $totalpages) {
 $endpagenumber = $totalpages;
 }
+if($startpagenumber < 1) {
+$startpagenumber = 1;
+}
 if (($startpagenumber>0) && ($endpagenumber <= $totalpages)) {
 	$startpoint = ($startpagenumber - 1) * $resultsperpage;
 	$endpoint = $endpagenumber * $resultsperpage;
