@@ -199,7 +199,7 @@ for ($i=0;$i<count($brushColours);$i++) {
 
 	$allPossibleRules = array(array("X"=>"S2X[+X]X[-X]X"),array("X"=>"S2X[+X]X[-X][X]"),array("X"=>"S3XX-[-X+X+X]+[+X-X-X]"),array("X"=>"S2F[+X]F[-X]+X","F"=>"FF"),array("X"=>"S2F[+X][-X]FX","F"=>"FF"),array("X"=>"S2F-[[X]+X]+F[+FX]-X","F"=>"FF"));
 
-$allPossibleRules = array(array("X"=>"L"));
+//$allPossibleRules = array(array("X"=>"L"));
 
 	$allPossibleRuleIterations = array(5,6,4,6,6,6);
 	$allPossibleRuleDistances = array(2,3,8,3,3,3);
@@ -266,6 +266,7 @@ $distance = $allPossibleRuleDistances[$whichRules];
 			// draw a leaf at the current size and heading
 
 imagefilledarc($plantCanvas, $pos["x"], $pos["y"]-50, 150, 100, 180, 360 , imagecolorallocate($plantCanvas, 24, 244, 24), IMG_ARC_EDGED);
+
 
 			break;
 			case "]": 
