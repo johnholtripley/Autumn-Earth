@@ -18,13 +18,25 @@ if (cutsTheMustard && document.getElementById("paginationEnhanced")) {
                     // Success:
                     var response = this.responseText;
                     if (response != "") {
-                        document.getElementById('pageArticleList').insertAdjacentHTML('beforeend', response);
+
+
+var jsonResponse = JSON.parse(response);
+
+                        document.getElementById('pageArticleList').insertAdjacentHTML('beforeend', jsonResponse['markup']);
                         // update URL accordingly and update history state
                         if (history.pushState) {
                             var stateObj = {};
                             history.pushState(stateObj, "page " + pageToRequest, "/chronicle/page/" + pageToRequest);
                         } else {
                             // ###
+                        }
+                        var resultsRemaining = jsonResponse['resultsRemaining'];
+              
+                        if(resultsRemaining==0) {
+                        	// remove load more button:
+document.getElementById("paginationEnhanced").innerHTML = '';
+                        } else {
+                        	document.getElementById("loadMore").innerHTML = 'load more ('+resultsRemaining+' more)';
                         }
                     }
                 } else {
