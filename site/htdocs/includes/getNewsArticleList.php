@@ -62,7 +62,9 @@ if (($startpagenumber>0) && ($endpagenumber <= $totalpages)) {
 	} else {
 		// construct JSON response:
 
-echo '{"markup": ["'.addslashes($htmlOutput).'"],"resultsRemaining": ["'.($numberOfEntries-$endpoint).'"]}';
+
+// only need to escape double quotes, not single:
+echo '{"markup": ["'.addcslashes($htmlOutput, '"\\/').'"],"resultsRemaining": ["'.($numberOfEntries-$endpoint).'"]}';
 
 
 

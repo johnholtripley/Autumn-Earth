@@ -1,5 +1,9 @@
-if (cutsTheMustard && document.getElementById("paginationEnhanced")) {
+if (cutsTheMustard && history.pushState && document.getElementById("paginationEnhanced")) {
     function getMoreContent() {
+        var savedButtonContent = document.getElementById("loadMore").innerHTML;
+        document.getElementById("loadMore").setAttribute("disabled", "disabled");
+        document.getElementById("loadMore").innerHTML = 'loading...';
+
         // http://youmightnotneedjquery.com/
         var request = new XMLHttpRequest();
         // get current page number:
@@ -25,26 +29,19 @@ if (cutsTheMustard && document.getElementById("paginationEnhanced")) {
         request.open('GET', '/includes/getNewsArticleList.php?page=' + pageToRequest, true);
         request.onreadystatechange = function() {
             if (this.readyState === 4) {
+                document.getElementById("loadMore").removeAttribute("disabled");
                 if (this.status >= 200 && this.status < 400) {
                     // Success:
                     var response = this.responseText;
                     if (response != "") {
+
                         var jsonResponse = JSON.parse(response);
                         document.getElementById('pageArticleList').insertAdjacentHTML('beforeend', jsonResponse['markup']);
                         // update URL accordingly and update history state
-                        if (history.pushState) {
-                       
-               
-                                urlUpdate = startRange + "-" + pageToRequest;
-                         
-                            var stateObj = {};
-
-                            history.pushState(stateObj, "page " + urlUpdate, "/chronicle/page/" + urlUpdate);
-                        } else {
-                            // ###
-                        }
+                        urlUpdate = startRange + "-" + pageToRequest;
+                        var stateObj = {};
+                        history.pushState(stateObj, "page " + urlUpdate, "/chronicle/page/" + urlUpdate);
                         var resultsRemaining = jsonResponse['resultsRemaining'];
-
                         if (resultsRemaining == 0) {
                             // remove load more button:
                             document.getElementById("paginationEnhanced").innerHTML = '';
@@ -54,7 +51,8 @@ if (cutsTheMustard && document.getElementById("paginationEnhanced")) {
                     }
                 } else {
                     // Error:
-                    // ###
+                    // restore the button to be able to try again:
+                    document.getElementById("loadMore").innerHTML = savedButtonContent;
                 }
             }
         };

@@ -1,0 +1,10 @@
+#loadMore {
+    
+    background: $accentColour;
+    color: #fff;
+
+    &:disabled {
+background: transparent;
+color: #000;
+}
+}
