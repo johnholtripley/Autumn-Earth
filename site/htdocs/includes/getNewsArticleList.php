@@ -43,12 +43,20 @@ if (($startpagenumber>0) && ($endpagenumber <= $totalpages)) {
 	}
 	if ($numberOfEntries > 0) {
 		$rowcount = 0;
+		$animationOffset = 0;
 		$htmlOutput = "";
 		while ($row = mysql_fetch_array($result)) {
 			if (($rowcount>= $startpoint) && ($rowcount<$endpoint)) {
 				extract($row);
 				$timeAdded = strtotime($timeAdded);
-				$htmlOutput .= '<p><strong>'.$newsTitle.'</strong> - '.date('jS F Y',$timeAdded);
+				
+				if(isset($isInitialPageRequest)) {
+					$blockClass = '';
+				} else {
+					$blockClass = ' class="animateIn animateOffset'.$animationOffset.'"';
+					$animationOffset ++;
+				}
+				$htmlOutput .= '<p'.$blockClass.'><strong>'.$newsTitle.'</strong> - '.date('jS F Y',$timeAdded);
 				// check for posted by info:
 				if ($postedBy != "") {
 					$htmlOutput .= ' - posted by '.$postedBy;

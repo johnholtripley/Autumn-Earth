@@ -1,10 +1,25 @@
 #loadMore {
-    
     background: $accentColour;
     color: #fff;
-
     &:disabled {
-background: transparent;
-color: #000;
+        background: transparent;
+        color: #000;
+    }
 }
+
+#pageArticleList {
+    p {
+        transition: transform 0.3s ease;
+    }
+    .animateIn {
+        transform: translateY(200px);
+    }
+
+
+  @for $i from 0 through 4 {
+    .animateOffset#{$i} {
+      transition-duration: $i*0.15s;
+    }
+  }
+
 }
