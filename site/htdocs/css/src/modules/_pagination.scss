@@ -8,6 +8,8 @@
 }
 
 #pageArticleList {
+    // stops the animating items appearing over contente below.
+    overflow: hidden;
     .animateIn {
         @include animation(1s linear 0s 1 slideUp);
     }
@@ -18,7 +20,7 @@
     }
 }
 
-//@include keyframes($animationName, $type, $attribute, $from, $to);
+
 @include keyframes('slideUp') {
     from {
         transform: translateY(200px)
