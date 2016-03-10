@@ -88,6 +88,7 @@ if (mysql_num_rows($result) > 0) {
 
 }
 ?>
+<p>More <a href="/chronicle/">Chronicle articles</a></p>
 </div></div>
 
 <div class="column"><div><h4>Upcoming Events</h4>

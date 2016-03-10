@@ -1,4 +1,5 @@
 if (cutsTheMustard && history.pushState && document.getElementById("paginationEnhanced")) {
+
     function getMoreContent() {
         var savedButtonContent = document.getElementById("loadMore").innerHTML;
         document.getElementById("loadMore").setAttribute("disabled", "disabled");
@@ -34,13 +35,12 @@ if (cutsTheMustard && history.pushState && document.getElementById("paginationEn
                     // Success:
                     var response = this.responseText;
                     if (response != "") {
-
                         var jsonResponse = JSON.parse(response);
                         document.getElementById('pageArticleList').insertAdjacentHTML('beforeend', jsonResponse['markup']);
                         // update URL accordingly and update history state
                         urlUpdate = startRange + "-" + pageToRequest;
-                        var stateObj = {};
-                        history.pushState(stateObj, "page " + urlUpdate, "/chronicle/page/" + urlUpdate);
+                        var stateObj = { };
+                        history.replaceState(stateObj, "page " + urlUpdate, "/chronicle/page/" + urlUpdate);
                         var resultsRemaining = jsonResponse['resultsRemaining'];
                         if (resultsRemaining == 0) {
                             // remove load more button:
@@ -48,10 +48,6 @@ if (cutsTheMustard && history.pushState && document.getElementById("paginationEn
                         } else {
                             document.getElementById("loadMore").innerHTML = 'load more (' + resultsRemaining + ' more)';
                         }
-
-
-
-     
                     }
                 } else {
                     // Error:
