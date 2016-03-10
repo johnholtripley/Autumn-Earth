@@ -1,0 +1,13 @@
+.forum {}
+
+.LinkedImage {
+    // styling in case any linked images are broken:
+    // (http://bitsofco.de/styling-broken-images/)
+    img {
+      font-size: 0.8em;
+        &:after {
+            content: "sorry - broken image (url: " attr(src) ")";
+            display: block;
+        }
+    }
+}

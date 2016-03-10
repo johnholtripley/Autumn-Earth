@@ -17,7 +17,7 @@ $longDescription="Autumn Earth Community Site";
 
 
 
-
+$sectionClass = "";
 switch ($thisSection) {
     case "index.php":
         // home
@@ -25,7 +25,7 @@ switch ($thisSection) {
 $longDescription="Autumn Earth community site";
         break;
     case "forum":
-    
+    $sectionClass = "forum";
 	$pagetitle = 'Autumn Earth community forum thread';
 	$longDescription = 'A discussion on the Autumn Earth community site';
 	// query database to find meta information
@@ -134,7 +134,7 @@ break;
 
 
           case "news":
-    
+     $sectionClass = "news";
 $pagetitle = 'Autumn Earth latest news';
 	$longDescription = 'Latest news from the Autumn Earth community site';
 
@@ -183,5 +183,9 @@ $longDescription = substr($longDescription, 0, 152);
 
 
 echo '<title>'.$pagetitle .'</title>'."\n";
+
+if( $sectionClass != "") {
+	$sectionClass = ' class="'.$sectionClass.'"';
+}
 
 ?>

@@ -9,11 +9,14 @@ $understandsMQs: false;
 @import "shared/IE8grid";
 
 @import "global";
+
 @import "modules/offcanvas";
 @import "modules/masonry";
 @import "modules/IE8masonry";
 @import "modules/pagination";
 @import "modules/accessible-modal-dialog";
+
+@import "sections/forum";
 
 @import "shared/print";
 

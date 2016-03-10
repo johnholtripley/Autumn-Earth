@@ -77,8 +77,8 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/meta-content.php");
 </head>
 
 <?php
-$bodyClass = "";
-echo '<body'.$bodyClass.'>'."\n";
+
+echo '<body'.$sectionClass.'>'."\n";
 include($_SERVER['DOCUMENT_ROOT']."/includes/build-url.php");
 ?>
 <div id="wrapper">
