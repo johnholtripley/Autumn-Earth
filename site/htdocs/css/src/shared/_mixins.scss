@@ -106,7 +106,8 @@
 
 
 
- @mixin transition($values) {
+ @mixin transition($values...) {
+// adding ... allows multiple values to be passed in
 -webkit-transition: $values;
 -moz-transition: $values;
 -o-transition: $values;

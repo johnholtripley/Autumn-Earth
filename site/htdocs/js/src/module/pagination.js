@@ -50,13 +50,14 @@ if (cutsTheMustard && history.pushState && document.getElementById("paginationEn
                         }
 
 
-// remove the added class so the animation is triggered:
-  var elements = document.querySelectorAll('.animateIn');
-  for (var i = 0; i < elements.length; i++) {
-   // fn(elements[i], i);
-//elements[i].style.color = "green";
-removeClass(elements[i], 'animateIn');
-}
+
+                        setTimeout(function() {
+                            // remove the added class so the animation is triggered:
+                            var elements = document.querySelectorAll('.animateIn');
+                            for (var i = 0; i < elements.length; i++) {
+                                removeClass(elements[i], 'animateIn');
+                            }
+                        }, 125);
 
                     }
                 } else {

@@ -9,10 +9,12 @@
 
 #pageArticleList {
     p {
-        transition: transform 0.3s ease;
+      
+        @include transition(transform 0.3s ease-out, opacity 0.1s ease);
     }
     .animateIn {
         transform: translateY(200px);
+        opacity: 0;
     }
 
 
