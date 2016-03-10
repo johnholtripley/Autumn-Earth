@@ -94,7 +94,6 @@ $tweetsList = array();
 		
 		// Function parameters.
 		$twitter_user_id,
-		$cache_file          = '/includes/tweets.txt',  // Change this to the path of your cache file. (Default : ./tweets.txt)
 		$tweets_to_display   = 10,               // Number of tweets you would like to display. (Default : 5)
 		$ignore_replies      = true,           // Ignore replies from the timeline. (Default : false)
 		$include_rts         = true,           // Include retweets. (Default : false)
@@ -113,32 +112,16 @@ $tweetsList = array();
 		$accesstoken         = "78302536-L38EcmSi4C32FuOUFN8hyh6apif8FfPMMh5IItmRE";
 		$accesstokensecret   = "B9Jb6hvZgt5bzx05vd0H44PEkpVjsMM7qGZJIBsRxMDxV";
 		
-		// Seconds to cache feed (Default : 3 minutes).
-		$cachetime           = 3*60;
+		
 		
 		global $tweetsList;
 
-$cache_file = $_SERVER['DOCUMENT_ROOT'].$cache_file;
 
-		// Time that the cache was last updtaed.
-		$cache_file_created  = ((file_exists($cache_file))) ? filemtime($cache_file) : 0;
  
 		// A flag so we know if the feed was successfully parsed.
 		$tweet_found         = false;
 		
-		// Show cached version of tweets, if it's less than $cachetime.
-		if (time() - $cachetime < $cache_file_created) {
-	 		$tweet_found = true;
-	 		
-	 	
-	 		
-			// Display tweets from the cache.
-			//readfile($cache_file);		 
 
-$jsonResults = file_get_contents($cache_file);
-$tweetsList = json_decode($jsonResults, true);
-
-		} else {
 		
 		// Cache file not found, or old. Authenticae app.
 		$connection = getConnectionWithAccessToken($consumerkey, $consumersecret, $accesstoken, $accesstokensecret);
@@ -283,19 +266,14 @@ $tweetOutput = str_replace("<tr>", "&lt;tr&gt;", $tweetOutput);
 
 					
  
-					// Generate a new cache file.
-					$file = fopen($cache_file, 'w');
- 
-					// Save the contents of output buffer to the file, and flush the buffer. 
-					fwrite($file, json_encode($tweetsList)); 
-					fclose($file); 
+				
 					//ob_end_flush();
 					
 				}
 				
 			} 
 			
-		}
+		
 		
 	}
 	

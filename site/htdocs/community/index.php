@@ -9,10 +9,21 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/header.php");
 
 
 
+$cache_file = '/includes/social.txt';
+// Seconds to cache feed (Default : 3 minutes).
+$cachetime           = 3*60;
+$cache_file = $_SERVER['DOCUMENT_ROOT'].$cache_file;
+// Time that the cache was last updtaed.
+$cache_file_created  = ((file_exists($cache_file))) ? filemtime($cache_file) : 0;
+if (time() - $cachetime < $cache_file_created) {
+    
+$socialOutput = stripslashes(file_get_contents($cache_file));
+
+} else {
+
+
 include($_SERVER['DOCUMENT_ROOT']."/includes/social-apis.php");
 display_latest_tweets('autumnearth');
-
-
 
 $socialContent = array();
 for ($i=0;$i<count($allYouTubeVideos);$i++) {
@@ -20,9 +31,6 @@ for ($i=0;$i<count($allYouTubeVideos);$i++) {
 }
 $socialContent = array_merge($socialContent, $tweetsList);
 $socialContent = array_merge($socialContent, $allTumblrImages);
-
-
-
 
 // get latest news:
 $newsQuery = "select * from tblNews WHERE status='1' order by timeAdded DESC limit 10";
@@ -35,50 +43,46 @@ if (mysql_num_rows($result) > 0) {
     array_push($socialContent,array('<div class="chronicle"><a href="/chronicle/'.$cleanURL.'/"><h3>'.$newsTitle.'</h3><p>'.$newsSynopsis.'</p></a></div>',strtotime($timeAdded)));
   }
 }
-
-
-
-
-
-
 // sort by date: 
 function sortByDate($a, $b) {
     return $b[1] - $a[1];
 }
-
 usort($socialContent, 'sortByDate');
 
 
+
+
+
+$socialOutput = "";
+for ($i=0;$i<count($socialContent);$i++) {
+
+$socialOutput .= '<div class="masonry-cell">';
+      $socialOutput .= '<div class="masonry-panel">';
+
+$socialOutput .= $socialContent[$i][0];
+
+
+$socialOutput .= '</div>';
+$socialOutput .= '</div>';
+
+}
+
+// Generate a new cache file.
+          $file = fopen($cache_file, 'w');
+ 
+          // Save the contents of output buffer to the file:
+          fwrite($file, addslashes($socialOutput)); 
+          fclose($file); 
+}
 ?>
-
-
-
-
-
-
 
 
 <div class="row masonry">  
 
 <?php
-
-for ($i=0;$i<count($socialContent);$i++) {
-?>
-<div class="masonry-cell">
-      <div class="masonry-panel">
-<?php
-echo $socialContent[$i][0];
+  echo $socialOutput;
 
 ?>
-</div>
-</div>
-<?php
-}
-
-?>
-  
-
-
 
 
 
