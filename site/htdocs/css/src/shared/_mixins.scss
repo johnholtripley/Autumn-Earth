@@ -74,6 +74,32 @@
 }
 
 
+@mixin animation($values) {
+      -webkit-animation: $values;
+     -moz-animation: $values;
+     -o-animation: $values;
+     animation: $values;
+}
+@mixin animation-duration($value) {
+      -webkit-animation-duration: $value;
+     -moz-animation-duration: $value;
+     -o-animation-duration: $value;
+     animation-duration: $value;
+}
+@mixin keyframes($animationName) {
+    @-webkit-keyframes #{$animationName} {
+        @content;
+    }
+    @-moz-keyframes #{$animationName} {
+        @content;
+    }
+    @-o-keyframes #{$animationName} {
+        @content;
+    }
+    @keyframes #{$animationName} {
+        @content;
+    }
+}
 
 
 @mixin attention() {

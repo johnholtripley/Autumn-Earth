@@ -8,20 +8,22 @@
 }
 
 #pageArticleList {
-    p {
-      
-        @include transition(transform 0.3s ease-out, opacity 0.1s ease);
-    }
     .animateIn {
-        transform: translateY(200px);
-        opacity: 0;
+        @include animation(1s linear 0s 1 slideUp);
     }
-
-
-  @for $i from 0 through 4 {
-    .animateOffset#{$i} {
-      transition-duration: $i*0.15s;
+    @for $i from 0 through 4 {
+        .animateOffset#{$i} {
+            @include animation-duration($i*0.15s);
+        }
     }
-  }
+}
 
+//@include keyframes($animationName, $type, $attribute, $from, $to);
+@include keyframes('slideUp') {
+    from {
+        transform: translateY(200px)
+    }
+    to {
+        transform: translateY(0px)
+    }
 }
