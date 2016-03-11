@@ -1,6 +1,21 @@
 <!doctype html>
 <?php
 
+
+// test for data-saving:
+// https://developers.google.com/web/updates/2016/02/save-data
+$dataSaving = false;
+foreach (getallheaders() as $name => $value) {
+    if(strtolower($name) == "save-data") {
+      if(strtolower($value) == "on") {
+        $dataSaving = true;
+      }
+    }
+}
+
+
+
+
 $useCriticalCssInling = false;
 
 if($_SERVER['PHP_SELF'] == "/index.php") {
