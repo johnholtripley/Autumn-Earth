@@ -388,7 +388,7 @@ $latinName = ucfirst($latinName);
 
 drawPlant(); 
 
-echo "<h1><em>".$latinName."</em></h1>";
+echo '<h1 style="font-style:italic;">'.$latinName.'</h1>';
 
 // create description:
 $jsonResults = file_get_contents($_SERVER['DOCUMENT_ROOT'].'/includes/herbarium/description-grammar.json');
