@@ -524,7 +524,7 @@ function checkMenuConfig() {
         for (i = 0; i < navCount; i++) {
 
             thisNavId = navElementsWithChildren[i].getAttribute('aria-controls');
-             // hide
+            // hide
             document.getElementById(thisNavId).setAttribute('aria-hidden', 'true');
             navElementsWithChildren[i].setAttribute('aria-expanded', 'false');
             if (ae.useHover) {
@@ -537,7 +537,7 @@ function checkMenuConfig() {
                 navElementsWithChildren[i].removeEventListener('mouseleave', navigationReaction, false);
                 navElementsWithChildren[i].addEventListener("click", navigationReaction, false);
             }
-           
+
         }
     }
 }

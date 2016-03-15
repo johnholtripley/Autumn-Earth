@@ -8,7 +8,26 @@
             display: inline-block;
         }
     }
-    @include mq($useOffCanvasUpToMax, 'max') {
+
+    ul {
+        @include mq($useOffCanvasUpTo) {
+            width: 100%;
+            float: none;
+            display: inline;
+            &[aria-hidden] {
+                
+                position: absolute;
+                left: 0;
+                top: 100%;
+            }
+        }
+        &[aria-hidden='true'] {
+            display: none;
+        }
+    }
+}
+.js #navigation ul {
+        @include mq($useOffCanvasUpToMax, 'max') {
         li[aria-controls] {
             position: relative;
             display: block;
@@ -24,19 +43,6 @@
                 width: 90%;
                 display: block;
             }
-        }
-    }
-    ul {
-        @include mq($useOffCanvasUpTo) {
-            &[aria-hidden] {
-                width: 100%;
-                position: absolute;
-                left: 0;
-                top: 100%;
-            }
-        }
-        &[aria-hidden='true'] {
-            display: none;
         }
     }
 }
