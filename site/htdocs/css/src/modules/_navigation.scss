@@ -8,22 +8,21 @@
             display: inline-block;
         }
     }
-    @media (max-width: $useOffCanvasUpTo - 0.01em) {
+    @include mq($useOffCanvasUpToMax, 'max') {
         li[aria-controls] {
-           position: relative;
+            position: relative;
             display: block;
+            cursor: pointer;
             &:after {
                 content: "\25be";
                 @include iconFont;
                 position: absolute;
                 top: 0;
                 right: 0;
-                cursor: pointer;
             }
             a {
                 width: 90%;
-               
-                 display: block;
+                display: block;
             }
         }
     }

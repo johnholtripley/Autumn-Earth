@@ -40,7 +40,7 @@
     }
 }
 
-@media (max-width: $useOffCanvasUpTo - 0.01em) {
+@include mq($useOffCanvasUpToMax, 'max') {
     .js #navigation {
         left: -$offCanvasWidth;
         background: #330000;
@@ -86,7 +86,7 @@
 }
 
 
-@media (max-width: $useOffCanvasUpTo - 0.01em) and (-webkit-transform-3d), (max-width: $useOffCanvasUpTo - 0.01em) and (transform-3d) {
+@media (max-width: $useOffCanvasUpToMax) and (-webkit-transform-3d), (max-width: $useOffCanvasUpToMax) and (transform-3d) {
     .js #navigation {
         left: 0;
         -webkit-transform: translate3d(-100%, 0, 0);

@@ -31,6 +31,7 @@ $triggerIEAt: $widest;
 
 // modules:
 $useOffCanvasUpTo: $wide;
+$useOffCanvasUpToMax: $useOffCanvasUpTo - 0.01em;
 $offCanvasWidth: 70%;
 
 $radioAndCheckboxSize: 16px;
