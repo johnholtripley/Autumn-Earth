@@ -41,8 +41,8 @@ function setUpNavigation() {
             thisNavContent.setAttribute('tabindex', '-1');
             navElementsWithChildren[i].setAttribute('aria-expanded', 'false');
             if (ae.useHover) {
-                navElementsWithChildren[i].addEventListener("mouseover", navigationReaction, false);
-                navElementsWithChildren[i].addEventListener("mouseout", navigationReaction, false);
+                navElementsWithChildren[i].addEventListener("mouseenter", navigationReaction, false);
+                navElementsWithChildren[i].addEventListener("mouseleave", navigationReaction, false);
             } else {
                 navElementsWithChildren[i].addEventListener("click", navigationReaction, false);
             }
@@ -65,11 +65,11 @@ function checkMenuConfig() {
             if (ae.useHover) {
                 // remove previous click - add hover
                 navElementsWithChildren[i].removeEventListener('click', navigationReaction, false);
-                navElementsWithChildren[i].addEventListener("mouseover", navigationReaction, false);
-                navElementsWithChildren[i].addEventListener("mouseout", navigationReaction, false);
+                navElementsWithChildren[i].addEventListener("mouseenter", navigationReaction, false);
+                navElementsWithChildren[i].addEventListener("mouseleave", navigationReaction, false);
             } else {
-                navElementsWithChildren[i].removeEventListener('mouseover', navigationReaction, false);
-                navElementsWithChildren[i].removeEventListener('mouseout', navigationReaction, false);
+                navElementsWithChildren[i].removeEventListener('mouseenter', navigationReaction, false);
+                navElementsWithChildren[i].removeEventListener('mouseleave', navigationReaction, false);
                 navElementsWithChildren[i].addEventListener("click", navigationReaction, false);
             }
             // hide

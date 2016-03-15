@@ -1,10 +1,43 @@
-#navigation ul ul {
-    @include mq($useOffCanvasUpTo) {
-        &[aria-hidden] {
-            width: 100%;
+#navigation ul {
+    @include mq($wide) {
+        float: right;
+        width: 50%;
+        position: relative;
+        z-index: 1;
+        li {
+            display: inline-block;
         }
     }
-    &[aria-hidden='true'] {
-        display: none;
+    @media (max-width: $useOffCanvasUpTo - 0.01em) {
+        li[aria-controls] {
+           position: relative;
+            display: block;
+            &:after {
+                content: "\25be";
+                @include iconFont;
+                position: absolute;
+                top: 0;
+                right: 0;
+                cursor: pointer;
+            }
+            a {
+                width: 90%;
+               
+                 display: block;
+            }
+        }
+    }
+    ul {
+        @include mq($useOffCanvasUpTo) {
+            &[aria-hidden] {
+                width: 100%;
+                position: absolute;
+                left: 0;
+                top: 100%;
+            }
+        }
+        &[aria-hidden='true'] {
+            display: none;
+        }
     }
 }

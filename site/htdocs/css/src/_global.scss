@@ -168,15 +168,7 @@ background: #000;
 
 
 @include mq($wide) {
-    #navigation ul {
-        float: right;
-        width: 50%;
-        position: relative;
-        z-index: 1;
-        li {
-            display: inline;
-        }
-    }
+
     #mastHead h1 {
         width: 50%;
         float: left;

@@ -12,7 +12,7 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/search.php");
 <div class="row">
 <ul>
 <li><a href="/">Home</a></li>
-<li><a href="/community/" aria-controls="subNavCommunity">Community</a>
+<li aria-controls="subNavCommunity"><a href="/community/" >Community</a>
 	<ul id="subNavCommunity">
 <li><a href="/forum/">Forum</a></li>
 </ul></li>
@@ -20,7 +20,7 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/search.php");
 <li><a href="/mail/">Mail</a></li>
 <li><a href="/chronicle/">The Chronicle</a></li>
 <li><a href="#">Guide</a></li>
-<li><a href="/the-world/" aria-controls="subNavTheWorld">The World</a>
+<li aria-controls="subNavTheWorld"><a href="/the-world/">The World</a>
 <ul id="subNavTheWorld">
 	<li><a href="#">The Bestiary</a></li>
 	<li><a href="#">The Pantheon</a></li>
