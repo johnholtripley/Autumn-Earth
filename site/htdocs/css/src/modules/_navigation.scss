@@ -1,0 +1,13 @@
+#navigation ul ul {
+    @include mq($useOffCanvasUpTo) {
+        &[aria-hidden] {
+            position: absolute;
+            left: 0;
+            top: 100%;
+            width: 100%;
+        }
+    }
+    &[aria-hidden='true'] {
+        display: none;
+    }
+}

@@ -76,6 +76,32 @@ function supportsCanvas() {
 }
 
 
+
+function domReady() {
+checkForMegaMenus();
+}
+
+// http://stackoverflow.com/questions/1795089/how-can-i-detect-dom-ready-and-add-a-class-without-jquery/1795167#1795167
+// Mozilla, Opera, Webkit 
+if ( document.addEventListener ) {
+  document.addEventListener( "DOMContentLoaded", function(){
+    document.removeEventListener( "DOMContentLoaded", arguments.callee, false);
+    domReady();
+  }, false );
+
+// If IE event model is used
+} else if ( document.attachEvent ) {
+  // ensure firing before onload
+  document.attachEvent("onreadystatechange", function(){
+    if ( document.readyState === "complete" ) {
+      document.detachEvent( "onreadystatechange", arguments.callee );
+      domReady();
+    }
+  });
+}
+
+
+
 // check for flexbox support:
 var doc = document.body || document.documentElement;
 var style = doc.style;
@@ -84,6 +110,17 @@ if (style.webkitFlexWrap == '' || style.msFlexWrap == '' || style.flexWrap == ''
 }
 
 
+
+
+function getStyle(el,styleProp) {
+  // http://www.quirksmode.org/dom/getstyles.html
+  var x = document.getElementById(el);
+  if (x.currentStyle)
+    var y = x.currentStyle[styleProp];
+  else if (window.getComputedStyle)
+    var y = document.defaultView.getComputedStyle(x,null).getPropertyValue(styleProp);
+  return y;
+}
 
 
 /*
@@ -132,22 +169,11 @@ function hasParent(element, id) {
 }
 
 
-/*
-    
-    
-    
-   function getStyle(el,styleProp) {
-  var x = document.getElementById(el);
-  if (x.currentStyle)
-    var y = x.currentStyle[styleProp];
-  else if (window.getComputedStyle)
-    var y = document.defaultView.getComputedStyle(x,null).getPropertyValue(styleProp);
-  return y;
-}
 
 
 
-*/
+
+
 /*! A fix for the iOS orientationchange zoom bug.
  Script by @scottjehl, rebound by @wilto.
  MIT / GPLv2 License.

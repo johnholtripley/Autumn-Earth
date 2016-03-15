@@ -12,16 +12,16 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/search.php");
 <div class="row">
 <ul>
 <li><a href="/">Home</a></li>
-<li><a href="/community/">Community</a>
-	<ul>
+<li><a href="/community/" aria-controls="subNavCommunity">Community</a>
+	<ul id="subNavCommunity">
 <li><a href="/forum/">Forum</a></li>
 </ul></li>
 <li><a href="/auction/">Auction</a></li>
 <li><a href="/mail/">Mail</a></li>
 <li><a href="/chronicle/">The Chronicle</a></li>
 <li><a href="#">Guide</a></li>
-<li><a href="#">The World</a>
-<ul>
+<li><a href="#" aria-controls="subNavTheWorld">The World</a>
+<ul id="subNavTheWorld">
 	<li><a href="#">The Bestiary</a></li>
 	<li><a href="#">The Pantheon</a></li>
 	<li><a href="#">Atlas</a></li>

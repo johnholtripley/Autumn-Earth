@@ -12,6 +12,12 @@ $threadlocID=$_POST["threadloc"];
 
 $postcontents = htmlCharsToEntities(cleanText($_POST["postcontents"]));
 
+// replace any target blanks to stop malicious code:
+// https://mathiasbynens.github.io/rel-noopener/
+$postcontents = str_ireplace("target='_blank'","target='_blank' rel='noopener'",$postcontents);
+$postcontents = str_ireplace("target=\"_blank\"","target=\"_blank\" rel=\""noopener\"",$postcontents);
+$postcontents = str_ireplace("target=_blank","target=\"_blank\" rel=\""noopener\"",$postcontents);
+
 $query = "update tblposts SET postContent = '".$postcontents."',edited=NOW()
 WHERE postid='".$thispostid."'";
 $result = mysql_query($query) or die ("couldn't execute query");

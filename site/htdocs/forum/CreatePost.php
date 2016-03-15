@@ -14,6 +14,12 @@ $threadID = $_POST["thread"];
 $useraccountID = $_POST["useraccount"];
 $postcontents = (htmlCharsToEntities(cleanText($_POST["postcontents"])));
 
+// replace any target blanks to stop malicious code:
+// https://mathiasbynens.github.io/rel-noopener/
+$postcontents = str_ireplace("target='_blank'","target='_blank' rel='noopener'",$postcontents);
+$postcontents = str_ireplace("target=\"_blank\"","target=\"_blank\" rel=\""noopener\"",$postcontents);
+$postcontents = str_ireplace("target=_blank","target=\"_blank\" rel=\""noopener\"",$postcontents);
+
 //
 
 //
