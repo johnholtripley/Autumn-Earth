@@ -97,6 +97,11 @@ if($isNetworkGame) {
 	$additionalAssets .= '<script src="/js/card-sockets.'.$cacheVersion.'.js"></script>'."\n";
 }
 $additionalAssets .= '<script src="/js/card-game.'.$cacheVersion.'.js"></script>'."\n";
-include($_SERVER['DOCUMENT_ROOT']."/includes/card-sub-nav.php");
-include($_SERVER['DOCUMENT_ROOT']."/includes/footer.php");
+?>
+<ul>
+<?php
+include($_SERVER['DOCUMENT_ROOT']."/includes/navigation/card-game.php");
+?>
+</ul>
+<?php include($_SERVER['DOCUMENT_ROOT']."/includes/footer.php");
 ?>
