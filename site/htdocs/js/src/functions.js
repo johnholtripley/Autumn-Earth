@@ -103,7 +103,7 @@ if ( document.addEventListener ) {
 
 
 
-
+/*
 // https://davidwalsh.name/javascript-debounce-function
 function debounce(func, wait, immediate) {
   var timeout;
@@ -124,11 +124,11 @@ function debounce(func, wait, immediate) {
 
 
 var throttledResize = debounce(function() {
-    checkMenuConfig();
+//    checkMenuConfig();
 }, 250);
 
 window.addEventListener('resize', throttledResize);
-
+*/
 
 // check for flexbox support:
 var doc = document.body || document.documentElement;

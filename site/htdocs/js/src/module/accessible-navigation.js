@@ -1,9 +1,7 @@
 function toggleNavElem(whichElement, event) {
-if(event.type != "click") {
-whichElement = whichElement.children[1]; 
-}
+
     thisNavId = whichElement.getAttribute('aria-controls');
-    console.log(whichElement.nodeName + " - "+thisNavId);
+    //console.log(whichElement.nodeName + " - "+thisNavId);
     if (thisNavId) {
         event.preventDefault();
         thisNavContent = document.getElementById(thisNavId);
@@ -29,11 +27,13 @@ function setUpNavigation() {
     // https://adactio.com/journal/10365
     // http://codepen.io/adactio/pen/oxLNwY/
     if (cutsTheMustard) {
+        /*
         ae.useHover = false;
         if (getStyle("menuToggle", "display") == "none") {
             // use hover instead
             ae.useHover = true;
         }
+        */
         // set up menus:
         navElementsWithChildren = document.querySelectorAll('[aria-controls]');
         navCount = navElementsWithChildren.length;
@@ -44,16 +44,17 @@ function setUpNavigation() {
             thisNavContent.setAttribute('tabindex', '-1');
             navElementsWithChildren[i].setAttribute('aria-expanded', 'false');
             
-            if (ae.useHover) {
-                navElementsWithChildren[i].parentNode.addEventListener("mouseenter", navigationReaction, false);
-                navElementsWithChildren[i].parentNode.addEventListener("mouseleave", navigationReaction, false);
-            } else {
+         //   if (ae.useHover) {
+         //       navElementsWithChildren[i].parentNode.addEventListener("mouseenter", navigationReaction, false);
+         //       navElementsWithChildren[i].parentNode.addEventListener("mouseleave", navigationReaction, false);
+         //   } else {
                 navElementsWithChildren[i].parentNode.parentNode.addEventListener("click", navigationReaction, false);
-            }
+          //  }
         }
     }
 }
 
+/*
 function checkMenuConfig() {
     // called on resize.
     ae.olduseHover = ae.useHover;
@@ -84,3 +85,4 @@ function checkMenuConfig() {
         }
     }
 }
+*/

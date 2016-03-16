@@ -3,17 +3,12 @@
         display: none;
     }
     ul {
-        @include mq($wide) {
+        @include mq($useOffCanvasUpTo) {
             float: right;
             width: 50%;
             position: relative;
             z-index: 1;
-            li {
-                display: inline-block;
-            }
-        }
-        ul {
-            @include mq($useOffCanvasUpTo) {
+            ul {
                 width: 100%;
                 float: none;
                 display: inline;
@@ -24,6 +19,14 @@
                     top: 100%;
                 }
             }
+            li {
+                display: inline-block;
+                &:hover ul {
+                    display: block;
+                }
+            }
+        }
+        ul {
             &[aria-hidden='true'] {
                 display: none;
             }
