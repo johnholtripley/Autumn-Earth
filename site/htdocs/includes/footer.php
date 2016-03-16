@@ -12,7 +12,7 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/search.php");
 <div class="row">
 <ul>
 <li><a href="/">Home</a></li>
-<li class="isParent"><a href="/community/" aria-controls="subNavCommunity">Community</a>
+<li><a href="/community/">Community</a><button aria-controls="subNavCommunity"><span class="visibleHide">Toggle community menu</span></button>
 	<ul id="subNavCommunity">
 <?php include($_SERVER['DOCUMENT_ROOT']."/includes/navigation/community.php"); ?>
 </ul></li>
@@ -20,13 +20,13 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/search.php");
 <li><a href="/mail/">Mail</a></li>
 <li><a href="/chronicle/">The Chronicle</a></li>
 <li><a href="#">Guide</a></li>
-<li class="isParent"><a href="/the-world/" aria-controls="subNavTheWorld">The World</a>
+<li><a href="/the-world/">The World</a><button aria-controls="subNavTheWorld"><span class="visibleHide">Toggle world menu</span></button>
 <ul id="subNavTheWorld">
 <?php include($_SERVER['DOCUMENT_ROOT']."/includes/navigation/the-world.php"); ?>
 </ul>
 </li>
 <li><a href="/contracts/CreateContract.php">Contracts</a></li>
-<li class="isParent"><a href="/card-game/" aria-controls="subNavCardGame">Card game</a>
+<li><a href="/card-game/">Card game</a><button aria-controls="subNavCardGame"><span class="visibleHide">Toggle card game menu</span></button>
 
 <ul id="subNavCardGame">
 <?php include($_SERVER['DOCUMENT_ROOT']."/includes/navigation/card-game.php"); ?>

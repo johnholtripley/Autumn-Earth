@@ -1,48 +1,44 @@
-#navigation ul {
-    @include mq($wide) {
-        float: right;
-        width: 50%;
-        position: relative;
-        z-index: 1;
-        li {
-            display: inline-block;
-        }
+#navigation {
+    button {
+        display: none;
     }
-
     ul {
-        @include mq($useOffCanvasUpTo) {
-            width: 100%;
-            float: none;
-            display: inline;
-            &[aria-hidden] {
-                display: block;
-                position: absolute;
-                left: 0;
-                top: 100%;
+        @include mq($wide) {
+            float: right;
+            width: 50%;
+            position: relative;
+            z-index: 1;
+            li {
+                display: inline-block;
             }
         }
-        &[aria-hidden='true'] {
-            display: none;
+        ul {
+            @include mq($useOffCanvasUpTo) {
+                width: 100%;
+                float: none;
+                display: inline;
+                &[aria-hidden] {
+                    display: block;
+                    position: absolute;
+                    left: 0;
+                    top: 100%;
+                }
+            }
+            &[aria-hidden='true'] {
+                display: none;
+            }
         }
     }
 }
-.js #navigation ul {
-        @include mq($useOffCanvasUpToMax, 'max') {
-        .isParent {
-            position: relative;
-            display: block;
-            cursor: pointer;
-            &:after {
-                content: "\25be";
-                @include iconFont;
-                position: absolute;
-                top: 0;
-                right: 0;
-            }
-            a {
-                width: 90%;
-                display: block;
-            }
+
+.js #navigation {
+    button {
+        display: inline-block;
+        cursor: pointer;
+        margin: 0;
+        &:after {
+            content: "\25be";
+            @include iconFont;
         }
     }
 }
