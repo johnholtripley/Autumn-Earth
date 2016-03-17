@@ -11,27 +11,27 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/search.php");
 <div id="navigationInner">
 <div class="row">
 <ul>
-<li><a href="/">Home</a></li>
-<li><a href="/community/">Community</a><button aria-controls="subNavCommunity"><span class="visibleHide">Toggle community menu</span></button>
-	<ul id="subNavCommunity">
-<?php include($_SERVER['DOCUMENT_ROOT']."/includes/navigation/community.php"); ?>
-</ul></li>
-<li><a href="/auction/">Auction</a></li>
-<li><a href="/mail/">Mail</a></li>
-<li><a href="/chronicle/">The Chronicle</a></li>
-<li><a href="#">Guide</a></li>
-<li><a href="/the-world/">The World</a><button aria-controls="subNavTheWorld"><span class="visibleHide">Toggle world menu</span></button>
-<ul id="subNavTheWorld">
-<?php include($_SERVER['DOCUMENT_ROOT']."/includes/navigation/the-world.php"); ?>
-</ul>
-</li>
-<li><a href="/contracts/CreateContract.php">Contracts</a></li>
-<li><a href="/card-game/">Card game</a><button aria-controls="subNavCardGame"><span class="visibleHide">Toggle card game menu</span></button>
-
-<ul id="subNavCardGame">
-<?php include($_SERVER['DOCUMENT_ROOT']."/includes/navigation/card-game.php"); ?>
-</ul>
-</li>
+	<li><a href="/">Home</a></li>
+	<li><a href="/community/">Community</a><button aria-controls="subNavCommunity"><span class="visibleHide">Toggle community menu</span></button>
+		<ul id="subNavCommunity">
+		<?php include($_SERVER['DOCUMENT_ROOT']."/includes/navigation/community.php"); ?>
+		</ul>
+	</li>
+	<li><a href="/auction/">Auction</a></li>
+	<li><a href="/mail/">Mail</a></li>
+	<li><a href="/chronicle/">The Chronicle</a></li>
+	<li><a href="#">Guide</a></li>
+	<li><a href="/the-world/">The World</a><button aria-controls="subNavTheWorld"><span class="visibleHide">Toggle world menu</span></button>
+		<ul id="subNavTheWorld">
+		<?php include($_SERVER['DOCUMENT_ROOT']."/includes/navigation/the-world.php"); ?>
+		</ul>
+	</li>
+	<li><a href="/contracts/CreateContract.php">Contracts</a></li>
+	<li><a href="/card-game/">Card game</a><button aria-controls="subNavCardGame"><span class="visibleHide">Toggle card game menu</span></button>
+		<ul id="subNavCardGame">
+		<?php include($_SERVER['DOCUMENT_ROOT']."/includes/navigation/card-game.php"); ?>
+		</ul>
+	</li>
 </ul>
 </div>
 </div>
@@ -39,12 +39,9 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/search.php");
 <div id="footer" role="contentinfo">
 	<div class="row">
 	<div class="small-12 column">
-<p>&copy; 2015 Autumn Earth</p>
-
+<p>&copy; 2004&ndash;<?php echo date("Y"); ?> Autumn Earth</p>
 <ul>
-	
 	<li><a href="https://twitter.com/autumnearth/">Twitter</a></li>
-
 	<li><a href="https://www.youtube.com/c/autumnearth/">YouTube</a></li>
 	<li><a href="https://autumnearth.tumblr.com/">Tumblr</a></li>
 	<li>Facebook</li>

@@ -1,7 +1,5 @@
 function toggleNavElem(whichElement, event) {
-
     thisNavId = whichElement.getAttribute('aria-controls');
-    //console.log(whichElement.nodeName + " - "+thisNavId);
     if (thisNavId) {
         event.preventDefault();
         thisNavContent = document.getElementById(thisNavId);
@@ -18,23 +16,13 @@ function toggleNavElem(whichElement, event) {
 
 navigationReaction = function(event) {
     target = event.target || event.srcElement;
-    //console.log(event.type+" - "+target.nodeName);
     toggleNavElem(target, event);
-
 };
 
 function setUpNavigation() {
     // https://adactio.com/journal/10365
     // http://codepen.io/adactio/pen/oxLNwY/
     if (cutsTheMustard) {
-        /*
-        ae.useHover = false;
-        if (getStyle("menuToggle", "display") == "none") {
-            // use hover instead
-            ae.useHover = true;
-        }
-        */
-        // set up menus:
         navElementsWithChildren = document.querySelectorAll('[aria-controls]');
         navCount = navElementsWithChildren.length;
         for (i = 0; i < navCount; i++) {
@@ -43,46 +31,8 @@ function setUpNavigation() {
             thisNavContent.setAttribute('aria-hidden', 'true');
             thisNavContent.setAttribute('tabindex', '-1');
             navElementsWithChildren[i].setAttribute('aria-expanded', 'false');
-            
-         //   if (ae.useHover) {
-         //       navElementsWithChildren[i].parentNode.addEventListener("mouseenter", navigationReaction, false);
-         //       navElementsWithChildren[i].parentNode.addEventListener("mouseleave", navigationReaction, false);
-         //   } else {
-                navElementsWithChildren[i].parentNode.parentNode.addEventListener("click", navigationReaction, false);
-          //  }
-        }
-    }
-}
-
-/*
-function checkMenuConfig() {
-    // called on resize.
-    ae.olduseHover = ae.useHover;
-    ae.useHover = false;
-    if (getStyle("menuToggle", "display") == "none") {
-        // use hover instead
-        ae.useHover = true;
-    }
-    if (ae.useHover != ae.olduseHover) {
-        // change handlers:
-        for (i = 0; i < navCount; i++) {
-
-            thisNavId = navElementsWithChildren[i].getAttribute('aria-controls');
-            // hide
-            document.getElementById(thisNavId).setAttribute('aria-hidden', 'true');
-            navElementsWithChildren[i].setAttribute('aria-expanded', 'false');
-            if (ae.useHover) {
-                // remove previous click - add hover
-                navElementsWithChildren[i].parentNode.parentNode.removeEventListener('click', navigationReaction, false);
-                navElementsWithChildren[i].parentNode.addEventListener("mouseenter", navigationReaction, false);
-                navElementsWithChildren[i].parentNode.addEventListener("mouseleave", navigationReaction, false);
-            } else {
-                navElementsWithChildren[i].parentNode.removeEventListener('mouseenter', navigationReaction, false);
-                navElementsWithChildren[i].parentNode.removeEventListener('mouseleave', navigationReaction, false);
-                navElementsWithChildren[i].parentNode.parentNode.addEventListener("click", navigationReaction, false);
-            }
+            navElementsWithChildren[i].parentNode.parentNode.addEventListener("click", navigationReaction, false);
 
         }
     }
 }
-*/
