@@ -103,6 +103,30 @@ if ( document.addEventListener ) {
 
 
 
+
+
+/*
+function viewport() {
+  // https://andylangton.co.uk/blog/development/get-viewportwindow-size-width-and-height-javascript
+    var e = window, a = 'inner';
+    if (!('innerWidth' in window)) {
+        a = 'client';
+        e = document.documentElement || document.body;
+    }
+    return { width: e[a + 'Width'], height: e[a + 'Height'] }
+}
+
+// viewport width = viewport().width;
+*/
+
+
+
+
+
+
+
+
+
 /*
 // https://davidwalsh.name/javascript-debounce-function
 function debounce(func, wait, immediate) {
