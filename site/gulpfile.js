@@ -227,7 +227,7 @@ gulp.task('favicons', function() {
             coast: true, // Create Opera Coast icon. 'boolean'
             favicons: true, // Create regular favicons. 'boolean'
             firefox: true, // Create Firefox OS icons. 'boolean'
-            opengraph: true, // Create Facebook OpenGraph image. 'boolean'
+            opengraph: false, // Create Facebook OpenGraph image. 'boolean'
             twitter: false, // Create Twitter Summary Card image. 'boolean'
             windows: true, // Create Windows 8 tile icons. 'boolean'
             yandex: true // Create Yandex browser icon. 'boolean'
