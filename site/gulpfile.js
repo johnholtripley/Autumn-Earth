@@ -13,6 +13,7 @@ var gulp = require('gulp'),
     gutil = require('gulp-util'),
     clean = require('gulp-clean'),
     favicons = require('gulp-favicons'),
+     webpagetest = require('webpagetest'),
    exec = require('child_process').exec,
     fs = require("fs"),
     access = require('gulp-accessibility'),
@@ -301,6 +302,60 @@ gulp.task('pageSpeed', function() {
 
 
 
+gulp.task('webpagetest', function() {
+  var parameters, testSpecs, wpt;
+  wpt = new webpagetest('www.webpagetest.org', 'A.32d53e293dd240a6a9c1e41d0f4a0d85');
+  parameters = {
+    disableHTTPHeaders: true,
+    "private": true,
+    notifyEmail: "john.holtripley@gmail.com",
+    location: 'ec2-eu-west-1:Chrome'
+  };
+  testSpecs = {
+    runs: {
+      1: {
+        firstView: {
+          SpeedIndex: 1500
+        }
+      }
+    },
+    median: {
+      firstView: {
+        bytesIn: 1000000,
+        visualComplete: 4000
+      }
+    }
+  };
+  return wpt.runTest("http://www.autumnearth.com", parameters, function(err, data) {
+    var checkStatus, testID;
+    var lastStatusMessage = "";
+    testID = data.data.testId;
+    checkStatus = function() {
+      return wpt.getTestStatus(testID, function(err, data) {
+        if(data.data.statusText != lastStatusMessage) {
+            // only show updates
+        console.log("Status for " + testID + ": " + data.data.statusText);
+lastStatusMessage = data.data.statusText;
+    }
+        if (!data.data.completeTime) {
+          return setTimeout(checkStatus, 5000);
+        } else {
+          return wpt.getTestResults(testID, {
+            specs: testSpecs
+          }, function(err, data) {
+            console.log("http://www.webpagetest.org/result/" + testID + "/");
+            if (err > 0) {
+              return process.exit(1);
+            }
+          });
+        }
+      });
+    };
+    return checkStatus();
+  });
+});
+
+
 
 
 
@@ -421,7 +476,7 @@ gulp.task('default', function() {
 // pre-go live task
 // run getSitemap first
 // then visual regression tests
-gulp.task('deploy', ['critical','removeUnused','favicons','cacheBusting','pageSpeed'], function() {
+gulp.task('deploy', ['critical','removeUnused','favicons','cacheBusting','pageSpeed', 'webpagetest'], function() {
     gulp.start('regressionTest');
 });
 
