@@ -12,7 +12,7 @@ foreach($json['items'] as $item) {
 		// is a video
 		$thisVideoId = $item['id']['videoId'];
 		$thisVideoPublishedAt = strtotime($item['snippet']['publishedAt']);
-		array_push($allYouTubeVideos, array($thisVideoId,$thisVideoPublishedAt));
+		array_push($allYouTubeVideos, array($thisVideoId,$thisVideoPublishedAt,"youtube"));
 	}
 }
 ?>
@@ -256,7 +256,7 @@ $tweetOutput = str_replace("<tr>", "&lt;tr&gt;", $tweetOutput);
 						if ($tweet_count >= $tweets_to_display){
 							break;
 						}
- array_push($tweetsList,array($twitter_html,$tweet_time));
+ array_push($tweetsList,array($twitter_html,$tweet_time,"tweet"));
 
 					}
  
@@ -305,7 +305,7 @@ $thisPostURL = $item['post_url'];
 		$thisImageSource = '<div class="tumblr"><a href="'.$thisPostURL.'" title="View this post on Tumblr"><img src="'.$thisImageUrl.'" alt="'.$altText.'"></a></div>';
 
 		$thisImagePublishedAt = strtotime($item['date']);
-		array_push($allTumblrImages, array($thisImageSource,$thisImagePublishedAt));
+		array_push($allTumblrImages, array($thisImageSource,$thisImagePublishedAt,"tumblr"));
 	}
 }
 

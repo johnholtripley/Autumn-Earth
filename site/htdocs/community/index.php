@@ -11,7 +11,7 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/header.php");
 
 
 // Seconds to cache feed (Default : 3 minutes).
-$cachetime = 3*60;
+$cachetime = 3;
 $cache_file = $_SERVER['DOCUMENT_ROOT'].'/includes/social.txt';
 // Time that the cache was last updtaed.
 $cache_file_created  = ((file_exists($cache_file))) ? filemtime($cache_file) : 0;
@@ -25,7 +25,7 @@ display_latest_tweets('autumnearth');
 
 $socialContent = array();
 for ($i=0;$i<count($allYouTubeVideos);$i++) {
-  array_push($socialContent,array('<div class="videoWrapper youtube"><iframe width="420" height="315" src="https://www.youtube.com/embed/'.$allYouTubeVideos[$i][0].'?rel=0&amp;showinfo=0&amp;modestbranding=1" frameborder="0" allowfullscreen></iframe></div>',$allYouTubeVideos[$i][1]));
+  array_push($socialContent,array('<div class="videoWrapper youtube"><iframe width="420" height="315" src="https://www.youtube.com/embed/'.$allYouTubeVideos[$i][0].'?rel=0&amp;showinfo=0&amp;modestbranding=1" frameborder="0" allowfullscreen></iframe></div>',$allYouTubeVideos[$i][1],$allYouTubeVideos[$i][2]));
 }
 $socialContent = array_merge($socialContent, $tweetsList);
 $socialContent = array_merge($socialContent, $allTumblrImages);
@@ -37,8 +37,7 @@ $result = mysql_query($newsQuery) or die ("couldn't execute query");
 if (mysql_num_rows($result) > 0) {
   while ($row = mysql_fetch_array($result)) {
     extract($row);
-   
-    array_push($socialContent,array('<div class="chronicle"><a href="/chronicle/'.$cleanURL.'/"><h3>'.$newsTitle.'</h3><p>'.$newsSynopsis.'</p></a></div>',strtotime($timeAdded)));
+    array_push($socialContent,array('<div class="chronicle"><a href="/chronicle/'.$cleanURL.'/"><h3>'.$newsTitle.'</h3><p>'.$newsSynopsis.'</p></a></div>',strtotime($timeAdded),"chronicle"));
   }
 }
 // sort by date: 
@@ -54,23 +53,50 @@ usort($socialContent, 'sortByDate');
 $socialOutput = "";
 for ($i=0;$i<count($socialContent);$i++) {
 
-$socialOutput .= '<div class="masonry-cell">';
-      $socialOutput .= '<div class="masonry-panel">';
 
-$socialOutput .= $socialContent[$i][0];
+// see if can create some clusters:
+  $canDoACluster = false;
+  if($i<count($socialContent)-1) {
+if($socialContent[$i][2] == "tumblr") {
+if($socialContent[$i+1][2] == "chronicle") {
 
 
-$socialOutput .= '</div>';
-$socialOutput .= '</div>';
 
+    $socialOutput .= '<div class="masonry-cell masonry-cluster">';
+     $socialOutput .= ' <div class="masonry-cluster-cell masonry-cluster-group">';
+       $socialOutput .= ' <div class="masonry-cell">';
+       
+        $socialOutput .= $socialContent[$i][0];
+   
+       $socialOutput .= ' </div>';
+        $socialOutput .= ' <div class="masonry-cell masonry-cluster-cell">';
+        $socialOutput .= '  <div class="masonry-panel">';
+             $socialOutput .= $socialContent[$i+1][0];
+        $socialOutput .= '  </div>';
+       $socialOutput .= ' </div>';
+     $socialOutput .= ' </div>';
+   $socialOutput .= ' </div>';
+
+
+  $canDoACluster = true;
+$i++;
+}
+}
+  }
+if(!$canDoACluster) {
+  $socialOutput .= '<div class="masonry-cell">';
+  $socialOutput .= '<div class="masonry-panel">';
+  $socialOutput .= $socialContent[$i][0];
+  $socialOutput .= '</div>';
+  $socialOutput .= '</div>';
+}
 }
 
+
 // Generate a new cache file.
-          $file = fopen($cache_file, 'w');
- 
-          // Save the contents of output buffer to the file:
-          fwrite($file, addslashes($socialOutput)); 
-          fclose($file); 
+$file = fopen($cache_file, 'w');
+fwrite($file, addslashes($socialOutput)); 
+fclose($file); 
 }
 ?>
 
@@ -99,7 +125,6 @@ $socialOutput .= '</div>';
           </div>
         </div>
       </div>
-      
     </div>
 
 
