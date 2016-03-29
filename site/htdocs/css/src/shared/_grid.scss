@@ -20,6 +20,11 @@
 
 }
 
+ul.row, ol.row {
+  // max-width is set in ems, so make sure it's not been changed
+  font-size: 1em;
+}
+
 @include mq($widest) {
   .row {
     width: 100%;
