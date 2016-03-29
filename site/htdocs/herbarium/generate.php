@@ -194,7 +194,7 @@ function quadBezier($im, $x1, $y1, $x2, $y2, $x3, $y3) {
 
 function drawPlant() {
 	// thanks to http://www.kevs3d.co.uk/dev/lsystems/
-	global $iterations, $angle;
+	global $iterations, $angle, $isAquatic;
 	$canvaDimension = 600;
 	$plantCanvas = imagecreatetruecolor($canvaDimension, $canvaDimension);
 	$ground = imagecolorallocate($plantCanvas, 240, 240, 240);
@@ -355,7 +355,7 @@ imagefilledarc($plantCanvas, $pos["x"], $pos["y"]-50, 150, 100, 180, 360 , image
 
 //$controlX = ($lastX + $pos["x"]) / 2;
   //    $controlY = ($lastY + $pos["y"]) / 2;
-$controlX = max($lastX, $pos["x"]);
+$controlX = min($lastX, $pos["x"]);
 $controlY = min($lastY, $pos["y"]);
    quadBezier($plantCanvas, $lastX, $lastY, $controlX, $controlY, $pos["x"], $pos["y"]);
 
@@ -462,7 +462,7 @@ $latinName = ucfirst($latinName);
 <body>
 <?php
 
-drawPlant(); 
+ 
 
 echo '<h1 style="font-style:italic;">'.$latinName.'</h1>';
 
@@ -479,6 +479,7 @@ $commonNameDistribution = array(1,1,1,1,2,2,3);
 $numberOfCommonNames = $commonNameDistribution[rand(0,count($commonNameDistribution)-1)];
 
 $commonNames = array();
+$isAquatic = false;
 
 for($i=0;$i<$numberOfCommonNames;$i++) {
 $thisCommonName = $commonPrefixes[rand(0,count($commonPrefixes)-1)];
@@ -515,10 +516,24 @@ switch ($shouldAddPrefix) {
 // in case the first name has a space at the end, and the second at the start:
 $thisCommonName = str_replace("  ", " ", $thisCommonName);
 
+$aquaticPos = strpos($thisCommonName, "*");
+if ($aquaticPos !== false) {
+	$isAquatic = true;
+	}
+// remove any asteriks:
+$thisCommonName = str_ireplace("*", "", $thisCommonName);
+
 array_push($commonNames,$thisCommonName);
 }
 
-echo "<h2>Common names: ".implode(", ",$commonNames)."</h2>";
+$commonNameString = implode(", ",$commonNames);
+if(count($commonNames)>1) {
+	// replace last "," with a "or":
+	$lastCommaPos = strrpos($commonNameString, ",");
+	$commonNameString = substr($commonNameString, 0, $lastCommaPos)   ." or ".   substr($commonNameString, $lastCommaPos+1);
+}
+
+echo "<h2>Common names: ".$commonNameString."</h2>";
 
 // pick a random item from the Origin to start from:
 $whichElem = rand(0,(count($json['origin'])-1));
@@ -526,6 +541,10 @@ $startingText = $json['origin'][$whichElem];
 $startingText = findAndReplaceHashes($startingText);
 
 echo '<p>'.$startingText.'</p>';
+
+
+drawPlant();
+
 //$cacheBustURL = "/images/herbarium/output.jpg?".$depthToStopAt."-".$branchingAngle."-".$numberOfBranches;
 $cacheBustURL = "/images/herbarium/output.jpg?".$iterations."-".$angle;
 echo '<img src="'.$cacheBustURL.'" width="480" height="480" alt="'.$latinName.'">';
