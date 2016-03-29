@@ -9,8 +9,8 @@ $thisURL = $_SERVER['PHP_SELF'];
 $thisURLSection = explode("/",$thisURL);
 $thisSection = trim($thisURLSection[1]);
 
-$thisBuiltURL = "http://www.autumnearth.com/";
-$shareImagePath = "http://www.autumnearth.com/images/icons/120.png";
+$thisBuiltURL = "https://www.autumnearth.com/";
+$shareImagePath = "https://www.autumnearth.com/images/icons/120.png";
 
   $pagetitle="Autumn Earth";
 $longDescription="Autumn Earth Community Site";
@@ -89,6 +89,31 @@ $result = mysql_query($query) or die ("couldn't execute query1");
 
 
         break;
+
+
+case "herbarium":
+if (isset($_GET["plant"])) {
+$query = "select * from tblplants WHERE plantUrl = '".cleanURL($_GET["plant"])."'";
+$result = mysql_query($query) or die ("couldn't execute query1");
+		$numberofrows = mysql_num_rows($result);
+		if ($numberofrows > 0) {
+			$row = mysql_fetch_array($result);
+			extract ($row);
+		$thisBuiltURL = $thisBuiltURL."herbarium/".$plantUrl."/";
+			$pagetitle = $latinName.' - ' .$commonNames. ' - Autumn Earth Herbarium';
+			$shareImagePath = 'https://www.autumnearth.com/images/herbarium/'.$plantUrl.'.jpg';
+			$longDescription = $plantDesc;
+		}
+	} else {
+		// herbarium home
+		$thisBuiltURL = $thisBuiltURL."herbarium/";
+		$pagetitle = 'Autumn Earth Herbarium';
+		$longDescription = 'Catalogue of the flora of Autumn Earth';
+	}
+
+break;
+
+
      case "auction":
     // if auction item show details for that
 
@@ -103,7 +128,7 @@ $result = mysql_query($query) or die ("couldn't execute query1");
 			extract ($row);
 $pagetitle = $shortname." for sale on the Autumn Earth Auction House";
 $longDescription = $description;
-	$shareImagePath = "http://www.autumnearth.com/images/inventory/".$itemID.".jpg";
+	$shareImagePath = "https://www.autumnearth.com/images/inventory/".$itemID.".jpg";
 		}
         break;
           case "mail":

@@ -105,7 +105,19 @@ echo '<url><loc>https://www.autumnearth.com/events/'.$cleanURL.'/</loc><priority
 }
 }
 
+// add herbarium pages:
+?>
 
+<url><loc>https://www.autumnearth.com/herbarium/</loc><priority>0.7</priority></url>
+<?php
+$query = "select * from tblplants order by timeCreated desc limit 5";
+$result = mysql_query( $query ) or die ( "couldn't execute inner query" );
+if ( mysql_num_rows( $result )>0 ) {
+while ( $row = mysql_fetch_array( $result ) ) {
+extract( $row );
+echo '<url><loc>https://www.autumnearth.com/herbarium/'.$plantUrl.'/</loc><priority>0.5</priority></url>'."\n";
+}
+}
 
 // get top search results pages
 $query = "select * from tblSavedSearches order by searchCount DESC LIMIT 10";
