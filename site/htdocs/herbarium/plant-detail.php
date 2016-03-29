@@ -37,6 +37,31 @@ extract($row);
 	<h3><?php echo $commonNames; ?></h3>
 	<img src="/images/herbarium/plants/<?php echo $plantUrl; ?>.jpg" alt="<?php echo $latinName; ?>">
 	<p><?php echo $plantDesc; ?></p>
+
+<ul id="socialShareLinks">
+    <li class="socialTwitter">
+    	<?php $urlToShare = urlencode($thisBuiltURL);
+    	$imageToShare = urlencode($shareImagePath);
+    	$descToShare = urlencode($longDescription);
+    	$hashTag = "AutumnEarth";
+    	?>
+        <a class="popupWindow" target="_blank" href="https://twitter.com/intent/tweet/?url=<?php echo $urlToShare; ?>&amp;hashtags=<?php echo $hashTag; ?>">Share on Twitter</a>
+    </li>
+    <li class="socialFacebook">
+        <a class="popupWindow" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=<?php echo $urlToShare; ?>">Share on Facebook</a>
+    </li>
+    <li class="socialGoogle">
+        <a class="popupWindow" target="_blank" href="https://plus.google.com/share?url=<?php echo $urlToShare; ?>">Share on Google+</a>
+    </li>
+    <li class="socialPinterest">
+        <a class="largerPopupWindow" target="_blank" href="https://www.pinterest.com/pin/create/button/?url=<?php echo $urlToShare; ?>&amp;media=<?php echo $imageToShare; ?>&amp;description=<?php echo $latinName . " - ".$commonNames; ?>&amp;hashtags=<?php echo $hashTag; ?>">Share on Pinterest</a>
+    </li>
+  
+
+
+
+</ul>
+
 <?php
 } else {
 	

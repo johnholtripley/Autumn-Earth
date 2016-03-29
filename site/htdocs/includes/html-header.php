@@ -51,7 +51,7 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/title-tag.php");
 <meta http-equiv="Accept-CH" content="DPR,Width,Viewport-Width"> 
 <script>
     var cutsTheMustard = false;
-    if('querySelector' in document && 'addEventListener' in window) {
+    if('querySelectorAll' in document && 'addEventListener' in window) {
      cutsTheMustard = true;
       document.documentElement.className += " js";
      }
