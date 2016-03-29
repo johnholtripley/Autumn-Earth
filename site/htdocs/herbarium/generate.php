@@ -5,8 +5,12 @@
 
 require_once $_SERVER['DOCUMENT_ROOT'].'/includes/third-party/twitterOAuth/twitteroauth-0.6.2/autoload.php';
 use Abraham\TwitterOAuth\TwitterOAuth;
+
+include($_SERVER['DOCUMENT_ROOT']."/includes/signalnoise.php");
+include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
+
 function sendToTwitter() {
-	global $latinName, $commonNames, $startingText;
+	global $latinName, $startingText, $plantURL, $commonNameString, $isAquatic, $storedSeed;
 
 
 $isLive = false;
@@ -33,8 +37,8 @@ $mediaURLLength = intval($config->short_url_length_https);
 
 
 
-$media = $connection->upload('media/upload', ['media' => 'https://autumnearth.com/images/herbarium/output.jpg']);
-$textString = $latinName."\r\n".'('.implode(", ",$commonNames).')';
+$media = $connection->upload('media/upload', ['media' => $_SERVER['DOCUMENT_ROOT'].'/images/herbarium/plants/'.$plantURL.'.jpg']);
+$textString = $latinName."\r\n".'('.$commonNameString.')';
 $textString .= "\r\n".$startingText;
 
 $characterLimit = 140-$mediaURLLength;
@@ -46,7 +50,7 @@ if ($pos !== false) {
 $textString = substr($textString, 0, $pos+1);
 } else {
 	// isn't room for the short description:
-	$textString = $latinName."\r\n".'('.implode(", ",$commonNames).')';
+	$textString = $latinName."\r\n".'('.$commonNameString.')';
 }
 }
 echo "<p>Tweeted content: ".$textString."</p>";
@@ -66,7 +70,10 @@ if($isLive) {
 
 
 
+$query = "INSERT INTO tblplants (latinName,commonNames,timeCreated,plantDesc,plantUrl,tweetedContent,isAquatic,plantSeed)
+VALUES ('" . $latinName . "','" . $commonNameString . "',NOW(),'".$startingText."','".$plantURL."','".$textString."','".$isAquatic."','".$storedSeed."')";
 
+$result = mysql_query($query) or die ("couldn't execute query1");
 
 
 
@@ -194,7 +201,7 @@ function quadBezier($im, $x1, $y1, $x2, $y2, $x3, $y3) {
 
 function drawPlant() {
 	// thanks to http://www.kevs3d.co.uk/dev/lsystems/
-	global $iterations, $angle, $isAquatic;
+	global $iterations, $angle, $isAquatic, $plantURL;
 	$canvaDimension = 600;
 	$plantCanvas = imagecreatetruecolor($canvaDimension, $canvaDimension);
 	$ground = imagecolorallocate($plantCanvas, 240, 240, 240);
@@ -371,7 +378,7 @@ imagecopy($plantCanvas, $textureOverlay, 0, 0, 0, 0, $canvaDimension, $canvaDime
 
 
 	// output:
-	imagejpeg($plantCanvas,$_SERVER['DOCUMENT_ROOT'].'/images/herbarium/output.jpg',95);
+	imagejpeg($plantCanvas,$_SERVER['DOCUMENT_ROOT'].'/images/herbarium/plants/'.$plantURL.'.jpg',95);
 	imagedestroy($plantCanvas);
 	imagedestroy($textureOverlay);
 
@@ -530,7 +537,7 @@ $commonNameString = implode(", ",$commonNames);
 if(count($commonNames)>1) {
 	// replace last "," with a "or":
 	$lastCommaPos = strrpos($commonNameString, ",");
-	$commonNameString = substr($commonNameString, 0, $lastCommaPos)   ." or ".   substr($commonNameString, $lastCommaPos+1);
+	$commonNameString = substr($commonNameString, 0, $lastCommaPos)   ." or".   substr($commonNameString, $lastCommaPos+1);
 }
 
 echo "<h2>Common names: ".$commonNameString."</h2>";
@@ -542,14 +549,16 @@ $startingText = findAndReplaceHashes($startingText);
 
 echo '<p>'.$startingText.'</p>';
 
-
+$plantURL = str_ireplace(" ", "-", trim(strtolower($latinName)));
 drawPlant();
 
-//$cacheBustURL = "/images/herbarium/output.jpg?".$depthToStopAt."-".$branchingAngle."-".$numberOfBranches;
-$cacheBustURL = "/images/herbarium/output.jpg?".$iterations."-".$angle;
-echo '<img src="'.$cacheBustURL.'" width="480" height="480" alt="'.$latinName.'">';
+echo '<img src="/images/herbarium/plants/'.$plantURL.'.jpg" width="480" height="480" alt="'.$latinName.'">';
 
 echo '<p style="font-size:0.7em;">seed: '.$storedSeed.'</p>';
+
+
+
+
 
 sendToTwitter();
 ?>
