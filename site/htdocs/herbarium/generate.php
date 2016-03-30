@@ -236,7 +236,7 @@ for ($i=0;$i<count($brushColours);$i++) {
 
 	$allPossibleRules = array(array("X"=>"S2X[+X]X[-X]X"),array("X"=>"S2X[+X]X[-X][X]"),array("X"=>"S3XX-[-X+X+X]+[+X-X-X]"),array("X"=>"S2F[+X]F[-X]+X","F"=>"FF"),array("X"=>"S2F[+X][-X]FX","F"=>"FF"),array("X"=>"S2F-[[X]+X]+F[+FX]-X","F"=>"FF"));
 
-$allPossibleRules = array(array("X"=>"FF[----FF]S2++FF[--F]S1+++FF","F"=>"FF"));
+//$allPossibleRules = array(array("X"=>"FF[----FF]S2++FF[--F]S1+++FF","F"=>"FF"));
 
 	$allPossibleRuleIterations = array(5,6,4,6,6,6);
 
@@ -270,6 +270,10 @@ $distance = $allPossibleRuleDistances[$whichRules];
 	} 
 
 	
+
+// make all 'X's into 'F's
+$result = str_replace("X", "F", $result);
+
 	
 	// find all successive 'F's and count them, so that 'FFFFF' becomes 'F(5)'
 	$commandString = "";
@@ -296,6 +300,21 @@ $distance = $allPossibleRuleDistances[$whichRules];
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//$commandString = $result;
 
 
 
@@ -342,9 +361,14 @@ imagefilledarc($plantCanvas, $pos["x"], $pos["y"]-50, 150, 100, 180, 360 , image
 				// "F"
 
 // find how long this line is
+
+
 	$posInString = stripos($commandString, ")", $i);
 		$lengthOfThisNumber = $posInString-($i+2);
 		$howLong = intval(substr($commandString,$i+2,$lengthOfThisNumber));
+
+		
+
 		$i += ($lengthOfThisNumber+2);
 
 
@@ -352,21 +376,24 @@ imagefilledarc($plantCanvas, $pos["x"], $pos["y"]-50, 150, 100, 180, 360 , image
 				$lastY = $pos["y"];
 				// move the turtle
 				$rad = deg2rad($pos["heading"]);
-			
+		
 				$pos["x"] -= ($distance * $howLong) * sin($rad);
 				$pos["y"] -= ($distance * $howLong) * cos($rad);
-				// imageline($plantCanvas, $lastX, $lastY, $pos["x"], $pos["y"], ${'penColour'.$pos["colour"]});
+				
 
 				imagesetbrush($plantCanvas, ${'brushcol'.$pos["colour"].'size'.$pos["size"]});
-			//	imageline($plantCanvas, $lastX, $lastY, $pos["x"], $pos["y"], IMG_COLOR_BRUSHED);
+				
 
-//$controlX = ($lastX + $pos["x"]) / 2;
-  //    $controlY = ($lastY + $pos["y"]) / 2;
+
 $controlX = min($lastX, $pos["x"]);
 $controlY = min($lastY, $pos["y"]);
+
+// curve:
    quadBezier($plantCanvas, $lastX, $lastY, $controlX, $controlY, $pos["x"], $pos["y"]);
 
-//quadBezier($plantCanvas, 50, 100, 300, 420, 400, 300);
+// line:
+//imageline($plantCanvas, $lastX, $lastY, $pos["x"], $pos["y"], IMG_COLOR_BRUSHED);
+
 
 		}
 	}
