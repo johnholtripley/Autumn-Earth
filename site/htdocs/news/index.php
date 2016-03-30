@@ -64,7 +64,7 @@ if (mysql_num_rows($result) > 0) {
 
 	
 	//
-	// get forum title information:
+	
 	$query = "SELECT * FROM tblnews WHERE status ='1' AND newsID = '".$articleId."'";
 	$result = mysql_query($query) or die ("couldn't execute query");
 	
@@ -78,23 +78,58 @@ if (mysql_num_rows($result) > 0) {
 		$row = mysql_fetch_array($result);
 		extract($row);
 
+?>
+<div itemscope itemtype="http://schema.org/NewsArticle">
+  <meta itemscope itemprop="mainEntityOfPage"  itemType="https://schema.org/WebPage" itemid="https://google.com/article"/>
 
+<?php
 
-		echo '<h1>'.$newsTitle.'</h1>';
+		echo '<h1 itemprop="headline">'.$newsTitle.'</h1>';
 		$thisArticleAdded = $timeAdded;
 		$timeAdded = strtotime($timeAdded);
-		echo '<h2>'.date('jS F Y',$timeAdded);
-		
+		echo '<h2>'.date('jS F Y',$timeAdded).'</h2>';
+		echo'<meta itemprop="datePublished" content="'.date('Y-m-d\TH:i:sO',$timeAdded).'">';
+		echo'<meta itemprop="dateModified" content="'.date('Y-m-d\TH:i:sO',$timeAdded).'">';
+
 		// check for posted by info:
 if ($postedBy != "") {
-echo ' - posted by '.$postedBy;
+echo '<h3 itemprop="author" itemscope itemtype="https://schema.org/Person">posted by <span itemprop="name">'.$postedBy.'</span></h3>';
 }
-echo '</h2>';
+
+
+if($bannerContent != "") {
+
+$size = getimagesize($_SERVER['DOCUMENT_ROOT'].'/images/banners/'.$bannerContent);
+
+	?>
+<div itemprop="image" itemscope itemtype="https://schema.org/ImageObject">
+    <img src="/images/banners/<?php echo $bannerContent; ?>" alt="">
+    <meta itemprop="url" content="https://www.autumnearth.com/images/banners/<?php echo $bannerContent; ?>">
+<meta itemprop="width" content="<?php echo $size[0]; ?>">
+      <meta itemprop="height" content="<?php echo $size[1]; ?>">
+
+  </div>
+
+	<?php
+}
 		
 		// remove any [CONTINUE] tag
 		$newsContent = str_ireplace('[CONTINUE]','',$newsContent);
-		echo $newsContent;
+		echo '<div itemprop="description">'.$newsContent.'</div>';
 	
+?>
+<div itemprop="publisher" itemscope itemtype="https://schema.org/Organization">
+	<meta itemprop="name" content="The Autumn Earth Chronicle">
+   <div itemprop="logo" itemscope itemtype="https://schema.org/ImageObject">
+      <img src="/images/the-chronicle.png">
+      <meta itemprop="url" content="https://www.autumnearth.com/images/the-chronicle.png">
+      <meta itemprop="width" content="233">
+      <meta itemprop="height" content="64">
+    </div>
+
+</div>
+</div>
+<?php
 
 
 
