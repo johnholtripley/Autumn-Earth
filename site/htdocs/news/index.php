@@ -81,7 +81,16 @@ if (mysql_num_rows($result) > 0) {
 ?>
 <div itemscope itemtype="http://schema.org/NewsArticle">
   <meta itemscope itemprop="mainEntityOfPage"  itemType="https://schema.org/WebPage" itemid="https://google.com/article"/>
+<div itemprop="publisher" itemscope itemtype="https://schema.org/Organization">
+	<meta itemprop="name" content="The Autumn Earth Chronicle">
+   <div itemprop="logo" itemscope itemtype="https://schema.org/ImageObject">
+      <img src="/images/the-chronicle.png">
+      <meta itemprop="url" content="https://www.autumnearth.com/images/the-chronicle.png">
+      <meta itemprop="width" content="233">
+      <meta itemprop="height" content="64">
+    </div>
 
+</div>
 <?php
 
 		echo '<h1 itemprop="headline">'.$newsTitle.'</h1>';
@@ -118,16 +127,7 @@ $size = getimagesize($_SERVER['DOCUMENT_ROOT'].'/images/banners/'.$bannerContent
 		echo '<div itemprop="description">'.$newsContent.'</div>';
 	
 ?>
-<div itemprop="publisher" itemscope itemtype="https://schema.org/Organization">
-	<meta itemprop="name" content="The Autumn Earth Chronicle">
-   <div itemprop="logo" itemscope itemtype="https://schema.org/ImageObject">
-      <img src="/images/the-chronicle.png">
-      <meta itemprop="url" content="https://www.autumnearth.com/images/the-chronicle.png">
-      <meta itemprop="width" content="233">
-      <meta itemprop="height" content="64">
-    </div>
 
-</div>
 </div>
 <?php
 

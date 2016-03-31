@@ -21,15 +21,27 @@ $result = mysql_query($query) or die ("couldn't execute query");
 if (mysql_num_rows($result) > 0) {
 echo '<ul id="herbariumCatalogue" class="row medium-2up wide-5up equalHeights">';
 $cardDataNeeded = array(array(null,null,null));
+$i = 1;
 while ($row = mysql_fetch_array($result)) {
 
 extract($row);
+$additionalClass="";
+$pictureArray = array(150,300);
+if(($i%13 == 1) || ($i%13 == 8)) {
+$additionalClass=" spotlight";
+$pictureArray = array(300,600);
+}
 
 ?>
 
-<li class="column" data-aquatic="<?php echo $isAquatic; ?>"><div>
+<li class="column<?php echo $additionalClass; ?>" data-aquatic="<?php echo $isAquatic; ?>"><div>
 	<a href="/herbarium/<?php echo $plantUrl; ?>/">
-	<img src="/images/herbarium/plants/<?php echo $plantUrl; ?>.jpg" alt="<?php echo $latinName; ?>">
+
+<?php
+picture('/images/herbarium/plants/'.$plantUrl.'.jpg', $latinName, $pictureArray);
+?>
+
+	
 	<h4><?php echo $latinName; ?></h4>
 	<h5><?php echo $commonNames; ?></h5>
 	<p><?php echo $plantDesc; ?></p>
@@ -38,7 +50,7 @@ extract($row);
 
 <?php
 
-
+$i++;
 	}
 	echo "</ul>";
 }

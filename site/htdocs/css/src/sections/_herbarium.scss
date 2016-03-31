@@ -1,9 +1,8 @@
-#herbariumCatalogue{
-	list-style: none;
-}
-@include mq($wide) {
-	#herbariumCatalogue li:nth-child(13n+1),
-	#herbariumCatalogue li:nth-child(13n+8) {
-		width: 40%;
-	}
+#herbariumCatalogue {
+    list-style: none;
+    @include mq($widest) {
+        .spotlight {
+            width: 40%;
+        }
+    }
 }

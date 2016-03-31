@@ -131,7 +131,7 @@ function quadBezier($im, $x1, $y1, $x2, $y2, $x3, $y3) {
 function drawPlant() {
 	// thanks to http://www.kevs3d.co.uk/dev/lsystems/
 	global $iterations, $angle, $isAquatic, $plantURL;
-	$canvaDimension = 600;
+	$canvaDimension = 604;
 	$plantCanvas = imagecreatetruecolor($canvaDimension, $canvaDimension);
 	$ground = imagecolorallocate($plantCanvas, 240, 240, 240);
 	imagefilledrectangle($plantCanvas, 0, 0, $canvaDimension, $canvaDimension, $ground);
@@ -391,7 +391,7 @@ $syllableCount ++;
 } while ($nextSyllable != " ");
 } while (!(($syllableCount>=3) && ($syllableCount<=5)));
 $latinName .= $secondLatinName;
-$latinName = ucfirst($latinName);
+$latinName = ucfirst(trim($latinName));
 ?>
 <!doctype html>
 <html lang="en-gb">
