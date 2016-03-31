@@ -58,6 +58,7 @@ if($isLive) {
 	$parameters = [
 	    'status' => $textString,
 	    'media_ids' => $media->media_id_string,
+	    'alt_text' => 'Plant generated in the style of a medieval Herbarium'
 	];
 	$result = $connection->post('statuses/update', $parameters);
 	if ($connection->getLastHttpCode() == 200) {

@@ -188,11 +188,18 @@ $tweet_desc = nl2br($tweet_desc);
  if(!empty($entities->urls[0]->expanded_url)) {
 $tweet_desc = str_replace($entities->urls[0]->url, $entities->urls[0]->expanded_url, $tweet_desc);
 }
+var_dump($tweet);
  if(!empty($entities->media[0]->media_url)) {
  	//$tweet_desc .= '<img src="'.$entities->media[0]->media_url_https.'">';
 
 $stringToReplace = '<a href="'.$entities->media[0]->url.'" target="_blank">'.$entities->media[0]->url.'</a>';
- $tweet_desc = str_replace($stringToReplace, '<img alt="sourced from '.$entities->media[0]->expanded_url.'" src="'.$entities->media[0]->media_url_https.'">', $tweet_desc);
+
+$altText = 'sourced from '.$entities->media[0]->expanded_url;
+if(!empty($entities->media[0]->ext_alt_text)) {
+	$altText = $entities->media[0]->ext_alt_text;
+}
+
+ $tweet_desc = str_replace($stringToReplace, '<img alt="'.$altText.'" src="'.$entities->media[0]->media_url_https.'">', $tweet_desc);
 
  	}
 

@@ -1314,9 +1314,12 @@ function imageResized($source, $widthRequired) {
 	}
 }
 
-function picture($source, $alt, $breakpoints) {
+function picture($source, $alt, $breakpoints, $forceResize = false) {
 	$htmlOutput = '<picture>'."\r\n";
+	if(!$forceResize) {
+// don't use the original image size if true - use the pciture element to fiorce a resize of the image, and exclude the original
 	$htmlOutput .= '<source media="(min-width: '.$breakpoints[(count($breakpoints)-1)].'px)" srcset="'.$source.'">'."\r\n";
+}
 	for($i = count($breakpoints)-1; $i>=0;$i--) {
 		$htmlOutput .= '<source ';
 		if($i>0) {

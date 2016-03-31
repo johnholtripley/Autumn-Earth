@@ -26,10 +26,10 @@ while ($row = mysql_fetch_array($result)) {
 
 extract($row);
 $additionalClass="";
-$pictureArray = array(150,300);
+$pictureArray = array(150,277);
 if(($i%13 == 1) || ($i%13 == 8)) {
 $additionalClass=" spotlight";
-$pictureArray = array(300,600);
+$pictureArray = array(300,604);
 }
 
 ?>
@@ -38,7 +38,7 @@ $pictureArray = array(300,600);
 	<a href="/herbarium/<?php echo $plantUrl; ?>/">
 
 <?php
-picture('/images/herbarium/plants/'.$plantUrl.'.jpg', $latinName, $pictureArray);
+picture('/images/herbarium/plants/'.$plantUrl.'.jpg', $latinName, $pictureArray, true);
 ?>
 
 	

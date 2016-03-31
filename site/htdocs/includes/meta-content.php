@@ -10,6 +10,7 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/favicons.html");
 <meta name="twitter:title" content="<?php echo $pagetitle; ?>">
 <meta name="twitter:description" content="<?php echo $longDescription; ?>">
 <meta name="twitter:image" content="<?php echo $shareImagePath; ?>">
+<meta name="twitter:image:alt" content="">
 
 <meta property="og:title" content="<?php echo $pagetitle; ?>">
 <meta property="og:image" content="<?php echo $shareImagePath; ?>">
@@ -20,4 +21,4 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/favicons.html");
 <meta itemprop="description" content="<?php echo $longDescription; ?>">
 <meta itemprop="image" content="<?php echo $shareImagePath; ?>">
 
-<link rel="canonical" href="<?php echo $thisBuiltURL; ?>" />
+<link rel="canonical" href="<?php echo $thisBuiltURL; ?>">
