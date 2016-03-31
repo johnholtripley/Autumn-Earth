@@ -32,10 +32,17 @@ extract($row);
 <li><?php echo $latinName; ?></li>
 </ul>
 
+</div>
+</div>
 
+
+<div class="row">
+    <div class="medium-6 column">
+<img src="/images/herbarium/plants/<?php echo $plantUrl; ?>.jpg" alt="<?php echo $latinName; ?>">
+</div><div class="medium-6 column">
 	<h2><?php echo $latinName; ?></h2>
 	<h3><?php echo $commonNames; ?></h3>
-	<img src="/images/herbarium/plants/<?php echo $plantUrl; ?>.jpg" alt="<?php echo $latinName; ?>">
+	
 	<p><?php echo $plantDesc; ?></p>
 
 <ul id="socialShareLinks">
@@ -61,12 +68,14 @@ extract($row);
 
 
 </ul>
-
+</div>
+</div>
 <?php
 } else {
 	
-echo"<h2>Sorry, couldn't find that plant</h2>";
-	
+echo "<h2>Sorry, couldn't find that plant</h2>";
+    echo "</div>";
+	echo "</div>";
 	header("HTTP/1.0 404 Not Found");
 }
 
