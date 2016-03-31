@@ -1314,22 +1314,28 @@ function imageResized($source, $widthRequired) {
 	}
 }
 
-function picture($source, $alt, $breakpoints, $forceResize = false) {
-	$htmlOutput = '<picture>'."\r\n";
+function picture($source, $alt, $breakpoints, $forceResize = false, &$addToBuffer = '') {
+	$thisHtmlOutput = '<picture>';
 	if(!$forceResize) {
 // don't use the original image size if true - use the pciture element to fiorce a resize of the image, and exclude the original
-	$htmlOutput .= '<source media="(min-width: '.$breakpoints[(count($breakpoints)-1)].'px)" srcset="'.$source.'">'."\r\n";
+	$thisHtmlOutput .= '<source media="(min-width: '.$breakpoints[(count($breakpoints)-1)].'px)" srcset="'.$source.'">';
 }
 	for($i = count($breakpoints)-1; $i>=0;$i--) {
-		$htmlOutput .= '<source ';
+		$thisHtmlOutput .= '<source ';
 		if($i>0) {
-			$htmlOutput .= 'media="(min-width: '.$breakpoints[$i-1].'px)"';
+			$thisHtmlOutput .= 'media="(min-width: '.$breakpoints[$i-1].'px)"';
 		}
-		$htmlOutput .= ' srcset="'.imageResized($source,$breakpoints[$i]).'">'."\r\n";
+		$thisHtmlOutput .= ' srcset="'.imageResized($source,$breakpoints[$i]).'">';
 	}
-	$htmlOutput .= '<img src="'.$source.'" alt="'.$alt.'">'."\r\n";
-	$htmlOutput .= '</picture>'."\r\n";
-	echo $htmlOutput;
+	$thisHtmlOutput .= '<img src="'.$source.'" alt="'.$alt.'">';
+	$thisHtmlOutput .= '</picture>';
+
+	if($addToBuffer == '') {
+	echo $thisHtmlOutput;
+} else {
+	// if not echoing the results immediately - for ajax requests and so on:
+$addToBuffer .= $thisHtmlOutput;
+}
 }
 
 

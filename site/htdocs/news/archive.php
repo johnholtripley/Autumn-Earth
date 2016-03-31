@@ -16,7 +16,7 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/header.php");
 
 
 
-<div id="newsArticleList">
+<div id="newsArticleList" class="paginationBlock">
 <?php
 $isInitialPageRequest = true;
 include($_SERVER['DOCUMENT_ROOT']."/includes/getNewsArticleList.php");
@@ -47,7 +47,7 @@ echo '</div>';
 
 
 } else {
-echo'<p class="Error">No news items found.</p>';
+echo'<p>No news items found.</p>';
 }
 
 

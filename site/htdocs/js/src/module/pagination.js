@@ -2,6 +2,8 @@ if (cutsTheMustard && history.pushState && document.getElementById("paginationEn
 
     // get the name of the file to load the content from:
     var whichContentToGet = document.getElementById('paginationEnhanced').previousElementSibling.id;
+    // eg. if the content block is newsArticleList then the content will be loaded from getnewsArticleList.php
+    // pagination block must be immedialtey after the content block
 
     function getMoreContent() {
         var savedButtonContent = document.getElementById("loadMore").innerHTML;

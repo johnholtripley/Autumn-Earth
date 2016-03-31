@@ -14,65 +14,34 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/header.php");
 </div>
 
 <?php
-// get all card data:
+// get all plant data:
+$isInitialPageRequest = true;
+include($_SERVER['DOCUMENT_ROOT']."/includes/getHerbariumCatalogue.php");
 
-$query = "select * from tblplants ORDER BY timeCreated desc";
-$result = mysql_query($query) or die ("couldn't execute query");
-if (mysql_num_rows($result) > 0) {
-echo '<ul id="herbariumCatalogue" class="row medium-2up wide-5up equalHeights">';
-$cardDataNeeded = array(array(null,null,null));
-$i = 1;
-while ($row = mysql_fetch_array($result)) {
-
-extract($row);
-$additionalClass="";
-$pictureArray = array(150,277);
-if(($i%13 == 1) || ($i%13 == 8)) {
-$additionalClass=" spotlight";
-$pictureArray = array(300,604);
+if ($numberOfEntries > 0) {
+// pagination:
+echo '<div id="paginationEnhanced">';
+$thispageurl = "/herbarium/";
+if($pagenumber>1) {
+	echo '<a href="'.$thispageurl.'page/'.($pagenumber-1).'" title="View page '.($pagenumber-1).'">previous</a> ';
 }
-
-?>
-
-<li class="column<?php echo $additionalClass; ?>" data-aquatic="<?php echo $isAquatic; ?>"><div>
-	<a href="/herbarium/<?php echo $plantUrl; ?>/">
-
-<?php
-picture('/images/herbarium/plants/'.$plantUrl.'.jpg', $latinName, $pictureArray, true);
-?>
-
-	
-	<h4><?php echo $latinName; ?></h4>
-	<h5><?php echo $commonNames; ?></h5>
-	<p><?php echo $plantDesc; ?></p>
-</a></div>
-</li>
-
-<?php
-
-$i++;
-	}
-	echo "</ul>";
+	for($i = 1; $i <= $totalpages; $i++) {
+				if($i == $pagenumber) { 
+				echo $i.' | ';
+				} else {
+				echo '<a href="'.$thispageurl.'page/'.$i.'" title="View page '.$i.'">'.$i.'</a> | ';
+				}
+			} 
+if($pagenumber<$totalpages) {
+	echo '<a href="'.$thispageurl.'page/'.($pagenumber+1).'" title="View page '.($pagenumber+1).'">next</a> ';
 }
+echo ' (<span id="articlesRemaining">'.($numberOfEntries-$endpoint).'</span> more)';
+echo '</div>';
 
 
-
-
-?>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<?php
+} else {
+echo'<p>No plants found.</p>';
+}
 
 include($_SERVER['DOCUMENT_ROOT']."/includes/footer.php");
 ?>

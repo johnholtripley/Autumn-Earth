@@ -341,6 +341,7 @@ AddDefaultCharset utf-8
 
 
 RewriteRule    ^herbarium/generate/?$     herbarium/generate/index.php      [NC,L]
+RewriteRule    ^herbarium/page/([0-9-]+)/?$     herbarium/index.php?page=$1 [NC,L]
 RewriteRule    ^herbarium/([A-Za-z0-9-]+)/?$    herbarium/plant-detail.php?plant=$1    [NC,L] 
 
 RewriteRule    ^community/([A-Za-z0-9-]+)/([A-Za-z0-9-]+)/?$    community/guilds/viewpage.php?cleaned=1&guild=$1&page=$2    [NC,L]  

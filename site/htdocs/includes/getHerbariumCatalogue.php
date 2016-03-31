@@ -2,6 +2,7 @@
 
 include_once($_SERVER['DOCUMENT_ROOT']."/includes/signalnoise.php");
 include_once($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
+include_once($_SERVER['DOCUMENT_ROOT']."/includes/functions.php");
 $pagenumber = 0;
 if(isset($_GET['page'])) {
 	$pagenumber = $_GET['page'];
@@ -24,10 +25,12 @@ if ($pos !== false) {
 	$endpagenumber = 1;
 }
 
-$query = "select * from tblNews WHERE status='1' order by timeAdded DESC";
+$query = "select * from tblplants ORDER BY timeCreated desc";
 $result = mysql_query($query) or die ("couldn't execute query");
 $numberOfEntries = mysql_num_rows($result);
-$resultsperpage = 5;
+
+
+$resultsperpage = 13;
 $totalpages = ceil($numberOfEntries/$resultsperpage);
 if($endpagenumber > $totalpages) {
 $endpagenumber = $totalpages;
@@ -45,28 +48,44 @@ if (($startpagenumber>0) && ($endpagenumber <= $totalpages)) {
 		$rowcount = 0;
 		$animationOffset = 0;
 		$htmlOutput = "";
+		$i = 1;
+		if(($numberOfEntries>0) && (isset($isInitialPageRequest))) {
+	echo '<ul id="herbariumCatalogue" class="row medium-2up wide-5up equalHeights paginationBlock">';
+}
 		while ($row = mysql_fetch_array($result)) {
 			if (($rowcount>= $startpoint) && ($rowcount<$endpoint)) {
 				extract($row);
-				$timeAdded = strtotime($timeAdded);
-				
+
+$additionalClass="";
+$pictureArray = array(150,277);
+if(($i%$resultsperpage == 1) || ($i%$resultsperpage == 8)) {
+$additionalClass=" spotlight";
+$pictureArray = array(300,604);
+}
+
 				if(isset($isInitialPageRequest)) {
-					$blockClass = '';
+					
 				} else {
-					$blockClass = ' class="animateIn animateOffset'.$animationOffset.'"';
+					$additionalClass .= ' animateIn animateOffset'.$animationOffset;
 					$animationOffset ++;
 				}
-				$htmlOutput .= '<p'.$blockClass.'><strong>'.$newsTitle.'</strong> - '.date('jS F Y',$timeAdded);
-				// check for posted by info:
-				if ($postedBy != "") {
-					$htmlOutput .= ' - posted by '.$postedBy;
-				}
-				$htmlOutput .= '<br>'.$newsSynopsis.' <a href="/chronicle/'.$cleanURL.'/" title="Click for the full article">read more...</a></p>';
+				$htmlOutput .= '<li class="column'.$additionalClass.'" data-aquatic="'.$isAquatic.'"><div>';
+				$htmlOutput .= '<a href="/herbarium/'.$plantUrl.'/">';
+
+picture('/images/herbarium/plants/'.$plantUrl.'.jpg', $latinName, $pictureArray, true, $htmlOutput);
+
+	$htmlOutput .= '<h4>'.$latinName.'</h4><h5>'.$commonNames.'</h5><p>'.$plantDesc.'</p></a></div></li>';
+
+
+
+
 			}
+			$i++;
 			$rowcount++;
 		}
 		if(isset($isInitialPageRequest)) {
 		echo $htmlOutput;
+		echo '</ul>';
 	} else {
 		// construct JSON response:
 
@@ -79,5 +98,6 @@ echo '{"markup": ["'.addcslashes($htmlOutput, '"\\/').'"],"resultsRemaining": ["
 	}
 	}
 }
+
 
 ?>
