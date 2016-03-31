@@ -1,5 +1,8 @@
 if (cutsTheMustard && history.pushState && document.getElementById("paginationEnhanced")) {
 
+    // get the name of the file to load the content from:
+    var whichContentToGet = document.getElementById('paginationEnhanced').previousElementSibling.id;
+
     function getMoreContent() {
         var savedButtonContent = document.getElementById("loadMore").innerHTML;
         document.getElementById("loadMore").setAttribute("disabled", "disabled");
@@ -8,7 +11,7 @@ if (cutsTheMustard && history.pushState && document.getElementById("paginationEn
         // http://youmightnotneedjquery.com/
         var request = new XMLHttpRequest();
         // get current page number:
-        var currentPage = window.location.toString();
+        var currentPage = window.location.pathname.toString();
         var pagePos = currentPage.indexOf("page/");
         if (pagePos != -1) {
             pageToRequest = currentPage.substr(pagePos + 5);
@@ -22,12 +25,18 @@ if (cutsTheMustard && history.pushState && document.getElementById("paginationEn
                 startRange = parseInt(pageToRequest);
                 pageToRequest = parseInt(pageToRequest) + 1;
             }
+            sectionRoot = currentPage.substr(0, pagePos);
         } else {
             // currently on the first page
             startRange = 1;
             pageToRequest = 2;
+            sectionRoot = currentPage;
         }
-        request.open('GET', '/includes/getNewsArticleList.php?page=' + pageToRequest, true);
+        if (sectionRoot.slice(-1) != "/") {
+            sectionRoot += "/";
+        }
+
+        request.open('GET', '/includes/get' + whichContentToGet + '.php?page=' + pageToRequest, true);
         request.onreadystatechange = function() {
             if (this.readyState === 4) {
                 document.getElementById("loadMore").removeAttribute("disabled");
@@ -36,11 +45,11 @@ if (cutsTheMustard && history.pushState && document.getElementById("paginationEn
                     var response = this.responseText;
                     if (response != "") {
                         var jsonResponse = JSON.parse(response);
-                        document.getElementById('pageArticleList').insertAdjacentHTML('beforeend', jsonResponse['markup']);
+                        document.getElementById('paginationEnhanced').previousElementSibling.insertAdjacentHTML('beforeend', jsonResponse['markup']);
                         // update URL accordingly and update history state
                         urlUpdate = startRange + "-" + pageToRequest;
-                        var stateObj = { };
-                        history.replaceState(stateObj, "page " + urlUpdate, "/chronicle/page/" + urlUpdate);
+                        var stateObj = {};
+                        history.replaceState(stateObj, "page " + urlUpdate, sectionRoot + "page/" + urlUpdate);
                         var resultsRemaining = jsonResponse['resultsRemaining'];
                         if (resultsRemaining == 0) {
                             // remove load more button:
