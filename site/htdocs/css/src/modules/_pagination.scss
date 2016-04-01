@@ -13,7 +13,7 @@
     .animateIn {
         @include animation(1s linear 0s 1 slideUp);
     }
-    @for $i from 0 through 4 {
+    @for $i from 0 through 11 {
         .animateOffset#{$i} {
             @include animation-duration($i*0.15s);
         }
