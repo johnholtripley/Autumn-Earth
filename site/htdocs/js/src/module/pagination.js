@@ -3,7 +3,7 @@ if (cutsTheMustard && history.pushState && document.getElementById("paginationEn
     // get the name of the file to load the content from:
     var whichContentToGet = document.getElementById('paginationEnhanced').previousElementSibling.id;
     // eg. if the content block is newsArticleList then the content will be loaded from getnewsArticleList.php
-    // pagination block must be immedialtey after the content block
+  
 
     function getMoreContent() {
         var savedButtonContent = document.getElementById("loadMore").innerHTML;
@@ -47,7 +47,7 @@ if (cutsTheMustard && history.pushState && document.getElementById("paginationEn
                     var response = this.responseText;
                     if (response != "") {
                         var jsonResponse = JSON.parse(response);
-                        document.getElementById('paginationEnhanced').previousElementSibling.insertAdjacentHTML('beforeend', jsonResponse['markup']);
+                        document.getElementsByClassName('paginatedBlock')[0].insertAdjacentHTML('beforeend', jsonResponse['markup']);
                         // update URL accordingly and update history state
                         urlUpdate = startRange + "-" + pageToRequest;
                         var stateObj = {};
