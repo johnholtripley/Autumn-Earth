@@ -188,7 +188,7 @@ $tweet_desc = nl2br($tweet_desc);
  if(!empty($entities->urls[0]->expanded_url)) {
 $tweet_desc = str_replace($entities->urls[0]->url, $entities->urls[0]->expanded_url, $tweet_desc);
 }
-var_dump($tweet);
+
  if(!empty($entities->media[0]->media_url)) {
  	//$tweet_desc .= '<img src="'.$entities->media[0]->media_url_https.'">';
 

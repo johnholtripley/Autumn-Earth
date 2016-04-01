@@ -11,7 +11,7 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/header.php");
 
 
 // Seconds to cache feed (Default : 3 minutes).
-$cachetime = 3;
+$cachetime = 3*60;
 $cache_file = $_SERVER['DOCUMENT_ROOT'].'/includes/social.txt';
 // Time that the cache was last updtaed.
 $cache_file_created  = ((file_exists($cache_file))) ? filemtime($cache_file) : 0;
