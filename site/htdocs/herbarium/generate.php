@@ -166,7 +166,7 @@ for ($i=0;$i<count($brushColours);$i++) {
 
 	$allPossibleRules = array(array("X"=>"S2X[+X]X[-X]X"),array("X"=>"S2X[+X]X[-X][X]"),array("X"=>"S3XX-[-X+X+X]+[+X-X-X]"),array("X"=>"S2F[+X]F[-X]+X","F"=>"FF"),array("X"=>"S2F[+X][-X]FX","F"=>"FF"),array("X"=>"S2F-[[X]+X]+F[+FX]-X","F"=>"FF"));
 
-//$allPossibleRules = array(array("X"=>"FF[----FF]S2++FF[--F]S1+++FF","F"=>"FF"));
+$allPossibleRules = array(array("X"=>"F","F"=>"FF"));
 
 	$allPossibleRuleIterations = array(5,6,4,6,6,6);
 
@@ -304,10 +304,25 @@ $controlX = min($lastX, $pos["x"]);
 $controlY = min($lastY, $pos["y"]);
 
 // curve:
-   quadBezier($plantCanvas, $lastX, $lastY, $controlX, $controlY, $pos["x"], $pos["y"]);
+//   quadBezier($plantCanvas, $lastX, $lastY, $controlX, $controlY, $pos["x"], $pos["y"]);
 
 // line:
 //imageline($plantCanvas, $lastX, $lastY, $pos["x"], $pos["y"], IMG_COLOR_BRUSHED);
+
+
+
+// --------------------------
+// testing
+$startX = $canvaDimension/2;
+$startY = $canvaDimension;
+$endX = ($canvaDimension/2)-50;
+$endY = $canvaDimension-400;
+$controlX = $startX+(($startX-$endX)/4);
+$controlY = $startY+(($endY-$startY)/4);
+quadBezier($plantCanvas, $startX, $startY, $controlX, $controlY, $endX, $endY);
+imagesetbrush($plantCanvas, ${'brushcol'.$pos["colour"].'size3'});
+imageline($plantCanvas, $startX, $startY, $endX, $endY, IMG_COLOR_BRUSHED);
+// --------------------------
 
 
 		}
@@ -504,7 +519,7 @@ echo '<p style="font-size:0.7em;">seed: '.$storedSeed.'</p>';
 
 
 
-sendToTwitter();
+//sendToTwitter();
 ?>
 </body>
 </html>
