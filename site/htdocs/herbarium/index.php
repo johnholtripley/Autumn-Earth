@@ -10,8 +10,6 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/header.php");
 <div class="row">
 <div class="column">
 <h1>The Herbarium</h1>
-</div>
-</div>
 
 <?php
 // get all plant data:
@@ -42,6 +40,8 @@ echo '</div>';
 } else {
 echo'<p>No plants found.</p>';
 }
+echo '</div>';
+echo '</div>';
 
 include($_SERVER['DOCUMENT_ROOT']."/includes/footer.php");
 ?>

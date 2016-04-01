@@ -16,7 +16,7 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/header.php");
 
 
 
-<div id="newsArticleList" class="paginationBlock">
+<div id="newsArticleList" class="paginatedBlock">
 <?php
 $isInitialPageRequest = true;
 include($_SERVER['DOCUMENT_ROOT']."/includes/getNewsArticleList.php");

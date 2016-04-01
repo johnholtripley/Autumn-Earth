@@ -2,7 +2,7 @@
 
 include_once($_SERVER['DOCUMENT_ROOT']."/includes/signalnoise.php");
 include_once($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
-$pagenumber = 0;
+$pagenumber = 1;
 if(isset($_GET['page'])) {
 	$pagenumber = $_GET['page'];
 	

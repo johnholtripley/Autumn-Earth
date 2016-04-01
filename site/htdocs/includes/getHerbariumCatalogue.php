@@ -3,7 +3,7 @@
 include_once($_SERVER['DOCUMENT_ROOT']."/includes/signalnoise.php");
 include_once($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
 include_once($_SERVER['DOCUMENT_ROOT']."/includes/functions.php");
-$pagenumber = 0;
+$pagenumber = 1;
 if(isset($_GET['page'])) {
 	$pagenumber = $_GET['page'];
 	
@@ -50,7 +50,7 @@ if (($startpagenumber>0) && ($endpagenumber <= $totalpages)) {
 		$htmlOutput = "";
 		$i = 1;
 		if(($numberOfEntries>0) && (isset($isInitialPageRequest))) {
-	echo '<ul id="herbariumCatalogue" class="row medium-2up wide-5up equalHeights paginationBlock">';
+	echo '<ul id="herbariumCatalogue" class="row medium-2up wide-5up equalHeights paginatedBlock">';
 }
 		while ($row = mysql_fetch_array($result)) {
 			if (($rowcount>= $startpoint) && ($rowcount<$endpoint)) {
