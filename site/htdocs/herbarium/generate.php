@@ -428,7 +428,7 @@ $commonNameDistribution = array(1,1,1,1,2,2,3);
 $numberOfCommonNames = $commonNameDistribution[rand(0,count($commonNameDistribution)-1)];
 
 $commonNames = array();
-$isAquatic = false;
+$isAquatic = 0;
 
 for($i=0;$i<$numberOfCommonNames;$i++) {
 $thisCommonName = $commonPrefixes[rand(0,count($commonPrefixes)-1)];
@@ -467,7 +467,7 @@ $thisCommonName = str_replace("  ", " ", $thisCommonName);
 
 $aquaticPos = strpos($thisCommonName, "*");
 if ($aquaticPos !== false) {
-	$isAquatic = true;
+	$isAquatic = 1;
 	}
 // remove any asteriks:
 $thisCommonName = str_ireplace("*", "", $thisCommonName);
