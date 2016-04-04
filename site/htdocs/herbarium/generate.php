@@ -66,6 +66,7 @@ if($isLive) {
 	} else {
 	    // Handle error case
 	    echo $connection->getLastHttpCode();
+	    // email the error? ##########
 	}
 }
 

@@ -78,7 +78,7 @@ $pictureArray = array(150,310);
 
 picture('/images/herbarium/plants/'.$plantUrl.'.jpg', $latinName, $pictureArray, true, $htmlOutput);
 
-	$htmlOutput .= '<h4>'.$latinName.'</h4><h5>'.$commonNames.'</h5><p>'.$plantDesc.'</p></a></div></li>';
+	$htmlOutput .= '<h4>'.$latinName.'</h4><h5>'.$commonNames.'</h5><p>'.$plantDesc.'</p><p>Catalogued '.lcfirst(relativePastDate( strtotime( $timeCreated ))).'</p></a></div></li>';
 
 
 
