@@ -38,6 +38,19 @@ $mediaURLLength = intval($config->short_url_length_https);
 
 
 $media = $connection->upload('media/upload', ['media' => $_SERVER['DOCUMENT_ROOT'].'/images/herbarium/plants/'.$plantURL.'.jpg']);
+
+var_dump($media);
+
+
+
+$parameters = [
+	     'alt_text[text]'  => "An image generated in the style of a medieval Herbarium", 
+	    'media_id' => $media->media_id_string
+	];
+$result = $connection->post('media/metadata/create', $parameters);
+
+var_dump($result);
+
 $textString = $latinName."\r\n".'('.$commonNameString.')';
 $textString .= "\r\n".$startingText;
 
@@ -54,11 +67,17 @@ $textString = substr($textString, 0, $pos+1);
 }
 }
 echo "<p>Tweeted content: ".$textString."</p>";
+
+
+// testing
+$isLive = true;
+// --------------
+
+
 if($isLive) {
 	$parameters = [
 	    'status' => $textString,
-	    'media_ids' => $media->media_id_string,
-	    'alt_text' => 'Plant generated in the style of a medieval Herbarium'
+	    'media_ids' => $media->media_id_string
 	];
 	$result = $connection->post('statuses/update', $parameters);
 	if ($connection->getLastHttpCode() == 200) {
@@ -72,11 +91,16 @@ if($isLive) {
 
 
 
+
+
+
+
+/*
 $query = "INSERT INTO tblplants (latinName,commonNames,timeCreated,plantDesc,plantUrl,tweetedContent,isAquatic,plantSeed)
 VALUES ('" . $latinName . "','" . $commonNameString . "',NOW(),'".$startingText."','".$plantURL."','".$textString."','".$isAquatic."','".$storedSeed."')";
 
-$result = mysql_query($query) or die ("couldn't execute query1");
-
+$result = mysql_query($query) or die ("couldn't execute tblplant query");
+*/
 
 
 
@@ -520,7 +544,7 @@ echo '<p style="font-size:0.7em;">seed: '.$storedSeed.'</p>';
 
 
 
-//sendToTwitter();
+sendToTwitter();
 ?>
 </body>
 </html>

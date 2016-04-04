@@ -134,7 +134,7 @@ $tweetsList = array();
 
 
 
- 				$get_tweets = $connection->get("https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=".$twitter_user_id."&count=20&include_rts=".$include_rts."&exclude_replies=".$ignore_replies);
+ 				$get_tweets = $connection->get("https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=".$twitter_user_id."&count=20&include_ext_alt_text=true&include_rts=".$include_rts."&exclude_replies=".$ignore_replies);
 				
 				// Error check: Make sure there is at least one item.
 				if (count($get_tweets)) {
@@ -171,6 +171,7 @@ if(isset($tweet->retweeted_status)) {
 // --------------
 
 
+
 							// Add hyperlink html tags to any urls, twitter ids or hashtags in the tweet.
 							$tweet_desc = preg_replace("/((http)+(s)?:\/\/[^<>\s]+)/i", "<a href=\"\\0\" target=\"_blank\">\\0</a>", $tweet_desc );
 							$tweet_desc = preg_replace("/[@]+([A-Za-z0-9-_]+)/", "<a href=\"http://twitter.com/\\1\" target=\"_blank\">\\0</a>", $tweet_desc );
@@ -189,14 +190,19 @@ $tweet_desc = nl2br($tweet_desc);
 $tweet_desc = str_replace($entities->urls[0]->url, $entities->urls[0]->expanded_url, $tweet_desc);
 }
 
+
+$extendedEntities = $tweet->extended_entities->media[0];
+
+
+
  if(!empty($entities->media[0]->media_url)) {
  	//$tweet_desc .= '<img src="'.$entities->media[0]->media_url_https.'">';
 
 $stringToReplace = '<a href="'.$entities->media[0]->url.'" target="_blank">'.$entities->media[0]->url.'</a>';
 
 $altText = 'sourced from '.$entities->media[0]->expanded_url;
-if(!empty($entities->media[0]->ext_alt_text)) {
-	$altText = $entities->media[0]->ext_alt_text;
+if(!empty($extendedEntities->ext_alt_text)) {
+	$altText = $extendedEntities->ext_alt_text;
 }
 
  $tweet_desc = str_replace($stringToReplace, '<img alt="'.$altText.'" src="'.$entities->media[0]->media_url_https.'">', $tweet_desc);
