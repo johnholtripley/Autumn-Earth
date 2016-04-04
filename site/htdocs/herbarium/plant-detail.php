@@ -44,7 +44,7 @@ extract($row);
 	<h3><?php echo $commonNames; ?></h3>
 	
 	<p><?php echo $plantDesc; ?></p>
-
+<p>Catalogued <?php echo lcfirst(relativePastDate( strtotime( $timeCreated ))); ?></p>
 <ul id="socialShareLinks">
     <li class="socialTwitter">
     	<?php $urlToShare = urlencode($thisBuiltURL);
