@@ -39,12 +39,14 @@ $mediaURLLength = intval($config->short_url_length_https);
 
 $media = $connection->upload('media/upload', ['media' => $_SERVER['DOCUMENT_ROOT'].'/images/herbarium/plants/'.$plantURL.'.jpg']);
 
-var_dump($media);
 
 
 
+
+
+$altText = (object) ['text' => 'An image generated in the style of a medieval Herbarium'];
 $parameters = [
-	     'alt_text[text]'  => "An image generated in the style of a medieval Herbarium", 
+	     'alt_text' => $altText, 
 	    'media_id' => $media->media_id_string
 	];
 $result = $connection->post('media/metadata/create', $parameters);
@@ -69,9 +71,9 @@ $textString = substr($textString, 0, $pos+1);
 echo "<p>Tweeted content: ".$textString."</p>";
 
 
-// testing
+
 $isLive = true;
-// --------------
+
 
 
 if($isLive) {
@@ -340,13 +342,54 @@ $controlY = min($lastY, $pos["y"]);
 // testing
 $startX = $canvaDimension/2;
 $startY = $canvaDimension;
-$endX = ($canvaDimension/2)-50;
-$endY = $canvaDimension-400;
+$endX = $startX-100;
+$endY = $startY-200;
 $controlX = $startX+(($startX-$endX)/4);
 $controlY = $startY+(($endY-$startY)/4);
+imagesetbrush($plantCanvas, ${'brushcol'.$pos["colour"].'size0'});
 quadBezier($plantCanvas, $startX, $startY, $controlX, $controlY, $endX, $endY);
 imagesetbrush($plantCanvas, ${'brushcol'.$pos["colour"].'size3'});
 imageline($plantCanvas, $startX, $startY, $endX, $endY, IMG_COLOR_BRUSHED);
+
+
+
+$startX = $canvaDimension/2;
+$startY = 0;
+$endX = $startX-100;
+$endY = $startY+200;
+$controlX = $startX+(($startX-$endX)/4);
+$controlY = $startY+(($endY-$startY)/4);
+imagesetbrush($plantCanvas, ${'brushcol'.$pos["colour"].'size0'});
+quadBezier($plantCanvas, $startX, $startY, $controlX, $controlY, $endX, $endY);
+imagesetbrush($plantCanvas, ${'brushcol'.$pos["colour"].'size3'});
+imageline($plantCanvas, $startX, $startY, $endX, $endY, IMG_COLOR_BRUSHED);
+
+
+
+$startX = $canvaDimension;
+$startY = $canvaDimension/2;
+$endX = $startX-100;
+$endY = $startY+200;
+$controlX = $startX+(($startX-$endX)/4);
+$controlY = $startY+(($endY-$startY)/4);
+imagesetbrush($plantCanvas, ${'brushcol'.$pos["colour"].'size0'});
+quadBezier($plantCanvas, $startX, $startY, $controlX, $controlY, $endX, $endY);
+imagesetbrush($plantCanvas, ${'brushcol'.$pos["colour"].'size3'});
+imageline($plantCanvas, $startX, $startY, $endX, $endY, IMG_COLOR_BRUSHED);
+
+
+
+$startX = 0;
+$startY = $canvaDimension/2;
+$endX = $startX+100;
+$endY = $startY+200;
+$controlX = $startX+(($startX-$endX)/4);
+$controlY = $startY+(($endY-$startY)/4);
+imagesetbrush($plantCanvas, ${'brushcol'.$pos["colour"].'size0'});
+quadBezier($plantCanvas, $startX, $startY, $controlX, $controlY, $endX, $endY);
+imagesetbrush($plantCanvas, ${'brushcol'.$pos["colour"].'size3'});
+imageline($plantCanvas, $startX, $startY, $endX, $endY, IMG_COLOR_BRUSHED);
+
 // --------------------------
 
 
@@ -544,7 +587,7 @@ echo '<p style="font-size:0.7em;">seed: '.$storedSeed.'</p>';
 
 
 
-sendToTwitter();
+//sendToTwitter();
 ?>
 </body>
 </html>
