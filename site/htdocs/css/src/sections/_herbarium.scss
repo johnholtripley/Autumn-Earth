@@ -5,7 +5,19 @@
             width: 40%;
         }
         .inbetweenRow {
-        	width: 25%;
+            width: 25%;
         }
+    }
+    .offset1 {
+        @include transform(rotate(1deg) translateY(-2.5%));
+    }
+    .offset2 {
+        @include transform(rotate(-1deg) scale(0.98, 0.98));
+    }
+    .offset3 {
+        @include transform(rotate(-1deg) translate(6%, 1.5%));
+    }
+    .offset4 {
+        @include transform(translateY(2.5%));
     }
 }

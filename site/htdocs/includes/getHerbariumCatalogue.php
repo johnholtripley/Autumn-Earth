@@ -49,6 +49,7 @@ if (($startpagenumber>0) && ($endpagenumber <= $totalpages)) {
 		$animationOffset = 0;
 		$htmlOutput = "";
 		$i = 1;
+		$offsetClasses = array(1,2,3,4);
 		if(($numberOfEntries>0) && (isset($isInitialPageRequest))) {
 	echo '<ul id="herbariumCatalogue" class="row medium-2up wide-4up widest-5up equalHeights paginatedBlock">';
 }
@@ -73,6 +74,13 @@ $pictureArray = array(150,310);
 					$additionalClass .= ' animateIn animateOffset'.$animationOffset;
 					$animationOffset ++;
 				}
+
+
+if(rand(1,8) == 1) {
+	shuffle($offsetClasses);
+	$additionalClass .= " offset".array_pop($offsetClasses);
+}
+
 				$htmlOutput .= '<li class="column'.$additionalClass.'" data-aquatic="'.$isAquatic.'"><div>';
 				$htmlOutput .= '<a href="/herbarium/'.$plantUrl.'/">';
 
