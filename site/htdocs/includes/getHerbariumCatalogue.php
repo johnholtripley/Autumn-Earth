@@ -58,6 +58,7 @@ if (($startpagenumber>0) && ($endpagenumber <= $totalpages)) {
 				extract($row);
 
 $additionalClass="";
+$innerClass="";
 $pictureArray = array(150,277);
 if(($i%$resultsperpage == 1) || ($i%$resultsperpage == 8)) {
 $additionalClass=" spotlight";
@@ -71,7 +72,7 @@ $pictureArray = array(150,310);
 				if(isset($isInitialPageRequest)) {
 					
 				} else {
-					$additionalClass .= ' animateIn animateOffset'.$animationOffset;
+					$innerClass = 'class="animateIn animateOffset'.$animationOffset.'"';
 					$animationOffset ++;
 				}
 
@@ -81,7 +82,7 @@ if(rand(1,8) == 1) {
 	$additionalClass .= " offset".array_pop($offsetClasses);
 }
 
-				$htmlOutput .= '<li class="column'.$additionalClass.'" data-aquatic="'.$isAquatic.'"><div>';
+				$htmlOutput .= '<li class="column'.$additionalClass.'" data-aquatic="'.$isAquatic.'"><div '.$innerClass.'>';
 				$htmlOutput .= '<a href="/herbarium/'.$plantUrl.'/">';
 
 picture('/images/herbarium/plants/'.$plantUrl.'.jpg', $latinName, $pictureArray, true, $htmlOutput);
