@@ -156,6 +156,9 @@ function quadBezier($im, $x1, $y1, $x2, $y2, $x3, $y3) {
 
 
 
+
+
+
 function drawPlant() {
 	// thanks to http://www.kevs3d.co.uk/dev/lsystems/
 	global $iterations, $angle, $isAquatic, $plantURL;
@@ -340,25 +343,23 @@ $controlY = min($lastY, $pos["y"]);
 
 // --------------------------
 // testing
-$startX = $canvaDimension/2;
-$startY = $canvaDimension;
-$endX = $startX-100;
-$endY = $startY-200;
-$controlX = $startX+(($startX-$endX)/4);
-$controlY = $startY+(($endY-$startY)/4);
-imagesetbrush($plantCanvas, ${'brushcol'.$pos["colour"].'size0'});
-quadBezier($plantCanvas, $startX, $startY, $controlX, $controlY, $endX, $endY);
-imagesetbrush($plantCanvas, ${'brushcol'.$pos["colour"].'size3'});
-imageline($plantCanvas, $startX, $startY, $endX, $endY, IMG_COLOR_BRUSHED);
 
 
-
-$startX = $canvaDimension/2;
-$startY = 0;
+$startX = $canvaDimension-10;
+$startY = 40;
 $endX = $startX-100;
 $endY = $startY+200;
-$controlX = $startX+(($startX-$endX)/4);
-$controlY = $startY+(($endY-$startY)/4);
+
+
+$dir = 1;
+
+
+if(($endX < $startX) && ($endY < $startX)) {
+	$dir = -1;
+}
+$controlX = $startX+(($startX-$endX)/4)*$dir;
+$controlY = $startY+(($endY-$startY)/4)*$dir;
+
 imagesetbrush($plantCanvas, ${'brushcol'.$pos["colour"].'size0'});
 quadBezier($plantCanvas, $startX, $startY, $controlX, $controlY, $endX, $endY);
 imagesetbrush($plantCanvas, ${'brushcol'.$pos["colour"].'size3'});
@@ -366,12 +367,23 @@ imageline($plantCanvas, $startX, $startY, $endX, $endY, IMG_COLOR_BRUSHED);
 
 
 
-$startX = $canvaDimension;
-$startY = $canvaDimension/2;
-$endX = $startX-100;
-$endY = $startY+200;
-$controlX = $startX+(($startX-$endX)/4);
-$controlY = $startY+(($endY-$startY)/4);
+$startX = $canvaDimension-10;
+$startY = $canvaDimension/2+10;
+$endX = $startX-200;
+$endY = $startY+100;
+
+$dir = 1;
+
+if(($endX < $startX) && ($endY < $startX)) {
+	$dir = -1;
+}
+
+
+
+
+
+$controlX = $startX+(($startX-$endX)/4)*$dir;
+$controlY = $startY+(($endY-$startY)/4)*$dir;
 imagesetbrush($plantCanvas, ${'brushcol'.$pos["colour"].'size0'});
 quadBezier($plantCanvas, $startX, $startY, $controlX, $controlY, $endX, $endY);
 imagesetbrush($plantCanvas, ${'brushcol'.$pos["colour"].'size3'});
@@ -379,16 +391,6 @@ imageline($plantCanvas, $startX, $startY, $endX, $endY, IMG_COLOR_BRUSHED);
 
 
 
-$startX = 0;
-$startY = $canvaDimension/2;
-$endX = $startX+100;
-$endY = $startY+200;
-$controlX = $startX+(($startX-$endX)/4);
-$controlY = $startY+(($endY-$startY)/4);
-imagesetbrush($plantCanvas, ${'brushcol'.$pos["colour"].'size0'});
-quadBezier($plantCanvas, $startX, $startY, $controlX, $controlY, $endX, $endY);
-imagesetbrush($plantCanvas, ${'brushcol'.$pos["colour"].'size3'});
-imageline($plantCanvas, $startX, $startY, $endX, $endY, IMG_COLOR_BRUSHED);
 
 // --------------------------
 
