@@ -1,5 +1,8 @@
 #herbariumCatalogue {
     list-style: none;
+    li div {
+        padding: 2.5% 0;
+    }
     @include mq($widest) {
         .spotlight {
             width: 40%;
