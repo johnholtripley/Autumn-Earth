@@ -7,18 +7,20 @@
 }
 
 .row .row {
-  width: (100%+$gutter*2);
-  margin-left: 0-($gutter);
-  margin-right: 0-($gutter);
-
-// nested columns:
-.column, .columns {
-  @include border-box;
-  padding-left: ($gutter);
-  padding-right: ($gutter);
+    width: (100%+$gutter*2);
+    margin-left: 0-($gutter);
+    margin-right: 0-($gutter);
+    // nested columns:
+    .column,
+    .columns {
+        @include border-box;
+        // needs to account for the wider parent:
+        $rowOffset: 1-(strip-units($gutter)*2/100);
+        padding-left: ($gutter)*$rowOffset;
+        padding-right: ($gutter)*$rowOffset;
+    }
 }
 
-}
 
 ul.row, ol.row {
   // max-width is set in ems, so make sure it's not been changed
