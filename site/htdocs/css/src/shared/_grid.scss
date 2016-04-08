@@ -25,11 +25,15 @@ ul.row, ol.row {
   font-size: 1em;
 }
 
-@include mq($widest) {
+$maxWidthTrigger: $maxWidth*(100%+$gutter*2);
+@include mq($maxWidthTrigger) {
   .row {
     width: 100%;
     max-width: $maxWidth;
     margin: 0 auto;
+    .row {
+      max-width: none;
+    }
   }
 }
 
