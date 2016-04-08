@@ -62,10 +62,10 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/title-tag.php");
 <noscript>
   <?php  endif;  ?>
 <!--[if (gt IE 8) | (IEMobile)]><!-->
-    <link href="/css/base.<?php echo $cacheVersion; ?>.css" rel="stylesheet" />
+    <link href="/css/base.<?php echo $cacheVersion; ?>.css" rel="stylesheet">
 <!--<![endif]-->
 <!--[if (lt IE 9) & (!IEMobile)]>
-    <link href="/css/IE8Support.<?php echo $cacheVersion; ?>.css" rel="stylesheet" />
+    <link href="/css/IE8Support.<?php echo $cacheVersion; ?>.css" rel="stylesheet">
 <![endif]-->
 <?php if ($useCriticalCssInling) {
 echo '</noscript>'."\n";
