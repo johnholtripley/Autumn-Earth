@@ -9,7 +9,7 @@ if (catalogueRoot) {
 
         addClass(document.getElementById('cd-modal'), "visible");
         addClass(document.getElementById('cd-transition-layer'), "opening");
-        addClass(document.getElementById('cd-transition-layer'), "visible");
+    
 
     }
 
@@ -19,7 +19,9 @@ if (catalogueRoot) {
         }
         addClass(document.getElementById('cd-transition-layer'), "closing");
         removeClass(document.getElementById('cd-modal'), "visible");
-        // then hide the transition-layer #####
+
+        // remove class after animation is complete ####
+    
     }
 
     var catalogueLinks = catalogueRoot.getElementsByClassName('catalogueLink');

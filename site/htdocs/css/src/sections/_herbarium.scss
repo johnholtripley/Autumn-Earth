@@ -74,17 +74,20 @@
   @include background-size(100%, 100%);
 }
 
-#cd-transition-layer.visible {
-  opacity: 1;
+#cd-transition-layer.opening, #cd-transition-layer.closing {
+    opacity: 1;
   visibility: visible;
 }
+
 #cd-transition-layer.opening .bg-layer {
   @include animation(ink-fill 0.8s steps(24));
   @include animation-fill-mode(forwards);
+
 }
 #cd-transition-layer.closing .bg-layer {
    @include animation(remove-ink 0.8s steps(24));
  @include animation-fill-mode(forwards);
+
 }
 
 
