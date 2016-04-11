@@ -34,7 +34,7 @@
 
 
 
-.cd-modal {
+#cd-modal {
   position: fixed;
   top: 0;
   left: 0;
@@ -44,7 +44,7 @@
   opacity: 0;
   visibility: hidden;
 }
-.cd-modal.visible {
+#cd-modal.visible {
   opacity: 1;
   visibility: visible;
 }

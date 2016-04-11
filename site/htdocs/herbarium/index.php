@@ -38,7 +38,7 @@ echo '</div>';
 
 ?>
 
-<div class="cd-modal">
+<div id="cd-modal">
 	<div class="modal-content">
 		<h1>My Modal Content</h1>
 		<p>
@@ -47,7 +47,7 @@ echo '</div>';
 			Fugiat, temporibus! 
 		</p>
 	</div>
- 	<a href="#0" class="modal-close">Close</a>
+ 	<a href="#0" id="modal-close">Close</a>
 </div>
 <div id="cd-transition-layer"> 
 	<div class="bg-layer"></div>
