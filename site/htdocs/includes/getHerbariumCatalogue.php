@@ -82,8 +82,8 @@ if(rand(1,8) == 1) {
 	$additionalClass .= " offset".array_pop($offsetClasses);
 }
 
-				$htmlOutput .= '<li class="column'.$additionalClass.'" data-aquatic="'.$isAquatic.'"><div '.$innerClass.'>';
-				$htmlOutput .= '<a href="/herbarium/'.$plantUrl.'/">';
+				$htmlOutput .= '<li class="column'.$additionalClass.'" data-url="'.$plantUrl.'" data-aquatic="'.$isAquatic.'"><div '.$innerClass.'>';
+				$htmlOutput .= '<a href="/herbarium/'.$plantUrl.'/" class="catalogueLink">';
 
 picture('/images/herbarium/plants/'.$plantUrl.'.jpg', $latinName, $pictureArray, true, $htmlOutput);
 

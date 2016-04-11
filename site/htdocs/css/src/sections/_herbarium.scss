@@ -23,4 +23,86 @@
     .offset4 {
         @include transform(translateY(2.5%));
     }
+
+
 }
+
+
+
+
+
+
+
+
+.cd-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 3;
+  height: 100%;
+  width: 100%;
+  opacity: 0;
+  visibility: hidden;
+}
+.cd-modal.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+#cd-transition-layer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 2;
+  height: 100%;
+  width: 100%;
+  opacity: 0;
+  visibility: hidden;
+  overflow: hidden;
+}
+
+#cd-transition-layer .bg-layer {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+ 
+  @include transform(translateY(-50%) translateX(-2%));
+  height: 100%;
+  /* our sprite is composed of 25 frames */
+  width: 2500%;
+  background: url(../images/herbarium/ink-transition-NOT-MINE.png) no-repeat 0 0;
+  @include background-size(100%, 100%);
+}
+
+#cd-transition-layer.visible {
+  opacity: 1;
+  visibility: visible;
+}
+#cd-transition-layer.opening .bg-layer {
+  @include animation(ink-fill 0.8s steps(24));
+  @include animation-fill-mode(forwards);
+}
+#cd-transition-layer.closing .bg-layer {
+   @include animation(remove-ink 0.8s steps(24));
+ @include animation-fill-mode(forwards);
+}
+
+
+@include keyframes('ink-fill') {
+    from {
+        transform: translateY(-50%) translateX(-2%);
+    }
+    to {
+        transform: translateY(-50%) translateX(-98%);
+    }
+}
+@include keyframes('remove-ink') {
+    from {
+        transform: translateY(-50%) translateX(-98%);
+    }
+    to {
+        transform: translateY(-50%) translateX(-2%);
+    }
+}
+
+

@@ -190,9 +190,11 @@ $tweet_desc = nl2br($tweet_desc);
 $tweet_desc = str_replace($entities->urls[0]->url, $entities->urls[0]->expanded_url, $tweet_desc);
 }
 
-
+if(isset($tweet->extended_entities)) {
 $extendedEntities = $tweet->extended_entities->media[0];
-
+} else {
+	$extendedEntities = "";
+}
 
 
  if(!empty($entities->media[0]->media_url)) {

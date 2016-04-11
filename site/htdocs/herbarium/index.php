@@ -36,6 +36,24 @@ if($pagenumber<$totalpages) {
 echo ' (<span id="articlesRemaining">'.($numberOfEntries-$endpoint).'</span> more)';
 echo '</div>';
 
+?>
+
+<div class="cd-modal">
+	<div class="modal-content">
+		<h1>My Modal Content</h1>
+		<p>
+			Lorem ipsum dolor sit amet, consectetur adipisicing elit. 
+			Ad modi repellendus, optio eveniet eligendi molestiae? 
+			Fugiat, temporibus! 
+		</p>
+	</div>
+ 	<a href="#0" class="modal-close">Close</a>
+</div>
+<div id="cd-transition-layer"> 
+	<div class="bg-layer"></div>
+</div>
+
+<?php
 
 } else {
 echo'<p>No plants found.</p>';

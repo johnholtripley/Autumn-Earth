@@ -86,6 +86,12 @@
      -o-animation-duration: $value;
      animation-duration: $value;
 }
+@mixin animation-fill-mode($value) {
+      -webkit-animation-fill-mode: $value;
+     -moz-animation-fill-mode: $value;
+     -o-animation-fill-mode: $value;
+     animation-fill-mode: $value;
+}
 @mixin keyframes($animationName) {
     @-webkit-keyframes #{$animationName} {
         @content;
