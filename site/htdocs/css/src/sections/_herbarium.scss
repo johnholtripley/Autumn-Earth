@@ -43,6 +43,8 @@
   width: 100%;
   opacity: 0;
   visibility: hidden;
+
+  @include transition(opacity 0.8s ease);
 }
 #cd-modal.visible {
   opacity: 1;

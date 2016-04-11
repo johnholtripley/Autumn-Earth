@@ -21,6 +21,7 @@ if (catalogueRoot) {
         removeClass(document.getElementById('cd-modal'), "visible");
 
         // remove class after animation is complete ####
+        // https://davidwalsh.name/css-animation-callback (but animation end - http://osvaldas.info/examples/detecting-css-animation-transition-end-with-javascript/oncssanimationend.js)
     
     }
 

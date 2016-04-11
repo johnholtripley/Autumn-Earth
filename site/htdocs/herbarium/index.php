@@ -37,7 +37,7 @@ echo ' (<span id="articlesRemaining">'.($numberOfEntries-$endpoint).'</span> mor
 echo '</div>';
 
 ?>
-
+<div id="modal-wrapper">
 <div id="cd-modal">
 	<div class="modal-content">
 		<h1>My Modal Content</h1>
@@ -51,6 +51,7 @@ echo '</div>';
 </div>
 <div id="cd-transition-layer"> 
 	<div class="bg-layer"></div>
+</div>
 </div>
 
 <?php
