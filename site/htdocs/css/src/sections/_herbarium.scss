@@ -29,69 +29,64 @@
 
 
 
-
-
-
-
+#modal-wrapper {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 3;
+    height: 100%;
+    width: 100%;
+    &.opening,
+    &.closing {
+        display: block;
+    }
+}
 
 #cd-modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 3;
-  height: 100%;
-  width: 100%;
-  opacity: 0;
-  visibility: hidden;
-
-  @include transition(opacity 0.8s ease);
+    height: 100%;
+    width: 100%;
+    opacity: 0;
+    position: relative;
+    z-index: 5;
+    @include transition(opacity 0.8s ease);
 }
-#cd-modal.visible {
-  opacity: 1;
-  visibility: visible;
+
+.opening #cd-modal {
+    opacity: 1;
 }
 
 #cd-transition-layer {
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 2;
-  height: 100%;
-  width: 100%;
-  opacity: 0;
-  visibility: hidden;
-  overflow: hidden;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 4;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
 }
 
 #cd-transition-layer .bg-layer {
-  position: absolute;
-  left: 50%;
-  top: 50%;
- 
-  @include transform(translateY(-50%) translateX(-2%));
-  height: 100%;
-  /* our sprite is composed of 25 frames */
-  width: 2500%;
-  background: url(../images/herbarium/ink-transition-NOT-MINE.png) no-repeat 0 0;
-  @include background-size(100%, 100%);
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    @include transform(translateY(-50%) translateX(-2%));
+    height: 100%;
+    /* our sprite is composed of 25 frames */
+    width: 2500%;
+    background: url(../images/herbarium/ink-transition-NOT-MINE.png) no-repeat 0 0;
+    @include background-size(100%, 100%);
 }
 
-#cd-transition-layer.opening, #cd-transition-layer.closing {
-    opacity: 1;
-  visibility: visible;
+.opening .bg-layer {
+    @include animation(ink-fill 0.8s steps(24));
+    @include animation-fill-mode(forwards);
 }
 
-#cd-transition-layer.opening .bg-layer {
-  @include animation(ink-fill 0.8s steps(24));
-  @include animation-fill-mode(forwards);
-
+.closing .bg-layer {
+    @include animation(remove-ink 0.8s steps(24));
+    @include animation-fill-mode(forwards);
 }
-#cd-transition-layer.closing .bg-layer {
-   @include animation(remove-ink 0.8s steps(24));
- @include animation-fill-mode(forwards);
-
-}
-
 
 @include keyframes('ink-fill') {
     from {
@@ -101,6 +96,7 @@
         transform: translateY(-50%) translateX(-98%);
     }
 }
+
 @include keyframes('remove-ink') {
     from {
         transform: translateY(-50%) translateX(-98%);

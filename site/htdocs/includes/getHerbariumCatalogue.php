@@ -83,7 +83,7 @@ if(rand(1,8) == 1) {
 }
 
 				$htmlOutput .= '<li class="column'.$additionalClass.'" data-url="'.$plantUrl.'" data-aquatic="'.$isAquatic.'"><div '.$innerClass.'>';
-				$htmlOutput .= '<a href="/herbarium/'.$plantUrl.'/" class="catalogueLink">';
+				$htmlOutput .= '<a href="/herbarium/'.$plantUrl.'/" class="triggersModal">';
 
 picture('/images/herbarium/plants/'.$plantUrl.'.jpg', $latinName, $pictureArray, true, $htmlOutput);
 
