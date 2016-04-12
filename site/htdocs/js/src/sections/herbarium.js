@@ -2,8 +2,8 @@ var catalogueRoot = document.getElementById('herbariumCatalogue');
 if (catalogueRoot) {
 
 
-    var animatedElement = document.getElementsByClassName('bg-layer')[0];
-
+    var animatedElement = document.getElementById('inkEffect');
+var modalWrapper = document.getElementById('modalWrapper');
     function whichAnimationEvent() {
         // https://davidwalsh.name/css-animation-callback
         var t;
@@ -26,8 +26,8 @@ if (catalogueRoot) {
     var animationEvent = whichAnimationEvent();
     animationEvent && animatedElement.addEventListener(animationEvent, function() {
     // will fire on open complete and close complete:
-        if(document.getElementById('modal-wrapper').className == "closing") {
-         document.getElementById('modal-wrapper').className = "";
+        if(modalWrapper.className == "closing") {
+         modalWrapper.className = "";
     }
     });
 
@@ -48,7 +48,7 @@ if (catalogueRoot) {
 
 
 
-        document.getElementById('modal-wrapper').className = "opening";
+        modalWrapper.className = "opening";
 
 
 
@@ -59,7 +59,7 @@ if (catalogueRoot) {
         if (e) {
             e.preventDefault();
         }
-        document.getElementById('modal-wrapper').className = "closing";
+        modalWrapper.className = "closing";
 
         // remove class after animation is complete ####
         // https://davidwalsh.name/css-animation-callback (but animation end - http://osvaldas.info/examples/detecting-css-animation-transition-end-with-javascript/oncssanimationend.js)
@@ -73,6 +73,6 @@ if (catalogueRoot) {
     }
 
 
-    document.getElementById('modal-close').addEventListener("click", closePlantDetail);
+    document.getElementById('modalClose').addEventListener("click", closePlantDetail);
 
 }

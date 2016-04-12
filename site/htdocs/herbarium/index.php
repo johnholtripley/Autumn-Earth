@@ -37,22 +37,23 @@ echo ' (<span id="articlesRemaining">'.($numberOfEntries-$endpoint).'</span> mor
 echo '</div>';
 
 ?>
-<div id="modal-wrapper">
-<div id="cd-modal">
-	<div class="modal-content">
+
+
+
+
+<div id="modalWrapper">
+	<div id="modalContent">
 		<h1>My Modal Content</h1>
-		<p>
-			Lorem ipsum dolor sit amet, consectetur adipisicing elit. 
-			Ad modi repellendus, optio eveniet eligendi molestiae? 
-			Fugiat, temporibus! 
-		</p>
+		<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad modi repellendus, optio eveniet eligendi molestiae? Fugiat, temporibus!</p>
+		<a href="#herbariumCatalogue" id="modalClose">Close</a>
 	</div>
- 	<a href="#0" id="modal-close">Close</a>
+	<div id="inkEffect"></div>
 </div>
-<div id="cd-transition-layer"> 
-	<div class="bg-layer"></div>
-</div>
-</div>
+
+
+
+
+
 
 <?php
 
