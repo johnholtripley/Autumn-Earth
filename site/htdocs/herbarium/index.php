@@ -43,8 +43,7 @@ echo '</div>';
 
 <div id="modalWrapper">
 	<div id="modalContent">
-		<h1>My Modal Content</h1>
-		<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad modi repellendus, optio eveniet eligendi molestiae? Fugiat, temporibus!</p>
+		<div id="plantModalDetails"></div>
 		<a href="#herbariumCatalogue" id="modalClose">Close</a>
 	</div>
 	<div id="inkEffect"></div>

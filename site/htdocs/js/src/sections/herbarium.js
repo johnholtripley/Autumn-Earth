@@ -1,9 +1,9 @@
 var catalogueRoot = document.getElementById('herbariumCatalogue');
 if (catalogueRoot) {
-
-
     var animatedElement = document.getElementById('inkEffect');
-var modalWrapper = document.getElementById('modalWrapper');
+    var modalWrapper = document.getElementById('modalWrapper');
+    var plantModalDetails = document.getElementById('plantModalDetails');
+
     function whichAnimationEvent() {
         // https://davidwalsh.name/css-animation-callback
         var t;
@@ -14,45 +14,27 @@ var modalWrapper = document.getElementById('modalWrapper');
             'MozAnimation': 'animationend',
             'WebkitAnimation': 'webkitAnimationEnd'
         }
-
         for (t in transitions) {
             if (el.style[t] !== undefined) {
                 return transitions[t];
             }
         }
     }
-
-    /* Listen for a transition! */
     var animationEvent = whichAnimationEvent();
     animationEvent && animatedElement.addEventListener(animationEvent, function() {
-    // will fire on open complete and close complete:
-        if(modalWrapper.className == "closing") {
-         modalWrapper.className = "";
-    }
+        // will fire on open complete and close complete:
+        if (modalWrapper.className == "closing") {
+            modalWrapper.className = "";
+        }
     });
-
-
-
-
-
-
-
-
-
-
 
     function openPlantDetail(e) {
         if (e) {
             e.preventDefault();
         }
-
-
-
+        var thisPlantDetail = this.innerHTML;
+        plantModalDetails.innerHTML = thisPlantDetail;
         modalWrapper.className = "opening";
-
-
-
-
     }
 
     function closePlantDetail(e) {
@@ -60,19 +42,11 @@ var modalWrapper = document.getElementById('modalWrapper');
             e.preventDefault();
         }
         modalWrapper.className = "closing";
-
-        // remove class after animation is complete ####
-        // https://davidwalsh.name/css-animation-callback (but animation end - http://osvaldas.info/examples/detecting-css-animation-transition-end-with-javascript/oncssanimationend.js)
-
     }
 
     var catalogueLinks = catalogueRoot.getElementsByClassName('triggersModal');
-
     for (var i = 0; i < catalogueLinks.length; i++) {
-        catalogueLinks[i].addEventListener("click", openPlantDetail);
+        catalogueLinks[i].addEventListener("click", openPlantDetail, false);
     }
-
-
     document.getElementById('modalClose').addEventListener("click", closePlantDetail);
-
 }

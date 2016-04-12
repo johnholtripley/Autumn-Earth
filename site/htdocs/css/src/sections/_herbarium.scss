@@ -30,7 +30,7 @@
 
 
 #modalWrapper {
-    display: none;
+    visibility: hidden;
     position: fixed;
     top: 0;
     left: 0;
@@ -40,16 +40,17 @@
     overflow: hidden;
     &.opening,
     &.closing {
-        display: block;
+        visibility: visible;
     }
 }
 
 #modalContent {
     height: 100%;
-    width: 100%;
+    width: 60%;
     opacity: 0;
+    margin: 5% auto;
     position: relative;
-    z-index: 5;
+    z-index: 4;
     @include transition(opacity 0.8s ease);
 }
 
@@ -57,9 +58,21 @@
     opacity: 1;
 }
 
+#plantModalDetails {
+    img {
+        max-width: 350px;
+        float: left;
+        margin-right: 20px;
+    }
+}
 
+#modalClose {
+    position: absolute;
+    right: 0;
+    top: 0;
+}
 
- #inkEffect {
+#inkEffect {
     position: absolute;
     left: 50%;
     top: 50%;
@@ -77,7 +90,7 @@
 }
 
 .closing #inkEffect {
-    @include animation(remove-ink 0.8s steps(24));
+    @include animation(remove-ink 0.6s steps(24));
     @include animation-fill-mode(forwards);
 }
 
