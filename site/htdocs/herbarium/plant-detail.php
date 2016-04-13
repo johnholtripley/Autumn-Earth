@@ -36,12 +36,12 @@ extract($row);
 </div>
 
 
-<div class="row">
+<div class="row" itemscope itemtype="http://schema.org/Thing/Species">
     <div class="medium-6 column">
-<img src="/images/herbarium/plants/<?php echo $plantUrl; ?>.jpg" alt="<?php echo $latinName; ?>">
+<img src="/images/herbarium/plants/<?php echo $plantUrl; ?>.jpg" alt="<?php echo $latinName; ?>" itemprop="image">
 </div><div class="medium-6 column">
-	<h2><?php echo $latinName; ?></h2>
-	<h3><?php echo $commonNames; ?></h3>
+	<h2 itemprop="name"><?php echo $latinName; ?></h2>
+	<h3 itemprop="alternateName"><?php echo $commonNames; ?></h3>
 	
 	<p><?php echo $plantDesc; ?></p>
 <p>Catalogued <?php echo lcfirst(relativePastDate( strtotime( $timeCreated ))); ?></p>

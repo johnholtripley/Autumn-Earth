@@ -1314,7 +1314,7 @@ function imageResized($source, $widthRequired) {
 	}
 }
 
-function picture($source, $alt, $breakpoints, $forceResize = false, &$addToBuffer = '') {
+function picture($source, $alt, $breakpoints, $forceResize = false, &$addToBuffer = '', $classOrProperty = '') {
 	$thisHtmlOutput = '<picture>';
 	if(!$forceResize) {
 // don't use the original image size if true - use the pciture element to fiorce a resize of the image, and exclude the original
@@ -1327,7 +1327,8 @@ function picture($source, $alt, $breakpoints, $forceResize = false, &$addToBuffe
 		}
 		$thisHtmlOutput .= ' srcset="'.imageResized($source,$breakpoints[$i]).'">';
 	}
-	$thisHtmlOutput .= '<img src="'.$source.'" alt="'.$alt.'">';
+
+	$thisHtmlOutput .= '<img src="'.$source.'" alt="'.$alt.'"'.$classOrProperty.'>';
 	$thisHtmlOutput .= '</picture>';
 
 	if($addToBuffer == '') {

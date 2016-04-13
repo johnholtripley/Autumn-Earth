@@ -82,12 +82,12 @@ if(rand(1,8) == 1) {
 	$additionalClass .= " offset".array_pop($offsetClasses);
 }
 
-				$htmlOutput .= '<li class="column'.$additionalClass.'" data-url="'.$plantUrl.'" data-aquatic="'.$isAquatic.'"><div '.$innerClass.'>';
-				$htmlOutput .= '<a href="/herbarium/'.$plantUrl.'/" class="triggersModal">';
+				$htmlOutput .= '<li class="column'.$additionalClass.'" data-url="'.$plantUrl.'" data-aquatic="'.$isAquatic.'"><div '.$innerClass.' itemscope itemtype="http://schema.org/Thing/Species">';
+				$htmlOutput .= '<a itemprop="mainEntityOfPage" href="/herbarium/'.$plantUrl.'/" class="triggersModal">';
 
-picture('/images/herbarium/plants/'.$plantUrl.'.jpg', $latinName, $pictureArray, true, $htmlOutput);
+picture('/images/herbarium/plants/'.$plantUrl.'.jpg', $latinName, $pictureArray, true, $htmlOutput, ' itemprop="image"');
 
-	$htmlOutput .= '<h4>'.$latinName.'</h4><h5>'.$commonNames.'</h5><p>'.$plantDesc.'</p><p>Catalogued '.lcfirst(relativePastDate( strtotime( $timeCreated ))).'</p></a></div></li>';
+	$htmlOutput .= '<h4 itemprop="name">'.$latinName.'</h4><h5 itemprop="alternateName">'.$commonNames.'</h5><p>'.$plantDesc.'</p><p>Catalogued '.lcfirst(relativePastDate( strtotime( $timeCreated ))).'</p></a></div></li>';
 
 
 
