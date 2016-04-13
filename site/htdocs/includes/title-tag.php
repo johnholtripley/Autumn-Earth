@@ -2,7 +2,8 @@
 
 
 
-
+$protocol = stripos($_SERVER['SERVER_PROTOCOL'],'https') === true ? 'https://' : 'http://';
+$fullSitePath = $protocol.$_SERVER['SERVER_NAME'];
 
 
 $thisURL = $_SERVER['PHP_SELF'];

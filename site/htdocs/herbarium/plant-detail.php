@@ -38,10 +38,33 @@ extract($row);
 
 <div class="row" itemscope itemtype="http://schema.org/Thing/Species">
     <div class="medium-6 column">
-<img src="/images/herbarium/plants/<?php echo $plantUrl; ?>.jpg" alt="<?php echo $latinName; ?>" itemprop="image">
+
+<?php
+
+
+?>
+
+<img src="<?php echo $fullSitePath; ?>/images/herbarium/plants/<?php echo $plantUrl; ?>.jpg" alt="<?php echo $latinName; ?>" itemprop="image">
 </div><div class="medium-6 column">
 	<h2 itemprop="name"><?php echo $latinName; ?></h2>
-	<h3 itemprop="alternateName"><?php echo $commonNames; ?></h3>
+
+
+	<h3>
+        <?php
+$allCommonNames = explode("/",$commonNamesJoined);
+for ($i=0; $i<count($allCommonNames);$i++) {
+    echo '<span itemprop="alternateName">'.$allCommonNames[$i].'</span>';
+    if(count($allCommonNames)>1) {
+    if($i == count($allCommonNames)-2) {
+echo ' or ';
+    } else if($i != count($allCommonNames)-1) {
+    echo ', ';
+}
+}
+}
+        ?>
+        
+    </h3>
 	
 	<p><?php echo $plantDesc; ?></p>
 <p>Catalogued <?php echo lcfirst(relativePastDate( strtotime( $timeCreated ))); ?></p>

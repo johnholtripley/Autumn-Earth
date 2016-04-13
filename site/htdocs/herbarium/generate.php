@@ -10,7 +10,7 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/signalnoise.php");
 include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
 
 function sendToTwitter() {
-	global $latinName, $startingText, $plantURL, $commonNameString, $isAquatic, $storedSeed;
+	global $latinName, $startingText, $plantURL, $commonNameString, $commonNamesJoined, $isAquatic, $storedSeed;
 
 
 $isLive = false;
@@ -98,8 +98,8 @@ if($isLive) {
 
 
 /*
-$query = "INSERT INTO tblplants (latinName,commonNames,timeCreated,plantDesc,plantUrl,tweetedContent,isAquatic,plantSeed)
-VALUES ('" . $latinName . "','" . $commonNameString . "',NOW(),'".$startingText."','".$plantURL."','".$textString."','".$isAquatic."','".$storedSeed."')";
+$query = "INSERT INTO tblplants (latinName,commonNames,commonNamesJoined,timeCreated,plantDesc,plantUrl,tweetedContent,isAquatic,plantSeed)
+VALUES ('" . $latinName . "','" . $commonNameString . "','" . $commonNamesJoined . "',NOW(),'".$startingText."','".$plantURL."','".$textString."','".$isAquatic."','".$storedSeed."')";
 
 $result = mysql_query($query) or die ("couldn't execute tblplant query");
 */
@@ -561,6 +561,7 @@ array_push($commonNames,$thisCommonName);
 }
 
 $commonNameString = implode(", ",$commonNames);
+$commonNameStringJoined = implode("/",$commonNames);
 if(count($commonNames)>1) {
 	// replace last "," with a "or":
 	$lastCommaPos = strrpos($commonNameString, ",");

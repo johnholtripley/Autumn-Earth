@@ -83,11 +83,26 @@ if(rand(1,8) == 1) {
 }
 
 				$htmlOutput .= '<li class="column'.$additionalClass.'" data-url="'.$plantUrl.'" data-aquatic="'.$isAquatic.'"><div '.$innerClass.' itemscope itemtype="http://schema.org/Thing/Species">';
-				$htmlOutput .= '<a itemprop="mainEntityOfPage" href="/herbarium/'.$plantUrl.'/" class="triggersModal">';
+				$htmlOutput .= '<a itemprop="mainEntityOfPage" href="'.$fullSitePath.'/herbarium/'.$plantUrl.'/" class="triggersModal">';
 
 picture('/images/herbarium/plants/'.$plantUrl.'.jpg', $latinName, $pictureArray, true, $htmlOutput, ' itemprop="image"');
 
-	$htmlOutput .= '<h4 itemprop="name">'.$latinName.'</h4><h5 itemprop="alternateName">'.$commonNames.'</h5><p>'.$plantDesc.'</p><p>Catalogued '.lcfirst(relativePastDate( strtotime( $timeCreated ))).'</p></a></div></li>';
+	$htmlOutput .= '<h4 itemprop="name">'.$latinName.'</h4><h5>';
+$allCommonNames = explode("/",$commonNamesJoined);
+for ($i=0; $i<count($allCommonNames);$i++) {
+   
+     $htmlOutput .= '<span itemprop="alternateName">'.$allCommonNames[$i].'</span>';
+   
+if(count($allCommonNames)>1) {
+	if($i == count($allCommonNames)-2) {
+$htmlOutput .= ' or ';
+	} else if($i != count($allCommonNames)-1) {
+	$htmlOutput .= ', ';
+}
+}
+
+}
+	$htmlOutput .= '</h5><p>'.$plantDesc.'</p><p>Catalogued '.lcfirst(relativePastDate( strtotime( $timeCreated ))).'</p></a></div></li>';
 
 
 
