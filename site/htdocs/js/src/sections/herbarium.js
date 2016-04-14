@@ -43,12 +43,14 @@ if (catalogueRoot) {
         }
         var thisPlantDetail = this.innerHTML;
 
+var thisPlantURL = this.getAttribute('data-url');
 
-// 
-// ##hashTag##
-// ##imageToShare##
-// ##descToShare##
-var thisShareString = shareString.replace(/##urlToShare##/g,'url-goes-here');
+
+var thisShareString = shareString.replace(/##urlToShare##/g,'https://www.autumnearth.com/herbarium/'+thisPlantURL);
+var thisShareString = thisShareString.replace(/##hashTag##/g,'AutumnEarth');
+// ############ TO DO:
+var thisShareString = thisShareString.replace(/##imageToShare##/g,'image-path-goes-here');
+var thisShareString = thisShareString.replace(/##descToShare##/g,'names-and-desc-go-here');
 
         plantModalDetails.innerHTML = thisPlantDetail+thisShareString;
         modalWrapper.className = "opening";
@@ -56,7 +58,7 @@ var thisShareString = shareString.replace(/##urlToShare##/g,'url-goes-here');
         document.getElementById('offCanvasWrapper').setAttribute('aria-hidden', 'true');
         storedCurrentPage = window.location.pathname.toString();
         var stateObj = {};
-        history.replaceState(stateObj, "Plant detail ", "/herbarium/" + this.getAttribute('data-url'));
+        history.replaceState(stateObj, "Plant detail ", "/herbarium/" + thisPlantURL);
     }
 
     function closePlantDetail(e) {
