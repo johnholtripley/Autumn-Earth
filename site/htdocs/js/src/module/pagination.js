@@ -60,7 +60,7 @@ if (cutsTheMustard && history.pushState && document.getElementById("paginationEn
                             document.getElementById("loadMore").innerHTML = 'load more (' + resultsRemaining + ' more)';
                         }
 
-if (typeof catalogueRoot !== "undefined") {
+if (catalogueRoot) {
     // is the Herbarium page, so bind the click events to the newly loaded items
     // (it's safe to re-bind the event to existing items as it won't be fired twice)
 bindHerbariumModal();
