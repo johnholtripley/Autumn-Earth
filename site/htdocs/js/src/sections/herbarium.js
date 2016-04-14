@@ -1,7 +1,8 @@
 var catalogueRoot = document.getElementById('herbariumCatalogue');
+var storedCurrentPage = "/herbarium/";
 
 function bindHerbariumModal() {
-       var catalogueLinks = catalogueRoot.getElementsByClassName('triggersModal');
+    var catalogueLinks = catalogueRoot.getElementsByClassName('triggersModal');
     for (var i = 0; i < catalogueLinks.length; i++) {
         catalogueLinks[i].addEventListener("click", openPlantDetail, false);
     }
@@ -37,6 +38,7 @@ if (catalogueRoot) {
     });
 
     function openPlantDetail(e) {
+
         if (e) {
             e.preventDefault();
         }
@@ -45,6 +47,13 @@ if (catalogueRoot) {
         modalWrapper.className = "opening";
         modalWrapper.removeAttribute('aria-hidden');
         document.getElementById('offCanvasWrapper').setAttribute('aria-hidden', 'true');
+
+        storedCurrentPage = window.location.pathname.toString();
+        // window.location = "/herbarium/"+this.getAttribute('data-url');
+
+
+        var stateObj = {};
+        history.replaceState(stateObj, "Plant detail ", "/herbarium/" + this.getAttribute('data-url'));
     }
 
     function closePlantDetail(e) {
@@ -54,8 +63,10 @@ if (catalogueRoot) {
         modalWrapper.className = "closing";
         modalWrapper.setAttribute('aria-hidden', 'true');
         document.getElementById('offCanvasWrapper').removeAttribute('aria-hidden');
+        var stateObj = {};
+        history.replaceState(stateObj, "Plant detail ", storedCurrentPage);
     }
-bindHerbariumModal();
- 
+    bindHerbariumModal();
+
     document.getElementById('modalClose').addEventListener("click", closePlantDetail);
 }
