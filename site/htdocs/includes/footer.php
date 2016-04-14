@@ -54,6 +54,17 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/search.php");
 
 
 </div>
+
+
+<?php
+// load in any modals that need to sit outside of the offcanvas nav:
+if($needsAModal != "") {
+// this is set in title-tag.php include
+	include($_SERVER['DOCUMENT_ROOT']."/includes/modals/".$needsAModal.".php");
+}
+?>
+
+
 </div>
 
 

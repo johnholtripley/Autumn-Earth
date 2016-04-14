@@ -3,6 +3,13 @@
 include_once($_SERVER['DOCUMENT_ROOT']."/includes/signalnoise.php");
 include_once($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
 include_once($_SERVER['DOCUMENT_ROOT']."/includes/functions.php");
+
+if(!isset($fullSitePath)) {
+	// done global in title tag for main pages
+	$protocol = stripos($_SERVER['SERVER_PROTOCOL'],'https') === true ? 'https://' : 'http://';
+$fullSitePath = $protocol.$_SERVER['SERVER_NAME'];
+}
+
 $pagenumber = 1;
 if(isset($_GET['page'])) {
 	$pagenumber = $_GET['page'];

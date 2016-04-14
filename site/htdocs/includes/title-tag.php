@@ -16,7 +16,7 @@ $shareImagePath = "https://www.autumnearth.com/images/icons/120.png";
   $pagetitle="Autumn Earth";
 $longDescription="Autumn Earth Community Site";
 
-
+$needsAModal = "";
 
 $sectionClass = "";
 switch ($thisSection) {
@@ -110,6 +110,7 @@ $result = mysql_query($query) or die ("couldn't execute query1");
 		$thisBuiltURL = $thisBuiltURL."herbarium/";
 		$pagetitle = 'Autumn Earth Herbarium';
 		$longDescription = 'Catalogue of the flora of Autumn Earth';
+		$needsAModal = "herbarium";
 	}
 
 break;
