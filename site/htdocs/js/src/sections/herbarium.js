@@ -59,6 +59,7 @@ var thisShareString = thisShareString.replace(/##descToShare##/g,'names-and-desc
         storedCurrentPage = window.location.pathname.toString();
         var stateObj = {};
         history.replaceState(stateObj, "Plant detail ", "/herbarium/" + thisPlantURL);
+        bindSocialLinks();
     }
 
     function closePlantDetail(e) {

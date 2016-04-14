@@ -20,16 +20,15 @@ function openLargerSocialPopup(e) {
 }
 
 
-
-var socialLinks = document.querySelectorAll('.popupWindow');
-
-for (i = 0; i < socialLinks.length; ++i) {
-    socialLinks[i].addEventListener("click", openSocialPopup);
+function bindSocialLinks() {
+    var socialLinks = document.querySelectorAll('.popupWindow');
+    for (i = 0; i < socialLinks.length; ++i) {
+        socialLinks[i].addEventListener("click", openSocialPopup);
+    }
+    // pinterest needs a larger popup:
+    var largerPopup = document.querySelector('.largerPopupWindow');
+    if (largerPopup) {
+        largerPopup.addEventListener("click", openLargerSocialPopup);
+    }
 }
-// pinterest needs a larger popup:
-var largerPopup = document.querySelector('.largerPopupWindow');
-if(largerPopup) {
-
-
-largerPopup.addEventListener("click", openLargerSocialPopup);
-}
+bindSocialLinks();
