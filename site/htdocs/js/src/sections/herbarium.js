@@ -43,6 +43,8 @@ if (catalogueRoot) {
         var thisPlantDetail = this.innerHTML;
         plantModalDetails.innerHTML = thisPlantDetail;
         modalWrapper.className = "opening";
+        modalWrapper.removeAttribute('aria-hidden');
+        document.getElementById('offCanvasWrapper').setAttribute('aria-hidden', 'true');
     }
 
     function closePlantDetail(e) {
@@ -50,6 +52,8 @@ if (catalogueRoot) {
             e.preventDefault();
         }
         modalWrapper.className = "closing";
+        modalWrapper.setAttribute('aria-hidden', 'true');
+        document.getElementById('offCanvasWrapper').removeAttribute('aria-hidden');
     }
 bindHerbariumModal();
  
