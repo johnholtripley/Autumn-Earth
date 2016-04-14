@@ -83,7 +83,7 @@
  
 // aspect ratio = 1.77
    height: 100vh;
-    width: 4444.44vh;
+    min-width: 4444.44vh;
     background: url(../images/herbarium/ink-transition-NOT-MINE.png) no-repeat 0 0;
     @include background-size(100%, 100%);
 }
