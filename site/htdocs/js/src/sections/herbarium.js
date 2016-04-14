@@ -38,20 +38,23 @@ if (catalogueRoot) {
     });
 
     function openPlantDetail(e) {
-
         if (e) {
             e.preventDefault();
         }
         var thisPlantDetail = this.innerHTML;
-        plantModalDetails.innerHTML = thisPlantDetail;
+
+
+// 
+// ##hashTag##
+// ##imageToShare##
+// ##descToShare##
+var thisShareString = shareString.replace(/##urlToShare##/g,'url-goes-here');
+
+        plantModalDetails.innerHTML = thisPlantDetail+thisShareString;
         modalWrapper.className = "opening";
         modalWrapper.removeAttribute('aria-hidden');
         document.getElementById('offCanvasWrapper').setAttribute('aria-hidden', 'true');
-
         storedCurrentPage = window.location.pathname.toString();
-        // window.location = "/herbarium/"+this.getAttribute('data-url');
-
-
         var stateObj = {};
         history.replaceState(stateObj, "Plant detail ", "/herbarium/" + this.getAttribute('data-url'));
     }
