@@ -1,4 +1,12 @@
 var catalogueRoot = document.getElementById('herbariumCatalogue');
+
+function bindHerbariumModal() {
+       var catalogueLinks = catalogueRoot.getElementsByClassName('triggersModal');
+    for (var i = 0; i < catalogueLinks.length; i++) {
+        catalogueLinks[i].addEventListener("click", openPlantDetail, false);
+    }
+}
+
 if (catalogueRoot) {
     var animatedElement = document.getElementById('inkEffect');
     var modalWrapper = document.getElementById('modalWrapper');
@@ -43,10 +51,7 @@ if (catalogueRoot) {
         }
         modalWrapper.className = "closing";
     }
-
-    var catalogueLinks = catalogueRoot.getElementsByClassName('triggersModal');
-    for (var i = 0; i < catalogueLinks.length; i++) {
-        catalogueLinks[i].addEventListener("click", openPlantDetail, false);
-    }
+bindHerbariumModal();
+ 
     document.getElementById('modalClose').addEventListener("click", closePlantDetail);
 }
