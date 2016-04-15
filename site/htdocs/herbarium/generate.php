@@ -117,7 +117,7 @@ $result = mysql_query($query) or die ("couldn't execute tblplant query");
 
 
 function makeSeed() {
-	// http://php.net/manual/en/function.srand.php
+	// http://php.net/manual/en/function.mt_srand.php
   list($usec, $sec) = explode(' ', microtime());
   return floor((float) $sec + ((float) $usec * 100000));
 }
@@ -127,7 +127,7 @@ if(isset($_GET["seed"])) {
 } else {
 	$storedSeed = makeSeed();
 }
-srand($storedSeed);
+mt_srand($storedSeed);
 
 
 function quadBezier($im, $x1, $y1, $x2, $y2, $x3, $y3) {
@@ -201,8 +201,8 @@ $allPossibleRules = array(array("X"=>"F","F"=>"FF"));
 	$allPossibleRuleIterations = array(5,6,4,6,6,6);
 
 	$allPossibleRuleDistances = array(2,3,8,3,3,3);
-	$startAngle = rand (-20,20);
-	$angle = rand(12,40);
+	$startAngle = mt_rand (-20,20);
+	$angle = mt_rand(12,40);
 
 
 	$whichRules = array_rand($allPossibleRules);
@@ -428,7 +428,7 @@ function findAndReplaceHashes($stringToCheck) {
 				// look for matching keys
 				$keyToMatch = substr($hashSplit[$i],1);
 				if (array_key_exists($keyToMatch, $json)) {
-					$whichReplaceElem = rand(0,(count($json[$keyToMatch])-1));
+					$whichReplaceElem = mt_rand(0,(count($json[$keyToMatch])-1));
 					$replacementString = $json[$keyToMatch][$whichReplaceElem];
 					// check this substitution string to see if it has any hashes itself:
 					$replacementString = findAndReplaceHashes($replacementString); 
@@ -457,7 +457,7 @@ $firstWord = array_rand($latinSyllables);
 $latinName = $firstWord;
 do {
 	
-$nextSyllable = $latinSyllables[$firstWord][rand(0,count($latinSyllables[$firstWord])-1)];
+$nextSyllable = $latinSyllables[$firstWord][mt_rand(0,count($latinSyllables[$firstWord])-1)];
 $latinName .= $nextSyllable;
 $firstWord = array_rand($latinSyllables);
 $syllableCount ++;
@@ -470,7 +470,7 @@ $secondWord = array_rand($latinSyllables);
 $secondLatinName = $secondWord;
 
 do {
-$nextSyllable = $latinSyllables[$secondWord][rand(0,count($latinSyllables[$secondWord])-1)];
+$nextSyllable = $latinSyllables[$secondWord][mt_rand(0,count($latinSyllables[$secondWord])-1)];
 $secondLatinName .= $nextSyllable;
 $secondWord = array_rand($latinSyllables);
 $syllableCount ++;
@@ -510,15 +510,15 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/herbarium/common-name-suffixes.php"
 
 
 $commonNameDistribution = array(1,1,1,1,2,2,3);
-$numberOfCommonNames = $commonNameDistribution[rand(0,count($commonNameDistribution)-1)];
+$numberOfCommonNames = $commonNameDistribution[mt_rand(0,count($commonNameDistribution)-1)];
 
 $commonNames = array();
 $isAquatic = 0;
 
 for($i=0;$i<$numberOfCommonNames;$i++) {
-$thisCommonName = $commonPrefixes[rand(0,count($commonPrefixes)-1)];
+$thisCommonName = $commonPrefixes[mt_rand(0,count($commonPrefixes)-1)];
 do {
-$thisSecondCommonName = $commonSuffixes[rand(0,count($commonSuffixes)-1)];
+$thisSecondCommonName = $commonSuffixes[mt_rand(0,count($commonSuffixes)-1)];
 // make sure the first and last words aren't identical:
 } while ($thisCommonName == $thisSecondCommonName);
 
@@ -529,7 +529,7 @@ $thisCommonName = substr($thisCommonName, 0, -1);
 
 $thisCommonName .= $thisSecondCommonName;
 
-$shouldAddPrefix = rand(1,42);
+$shouldAddPrefix = mt_rand(1,42);
 switch ($shouldAddPrefix) {
     case 1:
         $thisCommonName = "Lesser ".$thisCommonName;
@@ -571,7 +571,7 @@ if(count($commonNames)>1) {
 
 
 // pick a random item from the Origin to start from:
-$whichElem = rand(0,(count($json['origin'])-1));
+$whichElem = mt_rand(0,(count($json['origin'])-1));
 $startingText = $json['origin'][$whichElem];
 $startingText = findAndReplaceHashes($startingText);
 
