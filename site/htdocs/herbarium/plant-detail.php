@@ -70,22 +70,29 @@ echo ' or ';
 <p>Catalogued <?php echo lcfirst(relativePastDate( strtotime( $timeCreated ))); ?></p>
 
 
-<?php
-
- $urlToShare = urlencode($thisBuiltURL);
- $imageToShare = urlencode($shareImagePath);
- $descToShare = urlencode($latinName . " - ".$commonNames ." - ".$longDescription);
- $hashTag = "AutumnEarth";
-// do it this way so the markup can be shared between JS and PHP:
-$socialShareMarkup = file_get_contents($_SERVER['DOCUMENT_ROOT'].'/js/src/module/social-share-markup.js');
-$socialShareMarkup = str_ireplace("shareString='", "", $socialShareMarkup);
-$socialShareMarkup = str_ireplace("';", "", $socialShareMarkup);
-$socialShareMarkup = str_ireplace("##urlToShare##", $urlToShare, $socialShareMarkup);
-$socialShareMarkup = str_ireplace("##hashTag##", $hashTag, $socialShareMarkup);
-$socialShareMarkup = str_ireplace("##imageToShare##", $imageToShare, $socialShareMarkup);
-$socialShareMarkup = str_ireplace("##descToShare##", $descToShare, $socialShareMarkup);
-echo $socialShareMarkup;
-?>
+<ul id="socialShareLinks">
+    <li class="socialTwitter">
+        <?php $urlToShare = urlencode($thisBuiltURL);
+        $imageToShare = urlencode($shareImagePath);
+        $descToShare = urlencode($latinName . " - ".$commonNames." - ".$longDescription);
+        $hashTag = "AutumnEarth";
+        ?>
+        <a class="popupWindow" target="_blank" href="https://twitter.com/intent/tweet/?url=<?php echo $urlToShare; ?>&amp;hashtags=<?php echo $hashTag; ?>">Share on Twitter</a>
+    </li>
+    <li class="socialFacebook">
+        <a class="popupWindow" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=<?php echo $urlToShare; ?>">Share on Facebook</a>
+    </li>
+    <li class="socialGoogle">
+        <a class="popupWindow" target="_blank" href="https://plus.google.com/share?url=<?php echo $urlToShare; ?>">Share on Google+</a>
+    </li>
+    <li class="socialPinterest">
+        <a class="largerPopupWindow" target="_blank" href="https://www.pinterest.com/pin/create/button/?url=<?php echo $urlToShare; ?>&amp;media=<?php echo $imageToShare; ?>&amp;description=<?php echo $descToShare; ?>&amp;hashtags=<?php echo $hashTag; ?>">Share on Pinterest</a>
+    </li>
+   
+ 
+ 
+ 
+</ul>
 
 
 

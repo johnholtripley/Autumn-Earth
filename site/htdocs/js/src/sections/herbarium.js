@@ -42,24 +42,17 @@ if (catalogueRoot) {
             e.preventDefault();
         }
         var thisPlantDetail = this.innerHTML;
-
-var thisPlantURL = this.getAttribute('data-url');
-
-
-var thisShareString = shareString.replace(/##urlToShare##/g,'https://www.autumnearth.com/herbarium/'+thisPlantURL);
-var thisShareString = thisShareString.replace(/##hashTag##/g,'AutumnEarth');
-// ############ TO DO:
-var thisShareString = thisShareString.replace(/##imageToShare##/g,'image-path-goes-here');
-var thisShareString = thisShareString.replace(/##descToShare##/g,'names-and-desc-go-here');
-
-        plantModalDetails.innerHTML = thisPlantDetail+thisShareString;
+        plantModalDetails.innerHTML = thisPlantDetail;
         modalWrapper.className = "opening";
         modalWrapper.removeAttribute('aria-hidden');
         document.getElementById('offCanvasWrapper').setAttribute('aria-hidden', 'true');
         storedCurrentPage = window.location.pathname.toString();
         var stateObj = {};
-        history.replaceState(stateObj, "Plant detail ", "/herbarium/" + thisPlantURL);
-        bindSocialLinks();
+        history.replaceState(stateObj, "Plant detail ", "/herbarium/" + this.getAttribute('data-url'));
+
+// ########
+        // get detail content with ajax
+        // on success bindSocialLinks();
     }
 
     function closePlantDetail(e) {
