@@ -2,7 +2,7 @@
 include_once($_SERVER['DOCUMENT_ROOT']."/includes/signalnoise.php");
 include_once($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
 include_once($_SERVER['DOCUMENT_ROOT']."/includes/functions.php");
-include_once($_SERVER['DOCUMENT_ROOT']."/includes/title-tag.php");
+
 
 $query = "select * from tblplants WHERE plantUrl = '".$_GET["plant"]."'";
 $result = mysql_query($query) or die ("couldn't execute query");
@@ -14,7 +14,13 @@ extract($row);
 
 <div class="row" itemscope itemtype="http://schema.org/Thing/Species">
     <div class="medium-6 column">
-<img src="<?php echo $fullSitePath; ?>/images/herbarium/plants/<?php echo $plantUrl; ?>.jpg" alt="<?php echo $latinName; ?>" itemprop="image">
+
+
+
+<?php
+
+picture('/images/herbarium/plants/'.$plantUrl.'.jpg', $latinName, array(300,604), true, ' itemprop="image"');
+?>
 </div><div class="medium-6 column">
 	<h2 itemprop="name"><?php echo $latinName; ?></h2>
 	<h3>

@@ -1316,7 +1316,7 @@ function imageResized($source, $widthRequired) {
 
 
 
-function picture($source, $alt, $breakpoints, $forceResize = false, &$addToBuffer = '', $classOrProperty = '') {
+function picture($source, $alt, $breakpoints, $forceResize = false, $classOrProperty = '', &$addToBuffer = '') {
 	global $fullSitePath;
 	$thisHtmlOutput = '<picture>';
 	if(!$forceResize) {
