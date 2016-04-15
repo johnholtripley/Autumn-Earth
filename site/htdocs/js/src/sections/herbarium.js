@@ -41,6 +41,32 @@ if (catalogueRoot) {
         if (e) {
             e.preventDefault();
         }
+
+plantURL = this.getAttribute('data-url');
+pageToRequest = '/includes/herbarium/plant-detail.php?plant='+plantURL;
+
+// start ajax request:
+var request = new XMLHttpRequest();
+ request.open('GET', pageToRequest, true);
+        request.onreadystatechange = function() {
+            if (this.readyState === 4) {
+
+if (this.status >= 200 && this.status < 400) {
+                    // Success:
+                    var response = this.responseText;
+                    if (response != "") {
+                        plantModalDetails.innerHTML = response;
+                        bindSocialLinks();
+                    }
+                }
+            }
+              };
+        request.send();
+        request = null;
+
+
+
+
         var thisPlantDetail = this.innerHTML;
         plantModalDetails.innerHTML = thisPlantDetail;
         modalWrapper.className = "opening";
@@ -48,11 +74,11 @@ if (catalogueRoot) {
         document.getElementById('offCanvasWrapper').setAttribute('aria-hidden', 'true');
         storedCurrentPage = window.location.pathname.toString();
         var stateObj = {};
-        history.replaceState(stateObj, "Plant detail ", "/herbarium/" + this.getAttribute('data-url'));
+        history.replaceState(stateObj, "Plant detail ", "/herbarium/" + plantURL);
 
-// ########
-        // get detail content with ajax
-        // on success bindSocialLinks();
+
+
+ 
     }
 
     function closePlantDetail(e) {
