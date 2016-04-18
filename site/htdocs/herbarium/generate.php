@@ -72,7 +72,6 @@ echo "<p>Tweeted content: ".$textString."</p>";
 
 
 
-$isLive = true;
 
 
 
@@ -97,12 +96,11 @@ if($isLive) {
 
 
 
-/*
 $query = "INSERT INTO tblplants (latinName,commonNames,commonNamesJoined,timeCreated,plantDesc,plantUrl,tweetedContent,isAquatic,plantSeed)
 VALUES ('" . $latinName . "','" . $commonNameString . "','" . $commonNamesJoined . "',NOW(),'".$startingText."','".$plantURL."','".$textString."','".$isAquatic."','".$storedSeed."')";
 
 $result = mysql_query($query) or die ("couldn't execute tblplant query");
-*/
+
 
 
 
@@ -196,13 +194,15 @@ for ($i=0;$i<count($brushColours);$i++) {
 
 	$allPossibleRules = array(array("X"=>"S2X[+X]X[-X]X"),array("X"=>"S2X[+X]X[-X][X]"),array("X"=>"S3XX-[-X+X+X]+[+X-X-X]"),array("X"=>"S2F[+X]F[-X]+X","F"=>"FF"),array("X"=>"S2F[+X][-X]FX","F"=>"FF"),array("X"=>"S2F-[[X]+X]+F[+FX]-X","F"=>"FF"));
 
-$allPossibleRules = array(array("X"=>"F","F"=>"FF"));
+//$allPossibleRules = array(array("X"=>"F","F"=>"FFF"));
 
 	$allPossibleRuleIterations = array(5,6,4,6,6,6);
 
 	$allPossibleRuleDistances = array(2,3,8,3,3,3);
 	$startAngle = mt_rand (-20,20);
 	$angle = mt_rand(12,40);
+
+
 
 
 	$whichRules = array_rand($allPossibleRules);
@@ -265,7 +265,16 @@ $result = str_replace("X", "F", $result);
 
 	$stack = array();
 	// start at grid 0,0 facing north with no colour index
+	
+
+// testing -----------------------------
 	$pos = array("x"=>$canvaDimension/2, "y"=>$canvaDimension, "heading"=>$startAngle, "colour"=>0, "size"=>0);
+
+
+
+// -----------------------------------
+
+
 	for ($i=0;$i<strlen($commandString);$i++) {
 	$c = substr($commandString,$i,1);
 		switch ($c) {
@@ -306,93 +315,63 @@ imagefilledarc($plantCanvas, $pos["x"], $pos["y"]-50, 150, 100, 180, 360 , image
 				// "F"
 
 // find how long this line is
-
-
 	$posInString = stripos($commandString, ")", $i);
 		$lengthOfThisNumber = $posInString-($i+2);
 		$howLong = intval(substr($commandString,$i+2,$lengthOfThisNumber));
 
-		
-
 		$i += ($lengthOfThisNumber+2);
-
-
 				$lastX = $pos["x"];
 				$lastY = $pos["y"];
-				// move the turtle
+				// move the turtle:
 				$rad = deg2rad($pos["heading"]);
-		
-				$pos["x"] -= ($distance * $howLong) * sin($rad);
+					$pos["x"] -= ($distance * $howLong) * sin($rad);
 				$pos["y"] -= ($distance * $howLong) * cos($rad);
-				
-
 				imagesetbrush($plantCanvas, ${'brushcol'.$pos["colour"].'size'.$pos["size"]});
 				
 
 
-$controlX = min($lastX, $pos["x"]);
-$controlY = min($lastY, $pos["y"]);
 
 // curve:
-//   quadBezier($plantCanvas, $lastX, $lastY, $controlX, $controlY, $pos["x"], $pos["y"]);
+
+
+// determine control point based on which quadrant the line is in
+/*
+
+heading values:
+
+       360
+90      +       270
+       180       
+
+*/
+
+
+
+$controlOffsetX = mt_rand(1,8)*$howLong;
+$controlOffsetY = mt_rand(1,8)*$howLong;
+
+if($controlOffsetX > 40) {
+	$controlOffsetX = 40;
+}
+if($controlOffsetY > 40) {
+	$controlOffsetY = 40;
+}
+if (($pos["heading"]>=0) && ($pos["heading"]<90)) {
+$controlOffsetX *=-1;
+$controlOffsetY *=-1;
+} else if (($pos["heading"]>=90) && ($pos["heading"]<180)) {
+	$controlOffsetX *=-1;
+} else if (($pos["heading"]>=180) && ($pos["heading"]<270)) {
+	//
+} else {
+// 	heading>=270
+	$controlOffsetY *=-1;
+}
+
+   quadBezier($plantCanvas, $lastX, $lastY, ($lastX + $controlOffsetX), ($lastY + $controlOffsetY), $pos["x"], $pos["y"]);
 
 // line:
 //imageline($plantCanvas, $lastX, $lastY, $pos["x"], $pos["y"], IMG_COLOR_BRUSHED);
-
-
-
-// --------------------------
-// testing
-
-
-$startX = $canvaDimension-10;
-$startY = 40;
-$endX = $startX-100;
-$endY = $startY+200;
-
-//##### check the HEADING 
-$dir = 1;
-
-
-if(($endX < $startX) && ($endY < $startX)) {
-	$dir = -1;
-}
-$controlX = $startX+(($startX-$endX)/4)*$dir;
-$controlY = $startY+(($endY-$startY)/4)*$dir;
-
-imagesetbrush($plantCanvas, ${'brushcol'.$pos["colour"].'size0'});
-quadBezier($plantCanvas, $startX, $startY, $controlX, $controlY, $endX, $endY);
-imagesetbrush($plantCanvas, ${'brushcol'.$pos["colour"].'size3'});
-imageline($plantCanvas, $startX, $startY, $endX, $endY, IMG_COLOR_BRUSHED);
-
-
-
-$startX = $canvaDimension-10;
-$startY = $canvaDimension/2+10;
-$endX = $startX-200;
-$endY = $startY+100;
-
-$dir = 1;
-
-if(($endX < $startX) && ($endY < $startX)) {
-	$dir = -1;
-}
-
-
-
-
-
-$controlX = $startX+(($startX-$endX)/4)*$dir;
-$controlY = $startY+(($endY-$startY)/4)*$dir;
-imagesetbrush($plantCanvas, ${'brushcol'.$pos["colour"].'size0'});
-quadBezier($plantCanvas, $startX, $startY, $controlX, $controlY, $endX, $endY);
-imagesetbrush($plantCanvas, ${'brushcol'.$pos["colour"].'size3'});
-imageline($plantCanvas, $startX, $startY, $endX, $endY, IMG_COLOR_BRUSHED);
-
-
-
-
-// --------------------------
 
 
 		}
@@ -590,7 +569,7 @@ echo '<p style="font-size:0.7em;">seed: '.$storedSeed.'</p>';
 
 
 
-//sendToTwitter();
+sendToTwitter();
 ?>
 </body>
 </html>

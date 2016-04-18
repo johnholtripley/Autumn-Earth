@@ -1172,9 +1172,9 @@ function relativePastDate( $time ) {
 			$reldays = floor( $reldays );
 			return $reldays . ' days ago';
 		} else if ( abs( $reldays ) < 365 ) {
-			return date( 'j', strtotime( $time ) )."<sup>".date( 'S', strtotime( $time ) )."</sup> ".date( 'F', strtotime( $time ) );
+			return date( 'j',  $time  )."<sup>".date( 'S',  $time  )."</sup> ".date( 'F',  $time  );
 		} else {
-		return date( 'j', strtotime( $time ) )."<sup>".date( 'S', strtotime( $time ) )."</sup> ".date( 'F Y', strtotime( $time ) );
+		return date( 'j',  $time  )."<sup>".date( 'S',  $time  )."</sup> ".date( 'F Y',  $time  );
 	}
 }
 

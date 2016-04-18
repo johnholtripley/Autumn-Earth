@@ -39,7 +39,7 @@ echo ' or ';
         ?>
     </h3>
 	<p><?php echo $plantDesc; ?></p>
-<p>Catalogued <?php echo lcfirst(relativePastDate($timeCreated)); ?></p>
+<p>Catalogued <?php echo lcfirst(relativePastDate(strtotime($timeCreated))); ?></p>
 <ul id="socialShareLinks">
     <li class="socialTwitter">
 
