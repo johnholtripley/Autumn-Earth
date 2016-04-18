@@ -264,7 +264,21 @@ $allColours = array_unique($matches[0]);
 
 echo '<ul style="margin:0;padding:0;list-style:none;">';
 foreach ($allColours as $thisColour) {
-    echo '<li style="background:'.$thisColour.';color:#fff;float:left;padding: 5px 20px;">'.$thisColour.'</li>';
+
+
+$r = hexdec(substr($thisColour,1,2));
+$g = hexdec(substr($thisColour,3,2));
+$b = hexdec(substr($thisColour,5,2));
+if($r + $g + $b > 382){
+    $textColour = '000';
+}else{
+    $textColour = 'fff';
+}
+if(($thisColour == '#fff') || ($thisColour == '#ffffff')) {
+  $textColour = '000';
+}
+
+    echo '<li style="background:'.$thisColour.';color:#'.$textColour.';float:left;padding: 5px 20px;">'.$thisColour.'</li>';
 }
 echo '</ul>';
 
