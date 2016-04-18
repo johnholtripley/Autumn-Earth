@@ -246,6 +246,33 @@ picture('/images/placeholder.jpg', 'alt text', array(300,600,900));
 </div>
 
 
+<hr>
+<div class="row">
+  <div class="medium-6 columns">
+    <h2>Colours</h2>
+<?php
+
+$regHex = '/#([a-fA-F0-9]{3}){1,2}\b/';
+
+$coreCSS = file_get_contents($_SERVER['DOCUMENT_ROOT']."/css/base.css");
+
+preg_match_all($regHex, $coreCSS, $matches);
+
+
+
+$allColours = array_unique($matches[0]);
+
+echo '<ul style="margin:0;padding:0;list-style:none;">';
+foreach ($allColours as $thisColour) {
+    echo '<li style="background:'.$thisColour.';color:#fff;float:left;padding: 5px 20px;">'.$thisColour.'</li>';
+}
+echo '</ul>';
+
+?>
+</div>
+</div>
+
+
 
 
 </div>
