@@ -109,7 +109,7 @@ $htmlOutput .= ' or ';
 }
 
 }
-	$htmlOutput .= '</h5><p>'.$plantDesc.'</p><p>Catalogued '.lcfirst(relativePastDate( strtotime( $timeCreated ))).'</p></a></div></li>';
+	$htmlOutput .= '</h5><p>'.$plantDesc.'</p><p>Catalogued '.lcfirst(relativePastDate($timeCreated)).'</p></a></div></li>';
 
 
 
