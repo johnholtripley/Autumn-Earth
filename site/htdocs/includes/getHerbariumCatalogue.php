@@ -96,14 +96,14 @@ picture('/images/herbarium/plants/'.$plantUrl.'.jpg', $latinName, $pictureArray,
 
 	$htmlOutput .= '<h4 itemprop="name">'.$latinName.'</h4><h5>';
 $allCommonNames = explode("/",$commonNamesJoined);
-for ($i=0; $i<count($allCommonNames);$i++) {
+for ($j=0; $j<count($allCommonNames);$j++) {
    
-     $htmlOutput .= '<span itemprop="alternateName">'.$allCommonNames[$i].'</span>';
+     $htmlOutput .= '<span itemprop="alternateName">'.$allCommonNames[$j].'</span>';
    
 if(count($allCommonNames)>1) {
-	if($i == count($allCommonNames)-2) {
+	if($j == count($allCommonNames)-2) {
 $htmlOutput .= ' or ';
-	} else if($i != count($allCommonNames)-1) {
+	} else if($j != count($allCommonNames)-1) {
 	$htmlOutput .= ', ';
 }
 }

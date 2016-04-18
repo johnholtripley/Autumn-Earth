@@ -347,8 +347,8 @@ heading values:
 
 
 
-$controlOffsetX = mt_rand(1,8)*$howLong;
-$controlOffsetY = mt_rand(1,8)*$howLong;
+$controlOffsetX = mt_rand(4,10)*$howLong/2;
+$controlOffsetY = mt_rand(4,10)*$howLong/2;
 
 if($controlOffsetX > 40) {
 	$controlOffsetX = 40;
