@@ -175,7 +175,7 @@ function drawPlant() {
 
 // load brush images:
 
-$brushSizes = array(20,10,5,1);
+$brushSizes = array(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20);
 $brushColours = array(array(27,113,27),array(24,180,24),array(48,220,48),array(54,220,54));
 for ($i=0;$i<count($brushColours);$i++) {
 	for ($j=0;$j<count($brushSizes);$j++) {
@@ -356,45 +356,6 @@ imagefilledarc($plantCanvas, $pos["x"], $pos["y"]-50, 150, 100, 180, 360 , image
 
 
 
-// curve:
-
-
-// determine control point based on which quadrant the line is in
-/*
-
-heading values:
-
-       360
-90      +       270
-       180       
-
-*/
-
-
-/*
-$controlOffsetX = mt_rand(4,10)*$howLong/2;
-$controlOffsetY = mt_rand(4,10)*$howLong/2;
-
-if($controlOffsetX > 40) {
-	$controlOffsetX = 40;
-}
-if($controlOffsetY > 40) {
-	$controlOffsetY = 40;
-}
-if (($pos["heading"]>=0) && ($pos["heading"]<90)) {
-$controlOffsetX *=-1;
-$controlOffsetY *=-1;
-} else if (($pos["heading"]>=90) && ($pos["heading"]<180)) {
-	$controlOffsetX *=-1;
-} else if (($pos["heading"]>=180) && ($pos["heading"]<270)) {
-	//
-} else {
-// 	heading>=270
-	$controlOffsetY *=-1;
-}
-*/
-
- //  quadBezier($plantCanvas, $lastX, $lastY, ($lastX + $controlOffsetX), ($lastY + $controlOffsetY), $pos["x"], $pos["y"]);
 
 // push to array
 
@@ -412,8 +373,7 @@ array_push($allParentNodes, $lastX."_".$lastY);
 // find all nodes that aren't themselves parents (ie. are leaf nodes):
 	$allLeafNodes = array_diff( $allNodes,$allParentNodes);
 
-var_dump($allLeafNodes);
-echo "<hr>";
+
 
 // loop through all leaf nodes, finding each parent until run out
 	foreach ($allLeafNodes as $thisOuterNode) {
@@ -422,6 +382,7 @@ echo "<hr>";
 		$thisStartPoint = explode("_", $thisNode);
 		$previousX = $thisStartPoint[0];
 		$previousY = $thisStartPoint[1];
+		$thisDepth = 0;
 		//echo "outer - examining ".$thisNode."<br>";
 		while (array_key_exists($thisNode, $allNodeRelationships)) {
 //echo "inner - examining ".$thisNode."<br>";
@@ -430,7 +391,11 @@ $thisEndPoint = explode("_", $allNodeRelationships[$thisNode]);
 
   $controlX = ($thisPoint[0] + $thisEndPoint[0]) / 2;
   $controlY = ($thisPoint[1] + $thisEndPoint[1]) / 2;
+  // bezier curve:
+  imagesetbrush($plantCanvas, ${'brushcol'.$pos["colour"].'size'.$thisDepth});
 quadBezier($plantCanvas, $previousX, $previousY, $thisPoint[0], $thisPoint[1], $controlX, $controlY);
+// line:
+//imageline($plantCanvas, $lastX, $lastY, $pos["x"], $pos["y"], IMG_COLOR_BRUSHED);
 
 
 //echo "target ".$thisPoint[0].",".$thisPoint[1]." to ".$thisEndPoint[0].",".$thisEndPoint[1]."<br />";
@@ -438,6 +403,7 @@ quadBezier($plantCanvas, $previousX, $previousY, $thisPoint[0], $thisPoint[1], $
 $previousX = $controlX;
 $previousY = $controlY;
 $thisNode = $allNodeRelationships[$thisNode];
+$thisDepth ++;
 		}
 	}
 
