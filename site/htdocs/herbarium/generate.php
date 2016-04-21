@@ -194,11 +194,20 @@ for ($i=0;$i<count($brushColours);$i++) {
 
 	$allPossibleRules = array(array("X"=>"S2X[+X]X[-X]X"),array("X"=>"S2X[+X]X[-X][X]"),array("X"=>"S3XX-[-X+X+X]+[+X-X-X]"),array("X"=>"S2F[+X]F[-X]+X","F"=>"FF"),array("X"=>"S2F[+X][-X]FX","F"=>"FF"),array("X"=>"S2F-[[X]+X]+F[+FX]-X","F"=>"FF"));
 
-//$allPossibleRules = array(array("X"=>"F","F"=>"FFF"));
+
 
 	$allPossibleRuleIterations = array(5,6,4,6,6,6);
 
 	$allPossibleRuleDistances = array(2,3,8,3,3,3);
+
+
+
+// testing ------------------------
+$allPossibleRules = array(array("X"=>"F","F"=>"FFFFFFF[+FFF]-FFF"));
+$allPossibleRuleIterations = array(2);
+$allPossibleRuleDistances = array(20);
+// testing ------------------------
+
 	$startAngle = mt_rand (-20,20);
 	$angle = mt_rand(12,40);
 
@@ -265,14 +274,13 @@ $result = str_replace("X", "F", $result);
 
 	$stack = array();
 	// start at grid 0,0 facing north with no colour index
-	
-
-// testing -----------------------------
-	$pos = array("x"=>$canvaDimension/2, "y"=>$canvaDimension, "heading"=>$startAngle, "colour"=>0, "size"=>0);
+		$pos = array("x"=>$canvaDimension/2, "y"=>$canvaDimension, "heading"=>$startAngle, "colour"=>0, "size"=>0);
 
 
+$allNodes = array();
+$allParentNodes = array($pos["x"]."_".$pos["y"]);
+$allNodeRelationships = array();
 
-// -----------------------------------
 
 
 	for ($i=0;$i<strlen($commandString);$i++) {
@@ -318,7 +326,8 @@ imagefilledarc($plantCanvas, $pos["x"], $pos["y"]-50, 150, 100, 180, 360 , image
 	$posInString = stripos($commandString, ")", $i);
 		$lengthOfThisNumber = $posInString-($i+2);
 		$howLong = intval(substr($commandString,$i+2,$lengthOfThisNumber));
-
+// add some variation - ideally based on the iteration depth: ###
+		//$howLong += mt_rand(-5,5);
 		$i += ($lengthOfThisNumber+2);
 				$lastX = $pos["x"];
 				$lastY = $pos["y"];
@@ -326,6 +335,11 @@ imagefilledarc($plantCanvas, $pos["x"], $pos["y"]-50, 150, 100, 180, 360 , image
 				$rad = deg2rad($pos["heading"]);
 					$pos["x"] -= ($distance * $howLong) * sin($rad);
 				$pos["y"] -= ($distance * $howLong) * cos($rad);
+
+// add some variation - ideally based on the iteration depth ####
+//$pos["x"] += mt_rand(-5,5);
+//$pos["y"] += mt_rand(-5,5);
+
 				imagesetbrush($plantCanvas, ${'brushcol'.$pos["colour"].'size'.$pos["size"]});
 				
 
@@ -346,7 +360,7 @@ heading values:
 */
 
 
-
+/*
 $controlOffsetX = mt_rand(4,10)*$howLong/2;
 $controlOffsetY = mt_rand(4,10)*$howLong/2;
 
@@ -367,8 +381,15 @@ $controlOffsetY *=-1;
 // 	heading>=270
 	$controlOffsetY *=-1;
 }
+*/
 
-   quadBezier($plantCanvas, $lastX, $lastY, ($lastX + $controlOffsetX), ($lastY + $controlOffsetY), $pos["x"], $pos["y"]);
+ //  quadBezier($plantCanvas, $lastX, $lastY, ($lastX + $controlOffsetX), ($lastY + $controlOffsetY), $pos["x"], $pos["y"]);
+
+// push to array
+
+$allNodeRelationships[$pos["x"]."_".$pos["y"]] = $lastX."_".$lastY;
+array_push($allNodes, $pos["x"]."_".$pos["y"]);
+array_push($allParentNodes, $lastX."_".$lastY);
 
 // line:
 //imageline($plantCanvas, $lastX, $lastY, $pos["x"], $pos["y"], IMG_COLOR_BRUSHED);
@@ -376,6 +397,35 @@ $controlOffsetY *=-1;
 
 		}
 	}
+
+// find all nodes that aren't themselves parents (ie. are leaf nodes):
+	$allLeafNodes = array_diff( $allNodes,$allParentNodes);
+
+var_dump($allLeafNodes);
+echo "<hr>";
+
+// loop through all leaf nodes, finding each parent until run out
+	foreach ($allLeafNodes as $thisOuterNode) {
+
+		$thisNode = $thisOuterNode;
+		echo "outer - examining ".$thisNode."<br>";
+		while (array_key_exists($thisNode, $allNodeRelationships)) {
+echo "inner - examining ".$thisNode."<br>";
+$thisPoint = explode("_", $thisNode);
+$thisEndPoint = explode("_", $allNodeRelationships[$thisNode]);
+
+  $controlX = ($thisPoint[0] + $thisEndPoint[0]) / 2;
+  $controlY = ($thisPoint[1] + $thisEndPoint[1]) / 2;
+quadBezier($plantCanvas, $thisPoint[0], $thisPoint[1], $thisEndPoint[0], $thisEndPoint[1], $controlX, $controlY);
+
+
+echo "drawing ".$thisNode.$thisPoint[0].",".$thisPoint[1]." to ".$thisEndPoint[0].",".$thisEndPoint[1]."<br />";
+
+$thisNode = $allNodeRelationships[$thisNode];
+		}
+	}
+
+
 
 // add a texture overlay:
 	$textureOverlay = imagecreatefrompng($_SERVER['DOCUMENT_ROOT']."/images/herbarium/overlays/watercolour.png");
@@ -569,7 +619,7 @@ echo '<p style="font-size:0.7em;">seed: '.$storedSeed.'</p>';
 
 
 
-sendToTwitter();
+//sendToTwitter();
 ?>
 </body>
 </html>
