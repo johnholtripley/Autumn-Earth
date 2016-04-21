@@ -1,3 +1,3 @@
 <?php
-$butterflySuffixes = array("fritillary", "monarch", "dart");
+$butterflySuffixes = array("fritillary", "monarch", "dart", "mimic");
 ?>
