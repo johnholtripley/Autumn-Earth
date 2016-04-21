@@ -1294,23 +1294,42 @@ function imageResized($source, $widthRequired) {
 	}
 	$sourceDimensions = getimagesize($_SERVER['DOCUMENT_ROOT'].$source);
 	$sourceWidth = $sourceDimensions[0];
+	// check file extension:
+	$dotPos = strrpos($source, ".");
+	$fileExtension = substr(strtolower($source), $dotPos+1);
 	if($widthRequired<$sourceWidth) {
 		$sourceHeight = $sourceDimensions[1];
 		$heightRequired = floor(($widthRequired*$sourceHeight)/$sourceWidth);
 		$image = imagecreatetruecolor($widthRequired, $heightRequired);
-		$sourceImage = imagecreatefromjpeg($_SERVER['DOCUMENT_ROOT'].$source);
+		switch ($fileExtension) {
+			case "jpg":
+			$sourceImage = imagecreatefromjpeg($_SERVER['DOCUMENT_ROOT'].$source);
+			break;
+		case "png":
+			$sourceImage = imagecreatefrompng($_SERVER['DOCUMENT_ROOT'].$source);
+			imagealphablending( $image, false );
+			imagesavealpha( $image, true );
+			break;
+		}
 		imagecopyresampled($image, $sourceImage, 0, 0, 0, 0, $widthRequired, $heightRequired, $sourceWidth, $sourceHeight);
 		// create folder if it doesn't exist
 		if(!file_exists ( $_SERVER['DOCUMENT_ROOT'].$resizedFolder )) {
 			mkdir($_SERVER['DOCUMENT_ROOT'].$resizedFolder);
 		}
-		imagejpeg($image, $_SERVER['DOCUMENT_ROOT'].$resizedPath, 85);
+		switch ($fileExtension) {
+		case "jpg":
+			imagejpeg($image, $_SERVER['DOCUMENT_ROOT'].$resizedPath, 85);
+			break;
+		case "png":
+			imagepng($image, $_SERVER['DOCUMENT_ROOT'].$resizedPath, 0);
+			break;
+		}
 		imagedestroy($image);
 		imagedestroy($sourceImage);
 		return $resizedPath;
 	} else {
-		// use original:
-		return $source;
+	// use original:
+	return $source;
 	}
 }
 
@@ -1320,9 +1339,9 @@ function picture($source, $alt, $breakpoints, $forceResize = false, $classOrProp
 	global $fullSitePath;
 	$thisHtmlOutput = '<picture>';
 	if(!$forceResize) {
-// don't use the original image size if true - use the pciture element to fiorce a resize of the image, and exclude the original
-	$thisHtmlOutput .= '<source media="(min-width: '.$breakpoints[(count($breakpoints)-1)].'px)" srcset="'.$source.'">';
-}
+		// don't use the original image size if true - use the pciture element to fiorce a resize of the image, and exclude the original
+		$thisHtmlOutput .= '<source media="(min-width: '.$breakpoints[(count($breakpoints)-1)].'px)" srcset="'.$source.'">';
+	}
 	for($i = count($breakpoints)-1; $i>=0;$i--) {
 		$thisHtmlOutput .= '<source ';
 		if($i>0) {
@@ -1330,16 +1349,14 @@ function picture($source, $alt, $breakpoints, $forceResize = false, $classOrProp
 		}
 		$thisHtmlOutput .= ' srcset="'.$fullSitePath.imageResized($source,$breakpoints[$i]).'">';
 	}
-
 	$thisHtmlOutput .= '<img src="'.$fullSitePath.$source.'" alt="'.$alt.'"'.$classOrProperty.'>';
 	$thisHtmlOutput .= '</picture>';
-
 	if($addToBuffer == '') {
-	echo $thisHtmlOutput;
-} else {
-	// if not echoing the results immediately - for ajax requests and so on:
-$addToBuffer .= $thisHtmlOutput;
-}
+		echo $thisHtmlOutput;
+	} else {
+		// if not echoing the results immediately - for ajax requests and so on:
+		$addToBuffer .= $thisHtmlOutput;
+	}
 }
 
 

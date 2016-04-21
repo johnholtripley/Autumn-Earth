@@ -175,7 +175,7 @@ function drawPlant() {
 
 // load brush images:
 
-$brushSizes = array(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30);
+$brushSizes = array(1,2,3,4,5,6,7,8,9,10,11,12,13,14);
 $largestBrushSize = array_pop((array_slice($brushSizes, -1)));
 $brushColours = array(array(27,113,27),array(24,180,24),array(48,220,48),array(54,220,54));
 for ($i=0;$i<count($brushColours);$i++) {
