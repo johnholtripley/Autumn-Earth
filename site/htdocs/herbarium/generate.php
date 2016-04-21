@@ -426,6 +426,7 @@ $thisPointX = $thisLeaf[0];
 $thisPointY = $thisLeaf[1];
 $thisRotation = $thisLeaf[2];
 // tear drop leaf:
+// needs variable size, and rotating to heading ########
 imagefilledarc($plantCanvas, $thisPointX, $thisPointY, 150, 100, 360, 180, imagecolorallocate($plantCanvas, 24, 244, 24), IMG_ARC_EDGED);
 imagefilledarc($plantCanvas, $thisPointX, $thisPointY, 150, 200, 270, 360, imagecolorallocate($plantCanvas, 24, 244, 24), IMG_ARC_EDGED);
 imagefilledarc($plantCanvas, $thisPointX, $thisPointY, 150, 200, 180, 270, imagecolorallocate($plantCanvas, 24, 244, 24), IMG_ARC_EDGED);
