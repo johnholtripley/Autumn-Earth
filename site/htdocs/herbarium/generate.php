@@ -175,7 +175,8 @@ function drawPlant() {
 
 // load brush images:
 
-$brushSizes = array(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20);
+$brushSizes = array(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30);
+$largestBrushSize = array_pop((array_slice($brushSizes, -1)));
 $brushColours = array(array(27,113,27),array(24,180,24),array(48,220,48),array(54,220,54));
 for ($i=0;$i<count($brushColours);$i++) {
 	for ($j=0;$j<count($brushSizes);$j++) {
@@ -338,7 +339,7 @@ imagefilledarc($plantCanvas, $pos["x"], $pos["y"]-50, 150, 100, 180, 360 , image
 		$lengthOfThisNumber = $posInString-($i+2);
 		$howLong = intval(substr($commandString,$i+2,$lengthOfThisNumber));
 // add some variation - ideally based on the iteration depth: ###
-		//$howLong += mt_rand(-5,5);
+	//	$howLong += mt_rand(-15,15);
 		$i += ($lengthOfThisNumber+2);
 				$lastX = $pos["x"];
 				$lastY = $pos["y"];
@@ -351,7 +352,7 @@ imagefilledarc($plantCanvas, $pos["x"], $pos["y"]-50, 150, 100, 180, 360 , image
 //$pos["x"] += mt_rand(-5,5);
 //$pos["y"] += mt_rand(-5,5);
 
-				imagesetbrush($plantCanvas, ${'brushcol'.$pos["colour"].'size'.$pos["size"]});
+			//	imagesetbrush($plantCanvas, ${'brushcol'.$pos["colour"].'size'.$pos["size"]});
 				
 
 
@@ -374,7 +375,7 @@ array_push($allParentNodes, $lastX."_".$lastY);
 	$allLeafNodes = array_diff( $allNodes,$allParentNodes);
 
 
-
+$thisMaxDepth = 0;
 // loop through all leaf nodes, finding each parent until run out
 	foreach ($allLeafNodes as $thisOuterNode) {
 
@@ -404,8 +405,20 @@ $previousX = $controlX;
 $previousY = $controlY;
 $thisNode = $allNodeRelationships[$thisNode];
 $thisDepth ++;
+
+if($thisDepth >= $largestBrushSize) {
+	$thisDepth = $largestBrushSize-1;
+}
+
+if($thisDepth>$thisMaxDepth) {
+	$thisMaxDepth = $thisDepth;
+}
 		}
 	}
+
+	// draw to last point
+	imagesetbrush($plantCanvas, ${'brushcol'.$pos["colour"].'size'.$thisMaxDepth});
+	quadBezier($plantCanvas, $previousX, $previousY,$thisPoint[0], $thisPoint[1], $thisEndPoint[0],$thisEndPoint[1]);
 
 
 
@@ -601,7 +614,7 @@ echo '<p style="font-size:0.7em;">seed: '.$storedSeed.'</p>';
 
 
 
-//sendToTwitter();
+sendToTwitter();
 ?>
 </body>
 </html>
