@@ -609,6 +609,32 @@ $whichElem = mt_rand(0,(count($json['origin'])-1));
 $startingText = $json['origin'][$whichElem];
 $startingText = findAndReplaceHashes($startingText);
 
+// generate a butterfly:
+include($_SERVER['DOCUMENT_ROOT']."/includes/herbarium/butterfly-name-prefixes.php");
+include($_SERVER['DOCUMENT_ROOT']."/includes/herbarium/butterfly-name-suffixes.php");
+$thisButterflyName = $butterflyPrefixes[mt_rand(0,count($butterflyPrefixes)-1)];
+do {
+$thisSecondButterflyName = $butterflySuffixes[mt_rand(0,count($butterflySuffixes)-1)];
+// make sure the first and last words aren't identical:
+} while ($thisButterflyName == $thisSecondButterflyName);
+$combinedButterflyName = $thisButterflyName." ".$thisSecondButterflyName;
+
+$shouldAddButterflyPrefix = mt_rand(1,30);
+switch ($shouldAddButterflyPrefix) {
+    case 1:
+        $combinedButterflyName = "Lesser ".$combinedButterflyName;
+        break;
+    case 2:
+         $combinedButterflyName = "Common ".$combinedButterflyName;
+        break;
+    default:
+       $combinedButterflyName = ucfirst($combinedButterflyName);
+} 
+$combinedButterflyName .= " butterfly";
+$startingText = str_ireplace("++butterfly++", $combinedButterflyName, $startingText);
+
+
+
 echo '<h1 style="font-style:italic;">'.$latinName.'</h1>';
 echo "<h2>Common names: ".$commonNameString."</h2>";
 echo '<p>'.$startingText.'</p>';
