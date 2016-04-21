@@ -210,15 +210,15 @@ for ($i=0;$i<count($brushColours);$i++) {
 
 
 
-/*
+
 // testing ------------------------
-$allPossibleRules = array(array("X"=>"F","F"=>"S2FFFFFFF[+FFFFF]-FFFFF"));
+$allPossibleRules = array(array("X"=>"F","F"=>"FFFFFFFL"));
 $allPossibleRuleIterations = array(2);
 $allPossibleRuleDistances = array(20);
 $startAngle = 0;
 $angle = 45;
 // testing ------------------------
-*/
+
 
 
 
@@ -293,7 +293,7 @@ $allNodes = array();
 $allParentNodes = array($pos["x"]."_".$pos["y"]);
 $allNodeRelationships = array();
 
-
+$allLeaves = array();
 
 	for ($i=0;$i<strlen($commandString);$i++) {
 	$c = substr($commandString,$i,1);
@@ -323,8 +323,8 @@ $allNodeRelationships = array();
 			case "L":
 			// draw a leaf at the current size and heading
 
-imagefilledarc($plantCanvas, $pos["x"], $pos["y"]-50, 150, 100, 180, 360 , imagecolorallocate($plantCanvas, 24, 244, 24), IMG_ARC_EDGED);
-
+// imagefilledarc($plantCanvas, $pos["x"], $pos["y"]-50, 150, 100, 180, 360 , imagecolorallocate($plantCanvas, 24, 244, 24), IMG_ARC_EDGED);
+array_push($allLeaves,array($pos["x"], $pos["y"], $pos["heading"]));
 
 			break;
 			case "]": 
@@ -420,7 +420,16 @@ if($thisDepth>$thisMaxDepth) {
 	imagesetbrush($plantCanvas, ${'brushcol'.$pos["colour"].'size'.$thisMaxDepth});
 	quadBezier($plantCanvas, $previousX, $previousY,$thisPoint[0], $thisPoint[1], $thisEndPoint[0],$thisEndPoint[1]);
 
-
+// draw leaves:
+foreach ($allLeaves as $thisLeaf) {
+$thisPointX = $thisLeaf[0];
+$thisPointY = $thisLeaf[1];
+$thisRotation = $thisLeaf[2];
+// tear drop leaf:
+imagefilledarc($plantCanvas, $thisPointX, $thisPointY, 150, 100, 360, 180, imagecolorallocate($plantCanvas, 24, 244, 24), IMG_ARC_EDGED);
+imagefilledarc($plantCanvas, $thisPointX, $thisPointY, 150, 200, 270, 360, imagecolorallocate($plantCanvas, 24, 244, 24), IMG_ARC_EDGED);
+imagefilledarc($plantCanvas, $thisPointX, $thisPointY, 150, 200, 180, 270, imagecolorallocate($plantCanvas, 24, 244, 24), IMG_ARC_EDGED);
+}
 
 // add a texture overlay:
 	$textureOverlay = imagecreatefrompng($_SERVER['DOCUMENT_ROOT']."/images/herbarium/overlays/watercolour.png");
@@ -614,7 +623,7 @@ echo '<p style="font-size:0.7em;">seed: '.$storedSeed.'</p>';
 
 
 
-sendToTwitter();
+//sendToTwitter();
 ?>
 </body>
 </html>
