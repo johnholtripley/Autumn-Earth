@@ -202,14 +202,25 @@ for ($i=0;$i<count($brushColours);$i++) {
 
 
 
-// testing ------------------------
-$allPossibleRules = array(array("X"=>"F","F"=>"FFFFFFF[+FFF]-FFF"));
-$allPossibleRuleIterations = array(2);
-$allPossibleRuleDistances = array(20);
-// testing ------------------------
+
 
 	$startAngle = mt_rand (-20,20);
 	$angle = mt_rand(12,40);
+
+
+
+/*
+// testing ------------------------
+$allPossibleRules = array(array("X"=>"F","F"=>"S2FFFFFFF[+FFFFF]-FFFFF"));
+$allPossibleRuleIterations = array(2);
+$allPossibleRuleDistances = array(20);
+$startAngle = 0;
+$angle = 45;
+// testing ------------------------
+*/
+
+
+
 
 
 
@@ -408,19 +419,24 @@ echo "<hr>";
 	foreach ($allLeafNodes as $thisOuterNode) {
 
 		$thisNode = $thisOuterNode;
-		echo "outer - examining ".$thisNode."<br>";
+		$thisStartPoint = explode("_", $thisNode);
+		$previousX = $thisStartPoint[0];
+		$previousY = $thisStartPoint[1];
+		//echo "outer - examining ".$thisNode."<br>";
 		while (array_key_exists($thisNode, $allNodeRelationships)) {
-echo "inner - examining ".$thisNode."<br>";
+//echo "inner - examining ".$thisNode."<br>";
 $thisPoint = explode("_", $thisNode);
 $thisEndPoint = explode("_", $allNodeRelationships[$thisNode]);
 
   $controlX = ($thisPoint[0] + $thisEndPoint[0]) / 2;
   $controlY = ($thisPoint[1] + $thisEndPoint[1]) / 2;
-quadBezier($plantCanvas, $thisPoint[0], $thisPoint[1], $thisEndPoint[0], $thisEndPoint[1], $controlX, $controlY);
+quadBezier($plantCanvas, $previousX, $previousY, $thisPoint[0], $thisPoint[1], $controlX, $controlY);
 
 
-echo "drawing ".$thisNode.$thisPoint[0].",".$thisPoint[1]." to ".$thisEndPoint[0].",".$thisEndPoint[1]."<br />";
-
+//echo "target ".$thisPoint[0].",".$thisPoint[1]." to ".$thisEndPoint[0].",".$thisEndPoint[1]."<br />";
+//echo "drawing ".$previousX.",".$previousY." to ".$thisEndPoint[0].",".$thisEndPoint[1]."<br />";
+$previousX = $controlX;
+$previousY = $controlY;
 $thisNode = $allNodeRelationships[$thisNode];
 		}
 	}
