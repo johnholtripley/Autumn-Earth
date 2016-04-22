@@ -340,6 +340,7 @@ array_push($allLeaves,array($pos["x"], $pos["y"], $pos["heading"]));
 		$howLong = intval(substr($commandString,$i+2,$lengthOfThisNumber));
 // add some variation - ideally based on the iteration depth: ###
 	//	$howLong += mt_rand(0,30)-15;
+		 $howLong *= mt_rand(10,16)/10;
 		$i += ($lengthOfThisNumber+2);
 				$lastX = $pos["x"];
 				$lastY = $pos["y"];
