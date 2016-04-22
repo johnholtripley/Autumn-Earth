@@ -10,7 +10,7 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/signalnoise.php");
 include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
 
 function sendToTwitter() {
-	global $latinName, $startingText, $plantURL, $commonNameString, $commonNamesJoined, $isAquatic, $storedSeed;
+	global $latinName, $startingText, $plantURL, $commonNameString, $commonNamesJoined, $isAquatic, $isNight, $storedSeed;
 
 
 $isLive = false;
@@ -96,8 +96,8 @@ if($isLive) {
 
 
 
-$query = "INSERT INTO tblplants (latinName,commonNames,commonNamesJoined,timeCreated,plantDesc,plantUrl,tweetedContent,isAquatic,plantSeed)
-VALUES ('" . $latinName . "','" . $commonNameString . "','" . $commonNamesJoined . "',NOW(),'".$startingText."','".$plantURL."','".$textString."','".$isAquatic."','".$storedSeed."')";
+$query = "INSERT INTO tblplants (latinName,commonNames,commonNamesJoined,timeCreated,plantDesc,plantUrl,tweetedContent,isAquatic,isNight,plantSeed)
+VALUES ('" . $latinName . "','" . $commonNameString . "','" . $commonNamesJoined . "',NOW(),'".$startingText."','".$plantURL."','".$textString."','".$isAquatic."','".$isNight."','".$storedSeed."')";
 
 $result = mysql_query($query) or die ("couldn't execute tblplant query");
 
@@ -159,7 +159,7 @@ function quadBezier($im, $x1, $y1, $x2, $y2, $x3, $y3) {
 
 function drawPlant() {
 	// thanks to http://www.kevs3d.co.uk/dev/lsystems/
-	global $iterations, $angle, $isAquatic, $plantURL;
+	global $iterations, $angle, $isAquatic, $isNight, $plantURL;
 	$canvaDimension = 604;
 	$plantCanvas = imagecreatetruecolor($canvaDimension, $canvaDimension);
 	$ground = imagecolorallocate($plantCanvas, 240, 240, 240);
@@ -210,7 +210,7 @@ for ($i=0;$i<count($brushColours);$i++) {
 
 
 
-
+/*
 // testing ------------------------
 $allPossibleRules = array(array("X"=>"F","F"=>"FFFFFFFL"));
 $allPossibleRuleIterations = array(2);
@@ -218,7 +218,7 @@ $allPossibleRuleDistances = array(20);
 $startAngle = 0;
 $angle = 45;
 // testing ------------------------
-
+*/
 
 
 
@@ -339,7 +339,7 @@ array_push($allLeaves,array($pos["x"], $pos["y"], $pos["heading"]));
 		$lengthOfThisNumber = $posInString-($i+2);
 		$howLong = intval(substr($commandString,$i+2,$lengthOfThisNumber));
 // add some variation - ideally based on the iteration depth: ###
-	//	$howLong += mt_rand(-15,15);
+	//	$howLong += mt_rand(0,30)-15;
 		$i += ($lengthOfThisNumber+2);
 				$lastX = $pos["x"];
 				$lastY = $pos["y"];
@@ -428,8 +428,8 @@ $thisRotation = $thisLeaf[2];
 // tear drop leaf:
 // needs variable size, and rotating to heading ########
 imagefilledarc($plantCanvas, $thisPointX, $thisPointY, 150, 100, 360, 180, imagecolorallocate($plantCanvas, 24, 244, 24), IMG_ARC_EDGED);
-imagefilledarc($plantCanvas, $thisPointX, $thisPointY, 150, 200, 270, 360, imagecolorallocate($plantCanvas, 24, 244, 24), IMG_ARC_EDGED);
-imagefilledarc($plantCanvas, $thisPointX, $thisPointY, 150, 200, 180, 270, imagecolorallocate($plantCanvas, 24, 244, 24), IMG_ARC_EDGED);
+imagefilledarc($plantCanvas, $thisPointX, $thisPointY, 150, 350, 270, 360, imagecolorallocate($plantCanvas, 24, 244, 24), IMG_ARC_EDGED);
+imagefilledarc($plantCanvas, $thisPointX, $thisPointY, 150, 350, 180, 270, imagecolorallocate($plantCanvas, 24, 244, 24), IMG_ARC_EDGED);
 }
 
 // add a texture overlay:
@@ -548,6 +548,7 @@ $numberOfCommonNames = $commonNameDistribution[mt_rand(0,count($commonNameDistri
 
 $commonNames = array();
 $isAquatic = 0;
+$isNight = 0;
 
 for($i=0;$i<$numberOfCommonNames;$i++) {
 $thisCommonName = $commonPrefixes[mt_rand(0,count($commonPrefixes)-1)];
@@ -588,8 +589,13 @@ $aquaticPos = strpos($thisCommonName, "*");
 if ($aquaticPos !== false) {
 	$isAquatic = 1;
 	}
-// remove any asteriks:
+	$nightPos = strpos($thisCommonName, "^");
+if ($nightPos !== false) {
+	$isNight = 1;
+	}
+// remove any property markers:
 $thisCommonName = str_ireplace("*", "", $thisCommonName);
+$thisCommonName = str_ireplace("^", "", $thisCommonName);
 
 array_push($commonNames,$thisCommonName);
 }
@@ -602,11 +608,16 @@ if(count($commonNames)>1) {
 	$commonNameString = substr($commonNameString, 0, $lastCommaPos)   ." or".   substr($commonNameString, $lastCommaPos+1);
 }
 
-
+$whichBaseStringToUse = "origin";
+if($isAquatic == 1) {
+	$whichBaseStringToUse = "origin-aquatic";
+} else if($isNight == 1) {
+	$whichBaseStringToUse = "origin-night";
+}
 
 // pick a random item from the Origin to start from:
-$whichElem = mt_rand(0,(count($json['origin'])-1));
-$startingText = $json['origin'][$whichElem];
+$whichElem = mt_rand(0,(count($json[$whichBaseStringToUse])-1));
+$startingText = $json[$whichBaseStringToUse][$whichElem];
 $startingText = findAndReplaceHashes($startingText);
 
 // generate a butterfly:

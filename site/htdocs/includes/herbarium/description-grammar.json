@@ -12,13 +12,19 @@
         "A once common #|life# weed of #|habitats#, now rarely seen.  Bright blue flowers are produced on tall wiry stems with narrow leaves from June to August.  A good butterfly and bee plant.",
         "A tall, widespread, native #|life#, common in #|habitats#. The fluffy white flowers are the earliest flowering of the common hedge bank parsleys.",
         "Cowslips are the food plants of the caterpillars of the ++butterfly++.",
-        "A native #|life# of damp meadows, the flowers appear around the time that cuckoos return in April -May.  The clusters of pink, pale lilac or white flowers attract butterflies and bees.  A caterpillar food plant of the #|insects#.  The #|part# eaten in some regions.",
+        "A native #|life# of damp meadows, the flowers appear around the time that cuckoos return in April -May.  The clusters of pink, pale lilac or white flowers attract the butterflies and bees.  A caterpillar food plant of the ++butterfly++.  The #|part# eaten in some regions.",
         "This small #|life# produces brilliant, unscented purple flowers. It can be found in #|habitats# throughout Britain. Its folk-names include 'Blue Mice' and 'Pig Violet'. It is the larval food plant for several species of #|insects#.",
         "A scrambling #|life# commonly found in a wide variety of habitats including #|habitats#.",
-        "A spreading native #|life#, which produces long runners, which root at intervals to produce new plants. It produces a white flower and a sweet mini strawberry fruit. It is common in #|habitats# across Britain. It is the larval food plant of the #|insects#.",
+        "A spreading native #|life#, which produces long runners, which root at intervals to produce new plants. It produces a white flower and a sweet mini strawberry fruit. It is common in #|habitats# across Britain. It is the larval food plant of the ++butterfly++.",
         "Yellow flower of #|habitats#. Likes calcareous soils.",
         "Widely used in days gone by to curdle milk for cheese making.",
         "Medicinal, Scent of apricots, Good for bees and insects."
+    ],
+    "origin-aquatic": [
+    "A #|rarity# sea dwelling plant."
+    ],
+    "origin-night": [
+    "A #|rarity# night flowering plant pollinated by bats and moths."
     ],
     "insects": ["++butterfly++", "bumble bee"],
     "habitats": ["ditches, marshes, pond edges, and river banks", "woods and hedges", "hedgerows and pathways", "woodlands and grassland", "disturbed ground, farm land and walls", "coastal areas and beside trade routes", "roadsides and waste ground", "woods, hedges, pastures, heaths and rocky areas", "cornfields and waste places", "cornfields and waste places"],
