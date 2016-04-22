@@ -346,6 +346,9 @@ array_push($allLeaves,array($pos["x"], $pos["y"], $pos["heading"]));
 				$lastY = $pos["y"];
 				// move the turtle:
 				$rad = deg2rad($pos["heading"]);
+
+$rad += (mt_rand(0,10)-5)/20;
+
 					$pos["x"] -= ($distance * $howLong) * sin($rad);
 				$pos["y"] -= ($distance * $howLong) * cos($rad);
 
