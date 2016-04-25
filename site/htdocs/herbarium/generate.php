@@ -160,7 +160,7 @@ function quadBezier($im, $x1, $y1, $x2, $y2, $x3, $y3) {
 function drawPlant() {
 	// thanks to http://www.kevs3d.co.uk/dev/lsystems/
 	global $iterations, $angle, $isAquatic, $isNight, $plantURL;
-	$canvaDimension = 604;
+	$canvaDimension = 1208;
 	$plantCanvas = imagecreatetruecolor($canvaDimension, $canvaDimension);
 	$ground = imagecolorallocate($plantCanvas, 240, 240, 240);
 	imagefilledrectangle($plantCanvas, 0, 0, $canvaDimension, $canvaDimension, $ground);
@@ -213,8 +213,8 @@ for ($i=0;$i<count($brushColours);$i++) {
 
 // testing ------------------------
 $allPossibleRules = array(array("X"=>"F","F"=>"FF[+FL][-FL]"));
-$allPossibleRuleIterations = array(3);
-$allPossibleRuleDistances = array(25);
+$allPossibleRuleIterations = array(4);
+$allPossibleRuleDistances = array(50);
 $startAngle = 0;
 $angle = 30;
 // testing ------------------------
@@ -442,16 +442,23 @@ imagefilledarc($plantCanvas, $thisPointX, $thisPointY, $leafLength, $leafLength,
 //imagefilledarc($plantCanvas, $thisPointX, $thisPointY, $leafLength, $leafLength*2, 180, 270, imagecolorallocate($plantCanvas, 24, 244, 24), IMG_ARC_EDGED);
 }
 
+
+
+
+$imageResampled = imagecreatetruecolor($canvaDimension/2, $canvaDimension/2);
+imagecopyresampled($imageResampled, $plantCanvas, 0, 0, 0, 0, $canvaDimension/2, $canvaDimension/2, $canvaDimension, $canvaDimension);
+
+
 // add a texture overlay:
 	$textureOverlay = imagecreatefrompng($_SERVER['DOCUMENT_ROOT']."/images/herbarium/overlays/watercolour.png");
 imageAlphaBlending($textureOverlay, false);
-imagecopy($plantCanvas, $textureOverlay, 0, 0, 0, 0, $canvaDimension, $canvaDimension);
-
+imagecopy($imageResampled, $textureOverlay, 0, 0, 0, 0, $canvaDimension, $canvaDimension);
 
 	// output:
-	imagejpeg($plantCanvas,$_SERVER['DOCUMENT_ROOT'].'/images/herbarium/plants/'.$plantURL.'.jpg',95);
+	imagejpeg($imageResampled,$_SERVER['DOCUMENT_ROOT'].'/images/herbarium/plants/'.$plantURL.'.jpg',95);
 	imagedestroy($plantCanvas);
 	imagedestroy($textureOverlay);
+	imagedestroy($imageResampled);
 
 for ($i=0;$i<count($brushColours);$i++) {
 	for ($j=0;$j<count($brushSizes);$j++) {
