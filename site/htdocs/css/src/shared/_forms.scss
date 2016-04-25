@@ -105,7 +105,8 @@ input:not(:focus):valid {
 
 // radio buttons --------------------------------
 
-
+// if the labels get long and wrap onto 2 or more lines, then add padding-left to the label
+// and position:absolute on the span
 
 div:not(#foo)>#pageContent input[type='radio']{
     opacity:0;
@@ -168,6 +169,8 @@ div:not(#foo)>#pageContent input[type='radio']+label span:before {
 
 
 // check boxes --------------------------------
+// if the labels get long and wrap onto 2 or more lines, then add padding-left to the label
+// and position:absolute on the span
 
 div:not(#foo)>#pageContent input[type='checkbox']{
     opacity:0;
