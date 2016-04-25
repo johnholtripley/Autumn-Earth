@@ -210,15 +210,15 @@ for ($i=0;$i<count($brushColours);$i++) {
 
 
 
-/*
+
 // testing ------------------------
-$allPossibleRules = array(array("X"=>"F","F"=>"FFFFFFFL"));
-$allPossibleRuleIterations = array(2);
-$allPossibleRuleDistances = array(20);
+$allPossibleRules = array(array("X"=>"F","F"=>"FF[+FL]-FL"));
+$allPossibleRuleIterations = array(3);
+$allPossibleRuleDistances = array(25);
 $startAngle = 0;
-$angle = 45;
+$angle = 30;
 // testing ------------------------
-*/
+
 
 
 
@@ -245,7 +245,10 @@ $distance = $allPossibleRuleDistances[$whichRules];
 			if(array_key_exists($c,$rules)) {
 				$result.=$rules[$c];
 			} else {
+				// make sure leaves are only at terminal nodes:
+				if(!(($c=="L") && ($i!=$iterations))) {
 				$result.=$c;
+			}
 			}
 		}
 	} 
@@ -431,9 +434,9 @@ $thisPointY = $thisLeaf[1];
 $thisRotation = $thisLeaf[2];
 // tear drop leaf:
 // needs variable size, and rotating to heading ########
-imagefilledarc($plantCanvas, $thisPointX, $thisPointY, 150, 100, 360, 180, imagecolorallocate($plantCanvas, 24, 244, 24), IMG_ARC_EDGED);
-imagefilledarc($plantCanvas, $thisPointX, $thisPointY, 150, 350, 270, 360, imagecolorallocate($plantCanvas, 24, 244, 24), IMG_ARC_EDGED);
-imagefilledarc($plantCanvas, $thisPointX, $thisPointY, 150, 350, 180, 270, imagecolorallocate($plantCanvas, 24, 244, 24), IMG_ARC_EDGED);
+imagefilledarc($plantCanvas, $thisPointX, $thisPointY, 15, 10, 360, 180, imagecolorallocate($plantCanvas, 24, 244, 24), IMG_ARC_EDGED);
+imagefilledarc($plantCanvas, $thisPointX, $thisPointY, 15, 35, 270, 360, imagecolorallocate($plantCanvas, 24, 244, 24), IMG_ARC_EDGED);
+imagefilledarc($plantCanvas, $thisPointX, $thisPointY, 15, 35, 180, 270, imagecolorallocate($plantCanvas, 24, 244, 24), IMG_ARC_EDGED);
 }
 
 // add a texture overlay:
