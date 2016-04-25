@@ -1,40 +1,29 @@
 // font face loader:
-// https://helloanselm.com/2015/using-webfonts-in-2015/
+// https://www.bramstein.com/writing/web-font-loading-patterns.html
 
 
 
 
-    var fontObservers = [];
-    var fontFamilies = {
-        'Merriweather': [
-            {
-                weight: 400
-            },
-            {
-                weight: 400,
-                style: "italic"
-            }
-        ],
-        
-        'AlegreyaSC': [
-            {
-                weight: 400
-            }
-        ]
-    }
+   
 
-    Object.keys(fontFamilies).forEach(function(family) {
-        fontObservers.push(fontFamilies[family].map(function(config) {
-            return new FontFaceObserver(family, config).check()
-        }));
-    });
 
-    Promise.all(fontObservers)
-        .then(function() {
-             document.documentElement.className += " fontsLoaded";
+
+var bodyNormal = new FontFaceObserver('Merriweather');
+var bodyItalic = new FontFaceObserver('Merriweather', {
+  style: 'italic'
+});
+var titleNormal = new FontFaceObserver('AlegreyaSC');
+
+Promise.all([
+  bodyNormal.load(),
+  bodyItalic.load(),
+  titleNormal.load()
+]).then(function () {
+   document.documentElement.className += " fontsLoaded";
         // set a cookie as the font should now be in cache and can be displayed immediately subsequently
         createCookie("fontLoaded", "true", 1);
-        });
+});
+
 
 
 // service worker:
