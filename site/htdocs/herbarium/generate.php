@@ -175,8 +175,8 @@ function drawPlant() {
 
 // load brush images:
 
-$brushSizes = array(1,2,3,4,5,6,7,8,9,10,11,12,13,14);
-$largestBrushSize = array_pop((array_slice($brushSizes, -1)));
+$brushSizes = array(3,5,7,9,11,13,15);
+$largestBrushSize = count($brushSizes);
 $brushColours = array(array(27,113,27),array(24,180,24),array(48,220,48),array(54,220,54));
 for ($i=0;$i<count($brushColours);$i++) {
 	for ($j=0;$j<count($brushSizes);$j++) {
@@ -212,7 +212,7 @@ for ($i=0;$i<count($brushColours);$i++) {
 
 
 // testing ------------------------
-$allPossibleRules = array(array("X"=>"F","F"=>"FF[+FL][-FL]"));
+$allPossibleRules = array(array("X"=>"F","F"=>"FF[+FL][-FL][++FL][--FL]"));
 $allPossibleRuleIterations = array(4);
 $allPossibleRuleDistances = array(50);
 $startAngle = 0;
