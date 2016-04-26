@@ -1,0 +1,47 @@
+// http://codepen.io/stowball/pen/eZKwRv
+.js-accordion-trigger {
+    background: #cecece;
+    border: 1px solid;
+    color: #000;
+    display: block;
+    padding: 2%;
+    text-decoration: none;
+    &[aria-selected="true"] {
+        background: $accentColour;
+    }
+    &:before {
+        content: "+";
+        display: inline-block;
+        width: 15px;
+    }
+    &[aria-expanded="true"]:before {
+        content: "–";
+    }
+}
+
+.js-accordion-panel {
+    max-height: 32em;
+    overflow: hidden;
+    border: 1px solid;
+    border-top: none;
+    @include transition(max-height ease 0.5s);
+    visibility: visible;
+    &[aria-hidden="true"] {
+        // added after the max-height transition has completed:
+        visibility: hidden;
+    }
+    &.is-hidden {
+        max-height: 0;
+    }
+}
+
+.panel-inner {
+    padding: 2%;
+}
+
+.accordion-interface a:focus, .accordion-interface div:focus {
+    box-shadow: 0 0 4px $accentColour;
+    outline: none;
+    color: #000;
+}
+

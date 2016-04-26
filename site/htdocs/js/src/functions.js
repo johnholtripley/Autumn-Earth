@@ -45,6 +45,46 @@ function detectKonamiCode() {
 
 
 
+
+    function whichAnimationEvent() {
+        // https://davidwalsh.name/css-animation-callback
+        var t;
+        var el = document.createElement('fakeelement');
+        var animations = {
+            'animation': 'animationend',
+            'OAnimation': 'oAnimationEnd',
+            'MozAnimation': 'animationend',
+            'WebkitAnimation': 'webkitAnimationEnd'
+        }
+        for (t in animations) {
+            if (el.style[t] !== undefined) {
+                return animations[t];
+            }
+        }
+    }
+
+
+    function whichTransitionEvent() {
+        // https://davidwalsh.name/css-animation-callback
+        var t;
+        var el = document.createElement('fakeelement');
+        var transitions = {
+            'transition': 'transitionend',
+            'OTransition': 'oTransitionEnd',
+            'MozTransition': 'transitionend',
+            'WebkitTransition': 'webkitTransitionEnd'
+        }
+        for (t in transitions) {
+            if (el.style[t] !== undefined) {
+                return transitions[t];
+            }
+        }
+    }
+
+
+
+
+
 function createCookie(name,value,days) {
   // http://www.quirksmode.org/js/cookies.html
   if (days) {
@@ -221,7 +261,13 @@ function hasParent(element, id) {
 }
 
 
-
+function hasClass(element, className) {
+    if (element.classList) {
+        return element.classList.contains(className);
+    } else {
+        return new RegExp('(^| )' + className + '( |$)', 'gi').test(element.className);
+    }
+}
 
 
 

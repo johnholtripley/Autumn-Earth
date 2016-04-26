@@ -45,6 +45,46 @@ function detectKonamiCode() {
 
 
 
+
+    function whichAnimationEvent() {
+        // https://davidwalsh.name/css-animation-callback
+        var t;
+        var el = document.createElement('fakeelement');
+        var animations = {
+            'animation': 'animationend',
+            'OAnimation': 'oAnimationEnd',
+            'MozAnimation': 'animationend',
+            'WebkitAnimation': 'webkitAnimationEnd'
+        }
+        for (t in animations) {
+            if (el.style[t] !== undefined) {
+                return animations[t];
+            }
+        }
+    }
+
+
+    function whichTransitionEvent() {
+        // https://davidwalsh.name/css-animation-callback
+        var t;
+        var el = document.createElement('fakeelement');
+        var transitions = {
+            'transition': 'transitionend',
+            'OTransition': 'oTransitionEnd',
+            'MozTransition': 'transitionend',
+            'WebkitTransition': 'webkitTransitionEnd'
+        }
+        for (t in transitions) {
+            if (el.style[t] !== undefined) {
+                return transitions[t];
+            }
+        }
+    }
+
+
+
+
+
 function createCookie(name,value,days) {
   // http://www.quirksmode.org/js/cookies.html
   if (days) {
@@ -221,7 +261,13 @@ function hasParent(element, id) {
 }
 
 
-
+function hasClass(element, className) {
+    if (element.classList) {
+        return element.classList.contains(className);
+    } else {
+        return new RegExp('(^| )' + className + '( |$)', 'gi').test(element.className);
+    }
+}
 
 
 
@@ -386,102 +432,169 @@ document.addEventListener("visibilitychange", function() {
   document.title = ((document.hidden) ? newTitle : title);
 });
 */
-var catalogueRoot = document.getElementById('herbariumCatalogue');
-var storedCurrentPage = "/herbarium/";
+function AccordionWidget(el, selectedIndex) {
+    // http://codepen.io/stowball/pen/eZKwRv
+    // kudos Matt Stow
+    if (!el) {
+        return;
+    }
+    this.el = el;
+    this.accordionTriggers = this.el.getElementsByClassName('js-accordion-trigger');
+    this.accordionPanels = this.el.getElementsByClassName('js-accordion-panel');
+    if (this.accordionTriggers.length === 0 || this.accordionTriggers.length !== this.accordionPanels.length) {
+        return;
+    }
+    this.init(selectedIndex);
+}
 
-function bindHerbariumModal() {
-    var catalogueLinks = catalogueRoot.getElementsByClassName('triggersModal');
-    for (var i = 0; i < catalogueLinks.length; i++) {
-        catalogueLinks[i].addEventListener("click", openPlantDetail, false);
+AccordionWidget.prototype.init = function(selectedIndex) {
+    this.accordionTriggersLength = this.accordionTriggers.length;
+    this.expandedAccordions = new Array(this.accordionTriggersLength);
+    this.multiSelectable = this.el.hasAttribute('aria-multiselectable');
+    this.keys = {
+        prev: 38,
+        next: 40,
+        space: 32
+    };
+    var initialSelectedIndex;
+    for (var i = 0; i < this.accordionTriggersLength; i++) {
+        this.accordionTriggers[i].index = i;
+        this.accordionTriggers[i].addEventListener('click', this.accordionClick.bind(this), false);
+        this.accordionTriggers[i].addEventListener('keydown', this.accordionCursor.bind(this), false);
+        this.accordionTriggers[i].addEventListener('focus', this.accordionFocus.bind(this), false);
+        if (this.accordionTriggers[i].classList.contains('is-selected')) {
+            this.expandedAccordions[i] = true;
+        }
+    }
+    if (!isNaN(selectedIndex)) {
+        initialSelectedIndex = selectedIndex < this.accordionTriggersLength ? selectedIndex : this.accordionTriggersLength - 1;
+        this.expandedAccordions = new Array(this.accordionTriggersLength);
+        this.expandedAccordions[initialSelectedIndex] = true;
+    } else {
+        initialSelectedIndex = this.expandedAccordions.lastIndexOf(true);
+        if (!this.multiSelectable) {
+            this.expandedAccordions = new Array(this.accordionTriggersLength);
+            this.expandedAccordions[initialSelectedIndex] = true;
+        }
+    }
+    this.setSelected(initialSelectedIndex);
+    this.setExpanded();
+    this.el.classList.add('is-initialized');
+};
+
+AccordionWidget.prototype.accordionClick = function(e) {
+    e.preventDefault();
+    this.setSelected(e.target.index, true);
+    this.setExpanded(e.target.index, true);
+};
+
+AccordionWidget.prototype.accordionCursor = function(e) {
+    var targetIndex;
+    if (e.keyCode === this.keys.space || e.keyCode === this.keys.prev || e.keyCode === this.keys.next) {
+        e.preventDefault();
+        if (e.keyCode === this.keys.space) {
+            this.setExpanded(e.target.index, true);
+            return;
+        }
+    } else {
+        return;
+    }
+
+    if (e.keyCode === this.keys.prev && e.target.index > 0) {
+        targetIndex = e.target.index - 1;
+    } else if (e.keyCode === this.keys.next && e.target.index < this.accordionTriggersLength - 1) {
+        targetIndex = e.target.index + 1;
+    } else {
+        return;
+    }
+    this.setSelected(targetIndex, true);
+};
+
+AccordionWidget.prototype.accordionFocus = function() {
+    if (this.accordionTriggersLength === 1) {
+        this.setSelected(0);
+    }
+    return;
+};
+
+AccordionWidget.prototype.setSelected = function(index, userInvoked) {
+    if (index === -1) {
+        this.accordionTriggers[0].setAttribute('tabindex', 0);
+        return;
+    }
+
+    for (var i = 0; i < this.accordionTriggersLength; i++) {
+        if (i === index) {
+            this.accordionTriggers[i].classList.add('is-selected');
+            this.accordionTriggers[i].setAttribute('aria-selected', true);
+            this.accordionTriggers[i].setAttribute('tabindex', 0);
+            if (userInvoked) {
+                this.accordionTriggers[i].focus();
+            }
+        } else {
+            this.accordionTriggers[i].classList.remove('is-selected');
+            this.accordionTriggers[i].setAttribute('aria-selected', false);
+            this.accordionTriggers[i].setAttribute('tabindex', -1);
+        }
+    }
+};
+
+AccordionWidget.prototype.setExpanded = function(index, userInvoked) {
+    var i;
+    if (userInvoked) {
+        if (this.multiSelectable) {
+            this.expandedAccordions[index] = !this.expandedAccordions[index];
+        } else {
+            for (i = 0; i < this.accordionTriggersLength; i++) {
+                if (i === index) {
+                    this.expandedAccordions[i] = !this.expandedAccordions[i];
+                } else {
+                    this.expandedAccordions[i] = false;
+                }
+            }
+        }
+    }
+    for (i = 0; i < this.accordionTriggersLength; i++) {
+        if (this.expandedAccordions[i]) {
+            this.accordionTriggers[i].setAttribute('aria-expanded', true);
+            this.accordionTriggers[i].classList.add('is-expanded');
+            this.accordionPanels[i].setAttribute('aria-hidden', false);
+            this.accordionPanels[i].classList.remove('is-hidden');
+            this.accordionPanels[i].setAttribute('tabindex', 0);
+        } else {
+            this.accordionTriggers[i].setAttribute('aria-expanded', false);
+            this.accordionTriggers[i].classList.remove('is-expanded');
+          //  this.accordionPanels[i].setAttribute('aria-hidden', true);
+            this.accordionPanels[i].classList.add('is-hidden');
+            this.accordionPanels[i].setAttribute('tabindex', -1);
+        }
+    }
+};
+
+// transition callback
+var animatedElements = document.getElementsByClassName('js-accordion-panel');
+var transitionEvent = whichTransitionEvent();
+if (transitionEvent) {
+    for (var i = 0; i < animatedElements.length; i++) {
+        animatedElements[i].addEventListener(transitionEvent, function() {
+            // will fire on open complete and close complete:
+            if (hasClass(this, 'is-hidden')) {
+                this.setAttribute('aria-hidden', true);
+            } else {
+                this.setAttribute('aria-hidden', false);
+            }
+        });
     }
 }
 
-if (catalogueRoot) {
-    var animatedElement = document.getElementById('inkEffect');
-    var modalWrapper = document.getElementById('modalWrapper');
-    var plantModalDetails = document.getElementById('plantModalDetails');
 
-    function whichAnimationEvent() {
-        // https://davidwalsh.name/css-animation-callback
-        var t;
-        var el = document.createElement('fakeelement');
-        var transitions = {
-            'animation': 'animationend',
-            'OAnimation': 'oAnimationEnd',
-            'MozAnimation': 'animationend',
-            'WebkitAnimation': 'webkitAnimationEnd'
-        }
-        for (t in transitions) {
-            if (el.style[t] !== undefined) {
-                return transitions[t];
-            }
-        }
+// set up:
+if (cutsTheMustard) {
+    var accordionElements = document.getElementsByClassName('accordion-interface');
+    accordionCount = accordionElements.length;
+    for (i = 0; i < accordionCount; i++) {
+        new AccordionWidget(accordionElements[i], 0);
     }
-    var animationEvent = whichAnimationEvent();
-    animationEvent && animatedElement.addEventListener(animationEvent, function() {
-        // will fire on open complete and close complete:
-        if (modalWrapper.className == "closing") {
-            modalWrapper.className = "";
-        }
-    });
-
-    function openPlantDetail(e) {
-        if (e) {
-            e.preventDefault();
-        }
-
-plantURL = this.getAttribute('data-url');
-pageToRequest = '/includes/herbarium/plant-detail.php?plant='+plantURL;
-
-// start ajax request:
-var request = new XMLHttpRequest();
- request.open('GET', pageToRequest, true);
-        request.onreadystatechange = function() {
-            if (this.readyState === 4) {
-
-if (this.status >= 200 && this.status < 400) {
-                    // Success:
-                    var response = this.responseText;
-                    if (response != "") {
-                        plantModalDetails.innerHTML = response;
-                        bindSocialLinks();
-                    }
-                }
-            }
-              };
-        request.send();
-        request = null;
-
-
-
-
-        var thisPlantDetail = this.innerHTML;
-        plantModalDetails.innerHTML = thisPlantDetail;
-        modalWrapper.className = "opening";
-        modalWrapper.removeAttribute('aria-hidden');
-        document.getElementById('offCanvasWrapper').setAttribute('aria-hidden', 'true');
-        storedCurrentPage = window.location.pathname.toString();
-        var stateObj = {};
-        history.replaceState(stateObj, "Plant detail ", "/herbarium/" + plantURL);
-
-
-
- 
-    }
-
-    function closePlantDetail(e) {
-        if (e) {
-            e.preventDefault();
-        }
-        modalWrapper.className = "closing";
-        modalWrapper.setAttribute('aria-hidden', 'true');
-        document.getElementById('offCanvasWrapper').removeAttribute('aria-hidden');
-        var stateObj = {};
-        history.replaceState(stateObj, "Plant detail ", storedCurrentPage);
-    }
-    bindHerbariumModal();
-
-    document.getElementById('modalClose').addEventListener("click", closePlantDetail);
 }
 
 (function (global) {
@@ -606,7 +719,7 @@ function setUpNavigation() {
     // https://adactio.com/journal/10365
     // http://codepen.io/adactio/pen/oxLNwY/
     if (cutsTheMustard) {
-        navElementsWithChildren = document.querySelectorAll('[aria-controls]');
+        navElementsWithChildren = document.querySelectorAll('#navigation [aria-controls]');
         navCount = navElementsWithChildren.length;
         for (i = 0; i < navCount; i++) {
             thisNavId = navElementsWithChildren[i].getAttribute('aria-controls');
@@ -892,6 +1005,89 @@ function bindSocialLinks() {
     }
 }
 bindSocialLinks();
+var catalogueRoot = document.getElementById('herbariumCatalogue');
+var storedCurrentPage = "/herbarium/";
+
+function bindHerbariumModal() {
+    var catalogueLinks = catalogueRoot.getElementsByClassName('triggersModal');
+    for (var i = 0; i < catalogueLinks.length; i++) {
+        catalogueLinks[i].addEventListener("click", openPlantDetail, false);
+    }
+}
+
+if (catalogueRoot) {
+    var animatedElement = document.getElementById('inkEffect');
+    var modalWrapper = document.getElementById('modalWrapper');
+    var plantModalDetails = document.getElementById('plantModalDetails');
+
+
+    var animationEvent = whichAnimationEvent();
+    animationEvent && animatedElement.addEventListener(animationEvent, function() {
+        // will fire on open complete and close complete:
+        if (modalWrapper.className == "closing") {
+            modalWrapper.className = "";
+        }
+    });
+
+    function openPlantDetail(e) {
+        if (e) {
+            e.preventDefault();
+        }
+
+plantURL = this.getAttribute('data-url');
+pageToRequest = '/includes/herbarium/plant-detail.php?plant='+plantURL;
+
+// start ajax request:
+var request = new XMLHttpRequest();
+ request.open('GET', pageToRequest, true);
+        request.onreadystatechange = function() {
+            if (this.readyState === 4) {
+
+if (this.status >= 200 && this.status < 400) {
+                    // Success:
+                    var response = this.responseText;
+                    if (response != "") {
+                        plantModalDetails.innerHTML = response;
+                        bindSocialLinks();
+                    }
+                }
+            }
+              };
+        request.send();
+        request = null;
+
+
+
+
+        var thisPlantDetail = this.innerHTML;
+        plantModalDetails.innerHTML = thisPlantDetail;
+        modalWrapper.className = "opening";
+        modalWrapper.removeAttribute('aria-hidden');
+        document.getElementById('offCanvasWrapper').setAttribute('aria-hidden', 'true');
+        storedCurrentPage = window.location.pathname.toString();
+        var stateObj = {};
+        history.replaceState(stateObj, "Plant detail ", "/herbarium/" + plantURL);
+
+
+
+ 
+    }
+
+    function closePlantDetail(e) {
+        if (e) {
+            e.preventDefault();
+        }
+        modalWrapper.className = "closing";
+        modalWrapper.setAttribute('aria-hidden', 'true');
+        document.getElementById('offCanvasWrapper').removeAttribute('aria-hidden');
+        var stateObj = {};
+        history.replaceState(stateObj, "Plant detail ", storedCurrentPage);
+    }
+    bindHerbariumModal();
+
+    document.getElementById('modalClose').addEventListener("click", closePlantDetail);
+}
+
 // font face loader:
 // https://www.bramstein.com/writing/web-font-loading-patterns.html
 
@@ -940,4 +1136,4 @@ if ('serviceWorker' in navigator) {
         // dialog.hide()
       });
     }());
-//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbImZ1bmN0aW9ucy5qcyIsInNlY3Rpb25zL2hlcmJhcml1bS5qcyIsIm1vZHVsZS9hY2Nlc3NpYmxlLW1vZGFsLWRpYWxvZy5qcyIsIm1vZHVsZS9hY2Nlc3NpYmxlLW5hdmlnYXRpb24uanMiLCJtb2R1bGUvY3VzdG9tLWZpbGUtaW5wdXQuanMiLCJtb2R1bGUvZGVib3VuY2UuanMiLCJtb2R1bGUvZm9udGZhY2VvYnNlcnZlci5qcyIsIm1vZHVsZS9vZmZjYW52YXMuanMiLCJtb2R1bGUvcGFnaW5hdGlvbi5qcyIsIm1vZHVsZS9zb2NpYWwtc2hhcmUuanMiLCJpbml0LmpzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FDbllBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUNqR0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUNoR0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FDdENBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQ2hDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUNkQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUNYQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUN6RkE7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUN2RkE7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUNqQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBIiwiZmlsZSI6ImNvcmUuanMiLCJzb3VyY2VSb290IjoiaHRkb2NzL2pzL3NyYy8qKi8qLmpzIn0=
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbImZ1bmN0aW9ucy5qcyIsIm1vZHVsZS9hY2Nlc3NpYmxlLWFjY29yZGlvbi5qcyIsIm1vZHVsZS9hY2Nlc3NpYmxlLW1vZGFsLWRpYWxvZy5qcyIsIm1vZHVsZS9hY2Nlc3NpYmxlLW5hdmlnYXRpb24uanMiLCJtb2R1bGUvY3VzdG9tLWZpbGUtaW5wdXQuanMiLCJtb2R1bGUvZGVib3VuY2UuanMiLCJtb2R1bGUvZm9udGZhY2VvYnNlcnZlci5qcyIsIm1vZHVsZS9vZmZjYW52YXMuanMiLCJtb2R1bGUvcGFnaW5hdGlvbi5qcyIsIm1vZHVsZS9zb2NpYWwtc2hhcmUuanMiLCJzZWN0aW9ucy9oZXJiYXJpdW0uanMiLCJpbml0LmpzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUNqYkE7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FDcEtBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FDaEdBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQ3RDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUNoQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FDZEE7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FDWEE7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FDekZBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FDdkZBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FDakNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUNsRkE7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBIiwiZmlsZSI6ImNvcmUuanMiLCJzb3VyY2VSb290IjoiaHRkb2NzL2pzL3NyYy8qKi8qLmpzIn0=

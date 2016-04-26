@@ -13,22 +13,7 @@ if (catalogueRoot) {
     var modalWrapper = document.getElementById('modalWrapper');
     var plantModalDetails = document.getElementById('plantModalDetails');
 
-    function whichAnimationEvent() {
-        // https://davidwalsh.name/css-animation-callback
-        var t;
-        var el = document.createElement('fakeelement');
-        var transitions = {
-            'animation': 'animationend',
-            'OAnimation': 'oAnimationEnd',
-            'MozAnimation': 'animationend',
-            'WebkitAnimation': 'webkitAnimationEnd'
-        }
-        for (t in transitions) {
-            if (el.style[t] !== undefined) {
-                return transitions[t];
-            }
-        }
-    }
+
     var animationEvent = whichAnimationEvent();
     animationEvent && animatedElement.addEventListener(animationEvent, function() {
         // will fire on open complete and close complete:

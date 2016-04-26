@@ -294,6 +294,47 @@ echo '</ul>';
 
 
 
+
+
+
+<div class="row" id="OVERRIDE">
+  <div class="medium-6 columns">
+    <h2>Accessible accordion</h2>
+    <div role="tablist" class="accordion-interface">  
+      <a href="#accordion1" role="tab" aria-controls="accordion1" class="js-accordion-trigger">Accordion 1</a>
+      <div id="accordion1" role="tabpanel" class="js-accordion-panel">
+        <div class="panel-inner">
+          <h3>Accordion 1</h3>
+          <p>Duis sagittis, est sit amet gravida tristique, purus lectus venenatis urna, id molestie magna risus ut nunc. Aliquam nisl enim, tristique tempus placerat at, posuere in lectus. Vestibulum sit amet ipsum lacus. Suspendisse <em>potenti</em>. </p>
+        </div>
+      </div>
+      <a href="#accordion2" role="tab" aria-controls="accordion2" class="js-accordion-trigger">Accordion 2</a>
+      <div id="accordion2" role="tabpanel" class="js-accordion-panel">
+        <div class="panel-inner">
+          <h3>Accordion 2</h3>
+          <p>Fusce ac sodales <abbr title='Cascading Style Sheets'>CSS</abbr> magna. Donec et nisi dictum felis sollicitudin congue. Aliquam nisl enim, tristique tempus placerat at, posuere in lectus. Sed dapibus, lectus sit amet adipiscing egestas, mauris est viverra nibh, iaculis pretium sem orci aliquet mauris. Suspendisse <del>potenti</del>. Duis sagittis, est sit amet gravida tristique, purus lectus venenatis urna, id molestie magna risus ut nunc. Fusce ac sodales magna. Potenti et eros sed justo commodo bibendum non at nunc. </p>
+        </div>
+      </div>
+      <a href="#accordion3" role="tab" aria-controls="accordion3" class="js-accordion-trigger">Accordion 3</a>
+      <div id="accordion3" role="tabpanel" class="js-accordion-panel">
+        <div class="panel-inner">
+          <h3>Accordion 3</h3>
+          <p>Potenti et eros sed justo commodo bibendum non at nunc. Maecenas sit amet tellus nec mi gravida posuere non pretium magna. Nulla auctor eleifend turpis consequat pharetra. </p>
+          <p>Vestibulum sit amet ipsum lacus. Lorem ipsum dolor sit amet, consectetur <em>adipiscing elit</em>. Sed dapibus, lectus sit amet adipiscing egestas, mauris est viverra nibh, iaculis pretium sem orci aliquet mauris. Duis sagittis, est sit amet gravida tristique, purus lectus venenatis urna, id molestie magna risus ut nunc. Nulla vel magna sit amet dui commodo vitae vel nulla. </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
 </div>
 </div>
 

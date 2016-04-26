@@ -23,7 +23,7 @@ function setUpNavigation() {
     // https://adactio.com/journal/10365
     // http://codepen.io/adactio/pen/oxLNwY/
     if (cutsTheMustard) {
-        navElementsWithChildren = document.querySelectorAll('[aria-controls]');
+        navElementsWithChildren = document.querySelectorAll('#navigation [aria-controls]');
         navCount = navElementsWithChildren.length;
         for (i = 0; i < navCount; i++) {
             thisNavId = navElementsWithChildren[i].getAttribute('aria-controls');
