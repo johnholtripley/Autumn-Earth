@@ -175,7 +175,7 @@ function drawPlant() {
 
 // load brush images:
 
-$brushSizes = array(3,5,7,9,11,13,15);
+$brushSizes = array(3,5,7,9,11,13,15,17,19);
 $largestBrushSize = count($brushSizes);
 $brushColours = array(array(27,113,27),array(24,180,24),array(48,220,48),array(54,220,54));
 for ($i=0;$i<count($brushColours);$i++) {
@@ -435,7 +435,7 @@ $thisRotation = $thisLeaf[2];
 // tear drop leaf:
 // needs variable size, and rotating to heading ########
 
-$leafLength = 15;
+$leafLength = 30;
 
 imagefilledarc($plantCanvas, $thisPointX, $thisPointY, $leafLength, $leafLength, 360-$thisRotation, 180-$thisRotation, imagecolorallocate($plantCanvas, 24, 244, 24), IMG_ARC_EDGED);
 //imagefilledarc($plantCanvas, $thisPointX, $thisPointY, $leafLength, $leafLength*2, 270, 360, imagecolorallocate($plantCanvas, 24, 244, 24), IMG_ARC_EDGED);
