@@ -663,6 +663,12 @@ switch ($shouldAddButterflyPrefix) {
 $combinedButterflyName .= " butterfly";
 $startingText = str_ireplace("++butterfly++", $combinedButterflyName, $startingText);
 $startingText = str_ireplace("++commonname++", $primaryCommonName, $startingText);
+$primaryCommonNamePlural = $primaryCommonName+"s";
+// catch special cases for plurals:
+if(substr($primaryCommonName, -4) == "foot") {
+$primaryCommonNamePlural = substr($primaryCommonName, 0, -4)."feet";
+}
+$startingText = str_ireplace("++commonnameplural++", $primaryCommonNamePlural, $startingText);
 
 
 echo '<h1 style="font-style:italic;">'.$latinName.'</h1>';
