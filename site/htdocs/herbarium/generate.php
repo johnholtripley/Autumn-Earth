@@ -613,7 +613,9 @@ if ($nightPos !== false) {
 // remove any property markers:
 $thisCommonName = str_ireplace("*", "", $thisCommonName);
 $thisCommonName = str_ireplace("^", "", $thisCommonName);
-
+if($i==0) {
+	$primaryCommonName = $thisCommonName;
+}
 array_push($commonNames,$thisCommonName);
 }
 
@@ -660,7 +662,7 @@ switch ($shouldAddButterflyPrefix) {
 } 
 $combinedButterflyName .= " butterfly";
 $startingText = str_ireplace("++butterfly++", $combinedButterflyName, $startingText);
-
+$startingText = str_ireplace("++commonname++", $primaryCommonName, $startingText);
 
 
 echo '<h1 style="font-style:italic;">'.$latinName.'</h1>';
