@@ -48,6 +48,44 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/title-tag.php");
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="Accept-CH" content="DPR,Width,Viewport-Width"> 
+
+<?php
+// help Google index paginated pages behind the 'load more' links:
+// https://webmasters.googleblog.com/2014/02/infinite-scroll-search-friendly.html
+// herbarium home and chronicle home will need this
+if($needsSeoPagination) {
+  // get current page
+
+
+
+$pagenumber = 1;
+if(isset($_GET['page'])) {
+  $pagenumber = $_GET['page'];
+$pos = strrpos($pagenumber, "-");
+if ($pos !== false) {
+  // is a range
+  $startpagenumber = substr($pagenumber,0,$pos);
+  $endpagenumber = substr($pagenumber,$pos+1);
+} else {
+  $startpagenumber = $pagenumber;
+  $endpagenumber = $pagenumber;
+}
+} else {
+  $startpagenumber = 1;
+  $endpagenumber = 1;
+}
+
+
+
+
+if($pagenumber>1) {
+  echo '<link rel="prev" href="/'.$thisSection.'/page/'.($pagenumber-1).'">';
+}
+echo '<link rel="next" href="/'.$thisSection.'/page/'.($pagenumber+1).'">';
+}
+?>
+
+
 <script>
     var cutsTheMustard = false;
     if('querySelectorAll' in document && 'addEventListener' in window) {

@@ -41,6 +41,8 @@ $resultsperpage = 12;
 $totalpages = ceil($numberOfEntries/$resultsperpage);
 if($endpagenumber > $totalpages) {
 $endpagenumber = $totalpages;
+// // google recommends a 404 if the page goes out of bounds: https://webmasters.googleblog.com/2014/02/infinite-scroll-search-friendly.html
+header("HTTP/1.0 404 Not Found");
 }
 if($startpagenumber < 1) {
 $startpagenumber = 1;

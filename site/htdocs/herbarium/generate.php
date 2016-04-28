@@ -448,6 +448,8 @@ $leafCanvasSize = 50;
 $leafInset = 10;
 for ($k=0;$k<count($numberOfLeafVariationsToDraw);$k++) {
 	${'leaf'.$k} = imagecreate($leafCanvasSize,$leafCanvasSize);
+	//imagesavealpha(${'leaf'.$k}, true);
+	//imagealphablending(${'leaf'.$k}, true);
 	$leafTrans = imagecolorallocate(${'leaf'.$k}, 0, 0, 0);
 	imagecolortransparent(${'leaf'.$k}, $leafTrans);
 	${'leafColour'.$k} = imagecolorallocate(${'leaf'.$k}, $thisLeafColour[0], $thisLeafColour[1], $thisLeafColour[2]);
@@ -461,11 +463,12 @@ for ($k=0;$k<count($numberOfLeafVariationsToDraw);$k++) {
 	imagesetbrush(${'leaf'.$k}, ${'leafBrush'.$k});
 
 
-// ###
+	// ###
 	quadBezier(${'leaf'.$k}, $leafCanvasSize/2, $leafCanvasSize-$leafInset, $leafCanvasSize, $leafCanvasSize-$leafInset, $leafCanvasSize/2,$leafInset);
 	quadBezier(${'leaf'.$k}, $leafCanvasSize/2, $leafCanvasSize-$leafInset, 0, $leafCanvasSize-$leafInset, $leafCanvasSize/2,$leafInset);
 	imagefill(${'leaf'.$k}, $leafCanvasSize/2, $leafCanvasSize-$leafInset*2, ${'leafBrushColour'.$k});
 	// ###
+	
 }
 // leaf start needs to be the centre of the leaf image so it can be positioned correctly ##############
 $transparency = imagecolorallocatealpha( ${'leaf0'},0,0,0,127 );
@@ -475,9 +478,10 @@ foreach ($allLeaves as $thisLeaf) {
 $thisPointX = $thisLeaf[0];
 $thisPointY = $thisLeaf[1];
 $thisRotation = $thisLeaf[2];
+//$rotatedLeaf = imagecreatetruecolor($leafCanvasSize,$leafCanvasSize);
 $rotatedLeaf = imagerotate(${'leaf0'}, $thisRotation, $transparency, 1);
 //imagealphablending($rotatedLeaf, true);
-imagesavealpha($rotatedLeaf, TRUE);
+//imagesavealpha($rotatedLeaf, TRUE);
 imagecopyresampled($plantCanvas, $rotatedLeaf, $thisPointX-($leafCanvasSize/2), $thisPointY-$leafCanvasSize/2, 0, 0, $leafCanvasSize, $leafCanvasSize, $leafCanvasSize, $leafCanvasSize);
 imagedestroy($rotatedLeaf);
 

@@ -5,6 +5,8 @@
 $protocol = stripos($_SERVER['SERVER_PROTOCOL'],'https') === true ? 'https://' : 'http://';
 $fullSitePath = $protocol.$_SERVER['SERVER_NAME'];
 
+// https://webmasters.googleblog.com/2014/02/infinite-scroll-search-friendly.html
+$needsSeoPagination = false;
 
 $thisURL = $_SERVER['PHP_SELF'];
 $thisURLSection = explode("/",$thisURL);
@@ -107,7 +109,7 @@ $result = mysql_query($query) or die ("couldn't execute query1");
 		}
 	} else {
 		// herbarium home
-
+$needsSeoPagination = true;
 $query = "select * from tblplants limit 1";
 $result = mysql_query($query) or die ("couldn't execute query1");
 		$numberofrows = mysql_num_rows($result);
@@ -192,10 +194,12 @@ $result = mysql_query($query) or die ("couldn't execute query1");
 			$longDescription = stripcode($newsContent);
 		}
 } else {
+	$needsSeoPagination = true;
 	$thisBuiltURL = $thisBuiltURL."news/";
 
 }
-
+// so next and prev rel links have the correct url in:
+$thisSection = "chronicle";
 
         break;
           case "contract":
