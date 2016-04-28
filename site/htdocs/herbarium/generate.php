@@ -467,20 +467,19 @@ for ($k=0;$k<count($numberOfLeafVariationsToDraw);$k++) {
 	imagefill(${'leaf'.$k}, $leafCanvasSize/2, $leafCanvasSize-$leafInset*2, ${'leafBrushColour'.$k});
 	// ###
 }
-
-$transparency = imagecolorallocatealpha( $plantCanvas,0,0,0,127 );
+// leaf start needs to be the centre of the leaf image so it can be positioned correctly ##############
+$transparency = imagecolorallocatealpha( ${'leaf0'},0,0,0,127 );
+//$rotatedTransparency = imagecolorallocatealpha( ${'leaf0'},0,0,0,127 );
+//$rotatedLeaf 
 foreach ($allLeaves as $thisLeaf) {
 $thisPointX = $thisLeaf[0];
 $thisPointY = $thisLeaf[1];
 $thisRotation = $thisLeaf[2];
-
-// needs variable size, and rotating to heading ########
-
-$leafLength = 30;
-
-//$rotatedLeaf = imagerotate(${'leaf0'}, $thisRotation, $transparency, 1);
-imagecopyresampled($plantCanvas, ${'leaf0'}, $thisPointX-($leafCanvasSize/2), $thisPointY-$leafCanvasSize/2, 0, 0, $leafCanvasSize, $leafCanvasSize, $leafCanvasSize, $leafCanvasSize);
-//imagedestroy($rotatedLeaf);
+$rotatedLeaf = imagerotate(${'leaf0'}, $thisRotation, $transparency, 1);
+//imagealphablending($rotatedLeaf, true);
+imagesavealpha($rotatedLeaf, TRUE);
+imagecopyresampled($plantCanvas, $rotatedLeaf, $thisPointX-($leafCanvasSize/2), $thisPointY-$leafCanvasSize/2, 0, 0, $leafCanvasSize, $leafCanvasSize, $leafCanvasSize, $leafCanvasSize);
+imagedestroy($rotatedLeaf);
 
 
 }
