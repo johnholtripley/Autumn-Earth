@@ -162,7 +162,7 @@ function drawPlant() {
 	global $iterations, $angle, $isAquatic, $isNight, $plantURL;
 	$canvaDimension = 1208;
 	$plantCanvas = imagecreatetruecolor($canvaDimension, $canvaDimension);
-	$ground = imagecolorallocate($plantCanvas, 240, 240, 240);
+	$ground = imagecolorallocate($plantCanvas, 219, 215, 190);
 	imagefilledrectangle($plantCanvas, 0, 0, $canvaDimension, $canvaDimension, $ground);
 	/*
 	$brush = imagecreate(2,2);
@@ -177,7 +177,7 @@ function drawPlant() {
 
 $brushSizes = array(3,5,7,9,11,13,15,17,19);
 $largestBrushSize = count($brushSizes);
-$brushColours = array(array(91,111,83),array(102,150,138));
+$brushColours = array(array(97,113,77),array(102,150,138));
 for ($i=0;$i<count($brushColours);$i++) {
 	for ($j=0;$j<count($brushSizes);$j++) {
 	//	${'brushcol'.$i.'size'.$j} = imagecreatefrompng($_SERVER['DOCUMENT_ROOT'].'/images/herbarium/brushes/brush'.$i.'-'.$j.'.png');
@@ -437,7 +437,7 @@ $thisRotation = $thisLeaf[2];
 
 $leafLength = 30;
 
-imagefilledarc($plantCanvas, $thisPointX, $thisPointY, $leafLength, $leafLength, 360-$thisRotation, 180-$thisRotation, imagecolorallocate($plantCanvas, 24, 244, 24), IMG_ARC_EDGED);
+imagefilledarc($plantCanvas, $thisPointX, $thisPointY, $leafLength, $leafLength, 360-$thisRotation, 180-$thisRotation, imagecolorallocate($plantCanvas, 77, 92, 61), IMG_ARC_EDGED);
 //imagefilledarc($plantCanvas, $thisPointX, $thisPointY, $leafLength, $leafLength*2, 270, 360, imagecolorallocate($plantCanvas, 24, 244, 24), IMG_ARC_EDGED);
 //imagefilledarc($plantCanvas, $thisPointX, $thisPointY, $leafLength, $leafLength*2, 180, 270, imagecolorallocate($plantCanvas, 24, 244, 24), IMG_ARC_EDGED);
 }
@@ -696,8 +696,8 @@ echo '<p>'.$startingText.'</p>';
 $plantURL = str_ireplace(" ", "-", trim(strtolower($latinName)));
 drawPlant();
 
-echo '<img src="/images/herbarium/plants/'.$plantURL.'.jpg" width="480" height="480" alt="'.$latinName.'">';
-echo '<p style="padding: 12px;background:rgb('.$petalRed.','.$petalGreen.','.$petalBlue.')">Petal colour: '.$displayPetalColourName.'</p>';
+echo '<img style="display:block;" src="/images/herbarium/plants/'.$plantURL.'.jpg" width="480" height="480" alt="'.$latinName.'">';
+echo '<p style="padding: 12px;display:inline-block;background:rgb('.$petalRed.','.$petalGreen.','.$petalBlue.')">Petal colour: '.$displayPetalColourName.'</p>';
 echo '<p style="font-size:0.7em;">seed: '.$storedSeed.'</p>';
 
 
