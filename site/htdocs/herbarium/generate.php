@@ -471,17 +471,22 @@ for ($k=0;$k<count($numberOfLeafVariationsToDraw);$k++) {
 	
 }
 // leaf start needs to be the centre of the leaf image so it can be positioned correctly ##############
-$transparency = imagecolorallocatealpha( ${'leaf0'},0,0,0,127 );
-//$rotatedTransparency = imagecolorallocatealpha( ${'leaf0'},0,0,0,127 );
-//$rotatedLeaf 
+
 foreach ($allLeaves as $thisLeaf) {
 $thisPointX = $thisLeaf[0];
 $thisPointY = $thisLeaf[1];
 $thisRotation = $thisLeaf[2];
-//$rotatedLeaf = imagecreatetruecolor($leafCanvasSize,$leafCanvasSize);
-$rotatedLeaf = imagerotate(${'leaf0'}, $thisRotation, $transparency, 1);
-//imagealphablending($rotatedLeaf, true);
-//imagesavealpha($rotatedLeaf, TRUE);
+
+
+
+// Preserve transparency
+imagesavealpha(${'leaf0'} , true);
+$pngTransparency = imagecolorallocatealpha(${'leaf0'} , 0, 0, 0, 127);
+imagefill(${'leaf0'} , 0, 0, $pngTransparency);
+$rotatedLeaf = imagerotate(${'leaf0'}, $thisRotation, $pngTransparency);
+
+
+
 imagecopyresampled($plantCanvas, $rotatedLeaf, $thisPointX-($leafCanvasSize/2), $thisPointY-$leafCanvasSize/2, 0, 0, $leafCanvasSize, $leafCanvasSize, $leafCanvasSize, $leafCanvasSize);
 imagedestroy($rotatedLeaf);
 
