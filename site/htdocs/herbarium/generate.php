@@ -177,7 +177,7 @@ function drawPlant() {
 
 $brushSizes = array(3,5,7,9,11,13,15,17,19);
 $largestBrushSize = count($brushSizes);
-$brushColours = array(array(27,113,27),array(24,180,24),array(48,220,48),array(54,220,54));
+$brushColours = array(array(91,111,83),array(102,150,138));
 for ($i=0;$i<count($brushColours);$i++) {
 	for ($j=0;$j<count($brushSizes);$j++) {
 	//	${'brushcol'.$i.'size'.$j} = imagecreatefrompng($_SERVER['DOCUMENT_ROOT'].'/images/herbarium/brushes/brush'.$i.'-'.$j.'.png');
@@ -670,6 +670,25 @@ $primaryCommonNamePlural = substr($primaryCommonName, 0, -4)."feet";
 }
 $startingText = str_ireplace("++commonnameplural++", $primaryCommonNamePlural, $startingText);
 
+
+include($_SERVER['DOCUMENT_ROOT']."/includes/herbarium/petal-colours.php");
+$petalColourName = array_rand($petalColours, 1);
+$displayPetalColourName = $petalColourName;
+$petalRed = $petalColours[$petalColourName][0];
+$petalGreen = $petalColours[$petalColourName][1];
+$petalBlue = $petalColours[$petalColourName][2];
+$colourVariation = (mt_rand(1,80))-40;
+if($colourVariation>20) {
+	$displayPetalColourName = "light ".$displayPetalColourName;
+} else if($colourVariation<-20) {
+	$displayPetalColourName = "dark ".$displayPetalColourName;
+}
+$petalRed += $colourVariation;
+$petalGreen += $colourVariation;
+$petalBlue += $colourVariation;
+$startingText = str_ireplace("++petalcolour++", $displayPetalColourName, $startingText);
+
+
 echo '<h1 style="font-style:italic;">'.$latinName.'</h1>';
 echo "<h2>Common names: ".$commonNameString."</h2>";
 echo '<p>'.$startingText.'</p>';
@@ -678,7 +697,7 @@ $plantURL = str_ireplace(" ", "-", trim(strtolower($latinName)));
 drawPlant();
 
 echo '<img src="/images/herbarium/plants/'.$plantURL.'.jpg" width="480" height="480" alt="'.$latinName.'">';
-
+echo '<p style="padding: 12px;background:rgb('.$petalRed.','.$petalGreen.','.$petalBlue.')">Petal colour: '.$displayPetalColourName.'</p>';
 echo '<p style="font-size:0.7em;">seed: '.$storedSeed.'</p>';
 
 
