@@ -6,17 +6,21 @@
 require_once $_SERVER['DOCUMENT_ROOT'].'/includes/third-party/twitterOAuth/twitteroauth-0.6.2/autoload.php';
 use Abraham\TwitterOAuth\TwitterOAuth;
 
-include($_SERVER['DOCUMENT_ROOT']."/includes/signalnoise.php");
-include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
-
-function sendToTwitter() {
-	global $latinName, $startingText, $plantURL, $commonNameString, $commonNamesJoined, $isAquatic, $isNight, $storedSeed;
-
-
 $isLive = false;
 if($_SERVER['SERVER_NAME'] == "autumnearth.com") {
 	$isLive = true;
 }
+
+if(!$isLive) {
+include($_SERVER['DOCUMENT_ROOT']."/includes/signalnoise.php");
+include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
+}
+
+function sendToTwitter() {
+	global $latinName, $startingText, $plantURL, $commonNameString, $commonNamesJoined, $isAquatic, $isNight, $storedSeed, $isLive;
+
+
+
 
 define("CONSUMER_KEY", "tullZGE4wkZibDnr6aXKuFGQ0");
 define("CONSUMER_SECRET","y1S7rffnenpYRJtDQxSv8a5bq3QhAAafqJzEaCQq0nDtw3XtAS");
@@ -95,12 +99,12 @@ if($isLive) {
 
 
 
-
+if(!$isLive) {
 $query = "INSERT INTO tblplants (latinName,commonNames,commonNamesJoined,timeCreated,plantDesc,plantUrl,tweetedContent,isAquatic,isNight,plantSeed)
 VALUES ('" . $latinName . "','" . $commonNameString . "','" . $commonNamesJoined . "',NOW(),'".$startingText."','".$plantURL."','".$textString."','".$isAquatic."','".$isNight."','".$storedSeed."')";
 
 $result = mysql_query($query) or die ("couldn't execute tblplant query");
-
+}
 
 
 
@@ -427,19 +431,58 @@ if($thisDepth>$thisMaxDepth) {
 	imagesetbrush($plantCanvas, ${'brushcol'.$pos["colour"].'size'.$thisMaxDepth});
 	quadBezier($plantCanvas, $previousX, $previousY,$thisPoint[0], $thisPoint[1], $thisEndPoint[0],$thisEndPoint[1]);
 
+
+
+
 // draw leaves:
+
+include($_SERVER['DOCUMENT_ROOT']."/includes/herbarium/leaf-colours.php");
+$thisLeafColour = $leafColours[mt_rand(0, count($leafColours) - 1)];
+
+ 
+	
+
+
+$numberOfLeafVariationsToDraw = 1;
+$leafCanvasSize = 50;
+$leafInset = 10;
+for ($k=0;$k<count($numberOfLeafVariationsToDraw);$k++) {
+	${'leaf'.$k} = imagecreate($leafCanvasSize,$leafCanvasSize);
+	$leafTrans = imagecolorallocate(${'leaf'.$k}, 0, 0, 0);
+	imagecolortransparent(${'leaf'.$k}, $leafTrans);
+	${'leafColour'.$k} = imagecolorallocate(${'leaf'.$k}, $thisLeafColour[0], $thisLeafColour[1], $thisLeafColour[2]);
+	
+
+	${'leafBrush'.$k} = imagecreate(6,6);
+	$leafBrushTrans = imagecolorallocate(${'leafBrush'.$k}, 0, 0, 0);
+	imagecolortransparent(${'leafBrush'.$k}, $leafBrushTrans);
+	${'leafBrushColour'.$k} = imagecolorallocate(${'leafBrush'.$k}, $thisLeafColour[0], $thisLeafColour[1], $thisLeafColour[2]);
+	imagefilledellipse(${'leafBrush'.$k}, 3,3,6,6, ${'leafBrushColour'.$k});
+	imagesetbrush(${'leaf'.$k}, ${'leafBrush'.$k});
+
+
+// ###
+	quadBezier(${'leaf'.$k}, $leafCanvasSize/2, $leafCanvasSize-$leafInset, $leafCanvasSize, $leafCanvasSize-$leafInset, $leafCanvasSize/2,$leafInset);
+	quadBezier(${'leaf'.$k}, $leafCanvasSize/2, $leafCanvasSize-$leafInset, 0, $leafCanvasSize-$leafInset, $leafCanvasSize/2,$leafInset);
+	imagefill(${'leaf'.$k}, $leafCanvasSize/2, $leafCanvasSize-$leafInset*2, ${'leafBrushColour'.$k});
+	// ###
+}
+
+$transparency = imagecolorallocatealpha( $plantCanvas,0,0,0,127 );
 foreach ($allLeaves as $thisLeaf) {
 $thisPointX = $thisLeaf[0];
 $thisPointY = $thisLeaf[1];
 $thisRotation = $thisLeaf[2];
-// tear drop leaf:
+
 // needs variable size, and rotating to heading ########
 
 $leafLength = 30;
 
-imagefilledarc($plantCanvas, $thisPointX, $thisPointY, $leafLength, $leafLength, 360-$thisRotation, 180-$thisRotation, imagecolorallocate($plantCanvas, 77, 92, 61), IMG_ARC_EDGED);
-//imagefilledarc($plantCanvas, $thisPointX, $thisPointY, $leafLength, $leafLength*2, 270, 360, imagecolorallocate($plantCanvas, 24, 244, 24), IMG_ARC_EDGED);
-//imagefilledarc($plantCanvas, $thisPointX, $thisPointY, $leafLength, $leafLength*2, 180, 270, imagecolorallocate($plantCanvas, 24, 244, 24), IMG_ARC_EDGED);
+//$rotatedLeaf = imagerotate(${'leaf0'}, $thisRotation, $transparency, 1);
+imagecopyresampled($plantCanvas, ${'leaf0'}, $thisPointX-($leafCanvasSize/2), $thisPointY-$leafCanvasSize/2, 0, 0, $leafCanvasSize, $leafCanvasSize, $leafCanvasSize, $leafCanvasSize);
+//imagedestroy($rotatedLeaf);
+
+
 }
 
 
@@ -464,6 +507,10 @@ for ($i=0;$i<count($brushColours);$i++) {
 	for ($j=0;$j<count($brushSizes);$j++) {
 	imagedestroy(${'brushcol'.$i.'size'.$j});
 	}
+}
+for ($k=0;$k<count($numberOfLeafVariationsToDraw);$k++) {
+imagedestroy(${'leaf'.$k});
+imagedestroy(${'leafBrush'.$k});
 }
 
 
@@ -678,10 +725,12 @@ $petalRed = $petalColours[$petalColourName][0];
 $petalGreen = $petalColours[$petalColourName][1];
 $petalBlue = $petalColours[$petalColourName][2];
 $colourVariation = (mt_rand(1,80))-40;
+$lighterNames = array("light","bright");
+$darkerNames = array("dark","deep");
 if($colourVariation>20) {
-	$displayPetalColourName = "light ".$displayPetalColourName;
+	$displayPetalColourName = $lighterNames[mt_rand(0, count($lighterNames) - 1)]." ".$displayPetalColourName;
 } else if($colourVariation<-20) {
-	$displayPetalColourName = "dark ".$displayPetalColourName;
+	$displayPetalColourName = $darkerNames[mt_rand(0, count($darkerNames) - 1)]." ".$displayPetalColourName;
 }
 $petalRed += $colourVariation;
 $petalGreen += $colourVariation;
@@ -698,6 +747,7 @@ drawPlant();
 
 echo '<img style="display:block;" src="/images/herbarium/plants/'.$plantURL.'.jpg" width="480" height="480" alt="'.$latinName.'">';
 echo '<p style="padding: 12px;display:inline-block;background:rgb('.$petalRed.','.$petalGreen.','.$petalBlue.')">Petal colour: '.$displayPetalColourName.'</p>';
+echo '<p>Associated with the '.$combinedButterflyName.'.</p>';
 echo '<p style="font-size:0.7em;">seed: '.$storedSeed.'</p>';
 
 

@@ -107,10 +107,21 @@ $result = mysql_query($query) or die ("couldn't execute query1");
 		}
 	} else {
 		// herbarium home
+
+$query = "select * from tblplants limit 1";
+$result = mysql_query($query) or die ("couldn't execute query1");
+		$numberofrows = mysql_num_rows($result);
+		if ($numberofrows > 0) {
+			$row = mysql_fetch_array($result);
+			extract ($row);
+		}
+
+
 		$thisBuiltURL = $thisBuiltURL."herbarium/";
 		$pagetitle = 'Autumn Earth Herbarium';
 		$longDescription = 'Catalogue of the flora of Autumn Earth';
 		$needsAModal = "herbarium";
+		$shareImagePath = 'https://www.autumnearth.com/images/herbarium/'.$plantUrl.'.jpg';
 	}
 
 break;
