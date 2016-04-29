@@ -439,10 +439,6 @@ if($thisDepth>$thisMaxDepth) {
 include($_SERVER['DOCUMENT_ROOT']."/includes/herbarium/leaf-colours.php");
 $thisLeafColour = $leafColours[mt_rand(0, count($leafColours) - 1)];
 
- 
-	
-
-
 $numberOfLeafVariationsToDraw = 1;
 $leafCanvasSize = 100;
 $leafInset = 10;
@@ -477,14 +473,18 @@ foreach ($allLeaves as $thisLeaf) {
 	$thisPointY = $thisLeaf[1];
 	$thisRotation = $thisLeaf[2];
 	// Preserve transparency
-	imagesavealpha(${'leaf0'} , true);
-	$pngTransparency = imagecolorallocatealpha(${'leaf0'} , 0, 0, 0, 127);
-	imagefill(${'leaf0'} , 0, 0, $pngTransparency);
+	//imagesavealpha(${'leaf0'} , true);
+
+$whichLeafToUse = mt_rand(0,($numberOfLeafVariationsToDraw-1));
+
+	$pngTransparency = imagecolorallocatealpha(${'leaf'.$whichLeafToUse} , 0, 0, 0, 127);
+	imagefill(${'leaf'.$whichLeafToUse} , 0, 0, $pngTransparency);
 	//leaves at 90deg multiples have a small border along the edge:
 	if($thisRotation%90 == 0) {
 		$thisRotation += 5;
 	}
-	$rotatedLeaf = imagerotate(${'leaf0'}, $thisRotation, $pngTransparency);
+	$rotatedLeaf = imagerotate(${'leaf'.$whichLeafToUse}, $thisRotation, $pngTransparency);
+
 	$rotatedLeafWidth = imagesx($rotatedLeaf);
 	$rotatedLeafHeight = imagesy($rotatedLeaf);
 	imagecopyresampled($plantCanvas, $rotatedLeaf, $thisPointX-($rotatedLeafWidth)/2, $thisPointY-($rotatedLeafHeight/2), 0, 0, $rotatedLeafWidth, $rotatedLeafHeight, $rotatedLeafWidth, $rotatedLeafHeight);
