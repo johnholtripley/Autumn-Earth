@@ -444,16 +444,14 @@ $thisLeafColour = $leafColours[mt_rand(0, count($leafColours) - 1)];
 
 
 $numberOfLeafVariationsToDraw = 1;
-$leafCanvasSize = 50;
+$leafCanvasSize = 100;
 $leafInset = 10;
 for ($k=0;$k<count($numberOfLeafVariationsToDraw);$k++) {
 	${'leaf'.$k} = imagecreate($leafCanvasSize,$leafCanvasSize);
-	//imagesavealpha(${'leaf'.$k}, true);
-	//imagealphablending(${'leaf'.$k}, true);
+
 	$leafTrans = imagecolorallocate(${'leaf'.$k}, 0, 0, 0);
 	imagecolortransparent(${'leaf'.$k}, $leafTrans);
 	${'leafColour'.$k} = imagecolorallocate(${'leaf'.$k}, $thisLeafColour[0], $thisLeafColour[1], $thisLeafColour[2]);
-	
 
 	${'leafBrush'.$k} = imagecreate(6,6);
 	$leafBrushTrans = imagecolorallocate(${'leafBrush'.$k}, 0, 0, 0);
@@ -464,13 +462,14 @@ for ($k=0;$k<count($numberOfLeafVariationsToDraw);$k++) {
 
 
 	// ###
-	quadBezier(${'leaf'.$k}, $leafCanvasSize/2, $leafCanvasSize-$leafInset, $leafCanvasSize, $leafCanvasSize-$leafInset, $leafCanvasSize/2,$leafInset);
-	quadBezier(${'leaf'.$k}, $leafCanvasSize/2, $leafCanvasSize-$leafInset, 0, $leafCanvasSize-$leafInset, $leafCanvasSize/2,$leafInset);
-	imagefill(${'leaf'.$k}, $leafCanvasSize/2, $leafCanvasSize-$leafInset*2, ${'leafBrushColour'.$k});
+	// leaf start needs to be the centre of the leaf image so it can be positioned correctly
+	quadBezier(${'leaf'.$k}, $leafCanvasSize/2, $leafCanvasSize/2, $leafCanvasSize-$leafInset, $leafCanvasSize/2-$leafInset, $leafCanvasSize/2,$leafInset);
+	quadBezier(${'leaf'.$k}, $leafCanvasSize/2, $leafCanvasSize/2, $leafInset, $leafCanvasSize/2-$leafInset, $leafCanvasSize/2,$leafInset);
+	imagefill(${'leaf'.$k}, $leafCanvasSize/2, $leafCanvasSize/2-$leafInset*2, ${'leafBrushColour'.$k});
 	// ###
 	
 }
-// leaf start needs to be the centre of the leaf image so it can be positioned correctly ##############
+
 
 foreach ($allLeaves as $thisLeaf) {
 $thisPointX = $thisLeaf[0];
@@ -483,11 +482,17 @@ $thisRotation = $thisLeaf[2];
 imagesavealpha(${'leaf0'} , true);
 $pngTransparency = imagecolorallocatealpha(${'leaf0'} , 0, 0, 0, 127);
 imagefill(${'leaf0'} , 0, 0, $pngTransparency);
+
+//leaves at 90deg multiples have a small border along the edge:
+if($thisRotation%90 == 0) {
+$thisRotation += 5;
+}
+
 $rotatedLeaf = imagerotate(${'leaf0'}, $thisRotation, $pngTransparency);
 
 
 
-imagecopyresampled($plantCanvas, $rotatedLeaf, $thisPointX-($leafCanvasSize/2), $thisPointY-$leafCanvasSize/2, 0, 0, $leafCanvasSize, $leafCanvasSize, $leafCanvasSize, $leafCanvasSize);
+imagecopyresampled($plantCanvas, $rotatedLeaf, $thisPointX-(imagesx($rotatedLeaf))/2, $thisPointY-(imagesy($rotatedLeaf)/2), 0, 0, $leafCanvasSize, $leafCanvasSize, $leafCanvasSize, $leafCanvasSize);
 imagedestroy($rotatedLeaf);
 
 
@@ -733,7 +738,7 @@ $petalRed = $petalColours[$petalColourName][0];
 $petalGreen = $petalColours[$petalColourName][1];
 $petalBlue = $petalColours[$petalColourName][2];
 $colourVariation = (mt_rand(1,80))-40;
-$lighterNames = array("light","bright");
+$lighterNames = array("light","bright","pale");
 $darkerNames = array("dark","deep");
 if($colourVariation>20) {
 	$displayPetalColourName = $lighterNames[mt_rand(0, count($lighterNames) - 1)]." ".$displayPetalColourName;
