@@ -466,6 +466,7 @@ for ($k=0;$k<count($numberOfLeafVariationsToDraw);$k++) {
 	quadBezier(${'leaf'.$k}, $leafCanvasSize/2, $leafCanvasSize/2, $leafCanvasSize-$leafInset, $leafCanvasSize/2-$leafInset, $leafCanvasSize/2,$leafInset);
 	quadBezier(${'leaf'.$k}, $leafCanvasSize/2, $leafCanvasSize/2, $leafInset, $leafCanvasSize/2-$leafInset, $leafCanvasSize/2,$leafInset);
 	imagefill(${'leaf'.$k}, $leafCanvasSize/2, $leafCanvasSize/2-$leafInset*2, ${'leafBrushColour'.$k});
+	imageline ( ${'leaf'.$k} , $leafCanvasSize/2, $leafCanvasSize/2 , $leafCanvasSize/2, $leafInset , imagecolorallocate(${'leaf'.$k}, 6,42,30 ));
 	// ###
 	
 }
@@ -767,7 +768,7 @@ echo '<p style="font-size:0.7em;">seed: '.$storedSeed.'</p>';
 
 
 
-//sendToTwitter();
+sendToTwitter();
 ?>
 </body>
 </html>
