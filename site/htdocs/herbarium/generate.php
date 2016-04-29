@@ -179,7 +179,7 @@ function drawPlant() {
 
 // load brush images:
 
-$brushSizes = array(3,5,7,9,11,13,15,17,19);
+$brushSizes = array(3,5,7,11,15,19,24);
 $largestBrushSize = count($brushSizes);
 $brushColours = array(array(97,113,77),array(102,150,138));
 for ($i=0;$i<count($brushColours);$i++) {
@@ -473,30 +473,22 @@ for ($k=0;$k<count($numberOfLeafVariationsToDraw);$k++) {
 
 
 foreach ($allLeaves as $thisLeaf) {
-$thisPointX = $thisLeaf[0];
-$thisPointY = $thisLeaf[1];
-$thisRotation = $thisLeaf[2];
-
-
-
-// Preserve transparency
-imagesavealpha(${'leaf0'} , true);
-$pngTransparency = imagecolorallocatealpha(${'leaf0'} , 0, 0, 0, 127);
-imagefill(${'leaf0'} , 0, 0, $pngTransparency);
-
-//leaves at 90deg multiples have a small border along the edge:
-if($thisRotation%90 == 0) {
-$thisRotation += 5;
-}
-
-$rotatedLeaf = imagerotate(${'leaf0'}, $thisRotation, $pngTransparency);
-
-
-
-imagecopyresampled($plantCanvas, $rotatedLeaf, $thisPointX-(imagesx($rotatedLeaf))/2, $thisPointY-(imagesy($rotatedLeaf)/2), 0, 0, $leafCanvasSize, $leafCanvasSize, $leafCanvasSize, $leafCanvasSize);
-imagedestroy($rotatedLeaf);
-
-
+	$thisPointX = $thisLeaf[0];
+	$thisPointY = $thisLeaf[1];
+	$thisRotation = $thisLeaf[2];
+	// Preserve transparency
+	imagesavealpha(${'leaf0'} , true);
+	$pngTransparency = imagecolorallocatealpha(${'leaf0'} , 0, 0, 0, 127);
+	imagefill(${'leaf0'} , 0, 0, $pngTransparency);
+	//leaves at 90deg multiples have a small border along the edge:
+	if($thisRotation%90 == 0) {
+		$thisRotation += 5;
+	}
+	$rotatedLeaf = imagerotate(${'leaf0'}, $thisRotation, $pngTransparency);
+	$rotatedLeafWidth = imagesx($rotatedLeaf);
+	$rotatedLeafHeight = imagesy($rotatedLeaf);
+	imagecopyresampled($plantCanvas, $rotatedLeaf, $thisPointX-($rotatedLeafWidth)/2, $thisPointY-($rotatedLeafHeight/2), 0, 0, $rotatedLeafWidth, $rotatedLeafHeight, $rotatedLeafWidth, $rotatedLeafHeight);
+	imagedestroy($rotatedLeaf);
 }
 
 
