@@ -13,7 +13,7 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/search.php");
 <ul>
 	<li><a href="/">Home</a></li>
 	<li><a href="/community/">Community</a><button aria-controls="subNavCommunity"><span class="visibleHide">Toggle community menu</span></button>
-		<ul id="subNavCommunity">
+		<ul id="subNavCommunity" aria-label="submenu">
 		<?php include($_SERVER['DOCUMENT_ROOT']."/includes/navigation/community.php"); ?>
 		</ul>
 	</li>
@@ -22,13 +22,13 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/search.php");
 	<li><a href="/chronicle/">The Chronicle</a></li>
 	<li><a href="#">Guide</a></li>
 	<li><a href="/the-world/">The World</a><button aria-controls="subNavTheWorld"><span class="visibleHide">Toggle world menu</span></button>
-		<ul id="subNavTheWorld">
+		<ul id="subNavTheWorld" aria-label="submenu">
 		<?php include($_SERVER['DOCUMENT_ROOT']."/includes/navigation/the-world.php"); ?>
 		</ul>
 	</li>
 	<li><a href="/contracts/CreateContract.php">Contracts</a></li>
 	<li><a href="/card-game/">Card game</a><button aria-controls="subNavCardGame"><span class="visibleHide">Toggle card game menu</span></button>
-		<ul id="subNavCardGame">
+		<ul id="subNavCardGame" aria-label="submenu">
 		<?php include($_SERVER['DOCUMENT_ROOT']."/includes/navigation/card-game.php"); ?>
 		</ul>
 	</li>
