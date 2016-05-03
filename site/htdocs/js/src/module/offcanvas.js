@@ -1,6 +1,8 @@
 if(cutsTheMustard && document.getElementById("menuToggle")) {
 ae.navigationIsRevealed = false;
 
+menuToggleElem = document.getElementById("menuToggle");
+
 // toggle with the menu button:
 document.getElementById("menuToggle").addEventListener("click", function(e) {
 	ae.checkToggleNavigation();
@@ -9,15 +11,21 @@ document.getElementById("menuToggle").addEventListener("click", function(e) {
 	}
 }, false);
 
+// add ARIA attributes to help:
+document.getElementById("menuToggle").setAttribute('aria-expanded', false);
+document.getElementById("menuToggle").setAttribute('aria-controls', 'navigation');
+
 ae.checkToggleNavigation = function() {
 	if (ae.navigationIsRevealed) {
 		// hide navigation:
 		removeClass(document.documentElement, "offCanvas");
 		ae.navigationIsRevealed = false;
+		document.getElementById("menuToggle").setAttribute('aria-expanded', false);
 	} else {
 		// reveal navigation:
 		addClass(document.documentElement, "offCanvas");
 		ae.navigationIsRevealed = true;
+		document.getElementById("menuToggle").setAttribute('aria-expanded', true);
 	}
 };
 
@@ -30,6 +38,7 @@ ae.checkCloseNavigation = function(e) {
 				// hide navigation:
 				removeClass(document.documentElement, "offCanvas");
 				ae.navigationIsRevealed = false;
+				document.getElementById("menuToggle").setAttribute('aria-expanded', false);
 				e.preventDefault();
 			}
 		}
@@ -52,6 +61,7 @@ ae.swipeLeft = function() {
 	if (ae.navigationIsRevealed) {
 		removeClass(document.documentElement, "offCanvas");
 		ae.navigationIsRevealed = false;
+		document.getElementById("menuToggle").setAttribute('aria-expanded', false);
 	}
 };
 
