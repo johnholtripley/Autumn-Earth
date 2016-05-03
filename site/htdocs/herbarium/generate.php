@@ -387,6 +387,7 @@ array_push($allParentNodes, $lastX."_".$lastY);
 
 
 $thisMaxDepth = 0;
+$lengthsOfNodes = array();
 // loop through all leaf nodes, finding each parent until run out
 	foreach ($allLeafNodes as $thisOuterNode) {
 
@@ -395,9 +396,9 @@ $thisMaxDepth = 0;
 		$previousX = $thisStartPoint[0];
 		$previousY = $thisStartPoint[1];
 		$thisDepth = 0;
-		//echo "outer - examining ".$thisNode."<br>";
+		
 		while (array_key_exists($thisNode, $allNodeRelationships)) {
-//echo "inner - examining ".$thisNode."<br>";
+
 $thisPoint = explode("_", $thisNode);
 $thisEndPoint = explode("_", $allNodeRelationships[$thisNode]);
 
@@ -410,8 +411,7 @@ quadBezier($plantCanvas, $previousX, $previousY, $thisPoint[0], $thisPoint[1], $
 //imageline($plantCanvas, $lastX, $lastY, $pos["x"], $pos["y"], IMG_COLOR_BRUSHED);
 
 
-//echo "target ".$thisPoint[0].",".$thisPoint[1]." to ".$thisEndPoint[0].",".$thisEndPoint[1]."<br />";
-//echo "drawing ".$previousX.",".$previousY." to ".$thisEndPoint[0].",".$thisEndPoint[1]."<br />";
+
 $previousX = $controlX;
 $previousY = $controlY;
 $thisNode = $allNodeRelationships[$thisNode];
@@ -425,6 +425,8 @@ if($thisDepth>$thisMaxDepth) {
 	$thisMaxDepth = $thisDepth;
 }
 		}
+		// store this node's length:
+		$lengthsOfNodes[$thisOuterNode] = $thisDepth;
 	}
 
 	// draw to last point
@@ -469,7 +471,7 @@ for ($k=0;$k<count($numberOfLeafVariationsToDraw);$k++) {
 
 
 
-// prepare flower grpahic:
+// prepare flower graphic:
 $numberOfFlowerVariationsToDraw = 1;
 $flowerCanvasSize = 100;
 $flowerInset = 10;
@@ -495,21 +497,31 @@ foreach ($allLeaves as $thisLeaf) {
 	// Preserve transparency
 	//imagesavealpha(${'leaf0'} , true);
 
-$whichLeafToUse = mt_rand(0,($numberOfLeafVariationsToDraw-1));
+$whichElementToUse = 'leaf'.mt_rand(0,($numberOfLeafVariationsToDraw-1));
 
-	$pngTransparency = imagecolorallocatealpha(${'leaf'.$whichLeafToUse} , 0, 0, 0, 127);
-	imagefill(${'leaf'.$whichLeafToUse} , 0, 0, $pngTransparency);
+// check node length, if it's the maximum, then draw a flower instead
+$thisNodesLength = $lengthsOfNodes[$thisPointX."_".$thisPointY];
+if($thisNodesLength == $thisMaxDepth) {
+	$whichElementToUse = 'flower'.mt_rand(0,($numberOfFlowerVariationsToDraw-1));
+	$flowerWidth = imagesx(${$whichElementToUse});
+	$flowerHeight = imagesy(${$whichElementToUse});
+	imagecopyresampled($plantCanvas, ${$whichElementToUse}, $thisPointX-($flowerWidth)/2, $thisPointY-($flowerHeight/2), 0, 0, $flowerWidth, $flowerHeight, $flowerWidth, $flowerHeight);
+} else {
+
+	$pngTransparency = imagecolorallocatealpha(${$whichElementToUse} , 0, 0, 0, 127);
+	imagefill(${$whichElementToUse} , 0, 0, $pngTransparency);
 	//leaves at 90deg multiples have a small border along the edge:
 	if($thisRotation%90 == 0) {
 		$thisRotation += 5;
 	}
-	$rotatedLeaf = imagerotate(${'leaf'.$whichLeafToUse}, $thisRotation, $pngTransparency);
+	$rotatedLeaf = imagerotate(${$whichElementToUse}, $thisRotation, $pngTransparency);
 //imagealphablending(${'leaf'.$whichLeafToUse}, false);
 //imagesavealpha(${'leaf'.$whichLeafToUse}, true);
 	$rotatedLeafWidth = imagesx($rotatedLeaf);
 	$rotatedLeafHeight = imagesy($rotatedLeaf);
 	imagecopyresampled($plantCanvas, $rotatedLeaf, $thisPointX-($rotatedLeafWidth)/2, $thisPointY-($rotatedLeafHeight/2), 0, 0, $rotatedLeafWidth, $rotatedLeafHeight, $rotatedLeafWidth, $rotatedLeafHeight);
 	imagedestroy($rotatedLeaf);
+}
 }
 
 
