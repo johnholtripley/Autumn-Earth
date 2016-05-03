@@ -50,12 +50,13 @@ $result = mysql_query($query) or die ("couldn't execute query");
 if (mysql_num_rows($result) > 0) {
 $row = mysql_fetch_array($result);
 extract($row);
-echo '<p>Related to <a href="/herbarium/'.$relatedPlantUrl.'">'.$relatedCommonNamesJoined.'</a></p>';
+$relatedCommonNameSplit = explode("/", $relatedCommonNamesJoined);
+echo '<p>Related to <a href="/herbarium/'.$relatedPlantUrl.'">'.$relatedCommonNameSplit[0].'</a>.</p>';
 }
 ?>
 
 
-<p>Catalogued <?php echo lcfirst(relativePastDate(strtotime($timeCreated))); ?></p>
+<p>Catalogued <?php echo lcfirst(relativePastDate(strtotime($timeCreated))); ?>.</p>
 
 
 
