@@ -26,6 +26,7 @@ ae.checkToggleNavigation = function() {
 		addClass(document.documentElement, "offCanvas");
 		ae.navigationIsRevealed = true;
 		document.getElementById("menuToggle").setAttribute('aria-expanded', true);
+		//document.getElementById("navigation").focus();
 	}
 };
 
