@@ -163,7 +163,7 @@ function quadBezier($im, $x1, $y1, $x2, $y2, $x3, $y3) {
 
 function drawPlant() {
 	// thanks to http://www.kevs3d.co.uk/dev/lsystems/
-	global $iterations, $angle, $isAquatic, $isNight, $plantURL;
+	global $iterations, $angle, $isAquatic, $isNight, $plantURL, $petalRed, $petalGreen, $petalBlue;
 	$canvaDimension = 1208;
 	$plantCanvas = imagecreatetruecolor($canvaDimension, $canvaDimension);
 	$ground = imagecolorallocate($plantCanvas, 219, 215, 190);
@@ -468,6 +468,26 @@ for ($k=0;$k<count($numberOfLeafVariationsToDraw);$k++) {
 }
 
 
+
+// prepare flower grpahic:
+$numberOfFlowerVariationsToDraw = 1;
+$flowerCanvasSize = 100;
+$flowerInset = 10;
+for ($k=0;$k<count($numberOfFlowerVariationsToDraw);$k++) {
+	${'flower'.$k} = imagecreate($flowerCanvasSize,$flowerCanvasSize);
+
+	$flowerTrans = imagecolorallocate(${'flower'.$k}, 0, 0, 0);
+	imagecolortransparent(${'flower'.$k}, $flowerTrans);
+	
+
+imagefilledellipse ( ${'flower'.$k} , $flowerCanvasSize/2, $flowerCanvasSize/2 , $flowerCanvasSize/2-$flowerInset , $flowerCanvasSize/2-$flowerInset , imagecolorallocate(${'flower'.$k}, $petalRed,$petalGreen,$petalBlue ) );
+}
+
+
+
+
+
+
 foreach ($allLeaves as $thisLeaf) {
 	$thisPointX = $thisLeaf[0];
 	$thisPointY = $thisLeaf[1];
@@ -484,7 +504,8 @@ $whichLeafToUse = mt_rand(0,($numberOfLeafVariationsToDraw-1));
 		$thisRotation += 5;
 	}
 	$rotatedLeaf = imagerotate(${'leaf'.$whichLeafToUse}, $thisRotation, $pngTransparency);
-
+//imagealphablending(${'leaf'.$whichLeafToUse}, false);
+//imagesavealpha(${'leaf'.$whichLeafToUse}, true);
 	$rotatedLeafWidth = imagesx($rotatedLeaf);
 	$rotatedLeafHeight = imagesy($rotatedLeaf);
 	imagecopyresampled($plantCanvas, $rotatedLeaf, $thisPointX-($rotatedLeafWidth)/2, $thisPointY-($rotatedLeafHeight/2), 0, 0, $rotatedLeafWidth, $rotatedLeafHeight, $rotatedLeafWidth, $rotatedLeafHeight);
@@ -723,7 +744,6 @@ $primaryCommonNamePlural = substr($primaryCommonName, 0, -4)."feet";
 }
 $startingText = str_ireplace("++commonnameplural++", $primaryCommonNamePlural, $startingText);
 
-
 include($_SERVER['DOCUMENT_ROOT']."/includes/herbarium/petal-colours.php");
 $petalColourName = array_rand($petalColours, 1);
 $displayPetalColourName = $petalColourName;
@@ -741,6 +761,7 @@ if($colourVariation>20) {
 $petalRed += $colourVariation;
 $petalGreen += $colourVariation;
 $petalBlue += $colourVariation;
+
 $startingText = str_ireplace("++petalcolour++", $displayPetalColourName, $startingText);
 
 
