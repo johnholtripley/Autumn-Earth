@@ -706,7 +706,7 @@ array_push($commonNames,$thisCommonName);
 }
 
 $commonNameString = implode(", ",$commonNames);
-$commonNameStringJoined = implode("/",$commonNames);
+$commonNamesJoined = implode("/",$commonNames);
 if(count($commonNames)>1) {
 	// replace last "," with a "or":
 	$lastCommaPos = strrpos($commonNameString, ",");

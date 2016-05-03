@@ -39,7 +39,27 @@ echo ' or ';
         ?>
     </h3>
 	<p><?php echo $plantDesc; ?></p>
+<?php
+// see if any plants are related - same genus and identical night and aquatic flags:
+// get Genus:
+$latinNameSplit = explode(" ", $latinName);
+$genus = $latinNameSplit[0];
+$query = "SELECT plantUrl AS relatedPlantUrl, commonNamesJoined AS relatedCommonNamesJoined FROM tblplants WHERE latinName REGEXP '^(".$genus.")' AND isAquatic='".$isAquatic."' AND isNight='".$isNight."' AND plantID!='".$plantID."'";
+
+$result = mysql_query($query) or die ("couldn't execute query");
+if (mysql_num_rows($result) > 0) {
+$row = mysql_fetch_array($result);
+extract($row);
+echo '<p>Related to <a href="/herbarium/'.$relatedPlantUrl.'">'.$relatedCommonNamesJoined.'</a></p>';
+}
+?>
+
+
 <p>Catalogued <?php echo lcfirst(relativePastDate(strtotime($timeCreated))); ?></p>
+
+
+
+
 <ul id="socialShareLinks">
     <li class="socialTwitter">
 
