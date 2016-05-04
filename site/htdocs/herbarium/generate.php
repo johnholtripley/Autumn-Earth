@@ -705,6 +705,8 @@ do {
 
 // add some spacing:
 $spacing = 80;
+
+/*
 $limitMinX -= $spacing;
 $limitMaxX += $spacing;
 $limitMinY -= $spacing;
@@ -721,20 +723,31 @@ if($limitMaxX >=$canvaDimension) {
 if($limitMaxY >=$canvaDimension) {
 	$limitMaxY = $canvaDimension-1;
 }
+*/
 
 $sourceWidth = ($limitMaxX-$limitMinX);
 $sourceHeight = ($limitMaxY-$limitMinY);
 
 // make sure it doesn't distort the image:
-
+$longestSourceDimension = max($sourceWidth, $sourceHeight);
 
 $destOffsetX = 0;
 $destOffsetY = 0;
 
+if($sourceWidth<$sourceHeight) {
+$destinationWidth = $outputCanvaDimension*$sourceWidth/$sourceHeight;
+$destOffsetX = ($outputCanvaDimension-$destinationWidth)/2;
+} else if($sourceHeight<$sourceWidth) {
+$destinationHeight = $outputCanvaDimension*$sourceHeight/$sourceWidth;
+$destOffsetY = ($outputCanvaDimension-$destinationHeight)/2;
+}
+
+
+
 $imageResampled = imagecreatetruecolor($outputCanvaDimension, $outputCanvaDimension);
 $resizedGround = imagecolorallocate($imageResampled, $groundColour[0], $groundColour[1], $groundColour[2]);
 imagefilledrectangle($imageResampled, 0, 0, $outputCanvaDimension, $outputCanvaDimension, $resizedGround);
-imagecopyresampled($imageResampled, $plantCanvas, $destOffsetX, $destOffsetY, $limitMinX, $limitMinY, $outputCanvaDimension, $outputCanvaDimension, $sourceWidth, $sourceHeight);
+imagecopyresampled($imageResampled, $plantCanvas, $destOffsetX, $destOffsetY, $limitMinX, $limitMinY, $outputCanvaDimension, $outputCanvaDimension, $longestSourceDimension, $longestSourceDimension);
 
 
 // add a texture overlay:
