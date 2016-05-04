@@ -592,7 +592,6 @@ for ($k=0;$k<count($numberOfFlowerVariationsToDraw);$k++) {
 	$flowerTrans = imagecolorallocate(${'flower'.$k}, 0, 0, 0);
 	imagecolortransparent(${'flower'.$k}, $flowerTrans);
 	
-
 imagefilledellipse ( ${'flower'.$k} , $flowerCanvasSize/2, $flowerCanvasSize/2 , $flowerCanvasSize/2-$flowerInset , $flowerCanvasSize/2-$flowerInset , imagecolorallocate(${'flower'.$k}, $petalRed,$petalGreen,$petalBlue ) );
 }
 
@@ -974,6 +973,25 @@ if($colourVariation>20) {
 $petalRed += $colourVariation;
 $petalGreen += $colourVariation;
 $petalBlue += $colourVariation;
+
+if($petalRed<0) {
+	$petalRed = 0;
+}
+if($petalGreen<0) {
+	$petalGreen = 0;
+}
+if($petalBlue<0) {
+	$petalBlue = 0;
+}
+if($petalRed>255) {
+	$petalRed = 255;
+}
+if($petalGreen>255) {
+	$petalGreen = 255;
+}
+if($petalBlue>255) {
+	$petalBlue = 255;
+}
 
 $startingText = str_ireplace("++petalcolour++", $displayPetalColourName, $startingText);
 
