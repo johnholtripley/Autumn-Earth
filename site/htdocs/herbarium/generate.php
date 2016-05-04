@@ -157,84 +157,8 @@ function quadBezier($im, $x1, $y1, $x2, $y2, $x3, $y3) {
 }
 
 
+function createCommandString($axiom, $rules, $iterations) {
 
-
-
-
-function drawPlant() {
-	// thanks to http://www.kevs3d.co.uk/dev/lsystems/
-	global $iterations, $angle, $isAquatic, $isNight, $plantURL, $petalRed, $petalGreen, $petalBlue;
-	$canvaDimension = 1208;
-	$plantCanvas = imagecreatetruecolor($canvaDimension, $canvaDimension);
-	$ground = imagecolorallocate($plantCanvas, 219, 215, 190);
-	imagefilledrectangle($plantCanvas, 0, 0, $canvaDimension, $canvaDimension, $ground);
-	/*
-	$brush = imagecreate(2,2);
-	$brushtrans = imagecolorallocate($brush, 0, 0, 0);
-	imagecolortransparent($brush, $brushtrans);
-	$colour = imagecolorallocate($brush, 96, 35, 14);
-	imagefilledellipse($brush, 1, 1, 2, 2, $colour);
-	imagesetbrush($plantCanvas, $brush);
-	*/
-
-// load brush images:
-
-$brushSizes = array(3,4,5,7,11,15,19,24);
-$largestBrushSize = count($brushSizes);
-$brushColours = array(array(97,113,77),array(102,150,138));
-for ($i=0;$i<count($brushColours);$i++) {
-	for ($j=0;$j<count($brushSizes);$j++) {
-	//	${'brushcol'.$i.'size'.$j} = imagecreatefrompng($_SERVER['DOCUMENT_ROOT'].'/images/herbarium/brushes/brush'.$i.'-'.$j.'.png');
-		${'brushcol'.$i.'size'.$j} = imagecreate($brushSizes[$j],$brushSizes[$j]);
-	$brushtrans = imagecolorallocate(${'brushcol'.$i.'size'.$j}, 0, 0, 0);
-	imagecolortransparent(${'brushcol'.$i.'size'.$j}, $brushtrans);
-	$thisColour = imagecolorallocate(${'brushcol'.$i.'size'.$j}, $brushColours[$i][0], $brushColours[$i][1], $brushColours[$i][2]);
-	imagefilledellipse(${'brushcol'.$i.'size'.$j}, ($brushSizes[$j]/2), ($brushSizes[$j]/2), $brushSizes[$j], $brushSizes[$j], $thisColour);
-	}
-}
-
-	// generate command string:
-	
-	$axiom = "X";
-
-	$allPossibleRules = array(array("X"=>"S2X[+X]X[-X]X"),array("X"=>"S2X[+X]X[-X][X]"),array("X"=>"S3XX-[-X+X+X]+[+X-X-X]"),array("X"=>"S2F[+X]F[-X]+X","F"=>"FF"),array("X"=>"S2F[+X][-X]FX","F"=>"FF"),array("X"=>"S2F-[[X]+X]+F[+FX]-X","F"=>"FF"));
-
-
-
-	$allPossibleRuleIterations = array(5,6,4,6,6,6);
-
-	$allPossibleRuleDistances = array(2,3,8,3,3,3);
-
-
-
-
-
-	$startAngle = mt_rand (-20,20);
-	$angle = mt_rand(12,40);
-
-
-
-
-// testing ------------------------
-$allPossibleRules = array(array("X"=>"F","F"=>"FF[+FL][-FL][++FL][--FL]"));
-$allPossibleRuleIterations = array(4);
-$allPossibleRuleDistances = array(50);
-$startAngle = 0;
-$angle = 30;
-// testing ------------------------
-
-
-
-
-
-
-
-
-	$whichRules = array_rand($allPossibleRules);
-	$rules = $allPossibleRules[$whichRules];
-	$iterations = $allPossibleRuleIterations[$whichRules];
-$distance = $allPossibleRuleDistances[$whichRules];
-	
 	$result="";
 	for ($i=0;$i<$iterations;$i++) {
 		if($i==0) {
@@ -284,6 +208,83 @@ $result = str_replace("X", "F", $result);
 	if($thisFSequence > 0) {
 		$commandString .= "F(".$thisFSequence .")";
 	}
+return $commandString;
+}
+
+
+function drawPlant() {
+	// thanks to http://www.kevs3d.co.uk/dev/lsystems/
+	global $iterations, $angle, $isAquatic, $isNight, $plantURL, $petalRed, $petalGreen, $petalBlue;
+	$canvaDimension = 1208;
+	$plantCanvas = imagecreatetruecolor($canvaDimension, $canvaDimension);
+	$ground = imagecolorallocate($plantCanvas, 219, 215, 190);
+	imagefilledrectangle($plantCanvas, 0, 0, $canvaDimension, $canvaDimension, $ground);
+
+
+// load brush images:
+$brushSizes = array(3,4,5,7,11,15,19,24);
+$largestBrushSize = count($brushSizes);
+$brushColours = array(array(97,113,77),array(102,150,138));
+for ($i=0;$i<count($brushColours);$i++) {
+	for ($j=0;$j<count($brushSizes);$j++) {
+	//	${'brushcol'.$i.'size'.$j} = imagecreatefrompng($_SERVER['DOCUMENT_ROOT'].'/images/herbarium/brushes/brush'.$i.'-'.$j.'.png');
+		${'brushcol'.$i.'size'.$j} = imagecreate($brushSizes[$j],$brushSizes[$j]);
+	$brushtrans = imagecolorallocate(${'brushcol'.$i.'size'.$j}, 0, 0, 0);
+	imagecolortransparent(${'brushcol'.$i.'size'.$j}, $brushtrans);
+	$thisColour = imagecolorallocate(${'brushcol'.$i.'size'.$j}, $brushColours[$i][0], $brushColours[$i][1], $brushColours[$i][2]);
+	imagefilledellipse(${'brushcol'.$i.'size'.$j}, ($brushSizes[$j]/2), ($brushSizes[$j]/2), $brushSizes[$j], $brushSizes[$j], $thisColour);
+	}
+}
+
+
+include($_SERVER['DOCUMENT_ROOT']."/includes/herbarium/root-colours.php");
+for ($i=0;$i<count($rootColours);$i++) {
+	for ($j=0;$j<count($brushSizes);$j++) {
+	//	${'brushcol'.$i.'size'.$j} = imagecreatefrompng($_SERVER['DOCUMENT_ROOT'].'/images/herbarium/brushes/brush'.$i.'-'.$j.'.png');
+		${'rootbrushcol'.$i.'size'.$j} = imagecreate($brushSizes[$j],$brushSizes[$j]);
+	$brushtrans = imagecolorallocate(${'rootbrushcol'.$i.'size'.$j}, 0, 0, 0);
+	imagecolortransparent(${'rootbrushcol'.$i.'size'.$j}, $brushtrans);
+	$thisColour = imagecolorallocate(${'rootbrushcol'.$i.'size'.$j}, $rootColours[$i][0], $rootColours[$i][1], $rootColours[$i][2]);
+	imagefilledellipse(${'rootbrushcol'.$i.'size'.$j}, ($brushSizes[$j]/2), ($brushSizes[$j]/2), $brushSizes[$j], $brushSizes[$j], $thisColour);
+	}
+}
+
+
+
+
+	// generate command string:
+	
+	$axiom = "X";
+
+	$allPossibleRules = array(array("X"=>"S2X[+X]X[-X]X"),array("X"=>"S2X[+X]X[-X][X]"),array("X"=>"S3XX-[-X+X+X]+[+X-X-X]"),array("X"=>"S2F[+X]F[-X]+X","F"=>"FF"),array("X"=>"S2F[+X][-X]FX","F"=>"FF"),array("X"=>"S2F-[[X]+X]+F[+FX]-X","F"=>"FF"));
+
+	$allPossibleRuleIterations = array(5,6,4,6,6,6);
+	$allPossibleRuleDistances = array(2,3,8,3,3,3);
+
+	$startAngle = mt_rand (-20,20);
+	$angle = mt_rand(12,40);
+
+
+// root rules:
+$rootAxiom = "F";
+$allPossibleRootRules = array(array("F"=>"FF[+X+X][-X-X]"));
+$allPossibleRootRuleIterations = array(4);
+$allPossibleRootRuleDistances = array(50);
+$startRootAngle = 180;
+$rootAngle = 30;
+
+
+
+
+
+
+// testing ------------------------
+$allPossibleRules = array(array("X"=>"F","F"=>"FF[+FL][-FL][++FL][--FL]"));
+$allPossibleRuleIterations = array(4);
+$allPossibleRuleDistances = array(50);
+$startAngle = 0;
+$angle = 30;
+// testing ------------------------
 
 
 
@@ -291,147 +292,236 @@ $result = str_replace("X", "F", $result);
 
 
 
-	$stack = array();
-	// start at grid 0,0 facing north with no colour index
-		$pos = array("x"=>$canvaDimension/2, "y"=>$canvaDimension, "heading"=>$startAngle, "colour"=>0, "size"=>0);
+
+	$whichRules = array_rand($allPossibleRules);
+	$rules = $allPossibleRules[$whichRules];
+	$iterations = $allPossibleRuleIterations[$whichRules];
+$distance = $allPossibleRuleDistances[$whichRules];
+	
+	
+$commandString = createCommandString($axiom, $rules, $iterations);
+
+$whichRootRules = array_rand($allPossibleRootRules);
+	$rootRules = $allPossibleRootRules[$whichRootRules];
+	$rootIterations = $allPossibleRootRuleIterations[$whichRootRules];
+$rootDistance = $allPossibleRootRuleDistances[$whichRootRules];
+
+$rootCommandString = createCommandString($rootAxiom, $rootRules, $rootIterations);
 
 
+
+$stack = array();
+// start at grid 0,0 facing north with no colour index
+$pos = array("x"=>$canvaDimension/2, "y"=>$canvaDimension/2, "heading"=>$startAngle, "colour"=>0, "size"=>0);
 $allNodes = array();
 $allParentNodes = array($pos["x"]."_".$pos["y"]);
 $allNodeRelationships = array();
-
 $allLeaves = array();
-
-	for ($i=0;$i<strlen($commandString);$i++) {
+for ($i=0;$i<strlen($commandString);$i++) {
 	$c = substr($commandString,$i,1);
-		switch ($c) {
-			case "C": 
-				// get colour index from next character
-				$pos["colour"] = substr($commandString,$i+1,1);
-				$i++;
-				break;
-			case "-": 
-				// anticlockwise
-				$pos["heading"] += $angle;
-				break;
-			case "+": 
-				// clockwise
-				$pos["heading"] -= $angle;
-				break;
-			case "[": 
-				// push
-				array_push($stack,array("x"=>$pos["x"], "y"=>$pos["y"], "heading"=>$pos["heading"], "colour"=>$pos["colour"], "size"=>$pos["size"]));
-				break;
+	switch ($c) {
+		case "C": 
+			// get colour index from next character
+			$pos["colour"] = substr($commandString,$i+1,1);
+			$i++;
+			break;
+		case "-": 
+			// anticlockwise
+			$pos["heading"] += $angle;
+			break;
+		case "+": 
+			// clockwise
+			$pos["heading"] -= $angle;
+			break;
+		case "[": 
+			// push
+			array_push($stack,array("x"=>$pos["x"], "y"=>$pos["y"], "heading"=>$pos["heading"], "colour"=>$pos["colour"], "size"=>$pos["size"]));
+			break;
 			case "S":
-				// change size
+			// change size
 			$pos["size"] = substr($commandString,$i+1,1);
-				$i++;
+			$i++;
 			break;
-			case "L":
+		case "L":
 			// draw a leaf at the current size and heading
-
-// imagefilledarc($plantCanvas, $pos["x"], $pos["y"]-50, 150, 100, 180, 360 , imagecolorallocate($plantCanvas, 24, 244, 24), IMG_ARC_EDGED);
-array_push($allLeaves,array($pos["x"], $pos["y"], $pos["heading"]));
-
+			// imagefilledarc($plantCanvas, $pos["x"], $pos["y"]-50, 150, 100, 180, 360 , imagecolorallocate($plantCanvas, 24, 244, 24), IMG_ARC_EDGED);
+			array_push($allLeaves,array($pos["x"], $pos["y"], $pos["heading"]));
 			break;
-			case "]": 
-				// pop
-				$pos = array_pop($stack);
-				break;
-			default: 
-				// "F"
-
-// find how long this line is
-	$posInString = stripos($commandString, ")", $i);
-		$lengthOfThisNumber = $posInString-($i+2);
-		$howLong = intval(substr($commandString,$i+2,$lengthOfThisNumber));
-// add some variation - ideally based on the iteration depth: ###
-	//	$howLong += mt_rand(0,30)-15;
-		 $howLong *= mt_rand(10,16)/10;
-		$i += ($lengthOfThisNumber+2);
-				$lastX = $pos["x"];
-				$lastY = $pos["y"];
-				// move the turtle:
-				$rad = deg2rad($pos["heading"]);
-
-$rad += (mt_rand(0,10)-5)/20;
-
-					$pos["x"] -= ($distance * $howLong) * sin($rad);
-				$pos["y"] -= ($distance * $howLong) * cos($rad);
-
-// add some variation - ideally based on the iteration depth ####
-//$pos["x"] += mt_rand(-5,5);
-//$pos["y"] += mt_rand(-5,5);
-
-			//	imagesetbrush($plantCanvas, ${'brushcol'.$pos["colour"].'size'.$pos["size"]});
-				
-
-
-
-
-// push to array
-
-$allNodeRelationships[$pos["x"]."_".$pos["y"]] = $lastX."_".$lastY;
-array_push($allNodes, $pos["x"]."_".$pos["y"]);
-array_push($allParentNodes, $lastX."_".$lastY);
-
-// line:
-//imageline($plantCanvas, $lastX, $lastY, $pos["x"], $pos["y"], IMG_COLOR_BRUSHED);
-
-
-		}
+		case "]": 
+			// pop
+			$pos = array_pop($stack);
+			break;
+		default: 
+			// "F"
+			// find how long this line is
+			$posInString = stripos($commandString, ")", $i);
+			$lengthOfThisNumber = $posInString-($i+2);
+			$howLong = intval(substr($commandString,$i+2,$lengthOfThisNumber));
+			// add some variation - ideally based on the iteration depth: ###
+			//	$howLong += mt_rand(0,30)-15;
+			$howLong *= mt_rand(10,16)/10;
+			$i += ($lengthOfThisNumber+2);
+			$lastX = $pos["x"];
+			$lastY = $pos["y"];
+			// move the turtle:
+			$rad = deg2rad($pos["heading"]);
+			$rad += (mt_rand(0,10)-5)/20;
+			$pos["x"] -= ($distance * $howLong) * sin($rad);
+			$pos["y"] -= ($distance * $howLong) * cos($rad);
+			// push to array
+			$allNodeRelationships[$pos["x"]."_".$pos["y"]] = $lastX."_".$lastY;
+			array_push($allNodes, $pos["x"]."_".$pos["y"]);
+			array_push($allParentNodes, $lastX."_".$lastY);
 	}
+}
+
+
+// repeat for roots:
+$rootStack = array();
+// start at grid 0,0 facing north with no colour index
+$pos = array("x"=>$canvaDimension/2, "y"=>$canvaDimension/2, "heading"=>$startRootAngle, "colour"=>0, "size"=>0);
+$allRootNodes = array();
+$allRootParentNodes = array($pos["x"]."_".$pos["y"]);
+$allRootNodeRelationships = array();
+for ($i=0;$i<strlen($rootCommandString);$i++) {
+	$c = substr($rootCommandString,$i,1);
+	switch ($c) {
+		case "C": 
+			// get colour index from next character
+			$pos["colour"] = substr($rootCommandString,$i+1,1);
+			$i++;
+			break;
+		case "-": 
+			// anticlockwise
+			$pos["heading"] += $angle;
+			break;
+		case "+": 
+			// clockwise
+			$pos["heading"] -= $angle;
+			break;
+		case "[": 
+			// push
+			array_push($rootStack,array("x"=>$pos["x"], "y"=>$pos["y"], "heading"=>$pos["heading"], "colour"=>$pos["colour"], "size"=>$pos["size"]));
+			break;
+			case "S":
+			// change size
+			$pos["size"] = substr($rootCommandString,$i+1,1);
+			$i++;
+			break;
+		case "]": 
+			// pop
+			$pos = array_pop($rootStack);
+			break;
+		default: 
+			// "F"
+			// find how long this line is
+			$posInString = stripos($rootCommandString, ")", $i);
+			$lengthOfThisNumber = $posInString-($i+2);
+			$howLong = intval(substr($rootCommandString,$i+2,$lengthOfThisNumber));
+			// add some variation - ideally based on the iteration depth: ###
+			//	$howLong += mt_rand(0,30)-15;
+			$howLong *= mt_rand(10,16)/10;
+			$i += ($lengthOfThisNumber+2);
+			$lastX = $pos["x"];
+			$lastY = $pos["y"];
+			// move the turtle:
+			$rad = deg2rad($pos["heading"]);
+			$rad += (mt_rand(0,10)-5)/20;
+			$pos["x"] -= ($rootDistance * $howLong) * sin($rad);
+			$pos["y"] -= ($rootDistance * $howLong) * cos($rad);
+			// push to array
+			$allRootNodeRelationships[$pos["x"]."_".$pos["y"]] = $lastX."_".$lastY;
+			array_push($allRootNodes, $pos["x"]."_".$pos["y"]);
+			array_push($allRootParentNodes, $lastX."_".$lastY);
+	}
+}
+
+
+
+
+
+
 
 // find all nodes that aren't themselves parents (ie. are leaf nodes):
 	$allLeafNodes = array_diff( $allNodes,$allParentNodes);
-
+$allterminalRootNodes = array_diff( $allRootNodes,$allRootParentNodes);
 
 $thisMaxDepth = 0;
 $lengthsOfNodes = array();
 // loop through all leaf nodes, finding each parent until run out
-	foreach ($allLeafNodes as $thisOuterNode) {
-
-		$thisNode = $thisOuterNode;
-		$thisStartPoint = explode("_", $thisNode);
-		$previousX = $thisStartPoint[0];
-		$previousY = $thisStartPoint[1];
-		$thisDepth = 0;
-		
-		while (array_key_exists($thisNode, $allNodeRelationships)) {
-
-$thisPoint = explode("_", $thisNode);
-$thisEndPoint = explode("_", $allNodeRelationships[$thisNode]);
-
-  $controlX = ($thisPoint[0] + $thisEndPoint[0]) / 2;
-  $controlY = ($thisPoint[1] + $thisEndPoint[1]) / 2;
-  // bezier curve:
-  imagesetbrush($plantCanvas, ${'brushcol'.$pos["colour"].'size'.$thisDepth});
-quadBezier($plantCanvas, $previousX, $previousY, $thisPoint[0], $thisPoint[1], $controlX, $controlY);
-// line:
-//imageline($plantCanvas, $lastX, $lastY, $pos["x"], $pos["y"], IMG_COLOR_BRUSHED);
-
-
-
-$previousX = $controlX;
-$previousY = $controlY;
-$thisNode = $allNodeRelationships[$thisNode];
-$thisDepth ++;
-
-if($thisDepth >= $largestBrushSize) {
-	$thisDepth = $largestBrushSize-1;
-}
-
-if($thisDepth>$thisMaxDepth) {
-	$thisMaxDepth = $thisDepth;
-}
+foreach ($allLeafNodes as $thisOuterNode) {
+	$thisNode = $thisOuterNode;
+	$thisStartPoint = explode("_", $thisNode);
+	$previousX = $thisStartPoint[0];
+	$previousY = $thisStartPoint[1];
+	$thisDepth = 0;
+	while (array_key_exists($thisNode, $allNodeRelationships)) {
+		$thisPoint = explode("_", $thisNode);
+		$thisEndPoint = explode("_", $allNodeRelationships[$thisNode]);
+		$controlX = ($thisPoint[0] + $thisEndPoint[0]) / 2;
+		$controlY = ($thisPoint[1] + $thisEndPoint[1]) / 2;
+		// bezier curve:
+		imagesetbrush($plantCanvas, ${'brushcol'.$pos["colour"].'size'.$thisDepth});
+		quadBezier($plantCanvas, $previousX, $previousY, $thisPoint[0], $thisPoint[1], $controlX, $controlY);
+		// line:
+		//imageline($plantCanvas, $lastX, $lastY, $pos["x"], $pos["y"], IMG_COLOR_BRUSHED);
+		$previousX = $controlX;
+		$previousY = $controlY;
+		$thisNode = $allNodeRelationships[$thisNode];
+		$thisDepth ++;
+		if($thisDepth >= $largestBrushSize) {
+			$thisDepth = $largestBrushSize-1;
 		}
-		// store this node's length:
-		$lengthsOfNodes[$thisOuterNode] = $thisDepth;
+		if($thisDepth>$thisMaxDepth) {
+			$thisMaxDepth = $thisDepth;
+		}
 	}
+	// store this node's length:
+	$lengthsOfNodes[$thisOuterNode] = $thisDepth;
+}
+// draw to last point
+imagesetbrush($plantCanvas, ${'brushcol'.$pos["colour"].'size'.$thisMaxDepth});
+quadBezier($plantCanvas, $previousX, $previousY,$thisPoint[0], $thisPoint[1], $thisEndPoint[0],$thisEndPoint[1]);
 
-	// draw to last point
-	imagesetbrush($plantCanvas, ${'brushcol'.$pos["colour"].'size'.$thisMaxDepth});
-	quadBezier($plantCanvas, $previousX, $previousY,$thisPoint[0], $thisPoint[1], $thisEndPoint[0],$thisEndPoint[1]);
+
+
+
+
+
+// draw roots:
+// loop through all leaf nodes, finding each parent until run out
+foreach ($allterminalRootNodes as $thisOuterNode) {
+	$thisNode = $thisOuterNode;
+	$thisStartPoint = explode("_", $thisNode);
+	$previousX = $thisStartPoint[0];
+	$previousY = $thisStartPoint[1];
+	$thisDepth = 0;
+	while (array_key_exists($thisNode, $allRootNodeRelationships)) {
+		$thisPoint = explode("_", $thisNode);
+		$thisEndPoint = explode("_", $allRootNodeRelationships[$thisNode]);
+		$controlX = ($thisPoint[0] + $thisEndPoint[0]) / 2;
+		$controlY = ($thisPoint[1] + $thisEndPoint[1]) / 2;
+		// bezier curve:
+		imagesetbrush($plantCanvas, ${'rootbrushcol'.$pos["colour"].'size'.$thisDepth});
+		quadBezier($plantCanvas, $previousX, $previousY, $thisPoint[0], $thisPoint[1], $controlX, $controlY);
+		// line:
+		//imageline($plantCanvas, $lastX, $lastY, $pos["x"], $pos["y"], IMG_COLOR_BRUSHED);
+		$previousX = $controlX;
+		$previousY = $controlY;
+		$thisNode = $allRootNodeRelationships[$thisNode];
+		$thisDepth ++;
+		if($thisDepth >= $largestBrushSize) {
+			$thisDepth = $largestBrushSize-1;
+		}
+	}
+}
+// draw to last point
+imagesetbrush($plantCanvas, ${'rootbrushcol'.$pos["colour"].'size'.$thisMaxDepth});
+quadBezier($plantCanvas, $previousX, $previousY,$thisPoint[0], $thisPoint[1], $thisEndPoint[0],$thisEndPoint[1]);
+
+
+
+
 
 
 
