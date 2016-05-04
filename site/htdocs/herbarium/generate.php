@@ -215,7 +215,7 @@ return $commandString;
 function drawPlant() {
 	// thanks to http://www.kevs3d.co.uk/dev/lsystems/
 	global $iterations, $angle, $isAquatic, $isNight, $plantURL, $petalRed, $petalGreen, $petalBlue;
-	$canvaDimension = 1208;
+	$canvaDimension = 1508;
 	$plantCanvas = imagecreatetruecolor($canvaDimension, $canvaDimension);
 	$ground = imagecolorallocate($plantCanvas, 219, 215, 190);
 	imagefilledrectangle($plantCanvas, 0, 0, $canvaDimension, $canvaDimension, $ground);
@@ -312,7 +312,7 @@ $rootCommandString = createCommandString($rootAxiom, $rootRules, $rootIterations
 
 $stack = array();
 // start at grid 0,0 facing north with no colour index
-$pos = array("x"=>$canvaDimension/2, "y"=>$canvaDimension/2, "heading"=>$startAngle, "colour"=>0, "size"=>0);
+$pos = array("x"=>$canvaDimension/2, "y"=>$canvaDimension*2/3, "heading"=>$startAngle, "colour"=>0, "size"=>0);
 $allNodes = array();
 $allParentNodes = array($pos["x"]."_".$pos["y"]);
 $allNodeRelationships = array();
@@ -379,7 +379,7 @@ for ($i=0;$i<strlen($commandString);$i++) {
 // repeat for roots:
 $rootStack = array();
 // start at grid 0,0 facing north with no colour index
-$pos = array("x"=>$canvaDimension/2, "y"=>$canvaDimension/2, "heading"=>$startRootAngle, "colour"=>0, "size"=>0);
+$pos = array("x"=>$canvaDimension/2, "y"=>$canvaDimension*2/3, "heading"=>$startRootAngle, "colour"=>0, "size"=>0);
 $allRootNodes = array();
 $allRootParentNodes = array($pos["x"]."_".$pos["y"]);
 $allRootNodeRelationships = array();
@@ -446,42 +446,6 @@ for ($i=0;$i<strlen($rootCommandString);$i++) {
 	$allLeafNodes = array_diff( $allNodes,$allParentNodes);
 $allterminalRootNodes = array_diff( $allRootNodes,$allRootParentNodes);
 
-$thisMaxDepth = 0;
-$lengthsOfNodes = array();
-// loop through all leaf nodes, finding each parent until run out
-foreach ($allLeafNodes as $thisOuterNode) {
-	$thisNode = $thisOuterNode;
-	$thisStartPoint = explode("_", $thisNode);
-	$previousX = $thisStartPoint[0];
-	$previousY = $thisStartPoint[1];
-	$thisDepth = 0;
-	while (array_key_exists($thisNode, $allNodeRelationships)) {
-		$thisPoint = explode("_", $thisNode);
-		$thisEndPoint = explode("_", $allNodeRelationships[$thisNode]);
-		$controlX = ($thisPoint[0] + $thisEndPoint[0]) / 2;
-		$controlY = ($thisPoint[1] + $thisEndPoint[1]) / 2;
-		// bezier curve:
-		imagesetbrush($plantCanvas, ${'brushcol'.$pos["colour"].'size'.$thisDepth});
-		quadBezier($plantCanvas, $previousX, $previousY, $thisPoint[0], $thisPoint[1], $controlX, $controlY);
-		// line:
-		//imageline($plantCanvas, $lastX, $lastY, $pos["x"], $pos["y"], IMG_COLOR_BRUSHED);
-		$previousX = $controlX;
-		$previousY = $controlY;
-		$thisNode = $allNodeRelationships[$thisNode];
-		$thisDepth ++;
-		if($thisDepth >= $largestBrushSize) {
-			$thisDepth = $largestBrushSize-1;
-		}
-		if($thisDepth>$thisMaxDepth) {
-			$thisMaxDepth = $thisDepth;
-		}
-	}
-	// store this node's length:
-	$lengthsOfNodes[$thisOuterNode] = $thisDepth;
-}
-// draw to last point
-imagesetbrush($plantCanvas, ${'brushcol'.$pos["colour"].'size'.$thisMaxDepth});
-quadBezier($plantCanvas, $previousX, $previousY,$thisPoint[0], $thisPoint[1], $thisEndPoint[0],$thisEndPoint[1]);
 
 
 
@@ -522,6 +486,57 @@ foreach ($allterminalRootNodes as $thisOuterNode) {
 // draw to last point
 imagesetbrush($plantCanvas, ${'rootbrushcol'.$pos["colour"].'size'.$thisMaxDepth});
 quadBezier($plantCanvas, $previousX, $previousY,$thisPoint[0], $thisPoint[1], $thisEndPoint[0],$thisEndPoint[1]);
+
+
+
+
+
+
+
+
+
+
+
+$thisMaxDepth = 0;
+$lengthsOfNodes = array();
+// loop through all leaf nodes, finding each parent until run out
+foreach ($allLeafNodes as $thisOuterNode) {
+	$thisNode = $thisOuterNode;
+	$thisStartPoint = explode("_", $thisNode);
+	$previousX = $thisStartPoint[0];
+	$previousY = $thisStartPoint[1];
+	$thisDepth = 0;
+	while (array_key_exists($thisNode, $allNodeRelationships)) {
+		$thisPoint = explode("_", $thisNode);
+		$thisEndPoint = explode("_", $allNodeRelationships[$thisNode]);
+		$controlX = ($thisPoint[0] + $thisEndPoint[0]) / 2;
+		$controlY = ($thisPoint[1] + $thisEndPoint[1]) / 2;
+		// bezier curve:
+		imagesetbrush($plantCanvas, ${'brushcol'.$pos["colour"].'size'.$thisDepth});
+		quadBezier($plantCanvas, $previousX, $previousY, $thisPoint[0], $thisPoint[1], $controlX, $controlY);
+		// line:
+		//imageline($plantCanvas, $lastX, $lastY, $pos["x"], $pos["y"], IMG_COLOR_BRUSHED);
+		$previousX = $controlX;
+		$previousY = $controlY;
+		$thisNode = $allNodeRelationships[$thisNode];
+		$thisDepth ++;
+		if($thisDepth >= $largestBrushSize) {
+			$thisDepth = $largestBrushSize-1;
+		}
+		if($thisDepth>$thisMaxDepth) {
+			$thisMaxDepth = $thisDepth;
+		}
+	}
+	// store this node's length:
+	$lengthsOfNodes[$thisOuterNode] = $thisDepth;
+}
+// draw to last point
+imagesetbrush($plantCanvas, ${'brushcol'.$pos["colour"].'size'.$thisMaxDepth});
+quadBezier($plantCanvas, $previousX, $previousY,$thisPoint[0], $thisPoint[1], $thisEndPoint[0],$thisEndPoint[1]);
+
+
+
+
 
 
 
