@@ -704,26 +704,8 @@ do {
 
 
 // add some spacing:
-$spacing = 80;
+$spacing = 35;
 
-/*
-$limitMinX -= $spacing;
-$limitMaxX += $spacing;
-$limitMinY -= $spacing;
-$limitMaxY += $spacing;
-if($limitMinX <0) {
-	$limitMinX = 0;
-}
-if($limitMinY <0) {
-	$limitMinY = 0;
-}
-if($limitMaxX >=$canvaDimension) {
-	$limitMaxX = $canvaDimension-1;
-}
-if($limitMaxY >=$canvaDimension) {
-	$limitMaxY = $canvaDimension-1;
-}
-*/
 
 $sourceWidth = ($limitMaxX-$limitMinX);
 $sourceHeight = ($limitMaxY-$limitMinY);
@@ -731,15 +713,15 @@ $sourceHeight = ($limitMaxY-$limitMinY);
 // make sure it doesn't distort the image:
 $longestSourceDimension = max($sourceWidth, $sourceHeight);
 
-$destOffsetX = 0;
-$destOffsetY = 0;
+$destOffsetX = $spacing;
+$destOffsetY = $spacing;
 
 if($sourceWidth<$sourceHeight) {
-$destinationWidth = $outputCanvaDimension*$sourceWidth/$sourceHeight;
-$destOffsetX = ($outputCanvaDimension-$destinationWidth)/2;
+$destinationWidth = ($outputCanvaDimension-($spacing*2))*$sourceWidth/$sourceHeight;
+$destOffsetX += ((($outputCanvaDimension-($spacing*2))-$destinationWidth)/2);
 } else if($sourceHeight<$sourceWidth) {
-$destinationHeight = $outputCanvaDimension*$sourceHeight/$sourceWidth;
-$destOffsetY = ($outputCanvaDimension-$destinationHeight)/2;
+$destinationHeight = ($outputCanvaDimension-($spacing*2))*$sourceHeight/$sourceWidth;
+$destOffsetY += ((($outputCanvaDimension-($spacing*2))-$destinationHeight)/2);
 }
 
 
@@ -747,7 +729,7 @@ $destOffsetY = ($outputCanvaDimension-$destinationHeight)/2;
 $imageResampled = imagecreatetruecolor($outputCanvaDimension, $outputCanvaDimension);
 $resizedGround = imagecolorallocate($imageResampled, $groundColour[0], $groundColour[1], $groundColour[2]);
 imagefilledrectangle($imageResampled, 0, 0, $outputCanvaDimension, $outputCanvaDimension, $resizedGround);
-imagecopyresampled($imageResampled, $plantCanvas, $destOffsetX, $destOffsetY, $limitMinX, $limitMinY, $outputCanvaDimension, $outputCanvaDimension, $longestSourceDimension, $longestSourceDimension);
+imagecopyresampled($imageResampled, $plantCanvas, $destOffsetX, $destOffsetY, $limitMinX, $limitMinY, $outputCanvaDimension-($spacing*2), $outputCanvaDimension-($spacing*2), $longestSourceDimension, $longestSourceDimension);
 
 
 // add a texture overlay:
