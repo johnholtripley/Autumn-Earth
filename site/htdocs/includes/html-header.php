@@ -39,9 +39,22 @@ $htmlClass = ' class="fontsLoaded"';
 }
 ?>
 <html lang="en-gb"<?php echo $htmlClass; ?>>
-<head>
 
 <?php
+$thisURL = $_SERVER['PHP_SELF'];
+$thisURLSection = explode("/",$thisURL);
+$thisSection = trim($thisURLSection[1]);
+$isHomePage = false;
+if($thisSection == "index.php") {
+  // is the home page:
+  // https://developers.google.com/structured-data/site-name#site_name_requirements
+  echo '<head itemscope itemtype="http://schema.org/WebSite">';
+  echo '<link rel="canonical" href="https://www.autumnearth.com" itemprop="url">';
+} else {
+  echo '<head>';
+}
+
+
 include($_SERVER['DOCUMENT_ROOT']."/includes/title-tag.php");
 ?>
 

@@ -8,6 +8,8 @@ $fullSitePath = $protocol.$_SERVER['SERVER_NAME'];
 // https://webmasters.googleblog.com/2014/02/infinite-scroll-search-friendly.html
 $needsSeoPagination = false;
 
+
+
 $thisURL = $_SERVER['PHP_SELF'];
 $thisURLSection = explode("/",$thisURL);
 $thisSection = trim($thisURLSection[1]);
@@ -26,6 +28,7 @@ switch ($thisSection) {
         // home
         $pagetitle="Autumn Earth";
 $longDescription="Autumn Earth community site";
+
         break;
     case "forum":
     $sectionClass = "forum";

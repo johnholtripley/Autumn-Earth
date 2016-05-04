@@ -268,8 +268,8 @@ for ($i=0;$i<count($rootColours);$i++) {
 // root rules:
 $rootAxiom = "F";
 $allPossibleRootRules = array(array("F"=>"FF[+X+X][-X-X]"));
-$allPossibleRootRuleIterations = array(4);
-$allPossibleRootRuleDistances = array(50);
+$allPossibleRootRuleIterations = array(3);
+$allPossibleRootRuleDistances = array(35);
 $startRootAngle = 180;
 $rootAngle = 30;
 
@@ -489,6 +489,7 @@ quadBezier($plantCanvas, $previousX, $previousY,$thisPoint[0], $thisPoint[1], $t
 
 
 // draw roots:
+$thisMaxDepth = 0;
 // loop through all leaf nodes, finding each parent until run out
 foreach ($allterminalRootNodes as $thisOuterNode) {
 	$thisNode = $thisOuterNode;
@@ -512,6 +513,9 @@ foreach ($allterminalRootNodes as $thisOuterNode) {
 		$thisDepth ++;
 		if($thisDepth >= $largestBrushSize) {
 			$thisDepth = $largestBrushSize-1;
+		}
+		if($thisDepth>$thisMaxDepth) {
+			$thisMaxDepth = $thisDepth;
 		}
 	}
 }
