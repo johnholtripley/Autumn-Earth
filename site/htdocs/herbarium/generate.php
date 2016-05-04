@@ -214,10 +214,12 @@ return $commandString;
 
 function drawPlant() {
 	// thanks to http://www.kevs3d.co.uk/dev/lsystems/
-	global $iterations, $angle, $isAquatic, $isNight, $plantURL, $petalRed, $petalGreen, $petalBlue;
-	$canvaDimension = 1508;
+	global $iterations, $angle, $isAquatic, $isNight, $plantURL, $petalRed, $petalGreen, $petalBlue, $groundColour;
+	$canvaDimension = 2000;
+	$outputCanvaDimension = 754;
 	$plantCanvas = imagecreatetruecolor($canvaDimension, $canvaDimension);
-	$ground = imagecolorallocate($plantCanvas, 219, 215, 190);
+	$groundColour = array(219, 215, 190);
+	$ground = imagecolorallocate($plantCanvas, $groundColour[0], $groundColour[1], $groundColour[2]);
 	imagefilledrectangle($plantCanvas, 0, 0, $canvaDimension, $canvaDimension, $ground);
 
 
@@ -495,7 +497,7 @@ quadBezier($plantCanvas, $previousX, $previousY,$thisPoint[0], $thisPoint[1], $t
 
 
 
-
+// draw stems:
 
 $thisMaxDepth = 0;
 $lengthsOfNodes = array();
@@ -636,14 +638,109 @@ if($thisNodesLength == $thisMaxDepth) {
 
 
 
-$imageResampled = imagecreatetruecolor($canvaDimension/2, $canvaDimension/2);
-imagecopyresampled($imageResampled, $plantCanvas, 0, 0, 0, 0, $canvaDimension/2, $canvaDimension/2, $canvaDimension, $canvaDimension);
+
+// find the bounds of what's been drawn:
+function isBackgroundColour($plantCanvas,$x,$y) {
+	global $groundColour;
+	$rgb = imagecolorat($plantCanvas, $x, $y);
+	//$alpha = ($rgba & 0x7F000000) >> 24;
+	//return $alpha==127;
+	$r = ($rgb >> 16) & 0xFF;
+	$g = ($rgb >> 8) & 0xFF;
+	$b = $rgb & 0xFF;
+	if($r == $groundColour[0]) {
+		if($g == $groundColour[1]) {
+			if($b == $groundColour[2]) {
+				return true;
+			}	
+		}
+	}
+	return false;
+}
+
+$x=0;
+$limitMinY=0;
+do {
+	$foundBG = isBackgroundColour($plantCanvas,$x,$limitMinY);
+	$x++;
+	if($x>=$canvaDimension) {
+	$x=0;
+		$limitMinY ++;
+	}
+} while ( ($limitMinY<$canvaDimension) and ($foundBG));
+
+$x=0;
+$limitMaxY=$canvaDimension-1;
+do {
+	$foundBG = isBackgroundColour($plantCanvas,$x,$limitMaxY);
+	$x++;
+	if($x>=$canvaDimension) {
+	$x=0;
+		$limitMaxY --;
+	}
+} while ( ($limitMaxY>0) and ($foundBG));
+
+$limitMinX=0;
+$y=0;
+do {
+	$foundBG = isBackgroundColour($plantCanvas,$limitMinX,$y);
+	$y++;
+	if($y>=$canvaDimension) {
+	$y=0;
+		$limitMinX ++;
+	}
+} while ( ($limitMinX<$canvaDimension) and ($foundBG));
+
+$y=0;
+$limitMaxX=$canvaDimension-1;
+do {
+	$foundBG = isBackgroundColour($plantCanvas,$limitMaxX,$y);
+	$y++;
+	if($y>=$canvaDimension) {
+	$y=0;
+		$limitMaxX --;
+	}
+} while ( ($limitMaxX>0) and ($foundBG));
+
+
+// add some spacing:
+$spacing = 80;
+$limitMinX -= $spacing;
+$limitMaxX += $spacing;
+$limitMinY -= $spacing;
+$limitMaxY += $spacing;
+if($limitMinX <0) {
+	$limitMinX = 0;
+}
+if($limitMinY <0) {
+	$limitMinY = 0;
+}
+if($limitMaxX >=$canvaDimension) {
+	$limitMaxX = $canvaDimension-1;
+}
+if($limitMaxY >=$canvaDimension) {
+	$limitMaxY = $canvaDimension-1;
+}
+
+$sourceWidth = ($limitMaxX-$limitMinX);
+$sourceHeight = ($limitMaxY-$limitMinY);
+
+// make sure it doesn't distort the image:
+
+
+$destOffsetX = 0;
+$destOffsetY = 0;
+
+$imageResampled = imagecreatetruecolor($outputCanvaDimension, $outputCanvaDimension);
+$resizedGround = imagecolorallocate($imageResampled, $groundColour[0], $groundColour[1], $groundColour[2]);
+imagefilledrectangle($imageResampled, 0, 0, $outputCanvaDimension, $outputCanvaDimension, $resizedGround);
+imagecopyresampled($imageResampled, $plantCanvas, $destOffsetX, $destOffsetY, $limitMinX, $limitMinY, $outputCanvaDimension, $outputCanvaDimension, $sourceWidth, $sourceHeight);
 
 
 // add a texture overlay:
 	$textureOverlay = imagecreatefrompng($_SERVER['DOCUMENT_ROOT']."/images/herbarium/overlays/watercolour.png");
 imageAlphaBlending($textureOverlay, false);
-imagecopy($imageResampled, $textureOverlay, 0, 0, 0, 0, $canvaDimension, $canvaDimension);
+imagecopy($imageResampled, $textureOverlay, 0, 0, 0, 0, $outputCanvaDimension, $outputCanvaDimension);
 
 	// output:
 	imagejpeg($imageResampled,$_SERVER['DOCUMENT_ROOT'].'/images/herbarium/plants/'.$plantURL.'.jpg',95);
