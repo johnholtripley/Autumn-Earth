@@ -1,0 +1,332 @@
+CSS text-size-adjust
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:197: CSS text-size-adjust not supported by: IE (9,10,11), Edge (13), Firefox (45), Chrome (49,50), Opera Mini (5.0-8.0), Android Browser (4.4), Chrome for Android (50) (text-size-adjust)
+CSS text-size-adjust
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:167: CSS text-size-adjust not supported by: IE (9,10,11), Edge (13), Firefox (45), Chrome (49,50), Opera Mini (5.0-8.0), Android Browser (4.4), Chrome for Android (50) (text-size-adjust)
+CSS outline
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:441: CSS outline not supported by: Opera Mini (5.0-8.0) (outline)
+CSS touch-action property
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:253: CSS touch-action property not supported by: IE (9), Firefox (45), iOS Safari (9.0-9.2), Opera Mini (5.0-8.0), Android Browser (4.4), UC Browser for Android (9.9) (css-touch-action)
+CSS Appearance
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:1568: CSS Appearance not supported by: IE (9,10,11), Edge (13), Firefox (45), Chrome (49,50), iOS Safari (9.0-9.2,9.3), Opera Mini (5.0-8.0), Android Browser (4.4), Chrome for Android (50), UC Browser for Android (9.9) (css-appearance)
+Pointer events
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:253: Pointer events not supported by: IE (9,10), Firefox (45), Chrome (49,50), iOS Safari (9.0-9.2,9.3), Opera Mini (5.0-8.0), Android Browser (4.4), Chrome for Android (50), UC Browser for Android (9.9) (pointer)
+CSS Appearance
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:1584: CSS Appearance not supported by: IE (9,10,11), Edge (13), Firefox (45), Chrome (49,50), iOS Safari (9.0-9.2,9.3), Opera Mini (5.0-8.0), Android Browser (4.4), Chrome for Android (50), UC Browser for Android (9.9) (css-appearance)
+CSS Appearance
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:812: CSS Appearance not supported by: IE (9,10,11), Edge (13), Firefox (45), Chrome (49,50), iOS Safari (9.0-9.2,9.3), Opera Mini (5.0-8.0), Android Browser (4.4), Chrome for Android (50), UC Browser for Android (9.9) (css-appearance)
+CSS3 2D Transforms
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:1977: CSS3 2D Transforms not supported by: Opera Mini (5.0-8.0) (transforms2d)
+CSS Appearance
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:1608: CSS Appearance not supported by: IE (9,10,11), Edge (13), Firefox (45), Chrome (49,50), iOS Safari (9.0-9.2,9.3), Opera Mini (5.0-8.0), Android Browser (4.4), Chrome for Android (50), UC Browser for Android (9.9) (css-appearance)
+CSS font-feature-settings
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:2080: CSS font-feature-settings not supported by: IE (9), iOS Safari (9.0-9.2), Opera Mini (5.0-8.0) (font-feature)
+CSS outline
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:1693: CSS outline not supported by: Opera Mini (5.0-8.0) (outline)
+CSS pointer-events (for HTML)
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:2296: CSS pointer-events (for HTML) not supported by: IE (9,10), Opera Mini (5.0-8.0) (pointer-events)
+CSS3 Text-shadow
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:2409: CSS3 Text-shadow not supported by: IE (9), Opera Mini (5.0-8.0) (css-textshadow)
+CSS3 Border-radius (rounded corners)
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:2687: CSS3 Border-radius (rounded corners) not supported by: Opera Mini (5.0-8.0) (border-radius)
+CSS font-feature-settings
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:2128: CSS font-feature-settings not supported by: IE (9), iOS Safari (9.0-9.2), Opera Mini (5.0-8.0) (font-feature)
+CSS outline
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:2344: CSS outline not supported by: Opera Mini (5.0-8.0) (outline)
+CSS3 Border-radius (rounded corners)
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:2738: CSS3 Border-radius (rounded corners) not supported by: Opera Mini (5.0-8.0) (border-radius)
+CSS3 Border-radius (rounded corners)
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:2906: CSS3 Border-radius (rounded corners) not supported by: Opera Mini (5.0-8.0) (border-radius)
+CSS3 Border-radius (rounded corners)
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:2714: CSS3 Border-radius (rounded corners) not supported by: Opera Mini (5.0-8.0) (border-radius)
+CSS3 Border-radius (rounded corners)
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:2957: CSS3 Border-radius (rounded corners) not supported by: Opera Mini (5.0-8.0) (border-radius)
+CSS3 Border-radius (rounded corners)
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:2933: CSS3 Border-radius (rounded corners) not supported by: Opera Mini (5.0-8.0) (border-radius)
+CSS3 Transitions
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:3080: CSS3 Transitions not supported by: IE (9), Opera Mini (5.0-8.0) (css-transitions)
+CSS3 Transitions
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:3052: CSS3 Transitions not supported by: IE (9), Opera Mini (5.0-8.0) (css-transitions)
+CSS Feature Queries
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:3210: CSS Feature Queries not supported by: IE (9,10,11), Opera Mini (5.0-8.0), UC Browser for Android (9.9) (css-featurequeries)
+CSS3 Transitions
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:3021: CSS3 Transitions not supported by: IE (9), Opera Mini (5.0-8.0) (css-transitions)
+CSS3 Transitions
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:3106: CSS3 Transitions not supported by: IE (9), Opera Mini (5.0-8.0) (css-transitions)
+CSS3 2D Transforms
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:3337: CSS3 2D Transforms not supported by: Opera Mini (5.0-8.0) (transforms2d)
+CSS3 Transitions
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:3383: CSS3 Transitions not supported by: IE (9), Opera Mini (5.0-8.0) (css-transitions)
+CSS3 2D Transforms
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:3364: CSS3 2D Transforms not supported by: Opera Mini (5.0-8.0) (transforms2d)
+CSS3 Transitions
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:3446: CSS3 Transitions not supported by: IE (9), Opera Mini (5.0-8.0) (css-transitions)
+CSS3 Transitions
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:3416: CSS3 Transitions not supported by: IE (9), Opera Mini (5.0-8.0) (css-transitions)
+CSS3 2D Transforms
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:3314: CSS3 2D Transforms not supported by: Opera Mini (5.0-8.0) (transforms2d)
+CSS3 Transitions
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:3474: CSS3 Transitions not supported by: IE (9), Opera Mini (5.0-8.0) (css-transitions)
+CSS3 2D Transforms
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:3570: CSS3 2D Transforms not supported by: Opera Mini (5.0-8.0) (transforms2d)
+CSS3 Border-radius (rounded corners)
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:3919: CSS3 Border-radius (rounded corners) not supported by: Opera Mini (5.0-8.0) (border-radius)
+CSS3 2D Transforms
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:3620: CSS3 2D Transforms not supported by: Opera Mini (5.0-8.0) (transforms2d)
+CSS3 Border-radius (rounded corners)
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:3968: CSS3 Border-radius (rounded corners) not supported by: Opera Mini (5.0-8.0) (border-radius)
+CSS3 Border-radius (rounded corners)
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:3945: CSS3 Border-radius (rounded corners) not supported by: Opera Mini (5.0-8.0) (border-radius)
+CSS font-feature-settings
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:4242: CSS font-feature-settings not supported by: IE (9), iOS Safari (9.0-9.2), Opera Mini (5.0-8.0) (font-feature)
+CSS3 2D Transforms
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:4153: CSS3 2D Transforms not supported by: Opera Mini (5.0-8.0) (transforms2d)
+CSS3 Transitions
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:4386: CSS3 Transitions not supported by: IE (9), Opera Mini (5.0-8.0) (css-transitions)
+CSS font-feature-settings
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:4290: CSS font-feature-settings not supported by: IE (9), iOS Safari (9.0-9.2), Opera Mini (5.0-8.0) (font-feature)
+CSS3 2D Transforms
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:3593: CSS3 2D Transforms not supported by: Opera Mini (5.0-8.0) (transforms2d)
+CSS3 Transitions
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:4445: CSS3 Transitions not supported by: IE (9), Opera Mini (5.0-8.0) (css-transitions)
+CSS Feature Queries
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:4635: CSS Feature Queries not supported by: IE (9,10,11), Opera Mini (5.0-8.0), UC Browser for Android (9.9) (css-featurequeries)
+CSS3 Transitions
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:4471: CSS3 Transitions not supported by: IE (9), Opera Mini (5.0-8.0) (css-transitions)
+CSS3 Transitions
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:4417: CSS3 Transitions not supported by: IE (9), Opera Mini (5.0-8.0) (css-transitions)
+CSS3 2D Transforms
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:4765: CSS3 2D Transforms not supported by: Opera Mini (5.0-8.0) (transforms2d)
+CSS3 Transitions
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:4811: CSS3 Transitions not supported by: IE (9), Opera Mini (5.0-8.0) (css-transitions)
+CSS3 2D Transforms
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:4742: CSS3 2D Transforms not supported by: Opera Mini (5.0-8.0) (transforms2d)
+CSS3 Transitions
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:4874: CSS3 Transitions not supported by: IE (9), Opera Mini (5.0-8.0) (css-transitions)
+CSS3 Transitions
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:4844: CSS3 Transitions not supported by: IE (9), Opera Mini (5.0-8.0) (css-transitions)
+CSS3 2D Transforms
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:4792: CSS3 2D Transforms not supported by: Opera Mini (5.0-8.0) (transforms2d)
+CSS3 Transitions
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:4902: CSS3 Transitions not supported by: IE (9), Opera Mini (5.0-8.0) (css-transitions)
+CSS3 2D Transforms
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:5042: CSS3 2D Transforms not supported by: Opera Mini (5.0-8.0) (transforms2d)
+CSS3 Overflow-wrap
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:5201: CSS3 Overflow-wrap not supported by: IE (9,10,11), Edge (13), Firefox (45), Opera Mini (5.0-8.0), UC Browser for Android (9.9) (wordwrap)
+CSS Hyphenation
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:5247: CSS Hyphenation not supported by: IE (9), Chrome (49,50), Opera Mini (5.0-8.0), Android Browser (4.4), Chrome for Android (50), UC Browser for Android (9.9) (css-hyphens)
+CSS3 2D Transforms
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:5069: CSS3 2D Transforms not supported by: Opera Mini (5.0-8.0) (transforms2d)
+CSS Hyphenation
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:5285: CSS Hyphenation not supported by: IE (9), Chrome (49,50), Opera Mini (5.0-8.0), Android Browser (4.4), Chrome for Android (50), UC Browser for Android (9.9) (css-hyphens)
+CSS Hyphenation
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:5268: CSS Hyphenation not supported by: IE (9), Chrome (49,50), Opera Mini (5.0-8.0), Android Browser (4.4), Chrome for Android (50), UC Browser for Android (9.9) (css-hyphens)
+CSS3 2D Transforms
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:5019: CSS3 2D Transforms not supported by: Opera Mini (5.0-8.0) (transforms2d)
+CSS3 Border-radius (rounded corners)
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:5966: CSS3 Border-radius (rounded corners) not supported by: Opera Mini (5.0-8.0) (border-radius)
+CSS Hyphenation
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:5303: CSS Hyphenation not supported by: IE (9), Chrome (49,50), Opera Mini (5.0-8.0), Android Browser (4.4), Chrome for Android (50), UC Browser for Android (9.9) (css-hyphens)
+CSS3 Border-radius (rounded corners)
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:5995: CSS3 Border-radius (rounded corners) not supported by: Opera Mini (5.0-8.0) (border-radius)
+Font unicode-range subsetting
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:6840: Font unicode-range subsetting not supported by: IE (9,10,11), Edge (13), iOS Safari (9.0-9.2,9.3), Opera Mini (5.0-8.0), Android Browser (4.4), UC Browser for Android (9.9) (font-unicode-range)
+@font-face Web fonts
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:6840: @font-face Web fonts not supported by: Opera Mini (5.0-8.0) (fontface)
+CSS3 Border-radius (rounded corners)
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:6021: CSS3 Border-radius (rounded corners) not supported by: Opera Mini (5.0-8.0) (border-radius)
+@font-face Web fonts
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:7791: @font-face Web fonts not supported by: Opera Mini (5.0-8.0) (fontface)
+Font unicode-range subsetting
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:7316: Font unicode-range subsetting not supported by: IE (9,10,11), Edge (13), iOS Safari (9.0-9.2,9.3), Opera Mini (5.0-8.0), Android Browser (4.4), UC Browser for Android (9.9) (font-unicode-range)
+Flexible Box Layout Module
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:9460: Flexible Box Layout Module not supported by: IE (9,10,11), UC Browser for Android (9.9) (flexbox)
+Font unicode-range subsetting
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:7791: Font unicode-range subsetting not supported by: IE (9,10,11), Edge (13), iOS Safari (9.0-9.2,9.3), Opera Mini (5.0-8.0), Android Browser (4.4), UC Browser for Android (9.9) (font-unicode-range)
+Flexible Box Layout Module
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:9529: Flexible Box Layout Module not supported by: IE (9,10,11), UC Browser for Android (9.9) (flexbox)
+CSS3 Text-shadow
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:9852: CSS3 Text-shadow not supported by: IE (9), Opera Mini (5.0-8.0) (css-textshadow)
+@font-face Web fonts
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:7316: @font-face Web fonts not supported by: Opera Mini (5.0-8.0) (fontface)
+CSS3 Text-shadow
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:9788: CSS3 Text-shadow not supported by: IE (9), Opera Mini (5.0-8.0) (css-textshadow)
+CSS3 Transitions
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:9896: CSS3 Transitions not supported by: IE (9), Opera Mini (5.0-8.0) (css-transitions)
+CSS3 Text-shadow
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:9877: CSS3 Text-shadow not supported by: IE (9), Opera Mini (5.0-8.0) (css-textshadow)
+CSS3 Transitions
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:9930: CSS3 Transitions not supported by: IE (9), Opera Mini (5.0-8.0) (css-transitions)
+CSS3 Transitions
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:9961: CSS3 Transitions not supported by: IE (9), Opera Mini (5.0-8.0) (css-transitions)
+CSS3 Transitions
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:9990: CSS3 Transitions not supported by: IE (9), Opera Mini (5.0-8.0) (css-transitions)
+@font-face Web fonts
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:10380: @font-face Web fonts not supported by: Opera Mini (5.0-8.0) (fontface)
+Font unicode-range subsetting
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:10380: Font unicode-range subsetting not supported by: IE (9,10,11), Edge (13), iOS Safari (9.0-9.2,9.3), Opera Mini (5.0-8.0), Android Browser (4.4), UC Browser for Android (9.9) (font-unicode-range)
+CSS3 2D Transforms
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:10800: CSS3 2D Transforms not supported by: Opera Mini (5.0-8.0) (transforms2d)
+CSS font-feature-settings
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:10903: CSS font-feature-settings not supported by: IE (9), iOS Safari (9.0-9.2), Opera Mini (5.0-8.0) (font-feature)
+CSS font-feature-settings
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:10951: CSS font-feature-settings not supported by: IE (9), iOS Safari (9.0-9.2), Opera Mini (5.0-8.0) (font-feature)
+CSS3 Transitions
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:11347: CSS3 Transitions not supported by: IE (9), Opera Mini (5.0-8.0) (css-transitions)
+CSS3 Transitions
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:11384: CSS3 Transitions not supported by: IE (9), Opera Mini (5.0-8.0) (css-transitions)
+CSS3 Transitions
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:11418: CSS3 Transitions not supported by: IE (9), Opera Mini (5.0-8.0) (css-transitions)
+CSS3 Transitions
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:11450: CSS3 Transitions not supported by: IE (9), Opera Mini (5.0-8.0) (css-transitions)
+CSS Feature Queries
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:11744: CSS Feature Queries not supported by: IE (9,10,11), Opera Mini (5.0-8.0), UC Browser for Android (9.9) (css-featurequeries)
+CSS3 2D Transforms
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:11808: CSS3 2D Transforms not supported by: Opera Mini (5.0-8.0) (transforms2d)
+CSS3 3D Transforms
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:11841: CSS3 3D Transforms not supported by: IE (9,10,11), Opera Mini (5.0-8.0) (transforms3d)
+CSS3 2D Transforms
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:11897: CSS3 2D Transforms not supported by: Opera Mini (5.0-8.0) (transforms2d)
+CSS3 Transitions
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:11926: CSS3 Transitions not supported by: IE (9), Opera Mini (5.0-8.0) (css-transitions)
+CSS3 3D Transforms
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:11960: CSS3 3D Transforms not supported by: IE (9,10,11), Opera Mini (5.0-8.0) (transforms3d)
+CSS3 2D Transforms
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:12016: CSS3 2D Transforms not supported by: Opera Mini (5.0-8.0) (transforms2d)
+CSS3 Transitions
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:12101: CSS3 Transitions not supported by: IE (9), Opera Mini (5.0-8.0) (css-transitions)
+CSS3 2D Transforms
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:12135: CSS3 2D Transforms not supported by: Opera Mini (5.0-8.0) (transforms2d)
+CSS3 2D Transforms
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:12184: CSS3 2D Transforms not supported by: Opera Mini (5.0-8.0) (transforms2d)
+CSS3 2D Transforms
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:12254: CSS3 2D Transforms not supported by: Opera Mini (5.0-8.0) (transforms2d)
+CSS3 2D Transforms
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:12401: CSS3 2D Transforms not supported by: Opera Mini (5.0-8.0) (transforms2d)
+CSS3 2D Transforms
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:12442: CSS3 2D Transforms not supported by: Opera Mini (5.0-8.0) (transforms2d)
+CSS3 3D Transforms
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:12475: CSS3 3D Transforms not supported by: IE (9,10,11), Opera Mini (5.0-8.0) (transforms3d)
+CSS3 3D Transforms
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:12510: CSS3 3D Transforms not supported by: IE (9,10,11), Opera Mini (5.0-8.0) (transforms3d)
+CSS3 2D Transforms
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:12566: CSS3 2D Transforms not supported by: Opera Mini (5.0-8.0) (transforms2d)
+CSS3 2D Transforms
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:12603: CSS3 2D Transforms not supported by: Opera Mini (5.0-8.0) (transforms2d)
+CSS3 Transitions
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:12632: CSS3 Transitions not supported by: IE (9), Opera Mini (5.0-8.0) (css-transitions)
+CSS3 Transitions
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:12682: CSS3 Transitions not supported by: IE (9), Opera Mini (5.0-8.0) (css-transitions)
+CSS3 3D Transforms
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:12716: CSS3 3D Transforms not supported by: IE (9,10,11), Opera Mini (5.0-8.0) (transforms3d)
+CSS3 3D Transforms
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:12751: CSS3 3D Transforms not supported by: IE (9,10,11), Opera Mini (5.0-8.0) (transforms3d)
+CSS3 Transitions
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:12817: CSS3 Transitions not supported by: IE (9), Opera Mini (5.0-8.0) (css-transitions)
+CSS3 Transitions
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:12867: CSS3 Transitions not supported by: IE (9), Opera Mini (5.0-8.0) (css-transitions)
+CSS3 2D Transforms
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:12901: CSS3 2D Transforms not supported by: Opera Mini (5.0-8.0) (transforms2d)
+CSS3 2D Transforms
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:12958: CSS3 2D Transforms not supported by: Opera Mini (5.0-8.0) (transforms2d)
+CSS3 2D Transforms
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:13007: CSS3 2D Transforms not supported by: Opera Mini (5.0-8.0) (transforms2d)
+CSS3 2D Transforms
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:13039: CSS3 2D Transforms not supported by: Opera Mini (5.0-8.0) (transforms2d)
+Flexible Box Layout Module
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:13590: Flexible Box Layout Module not supported by: IE (9,10,11), UC Browser for Android (9.9) (flexbox)
+Flexible Box Layout Module
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:13611: Flexible Box Layout Module not supported by: IE (9,10,11), UC Browser for Android (9.9) (flexbox)
+CSS3 2D Transforms
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:13818: CSS3 2D Transforms not supported by: Opera Mini (5.0-8.0) (transforms2d)
+CSS font-feature-settings
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:13921: CSS font-feature-settings not supported by: IE (9), iOS Safari (9.0-9.2), Opera Mini (5.0-8.0) (font-feature)
+CSS font-feature-settings
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:13969: CSS font-feature-settings not supported by: IE (9), iOS Safari (9.0-9.2), Opera Mini (5.0-8.0) (font-feature)
+CSS3 Multiple column layout
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:14018: CSS3 Multiple column layout not supported by: IE (9), Firefox (45), Chrome (49,50), iOS Safari (9.0-9.2,9.3), Android Browser (4.4), Chrome for Android (50), UC Browser for Android (9.9) (multicolumn)
+CSS3 Multiple column layout
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:14041: CSS3 Multiple column layout not supported by: IE (9), Firefox (45), Chrome (49,50), iOS Safari (9.0-9.2,9.3), Android Browser (4.4), Chrome for Android (50), UC Browser for Android (9.9) (multicolumn)
+CSS3 Multiple column layout
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:14061: CSS3 Multiple column layout not supported by: IE (9), Firefox (45), Chrome (49,50), iOS Safari (9.0-9.2,9.3), Android Browser (4.4), Chrome for Android (50), UC Browser for Android (9.9) (multicolumn)
+CSS3 Multiple column layout
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:14076: CSS3 Multiple column layout not supported by: IE (9), Firefox (45), Chrome (49,50), iOS Safari (9.0-9.2,9.3), Android Browser (4.4), Chrome for Android (50), UC Browser for Android (9.9) (multicolumn)
+CSS3 Multiple column layout
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:14097: CSS3 Multiple column layout not supported by: IE (9), Firefox (45), Chrome (49,50), iOS Safari (9.0-9.2,9.3), Android Browser (4.4), Chrome for Android (50), UC Browser for Android (9.9) (multicolumn)
+CSS3 Multiple column layout
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:14115: CSS3 Multiple column layout not supported by: IE (9), Firefox (45), Chrome (49,50), iOS Safari (9.0-9.2,9.3), Android Browser (4.4), Chrome for Android (50), UC Browser for Android (9.9) (multicolumn)
+CSS3 Multiple column layout
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:14176: CSS3 Multiple column layout not supported by: IE (9), Firefox (45), Chrome (49,50), iOS Safari (9.0-9.2,9.3), Android Browser (4.4), Chrome for Android (50), UC Browser for Android (9.9) (multicolumn)
+CSS3 Multiple column layout
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:14199: CSS3 Multiple column layout not supported by: IE (9), Firefox (45), Chrome (49,50), iOS Safari (9.0-9.2,9.3), Android Browser (4.4), Chrome for Android (50), UC Browser for Android (9.9) (multicolumn)
+CSS3 Multiple column layout
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:14219: CSS3 Multiple column layout not supported by: IE (9), Firefox (45), Chrome (49,50), iOS Safari (9.0-9.2,9.3), Android Browser (4.4), Chrome for Android (50), UC Browser for Android (9.9) (multicolumn)
+CSS3 Multiple column layout
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:14248: CSS3 Multiple column layout not supported by: IE (9), Firefox (45), Chrome (49,50), iOS Safari (9.0-9.2,9.3), Android Browser (4.4), Chrome for Android (50), UC Browser for Android (9.9) (multicolumn)
+CSS3 Multiple column layout
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:14282: CSS3 Multiple column layout not supported by: IE (9), Firefox (45), Chrome (49,50), iOS Safari (9.0-9.2,9.3), Android Browser (4.4), Chrome for Android (50), UC Browser for Android (9.9) (multicolumn)
+CSS3 Multiple column layout
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:14306: CSS3 Multiple column layout not supported by: IE (9), Firefox (45), Chrome (49,50), iOS Safari (9.0-9.2,9.3), Android Browser (4.4), Chrome for Android (50), UC Browser for Android (9.9) (multicolumn)
+CSS3 Multiple column layout
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:14359: CSS3 Multiple column layout not supported by: IE (9), Firefox (45), Chrome (49,50), iOS Safari (9.0-9.2,9.3), Android Browser (4.4), Chrome for Android (50), UC Browser for Android (9.9) (multicolumn)
+CSS3 Multiple column layout
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:14382: CSS3 Multiple column layout not supported by: IE (9), Firefox (45), Chrome (49,50), iOS Safari (9.0-9.2,9.3), Android Browser (4.4), Chrome for Android (50), UC Browser for Android (9.9) (multicolumn)
+CSS3 Multiple column layout
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:14402: CSS3 Multiple column layout not supported by: IE (9), Firefox (45), Chrome (49,50), iOS Safari (9.0-9.2,9.3), Android Browser (4.4), Chrome for Android (50), UC Browser for Android (9.9) (multicolumn)
+Flexible Box Layout Module
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:14538: Flexible Box Layout Module not supported by: IE (9,10,11), UC Browser for Android (9.9) (flexbox)
+Flexible Box Layout Module
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:14662: Flexible Box Layout Module not supported by: IE (9,10,11), UC Browser for Android (9.9) (flexbox)
+Flexible Box Layout Module
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:14986: Flexible Box Layout Module not supported by: IE (9,10,11), UC Browser for Android (9.9) (flexbox)
+Flexible Box Layout Module
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:15007: Flexible Box Layout Module not supported by: IE (9,10,11), UC Browser for Android (9.9) (flexbox)
+Flexible Box Layout Module
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:15027: Flexible Box Layout Module not supported by: IE (9,10,11), UC Browser for Android (9.9) (flexbox)
+CSS3 Multiple column layout
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:15834: CSS3 Multiple column layout not supported by: IE (9), Firefox (45), Chrome (49,50), iOS Safari (9.0-9.2,9.3), Android Browser (4.4), Chrome for Android (50), UC Browser for Android (9.9) (multicolumn)
+CSS3 Multiple column layout
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:15857: CSS3 Multiple column layout not supported by: IE (9), Firefox (45), Chrome (49,50), iOS Safari (9.0-9.2,9.3), Android Browser (4.4), Chrome for Android (50), UC Browser for Android (9.9) (multicolumn)
+CSS3 Multiple column layout
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:15877: CSS3 Multiple column layout not supported by: IE (9), Firefox (45), Chrome (49,50), iOS Safari (9.0-9.2,9.3), Android Browser (4.4), Chrome for Android (50), UC Browser for Android (9.9) (multicolumn)
+CSS position:fixed
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:16010: CSS position:fixed not supported by: Opera Mini (5.0-8.0) (css-fixed)
+CSS3 Transitions
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:16160: CSS3 Transitions not supported by: IE (9), Opera Mini (5.0-8.0) (css-transitions)
+CSS3 Transitions
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:16196: CSS3 Transitions not supported by: IE (9), Opera Mini (5.0-8.0) (css-transitions)
+CSS3 Transitions
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:16229: CSS3 Transitions not supported by: IE (9), Opera Mini (5.0-8.0) (css-transitions)
+CSS3 Transitions
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:16260: CSS3 Transitions not supported by: IE (9), Opera Mini (5.0-8.0) (css-transitions)
+CSS3 2D Transforms
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:16378: CSS3 2D Transforms not supported by: Opera Mini (5.0-8.0) (transforms2d)
+CSS3 2D Transforms
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:16429: CSS3 2D Transforms not supported by: Opera Mini (5.0-8.0) (transforms2d)
+CSS3 2D Transforms
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:16477: CSS3 2D Transforms not supported by: Opera Mini (5.0-8.0) (transforms2d)
+CSS3 2D Transforms
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:16523: CSS3 2D Transforms not supported by: Opera Mini (5.0-8.0) (transforms2d)
+Viewport units: vw, vh, vmin, vmax
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:16578: Viewport units: vw, vh, vmin, vmax not supported by: IE (9,10,11), Edge (13), Opera Mini (5.0-8.0), UC Browser for Android (9.9) (viewport-units)
+Viewport units: vw, vh, vmin, vmax
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:16591: Viewport units: vw, vh, vmin, vmax not supported by: IE (9,10,11), Edge (13), Opera Mini (5.0-8.0), UC Browser for Android (9.9) (viewport-units)
+CSS3 Background-image options
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:16685: CSS3 Background-image options not supported by: Opera Mini (5.0-8.0) (background-img-opts)
+CSS3 Background-image options
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:16719: CSS3 Background-image options not supported by: Opera Mini (5.0-8.0) (background-img-opts)
+CSS3 Background-image options
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:16750: CSS3 Background-image options not supported by: Opera Mini (5.0-8.0) (background-img-opts)
+CSS3 Background-image options
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:16779: CSS3 Background-image options not supported by: Opera Mini (5.0-8.0) (background-img-opts)
+CSS3 Multiple column layout
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:16833: CSS3 Multiple column layout not supported by: IE (9), Firefox (45), Chrome (49,50), iOS Safari (9.0-9.2,9.3), Android Browser (4.4), Chrome for Android (50), UC Browser for Android (9.9) (multicolumn)
+CSS3 Box-shadow
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:16905: CSS3 Box-shadow not supported by: Opera Mini (5.0-8.0) (css-boxshadow)
+CSS3 Text-shadow
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:16931: CSS3 Text-shadow not supported by: IE (9), Opera Mini (5.0-8.0) (css-textshadow)
+CSS3 Multiple column layout
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:17451: CSS3 Multiple column layout not supported by: IE (9), Firefox (45), Chrome (49,50), iOS Safari (9.0-9.2,9.3), Android Browser (4.4), Chrome for Android (50), UC Browser for Android (9.9) (multicolumn)
+CSS Filter Effects
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:17536: CSS Filter Effects not supported by: IE (9,10,11), Edge (13), Opera Mini (5.0-8.0) (css-filters)
+CSS Filter Effects
+C:\Autumn Earth\Dropbox\autumn-earth\site\htdocs\css\base.css:1:17491: CSS Filter Effects not supported by: IE (9,10,11), Edge (13), Opera Mini (5.0-8.0) (css-filters)

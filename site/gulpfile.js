@@ -23,7 +23,9 @@ var gulp = require('gulp'),
      http = require('http'),
      mkdirp = require('mkdirp'),
      del = require('del'),
-     blc = require("broken-link-checker");
+     blc = require("broken-link-checker"),
+     postcss = require('gulp-postcss'),
+ doiuse = require('doiuse');
 
 
 // css:
@@ -91,6 +93,41 @@ gulp.task('regressionTest', function() {
         console.log(stdout);
     });
 })
+
+
+
+
+
+
+gulp.task('canIUse', function() {
+    fs.stat('tests/canIUse.txt', function(err, stat) {
+        if (err == null) {
+            // file exists:
+            fs.unlinkSync('tests/canIUse.txt');
+        }
+    });
+    gulp.src('htdocs/css/base.css', { cwd: process.cwd() })
+        .pipe(postcss([
+            doiuse({
+                browsers: [
+                    'ie >= 9',
+                    '> 1%'
+                ],
+                ignore: ['rem'],
+                onFeatureUsage: function(usageInfo) {
+                    // console.log(usageInfo.message);
+                    fs.open('tests/canIUse.txt', 'a', 666, function(e, id) {
+                        fs.write(id, usageInfo.featureData.title + "\n" + usageInfo.message + "\n", null, 'utf8', function() {
+                            fs.close(id, function() {});
+                        });
+                    });
+                }
+            })
+        ]))
+})
+
+
+
 
 
 
@@ -480,7 +517,7 @@ gulp.task('default', function() {
 // pre-go live task
 // run getSitemap first
 // then visual regression tests
-gulp.task('deploy', ['critical','removeUnused','favicons','cacheBusting','pageSpeed', 'webpagetest'], function() {
+gulp.task('deploy', ['critical','removeUnused','favicons','cacheBusting','pageSpeed','webpagetest','canIUse'], function() {
     gulp.start('regressionTest');
 });
 
