@@ -4,8 +4,8 @@
 TEST SEND:
 https://putsmail.com/tests/new
 
-
-
+https://www.google.com/webmasters/markup-tester/
+http://gmail-actions.appspot.com/
   
 
 The CSS style block has been placed just above the closing body tag for Yahoo in IE7 & 8. This fix actually requires a DOCTYPE.  
@@ -245,6 +245,35 @@ queries example in the style block below. -->
 				<p style="Margin:16px;">
 					Lorem ipsum dolor sit amet, consectetur adipisicing elit.
 				</p>
+
+
+<!-- https://developers.google.com/gmail/markup/reference/article /-->
+<div itemscope itemtype="http://schema.org/Article">
+  <link itemprop="url" href="http://ae.dev/chronicle/article-16/"/>
+  <h1 itemprop="name">article 16</h1>
+  <p itemprop="description">
+Alice was beginning to get very tired of sitting by her sister on the bank, and of having nothing to do: once or twice she had peeped into the book her sister was reading, but it had no pictures or conversations in it, "and what is the use of a book," thought Alice "without pictures or conversation?"
+  </p>
+  <img src="https://autumnearth.com/images/banners/placeholder.jpg" itemprop="image"/>
+  <div itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Autumn Earth Chronicle"/>
+  </div>
+</div>
+
+
+
+
+<!-- https://developers.google.com/gmail/markup/reference/go-to-action#view_action /-->
+<div itemscope itemtype="http://schema.org/EmailMessage">
+  <div itemprop="potentialAction" itemscope itemtype="http://schema.org/ViewAction">
+    <link itemprop="target" href="http://ae.dev/forum/general-discussion/lorem-ip/"/>
+    <meta itemprop="name" content="Read thread"/>
+  </div>
+  <meta itemprop="description" content="Read the full forum thread"/>
+</div>
+
+
+
 			</div>
 			<!--[if mso]>
 			</td><td style="width:33%; background:#FACF39;">
