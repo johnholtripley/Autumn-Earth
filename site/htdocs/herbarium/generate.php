@@ -270,7 +270,7 @@ for ($i=0;$i<count($rootColours);$i++) {
 // root rules:
 $rootAxiom = "F";
 $allPossibleRootRules = array(array("F"=>"FF[+X+X][-X-X]"));
-$allPossibleRootRuleIterations = array(3);
+$allPossibleRootRuleIterations = array(5);
 $allPossibleRootRuleDistances = array(35);
 $startRootAngle = 180;
 $rootAngle = 30;
@@ -859,6 +859,12 @@ do {
 $thisSecondCommonName = $commonSuffixes[mt_rand(0,count($commonSuffixes)-1)];
 // make sure the first and last words aren't identical:
 } while ($thisCommonName == $thisSecondCommonName);
+
+// make sure any prefixes ending in '-' don't have a space after them - so don't have "bil lilly", it's "bililly" instead:
+if (substr($thisCommonName, -1, 1) == "-") {
+	$thisSecondCommonName = trim($thisSecondCommonName);
+}
+$thisCommonName = str_replace("-", "", $thisCommonName);
 
 if (substr($thisCommonName, -1, 1) == substr($thisSecondCommonName, 0, 1)) {
 	// make sure the last character of the first word isn't the same as the first of the last word - so don't get dragonsstar - get dragonstar instead
