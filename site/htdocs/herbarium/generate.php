@@ -591,7 +591,7 @@ $petalBrushSize = 2;
 
 // prepare flower graphic:
 $numberOfFlowerVariationsToDraw = 1;
-$flowerCanvasSize = 350;
+$flowerCanvasSize = 125;
 $flowerInset = 10;
 for ($k=0;$k<count($numberOfFlowerVariationsToDraw);$k++) {
 	${'flower'.$k} = imagecreate($flowerCanvasSize,$flowerCanvasSize);
@@ -603,35 +603,54 @@ for ($k=0;$k<count($numberOfFlowerVariationsToDraw);$k++) {
 // draw star:
 $centreX = $flowerCanvasSize/2;
 $centreY =$flowerCanvasSize/2;
-$points = 5;
-$outerRadius = 60;
-$innerRadius = 30;
+$points = 9;
+$outerRadius = 30;
+$innerRadius = 10;
 imagesetbrush(${'flower'.$k}, $petalBrush);
 // http://stackoverflow.com/questions/14580033/algorithm-for-drawing-a-5-point-star
 $RAD_distance = ( 2 * pi() / $points);  
 $RAD_half_PI = pi()/2; 
 
-$startX = $centreX;
-$startY = $centreY;
+
+$petalPoints = array(array($centreX, $centreY));
 for ($i=0; $i <= $points; $i++) {
 	$new_outer_RAD = ($i + 1) * $RAD_distance;     
 	$half_new_outer_RAD = $new_outer_RAD - ($RAD_distance / 2); 
 	// don't have this line for a poly (need for a star):
 	$midPointX = $centreX + round(cos($half_new_outer_RAD - $RAD_half_PI) * $innerRadius);
 	$midPointY = $centreY + round(sin($half_new_outer_RAD - $RAD_half_PI) * $innerRadius);
-	imageline ( ${'flower'.$k} , $startX , $startY , $midPointX , $midPointY, IMG_COLOR_BRUSHED);
+	//imageline ( ${'flower'.$k} , $startX , $startY , $midPointX , $midPointY, IMG_COLOR_BRUSHED);
+
+array_push($petalPoints, array($midPointX, $midPointY));
+
 	//
 	$nextPointX = $centreX + round(cos($new_outer_RAD - $RAD_half_PI) * $outerRadius);
 	$nextPointY = $centreY + round(sin($new_outer_RAD - $RAD_half_PI) * $outerRadius);
-	imageline ( ${'flower'.$k} , $midPointX , $midPointY , $nextPointX , $nextPointY ,IMG_COLOR_BRUSHED);
-	$startX = $nextPointX;
-	$startY = $nextPointY;       
+
+array_push($petalPoints, array($nextPointX, $nextPointY));
+
+//	imageline ( ${'flower'.$k} , $midPointX , $midPointY , $nextPointX , $nextPointY ,IMG_COLOR_BRUSHED);
+      
+
+
+	$previousX = $petalPoints[0][0];
+	$previousY = $petalPoints[0][1];
 }
-imagefill ( ${'flower'.$k}, $centreX+10,$centreY+10, imagecolorallocate(${'flower'.$k}, $petalRed, $petalGreen, $petalBlue) );
-// --------------
+for ($i=0; $i < count($petalPoints)-2; $i++) {
+
+	$controlX = ($petalPoints[$i][0] + $petalPoints[$i+1][0]) / 2;
+	$controlY = ($petalPoints[$i][1] + $petalPoints[$i+1][1]) / 2;
+	quadBezier(${'flower'.$k}, $previousX, $previousY, $petalPoints[$i][0], $petalPoints[$i][1], $controlX, $controlY);
+		$previousX = $controlX;
+		$previousY = $controlY;
+}
+// draw to last point:
+quadBezier(${'flower'.$k}, $previousX, $previousY,$petalPoints[$i][0], $petalPoints[$i][1], $petalPoints[$i+1][0],$petalPoints[$i+1][1]);
+imagefill ( ${'flower'.$k}, $centreX+$petalBrushSize,$centreY+$petalBrushSize, imagecolorallocate(${'flower'.$k}, $petalRed, $petalGreen, $petalBlue) );
 
 
-// imagefilledellipse ( ${'flower'.$k} , $flowerCanvasSize/2, $flowerCanvasSize/2 , $flowerCanvasSize/2-$flowerInset , $flowerCanvasSize/2-$flowerInset , imagecolorallocate(${'flower'.$k}, $petalRed,$petalGreen,$petalBlue ) );
+
+// imagefilledellipse ( ${'flower'.$k} , $flowerCanvasSize/6, $flowerCanvasSize/6 , $centreX+$innerRadius , $centreY+$innerRadius , imagecolorallocate(${'flower'.$k}, 215,221,217 ) );
 }
 
 
