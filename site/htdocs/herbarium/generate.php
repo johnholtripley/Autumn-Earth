@@ -214,7 +214,7 @@ return $commandString;
 
 function drawPlant() {
 	// thanks to http://www.kevs3d.co.uk/dev/lsystems/
-	global $iterations, $angle, $isAquatic, $isNight, $plantURL, $petalRed, $petalGreen, $petalBlue, $groundColour;
+	global $iterations, $angle, $isAquatic, $isNight, $plantURL, $petalRed, $petalGreen, $petalBlue, $groundColour, $plantCanvas;
 	$canvaDimension = 2000;
 	$outputCanvaDimension = 754;
 	$plantCanvas = imagecreatetruecolor($canvaDimension, $canvaDimension);
@@ -581,18 +581,56 @@ for ($k=0;$k<count($numberOfLeafVariationsToDraw);$k++) {
 }
 
 
+$petalBrushSize = 2;
+	$petalBrush = imagecreate($petalBrushSize,$petalBrushSize);
+	$petalBrushtrans = imagecolorallocate($petalBrush, 0, 0, 0);
+	imagecolortransparent($petalBrush, $petalBrushtrans);
+	$thisPetalColour = imagecolorallocate($petalBrush, $petalRed, $petalGreen, $petalBlue);
+	imagefilledellipse($petalBrush, $petalBrushSize/2, $petalBrushSize/2, $petalBrushSize,$petalBrushSize, $thisPetalColour);
+
 
 // prepare flower graphic:
 $numberOfFlowerVariationsToDraw = 1;
-$flowerCanvasSize = 100;
+$flowerCanvasSize = 150;
 $flowerInset = 10;
 for ($k=0;$k<count($numberOfFlowerVariationsToDraw);$k++) {
 	${'flower'.$k} = imagecreate($flowerCanvasSize,$flowerCanvasSize);
 
 	$flowerTrans = imagecolorallocate(${'flower'.$k}, 0, 0, 0);
 	imagecolortransparent(${'flower'.$k}, $flowerTrans);
-	
-imagefilledellipse ( ${'flower'.$k} , $flowerCanvasSize/2, $flowerCanvasSize/2 , $flowerCanvasSize/2-$flowerInset , $flowerCanvasSize/2-$flowerInset , imagecolorallocate(${'flower'.$k}, $petalRed,$petalGreen,$petalBlue ) );
+
+
+// draw star:
+$centreX = $flowerCanvasSize/2;
+$centreY =$flowerCanvasSize/2;
+$points = 5;
+$outerRadius = 60;
+$innerRadius = 30;
+imagesetbrush(${'flower'.$k}, $petalBrush);
+// http://stackoverflow.com/questions/14580033/algorithm-for-drawing-a-5-point-star
+$RAD_distance = ( 2 * pi() / $points);  
+$RAD_half_PI = pi()/2; 
+$startX = $centreX;
+$startY = $centreY;
+for ($i=0; $i <= $points; $i++) {
+	$new_outer_RAD = ($i + 1) * $RAD_distance;     
+	$half_new_outer_RAD = $new_outer_RAD - ($RAD_distance / 2); 
+	// don't have this line for a poly (need for a star):
+	$midPointX = $startX + round(cos($half_new_outer_RAD - $RAD_half_PI) * $innerRadius);
+	$midPointY = $startY + round(sin($half_new_outer_RAD - $RAD_half_PI) * $innerRadius);
+	imageline ( ${'flower'.$k} , $startX , $startY , $midPointX , $midPointY, IMG_COLOR_BRUSHED);
+	//
+	$nextPointX = $startX + round(cos($new_outer_RAD - $RAD_half_PI) * $outerRadius);
+	$nextPointY = $startY + round(sin($new_outer_RAD - $RAD_half_PI) * $outerRadius);
+	imageline ( ${'flower'.$k} , $midPointX , $midPointY , $nextPointX , $nextPointY ,IMG_COLOR_BRUSHED);
+	$startX = $nextPointX;
+	$startY = $nextPointY;       
+}
+imagefill ( ${'flower'.$k}, $flowerCanvasSize/2, $flowerCanvasSize/2, imagecolorallocate(${'flower'.$k}, $petalRed, $petalGreen, $petalBlue) );
+// --------------
+
+
+// imagefilledellipse ( ${'flower'.$k} , $flowerCanvasSize/2, $flowerCanvasSize/2 , $flowerCanvasSize/2-$flowerInset , $flowerCanvasSize/2-$flowerInset , imagecolorallocate(${'flower'.$k}, $petalRed,$petalGreen,$petalBlue ) );
 }
 
 
