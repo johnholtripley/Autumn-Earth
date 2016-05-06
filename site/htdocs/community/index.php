@@ -62,7 +62,7 @@ if($socialContent[$i+1][2] == "chronicle") {
 
 
 
-    $socialOutput .= '<div class="masonry-cell masonry-cluster">';
+    $socialOutput .= '<div class="masonry-cell masonry-horizontal-cluster masonry-cluster">';
      $socialOutput .= ' <div class="masonry-cluster-cell masonry-cluster-group">';
        $socialOutput .= ' <div class="masonry-cell">';
        
@@ -114,7 +114,7 @@ fclose($file);
 
       
 
-    <div class="masonry-cell masonry-cluster">
+    <div class="masonry-cell masonry-horizontal-cluster masonry-cluster">
       <div class="masonry-cluster-cell masonry-cluster-group">
         <div class="masonry-cell">
         	<img src="http://placekitten.com.s3.amazonaws.com/homepage-samples/408/287.jpg">
