@@ -591,7 +591,7 @@ $petalBrushSize = 2;
 
 // prepare flower graphic:
 $numberOfFlowerVariationsToDraw = 1;
-$flowerCanvasSize = 125;
+$flowerCanvasSize = 145;
 $flowerInset = 10;
 for ($k=0;$k<count($numberOfFlowerVariationsToDraw);$k++) {
 	${'flower'.$k} = imagecreate($flowerCanvasSize,$flowerCanvasSize);
@@ -604,7 +604,7 @@ for ($k=0;$k<count($numberOfFlowerVariationsToDraw);$k++) {
 $centreX = $flowerCanvasSize/2;
 $centreY =$flowerCanvasSize/2;
 $points = 9;
-$outerRadius = 30;
+$outerRadius = 40;
 $innerRadius = 10;
 imagesetbrush(${'flower'.$k}, $petalBrush);
 // http://stackoverflow.com/questions/14580033/algorithm-for-drawing-a-5-point-star
@@ -650,7 +650,7 @@ imagefill ( ${'flower'.$k}, $centreX+$petalBrushSize,$centreY+$petalBrushSize, i
 
 
 
-// imagefilledellipse ( ${'flower'.$k} , $flowerCanvasSize/6, $flowerCanvasSize/6 , $centreX+$innerRadius , $centreY+$innerRadius , imagecolorallocate(${'flower'.$k}, 215,221,217 ) );
+ imagefilledellipse ( ${'flower'.$k} , $centreX, $centreY , $flowerCanvasSize/6 , $flowerCanvasSize/6 , imagecolorallocate(${'flower'.$k}, 184,126,80 ) );
 }
 
 
