@@ -591,7 +591,7 @@ $petalBrushSize = 2;
 
 // prepare flower graphic:
 $numberOfFlowerVariationsToDraw = 1;
-$flowerCanvasSize = 150;
+$flowerCanvasSize = 350;
 $flowerInset = 10;
 for ($k=0;$k<count($numberOfFlowerVariationsToDraw);$k++) {
 	${'flower'.$k} = imagecreate($flowerCanvasSize,$flowerCanvasSize);
@@ -610,23 +610,24 @@ imagesetbrush(${'flower'.$k}, $petalBrush);
 // http://stackoverflow.com/questions/14580033/algorithm-for-drawing-a-5-point-star
 $RAD_distance = ( 2 * pi() / $points);  
 $RAD_half_PI = pi()/2; 
+
 $startX = $centreX;
 $startY = $centreY;
 for ($i=0; $i <= $points; $i++) {
 	$new_outer_RAD = ($i + 1) * $RAD_distance;     
 	$half_new_outer_RAD = $new_outer_RAD - ($RAD_distance / 2); 
 	// don't have this line for a poly (need for a star):
-	$midPointX = $startX + round(cos($half_new_outer_RAD - $RAD_half_PI) * $innerRadius);
-	$midPointY = $startY + round(sin($half_new_outer_RAD - $RAD_half_PI) * $innerRadius);
+	$midPointX = $centreX + round(cos($half_new_outer_RAD - $RAD_half_PI) * $innerRadius);
+	$midPointY = $centreY + round(sin($half_new_outer_RAD - $RAD_half_PI) * $innerRadius);
 	imageline ( ${'flower'.$k} , $startX , $startY , $midPointX , $midPointY, IMG_COLOR_BRUSHED);
 	//
-	$nextPointX = $startX + round(cos($new_outer_RAD - $RAD_half_PI) * $outerRadius);
-	$nextPointY = $startY + round(sin($new_outer_RAD - $RAD_half_PI) * $outerRadius);
+	$nextPointX = $centreX + round(cos($new_outer_RAD - $RAD_half_PI) * $outerRadius);
+	$nextPointY = $centreY + round(sin($new_outer_RAD - $RAD_half_PI) * $outerRadius);
 	imageline ( ${'flower'.$k} , $midPointX , $midPointY , $nextPointX , $nextPointY ,IMG_COLOR_BRUSHED);
 	$startX = $nextPointX;
 	$startY = $nextPointY;       
 }
-imagefill ( ${'flower'.$k}, $flowerCanvasSize/2, $flowerCanvasSize/2, imagecolorallocate(${'flower'.$k}, $petalRed, $petalGreen, $petalBlue) );
+imagefill ( ${'flower'.$k}, $centreX+10,$centreY+10, imagecolorallocate(${'flower'.$k}, $petalRed, $petalGreen, $petalBlue) );
 // --------------
 
 
