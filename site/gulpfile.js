@@ -117,7 +117,7 @@ gulp.task('canIUse', function() {
                 onFeatureUsage: function(usageInfo) {
                     // console.log(usageInfo.message);
                     fs.open('tests/canIUse.txt', 'a', 666, function(e, id) {
-                        fs.write(id, usageInfo.featureData.title + "\n" + usageInfo.message + "\n", null, 'utf8', function() {
+                        fs.write(id, usageInfo.featureData.title + " - " + usageInfo.message + "\n", null, 'utf8', function() {
                             fs.close(id, function() {});
                         });
                     });
