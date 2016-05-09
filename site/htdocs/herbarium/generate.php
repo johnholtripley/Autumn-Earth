@@ -591,7 +591,7 @@ $petalBrushSize = 2;
 
 // prepare flower graphic:
 $numberOfFlowerVariationsToDraw = 1;
-$flowerCanvasSize = 150;
+$flowerCanvasSize = 90;
 for ($k=0;$k<count($numberOfFlowerVariationsToDraw);$k++) {
 	${'flower'.$k} = imagecreate($flowerCanvasSize,$flowerCanvasSize);
 	$flowerTrans = imagecolorallocate(${'flower'.$k}, 0, 0, 0);
