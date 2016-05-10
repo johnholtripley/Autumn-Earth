@@ -887,7 +887,7 @@ if ("ontouchstart" in document.documentElement) {
 				if (deltaX < 0) {
 					ae.swipeLeft();
 				} else {
-					ae.swipeRight();
+					// ae.swipeRight();
 				}
 			}
 		}
