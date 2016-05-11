@@ -995,6 +995,17 @@ $butterflyColour = $butterflyColourPrefixes[mt_rand(0,count($butterflyColourPref
 } while ($thisButterflyName == $thisSecondButterflyName);
 $combinedButterflyName = $thisButterflyName." ".$thisSecondButterflyName;
 
+
+
+if($isNight == 1) {
+$combinedButterflyName .= " moth";
+} else {
+$combinedButterflyName .= " butterfly";
+}
+
+
+$combinedButterflyName = str_ireplace("++colour++", $butterflyColour, $combinedButterflyName);
+
 $shouldAddButterflyPrefix = mt_rand(1,30);
 switch ($shouldAddButterflyPrefix) {
     case 1:
@@ -1007,15 +1018,11 @@ switch ($shouldAddButterflyPrefix) {
        $combinedButterflyName = ucfirst($combinedButterflyName);
 } 
 
-if($isNight == 1) {
-$combinedButterflyName .= " moth";
-} else {
-$combinedButterflyName .= " butterfly";
-}
-
-
-$combinedButterflyName = str_ireplace("++colour++", $butterflyColour, $combinedButterflyName);
 $startingText = str_ireplace("++butterfly++", $combinedButterflyName, $startingText);
+
+
+
+
 $startingText = str_ireplace("++commonname++", $primaryCommonName, $startingText);
 $primaryCommonNamePlural = $primaryCommonName."s";
 // catch special cases for plurals:
