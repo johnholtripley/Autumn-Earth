@@ -952,6 +952,9 @@ if ($aquaticPos !== false) {
 if ($nightPos !== false) {
 	$isNight = 1;
 	}
+
+
+	
 // remove any property markers:
 $thisCommonName = str_ireplace("*", "", $thisCommonName);
 $thisCommonName = str_ireplace("^", "", $thisCommonName);
@@ -987,6 +990,7 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/herbarium/butterfly-name-suffixes.p
 $thisButterflyName = $butterflyPrefixes[mt_rand(0,count($butterflyPrefixes)-1)];
 do {
 $thisSecondButterflyName = $butterflySuffixes[mt_rand(0,count($butterflySuffixes)-1)];
+$butterflyColour = $butterflyColourPrefixes[mt_rand(0,count($butterflyColourPrefixes)-1)];
 // make sure the first and last words aren't identical:
 } while ($thisButterflyName == $thisSecondButterflyName);
 $combinedButterflyName = $thisButterflyName." ".$thisSecondButterflyName;
@@ -1002,7 +1006,15 @@ switch ($shouldAddButterflyPrefix) {
     default:
        $combinedButterflyName = ucfirst($combinedButterflyName);
 } 
+
+if($isNight == 1) {
+$combinedButterflyName .= " moth";
+} else {
 $combinedButterflyName .= " butterfly";
+}
+
+
+$combinedButterflyName = str_ireplace("++colour++", $butterflyColour, $combinedButterflyName);
 $startingText = str_ireplace("++butterfly++", $combinedButterflyName, $startingText);
 $startingText = str_ireplace("++commonname++", $primaryCommonName, $startingText);
 $primaryCommonNamePlural = $primaryCommonName."s";
