@@ -7,7 +7,7 @@
 // the version number is updated in the Gulp cacheBusting task: 
     var version = 'v::144::';
     var staticCacheName = version + 'static';
-    var pagesCacheName = version + 'pages';
+    var pagesCacheName = 'pages';
     var imagesCacheName = version + 'images';
     var assetsCacheName = version + 'assets';
     var fallBackImage = '/images/offline-fallback.jpg';
