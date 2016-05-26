@@ -116,6 +116,7 @@ picture('/images/placeholder.jpg', 'alt text', array(300,600,900));
 </div>
 <p>Test with <strong>strong</strong>, <em>emphasis</em>, and a date, 11<sup>th</sup> of April</p>
 <p>Text that has been <del>deleted</del> and then <ins>inserted</ins> for this <abbr title="Role Playing Game">RPG</abbr></p>
+<p>Pressing <kbd>Ctrl</kbd> will make you run</p>
 
 <blockquote><p>Do cats eat rats?</p><p>Do rats eat cats?</p><p>Do cats eat rats?</p><p>Do cats eat rats?</p></blockquote>
 

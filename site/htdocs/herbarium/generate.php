@@ -29,7 +29,7 @@ define("OAUTH_SECRET", "7f8t7rXScvWIk1AgXe20Z6AA9vRCaG7Vp2wJM964bZMEj");
 $connection = new TwitterOAuth(CONSUMER_KEY, CONSUMER_SECRET, OAUTH_TOKEN, OAUTH_SECRET);
 $connection->setTimeouts(10, 15);
 
-
+/*
 if($isLive) {
 // try and get media url length
 // https://dev.twitter.com/rest/reference/get/help/configuration
@@ -38,8 +38,10 @@ $mediaURLLength = intval($config->short_url_length_https);
 } else {
 	$mediaURLLength = 23;
 }
-
-
+*/
+// https://blog.twitter.com/express-even-more-in-140-characters
+// media links don't count towards the 140
+$mediaURLLength = 0;
 
 $media = $connection->upload('media/upload', ['media' => $_SERVER['DOCUMENT_ROOT'].'/images/herbarium/plants/'.$plantURL.'.jpg']);
 
@@ -952,6 +954,9 @@ if ($aquaticPos !== false) {
 if ($nightPos !== false) {
 	$isNight = 1;
 	}
+
+
+	
 // remove any property markers:
 $thisCommonName = str_ireplace("*", "", $thisCommonName);
 $thisCommonName = str_ireplace("^", "", $thisCommonName);
@@ -987,9 +992,21 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/herbarium/butterfly-name-suffixes.p
 $thisButterflyName = $butterflyPrefixes[mt_rand(0,count($butterflyPrefixes)-1)];
 do {
 $thisSecondButterflyName = $butterflySuffixes[mt_rand(0,count($butterflySuffixes)-1)];
+$butterflyColour = $butterflyColourPrefixes[mt_rand(0,count($butterflyColourPrefixes)-1)];
 // make sure the first and last words aren't identical:
 } while ($thisButterflyName == $thisSecondButterflyName);
 $combinedButterflyName = $thisButterflyName." ".$thisSecondButterflyName;
+
+
+
+if($isNight == 1) {
+$combinedButterflyName .= " moth";
+} else {
+$combinedButterflyName .= " butterfly";
+}
+
+
+$combinedButterflyName = str_ireplace("++colour++", $butterflyColour, $combinedButterflyName);
 
 $shouldAddButterflyPrefix = mt_rand(1,30);
 switch ($shouldAddButterflyPrefix) {
@@ -1002,8 +1019,12 @@ switch ($shouldAddButterflyPrefix) {
     default:
        $combinedButterflyName = ucfirst($combinedButterflyName);
 } 
-$combinedButterflyName .= " butterfly";
+
 $startingText = str_ireplace("++butterfly++", $combinedButterflyName, $startingText);
+
+
+
+
 $startingText = str_ireplace("++commonname++", $primaryCommonName, $startingText);
 $primaryCommonNamePlural = $primaryCommonName."s";
 // catch special cases for plurals:

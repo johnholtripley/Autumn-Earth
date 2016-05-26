@@ -24,7 +24,7 @@
     "A #|rarity# sea dwelling plant."
     ],
     "origin-night": [
-    "A #|rarity# night flowering plant pollinated by bats and moths."
+    "A #|rarity# night flowering plant pollinated by bats and moths. Particularly favoured by the ++butterfly++."
     ],
     "insects": ["++butterfly++", "bumble bee"],
     "habitats": ["ditches, marshes, pond edges, and river banks", "woods and hedges", "hedgerows and pathways", "woodlands and grassland", "disturbed ground, farm land and walls", "coastal areas and beside trade routes", "roadsides and waste ground", "woods, hedges, pastures, heaths and rocky areas", "cornfields and waste places", "cornfields and waste places"],

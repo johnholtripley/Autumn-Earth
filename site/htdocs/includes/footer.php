@@ -76,7 +76,7 @@ if($additionalAssets != "") {
 echo $additionalAssets;
 }
 
-include($_SERVER['DOCUMENT_ROOT']."/includes/google-analytics.php");
+
 ?>
 
 <?php if ($useCriticalCssInling): ?>
@@ -95,6 +95,7 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/google-analytics.php");
 
   <?php  endif;  ?>
 
+<?php include($_SERVER['DOCUMENT_ROOT']."/includes/google-analytics.php"); ?>
 
 </body>
 </html>
