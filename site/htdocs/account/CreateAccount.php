@@ -230,14 +230,14 @@ echo "<p>$error</p>";
 
 <form name="newaccountform" method="POST" action="<?php echo $thisurl ?>">
 
-<label for="accname">Account Name* </label><input name="accname" type="text" id="accname" value="<?php echo @$eaccname ?>" /><br />
-<label for="emailaddr">Email Address* </label><input name="emailaddr" type="text" id="emailaddr" onfocus="elemShow('Help1');" onblur="elemHide('Help1');" value="<?php echo @$eemailaddr ?>" /><br />
+<label for="accname">Account Name* </label><input name="accname" type="text" id="accname" value="<?php echo @$eaccname ?>" autocomplete="username"><br />
+<label for="emailaddr">Email Address* </label><input name="emailaddr" type="text" id="emailaddr" automcomplete="email" value="<?php echo @$eemailaddr ?>" /><br />
 <div class="ContextHelp" id="Help1"><p>The email address is only used to keep you up to date with news and events. You can choose which information you'd like to receive.</p><div class="ContextHelpBottom">&nbsp;</div></div>
-<label for="pword">Password* </label><input name="pword" type="password" id="pword" /><br />
+<label for="pword">Password* </label><input name="pword" type="password" id="pword" autocomplete="new-password"><br />
 <label for="cpword">Confirm Password* </label><input name="cpword" type="password" id="cpword" /><br />
 <label for="signature">Signature </label><input name="signature" type="text" id="signature" value="<?php echo @$psignature ?>" /><br />
 <label for="bday">Birthday </label>
-<div class="selectWrapper"><select name="bday" id="bday">
+<div class="selectWrapper"><select name="bday" id="bday" autocomplete="bday bday-day">
 
 <?php
 for($di=1; $di<32; $di++) {
@@ -249,7 +249,7 @@ for($di=1; $di<32; $di++) {
 }
 
 echo '</select></div>';
-echo '<div class="selectWrapper"><select name="bmonth" id="bmonth">';
+echo '<div class="selectWrapper"><select name="bmonth" id="bmonth" autocomplete="bday bday-month">';
 
 for($di=1; $di<13; $di++) {
 	echo '<option value="' . $di .'"';
@@ -265,7 +265,7 @@ echo '</select></div>';
 // find the current year:
 $thisyear = date("Y", Time());
 
-echo '<div class="selectWrapper"><select name="byear" id="byear">';
+echo '<div class="selectWrapper"><select name="byear" id="byear" autocomplete="bady bday-year">';
 for($di=$thisyear; $di>1900; $di--) {
 	echo '<option value="' . $di .'"';
 	if ($di == $ebyear) {
