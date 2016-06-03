@@ -120,6 +120,18 @@ $result = mysql_query($query) or die ("couldn't execute tblplant query");
 }
 
 
+
+function capValues($val,$min,$max) {
+	if($val<$min) {
+	$val = $min;
+	}
+	if($val>$max) {
+		$val = $max;
+	}
+	return $val;
+}
+
+
 function makeSeed() {
 	// http://php.net/manual/en/function.mt_srand.php
   list($usec, $sec) = explode(' ', microtime());
@@ -274,7 +286,8 @@ $rootAxiom = "F";
 $allPossibleRootRules = array(array("F"=>"FF[+X+X][-X-X]"));
 $allPossibleRootRuleIterations = array(3);
 $allPossibleRootRuleDistances = array(35);
-$startRootAngle = 180;
+$startRootAngle = 180 + $startAngle;
+$startRootAngle = capValues($startRootAngle,0,360);
 $rootAngle = 30;
 
 
@@ -288,6 +301,8 @@ $allPossibleRuleIterations = array(4);
 $allPossibleRuleDistances = array(50);
 $startAngle = 0;
 $angle = 30;
+$startRootAngle = 180 + $startAngle;
+$startRootAngle = capValues($startRootAngle,0,360);
 // testing ------------------------
 
 
@@ -1057,15 +1072,7 @@ $petalGreen += $colourVariation;
 $petalBlue += $colourVariation;
 
 
-function capValues($val,$min,$max) {
-	if($val<$min) {
-	$val = $min;
-	}
-	if($val>$max) {
-		$val = $max;
-	}
-	return $val;
-}
+
 $petalRed = capValues($petalRed,0,255);
 $petalGreen = capValues($petalGreen,0,255);
 $petalBlue = capValues($petalBlue,0,255);
