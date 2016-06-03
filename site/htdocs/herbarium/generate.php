@@ -1039,7 +1039,12 @@ $displayPetalColourName = $petalColourName;
 $petalRed = $petalColours[$petalColourName][0];
 $petalGreen = $petalColours[$petalColourName][1];
 $petalBlue = $petalColours[$petalColourName][2];
+if($isNight) {
+	// make a darker colour:
+$colourVariation = (mt_rand(1,40))-40;
+} else {
 $colourVariation = (mt_rand(1,80))-40;
+}
 $lighterNames = array("light","bright","pale");
 $darkerNames = array("dark","deep");
 if($colourVariation>20) {
@@ -1051,24 +1056,20 @@ $petalRed += $colourVariation;
 $petalGreen += $colourVariation;
 $petalBlue += $colourVariation;
 
-if($petalRed<0) {
-	$petalRed = 0;
+
+function capValues($val,$min,$max) {
+	if($val<$min) {
+	$val = $min;
+	}
+	if($val>$max) {
+		$val = $max;
+	}
+	return $val;
 }
-if($petalGreen<0) {
-	$petalGreen = 0;
-}
-if($petalBlue<0) {
-	$petalBlue = 0;
-}
-if($petalRed>255) {
-	$petalRed = 255;
-}
-if($petalGreen>255) {
-	$petalGreen = 255;
-}
-if($petalBlue>255) {
-	$petalBlue = 255;
-}
+$petalRed = capValues($petalRed,0,255);
+$petalGreen = capValues($petalGreen,0,255);
+$petalBlue = capValues($petalBlue,0,255);
+
 
 $startingText = str_ireplace("++petalcolour++", $displayPetalColourName, $startingText);
 
