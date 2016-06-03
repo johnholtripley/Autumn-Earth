@@ -203,7 +203,7 @@ WHERE tblacct.accountName='".$processedlogin."' and tblmail.mailread = '0'";
 	
 	echo '</form>'."\n";
 	echo '<br />'."\n";
-	echo '<a href="/account/join/" title="Create a new account">Create a new account</a>'."\n";
+	echo '<a href="/account/join/">Create a new account</a>'."\n";
 		
 		
 		}
@@ -239,7 +239,7 @@ WHERE tblacct.accountName='".$processedlogin."' and tblmail.mailread = '0'";
 	echo '<input type="submit" name="subbutton" id="subbutton" value="log in" />'."\n";
 	echo '</form>'."\n";
 	echo '<br />'."\n";
-	echo '<a href="/account/join/" title="Create a new account">Create a new account</a>'."\n";
+	echo '<a href="/account/join/">Create a new account</a>'."\n";
 }
 
 echo'</div>'."\n";
