@@ -1,0 +1,4 @@
+use sculpting rock method
+particle system for leaves
+add branches with sapling
+add flowers from plantStudio
