@@ -74,6 +74,8 @@ $textString = substr($textString, 0, $pos+1);
 	$textString = $latinName."\r\n".'('.$commonNameString.')';
 }
 }
+// twitter doesn't handle html entities:
+$textString = str_replace("&rsquo;", "'", $textString);
 echo "<p>Tweeted content: ".$textString."</p>";
 
 
