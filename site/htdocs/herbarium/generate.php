@@ -684,18 +684,12 @@ if($thisNodesLength == $thisMaxDepth) {
 
 	$pngTransparency = imagecolorallocatealpha(${$whichElementToUse} , 0, 0, 0, 127);
 	imagefill(${$whichElementToUse} , 0, 0, $pngTransparency);
-	//leaves at 90deg multiples have a small border along the edge:
-	/*
-	if($thisRotation%90 == 0) {
-		$thisRotation += 5;
-	}
-*/
-// weird bug on live - if rotating more than 45 degrees it would add black where the transparency should be. So rotate twice - once to get as close as possible in whole 45 degree increments, and then the last bit:
+
+// weird bug on live - if rotating more than 45 degrees it would add black where the transparency should be. So rotate twice - once to get as close as possible in whole 90 degree increments, and then the last bit:
 $steppedRotation  = 90 * floor($thisRotation/90);
 	$rotatedLeaf = imagerotate(${$whichElementToUse}, $steppedRotation, $pngTransparency);
-
+// now rotate again for the difference:
 $thisNextRotation = $thisRotation-$steppedRotation;
-
 $pngTransparency = imagecolorallocatealpha($rotatedLeaf , 255, 255, 255, 127);
 $rotatedLeaf = imagerotate($rotatedLeaf, $thisNextRotation, $pngTransparency);
 
