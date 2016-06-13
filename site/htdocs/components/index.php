@@ -225,7 +225,12 @@ picture('/images/placeholder.jpg', 'alt text', array(300,600,900));
 <input type="checkbox" value="1" id="checkboxInput" checked="checked"> <label for="checkboxInput"><span></span>Checkbox</label>
  
 
+
 <input type="radio" name="radioInputs" id="radioInput1" value="1" checked="checked" /><label for="radioInput1"><span></span>Tweedledum</label> <input type="radio" name="radioInputs" id="radioInput2" value="0" /> <label for="radioInput2"><span></span>Tweedledee</label> 
+
+
+
+<input type="checkbox" value="1" id="switchInput" checked="checked" class="switch"> <label for="switchInput"><span></span>Checkbox Switch</label>
 
 
   <input type="file" name="file" id="file" class="fileInput" data-multiple-caption="{count} files selected" multiple>

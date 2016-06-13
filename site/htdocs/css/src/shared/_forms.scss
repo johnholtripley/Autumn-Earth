@@ -205,18 +205,61 @@ opacity: 1;
 // enhance with scale if supported:
 div:not(#foo)>#pageContent input[type='checkbox']+label span:before {
 opacity: 1;
- -ms-transform: scale(0); 
-    -webkit-transform: scale(0); 
-    transform: scale(0);
+
+    @include transform(scale(0));
   @include transition(transform 0.2s);position: absolute;
 }
 
     div:not(#foo)>#pageContent input[type='checkbox']:checked+label span:before {
- -ms-transform: scale(1); 
-    -webkit-transform: scale(1); 
-    transform: scale(1);
+ @include transform(scale(1));
 }
 }
+
+
+
+
+
+// ----------------------------
+// 'switch' style checkboxes
+
+div:not(#foo)>#pageContent input[type='checkbox'] {
+    &.switch+label span {
+        display: inline-block;
+        cursor: pointer;
+        width: $radioAndCheckboxSize*2;
+        height: $radioAndCheckboxSize;
+        background: #fff;
+        border-radius: $radioAndCheckboxSize;
+        @include transition(background 0.4s ease);
+        &:before {
+            content: "";
+            width: $radioAndCheckboxSize;
+            height: $radioAndCheckboxSize;
+            border-radius: $radioAndCheckboxSize;
+            background: #fff;
+            border: 1px solid #000;
+            left: 0;
+            @include transition(left 0.4s ease);
+            @include transform(scale(1));
+        }
+    }
+    &:checked.switch+label span {
+        background: #64bd63;
+        &:before {
+            left: $radioAndCheckboxSize;
+            opacity: 1;
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
 
 
 
