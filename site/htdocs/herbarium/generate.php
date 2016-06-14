@@ -274,12 +274,13 @@ for ($i=0;$i<count($rootColours);$i++) {
 	
 	$axiom = "X";
 
-	$allPossibleRules = array(array("X"=>"S2X[+X]X[-X]X"),array("X"=>"S2X[+X]X[-X][X]"),array("X"=>"S3XX-[-X+X+X]+[+X-X-X]"),array("X"=>"S2F[+X]F[-X]+X","F"=>"FF"),array("X"=>"S2F[+X][-X]FX","F"=>"FF"),array("X"=>"S2F-[[X]+X]+F[+FX]-X","F"=>"FF"));
+	// $allPossibleRules = array(array("X"=>"S2X[+X]X[-X]X"),array("X"=>"S2X[+X]X[-X][X]"),array("X"=>"S3XX-[-X+X+X]+[+X-X-X]"),array("X"=>"S2F[+X]F[-X]+X","F"=>"FF"),array("X"=>"S2F[+X][-X]FX","F"=>"FF"),array("X"=>"S2F-[[X]+X]+F[+FX]-X","F"=>"FF"));
+$allPossibleRules = array(array("X"=>"F","F"=>"FF[+FL][-FL][++FL][--FL]"), array("X"=>"F","F"=>"FF[++FL][--FL]"));
+	$allPossibleRuleIterations = array(4,4);
+$allPossibleRuleDistances = array(50,50);
 
-	$allPossibleRuleIterations = array(5,6,4,6,6,6);
-	$allPossibleRuleDistances = array(2,3,8,3,3,3);
-
-	$startAngle = mt_rand (-20,20);
+	//$startAngle = mt_rand (-20,20);
+	$startAngle = 0;
 	$angle = mt_rand(12,40);
 
 
@@ -296,17 +297,17 @@ $rootAngle = 30;
 
 
 
-
+/*
 // testing ------------------------
-$allPossibleRules = array(array("X"=>"F","F"=>"FF[+FL][-FL][++FL][--FL]"));
-$allPossibleRuleIterations = array(4);
-$allPossibleRuleDistances = array(50);
+$allPossibleRules = array(array("X"=>"F","F"=>"FF[+FL][-FL][++FL][--FL]"), array("X"=>"F","F"=>"FF[++FL][--FL]"));
+$allPossibleRuleIterations = array(4,4);
+$allPossibleRuleDistances = array(50,50);
 $startAngle = 0;
 $angle = 30;
 $startRootAngle = 180 + $startAngle;
 $startRootAngle = capValues($startRootAngle,0,360);
 // testing ------------------------
-
+*/
 
 
 
