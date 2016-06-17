@@ -95,7 +95,7 @@ gulp.task('csslint', function lintCssTask() {
     .pipe(gulpStylelint({
         reportOutputDir: 'reports/lint',
       reporters: [
-        {formatter: 'json', save: 'report.json'}
+        {formatter: 'verbose', save: 'report.txt'}
       ]
     }));
 });
