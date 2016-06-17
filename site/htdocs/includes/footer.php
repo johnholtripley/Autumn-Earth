@@ -41,6 +41,9 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/search.php");
 	<div class="small-12 column">
 <p>&copy; 2004&ndash;<?php echo date("Y"); ?> Autumn Earth</p>
 <ul>
+	<li><a href="/colophon/">Colophon</a></li>
+	</ul>
+<ul>
 	<li><a href="https://twitter.com/autumnearth/">Twitter</a></li>
 	<li><a href="https://www.youtube.com/c/autumnearth/">YouTube</a></li>
 	<li><a href="https://autumnearth.tumblr.com/">Tumblr</a></li>
