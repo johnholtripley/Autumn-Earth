@@ -78,10 +78,26 @@ gulp.task('jshint', function() {
         .pipe(jshint.reporter('default'))
 });
 
+
+/*
 gulp.task('csslint', function() {
     gulp.src('htdocs/css/*.css')
         .pipe(csslint())
         .pipe(csslint.reporter());
+});
+*/
+
+gulp.task('csslint', function lintCssTask() {
+  const gulpStylelint = require('gulp-stylelint');
+
+  return gulp
+    .src('htdocs/css/base.css')
+    .pipe(gulpStylelint({
+        reportOutputDir: 'reports/lint',
+      reporters: [
+        {formatter: 'json', save: 'report.json'}
+      ]
+    }));
 });
 
 
