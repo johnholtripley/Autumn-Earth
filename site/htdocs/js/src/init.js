@@ -46,3 +46,13 @@ if ('serviceWorker' in navigator) {
         // dialog.hide()
       });
     }());
+
+
+
+
+
+
+
+// cancel the <head> timeout as the JS has all loaded and the enhanced UI should show:
+clearTimeout( fallbackTimeout ); 
+document.documentElement.className += " js";

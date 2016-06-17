@@ -100,13 +100,19 @@ echo '<link rel="next" href="/'.$thisSection.'/page/'.($pagenumber+1).'">';
 
 
 <script>
-    var cutsTheMustard = false;
-    if('querySelectorAll' in document && 'addEventListener' in window) {
-     cutsTheMustard = true;
-      document.documentElement.className += " js";
-     }
-     cacheVersion = <?php echo $cacheVersion; ?>;
-  </script>
+  var cutsTheMustard = false;
+  function removeClass() {
+    document.documentElement.className = document.documentElement.className.replace("js", " " );
+  }
+  if('querySelectorAll' in document && 'addEventListener' in window) {
+    cutsTheMustard = true;
+    document.documentElement.className += " js";
+
+    
+    var fallbackTimeout = setTimeout(removeClass, 8000);
+  }
+  cacheVersion = <?php echo $cacheVersion; ?>;
+</script>
 
 <?php if ($useCriticalCssInling): ?>
  <style><?php include '/css/critical.css'; ?></style>
