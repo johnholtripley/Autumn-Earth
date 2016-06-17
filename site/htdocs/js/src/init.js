@@ -54,5 +54,6 @@ if ('serviceWorker' in navigator) {
 
 
 // cancel the <head> timeout as the JS has all loaded and the enhanced UI should show:
+// https://www.filamentgroup.com/lab/enhancing-optimistically.html
 clearTimeout( fallbackTimeout ); 
 document.documentElement.className += " js";
