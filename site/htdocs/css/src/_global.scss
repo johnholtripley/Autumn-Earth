@@ -234,4 +234,8 @@ width: 84px;
 
 
 
-
+.responsiveBG {
+    background-position: 50% 50%;
+    background-repeat: no-repeat;
+ @include background-size(cover);   
+}

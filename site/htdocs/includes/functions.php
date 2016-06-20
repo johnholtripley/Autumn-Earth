@@ -1339,7 +1339,7 @@ function picture($source, $alt, $breakpoints, $forceResize = false, $classOrProp
 	global $fullSitePath;
 	$thisHtmlOutput = '<picture>';
 	if(!$forceResize) {
-		// don't use the original image size if true - use the pciture element to fiorce a resize of the image, and exclude the original
+		// don't use the original image size if true - use the picture element to force a resize of the image, and exclude the original
 		$thisHtmlOutput .= '<source media="(min-width: '.$breakpoints[(count($breakpoints)-1)].'px)" srcset="'.$source.'">';
 	}
 	for($i = count($breakpoints)-1; $i>=0;$i--) {
@@ -1359,7 +1359,39 @@ function picture($source, $alt, $breakpoints, $forceResize = false, $classOrProp
 	}
 }
 
+function responsiveBackground($source, $breakpoints, &$addToBuffer = '') {
+	global $fullSitePath;
 
+$thisHtmlOutput = '<div class="responsiveBG" style="';
+// get aspect ratio:
+	$sourceDimensions = getimagesize($_SERVER['DOCUMENT_ROOT'].$source);
+	$sourceWidth = $sourceDimensions[0];
+	$sourceHeight = $sourceDimensions[1];
+	$aspectRatio = $sourceHeight/$sourceWidth*100;
+	$thisHtmlOutput .= 'padding-bottom:'.$aspectRatio.'%;';
+	$thisHtmlOutput .= 'background-image:url('.$fullSitePath.$source.');';
+	for($i=0; $i<count($breakpoints); $i++) {
+
+$thisHtmlOutput .= '@media (max-width: '.$breakpoints[$i].'px) { background-image:url('.$fullSitePath.imageResized($source,$breakpoints[$i]).');}';
+	}
+$thisHtmlOutput .= '@media (min-width: '.(intval($breakpoints[count($breakpoints)-1])+1).'px) { background-image:url('.$fullSitePath.$source.');}';
+/*
+@media (max-width: 300px) {   background-image:url('/images/resized/300/placeholder.jpg'); }
+@media (max-width: 600px) {   background-image:url('/images/resized/600/placeholder.jpg'); }
+@media (max-width: 900px) {   background-image:url('/images/resized/900/placeholder.jpg'); }
+@media (min-width: 901px) {   background-image:url('/images/placeholder.jpg'); }
+*/
+$thisHtmlOutput .= '"></div>';
+
+if($addToBuffer == '') {
+		echo $thisHtmlOutput;
+	} else {
+		// if not echoing the results immediately - for ajax requests and so on:
+		$addToBuffer .= $thisHtmlOutput;
+	}
+
+
+}
 
 
 function compress($string) {

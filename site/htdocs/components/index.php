@@ -101,12 +101,20 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/functions.php");
 <p>So she was considering in her own mind (as well as she could, for the hot day made her feel very sleepy and stupid), whether the pleasure of <a href="#">making a daisy-chain</a> would be worth the trouble of getting up and picking the daisies, when suddenly a White Rabbit with pink eyes ran close by her.</p>
 
 
-
+<h2>&lt;picture&gt; element</h2>
 <?php
 picture('/images/placeholder.jpg', 'alt text', array(300,600,900));
 ?>
 
+<h2>Responsive background-image</h2>
+<?php
+responsiveBackground('/images/placeholder.jpg', array(300,600,900));
+?>
 
+
+
+
+<h2>&lt;video&gt; element</h2>
 <div class="videoWrapper" style="padding-bottom: 60.88%;">
   <video preload="auto" controls="controls" muted="muted" poster="/images/placeholder.jpg">
     <source src="/videos/placeholder.mp4" type="video/mp4"></source>
