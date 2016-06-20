@@ -1361,31 +1361,27 @@ function picture($source, $alt, $breakpoints, $forceResize = false, $classOrProp
 
 function responsiveBackground($source, $breakpoints, &$addToBuffer = '') {
 	global $fullSitePath;
-
-$thisHtmlOutput = '<div class="responsiveBG" style="';
-// get aspect ratio:
+	// generate a unique id for this div
+	$uniqueId = 'img'.uniqid();
+	$thisHtmlOutput = '<style>#'.$uniqueId.'{';
+	// get aspect ratio:
 	$sourceDimensions = getimagesize($_SERVER['DOCUMENT_ROOT'].$source);
 	$sourceWidth = $sourceDimensions[0];
 	$sourceHeight = $sourceDimensions[1];
 	$aspectRatio = $sourceHeight/$sourceWidth*100;
-	$thisHtmlOutput .= 'padding-bottom:'.round($aspectRatio,2).'%;';
-	$thisHtmlOutput .= 'background-image:url('.$fullSitePath.$source.');';
-	for($i=0; $i<count($breakpoints); $i++) {
-
-$thisHtmlOutput .= '@media (max-width: '.$breakpoints[$i].'px) { background-image:url('.$fullSitePath.imageResized($source,$breakpoints[$i]).');}';
+	$thisHtmlOutput .= 'padding-bottom:'.round($aspectRatio,2).'%;}';
+	//	$thisHtmlOutput .= 'background-image:url('.$fullSitePath.$source.');';
+	for($i=count($breakpoints)-1; $i>=0; $i--) {
+		$thisHtmlOutput .= '@media (max-width: '.$breakpoints[$i].'px) { #'.$uniqueId.'{ background-image:url('.$fullSitePath.imageResized($source,$breakpoints[$i]).');}}';
 	}
-$thisHtmlOutput .= '@media (min-width: '.(intval($breakpoints[count($breakpoints)-1])+1).'px) { background-image:url('.$fullSitePath.$source.');}';
-
-$thisHtmlOutput .= '"></div>';
-
-if($addToBuffer == '') {
+	$thisHtmlOutput .= '@media (min-width: '.(intval($breakpoints[count($breakpoints)-1])+1).'px) { #'.$uniqueId.'{ background-image:url('.$fullSitePath.$source.');}}';
+	$thisHtmlOutput .= '</style><div id="'.$uniqueId.'" class="responsiveBG"></div>';
+	if($addToBuffer == '') {
 		echo $thisHtmlOutput;
 	} else {
 		// if not echoing the results immediately - for ajax requests and so on:
 		$addToBuffer .= $thisHtmlOutput;
 	}
-
-
 }
 
 
