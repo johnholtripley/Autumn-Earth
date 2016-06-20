@@ -1368,19 +1368,14 @@ $thisHtmlOutput = '<div class="responsiveBG" style="';
 	$sourceWidth = $sourceDimensions[0];
 	$sourceHeight = $sourceDimensions[1];
 	$aspectRatio = $sourceHeight/$sourceWidth*100;
-	$thisHtmlOutput .= 'padding-bottom:'.$aspectRatio.'%;';
+	$thisHtmlOutput .= 'padding-bottom:'.round($aspectRatio,2).'%;';
 	$thisHtmlOutput .= 'background-image:url('.$fullSitePath.$source.');';
 	for($i=0; $i<count($breakpoints); $i++) {
 
 $thisHtmlOutput .= '@media (max-width: '.$breakpoints[$i].'px) { background-image:url('.$fullSitePath.imageResized($source,$breakpoints[$i]).');}';
 	}
 $thisHtmlOutput .= '@media (min-width: '.(intval($breakpoints[count($breakpoints)-1])+1).'px) { background-image:url('.$fullSitePath.$source.');}';
-/*
-@media (max-width: 300px) {   background-image:url('/images/resized/300/placeholder.jpg'); }
-@media (max-width: 600px) {   background-image:url('/images/resized/600/placeholder.jpg'); }
-@media (max-width: 900px) {   background-image:url('/images/resized/900/placeholder.jpg'); }
-@media (min-width: 901px) {   background-image:url('/images/placeholder.jpg'); }
-*/
+
 $thisHtmlOutput .= '"></div>';
 
 if($addToBuffer == '') {
