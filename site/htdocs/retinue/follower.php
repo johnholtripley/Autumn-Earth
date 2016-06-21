@@ -18,9 +18,23 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/header.php");
 
 
 <?php
+
+$showAll = false;
+if(isset($_GET["show"])) {
+	if($_GET["show"] == "all") {
+$showAll = true;
+	}
+}
+
+
 echo $_GET["character"];
 echo "<br>";
+
+if($showAll) {
+echo '<h2>All followers</h2>';
+} else {
 echo $_GET["follower"];
+}
 ?>
 
 

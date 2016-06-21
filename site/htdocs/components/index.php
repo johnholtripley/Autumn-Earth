@@ -125,6 +125,7 @@ responsiveBackground('/images/placeholder.jpg', array(300,600,900));
 <p>Test with <strong>strong</strong>, <em>emphasis</em>, and a date, 11<sup>th</sup> of April</p>
 <p>Text that has been <del>deleted</del> and then <ins>inserted</ins> for this <abbr title="Role Playing Game">RPG</abbr></p>
 <p>Pressing <kbd>Ctrl</kbd> will make you run</p>
+<p>A css only <span class="tooltip" aria-label="Sample text for your tooltip! wow that's fantastic - who'd have thought it" tabindex="0">tooltip</span> here.</p>
 
 <blockquote><p>Do cats eat rats?</p><p>Do rats eat cats?</p><p>Do cats eat rats?</p><p>Do cats eat rats?</p></blockquote>
 

@@ -1,0 +1,48 @@
+//The good stuff
+.tooltip {
+    cursor: default;
+    position: relative;
+    // tooltip text container
+    &:before {
+        bottom: 2em;
+        left: -5em;
+        background-color: $accentColour;
+        border-radius: 5px;
+        //This pulls in the text from the element with the tooltip: 
+        content: attr(aria-label);
+        padding: 1em;
+        text-transform: none;
+        transition: all 0.5s ease;
+        width: 10em;
+    }
+    // tooltip arrow
+    &:after {
+        bottom: 1.5em;
+        left: 50%;
+        border-left: 0.5em solid transparent;
+        border-right: 0.5em solid transparent;
+        border-top: 0.5em solid $accentColour;
+        content: "";
+        font-size: 0;
+        line-height: 0;
+        margin-left: -1em;
+        display: block;
+        width: 0;
+    }
+    &:before,
+    &:after {
+        position: absolute;
+        color: #000;
+        font-size: 1em;
+        opacity: 0;
+        pointer-events: none;
+        text-align: center;
+        @include transition(opacity 0.75s ease);
+    }
+    &:focus:before,
+    &:focus:after,
+    &:hover:before,
+    &:hover:after {
+        opacity: 1;
+    }
+}
