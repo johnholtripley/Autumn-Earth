@@ -344,6 +344,9 @@ RewriteRule    ^herbarium/generate/?$     herbarium/generate/index.php      [NC,
 RewriteRule    ^herbarium/page/([0-9-]+)/?$     herbarium/index.php?page=$1 [NC,L]
 RewriteRule    ^herbarium/([A-Za-z0-9-]+)/?$    herbarium/plant-detail.php?plant=$1    [NC,L] 
 
+RewriteRule    ^retinue/quest/([A-Za-z0-9-]+)/?$    retinue/quest.php?questName=$1    [NC,L]  
+RewriteRule    ^retinue/([A-Za-z0-9-]+)/([A-Za-z0-9-]+)/?$    retinue/follower.php?character=$1&follower=$2    [NC,L]  
+
 RewriteRule    ^community/([A-Za-z0-9-]+)/([A-Za-z0-9-]+)/?$    community/guilds/viewpage.php?cleaned=1&guild=$1&page=$2    [NC,L]  
 RewriteRule    ^chronicle/archive/?$     news/archive.php      [NC,L]
 RewriteRule    ^chronicle/page/([0-9-]+)/?$     news/archive.php?page=$1 [NC,L]
