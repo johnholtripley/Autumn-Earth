@@ -1402,6 +1402,24 @@ function compress($string) {
 }
 
 
+function sortSequentialSyllables($syllables) {
+	// take an array of syllables and return and key array that lists every syllable with the syllables that can follow it
+	// useful for procedurally creating names
+	$i = 0;
+	$orderedSyllables = array();
+	do {
+		if($syllables[$i] != " ") {
+			if (array_key_exists($syllables[$i], $orderedSyllables)) {
+				array_push($orderedSyllables[($syllables[$i])],$syllables[($i+1)]);
+			} else {
+				$orderedSyllables[$syllables[$i]] = array($syllables[($i+1)]);
+			}
+		}
+		$i++;
+	} while ($i < count($syllables));
+	return $orderedSyllables;
+}
+
 
 
 ?>

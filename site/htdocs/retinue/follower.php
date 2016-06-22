@@ -27,6 +27,15 @@ $showAll = true;
 }
 
 
+// follower names should be unique per character, but not globally, so need to check for followers of that name assigned to that character
+
+$possibleFollowerFirstNameSyllables = ["an", "boo", " ", "an", "caa", " ", "ba", "de", "fe", " ", "ba", "fe", "ba", "an", " "];
+$possibleFollowerFirstNames = sortSequentialSyllables($possibleFollowerFirstNameSyllables);
+echo "<code><pre>";
+var_dump($possibleFollowerFirstNameSyllables);
+echo "<hr>";
+var_dump($possibleFollowerFirstNames);
+echo "</pre></code>";
 echo $_GET["character"];
 echo "<br>";
 
