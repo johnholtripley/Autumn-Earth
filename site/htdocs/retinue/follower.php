@@ -29,13 +29,58 @@ $showAll = true;
 
 // follower names should be unique per character, but not globally, so need to check for followers of that name assigned to that character
 
-$possibleFollowerFirstNameSyllables = ["an", "boo", " ", "an", "caa", " ", "ba", "de", "fe", " ", "ba", "fe", "ba", "an", " "];
-$possibleFollowerFirstNames = sortSequentialSyllables($possibleFollowerFirstNameSyllables);
-echo "<code><pre>";
-var_dump($possibleFollowerFirstNameSyllables);
-echo "<hr>";
-var_dump($possibleFollowerFirstNames);
-echo "</pre></code>";
+
+
+
+
+include($_SERVER['DOCUMENT_ROOT']."/retinue/generation/male-first-names.php");
+include($_SERVER['DOCUMENT_ROOT']."/retinue/generation/female-first-names.php");
+$possibleMaleFirstNames = sortSequentialSyllables($maleFirstNameSyllables);
+$possibleFemaleFirstNames = sortSequentialSyllables($femaleFirstNameSyllables);
+
+
+
+
+
+
+$numberOfSyllablesAvailable = count($possibleMaleFirstNames);
+do {
+$syllableCount = 0;
+// pick a random start syllable:
+$firstWord = array_rand($possibleMaleFirstNames);
+$maleName = $firstWord;
+do {
+	
+$nextSyllable = $possibleMaleFirstNames[$firstWord][mt_rand(0,count($possibleMaleFirstNames[$firstWord])-1)];
+$maleName .= $nextSyllable;
+$firstWord = array_rand($possibleMaleFirstNames);
+$syllableCount ++;
+} while ($nextSyllable != " ");
+} while (!($syllableCount>=3));
+
+
+
+echo "<h2>".$maleName."</h2>";
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 echo $_GET["character"];
 echo "<br>";
 
