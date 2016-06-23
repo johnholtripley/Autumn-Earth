@@ -601,6 +601,10 @@ function cleanURL( $string ) {
 	//Lower case everything
 
 	$string = strtolower( $string );
+
+// convert accent characters to non-accented equivilent:
+$string = strtr($string, array('é' => 'e', 'è' => 'e'));
+
 	//Make alphanumeric (removes all other characters)
 	$string = preg_replace( "/[^a-z0-9_\s-]/", "", $string );
 	//Clean up multiple dashes or whitespaces

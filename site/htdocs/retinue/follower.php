@@ -116,8 +116,9 @@ $surname = ucfirst($surname);
 
 
 echo "<h2>".$maleName." ".$surname." (male)</h2>";
+echo "<p>(".cleanURL($maleName." ".$surname).")</p>";
 echo "<h2>".$femaleName." ".$surname." (female)</h2>";
-
+echo "<p>(".cleanURL($femaleName." ".$surname).")</p>";
 
 
 
