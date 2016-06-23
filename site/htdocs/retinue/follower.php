@@ -45,22 +45,36 @@ $possibleFemaleFirstNames = sortSequentialSyllables($femaleFirstNameSyllables);
 
 $numberOfSyllablesAvailable = count($possibleMaleFirstNames);
 do {
-$syllableCount = 0;
-// pick a random start syllable:
-$firstWord = array_rand($possibleMaleFirstNames);
-$maleName = $firstWord;
-do {
-	
-$nextSyllable = $possibleMaleFirstNames[$firstWord][mt_rand(0,count($possibleMaleFirstNames[$firstWord])-1)];
-$maleName .= $nextSyllable;
-$firstWord = array_rand($possibleMaleFirstNames);
-$syllableCount ++;
-} while ($nextSyllable != " ");
+	$syllableCount = 0;
+	// pick a random start syllable:
+	$firstWord = array_rand($possibleMaleFirstNames);
+	$maleName = $firstWord;
+	do {
+		$nextSyllable = $possibleMaleFirstNames[$firstWord][mt_rand(0,count($possibleMaleFirstNames[$firstWord])-1)];
+		$maleName .= $nextSyllable;
+		$firstWord = $nextSyllable;
+		$syllableCount ++;
+	} while ($nextSyllable != " ");
 } while (!($syllableCount>=3));
+$maleName = ucfirst($maleName);
 
+$numberOfSyllablesAvailable = count($possibleFemaleFirstNames);
+do {
+	$syllableCount = 0;
+	// pick a random start syllable:
+	$firstWord = array_rand($possibleFemaleFirstNames);
+	$femaleName = $firstWord;
+	do {
+		$nextSyllable = $possibleFemaleFirstNames[$firstWord][mt_rand(0,count($possibleFemaleFirstNames[$firstWord])-1)];
+		$femaleName .= $nextSyllable;
+		$firstWord = $nextSyllable;
+		$syllableCount ++;
+	} while ($nextSyllable != " ");
+} while (!($syllableCount>=3));
+$femaleName = ucfirst($femaleName);
 
-
-echo "<h2>".$maleName."</h2>";
+echo "<h2>".$maleName." (male)</h2>";
+echo "<h2>".$femaleName." (female)</h2>";
 
 
 

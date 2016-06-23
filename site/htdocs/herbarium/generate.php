@@ -867,10 +867,10 @@ do {
 	
 $nextSyllable = $latinSyllables[$firstWord][mt_rand(0,count($latinSyllables[$firstWord])-1)];
 $latinName .= $nextSyllable;
-$firstWord = array_rand($latinSyllables);
+$firstWord = $nextSyllable;
 $syllableCount ++;
 } while ($nextSyllable != " ");
-} while (!(($syllableCount>=3) && ($syllableCount<=5)));
+} while (!(($syllableCount>=3) && ($syllableCount<=6)));
 
 do {
 $syllableCount = 0;
@@ -880,10 +880,10 @@ $secondLatinName = $secondWord;
 do {
 $nextSyllable = $latinSyllables[$secondWord][mt_rand(0,count($latinSyllables[$secondWord])-1)];
 $secondLatinName .= $nextSyllable;
-$secondWord = array_rand($latinSyllables);
+$secondWord = $nextSyllable;
 $syllableCount ++;
 } while ($nextSyllable != " ");
-} while (!(($syllableCount>=3) && ($syllableCount<=5)));
+} while (!(($syllableCount>=3) && ($syllableCount<=6)));
 $latinName .= $secondLatinName;
 $latinName = ucfirst(trim($latinName));
 ?>
