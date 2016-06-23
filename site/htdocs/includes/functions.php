@@ -1424,6 +1424,24 @@ function sortSequentialSyllables($syllables) {
 	return $orderedSyllables;
 }
 
-
+function selectSyllables($possibleSyllables,$minSyllables,$maxSyllables) {
+$numberOfSyllablesAvailable = count($possibleSyllables);
+do {
+	$syllableCount = 0;
+	// pick a random start syllable:
+	$firstWord = array_rand($possibleSyllables);
+	$constructedWord = $firstWord;
+	//echo $firstWord . " - ";
+	do {
+		$nextSyllable = $possibleSyllables[$firstWord][mt_rand(0,count($possibleSyllables[$firstWord])-1)];
+		//echo $nextSyllable . " - ";
+		$constructedWord .= $nextSyllable;
+		$firstWord = $nextSyllable;
+		$syllableCount ++;
+	} while ($nextSyllable != " ");
+	//echo " ** ";
+} while (!(($syllableCount>=$minSyllables) && ($syllableCount<=$maxSyllables)));
+return $constructedWord;
+}
 
 ?>
