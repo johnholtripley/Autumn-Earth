@@ -57,7 +57,28 @@ echo "<p>(/retinue/".$_GET["character"]."/".cleanURL($femaleName." ".$surname)."
 
 
 
+echo"<h1>Hobbits</h1>";
+include($_SERVER['DOCUMENT_ROOT']."/includes/retinue/hobbit-male-first-names.php");
+include($_SERVER['DOCUMENT_ROOT']."/includes/retinue/hobbit-female-first-names.php");
+include($_SERVER['DOCUMENT_ROOT']."/includes/retinue/hobbit-surnames.php");
+$possibleHobbitMaleFirstNames = sortSequentialSyllables($hobbitMaleFirstNameSyllables);
+$possibleHobbitFemaleFirstNames = sortSequentialSyllables($hobbitFemaleFirstNameSyllables);
+$possibleHobbitSurnames = sortSequentialSyllables($hobbitSurnamesNameSyllables);
 
+
+$maleName = selectSyllables($possibleHobbitMaleFirstNames,2,4);
+$maleName = ucfirst($maleName);
+
+$femaleName = selectSyllables($possibleHobbitFemaleFirstNames,2,4);
+$femaleName = ucfirst($femaleName);
+
+$surname = selectSyllables($possibleHobbitSurnames,2,5);
+$surname = ucfirst($surname);
+
+echo "<h2>".$maleName." ".$surname." (male)</h2>";
+echo "<p>(/retinue/".$_GET["character"]."/".cleanURL($maleName." ".$surname)."/)</p>";
+echo "<h2>".$femaleName." ".$surname." (female)</h2>";
+echo "<p>(/retinue/".$_GET["character"]."/".cleanURL($femaleName." ".$surname)."/)</p>";
 
 
 
