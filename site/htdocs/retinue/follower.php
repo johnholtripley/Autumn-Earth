@@ -50,14 +50,14 @@ $femaleName = ucfirst($femaleName);
 $surname = selectSyllables($possibleSurnames,3,5);
 $surname = ucfirst($surname);
 
-echo "<h2>".$maleName." ".$surname." (male)</h2>";
+echo "<h3>".$maleName." ".$surname." (male)</h3>";
 echo "<p>(/retinue/".$_GET["character"]."/".cleanURL($maleName." ".$surname)."/)</p>";
-echo "<h2>".$femaleName." ".$surname." (female)</h2>";
+echo "<h3>".$femaleName." ".$surname." (female)</h3>";
 echo "<p>(/retinue/".$_GET["character"]."/".cleanURL($femaleName." ".$surname)."/)</p>";
 
 
 
-echo"<h1>Hobbits</h1>";
+echo"<h2>Hobbits</h2>";
 include($_SERVER['DOCUMENT_ROOT']."/includes/retinue/hobbit-male-first-names.php");
 include($_SERVER['DOCUMENT_ROOT']."/includes/retinue/hobbit-female-first-names.php");
 include($_SERVER['DOCUMENT_ROOT']."/includes/retinue/hobbit-surnames.php");
@@ -75,9 +75,9 @@ $femaleName = ucfirst($femaleName);
 $surname = selectSyllables($possibleHobbitSurnames,2,5);
 $surname = ucfirst($surname);
 
-echo "<h2>".$maleName." ".$surname." (male)</h2>";
+echo "<h3>".$maleName." ".$surname." (male)</h3>";
 echo "<p>(/retinue/".$_GET["character"]."/".cleanURL($maleName." ".$surname)."/)</p>";
-echo "<h2>".$femaleName." ".$surname." (female)</h2>";
+echo "<h3>".$femaleName." ".$surname." (female)</h3>";
 echo "<p>(/retinue/".$_GET["character"]."/".cleanURL($femaleName." ".$surname)."/)</p>";
 
 
