@@ -29,7 +29,7 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/header.php");
 <div class="row">
 
 	<div class="column">
-<p><a href="/retinue/eleaddai/followers/ ">All Followers</a>, <a href="/retinue/quest/first-expedition/">Individual quest</a> and <a href="/retinue/eleaddai/bob-the-drag-queen/">Individual Followers</a></p>
+<p><a href="/retinue/eleaddai/ ">All Followers</a>, <a href="/retinue/quest/first-expedition/">Individual quest</a> and <a href="/retinue/eleaddai/bob-the-drag-queen/">Individual Followers</a></p>
 </div>
 </div>
 

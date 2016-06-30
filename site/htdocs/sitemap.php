@@ -95,13 +95,13 @@ echo '<url><loc>https://www.autumnearth.com/chronicle/'.$cleanURL.'/</loc><prior
 }
 
 // get Events
-echo'<url><loc>https://www.autumnearth.com/events/</loc><priority>0.7</priority></url>'."\n";
+echo'<url><loc>https://www.autumnearth.com/almanack/</loc><priority>0.7</priority></url>'."\n";
 $query = "select * from tblEvents";
 $result = mysql_query( $query ) or die ( "couldn't execute inner query" );
 if ( mysql_num_rows( $result )>0 ) {
 while ( $row = mysql_fetch_array( $result ) ) {
 extract( $row );
-echo '<url><loc>https://www.autumnearth.com/events/'.$cleanURL.'/</loc><priority>0.5</priority></url>'."\n";
+echo '<url><loc>https://www.autumnearth.com/almanack/'.$cleanURL.'/</loc><priority>0.5</priority></url>'."\n";
 }
 }
 
