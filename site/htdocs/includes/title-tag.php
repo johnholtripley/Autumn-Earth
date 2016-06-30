@@ -157,21 +157,24 @@ $longDescription = $description;
 case "events":
 
 
-
+if(isset($_GET["eventName"])) {
 $query = "select * from tblEvents where cleanURL='".$_GET["eventName"]."'";
 $result = mysql_query($query) or die ("couldn't execute query");
 
 if (mysql_num_rows($result) > 0) {
-
-
-
 while ($row = mysql_fetch_array($result)) {
 extract ($row);
 	$pagetitle = $title." - an Event in Autumn Earth";
 	$longDescription = stripcode($eventContent);
-	$thisBuiltURL = $thisBuiltURL."events/".$cleanURL."/"; 
+	$thisBuiltURL = $thisBuiltURL."almanack/".$cleanURL."/"; 
 }
 }
+} else {
+$pagetitle = "The Almanack for Autumn Earth`";
+	$longDescription = "Latest Events in the Autumn Earth Almanack";
+	$thisBuiltURL = $thisBuiltURL."almanack/";
+}
+
 
 break;
 
