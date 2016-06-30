@@ -33,6 +33,28 @@ $showAll = true;
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+echo $_GET["character"];
+echo "<br>";
+
+if($showAll) {
+echo '<h2>All followers</h2>';
+} else {
+echo $_GET["follower"];
+
 include($_SERVER['DOCUMENT_ROOT']."/includes/retinue/male-first-names.php");
 include($_SERVER['DOCUMENT_ROOT']."/includes/retinue/female-first-names.php");
 include($_SERVER['DOCUMENT_ROOT']."/includes/retinue/surnames.php");
@@ -80,27 +102,6 @@ echo "<p>(/retinue/".$_GET["character"]."/".cleanURL($maleName." ".$surname)."/)
 echo "<h3>".$femaleName." ".$surname." (female)</h3>";
 echo "<p>(/retinue/".$_GET["character"]."/".cleanURL($femaleName." ".$surname)."/)</p>";
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-echo $_GET["character"];
-echo "<br>";
-
-if($showAll) {
-echo '<h2>All followers</h2>';
-} else {
-echo $_GET["follower"];
 }
 ?>
 
