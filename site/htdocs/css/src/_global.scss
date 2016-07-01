@@ -54,7 +54,12 @@ a {
 }
 
 
-
+kbd {
+    @include border-radius(2);
+    padding: 0 0.4em;
+    background: #999;
+    font-family: 'Andale Mono', 'courier new', courier, 'droid sans mono', monospace;
+}
 
 
 

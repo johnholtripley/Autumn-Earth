@@ -22,8 +22,11 @@ displayUpcomingEvents(10);
 
 
 
-
 ?>
+
+<h2>Archive</h2>
+<p>Past events</p>
+
 </div>
 </div>
 

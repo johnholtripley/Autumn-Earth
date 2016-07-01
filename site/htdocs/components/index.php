@@ -122,11 +122,10 @@ responsiveBackground('/images/placeholder.jpg', array(300,600,900));
     <source src="/videos/placeholder.ogv" type="video/ogg"></source>
   </video>
 </div>
-<p>Test with <strong>strong</strong>, <em>emphasis</em>, and a date, 11<sup>th</sup> of April</p>
-<p>Text that has been <del>deleted</del> and then <ins>inserted</ins> for this <abbr title="Role Playing Game">RPG</abbr></p>
+<p>Alice was beginning to get very tired of sitting by her sister on the bank, and of having nothing to do: once or twice she had peeped into the book her sister was reading, but it had no pictures or conversations in it, &#8220;and what is the use of a book,&#8221; thought Alice &#8220;without pictures or conversation?&#8221; Test with <strong>strong</strong>, <em>emphasis</em>, and a date, 11<sup>th</sup> of April and try some CO<sub>2</sub>. Text that has been <del>deleted</del> and then <ins>inserted</ins> for this <abbr title="Role Playing Game">RPG</abbr></p>
 <p>Pressing <kbd>Ctrl</kbd> will make you run</p>
-<p>A css only <span class="tooltip" aria-label="Sample text for your tooltip! wow that's fantastic - who'd have thought it" tabindex="0">tooltip</span> here.</p>
-
+<p>A css only <span class="tooltip" aria-label="Sample text for your tooltip! wow that's fantastic - who'd have thought it" tabindex="0">tooltip here</span>.</p>
+<p>Alice was beginning to get very tired of sitting by her sister on the bank, and of having nothing to do: once or twice she had peeped into the book her sister was reading, but it had no pictures or conversations in it, &#8220;and what is the use of a book,&#8221; thought Alice &#8220;without pictures or conversation?&#8221;</p>
 <blockquote><p>Do cats eat rats?</p><p>Do rats eat cats?</p><p>Do cats eat rats?</p><p>Do cats eat rats?</p></blockquote>
 
 </div>
