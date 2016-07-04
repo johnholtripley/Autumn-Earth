@@ -1,1 +1,1 @@
-canvas{image-rendering:-moz-crisp-edges;image-rendering:-webkit-crisp-edges;-ms-interpolation-mode:nearest-neighbor;image-rendering:pixelated;width:100%;height:100%}#gameWrapper{position:relative}
+canvas{image-rendering:-moz-crisp-edges;image-rendering:-webkit-crisp-edges;-ms-interpolation-mode:nearest-neighbor;image-rendering:pixelated;border:1px solid #cecece}#gameWrapper{position:relative}
