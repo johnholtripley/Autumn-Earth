@@ -29,8 +29,21 @@ var gulp = require('gulp'),
 
 
 // css:
-gulp.task('sass', function() {
-    return gulp.src('htdocs/css/src/**/*.scss')
+gulp.task('sass', ['gameWorldCss'],function() {
+    return gulp.src(['htdocs/css/src/**/*.scss', '!(htdocs/css/src/game-world.scss)'])
+        .pipe(sourcemaps.init())
+        .pipe(sass({
+            outputStyle: 'compressed'
+        }))
+        //   .pipe(sourcemaps.write({
+        //      includeContent: false,
+        //      sourceRoot: 'htdocs/css/src/**/*.css'
+        //  }))
+        .pipe(gulp.dest('htdocs/css'));
+});
+
+gulp.task('gameWorldCss', function() {
+    return gulp.src('htdocs/css/src/**/game-world.scss')
         .pipe(sourcemaps.init())
         .pipe(sass({
             outputStyle: 'compressed'
@@ -45,7 +58,7 @@ gulp.task('sass', function() {
 // js:
 gulp.task('scripts', ['alternateScripts'],function() {
     // make sure that init is compiled last after all modules are loaded:
-    return gulp.src(['htdocs/js/src/**/!(init)*.js', 'htdocs/js/src/**/!(card-game)*.js', 'htdocs/js/src/init.js'])
+    return gulp.src(['htdocs/js/src/**/!(init)*.js', 'htdocs/js/src/**/!(card-game)*.js', 'htdocs/js/src/**/!(game-world)*.js', 'htdocs/js/src/init.js'])
         .pipe(sourcemaps.init())
         .pipe(concat('core.js'))
         .pipe(sourcemaps.write({
@@ -62,7 +75,7 @@ gulp.task('scripts', ['alternateScripts'],function() {
 
 gulp.task('alternateScripts', function() {
     // minify predefined list of unique scripts:
-    return gulp.src(['htdocs/**/*(serviceWorker.js|card-game.js)'])
+    return gulp.src(['htdocs/**/*(serviceWorker.js|card-game.js|game-world.js)'])
         .pipe(rename({
             suffix: '.min'
         }))
