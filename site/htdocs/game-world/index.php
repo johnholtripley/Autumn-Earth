@@ -15,9 +15,12 @@
 </head>
 
 <body>
+
+  <div class="gameWrapper">
 <canvas id="gameWorld" width="256" height="224">
   <img src="/images/game-world/no-canvas.jpg" alt="Sorry">
 </canvas>
+</div>
 
 <script src="/js/game-world.<?php echo $cacheVersion; ?>.js"></script>
 

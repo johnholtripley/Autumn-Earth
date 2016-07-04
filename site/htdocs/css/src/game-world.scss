@@ -1,9 +1,28 @@
-
-
-
 @import "variables";
 @import "shared/mixins";
 
-body {
-	background: teal;
+
+canvas {
+    image-rendering: -moz-crisp-edges;
+    image-rendering: -webkit-crisp-edges;
+    -ms-interpolation-mode: nearest-neighbor;
+    image-rendering: pixelated;
+    width: 100%;
+    height: 100%;
 }
+
+#gameWrapper {
+    position: relative;
+ //   padding-bottom: 87.5%;
+ //   height: 0;
+ //   width: 100%;
+}
+/*
+#gameWrapper canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+*/

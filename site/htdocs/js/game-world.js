@@ -80,6 +80,8 @@ function init() {
         gameContext = gameCanvas.getContext('2d');
         canvasWidth = gameCanvas.width;
         canvasHeight = gameCanvas.height;
+
+
     }
 
 
