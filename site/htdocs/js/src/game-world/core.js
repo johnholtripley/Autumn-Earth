@@ -52,7 +52,10 @@ if( key[1]) // right
 function draw() {
 	  gameContext.clearRect(0, 0, 256, 224);
 
-    gameContext.drawImage(heroSprite, hero.x, hero.y);
+  //  gameContext.drawImage(heroSprite, hero.x, hero.y);
+
+gameContext.drawImage(heroSprite, 0, 0, 16, 25, hero.x, hero.y, 16, 25);
+
 }
 
 
