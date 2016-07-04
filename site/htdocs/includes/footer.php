@@ -12,6 +12,7 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/search.php");
 <div class="row">
 <ul>
 	<li><a href="/">Home</a></li>
+	<li><a href="/game-world/">Enter the world</a></li>
 	<li><a href="/community/">Community</a><button aria-controls="subNavCommunity"><span class="visibleHide">Toggle community menu</span></button>
 		<ul id="subNavCommunity" aria-label="submenu">
 		<?php include($_SERVER['DOCUMENT_ROOT']."/includes/navigation/community.php"); ?>

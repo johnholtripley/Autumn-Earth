@@ -73,14 +73,26 @@ gulp.task('scripts', ['alternateScripts'],function() {
         .pipe(gulp.dest('htdocs/js'));
 });
 
-gulp.task('alternateScripts', function() {
+gulp.task('alternateScripts', ['gameScripts'], function() {
     // minify predefined list of unique scripts:
-    return gulp.src(['htdocs/**/*(serviceWorker.js|card-game.js|game-world.js)'])
+    return gulp.src(['htdocs/**/*(serviceWorker.js|card-game.js)'])
         .pipe(rename({
             suffix: '.min'
         }))
         .pipe(uglify())
         .pipe(gulp.dest('htdocs/'));
+});
+
+gulp.task('gameScripts',function() {
+    // make sure that core is compiled last after all modules are loaded:
+    return gulp.src(['htdocs/js/src/game-world/**/!(core)*.js', 'htdocs/js/src/game-world/core.js'])
+        .pipe(concat('game-world.js'))
+        .pipe(gulp.dest('htdocs/js'))
+        .pipe(rename({
+            suffix: '.min'
+        }))
+        .pipe(uglify())
+        .pipe(gulp.dest('htdocs/js'));
 });
 
 
