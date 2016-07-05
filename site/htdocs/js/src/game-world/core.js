@@ -8,11 +8,14 @@ function init() {
 
     }
 
+lastAnimationUpdateTime = window.performance.now();
+
     gameMode = "loading";
     // show loading screen while getting assets:
     gameLoop();
 // get assets:
-    heroSprite.src = '/images/game-world/core/TEMP-link.png';
+hero.img    = new Image();
+    hero.img.src = '/images/game-world/core/TEMP-link.png';
 
     
 // detect and set up input methods:
@@ -24,9 +27,8 @@ function init() {
 
 
 function gameLoop() {
-    // using Timeout to throttle FPS (http://creativejs.com/resources/requestanimationframe/)
-    setTimeout(function() {
-        window.requestAnimationFrame(gameLoop);
+   
+       
         switch (gameMode) {
             case "loading":
                 //
@@ -38,27 +40,76 @@ function gameLoop() {
                 update();
                 draw();
                 break;
-        }
-    }, (1000 / framesPerSecond));
+        } window.requestAnimationFrame(gameLoop);
+    
 }
 
 function update() {
-    if (key[2]) // up
-        hero.y -= 4;
-    if (key[3]) // down
-        hero.y += 4;
-    if (key[0]) // left
-        hero.x -= 4;
-    if (key[1]) // right
-        hero.x += 4;
+
+  var now     = window.performance.now();
+    var elapsed = (now - lastTime);
+lastTime = now;
+
+
+ hero.moving = false;
+  // Handle the Input
+    if (key[2]) {
+        hero.moving = true;
+        hero.facing = 'up';
+        hero.y -= hero.speed;
+    }
+    if( key[3]) {
+        hero.moving = true;
+        hero.facing = 'down';
+        hero.y += hero.speed;
+    }
+    if( key[0]) {
+        hero.moving = true;
+        hero.facing = 'left';
+        hero.x -= hero.speed;
+    }
+    if( key[1]) {
+        hero.moving = true;
+        hero.facing = 'right';
+        hero.x += hero.speed;
+    }
+
+
+
+   hero.timeSinceLastFrameSwap += elapsed;
+
+        if( hero.timeSinceLastFrameSwap > hero.animationUpdateTime ) {
+           
+            var seq = (hero.moving ? 'walk-' : 'stand-') + hero.facing;
+            var currentSequence = hero.sequences[seq];
+            if( hero.sequenceIdx < currentSequence.length - 1 ) {
+                hero.sequenceIdx += 1;
+            }             else {
+                hero.sequenceIdx = 0;
+            }
+            var col = currentSequence[hero.sequenceIdx] % 7;
+            var row = Math.floor( currentSequence[hero.sequenceIdx] / 7 );
+           
+            hero.offsetX = col * hero.width;
+            hero.offsetY = row * hero.height;
+            hero.timeSinceLastFrameSwap = 0;
+        }
+
+
+
+
 }
 
 function draw() {
     gameContext.clearRect(0, 0, 256, 224);
-    //  gameContext.drawImage(heroSprite, hero.x, hero.y);
-    gameContext.drawImage(heroSprite, 0, 0, 16, 25, hero.x, hero.y, 16, 25);
+
+  gameContext.drawImage(hero.img, hero.offsetX, hero.offsetY, hero.width, hero.height, hero.x, hero.y, hero.width, hero.height);
+
+
+
 
 }
+
 
 
 
