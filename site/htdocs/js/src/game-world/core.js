@@ -10,11 +10,10 @@ function init() {
     gameCanvas = document.getElementById("gameWorld");
     if (gameCanvas.getContext) {
         gameContext = gameCanvas.getContext('2d');
-        canvasWidth = gameCanvas.width;
-        canvasHeight = gameCanvas.height;
+        //canvasWidth = gameCanvas.width;
+        //canvasHeight = gameCanvas.height;
     }
 
-    lastAnimationUpdateTime = window.performance.now();
     gameMode = "loading";
     // show loading screen while getting assets:
     gameLoop();
