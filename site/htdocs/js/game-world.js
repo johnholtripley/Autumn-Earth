@@ -1,9 +1,12 @@
-// config:
+// frame rate:
 var animationFramesPerSecond = 16;
 var lastTime = 0;
-
 var elapsed = 0;
+
+// dimensions:
 var tileWidth = 40;
+
+// key bindings
 var key = [0, 0, 0, 0, 0];
 
 var hero = {
@@ -12,7 +15,7 @@ var hero = {
     width: 17,
     height: 25,
     speed: 2,
-    sequenceIdx: 0,
+    animationFrameIndex: 0,
     timeSinceLastFrameSwap: 0,
     animationUpdateTime: (1000 / animationFramesPerSecond),
     isMoving: false,
@@ -71,28 +74,31 @@ var Input = {
     // called on key up and key down events
     changeKey: function(which, to) {
         switch (which) {
-            case 37:
-                // left
+            case KeyBindings.left:
                 key[0] = to;
                 break;
-            case 38:
-                // up
+            case KeyBindings.up:
                 key[2] = to;
                 break;
-            case 39:
-                // right
+            case KeyBindings.right:
                 key[1] = to;
                 break;
-            case 40:
-                // down
+            case KeyBindings.down:
                 key[3] = to;
                 break;
-            case 32:
-                // space bar
+            case KeyBindings.action:
                 key[4] = to;
                 break;
         }
     }
+}
+
+var KeyBindings = {
+    'left': 37,
+    'right': 39,
+    'up': 38,
+    'down': 40,
+    'action': 32
 }
 
 // service worker:
@@ -146,40 +152,40 @@ function update() {
     var now = window.performance.now();
     var elapsed = (now - lastTime);
     lastTime = now;
-    hero.moving = false;
+    hero.isMoving = false;
     // Handle the Input
     if (key[2]) {
-        hero.moving = true;
+        hero.isMoving = true;
         hero.facing = 'up';
         hero.y -= hero.speed;
     }
     if (key[3]) {
-        hero.moving = true;
+        hero.isMoving = true;
         hero.facing = 'down';
         hero.y += hero.speed;
     }
     if (key[0]) {
-        hero.moving = true;
+        hero.isMoving = true;
         hero.facing = 'left';
         hero.x -= hero.speed;
     }
     if (key[1]) {
-        hero.moving = true;
+        hero.isMoving = true;
         hero.facing = 'right';
         hero.x += hero.speed;
     }
 
     hero.timeSinceLastFrameSwap += elapsed;
     if (hero.timeSinceLastFrameSwap > hero.animationUpdateTime) {
-        var seq = (hero.moving ? 'walk-' : 'stand-') + hero.facing;
+        var seq = (hero.isMoving ? 'walk-' : 'stand-') + hero.facing;
         var currentSequence = hero.sequences[seq];
-        if (hero.sequenceIdx < currentSequence.length - 1) {
-            hero.sequenceIdx += 1;
+        if (hero.animationFrameIndex < currentSequence.length - 1) {
+            hero.animationFrameIndex += 1;
         } else {
-            hero.sequenceIdx = 0;
+            hero.animationFrameIndex = 0;
         }
-        var col = currentSequence[hero.sequenceIdx] % 7;
-        var row = Math.floor(currentSequence[hero.sequenceIdx] / 7);
+        var col = currentSequence[hero.animationFrameIndex] % 7;
+        var row = Math.floor(currentSequence[hero.animationFrameIndex] / 7);
         hero.offsetX = col * hero.width;
         hero.offsetY = row * hero.height;
         hero.timeSinceLastFrameSwap = 0;

@@ -1,9 +1,12 @@
-// config:
+// frame rate:
 var animationFramesPerSecond = 16;
 var lastTime = 0;
-
 var elapsed = 0;
+
+// dimensions:
 var tileWidth = 40;
+
+// key bindings
 var key = [0, 0, 0, 0, 0];
 
 var hero = {
@@ -12,7 +15,7 @@ var hero = {
     width: 17,
     height: 25,
     speed: 2,
-    sequenceIdx: 0,
+    animationFrameIndex: 0,
     timeSinceLastFrameSwap: 0,
     animationUpdateTime: (1000 / animationFramesPerSecond),
     isMoving: false,

@@ -8,24 +8,19 @@ var Input = {
     // called on key up and key down events
     changeKey: function(which, to) {
         switch (which) {
-            case 37:
-                // left
+            case KeyBindings.left:
                 key[0] = to;
                 break;
-            case 38:
-                // up
+            case KeyBindings.up:
                 key[2] = to;
                 break;
-            case 39:
-                // right
+            case KeyBindings.right:
                 key[1] = to;
                 break;
-            case 40:
-                // down
+            case KeyBindings.down:
                 key[3] = to;
                 break;
-            case 32:
-                // space bar
+            case KeyBindings.action:
                 key[4] = to;
                 break;
         }
