@@ -360,6 +360,33 @@ gulp.task('cacheBusting', function() {
             }
         });
     });
+     // same again for the game-world version:
+      fs.readFile('htdocs/game-world/serviceWorker.js', 'utf8', function(err, data) {
+        if (err) {
+            return console.log(err);
+        }
+        var result = data.replace(/v::\d+::/, function(fullMatch, n) {
+            return "v::" + newVersionNumber + "::";
+        });
+        fs.writeFile('htdocs/game-world/serviceWorker.js', result, 'utf8', function(err) {
+            if (err) {
+                return console.log(err);
+            }
+        });
+    });
+    fs.readFile('htdocs/game-world/serviceWorker.min.js', 'utf8', function(err, data) {
+        if (err) {
+            return console.log(err);
+        }
+        var result = data.replace(/v::\d+::/, function(fullMatch, n) {
+            return "v::" + newVersionNumber + "::";
+        });
+        fs.writeFile('htdocs/game-world/serviceWorker.min.js', result, 'utf8', function(err) {
+            if (err) {
+                return console.log(err);
+            }
+        });
+    });
 });
 
 
