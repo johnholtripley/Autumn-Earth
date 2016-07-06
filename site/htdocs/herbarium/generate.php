@@ -960,6 +960,9 @@ switch ($shouldAddPrefix) {
                 case 4:
          $thisCommonName = "Wild ".$thisCommonName;
         break;
+                  case 5:
+         $thisCommonName = "Trailing ".$thisCommonName;
+        break;
     default:
        $thisCommonName = ucfirst($thisCommonName);
 } 

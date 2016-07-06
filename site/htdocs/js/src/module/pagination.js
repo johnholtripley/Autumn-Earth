@@ -11,7 +11,7 @@ if (cutsTheMustard && history.pushState && document.getElementById("paginationEn
         document.getElementById("loadMore").innerHTML = 'loading...';
 
         // http://youmightnotneedjquery.com/
-        var request = new XMLHttpRequest();
+        var request = typeof XMLHttpRequest != 'undefined' ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
         // get current page number:
         var currentPage = window.location.pathname.toString();
         var pagePos = currentPage.indexOf("page/");

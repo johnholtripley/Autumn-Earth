@@ -3,8 +3,9 @@ var animationFramesPerSecond = 16;
 var lastTime = 0;
 var elapsed = 0;
 
-
-
+var characterId = 'chr-html5';
+var currentMap = 1;
+var thisMapData = '';
 
 // dimensions:
 var width   = 256;
@@ -74,6 +75,40 @@ var hero = {
             clearTimeout(id);
         };
 }());
+
+
+
+
+
+
+
+
+
+
+
+
+
+// https://mathiasbynens.be/notes/xhr-responsetype-json
+
+var getJSON = function(url, successHandler, errorHandler) {
+    var xhr = typeof XMLHttpRequest != 'undefined' ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
+    xhr.open('get', url, true);
+    xhr.onreadystatechange = function() {
+        var status;
+        var data;
+        // https://xhr.spec.whatwg.org/#dom-xmlhttprequest-readystate
+        if (xhr.readyState == 4) { // `DONE`
+            status = xhr.status;
+            if (status == 200) {
+                data = JSON.parse(xhr.responseText);
+                successHandler && successHandler(data);
+            } else {
+                errorHandler && errorHandler(status);
+            }
+        }
+    };
+    xhr.send();
+};
 var Input = {
     init: function() {
         // Set up the keyboard events
@@ -108,35 +143,10 @@ var KeyBindings = {
     'right': 39,
     'up': 38,
     'down': 40,
-    'action': 32
+    'action': 32,
+    'pause': 80
 }
 
-var world = {
-   "collisions": [
-                        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-                        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-                        1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-                        1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-                        1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-                        1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-                        1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-                        1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-                        1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-                        1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-                        1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-                        1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-                        1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
-                        1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
-                        1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
-                        1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
-                        1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1,
-                        1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1,
-                        1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1,
-                        1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1,
-                        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-                        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
-                    ]
-}
 // service worker:
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('/game-world/serviceWorker.min.js', {
@@ -153,6 +163,18 @@ function init() {
         //canvasHeight = gameCanvas.height;
     }
 
+
+getJSON('/data/'+characterId+'/map'+currentMap+'.json', function(data) {
+    thisMapData = data.map;
+  // detect and set up input methods:
+    Input.init();
+    gameMode = "play";
+
+}, function(status) {
+    alert('Something went wrong.');
+});
+
+
     gameMode = "loading";
     // show loading screen while getting assets:
     gameLoop();
@@ -161,74 +183,60 @@ function init() {
     hero.img.src = '/images/game-world/core/TEMP-link.png';
     backgroundImg = new Image();
     backgroundImg.src = '/images/game-world/maps/1/bg.png';
-    // detect and set up input methods:
-    Input.init();
-    gameMode = "play";
+  
 
 }
 
 function checkCollisions() {
-
-    var collisionArray = world.collisions;
-  
+    var collisionArray = thisMapData.collisions;
     // due to his sprite _apparently_ being 17px wide, this causes problems with entrances which are two tiles, or 16px wide.
     // So let’s ignore a whole pixel when calculating tile-based collisions.
     var collisionWidth = hero.width - 2;
-
-  
-
     // tile collisions
-    if( key[2] ) { // up
-        var topLeftCol  = Math.floor(hero.x / 8);
-        var topRightCol = Math.floor((hero.x+collisionWidth) / 8);
-        var row         = Math.floor((hero.y+9) / 8); // same for topleft and topright
-        
-        var tlCell      = (row * NUM_TILES_WIDE) + topLeftCol;
-        var trCell      = (row * NUM_TILES_WIDE) + topRightCol;
-
+    if (key[2]) { // up
+        var topLeftCol = Math.floor(hero.x / 8);
+        var topRightCol = Math.floor((hero.x + collisionWidth) / 8);
+        var row = Math.floor((hero.y + 9) / 8); // same for topleft and topright
+        var tlCell = (row * NUM_TILES_WIDE) + topLeftCol;
+        var trCell = (row * NUM_TILES_WIDE) + topRightCol;
         // now get the cells for each corner and check 'em!
-        if( collisionArray[tlCell] == 1 || collisionArray[trCell] == 1 ) {
+        if (collisionArray[tlCell] == 1 || collisionArray[trCell] == 1) {
             hero.y = (row * 8);
         }
     }
-    if( key[3]) { // down
-        var bottomLeftCol   = Math.floor(hero.x / 8);
-        var bottomRightCol  = Math.floor((hero.x+hero.width-1) / 8);
-        var row             = Math.floor((hero.y+hero.height) / 8);
-
-        var blCell      = (row * NUM_TILES_WIDE) + bottomLeftCol;
-        var brCell      = (row * NUM_TILES_WIDE) + bottomRightCol;
-
-        if( collisionArray[blCell] == 1 || collisionArray[brCell] == 1 ) {
+    if (key[3]) { // down
+        var bottomLeftCol = Math.floor(hero.x / 8);
+        var bottomRightCol = Math.floor((hero.x + hero.width - 1) / 8);
+        var row = Math.floor((hero.y + hero.height) / 8);
+        var blCell = (row * NUM_TILES_WIDE) + bottomLeftCol;
+        var brCell = (row * NUM_TILES_WIDE) + bottomRightCol;
+        if (collisionArray[blCell] == 1 || collisionArray[brCell] == 1) {
             hero.y = (row * 8) - hero.height;
         }
     }
-    if( key[0]) { // left
-        var col             = Math.floor(hero.x / 8);
-        var topLeftRow      = Math.floor((hero.y+9) / 8);
-        var bottomLeftRow   = Math.floor((hero.y+hero.height-1) / 8);
-
-        var tlCell      = (topLeftRow * NUM_TILES_WIDE) + col;
-        var blCell      = (bottomLeftRow * NUM_TILES_WIDE) + col;
-
-        if( collisionArray[tlCell] == 1 || collisionArray[blCell] == 1 ) {
+    if (key[0]) { // left
+        var col = Math.floor(hero.x / 8);
+        var topLeftRow = Math.floor((hero.y + 9) / 8);
+        var bottomLeftRow = Math.floor((hero.y + hero.height - 1) / 8);
+        var tlCell = (topLeftRow * NUM_TILES_WIDE) + col;
+        var blCell = (bottomLeftRow * NUM_TILES_WIDE) + col;
+        if (collisionArray[tlCell] == 1 || collisionArray[blCell] == 1) {
             hero.x = (col * 8) + 8;
         }
     }
-    if( key[1]) { //right
-        var col             = Math.floor((hero.x+hero.width) / 8);
-        var topRightRow     = Math.floor((hero.y+9) / 8);
-        var bottomRightRow  = Math.floor((hero.y+hero.height-1) / 8);
-
-        var trCell      = (topRightRow * NUM_TILES_WIDE) + col;
-        var brCell      = (bottomRightRow * NUM_TILES_WIDE) + col;
-
-        if( collisionArray[trCell] == 1 || collisionArray[brCell] == 1 ) {
+    if (key[1]) { //right
+        var col = Math.floor((hero.x + hero.width) / 8);
+        var topRightRow = Math.floor((hero.y + 9) / 8);
+        var bottomRightRow = Math.floor((hero.y + hero.height - 1) / 8);
+        var trCell = (topRightRow * NUM_TILES_WIDE) + col;
+        var brCell = (bottomRightRow * NUM_TILES_WIDE) + col;
+        if (collisionArray[trCell] == 1 || collisionArray[brCell] == 1) {
             hero.x = (col * 8) - hero.width;
         }
     }
 
 }
+
 
 function gameLoop() {
     switch (gameMode) {

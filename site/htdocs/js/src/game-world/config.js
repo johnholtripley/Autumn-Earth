@@ -3,8 +3,9 @@ var animationFramesPerSecond = 16;
 var lastTime = 0;
 var elapsed = 0;
 
-
-
+var characterId = 'chr-html5';
+var currentMap = 1;
+var thisMapData = '';
 
 // dimensions:
 var width   = 256;

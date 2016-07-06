@@ -31,7 +31,7 @@ plantURL = this.getAttribute('data-url');
 pageToRequest = '/includes/herbarium/plant-detail.php?plant='+plantURL;
 
 // start ajax request:
-var request = new XMLHttpRequest();
+var request = typeof XMLHttpRequest != 'undefined' ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
  request.open('GET', pageToRequest, true);
         request.onreadystatechange = function() {
             if (this.readyState === 4) {
