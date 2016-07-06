@@ -20,6 +20,8 @@ function init() {
     // get assets:
     hero.img = new Image();
     hero.img.src = '/images/game-world/core/TEMP-link.png';
+    backgroundImg = new Image();
+    backgroundImg.src = '/images/game-world/maps/1/bg.png';
     // detect and set up input methods:
     Input.init();
     gameMode = "play";
@@ -89,7 +91,8 @@ function update() {
 }
 
 function draw() {
-    gameContext.clearRect(0, 0, 256, 224);
+    // gameContext.clearRect(0, 0, 256, 224);
+    gameContext.drawImage(backgroundImg, 0, 0);
     gameContext.drawImage(hero.img, hero.offsetX, hero.offsetY, hero.width, hero.height, hero.x, hero.y, hero.width, hero.height);
 }
 
