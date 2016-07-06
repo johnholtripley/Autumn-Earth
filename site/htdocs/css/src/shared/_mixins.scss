@@ -144,6 +144,14 @@
 transform: $values;
 }
 
+ @mixin transform-origin($values...) {
+// adding ... allows multiple values to be passed in
+-webkit-transform-origin: $values;
+-moz-transform-origin: $values;
+-o-transform-origin: $values;
+transform-origin: $values;
+}
+
  @mixin transition($values...) {
 // adding ... allows multiple values to be passed in
 -webkit-transition: $values;

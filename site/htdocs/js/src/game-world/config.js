@@ -3,8 +3,18 @@ var animationFramesPerSecond = 16;
 var lastTime = 0;
 var elapsed = 0;
 
+
+
+
 // dimensions:
-var tileWidth = 40;
+var width   = 256;
+var ROOM_HEIGHT = 176;
+var TILE_WIDTH = 8;
+var NUM_TILES_WIDE = width / TILE_WIDTH;
+var NUM_TILES_HIGH = ROOM_HEIGHT / TILE_WIDTH; 
+
+
+
 
 // key bindings
 var key = [0, 0, 0, 0, 0];

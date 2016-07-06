@@ -3,8 +3,18 @@ var animationFramesPerSecond = 16;
 var lastTime = 0;
 var elapsed = 0;
 
+
+
+
 // dimensions:
-var tileWidth = 40;
+var width   = 256;
+var ROOM_HEIGHT = 176;
+var TILE_WIDTH = 8;
+var NUM_TILES_WIDE = width / TILE_WIDTH;
+var NUM_TILES_HIGH = ROOM_HEIGHT / TILE_WIDTH; 
+
+
+
 
 // key bindings
 var key = [0, 0, 0, 0, 0];
@@ -101,6 +111,32 @@ var KeyBindings = {
     'action': 32
 }
 
+var world = {
+   "collisions": [
+                        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+                        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+                        1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+                        1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+                        1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+                        1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+                        1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+                        1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+                        1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+                        1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+                        1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+                        1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+                        1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+                        1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+                        1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+                        1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+                        1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1,
+                        1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1,
+                        1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1,
+                        1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1,
+                        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+                        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
+                    ]
+}
 // service worker:
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('/game-world/serviceWorker.min.js', {
@@ -131,7 +167,68 @@ function init() {
 
 }
 
+function checkCollisions() {
 
+    var collisionArray = world.collisions;
+  
+    // due to his sprite _apparently_ being 17px wide, this causes problems with entrances which are two tiles, or 16px wide.
+    // So let’s ignore a whole pixel when calculating tile-based collisions.
+    var collisionWidth = hero.width - 2;
+
+  
+
+    // tile collisions
+    if( key[2] ) { // up
+        var topLeftCol  = Math.floor(hero.x / 8);
+        var topRightCol = Math.floor((hero.x+collisionWidth) / 8);
+        var row         = Math.floor((hero.y+9) / 8); // same for topleft and topright
+        
+        var tlCell      = (row * NUM_TILES_WIDE) + topLeftCol;
+        var trCell      = (row * NUM_TILES_WIDE) + topRightCol;
+
+        // now get the cells for each corner and check 'em!
+        if( collisionArray[tlCell] == 1 || collisionArray[trCell] == 1 ) {
+            hero.y = (row * 8);
+        }
+    }
+    if( key[3]) { // down
+        var bottomLeftCol   = Math.floor(hero.x / 8);
+        var bottomRightCol  = Math.floor((hero.x+hero.width-1) / 8);
+        var row             = Math.floor((hero.y+hero.height) / 8);
+
+        var blCell      = (row * NUM_TILES_WIDE) + bottomLeftCol;
+        var brCell      = (row * NUM_TILES_WIDE) + bottomRightCol;
+
+        if( collisionArray[blCell] == 1 || collisionArray[brCell] == 1 ) {
+            hero.y = (row * 8) - hero.height;
+        }
+    }
+    if( key[0]) { // left
+        var col             = Math.floor(hero.x / 8);
+        var topLeftRow      = Math.floor((hero.y+9) / 8);
+        var bottomLeftRow   = Math.floor((hero.y+hero.height-1) / 8);
+
+        var tlCell      = (topLeftRow * NUM_TILES_WIDE) + col;
+        var blCell      = (bottomLeftRow * NUM_TILES_WIDE) + col;
+
+        if( collisionArray[tlCell] == 1 || collisionArray[blCell] == 1 ) {
+            hero.x = (col * 8) + 8;
+        }
+    }
+    if( key[1]) { //right
+        var col             = Math.floor((hero.x+hero.width) / 8);
+        var topRightRow     = Math.floor((hero.y+9) / 8);
+        var bottomRightRow  = Math.floor((hero.y+hero.height-1) / 8);
+
+        var trCell      = (topRightRow * NUM_TILES_WIDE) + col;
+        var brCell      = (bottomRightRow * NUM_TILES_WIDE) + col;
+
+        if( collisionArray[trCell] == 1 || collisionArray[brCell] == 1 ) {
+            hero.x = (col * 8) - hero.width;
+        }
+    }
+
+}
 
 function gameLoop() {
     switch (gameMode) {
@@ -175,6 +272,8 @@ function update() {
         hero.facing = 'right';
         hero.x += hero.speed;
     }
+
+    checkCollisions();
 
     hero.timeSinceLastFrameSwap += elapsed;
     if (hero.timeSinceLastFrameSwap > hero.animationUpdateTime) {

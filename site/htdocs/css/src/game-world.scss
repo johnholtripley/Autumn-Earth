@@ -7,24 +7,12 @@ canvas {
     image-rendering: -webkit-crisp-edges;
     -ms-interpolation-mode: nearest-neighbor;
     image-rendering: pixelated;
-   // width: 100%;
-   // height: 100%;
-//border: 1px solid #cecece;
+@include transform(scale(3));
+@include transform-origin(0 0);
 }
 
 #gameWrapper {
     position: relative;
-    
- //   padding-bottom: 87.5%;
- //   height: 0;
- //   width: 100%;
+
 }
-/*
-#gameWrapper canvas {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-}
-*/
+
