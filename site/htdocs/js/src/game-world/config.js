@@ -7,6 +7,8 @@ var characterId = 'chr-html5';
 var currentMap = 1;
 var thisMapData = '';
 
+var tileGraphics = [];
+
 // dimensions:
 var width   = 256;
 var ROOM_HEIGHT = 176;

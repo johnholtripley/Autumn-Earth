@@ -7,6 +7,8 @@ var characterId = 'chr-html5';
 var currentMap = 1;
 var thisMapData = '';
 
+var tileGraphics = [];
+
 // dimensions:
 var width   = 256;
 var ROOM_HEIGHT = 176;
@@ -166,9 +168,8 @@ function init() {
 
 getJSON('/data/'+characterId+'/map'+currentMap+'.json', function(data) {
     thisMapData = data.map;
-  // detect and set up input methods:
-    Input.init();
-    gameMode = "play";
+  
+   loadAssets();
 
 }, function(status) {
     alert('Something went wrong.');
@@ -178,13 +179,34 @@ getJSON('/data/'+characterId+'/map'+currentMap+'.json', function(data) {
     gameMode = "loading";
     // show loading screen while getting assets:
     gameLoop();
-    // get assets:
+
+
+
+
+}
+
+function loadAssets() {
+
     hero.img = new Image();
     hero.img.src = '/images/game-world/core/TEMP-link.png';
     backgroundImg = new Image();
     backgroundImg.src = '/images/game-world/maps/1/bg.png';
-  
-
+  tileGraphicsLoaded = 0;
+tileGraphicsToLoad = ["/images/game-world/maps/1/1.png","/images/game-world/maps/1/2.png"];
+for (var i = 0; i < tileGraphicsToLoad.length; i++) {
+    tileGraphics[i] = new Image();
+     tileGraphics[i].src = tileGraphicsToLoad[i];
+    tileGraphics[i].onload = function() {
+        // Once the image is loaded increment the loaded graphics count and check if all images are ready.
+        tileGraphicsLoaded++;
+        if (tileGraphicsLoaded === tileGraphicsToLoad.length) {
+         // detect and set up input methods:
+         
+             Input.init();
+    gameMode = "play";
+        }
+      }
+  }
 }
 
 function checkCollisions() {
@@ -301,10 +323,37 @@ function update() {
 }
 
 function draw() {
-    // gameContext.clearRect(0, 0, 256, 224);
-    gameContext.drawImage(backgroundImg, 0, 0);
+    drawBackground();
     gameContext.drawImage(hero.img, hero.offsetX, hero.offsetY, hero.width, hero.height, hero.x, hero.y, hero.width, hero.height);
 }
+
+function drawBackground() {
+    // gameContext.clearRect(0, 0, 256, 224);
+    gameContext.drawImage(backgroundImg, 0, 0);
+
+    var tileH = 20;
+    var tileW = 40;
+    var mapX = 76;
+    var mapY = 52;
+    var drawTile;
+    counter = 0;
+    var map = thisMapData.terrain;
+
+    for (var i = 0; i < map.length; i++) {
+        for (var j = 0; j < map[i].length; j++) {
+            drawTile = map[i][j];
+          //  gameContext.drawImage(tileGraphics[drawTile], (i - j) * tileH + mapX, (i + j) * tileH / 2 + mapY);
+          thisX = ((map.length)-i)*tileW/2 + j*tileW/2;
+          thisY = (i+j)*tileH/2;
+          gameContext.drawImage(tileGraphics[drawTile],  thisX + mapX, thisY + mapY);
+            counter ++;
+
+        }
+    }
+
+
+}
+
 
 // check if it cuts the mustard and supports Canvas:
 if (('querySelectorAll' in document && 'addEventListener' in window) && (!!window.HTMLCanvasElement)) {
