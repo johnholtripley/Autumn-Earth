@@ -1,6 +1,9 @@
 @import "variables";
 @import "shared/mixins";
 
+body {
+    margin: 0;
+}
 
 canvas {
     image-rendering: -moz-crisp-edges;

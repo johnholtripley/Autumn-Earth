@@ -8,13 +8,16 @@ var currentMap = 1;
 var thisMapData = '';
 
 var tileGraphics = [];
+    var tileH = 20;
+    var tileW = 40;
 
 // dimensions:
 var width   = 256;
 var ROOM_HEIGHT = 176;
-var TILE_WIDTH = 8;
-var NUM_TILES_WIDE = width / TILE_WIDTH;
-var NUM_TILES_HIGH = ROOM_HEIGHT / TILE_WIDTH; 
+//var NUM_TILES_WIDE = width / TILE_WIDTH;
+var NUM_TILES_WIDE = 1;
+//var NUM_TILES_HIGH = ROOM_HEIGHT / TILE_WIDTH; 
+var NUM_TILES_HIGH = 1; 
 
 
 
@@ -25,6 +28,8 @@ var key = [0, 0, 0, 0, 0];
 var hero = {
     x: 100,
     y: 100,
+    tileX: 0,
+    tileY: 0,
     width: 17,
     height: 25,
     speed: 2,
