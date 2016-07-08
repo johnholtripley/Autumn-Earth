@@ -10,20 +10,9 @@ var mapTilesX = 0;
 var mapTilesY = 0;
 
 var tileGraphics = [];
-    var tileH = 24;
-    var tileW = 48;
-    var tileGraphicsToLoad = 0;
-
-// dimensions:
-var width   = 256;
-var ROOM_HEIGHT = 176;
-//var NUM_TILES_WIDE = width / TILE_WIDTH;
-var NUM_TILES_WIDE = 1;
-//var NUM_TILES_HIGH = ROOM_HEIGHT / TILE_WIDTH; 
-var NUM_TILES_HIGH = 1; 
-
-
-
+var tileH = 24;
+var tileW = 48;
+var tileGraphicsToLoad = 0;
 
 // key bindings
 var key = [0, 0, 0, 0, 0];
@@ -56,7 +45,9 @@ var hero = {
 
 };
 
+
 // -----------------------------------------------------------
+
 // http://paulirish.com/2011/requestanimationframe-for-smart-animating/
 // http://my.opera.com/emoller/blog/2011/12/20/requestanimationframe-for-smart-er-animating
 // requestAnimationFrame polyfill by Erik Moller
@@ -88,20 +79,9 @@ var hero = {
         };
 }());
 
-
-
-// ---------------------------
-
-
-
-
-
-
-
-
+// -----------------------------------------------------------
 
 // https://mathiasbynens.be/notes/xhr-responsetype-json
-
 var getJSON = function(url, successHandler, errorHandler) {
     var xhr = typeof XMLHttpRequest != 'undefined' ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
     xhr.open('get', url, true);
@@ -122,16 +102,11 @@ var getJSON = function(url, successHandler, errorHandler) {
     xhr.send();
 };
 
-// ---------------------------
+// -----------------------------------------------------------
 
-
-
-
-// image loader -----------------------------------------------------------
+// image loader 
 // http://stackoverflow.com/questions/16560397/image-not-drawn-on-canvas-until-user-clicks
 // http://jsfiddle.net/gfcarv/26AmY/
-
-
 window.Loader = (function() {
     var imageCount = 0;
     var loading = false;
@@ -224,6 +199,7 @@ window.Loader = (function() {
     };
 })();
 
+// -----------------------------------------------------------
 
 
 var Input = {
@@ -271,7 +247,6 @@ if ('serviceWorker' in navigator) {
     });
 }
 
-
 function init() {
     gameCanvas = document.getElementById("gameWorld");
     if (gameCanvas.getContext) {
@@ -283,7 +258,6 @@ function init() {
         thisMapData = data.map;
         mapTilesY = thisMapData.terrain.length;
         mapTilesX = thisMapData.terrain[0].length;
-      
         loadAssets();
     }, function(status) {
         alert('Error loading map data');
@@ -303,28 +277,22 @@ function getTileCentreCoordY(tileX, tileY) {
 }
 
 
-function initGame() {
-
-// get img references:
-tileImages = [];
- for (var i = 0; i < tileGraphicsToLoad.length; i++) {
+function prepareGame() {
+    // get image references:
+    tileImages = [];
+    for (var i = 0; i < tileGraphicsToLoad.length; i++) {
         tileImages[i] = Loader.getImage("tile" + i);
     }
     heroImg = Loader.getImage("heroImg");
     backgroundImg = Loader.getImage("backgroundImg");
-
-
     // detect and set up input methods:
     Input.init();
-
-
     // determine hero's start position:
     hero.x = getTileCentreCoordX(hero.tileX, hero.tileY) - hero.feetOffsetX;
     hero.y = getTileCentreCoordY(hero.tileX, hero.tileY) - hero.feetOffsetY;
-
-
     gameMode = "play";
 }
+
 
 
 function loadAssets() {
@@ -337,14 +305,14 @@ function loadAssets() {
         name: "backgroundImg",
         src: '/images/game-world/maps/' + currentMap + '/bg.png'
     });
-     tileGraphicsToLoad = thisMapData.graphics;
+    tileGraphicsToLoad = thisMapData.graphics;
     for (var i = 0; i < tileGraphicsToLoad.length; i++) {
         imagesToLoad.push({
             name: "tile" + i,
             src: "/images/game-world/maps/" + currentMap + "/" + tileGraphicsToLoad[i].src
         });
     }
-    Loader.preload(imagesToLoad, initGame, loadingProgress);
+    Loader.preload(imagesToLoad, prepareGame, loadingProgress);
 }
 
 function loadingProgress() {
@@ -354,54 +322,20 @@ function loadingProgress() {
 
 function checkCollisions() {
     var collisionArray = thisMapData.collisions;
-    // due to his sprite _apparently_ being 17px wide, this causes problems with entrances which are two tiles, or 16px wide.
-    // So let’s ignore a whole pixel when calculating tile-based collisions.
-    var collisionWidth = hero.width - 2;
     // tile collisions
-    if (key[2]) { // up
-        var topLeftCol = Math.floor(hero.x / 8);
-        var topRightCol = Math.floor((hero.x + collisionWidth) / 8);
-        var row = Math.floor((hero.y + 9) / 8); // same for topleft and topright
-        var tlCell = (row * NUM_TILES_WIDE) + topLeftCol;
-        var trCell = (row * NUM_TILES_WIDE) + topRightCol;
-        // now get the cells for each corner and check 'em!
-        if (collisionArray[tlCell] == 1 || collisionArray[trCell] == 1) {
-            hero.y = (row * 8);
-        }
+    if (key[2]) {
+        // up
     }
-    if (key[3]) { // down
-        var bottomLeftCol = Math.floor(hero.x / 8);
-        var bottomRightCol = Math.floor((hero.x + hero.width - 1) / 8);
-        var row = Math.floor((hero.y + hero.height) / 8);
-        var blCell = (row * NUM_TILES_WIDE) + bottomLeftCol;
-        var brCell = (row * NUM_TILES_WIDE) + bottomRightCol;
-        if (collisionArray[blCell] == 1 || collisionArray[brCell] == 1) {
-            hero.y = (row * 8) - hero.height;
-        }
+    if (key[3]) {
+        // down
     }
-    if (key[0]) { // left
-        var col = Math.floor(hero.x / 8);
-        var topLeftRow = Math.floor((hero.y + 9) / 8);
-        var bottomLeftRow = Math.floor((hero.y + hero.height - 1) / 8);
-        var tlCell = (topLeftRow * NUM_TILES_WIDE) + col;
-        var blCell = (bottomLeftRow * NUM_TILES_WIDE) + col;
-        if (collisionArray[tlCell] == 1 || collisionArray[blCell] == 1) {
-            hero.x = (col * 8) + 8;
-        }
+    if (key[0]) {
+        // left
     }
-    if (key[1]) { //right
-        var col = Math.floor((hero.x + hero.width) / 8);
-        var topRightRow = Math.floor((hero.y + 9) / 8);
-        var bottomRightRow = Math.floor((hero.y + hero.height - 1) / 8);
-        var trCell = (topRightRow * NUM_TILES_WIDE) + col;
-        var brCell = (bottomRightRow * NUM_TILES_WIDE) + col;
-        if (collisionArray[trCell] == 1 || collisionArray[brCell] == 1) {
-            hero.x = (col * 8) - hero.width;
-        }
+    if (key[1]) {
+        //right
     }
-
 }
-
 
 function gameLoop() {
     switch (gameMode) {
@@ -488,9 +422,6 @@ function drawBackground() {
         }
     }
 }
-
-
-
 
 // check if it cuts the mustard and supports Canvas:
 if (('querySelectorAll' in document && 'addEventListener' in window) && (!!window.HTMLCanvasElement)) {

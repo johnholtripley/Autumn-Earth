@@ -1,4 +1,6 @@
+
 // -----------------------------------------------------------
+
 // http://paulirish.com/2011/requestanimationframe-for-smart-animating/
 // http://my.opera.com/emoller/blog/2011/12/20/requestanimationframe-for-smart-er-animating
 // requestAnimationFrame polyfill by Erik Moller
@@ -30,20 +32,9 @@
         };
 }());
 
-
-
-// ---------------------------
-
-
-
-
-
-
-
-
+// -----------------------------------------------------------
 
 // https://mathiasbynens.be/notes/xhr-responsetype-json
-
 var getJSON = function(url, successHandler, errorHandler) {
     var xhr = typeof XMLHttpRequest != 'undefined' ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
     xhr.open('get', url, true);
@@ -64,16 +55,11 @@ var getJSON = function(url, successHandler, errorHandler) {
     xhr.send();
 };
 
-// ---------------------------
+// -----------------------------------------------------------
 
-
-
-
-// image loader -----------------------------------------------------------
+// image loader 
 // http://stackoverflow.com/questions/16560397/image-not-drawn-on-canvas-until-user-clicks
 // http://jsfiddle.net/gfcarv/26AmY/
-
-
 window.Loader = (function() {
     var imageCount = 0;
     var loading = false;
@@ -166,4 +152,5 @@ window.Loader = (function() {
     };
 })();
 
+// -----------------------------------------------------------
 

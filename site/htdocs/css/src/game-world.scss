@@ -1,6 +1,5 @@
 @import "variables";
 @import "shared/mixins";
-
 body {
     margin: 0;
 }
@@ -10,12 +9,10 @@ canvas {
     image-rendering: -webkit-crisp-edges;
     -ms-interpolation-mode: nearest-neighbor;
     image-rendering: pixelated;
-@include transform(scale(3));
-@include transform-origin(0 0);
+    @include transform(scale(3));
+    @include transform-origin(0 0);
 }
 
 #gameWrapper {
     position: relative;
-
 }
-

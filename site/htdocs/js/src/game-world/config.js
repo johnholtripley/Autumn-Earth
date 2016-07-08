@@ -10,20 +10,9 @@ var mapTilesX = 0;
 var mapTilesY = 0;
 
 var tileGraphics = [];
-    var tileH = 24;
-    var tileW = 48;
-    var tileGraphicsToLoad = 0;
-
-// dimensions:
-var width   = 256;
-var ROOM_HEIGHT = 176;
-//var NUM_TILES_WIDE = width / TILE_WIDTH;
-var NUM_TILES_WIDE = 1;
-//var NUM_TILES_HIGH = ROOM_HEIGHT / TILE_WIDTH; 
-var NUM_TILES_HIGH = 1; 
-
-
-
+var tileH = 24;
+var tileW = 48;
+var tileGraphicsToLoad = 0;
 
 // key bindings
 var key = [0, 0, 0, 0, 0];
