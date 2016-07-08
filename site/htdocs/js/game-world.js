@@ -28,12 +28,12 @@ var key = [0, 0, 0, 0, 0];
 var hero = {
     x: 100,
     y: 100,
-    tileX: 0,
-    tileY: 0,
+    tileX: 1,
+    tileY: 4,
     width: 17,
     height: 25,
     feetOffsetX: 8,
-    feetOffsetY: 20,
+    feetOffsetY: 21,
     speed: 2,
     animationFrameIndex: 0,
     timeSinceLastFrameSwap: 0,
@@ -188,44 +188,42 @@ getJSON('/data/'+characterId+'/map'+currentMap+'.json', function(data) {
     gameLoop();
 
 
-// determine hero's start position:
-hx = 0;
-hy = 0;
-    hpx = ((hx + 0.5) * tileW);
-    hpy = ((hy + 0.5) * tileW);
-    // the ...(+0.5)s ensures that the hero is centred tile 
-    // these 2 lines...
-    hero.x = (hpx + hpy)-hero.feetOffsetX;
-    hero.y = ((hpx - hpy) / 2)+hero.feetOffsetY;
+
+
+
 
 
 }
 
 function loadAssets() {
-
     hero.img = new Image();
     hero.img.src = '/images/game-world/core/TEMP-link.png';
     backgroundImg = new Image();
     backgroundImg.src = '/images/game-world/maps/1/bg.png';
-  tileGraphicsLoaded = 0;
-tileGraphicsToLoad = thisMapData.graphics;
+    tileGraphicsLoaded = 0;
+    tileGraphicsToLoad = thisMapData.graphics;
+    for (var i = 0; i < tileGraphicsToLoad.length; i++) {
+        tileGraphics[i] = new Image();
+        tileGraphics[i].src = "/images/game-world/maps/" + currentMap + "/" + tileGraphicsToLoad[i].src;
+        tileGraphics[i].onload = function() {
+            // Once the image is loaded increment the loaded graphics count and check if all images are ready.
+            tileGraphicsLoaded++;
+            if (tileGraphicsLoaded === tileGraphicsToLoad.length) {
+                // detect and set up input methods:
+                Input.init();
 
 
-for (var i = 0; i < tileGraphicsToLoad.length; i++) {
-    tileGraphics[i] = new Image();
-     tileGraphics[i].src = "/images/game-world/maps/"+currentMap+"/"+tileGraphicsToLoad[i].src;
-    tileGraphics[i].onload = function() {
-        // Once the image is loaded increment the loaded graphics count and check if all images are ready.
-        tileGraphicsLoaded++;
-        if (tileGraphicsLoaded === tileGraphicsToLoad.length) {
-         // detect and set up input methods:
-         
-             Input.init();
-    gameMode = "play";
+// determine hero's start position:
+                  hero.x = (thisMapData.terrain.length/2)*tileW - (0.5*tileW*hero.tileY) + (0.5*tileW*hero.tileX)  - hero.feetOffsetX;
+            hero.y = 0.5*tileH + 0.5*tileH*hero.tileY  + 0.5*tileH*hero.tileX  - hero.feetOffsetY;
+
+
+                gameMode = "play";
+            }
         }
-      }
-  }
+    }
 }
+
 
 function checkCollisions() {
     var collisionArray = thisMapData.collisions;
@@ -349,9 +347,9 @@ function drawBackground() {
     // gameContext.clearRect(0, 0, 256, 224);
     gameContext.drawImage(backgroundImg, 0, 0);
     var map = thisMapData.terrain;
-
+    var thisGraphicCentreX, thisGraphicCentreY;
     var mapX = 0;
-    var mapY = 0;
+    var mapY = tileH / 2;
     for (var i = 0; i < map.length; i++) {
         for (var j = 0; j < map[i].length; j++) {
             //thisX = ((map.length)-i)*tileW/2 + j*tileW/2;
@@ -363,6 +361,7 @@ function drawBackground() {
         }
     }
 }
+
 
 
 
