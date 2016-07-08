@@ -6,6 +6,8 @@ var elapsed = 0;
 var characterId = 'chr-html5';
 var currentMap = 1;
 var thisMapData = '';
+var mapTilesX = 0;
+var mapTilesY = 0;
 
 var tileGraphics = [];
     var tileH = 24;

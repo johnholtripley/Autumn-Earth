@@ -1,8 +1,8 @@
 // service worker:
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/game-world/serviceWorker.min.js', {
-    scope: '/game-world/'
-  });
+    navigator.serviceWorker.register('/game-world/serviceWorker.min.js', {
+        scope: '/game-world/'
+    });
 }
 
 
@@ -15,6 +15,9 @@ function init() {
     }
     getJSON('/data/' + characterId + '/map' + currentMap + '.json', function(data) {
         thisMapData = data.map;
+        mapTilesY = thisMapData.terrain.length;
+        mapTilesX = thisMapData.terrain[0].length;
+      
         loadAssets();
     }, function(status) {
         alert('Error loading map data');
@@ -25,12 +28,12 @@ function init() {
 }
 
 
-function getTileCentreCoordX(tileX,tileY) {
-    return tileW/2*(thisMapData.terrain.length-tileY+tileX);
+function getTileCentreCoordX(tileX, tileY) {
+    return tileW / 2 * (mapTilesY - tileY + tileX);
 }
 
-function getTileCentreCoordY(tileX,tileY) {
-    return tileH/2*(1+tileY+tileX);
+function getTileCentreCoordY(tileX, tileY) {
+    return tileH / 2 * (1 + tileY + tileX);
 }
 
 function loadAssets() {
@@ -51,9 +54,9 @@ function loadAssets() {
                 Input.init();
 
 
-// determine hero's start position:
-                  hero.x = getTileCentreCoordX(hero.tileX,hero.tileY)  - hero.feetOffsetX;
-            hero.y =  getTileCentreCoordY(hero.tileX,hero.tileY) - hero.feetOffsetY;
+                // determine hero's start position:
+                hero.x = getTileCentreCoordX(hero.tileX, hero.tileY) - hero.feetOffsetX;
+                hero.y = getTileCentreCoordY(hero.tileX, hero.tileY) - hero.feetOffsetY;
 
 
                 gameMode = "play";
