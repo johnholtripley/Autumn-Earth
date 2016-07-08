@@ -12,6 +12,7 @@ var mapTilesY = 0;
 var tileGraphics = [];
     var tileH = 24;
     var tileW = 48;
+    var tileGraphicsToLoad = 0;
 
 // dimensions:
 var width   = 256;

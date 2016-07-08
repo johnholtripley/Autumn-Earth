@@ -36,35 +36,55 @@ function getTileCentreCoordY(tileX, tileY) {
     return tileH / 2 * (1 + tileY + tileX);
 }
 
-function loadAssets() {
-    hero.img = new Image();
-    hero.img.src = '/images/game-world/core/TEMP-link.png';
-    backgroundImg = new Image();
-    backgroundImg.src = '/images/game-world/maps/1/bg.png';
-    tileGraphicsLoaded = 0;
-    tileGraphicsToLoad = thisMapData.graphics;
-    for (var i = 0; i < tileGraphicsToLoad.length; i++) {
-        tileGraphics[i] = new Image();
-        tileGraphics[i].src = "/images/game-world/maps/" + currentMap + "/" + tileGraphicsToLoad[i].src;
-        tileGraphics[i].onload = function() {
-            // Once the image is loaded increment the loaded graphics count and check if all images are ready.
-            tileGraphicsLoaded++;
-            if (tileGraphicsLoaded === tileGraphicsToLoad.length) {
-                // detect and set up input methods:
-                Input.init();
 
+function initGame() {
 
-                // determine hero's start position:
-                hero.x = getTileCentreCoordX(hero.tileX, hero.tileY) - hero.feetOffsetX;
-                hero.y = getTileCentreCoordY(hero.tileX, hero.tileY) - hero.feetOffsetY;
-
-
-                gameMode = "play";
-            }
-        }
+// get img references:
+tileImages = [];
+ for (var i = 0; i < tileGraphicsToLoad.length; i++) {
+        tileImages[i] = Loader.getImage("tile" + i);
     }
+    heroImg = Loader.getImage("heroImg");
+    backgroundImg = Loader.getImage("backgroundImg");
+
+
+    // detect and set up input methods:
+    Input.init();
+
+
+    // determine hero's start position:
+    hero.x = getTileCentreCoordX(hero.tileX, hero.tileY) - hero.feetOffsetX;
+    hero.y = getTileCentreCoordY(hero.tileX, hero.tileY) - hero.feetOffsetY;
+
+
+    gameMode = "play";
 }
 
+
+function loadAssets() {
+    imagesToLoad = [];
+    imagesToLoad.push({
+        name: "heroImg",
+        src: '/images/game-world/core/TEMP-link.png'
+    });
+    imagesToLoad.push({
+        name: "backgroundImg",
+        src: '/images/game-world/maps/' + currentMap + '/bg.png'
+    });
+     tileGraphicsToLoad = thisMapData.graphics;
+    for (var i = 0; i < tileGraphicsToLoad.length; i++) {
+        imagesToLoad.push({
+            name: "tile" + i,
+            src: "/images/game-world/maps/" + currentMap + "/" + tileGraphicsToLoad[i].src
+        });
+    }
+    Loader.preload(imagesToLoad, initGame, loadingProgress);
+}
+
+function loadingProgress() {
+    // make this graphical ####
+    console.log("loading - " + Loader.getProgress());
+}
 
 function checkCollisions() {
     var collisionArray = thisMapData.collisions;
@@ -181,7 +201,7 @@ function update() {
 
 function draw() {
     drawBackground();
-    gameContext.drawImage(hero.img, hero.offsetX, hero.offsetY, hero.width, hero.height, hero.x, hero.y, hero.width, hero.height);
+    gameContext.drawImage(heroImg, hero.offsetX, hero.offsetY, hero.width, hero.height, hero.x, hero.y, hero.width, hero.height);
 }
 
 function drawBackground() {
@@ -198,7 +218,7 @@ function drawBackground() {
             thisY = (i + j) * tileH / 2;
             thisGraphicCentreX = thisMapData.graphics[(map[i][j])].centreX;
             thisGraphicCentreY = thisMapData.graphics[(map[i][j])].centreY;
-            gameContext.drawImage(tileGraphics[(map[i][j])], thisX + mapX - thisGraphicCentreX, thisY + mapY - thisGraphicCentreY);
+            gameContext.drawImage(tileImages[(map[i][j])], thisX + mapX - thisGraphicCentreX, thisY + mapY - thisGraphicCentreY);
         }
     }
 }

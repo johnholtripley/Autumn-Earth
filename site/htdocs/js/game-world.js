@@ -12,6 +12,7 @@ var mapTilesY = 0;
 var tileGraphics = [];
     var tileH = 24;
     var tileW = 48;
+    var tileGraphicsToLoad = 0;
 
 // dimensions:
 var width   = 256;
@@ -89,7 +90,7 @@ var hero = {
 
 
 
-
+// ---------------------------
 
 
 
@@ -120,6 +121,111 @@ var getJSON = function(url, successHandler, errorHandler) {
     };
     xhr.send();
 };
+
+// ---------------------------
+
+
+
+
+// image loader -----------------------------------------------------------
+// http://stackoverflow.com/questions/16560397/image-not-drawn-on-canvas-until-user-clicks
+// http://jsfiddle.net/gfcarv/26AmY/
+
+
+window.Loader = (function() {
+    var imageCount = 0;
+    var loading = false;
+    var total = 0;
+
+    // this object will hold all image references
+    var images = {};
+
+    // user defined callback, called each time an image is loaded (if it is not defined the empty function wil be called)
+    function onProgressUpdate() {};
+    // user defined callback, called when all images are loaded (if it is not defined the empty function wil be called)
+    function onComplete() {};
+
+    function onLoadImage(name) {
+        ++imageCount;
+        // console.log(name + " loaded");
+
+        // call the user defined callback when an image is loaded
+        onProgressUpdate(getProgress());
+
+        // check if all images are loaded
+        if (imageCount == total) {
+            loading = false;
+            //  console.log("Load complete.");
+            onComplete();
+        }
+
+    };
+
+    function onImageError(e) {
+        console.log("Error on loading the image: " + e.srcElement);
+    }
+
+    function loadImage(name, src) {
+        try {
+            images[name] = new Image();
+            images[name].onload = function() {
+                onLoadImage(name);
+            };
+            images[name].onerror = onImageError;
+            images[name].src = src;
+        } catch (e) {
+            console.log(e.message);
+        }
+    }
+
+    function getImage(name) {
+        if (images[name]) {
+            return (images[name]);
+        } else {
+            return undefined;
+        }
+    }
+
+    // pre-load all the images and call the onComplete callback when all images are loaded
+    // optionaly set the onProgressUpdate callback to be called each time an image is loaded (useful for loading screens) 
+    function preload(_images, _onComplete, _onProgressUpdate) {
+        if (!loading) {
+
+            //  console.log("Loading...");
+            loading = true;
+
+            try {
+                total = _images.length;
+                onProgressUpdate = _onProgressUpdate || (function() {});
+                onComplete = _onComplete || (function() {});
+
+                for (var i = 0; i < _images.length; ++i) {
+                    loadImage(_images[i].name, _images[i].src);
+                }
+            } catch (e) {
+                console.log(e.message);
+            }
+        } else {
+            //  throw new Error("Acess denied: Cannot call the load function while there are remaining images to load.");
+        }
+    }
+
+    // percentage of progress
+    function getProgress() {
+        return (imageCount / total) * 100;
+    };
+
+    // return only the public stuff to create our Loader object
+    return {
+        preload: preload,
+        getProgress: getProgress,
+        getImage: getImage,
+        images: images
+    };
+})();
+
+
+
 var Input = {
     init: function() {
         // Set up the keyboard events
@@ -196,35 +302,55 @@ function getTileCentreCoordY(tileX, tileY) {
     return tileH / 2 * (1 + tileY + tileX);
 }
 
-function loadAssets() {
-    hero.img = new Image();
-    hero.img.src = '/images/game-world/core/TEMP-link.png';
-    backgroundImg = new Image();
-    backgroundImg.src = '/images/game-world/maps/1/bg.png';
-    tileGraphicsLoaded = 0;
-    tileGraphicsToLoad = thisMapData.graphics;
-    for (var i = 0; i < tileGraphicsToLoad.length; i++) {
-        tileGraphics[i] = new Image();
-        tileGraphics[i].src = "/images/game-world/maps/" + currentMap + "/" + tileGraphicsToLoad[i].src;
-        tileGraphics[i].onload = function() {
-            // Once the image is loaded increment the loaded graphics count and check if all images are ready.
-            tileGraphicsLoaded++;
-            if (tileGraphicsLoaded === tileGraphicsToLoad.length) {
-                // detect and set up input methods:
-                Input.init();
 
+function initGame() {
 
-                // determine hero's start position:
-                hero.x = getTileCentreCoordX(hero.tileX, hero.tileY) - hero.feetOffsetX;
-                hero.y = getTileCentreCoordY(hero.tileX, hero.tileY) - hero.feetOffsetY;
-
-
-                gameMode = "play";
-            }
-        }
+// get img references:
+tileImages = [];
+ for (var i = 0; i < tileGraphicsToLoad.length; i++) {
+        tileImages[i] = Loader.getImage("tile" + i);
     }
+    heroImg = Loader.getImage("heroImg");
+    backgroundImg = Loader.getImage("backgroundImg");
+
+
+    // detect and set up input methods:
+    Input.init();
+
+
+    // determine hero's start position:
+    hero.x = getTileCentreCoordX(hero.tileX, hero.tileY) - hero.feetOffsetX;
+    hero.y = getTileCentreCoordY(hero.tileX, hero.tileY) - hero.feetOffsetY;
+
+
+    gameMode = "play";
 }
 
+
+function loadAssets() {
+    imagesToLoad = [];
+    imagesToLoad.push({
+        name: "heroImg",
+        src: '/images/game-world/core/TEMP-link.png'
+    });
+    imagesToLoad.push({
+        name: "backgroundImg",
+        src: '/images/game-world/maps/' + currentMap + '/bg.png'
+    });
+     tileGraphicsToLoad = thisMapData.graphics;
+    for (var i = 0; i < tileGraphicsToLoad.length; i++) {
+        imagesToLoad.push({
+            name: "tile" + i,
+            src: "/images/game-world/maps/" + currentMap + "/" + tileGraphicsToLoad[i].src
+        });
+    }
+    Loader.preload(imagesToLoad, initGame, loadingProgress);
+}
+
+function loadingProgress() {
+    // make this graphical ####
+    console.log("loading - " + Loader.getProgress());
+}
 
 function checkCollisions() {
     var collisionArray = thisMapData.collisions;
@@ -341,7 +467,7 @@ function update() {
 
 function draw() {
     drawBackground();
-    gameContext.drawImage(hero.img, hero.offsetX, hero.offsetY, hero.width, hero.height, hero.x, hero.y, hero.width, hero.height);
+    gameContext.drawImage(heroImg, hero.offsetX, hero.offsetY, hero.width, hero.height, hero.x, hero.y, hero.width, hero.height);
 }
 
 function drawBackground() {
@@ -358,7 +484,7 @@ function drawBackground() {
             thisY = (i + j) * tileH / 2;
             thisGraphicCentreX = thisMapData.graphics[(map[i][j])].centreX;
             thisGraphicCentreY = thisMapData.graphics[(map[i][j])].centreY;
-            gameContext.drawImage(tileGraphics[(map[i][j])], thisX + mapX - thisGraphicCentreX, thisY + mapY - thisGraphicCentreY);
+            gameContext.drawImage(tileImages[(map[i][j])], thisX + mapX - thisGraphicCentreX, thisY + mapY - thisGraphicCentreY);
         }
     }
 }

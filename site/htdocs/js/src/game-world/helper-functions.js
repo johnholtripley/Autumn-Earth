@@ -32,7 +32,7 @@
 
 
 
-
+// ---------------------------
 
 
 
@@ -63,3 +63,107 @@ var getJSON = function(url, successHandler, errorHandler) {
     };
     xhr.send();
 };
+
+// ---------------------------
+
+
+
+
+// image loader -----------------------------------------------------------
+// http://stackoverflow.com/questions/16560397/image-not-drawn-on-canvas-until-user-clicks
+// http://jsfiddle.net/gfcarv/26AmY/
+
+
+window.Loader = (function() {
+    var imageCount = 0;
+    var loading = false;
+    var total = 0;
+
+    // this object will hold all image references
+    var images = {};
+
+    // user defined callback, called each time an image is loaded (if it is not defined the empty function wil be called)
+    function onProgressUpdate() {};
+    // user defined callback, called when all images are loaded (if it is not defined the empty function wil be called)
+    function onComplete() {};
+
+    function onLoadImage(name) {
+        ++imageCount;
+        // console.log(name + " loaded");
+
+        // call the user defined callback when an image is loaded
+        onProgressUpdate(getProgress());
+
+        // check if all images are loaded
+        if (imageCount == total) {
+            loading = false;
+            //  console.log("Load complete.");
+            onComplete();
+        }
+
+    };
+
+    function onImageError(e) {
+        console.log("Error on loading the image: " + e.srcElement);
+    }
+
+    function loadImage(name, src) {
+        try {
+            images[name] = new Image();
+            images[name].onload = function() {
+                onLoadImage(name);
+            };
+            images[name].onerror = onImageError;
+            images[name].src = src;
+        } catch (e) {
+            console.log(e.message);
+        }
+    }
+
+    function getImage(name) {
+        if (images[name]) {
+            return (images[name]);
+        } else {
+            return undefined;
+        }
+    }
+
+    // pre-load all the images and call the onComplete callback when all images are loaded
+    // optionaly set the onProgressUpdate callback to be called each time an image is loaded (useful for loading screens) 
+    function preload(_images, _onComplete, _onProgressUpdate) {
+        if (!loading) {
+
+            //  console.log("Loading...");
+            loading = true;
+
+            try {
+                total = _images.length;
+                onProgressUpdate = _onProgressUpdate || (function() {});
+                onComplete = _onComplete || (function() {});
+
+                for (var i = 0; i < _images.length; ++i) {
+                    loadImage(_images[i].name, _images[i].src);
+                }
+            } catch (e) {
+                console.log(e.message);
+            }
+        } else {
+            //  throw new Error("Acess denied: Cannot call the load function while there are remaining images to load.");
+        }
+    }
+
+    // percentage of progress
+    function getProgress() {
+        return (imageCount / total) * 100;
+    };
+
+    // return only the public stuff to create our Loader object
+    return {
+        preload: preload,
+        getProgress: getProgress,
+        getImage: getImage,
+        images: images
+    };
+})();
+
+
