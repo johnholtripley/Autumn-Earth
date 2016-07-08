@@ -8,8 +8,8 @@ var currentMap = 1;
 var thisMapData = '';
 
 var tileGraphics = [];
-    var tileH = 20;
-    var tileW = 40;
+    var tileH = 24;
+    var tileW = 48;
 
 // dimensions:
 var width   = 256;
@@ -32,6 +32,8 @@ var hero = {
     tileY: 0,
     width: 17,
     height: 25,
+    feetOffsetX: 8,
+    feetOffsetY: 20,
     speed: 2,
     animationFrameIndex: 0,
     timeSinceLastFrameSwap: 0,

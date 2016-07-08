@@ -26,9 +26,14 @@
             1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
         ],
         "terrain": [
-        [1,0,0],
-        [0,0,0],
-        [0,0,0]
+        [1,0,1],
+        [0,0,1],
+        [1,1,2]
+        ],
+        "graphics": [
+        {"src":"grass.png","centreX":24,"centreY":12},
+        {"src":"dirt.png","centreX":24,"centreY":12},
+        {"src":"block.png","centreX":24,"centreY":45}
         ],
         "terrainAnimations": [{
             "tileId": 119,

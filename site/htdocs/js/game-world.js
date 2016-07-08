@@ -8,8 +8,8 @@ var currentMap = 1;
 var thisMapData = '';
 
 var tileGraphics = [];
-    var tileH = 20;
-    var tileW = 40;
+    var tileH = 24;
+    var tileW = 48;
 
 // dimensions:
 var width   = 256;
@@ -32,6 +32,8 @@ var hero = {
     tileY: 0,
     width: 17,
     height: 25,
+    feetOffsetX: 8,
+    feetOffsetY: 20,
     speed: 2,
     animationFrameIndex: 0,
     timeSinceLastFrameSwap: 0,
@@ -177,7 +179,7 @@ getJSON('/data/'+characterId+'/map'+currentMap+'.json', function(data) {
    loadAssets();
 
 }, function(status) {
-    alert('Something went wrong.');
+    alert('Error loading map data');
 });
 
 
@@ -186,10 +188,15 @@ getJSON('/data/'+characterId+'/map'+currentMap+'.json', function(data) {
     gameLoop();
 
 
-
 // determine hero's start position:
- hero.x = ((2)-hero.tileX)*tileW/2 + hero.tileY*tileW/2;
-          hero.y = (hero.tileX+hero.tileY)*tileH/2;
+hx = 0;
+hy = 0;
+    hpx = ((hx + 0.5) * tileW);
+    hpy = ((hy + 0.5) * tileW);
+    // the ...(+0.5)s ensures that the hero is centred tile 
+    // these 2 lines...
+    hero.x = (hpx + hpy)-hero.feetOffsetX;
+    hero.y = ((hpx - hpy) / 2)+hero.feetOffsetY;
 
 
 }
@@ -201,10 +208,12 @@ function loadAssets() {
     backgroundImg = new Image();
     backgroundImg.src = '/images/game-world/maps/1/bg.png';
   tileGraphicsLoaded = 0;
-tileGraphicsToLoad = ["/images/game-world/maps/1/1.png","/images/game-world/maps/1/2.png"];
+tileGraphicsToLoad = thisMapData.graphics;
+
+
 for (var i = 0; i < tileGraphicsToLoad.length; i++) {
     tileGraphics[i] = new Image();
-     tileGraphics[i].src = tileGraphicsToLoad[i];
+     tileGraphics[i].src = "/images/game-world/maps/"+currentMap+"/"+tileGraphicsToLoad[i].src;
     tileGraphics[i].onload = function() {
         // Once the image is loaded increment the loaded graphics count and check if all images are ready.
         tileGraphicsLoaded++;
@@ -339,28 +348,22 @@ function draw() {
 function drawBackground() {
     // gameContext.clearRect(0, 0, 256, 224);
     gameContext.drawImage(backgroundImg, 0, 0);
- var map = thisMapData.terrain;
+    var map = thisMapData.terrain;
 
     var mapX = 0;
     var mapY = 0;
-    var drawTile;
-  
-   
-
     for (var i = 0; i < map.length; i++) {
         for (var j = 0; j < map[i].length; j++) {
-            drawTile = map[i][j];
-          //  gameContext.drawImage(tileGraphics[drawTile], (i - j) * tileH + mapX, (i + j) * tileH / 2 + mapY);
-          thisX = ((map.length)-i)*tileW/2 + j*tileW/2;
-          thisY = (i+j)*tileH/2;
-          gameContext.drawImage(tileGraphics[drawTile],  thisX + mapX, thisY + mapY);
-         
-
+            //thisX = ((map.length)-i)*tileW/2 + j*tileW/2;
+            thisX = (map.length - i + j) * tileW / 2;
+            thisY = (i + j) * tileH / 2;
+            thisGraphicCentreX = thisMapData.graphics[(map[i][j])].centreX;
+            thisGraphicCentreY = thisMapData.graphics[(map[i][j])].centreY;
+            gameContext.drawImage(tileGraphics[(map[i][j])], thisX + mapX - thisGraphicCentreX, thisY + mapY - thisGraphicCentreY);
         }
     }
-
-
 }
+
 
 
 // check if it cuts the mustard and supports Canvas:
