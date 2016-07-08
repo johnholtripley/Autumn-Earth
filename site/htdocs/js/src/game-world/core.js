@@ -13,28 +13,24 @@ function init() {
         //canvasWidth = gameCanvas.width;
         //canvasHeight = gameCanvas.height;
     }
-
-
-getJSON('/data/'+characterId+'/map'+currentMap+'.json', function(data) {
-    thisMapData = data.map;
-  
-   loadAssets();
-
-}, function(status) {
-    alert('Error loading map data');
-});
-
-
+    getJSON('/data/' + characterId + '/map' + currentMap + '.json', function(data) {
+        thisMapData = data.map;
+        loadAssets();
+    }, function(status) {
+        alert('Error loading map data');
+    });
     gameMode = "loading";
     // show loading screen while getting assets:
     gameLoop();
+}
 
 
+function getTileCentreCoordX(tileX,tileY) {
+    return tileW/2*(thisMapData.terrain.length-tileY+tileX);
+}
 
-
-
-
-
+function getTileCentreCoordY(tileX,tileY) {
+    return tileH/2*(1+tileY+tileX);
 }
 
 function loadAssets() {
@@ -56,8 +52,8 @@ function loadAssets() {
 
 
 // determine hero's start position:
-                  hero.x = (thisMapData.terrain.length/2)*tileW - (0.5*tileW*hero.tileY) + (0.5*tileW*hero.tileX)  - hero.feetOffsetX;
-            hero.y = 0.5*tileH + 0.5*tileH*hero.tileY  + 0.5*tileH*hero.tileX  - hero.feetOffsetY;
+                  hero.x = getTileCentreCoordX(hero.tileX,hero.tileY)  - hero.feetOffsetX;
+            hero.y =  getTileCentreCoordY(hero.tileX,hero.tileY) - hero.feetOffsetY;
 
 
                 gameMode = "play";
