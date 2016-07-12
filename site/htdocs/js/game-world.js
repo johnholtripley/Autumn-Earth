@@ -10,9 +10,13 @@ var mapTilesX = 0;
 var mapTilesY = 0;
 
 var tileGraphics = [];
-var tileH = 24;
 var tileW = 48;
+var tileH = tileW/2;
 var tileGraphicsToLoad = 0;
+var canvasWidth = 256;
+var canvasHeight = 176;
+var worldOffsetX = 0;
+var worldOffsety = 0;
 
 // key bindings
 var key = [0, 0, 0, 0, 0];
@@ -20,8 +24,8 @@ var key = [0, 0, 0, 0, 0];
 var hero = {
     x: 100,
     y: 100,
-    tileX: 1,
-    tileY: 0,
+    tileX: 3,
+    tileY: 3,
     width: 17,
     height: 25,
     feetOffsetX: 8,
@@ -251,8 +255,8 @@ function init() {
     gameCanvas = document.getElementById("gameWorld");
     if (gameCanvas.getContext) {
         gameContext = gameCanvas.getContext('2d');
-        //canvasWidth = gameCanvas.width;
-        //canvasHeight = gameCanvas.height;
+        canvasWidth = gameCanvas.width;
+        canvasHeight = gameCanvas.height;
     }
     getJSON('/data/' + characterId + '/map' + currentMap + '.json', function(data) {
         thisMapData = data.map;
@@ -287,9 +291,20 @@ function prepareGame() {
     backgroundImg = Loader.getImage("backgroundImg");
     // detect and set up input methods:
     Input.init();
-    // determine hero's start position:
-    hero.x = getTileCentreCoordX(hero.tileX, hero.tileY) - hero.feetOffsetX;
-    hero.y = getTileCentreCoordY(hero.tileX, hero.tileY) - hero.feetOffsetY;
+    // determine tile offset to centre the hero in the centre
+    hero.x = getTileCentreCoordX(hero.tileX, hero.tileY);
+    hero.y = getTileCentreCoordY(hero.tileX, hero.tileY);
+    console.log("hero start"+hero.x+","+hero.y);
+    console.log("canvas centre "+canvasWidth/2+", "+canvasHeight/2);
+worldOffsetX =   getTileCentreCoordX(hero.tileX, hero.tileY) - (canvasWidth/2);
+worldOffsetY =  getTileCentreCoordY(hero.tileX, hero.tileY) - (canvasHeight/2) - (tileH/2);
+
+
+// but hero needs to be at the canvas centre:
+hero.x = canvasWidth/2 - hero.feetOffsetX;
+hero.y = canvasHeight/2 - hero.feetOffsetY;
+
+
     gameMode = "play";
 }
 
@@ -409,8 +424,7 @@ function drawBackground() {
     gameContext.drawImage(backgroundImg, 0, 0);
     var map = thisMapData.terrain;
     var thisGraphicCentreX, thisGraphicCentreY;
-    var mapX = 0;
-    var mapY = tileH / 2;
+ 
     for (var i = 0; i < map.length; i++) {
         for (var j = 0; j < map[i].length; j++) {
             if(map[i][j] != "*") {
@@ -418,7 +432,7 @@ function drawBackground() {
             thisY = (i + j) * tileH / 2;
             thisGraphicCentreX = thisMapData.graphics[(map[i][j])].centreX;
             thisGraphicCentreY = thisMapData.graphics[(map[i][j])].centreY;
-            gameContext.drawImage(tileImages[(map[i][j])], thisX + mapX - thisGraphicCentreX, thisY + mapY - thisGraphicCentreY);
+            gameContext.drawImage(tileImages[(map[i][j])], thisX - worldOffsetX - thisGraphicCentreX, thisY - worldOffsetY - thisGraphicCentreY);
         }
         }
     }

@@ -10,9 +10,13 @@ var mapTilesX = 0;
 var mapTilesY = 0;
 
 var tileGraphics = [];
-var tileH = 24;
 var tileW = 48;
+var tileH = tileW/2;
 var tileGraphicsToLoad = 0;
+var canvasWidth = 256;
+var canvasHeight = 176;
+var worldOffsetX = 0;
+var worldOffsety = 0;
 
 // key bindings
 var key = [0, 0, 0, 0, 0];
@@ -20,8 +24,8 @@ var key = [0, 0, 0, 0, 0];
 var hero = {
     x: 100,
     y: 100,
-    tileX: 1,
-    tileY: 0,
+    tileX: 3,
+    tileY: 3,
     width: 17,
     height: 25,
     feetOffsetX: 8,
