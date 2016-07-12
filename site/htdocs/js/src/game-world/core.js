@@ -171,12 +171,13 @@ function drawBackground() {
     var mapY = tileH / 2;
     for (var i = 0; i < map.length; i++) {
         for (var j = 0; j < map[i].length; j++) {
-            //thisX = ((map.length)-i)*tileW/2 + j*tileW/2;
+            if(map[i][j] != "*") {
             thisX = (map.length - i + j) * tileW / 2;
             thisY = (i + j) * tileH / 2;
             thisGraphicCentreX = thisMapData.graphics[(map[i][j])].centreX;
             thisGraphicCentreY = thisMapData.graphics[(map[i][j])].centreY;
             gameContext.drawImage(tileImages[(map[i][j])], thisX + mapX - thisGraphicCentreX, thisY + mapY - thisGraphicCentreY);
+        }
         }
     }
 }
