@@ -292,21 +292,14 @@ function prepareGame() {
     // detect and set up input methods:
     Input.init();
     // determine tile offset to centre the hero in the centre
-    hero.x = getTileCentreCoordX(hero.tileX, hero.tileY);
-    hero.y = getTileCentreCoordY(hero.tileX, hero.tileY);
-    console.log("hero start"+hero.x+","+hero.y);
-    console.log("canvas centre "+canvasWidth/2+", "+canvasHeight/2);
-worldOffsetX =   getTileCentreCoordX(hero.tileX, hero.tileY) - (canvasWidth/2);
-worldOffsetY =  getTileCentreCoordY(hero.tileX, hero.tileY) - (canvasHeight/2) - (tileH/2);
-
-
-// but hero needs to be at the canvas centre:
-hero.x = canvasWidth/2 - hero.feetOffsetX;
-hero.y = canvasHeight/2 - hero.feetOffsetY;
-
-
+    worldOffsetX = getTileCentreCoordX(hero.tileX, hero.tileY) - (canvasWidth / 2);
+    worldOffsetY = getTileCentreCoordY(hero.tileX, hero.tileY) - (canvasHeight / 2) - (tileH / 2);
+    // hero needs to be at the canvas centre:
+    hero.x = canvasWidth / 2 - hero.feetOffsetX;
+    hero.y = canvasHeight / 2 - hero.feetOffsetY;
     gameMode = "play";
 }
+
 
 
 
@@ -377,23 +370,25 @@ function update() {
     if (key[2]) {
         hero.isMoving = true;
         hero.facing = 'up';
-        hero.y -= hero.speed;
-    }
-    if (key[3]) {
+        hero.x += hero.speed;
+        hero.y -= hero.speed / 2;
+    } else if (key[3]) {
         hero.isMoving = true;
         hero.facing = 'down';
-        hero.y += hero.speed;
-    }
-    if (key[0]) {
+        hero.x -= hero.speed;
+        hero.y += hero.speed / 2;
+    } else if (key[0]) {
         hero.isMoving = true;
         hero.facing = 'left';
         hero.x -= hero.speed;
-    }
-    if (key[1]) {
+        hero.y -= hero.speed / 2;
+    } else if (key[1]) {
         hero.isMoving = true;
         hero.facing = 'right';
         hero.x += hero.speed;
+        hero.y += hero.speed / 2;
     }
+console.log("hero coords "+hero.x+", "+hero.y);
 
     checkCollisions();
 
