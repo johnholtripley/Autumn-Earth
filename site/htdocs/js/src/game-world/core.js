@@ -105,6 +105,7 @@ function checkCollisions() {
 function gameLoop() {
     switch (gameMode) {
         case "loading":
+        
             //
             break;
         case "paused":
@@ -166,29 +167,60 @@ console.log("hero coords "+hero.x+", "+hero.y);
     }
 }
 
-function draw() {
-    drawBackground();
-    gameContext.drawImage(heroImg, hero.offsetX, hero.offsetY, hero.width, hero.height, hero.x, hero.y, hero.width, hero.height);
+function sortByIsoDepth(a, b) {
+    if (a[3] < b[3])
+        return 1;
+    if (a[3] > b[3])
+        return -1;
+    return 0;
 }
 
-function drawBackground() {
-    // gameContext.clearRect(0, 0, 256, 224);
-    gameContext.drawImage(backgroundImg, 0, 0);
+function findIsoDepth(x, y) {
+    return x + y * tileW * mapTilesX;
+}
+
+// ##########
+// need to fix findIsoDepth equation
+// need to pass in object centre, not draw coords
+// need a better way to reference items so they can be drawn quickly -  if (assetsToDraw[i][0] == "hero") { is not good...
+// ##########
+
+
+function draw() {
+    //  drawBackground();
+    //  gameContext.drawImage(heroImg, hero.offsetX, hero.offsetY, hero.width, hero.height, hero.x, hero.y, hero.width, hero.height);
+    // get all objects to be drawn in a list:
+    var assetsToDraw = [];
+    assetsToDraw.push(["hero", hero.x, hero.y, findIsoDepth(hero.x, hero.y)]);
     var map = thisMapData.terrain;
     var thisGraphicCentreX, thisGraphicCentreY;
- 
     for (var i = 0; i < map.length; i++) {
         for (var j = 0; j < map[i].length; j++) {
-            if(map[i][j] != "*") {
-            thisX = (map.length - i + j) * tileW / 2;
-            thisY = (i + j) * tileH / 2;
-            thisGraphicCentreX = thisMapData.graphics[(map[i][j])].centreX;
-            thisGraphicCentreY = thisMapData.graphics[(map[i][j])].centreY;
-            gameContext.drawImage(tileImages[(map[i][j])], thisX - worldOffsetX - thisGraphicCentreX, thisY - worldOffsetY - thisGraphicCentreY);
-        }
+            if (map[i][j] != "*") {
+                thisX = (map.length - i + j) * tileW / 2;
+                thisY = (i + j) * tileH / 2;
+                thisGraphicCentreX = thisMapData.graphics[(map[i][j])].centreX;
+                thisGraphicCentreY = thisMapData.graphics[(map[i][j])].centreY;
+                //    gameContext.drawImage(tileImages[(map[i][j])], thisX - worldOffsetX - thisGraphicCentreX, thisY - worldOffsetY - thisGraphicCentreY);
+                assetsToDraw.push([tileImages[(map[i][j])], thisX - worldOffsetX - thisGraphicCentreX, thisY - worldOffsetY - thisGraphicCentreY, findIsoDepth(thisX - worldOffsetX - thisGraphicCentreX, thisY - worldOffsetY - thisGraphicCentreY)]);
+            }
         }
     }
+    assetsToDraw.sort(sortByIsoDepth);
+    gameContext.drawImage(backgroundImg, 0, 0);
+    for (var i = 0; i < assetsToDraw.length; i++) {
+        if (assetsToDraw[i][0] == "hero") {
+            gameContext.drawImage(heroImg, hero.offsetX, hero.offsetY, hero.width, hero.height, hero.x, hero.y, hero.width, hero.height);
+        } else {
+            gameContext.drawImage(assetsToDraw[i][0], assetsToDraw[i][1], assetsToDraw[i][2]);
+        }
+    }
+
 }
+
+
+
+
 
 // check if it cuts the mustard and supports Canvas:
 if (('querySelectorAll' in document && 'addEventListener' in window) && (!!window.HTMLCanvasElement)) {
