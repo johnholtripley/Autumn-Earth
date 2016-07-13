@@ -353,7 +353,7 @@ function checkCollisions() {
 function gameLoop() {
     switch (gameMode) {
         case "loading":
-        
+         
             //
             break;
         case "paused":
@@ -394,7 +394,7 @@ function update() {
         worldOffsetX += hero.speed;
         worldOffsetY += hero.speed / 2;
     }
-console.log("hero coords "+hero.x+", "+hero.y);
+
 
     checkCollisions();
 
@@ -417,14 +417,15 @@ console.log("hero coords "+hero.x+", "+hero.y);
 
 function sortByIsoDepth(a, b) {
     if (a[3] < b[3])
-        return 1;
-    if (a[3] > b[3])
         return -1;
+    if (a[3] > b[3])
+        return 1;
     return 0;
 }
 
 function findIsoDepth(x, y) {
-    return x + y * tileW * mapTilesX;
+    
+    return x*tileW + y*(mapTilesX+1)*tileW;
 }
 
 // ##########
@@ -439,18 +440,20 @@ function draw() {
     //  gameContext.drawImage(heroImg, hero.offsetX, hero.offsetY, hero.width, hero.height, hero.x, hero.y, hero.width, hero.height);
     // get all objects to be drawn in a list:
     var assetsToDraw = [];
-    assetsToDraw.push(["hero", hero.x, hero.y, findIsoDepth(hero.x, hero.y)]);
+    assetsToDraw.push(["hero", hero.x, hero.y, findIsoDepth(hero.x- worldOffsetX, hero.y- worldOffsetY)]);
+
     var map = thisMapData.terrain;
     var thisGraphicCentreX, thisGraphicCentreY;
-    for (var i = 0; i < map.length; i++) {
-        for (var j = 0; j < map[i].length; j++) {
+    for (var i = 0; i < mapTilesY; i++) {
+        for (var j = 0; j < mapTilesX; j++) {
             if (map[i][j] != "*") {
-                thisX = (map.length - i + j) * tileW / 2;
+                thisX = (mapTilesY - i + j) * tileW / 2;
                 thisY = (i + j) * tileH / 2;
                 thisGraphicCentreX = thisMapData.graphics[(map[i][j])].centreX;
                 thisGraphicCentreY = thisMapData.graphics[(map[i][j])].centreY;
+          
                 //    gameContext.drawImage(tileImages[(map[i][j])], thisX - worldOffsetX - thisGraphicCentreX, thisY - worldOffsetY - thisGraphicCentreY);
-                assetsToDraw.push([tileImages[(map[i][j])], thisX - worldOffsetX - thisGraphicCentreX, thisY - worldOffsetY - thisGraphicCentreY, findIsoDepth(thisX - worldOffsetX - thisGraphicCentreX, thisY - worldOffsetY - thisGraphicCentreY)]);
+                assetsToDraw.push([tileImages[(map[i][j])], thisX - worldOffsetX - thisGraphicCentreX, thisY - worldOffsetY - thisGraphicCentreY, findIsoDepth(thisX - worldOffsetX, thisY - worldOffsetY)]);
             }
         }
     }
