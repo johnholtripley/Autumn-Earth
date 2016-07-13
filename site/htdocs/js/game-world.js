@@ -429,8 +429,6 @@ function findIsoDepth(x, y) {
 }
 
 // ##########
-// need to fix findIsoDepth equation
-// need to pass in object centre, not draw coords
 // need a better way to reference items so they can be drawn quickly -  if (assetsToDraw[i][0] == "hero") { is not good...
 // ##########
 
@@ -440,7 +438,7 @@ function draw() {
     //  gameContext.drawImage(heroImg, hero.offsetX, hero.offsetY, hero.width, hero.height, hero.x, hero.y, hero.width, hero.height);
     // get all objects to be drawn in a list:
     var assetsToDraw = [];
-    assetsToDraw.push(["hero", hero.x, hero.y, findIsoDepth(hero.x- worldOffsetX, hero.y- worldOffsetY)]);
+    assetsToDraw.push(["hero", hero.x, hero.y, findIsoDepth(hero.x + hero.feetOffsetX, hero.y + hero.feetOffsetY)]);
 
     var map = thisMapData.terrain;
     var thisGraphicCentreX, thisGraphicCentreY;
@@ -453,7 +451,7 @@ function draw() {
                 thisGraphicCentreY = thisMapData.graphics[(map[i][j])].centreY;
           
                 //    gameContext.drawImage(tileImages[(map[i][j])], thisX - worldOffsetX - thisGraphicCentreX, thisY - worldOffsetY - thisGraphicCentreY);
-                assetsToDraw.push([tileImages[(map[i][j])], thisX - worldOffsetX - thisGraphicCentreX, thisY - worldOffsetY - thisGraphicCentreY, findIsoDepth(thisX - worldOffsetX, thisY - worldOffsetY)]);
+                assetsToDraw.push([tileImages[(map[i][j])], thisX - worldOffsetX - thisGraphicCentreX, thisY - worldOffsetY - thisGraphicCentreY, findIsoDepth(thisX - worldOffsetX - tileW/2, thisY - worldOffsetY - tileH/2)]);
             }
         }
     }
