@@ -22,8 +22,10 @@ var worldOffsety = 0;
 var key = [0, 0, 0, 0, 0];
 
 var hero = {
-    x: 100,
-    y: 100,
+    x: 0,
+    y: 0,
+    dx: 0,
+    dy: 0,
     tileX: 3,
     tileY: 3,
     width: 17,
@@ -297,6 +299,9 @@ function prepareGame() {
     // hero needs to be at the canvas centre:
     hero.x = canvasWidth / 2 - hero.feetOffsetX;
     hero.y = canvasHeight / 2 - hero.feetOffsetY;
+
+    
+
     gameMode = "play";
 }
 
@@ -367,26 +372,26 @@ function update() {
     lastTime = now;
     hero.isMoving = false;
     // Handle the Input
-    if (key[2]) {
+  if (key[2]) {
         hero.isMoving = true;
         hero.facing = 'up';
-        hero.x += hero.speed;
-        hero.y -= hero.speed / 2;
+        worldOffsetX += hero.speed;
+        worldOffsetY -= hero.speed / 2;
     } else if (key[3]) {
         hero.isMoving = true;
         hero.facing = 'down';
-        hero.x -= hero.speed;
-        hero.y += hero.speed / 2;
+        worldOffsetX -= hero.speed;
+        worldOffsetY += hero.speed / 2;
     } else if (key[0]) {
         hero.isMoving = true;
         hero.facing = 'left';
-        hero.x -= hero.speed;
-        hero.y -= hero.speed / 2;
+        worldOffsetX -= hero.speed;
+        worldOffsetY -= hero.speed / 2;
     } else if (key[1]) {
         hero.isMoving = true;
         hero.facing = 'right';
-        hero.x += hero.speed;
-        hero.y += hero.speed / 2;
+        worldOffsetX += hero.speed;
+        worldOffsetY += hero.speed / 2;
     }
 console.log("hero coords "+hero.x+", "+hero.y);
 

@@ -22,8 +22,10 @@ var worldOffsety = 0;
 var key = [0, 0, 0, 0, 0];
 
 var hero = {
-    x: 100,
-    y: 100,
+    x: 0,
+    y: 0,
+    dx: 0,
+    dy: 0,
     tileX: 3,
     tileY: 3,
     width: 17,
