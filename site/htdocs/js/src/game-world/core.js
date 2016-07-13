@@ -168,9 +168,9 @@ function update() {
 }
 
 function sortByIsoDepth(a, b) {
-    if (a[3] < b[3])
+    if (a[0] < b[0])
         return -1;
-    if (a[3] > b[3])
+    if (a[0] > b[0])
         return 1;
     return 0;
 }
@@ -180,17 +180,12 @@ function findIsoDepth(x, y) {
     return x*tileW + y*(mapTilesX+1)*tileW;
 }
 
-// ##########
-// need a better way to reference items so they can be drawn quickly -  if (assetsToDraw[i][0] == "hero") { is not good...
-// ##########
 
 
 function draw() {
-    //  drawBackground();
-    //  gameContext.drawImage(heroImg, hero.offsetX, hero.offsetY, hero.width, hero.height, hero.x, hero.y, hero.width, hero.height);
-    // get all objects to be drawn in a list:
+    // get all assets to be drawn in a list:
     var assetsToDraw = [];
-    assetsToDraw.push(["hero", hero.x, hero.y, findIsoDepth(hero.x + hero.feetOffsetX, hero.y + hero.feetOffsetY)]);
+    assetsToDraw.push([findIsoDepth(hero.x + hero.feetOffsetX, hero.y + hero.feetOffsetY), heroImg, hero.offsetX, hero.offsetY, hero.width, hero.height, hero.x, hero.y, hero.width, hero.height]);
 
     var map = thisMapData.terrain;
     var thisGraphicCentreX, thisGraphicCentreY;
@@ -201,23 +196,24 @@ function draw() {
                 thisY = (i + j) * tileH / 2;
                 thisGraphicCentreX = thisMapData.graphics[(map[i][j])].centreX;
                 thisGraphicCentreY = thisMapData.graphics[(map[i][j])].centreY;
-          
-                //    gameContext.drawImage(tileImages[(map[i][j])], thisX - worldOffsetX - thisGraphicCentreX, thisY - worldOffsetY - thisGraphicCentreY);
-                assetsToDraw.push([tileImages[(map[i][j])], thisX - worldOffsetX - thisGraphicCentreX, thisY - worldOffsetY - thisGraphicCentreY, findIsoDepth(thisX - worldOffsetX - tileW/2, thisY - worldOffsetY - tileH/2)]);
+                assetsToDraw.push([findIsoDepth(thisX - worldOffsetX - tileW / 2, thisY - worldOffsetY - tileH / 2), tileImages[(map[i][j])], thisX - worldOffsetX - thisGraphicCentreX, thisY - worldOffsetY - thisGraphicCentreY]);
             }
         }
     }
     assetsToDraw.sort(sortByIsoDepth);
     gameContext.drawImage(backgroundImg, 0, 0);
+    // draw the sorted assets:
     for (var i = 0; i < assetsToDraw.length; i++) {
-        if (assetsToDraw[i][0] == "hero") {
-            gameContext.drawImage(heroImg, hero.offsetX, hero.offsetY, hero.width, hero.height, hero.x, hero.y, hero.width, hero.height);
+          if (assetsToDraw[i].length == 10) {
+            // sprite image (needs slicing parameters):
+            gameContext.drawImage(assetsToDraw[i][1], assetsToDraw[i][2], assetsToDraw[i][3], assetsToDraw[i][4], assetsToDraw[i][5], assetsToDraw[i][6], assetsToDraw[i][7], assetsToDraw[i][8], assetsToDraw[i][9]);
         } else {
-            gameContext.drawImage(assetsToDraw[i][0], assetsToDraw[i][1], assetsToDraw[i][2]);
+            // standard image:
+            gameContext.drawImage(assetsToDraw[i][1], assetsToDraw[i][2], assetsToDraw[i][3]);
         }
     }
-
 }
+
 
 
 
@@ -227,5 +223,5 @@ function draw() {
 if (('querySelectorAll' in document && 'addEventListener' in window) && (!!window.HTMLCanvasElement)) {
     init();
 } else {
-    // sorry message / fallback?
+    // sorry message / fallback? #####
 }
