@@ -302,3 +302,25 @@ div:not(#foo)>#pageContent input[type='checkbox'] {
 }
 
 }
+
+
+
+// buttons -----------------------------
+.button {
+    text-decoration: none;
+    background: $titleColour;
+    display: inline-block;
+    &:link,&:visited {
+    color: #fff;
+}
+    text-transform: uppercase;
+    padding: 1% 4%;
+    @include transition(background 0.4s ease);
+    @include attention() {
+        color: #fff;
+        background: darken($titleColour,20);
+    }
+}
+.primary-button {
+    @include pxRem("font-size",28px);
+}
