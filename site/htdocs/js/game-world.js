@@ -26,8 +26,8 @@ var hero = {
     y: 0,
     dx: 0,
     dy: 0,
-    tileX: 0,
-    tileY: 2,
+    tileX: 1,
+    tileY: 1,
     width: 17,
     height: 25,
     feetOffsetX: 8,
@@ -273,13 +273,22 @@ function init() {
     gameLoop();
 }
 
+// find tile from coords:
+function getTileX(x, y) {
+    return Math.floor(x/tileW);
+}
 
+function getTileY(x, y) {
+    return Math.floor(y/tileW);
+}
+
+// find coords for a tile
 function getTileCentreCoordX(tileX, tileY) {
     return tileW / 2 * (mapTilesY - tileY + tileX);
 }
 
 function getTileCentreCoordY(tileX, tileY) {
-    return tileH / 2 * (1 + tileY + tileX);
+    return tileH / 2 * (tileY + tileX);
 }
 
 
@@ -294,11 +303,9 @@ function prepareGame() {
     // detect and set up input methods:
     Input.init();
     // determine tile offset to centre the hero in the centre
-    worldOffsetX = getTileCentreCoordX(hero.tileX, hero.tileY) - (canvasWidth / 2);
-    worldOffsetY = getTileCentreCoordY(hero.tileX, hero.tileY) - (canvasHeight / 2) - (tileH / 2);
-    // hero needs to be at the canvas centre:
-    hero.x = canvasWidth / 2 - hero.feetOffsetX;
-    hero.y = canvasHeight / 2 - hero.feetOffsetY;
+
+    hero.x = getTileCentreCoordX(hero.tileX, hero.tileY);
+    hero.y = getTileCentreCoordY(hero.tileX, hero.tileY);
 
     
 
@@ -376,26 +383,30 @@ function update() {
   if (key[2]) {
         hero.isMoving = true;
         hero.facing = 'up';
-        worldOffsetX += hero.speed;
-        worldOffsetY -= hero.speed / 2;
+     
+                hero.x += hero.speed;
+        hero.y -= hero.speed / 2;
     } else if (key[3]) {
         hero.isMoving = true;
         hero.facing = 'down';
-        worldOffsetX -= hero.speed;
-        worldOffsetY += hero.speed / 2;
+      
+         hero.x -= hero.speed;
+        hero.y += hero.speed / 2;
     } else if (key[0]) {
         hero.isMoving = true;
         hero.facing = 'left';
-        worldOffsetX -= hero.speed;
-        worldOffsetY -= hero.speed / 2;
+      
+        hero.x -= hero.speed;
+        hero.y -= hero.speed / 2;
     } else if (key[1]) {
         hero.isMoving = true;
         hero.facing = 'right';
-        worldOffsetX += hero.speed;
-        worldOffsetY += hero.speed / 2;
+     
+        hero.x += hero.speed;
+        hero.y += hero.speed / 2;
     }
 
-
+//console.log(getTileX(hero.x,hero.y)+", "+getTileY(hero.x,hero.y));
     checkCollisions();
 
     hero.timeSinceLastFrameSwap += elapsed;
@@ -424,7 +435,6 @@ function sortByIsoDepth(a, b) {
 }
 
 function findIsoDepth(x, y) {
-    
     return x*tileW + y*(mapTilesX+1)*tileW;
 }
 
@@ -433,18 +443,18 @@ function findIsoDepth(x, y) {
 function draw() {
     // get all assets to be drawn in a list:
     var assetsToDraw = [];
-    assetsToDraw.push([findIsoDepth(hero.x + hero.feetOffsetX, hero.y + hero.feetOffsetY), heroImg, hero.offsetX, hero.offsetY, hero.width, hero.height, hero.x, hero.y, hero.width, hero.height]);
+    assetsToDraw.push([findIsoDepth(hero.x, hero.y), heroImg, hero.offsetX, hero.offsetY, hero.width, hero.height, canvasWidth / 2 - hero.feetOffsetX, canvasHeight / 2 - hero.feetOffsetY, hero.width, hero.height]);
 
     var map = thisMapData.terrain;
     var thisGraphicCentreX, thisGraphicCentreY;
     for (var i = 0; i < mapTilesY; i++) {
         for (var j = 0; j < mapTilesX; j++) {
             if (map[i][j] != "*") {
-                thisX = (mapTilesY - i + j) * tileW / 2;
-                thisY = (i + j) * tileH / 2;
+                thisX = getTileCentreCoordX(i,j);
+                thisY = getTileCentreCoordY(i,j);
                 thisGraphicCentreX = thisMapData.graphics[(map[i][j])].centreX;
                 thisGraphicCentreY = thisMapData.graphics[(map[i][j])].centreY;
-                assetsToDraw.push([findIsoDepth(thisX - worldOffsetX - tileW / 2, thisY - worldOffsetY - tileH / 2), tileImages[(map[i][j])], thisX - worldOffsetX - thisGraphicCentreX, thisY - worldOffsetY - thisGraphicCentreY]);
+                assetsToDraw.push([findIsoDepth(thisX, thisY), tileImages[(map[i][j])], thisX - hero.x - thisGraphicCentreX +  (canvasWidth / 2), thisY - hero.y - thisGraphicCentreY  + (canvasHeight / 2)]);
             }
         }
     }
