@@ -17,6 +17,7 @@
 
 
         ],
+        "elevation": [],
         "graphics": [
             { "src": "grass.png", "centreX": 24, "centreY": 12 },
             { "src": "dirt.png", "centreX": 24, "centreY": 12 },

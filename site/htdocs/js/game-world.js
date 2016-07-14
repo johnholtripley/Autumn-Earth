@@ -307,8 +307,6 @@ function prepareGame() {
     hero.x = getTileCentreCoordX(hero.tileX, hero.tileY);
     hero.y = getTileCentreCoordY(hero.tileX, hero.tileY);
 
-    
-
     gameMode = "play";
 }
 
@@ -359,8 +357,7 @@ function checkCollisions() {
 
 function gameLoop() {
     switch (gameMode) {
-        case "loading":
-         
+        case "loading":   
             //
             break;
         case "paused":
@@ -380,33 +377,33 @@ function update() {
     lastTime = now;
     hero.isMoving = false;
     // Handle the Input
-  if (key[2]) {
+    if (key[2]) {
         hero.isMoving = true;
         hero.facing = 'up';
-     
-                hero.x += hero.speed;
+
+        hero.x += hero.speed;
         hero.y -= hero.speed / 2;
     } else if (key[3]) {
         hero.isMoving = true;
         hero.facing = 'down';
-      
-         hero.x -= hero.speed;
+
+        hero.x -= hero.speed;
         hero.y += hero.speed / 2;
     } else if (key[0]) {
         hero.isMoving = true;
         hero.facing = 'left';
-      
+
         hero.x -= hero.speed;
         hero.y -= hero.speed / 2;
     } else if (key[1]) {
         hero.isMoving = true;
         hero.facing = 'right';
-     
+
         hero.x += hero.speed;
         hero.y += hero.speed / 2;
     }
 
-//console.log(getTileX(hero.x,hero.y)+", "+getTileY(hero.x,hero.y));
+    console.log(getTileX(hero.x,hero.y)+", "+getTileY(hero.x,hero.y));
     checkCollisions();
 
     hero.timeSinceLastFrameSwap += elapsed;
@@ -426,6 +423,7 @@ function update() {
     }
 }
 
+
 function sortByIsoDepth(a, b) {
     if (a[0] < b[0])
         return -1;
@@ -441,20 +439,22 @@ function findIsoDepth(x, y) {
 
 
 function draw() {
-    // get all assets to be drawn in a list:
-    var assetsToDraw = [];
-    assetsToDraw.push([findIsoDepth(hero.x, hero.y), heroImg, hero.offsetX, hero.offsetY, hero.width, hero.height, canvasWidth / 2 - hero.feetOffsetX, canvasHeight / 2 - hero.feetOffsetY, hero.width, hero.height]);
-
+    // get all assets to be drawn in a list - start with the hero:
+    var assetsToDraw = [
+        [findIsoDepth(hero.x, hero.y), heroImg, hero.offsetX, hero.offsetY, hero.width, hero.height, canvasWidth / 2 - hero.feetOffsetX, canvasHeight / 2 - hero.feetOffsetY, hero.width, hero.height]
+    ];
     var map = thisMapData.terrain;
-    var thisGraphicCentreX, thisGraphicCentreY;
+    var thisGraphicCentreX, thisGraphicCentreY, k;
     for (var i = 0; i < mapTilesY; i++) {
         for (var j = 0; j < mapTilesX; j++) {
-            if (map[i][j] != "*") {
-                thisX = getTileCentreCoordX(i,j);
-                thisY = getTileCentreCoordY(i,j);
-                thisGraphicCentreX = thisMapData.graphics[(map[i][j])].centreX;
-                thisGraphicCentreY = thisMapData.graphics[(map[i][j])].centreY;
-                assetsToDraw.push([findIsoDepth(thisX, thisY), tileImages[(map[i][j])], thisX - hero.x - thisGraphicCentreX +  (canvasWidth / 2), thisY - hero.y - thisGraphicCentreY  + (canvasHeight / 2)]);
+            // the Y needs reflecting to make the terrain array easier to read in the Json file:
+            k = mapTilesX - 1 - j;
+            if (map[i][k] != "*") {
+                thisX = getTileCentreCoordX(i, j);
+                thisY = getTileCentreCoordY(i, j);
+                thisGraphicCentreX = thisMapData.graphics[(map[i][k])].centreX;
+                thisGraphicCentreY = thisMapData.graphics[(map[i][k])].centreY;
+                assetsToDraw.push([findIsoDepth(thisX, thisY), tileImages[(map[i][k])], thisX - hero.x - thisGraphicCentreX + (canvasWidth / 2), thisY - hero.y - thisGraphicCentreY + (canvasHeight / 2)]);
             }
         }
     }
@@ -462,7 +462,7 @@ function draw() {
     gameContext.drawImage(backgroundImg, 0, 0);
     // draw the sorted assets:
     for (var i = 0; i < assetsToDraw.length; i++) {
-          if (assetsToDraw[i].length == 10) {
+        if (assetsToDraw[i].length == 10) {
             // sprite image (needs slicing parameters):
             gameContext.drawImage(assetsToDraw[i][1], assetsToDraw[i][2], assetsToDraw[i][3], assetsToDraw[i][4], assetsToDraw[i][5], assetsToDraw[i][6], assetsToDraw[i][7], assetsToDraw[i][8], assetsToDraw[i][9]);
         } else {
@@ -471,6 +471,7 @@ function draw() {
         }
     }
 }
+
 
 
 
