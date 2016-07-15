@@ -26,7 +26,7 @@ var hero = {
     y: 0,
     dx: 0,
     dy: 0,
-    tileX: 1,
+    tileX: 4,
     tileY: 1,
     width: 17,
     height: 25,
@@ -50,6 +50,53 @@ var hero = {
     }
 
 };
+
+
+// find tile from coords:
+function getTileX(x, y) {
+    return Math.floor(x/tileW);
+}
+
+function getTileY(x, y) {
+    return Math.floor(y/tileW);
+}
+
+// find coords for a tile
+function getTileCentreCoordX(tileX, tileY) {
+    return tileW / 2 * (mapTilesY + tileY - tileX);
+}
+
+function getTileCentreCoordY(tileX, tileY) {
+    return tileH / 2 * (tileY + tileX);
+}
+
+
+
+
+
+
+function sortByIsoDepth(a, b) {
+    if (a[0] < b[0])
+        return -1;
+    if (a[0] > b[0])
+        return 1;
+    return 0;
+}
+
+function findIsoDepth(x, y) {
+    return x*tileW + y*(mapTilesX+1)*tileW;
+}
+
+
+
+
+
+
+
+
+
+
+
 
 
 // -----------------------------------------------------------
@@ -273,23 +320,7 @@ function init() {
     gameLoop();
 }
 
-// find tile from coords:
-function getTileX(x, y) {
-    return Math.floor(x/tileW);
-}
 
-function getTileY(x, y) {
-    return Math.floor(y/tileW);
-}
-
-// find coords for a tile
-function getTileCentreCoordX(tileX, tileY) {
-    return tileW / 2 * (mapTilesY - tileY + tileX);
-}
-
-function getTileCentreCoordY(tileX, tileY) {
-    return tileH / 2 * (tileY + tileX);
-}
 
 
 function prepareGame() {
@@ -357,7 +388,7 @@ function checkCollisions() {
 
 function gameLoop() {
     switch (gameMode) {
-        case "loading":   
+        case "loading":
             //
             break;
         case "paused":
@@ -403,7 +434,7 @@ function update() {
         hero.y += hero.speed / 2;
     }
 
-    console.log(getTileX(hero.x,hero.y)+", "+getTileY(hero.x,hero.y));
+    console.log(getTileX(hero.x, hero.y) + ", " + getTileY(hero.x, hero.y));
     checkCollisions();
 
     hero.timeSinceLastFrameSwap += elapsed;
@@ -424,17 +455,6 @@ function update() {
 }
 
 
-function sortByIsoDepth(a, b) {
-    if (a[0] < b[0])
-        return -1;
-    if (a[0] > b[0])
-        return 1;
-    return 0;
-}
-
-function findIsoDepth(x, y) {
-    return x*tileW + y*(mapTilesX+1)*tileW;
-}
 
 
 
@@ -447,8 +467,9 @@ function draw() {
     var thisGraphicCentreX, thisGraphicCentreY, k;
     for (var i = 0; i < mapTilesY; i++) {
         for (var j = 0; j < mapTilesX; j++) {
-            // the Y needs reflecting to make the terrain array easier to read in the Json file:
+            // the Y needs flipping to make the terrain array easier to read in the Json file:
             k = mapTilesX - 1 - j;
+            k = j;
             if (map[i][k] != "*") {
                 thisX = getTileCentreCoordX(i, j);
                 thisY = getTileCentreCoordY(i, j);

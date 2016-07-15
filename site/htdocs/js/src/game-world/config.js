@@ -26,7 +26,7 @@ var hero = {
     y: 0,
     dx: 0,
     dy: 0,
-    tileX: 1,
+    tileX: 4,
     tileY: 1,
     width: 17,
     height: 25,

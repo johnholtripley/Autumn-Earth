@@ -1,4 +1,51 @@
 
+// find tile from coords:
+function getTileX(x, y) {
+    return Math.floor(x/tileW);
+}
+
+function getTileY(x, y) {
+    return Math.floor(y/tileW);
+}
+
+// find coords for a tile
+function getTileCentreCoordX(tileX, tileY) {
+    return tileW / 2 * (mapTilesY + tileY - tileX);
+}
+
+function getTileCentreCoordY(tileX, tileY) {
+    return tileH / 2 * (tileY + tileX);
+}
+
+
+
+
+
+
+function sortByIsoDepth(a, b) {
+    if (a[0] < b[0])
+        return -1;
+    if (a[0] > b[0])
+        return 1;
+    return 0;
+}
+
+function findIsoDepth(x, y) {
+    return x*tileW + y*(mapTilesX+1)*tileW;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 // -----------------------------------------------------------
 
 // http://paulirish.com/2011/requestanimationframe-for-smart-animating/

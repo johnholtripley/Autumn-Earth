@@ -25,23 +25,7 @@ function init() {
     gameLoop();
 }
 
-// find tile from coords:
-function getTileX(x, y) {
-    return Math.floor(x/tileW);
-}
 
-function getTileY(x, y) {
-    return Math.floor(y/tileW);
-}
-
-// find coords for a tile
-function getTileCentreCoordX(tileX, tileY) {
-    return tileW / 2 * (mapTilesY - tileY + tileX);
-}
-
-function getTileCentreCoordY(tileX, tileY) {
-    return tileH / 2 * (tileY + tileX);
-}
 
 
 function prepareGame() {
@@ -109,7 +93,7 @@ function checkCollisions() {
 
 function gameLoop() {
     switch (gameMode) {
-        case "loading":   
+        case "loading":
             //
             break;
         case "paused":
@@ -155,7 +139,7 @@ function update() {
         hero.y += hero.speed / 2;
     }
 
-    console.log(getTileX(hero.x,hero.y)+", "+getTileY(hero.x,hero.y));
+    console.log(getTileX(hero.x, hero.y) + ", " + getTileY(hero.x, hero.y));
     checkCollisions();
 
     hero.timeSinceLastFrameSwap += elapsed;
@@ -176,17 +160,6 @@ function update() {
 }
 
 
-function sortByIsoDepth(a, b) {
-    if (a[0] < b[0])
-        return -1;
-    if (a[0] > b[0])
-        return 1;
-    return 0;
-}
-
-function findIsoDepth(x, y) {
-    return x*tileW + y*(mapTilesX+1)*tileW;
-}
 
 
 
@@ -196,17 +169,15 @@ function draw() {
         [findIsoDepth(hero.x, hero.y), heroImg, hero.offsetX, hero.offsetY, hero.width, hero.height, canvasWidth / 2 - hero.feetOffsetX, canvasHeight / 2 - hero.feetOffsetY, hero.width, hero.height]
     ];
     var map = thisMapData.terrain;
-    var thisGraphicCentreX, thisGraphicCentreY, k;
+    var thisGraphicCentreX, thisGraphicCentreY;
     for (var i = 0; i < mapTilesY; i++) {
         for (var j = 0; j < mapTilesX; j++) {
-            // the Y needs reflecting to make the terrain array easier to read in the Json file:
-            k = mapTilesX - 1 - j;
-            if (map[i][k] != "*") {
+                   if (map[i][j] != "*") {
                 thisX = getTileCentreCoordX(i, j);
                 thisY = getTileCentreCoordY(i, j);
-                thisGraphicCentreX = thisMapData.graphics[(map[i][k])].centreX;
-                thisGraphicCentreY = thisMapData.graphics[(map[i][k])].centreY;
-                assetsToDraw.push([findIsoDepth(thisX, thisY), tileImages[(map[i][k])], thisX - hero.x - thisGraphicCentreX + (canvasWidth / 2), thisY - hero.y - thisGraphicCentreY + (canvasHeight / 2)]);
+                thisGraphicCentreX = thisMapData.graphics[(map[i][j])].centreX;
+                thisGraphicCentreY = thisMapData.graphics[(map[i][j])].centreY;
+                assetsToDraw.push([findIsoDepth(thisX, thisY), tileImages[(map[i][j])], thisX - hero.x - thisGraphicCentreX + (canvasWidth / 2), thisY - hero.y - thisGraphicCentreY + (canvasHeight / 2)]);
             }
         }
     }
