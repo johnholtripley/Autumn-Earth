@@ -26,8 +26,8 @@ var hero = {
     y: 0,
     dx: 0,
     dy: 0,
-    tileX: 3,
-    tileY: 2,
+    tileX: 1,
+    tileY: 1,
     width: 17,
     height: 25,
     feetOffsetX: 8,
@@ -64,12 +64,13 @@ function getTileY(x, y) {
 
 // find Iso coords from 2d coords:
 function findIsoCoordsX(x, y) {
-    // http://gamedev.stackexchange.com/questions/30566/how-would-i-translate-screen-coordinates-to-isometric-coordinates#answer-30574
-    return x;
+  return 0;
+  //   return Math.floor(tileW / 2 * (mapTilesY - y/tileW + x/tileW));
 }
 
 function findIsoCoordsY(x, y) {
-    return y;
+ return 0;
+ //   return Math.floor(tileH / 2 * (y/tileW + x/tileW));
 }
 
 
@@ -352,8 +353,19 @@ function prepareGame() {
     hero.x = getTileCentreCoordX(hero.tileX, hero.tileY);
     hero.y = getTileCentreCoordY(hero.tileX, hero.tileY);
 
-    console.log("hero: "+hero.tileX + "," + hero.tileY + " ==> " + hero.x + ", " + hero.y);
+   // console.log("hero: "+hero.tileX + "," + hero.tileY + " ==> " + hero.x + ", " + hero.y);
 
+
+console.log("0,0 ==>"+findIsoCoordsX(0,0)+", "+findIsoCoordsY(0,0));
+console.log("48,0 ==>"+findIsoCoordsX(48,0)+", "+findIsoCoordsY(48,0));
+console.log("0,24 ==>"+findIsoCoordsX(0,24)+", "+findIsoCoordsY(0,24));
+console.log(hero.x+","+hero.y+" ==>"+findIsoCoordsX(hero.x,hero.y)+", "+findIsoCoordsY(hero.x,hero.y)+" - hero");
+
+hero.isox = hero.x;
+hero.isoy = hero.y;
+
+oldHeroX = hero.x;
+oldHeroY = hero.y;
 
     gameMode = "play";
 }
@@ -432,33 +444,41 @@ function update() {
         hero.facing = 'up';
 // adjusting the hero's coord as iso ################
 // need to move on cartesinan, but then adjust to iso for graphics offset
-    //    hero.x += hero.speed;
-    //    hero.y -= hero.speed / 2;
+        hero.isox += hero.speed;
+        hero.isoy -= hero.speed / 2;
     hero.y -= hero.speed;
     } else if (key[3]) {
         hero.isMoving = true;
         hero.facing = 'down';
 
-     //   hero.x -= hero.speed;
-     //   hero.y += hero.speed / 2;
+        hero.isox -= hero.speed;
+        hero.isoy += hero.speed / 2;
       hero.y += hero.speed;
     } else if (key[0]) {
         hero.isMoving = true;
         hero.facing = 'left';
 
-     //  hero.x -= hero.speed;
-     //   hero.y -= hero.speed / 2;
+       hero.isox -= hero.speed;
+        hero.isoy -= hero.speed / 2;
       hero.x -= hero.speed;
     } else if (key[1]) {
         hero.isMoving = true;
         hero.facing = 'right';
 
-      //  hero.x += hero.speed;
-      //  hero.y += hero.speed / 2;
+        hero.isox += hero.speed;
+        hero.isoy += hero.speed / 2;
       hero.x += hero.speed;
     }
 
-    console.log(getTileX(hero.x, hero.y) + ", " + getTileY(hero.x, hero.y));
+
+
+
+if(oldHeroX != hero.x || oldHeroY != hero.y) {
+    console.log(hero.x+","+hero.y+" --> "+hero.isox+","+hero.isoy);
+oldHeroX = hero.x;
+oldHeroY = hero.y;
+}
+
     checkCollisions();
 
     hero.timeSinceLastFrameSwap += elapsed;
@@ -498,7 +518,7 @@ function draw() {
                 thisY = getTileCentreCoordY(i, j);
                 thisGraphicCentreX = thisMapData.graphics[(map[j][i])].centreX;
                 thisGraphicCentreY = thisMapData.graphics[(map[j][i])].centreY;
-                assetsToDraw.push([findIsoDepth(thisX, thisY), tileImages[(map[j][i])], thisX - findIsoCoordsX(hero.x,hero.y) - thisGraphicCentreX + (canvasWidth / 2), thisY - findIsoCoordsY(hero.x,hero.y) - thisGraphicCentreY + (canvasHeight / 2)]);
+                assetsToDraw.push([findIsoDepth(thisX, thisY), tileImages[(map[j][i])], thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2), thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2)]);
             
             }
         }

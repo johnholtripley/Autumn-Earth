@@ -11,12 +11,13 @@ function getTileY(x, y) {
 
 // find Iso coords from 2d coords:
 function findIsoCoordsX(x, y) {
-    // http://gamedev.stackexchange.com/questions/30566/how-would-i-translate-screen-coordinates-to-isometric-coordinates#answer-30574
-    return x;
+  return 0;
+  //   return Math.floor(tileW / 2 * (mapTilesY - y/tileW + x/tileW));
 }
 
 function findIsoCoordsY(x, y) {
-    return y;
+ return 0;
+ //   return Math.floor(tileH / 2 * (y/tileW + x/tileW));
 }
 
 
