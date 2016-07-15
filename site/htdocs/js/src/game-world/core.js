@@ -16,6 +16,7 @@ function init() {
         thisMapData = data.map;
         mapTilesY = thisMapData.terrain.length;
         mapTilesX = thisMapData.terrain[0].length;
+        console.log("map dimensions: "+mapTilesX+", "+mapTilesY);
         loadAssets();
     }, function(status) {
         alert('Error loading map data');
@@ -44,7 +45,7 @@ function prepareGame() {
     hero.x = getTileCentreCoordX(hero.tileX, hero.tileY);
     hero.y = getTileCentreCoordY(hero.tileX, hero.tileY);
 
-    console.log(hero.tileX + "," + hero.tileY + " ==> " + hero.x + ", " + hero.y);
+    console.log("hero: "+hero.tileX + "," + hero.tileY + " ==> " + hero.x + ", " + hero.y);
 
 
     gameMode = "play";
@@ -176,17 +177,17 @@ function draw() {
     ];
     var map = thisMapData.terrain;
     var thisGraphicCentreX, thisGraphicCentreY;
-    for (var i = 0; i < mapTilesY; i++) {
-        for (var j = 0; j < mapTilesX; j++) {
-                   if (map[i][j] != "*") {
+    for (var i = 0; i < mapTilesX; i++) {
+        for (var j = 0; j < mapTilesY; j++) {
+         // the tile coordinates should be positioned by i,j but the way the map is drawn, the reference in the array is j,i
+         // this makes the map array more readable when editing
+                   if (map[j][i] != "*") {
                 thisX = getTileCentreCoordX(i, j);
                 thisY = getTileCentreCoordY(i, j);
-                thisGraphicCentreX = thisMapData.graphics[(map[i][j])].centreX;
-                thisGraphicCentreY = thisMapData.graphics[(map[i][j])].centreY;
-                assetsToDraw.push([findIsoDepth(thisX, thisY), tileImages[(map[i][j])], thisX - hero.x - thisGraphicCentreX + (canvasWidth / 2), thisY - hero.y - thisGraphicCentreY + (canvasHeight / 2)]);
-                if(map[i][j]==2) {
-console.log("tile: "+i+", "+j+" ==> "+thisX+", "+thisY+" - "+(thisX - hero.x  + (canvasWidth / 2), thisY - hero.y + (canvasHeight / 2))+", "+(thisY - hero.y + (canvasHeight / 2)));
-                }
+                thisGraphicCentreX = thisMapData.graphics[(map[j][i])].centreX;
+                thisGraphicCentreY = thisMapData.graphics[(map[j][i])].centreY;
+                assetsToDraw.push([findIsoDepth(thisX, thisY), tileImages[(map[j][i])], thisX - hero.x - thisGraphicCentreX + (canvasWidth / 2), thisY - hero.y - thisGraphicCentreY + (canvasHeight / 2)]);
+            
             }
         }
     }

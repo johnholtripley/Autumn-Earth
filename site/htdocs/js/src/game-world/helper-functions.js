@@ -10,7 +10,7 @@ function getTileY(x, y) {
 
 // find coords for a tile
 function getTileCentreCoordX(tileX, tileY) {
-    return tileW / 2 * (mapTilesY + tileY - tileX);
+    return tileW / 2 * (mapTilesY - tileY + tileX);
 }
 
 function getTileCentreCoordY(tileX, tileY) {
