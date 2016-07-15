@@ -40,11 +40,17 @@ function prepareGame() {
     Input.init();
     // determine tile offset to centre the hero in the centre
 
+
     hero.x = getTileCentreCoordX(hero.tileX, hero.tileY);
     hero.y = getTileCentreCoordY(hero.tileX, hero.tileY);
 
+    console.log(hero.tileX + "," + hero.tileY + " ==> " + hero.x + ", " + hero.y);
+
+
     gameMode = "play";
 }
+
+
 
 
 
@@ -139,7 +145,7 @@ function update() {
         hero.y += hero.speed / 2;
     }
 
-    console.log(getTileX(hero.x, hero.y) + ", " + getTileY(hero.x, hero.y));
+  //  console.log(getTileX(hero.x, hero.y) + ", " + getTileY(hero.x, hero.y));
     checkCollisions();
 
     hero.timeSinceLastFrameSwap += elapsed;
@@ -178,6 +184,9 @@ function draw() {
                 thisGraphicCentreX = thisMapData.graphics[(map[i][j])].centreX;
                 thisGraphicCentreY = thisMapData.graphics[(map[i][j])].centreY;
                 assetsToDraw.push([findIsoDepth(thisX, thisY), tileImages[(map[i][j])], thisX - hero.x - thisGraphicCentreX + (canvasWidth / 2), thisY - hero.y - thisGraphicCentreY + (canvasHeight / 2)]);
+                if(map[i][j]==2) {
+console.log("tile: "+i+", "+j+" ==> "+thisX+", "+thisY+" - "+(thisX - hero.x  + (canvasWidth / 2), thisY - hero.y + (canvasHeight / 2))+", "+(thisY - hero.y + (canvasHeight / 2)));
+                }
             }
         }
     }
