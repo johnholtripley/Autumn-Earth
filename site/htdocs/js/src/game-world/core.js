@@ -123,30 +123,35 @@ function update() {
     if (key[2]) {
         hero.isMoving = true;
         hero.facing = 'up';
-
-        hero.x += hero.speed;
-        hero.y -= hero.speed / 2;
+// adjusting the hero's coord as iso ################
+// need to move on cartesinan, but then adjust to iso for graphics offset
+    //    hero.x += hero.speed;
+    //    hero.y -= hero.speed / 2;
+    hero.y -= hero.speed;
     } else if (key[3]) {
         hero.isMoving = true;
         hero.facing = 'down';
 
-        hero.x -= hero.speed;
-        hero.y += hero.speed / 2;
+     //   hero.x -= hero.speed;
+     //   hero.y += hero.speed / 2;
+      hero.y += hero.speed;
     } else if (key[0]) {
         hero.isMoving = true;
         hero.facing = 'left';
 
-        hero.x -= hero.speed;
-        hero.y -= hero.speed / 2;
+     //  hero.x -= hero.speed;
+     //   hero.y -= hero.speed / 2;
+      hero.x -= hero.speed;
     } else if (key[1]) {
         hero.isMoving = true;
         hero.facing = 'right';
 
-        hero.x += hero.speed;
-        hero.y += hero.speed / 2;
+      //  hero.x += hero.speed;
+      //  hero.y += hero.speed / 2;
+      hero.x += hero.speed;
     }
 
-  //  console.log(getTileX(hero.x, hero.y) + ", " + getTileY(hero.x, hero.y));
+    console.log(getTileX(hero.x, hero.y) + ", " + getTileY(hero.x, hero.y));
     checkCollisions();
 
     hero.timeSinceLastFrameSwap += elapsed;
@@ -186,7 +191,7 @@ function draw() {
                 thisY = getTileCentreCoordY(i, j);
                 thisGraphicCentreX = thisMapData.graphics[(map[j][i])].centreX;
                 thisGraphicCentreY = thisMapData.graphics[(map[j][i])].centreY;
-                assetsToDraw.push([findIsoDepth(thisX, thisY), tileImages[(map[j][i])], thisX - hero.x - thisGraphicCentreX + (canvasWidth / 2), thisY - hero.y - thisGraphicCentreY + (canvasHeight / 2)]);
+                assetsToDraw.push([findIsoDepth(thisX, thisY), tileImages[(map[j][i])], thisX - findIsoCoordsX(hero.x,hero.y) - thisGraphicCentreX + (canvasWidth / 2), thisY - findIsoCoordsY(hero.x,hero.y) - thisGraphicCentreY + (canvasHeight / 2)]);
             
             }
         }
