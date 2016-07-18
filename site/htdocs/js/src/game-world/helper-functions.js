@@ -21,18 +21,33 @@ function findIsoCoordsY(x, y) {
 }
 
 
-// find coords for a tile
-function getTileCentreCoordX(tileX, tileY) {
+// find non-iso coords for a tile
+function getTileCentreCoordX(tileX) {
+    return tileX*tileW;
+}
+
+function getTileCentreCoordY(tileY) {
+    return tileY*tileW;
+}
+
+
+// find iso coords for a tile
+function getTileIsoCentreCoordX(tileX, tileY) {
     return tileW / 2 * (mapTilesY - tileY + tileX);
 }
 
-function getTileCentreCoordY(tileX, tileY) {
+function getTileIsoCentreCoordY(tileX, tileY) {
     return tileH / 2 * (tileY + tileX);
 }
 
 
-
-
+// find current tile based on non-iso coords
+function getCurrentTileX(x) {
+    return Math.floor(x/tileW);
+}
+function getCurrentTileY(y) {
+    return Math.floor(y/tileW);
+}
 
 
 function sortByIsoDepth(a, b) {

@@ -42,12 +42,16 @@ function prepareGame() {
     // determine tile offset to centre the hero in the centre
 
 
-    hero.x = getTileCentreCoordX(hero.tileX, hero.tileY);
-    hero.y = getTileCentreCoordY(hero.tileX, hero.tileY);
-
-   // console.log("hero: "+hero.tileX + "," + hero.tileY + " ==> " + hero.x + ", " + hero.y);
+    hero.x = getTileIsoCentreCoordX(hero.tileX, hero.tileY);
+    hero.y = getTileIsoCentreCoordY(hero.tileX, hero.tileY);
 
 
+   hero.x = getTileCentreCoordX(hero.tileX);
+    hero.y = getTileCentreCoordY(hero.tileY);
+
+    console.log("hero: "+hero.x + ", " + hero.y);
+
+/*
 console.log("0,0 ==>"+findIsoCoordsX(0,0)+", "+findIsoCoordsY(0,0));
 console.log("48,0 ==>"+findIsoCoordsX(48,0)+", "+findIsoCoordsY(48,0));
 console.log("0,24 ==>"+findIsoCoordsX(0,24)+", "+findIsoCoordsY(0,24));
@@ -55,6 +59,8 @@ console.log(hero.x+","+hero.y+" ==>"+findIsoCoordsX(hero.x,hero.y)+", "+findIsoC
 
 hero.isox = hero.x;
 hero.isoy = hero.y;
+*/
+
 
 oldHeroX = hero.x;
 oldHeroY = hero.y;
@@ -136,29 +142,29 @@ function update() {
         hero.facing = 'up';
 // adjusting the hero's coord as iso ################
 // need to move on cartesinan, but then adjust to iso for graphics offset
-        hero.isox += hero.speed;
-        hero.isoy -= hero.speed / 2;
+     //   hero.isox += hero.speed;
+     //   hero.isoy -= hero.speed / 2;
     hero.y -= hero.speed;
     } else if (key[3]) {
         hero.isMoving = true;
         hero.facing = 'down';
 
-        hero.isox -= hero.speed;
-        hero.isoy += hero.speed / 2;
+   //     hero.isox -= hero.speed;
+   //     hero.isoy += hero.speed / 2;
       hero.y += hero.speed;
     } else if (key[0]) {
         hero.isMoving = true;
         hero.facing = 'left';
 
-       hero.isox -= hero.speed;
-        hero.isoy -= hero.speed / 2;
+   //    hero.isox -= hero.speed;
+   //     hero.isoy -= hero.speed / 2;
       hero.x -= hero.speed;
     } else if (key[1]) {
         hero.isMoving = true;
         hero.facing = 'right';
 
-        hero.isox += hero.speed;
-        hero.isoy += hero.speed / 2;
+     //   hero.isox += hero.speed;
+     //   hero.isoy += hero.speed / 2;
       hero.x += hero.speed;
     }
 
@@ -166,7 +172,7 @@ function update() {
 
 
 if(oldHeroX != hero.x || oldHeroY != hero.y) {
-    console.log(hero.x+","+hero.y+" --> "+hero.isox+","+hero.isoy);
+    console.log(hero.x+","+hero.y+"  --> "+getCurrentTileX(hero.x)+", "+getCurrentTileY(hero.y));
 oldHeroX = hero.x;
 oldHeroY = hero.y;
 }
@@ -196,9 +202,18 @@ oldHeroY = hero.y;
 
 function draw() {
     // get all assets to be drawn in a list - start with the hero:
+ /*
     var assetsToDraw = [
         [findIsoDepth(hero.x, hero.y), heroImg, hero.offsetX, hero.offsetY, hero.width, hero.height, canvasWidth / 2 - hero.feetOffsetX, canvasHeight / 2 - hero.feetOffsetY, hero.width, hero.height]
     ];
+    */
+
+ var assetsToDraw = [
+        [findIsoDepth(hero.x, hero.y), heroImg, hero.offsetX, hero.offsetY, hero.width, hero.height, hero.x - hero.feetOffsetX, hero.y - hero.feetOffsetY, hero.width, hero.height]
+    ];
+
+
+
     var map = thisMapData.terrain;
     var thisGraphicCentreX, thisGraphicCentreY;
     for (var i = 0; i < mapTilesX; i++) {
@@ -206,11 +221,20 @@ function draw() {
          // the tile coordinates should be positioned by i,j but the way the map is drawn, the reference in the array is j,i
          // this makes the map array more readable when editing
                    if (map[j][i] != "*") {
-                thisX = getTileCentreCoordX(i, j);
-                thisY = getTileCentreCoordY(i, j);
+                thisX = getTileIsoCentreCoordX(i, j);
+                thisY = getTileIsoCentreCoordY(i, j);
                 thisGraphicCentreX = thisMapData.graphics[(map[j][i])].centreX;
                 thisGraphicCentreY = thisMapData.graphics[(map[j][i])].centreY;
-                assetsToDraw.push([findIsoDepth(thisX, thisY), tileImages[(map[j][i])], thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2), thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2)]);
+                
+
+
+                hero.isox = 0;
+                hero.isoy = 0;
+
+
+
+            //    assetsToDraw.push([findIsoDepth(thisX, thisY), tileImages[(map[j][i])], thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2), thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2)]);
+                assetsToDraw.push([findIsoDepth(thisX, thisY), tileImages[(map[j][i])], thisX - hero.isox - thisGraphicCentreX, thisY - hero.isoy - thisGraphicCentreY]);
             
             }
         }
