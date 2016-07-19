@@ -11,13 +11,13 @@ function getTileY(x, y) {
 
 // find Iso coords from 2d coords:
 function findIsoCoordsX(x, y) {
-  return 0;
-  //   return Math.floor(tileW / 2 * (mapTilesY - y/tileW + x/tileW));
+  return x/2 + y/2;
+
 }
 
 function findIsoCoordsY(x, y) {
- return 0;
- //   return Math.floor(tileH / 2 * (y/tileW + x/tileW));
+ return (mapTilesY * tileH/2) -x/4 + y/4;
+
 }
 
 
