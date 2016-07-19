@@ -46,8 +46,8 @@ function prepareGame() {
     hero.y = getTileIsoCentreCoordY(hero.tileX, hero.tileY);
 
 
-   hero.x = getTileCentreCoordX(hero.tileX);
-    hero.y = getTileCentreCoordY(hero.tileY);
+  // hero.x = getTileCentreCoordX(hero.tileX);
+  //  hero.y = getTileCentreCoordY(hero.tileY);
 
     console.log("hero: "+hero.x + ", " + hero.y);
 
@@ -172,7 +172,7 @@ function update() {
 
 
 if(oldHeroX != hero.x || oldHeroY != hero.y) {
-    console.log(hero.x+","+hero.y+"  --> "+getCurrentTileX(hero.x)+", "+getCurrentTileY(hero.y));
+    console.log(hero.x+","+hero.y+"  --> "+findIsoCoordsX(hero.x,hero.y)+", "+findIsoCoordsY(hero.x,hero.y));
 oldHeroX = hero.x;
 oldHeroY = hero.y;
 }
@@ -202,16 +202,16 @@ oldHeroY = hero.y;
 
 function draw() {
     // get all assets to be drawn in a list - start with the hero:
- /*
+ 
     var assetsToDraw = [
         [findIsoDepth(hero.x, hero.y), heroImg, hero.offsetX, hero.offsetY, hero.width, hero.height, canvasWidth / 2 - hero.feetOffsetX, canvasHeight / 2 - hero.feetOffsetY, hero.width, hero.height]
     ];
-    */
-
+  
+/*
  var assetsToDraw = [
         [findIsoDepth(hero.x, hero.y), heroImg, hero.offsetX, hero.offsetY, hero.width, hero.height, hero.x - hero.feetOffsetX, hero.y - hero.feetOffsetY, hero.width, hero.height]
     ];
-
+*/
 
 
     var map = thisMapData.terrain;
@@ -228,13 +228,13 @@ function draw() {
                 
 
 
-                hero.isox = 0;
-                hero.isoy = 0;
+                hero.isox = findIsoCoordsX(hero.x,hero.y);
+                hero.isoy = findIsoCoordsY(hero.x,hero.y);
 
 
 
-            //    assetsToDraw.push([findIsoDepth(thisX, thisY), tileImages[(map[j][i])], thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2), thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2)]);
-                assetsToDraw.push([findIsoDepth(thisX, thisY), tileImages[(map[j][i])], thisX - hero.isox - thisGraphicCentreX, thisY - hero.isoy - thisGraphicCentreY]);
+                assetsToDraw.push([findIsoDepth(thisX, thisY), tileImages[(map[j][i])], thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2), thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2)]);
+          //      assetsToDraw.push([findIsoDepth(thisX, thisY), tileImages[(map[j][i])], thisX - hero.isox - thisGraphicCentreX, thisY - hero.isoy - thisGraphicCentreY]);
             
             }
         }
