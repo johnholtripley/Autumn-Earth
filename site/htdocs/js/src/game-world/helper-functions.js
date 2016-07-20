@@ -1,10 +1,10 @@
 
 // find tile from coords:
-function getTileX(x, y) {
+function getTileX(x) {
     return Math.floor(x/tileW);
 }
 
-function getTileY(x, y) {
+function getTileY(y) {
     return Math.floor(y/tileW);
 }
 
@@ -17,18 +17,19 @@ function findIsoCoordsX(x, y) {
 }
 
 function findIsoCoordsY(x, y) {
-return Math.floor((x/4) + (y/4));
+    // the -tileH/2 is because the tile centre was at 0,0, and so the tip would be off the top of the screen
+return Math.floor((x/4) + (y/4) - tileH/2);
 
 }
 
 
 // find non-iso coords for a tile
 function getTileCentreCoordX(tileX) {
-    return tileX*tileW;
+    return tileX*tileW + tileW/2;
 }
 
 function getTileCentreCoordY(tileY) {
-    return tileY*tileW;
+    return tileY*tileW + tileW/2;
 }
 
 

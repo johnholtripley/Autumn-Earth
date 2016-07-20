@@ -53,11 +53,11 @@ var hero = {
 
 
 // find tile from coords:
-function getTileX(x, y) {
+function getTileX(x) {
     return Math.floor(x/tileW);
 }
 
-function getTileY(x, y) {
+function getTileY(y) {
     return Math.floor(y/tileW);
 }
 
@@ -70,18 +70,19 @@ function findIsoCoordsX(x, y) {
 }
 
 function findIsoCoordsY(x, y) {
-return Math.floor((x/4) + (y/4));
+    // the -tileH/2 is because the tile centre was at 0,0, and so the tip would be off the top of the screen
+return Math.floor((x/4) + (y/4) - tileH/2);
 
 }
 
 
 // find non-iso coords for a tile
 function getTileCentreCoordX(tileX) {
-    return tileX*tileW;
+    return tileX*tileW + tileW/2;
 }
 
 function getTileCentreCoordY(tileY) {
-    return tileY*tileW;
+    return tileY*tileW + tileW/2;
 }
 
 
@@ -366,8 +367,8 @@ function prepareGame() {
     // determine tile offset to centre the hero in the centre
 
 
-    hero.x = getTileIsoCentreCoordX(hero.tileX, hero.tileY);
-    hero.y = getTileIsoCentreCoordY(hero.tileX, hero.tileY);
+    hero.x = getTileCentreCoordX(hero.tileX, hero.tileY);
+    hero.y = getTileCentreCoordY(hero.tileX, hero.tileY);
 
 
   // hero.x = getTileCentreCoordX(hero.tileX);
@@ -386,8 +387,12 @@ hero.isoy = hero.y;
 */
 
 
-oldHeroX = hero.x;
-oldHeroY = hero.y;
+hero.tileX = getTileX(hero.x);
+hero.tileY = getTileX(hero.y);
+
+
+oldHeroX = hero.tileX;
+oldHeroY = hero.tileY;
 
     gameMode = "play";
 }
@@ -494,11 +499,14 @@ function update() {
 
 
 
+hero.tileX = getTileX(hero.x);
+hero.tileY = getTileX(hero.y);
 
-if(oldHeroX != hero.x || oldHeroY != hero.y) {
-    console.log(hero.x+","+hero.y+"  --> "+findIsoCoordsX(hero.x,hero.y)+", "+findIsoCoordsY(hero.x,hero.y));
-oldHeroX = hero.x;
-oldHeroY = hero.y;
+if(oldHeroX != hero.tileX || oldHeroY != hero.tileY) {
+  //  console.log(hero.x+","+hero.y+"  --> "+findIsoCoordsX(hero.x,hero.y)+", "+findIsoCoordsY(hero.x,hero.y));
+console.log(hero.tileX+","+hero.tileY);
+oldHeroX = hero.tileX;
+oldHeroY = hero.tileY;
 }
 
     checkCollisions();

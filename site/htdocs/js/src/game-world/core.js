@@ -42,8 +42,8 @@ function prepareGame() {
     // determine tile offset to centre the hero in the centre
 
 
-    hero.x = getTileIsoCentreCoordX(hero.tileX, hero.tileY);
-    hero.y = getTileIsoCentreCoordY(hero.tileX, hero.tileY);
+    hero.x = getTileCentreCoordX(hero.tileX, hero.tileY);
+    hero.y = getTileCentreCoordY(hero.tileX, hero.tileY);
 
 
   // hero.x = getTileCentreCoordX(hero.tileX);
@@ -62,8 +62,12 @@ hero.isoy = hero.y;
 */
 
 
-oldHeroX = hero.x;
-oldHeroY = hero.y;
+hero.tileX = getTileX(hero.x);
+hero.tileY = getTileX(hero.y);
+
+
+oldHeroX = hero.tileX;
+oldHeroY = hero.tileY;
 
     gameMode = "play";
 }
@@ -170,11 +174,14 @@ function update() {
 
 
 
+hero.tileX = getTileX(hero.x);
+hero.tileY = getTileX(hero.y);
 
-if(oldHeroX != hero.x || oldHeroY != hero.y) {
-    console.log(hero.x+","+hero.y+"  --> "+findIsoCoordsX(hero.x,hero.y)+", "+findIsoCoordsY(hero.x,hero.y));
-oldHeroX = hero.x;
-oldHeroY = hero.y;
+if(oldHeroX != hero.tileX || oldHeroY != hero.tileY) {
+  //  console.log(hero.x+","+hero.y+"  --> "+findIsoCoordsX(hero.x,hero.y)+", "+findIsoCoordsY(hero.x,hero.y));
+console.log(hero.tileX+","+hero.tileY);
+oldHeroX = hero.tileX;
+oldHeroY = hero.tileY;
 }
 
     checkCollisions();
