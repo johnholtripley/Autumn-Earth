@@ -81,7 +81,7 @@ function loadAssets() {
     imagesToLoad = [];
     imagesToLoad.push({
         name: "heroImg",
-        src: '/images/game-world/core/TEMP-link.png'
+        src: '/images/game-world/core/test-iso-hero.png'
     });
     imagesToLoad.push({
         name: "backgroundImg",
@@ -114,28 +114,57 @@ function isATerrainCollision(x, y) {
 
 
 function checkCollisions() {
-    
-    // tile collisions
+    // tile collisions:
     if (key[2]) {
         // up
-        if((isATerrainCollision(hero.x-hero.width/2,hero.y-hero.height/2)) || (isATerrainCollision(hero.x+hero.width/2,hero.y-hero.height/2))) {
+        if ((isATerrainCollision(hero.x - hero.width / 2, hero.y - hero.height / 2)) || (isATerrainCollision(hero.x + hero.width / 2, hero.y - hero.height / 2))) {
             // find the tile's bottom edge
-            var tileCollidedWith = getTileY(hero.y-hero.height/2);
-            console.log("collided with "+hero.tileX+","+tileCollidedWith);
-            var tileBottomEdge = tileCollidedWith * tileW;
-            console.log(tileBottomEdge+"px");
-hero.y = tileBottomEdge + hero.height/2;
+             var tileCollidedWith = getTileY(hero.y - hero.height / 2);
+            var tileBottomEdge = (tileCollidedWith + 1) * tileW;
+            // use the +1 to make sure it's just clear of the collision tile
+            hero.y = tileBottomEdge + hero.height / 2 +1;
+                 //  console.log("collided with "+hero.tileX+", "+tileCollidedWith);
         }
     }
     if (key[3]) {
         // down
+         if ((isATerrainCollision(hero.x - hero.width / 2, hero.y + hero.height / 2)) || (isATerrainCollision(hero.x + hero.width / 2, hero.y + hero.height / 2))) {
+       
+            var tileCollidedWith = getTileY(hero.y + hero.height / 2);
+            var tileTopEdge = (tileCollidedWith) * tileW;
+            hero.y = tileTopEdge - hero.height / 2 -1;
+          //  console.log("collided with "+hero.tileX+", "+tileCollidedWith);
+        }
     }
     if (key[0]) {
         // left
+
+
+  if ((isATerrainCollision(hero.x - hero.width / 2, hero.y + hero.height / 2)) || (isATerrainCollision(hero.x - hero.width / 2, hero.y - hero.height / 2))) {
+    
+            var tileCollidedWith = getTileX(hero.x - hero.width / 2);
+      //    console.log("collided with "+tileCollidedWith+","+hero.tileY);
+            var tileRightEdge = (tileCollidedWith+1) * tileW;
+    
+            hero.x = tileRightEdge + hero.width / 2 +1;
+        }
+
+
     }
     if (key[1]) {
         //right
+          if ((isATerrainCollision(hero.x + hero.width / 2, hero.y + hero.height / 2)) || (isATerrainCollision(hero.x + hero.width / 2, hero.y - hero.height / 2))) {
+    
+      //      console.log("hero was at "+hero.x+", "+hero.y);
+            var tileCollidedWith = getTileX(hero.x + hero.width / 2);
+                //      console.log("collided with "+tileCollidedWith+","+hero.tileY);
+            var tileLeftEdge = (tileCollidedWith) * tileW;
+               //     console.log(tileLeftEdge+"px");
+            hero.x = tileLeftEdge - hero.width / 2 -1;
+         //   console.log("pushed back to "+hero.x);
+        }
     }
+
 }
 
 function gameLoop() {
@@ -228,9 +257,16 @@ oldHeroY = hero.tileY;
 
 function draw() {
     // get all assets to be drawn in a list - start with the hero:
+  /*
     var assetsToDraw = [
         [findIsoDepth(findIsoCoordsX(hero.x, hero.y),findIsoCoordsY(hero.x, hero.y)), heroImg, hero.offsetX, hero.offsetY, hero.width, hero.height, canvasWidth / 2 - hero.feetOffsetX, canvasHeight / 2 - hero.feetOffsetY, hero.width, hero.height]
     ];
+    */
+
+var assetsToDraw = [
+[findIsoDepth(findIsoCoordsX(hero.x, hero.y),findIsoCoordsY(hero.x, hero.y)), heroImg, (canvasWidth / 2 - hero.feetOffsetX), (canvasHeight / 2 - hero.feetOffsetY)]
+];
+
     var map = thisMapData.terrain;
     var thisGraphicCentreX, thisGraphicCentreY;
     for (var i = 0; i < mapTilesX; i++) {
