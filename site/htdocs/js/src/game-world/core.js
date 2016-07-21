@@ -46,28 +46,14 @@ function prepareGame() {
     hero.y = getTileCentreCoordY(hero.tileX, hero.tileY);
 
 
-  // hero.x = getTileCentreCoordX(hero.tileX);
-  //  hero.y = getTileCentreCoordY(hero.tileY);
 
-    console.log("hero: "+hero.x + ", " + hero.y);
 
 /*
-console.log("0,0 ==>"+findIsoCoordsX(0,0)+", "+findIsoCoordsY(0,0));
-console.log("48,0 ==>"+findIsoCoordsX(48,0)+", "+findIsoCoordsY(48,0));
-console.log("0,24 ==>"+findIsoCoordsX(0,24)+", "+findIsoCoordsY(0,24));
-console.log(hero.x+","+hero.y+" ==>"+findIsoCoordsX(hero.x,hero.y)+", "+findIsoCoordsY(hero.x,hero.y)+" - hero");
-
-hero.isox = hero.x;
-hero.isoy = hero.y;
-*/
-
 
 hero.tileX = getTileX(hero.x);
 hero.tileY = getTileX(hero.y);
 
-
-oldHeroX = hero.tileX;
-oldHeroY = hero.tileY;
+*/
 
     gameMode = "play";
 }
@@ -192,38 +178,32 @@ function update() {
     if (key[2]) {
         hero.isMoving = true;
         hero.facing = 'up';
-// adjusting the hero's coord as iso ################
-// need to move on cartesinan, but then adjust to iso for graphics offset
-     //   hero.isox += hero.speed;
-     //   hero.isoy -= hero.speed / 2;
+
     hero.y -= hero.speed;
     } else if (key[3]) {
         hero.isMoving = true;
         hero.facing = 'down';
 
-   //     hero.isox -= hero.speed;
-   //     hero.isoy += hero.speed / 2;
+   
       hero.y += hero.speed;
     } else if (key[0]) {
         hero.isMoving = true;
         hero.facing = 'left';
 
-   //    hero.isox -= hero.speed;
-   //     hero.isoy -= hero.speed / 2;
+  
       hero.x -= hero.speed;
     } else if (key[1]) {
         hero.isMoving = true;
         hero.facing = 'right';
 
-     //   hero.isox += hero.speed;
-     //   hero.isoy += hero.speed / 2;
+   
       hero.x += hero.speed;
     }
 
-
-
 hero.tileX = getTileX(hero.x);
 hero.tileY = getTileX(hero.y);
+/*
+
 
 if(oldHeroX != hero.tileX || oldHeroY != hero.tileY) {
   //  console.log(hero.x+","+hero.y+"  --> "+findIsoCoordsX(hero.x,hero.y)+", "+findIsoCoordsY(hero.x,hero.y));
@@ -231,7 +211,7 @@ console.log(hero.tileX+","+hero.tileY);
 oldHeroX = hero.tileX;
 oldHeroY = hero.tileY;
 }
-
+*/
     checkCollisions();
 
     hero.timeSinceLastFrameSwap += elapsed;
