@@ -102,11 +102,30 @@ function loadingProgress() {
     console.log("loading - " + Loader.getProgress());
 }
 
+function isATerrainCollision(x, y) {
+    if (thisMapData.collisions[getTileY(y)][getTileX(x)] == 1) {
+        // is a collision
+        return 1;
+    } else {
+        return 0;
+    }
+}
+
+
+
 function checkCollisions() {
-    var collisionArray = thisMapData.collisions;
+    
     // tile collisions
     if (key[2]) {
         // up
+        if((isATerrainCollision(hero.x-hero.width/2,hero.y-hero.height/2)) || (isATerrainCollision(hero.x+hero.width/2,hero.y-hero.height/2))) {
+            // find the tile's bottom edge
+            var tileCollidedWith = getTileY(hero.y-hero.height/2);
+            console.log("collided with "+hero.tileX+","+tileCollidedWith);
+            var tileBottomEdge = tileCollidedWith * tileW;
+            console.log(tileBottomEdge+"px");
+hero.y = tileBottomEdge + hero.height/2;
+        }
     }
     if (key[3]) {
         // down

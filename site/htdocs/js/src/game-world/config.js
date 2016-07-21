@@ -29,7 +29,7 @@ var hero = {
     tileX: 0,
     tileY: 0,
     width: 17,
-    height: 25,
+    height: 17,
     feetOffsetX: 8,
     feetOffsetY: 21,
     speed: 2,
