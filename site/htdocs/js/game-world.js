@@ -26,8 +26,8 @@ var hero = {
     y: 0,
     dx: 0,
     dy: 0,
-    tileX: 0,
-    tileY: 0,
+    tileX: 3,
+    tileY: 3,
     width: 20,
     height: 20,
     feetOffsetX: 10,
@@ -114,7 +114,8 @@ function sortByIsoDepth(a, b) {
 }
 
 function findIsoDepth(x, y) {
-    return x*tileW + y*(mapTilesX+1)*tileW;
+ return y;
+ //   return x*tileW + y*(mapTilesX+1)*tileW;
 }
 
 
@@ -371,28 +372,14 @@ function prepareGame() {
     hero.y = getTileCentreCoordY(hero.tileX, hero.tileY);
 
 
-  // hero.x = getTileCentreCoordX(hero.tileX);
-  //  hero.y = getTileCentreCoordY(hero.tileY);
 
-    console.log("hero: "+hero.x + ", " + hero.y);
 
 /*
-console.log("0,0 ==>"+findIsoCoordsX(0,0)+", "+findIsoCoordsY(0,0));
-console.log("48,0 ==>"+findIsoCoordsX(48,0)+", "+findIsoCoordsY(48,0));
-console.log("0,24 ==>"+findIsoCoordsX(0,24)+", "+findIsoCoordsY(0,24));
-console.log(hero.x+","+hero.y+" ==>"+findIsoCoordsX(hero.x,hero.y)+", "+findIsoCoordsY(hero.x,hero.y)+" - hero");
-
-hero.isox = hero.x;
-hero.isoy = hero.y;
-*/
-
 
 hero.tileX = getTileX(hero.x);
 hero.tileY = getTileX(hero.y);
 
-
-oldHeroX = hero.tileX;
-oldHeroY = hero.tileY;
+*/
 
     gameMode = "play";
 }
@@ -517,38 +504,32 @@ function update() {
     if (key[2]) {
         hero.isMoving = true;
         hero.facing = 'up';
-// adjusting the hero's coord as iso ################
-// need to move on cartesinan, but then adjust to iso for graphics offset
-     //   hero.isox += hero.speed;
-     //   hero.isoy -= hero.speed / 2;
+
     hero.y -= hero.speed;
     } else if (key[3]) {
         hero.isMoving = true;
         hero.facing = 'down';
 
-   //     hero.isox -= hero.speed;
-   //     hero.isoy += hero.speed / 2;
+   
       hero.y += hero.speed;
     } else if (key[0]) {
         hero.isMoving = true;
         hero.facing = 'left';
 
-   //    hero.isox -= hero.speed;
-   //     hero.isoy -= hero.speed / 2;
+  
       hero.x -= hero.speed;
     } else if (key[1]) {
         hero.isMoving = true;
         hero.facing = 'right';
 
-     //   hero.isox += hero.speed;
-     //   hero.isoy += hero.speed / 2;
+   
       hero.x += hero.speed;
     }
 
-
-
 hero.tileX = getTileX(hero.x);
 hero.tileY = getTileX(hero.y);
+/*
+
 
 if(oldHeroX != hero.tileX || oldHeroY != hero.tileY) {
   //  console.log(hero.x+","+hero.y+"  --> "+findIsoCoordsX(hero.x,hero.y)+", "+findIsoCoordsY(hero.x,hero.y));
@@ -556,7 +537,7 @@ console.log(hero.tileX+","+hero.tileY);
 oldHeroX = hero.tileX;
 oldHeroY = hero.tileY;
 }
-
+*/
     checkCollisions();
 
     hero.timeSinceLastFrameSwap += elapsed;
@@ -594,6 +575,8 @@ var assetsToDraw = [
 
     var map = thisMapData.terrain;
     var thisGraphicCentreX, thisGraphicCentreY;
+       hero.isox = findIsoCoordsX(hero.x, hero.y);
+                hero.isoy = findIsoCoordsY(hero.x, hero.y);
     for (var i = 0; i < mapTilesX; i++) {
         for (var j = 0; j < mapTilesY; j++) {
             // the tile coordinates should be positioned by i,j but the way the map is drawn, the reference in the array is j,i
@@ -603,8 +586,7 @@ var assetsToDraw = [
                 thisY = getTileIsoCentreCoordY(i, j);
                 thisGraphicCentreX = thisMapData.graphics[(map[j][i])].centreX;
                 thisGraphicCentreY = thisMapData.graphics[(map[j][i])].centreY;
-                hero.isox = findIsoCoordsX(hero.x, hero.y);
-                hero.isoy = findIsoCoordsY(hero.x, hero.y);
+             
                 assetsToDraw.push([findIsoDepth(thisX, thisY), tileImages[(map[j][i])], thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2), thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2)]);
             }
         }

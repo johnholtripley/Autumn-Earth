@@ -249,6 +249,8 @@ var assetsToDraw = [
 
     var map = thisMapData.terrain;
     var thisGraphicCentreX, thisGraphicCentreY;
+       hero.isox = findIsoCoordsX(hero.x, hero.y);
+                hero.isoy = findIsoCoordsY(hero.x, hero.y);
     for (var i = 0; i < mapTilesX; i++) {
         for (var j = 0; j < mapTilesY; j++) {
             // the tile coordinates should be positioned by i,j but the way the map is drawn, the reference in the array is j,i
@@ -258,8 +260,7 @@ var assetsToDraw = [
                 thisY = getTileIsoCentreCoordY(i, j);
                 thisGraphicCentreX = thisMapData.graphics[(map[j][i])].centreX;
                 thisGraphicCentreY = thisMapData.graphics[(map[j][i])].centreY;
-                hero.isox = findIsoCoordsX(hero.x, hero.y);
-                hero.isoy = findIsoCoordsY(hero.x, hero.y);
+             
                 assetsToDraw.push([findIsoDepth(thisX, thisY), tileImages[(map[j][i])], thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2), thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2)]);
             }
         }
