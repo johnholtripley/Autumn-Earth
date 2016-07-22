@@ -592,7 +592,10 @@ var assetsToDraw = [
         }
     }
     assetsToDraw.sort(sortByIsoDepth);
-    gameContext.drawImage(backgroundImg, 0, 0);
+
+    gameContext.clearRect(0, 0, 256, 176);
+    // scroll background to match the top tip and left tip of the tile grid:
+    gameContext.drawImage(backgroundImg, getTileIsoCentreCoordX(0,mapTilesX-1) - hero.isox + (canvasWidth / 2) -tileW/2, getTileIsoCentreCoordY(0,0) - hero.isoy + (canvasHeight / 2) - tileH/2);
     // draw the sorted assets:
     for (var i = 0; i < assetsToDraw.length; i++) {
         if (assetsToDraw[i].length == 10) {
