@@ -5,6 +5,19 @@ if ('serviceWorker' in navigator) {
     });
 }
 
+function loadMap() {
+    gameMode = "mapLoading";
+    getJSON('/data/' + characterId + '/map' + currentMap + '.json', function(data) {
+        thisMapData = data.map;
+        mapTilesY = thisMapData.terrain.length;
+        mapTilesX = thisMapData.terrain[0].length;
+        loadAssets();
+    }, function(status) {
+        alert('Error loading map data');
+    });
+
+}
+
 function init() {
     gameCanvas = document.getElementById("gameWorld");
     if (gameCanvas.getContext) {
@@ -12,19 +25,11 @@ function init() {
         canvasWidth = gameCanvas.width;
         canvasHeight = gameCanvas.height;
     }
-    getJSON('/data/' + characterId + '/map' + currentMap + '.json', function(data) {
-        thisMapData = data.map;
-        mapTilesY = thisMapData.terrain.length;
-        mapTilesX = thisMapData.terrain[0].length;
-        console.log("map dimensions: "+mapTilesX+", "+mapTilesY);
-        loadAssets();
-    }, function(status) {
-        alert('Error loading map data');
-    });
-    gameMode = "loading";
+    loadMap();
     // show loading screen while getting assets:
     gameLoop();
 }
+
 
 
 
@@ -155,7 +160,7 @@ function checkCollisions() {
 
 function gameLoop() {
     switch (gameMode) {
-        case "loading":
+        case "mapLoading":
             //
             break;
         case "paused":
