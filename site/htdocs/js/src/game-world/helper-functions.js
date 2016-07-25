@@ -139,12 +139,19 @@ var getJSON = function(url, successHandler, errorHandler) {
 // http://stackoverflow.com/questions/16560397/image-not-drawn-on-canvas-until-user-clicks
 // http://jsfiddle.net/gfcarv/26AmY/
 window.Loader = (function() {
-    var imageCount = 0;
+        var imageCount = 0;
     var loading = false;
     var total = 0;
 
     // this object will hold all image references
     var images = {};
+
+function reset() {
+     imageCount = 0;
+     loading = false;
+     total = 0;
+     images = {};
+}
 
     // user defined callback, called each time an image is loaded (if it is not defined the empty function wil be called)
     function onProgressUpdate() {};
@@ -195,6 +202,7 @@ window.Loader = (function() {
     // pre-load all the images and call the onComplete callback when all images are loaded
     // optionaly set the onProgressUpdate callback to be called each time an image is loaded (useful for loading screens) 
     function preload(_images, _onComplete, _onProgressUpdate) {
+        reset();
         if (!loading) {
 
             //  console.log("Loading...");
@@ -226,6 +234,7 @@ window.Loader = (function() {
         preload: preload,
         getProgress: getProgress,
         getImage: getImage,
+        reset: reset,
         images: images
     };
 })();

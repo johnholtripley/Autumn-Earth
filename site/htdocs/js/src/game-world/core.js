@@ -5,19 +5,6 @@ if ('serviceWorker' in navigator) {
     });
 }
 
-function loadMap() {
-    gameMode = "mapLoading";
-    getJSON('/data/' + characterId + '/map' + currentMap + '.json', function(data) {
-        thisMapData = data.map;
-        mapTilesY = thisMapData.terrain.length;
-        mapTilesX = thisMapData.terrain[0].length;
-        loadAssets();
-    }, function(status) {
-        alert('Error loading map data');
-    });
-
-}
-
 function init() {
     gameCanvas = document.getElementById("gameWorld");
     if (gameCanvas.getContext) {
@@ -25,7 +12,10 @@ function init() {
         canvasWidth = gameCanvas.width;
         canvasHeight = gameCanvas.height;
     }
-    loadMap();
+    gameMode = "mapLoading";
+        // detect and set up input methods:
+    Input.init();
+    loadCoreAssets();
     // show loading screen while getting assets:
     gameLoop();
 }
@@ -40,40 +30,51 @@ function prepareGame() {
     for (var i = 0; i < tileGraphicsToLoad.length; i++) {
         tileImages[i] = Loader.getImage("tile" + i);
     }
-    heroImg = Loader.getImage("heroImg");
     backgroundImg = Loader.getImage("backgroundImg");
-    // detect and set up input methods:
-    Input.init();
     // determine tile offset to centre the hero in the centre
-
-
     hero.x = getTileCentreCoordX(hero.tileX, hero.tileY);
     hero.y = getTileCentreCoordY(hero.tileX, hero.tileY);
-
-
-
-
-/*
-
-hero.tileX = getTileX(hero.x);
-hero.tileY = getTileX(hero.y);
-
-*/
-
     gameMode = "play";
 }
 
 
+function loadMap() {  
+    getJSON('/data/' + characterId + '/map' + currentMap + '.json', function(data) {
+        thisMapData = data.map;
+        mapTilesY = thisMapData.terrain.length;
+        mapTilesX = thisMapData.terrain[0].length;
+        loadMapAssets();
+    }, function(status) {
+        alert('Error loading data for map #'+currentMap);
+    });
+}
 
+function prepareCoreAssets() {
+    heroImg = Loader.getImage("heroImg");
+    loadMap();
+}
 
-
-
-function loadAssets() {
-    imagesToLoad = [];
-    imagesToLoad.push({
+function loadCoreAssets() {
+    coreImagesToLoad = [];
+    coreImagesToLoad.push({
         name: "heroImg",
         src: '/images/game-world/core/test-iso-hero.png'
     });
+    Loader.preload(coreImagesToLoad, prepareCoreAssets, loadingProgress);
+}
+
+function removeMapAssets() {
+    for (var i = 0; i < tileGraphicsToLoad.length; i++) {
+      //  tileImages[i].src = '';
+        tileImages[i] = null;
+    }
+    //backgroundImg.src = '';
+    backgroundImg = null;
+}
+
+
+function loadMapAssets() {
+    imagesToLoad = [];
     imagesToLoad.push({
         name: "backgroundImg",
         src: '/images/game-world/maps/' + currentMap + '/bg.png'
@@ -93,14 +94,40 @@ function loadingProgress() {
     console.log("loading - " + Loader.getProgress());
 }
 
+function changeMaps(doorX, doorY) {
+    gameMode = "mapLoading";
+    var doorData = thisMapData.doors;
+    var whichDoor = getTileX(doorX) + "-" + getTileX(doorY);
+    hero.tileX = doorData[whichDoor].startX;
+    hero.tileY = doorData[whichDoor].startY;
+    currentMap = doorData[whichDoor].map;
+    //removeMapAssets();
+    // need to remove previos map's assets *after* the new is fully loaded so it can all be drawn through the transition
+    // append asset name ewith map number? ######################
+    loadMap();
+}
+
+
+
 function isATerrainCollision(x, y) {
-    if (thisMapData.collisions[getTileY(y)][getTileX(x)] == 1) {
-        // is a collision
-        return 1;
-    } else {
-        return 0;
+    switch (thisMapData.collisions[getTileY(y)][getTileX(x)]) {
+        case 1:
+            // is a collision:
+            return 1;
+            break;
+        case "d":
+            // is a door:
+            changeMaps(x,y);
+            return 0;
+            break;
+        default:
+            // not a collsiion:
+            return 0;
     }
 }
+
+
+
 
 
 
@@ -110,58 +137,47 @@ function checkCollisions() {
         // up
         if ((isATerrainCollision(hero.x - hero.width / 2, hero.y - hero.height / 2)) || (isATerrainCollision(hero.x + hero.width / 2, hero.y - hero.height / 2))) {
             // find the tile's bottom edge
-             var tileCollidedWith = getTileY(hero.y - hero.height / 2);
+            var tileCollidedWith = getTileY(hero.y - hero.height / 2);
             var tileBottomEdge = (tileCollidedWith + 1) * tileW;
             // use the +1 to make sure it's just clear of the collision tile
-            hero.y = tileBottomEdge + hero.height / 2 +1;
-                 //  console.log("collided with "+hero.tileX+", "+tileCollidedWith);
+            hero.y = tileBottomEdge + hero.height / 2 + 1;
+
         }
     }
     if (key[3]) {
         // down
-         if ((isATerrainCollision(hero.x - hero.width / 2, hero.y + hero.height / 2)) || (isATerrainCollision(hero.x + hero.width / 2, hero.y + hero.height / 2))) {
-       
+        if ((isATerrainCollision(hero.x - hero.width / 2, hero.y + hero.height / 2)) || (isATerrainCollision(hero.x + hero.width / 2, hero.y + hero.height / 2))) {
             var tileCollidedWith = getTileY(hero.y + hero.height / 2);
             var tileTopEdge = (tileCollidedWith) * tileW;
-            hero.y = tileTopEdge - hero.height / 2 -1;
-          //  console.log("collided with "+hero.tileX+", "+tileCollidedWith);
+            hero.y = tileTopEdge - hero.height / 2 - 1;
         }
     }
     if (key[0]) {
         // left
 
 
-  if ((isATerrainCollision(hero.x - hero.width / 2, hero.y + hero.height / 2)) || (isATerrainCollision(hero.x - hero.width / 2, hero.y - hero.height / 2))) {
-    
+        if ((isATerrainCollision(hero.x - hero.width / 2, hero.y + hero.height / 2)) || (isATerrainCollision(hero.x - hero.width / 2, hero.y - hero.height / 2))) {
             var tileCollidedWith = getTileX(hero.x - hero.width / 2);
-      //    console.log("collided with "+tileCollidedWith+","+hero.tileY);
-            var tileRightEdge = (tileCollidedWith+1) * tileW;
-    
-            hero.x = tileRightEdge + hero.width / 2 +1;
+            var tileRightEdge = (tileCollidedWith + 1) * tileW;
+            hero.x = tileRightEdge + hero.width / 2 + 1;
         }
-
-
     }
     if (key[1]) {
         //right
-          if ((isATerrainCollision(hero.x + hero.width / 2, hero.y + hero.height / 2)) || (isATerrainCollision(hero.x + hero.width / 2, hero.y - hero.height / 2))) {
-    
-      //      console.log("hero was at "+hero.x+", "+hero.y);
+        if ((isATerrainCollision(hero.x + hero.width / 2, hero.y + hero.height / 2)) || (isATerrainCollision(hero.x + hero.width / 2, hero.y - hero.height / 2))) {
             var tileCollidedWith = getTileX(hero.x + hero.width / 2);
-                //      console.log("collided with "+tileCollidedWith+","+hero.tileY);
             var tileLeftEdge = (tileCollidedWith) * tileW;
-               //     console.log(tileLeftEdge+"px");
-            hero.x = tileLeftEdge - hero.width / 2 -1;
-         //   console.log("pushed back to "+hero.x);
+            hero.x = tileLeftEdge - hero.width / 2 - 1;
         }
     }
 
 }
 
+
 function gameLoop() {
     switch (gameMode) {
         case "mapLoading":
-            //
+            console.log("loading map assets...");
             break;
         case "paused":
             //
