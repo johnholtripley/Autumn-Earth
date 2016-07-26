@@ -126,7 +126,7 @@ function isATerrainCollision(x, y) {
             activeDoorX = x;
             activeDoorY = y;
    if (!mapIsTransitioningOut) {
-    mapTransitionCurrentFrames = 0;
+    mapTransitionCurrentFrames = 1;
         mapIsTransitioningOut = true;
     }
 
@@ -326,7 +326,9 @@ function draw() {
     }
     // draw the map transition if it's needed:
     if (mapIsTransitioningOut) {
-        var gradient = gameContext.createRadialGradient(canvasWidth / 2, canvasHeight / 2, canvasWidth / 2, canvasWidth / 2, canvasWidth / 2, 0);
+        var gradientSize = (1-(mapTransitionCurrentFrames/mapTransitionMaxFrames));
+        console.log(gradientSize);
+        var gradient = gameContext.createRadialGradient(canvasWidth / 2, canvasHeight / 2, gradientSize * canvasWidth / 2, canvasWidth / 2, canvasHeight / 2, 0);
         gradient.addColorStop(0, "rgba(0,0,0,1)");
         gradient.addColorStop(1, "rgba(0,0,0,0)");
         gameContext.fillStyle = gradient;
