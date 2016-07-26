@@ -595,6 +595,23 @@ oldHeroY = hero.tileY;
 
     checkHeroCollisions();
 } else {
+    hero.isMoving = true;
+// continue the hero moving:
+switch(hero.facing) {
+    case 'up':
+        hero.y -= hero.speed;
+        break;
+        case 'down':
+        hero.y += hero.speed;
+        break;
+           case 'left':
+        hero.x -= hero.speed;
+        break;
+        case 'right':
+        hero.x += hero.speed;
+        break;
+
+} 
     mapTransitionCurrentFrames++;
     if (mapTransitionCurrentFrames >= mapTransitionMaxFrames) {
         mapIsTransitioningOut = false;
@@ -602,6 +619,9 @@ oldHeroY = hero.tileY;
     }
 }
 if(mapIsTransitioningIn) {
+
+
+
     mapTransitionCurrentFrames++;
       if (mapTransitionCurrentFrames >= mapTransitionMaxFrames) {
         mapIsTransitioningIn = false;
