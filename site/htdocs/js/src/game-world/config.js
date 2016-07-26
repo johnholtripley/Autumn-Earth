@@ -3,6 +3,12 @@ var animationFramesPerSecond = 16;
 var lastTime = 0;
 var elapsed = 0;
 
+var mapIsTransitioningOut = false;
+var mapTransitionCurrentFrames = 0;
+var mapTransitionMaxFrames = 120;
+var activeDoorX = -1;
+var activeDoorY = -1;
+
 var characterId = 'chr-html5';
 var currentMap = 1;
 var thisMapData = '';
@@ -26,8 +32,8 @@ var hero = {
     y: 0,
     dx: 0,
     dy: 0,
-    tileX: 4,
-    tileY: 1,
+    tileX: 1,
+    tileY: 2,
     width: 20,
     height: 20,
     feetOffsetX: 10,

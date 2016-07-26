@@ -25,7 +25,7 @@ function init() {
 
 
 function prepareGame() {
-    // get image references:
+    // get map image references:
     tileImages = [];
     for (var i = 0; i < tileGraphicsToLoad.length; i++) {
         tileImages[i] = Loader.getImage("tile" + i);
@@ -34,7 +34,7 @@ function prepareGame() {
     // determine tile offset to centre the hero in the centre
     hero.x = getTileCentreCoordX(hero.tileX);
     hero.y = getTileCentreCoordY(hero.tileY);
-    console.log("starting at "+hero.x+","+hero.y+" ("+hero.tileX+","+hero.tileY+")");
+    mapIsTransitioningOut = false;
     gameMode = "play";
 }
 
@@ -96,17 +96,22 @@ function loadingProgress() {
 }
 
 function changeMaps(doorX, doorY) {
-    gameMode = "mapLoading";
-    var doorData = thisMapData.doors;
-    var whichDoor = getTileX(doorX) + "," + getTileX(doorY);
-    hero.tileX = doorData[whichDoor].startX;
-    hero.tileY = doorData[whichDoor].startY;
-    currentMap = doorData[whichDoor].map;
-    //removeMapAssets();
-    // need to remove previos map's assets *after* the new is fully loaded so it can all be drawn through the transition
-    // append asset name ewith map number? ######################
-    loadMap();
+
+ 
+        gameMode = "mapLoading";
+        console.log("chaning maps");
+        var doorData = thisMapData.doors;
+        var whichDoor = getTileX(doorX) + "," + getTileX(doorY);
+        hero.tileX = doorData[whichDoor].startX;
+        hero.tileY = doorData[whichDoor].startY;
+        currentMap = doorData[whichDoor].map;
+        //removeMapAssets();
+        // need to remove previous map's assets *after* the new is fully loaded so it can all be drawn through the transition
+        // append asset name ewith map number? ######################
+        loadMap();
+    
 }
+
 
 
 
@@ -118,7 +123,14 @@ function isATerrainCollision(x, y) {
             break;
         case "d":
             // is a door:
-            changeMaps(x,y);
+            activeDoorX = x;
+            activeDoorY = y;
+   if (!mapIsTransitioningOut) {
+    mapTransitionCurrentFrames = 0;
+        mapIsTransitioningOut = true;
+    }
+
+            //changeMaps(x,y);
             return 0;
             break;
         default:
@@ -132,7 +144,7 @@ function isATerrainCollision(x, y) {
 
 
 
-function checkCollisions() {
+function checkHeroCollisions() {
     // tile collisions:
     if (key[2]) {
         // up
@@ -196,6 +208,7 @@ function update() {
     var elapsed = (now - lastTime);
     lastTime = now;
     hero.isMoving = false;
+    if (!mapIsTransitioningOut) {
     // Handle the Input
     if (key[2]) {
         hero.isMoving = true;
@@ -234,7 +247,16 @@ oldHeroX = hero.tileX;
 oldHeroY = hero.tileY;
 }
 */
-    checkCollisions();
+
+    checkHeroCollisions();
+} else {
+    mapTransitionCurrentFrames++;
+    if (mapTransitionCurrentFrames >= mapTransitionMaxFrames) {
+        mapIsTransitioningOut = false;
+        changeMaps(activeDoorX, activeDoorY);
+    }
+}
+
 
     hero.timeSinceLastFrameSwap += elapsed;
     if (hero.timeSinceLastFrameSwap > hero.animationUpdateTime) {
@@ -259,20 +281,20 @@ oldHeroY = hero.tileY;
 
 function draw() {
     // get all assets to be drawn in a list - start with the hero:
-  /*
-    var assetsToDraw = [
-        [findIsoDepth(findIsoCoordsX(hero.x, hero.y),findIsoCoordsY(hero.x, hero.y)), heroImg, hero.offsetX, hero.offsetY, hero.width, hero.height, canvasWidth / 2 - hero.feetOffsetX, canvasHeight / 2 - hero.feetOffsetY, hero.width, hero.height]
-    ];
-    */
+    /*
+      var assetsToDraw = [
+          [findIsoDepth(findIsoCoordsX(hero.x, hero.y),findIsoCoordsY(hero.x, hero.y)), heroImg, hero.offsetX, hero.offsetY, hero.width, hero.height, canvasWidth / 2 - hero.feetOffsetX, canvasHeight / 2 - hero.feetOffsetY, hero.width, hero.height]
+      ];
+      */
 
-var assetsToDraw = [
-[findIsoDepth(findIsoCoordsX(hero.x, hero.y),findIsoCoordsY(hero.x, hero.y)), heroImg, (canvasWidth / 2 - hero.feetOffsetX), (canvasHeight / 2 - hero.feetOffsetY)]
-];
+    var assetsToDraw = [
+        [findIsoDepth(findIsoCoordsX(hero.x, hero.y), findIsoCoordsY(hero.x, hero.y)), heroImg, (canvasWidth / 2 - hero.feetOffsetX), (canvasHeight / 2 - hero.feetOffsetY)]
+    ];
 
     var map = thisMapData.terrain;
     var thisGraphicCentreX, thisGraphicCentreY;
-       hero.isox = findIsoCoordsX(hero.x, hero.y);
-                hero.isoy = findIsoCoordsY(hero.x, hero.y);
+    hero.isox = findIsoCoordsX(hero.x, hero.y);
+    hero.isoy = findIsoCoordsY(hero.x, hero.y);
     for (var i = 0; i < mapTilesX; i++) {
         for (var j = 0; j < mapTilesY; j++) {
             // the tile coordinates should be positioned by i,j but the way the map is drawn, the reference in the array is j,i
@@ -282,16 +304,16 @@ var assetsToDraw = [
                 thisY = getTileIsoCentreCoordY(i, j);
                 thisGraphicCentreX = thisMapData.graphics[(map[j][i])].centreX;
                 thisGraphicCentreY = thisMapData.graphics[(map[j][i])].centreY;
-             
+
                 assetsToDraw.push([findIsoDepth(thisX, thisY), tileImages[(map[j][i])], thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2), thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2)]);
             }
         }
     }
     assetsToDraw.sort(sortByIsoDepth);
 
-    gameContext.clearRect(0, 0, 256, 176);
+    gameContext.clearRect(0, 0, canvasWidth, canvasHeight);
     // scroll background to match the top tip and left tip of the tile grid:
-    gameContext.drawImage(backgroundImg, getTileIsoCentreCoordX(0,mapTilesX-1) - hero.isox + (canvasWidth / 2) -tileW/2, getTileIsoCentreCoordY(0,0) - hero.isoy + (canvasHeight / 2) - tileH/2);
+    gameContext.drawImage(backgroundImg, getTileIsoCentreCoordX(0, mapTilesX - 1) - hero.isox + (canvasWidth / 2) - tileW / 2, getTileIsoCentreCoordY(0, 0) - hero.isoy + (canvasHeight / 2) - tileH / 2);
     // draw the sorted assets:
     for (var i = 0; i < assetsToDraw.length; i++) {
         if (assetsToDraw[i].length == 10) {
@@ -302,7 +324,16 @@ var assetsToDraw = [
             gameContext.drawImage(assetsToDraw[i][1], assetsToDraw[i][2], assetsToDraw[i][3]);
         }
     }
+    // draw the map transition if it's needed:
+    if (mapIsTransitioningOut) {
+        var gradient = gameContext.createRadialGradient(canvasWidth / 2, canvasHeight / 2, canvasWidth / 2, canvasWidth / 2, canvasWidth / 2, 0);
+        gradient.addColorStop(0, "rgba(0,0,0,1)");
+        gradient.addColorStop(1, "rgba(0,0,0,0)");
+        gameContext.fillStyle = gradient;
+        gameContext.fillRect(0, 0, canvasWidth, canvasHeight);
+    }
 }
+
 
 
 
