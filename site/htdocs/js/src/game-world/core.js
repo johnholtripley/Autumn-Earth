@@ -278,8 +278,8 @@ switch(hero.facing) {
 if(mapIsTransitioningIn) {
 
 
-
-    mapTransitionCurrentFrames++;
+// make it transition in twice as fast:
+    mapTransitionCurrentFrames+=2;
       if (mapTransitionCurrentFrames >= mapTransitionMaxFrames) {
         mapIsTransitioningIn = false;
        
@@ -355,7 +355,7 @@ function draw() {
     }
     // draw the map transition if it's needed:
     if (mapIsTransitioningOut) {
-        console.log("out...");
+       
         var gradientSize = (1-(mapTransitionCurrentFrames/mapTransitionMaxFrames));
         //console.log(gradientSize);
         var gradient = gameContext.createRadialGradient(canvasWidth / 2, canvasHeight / 2, gradientSize * canvasWidth / 2, canvasWidth / 2, canvasHeight / 2, 0);
@@ -365,7 +365,7 @@ function draw() {
         gameContext.fillRect(0, 0, canvasWidth, canvasHeight);
     }
         if (mapIsTransitioningIn) {
-            console.log("in...");
+            
         var gradientSize = ((mapTransitionCurrentFrames/mapTransitionMaxFrames));
         //console.log(gradientSize);
         var gradient = gameContext.createRadialGradient(canvasWidth / 2, canvasHeight / 2, gradientSize * canvasWidth / 2, canvasWidth / 2, canvasHeight / 2, 0);
