@@ -3,7 +3,9 @@ var animationFramesPerSecond = 16;
 var lastTime = 0;
 var elapsed = 0;
 
+// map changes:
 var mapIsTransitioningOut = false;
+var mapIsTransitioningIn = false;
 var mapTransitionCurrentFrames = 1;
 var mapTransitionMaxFrames = 60;
 var activeDoorX = -1;
@@ -376,6 +378,8 @@ function prepareGame() {
     hero.x = getTileCentreCoordX(hero.tileX);
     hero.y = getTileCentreCoordY(hero.tileY);
     mapIsTransitioningOut = false;
+    mapTransitionCurrentFrames = 1;
+    mapIsTransitioningIn = true;
     gameMode = "play";
 }
 
@@ -597,6 +601,13 @@ oldHeroY = hero.tileY;
         changeMaps(activeDoorX, activeDoorY);
     }
 }
+if(mapIsTransitioningIn) {
+    mapTransitionCurrentFrames++;
+      if (mapTransitionCurrentFrames >= mapTransitionMaxFrames) {
+        mapIsTransitioningIn = false;
+       
+    }
+}
 
 
     hero.timeSinceLastFrameSwap += elapsed;
@@ -667,8 +678,19 @@ function draw() {
     }
     // draw the map transition if it's needed:
     if (mapIsTransitioningOut) {
+        console.log("out...");
         var gradientSize = (1-(mapTransitionCurrentFrames/mapTransitionMaxFrames));
-        console.log(gradientSize);
+        //console.log(gradientSize);
+        var gradient = gameContext.createRadialGradient(canvasWidth / 2, canvasHeight / 2, gradientSize * canvasWidth / 2, canvasWidth / 2, canvasHeight / 2, 0);
+        gradient.addColorStop(0, "rgba(0,0,0,1)");
+        gradient.addColorStop(1, "rgba(0,0,0,0)");
+        gameContext.fillStyle = gradient;
+        gameContext.fillRect(0, 0, canvasWidth, canvasHeight);
+    }
+        if (mapIsTransitioningIn) {
+            console.log("in...");
+        var gradientSize = ((mapTransitionCurrentFrames/mapTransitionMaxFrames));
+        //console.log(gradientSize);
         var gradient = gameContext.createRadialGradient(canvasWidth / 2, canvasHeight / 2, gradientSize * canvasWidth / 2, canvasWidth / 2, canvasHeight / 2, 0);
         gradient.addColorStop(0, "rgba(0,0,0,1)");
         gradient.addColorStop(1, "rgba(0,0,0,0)");
