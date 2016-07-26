@@ -26,8 +26,8 @@ var hero = {
     y: 0,
     dx: 0,
     dy: 0,
-    tileX: 3,
-    tileY: 3,
+    tileX: 4,
+    tileY: 1,
     width: 20,
     height: 20,
     feetOffsetX: 10,
@@ -367,8 +367,9 @@ function prepareGame() {
     }
     backgroundImg = Loader.getImage("backgroundImg");
     // determine tile offset to centre the hero in the centre
-    hero.x = getTileCentreCoordX(hero.tileX, hero.tileY);
-    hero.y = getTileCentreCoordY(hero.tileX, hero.tileY);
+    hero.x = getTileCentreCoordX(hero.tileX);
+    hero.y = getTileCentreCoordY(hero.tileY);
+    console.log("starting at "+hero.x+","+hero.y+" ("+hero.tileX+","+hero.tileY+")");
     gameMode = "play";
 }
 
@@ -432,7 +433,7 @@ function loadingProgress() {
 function changeMaps(doorX, doorY) {
     gameMode = "mapLoading";
     var doorData = thisMapData.doors;
-    var whichDoor = getTileX(doorX) + "-" + getTileX(doorY);
+    var whichDoor = getTileX(doorX) + "," + getTileX(doorY);
     hero.tileX = doorData[whichDoor].startX;
     hero.tileY = doorData[whichDoor].startY;
     currentMap = doorData[whichDoor].map;
@@ -557,7 +558,7 @@ function update() {
     }
 
 hero.tileX = getTileX(hero.x);
-hero.tileY = getTileX(hero.y);
+hero.tileY = getTileY(hero.y);
 /*
 
 
