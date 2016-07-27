@@ -441,7 +441,7 @@ function loadingProgress() {
 function changeMaps(doorX, doorY) {
   
         gameMode = "mapLoading";
- //removeMapAssets();
+ removeMapAssets();
 
         
         var doorData = thisMapData.doors;
@@ -537,7 +537,7 @@ function gameLoop() {
     switch (gameMode) {
         case "mapLoading":
             console.log("loading map assets...");
-            drawBlank();
+            
             break;
         case "paused":
             //
@@ -653,13 +653,14 @@ if(mapTransition=="in") {
 
 
 
-function drawBlank() {
-    gameContext.fillRect(0, 0, canvasWidth, canvasHeight);
-    gameContext.fillStyle = "black";
-    gameContext.fill();
-}
+
 
 function draw() {
+    if(gameMode == "mapLoading") {
+  gameContext.fillRect(0, 0, canvasWidth, canvasHeight);
+    gameContext.fillStyle = "black";
+    gameContext.fill();
+} else {
     // get all assets to be drawn in a list - start with the hero:
     /*
       var assetsToDraw = [
@@ -725,6 +726,7 @@ function draw() {
         gameContext.fillStyle = gradient;
         gameContext.fillRect(0, 0, canvasWidth, canvasHeight);
     }
+}
 }
 
 
