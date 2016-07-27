@@ -4,8 +4,7 @@ var lastTime = 0;
 var elapsed = 0;
 
 // map changes:
-var mapIsTransitioningOut = false;
-var mapIsTransitioningIn = false;
+var mapTransition = "";
 var mapTransitionCurrentFrames = 1;
 var mapTransitionMaxFrames = 60;
 var activeDoorX = -1;
@@ -377,9 +376,8 @@ function prepareGame() {
     // determine tile offset to centre the hero in the centre
     hero.x = getTileCentreCoordX(hero.tileX);
     hero.y = getTileCentreCoordY(hero.tileY);
-    mapIsTransitioningOut = false;
+    mapTransition = "in";
     mapTransitionCurrentFrames = 1;
-    mapIsTransitioningIn = true;
     gameMode = "play";
 }
 
@@ -441,16 +439,17 @@ function loadingProgress() {
 }
 
 function changeMaps(doorX, doorY) {
-
- 
+  
         gameMode = "mapLoading";
-        console.log("chaning maps");
+ //removeMapAssets();
+
+        
         var doorData = thisMapData.doors;
         var whichDoor = getTileX(doorX) + "," + getTileX(doorY);
         hero.tileX = doorData[whichDoor].startX;
         hero.tileY = doorData[whichDoor].startY;
         currentMap = doorData[whichDoor].map;
-        //removeMapAssets();
+        
         // need to remove previous map's assets *after* the new is fully loaded so it can all be drawn through the transition
         // append asset name ewith map number? ######################
         loadMap();
@@ -470,9 +469,11 @@ function isATerrainCollision(x, y) {
             // is a door:
             activeDoorX = x;
             activeDoorY = y;
-   if (!mapIsTransitioningOut) {
+            console.log("["+mapTransition+"]");
+   if (mapTransition=="") {
+
     mapTransitionCurrentFrames = 1;
-        mapIsTransitioningOut = true;
+        mapTransition = "out";
     }
 
             //changeMaps(x,y);
@@ -536,6 +537,7 @@ function gameLoop() {
     switch (gameMode) {
         case "mapLoading":
             console.log("loading map assets...");
+            drawBlank();
             break;
         case "paused":
             //
@@ -553,7 +555,7 @@ function update() {
     var elapsed = (now - lastTime);
     lastTime = now;
     hero.isMoving = false;
-    if (!mapIsTransitioningOut) {
+    if ((mapTransition == "" || mapTransition=="in")) {
     // Handle the Input
     if (key[2]) {
         hero.isMoving = true;
@@ -614,17 +616,19 @@ switch(hero.facing) {
 } 
     mapTransitionCurrentFrames++;
     if (mapTransitionCurrentFrames >= mapTransitionMaxFrames) {
-        mapIsTransitioningOut = false;
+       
+       
         changeMaps(activeDoorX, activeDoorY);
     }
 }
-if(mapIsTransitioningIn) {
+if(mapTransition=="in") {
 
 
 // make it transition in twice as fast:
     mapTransitionCurrentFrames+=2;
       if (mapTransitionCurrentFrames >= mapTransitionMaxFrames) {
-        mapIsTransitioningIn = false;
+
+        mapTransition = "";
        
     }
 }
@@ -649,7 +653,11 @@ if(mapIsTransitioningIn) {
 
 
 
-
+function drawBlank() {
+    gameContext.fillRect(0, 0, canvasWidth, canvasHeight);
+    gameContext.fillStyle = "black";
+    gameContext.fill();
+}
 
 function draw() {
     // get all assets to be drawn in a list - start with the hero:
@@ -696,8 +704,9 @@ function draw() {
             gameContext.drawImage(assetsToDraw[i][1], assetsToDraw[i][2], assetsToDraw[i][3]);
         }
     }
+
     // draw the map transition if it's needed:
-    if (mapIsTransitioningOut) {
+    if (mapTransition == "out") {
        
         var gradientSize = (1-(mapTransitionCurrentFrames/mapTransitionMaxFrames));
         //console.log(gradientSize);
@@ -706,8 +715,7 @@ function draw() {
         gradient.addColorStop(1, "rgba(0,0,0,0)");
         gameContext.fillStyle = gradient;
         gameContext.fillRect(0, 0, canvasWidth, canvasHeight);
-    }
-        if (mapIsTransitioningIn) {
+    } else if (mapTransition=="in") {
             
         var gradientSize = ((mapTransitionCurrentFrames/mapTransitionMaxFrames));
         //console.log(gradientSize);

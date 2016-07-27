@@ -4,8 +4,7 @@ var lastTime = 0;
 var elapsed = 0;
 
 // map changes:
-var mapIsTransitioningOut = false;
-var mapIsTransitioningIn = false;
+var mapTransition = "";
 var mapTransitionCurrentFrames = 1;
 var mapTransitionMaxFrames = 60;
 var activeDoorX = -1;
