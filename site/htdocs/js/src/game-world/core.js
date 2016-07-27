@@ -13,16 +13,12 @@ function init() {
         canvasHeight = gameCanvas.height;
     }
     gameMode = "mapLoading";
-        // detect and set up input methods:
+    // detect and set up input methods:
     Input.init();
     loadCoreAssets();
     // show loading screen while getting assets:
     gameLoop();
 }
-
-
-
-
 
 function prepareGame() {
     // get map image references:
@@ -39,15 +35,14 @@ function prepareGame() {
     gameMode = "play";
 }
 
-
-function loadMap() {  
+function loadMap() {
     getJSON('/data/' + characterId + '/map' + currentMap + '.json', function(data) {
         thisMapData = data.map;
         mapTilesY = thisMapData.terrain.length;
         mapTilesX = thisMapData.terrain[0].length;
         loadMapAssets();
     }, function(status) {
-        alert('Error loading data for map #'+currentMap);
+        alert('Error loading data for map #' + currentMap);
     });
 }
 
@@ -67,13 +62,12 @@ function loadCoreAssets() {
 
 function removeMapAssets() {
     for (var i = 0; i < tileGraphicsToLoad.length; i++) {
-      //  tileImages[i].src = '';
+        tileImages[i].src = '';
         tileImages[i] = null;
     }
-    //backgroundImg.src = '';
+    backgroundImg.src = '';
     backgroundImg = null;
 }
-
 
 function loadMapAssets() {
     imagesToLoad = [];
@@ -97,25 +91,15 @@ function loadingProgress() {
 }
 
 function changeMaps(doorX, doorY) {
-  
-        gameMode = "mapLoading";
- removeMapAssets();
-
-        
-        var doorData = thisMapData.doors;
-        var whichDoor = getTileX(doorX) + "," + getTileX(doorY);
-        hero.tileX = doorData[whichDoor].startX;
-        hero.tileY = doorData[whichDoor].startY;
-        currentMap = doorData[whichDoor].map;
-        
-        // need to remove previous map's assets *after* the new is fully loaded so it can all be drawn through the transition
-        // append asset name ewith map number? ######################
-        loadMap();
-    
+    gameMode = "mapLoading";
+    removeMapAssets();
+    var doorData = thisMapData.doors;
+    var whichDoor = getTileX(doorX) + "," + getTileX(doorY);
+    hero.tileX = doorData[whichDoor].startX;
+    hero.tileY = doorData[whichDoor].startY;
+    currentMap = doorData[whichDoor].map;
+    loadMap();
 }
-
-
-
 
 function isATerrainCollision(x, y) {
     switch (thisMapData.collisions[getTileY(y)][getTileX(x)]) {
@@ -127,14 +111,11 @@ function isATerrainCollision(x, y) {
             // is a door:
             activeDoorX = x;
             activeDoorY = y;
-            console.log("["+mapTransition+"]");
-   if (mapTransition=="") {
-
-    mapTransitionCurrentFrames = 1;
-        mapTransition = "out";
-    }
-
-            //changeMaps(x,y);
+            console.log("[" + mapTransition + "]");
+            if (mapTransition == "") {
+                mapTransitionCurrentFrames = 1;
+                mapTransition = "out";
+            }
             return 0;
             break;
         default:
@@ -142,11 +123,6 @@ function isATerrainCollision(x, y) {
             return 0;
     }
 }
-
-
-
-
-
 
 function checkHeroCollisions() {
     // tile collisions:
@@ -158,7 +134,6 @@ function checkHeroCollisions() {
             var tileBottomEdge = (tileCollidedWith + 1) * tileW;
             // use the +1 to make sure it's just clear of the collision tile
             hero.y = tileBottomEdge + hero.height / 2 + 1;
-
         }
     }
     if (key[3]) {
@@ -171,8 +146,6 @@ function checkHeroCollisions() {
     }
     if (key[0]) {
         // left
-
-
         if ((isATerrainCollision(hero.x - hero.width / 2, hero.y + hero.height / 2)) || (isATerrainCollision(hero.x - hero.width / 2, hero.y - hero.height / 2))) {
             var tileCollidedWith = getTileX(hero.x - hero.width / 2);
             var tileRightEdge = (tileCollidedWith + 1) * tileW;
@@ -195,7 +168,6 @@ function gameLoop() {
     switch (gameMode) {
         case "mapLoading":
             console.log("loading map assets...");
-            
             break;
         case "paused":
             //
@@ -213,85 +185,68 @@ function update() {
     var elapsed = (now - lastTime);
     lastTime = now;
     hero.isMoving = false;
-    if ((mapTransition == "" || mapTransition=="in")) {
-    // Handle the Input
-    if (key[2]) {
-        hero.isMoving = true;
-        hero.facing = 'up';
+    if ((mapTransition == "" || mapTransition == "in")) {
+        // Handle the Input
+        if (key[2]) {
+            hero.isMoving = true;
+            hero.facing = 'up';
+            hero.y -= hero.speed;
+        } else if (key[3]) {
+            hero.isMoving = true;
+            hero.facing = 'down';
+            hero.y += hero.speed;
+        } else if (key[0]) {
+            hero.isMoving = true;
+            hero.facing = 'left';
+            hero.x -= hero.speed;
+        } else if (key[1]) {
+            hero.isMoving = true;
+            hero.facing = 'right';
+            hero.x += hero.speed;
+        }
 
-    hero.y -= hero.speed;
-    } else if (key[3]) {
-        hero.isMoving = true;
-        hero.facing = 'down';
+        hero.tileX = getTileX(hero.x);
+        hero.tileY = getTileY(hero.y);
+        
+        /*
+        if(oldHeroX != hero.tileX || oldHeroY != hero.tileY) {
+          //  console.log(hero.x+","+hero.y+"  --> "+findIsoCoordsX(hero.x,hero.y)+", "+findIsoCoordsY(hero.x,hero.y));
+        console.log(hero.tileX+","+hero.tileY);
+        oldHeroX = hero.tileX;
+        oldHeroY = hero.tileY;
+        }
+        */
 
-   
-      hero.y += hero.speed;
-    } else if (key[0]) {
+        checkHeroCollisions();
+    } else {
         hero.isMoving = true;
-        hero.facing = 'left';
-
-  
-      hero.x -= hero.speed;
-    } else if (key[1]) {
-        hero.isMoving = true;
-        hero.facing = 'right';
-
-   
-      hero.x += hero.speed;
+        // continue the hero moving:
+        switch (hero.facing) {
+            case 'up':
+                hero.y -= hero.speed;
+                break;
+            case 'down':
+                hero.y += hero.speed;
+                break;
+            case 'left':
+                hero.x -= hero.speed;
+                break;
+            case 'right':
+                hero.x += hero.speed;
+                break;
+        }
+        mapTransitionCurrentFrames++;
+        if (mapTransitionCurrentFrames >= mapTransitionMaxFrames) {
+            changeMaps(activeDoorX, activeDoorY);
+        }
     }
-
-hero.tileX = getTileX(hero.x);
-hero.tileY = getTileY(hero.y);
-/*
-
-
-if(oldHeroX != hero.tileX || oldHeroY != hero.tileY) {
-  //  console.log(hero.x+","+hero.y+"  --> "+findIsoCoordsX(hero.x,hero.y)+", "+findIsoCoordsY(hero.x,hero.y));
-console.log(hero.tileX+","+hero.tileY);
-oldHeroX = hero.tileX;
-oldHeroY = hero.tileY;
-}
-*/
-
-    checkHeroCollisions();
-} else {
-    hero.isMoving = true;
-// continue the hero moving:
-switch(hero.facing) {
-    case 'up':
-        hero.y -= hero.speed;
-        break;
-        case 'down':
-        hero.y += hero.speed;
-        break;
-           case 'left':
-        hero.x -= hero.speed;
-        break;
-        case 'right':
-        hero.x += hero.speed;
-        break;
-
-} 
-    mapTransitionCurrentFrames++;
-    if (mapTransitionCurrentFrames >= mapTransitionMaxFrames) {
-       
-       
-        changeMaps(activeDoorX, activeDoorY);
+    if (mapTransition == "in") {
+        // make it transition in twice as fast:
+        mapTransitionCurrentFrames += 2;
+        if (mapTransitionCurrentFrames >= mapTransitionMaxFrames) {
+            mapTransition = "";
+        }
     }
-}
-if(mapTransition=="in") {
-
-
-// make it transition in twice as fast:
-    mapTransitionCurrentFrames+=2;
-      if (mapTransitionCurrentFrames >= mapTransitionMaxFrames) {
-
-        mapTransition = "";
-       
-    }
-}
-
-
     hero.timeSinceLastFrameSwap += elapsed;
     if (hero.timeSinceLastFrameSwap > hero.animationUpdateTime) {
         var seq = (hero.isMoving ? 'walk-' : 'stand-') + hero.facing;
@@ -309,90 +264,72 @@ if(mapTransition=="in") {
     }
 }
 
-
-
-
-
 function draw() {
-    if(gameMode == "mapLoading") {
-  gameContext.fillRect(0, 0, canvasWidth, canvasHeight);
-    gameContext.fillStyle = "black";
-    gameContext.fill();
-} else {
-    // get all assets to be drawn in a list - start with the hero:
-    /*
-      var assetsToDraw = [
-          [findIsoDepth(findIsoCoordsX(hero.x, hero.y),findIsoCoordsY(hero.x, hero.y)), heroImg, hero.offsetX, hero.offsetY, hero.width, hero.height, canvasWidth / 2 - hero.feetOffsetX, canvasHeight / 2 - hero.feetOffsetY, hero.width, hero.height]
-      ];
-      */
-
-    var assetsToDraw = [
-        [findIsoDepth(findIsoCoordsX(hero.x, hero.y), findIsoCoordsY(hero.x, hero.y)), heroImg, (canvasWidth / 2 - hero.feetOffsetX), (canvasHeight / 2 - hero.feetOffsetY)]
-    ];
-
-    var map = thisMapData.terrain;
-    var thisGraphicCentreX, thisGraphicCentreY;
-    hero.isox = findIsoCoordsX(hero.x, hero.y);
-    hero.isoy = findIsoCoordsY(hero.x, hero.y);
-    for (var i = 0; i < mapTilesX; i++) {
-        for (var j = 0; j < mapTilesY; j++) {
-            // the tile coordinates should be positioned by i,j but the way the map is drawn, the reference in the array is j,i
-            // this makes the map array more readable when editing
-            if (map[j][i] != "*") {
-                thisX = getTileIsoCentreCoordX(i, j);
-                thisY = getTileIsoCentreCoordY(i, j);
-                thisGraphicCentreX = thisMapData.graphics[(map[j][i])].centreX;
-                thisGraphicCentreY = thisMapData.graphics[(map[j][i])].centreY;
-
-                assetsToDraw.push([findIsoDepth(thisX, thisY), tileImages[(map[j][i])], thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2), thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2)]);
+    if (gameMode == "mapLoading") {
+        gameContext.fillRect(0, 0, canvasWidth, canvasHeight);
+        gameContext.fillStyle = "black";
+        gameContext.fill();
+    } else {
+        // get all assets to be drawn in a list - start with the hero:
+        /*
+          var assetsToDraw = [
+              [findIsoDepth(findIsoCoordsX(hero.x, hero.y),findIsoCoordsY(hero.x, hero.y)), heroImg, hero.offsetX, hero.offsetY, hero.width, hero.height, canvasWidth / 2 - hero.feetOffsetX, canvasHeight / 2 - hero.feetOffsetY, hero.width, hero.height]
+          ];
+          */
+        var assetsToDraw = [
+            [findIsoDepth(findIsoCoordsX(hero.x, hero.y), findIsoCoordsY(hero.x, hero.y)), heroImg, (canvasWidth / 2 - hero.feetOffsetX), (canvasHeight / 2 - hero.feetOffsetY)]
+        ];
+        var map = thisMapData.terrain;
+        var thisGraphicCentreX, thisGraphicCentreY;
+        hero.isox = findIsoCoordsX(hero.x, hero.y);
+        hero.isoy = findIsoCoordsY(hero.x, hero.y);
+        for (var i = 0; i < mapTilesX; i++) {
+            for (var j = 0; j < mapTilesY; j++) {
+                // the tile coordinates should be positioned by i,j but the way the map is drawn, the reference in the array is j,i
+                // this makes the map array more readable when editing
+                if (map[j][i] != "*") {
+                    thisX = getTileIsoCentreCoordX(i, j);
+                    thisY = getTileIsoCentreCoordY(i, j);
+                    thisGraphicCentreX = thisMapData.graphics[(map[j][i])].centreX;
+                    thisGraphicCentreY = thisMapData.graphics[(map[j][i])].centreY;
+                    assetsToDraw.push([findIsoDepth(thisX, thisY), tileImages[(map[j][i])], thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2), thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2)]);
+                }
             }
         }
-    }
-    assetsToDraw.sort(sortByIsoDepth);
+        assetsToDraw.sort(sortByIsoDepth);
 
-    gameContext.clearRect(0, 0, canvasWidth, canvasHeight);
-    // scroll background to match the top tip and left tip of the tile grid:
-    gameContext.drawImage(backgroundImg, getTileIsoCentreCoordX(0, mapTilesX - 1) - hero.isox + (canvasWidth / 2) - tileW / 2, getTileIsoCentreCoordY(0, 0) - hero.isoy + (canvasHeight / 2) - tileH / 2);
-    // draw the sorted assets:
-    for (var i = 0; i < assetsToDraw.length; i++) {
-        if (assetsToDraw[i].length == 10) {
-            // sprite image (needs slicing parameters):
-            gameContext.drawImage(assetsToDraw[i][1], assetsToDraw[i][2], assetsToDraw[i][3], assetsToDraw[i][4], assetsToDraw[i][5], assetsToDraw[i][6], assetsToDraw[i][7], assetsToDraw[i][8], assetsToDraw[i][9]);
-        } else {
-            // standard image:
-            gameContext.drawImage(assetsToDraw[i][1], assetsToDraw[i][2], assetsToDraw[i][3]);
+        gameContext.clearRect(0, 0, canvasWidth, canvasHeight);
+        // scroll background to match the top tip and left tip of the tile grid:
+        gameContext.drawImage(backgroundImg, getTileIsoCentreCoordX(0, mapTilesX - 1) - hero.isox + (canvasWidth / 2) - tileW / 2, getTileIsoCentreCoordY(0, 0) - hero.isoy + (canvasHeight / 2) - tileH / 2);
+        // draw the sorted assets:
+        for (var i = 0; i < assetsToDraw.length; i++) {
+            if (assetsToDraw[i].length == 10) {
+                // sprite image (needs slicing parameters):
+                gameContext.drawImage(assetsToDraw[i][1], assetsToDraw[i][2], assetsToDraw[i][3], assetsToDraw[i][4], assetsToDraw[i][5], assetsToDraw[i][6], assetsToDraw[i][7], assetsToDraw[i][8], assetsToDraw[i][9]);
+            } else {
+                // standard image:
+                gameContext.drawImage(assetsToDraw[i][1], assetsToDraw[i][2], assetsToDraw[i][3]);
+            }
+        }
+
+        // draw the map transition if it's needed:
+        if (mapTransition == "out") {
+            var gradientSize = (1 - (mapTransitionCurrentFrames / mapTransitionMaxFrames));
+            var gradient = gameContext.createRadialGradient(canvasWidth / 2, canvasHeight / 2, gradientSize * canvasWidth / 2, canvasWidth / 2, canvasHeight / 2, 0);
+            gradient.addColorStop(0, "rgba(0,0,0,1)");
+            gradient.addColorStop(1, "rgba(0,0,0,0)");
+            gameContext.fillStyle = gradient;
+            gameContext.fillRect(0, 0, canvasWidth, canvasHeight);
+        } else if (mapTransition == "in") {
+            var gradientSize = ((mapTransitionCurrentFrames / mapTransitionMaxFrames));
+            var gradient = gameContext.createRadialGradient(canvasWidth / 2, canvasHeight / 2, gradientSize * canvasWidth / 2, canvasWidth / 2, canvasHeight / 2, 0);
+            gradient.addColorStop(0, "rgba(0,0,0,1)");
+            gradient.addColorStop(1, "rgba(0,0,0,0)");
+            gameContext.fillStyle = gradient;
+            gameContext.fillRect(0, 0, canvasWidth, canvasHeight);
         }
     }
-
-    // draw the map transition if it's needed:
-    if (mapTransition == "out") {
-       
-        var gradientSize = (1-(mapTransitionCurrentFrames/mapTransitionMaxFrames));
-        //console.log(gradientSize);
-        var gradient = gameContext.createRadialGradient(canvasWidth / 2, canvasHeight / 2, gradientSize * canvasWidth / 2, canvasWidth / 2, canvasHeight / 2, 0);
-        gradient.addColorStop(0, "rgba(0,0,0,1)");
-        gradient.addColorStop(1, "rgba(0,0,0,0)");
-        gameContext.fillStyle = gradient;
-        gameContext.fillRect(0, 0, canvasWidth, canvasHeight);
-    } else if (mapTransition=="in") {
-            
-        var gradientSize = ((mapTransitionCurrentFrames/mapTransitionMaxFrames));
-        //console.log(gradientSize);
-        var gradient = gameContext.createRadialGradient(canvasWidth / 2, canvasHeight / 2, gradientSize * canvasWidth / 2, canvasWidth / 2, canvasHeight / 2, 0);
-        gradient.addColorStop(0, "rgba(0,0,0,1)");
-        gradient.addColorStop(1, "rgba(0,0,0,0)");
-        gameContext.fillStyle = gradient;
-        gameContext.fillRect(0, 0, canvasWidth, canvasHeight);
-    }
 }
-}
-
-
-
-
-
-
-
 
 // check if it cuts the mustard and supports Canvas:
 if (('querySelectorAll' in document && 'addEventListener' in window) && (!!window.HTMLCanvasElement)) {
