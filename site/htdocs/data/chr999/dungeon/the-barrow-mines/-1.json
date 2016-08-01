@@ -1,6 +1,6 @@
 {
     "map": {
-        "name": "The old meadows",
+        "zoneName": "The Barrow Mines",
         "collisions": [
             [1, "d", 1, 1, 1, 1],
             [0, 0, 0, 0, 0, 0],

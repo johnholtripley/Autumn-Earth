@@ -10,8 +10,9 @@ var mapTransitionMaxFrames = 60;
 var activeDoorX = -1;
 var activeDoorY = -1;
 
-var characterId = 'chr-html5';
+var characterId = 999;
 var currentMap = 1;
+var newMap = currentMap;
 var thisMapData = '';
 var mapTilesX = 0;
 var mapTilesY = 0;
@@ -22,8 +23,9 @@ var tileH = tileW/2;
 var tileGraphicsToLoad = 0;
 var canvasWidth = 256;
 var canvasHeight = 176;
-var worldOffsetX = 0;
-var worldOffsety = 0;
+
+var randomDungeonName = "";
+var randomDungeons = ["","the-barrow-mines"];
 
 // key bindings
 var key = [0, 0, 0, 0, 0];

@@ -15,9 +15,70 @@ function init() {
     gameMode = "mapLoading";
     // detect and set up input methods:
     Input.init();
-    loadCoreAssets();
     // show loading screen while getting assets:
     gameLoop();
+    loadCoreAssets();
+}
+
+function loadCoreAssets() {
+    coreImagesToLoad = [];
+    coreImagesToLoad.push({
+        name: "heroImg",
+        src: '/images/game-world/core/test-iso-hero.png'
+    });
+    Loader.preload(coreImagesToLoad, prepareCoreAssets, loadingProgress);
+}
+
+function prepareCoreAssets() {
+    heroImg = Loader.getImage("heroImg");
+    loadMap();
+}
+
+function loadMap() {
+    var mapFilePath;
+    // check for newly entering a random dungeon:
+    if ((newMap < 0) && (currentMap > 0)) {
+        randomDungeonName = randomDungeons[Math.abs(newMap)];
+        newMap = -1;
+    } else {
+        mapFilePath = '/data/chr' + characterId + '/map' + currentMap + '.json';
+    }
+    if (newMap < 0) {
+        mapFilePath = '/generateDungeonMap.php?playerId=' + characterId + '&originatingMapId=' + currentMap + '&requestedMap=' + newMap + '&dungeonName=' + randomDungeonName + '&connectingDoorX=18&connectingDoorY=35';
+    }
+    currentMap = newMap;
+    console.log(mapFilePath);
+    getJSON(mapFilePath, function(data) {
+        thisMapData = data.map;
+        mapTilesY = thisMapData.terrain.length;
+        mapTilesX = thisMapData.terrain[0].length;
+        loadMapAssets();
+    }, function(status) {
+        alert('Error loading data for map #' + currentMap);
+    });
+}
+
+
+
+
+function loadMapAssets() {
+    imagesToLoad = [];
+    var assetPath = currentMap;
+    if(currentMap < 0) {
+assetPath = 'dungeon/'+randomDungeonName;
+    }
+    imagesToLoad.push({
+        name: "backgroundImg",
+        src: '/images/game-world/maps/' + assetPath + '/bg.png'
+    });
+    tileGraphicsToLoad = thisMapData.graphics;
+    for (var i = 0; i < tileGraphicsToLoad.length; i++) {
+        imagesToLoad.push({
+            name: "tile" + i,
+            src: "/images/game-world/maps/" + assetPath + "/" + tileGraphicsToLoad[i].src
+        });
+    }
+    Loader.preload(imagesToLoad, prepareGame, loadingProgress);
 }
 
 function prepareGame() {
@@ -35,31 +96,6 @@ function prepareGame() {
     gameMode = "play";
 }
 
-function loadMap() {
-    getJSON('/data/' + characterId + '/map' + currentMap + '.json', function(data) {
-        thisMapData = data.map;
-        mapTilesY = thisMapData.terrain.length;
-        mapTilesX = thisMapData.terrain[0].length;
-        loadMapAssets();
-    }, function(status) {
-        alert('Error loading data for map #' + currentMap);
-    });
-}
-
-function prepareCoreAssets() {
-    heroImg = Loader.getImage("heroImg");
-    loadMap();
-}
-
-function loadCoreAssets() {
-    coreImagesToLoad = [];
-    coreImagesToLoad.push({
-        name: "heroImg",
-        src: '/images/game-world/core/test-iso-hero.png'
-    });
-    Loader.preload(coreImagesToLoad, prepareCoreAssets, loadingProgress);
-}
-
 function removeMapAssets() {
     for (var i = 0; i < tileGraphicsToLoad.length; i++) {
         tileImages[i].src = '';
@@ -67,22 +103,6 @@ function removeMapAssets() {
     }
     backgroundImg.src = '';
     backgroundImg = null;
-}
-
-function loadMapAssets() {
-    imagesToLoad = [];
-    imagesToLoad.push({
-        name: "backgroundImg",
-        src: '/images/game-world/maps/' + currentMap + '/bg.png'
-    });
-    tileGraphicsToLoad = thisMapData.graphics;
-    for (var i = 0; i < tileGraphicsToLoad.length; i++) {
-        imagesToLoad.push({
-            name: "tile" + i,
-            src: "/images/game-world/maps/" + currentMap + "/" + tileGraphicsToLoad[i].src
-        });
-    }
-    Loader.preload(imagesToLoad, prepareGame, loadingProgress);
 }
 
 function loadingProgress() {
@@ -97,7 +117,7 @@ function changeMaps(doorX, doorY) {
     var whichDoor = getTileX(doorX) + "," + getTileX(doorY);
     hero.tileX = doorData[whichDoor].startX;
     hero.tileY = doorData[whichDoor].startY;
-    currentMap = doorData[whichDoor].map;
+    newMap = doorData[whichDoor].map;
     loadMap();
 }
 
@@ -162,7 +182,6 @@ function checkHeroCollisions() {
     }
 
 }
-
 
 function gameLoop() {
     switch (gameMode) {

@@ -157,6 +157,7 @@ if(isset($_GET["debug"])) {
 }
 
 $dir = "data/chr" . $thisPlayersId . "/dungeon/".$thisDungeonsName;
+
 // check directory exists and create it if not:
  if (!(is_dir($dir))) {
  mkdir($dir, 0777);
@@ -184,13 +185,23 @@ if ($clearOldMaps) {
 }
 
 
+    $outputMode = "json";
+  if(isset($_GET["outputMode"])) {
+  $outputMode = $_GET["outputMode"];
+  }
+
+
 if (is_numeric($thisPlayersId)) {
     if (is_numeric($thisMapsId)) {
-        $mapFilename = "data/chr" . $thisPlayersId . "/dungeon/".$thisDungeonsName."/" . $thisMapsId . ".xml";
+        $fileExtenstion = ".json";
+        if($outputMode == "xml") {
+$fileExtenstion = ".xml";
+        }
+        $mapFilename = "data/chr" . $thisPlayersId . "/dungeon/".$thisDungeonsName."/" . $thisMapsId . $fileExtenstion;
         if ((is_file($mapFilename)) && ($_GET["outputMode"] != "test")) {
  
        
-            header("Location: http://www.autumnearth.com/" . $mapFilename);
+            header("Location: /" . $mapFilename);
             
         } else {
             createNewDungeonMap($thisMapsId);
@@ -1492,6 +1503,66 @@ $atLeastOneCart = true;
                 }
                 }
 */
+if($outputMode=="json") {
+    $outputString = '{
+    "map": {
+        "zoneName": "'.$dungeonDetails[$thisDungeonsName]["zoneName"].'",
+        "collisions": [
+            [1, "d", 1, 1, 1, 1],
+            [0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0],
+            [0, 1, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0]
+        ],
+        "terrain": [
+            ["*", "*", "*", "*", "*", "*"],
+            ["*", "*", "*", "*", "*", "*"],
+            ["*", "*", "*", "*", "*", "*"],
+            ["*", "*", "*", "*", "*", "*"],
+            ["*", 2, "*", "*", "*", "*"],
+            ["*", "*", "*", "*", "*", "*"]
+        ],
+        "elevation": [],
+        "graphics": [
+            { "src": "grass.png", "centreX": 24, "centreY": 12 },
+            { "src": "dirt.png", "centreX": 24, "centreY": 12 },
+            { "src": "block.png", "centreX": 24, "centreY": 45 }
+        ],
+        "npcs": [],
+        "elevation": [],
+        "doors": {
+            "1,0": {
+                "map": 2,
+                "startX": 1,
+                "startY": 4
+            }
+        },
+        "items": []
+    }
+}
+';
+
+
+
+
+if (!$isTreasureMapLevel) {
+// echo for immediate use by Flash: (treasure maps only need creating ready for flash, not passing back for immediate use)
+echo $outputString;
+}
+// write this to file:
+
+        $mapFilename = "data/chr" . $thisPlayersId . "/dungeon/".$thisDungeonsName."/" . $thisMapsId . ".json";
+        
+    if(!($filename=fopen($mapFilename,"w"))) {
+            // error handling?
+        }
+        
+        fwrite($filename, $outputString); 
+        fclose($filename);
+
+}
+if($outputMode=="xml") {
 
 
 
@@ -1666,6 +1737,7 @@ if (!$tileNorthIsWalkable) {
     
 
     
+
     $treasureMapFilename = "data/chr" . $thisPlayersId . "/dungeon/".$thisDungeonsName."/" . $newTargetTreasureMap . ".xml";
    // increase depth to get deeper if map already exists:
    $treasureDepthInc += 5;
@@ -1847,11 +1919,7 @@ $newStartDoorY = 1;
     
     
     
-    
-    
-    
-    
-    
+
     
     if ($outputMode == "xml") {
     
@@ -1873,6 +1941,8 @@ echo $outputString;
 		fwrite($filename, $outputString); 
 		fclose($filename);
 		
+
+        }
 		
 		
 		
@@ -2430,10 +2500,7 @@ global $savedWalkableAreas, $isAValidItemPosition, $mapMaxWidth, $mapMaxHeight, 
 
 function createNewDungeonMap($mapID) {
     global $dungeonMap, $itemMap, $npcMap, $tunnelMaxLength, $mapMaxWidth, $mapMaxHeight, $inX, $inY, $outX, $outY, $templateRows, $exitDoorX, $exitDoorY, $heightMap, $entranceHeight, $exitHeight, $debugMode, $dungeonDetails, $doorsIn, $doorsOut, $connectingDoorX, $connectingDoorY, $dungeonDetails, $thisDungeonsName, $thisMapsId, $outputMode, $allStairs, $tileHeight, $isTreasureMapLevel, $treasureLocX, $treasureLocY, $thisPlayersId, $loadedDoorData, $mapMode, $topLeftXPos, $topLeftYPos, $turning, $whichDirectionToTurn, $NPCsAlreadyPlaced, $templatesAlreadyPlaced, $levelLockedTemplatesAlreadyPlaced, $templateChosen, $levelLockedTemplateChosen, $levelLockedTemplatePossible;
-    $outputMode = "xml";
-  if(isset($_GET["outputMode"])) {
-  $outputMode = $_GET["outputMode"];
-  }
+
   
   
   include("includes/dungeonMapConfig.php");
