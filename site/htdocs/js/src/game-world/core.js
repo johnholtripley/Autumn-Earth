@@ -44,8 +44,20 @@ function loadMap() {
         mapFilePath = '/data/chr' + characterId + '/map' + currentMap + '.json';
     }
     if (newMap < 0) {
-        // find door centre ######
-        mapFilePath = '/generateDungeonMap.php?playerId=' + characterId + '&originatingMapId=' + currentMap + '&requestedMap=' + newMap + '&dungeonName=' + randomDungeonName + '&connectingDoorX=18&connectingDoorY=35';
+        // find door centre:
+        var targetDoorX = 0;
+        var targetDoorY = 0;
+        var doorData = thisMapData.doors;
+        for (var i = 0 in doorData) {
+            if (doorData.map == newMap) {
+                targetDoorX += doorData[i].startX;
+                targetDoorY += doorData[i].startY;
+            }
+        }
+        // this assumes random maps always have a 3x1 doorway (the average of the doors will be the centre door)
+        var centreDoorX = targetDoorX / 3;
+        var centreDoorY = targetDoorY / 3;
+        mapFilePath = '/generateDungeonMap.php?playerId=' + characterId + '&originatingMapId=' + currentMap + '&requestedMap=' + newMap + '&dungeonName=' + randomDungeonName + '&connectingDoorX=' + centreDoorX + '&connectingDoorY=' + centreDoorY;
     }
     currentMap = newMap;
     console.log(mapFilePath);
@@ -58,6 +70,7 @@ function loadMap() {
         alert('Error loading data for map #' + currentMap);
     });
 }
+
 
 
 
