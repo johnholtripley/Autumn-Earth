@@ -24,7 +24,6 @@
             { "src": "block.png", "centreX": 24, "centreY": 45 }
         ],
         "npcs": [],
-        "elevation": [],
         "doors": {
             "1,0": {
                 "map": -1,

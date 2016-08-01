@@ -1523,9 +1523,7 @@ if($outputMode=="json") {
             ["*", 2, "*", "*", "*", "*"],
             ["*", "*", "*", "*", "*", "*"]
         ],
-        "elevation": [],
         "graphics": [
-            { "src": "grass.png", "centreX": 24, "centreY": 12 },
             { "src": "dirt.png", "centreX": 24, "centreY": 12 },
             { "src": "block.png", "centreX": 24, "centreY": 45 }
         ],

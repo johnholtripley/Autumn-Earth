@@ -44,6 +44,7 @@ function loadMap() {
         mapFilePath = '/data/chr' + characterId + '/map' + currentMap + '.json';
     }
     if (newMap < 0) {
+        // find door centre ######
         mapFilePath = '/generateDungeonMap.php?playerId=' + characterId + '&originatingMapId=' + currentMap + '&requestedMap=' + newMap + '&dungeonName=' + randomDungeonName + '&connectingDoorX=18&connectingDoorY=35';
     }
     currentMap = newMap;
@@ -204,7 +205,7 @@ function update() {
     var elapsed = (now - lastTime);
     lastTime = now;
     hero.isMoving = false;
-    if ((mapTransition == "" || mapTransition == "in")) {
+    if (mapTransition != "out") {
         // Handle the Input
         if (key[2]) {
             hero.isMoving = true;
