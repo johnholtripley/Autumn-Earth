@@ -1179,6 +1179,10 @@ echo '<body style="background: #000; color: #fff;">' . "\n";
   $dungeonMap[($mapMaxWidth-1)][($mapMaxHeight-1)]="3";
   $dungeonMap[0][($mapMaxHeight-1)]="4";
 
+
+  
+
+
  
   for ($j = 0;$j < $mapMaxHeight;$j++) {
     for ($i = $mapMaxWidth-1;$i >=0;$i--) {
@@ -1503,6 +1507,10 @@ $atLeastOneCart = true;
                 }
                 }
 */
+
+var_dump($dungeonOutputMap);
+
+
 if($outputMode=="json") {
     $outputString = '{
     "map": {

@@ -12,7 +12,7 @@ array("6","6","6","6","2","2","3","22","35","25","26","27"),
 array(array("2,0,5,lockedNPCPos,lockedNPCDir,0,0,0,Red Diamond Collector,0,4.3,1,5,6,7",2,2), array("2,0,5,lockedNPCPos,lockedNPCDir,0,0,0,Dwarven Curator,0,4.3,1,5,13",2,2), array("2,0,4,lockedNPCPos,lockedNPCDir,0,0,0,Tourist,0,4.3,1,5,14,15",2,2)),
 array(array(0,5,5), array(1,6,6), array(2,4,4), array(3,3,3), array(4,2,2)),
 array(4,8),
-"stairs",
+"nest",
 "zoneName"=>"The Barrow Mines",
 "tileSet"=>' { "src": "blank.png", "centreX": 24, "centreY": 12 }, { "src": "dirt.png", "centreX": 24, "centreY": 12 }, { "src": "block.png", "centreX": 24, "centreY": 45 }'
 )

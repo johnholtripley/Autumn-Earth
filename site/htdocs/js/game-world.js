@@ -21,8 +21,8 @@ var tileGraphics = [];
 var tileW = 48;
 var tileH = tileW/2;
 var tileGraphicsToLoad = 0;
-var canvasWidth = 256;
-var canvasHeight = 176;
+var canvasWidth = 800;
+var canvasHeight = 600;
 
 var randomDungeonName = "";
 var randomDungeons = ["","the-barrow-mines"];

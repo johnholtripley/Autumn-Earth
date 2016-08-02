@@ -17,7 +17,7 @@
 <body>
 
   <div id="gameWrapper">
-<canvas id="gameWorld" width="256" height="176">
+<canvas id="gameWorld" width="800" height="600">
   <img src="/images/game-world/no-canvas.jpg" alt="Sorry">
 </canvas>
 </div>
