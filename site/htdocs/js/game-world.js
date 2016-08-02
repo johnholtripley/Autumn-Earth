@@ -393,7 +393,9 @@ function loadMap() {
         var targetDoorY = 0;
         var doorData = thisMapData.doors;
         for (var i = 0 in doorData) {
-            if (doorData.map == newMap) {
+            
+            if (doorData[i].map == newMap) {
+
                 targetDoorX += doorData[i].startX;
                 targetDoorY += doorData[i].startY;
             }
@@ -401,6 +403,7 @@ function loadMap() {
         // this assumes random maps always have a 3x1 doorway (the average of the doors will be the centre door)
         var centreDoorX = targetDoorX / 3;
         var centreDoorY = targetDoorY / 3;
+        console.log(centreDoorX+","+centreDoorY);
         mapFilePath = '/generateDungeonMap.php?playerId=' + characterId + '&originatingMapId=' + currentMap + '&requestedMap=' + newMap + '&dungeonName=' + randomDungeonName + '&connectingDoorX=' + centreDoorX + '&connectingDoorY=' + centreDoorY;
     }
     currentMap = newMap;
@@ -654,7 +657,7 @@ function draw() {
           ];
           */
         var assetsToDraw = [
-            [findIsoDepth(findIsoCoordsX(hero.x, hero.y), findIsoCoordsY(hero.x, hero.y)), heroImg, (canvasWidth / 2 - hero.feetOffsetX), (canvasHeight / 2 - hero.feetOffsetY)]
+            [findIsoDepth(findIsoCoordsX(hero.x, hero.y), findIsoCoordsY(hero.x, hero.y)), heroImg, Math.floor(canvasWidth / 2 - hero.feetOffsetX), Math.floor(canvasHeight / 2 - hero.feetOffsetY)]
         ];
         var map = thisMapData.terrain;
         var thisGraphicCentreX, thisGraphicCentreY;
@@ -669,7 +672,7 @@ function draw() {
                     thisY = getTileIsoCentreCoordY(i, j);
                     thisGraphicCentreX = thisMapData.graphics[(map[j][i])].centreX;
                     thisGraphicCentreY = thisMapData.graphics[(map[j][i])].centreY;
-                    assetsToDraw.push([findIsoDepth(thisX, thisY), tileImages[(map[j][i])], thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2), thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2)]);
+                    assetsToDraw.push([findIsoDepth(thisX, thisY), tileImages[(map[j][i])], Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2))]);
                 }
             }
         }
@@ -677,7 +680,7 @@ function draw() {
 
         gameContext.clearRect(0, 0, canvasWidth, canvasHeight);
         // scroll background to match the top tip and left tip of the tile grid:
-        gameContext.drawImage(backgroundImg, getTileIsoCentreCoordX(0, mapTilesX - 1) - hero.isox + (canvasWidth / 2) - tileW / 2, getTileIsoCentreCoordY(0, 0) - hero.isoy + (canvasHeight / 2) - tileH / 2);
+        gameContext.drawImage(backgroundImg, Math.floor(getTileIsoCentreCoordX(0, mapTilesX - 1) - hero.isox + (canvasWidth / 2) - tileW / 2), Math.floor(getTileIsoCentreCoordY(0, 0) - hero.isoy + (canvasHeight / 2) - tileH / 2));
         // draw the sorted assets:
         for (var i = 0; i < assetsToDraw.length; i++) {
             if (assetsToDraw[i].length == 10) {

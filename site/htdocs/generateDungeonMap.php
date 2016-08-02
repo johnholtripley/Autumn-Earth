@@ -1181,7 +1181,7 @@ echo '<body style="background: #000; color: #fff;">' . "\n";
 
  
   for ($j = 0;$j < $mapMaxHeight;$j++) {
-    for ($i = 0;$i < $mapMaxWidth;$i++) {
+    for ($i = $mapMaxWidth-1;$i >=0;$i--) {
     
       if ($itemMap[$i][$j] != "") {
        echo "<span style=\"color:#8B600D;\">".$itemMap[$i][$j]."</span>";
@@ -1507,25 +1507,92 @@ if($outputMode=="json") {
     $outputString = '{
     "map": {
         "zoneName": "'.$dungeonDetails[$thisDungeonsName]["zoneName"].'",
-        "collisions": [
+        "collisions": [';
+
+
+
+for ($j = 0;$j < $mapMaxHeight;$j++) {
+$outputString .= "[";
+
+    for ($i = $mapMaxWidth-1;$i >= 0;$i--) {
+  if($dungeonOutputMap[$i][$j] == "999") {
+    // add blank tile:
+    $outputString .= '1,';
+//  } else {
+    // add feature tile:
+  //  if($dungeonOutputMap[$i][$j]=="O") {
+    // is a door - create hero walkable tile here:
+  //  $outputString .= "8,";
+  } else {
+    // $outputString .= $dungeonOutputMap[$i][$j].",";
+    $outputString .= '0,';
+  }
+  }
+
+// remove final comma:
+$outputString = substr($outputString, 0, -1);
+if($j==$mapMaxWidth-1) {
+$outputString .= "]\n";
+} else {
+$outputString .= "],\n";
+}
+}
+
+
+        /*
             [1, "d", 1, 1, 1, 1],
             [0, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0, 0],
             [0, 1, 0, 0, 0, 0],
             [0, 0, 0, 0, 0, 0]
+            */
+            $outputString.='
         ],
-        "terrain": [
+        "terrain": [';
+
+for ($j = 0;$j < $mapMaxHeight;$j++) {
+
+$outputString .= "[";
+for ($i = $mapMaxWidth-1;$i >= 0;$i--) {
+  if($dungeonOutputMap[$i][$j] == "999") {
+    // add blank tile:
+    $outputString .= '0,';
+//  } else {
+    // add feature tile:
+  //  if($dungeonOutputMap[$i][$j]=="O") {
+    // is a door - create hero walkable tile here:
+  //  $outputString .= "8,";
+  } else {
+    // $outputString .= $dungeonOutputMap[$i][$j].",";
+    $outputString .= '"*",';
+  }
+  }
+
+// remove final comma:
+$outputString = substr($outputString, 0, -1);
+if($j==$mapMaxWidth-1) {
+$outputString .= "]\n";
+} else {
+$outputString .= "],\n";
+}
+}
+
+
+
+        /*
             ["*", "*", "*", "*", "*", "*"],
             ["*", "*", "*", "*", "*", "*"],
             ["*", "*", "*", "*", "*", "*"],
             ["*", "*", "*", "*", "*", "*"],
             ["*", 2, "*", "*", "*", "*"],
             ["*", "*", "*", "*", "*", "*"]
+*/
+
+            $outputString.='
         ],
         "graphics": [
-            { "src": "dirt.png", "centreX": 24, "centreY": 12 },
-            { "src": "block.png", "centreX": 24, "centreY": 45 }
+           '.$dungeonDetails[$thisDungeonsName]["tileSet"].'
         ],
         "npcs": [],
         "elevation": [],
@@ -2021,6 +2088,7 @@ $sessionOutput .= '?>';
 		
 }
 
+if (isset($hasPlacedATreasureMap)) {
 if ($hasPlacedATreasureMap) {
  // create the target treasure map now, so that it's ready for flash when needed to draw the treasure map hint graphic:
  // reset timer for new map:
@@ -2034,7 +2102,7 @@ $thisMapsId = $newTargetTreasureMap;
   
   createNewDungeonMap($thisMapsId);
  
- 
+ }
 }
 
 

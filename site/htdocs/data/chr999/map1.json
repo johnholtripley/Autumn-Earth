@@ -27,18 +27,18 @@
         "doors": {
             "1,0": {
                 "map": -1,
-                "startX": 1,
-                "startY": 35
+                "startX": 10,
+                "startY": 34
             },
             "2,0": {
                 "map": -1,
-                "startX": 2,
-                "startY": 35
+                "startX": 11,
+                "startY": 34
             },
             "3,0": {
                 "map": -1,
-                "startX": 3,
-                "startY": 35
+                "startX": 12,
+                "startY": 34
             }
         },
         "items": []

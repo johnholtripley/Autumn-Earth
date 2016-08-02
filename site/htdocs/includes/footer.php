@@ -48,6 +48,7 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/search.php");
 	</ul>
 <ul>
 	<li><a href="https://twitter.com/autumnearth/">Twitter</a></li>
+	<li><a href="https://twitter.com/HerbariumArcana">Twitter (Herbarium)</a></li>
 	<li><a href="https://www.youtube.com/c/autumnearth/">YouTube</a></li>
 	<li><a href="https://autumnearth.tumblr.com/">Tumblr</a></li>
 	
