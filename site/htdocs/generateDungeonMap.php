@@ -1523,7 +1523,7 @@ for ($j = 0;$j < $mapMaxHeight;$j++) {
 $outputString .= "[";
 
     for ($i = $mapMaxWidth-1;$i >= 0;$i--) {
-  if($dungeonOutputMap[$i][$j] == "999") {
+  if($dungeonOutputMap[$i][$j] > 99) {
     // add blank tile:
     $outputString .= '1,';
 //  } else {
@@ -1531,6 +1531,7 @@ $outputString .= "[";
   //  if($dungeonOutputMap[$i][$j]=="O") {
     // is a door - create hero walkable tile here:
   //  $outputString .= "8,";
+
   } else {
     // $outputString .= $dungeonOutputMap[$i][$j].",";
     $outputString .= '0,';
@@ -1571,6 +1572,12 @@ for ($i = $mapMaxWidth-1;$i >= 0;$i--) {
   //  if($dungeonOutputMap[$i][$j]=="O") {
     // is a door - create hero walkable tile here:
   //  $outputString .= "8,";
+
+
+} else if ($dungeonOutputMap[$i][$j] > 109) {
+    $outputString .= '1,';
+} else if ($dungeonOutputMap[$i][$j] > 99) {
+    $outputString .= '2,';
   } else {
     // $outputString .= $dungeonOutputMap[$i][$j].",";
     $outputString .= '"*",';
