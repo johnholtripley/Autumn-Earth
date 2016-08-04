@@ -1185,8 +1185,8 @@ echo '<body style="background: #000; color: #fff;">' . "\n";
 
  
   for ($j = 0;$j < $mapMaxHeight;$j++) {
-    for ($i = $mapMaxWidth-1;$i >=0;$i--) {
-    
+  //  for ($i = $mapMaxWidth-1;$i >=0;$i--) {
+    for ($i = 0;$i < $mapMaxHeight;$i++) {
       if ($itemMap[$i][$j] != "") {
        echo "<span style=\"color:#8B600D;\">".$itemMap[$i][$j]."</span>";
        } else if ($npcMap[$i][$j] == "n") {
@@ -1522,7 +1522,9 @@ if($outputMode=="json") {
 for ($j = 0;$j < $mapMaxHeight;$j++) {
 $outputString .= "[";
 
-    for ($i = $mapMaxWidth-1;$i >= 0;$i--) {
+for ($i = 0;$i < $mapMaxWidth;$i++) {
+
+   // for ($i = $mapMaxWidth-1;$i >= 0;$i--) {
   if($dungeonOutputMap[$i][$j] > 99) {
     // add blank tile:
     $outputString .= '1,';
@@ -1563,7 +1565,7 @@ $outputString .= "],\n";
 for ($j = 0;$j < $mapMaxHeight;$j++) {
 
 $outputString .= "[";
-for ($i = $mapMaxWidth-1;$i >= 0;$i--) {
+for ($i = 0;$i < $mapMaxWidth;$i++) {
   if($dungeonOutputMap[$i][$j] == "999") {
     // add blank tile:
     $outputString .= '0,';
