@@ -26,6 +26,7 @@ var canvasHeight = 600;
 
 var randomDungeonName = "";
 var randomDungeons = ["","the-barrow-mines"];
+var previousZoneName = "";
 
 // key bindings
 var key = [0, 0, 0, 0, 0];

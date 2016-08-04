@@ -26,6 +26,7 @@ var canvasHeight = 600;
 
 var randomDungeonName = "";
 var randomDungeons = ["","the-barrow-mines"];
+var previousZoneName = "";
 
 // key bindings
 var key = [0, 0, 0, 0, 0];
@@ -342,6 +343,22 @@ var KeyBindings = {
     'pause': 80
 }
 
+var UI = {
+    init: function() {
+        // cache all references to UI elements:
+        var displayZoneName = document.getElementById('displayZoneName');
+    },
+
+    showZoneName: function(zoneName) {
+        displayZoneName.classList.remove("active");
+        displayZoneName.textContent = zoneName;
+        // https://css-tricks.com/restart-css-animation/
+        // -> triggering reflow:
+        void displayZoneName.offsetWidth;
+        displayZoneName.classList.add("active");
+    }
+}
+
 // service worker:
 if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('/game-world/serviceWorker.min.js', {
@@ -357,6 +374,7 @@ function init() {
         canvasHeight = gameCanvas.height;
     }
     gameMode = "mapLoading";
+    UI.init();
     // detect and set up input methods:
     Input.init();
     // show loading screen while getting assets:
@@ -412,6 +430,9 @@ function loadMap() {
         thisMapData = data.map;
         mapTilesY = thisMapData.terrain.length;
         mapTilesX = thisMapData.terrain[0].length;
+        if(previousZoneName != thisMapData.zoneName) {
+UI.showZoneName(thisMapData.zoneName);
+        }
         loadMapAssets();
     }, function(status) {
         alert('Error loading data for map #' + currentMap);
@@ -472,6 +493,7 @@ function loadingProgress() {
 }
 
 function changeMaps(doorX, doorY) {
+    previousZoneName = thisMapData.zoneName;
     gameMode = "mapLoading";
     removeMapAssets();
     var doorData = thisMapData.doors;

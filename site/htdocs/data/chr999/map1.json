@@ -28,17 +28,17 @@
             "1,0": {
                 "map": -1,
                 "startX": 10,
-                "startY": 34
+                "startY": 35
             },
             "2,0": {
                 "map": -1,
                 "startX": 11,
-                "startY": 34
+                "startY": 35
             },
             "3,0": {
                 "map": -1,
                 "startX": 12,
-                "startY": 34
+                "startY": 35
             }
         },
         "items": []

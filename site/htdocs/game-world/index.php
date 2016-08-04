@@ -20,6 +20,7 @@
 <canvas id="gameWorld" width="800" height="600">
   <img src="/images/game-world/no-canvas.jpg" alt="Sorry">
 </canvas>
+<div id="displayZoneName"></div>
 </div>
 
 <script src="/js/game-world.<?php echo $cacheVersion; ?>.js"></script>
