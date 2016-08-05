@@ -42,7 +42,7 @@ var hero = {
     height: 20,
     feetOffsetX: 10,
     feetOffsetY: 16,
-    speed: 2,
+    speed: 4,
     animationFrameIndex: 0,
     timeSinceLastFrameSwap: 0,
     animationUpdateTime: (1000 / animationFramesPerSecond),

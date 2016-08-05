@@ -1512,6 +1512,11 @@ $atLeastOneCart = true;
 
 
 if($outputMode=="json") {
+
+
+
+
+
     $outputString = '{
     "map": {
         "zoneName": "'.$dungeonDetails[$thisDungeonsName]["zoneName"].'",
@@ -1524,8 +1529,24 @@ $outputString .= "[";
 
 for ($i = 0;$i < $mapMaxWidth;$i++) {
 
-   // for ($i = $mapMaxWidth-1;$i >= 0;$i--) {
-  if($dungeonOutputMap[$i][$j] > 99) {
+$isADoor = false;
+for ($doorLoop=0; $doorLoop<count($doorsIn); $doorLoop++) {
+if($doorsIn[$doorLoop] == $i.",".$j) {
+    $isADoor = true;
+    break;
+}
+}
+for ($doorLoop=0; $doorLoop<count($doorsOut); $doorLoop++) {
+if($doorsOut[$doorLoop] == $i.",".$j) {
+    $isADoor = true;
+    break;
+}
+}
+
+
+if($isADoor) {
+$outputString .= '"d",';
+} else if($dungeonOutputMap[$i][$j] > 99) {
     // add blank tile:
     $outputString .= '1,';
 //  } else {
@@ -1616,47 +1637,107 @@ $outputString .= "],\n";
         "doors": {';
 
 
-
 // sort doors arrays to be ascending order so that they correspond correctly (need to re-assign keys for the sorted array as well
 sort($doorsIn);
 $doorsIn = array_values($doorsIn);
 sort($doorsOut);
 $doorsOut = array_values($doorsOut);
 
+
+
 // array(3) { [0]=> string(5) "11,35" [1]=> string(5) "10,35" [2]=> string(5) "12,35" }
 // array(3) { [0]=> string(5) "35,26" [1]=> string(5) "35,25" [2]=> string(5) "35,27" } 
    
-    if($thisMapsId == -1) {
-      // first map, set entrance doors' targets to hard-coded values (those back to the outside of the dungeon):
-      for ($doorLoop=0; $doorLoop<count($doorsIn); $doorLoop++) {
 
-$outputString .= '"'.$doorsIn[$doorLoop].'": {';
-$outputString .= '"map": '.$dungeonDetails[$thisDungeonsName][0].',';
+// doors in:
+if($thisMapsId == -1) {
+    // first map, set entrance doors' targets to hard-coded values (those back to the outside of the dungeon):
+    for ($doorLoop=0; $doorLoop<count($doorsIn); $doorLoop++) {
+        $outputString .= '"'.$doorsIn[$doorLoop].'": {';
+        $outputString .= '"map": '.$dungeonDetails[$thisDungeonsName][0].',';
 
-$dungeonDoorsSplit = explode(",", $dungeonDetails[$thisDungeonsName][2][$doorLoop]);
-
-$outputString .= '"startX": '.$dungeonDoorsSplit[0].',';
-$outputString .= '"startY": '.$dungeonDoorsSplit[1];
-
-if($doorLoop == count($doorsIn)-1) {
-$outputString .= '}';
+        $dungeonDoorsSplit = explode(",", $dungeonDetails[$thisDungeonsName][2][$doorLoop]);
+        $outputString .= '"startX": '.$dungeonDoorsSplit[0].',';
+        $outputString .= '"startY": '.$dungeonDoorsSplit[1];
+      
+            $outputString .= '},';
+        
+    }
 } else {
-    $outputString .= '},';
-}
+    // write door positions implied from what was passed in:
+    for ($doorLoop=0; $doorLoop<count($doorsIn); $doorLoop++) {
+$outputString .= '"'.$doorsIn[$doorLoop].'": {';
+$outputString .= '"map": '.$thisOriginatingMapId.',';
+ $doorArray = explode(",",$doorsIn[$doorLoop]);
+      $doorX = $doorArray[0];
+      $doorY = $doorArray[1];
+      $outputStartDoorX = $doorX;
+      $outputStartDoorY = $doorY;
+      if ($doorX == 0) {
+      // north wall:
+      $outputStartDoorX = ($mapMaxWidth - 2);
+      } else if ($doorX == ($mapMaxWidth - 1)) {
+      // south wall:
+      $outputStartDoorX = 1;
+      }
+      if ($doorY == 0) {
+      // west wall:
+      $outputStartDoorY = ($mapMaxHeight - 2);
+      } else if ($doorY == ($mapMaxHeight - 1)) {
+      // east wall:
+      $outputStartDoorY = 1;
+      }
 
+
+    $outputString .= '"startX": '.$outputStartDoorX.',';
+        $outputString .= '"startY": '.$outputStartDoorY;
+      $outputString .= '},';
     }
 }
 
-        /*
-            "1,0": {
-                "map": 2,
-                "startX": 1,
-                "startY": 4
-            }
-*/
 
+// doors out:
+for ($doorLoop=0; $doorLoop<count($doorsOut); $doorLoop++) {
+$outputString .= '"'.$doorsOut[$doorLoop].'": {';
+$outputString .= '"map": '.($thisMapsId-1).',';
 
-        $outputString.='    
+ // work out corresponding start positions on the next map:
+$doorArray = explode(",",$doorsOut[$doorLoop]);
+      $doorX = $doorArray[0];
+      $doorY = $doorArray[1];
+      
+    
+      
+      $newStartDoorX = $doorX;
+      $newStartDoorY = $doorY;
+      
+    
+if ($doorX == 0) {
+// north wall:
+$newStartDoorX = ($mapMaxWidth - 2);
+} else if ($doorX == ($mapMaxWidth - 1)) {
+// south wall:
+$newStartDoorX = 1;
+}
+if ($doorY == 0) {
+// west wall:
+$newStartDoorY = ($mapMaxHeight - 2);
+} else if ($doorY == ($mapMaxHeight - 1)) {
+// east wall:
+$newStartDoorY = 1;
+}
+
+    $outputString .= '"startX": '.$newStartDoorX.',';
+        $outputString .= '"startY": '.$newStartDoorY;
+
+        if($doorLoop == count($doorsOut)-1) {
+            $outputString .= '}';
+        } else {
+            $outputString .= '},';
+        }
+    }
+
+        $outputString .= '    
         },
         "items": []
     }
@@ -1668,6 +1749,7 @@ $outputString .= '}';
 
 if (!$isTreasureMapLevel) {
 // echo for immediate use by Flash: (treasure maps only need creating ready for flash, not passing back for immediate use)
+echo 'header("Content-Type: application/json");';
 echo $outputString;
 }
 // write this to file:

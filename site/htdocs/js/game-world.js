@@ -42,7 +42,7 @@ var hero = {
     height: 20,
     feetOffsetX: 10,
     feetOffsetY: 16,
-    speed: 2,
+    speed: 4,
     animationFrameIndex: 0,
     timeSinceLastFrameSwap: 0,
     animationUpdateTime: (1000 / animationFramesPerSecond),
@@ -398,12 +398,13 @@ function prepareCoreAssets() {
 
 function loadMap() {
     var mapFilePath;
+    console.log("going from "+currentMap+" to "+newMap);
     // check for newly entering a random dungeon:
     if ((newMap < 0) && (currentMap > 0)) {
         randomDungeonName = randomDungeons[Math.abs(newMap)];
         newMap = -1;
     } else {
-        mapFilePath = '/data/chr' + characterId + '/map' + currentMap + '.json';
+        mapFilePath = '/data/chr' + characterId + '/map' + newMap + '.json';
     }
     if (newMap < 0) {
         // find door centre:
@@ -411,7 +412,7 @@ function loadMap() {
         var targetDoorY = 0;
         var doorData = thisMapData.doors;
         for (var i = 0 in doorData) {
-            
+
             if (doorData[i].map == newMap) {
 
                 targetDoorX += doorData[i].startX;
@@ -421,23 +422,23 @@ function loadMap() {
         // this assumes random maps always have a 3x1 doorway (the average of the doors will be the centre door)
         var centreDoorX = targetDoorX / 3;
         var centreDoorY = targetDoorY / 3;
-        console.log(centreDoorX+","+centreDoorY);
         mapFilePath = '/generateDungeonMap.php?playerId=' + characterId + '&originatingMapId=' + currentMap + '&requestedMap=' + newMap + '&dungeonName=' + randomDungeonName + '&connectingDoorX=' + centreDoorX + '&connectingDoorY=' + centreDoorY;
     }
     currentMap = newMap;
-    console.log(mapFilePath);
+    console.log("mapFilePath: "+mapFilePath);
     getJSON(mapFilePath, function(data) {
         thisMapData = data.map;
         mapTilesY = thisMapData.terrain.length;
         mapTilesX = thisMapData.terrain[0].length;
-        if(previousZoneName != thisMapData.zoneName) {
-UI.showZoneName(thisMapData.zoneName);
+        if (previousZoneName != thisMapData.zoneName) {
+            UI.showZoneName(thisMapData.zoneName);
         }
         loadMapAssets();
     }, function(status) {
         alert('Error loading data for map #' + currentMap);
     });
 }
+
 
 
 
