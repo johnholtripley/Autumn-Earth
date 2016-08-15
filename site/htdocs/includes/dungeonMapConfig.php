@@ -14,7 +14,7 @@ array(array(0,5,5), array(1,6,6), array(2,4,4), array(3,3,3), array(4,2,2)),
 array(4,8),
 "nest",
 "zoneName"=>"The Barrow Mines",
-"tileSet"=>' { "src": "blank.png", "centreX": 24, "centreY": 12 }, { "src": "dirt.png", "centreX": 24, "centreY": 25 }, { "src": "block.png", "centreX": 24, "centreY": 45 }'
+"tileSet"=>' { "src": "blank.png", "centreX": 24, "centreY": 12 }, { "src": "dirt.png", "centreX": 24, "centreY": 24 }, { "src": "block.png", "centreX": 24, "centreY": 45 }'
 )
 );
 

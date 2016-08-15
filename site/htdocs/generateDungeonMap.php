@@ -23,7 +23,7 @@
 
 // the code for determining whether an area should be black or a solid terrain piece needs to look at height differences as well, as a lower floor piece next to a raised section will need the solid edging visually
 
-// Flash code for Pet to have its own heightgained value to be positioned on raised terrain
+
 
 graphics
 
@@ -63,7 +63,7 @@ fae should react to npcs with active quest dialogue, without needing a hotspot
 
 
 // the xml files for level locked templates have tiles in the right order, but items and npcs are placed with the y axis being from the bottom.
-
+// might be fixed now ? #########
 
 
 // tunnels shouldn't go through stairs
@@ -100,7 +100,6 @@ fae should react to npcs with active quest dialogue, without needing a hotspot
 // which npcs (and frequency) should be determined in the dungeon's config
 
 
-// save changes in Flash for random maps
 
 // bug - it is possible for small incosequential areas to be separated from the main walkable region after edging walls are added back in. not a problem, but does look a little messy.
 
@@ -109,15 +108,16 @@ fae should react to npcs with active quest dialogue, without needing a hotspot
 
 // rarer items should be placed more often the deeper in to the dungeon the player has gone
 
-// randomDungeonName needs to be saved with save game in flash so that it is pulled through when starting a new game session from within the dungeon
+// randomDungeonName needs to be saved with save game so that it is pulled through when starting a new game session from within the dungeon
 
 
 
 
-// error handle script timeout in function abortScript() and default to a fully templated map so that flash has something to load. These template maps would need to have very wide entrance chambers, so that wherever the door was placed to match up with the previous map, a path is connected up. also need to be aware that a treasure map location might need to exist somewhere on the map
+// error handle script timeout in function abortScript() and default to a fully templated map so that the game has something to load. These template maps would need to have very wide entrance chambers, so that wherever the door was placed to match up with the previous map, a path is connected up. also need to be aware that a treasure map location might need to exist somewhere on the map
+
 // optimise (if required - it does run pretty fast currently)
 // after placing items there is no check on the path not being blocked. make sure that the item placement logic is sound
-// place NPCs and creatures
+
 // lock-and-key regions (if not annoying?)
 // water features - templated or 'tunnel' a river's course?
 // mazes? tend to be annoying, but might provide interest - algorithms at http://www.astrolog.org/labyrnth/algrithm.htm
@@ -856,9 +856,6 @@ function markDoors($doorX, $doorY, $inOut) {
         // north wall:
         $dungeonMap[$doorX][$doorY - 1] = "O";
         $dungeonMap[$doorX][$doorY + 1] = "O";
-        
-        
-        
     if ($inOut == "in") {
         array_push($doorsIn, $doorX.",".($doorY-1));
         array_push($doorsIn, $doorX.",".($doorY+1));
@@ -866,9 +863,6 @@ function markDoors($doorX, $doorY, $inOut) {
         array_push($doorsOut,$doorX.",".($doorY-1));
         array_push($doorsOut,$doorX.",".($doorY+1));
     }
-        
-        
-        
         $dungeonMap[$doorX + 1][$doorY - 1] = ".";
         $dungeonMap[$doorX + 1][$doorY] = ".";
         $dungeonMap[$doorX + 1][$doorY + 1] = ".";
@@ -889,8 +883,6 @@ function markDoors($doorX, $doorY, $inOut) {
         array_push($doorsOut,$doorX.",".($doorY-1));
         array_push($doorsOut,$doorX.",".($doorY+1));
     }
-        
-        
         $dungeonMap[$doorX - 1][$doorY - 1] = ".";
         $dungeonMap[$doorX - 1][$doorY] = ".";
         $dungeonMap[$doorX - 1][$doorY + 1] = ".";
@@ -910,7 +902,6 @@ function markDoors($doorX, $doorY, $inOut) {
         array_push($doorsOut,($doorX-1).",".$doorY);
         array_push($doorsOut,($doorX+1).",".$doorY);
     }
-        
         $dungeonMap[$doorX - 1][$doorY + 1] = ".";
         $dungeonMap[$doorX][$doorY + 1] = ".";
         $dungeonMap[$doorX + 1][$doorY + 1] = ".";
@@ -935,7 +926,6 @@ function markDoors($doorX, $doorY, $inOut) {
         array_push($doorsOut,($doorX-1).",".$doorY);
         array_push($doorsOut,($doorX+1).",".$doorY);
     }
-        
         $dungeonMap[$doorX - 1][$doorY - 1] = ".";
         $dungeonMap[$doorX][$doorY - 1] = ".";
         $dungeonMap[$doorX + 1][$doorY - 1] = ".";
@@ -945,6 +935,10 @@ function markDoors($doorX, $doorY, $inOut) {
         }
     }
 }
+
+
+
+
 function checkPathIsConnected($doorStartX, $doorStartY) {
     global $dungeonMap, $itemMap, $mapMaxWidth, $mapMaxHeight, $exitDoorX, $exitDoorY, $savedWalkableAreas;
     $connectionFound = false;
@@ -1675,14 +1669,14 @@ $outputString .= '"map": '.$thisOriginatingMapId.',';
       $outputStartDoorY = $doorY;
       if ($doorX == 0) {
       // north wall:
-      $outputStartDoorX = ($mapMaxWidth - 2);
+      $outputStartDoorX = ($mapMaxWidth - 1);
       } else if ($doorX == ($mapMaxWidth - 1)) {
       // south wall:
       $outputStartDoorX = 1;
       }
       if ($doorY == 0) {
       // west wall:
-      $outputStartDoorY = ($mapMaxHeight - 2);
+      $outputStartDoorY = ($mapMaxHeight - 1);
       } else if ($doorY == ($mapMaxHeight - 1)) {
       // east wall:
       $outputStartDoorY = 1;
@@ -1696,36 +1690,55 @@ $outputString .= '"map": '.$thisOriginatingMapId.',';
 }
 
 
+
+
+
+
+
+
+
 // doors out:
 for ($doorLoop=0; $doorLoop<count($doorsOut); $doorLoop++) {
 $outputString .= '"'.$doorsOut[$doorLoop].'": {';
 $outputString .= '"map": '.($thisMapsId-1).',';
 
- // work out corresponding start positions on the next map:
+
+
+// work out corresponding start positions on the next map:
 $doorArray = explode(",",$doorsOut[$doorLoop]);
-      $doorX = $doorArray[0];
-      $doorY = $doorArray[1];
-      
-    
-      
-      $newStartDoorX = $doorX;
-      $newStartDoorY = $doorY;
-      
-    
+$doorX = $doorArray[0];
+$doorY = $doorArray[1];
+$newStartDoorX = $doorX;
+$newStartDoorY = $doorY;
+
+
+
+
+// john ############
+/*
 if ($doorX == 0) {
-// north wall:
-$newStartDoorX = ($mapMaxWidth - 2);
+    // north wall:
+    $newStartDoorX = ($mapMaxWidth - 1);
 } else if ($doorX == ($mapMaxWidth - 1)) {
-// south wall:
-$newStartDoorX = 1;
+    // south wall:
+    $newStartDoorX = 0;
 }
 if ($doorY == 0) {
-// west wall:
-$newStartDoorY = ($mapMaxHeight - 2);
+    // west wall:
+    $newStartDoorY = ($mapMaxHeight - 1);
 } else if ($doorY == ($mapMaxHeight - 1)) {
-// east wall:
-$newStartDoorY = 1;
+    // east wall:
+    $newStartDoorY = 0;
 }
+*/
+
+
+
+
+
+
+
+
 
     $outputString .= '"startX": '.$newStartDoorX.',';
         $outputString .= '"startY": '.$newStartDoorY;

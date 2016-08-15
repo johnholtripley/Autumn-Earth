@@ -185,9 +185,18 @@ var getJSON = function(url, successHandler, errorHandler) {
         // https://xhr.spec.whatwg.org/#dom-xmlhttprequest-readystate
         if (xhr.readyState == 4) { // `DONE`
             status = xhr.status;
+            var wasParsedOk = true;
             if (status == 200) {
-                data = JSON.parse(xhr.responseText);
+                try {
+                    data = JSON.parse(xhr.responseText);
+                } catch (e) {
+                    // JSON parse error:
+                    wasParsedOk = false;
+                    errorHandler && errorHandler(status);
+                }
+                if(wasParsedOk) {
                 successHandler && successHandler(data);
+            }
             } else {
                 errorHandler && errorHandler(status);
             }
@@ -195,6 +204,7 @@ var getJSON = function(url, successHandler, errorHandler) {
     };
     xhr.send();
 };
+
 
 // -----------------------------------------------------------
 
@@ -396,6 +406,23 @@ function prepareCoreAssets() {
     loadMap();
 }
 
+function loadMapJSON(mapFilePath) {
+        console.log("mapFilePath: "+mapFilePath);
+    getJSON(mapFilePath, function(data) {
+        thisMapData = data.map;
+        mapTilesY = thisMapData.terrain.length;
+        mapTilesX = thisMapData.terrain[0].length;
+        if (previousZoneName != thisMapData.zoneName) {
+            UI.showZoneName(thisMapData.zoneName);
+        }
+        loadMapAssets();
+    }, function(status) {
+        // alert('Error loading data for map #' + currentMap+" --- "+mapFilePath);
+        // try again:
+        loadMapJSON(mapFilePath);
+    });
+}
+
 function loadMap() {
     var mapFilePath;
     console.log("going from "+currentMap+" to "+newMap);
@@ -412,9 +439,7 @@ function loadMap() {
         var targetDoorY = 0;
         var doorData = thisMapData.doors;
         for (var i = 0 in doorData) {
-
             if (doorData[i].map == newMap) {
-
                 targetDoorX += doorData[i].startX;
                 targetDoorY += doorData[i].startY;
             }
@@ -425,18 +450,7 @@ function loadMap() {
         mapFilePath = '/generateDungeonMap.php?playerId=' + characterId + '&originatingMapId=' + currentMap + '&requestedMap=' + newMap + '&dungeonName=' + randomDungeonName + '&connectingDoorX=' + centreDoorX + '&connectingDoorY=' + centreDoorY;
     }
     currentMap = newMap;
-    console.log("mapFilePath: "+mapFilePath);
-    getJSON(mapFilePath, function(data) {
-        thisMapData = data.map;
-        mapTilesY = thisMapData.terrain.length;
-        mapTilesX = thisMapData.terrain[0].length;
-        if (previousZoneName != thisMapData.zoneName) {
-            UI.showZoneName(thisMapData.zoneName);
-        }
-        loadMapAssets();
-    }, function(status) {
-        alert('Error loading data for map #' + currentMap);
-    });
+loadMapJSON(mapFilePath);
 }
 
 

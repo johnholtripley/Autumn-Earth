@@ -122,9 +122,18 @@ var getJSON = function(url, successHandler, errorHandler) {
         // https://xhr.spec.whatwg.org/#dom-xmlhttprequest-readystate
         if (xhr.readyState == 4) { // `DONE`
             status = xhr.status;
+            var wasParsedOk = true;
             if (status == 200) {
-                data = JSON.parse(xhr.responseText);
+                try {
+                    data = JSON.parse(xhr.responseText);
+                } catch (e) {
+                    // JSON parse error:
+                    wasParsedOk = false;
+                    errorHandler && errorHandler(status);
+                }
+                if(wasParsedOk) {
                 successHandler && successHandler(data);
+            }
             } else {
                 errorHandler && errorHandler(status);
             }
@@ -132,6 +141,7 @@ var getJSON = function(url, successHandler, errorHandler) {
     };
     xhr.send();
 };
+
 
 // -----------------------------------------------------------
 
