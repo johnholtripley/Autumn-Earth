@@ -1668,15 +1668,16 @@ $outputString .= '"map": '.$thisOriginatingMapId.',';
       $outputStartDoorX = $doorX;
       $outputStartDoorY = $doorY;
       if ($doorX == 0) {
+        // john ####
       // north wall:
-      $outputStartDoorX = ($mapMaxWidth - 1);
+      $outputStartDoorX = ($mapMaxWidth - 2);
       } else if ($doorX == ($mapMaxWidth - 1)) {
       // south wall:
       $outputStartDoorX = 1;
       }
       if ($doorY == 0) {
       // west wall:
-      $outputStartDoorY = ($mapMaxHeight - 1);
+      $outputStartDoorY = ($mapMaxHeight - 2);
       } else if ($doorY == ($mapMaxHeight - 1)) {
       // east wall:
       $outputStartDoorY = 1;
@@ -1714,23 +1715,23 @@ $newStartDoorY = $doorY;
 
 
 
-// john ############
-/*
+
+
 if ($doorX == 0) {
-    // north wall:
-    $newStartDoorX = ($mapMaxWidth - 1);
+  
+    $newStartDoorX = ($mapMaxWidth - 2);
 } else if ($doorX == ($mapMaxWidth - 1)) {
-    // south wall:
-    $newStartDoorX = 0;
+   
+    $newStartDoorX = 1;
 }
 if ($doorY == 0) {
-    // west wall:
-    $newStartDoorY = ($mapMaxHeight - 1);
+   
+    $newStartDoorY = ($mapMaxHeight - 2);
 } else if ($doorY == ($mapMaxHeight - 1)) {
-    // east wall:
-    $newStartDoorY = 0;
+
+    $newStartDoorY = 1;
 }
-*/
+
 
 
 
@@ -2889,20 +2890,23 @@ if($thisMapsId == -1) {
     // determine door position based on connecting door's position:
     $startDoorX = $connectingDoorX;
     $startDoorY = $connectingDoorY;
-    if ($connectingDoorX == 0) {
+  // john
+  
+    if ($connectingDoorX == ($mapMaxWidth - 2)) {
     // north wall:
     $startDoorX = ($mapMaxWidth - 1);
-    } else if ($connectingDoorX == ($mapMaxWidth - 1)) {
+    } else if ($connectingDoorX == 1) {
     // south wall:
     $startDoorX = 0;
     }
-    if ($connectingDoorY == 0) {
+    if ($connectingDoorY == 1) {
     // west wall:
-    $startDoorY = ($mapMaxHeight - 1);
-    } else if ($connectingDoorY == ($mapMaxHeight - 1)) {
-    // east wall:
     $startDoorY = 0;
+    } else if ($connectingDoorY == ($mapMaxHeight - 2)) {
+    // east wall:
+    $startDoorY = ($mapMaxHeight - 1);
     }
+    
 }
 
 if($isTreasureMapLevel) {
