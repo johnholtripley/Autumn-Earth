@@ -168,9 +168,16 @@ function isATerrainCollision(x, y) {
     }
 }
 
+function startDoorTransition() {
+    if (mapTransition == "") {
+        mapTransitionCurrentFrames = 1;
+        mapTransition = "out";
+    }
+}
+
 function checkHeroCollisions() {
-     activeDoorX = -1;
-            activeDoorY = -1;
+    activeDoorX = -1;
+    activeDoorY = -1;
     // tile collisions:
     if (key[2]) {
         // up
@@ -181,11 +188,7 @@ function checkHeroCollisions() {
             // use the +1 to make sure it's just clear of the collision tile
             hero.y = tileBottomEdge + hero.height / 2 + 1;
         } else if (activeDoorX != -1) {
-             console.log("[" + mapTransition + "]");
-            if (mapTransition == "") {
-                mapTransitionCurrentFrames = 1;
-                mapTransition = "out";
-            }
+            startDoorTransition();
         }
     }
     if (key[3]) {
@@ -195,11 +198,7 @@ function checkHeroCollisions() {
             var tileTopEdge = (tileCollidedWith) * tileW;
             hero.y = tileTopEdge - hero.height / 2 - 1;
         } else if (activeDoorX != -1) {
-             console.log("[" + mapTransition + "]");
-            if (mapTransition == "") {
-                mapTransitionCurrentFrames = 1;
-                mapTransition = "out";
-            }
+            startDoorTransition();
         }
     }
     if (key[0]) {
@@ -209,11 +208,7 @@ function checkHeroCollisions() {
             var tileRightEdge = (tileCollidedWith + 1) * tileW;
             hero.x = tileRightEdge + hero.width / 2 + 1;
         } else if (activeDoorX != -1) {
-             console.log("[" + mapTransition + "]");
-            if (mapTransition == "") {
-                mapTransitionCurrentFrames = 1;
-                mapTransition = "out";
-            }
+            startDoorTransition();
         }
     }
     if (key[1]) {
@@ -223,15 +218,13 @@ function checkHeroCollisions() {
             var tileLeftEdge = (tileCollidedWith) * tileW;
             hero.x = tileLeftEdge - hero.width / 2 - 1;
         } else if (activeDoorX != -1) {
-             console.log("[" + mapTransition + "]");
-            if (mapTransition == "") {
-                mapTransitionCurrentFrames = 1;
-                mapTransition = "out";
-            }
+            startDoorTransition();
         }
     }
 
 }
+
+
 
 function gameLoop() {
     switch (gameMode) {
