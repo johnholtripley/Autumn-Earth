@@ -51,7 +51,7 @@ for ($i=0;$i<$numberOfParagraphs;$i++) {
     } while ($thisWord != ".");
   }
   $builtSentence = str_ireplace(" .", ".", $builtSentence);
-  echo '<p style="font-family:arial,helvetica,sans-serif;font-size:13px;">'.$builtSentence."</p>";
+  echo '<p>'.$builtSentence."</p>";
 }
 
 

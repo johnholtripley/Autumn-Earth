@@ -11,7 +11,7 @@ var activeDoorX = -1;
 var activeDoorY = -1;
 
 var characterId = 999;
-var currentMap = 1;
+var currentMap = 2;
 var newMap = currentMap;
 var thisMapData = '';
 var mapTilesX = 0;
@@ -36,8 +36,8 @@ var hero = {
     y: 0,
     dx: 0,
     dy: 0,
-    tileX: 1,
-    tileY: 2,
+    tileX: 12,
+    tileY: 12,
     width: 20,
     height: 20,
     feetOffsetX: 10,
