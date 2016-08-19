@@ -149,24 +149,33 @@ function changeMaps(doorX, doorY) {
 }
 
 function isATerrainCollision(x, y) {
-    switch (thisMapData.collisions[getTileY(y)][getTileX(x)]) {
-        case 1:
-            // is a collision:
-            return 1;
-            break;
-        case "d":
-            // is a door:
-            // make sure it isn't also blocked on the other corner though before starting the transition ##################
-            activeDoorX = x;
-            activeDoorY = y;
-           
-            return 0;
-            break;
-        default:
-            // not a collsiion:
-            return 0;
+    // check map bounds first:
+    var tileX = getTileX(x);
+    var tileY = getTileY(y);
+    if ((tileX < 0) || (tileY < 0) || (tileX >= mapTilesX) || (tileY >= mapTilesY)) {
+        // is out of the bounds of the current map:
+        return 1;
+    } else {
+
+        switch (thisMapData.collisions[tileY][tileX]) {
+            case 1:
+                // is a collision:
+                return 1;
+                break;
+            case "d":
+                // is a door:
+                // make sure it isn't also blocked on the other corner though before starting the transition ##################
+                activeDoorX = x;
+                activeDoorY = y;
+                return 0;
+                break;
+            default:
+                // not a collsiion:
+                return 0;
+        }
     }
 }
+
 
 function startDoorTransition() {
     if (mapTransition == "") {
@@ -362,7 +371,7 @@ function draw() {
 
         gameContext.clearRect(0, 0, canvasWidth, canvasHeight);
         // scroll background to match the top tip and left tip of the tile grid:
-        gameContext.drawImage(backgroundImg, Math.floor(getTileIsoCentreCoordX(0, mapTilesX - 1) - hero.isox + (canvasWidth / 2) - tileW / 2), Math.floor(getTileIsoCentreCoordY(0, 0) - hero.isoy + (canvasHeight / 2) - tileH / 2));
+        gameContext.drawImage(backgroundImg, Math.floor(getTileIsoCentreCoordX(0, mapTilesX - 1) - hero.isox - tileW / 2), Math.floor(getTileIsoCentreCoordY(0, 0) - hero.isoy - tileH / 2));
         // draw the sorted assets:
         for (var i = 0; i < assetsToDraw.length; i++) {
             if (assetsToDraw[i].length == 10) {
