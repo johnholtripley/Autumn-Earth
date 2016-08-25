@@ -64,7 +64,9 @@
         .js #offCanvasWrapper {
             left: 0;
             transform: translate3d(0, 0, 0);
-            transition: transform 0.4s ease-out;
+       
+           // http://cubic-bezier.com/
+            transition: transform 0.5s cubic-bezier(.17, .67, .12, .94);
             backface-visibility: hidden;
         }
         .offCanvas #offCanvasWrapper {
@@ -99,7 +101,7 @@
         left: 0;
         -webkit-transform: translate3d(0, 0, 0);
         transform: translate3d(0, 0, 0);
-        -webkit-transition: -webkit-transform 0.4s ease-out;
+        -webkit-transition: -webkit-transform 0.5s cubic-bezier(.17, .67, .12, .94);
         transition: transform 0.4s ease-out;
         -webkit-backface-visibility: hidden;
         backface-visibility: hidden;
