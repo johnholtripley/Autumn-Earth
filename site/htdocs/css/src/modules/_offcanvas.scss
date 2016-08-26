@@ -40,6 +40,19 @@
     }
 }
 
+// make content 'stick' to the top of the page when the nav is open:
+.offCanvas {
+    height: 100%;
+    body, #wrapper, #offCanvasWrapper {
+        height: 100%;
+    }
+    #navigationInner {
+        height: 100%;
+        overflow-y: scroll;
+    }
+}
+
+
 @include mq($useOffCanvasUpToMax, 'max') {
     .js #navigation {
         left: -$offCanvasWidth;
