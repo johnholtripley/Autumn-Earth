@@ -740,7 +740,11 @@ function draw() {
         }
         assetsToDraw.sort(sortByIsoDepth);
 
-        gameContext.clearRect(0, 0, canvasWidth, canvasHeight);
+        // don't need to clear, as the background will overwrite anyway - this means there's less to process:
+      //  gameContext.clearRect(0, 0, canvasWidth, canvasHeight);
+
+
+      
         // scroll background to match the top tip and left tip of the tile grid:
         gameContext.drawImage(backgroundImg, Math.floor(getTileIsoCentreCoordX(0, mapTilesX - 1) - hero.isox - tileW / 2), Math.floor(getTileIsoCentreCoordY(0, 0) - hero.isoy - tileH / 2));
         // draw the sorted assets:
