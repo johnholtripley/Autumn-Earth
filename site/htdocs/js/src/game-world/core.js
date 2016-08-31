@@ -463,7 +463,8 @@ function draw() {
 
         for (var i = 0; i < thisMapData.npcs.length; i++) {
             thisNPC = thisMapData.npcs[i];
-            thisNPCOffsetCol = currentAnimationFrame % thisNPC.sequences['walk-'+thisNPC.facing].length;
+            thisNPCOffsetCol = currentAnimationFrame % thisNPC["walk"]["length"];
+            thisNPCOffsetRow = thisNPC["walk"][thisNpc.facing];
             thisX = findIsoCoordsX(thisNPC.x, thisNPC.y);
             thisY = findIsoCoordsY(thisNPC.x, thisNPC.y);
             assetsToDraw.push([findIsoDepth(thisX, thisY), npcImages[i], thisNPCOffsetCol*thisNPC.width, thisNPCOffsetRow*thisNPC.height, thisNPC.width, thisNPC.height, Math.floor(thisX - hero.isox - thisNPC.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisNPC.centreY + (canvasHeight / 2)), thisNPC.width, thisNPC.height]);
