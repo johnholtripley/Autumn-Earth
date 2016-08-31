@@ -95,6 +95,7 @@
             "tileY": 14,
             "movement": ["?"],
             "facing": "n",
+            "walkThroughDoors": false,
             "speed": 4,
             "speech": "",
             "isCollidable": false,
