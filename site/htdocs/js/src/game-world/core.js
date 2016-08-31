@@ -126,10 +126,13 @@ function prepareGame() {
         npcImages[i] = Loader.getImage("npc" + i);
     }
     backgroundImg = Loader.getImage("backgroundImg");
-    // position NPCs:
+    // initialise and position NPCs:
     for (var i = 0; i < thisMapData.npcs.length; i++) {
         thisMapData.npcs[i].x = getTileCentreCoordX(thisMapData.npcs[i].tileX);
         thisMapData.npcs[i].y = getTileCentreCoordY(thisMapData.npcs[i].tileX);
+        thisMapData.npcs[i].dx = 0;
+        thisMapData.npcs[i].dy = 0;
+        thisMapData.npcs[i].movementIndex = 0;
     }
     // determine tile offset to centre the hero in the centre
     hero.x = getTileCentreCoordX(hero.tileX);
@@ -284,49 +287,40 @@ function update() {
         // Handle the Input
         if (key[2]) {
             hero.isMoving = true;
-            hero.facing = 'up';
+            hero.facing = 'n';
             hero.y -= hero.speed;
         } else if (key[3]) {
             hero.isMoving = true;
-            hero.facing = 'down';
+            hero.facing = 's';
             hero.y += hero.speed;
         } else if (key[0]) {
             hero.isMoving = true;
-            hero.facing = 'left';
+            hero.facing = 'e';
             hero.x -= hero.speed;
         } else if (key[1]) {
             hero.isMoving = true;
-            hero.facing = 'right';
+            hero.facing = 'w';
             hero.x += hero.speed;
         }
 
         hero.tileX = getTileX(hero.x);
         hero.tileY = getTileY(hero.y);
-        
-        /*
-        if(oldHeroX != hero.tileX || oldHeroY != hero.tileY) {
-          //  console.log(hero.x+","+hero.y+"  --> "+findIsoCoordsX(hero.x,hero.y)+", "+findIsoCoordsY(hero.x,hero.y));
-        console.log(hero.tileX+","+hero.tileY);
-        oldHeroX = hero.tileX;
-        oldHeroY = hero.tileY;
-        }
-        */
 
         checkHeroCollisions();
     } else {
         hero.isMoving = true;
         // continue the hero moving:
         switch (hero.facing) {
-            case 'up':
+            case 'n':
                 hero.y -= hero.speed;
                 break;
-            case 'down':
+            case 's':
                 hero.y += hero.speed;
                 break;
-            case 'left':
+            case 'e':
                 hero.x -= hero.speed;
                 break;
-            case 'right':
+            case 'w':
                 hero.x += hero.speed;
                 break;
         }
@@ -344,8 +338,8 @@ function update() {
     }
     timeSinceLastFrameSwap += elapsed;
     if (timeSinceLastFrameSwap > animationUpdateTime) {
-currentAnimationFrame ++;
-timeSinceLastFrameSwap = 0;
+        currentAnimationFrame++;
+        timeSinceLastFrameSwap = 0;
     }
     /*if (hero.timeSinceLastFrameSwap > hero.animationUpdateTime) {
         var seq = (hero.isMoving ? 'walk-' : 'stand-') + hero.facing;
@@ -362,7 +356,73 @@ timeSinceLastFrameSwap = 0;
         hero.timeSinceLastFrameSwap = 0;
     }
     */
+
+moveNPCs();
+
 }
+
+function moveNPCs() {
+    var thisNPC, newTile, thisNextMovement;
+    for (var i = 0; i < thisMapData.npcs.length; i++) {
+        thisNPC = thisMapData.npcs[i];
+        switch (thisNPC.facing) {
+            case 'n':
+                thisNPC.y -= thisNPC.speed;
+                thisNPC.dy -= thisNPC.speed;
+                break;
+            case 's':
+                thisNPC.y += thisNPC.speed;
+                thisNPC.dy += thisNPC.speed;
+                break;
+            case 'e':
+                thisNPC.x -= thisNPC.speed;
+                thisNPC.dx -= thisNPC.speed;
+                break;
+            case 'w':
+                thisNPC.x += thisNPC.speed;
+                thisNPC.dx += thisNPC.speed;
+                break;
+        }
+        newTile = false;
+        if (Math.abs(thisNPC.dx) >= tileW) {
+            if (thisNPC.dx > 0) {
+                thisNPC.dx -= tileW;
+            } else {
+                thisNPC.dx += tileW;
+            }
+
+            newTile = true;
+        }
+        if (Math.abs(thisNPC.dy) >= tileW) {
+            if (thisNPC.dy > 0) {
+                thisNPC.dy -= tileW;
+            } else {
+                thisNPC.dy += tileW;
+            }
+            newTile = true;
+        }
+        if(newTile) {
+thisNPC.movementIndex++;
+if(thisNPC.movementIndex>thisNPC.movement.length) {
+thisNPC.movementIndex = 0;
+ thisNextMovement = thisNPC.movement[thisNPC.movementIndex];
+ switch (thisNextMovement) {
+case '?':
+// pick a random facing:
+thisNPC.facing = facingsPossible[Math.floor(Math.random()*facingsPossible.length)];
+break;
+default :
+thisNPC.facing = thisNextMovement;
+break;
+ }
+
+
+}
+        }
+    }
+}
+
+
 
 function draw() {
     if (gameMode == "mapLoading") {
@@ -403,7 +463,7 @@ function draw() {
 
         for (var i = 0; i < thisMapData.npcs.length; i++) {
             thisNPC = thisMapData.npcs[i];
-            thisNPCOffsetCol = currentAnimationFrame % thisNPC.sequences['walk-up'].length;
+            thisNPCOffsetCol = currentAnimationFrame % thisNPC.sequences['walk-'+thisNPC.facing].length;
             thisX = findIsoCoordsX(thisNPC.x, thisNPC.y);
             thisY = findIsoCoordsY(thisNPC.x, thisNPC.y);
             assetsToDraw.push([findIsoDepth(thisX, thisY), npcImages[i], thisNPCOffsetCol*thisNPC.width, thisNPCOffsetRow*thisNPC.height, thisNPC.width, thisNPC.height, Math.floor(thisX - hero.isox - thisNPC.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisNPC.centreY + (canvasHeight / 2)), thisNPC.width, thisNPC.height]);
