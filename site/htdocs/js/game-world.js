@@ -2,6 +2,9 @@
 var animationFramesPerSecond = 16;
 var lastTime = 0;
 var elapsed = 0;
+var timeSinceLastFrameSwap = 0;
+var currentAnimationFrame = 0;
+var animationUpdateTime = (1000 / animationFramesPerSecond);
 
 // map changes:
 var mapTransition = "";
@@ -21,6 +24,7 @@ var tileGraphics = [];
 var tileW = 48;
 var tileH = tileW/2;
 var tileGraphicsToLoad = 0;
+var npcGraphicsToLoad = 0;
 var canvasWidth = 800;
 var canvasHeight = 600;
 
@@ -43,9 +47,9 @@ var hero = {
     feetOffsetX: 40,
     feetOffsetY: 69,
     speed: 4,
-    animationFrameIndex: 0,
-    timeSinceLastFrameSwap: 0,
-    animationUpdateTime: (1000 / animationFramesPerSecond),
+ //   animationFrameIndex: 0,
+ //   timeSinceLastFrameSwap: 0,
+ //   animationUpdateTime: (1000 / animationFramesPerSecond),
     isMoving: false,
     facing: 'down',
     sequences: {
@@ -233,7 +237,7 @@ function reset() {
 
     function onLoadImage(name) {
         ++imageCount;
-        // console.log(name + " loaded");
+       //  console.log(name + " loaded");
 
         // call the user defined callback when an image is loaded
         onProgressUpdate(getProgress());
@@ -252,6 +256,7 @@ function reset() {
     }
 
     function loadImage(name, src) {
+        //console.log("loading "+name+" - "+src);
         try {
             images[name] = new Image();
             images[name].onload = function() {
@@ -461,8 +466,8 @@ loadMapJSON(mapFilePath);
 function loadMapAssets() {
     imagesToLoad = [];
     var assetPath = currentMap;
-    if(currentMap < 0) {
-assetPath = 'dungeon/'+randomDungeonName;
+    if (currentMap < 0) {
+        assetPath = 'dungeon/' + randomDungeonName;
     }
     imagesToLoad.push({
         name: "backgroundImg",
@@ -475,8 +480,16 @@ assetPath = 'dungeon/'+randomDungeonName;
             src: "/images/game-world/maps/" + assetPath + "/" + tileGraphicsToLoad[i].src
         });
     }
+    npcGraphicsToLoad = thisMapData.npcs;
+        for (var i = 0; i < npcGraphicsToLoad.length; i++) {
+        imagesToLoad.push({
+            name: "npc" + i,
+            src: "/images/game-world/npcs/" + npcGraphicsToLoad[i].src
+        });
+    }
     Loader.preload(imagesToLoad, prepareGame, loadingProgress);
 }
+
 
 function prepareGame() {
     // get map image references:
@@ -484,19 +497,35 @@ function prepareGame() {
     for (var i = 0; i < tileGraphicsToLoad.length; i++) {
         tileImages[i] = Loader.getImage("tile" + i);
     }
+    npcImages = [];
+    for (var i = 0; i < npcGraphicsToLoad.length; i++) {
+        npcImages[i] = Loader.getImage("npc" + i);
+    }
     backgroundImg = Loader.getImage("backgroundImg");
+    // position NPCs:
+    for (var i = 0; i < thisMapData.npcs.length; i++) {
+        thisMapData.npcs[i].x = getTileCentreCoordX(thisMapData.npcs[i].tileX);
+        thisMapData.npcs[i].y = getTileCentreCoordY(thisMapData.npcs[i].tileX);
+    }
     // determine tile offset to centre the hero in the centre
     hero.x = getTileCentreCoordX(hero.tileX);
     hero.y = getTileCentreCoordY(hero.tileY);
+    timeSinceLastFrameSwap = 0;
+    currentAnimationFrame = 0;
     mapTransition = "in";
     mapTransitionCurrentFrames = 1;
     gameMode = "play";
 }
 
+
 function removeMapAssets() {
     for (var i = 0; i < tileGraphicsToLoad.length; i++) {
         tileImages[i].src = '';
         tileImages[i] = null;
+    }
+        for (var i = 0; i < npcGraphicsToLoad.length; i++) {
+       npcImages[i].src = '';
+        npcImages[i] = null;
     }
     backgroundImg.src = '';
     backgroundImg = null;
@@ -689,8 +718,11 @@ function update() {
             mapTransition = "";
         }
     }
-    hero.timeSinceLastFrameSwap += elapsed;
-    if (hero.timeSinceLastFrameSwap > hero.animationUpdateTime) {
+    timeSinceLastFrameSwap += elapsed;
+    if (timeSinceLastFrameSwap > animationUpdateTime) {
+currentAnimationFrame ++;
+    }
+    /*if (hero.timeSinceLastFrameSwap > hero.animationUpdateTime) {
         var seq = (hero.isMoving ? 'walk-' : 'stand-') + hero.facing;
         var currentSequence = hero.sequences[seq];
         if (hero.animationFrameIndex < currentSequence.length - 1) {
@@ -704,6 +736,7 @@ function update() {
         hero.offsetY = row * hero.height;
         hero.timeSinceLastFrameSwap = 0;
     }
+    */
 }
 
 function draw() {
@@ -722,7 +755,9 @@ function draw() {
             [findIsoDepth(findIsoCoordsX(hero.x, hero.y), findIsoCoordsY(hero.x, hero.y)), heroImg, Math.floor(canvasWidth / 2 - hero.feetOffsetX), Math.floor(canvasHeight / 2 - hero.feetOffsetY)]
         ];
         var map = thisMapData.terrain;
-        var thisGraphicCentreX, thisGraphicCentreY;
+        var thisGraphicCentreX, thisGraphicCentreY, thisX, thisY, thisNPC;
+        var thisNPCOffsetCol = 0;
+        var thisNPCOffsetRow = 0;
         hero.isox = findIsoCoordsX(hero.x, hero.y);
         hero.isoy = findIsoCoordsY(hero.x, hero.y);
         for (var i = 0; i < mapTilesX; i++) {
@@ -738,13 +773,24 @@ function draw() {
                 }
             }
         }
+
+
+
+        for (var i = 0; i < thisMapData.npcs.length; i++) {
+            thisNPC = thisMapData.npcs[i];
+            thisNPCOffsetCol = currentAnimationFrame % thisNPC.sequences['walk-up'].length;
+            thisX = findIsoCoordsX(thisNPC.x, thisNPC.y);
+            thisY = findIsoCoordsY(thisNPC.x, thisNPC.y);
+            assetsToDraw.push([findIsoDepth(thisX, thisY), npcImages[i], thisNPCOffsetCol, thisNPCOffsetRow, thisNPC.width, thisNPC.height, Math.floor(thisX - hero.isox - thisNPC.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisNPC.centreY + (canvasHeight / 2)), thisNPC.width, thisNPC.height]);
+        }
+
         assetsToDraw.sort(sortByIsoDepth);
 
         // don't need to clear, as the background will overwrite anyway - this means there's less to process:
-      //  gameContext.clearRect(0, 0, canvasWidth, canvasHeight);
+        //  gameContext.clearRect(0, 0, canvasWidth, canvasHeight);
 
 
-      
+
         // scroll background to match the top tip and left tip of the tile grid:
         gameContext.drawImage(backgroundImg, Math.floor(getTileIsoCentreCoordX(0, mapTilesX - 1) - hero.isox - tileW / 2), Math.floor(getTileIsoCentreCoordY(0, 0) - hero.isoy - tileH / 2));
         // draw the sorted assets:
@@ -783,3 +829,4 @@ if (('querySelectorAll' in document && 'addEventListener' in window) && (!!windo
 } else {
     // sorry message / fallback? #####
 }
+

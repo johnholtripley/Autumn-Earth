@@ -170,7 +170,7 @@ function reset() {
 
     function onLoadImage(name) {
         ++imageCount;
-        // console.log(name + " loaded");
+       //  console.log(name + " loaded");
 
         // call the user defined callback when an image is loaded
         onProgressUpdate(getProgress());
@@ -189,6 +189,7 @@ function reset() {
     }
 
     function loadImage(name, src) {
+        //console.log("loading "+name+" - "+src);
         try {
             images[name] = new Image();
             images[name].onload = function() {

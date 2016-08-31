@@ -2,6 +2,9 @@
 var animationFramesPerSecond = 16;
 var lastTime = 0;
 var elapsed = 0;
+var timeSinceLastFrameSwap = 0;
+var currentAnimationFrame = 0;
+var animationUpdateTime = (1000 / animationFramesPerSecond);
 
 // map changes:
 var mapTransition = "";
@@ -21,6 +24,7 @@ var tileGraphics = [];
 var tileW = 48;
 var tileH = tileW/2;
 var tileGraphicsToLoad = 0;
+var npcGraphicsToLoad = 0;
 var canvasWidth = 800;
 var canvasHeight = 600;
 
@@ -43,9 +47,9 @@ var hero = {
     feetOffsetX: 40,
     feetOffsetY: 69,
     speed: 4,
-    animationFrameIndex: 0,
-    timeSinceLastFrameSwap: 0,
-    animationUpdateTime: (1000 / animationFramesPerSecond),
+ //   animationFrameIndex: 0,
+ //   timeSinceLastFrameSwap: 0,
+ //   animationUpdateTime: (1000 / animationFramesPerSecond),
     isMoving: false,
     facing: 'down',
     sequences: {
