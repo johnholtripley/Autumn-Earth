@@ -721,6 +721,7 @@ function update() {
     timeSinceLastFrameSwap += elapsed;
     if (timeSinceLastFrameSwap > animationUpdateTime) {
 currentAnimationFrame ++;
+timeSinceLastFrameSwap = 0;
     }
     /*if (hero.timeSinceLastFrameSwap > hero.animationUpdateTime) {
         var seq = (hero.isMoving ? 'walk-' : 'stand-') + hero.facing;
@@ -781,7 +782,7 @@ function draw() {
             thisNPCOffsetCol = currentAnimationFrame % thisNPC.sequences['walk-up'].length;
             thisX = findIsoCoordsX(thisNPC.x, thisNPC.y);
             thisY = findIsoCoordsY(thisNPC.x, thisNPC.y);
-            assetsToDraw.push([findIsoDepth(thisX, thisY), npcImages[i], thisNPCOffsetCol*thisNPC.width, thisNPCOffsetRow, thisNPC.width, thisNPC.height, Math.floor(thisX - hero.isox - thisNPC.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisNPC.centreY + (canvasHeight / 2)), thisNPC.width, thisNPC.height]);
+            assetsToDraw.push([findIsoDepth(thisX, thisY), npcImages[i], thisNPCOffsetCol*thisNPC.width, thisNPCOffsetRow*thisNPC.height, thisNPC.width, thisNPC.height, Math.floor(thisX - hero.isox - thisNPC.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisNPC.centreY + (canvasHeight / 2)), thisNPC.width, thisNPC.height]);
         }
 
         assetsToDraw.sort(sortByIsoDepth);

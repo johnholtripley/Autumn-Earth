@@ -345,6 +345,7 @@ function update() {
     timeSinceLastFrameSwap += elapsed;
     if (timeSinceLastFrameSwap > animationUpdateTime) {
 currentAnimationFrame ++;
+timeSinceLastFrameSwap = 0;
     }
     /*if (hero.timeSinceLastFrameSwap > hero.animationUpdateTime) {
         var seq = (hero.isMoving ? 'walk-' : 'stand-') + hero.facing;
