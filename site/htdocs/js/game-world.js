@@ -414,7 +414,7 @@ function prepareCoreAssets() {
 }
 
 function loadMapJSON(mapFilePath) {
-        console.log("mapFilePath: "+mapFilePath);
+    console.log("mapFilePath: " + mapFilePath);
     getJSON(mapFilePath, function(data) {
         thisMapData = data.map;
         mapTilesY = thisMapData.terrain.length;
@@ -432,7 +432,7 @@ function loadMapJSON(mapFilePath) {
 
 function loadMap() {
     var mapFilePath;
-    console.log("going from "+currentMap+" to "+newMap);
+    console.log("going from " + currentMap + " to " + newMap);
     // check for newly entering a random dungeon:
     if ((newMap < 0) && (currentMap > 0)) {
         randomDungeonName = randomDungeons[Math.abs(newMap)];
@@ -457,7 +457,7 @@ function loadMap() {
         mapFilePath = '/generateDungeonMap.php?playerId=' + characterId + '&originatingMapId=' + currentMap + '&requestedMap=' + newMap + '&dungeonName=' + randomDungeonName + '&connectingDoorX=' + centreDoorX + '&connectingDoorY=' + centreDoorY;
     }
     currentMap = newMap;
-loadMapJSON(mapFilePath);
+    loadMapJSON(mapFilePath);
 }
 
 
@@ -483,7 +483,7 @@ function loadMapAssets() {
         });
     }
     npcGraphicsToLoad = thisMapData.npcs;
-        for (var i = 0; i < npcGraphicsToLoad.length; i++) {
+    for (var i = 0; i < npcGraphicsToLoad.length; i++) {
         imagesToLoad.push({
             name: "npc" + i,
             src: "/images/game-world/npcs/" + npcGraphicsToLoad[i].src
@@ -528,8 +528,8 @@ function removeMapAssets() {
         tileImages[i].src = '';
         tileImages[i] = null;
     }
-        for (var i = 0; i < npcGraphicsToLoad.length; i++) {
-       npcImages[i].src = '';
+    for (var i = 0; i < npcGraphicsToLoad.length; i++) {
+        npcImages[i].src = '';
         npcImages[i] = null;
     }
     backgroundImg.src = '';
@@ -561,7 +561,6 @@ function isATerrainCollision(x, y) {
         // is out of the bounds of the current map:
         return 1;
     } else {
-
         switch (thisMapData.collisions[tileY][tileX]) {
             case 1:
                 // is a collision:
@@ -735,66 +734,101 @@ function update() {
     }
     */
 
-moveNPCs();
-
+    moveNPCs();
 }
 
 function moveNPCs() {
-    var thisNPC, newTile, thisNextMovement;
+    var thisNPC, newTile, thisNextMovement, oldNPCx, oldNPCy;
     for (var i = 0; i < thisMapData.npcs.length; i++) {
         thisNPC = thisMapData.npcs[i];
-        switch (thisNPC.facing) {
-            case 'n':
-                thisNPC.y -= thisNPC.speed;
-                thisNPC.dy -= thisNPC.speed;
-                break;
-            case 's':
-                thisNPC.y += thisNPC.speed;
-                thisNPC.dy += thisNPC.speed;
-                break;
-            case 'e':
-                thisNPC.x -= thisNPC.speed;
-                thisNPC.dx -= thisNPC.speed;
-                break;
-            case 'w':
-                thisNPC.x += thisNPC.speed;
-                thisNPC.dx += thisNPC.speed;
-                break;
-        }
-        newTile = false;
-        if (Math.abs(thisNPC.dx) >= tileW) {
-            if (thisNPC.dx > 0) {
-                thisNPC.dx -= tileW;
-            } else {
-                thisNPC.dx += tileW;
-            }
-            newTile = true;
-        }
-        if (Math.abs(thisNPC.dy) >= tileW) {
-            if (thisNPC.dy > 0) {
-                thisNPC.dy -= tileW;
-            } else {
-                thisNPC.dy += tileW;
-            }
-            newTile = true;
-        }
-        if (newTile) {
-            thisNPC.movementIndex++;
-            if (thisNPC.movementIndex >= thisNPC.movement.length) {
-                thisNPC.movementIndex = 0;
-            }
-            thisNextMovement = thisNPC.movement[thisNPC.movementIndex];
-            switch (thisNextMovement) {
-                case '?':
-                    // pick a random facing:
-                    thisNPC.facing = facingsPossible[Math.floor(Math.random() * facingsPossible.length)];
+        if (thisNPC.isMoving) {
+            oldNPCx = thisNPC.x;
+            oldNPCy = thisNPC.y;
+            switch (thisNPC.facing) {
+                case 'n':
+                    thisNPC.y -= thisNPC.speed;
+                    // check for collisions:
+                    if ((isATerrainCollision(thisNPC.x - thisNPC.width / 2, thisNPC.y - thisNPC.height / 2)) || (isATerrainCollision(thisNPC.x + thisNPC.width / 2, thisNPC.y - thisNPC.height / 2))) {
+                        // find the tile's bottom edge
+                        var tileCollidedWith = getTileY(thisNPC.y - thisNPC.height / 2);
+                        var tileBottomEdge = (tileCollidedWith + 1) * tileW;
+                        // use the +1 to make sure it's just clear of the collision tile
+                        thisNPC.y = tileBottomEdge + thisNPC.height / 2 + 1;
+                    }
                     break;
-                default:
-                    thisNPC.facing = thisNextMovement;
-                    console.log(thisNPC.facing);
+                case 's':
+                    thisNPC.y += thisNPC.speed;
+                    // check for collisions:
+                    if ((isATerrainCollision(thisNPC.x - thisNPC.width / 2, thisNPC.y + thisNPC.height / 2)) || (isATerrainCollision(thisNPC.x + thisNPC.width / 2, thisNPC.y + thisNPC.height / 2))) {
+                        var tileCollidedWith = getTileY(thisNPC.y + thisNPC.height / 2);
+                        var tileTopEdge = (tileCollidedWith) * tileW;
+                        thisNPC.y = tileTopEdge - thisNPC.height / 2 - 1;
+                    }
+                    break;
+                case 'w':
+                    thisNPC.x -= thisNPC.speed;
+                    // check for collisions:
+                    if ((isATerrainCollision(thisNPC.x - thisNPC.width / 2, thisNPC.y + thisNPC.height / 2)) || (isATerrainCollision(thisNPC.x - thisNPC.width / 2, thisNPC.y - thisNPC.height / 2))) {
+                        var tileCollidedWith = getTileX(thisNPC.x - thisNPC.width / 2);
+                        var tileRightEdge = (tileCollidedWith + 1) * tileW;
+                        thisNPC.x = tileRightEdge + thisNPC.width / 2 + 1;
+                    }
+                    break;
+                case 'e':
+                    thisNPC.x += thisNPC.speed;
+                    // check for collisions:
+                    if ((isATerrainCollision(thisNPC.x + thisNPC.width / 2, thisNPC.y + thisNPC.height / 2)) || (isATerrainCollision(thisNPC.x + thisNPC.width / 2, thisNPC.y - thisNPC.height / 2))) {
+                        var tileCollidedWith = getTileX(thisNPC.x + thisNPC.width / 2);
+                        var tileLeftEdge = (tileCollidedWith) * tileW;
+                        thisNPC.x = tileLeftEdge - thisNPC.width / 2 - 1;
+                    }
                     break;
             }
-
+            // find the difference for this movement:
+            thisNPC.dx += (thisNPC.x - oldNPCx);
+            thisNPC.dy += (thisNPC.y - oldNPCy);
+            // see if it's at a new tile centre:
+            newTile = false;
+            if (Math.abs(thisNPC.dx) >= tileW) {
+                if (thisNPC.dx > 0) {
+                    thisNPC.dx -= tileW;
+                } else {
+                    thisNPC.dx += tileW;
+                }
+                newTile = true;
+            }
+            if (Math.abs(thisNPC.dy) >= tileW) {
+                if (thisNPC.dy > 0) {
+                    thisNPC.dy -= tileW;
+                } else {
+                    thisNPC.dy += tileW;
+                }
+                newTile = true;
+            }
+            if (newTile) {
+                thisNPC.movementIndex++;
+                if (thisNPC.movementIndex >= thisNPC.movement.length) {
+                    thisNPC.movementIndex = 0;
+                }
+                thisNextMovement = thisNPC.movement[thisNPC.movementIndex];
+                console.log("next move is " + thisNextMovement);
+                switch (thisNextMovement) {
+                    case '-':
+                        // stand still:
+                        thisNPC.isMoving = false;
+                        console.log(getTileY(thisNPC.y));
+                    case '?':
+                        // pick a random facing:
+                        thisNPC.facing = facingsPossible[Math.floor(Math.random() * facingsPossible.length)];
+                        // check that the target tile is walkable:
+                        // ###########
+                        
+                        break;
+                    default:
+                        thisNPC.facing = thisNextMovement;
+                        break;
+                }
+            }
         }
     }
 }
@@ -846,7 +880,7 @@ function draw() {
             thisNPCOffsetRow = thisNPC["animation"]["walk"][thisNPC.facing];
             thisX = findIsoCoordsX(thisNPC.x, thisNPC.y);
             thisY = findIsoCoordsY(thisNPC.x, thisNPC.y);
-            assetsToDraw.push([findIsoDepth(thisX, thisY), npcImages[i], thisNPCOffsetCol*thisNPC.width, thisNPCOffsetRow*thisNPC.height, thisNPC.width, thisNPC.height, Math.floor(thisX - hero.isox - thisNPC.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisNPC.centreY + (canvasHeight / 2)), thisNPC.width, thisNPC.height]);
+            assetsToDraw.push([findIsoDepth(thisX, thisY), npcImages[i], thisNPCOffsetCol * thisNPC.width, thisNPCOffsetRow * thisNPC.height, thisNPC.width, thisNPC.height, Math.floor(thisX - hero.isox - thisNPC.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisNPC.centreY + (canvasHeight / 2)), thisNPC.width, thisNPC.height]);
         }
 
         assetsToDraw.sort(sortByIsoDepth);
@@ -894,4 +928,3 @@ if (('querySelectorAll' in document && 'addEventListener' in window) && (!!windo
 } else {
     // sorry message / fallback? #####
 }
-

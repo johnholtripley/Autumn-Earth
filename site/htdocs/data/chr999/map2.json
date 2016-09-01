@@ -91,22 +91,22 @@
             "height": 48,
             "centreX": 7,
             "centreY": 72,
-            "tileX": 14,
-            "tileY": 14,
+            "tileX": 11,
+            "tileY": 11,
             "movement": ["?"],
-            "facing": "n",
+            "facing": "s",
             "walkThroughDoors": false,
             "speed": 2,
             "speech": "",
             "isCollidable": false,
-
+            "isMoving": true,
             "animation": {
                 "walk": {
                     "length": 10,
                     "n": 0,
-                    "e": 3,
+                    "e": 1,
                     "s": 2,
-                    "w": 1
+                    "w": 3
                 }
             }
         }],
