@@ -32,7 +32,7 @@ var randomDungeonName = "";
 var randomDungeons = ["","the-barrow-mines"];
 var previousZoneName = "";
 
-var facingsPossible = ["n","e","s","w"];
+
 
 // key bindings
 var key = [0, 0, 0, 0, 0];

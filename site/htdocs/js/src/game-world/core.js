@@ -132,7 +132,8 @@ function prepareGame() {
         thisMapData.npcs[i].y = getTileCentreCoordY(thisMapData.npcs[i].tileX);
         thisMapData.npcs[i].dx = 0;
         thisMapData.npcs[i].dy = 0;
-        thisMapData.npcs[i].movementIndex = 0;
+        // set index to -1 so when it increases, it'll pick up the first (0) element:
+        thisMapData.npcs[i].movementIndex = -1;
     }
     // determine tile offset to centre the hero in the centre
     hero.x = getTileCentreCoordX(hero.tileX);
@@ -190,7 +191,7 @@ function isATerrainCollision(x, y) {
                 break;
             case "d":
                 // is a door:
-                // make sure it isn't also blocked on the other corner though before starting the transition ##################
+                
                 activeDoorX = x;
                 activeDoorY = y;
                 return 0;
@@ -440,10 +441,12 @@ function moveNPCs() {
                         thisNPC.isMoving = false;
                         console.log(getTileY(thisNPC.y));
                     case '?':
+                    do {
                         // pick a random facing:
                         thisNPC.facing = facingsPossible[Math.floor(Math.random() * facingsPossible.length)];
                         // check that the target tile is walkable:
-                        // ###########
+                    } while (isATerrainCollision(thisNPC.x + (relativeFacing[thisNPC.facing]["x"]*tileW), thisNPC.y + (relativeFacing[thisNPC.facing]["y"]*tileW));
+
                         
                         break;
                     default:

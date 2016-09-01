@@ -68,9 +68,27 @@ function findIsoDepth(x, y) {
 
 
 
+var facingsPossible = ["n","e","s","w"];
 
-
-
+// useful for determining relative direction based on facing:
+relativeFacing = {
+    "n": {
+        "x": 0,
+        "y": -1
+    },
+    "s": {
+        "x": 0,
+        "y": 1
+    },
+    "e": {
+        "x": 1,
+        "y": 0
+    },
+    "w": {
+        "x": -1,
+        "y": 0
+    }
+}
 
 
 
