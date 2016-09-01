@@ -96,18 +96,18 @@
             "movement": ["?"],
             "facing": "n",
             "walkThroughDoors": false,
-            "speed": 4,
+            "speed": 2,
             "speech": "",
             "isCollidable": false,
 
             "animation": {
-"walk": {
-    "length": 10,
-"n":0,
-"e":1,
-"s":2,
-"w":3
-}
+                "walk": {
+                    "length": 10,
+                    "n": 0,
+                    "e": 3,
+                    "s": 2,
+                    "w": 1
+                }
             }
         }],
         "doors": {

@@ -768,7 +768,6 @@ function moveNPCs() {
             } else {
                 thisNPC.dx += tileW;
             }
-
             newTile = true;
         }
         if (Math.abs(thisNPC.dy) >= tileW) {
@@ -779,26 +778,28 @@ function moveNPCs() {
             }
             newTile = true;
         }
-        if(newTile) {
-thisNPC.movementIndex++;
-if(thisNPC.movementIndex>thisNPC.movement.length) {
-thisNPC.movementIndex = 0;
- thisNextMovement = thisNPC.movement[thisNPC.movementIndex];
- switch (thisNextMovement) {
-case '?':
-// pick a random facing:
-thisNPC.facing = facingsPossible[Math.floor(Math.random()*facingsPossible.length)];
-break;
-default :
-thisNPC.facing = thisNextMovement;
-break;
- }
+        if (newTile) {
+            thisNPC.movementIndex++;
+            if (thisNPC.movementIndex >= thisNPC.movement.length) {
+                thisNPC.movementIndex = 0;
+            }
+            thisNextMovement = thisNPC.movement[thisNPC.movementIndex];
+            switch (thisNextMovement) {
+                case '?':
+                    // pick a random facing:
+                    thisNPC.facing = facingsPossible[Math.floor(Math.random() * facingsPossible.length)];
+                    break;
+                default:
+                    thisNPC.facing = thisNextMovement;
+                    console.log(thisNPC.facing);
+                    break;
+            }
 
-
-}
         }
     }
 }
+
+
 
 
 
@@ -841,7 +842,8 @@ function draw() {
 
         for (var i = 0; i < thisMapData.npcs.length; i++) {
             thisNPC = thisMapData.npcs[i];
-            thisNPCOffsetCol = currentAnimationFrame % thisNPC.sequences['walk-'+thisNPC.facing].length;
+            thisNPCOffsetCol = currentAnimationFrame % thisNPC["animation"]["walk"]["length"];
+            thisNPCOffsetRow = thisNPC["animation"]["walk"][thisNPC.facing];
             thisX = findIsoCoordsX(thisNPC.x, thisNPC.y);
             thisY = findIsoCoordsY(thisNPC.x, thisNPC.y);
             assetsToDraw.push([findIsoDepth(thisX, thisY), npcImages[i], thisNPCOffsetCol*thisNPC.width, thisNPCOffsetRow*thisNPC.height, thisNPC.width, thisNPC.height, Math.floor(thisX - hero.isox - thisNPC.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisNPC.centreY + (canvasHeight / 2)), thisNPC.width, thisNPC.height]);
