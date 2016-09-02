@@ -447,6 +447,18 @@ function moveNPCs() {
                 thisNPC.y = oldNPCy;
             }
 
+            // check for collisions against other NPCs:
+            for (var j = 0; j < thisMapData.npcs.length; j++) {
+                if (i != j) {
+                    thisOtherNPC = thisMapData.npcs[j];
+                    if (thisOtherNPC.isCollidable) {
+                        if (isAnObjectCollision(thisNPC.x, thisNPC.y, thisNPC.width, thisNPC.height, thisOtherNPC.x, thisOtherNPC.y, thisOtherNPC.width, thisOtherNPC.height)) {
+                            thisNPC.x = oldNPCx;
+                            thisNPC.y = oldNPCy;
+                        }
+                    }
+                }
+            }
 
 
             // find the difference for this movement:
@@ -499,8 +511,6 @@ function moveNPCs() {
         }
     }
 }
-
-
 
 
 

@@ -92,7 +92,7 @@
                 "spriteHeight": 77,
                 "centreX": 42,
                 "centreY": 68,
-                "tileX": 5,
+                "tileX": 1,
                 "tileY": 12,
                 "movement": ["?"],
                 "facing": "e",
