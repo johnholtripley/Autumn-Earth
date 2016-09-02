@@ -42,7 +42,7 @@ var hero = {
     y: 0,
     dx: 0,
     dy: 0,
-    tileX: 12,
+    tileX: 6,
     tileY: 12,
     width: 20,
     height: 20,
@@ -525,7 +525,7 @@ function prepareGame() {
     // initialise and position NPCs:
     for (var i = 0; i < thisMapData.npcs.length; i++) {
         thisMapData.npcs[i].x = getTileCentreCoordX(thisMapData.npcs[i].tileX);
-        thisMapData.npcs[i].y = getTileCentreCoordY(thisMapData.npcs[i].tileX);
+        thisMapData.npcs[i].y = getTileCentreCoordY(thisMapData.npcs[i].tileY);
         thisMapData.npcs[i].dx = 0;
         thisMapData.npcs[i].dy = 0;
         // set index to -1 so when it increases, it'll pick up the first (0) element:
@@ -610,6 +610,7 @@ function startDoorTransition() {
 function checkHeroCollisions() {
     activeDoorX = -1;
     activeDoorY = -1;
+  
     // tile collisions:
     if (key[2]) {
         // up
@@ -654,6 +655,19 @@ function checkHeroCollisions() {
         }
     }
 
+
+                // check for collisions against NPCs:
+for (var i = 0; i < thisMapData.npcs.length; i++) {
+            thisNPC = thisMapData.npcs[i];
+            if(thisNPC.isCollidable) {
+            if (isAnObjectCollision(thisNPC.x, thisNPC.y, thisNPC.width, thisNPC.height, hero.x, hero.y, hero.width, hero.height)) {
+              hero.x = oldHeroX;
+              hero.y = oldHeroY;
+
+            }
+        }
+        }
+
 }
 
 
@@ -679,6 +693,8 @@ function update() {
     var elapsed = (now - lastTime);
     lastTime = now;
     hero.isMoving = false;
+       oldHeroX = hero.x;
+     oldHeroY = hero.y;
     if (mapTransition != "out") {
         // Handle the Input
         if (key[2]) {
@@ -698,11 +714,11 @@ function update() {
             hero.facing = 'w';
             hero.x += hero.speed;
         }
-
+checkHeroCollisions();
         hero.tileX = getTileX(hero.x);
         hero.tileY = getTileY(hero.y);
 
-        checkHeroCollisions();
+        
     } else {
         hero.isMoving = true;
         // continue the hero moving:
@@ -756,6 +772,20 @@ function update() {
     moveNPCs();
 }
 
+function isAnObjectCollision(obj1x, obj1y, obj1w, obj1h, obj2x, obj2y, obj2w, obj2h) {
+    if (obj1x + obj1w / 2 > obj2x - obj2w / 2) {
+        if (obj1x - obj1w / 2 < obj2x + obj2w / 2) {
+            if (obj1y - obj1h / 2 < obj2y + obj2h / 2) {
+                if (obj1y + obj1h / 2 > obj2y - obj2h / 2) {
+                    return true;
+                }
+            }
+        }
+    }
+    return false;
+}
+
+
 function moveNPCs() {
     var thisNPC, newTile, thisNextMovement, oldNPCx, oldNPCy;
     for (var i = 0; i < thisMapData.npcs.length; i++) {
@@ -774,6 +804,7 @@ function moveNPCs() {
                         // use the +1 to make sure it's just clear of the collision tile
                         thisNPC.y = tileBottomEdge + thisNPC.height / 2 + 1;
                     }
+
                     break;
                 case 's':
                     thisNPC.y += thisNPC.speed;
@@ -803,6 +834,17 @@ function moveNPCs() {
                     }
                     break;
             }
+
+
+            // check for collision against hero:
+
+            if (isAnObjectCollision(thisNPC.x, thisNPC.y, thisNPC.width, thisNPC.height, hero.x, hero.y, hero.width, hero.height)) {
+                thisNPC.x = oldNPCx;
+                thisNPC.y = oldNPCy;
+            }
+
+
+
             // find the difference for this movement:
             thisNPC.dx += (thisNPC.x - oldNPCx);
             thisNPC.dy += (thisNPC.y - oldNPCy);
@@ -830,20 +872,20 @@ function moveNPCs() {
                     thisNPC.movementIndex = 0;
                 }
                 thisNextMovement = thisNPC.movement[thisNPC.movementIndex];
-            
+
                 switch (thisNextMovement) {
                     case '-':
                         // stand still:
                         thisNPC.isMoving = false;
                         console.log(getTileY(thisNPC.y));
                     case '?':
-                    do {
-                        // pick a random facing:
-                        thisNPC.facing = facingsPossible[Math.floor(Math.random() * facingsPossible.length)];
-                        // check that the target tile is walkable:
-                    } while (isATerrainCollision(thisNPC.x + (relativeFacing[thisNPC.facing]["x"]*tileW), thisNPC.y + (relativeFacing[thisNPC.facing]["y"]*tileW)));
+                        do {
+                            // pick a random facing:
+                            thisNPC.facing = facingsPossible[Math.floor(Math.random() * facingsPossible.length)];
+                            // check that the target tile is walkable:
+                        } while (isATerrainCollision(thisNPC.x + (relativeFacing[thisNPC.facing]["x"] * tileW), thisNPC.y + (relativeFacing[thisNPC.facing]["y"] * tileW)));
 
-                        
+
                         break;
                     default:
                         thisNPC.facing = thisNextMovement;
@@ -853,6 +895,8 @@ function moveNPCs() {
         }
     }
 }
+
+
 
 
 
@@ -901,7 +945,10 @@ function draw() {
             thisNPCOffsetRow = thisNPC["animation"]["walk"][thisNPC.facing];
             thisX = findIsoCoordsX(thisNPC.x, thisNPC.y);
             thisY = findIsoCoordsY(thisNPC.x, thisNPC.y);
-            assetsToDraw.push([findIsoDepth(thisX, thisY), npcImages[i], thisNPCOffsetCol * thisNPC.width, thisNPCOffsetRow * thisNPC.height, thisNPC.width, thisNPC.height, Math.floor(thisX - hero.isox - thisNPC.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisNPC.centreY + (canvasHeight / 2)), thisNPC.width, thisNPC.height]);
+
+ assetsToDraw.push([findIsoDepth(thisX, thisY), npcImages[i], Math.floor(thisX - hero.isox - thisNPC.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisNPC.centreY + (canvasHeight / 2))]);
+
+          //  assetsToDraw.push([findIsoDepth(thisX, thisY), npcImages[i], thisNPCOffsetCol * thisNPC.width, thisNPCOffsetRow * thisNPC.spriteHeight, thisNPC.width, thisNPC.height, Math.floor(thisX - hero.isox - thisNPC.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisNPC.centreY + (canvasHeight / 2)), thisNPC.width, thisNPC.spriteHeight]);
         }
 
         assetsToDraw.sort(sortByIsoDepth);
@@ -923,7 +970,7 @@ function draw() {
                 gameContext.drawImage(assetsToDraw[i][1], assetsToDraw[i][2], assetsToDraw[i][3]);
             }
         }
-
+/*
         // draw the map transition if it's needed:
         if (mapTransition == "out") {
             var gradientSize = (1 - (mapTransitionCurrentFrames / mapTransitionMaxFrames));
@@ -939,7 +986,7 @@ function draw() {
             gradient.addColorStop(1, "rgba(0,0,0,0)");
             gameContext.fillStyle = gradient;
             gameContext.fillRect(0, 0, canvasWidth, canvasHeight);
-        }
+        }*/
     }
 }
 
