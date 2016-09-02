@@ -434,7 +434,7 @@ function moveNPCs() {
                     thisNPC.movementIndex = 0;
                 }
                 thisNextMovement = thisNPC.movement[thisNPC.movementIndex];
-                console.log("next move is " + thisNextMovement);
+            
                 switch (thisNextMovement) {
                     case '-':
                         // stand still:
@@ -445,7 +445,7 @@ function moveNPCs() {
                         // pick a random facing:
                         thisNPC.facing = facingsPossible[Math.floor(Math.random() * facingsPossible.length)];
                         // check that the target tile is walkable:
-                    } while (isATerrainCollision(thisNPC.x + (relativeFacing[thisNPC.facing]["x"]*tileW), thisNPC.y + (relativeFacing[thisNPC.facing]["y"]*tileW));
+                    } while (isATerrainCollision(thisNPC.x + (relativeFacing[thisNPC.facing]["x"]*tileW), thisNPC.y + (relativeFacing[thisNPC.facing]["y"]*tileW)));
 
                         
                         break;

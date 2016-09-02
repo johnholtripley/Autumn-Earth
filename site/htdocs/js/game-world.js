@@ -32,7 +32,7 @@ var randomDungeonName = "";
 var randomDungeons = ["","the-barrow-mines"];
 var previousZoneName = "";
 
-var facingsPossible = ["n","e","s","w"];
+
 
 // key bindings
 var key = [0, 0, 0, 0, 0];
@@ -137,9 +137,27 @@ function findIsoDepth(x, y) {
 
 
 
+var facingsPossible = ["n","e","s","w"];
 
-
-
+// useful for determining relative direction based on facing:
+var relativeFacing = {
+    "n": {
+        "x": 0,
+        "y": -1
+    },
+    "s": {
+        "x": 0,
+        "y": 1
+    },
+    "e": {
+        "x": 1,
+        "y": 0
+    },
+    "w": {
+        "x": -1,
+        "y": 0
+    }
+};
 
 
 
@@ -510,7 +528,8 @@ function prepareGame() {
         thisMapData.npcs[i].y = getTileCentreCoordY(thisMapData.npcs[i].tileX);
         thisMapData.npcs[i].dx = 0;
         thisMapData.npcs[i].dy = 0;
-        thisMapData.npcs[i].movementIndex = 0;
+        // set index to -1 so when it increases, it'll pick up the first (0) element:
+        thisMapData.npcs[i].movementIndex = -1;
     }
     // determine tile offset to centre the hero in the centre
     hero.x = getTileCentreCoordX(hero.tileX);
@@ -568,7 +587,7 @@ function isATerrainCollision(x, y) {
                 break;
             case "d":
                 // is a door:
-                // make sure it isn't also blocked on the other corner though before starting the transition ##################
+                
                 activeDoorX = x;
                 activeDoorY = y;
                 return 0;
@@ -811,17 +830,19 @@ function moveNPCs() {
                     thisNPC.movementIndex = 0;
                 }
                 thisNextMovement = thisNPC.movement[thisNPC.movementIndex];
-                console.log("next move is " + thisNextMovement);
+            
                 switch (thisNextMovement) {
                     case '-':
                         // stand still:
                         thisNPC.isMoving = false;
                         console.log(getTileY(thisNPC.y));
                     case '?':
+                    do {
                         // pick a random facing:
                         thisNPC.facing = facingsPossible[Math.floor(Math.random() * facingsPossible.length)];
                         // check that the target tile is walkable:
-                        // ###########
+                    } while (isATerrainCollision(thisNPC.x + (relativeFacing[thisNPC.facing]["x"]*tileW), thisNPC.y + (relativeFacing[thisNPC.facing]["y"]*tileW)));
+
                         
                         break;
                     default:
