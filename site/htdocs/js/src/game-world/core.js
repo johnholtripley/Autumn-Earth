@@ -449,6 +449,7 @@ function moveNPCs() {
 
             // check for collisions against other NPCs:
             for (var j = 0; j < thisMapData.npcs.length; j++) {
+
                 if (i != j) {
                     thisOtherNPC = thisMapData.npcs[j];
                     if (thisOtherNPC.isCollidable) {
@@ -560,9 +561,9 @@ function draw() {
             thisX = findIsoCoordsX(thisNPC.x, thisNPC.y);
             thisY = findIsoCoordsY(thisNPC.x, thisNPC.y);
 
- assetsToDraw.push([findIsoDepth(thisX, thisY), npcImages[i], Math.floor(thisX - hero.isox - thisNPC.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisNPC.centreY + (canvasHeight / 2))]);
+ //assetsToDraw.push([findIsoDepth(thisX, thisY), npcImages[i], Math.floor(thisX - hero.isox - thisNPC.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisNPC.centreY + (canvasHeight / 2))]);
 
-          //  assetsToDraw.push([findIsoDepth(thisX, thisY), npcImages[i], thisNPCOffsetCol * thisNPC.width, thisNPCOffsetRow * thisNPC.spriteHeight, thisNPC.width, thisNPC.height, Math.floor(thisX - hero.isox - thisNPC.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisNPC.centreY + (canvasHeight / 2)), thisNPC.width, thisNPC.spriteHeight]);
+            assetsToDraw.push([findIsoDepth(thisX, thisY), npcImages[i], thisNPCOffsetCol * thisNPC.width, thisNPCOffsetRow * thisNPC.spriteHeight, thisNPC.width, thisNPC.spriteHeight, Math.floor(thisX - hero.isox - thisNPC.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisNPC.centreY + (canvasHeight / 2)), thisNPC.width, thisNPC.spriteHeight]);
         }
 
         assetsToDraw.sort(sortByIsoDepth);
@@ -584,7 +585,7 @@ function draw() {
                 gameContext.drawImage(assetsToDraw[i][1], assetsToDraw[i][2], assetsToDraw[i][3]);
             }
         }
-/*
+
         // draw the map transition if it's needed:
         if (mapTransition == "out") {
             var gradientSize = (1 - (mapTransitionCurrentFrames / mapTransitionMaxFrames));
@@ -600,7 +601,7 @@ function draw() {
             gradient.addColorStop(1, "rgba(0,0,0,0)");
             gameContext.fillStyle = gradient;
             gameContext.fillRect(0, 0, canvasWidth, canvasHeight);
-        }*/
+        }
     }
 }
 

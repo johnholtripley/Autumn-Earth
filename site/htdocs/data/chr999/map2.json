@@ -84,33 +84,7 @@
             { "src": "pendean-overlay.png", "centreX": 182, "centreY": 187 },
             { "src": "pine-tree.png", "centreX": 296, "centreY": 399 }
         ],
-        "npcs": [{
-                "name": "merchant",
-                "src": "merchant.png",
-                "width": 33,
-                "height": 33,
-                "spriteHeight": 77,
-                "centreX": 42,
-                "centreY": 68,
-                "tileX": 1,
-                "tileY": 12,
-                "movement": ["?"],
-                "facing": "e",
-                "walkThroughDoors": false,
-                "speed": 2,
-                "speech": "",
-                "isCollidable": true,
-                "isMoving": true,
-                "animation": {
-                    "walk": {
-                        "length": 10,
-                        "n": 0,
-                        "e": 1,
-                        "s": 2,
-                        "w": 3
-                    }
-                }
-            },
+        "npcs": [
 
             {
                 "name": "butterfly",
