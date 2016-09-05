@@ -25,6 +25,7 @@ var tileW = 48;
 var tileH = tileW/2;
 var tileGraphicsToLoad = 0;
 var npcGraphicsToLoad = 0;
+var itemGraphicsToLoad = 0;
 var canvasWidth = 800;
 var canvasHeight = 600;
 
@@ -42,8 +43,8 @@ var hero = {
     y: 0,
     dx: 0,
     dy: 0,
-    tileX: 6,
-    tileY: 12,
+    tileX: 9,
+    tileY: 1,
     width: 20,
     height: 20,
     feetOffsetX: 40,
@@ -475,6 +476,11 @@ function loadMap() {
         mapFilePath = '/generateDungeonMap.php?playerId=' + characterId + '&originatingMapId=' + currentMap + '&requestedMap=' + newMap + '&dungeonName=' + randomDungeonName + '&connectingDoorX=' + centreDoorX + '&connectingDoorY=' + centreDoorY;
     }
     currentMap = newMap;
+
+
+
+
+
     loadMapJSON(mapFilePath);
 }
 
@@ -507,6 +513,15 @@ function loadMapAssets() {
             src: "/images/game-world/npcs/" + npcGraphicsToLoad[i].src
         });
     }
+
+    itemGraphicsToLoad = thisMapData.items;
+    for (var i = 0; i < itemGraphicsToLoad.length; i++) {
+        imagesToLoad.push({
+            name: "item" + i,
+            src: "/images/game-world/items/" + itemGraphicsToLoad[i].src
+        });
+    }
+
     Loader.preload(imagesToLoad, prepareGame, loadingProgress);
 }
 
@@ -521,16 +536,27 @@ function prepareGame() {
     for (var i = 0; i < npcGraphicsToLoad.length; i++) {
         npcImages[i] = Loader.getImage("npc" + i);
     }
+    itemImages = [];
+    for (var i = 0; i < itemGraphicsToLoad.length; i++) {
+        itemImages[i] = Loader.getImage("item" + i);
+    }
     backgroundImg = Loader.getImage("backgroundImg");
     // initialise and position NPCs:
     for (var i = 0; i < thisMapData.npcs.length; i++) {
         thisMapData.npcs[i].x = getTileCentreCoordX(thisMapData.npcs[i].tileX);
         thisMapData.npcs[i].y = getTileCentreCoordY(thisMapData.npcs[i].tileY);
+
         thisMapData.npcs[i].dx = 0;
         thisMapData.npcs[i].dy = 0;
         // set index to -1 so when it increases, it'll pick up the first (0) element:
         thisMapData.npcs[i].movementIndex = -1;
     }
+    // initialise items:
+    for (var i = 0; i < thisMapData.items.length; i++) {
+        thisMapData.items[i].x = getTileCentreCoordX(thisMapData.items[i].tileX);
+        thisMapData.items[i].y = getTileCentreCoordY(thisMapData.items[i].tileY);
+    }
+
     // determine tile offset to centre the hero in the centre
     hero.x = getTileCentreCoordX(hero.tileX);
     hero.y = getTileCentreCoordY(hero.tileY);
@@ -550,6 +576,10 @@ function removeMapAssets() {
     for (var i = 0; i < npcGraphicsToLoad.length; i++) {
         npcImages[i].src = '';
         npcImages[i] = null;
+    }
+    for (var i = 0; i < itemGraphicsToLoad.length; i++) {
+        itemImages[i].src = '';
+        itemImages[i] = null;
     }
     backgroundImg.src = '';
     backgroundImg = null;
@@ -587,7 +617,7 @@ function isATerrainCollision(x, y) {
                 break;
             case "d":
                 // is a door:
-                
+
                 activeDoorX = x;
                 activeDoorY = y;
                 return 0;
@@ -607,10 +637,30 @@ function startDoorTransition() {
     }
 }
 
+function getHeroAsCloseAsPossibleToObject(objx, objy, objw, objh) {
+
+    switch (hero.facing) {
+        case "n":
+            hero.y = objy + objh / 2 + hero.height / 2 + 1;
+            break;
+        case "s":
+            hero.y = objy - objh / 2 - hero.height / 2 - 1;
+            break;
+        case "w":
+            hero.x = objx - objw / 2 - hero.width / 2 - 1;
+            break;
+        case "e":
+            hero.x = objx + objw / 2 + hero.width / 2 + 1;
+            break;
+
+    }
+
+}
+
 function checkHeroCollisions() {
     activeDoorX = -1;
     activeDoorY = -1;
-  
+
     // tile collisions:
     if (key[2]) {
         // up
@@ -635,7 +685,7 @@ function checkHeroCollisions() {
         }
     }
     if (key[0]) {
-        // left
+        // left/west
         if ((isATerrainCollision(hero.x - hero.width / 2, hero.y + hero.height / 2)) || (isATerrainCollision(hero.x - hero.width / 2, hero.y - hero.height / 2))) {
             var tileCollidedWith = getTileX(hero.x - hero.width / 2);
             var tileRightEdge = (tileCollidedWith + 1) * tileW;
@@ -645,7 +695,7 @@ function checkHeroCollisions() {
         }
     }
     if (key[1]) {
-        //right
+        //right/east
         if ((isATerrainCollision(hero.x + hero.width / 2, hero.y + hero.height / 2)) || (isATerrainCollision(hero.x + hero.width / 2, hero.y - hero.height / 2))) {
             var tileCollidedWith = getTileX(hero.x + hero.width / 2);
             var tileLeftEdge = (tileCollidedWith) * tileW;
@@ -656,17 +706,26 @@ function checkHeroCollisions() {
     }
 
 
-                // check for collisions against NPCs:
-for (var i = 0; i < thisMapData.npcs.length; i++) {
-            thisNPC = thisMapData.npcs[i];
-            if(thisNPC.isCollidable) {
+    // check for collisions against NPCs:
+    for (var i = 0; i < thisMapData.npcs.length; i++) {
+        thisNPC = thisMapData.npcs[i];
+        if (thisNPC.isCollidable) {
             if (isAnObjectCollision(thisNPC.x, thisNPC.y, thisNPC.width, thisNPC.height, hero.x, hero.y, hero.width, hero.height)) {
-              hero.x = oldHeroX;
-              hero.y = oldHeroY;
 
+                getHeroAsCloseAsPossibleToObject(thisNPC.x, thisNPC.y, thisNPC.width, thisNPC.height);
             }
         }
+    }
+    // check for collisions against items:
+    for (var i = 0; i < thisMapData.items.length; i++) {
+        thisItem = thisMapData.items[i];
+
+        if (isAnObjectCollision(thisItem.x, thisItem.y, thisItem.width, thisItem.height, hero.x, hero.y, hero.width, hero.height)) {
+            getHeroAsCloseAsPossibleToObject(thisItem.x, thisItem.y, thisItem.width, thisItem.height);
+
         }
+
+    }
 
 }
 
@@ -693,8 +752,8 @@ function update() {
     var elapsed = (now - lastTime);
     lastTime = now;
     hero.isMoving = false;
-       oldHeroX = hero.x;
-     oldHeroY = hero.y;
+    oldHeroX = hero.x;
+    oldHeroY = hero.y;
     if (mapTransition != "out") {
         // Handle the Input
         if (key[2]) {
@@ -714,11 +773,11 @@ function update() {
             hero.facing = 'w';
             hero.x += hero.speed;
         }
-checkHeroCollisions();
+        checkHeroCollisions();
         hero.tileX = getTileX(hero.x);
         hero.tileY = getTileY(hero.y);
 
-        
+
     } else {
         hero.isMoving = true;
         // continue the hero moving:
@@ -856,6 +915,18 @@ function moveNPCs() {
                     }
                 }
             }
+            // check for collisions against items:
+            for (var i = 0; i < thisMapData.items.length; i++) {
+                thisItem = thisMapData.items[i];
+
+                if (isAnObjectCollision(thisNPC.x, thisNPC.y, thisNPC.width, thisNPC.height, thisItem.x, thisItem.y, thisItem.width, thisItem.height)) {
+                    thisNPC.x = oldNPCx;
+                    thisNPC.y = oldNPCy;
+
+                }
+
+            }
+
 
 
             // find the difference for this movement:
@@ -929,7 +1000,7 @@ function draw() {
             [findIsoDepth(findIsoCoordsX(hero.x, hero.y), findIsoCoordsY(hero.x, hero.y)), heroImg, Math.floor(canvasWidth / 2 - hero.feetOffsetX), Math.floor(canvasHeight / 2 - hero.feetOffsetY)]
         ];
         var map = thisMapData.terrain;
-        var thisGraphicCentreX, thisGraphicCentreY, thisX, thisY, thisNPC;
+        var thisGraphicCentreX, thisGraphicCentreY, thisX, thisY, thisNPC, thisItem;
         var thisNPCOffsetCol = 0;
         var thisNPCOffsetRow = 0;
         hero.isox = findIsoCoordsX(hero.x, hero.y);
@@ -957,9 +1028,17 @@ function draw() {
             thisX = findIsoCoordsX(thisNPC.x, thisNPC.y);
             thisY = findIsoCoordsY(thisNPC.x, thisNPC.y);
 
- //assetsToDraw.push([findIsoDepth(thisX, thisY), npcImages[i], Math.floor(thisX - hero.isox - thisNPC.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisNPC.centreY + (canvasHeight / 2))]);
+            //assetsToDraw.push([findIsoDepth(thisX, thisY), npcImages[i], Math.floor(thisX - hero.isox - thisNPC.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisNPC.centreY + (canvasHeight / 2))]);
 
-            assetsToDraw.push([findIsoDepth(thisX, thisY), npcImages[i], thisNPCOffsetCol * thisNPC.width, thisNPCOffsetRow * thisNPC.spriteHeight, thisNPC.width, thisNPC.spriteHeight, Math.floor(thisX - hero.isox - thisNPC.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisNPC.centreY + (canvasHeight / 2)), thisNPC.width, thisNPC.spriteHeight]);
+            assetsToDraw.push([findIsoDepth(thisX, thisY), npcImages[i], thisNPCOffsetCol * thisNPC.spriteWidth, thisNPCOffsetRow * thisNPC.spriteHeight, thisNPC.spriteWidth, thisNPC.spriteHeight, Math.floor(thisX - hero.isox - thisNPC.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisNPC.centreY + (canvasHeight / 2)), thisNPC.spriteWidth, thisNPC.spriteHeight]);
+        }
+
+
+        for (var i = 0; i < thisMapData.items.length; i++) {
+            thisItem = thisMapData.items[i];
+            thisX = findIsoCoordsX(thisItem.x, thisItem.y);
+            thisY = findIsoCoordsY(thisItem.x, thisItem.y);
+            assetsToDraw.push([findIsoDepth(thisX, thisY), itemImages[i], Math.floor(thisX - hero.isox - thisItem.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisItem.centreY + (canvasHeight / 2))]);
         }
 
         assetsToDraw.sort(sortByIsoDepth);

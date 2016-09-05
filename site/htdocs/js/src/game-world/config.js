@@ -25,6 +25,7 @@ var tileW = 48;
 var tileH = tileW/2;
 var tileGraphicsToLoad = 0;
 var npcGraphicsToLoad = 0;
+var itemGraphicsToLoad = 0;
 var canvasWidth = 800;
 var canvasHeight = 600;
 
@@ -42,8 +43,8 @@ var hero = {
     y: 0,
     dx: 0,
     dy: 0,
-    tileX: 6,
-    tileY: 12,
+    tileX: 9,
+    tileY: 1,
     width: 20,
     height: 20,
     feetOffsetX: 40,

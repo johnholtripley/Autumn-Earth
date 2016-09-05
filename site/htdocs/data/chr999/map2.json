@@ -91,13 +91,14 @@
                 "src": "orange-butterfly.png",
                 "width": 15,
                 "height": 15,
+                "spriteWidth": 15,
                 "spriteHeight": 48,
                 "centreX": 7,
                 "centreY": 72,
-                "tileX": 21,
-                "tileY": 21,
+                "tileX": 11,
+                "tileY": 7,
                 "movement": ["?"],
-                "facing": "s",
+                "facing": "w",
                 "walkThroughDoors": false,
                 "speed": 2,
                 "speech": "",
@@ -112,12 +113,57 @@
                         "w": 3
                     }
                 }
+            }, {
+                "name": "merchant",
+                "src": "merchant.png",
+                "width": 30,
+                "height": 30,
+                "spriteWidth": 55,
+                "spriteHeight": 77,
+                "centreX": 40,
+                "centreY": 69,
+                "tileX": 14,
+                "tileY": 3,
+                "movement": ["-"],
+                "facing": "s",
+                "walkThroughDoors": false,
+                "speed": 2,
+                "speech": "",
+                "isCollidable": true,
+                "isMoving": false,
+                "animation": {
+                    "walk": {
+                        "length": 1,
+                        "n": 0,
+                        "e": 0,
+                        "s": 0,
+                        "w": 0
+                    }
+                }
             }
 
         ],
         "doors": {
 
         },
-        "items": []
+        "items": [{
+                "src": "barrel.png",
+                "tileX": 10,
+                "tileY": 1,
+                "width": 24,
+                "height": 24,
+                "centreX": 25,
+                "centreY": 31
+            }, {
+                "src": "barrel.png",
+                "tileX": 7,
+                "tileY": 1,
+                "width": 24,
+                "height": 24,
+                "centreX": 25,
+                "centreY": 31
+            }
+
+        ]
     }
 }
