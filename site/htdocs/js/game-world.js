@@ -414,20 +414,21 @@ function init() {
     Input.init();
     // show loading screen while getting assets:
     gameLoop();
-    
 
+   getHeroGameState();
+  
+}
 
-    getJSON("/data/chr"+characterId+"/gameState.json", function(data) {
+function getHeroGameState() {
+     getJSON("/data/chr"+characterId+"/gameState.json", function(data) {
       //  thisMapData = data.map;
       hero.tileX = data.tileX;
       hero.tileY = data.tileY;
         loadCoreAssets();
     }, function(status) {
-      // error
+      // error - try again:
+      getHeroGameState();
     });
-
-
-    
 }
 
 function loadCoreAssets() {
