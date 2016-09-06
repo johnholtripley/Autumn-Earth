@@ -28,6 +28,8 @@ function getHeroGameState() {
       //  thisMapData = data.map;
       hero.tileX = data.tileX;
       hero.tileY = data.tileY;
+      currentMap = data.currentMap;
+      newMap = currentMap;
         loadCoreAssets();
     }, function(status) {
       // error - try again:

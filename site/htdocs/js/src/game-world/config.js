@@ -14,8 +14,8 @@ var activeDoorX = -1;
 var activeDoorY = -1;
 
 var characterId = 999;
-var currentMap = 2;
-var newMap = currentMap;
+var currentMap = 0;
+var newMap = 0;
 var thisMapData = '';
 var mapTilesX = 0;
 var mapTilesY = 0;
