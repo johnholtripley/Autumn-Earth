@@ -60,11 +60,13 @@ function sortByIsoDepth(a, b) {
     return 0;
 }
 
+
+/*
 function findIsoDepth(x, y) {
  return y;
  //   return x*tileW + y*(mapTilesX+1)*tileW;
 }
-
+*/
 
 
 
