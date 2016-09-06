@@ -43,8 +43,7 @@ var hero = {
     y: 0,
     dx: 0,
     dy: 0,
-    tileX: 9,
-    tileY: 1,
+
     width: 20,
     height: 20,
     feetOffsetX: 40,

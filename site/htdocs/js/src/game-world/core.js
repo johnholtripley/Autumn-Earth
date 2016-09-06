@@ -18,7 +18,20 @@ function init() {
     Input.init();
     // show loading screen while getting assets:
     gameLoop();
-    loadCoreAssets();
+    
+
+
+    getJSON("/data/chr"+characterId+"/gameState.json", function(data) {
+      //  thisMapData = data.map;
+      hero.tileX = data.tileX;
+      hero.tileY = data.tileY;
+        loadCoreAssets();
+    }, function(status) {
+      // error
+    });
+
+
+    
 }
 
 function loadCoreAssets() {

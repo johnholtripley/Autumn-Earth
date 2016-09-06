@@ -43,8 +43,7 @@ var hero = {
     y: 0,
     dx: 0,
     dy: 0,
-    tileX: 9,
-    tileY: 1,
+
     width: 20,
     height: 20,
     feetOffsetX: 40,
@@ -415,7 +414,20 @@ function init() {
     Input.init();
     // show loading screen while getting assets:
     gameLoop();
-    loadCoreAssets();
+    
+
+
+    getJSON("/data/chr"+characterId+"/gameState.json", function(data) {
+      //  thisMapData = data.map;
+      hero.tileX = data.tileX;
+      hero.tileY = data.tileY;
+        loadCoreAssets();
+    }, function(status) {
+      // error
+    });
+
+
+    
 }
 
 function loadCoreAssets() {

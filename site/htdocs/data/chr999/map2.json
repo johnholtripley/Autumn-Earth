@@ -114,14 +114,14 @@
                     }
                 }
             }, {
-                "name": "merchant",
-                "src": "merchant.png",
-                "width": 30,
-                "height": 30,
-                "spriteWidth": 55,
-                "spriteHeight": 77,
-                "centreX": 40,
-                "centreY": 69,
+                "name": "hen",
+                "src": "white-hen.png",
+                "width": 20,
+                "height": 20,
+                "spriteWidth": 31,
+                "spriteHeight": 29,
+                "centreX": 21,
+                "centreY": 24,
                 "tileX": 14,
                 "tileY": 3,
                 "movement": ["-"],
@@ -157,7 +157,7 @@
             }, {
                 "src": "barrel.png",
                 "tileX": 7,
-                "tileY": 1,
+                "tileY": 9,
                 "width": 24,
                 "height": 24,
                 "centreX": 25,
