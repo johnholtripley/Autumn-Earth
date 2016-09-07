@@ -7,4 +7,11 @@ $database="autumnearth";
 $dbpk ="AsOiD";
 $resultsperpage = 10;
 $additionalAssets = "";
+
+
+$liveHost="localhost";
+$liveUser="autumnearth.com";
+$livePassword="2Z4vVA1i";
+
+
 ?>

@@ -6,18 +6,15 @@
 require_once $_SERVER['DOCUMENT_ROOT'].'/includes/third-party/twitterOAuth/twitteroauth-0.6.2/autoload.php';
 use Abraham\TwitterOAuth\TwitterOAuth;
 
-$isLive = false;
-if($_SERVER['SERVER_NAME'] == "autumnearth.com") {
-	$isLive = true;
-}
 
-if(!$isLive) {
+
+//if(!$isLive) {
 include($_SERVER['DOCUMENT_ROOT']."/includes/signalnoise.php");
 include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
-}
+//}
 
 function sendToTwitter() {
-	global $latinName, $startingText, $plantURL, $commonNameString, $commonNamesJoined, $isAquatic, $isNight, $storedSeed, $isLive;
+	global $latinName, $startingText, $plantURL, $commonNameString, $commonNamesJoined, $isAquatic, $isNight, $storedSeed;
 
 
 
@@ -83,7 +80,7 @@ echo "<p>Tweeted content: ".$textString."</p>";
 
 
 
-if($isLive) {
+//if($isLive) {
 	$parameters = [
 	    'status' => $textString,
 	    'media_ids' => $media->media_id_string
@@ -96,19 +93,19 @@ if($isLive) {
 	    echo $connection->getLastHttpCode();
 	    // email the error? ##########
 	}
-}
+//}
 
 
 
 
 
 
-if(!$isLive) {
+//if(!$isLive) {
 $query = "INSERT INTO tblplants (latinName,commonNames,commonNamesJoined,timeCreated,plantDesc,plantUrl,tweetedContent,isAquatic,isNight,plantSeed)
 VALUES ('" . $latinName . "','" . $commonNameString . "','" . $commonNamesJoined . "',NOW(),'".$startingText."','".$plantURL."','".$textString."','".$isAquatic."','".$isNight."','".$storedSeed."')";
 
 $result = mysql_query($query) or die ("couldn't execute tblplant query");
-}
+//}
 
 
 
