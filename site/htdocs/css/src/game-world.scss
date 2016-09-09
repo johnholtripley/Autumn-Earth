@@ -71,5 +71,15 @@ float: left;
 
 // inventory panels, shops panels etc:
 #inventoryPanels {
-
+position:absolute;
+ul {
+    max-width: 300px;
+    li {
+        width: 25%;
+        height: 80px;
+        display: inline-block;
+        background: #cecece;
+        border: 4px solid #fff;
+    }
+}
 }
