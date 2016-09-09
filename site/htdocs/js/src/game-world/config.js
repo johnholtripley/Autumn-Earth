@@ -35,6 +35,8 @@ var previousZoneName = "";
 
 var currentActiveInventoryItems = [];
 
+var inventoryInterfaceIsBuilt = false;
+
 // key bindings
 var key = [0, 0, 0, 0, 0];
 

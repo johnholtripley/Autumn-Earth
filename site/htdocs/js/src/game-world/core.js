@@ -98,11 +98,6 @@ function loadMap() {
         mapFilePath = '/generateDungeonMap.php?playerId=' + characterId + '&originatingMapId=' + currentMap + '&requestedMap=' + newMap + '&dungeonName=' + randomDungeonName + '&connectingDoorX=' + centreDoorX + '&connectingDoorY=' + centreDoorY;
     }
     currentMap = newMap;
-
-
-
-
-
     loadMapJSON(mapFilePath);
 }
 
@@ -170,17 +165,21 @@ function findInventoryItemData() {
 
 function loadInventoryItemData(itemIdsToLoad) {
     getJSON("/game-world/getInventoryItems.php?whichIds=" + itemIdsToLoad, function(data) {
-currentActiveInventoryItems = data;
-//console.log(currentActiveInventoryItems);
-console.log(currentActiveInventoryItems["5"].shortname);
-console.log(currentActiveInventoryItems["9"].shortname);
-
+        currentActiveInventoryItems = data;
+        //console.log(currentActiveInventoryItems);
+        console.log(currentActiveInventoryItems["5"].shortname);
+        console.log(currentActiveInventoryItems["9"].shortname);
+        if (!inventoryInterfaceIsBuilt) {
+            UI.buildInventoryInterface();
+        }
         loadMapAssets();
     }, function(status) {
         // try again:
         loadInventoryItemData(itemIdsToLoad);
     });
 }
+
+
 
 
 

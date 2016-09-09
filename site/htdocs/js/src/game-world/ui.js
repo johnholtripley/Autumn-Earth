@@ -11,5 +11,9 @@ var UI = {
         // -> triggering reflow:
         void displayZoneName.offsetWidth;
         displayZoneName.classList.add("active");
+    },
+
+    buildInventoryInterface: function() {
+        inventoryInterfaceIsBuilt = true;
     }
 }
