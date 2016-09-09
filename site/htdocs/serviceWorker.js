@@ -67,18 +67,21 @@
             });
     };
 
-    self.addEventListener('install', event => {
+    self.addEventListener('install', function(event) {
         event.waitUntil(updateStaticCache()
-            .then(() => self.skipWaiting())
+            .then(function() {
+                return self.skipWaiting();
+            })
         );
     });
-
-    self.addEventListener('activate', event => {
+ 
+    self.addEventListener('activate', function(event) {
         event.waitUntil(clearOldCaches()
-            .then(() => self.clients.claim())
+            .then(function() {
+                return self.clients.claim();
+            })
         );
     });
-
 
 
     self.addEventListener('message', function(event) {

@@ -174,8 +174,10 @@ $maxWidthTrigger: $maxWidth*(100%+$gutter*2);
 
 }
 
-.equalHeights > .column > div {
+.equalHeights > .column > div, .equalHeights > .columns > div {
     width: 100%;
+    // allow word-wrap to work - https://bugzilla.mozilla.org/show_bug.cgi?id=1136818
+    min-width: 0;
 }
 
 
