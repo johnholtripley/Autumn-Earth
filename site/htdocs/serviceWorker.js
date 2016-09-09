@@ -5,7 +5,7 @@
 (function() {
 
 // the version number is updated in the Gulp cacheBusting task: 
-    var version = 'v::150::';
+    var version = 'v::152::';
     var staticCacheName = version + 'static';
     var pagesCacheName = 'pages';
     var imagesCacheName = version + 'images';
@@ -67,21 +67,19 @@
             });
     };
 
-    self.addEventListener('install', function(event) {
+    self.addEventListener('install', event => {
         event.waitUntil(updateStaticCache()
-            .then(function() {
-                return self.skipWaiting();
-            })
+            .then(() => self.skipWaiting())
         );
     });
 
-    self.addEventListener('activate', function(event) {
+    self.addEventListener('activate', event => {
         event.waitUntil(clearOldCaches()
-            .then(function() {
-                return self.clients.claim();
-            })
+            .then(() => self.clients.claim())
         );
     });
+
+
 
     self.addEventListener('message', function(event) {
         if (event.data.command == 'trimCaches') {

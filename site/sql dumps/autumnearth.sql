@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 07, 2016 at 02:11 PM
+-- Generation Time: Sep 09, 2016 at 05:51 PM
 -- Server version: 5.6.24
 -- PHP Version: 5.6.8
 
@@ -489,33 +489,34 @@ CREATE TABLE IF NOT EXISTS `tblinventoryitems` (
   `dyeable` tinyint(1) NOT NULL,
   `level` int(11) NOT NULL,
   `prerequisites` varchar(255) NOT NULL,
-  `group` int(11) NOT NULL,
+  `group` varchar(10) NOT NULL,
   `inscribable` tinyint(1) NOT NULL,
-  `colour` int(128) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=42 DEFAULT CHARSET=latin1;
+  `colour` int(128) NOT NULL,
+  `hasInherentColour` tinyint(1) NOT NULL DEFAULT '0'
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblinventoryitems`
 --
 
-INSERT INTO `tblinventoryitems` (`itemID`, `shortname`, `description`, `priceCode`, `centreX`, `centreY`, `worldSrc`, `action`, `actionValue`, `dyeable`, `level`, `prerequisites`, `group`, `inscribable`, `colour`) VALUES
-(1, 'Wild Flax', '-', '1', '20.0', '24.0', 'wild-flax.png', '', 0, 0, 0, '0', 0, 0, 0),
-(2, 'Wild Madder', 'A flower used for its red pigment.', '1', '20.0', '24.0', 'wild-madder.png', '', 0, 0, 0, '0', 0, 0, 1),
-(3, 'Safflower', '-', '1', '20.0', '24.0', 'safflower.png', '', 0, 0, 0, '0', 0, 0, 2),
-(4, 'Woad', '-', '1', '20.0', '24.0', 'woad.png', '', 0, 0, 0, '0', 0, 0, 4),
-(5, 'Whortleberry', '-', '1', '20.0', '24.0', 'whortleberry.png', '', 0, 0, 0, '0', 0, 0, 7),
-(6, 'Alder Bark', '-', '1', '20.0', '24.0', 'alder-bark.png', '', 0, 0, 0, '0', 0, 0, 32),
-(7, 'Archil', '-', '1', '20.0', '24.0', 'archil.png', '', 0, 0, 0, '0', 0, 0, 5),
-(8, 'Copper Mordant', 'A standard mordant.', '1', '20.0', '24.0', 'copper-mordant.png', '', 0, 0, 0, '0', 0, 0, 0),
-(9, 'Iron Mordant', 'A mordant for making darker dyes.', '1', '20.0', '24.0', 'iron-mordant.png', '', 0, 0, 0, '0', 0, 0, 32),
-(10, 'Alum Mordant', 'A mordant used for lighter dyes.', '1', '20.0', '24.0', 'alum-mordant.png', '', 0, 0, 0, '0', 0, 0, 16),
-(11, 'Small Glass Bottle', '', '1', '20.0', '24.0', 'small-glass-bottle.png', '', 0, 0, 0, '0', 0, 0, 0),
-(12, 'Dye', '', '1', '20.0', '24.0', '[colour]-dye.png', '', 0, 0, 0, '0', 0, 0, 0),
-(13, 'Tailor''s tools **rename**', '', '1', '20.0', '24.0', 'tailors-tools.png', 'tailor', 0, 0, 0, '0', 0, 0, 0),
-(14, 'Dyer''s Cauldron **rename ??? **', '', '1', '20.0', '24.0', 'dyers-cauldron.png', 'dyer', 0, 0, 0, '0', 0, 0, 0),
-(15, 'Linen', '', '1', '20.0', '24.0', 'linen.png', '', 0, 1, 0, '0', 0, 0, 0),
-(16, 'Wool', '', '1', '20.0', '24.0', 'wool.png', '', 0, 1, 0, '0', 0, 0, 0),
-(17, 'Yarn', '', '1', '20.0', '24.0', 'yarn.png', '', 0, 1, 0, '0', 0, 0, 0);
+INSERT INTO `tblinventoryitems` (`itemID`, `shortname`, `description`, `priceCode`, `centreX`, `centreY`, `worldSrc`, `action`, `actionValue`, `dyeable`, `level`, `prerequisites`, `group`, `inscribable`, `colour`, `hasInherentColour`) VALUES
+(1, 'Wild Flax', '-', '1', '20.0', '24.0', 'wild-flax.png', '', 0, 0, 0, '0', '0', 0, 0, 0),
+(2, 'Wild Madder', 'A flower used for its red pigment.', '1', '20.0', '24.0', 'wild-madder.png', '', 0, 0, 0, '0', 'pgmt', 0, 1, 1),
+(3, 'Safflower', '-', '1', '20.0', '24.0', 'safflower.png', '', 0, 0, 0, '0', 'pgmt', 0, 2, 1),
+(4, 'Woad', '-', '1', '20.0', '24.0', 'woad.png', '', 0, 0, 0, '0', 'pgmt', 0, 4, 1),
+(5, 'Whortleberry', '-', '1', '20.0', '24.0', 'whortleberry.png', '', 0, 0, 0, '0', 'pgmt', 0, 7, 1),
+(6, 'Alder Bark', '-', '1', '20.0', '24.0', 'alder-bark.png', '', 0, 0, 0, '0', 'pgmt', 0, 16, 1),
+(7, 'Archil', '-', '1', '20.0', '24.0', 'archil.png', '', 0, 0, 0, '0', 'pgmt', 0, 5, 1),
+(8, 'Copper Mordant', 'A standard mordant.', '1', '20.0', '24.0', 'copper-mordant.png', '', 0, 0, 0, '0', 'mrdt', 0, 0, 0),
+(9, 'Iron Mordant', 'A mordant for making darker dyes.', '1', '20.0', '24.0', 'iron-mordant.png', '', 0, 0, 0, '0', 'mrdt', 0, 16, 1),
+(10, 'Alum Mordant', 'A mordant used for brighter dyes.', '1', '20.0', '24.0', 'alum-mordant.png', '', 0, 0, 0, '0', 'mrdt', 0, 8, 1),
+(11, 'Small Glass Bottle', '', '1', '20.0', '24.0', 'small-glass-bottle.png', '', 0, 0, 0, '0', '0', 0, 0, 0),
+(12, 'Dye', '', '1', '20.0', '24.0', 'dye-[colour].png', '', 0, 0, 0, '0', '0', 0, 0, 0),
+(13, 'Dyer''s Cauldron', '', '1', '20.0', '24.0', 'dyers-cauldron.png', 'dyer', 0, 0, 0, '0', '0', 0, 0, 0),
+(14, 'Linen', '', '1', '20.0', '24.0', 'linen.png', '', 0, 1, 0, '0', '0', 0, 0, 0),
+(15, 'Wool', '', '1', '20.0', '24.0', 'wool.png', '', 0, 1, 0, '0', '0', 0, 0, 0),
+(16, 'Yarn', '', '1', '20.0', '24.0', 'yarn.png', '', 0, 1, 0, '0', '0', 0, 0, 0),
+(17, 'Small Backpack', 'A 12 slot bag', '2', '20.0', '24.0', 'small-backpack.png', 'bag', 12, 1, 0, '0', '0', 0, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -1636,7 +1637,7 @@ ALTER TABLE `tblguilds`
 -- AUTO_INCREMENT for table `tblinventoryitems`
 --
 ALTER TABLE `tblinventoryitems`
-  MODIFY `itemID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=42;
+  MODIFY `itemID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=18;
 --
 -- AUTO_INCREMENT for table `tbllocations`
 --
