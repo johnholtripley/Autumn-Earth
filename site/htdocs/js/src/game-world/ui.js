@@ -33,6 +33,7 @@ var UI = {
       
 
 inventoryMarkup += '<p>'+currentActiveInventoryItems[(hero.inventory[thisSlotsID].type)].shortname+'</p>';
+inventoryMarkup += '<img src="/images/game-world/inventory-items/'+hero.inventory[thisSlotsID].type+'.png">';
                 }
                 // add item there
                 inventoryMarkup += '</li>';
