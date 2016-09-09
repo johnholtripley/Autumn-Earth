@@ -2,7 +2,45 @@
     "currentMap": 2,
     "tileX": 9,
     "tileY": 6,
-    "inventory": [
-        [0, 0, 1, 0, 2]
-    ]
+    "bags": [{
+            "type": 17,
+            "quality": 100,
+            "durability": 100,
+            "currentWear": 0,
+            "effectiveness": 100,
+            "colour": 1,
+            "enchanted": 0,
+            "hallmark": 0,
+            "inscription": ""
+        }
+
+    ],
+    "inventory": [{
+        "0-1": {
+            "type": 5,
+            "quantity": 4,
+            "quality": 100,
+            "durability": 100,
+            "currentWear": 0,
+            "effectiveness": 100,
+            "wrapped": 0,
+            "colour": 7,
+            "enchanted": 0,
+            "hallmark": 0,
+            "inscription": ""
+        },
+        "0-4": {
+            "type": 9,
+            "quantity": 6,
+            "quality": 100,
+            "durability": 100,
+            "currentWear": 0,
+            "effectiveness": 100,
+            "wrapped": 0,
+            "colour": 16,
+            "enchanted": 0,
+            "hallmark": 0,
+            "inscription": ""
+        }
+    }]
 }

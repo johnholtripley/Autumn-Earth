@@ -9,7 +9,7 @@ $resultsperpage = 10;
 $additionalAssets = "";
 
 
-$liveHost="localhost";
+$liveHost="185.116.212.163";
 $liveUser="autumnearth.com";
 $livePassword="2Z4vVA1i";
 
