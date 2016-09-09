@@ -174,9 +174,8 @@ function findInventoryItemData() {
 function loadInventoryItemData(itemIdsToLoad) {
     getJSON("/game-world/getInventoryItems.php?whichIds=" + itemIdsToLoad, function(data) {
         currentActiveInventoryItems = data;
-        //console.log(currentActiveInventoryItems);
-        console.log(currentActiveInventoryItems["5"].shortname);
-        console.log(currentActiveInventoryItems["9"].shortname);
+       
+ 
         if (!inventoryInterfaceIsBuilt) {
             UI.buildInventoryInterface();
         }
