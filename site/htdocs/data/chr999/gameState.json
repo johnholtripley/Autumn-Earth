@@ -15,7 +15,7 @@
         }
 
     ],
-    "inventory": [{
+    "inventory": {
         "0-1": {
             "type": 5,
             "quantity": 4,
@@ -42,5 +42,5 @@
             "hallmark": 0,
             "inscription": ""
         }
-    }]
+    }
 }

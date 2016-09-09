@@ -21,6 +21,7 @@
   <img src="/images/game-world/no-canvas.jpg" alt="Sorry">
 </canvas>
 <div id="displayZoneName"></div>
+<div id="itemPanels"></div>
 </div>
 
 <script src="/js/game-world.<?php echo $cacheVersion; ?>.js"></script>

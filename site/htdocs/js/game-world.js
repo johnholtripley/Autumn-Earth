@@ -100,7 +100,7 @@ var randomDungeonName = "";
 var randomDungeons = ["","the-barrow-mines"];
 var previousZoneName = "";
 
-
+var currentActiveInventoryItems = [];
 
 // key bindings
 var key = [0, 0, 0, 0, 0];
@@ -495,6 +495,8 @@ function getHeroGameState() {
       hero.tileY = data.tileY;
       currentMap = data.currentMap;
       newMap = currentMap;
+      hero.bags = data.bags;
+      hero.inventory = data.inventory;
         loadCoreAssets();
     }, function(status) {
       // error - try again:
@@ -525,7 +527,8 @@ function loadMapJSON(mapFilePath) {
         if (previousZoneName != thisMapData.zoneName) {
             UI.showZoneName(thisMapData.zoneName);
         }
-        loadMapAssets();
+        findInventoryItemData();
+        
     }, function(status) {
         // alert('Error loading data for map #' + currentMap+" --- "+mapFilePath);
         // try again:
@@ -608,6 +611,42 @@ function loadMapAssets() {
 
     Loader.preload(imagesToLoad, prepareGame, loadingProgress);
 }
+
+
+
+
+
+function findInventoryItemData() {
+    var itemIdsToGet = [];
+    // find out all items in the hero's inventory, placed on this map or available in any shops:
+    for (var key in hero.inventory) {
+        if (hero.inventory.hasOwnProperty(key)) {
+            //console.log(key + " -> " + hero.inventory[key].type);
+            // make sure it's not already added:
+            if (itemIdsToGet.indexOf(hero.inventory[key].type) == -1) {
+                itemIdsToGet.push(hero.inventory[key].type);
+            }
+        }
+    }
+    loadInventoryItemData(itemIdsToGet.join("|"));
+}
+
+
+
+function loadInventoryItemData(itemIdsToLoad) {
+    getJSON("/game-world/getInventoryItems.php?whichIds=" + itemIdsToLoad, function(data) {
+currentActiveInventoryItems = data;
+//console.log(currentActiveInventoryItems);
+console.log(currentActiveInventoryItems["5"].shortname);
+console.log(currentActiveInventoryItems["9"].shortname);
+
+        loadMapAssets();
+    }, function(status) {
+        // try again:
+        loadInventoryItemData(itemIdsToLoad);
+    });
+}
+
 
 
 function prepareGame() {

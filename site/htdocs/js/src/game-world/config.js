@@ -33,7 +33,7 @@ var randomDungeonName = "";
 var randomDungeons = ["","the-barrow-mines"];
 var previousZoneName = "";
 
-
+var currentActiveInventoryItems = [];
 
 // key bindings
 var key = [0, 0, 0, 0, 0];
