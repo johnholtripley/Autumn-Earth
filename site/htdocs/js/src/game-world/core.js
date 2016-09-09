@@ -148,7 +148,7 @@ function loadMapAssets() {
 
 function findInventoryItemData() {
     var itemIdsToGet = [];
-    // find out all items in the hero's inventory, placed on this map or available in any shops:
+    // find out all items in the hero's inventory:
     for (var key in hero.inventory) {
         if (hero.inventory.hasOwnProperty(key)) {
             //console.log(key + " -> " + hero.inventory[key].type);
@@ -158,6 +158,14 @@ function findInventoryItemData() {
             }
         }
     }
+    // find bag items:
+    for (var i=0;i<hero.bags.length;i++) {
+           itemIdsToGet.push(hero.bags[i].type);
+       }
+    // find items placed on this map:
+    // ####
+    // find item available in any shops:
+    // ####
     loadInventoryItemData(itemIdsToGet.join("|"));
 }
 

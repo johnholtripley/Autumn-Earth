@@ -465,6 +465,17 @@ var UI = {
     },
 
     buildInventoryInterface: function() {
+        console.log("building inventory panels...");
+        // loop through number of bags
+        for (var i = 0; i < hero.bags.length; i++) {
+            //console.log(hero.bags[i].type);
+            var thisBagNumberOfSlots = currentActiveInventoryItems[hero.bags[i].type].actionValue;
+            // loop through slots for each bag:
+            for (var j = 0; j < thisBagNumberOfSlots; j++) {
+                // check if that key exists in inventory
+                // add item there
+            }
+        }
         inventoryInterfaceIsBuilt = true;
     }
 }
@@ -619,7 +630,7 @@ function loadMapAssets() {
 
 function findInventoryItemData() {
     var itemIdsToGet = [];
-    // find out all items in the hero's inventory, placed on this map or available in any shops:
+    // find out all items in the hero's inventory:
     for (var key in hero.inventory) {
         if (hero.inventory.hasOwnProperty(key)) {
             //console.log(key + " -> " + hero.inventory[key].type);
@@ -629,6 +640,14 @@ function findInventoryItemData() {
             }
         }
     }
+    // find bag items:
+    for (var i=0;i<hero.bags.length;i++) {
+           itemIdsToGet.push(hero.bags[i].type);
+       }
+    // find items placed on this map:
+    // ####
+    // find item available in any shops:
+    // ####
     loadInventoryItemData(itemIdsToGet.join("|"));
 }
 
