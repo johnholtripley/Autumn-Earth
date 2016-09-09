@@ -32,8 +32,11 @@ var UI = {
      
       
 
-inventoryMarkup += '<p>'+currentActiveInventoryItems[(hero.inventory[thisSlotsID].type)].shortname+'</p>';
+//inventoryMarkup += '<p>'+currentActiveInventoryItems[(hero.inventory[thisSlotsID].type)].shortname+'</p>';
 inventoryMarkup += '<img src="/images/game-world/inventory-items/'+hero.inventory[thisSlotsID].type+'.png">';
+inventoryMarkup += '<span class="qty">'+hero.inventory[thisSlotsID].quantity+'</span>';
+                } else {
+                    inventoryMarkup += '<img src="/images/game-world/inventory-items/blank.png">';
                 }
                 // add item there
                 inventoryMarkup += '</li>';
