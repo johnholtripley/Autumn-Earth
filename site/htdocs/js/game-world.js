@@ -636,7 +636,7 @@ function loadMapAssets() {
     for (var i = 0; i < itemGraphicsToLoad.length; i++) {
         imagesToLoad.push({
             name: "item" + i,
-            src: "/images/game-world/items/" + itemGraphicsToLoad[i].src
+            src: "/images/game-world/items/" + currentActiveInventoryItems[itemGraphicsToLoad[i].type].worldSrc
         });
     }
 
@@ -664,7 +664,13 @@ function findInventoryItemData() {
            itemIdsToGet.push(hero.bags[i].type);
        }
     // find items placed on this map:
-    // ####
+    for (var i = 0; i < thisMapData.items.length; i++) {
+itemIdsToGet.push(thisMapData.items[i].type);
+    }
+
+
+
+
     // find item available in any shops:
     // ####
     loadInventoryItemData(itemIdsToGet.join("|"));
@@ -720,6 +726,12 @@ function prepareGame() {
     for (var i = 0; i < thisMapData.items.length; i++) {
         thisMapData.items[i].x = getTileCentreCoordX(thisMapData.items[i].tileX);
         thisMapData.items[i].y = getTileCentreCoordY(thisMapData.items[i].tileY);
+
+thisMapData.items[i].width = currentActiveInventoryItems[thisMapData.items[i].type].width;
+thisMapData.items[i].height = currentActiveInventoryItems[thisMapData.items[i].type].height;
+
+thisMapData.items[i].centreX = currentActiveInventoryItems[thisMapData.items[i].type].centreX;
+thisMapData.items[i].centreY = currentActiveInventoryItems[thisMapData.items[i].type].centreY;
     }
 
     // determine tile offset to centre the hero in the centre
