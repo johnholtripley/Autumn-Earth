@@ -68,6 +68,19 @@ function findIsoDepth(x, y) {
 }
 */
 
+function isAnObjectCollision(obj1x, obj1y, obj1w, obj1h, obj2x, obj2y, obj2w, obj2h) {
+    if (obj1x + obj1w / 2 > obj2x - obj2w / 2) {
+        if (obj1x - obj1w / 2 < obj2x + obj2w / 2) {
+            if (obj1y - obj1h / 2 < obj2y + obj2h / 2) {
+                if (obj1y + obj1h / 2 > obj2y - obj2h / 2) {
+                    return true;
+                }
+            }
+        }
+    }
+    return false;
+}
+
 
 
 var facingsPossible = ["n","e","s","w"];

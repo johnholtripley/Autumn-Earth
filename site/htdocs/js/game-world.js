@@ -206,6 +206,19 @@ function findIsoDepth(x, y) {
 }
 */
 
+function isAnObjectCollision(obj1x, obj1y, obj1w, obj1h, obj2x, obj2y, obj2w, obj2h) {
+    if (obj1x + obj1w / 2 > obj2x - obj2w / 2) {
+        if (obj1x - obj1w / 2 < obj2x + obj2w / 2) {
+            if (obj1y - obj1h / 2 < obj2y + obj2h / 2) {
+                if (obj1y + obj1h / 2 > obj2y - obj2h / 2) {
+                    return true;
+                }
+            }
+        }
+    }
+    return false;
+}
+
 
 
 var facingsPossible = ["n","e","s","w"];
@@ -564,23 +577,23 @@ function init() {
     // show loading screen while getting assets:
     gameLoop();
 
-   getHeroGameState();
-  
+    getHeroGameState();
+
 }
 
 function getHeroGameState() {
-     getJSON("/data/chr"+characterId+"/gameState.json", function(data) {
-      //  thisMapData = data.map;
-      hero.tileX = data.tileX;
-      hero.tileY = data.tileY;
-      currentMap = data.currentMap;
-      newMap = currentMap;
-      hero.bags = data.bags;
-      hero.inventory = data.inventory;
+    getJSON("/data/chr" + characterId + "/gameState.json", function(data) {
+        //  thisMapData = data.map;
+        hero.tileX = data.tileX;
+        hero.tileY = data.tileY;
+        currentMap = data.currentMap;
+        newMap = currentMap;
+        hero.bags = data.bags;
+        hero.inventory = data.inventory;
         loadCoreAssets();
     }, function(status) {
-      // error - try again:
-      getHeroGameState();
+        // error - try again:
+        getHeroGameState();
     });
 }
 
@@ -608,7 +621,7 @@ function loadMapJSON(mapFilePath) {
             UI.showZoneName(thisMapData.zoneName);
         }
         findInventoryItemData();
-        
+
     }, function(status) {
         // alert('Error loading data for map #' + currentMap+" --- "+mapFilePath);
         // try again:
@@ -704,12 +717,12 @@ function findInventoryItemData() {
         }
     }
     // find bag items:
-    for (var i=0;i<hero.bags.length;i++) {
-           itemIdsToGet.push(hero.bags[i].type);
-       }
+    for (var i = 0; i < hero.bags.length; i++) {
+        itemIdsToGet.push(hero.bags[i].type);
+    }
     // find items placed on this map:
     for (var i = 0; i < thisMapData.items.length; i++) {
-itemIdsToGet.push(thisMapData.items[i].type);
+        itemIdsToGet.push(thisMapData.items[i].type);
     }
 
 
@@ -725,8 +738,8 @@ itemIdsToGet.push(thisMapData.items[i].type);
 function loadInventoryItemData(itemIdsToLoad) {
     getJSON("/game-world/getInventoryItems.php?whichIds=" + itemIdsToLoad, function(data) {
         currentActiveInventoryItems = data;
-       
- 
+
+
         if (!inventoryInterfaceIsBuilt) {
             UI.buildInventoryInterface();
         }
@@ -771,11 +784,11 @@ function prepareGame() {
         thisMapData.items[i].x = getTileCentreCoordX(thisMapData.items[i].tileX);
         thisMapData.items[i].y = getTileCentreCoordY(thisMapData.items[i].tileY);
 
-thisMapData.items[i].width = currentActiveInventoryItems[thisMapData.items[i].type].width;
-thisMapData.items[i].height = currentActiveInventoryItems[thisMapData.items[i].type].height;
+        thisMapData.items[i].width = currentActiveInventoryItems[thisMapData.items[i].type].width;
+        thisMapData.items[i].height = currentActiveInventoryItems[thisMapData.items[i].type].height;
 
-thisMapData.items[i].centreX = currentActiveInventoryItems[thisMapData.items[i].type].centreX;
-thisMapData.items[i].centreY = currentActiveInventoryItems[thisMapData.items[i].type].centreY;
+        thisMapData.items[i].centreX = currentActiveInventoryItems[thisMapData.items[i].type].centreX;
+        thisMapData.items[i].centreY = currentActiveInventoryItems[thisMapData.items[i].type].centreY;
     }
 
     // determine tile offset to centre the hero in the centre
@@ -868,10 +881,10 @@ function getHeroAsCloseAsPossibleToObject(objx, objy, objw, objh) {
             hero.y = objy - objh / 2 - hero.height / 2 - 1;
             break;
         case "w":
-            hero.x = objx - objw / 2 - hero.width / 2 - 1;
+            hero.x = objx + objw / 2 + hero.width / 2 + 1;
             break;
         case "e":
-            hero.x = objx + objw / 2 + hero.width / 2 + 1;
+            hero.x = objx - objw / 2 - hero.width / 2 - 1;
             break;
 
     }
@@ -972,7 +985,7 @@ function update() {
     oldHeroY = hero.y;
     var thisSpeed = hero.speed;
     if (key[5]) {
-        thisSpeed *=2;
+        thisSpeed *= 2;
     }
     if (mapTransition != "out") {
         // Handle the Input
@@ -993,7 +1006,7 @@ function update() {
             hero.facing = 'w';
             hero.x -= thisSpeed;
         }
-        if(key[4]) {
+        if (key[4]) {
             checkForActions();
         }
         checkHeroCollisions();
@@ -1052,43 +1065,59 @@ function update() {
     moveNPCs();
 }
 
+function canAddItemToInventory() {
+    // make copy of inventory:
+    var inventoryClone = JSON.parse(JSON.stringify(hero.inventory));
+    var quantityAddedSoFar = 0;
+    // count how many can be added
+    // if all added, make active inventory the same as clone with additions, and return true
+    // else return false and leave active inventory unaffected
+    // try to add to filled slots first, and then empty slots
+    return true;
+}
+
 function checkForActions() {
-    console.log("action check");
-// action processed, so cancel the key event:
-
-// loop through items:
-for (var i = 0; i < thisMapData.items.length; i++) {
-if (isInRange(hero.x, hero.y, thisMapData.items[i].x, thisMapData.items[i].y, (thisMapData.items[i].width / 2 + hero.width / 2 + 6))) {
-//is facing
-console.log("it's close");
-
-   if(isFacing(hero,thisMapData.items[i])) {
-console.log("pick it up!");
-   }
+    // loop through items:
+    for (var i = 0; i < thisMapData.items.length; i++) {
+        if (isInRange(hero.x, hero.y, thisMapData.items[i].x, thisMapData.items[i].y, (thisMapData.items[i].width / 2 + hero.width / 2 + 6))) {
+            if (isFacing(hero, thisMapData.items[i])) {
+                
 
 
-}
-}
+switch(currentActiveInventoryItems[itemGraphicsToLoad[i].type].action) {
+    case "static":
+        // can't interact with it - do nothing
+        console.log("leave me alne");
+        break;
 
-// loop through NPCs:
-
-
-
-    key[4] = 0;
-}
-
-function isAnObjectCollision(obj1x, obj1y, obj1w, obj1h, obj2x, obj2y, obj2w, obj2h) {
-    if (obj1x + obj1w / 2 > obj2x - obj2w / 2) {
-        if (obj1x - obj1w / 2 < obj2x + obj2w / 2) {
-            if (obj1y - obj1h / 2 < obj2y + obj2h / 2) {
-                if (obj1y + obj1h / 2 > obj2y - obj2h / 2) {
-                    return true;
+    default:
+        // try and pick it up:
+          // get all data for the object
+                if (canAddItemToInventory()) {
+                    // remove from map
+                } else {
+                    // ###
                 }
+}
+
+
+
+              
+
             }
         }
     }
-    return false;
+
+    // loop through NPCs:
+    // #######
+
+    // action processed, so cancel the key event:
+    key[4] = 0;
 }
+
+
+
+
 
 
 function moveNPCs() {
@@ -1237,8 +1266,8 @@ function draw() {
         gameContext.fill();
     } else {
         // get all assets to be drawn in a list - start with the hero:
-        
- hero.isox = findIsoCoordsX(hero.x, hero.y);
+
+        hero.isox = findIsoCoordsX(hero.x, hero.y);
         hero.isoy = findIsoCoordsY(hero.x, hero.y);
         /*
           var assetsToDraw = [
@@ -1252,7 +1281,7 @@ function draw() {
         var thisGraphicCentreX, thisGraphicCentreY, thisX, thisY, thisNPC, thisItem;
         var thisNPCOffsetCol = 0;
         var thisNPCOffsetRow = 0;
-       
+
         for (var i = 0; i < mapTilesX; i++) {
             for (var j = 0; j < mapTilesY; j++) {
                 // the tile coordinates should be positioned by i,j but the way the map is drawn, the reference in the array is j,i
