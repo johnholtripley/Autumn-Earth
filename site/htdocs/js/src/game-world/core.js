@@ -507,16 +507,59 @@ function update() {
     moveNPCs();
 }
 
-function canAddItemToInventory() {
+function canAddItemToInventory(itemObj) {
+    /*
+    itemObj.type
+    itemObj.quantity
+    itemObj.quality
+    itemObj.durability
+    itemObj.currentWear
+    itemObj.effectiveness
+    itemObj.wrapped
+    itemObj.colour
+    itemObj.enchanted
+    itemObj.hallmark
+    itemObj.inscription
+    */
+
     // make copy of inventory:
     var inventoryClone = JSON.parse(JSON.stringify(hero.inventory));
     var quantityAddedSoFar = 0;
+
+    // check if this type exist in the current inventory:
+    var inventoryKeysFound = getObjectKeysForValue(inventoryClone, itemObj.type);
+    if (inventoryKeysFound.length == 0) {
+        // hasn't got one already - find an empty slot:
+        for (var i = 0; i < hero.bags.length; i++) {
+            var thisBagNumberOfSlots = currentActiveInventoryItems[hero.bags[i].type].actionValue;
+            // loop through slots for each bag:
+            for (var j = 0; j < thisBagNumberOfSlots; j++) {}
+        }
+    } else {
+        // loop through keysFound and add to the slot maximum
+        // maxNumberOfItemsPerSlot 
+        for (var i = 0; i < inventoryKeysFound.length; i++) {
+            console.log(inventoryClone[inventoryKeysFound].quantity);
+        }
+    }
+
+
+
     // count how many can be added
     // if all added, make active inventory the same as clone with additions, and return true
-    // else return false and leave active inventory unaffected
+
     // try to add to filled slots first, and then empty slots
-    return true;
+    if (quantityAddedSoFar == itemObj.quantity) {
+        // make the active inventory be the same as the amended one:
+        hero.inventory = JSON.parse(JSON.stringify(inventoryClone));
+        return true;
+    } else {
+        // don't change the current inventory:
+        return false;
+    }
 }
+
+
 
 function checkForActions() {
     // loop through items:
@@ -529,8 +572,8 @@ function checkForActions() {
                         break;
                     default:
                         // try and pick it up:
-                        // get all data for the object
-                        if (canAddItemToInventory()) {
+
+                        if (canAddItemToInventory(thisMapData.items[i])) {
                             // remove from map
                         } else {
                             // ###

@@ -61,6 +61,23 @@ function sortByIsoDepth(a, b) {
 }
 
 
+
+
+
+ function getObjectKeysForValue( testObject, value ) {
+    // return an array of all keys in the object that have a value that match the one passed in
+   var keysFound = [];
+    for( var prop in testObject ) {
+        if( testObject.hasOwnProperty( prop ) ) {
+             if( testObject[ prop ] === value )
+                 keysFound.push(prop);
+        }
+    }
+   return keysFound;
+}
+
+
+
 /*
 function findIsoDepth(x, y) {
  return y;

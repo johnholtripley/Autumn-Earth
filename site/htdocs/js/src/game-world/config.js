@@ -34,6 +34,7 @@ var randomDungeons = ["","the-barrow-mines"];
 var previousZoneName = "";
 
 var currentActiveInventoryItems = [];
+var maxNumberOfItemsPerSlot = 20;
 
 var inventoryInterfaceIsBuilt = false;
 
