@@ -94,8 +94,15 @@ var relativeFacing = {
 
 
 
-
-
+function isInRange(ax, ay, bx, by, ra) {
+    // determines if one sprite is within range of another
+    var range = Math.sqrt(((ax - bx) * (ax - bx)) + ((ay - by) * (ay - by)));
+    if (range <= ra) {
+        return true;
+    } else {
+        return false;
+    }
+}
 
 // -----------------------------------------------------------
 

@@ -510,6 +510,19 @@ function update() {
 function checkForActions() {
     console.log("action check");
 // action processed, so cancel the key event:
+
+// loop through items:
+for (var i = 0; i < thisMapData.items.length; i++) {
+if (isInRange(hero.x, hero.y, thisMapData.items[i].x, thisMapData.items[i].y, (thisMapData.items[i].width / 2 + hero.width / 2 + 6))) {
+//is facing
+console.log("it's close");
+}
+}
+
+// loop through NPCs:
+
+
+
     key[4] = 0;
 }
 
