@@ -11,7 +11,6 @@ canvas {
     image-rendering: pixelated;
     display: block;
     background: #000;
-
 }
 
 #gameWrapper {
@@ -31,7 +30,6 @@ canvas {
     left: 0;
     top: 50%;
     text-transform: uppercase;
-    
     width: 100%;
     text-align: center;
     text-shadow: 0px 0px 2px rgba(0, 0, 0, 1);
@@ -59,15 +57,23 @@ canvas {
 // ------------------
 // inventory panels, shops panels etc:
 #inventoryPanels {
-    position: absolute;
-    width: 100%;
-    left: 0;
     ul {
         max-width: 300px;
         margin: 0 2% 2% 0;
         float: left;
         width: 48%;
         padding: 0;
+        position: absolute;
+        @include transition(opacity 0.4s ease, transform 0.4s cubic-bezier(.12, 1.07, .29, 1.24));
+        // inactive state:
+        opacity: 0;
+        @include transform(scale(0.95));
+        pointer-events: none;
+        &.active {
+            opacity: 1;
+            pointer-events: auto;
+            @include transform(scale(1));
+        }
         li {
             width: 24%;
             display: block;

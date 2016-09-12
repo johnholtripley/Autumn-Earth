@@ -19,7 +19,7 @@ var UI = {
         var inventoryMarkup = '';
         // loop through number of bags
         for (var i = 0; i < hero.bags.length; i++) {
-            inventoryMarkup += '<ul id="bag'+i+'">';
+            inventoryMarkup += '<ul class="active" id="bag'+i+'">';
             //console.log(hero.bags[i].type);
             var thisBagNumberOfSlots = currentActiveInventoryItems[hero.bags[i].type].actionValue;
             // loop through slots for each bag:
