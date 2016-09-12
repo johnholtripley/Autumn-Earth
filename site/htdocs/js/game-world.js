@@ -414,12 +414,12 @@ function reset() {
 var Input = {
     init: function() {
         // Set up the keyboard events
-        document.addEventListener('keydown', function(e) { Input.changeKey(e.keyCode, 1) });
-        document.addEventListener('keyup', function(e) { Input.changeKey(e.keyCode, 0) });
+        document.addEventListener('keydown', function(e) { Input.changeKey(e.keyCode, 1, "down") });
+        document.addEventListener('keyup', function(e) { Input.changeKey(e.keyCode, 0, "up") });
     },
 
     // called on key up and key down events
-    changeKey: function(which, to) {
+    changeKey: function(which, to, type) {
         switch (which) {
             case KeyBindings.left:
                 key[0] = to;
@@ -434,7 +434,11 @@ var Input = {
                 key[3] = to;
                 break;
             case KeyBindings.action:
-                key[4] = to;
+                // action should only be on key Up:
+                key[4] = 0;
+                if (type === "up") {
+                    key[4] = 1;
+                }
                 break;
         }
     }
@@ -445,8 +449,8 @@ var KeyBindings = {
     'right': 39,
     'up': 38,
     'down': 40,
-    'action': 32,
-    'pause': 80
+    'pause': 80,
+    'action': 17
 }
 
 var UI = {
@@ -484,10 +488,10 @@ var UI = {
       
 
 //inventoryMarkup += '<p>'+currentActiveInventoryItems[(hero.inventory[thisSlotsID].type)].shortname+'</p>';
-inventoryMarkup += '<img src="/images/game-world/inventory-items/'+hero.inventory[thisSlotsID].type+'.png" alt="'+currentActiveInventoryItems[hero.bags[i].type].shortname+'">';
+inventoryMarkup += '<img src="/images/game-world/inventory-items/'+hero.inventory[thisSlotsID].type+'.png" alt="'+currentActiveInventoryItems[hero.inventory[thisSlotsID].type].shortname+'">';
 inventoryMarkup += '<span class="qty">'+hero.inventory[thisSlotsID].quantity+'</span>';
                 } else {
-                    inventoryMarkup += '<img src="/images/game-world/inventory-items/blank.png">';
+                    inventoryMarkup += '<img alt="Empty slot" src="/images/game-world/inventory-items/blank.png">';
                 }
                 // add item there
                 inventoryMarkup += '</li>';
@@ -650,12 +654,12 @@ function loadMapAssets() {
 function findInventoryItemData() {
     var itemIdsToGet = [];
     // find out all items in the hero's inventory:
-    for (var key in hero.inventory) {
-        if (hero.inventory.hasOwnProperty(key)) {
-            //console.log(key + " -> " + hero.inventory[key].type);
+    for (var arrkey in hero.inventory) {
+        if (hero.inventory.hasOwnProperty(arrkey)) {
+            //console.log(key + " -> " + hero.inventory[arrkey].type);
             // make sure it's not already added:
-            if (itemIdsToGet.indexOf(hero.inventory[key].type) == -1) {
-                itemIdsToGet.push(hero.inventory[key].type);
+            if (itemIdsToGet.indexOf(hero.inventory[arrkey].type) == -1) {
+                itemIdsToGet.push(hero.inventory[arrkey].type);
             }
         }
     }
@@ -888,7 +892,6 @@ function checkHeroCollisions() {
         thisNPC = thisMapData.npcs[i];
         if (thisNPC.isCollidable) {
             if (isAnObjectCollision(thisNPC.x, thisNPC.y, thisNPC.width, thisNPC.height, hero.x, hero.y, hero.width, hero.height)) {
-
                 getHeroAsCloseAsPossibleToObject(thisNPC.x, thisNPC.y, thisNPC.width, thisNPC.height);
             }
         }
@@ -896,14 +899,10 @@ function checkHeroCollisions() {
     // check for collisions against items:
     for (var i = 0; i < thisMapData.items.length; i++) {
         thisItem = thisMapData.items[i];
-
         if (isAnObjectCollision(thisItem.x, thisItem.y, thisItem.width, thisItem.height, hero.x, hero.y, hero.width, hero.height)) {
             getHeroAsCloseAsPossibleToObject(thisItem.x, thisItem.y, thisItem.width, thisItem.height);
-
         }
-
     }
-
 }
 
 
@@ -950,11 +949,12 @@ function update() {
             hero.facing = 'w';
             hero.x += hero.speed;
         }
+        if(key[4]) {
+            checkForActions();
+        }
         checkHeroCollisions();
         hero.tileX = getTileX(hero.x);
         hero.tileY = getTileY(hero.y);
-
-
     } else {
         hero.isMoving = true;
         // continue the hero moving:
@@ -1006,6 +1006,12 @@ function update() {
     */
 
     moveNPCs();
+}
+
+function checkForActions() {
+    console.log("action check");
+// action processed, so cancel the key event:
+    key[4] = 0;
 }
 
 function isAnObjectCollision(obj1x, obj1y, obj1w, obj1h, obj2x, obj2y, obj2w, obj2h) {

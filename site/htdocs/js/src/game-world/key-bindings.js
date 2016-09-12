@@ -3,6 +3,6 @@ var KeyBindings = {
     'right': 39,
     'up': 38,
     'down': 40,
-    'action': 32,
-    'pause': 80
+    'pause': 80,
+    'action': 17
 }

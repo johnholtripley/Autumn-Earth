@@ -33,10 +33,10 @@ var UI = {
       
 
 //inventoryMarkup += '<p>'+currentActiveInventoryItems[(hero.inventory[thisSlotsID].type)].shortname+'</p>';
-inventoryMarkup += '<img src="/images/game-world/inventory-items/'+hero.inventory[thisSlotsID].type+'.png" alt="'+currentActiveInventoryItems[hero.bags[i].type].shortname+'">';
+inventoryMarkup += '<img src="/images/game-world/inventory-items/'+hero.inventory[thisSlotsID].type+'.png" alt="'+currentActiveInventoryItems[hero.inventory[thisSlotsID].type].shortname+'">';
 inventoryMarkup += '<span class="qty">'+hero.inventory[thisSlotsID].quantity+'</span>';
                 } else {
-                    inventoryMarkup += '<img src="/images/game-world/inventory-items/blank.png">';
+                    inventoryMarkup += '<img alt="Empty slot" src="/images/game-world/inventory-items/blank.png">';
                 }
                 // add item there
                 inventoryMarkup += '</li>';

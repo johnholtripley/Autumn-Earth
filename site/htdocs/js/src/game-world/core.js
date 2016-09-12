@@ -149,12 +149,12 @@ function loadMapAssets() {
 function findInventoryItemData() {
     var itemIdsToGet = [];
     // find out all items in the hero's inventory:
-    for (var key in hero.inventory) {
-        if (hero.inventory.hasOwnProperty(key)) {
-            //console.log(key + " -> " + hero.inventory[key].type);
+    for (var arrkey in hero.inventory) {
+        if (hero.inventory.hasOwnProperty(arrkey)) {
+            //console.log(key + " -> " + hero.inventory[arrkey].type);
             // make sure it's not already added:
-            if (itemIdsToGet.indexOf(hero.inventory[key].type) == -1) {
-                itemIdsToGet.push(hero.inventory[key].type);
+            if (itemIdsToGet.indexOf(hero.inventory[arrkey].type) == -1) {
+                itemIdsToGet.push(hero.inventory[arrkey].type);
             }
         }
     }
@@ -387,7 +387,6 @@ function checkHeroCollisions() {
         thisNPC = thisMapData.npcs[i];
         if (thisNPC.isCollidable) {
             if (isAnObjectCollision(thisNPC.x, thisNPC.y, thisNPC.width, thisNPC.height, hero.x, hero.y, hero.width, hero.height)) {
-
                 getHeroAsCloseAsPossibleToObject(thisNPC.x, thisNPC.y, thisNPC.width, thisNPC.height);
             }
         }
@@ -395,14 +394,10 @@ function checkHeroCollisions() {
     // check for collisions against items:
     for (var i = 0; i < thisMapData.items.length; i++) {
         thisItem = thisMapData.items[i];
-
         if (isAnObjectCollision(thisItem.x, thisItem.y, thisItem.width, thisItem.height, hero.x, hero.y, hero.width, hero.height)) {
             getHeroAsCloseAsPossibleToObject(thisItem.x, thisItem.y, thisItem.width, thisItem.height);
-
         }
-
     }
-
 }
 
 
@@ -449,11 +444,12 @@ function update() {
             hero.facing = 'w';
             hero.x += hero.speed;
         }
+        if(key[4]) {
+            checkForActions();
+        }
         checkHeroCollisions();
         hero.tileX = getTileX(hero.x);
         hero.tileY = getTileY(hero.y);
-
-
     } else {
         hero.isMoving = true;
         // continue the hero moving:
@@ -505,6 +501,12 @@ function update() {
     */
 
     moveNPCs();
+}
+
+function checkForActions() {
+    console.log("action check");
+// action processed, so cancel the key event:
+    key[4] = 0;
 }
 
 function isAnObjectCollision(obj1x, obj1y, obj1w, obj1h, obj2x, obj2y, obj2w, obj2h) {

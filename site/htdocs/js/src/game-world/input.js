@@ -1,12 +1,12 @@
 var Input = {
     init: function() {
         // Set up the keyboard events
-        document.addEventListener('keydown', function(e) { Input.changeKey(e.keyCode, 1) });
-        document.addEventListener('keyup', function(e) { Input.changeKey(e.keyCode, 0) });
+        document.addEventListener('keydown', function(e) { Input.changeKey(e.keyCode, 1, "down") });
+        document.addEventListener('keyup', function(e) { Input.changeKey(e.keyCode, 0, "up") });
     },
 
     // called on key up and key down events
-    changeKey: function(which, to) {
+    changeKey: function(which, to, type) {
         switch (which) {
             case KeyBindings.left:
                 key[0] = to;
@@ -21,7 +21,11 @@ var Input = {
                 key[3] = to;
                 break;
             case KeyBindings.action:
-                key[4] = to;
+                // action should only be on key Up:
+                key[4] = 0;
+                if (type === "up") {
+                    key[4] = 1;
+                }
                 break;
         }
     }
