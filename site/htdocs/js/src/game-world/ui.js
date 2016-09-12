@@ -19,22 +19,18 @@ var UI = {
         var inventoryMarkup = '';
         // loop through number of bags
         for (var i = 0; i < hero.bags.length; i++) {
-            inventoryMarkup += '<ul class="active" id="bag'+i+'">';
+            inventoryMarkup += '<ul class="active" id="bag' + i + '">';
             //console.log(hero.bags[i].type);
             var thisBagNumberOfSlots = currentActiveInventoryItems[hero.bags[i].type].actionValue;
             // loop through slots for each bag:
             for (var j = 0; j < thisBagNumberOfSlots; j++) {
-                var thisSlotsID = i+'-'+j
-                inventoryMarkup += '<li id="slot'+thisSlotsID+'">';
+                var thisSlotsID = i + '-' + j
+                inventoryMarkup += '<li id="slot' + thisSlotsID + '">';
                 // check if that key exists in inventory:
-                if(thisSlotsID in hero.inventory) {
-
-     
-      
-
-//inventoryMarkup += '<p>'+currentActiveInventoryItems[(hero.inventory[thisSlotsID].type)].shortname+'</p>';
-inventoryMarkup += '<img src="/images/game-world/inventory-items/'+hero.inventory[thisSlotsID].type+'.png" alt="'+currentActiveInventoryItems[hero.inventory[thisSlotsID].type].shortname+'">';
-inventoryMarkup += '<span class="qty">'+hero.inventory[thisSlotsID].quantity+'</span>';
+                if (thisSlotsID in hero.inventory) {
+                    //inventoryMarkup += '<p>'+currentActiveInventoryItems[(hero.inventory[thisSlotsID].type)].shortname+'</p>';
+                    inventoryMarkup += '<img src="/images/game-world/inventory-items/' + hero.inventory[thisSlotsID].type + '.png" alt="' + currentActiveInventoryItems[hero.inventory[thisSlotsID].type].shortname + '">';
+                    inventoryMarkup += '<span class="qty">' + hero.inventory[thisSlotsID].quantity + '</span>';
                 } else {
                     inventoryMarkup += '<img alt="Empty slot" src="/images/game-world/inventory-items/blank.png">';
                 }
@@ -43,7 +39,7 @@ inventoryMarkup += '<span class="qty">'+hero.inventory[thisSlotsID].quantity+'</
             }
             inventoryMarkup += '</ul>';
         }
-         inventoryPanels.innerHTML = inventoryMarkup;
+        inventoryPanels.innerHTML = inventoryMarkup;
         inventoryInterfaceIsBuilt = true;
     }
 }
