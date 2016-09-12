@@ -242,6 +242,35 @@ function isInRange(ax, ay, bx, by, ra) {
     }
 }
 
+function isFacing(obj1, obj2) {
+    var isFacing = false;
+    switch (obj1.facing) {
+        case "n":
+            if (obj1.y > obj2.y) {
+                isFacing = true;
+            }
+            break;
+        case "s":
+            if (obj1.y < obj2.y) {
+                isFacing = true;
+            }
+            break;
+        case "w":
+            if (obj1.x > obj2.x) {
+                isFacing = true;
+            }
+            break;
+        case "e":
+            if (obj1.x < obj2.x) {
+                isFacing = true;
+            }
+            break;
+
+    }
+    return isFacing;
+}
+
+
 // -----------------------------------------------------------
 
 // http://paulirish.com/2011/requestanimationframe-for-smart-animating/
@@ -955,14 +984,14 @@ function update() {
             hero.isMoving = true;
             hero.facing = 's';
             hero.y += thisSpeed;
-        } else if (key[0]) {
-            hero.isMoving = true;
-            hero.facing = 'e';
-            hero.x -= thisSpeed;
         } else if (key[1]) {
             hero.isMoving = true;
-            hero.facing = 'w';
+            hero.facing = 'e';
             hero.x += thisSpeed;
+        } else if (key[0]) {
+            hero.isMoving = true;
+            hero.facing = 'w';
+            hero.x -= thisSpeed;
         }
         if(key[4]) {
             checkForActions();
@@ -981,10 +1010,10 @@ function update() {
                 hero.y += thisSpeed;
                 break;
             case 'e':
-                hero.x -= thisSpeed;
+                hero.x += thisSpeed;
                 break;
             case 'w':
-                hero.x += thisSpeed;
+                hero.x -= thisSpeed;
                 break;
         }
         mapTransitionCurrentFrames++;
@@ -1032,6 +1061,12 @@ for (var i = 0; i < thisMapData.items.length; i++) {
 if (isInRange(hero.x, hero.y, thisMapData.items[i].x, thisMapData.items[i].y, (thisMapData.items[i].width / 2 + hero.width / 2 + 6))) {
 //is facing
 console.log("it's close");
+
+   if(isFacing(hero,thisMapData.items[i])) {
+console.log("pick it up!");
+   }
+
+
 }
 }
 

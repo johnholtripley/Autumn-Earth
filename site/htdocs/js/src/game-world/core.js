@@ -439,14 +439,14 @@ function update() {
             hero.isMoving = true;
             hero.facing = 's';
             hero.y += thisSpeed;
-        } else if (key[0]) {
-            hero.isMoving = true;
-            hero.facing = 'e';
-            hero.x -= thisSpeed;
         } else if (key[1]) {
             hero.isMoving = true;
-            hero.facing = 'w';
+            hero.facing = 'e';
             hero.x += thisSpeed;
+        } else if (key[0]) {
+            hero.isMoving = true;
+            hero.facing = 'w';
+            hero.x -= thisSpeed;
         }
         if(key[4]) {
             checkForActions();
@@ -465,10 +465,10 @@ function update() {
                 hero.y += thisSpeed;
                 break;
             case 'e':
-                hero.x -= thisSpeed;
+                hero.x += thisSpeed;
                 break;
             case 'w':
-                hero.x += thisSpeed;
+                hero.x -= thisSpeed;
                 break;
         }
         mapTransitionCurrentFrames++;
@@ -516,6 +516,12 @@ for (var i = 0; i < thisMapData.items.length; i++) {
 if (isInRange(hero.x, hero.y, thisMapData.items[i].x, thisMapData.items[i].y, (thisMapData.items[i].width / 2 + hero.width / 2 + 6))) {
 //is facing
 console.log("it's close");
+
+   if(isFacing(hero,thisMapData.items[i])) {
+console.log("pick it up!");
+   }
+
+
 }
 }
 

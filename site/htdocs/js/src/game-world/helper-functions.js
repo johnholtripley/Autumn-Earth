@@ -104,6 +104,35 @@ function isInRange(ax, ay, bx, by, ra) {
     }
 }
 
+function isFacing(obj1, obj2) {
+    var isFacing = false;
+    switch (obj1.facing) {
+        case "n":
+            if (obj1.y > obj2.y) {
+                isFacing = true;
+            }
+            break;
+        case "s":
+            if (obj1.y < obj2.y) {
+                isFacing = true;
+            }
+            break;
+        case "w":
+            if (obj1.x > obj2.x) {
+                isFacing = true;
+            }
+            break;
+        case "e":
+            if (obj1.x < obj2.x) {
+                isFacing = true;
+            }
+            break;
+
+    }
+    return isFacing;
+}
+
+
 // -----------------------------------------------------------
 
 // http://paulirish.com/2011/requestanimationframe-for-smart-animating/
