@@ -27,6 +27,9 @@ var Input = {
                     key[4] = 1;
                 }
                 break;
+            case KeyBindings.run:
+                key[5] = to;
+                break;
         }
     }
 }

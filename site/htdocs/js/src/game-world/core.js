@@ -425,24 +425,28 @@ function update() {
     hero.isMoving = false;
     oldHeroX = hero.x;
     oldHeroY = hero.y;
+    var thisSpeed = hero.speed;
+    if (key[5]) {
+        thisSpeed *=2;
+    }
     if (mapTransition != "out") {
         // Handle the Input
         if (key[2]) {
             hero.isMoving = true;
             hero.facing = 'n';
-            hero.y -= hero.speed;
+            hero.y -= thisSpeed;
         } else if (key[3]) {
             hero.isMoving = true;
             hero.facing = 's';
-            hero.y += hero.speed;
+            hero.y += thisSpeed;
         } else if (key[0]) {
             hero.isMoving = true;
             hero.facing = 'e';
-            hero.x -= hero.speed;
+            hero.x -= thisSpeed;
         } else if (key[1]) {
             hero.isMoving = true;
             hero.facing = 'w';
-            hero.x += hero.speed;
+            hero.x += thisSpeed;
         }
         if(key[4]) {
             checkForActions();
@@ -455,16 +459,16 @@ function update() {
         // continue the hero moving:
         switch (hero.facing) {
             case 'n':
-                hero.y -= hero.speed;
+                hero.y -= thisSpeed;
                 break;
             case 's':
-                hero.y += hero.speed;
+                hero.y += thisSpeed;
                 break;
             case 'e':
-                hero.x -= hero.speed;
+                hero.x -= thisSpeed;
                 break;
             case 'w':
-                hero.x += hero.speed;
+                hero.x += thisSpeed;
                 break;
         }
         mapTransitionCurrentFrames++;

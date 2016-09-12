@@ -4,5 +4,6 @@ var KeyBindings = {
     'up': 38,
     'down': 40,
     'pause': 80,
-    'action': 17
+    'action': 17,
+    'run': 16
 }
