@@ -476,7 +476,7 @@ var UI = {
             // loop through slots for each bag:
             for (var j = 0; j < thisBagNumberOfSlots; j++) {
                 var thisSlotsID = i+'-'+j
-                inventoryMarkup += '<li class="'+thisSlotsID+'">';
+                inventoryMarkup += '<li id="slot'+thisSlotsID+'">';
                 // check if that key exists in inventory:
                 if(thisSlotsID in hero.inventory) {
 
@@ -484,7 +484,7 @@ var UI = {
       
 
 //inventoryMarkup += '<p>'+currentActiveInventoryItems[(hero.inventory[thisSlotsID].type)].shortname+'</p>';
-inventoryMarkup += '<img src="/images/game-world/inventory-items/'+hero.inventory[thisSlotsID].type+'.png">';
+inventoryMarkup += '<img src="/images/game-world/inventory-items/'+hero.inventory[thisSlotsID].type+'.png" alt="'+currentActiveInventoryItems[hero.bags[i].type].shortname+'">';
 inventoryMarkup += '<span class="qty">'+hero.inventory[thisSlotsID].quantity+'</span>';
                 } else {
                     inventoryMarkup += '<img src="/images/game-world/inventory-items/blank.png">';
