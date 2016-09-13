@@ -219,14 +219,15 @@ function sortByIsoDepth(a, b) {
     console.log("looking for "+value);
     // return an array of all keys in the object that have a value that match the one passed in
    var keysFound = [];
-    for( var prop in testObject ) {
-        if( testObject.hasOwnProperty( prop ) ) {
-            console.log("checking:"+testObject[ prop ][attribute]);
-             if( testObject[prop][attribute] === value ) {
+    for(var prop in testObject) {
+        if( testObject.hasOwnProperty(prop)) {
+            console.log("checking:"+testObject[prop][attribute]);
+             if(testObject[prop][attribute] === value) {
                  keysFound.push(prop);
              }
         }
     }
+    console.log("returning "+keysFound);
    return keysFound;
 }
 
@@ -1104,14 +1105,18 @@ function canAddItemToInventory(itemObj) {
     if (inventoryKeysFound.length > 0) {
         // loop through keysFound and add to the slot maximum
         for (var i = 0; i < inventoryKeysFound.length; i++) {
-            if (itemAttributesMatch(inventoryClone[inventoryKeysFound], itemObj)) {
+
+
+console.log(inventoryClone[inventoryKeysFound[i]]);
+
+            if (itemAttributesMatch(inventoryClone[inventoryKeysFound[i]], itemObj)) {
                 console.log("attributes match");
-                var quantityOnSlotAlready = inventoryClone[inventoryKeysFound].quantity;
+                var quantityOnSlotAlready = inventoryClone[inventoryKeysFound[i]].quantity;
                 var amountAddedToThisSlot = (maxNumberOfItemsPerSlot - quantityOnSlotAlready) > (itemObj.quantity - quantityAddedSoFar) ? (itemObj.quantity - quantityAddedSoFar) : maxNumberOfItemsPerSlot - quantityOnSlotAlready;
                 quantityAddedSoFar += amountAddedToThisSlot;
                 // add item to this slot:
                 slotsUpdated.push((inventoryKeysFound[i]));
-                inventoryClone[(inventoryKeysFound[i])].quantity += amountAddedToThisSlot;
+                inventoryClone[inventoryKeysFound[i]].quantity += amountAddedToThisSlot;
                 if (quantityAddedSoFar >= itemObj.quantity) {
                     break;
                 }

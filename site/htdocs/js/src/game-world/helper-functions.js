@@ -80,14 +80,15 @@ function sortByIsoDepth(a, b) {
     console.log("looking for "+value);
     // return an array of all keys in the object that have a value that match the one passed in
    var keysFound = [];
-    for( var prop in testObject ) {
-        if( testObject.hasOwnProperty( prop ) ) {
-            console.log("checking:"+testObject[ prop ][attribute]);
-             if( testObject[prop][attribute] === value ) {
+    for(var prop in testObject) {
+        if( testObject.hasOwnProperty(prop)) {
+            console.log("checking:"+testObject[prop][attribute]);
+             if(testObject[prop][attribute] === value) {
                  keysFound.push(prop);
              }
         }
     }
+    console.log("returning "+keysFound);
    return keysFound;
 }
 
