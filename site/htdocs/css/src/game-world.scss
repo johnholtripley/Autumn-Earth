@@ -86,12 +86,13 @@ canvas {
             @include transform(scale(1));
         }
         li {
-            width: 24%;
+            width: 44px;
+            height: 44px;
             display: block;
             float: left;
             background: #000;
-            border: 4px solid #666;
-            margin: 0 1% 1% 0;
+            border: 2px solid #666;
+            margin: 0 2px 2px 0;
             @include border-box;
             position: relative;
             .qty {
@@ -102,8 +103,7 @@ canvas {
                 color: #fff;
             }
             img {
-                width: 100%;
-                height: auto;
+               
                 display: block;
             }
         }
@@ -112,6 +112,6 @@ canvas {
 
 #toolbar {
     width: 100%;
-    height: 64px;
+    height: 40px;
     background: #666;
 }
