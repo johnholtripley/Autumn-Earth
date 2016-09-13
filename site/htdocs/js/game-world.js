@@ -73,6 +73,8 @@ var timeSinceLastFrameSwap = 0;
 var currentAnimationFrame = 0;
 var animationUpdateTime = (1000 / animationFramesPerSecond);
 
+var titleTagPrefix = 'Autumn Earth';
+
 // map changes:
 var mapTransition = "";
 var mapTransitionCurrentFrames = 1;
@@ -649,6 +651,7 @@ function loadMapJSON(mapFilePath) {
         mapTilesX = thisMapData.terrain[0].length;
         if (previousZoneName != thisMapData.zoneName) {
             UI.showZoneName(thisMapData.zoneName);
+            document.title = titleTagPrefix+' - '+thisMapData.zoneName;
         }
         findInventoryItemData();
 

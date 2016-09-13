@@ -6,6 +6,8 @@ var timeSinceLastFrameSwap = 0;
 var currentAnimationFrame = 0;
 var animationUpdateTime = (1000 / animationFramesPerSecond);
 
+var titleTagPrefix = 'Autumn Earth';
+
 // map changes:
 var mapTransition = "";
 var mapTransitionCurrentFrames = 1;

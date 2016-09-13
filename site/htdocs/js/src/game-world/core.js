@@ -61,6 +61,7 @@ function loadMapJSON(mapFilePath) {
         mapTilesX = thisMapData.terrain[0].length;
         if (previousZoneName != thisMapData.zoneName) {
             UI.showZoneName(thisMapData.zoneName);
+            document.title = titleTagPrefix+' - '+thisMapData.zoneName;
         }
         findInventoryItemData();
 
