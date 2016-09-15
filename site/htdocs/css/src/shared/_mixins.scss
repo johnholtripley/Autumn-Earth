@@ -385,20 +385,20 @@ transition: $values;
 
 
 
-@mixin box-shadow($values) {
+@mixin box-shadow($values...) {
 // usage
 // @include box-shadow(inset 0 0 1em gold);
 // @include box-shadow('inset 0 0 1em gold, 0 0 1em red'); - if comma separating, need to add the whole list in quotes
-$values: unquote($values);
+//$values: unquote($values);
 -webkit-box-shadow: $values;
 -moz-box-shadow: $values;
 box-shadow: $values;
 }
 
 
-@mixin text-shadow($values) {
+@mixin text-shadow($values...) {
 // if comma separating, need to add the whole list in quotes
-$values: unquote($values);
+//$values: unquote($values);
 // no vendor prefixs needed - just including this mixin to be consistent
 text-shadow: $values;
 }

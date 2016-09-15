@@ -194,6 +194,27 @@ var moneyOutput = "";
 }
 
 
+
+
+// ---------------------
+// http://youmightnotneedjquery.com/ - IE8+
+function addClass(whichElement, className) {
+  if (whichElement.classList) {
+    whichElement.classList.add(className);
+  } else {
+    whichElement.className += ' ' + className;
+  }
+}
+
+function removeClass(el, className) {
+  if (el.classList) {
+    el.classList.remove(className);
+  } else {
+    el.className = el.className.replace(new RegExp('(^|\\b)' + className.split(' ').join('|') + '(\\b|$)', 'gi'), ' ');
+  }
+}
+
+
 // -----------------------------------------------------------
 
 // http://paulirish.com/2011/requestanimationframe-for-smart-animating/

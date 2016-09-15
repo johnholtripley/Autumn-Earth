@@ -32,7 +32,7 @@ ins {
 
 ::selection {
     background: $accentColour;
-    color: #fff;
+    color: $secondaryColour;
     -webkit-text-shadow: none;
     text-shadow: none;
 }

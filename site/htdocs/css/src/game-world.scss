@@ -4,6 +4,19 @@ body {
     margin: 0;
 }
 
+::-moz-selection {
+    background: #666;
+    color: #fff;
+    -moz-text-shadow: none;
+}
+
+::selection {
+    background: #666;
+    color: #fff;
+    -webkit-text-shadow: none;
+    text-shadow: none;
+}
+
 canvas {
     image-rendering: -moz-crisp-edges;
     image-rendering: -webkit-crisp-edges;
@@ -17,6 +30,7 @@ canvas {
     position: relative;
     display: inline-block;
     font-family: "Trebuchet MS", trebuchet, arial, helvetica, sans-serif;
+    cursor: url(../images/game-world/cursors/default.gif) 3 3, auto;
 }
 
 // ------------------
@@ -58,14 +72,19 @@ canvas {
 // inventory panels, shops panels etc:
 #inventoryPanels {
     ul {
+        // bag
         margin: 0;
         width: 184px;
         padding: 0;
         position: absolute;
-        left: 0;
+        background: #666;
+        left: 10px;
+        padding: 2px 0 0 2px;
+        bottom: 44px;
+
         @for $i from 2 through 6 {
             &:nth-child(#{$i}) {
-                left: 200px * (($i)-1);
+                left: 200px * (($i)-1) + 10px;
             }
         }
         @include transition(opacity 0.4s ease, transform 0.4s cubic-bezier(.12, 1.07, .29, 1.24));
@@ -79,12 +98,13 @@ canvas {
             @include transform(scale(1));
         }
         li {
+            // slot
             width: 44px;
             height: 44px;
             display: block;
             float: left;
             background: #000;
-            border: 2px solid #666;
+cursor: url(../images/game-world/cursors/active.gif) 3 3, auto;
             margin: 0 2px 2px 0;
             @include border-box;
             position: relative;
@@ -94,6 +114,8 @@ canvas {
                 bottom: 3px;
                 text-align: right;
                 color: #fff;
+                cursor: default;
+                font-size: 11px;
             }
             img {
                 display: block;
@@ -105,6 +127,10 @@ canvas {
                     @include transform(translateY(0));
                 }
             }
+            &.changed {
+                @include box-shadow(0 0 5px 3px #eebb3f);
+                z-index: 1;
+            }
         }
     }
     p {
@@ -115,14 +141,22 @@ canvas {
         bottom: 100%;
         color: #000;
         display: block;
-        right: 0;
+        left: 0;
+        min-width: 120px;
         opacity: 0;
         padding: 8px;
         pointer-events: none;
         position: absolute;
-        font-size: 10px;
+        font-size: 11px;
+        cursor: url(../images/game-world/cursors/default.gif) 3 3, auto;
         @include transform(translateY(10px));
         @include transition(all .25s ease-out);
+        em {
+            // tooltip item title
+            display: block;
+            font-size: 1.2em;
+            font-style: normal;
+        }
     }
 }
 

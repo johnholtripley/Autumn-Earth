@@ -335,6 +335,27 @@ var moneyOutput = "";
 }
 
 
+
+
+// ---------------------
+// http://youmightnotneedjquery.com/ - IE8+
+function addClass(whichElement, className) {
+  if (whichElement.classList) {
+    whichElement.classList.add(className);
+  } else {
+    whichElement.className += ' ' + className;
+  }
+}
+
+function removeClass(el, className) {
+  if (el.classList) {
+    el.classList.remove(className);
+  } else {
+    el.className = el.className.replace(new RegExp('(^|\\b)' + className.split(' ').join('|') + '(\\b|$)', 'gi'), ' ');
+  }
+}
+
+
 // -----------------------------------------------------------
 
 // http://paulirish.com/2011/requestanimationframe-for-smart-animating/
@@ -590,7 +611,7 @@ var UI = {
                    
                     inventoryMarkup += '<img src="/images/game-world/inventory-items/' + hero.inventory[thisSlotsID].type + '.png" alt="">';
                     inventoryMarkup += '<span class="qty">' + hero.inventory[thisSlotsID].quantity + '</span>';
-                    inventoryMarkup += '<p><em>'+currentActiveInventoryItems[hero.inventory[thisSlotsID].type].shortname+' </em>'+currentActiveInventoryItems[hero.inventory[thisSlotsID].type].description+'<span class="price">Sell price: '+parseMoney(hero.inventory[thisSlotsID].quantity*currentActiveInventoryItems[hero.inventory[thisSlotsID].type].priceCode,0)+'</span></p>';
+                    inventoryMarkup += '<p><em>'+currentActiveInventoryItems[hero.inventory[thisSlotsID].type].shortname+' </em>'+currentActiveInventoryItems[hero.inventory[thisSlotsID].type].description+' <span class="price">Sell price: '+parseMoney(hero.inventory[thisSlotsID].quantity*currentActiveInventoryItems[hero.inventory[thisSlotsID].type].priceCode,0)+'</span></p>';
                 } else {
                     inventoryMarkup += '<img alt="Empty slot" src="/images/game-world/inventory-items/blank.png">';
                 }
@@ -1124,10 +1145,6 @@ function canAddItemToInventory(itemObj) {
     if (inventoryKeysFound.length > 0) {
         // loop through keysFound and add to the slot maximum
         for (var i = 0; i < inventoryKeysFound.length; i++) {
-
-
-
-
             if (itemAttributesMatch(inventoryClone[inventoryKeysFound[i]], itemObj)) {
                 console.log("attributes match");
                 var quantityOnSlotAlready = inventoryClone[inventoryKeysFound[i]].quantity;
@@ -1234,25 +1251,14 @@ function checkForActions() {
                             thisMapData.items.splice(i, 1);
                             // visually update inventory
                             // loop through the slots that have changed and update their markup:
-                            
-
-
-for(var j=0; j<inventoryCheck[1].length;j++) {
-     thisSlotsId = inventoryCheck[1][j];
-     console.log("thisSlotsId:"+thisSlotsId);
-
-
-   slotMarkup = '<img src="/images/game-world/inventory-items/' + hero.inventory[thisSlotsId].type + '.png" alt="">';
-                    slotMarkup += '<span class="qty">' + hero.inventory[thisSlotsId].quantity + '</span>';
-                    slotMarkup += '<p><em>'+currentActiveInventoryItems[hero.inventory[thisSlotsId].type].shortname+' </em>'+currentActiveInventoryItems[hero.inventory[thisSlotsId].type].description+'<span class="price">Sell price: '+parseMoney(hero.inventory[thisSlotsId].quantity*currentActiveInventoryItems[hero.inventory[thisSlotsId].type].priceCode,0)+'</span></p>'
-
-
-
-
-                    document.getElementById("slot"+thisSlotsId).innerHTML = slotMarkup;
-}
-
-
+                            for (var j = 0; j < inventoryCheck[1].length; j++) {
+                                thisSlotsId = inventoryCheck[1][j];
+                                slotMarkup = '<img src="/images/game-world/inventory-items/' + hero.inventory[thisSlotsId].type + '.png" alt="">';
+                                slotMarkup += '<span class="qty">' + hero.inventory[thisSlotsId].quantity + '</span>';
+                                slotMarkup += '<p><em>' + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].shortname + ' </em>' + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].description + ' <span class="price">Sell price: ' + parseMoney(hero.inventory[thisSlotsId].quantity * currentActiveInventoryItems[hero.inventory[thisSlotsId].type].priceCode, 0) + '</span></p>'
+                                document.getElementById("slot" + thisSlotsId).innerHTML = slotMarkup;
+                                addClass(document.getElementById("slot" + thisSlotsId), "changed");
+                            }
                         } else {
                             // ###
                             alert("no room in the inventory");
@@ -1268,6 +1274,7 @@ for(var j=0; j<inventoryCheck[1].length;j++) {
     // action processed, so cancel the key event:
     key[4] = 0;
 }
+
 
 
 
