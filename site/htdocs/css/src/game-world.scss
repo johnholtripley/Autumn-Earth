@@ -109,7 +109,7 @@ cursor: url(../images/game-world/cursors/active.gif) 3 3, auto;
             @include border-box;
             position: relative;
             box-shadow: 0 0 0 0 #eebb3f;
-            @include transition(box-shadow 0.6s ease);
+            @include transition(box-shadow 0.2s ease-in-out);
             .qty {
                 position: absolute;
                 right: 3px;
