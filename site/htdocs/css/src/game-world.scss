@@ -58,23 +58,16 @@ canvas {
 // inventory panels, shops panels etc:
 #inventoryPanels {
     ul {
-     
         margin: 0;
-        
         width: 184px;
         padding: 0;
         position: absolute;
         left: 0;
-    
-
-
-@for $i from 2 through 6 {
-    &:nth-child(#{$i}) {
-        left: 200px * (($i)-1);
-    }
-}
-
-
+        @for $i from 2 through 6 {
+            &:nth-child(#{$i}) {
+                left: 200px * (($i)-1);
+            }
+        }
         @include transition(opacity 0.4s ease, transform 0.4s cubic-bezier(.12, 1.07, .29, 1.24));
         // inactive state:
         opacity: 0;
@@ -103,13 +96,13 @@ canvas {
                 color: #fff;
             }
             img {
-               
                 display: block;
             }
             @include attention() {
                 p {
-                    display: block;
-                   
+                    opacity: 1;
+                    pointer-events: auto;
+                    @include transform(translateY(0));
                 }
             }
         }
@@ -117,12 +110,19 @@ canvas {
     p {
         // tooltip
         background: #eee;
-        display: none;
-         position: absolute;
-                    left: 40px;
-                    top: 40px;
-                    z-index: 1;
-                    margin: 0;
+        z-index: 1;
+        margin: 0;
+        bottom: 100%;
+        color: #000;
+        display: block;
+        right: 0;
+        opacity: 0;
+        padding: 8px;
+        pointer-events: none;
+        position: absolute;
+        font-size: 10px;
+        @include transform(translateY(10px));
+        @include transition(all .25s ease-out);
     }
 }
 
