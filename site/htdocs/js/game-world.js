@@ -107,6 +107,8 @@ var maxNumberOfItemsPerSlot = 20;
 
 var inventoryInterfaceIsBuilt = false;
 
+var whichTransitionEvent = '';
+
 // key bindings
 var key = [0, 0, 0, 0, 0];
 
@@ -354,6 +356,24 @@ function removeClass(el, className) {
     el.className = el.className.replace(new RegExp('(^|\\b)' + className.split(' ').join('|') + '(\\b|$)', 'gi'), ' ');
   }
 }
+
+
+   function determineWhichTransitionEvent() {
+       // https://davidwalsh.name/css-animation-callback
+       var t;
+       var el = document.createElement('fakeelement');
+       var transitions = {
+           'transition': 'transitionend',
+           'OTransition': 'oTransitionEnd',
+           'MozTransition': 'transitionend',
+           'WebkitTransition': 'webkitTransitionEnd'
+       }
+       for (t in transitions) {
+           if (el.style[t] !== undefined) {
+               return transitions[t];
+           }
+       }
+   }
 
 
 // -----------------------------------------------------------
@@ -639,6 +659,7 @@ function init() {
         canvasWidth = gameCanvas.width;
         canvasHeight = gameCanvas.height;
     }
+    whichTransitionEvent = determineWhichTransitionEvent();
     gameMode = "mapLoading";
     UI.init();
     // detect and set up input methods:
@@ -1230,11 +1251,16 @@ function itemAttributesMatch(item1, item2) {
     return false;
 }
 
-
+function removeSlotStatus() {
+elementList = document.querySelectorAll('#inventoryPanels .changed');
+for (var i=0;i<elementList.length;i++) {
+    removeClass(elementList[i],'changed');
+}
+}
 
 function checkForActions() {
     var inventoryCheck = [];
-    var slotMarkup, thisSlotsId;
+    var slotMarkup, thisSlotsId, thisSlotElem;
     // loop through items:
     for (var i = 0; i < thisMapData.items.length; i++) {
         if (isInRange(hero.x, hero.y, thisMapData.items[i].x, thisMapData.items[i].y, (thisMapData.items[i].width / 2 + hero.width / 2 + 6))) {
@@ -1255,9 +1281,11 @@ function checkForActions() {
                                 thisSlotsId = inventoryCheck[1][j];
                                 slotMarkup = '<img src="/images/game-world/inventory-items/' + hero.inventory[thisSlotsId].type + '.png" alt="">';
                                 slotMarkup += '<span class="qty">' + hero.inventory[thisSlotsId].quantity + '</span>';
-                                slotMarkup += '<p><em>' + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].shortname + ' </em>' + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].description + ' <span class="price">Sell price: ' + parseMoney(hero.inventory[thisSlotsId].quantity * currentActiveInventoryItems[hero.inventory[thisSlotsId].type].priceCode, 0) + '</span></p>'
-                                document.getElementById("slot" + thisSlotsId).innerHTML = slotMarkup;
-                                addClass(document.getElementById("slot" + thisSlotsId), "changed");
+                                slotMarkup += '<p><em>' + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].shortname + ' </em>' + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].description + ' <span class="price">Sell price: ' + parseMoney(hero.inventory[thisSlotsId].quantity * currentActiveInventoryItems[hero.inventory[thisSlotsId].type].priceCode, 0) + '</span></p>';
+                                thisSlotElem = document.getElementById("slot" + thisSlotsId);
+                                thisSlotElem.innerHTML = slotMarkup;
+                                thisSlotElem.addEventListener(whichTransitionEvent, removeSlotStatus, true);
+                                addClass(thisSlotElem, "changed");
                             }
                         } else {
                             // ###

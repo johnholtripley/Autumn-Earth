@@ -40,6 +40,8 @@ var maxNumberOfItemsPerSlot = 20;
 
 var inventoryInterfaceIsBuilt = false;
 
+var whichTransitionEvent = '';
+
 // key bindings
 var key = [0, 0, 0, 0, 0];
 

@@ -215,6 +215,24 @@ function removeClass(el, className) {
 }
 
 
+   function determineWhichTransitionEvent() {
+       // https://davidwalsh.name/css-animation-callback
+       var t;
+       var el = document.createElement('fakeelement');
+       var transitions = {
+           'transition': 'transitionend',
+           'OTransition': 'oTransitionEnd',
+           'MozTransition': 'transitionend',
+           'WebkitTransition': 'webkitTransitionEnd'
+       }
+       for (t in transitions) {
+           if (el.style[t] !== undefined) {
+               return transitions[t];
+           }
+       }
+   }
+
+
 // -----------------------------------------------------------
 
 // http://paulirish.com/2011/requestanimationframe-for-smart-animating/

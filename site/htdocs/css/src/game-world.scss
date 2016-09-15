@@ -108,6 +108,8 @@ cursor: url(../images/game-world/cursors/active.gif) 3 3, auto;
             margin: 0 2px 2px 0;
             @include border-box;
             position: relative;
+            box-shadow: 0 0 0 0 #eebb3f;
+            @include transition(box-shadow 0.6s ease);
             .qty {
                 position: absolute;
                 right: 3px;
@@ -128,7 +130,7 @@ cursor: url(../images/game-world/cursors/active.gif) 3 3, auto;
                 }
             }
             &.changed {
-                @include box-shadow(0 0 5px 3px #eebb3f);
+             box-shadow: 0 0 5px 3px #eebb3f;
                 z-index: 1;
             }
         }
