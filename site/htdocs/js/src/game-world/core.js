@@ -623,18 +623,7 @@ function checkForActions() {
                             // remove from map:
                             thisMapData.items.splice(i, 1);
                             // visually update inventory
-                            // loop through the slots that have changed and update their markup:
-                            for (var j = 0; j < inventoryCheck[1].length; j++) {
-                                thisSlotsId = inventoryCheck[1][j];
-                                slotMarkup = '<img src="/images/game-world/inventory-items/' + hero.inventory[thisSlotsId].type + '.png" alt="">';
-                                slotMarkup += '<span class="qty">' + hero.inventory[thisSlotsId].quantity + '</span>';
-                                slotMarkup += '<p><em>' + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].shortname + ' </em>' + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].description + ' <span class="price">Sell price: ' + parseMoney(hero.inventory[thisSlotsId].quantity * currentActiveInventoryItems[hero.inventory[thisSlotsId].type].priceCode, 0) + '</span></p>';
-                                thisSlotElem = document.getElementById("slot" + thisSlotsId);
-                                thisSlotElem.innerHTML = slotMarkup;
-                                
-                                addClass(thisSlotElem, "changed");
-                            }
-                            // add a transition end detector to just the first changed element:
+                                        // add a transition end detector to just the first element that will be changed:
                           
 
 document.getElementById("slot" + inventoryCheck[1][0]).addEventListener(whichTransitionEvent, function removeSlotStatus(e) {
@@ -646,6 +635,18 @@ document.getElementById("slot" + inventoryCheck[1][0]).addEventListener(whichTra
     return e.currentTarget.removeEventListener(whichTransitionEvent, removeSlotStatus);
   
 });
+                            // loop through the slots that have changed and update their markup:
+                            for (var j = 0; j < inventoryCheck[1].length; j++) {
+                                thisSlotsId = inventoryCheck[1][j];
+                                slotMarkup = '<img src="/images/game-world/inventory-items/' + hero.inventory[thisSlotsId].type + '.png" alt="">';
+                                slotMarkup += '<span class="qty">' + hero.inventory[thisSlotsId].quantity + '</span>';
+                                slotMarkup += '<p><em>' + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].shortname + ' </em>' + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].description + ' <span class="price">Sell price: ' + parseMoney(hero.inventory[thisSlotsId].quantity * currentActiveInventoryItems[hero.inventory[thisSlotsId].type].priceCode, 0) + '</span></p>';
+                                thisSlotElem = document.getElementById("slot" + thisSlotsId);
+                                thisSlotElem.innerHTML = slotMarkup;
+                                
+                                addClass(thisSlotElem, "changed");
+                            }
+                
 
 
 
