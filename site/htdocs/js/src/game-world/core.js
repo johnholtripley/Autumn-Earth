@@ -632,9 +632,9 @@ document.getElementById("slot" + inventoryCheck[1][0]).addEventListener(whichTra
         removeClass(elementList[i],'changed');
     }
     // remove the event listener now:
-    return e.currentTarget.removeEventListener(whichTransitionEvent, removeSlotStatus);
+    return e.currentTarget.removeEventListener(whichTransitionEvent, removeSlotStatus, false);
   
-});
+},false);
                             // loop through the slots that have changed and update their markup:
                             for (var j = 0; j < inventoryCheck[1].length; j++) {
                                 thisSlotsId = inventoryCheck[1][j];
