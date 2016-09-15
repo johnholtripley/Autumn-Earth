@@ -520,7 +520,7 @@ function canAddItemToInventory(itemObj) {
         for (var i = 0; i < inventoryKeysFound.length; i++) {
 
 
-console.log(inventoryClone[inventoryKeysFound[i]]);
+
 
             if (itemAttributesMatch(inventoryClone[inventoryKeysFound[i]], itemObj)) {
                 console.log("attributes match");
@@ -634,8 +634,15 @@ function checkForActions() {
 for(var j=0; j<inventoryCheck[1].length;j++) {
      thisSlotsId = inventoryCheck[1][j];
      console.log("thisSlotsId:"+thisSlotsId);
- slotMarkup = '<img src="/images/game-world/inventory-items/' + hero.inventory[thisSlotsId].type + '.png" alt="' + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].shortname + '">';
+
+
+   slotMarkup = '<img src="/images/game-world/inventory-items/' + hero.inventory[thisSlotsId].type + '.png" alt="">';
                     slotMarkup += '<span class="qty">' + hero.inventory[thisSlotsId].quantity + '</span>';
+                    slotMarkup += '<p><em>'+currentActiveInventoryItems[hero.inventory[thisSlotsId].type].shortname+' </em>'+currentActiveInventoryItems[hero.inventory[thisSlotsId].type].description+'<span class="price">Sell price: '+parseMoney(hero.inventory[thisSlotsId].quantity*currentActiveInventoryItems[hero.inventory[thisSlotsId].type].priceCode,0)+'</span></p>'
+
+
+
+
                     document.getElementById("slot"+thisSlotsId).innerHTML = slotMarkup;
 }
 

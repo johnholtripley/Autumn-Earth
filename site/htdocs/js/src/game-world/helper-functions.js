@@ -179,6 +179,21 @@ function isFacing(obj1, obj2) {
 }
 
 
+function parseMoney(amount,whichCurrency) {
+    // whichCurrency passed in case alternative currencies are added
+var moneyOutput = "";
+    var silver = amount % 100;
+    var gold = (amount - silver) / 100;
+    if (gold > 0) {
+        moneyOutput = gold + "G ";
+    }
+    if (silver != 0) {
+        moneyOutput += silver + "S";
+    }
+    return moneyOutput;
+}
+
+
 // -----------------------------------------------------------
 
 // http://paulirish.com/2011/requestanimationframe-for-smart-animating/

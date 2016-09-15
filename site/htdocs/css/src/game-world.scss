@@ -58,10 +58,10 @@ canvas {
 // inventory panels, shops panels etc:
 #inventoryPanels {
     ul {
-        max-width: 300px;
-        margin: 0 2% 2% 0;
+     
+        margin: 0;
         
-        width: 48%;
+        width: 184px;
         padding: 0;
         position: absolute;
         left: 0;
@@ -70,7 +70,7 @@ canvas {
 
 @for $i from 2 through 6 {
     &:nth-child(#{$i}) {
-        left: 320px * (($i)-1);
+        left: 200px * (($i)-1);
     }
 }
 
@@ -106,7 +106,23 @@ canvas {
                
                 display: block;
             }
+            @include attention() {
+                p {
+                    display: block;
+                   
+                }
+            }
         }
+    }
+    p {
+        // tooltip
+        background: #eee;
+        display: none;
+         position: absolute;
+                    left: 40px;
+                    top: 40px;
+                    z-index: 1;
+                    margin: 0;
     }
 }
 

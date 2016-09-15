@@ -320,6 +320,21 @@ function isFacing(obj1, obj2) {
 }
 
 
+function parseMoney(amount,whichCurrency) {
+    // whichCurrency passed in case alternative currencies are added
+var moneyOutput = "";
+    var silver = amount % 100;
+    var gold = (amount - silver) / 100;
+    if (gold > 0) {
+        moneyOutput = gold + "G ";
+    }
+    if (silver != 0) {
+        moneyOutput += silver + "S";
+    }
+    return moneyOutput;
+}
+
+
 // -----------------------------------------------------------
 
 // http://paulirish.com/2011/requestanimationframe-for-smart-animating/
@@ -572,9 +587,10 @@ var UI = {
                 inventoryMarkup += '<li id="slot' + thisSlotsID + '">';
                 // check if that key exists in inventory:
                 if (thisSlotsID in hero.inventory) {
-                    //inventoryMarkup += '<p>'+currentActiveInventoryItems[(hero.inventory[thisSlotsID].type)].shortname+'</p>';
-                    inventoryMarkup += '<img src="/images/game-world/inventory-items/' + hero.inventory[thisSlotsID].type + '.png" alt="' + currentActiveInventoryItems[hero.inventory[thisSlotsID].type].shortname + '">';
+                   
+                    inventoryMarkup += '<img src="/images/game-world/inventory-items/' + hero.inventory[thisSlotsID].type + '.png" alt="">';
                     inventoryMarkup += '<span class="qty">' + hero.inventory[thisSlotsID].quantity + '</span>';
+                    inventoryMarkup += '<p><em>'+currentActiveInventoryItems[hero.inventory[thisSlotsID].type].shortname+' </em>'+currentActiveInventoryItems[hero.inventory[thisSlotsID].type].description+'<span class="price">Sell price: '+parseMoney(hero.inventory[thisSlotsID].quantity*currentActiveInventoryItems[hero.inventory[thisSlotsID].type].priceCode,0)+'</span></p>';
                 } else {
                     inventoryMarkup += '<img alt="Empty slot" src="/images/game-world/inventory-items/blank.png">';
                 }
@@ -1110,7 +1126,7 @@ function canAddItemToInventory(itemObj) {
         for (var i = 0; i < inventoryKeysFound.length; i++) {
 
 
-console.log(inventoryClone[inventoryKeysFound[i]]);
+
 
             if (itemAttributesMatch(inventoryClone[inventoryKeysFound[i]], itemObj)) {
                 console.log("attributes match");
@@ -1224,8 +1240,15 @@ function checkForActions() {
 for(var j=0; j<inventoryCheck[1].length;j++) {
      thisSlotsId = inventoryCheck[1][j];
      console.log("thisSlotsId:"+thisSlotsId);
- slotMarkup = '<img src="/images/game-world/inventory-items/' + hero.inventory[thisSlotsId].type + '.png" alt="' + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].shortname + '">';
+
+
+   slotMarkup = '<img src="/images/game-world/inventory-items/' + hero.inventory[thisSlotsId].type + '.png" alt="">';
                     slotMarkup += '<span class="qty">' + hero.inventory[thisSlotsId].quantity + '</span>';
+                    slotMarkup += '<p><em>'+currentActiveInventoryItems[hero.inventory[thisSlotsId].type].shortname+' </em>'+currentActiveInventoryItems[hero.inventory[thisSlotsId].type].description+'<span class="price">Sell price: '+parseMoney(hero.inventory[thisSlotsId].quantity*currentActiveInventoryItems[hero.inventory[thisSlotsId].type].priceCode,0)+'</span></p>'
+
+
+
+
                     document.getElementById("slot"+thisSlotsId).innerHTML = slotMarkup;
 }
 
