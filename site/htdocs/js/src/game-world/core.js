@@ -604,12 +604,6 @@ function itemAttributesMatch(item1, item2) {
     return false;
 }
 
-function removeSlotStatus() {
-elementList = document.querySelectorAll('#inventoryPanels .changed');
-for (var i=0;i<elementList.length;i++) {
-    removeClass(elementList[i],'changed');
-}
-}
 
 function checkForActions() {
     var inventoryCheck = [];
@@ -637,9 +631,26 @@ function checkForActions() {
                                 slotMarkup += '<p><em>' + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].shortname + ' </em>' + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].description + ' <span class="price">Sell price: ' + parseMoney(hero.inventory[thisSlotsId].quantity * currentActiveInventoryItems[hero.inventory[thisSlotsId].type].priceCode, 0) + '</span></p>';
                                 thisSlotElem = document.getElementById("slot" + thisSlotsId);
                                 thisSlotElem.innerHTML = slotMarkup;
-                                thisSlotElem.addEventListener(whichTransitionEvent, removeSlotStatus, true);
+                                
                                 addClass(thisSlotElem, "changed");
                             }
+                            // add a transition end detector to just the first changed element:
+                          
+
+document.getElementById("slot" + inventoryCheck[1][0]).addEventListener(whichTransitionEvent, function removeSlotStatus(e) {
+    elementList = document.querySelectorAll('#inventoryPanels .changed');
+    for (var i=0;i<elementList.length;i++) {
+        removeClass(elementList[i],'changed');
+    }
+    // remove the event listener now:
+    return e.currentTarget.removeEventListener(whichTransitionEvent, removeSlotStatus);
+  
+});
+
+
+
+
+
                         } else {
                             // ###
                             alert("no room in the inventory");
