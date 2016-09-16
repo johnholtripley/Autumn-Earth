@@ -490,21 +490,6 @@ function update() {
         currentAnimationFrame++;
         timeSinceLastFrameSwap = 0;
     }
-    /*if (hero.timeSinceLastFrameSwap > hero.animationUpdateTime) {
-        var seq = (hero.isMoving ? 'walk-' : 'stand-') + hero.facing;
-        var currentSequence = hero.sequences[seq];
-        if (hero.animationFrameIndex < currentSequence.length - 1) {
-            hero.animationFrameIndex += 1;
-        } else {
-            hero.animationFrameIndex = 0;
-        }
-        var col = currentSequence[hero.animationFrameIndex] % 7;
-        var row = Math.floor(currentSequence[hero.animationFrameIndex] / 7);
-        hero.offsetX = col * hero.width;
-        hero.offsetY = row * hero.height;
-        hero.timeSinceLastFrameSwap = 0;
-    }
-    */
 
     moveNPCs();
 }
@@ -604,7 +589,6 @@ function itemAttributesMatch(item1, item2) {
     return false;
 }
 
-
 function checkForActions() {
     var inventoryCheck = [];
     var slotMarkup, thisSlotsId, thisSlotElem;
@@ -623,18 +607,15 @@ function checkForActions() {
                             // remove from map:
                             thisMapData.items.splice(i, 1);
                             // visually update inventory
-                                        // add a transition end detector to just the first element that will be changed:
-                          
-
-document.getElementById("slot" + inventoryCheck[1][0]).addEventListener(whichTransitionEvent, function removeSlotStatus(e) {
-    elementList = document.querySelectorAll('#inventoryPanels .changed');
-    for (var i=0;i<elementList.length;i++) {
-        removeClass(elementList[i],'changed');
-    }
-    // remove the event listener now:
-    return e.currentTarget.removeEventListener(whichTransitionEvent, removeSlotStatus, false);
-  
-},false);
+                            // add a transition end detector to just the first element that will be changed:
+                            document.getElementById("slot" + inventoryCheck[1][0]).addEventListener(whichTransitionEvent, function removeSlotStatus(e) {
+                                elementList = document.querySelectorAll('#inventoryPanels .changed');
+                                for (var i = 0; i < elementList.length; i++) {
+                                    removeClass(elementList[i], 'changed');
+                                }
+                                // remove the event listener now:
+                                return e.currentTarget.removeEventListener(whichTransitionEvent, removeSlotStatus, false);
+                            }, false);
                             // loop through the slots that have changed and update their markup:
                             for (var j = 0; j < inventoryCheck[1].length; j++) {
                                 thisSlotsId = inventoryCheck[1][j];
@@ -643,15 +624,9 @@ document.getElementById("slot" + inventoryCheck[1][0]).addEventListener(whichTra
                                 slotMarkup += '<p><em>' + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].shortname + ' </em>' + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].description + ' <span class="price">Sell price: ' + parseMoney(hero.inventory[thisSlotsId].quantity * currentActiveInventoryItems[hero.inventory[thisSlotsId].type].priceCode, 0) + '</span></p>';
                                 thisSlotElem = document.getElementById("slot" + thisSlotsId);
                                 thisSlotElem.innerHTML = slotMarkup;
-                                
+
                                 addClass(thisSlotElem, "changed");
                             }
-                
-
-
-
-
-
                         } else {
                             // ###
                             alert("no room in the inventory");
@@ -667,8 +642,6 @@ document.getElementById("slot" + inventoryCheck[1][0]).addEventListener(whichTra
     // action processed, so cancel the key event:
     key[4] = 0;
 }
-
-
 
 
 
