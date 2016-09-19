@@ -76,15 +76,15 @@ canvas {
         margin: 0;
         width: 184px;
         padding: 0;
-        position: absolute;
+      //  position: absolute;
         background: #666;
-        left: 10px;
+     //   left: 10px;
         padding: 2px 0 0 2px;
-        bottom: 44px;
+      //  bottom: 44px;
 
         @for $i from 2 through 6 {
             &:nth-child(#{$i}) {
-                left: 200px * (($i)-1) + 10px;
+       //         left: 200px * (($i)-1) + 10px;
             }
         }
         @include transition(opacity 0.4s ease, transform 0.4s cubic-bezier(.12, 1.07, .29, 1.24));
@@ -166,4 +166,29 @@ cursor: url(../images/game-world/cursors/active.gif) 3 3, auto;
     width: 100%;
     height: 40px;
     background: #666;
+}
+
+
+
+
+
+.dragParent {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  width: 340px;
+  padding: 0 0 10px 0;
+  background-color: #666;
+  color: #fff;
+  z-index: 1;
+}
+
+.draggableBar {
+  background: #333;
+  padding: 20px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  cursor: move;
 }
