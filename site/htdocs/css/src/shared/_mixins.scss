@@ -243,6 +243,7 @@ transition: $values;
     /* http://css-tricks.com/places-its-tempting-to-use-display-none-but-dont/ */
     position: absolute;
     overflow: hidden;
+    clip-path: inset(100%);
     clip: rect(0 0 0 0);
     height: 1px;
     width: 1px;

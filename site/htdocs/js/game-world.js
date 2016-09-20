@@ -141,6 +141,13 @@ var hero = {
 
 };
 
+var fae = {
+    z: 40,
+    dz: -1,
+state:'resting',
+particles: []
+};
+
 
 // find tile from coords:
 function getTileX(x) {
@@ -374,6 +381,20 @@ function removeClass(el, className) {
            }
        }
    }
+
+
+
+
+
+
+
+
+function drawCircle(fillStyle,x,y,radius) {
+gameContext.fillStyle = fillStyle;
+    gameContext.beginPath();
+    gameContext.arc(x,y,radius, 0, 2 * Math.PI);
+    gameContext.fill();
+}
 
 
 // -----------------------------------------------------------
@@ -617,11 +638,10 @@ var UI = {
     },
 
     buildInventoryInterface: function() {
-        console.log("building inventory panels...");
         var inventoryMarkup = '';
         // loop through number of bags
         for (var i = 0; i < hero.bags.length; i++) {
-            inventoryMarkup += '<div class="inventoryBag"><div class="draggableBar">' + currentActiveInventoryItems[hero.bags[i].type].shortname + '</div><ul class="active" id="bag' + i + '">';
+            inventoryMarkup += '<div class="inventoryBag"><div class="draggableBar">' + currentActiveInventoryItems[hero.bags[i].type].shortname + '</div><ol class="active" id="bag' + i + '">';
             //console.log(hero.bags[i].type);
             var thisBagNumberOfSlots = currentActiveInventoryItems[hero.bags[i].type].actionValue;
             // loop through slots for each bag:
@@ -640,7 +660,7 @@ var UI = {
                 // add item there
                 inventoryMarkup += '</li>';
             }
-            inventoryMarkup += '</ul></div></div>';
+            inventoryMarkup += '</ol></div></div>';
         }
         inventoryPanels.innerHTML = inventoryMarkup;
         UI.initDrag(".draggableBar");
@@ -924,9 +944,15 @@ function prepareGame() {
         thisMapData.items[i].centreY = currentActiveInventoryItems[thisMapData.items[i].type].centreY;
     }
 
+
     // determine tile offset to centre the hero in the centre
     hero.x = getTileCentreCoordX(hero.tileX);
     hero.y = getTileCentreCoordY(hero.tileY);
+
+    // initialise fae:
+    fae.x = hero.x + tileW * 2;
+    fae.y = hero.y + tileH * 2;
+
     timeSinceLastFrameSwap = 0;
     currentAnimationFrame = 0;
     mapTransition = "in";
@@ -1178,6 +1204,7 @@ function update() {
     if (timeSinceLastFrameSwap > animationUpdateTime) {
         currentAnimationFrame++;
         timeSinceLastFrameSwap = 0;
+        animateFae();
     }
 
     moveNPCs();
@@ -1473,6 +1500,16 @@ function moveNPCs() {
 }
 
 
+function animateFae() {
+ if(fae.dz<1) {
+    fae.z += fae.dz;
+    fae.dz += 0.05;
+   } else {
+    fae.z -= fae.dz;
+    fae.dz -= 0.05;
+   } 
+
+}
 
 
 
@@ -1484,6 +1521,8 @@ function draw() {
     } else {
         // get all assets to be drawn in a list - start with the hero:
 
+var thisGraphicCentreX, thisGraphicCentreY, thisX, thisY, thisNPC, thisItem;
+
         hero.isox = findIsoCoordsX(hero.x, hero.y);
         hero.isoy = findIsoCoordsY(hero.x, hero.y);
         /*
@@ -1494,8 +1533,17 @@ function draw() {
         var assetsToDraw = [
             [hero.isoy, heroImg, Math.floor(canvasWidth / 2 - hero.feetOffsetX), Math.floor(canvasHeight / 2 - hero.feetOffsetY)]
         ];
+
+
+// draw fae:
+ thisX = findIsoCoordsX(fae.x, fae.y);
+        thisY = findIsoCoordsY(fae.x, fae.y);
+
+assetsToDraw.push([thisY, "faeCentre", Math.floor(thisX - hero.isox + (canvasWidth / 2)), Math.floor(thisY - hero.isoy + (canvasHeight / 2) - fae.z)]);
+
+
         var map = thisMapData.terrain;
-        var thisGraphicCentreX, thisGraphicCentreY, thisX, thisY, thisNPC, thisItem;
+        
         var thisNPCOffsetCol = 0;
         var thisNPCOffsetRow = 0;
 
@@ -1546,7 +1594,23 @@ function draw() {
         gameContext.drawImage(backgroundImg, Math.floor(getTileIsoCentreCoordX(0, mapTilesX - 1) - hero.isox - tileW / 2), Math.floor(getTileIsoCentreCoordY(0, 0) - hero.isoy - tileH / 2));
         // draw the sorted assets:
         for (var i = 0; i < assetsToDraw.length; i++) {
-            if (assetsToDraw[i].length == 10) {
+
+if(assetsToDraw[i][1] == "faeCentre") {
+
+
+    // draw fae:
+    drawCircle("#ffdc0c", assetsToDraw[i][2], assetsToDraw[i][3], 2);
+    drawCircle("rgba(255,220,255,0.5)", assetsToDraw[i][2], assetsToDraw[i][3], 4);
+// draw fae's shadow:
+
+gameContext.fillStyle = "rgba(0,0,0,0.3)";
+gameContext.beginPath();
+gameContext.ellipse(assetsToDraw[i][2], assetsToDraw[i][3] + fae.z, 4, 2, 0, 0, 2 * Math.PI);
+gameContext.fill();
+
+
+
+} else if (assetsToDraw[i].length == 10) {
                 // sprite image (needs slicing parameters):
                 gameContext.drawImage(assetsToDraw[i][1], assetsToDraw[i][2], assetsToDraw[i][3], assetsToDraw[i][4], assetsToDraw[i][5], assetsToDraw[i][6], assetsToDraw[i][7], assetsToDraw[i][8], assetsToDraw[i][9]);
             } else {

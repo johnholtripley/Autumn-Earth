@@ -73,3 +73,10 @@ var hero = {
     }
 
 };
+
+var fae = {
+    z: 40,
+    dz: -1,
+state:'resting',
+particles: []
+};
