@@ -60,6 +60,12 @@ function sortByIsoDepth(a, b) {
     return 0;
 }
 
+function getXOffsetFromHeight(height) {
+    // for determining a shadow's offset (for example).
+    return (Math.sqrt(2) / 2 * height);
+}
+
+
 /*
  function getObjectKeysForValue( testObject, value ) {
     console.log("looking for "+value);

@@ -243,6 +243,10 @@ function prepareGame() {
     // initialise fae:
     fae.x = hero.x + tileW * 2;
     fae.y = hero.y + tileH * 2;
+    fae.z = 40;
+    fae.dz = 1;
+    fae.pulse = 0;
+    fae.state = 'idle';
 
     timeSinceLastFrameSwap = 0;
     currentAnimationFrame = 0;
@@ -250,6 +254,7 @@ function prepareGame() {
     mapTransitionCurrentFrames = 1;
     gameMode = "play";
 }
+
 
 
 function removeMapAssets() {
@@ -512,7 +517,6 @@ function canAddItemToInventory(itemObj) {
         // loop through keysFound and add to the slot maximum
         for (var i = 0; i < inventoryKeysFound.length; i++) {
             if (itemAttributesMatch(inventoryClone[inventoryKeysFound[i]], itemObj)) {
-                console.log("attributes match");
                 var quantityOnSlotAlready = inventoryClone[inventoryKeysFound[i]].quantity;
                 var amountAddedToThisSlot = (maxNumberOfItemsPerSlot - quantityOnSlotAlready) > (itemObj.quantity - quantityAddedSoFar) ? (itemObj.quantity - quantityAddedSoFar) : maxNumberOfItemsPerSlot - quantityOnSlotAlready;
                 quantityAddedSoFar += amountAddedToThisSlot;
@@ -771,7 +775,6 @@ function moveNPCs() {
                     case '-':
                         // stand still:
                         thisNPC.isMoving = false;
-                        console.log(getTileY(thisNPC.y));
                     case '?':
                         do {
                             // pick a random facing:
@@ -792,15 +795,17 @@ function moveNPCs() {
 
 
 function animateFae() {
- if(fae.dz<1) {
-    fae.z += fae.dz;
-    fae.dz += 0.05;
-   } else {
-    fae.z -= fae.dz;
-    fae.dz -= 0.05;
-   } 
-
+    fae.z = Math.floor((Math.sin(fae.dz) + 1) * 8 + 40);
+    fae.dz += 0.2;
+    /*   fae.pulse += 0.2;
+       if (fae.pulse > 2) {
+           fae.pulse = 0;
+       }
+       */
 }
+
+
+
 
 
 
@@ -891,12 +896,12 @@ if(assetsToDraw[i][1] == "faeCentre") {
 
     // draw fae:
     drawCircle("#ffdc0c", assetsToDraw[i][2], assetsToDraw[i][3], 2);
-    drawCircle("rgba(255,220,255,0.5)", assetsToDraw[i][2], assetsToDraw[i][3], 4);
-// draw fae's shadow:
+    drawCircle("rgba(255,220,255,0.3)", assetsToDraw[i][2], assetsToDraw[i][3], 4);
 
-gameContext.fillStyle = "rgba(0,0,0,0.3)";
+// draw fae's shadow - make it respond to the fae's height:
+gameContext.fillStyle = "rgba(0,0,0,"+(65-fae.z)*0.01+")";
 gameContext.beginPath();
-gameContext.ellipse(assetsToDraw[i][2], assetsToDraw[i][3] + fae.z, 4, 2, 0, 0, 2 * Math.PI);
+gameContext.ellipse(assetsToDraw[i][2]-getXOffsetFromHeight(fae.z), assetsToDraw[i][3] + fae.z, 4, 2, 0, 0, 2 * Math.PI);
 gameContext.fill();
 
 
