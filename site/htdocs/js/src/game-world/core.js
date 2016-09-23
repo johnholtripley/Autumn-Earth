@@ -815,7 +815,7 @@ function animateFae() {
             // check it's in a circle from the fae's centre:
             if (isInRange(faeIsoX, faeIsoY, particleIsoX, particleIsoY, 6)) {
 
-                fae.particles.push({ 'isoX': particleIsoX, 'isoY': particleIsoY, 'alpha': 1 });
+                fae.particles.push({ 'depth': faeIsoY,'isoX': particleIsoX, 'isoY': particleIsoY, 'alpha': 1 });
             
             }
         }
@@ -859,7 +859,7 @@ assetsToDraw.push([thisY, "faeCentre", Math.floor(thisX - hero.isox + (canvasWid
 
 // draw fae particles:
 for (var i = 0; i < fae.particles.length; i++) {
-assetsToDraw.push([fae.particles[i].isoY, "faeParticle", fae.particles[i].isoX, fae.particles[i].isoY, fae.particles[i].alpha]);
+assetsToDraw.push([fae.particles[i].depth, "faeParticle", fae.particles[i].isoX, fae.particles[i].isoY, fae.particles[i].alpha]);
     }
 
         var map = thisMapData.terrain;
