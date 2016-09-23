@@ -1517,14 +1517,16 @@ function animateFae() {
 
     for (var i = 0; i < fae.particles.length; i++) {
         fae.particles[i].alpha -= 0.1;
-        // if <=0 remove ################
+        if(fae.particles[i].alpha<0) {
+            fae.particles.splice(i, 1);
+        }
     }
 
     // add particles:
     if (fae.particles.length < fae.maxParticles) {
         if (getRandomInteger(1, 4) == 1) {
-            var faeIsoX = findIsoCoordsX(fae.x, fae.y);
-            var faeIsoY = findIsoCoordsY(fae.x, fae.y);
+            var faeIsoX = findIsoCoordsX(fae.x, fae.y) - hero.isox + (canvasWidth / 2);
+            var faeIsoY = findIsoCoordsY(fae.x, fae.y) - hero.isoy + (canvasHeight / 2) - fae.z;
             var particleIsoX = faeIsoX + getRandomInteger(0, 8) - 4;
             var particleIsoY = faeIsoY + getRandomInteger(0, 8) - 4;
             // check it's in a circle from the fae's centre:
@@ -1646,7 +1648,7 @@ gameContext.fill();
 } else if (assetsToDraw[i][1] == "faeParticle") {
     
 gameContext.fillStyle = "rgba(255,220,255,"+assetsToDraw[i][4]+")";
-gameContext.fillRect(assetsToDraw[i][2],assetsToDraw[i][3],2,2);
+gameContext.fillRect(assetsToDraw[i][2],assetsToDraw[i][3],1,1);
 
 
 } else if (assetsToDraw[i].length == 10) {
