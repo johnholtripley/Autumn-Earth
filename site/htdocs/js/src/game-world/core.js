@@ -800,7 +800,7 @@ function animateFae() {
 
     for (var i = 0; i < fae.particles.length; i++) {
         fae.particles[i].alpha -= 0.1;
-        if(fae.particles[i].alpha<0) {
+        if(fae.particles[i].alpha<=0) {
             fae.particles.splice(i, 1);
         }
     }
