@@ -1525,14 +1525,14 @@ function animateFae() {
     // add particles:
     if (fae.particles.length < fae.maxParticles) {
         if (getRandomInteger(1, 4) == 1) {
-            var faeIsoX = findIsoCoordsX(fae.x, fae.y) - hero.isox + (canvasWidth / 2);
-            var faeIsoY = findIsoCoordsY(fae.x, fae.y) - hero.isoy + (canvasHeight / 2) - fae.z;
+            var faeIsoX = findIsoCoordsX(fae.x, fae.y);
+            var faeIsoY = findIsoCoordsY(fae.x, fae.y) - fae.z;
             var particleIsoX = faeIsoX + getRandomInteger(0, 8) - 4;
             var particleIsoY = faeIsoY + getRandomInteger(0, 8) - 4;
             // check it's in a circle from the fae's centre:
             if (isInRange(faeIsoX, faeIsoY, particleIsoX, particleIsoY, 6)) {
 
-                fae.particles.push({ 'depth': faeIsoY,'isoX': particleIsoX, 'isoY': particleIsoY, 'alpha': 1 });
+                fae.particles.push({ 'depth': findIsoCoordsY(fae.x, fae.y),'isoX': particleIsoX, 'isoY': particleIsoY, 'alpha': 1 });
             
             }
         }
@@ -1576,7 +1576,7 @@ assetsToDraw.push([thisY, "faeCentre", Math.floor(thisX - hero.isox + (canvasWid
 
 // draw fae particles:
 for (var i = 0; i < fae.particles.length; i++) {
-assetsToDraw.push([fae.particles[i].depth, "faeParticle", fae.particles[i].isoX, fae.particles[i].isoY, fae.particles[i].alpha]);
+assetsToDraw.push([fae.particles[i].depth, "faeParticle", Math.floor(fae.particles[i].isoX - hero.isox + (canvasWidth / 2)), Math.floor(fae.particles[i].isoY - hero.isoy + (canvasHeight / 2)), fae.particles[i].alpha]);
     }
 
         var map = thisMapData.terrain;
