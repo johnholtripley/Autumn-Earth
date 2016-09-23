@@ -75,5 +75,6 @@ var hero = {
 };
 
 var fae = {
-particles: []
+particles: [],
+maxParticles: 10
 };

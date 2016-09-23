@@ -797,12 +797,30 @@ function moveNPCs() {
 function animateFae() {
     fae.z = Math.floor((Math.sin(fae.dz) + 1) * 8 + 40);
     fae.dz += 0.2;
-    /*   fae.pulse += 0.2;
-       if (fae.pulse > 2) {
-           fae.pulse = 0;
-       }
-       */
+
+    for (var i = 0; i < fae.particles.length; i++) {
+        fae.particles[i].alpha -= 0.1;
+        // if <=0 remove ################
+    }
+
+    // add particles:
+    if (fae.particles.length < fae.maxParticles) {
+        if (getRandomInteger(1, 4) == 1) {
+            var faeIsoX = findIsoCoordsX(fae.x, fae.y);
+            var faeIsoY = findIsoCoordsY(fae.x, fae.y);
+            var particleIsoX = faeIsoX + getRandomInteger(0, 8) - 4;
+            var particleIsoY = faeIsoY + getRandomInteger(0, 8) - 4;
+            // check it's in a circle from the fae's centre:
+            if (isInRange(faeIsoX, faeIsoY, particleIsoX, particleIsoY, 6)) {
+
+                fae.particles.push({ 'isoX': particleIsoX, 'isoY': particleIsoY, 'alpha': 1 });
+            
+            }
+        }
+    }
 }
+
+
 
 
 
@@ -837,6 +855,10 @@ var thisGraphicCentreX, thisGraphicCentreY, thisX, thisY, thisNPC, thisItem;
 
 assetsToDraw.push([thisY, "faeCentre", Math.floor(thisX - hero.isox + (canvasWidth / 2)), Math.floor(thisY - hero.isoy + (canvasHeight / 2) - fae.z)]);
 
+// draw fae particles:
+for (var i = 0; i < fae.particles.length; i++) {
+assetsToDraw.push([fae.particles[i].isoY, "faeParticle", fae.particles[i].isoX, fae.particles[i].isoY, fae.particles[i].alpha]);
+    }
 
         var map = thisMapData.terrain;
         
@@ -901,9 +923,13 @@ if(assetsToDraw[i][1] == "faeCentre") {
 // draw fae's shadow - make it respond to the fae's height:
 gameContext.fillStyle = "rgba(0,0,0,"+(65-fae.z)*0.01+")";
 gameContext.beginPath();
-gameContext.ellipse(assetsToDraw[i][2]-getXOffsetFromHeight(fae.z), assetsToDraw[i][3] + fae.z, 4, 2, 0, 0, 2 * Math.PI);
+gameContext.ellipse(assetsToDraw[i][2]-getXOffsetFromHeight(fae.z), assetsToDraw[i][3] + fae.z, 3, 1, 0, 0, 2 * Math.PI);
 gameContext.fill();
 
+} else if (assetsToDraw[i][1] == "faeParticle") {
+    
+gameContext.fillStyle = "rgba(255,220,255,"+assetsToDraw[i][4]+")";
+gameContext.fillRect(assetsToDraw[i][2],assetsToDraw[i][3],2,2);
 
 
 } else if (assetsToDraw[i].length == 10) {

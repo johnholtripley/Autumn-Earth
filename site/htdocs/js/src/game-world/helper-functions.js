@@ -145,6 +145,10 @@ var relativeFacing = {
 };
 
 
+function getRandomInteger(min, max) {
+  return Math.floor(Math.random() * (max - min)) + min;
+}
+
 
 function isInRange(ax, ay, bx, by, ra) {
     // determines if one sprite is within range of another
