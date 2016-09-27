@@ -55,9 +55,7 @@ function prepareCoreAssets() {
 }
 
 function loadCartographicMap() {
-    // activeCartographicMap
-    // newMap
-    activeCartographicMap.src="https://www.autumnearth.com/data/chr1001/cartography/the-barrow-mines/session1/-1.jpg";
+    activeCartographicMap.src="/generateCartographicMap.php?playerId="+characterId+"&dungeonName="+randomDungeonName+"&plotChests=true&requestedMap="+newMap;
 }
 
 function loadMapJSON(mapFilePath) {

@@ -131,7 +131,7 @@ createCartographicMap();
 
 
 function createCartographicMap() {
-global $mapMaxWidth, $mapMaxHeight, $dungeonArray, $loadedItemData, $loadedDoorData, $debug, $playerId, $dungeonName, $session, $requestedMap, $plotChests, $update, $useOverlay;
+global $mapMaxWidth, $mapMaxHeight, $dungeonArray, $loadedItemData, $loadedDoorData, $debug, $playerId, $dungeonName, $session, $requestedMap, $plotChests, $update, $useOverlay, $format;
 
 
 // canvas size should be twice required size as it will be downsampled to anti alias:
@@ -832,9 +832,13 @@ array_push($unusedEdges,$edges[$i]);
 // flood fill from centre of a door tile:
 
 $firstDoor = explode(",",$loadedDoorData[0]);
-
+if($format == "xml") {
 $doorX = intval($firstDoor[1])+0.5;
 $doorY = intval($firstDoor[2])+0.5;
+} else {
+  $doorX = intval($firstDoor[0])+0.5;
+$doorY = intval($firstDoor[1])+0.5;
+}
 $doorX = $doorX *$tileLineDimension;
 $doorY = ($mapMaxHeight -1 - $doorY)*$tileLineDimension;
 /*
@@ -894,9 +898,9 @@ $overlayDir = "images/cartography/overlays/";
   }
     $templateOverlayToUse = rand(1,$templatesFound);
 
+$protocol = stripos($_SERVER['SERVER_PROTOCOL'],'https') === true ? 'https://' : 'http://';
 
-
-$overlayTexture = imagecreatefrompng("https://".$_SERVER['SERVER_NAME']."/images/cartography/overlays/".$templateOverlayToUse.".png");
+$overlayTexture = imagecreatefrompng($protocol.$_SERVER['SERVER_NAME']."/images/cartography/overlays/".$templateOverlayToUse.".png");
 imageAlphaBlending($overlayTexture, false);
 if($useOverlay) {
 imagecopy($imageResampled, $overlayTexture, 0, 0, 0, 0, $canvaDimension, $canvaDimension);
@@ -915,7 +919,7 @@ die();
 }
 */
 
-$chestLocator = imagecreatefrompng("https://".$_SERVER['SERVER_NAME']."/images/cartography/map-location.png");
+$chestLocator = imagecreatefrompng($protocol.$_SERVER['SERVER_NAME']."/images/cartography/map-location.png");
 imageAlphaBlending($chestLocator, false);
 
 
@@ -956,7 +960,7 @@ if($debug) {
 $mapFilename = "data/chr".$playerId."/cartography/".$dungeonName."/".$session."/".$requestedMap.".jpg";
 
 
-/*
+
 if(!$debug) {
 //save image:
 
@@ -974,7 +978,7 @@ if($update) {
 header('Content-type: image/jpg');
 imagejpeg($imageResampled);
 }
-*/
+
 
 
 imagedestroy($mapCanvas);
@@ -1068,6 +1072,11 @@ $json = json_decode($str, true);
 for($i=0;$i<count($json['map']['collisions'][0]);$i++) {
   array_push($loadedMapData, str_ireplace(" ", "", $json['map']['collisions'][$i]));
 }
+
+foreach ($json['map']['doors'] as $key => $value) {
+array_push($loadedDoorData, $key);
+}
+
 
 }
 
