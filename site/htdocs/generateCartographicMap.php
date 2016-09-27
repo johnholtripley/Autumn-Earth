@@ -24,12 +24,20 @@ if(isset($_GET["update"])) {
 $update = true;
 }
 
+$format = "json";
+if(isset($_GET["format"])) {
+$format = $_GET["format"];
+}
+
 $requestedMap = $_GET["requestedMap"];
 $playerId=$_GET["playerId"];
 $dungeonName=$_GET["dungeonName"];
 
+if($format == "xml") {
 $fileToUse = "data/chr".$playerId."/dungeon/".$dungeonName."/".$requestedMap.".xml";
-
+} else {
+$fileToUse = "data/chr".$playerId."/dungeon/".$dungeonName."/".$requestedMap.".json";
+}
 
 $plotChests = false;
 if(isset($_GET["plotChests"])) {
@@ -61,12 +69,13 @@ $mapFilename = "data/chr".$playerId."/cartography/".$dungeonName."/".$session."/
     $mapMaxWidth = 36;
     $mapMaxHeight = 36;
     
-    
-      $xmlparser = xml_parser_create();
-    $nodeType = "";
-    $loadedMapData = array();
+        $loadedMapData = array();
     $loadedDoorData = array();
     $loadedItemData = array();
+    if($format == "xml") {
+      $xmlparser = xml_parser_create();
+    $nodeType = "";
+
     xml_set_element_handler($xmlparser, "XMLMapStartTag", "XMLMapEndTag");
     xml_set_character_data_handler($xmlparser, "XMLMapTagContents");
 $fp = fopen($fileToUse, "r");
@@ -78,6 +87,13 @@ $fp = fopen($fileToUse, "r");
         }
 
 xml_parser_free($xmlparser);
+} else {
+  // load json
+
+loadAndParseJSON($fileToUse);
+
+
+}
 
 
 
@@ -93,12 +109,14 @@ for ($i = 0;$i < $mapMaxWidth;$i++) {
 }
 
 for ($i = 0;$i < $mapMaxWidth;$i++) {
+  if($format == "xml") {
 $thisRow = explode(",", $loadedMapData[$i]);
 for ($j = 0;$j < $mapMaxHeight;$j++) {
-  
   $dungeonArray[$i][$j] = $thisRow[$j];
-  
   }
+} else {
+  $dungeonArray[$i] = $loadedMapData[$i];
+}
 }
 
 
@@ -938,7 +956,7 @@ if($debug) {
 $mapFilename = "data/chr".$playerId."/cartography/".$dungeonName."/".$session."/".$requestedMap.".jpg";
 
 
-
+/*
 if(!$debug) {
 //save image:
 
@@ -956,7 +974,7 @@ if($update) {
 header('Content-type: image/jpg');
 imagejpeg($imageResampled);
 }
-
+*/
 
 
 imagedestroy($mapCanvas);
@@ -1038,8 +1056,20 @@ function quadBezier($im, $x1, $y1, $x2, $y2, $x3, $y3) {
 
 
 
+function loadAndParseJSON($whichfileToUse) {
+  global $loadedMapData, $loadedItemData, $loadedDoorData;
+
+$str = file_get_contents($whichfileToUse);
+$json = json_decode($str, true);
 
 
+//var_dump($json['map']['collisions']);
+
+for($i=0;$i<count($json['map']['collisions'][0]);$i++) {
+  array_push($loadedMapData, str_ireplace(" ", "", $json['map']['collisions'][$i]));
+}
+
+}
 
 
 

@@ -3,6 +3,7 @@ var UI = {
         // cache all references to UI elements:
         var displayZoneName = document.getElementById('displayZoneName');
         var inventoryPanels = document.getElementById('inventoryPanels');
+        var activeCartographicMap = document.getElementById('activeCartographicMap');
         //
 
     },

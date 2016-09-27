@@ -632,6 +632,7 @@ var UI = {
         // cache all references to UI elements:
         var displayZoneName = document.getElementById('displayZoneName');
         var inventoryPanels = document.getElementById('inventoryPanels');
+        var activeCartographicMap = document.getElementById('activeCartographicMap');
         //
 
     },
@@ -771,6 +772,12 @@ function prepareCoreAssets() {
     loadMap();
 }
 
+function loadCartographicMap() {
+    // activeCartographicMap
+    // newMap
+    activeCartographicMap.src="https://www.autumnearth.com/data/chr1001/cartography/the-barrow-mines/session1/-1.jpg";
+}
+
 function loadMapJSON(mapFilePath) {
     console.log("mapFilePath: " + mapFilePath);
     getJSON(mapFilePath, function(data) {
@@ -781,6 +788,7 @@ function loadMapJSON(mapFilePath) {
             UI.showZoneName(thisMapData.zoneName);
             document.title = titleTagPrefix+' - '+thisMapData.zoneName;
         }
+       
         findInventoryItemData();
 
     }, function(status) {
@@ -815,6 +823,7 @@ function loadMap() {
         var centreDoorX = targetDoorX / 3;
         var centreDoorY = targetDoorY / 3;
         mapFilePath = '/generateDungeonMap.php?playerId=' + characterId + '&originatingMapId=' + currentMap + '&requestedMap=' + newMap + '&dungeonName=' + randomDungeonName + '&connectingDoorX=' + centreDoorX + '&connectingDoorY=' + centreDoorY;
+         loadCartographicMap();
     }
     currentMap = newMap;
     loadMapJSON(mapFilePath);
@@ -1554,7 +1563,7 @@ function draw() {
     } else {
         // get all assets to be drawn in a list - start with the hero:
 
-var thisGraphicCentreX, thisGraphicCentreY, thisX, thisY, thisNPC, thisItem;
+        var thisGraphicCentreX, thisGraphicCentreY, thisX, thisY, thisNPC, thisItem;
 
         hero.isox = findIsoCoordsX(hero.x, hero.y);
         hero.isoy = findIsoCoordsY(hero.x, hero.y);
@@ -1564,23 +1573,23 @@ var thisGraphicCentreX, thisGraphicCentreY, thisX, thisY, thisNPC, thisItem;
           ];
           */
         var assetsToDraw = [
-            [hero.isoy, heroImg, Math.floor(canvasWidth / 2 - hero.feetOffsetX), Math.floor(canvasHeight / 2 - hero.feetOffsetY)]
+            [hero.isoy, "img", heroImg, Math.floor(canvasWidth / 2 - hero.feetOffsetX), Math.floor(canvasHeight / 2 - hero.feetOffsetY)]
         ];
 
 
-// draw fae:
- thisX = findIsoCoordsX(fae.x, fae.y);
+        // draw fae:
+        thisX = findIsoCoordsX(fae.x, fae.y);
         thisY = findIsoCoordsY(fae.x, fae.y);
 
-assetsToDraw.push([thisY, "faeCentre", Math.floor(thisX - hero.isox + (canvasWidth / 2)), Math.floor(thisY - hero.isoy + (canvasHeight / 2) - fae.z)]);
+        assetsToDraw.push([thisY, "faeCentre", Math.floor(thisX - hero.isox + (canvasWidth / 2)), Math.floor(thisY - hero.isoy + (canvasHeight / 2) - fae.z)]);
 
-// draw fae particles:
-for (var i = 0; i < fae.particles.length; i++) {
-assetsToDraw.push([fae.particles[i].depth, "faeParticle", Math.floor(fae.particles[i].isoX - hero.isox + (canvasWidth / 2)), Math.floor(fae.particles[i].isoY - hero.isoy + (canvasHeight / 2)), fae.particles[i].alpha]);
-    }
+        // draw fae particles:
+        for (var i = 0; i < fae.particles.length; i++) {
+            assetsToDraw.push([fae.particles[i].depth, "faeParticle", Math.floor(fae.particles[i].isoX - hero.isox + (canvasWidth / 2)), Math.floor(fae.particles[i].isoY - hero.isoy + (canvasHeight / 2)), fae.particles[i].alpha]);
+        }
 
         var map = thisMapData.terrain;
-        
+
         var thisNPCOffsetCol = 0;
         var thisNPCOffsetRow = 0;
 
@@ -1593,7 +1602,7 @@ assetsToDraw.push([fae.particles[i].depth, "faeParticle", Math.floor(fae.particl
                     thisY = getTileIsoCentreCoordY(i, j);
                     thisGraphicCentreX = thisMapData.graphics[(map[j][i])].centreX;
                     thisGraphicCentreY = thisMapData.graphics[(map[j][i])].centreY;
-                    assetsToDraw.push([thisY, tileImages[(map[j][i])], Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2))]);
+                    assetsToDraw.push([thisY, "img", tileImages[(map[j][i])], Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2))]);
                 }
             }
         }
@@ -1609,7 +1618,7 @@ assetsToDraw.push([fae.particles[i].depth, "faeParticle", Math.floor(fae.particl
 
             //assetsToDraw.push([findIsoDepth(thisX, thisY), npcImages[i], Math.floor(thisX - hero.isox - thisNPC.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisNPC.centreY + (canvasHeight / 2))]);
 
-            assetsToDraw.push([thisY, npcImages[i], thisNPCOffsetCol * thisNPC.spriteWidth, thisNPCOffsetRow * thisNPC.spriteHeight, thisNPC.spriteWidth, thisNPC.spriteHeight, Math.floor(thisX - hero.isox - thisNPC.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisNPC.centreY + (canvasHeight / 2)), thisNPC.spriteWidth, thisNPC.spriteHeight]);
+            assetsToDraw.push([thisY, "sprite", npcImages[i], thisNPCOffsetCol * thisNPC.spriteWidth, thisNPCOffsetRow * thisNPC.spriteHeight, thisNPC.spriteWidth, thisNPC.spriteHeight, Math.floor(thisX - hero.isox - thisNPC.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisNPC.centreY + (canvasHeight / 2)), thisNPC.spriteWidth, thisNPC.spriteHeight]);
         }
 
 
@@ -1617,7 +1626,7 @@ assetsToDraw.push([fae.particles[i].depth, "faeParticle", Math.floor(fae.particl
             thisItem = thisMapData.items[i];
             thisX = findIsoCoordsX(thisItem.x, thisItem.y);
             thisY = findIsoCoordsY(thisItem.x, thisItem.y);
-            assetsToDraw.push([thisY, itemImages[i], Math.floor(thisX - hero.isox - thisItem.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisItem.centreY + (canvasHeight / 2))]);
+            assetsToDraw.push([thisY, "img", itemImages[i], Math.floor(thisX - hero.isox - thisItem.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisItem.centreY + (canvasHeight / 2))]);
         }
 
         assetsToDraw.sort(sortByIsoDepth);
@@ -1632,32 +1641,35 @@ assetsToDraw.push([fae.particles[i].depth, "faeParticle", Math.floor(fae.particl
         // draw the sorted assets:
         for (var i = 0; i < assetsToDraw.length; i++) {
 
-if(assetsToDraw[i][1] == "faeCentre") {
+
+switch(assetsToDraw[i][1]) {
+    case "faeCentre":
+                // draw fae:
+                drawCircle("#ffdc0c", assetsToDraw[i][2], assetsToDraw[i][3], 2);
+                drawCircle("rgba(255,220,255,0.3)", assetsToDraw[i][2], assetsToDraw[i][3], 4);
+
+                // draw fae's shadow - make it respond to the fae's height:
+                gameContext.fillStyle = "rgba(0,0,0," + (65 - fae.z) * 0.01 + ")";
+                gameContext.beginPath();
+                gameContext.ellipse(assetsToDraw[i][2] - getXOffsetFromHeight(fae.z), assetsToDraw[i][3] + fae.z, 3, 1, 0, 0, 2 * Math.PI);
+                gameContext.fill();
+        break;
+           case "faeParticle":
+         gameContext.fillStyle = "rgba(255,220,255," + assetsToDraw[i][4] + ")";
+                gameContext.fillRect(assetsToDraw[i][2], assetsToDraw[i][3], 1, 1);
+        break;
+    case "sprite":
+         // sprite image (needs slicing parameters):
+                gameContext.drawImage(assetsToDraw[i][2], assetsToDraw[i][3], assetsToDraw[i][4], assetsToDraw[i][5], assetsToDraw[i][6], assetsToDraw[i][7], assetsToDraw[i][8], assetsToDraw[i][9], assetsToDraw[i][10]);
+        break;
+    case "img":
+          // standard image:
+                gameContext.drawImage(assetsToDraw[i][2], assetsToDraw[i][3], assetsToDraw[i][4]);
+
+} 
 
 
-    // draw fae:
-    drawCircle("#ffdc0c", assetsToDraw[i][2], assetsToDraw[i][3], 2);
-    drawCircle("rgba(255,220,255,0.3)", assetsToDraw[i][2], assetsToDraw[i][3], 4);
-
-// draw fae's shadow - make it respond to the fae's height:
-gameContext.fillStyle = "rgba(0,0,0,"+(65-fae.z)*0.01+")";
-gameContext.beginPath();
-gameContext.ellipse(assetsToDraw[i][2]-getXOffsetFromHeight(fae.z), assetsToDraw[i][3] + fae.z, 3, 1, 0, 0, 2 * Math.PI);
-gameContext.fill();
-
-} else if (assetsToDraw[i][1] == "faeParticle") {
-    
-gameContext.fillStyle = "rgba(255,220,255,"+assetsToDraw[i][4]+")";
-gameContext.fillRect(assetsToDraw[i][2],assetsToDraw[i][3],1,1);
-
-
-} else if (assetsToDraw[i].length == 10) {
-                // sprite image (needs slicing parameters):
-                gameContext.drawImage(assetsToDraw[i][1], assetsToDraw[i][2], assetsToDraw[i][3], assetsToDraw[i][4], assetsToDraw[i][5], assetsToDraw[i][6], assetsToDraw[i][7], assetsToDraw[i][8], assetsToDraw[i][9]);
-            } else {
-                // standard image:
-                gameContext.drawImage(assetsToDraw[i][1], assetsToDraw[i][2], assetsToDraw[i][3]);
-            }
+         
         }
 
         // draw the map transition if it's needed:
@@ -1685,3 +1697,4 @@ if (('querySelectorAll' in document && 'addEventListener' in window) && (!!windo
 } else {
     // sorry message / fallback? #####
 }
+

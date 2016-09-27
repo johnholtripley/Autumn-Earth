@@ -23,6 +23,7 @@
 <div id="toolbar"></div>
 <div id="displayZoneName"></div>
 <div id="inventoryPanels"></div>
+<div id="cartographicPanel"><div class="draggableBar">Map</div><img id="activeCartographicMap"></div>
 </div>
 
 <script src="/js/game-world.<?php echo $cacheVersion; ?>.js"></script>
