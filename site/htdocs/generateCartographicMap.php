@@ -831,16 +831,28 @@ array_push($unusedEdges,$edges[$i]);
 
 // flood fill from centre of a door tile:
 
+
+
+
 $firstDoor = explode(",",$loadedDoorData[0]);
 if($format == "xml") {
 $doorX = intval($firstDoor[1])+0.5;
 $doorY = intval($firstDoor[2])+0.5;
+$doorY = $doorX *$tileLineDimension;
+$doorY = ($mapMaxHeight -1 - $doorY)*$tileLineDimension;
 } else {
-  $doorX = intval($firstDoor[0])+0.5;
-$doorY = intval($firstDoor[1])+0.5;
-}
+$doorX = intval($firstDoor[1])+0.5;
+$doorY = intval($firstDoor[0])+0.5;
+
+//echo $doorX.",".$doorY."           ";
+
 $doorX = $doorX *$tileLineDimension;
 $doorY = ($mapMaxHeight -1 - $doorY)*$tileLineDimension;
+}
+
+//echo $doorX.",".$doorY."<br>";
+
+
 /*
 echo $tileLineDimension." ####";
 
@@ -866,22 +878,44 @@ if($doorY<0) {
   $doorY=0;
 }
 if($doorX>$canvaDimension) {
-  $doorX=$canvaDimension;
+  $doorX=$canvaDimension - 2;
 }
 if($doorY>$canvaDimension) {
-  $doorY=$canvaDimension;
+  $doorY=$canvaDimension - 2;
 }
 
-imagefill($mapCanvas, $doorX, $doorY, $walkableColour);
 
 
 
 
- imagefilter($mapCanvas, IMG_FILTER_GAUSSIAN_BLUR);
+
+
+
+// json maps are rotate compared to the old xml maps:
+if($format!="xml") {
+
+   imagefill($mapCanvas, $doorX, $doorY, $walkableColour);
+$rotatedImage = imagerotate($mapCanvas, -90, 0);
+ imagefilter($rotatedImage, IMG_FILTER_GAUSSIAN_BLUR);
+} else {
+   imagefill($mapCanvas, $doorX, $doorY, $walkableColour);
+imagefilter($mapCanvas, IMG_FILTER_GAUSSIAN_BLUR);
+}
+
+
+
+
+
+
+
+
+
 $imageResampled = imagecreatetruecolor($canvaDimension/2, $canvaDimension/2);
-
-imagecopyresampled($imageResampled, $mapCanvas, 0, 0, 0, 0, $canvaDimension/2, $canvaDimension/2, $canvaDimension, $canvaDimension);
-
+if($format!="xml") {
+imagecopyresampled($imageResampled, $rotatedImage, 0, 0, 0, 0, $canvaDimension/2, $canvaDimension/2, $canvaDimension, $canvaDimension);
+} else {
+  imagecopyresampled($imageResampled, $mapCanvas, 0, 0, 0, 0, $canvaDimension/2, $canvaDimension/2, $canvaDimension, $canvaDimension);
+}
 // pick a random overlay
 $overlayDir = "images/cartography/overlays/";
  $templatesFound = 0;
@@ -936,6 +970,12 @@ $chestY = $thisItem[1];
 imagecopy($imageResampled, $chestLocator, ($chestX)*$tileLineDimension/2, ($mapMaxHeight -1 - $chestY)*$tileLineDimension/2, 0, 0, 7, 7);
 
 
+
+
+
+
+
+
 if($debug) {
 //echo "<pre>item    ";
 //var_dump($thisItem);
@@ -951,6 +991,9 @@ if($debug) {
 }
 
 }
+
+
+
 
 
 
@@ -973,10 +1016,15 @@ $mapFilename = "data/chr".$playerId."/cartography/".$dungeonName."/".$session."/
 
 
 
+
+
+
+
 if(!$debug) {
 //save image:
 
-imagejpeg($imageResampled,$mapFilename,100);
+
+  imagejpeg($imageResampled,$mapFilename,100);
 
 
 }
@@ -987,8 +1035,12 @@ if($update) {
  print "changeswassuccess=true";
 } else {
 // Output image to the browser
+
+ // if(!$debug) {
 header('Content-type: image/jpg');
-imagejpeg($imageResampled);
+//}
+  imagejpeg($imageResampled,null,100);
+
 }
 
 
@@ -997,6 +1049,9 @@ imagedestroy($mapCanvas);
 imagedestroy($overlayTexture);
 imagedestroy($imageResampled);
 imagedestroy($brush);
+if($format!="xml") {
+imagedestroy($rotatedImage);
+}
 
 if($plotChests) {
 imagedestroy($chestLocator);
@@ -1073,9 +1128,9 @@ function quadBezier($im, $x1, $y1, $x2, $y2, $x3, $y3) {
 
 
 function loadAndParseJSON($whichfileToUse) {
-  global $loadedMapData, $loadedItemData, $loadedDoorData;
+  global $loadedMapData, $loadedItemData, $loadedDoorData, $protocol;
 
-$str = file_get_contents($whichfileToUse);
+$str = file_get_contents($protocol.$_SERVER['SERVER_NAME']."/".$whichfileToUse);
 $json = json_decode($str, true);
 
 
@@ -1084,6 +1139,10 @@ $json = json_decode($str, true);
 for($i=0;$i<count($json['map']['collisions'][0]);$i++) {
   array_push($loadedMapData, str_ireplace(" ", "", $json['map']['collisions'][$i]));
 }
+
+
+// replace door's "d" with 0 for being walkable:
+
 
 foreach ($json['map']['doors'] as $key => $value) {
 array_push($loadedDoorData, $key);
