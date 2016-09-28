@@ -841,6 +841,7 @@ $doorY = intval($firstDoor[2])+0.5;
 $doorY = $doorX *$tileLineDimension;
 $doorY = ($mapMaxHeight -1 - $doorY)*$tileLineDimension;
 } else {
+  // reversed becuase of the rotation of the old XML compared to the json
 $doorX = intval($firstDoor[1])+0.5;
 $doorY = intval($firstDoor[0])+0.5;
 
