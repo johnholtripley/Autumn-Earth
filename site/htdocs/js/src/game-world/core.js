@@ -70,7 +70,7 @@ function loadMapJSON(mapFilePath) {
             document.title = titleTagPrefix+' - '+thisMapData.zoneName;
              cartographicTitle.innerHTML = thisMapData.zoneName;
         }
-       
+       loadCartographicMap();
         findInventoryItemData();
 
     }, function(status) {
@@ -105,7 +105,7 @@ function loadMap() {
         var centreDoorX = targetDoorX / 3;
         var centreDoorY = targetDoorY / 3;
         mapFilePath = '/generateDungeonMap.php?playerId=' + characterId + '&originatingMapId=' + currentMap + '&requestedMap=' + newMap + '&dungeonName=' + randomDungeonName + '&connectingDoorX=' + centreDoorX + '&connectingDoorY=' + centreDoorY;
-         loadCartographicMap();
+         
     }
     currentMap = newMap;
     loadMapJSON(mapFilePath);
