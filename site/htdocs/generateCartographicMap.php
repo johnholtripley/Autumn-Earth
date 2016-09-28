@@ -11,7 +11,7 @@
 // before placing chest - look at pixel colours of the boundaries, and nudge accordingly so that the chest doesn't overlay a wall where the curve has come in slightly
 // islands always start at bottom left
 // find a way to make the single 1x1 tiles less regular - use bezier curves instead? or an arc in one quadrant?
-
+$protocol = stripos($_SERVER['SERVER_PROTOCOL'],'https') === true ? 'https://' : 'http://';
 
 $debug = false;
 
@@ -59,7 +59,7 @@ if (is_numeric($playerId)) {
 $mapFilename = "data/chr".$playerId."/cartography/".$dungeonName."/".$session."/".$requestedMap.".jpg";
   if ((is_file($mapFilename)) && (!$debug) && (!$update)) {
   
-            header("Location: https://www.autumnearth.com/" . $mapFilename);
+            header("Location: ".$protocol.$_SERVER['SERVER_NAME'] . "/".$mapFilename);
             
         } else {
            
@@ -131,7 +131,7 @@ createCartographicMap();
 
 
 function createCartographicMap() {
-global $mapMaxWidth, $mapMaxHeight, $dungeonArray, $loadedItemData, $loadedDoorData, $debug, $playerId, $dungeonName, $session, $requestedMap, $plotChests, $update, $useOverlay, $format;
+global $mapMaxWidth, $mapMaxHeight, $dungeonArray, $loadedItemData, $loadedDoorData, $debug, $playerId, $dungeonName, $session, $requestedMap, $plotChests, $update, $useOverlay, $format, $protocol;
 
 
 // canvas size should be twice required size as it will be downsampled to anti alias:
@@ -898,7 +898,7 @@ $overlayDir = "images/cartography/overlays/";
   }
     $templateOverlayToUse = rand(1,$templatesFound);
 
-$protocol = stripos($_SERVER['SERVER_PROTOCOL'],'https') === true ? 'https://' : 'http://';
+
 
 $overlayTexture = imagecreatefrompng($protocol.$_SERVER['SERVER_NAME']."/images/cartography/overlays/".$templateOverlayToUse.".png");
 imageAlphaBlending($overlayTexture, false);
@@ -954,8 +954,20 @@ if($debug) {
 
 
 
+if (!file_exists("data/chr".$playerId."/cartography")) {
+    mkdir("data/chr".$playerId."/cartography", 0777, true);
+}
 
 
+
+if (!file_exists("data/chr".$playerId."/cartography/".$dungeonName)) {
+    mkdir("data/chr".$playerId."/cartography/".$dungeonName, 0777, true);
+}
+
+
+if (!file_exists("data/chr".$playerId."/cartography/".$dungeonName."/".$session)) {
+    mkdir("data/chr".$playerId."/cartography/".$dungeonName."/".$session, 0777, true);
+}
 
 $mapFilename = "data/chr".$playerId."/cartography/".$dungeonName."/".$session."/".$requestedMap.".jpg";
 
