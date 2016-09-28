@@ -4,6 +4,7 @@ var UI = {
         var displayZoneName = document.getElementById('displayZoneName');
         var inventoryPanels = document.getElementById('inventoryPanels');
         var activeCartographicMap = document.getElementById('activeCartographicMap');
+        var cartographicTitle = document.getElementById('cartographicTitle');
         //
 
     },

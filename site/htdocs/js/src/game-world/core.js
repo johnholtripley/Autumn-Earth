@@ -56,6 +56,7 @@ function prepareCoreAssets() {
 
 function loadCartographicMap() {
     activeCartographicMap.src="/generateCartographicMap.php?playerId="+characterId+"&dungeonName="+randomDungeonName+"&plotChests=true&requestedMap="+newMap;
+
 }
 
 function loadMapJSON(mapFilePath) {
@@ -67,6 +68,7 @@ function loadMapJSON(mapFilePath) {
         if (previousZoneName != thisMapData.zoneName) {
             UI.showZoneName(thisMapData.zoneName);
             document.title = titleTagPrefix+' - '+thisMapData.zoneName;
+             cartographicTitle.innerHTML = thisMapData.zoneName;
         }
        
         findInventoryItemData();
