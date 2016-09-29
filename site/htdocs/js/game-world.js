@@ -730,9 +730,13 @@ function init() {
         gameContext = gameCanvas.getContext('2d');
         canvasWidth = gameCanvas.width;
         canvasHeight = gameCanvas.height;
-    }
+    
     whichTransitionEvent = determineWhichTransitionEvent();
     gameMode = "mapLoading";
+
+cartographyCanvas = document.getElementById("cartographyCanvas");
+cartographyContext = cartographyCanvas.getContext('2d');
+
     UI.init();
     // detect and set up input methods:
     Input.init();
@@ -740,7 +744,7 @@ function init() {
     gameLoop();
 
     getHeroGameState();
-
+}
 }
 
 function getHeroGameState() {
@@ -896,9 +900,6 @@ function findInventoryItemData() {
         itemIdsToGet.push(thisMapData.items[i].type);
     }
 
-
-
-
     // find item available in any shops:
     // ####
     loadInventoryItemData(itemIdsToGet.join("|"));
@@ -909,8 +910,6 @@ function findInventoryItemData() {
 function loadInventoryItemData(itemIdsToLoad) {
     getJSON("/game-world/getInventoryItems.php?whichIds=" + itemIdsToLoad, function(data) {
         currentActiveInventoryItems = data;
-
-
         if (!inventoryInterfaceIsBuilt) {
             UI.buildInventoryInterface();
         }
@@ -1054,7 +1053,6 @@ function startDoorTransition() {
 }
 
 function getHeroAsCloseAsPossibleToObject(objx, objy, objw, objh) {
-
     switch (hero.facing) {
         case "n":
             hero.y = objy + objh / 2 + hero.height / 2 + 1;
@@ -1068,9 +1066,7 @@ function getHeroAsCloseAsPossibleToObject(objx, objy, objw, objh) {
         case "e":
             hero.x = objx - objw / 2 - hero.width / 2 - 1;
             break;
-
     }
-
 }
 
 function checkHeroCollisions() {
@@ -1192,8 +1188,13 @@ function update() {
             checkForActions();
         }
         checkHeroCollisions();
+        var heroOldX = hero.tileX;
+        var heroOldY = hero.tileY;
         hero.tileX = getTileX(hero.x);
         hero.tileY = getTileY(hero.y);
+        if((hero.tileX != heroOldX) || (hero.tileY != heroOldY)) {
+heroIsInNewTile();
+        }
     } else {
         hero.isMoving = true;
         // continue the hero moving:
@@ -1217,7 +1218,7 @@ function update() {
         }
     }
     if (mapTransition == "in") {
-        // make it transition in twice as fast:
+        // make it transition in faster:
         mapTransitionCurrentFrames += 2;
         if (mapTransitionCurrentFrames >= mapTransitionMaxFrames) {
             mapTransition = "";
@@ -1231,6 +1232,29 @@ function update() {
     }
 
     moveNPCs();
+}
+
+function heroIsInNewTile() {
+    // update the cartographic minimap:
+    
+// cartography canvas is 246px wide
+cartographyUnits = mapTilesX * tileW / 246;
+x = hero.x*cartographyUnits;
+y = hero.y*cartographyUnits;
+innerRadius = 0;
+outerRadius = 25;
+
+var gradient = cartographyContext.createRadialGradient(x, y, innerRadius, x, y, outerRadius);
+gradient.addColorStop(0, 'rgb(255,255,255)');
+gradient.addColorStop(1, 'rgba(255,255,255,0)');
+
+cartographyContext.arc(x, y, outerRadius, 0, 2 * Math.PI);
+
+cartographyContext.fillStyle = gradient;
+cartographyContext.fill();
+
+
+
 }
 
 function canAddItemToInventory(itemObj) {
