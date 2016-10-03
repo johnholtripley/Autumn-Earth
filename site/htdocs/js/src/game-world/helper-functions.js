@@ -245,7 +245,9 @@ function removeClass(el, className) {
 
 
 
-
+function getColourName(colour, itemId) {
+    
+}
 
 
 
