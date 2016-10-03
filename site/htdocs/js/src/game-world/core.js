@@ -122,6 +122,7 @@ function loadMap() {
 
 function loadMapAssets() {
     imagesToLoad = [];
+    var thisFileColourSuffix, thisColourName;
     var assetPath = currentMap;
     if (currentMap < 0) {
         assetPath = 'dungeon/' + randomDungeonName;
@@ -148,9 +149,18 @@ function loadMapAssets() {
     itemGraphicsToLoad = thisMapData.items;
     for (var i = 0; i < itemGraphicsToLoad.length; i++) {
         // get colour name #########
+
+thisFileColourSuffix = "";
+ thisColourName = getColourName(currentActiveInventoryItems[itemGraphicsToLoad[i].colour, currentActiveInventoryItems[itemGraphicsToLoad[i].type);
+                    if (thisColourName != "") {
+                       
+                        thisFileColourSuffix = "-" + thisColourName.toLowerCase();
+                    }
+
+
         imagesToLoad.push({
             name: "item" + i,
-            src: "/images/game-world/items/" + currentActiveInventoryItems[itemGraphicsToLoad[i].type].worldSrc + ".png"
+            src: "/images/game-world/items/" + currentActiveInventoryItems[itemGraphicsToLoad[i].type].worldSrc + thisFileColourSuffix+".png"
         });
     }
 

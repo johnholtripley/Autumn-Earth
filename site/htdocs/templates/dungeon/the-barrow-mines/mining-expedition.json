@@ -1,0 +1,81 @@
+{
+    "template": {
+        "in": {
+            "x": 0,
+            "y": 0
+        },
+        "out": {
+            "x": 0,
+            "y": 5
+        },
+        "collisions": [
+            [0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 1, 1, 1, 1, 0],
+            [0, 0, 1, 1, 1, 1, 0],
+            [0, 0, 1, 1, 1, 1, 0],
+            [0, 0, 1, 1, 1, 1, 0]
+        ],
+        "terrain": [
+            ["X", "X", "X", "X", "X", "X", "X"],
+            ["X", "X", "*", "*", "*", "*", "*"],
+            ["X", "X", "*", "*", "*", "*", "*"],
+            ["X", "X", "*", 0, "*", "*", "*"],
+            ["X", "X", "*", "*", "*", "*", "*"],
+            ["X", "X", "*", "*", "*", "*", "*"]
+        ],
+        "elevation": [],
+        "graphics": [
+            { "src": "tent.png", "centreX": 117, "centreY": 98 }
+
+        ],
+        "npcs": [
+
+            {
+                "name": "hen",
+                "src": "white-hen.png",
+                "width": 20,
+                "height": 20,
+                "spriteWidth": 31,
+                "spriteHeight": 29,
+                "centreX": 21,
+                "centreY": 24,
+                "tileX": 2,
+                "tileY": 2,
+                "movement": ["-"],
+                "facing": "s",
+                "walkThroughDoors": false,
+                "speed": 2,
+                "speech": "",
+                "isCollidable": true,
+                "isMoving": false,
+                "animation": {
+                    "walk": {
+                        "length": 1,
+                        "n": 0,
+                        "e": 0,
+                        "s": 0,
+                        "w": 0
+                    }
+                }
+            }
+        ],
+        "items": [{
+
+            "type": 19,
+            "tileX": 2,
+            "tileY": 3,
+            "quantity": 26,
+            "quality": 100,
+            "durability": 100,
+            "currentWear": 0,
+            "effectiveness": 100,
+            "wrapped": 0,
+            "colour": 0,
+            "enchanted": 0,
+            "hallmark": 0,
+            "inscription": ""
+
+        }]
+    }
+}

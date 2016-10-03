@@ -6,5 +6,5 @@ $templatesAlreadyPlaced = array();
 // save level locked NPCs placed:
 $NPCsAlreadyPlaced = array(0,1,2);
 // save level locked templates placed:
-$levelLockedTemplatesAlreadyPlaced = array(4);
+$levelLockedTemplatesAlreadyPlaced = array();
 ?>

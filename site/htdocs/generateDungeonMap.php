@@ -144,6 +144,8 @@ if(isset($_GET["clearMaps"])) {
 }
 
 
+$protocol = stripos($_SERVER['SERVER_PROTOCOL'],'https') === true ? 'https://' : 'http://';
+
 $isTreasureMapLevel = false;
 if(isset($_GET["isTreasureMap"])) {
   $isTreasureMapLevel = true;
@@ -198,7 +200,7 @@ if (is_numeric($thisPlayersId)) {
 $fileExtenstion = ".xml";
         }
         $mapFilename = "data/chr" . $thisPlayersId . "/dungeon/".$thisDungeonsName."/" . $thisMapsId . $fileExtenstion;
-        if ((is_file($mapFilename)) && ($_GET["outputMode"] != "test")) {
+        if ((is_file($mapFilename)) && ($outputMode != "test") && ($_GET["debug"] != true)) {
  
        
             header("Location: /" . $mapFilename);
@@ -384,8 +386,44 @@ function getXMLFile() {
     $templateRows = array();
     $templateTiles = array();
 }
+
+function getJSONTemplateFile() {
+        global $templateRows, $fileToUse, $templateTiles, $thisDungeonsName, $templatesAlreadyPlaced, $templateChosen;
+    // read contents of dir and find number of files:
+    $dir = "templates/dungeon/".$thisDungeonsName."/";
+    
+    
+    $filesFound = array();
+    if (is_dir($dir)) {
+        if ($dirHandle = opendir($dir)) {
+            while (($file = readdir($dirHandle)) !== false) {
+                if ((is_file($dir . '/' . $file)) && ($file != 'index.php')) {
+                if (!(in_array($file,$templatesAlreadyPlaced))) {
+                    array_push($filesFound, $file);
+                    }
+                }
+            }
+            closedir($dirHandle);
+        }
+    }
+    
+    
+    $randomFile = rand(0, count($filesFound) - 1);
+    $fileToUse = $dir . $filesFound[$randomFile];
+    
+    $templateChosen = $filesFound[$randomFile];
+    
+  
+    
+    $templateRows = array();
+    $templateTiles = array();
+}
+
 function pickTemplate() {
-    global $inX, $inY, $outX, $outY, $templateRows, $fileToUse;
+  
+    global $inX, $inY, $outX, $outY, $templateRows, $fileToUse, $outputMode, $templateJSON, $protocol;
+      
+    if($outputMode == "xml") {
     $xmlparser = xml_parser_create();
     xml_set_element_handler($xmlparser, "XMLStartTag", "XMLEndTag");
     xml_set_character_data_handler($xmlparser, "XMLTagContents");
@@ -408,6 +446,16 @@ function pickTemplate() {
     }
     while (!$xmlParsedOk);
     xml_parser_free($xmlparser);
+} else {
+    getJSONTemplateFile();
+
+  
+
+$templateJSONFile = file_get_contents($protocol.$_SERVER['SERVER_NAME']."/".$fileToUse);
+
+$templateJSON = json_decode($templateJSONFile, true);
+
+}
 }
 
 
@@ -698,7 +746,7 @@ $dungeonMap[$thisCaseStartX-1][$thisCaseStartY+2] = ",";
 
 
 function makeTunnel($startX, $startY, $endX, $endY, $tunnelWidth, $bendyness, $calledFromLine) {
-    global $dungeonMap, $tunnelMaxLength, $xDir, $yDir, $targetX, $targetY, $currX, $currY, $mapMaxWidth, $mapMaxHeight, $width1, $width2, $globalTunnelWidth, $startTime, $debugMode;
+    global $dungeonMap, $tunnelMaxLength, $xDir, $yDir, $targetX, $targetY, $currX, $currY, $mapMaxWidth, $mapMaxHeight, $width1, $width2, $globalTunnelWidth, $startTime, $debugMode, $outputMode;
 
     $thisTime = time();
     $totalTimeSoFar = $thisTime - $startTime;
@@ -760,9 +808,10 @@ function makeTunnel($startX, $startY, $endX, $endY, $tunnelWidth, $bendyness, $c
     while (($currTunnelLength < $tunnelMaxLength) && (!(($currX == $targetX) && ($currY == $targetY))));
     // mark destination tile as well:
     markTunnel($currX, $currY);
-    if($debugMode) {
+   /* if($debugMode) {
      echo "tunnel length " . $currTunnelLength . " / " . $tunnelMaxLength . " from " . $calledFromLine . "<br />";
      }
+    */
     if ($currTunnelLength < $tunnelMaxLength) {
         return true;
     } else {
@@ -1161,7 +1210,7 @@ echo '<head>' . "\n";
     echo '<meta http-equiv="content-language" content="en" />' . "\n";
     echo '<meta name="language" content="english" />' . "\n";
 echo '</head>' . "\n";
-echo '<body style="background: #000; color: #fff;">' . "\n";
+echo '<body style="background: #cecece; color: #fff;">' . "\n";
   
 
   echo '<code><pre style="font-family: courier; line-height: 0.75em;">' . "\n";
@@ -1288,12 +1337,12 @@ for ($i = ($mapMaxWidth-1);$i >= 0;$i--) {
 for ($j = ($mapMaxHeight-1);$j >= 0;$j--) {
     if ($dungeonOutputMap[$i][$j] == "#") {
     // check to see if tiles above or to the side are walkable:
-    if (  (tileIsWalkable($i-1,$j)) || (tileIsWalkable($i-1,$j+1)) || (tileIsWalkable($i,$j+1)) ) {
+    if (  (tileIsWalkable($i-1,$j)) || (tileIsWalkable($i-1,$j-1)) || (tileIsWalkable($i,$j-1)) ) {
  
      
-     $dungeonOutputMap[$i][$j] = "100";
-     } else {
      $dungeonOutputMap[$i][$j] = "120";
+     } else {
+     $dungeonOutputMap[$i][$j] = "100";
      }
     }
     
@@ -1357,7 +1406,9 @@ for ($i = 0;$i < count($allStairs);$i++) {
 
 if($mapMode=="template") {
 // insert the template tiles here - so that the dungeon walls get averaged in smoothly
-$templateWidth = count($templateTiles);
+
+if($outputMode=="xml") {
+    $templateWidth = count($templateTiles);
 $templateHeight = count(explode(",",$templateTiles[0]));
 for ($ti = 0;$ti < $templateWidth;$ti++) {
   $thisRow = explode(",",$templateTiles[$ti]);
@@ -1365,6 +1416,18 @@ for ($ti = 0;$ti < $templateWidth;$ti++) {
     $dungeonOutputMap[($tj + $topLeftXPos) ][($ti + $topLeftYPos) ] = $thisRow[$tj];
   }
 }
+} else {
+     $templateHeight = count($templateTiles);
+                    $templateWidth = count($templateTiles[0]);
+
+for ($ti = 0;$ti < $templateWidth;$ti++) {
+  for ($tj = 0;$tj < $templateHeight;$tj++) {
+    $dungeonOutputMap[($tj + $topLeftXPos) ][($ti + $topLeftYPos) ] = $templateTiles[$tj][$ti];
+  }
+}
+
+}
+
 }
 
 
@@ -1503,6 +1566,7 @@ $atLeastOneCart = true;
 */
 
 //var_dump($dungeonOutputMap);
+
 
 
 if($outputMode=="json") {
@@ -1762,7 +1826,7 @@ if ($doorY == 0) {
 
 
 if (!$isTreasureMapLevel) {
-// echo for immediate use by Flash: (treasure maps only need creating ready for flash, not passing back for immediate use)
+// echo for immediate use by game: (treasure maps only need creating ready for game, not passing back for immediate use)
 echo 'header("Content-Type: application/json");';
 echo $outputString;
 }
@@ -1779,9 +1843,9 @@ echo $outputString;
 
 }
 
-var_dump($doorsIn);
-echo "<hr>";
-var_dump($doorsOut);
+//var_dump($doorsIn);
+//echo "<hr>";
+//var_dump($doorsOut);
 
 if($outputMode=="xml") {
 
@@ -2721,7 +2785,7 @@ global $savedWalkableAreas, $isAValidItemPosition, $mapMaxWidth, $mapMaxHeight, 
 
 
 function createNewDungeonMap($mapID) {
-    global $dungeonMap, $itemMap, $npcMap, $tunnelMaxLength, $mapMaxWidth, $mapMaxHeight, $inX, $inY, $outX, $outY, $templateRows, $exitDoorX, $exitDoorY, $heightMap, $entranceHeight, $exitHeight, $debugMode, $dungeonDetails, $doorsIn, $doorsOut, $connectingDoorX, $connectingDoorY, $dungeonDetails, $thisDungeonsName, $thisMapsId, $outputMode, $allStairs, $tileHeight, $isTreasureMapLevel, $treasureLocX, $treasureLocY, $thisPlayersId, $loadedDoorData, $mapMode, $topLeftXPos, $topLeftYPos, $turning, $whichDirectionToTurn, $NPCsAlreadyPlaced, $templatesAlreadyPlaced, $levelLockedTemplatesAlreadyPlaced, $templateChosen, $levelLockedTemplateChosen, $levelLockedTemplatePossible;
+    global $dungeonMap, $itemMap, $npcMap, $tunnelMaxLength, $mapMaxWidth, $mapMaxHeight, $inX, $inY, $outX, $outY, $templateRows, $templateTiles, $exitDoorX, $exitDoorY, $heightMap, $entranceHeight, $exitHeight, $debugMode, $dungeonDetails, $doorsIn, $doorsOut, $connectingDoorX, $connectingDoorY, $dungeonDetails, $thisDungeonsName, $thisMapsId, $outputMode, $allStairs, $tileHeight, $isTreasureMapLevel, $treasureLocX, $treasureLocY, $thisPlayersId, $loadedDoorData, $mapMode, $topLeftXPos, $topLeftYPos, $turning, $whichDirectionToTurn, $NPCsAlreadyPlaced, $templatesAlreadyPlaced, $levelLockedTemplatesAlreadyPlaced, $templateChosen, $levelLockedTemplateChosen, $levelLockedTemplatePossible, $templateJSON;
 
   
   
@@ -3606,8 +3670,35 @@ echo "</pre></code>";
                     
                 case "template":
                     pickTemplate();
+
+
+
+if($outputMode!="xml") {
+ //  echo '<pre>' . print_r($templateJSON, true) . '</pre>';
+//echo "<hr>";
+
+
+
+
+for($i=0;$i<count($templateJSON['template']['terrain']);$i++) {
+     array_push($templateTiles, str_ireplace(" ", "", $templateJSON['template']['terrain'][$i]));
+  array_push($templateRows, str_ireplace(" ", "", $templateJSON['template']['collisions'][$i]));
+}
+
+//echo '<pre>' . print_r($templateRows, true) . '</pre>';
+
+ $templateHeight = count($templateRows);
+                    $templateWidth = count($templateRows[0]);
+                  //  echo $templateWidth . " x ".$templateHeight;
+
+
+} else {
+
                     $templateWidth = count($templateRows);
                     $templateHeight = strlen($templateRows[0]);
+}
+
+
                     // find a location for this template: (allow room for the tunnel to get between template and map edge)
                     $topLeftXPos = rand(5, $mapMaxWidth - $templateWidth - 5);
                     $topLeftYPos = rand(5, $mapMaxHeight - $templateHeight - 5);
@@ -3630,14 +3721,25 @@ echo "</pre></code>";
                       } while (!$tunnelSuccess);
                     // place template:
                     for ($i = 0;$i < $templateWidth;$i++) {
+                        if($outputMode=="xml") {
                         $thisRow = str_split($templateRows[$i], 1);
+                    
                         for ($j = 0;$j < $templateHeight;$j++) {
                             if ($thisRow[$j] != "X") {
                                 // X means leave the terrain underneath untouched
                                 $dungeonMap[($j + $topLeftXPos) ][($i + $topLeftYPos) ] = $thisRow[$j];
                             }
                         }
+                    } else {
+                        for ($j = 0;$j < $templateHeight;$j++) {
+                            if ($templateRows[$j][$i] != "X") {
+                                // X means leave the terrain underneath untouched
+$dungeonMap[($j + $topLeftXPos) ][($i + $topLeftYPos) ] = $templateRows[$j][$i];
+}
+                        }
                     }
+                    }
+                    
                     break;
                     
                 case "nest":    
@@ -3829,10 +3931,11 @@ echo '<head>' . "\n";
     echo 'span.door {background:#8B600D;}'."\n";
     echo '.clearer {width:100%;clear:both;height:0;}'."\n";
     echo '#wrapper {position:relative;margin: 0 0 40px 0;}'."\n";
+    echo 'body{background:#cecece;}'."\n";
     echo '</style>'."\n";
     
 echo '</head>' . "\n";
-echo '<body style="background: #000; color: #fff;">' . "\n";
+echo '<body style="background: #cecece; color: #fff;">' . "\n";
   
 
   echo '<div id="wrapper">' . "\n";
