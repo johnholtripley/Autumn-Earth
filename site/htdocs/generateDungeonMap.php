@@ -1817,7 +1817,24 @@ if ($doorY == 0) {
 
         $outputString .= '    
         },
-        "items": []
+        "items": [';
+
+for ($j = 0;$j < $mapMaxHeight;$j++) {
+    for ($i = 0;$i < $mapMaxWidth;$i++) {
+    
+   if($itemMap[$i][$j] != "") {
+   
+
+$outputString .= '{"type": '.$itemMap[$i][$j].',"tileX": '.$i.',"tileY": '.$j.'},';
+
+
+}
+   }
+   }
+   $outputString = rtrim($outputString, ',');
+
+
+        $outputString .= ']
     }
 }
 ';
