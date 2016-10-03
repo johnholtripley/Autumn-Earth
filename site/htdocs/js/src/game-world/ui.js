@@ -34,10 +34,10 @@ var UI = {
                 if (thisSlotsID in hero.inventory) {
 theColourPrefix = "";
 thisFileColourSuffix = "";
-thisColourName = getColourName(1,2);
-if(thisColourName == "") {
+thisColourName = getColourName(hero.inventory[thisSlotsID].colour,hero.inventory[thisSlotsID].type);
+if(thisColourName != "") {
 theColourPrefix = thisColourName+" ";
-thisFileColourSuffix = "-".thisColourName.toLowerCase();
+thisFileColourSuffix = "-"+thisColourName.toLowerCase();
 }
                     inventoryMarkup += '<img src="/images/game-world/inventory-items/' + hero.inventory[thisSlotsID].type + thisFileColourSuffix+ '.png" alt="">';
                     inventoryMarkup += '<span class="qty">' + hero.inventory[thisSlotsID].quantity + '</span>';

@@ -94,7 +94,7 @@ function getXOffsetFromHeight(height) {
              }
         }
     }
-    console.log("returning "+keysFound);
+    
    return keysFound;
 }
 
@@ -245,9 +245,7 @@ function removeClass(el, className) {
 
 
 
-function getColourName(colour, itemId) {
-    
-}
+
 
 
 

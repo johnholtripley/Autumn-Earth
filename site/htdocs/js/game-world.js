@@ -1,3 +1,23 @@
+function updateCartographicMiniMap() {
+
+    // cartography canvas is 246px wide
+    cartographyUnits = mapTilesX * tileW / 246;
+    x = hero.x * cartographyUnits;
+    y = hero.y * cartographyUnits;
+    innerRadius = 0;
+    outerRadius = 25;
+
+    var gradient = cartographyContext.createRadialGradient(x, y, innerRadius, x, y, outerRadius);
+    gradient.addColorStop(0, 'rgb(255,255,255)');
+    gradient.addColorStop(1, 'rgba(255,255,255,0)');
+
+    cartographyContext.arc(x, y, outerRadius, 0, 2 * Math.PI);
+
+    cartographyContext.fillStyle = gradient;
+    cartographyContext.fill();
+
+}
+
 colourNames = ["",
     "Crimson",
     "Yellow",
@@ -24,6 +44,17 @@ colourNames = ["",
     "(dark brown/chestnut)",
     "Grey"
 ];
+
+function getColourName(colour, itemType) {
+    var colourName = "";
+    // check it's not got an inherent colour:
+    if (currentActiveInventoryItems[itemType].hasInherentColour != 1) {
+        colourName = colourNames[colour];
+    }
+    return colourName;
+}
+
+
 
 function mixColours() {
     // use to get the resulting colour from any number of colours passed in.
@@ -242,7 +273,7 @@ function getXOffsetFromHeight(height) {
              }
         }
     }
-    console.log("returning "+keysFound);
+    
    return keysFound;
 }
 
@@ -649,6 +680,7 @@ var UI = {
 
     buildInventoryInterface: function() {
         var inventoryMarkup = '';
+        var thisColourName, theColourPrefix, thisFileColourSuffix;
         // loop through number of bags
         for (var i = 0; i < hero.bags.length; i++) {
             inventoryMarkup += '<div class="inventoryBag"><div class="draggableBar">' + currentActiveInventoryItems[hero.bags[i].type].shortname + '</div><ol class="active" id="bag' + i + '">';
@@ -660,10 +692,16 @@ var UI = {
                 inventoryMarkup += '<li id="slot' + thisSlotsID + '">';
                 // check if that key exists in inventory:
                 if (thisSlotsID in hero.inventory) {
-
-                    inventoryMarkup += '<img src="/images/game-world/inventory-items/' + hero.inventory[thisSlotsID].type + '.png" alt="">';
+theColourPrefix = "";
+thisFileColourSuffix = "";
+thisColourName = getColourName(hero.inventory[thisSlotsID].colour,hero.inventory[thisSlotsID].type);
+if(thisColourName != "") {
+theColourPrefix = thisColourName+" ";
+thisFileColourSuffix = "-"+thisColourName.toLowerCase();
+}
+                    inventoryMarkup += '<img src="/images/game-world/inventory-items/' + hero.inventory[thisSlotsID].type + thisFileColourSuffix+ '.png" alt="">';
                     inventoryMarkup += '<span class="qty">' + hero.inventory[thisSlotsID].quantity + '</span>';
-                    inventoryMarkup += '<p><em>' + currentActiveInventoryItems[hero.inventory[thisSlotsID].type].shortname + ' </em>' + currentActiveInventoryItems[hero.inventory[thisSlotsID].type].description + ' <span class="price">Sell price: ' + parseMoney(hero.inventory[thisSlotsID].quantity * currentActiveInventoryItems[hero.inventory[thisSlotsID].type].priceCode, 0) + '</span></p>';
+                    inventoryMarkup += '<p><em>' + theColourPrefix+currentActiveInventoryItems[hero.inventory[thisSlotsID].type].shortname + ' </em>' + currentActiveInventoryItems[hero.inventory[thisSlotsID].type].description + ' <span class="price">Sell price: ' + parseMoney(hero.inventory[thisSlotsID].quantity * currentActiveInventoryItems[hero.inventory[thisSlotsID].type].priceCode, 0) + '</span></p>';
                 } else {
                     inventoryMarkup += '<img alt="Empty slot" src="/images/game-world/inventory-items/blank.png">';
                 }
@@ -866,9 +904,10 @@ function loadMapAssets() {
 
     itemGraphicsToLoad = thisMapData.items;
     for (var i = 0; i < itemGraphicsToLoad.length; i++) {
+        // get colour name #########
         imagesToLoad.push({
             name: "item" + i,
-            src: "/images/game-world/items/" + currentActiveInventoryItems[itemGraphicsToLoad[i].type].worldSrc
+            src: "/images/game-world/items/" + currentActiveInventoryItems[itemGraphicsToLoad[i].type].worldSrc + ".png"
         });
     }
 
@@ -1235,27 +1274,9 @@ heroIsInNewTile();
 }
 
 function heroIsInNewTile() {
-    // update the cartographic minimap:
-    
-// cartography canvas is 246px wide
-cartographyUnits = mapTilesX * tileW / 246;
-x = hero.x*cartographyUnits;
-y = hero.y*cartographyUnits;
-innerRadius = 0;
-outerRadius = 25;
-
-var gradient = cartographyContext.createRadialGradient(x, y, innerRadius, x, y, outerRadius);
-gradient.addColorStop(0, 'rgb(255,255,255)');
-gradient.addColorStop(1, 'rgba(255,255,255,0)');
-
-cartographyContext.arc(x, y, outerRadius, 0, 2 * Math.PI);
-
-cartographyContext.fillStyle = gradient;
-cartographyContext.fill();
-
-
-
+    updateCartographicMiniMap();
 }
+
 
 function canAddItemToInventory(itemObj) {
     // make copy of inventory:

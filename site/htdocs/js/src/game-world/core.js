@@ -147,9 +147,10 @@ function loadMapAssets() {
 
     itemGraphicsToLoad = thisMapData.items;
     for (var i = 0; i < itemGraphicsToLoad.length; i++) {
+        // get colour name #########
         imagesToLoad.push({
             name: "item" + i,
-            src: "/images/game-world/items/" + currentActiveInventoryItems[itemGraphicsToLoad[i].type].worldSrc
+            src: "/images/game-world/items/" + currentActiveInventoryItems[itemGraphicsToLoad[i].type].worldSrc + ".png"
         });
     }
 
@@ -516,27 +517,9 @@ heroIsInNewTile();
 }
 
 function heroIsInNewTile() {
-    // update the cartographic minimap:
-    
-// cartography canvas is 246px wide
-cartographyUnits = mapTilesX * tileW / 246;
-x = hero.x*cartographyUnits;
-y = hero.y*cartographyUnits;
-innerRadius = 0;
-outerRadius = 25;
-
-var gradient = cartographyContext.createRadialGradient(x, y, innerRadius, x, y, outerRadius);
-gradient.addColorStop(0, 'rgb(255,255,255)');
-gradient.addColorStop(1, 'rgba(255,255,255,0)');
-
-cartographyContext.arc(x, y, outerRadius, 0, 2 * Math.PI);
-
-cartographyContext.fillStyle = gradient;
-cartographyContext.fill();
-
-
-
+    updateCartographicMiniMap();
 }
+
 
 function canAddItemToInventory(itemObj) {
     // make copy of inventory:

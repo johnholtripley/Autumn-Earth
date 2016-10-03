@@ -25,6 +25,17 @@ colourNames = ["",
     "Grey"
 ];
 
+function getColourName(colour, itemType) {
+    var colourName = "";
+    // check it's not got an inherent colour:
+    if (currentActiveInventoryItems[itemType].hasInherentColour != 1) {
+        colourName = colourNames[colour];
+    }
+    return colourName;
+}
+
+
+
 function mixColours() {
     // use to get the resulting colour from any number of colours passed in.
     // eg. resultingColour = mixColours(4,2,8,16,16,16,16,16,16,16,16,16);
