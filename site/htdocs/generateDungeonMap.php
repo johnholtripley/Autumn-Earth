@@ -454,7 +454,7 @@ function pickTemplate() {
 $templateJSONFile = file_get_contents($protocol.$_SERVER['SERVER_NAME']."/".$fileToUse);
 
 // templates use "*" for consitency, but this code uses "," for walkable
-$templateJSONFile = str_replace('"*"', '","', templateJSONFile);
+$templateJSONFile = str_replace('"*"', '","', $templateJSONFile);
 
 $templateJSON = json_decode($templateJSONFile, true);
 
@@ -1196,7 +1196,7 @@ function floodFillHeight($startPointX, $startPointY, $heightToUse) {
 }
 
 function outputDungeon() {
-  global $dungeonMap, $dungeonOutputMap, $heightMap, $itemMap, $npcMap, $mapMaxHeight, $mapMaxWidth, $thisDungeonsName, $thisMapsId, $thisPlayersId, $thisAverageCount, $thisAverageTotal, $doorsOut, $doorsIn, $dungeonDetails, $thisOriginatingMapId, $outputMode, $allStairs, $stairsWidth, $entranceHeight, $tileHeight, $itemsAvailable, $isTreasureMapLevel, $startTime, $treasureLocX, $treasureLocY, $templateTiles, $mapMode, $topLeftXPos, $topLeftYPos, $levelLockedNPCs, $levelLockedItems, $turning, $whichDirectionToTurn, $NPCsAlreadyPlaced, $templatesAlreadyPlaced, $levelLockedTemplatesAlreadyPlaced, $templateChosen, $levelLockedTemplateChosen, $levelLockedTemplatePossible, $newTargetTreasureMap, $treasuresLocX, $treasuresLocY;
+  global $dungeonMap, $dungeonOutputMap, $heightMap, $itemMap, $npcMap, $mapMaxHeight, $mapMaxWidth, $thisDungeonsName, $thisMapsId, $thisPlayersId, $thisAverageCount, $thisAverageTotal, $doorsOut, $doorsIn, $dungeonDetails, $thisOriginatingMapId, $outputMode, $allStairs, $stairsWidth, $entranceHeight, $tileHeight, $itemsAvailable, $isTreasureMapLevel, $startTime, $treasureLocX, $treasureLocY, $templateTiles, $mapMode, $topLeftXPos, $topLeftYPos, $levelLockedNPCs, $levelLockedItems, $turning, $whichDirectionToTurn, $NPCsAlreadyPlaced, $templatesAlreadyPlaced, $levelLockedTemplatesAlreadyPlaced, $templateChosen, $levelLockedTemplateChosen, $levelLockedTemplatePossible, $newTargetTreasureMap, $treasuresLocX, $treasuresLocY, $templateJSON;
 
 
   if ($outputMode == "test") {
@@ -1422,12 +1422,35 @@ for ($ti = 0;$ti < $templateWidth;$ti++) {
 } else {
      $templateHeight = count($templateTiles);
                     $templateWidth = count($templateTiles[0]);
+// john
+
+                    // find out how many base graphics there are:
+
+                    $baseGraphics = "[".$dungeonDetails[$thisDungeonsName]["tileSet"]."]";
+
+
+                    $numberOfBaseGraphics = (count(json_decode($baseGraphics)));
+                   
 
 for ($ti = 0;$ti < $templateWidth;$ti++) {
   for ($tj = 0;$tj < $templateHeight;$tj++) {
-    $dungeonOutputMap[($tj + $topLeftXPos) ][($ti + $topLeftYPos) ] = $templateTiles[$tj][$ti];
+  //  $dungeonOutputMap[($tj + $topLeftXPos) ][($ti + $topLeftYPos) ] = $templateTiles[$tj][$ti];
+
+//echo ">".$templateTiles[$tj][$ti]."<        ";
+
+    if($templateTiles[$tj][$ti] == ",") {
+        
+$dungeonOutputMap[($tj + $topLeftXPos) ][($ti + $topLeftYPos) ] = 1;
+    } else {
+
+        // need to offset the graphic reference to allow for the base terrain graphics:
+    $dungeonOutputMap[($tj + $topLeftXPos) ][($ti + $topLeftYPos) ] = 0-(intval($templateTiles[$tj][$ti])+$numberOfBaseGraphics);
+}
   }
 }
+
+
+var_dump($dungeonOutputMap);
 
 }
 
@@ -1657,11 +1680,16 @@ for ($i = 0;$i < $mapMaxWidth;$i++) {
     // is a door - create hero walkable tile here:
   //  $outputString .= "8,";
 
+// john
 
 } else if ($dungeonOutputMap[$i][$j] > 109) {
     $outputString .= '1,';
 } else if ($dungeonOutputMap[$i][$j] > 99) {
     $outputString .= '2,';
+    } else if ($dungeonOutputMap[$i][$j] < 0) {
+    // template tile:
+       $outputString .= -1*($dungeonOutputMap[$i][$j]).','; 
+    
   } else {
     // $outputString .= $dungeonOutputMap[$i][$j].",";
     $outputString .= '"*",';
@@ -1691,8 +1719,21 @@ $outputString .= "],\n";
             $outputString.='
         ],
         "graphics": [
-           '.$dungeonDetails[$thisDungeonsName]["tileSet"].'
-        ],
+           '.$dungeonDetails[$thisDungeonsName]["tileSet"];
+
+if($mapMode=="template") {
+    $outputString.=', ';
+    // add in template specific graphics:
+     for ($i = 0;$i < count($templateJSON['template']['graphics']);$i++) {
+    $outputString.= json_encode($templateJSON['template']['graphics'][$i]).',';
+}
+
+   $outputString = rtrim($outputString, ',');
+
+}
+
+
+     $outputString.='   ],
         "npcs": [],
         "elevation": [],
         "doors": {';
@@ -1735,7 +1776,7 @@ $outputString .= '"map": '.$thisOriginatingMapId.',';
       $outputStartDoorX = $doorX;
       $outputStartDoorY = $doorY;
       if ($doorX == 0) {
-        // john ####
+    
       // north wall:
       $outputStartDoorX = ($mapMaxWidth - 2);
       } else if ($doorX == ($mapMaxWidth - 1)) {
@@ -1834,6 +1875,18 @@ $outputString .= '{"type": '.$itemMap[$i][$j].',"tileX": '.$i.',"tileY": '.$j.'}
 }
    }
    }
+
+
+if($mapMode=="template") {
+    for ($i = 0;$i < count($templateJSON['template']['items']);$i++) {
+        $thisItem = $templateJSON['template']['items'][$i];
+        $thisItem['tileX'] = intval($thisItem['tileX']) + $topLeftXPos;
+        $thisItem['tileY'] = intval($thisItem['tileY']) + $topLeftYPos;
+    $outputString .= json_encode($thisItem).',';
+}
+}
+
+
    $outputString = rtrim($outputString, ',');
 
 
@@ -2974,7 +3027,7 @@ if($thisMapsId == -1) {
     // determine door position based on connecting door's position:
     $startDoorX = $connectingDoorX;
     $startDoorY = $connectingDoorY;
-  // john
+  
   
     if ($connectingDoorX == ($mapMaxWidth - 2)) {
     // north wall:
