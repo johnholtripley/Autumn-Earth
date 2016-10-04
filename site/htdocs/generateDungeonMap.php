@@ -453,6 +453,9 @@ function pickTemplate() {
 
 $templateJSONFile = file_get_contents($protocol.$_SERVER['SERVER_NAME']."/".$fileToUse);
 
+// templates use "*" for consitency, but this code uses "," for walkable
+$templateJSONFile = str_replace('"*"', '","', templateJSONFile);
+
 $templateJSON = json_decode($templateJSONFile, true);
 
 }
@@ -3708,7 +3711,10 @@ for($i=0;$i<count($templateJSON['template']['terrain']);$i++) {
                     $templateWidth = count($templateRows[0]);
                   //  echo $templateWidth . " x ".$templateHeight;
 
-
+$inX = $templateJSON['template']['in']['x'];
+$inY = $templateJSON['template']['in']['y'];
+$outX = $templateJSON['template']['out']['x'];
+$outY = $templateJSON['template']['out']['y'];
 } else {
 
                     $templateWidth = count($templateRows);
