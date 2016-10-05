@@ -692,16 +692,16 @@ var UI = {
                 inventoryMarkup += '<li id="slot' + thisSlotsID + '">';
                 // check if that key exists in inventory:
                 if (thisSlotsID in hero.inventory) {
-theColourPrefix = "";
-thisFileColourSuffix = "";
-thisColourName = getColourName(hero.inventory[thisSlotsID].colour,hero.inventory[thisSlotsID].type);
-if(thisColourName != "") {
-theColourPrefix = thisColourName+" ";
-thisFileColourSuffix = "-"+thisColourName.toLowerCase();
-}
-                    inventoryMarkup += '<img src="/images/game-world/inventory-items/' + hero.inventory[thisSlotsID].type + thisFileColourSuffix+ '.png" alt="">';
+                    theColourPrefix = "";
+                    thisFileColourSuffix = "";
+                    thisColourName = getColourName(hero.inventory[thisSlotsID].colour, hero.inventory[thisSlotsID].type);
+                    if (thisColourName != "") {
+                        theColourPrefix = thisColourName + " ";
+                        thisFileColourSuffix = "-" + thisColourName.toLowerCase();
+                    }
+                    inventoryMarkup += '<img src="/images/game-world/inventory-items/' + hero.inventory[thisSlotsID].type + thisFileColourSuffix + '.png" alt="">';
                     inventoryMarkup += '<span class="qty">' + hero.inventory[thisSlotsID].quantity + '</span>';
-                    inventoryMarkup += '<p><em>' + theColourPrefix+currentActiveInventoryItems[hero.inventory[thisSlotsID].type].shortname + ' </em>' + currentActiveInventoryItems[hero.inventory[thisSlotsID].type].description + ' <span class="price">Sell price: ' + parseMoney(hero.inventory[thisSlotsID].quantity * currentActiveInventoryItems[hero.inventory[thisSlotsID].type].priceCode, 0) + '</span></p>';
+                    inventoryMarkup += '<p><em>' + theColourPrefix + currentActiveInventoryItems[hero.inventory[thisSlotsID].type].shortname + ' </em>' + currentActiveInventoryItems[hero.inventory[thisSlotsID].type].description + ' <span class="price">Sell price: ' + parseMoney(hero.inventory[thisSlotsID].quantity * currentActiveInventoryItems[hero.inventory[thisSlotsID].type].priceCode, 0) + '</span></p>';
                 } else {
                     inventoryMarkup += '<img alt="Empty slot" src="/images/game-world/inventory-items/blank.png">';
                 }
@@ -879,6 +879,7 @@ function loadMap() {
 
 function loadMapAssets() {
     imagesToLoad = [];
+    var thisFileColourSuffix, thisColourName;
     var assetPath = currentMap;
     if (currentMap < 0) {
         assetPath = 'dungeon/' + randomDungeonName;
@@ -904,10 +905,22 @@ function loadMapAssets() {
 
     itemGraphicsToLoad = thisMapData.items;
     for (var i = 0; i < itemGraphicsToLoad.length; i++) {
-        // get colour name #########
+        // get colour name 
+
+thisFileColourSuffix = "";
+if(itemGraphicsToLoad[i].colour) {
+ thisColourName = getColourName(itemGraphicsToLoad[i].colour, itemGraphicsToLoad[i].type);
+
+                    if (thisColourName != "") {
+                       
+                        thisFileColourSuffix = "-" + thisColourName.toLowerCase();
+                    }
+                }
+
+
         imagesToLoad.push({
             name: "item" + i,
-            src: "/images/game-world/items/" + currentActiveInventoryItems[itemGraphicsToLoad[i].type].worldSrc + ".png"
+            src: "/images/game-world/items/" + currentActiveInventoryItems[itemGraphicsToLoad[i].type].worldSrc + thisFileColourSuffix+".png"
         });
     }
 

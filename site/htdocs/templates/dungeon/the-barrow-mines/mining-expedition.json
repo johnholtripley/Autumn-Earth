@@ -77,6 +77,23 @@
             "hallmark": 0,
             "inscription": ""
 
+        },
+        {
+
+            "type": 19,
+            "tileX": 3,
+            "tileY": 1,
+            "quantity": 26,
+            "quality": 100,
+            "durability": 100,
+            "currentWear": 0,
+            "effectiveness": 100,
+            "wrapped": 0,
+            "colour": 0,
+            "enchanted": 0,
+            "hallmark": 0,
+            "inscription": ""
+
         }]
     }
 }

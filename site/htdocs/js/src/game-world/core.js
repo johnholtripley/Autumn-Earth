@@ -148,14 +148,17 @@ function loadMapAssets() {
 
     itemGraphicsToLoad = thisMapData.items;
     for (var i = 0; i < itemGraphicsToLoad.length; i++) {
-        // get colour name #########
+        // get colour name 
 
 thisFileColourSuffix = "";
- thisColourName = getColourName(currentActiveInventoryItems[itemGraphicsToLoad[i].colour, currentActiveInventoryItems[itemGraphicsToLoad[i].type);
+if(itemGraphicsToLoad[i].colour) {
+ thisColourName = getColourName(itemGraphicsToLoad[i].colour, itemGraphicsToLoad[i].type);
+
                     if (thisColourName != "") {
                        
                         thisFileColourSuffix = "-" + thisColourName.toLowerCase();
                     }
+                }
 
 
         imagesToLoad.push({

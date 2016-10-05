@@ -1420,9 +1420,9 @@ for ($ti = 0;$ti < $templateWidth;$ti++) {
   }
 }
 } else {
-     $templateHeight = count($templateTiles);
-                    $templateWidth = count($templateTiles[0]);
-// john
+     $templateHeight = count($templateTiles[0]);
+                    $templateWidth = count($templateTiles);
+
 
                     // find out how many base graphics there are:
 
@@ -1432,25 +1432,24 @@ for ($ti = 0;$ti < $templateWidth;$ti++) {
                     $numberOfBaseGraphics = (count(json_decode($baseGraphics)));
                    
 
-for ($ti = 0;$ti < $templateWidth;$ti++) {
-  for ($tj = 0;$tj < $templateHeight;$tj++) {
+for ($ti = 0;$ti < $templateHeight;$ti++) {
+  for ($tj = 0;$tj < $templateWidth;$tj++) {
   //  $dungeonOutputMap[($tj + $topLeftXPos) ][($ti + $topLeftYPos) ] = $templateTiles[$tj][$ti];
 
 //echo ">".$templateTiles[$tj][$ti]."<        ";
 
     if($templateTiles[$tj][$ti] == ",") {
-        
-$dungeonOutputMap[($tj + $topLeftXPos) ][($ti + $topLeftYPos) ] = 1;
+$dungeonOutputMap[($ti + $topLeftXPos) ][($tj + $topLeftYPos) ] = 1;
     } else {
 
         // need to offset the graphic reference to allow for the base terrain graphics:
-    $dungeonOutputMap[($tj + $topLeftXPos) ][($ti + $topLeftYPos) ] = 0-(intval($templateTiles[$tj][$ti])+$numberOfBaseGraphics);
+    $dungeonOutputMap[($ti + $topLeftXPos) ][($tj + $topLeftYPos) ] = 0-(intval($templateTiles[$tj][$ti])+$numberOfBaseGraphics);
 }
   }
 }
 
 
-var_dump($dungeonOutputMap);
+//var_dump($dungeonOutputMap);
 
 }
 
@@ -3760,8 +3759,8 @@ for($i=0;$i<count($templateJSON['template']['terrain']);$i++) {
 
 //echo '<pre>' . print_r($templateRows, true) . '</pre>';
 
- $templateHeight = count($templateRows);
-                    $templateWidth = count($templateRows[0]);
+ $templateHeight = count($templateRows[0]);
+                    $templateWidth = count($templateRows);
                   //  echo $templateWidth . " x ".$templateHeight;
 
 $inX = $templateJSON['template']['in']['x'];
@@ -3808,9 +3807,9 @@ $outY = $templateJSON['template']['out']['y'];
                         }
                     } else {
                         for ($j = 0;$j < $templateHeight;$j++) {
-                            if ($templateRows[$j][$i] != "X") {
+                            if ($templateRows[$i][$j] != "X") {
                                 // X means leave the terrain underneath untouched
-$dungeonMap[($j + $topLeftXPos) ][($i + $topLeftYPos) ] = $templateRows[$j][$i];
+$dungeonMap[($i + $topLeftXPos) ][($j + $topLeftYPos) ] = $templateRows[$i][$j];
 }
                         }
                     }
