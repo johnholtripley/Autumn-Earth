@@ -1234,7 +1234,8 @@ echo '<body style="background: #cecece; color: #fff;">' . "\n";
   //  for ($i = $mapMaxWidth-1;$i >=0;$i--) {
     for ($i = 0;$i < $mapMaxHeight;$i++) {
       if ($itemMap[$i][$j] != "") {
-       echo "<span style=\"color:#8B600D;\">".$itemMap[$i][$j]."</span>";
+      // echo "<span style=\"color:#8B600D;\">".$itemMap[$i][$j]."</span>";
+       echo "<span style=\"color:#8B600D;\">i</span>";
        } else if ($npcMap[$i][$j] == "n") {
        echo "<span style=\"color:#ffffff;\">n</span>";
        
@@ -1421,7 +1422,7 @@ for ($ti = 0;$ti < $templateWidth;$ti++) {
 }
 } else {
      $templateHeight = count($templateTiles[0]);
-                    $templateWidth = count($templateTiles);
+    $templateWidth = count($templateTiles);
 
 
                     // find out how many base graphics there are:
@@ -1432,18 +1433,18 @@ for ($ti = 0;$ti < $templateWidth;$ti++) {
                     $numberOfBaseGraphics = (count(json_decode($baseGraphics)));
                    
 
-for ($ti = 0;$ti < $templateHeight;$ti++) {
-  for ($tj = 0;$tj < $templateWidth;$tj++) {
+for ($ti = 0;$ti < $templateWidth;$ti++) {
+  for ($tj = 0;$tj < $templateHeight;$tj++) {
   //  $dungeonOutputMap[($tj + $topLeftXPos) ][($ti + $topLeftYPos) ] = $templateTiles[$tj][$ti];
 
 //echo ">".$templateTiles[$tj][$ti]."<        ";
 
-    if($templateTiles[$tj][$ti] == ",") {
-$dungeonOutputMap[($ti + $topLeftXPos) ][($tj + $topLeftYPos) ] = 1;
+    if($templateTiles[$ti][$tj] == ",") {
+$dungeonOutputMap[($ti + $topLeftXPos) ][($tj + $topLeftYPos) ] = 2;
     } else {
 
         // need to offset the graphic reference to allow for the base terrain graphics:
-    $dungeonOutputMap[($ti + $topLeftXPos) ][($tj + $topLeftYPos) ] = 0-(intval($templateTiles[$tj][$ti])+$numberOfBaseGraphics);
+    $dungeonOutputMap[($ti + $topLeftXPos) ][($tj + $topLeftYPos) ] = 0-(intval($templateTiles[$ti][$tj])+$numberOfBaseGraphics);
 }
   }
 }
@@ -1629,17 +1630,15 @@ if($doorsOut[$doorLoop] == $i.",".$j) {
 
 if($isADoor) {
 $outputString .= '"d",';
-} else if($dungeonOutputMap[$i][$j] > 99) {
-    // add blank tile:
+} else if($dungeonOutputMap[$i][$j] > 2) {
+    // add collision tile:
     $outputString .= '1,';
-//  } else {
-    // add feature tile:
-  //  if($dungeonOutputMap[$i][$j]=="O") {
-    // is a door - create hero walkable tile here:
-  //  $outputString .= "8,";
+} else if($dungeonOutputMap[$i][$j] < 0) {
+    // add collision tile:
+    $outputString .= '1,';
 
+ 
   } else {
-    // $outputString .= $dungeonOutputMap[$i][$j].",";
     $outputString .= '0,';
   }
   }
@@ -3754,7 +3753,15 @@ if($outputMode!="xml") {
 
 for($i=0;$i<count($templateJSON['template']['terrain']);$i++) {
      array_push($templateTiles, str_ireplace(" ", "", $templateJSON['template']['terrain'][$i]));
-  array_push($templateRows, str_ireplace(" ", "", $templateJSON['template']['collisions'][$i]));
+
+
+// convert collisions array to suit this code's format:
+     $collisionArray = $templateJSON['template']['collisions'][$i];
+
+$collisionArray = str_replace("0", ",", $collisionArray);
+$collisionArray = str_replace("1", "#", $collisionArray);
+
+  array_push($templateRows, str_ireplace(" ", "", $collisionArray));
 }
 
 //echo '<pre>' . print_r($templateRows, true) . '</pre>';
@@ -3763,10 +3770,10 @@ for($i=0;$i<count($templateJSON['template']['terrain']);$i++) {
                     $templateWidth = count($templateRows);
                   //  echo $templateWidth . " x ".$templateHeight;
 
-$inX = $templateJSON['template']['in']['x'];
-$inY = $templateJSON['template']['in']['y'];
-$outX = $templateJSON['template']['out']['x'];
-$outY = $templateJSON['template']['out']['y'];
+$inX = $templateJSON['template']['in']['y'];
+$inY = $templateJSON['template']['in']['x'];
+$outX = $templateJSON['template']['out']['y'];
+$outY = $templateJSON['template']['out']['x'];
 } else {
 
                     $templateWidth = count($templateRows);
@@ -3794,6 +3801,15 @@ $outY = $templateJSON['template']['out']['y'];
                      do {
                     $tunnelSuccess = makeTunnel(($topLeftXPos + $outX), ($topLeftYPos + $outY), $exitPointToConnectToX, $exitPointToConnectToY, 3, 3, 862);
                       } while (!$tunnelSuccess);
+if($debugMode) {
+echo'<div style="width:30%;float:left">before<pre>';
+for ($i = 0;$i < count($dungeonMap);$i++) {
+echo  implode("", $dungeonMap[$i])."<br>";
+}
+echo"</pre><hr/></div>";
+}
+
+
                     // place template:
                     for ($i = 0;$i < $templateWidth;$i++) {
                         if($outputMode=="xml") {
@@ -3814,6 +3830,20 @@ $dungeonMap[($i + $topLeftXPos) ][($j + $topLeftYPos) ] = $templateRows[$i][$j];
                         }
                     }
                     }
+
+
+// mark doors:
+if($debugMode) {
+    $dungeonMap[$inX+$topLeftXPos][$inY+$topLeftYPos] = "£";
+    $dungeonMap[$outX+$topLeftXPos][$outY+$topLeftYPos] = "£";
+}                    
+if($debugMode) {
+                    echo'<div style="width:30%;float:left">after<pre>';
+for ($i = 0;$i < count($dungeonMap);$i++) {
+echo  implode("", $dungeonMap[$i])."<br>";
+}
+echo"</pre><hr/></div>";
+}
                     
                     break;
                     
@@ -3980,7 +4010,7 @@ $isTemplateConnected = checkPathIsConnected($exitPointToConnectToX,$exitPointToC
         
         
         
-        
+        /*
         
         function testOutputDungeon() {
          global $dungeonMap, $dungeonOutputMap, $mapMaxHeight, $mapMaxWidth, $doorsOut, $doorsIn, $dungeonDetails, $thisOriginatingMapId, $outputMode, $levelLockedTemplateChosen, $levelLockedTemplatePossible;
@@ -4022,6 +4052,7 @@ echo '<body style="background: #cecece; color: #fff;">' . "\n";
   $dungeonMap[($mapMaxWidth-1)][($mapMaxHeight-1)]="3";
   $dungeonMap[0][($mapMaxHeight-1)]="4";
 */
+  /*
  
   for ($j = 0;$j < $mapMaxHeight;$j++) {
     for ($i = 0;$i < $mapMaxWidth;$i++) {
@@ -4088,7 +4119,7 @@ echo '</html>' . "\n";
          }
         }
         
-        
+        */
         
        
 ?>
