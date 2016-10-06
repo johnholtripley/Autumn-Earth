@@ -170,6 +170,8 @@ $dir = "data/chr" . $thisPlayersId . "/dungeon/".$thisDungeonsName;
  }
 
 if ($clearOldMaps) {
+// Don't just do a single dungeon - do all of them ######################
+
  if (is_dir($dir)) { 
     if ($thisDirectory = opendir($dir)) {
       while (($file = readdir($thisDirectory)) !== false) {
@@ -2342,7 +2344,7 @@ echo $outputString;
         }
 		
 		
-		
+		}
 		
 		// update session details:
 		  if($turning !=0) {
@@ -2418,7 +2420,7 @@ $sessionOutput .= '?>';
 		
 	
 		
-}
+
 
 if (isset($hasPlacedATreasureMap)) {
 if ($hasPlacedATreasureMap) {
