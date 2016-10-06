@@ -783,6 +783,9 @@ cartographyContext = cartographyCanvas.getContext('2d');
 
     getHeroGameState();
 }
+
+
+
 }
 
 function getHeroGameState() {
@@ -794,6 +797,18 @@ function getHeroGameState() {
         newMap = currentMap;
         hero.bags = data.bags;
         hero.inventory = data.inventory;
+        if(currentMap>0) {
+//clean old procedural maps:
+
+
+ getJSON('/generateDungeonMap.php?playerId=' + characterId + '&clearMaps=true', function(data) {
+
+    }, function(status) {
+    });
+
+
+
+        }
         loadCoreAssets();
     }, function(status) {
         // error - try again:

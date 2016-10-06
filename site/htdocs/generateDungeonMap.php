@@ -134,9 +134,13 @@ fae should react to npcs with active quest dialogue, without needing a hotspot
 $startTime = time();
 
 $thisPlayersId = $_GET["playerId"];
-$thisOriginatingMapId = $_GET["originatingMapId"];
-$thisMapsId = $_GET["requestedMap"];
+
+if(isset($_GET["dungeonName"])) {
 $thisDungeonsName = $_GET["dungeonName"];
+} else {
+$thisDungeonsName="the-barrow-mines";
+}
+
 
 $clearOldMaps = false;
 if(isset($_GET["clearMaps"])) {
@@ -184,7 +188,31 @@ if ($clearOldMaps) {
     
     
   }
+
+// delete cartography too:
+  $cartographyDirectory = "data/chr" . $thisPlayersId . "/cartography/".$thisDungeonsName."/session1/";
+ if (is_dir($cartographyDirectory)) { 
+    if ($thisDirectory = opendir($cartographyDirectory)) {
+      while (($file = readdir($thisDirectory)) !== false) {
+      if(is_file($cartographyDirectory."/".$file)) {
+      // don't delete any maps that have undiscovered treasure still on ###########################
+        unlink($cartographyDirectory."/".$file);
+      }
+    }
+    closedir($thisDirectory);
+    }
+  }
+
+
+die();
+
+
+
 }
+
+$thisOriginatingMapId = $_GET["originatingMapId"];
+$thisMapsId = $_GET["requestedMap"];
+
 
 
     $outputMode = "json";
