@@ -3751,8 +3751,13 @@ if($outputMode!="xml") {
 
 
 
+
+
+
+
+
 for($i=0;$i<count($templateJSON['template']['terrain']);$i++) {
-     array_push($templateTiles, str_ireplace(" ", "", $templateJSON['template']['terrain'][$i]));
+     array_unshift($templateTiles, str_ireplace(" ", "", $templateJSON['template']['terrain'][$i]));
 
 
 // convert collisions array to suit this code's format:
@@ -3761,19 +3766,31 @@ for($i=0;$i<count($templateJSON['template']['terrain']);$i++) {
 $collisionArray = str_replace("0", ",", $collisionArray);
 $collisionArray = str_replace("1", "#", $collisionArray);
 
-  array_push($templateRows, str_ireplace(" ", "", $collisionArray));
+  array_unshift($templateRows, str_ireplace(" ", "", $collisionArray));
 }
 
 //echo '<pre>' . print_r($templateRows, true) . '</pre>';
 
- $templateHeight = count($templateRows[0]);
-                    $templateWidth = count($templateRows);
+ $templateHeight = count($templateRows);
+                    $templateWidth = count($templateRows[0]);
                   //  echo $templateWidth . " x ".$templateHeight;
 
 $inX = $templateJSON['template']['in']['y'];
 $inY = $templateJSON['template']['in']['x'];
 $outX = $templateJSON['template']['out']['y'];
 $outY = $templateJSON['template']['out']['x'];
+
+
+// rotate the arrays:
+// http://stackoverflow.com/questions/30087158/how-can-i-rotate-a-2d-array-in-php-by-90-degrees#answer-30088789
+array_unshift($templateRows, null);
+$templateRows = call_user_func_array('array_map', $templateRows);
+$templateRows = array_map('array_reverse', $templateRows);
+array_unshift($templateTiles, null);
+$templateTiles = call_user_func_array('array_map', $templateTiles);
+$templateTiles = array_map('array_reverse', $templateTiles);
+
+
 } else {
 
                     $templateWidth = count($templateRows);
