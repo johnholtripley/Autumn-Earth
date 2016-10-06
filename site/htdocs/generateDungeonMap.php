@@ -1732,7 +1732,20 @@ if($mapMode=="template") {
 
 
      $outputString.='   ],
-        "npcs": [],
+        "npcs": [';
+
+if($mapMode=="template") {
+    for ($i = 0;$i < count($templateJSON['template']['npcs']);$i++) {
+        $thisNPC = $templateJSON['template']['npcs'][$i];
+        $thisNPC['tileX'] = intval($thisNPC['tileX']) + $topLeftXPos;
+        $thisNPC['tileY'] = intval($thisNPC['tileY']) + $topLeftYPos;
+    $outputString .= json_encode($thisNPC).',';
+}
+$outputString = rtrim($outputString, ',');
+
+}
+
+        $outputString .= '],
         "elevation": [],
         "doors": {';
 
