@@ -3775,10 +3775,10 @@ $collisionArray = str_replace("1", "#", $collisionArray);
                     $templateWidth = count($templateRows[0]);
                   //  echo $templateWidth . " x ".$templateHeight;
 
-$inX = $templateJSON['template']['in']['y'];
-$inY = $templateJSON['template']['in']['x'];
-$outX = $templateJSON['template']['out']['y'];
-$outY = $templateJSON['template']['out']['x'];
+$inX = $templateJSON['template']['in']['x'];
+$inY = $templateJSON['template']['in']['y'];
+$outX = $templateJSON['template']['out']['x'];
+$outY = $templateJSON['template']['out']['y'];
 
 
 // rotate the arrays:
