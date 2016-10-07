@@ -439,12 +439,12 @@ function getJSONTemplateFile() {
     
     
     $randomFile = rand(0, count($filesFound) - 1);
+  
     $fileToUse = $dir . $filesFound[$randomFile];
     
     $templateChosen = $filesFound[$randomFile];
     
-  
-    
+   
     $templateRows = array();
     $templateTiles = array();
 }
@@ -1226,7 +1226,7 @@ function floodFillHeight($startPointX, $startPointY, $heightToUse) {
 }
 
 function outputDungeon() {
-  global $dungeonMap, $dungeonOutputMap, $heightMap, $itemMap, $npcMap, $mapMaxHeight, $mapMaxWidth, $thisDungeonsName, $thisMapsId, $thisPlayersId, $thisAverageCount, $thisAverageTotal, $doorsOut, $doorsIn, $dungeonDetails, $thisOriginatingMapId, $outputMode, $allStairs, $stairsWidth, $entranceHeight, $tileHeight, $itemsAvailable, $isTreasureMapLevel, $startTime, $treasureLocX, $treasureLocY, $templateTiles, $mapMode, $topLeftXPos, $topLeftYPos, $levelLockedNPCs, $levelLockedItems, $turning, $whichDirectionToTurn, $NPCsAlreadyPlaced, $templatesAlreadyPlaced, $levelLockedTemplatesAlreadyPlaced, $templateChosen, $levelLockedTemplateChosen, $levelLockedTemplatePossible, $newTargetTreasureMap, $treasuresLocX, $treasuresLocY, $templateJSON;
+  global $dungeonMap, $dungeonOutputMap, $heightMap, $itemMap, $npcMap, $mapMaxHeight, $mapMaxWidth, $thisDungeonsName, $thisMapsId, $thisPlayersId, $thisAverageCount, $thisAverageTotal, $doorsOut, $doorsIn, $dungeonDetails, $thisOriginatingMapId, $outputMode, $allStairs, $stairsWidth, $entranceHeight, $tileHeight, $itemsAvailable, $isTreasureMapLevel, $startTime, $treasureLocX, $treasureLocY, $templateTiles, $mapMode, $topLeftXPos, $topLeftYPos, $levelLockedNPCs, $levelLockedItems, $turning, $whichDirectionToTurn, $NPCsAlreadyPlaced, $templatesAlreadyPlaced, $levelLockedTemplatesAlreadyPlaced, $templateChosen, $levelLockedTemplateChosen, $levelLockedTemplatePossible, $newTargetTreasureMap, $treasuresLocX, $treasuresLocY, $templateJSON, $debugMode;
 
 
   if ($outputMode == "test") {
@@ -1438,53 +1438,6 @@ for ($i = 0;$i < count($allStairs);$i++) {
 
 
 
-if($mapMode=="template") {
-// insert the template tiles here - so that the dungeon walls get averaged in smoothly
-
-if($outputMode=="xml") {
-    $templateWidth = count($templateTiles);
-$templateHeight = count(explode(",",$templateTiles[0]));
-for ($ti = 0;$ti < $templateWidth;$ti++) {
-  $thisRow = explode(",",$templateTiles[$ti]);
-  for ($tj = 0;$tj < $templateHeight;$tj++) {
-    $dungeonOutputMap[($tj + $topLeftXPos) ][($ti + $topLeftYPos) ] = $thisRow[$tj];
-  }
-}
-} else {
-     $templateHeight = count($templateTiles[0]);
-    $templateWidth = count($templateTiles);
-
-
-                    // find out how many base graphics there are:
-
-                    $baseGraphics = "[".$dungeonDetails[$thisDungeonsName]["tileSet"]."]";
-
-
-                    $numberOfBaseGraphics = (count(json_decode($baseGraphics)));
-                   
-
-for ($ti = 0;$ti < $templateWidth;$ti++) {
-  for ($tj = 0;$tj < $templateHeight;$tj++) {
-  //  $dungeonOutputMap[($tj + $topLeftXPos) ][($ti + $topLeftYPos) ] = $templateTiles[$tj][$ti];
-
-//echo ">".$templateTiles[$tj][$ti]."<        ";
-
-    if($templateTiles[$ti][$tj] == ",") {
-$dungeonOutputMap[($ti + $topLeftXPos) ][($tj + $topLeftYPos) ] = 2;
-    } else {
-
-        // need to offset the graphic reference to allow for the base terrain graphics:
-    $dungeonOutputMap[($ti + $topLeftXPos) ][($tj + $topLeftYPos) ] = 0-(intval($templateTiles[$ti][$tj])+$numberOfBaseGraphics);
-}
-  }
-}
-
-
-//var_dump($dungeonOutputMap);
-
-}
-
-}
 
 
 
@@ -1558,6 +1511,9 @@ for ($k = 0; $k<2; $k++) {
 }
 
 
+
+
+
 // check height map and raise levels appropriately:
 // first tile is on frame 600, but height of '1' will need to be tile 600:
 $raisedBase = 599;
@@ -1623,6 +1579,53 @@ $atLeastOneCart = true;
 
 //var_dump($dungeonOutputMap);
 
+if($mapMode=="template") {
+// insert the template tiles here - so that the dungeon walls get averaged in smoothly
+
+if($outputMode=="xml") {
+    $templateWidth = count($templateTiles);
+$templateHeight = count(explode(",",$templateTiles[0]));
+for ($ti = 0;$ti < $templateWidth;$ti++) {
+  $thisRow = explode(",",$templateTiles[$ti]);
+  for ($tj = 0;$tj < $templateHeight;$tj++) {
+    $dungeonOutputMap[($tj + $topLeftXPos) ][($ti + $topLeftYPos) ] = $thisRow[$tj];
+  }
+}
+} else {
+     $templateHeight = count($templateTiles[0]);
+    $templateWidth = count($templateTiles);
+
+
+                    // find out how many base graphics there are:
+
+                    $baseGraphics = "[".$dungeonDetails[$thisDungeonsName]["tileSet"]."]";
+
+
+                    $numberOfBaseGraphics = (count(json_decode($baseGraphics)));
+                   
+
+for ($ti = 0;$ti < $templateWidth;$ti++) {
+  for ($tj = 0;$tj < $templateHeight;$tj++) {
+  //  $dungeonOutputMap[($tj + $topLeftXPos) ][($ti + $topLeftYPos) ] = $templateTiles[$tj][$ti];
+
+//echo ">".$templateTiles[$tj][$ti]."<        ";
+
+    if($templateTiles[$ti][$tj] == ",") {
+$dungeonOutputMap[($ti + $topLeftXPos) ][($tj + $topLeftYPos) ] = 2;
+    } else {
+
+        // need to offset the graphic reference to allow for the base terrain graphics:
+    $dungeonOutputMap[($ti + $topLeftXPos) ][($tj + $topLeftYPos) ] = 0-(intval($templateTiles[$ti][$tj])+$numberOfBaseGraphics);
+}
+  }
+}
+
+
+//var_dump($dungeonOutputMap);
+
+}
+
+}
 
 
 if($outputMode=="json") {
@@ -2409,7 +2412,7 @@ $sessionOutput .= '$levelLockedTemplatesAlreadyPlaced = array('.implode(',',$lev
 
 $sessionOutput .= '?>';
 
-
+if(!$debugMode) {
 		
 		$sessionFilename = "data/chr" . $thisPlayersId . "/dungeon/".$thisDungeonsName."/session.php";    
 	if(!($sessionFilename=fopen($sessionFilename,"w"))) {
@@ -2417,6 +2420,7 @@ $sessionOutput .= '?>';
 		}
 		fwrite($sessionFilename, $sessionOutput); 
 		fclose($sessionFilename);
+    }
 		
 	
 		

@@ -15,8 +15,10 @@ function init() {
     whichTransitionEvent = determineWhichTransitionEvent();
     gameMode = "mapLoading";
 
-cartographyCanvas = document.getElementById("cartographyCanvas");
-cartographyContext = cartographyCanvas.getContext('2d');
+    cartographyCanvas = document.getElementById("cartographyCanvas");
+    cartographyContext = cartographyCanvas.getContext('2d');
+    offScreenCartographyCanvas = document.getElementById("offScreenCartographyCanvas");
+    offScreenCartographyContext = offScreenCartographyCanvas.getContext('2d');
 
     UI.init();
     // detect and set up input methods:
@@ -41,13 +43,14 @@ function getHeroGameState() {
         hero.bags = data.bags;
         hero.inventory = data.inventory;
         if(currentMap>0) {
-//clean old procedural maps:
+//clean old procedural maps: (don't need a response here)
+
+var xhr = typeof XMLHttpRequest != 'undefined' ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
+    xhr.open('get', '/generateDungeonMap.php?playerId=' + characterId + '&clearMaps=true', true);
+    xhr.send();
 
 
- getJSON('/generateDungeonMap.php?playerId=' + characterId + '&clearMaps=true', function(data) {
 
-    }, function(status) {
-    });
 
 
 
@@ -73,10 +76,7 @@ function prepareCoreAssets() {
     loadMap();
 }
 
-function loadCartographicMap() {
-    activeCartographicMap.src="/generateCartographicMap.php?playerId="+characterId+"&dungeonName="+randomDungeonName+"&plotChests=true&requestedMap="+newMap;
 
-}
 
 function loadMapJSON(mapFilePath) {
     console.log("mapFilePath: " + mapFilePath);
@@ -89,7 +89,7 @@ function loadMapJSON(mapFilePath) {
             document.title = titleTagPrefix+' - '+thisMapData.zoneName;
              cartographicTitle.innerHTML = thisMapData.zoneName;
         }
-       loadCartographicMap();
+       initCartographicMap();
         findInventoryItemData();
 
     }, function(status) {
@@ -288,6 +288,9 @@ function prepareGame() {
     currentAnimationFrame = 0;
     mapTransition = "in";
     mapTransitionCurrentFrames = 1;
+
+
+
     gameMode = "play";
 }
 
