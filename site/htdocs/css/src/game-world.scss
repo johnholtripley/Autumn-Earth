@@ -23,7 +23,7 @@ canvas {
     -ms-interpolation-mode: nearest-neighbor;
     image-rendering: pixelated;
     display: block;
-    background: #000;
+    
 }
 
 #gameWrapper {
@@ -196,11 +196,13 @@ cursor: url(../images/game-world/cursors/active.gif) 3 3, auto;
     position: absolute;
     top: 20px;
     left: 860px;
-    background: #999;
     canvas {
-       
-    }
+    background: #fbf2b1 url(../images/cartography/overlays/1.png) no-repeat 0 0;
+  }
 }
+
+
+
 .offScreenCanvas {
     display: none;
 }

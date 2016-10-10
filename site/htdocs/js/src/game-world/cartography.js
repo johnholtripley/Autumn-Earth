@@ -18,8 +18,10 @@ function updateCartographicMiniMap() {
     offScreenCartographyContext.fill();
 
     cartographyContext.clearRect(0, 0, 246, 246);
+    cartographyContext.globalCompositeOperation = 'copy';
     cartographyContext.drawImage(offScreenCartographyCanvas, 0, 0);
-    cartographyContext.globalCompositeOperation = 'source-in';
+    
+cartographyContext.globalCompositeOperation = 'source-atop';
     cartographyContext.drawImage(canvasMapImage, 0, 0);
 }
 
