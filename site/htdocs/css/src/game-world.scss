@@ -221,7 +221,7 @@ filter: drop-shadow(2px 2px 5px rgba(0,0,0,0.69));
     @include pxRem('padding',10px 12px);
     @include pxRem('font-size',12px);
     @include pxRem('padding',14px);
-
+max-width: 295px;
     
 &:before {
     border-color: #cbbc9f transparent;
