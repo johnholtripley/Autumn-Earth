@@ -222,14 +222,27 @@ filter: drop-shadow(2px 2px 5px rgba(0,0,0,0.69));
     @include pxRem('font-size',12px);
     @include pxRem('padding',14px);
 
-    &:after {
-        background: url(../images/game-world/interface/dialogue-speech-curve.svg) no-repeat 0 0;
-        content: "";
-        position: absolute;
-        left: 45%;
-        bottom: -40px;
-        width: 16px;
-        height: 40px;
-        @include background-size(100%, 100%);
-    }
+    
+&:before {
+    border-color: #cbbc9f transparent;
+    border-style: solid;
+    border-width: 13px 13px 0;
+    bottom: -13px;
+    content: "";
+    display: block;
+    left: 44px;
+    position: absolute;
+    width: 0;
+}
+&:after {
+    border-color: #363636 transparent;
+    border-style: solid;
+    border-width: 10px 10px 0;
+    bottom: -10px;
+    content: "";
+    display: block;
+    left: 47px;
+    position: absolute;
+    width: 0;
+}
 }
