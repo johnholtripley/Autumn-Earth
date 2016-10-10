@@ -226,22 +226,22 @@ max-width: 295px;
 &:before {
     border-color: #cbbc9f transparent;
     border-style: solid;
-    border-width: 13px 13px 0;
-    bottom: -13px;
+      border-width: 14px 2px 0 14px;
+    bottom: -14px;
     content: "";
     display: block;
-    left: 44px;
+    left: 25px;
     position: absolute;
     width: 0;
 }
 &:after {
     border-color: #363636 transparent;
     border-style: solid;
-    border-width: 10px 10px 0;
+    border-width: 14px 2px 0 14px;
     bottom: -10px;
     content: "";
     display: block;
-    left: 47px;
+    left: 24px;
     position: absolute;
     width: 0;
 }
