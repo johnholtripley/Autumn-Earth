@@ -677,9 +677,9 @@ var UI = {
     init: function() {
         // cache all references to UI elements:
         var displayZoneName = document.getElementById('displayZoneName');
-        var inventoryPanels = document.getElementById('inventoryPanels');
         var activeCartographicMap = document.getElementById('activeCartographicMap');
         var cartographicTitle = document.getElementById('cartographicTitle');
+        var dialogue = document.getElementById('dialogue');
         //
 
     },
@@ -725,7 +725,7 @@ var UI = {
             }
             inventoryMarkup += '</ol></div></div>';
         }
-        inventoryPanels.innerHTML = inventoryMarkup;
+        document.getElementById('inventoryPanels').innerHTML = inventoryMarkup;
         UI.initDrag(".draggableBar");
         inventoryInterfaceIsBuilt = true;
     },
@@ -1615,7 +1615,7 @@ function moveNPCs() {
 function animateFae() {
     fae.z = Math.floor((Math.sin(fae.dz) + 1) * 8 + 40);
     fae.dz += 0.2;
-
+// fae.y+=8;
     for (var i = 0; i < fae.particles.length; i++) {
         fae.particles[i].alpha -= 0.1;
         if(fae.particles[i].alpha<=0) {

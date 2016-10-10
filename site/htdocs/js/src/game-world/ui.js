@@ -2,9 +2,9 @@ var UI = {
     init: function() {
         // cache all references to UI elements:
         var displayZoneName = document.getElementById('displayZoneName');
-        var inventoryPanels = document.getElementById('inventoryPanels');
         var activeCartographicMap = document.getElementById('activeCartographicMap');
         var cartographicTitle = document.getElementById('cartographicTitle');
+        var dialogue = document.getElementById('dialogue');
         //
 
     },
@@ -50,7 +50,7 @@ var UI = {
             }
             inventoryMarkup += '</ol></div></div>';
         }
-        inventoryPanels.innerHTML = inventoryMarkup;
+        document.getElementById('inventoryPanels').innerHTML = inventoryMarkup;
         UI.initDrag(".draggableBar");
         inventoryInterfaceIsBuilt = true;
     },

@@ -204,3 +204,32 @@ cursor: url(../images/game-world/cursors/active.gif) 3 3, auto;
 .offScreenCanvas {
     display: none;
 }
+
+
+#dialogue {
+    background: #363636;
+    border: 2px solid #cbbc9f;
+    @include border-radius(10px);
+ //    @include box-shadow(1px 1px 5px 0px rgba(0,0,0,0.69));
+   
+filter: drop-shadow(2px 2px 5px rgba(0,0,0,0.69));
+
+    color: #fff;
+    position: absolute;
+    left: 120px;
+    top: 60px;
+    @include pxRem('padding',10px 12px);
+    @include pxRem('font-size',12px);
+    @include pxRem('padding',14px);
+
+    &:after {
+        background: url(../images/game-world/interface/dialogue-speech-curve.svg) no-repeat 0 0;
+        content: "";
+        position: absolute;
+        left: 45%;
+        bottom: -40px;
+        width: 16px;
+        height: 40px;
+        @include background-size(100%, 100%);
+    }
+}

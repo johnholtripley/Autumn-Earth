@@ -21,9 +21,10 @@
   <img src="/images/game-world/no-canvas.jpg" alt="Sorry">
 </canvas>
 <div id="toolbar"></div>
+<p id="dialogue">Some interesting dialogue</p>
 <div id="displayZoneName"></div>
 <div id="inventoryPanels"></div>
-<div id="cartographicPanel"><div class="draggableBar"><span id="cartographicTitle">Map</span></div><img id="activeCartographicMap"><canvas id="cartographyCanvas" width="246" height="246" moz-opaque></canvas><canvas id="offScreenCartographyCanvas" class="offScreenCanvas" width="246" height="246"></canvas></div>
+<div id="cartographicPanel"><div class="draggableBar"><span id="cartographicTitle">Map</span></div><canvas id="cartographyCanvas" width="246" height="246" moz-opaque></canvas><canvas id="offScreenCartographyCanvas" class="offScreenCanvas" width="246" height="246"></canvas></div>
 </div>
 
 
