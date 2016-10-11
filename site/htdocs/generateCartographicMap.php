@@ -1008,11 +1008,9 @@ if (!file_exists("data/chr".$playerId."/cartography/".$dungeonName)) {
 }
 
 
-if (!file_exists("data/chr".$playerId."/cartography/".$dungeonName."/".$session)) {
-    mkdir("data/chr".$playerId."/cartography/".$dungeonName."/".$session, 0777, true);
-}
 
-$mapFilename = "data/chr".$playerId."/cartography/".$dungeonName."/".$session."/".$requestedMap.".jpg";
+
+$mapFilename = "data/chr".$playerId."/cartography/".$dungeonName."/".$requestedMap.".jpg";
 
 
 

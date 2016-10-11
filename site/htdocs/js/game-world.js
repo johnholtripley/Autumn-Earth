@@ -38,7 +38,7 @@ function initCartographicMap() {
 function saveCartographyMask() {
     // http://stackoverflow.com/questions/13198131/how-to-save-a-html5-canvas-as-image-on-a-server/13198699#13198699
     var dataURL = offScreenCartographyCanvas.toDataURL();
-    postDataWithoutNeedingAResponse('/game-world/saveCartographicMapMask.php', dataURL);
+    postData('/game-world/saveCartographicMapMask.php', 'chr='+characterId+'&dungeonName=' + randomDungeonName+'&currentMap='+currentMap+'&data='+dataURL);
 }
 
 colourNames = ["",
@@ -533,10 +533,12 @@ var xhr = typeof XMLHttpRequest != 'undefined' ? new XMLHttpRequest() : new Acti
     xhr.send();
 }
 
-function postDataWithoutNeedingAResponse(url,data) {
+function postData(url,data) {
 // send data to the server, without needing to listen for a response:
 var xhr = typeof XMLHttpRequest != 'undefined' ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
+
     xhr.open('post', url, true);
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded;');
     xhr.send(data);
 }
 

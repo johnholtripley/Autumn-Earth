@@ -331,10 +331,12 @@ var xhr = typeof XMLHttpRequest != 'undefined' ? new XMLHttpRequest() : new Acti
     xhr.send();
 }
 
-function postDataWithoutNeedingAResponse(url,data) {
+function postData(url,data) {
 // send data to the server, without needing to listen for a response:
 var xhr = typeof XMLHttpRequest != 'undefined' ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
+
     xhr.open('post', url, true);
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded;');
     xhr.send(data);
 }
 
