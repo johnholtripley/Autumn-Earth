@@ -226,7 +226,9 @@ filter: drop-shadow(2px 2px 5px rgba(0,0,0,0.69));
     @include pxRem('font-size',12px);
     @include pxRem('padding',14px);
 max-width: 295px;
-    
+    opacity: 0;
+    @include transition(opacity 0.4s ease);
+    pointer-events: none;
 &:before {
     border-color: #cbbc9f transparent;
     border-style: solid;
@@ -248,5 +250,9 @@ max-width: 295px;
     left: 24px;
     position: absolute;
     width: 0;
+}
+&.active {
+    opacity: 1;
+    pointer-events: auto;
 }
 }
