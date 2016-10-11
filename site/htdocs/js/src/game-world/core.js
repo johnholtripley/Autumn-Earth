@@ -45,9 +45,10 @@ function getHeroGameState() {
         if(currentMap>0) {
 //clean old procedural maps: (don't need a response here)
 
-var xhr = typeof XMLHttpRequest != 'undefined' ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
-    xhr.open('get', '/generateDungeonMap.php?playerId=' + characterId + '&clearMaps=true', true);
-    xhr.send();
+
+sendDataWithoutNeedingAResponse('/generateDungeonMap.php?playerId=' + characterId + '&clearMaps=true');
+
+
 
 
 
@@ -363,6 +364,9 @@ function startDoorTransition() {
         mapTransitionCurrentFrames = 1;
         mapTransition = "out";
     }
+    if(currentMap < 0) {
+    saveCartographyMask();
+}
 }
 
 function getHeroAsCloseAsPossibleToObject(objx, objy, objw, objh) {

@@ -20,8 +20,8 @@ function updateCartographicMiniMap() {
     cartographyContext.clearRect(0, 0, 246, 246);
     cartographyContext.globalCompositeOperation = 'copy';
     cartographyContext.drawImage(offScreenCartographyCanvas, 0, 0);
-    
-cartographyContext.globalCompositeOperation = 'source-atop';
+
+    cartographyContext.globalCompositeOperation = 'source-atop';
     cartographyContext.drawImage(canvasMapImage, 0, 0);
 }
 
@@ -33,4 +33,10 @@ function initCartographicMap() {
         offScreenCartographyContext.clearRect(0, 0, 246, 246);
         updateCartographicMiniMap();
     }
+}
+
+function saveCartographyMask() {
+    // http://stackoverflow.com/questions/13198131/how-to-save-a-html5-canvas-as-image-on-a-server/13198699#13198699
+    var dataURL = offScreenCartographyCanvas.toDataURL();
+    postDataWithoutNeedingAResponse('/game-world/saveCartographicMapMask.php', dataURL);
 }

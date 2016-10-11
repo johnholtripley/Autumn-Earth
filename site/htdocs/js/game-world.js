@@ -20,8 +20,8 @@ function updateCartographicMiniMap() {
     cartographyContext.clearRect(0, 0, 246, 246);
     cartographyContext.globalCompositeOperation = 'copy';
     cartographyContext.drawImage(offScreenCartographyCanvas, 0, 0);
-    
-cartographyContext.globalCompositeOperation = 'source-atop';
+
+    cartographyContext.globalCompositeOperation = 'source-atop';
     cartographyContext.drawImage(canvasMapImage, 0, 0);
 }
 
@@ -33,6 +33,12 @@ function initCartographicMap() {
         offScreenCartographyContext.clearRect(0, 0, 246, 246);
         updateCartographicMiniMap();
     }
+}
+
+function saveCartographyMask() {
+    // http://stackoverflow.com/questions/13198131/how-to-save-a-html5-canvas-as-image-on-a-server/13198699#13198699
+    var dataURL = offScreenCartographyCanvas.toDataURL();
+    postDataWithoutNeedingAResponse('/game-world/saveCartographicMapMask.php', dataURL);
 }
 
 colourNames = ["",
@@ -519,6 +525,22 @@ var getJSON = function(url, successHandler, errorHandler) {
 };
 
 
+
+function sendDataWithoutNeedingAResponse(url) {
+// send data to the server, without needing to listen for a response:
+var xhr = typeof XMLHttpRequest != 'undefined' ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
+    xhr.open('get', url, true);
+    xhr.send();
+}
+
+function postDataWithoutNeedingAResponse(url,data) {
+// send data to the server, without needing to listen for a response:
+var xhr = typeof XMLHttpRequest != 'undefined' ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
+    xhr.open('post', url, true);
+    xhr.send(data);
+}
+
+
 // -----------------------------------------------------------
 
 // image loader 
@@ -819,9 +841,10 @@ function getHeroGameState() {
         if(currentMap>0) {
 //clean old procedural maps: (don't need a response here)
 
-var xhr = typeof XMLHttpRequest != 'undefined' ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
-    xhr.open('get', '/generateDungeonMap.php?playerId=' + characterId + '&clearMaps=true', true);
-    xhr.send();
+
+sendDataWithoutNeedingAResponse('/generateDungeonMap.php?playerId=' + characterId + '&clearMaps=true');
+
+
 
 
 
@@ -1137,6 +1160,9 @@ function startDoorTransition() {
         mapTransitionCurrentFrames = 1;
         mapTransition = "out";
     }
+    if(currentMap < 0) {
+    saveCartographyMask();
+}
 }
 
 function getHeroAsCloseAsPossibleToObject(objx, objy, objw, objh) {

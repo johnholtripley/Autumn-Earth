@@ -323,6 +323,22 @@ var getJSON = function(url, successHandler, errorHandler) {
 };
 
 
+
+function sendDataWithoutNeedingAResponse(url) {
+// send data to the server, without needing to listen for a response:
+var xhr = typeof XMLHttpRequest != 'undefined' ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
+    xhr.open('get', url, true);
+    xhr.send();
+}
+
+function postDataWithoutNeedingAResponse(url,data) {
+// send data to the server, without needing to listen for a response:
+var xhr = typeof XMLHttpRequest != 'undefined' ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
+    xhr.open('post', url, true);
+    xhr.send(data);
+}
+
+
 // -----------------------------------------------------------
 
 // image loader 

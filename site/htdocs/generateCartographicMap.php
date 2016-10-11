@@ -49,14 +49,13 @@ if(isset($_GET["overlay"])) {
 $useOverlay = false;
 }
 
-// make this dynamic ##################
-$session = "session1";
+
 
 if (is_numeric($playerId)) {
     if (is_numeric($requestedMap)) {
 
 
-$mapFilename = "data/chr".$playerId."/cartography/".$dungeonName."/".$session."/".$requestedMap.".jpg";
+$mapFilename = "data/chr".$playerId."/cartography/".$dungeonName."/".$requestedMap.".jpg";
   if ((is_file($mapFilename)) && (!$debug) && (!$update)) {
   
             header("Location: ".$protocol.$_SERVER['SERVER_NAME'] . "/".$mapFilename);

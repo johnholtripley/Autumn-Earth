@@ -62,8 +62,7 @@ fae should react to npcs with active quest dialogue, without needing a hotspot
 // with a mine cart, all npcs tend to then aim for the same bit of rock - might need to store a list of 'occupied' tiles and avoid these
 
 
-// the xml files for level locked templates have tiles in the right order, but items and npcs are placed with the y axis being from the bottom.
-// might be fixed now ? #########
+
 
 
 // tunnels shouldn't go through stairs
@@ -95,7 +94,6 @@ fae should react to npcs with active quest dialogue, without needing a hotspot
 
 // Templates will need height maps and then to put the map start door at the same height as the height of the entrance to the template
 
-// caves could branch if coordinates for each map are saved and checked against before determining exit doors - just to ensure that the maps don't intersect incorrectly
 
 // which npcs (and frequency) should be determined in the dungeon's config
 
@@ -104,7 +102,6 @@ fae should react to npcs with active quest dialogue, without needing a hotspot
 // bug - it is possible for small incosequential areas to be separated from the main walkable region after edging walls are added back in. not a problem, but does look a little messy.
 
 
-// rewrite drawFilledCircle so I understand it
 
 // rarer items should be placed more often the deeper in to the dungeon the player has gone
 
@@ -115,7 +112,7 @@ fae should react to npcs with active quest dialogue, without needing a hotspot
 
 // error handle script timeout in function abortScript() and default to a fully templated map so that the game has something to load. These template maps would need to have very wide entrance chambers, so that wherever the door was placed to match up with the previous map, a path is connected up. also need to be aware that a treasure map location might need to exist somewhere on the map
 
-// optimise (if required - it does run pretty fast currently)
+
 // after placing items there is no check on the path not being blocked. make sure that the item placement logic is sound
 
 // lock-and-key regions (if not annoying?)
@@ -192,7 +189,7 @@ if ($clearOldMaps) {
   }
 
 // delete cartography too:
-  $cartographyDirectory = "data/chr" . $thisPlayersId . "/cartography/".$thisDungeonsName."/session1/";
+  $cartographyDirectory = "data/chr" . $thisPlayersId . "/cartography/".$thisDungeonsName;
  if (is_dir($cartographyDirectory)) { 
     if ($thisDirectory = opendir($cartographyDirectory)) {
       while (($file = readdir($thisDirectory)) !== false) {
