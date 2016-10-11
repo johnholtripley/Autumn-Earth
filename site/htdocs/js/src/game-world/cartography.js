@@ -26,17 +26,23 @@ function updateCartographicMiniMap() {
 }
 
 function initCartographicMap() {
-    canvasMapImage = document.createElement('img');
+    
     canvasMapImage.src = "/generateCartographicMap.php?playerId=" + characterId + "&dungeonName=" + randomDungeonName + "&plotChests=true&requestedMap=" + newMap;
     canvasMapImage.onload = function() {
-        // new map:
-        offScreenCartographyContext.clearRect(0, 0, 246, 246);
-        updateCartographicMiniMap();
+        // load the mask (if any) so that previously uncovered areas are revealed:
+        console.log('getting mask - /game-world/getCartographicMapMask.php?chr=' + characterId + '&dungeonName=' + randomDungeonName + '&currentMap=' + newMap);
+        canvasMapMaskImage.src = '/game-world/getCartographicMapMask.php?chr=' + characterId + '&dungeonName=' + randomDungeonName + '&currentMap=' + newMap + '&cache='+Date.now();
+        canvasMapMaskImage.onload = function() {
+            console.log('canvasMapMaskImage onload');
+            offScreenCartographyContext.clearRect(0, 0, 246, 246);
+            offScreenCartographyContext.drawImage(canvasMapMaskImage, 0, 0);
+            updateCartographicMiniMap();
+        }
     }
 }
 
 function saveCartographyMask() {
     // http://stackoverflow.com/questions/13198131/how-to-save-a-html5-canvas-as-image-on-a-server/13198699#13198699
     var dataURL = offScreenCartographyCanvas.toDataURL();
-    postData('/game-world/saveCartographicMapMask.php', 'chr='+characterId+'&dungeonName=' + randomDungeonName+'&currentMap='+currentMap+'&data='+dataURL);
+    postData('/game-world/saveCartographicMapMask.php', 'chr=' + characterId + '&dungeonName=' + randomDungeonName + '&currentMap=' + currentMap + '&data=' + dataURL);
 }

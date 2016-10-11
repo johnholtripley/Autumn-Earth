@@ -1,9 +1,7 @@
 <?php
 
 
-//print_r($_POST);
 
-// data\chr999\cartography
 
 $chr = $_POST['chr'];
 $dungeonName = $_POST['dungeonName'];

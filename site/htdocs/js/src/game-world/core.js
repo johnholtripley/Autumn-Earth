@@ -20,6 +20,9 @@ function init() {
     offScreenCartographyCanvas = document.getElementById("offScreenCartographyCanvas");
     offScreenCartographyContext = offScreenCartographyCanvas.getContext('2d');
 
+    canvasMapImage = document.createElement('img');
+canvasMapMaskImage = document.createElement('img');
+
     UI.init();
     // detect and set up input methods:
     Input.init();
