@@ -93,4 +93,9 @@ var UI = {
             }, false);
         }
     }
+
+    showDialogue: function(text) {
+        dialogue.innerHTML = text;
+        displayZoneName.classList.add("active");
+    }
 }

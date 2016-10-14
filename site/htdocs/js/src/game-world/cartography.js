@@ -1,11 +1,11 @@
 function updateCartographicMiniMap() {
 
     // cartography canvas is 246px wide
+
     var cartographyUnits = 246 / (mapTilesX * tileW);
 
     var x = hero.x * cartographyUnits;
     var y = hero.y * cartographyUnits;
-
     var innerRadius = 0;
     var outerRadius = 35;
 
@@ -20,18 +20,16 @@ function updateCartographicMiniMap() {
     cartographyContext.clearRect(0, 0, 246, 246);
     cartographyContext.globalCompositeOperation = 'copy';
     cartographyContext.drawImage(offScreenCartographyCanvas, 0, 0);
-
     cartographyContext.globalCompositeOperation = 'source-atop';
     cartographyContext.drawImage(canvasMapImage, 0, 0);
 }
 
 function initCartographicMap() {
-    
     canvasMapImage.src = "/generateCartographicMap.php?playerId=" + characterId + "&dungeonName=" + randomDungeonName + "&plotChests=true&requestedMap=" + newMap;
     canvasMapImage.onload = function() {
         // load the mask (if any) so that previously uncovered areas are revealed:
         console.log('getting mask - /game-world/getCartographicMapMask.php?chr=' + characterId + '&dungeonName=' + randomDungeonName + '&currentMap=' + newMap);
-        canvasMapMaskImage.src = '/game-world/getCartographicMapMask.php?chr=' + characterId + '&dungeonName=' + randomDungeonName + '&currentMap=' + newMap + '&cache='+Date.now();
+        canvasMapMaskImage.src = '/game-world/getCartographicMapMask.php?chr=' + characterId + '&dungeonName=' + randomDungeonName + '&currentMap=' + newMap + '&cache=' + Date.now();
         canvasMapMaskImage.onload = function() {
             console.log('canvasMapMaskImage onload');
             offScreenCartographyContext.clearRect(0, 0, 246, 246);
@@ -42,7 +40,6 @@ function initCartographicMap() {
 }
 
 function saveCartographyMask() {
-    // http://stackoverflow.com/questions/13198131/how-to-save-a-html5-canvas-as-image-on-a-server/13198699#13198699
     var dataURL = offScreenCartographyCanvas.toDataURL();
     postData('/game-world/saveCartographicMapMask.php', 'chr=' + characterId + '&dungeonName=' + randomDungeonName + '&currentMap=' + currentMap + '&data=' + dataURL);
 }
