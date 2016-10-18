@@ -41,6 +41,8 @@
                 "speech": "",
                 "isCollidable": true,
                 "isMoving": false,
+                "speechIndex": 0,
+                "speech": [["hello","once"], ["hello again",""]],
                 "animation": {
                     "walk": {
                         "length": 1,

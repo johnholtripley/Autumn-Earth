@@ -655,7 +655,7 @@ function itemAttributesMatch(item1, item2) {
 
 function checkForActions() {
     var inventoryCheck = [];
-    var slotMarkup, thisSlotsId, thisSlotElem;
+    var slotMarkup, thisSlotsId, thisSlotElem, thisNPC;
     // loop through items:
     for (var i = 0; i < thisMapData.items.length; i++) {
         if (isInRange(hero.x, hero.y, thisMapData.items[i].x, thisMapData.items[i].y, (thisMapData.items[i].width / 2 + hero.width / 2 + 6))) {
@@ -701,7 +701,29 @@ function checkForActions() {
     }
 
     // loop through NPCs:
-    // #######
+    for (var i = 0; i < thisMapData.npcs.length; i++) {
+        thisNPC = thisMapData.npcs[i];
+        if (isInRange(hero.x, hero.y, thisNPC.x, thisNPC.y, (thisNPC.width / 2 + hero.width / 2 + 6))) {
+            if (isFacing(hero, thisNPC)) {
+                var thisSpeech = thisNPC.speech[thisNPC.speechIndex][0];
+                var thisSpeechCode = thisNPC.speech[thisNPC.speechIndex][1];
+                switch (thisSpeechCode) {
+                    case "once":
+                        console.log("remove");
+                        // no break, allow it to fall through to default as well:
+                    default:
+                    // turn NPC to face hero ########
+                        UI.showDialogue(thisNPC, thisSpeech);
+                        thisNPC.speechIndex++;
+                        if (thisNPC.speechIndex >= thisNPC.speech.length) {
+                            thisNPC.speechIndex = 0;
+                        }
+                }
+
+            }
+        }
+    }
+
 
     // action processed, so cancel the key event:
     key[4] = 0;

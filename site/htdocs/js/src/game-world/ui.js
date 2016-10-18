@@ -92,10 +92,16 @@ var UI = {
                 }
             }, false);
         }
-    }
+    },
 
-    showDialogue: function(text) {
+    showDialogue: function(whichNPC,text) {
         dialogue.innerHTML = text;
-        displayZoneName.classList.add("active");
+        dialogue.classList.add("active");
+
+  var thisX = findIsoCoordsX(whichNPC.x, whichNPC.y);
+            var thisY = findIsoCoordsY(whichNPC.x, whichNPC.y);
+
+        dialogue.style.left = Math.floor(thisX - hero.isox - whichNPC.centreX + (canvasWidth / 2))+"px";
+        dialogue.style.bottom = Math.floor(thisY - hero.isoy - whichNPC.centreY + (canvasHeight / 2))+"px";
     }
 }

@@ -1,11 +1,11 @@
 function updateCartographicMiniMap() {
 
     // cartography canvas is 246px wide
+
     var cartographyUnits = 246 / (mapTilesX * tileW);
 
     var x = hero.x * cartographyUnits;
     var y = hero.y * cartographyUnits;
-
     var innerRadius = 0;
     var outerRadius = 35;
 
@@ -20,18 +20,16 @@ function updateCartographicMiniMap() {
     cartographyContext.clearRect(0, 0, 246, 246);
     cartographyContext.globalCompositeOperation = 'copy';
     cartographyContext.drawImage(offScreenCartographyCanvas, 0, 0);
-
     cartographyContext.globalCompositeOperation = 'source-atop';
     cartographyContext.drawImage(canvasMapImage, 0, 0);
 }
 
 function initCartographicMap() {
-    
     canvasMapImage.src = "/generateCartographicMap.php?playerId=" + characterId + "&dungeonName=" + randomDungeonName + "&plotChests=true&requestedMap=" + newMap;
     canvasMapImage.onload = function() {
         // load the mask (if any) so that previously uncovered areas are revealed:
         console.log('getting mask - /game-world/getCartographicMapMask.php?chr=' + characterId + '&dungeonName=' + randomDungeonName + '&currentMap=' + newMap);
-        canvasMapMaskImage.src = '/game-world/getCartographicMapMask.php?chr=' + characterId + '&dungeonName=' + randomDungeonName + '&currentMap=' + newMap + '&cache='+Date.now();
+        canvasMapMaskImage.src = '/game-world/getCartographicMapMask.php?chr=' + characterId + '&dungeonName=' + randomDungeonName + '&currentMap=' + newMap + '&cache=' + Date.now();
         canvasMapMaskImage.onload = function() {
             console.log('canvasMapMaskImage onload');
             offScreenCartographyContext.clearRect(0, 0, 246, 246);
@@ -42,7 +40,6 @@ function initCartographicMap() {
 }
 
 function saveCartographyMask() {
-    // http://stackoverflow.com/questions/13198131/how-to-save-a-html5-canvas-as-image-on-a-server/13198699#13198699
     var dataURL = offScreenCartographyCanvas.toDataURL();
     postData('/game-world/saveCartographicMapMask.php', 'chr=' + characterId + '&dungeonName=' + randomDungeonName + '&currentMap=' + currentMap + '&data=' + dataURL);
 }
@@ -799,6 +796,17 @@ var UI = {
                 }
             }, false);
         }
+    },
+
+    showDialogue: function(whichNPC,text) {
+        dialogue.innerHTML = text;
+        dialogue.classList.add("active");
+
+  var thisX = findIsoCoordsX(whichNPC.x, whichNPC.y);
+            var thisY = findIsoCoordsY(whichNPC.x, whichNPC.y);
+
+        dialogue.style.left = Math.floor(thisX - hero.isox - whichNPC.centreX + (canvasWidth / 2))+"px";
+        dialogue.style.bottom = Math.floor(thisY - hero.isoy - whichNPC.centreY + (canvasHeight / 2))+"px";
     }
 }
 
@@ -1459,7 +1467,7 @@ function itemAttributesMatch(item1, item2) {
 
 function checkForActions() {
     var inventoryCheck = [];
-    var slotMarkup, thisSlotsId, thisSlotElem;
+    var slotMarkup, thisSlotsId, thisSlotElem, thisNPC;
     // loop through items:
     for (var i = 0; i < thisMapData.items.length; i++) {
         if (isInRange(hero.x, hero.y, thisMapData.items[i].x, thisMapData.items[i].y, (thisMapData.items[i].width / 2 + hero.width / 2 + 6))) {
@@ -1505,7 +1513,29 @@ function checkForActions() {
     }
 
     // loop through NPCs:
-    // #######
+    for (var i = 0; i < thisMapData.npcs.length; i++) {
+        thisNPC = thisMapData.npcs[i];
+        if (isInRange(hero.x, hero.y, thisNPC.x, thisNPC.y, (thisNPC.width / 2 + hero.width / 2 + 6))) {
+            if (isFacing(hero, thisNPC)) {
+                var thisSpeech = thisNPC.speech[thisNPC.speechIndex][0];
+                var thisSpeechCode = thisNPC.speech[thisNPC.speechIndex][1];
+                switch (thisSpeechCode) {
+                    case "once":
+                        console.log("remove");
+                        // no break, allow it to fall through to default as well:
+                    default:
+                    // turn NPC to face hero ########
+                        UI.showDialogue(thisNPC, thisSpeech);
+                        thisNPC.speechIndex++;
+                        if (thisNPC.speechIndex >= thisNPC.speech.length) {
+                            thisNPC.speechIndex = 0;
+                        }
+                }
+
+            }
+        }
+    }
+
 
     // action processed, so cancel the key event:
     key[4] = 0;
