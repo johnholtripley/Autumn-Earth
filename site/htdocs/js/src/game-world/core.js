@@ -513,7 +513,7 @@ if (activeNPCForDialogue != '') {
     if (!(isInRange(hero.x, hero.y, activeNPCForDialogue.x, activeNPCForDialogue.y, closeDialogueDistance))) {
         dialogue.classList.add("slowerFade");
         dialogue.classList.remove("active");
-        // only remove this after dialogue has fade out completely:
+        // only remove this after dialogue has faded out completely:
 
 
     dialogue.addEventListener(whichTransitionEvent, function removeActiveDialogue(e) {

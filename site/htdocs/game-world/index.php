@@ -25,8 +25,17 @@
 <div id="displayZoneName"></div>
 <div id="inventoryPanels"></div>
 <div id="cartographicPanel"><div class="draggableBar"><span id="cartographicTitle">Map</span></div><canvas id="cartographyCanvas" width="246" height="246"></canvas><canvas id="offScreenCartographyCanvas" class="offScreenCanvas" width="246" height="246"></canvas></div>
+
+
+
+<div id="cardGame">
+<canvas id="cardGame" width="1008" height="612">
+  <img src="/images/card-game/no-canvas.jpg" alt="Card game">
+</canvas>
 </div>
 
+
+</div>
 
 
 <script src="/js/game-world.<?php echo $cacheVersion; ?>.js"></script>

@@ -1,5 +1,9 @@
 // config ----------------------------------------------------
 
+// name space the card game code so it doesn't cause conflicts with the core game code:
+cardGameNameSpace = new Object();
+
+
 framesPerSecond = 24;
 playerColours = ["", "#ffcc00", "#ff00cc"];
 
@@ -57,7 +61,6 @@ function compareZIndex(a,b) {
     return 1;
   return 0;
 }
-
 
 function getRandomInteger(min, max) {
    return Math.floor(Math.random() * (max - min + 1)) + min;

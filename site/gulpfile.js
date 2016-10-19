@@ -75,7 +75,7 @@ gulp.task('scripts', ['alternateScripts'],function() {
 
 gulp.task('alternateScripts', ['gameScripts'], function() {
     // minify predefined list of unique scripts:
-    return gulp.src(['htdocs/**/*(serviceWorker.js|card-game.js)'])
+    return gulp.src(['htdocs/**/*(serviceWorker.js|card-game.js|card-game-shared.js)'])
         .pipe(rename({
             suffix: '.min'
         }))
