@@ -166,6 +166,8 @@ var inventoryInterfaceIsBuilt = false;
 
 var whichTransitionEvent = '';
 
+var activeNPCForDialogue = '';
+
 // key bindings
 var key = [0, 0, 0, 0, 0];
 
@@ -822,14 +824,19 @@ var UI = {
     showDialogue: function(whichNPC, text) {
         dialogue.innerHTML = text;
         dialogue.classList.add("active");
+activeNPCForDialogue = whichNPC;
+     UI.updateDialogue(activeNPCForDialogue);
+    },
 
-        var thisX = findIsoCoordsX(whichNPC.x, whichNPC.y);
+updateDialogue: function(whichNPC) {
+       var thisX = findIsoCoordsX(whichNPC.x, whichNPC.y);
         var thisY = findIsoCoordsY(whichNPC.x, whichNPC.y);
         // +40 y for the toolbar height at the bottom of the canvas:
         // -40 x so the balloon tip is at '0' x
         thisTransform = "translate(" + Math.floor(thisX - hero.isox + (canvasWidth / 2) - 40) + "px," + Math.floor(0 - (canvasHeight - (thisY - hero.isoy - whichNPC.centreY + (canvasHeight / 2)) + 40)) + "px)";
         dialogue.style.transform = thisTransform;
-    }
+}
+
 }
 
 // service worker:
@@ -1102,7 +1109,7 @@ thisMapData.npcs[i].drawnFacing = thisMapData.npcs[i].facing;
         thisMapData.items[i].centreY = currentActiveInventoryItems[thisMapData.items[i].type].centreY;
     }
 
-
+activeNPCForDialogue = '';
     // determine tile offset to centre the hero in the centre
     hero.x = getTileCentreCoordX(hero.tileX);
     hero.y = getTileCentreCoordY(hero.tileY);
@@ -1536,6 +1543,7 @@ function checkForActions() {
  if (thisNPC.speechIndex >= thisNPC.speech.length) {
                             thisNPC.speechIndex = 0;
                             dialogue.classList.remove("active");
+                            activeNPCForDialogue = '';
                         } else {
 
                 var thisSpeech = thisNPC.speech[thisNPC.speechIndex][0];
@@ -1858,6 +1866,12 @@ switch(assetsToDraw[i][1]) {
 
          
         }
+
+
+
+if(activeNPCForDialogue != '') {
+    UI.updateDialogue(activeNPCForDialogue);
+}
 
         // draw the map transition if it's needed:
         if (mapTransition == "out") {

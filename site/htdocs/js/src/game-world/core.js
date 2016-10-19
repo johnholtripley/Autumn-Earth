@@ -268,7 +268,7 @@ thisMapData.npcs[i].drawnFacing = thisMapData.npcs[i].facing;
         thisMapData.items[i].centreY = currentActiveInventoryItems[thisMapData.items[i].type].centreY;
     }
 
-
+activeNPCForDialogue = '';
     // determine tile offset to centre the hero in the centre
     hero.x = getTileCentreCoordX(hero.tileX);
     hero.y = getTileCentreCoordY(hero.tileY);
@@ -702,6 +702,7 @@ function checkForActions() {
  if (thisNPC.speechIndex >= thisNPC.speech.length) {
                             thisNPC.speechIndex = 0;
                             dialogue.classList.remove("active");
+                            activeNPCForDialogue = '';
                         } else {
 
                 var thisSpeech = thisNPC.speech[thisNPC.speechIndex][0];
@@ -1024,6 +1025,12 @@ switch(assetsToDraw[i][1]) {
 
          
         }
+
+
+
+if(activeNPCForDialogue != '') {
+    UI.updateDialogue(activeNPCForDialogue);
+}
 
         // draw the map transition if it's needed:
         if (mapTransition == "out") {

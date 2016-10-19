@@ -42,6 +42,8 @@ var inventoryInterfaceIsBuilt = false;
 
 var whichTransitionEvent = '';
 
+var activeNPCForDialogue = '';
+
 // key bindings
 var key = [0, 0, 0, 0, 0];
 
