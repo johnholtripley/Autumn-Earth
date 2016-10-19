@@ -365,6 +365,27 @@ function isInRange(ax, ay, bx, by, ra) {
     }
 }
 
+function turntoFace(obj1, obj2) {
+    // obj1 is the one which will react and turn to face obj2
+    var xDiff = obj1.x - obj2.x;
+    var yDiff = obj1.y - obj2.y;
+    // find the greatest difference:
+    if (Math.abs(xDiff) > Math.abs(yDiff)) {
+        if (xDiff > 0) {
+            return "w";
+        } else {
+            return "e";
+        }
+    } else {
+        if (yDiff > 0) {
+            return "n";
+        } else {
+            return "s";
+        }
+    }
+}
+
+
 function isFacing(obj1, obj2) {
     var isFacing = false;
     switch (obj1.facing) {
@@ -1519,6 +1540,7 @@ function checkForActions() {
 
                 var thisSpeech = thisNPC.speech[thisNPC.speechIndex][0];
                 var thisSpeechCode = thisNPC.speech[thisNPC.speechIndex][1];
+                thisNPC.drawnFacing = turntoFace(thisNPC,hero);
                 switch (thisSpeechCode) {
                     case "once":
                         
@@ -1526,7 +1548,7 @@ function checkForActions() {
                         UI.showDialogue(thisNPC, thisSpeech);
                         break;
                     default:
-                    // turn NPC to face hero ########
+                    
                         UI.showDialogue(thisNPC, thisSpeech);
                         thisNPC.speechIndex++;
                        

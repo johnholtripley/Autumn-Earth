@@ -706,6 +706,7 @@ function checkForActions() {
 
                 var thisSpeech = thisNPC.speech[thisNPC.speechIndex][0];
                 var thisSpeechCode = thisNPC.speech[thisNPC.speechIndex][1];
+                thisNPC.drawnFacing = turntoFace(thisNPC,hero);
                 switch (thisSpeechCode) {
                     case "once":
                         
@@ -713,7 +714,7 @@ function checkForActions() {
                         UI.showDialogue(thisNPC, thisSpeech);
                         break;
                     default:
-                    // turn NPC to face hero ########
+                    
                         UI.showDialogue(thisNPC, thisSpeech);
                         thisNPC.speechIndex++;
                        
