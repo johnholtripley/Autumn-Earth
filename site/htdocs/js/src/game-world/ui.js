@@ -97,17 +97,17 @@ var UI = {
     showDialogue: function(whichNPC, text) {
         dialogue.innerHTML = text;
         dialogue.classList.add("active");
-activeNPCForDialogue = whichNPC;
-     UI.updateDialogue(activeNPCForDialogue);
+        activeNPCForDialogue = whichNPC;
+        UI.updateDialogue(activeNPCForDialogue);
     },
 
-updateDialogue: function(whichNPC) {
-       var thisX = findIsoCoordsX(whichNPC.x, whichNPC.y);
+    updateDialogue: function(whichNPC) {
+        var thisX = findIsoCoordsX(whichNPC.x, whichNPC.y);
         var thisY = findIsoCoordsY(whichNPC.x, whichNPC.y);
         // +40 y for the toolbar height at the bottom of the canvas:
         // -40 x so the balloon tip is at '0' x
-        thisTransform = "translate(" + Math.floor(thisX - hero.isox + (canvasWidth / 2) - 40) + "px," + Math.floor(0 - (canvasHeight - (thisY - hero.isoy - whichNPC.centreY + (canvasHeight / 2)) + 40)) + "px)";
+        var thisTransform = "translate(" + Math.floor(thisX - hero.isox + (canvasWidth / 2) - 40) + "px," + Math.floor(0 - (canvasHeight - (thisY - hero.isoy - whichNPC.centreY + (canvasHeight / 2)) + 40)) + "px)";
         dialogue.style.transform = thisTransform;
-}
+    }
 
 }

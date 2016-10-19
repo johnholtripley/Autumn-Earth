@@ -696,7 +696,7 @@ function checkForActions() {
     // loop through NPCs:
     for (var i = 0; i < thisMapData.npcs.length; i++) {
         thisNPC = thisMapData.npcs[i];
-        if (isInRange(hero.x, hero.y, thisNPC.x, thisNPC.y, (thisNPC.width / 2 + hero.width / 2 + 6))) {
+        if (isInRange(hero.x, hero.y, thisNPC.x, thisNPC.y, (thisNPC.width + hero.width))) {
             if (isFacing(hero, thisNPC)) {
 
  if (thisNPC.speechIndex >= thisNPC.speech.length) {
