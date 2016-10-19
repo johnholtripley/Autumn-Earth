@@ -1353,12 +1353,23 @@ function update() {
             heroIsInNewTile();
         }
 // check to see if a dialogue balloon is open, and if the hero has moved far from the NPC:
-if(activeNPCForDialogue != '') {
-if (!(isInRange(hero.x, hero.y, activeNPCForDialogue.x, activeNPCForDialogue.y, closeDialogueDistance))) {
-dialogue.classList.add("slowerFade");
-dialogue.classList.remove("active");
+if (activeNPCForDialogue != '') {
+    if (!(isInRange(hero.x, hero.y, activeNPCForDialogue.x, activeNPCForDialogue.y, closeDialogueDistance))) {
+        dialogue.classList.add("slowerFade");
+        dialogue.classList.remove("active");
+        // only remove this after dialogue has fade out completely:
+
+
+    dialogue.addEventListener(whichTransitionEvent, function removeActiveDialogue(e) {
+                               activeNPCForDialogue = '';
+                                return e.currentTarget.removeEventListener(whichTransitionEvent, removeActiveDialogue, false);
+                            }, false);
+
+
+        
+    }
 }
-}
+
 
     } else {
         hero.isMoving = true;
