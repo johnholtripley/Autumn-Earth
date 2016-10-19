@@ -101,7 +101,8 @@ var UI = {
   var thisX = findIsoCoordsX(whichNPC.x, whichNPC.y);
             var thisY = findIsoCoordsY(whichNPC.x, whichNPC.y);
 
-        dialogue.style.left = Math.floor(thisX - hero.isox - whichNPC.centreX + (canvasWidth / 2))+"px";
-        dialogue.style.bottom = Math.floor(thisY - hero.isoy - whichNPC.centreY + (canvasHeight / 2))+"px";
+        dialogue.style.left = Math.floor(thisX - hero.isox + (canvasWidth / 2))+"px";
+        // +40 for the toolbar height at the bottom of the canvas:
+        dialogue.style.bottom = Math.floor(canvasHeight - (thisY - hero.isoy - whichNPC.centreY + (canvasHeight / 2)) +40)+"px";
     }
 }

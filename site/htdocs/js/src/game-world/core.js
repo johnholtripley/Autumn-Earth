@@ -45,19 +45,9 @@ function getHeroGameState() {
         newMap = currentMap;
         hero.bags = data.bags;
         hero.inventory = data.inventory;
-        if(currentMap>0) {
-//clean old procedural maps: (don't need a response here)
-
-
-sendDataWithoutNeedingAResponse('/generateDungeonMap.php?playerId=' + characterId + '&clearMaps=true');
-
-
-
-
-
-
-
-
+        if (currentMap > 0) {
+            //clean old procedural maps: (don't need a response here)
+            sendDataWithoutNeedingAResponse('/generateDungeonMap.php?playerId=' + characterId + '&clearMaps=true');
         }
         loadCoreAssets();
     }, function(status) {
@@ -65,6 +55,7 @@ sendDataWithoutNeedingAResponse('/generateDungeonMap.php?playerId=' + characterI
         getHeroGameState();
     });
 }
+
 
 function loadCoreAssets() {
     coreImagesToLoad = [];
@@ -257,6 +248,8 @@ function prepareGame() {
     for (var i = 0; i < thisMapData.npcs.length; i++) {
         thisMapData.npcs[i].x = getTileCentreCoordX(thisMapData.npcs[i].tileX);
         thisMapData.npcs[i].y = getTileCentreCoordY(thisMapData.npcs[i].tileY);
+
+thisMapData.npcs[i].drawnFacing = thisMapData.npcs[i].facing;
 
         thisMapData.npcs[i].dx = 0;
         thisMapData.npcs[i].dy = 0;
@@ -741,6 +734,9 @@ function moveNPCs() {
         if (thisNPC.isMoving) {
             oldNPCx = thisNPC.x;
             oldNPCy = thisNPC.y;
+
+thisNPC.drawnFacing = thisNPC.facing;
+            
             switch (thisNPC.facing) {
                 case 'n':
                     thisNPC.y -= thisNPC.speed;
@@ -961,11 +957,12 @@ function draw() {
         for (var i = 0; i < thisMapData.npcs.length; i++) {
             thisNPC = thisMapData.npcs[i];
             thisNPCOffsetCol = currentAnimationFrame % thisNPC["animation"]["walk"]["length"];
-            thisNPCOffsetRow = thisNPC["animation"]["walk"][thisNPC.facing];
+            thisNPCOffsetRow = thisNPC["animation"]["walk"][thisNPC.drawnFacing];
             thisX = findIsoCoordsX(thisNPC.x, thisNPC.y);
             thisY = findIsoCoordsY(thisNPC.x, thisNPC.y);
 
             //assetsToDraw.push([findIsoDepth(thisX, thisY), npcImages[i], Math.floor(thisX - hero.isox - thisNPC.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisNPC.centreY + (canvasHeight / 2))]);
+   
 
             assetsToDraw.push([thisY, "sprite", npcImages[i], thisNPCOffsetCol * thisNPC.spriteWidth, thisNPCOffsetRow * thisNPC.spriteHeight, thisNPC.spriteWidth, thisNPC.spriteHeight, Math.floor(thisX - hero.isox - thisNPC.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisNPC.centreY + (canvasHeight / 2)), thisNPC.spriteWidth, thisNPC.spriteHeight]);
         }

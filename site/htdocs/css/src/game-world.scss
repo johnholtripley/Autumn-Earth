@@ -227,7 +227,7 @@ filter: drop-shadow(2px 2px 5px rgba(0,0,0,0.69));
     @include pxRem('padding',14px);
 max-width: 295px;
 // nudge the balloon so that the arrow is at '0' on the x axis:
-@include transform(translateX(-25px));
+@include transform(translateX(-40px));
     opacity: 0;
     @include transition(opacity 0.4s ease);
     pointer-events: none;
