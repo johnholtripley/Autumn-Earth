@@ -102,6 +102,7 @@ var UI = {
     },
 
     updateDialogue: function(whichNPC) {
+        // maybe store these values if NPCs are never going to move while a speech balloon is attached to them? #####
         var thisX = findIsoCoordsX(whichNPC.x, whichNPC.y);
         var thisY = findIsoCoordsY(whichNPC.x, whichNPC.y);
         // +40 y for the toolbar height at the bottom of the canvas:

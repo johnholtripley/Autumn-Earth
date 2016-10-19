@@ -829,6 +829,7 @@ var UI = {
     },
 
     updateDialogue: function(whichNPC) {
+        // maybe store these values if NPCs are never going to move while a speech balloon is attached to them? #####
         var thisX = findIsoCoordsX(whichNPC.x, whichNPC.y);
         var thisY = findIsoCoordsY(whichNPC.x, whichNPC.y);
         // +40 y for the toolbar height at the bottom of the canvas:
@@ -1537,34 +1538,37 @@ function checkForActions() {
     // loop through NPCs:
     for (var i = 0; i < thisMapData.npcs.length; i++) {
         thisNPC = thisMapData.npcs[i];
-        if (isInRange(hero.x, hero.y, thisNPC.x, thisNPC.y, (thisNPC.width + hero.width))) {
-            if (isFacing(hero, thisNPC)) {
+        if (thisNPC.speech) {
+            if (isInRange(hero.x, hero.y, thisNPC.x, thisNPC.y, (thisNPC.width + hero.width))) {
+                if (isFacing(hero, thisNPC)) {
 
- if (thisNPC.speechIndex >= thisNPC.speech.length) {
-                            thisNPC.speechIndex = 0;
-                            dialogue.classList.remove("active");
-                            activeNPCForDialogue = '';
-                        } else {
+                    if (thisNPC.speechIndex >= thisNPC.speech.length) {
+                        thisNPC.speechIndex = 0;
+                        dialogue.classList.remove("active");
+                        activeNPCForDialogue = '';
+                    } else {
 
-                var thisSpeech = thisNPC.speech[thisNPC.speechIndex][0];
-                var thisSpeechCode = thisNPC.speech[thisNPC.speechIndex][1];
-                thisNPC.drawnFacing = turntoFace(thisNPC,hero);
-                switch (thisSpeechCode) {
-                    case "once":
-                        
-                        thisNPC.speech.splice(thisNPC.speechIndex, 1);
-                        UI.showDialogue(thisNPC, thisSpeech);
-                        break;
-                    default:
-                    
-                        UI.showDialogue(thisNPC, thisSpeech);
-                        thisNPC.speechIndex++;
-                       
+                        var thisSpeech = thisNPC.speech[thisNPC.speechIndex][0];
+                        var thisSpeechCode = thisNPC.speech[thisNPC.speechIndex][1];
+                        thisNPC.drawnFacing = turntoFace(thisNPC, hero);
+                        switch (thisSpeechCode) {
+                            case "once":
+
+                                thisNPC.speech.splice(thisNPC.speechIndex, 1);
+                                UI.showDialogue(thisNPC, thisSpeech);
+                                break;
+                            default:
+
+                                UI.showDialogue(thisNPC, thisSpeech);
+                                thisNPC.speechIndex++;
+
+                        }
+                    }
                 }
-}
             }
         }
     }
+
 
 
     // action processed, so cancel the key event:
