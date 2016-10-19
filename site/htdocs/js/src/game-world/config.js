@@ -43,6 +43,7 @@ var inventoryInterfaceIsBuilt = false;
 var whichTransitionEvent = '';
 
 var activeNPCForDialogue = '';
+var closeDialogueDistance = 200;
 
 // key bindings
 var key = [0, 0, 0, 0, 0];

@@ -506,8 +506,16 @@ function update() {
         hero.tileX = getTileX(hero.x);
         hero.tileY = getTileY(hero.y);
         if((hero.tileX != heroOldX) || (hero.tileY != heroOldY)) {
-heroIsInNewTile();
+            heroIsInNewTile();
         }
+// check to see if a dialogue balloon is open, and if the hero has moved far from the NPC:
+if(activeNPCForDialogue != '') {
+if (!(isInRange(hero.x, hero.y, activeNPCForDialogue.x, activeNPCForDialogue.y, closeDialogueDistance))) {
+dialogue.classList.add("slowerFade");
+dialogue.classList.remove("active");
+}
+}
+
     } else {
         hero.isMoving = true;
         // continue the hero moving:

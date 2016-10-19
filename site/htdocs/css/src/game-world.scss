@@ -214,46 +214,45 @@ cursor: url(../images/game-world/cursors/active.gif) 3 3, auto;
     background: #363636;
     border: 2px solid #cbbc9f;
     @include border-radius(10px);
- //    @include box-shadow(1px 1px 5px 0px rgba(0,0,0,0.69));
-   
-filter: drop-shadow(2px 2px 5px rgba(0,0,0,0.69));
-
+    filter: drop-shadow(2px 2px 5px rgba(0, 0, 0, 0.69));
     color: #fff;
     position: absolute;
     left: 0px;
     bottom: 0px;
-    @include pxRem('padding',10px 12px);
-    @include pxRem('font-size',12px);
-    @include pxRem('padding',14px);
-max-width: 295px;
-
+    @include pxRem('padding', 10px 12px);
+    @include pxRem('font-size', 12px);
+    @include pxRem('padding', 14px);
+    max-width: 295px;
     opacity: 0;
     @include transition(opacity 0.4s ease);
     pointer-events: none;
-&:before {
-    border-color: #cbbc9f transparent;
-    border-style: solid;
-      border-width: 14px 2px 0 14px;
-    bottom: -14px;
-    content: "";
-    display: block;
-    left: 25px;
-    position: absolute;
-    width: 0;
-}
-&:after {
-    border-color: #363636 transparent;
-    border-style: solid;
-    border-width: 14px 2px 0 14px;
-    bottom: -10px;
-    content: "";
-    display: block;
-    left: 24px;
-    position: absolute;
-    width: 0;
-}
-&.active {
-    opacity: 1;
-    pointer-events: auto;
-}
+    &.slowerFade {
+        @include transition-duration(2s);
+    }
+    &:before {
+        border-color: #cbbc9f transparent;
+        border-style: solid;
+        border-width: 14px 2px 0 14px;
+        bottom: -14px;
+        content: "";
+        display: block;
+        left: 25px;
+        position: absolute;
+        width: 0;
+    }
+    &:after {
+        border-color: #363636 transparent;
+        border-style: solid;
+        border-width: 14px 2px 0 14px;
+        bottom: -10px;
+        content: "";
+        display: block;
+        left: 24px;
+        position: absolute;
+        width: 0;
+    }
+    &.active {
+        opacity: 1;
+        pointer-events: auto;
+    }
 }

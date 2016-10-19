@@ -96,6 +96,7 @@ var UI = {
 
     showDialogue: function(whichNPC, text) {
         dialogue.innerHTML = text;
+        dialogue.classList.remove("slowerFade");
         dialogue.classList.add("active");
         activeNPCForDialogue = whichNPC;
         UI.updateDialogue(activeNPCForDialogue);

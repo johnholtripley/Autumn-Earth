@@ -160,6 +160,13 @@ transform-origin: $values;
 transition: $values;
 }
 
+ @mixin transition-duration($values...) {
+// adding ... allows multiple values to be passed in
+-webkit-transition-duration: $values;
+-moz-transition-duration: $values;
+-o-transition-duration: $values;
+transition-duration: $values;
+}
 
 @mixin linearGradient($from, $to, $fromPercent:0, $toPercent:100, $direction:to bottom) {
     // simple 2 colour vertical gradients only
