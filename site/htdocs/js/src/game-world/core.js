@@ -698,21 +698,27 @@ function checkForActions() {
         thisNPC = thisMapData.npcs[i];
         if (isInRange(hero.x, hero.y, thisNPC.x, thisNPC.y, (thisNPC.width / 2 + hero.width / 2 + 6))) {
             if (isFacing(hero, thisNPC)) {
+
+ if (thisNPC.speechIndex >= thisNPC.speech.length) {
+                            thisNPC.speechIndex = 0;
+                            dialogue.classList.remove("active");
+                        } else {
+
                 var thisSpeech = thisNPC.speech[thisNPC.speechIndex][0];
                 var thisSpeechCode = thisNPC.speech[thisNPC.speechIndex][1];
                 switch (thisSpeechCode) {
                     case "once":
-                        console.log("remove");
-                        // no break, allow it to fall through to default as well:
+                        
+                        thisNPC.speech.splice(thisNPC.speechIndex, 1);
+                        UI.showDialogue(thisNPC, thisSpeech);
+                        break;
                     default:
                     // turn NPC to face hero ########
                         UI.showDialogue(thisNPC, thisSpeech);
                         thisNPC.speechIndex++;
-                        if (thisNPC.speechIndex >= thisNPC.speech.length) {
-                            thisNPC.speechIndex = 0;
-                        }
+                       
                 }
-
+}
             }
         }
     }
