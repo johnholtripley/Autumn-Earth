@@ -96,6 +96,7 @@ if($isNetworkGame) {
 	$additionalAssets .= '<script src="/socket.io/socket.io.js"></script>'."\n";
 	$additionalAssets .= '<script src="/js/card-sockets.'.$cacheVersion.'.js"></script>'."\n";
 }
+$additionalAssets .= '<script src="/js/src/game-world/helper-functions.'.$cacheVersion.'.js"></script>'."\n";
 $additionalAssets .= '<script src="/js/card-game-shared.'.$cacheVersion.'.js"></script>'."\n";
 $additionalAssets .= '<script src="/js/card-game.'.$cacheVersion.'.js"></script>'."\n";
 ?>

@@ -1,208 +1,24 @@
 // config ----------------------------------------------------
 
-// name space the card game code so it doesn't cause conflicts with the core game code:
-cardGameNameSpace = new Object();
+
 
 
 framesPerSecond = 24;
-playerColours = ["", "#ffcc00", "#ff00cc"];
 
-cardWidth = 84;
-cardHeight = 102;
+
+
 
 allCardsThisGame = player1Cards.concat(player2Cards);
 numberOfCardsInGame = allCardsThisGame.length;
 
 
-// 'x' = void space
-// '#' = player 1 start position
-// '@' = player 2 start position
-board = [
-    ['#', '#', 'x', 'x', 'x', '-', '-', 'x', 'x', 'x', 'x', 'x'],
-    ['#', '#', 'x', 'x', '-', '-', '-', '-', 'x', 'x', '@', '@'],
-    ['#', '#', 'x', '-', '-', '-', '-', '-', '-', 'x', '@', '@'],
-    ['#', '#', 'x', '-', '-', '-', '-', '-', '-', 'x', '@', '@'],
-    ['#', '#', 'x', 'x', '-', '-', '-', '-', 'x', 'x', '@', '@'],
-    ['x', 'x', 'x', 'x', 'x', '-', '-', 'x', 'x', 'x', '@', '@']
-];
 
-
-boardWidth = board[0].length;
-boardHeight = board.length;
 
 
 // isANetworkGameis defined in card-sockets.js so if not a network game, this won't be set:
 if (typeof isANetworkGame === "undefined") {
     isANetworkGame = false;
 }
-
-// helper functions ----------------------------------------------------
-
-// http://stackoverflow.com/questions/9229645/remove-duplicates-from-javascript-array#answer-9229821
-function uniqueValues(a) {
-    var seen = {};
-    return a.filter(function(item) {
-        return seen.hasOwnProperty(item) ? false : (seen[item] = true);
-    });
-}
-
-function sortByHighestValue(a,b) {
-  if (a[0] < b[0])
-    return 1;
-  if (a[0] > b[0])
-    return -1;
-  return 0;
-}
-
-function compareZIndex(a,b) {
-  if (a.zIndex < b.zIndex)
-    return -1;
-  if (a.zIndex > b.zIndex)
-    return 1;
-  return 0;
-}
-
-function getRandomInteger(min, max) {
-   return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
-
-// -----------------------------------------------------------
-// http://paulirish.com/2011/requestanimationframe-for-smart-animating/
-// http://my.opera.com/emoller/blog/2011/12/20/requestanimationframe-for-smart-er-animating
-// requestAnimationFrame polyfill by Erik Moller
-// fixes from Paul Irish and Tino Zijdel
-
-(function() {
-    var lastTime = 0;
-    var vendors = ['ms', 'moz', 'webkit', 'o'];
-    for (var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
-        window.requestAnimationFrame = window[vendors[x] + 'RequestAnimationFrame'];
-        window.cancelAnimationFrame = window[vendors[x] + 'CancelAnimationFrame'] || window[vendors[x] + 'CancelRequestAnimationFrame'];
-    }
-
-    if (!window.requestAnimationFrame)
-        window.requestAnimationFrame = function(callback, element) {
-            var currTime = new Date().getTime();
-            var timeToCall = Math.max(0, 16 - (currTime - lastTime));
-            var id = window.setTimeout(function() {
-                    callback(currTime + timeToCall);
-                },
-                timeToCall);
-            lastTime = currTime + timeToCall;
-            return id;
-        };
-
-    if (!window.cancelAnimationFrame)
-        window.cancelAnimationFrame = function(id) {
-            clearTimeout(id);
-        };
-}());
-// -----------------------------------------------------------
-
-
-
-
-
-// image loader -----------------------------------------------------------
-// http://stackoverflow.com/questions/16560397/image-not-drawn-on-canvas-until-user-clicks
-// http://jsfiddle.net/gfcarv/26AmY/
-
-
-window.Loader = (function() {
-    var imageCount = 0;
-    var loading = false;
-    var total = 0;
-
-    // this object will hold all image references
-    var images = {};
-
-    // user defined callback, called each time an image is loaded (if it is not defined the empty function wil be called)
-    function onProgressUpdate() {};
-    // user defined callback, called when all images are loaded (if it is not defined the empty function wil be called)
-    function onComplete() {};
-
-    function onLoadImage(name) {
-        ++imageCount;
-        // console.log(name + " loaded");
-
-        // call the user defined callback when an image is loaded
-        onProgressUpdate(getProgress());
-
-        // check if all images are loaded
-        if (imageCount == total) {
-            loading = false;
-            //  console.log("Load complete.");
-            onComplete();
-        }
-
-    };
-
-    function onImageError(e) {
-        console.log("Error on loading the image: " + e.srcElement);
-    }
-
-    function loadImage(name, src) {
-        try {
-            images[name] = new Image();
-            images[name].onload = function() {
-                onLoadImage(name);
-            };
-            images[name].onerror = onImageError;
-            images[name].src = src;
-        } catch (e) {
-            console.log(e.message);
-        }
-    }
-
-    function getImage(name) {
-        if (images[name]) {
-            return (images[name]);
-        } else {
-            return undefined;
-        }
-    }
-
-    // pre-load all the images and call the onComplete callback when all images are loaded
-    // optionaly set the onProgressUpdate callback to be called each time an image is loaded (useful for loading screens) 
-    function preload(_images, _onComplete, _onProgressUpdate) {
-        if (!loading) {
-
-            //  console.log("Loading...");
-            loading = true;
-
-            try {
-                total = _images.length;
-                onProgressUpdate = _onProgressUpdate || (function() {});
-                onComplete = _onComplete || (function() {});
-
-                for (var i = 0; i < _images.length; ++i) {
-                    loadImage(_images[i].name, _images[i].src);
-                }
-            } catch (e) {
-                console.log(e.message);
-            }
-        } else {
-            //  throw new Error("Acess denied: Cannot call the load function while there are remaining images to load.");
-        }
-    }
-
-    // percentage of progress
-    function getProgress() {
-        return (imageCount / total) * 100;
-    };
-
-    // return only the public stuff to create our Loader object
-    return {
-        preload: preload,
-        getProgress: getProgress,
-        getImage: getImage,
-        images: images
-    };
-})();
-
-
-
 
 
 
@@ -300,16 +116,16 @@ function initCardGame() {
                 offsetY = 0;
                 if (this.flippedAnimation > 0) {
                     randomAmount = this.flippedAnimation * 4;
-                    offsetX = getRandomInteger(0, randomAmount);
-                    offsetY = getRandomInteger(0, randomAmount);
+                    offsetX = getRandomIntegerInclusive(0, randomAmount);
+                    offsetY = getRandomIntegerInclusive(0, randomAmount);
                     this.flippedAnimation--;
                     if (this.flippedAnimation == 0) {
                         // now finished moving:
                         this.zIndex = 0;
                     }
                 }
-                gameContext.fillStyle = playerColours[this.currentOwner];
-                gameContext.fillRect(this.x + offsetX, this.y + offsetY, cardWidth, cardHeight);
+                gameContext.fillStyle = cardGameNameSpace.playerColours[this.currentOwner];
+                gameContext.fillRect(this.x + offsetX, this.y + offsetY, cardGameNameSpace.cardWidth, cardGameNameSpace.cardHeight);
                 gameContext.drawImage(cardImages[this.cardType], this.x + offsetX, this.y + offsetY);
             }
         }
@@ -351,19 +167,19 @@ function initCardGame() {
 
 
 
-    placeCardOnBoard(0, (boardWidth / 2) - 1, (boardHeight / 2) - 1, true);
-    placeCardOnBoard(1, (boardWidth / 2), (boardHeight / 2), true);
-    placeCardOnBoard((numberOfCardsInGame / 2), (boardWidth / 2), (boardHeight / 2) - 1, true);
-    placeCardOnBoard((numberOfCardsInGame / 2) + 1, (boardWidth / 2) - 1, (boardHeight / 2), true);
+    placeCardOnBoard(0, (cardGameNameSpace.boardWidth / 2) - 1, (cardGameNameSpace.boardHeight / 2) - 1, true);
+    placeCardOnBoard(1, (cardGameNameSpace.boardWidth / 2), (cardGameNameSpace.boardHeight / 2), true);
+    placeCardOnBoard((numberOfCardsInGame / 2), (cardGameNameSpace.boardWidth / 2), (cardGameNameSpace.boardHeight / 2) - 1, true);
+    placeCardOnBoard((numberOfCardsInGame / 2) + 1, (cardGameNameSpace.boardWidth / 2) - 1, (cardGameNameSpace.boardHeight / 2), true);
     var player1CardIndexToPlace = 2;
     var player2CardIndexToPlace = (numberOfCardsInGame / 2) + 2;
-    for (var j = 0; j < boardWidth; j++) {
-        for (var k = 0; k < boardHeight; k++) {
-            if (board[k][j] == "#") {
+    for (var j = 0; j < cardGameNameSpace.boardWidth; j++) {
+        for (var k = 0; k < cardGameNameSpace.boardHeight; k++) {
+            if (cardGameNameSpace.board[k][j] == "#") {
                 // player 1 card
                 placeCardOnBoard(player1CardIndexToPlace, j, k, false);
                 player1CardIndexToPlace++;
-            } else if (board[k][j] == "@") {
+            } else if (cardGameNameSpace.board[k][j] == "@") {
                 placeCardOnBoard(player2CardIndexToPlace, j, k, false);
                 player2CardIndexToPlace++;
             }
@@ -433,7 +249,7 @@ function initCardGame() {
         isPlayer1AI = false;
         // will get the play instruction from the socket when it's determined which player starts first
     } else {
-        currentPlayersTurn = getRandomInteger(1, 2);
+        currentPlayersTurn = getRandomIntegerInclusive(1, 2);
         whoCanClick = currentPlayersTurn;
         gameMode = "play";
        
@@ -448,9 +264,9 @@ function initCardGame() {
 
 
 function placeCardOnBoard(cardRef, gridX, gridY, placedOnGameBoard) {
-    board[gridY][gridX] = cardRef;
-    cards[cardRef].x = gridX * cardWidth;
-    cards[cardRef].y = gridY * cardHeight;
+    cardGameNameSpace.board[gridY][gridX] = cardRef;
+    cards[cardRef].x = gridX * cardGameNameSpace.cardWidth;
+    cards[cardRef].y = gridY * cardGameNameSpace.cardHeight;
     cards[cardRef].hasBeenPlaced = placedOnGameBoard;
     //  cards[cardRef].boardX = gridX;
     //  cards[cardRef].boardY = gridY;
@@ -465,19 +281,19 @@ function update() {
     }
     for (var i = 0; i < numberOfCardsInGame; i++) {
         if (cards[i].isMovingToBoard) {
-            var targetX = cards[i].gridX * cardWidth;
-            var targetY = cards[i].gridY * cardHeight;
+            var targetX = cards[i].gridX * cardGameNameSpace.cardWidth;
+            var targetY = cards[i].gridY * cardGameNameSpace.cardHeight;
             cards[i].x -= (cards[i].x - targetX) * 0.3;
             cards[i].y -= (cards[i].y - targetY) * 0.3;
             if (Math.abs(cards[i].x - targetX) < 10) {
                 if (Math.abs(cards[i].y - targetY) < 10) {
                     // snap in position:
                     cards[i].isMovingToBoard = false;
-                    cards[i].x = cards[i].gridX * cardWidth;
-                    cards[i].y = cards[i].gridY * cardHeight;
+                    cards[i].x = cards[i].gridX * cardGameNameSpace.cardWidth;
+                    cards[i].y = cards[i].gridY * cardGameNameSpace.cardHeight;
                     cards[i].hasBeenPlaced = true;
                     cards[i].zIndex = 0;
-                    checkAttacksInAllDirections(cards[i].gridX, cards[i].gridY, board, cards, currentOpponent, currentPlayersTurn, false);
+                    checkAttacksInAllDirections(cards[i].gridX, cards[i].gridY, cardGameNameSpace.board, cards, currentOpponent, currentPlayersTurn, false);
                     placedCards++;
                     if (placedCards == numberOfCardsInGame) {
                         gameMode = "gameover";
@@ -491,9 +307,9 @@ function update() {
                             }
                         }
                         if (player2CardsShown > player1CardsShown) {
-                            playerColours[1] = "#665200";
+                            cardGameNameSpace.playerColours[1] = "#665200";
                         } else if (player1CardsShown > player2CardsShown) {
-                            playerColours[2] = "#660052";
+                            cardGameNameSpace.playerColours[2] = "#660052";
                         }
                         draw();
                     }
@@ -522,7 +338,7 @@ function update() {
             cards[currentlySelectedCard].isMovingToBoard = true;
             cards[currentlySelectedCard].gridX = whichMoveToMake[2];
             cards[currentlySelectedCard].gridY = whichMoveToMake[3];
-            board[(whichMoveToMake[3])][(whichMoveToMake[2])] = currentlySelectedCard;
+            cardGameNameSpace.board[(whichMoveToMake[3])][(whichMoveToMake[2])] = currentlySelectedCard;
             cards[currentlySelectedCard].zIndex = 1;
             currentlySelectedCard = -1;
             // player's turn now:
@@ -539,7 +355,7 @@ function draw() {
     gameContext.drawImage(boardImage, 0, 0);
     // get card indexes sorted by zindex:
     var cardsCopyForSorting = cards.slice();
-    var cardDrawOrder = cardsCopyForSorting.sort(compareZIndex);
+    var cardDrawOrder = cardsCopyForSorting.sort(cardGameNameSpace.compareZIndex);
     for (var i = 0; i < numberOfCardsInGame; i++) {
         cards[(cardDrawOrder[i].index)].draw();
     }
@@ -557,7 +373,7 @@ function isValidMove(checkX, checkY, whichBoard) {
         for (var j = checkY - 1; j <= checkY + 1; j++) {
             // x shouldn't go out of scope, but y might:
             if (j >= 0) {
-                if (j < boardHeight) {
+                if (j < cardGameNameSpace.boardHeight) {
               //      console.log(i+","+j+" = "+whichBoard[j][i]);
                     if (!isNaN(whichBoard[j][i])) {
                         isValid = true;
@@ -591,7 +407,7 @@ function checkAttack(placedTileX, placedTileY, xDir, yDir, whichBoard, whichCard
         var isAnOpponentCard = false;
         // is in bounds:
         if (lineTracedY >= 0) {
-            if (lineTracedY < boardHeight) {
+            if (lineTracedY < cardGameNameSpace.boardHeight) {
                 var thisCheckBoardRef = whichBoard[lineTracedY][lineTracedX];
                 // is numeric?
                 if (!(isNaN(thisCheckBoardRef))) {
@@ -611,7 +427,7 @@ function checkAttack(placedTileX, placedTileY, xDir, yDir, whichBoard, whichCard
     var placedCardsAttack = parseInt(allCardData[attackCardType][0]);
     // then check card after is current player's card, not the board edge:
     if (lineTracedY >= 0) {
-        if (lineTracedY < boardHeight) {
+        if (lineTracedY < cardGameNameSpace.boardHeight) {
             // is numeric?
             if (!(isNaN(whichBoard[lineTracedY][lineTracedX]))) {
                 if (whichCards[(whichBoard[lineTracedY][lineTracedX])].currentOwner == whichCurrentPlayersTurn) {
@@ -689,7 +505,7 @@ function findLowestScoreInGroup() {
 function doAIMove() {
     console.log("AI thinking...");
     aiIsWorking = 1;
-    findBestMove(board, currentPlayersTurn, cards);
+    findBestMove(cardGameNameSpace.board, currentPlayersTurn, cards);
 }
 function findBestMove(boardState, whichPlayerCurrently) {
     whichOpponentCurrently = (whichPlayerCurrently == 1) ? 2 : 1;
@@ -702,8 +518,8 @@ function findBestMove(boardState, whichPlayerCurrently) {
     var horizInset = 2;
     var vertInset = 0;
     // loop through all board tiles:
-    for (var j = horizInset; j < (boardWidth - horizInset); j++) {
-        for (var k = vertInset; k < (boardHeight - vertInset); k++) {
+    for (var j = horizInset; j < (cardGameNameSpace.boardWidth - horizInset); j++) {
+        for (var k = vertInset; k < (cardGameNameSpace.boardHeight - vertInset); k++) {
             // if is valid:
             if (boardState[k][j] == "-") {
                 if (isValidMove(j, k, boardState)) {
@@ -749,8 +565,8 @@ function findBestMove(boardState, whichPlayerCurrently) {
                                     // swap whose go it is:
                                     whichCounterPlayerCurrently = whichOpponentCurrently;
                                     whichCounterOpponentCurrently = whichPlayerCurrently;
-                                    for (var l = horizInset; l < (boardWidth - horizInset); l++) {
-                                        for (var m = vertInset; m < (boardHeight - vertInset); m++) {
+                                    for (var l = horizInset; l < (cardGameNameSpace.boardWidth - horizInset); l++) {
+                                        for (var m = vertInset; m < (cardGameNameSpace.boardHeight - vertInset); m++) {
                                             // if is valid:
                                             if (tempBoard[m][l] == "-") {
                                                 if (isValidMove(l, m, tempBoard)) {
@@ -886,16 +702,16 @@ function canvasClick(e) {
     var y = e.clientY + document.body.scrollTop + document.documentElement.scrollTop - outerCanvasTop - pageLoadScroll;
     switch (gameMode) {
         case "play":
-            gridX = Math.floor((x / outerCanvasWidth) * boardWidth);
-            gridY = Math.floor((y / outerCanvasHeight) * boardHeight);
-            var thisBoardRef = board[gridY][gridX];
+            gridX = Math.floor((x / outerCanvasWidth) * cardGameNameSpace.boardWidth);
+            gridY = Math.floor((y / outerCanvasHeight) * cardGameNameSpace.boardHeight);
+            var thisBoardRef = cardGameNameSpace.board[gridY][gridX];
             if (thisBoardRef == "-") {
                 if (currentlySelectedCard != -1) {
-                    if (isValidMove(gridX, gridY, board)) {
+                    if (isValidMove(gridX, gridY, cardGameNameSpace.board)) {
                         cards[currentlySelectedCard].isMovingToBoard = true;
                         cards[currentlySelectedCard].gridX = gridX;
                         cards[currentlySelectedCard].gridY = gridY;
-                        board[gridY][gridX] = currentlySelectedCard;
+                        cardGameNameSpace.board[gridY][gridX] = currentlySelectedCard;
                         cards[currentlySelectedCard].zIndex = 1;
                         currentlySelectedCard = -1;
                         whoCanClick = currentOpponent;

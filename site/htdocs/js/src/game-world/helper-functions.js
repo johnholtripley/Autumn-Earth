@@ -149,6 +149,9 @@ function getRandomInteger(min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
 }
 
+function getRandomIntegerInclusive(min, max) {
+   return Math.floor(Math.random() * (max - min + 1)) + min;
+}
 
 function isInRange(ax, ay, bx, by, ra) {
     // determines if one sprite is within range of another
@@ -266,7 +269,21 @@ function removeClass(el, className) {
 
 
 
+// http://stackoverflow.com/questions/9229645/remove-duplicates-from-javascript-array#answer-9229821
+function uniqueValues(a) {
+    var seen = {};
+    return a.filter(function(item) {
+        return seen.hasOwnProperty(item) ? false : (seen[item] = true);
+    });
+}
 
+function sortByHighestValue(a,b) {
+  if (a[0] < b[0])
+    return 1;
+  if (a[0] > b[0])
+    return -1;
+  return 0;
+}
 
 
 
