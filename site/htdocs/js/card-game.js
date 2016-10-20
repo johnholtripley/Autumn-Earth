@@ -8,17 +8,13 @@ framesPerSecond = 24;
 
 
 
-allCardsThisGame = player1Cards.concat(player2Cards);
-numberOfCardsInGame = allCardsThisGame.length;
 
 
 
 
 
-// isANetworkGameis defined in card-sockets.js so if not a network game, this won't be set:
-if (typeof isANetworkGame === "undefined") {
-    isANetworkGame = false;
-}
+
+
 
 
 
@@ -29,46 +25,19 @@ if (typeof isANetworkGame === "undefined") {
 
 
 
-
+var numberOfCardTypes, imagesToLoad;
 
 if ((cutsTheMustard) && (supportsCanvas())) {
-    // find non-duplicate card types to load:
-    allCardsToLoadThisGame = uniqueValues(allCardsThisGame);
-    var numberOfCardTypes = allCardsToLoadThisGame.length;
-    var imagesToLoad = [{
-        name: "board",
-        src: "/images/card-game/board.jpg"
-    }, {
-        name: "selected",
-        src: "/images/card-game/selected-card.png"
-    }, {
-        name: "current",
-        src: "/images/card-game/current-player.png"
-    }];
-    // build imagesToLoad array dynamically for cards:
-    for (var i = 1; i <= numberOfCardTypes; i++) {
-        imagesToLoad.push({
-            name: "card" + i,
-            src: "/images/card-game/cards/" + i + ".png"
-        });
-    }
-    // click handler:
-    document.getElementById("cardGame").addEventListener("click", function(e) {
-        canvasClick(e);
-        if (e) {
-            e.preventDefault();
-        }
-    }, false);
-    // resize handler:
-    canvasResizeHandler = debounce(function() {
-        getCanvasPosition();
-    }, 250);
-    window.addEventListener('resize', canvasResizeHandler);
-    gameMode = "loading";
-    gameLoop();
-    // preload all images:
-    Loader.preload(imagesToLoad, initCardGame, loadingProgress);
+cardGameNameSpace.initialiseCardGame();
+        // resize handler:
+        canvasResizeHandler = debounce(function() {
+            getCanvasPosition();
+        }, 250);
+        window.addEventListener('resize', canvasResizeHandler);
 }
+
+
+
 
 
 
@@ -97,7 +66,7 @@ function initCardGame() {
         canvasHeight = gameCanvas.height;
     }
     cards = [];
-    for (var i = 0; i < numberOfCardsInGame; i++) {
+    for (var i = 0; i < cardGameNameSpace.numberOfCardsInGame; i++) {
         cards[i] = {
             x: -100,
             y: -100,
@@ -107,10 +76,10 @@ function initCardGame() {
             zIndex: 0,
             flippedAnimation: 0,
             isMovingToBoard: false,
-            originalOwner: (i >= (numberOfCardsInGame / 2) ? 2 : 1),
+            originalOwner: (i >= (cardGameNameSpace.numberOfCardsInGame / 2) ? 2 : 1),
             hasBeenPlaced: false,
-            cardType: allCardsThisGame[i],
-            currentOwner: (i >= (numberOfCardsInGame / 2) ? 2 : 1),
+            cardType: cardGameNameSpace.allCardsThisGame[i],
+            currentOwner: (i >= (cardGameNameSpace.numberOfCardsInGame / 2) ? 2 : 1),
             draw: function() {
                 offsetX = 0;
                 offsetY = 0;
@@ -169,10 +138,10 @@ function initCardGame() {
 
     placeCardOnBoard(0, (cardGameNameSpace.boardWidth / 2) - 1, (cardGameNameSpace.boardHeight / 2) - 1, true);
     placeCardOnBoard(1, (cardGameNameSpace.boardWidth / 2), (cardGameNameSpace.boardHeight / 2), true);
-    placeCardOnBoard((numberOfCardsInGame / 2), (cardGameNameSpace.boardWidth / 2), (cardGameNameSpace.boardHeight / 2) - 1, true);
-    placeCardOnBoard((numberOfCardsInGame / 2) + 1, (cardGameNameSpace.boardWidth / 2) - 1, (cardGameNameSpace.boardHeight / 2), true);
+    placeCardOnBoard((cardGameNameSpace.numberOfCardsInGame / 2), (cardGameNameSpace.boardWidth / 2), (cardGameNameSpace.boardHeight / 2) - 1, true);
+    placeCardOnBoard((cardGameNameSpace.numberOfCardsInGame / 2) + 1, (cardGameNameSpace.boardWidth / 2) - 1, (cardGameNameSpace.boardHeight / 2), true);
     var player1CardIndexToPlace = 2;
-    var player2CardIndexToPlace = (numberOfCardsInGame / 2) + 2;
+    var player2CardIndexToPlace = (cardGameNameSpace.numberOfCardsInGame / 2) + 2;
     for (var j = 0; j < cardGameNameSpace.boardWidth; j++) {
         for (var k = 0; k < cardGameNameSpace.boardHeight; k++) {
             if (cardGameNameSpace.board[k][j] == "#") {
@@ -251,7 +220,7 @@ function initCardGame() {
     } else {
         currentPlayersTurn = getRandomIntegerInclusive(1, 2);
         whoCanClick = currentPlayersTurn;
-        gameMode = "play";
+        cardGameNameSpace.gameMode = "play";
        
         if (currentPlayersTurn == 1) {
             currentOpponent = 2;
@@ -279,7 +248,7 @@ function update() {
         doAIMove();
         waitForDrawUpdate = false;
     }
-    for (var i = 0; i < numberOfCardsInGame; i++) {
+    for (var i = 0; i < cardGameNameSpace.numberOfCardsInGame; i++) {
         if (cards[i].isMovingToBoard) {
             var targetX = cards[i].gridX * cardGameNameSpace.cardWidth;
             var targetY = cards[i].gridY * cardGameNameSpace.cardHeight;
@@ -295,11 +264,11 @@ function update() {
                     cards[i].zIndex = 0;
                     checkAttacksInAllDirections(cards[i].gridX, cards[i].gridY, cardGameNameSpace.board, cards, currentOpponent, currentPlayersTurn, false);
                     placedCards++;
-                    if (placedCards == numberOfCardsInGame) {
-                        gameMode = "gameover";
+                    if (placedCards == cardGameNameSpace.numberOfCardsInGame) {
+                        cardGameNameSpace.gameMode = "gameover";
                         var player1CardsShown = 0;
                         var player2CardsShown = 0;
-                        for (var j = 0; j < numberOfCardsInGame; j++) {
+                        for (var j = 0; j < cardGameNameSpace.numberOfCardsInGame; j++) {
                             if (cards[j].currentOwner == 1) {
                                 player1CardsShown++;
                             } else {
@@ -356,7 +325,7 @@ function draw() {
     // get card indexes sorted by zindex:
     var cardsCopyForSorting = cards.slice();
     var cardDrawOrder = cardsCopyForSorting.sort(cardGameNameSpace.compareZIndex);
-    for (var i = 0; i < numberOfCardsInGame; i++) {
+    for (var i = 0; i < cardGameNameSpace.numberOfCardsInGame; i++) {
         cards[(cardDrawOrder[i].index)].draw();
     }
     currentCardSelected.draw();
@@ -525,7 +494,7 @@ function findBestMove(boardState, whichPlayerCurrently) {
                 if (isValidMove(j, k, boardState)) {
                     var cardTypesTriedInThisPosition = [];
                     // loop through remaining cards
-                    for (var i = 0; i < numberOfCardsInGame; i++) {
+                    for (var i = 0; i < cardGameNameSpace.numberOfCardsInGame; i++) {
                         // if is AI player's card (always player 1)
                         if (cards[i].currentOwner == 1) {
                             // if not placed
@@ -536,7 +505,7 @@ function findBestMove(boardState, whichPlayerCurrently) {
                                     // copy arrays so original data isn't changed:
                                     // copy an array of objects: http://stackoverflow.com/questions/597588/how-do-you-clone-an-array-of-objects-in-javascript#answer-23481096
                                     var cardState = [];
-                                    for (var p = 0; p < numberOfCardsInGame; p++) {
+                                    for (var p = 0; p < cardGameNameSpace.numberOfCardsInGame; p++) {
                                         cardState[p] = {
                                             index: cards[p].index,
                                             originalOwner: cards[p].originalOwner,
@@ -572,7 +541,7 @@ function findBestMove(boardState, whichPlayerCurrently) {
                                                 if (isValidMove(l, m, tempBoard)) {
                                                     var counterCardTypesTriedInThisPosition = [];
                                                     // loop through remaining cards
-                                                    for (var o = 0; o < numberOfCardsInGame; o++) {
+                                                    for (var o = 0; o < cardGameNameSpace.numberOfCardsInGame; o++) {
                                                         // if is not AI player's card (AI is always player 1)
                                                         if (cardState[o].currentOwner == 2) {
                                                             // if not placed
@@ -582,7 +551,7 @@ function findBestMove(boardState, whichPlayerCurrently) {
                                                                     counterCardTypesTriedInThisPosition.push(cardState[o].cardType);
                                                                     // copy board and cards:
                                                                     var counterCardState = [];
-                                                                    for (var p = 0; p < numberOfCardsInGame; p++) {
+                                                                    for (var p = 0; p < cardGameNameSpace.numberOfCardsInGame; p++) {
                                                                         counterCardState[p] = {
                                                                             index: cardState[p].index,
                                                                             originalOwner: cardState[p].originalOwner,
@@ -700,7 +669,7 @@ function findBestMove(boardState, whichPlayerCurrently) {
 function canvasClick(e) {
     var x = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft - outerCanvasLeft;
     var y = e.clientY + document.body.scrollTop + document.documentElement.scrollTop - outerCanvasTop - pageLoadScroll;
-    switch (gameMode) {
+    switch (cardGameNameSpace.gameMode) {
         case "play":
             gridX = Math.floor((x / outerCanvasWidth) * cardGameNameSpace.boardWidth);
             gridY = Math.floor((y / outerCanvasHeight) * cardGameNameSpace.boardHeight);
@@ -741,7 +710,7 @@ function canvasClick(e) {
 function gameLoop() {
     setTimeout(function() {
         window.requestAnimationFrame(gameLoop);
-        switch (gameMode) {
+        switch (cardGameNameSpace.gameMode) {
             case "loading":
             console.log("loading...");
             //

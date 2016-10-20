@@ -770,7 +770,7 @@ function processSpeech(thisNPC, thisSpeech, thisSpeechCode) {
             break;
         case "play":
         UI.showDialogue(thisNPC, thisSpeech);
-            console.log("start card game!");
+            startCardGame();
             break;
         default:
             UI.showDialogue(thisNPC, thisSpeech);

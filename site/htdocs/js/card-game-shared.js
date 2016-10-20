@@ -23,6 +23,52 @@ cardGameNameSpace = {
         if (a.zIndex > b.zIndex)
             return 1;
         return 0;
+    },
+
+
+    initialiseCardGame: function() {
+
+        cardGameNameSpace.allCardsThisGame = player1Cards.concat(player2Cards);
+        cardGameNameSpace.numberOfCardsInGame = cardGameNameSpace.allCardsThisGame.length;
+
+        // find non-duplicate card types to load:
+        cardGameNameSpace.allCardsToLoadThisGame = uniqueValues(cardGameNameSpace.allCardsThisGame);
+        numberOfCardTypes = cardGameNameSpace.allCardsToLoadThisGame.length;
+
+        // isANetworkGameis defined in card-sockets.js so if not a network game, this won't be set:
+        if (typeof isANetworkGame === "undefined") {
+            isANetworkGame = false;
+        }
+
+        imagesToLoad = [{
+            name: "board",
+            src: "/images/card-game/board.jpg"
+        }, {
+            name: "selected",
+            src: "/images/card-game/selected-card.png"
+        }, {
+            name: "current",
+            src: "/images/card-game/current-player.png"
+        }];
+        // build imagesToLoad array dynamically for cards:
+        for (var i = 1; i <= numberOfCardTypes; i++) {
+            imagesToLoad.push({
+                name: "card" + i,
+                src: "/images/card-game/cards/" + i + ".png"
+            });
+        }
+        // click handler:
+        document.getElementById("cardGame").addEventListener("click", function(e) {
+            canvasClick(e);
+            if (e) {
+                e.preventDefault();
+            }
+        }, false);
+
+        cardGameNameSpace.gameMode = "loading";
+        gameLoop();
+        // preload all images:
+        Loader.preload(imagesToLoad, initCardGame, loadingProgress);
     }
 
 };
