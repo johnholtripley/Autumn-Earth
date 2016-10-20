@@ -20,6 +20,7 @@ var Input = {
             case KeyBindings.down:
                 key[3] = to;
                 break;
+
             case KeyBindings.action:
                 // action should only be on key Up:
                 key[4] = 0;
@@ -29,6 +30,9 @@ var Input = {
                 break;
             case KeyBindings.run:
                 key[5] = to;
+                break;
+            case KeyBindings.challenge:
+                key[6] = to;
                 break;
         }
     }

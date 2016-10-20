@@ -29,7 +29,7 @@
 
 
 <div id="cardGame">
-<canvas id="cardGame" width="1008" height="612">
+<canvas id="cardGame" moz-opaque width="1008" height="612">
   <img src="/images/card-game/no-canvas.jpg" alt="Card game">
 </canvas>
 </div>

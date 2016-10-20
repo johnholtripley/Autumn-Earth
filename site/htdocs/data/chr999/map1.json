@@ -24,35 +24,43 @@
             { "src": "block.png", "centreX": 24, "centreY": 45 }
         ],
         "npcs": [{
-                "name": "labourer",
-                "src": "labourer.png",
-                "width": 20,
-                "height": 20,
-                "spriteWidth": 75,
-                "spriteHeight": 85,
-                "centreX": 56,
-                "centreY": 73,
-                "tileX": 2,
-                "tileY": 4,
-                "movement": ["-"],
-                "facing": "e",
-                "walkThroughDoors": false,
-                "speed": 2,
-                "speech": "",
-                "isCollidable": true,
-                "isMoving": false,
-                "speechIndex": 0,
-                "speech": [["hello","once"], ["hello again",""]],
-                "animation": {
-                    "walk": {
-                        "length": 1,
-                        "n": 2,
-                        "e": 3,
-                        "s": 0,
-                        "w": 1
-                    }
+            "name": "labourer",
+            "src": "labourer.png",
+            "width": 20,
+            "height": 20,
+            "spriteWidth": 75,
+            "spriteHeight": 85,
+            "centreX": 56,
+            "centreY": 73,
+            "tileX": 2,
+            "tileY": 4,
+            "movement": ["-"],
+            "facing": "e",
+            "walkThroughDoors": false,
+            "speed": 2,
+            "speech": "",
+            "isCollidable": true,
+            "isMoving": false,
+            "speechIndex": 0,
+            "speech": [
+                ["hello", "once"],
+                ["hello again", ""]
+            ],
+            "cardGameSpeech": {
+                "challenge": ["Do you play? Fancy a game then?", "play"],
+                "win": ["Woo! I won!", ""],
+                "lose": ["Ahh, you beat me...", ""]
+            },
+            "animation": {
+                "walk": {
+                    "length": 1,
+                    "n": 2,
+                    "e": 3,
+                    "s": 0,
+                    "w": 1
                 }
-            }],
+            }
+        }],
         "doors": {
             "1,0": {
                 "map": -1,

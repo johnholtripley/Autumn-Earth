@@ -46,7 +46,7 @@ var activeNPCForDialogue = '';
 var closeDialogueDistance = 200;
 
 // key bindings
-var key = [0, 0, 0, 0, 0];
+var key = [0, 0, 0, 0, 0, 0];
 
 var hero = {
     x: 0,

@@ -5,5 +5,6 @@ var KeyBindings = {
     'down': 40,
     'pause': 80,
     'action': 17,
-    'run': 16
+    'run': 16,
+    'challenge': 67
 }

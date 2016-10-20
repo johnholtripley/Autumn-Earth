@@ -500,6 +500,9 @@ function update() {
         if (key[4]) {
             checkForActions();
         }
+              if (key[6]) {
+            checkForChallenges();
+        }
         checkHeroCollisions();
         var heroOldX = hero.tileX;
         var heroOldY = hero.tileY;
@@ -724,22 +727,11 @@ function checkForActions() {
                         dialogue.classList.remove("active");
                         activeNPCForDialogue = '';
                     } else {
-
                         var thisSpeech = thisNPC.speech[thisNPC.speechIndex][0];
                         var thisSpeechCode = thisNPC.speech[thisNPC.speechIndex][1];
                         thisNPC.drawnFacing = turntoFace(thisNPC, hero);
-                        switch (thisSpeechCode) {
-                            case "once":
-
-                                thisNPC.speech.splice(thisNPC.speechIndex, 1);
-                                UI.showDialogue(thisNPC, thisSpeech);
-                                break;
-                            default:
-
-                                UI.showDialogue(thisNPC, thisSpeech);
-                                thisNPC.speechIndex++;
-
-                        }
+                        processSpeech(thisNPC, thisSpeech, thisSpeechCode);
+                     
                     }
                 }
             }
@@ -753,6 +745,40 @@ function checkForActions() {
 }
 
 
+
+function checkForChallenges() {
+    for (var i = 0; i < thisMapData.npcs.length; i++) {
+        thisNPC = thisMapData.npcs[i];
+        if (isInRange(hero.x, hero.y, thisNPC.x, thisNPC.y, (thisNPC.width + hero.width))) {
+            if (isFacing(hero, thisNPC)) {
+                thisNPC.drawnFacing = turntoFace(thisNPC, hero);
+                processSpeech(thisNPC, thisNPC.cardGameSpeech.challenge[0], thisNPC.cardGameSpeech.challenge[1]);
+            }
+        }
+    }
+    // challenge processed, so cancel the key event:
+    key[6] = 0;
+}
+
+
+
+function processSpeech(thisNPC, thisSpeech, thisSpeechCode) {
+    switch (thisSpeechCode) {
+        case "once":
+            thisNPC.speech.splice(thisNPC.speechIndex, 1);
+            UI.showDialogue(thisNPC, thisSpeech);
+            break;
+        case "play":
+        UI.showDialogue(thisNPC, thisSpeech);
+            console.log("start card game!");
+            break;
+        default:
+            UI.showDialogue(thisNPC, thisSpeech);
+            
+                thisNPC.speechIndex++;
+            
+    }
+}
 
 
 
