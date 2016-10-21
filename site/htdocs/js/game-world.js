@@ -357,6 +357,9 @@ function getRandomInteger(min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
 }
 
+function getRandomIntegerInclusive(min, max) {
+   return Math.floor(Math.random() * (max - min + 1)) + min;
+}
 
 function isInRange(ax, ay, bx, by, ra) {
     // determines if one sprite is within range of another
@@ -474,7 +477,21 @@ function removeClass(el, className) {
 
 
 
+// http://stackoverflow.com/questions/9229645/remove-duplicates-from-javascript-array#answer-9229821
+function uniqueValues(a) {
+    var seen = {};
+    return a.filter(function(item) {
+        return seen.hasOwnProperty(item) ? false : (seen[item] = true);
+    });
+}
 
+function sortByHighestValue(a,b) {
+  if (a[0] < b[0])
+    return 1;
+  if (a[0] > b[0])
+    return -1;
+  return 0;
+}
 
 
 
@@ -680,6 +697,21 @@ function reset() {
 // -----------------------------------------------------------
 
 
+
+allCardPacks = [[1,1,1,1,1,1,1,1,3,3,3,3,3,3,3,3,3],[1,1,1,1,1,1,2,2,2,2,2,3,3,3,3,3,3]];
+
+
+function startCardGame(opponentNPC) {
+
+
+cardGameNameSpace.allCardData = [[null,null,null],["5","10","Bomb"],["5","17","Chocobo"],["15","10","Mog"]];
+cardGameNameSpace.player1Cards = hero.cards.slice(0,12);
+// combine the NPC's unique cards with their base pack and pick the first 12:
+cardGameNameSpace.player2Cards = opponentNPC.uniqueCards.concat(allCardPacks[opponentNPC.baseCardPack]).slice(0,12);
+cardGameNameSpace.player2Skill = opponentNPC.cardSkill;
+
+cardGameNameSpace.initialiseCardGame();
+}
 var Input = {
     init: function() {
         // Set up the keyboard events
@@ -893,6 +925,7 @@ function getHeroGameState() {
         currentMap = data.currentMap;
         newMap = currentMap;
         hero.bags = data.bags;
+        hero.cards = data.cards;
         hero.inventory = data.inventory;
         if (currentMap > 0) {
             //clean old procedural maps: (don't need a response here)
@@ -1619,7 +1652,7 @@ function processSpeech(thisNPC, thisSpeech, thisSpeechCode) {
             break;
         case "play":
         UI.showDialogue(thisNPC, thisSpeech);
-            console.log("start card game!");
+            startCardGame(thisNPC);
             break;
         default:
             UI.showDialogue(thisNPC, thisSpeech);

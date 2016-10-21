@@ -44,6 +44,7 @@ function getHeroGameState() {
         currentMap = data.currentMap;
         newMap = currentMap;
         hero.bags = data.bags;
+        hero.cards = data.cards;
         hero.inventory = data.inventory;
         if (currentMap > 0) {
             //clean old procedural maps: (don't need a response here)
@@ -770,7 +771,7 @@ function processSpeech(thisNPC, thisSpeech, thisSpeechCode) {
             break;
         case "play":
         UI.showDialogue(thisNPC, thisSpeech);
-            startCardGame();
+            startCardGame(thisNPC);
             break;
         default:
             UI.showDialogue(thisNPC, thisSpeech);

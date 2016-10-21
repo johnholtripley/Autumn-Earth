@@ -28,7 +28,7 @@ cardGameNameSpace = {
 
     initialiseCardGame: function() {
 
-        cardGameNameSpace.allCardsThisGame = player1Cards.concat(player2Cards);
+        cardGameNameSpace.allCardsThisGame = cardGameNameSpace.player1Cards.concat(cardGameNameSpace.player2Cards);
         cardGameNameSpace.numberOfCardsInGame = cardGameNameSpace.allCardsThisGame.length;
 
         // find non-duplicate card types to load:
@@ -75,3 +75,5 @@ cardGameNameSpace = {
 
 cardGameNameSpace.boardWidth = cardGameNameSpace.board[0].length;
 cardGameNameSpace.boardHeight = cardGameNameSpace.board.length;
+
+

@@ -38,6 +38,7 @@
 </div>
 
 
+<script src="/js/card-game-shared.<?php echo $cacheVersion; ?>.js"></script>
 <script src="/js/game-world.<?php echo $cacheVersion; ?>.js"></script>
 
 <?php include($_SERVER['DOCUMENT_ROOT']."/includes/google-analytics.php"); ?>

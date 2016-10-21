@@ -12,7 +12,10 @@ framesPerSecond = 24;
 
 
 
-
+cardGameNameSpace.allCardData = allCardData;
+cardGameNameSpace.player1Cards = player1Cards;
+cardGameNameSpace.player2Cards = player2Cards;
+cardGameNameSpace.player2Skill = player2Skill;
 
 
 
@@ -384,7 +387,7 @@ function checkAttack(placedTileX, placedTileY, xDir, yDir, whichBoard, whichCard
                         isAnOpponentCard = true;
                         opponentsCardsFound.push(thisCheckBoardRef);
                         var defenseCardType = whichCards[thisCheckBoardRef].cardType;
-                        defenceRunningTotal += parseInt(allCardData[defenseCardType][1]);
+                        defenceRunningTotal += parseInt(cardGameNameSpace.allCardData[defenseCardType][1]);
                         lineTracedX += xDir;
                         lineTracedY += yDir;
                     }
@@ -393,7 +396,7 @@ function checkAttack(placedTileX, placedTileY, xDir, yDir, whichBoard, whichCard
         }
     } while (isAnOpponentCard);
     var attackCardType = whichCards[(whichBoard[placedTileY][placedTileX])].cardType;
-    var placedCardsAttack = parseInt(allCardData[attackCardType][0]);
+    var placedCardsAttack = parseInt(cardGameNameSpace.allCardData[attackCardType][0]);
     // then check card after is current player's card, not the board edge:
     if (lineTracedY >= 0) {
         if (lineTracedY < cardGameNameSpace.boardHeight) {
@@ -401,7 +404,7 @@ function checkAttack(placedTileX, placedTileY, xDir, yDir, whichBoard, whichCard
             if (!(isNaN(whichBoard[lineTracedY][lineTracedX]))) {
                 if (whichCards[(whichBoard[lineTracedY][lineTracedX])].currentOwner == whichCurrentPlayersTurn) {
                     var existingCardType = whichCards[(whichBoard[lineTracedY][lineTracedX])].cardType;
-                    var existingCardsAttack = parseInt(allCardData[existingCardType][0]);
+                    var existingCardsAttack = parseInt(cardGameNameSpace.allCardData[existingCardType][0]);
                     if (placedCardsAttack + existingCardsAttack >= defenceRunningTotal) {
                         if (isAIChecking) {
                             thisMovesScore += opponentsCardsFound.length;
@@ -455,14 +458,14 @@ function findLowestScoreInGroup() {
     var lowestGroupScore = 99999;
     for (var cg = 0; cg < thisGroupsScore.length; cg++) {
         var thisCardType = cards[(listOfPossibleBestMoves[(thisGroupsScore[cg])][1])].cardType;
-        var thisCardsStrength = parseInt(allCardData[thisCardType][0]) + parseInt(allCardData[thisCardType][1]);
+        var thisCardsStrength = parseInt(cardGameNameSpace.allCardData[thisCardType][0]) + parseInt(cardGameNameSpace.allCardData[thisCardType][1]);
         if (thisCardsStrength < lowestGroupScore) {
             lowestGroupScore = thisCardsStrength;
         }
     }
     for (var cg = 0; cg < thisGroupsScore.length; cg++) {
         var thisCardType = cards[(listOfPossibleBestMoves[(thisGroupsScore[cg])][1])].cardType;
-        var thisCardsStrength = parseInt(allCardData[thisCardType][0]) + parseInt(allCardData[thisCardType][1]);
+        var thisCardsStrength = parseInt(cardGameNameSpace.allCardData[thisCardType][0]) + parseInt(cardGameNameSpace.allCardData[thisCardType][1]);
         if (thisCardsStrength != lowestGroupScore) {
             indexesToRemove.push(thisGroupsScore[cg]);
         }
@@ -645,7 +648,7 @@ function findBestMove(boardState, whichPlayerCurrently) {
     }
     console.log(listOfPossibleBestMoves);
     // randomly pick a move based on AI's skill level:
-    var pickMoveRange = player2Skill;
+    var pickMoveRange = cardGameNameSpace.player2Skill;
     // check to see if any moves have the same score as the best move - and use these as well so the higher skill AI doesn't just pick the same move every time:
     var indexToUse = 0;
     do {
