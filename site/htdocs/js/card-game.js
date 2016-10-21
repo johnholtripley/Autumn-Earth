@@ -61,11 +61,18 @@ function loadingProgress() {
 
 
 
+function cardGamePlayer2Wins() {
+
+}
+
+function cardGamePlayer1Wins() {
+    
+}
 
 
-
-
-
+function cardGameIsDrawn() {
+    
+}
 
 
 
