@@ -106,7 +106,7 @@ canvasClick: function(e) {
             var thisBoardRef = cardGameNameSpace.board[gridY][gridX];
             if (thisBoardRef == "-") {
                 if (cardGameNameSpace.currentlySelectedCard != -1) {
-                    if (isValidMove(gridX, gridY, cardGameNameSpace.board)) {
+                    if (cardGameNameSpace.isValidMove(gridX, gridY, cardGameNameSpace.board)) {
                         cardGameNameSpace.cards[cardGameNameSpace.currentlySelectedCard].isMovingToBoard = true;
                         cardGameNameSpace.cards[cardGameNameSpace.currentlySelectedCard].gridX = gridX;
                         cardGameNameSpace.cards[cardGameNameSpace.currentlySelectedCard].gridY = gridY;
@@ -328,6 +328,26 @@ gameMode = "cardGame";
     }
     cardGameNameSpace.currentCardSelected.draw();
     cardGameNameSpace.currentPlayerMarker.draw();
+},
+
+
+isValidMove:function(checkX, checkY, whichBoard) {
+    // check that it adjoins another card (ie. that the board has a number there and not X, - or undefined):
+    var isValid = false;
+    for (var i = checkX - 1; i <= checkX + 1; i++) {
+        for (var j = checkY - 1; j <= checkY + 1; j++) {
+            // x shouldn't go out of scope, but y might:
+            if (j >= 0) {
+                if (j < cardGameNameSpace.boardHeight) {
+              //      console.log(i+","+j+" = "+whichBoard[j][i]);
+                    if (!isNaN(whichBoard[j][i])) {
+                        isValid = true;
+                    }
+                }
+            }
+        }
+    }
+    return isValid;
 },
 
 

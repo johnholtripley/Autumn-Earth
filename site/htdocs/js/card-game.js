@@ -69,24 +69,7 @@ function loadingProgress() {
 
 
 
-function isValidMove(checkX, checkY, whichBoard) {
-    // check that it adjoins another card (ie. that the board has a number there and not X, - or undefined):
-    var isValid = false;
-    for (var i = checkX - 1; i <= checkX + 1; i++) {
-        for (var j = checkY - 1; j <= checkY + 1; j++) {
-            // x shouldn't go out of scope, but y might:
-            if (j >= 0) {
-                if (j < cardGameNameSpace.boardHeight) {
-              //      console.log(i+","+j+" = "+whichBoard[j][i]);
-                    if (!isNaN(whichBoard[j][i])) {
-                        isValid = true;
-                    }
-                }
-            }
-        }
-    }
-    return isValid;
-}
+
 
 function checkAttacksInAllDirections(checkX, checkY, whichBoard, whichCards, currentOpponent, currentPlayersTurn, isAIChecking) {
     checkAttack(checkX, checkY, -1, 0, whichBoard, whichCards, currentOpponent, currentPlayersTurn, isAIChecking);
@@ -221,7 +204,7 @@ function findBestMove(boardState, whichPlayerCurrently) {
         for (var k = vertInset; k < (cardGameNameSpace.boardHeight - vertInset); k++) {
             // if is valid:
             if (boardState[k][j] == "-") {
-                if (isValidMove(j, k, boardState)) {
+                if (cardGameNameSpace.isValidMove(j, k, boardState)) {
                     var cardTypesTriedInThisPosition = [];
                     // loop through remaining cards
                     for (var i = 0; i < cardGameNameSpace.numberOfCardsInGame; i++) {
@@ -268,7 +251,7 @@ function findBestMove(boardState, whichPlayerCurrently) {
                                         for (var m = vertInset; m < (cardGameNameSpace.boardHeight - vertInset); m++) {
                                             // if is valid:
                                             if (tempBoard[m][l] == "-") {
-                                                if (isValidMove(l, m, tempBoard)) {
+                                                if (cardGameNameSpace.isValidMove(l, m, tempBoard)) {
                                                     var counterCardTypesTriedInThisPosition = [];
                                                     // loop through remaining cards
                                                     for (var o = 0; o < cardGameNameSpace.numberOfCardsInGame; o++) {
