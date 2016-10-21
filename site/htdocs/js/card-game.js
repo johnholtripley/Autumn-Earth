@@ -63,85 +63,6 @@ function loadingProgress() {
 
 
 
-function update() {
-
-
-
-
-
-    if (cardGameNameSpace.waitForDrawUpdate) {
-        // wait until after the last draw() has been called so the card is fully placed on the board:
-        doAIMove();
-        cardGameNameSpace.waitForDrawUpdate = false;
-    }
-    for (var i = 0; i < cardGameNameSpace.numberOfCardsInGame; i++) {
-        if (cardGameNameSpace.cards[i].isMovingToBoard) {
-            var targetX = cardGameNameSpace.cards[i].gridX * cardGameNameSpace.cardWidth;
-            var targetY = cardGameNameSpace.cards[i].gridY * cardGameNameSpace.cardHeight;
-            cardGameNameSpace.cards[i].x -= (cardGameNameSpace.cards[i].x - targetX) * 0.3;
-            cardGameNameSpace.cards[i].y -= (cardGameNameSpace.cards[i].y - targetY) * 0.3;
-            if (Math.abs(cardGameNameSpace.cards[i].x - targetX) < 10) {
-                if (Math.abs(cardGameNameSpace.cards[i].y - targetY) < 10) {
-                    // snap in position:
-                    cardGameNameSpace.cards[i].isMovingToBoard = false;
-                    cardGameNameSpace.cards[i].x = cardGameNameSpace.cards[i].gridX * cardGameNameSpace.cardWidth;
-                    cardGameNameSpace.cards[i].y = cardGameNameSpace.cards[i].gridY * cardGameNameSpace.cardHeight;
-                    cardGameNameSpace.cards[i].hasBeenPlaced = true;
-                    cardGameNameSpace.cards[i].zIndex = 0;
-                    checkAttacksInAllDirections(cardGameNameSpace.cards[i].gridX, cardGameNameSpace.cards[i].gridY, cardGameNameSpace.board, cardGameNameSpace.cards, cardGameNameSpace.currentOpponent, cardGameNameSpace.currentPlayersTurn, false);
-                    cardGameNameSpace.placedCards++;
-                    if (cardGameNameSpace.placedCards == cardGameNameSpace.numberOfCardsInGame) {
-                        cardGameNameSpace.gameMode = "gameover";
-                        var player1CardsShown = 0;
-                        var player2CardsShown = 0;
-                        for (var j = 0; j < cardGameNameSpace.numberOfCardsInGame; j++) {
-                            if (cardGameNameSpace.cards[j].currentOwner == 1) {
-                                player1CardsShown++;
-                            } else {
-                                player2CardsShown++;
-                            }
-                        }
-                        if (player2CardsShown > player1CardsShown) {
-                            cardGameNameSpace.playerColours[1] = "#665200";
-                        } else if (player1CardsShown > player2CardsShown) {
-                            cardGameNameSpace.playerColours[2] = "#660052";
-                        }
-                        draw();
-                    }
-                    // swap whose go it is:
-                     cardGameNameSpace.oldCurrentPlayersTurn = cardGameNameSpace.currentPlayersTurn;
-                    cardGameNameSpace.currentPlayersTurn = cardGameNameSpace.currentOpponent;
-                    cardGameNameSpace.currentOpponent = cardGameNameSpace.oldCurrentPlayersTurn;
-                    if (cardGameNameSpace.currentPlayersTurn == 1) {
-                        if (cardGameNameSpace.isPlayer1AI) {
-                            cardGameNameSpace.waitForDrawUpdate = true;
-
-                        }
-                    }
-
-                }
-            }
-        }
-    }
-    if (cardGameNameSpace.aiIsWorking > 0) {
-        cardGameNameSpace.aiIsWorking++;
-        // simulate a delay while the AI thinks:
-        if (cardGameNameSpace.aiIsWorking > 36) {
-            // make move:
-            cardGameNameSpace.aiIsWorking = -1;
-            cardGameNameSpace.currentlySelectedCard = whichMoveToMake[1];
-            cardGameNameSpace.cards[cardGameNameSpace.currentlySelectedCard].isMovingToBoard = true;
-            cardGameNameSpace.cards[cardGameNameSpace.currentlySelectedCard].gridX = whichMoveToMake[2];
-            cardGameNameSpace.cards[cardGameNameSpace.currentlySelectedCard].gridY = whichMoveToMake[3];
-            cardGameNameSpace.board[(whichMoveToMake[3])][(whichMoveToMake[2])] = cardGameNameSpace.currentlySelectedCard;
-            cardGameNameSpace.cards[cardGameNameSpace.currentlySelectedCard].zIndex = 1;
-            cardGameNameSpace.currentlySelectedCard = -1;
-            // player's turn now:
-            cardGameNameSpace.whoCanClick = 2;
-        }
-    }
-}
-
 
 
 
@@ -284,11 +205,7 @@ function findLowestScoreInGroup() {
     thisGroupsScore.push(indexToCheck);
 }
 
-function doAIMove() {
-    console.log("AI thinking...");
-    cardGameNameSpace.aiIsWorking = 1;
-    findBestMove(cardGameNameSpace.board, cardGameNameSpace.currentPlayersTurn, cardGameNameSpace.cards);
-}
+
 function findBestMove(boardState, whichPlayerCurrently) {
     whichOpponentCurrently = (whichPlayerCurrently == 1) ? 2 : 1;
     // [best score, card ref, gridx, gridy]:
@@ -479,46 +396,7 @@ function findBestMove(boardState, whichPlayerCurrently) {
 // -------------------------------------------
 
 
-function canvasClick(e) {
-    var x = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft - cardGameNameSpace.outerCanvasLeft;
-    var y = e.clientY + document.body.scrollTop + document.documentElement.scrollTop - cardGameNameSpace.outerCanvasTop - cardGameNameSpace.pageLoadScroll;
-    switch (cardGameNameSpace.gameMode) {
-        case "play":
-            gridX = Math.floor((x / cardGameNameSpace.outerCanvasWidth) * cardGameNameSpace.boardWidth);
-            gridY = Math.floor((y / cardGameNameSpace.outerCanvasHeight) * cardGameNameSpace.boardHeight);
-            var thisBoardRef = cardGameNameSpace.board[gridY][gridX];
-            if (thisBoardRef == "-") {
-                if (cardGameNameSpace.currentlySelectedCard != -1) {
-                    if (isValidMove(gridX, gridY, cardGameNameSpace.board)) {
-                        cardGameNameSpace.cards[cardGameNameSpace.currentlySelectedCard].isMovingToBoard = true;
-                        cardGameNameSpace.cards[cardGameNameSpace.currentlySelectedCard].gridX = gridX;
-                        cardGameNameSpace.cards[cardGameNameSpace.currentlySelectedCard].gridY = gridY;
-                        cardGameNameSpace.board[gridY][gridX] = cardGameNameSpace.currentlySelectedCard;
-                        cardGameNameSpace.cards[cardGameNameSpace.currentlySelectedCard].zIndex = 1;
-                        cardGameNameSpace.currentlySelectedCard = -1;
-                        cardGameNameSpace.whoCanClick = cardGameNameSpace.currentOpponent;
-                    }
-                }
-            } else if (thisBoardRef != "x") {
-                var isValidClick = false;
-                if (!(cardGameNameSpace.cards[thisBoardRef].hasBeenPlaced)) {
-                    if (cardGameNameSpace.cards[thisBoardRef].currentOwner == cardGameNameSpace.whoCanClick) {
-                        isValidClick = true;
-                    }
-                }
-                // stop player clicking if it's the AI's turn:
-                if (cardGameNameSpace.isPlayer1AI) {
-                    if (cardGameNameSpace.whoCanClick == 1) {
-                        isValidClick = false;
-                    }
-                }
-                if (isValidClick) {
-                    cardGameNameSpace.currentlySelectedCard = thisBoardRef;
-                }
 
-            }
-    }
-}
 
 function gameLoop() {
 
@@ -536,7 +414,7 @@ function gameLoop() {
             timeSinceLastFrameSwap += elapsed;
             if (timeSinceLastFrameSwap > animationUpdateTime) {
 
-                update();
+                cardGameNameSpace.update();
                 cardGameNameSpace.draw();
                 timeSinceLastFrameSwap = 0;
             }

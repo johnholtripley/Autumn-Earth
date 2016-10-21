@@ -461,7 +461,7 @@ function gameLoop() {
             //
             break;
             case "cardGame":
-            //cardGameNameSpace.update();
+            cardGameNameSpace.update();
             cardGameNameSpace.draw();
             break;
         case "play":

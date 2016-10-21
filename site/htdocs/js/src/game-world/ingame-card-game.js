@@ -22,4 +22,5 @@ function startCardGame(opponentNPC) {
   cardGameWrapper.classList.add("active");
 
 
+
 }
