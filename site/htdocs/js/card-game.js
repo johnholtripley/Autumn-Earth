@@ -28,13 +28,13 @@ cardGameNameSpace.player2Skill = player2Skill;
 
 
 
-var numberOfCardTypes, imagesToLoad;
+
 
 if ((cutsTheMustard) && (supportsCanvas())) {
 cardGameNameSpace.initialiseCardGame();
         // resize handler:
         canvasResizeHandler = debounce(function() {
-            getCanvasPosition();
+            cardGameNameSpace.getCanvasPosition();
         }, 250);
         window.addEventListener('resize', canvasResizeHandler);
 }
@@ -49,230 +49,47 @@ function loadingProgress() {
     console.log("loading - " + Loader.getProgress());
 }
 
-function getCanvasPosition() {
-    canvasElemCoords = document.getElementById("cardGame").getBoundingClientRect();
-    outerCanvasLeft = canvasElemCoords.left;
-    outerCanvasTop = canvasElemCoords.top;
-    outerCanvasWidth = canvasElemCoords.right - canvasElemCoords.left;
-    outerCanvasHeight = canvasElemCoords.bottom - canvasElemCoords.top;
-    pageLoadScroll = document.body.scrollTop + document.documentElement.scrollTop;
-   // console.log("canvas at " + outerCanvasLeft + ", " + outerCanvasTop + " at " + pageLoadScroll + " - " + outerCanvasWidth + " x " + outerCanvasHeight);
-}
 
-
-function initCardGame() {
-    getCanvasPosition();
-    gameCanvas = document.getElementById("cardGame");
-    if (gameCanvas.getContext) {
-        gameContext = gameCanvas.getContext('2d');
-        canvasWidth = gameCanvas.width;
-        canvasHeight = gameCanvas.height;
-    }
-    cards = [];
-    for (var i = 0; i < cardGameNameSpace.numberOfCardsInGame; i++) {
-        cards[i] = {
-            x: -100,
-            y: -100,
-            index: i,
-            //   boardX: -1,
-            //   boardY: -1,
-            zIndex: 0,
-            flippedAnimation: 0,
-            isMovingToBoard: false,
-            originalOwner: (i >= (cardGameNameSpace.numberOfCardsInGame / 2) ? 2 : 1),
-            hasBeenPlaced: false,
-            cardType: cardGameNameSpace.allCardsThisGame[i],
-            currentOwner: (i >= (cardGameNameSpace.numberOfCardsInGame / 2) ? 2 : 1),
-            draw: function() {
-                offsetX = 0;
-                offsetY = 0;
-                if (this.flippedAnimation > 0) {
-                    randomAmount = this.flippedAnimation * 4;
-                    offsetX = getRandomIntegerInclusive(0, randomAmount);
-                    offsetY = getRandomIntegerInclusive(0, randomAmount);
-                    this.flippedAnimation--;
-                    if (this.flippedAnimation == 0) {
-                        // now finished moving:
-                        this.zIndex = 0;
-                    }
-                }
-                gameContext.fillStyle = cardGameNameSpace.playerColours[this.currentOwner];
-                gameContext.fillRect(this.x + offsetX, this.y + offsetY, cardGameNameSpace.cardWidth, cardGameNameSpace.cardHeight);
-                gameContext.drawImage(cardImages[this.cardType], this.x + offsetX, this.y + offsetY);
-            }
-        }
-    }
-    // set up image references:
-    cardImages = [];
-    for (var i = 1; i <= numberOfCardTypes; i++) {
-        cardImages[i] = Loader.getImage("card" + i);
-    }
-    boardImage = Loader.getImage("board");
-    currentCardSelectedImage = Loader.getImage("selected");
-    currentCardSelected = {
-        draw: function() {
-            if (currentlySelectedCard != -1) {
-                gameContext.drawImage(currentCardSelectedImage, cards[currentlySelectedCard].x - 20, cards[currentlySelectedCard].y - 20);
-            }
-        }
-    }
-    currentPlayerMarkerImage = Loader.getImage("current");
-    currentPlayerMarker = {
-        xScale: 1,
-        increment: -0.05,
-        draw: function() {
-            // http://codetheory.in/canvas-rotating-and-scaling-images-around-a-particular-point/
-            this.xScale += this.increment;
-            if (Math.abs(this.xScale) > 1) {
-                this.increment *= -1;
-            }
-            gameContext.save();
-            this.x = (currentPlayersTurn == 1 ? 84 : 925);
-            gameContext.translate(this.x, 20);
-            gameContext.scale(this.xScale, 1);
-            gameContext.drawImage(currentPlayerMarkerImage, (0 - ((currentPlayerMarkerImage.width) / 2)), 0);
-            gameContext.restore();
-        }
-    }
-
-
-
-
-
-    placeCardOnBoard(0, (cardGameNameSpace.boardWidth / 2) - 1, (cardGameNameSpace.boardHeight / 2) - 1, true);
-    placeCardOnBoard(1, (cardGameNameSpace.boardWidth / 2), (cardGameNameSpace.boardHeight / 2), true);
-    placeCardOnBoard((cardGameNameSpace.numberOfCardsInGame / 2), (cardGameNameSpace.boardWidth / 2), (cardGameNameSpace.boardHeight / 2) - 1, true);
-    placeCardOnBoard((cardGameNameSpace.numberOfCardsInGame / 2) + 1, (cardGameNameSpace.boardWidth / 2) - 1, (cardGameNameSpace.boardHeight / 2), true);
-    var player1CardIndexToPlace = 2;
-    var player2CardIndexToPlace = (cardGameNameSpace.numberOfCardsInGame / 2) + 2;
-    for (var j = 0; j < cardGameNameSpace.boardWidth; j++) {
-        for (var k = 0; k < cardGameNameSpace.boardHeight; k++) {
-            if (cardGameNameSpace.board[k][j] == "#") {
-                // player 1 card
-                placeCardOnBoard(player1CardIndexToPlace, j, k, false);
-                player1CardIndexToPlace++;
-            } else if (cardGameNameSpace.board[k][j] == "@") {
-                placeCardOnBoard(player2CardIndexToPlace, j, k, false);
-                player2CardIndexToPlace++;
-            }
-        }
-    }
-    placedCards = 4;
-
-
-
-
-
-
-
-    // for testing ----------------------------------
-    /*
-    board = [
-        ['x', 'x', 'x', 'x', 'x', '-', '-', 'x', 'x', 'x', 'x', 'x'],
-        ['x', 'x', 'x', 'x', '-', '-', '-', '-', 'x', 'x', 'x', 'x'],
-        ['x', 'x', 'x', '-', '-', '-', '-', '-', '-', 'x', 'x', 'x'],
-        ['x', 'x', 'x', '-', '-', '-', '-', '-', '-', 'x', 'x', 'x'],
-        ['x', 'x', 'x', 'x', '-', '-', '-', '-', 'x', 'x', 'x', 'x'],
-        ['x', 'x', 'x', 'x', 'x', '-', '-', 'x', 'x', 'x', 'x', 'x']
-    ];
-
-       placeCardOnBoard(0, 5, 2, true);
-        placeCardOnBoard(1, 6, 2, true);
-        placeCardOnBoard(2, 7, 2, true);
-        placeCardOnBoard(3, 6, 1, true);
-        placeCardOnBoard(4, 7, 3, true);
-        placeCardOnBoard(5, 6, 3, true);
-        placeCardOnBoard(6, 6, 4, true);
-        placeCardOnBoard(7, 7, 4, true);
-        placeCardOnBoard(8, 5, 4, true);
-       placeCardOnBoard(9, 1, 1, false);
-       placeCardOnBoard(10, 6, 0, true);
-
-    placeCardOnBoard(11, 1, 3, false);
-    placeCardOnBoard(12, 5, 3, true);
-    placeCardOnBoard(13, 4, 4, true);
-    placeCardOnBoard(14, 7, 1, true);
-
-    placeCardOnBoard(15, 11, 2, false);
-    placeCardOnBoard(16, 11, 3, false);
-    placeCardOnBoard(17, 11, 4, false);
-    placeCardOnBoard(18, 11, 5, false);
-    placeCardOnBoard(19, 10, 2, false);
-    placeCardOnBoard(20, 10, 3, false);
-    placeCardOnBoard(21, 10, 4, false);
-    placeCardOnBoard(22, 10, 1, false);
-    placeCardOnBoard(23, 11, 1, false);
-
-
-
-
-      placedCards = 4;
-        currentPlayersTurn = 1;
-        */
-    // testing ----------------------------------
-
-
-    currentlySelectedCard = -1;
-    currentOpponent = 1;
-    isPlayer1AI = true;
-     aiIsWorking = -1;
-        waitForDrawUpdate = false;
-    if (isANetworkGame) {
-        isPlayer1AI = false;
-        // will get the play instruction from the socket when it's determined which player starts first
-    } else {
-        currentPlayersTurn = getRandomIntegerInclusive(1, 2);
-        whoCanClick = currentPlayersTurn;
-        cardGameNameSpace.gameMode = "play";
-       
-        if (currentPlayersTurn == 1) {
-            currentOpponent = 2;
-            if (isPlayer1AI) {
-                doAIMove();
-            }
-        }
-    }
-}
 
 
 function placeCardOnBoard(cardRef, gridX, gridY, placedOnGameBoard) {
     cardGameNameSpace.board[gridY][gridX] = cardRef;
-    cards[cardRef].x = gridX * cardGameNameSpace.cardWidth;
-    cards[cardRef].y = gridY * cardGameNameSpace.cardHeight;
-    cards[cardRef].hasBeenPlaced = placedOnGameBoard;
+    cardGameNameSpace.cards[cardRef].x = gridX * cardGameNameSpace.cardWidth;
+    cardGameNameSpace.cards[cardRef].y = gridY * cardGameNameSpace.cardHeight;
+    cardGameNameSpace.cards[cardRef].hasBeenPlaced = placedOnGameBoard;
     //  cards[cardRef].boardX = gridX;
     //  cards[cardRef].boardY = gridY;
 }
 
 
 function update() {
-    if (waitForDrawUpdate) {
+    if (cardGameNameSpace.waitForDrawUpdate) {
         // wait until after the last draw() has been called so the card is fully placed on the board:
         doAIMove();
-        waitForDrawUpdate = false;
+        cardGameNameSpace.waitForDrawUpdate = false;
     }
     for (var i = 0; i < cardGameNameSpace.numberOfCardsInGame; i++) {
-        if (cards[i].isMovingToBoard) {
-            var targetX = cards[i].gridX * cardGameNameSpace.cardWidth;
-            var targetY = cards[i].gridY * cardGameNameSpace.cardHeight;
-            cards[i].x -= (cards[i].x - targetX) * 0.3;
-            cards[i].y -= (cards[i].y - targetY) * 0.3;
-            if (Math.abs(cards[i].x - targetX) < 10) {
-                if (Math.abs(cards[i].y - targetY) < 10) {
+        if (cardGameNameSpace.cards[i].isMovingToBoard) {
+            var targetX = cardGameNameSpace.cards[i].gridX * cardGameNameSpace.cardWidth;
+            var targetY = cardGameNameSpace.cards[i].gridY * cardGameNameSpace.cardHeight;
+            cardGameNameSpace.cards[i].x -= (cardGameNameSpace.cards[i].x - targetX) * 0.3;
+            cardGameNameSpace.cards[i].y -= (cardGameNameSpace.cards[i].y - targetY) * 0.3;
+            if (Math.abs(cardGameNameSpace.cards[i].x - targetX) < 10) {
+                if (Math.abs(cardGameNameSpace.cards[i].y - targetY) < 10) {
                     // snap in position:
-                    cards[i].isMovingToBoard = false;
-                    cards[i].x = cards[i].gridX * cardGameNameSpace.cardWidth;
-                    cards[i].y = cards[i].gridY * cardGameNameSpace.cardHeight;
-                    cards[i].hasBeenPlaced = true;
-                    cards[i].zIndex = 0;
-                    checkAttacksInAllDirections(cards[i].gridX, cards[i].gridY, cardGameNameSpace.board, cards, currentOpponent, currentPlayersTurn, false);
-                    placedCards++;
-                    if (placedCards == cardGameNameSpace.numberOfCardsInGame) {
+                    cardGameNameSpace.cards[i].isMovingToBoard = false;
+                    cardGameNameSpace.cards[i].x = cardGameNameSpace.cards[i].gridX * cardGameNameSpace.cardWidth;
+                    cardGameNameSpace.cards[i].y = cardGameNameSpace.cards[i].gridY * cardGameNameSpace.cardHeight;
+                    cardGameNameSpace.cards[i].hasBeenPlaced = true;
+                    cardGameNameSpace.cards[i].zIndex = 0;
+                    checkAttacksInAllDirections(cardGameNameSpace.cards[i].gridX, cardGameNameSpace.cards[i].gridY, cardGameNameSpace.board, cardGameNameSpace.cards, cardGameNameSpace.currentOpponent, cardGameNameSpace.currentPlayersTurn, false);
+                    cardGameNameSpace.placedCards++;
+                    if (cardGameNameSpace.placedCards == cardGameNameSpace.numberOfCardsInGame) {
                         cardGameNameSpace.gameMode = "gameover";
                         var player1CardsShown = 0;
                         var player2CardsShown = 0;
                         for (var j = 0; j < cardGameNameSpace.numberOfCardsInGame; j++) {
-                            if (cards[j].currentOwner == 1) {
+                            if (cardGameNameSpace.cards[j].currentOwner == 1) {
                                 player1CardsShown++;
                             } else {
                                 player2CardsShown++;
@@ -286,12 +103,12 @@ function update() {
                         draw();
                     }
                     // swap whose go it is:
-                    var oldCurrentPlayersTurn = currentPlayersTurn;
-                    currentPlayersTurn = currentOpponent;
-                    currentOpponent = oldCurrentPlayersTurn;
-                    if (currentPlayersTurn == 1) {
-                        if (isPlayer1AI) {
-                            waitForDrawUpdate = true;
+                     cardGameNameSpace.oldCurrentPlayersTurn = cardGameNameSpace.currentPlayersTurn;
+                    cardGameNameSpace.currentPlayersTurn = cardGameNameSpace.currentOpponent;
+                    cardGameNameSpace.currentOpponent = cardGameNameSpace.oldCurrentPlayersTurn;
+                    if (cardGameNameSpace.currentPlayersTurn == 1) {
+                        if (cardGameNameSpace.isPlayer1AI) {
+                            cardGameNameSpace.waitForDrawUpdate = true;
 
                         }
                     }
@@ -300,21 +117,21 @@ function update() {
             }
         }
     }
-    if (aiIsWorking > 0) {
-        aiIsWorking++;
+    if (cardGameNameSpace.aiIsWorking > 0) {
+        cardGameNameSpace.aiIsWorking++;
         // simulate a delay while the AI thinks:
-        if (aiIsWorking > 36) {
+        if (cardGameNameSpace.aiIsWorking > 36) {
             // make move:
-            aiIsWorking = -1;
-            currentlySelectedCard = whichMoveToMake[1];
-            cards[currentlySelectedCard].isMovingToBoard = true;
-            cards[currentlySelectedCard].gridX = whichMoveToMake[2];
-            cards[currentlySelectedCard].gridY = whichMoveToMake[3];
-            cardGameNameSpace.board[(whichMoveToMake[3])][(whichMoveToMake[2])] = currentlySelectedCard;
-            cards[currentlySelectedCard].zIndex = 1;
-            currentlySelectedCard = -1;
+            cardGameNameSpace.aiIsWorking = -1;
+            cardGameNameSpace.currentlySelectedCard = whichMoveToMake[1];
+            cardGameNameSpace.cards[cardGameNameSpace.currentlySelectedCard].isMovingToBoard = true;
+            cardGameNameSpace.cards[cardGameNameSpace.currentlySelectedCard].gridX = whichMoveToMake[2];
+            cardGameNameSpace.cards[cardGameNameSpace.currentlySelectedCard].gridY = whichMoveToMake[3];
+            cardGameNameSpace.board[(whichMoveToMake[3])][(whichMoveToMake[2])] = cardGameNameSpace.currentlySelectedCard;
+            cardGameNameSpace.cards[cardGameNameSpace.currentlySelectedCard].zIndex = 1;
+            cardGameNameSpace.currentlySelectedCard = -1;
             // player's turn now:
-            whoCanClick = 2;
+            cardGameNameSpace.whoCanClick = 2;
         }
     }
 }
@@ -322,17 +139,17 @@ function update() {
 
 
 function draw() {
-    //  gameContext.clearRect(0, 0, canvasWidth, canvasHeight);
+    //  cardGameNameSpace.gameContext.clearRect(0, 0, cardGameNameSpace.canvasWidth, cardGameNameSpace.canvasHeight);
     // place board:
-    gameContext.drawImage(boardImage, 0, 0);
+    cardGameNameSpace.gameContext.drawImage(cardGameNameSpace.boardImage, 0, 0);
     // get card indexes sorted by zindex:
-    var cardsCopyForSorting = cards.slice();
+    var cardsCopyForSorting = cardGameNameSpace.cards.slice();
     var cardDrawOrder = cardsCopyForSorting.sort(cardGameNameSpace.compareZIndex);
     for (var i = 0; i < cardGameNameSpace.numberOfCardsInGame; i++) {
-        cards[(cardDrawOrder[i].index)].draw();
+        cardGameNameSpace.cards[(cardDrawOrder[i].index)].draw();
     }
-    currentCardSelected.draw();
-    currentPlayerMarker.draw();
+    cardGameNameSpace.currentCardSelected.draw();
+    cardGameNameSpace.currentPlayerMarker.draw();
 }
 
 
@@ -357,18 +174,18 @@ function isValidMove(checkX, checkY, whichBoard) {
     return isValid;
 }
 
-function checkAttacksInAllDirections(checkX, checkY, whichBoard, whichCards, whichCurrentOpponent, whichCurrentPlayersTurn, isAIChecking) {
-    checkAttack(checkX, checkY, -1, 0, whichBoard, whichCards, whichCurrentOpponent, whichCurrentPlayersTurn, isAIChecking);
-    checkAttack(checkX, checkY, 1, 0, whichBoard, whichCards, whichCurrentOpponent, whichCurrentPlayersTurn, isAIChecking);
-    checkAttack(checkX, checkY, 0, -1, whichBoard, whichCards, whichCurrentOpponent, whichCurrentPlayersTurn, isAIChecking);
-    checkAttack(checkX, checkY, 0, 1, whichBoard, whichCards, whichCurrentOpponent, whichCurrentPlayersTurn, isAIChecking);
-    checkAttack(checkX, checkY, -1, -1, whichBoard, whichCards, whichCurrentOpponent, whichCurrentPlayersTurn, isAIChecking);
-    checkAttack(checkX, checkY, 1, 1, whichBoard, whichCards, whichCurrentOpponent, whichCurrentPlayersTurn, isAIChecking);
-    checkAttack(checkX, checkY, -1, 1, whichBoard, whichCards, whichCurrentOpponent, whichCurrentPlayersTurn, isAIChecking);
-    checkAttack(checkX, checkY, 1, -1, whichBoard, whichCards, whichCurrentOpponent, whichCurrentPlayersTurn, isAIChecking);
+function checkAttacksInAllDirections(checkX, checkY, whichBoard, whichCards, currentOpponent, currentPlayersTurn, isAIChecking) {
+    checkAttack(checkX, checkY, -1, 0, whichBoard, whichCards, currentOpponent, currentPlayersTurn, isAIChecking);
+    checkAttack(checkX, checkY, 1, 0, whichBoard, whichCards, currentOpponent, currentPlayersTurn, isAIChecking);
+    checkAttack(checkX, checkY, 0, -1, whichBoard, whichCards, currentOpponent, currentPlayersTurn, isAIChecking);
+    checkAttack(checkX, checkY, 0, 1, whichBoard, whichCards, currentOpponent, currentPlayersTurn, isAIChecking);
+    checkAttack(checkX, checkY, -1, -1, whichBoard, whichCards, currentOpponent, currentPlayersTurn, isAIChecking);
+    checkAttack(checkX, checkY, 1, 1, whichBoard, whichCards, currentOpponent, currentPlayersTurn, isAIChecking);
+    checkAttack(checkX, checkY, -1, 1, whichBoard, whichCards, currentOpponent, currentPlayersTurn, isAIChecking);
+    checkAttack(checkX, checkY, 1, -1, whichBoard, whichCards, currentOpponent, currentPlayersTurn, isAIChecking);
 }
 
-function checkAttack(placedTileX, placedTileY, xDir, yDir, whichBoard, whichCards, whichCurrentOpponent, whichCurrentPlayersTurn, isAIChecking) {
+function checkAttack(placedTileX, placedTileY, xDir, yDir, whichBoard, whichCards, currentOpponent, currentPlayersTurn, isAIChecking) {
     var defenceRunningTotal = 0;
     var opponentsCardsFound = [];
     // trace a path from selected tile, in direction set until a card that isn't an opponent's is encountered:
@@ -383,7 +200,7 @@ function checkAttack(placedTileX, placedTileY, xDir, yDir, whichBoard, whichCard
                 var thisCheckBoardRef = whichBoard[lineTracedY][lineTracedX];
                 // is numeric?
                 if (!(isNaN(thisCheckBoardRef))) {
-                    if (whichCards[thisCheckBoardRef].currentOwner == whichCurrentOpponent) {
+                    if (whichCards[thisCheckBoardRef].currentOwner == currentOpponent) {
                         isAnOpponentCard = true;
                         opponentsCardsFound.push(thisCheckBoardRef);
                         var defenseCardType = whichCards[thisCheckBoardRef].cardType;
@@ -396,26 +213,26 @@ function checkAttack(placedTileX, placedTileY, xDir, yDir, whichBoard, whichCard
         }
     } while (isAnOpponentCard);
     var attackCardType = whichCards[(whichBoard[placedTileY][placedTileX])].cardType;
-    var placedCardsAttack = parseInt(cardGameNameSpace.allCardData[attackCardType][0]);
+     cardGameNameSpace.placedCardsAttack = parseInt(cardGameNameSpace.allCardData[attackCardType][0]);
     // then check card after is current player's card, not the board edge:
     if (lineTracedY >= 0) {
         if (lineTracedY < cardGameNameSpace.boardHeight) {
             // is numeric?
             if (!(isNaN(whichBoard[lineTracedY][lineTracedX]))) {
-                if (whichCards[(whichBoard[lineTracedY][lineTracedX])].currentOwner == whichCurrentPlayersTurn) {
+                if (whichCards[(whichBoard[lineTracedY][lineTracedX])].currentOwner == currentPlayersTurn) {
                     var existingCardType = whichCards[(whichBoard[lineTracedY][lineTracedX])].cardType;
                     var existingCardsAttack = parseInt(cardGameNameSpace.allCardData[existingCardType][0]);
-                    if (placedCardsAttack + existingCardsAttack >= defenceRunningTotal) {
+                    if (cardGameNameSpace.placedCardsAttack + existingCardsAttack >= defenceRunningTotal) {
                         if (isAIChecking) {
                             thisMovesScore += opponentsCardsFound.length;
                          //   console.log("ai test flipping "+opponentsCardsFound.length);
                             for (var i = 0; i < opponentsCardsFound.length; i++) {
-                                whichCards[(opponentsCardsFound[i])].currentOwner = whichCurrentPlayersTurn;
+                                whichCards[(opponentsCardsFound[i])].currentOwner = currentPlayersTurn;
                             }
                         } else {
                          
                             for (var i = 0; i < opponentsCardsFound.length; i++) {
-                                flipCard(opponentsCardsFound[i], whichCards, whichCurrentPlayersTurn);
+                                flipCard(opponentsCardsFound[i], whichCards, currentPlayersTurn);
                             }
                         }
                     }
@@ -426,8 +243,8 @@ function checkAttack(placedTileX, placedTileY, xDir, yDir, whichBoard, whichCard
 }
 
 
-function flipCard(cardRef,whichCards,whichCurrentPlayersTurn) {
-    whichCards[cardRef].currentOwner = whichCurrentPlayersTurn;
+function flipCard(cardRef,whichCards,currentPlayersTurn) {
+    whichCards[cardRef].currentOwner = currentPlayersTurn;
     whichCards[cardRef].flippedAnimation = 10;
     whichCards[cardRef].zIndex = 1;
 }
@@ -457,14 +274,14 @@ function findLowestScoreInGroup() {
     // run through the previous group and find the lowest power card that can be used for this score:
     var lowestGroupScore = 99999;
     for (var cg = 0; cg < thisGroupsScore.length; cg++) {
-        var thisCardType = cards[(listOfPossibleBestMoves[(thisGroupsScore[cg])][1])].cardType;
+        var thisCardType = cardGameNameSpace.cards[(listOfPossibleBestMoves[(thisGroupsScore[cg])][1])].cardType;
         var thisCardsStrength = parseInt(cardGameNameSpace.allCardData[thisCardType][0]) + parseInt(cardGameNameSpace.allCardData[thisCardType][1]);
         if (thisCardsStrength < lowestGroupScore) {
             lowestGroupScore = thisCardsStrength;
         }
     }
     for (var cg = 0; cg < thisGroupsScore.length; cg++) {
-        var thisCardType = cards[(listOfPossibleBestMoves[(thisGroupsScore[cg])][1])].cardType;
+        var thisCardType = cardGameNameSpace.cards[(listOfPossibleBestMoves[(thisGroupsScore[cg])][1])].cardType;
         var thisCardsStrength = parseInt(cardGameNameSpace.allCardData[thisCardType][0]) + parseInt(cardGameNameSpace.allCardData[thisCardType][1]);
         if (thisCardsStrength != lowestGroupScore) {
             indexesToRemove.push(thisGroupsScore[cg]);
@@ -476,8 +293,8 @@ function findLowestScoreInGroup() {
 
 function doAIMove() {
     console.log("AI thinking...");
-    aiIsWorking = 1;
-    findBestMove(cardGameNameSpace.board, currentPlayersTurn, cards);
+    cardGameNameSpace.aiIsWorking = 1;
+    findBestMove(cardGameNameSpace.board, cardGameNameSpace.currentPlayersTurn, cardGameNameSpace.cards);
 }
 function findBestMove(boardState, whichPlayerCurrently) {
     whichOpponentCurrently = (whichPlayerCurrently == 1) ? 2 : 1;
@@ -499,22 +316,22 @@ function findBestMove(boardState, whichPlayerCurrently) {
                     // loop through remaining cards
                     for (var i = 0; i < cardGameNameSpace.numberOfCardsInGame; i++) {
                         // if is AI player's card (always player 1)
-                        if (cards[i].currentOwner == 1) {
+                        if (cardGameNameSpace.cards[i].currentOwner == 1) {
                             // if not placed
-                            if (!cards[i].hasBeenPlaced) {
+                            if (!cardGameNameSpace.cards[i].hasBeenPlaced) {
                                 // optimisation - don't try this card if a card of this type has already been tried at this position 
-                                if (cardTypesTriedInThisPosition.indexOf(cards[i].cardType) == -1) {
-                                    cardTypesTriedInThisPosition.push(cards[i].cardType);
+                                if (cardTypesTriedInThisPosition.indexOf(cardGameNameSpace.cards[i].cardType) == -1) {
+                                    cardTypesTriedInThisPosition.push(cardGameNameSpace.cards[i].cardType);
                                     // copy arrays so original data isn't changed:
                                     // copy an array of objects: http://stackoverflow.com/questions/597588/how-do-you-clone-an-array-of-objects-in-javascript#answer-23481096
                                     var cardState = [];
                                     for (var p = 0; p < cardGameNameSpace.numberOfCardsInGame; p++) {
                                         cardState[p] = {
-                                            index: cards[p].index,
-                                            originalOwner: cards[p].originalOwner,
-                                            hasBeenPlaced: cards[p].hasBeenPlaced,
-                                            cardType: cards[p].cardType,
-                                            currentOwner: cards[p].currentOwner
+                                            index: cardGameNameSpace.cards[p].index,
+                                            originalOwner: cardGameNameSpace.cards[p].originalOwner,
+                                            hasBeenPlaced: cardGameNameSpace.cards[p].hasBeenPlaced,
+                                            cardType: cardGameNameSpace.cards[p].cardType,
+                                            currentOwner: cardGameNameSpace.cards[p].currentOwner
                                         }
                                     }
                                     var tempBoard = [];
@@ -670,40 +487,40 @@ function findBestMove(boardState, whichPlayerCurrently) {
 
 
 function canvasClick(e) {
-    var x = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft - outerCanvasLeft;
-    var y = e.clientY + document.body.scrollTop + document.documentElement.scrollTop - outerCanvasTop - pageLoadScroll;
+    var x = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft - cardGameNameSpace.outerCanvasLeft;
+    var y = e.clientY + document.body.scrollTop + document.documentElement.scrollTop - cardGameNameSpace.outerCanvasTop - cardGameNameSpace.pageLoadScroll;
     switch (cardGameNameSpace.gameMode) {
         case "play":
-            gridX = Math.floor((x / outerCanvasWidth) * cardGameNameSpace.boardWidth);
-            gridY = Math.floor((y / outerCanvasHeight) * cardGameNameSpace.boardHeight);
+            gridX = Math.floor((x / cardGameNameSpace.outerCanvasWidth) * cardGameNameSpace.boardWidth);
+            gridY = Math.floor((y / cardGameNameSpace.outerCanvasHeight) * cardGameNameSpace.boardHeight);
             var thisBoardRef = cardGameNameSpace.board[gridY][gridX];
             if (thisBoardRef == "-") {
-                if (currentlySelectedCard != -1) {
+                if (cardGameNameSpace.currentlySelectedCard != -1) {
                     if (isValidMove(gridX, gridY, cardGameNameSpace.board)) {
-                        cards[currentlySelectedCard].isMovingToBoard = true;
-                        cards[currentlySelectedCard].gridX = gridX;
-                        cards[currentlySelectedCard].gridY = gridY;
-                        cardGameNameSpace.board[gridY][gridX] = currentlySelectedCard;
-                        cards[currentlySelectedCard].zIndex = 1;
-                        currentlySelectedCard = -1;
-                        whoCanClick = currentOpponent;
+                        cardGameNameSpace.cards[cardGameNameSpace.currentlySelectedCard].isMovingToBoard = true;
+                        cardGameNameSpace.cards[cardGameNameSpace.currentlySelectedCard].gridX = gridX;
+                        cardGameNameSpace.cards[cardGameNameSpace.currentlySelectedCard].gridY = gridY;
+                        cardGameNameSpace.board[gridY][gridX] = cardGameNameSpace.currentlySelectedCard;
+                        cardGameNameSpace.cards[cardGameNameSpace.currentlySelectedCard].zIndex = 1;
+                        cardGameNameSpace.currentlySelectedCard = -1;
+                        cardGameNameSpace.whoCanClick = cardGameNameSpace.currentOpponent;
                     }
                 }
             } else if (thisBoardRef != "x") {
                 var isValidClick = false;
-                if (!(cards[thisBoardRef].hasBeenPlaced)) {
-                    if (cards[thisBoardRef].currentOwner == whoCanClick) {
+                if (!(cardGameNameSpace.cards[thisBoardRef].hasBeenPlaced)) {
+                    if (cardGameNameSpace.cards[thisBoardRef].currentOwner == cardGameNameSpace.whoCanClick) {
                         isValidClick = true;
                     }
                 }
                 // stop player clicking if it's the AI's turn:
-                if (isPlayer1AI) {
-                    if (whoCanClick == 1) {
+                if (cardGameNameSpace.isPlayer1AI) {
+                    if (cardGameNameSpace.whoCanClick == 1) {
                         isValidClick = false;
                     }
                 }
                 if (isValidClick) {
-                    currentlySelectedCard = thisBoardRef;
+                    cardGameNameSpace.currentlySelectedCard = thisBoardRef;
                 }
 
             }

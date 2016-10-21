@@ -13,7 +13,7 @@ http://socket.io/docs/rooms-and-namespaces/
 
 
 
-isANetworkGame = true;
+isCardGameANetworkGame = true;
 
 function startNetworkGame(whichPlayerStarts) {
     console.log(whichPlayerStarts);

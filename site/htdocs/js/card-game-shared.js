@@ -33,14 +33,14 @@ cardGameNameSpace = {
 
         // find non-duplicate card types to load:
         cardGameNameSpace.allCardsToLoadThisGame = uniqueValues(cardGameNameSpace.allCardsThisGame);
-        numberOfCardTypes = cardGameNameSpace.allCardsToLoadThisGame.length;
+        cardGameNameSpace.cardGameNameSpace = cardGameNameSpace.allCardsToLoadThisGame.length;
 
         // isANetworkGameis defined in card-sockets.js so if not a network game, this won't be set:
-        if (typeof isANetworkGame === "undefined") {
-            isANetworkGame = false;
+        if (typeof isCardGameANetworkGame === "undefined") {
+            isCardGameANetworkGame = false;
         }
 
-        imagesToLoad = [{
+        cardGameNameSpace.imagesToLoad = [{
             name: "board",
             src: "/images/card-game/board.jpg"
         }, {
@@ -50,9 +50,9 @@ cardGameNameSpace = {
             name: "current",
             src: "/images/card-game/current-player.png"
         }];
-        // build imagesToLoad array dynamically for cards:
-        for (var i = 1; i <= numberOfCardTypes; i++) {
-            imagesToLoad.push({
+        // build cardGameNameSpace.imagesToLoad array dynamically for cards:
+        for (var i = 1; i <= cardGameNameSpace.cardGameNameSpace; i++) {
+            cardGameNameSpace.imagesToLoad.push({
                 name: "card" + i,
                 src: "/images/card-game/cards/" + i + ".png"
             });
@@ -68,12 +68,207 @@ cardGameNameSpace = {
         cardGameNameSpace.gameMode = "loading";
         gameLoop();
         // preload all images:
-        Loader.preload(imagesToLoad, initCardGame, loadingProgress);
+        Loader.preload(cardGameNameSpace.imagesToLoad, cardGameNameSpace.initCardGame, loadingProgress);
+    },
+
+    getCanvasPosition: function() {
+        var canvasElemCoords = document.getElementById("cardGame").getBoundingClientRect();
+        cardGameNameSpace.outerCanvasLeft = canvasElemCoords.left;
+        cardGameNameSpace.outerCanvasTop = canvasElemCoords.top;
+        cardGameNameSpace.outerCanvasWidth = canvasElemCoords.right - canvasElemCoords.left;
+        cardGameNameSpace.outerCanvasHeight = canvasElemCoords.bottom - canvasElemCoords.top;
+        cardGameNameSpace.pageLoadScroll = document.body.scrollTop + document.documentElement.scrollTop;
+        // console.log("canvas at " + cardGameNameSpace.outerCanvasLeft + ", " + cardGameNameSpace.outerCanvasTop + " at " + cardGameNameSpace.pageLoadScroll + " - " + outercardGameNameSpace.canvasWidth + " x " + outercardGameNameSpace.canvasHeight);
+    },
+
+
+
+
+
+
+
+
+
+
+    initCardGame: function() {
+        cardGameNameSpace.getCanvasPosition();
+        cardGameNameSpace.gameCanvas = document.getElementById("cardGame");
+        if (cardGameNameSpace.gameCanvas.getContext) {
+            cardGameNameSpace.gameContext = cardGameNameSpace.gameCanvas.getContext('2d');
+            cardGameNameSpace.canvasWidth = cardGameNameSpace.gameCanvas.width;
+            cardGameNameSpace.canvasHeight = cardGameNameSpace.gameCanvas.height;
+        }
+        cardGameNameSpace.cards = [];
+        for (var i = 0; i < cardGameNameSpace.numberOfCardsInGame; i++) {
+            cardGameNameSpace.cards[i] = {
+                x: -100,
+                y: -100,
+                index: i,
+                //   boardX: -1,
+                //   boardY: -1,
+                zIndex: 0,
+                flippedAnimation: 0,
+                isMovingToBoard: false,
+                originalOwner: (i >= (cardGameNameSpace.numberOfCardsInGame / 2) ? 2 : 1),
+                hasBeenPlaced: false,
+                cardType: cardGameNameSpace.allCardsThisGame[i],
+                currentOwner: (i >= (cardGameNameSpace.numberOfCardsInGame / 2) ? 2 : 1),
+                draw: function() {
+                    offsetX = 0;
+                    offsetY = 0;
+                    if (this.flippedAnimation > 0) {
+                        randomAmount = this.flippedAnimation * 4;
+                        offsetX = getRandomIntegerInclusive(0, randomAmount);
+                        offsetY = getRandomIntegerInclusive(0, randomAmount);
+                        this.flippedAnimation--;
+                        if (this.flippedAnimation == 0) {
+                            // now finished moving:
+                            this.zIndex = 0;
+                        }
+                    }
+                    cardGameNameSpace.gameContext.fillStyle = cardGameNameSpace.playerColours[this.currentOwner];
+                    cardGameNameSpace.gameContext.fillRect(this.x + offsetX, this.y + offsetY, cardGameNameSpace.cardWidth, cardGameNameSpace.cardHeight);
+                    cardGameNameSpace.gameContext.drawImage(cardGameNameSpace.cardImages[this.cardType], this.x + offsetX, this.y + offsetY);
+                }
+            }
+        }
+        // set up image references:
+        cardGameNameSpace.cardImages = [];
+        for (var i = 1; i <= cardGameNameSpace.cardGameNameSpace; i++) {
+            cardGameNameSpace.cardImages[i] = Loader.getImage("card" + i);
+        }
+        cardGameNameSpace.boardImage = Loader.getImage("board");
+        cardGameNameSpace.currentCardSelectedImage = Loader.getImage("selected");
+        cardGameNameSpace.currentCardSelected = {
+            draw: function() {
+                if (cardGameNameSpace.currentlySelectedCard != -1) {
+                    cardGameNameSpace.gameContext.drawImage(cardGameNameSpace.currentCardSelectedImage, cardGameNameSpace.cards[cardGameNameSpace.currentlySelectedCard].x - 20, cardGameNameSpace.cards[cardGameNameSpace.currentlySelectedCard].y - 20);
+                }
+            }
+        }
+        cardGameNameSpace.currentPlayerMarkerImage = Loader.getImage("current");
+        cardGameNameSpace.currentPlayerMarker = {
+            xScale: 1,
+            increment: -0.05,
+            draw: function() {
+                // http://codetheory.in/canvas-rotating-and-scaling-images-around-a-particular-point/
+                this.xScale += this.increment;
+                if (Math.abs(this.xScale) > 1) {
+                    this.increment *= -1;
+                }
+                cardGameNameSpace.gameContext.save();
+                this.x = (cardGameNameSpace.currentPlayersTurn == 1 ? 84 : 925);
+                cardGameNameSpace.gameContext.translate(this.x, 20);
+                cardGameNameSpace.gameContext.scale(this.xScale, 1);
+                cardGameNameSpace.gameContext.drawImage(cardGameNameSpace.currentPlayerMarkerImage, (0 - ((cardGameNameSpace.currentPlayerMarkerImage.width) / 2)), 0);
+                cardGameNameSpace.gameContext.restore();
+            }
+        }
+
+
+
+
+
+        placeCardOnBoard(0, (cardGameNameSpace.boardWidth / 2) - 1, (cardGameNameSpace.boardHeight / 2) - 1, true);
+        placeCardOnBoard(1, (cardGameNameSpace.boardWidth / 2), (cardGameNameSpace.boardHeight / 2), true);
+        placeCardOnBoard((cardGameNameSpace.numberOfCardsInGame / 2), (cardGameNameSpace.boardWidth / 2), (cardGameNameSpace.boardHeight / 2) - 1, true);
+        placeCardOnBoard((cardGameNameSpace.numberOfCardsInGame / 2) + 1, (cardGameNameSpace.boardWidth / 2) - 1, (cardGameNameSpace.boardHeight / 2), true);
+        cardGameNameSpace.player1CardIndexToPlace = 2;
+        cardGameNameSpace.player2CardIndexToPlace = (cardGameNameSpace.numberOfCardsInGame / 2) + 2;
+        for (var j = 0; j < cardGameNameSpace.boardWidth; j++) {
+            for (var k = 0; k < cardGameNameSpace.boardHeight; k++) {
+                if (cardGameNameSpace.board[k][j] == "#") {
+                    // player 1 card
+                    placeCardOnBoard(cardGameNameSpace.player1CardIndexToPlace, j, k, false);
+                    cardGameNameSpace.player1CardIndexToPlace++;
+                } else if (cardGameNameSpace.board[k][j] == "@") {
+                    placeCardOnBoard(cardGameNameSpace.player2CardIndexToPlace, j, k, false);
+                    cardGameNameSpace.player2CardIndexToPlace++;
+                }
+            }
+        }
+        cardGameNameSpace.placedCards = 4;
+
+
+
+
+
+
+
+        // for testing ----------------------------------
+        /*
+        board = [
+            ['x', 'x', 'x', 'x', 'x', '-', '-', 'x', 'x', 'x', 'x', 'x'],
+            ['x', 'x', 'x', 'x', '-', '-', '-', '-', 'x', 'x', 'x', 'x'],
+            ['x', 'x', 'x', '-', '-', '-', '-', '-', '-', 'x', 'x', 'x'],
+            ['x', 'x', 'x', '-', '-', '-', '-', '-', '-', 'x', 'x', 'x'],
+            ['x', 'x', 'x', 'x', '-', '-', '-', '-', 'x', 'x', 'x', 'x'],
+            ['x', 'x', 'x', 'x', 'x', '-', '-', 'x', 'x', 'x', 'x', 'x']
+        ];
+
+           placeCardOnBoard(0, 5, 2, true);
+            placeCardOnBoard(1, 6, 2, true);
+            placeCardOnBoard(2, 7, 2, true);
+            placeCardOnBoard(3, 6, 1, true);
+            placeCardOnBoard(4, 7, 3, true);
+            placeCardOnBoard(5, 6, 3, true);
+            placeCardOnBoard(6, 6, 4, true);
+            placeCardOnBoard(7, 7, 4, true);
+            placeCardOnBoard(8, 5, 4, true);
+           placeCardOnBoard(9, 1, 1, false);
+           placeCardOnBoard(10, 6, 0, true);
+
+        placeCardOnBoard(11, 1, 3, false);
+        placeCardOnBoard(12, 5, 3, true);
+        placeCardOnBoard(13, 4, 4, true);
+        placeCardOnBoard(14, 7, 1, true);
+
+        placeCardOnBoard(15, 11, 2, false);
+        placeCardOnBoard(16, 11, 3, false);
+        placeCardOnBoard(17, 11, 4, false);
+        placeCardOnBoard(18, 11, 5, false);
+        placeCardOnBoard(19, 10, 2, false);
+        placeCardOnBoard(20, 10, 3, false);
+        placeCardOnBoard(21, 10, 4, false);
+        placeCardOnBoard(22, 10, 1, false);
+        placeCardOnBoard(23, 11, 1, false);
+
+
+
+
+          cardGameNameSpace.placedCards = 4;
+            cardGameNameSpace.currentPlayersTurn = 1;
+            */
+        // testing ----------------------------------
+
+
+        cardGameNameSpace.currentlySelectedCard = -1;
+        cardGameNameSpace.currentOpponent = 1;
+        cardGameNameSpace.isPlayer1AI = true;
+        cardGameNameSpace.aiIsWorking = -1;
+        cardGameNameSpace.waitForDrawUpdate = false;
+        if (isCardGameANetworkGame) {
+            cardGameNameSpace.isPlayer1AI = false;
+            // will get the play instruction from the socket when it's determined which player starts first
+        } else {
+            cardGameNameSpace.currentPlayersTurn = getRandomIntegerInclusive(1, 2);
+            cardGameNameSpace.whoCanClick = cardGameNameSpace.currentPlayersTurn;
+            cardGameNameSpace.gameMode = "play";
+
+            if (cardGameNameSpace.currentPlayersTurn == 1) {
+                cardGameNameSpace.currentOpponent = 2;
+                if (cardGameNameSpace.isPlayer1AI) {
+                    doAIMove();
+                }
+            }
+        }
     }
+
+
+
+
 
 };
 
 cardGameNameSpace.boardWidth = cardGameNameSpace.board[0].length;
 cardGameNameSpace.boardHeight = cardGameNameSpace.board.length;
-
-
