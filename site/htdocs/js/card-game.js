@@ -17,7 +17,7 @@ var timeSinceLastFrameSwap = 0;
 cardGameNameSpace.allCardData = allCardData;
 cardGameNameSpace.player1Cards = player1Cards;
 cardGameNameSpace.player2Cards = player2Cards;
-cardGameNameSpace.player2Skill = player2Skill;
+cardGameNameSpace.player1Skill = player1Skill;
 
 
 
@@ -358,7 +358,7 @@ function findBestMove(boardState, whichPlayerCurrently) {
     }
     console.log(listOfPossibleBestMoves);
     // randomly pick a move based on AI's skill level:
-    var pickMoveRange = cardGameNameSpace.player2Skill;
+    var pickMoveRange = cardGameNameSpace.player1Skill;
     // check to see if any moves have the same score as the best move - and use these as well so the higher skill AI doesn't just pick the same move every time:
     var indexToUse = 0;
     do {

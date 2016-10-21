@@ -710,10 +710,10 @@ function startCardGame(opponentNPC) {
         ["5", "17", "Chocobo"],
         ["15", "10", "Mog"]
     ];
-    cardGameNameSpace.player1Cards = hero.cards.slice(0, 12);
+    cardGameNameSpace.player2Cards = hero.cards.slice(0, 12);
     // combine the NPC's unique cards with their base pack and pick the first 12:
-    cardGameNameSpace.player2Cards = opponentNPC.uniqueCards.concat(allCardPacks[opponentNPC.baseCardPack]).slice(0, 12);
-    cardGameNameSpace.player2Skill = opponentNPC.cardSkill;
+    cardGameNameSpace.player1Cards = opponentNPC.uniqueCards.concat(allCardPacks[opponentNPC.baseCardPack]).slice(0, 12);
+    cardGameNameSpace.player1Skill = opponentNPC.cardSkill;
 
    
 
@@ -1355,7 +1355,7 @@ function gameLoop() {
             //
             break;
             case "cardGame":
-            //cardGameNameSpace.update();
+            cardGameNameSpace.update();
             cardGameNameSpace.draw();
             break;
         case "play":
