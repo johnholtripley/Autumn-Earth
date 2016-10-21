@@ -460,6 +460,10 @@ function gameLoop() {
         case "paused":
             //
             break;
+            case "cardGame":
+            //cardGameNameSpace.update();
+            cardGameNameSpace.draw();
+            break;
         case "play":
             update();
             draw();

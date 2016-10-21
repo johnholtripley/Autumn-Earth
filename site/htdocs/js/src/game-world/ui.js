@@ -5,6 +5,7 @@ var UI = {
         var activeCartographicMap = document.getElementById('activeCartographicMap');
         var cartographicTitle = document.getElementById('cartographicTitle');
         var dialogue = document.getElementById('dialogue');
+        var cardGameWrapper = document.getElementById('cardGameWrapper');
         //
 
     },

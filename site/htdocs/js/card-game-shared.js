@@ -66,7 +66,7 @@ cardGameNameSpace = {
         }, false);
 
         cardGameNameSpace.gameMode = "loading";
-        gameLoop();
+       // gameLoop();
         // preload all images:
         Loader.preload(cardGameNameSpace.imagesToLoad, cardGameNameSpace.initCardGame, loadingProgress);
     },
@@ -84,7 +84,14 @@ cardGameNameSpace = {
 
 
 
-
+ placeCardOnBoard: function(cardRef, gridX, gridY, placedOnGameBoard) {
+    cardGameNameSpace.board[gridY][gridX] = cardRef;
+    cardGameNameSpace.cards[cardRef].x = gridX * cardGameNameSpace.cardWidth;
+    cardGameNameSpace.cards[cardRef].y = gridY * cardGameNameSpace.cardHeight;
+    cardGameNameSpace.cards[cardRef].hasBeenPlaced = placedOnGameBoard;
+    //  cards[cardRef].boardX = gridX;
+    //  cards[cardRef].boardY = gridY;
+},
 
 
 
@@ -169,20 +176,20 @@ cardGameNameSpace = {
 
 
 
-        placeCardOnBoard(0, (cardGameNameSpace.boardWidth / 2) - 1, (cardGameNameSpace.boardHeight / 2) - 1, true);
-        placeCardOnBoard(1, (cardGameNameSpace.boardWidth / 2), (cardGameNameSpace.boardHeight / 2), true);
-        placeCardOnBoard((cardGameNameSpace.numberOfCardsInGame / 2), (cardGameNameSpace.boardWidth / 2), (cardGameNameSpace.boardHeight / 2) - 1, true);
-        placeCardOnBoard((cardGameNameSpace.numberOfCardsInGame / 2) + 1, (cardGameNameSpace.boardWidth / 2) - 1, (cardGameNameSpace.boardHeight / 2), true);
+        cardGameNameSpace.placeCardOnBoard(0, (cardGameNameSpace.boardWidth / 2) - 1, (cardGameNameSpace.boardHeight / 2) - 1, true);
+        cardGameNameSpace.placeCardOnBoard(1, (cardGameNameSpace.boardWidth / 2), (cardGameNameSpace.boardHeight / 2), true);
+        cardGameNameSpace.placeCardOnBoard((cardGameNameSpace.numberOfCardsInGame / 2), (cardGameNameSpace.boardWidth / 2), (cardGameNameSpace.boardHeight / 2) - 1, true);
+        cardGameNameSpace.placeCardOnBoard((cardGameNameSpace.numberOfCardsInGame / 2) + 1, (cardGameNameSpace.boardWidth / 2) - 1, (cardGameNameSpace.boardHeight / 2), true);
         cardGameNameSpace.player1CardIndexToPlace = 2;
         cardGameNameSpace.player2CardIndexToPlace = (cardGameNameSpace.numberOfCardsInGame / 2) + 2;
         for (var j = 0; j < cardGameNameSpace.boardWidth; j++) {
             for (var k = 0; k < cardGameNameSpace.boardHeight; k++) {
                 if (cardGameNameSpace.board[k][j] == "#") {
                     // player 1 card
-                    placeCardOnBoard(cardGameNameSpace.player1CardIndexToPlace, j, k, false);
+                    cardGameNameSpace.placeCardOnBoard(cardGameNameSpace.player1CardIndexToPlace, j, k, false);
                     cardGameNameSpace.player1CardIndexToPlace++;
                 } else if (cardGameNameSpace.board[k][j] == "@") {
-                    placeCardOnBoard(cardGameNameSpace.player2CardIndexToPlace, j, k, false);
+                    cardGameNameSpace.placeCardOnBoard(cardGameNameSpace.player2CardIndexToPlace, j, k, false);
                     cardGameNameSpace.player2CardIndexToPlace++;
                 }
             }
@@ -254,7 +261,7 @@ cardGameNameSpace = {
             cardGameNameSpace.currentPlayersTurn = getRandomIntegerInclusive(1, 2);
             cardGameNameSpace.whoCanClick = cardGameNameSpace.currentPlayersTurn;
             cardGameNameSpace.gameMode = "play";
-
+gameMode = "cardGame";
             if (cardGameNameSpace.currentPlayersTurn == 1) {
                 cardGameNameSpace.currentOpponent = 2;
                 if (cardGameNameSpace.isPlayer1AI) {
@@ -262,7 +269,27 @@ cardGameNameSpace = {
                 }
             }
         }
+
+
+
+
+
+    },
+
+    draw:function() {
+    //  cardGameNameSpace.gameContext.clearRect(0, 0, cardGameNameSpace.canvasWidth, cardGameNameSpace.canvasHeight);
+    // place board:
+    cardGameNameSpace.gameContext.drawImage(cardGameNameSpace.boardImage, 0, 0);
+    // get card indexes sorted by zindex:
+    var cardsCopyForSorting = cardGameNameSpace.cards.slice();
+    var cardDrawOrder = cardsCopyForSorting.sort(cardGameNameSpace.compareZIndex);
+    for (var i = 0; i < cardGameNameSpace.numberOfCardsInGame; i++) {
+        cardGameNameSpace.cards[(cardDrawOrder[i].index)].draw();
     }
+    cardGameNameSpace.currentCardSelected.draw();
+    cardGameNameSpace.currentPlayerMarker.draw();
+}
+
 
 
 

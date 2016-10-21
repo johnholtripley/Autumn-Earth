@@ -258,6 +258,16 @@ cursor: url(../images/game-world/cursors/active.gif) 3 3, auto;
 }
 
 
-#cardGame {
+#cardGameWrapper {
     display: none;
+    z-index: 2;
+    position: absolute;
+    left: 0;
+    top: 500px;
+    &.active {
+        display: block;
+    }
+    canvas {
+        width: 800px;
+    }
 }

@@ -3,11 +3,13 @@
 
 
 
-framesPerSecond = 24;
 
+var lastTime = 0;
+var elapsed = 0;
 
-
-
+var timeSinceLastFrameSwap = 0;
+  var animationFramesPerSecond = 16;
+   var animationUpdateTime = (1000 / animationFramesPerSecond);
 
 
 
@@ -32,6 +34,12 @@ cardGameNameSpace.player2Skill = player2Skill;
 
 if ((cutsTheMustard) && (supportsCanvas())) {
 cardGameNameSpace.initialiseCardGame();
+
+ gameLoop();
+        // preload all images:
+        Loader.preload(cardGameNameSpace.imagesToLoad, cardGameNameSpace.initCardGame, loadingProgress);
+
+
         // resize handler:
         canvasResizeHandler = debounce(function() {
             cardGameNameSpace.getCanvasPosition();
@@ -52,17 +60,15 @@ function loadingProgress() {
 
 
 
-function placeCardOnBoard(cardRef, gridX, gridY, placedOnGameBoard) {
-    cardGameNameSpace.board[gridY][gridX] = cardRef;
-    cardGameNameSpace.cards[cardRef].x = gridX * cardGameNameSpace.cardWidth;
-    cardGameNameSpace.cards[cardRef].y = gridY * cardGameNameSpace.cardHeight;
-    cardGameNameSpace.cards[cardRef].hasBeenPlaced = placedOnGameBoard;
-    //  cards[cardRef].boardX = gridX;
-    //  cards[cardRef].boardY = gridY;
-}
+
 
 
 function update() {
+
+
+
+
+
     if (cardGameNameSpace.waitForDrawUpdate) {
         // wait until after the last draw() has been called so the card is fully placed on the board:
         doAIMove();
@@ -138,19 +144,6 @@ function update() {
 
 
 
-function draw() {
-    //  cardGameNameSpace.gameContext.clearRect(0, 0, cardGameNameSpace.canvasWidth, cardGameNameSpace.canvasHeight);
-    // place board:
-    cardGameNameSpace.gameContext.drawImage(cardGameNameSpace.boardImage, 0, 0);
-    // get card indexes sorted by zindex:
-    var cardsCopyForSorting = cardGameNameSpace.cards.slice();
-    var cardDrawOrder = cardsCopyForSorting.sort(cardGameNameSpace.compareZIndex);
-    for (var i = 0; i < cardGameNameSpace.numberOfCardsInGame; i++) {
-        cardGameNameSpace.cards[(cardDrawOrder[i].index)].draw();
-    }
-    cardGameNameSpace.currentCardSelected.draw();
-    cardGameNameSpace.currentPlayerMarker.draw();
-}
 
 
 
@@ -528,21 +521,31 @@ function canvasClick(e) {
 }
 
 function gameLoop() {
-    setTimeout(function() {
-        window.requestAnimationFrame(gameLoop);
-        switch (cardGameNameSpace.gameMode) {
-            case "loading":
+
+    window.requestAnimationFrame(gameLoop);
+    switch (cardGameNameSpace.gameMode) {
+        case "loading":
             console.log("loading...");
             //
             break;
-            case "play":
+        case "play":
+
+            var now = window.performance.now();
+            var elapsed = (now - lastTime);
+            lastTime = now;
+            timeSinceLastFrameSwap += elapsed;
+            if (timeSinceLastFrameSwap > animationUpdateTime) {
+
                 update();
-                draw();
-                break;
-            case "gameover":
-                console.log("game over");
-                break;
-        }
-    }, (1000 / framesPerSecond));
+                cardGameNameSpace.draw();
+                timeSinceLastFrameSwap = 0;
+            }
+            break;
+        case "gameover":
+            console.log("game over");
+            break;
+    }
+
 }
+
 

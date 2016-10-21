@@ -28,7 +28,7 @@
 
 
 
-<div id="cardGame">
+<div id="cardGameWrapper">
 <canvas id="cardGame" moz-opaque width="1008" height="612">
   <img src="/images/card-game/no-canvas.jpg" alt="Card game">
 </canvas>
