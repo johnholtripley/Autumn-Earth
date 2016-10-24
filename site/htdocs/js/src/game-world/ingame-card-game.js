@@ -6,8 +6,8 @@ allCardPacks = [
 
 function cardGamePlayer2Wins() {
 
-console.log("hero: "+hero.cards.join(","));
-console.log("npc: "+thisNPC.uniqueCards.join(","));
+    console.log("hero: " + hero.cards.join(","));
+    console.log("npc: " + thisNPC.uniqueCards.join(","));
 
     // player won
     processSpeech(thisNPC, thisNPC.cardGameSpeech.lose[0], thisNPC.cardGameSpeech.lose[1]);
@@ -20,8 +20,8 @@ console.log("npc: "+thisNPC.uniqueCards.join(","));
     }
     UI.showNotification('<p>You won a ' + cardGameNameSpace.allCardData[(cardGameNameSpace.player1Cards[whichCardWon])][2] + '</p><img class="card players" src="/images/card-game/cards/' + (cardGameNameSpace.player1Cards[whichCardWon]) + '.png">');
 
-console.log("hero: "+hero.cards.join(","));
-console.log("npc: "+thisNPC.uniqueCards.join(","));
+    console.log("hero: " + hero.cards.join(","));
+    console.log("npc: " + thisNPC.uniqueCards.join(","));
 
 
     closeCardGame();
@@ -31,23 +31,15 @@ console.log("npc: "+thisNPC.uniqueCards.join(","));
 }
 
 function cardGamePlayer1Wins() {
-
-console.log("hero: "+hero.cards.join(","));
-console.log("npc: "+thisNPC.uniqueCards.join(","));
-
     // player lost
     processSpeech(thisNPC, thisNPC.cardGameSpeech.win[0], thisNPC.cardGameSpeech.win[1]);
     whichCardWon = pickBestCardToTake(cardGameNameSpace.player2Cards);
-    thisNPC.uniqueCards.unshift((cardGameNameSpace.player1Cards[whichCardWon]));
+    thisNPC.uniqueCards.unshift((cardGameNameSpace.player2Cards[whichCardWon]));
     var foundIndexInUniqueCards = hero.cards.indexOf(cardGameNameSpace.player2Cards[whichCardWon]);
     if (foundIndexInUniqueCards != -1) {
         hero.cards.splice(foundIndexInUniqueCards, 1);
     }
     UI.showNotification('<p>You lost a ' + cardGameNameSpace.allCardData[(cardGameNameSpace.player2Cards[whichCardWon])][2] + '</p><img class="card npcs" src="/images/card-game/cards/' + (cardGameNameSpace.player2Cards[whichCardWon]) + '.png">');
-
-console.log("hero: "+hero.cards.join(","));
-console.log("npc: "+thisNPC.uniqueCards.join(","));
-    
     closeCardGame();
 }
 
