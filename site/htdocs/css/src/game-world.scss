@@ -23,7 +23,6 @@ canvas {
     -ms-interpolation-mode: nearest-neighbor;
     image-rendering: pixelated;
     display: block;
-    
 }
 
 #gameWrapper {
@@ -53,6 +52,21 @@ canvas {
     }
 }
 
+#notification {
+    pointer-events: none;
+    position: absolute;
+    font-size: 24px;
+    color: #fff;
+    left: 0;
+    top: 50%;
+    width: 100%;
+    text-align: center;
+    @include transform(translateY(-50%));
+    &.active {
+        @include animation(fadeOut 3s ease 0s 1 normal forwards);
+    }
+}
+
 @include keyframes('fadeOut') {
     0 {
         opacity: 0;
@@ -76,40 +90,34 @@ canvas {
     cursor: move;
 }
 
-
 // ------------------
 // inventory panels, shops panels etc:
 #inventoryPanels {
-
-
-.inventoryBag {
-    // bag
-    position: absolute;
-    top: 650px;
-    background: #666;
-    left: 0;
-    @for $i from 2 through 6 {
-        &:nth-child(#{$i}) {
-            left: 200px * (($i)-1) + 10px;
+    .inventoryBag {
+        // bag
+        position: absolute;
+        top: 650px;
+        background: #666;
+        left: 0;
+        @for $i from 2 through 6 {
+            &:nth-child(#{$i}) {
+                left: 200px * (($i)-1) + 10px;
+            }
         }
+        z-index: 1;
     }
-    z-index: 1;
-}
-
-.draggableBar {
-    background: #333;
-    padding: 5px;
-    color: #fff;
-}
-
+    .draggableBar {
+        background: #333;
+        padding: 5px;
+        color: #fff;
+    }
     ol {
-        
         margin: 0;
         width: 184px;
         padding: 0;
-         background: #666;
-         padding: 2px 0 0 2px;
-         @include transition(opacity 0.4s ease, transform 0.4s cubic-bezier(.12, 1.07, .29, 1.24));
+        background: #666;
+        padding: 2px 0 0 2px;
+        @include transition(opacity 0.4s ease, transform 0.4s cubic-bezier(.12, 1.07, .29, 1.24));
         // inactive state:
         opacity: 0;
         @include transform(scale(0.95));
@@ -126,7 +134,7 @@ canvas {
             display: block;
             float: left;
             background: #000;
-cursor: url(../images/game-world/cursors/active.gif) 3 3, auto;
+            cursor: url(../images/game-world/cursors/active.gif) 3 3, auto;
             margin: 0 2px 2px 0;
             @include border-box;
             position: relative;
@@ -152,7 +160,7 @@ cursor: url(../images/game-world/cursors/active.gif) 3 3, auto;
                 }
             }
             &.changed {
-             box-shadow: 0 0 5px 3px #eebb3f;
+                box-shadow: 0 0 5px 3px #eebb3f;
                 z-index: 1;
             }
         }
@@ -190,7 +198,6 @@ cursor: url(../images/game-world/cursors/active.gif) 3 3, auto;
     background: #666;
 }
 
-
 // cartography panel:
 #cartographicPanel {
     position: absolute;
@@ -199,16 +206,13 @@ cursor: url(../images/game-world/cursors/active.gif) 3 3, auto;
     background: #666;
     color: #fff;
     canvas {
-    background: #ded49d url(../images/cartography/overlays/1.png) no-repeat 0 0;
-  }
+        background: #ded49d url(../images/cartography/overlays/1.png) no-repeat 0 0;
+    }
 }
-
-
 
 .offScreenCanvas {
     display: none;
 }
-
 
 #dialogue {
     background: #363636;
@@ -257,7 +261,6 @@ cursor: url(../images/game-world/cursors/active.gif) 3 3, auto;
     }
 }
 
-
 #cardGameWrapper {
     pointer-events: none;
     opacity: 0;
@@ -272,5 +275,14 @@ cursor: url(../images/game-world/cursors/active.gif) 3 3, auto;
     }
     canvas {
         width: 800px;
+    }
+}
+
+.card {
+    &.players {
+        background: ff00cc;
+    }
+    &.npcs {
+        background: #ffcc00;
     }
 }

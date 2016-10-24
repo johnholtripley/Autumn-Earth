@@ -5,29 +5,56 @@ allCardPacks = [
 
 
 function cardGamePlayer2Wins() {
+
+console.log("hero: "+hero.cards.join(","));
+console.log("npc: "+thisNPC.uniqueCards.join(","));
+
+    // player won
     processSpeech(thisNPC, thisNPC.cardGameSpeech.lose[0], thisNPC.cardGameSpeech.lose[1]);
     whichCardWon = pickBestCardToTake(cardGameNameSpace.player1Cards);
-    console.log("You won a " + cardGameNameSpace.allCardData[(cardGameNameSpace.player1Cards[whichCardWon])][2]);
+    hero.cards.unshift((cardGameNameSpace.player1Cards[whichCardWon]));
+    // need to find this card type in the NPC's unique card array (if it's from the basic deck then don't need to try and remove it):
+    var foundIndexInUniqueCards = thisNPC.uniqueCards.indexOf(cardGameNameSpace.player1Cards[whichCardWon]);
+    if (foundIndexInUniqueCards != -1) {
+        thisNPC.uniqueCards.splice(foundIndexInUniqueCards, 1);
+    }
+    UI.showNotification('<p>You won a ' + cardGameNameSpace.allCardData[(cardGameNameSpace.player1Cards[whichCardWon])][2] + '</p><img class="card players" src="/images/card-game/cards/' + (cardGameNameSpace.player1Cards[whichCardWon]) + '.png">');
+
+console.log("hero: "+hero.cards.join(","));
+console.log("npc: "+thisNPC.uniqueCards.join(","));
+
+
     closeCardGame();
+
+
 
 }
 
 function cardGamePlayer1Wins() {
+
+console.log("hero: "+hero.cards.join(","));
+console.log("npc: "+thisNPC.uniqueCards.join(","));
+
+    // player lost
     processSpeech(thisNPC, thisNPC.cardGameSpeech.win[0], thisNPC.cardGameSpeech.win[1]);
     whichCardWon = pickBestCardToTake(cardGameNameSpace.player2Cards);
-    console.log(whichCardWon);
-    console.log(cardGameNameSpace.player2Cards.join(","));
-    console.log(cardGameNameSpace.player2Cards[whichCardWon]);
-    console.log("You lost a " + cardGameNameSpace.allCardData[(cardGameNameSpace.player2Cards[whichCardWon])][2]);
+    thisNPC.uniqueCards.unshift((cardGameNameSpace.player1Cards[whichCardWon]));
+    var foundIndexInUniqueCards = hero.cards.indexOf(cardGameNameSpace.player2Cards[whichCardWon]);
+    if (foundIndexInUniqueCards != -1) {
+        hero.cards.splice(foundIndexInUniqueCards, 1);
+    }
+    UI.showNotification('<p>You lost a ' + cardGameNameSpace.allCardData[(cardGameNameSpace.player2Cards[whichCardWon])][2] + '</p><img class="card npcs" src="/images/card-game/cards/' + (cardGameNameSpace.player2Cards[whichCardWon]) + '.png">');
+
+console.log("hero: "+hero.cards.join(","));
+console.log("npc: "+thisNPC.uniqueCards.join(","));
+    
     closeCardGame();
 }
-
 
 function cardGameIsDrawn() {
     processSpeech(thisNPC, thisNPC.cardGameSpeech.draw[0], thisNPC.cardGameSpeech.draw[1]);
     closeCardGame();
 }
-
 
 function startCardGame(opponentNPC) {
     cardGameNameSpace.allCardData = [
@@ -42,9 +69,6 @@ function startCardGame(opponentNPC) {
     cardGameNameSpace.player1Skill = opponentNPC.cardSkill;
     cardGameNameSpace.initialiseCardGame();
     cardGameWrapper.classList.add("active");
-
-
-
 }
 
 function closeCardGame() {

@@ -5,6 +5,7 @@ var UI = {
         var activeCartographicMap = document.getElementById('activeCartographicMap');
         var cartographicTitle = document.getElementById('cartographicTitle');
         var dialogue = document.getElementById('dialogue');
+        var notification = document.getElementById('notification');
         var cardGameWrapper = document.getElementById('cardGameWrapper');
         //
 
@@ -111,6 +112,11 @@ var UI = {
         // -40 x so the balloon tip is at '0' x
         var thisTransform = "translate(" + Math.floor(thisX - hero.isox + (canvasWidth / 2) - 40) + "px," + Math.floor(0 - (canvasHeight - (thisY - hero.isoy - whichNPC.centreY + (canvasHeight / 2)) + 40)) + "px)";
         dialogue.style.transform = thisTransform;
+    },
+
+    showNotification: function(markup) {
+        notification.innerHTML = markup;
+        notification.classList.add('active');
     }
 
 }
