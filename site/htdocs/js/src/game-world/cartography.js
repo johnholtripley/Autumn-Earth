@@ -1,7 +1,6 @@
 function updateCartographicMiniMap() {
 
     // cartography canvas is 246px wide
-
     var cartographyUnits = 246 / (mapTilesX * tileW);
 
     var x = hero.x * cartographyUnits;

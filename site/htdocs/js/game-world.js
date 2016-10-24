@@ -1,7 +1,6 @@
 function updateCartographicMiniMap() {
 
     // cartography canvas is 246px wide
-
     var cartographyUnits = 246 / (mapTilesX * tileW);
 
     var x = hero.x * cartographyUnits;
@@ -705,15 +704,18 @@ allCardPacks = [
 
 function cardGamePlayer2Wins() {
 processSpeech(thisNPC, thisNPC.cardGameSpeech.lose[0], thisNPC.cardGameSpeech.lose[1]);
+closeCardGame();
 }
 
 function cardGamePlayer1Wins() {
    processSpeech(thisNPC, thisNPC.cardGameSpeech.win[0], thisNPC.cardGameSpeech.win[1]); 
+   closeCardGame();
 }
 
 
 function cardGameIsDrawn() {
   processSpeech(thisNPC, thisNPC.cardGameSpeech.draw[0], thisNPC.cardGameSpeech.draw[1]);  
+  closeCardGame();
 }
 
 
@@ -738,6 +740,11 @@ function startCardGame(opponentNPC) {
 
 }
 
+function closeCardGame() {
+    gameMode = "play";
+    cardGameWrapper.classList.remove("active");
+    // remove click events etc.
+}
 var Input = {
     init: function() {
         // Set up the keyboard events
