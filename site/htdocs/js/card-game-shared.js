@@ -55,12 +55,7 @@ cardGameNameSpace = {
             });
         }
         // click handler:
-        document.getElementById("cardGame").addEventListener("click", function(e) {
-            cardGameNameSpace.canvasClick(e);
-            if (e) {
-                e.preventDefault();
-            }
-        }, false);
+        document.getElementById("cardGame").addEventListener("click",  cardGameNameSpace.canvasClick, false);
 
         cardGameNameSpace.gameMode = "loading";
         // gameLoop();
@@ -162,6 +157,9 @@ cardGameNameSpace = {
     },
 
     canvasClick: function(e) {
+           if (e) {
+                e.preventDefault();
+            }
         var x = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft - cardGameNameSpace.outerCanvasLeft;
         var y = e.clientY + document.body.scrollTop + document.documentElement.scrollTop - cardGameNameSpace.outerCanvasTop - cardGameNameSpace.pageLoadScroll;
         switch (gameMode) {
