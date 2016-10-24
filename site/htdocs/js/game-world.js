@@ -754,7 +754,7 @@ function closeCardGame() {
 function pickBestCardToTake(whichDeck) {
     // find the best opponent's card and give it to the winner
     var highestScoreSoFar = -1;
-    var whichIndex = -1;
+    var whichIndex = 0;
     var thisCardsScore;
     for (var i = 0; i < whichDeck.length; i++) {
         // square the results so that a 10/1 card is favoured to a 5/6 card:
@@ -764,7 +764,7 @@ function pickBestCardToTake(whichDeck) {
             whichIndex = i;
         }
     }
-    return i;
+    return whichIndex;
 }
 
 var Input = {
