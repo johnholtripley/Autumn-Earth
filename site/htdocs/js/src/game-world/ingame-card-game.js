@@ -3,12 +3,7 @@ allCardPacks = [
     [1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3]
 ];
 
-
 function cardGamePlayer2Wins() {
-
-    console.log("hero: " + hero.cards.join(","));
-    console.log("npc: " + thisNPC.uniqueCards.join(","));
-
     // player won
     processSpeech(thisNPC, thisNPC.cardGameSpeech.lose[0], thisNPC.cardGameSpeech.lose[1]);
     whichCardWon = pickBestCardToTake(cardGameNameSpace.player1Cards);
@@ -19,15 +14,8 @@ function cardGamePlayer2Wins() {
         thisNPC.uniqueCards.splice(foundIndexInUniqueCards, 1);
     }
     UI.showNotification('<p>You won a ' + cardGameNameSpace.allCardData[(cardGameNameSpace.player1Cards[whichCardWon])][2] + '</p><img class="card players" src="/images/card-game/cards/' + (cardGameNameSpace.player1Cards[whichCardWon]) + '.png">');
-
-    console.log("hero: " + hero.cards.join(","));
-    console.log("npc: " + thisNPC.uniqueCards.join(","));
-
-
+    UI.updateCardAlbum();
     closeCardGame();
-
-
-
 }
 
 function cardGamePlayer1Wins() {
@@ -40,6 +28,7 @@ function cardGamePlayer1Wins() {
         hero.cards.splice(foundIndexInUniqueCards, 1);
     }
     UI.showNotification('<p>You lost a ' + cardGameNameSpace.allCardData[(cardGameNameSpace.player2Cards[whichCardWon])][2] + '</p><img class="card npcs" src="/images/card-game/cards/' + (cardGameNameSpace.player2Cards[whichCardWon]) + '.png">');
+    UI.updateCardAlbum();
     closeCardGame();
 }
 

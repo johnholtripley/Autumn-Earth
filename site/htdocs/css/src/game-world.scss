@@ -280,9 +280,25 @@ canvas {
 
 .card {
     &.players {
-        background: ff00cc;
+        background: #ff00cc;
     }
     &.npcs {
         background: #ffcc00;
+    }
+}
+
+
+#cardAlbumList {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    max-width: 400px;
+    li {
+        width: 84px;
+        height: 102px;
+        background: #cecece;
+        display: block;
+        float: left;
+        margin: 0 4px 4px 0;
     }
 }

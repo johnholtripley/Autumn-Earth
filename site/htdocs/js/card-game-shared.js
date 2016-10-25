@@ -712,3 +712,7 @@ cardGameNameSpace = {
 
 cardGameNameSpace.boardWidth = cardGameNameSpace.board[0].length;
 cardGameNameSpace.boardHeight = cardGameNameSpace.board.length;
+
+
+
+
