@@ -122,7 +122,9 @@ var UI = {
     },
 
     showNotification: function(markup) {
+        notification.classList.remove("active");
         notification.innerHTML = markup;
+        void notification.offsetWidth;
         notification.classList.add('active');
     },
 

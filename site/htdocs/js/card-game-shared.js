@@ -4,18 +4,9 @@
 cardGameNameSpace = {
     'cardWidth': 84,
     'cardHeight': 102,
-    'playerColours': ["", "#ffcc00", "#ff00cc"],
-    // 'x' = void space
-    // '#' = player 1 start position
-    // '@' = player 2 start position
-    'board': [
-        ['#', '#', 'x', 'x', 'x', '-', '-', 'x', 'x', 'x', 'x', 'x'],
-        ['#', '#', 'x', 'x', '-', '-', '-', '-', 'x', 'x', '@', '@'],
-        ['#', '#', 'x', '-', '-', '-', '-', '-', '-', 'x', '@', '@'],
-        ['#', '#', 'x', '-', '-', '-', '-', '-', '-', 'x', '@', '@'],
-        ['#', '#', 'x', 'x', '-', '-', '-', '-', 'x', 'x', '@', '@'],
-        ['x', 'x', 'x', 'x', 'x', '-', '-', 'x', 'x', 'x', '@', '@']
-    ],
+    
+
+    'board': [    ],
 
     compareZIndex: function(a, b) {
         if (a.zIndex < b.zIndex)
@@ -26,11 +17,31 @@ cardGameNameSpace = {
     },
 
     initialiseCardGame: function() {
+
+    // 'x' = void space
+    // '#' = player 1 start position
+    // '@' = player 2 start position
+    cardGameNameSpace.board = [
+        ['#', '#', 'x', 'x', 'x', '-', '-', 'x', 'x', 'x', 'x', 'x'],
+        ['#', '#', 'x', 'x', '-', '-', '-', '-', 'x', 'x', '@', '@'],
+        ['#', '#', 'x', '-', '-', '-', '-', '-', '-', 'x', '@', '@'],
+        ['#', '#', 'x', '-', '-', '-', '-', '-', '-', 'x', '@', '@'],
+        ['#', '#', 'x', 'x', '-', '-', '-', '-', 'x', 'x', '@', '@'],
+        ['x', 'x', 'x', 'x', 'x', '-', '-', 'x', 'x', 'x', '@', '@']
+    ];
+
+cardGameNameSpace.boardWidth = cardGameNameSpace.board[0].length;
+cardGameNameSpace.boardHeight = cardGameNameSpace.board.length;
+
+cardGameNameSpace.playerColours= ["", "#ffcc00", "#ff00cc"];
+
         cardGameNameSpace.allCardsThisGame = cardGameNameSpace.player1Cards.concat(cardGameNameSpace.player2Cards);
         cardGameNameSpace.numberOfCardsInGame = cardGameNameSpace.allCardsThisGame.length;
         // find non-duplicate card types to load:
         cardGameNameSpace.allCardsToLoadThisGame = uniqueValues(cardGameNameSpace.allCardsThisGame);
-        cardGameNameSpace.cardGameNameSpace = cardGameNameSpace.allCardsToLoadThisGame.length;
+        cardGameNameSpace.numberOfCardTypes = cardGameNameSpace.allCardsToLoadThisGame.length;
+
+console.log("all card type: "+cardGameNameSpace.allCardsToLoadThisGame.join("/"));
 
         // isANetworkGameis defined in card-sockets.js so if not a network game, this won't be set:
         if (typeof isCardGameANetworkGame === "undefined") {
@@ -48,10 +59,12 @@ cardGameNameSpace = {
             src: "/images/card-game/current-player.png"
         }];
         // build cardGameNameSpace.imagesToLoad array dynamically for cards:
-        for (var i = 1; i <= cardGameNameSpace.cardGameNameSpace; i++) {
+        console.log("numberOfCardTypes: "+cardGameNameSpace.numberOfCardTypes);
+        for (var i = 1; i <= cardGameNameSpace.numberOfCardTypes; i++) {
+            console.log("loading "+"/images/card-game/cards/" + cardGameNameSpace.allCardsToLoadThisGame[i-1] + ".png");
             cardGameNameSpace.imagesToLoad.push({
                 name: "card" + i,
-                src: "/images/card-game/cards/" + i + ".png"
+                src: "/images/card-game/cards/" + cardGameNameSpace.allCardsToLoadThisGame[i-1] + ".png"
             });
         }
         // click handler:
@@ -368,7 +381,7 @@ cardGameNameSpace = {
         for (var ir = indexesToRemove.length - 1; ir >= 0; ir--) {
             listOfPossibleBestMoves.splice((indexesToRemove[ir]), 1);
         }
-        console.log(listOfPossibleBestMoves);
+        //console.log(listOfPossibleBestMoves);
         // randomly pick a move based on AI's skill level:
         var pickMoveRange = cardGameNameSpace.player1Skill;
         // check to see if any moves have the same score as the best move - and use these as well so the higher skill AI doesn't just pick the same move every time:
@@ -429,6 +442,8 @@ cardGameNameSpace = {
     },
 
     initCardGame: function() {
+        console.log("card game init called ===================");
+         isFirstTime = true;
         cardGameNameSpace.getCanvasPosition();
         cardGameNameSpace.gameCanvas = document.getElementById("cardGame");
         if (cardGameNameSpace.gameCanvas.getContext) {
@@ -466,13 +481,14 @@ cardGameNameSpace = {
                     }
                     cardGameNameSpace.gameContext.fillStyle = cardGameNameSpace.playerColours[this.currentOwner];
                     cardGameNameSpace.gameContext.fillRect(this.x + offsetX, this.y + offsetY, cardGameNameSpace.cardWidth, cardGameNameSpace.cardHeight);
+                    if(isFirstTime) {console.log("drawImage: "+this.cardType);}
                     cardGameNameSpace.gameContext.drawImage(cardGameNameSpace.cardImages[this.cardType], this.x + offsetX, this.y + offsetY);
                 }
             }
         }
         // set up image references:
         cardGameNameSpace.cardImages = [];
-        for (var i = 1; i <= cardGameNameSpace.cardGameNameSpace; i++) {
+        for (var i = 1; i <= cardGameNameSpace.numberOfCardTypes; i++) {
             cardGameNameSpace.cardImages[i] = Loader.getImage("card" + i);
         }
         cardGameNameSpace.boardImage = Loader.getImage("board");
@@ -589,12 +605,15 @@ cardGameNameSpace = {
                     cardGameNameSpace.doAIMove();
                 }
             }
+
         }
+      
     },
 
     draw: function() {
         //  cardGameNameSpace.gameContext.clearRect(0, 0, cardGameNameSpace.canvasWidth, cardGameNameSpace.canvasHeight);
         // place board:
+       
         cardGameNameSpace.gameContext.drawImage(cardGameNameSpace.boardImage, 0, 0);
         // get card indexes sorted by zindex:
         var cardsCopyForSorting = cardGameNameSpace.cards.slice();
@@ -604,6 +623,7 @@ cardGameNameSpace = {
         }
         cardGameNameSpace.currentCardSelected.draw();
         cardGameNameSpace.currentPlayerMarker.draw();
+          isFirstTime = false;
     },
 
     isValidMove: function(checkX, checkY, whichBoard) {
@@ -704,14 +724,13 @@ cardGameNameSpace = {
     },
 
     doAIMove: function() {
-        console.log("AI thinking...");
+       // console.log("AI thinking...");
         cardGameNameSpace.aiIsWorking = 1;
         cardGameNameSpace.findBestMove(cardGameNameSpace.board, cardGameNameSpace.currentPlayersTurn, cardGameNameSpace.cards);
     }
 };
 
-cardGameNameSpace.boardWidth = cardGameNameSpace.board[0].length;
-cardGameNameSpace.boardHeight = cardGameNameSpace.board.length;
+
 
 
 

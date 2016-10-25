@@ -6,8 +6,12 @@ allCardPacks = [
     cardGameNameSpace.allCardData = [
         [null, null, null],
         ["5", "10", "Bomb"],
-        ["5", "17", "Chocobo"],
-        ["15", "10", "Mog"]
+        ["5", "10", "Chocobo"],
+        ["5", "10", "Mog"],
+        ["5", "10", "Cactuar"],
+        ["5", "10", "Shiva"],
+        ["5", "10", "Tonberry"],
+        ["5", "10", "Slime"]
     ];
 
 function cardGamePlayer2Wins() {
@@ -45,13 +49,26 @@ function cardGameIsDrawn() {
 }
 
 function startCardGame(opponentNPC) {
-    cardGameNameSpace.player2Cards = hero.cards.slice(0, 12);
-    // combine the NPC's unique cards with their base pack and pick the first 12:
-    cardGameNameSpace.player1Cards = opponentNPC.uniqueCards.concat(allCardPacks[opponentNPC.baseCardPack]).slice(0, 12);
-    cardGameNameSpace.player1Skill = opponentNPC.cardSkill;
-    cardGameNameSpace.initialiseCardGame();
-    cardGameWrapper.classList.add("active");
+    if (hero.cards.length >= 12) {
+
+
+
+        cardGameNameSpace.player2Cards = hero.cards.slice(0, 12);
+        // combine the NPC's unique cards with their base pack and pick the first 12:
+        cardGameNameSpace.player1Cards = opponentNPC.uniqueCards.concat(allCardPacks[opponentNPC.baseCardPack]).slice(0, 12);
+        cardGameNameSpace.player1Skill = opponentNPC.cardSkill;
+
+
+console.log(cardGameNameSpace.player1Cards.join(":"));
+console.log(cardGameNameSpace.player2Cards.join(":"));
+
+        cardGameNameSpace.initialiseCardGame();
+        cardGameWrapper.classList.add("active");
+    } else {
+        UI.showNotification('<p>You don\'t have enough cards</p>');
+    }
 }
+
 
 function closeCardGame() {
     gameMode = "play";
