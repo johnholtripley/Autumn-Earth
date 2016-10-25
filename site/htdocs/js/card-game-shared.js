@@ -41,7 +41,7 @@ cardGameNameSpace.playerColours= ["", "#ffcc00", "#ff00cc"];
         cardGameNameSpace.allCardsToLoadThisGame = uniqueValues(cardGameNameSpace.allCardsThisGame);
         cardGameNameSpace.numberOfCardTypes = cardGameNameSpace.allCardsToLoadThisGame.length;
 
-console.log("all card type: "+cardGameNameSpace.allCardsToLoadThisGame.join("/"));
+
 
         // isANetworkGameis defined in card-sockets.js so if not a network game, this won't be set:
         if (typeof isCardGameANetworkGame === "undefined") {
@@ -59,12 +59,12 @@ console.log("all card type: "+cardGameNameSpace.allCardsToLoadThisGame.join("/")
             src: "/images/card-game/current-player.png"
         }];
         // build cardGameNameSpace.imagesToLoad array dynamically for cards:
-        console.log("numberOfCardTypes: "+cardGameNameSpace.numberOfCardTypes);
-        for (var i = 1; i <= cardGameNameSpace.numberOfCardTypes; i++) {
-            console.log("loading "+"/images/card-game/cards/" + cardGameNameSpace.allCardsToLoadThisGame[i-1] + ".png");
+       
+        for (var i = 0; i < cardGameNameSpace.numberOfCardTypes; i++) {
+           
             cardGameNameSpace.imagesToLoad.push({
-                name: "card" + i,
-                src: "/images/card-game/cards/" + cardGameNameSpace.allCardsToLoadThisGame[i-1] + ".png"
+                name: "card" + cardGameNameSpace.allCardsToLoadThisGame[i],
+                src: "/images/card-game/cards/" + cardGameNameSpace.allCardsToLoadThisGame[i] + ".png"
             });
         }
         // click handler:
@@ -442,8 +442,7 @@ console.log("all card type: "+cardGameNameSpace.allCardsToLoadThisGame.join("/")
     },
 
     initCardGame: function() {
-        console.log("card game init called ===================");
-         isFirstTime = true;
+   
         cardGameNameSpace.getCanvasPosition();
         cardGameNameSpace.gameCanvas = document.getElementById("cardGame");
         if (cardGameNameSpace.gameCanvas.getContext) {
@@ -481,15 +480,15 @@ console.log("all card type: "+cardGameNameSpace.allCardsToLoadThisGame.join("/")
                     }
                     cardGameNameSpace.gameContext.fillStyle = cardGameNameSpace.playerColours[this.currentOwner];
                     cardGameNameSpace.gameContext.fillRect(this.x + offsetX, this.y + offsetY, cardGameNameSpace.cardWidth, cardGameNameSpace.cardHeight);
-                    if(isFirstTime) {console.log("drawImage: "+this.cardType);}
+                  
                     cardGameNameSpace.gameContext.drawImage(cardGameNameSpace.cardImages[this.cardType], this.x + offsetX, this.y + offsetY);
                 }
             }
         }
         // set up image references:
         cardGameNameSpace.cardImages = [];
-        for (var i = 1; i <= cardGameNameSpace.numberOfCardTypes; i++) {
-            cardGameNameSpace.cardImages[i] = Loader.getImage("card" + i);
+        for (var i = 0; i < cardGameNameSpace.numberOfCardTypes; i++) {
+            cardGameNameSpace.cardImages[(cardGameNameSpace.allCardsToLoadThisGame[i])] = Loader.getImage("card" + (cardGameNameSpace.allCardsToLoadThisGame[i]));
         }
         cardGameNameSpace.boardImage = Loader.getImage("board");
         cardGameNameSpace.currentCardSelectedImage = Loader.getImage("selected");
@@ -623,7 +622,7 @@ console.log("all card type: "+cardGameNameSpace.allCardsToLoadThisGame.join("/")
         }
         cardGameNameSpace.currentCardSelected.draw();
         cardGameNameSpace.currentPlayerMarker.draw();
-          isFirstTime = false;
+         
     },
 
     isValidMove: function(checkX, checkY, whichBoard) {
