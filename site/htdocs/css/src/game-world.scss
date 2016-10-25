@@ -288,11 +288,18 @@ canvas {
 }
 
 
+#cardAlbum {
+   max-width: 400px;
+   background: #666;
+   position: absolute;
+   left: 0;
+   top: 500px; 
+}
 #cardAlbumList {
     margin: 0;
     padding: 0;
     list-style: none;
-    max-width: 400px;
+    
     li {
         width: 84px;
         height: 102px;

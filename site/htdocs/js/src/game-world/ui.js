@@ -130,7 +130,7 @@ var UI = {
         var cardAlbumMarkup = '';
         for (var i = 0; i < 20; i++) {
             if (hero.cards[i]) {
-                cardAlbumMarkup += '<li><img src="/images/card-game/cards/' + hero.cards[i] + '.png" class="card players" alt=""></li>';
+                cardAlbumMarkup += '<li><img src="/images/card-game/cards/' + hero.cards[i] + '.png" class="card players" alt="'+cardGameNameSpace.allCardData[(hero.cards[i])][2]+' card"></li>';
             } else {
                 cardAlbumMarkup += '<li></li>';
             }
