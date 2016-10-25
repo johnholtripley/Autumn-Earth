@@ -289,7 +289,7 @@ canvas {
 
 
 #cardAlbum {
-   max-width: 400px;
+   width: 400px;
    background: #666;
    position: absolute;
    left: 0;
@@ -301,11 +301,15 @@ canvas {
     list-style: none;
     
     li {
-        width: 84px;
-        height: 102px;
+        width: 42px;
+        height: 51px;
         background: #cecece;
         display: block;
         float: left;
         margin: 0 4px 4px 0;
+        img {
+            width: 100%;
+            height: auto;
+        }
     }
 }
