@@ -342,7 +342,7 @@ canvas {
     .cardFlip {
         display: inline-block;
         margin: 0 10px;
-        perspective: 1000px;
+        @include perspective(1000px);
         &.active {
             .flipper {
                 @include transform(rotateY(180deg));

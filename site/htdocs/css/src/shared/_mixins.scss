@@ -175,6 +175,12 @@ transition-duration: $values;
 transition-delay: $values;
 }
 
+@mixin perspective($value) {
+  -webkit-perspective: $value;
+  -moz-perspective: $value;
+  perspective: $value;
+}
+
 @mixin linearGradient($from, $to, $fromPercent:0, $toPercent:100, $direction:to bottom) {
     // simple 2 colour vertical gradients only
     // http://codepen.io/thebabydino/full/pjxVWp/
