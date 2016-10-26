@@ -327,7 +327,7 @@ canvas {
     top: 50%;
     margin-top: -$cardHeight/2;
     width: 100%;
-    @include transition(opacity 0.6s ease 3s);
+    @include transition(opacity 0.6s ease 1.5s);
     &.active {
         pointer-events: auto;
         opacity: 1;
@@ -345,7 +345,7 @@ canvas {
         perspective: 1000px;
         &.active {
             .flipper {
-                transform: rotateY(180deg);
+                @include transform(rotateY(180deg));
             }
         }
     }
@@ -355,9 +355,9 @@ canvas {
         width: $cardWidth;
         height: $cardHeight;
     }
-    /* flip speed goes here */
+    
     .flipper {
-        transition: 0.6s;
+       @include transition-duration(0.6s);
         transform-style: preserve-3d;
         position: relative;
     }
