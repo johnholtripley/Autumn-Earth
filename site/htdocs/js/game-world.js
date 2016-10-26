@@ -1961,17 +1961,20 @@ function animateFae() {
 
 
 
-function inventoryItemAction(whichSlot,whichAction) {
-switch (whichAction) {
-case "booster":
-openBoosterPack();
-// removeFromInventory(whichSlot,amount);
-break;
+function inventoryItemAction(whichSlot, whichAction) {
+    switch (whichAction) {
+        case "booster":
+            openBoosterPack();
+            removeFromInventory(whichSlot.parentElement.id, 1);
+            break;
+    }
 }
+
+
+
+function removeFromInventory(whichSlot,amount) {
+
 }
-
-
-
 
 function draw() {
     if (gameMode == "mapLoading") {
