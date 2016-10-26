@@ -181,6 +181,18 @@ transition-delay: $values;
   perspective: $value;
 }
 
+@mixin backface-visibility($value) {
+  -webkit-backface-visibility: $value;
+  -moz-backface-visibility: $value;
+  backface-visibility: $value;
+}
+
+@mixin transform-style($value) {
+  -webkit-transform-style: $value;
+  -moz-transform-style: $value;
+  transform-style: $value;
+}
+
 @mixin linearGradient($from, $to, $fromPercent:0, $toPercent:100, $direction:to bottom) {
     // simple 2 colour vertical gradients only
     // http://codepen.io/thebabydino/full/pjxVWp/
