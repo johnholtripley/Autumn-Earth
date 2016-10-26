@@ -168,6 +168,9 @@ var whichTransitionEvent = '';
 var activeNPCForDialogue = '';
 var closeDialogueDistance = 200;
 
+var boosterCardsRevealed = 0;
+var boosterCardsToAdd = [];
+
 // key bindings
 var key = [0, 0, 0, 0, 0, 0];
 
@@ -758,8 +761,7 @@ function startCardGame(opponentNPC) {
         cardGameNameSpace.player1Skill = opponentNPC.cardSkill;
 
 
-console.log(cardGameNameSpace.player1Cards.join(":"));
-console.log(cardGameNameSpace.player2Cards.join(":"));
+
 
         cardGameNameSpace.initialiseCardGame();
         cardGameWrapper.classList.add("active");
@@ -792,9 +794,55 @@ function pickBestCardToTake(whichDeck) {
 }
 
 function openBoosterPack() {
-    console.log("open booster pack!");
+    // pick 5 random, but different, cards:
+    boosterCardsToAdd = [];
+    var thisCardToAdd;
+    do {
+        thisCardToAdd = getRandomInteger(1, cardGameNameSpace.allCardData.length);
+        if (boosterCardsToAdd.indexOf(thisCardToAdd) == -1) {
+            boosterCardsToAdd.push(thisCardToAdd);
+
+        }
+
+    } while (boosterCardsToAdd.length < 5);
+
+
+ var boosterPackCards = document.getElementsByClassName('cardFlip');
+    for (var i = 0; i < boosterPackCards.length; i++) {
+        boosterPackCards[i].classList.remove('active');
+    }
+
     
+    // wait for these to load? #######
+
+
+
+
+
+    for (var i = 0; i < 5; i++) {
+        document.getElementById("boosterCard" + i).innerHTML = '<img src="/images/card-game/cards/' + boosterCardsToAdd[i] + '.png" alt="' + cardGameNameSpace.allCardData[(boosterCardsToAdd[i][3])] + '">';
+    }
+
+    boosterPack.classList.add('active');
+    boosterCardsRevealed = 0;
+    boosterPack.addEventListener("click", revealBoosterCard, false);
+
 }
+
+function revealBoosterCard(e) {
+
+    if (e.target.nodeName == "IMG") {
+        e.target.parentNode.parentNode.parentNode.classList.add('active');
+        boosterCardsRevealed++;
+        if (boosterCardsRevealed >= 5) {
+            hero.cards = boosterCardsToAdd.concat(hero.cards);
+            UI.updateCardAlbum();
+            boosterPack.classList.remove('active');
+
+        }
+    }
+}
+
 var Input = {
     init: function() {
         // Set up the keyboard events
@@ -856,6 +904,8 @@ var UI = {
         var notification = document.getElementById('notification');
         var cardGameWrapper = document.getElementById('cardGameWrapper');
         var cardAlbumList = document.getElementById('cardAlbumList');
+        var boosterPack = document.getElementById('boosterPack');
+      
         //
 
     },
@@ -989,7 +1039,7 @@ dataActionMarkup = 'data-action="'+thisAction+'" ';
 
     updateCardAlbum: function() {
         var cardAlbumMarkup = '';
-        for (var i = 0; i < 20; i++) {
+        for (var i = 0; i < 30; i++) {
             if (hero.cards[i]) {
                 cardAlbumMarkup += '<li><img src="/images/card-game/cards/' + hero.cards[i] + '.png" class="card players" alt="'+cardGameNameSpace.allCardData[(hero.cards[i])][2]+' card"></li>';
             } else {
@@ -1965,16 +2015,37 @@ function inventoryItemAction(whichSlot, whichAction) {
     switch (whichAction) {
         case "booster":
             openBoosterPack();
-            removeFromInventory(whichSlot.parentElement.id, 1);
+            // remove the 'slot' prefix with the substring(4):
+            removeFromInventory(whichSlot.parentElement.id.substring(4), 1);
             break;
     }
 }
 
 
 
-function removeFromInventory(whichSlot,amount) {
-
+function removeFromInventory(whichSlot, amount) {
+    var thisCurrentQuantity = hero.inventory[whichSlot].quantity;
+    var thisSlotElem = document.getElementById("slot" + whichSlot);
+    if (thisCurrentQuantity - amount > 0) {
+        // just reduce quantity:
+        hero.inventory[whichSlot].quantity -= amount;
+        // update visually:
+        for (var i = 0; i < thisSlotElem.childNodes.length; i++) {
+            if (thisSlotElem.childNodes[i].className == "qty") {
+                thisSlotElem.childNodes[i].innerHTML = hero.inventory[whichSlot].quantity;
+                break;
+            }
+        }
+    } else {
+        // remove the item:
+        delete hero.inventory[whichSlot];
+        // update visually:
+        thisSlotElem.innerHTML = '<img alt="Empty slot" src="/images/game-world/inventory-items/blank.png">';
+    }
 }
+
+
+
 
 function draw() {
     if (gameMode == "mapLoading") {

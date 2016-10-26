@@ -45,6 +45,9 @@ var whichTransitionEvent = '';
 var activeNPCForDialogue = '';
 var closeDialogueDistance = 200;
 
+var boosterCardsRevealed = 0;
+var boosterCardsToAdd = [];
+
 // key bindings
 var key = [0, 0, 0, 0, 0, 0];
 

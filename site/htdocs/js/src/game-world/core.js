@@ -961,16 +961,37 @@ function inventoryItemAction(whichSlot, whichAction) {
     switch (whichAction) {
         case "booster":
             openBoosterPack();
-            removeFromInventory(whichSlot.parentElement.id, 1);
+            // remove the 'slot' prefix with the substring(4):
+            removeFromInventory(whichSlot.parentElement.id.substring(4), 1);
             break;
     }
 }
 
 
 
-function removeFromInventory(whichSlot,amount) {
-
+function removeFromInventory(whichSlot, amount) {
+    var thisCurrentQuantity = hero.inventory[whichSlot].quantity;
+    var thisSlotElem = document.getElementById("slot" + whichSlot);
+    if (thisCurrentQuantity - amount > 0) {
+        // just reduce quantity:
+        hero.inventory[whichSlot].quantity -= amount;
+        // update visually:
+        for (var i = 0; i < thisSlotElem.childNodes.length; i++) {
+            if (thisSlotElem.childNodes[i].className == "qty") {
+                thisSlotElem.childNodes[i].innerHTML = hero.inventory[whichSlot].quantity;
+                break;
+            }
+        }
+    } else {
+        // remove the item:
+        delete hero.inventory[whichSlot];
+        // update visually:
+        thisSlotElem.innerHTML = '<img alt="Empty slot" src="/images/game-world/inventory-items/blank.png">';
+    }
 }
+
+
+
 
 function draw() {
     if (gameMode == "mapLoading") {

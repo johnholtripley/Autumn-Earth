@@ -8,6 +8,8 @@ var UI = {
         var notification = document.getElementById('notification');
         var cardGameWrapper = document.getElementById('cardGameWrapper');
         var cardAlbumList = document.getElementById('cardAlbumList');
+        var boosterPack = document.getElementById('boosterPack');
+      
         //
 
     },
@@ -141,7 +143,7 @@ dataActionMarkup = 'data-action="'+thisAction+'" ';
 
     updateCardAlbum: function() {
         var cardAlbumMarkup = '';
-        for (var i = 0; i < 20; i++) {
+        for (var i = 0; i < 30; i++) {
             if (hero.cards[i]) {
                 cardAlbumMarkup += '<li><img src="/images/card-game/cards/' + hero.cards[i] + '.png" class="card players" alt="'+cardGameNameSpace.allCardData[(hero.cards[i])][2]+' card"></li>';
             } else {

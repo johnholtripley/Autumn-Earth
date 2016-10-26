@@ -60,8 +60,7 @@ function startCardGame(opponentNPC) {
         cardGameNameSpace.player1Skill = opponentNPC.cardSkill;
 
 
-console.log(cardGameNameSpace.player1Cards.join(":"));
-console.log(cardGameNameSpace.player2Cards.join(":"));
+
 
         cardGameNameSpace.initialiseCardGame();
         cardGameWrapper.classList.add("active");
@@ -94,6 +93,51 @@ function pickBestCardToTake(whichDeck) {
 }
 
 function openBoosterPack() {
-    console.log("open booster pack!");
+    // pick 5 random, but different, cards:
+    boosterCardsToAdd = [];
+    var thisCardToAdd;
+    do {
+        thisCardToAdd = getRandomInteger(1, cardGameNameSpace.allCardData.length);
+        if (boosterCardsToAdd.indexOf(thisCardToAdd) == -1) {
+            boosterCardsToAdd.push(thisCardToAdd);
+
+        }
+
+    } while (boosterCardsToAdd.length < 5);
+
+
+ var boosterPackCards = document.getElementsByClassName('cardFlip');
+    for (var i = 0; i < boosterPackCards.length; i++) {
+        boosterPackCards[i].classList.remove('active');
+    }
+
     
+    // wait for these to load? #######
+
+
+
+
+
+    for (var i = 0; i < 5; i++) {
+        document.getElementById("boosterCard" + i).innerHTML = '<img src="/images/card-game/cards/' + boosterCardsToAdd[i] + '.png" alt="' + cardGameNameSpace.allCardData[(boosterCardsToAdd[i][3])] + '">';
+    }
+
+    boosterPack.classList.add('active');
+    boosterCardsRevealed = 0;
+    boosterPack.addEventListener("click", revealBoosterCard, false);
+
+}
+
+function revealBoosterCard(e) {
+
+    if (e.target.nodeName == "IMG") {
+        e.target.parentNode.parentNode.parentNode.classList.add('active');
+        boosterCardsRevealed++;
+        if (boosterCardsRevealed >= 5) {
+            hero.cards = boosterCardsToAdd.concat(hero.cards);
+            UI.updateCardAlbum();
+            boosterPack.classList.remove('active');
+
+        }
+    }
 }

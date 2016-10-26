@@ -168,6 +168,13 @@ transition: $values;
 transition-duration: $values;
 }
 
+ @mixin transition-delay($values) {
+-webkit-transition-delay: $values;
+-moz-transition-delay: $values;
+-o-transition-delay: $values;
+transition-delay: $values;
+}
+
 @mixin linearGradient($from, $to, $fromPercent:0, $toPercent:100, $direction:to bottom) {
     // simple 2 colour vertical gradients only
     // http://codepen.io/thebabydino/full/pjxVWp/

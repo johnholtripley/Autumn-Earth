@@ -27,7 +27,16 @@
 <div id="inventoryPanels"></div>
 <div id="cardAlbum"><div class="draggableBar">Card album</div><ul id="cardAlbumList"></ul></div>
 <div id="cartographicPanel"><div class="draggableBar"><span id="cartographicTitle">Map</span></div><canvas id="cartographyCanvas" width="246" height="246"></canvas><canvas id="offScreenCartographyCanvas" class="offScreenCanvas" width="246" height="246"></canvas></div>
+<div id="boosterPack">
+<ol>
 
+<?php
+for ($i=0;$i<5;$i++) {
+  echo '<li class="cardFlip"><div class="flipper"><div class="front card players" id="boosterCard'.$i.'"></div><div class="back"><img src="/images/card-game/cards/back.png" alt="card back"></div></div></li>';
+}
+?>
+</ol>
+</div>
 
 
 <div id="cardGameWrapper">
