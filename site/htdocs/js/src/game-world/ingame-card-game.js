@@ -92,3 +92,8 @@ function pickBestCardToTake(whichDeck) {
     }
     return whichIndex;
 }
+
+function openBoosterPack() {
+    console.log("open booster pack!");
+    
+}

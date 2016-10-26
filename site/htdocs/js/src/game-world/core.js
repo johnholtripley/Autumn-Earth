@@ -957,7 +957,14 @@ function animateFae() {
 
 
 
-
+function inventoryItemAction(whichSlot,whichAction) {
+switch (whichAction) {
+case "booster":
+openBoosterPack();
+// removeFromInventory(whichSlot,amount);
+break;
+}
+}
 
 
 

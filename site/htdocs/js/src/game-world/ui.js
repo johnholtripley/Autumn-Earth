@@ -106,7 +106,12 @@ dataActionMarkup = 'data-action="'+thisAction+'" ';
     },
 
     inventoryItemDoubleClick: function(e) {
-        console.log("double click on inventory panel");
+ 
+        var thisItemsAction = e.target.getAttribute('data-action');
+        if(thisItemsAction) {
+            
+            inventoryItemAction(e.target,thisItemsAction);
+        }
     },
 
     showDialogue: function(whichNPC, text) {

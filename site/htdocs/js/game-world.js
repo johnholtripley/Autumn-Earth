@@ -791,6 +791,10 @@ function pickBestCardToTake(whichDeck) {
     return whichIndex;
 }
 
+function openBoosterPack() {
+    console.log("open booster pack!");
+    
+}
 var Input = {
     init: function() {
         // Set up the keyboard events
@@ -950,7 +954,12 @@ dataActionMarkup = 'data-action="'+thisAction+'" ';
     },
 
     inventoryItemDoubleClick: function(e) {
-        console.log("double click on inventory panel");
+ 
+        var thisItemsAction = e.target.getAttribute('data-action');
+        if(thisItemsAction) {
+            
+            inventoryItemAction(e.target,thisItemsAction);
+        }
     },
 
     showDialogue: function(whichNPC, text) {
@@ -1952,7 +1961,14 @@ function animateFae() {
 
 
 
-
+function inventoryItemAction(whichSlot,whichAction) {
+switch (whichAction) {
+case "booster":
+openBoosterPack();
+// removeFromInventory(whichSlot,amount);
+break;
+}
+}
 
 
 
