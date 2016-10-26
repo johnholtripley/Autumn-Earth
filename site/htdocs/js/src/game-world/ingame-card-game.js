@@ -33,6 +33,7 @@ function cardGamePlayer1Wins() {
     // player lost
     processSpeech(thisNPC, thisNPC.cardGameSpeech.win[0], thisNPC.cardGameSpeech.win[1]);
     whichCardWon = pickBestCardToTake(cardGameNameSpace.player2Cards);
+    // add it to NPC's unique cards so the player can win it back:
     thisNPC.uniqueCards.unshift((cardGameNameSpace.player2Cards[whichCardWon]));
     var foundIndexInUniqueCards = hero.cards.indexOf(cardGameNameSpace.player2Cards[whichCardWon]);
     if (foundIndexInUniqueCards != -1) {

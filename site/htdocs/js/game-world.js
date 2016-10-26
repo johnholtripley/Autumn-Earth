@@ -731,6 +731,7 @@ function cardGamePlayer1Wins() {
     // player lost
     processSpeech(thisNPC, thisNPC.cardGameSpeech.win[0], thisNPC.cardGameSpeech.win[1]);
     whichCardWon = pickBestCardToTake(cardGameNameSpace.player2Cards);
+    // add it to NPC's unique cards so the player can win it back:
     thisNPC.uniqueCards.unshift((cardGameNameSpace.player2Cards[whichCardWon]));
     var foundIndexInUniqueCards = hero.cards.indexOf(cardGameNameSpace.player2Cards[whichCardWon]);
     if (foundIndexInUniqueCards != -1) {
@@ -866,7 +867,7 @@ var UI = {
 
     buildInventoryInterface: function() {
         var inventoryMarkup = '';
-        var thisColourName, theColourPrefix, thisFileColourSuffix;
+        var thisColourName, theColourPrefix, thisFileColourSuffix, thisAction, dataActionMarkup;
         // loop through number of bags
         for (var i = 0; i < hero.bags.length; i++) {
             inventoryMarkup += '<div class="inventoryBag"><div class="draggableBar">' + currentActiveInventoryItems[hero.bags[i].type].shortname + '</div><ol class="active" id="bag' + i + '">';
@@ -885,7 +886,13 @@ var UI = {
                         theColourPrefix = thisColourName + " ";
                         thisFileColourSuffix = "-" + thisColourName.toLowerCase();
                     }
-                    inventoryMarkup += '<img src="/images/game-world/inventory-items/' + hero.inventory[thisSlotsID].type + thisFileColourSuffix + '.png" alt="">';
+                    thisAction = currentActiveInventoryItems[hero.inventory[thisSlotsID].type].action;
+
+                    dataActionMarkup = '';
+                    if(thisAction) {
+dataActionMarkup = 'data-action="'+thisAction+'" ';
+                    }
+                    inventoryMarkup += '<img src="/images/game-world/inventory-items/' + hero.inventory[thisSlotsID].type + thisFileColourSuffix + '.png" '+dataActionMarkup+'alt="">';
                     inventoryMarkup += '<span class="qty">' + hero.inventory[thisSlotsID].quantity + '</span>';
                     inventoryMarkup += '<p><em>' + theColourPrefix + currentActiveInventoryItems[hero.inventory[thisSlotsID].type].shortname + ' </em>' + currentActiveInventoryItems[hero.inventory[thisSlotsID].type].description + ' <span class="price">Sell price: ' + parseMoney(hero.inventory[thisSlotsID].quantity * currentActiveInventoryItems[hero.inventory[thisSlotsID].type].priceCode, 0) + '</span></p>';
                 } else {
