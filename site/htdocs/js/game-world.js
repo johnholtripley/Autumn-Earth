@@ -704,16 +704,8 @@ allCardPacks = [
     [1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3]
 ];
 
-    cardGameNameSpace.allCardData = [
-        [null, null, null],
-        ["5", "10", "Bomb"],
-        ["5", "10", "Chocobo"],
-        ["5", "10", "Mog"],
-        ["5", "10", "Cactuar"],
-        ["5", "10", "Shiva"],
-        ["5", "10", "Tonberry"],
-        ["5", "10", "Slime"]
-    ];
+//tempCardData = '{[[null, null, null],["5", "10", "Bomb"],["5", "10", "Chocobo"],["5", "10", "Mog"],["5", "10", "Cactuar"],["5", "10", "Shiva"],["5", "10", "Tonberry"],["5", "10", "Slime"]]}';
+  //  cardGameNameSpace.allCardData = tempCardData;
 
 function cardGamePlayer2Wins() {
     // player won
@@ -1123,10 +1115,20 @@ function loadCoreAssets() {
 
 function prepareCoreAssets() {
     heroImg = Loader.getImage("heroImg");
-    loadMap();
+
+    loadCardData();
+    
 }
 
-
+function loadCardData() {
+    getJSON("/game-world/getCardDetails.php", function(data) {
+        cardGameNameSpace.allCardData = data.cards;
+        loadMap();
+    }, function(status) {
+        // error - try again:
+        loadCardData();
+    });
+}
 
 function loadMapJSON(mapFilePath) {
     console.log("mapFilePath: " + mapFilePath);

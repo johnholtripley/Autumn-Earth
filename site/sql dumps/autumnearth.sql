@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 09, 2016 at 05:51 PM
+-- Generation Time: Oct 27, 2016 at 01:41 PM
 -- Server version: 5.6.24
 -- PHP Version: 5.6.8
 
@@ -168,7 +168,7 @@ CREATE TABLE IF NOT EXISTS `tblcards` (
   `cardAttack` int(2) NOT NULL,
   `cardDefense` int(2) NOT NULL,
   `cardName` varchar(255) COLLATE utf8_bin NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
 -- Dumping data for table `tblcards`
@@ -176,8 +176,12 @@ CREATE TABLE IF NOT EXISTS `tblcards` (
 
 INSERT INTO `tblcards` (`cardID`, `cardAttack`, `cardDefense`, `cardName`) VALUES
 (1, 5, 10, 'Bomb'),
-(2, 5, 17, 'Chocobo'),
-(3, 15, 10, 'Mog');
+(2, 5, 10, 'Chocobo'),
+(3, 5, 10, 'Mog'),
+(4, 5, 10, 'Cactuar'),
+(5, 5, 10, 'Shiva'),
+(6, 5, 10, 'Tonberry'),
+(7, 5, 10, 'Slime');
 
 -- --------------------------------------------------------
 
@@ -483,6 +487,8 @@ CREATE TABLE IF NOT EXISTS `tblinventoryitems` (
   `priceCode` varchar(12) DEFAULT NULL,
   `centreX` decimal(11,1) DEFAULT NULL,
   `centreY` decimal(11,1) DEFAULT NULL,
+  `width` int(11) NOT NULL,
+  `height` int(11) NOT NULL,
   `worldSrc` varchar(255) DEFAULT NULL,
   `action` varchar(255) NOT NULL,
   `actionValue` int(11) NOT NULL,
@@ -493,30 +499,34 @@ CREATE TABLE IF NOT EXISTS `tblinventoryitems` (
   `inscribable` tinyint(1) NOT NULL,
   `colour` int(128) NOT NULL,
   `hasInherentColour` tinyint(1) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblinventoryitems`
 --
 
-INSERT INTO `tblinventoryitems` (`itemID`, `shortname`, `description`, `priceCode`, `centreX`, `centreY`, `worldSrc`, `action`, `actionValue`, `dyeable`, `level`, `prerequisites`, `group`, `inscribable`, `colour`, `hasInherentColour`) VALUES
-(1, 'Wild Flax', '-', '1', '20.0', '24.0', 'wild-flax.png', '', 0, 0, 0, '0', '0', 0, 0, 0),
-(2, 'Wild Madder', 'A flower used for its red pigment.', '1', '20.0', '24.0', 'wild-madder.png', '', 0, 0, 0, '0', 'pgmt', 0, 1, 1),
-(3, 'Safflower', '-', '1', '20.0', '24.0', 'safflower.png', '', 0, 0, 0, '0', 'pgmt', 0, 2, 1),
-(4, 'Woad', '-', '1', '20.0', '24.0', 'woad.png', '', 0, 0, 0, '0', 'pgmt', 0, 4, 1),
-(5, 'Whortleberry', '-', '1', '20.0', '24.0', 'whortleberry.png', '', 0, 0, 0, '0', 'pgmt', 0, 7, 1),
-(6, 'Alder Bark', '-', '1', '20.0', '24.0', 'alder-bark.png', '', 0, 0, 0, '0', 'pgmt', 0, 16, 1),
-(7, 'Archil', '-', '1', '20.0', '24.0', 'archil.png', '', 0, 0, 0, '0', 'pgmt', 0, 5, 1),
-(8, 'Copper Mordant', 'A standard mordant.', '1', '20.0', '24.0', 'copper-mordant.png', '', 0, 0, 0, '0', 'mrdt', 0, 0, 0),
-(9, 'Iron Mordant', 'A mordant for making darker dyes.', '1', '20.0', '24.0', 'iron-mordant.png', '', 0, 0, 0, '0', 'mrdt', 0, 16, 1),
-(10, 'Alum Mordant', 'A mordant used for brighter dyes.', '1', '20.0', '24.0', 'alum-mordant.png', '', 0, 0, 0, '0', 'mrdt', 0, 8, 1),
-(11, 'Small Glass Bottle', '', '1', '20.0', '24.0', 'small-glass-bottle.png', '', 0, 0, 0, '0', '0', 0, 0, 0),
-(12, 'Dye', '', '1', '20.0', '24.0', 'dye-[colour].png', '', 0, 0, 0, '0', '0', 0, 0, 0),
-(13, 'Dyer''s Cauldron', '', '1', '20.0', '24.0', 'dyers-cauldron.png', 'dyer', 0, 0, 0, '0', '0', 0, 0, 0),
-(14, 'Linen', '', '1', '20.0', '24.0', 'linen.png', '', 0, 1, 0, '0', '0', 0, 0, 0),
-(15, 'Wool', '', '1', '20.0', '24.0', 'wool.png', '', 0, 1, 0, '0', '0', 0, 0, 0),
-(16, 'Yarn', '', '1', '20.0', '24.0', 'yarn.png', '', 0, 1, 0, '0', '0', 0, 0, 0),
-(17, 'Small Backpack', 'A 12 slot bag', '2', '20.0', '24.0', 'small-backpack.png', 'bag', 12, 1, 0, '0', '0', 0, 0, 0);
+INSERT INTO `tblinventoryitems` (`itemID`, `shortname`, `description`, `priceCode`, `centreX`, `centreY`, `width`, `height`, `worldSrc`, `action`, `actionValue`, `dyeable`, `level`, `prerequisites`, `group`, `inscribable`, `colour`, `hasInherentColour`) VALUES
+(1, 'Wild Flax', '-', '1', '20.0', '24.0', 0, 0, 'wild-flax', '', 0, 0, 0, '0', '0', 0, 0, 0),
+(2, 'Wild Madder', 'A flower used for its red pigment.', '1', '20.0', '24.0', 0, 0, 'wild-madder', '', 0, 0, 0, '0', 'pgmt', 0, 1, 1),
+(3, 'Safflower', '-', '1', '20.0', '24.0', 0, 0, 'safflower', '', 0, 0, 0, '0', 'pgmt', 0, 2, 1),
+(4, 'Woad', '-', '1', '20.0', '24.0', 0, 0, 'woad', '', 0, 0, 0, '0', 'pgmt', 0, 4, 1),
+(5, 'Whortleberry', '-', '1', '20.0', '24.0', 0, 0, 'whortleberry', '', 0, 0, 0, '0', 'pgmt', 0, 7, 1),
+(6, 'Alder Bark', '-', '1', '20.0', '24.0', 0, 0, 'alder-bark', '', 0, 0, 0, '0', 'pgmt', 0, 16, 1),
+(7, 'Archil', '-', '1', '20.0', '24.0', 0, 0, 'archil', '', 0, 0, 0, '0', 'pgmt', 0, 5, 1),
+(8, 'Copper Mordant', 'A standard mordant.', '1', '20.0', '24.0', 0, 0, 'copper-mordant', '', 0, 0, 0, '0', 'mrdt', 0, 0, 0),
+(9, 'Iron Mordant', 'A mordant for making darker dyes.', '1', '20.0', '24.0', 0, 0, 'iron-mordant', '', 0, 0, 0, '0', 'mrdt', 0, 16, 1),
+(10, 'Alum Mordant', 'A mordant used for brighter dyes.', '1', '20.0', '24.0', 0, 0, 'alum-mordant', '', 0, 0, 0, '0', 'mrdt', 0, 8, 1),
+(11, 'Small Glass Bottle', '', '1', '20.0', '24.0', 0, 0, 'small-glass-bottle', '', 0, 0, 0, '0', '0', 0, 0, 0),
+(12, 'Dye', '', '1', '20.0', '24.0', 0, 0, 'dye', '', 0, 0, 0, '0', '0', 0, 0, 0),
+(13, 'Dyer''s Cauldron', '', '1', '20.0', '24.0', 0, 0, 'dyers-cauldron', 'dyer', 0, 0, 0, '0', '0', 0, 0, 0),
+(14, 'Linen', '', '1', '20.0', '24.0', 0, 0, 'linen', '', 0, 1, 0, '0', '0', 0, 0, 0),
+(15, 'Wool', '', '1', '20.0', '24.0', 0, 0, 'wool', '', 0, 1, 0, '0', '0', 0, 0, 0),
+(16, 'Yarn', '', '1', '20.0', '24.0', 0, 0, 'yarn.png', '', 0, 1, 0, '0', '0', 0, 0, 0),
+(17, 'Small Backpack', 'A 11 slot bag', '2', '20.0', '24.0', 0, 0, 'small-backpack', 'bag', 11, 1, 0, '0', '0', 0, 0, 0),
+(18, 'Barrel', 'A large wooden barrel.', '2', '25.0', '31.0', 24, 24, 'barrel', 'static', 0, 0, 0, '0', '0', 0, 0, 0),
+(19, 'Pumpkin', 'A tasty pumpkin.', '1', '16.0', '18.0', 25, 23, 'pumpkin', '', 0, 0, 0, '0', '0', 0, 0, 0),
+(20, 'Large Backpack', 'A 20 slot bag', '2', '20.0', '24.0', 0, 0, 'large-backpack', 'bag', 20, 1, 0, '0', '0', 0, 0, 0),
+(21, 'Card Pack', '5 cards', '4', '20.0', '24.0', 0, 0, 'card-pack', 'booster', 0, 0, 0, '0', '0', 0, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -1577,7 +1587,7 @@ ALTER TABLE `tblauctionitems`
 -- AUTO_INCREMENT for table `tblcards`
 --
 ALTER TABLE `tblcards`
-  MODIFY `cardID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
+  MODIFY `cardID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=8;
 --
 -- AUTO_INCREMENT for table `tblcharacters`
 --
@@ -1637,7 +1647,7 @@ ALTER TABLE `tblguilds`
 -- AUTO_INCREMENT for table `tblinventoryitems`
 --
 ALTER TABLE `tblinventoryitems`
-  MODIFY `itemID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=18;
+  MODIFY `itemID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=22;
 --
 -- AUTO_INCREMENT for table `tbllocations`
 --

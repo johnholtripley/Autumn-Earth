@@ -3,16 +3,8 @@ allCardPacks = [
     [1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3]
 ];
 
-    cardGameNameSpace.allCardData = [
-        [null, null, null],
-        ["5", "10", "Bomb"],
-        ["5", "10", "Chocobo"],
-        ["5", "10", "Mog"],
-        ["5", "10", "Cactuar"],
-        ["5", "10", "Shiva"],
-        ["5", "10", "Tonberry"],
-        ["5", "10", "Slime"]
-    ];
+//tempCardData = '{[[null, null, null],["5", "10", "Bomb"],["5", "10", "Chocobo"],["5", "10", "Mog"],["5", "10", "Cactuar"],["5", "10", "Shiva"],["5", "10", "Tonberry"],["5", "10", "Slime"]]}';
+  //  cardGameNameSpace.allCardData = tempCardData;
 
 function cardGamePlayer2Wins() {
     // player won

@@ -69,10 +69,20 @@ function loadCoreAssets() {
 
 function prepareCoreAssets() {
     heroImg = Loader.getImage("heroImg");
-    loadMap();
+
+    loadCardData();
+    
 }
 
-
+function loadCardData() {
+    getJSON("/game-world/getCardDetails.php", function(data) {
+        cardGameNameSpace.allCardData = data.cards;
+        loadMap();
+    }, function(status) {
+        // error - try again:
+        loadCardData();
+    });
+}
 
 function loadMapJSON(mapFilePath) {
     console.log("mapFilePath: " + mapFilePath);
