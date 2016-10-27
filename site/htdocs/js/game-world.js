@@ -709,7 +709,9 @@ allCardPacks = [
 
 function cardGamePlayer2Wins() {
     // player won
-    hero.stats.cardGamesWon ++;
+   
+    hero.stats.cardGamesWon++;
+    
     processSpeech(thisNPC, thisNPC.cardGameSpeech.lose[0], thisNPC.cardGameSpeech.lose[1]);
     whichCardWon = pickBestCardToTake(cardGameNameSpace.player1Cards);
     hero.cards.unshift((cardGameNameSpace.player1Cards[whichCardWon]));
@@ -725,7 +727,9 @@ function cardGamePlayer2Wins() {
 
 function cardGamePlayer1Wins() {
     // player lost
-    hero.stats.cardGamesLost ++;
+    
+    hero.stats.cardGamesLost++;
+    
     processSpeech(thisNPC, thisNPC.cardGameSpeech.win[0], thisNPC.cardGameSpeech.win[1]);
     whichCardWon = pickBestCardToTake(cardGameNameSpace.player2Cards);
     // add it to NPC's unique cards so the player can win it back:
@@ -767,6 +771,7 @@ function startCardGame(opponentNPC) {
 
 function closeCardGame() {
     gameMode = "play";
+    
     cardGameWrapper.classList.remove("active");
     document.getElementById("cardGame").removeEventListener("click", cardGameNameSpace.canvasClick, false);
 }
