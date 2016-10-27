@@ -48,7 +48,7 @@ function getHeroGameState() {
         hero.inventory = data.inventory;
         if (currentMap > 0) {
             //clean old procedural maps: (don't need a response here)
-            sendDataWithoutNeedingAResponse('/generateDungeonMap.php?playerId=' + characterId + '&clearMaps=true');
+            sendDataWithoutNeedingAResponse('/game-world/generateDungeonMap.php?playerId=' + characterId + '&clearMaps=true');
         }
         loadCoreAssets();
     }, function(status) {

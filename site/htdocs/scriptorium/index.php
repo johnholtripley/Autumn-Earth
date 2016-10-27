@@ -22,7 +22,7 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/navigation/the-world.php");
 </ul>
 
 <?php
-include($_SERVER['DOCUMENT_ROOT']."/generateBook.php");
+include($_SERVER['DOCUMENT_ROOT']."/scriptorium/generateBook.php");
 ?>
 </div>
 

@@ -24,7 +24,7 @@ function updateCartographicMiniMap() {
 }
 
 function initCartographicMap() {
-    canvasMapImage.src = "/generateCartographicMap.php?playerId=" + characterId + "&dungeonName=" + randomDungeonName + "&plotChests=true&requestedMap=" + newMap;
+    canvasMapImage.src = "/game-world/generateCartographicMap.php?playerId=" + characterId + "&dungeonName=" + randomDungeonName + "&plotChests=true&requestedMap=" + newMap;
     canvasMapImage.onload = function() {
         // load the mask (if any) so that previously uncovered areas are revealed:
         console.log('getting mask - /game-world/getCartographicMapMask.php?chr=' + characterId + '&dungeonName=' + randomDungeonName + '&currentMap=' + newMap);

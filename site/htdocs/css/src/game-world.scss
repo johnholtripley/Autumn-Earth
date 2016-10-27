@@ -361,7 +361,6 @@ canvas {
         @include transform-style(preserve-3d);
         position: relative;
     }
-    /* hide back of pane during swap */
     .front,
     .back {
         @include backface-visibility(hidden);
@@ -369,14 +368,13 @@ canvas {
         top: 0;
         left: 0;
     }
-    /* front pane, placed above back */
+
     .back {
         z-index: 2;
-        /* for firefox 31 */
         @include transform(rotateY(0deg));
     }
-    /* back, initially hidden pane */
     .front {
+        // booster cards start with their backs visible:
         @include transform(rotateY(180deg));
     }
 }
