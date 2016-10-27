@@ -159,7 +159,7 @@ if(isset($_GET["debug"])) {
   $debugMode = true;
 }
 
-$dir = "data/chr" . $thisPlayersId . "/dungeon/".$thisDungeonsName;
+$dir = "../data/chr" . $thisPlayersId . "/dungeon/".$thisDungeonsName;
 
 // check directory exists and create it if not:
  if (!(is_dir($dir))) {
@@ -181,7 +181,7 @@ if ($clearOldMaps) {
     }
     
     // restore session file:
-    if (!copy('data/source/session.php', $dir.'/session.php')) {
+    if (!copy('../data/source/session.php', $dir.'/session.php')) {
     // error handling ########
     }
     
@@ -189,7 +189,7 @@ if ($clearOldMaps) {
   }
 
 // delete cartography too:
-  $cartographyDirectory = "data/chr" . $thisPlayersId . "/cartography/".$thisDungeonsName;
+  $cartographyDirectory = "../data/chr" . $thisPlayersId . "/cartography/".$thisDungeonsName;
  if (is_dir($cartographyDirectory)) { 
     if ($thisDirectory = opendir($cartographyDirectory)) {
       while (($file = readdir($thisDirectory)) !== false) {
@@ -226,7 +226,7 @@ if (is_numeric($thisPlayersId)) {
         if($outputMode == "xml") {
 $fileExtenstion = ".xml";
         }
-        $mapFilename = "data/chr" . $thisPlayersId . "/dungeon/".$thisDungeonsName."/" . $thisMapsId . $fileExtenstion;
+        $mapFilename = "../data/chr" . $thisPlayersId . "/dungeon/".$thisDungeonsName."/" . $thisMapsId . $fileExtenstion;
         if ((is_file($mapFilename)) && ($outputMode != "test") && ($_GET["debug"] != true)) {
  
        
@@ -1946,7 +1946,7 @@ echo $outputString;
 }
 // write this to file:
 
-        $mapFilename = "data/chr" . $thisPlayersId . "/dungeon/".$thisDungeonsName."/" . $thisMapsId . ".json";
+        $mapFilename = "../data/chr" . $thisPlayersId . "/dungeon/".$thisDungeonsName."/" . $thisMapsId . ".json";
         
     if(!($filename=fopen($mapFilename,"w"))) {
             // error handling?
@@ -2137,7 +2137,7 @@ if (!$tileNorthIsWalkable) {
 
     
 
-    $treasureMapFilename = "data/chr" . $thisPlayersId . "/dungeon/".$thisDungeonsName."/" . $newTargetTreasureMap . ".xml";
+    $treasureMapFilename = "../data/chr" . $thisPlayersId . "/dungeon/".$thisDungeonsName."/" . $newTargetTreasureMap . ".xml";
    // increase depth to get deeper if map already exists:
    $treasureDepthInc += 5;
    } while(is_file($treasureMapFilename));
@@ -2331,7 +2331,7 @@ echo $outputString;
 }
 // write this to file:
 
-        $mapFilename = "data/chr" . $thisPlayersId . "/dungeon/".$thisDungeonsName."/" . $thisMapsId . ".xml";
+        $mapFilename = "../data/chr" . $thisPlayersId . "/dungeon/".$thisDungeonsName."/" . $thisMapsId . ".xml";
         
 	if(!($filename=fopen($mapFilename,"w"))) {
 			// error handling?
@@ -2411,7 +2411,7 @@ $sessionOutput .= '?>';
 
 if(!$debugMode) {
 		
-		$sessionFilename = "data/chr" . $thisPlayersId . "/dungeon/".$thisDungeonsName."/session.php";    
+		$sessionFilename = "../data/chr" . $thisPlayersId . "/dungeon/".$thisDungeonsName."/session.php";    
 	if(!($sessionFilename=fopen($sessionFilename,"w"))) {
 			// error handling?
 		}
@@ -2904,7 +2904,7 @@ function createNewDungeonMap($mapID) {
 
   
   
-  include("includes/dungeonMapConfig.php");
+  include("../includes/dungeonMapConfig.php");
 
     $mapMaxWidth = 36;
     $mapMaxHeight = 36;
@@ -2924,7 +2924,7 @@ $tileHeight = 24;
   
  
   
-    include("data/chr" . $thisPlayersId . "/dungeon/".$thisDungeonsName."/session.php");
+    include("../data/chr" . $thisPlayersId . "/dungeon/".$thisDungeonsName."/session.php");
   
   
   
@@ -3091,7 +3091,7 @@ if($thisMapsId == -1) {
 if($isTreasureMapLevel) {
 
 
-$testNextMapFilename = "data/chr" . $thisPlayersId . "/dungeon/".$thisDungeonsName."/" . ($thisMapsId+1) . ".xml";
+$testNextMapFilename = "../data/chr" . $thisPlayersId . "/dungeon/".$thisDungeonsName."/" . ($thisMapsId+1) . ".xml";
         if (is_file($testNextMapFilename)) {
         // previous map exists - get the exit doors for that map and create corresponding entrances doors for this current map to connect up nicely
         
@@ -3200,7 +3200,7 @@ if($turning == 0) {
       
 
    // check to see if the map after this one already exists (ie. the next map has treasure on it and has already been created)
-       $testNextMapFilename = "data/chr" . $thisPlayersId . "/dungeon/".$thisDungeonsName."/" . ($thisMapsId-1) . ".xml";
+       $testNextMapFilename = "../data/chr" . $thisPlayersId . "/dungeon/".$thisDungeonsName."/" . ($thisMapsId-1) . ".xml";
         if (is_file($testNextMapFilename)) {
            // load the xml for the next map and find the entrance doors, and connect to these
            loadPreviouslyCreatedMap($testNextMapFilename);

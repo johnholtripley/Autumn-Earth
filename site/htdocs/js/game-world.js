@@ -24,7 +24,7 @@ function updateCartographicMiniMap() {
 }
 
 function initCartographicMap() {
-    canvasMapImage.src = "/generateCartographicMap.php?playerId=" + characterId + "&dungeonName=" + randomDungeonName + "&plotChests=true&requestedMap=" + newMap;
+    canvasMapImage.src = "/game-world/generateCartographicMap.php?playerId=" + characterId + "&dungeonName=" + randomDungeonName + "&plotChests=true&requestedMap=" + newMap;
     canvasMapImage.onload = function() {
         // load the mask (if any) so that previously uncovered areas are revealed:
         console.log('getting mask - /game-world/getCartographicMapMask.php?chr=' + characterId + '&dungeonName=' + randomDungeonName + '&currentMap=' + newMap);
@@ -1102,7 +1102,7 @@ function getHeroGameState() {
         hero.inventory = data.inventory;
         if (currentMap > 0) {
             //clean old procedural maps: (don't need a response here)
-            sendDataWithoutNeedingAResponse('/generateDungeonMap.php?playerId=' + characterId + '&clearMaps=true');
+            sendDataWithoutNeedingAResponse('/game-world/generateDungeonMap.php?playerId=' + characterId + '&clearMaps=true');
         }
         loadCoreAssets();
     }, function(status) {
@@ -1173,7 +1173,7 @@ function loadMap() {
         // this assumes random maps always have a 3x1 doorway (the average of the doors will be the centre door)
         var centreDoorX = targetDoorX / 3;
         var centreDoorY = targetDoorY / 3;
-        mapFilePath = '/generateDungeonMap.php?playerId=' + characterId + '&originatingMapId=' + currentMap + '&requestedMap=' + newMap + '&dungeonName=' + randomDungeonName + '&connectingDoorX=' + centreDoorX + '&connectingDoorY=' + centreDoorY;
+        mapFilePath = '/game-world/generateDungeonMap.php?playerId=' + characterId + '&originatingMapId=' + currentMap + '&requestedMap=' + newMap + '&dungeonName=' + randomDungeonName + '&connectingDoorX=' + centreDoorX + '&connectingDoorY=' + centreDoorY;
          
     }
     currentMap = newMap;
