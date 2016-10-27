@@ -167,6 +167,9 @@ cardGameNameSpace.playerColours= ["", "#ffcc00", "#ff00cc"];
         whichCards[cardRef].currentOwner = currentPlayersTurn;
         whichCards[cardRef].flippedAnimation = 10;
         whichCards[cardRef].zIndex = 1;
+        if(currentPlayersTurn == 2) {
+             hero.stats.numberOfcardsFlipped ++;
+        }
     },
 
     canvasClick: function(e) {

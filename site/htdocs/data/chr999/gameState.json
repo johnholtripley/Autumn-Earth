@@ -92,5 +92,10 @@
             "inscription": ""
         }
     },
-    "cards": [6,5,4,4,4,4,4,4,4,4,4,4,4,4,4]
+    "cards": [6,5,4,4,4,4,4,4,4,4,4,4,4,4,4],
+    "stats": {
+        "cardGamesWon": 0,
+        "cardGamesLost": 0,
+        "numberOfcardsFlipped": 0
+    }
 }

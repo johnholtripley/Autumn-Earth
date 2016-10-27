@@ -45,6 +45,8 @@ function getHeroGameState() {
         newMap = currentMap;
         hero.bags = data.bags;
         hero.cards = data.cards;
+        hero.stats = data.stats;
+        console.log(data.stats.numberOfcardsFlipped);
         hero.inventory = data.inventory;
         if (currentMap > 0) {
             //clean old procedural maps: (don't need a response here)

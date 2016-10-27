@@ -21,7 +21,9 @@ cardGameNameSpace.player1Skill = player1Skill;
 
 
 
-
+hero.stats.cardGamesWon = 0;
+hero.stats.cardGamesLost = 0;
+hero.stats.numberOfcardsFlipped = 0;
 
 
 // -----------------------------------------------------------
