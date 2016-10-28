@@ -167,6 +167,7 @@ var whichTransitionEvent = '';
 
 var activeNPCForDialogue = '';
 var closeDialogueDistance = 200;
+var canCloseDialogueBalloonNextClick = false;
 
 var boosterCardsRevealed = 0;
 var boosterCardsToAdd = [];
@@ -1792,29 +1793,51 @@ function checkForActions() {
         if (thisNPC.speech) {
             if (isInRange(hero.x, hero.y, thisNPC.x, thisNPC.y, (thisNPC.width + hero.width))) {
                 if (isFacing(hero, thisNPC)) {
-
-                    if (thisNPC.speechIndex >= thisNPC.speech.length) {
+// if at the end of the NPC's speech list, or the dialogue isn't part of the NPC's normal speech list, then close the balloon with an action click:
+                    if ((thisNPC.speechIndex >= thisNPC.speech.length) || (canCloseDialogueBalloonNextClick && activeNPCForDialogue == thisNPC)) {
                         thisNPC.speechIndex = 0;
                         dialogue.classList.remove("active");
                         activeNPCForDialogue = '';
+                        canCloseDialogueBalloonNextClick = false;
                     } else {
                         var thisSpeech = thisNPC.speech[thisNPC.speechIndex][0];
                         var thisSpeechCode = thisNPC.speech[thisNPC.speechIndex][1];
                         thisNPC.drawnFacing = turntoFace(thisNPC, hero);
-                        processSpeech(thisNPC, thisSpeech, thisSpeechCode);
-                     
+                        processSpeech(thisNPC, thisSpeech, thisSpeechCode, true);
+                        
+                     thisNPC.speechIndex++;
                     }
                 }
             }
         }
     }
-
-
-
     // action processed, so cancel the key event:
     key[4] = 0;
 }
 
+function processSpeech(thisNPC, thisSpeech, thisSpeechCode, isPartOfNPCsNormalSpeech) {
+    // isPartOfNPCsNormalSpeech is false if not set:
+    isPartOfNPCsNormalSpeech = typeof isPartOfNPCsNormalSpeech !== 'undefined' ? isPartOfNPCsNormalSpeech : false;
+    UI.showDialogue(thisNPC, thisSpeech);
+    switch (thisSpeechCode) {
+        case "once":
+            thisNPC.speech.splice(thisNPC.speechIndex, 1);
+            // knock this back one so to keep it in step with the removed item:
+            thisNPC.speechIndex--;
+            break;
+        case "play":
+            startCardGame(thisNPC);
+            break;
+        default:
+            // nothing
+    }
+    canCloseDialogueBalloonNextClick = false;
+    if(!isPartOfNPCsNormalSpeech) {
+        // set a flag so that pressing action near the NPC will close the balloon:
+        canCloseDialogueBalloonNextClick = true;
+
+    }
+}
 
 
 function checkForChallenges() {
@@ -1830,29 +1853,6 @@ function checkForChallenges() {
     // challenge processed, so cancel the key event:
     key[6] = 0;
 }
-
-
-
-function processSpeech(thisNPC, thisSpeech, thisSpeechCode) {
-    switch (thisSpeechCode) {
-        case "once":
-            thisNPC.speech.splice(thisNPC.speechIndex, 1);
-            UI.showDialogue(thisNPC, thisSpeech);
-            break;
-        case "play":
-        UI.showDialogue(thisNPC, thisSpeech);
-            startCardGame(thisNPC);
-            break;
-        default:
-            UI.showDialogue(thisNPC, thisSpeech);
-            
-                thisNPC.speechIndex++;
-            
-    }
-}
-
-
-
 
 function moveNPCs() {
     var thisNPC, newTile, thisNextMovement, oldNPCx, oldNPCy;
