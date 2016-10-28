@@ -1819,25 +1819,31 @@ function processSpeech(thisNPC, thisSpeech, thisSpeechCode, isPartOfNPCsNormalSp
     // isPartOfNPCsNormalSpeech is false if not set:
     isPartOfNPCsNormalSpeech = typeof isPartOfNPCsNormalSpeech !== 'undefined' ? isPartOfNPCsNormalSpeech : false;
     UI.showDialogue(thisNPC, thisSpeech);
-    switch (thisSpeechCode) {
-        case "once":
-            thisNPC.speech.splice(thisNPC.speechIndex, 1);
-            // knock this back one so to keep it in step with the removed item:
-            thisNPC.speechIndex--;
-            break;
-        case "play":
-            startCardGame(thisNPC);
-            break;
-        default:
-            // nothing
+
+
+    individualSpeechCodes = thisSpeechCode.split(",");
+    for (var i = 0; i < individualSpeechCodes.length; i++) {
+        switch (individualSpeechCodes[i]) {
+            case "once":
+                thisNPC.speech.splice(thisNPC.speechIndex, 1);
+                // knock this back one so to keep it in step with the removed item:
+                thisNPC.speechIndex--;
+                break;
+            case "play":
+                startCardGame(thisNPC);
+                break;
+            default:
+                // nothing
+        }
     }
     canCloseDialogueBalloonNextClick = false;
-    if(!isPartOfNPCsNormalSpeech) {
+    if (!isPartOfNPCsNormalSpeech) {
         // set a flag so that pressing action near the NPC will close the balloon:
         canCloseDialogueBalloonNextClick = true;
 
     }
 }
+
 
 
 function checkForChallenges() {
