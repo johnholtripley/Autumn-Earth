@@ -44,7 +44,19 @@ $media = $connection->upload('media/upload', ['media' => $_SERVER['DOCUMENT_ROOT
 
 
 
+$data = [
+  'media_id' => $media->media_id_string,
+  'alt_text' => [
+    'text' => 'An image generated in the style of a medieval Herbarium'
+  ]
+];
+$metadata = $connection->upload('media/metadata/create', $data, null, true);
 
+//$status = $connection->post('statuses/update', ['status' => 'kitten', 'media_ids' => $media->media_id_string]);
+
+
+
+/*
 
 
 $altText = (object) ['text' => 'An image generated in the style of a medieval Herbarium'];
@@ -55,7 +67,7 @@ $parameters = [
 $result = $connection->post('media/metadata/create', $parameters);
 
 var_dump($result);
-
+*/
 $textString = $latinName."\r\n".'('.$commonNameString.')';
 $textString .= "\r\n".$startingText;
 
