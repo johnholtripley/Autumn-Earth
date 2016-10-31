@@ -1642,7 +1642,9 @@ if (activeNPCForDialogue != '') {
 }
 
 function heroIsInNewTile() {
+    if(currentMap<0) {
     updateCartographicMiniMap();
+}
 }
 
 
