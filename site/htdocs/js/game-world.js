@@ -1853,8 +1853,10 @@ function checkForChallenges() {
         thisNPC = thisMapData.npcs[i];
         if (isInRange(hero.x, hero.y, thisNPC.x, thisNPC.y, (thisNPC.width + hero.width))) {
             if (isFacing(hero, thisNPC)) {
+                if(thisNPC.cardGameSpeech) {
                 thisNPC.drawnFacing = turntoFace(thisNPC, hero);
                 processSpeech(thisNPC, thisNPC.cardGameSpeech.challenge[0], thisNPC.cardGameSpeech.challenge[1]);
+            }
             }
         }
     }
