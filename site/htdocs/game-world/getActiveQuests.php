@@ -1,6 +1,11 @@
 <?php
+
+include($_SERVER['DOCUMENT_ROOT']."/includes/signalnoise.php");
+include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
+
 $chr = $_GET["chr"];
-?>
+
+/*
 {
 	"quests": {
 		"1": {
@@ -34,8 +39,44 @@ $chr = $_GET["chr"];
 	}
 }
 
+*/
 
 
+$query = "SELECT * FROM tblQuests";
+$result = mysql_query($query) or die ();
 
+$outputJson = '{"quests": {';
 
+while ($row = mysql_fetch_array($result)) {
+	extract($row);
+	$outputJson .= '"'.$questID.'": {';
+	$outputJson .= '"isRepeatable": "'.$isRepeatable.'",';
+	$outputJson .= '"startItemsReceived": "'.$startItemsReceived.'",';
+	$outputJson .= '"itemsReceivedOnCompletion": "'.$itemsReceivedOnCompletion.'",';
+	$outputJson .= '"whatIsRequiredForCompletion": "'.$whatIsRequiredForCompletion.'",';
 
+	switch ($whatIsRequiredForCompletion) {
+		case "possess":
+		case "give":
+		case "":
+		$outputJson .= '"itemsNeededForCompletion": "'.$itemsNeededForCompletion.'",';
+		break;
+		case "world":
+		$outputJson .= '"hasBeenActivated": "'.$hasBeenActivated.'",';
+		break;
+		default:
+		$outputJson .= '"thresholdNeededForCompletion": "'.$thresholdNeededForCompletion.'",';
+		$outputJson .= '"valueAtQuestStart": "",';
+	}
+
+	$outputJson .= '"titleGainedAfterCompletion": "'.$titleGainedAfterCompletion.'"';
+	$outputJson .= '},';
+}
+
+// remove last comma:
+$outputJson = rtrim($outputJson, ",");
+
+$outputJson .= '}}';
+
+echo $outputJson;
+?>

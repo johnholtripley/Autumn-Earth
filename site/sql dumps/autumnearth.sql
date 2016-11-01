@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 31, 2016 at 11:10 AM
+-- Generation Time: Nov 01, 2016 at 01:55 PM
 -- Server version: 5.6.24
 -- PHP Version: 5.6.8
 
@@ -1164,16 +1164,20 @@ CREATE TABLE IF NOT EXISTS `tblquests` (
   `startItemsReceived` varchar(255) DEFAULT NULL,
   `itemsNeededForCompletion` varchar(255) DEFAULT NULL,
   `itemsReceivedOnCompletion` varchar(255) DEFAULT NULL,
-  `whatHappensOnCompletion` int(11) NOT NULL,
-  `titleGainedAfterCompletion` int(11) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+  `whatIsRequiredForCompletion` varchar(128) NOT NULL,
+  `titleGainedAfterCompletion` int(11) NOT NULL,
+  `hasBeenActivated` tinyint(1) NOT NULL,
+  `thresholdNeededForCompletion` varchar(128) NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblquests`
 --
 
-INSERT INTO `tblquests` (`questID`, `journalTitle`, `journalDesc`, `isRepeatable`, `startItemsReceived`, `itemsNeededForCompletion`, `itemsReceivedOnCompletion`, `whatHappensOnCompletion`, `titleGainedAfterCompletion`) VALUES
-(1, 'A hero''s journey', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 0, '', '', '', 0, 0);
+INSERT INTO `tblquests` (`questID`, `journalTitle`, `journalDesc`, `isRepeatable`, `startItemsReceived`, `itemsNeededForCompletion`, `itemsReceivedOnCompletion`, `whatIsRequiredForCompletion`, `titleGainedAfterCompletion`, `hasBeenActivated`, `thresholdNeededForCompletion`) VALUES
+(1, 'A hero''s journey', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 0, '14,17', '5x16,12', '2x18', 'possess', 4, 0, ''),
+(2, 'An unexpected journey', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 0, '', '', '18,20', 'world', 0, 1, ''),
+(3, 'A longer journey', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 1, '', '', '', 'hero.stats.cardsFlipped', 0, 0, '10');
 
 -- --------------------------------------------------------
 
@@ -1721,7 +1725,7 @@ ALTER TABLE `tblposts`
 -- AUTO_INCREMENT for table `tblquests`
 --
 ALTER TABLE `tblquests`
-  MODIFY `questID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
+  MODIFY `questID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT for table `tblsavedsearches`
 --
