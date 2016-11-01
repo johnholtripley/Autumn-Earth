@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 01, 2016 at 01:55 PM
+-- Generation Time: Nov 01, 2016 at 02:52 PM
 -- Server version: 5.6.24
 -- PHP Version: 5.6.8
 
@@ -1165,19 +1165,20 @@ CREATE TABLE IF NOT EXISTS `tblquests` (
   `itemsNeededForCompletion` varchar(255) DEFAULT NULL,
   `itemsReceivedOnCompletion` varchar(255) DEFAULT NULL,
   `whatIsRequiredForCompletion` varchar(128) NOT NULL,
-  `titleGainedAfterCompletion` int(11) NOT NULL,
+  `titleGainedAfterCompletion` int(11) DEFAULT NULL,
   `hasBeenActivated` tinyint(1) NOT NULL,
   `thresholdNeededForCompletion` varchar(128) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblquests`
 --
 
 INSERT INTO `tblquests` (`questID`, `journalTitle`, `journalDesc`, `isRepeatable`, `startItemsReceived`, `itemsNeededForCompletion`, `itemsReceivedOnCompletion`, `whatIsRequiredForCompletion`, `titleGainedAfterCompletion`, `hasBeenActivated`, `thresholdNeededForCompletion`) VALUES
-(1, 'A hero''s journey', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 0, '14,17', '5x16,12', '2x18', 'possess', 4, 0, ''),
-(2, 'An unexpected journey', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 0, '', '', '18,20', 'world', 0, 1, ''),
-(3, 'A longer journey', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 1, '', '', '', 'hero.stats.cardsFlipped', 0, 0, '10');
+(1, 'A hero''s journey', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 0, '5,9', '5x19', '2x21', 'possess', 4, 0, ''),
+(2, 'An unexpected journey', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 0, '', '', '9,14', 'world', NULL, 1, ''),
+(3, 'A longer journey', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 1, '', '', '', 'hero.stats.cardsFlipped', NULL, 0, '10'),
+(4, 'A hero''s peregrination', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 0, '5,9', '5x19', '2x21,9', 'give', 7, 0, '');
 
 -- --------------------------------------------------------
 
@@ -1436,6 +1437,30 @@ INSERT INTO `tblthreads` (`threadID`, `forumID`, `accountID`, `viewCount`, `Crea
 (49, 1, 48, 0, '2015-08-07 13:21:23', '2', '0', 'massive post', 'bug-reports/massive-post', 222, 1),
 (50, 2, 48, 1, '2015-08-07 13:53:47', '2', '0', 'hidden in the middle', 'suggestions/hidden-in-the-middle', 223, 1);
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tbltitles`
+--
+
+CREATE TABLE IF NOT EXISTS `tbltitles` (
+  `titleID` int(11) NOT NULL,
+  `titleName` varchar(128) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `tbltitles`
+--
+
+INSERT INTO `tbltitles` (`titleID`, `titleName`) VALUES
+(1, 'of Croft'),
+(2, 'spider friend'),
+(3, 'master craftsperson'),
+(4, 'of Burntwood'),
+(5, 'the fortunate'),
+(6, 'collector'),
+(7, 'expert collector');
+
 --
 -- Indexes for dumped tables
 --
@@ -1603,6 +1628,12 @@ ALTER TABLE `tblthreads`
   ADD PRIMARY KEY (`threadID`);
 
 --
+-- Indexes for table `tbltitles`
+--
+ALTER TABLE `tbltitles`
+  ADD PRIMARY KEY (`titleID`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -1725,7 +1756,7 @@ ALTER TABLE `tblposts`
 -- AUTO_INCREMENT for table `tblquests`
 --
 ALTER TABLE `tblquests`
-  MODIFY `questID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
+  MODIFY `questID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=5;
 --
 -- AUTO_INCREMENT for table `tblsavedsearches`
 --
@@ -1741,6 +1772,11 @@ ALTER TABLE `tblsubscribedthreads`
 --
 ALTER TABLE `tblthreads`
   MODIFY `threadID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=51;
+--
+-- AUTO_INCREMENT for table `tbltitles`
+--
+ALTER TABLE `tbltitles`
+  MODIFY `titleID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=8;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

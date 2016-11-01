@@ -78,7 +78,7 @@
             "hallmark": 0,
             "inscription": ""
         },
-                "1-4": {
+        "1-4": {
             "type": 14,
             "quantity": 3,
             "quality": 100,
@@ -92,10 +92,12 @@
             "inscription": ""
         }
     },
-    "cards": [6,5,4,4,4,4,4,4,4,4,4,4,4,4,4],
+    "cards": [6, 5, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4],
     "stats": {
         "cardGamesWon": 0,
         "cardGamesLost": 0,
         "numberOfcardsFlipped": 0
-    }
+    },
+    "titlesEarned": "3,7",
+    "activeTitle": "3"
 }
