@@ -5,7 +5,7 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
 
 
 
-$query = "SELECT * FROM tblCards";
+$query = "SELECT * FROM tblcards";
 $result = mysql_query($query) or die ();
 
 $outputJson = '{ "cards":[';

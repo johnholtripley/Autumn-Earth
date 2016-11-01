@@ -17,7 +17,7 @@ for($i=0;$i<count($allIds);$i++) {
 	$titleIdString .= intval($allIds[$i]);
 }
 
-$query = "SELECT * FROM tblTitles where titleID in (".$titleIdString.")";
+$query = "SELECT * FROM tbltitles where titleid in (".$titleIdString.")";
 $result = mysql_query($query) or die ();
 
 

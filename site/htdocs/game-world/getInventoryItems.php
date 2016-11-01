@@ -17,7 +17,7 @@ for($i=0;$i<count($allIds);$i++) {
 	$itemIdString .= intval($allIds[$i]);
 }
 
-$query = "SELECT * FROM tblinventoryitems where itemID in (".$itemIdString.")";
+$query = "SELECT * FROM tblinventoryitems where itemid in (".$itemIdString.")";
 $result = mysql_query($query) or die ();
 
 

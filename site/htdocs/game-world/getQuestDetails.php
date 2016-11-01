@@ -42,7 +42,7 @@ $chr = $_GET["chr"];
 */
 
 
-$query = "SELECT * FROM tblQuests";
+$query = "SELECT * FROM tblquests";
 $result = mysql_query($query) or die ();
 
 $outputJson = '{"quests": {';

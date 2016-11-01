@@ -34,9 +34,9 @@ $playerId=$_GET["playerId"];
 $dungeonName=$_GET["dungeonName"];
 
 if($format == "xml") {
-$fileToUse = "data/chr".$playerId."/dungeon/".$dungeonName."/".$requestedMap.".xml";
+$fileToUse = "../data/chr".$playerId."/dungeon/".$dungeonName."/".$requestedMap.".xml";
 } else {
-$fileToUse = "data/chr".$playerId."/dungeon/".$dungeonName."/".$requestedMap.".json";
+$fileToUse = "../data/chr".$playerId."/dungeon/".$dungeonName."/".$requestedMap.".json";
 }
 
 $plotChests = false;
@@ -55,7 +55,7 @@ if (is_numeric($playerId)) {
     if (is_numeric($requestedMap)) {
 
 
-$mapFilename = "data/chr".$playerId."/cartography/".$dungeonName."/".$requestedMap.".jpg";
+$mapFilename = "../data/chr".$playerId."/cartography/".$dungeonName."/".$requestedMap.".jpg";
   if ((is_file($mapFilename)) && (!$debug) && (!$update)) {
   
             header("Location: ".$protocol.$_SERVER['SERVER_NAME'] . "/".$mapFilename);
@@ -147,7 +147,7 @@ $mapCanvas = imagecreatetruecolor($canvaDimension, $canvaDimension);
 
 if($update) {
 // use previous map as the ground
-$originalMap = imagecreatefromjpeg("data/chr".$playerId."/cartography/".$dungeonName."/".$session."/".$requestedMap.".jpg");
+$originalMap = imagecreatefromjpeg("../data/chr".$playerId."/cartography/".$dungeonName."/".$session."/".$requestedMap.".jpg");
 // double the size of this to match the newly drawn one:
 
 
@@ -997,20 +997,20 @@ if($debug) {
 
 
 
-if (!file_exists("data/chr".$playerId."/cartography")) {
-    mkdir("data/chr".$playerId."/cartography", 0777, true);
+if (!file_exists("../data/chr".$playerId."/cartography")) {
+    mkdir("../data/chr".$playerId."/cartography", 0777, true);
 }
 
 
 
-if (!file_exists("data/chr".$playerId."/cartography/".$dungeonName)) {
-    mkdir("data/chr".$playerId."/cartography/".$dungeonName, 0777, true);
+if (!file_exists("../data/chr".$playerId."/cartography/".$dungeonName)) {
+    mkdir("../data/chr".$playerId."/cartography/".$dungeonName, 0777, true);
 }
 
 
 
 
-$mapFilename = "data/chr".$playerId."/cartography/".$dungeonName."/".$requestedMap.".jpg";
+$mapFilename = "../data/chr".$playerId."/cartography/".$dungeonName."/".$requestedMap.".jpg";
 
 
 
