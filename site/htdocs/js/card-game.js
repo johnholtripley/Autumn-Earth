@@ -20,7 +20,9 @@ cardGameNameSpace.player2Cards = player2Cards;
 cardGameNameSpace.player1Skill = player1Skill;
 
 
-
+var hero = {
+stats: []
+}
 hero.stats.cardGamesWon = 0;
 hero.stats.cardGamesLost = 0;
 hero.stats.numberOfcardsFlipped = 0;
