@@ -161,6 +161,8 @@ var previousZoneName = "";
 var currentActiveInventoryItems = [];
 var maxNumberOfItemsPerSlot = 20;
 
+var activeTitles = [];
+
 var inventoryInterfaceIsBuilt = false;
 
 var whichTransitionEvent = '';
@@ -1100,7 +1102,9 @@ function getHeroGameState() {
         hero.bags = data.bags;
         hero.cards = data.cards;
         hero.stats = data.stats;
-        console.log(data.stats.numberOfcardsFlipped);
+        hero.titlesEarned = data.titlesEarned;
+        hero.activeTitle = data.activeTitle;
+       
         hero.inventory = data.inventory;
         if (currentMap > 0) {
             //clean old procedural maps: (don't need a response here)
@@ -1126,7 +1130,7 @@ function loadCoreAssets() {
 function prepareCoreAssets() {
     heroImg = Loader.getImage("heroImg");
 
-    loadCardData();
+    loadTitles();
     
 }
 
@@ -1247,8 +1251,16 @@ if(itemGraphicsToLoad[i].colour) {
     Loader.preload(imagesToLoad, prepareGame, loadingProgress);
 }
 
-
-
+function loadTitles() {
+    var itemIdsToGet = hero.titlesEarned.join("|");
+    getJSON("/game-world/getActiveTitles.php?whichIds=" + itemIdsToGet, function(data) {
+        activeTitles = data;
+        loadCardData();
+    }, function(status) {
+        // try again:
+        loadTitles();
+    });
+}
 
 
 function findInventoryItemData() {

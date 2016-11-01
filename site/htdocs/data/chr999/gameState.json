@@ -98,6 +98,6 @@
         "cardGamesLost": 0,
         "numberOfcardsFlipped": 0
     },
-    "titlesEarned": "3,7",
+    "titlesEarned": [3,7],
     "activeTitle": "3"
 }

@@ -38,6 +38,8 @@ var previousZoneName = "";
 var currentActiveInventoryItems = [];
 var maxNumberOfItemsPerSlot = 20;
 
+var activeTitles = [];
+
 var inventoryInterfaceIsBuilt = false;
 
 var whichTransitionEvent = '';
