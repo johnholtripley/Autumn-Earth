@@ -51,6 +51,8 @@ var canCloseDialogueBalloonNextClick = false;
 var boosterCardsRevealed = 0;
 var boosterCardsToAdd = [];
 
+var questData = [];
+
 // key bindings
 var key = [0, 0, 0, 0, 0, 0];
 

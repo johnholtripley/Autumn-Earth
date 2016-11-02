@@ -82,6 +82,22 @@ function getXOffsetFromHeight(height) {
 }
 */
 
+function accessDynamicVariable(variableToUse) {
+
+                            var variableComponents = variableToUse.split(".");
+                            switch (variableComponents.length) {
+                                case 1:
+                                    return window[variableToUse];
+                                    break;
+                                case 2:
+                                    return window[variableComponents[0]][variableComponents[1]];
+                                    break;
+                                case 3:
+                                    return window[variableComponents[0]][variableComponents[1]][variableComponents[2]];
+                                    break;
+                            }
+}
+
  function getObjectKeysForInnerValue( testObject, value, attribute ) {
     console.log("looking for "+value);
     // return an array of all keys in the object that have a value that match the one passed in

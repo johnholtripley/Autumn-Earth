@@ -74,7 +74,7 @@ function loadCoreAssets() {
 function prepareCoreAssets() {
     heroImg = Loader.getImage("heroImg");
 
-    loadTitles();
+    getQuestDetails();
     
 }
 
@@ -203,6 +203,17 @@ function loadTitles() {
     }, function(status) {
         // try again:
         loadTitles();
+    });
+}
+
+function getQuestDetails() {
+    
+    getJSON("/game-world/getQuestDetails.php?chr=" + characterId, function(data) {
+        questData = data.quests;
+        loadTitles();
+    }, function(status) {
+        // try again:
+        getQuestDetails();
     });
 }
 
@@ -776,8 +787,6 @@ function checkForActions() {
 function processSpeech(thisNPC, thisSpeech, thisSpeechCode, isPartOfNPCsNormalSpeech) {
     // isPartOfNPCsNormalSpeech is false if not set:
     isPartOfNPCsNormalSpeech = typeof isPartOfNPCsNormalSpeech !== 'undefined' ? isPartOfNPCsNormalSpeech : false;
-    UI.showDialogue(thisNPC, thisSpeech);
-
 
     individualSpeechCodes = thisSpeechCode.split(",");
     for (var i = 0; i < individualSpeechCodes.length; i++) {
@@ -787,6 +796,64 @@ function processSpeech(thisNPC, thisSpeech, thisSpeechCode, isPartOfNPCsNormalSp
                 // knock this back one so to keep it in step with the removed item:
                 thisNPC.speechIndex--;
                 break;
+            case "quest":
+                var questSpeech = thisSpeech.split("|");
+                var questId = thisNPC.speech[thisNPC.speechIndex][2];
+
+                if (questData[questId].isUnderway) {
+                    // quest has been opened - check if it's complete:
+                    switch (questData[questId].whatIsRequiredForCompletion) {
+                        case "possess":
+                        case "give":
+                        case "":
+                            // check items ###
+                            break;
+                        case "world":
+                            // check hasBeenActivated ###
+                            break;
+                        default:
+                            // threshold quest:
+                            var thresholdValueAtStart = questData[questId].valueAtQuestStart;
+                            var currentThresholdValue = accessDynamicVariable(questData[questId].whatIsRequiredForCompletion);
+
+                            if (currentThresholdValue - thresholdValueAtStart >= accessDynamicVariable(questData[questId].thresholdNeededForCompletion)) {
+                                // threshold quest is complete:
+                                thisSpeech = questSpeech[2];
+                                // remove quest text now:
+                                thisNPC.speech.splice(thisNPC.speechIndex, 1);
+                                // knock this back one so to keep it in step with the removed item:
+                                thisNPC.speechIndex--;
+                            } else {
+                                // show 'underway' text:
+                                thisSpeech = questSpeech[1];
+                                // keep the NPC on this quest speech:
+                                thisNPC.speechIndex--;
+                            }
+
+                            break;
+                    }
+                } else {
+                    // open quest:
+                    switch (questData[questId].whatIsRequiredForCompletion) {
+                        case "possess":
+                        case "give":
+                        case "":
+                            // ###
+                            break;
+                        case "world":
+                            // ###
+                            break;
+                        default:
+                            // threshold quest:
+                            questData[questId].valueAtQuestStart = accessDynamicVariable(questData[questId].whatIsRequiredForCompletion);
+                            break;
+                    }
+                    thisSpeech = questSpeech[0];
+                    questData[questId].isUnderway = true;
+                    // keep the NPC on this quest speech:
+                    thisNPC.speechIndex--;
+                }
+                break;
             case "play":
                 startCardGame(thisNPC);
                 break;
@@ -794,13 +861,21 @@ function processSpeech(thisNPC, thisSpeech, thisSpeechCode, isPartOfNPCsNormalSp
                 // nothing
         }
     }
+
+    UI.showDialogue(thisNPC, thisSpeech);
+
     canCloseDialogueBalloonNextClick = false;
     if (!isPartOfNPCsNormalSpeech) {
         // set a flag so that pressing action near the NPC will close the balloon:
         canCloseDialogueBalloonNextClick = true;
-
     }
 }
+
+
+
+
+
+
 
 
 

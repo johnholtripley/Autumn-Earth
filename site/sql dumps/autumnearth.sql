@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 01, 2016 at 02:52 PM
+-- Generation Time: Nov 02, 2016 at 10:23 AM
 -- Server version: 5.6.24
 -- PHP Version: 5.6.8
 
@@ -1161,12 +1161,12 @@ CREATE TABLE IF NOT EXISTS `tblquests` (
   `journalTitle` varchar(128) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
   `journalDesc` varchar(255) DEFAULT NULL,
   `isRepeatable` tinyint(1) NOT NULL,
+  `childOf` int(11) DEFAULT NULL,
   `startItemsReceived` varchar(255) DEFAULT NULL,
   `itemsNeededForCompletion` varchar(255) DEFAULT NULL,
   `itemsReceivedOnCompletion` varchar(255) DEFAULT NULL,
   `whatIsRequiredForCompletion` varchar(128) NOT NULL,
   `titleGainedAfterCompletion` int(11) DEFAULT NULL,
-  `hasBeenActivated` tinyint(1) NOT NULL,
   `thresholdNeededForCompletion` varchar(128) NOT NULL
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 
@@ -1174,11 +1174,33 @@ CREATE TABLE IF NOT EXISTS `tblquests` (
 -- Dumping data for table `tblquests`
 --
 
-INSERT INTO `tblquests` (`questID`, `journalTitle`, `journalDesc`, `isRepeatable`, `startItemsReceived`, `itemsNeededForCompletion`, `itemsReceivedOnCompletion`, `whatIsRequiredForCompletion`, `titleGainedAfterCompletion`, `hasBeenActivated`, `thresholdNeededForCompletion`) VALUES
-(1, 'A hero''s journey', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 0, '5,9', '5x19', '2x21', 'possess', 4, 0, ''),
-(2, 'An unexpected journey', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 0, '', '', '9,14', 'world', NULL, 1, ''),
-(3, 'A longer journey', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 1, '', '', '', 'hero.stats.cardsFlipped', NULL, 0, '10'),
-(4, 'A hero''s peregrination', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 0, '5,9', '5x19', '2x21,9', 'give', 7, 0, '');
+INSERT INTO `tblquests` (`questID`, `journalTitle`, `journalDesc`, `isRepeatable`, `childOf`, `startItemsReceived`, `itemsNeededForCompletion`, `itemsReceivedOnCompletion`, `whatIsRequiredForCompletion`, `titleGainedAfterCompletion`, `thresholdNeededForCompletion`) VALUES
+(1, 'A hero''s journey', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 0, NULL, '5,9', '5x19', '2x21', 'possess', 4, ''),
+(2, 'An unexpected journey', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 0, NULL, '', '', '9,14', 'world', NULL, ''),
+(3, 'A longer journey', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 1, NULL, '', '', '', 'hero.stats.cardsFlipped', NULL, '10'),
+(4, 'A hero''s peregrination', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 0, NULL, '5,9', '5x19', '2x21,9', 'give', 7, '');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tblqueststatus`
+--
+
+CREATE TABLE IF NOT EXISTS `tblqueststatus` (
+  `questStatusID` int(11) NOT NULL,
+  `charID` int(11) DEFAULT NULL,
+  `questID` int(11) DEFAULT NULL,
+  `isUnderway` tinyint(1) NOT NULL DEFAULT '0',
+  `thresholdAtQuestStart` varchar(255) DEFAULT NULL,
+  `hasBeenActivated` tinyint(1) DEFAULT '0'
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `tblqueststatus`
+--
+
+INSERT INTO `tblqueststatus` (`questStatusID`, `charID`, `questID`, `isUnderway`, `thresholdAtQuestStart`, `hasBeenActivated`) VALUES
+(1, 0, 0, 0, NULL, 5);
 
 -- --------------------------------------------------------
 
@@ -1610,6 +1632,12 @@ ALTER TABLE `tblquests`
   ADD PRIMARY KEY (`questID`);
 
 --
+-- Indexes for table `tblqueststatus`
+--
+ALTER TABLE `tblqueststatus`
+  ADD PRIMARY KEY (`questStatusID`);
+
+--
 -- Indexes for table `tblsavedsearches`
 --
 ALTER TABLE `tblsavedsearches`
@@ -1757,6 +1785,11 @@ ALTER TABLE `tblposts`
 --
 ALTER TABLE `tblquests`
   MODIFY `questID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=5;
+--
+-- AUTO_INCREMENT for table `tblqueststatus`
+--
+ALTER TABLE `tblqueststatus`
+  MODIFY `questStatusID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT for table `tblsavedsearches`
 --

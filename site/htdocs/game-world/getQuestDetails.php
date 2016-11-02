@@ -55,6 +55,14 @@ while ($row = mysql_fetch_array($result)) {
 	$outputJson .= '"itemsReceivedOnCompletion": "'.$itemsReceivedOnCompletion.'",';
 	$outputJson .= '"whatIsRequiredForCompletion": "'.$whatIsRequiredForCompletion.'",';
 
+
+$innerquery = "SELECT * from tblquestsstatus where charid='".$chr."' AND questid='".$questID."'";
+$innerresult = mysql_query($innerquery) or die ();
+if (mysql_num_rows($innerresult)>0) {
+$innerrow = mysql_fetch_array($innerresult);
+extract($innerrow);
+	}
+
 	switch ($whatIsRequiredForCompletion) {
 		case "possess":
 		case "give":
@@ -62,11 +70,21 @@ while ($row = mysql_fetch_array($result)) {
 		$outputJson .= '"itemsNeededForCompletion": "'.$itemsNeededForCompletion.'",';
 		break;
 		case "world":
-		$outputJson .= '"hasBeenActivated": "'.$hasBeenActivated.'",';
+		if (isset($hasBeenActivated)) {
+			$outputJson .= '"hasBeenActivated": "'.$hasBeenActivated.'",';
+	}
+		
 		break;
 		default:
 		$outputJson .= '"thresholdNeededForCompletion": "'.$thresholdNeededForCompletion.'",';
+		if (isset($thresholdAtQuestStart)) {
+			$outputJson .= '"thresholdAtQuestStart": "'.$thresholdAtQuestStart.'",';
+	}
 		$outputJson .= '"valueAtQuestStart": "",';
+	}
+
+if (isset($isUnderway)) {
+			$outputJson .= '"isUnderway": "'.$isUnderway.'",';
 	}
 
 	$outputJson .= '"titleGainedAfterCompletion": "'.$titleGainedAfterCompletion.'"';

@@ -94,10 +94,10 @@
     },
     "cards": [6, 5, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4],
     "stats": {
-        "cardGamesWon": 0,
-        "cardGamesLost": 0,
-        "numberOfcardsFlipped": 0
+        "cardGamesWon": 2,
+        "cardGamesLost": 4,
+        "numberOfcardsFlipped": 8
     },
     "titlesEarned": [3,7],
-    "activeTitle": "3"
+    "activeTitle": 3
 }
