@@ -1269,6 +1269,7 @@ function loadTitles() {
     var itemIdsToGet = hero.titlesEarned.join("|");
     getJSON("/game-world/getActiveTitles.php?whichIds=" + itemIdsToGet, function(data) {
         activeTitles = data;
+        console.log(activeTitles);
         loadCardData();
     }, function(status) {
         // try again:
@@ -1679,11 +1680,35 @@ if (activeNPCForDialogue != '') {
 }
 
 function heroIsInNewTile() {
-    if(currentMap<0) {
-    updateCartographicMiniMap();
-}
+    if (currentMap < 0) {
+        updateCartographicMiniMap();
+    }
 }
 
+function showChangeInInventory(whichSlotsToUpdate) {
+
+                            
+                            // add a transition end detector to just the first element that will be changed:
+                            document.getElementById("slot" + whichSlotsToUpdate[0]).addEventListener(whichTransitionEvent, function removeSlotStatus(e) {
+                                elementList = document.querySelectorAll('#inventoryPanels .changed');
+                                for (var i = 0; i < elementList.length; i++) {
+                                    removeClass(elementList[i], 'changed');
+                                }
+                                // remove the event listener now:
+                                return e.currentTarget.removeEventListener(whichTransitionEvent, removeSlotStatus, false);
+                            }, false);
+                            // loop through the slots that have changed and update their markup:
+                            for (var j = 0; j < whichSlotsToUpdate.length; j++) {
+                                thisSlotsId = whichSlotsToUpdate[j];
+                                slotMarkup = '<img src="/images/game-world/inventory-items/' + hero.inventory[thisSlotsId].type + '.png" alt="">';
+                                slotMarkup += '<span class="qty">' + hero.inventory[thisSlotsId].quantity + '</span>';
+                                slotMarkup += '<p><em>' + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].shortname + ' </em>' + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].description + ' <span class="price">Sell price: ' + parseMoney(hero.inventory[thisSlotsId].quantity * currentActiveInventoryItems[hero.inventory[thisSlotsId].type].priceCode, 0) + '</span></p>';
+                                thisSlotElem = document.getElementById("slot" + thisSlotsId);
+                                thisSlotElem.innerHTML = slotMarkup;
+
+                                addClass(thisSlotElem, "changed");
+                            }
+                        }
 
 function canAddItemToInventory(itemObj) {
     // make copy of inventory:
@@ -1796,30 +1821,9 @@ function checkForActions() {
                         if (inventoryCheck[0]) {
                             // remove from map:
                             thisMapData.items.splice(i, 1);
-                            // visually update inventory
-                            // add a transition end detector to just the first element that will be changed:
-                            document.getElementById("slot" + inventoryCheck[1][0]).addEventListener(whichTransitionEvent, function removeSlotStatus(e) {
-                                elementList = document.querySelectorAll('#inventoryPanels .changed');
-                                for (var i = 0; i < elementList.length; i++) {
-                                    removeClass(elementList[i], 'changed');
-                                }
-                                // remove the event listener now:
-                                return e.currentTarget.removeEventListener(whichTransitionEvent, removeSlotStatus, false);
-                            }, false);
-                            // loop through the slots that have changed and update their markup:
-                            for (var j = 0; j < inventoryCheck[1].length; j++) {
-                                thisSlotsId = inventoryCheck[1][j];
-                                slotMarkup = '<img src="/images/game-world/inventory-items/' + hero.inventory[thisSlotsId].type + '.png" alt="">';
-                                slotMarkup += '<span class="qty">' + hero.inventory[thisSlotsId].quantity + '</span>';
-                                slotMarkup += '<p><em>' + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].shortname + ' </em>' + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].description + ' <span class="price">Sell price: ' + parseMoney(hero.inventory[thisSlotsId].quantity * currentActiveInventoryItems[hero.inventory[thisSlotsId].type].priceCode, 0) + '</span></p>';
-                                thisSlotElem = document.getElementById("slot" + thisSlotsId);
-                                thisSlotElem.innerHTML = slotMarkup;
-
-                                addClass(thisSlotElem, "changed");
-                            }
+                            showChangeInInventory(inventoryCheck[1]);
                         } else {
-                            // ###
-                            alert("no room in the inventory");
+                            UI.showNotification("<p>Oops - sorry, no room in your bags</p>");
                         }
                 }
             }
@@ -1832,7 +1836,7 @@ function checkForActions() {
         if (thisNPC.speech) {
             if (isInRange(hero.x, hero.y, thisNPC.x, thisNPC.y, (thisNPC.width + hero.width))) {
                 if (isFacing(hero, thisNPC)) {
-// if at the end of the NPC's speech list, or the dialogue isn't part of the NPC's normal speech list, then close the balloon with an action click:
+                    // if at the end of the NPC's speech list, or the dialogue isn't part of the NPC's normal speech list, then close the balloon with an action click:
                     if ((thisNPC.speechIndex >= thisNPC.speech.length) || (canCloseDialogueBalloonNextClick && activeNPCForDialogue == thisNPC)) {
                         thisNPC.speechIndex = 0;
                         dialogue.classList.remove("active");
@@ -1843,8 +1847,8 @@ function checkForActions() {
                         var thisSpeechCode = thisNPC.speech[thisNPC.speechIndex][1];
                         thisNPC.drawnFacing = turntoFace(thisNPC, hero);
                         processSpeech(thisNPC, thisSpeech, thisSpeechCode, true);
-                        
-                     thisNPC.speechIndex++;
+
+                        thisNPC.speechIndex++;
                     }
                 }
             }
@@ -1853,6 +1857,8 @@ function checkForActions() {
     // action processed, so cancel the key event:
     key[4] = 0;
 }
+
+
 
 function processSpeech(thisNPC, thisSpeech, thisSpeechCode, isPartOfNPCsNormalSpeech) {
     // isPartOfNPCsNormalSpeech is false if not set:
@@ -1885,15 +1891,66 @@ function processSpeech(thisNPC, thisSpeech, thisSpeechCode, isPartOfNPCsNormalSp
                             // threshold quest:
                             var thresholdValueAtStart = questData[questId].valueAtQuestStart;
                             var currentThresholdValue = accessDynamicVariable(questData[questId].whatIsRequiredForCompletion);
-
-console.log(currentThresholdValue);
-console.log(thresholdValueAtStart);
-console.log((currentThresholdValue - thresholdValueAtStart));
-console.log((questData[questId].thresholdNeededForCompletion));
-
                             if (currentThresholdValue - thresholdValueAtStart >= questData[questId].thresholdNeededForCompletion) {
+
                                 // threshold quest is complete:
                                 thisSpeech = questSpeech[2];
+
+
+                                // give any reward to the player:
+
+
+                                if (questData[questId].itemsReceivedOnCompletion) {
+                                    var questRewards = questData[questId].itemsReceivedOnCompletion.split(",");
+                                    for (var i = 0; i < questRewards.length; i++) {
+                                        // check for any quantities:
+                                        var thisQuestReward = questRewards[i].split("x");
+                                        var thisQuantity, thisItem;
+                                        if (thisQuestReward.length > 1) {
+                                            thisQuantity = thisQuestReward[0];
+                                            thisItem = thisQuestReward[1];
+                                        } else {
+                                            thisQuantity = 1;
+                                            thisItem = questRewards[i];
+                                        }
+
+// build item object:
+var thisRewardObject = {
+                "type": parseInt(thisItem),
+            "quantity": parseInt(thisQuantity),
+            "quality": 100,
+            "durability": 100,
+            "currentWear": 0,
+            "effectiveness": 100,
+            "wrapped": 0,
+            "colour": currentActiveInventoryItems[parseInt(thisItem)].colour,
+            "enchanted": 0,
+            "hallmark": 0,
+            "inscription": ""
+}
+
+
+                        inventoryCheck = canAddItemToInventory(thisRewardObject);
+                        if (inventoryCheck[0]) {
+                            showChangeInInventory(inventoryCheck[1]);
+                        } else {
+                            UI.showNotification("<p>Oops - sorry, no room in your bags</p>");
+                            // don't close quest? #########
+                        }
+
+
+                                    }
+                                }
+
+                                // check for any titles:
+                                if (questData[questId].titleGainedAfterCompletion) {
+                                    var thisTitle = questData[questId].titleGainedAfterCompletion;
+                                    if (hero.titlesEarned.indexOf(thisTitle) == -1) {
+                                        hero.titlesEarned.push(thisTitle);
+                                        UI.showNotification('<p>You earned the &quot;' + activeTitles[thisTitle] + '&quot; title</p>');
+                                    }
+                                }
+
                                 // remove quest text now:
                                 thisNPC.speech.splice(thisNPC.speechIndex, 1);
                                 // knock this back one so to keep it in step with the removed item:
