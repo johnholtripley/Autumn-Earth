@@ -83,20 +83,16 @@ function getXOffsetFromHeight(height) {
 */
 
 function accessDynamicVariable(variableToUse) {
-
-                            var variableComponents = variableToUse.split(".");
-                            switch (variableComponents.length) {
-                                case 1:
-                                    return window[variableToUse];
-                                    break;
-                                case 2:
-                                    return window[variableComponents[0]][variableComponents[1]];
-                                    break;
-                                case 3:
-                                    return window[variableComponents[0]][variableComponents[1]][variableComponents[2]];
-                                    break;
-                            }
+    var variableComponents = variableToUse.split(".");
+    var currentElement = window;
+    for (var i = 0; i < variableComponents.length; i++) {
+        if (currentElement[variableComponents[i]]) {
+            currentElement = currentElement[variableComponents[i]];
+        }
+    }
+    return currentElement;
 }
+
 
  function getObjectKeysForInnerValue( testObject, value, attribute ) {
     console.log("looking for "+value);

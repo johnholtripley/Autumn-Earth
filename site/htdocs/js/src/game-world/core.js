@@ -816,6 +816,8 @@ function processSpeech(thisNPC, thisSpeech, thisSpeechCode, isPartOfNPCsNormalSp
                             var thresholdValueAtStart = questData[questId].valueAtQuestStart;
                             var currentThresholdValue = accessDynamicVariable(questData[questId].whatIsRequiredForCompletion);
 
+
+
                             if (currentThresholdValue - thresholdValueAtStart >= accessDynamicVariable(questData[questId].thresholdNeededForCompletion)) {
                                 // threshold quest is complete:
                                 thisSpeech = questSpeech[2];
@@ -845,6 +847,9 @@ function processSpeech(thisNPC, thisSpeech, thisSpeechCode, isPartOfNPCsNormalSp
                             break;
                         default:
                             // threshold quest:
+
+
+
                             questData[questId].valueAtQuestStart = accessDynamicVariable(questData[questId].whatIsRequiredForCompletion);
                             break;
                     }
