@@ -826,10 +826,7 @@ function processSpeech(thisNPC, thisSpeech, thisSpeechCode, isPartOfNPCsNormalSp
                                 // threshold quest is complete:
                                 thisSpeech = questSpeech[2];
 
-
                                 // give any reward to the player:
-
-
                                 if (questData[questId].itemsReceivedOnCompletion) {
                                     var questRewards = questData[questId].itemsReceivedOnCompletion.split(",");
                                     for (var i = 0; i < questRewards.length; i++) {
@@ -844,29 +841,28 @@ function processSpeech(thisNPC, thisSpeech, thisSpeechCode, isPartOfNPCsNormalSp
                                             thisItem = questRewards[i];
                                         }
 
-// build item object:
-var thisRewardObject = {
-                "type": parseInt(thisItem),
-            "quantity": parseInt(thisQuantity),
-            "quality": 100,
-            "durability": 100,
-            "currentWear": 0,
-            "effectiveness": 100,
-            "wrapped": 0,
-            "colour": currentActiveInventoryItems[parseInt(thisItem)].colour,
-            "enchanted": 0,
-            "hallmark": 0,
-            "inscription": ""
-}
+                                        // build item object:
+                                        var thisRewardObject = {
+                                            "type": parseInt(thisItem),
+                                            "quantity": parseInt(thisQuantity),
+                                            "quality": 100,
+                                            "durability": 100,
+                                            "currentWear": 0,
+                                            "effectiveness": 100,
+                                            "wrapped": 0,
+                                            "colour": currentActiveInventoryItems[parseInt(thisItem)].colour,
+                                            "enchanted": 0,
+                                            "hallmark": 0,
+                                            "inscription": ""
+                                        }
 
-
-                        inventoryCheck = canAddItemToInventory(thisRewardObject);
-                        if (inventoryCheck[0]) {
-                            showChangeInInventory(inventoryCheck[1]);
-                        } else {
-                            UI.showNotification("<p>Oops - sorry, no room in your bags</p>");
-                            // don't close quest? #########
-                        }
+                                        inventoryCheck = canAddItemToInventory(thisRewardObject);
+                                        if (inventoryCheck[0]) {
+                                            showChangeInInventory(inventoryCheck[1]);
+                                        } else {
+                                            UI.showNotification("<p>Oops - sorry, no room in your bags</p>");
+                                            // don't close quest? #########
+                                        }
 
 
                                     }
@@ -907,9 +903,6 @@ var thisRewardObject = {
                             break;
                         default:
                             // threshold quest:
-
-
-
                             questData[questId].valueAtQuestStart = accessDynamicVariable(questData[questId].whatIsRequiredForCompletion);
                             break;
                     }
@@ -935,6 +928,7 @@ var thisRewardObject = {
         canCloseDialogueBalloonNextClick = true;
     }
 }
+
 
 
 

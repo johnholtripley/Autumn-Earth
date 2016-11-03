@@ -201,7 +201,7 @@
                 "isMoving": false,
                 "speechIndex": 0,
                 "speech": [
-                    ["open quest|quest open but not complete|complete - good work", "quest", "3"],
+                    ["Flip at least 2 cards|quest open but not complete|complete - good work", "quest", "3"],
                     ["after quest",""]
                 ],
                 "cardGameSpeech": {
