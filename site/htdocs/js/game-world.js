@@ -310,13 +310,14 @@ function accessDynamicVariable(variableToUse) {
 
 
  function getObjectKeysForInnerValue( testObject, value, attribute ) {
-    console.log("looking for "+value);
+   // console.log("looking for "+value);
     // return an array of all keys in the object that have a value that match the one passed in
    var keysFound = [];
     for(var prop in testObject) {
         if( testObject.hasOwnProperty(prop)) {
-            console.log("checking:"+testObject[prop][attribute]);
+       //     console.log("checking:"+testObject[prop][attribute]);
              if(testObject[prop][attribute] === value) {
+
                  keysFound.push(prop);
              }
         }
@@ -899,6 +900,126 @@ var Input = {
     }
 }
 
+function canAddItemToInventory(itemObj) {
+    // takes an array of objects and checks if all of them can be added before adding any of them
+    // make copy of inventory:
+    var inventoryClone = JSON.parse(JSON.stringify(hero.inventory));
+    var slotsUpdated = [];
+    var allItemsAdded = true;
+    for (var k = 0; k < itemObj.length; k++) {
+        var quantityAddedSoFar = 0;
+        // check if this type exist in the current inventory:
+        var inventoryKeysFound = getObjectKeysForInnerValue(inventoryClone, itemObj[k].type, "type");
+        if (inventoryKeysFound.length > 0) {
+            // loop through keysFound and add to the slot maximum
+            for (var i = 0; i < inventoryKeysFound.length; i++) {
+                if (itemAttributesMatch(inventoryClone[inventoryKeysFound[i]], itemObj[k])) {
+                    var quantityOnSlotAlready = inventoryClone[inventoryKeysFound[i]].quantity;
+                    var amountAddedToThisSlot = (maxNumberOfItemsPerSlot - quantityOnSlotAlready) > (itemObj[k].quantity - quantityAddedSoFar) ? (itemObj[k].quantity - quantityAddedSoFar) : maxNumberOfItemsPerSlot - quantityOnSlotAlready;
+                    quantityAddedSoFar += amountAddedToThisSlot;
+                    // add item to this slot:
+
+                    slotsUpdated.push((inventoryKeysFound[i]));
+                    inventoryClone[inventoryKeysFound[i]].quantity += amountAddedToThisSlot;
+                    if (quantityAddedSoFar >= itemObj[k].quantity) {
+                        break;
+                    }
+                }
+            }
+        }
+        if (quantityAddedSoFar < itemObj[k].quantity) {
+            // either filled all matching slots, or couldn't find any matching slots - find an empty slot
+            outerLoop: for (var i = 0; i < hero.bags.length; i++) {
+                var thisBagNumberOfSlots = currentActiveInventoryItems[hero.bags[i].type].actionValue;
+                // loop through slots for each bag:
+                for (var j = 0; j < thisBagNumberOfSlots; j++) {
+                    var thisSlotsID = i + '-' + j;
+                    if (!(thisSlotsID in inventoryClone)) {
+                        // empty slot:
+                        var amountAddedToThisSlot = maxNumberOfItemsPerSlot > (itemObj[k].quantity - quantityAddedSoFar) ? (itemObj[k].quantity - quantityAddedSoFar) : maxNumberOfItemsPerSlot;
+                        quantityAddedSoFar += amountAddedToThisSlot;
+                        // add item to this slot:
+                        slotsUpdated.push(thisSlotsID);
+                        inventoryClone[thisSlotsID] = new Object();
+                        inventoryClone[thisSlotsID].type = itemObj[k].type;
+                        inventoryClone[thisSlotsID].quantity = amountAddedToThisSlot;
+                        inventoryClone[thisSlotsID].quality = itemObj[k].quality;
+                        inventoryClone[thisSlotsID].durability = itemObj[k].durability;
+                        inventoryClone[thisSlotsID].currentWear = itemObj[k].currentWear;
+                        inventoryClone[thisSlotsID].effectiveness = itemObj[k].effectiveness;
+                        inventoryClone[thisSlotsID].wrapped = itemObj[k].wrapped;
+                        inventoryClone[thisSlotsID].colour = itemObj[k].colour;
+                        inventoryClone[thisSlotsID].enchanted = itemObj[k].enchanted;
+                        inventoryClone[thisSlotsID].hallmark = itemObj[k].hallmark;
+                        inventoryClone[thisSlotsID].inscription = itemObj[k].inscription;
+                        if (quantityAddedSoFar >= itemObj[k].quantity) {
+                            // stop both loops:
+                            break outerLoop;
+                        }
+                    }
+                }
+            }
+        }
+        if (quantityAddedSoFar != itemObj[k].quantity) {
+            allItemsAdded = false;
+        }
+    }
+    if (allItemsAdded) {
+        // make the active inventory be the same as the amended one:
+        hero.inventory = JSON.parse(JSON.stringify(inventoryClone));
+        // return success, and the slots that were affected:
+        return [true, slotsUpdated];
+    } else {
+        // don't change the current inventory - return false:
+        return [false];
+    }
+}
+
+
+function hasItemInInventory(itemType, amountNeeded) {
+    var quantityFound = 0;
+    console.log(amountNeeded+" of "+itemType);
+    var inventoryKeysFound = getObjectKeysForInnerValue(hero.inventory, parseInt(itemType), "type");
+
+console.log(inventoryKeysFound);
+    if (inventoryKeysFound.length > 0) {
+
+        for (var i = 0; i < inventoryKeysFound.length; i++) {
+            quantityFound += hero.inventory[inventoryKeysFound[i]].quantity;
+        }
+
+    }
+    if (quantityFound >= amountNeeded) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+
+
+
+function removeFromInventory(whichSlot, amount) {
+    var thisCurrentQuantity = hero.inventory[whichSlot].quantity;
+    var thisSlotElem = document.getElementById("slot" + whichSlot);
+    if (thisCurrentQuantity - amount > 0) {
+        // just reduce quantity:
+        hero.inventory[whichSlot].quantity -= amount;
+        // update visually:
+        for (var i = 0; i < thisSlotElem.childNodes.length; i++) {
+            if (thisSlotElem.childNodes[i].className == "qty") {
+                thisSlotElem.childNodes[i].innerHTML = hero.inventory[whichSlot].quantity;
+                break;
+            }
+        }
+    } else {
+        // remove the item:
+        delete hero.inventory[whichSlot];
+        // update visually:
+        thisSlotElem.innerHTML = '<img alt="Empty slot" src="/images/game-world/inventory-items/blank.png">';
+    }
+}
+
 var KeyBindings = {
     'left': 37,
     'right': 39,
@@ -980,6 +1101,32 @@ dataActionMarkup = 'data-action="'+thisAction+'" ';
         inventoryInterfaceIsBuilt = true;
     },
 
+
+
+showChangeInInventory: function(whichSlotsToUpdate) {
+
+                            
+                            // add a transition end detector to just the first element that will be changed:
+                            document.getElementById("slot" + whichSlotsToUpdate[0]).addEventListener(whichTransitionEvent, function removeSlotStatus(e) {
+                                elementList = document.querySelectorAll('#inventoryPanels .changed');
+                                for (var i = 0; i < elementList.length; i++) {
+                                    removeClass(elementList[i], 'changed');
+                                }
+                                // remove the event listener now:
+                                return e.currentTarget.removeEventListener(whichTransitionEvent, removeSlotStatus, false);
+                            }, false);
+                            // loop through the slots that have changed and update their markup:
+                            for (var j = 0; j < whichSlotsToUpdate.length; j++) {
+                                thisSlotsId = whichSlotsToUpdate[j];
+                                slotMarkup = '<img src="/images/game-world/inventory-items/' + hero.inventory[thisSlotsId].type + '.png" alt="">';
+                                slotMarkup += '<span class="qty">' + hero.inventory[thisSlotsId].quantity + '</span>';
+                                slotMarkup += '<p><em>' + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].shortname + ' </em>' + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].description + ' <span class="price">Sell price: ' + parseMoney(hero.inventory[thisSlotsId].quantity * currentActiveInventoryItems[hero.inventory[thisSlotsId].type].priceCode, 0) + '</span></p>';
+                                thisSlotElem = document.getElementById("slot" + thisSlotsId);
+                                thisSlotElem.innerHTML = slotMarkup;
+
+                                addClass(thisSlotElem, "changed");
+                            }
+                        },
 
 
     handleDrag: function(e) {
@@ -1269,7 +1416,7 @@ function loadTitles() {
     var itemIdsToGet = hero.titlesEarned.join("|");
     getJSON("/game-world/getActiveTitles.php?whichIds=" + itemIdsToGet, function(data) {
         activeTitles = data;
-        console.log(activeTitles);
+       
         loadCardData();
     }, function(status) {
         // try again:
@@ -1685,97 +1832,7 @@ function heroIsInNewTile() {
     }
 }
 
-function showChangeInInventory(whichSlotsToUpdate) {
 
-                            
-                            // add a transition end detector to just the first element that will be changed:
-                            document.getElementById("slot" + whichSlotsToUpdate[0]).addEventListener(whichTransitionEvent, function removeSlotStatus(e) {
-                                elementList = document.querySelectorAll('#inventoryPanels .changed');
-                                for (var i = 0; i < elementList.length; i++) {
-                                    removeClass(elementList[i], 'changed');
-                                }
-                                // remove the event listener now:
-                                return e.currentTarget.removeEventListener(whichTransitionEvent, removeSlotStatus, false);
-                            }, false);
-                            // loop through the slots that have changed and update their markup:
-                            for (var j = 0; j < whichSlotsToUpdate.length; j++) {
-                                thisSlotsId = whichSlotsToUpdate[j];
-                                slotMarkup = '<img src="/images/game-world/inventory-items/' + hero.inventory[thisSlotsId].type + '.png" alt="">';
-                                slotMarkup += '<span class="qty">' + hero.inventory[thisSlotsId].quantity + '</span>';
-                                slotMarkup += '<p><em>' + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].shortname + ' </em>' + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].description + ' <span class="price">Sell price: ' + parseMoney(hero.inventory[thisSlotsId].quantity * currentActiveInventoryItems[hero.inventory[thisSlotsId].type].priceCode, 0) + '</span></p>';
-                                thisSlotElem = document.getElementById("slot" + thisSlotsId);
-                                thisSlotElem.innerHTML = slotMarkup;
-
-                                addClass(thisSlotElem, "changed");
-                            }
-                        }
-
-function canAddItemToInventory(itemObj) {
-    // make copy of inventory:
-    var inventoryClone = JSON.parse(JSON.stringify(hero.inventory));
-    var quantityAddedSoFar = 0;
-    var slotsUpdated = [];
-    // check if this type exist in the current inventory:
-    var inventoryKeysFound = getObjectKeysForInnerValue(inventoryClone, itemObj.type, "type");
-    if (inventoryKeysFound.length > 0) {
-        // loop through keysFound and add to the slot maximum
-        for (var i = 0; i < inventoryKeysFound.length; i++) {
-            if (itemAttributesMatch(inventoryClone[inventoryKeysFound[i]], itemObj)) {
-                var quantityOnSlotAlready = inventoryClone[inventoryKeysFound[i]].quantity;
-                var amountAddedToThisSlot = (maxNumberOfItemsPerSlot - quantityOnSlotAlready) > (itemObj.quantity - quantityAddedSoFar) ? (itemObj.quantity - quantityAddedSoFar) : maxNumberOfItemsPerSlot - quantityOnSlotAlready;
-                quantityAddedSoFar += amountAddedToThisSlot;
-                // add item to this slot:
-                slotsUpdated.push((inventoryKeysFound[i]));
-                inventoryClone[inventoryKeysFound[i]].quantity += amountAddedToThisSlot;
-                if (quantityAddedSoFar >= itemObj.quantity) {
-                    break;
-                }
-            }
-        }
-    }
-    if (quantityAddedSoFar < itemObj.quantity) {
-        // either filled all matching slots, or couldn't find any matching slots - find an empty slot
-        outerLoop: for (var i = 0; i < hero.bags.length; i++) {
-            var thisBagNumberOfSlots = currentActiveInventoryItems[hero.bags[i].type].actionValue;
-            // loop through slots for each bag:
-            for (var j = 0; j < thisBagNumberOfSlots; j++) {
-                var thisSlotsID = i + '-' + j;
-                if (!(thisSlotsID in inventoryClone)) {
-                    // empty slot:
-                    var amountAddedToThisSlot = maxNumberOfItemsPerSlot > (itemObj.quantity - quantityAddedSoFar) ? (itemObj.quantity - quantityAddedSoFar) : maxNumberOfItemsPerSlot;
-                    quantityAddedSoFar += amountAddedToThisSlot;
-                    // add item to this slot:
-                    slotsUpdated.push(thisSlotsID);
-                    inventoryClone[thisSlotsID] = new Object();
-                    inventoryClone[thisSlotsID].type = itemObj.type;
-                    inventoryClone[thisSlotsID].quantity = amountAddedToThisSlot;
-                    inventoryClone[thisSlotsID].quality = itemObj.quality;
-                    inventoryClone[thisSlotsID].durability = itemObj.durability;
-                    inventoryClone[thisSlotsID].currentWear = itemObj.currentWear;
-                    inventoryClone[thisSlotsID].effectiveness = itemObj.effectiveness;
-                    inventoryClone[thisSlotsID].wrapped = itemObj.wrapped;
-                    inventoryClone[thisSlotsID].colour = itemObj.colour;
-                    inventoryClone[thisSlotsID].enchanted = itemObj.enchanted;
-                    inventoryClone[thisSlotsID].hallmark = itemObj.hallmark;
-                    inventoryClone[thisSlotsID].inscription = itemObj.inscription;
-                    if (quantityAddedSoFar >= itemObj.quantity) {
-                        // stop both loops:
-                        break outerLoop;
-                    }
-                }
-            }
-        }
-    }
-    if (quantityAddedSoFar == itemObj.quantity) {
-        // make the active inventory be the same as the amended one:
-        hero.inventory = JSON.parse(JSON.stringify(inventoryClone));
-        // return success, and the slots that were affected:
-        return [true, slotsUpdated];
-    } else {
-        // don't change the current inventory - return false:
-        return [false];
-    }
-}
 
 
 
@@ -1817,11 +1874,13 @@ function checkForActions() {
                         break;
                     default:
                         // try and pick it up:
-                        inventoryCheck = canAddItemToInventory(thisMapData.items[i]);
+
+                        inventoryCheck = canAddItemToInventory([thisMapData.items[i]]);
+                       
                         if (inventoryCheck[0]) {
                             // remove from map:
                             thisMapData.items.splice(i, 1);
-                            showChangeInInventory(inventoryCheck[1]);
+                            UI.showChangeInInventory(inventoryCheck[1]);
                         } else {
                             UI.showNotification("<p>Oops - sorry, no room in your bags</p>");
                         }
@@ -1858,8 +1917,6 @@ function checkForActions() {
     key[4] = 0;
 }
 
-
-
 function processSpeech(thisNPC, thisSpeech, thisSpeechCode, isPartOfNPCsNormalSpeech) {
     // isPartOfNPCsNormalSpeech is false if not set:
     isPartOfNPCsNormalSpeech = typeof isPartOfNPCsNormalSpeech !== 'undefined' ? isPartOfNPCsNormalSpeech : false;
@@ -1873,6 +1930,9 @@ function processSpeech(thisNPC, thisSpeech, thisSpeechCode, isPartOfNPCsNormalSp
                 thisNPC.speechIndex--;
                 break;
             case "quest":
+            case "quest-no-open":
+            case "quest-no-close":
+            case "quest-no-open-no-close":
                 var questSpeech = thisSpeech.split("|");
                 var questId = thisNPC.speech[thisNPC.speechIndex][2];
 
@@ -1882,7 +1942,62 @@ function processSpeech(thisNPC, thisSpeech, thisSpeechCode, isPartOfNPCsNormalSp
                         case "possess":
                         case "give":
                         case "":
-                            // check items ###
+
+
+
+                            if ((individualSpeechCodes[i] == "quest") || (individualSpeechCodes[i] == "quest-no-open")) {
+                                // ie. it's not a '-no-close' speech
+                                // check items:
+                                var theseItemsNeededForCompletion = questData[questId].itemsNeededForCompletion;
+                                var allItemsFound = true;
+                                var itemsToGive = questData[questId].startItemsReceived.split(",");
+                                var allItemsToGive = [];
+                                for (var i = 0; i < itemsToGive.length; i++) {
+                                    // check for any quantities:
+                                    var thisQuestItem = itemsToGive[i].split("x");
+                                    var thisQuantity, thisItem;
+                                    if (thisQuestItem.length > 1) {
+                                        thisQuantity = thisQuestItem[0];
+                                        thisItem = thisQuestItem[1];
+                                    } else {
+                                        thisQuantity = 1;
+                                        thisItem = itemsToGive[i];
+                                    }
+
+
+                                    if (!hasItemInInventory(thisItem, thisQuantity)) {
+                                        allItemsFound = false;
+                                    }
+
+                                }
+
+
+                                if (allItemsFound) {
+                                    if (questData[questId].whatIsRequiredForCompletion == "give") {
+                                        // remove items:
+                                        // ######
+                                    }
+                                    // close quest:
+                                    thisSpeech = questSpeech[2];
+                                    checkForTitlesAwarded(questId);
+                                    giveQuestRewards(questId);
+                                    // remove quest text now:
+                                    thisNPC.speech.splice(thisNPC.speechIndex, 1);
+                                    // knock this back one so to keep it in step with the removed item:
+                                    thisNPC.speechIndex--;
+
+                                } else {
+                                    // show 'underway' text:
+                                    thisSpeech = questSpeech[1];
+                                    // keep the NPC on this quest speech:
+                                    thisNPC.speechIndex--;
+                                }
+
+
+                            }
+
+
+
                             break;
                         case "world":
                             // check hasBeenActivated ###
@@ -1891,65 +2006,28 @@ function processSpeech(thisNPC, thisSpeech, thisSpeechCode, isPartOfNPCsNormalSp
                             // threshold quest:
                             var thresholdValueAtStart = questData[questId].valueAtQuestStart;
                             var currentThresholdValue = accessDynamicVariable(questData[questId].whatIsRequiredForCompletion);
-                            if (currentThresholdValue - thresholdValueAtStart >= questData[questId].thresholdNeededForCompletion) {
 
+                            var thisQuestIsComplete = false;
+                            // check if it's an absolute value to check for, or an increment (whether there is a '+' at the start):
+                            if (questData[questId].thresholdNeededForCompletion.charAt(0) == "+") {
+                                if (currentThresholdValue >= questData[questId].thresholdNeededForCompletion.substring(1)) {
+                                    thisQuestIsComplete = true;
+                                }
+                            } else {
+                                if (currentThresholdValue - thresholdValueAtStart >= questData[questId].thresholdNeededForCompletion) {
+                                    thisQuestIsComplete = true;
+                                }
+                            }
+                            if (thisQuestIsComplete) {
                                 // threshold quest is complete:
                                 thisSpeech = questSpeech[2];
 
 
-                                // give any reward to the player:
+giveQuestRewards(questId);
 
+                             
 
-                                if (questData[questId].itemsReceivedOnCompletion) {
-                                    var questRewards = questData[questId].itemsReceivedOnCompletion.split(",");
-                                    for (var i = 0; i < questRewards.length; i++) {
-                                        // check for any quantities:
-                                        var thisQuestReward = questRewards[i].split("x");
-                                        var thisQuantity, thisItem;
-                                        if (thisQuestReward.length > 1) {
-                                            thisQuantity = thisQuestReward[0];
-                                            thisItem = thisQuestReward[1];
-                                        } else {
-                                            thisQuantity = 1;
-                                            thisItem = questRewards[i];
-                                        }
-
-// build item object:
-var thisRewardObject = {
-                "type": parseInt(thisItem),
-            "quantity": parseInt(thisQuantity),
-            "quality": 100,
-            "durability": 100,
-            "currentWear": 0,
-            "effectiveness": 100,
-            "wrapped": 0,
-            "colour": currentActiveInventoryItems[parseInt(thisItem)].colour,
-            "enchanted": 0,
-            "hallmark": 0,
-            "inscription": ""
-}
-
-
-                        inventoryCheck = canAddItemToInventory(thisRewardObject);
-                        if (inventoryCheck[0]) {
-                            showChangeInInventory(inventoryCheck[1]);
-                        } else {
-                            UI.showNotification("<p>Oops - sorry, no room in your bags</p>");
-                            // don't close quest? #########
-                        }
-
-
-                                    }
-                                }
-
-                                // check for any titles:
-                                if (questData[questId].titleGainedAfterCompletion) {
-                                    var thisTitle = questData[questId].titleGainedAfterCompletion;
-                                    if (hero.titlesEarned.indexOf(thisTitle) == -1) {
-                                        hero.titlesEarned.push(thisTitle);
-                                        UI.showNotification('<p>You earned the &quot;' + activeTitles[thisTitle] + '&quot; title</p>');
-                                    }
-                                }
+                                checkForTitlesAwarded(questId);
 
                                 // remove quest text now:
                                 thisNPC.speech.splice(thisNPC.speechIndex, 1);
@@ -1965,26 +2043,71 @@ var thisRewardObject = {
                             break;
                     }
                 } else {
-                    // open quest:
-                    switch (questData[questId].whatIsRequiredForCompletion) {
-                        case "possess":
-                        case "give":
-                        case "":
-                            // ###
-                            break;
-                        case "world":
-                            // ###
-                            break;
-                        default:
-                            // threshold quest:
 
+                    if ((individualSpeechCodes[i] == "quest") || (individualSpeechCodes[i] == "quest-no-close")) {
+                        // ie. don't open the quest if it's "-no-open":
 
+                        var okToStartQuest = true;
 
-                            questData[questId].valueAtQuestStart = accessDynamicVariable(questData[questId].whatIsRequiredForCompletion);
-                            break;
+                        // see if any items need to be given to start the quest:
+                        if (questData[questId].startItemsReceived) {
+                            var itemsToAdd = questData[questId].startItemsReceived.split(",");
+                            var allItemsToGive = [];
+                            for (var i = 0; i < itemsToAdd.length; i++) {
+                                // check for any quantities:
+                                var thisQuestItem = itemsToAdd[i].split("x");
+                                var thisQuantity, thisItem;
+                                if (thisQuestItem.length > 1) {
+                                    thisQuantity = thisQuestItem[0];
+                                    thisItem = thisQuestItem[1];
+                                } else {
+                                    thisQuantity = 1;
+                                    thisItem = itemsToAdd[i];
+                                }
+                                // build item object:
+                                var thisRewardObject = {
+                                    "type": parseInt(thisItem),
+                                    "quantity": parseInt(thisQuantity),
+                                    "quality": 100,
+                                    "durability": 100,
+                                    "currentWear": 0,
+                                    "effectiveness": 100,
+                                    "wrapped": 0,
+                                    "colour": currentActiveInventoryItems[parseInt(thisItem)].colour,
+                                    "enchanted": 0,
+                                    "hallmark": 0,
+                                    "inscription": ""
+                                }
+                                allItemsToGive.push(thisRewardObject);
+                            }
+                            inventoryCheck = canAddItemToInventory(allItemsToGive);
+                            if (inventoryCheck[0]) {
+                                UI.showChangeInInventory(inventoryCheck[1]);
+                            } else {
+                                okToStartQuest = false;
+                            }
+                        }
+                        if (okToStartQuest) {
+                            // open quest:
+                            switch (questData[questId].whatIsRequiredForCompletion) {
+                                case "possess":
+                                case "give":
+                                case "":
+                                    // ###
+                                    break;
+                                case "world":
+                                    // ###
+                                    break;
+                                default:
+                                    // threshold quest:
+                                    questData[questId].valueAtQuestStart = accessDynamicVariable(questData[questId].whatIsRequiredForCompletion);
+                                    break;
+                            }
+                            questData[questId].isUnderway = true;
+
+                        }
                     }
                     thisSpeech = questSpeech[0];
-                    questData[questId].isUnderway = true;
                     // keep the NPC on this quest speech:
                     thisNPC.speechIndex--;
                 }
@@ -2006,12 +2129,64 @@ var thisRewardObject = {
     }
 }
 
+function giveQuestRewards(whichQuestId) {
 
+    // give any reward to the player:
+    if (questData[whichQuestId].itemsReceivedOnCompletion) {
 
+        var allRewardItems = [];
 
+        var questRewards = questData[whichQuestId].itemsReceivedOnCompletion.split(",");
+        for (var i = 0; i < questRewards.length; i++) {
+            // check for any quantities:
+            var thisQuestReward = questRewards[i].split("x");
+            var thisQuantity, thisItem;
+            if (thisQuestReward.length > 1) {
+                thisQuantity = thisQuestReward[0];
+                thisItem = thisQuestReward[1];
+            } else {
+                thisQuantity = 1;
+                thisItem = questRewards[i];
+            }
 
+            // build item object:
+            var thisRewardObject = {
+                "type": parseInt(thisItem),
+                "quantity": parseInt(thisQuantity),
+                "quality": 100,
+                "durability": 100,
+                "currentWear": 0,
+                "effectiveness": 100,
+                "wrapped": 0,
+                "colour": currentActiveInventoryItems[parseInt(thisItem)].colour,
+                "enchanted": 0,
+                "hallmark": 0,
+                "inscription": ""
+            }
+            allRewardItems.push(thisRewardObject);
+        }
 
+        inventoryCheck = canAddItemToInventory(thisRewardObject);
+        if (inventoryCheck[0]) {
+            UI.showChangeInInventory(inventoryCheck[1]);
+        } else {
+            UI.showNotification("<p>Oops - sorry, no room in your bags</p>");
+            // don't close quest? #########
+        }
+    }
 
+}
+
+function checkForTitlesAwarded(whichQuestId) {
+    // check for any titles:
+    if (questData[whichQuestId].titleGainedAfterCompletion) {
+        var thisTitle = questData[whichQuestId].titleGainedAfterCompletion;
+        if (hero.titlesEarned.indexOf(thisTitle) == -1) {
+            hero.titlesEarned.push(thisTitle);
+            UI.showNotification('<p>You earned the &quot;' + activeTitles[thisTitle] + '&quot; title</p>');
+        }
+    }
+}
 
 
 function checkForChallenges() {
@@ -2210,26 +2385,7 @@ function inventoryItemAction(whichSlot, whichAction) {
 
 
 
-function removeFromInventory(whichSlot, amount) {
-    var thisCurrentQuantity = hero.inventory[whichSlot].quantity;
-    var thisSlotElem = document.getElementById("slot" + whichSlot);
-    if (thisCurrentQuantity - amount > 0) {
-        // just reduce quantity:
-        hero.inventory[whichSlot].quantity -= amount;
-        // update visually:
-        for (var i = 0; i < thisSlotElem.childNodes.length; i++) {
-            if (thisSlotElem.childNodes[i].className == "qty") {
-                thisSlotElem.childNodes[i].innerHTML = hero.inventory[whichSlot].quantity;
-                break;
-            }
-        }
-    } else {
-        // remove the item:
-        delete hero.inventory[whichSlot];
-        // update visually:
-        thisSlotElem.innerHTML = '<img alt="Empty slot" src="/images/game-world/inventory-items/blank.png">';
-    }
-}
+
 
 
 

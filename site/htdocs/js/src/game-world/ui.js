@@ -70,6 +70,32 @@ dataActionMarkup = 'data-action="'+thisAction+'" ';
 
 
 
+showChangeInInventory: function(whichSlotsToUpdate) {
+
+                            
+                            // add a transition end detector to just the first element that will be changed:
+                            document.getElementById("slot" + whichSlotsToUpdate[0]).addEventListener(whichTransitionEvent, function removeSlotStatus(e) {
+                                elementList = document.querySelectorAll('#inventoryPanels .changed');
+                                for (var i = 0; i < elementList.length; i++) {
+                                    removeClass(elementList[i], 'changed');
+                                }
+                                // remove the event listener now:
+                                return e.currentTarget.removeEventListener(whichTransitionEvent, removeSlotStatus, false);
+                            }, false);
+                            // loop through the slots that have changed and update their markup:
+                            for (var j = 0; j < whichSlotsToUpdate.length; j++) {
+                                thisSlotsId = whichSlotsToUpdate[j];
+                                slotMarkup = '<img src="/images/game-world/inventory-items/' + hero.inventory[thisSlotsId].type + '.png" alt="">';
+                                slotMarkup += '<span class="qty">' + hero.inventory[thisSlotsId].quantity + '</span>';
+                                slotMarkup += '<p><em>' + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].shortname + ' </em>' + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].description + ' <span class="price">Sell price: ' + parseMoney(hero.inventory[thisSlotsId].quantity * currentActiveInventoryItems[hero.inventory[thisSlotsId].type].priceCode, 0) + '</span></p>';
+                                thisSlotElem = document.getElementById("slot" + thisSlotsId);
+                                thisSlotElem.innerHTML = slotMarkup;
+
+                                addClass(thisSlotElem, "changed");
+                            }
+                        },
+
+
     handleDrag: function(e) {
         if (UI.inDrag) {
             // don't access the element multiple times - do it all in one go:

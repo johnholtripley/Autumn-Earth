@@ -95,13 +95,14 @@ function accessDynamicVariable(variableToUse) {
 
 
  function getObjectKeysForInnerValue( testObject, value, attribute ) {
-    console.log("looking for "+value);
+   // console.log("looking for "+value);
     // return an array of all keys in the object that have a value that match the one passed in
    var keysFound = [];
     for(var prop in testObject) {
         if( testObject.hasOwnProperty(prop)) {
-            console.log("checking:"+testObject[prop][attribute]);
+       //     console.log("checking:"+testObject[prop][attribute]);
              if(testObject[prop][attribute] === value) {
+
                  keysFound.push(prop);
              }
         }

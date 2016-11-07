@@ -222,6 +222,47 @@
                         "w": 1
                     }
                 }
+            }, {
+                "name": "labourer3",
+                "src": "labourer3.png",
+                "width": 20,
+                "height": 20,
+                "spriteWidth": 75,
+                "spriteHeight": 85,
+                "centreX": 56,
+                "centreY": 73,
+                "tileX": 15,
+                "tileY": 14,
+                "movement": ["-"],
+                "facing": "w",
+                "walkThroughDoors": false,
+                "speed": 2,
+                "speech": "",
+                "isCollidable": true,
+                "isMoving": false,
+                "speechIndex": 0,
+                "speech": [
+                    ["open quest 1|quest #1 open but not complete|complete quest #1 - good work", "quest", "1"],
+                    ["after quest #1 - thanks",""]
+                ],
+                "cardGameSpeech": {
+                    "challenge": ["Do you play? Fancy a game then?", "play"],
+                    "win": ["Woo! I won!", ""],
+                    "lose": ["Ahh, you beat me...", ""],
+                    "draw": ["Well played", ""]
+                },
+                "cardSkill": 1,
+                "uniqueCards": [2, 2],
+                "baseCardPack": 0,
+                "animation": {
+                    "walk": {
+                        "length": 1,
+                        "n": 2,
+                        "e": 3,
+                        "s": 0,
+                        "w": 1
+                    }
+                }
             }
 
         ],
