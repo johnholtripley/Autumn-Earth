@@ -72,6 +72,8 @@ extract($innerrow);
 		case "world":
 		if (isset($hasBeenActivated)) {
 			$outputJson .= '"hasBeenActivated": "'.$hasBeenActivated.'",';
+	} else {
+		$outputJson .= '"hasBeenActivated": "0",';
 	}
 		
 		break;
@@ -85,6 +87,12 @@ extract($innerrow);
 
 if (isset($isUnderway)) {
 			$outputJson .= '"isUnderway": "'.$isUnderway.'",';
+	}
+	if (isset($hasBeenActivated)) {
+			$outputJson .= '"hasBeenCompleted": "'.$hasBeenCompleted.'",';
+	} else {
+		// false:
+		$outputJson .= '"hasBeenCompleted": "0",';
 	}
 
 	$outputJson .= '"titleGainedAfterCompletion": "'.$titleGainedAfterCompletion.'"';

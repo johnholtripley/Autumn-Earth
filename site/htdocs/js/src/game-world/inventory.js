@@ -76,16 +76,11 @@ function canAddItemToInventory(itemObj) {
 
 function hasItemInInventory(itemType, amountNeeded) {
     var quantityFound = 0;
-    console.log(amountNeeded+" of "+itemType);
     var inventoryKeysFound = getObjectKeysForInnerValue(hero.inventory, parseInt(itemType), "type");
-
-console.log(inventoryKeysFound);
     if (inventoryKeysFound.length > 0) {
-
         for (var i = 0; i < inventoryKeysFound.length; i++) {
             quantityFound += hero.inventory[inventoryKeysFound[i]].quantity;
         }
-
     }
     if (quantityFound >= amountNeeded) {
         return true;
@@ -94,6 +89,24 @@ console.log(inventoryKeysFound);
     }
 }
 
+
+function removeItemTypeFromInventory(itemType, amount) {
+    var quantityStillToRemove = amount;
+    var quantityAvailableOnThisSlot;
+    var inventoryKeysFound = getObjectKeysForInnerValue(hero.inventory, parseInt(itemType), "type");
+    if (inventoryKeysFound.length > 0) {
+        for (var i = 0; i < inventoryKeysFound.length; i++) {
+            quantityAvailableOnThisSlot = hero.inventory[inventoryKeysFound[i]].quantity;
+            if (quantityAvailableOnThisSlot > quantityStillToRemove) {
+                removeFromInventory((inventoryKeysFound[i]), quantityStillToRemove);
+                quantityStillToRemove = 0;
+            } else {
+                removeFromInventory((inventoryKeysFound[i]), quantityAvailableOnThisSlot);
+                quantityStillToRemove -= quantityAvailableOnThisSlot;
+            }
+        }
+    }
+}
 
 
 
