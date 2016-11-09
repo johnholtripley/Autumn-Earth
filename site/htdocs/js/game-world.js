@@ -2069,7 +2069,27 @@ if(questData[questId].hasBeenCompleted > 0) {
 
                             break;
                         case "world":
-                            // check hasBeenActivated ###
+                            
+                            if(questData[questId].hasBeenActivated > 0) {
+thisSpeech = questSpeech[2];
+questData[questId].hasBeenCompleted = true;
+
+giveQuestRewards(questId);
+
+                             
+
+                                checkForTitlesAwarded(questId);
+
+                                // remove quest text now:
+                                thisNPC.speech.splice(thisNPC.speechIndex, 1);
+                                // knock this back one so to keep it in step with the removed item:
+                                thisNPC.speechIndex--;
+                            } else {
+                                // show 'underway' text:
+                                thisSpeech = questSpeech[1];
+                                // keep the NPC on this quest speech:
+                                thisNPC.speechIndex--;
+                            }
                             break;
                         default:
                             // threshold quest:

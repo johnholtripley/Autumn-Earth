@@ -25,7 +25,7 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/header.php");
 <?php
 
 
-$forumQuery = "select * from tblthreads where tblthreads.status>0 order by tblthreads.CreationTime DESC limit 5";
+$forumQuery = "select * from tblthreads where tblthreads.status>0 order by tblthreads.creationtime DESC limit 5";
 $result = mysql_query($forumQuery) or die ("couldn't execute query");
 
 if (mysql_num_rows($result) > 0) {
@@ -44,7 +44,7 @@ if (mysql_num_rows($result) > 0) {
 <?php
 // find all publically visible pages, group by guild and show a list of clean URLs for them:
 
-$communityQuery = "select tblguilds.*, tblfreeformpages.*, tblguilds.cleanURL as guildURL, tblfreeformpages.cleanURL as pageURL from tblFreeformPages inner join tblGuilds on tblFreeformPages.guildID = tblGuilds.guildID WHERE tblFreeformPages.public='1' order by tblfreeformpages.creationTime DESC limit 5";
+$communityQuery = "select tblguilds.*, tblfreeformpages.*, tblguilds.cleanurl as guildURL, tblfreeformpages.cleanurl as pageURL from tblfreeformpages inner join tblguilds on tblfreeformpages.guildid = tblguilds.guildid WHERE tblfreeformpages.public='1' order by tblfreeformpages.creationtime DESC limit 5";
 
 $result = mysql_query($communityQuery) or die ("couldn't execute query");
 
@@ -75,7 +75,7 @@ if (mysql_num_rows($result) > 0) {
 <div class="column"><div>
 <h4>Latest from the Chronicle</h4>
 <?php
-$newsQuery = "select * from tblNews WHERE status='1' order by timeAdded DESC limit 5";
+$newsQuery = "select * from tblnews WHERE status='1' order by timeadded DESC limit 5";
 $result = mysql_query($newsQuery) or die ("couldn't execute query");
 
 if (mysql_num_rows($result) > 0) {

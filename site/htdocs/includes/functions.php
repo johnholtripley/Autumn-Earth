@@ -616,12 +616,12 @@ $string = strtr($string, array('é' => 'e', 'è' => 'e'));
 
 
 function displayAuctionItemsEndingSoon( $itemLimit ) {
-	$query = "SELECT tblAuctionItems.*, tblinventoryitems.itemID, tblinventoryitems.shortname
-	FROM tblAuctionItems
-	inner join tblinventoryitems on tblAuctionItems.itemid = tblinventoryitems.itemid
-	WHERE tblAuctionItems.endtime > NOW()
-	and tblAuctionItems.auctionClosed = 'true'
-	ORDER BY tblAuctionItems.endtime ASC
+	$query = "SELECT tblauctionitems.*, tblinventoryitems.itemid, tblinventoryitems.shortname
+	FROM tblauctionitems
+	inner join tblinventoryitems on tblauctionitems.itemid = tblinventoryitems.itemid
+	WHERE tblauctionitems.endtime > NOW()
+	and tblauctionitems.auctionclosed = 'true'
+	ORDER BY tblauctionitems.endtime ASC
 	LIMIT ".$itemLimit;
 	$result = mysql_query( $query ) or die ( "couldn't execute query" );
 
@@ -639,13 +639,13 @@ function displayAuctionItemsEndingSoon( $itemLimit ) {
 
 			// get the highest 2 bids from different bidders on this item:
 
-			$query3 = "select tblauctionbids.auctionID ,tblauctionbids.bidderID, max(tblauctionbids.bidAmount) as bidAmount, tblcharacters.charName, tblcharacters.charID
+			$query3 = "select tblauctionbids.auctionid ,tblauctionbids.bidderid, max(tblauctionbids.bidAmount) as bidAmount, tblcharacters.charname, tblcharacters.charid
 
 from tblauctionbids
-inner join tblcharacters on tblauctionbids.bidderID = tblcharacters.charID
-where auctionID = '".$auctionID."'
-group by tblauctionbids.bidderID
-order by tblauctionbids.bidAmount DESC limit 2
+inner join tblcharacters on tblauctionbids.bidderid = tblcharacters.charid
+where auctionid = '".$auctionID."'
+group by tblauctionbids.bidderid
+order by tblauctionbids.bidamount DESC limit 2
 			";
 
 			$result3 = mysql_query( $query3 ) or die ( "couldn't execute query3" );
@@ -696,12 +696,12 @@ outputAuctionCard($itemID, $auctionID, $quantity, $shortname, $currentprice, $re
 
 
 function displayAuctionNewestItems( $itemLimit ) {
-	$query = "SELECT tblAuctionItems.*, tblinventoryitems.itemID, tblinventoryitems.shortname
-	FROM tblAuctionItems
-	inner join tblinventoryitems on tblAuctionItems.itemid = tblinventoryitems.itemid
-	WHERE tblAuctionItems.endtime > NOW()
-	and tblAuctionItems.auctionClosed = 'true'
-	ORDER BY tblAuctionItems.starttime DESC
+	$query = "SELECT tblauctionitems.*, tblinventoryitems.itemid, tblinventoryitems.shortname
+	FROM tblauctionitems
+	inner join tblinventoryitems on tblauctionitems.itemid = tblinventoryitems.itemid
+	WHERE tblauctionitems.endtime > NOW()
+	and tblauctionitems.auctionclosed = 'true'
+	ORDER BY tblauctionitems.starttime DESC
 	LIMIT ".$itemLimit;
 	$result = mysql_query( $query ) or die ( "couldn't execute query" );
 
@@ -719,13 +719,13 @@ function displayAuctionNewestItems( $itemLimit ) {
 
 			// get the highest 2 bids from different bidders on this item:
 
-			$query3 = "select tblauctionbids.auctionID ,tblauctionbids.bidderID, max(tblauctionbids.bidAmount) as bidAmount, tblcharacters.charName, tblcharacters.charID
+			$query3 = "select tblauctionbids.auctionid ,tblauctionbids.bidderid, max(tblauctionbids.bidamount) as bidAmount, tblcharacters.charname, tblcharacters.charid
 
 from tblauctionbids
-inner join tblcharacters on tblauctionbids.bidderID = tblcharacters.charID
-where auctionID = '".$auctionID."'
-group by tblauctionbids.bidderID
-order by tblauctionbids.bidAmount DESC limit 2
+inner join tblcharacters on tblauctionbids.bidderid = tblcharacters.charid
+where auctionid = '".$auctionID."'
+group by tblauctionbids.bidderid
+order by tblauctionbids.bidamount DESC limit 2
 			";
 
 			$result3 = mysql_query( $query3 ) or die ( "couldn't execute query3" );
