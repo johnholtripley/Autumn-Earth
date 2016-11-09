@@ -130,3 +130,27 @@ function removeFromInventory(whichSlot, amount) {
         thisSlotElem.innerHTML = '<img alt="Empty slot" src="/images/game-world/inventory-items/blank.png">';
     }
 }
+
+function itemAttributesMatch(item1, item2) {
+    // 'type' has already been checked
+    if (item1.quality == item2.quality) {
+        if (item1.durability == item2.durability) {
+            if (item1.currentWear == item2.currentWear) {
+                if (item1.effectiveness == item2.effectiveness) {
+                    if (item1.wrapped == item2.wrapped) {
+                        if (item1.colour == item2.colour) {
+                            if (item1.enchanted == item2.enchanted) {
+                                if (item1.hallmark == item2.hallmark) {
+                                    if (item1.inscription == item2.inscription) {
+                                        return true;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    return false;
+}

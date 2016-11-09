@@ -69,6 +69,9 @@ extract($innerrow);
 		case "":
 		$outputJson .= '"itemsNeededForCompletion": "'.$itemsNeededForCompletion.'",';
 		break;
+		case "multi":
+		$outputJson .= '"subQuestsRequiredForCompletion": "'.$subQuestsRequiredForCompletion.'",';
+		break;
 		case "world":
 		if (isset($hasBeenActivated)) {
 			$outputJson .= '"hasBeenActivated": "'.$hasBeenActivated.'",';

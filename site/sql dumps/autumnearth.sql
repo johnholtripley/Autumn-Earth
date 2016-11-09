@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 02, 2016 at 10:23 AM
+-- Generation Time: Nov 09, 2016 at 11:43 AM
 -- Server version: 5.6.24
 -- PHP Version: 5.6.8
 
@@ -499,7 +499,7 @@ CREATE TABLE IF NOT EXISTS `tblinventoryitems` (
   `inscribable` tinyint(1) NOT NULL,
   `colour` int(128) NOT NULL,
   `hasInherentColour` tinyint(1) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblinventoryitems`
@@ -523,10 +523,11 @@ INSERT INTO `tblinventoryitems` (`itemID`, `shortname`, `description`, `priceCod
 (15, 'Wool', '', '1', '20.0', '24.0', 0, 0, 'wool', '', 0, 1, 0, '0', '0', 0, 0, 0),
 (16, 'Yarn', '', '1', '20.0', '24.0', 0, 0, 'yarn.png', '', 0, 1, 0, '0', '0', 0, 0, 0),
 (17, 'Small Backpack', 'A 11 slot bag', '2', '20.0', '24.0', 0, 0, 'small-backpack', 'bag', 11, 1, 0, '0', '0', 0, 0, 0),
-(18, 'Barrel', 'A large wooden barrel.', '2', '25.0', '31.0', 24, 24, 'barrel', 'static', 0, 0, 0, '0', '0', 0, 0, 0),
+(18, 'Barrel', 'A large wooden barrel.', '2', '25.0', '31.0', 38, 38, 'barrel', 'static', 0, 0, 0, '0', '0', 0, 0, 0),
 (19, 'Pumpkin', 'A tasty pumpkin.', '1', '16.0', '18.0', 25, 23, 'pumpkin', '', 0, 0, 0, '0', '0', 0, 0, 0),
 (20, 'Large Backpack', 'A 20 slot bag', '2', '20.0', '24.0', 0, 0, 'large-backpack', 'bag', 20, 1, 0, '0', '0', 0, 0, 0),
-(21, 'Card Pack', '5 cards', '4', '20.0', '24.0', 0, 0, 'card-pack', 'booster', 0, 0, 0, '0', '0', 0, 0, 0);
+(21, 'Card Pack', '5 cards', '4', '20.0', '24.0', 0, 0, 'card-pack', 'booster', 0, 0, 0, '0', '0', 0, 0, 0),
+(22, 'Standing Stone', '', '4', '49.0', '81.0', 63, 63, 'standing-stone', 'questToggle', 2, 0, 0, '0', '0', 0, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -1175,32 +1176,33 @@ CREATE TABLE IF NOT EXISTS `tblquests` (
 --
 
 INSERT INTO `tblquests` (`questID`, `journalTitle`, `journalDesc`, `isRepeatable`, `childOf`, `startItemsReceived`, `itemsNeededForCompletion`, `itemsReceivedOnCompletion`, `whatIsRequiredForCompletion`, `titleGainedAfterCompletion`, `thresholdNeededForCompletion`) VALUES
-(1, 'A hero''s journey', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 0, NULL, '5,9', '5x19', '2x21', 'possess', 4, ''),
+(1, 'A hero''s journey', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 0, NULL, '9', '9', '2x21', 'give', 4, ''),
 (2, 'An unexpected journey', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 0, NULL, '', '', '9,14', 'world', NULL, ''),
-(3, 'A longer journey', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 1, NULL, '', '', '', 'hero.stats.cardsFlipped', NULL, '10'),
-(4, 'A hero''s peregrination', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 0, NULL, '5,9', '5x19', '2x21,9', 'give', 7, '');
+(3, 'A longer journey', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 1, NULL, '', '', '', 'hero.stats.numberOfcardsFlipped', NULL, '+2'),
+(4, 'A hero''s peregrination', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 0, NULL, '5,9', '5x19', '2x21,9', 'possess', 7, '');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tblqueststatus`
+-- Table structure for table `tblquestsstatus`
 --
 
-CREATE TABLE IF NOT EXISTS `tblqueststatus` (
+CREATE TABLE IF NOT EXISTS `tblquestsstatus` (
   `questStatusID` int(11) NOT NULL,
   `charID` int(11) DEFAULT NULL,
   `questID` int(11) DEFAULT NULL,
   `isUnderway` tinyint(1) NOT NULL DEFAULT '0',
   `thresholdAtQuestStart` varchar(255) DEFAULT NULL,
-  `hasBeenActivated` tinyint(1) DEFAULT '0'
+  `hasBeenActivated` tinyint(1) DEFAULT '0',
+  `hasBeenCompleted` tinyint(1) DEFAULT '0'
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `tblqueststatus`
+-- Dumping data for table `tblquestsstatus`
 --
 
-INSERT INTO `tblqueststatus` (`questStatusID`, `charID`, `questID`, `isUnderway`, `thresholdAtQuestStart`, `hasBeenActivated`) VALUES
-(1, 0, 0, 0, NULL, 5);
+INSERT INTO `tblquestsstatus` (`questStatusID`, `charID`, `questID`, `isUnderway`, `thresholdAtQuestStart`, `hasBeenActivated`, `hasBeenCompleted`) VALUES
+(1, 0, 0, 0, NULL, 5, 0);
 
 -- --------------------------------------------------------
 
@@ -1468,7 +1470,7 @@ INSERT INTO `tblthreads` (`threadID`, `forumID`, `accountID`, `viewCount`, `Crea
 CREATE TABLE IF NOT EXISTS `tbltitles` (
   `titleID` int(11) NOT NULL,
   `titleName` varchar(128) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tbltitles`
@@ -1481,7 +1483,8 @@ INSERT INTO `tbltitles` (`titleID`, `titleName`) VALUES
 (4, 'of Burntwood'),
 (5, 'the fortunate'),
 (6, 'collector'),
-(7, 'expert collector');
+(7, 'expert collector'),
+(8, 'card flipper');
 
 --
 -- Indexes for dumped tables
@@ -1632,9 +1635,9 @@ ALTER TABLE `tblquests`
   ADD PRIMARY KEY (`questID`);
 
 --
--- Indexes for table `tblqueststatus`
+-- Indexes for table `tblquestsstatus`
 --
-ALTER TABLE `tblqueststatus`
+ALTER TABLE `tblquestsstatus`
   ADD PRIMARY KEY (`questStatusID`);
 
 --
@@ -1744,7 +1747,7 @@ ALTER TABLE `tblguilds`
 -- AUTO_INCREMENT for table `tblinventoryitems`
 --
 ALTER TABLE `tblinventoryitems`
-  MODIFY `itemID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=22;
+  MODIFY `itemID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=23;
 --
 -- AUTO_INCREMENT for table `tbllocations`
 --
@@ -1786,9 +1789,9 @@ ALTER TABLE `tblposts`
 ALTER TABLE `tblquests`
   MODIFY `questID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=5;
 --
--- AUTO_INCREMENT for table `tblqueststatus`
+-- AUTO_INCREMENT for table `tblquestsstatus`
 --
-ALTER TABLE `tblqueststatus`
+ALTER TABLE `tblquestsstatus`
   MODIFY `questStatusID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT for table `tblsavedsearches`
@@ -1809,7 +1812,7 @@ ALTER TABLE `tblthreads`
 -- AUTO_INCREMENT for table `tbltitles`
 --
 ALTER TABLE `tbltitles`
-  MODIFY `titleID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=8;
+  MODIFY `titleID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=9;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
