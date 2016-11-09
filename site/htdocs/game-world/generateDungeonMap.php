@@ -1777,6 +1777,7 @@ $outputString = rtrim($outputString, ',');
 
         $outputString .= '],
         "elevation": [],
+        "hotspots": [],
         "doors": {';
 
 

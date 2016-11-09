@@ -202,7 +202,7 @@
                 "speechIndex": 0,
                 "speech": [
                     ["Flip at least 2 cards|quest open but not complete|complete - good work", "quest", "3"],
-                    ["after quest",""]
+                    ["after quest", ""]
                 ],
                 "cardGameSpeech": {
                     "challenge": ["Do you play? Fancy a game then?", "play"],
@@ -243,7 +243,7 @@
                 "speechIndex": 0,
                 "speech": [
                     ["give this mordant to the green bloke please|the green bloke - over there|thanks for taking that over", "quest-no-close", "1"],
-                    ["that was really kind",""]
+                    ["that was really kind", ""]
                 ],
                 "cardGameSpeech": {
                     "challenge": ["Do you play? Fancy a game then?", "play"],
@@ -284,7 +284,7 @@
                 "speechIndex": 0,
                 "speech": [
                     ["I could really do with some mordant... I wonder if pink guy has any?|2|thanks for giving me that mordant, here's some cards", "quest-no-open", "1"],
-                    ["that was really kind of you",""]
+                    ["that was really kind of you", ""]
                 ],
                 "cardGameSpeech": {
                     "challenge": ["Do you play? Fancy a game then?", "play"],
@@ -325,7 +325,7 @@
                 "speechIndex": 0,
                 "speech": [
                     ["Touch that standing stone|Just touch it|Did you feel the power?", "quest", "2"],
-                    ["I like standing stones...",""]
+                    ["I like standing stones...", ""]
                 ],
                 "cardGameSpeech": {
                     "challenge": ["Do you play? Fancy a game then?", "play"],
@@ -395,6 +395,14 @@
 
             }
 
-        ]
+        ],
+        "hotspots": [{
+            "centreX": 9,
+            "centreY": 3,
+            "radius": 5,
+            "quest": 2,
+            "message": "you found the standing stone site"
+
+        }]
     }
 }

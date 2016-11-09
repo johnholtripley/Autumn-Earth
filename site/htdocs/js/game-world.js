@@ -1843,6 +1843,17 @@ function heroIsInNewTile() {
     if (currentMap < 0) {
         updateCartographicMiniMap();
     }
+    var thisHotspot;
+    // check for hotspots:
+    for (var i=0; i<thisMapData.hotspots.length; i++) {
+       thisHotspot = thisMapData.hotspots[i];
+       if(isInRange(hero.x, hero.y, getTileCentreCoordX(thisHotspot.centreX), getTileCentreCoordY(thisHotspot.centreY), thisHotspot.radius * tileW)) {
+        if(questData[thisHotspot.quest].hasBeenActivated < 1) {
+UI.showNotification("<p>"+thisHotspot.message+"</p>");
+        }
+questData[thisHotspot.quest].hasBeenActivated = 1;
+       }
+    }
 }
 
 
