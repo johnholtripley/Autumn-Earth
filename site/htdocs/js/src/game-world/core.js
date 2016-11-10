@@ -722,7 +722,6 @@ function processSpeech(thisNPC, thisSpeech, thisSpeechCode, isPartOfNPCsNormalSp
             case "quest-no-open-no-close":
                 var questSpeech = thisSpeech.split("|");
                 var questId = thisNPC.speech[thisNPC.speechIndex][2];
-
                 if (questData[questId].isUnderway) {
                     // quest has been opened - check if it's complete:
                     switch (questData[questId].whatIsRequiredForCompletion) {
@@ -770,13 +769,7 @@ function processSpeech(thisNPC, thisSpeech, thisSpeechCode, isPartOfNPCsNormalSp
                                     }
                                     // close quest:
                                     thisSpeech = questSpeech[2];
-                                    questData[questId].hasBeenCompleted = true;
-                                    checkForTitlesAwarded(questId);
-                                    giveQuestRewards(questId);
-                                    // remove quest text now:
-                                    thisNPC.speech.splice(thisNPC.speechIndex, 1);
-                                    // knock this back one so to keep it in step with the removed item:
-                                    thisNPC.speechIndex--;
+                                    closeQuest(thisNPC, questId);
                                 } else {
                                     // show 'underway' text:
                                     thisSpeech = questSpeech[1];
@@ -787,10 +780,7 @@ function processSpeech(thisNPC, thisSpeech, thisSpeechCode, isPartOfNPCsNormalSp
                                 // check if it's been closed elsewhere:
                                 if (questData[questId].hasBeenCompleted > 0) {
                                     thisSpeech = questSpeech[2];
-                                    // remove quest text now:
-                                    thisNPC.speech.splice(thisNPC.speechIndex, 1);
-                                    // knock this back one so to keep it in step with the removed item:
-                                    thisNPC.speechIndex--;
+                                    closeQuest(thisNPC, questId);
                                 } else {
                                     // show 'underway' text:
                                     thisSpeech = questSpeech[1];
@@ -799,11 +789,6 @@ function processSpeech(thisNPC, thisSpeech, thisSpeechCode, isPartOfNPCsNormalSp
                                 }
                             }
                             break;
-
-
-
-
-
                         case "multi":
                             var allSubQuestsRequired = questData[questId].subQuestsRequiredForCompletion.split(",");
                             var allSubQuestsComplete = true;
@@ -814,13 +799,7 @@ function processSpeech(thisNPC, thisSpeech, thisSpeechCode, isPartOfNPCsNormalSp
                             }
                             if (allSubQuestsComplete) {
                                 thisSpeech = questSpeech[2];
-                                questData[questId].hasBeenCompleted = true;
-                                giveQuestRewards(questId);
-                                checkForTitlesAwarded(questId);
-                                // remove quest text now:
-                                thisNPC.speech.splice(thisNPC.speechIndex, 1);
-                                // knock this back one so to keep it in step with the removed item:
-                                thisNPC.speechIndex--;
+                                closeQuest(thisNPC, questId);
                             } else {
                                 // show 'underway' text:
                                 thisSpeech = questSpeech[1];
@@ -828,20 +807,10 @@ function processSpeech(thisNPC, thisSpeech, thisSpeechCode, isPartOfNPCsNormalSp
                                 thisNPC.speechIndex--;
                             }
                             break;
-
-
-
-
                         case "world":
                             if (questData[questId].hasBeenActivated > 0) {
                                 thisSpeech = questSpeech[2];
-                                questData[questId].hasBeenCompleted = true;
-                                giveQuestRewards(questId);
-                                checkForTitlesAwarded(questId);
-                                // remove quest text now:
-                                thisNPC.speech.splice(thisNPC.speechIndex, 1);
-                                // knock this back one so to keep it in step with the removed item:
-                                thisNPC.speechIndex--;
+                                closeQuest(thisNPC, questId);
                             } else {
                                 // show 'underway' text:
                                 thisSpeech = questSpeech[1];
@@ -867,13 +836,7 @@ function processSpeech(thisNPC, thisSpeech, thisSpeechCode, isPartOfNPCsNormalSp
                             if (thisQuestIsComplete) {
                                 // threshold quest is complete:
                                 thisSpeech = questSpeech[2];
-                                questData[questId].hasBeenCompleted = true;
-                                giveQuestRewards(questId);
-                                checkForTitlesAwarded(questId);
-                                // remove quest text now:
-                                thisNPC.speech.splice(thisNPC.speechIndex, 1);
-                                // knock this back one so to keep it in step with the removed item:
-                                thisNPC.speechIndex--;
+                                closeQuest(thisNPC, questId);
                             } else {
                                 // show 'underway' text:
                                 thisSpeech = questSpeech[1];
@@ -963,6 +926,23 @@ function processSpeech(thisNPC, thisSpeech, thisSpeechCode, isPartOfNPCsNormalSp
         canCloseDialogueBalloonNextClick = true;
     }
 }
+
+
+function closeQuest(whichNPC, whichQestId) {
+    if (questData[whichQestId].isRepeatable > 0) {
+        questData[whichQestId].hasBeenCompleted = false;
+        questData[whichQestId].isUnderway = false;
+    } else {
+        questData[whichQestId].hasBeenCompleted = true;
+        // remove quest text now:
+        whichNPC.speech.splice(whichNPC.speechIndex, 1);
+        // knock this back one so to keep it in step with the removed item:
+        whichNPC.speechIndex--;
+    }
+    checkForTitlesAwarded(whichQestId);
+    giveQuestRewards(whichQestId);
+}
+
 
 
 function giveQuestRewards(whichQuestId) {

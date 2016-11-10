@@ -345,6 +345,47 @@
                         "w": 1
                     }
                 }
+            }, {
+                "name": "labourer6",
+                "src": "labourer6.png",
+                "width": 20,
+                "height": 20,
+                "spriteWidth": 75,
+                "spriteHeight": 85,
+                "centreX": 56,
+                "centreY": 73,
+                "tileX": 7,
+                "tileY": 9,
+                "movement": ["-"],
+                "facing": "s",
+                "walkThroughDoors": false,
+                "speed": 2,
+                "speech": "",
+                "isCollidable": true,
+                "isMoving": false,
+                "speechIndex": 0,
+                "speech": [
+                    ["flip 2 cards and go near the stone|near the stone and 2 cards - done it yet?|great stuff on both tasks", "quest", "5"],
+                    ["Great work", ""]
+                ],
+                "cardGameSpeech": {
+                    "challenge": ["Do you play? Fancy a game then?", "play"],
+                    "win": ["Woo! I won!", ""],
+                    "lose": ["Ahh, you beat me...", ""],
+                    "draw": ["Well played", ""]
+                },
+                "cardSkill": 1,
+                "uniqueCards": [2, 2],
+                "baseCardPack": 0,
+                "animation": {
+                    "walk": {
+                        "length": 1,
+                        "n": 2,
+                        "e": 3,
+                        "s": 0,
+                        "w": 1
+                    }
+                }
             }
 
         ],
@@ -400,8 +441,8 @@
             "centreX": 9,
             "centreY": 3,
             "radius": 5,
-            "quest": 2,
-            "message": "you found the standing stone site"
+            "quest": 6,
+            "message": "you found the ancient standing stone site"
 
         }]
     }
