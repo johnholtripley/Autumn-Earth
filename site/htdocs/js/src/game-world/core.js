@@ -1019,29 +1019,28 @@ function processSpeech(thisNPC, thisSpeech, thisSpeechCode, isPartOfNPCsNormalSp
 
 
 function closeQuest(whichNPC, whichQestId) {
-    if (questData[whichQestId].isRepeatable > 0) {
-        questData[whichQestId].hasBeenCompleted = false;
-        questData[whichQestId].isUnderway = false;
-    } else {
-        questData[whichQestId].hasBeenCompleted = true;
-        // remove quest text now:
-        whichNPC.speech.splice(whichNPC.speechIndex, 1);
-        // knock this back one so to keep it in step with the removed item:
-        whichNPC.speechIndex--;
+    if (giveQuestRewards(whichQestId)) {
+        if (questData[whichQestId].isRepeatable > 0) {
+            questData[whichQestId].hasBeenCompleted = false;
+            questData[whichQestId].isUnderway = false;
+        } else {
+            questData[whichQestId].hasBeenCompleted = true;
+            // remove quest text now:
+            whichNPC.speech.splice(whichNPC.speechIndex, 1);
+            // knock this back one so to keep it in step with the removed item:
+            whichNPC.speechIndex--;
+        }
+        checkForTitlesAwarded(whichQestId);
     }
-    checkForTitlesAwarded(whichQestId);
-    giveQuestRewards(whichQestId);
 }
 
 
 
-function giveQuestRewards(whichQuestId) {
 
+function giveQuestRewards(whichQuestId) {
     // give any reward to the player:
     if (questData[whichQuestId].itemsReceivedOnCompletion) {
-
         var allRewardItems = [];
-
         var questRewards = questData[whichQuestId].itemsReceivedOnCompletion.split(",");
         for (var i = 0; i < questRewards.length; i++) {
             // check for any quantities:
@@ -1075,10 +1074,14 @@ function giveQuestRewards(whichQuestId) {
         inventoryCheck = canAddItemToInventory(allRewardItems);
         if (inventoryCheck[0]) {
             UI.showChangeInInventory(inventoryCheck[1]);
+            return true;
         } else {
             UI.showNotification("<p>Oops - sorry, no room in your bags</p>");
-            // don't close quest? #########
+            // don't close quest
+            return false;
         }
+    } else {
+        return true;
     }
 
 }
