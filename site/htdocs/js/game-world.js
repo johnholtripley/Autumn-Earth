@@ -1033,6 +1033,29 @@ function removeFromInventory(whichSlot, amount) {
     }
 }
 
+function itemAttributesMatch(item1, item2) {
+    // 'type' has already been checked
+    if (item1.quality == item2.quality) {
+        if (item1.durability == item2.durability) {
+            if (item1.currentWear == item2.currentWear) {
+                if (item1.effectiveness == item2.effectiveness) {
+                    if (item1.wrapped == item2.wrapped) {
+                        if (item1.colour == item2.colour) {
+                            if (item1.enchanted == item2.enchanted) {
+                                if (item1.hallmark == item2.hallmark) {
+                                    if (item1.inscription == item2.inscription) {
+                                        return true;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    return false;
+}
 var KeyBindings = {
     'left': 37,
     'right': 39,
@@ -1861,29 +1884,7 @@ questData[thisHotspot.quest].hasBeenActivated = 1;
 
 
 
-function itemAttributesMatch(item1, item2) {
-    // 'type' has already been checked
-    if (item1.quality == item2.quality) {
-        if (item1.durability == item2.durability) {
-            if (item1.currentWear == item2.currentWear) {
-                if (item1.effectiveness == item2.effectiveness) {
-                    if (item1.wrapped == item2.wrapped) {
-                        if (item1.colour == item2.colour) {
-                            if (item1.enchanted == item2.enchanted) {
-                                if (item1.hallmark == item2.hallmark) {
-                                    if (item1.inscription == item2.inscription) {
-                                        return true;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-    return false;
-}
+
 
 function checkForActions() {
     var inventoryCheck = [];
@@ -1957,11 +1958,9 @@ function checkForActions() {
     key[4] = 0;
 }
 
-
 function processSpeech(thisNPC, thisSpeech, thisSpeechCode, isPartOfNPCsNormalSpeech) {
     // isPartOfNPCsNormalSpeech is false if not set:
     isPartOfNPCsNormalSpeech = typeof isPartOfNPCsNormalSpeech !== 'undefined' ? isPartOfNPCsNormalSpeech : false;
-
     individualSpeechCodes = thisSpeechCode.split(",");
     for (var i = 0; i < individualSpeechCodes.length; i++) {
         switch (individualSpeechCodes[i]) {
@@ -1976,16 +1975,12 @@ function processSpeech(thisNPC, thisSpeech, thisSpeechCode, isPartOfNPCsNormalSp
             case "quest-no-open-no-close":
                 var questSpeech = thisSpeech.split("|");
                 var questId = thisNPC.speech[thisNPC.speechIndex][2];
-
                 if (questData[questId].isUnderway) {
                     // quest has been opened - check if it's complete:
                     switch (questData[questId].whatIsRequiredForCompletion) {
                         case "possess":
                         case "give":
                         case "":
-
-
-
                             if ((individualSpeechCodes[i] == "quest") || (individualSpeechCodes[i] == "quest-no-open")) {
                                 // ie. it's not a '-no-close' speech
                                 // check items:
@@ -2004,97 +1999,135 @@ function processSpeech(thisNPC, thisSpeech, thisSpeechCode, isPartOfNPCsNormalSp
                                         thisQuantity = 1;
                                         thisItem = itemsToGive[i];
                                     }
-
-
                                     if (!hasItemInInventory(thisItem, thisQuantity)) {
                                         allItemsFound = false;
                                     }
-
                                 }
-
-
                                 if (allItemsFound) {
                                     if (questData[questId].whatIsRequiredForCompletion == "give") {
                                         // remove items:
-                                        
-
-      for (var i = 0; i < itemsToGive.length; i++) {
-                                    // check for any quantities:
-                                    var thisQuestItem = itemsToGive[i].split("x");
-                                    var thisQuantity, thisItem;
-                                    if (thisQuestItem.length > 1) {
-                                        thisQuantity = thisQuestItem[0];
-                                        thisItem = thisQuestItem[1];
-                                    } else {
-                                        thisQuantity = 1;
-                                        thisItem = itemsToGive[i];
-                                    }
-
-
-                                 removeItemTypeFromInventory(thisItem,thisQuantity);
-
-                                }
-
-
+                                        for (var i = 0; i < itemsToGive.length; i++) {
+                                            // check for any quantities:
+                                            var thisQuestItem = itemsToGive[i].split("x");
+                                            var thisQuantity, thisItem;
+                                            if (thisQuestItem.length > 1) {
+                                                thisQuantity = thisQuestItem[0];
+                                                thisItem = thisQuestItem[1];
+                                            } else {
+                                                thisQuantity = 1;
+                                                thisItem = itemsToGive[i];
+                                            }
+                                            removeItemTypeFromInventory(thisItem, thisQuantity);
+                                        }
                                     }
                                     // close quest:
                                     thisSpeech = questSpeech[2];
-                                    questData[questId].hasBeenCompleted = true;
-                                    checkForTitlesAwarded(questId);
-                                    giveQuestRewards(questId);
-                                    // remove quest text now:
-                                    thisNPC.speech.splice(thisNPC.speechIndex, 1);
-                                    // knock this back one so to keep it in step with the removed item:
-                                    thisNPC.speechIndex--;
-
+                                    closeQuest(thisNPC, questId);
                                 } else {
                                     // show 'underway' text:
                                     thisSpeech = questSpeech[1];
                                     // keep the NPC on this quest speech:
                                     thisNPC.speechIndex--;
                                 }
-
-
                             } else {
                                 // check if it's been closed elsewhere:
-                              
-if(questData[questId].hasBeenCompleted > 0) {
-
-                                thisSpeech = questSpeech[2];
-
-                                  // remove quest text now:
-                                thisNPC.speech.splice(thisNPC.speechIndex, 1);
-                                // knock this back one so to keep it in step with the removed item:
-                                thisNPC.speechIndex--;
-} else {
- 
-
-                                 // show 'underway' text:
+                                if (questData[questId].hasBeenCompleted > 0) {
+                                    thisSpeech = questSpeech[2];
+                                    closeQuest(thisNPC, questId);
+                                } else {
+                                    // show 'underway' text:
                                     thisSpeech = questSpeech[1];
                                     // keep the NPC on this quest speech:
                                     thisNPC.speechIndex--;
                                 }
                             }
+                            break;
+                        case "multi":
+                            var allSubQuestsRequired = questData[questId].subQuestsRequiredForCompletion.split(",");
+                      
+                            var allSubQuestsComplete = true;
+                            for (var k = 0; k < allSubQuestsRequired.length; k++) {
+                                // check conditions for this sub-quest and set if it's complete ###############
+
+
+                                switch (questData[allSubQuestsRequired[k]].whatIsRequiredForCompletion) {
+                                    case "possess":
+                                    case "give":
+                                    case "":
 
 
 
+                                        var theseItemsNeededForCompletion = questData[allSubQuestsRequired[k]].itemsNeededForCompletion;
+
+                                        var itemsToGive = questData[allSubQuestsRequired[k]].startItemsReceived.split(",");
+                                        var allItemsToGive = [];
+                                        for (var j = 0; j < itemsToGive.length; j++) {
+                                            // check for any quantities:
+                                            var thisQuestItem = itemsToGive[j].split("x");
+                                            var thisQuantity, thisItem;
+                                            if (thisQuestItem.length > 1) {
+                                                thisQuantity = thisQuestItem[0];
+                                                thisItem = thisQuestItem[1];
+                                            } else {
+                                                thisQuantity = 1;
+                                                thisItem = itemsToGive[i];
+                                            }
+                                            if (!hasItemInInventory(thisItem, thisQuantity)) {
+                                                allSubQuestsComplete = false;
+                                            }
+                                        }
+
+
+
+                                        break;
+                                    case "world":
+                                        
+                                        if (questData[allSubQuestsRequired[k]].hasBeenActivated < 1) {
+                                            allSubQuestsComplete = false;
+
+                                        }
+                                        break;
+                                    default:
+                                        // threshold quest:
+                                   
+                                        var thresholdValueAtStart = questData[allSubQuestsRequired[k]].valueAtQuestStart;
+                                        var currentThresholdValue = accessDynamicVariable(questData[allSubQuestsRequired[k]].whatIsRequiredForCompletion);
+  
+                                        // check if it's an absolute value to check for, or an increment (whether there is a '+' at the start):
+                                        if (questData[allSubQuestsRequired[k]].thresholdNeededForCompletion.charAt(0) == "+") {
+                                            console.log(currentThresholdValue + " < "+questData[allSubQuestsRequired[k]].thresholdNeededForCompletion.substring(1));
+                                           if (currentThresholdValue - thresholdValueAtStart < questData[allSubQuestsRequired[k]].thresholdNeededForCompletion) {
+                                                allSubQuestsComplete = false;
+                                            }
+                                        } else {
+                                           
+                                            
+                                             if (currentThresholdValue < questData[allSubQuestsRequired[k]].thresholdNeededForCompletion.substring(1)) {
+                                                allSubQuestsComplete = false;
+                                            }
+                                        }
+
+                                        break;
+                                }
+
+
+
+                            }
+                            console.log("allSubQuestsComplete: "+allSubQuestsComplete);
+                            if (allSubQuestsComplete) {
+                                thisSpeech = questSpeech[2];
+                                closeQuest(thisNPC, questId);
+                            } else {
+                                // show 'underway' text:
+                                thisSpeech = questSpeech[1];
+                                // keep the NPC on this quest speech:
+                                thisNPC.speechIndex--;
+                            }
                             break;
                         case "world":
-                            
-                            if(questData[questId].hasBeenActivated > 0) {
-thisSpeech = questSpeech[2];
-questData[questId].hasBeenCompleted = true;
-
-giveQuestRewards(questId);
-
-                             
-
-                                checkForTitlesAwarded(questId);
-
-                                // remove quest text now:
-                                thisNPC.speech.splice(thisNPC.speechIndex, 1);
-                                // knock this back one so to keep it in step with the removed item:
-                                thisNPC.speechIndex--;
+                            if (questData[questId].hasBeenActivated > 0) {
+                                thisSpeech = questSpeech[2];
+                                closeQuest(thisNPC, questId);
                             } else {
                                 // show 'underway' text:
                                 thisSpeech = questSpeech[1];
@@ -2106,63 +2139,48 @@ giveQuestRewards(questId);
                             // threshold quest:
                             var thresholdValueAtStart = questData[questId].valueAtQuestStart;
                             var currentThresholdValue = accessDynamicVariable(questData[questId].whatIsRequiredForCompletion);
-
                             var thisQuestIsComplete = false;
                             // check if it's an absolute value to check for, or an increment (whether there is a '+' at the start):
                             if (questData[questId].thresholdNeededForCompletion.charAt(0) == "+") {
-                                if (currentThresholdValue >= questData[questId].thresholdNeededForCompletion.substring(1)) {
+                               
+                                 if (currentThresholdValue - thresholdValueAtStart >= questData[questId].thresholdNeededForCompletion) {
                                     thisQuestIsComplete = true;
                                 }
                             } else {
-                                if (currentThresholdValue - thresholdValueAtStart >= questData[questId].thresholdNeededForCompletion) {
+                                if (currentThresholdValue >= questData[questId].thresholdNeededForCompletion.substring(1)) {
                                     thisQuestIsComplete = true;
                                 }
                             }
                             if (thisQuestIsComplete) {
                                 // threshold quest is complete:
                                 thisSpeech = questSpeech[2];
-questData[questId].hasBeenCompleted = true;
-
-giveQuestRewards(questId);
-
-                             
-
-                                checkForTitlesAwarded(questId);
-
-                                // remove quest text now:
-                                thisNPC.speech.splice(thisNPC.speechIndex, 1);
-                                // knock this back one so to keep it in step with the removed item:
-                                thisNPC.speechIndex--;
+                                closeQuest(thisNPC, questId);
                             } else {
                                 // show 'underway' text:
                                 thisSpeech = questSpeech[1];
                                 // keep the NPC on this quest speech:
                                 thisNPC.speechIndex--;
                             }
-
                             break;
                     }
                 } else {
-
                     if ((individualSpeechCodes[i] == "quest") || (individualSpeechCodes[i] == "quest-no-close")) {
                         // ie. don't open the quest if it's "-no-open":
-
                         var okToStartQuest = true;
-
                         // see if any items need to be given to start the quest:
                         if (questData[questId].startItemsReceived) {
                             var itemsToAdd = questData[questId].startItemsReceived.split(",");
                             var allItemsToGive = [];
-                            for (var i = 0; i < itemsToAdd.length; i++) {
+                            for (var l = 0; l < itemsToAdd.length; l++) {
                                 // check for any quantities:
-                                var thisQuestItem = itemsToAdd[i].split("x");
+                                var thisQuestItem = itemsToAdd[l].split("x");
                                 var thisQuantity, thisItem;
                                 if (thisQuestItem.length > 1) {
                                     thisQuantity = thisQuestItem[0];
                                     thisItem = thisQuestItem[1];
                                 } else {
                                     thisQuantity = 1;
-                                    thisItem = itemsToAdd[i];
+                                    thisItem = itemsToAdd[l];
                                 }
                                 // build item object:
                                 var thisRewardObject = {
@@ -2195,6 +2213,30 @@ giveQuestRewards(questId);
                                 case "":
                                     // ###
                                     break;
+                                case "multi":
+                                    // open all sub quests:
+                                    var allSubQuestsRequired = questData[questId].subQuestsRequiredForCompletion.split(",");
+
+                                    for (var k = 0; k < allSubQuestsRequired.length; k++) {
+                                        questData[allSubQuestsRequired[k]].isUnderway = 1;
+                                        switch (questData[allSubQuestsRequired[k]].whatIsRequiredForCompletion) {
+                                            case "possess":
+                                            case "give":
+                                            case "":
+                                                //
+                                                break;
+                                            case "world":
+                                                //
+                                                break;
+                                            default:
+                                                // threshold quest:
+                                                questData[allSubQuestsRequired[k]].valueAtQuestStart = accessDynamicVariable(questData[allSubQuestsRequired[k]].whatIsRequiredForCompletion);
+                                                break;
+                                        }
+                                        questData[allSubQuestsRequired[k]].isUnderway = true;
+                                    }
+
+                                    break;
                                 case "world":
                                     // ###
                                     break;
@@ -2204,7 +2246,6 @@ giveQuestRewards(questId);
                                     break;
                             }
                             questData[questId].isUnderway = true;
-
                         }
                     }
                     thisSpeech = questSpeech[0];
@@ -2221,13 +2262,31 @@ giveQuestRewards(questId);
     }
 
     UI.showDialogue(thisNPC, thisSpeech);
-
     canCloseDialogueBalloonNextClick = false;
     if (!isPartOfNPCsNormalSpeech) {
         // set a flag so that pressing action near the NPC will close the balloon:
         canCloseDialogueBalloonNextClick = true;
     }
 }
+
+
+
+function closeQuest(whichNPC, whichQestId) {
+    if (questData[whichQestId].isRepeatable > 0) {
+        questData[whichQestId].hasBeenCompleted = false;
+        questData[whichQestId].isUnderway = false;
+    } else {
+        questData[whichQestId].hasBeenCompleted = true;
+        // remove quest text now:
+        whichNPC.speech.splice(whichNPC.speechIndex, 1);
+        // knock this back one so to keep it in step with the removed item:
+        whichNPC.speechIndex--;
+    }
+    checkForTitlesAwarded(whichQestId);
+    giveQuestRewards(whichQestId);
+}
+
+
 
 function giveQuestRewards(whichQuestId) {
 

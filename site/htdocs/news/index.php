@@ -13,7 +13,7 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/header.php");
 if(isset($_GET["cleaned"])) {
 // uses clean URLS - find articleId from the URL
 
-$query = "select newsID, cleanURL from tblnews WHERE cleanURL = '".$_GET["articleName"]."'";
+$query = "select newsid, cleanurl from tblnews WHERE cleanurl = '".$_GET["articleName"]."'";
 $result = mysql_query($query) or die ("couldn't execute query");
 
 if (mysql_num_rows($result) > 0) {
@@ -21,7 +21,7 @@ if (mysql_num_rows($result) > 0) {
 
 $row = mysql_fetch_array($result);
 
-$articleId = $row["newsID"];
+$articleId = $row["newsid"];
 
 }
 
@@ -49,7 +49,7 @@ if (!(is_numeric($articleId))) {
 <h2>Recent entries:</h2>
 <?php
 
-$newsQuery = "select * from tblNews WHERE status='1' order by timeAdded DESC limit 4";
+$newsQuery = "select * from tblnews WHERE status='1' order by timeadded DESC limit 4";
 $result = mysql_query($newsQuery) or die ("couldn't execute query");
 if (mysql_num_rows($result) > 0) {
 	echo '<div class="row medium-2up wide-4up equalHeights">';
@@ -65,14 +65,14 @@ if (mysql_num_rows($result) > 0) {
 	
 	//
 	
-	$query = "SELECT * FROM tblnews WHERE status ='1' AND newsID = '".$articleId."'";
+	$query = "SELECT * FROM tblnews WHERE status ='1' AND newsid = '".$articleId."'";
 	$result = mysql_query($query) or die ("couldn't execute query");
 	
 	$numberofrows = mysql_num_rows($result);
 	// check that something is returned
 	if ($numberofrows < 1) {
 	// get latest news item
-	$query = "SELECT * from tblNews WHERE status='1' order by timeAdded DESC limit 1";
+	$query = "SELECT * from tblnews WHERE status='1' order by timeadded DESC limit 1";
 	$result = mysql_query($query) or die ("couldn't execute query");
 	}
 		$row = mysql_fetch_array($result);
@@ -136,7 +136,7 @@ $size = getimagesize($_SERVER['DOCUMENT_ROOT'].'/images/banners/'.$bannerContent
 
 // find previous article:
 
-	$query = "SELECT * FROM tblnews WHERE status ='1' AND timeAdded < '".$thisArticleAdded."' order by timeAdded DESC";	
+	$query = "SELECT * FROM tblnews WHERE status ='1' AND timeadded < '".$thisArticleAdded."' order by timeadded DESC";	
 	$result = mysql_query($query) or die ("couldn't execute query");
 if (mysql_num_rows($result) > 0) {
 	$row = mysql_fetch_array($result);
@@ -150,7 +150,7 @@ if (mysql_num_rows($result) > 0) {
  
 // find next article:
 
-	$query = "SELECT * FROM tblnews WHERE status ='1' AND timeAdded > '".$thisArticleAdded."' order by timeAdded ASC";	
+	$query = "SELECT * FROM tblnews WHERE status ='1' AND timeadded > '".$thisArticleAdded."' order by timeadded ASC";	
 	$result = mysql_query($query) or die ("couldn't execute query");
 if (mysql_num_rows($result) > 0) {
 	$row = mysql_fetch_array($result);

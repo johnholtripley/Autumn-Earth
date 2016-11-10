@@ -24,7 +24,7 @@ if ($pos !== false) {
 	$endpagenumber = 1;
 }
 
-$query = "select * from tblNews WHERE status='1' order by timeAdded DESC";
+$query = "select * from tblnews WHERE status='1' order by timeadded DESC";
 $result = mysql_query($query) or die ("couldn't execute query");
 $numberOfEntries = mysql_num_rows($result);
 $resultsperpage = 5;
