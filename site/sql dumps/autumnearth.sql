@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 09, 2016 at 11:43 AM
+-- Generation Time: Nov 11, 2016 at 04:54 PM
 -- Server version: 5.6.24
 -- PHP Version: 5.6.8
 
@@ -507,12 +507,12 @@ CREATE TABLE IF NOT EXISTS `tblinventoryitems` (
 
 INSERT INTO `tblinventoryitems` (`itemID`, `shortname`, `description`, `priceCode`, `centreX`, `centreY`, `width`, `height`, `worldSrc`, `action`, `actionValue`, `dyeable`, `level`, `prerequisites`, `group`, `inscribable`, `colour`, `hasInherentColour`) VALUES
 (1, 'Wild Flax', '-', '1', '20.0', '24.0', 0, 0, 'wild-flax', '', 0, 0, 0, '0', '0', 0, 0, 0),
-(2, 'Wild Madder', 'A flower used for its red pigment.', '1', '20.0', '24.0', 0, 0, 'wild-madder', '', 0, 0, 0, '0', 'pgmt', 0, 1, 1),
-(3, 'Safflower', '-', '1', '20.0', '24.0', 0, 0, 'safflower', '', 0, 0, 0, '0', 'pgmt', 0, 2, 1),
-(4, 'Woad', '-', '1', '20.0', '24.0', 0, 0, 'woad', '', 0, 0, 0, '0', 'pgmt', 0, 4, 1),
-(5, 'Whortleberry', '-', '1', '20.0', '24.0', 0, 0, 'whortleberry', '', 0, 0, 0, '0', 'pgmt', 0, 7, 1),
-(6, 'Alder Bark', '-', '1', '20.0', '24.0', 0, 0, 'alder-bark', '', 0, 0, 0, '0', 'pgmt', 0, 16, 1),
-(7, 'Archil', '-', '1', '20.0', '24.0', 0, 0, 'archil', '', 0, 0, 0, '0', 'pgmt', 0, 5, 1),
+(2, 'Wild Madder', 'A flower used for its red pigment.', '1', '20.0', '24.0', 0, 0, 'wild-madder', '', 0, 0, 0, '0', '0', 0, 1, 1),
+(3, 'Safflower', '-', '1', '20.0', '24.0', 0, 0, 'safflower', '', 0, 0, 0, '0', '0', 0, 2, 1),
+(4, 'Woad', '-', '1', '20.0', '24.0', 0, 0, 'woad', '', 0, 0, 0, '0', '0', 0, 4, 1),
+(5, 'Whortleberry', '-', '1', '20.0', '24.0', 0, 0, 'whortleberry', '', 0, 0, 0, '0', '0', 0, 7, 1),
+(6, 'Alder Bark', '-', '1', '20.0', '24.0', 0, 0, 'alder-bark', '', 0, 0, 0, '0', '0', 0, 16, 1),
+(7, 'Archil', '-', '1', '20.0', '24.0', 0, 0, 'archil', '', 0, 0, 0, '0', '0', 0, 5, 1),
 (8, 'Copper Mordant', 'A standard mordant.', '1', '20.0', '24.0', 0, 0, 'copper-mordant', '', 0, 0, 0, '0', 'mrdt', 0, 0, 0),
 (9, 'Iron Mordant', 'A mordant for making darker dyes.', '1', '20.0', '24.0', 0, 0, 'iron-mordant', '', 0, 0, 0, '0', 'mrdt', 0, 16, 1),
 (10, 'Alum Mordant', 'A mordant used for brighter dyes.', '1', '20.0', '24.0', 0, 0, 'alum-mordant', '', 0, 0, 0, '0', 'mrdt', 0, 8, 1),
@@ -1154,6 +1154,24 @@ INSERT INTO `tblposts` (`postID`, `threadID`, `accountID`, `creationTime`, `post
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `tblprofessions`
+--
+
+CREATE TABLE IF NOT EXISTS `tblprofessions` (
+  `professionID` int(11) NOT NULL,
+  `professionName` varchar(128) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `tblprofessions`
+--
+
+INSERT INTO `tblprofessions` (`professionID`, `professionName`) VALUES
+(1, 'A hero''s journey');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `tblquests`
 --
 
@@ -1168,18 +1186,22 @@ CREATE TABLE IF NOT EXISTS `tblquests` (
   `itemsReceivedOnCompletion` varchar(255) DEFAULT NULL,
   `whatIsRequiredForCompletion` varchar(128) NOT NULL,
   `titleGainedAfterCompletion` int(11) DEFAULT NULL,
-  `thresholdNeededForCompletion` varchar(128) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+  `thresholdNeededForCompletion` varchar(128) NOT NULL,
+  `subQuestsRequiredForCompletion` varchar(128) DEFAULT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblquests`
 --
 
-INSERT INTO `tblquests` (`questID`, `journalTitle`, `journalDesc`, `isRepeatable`, `childOf`, `startItemsReceived`, `itemsNeededForCompletion`, `itemsReceivedOnCompletion`, `whatIsRequiredForCompletion`, `titleGainedAfterCompletion`, `thresholdNeededForCompletion`) VALUES
-(1, 'A hero''s journey', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 0, NULL, '9', '9', '2x21', 'give', 4, ''),
-(2, 'An unexpected journey', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 0, NULL, '', '', '9,14', 'world', NULL, ''),
-(3, 'A longer journey', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 1, NULL, '', '', '', 'hero.stats.numberOfcardsFlipped', NULL, '+2'),
-(4, 'A hero''s peregrination', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 0, NULL, '5,9', '5x19', '2x21,9', 'possess', 7, '');
+INSERT INTO `tblquests` (`questID`, `journalTitle`, `journalDesc`, `isRepeatable`, `childOf`, `startItemsReceived`, `itemsNeededForCompletion`, `itemsReceivedOnCompletion`, `whatIsRequiredForCompletion`, `titleGainedAfterCompletion`, `thresholdNeededForCompletion`, `subQuestsRequiredForCompletion`) VALUES
+(1, 'A hero''s journey', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 0, NULL, '9', '9', '2x21', 'give', 4, '', NULL),
+(2, 'An unexpected journey', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 0, NULL, '', '', '9,14', 'world', NULL, '', NULL),
+(3, 'A longer journey', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 1, NULL, '', '', '', 'hero.stats.numberOfcardsFlipped', NULL, '+2', NULL),
+(4, 'A hero''s peregrination', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 0, NULL, '5,9', '5x19', '2x21,9', 'possess', 7, '', NULL),
+(5, 'A much longer task', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 0, NULL, '', NULL, '2x21,9', 'multi', 7, '', '6,7'),
+(6, 'sub task 1', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 0, NULL, '', '', '', 'world', NULL, '', NULL),
+(7, 'sub task 2', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 0, NULL, '', '', '', 'hero.stats.numberOfcardsFlipped', NULL, '+2', NULL);
 
 -- --------------------------------------------------------
 
@@ -1203,6 +1225,30 @@ CREATE TABLE IF NOT EXISTS `tblquestsstatus` (
 
 INSERT INTO `tblquestsstatus` (`questStatusID`, `charID`, `questID`, `isUnderway`, `thresholdAtQuestStart`, `hasBeenActivated`, `hasBeenCompleted`) VALUES
 (1, 0, 0, 0, NULL, 5, 0);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tblrecipes`
+--
+
+CREATE TABLE IF NOT EXISTS `tblrecipes` (
+  `recipeID` int(11) NOT NULL,
+  `components` varchar(255) DEFAULT NULL,
+  `creates` int(11) DEFAULT NULL,
+  `baseColour` int(11) DEFAULT NULL,
+  `prerequisite` int(11) DEFAULT NULL,
+  `profession` int(11) DEFAULT NULL,
+  `recipeName` varchar(255) DEFAULT NULL,
+  `recipeDescription` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `tblrecipes`
+--
+
+INSERT INTO `tblrecipes` (`recipeID`, `components`, `creates`, `baseColour`, `prerequisite`, `profession`, `recipeName`, `recipeDescription`) VALUES
+(1, NULL, 0, 0, 0, NULL, '9', '9');
 
 -- --------------------------------------------------------
 
@@ -1629,6 +1675,12 @@ ALTER TABLE `tblposts`
   ADD PRIMARY KEY (`postID`);
 
 --
+-- Indexes for table `tblprofessions`
+--
+ALTER TABLE `tblprofessions`
+  ADD PRIMARY KEY (`professionID`);
+
+--
 -- Indexes for table `tblquests`
 --
 ALTER TABLE `tblquests`
@@ -1639,6 +1691,12 @@ ALTER TABLE `tblquests`
 --
 ALTER TABLE `tblquestsstatus`
   ADD PRIMARY KEY (`questStatusID`);
+
+--
+-- Indexes for table `tblrecipes`
+--
+ALTER TABLE `tblrecipes`
+  ADD PRIMARY KEY (`recipeID`);
 
 --
 -- Indexes for table `tblsavedsearches`
@@ -1784,15 +1842,25 @@ ALTER TABLE `tblplants`
 ALTER TABLE `tblposts`
   MODIFY `postID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=224;
 --
+-- AUTO_INCREMENT for table `tblprofessions`
+--
+ALTER TABLE `tblprofessions`
+  MODIFY `professionID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
+--
 -- AUTO_INCREMENT for table `tblquests`
 --
 ALTER TABLE `tblquests`
-  MODIFY `questID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=5;
+  MODIFY `questID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=8;
 --
 -- AUTO_INCREMENT for table `tblquestsstatus`
 --
 ALTER TABLE `tblquestsstatus`
   MODIFY `questStatusID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
+--
+-- AUTO_INCREMENT for table `tblrecipes`
+--
+ALTER TABLE `tblrecipes`
+  MODIFY `recipeID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT for table `tblsavedsearches`
 --

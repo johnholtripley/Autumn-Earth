@@ -13,7 +13,7 @@ $forumID = $_GET["forum"];
 
 
 
-$query = "select * from tblforums WHERE cleanURL = '".$forumID."'";
+$query = "select * from tblforums WHERE cleanurl = '".$forumID."'";
 
 
 
@@ -24,7 +24,7 @@ if (mysql_num_rows($result) > 0) {
 
 $row = mysql_fetch_array($result);
 
-$forumID = $row["forumID"];
+$forumID = $row["forumid"];
 
 }
 
@@ -50,7 +50,7 @@ if (is_numeric($forumID)) {
 	
 	//
 	// get forum title information:
-	$query = "SELECT * FROM tblForums WHERE forumID = " . $forumID;
+	$query = "SELECT * FROM tblforums WHERE forumid = " . $forumID;
 	$result = mysql_query($query) or die ("couldn't execute query");
 	
 	$numberofrows = mysql_num_rows($result);
@@ -87,10 +87,10 @@ if (is_numeric($forumID)) {
 	echo '<br /><p><a href="/forum/CreateThread.php?forum=' . $forumID . '" title="Create a new thread">Create a new thread</a></p>'."\n";
 	}
 	
-	$query = "SELECT tblThreads.*, tblacct.accountName AS userName
+	$query = "SELECT tblthreads.*, tblacct.accountname AS userName
 FROM tblacct
-INNER JOIN tblthreads on tblacct.accountID = tblthreads.accountID
-WHERE tblthreads.forumID = " . $forumID . " AND tblthreads.status>0  ORDER BY sticky DESC, tblThreads.latestPostID DESC";
+INNER JOIN tblthreads on tblacct.accountid = tblthreads.accountid
+WHERE tblthreads.forumid = " . $forumID . " AND tblthreads.status>0  ORDER BY sticky DESC, tblthreads.latestpostid DESC";
 	$result = mysql_query($query) or die ("couldn't execute query");
 	
 		

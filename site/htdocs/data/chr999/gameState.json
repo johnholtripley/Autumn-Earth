@@ -99,5 +99,7 @@
         "numberOfcardsFlipped": 8
     },
     "titlesEarned": [3,7],
-    "activeTitle": 3
+    "activeTitle": 3,
+    "professionsKnown": [0],
+    "recipesKnown": [0,1,2,3]
 }

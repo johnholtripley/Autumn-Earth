@@ -13,7 +13,7 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/header.php");
 <?php
 // get all card data:
 
-$query = "select * from tblCards";
+$query = "select * from tblcards";
 $result = mysql_query($query) or die ("couldn't execute query");
 if (mysql_num_rows($result) > 0) {
 

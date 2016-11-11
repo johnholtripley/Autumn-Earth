@@ -9,7 +9,7 @@ if (is_numeric($threadID)) {
 	include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
 	
 	// add to thread view count
-	$query = "UPDATE tblThreads SET viewCount = viewCount+1 WHERE threadID=" . $threadID;
+	$query = "UPDATE tblthreads SET viewcount = viewcount+1 WHERE threadid=" . $threadID;
 	$result = mysql_query($query) or die ("couldn't execute query");
 	
 	

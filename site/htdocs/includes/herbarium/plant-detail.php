@@ -4,7 +4,7 @@ include_once($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
 include_once($_SERVER['DOCUMENT_ROOT']."/includes/functions.php");
 
 
-$query = "select * from tblplants WHERE plantUrl = '".$_GET["plant"]."'";
+$query = "select * from tblplants WHERE planturl = '".$_GET["plant"]."'";
 $result = mysql_query($query) or die ("couldn't execute query");
 
 if (mysql_num_rows($result) > 0) {
@@ -44,7 +44,7 @@ echo ' or ';
 // get Genus:
 $latinNameSplit = explode(" ", $latinName);
 $genus = $latinNameSplit[0];
-$query = "SELECT plantUrl AS relatedPlantUrl, commonNamesJoined AS relatedCommonNamesJoined FROM tblplants WHERE latinName REGEXP '^(".$genus.")' AND isAquatic='".$isAquatic."' AND isNight='".$isNight."' AND plantID!='".$plantID."'";
+$query = "SELECT planturl AS relatedplanturl, commonnamesjoined AS relatedcommonnamesjoined FROM tblplants WHERE latinname REGEXP '^(".$genus.")' AND isaquatic='".$isAquatic."' AND isnight='".$isNight."' AND plantid!='".$plantID."'";
 
 $result = mysql_query($query) or die ("couldn't execute query");
 if (mysql_num_rows($result) > 0) {
@@ -67,7 +67,7 @@ echo '<p>Related to <a href="/herbarium/'.$relatedPlantUrl.'">'.$relatedCommonNa
 <?php
 $thisBuiltURL = "https://www.autumnearth.com/herbarium/".$plantUrl."/";
 			$pagetitle = $latinName.' - ' .$commonNames. ' - Autumn Earth Herbarium';
-			$shareImagePath = 'https://www.autumnearth.com/images/herbarium/'.$plantUrl.'.jpg';
+			$shareImagePath = 'https://www.autumnearth.com/images/herbarium/plants/'.$plantUrl.'.jpg';
 			$longDescription = $plantDesc;
 
          $urlToShare = urlencode($thisBuiltURL);
@@ -82,6 +82,9 @@ $thisBuiltURL = "https://www.autumnearth.com/herbarium/".$plantUrl."/";
     </li>
     <li class="socialGoogle">
         <a class="popupWindow" target="_blank" href="https://plus.google.com/share?url=<?php echo $urlToShare; ?>">Share on Google+</a>
+    </li>
+        <li class="socialTumblr">
+        <a class="popupWindow" target="_blank" href="http://tumblr.com/widgets/share/tool?canonicalUrl=<?php echo $urlToShare; ?>&amp;posttype=photo&amp;caption=<?php echo $descToShare; ?>&amp;content=<?php echo $shareImagePath; ?>">Share on Tumblr</a>
     </li>
     <li class="socialPinterest">
         <a class="largerPopupWindow" target="_blank" href="https://www.pinterest.com/pin/create/button/?url=<?php echo $urlToShare; ?>&amp;media=<?php echo $imageToShare; ?>&amp;description=<?php echo $descToShare; ?>&amp;hashtags=<?php echo $hashTag; ?>">Share on Pinterest</a>

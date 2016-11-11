@@ -48,6 +48,8 @@ function getHeroGameState() {
         hero.stats = data.stats;
         hero.titlesEarned = data.titlesEarned;
         hero.activeTitle = data.activeTitle;
+        hero.recipesKnown = data.recipesKnown;
+        hero.professionsKnown = data.professionsKnown;
        
         hero.inventory = data.inventory;
         if (currentMap > 0) {
@@ -1031,6 +1033,9 @@ function closeQuest(whichNPC, whichQestId) {
             whichNPC.speechIndex--;
         }
         checkForTitlesAwarded(whichQestId);
+    } else {
+        // keep the NPC on the quest dialogue:
+        whichNPC.speechIndex--;
     }
 }
 

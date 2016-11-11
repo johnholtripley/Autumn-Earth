@@ -16,7 +16,7 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/header.php");
 
 <?php
 
-$query = "SELECT * FROM tblForums ORDER BY title";
+$query = "SELECT * FROM tblforums ORDER BY title";
 $result = mysql_query($query) or die ("couldn't execute query");
 
 while ($row = mysql_fetch_array($result)) {

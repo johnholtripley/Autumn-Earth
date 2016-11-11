@@ -18,7 +18,7 @@ $forumURL = $_GET["forumName"];
 $fullCleanedURL = $forumURL."/".$threadURL;
 
 
-$query = "select threadID, cleanURL from tblthreads WHERE cleanURL = '".$fullCleanedURL."'";
+$query = "select threadid, cleanurl from tblthreads WHERE cleanurl = '".$fullCleanedURL."'";
 $result = mysql_query($query) or die ("couldn't execute query");
 
 if (mysql_num_rows($result) > 0) {
@@ -26,7 +26,7 @@ if (mysql_num_rows($result) > 0) {
 
 $row = mysql_fetch_array($result);
 
-$threadID = $row["threadID"];
+$threadID = $row["threadid"];
 
 }
 
@@ -51,11 +51,11 @@ if (is_numeric($threadID)) {
 if (isset($_SESSION['username'])) {
 // check the status of this user and this thread - if the user is subscribed to this thread, there their status for this thread should be set to 0
 $query = "
-SELECT tblsubscribedthreads.*, tblacct.accountName, tblacct.accountID AS useracctid, tblthreads.threadid, tblthreads.cleanURL as cleanURL
+SELECT tblsubscribedthreads.*, tblacct.accountname, tblacct.accountid AS useracctid, tblthreads.threadid, tblthreads.cleanurl as cleanURL
 FROM tblsubscribedthreads
-INNER JOIN tblacct on tblsubscribedthreads.accountID = tblacct.accountID
+INNER JOIN tblacct on tblsubscribedthreads.accountid = tblacct.accountid
 INNER JOIN tblthreads on tblsubscribedthreads.threadid = tblthreads.threadid
-WHERE tblacct.accountID = tblsubscribedthreads.accountID AND tblthreads.ThreadID = '".$threadID."' AND tblsubscribedthreads.status='1' AND tblacct.accountName = '".$_SESSION['username']."'";
+WHERE tblacct.accountid = tblsubscribedthreads.accountid AND tblthreads.threadid = '".$threadID."' AND tblsubscribedthreads.status='1' AND tblacct.accountname = '".$_SESSION['username']."'";
 
 $result = mysql_query($query) or die ("couldn't execute query1");
 $numberofrows = mysql_num_rows($result);
@@ -63,20 +63,20 @@ if ($numberofrows > 0) {
 $row = mysql_fetch_array($result);
 extract ($row);
 // update status
-$query = "update tblsubscribedthreads SET status='0' WHERE accountID='".$useracctid."' AND threadID='".$threadID."'";
+$query = "update tblsubscribedthreads SET status='0' WHERE accountid='".$useracctid."' AND threadid='".$threadID."'";
 $result = mysql_query($query) or die ("couldn't execute query2");
 }
 	}
 	
 	// get all the information required in one query:
-	$query = "SELECT tblposts.*, tblThreads.title AS threadTitle, tblThreads.status AS threadstatus, tblForums.title AS forumTitle, tblForums.imagePath, tblforums.ForumID AS thisforumid, tblacct.Accountname AS acctusername, tblacct.signature AS acctsignature, tblacct.currentCharID as currentcharid, tbllocations.locName AS charlocation, tblCharacters.charname AS charname 
+	$query = "SELECT tblposts.*, tblthreads.title AS threadTitle, tblthreads.status AS threadstatus, tblforums.title AS forumTitle, tblforums.imagepath, tblforums.forumid AS thisforumid, tblacct.accountname AS acctusername, tblacct.signature AS acctsignature, tblacct.currentcharid as currentcharid, tbllocations.locname AS charlocation, tblcharacters.charname AS charname 
 FROM tblposts
-INNER JOIN tblthreads on tblposts.ThreadID = tblthreads.ThreadID
-INNER JOIN tblforums on tblthreads.ForumID = tblforums.ForumID
-INNER JOIN tblacct on tblacct.accountID = tblposts.accountID
-INNER JOIN tblCharacters on tblCharacters.charID = tblacct.currentcharid
-INNER JOIN tbllocations on tblCharacters.location = tbllocations.locID
-WHERE tblposts.ThreadID = " . $threadID . " ORDER BY tblposts.Sticky DESC, tblposts.CreationTime ASC";
+INNER JOIN tblthreads on tblposts.threadid = tblthreads.threadid
+INNER JOIN tblforums on tblthreads.forumid = tblforums.forumid
+INNER JOIN tblacct on tblacct.accountid = tblposts.accountid
+INNER JOIN tblcharacters on tblcharacters.charid = tblacct.currentcharid
+INNER JOIN tbllocations on tblcharacters.location = tbllocations.locid
+WHERE tblposts.threadid = " . $threadID . " ORDER BY tblposts.sticky DESC, tblposts.creationtime ASC";
 
 
 	
