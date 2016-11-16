@@ -32,7 +32,7 @@ if ($pos !== false) {
 	$endpagenumber = 1;
 }
 
-$query = "select * from tblplants ORDER BY timecreated desc";
+$query = "select * from tblplants ORDER BY timecreated DESC";
 $result = mysql_query($query) or die ("couldn't execute query");
 $numberOfEntries = mysql_num_rows($result);
 

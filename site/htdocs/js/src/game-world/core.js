@@ -76,9 +76,11 @@ function loadCoreAssets() {
 function prepareCoreAssets() {
     heroImg = Loader.getImage("heroImg");
 
-    getQuestDetails();
+    getColours();
     
 }
+
+
 
 function loadCardData() {
     getJSON("/game-world/getCardDetails.php", function(data) {
@@ -206,6 +208,16 @@ function loadTitles() {
     }, function(status) {
         // try again:
         loadTitles();
+    });
+}
+
+function getColours() {
+        getJSON("/game-world/getColours.php", function(data) {
+        colourNames = data.colourNames;
+        getQuestDetails();
+    }, function(status) {
+        // try again:
+        getColours();
     });
 }
 

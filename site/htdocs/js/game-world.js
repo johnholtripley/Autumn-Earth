@@ -43,7 +43,7 @@ function saveCartographyMask() {
     postData('/game-world/saveCartographicMapMask.php', 'chr=' + characterId + '&dungeonName=' + randomDungeonName + '&currentMap=' + currentMap + '&data=' + dataURL);
 }
 
-colourNames = ["",
+/*colourNames = ["",
     "Crimson",
     "Yellow",
     "Orange",
@@ -69,6 +69,7 @@ colourNames = ["",
     "(dark brown/chestnut)",
     "Grey"
 ];
+*/
 
 function getColourName(colour, itemType) {
     var colourName = "";
@@ -175,6 +176,8 @@ var boosterCardsRevealed = 0;
 var boosterCardsToAdd = [];
 
 var questData = [];
+
+var colourNames = [];
 
 // key bindings
 var key = [0, 0, 0, 0, 0, 0];
@@ -1301,6 +1304,8 @@ function getHeroGameState() {
         hero.stats = data.stats;
         hero.titlesEarned = data.titlesEarned;
         hero.activeTitle = data.activeTitle;
+        hero.recipesKnown = data.recipesKnown;
+        hero.professionsKnown = data.professionsKnown;
        
         hero.inventory = data.inventory;
         if (currentMap > 0) {
@@ -1327,9 +1332,11 @@ function loadCoreAssets() {
 function prepareCoreAssets() {
     heroImg = Loader.getImage("heroImg");
 
-    getQuestDetails();
+    getColours();
     
 }
+
+
 
 function loadCardData() {
     getJSON("/game-world/getCardDetails.php", function(data) {
@@ -1457,6 +1464,16 @@ function loadTitles() {
     }, function(status) {
         // try again:
         loadTitles();
+    });
+}
+
+function getColours() {
+        getJSON("/game-world/getColours.php", function(data) {
+        colourNames = data.colourNames;
+        getQuestDetails();
+    }, function(status) {
+        // try again:
+        getColours();
     });
 }
 
@@ -2284,6 +2301,9 @@ function closeQuest(whichNPC, whichQestId) {
             whichNPC.speechIndex--;
         }
         checkForTitlesAwarded(whichQestId);
+    } else {
+        // keep the NPC on the quest dialogue:
+        whichNPC.speechIndex--;
     }
 }
 

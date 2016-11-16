@@ -32,7 +32,7 @@ for($i=0;$i<count($allIds);$i++) {
 	$itemIdString .= intval($allIds[$i]);
 }
 
-$query = "SELECT * FROM tblrecipes where recipeid in (".$itemIdString.")";
+$query = "SELECT tblrecipes.*, tblinventoryitems.shortname as recipeFallbackName, tblinventoryitems.description as recipeDescriptionFallback FROM tblrecipes INNER JOIN tblinventoryitems on tblrecipes.creates = tblinventoryitems.itemid where tblrecipes.recipeid in (".$itemIdString.")";
 $result = mysql_query($query) or die ("recipes failed");
 
 
@@ -44,13 +44,22 @@ while ($row = mysql_fetch_array($result)) {
 	$outputJson .= '"'.$recipeID.'":{';
 $outputJson .= '"components":"'.$components.'",';
 $outputJson .= '"creates":"'.$creates.'",';
-$outputJson .= '"baseColour":"'.$baseColour.'",';
 $outputJson .= '"prerequisite":"'.$prerequisite.'",';
 $outputJson .= '"profession":"'.$profession.'",';
+
+
+if($recipeName == "") {
+$outputJson .= '"recipeName":"'.$recipeFallbackName.'",';
+} else {
 $outputJson .= '"recipeName":"'.$recipeName.'",';
-$outputJson .= '"recipeDescription":"'.$recipeDescription.'"';
+}
 
 
+if($recipeDescription == "") {
+$outputJson .= '"recipeDescription":"'.$recipeDescriptionFallback.'"';
+} else {
+	$outputJson .= '"recipeDescription":"'.$recipeDescription.'"';
+}
 
 $outputJson .= '},';
 }

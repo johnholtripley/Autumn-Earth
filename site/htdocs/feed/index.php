@@ -13,7 +13,7 @@ header("Content-type: text/xml; charset=iso-8859-1");
 echo '<?xml version="1.0" encoding="iso-8859-1"?>'."\n";
 echo '<rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom">'."\n";
 	echo '<channel>'."\n";
-		echo '<title>Autumn Earth News</title>'."\n";
+		echo '<title>Autumn Earth Chronicle</title>'."\n";
 		echo '<link>https://www.autumnearth.com/feed/</link>'."\n";
 		echo '<description>Latest News from the world of Autumn Earth</description>'."\n";
 		echo '<language>en</language>'."\n";

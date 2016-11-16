@@ -1,4 +1,4 @@
-colourNames = ["",
+/*colourNames = ["",
     "Crimson",
     "Yellow",
     "Orange",
@@ -24,6 +24,7 @@ colourNames = ["",
     "(dark brown/chestnut)",
     "Grey"
 ];
+*/
 
 function getColourName(colour, itemType) {
     var colourName = "";

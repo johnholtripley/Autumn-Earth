@@ -53,6 +53,8 @@ var boosterCardsToAdd = [];
 
 var questData = [];
 
+var colourNames = [];
+
 // key bindings
 var key = [0, 0, 0, 0, 0, 0];
 
