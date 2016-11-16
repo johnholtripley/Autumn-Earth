@@ -1444,4 +1444,34 @@ do {
 return $constructedWord;
 }
 
+
+
+
+
+
+
+function buildBreadCrumb($breadcrumbPath) {
+	$pathSplit = explode("/", $breadcrumbPath);
+	$htmlOutput = '<ul class="breadcrumbs" vocab="http://schema.org/" typeof="BreadcrumbList">';
+	$pathBuiltSoFar = '/';
+	for ($i=0; $i<count($pathSplit);$i++) {
+
+$htmlOutput .= '<li property="itemListElement" typeof="ListItem">';
+$pathBuiltSoFar .= $pathSplit[$i].'/';
+$htmlOutput .= '<a property="item" typeof="WebPage" href="'.$pathBuiltSoFar.'"><span property="name">'.ucfirst($pathSplit[$i]).'</span></a>';
+$htmlOutput .= '<meta property="position" content="'.($i+1).'">';
+$htmlOutput .= '</li>';
+
+
+	}
+	$htmlOutput .= '</ul>';
+	return $htmlOutput;
+}
+
+
+
+
+
+
+
 ?>

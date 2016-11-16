@@ -244,3 +244,11 @@ width: 84px;
     background-repeat: no-repeat;
  @include background-size(cover);   
 }
+
+
+.breadcrumbs {
+    li {
+        display: inline;
+        padding-right: 12px;
+    }
+}

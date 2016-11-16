@@ -36,8 +36,16 @@ echo "<p>Sorry, that profession wasn't found</p>";
 	extract(mysql_fetch_array($result));
 
 
-echo '<h2>'.$thisProfession.'</h2>';
+// breadcrumb:
+	
+	echo buildBreadCrumb('codex/crafting/dyeing/recipes');
 
+
+
+
+
+echo '<h2>'.$thisProfession.'</h2>';
+echo '<h3>Recipes</h3>';
 $query2 = "SELECT tblrecipes.*, tblinventoryitems.itemid as productId, tblinventoryitems.shortname as recipeFallbackName, tblinventoryitems.description as recipeDescriptionFallback FROM tblrecipes INNER JOIN tblinventoryitems on tblrecipes.creates = tblinventoryitems.itemid where tblrecipes.profession='".$professionID."'";
 
 $result2 = mysql_query($query2) or die ("recipes failed");
@@ -51,13 +59,13 @@ echo '<li>';
 
 echo '<img src="/images/game-world/inventory-items/'.$productId.'.png" alt="'.$recipeFallbackName.'" style="width: auto;">';
 
-echo '<h3>';
+echo '<h4>';
 if($recipeName == "") {
 echo $recipeFallbackName;
 } else {
 	echo $recipeName;
 }
-echo '</h3>';
+echo '</h4>';
 echo '<p>';
 if($recipeDescription == "") {
 echo $recipeDescriptionFallback;
