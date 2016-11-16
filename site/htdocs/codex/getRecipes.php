@@ -38,7 +38,7 @@ echo "<p>Sorry, that profession wasn't found</p>";
 
 echo '<h2>'.$thisProfession.'</h2>';
 
-$query2 = "SELECT tblrecipes.*, tblinventoryitems.shortname as recipeFallbackName, tblinventoryitems.description as recipeDescriptionFallback FROM tblrecipes INNER JOIN tblinventoryitems on tblrecipes.creates = tblinventoryitems.itemid where tblrecipes.profession='".$professionID."'";
+$query2 = "SELECT tblrecipes.*, tblinventoryitems.itemid as productId, tblinventoryitems.shortname as recipeFallbackName, tblinventoryitems.description as recipeDescriptionFallback FROM tblrecipes INNER JOIN tblinventoryitems on tblrecipes.creates = tblinventoryitems.itemid where tblrecipes.profession='".$professionID."'";
 
 $result2 = mysql_query($query2) or die ("recipes failed");
 
@@ -49,11 +49,13 @@ while ($row = mysql_fetch_array($result2)) {
 	extract($row);
 echo '<li>';
 
+echo '<img src="/images/game-world/inventory-items/'.$productId.'.png" alt="'.$recipeFallbackName.'" style="width: auto;">';
+
 echo '<h3>';
 if($recipeName == "") {
 echo $recipeFallbackName;
 } else {
-	echo $recipeName.'<span> (creates '.$recipeFallbackName.')</span>';
+	echo $recipeName;
 }
 echo '</h3>';
 echo '<p>';
@@ -98,15 +100,18 @@ array_push($groupItems, $thisGroupNameJoined);
 // remove last comma:
 
 $componentNumbers = rtrim($componentNumbers, ",");
-if($componentNumbers != "") {
+if(($componentNumbers != "") || (count($groupItems)>0)) {
+echo '<p>Ingredients:</p><ol>';
+	if($componentNumbers != "") {
 $componentsQuery = "select tblinventoryitems.itemid, tblinventoryitems.shortname as innerShortName from tblinventoryitems where tblinventoryitems.itemid in (".$componentNumbers.")";
 $result3 = mysql_query($componentsQuery) or die ("ingredients failed");
-echo '<p>Ingredients:</p><ol>';
+
 while ($componentsRow = mysql_fetch_array($result3)) {
 	extract($componentsRow);
 echo '<li>';
 echo $innerShortName;
 echo '</li>';
+}
 }
 
 if(count($groupItems >0)) {

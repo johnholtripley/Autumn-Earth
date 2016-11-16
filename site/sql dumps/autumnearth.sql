@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 11, 2016 at 04:54 PM
+-- Generation Time: Nov 16, 2016 at 02:43 PM
 -- Server version: 5.6.24
 -- PHP Version: 5.6.8
 
@@ -231,6 +231,47 @@ INSERT INTO `tblcharacters` (`charID`, `accountID`, `charName`, `location`, `gam
 (15, 39, 'dilly20', 4, NULL, NULL, NULL, NULL, NULL, NULL, '1,2,3,1,2,1,1,1,2,1,2,3', NULL, 0, 200, 0, '2015-06-30', '10|38|60'),
 (16, 39, 'dilly21', 1, NULL, NULL, NULL, NULL, NULL, NULL, '', NULL, 0, 200, 0, '2015-06-30', '-1'),
 (17, 50, 'dilly22', 1, NULL, NULL, NULL, NULL, NULL, NULL, '', NULL, 0, 200, 0, '2015-06-30', '-1');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tblcolours`
+--
+
+CREATE TABLE IF NOT EXISTS `tblcolours` (
+  `colourID` int(11) NOT NULL,
+  `colourName` varchar(128) NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `tblcolours`
+--
+
+INSERT INTO `tblcolours` (`colourID`, `colourName`) VALUES
+(0, ''),
+(1, 'Crimson'),
+(2, 'Yellow'),
+(3, 'Orange'),
+(4, 'Blue'),
+(5, 'Purple'),
+(6, 'Green'),
+(7, 'Brown'),
+(8, 'White'),
+(9, 'Pink'),
+(10, '(light yellow/cream)'),
+(11, '(light orange/coral)'),
+(12, 'Aquamarine'),
+(13, 'Violet'),
+(14, '(light green/lime)'),
+(15, 'Tawny'),
+(16, 'Black'),
+(18, '(dark yellow/amber)'),
+(19, '(dark orange/sienna)'),
+(20, '(dark blue/sapphire)'),
+(21, '(indigo/imperial purple)'),
+(22, '(dark green/emerald/olive)'),
+(23, '(dark brown/chestnut)'),
+(24, 'Grey');
 
 -- --------------------------------------------------------
 
@@ -499,7 +540,7 @@ CREATE TABLE IF NOT EXISTS `tblinventoryitems` (
   `inscribable` tinyint(1) NOT NULL,
   `colour` int(128) NOT NULL,
   `hasInherentColour` tinyint(1) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblinventoryitems`
@@ -508,16 +549,15 @@ CREATE TABLE IF NOT EXISTS `tblinventoryitems` (
 INSERT INTO `tblinventoryitems` (`itemID`, `shortname`, `description`, `priceCode`, `centreX`, `centreY`, `width`, `height`, `worldSrc`, `action`, `actionValue`, `dyeable`, `level`, `prerequisites`, `group`, `inscribable`, `colour`, `hasInherentColour`) VALUES
 (1, 'Wild Flax', '-', '1', '20.0', '24.0', 0, 0, 'wild-flax', '', 0, 0, 0, '0', '0', 0, 0, 0),
 (2, 'Wild Madder', 'A flower used for its red pigment.', '1', '20.0', '24.0', 0, 0, 'wild-madder', '', 0, 0, 0, '0', '0', 0, 1, 1),
-(3, 'Safflower', '-', '1', '20.0', '24.0', 0, 0, 'safflower', '', 0, 0, 0, '0', '0', 0, 2, 1),
-(4, 'Woad', '-', '1', '20.0', '24.0', 0, 0, 'woad', '', 0, 0, 0, '0', '0', 0, 4, 1),
-(5, 'Whortleberry', '-', '1', '20.0', '24.0', 0, 0, 'whortleberry', '', 0, 0, 0, '0', '0', 0, 7, 1),
-(6, 'Alder Bark', '-', '1', '20.0', '24.0', 0, 0, 'alder-bark', '', 0, 0, 0, '0', '0', 0, 16, 1),
-(7, 'Archil', '-', '1', '20.0', '24.0', 0, 0, 'archil', '', 0, 0, 0, '0', '0', 0, 5, 1),
+(3, 'Safflower', 'A flower used for its yellow pigment.', '1', '20.0', '24.0', 0, 0, 'safflower', '', 0, 0, 0, '0', '0', 0, 2, 1),
+(5, 'Whortleberry', 'The berries are used for their blue colour.', '1', '20.0', '24.0', 0, 0, 'whortleberry', '', 0, 0, 0, '0', '0', 0, 4, 1),
+(6, 'Meadowsweet', 'Used to make black pigments.', '1', '20.0', '24.0', 0, 0, 'meadowsweet', '', 0, 0, 0, '0', '0', 0, 16, 1),
+(7, 'Archil', 'A purple dye.', '1', '20.0', '24.0', 0, 0, 'archil', '', 0, 0, 0, '0', 'dye', 0, 5, 1),
 (8, 'Copper Mordant', 'A standard mordant.', '1', '20.0', '24.0', 0, 0, 'copper-mordant', '', 0, 0, 0, '0', 'mrdt', 0, 0, 0),
 (9, 'Iron Mordant', 'A mordant for making darker dyes.', '1', '20.0', '24.0', 0, 0, 'iron-mordant', '', 0, 0, 0, '0', 'mrdt', 0, 16, 1),
 (10, 'Alum Mordant', 'A mordant used for brighter dyes.', '1', '20.0', '24.0', 0, 0, 'alum-mordant', '', 0, 0, 0, '0', 'mrdt', 0, 8, 1),
 (11, 'Small Glass Bottle', '', '1', '20.0', '24.0', 0, 0, 'small-glass-bottle', '', 0, 0, 0, '0', '0', 0, 0, 0),
-(12, 'Dye', '', '1', '20.0', '24.0', 0, 0, 'dye', '', 0, 0, 0, '0', '0', 0, 0, 0),
+(12, 'Dye', 'A standard pigment dye.', '1', '20.0', '24.0', 0, 0, 'dye', '', 0, 0, 0, '0', 'dye', 0, 0, 0),
 (13, 'Dyer''s Cauldron', '', '1', '20.0', '24.0', 0, 0, 'dyers-cauldron', 'dyer', 0, 0, 0, '0', '0', 0, 0, 0),
 (14, 'Linen', '', '1', '20.0', '24.0', 0, 0, 'linen', '', 0, 1, 0, '0', '0', 0, 0, 0),
 (15, 'Wool', '', '1', '20.0', '24.0', 0, 0, 'wool', '', 0, 1, 0, '0', '0', 0, 0, 0),
@@ -527,7 +567,13 @@ INSERT INTO `tblinventoryitems` (`itemID`, `shortname`, `description`, `priceCod
 (19, 'Pumpkin', 'A tasty pumpkin.', '1', '16.0', '18.0', 25, 23, 'pumpkin', '', 0, 0, 0, '0', '0', 0, 0, 0),
 (20, 'Large Backpack', 'A 20 slot bag', '2', '20.0', '24.0', 0, 0, 'large-backpack', 'bag', 20, 1, 0, '0', '0', 0, 0, 0),
 (21, 'Card Pack', '5 cards', '4', '20.0', '24.0', 0, 0, 'card-pack', 'booster', 0, 0, 0, '0', '0', 0, 0, 0),
-(22, 'Standing Stone', '', '4', '49.0', '81.0', 63, 63, 'standing-stone', 'questToggle', 2, 0, 0, '0', '0', 0, 0, 0);
+(22, 'Standing Stone', '', '4', '49.0', '81.0', 63, 63, 'standing-stone', 'questToggle', 2, 0, 0, '0', '0', 0, 0, 0),
+(23, 'Mugwort', 'Used to make green dyes', '4', '49.0', '81.0', 63, 63, 'mugwort', '', 0, 0, 0, '0', '0', 0, 6, 1),
+(24, 'Rim Lichen', 'Used to make purple dyes', '4', '49.0', '81.0', 63, 63, 'rim-lichen', '', 0, 0, 0, '0', '0', 0, 5, 1),
+(25, 'Spring water', '', '4', '49.0', '81.0', 63, 63, 'spring-water', '', 0, 0, 0, '0', '0', 0, 0, 0),
+(26, 'Wood Ash', '', '4', '49.0', '81.0', 63, 63, 'wood-ash', '', 0, 0, 0, '0', '0', 0, 0, 0),
+(27, 'Apple Wood', '', '4', '49.0', '81.0', 63, 63, 'apple-wood', '', 0, 0, 0, '0', '0', 0, 0, 0),
+(28, 'Lye', 'Used for bleaching', '4', '49.0', '81.0', 63, 63, 'lye', '', 0, 0, 0, '0', '0', 0, 8, 1);
 
 -- --------------------------------------------------------
 
@@ -1159,15 +1205,16 @@ INSERT INTO `tblposts` (`postID`, `threadID`, `accountID`, `creationTime`, `post
 
 CREATE TABLE IF NOT EXISTS `tblprofessions` (
   `professionID` int(11) NOT NULL,
-  `professionName` varchar(128) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+  `professionName` varchar(128) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
+  `cleanurl` varchar(128) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblprofessions`
 --
 
-INSERT INTO `tblprofessions` (`professionID`, `professionName`) VALUES
-(1, 'A hero''s journey');
+INSERT INTO `tblprofessions` (`professionID`, `professionName`, `cleanurl`) VALUES
+(0, 'Dyeing', 'dyeing');
 
 -- --------------------------------------------------------
 
@@ -1236,19 +1283,25 @@ CREATE TABLE IF NOT EXISTS `tblrecipes` (
   `recipeID` int(11) NOT NULL,
   `components` varchar(255) DEFAULT NULL,
   `creates` int(11) DEFAULT NULL,
-  `baseColour` int(11) DEFAULT NULL,
   `prerequisite` int(11) DEFAULT NULL,
   `profession` int(11) DEFAULT NULL,
   `recipeName` varchar(255) DEFAULT NULL,
   `recipeDescription` varchar(255) DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblrecipes`
 --
 
-INSERT INTO `tblrecipes` (`recipeID`, `components`, `creates`, `baseColour`, `prerequisite`, `profession`, `recipeName`, `recipeDescription`) VALUES
-(1, NULL, 0, 0, 0, NULL, '9', '9');
+INSERT INTO `tblrecipes` (`recipeID`, `components`, `creates`, `prerequisite`, `profession`, `recipeName`, `recipeDescription`) VALUES
+(0, '11,mrdt,2', 12, 0, 0, 'Crimson Dye', ''),
+(1, '11,mrdt,3', 12, 0, 0, 'Yellow Dye', ''),
+(2, '11,mrdt,5', 12, 0, 0, 'Blue Dye', ''),
+(3, '11,mrdt,24', 7, 0, 0, '', ''),
+(4, '26,25', 28, 0, 0, '', ''),
+(5, '11,mrdt,6', 12, 0, 0, 'Black Dye', ''),
+(6, 'dye,dye', 12, 0, 0, 'Mix dyes', ''),
+(7, '27', 26, 0, 0, 'Burn Wood', 'Produce Wood Ash by burning');
 
 -- --------------------------------------------------------
 
@@ -1567,6 +1620,12 @@ ALTER TABLE `tblcharacters`
   ADD PRIMARY KEY (`charID`);
 
 --
+-- Indexes for table `tblcolours`
+--
+ALTER TABLE `tblcolours`
+  ADD PRIMARY KEY (`colourID`);
+
+--
 -- Indexes for table `tblcontractbids`
 --
 ALTER TABLE `tblcontractbids`
@@ -1752,6 +1811,11 @@ ALTER TABLE `tblcards`
 ALTER TABLE `tblcharacters`
   MODIFY `charID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=18;
 --
+-- AUTO_INCREMENT for table `tblcolours`
+--
+ALTER TABLE `tblcolours`
+  MODIFY `colourID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=25;
+--
 -- AUTO_INCREMENT for table `tblcontractbids`
 --
 ALTER TABLE `tblcontractbids`
@@ -1805,7 +1869,7 @@ ALTER TABLE `tblguilds`
 -- AUTO_INCREMENT for table `tblinventoryitems`
 --
 ALTER TABLE `tblinventoryitems`
-  MODIFY `itemID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=23;
+  MODIFY `itemID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=29;
 --
 -- AUTO_INCREMENT for table `tbllocations`
 --
@@ -1845,7 +1909,7 @@ ALTER TABLE `tblposts`
 -- AUTO_INCREMENT for table `tblprofessions`
 --
 ALTER TABLE `tblprofessions`
-  MODIFY `professionID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
+  MODIFY `professionID` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `tblquests`
 --
@@ -1860,7 +1924,7 @@ ALTER TABLE `tblquestsstatus`
 -- AUTO_INCREMENT for table `tblrecipes`
 --
 ALTER TABLE `tblrecipes`
-  MODIFY `recipeID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
+  MODIFY `recipeID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=8;
 --
 -- AUTO_INCREMENT for table `tblsavedsearches`
 --
