@@ -63,11 +63,11 @@ $query2 = "SELECT tblrecipes.*, tblcolours.colourName, tblinventoryitems.itemid 
 $result2 = mysql_query($query2) or die ("recipes failed:".$query2);
 
 
-echo '<ul>';
+echo '<div class="row medium-3up wide-5up equalHeights" id="recipeCards">';
 
 while ($row = mysql_fetch_array($result2)) {
 	extract($row);
-echo '<li id="recipe'.$recipeID.'">';
+echo '<div class="column" id="recipe'.$recipeID.'"><div>';
 $thisColour = '';
 $thisColourPrefix = '';
 if($hasInherentColour<1) {
@@ -155,9 +155,9 @@ if(count($groupItems >0)) {
 
 echo '</ol>';
 }
-echo '</li>';
+echo '</div></div>';
 }
-echo '</ul>';
+echo '</div>';
 }
 
 
