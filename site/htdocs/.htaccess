@@ -355,6 +355,8 @@ RewriteRule    ^chronicle/([A-Za-z0-9-]+)/?$     news/index.php?cleaned=1&articl
 RewriteRule    ^chronicle/?$     news/archive.php [NC,L]
 
 RewriteRule    ^codex/crafting/([A-Za-z0-9-]+)/recipes/?$    codex/getRecipes.php?profession=$1    [NC,L]  
+RewriteRule    ^codex/items/([A-Za-z0-9-]+)/?$    codex/showItemDetail.php?cleanURL=$1    [NC,L]  
+RewriteRule    ^codex/items/     codex/items.php [NC,L]
 
 RewriteRule    ^almanack/?$     events/all.php [NC,L]
 RewriteRule    ^almanack/([A-Za-z0-9-]+)/?$     events/index.php?cleaned=1&eventName=$1 [NC,L]

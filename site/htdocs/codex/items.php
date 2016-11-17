@@ -19,16 +19,34 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/header.php");
 		<h1>The Codex</h1>
 
 
-<h2>Items</h2>
-<ul>
-<li><a href="/codex/items/">Item index</a></li>
-</ul>
 
-<h2>Crafting</h2>
-<h3>Dyeing</h3>
-<ul>
-<li><a href="/codex/crafting/dyeing/recipes/">Recipes</a></li>
-</ul>
+
+<h2>Item index</h2>
+
+
+<?php
+
+$letters = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
+for ($i=0;$i<count($letters);$i++) {
+$query = "select * from tblinventoryitems where shortname LIKE '".$letters[$i]."%' and showinthecodex>0";
+$result = mysql_query($query) or die ("couldn't execute query");
+
+if(mysql_num_rows($result) > 0) {
+
+echo '<h3>'.$letters[$i].'</h3>';
+echo '<ul>';
+while ($row = mysql_fetch_array($result)) {
+	extract($row);
+
+echo '<li><a href="/codex/items/'.$cleanURL.'">'.$shortname.'</a></li>';
+
+}
+echo '</ul>';
+}
+
+
+}
+?>
 
 <hr>
 </div>

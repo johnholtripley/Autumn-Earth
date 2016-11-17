@@ -1450,15 +1450,26 @@ return $constructedWord;
 
 
 
-function buildBreadCrumb($breadcrumbPath) {
+function buildBreadCrumb($breadcrumbPath,$breadcrumbNames = "") {
+	// $breadcrumbPath is the full path split by /
+	// $breadcrumbNames will override any text to display - otherwise the url will be used. Split by /. 
 	$pathSplit = explode("/", $breadcrumbPath);
+	$nameSplit = explode("/", $breadcrumbNames);
 	$htmlOutput = '<ul class="breadcrumbs" vocab="http://schema.org/" typeof="BreadcrumbList">';
 	$pathBuiltSoFar = '/';
 	for ($i=0; $i<count($pathSplit);$i++) {
 
 $htmlOutput .= '<li property="itemListElement" typeof="ListItem">';
 $pathBuiltSoFar .= $pathSplit[$i].'/';
-$htmlOutput .= '<a property="item" typeof="WebPage" href="'.$pathBuiltSoFar.'"><span property="name">'.ucfirst($pathSplit[$i]).'</span></a>';
+// display the url:
+$thisName = ucfirst($pathSplit[$i]);
+if(isset($nameSplit[$i])) {
+	if($nameSplit[$i] != "") {
+	// use the text passed instead
+$thisName = $nameSplit[$i];
+}
+}
+$htmlOutput .= '<a property="item" typeof="WebPage" href="'.$pathBuiltSoFar.'"><span property="name">'.$thisName.'</span></a>';
 $htmlOutput .= '<meta property="position" content="'.($i+1).'">';
 $htmlOutput .= '</li>';
 

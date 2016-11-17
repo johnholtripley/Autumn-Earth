@@ -25,10 +25,13 @@ $row = mysql_fetch_array($result);
 extract($row);
 ?>
 
-<ul class="breadcrumbs" vocab="http://schema.org/" typeof="BreadcrumbList">
-<li property="itemListElement" typeof="ListItem"><a property="item" typeof="WebPage" href="<?php echo $fullSitePath; ?>/herbarium/"><span property="name">The Herbarium</span></a><meta property="position" content="1"></li>
-<li property="itemListElement" typeof="ListItem"><a property="item" typeof="WebPage" href="<?php echo $fullSitePath; ?>/herbarium/<?php echo $plantUrl; ?>"><span property="name"><?php echo $latinName; ?></span></a><meta property="position" content="2"></li>
-</ul>
+
+
+<?php
+	echo buildBreadCrumb('herbarium/'.$plantUrl,'The Herbarium/'.$latinName);
+?>
+
+
 
 </div>
 </div>

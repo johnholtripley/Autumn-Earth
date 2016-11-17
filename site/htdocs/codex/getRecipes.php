@@ -38,15 +38,15 @@ echo "<p>Sorry, that profession wasn't found</p>";
 
 // breadcrumb:
 	
-	echo buildBreadCrumb('codex/crafting/dyeing/recipes');
+	echo buildBreadCrumb('codex/crafting/'.$thisProfession.'/recipes','The Codex/');
 
 
 
 
 
-echo '<h2>'.$thisProfession.'</h2>';
-echo '<h3>Recipes</h3>';
-$query2 = "SELECT tblrecipes.*, tblinventoryitems.itemid as productId, tblinventoryitems.shortname as recipeFallbackName, tblinventoryitems.description as recipeDescriptionFallback FROM tblrecipes INNER JOIN tblinventoryitems on tblrecipes.creates = tblinventoryitems.itemid where tblrecipes.profession='".$professionID."'";
+echo '<h2>'.$thisProfession.' recipes</h2>';
+
+$query2 = "SELECT tblrecipes.*, tblinventoryitems.itemid as productId, tblinventoryitems.shortname as recipeFallbackName, tblinventoryitems.description as recipeDescriptionFallback FROM tblrecipes INNER JOIN tblinventoryitems on tblrecipes.creates = tblinventoryitems.itemid where tblrecipes.profession='".$professionID."' order by case when tblrecipes.recipename IS NULL THEN  tblinventoryitems.shortname ELSE tblrecipes.recipename END";
 
 $result2 = mysql_query($query2) or die ("recipes failed");
 
@@ -59,13 +59,13 @@ echo '<li>';
 
 echo '<img src="/images/game-world/inventory-items/'.$productId.'.png" alt="'.$recipeFallbackName.'" style="width: auto;">';
 
-echo '<h4>';
+echo '<h3>';
 if($recipeName == "") {
 echo $recipeFallbackName;
 } else {
 	echo $recipeName;
 }
-echo '</h4>';
+echo '</h3>';
 echo '<p>';
 if($recipeDescription == "") {
 echo $recipeDescriptionFallback;
@@ -86,12 +86,12 @@ $componentNumbers .= $componentsSplit[$i].",";
 
 		// add group item
 
-$groupQuery = "select tblinventoryitems.group, tblinventoryitems.shortname as groupShortName from tblinventoryitems where tblinventoryitems.group = '".$componentsSplit[$i]."'";
+$groupQuery = "select tblinventoryitems.itemgroup, tblinventoryitems.shortname as groupShortName, tblinventoryitems.cleanurl as groupcleanurl from tblinventoryitems where tblinventoryitems.itemgroup = '".$componentsSplit[$i]."'";
 $result4 = mysql_query($groupQuery) or die ("ingredients group failed");
 $thisGroupNameJoined = "";
 while ($componentsRow = mysql_fetch_array($result4)) {
 	extract($componentsRow);
-	$thisGroupNameJoined .= $groupShortName.", ";
+	$thisGroupNameJoined .= '<a href="/codex/items/'.$groupcleanurl.'">'.$groupShortName.'</a>, ';
 }
 $thisGroupNameJoined = rtrim($thisGroupNameJoined, ", ");
 
@@ -111,13 +111,16 @@ $componentNumbers = rtrim($componentNumbers, ",");
 if(($componentNumbers != "") || (count($groupItems)>0)) {
 echo '<p>Ingredients:</p><ol>';
 	if($componentNumbers != "") {
-$componentsQuery = "select tblinventoryitems.itemid, tblinventoryitems.shortname as innerShortName from tblinventoryitems where tblinventoryitems.itemid in (".$componentNumbers.")";
+$componentsQuery = "select tblinventoryitems.itemid, tblinventoryitems.shortname as innerShortName, tblinventoryitems.cleanurl as innerCleanURL from tblinventoryitems where tblinventoryitems.itemid in (".$componentNumbers.")";
 $result3 = mysql_query($componentsQuery) or die ("ingredients failed");
 
 while ($componentsRow = mysql_fetch_array($result3)) {
 	extract($componentsRow);
 echo '<li>';
-echo $innerShortName;
+
+
+echo '<a href="/codex/items/'.$innerCleanURL.'">'.$innerShortName.'</a>';
+
 echo '</li>';
 }
 }
