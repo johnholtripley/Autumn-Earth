@@ -46,24 +46,46 @@ echo "<p>Sorry, that profession wasn't found</p>";
 
 echo '<h2>'.$thisProfession.' recipes</h2>';
 
-$query2 = "SELECT tblrecipes.*, tblinventoryitems.itemid as productId, tblinventoryitems.shortname as recipeFallbackName, tblinventoryitems.description as recipeDescriptionFallback FROM tblrecipes INNER JOIN tblinventoryitems on tblrecipes.creates = tblinventoryitems.itemid where tblrecipes.profession='".$professionID."' order by case when tblrecipes.recipename IS NULL THEN  tblinventoryitems.shortname ELSE tblrecipes.recipename END";
 
-$result2 = mysql_query($query2) or die ("recipes failed");
+$coloursQuery = "SELECT * from tblcolours";
+$allColours = [];
+$colourResult = mysql_query($coloursQuery) or die ("recipes failed");
+while ($colourRow = mysql_fetch_array($colourResult)) {
+	extract($colourRow);
+	array_push($allColours, $colourName);
+}
+
+// ideally use the full name if there's a colour to order by. Cuurently it just uses the colour name #######
+$query2 = "SELECT tblrecipes.*, tblcolours.colourName, tblinventoryitems.itemid as productId, tblinventoryitems.shortname as recipeFallbackName, tblinventoryitems.description as recipeDescriptionFallback, tblinventoryitems.hasInherentColour as hasInherentColour FROM tblrecipes INNER JOIN tblinventoryitems on tblrecipes.creates = tblinventoryitems.itemid LEFT JOIN tblcolours on tblrecipes.defaultresultingcolour = tblcolours.colourid where tblrecipes.profession='".$professionID."' order by case when tblrecipes.defaultresultingcolour IS NOT NULL AND tblinventoryitems.hasInherentColour IS NOT NULL THEN tblcolours.colourname when tblrecipes.recipename IS NULL THEN tblinventoryitems.shortname  ELSE tblrecipes.recipename END";
+
+
+
+$result2 = mysql_query($query2) or die ("recipes failed:".$query2);
 
 
 echo '<ul>';
 
 while ($row = mysql_fetch_array($result2)) {
 	extract($row);
-echo '<li>';
+echo '<li id="recipe'.$recipeID.'">';
+$thisColour = '';
+$thisColourPrefix = '';
+if($hasInherentColour<1) {
+if($defaultResultingColour>0) {
+	$thisColour = "-".strtolower($allColours[$defaultResultingColour]);
+	$thisColourPrefix = $allColours[$defaultResultingColour]." ";
+}
+}
 
-echo '<img src="/images/game-world/inventory-items/'.$productId.'.png" alt="'.$recipeFallbackName.'" style="width: auto;">';
+echo '<img src="/images/game-world/inventory-items/'.$productId.$thisColour.'.png" alt="'.$recipeFallbackName.'" style="width: auto;">';
 
-echo '<h3>';
+echo '<h3>'.$thisColourPrefix;
 if($recipeName == "") {
 echo $recipeFallbackName;
+
 } else {
 	echo $recipeName;
+	echo '<span>(produces '.$recipeFallbackName.')</span>';
 }
 echo '</h3>';
 echo '<p>';
