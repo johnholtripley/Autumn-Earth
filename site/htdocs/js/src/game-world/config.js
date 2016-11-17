@@ -55,6 +55,9 @@ var questData = [];
 
 var colourNames = [];
 
+var allProfessions = [];
+var activeRecipes = [];
+
 // key bindings
 var key = [0, 0, 0, 0, 0, 0];
 

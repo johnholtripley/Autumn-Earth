@@ -179,6 +179,9 @@ var questData = [];
 
 var colourNames = [];
 
+var allProfessions = [];
+var activeRecipes = [];
+
 // key bindings
 var key = [0, 0, 0, 0, 0, 0];
 
@@ -1508,6 +1511,41 @@ function getQuestDetails() {
 }
 
 
+function findProfessionsAndRecipes() {
+    var recipeIdsToGet = hero.recipesKnown.join("|");
+    
+var recipeItemReferencesToGet = [];
+    // check inventory for any recipe types:
+      for (var arrkey in hero.inventory) {
+
+        if (hero.inventory.hasOwnProperty(arrkey)) {
+            if (currentActiveInventoryItems[hero.inventory[arrkey].type].action == "recipe") {
+                recipeItemReferencesToGet.push(currentActiveInventoryItems[hero.inventory[arrkey].type].actionValue);
+            }
+        }
+    }
+
+if(recipeItemReferencesToGet.length>0) {
+    recipeIdsToGet += "|"+recipeItemReferencesToGet.join("|");
+}
+
+    loadProfessionsAndRecipes(recipeIdsToGet);
+}
+
+
+function loadProfessionsAndRecipes(recipeIdsToLoad) {
+    getJSON("/game-world/getProfessionsAndRecipes.php?whichIds=" + recipeIdsToLoad, function(data) {
+        allProfessions = data.professions;
+        activeRecipes = data.recipes;
+        loadMapAssets();
+    }, function(status) {
+        // try again:
+        loadProfessionsAndRecipes(recipeIdsToLoad);
+    });
+}
+
+
+
 function findInventoryItemData() {
     var itemIdsToGet = [];
     // find out all items in the hero's inventory:
@@ -1542,7 +1580,7 @@ function loadInventoryItemData(itemIdsToLoad) {
         if (!inventoryInterfaceIsBuilt) {
             UI.buildInventoryInterface();
         }
-        loadMapAssets();
+        findProfessionsAndRecipes();
     }, function(status) {
         // try again:
         loadInventoryItemData(itemIdsToLoad);
@@ -2574,12 +2612,11 @@ function animateFae() {
 
 
 
-function  learnRecipe(recipeIndex) {
+function learnRecipe(recipeIndex) {
     if (hero.recipesKnown.indexOf(recipeIndex) === -1) {
-    hero.recipesKnown.push(parseInt(recipeIndex));
+        hero.recipesKnown.push(parseInt(recipeIndex));
+    }
 }
-}
-
 
 
 
