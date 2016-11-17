@@ -1059,6 +1059,24 @@ function itemAttributesMatch(item1, item2) {
     }
     return false;
 }
+
+
+
+function inventoryItemAction(whichSlot, whichAction, whichActionValue) {
+    switch (whichAction) {
+        case "booster":
+            openBoosterPack();
+            // remove the 'slot' prefix with the substring(4):
+            removeFromInventory(whichSlot.parentElement.id.substring(4), 1);
+            break;
+            case "recipe":
+          learnRecipe(whichActionValue);
+
+
+                        // remove the 'slot' prefix with the substring(4):
+            removeFromInventory(whichSlot.parentElement.id.substring(4), 1);
+    }
+}
 var KeyBindings = {
     'left': 37,
     'right': 39,
@@ -1120,7 +1138,7 @@ var UI = {
 
                     dataActionMarkup = '';
                     if(thisAction) {
-dataActionMarkup = 'data-action="'+thisAction+'" ';
+dataActionMarkup = 'data-action="'+thisAction+'" data-action-value="'+currentActiveInventoryItems[hero.inventory[thisSlotsID].type].actionValue+'" ';
                     }
                     inventoryMarkup += '<img src="/images/game-world/inventory-items/' + hero.inventory[thisSlotsID].type + thisFileColourSuffix + '.png" '+dataActionMarkup+'alt="">';
                     inventoryMarkup += '<span class="qty">' + hero.inventory[thisSlotsID].quantity + '</span>';
@@ -1208,9 +1226,10 @@ showChangeInInventory: function(whichSlotsToUpdate) {
     inventoryItemDoubleClick: function(e) {
  
         var thisItemsAction = e.target.getAttribute('data-action');
+
         if(thisItemsAction) {
-            
-            inventoryItemAction(e.target,thisItemsAction);
+     
+            inventoryItemAction(e.target,thisItemsAction,e.target.getAttribute('data-action-value'));
         }
     },
 
@@ -2555,14 +2574,10 @@ function animateFae() {
 
 
 
-function inventoryItemAction(whichSlot, whichAction) {
-    switch (whichAction) {
-        case "booster":
-            openBoosterPack();
-            // remove the 'slot' prefix with the substring(4):
-            removeFromInventory(whichSlot.parentElement.id.substring(4), 1);
-            break;
-    }
+function  learnRecipe(recipeIndex) {
+    if (hero.recipesKnown.indexOf(recipeIndex) === -1) {
+    hero.recipesKnown.push(parseInt(recipeIndex));
+}
 }
 
 

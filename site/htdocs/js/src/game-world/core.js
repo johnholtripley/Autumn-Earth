@@ -1299,14 +1299,10 @@ function animateFae() {
 
 
 
-function inventoryItemAction(whichSlot, whichAction) {
-    switch (whichAction) {
-        case "booster":
-            openBoosterPack();
-            // remove the 'slot' prefix with the substring(4):
-            removeFromInventory(whichSlot.parentElement.id.substring(4), 1);
-            break;
-    }
+function  learnRecipe(recipeIndex) {
+    if (hero.recipesKnown.indexOf(recipeIndex) === -1) {
+    hero.recipesKnown.push(parseInt(recipeIndex));
+}
 }
 
 

@@ -48,7 +48,7 @@ var UI = {
 
                     dataActionMarkup = '';
                     if(thisAction) {
-dataActionMarkup = 'data-action="'+thisAction+'" ';
+dataActionMarkup = 'data-action="'+thisAction+'" data-action-value="'+currentActiveInventoryItems[hero.inventory[thisSlotsID].type].actionValue+'" ';
                     }
                     inventoryMarkup += '<img src="/images/game-world/inventory-items/' + hero.inventory[thisSlotsID].type + thisFileColourSuffix + '.png" '+dataActionMarkup+'alt="">';
                     inventoryMarkup += '<span class="qty">' + hero.inventory[thisSlotsID].quantity + '</span>';
@@ -136,9 +136,10 @@ showChangeInInventory: function(whichSlotsToUpdate) {
     inventoryItemDoubleClick: function(e) {
  
         var thisItemsAction = e.target.getAttribute('data-action');
+
         if(thisItemsAction) {
-            
-            inventoryItemAction(e.target,thisItemsAction);
+     
+            inventoryItemAction(e.target,thisItemsAction,e.target.getAttribute('data-action-value'));
         }
     },
 

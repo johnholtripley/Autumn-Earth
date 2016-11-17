@@ -79,14 +79,14 @@
             "inscription": ""
         },
         "1-4": {
-            "type": 14,
-            "quantity": 3,
+            "type": 29,
+            "quantity": 1,
             "quality": 100,
             "durability": 100,
             "currentWear": 0,
             "effectiveness": 100,
             "wrapped": 0,
-            "colour": 5,
+            "colour": 0,
             "enchanted": 0,
             "hallmark": 0,
             "inscription": ""

@@ -154,3 +154,21 @@ function itemAttributesMatch(item1, item2) {
     }
     return false;
 }
+
+
+
+function inventoryItemAction(whichSlot, whichAction, whichActionValue) {
+    switch (whichAction) {
+        case "booster":
+            openBoosterPack();
+            // remove the 'slot' prefix with the substring(4):
+            removeFromInventory(whichSlot.parentElement.id.substring(4), 1);
+            break;
+            case "recipe":
+          learnRecipe(whichActionValue);
+
+
+                        // remove the 'slot' prefix with the substring(4):
+            removeFromInventory(whichSlot.parentElement.id.substring(4), 1);
+    }
+}
