@@ -52,13 +52,7 @@ function getCurrentTileY(y) {
 }
 
 
-function sortByIsoDepth(a, b) {
-    if (a[0] < b[0])
-        return -1;
-    if (a[0] > b[0])
-        return 1;
-    return 0;
-}
+
 
 function getXOffsetFromHeight(height) {
     // for determining a shadow's offset (for example).
@@ -291,12 +285,33 @@ function uniqueValues(a) {
 }
 
 function sortByHighestValue(a,b) {
+    // highest first
   if (a[0] < b[0])
     return 1;
   if (a[0] > b[0])
     return -1;
   return 0;
 }
+
+function sortByLowestValue(a, b) {
+    // lowest first
+    if (a[0] < b[0])
+        return -1;
+    if (a[0] > b[0])
+        return 1;
+    return 0;
+}
+
+ function byPropertyLowestFirst(property) {
+    // sortedObj = unsortedObj.sort(byPropertyLowestFirst("name"));
+    return function(a,b) {
+        if (typeof a[property] == "number") {
+            return (a[property] - b[property]);
+        } else {
+            return ((a[property] < b[property]) ? -1 : ((a[property] > b[property]) ? 1 : 0));
+        }
+    };
+};
 
 
 

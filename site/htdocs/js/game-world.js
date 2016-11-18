@@ -273,13 +273,7 @@ function getCurrentTileY(y) {
 }
 
 
-function sortByIsoDepth(a, b) {
-    if (a[0] < b[0])
-        return -1;
-    if (a[0] > b[0])
-        return 1;
-    return 0;
-}
+
 
 function getXOffsetFromHeight(height) {
     // for determining a shadow's offset (for example).
@@ -512,12 +506,33 @@ function uniqueValues(a) {
 }
 
 function sortByHighestValue(a,b) {
+    // highest first
   if (a[0] < b[0])
     return 1;
   if (a[0] > b[0])
     return -1;
   return 0;
 }
+
+function sortByLowestValue(a, b) {
+    // lowest first
+    if (a[0] < b[0])
+        return -1;
+    if (a[0] > b[0])
+        return 1;
+    return 0;
+}
+
+ function byPropertyLowestFirst(property) {
+    // sortedObj = unsortedObj.sort(byPropertyLowestFirst("name"));
+    return function(a,b) {
+        if (typeof a[property] == "number") {
+            return (a[property] - b[property]);
+        } else {
+            return ((a[property] < b[property]) ? -1 : ((a[property] > b[property]) ? 1 : 0));
+        }
+    };
+};
 
 
 
@@ -1074,11 +1089,28 @@ function inventoryItemAction(whichSlot, whichAction, whichActionValue) {
             break;
             case "recipe":
           learnRecipe(whichActionValue);
-
-
                         // remove the 'slot' prefix with the substring(4):
             removeFromInventory(whichSlot.parentElement.id.substring(4), 1);
     }
+}
+
+
+function additionalTooltipDetail(whichSlotID) {
+// get any information that needs displaying in the tooltip:
+var tooltipInformationToAdd = "";
+
+
+
+
+if (currentActiveInventoryItems[hero.inventory[whichSlotID].type].action == "recipe") {
+    // check if it's known already:
+    if (hero.recipesKnown.indexOf(parseInt(currentActiveInventoryItems[hero.inventory[whichSlotID].type].actionValue)) != -1) {
+        tooltipInformationToAdd += " (already known)";
+    }
+}
+
+
+return tooltipInformationToAdd;
 }
 var KeyBindings = {
     'left': 37,
@@ -1103,7 +1135,7 @@ var UI = {
         var cardAlbumList = document.getElementById('cardAlbumList');
         var boosterPack = document.getElementById('boosterPack');
         var createRecipeList = document.getElementById('createRecipeList');
-      
+
         //
 
     },
@@ -1141,12 +1173,12 @@ var UI = {
                     thisAction = currentActiveInventoryItems[hero.inventory[thisSlotsID].type].action;
 
                     dataActionMarkup = '';
-                    if(thisAction) {
-dataActionMarkup = 'data-action="'+thisAction+'" data-action-value="'+currentActiveInventoryItems[hero.inventory[thisSlotsID].type].actionValue+'" ';
+                    if (thisAction) {
+                        dataActionMarkup = 'data-action="' + thisAction + '" data-action-value="' + currentActiveInventoryItems[hero.inventory[thisSlotsID].type].actionValue + '" ';
                     }
-                    inventoryMarkup += '<img src="/images/game-world/inventory-items/' + hero.inventory[thisSlotsID].type + thisFileColourSuffix + '.png" '+dataActionMarkup+'alt="">';
+                    inventoryMarkup += '<img src="/images/game-world/inventory-items/' + hero.inventory[thisSlotsID].type + thisFileColourSuffix + '.png" ' + dataActionMarkup + 'alt="">';
                     inventoryMarkup += '<span class="qty">' + hero.inventory[thisSlotsID].quantity + '</span>';
-                    inventoryMarkup += '<p><em>' + theColourPrefix + currentActiveInventoryItems[hero.inventory[thisSlotsID].type].shortname + ' </em>' + currentActiveInventoryItems[hero.inventory[thisSlotsID].type].description + ' <span class="price">Sell price: ' + parseMoney(hero.inventory[thisSlotsID].quantity * currentActiveInventoryItems[hero.inventory[thisSlotsID].type].priceCode, 0) + '</span></p>';
+                    inventoryMarkup += '<p><em>' + theColourPrefix + currentActiveInventoryItems[hero.inventory[thisSlotsID].type].shortname + ' </em>' + currentActiveInventoryItems[hero.inventory[thisSlotsID].type].description + ' <span class="price">Sell price: ' + parseMoney(hero.inventory[thisSlotsID].quantity * currentActiveInventoryItems[hero.inventory[thisSlotsID].type].priceCode, 0) + '</span>'+additionalTooltipDetail(thisSlotsID)+'</p>';
                 } else {
                     inventoryMarkup += '<img alt="Empty slot" src="/images/game-world/inventory-items/blank.png">';
                 }
@@ -1160,37 +1192,37 @@ dataActionMarkup = 'data-action="'+thisAction+'" data-action-value="'+currentAct
         UI.initDrag(".draggableBar");
         UI.updateCardAlbum();
 
-UI.populateRecipeList(0);
+        UI.populateRecipeList(0);
 
         inventoryInterfaceIsBuilt = true;
     },
 
 
 
-showChangeInInventory: function(whichSlotsToUpdate) {
+    showChangeInInventory: function(whichSlotsToUpdate) {
 
-                            
-                            // add a transition end detector to just the first element that will be changed:
-                            document.getElementById("slot" + whichSlotsToUpdate[0]).addEventListener(whichTransitionEvent, function removeSlotStatus(e) {
-                                elementList = document.querySelectorAll('#inventoryPanels .changed');
-                                for (var i = 0; i < elementList.length; i++) {
-                                    removeClass(elementList[i], 'changed');
-                                }
-                                // remove the event listener now:
-                                return e.currentTarget.removeEventListener(whichTransitionEvent, removeSlotStatus, false);
-                            }, false);
-                            // loop through the slots that have changed and update their markup:
-                            for (var j = 0; j < whichSlotsToUpdate.length; j++) {
-                                thisSlotsId = whichSlotsToUpdate[j];
-                                slotMarkup = '<img src="/images/game-world/inventory-items/' + hero.inventory[thisSlotsId].type + '.png" alt="">';
-                                slotMarkup += '<span class="qty">' + hero.inventory[thisSlotsId].quantity + '</span>';
-                                slotMarkup += '<p><em>' + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].shortname + ' </em>' + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].description + ' <span class="price">Sell price: ' + parseMoney(hero.inventory[thisSlotsId].quantity * currentActiveInventoryItems[hero.inventory[thisSlotsId].type].priceCode, 0) + '</span></p>';
-                                thisSlotElem = document.getElementById("slot" + thisSlotsId);
-                                thisSlotElem.innerHTML = slotMarkup;
 
-                                addClass(thisSlotElem, "changed");
-                            }
-                        },
+        // add a transition end detector to just the first element that will be changed:
+        document.getElementById("slot" + whichSlotsToUpdate[0]).addEventListener(whichTransitionEvent, function removeSlotStatus(e) {
+            elementList = document.querySelectorAll('#inventoryPanels .changed');
+            for (var i = 0; i < elementList.length; i++) {
+                removeClass(elementList[i], 'changed');
+            }
+            // remove the event listener now:
+            return e.currentTarget.removeEventListener(whichTransitionEvent, removeSlotStatus, false);
+        }, false);
+        // loop through the slots that have changed and update their markup:
+        for (var j = 0; j < whichSlotsToUpdate.length; j++) {
+            thisSlotsId = whichSlotsToUpdate[j];
+            slotMarkup = '<img src="/images/game-world/inventory-items/' + hero.inventory[thisSlotsId].type + '.png" alt="">';
+            slotMarkup += '<span class="qty">' + hero.inventory[thisSlotsId].quantity + '</span>';
+            slotMarkup += '<p><em>' + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].shortname + ' </em>' + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].description + ' <span class="price">Sell price: ' + parseMoney(hero.inventory[thisSlotsId].quantity * currentActiveInventoryItems[hero.inventory[thisSlotsId].type].priceCode, 0) + '</span>'+additionalTooltipDetail(thisSlotsId)+'</p>';
+            thisSlotElem = document.getElementById("slot" + thisSlotsId);
+            thisSlotElem.innerHTML = slotMarkup;
+
+            addClass(thisSlotElem, "changed");
+        }
+    },
 
 
     handleDrag: function(e) {
@@ -1231,12 +1263,12 @@ showChangeInInventory: function(whichSlotsToUpdate) {
     },
 
     inventoryItemDoubleClick: function(e) {
- 
+
         var thisItemsAction = e.target.getAttribute('data-action');
 
-        if(thisItemsAction) {
-     
-            inventoryItemAction(e.target,thisItemsAction,e.target.getAttribute('data-action-value'));
+        if (thisItemsAction) {
+
+            inventoryItemAction(e.target, thisItemsAction, e.target.getAttribute('data-action-value'));
         }
     },
 
@@ -1269,7 +1301,7 @@ showChangeInInventory: function(whichSlotsToUpdate) {
         var cardAlbumMarkup = '';
         for (var i = 0; i < 30; i++) {
             if (hero.cards[i]) {
-                cardAlbumMarkup += '<li><img src="/images/card-game/cards/' + hero.cards[i] + '.png" class="card players" alt="'+cardGameNameSpace.allCardData[(hero.cards[i])][2]+' card"></li>';
+                cardAlbumMarkup += '<li><img src="/images/card-game/cards/' + hero.cards[i] + '.png" class="card players" alt="' + cardGameNameSpace.allCardData[(hero.cards[i])][2] + ' card"></li>';
             } else {
                 cardAlbumMarkup += '<li></li>';
             }
@@ -1280,15 +1312,13 @@ showChangeInInventory: function(whichSlotsToUpdate) {
     populateRecipeList: function(whichProfession) {
         var recipeMarkup = '';
         var thisRecipe;
-for( var i =0; i<hero.recipesKnown.length;i++) {
-
-    thisRecipe = activeRecipes[hero.recipesKnown[i]];
-    console.log(thisRecipe);
-if(thisRecipe.profession == whichProfession) {
-recipeMarkup += '<li><img src="/images/game-world/inventory-items/'+thisRecipe.imageId+'.png" alt="'+thisRecipe.recipeName+'"><h3>'+thisRecipe.recipeName+'</h3><p>'+thisRecipe.recipeDescription+'</p></li>';
-}
-}
-createRecipeList.innerHTML = recipeMarkup;
+        for (var i = 0; i < hero.recipesKnown.length; i++) {
+            thisRecipe = activeRecipes[hero.recipesKnown[i]];
+            if (thisRecipe.profession == whichProfession) {
+                recipeMarkup += '<li><img src="/images/game-world/inventory-items/' + thisRecipe.imageId + '.png" alt="' + thisRecipe.recipeName + '"><h3>' + thisRecipe.recipeName + '</h3><p>' + thisRecipe.recipeDescription + '</p></li>';
+            }
+        }
+        createRecipeList.innerHTML = recipeMarkup;
     }
 
 
@@ -2718,7 +2748,7 @@ function draw() {
             assetsToDraw.push([thisY, "img", itemImages[i], Math.floor(thisX - hero.isox - thisItem.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisItem.centreY + (canvasHeight / 2))]);
         }
 
-        assetsToDraw.sort(sortByIsoDepth);
+        assetsToDraw.sort(sortByLowestValue);
 
         // don't need to clear, as the background will overwrite anyway - this means there's less to process:
         //  gameContext.clearRect(0, 0, canvasWidth, canvasHeight);

@@ -1422,7 +1422,7 @@ function draw() {
             assetsToDraw.push([thisY, "img", itemImages[i], Math.floor(thisX - hero.isox - thisItem.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisItem.centreY + (canvasHeight / 2))]);
         }
 
-        assetsToDraw.sort(sortByIsoDepth);
+        assetsToDraw.sort(sortByLowestValue);
 
         // don't need to clear, as the background will overwrite anyway - this means there's less to process:
         //  gameContext.clearRect(0, 0, canvasWidth, canvasHeight);

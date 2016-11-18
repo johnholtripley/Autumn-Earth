@@ -166,9 +166,26 @@ function inventoryItemAction(whichSlot, whichAction, whichActionValue) {
             break;
             case "recipe":
           learnRecipe(whichActionValue);
-
-
                         // remove the 'slot' prefix with the substring(4):
             removeFromInventory(whichSlot.parentElement.id.substring(4), 1);
     }
+}
+
+
+function additionalTooltipDetail(whichSlotID) {
+// get any information that needs displaying in the tooltip:
+var tooltipInformationToAdd = "";
+
+
+
+
+if (currentActiveInventoryItems[hero.inventory[whichSlotID].type].action == "recipe") {
+    // check if it's known already:
+    if (hero.recipesKnown.indexOf(parseInt(currentActiveInventoryItems[hero.inventory[whichSlotID].type].actionValue)) != -1) {
+        tooltipInformationToAdd += " (already known)";
+    }
+}
+
+
+return tooltipInformationToAdd;
 }
