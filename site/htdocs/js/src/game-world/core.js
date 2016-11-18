@@ -259,6 +259,9 @@ function loadProfessionsAndRecipes(recipeIdsToLoad) {
     getJSON("/game-world/getProfessionsAndRecipes.php?whichIds=" + recipeIdsToLoad, function(data) {
         allProfessions = data.professions;
         activeRecipes = data.recipes;
+            if (!inventoryInterfaceIsBuilt) {
+            UI.buildInventoryInterface();
+        }
         loadMapAssets();
     }, function(status) {
         // try again:
@@ -299,9 +302,7 @@ function findInventoryItemData() {
 function loadInventoryItemData(itemIdsToLoad) {
     getJSON("/game-world/getInventoryItems.php?whichIds=" + itemIdsToLoad, function(data) {
         currentActiveInventoryItems = data;
-        if (!inventoryInterfaceIsBuilt) {
-            UI.buildInventoryInterface();
-        }
+    
         findProfessionsAndRecipes();
     }, function(status) {
         // try again:

@@ -9,6 +9,7 @@ var UI = {
         var cardGameWrapper = document.getElementById('cardGameWrapper');
         var cardAlbumList = document.getElementById('cardAlbumList');
         var boosterPack = document.getElementById('boosterPack');
+        var createRecipeList = document.getElementById('createRecipeList');
       
         //
 
@@ -65,6 +66,9 @@ dataActionMarkup = 'data-action="'+thisAction+'" data-action-value="'+currentAct
         document.getElementById('inventoryPanels').ondblclick = UI.inventoryItemDoubleClick;
         UI.initDrag(".draggableBar");
         UI.updateCardAlbum();
+
+UI.populateRecipeList(0);
+
         inventoryInterfaceIsBuilt = true;
     },
 
@@ -178,6 +182,20 @@ showChangeInInventory: function(whichSlotsToUpdate) {
             }
         }
         cardAlbumList.innerHTML = cardAlbumMarkup;
+    },
+
+    populateRecipeList: function(whichProfession) {
+        var recipeMarkup = '';
+        var thisRecipe;
+for( var i =0; i<hero.recipesKnown.length;i++) {
+
+    thisRecipe = activeRecipes[hero.recipesKnown[i]];
+    console.log(thisRecipe);
+if(thisRecipe.profession == whichProfession) {
+recipeMarkup += '<li><img src="/images/game-world/inventory-items/'+thisRecipe.imageId+'.png" alt="'+thisRecipe.recipeName+'"><h3>'+thisRecipe.recipeName+'</h3><p>'+thisRecipe.recipeDescription+'</p></li>';
+}
+}
+createRecipeList.innerHTML = recipeMarkup;
     }
 
 

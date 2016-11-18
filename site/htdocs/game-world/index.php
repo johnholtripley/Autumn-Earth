@@ -27,6 +27,10 @@
 <div id="inventoryPanels"></div>
 <div id="cardAlbum"><div class="draggableBar">Card album</div><ul id="cardAlbumList"></ul></div>
 <div id="cartographicPanel"><div class="draggableBar"><span id="cartographicTitle">Map</span></div><canvas id="cartographyCanvas" width="246" height="246"></canvas><canvas id="offScreenCartographyCanvas" class="offScreenCanvas" width="246" height="246"></canvas></div>
+<div id="craftingPanel">
+<ul id="createRecipeList">
+</ul>
+</div>
 <div id="boosterPack">
 <ol>
 

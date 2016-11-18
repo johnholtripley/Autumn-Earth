@@ -1351,9 +1351,9 @@ function picture($source, $alt, $breakpoints, $forceResize = false, $classOrProp
 		if($i>0) {
 			$thisHtmlOutput .= 'media="(min-width: '.$breakpoints[$i-1].'px)"';
 		}
-		$thisHtmlOutput .= ' srcset="'.$fullSitePath.imageResized($source,$breakpoints[$i]).'">';
+		$thisHtmlOutput .= ' srcset="'.imageResized($source,$breakpoints[$i]).'">';
 	}
-	$thisHtmlOutput .= '<img src="'.$fullSitePath.$source.'" alt="'.$alt.'"'.$classOrProperty.'>';
+	$thisHtmlOutput .= '<img src="'.$source.'" alt="'.$alt.'"'.$classOrProperty.'>';
 	$thisHtmlOutput .= '</picture>';
 	if($addToBuffer == '') {
 		echo $thisHtmlOutput;
