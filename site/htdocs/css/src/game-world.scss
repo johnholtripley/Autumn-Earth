@@ -384,14 +384,15 @@ canvas {
 position: absolute;
 left: 1400px;
 top: 320px;
-width: 250px;
-height: 300px;
-overflow: auto;
+
 background: #222;
 color: #fff;
 ul {
     margin: 0;
     padding: 0;
     list-style: none;
+    width: 250px;
+height: 300px;
+overflow: auto;
 }
 }
