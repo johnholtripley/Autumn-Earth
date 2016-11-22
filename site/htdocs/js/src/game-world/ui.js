@@ -188,8 +188,9 @@ var UI = {
         if (currentRecipePanelProfession != whichProfession) {
             var recipeMarkup = '';
             var thisRecipe;
-            for (var i = 0; i < hero.crafting.profession[whichProfession].recipes.length; i++) {
-                thisRecipe = hero.crafting.profession[whichProfession].recipes[i];
+
+            for (var i in hero.crafting[whichProfession].recipes) {
+                thisRecipe = hero.crafting[whichProfession].recipes[i];
                 recipeMarkup += '<li class="active"><img src="/images/game-world/inventory-items/' + thisRecipe.imageId + '.png" alt="' + thisRecipe.recipeName + '"><h3>' + thisRecipe.recipeName + '</h3><p>' + thisRecipe.recipeDescription + '</p></li>';
             }
             createRecipeList.innerHTML = recipeMarkup;

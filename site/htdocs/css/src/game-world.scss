@@ -401,3 +401,92 @@ canvas {
         }
     }
 }
+
+
+
+
+
+.visibleHide {
+  @include visibleHide;
+}
+
+
+// select dropdowns --------------------------------
+// http://jsbin.com/juvixufu/10/edit?html,output
+.selectWrapper {
+    position: relative;
+    display: block;
+    margin-top: 0.5em;
+    overflow: hidden;
+    width: 100%;
+    max-width: 100%;
+
+
+ select {
+    /* Make sure the select is wider than the container so we can clip the arrow */
+    cursor: pointer;
+    width: 110%;
+    max-width: 110%;
+    min-width: 110%;
+    /* Remove select styling */
+    
+    appearance: none;
+    -webkit-appearance: none;
+    /* Ugly Firefox way of doing it */
+    
+    -moz-appearance: window;
+    text-indent: 0.01px;
+    text-overflow: "";
+ 
+    background: none;
+    border: none;
+   
+    outline: none;
+    /* Padding works surpringly well */
+    
+    padding: .4em 19% .4em .8em;
+    font-family: helvetica, sans-serif;
+    line-height: 1.2;
+    margin: .2em;
+}
+/* This hides native dropdown button arrow in IE */
+
+ select::-ms-expand {
+    display: none;
+}
+
+/* Custom arrow - could be an image, SVG, icon font, etc. */
+
+&:after {
+  
+    background: none;
+    color: #bbb;
+    content: "V";
+    font-size: 1.5em;
+    padding: 0;
+    position: absolute;
+    right: 0.4em;
+    top: 0.2em;
+    bottom: .3em;
+    z-index: 1;
+    /* This hack makes the select behind the arrow clickable in some browsers */
+    
+    pointer-events: none;
+}
+
+/* Focus style */
+
+ select:focus {
+    outline: none;
+
+}
+/* This hides focus around selected option in FF */
+
+ select:-moz-focusring {
+    color: transparent;
+    text-shadow: 0 0 0 #000;
+}
+
+
+}
+
