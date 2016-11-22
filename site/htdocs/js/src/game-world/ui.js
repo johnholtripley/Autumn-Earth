@@ -67,7 +67,11 @@ var UI = {
         UI.initDrag(".draggableBar");
         UI.updateCardAlbum();
 
-        UI.populateRecipeList(0);
+UI.buildRecipePanel();
+if(hero.professionsKnown.length>0) {
+    // load and cache the first profession's recipe assets:
+        UI.populateRecipeList(hero.professionsKnown[0]);
+    }
 
         inventoryInterfaceIsBuilt = true;
     },
@@ -198,6 +202,10 @@ var UI = {
             
             currentRecipePanelProfession = whichProfession;
         }
+    },
+
+    buildRecipePanel: function() {
+        
     }
 
 
