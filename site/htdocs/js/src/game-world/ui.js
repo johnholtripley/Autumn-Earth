@@ -10,7 +10,8 @@ var UI = {
         var cardAlbumList = document.getElementById('cardAlbumList');
         var boosterPack = document.getElementById('boosterPack');
         var createRecipeList = document.getElementById('createRecipeList');
-
+var recipeSearch = document.getElementById('recipeSearch');
+var clearRecipeSearch = document.getElementById('clearRecipeSearch');
         //
 
     },
@@ -205,7 +206,9 @@ if(hero.professionsKnown.length>0) {
     },
 
     buildRecipePanel: function() {
-        
+        recipeSearch.onkeyup = recipeSearchInput;
+        document.getElementById('recipeFilter').onchange = recipeSearchAndFilter;
+        clearRecipeSearch.onpress = recipeSearchClear;
     }
 
 
