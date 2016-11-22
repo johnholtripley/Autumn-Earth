@@ -2,16 +2,7 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
+/*
 // http://stackoverflow.com/questions/6054033/pretty-printing-json-with-php
 function prettyPrint( $json )
 {
@@ -71,41 +62,7 @@ function prettyPrint( $json )
 }
 // just temp while working
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+*/
 
 
 
@@ -123,29 +80,7 @@ while ($colourRow = mysql_fetch_array($colourResult)) {
 	array_push($allColours, $colourName);
 }
 
-
-/*
-
-professions: 
-             0 : recipes: {},
-                 filters: [],
-
-             1  : recipes: {},
-                   filters: []
-             ...
-
-*/
-
-
-
-
-
-
 $outputJson = '{"professions": {';
-
-
-
-
 
 $whichIds = '';
 if(isset($_GET["whichIds"]));
@@ -178,10 +113,25 @@ order by tblprofessions.professionid, finalRecipeName ASC";
 $result = mysql_query($query) or die ("recipes failed");
 
 
-
+$thisProfession = -1;
 
 while ($row = mysql_fetch_array($result)) {
 	extract($row);
+
+    if($thisProfession != $profession) {
+if($thisProfession != -1) {
+    // if not first time:
+
+// remove last comma:
+$outputJson = rtrim($outputJson, ",");
+
+$outputJson .= '},';
+$outputJson .= '"filters": {}';
+$outputJson .= '},';
+}
+$outputJson .= '"'.$profession.'": { "recipes": {';
+$thisProfession = $profession;
+    }
 	
 	$outputJson .= '"'.$recipeID.'":{';
 $outputJson .= '"components":"'.$components.'",';
@@ -190,22 +140,16 @@ $outputJson .= '"prerequisite":"'.$prerequisite.'",';
 $outputJson .= '"profession":"'.$profession.'",';
 
 $thisColour = '';
-$thisColourPrefix = '';
 if($hasInherentColour<1) {
 if($defaultResultingColour>0) {
 	$thisColour = "-".strtolower($allColours[$defaultResultingColour]);
-//	$thisColourPrefix = $allColours[$defaultResultingColour]." ";
-
 }
 }
 
 
 
-//if($recipeName == "") {
-//$outputJson .= '"recipeName":"'.$thisColourPrefix.$recipeFallbackName.'",';
-//} else {
 $outputJson .= '"recipeName":"'.$finalRecipeName.'",';
-//}
+
 
 $outputJson .= '"imageId":"'.$productId.$thisColour.'",';
 
@@ -216,15 +160,18 @@ $outputJson .= '"recipeDescription":"'.$recipeDescriptionFallback.'"';
 }
 
 $outputJson .= '},';
-}
 
+}
 // remove last comma:
 
 $outputJson = rtrim($outputJson, ",");
 
-$outputJson .= '}}';
 
-//echo $outputJson;
-echo '<code><pre>'.prettyPrint($outputJson).'</pre></code>';
+$outputJson .= '},';
+$outputJson .= '"filters": {}';
+$outputJson .= '}}}';
+
+echo $outputJson;
+//echo '<code><pre>'.prettyPrint($outputJson).'</pre></code>';
 
 ?>
