@@ -12,6 +12,7 @@ var UI = {
         var createRecipeList = document.getElementById('createRecipeList');
 var recipeSearch = document.getElementById('recipeSearch');
 var clearRecipeSearch = document.getElementById('clearRecipeSearch');
+var recipeFilter = document.getElementById('recipeFilter');
         //
 
     },
@@ -207,7 +208,7 @@ if(hero.professionsKnown.length>0) {
 
     buildRecipePanel: function() {
         recipeSearch.onkeyup = recipeSearchInput;
-        document.getElementById('recipeFilter').onchange = recipeSearchAndFilter;
+        recipeFilter.onchange = recipeSearchAndFilter;
         clearRecipeSearch.onpress = recipeSearchClear;
     }
 
