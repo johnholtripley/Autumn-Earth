@@ -2,7 +2,7 @@
 
 
 
-/*
+
 // http://stackoverflow.com/questions/6054033/pretty-printing-json-with-php
 function prettyPrint( $json )
 {
@@ -62,7 +62,6 @@ function prettyPrint( $json )
 }
 // just temp while working
 
-*/
 
 
 
@@ -115,6 +114,7 @@ $result = mysql_query($query) or die ("recipes failed");
 
 $thisProfession = -1;
 
+
 while ($row = mysql_fetch_array($result)) {
 	extract($row);
 
@@ -126,9 +126,11 @@ if($thisProfession != -1) {
 $outputJson = rtrim($outputJson, ",");
 
 $outputJson .= '},';
+$outputJson .= '"sortOrder": ['.implode(",", $thisRecipeOrder).'],';
 $outputJson .= '"filters": {}';
 $outputJson .= '},';
 }
+$thisRecipeOrder = [];
 $outputJson .= '"'.$profession.'": { "recipes": {';
 $thisProfession = $profession;
     }
@@ -137,7 +139,7 @@ $thisProfession = $profession;
 $outputJson .= '"components":"'.$components.'",';
 $outputJson .= '"creates":"'.$creates.'",';
 $outputJson .= '"prerequisite":"'.$prerequisite.'",';
-$outputJson .= '"profession":"'.$profession.'",';
+array_push($thisRecipeOrder, $recipeID);
 
 $thisColour = '';
 if($hasInherentColour<1) {
@@ -168,6 +170,7 @@ $outputJson = rtrim($outputJson, ",");
 
 
 $outputJson .= '},';
+$outputJson .= '"sortOrder": ['.implode(",", $thisRecipeOrder).'],';
 $outputJson .= '"filters": {}';
 $outputJson .= '}}}';
 
