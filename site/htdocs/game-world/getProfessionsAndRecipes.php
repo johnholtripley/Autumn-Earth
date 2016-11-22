@@ -1,5 +1,116 @@
 <?php
 
+
+
+
+
+
+
+
+
+
+
+
+
+// http://stackoverflow.com/questions/6054033/pretty-printing-json-with-php
+function prettyPrint( $json )
+{
+    $result = '';
+    $level = 0;
+    $in_quotes = false;
+    $in_escape = false;
+    $ends_line_level = NULL;
+    $json_length = strlen( $json );
+
+    for( $i = 0; $i < $json_length; $i++ ) {
+        $char = $json[$i];
+        $new_line_level = NULL;
+        $post = "";
+        if( $ends_line_level !== NULL ) {
+            $new_line_level = $ends_line_level;
+            $ends_line_level = NULL;
+        }
+        if ( $in_escape ) {
+            $in_escape = false;
+        } else if( $char === '"' ) {
+            $in_quotes = !$in_quotes;
+        } else if( ! $in_quotes ) {
+            switch( $char ) {
+                case '}': case ']':
+                    $level--;
+                    $ends_line_level = NULL;
+                    $new_line_level = $level;
+                    break;
+
+                case '{': case '[':
+                    $level++;
+                case ',':
+                    $ends_line_level = $level;
+                    break;
+
+                case ':':
+                    $post = " ";
+                    break;
+
+                case " ": case "\t": case "\n": case "\r":
+                    $char = "";
+                    $ends_line_level = $new_line_level;
+                    $new_line_level = NULL;
+                    break;
+            }
+        } else if ( $char === '\\' ) {
+            $in_escape = true;
+        }
+        if( $new_line_level !== NULL ) {
+            $result .= "\n".str_repeat( "\t", $new_line_level );
+        }
+        $result .= $char.$post;
+    }
+
+    return $result;
+}
+// just temp while working
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 include($_SERVER['DOCUMENT_ROOT']."/includes/signalnoise.php");
 include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
 
@@ -13,23 +124,28 @@ while ($colourRow = mysql_fetch_array($colourResult)) {
 }
 
 
-$query = "SELECT * FROM tblprofessions";
-$result = mysql_query($query) or die ("professions failed");
+/*
+
+professions: 
+             0 : recipes: {},
+                 filters: [],
+
+             1  : recipes: {},
+                   filters: []
+             ...
+
+*/
+
+
+
+
+
+
 $outputJson = '{"professions": {';
 
-while ($row = mysql_fetch_array($result)) {
-	extract($row);
-	$outputJson .= '"'.$professionID.'":{';
-	$outputJson .= '"professionName":"'.$professionName.'"';
-	$outputJson .= '},';
-}
 
-// remove last comma:
 
-$outputJson = rtrim($outputJson, ",");
 
-$outputJson .= '},';
-$outputJson .= '"recipes": {';
 
 $whichIds = '';
 if(isset($_GET["whichIds"]));
@@ -45,7 +161,20 @@ for($i=0;$i<count($allIds);$i++) {
 	$itemIdString .= intval($allIds[$i]);
 }
 
-$query = "SELECT tblrecipes.*, tblcolours.colourName, tblinventoryitems.itemid as productId, tblinventoryitems.shortname as recipeFallbackName, tblinventoryitems.description as recipeDescriptionFallback, tblinventoryitems.hasInherentColour as hasInherentColour FROM tblrecipes INNER JOIN tblinventoryitems on tblrecipes.creates = tblinventoryitems.itemid LEFT JOIN tblcolours on tblrecipes.defaultresultingcolour = tblcolours.colourid where tblrecipes.recipeid in (".$itemIdString.")";
+
+
+
+$query = "SELECT tblrecipes.*, tblprofessions.*, tblcolours.colourName, tblinventoryitems.itemid as productId, 
+
+CASE WHEN tblrecipes.recipename IS NOT NULL THEN tblrecipes.recipename
+
+ WHEN tblrecipes.defaultresultingcolour IS NOT NULL AND tblinventoryitems.hasInherentColour IS NOT NULL THEN CONCAT_WS(' ',tblcolours.colourname, tblinventoryitems.shortname)
+  WHEN tblrecipes.recipename IS NULL THEN tblinventoryitems.shortname
+ END as 'finalRecipeName',
+ tblinventoryitems.description as recipeDescriptionFallback, tblinventoryitems.hasInherentColour as hasInherentColour FROM tblrecipes INNER JOIN tblprofessions on tblrecipes.profession = tblprofessions.professionid INNER JOIN tblinventoryitems on tblrecipes.creates = tblinventoryitems.itemid LEFT JOIN tblcolours on tblrecipes.defaultresultingcolour = tblcolours.colourid where tblrecipes.recipeid in (".$itemIdString.")
+order by tblprofessions.professionid, finalRecipeName ASC";
+
+
 $result = mysql_query($query) or die ("recipes failed");
 
 
@@ -65,18 +194,18 @@ $thisColourPrefix = '';
 if($hasInherentColour<1) {
 if($defaultResultingColour>0) {
 	$thisColour = "-".strtolower($allColours[$defaultResultingColour]);
-	$thisColourPrefix = $allColours[$defaultResultingColour]." ";
+//	$thisColourPrefix = $allColours[$defaultResultingColour]." ";
 
 }
 }
 
 
 
-if($recipeName == "") {
-$outputJson .= '"recipeName":"'.$thisColourPrefix.$recipeFallbackName.'",';
-} else {
-$outputJson .= '"recipeName":"'.$thisColourPrefix.$recipeName.'",';
-}
+//if($recipeName == "") {
+//$outputJson .= '"recipeName":"'.$thisColourPrefix.$recipeFallbackName.'",';
+//} else {
+$outputJson .= '"recipeName":"'.$finalRecipeName.'",';
+//}
 
 $outputJson .= '"imageId":"'.$productId.$thisColour.'",';
 
@@ -95,6 +224,7 @@ $outputJson = rtrim($outputJson, ",");
 
 $outputJson .= '}}';
 
-echo $outputJson;
+//echo $outputJson;
+echo '<code><pre>'.prettyPrint($outputJson).'</pre></code>';
 
 ?>

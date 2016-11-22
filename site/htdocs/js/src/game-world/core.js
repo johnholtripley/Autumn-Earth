@@ -235,31 +235,15 @@ function getQuestDetails() {
 
 function findProfessionsAndRecipes() {
     var recipeIdsToGet = hero.recipesKnown.join("|");
-    
-var recipeItemReferencesToGet = [];
-    // check inventory for any recipe types:
-      for (var arrkey in hero.inventory) {
-
-        if (hero.inventory.hasOwnProperty(arrkey)) {
-            if (currentActiveInventoryItems[hero.inventory[arrkey].type].action == "recipe") {
-                recipeItemReferencesToGet.push(currentActiveInventoryItems[hero.inventory[arrkey].type].actionValue);
-            }
-        }
-    }
-
-if(recipeItemReferencesToGet.length>0) {
-    recipeIdsToGet += "|"+recipeItemReferencesToGet.join("|");
-}
-
     loadProfessionsAndRecipes(recipeIdsToGet);
 }
 
 
 function loadProfessionsAndRecipes(recipeIdsToLoad) {
     getJSON("/game-world/getProfessionsAndRecipes.php?whichIds=" + recipeIdsToLoad, function(data) {
-        allProfessions = data.professions;
-        activeRecipes = data.recipes;
-            if (!inventoryInterfaceIsBuilt) {
+
+        hero.crafting = data.professions;
+        if (!inventoryInterfaceIsBuilt) {
             UI.buildInventoryInterface();
         }
         loadMapAssets();
@@ -268,6 +252,7 @@ function loadProfessionsAndRecipes(recipeIdsToLoad) {
         loadProfessionsAndRecipes(recipeIdsToLoad);
     });
 }
+
 
 
 

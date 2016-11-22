@@ -53,7 +53,7 @@ var UI = {
                     }
                     inventoryMarkup += '<img src="/images/game-world/inventory-items/' + hero.inventory[thisSlotsID].type + thisFileColourSuffix + '.png" ' + dataActionMarkup + 'alt="">';
                     inventoryMarkup += '<span class="qty">' + hero.inventory[thisSlotsID].quantity + '</span>';
-                    inventoryMarkup += '<p><em>' + theColourPrefix + currentActiveInventoryItems[hero.inventory[thisSlotsID].type].shortname + ' </em>' + currentActiveInventoryItems[hero.inventory[thisSlotsID].type].description + ' <span class="price">Sell price: ' + parseMoney(hero.inventory[thisSlotsID].quantity * currentActiveInventoryItems[hero.inventory[thisSlotsID].type].priceCode, 0) + '</span>'+additionalTooltipDetail(thisSlotsID)+'</p>';
+                    inventoryMarkup += '<p><em>' + theColourPrefix + currentActiveInventoryItems[hero.inventory[thisSlotsID].type].shortname + ' </em>' + currentActiveInventoryItems[hero.inventory[thisSlotsID].type].description + ' <span class="price">Sell price: ' + parseMoney(hero.inventory[thisSlotsID].quantity * currentActiveInventoryItems[hero.inventory[thisSlotsID].type].priceCode, 0) + '</span>' + additionalTooltipDetail(thisSlotsID) + '</p>';
                 } else {
                     inventoryMarkup += '<img alt="Empty slot" src="/images/game-world/inventory-items/blank.png">';
                 }
@@ -91,7 +91,7 @@ var UI = {
             thisSlotsId = whichSlotsToUpdate[j];
             slotMarkup = '<img src="/images/game-world/inventory-items/' + hero.inventory[thisSlotsId].type + '.png" alt="">';
             slotMarkup += '<span class="qty">' + hero.inventory[thisSlotsId].quantity + '</span>';
-            slotMarkup += '<p><em>' + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].shortname + ' </em>' + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].description + ' <span class="price">Sell price: ' + parseMoney(hero.inventory[thisSlotsId].quantity * currentActiveInventoryItems[hero.inventory[thisSlotsId].type].priceCode, 0) + '</span>'+additionalTooltipDetail(thisSlotsId)+'</p>';
+            slotMarkup += '<p><em>' + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].shortname + ' </em>' + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].description + ' <span class="price">Sell price: ' + parseMoney(hero.inventory[thisSlotsId].quantity * currentActiveInventoryItems[hero.inventory[thisSlotsId].type].priceCode, 0) + '</span>' + additionalTooltipDetail(thisSlotsId) + '</p>';
             thisSlotElem = document.getElementById("slot" + thisSlotsId);
             thisSlotElem.innerHTML = slotMarkup;
 
@@ -185,16 +185,18 @@ var UI = {
     },
 
     populateRecipeList: function(whichProfession) {
-        var recipeMarkup = '';
-        var thisRecipe;
-        for (var i = 0; i < hero.recipesKnown.length; i++) {
-            thisRecipe = activeRecipes[hero.recipesKnown[i]];
-            if (thisRecipe.profession == whichProfession) {
-                recipeMarkup += '<li><img src="/images/game-world/inventory-items/' + thisRecipe.imageId + '.png" alt="' + thisRecipe.recipeName + '"><h3>' + thisRecipe.recipeName + '</h3><p>' + thisRecipe.recipeDescription + '</p></li>';
+        if (currentRecipePanelProfession != whichProfession) {
+            var recipeMarkup = '';
+            var thisRecipe;
+            for (var i = 0; i < hero.crafting.profession[whichProfession].recipes.length; i++) {
+                thisRecipe = hero.crafting.profession[whichProfession].recipes[i];
+                recipeMarkup += '<li class="active"><img src="/images/game-world/inventory-items/' + thisRecipe.imageId + '.png" alt="' + thisRecipe.recipeName + '"><h3>' + thisRecipe.recipeName + '</h3><p>' + thisRecipe.recipeDescription + '</p></li>';
             }
+            createRecipeList.innerHTML = recipeMarkup;
+            currentRecipePanelProfession = whichProfession;
         }
-        createRecipeList.innerHTML = recipeMarkup;
     }
+
 
 
 }

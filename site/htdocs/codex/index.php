@@ -25,10 +25,27 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/header.php");
 </ul>
 
 <h2>Crafting</h2>
-<h3>Dyeing</h3>
-<ul>
-<li><a href="/codex/crafting/dyeing/recipes/">Recipes</a></li>
-</ul>
+<?php
+
+$query = "SELECT * from tblprofessions";
+$result = mysql_query($query) or die ("failed");
+
+
+
+
+while ($row = mysql_fetch_array($result)) {
+	extract($row);
+
+echo'<h3>'.$professionName.'</h3><ul>';
+echo'<li><a href="/codex/crafting/'.$cleanurl.'/recipes/">Recipes</a></li>';
+echo'</ul>';
+
+	}
+
+?>
+
+
+
 
 <hr>
 </div>

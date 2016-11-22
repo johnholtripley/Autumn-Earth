@@ -302,6 +302,7 @@ function sortByLowestValue(a, b) {
     return 0;
 }
 
+/*
  function byPropertyLowestFirst(property) {
     // sortedObj = unsortedObj.sort(byPropertyLowestFirst("name"));
     return function(a,b) {
@@ -312,7 +313,7 @@ function sortByLowestValue(a, b) {
         }
     };
 };
-
+*/
 
 
 function drawCircle(fillStyle,x,y,radius) {

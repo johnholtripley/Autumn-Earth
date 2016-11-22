@@ -393,5 +393,11 @@ canvas {
         width: 250px;
         height: 300px;
         overflow: auto;
+        li {
+            display: none;
+            &.active {
+                display: block;
+            }
+        }
     }
 }
