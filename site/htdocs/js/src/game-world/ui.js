@@ -191,7 +191,7 @@ var UI = {
 
             for (var i =0;i < hero.crafting[whichProfession].sortOrder.length;i++) {
                 thisRecipe = hero.crafting[whichProfession].recipes[(hero.crafting[whichProfession].sortOrder[i])];
-                recipeMarkup += '<li class="active"><img src="/images/game-world/inventory-items/' + thisRecipe.imageId + '.png" alt="' + thisRecipe.recipeName + '"><h3>' + thisRecipe.recipeName + '</h3><p>' + thisRecipe.recipeDescription + '</p></li>';
+                recipeMarkup += '<li class="active" id="recipe'+hero.crafting[whichProfession].sortOrder[i]+'"><img src="/images/game-world/inventory-items/' + thisRecipe.imageId + '.png" alt="' + thisRecipe.recipeName + '"><h3>' + thisRecipe.recipeName + '</h3><p>' + thisRecipe.recipeDescription + '</p></li>';
             }
 
             createRecipeList.innerHTML = recipeMarkup;

@@ -1,7 +1,7 @@
 <?php
 
 
-
+/*
 
 // http://stackoverflow.com/questions/6054033/pretty-printing-json-with-php
 function prettyPrint( $json )
@@ -62,7 +62,7 @@ function prettyPrint( $json )
 }
 // just temp while working
 
-
+*/
 
 
 
@@ -98,7 +98,7 @@ for($i=0;$i<count($allIds);$i++) {
 
 
 
-$query = "SELECT tblrecipes.*, tblprofessions.*, tblcolours.colourName, tblinventoryitems.itemid as productId, 
+$query = "SELECT tblrecipes.*, tblprofessions.*, tblcolours.colourName, tblinventoryitems.itemid as productId, tblinventoryitems.itemcategories as createditemcategories,
 
 CASE WHEN tblrecipes.recipename IS NOT NULL THEN tblrecipes.recipename
 
@@ -127,10 +127,11 @@ $outputJson = rtrim($outputJson, ",");
 
 $outputJson .= '},';
 $outputJson .= '"sortOrder": ['.implode(",", $thisRecipeOrder).'],';
-$outputJson .= '"filters": {}';
+$outputJson .= '"filters": '.json_encode($thisProfessionsFilters).'';
 $outputJson .= '},';
 }
 $thisRecipeOrder = [];
+$thisProfessionsFilters = [];
 $outputJson .= '"'.$profession.'": { "recipes": {';
 $thisProfession = $profession;
     }
@@ -138,6 +139,44 @@ $thisProfession = $profession;
 	$outputJson .= '"'.$recipeID.'":{';
 $outputJson .= '"components":"'.$components.'",';
 $outputJson .= '"creates":"'.$creates.'",';
+
+
+$thisRecipesFilters = "Miscellaneous";
+if(isset($createditemcategories)) {
+// get categories for this item:
+$catQuery = "SELECT * FROM tblitemcategories WHERE categoryid in (".$createditemcategories.")";
+$catResult = mysql_query($catQuery) or die ("categories failed");
+ 
+while ($catRow = mysql_fetch_array($catResult)) {
+    extract($catRow);
+    $thisRecipesFilters = $categoryName; 
+}
+} 
+
+
+if (array_key_exists($thisRecipesFilters, $thisProfessionsFilters)) {
+    array_push($thisProfessionsFilters[$thisRecipesFilters], $recipeID);
+} else {
+// add new key:
+$thisProfessionsFilters[$thisRecipesFilters] = array($recipeID);
+}
+
+
+/*
+
+
+need filter:
+
+profession [0]
+            "herbs": [1,3,4],
+            "dyers": [1,2,4,7],
+
+
+*/
+
+
+
+
 $outputJson .= '"prerequisite":"'.$prerequisite.'",';
 array_push($thisRecipeOrder, $recipeID);
 
@@ -171,7 +210,7 @@ $outputJson = rtrim($outputJson, ",");
 
 $outputJson .= '},';
 $outputJson .= '"sortOrder": ['.implode(",", $thisRecipeOrder).'],';
-$outputJson .= '"filters": {}';
+$outputJson .= '"filters": '.json_encode($thisProfessionsFilters).'';
 $outputJson .= '}}}';
 
 echo $outputJson;
