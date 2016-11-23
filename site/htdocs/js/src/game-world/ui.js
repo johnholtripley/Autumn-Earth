@@ -192,6 +192,9 @@ if(hero.professionsKnown.length>0) {
 
     populateRecipeList: function(whichProfession) {
         if (currentRecipePanelProfession != whichProfession) {
+            // clear previous searches:
+              UI.recipeSearch.value = '';
+    UI.clearRecipeSearch.classList.remove("active");
             var recipeMarkup = '';
             var thisRecipe;
 
@@ -210,6 +213,8 @@ if(hero.professionsKnown.length>0) {
         recipeSearch.onkeyup = recipeSearchInput;
         recipeFilter.onchange = recipeSearchAndFilter;
         clearRecipeSearch.onpress = recipeSearchClear;
+
+        // Add selected to all option when building select #######
     }
 
 

@@ -423,6 +423,7 @@ canvas {
 
 
  select {
+    color: #fff;
     /* Make sure the select is wider than the container so we can clip the arrow */
     cursor: pointer;
     width: 110%;
@@ -460,7 +461,7 @@ canvas {
 &:after {
   
     background: none;
-    color: #bbb;
+    color: #fff;
     content: "V";
     font-size: 1.5em;
     padding: 0;
@@ -489,6 +490,10 @@ canvas {
 
 
 }
+
+
+
+
 
 
 #clearRecipeSearch {

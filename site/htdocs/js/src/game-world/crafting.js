@@ -1,18 +1,18 @@
 function recipeSearchAndFilter() {
-
+ // Convert to lowercase for search. Search name and if not, then description too ######
 }
 
 function recipeSearchInput() {
-    if(recipeSearch.value != '') {
-clearRecipeSearch.classList.add("active");
+    if(UI.recipeSearch.value != '') {
+UI.clearRecipeSearch.classList.add("active");
     } else {
-        clearRecipeSearch.classList.remove("active");
+        UI.clearRecipeSearch.classList.remove("active");
     }
     recipeSearchAndFilter();
 }
 
 function recipeSearchClear() {
-    recipeSearch.value = '';
-    clearRecipeSearch.classList.remove("active");
+    UI.recipeSearch.value = '';
+    UI.clearRecipeSearch.classList.remove("active");
     recipeSearchAndFilter();
 }

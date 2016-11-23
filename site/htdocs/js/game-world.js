@@ -218,6 +218,24 @@ particles: [],
 maxParticles: 10
 };
 
+function recipeSearchAndFilter() {
+ // Convert to lowercase for search. Search name and if not, then description too ######
+}
+
+function recipeSearchInput() {
+    if(UI.recipeSearch.value != '') {
+UI.clearRecipeSearch.classList.add("active");
+    } else {
+        UI.clearRecipeSearch.classList.remove("active");
+    }
+    recipeSearchAndFilter();
+}
+
+function recipeSearchClear() {
+    UI.recipeSearch.value = '';
+    UI.clearRecipeSearch.classList.remove("active");
+    recipeSearchAndFilter();
+}
 
 // find tile from coords:
 function getTileX(x) {
@@ -1135,7 +1153,9 @@ var UI = {
         var cardAlbumList = document.getElementById('cardAlbumList');
         var boosterPack = document.getElementById('boosterPack');
         var createRecipeList = document.getElementById('createRecipeList');
-
+var recipeSearch = document.getElementById('recipeSearch');
+var clearRecipeSearch = document.getElementById('clearRecipeSearch');
+var recipeFilter = document.getElementById('recipeFilter');
         //
 
     },
@@ -1192,7 +1212,11 @@ var UI = {
         UI.initDrag(".draggableBar");
         UI.updateCardAlbum();
 
-        UI.populateRecipeList(0);
+UI.buildRecipePanel();
+if(hero.professionsKnown.length>0) {
+    // load and cache the first profession's recipe assets:
+        UI.populateRecipeList(hero.professionsKnown[0]);
+    }
 
         inventoryInterfaceIsBuilt = true;
     },
@@ -1311,18 +1335,29 @@ var UI = {
 
     populateRecipeList: function(whichProfession) {
         if (currentRecipePanelProfession != whichProfession) {
+            // clear previous searches:
+              UI.recipeSearch.value = '';
+    UI.clearRecipeSearch.classList.remove("active");
             var recipeMarkup = '';
             var thisRecipe;
 
             for (var i =0;i < hero.crafting[whichProfession].sortOrder.length;i++) {
                 thisRecipe = hero.crafting[whichProfession].recipes[(hero.crafting[whichProfession].sortOrder[i])];
-                recipeMarkup += '<li class="active"><img src="/images/game-world/inventory-items/' + thisRecipe.imageId + '.png" alt="' + thisRecipe.recipeName + '"><h3>' + thisRecipe.recipeName + '</h3><p>' + thisRecipe.recipeDescription + '</p></li>';
+                recipeMarkup += '<li class="active" id="recipe'+hero.crafting[whichProfession].sortOrder[i]+'"><img src="/images/game-world/inventory-items/' + thisRecipe.imageId + '.png" alt="' + thisRecipe.recipeName + '"><h3>' + thisRecipe.recipeName + '</h3><p>' + thisRecipe.recipeDescription + '</p></li>';
             }
 
             createRecipeList.innerHTML = recipeMarkup;
             
             currentRecipePanelProfession = whichProfession;
         }
+    },
+
+    buildRecipePanel: function() {
+        recipeSearch.onkeyup = recipeSearchInput;
+        recipeFilter.onchange = recipeSearchAndFilter;
+        clearRecipeSearch.onpress = recipeSearchClear;
+
+        // Add selected to all option when building select #######
     }
 
 
