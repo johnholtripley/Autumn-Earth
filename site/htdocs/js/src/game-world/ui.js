@@ -215,7 +215,7 @@ var UI = {
     buildRecipePanel: function() {
         recipeSearch.onkeyup = recipeSearchInput;
         recipeFilter.onchange = recipeSearchAndFilter;
-        clearRecipeSearch.onpress = recipeSearchClear;
+        clearRecipeSearch.onclick = recipeSearchClear;
 
         // Add selected to all option when building select #######
     }

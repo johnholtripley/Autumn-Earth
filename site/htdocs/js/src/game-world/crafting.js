@@ -44,7 +44,7 @@ function recipeSearchInput() {
 }
 
 function recipeSearchClear() {
-	alert("clear");
+	
     recipeSearch.value = '';
     clearRecipeSearch.classList.remove("active");
     recipeSearchAndFilter();
