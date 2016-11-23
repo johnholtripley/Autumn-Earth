@@ -1,5 +1,5 @@
 function recipeSearchAndFilter() {
-    // Convert to lowercase for search. Search name and if not, then description too ######
+    // Convert to lowercase for search. Search name and if not, then description too
 
     // default to showing all:
     var foundKeys = hero.crafting[currentRecipePanelProfession].sortOrder;
@@ -44,7 +44,7 @@ function recipeSearchInput() {
 }
 
 function recipeSearchClear() {
-	
+
     recipeSearch.value = '';
     clearRecipeSearch.classList.remove("active");
     recipeSearchAndFilter();

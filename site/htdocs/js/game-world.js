@@ -219,7 +219,7 @@ maxParticles: 10
 };
 
 function recipeSearchAndFilter() {
-    // Convert to lowercase for search. Search name and if not, then description too ######
+    // Convert to lowercase for search. Search name and if not, then description too
 
     // default to showing all:
     var foundKeys = hero.crafting[currentRecipePanelProfession].sortOrder;
@@ -264,7 +264,7 @@ function recipeSearchInput() {
 }
 
 function recipeSearchClear() {
-	
+
     recipeSearch.value = '';
     clearRecipeSearch.classList.remove("active");
     recipeSearchAndFilter();
@@ -1385,6 +1385,10 @@ var UI = {
 
             createRecipeList.innerHTML = recipeMarkup;
 
+
+console.log(hero.crafting[whichProfession].filters);
+
+
             currentRecipePanelProfession = whichProfession;
         }
     },
@@ -1393,6 +1397,8 @@ var UI = {
         recipeSearch.onkeyup = recipeSearchInput;
         recipeFilter.onchange = recipeSearchAndFilter;
         clearRecipeSearch.onclick = recipeSearchClear;
+
+
 
         // Add selected to all option when building select #######
     }

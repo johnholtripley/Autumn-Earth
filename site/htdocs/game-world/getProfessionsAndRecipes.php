@@ -1,7 +1,7 @@
 <?php
 
 
-/*
+
 
 // http://stackoverflow.com/questions/6054033/pretty-printing-json-with-php
 function prettyPrint( $json )
@@ -62,7 +62,7 @@ function prettyPrint( $json )
 }
 // just temp while working
 
-*/
+
 
 
 
@@ -132,6 +132,7 @@ $outputJson .= '},';
 }
 $thisRecipeOrder = [];
 $thisProfessionsFilters = [];
+
 $outputJson .= '"'.$profession.'": { "recipes": {';
 $thisProfession = $profession;
     }
@@ -159,6 +160,14 @@ if (array_key_exists($thisRecipesFilters, $thisProfessionsFilters)) {
 } else {
 // add new key:
 $thisProfessionsFilters[$thisRecipesFilters] = array($recipeID);
+}
+
+// add this to the 'all' category
+if (array_key_exists("All", $thisProfessionsFilters)) {
+    array_push($thisProfessionsFilters["All"], $recipeID);
+} else {
+// add new key:
+$thisProfessionsFilters["All"] = array($recipeID);
 }
 
 

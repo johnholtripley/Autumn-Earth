@@ -208,6 +208,10 @@ var UI = {
 
             createRecipeList.innerHTML = recipeMarkup;
 
+
+console.log(hero.crafting[whichProfession].filters);
+
+
             currentRecipePanelProfession = whichProfession;
         }
     },
@@ -216,6 +220,8 @@ var UI = {
         recipeSearch.onkeyup = recipeSearchInput;
         recipeFilter.onchange = recipeSearchAndFilter;
         clearRecipeSearch.onclick = recipeSearchClear;
+
+
 
         // Add selected to all option when building select #######
     }
