@@ -1,6 +1,11 @@
+    // global vars:
+    var recipeSearch = document.getElementById('recipeSearch');
+        var clearRecipeSearch = document.getElementById('clearRecipeSearch');
+        var recipeFilter = document.getElementById('recipeFilter');
+
 var UI = {
     init: function() {
-        // cache all references to UI elements:
+        // cache all local references to UI elements:
         var displayZoneName = document.getElementById('displayZoneName');
         var activeCartographicMap = document.getElementById('activeCartographicMap');
         var cartographicTitle = document.getElementById('cartographicTitle');
@@ -10,9 +15,7 @@ var UI = {
         var cardAlbumList = document.getElementById('cardAlbumList');
         var boosterPack = document.getElementById('boosterPack');
         var createRecipeList = document.getElementById('createRecipeList');
-var recipeSearch = document.getElementById('recipeSearch');
-var clearRecipeSearch = document.getElementById('clearRecipeSearch');
-var recipeFilter = document.getElementById('recipeFilter');
+    
         //
 
     },
@@ -69,11 +72,11 @@ var recipeFilter = document.getElementById('recipeFilter');
         UI.initDrag(".draggableBar");
         UI.updateCardAlbum();
 
-UI.buildRecipePanel();
-if(hero.professionsKnown.length>0) {
-    // load and cache the first profession's recipe assets:
-        UI.populateRecipeList(hero.professionsKnown[0]);
-    }
+        UI.buildRecipePanel();
+        if (hero.professionsKnown.length > 0) {
+            // load and cache the first profession's recipe assets:
+            UI.populateRecipeList(hero.professionsKnown[0]);
+        }
 
         inventoryInterfaceIsBuilt = true;
     },
@@ -193,18 +196,18 @@ if(hero.professionsKnown.length>0) {
     populateRecipeList: function(whichProfession) {
         if (currentRecipePanelProfession != whichProfession) {
             // clear previous searches:
-              UI.recipeSearch.value = '';
-    UI.clearRecipeSearch.classList.remove("active");
+            recipeSearch.value = '';
+            clearRecipeSearch.classList.remove("active");
             var recipeMarkup = '';
             var thisRecipe;
 
-            for (var i =0;i < hero.crafting[whichProfession].sortOrder.length;i++) {
+            for (var i = 0; i < hero.crafting[whichProfession].sortOrder.length; i++) {
                 thisRecipe = hero.crafting[whichProfession].recipes[(hero.crafting[whichProfession].sortOrder[i])];
-                recipeMarkup += '<li class="active" id="recipe'+hero.crafting[whichProfession].sortOrder[i]+'"><img src="/images/game-world/inventory-items/' + thisRecipe.imageId + '.png" alt="' + thisRecipe.recipeName + '"><h3>' + thisRecipe.recipeName + '</h3><p>' + thisRecipe.recipeDescription + '</p></li>';
+                recipeMarkup += '<li class="active" id="recipe' + hero.crafting[whichProfession].sortOrder[i] + '"><img src="/images/game-world/inventory-items/' + thisRecipe.imageId + '.png" alt="' + thisRecipe.recipeName + '"><h3>' + thisRecipe.recipeName + '</h3><p>' + thisRecipe.recipeDescription + '</p></li>';
             }
 
             createRecipeList.innerHTML = recipeMarkup;
-            
+
             currentRecipePanelProfession = whichProfession;
         }
     },
