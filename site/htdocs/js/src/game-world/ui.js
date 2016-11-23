@@ -200,6 +200,8 @@ var UI = {
             clearRecipeSearch.classList.remove("active");
             var recipeMarkup = '';
             var thisRecipe;
+            var filterMarkup = '';
+            var thisFilter;
 
             for (var i = 0; i < hero.crafting[whichProfession].sortOrder.length; i++) {
                 thisRecipe = hero.crafting[whichProfession].recipes[(hero.crafting[whichProfession].sortOrder[i])];
@@ -208,10 +210,15 @@ var UI = {
 
             createRecipeList.innerHTML = recipeMarkup;
 
-
-console.log(hero.crafting[whichProfession].filters);
-
-
+for (var i = 0; i < hero.crafting[whichProfession].filterOrder.length; i++) {
+thisFilter = hero.crafting[whichProfession].filters[(hero.crafting[whichProfession].filterOrder[i])];
+filterMarkup += '<option value="'+thisFilter+'"';
+if(i == 0) {
+filterMarkup += ' selected="selected"';
+}
+filterMarkup += '>'+hero.crafting[whichProfession].filterOrder[i]+'</option>';
+}
+recipeFilter.innerHTML = filterMarkup;
             currentRecipePanelProfession = whichProfession;
         }
     },
@@ -223,7 +230,7 @@ console.log(hero.crafting[whichProfession].filters);
 
 
 
-        // Add selected to all option when building select #######
+        
     }
 
 

@@ -2,7 +2,7 @@
 
 
 
-
+/*
 // http://stackoverflow.com/questions/6054033/pretty-printing-json-with-php
 function prettyPrint( $json )
 {
@@ -61,7 +61,7 @@ function prettyPrint( $json )
     return $result;
 }
 // just temp while working
-
+*/
 
 
 
@@ -127,7 +127,19 @@ $outputJson = rtrim($outputJson, ",");
 
 $outputJson .= '},';
 $outputJson .= '"sortOrder": ['.implode(",", $thisRecipeOrder).'],';
-$outputJson .= '"filters": '.json_encode($thisProfessionsFilters).'';
+ksort($thisProfessionsFilters);
+$outputJson .= '"filters": '.json_encode($thisProfessionsFilters).',';
+$outputJson .= '"filterOrder": [';
+//implode(",", array_keys($thisProfessionsFilters));
+$professionsKeys = array_keys($thisProfessionsFilters);
+
+foreach ($professionsKeys as $value) {
+    $outputJson .= '"'.$value.'",';
+}
+// remove last comma:
+
+$outputJson = rtrim($outputJson, ",");
+$outputJson .= ']';
 $outputJson .= '},';
 }
 $thisRecipeOrder = [];
@@ -171,17 +183,6 @@ $thisProfessionsFilters["All"] = array($recipeID);
 }
 
 
-/*
-
-
-need filter:
-
-profession [0]
-            "herbs": [1,3,4],
-            "dyers": [1,2,4,7],
-
-
-*/
 
 
 
@@ -219,7 +220,18 @@ $outputJson = rtrim($outputJson, ",");
 
 $outputJson .= '},';
 $outputJson .= '"sortOrder": ['.implode(",", $thisRecipeOrder).'],';
-$outputJson .= '"filters": '.json_encode($thisProfessionsFilters).'';
+ksort($thisProfessionsFilters);
+$outputJson .= '"filters": '.json_encode($thisProfessionsFilters).',';
+$outputJson .= '"filterOrder": [';
+//implode(",", array_keys($thisProfessionsFilters));
+$professionsKeys = array_keys($thisProfessionsFilters);
+foreach ($professionsKeys as $value) {
+    $outputJson .= '"'.$value.'",';
+}
+// remove last comma:
+
+$outputJson = rtrim($outputJson, ",");
+$outputJson .= ']';
 $outputJson .= '}}}';
 
 echo $outputJson;

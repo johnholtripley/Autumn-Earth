@@ -224,7 +224,7 @@ function recipeSearchAndFilter() {
     // default to showing all:
     var foundKeys = hero.crafting[currentRecipePanelProfession].sortOrder;
     if (recipeSearch.value != '') {
-    	var searchTerm = recipeSearch.value.toLowerCase();
+        var searchTerm = recipeSearch.value.toLowerCase();
         foundKeys = [];
         for (var key in hero.crafting[currentRecipePanelProfession].recipes) {
             if (hero.crafting[currentRecipePanelProfession].recipes[key]['recipeName'].toLowerCase().indexOf(searchTerm) != -1) {
@@ -234,27 +234,22 @@ function recipeSearchAndFilter() {
             }
         }
     }
-
-    
-var recipeListItems = document.querySelectorAll('#createRecipeList li'), i;
-// hide all:
-for (i = 0; i < recipeListItems.length; ++i) {
-  recipeListItems[i].classList.remove('active');
-}
-// show those that are relevant:
-for (i = 0; i < foundKeys.length; ++i) {
-	document.getElementById("recipe"+foundKeys[i]).classList.add('active');
-}
-
-
-
-
+    var recipeListItems = document.querySelectorAll('#createRecipeList li'),
+        i;
+    // hide all:
+    for (i = 0; i < recipeListItems.length; ++i) {
+        recipeListItems[i].classList.remove('active');
+    }
+    // show those that are relevant:
+    for (i = 0; i < foundKeys.length; i++) {
+        // only show those keys that are in this filter set:
+        if (recipeFilter.value.indexOf(foundKeys[i]) != -1) {
+            document.getElementById("recipe" + foundKeys[i]).classList.add('active');
+        }
+    }
 }
 
 function recipeSearchInput() {
-
-
-	
     if (recipeSearch.value != '') {
         clearRecipeSearch.classList.add("active");
     } else {
@@ -264,7 +259,6 @@ function recipeSearchInput() {
 }
 
 function recipeSearchClear() {
-
     recipeSearch.value = '';
     clearRecipeSearch.classList.remove("active");
     recipeSearchAndFilter();
@@ -1377,6 +1371,8 @@ var UI = {
             clearRecipeSearch.classList.remove("active");
             var recipeMarkup = '';
             var thisRecipe;
+            var filterMarkup = '';
+            var thisFilter;
 
             for (var i = 0; i < hero.crafting[whichProfession].sortOrder.length; i++) {
                 thisRecipe = hero.crafting[whichProfession].recipes[(hero.crafting[whichProfession].sortOrder[i])];
@@ -1385,10 +1381,15 @@ var UI = {
 
             createRecipeList.innerHTML = recipeMarkup;
 
-
-console.log(hero.crafting[whichProfession].filters);
-
-
+for (var i = 0; i < hero.crafting[whichProfession].filterOrder.length; i++) {
+thisFilter = hero.crafting[whichProfession].filters[(hero.crafting[whichProfession].filterOrder[i])];
+filterMarkup += '<option value="'+thisFilter+'"';
+if(i == 0) {
+filterMarkup += ' selected="selected"';
+}
+filterMarkup += '>'+hero.crafting[whichProfession].filterOrder[i]+'</option>';
+}
+recipeFilter.innerHTML = filterMarkup;
             currentRecipePanelProfession = whichProfession;
         }
     },
@@ -1400,7 +1401,7 @@ console.log(hero.crafting[whichProfession].filters);
 
 
 
-        // Add selected to all option when building select #######
+        
     }
 
 
