@@ -198,7 +198,7 @@ var UI = {
             // clear previous searches:
             recipeSearch.value = '';
             clearRecipeSearch.classList.remove("active");
-            var recipeMarkup = '';
+            var recipeMarkup = '<li id="noRecipesFound"><p>No recipes found.</p></li>';
             var thisRecipe;
             var filterMarkup = '';
             var thisFilter;

@@ -21,11 +21,16 @@ function recipeSearchAndFilter() {
         recipeListItems[i].classList.remove('active');
     }
     // show those that are relevant:
+    var numberBeingShown = 0;
     for (i = 0; i < foundKeys.length; i++) {
         // only show those keys that are in this filter set:
         if (recipeFilter.value.indexOf(foundKeys[i]) != -1) {
             document.getElementById("recipe" + foundKeys[i]).classList.add('active');
+            numberBeingShown++;
         }
+    }
+    if(numberBeingShown == 0) {
+document.getElementById("noRecipesFound").classList.add('active');
     }
 }
 
