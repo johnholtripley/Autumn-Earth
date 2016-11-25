@@ -29,10 +29,17 @@ canvas {
     display: block;
 }
 
-#gameWrapper {
+#worldWrapper {
     position: relative;
     display: inline-block;
-    font-family: "Trebuchet MS", trebuchet, arial, helvetica, sans-serif;
+
+}
+
+#gameWrapper {
+    width: 100%;
+    width: 100vw;
+    height: 100vh;
+        font-family: "Trebuchet MS", trebuchet, arial, helvetica, sans-serif;
     cursor: url(../images/game-world/cursors/default.gif) 3 3, auto;
 }
 

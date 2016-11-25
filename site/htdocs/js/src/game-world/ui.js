@@ -249,7 +249,9 @@ var UI = {
 
     endInventoryDrag: function(e) {
         UI.inDrag = false;
+
         var thisNode = e.target;
+        
         // find the id of the parent if actual dropped target doesn't have one:
         while (!thisNode.id) {
             thisNode = thisNode.parentNode;
@@ -269,6 +271,7 @@ var UI = {
             var droppedSlotId = droppedSlot.substring(4);
             if (hero.inventory[droppedSlotId] == undefined) {
                 addToInventory(droppedSlotId, UI.draggedInventoryObject);
+                UI.droppedSuccessfully();
             } else {
                 if (itemAttributesMatch(UI.draggedInventoryObject, hero.inventory[droppedSlotId])) {
                     if (parseInt(UI.draggedInventoryObject.quantity) + parseInt(hero.inventory[droppedSlotId].quantity) <= maxNumberOfItemsPerSlot) {
@@ -281,25 +284,33 @@ var UI = {
                                 break;
                             }
                         }
+                        UI.droppedSuccessfully();
                     } else {
                         // add in the max, and slide the remainder back:
                         // ######
                     }
                 } else {
                     // otherwise slide it back #####
+                    UI.slideDraggedSlotBack();
                 }
             }
 
+        } else {
+                 UI.slideDraggedSlotBack();
         }
 
         // tidy up and remove event listeners:
         document.removeEventListener("mousemove", UI.handleDrag, false);
         document.removeEventListener("mouseup", UI.endInventoryDrag, false);
 
-        // hide the clone:
+    
+    },
+
+droppedSuccessfully: function() {
+    // hide the clone:
         UI.activeDragObject.style.cssText = "z-index:2;left: -100px; top: -100px";
         UI.activeDragObject = '';
-    },
+},
 
     initInventoryDrag: function() {
         var dragTargets = document.querySelectorAll('.inventoryBag li');
@@ -324,6 +335,20 @@ var UI = {
                 }
             }, false);
         }
+    },
+
+    slideDraggedSlotBack: function() {
+        // set the element to its destination, and then add a transform so that it can transition back into place
+        // determine the difference between where it started and where it is now:
+
+console.log("currently: "+UI.activeDragObject.style.left+", "+UI.activeDragObject.style.top);
+console.log("started at: "+objInitLeft+", "+objInitTop);
+var offsetDifferenceX = parseInt(UI.activeDragObject.style.left) - objInitLeft;
+var offsetDifferenceY = parseInt(UI.activeDragObject.style.top) - objInitTop;
+
+UI.activeDragObject.style.cssText = "z-index:2;left: " + (objInitLeft) + "px; top: " + (objInitTop) + "px;transform: translate("+offsetDifferenceX+"px, "+offsetDifferenceY+"px);transition: transform 0.8s ease;";
+UI.activeDragObject.style.transform(translate(0, 0));
+
     }
 
 

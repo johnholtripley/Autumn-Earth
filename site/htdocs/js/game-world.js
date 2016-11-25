@@ -1084,8 +1084,8 @@ function removeItemTypeFromInventory(itemType, amount) {
 
 function addToInventory(whichSlot, itemObject) {
     // make a copy not a reference:
-hero.inventory[whichSlot] = JSON.parse(JSON.stringify(itemObject));
-document.getElementById("slot" + whichSlot).innerHTML = generateSlotMarkup(whichSlot);
+    hero.inventory[whichSlot] = JSON.parse(JSON.stringify(itemObject));
+    document.getElementById("slot" + whichSlot).innerHTML = generateSlotMarkup(whichSlot);
 }
 
 function removeFromInventory(whichSlot, amount) {
@@ -1142,39 +1142,33 @@ function inventoryItemAction(whichSlot, whichAction, whichActionValue) {
             // remove the 'slot' prefix with the substring(4):
             removeFromInventory(whichSlot.parentElement.id.substring(4), 1);
             break;
-            case "recipe":
-          learnRecipe(whichActionValue);
-                        // remove the 'slot' prefix with the substring(4):
+        case "recipe":
+            learnRecipe(whichActionValue);
+            // remove the 'slot' prefix with the substring(4):
             removeFromInventory(whichSlot.parentElement.id.substring(4), 1);
     }
 }
 
 
 function additionalTooltipDetail(whichSlotID) {
-// get any information that needs displaying in the tooltip:
-var tooltipInformationToAdd = "";
-
-
-
-
-if (currentActiveInventoryItems[hero.inventory[whichSlotID].type].action == "recipe") {
-    // check if it's known already:
-    if (hero.recipesKnown.indexOf(parseInt(currentActiveInventoryItems[hero.inventory[whichSlotID].type].actionValue)) != -1) {
-        tooltipInformationToAdd += " (already known)";
+    // get any information that needs displaying in the tooltip:
+    var tooltipInformationToAdd = "";
+    if (currentActiveInventoryItems[hero.inventory[whichSlotID].type].action == "recipe") {
+        // check if it's known already:
+        if (hero.recipesKnown.indexOf(parseInt(currentActiveInventoryItems[hero.inventory[whichSlotID].type].actionValue)) != -1) {
+            tooltipInformationToAdd += " (already known)";
+        }
     }
-}
-
-
-return tooltipInformationToAdd;
+    return tooltipInformationToAdd;
 }
 
 function generateSlotMarkup(thisSlotsId) {
+    var slotMarkup = '<img src="/images/game-world/inventory-items/' + hero.inventory[thisSlotsId].type + '.png" alt="">';
+    slotMarkup += '<span class="qty">' + hero.inventory[thisSlotsId].quantity + '</span>';
+    slotMarkup += '<p><em>' + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].shortname + ' </em>' + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].description + ' <span class="price">Sell price: ' + parseMoney(hero.inventory[thisSlotsId].quantity * currentActiveInventoryItems[hero.inventory[thisSlotsId].type].priceCode, 0) + '</span>' + additionalTooltipDetail(thisSlotsId) + '</p>';
+    return slotMarkup;
+}
 
- var slotMarkup = '<img src="/images/game-world/inventory-items/' + hero.inventory[thisSlotsId].type + '.png" alt="">';
-            slotMarkup += '<span class="qty">' + hero.inventory[thisSlotsId].quantity + '</span>';
-            slotMarkup += '<p><em>' + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].shortname + ' </em>' + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].description + ' <span class="price">Sell price: ' + parseMoney(hero.inventory[thisSlotsId].quantity * currentActiveInventoryItems[hero.inventory[thisSlotsId].type].priceCode, 0) + '</span>' + additionalTooltipDetail(thisSlotsId) + '</p>';
-return slotMarkup;
-        }
 var KeyBindings = {
     'left': 37,
     'right': 39,
@@ -1438,39 +1432,31 @@ var UI = {
     endInventoryDrag: function(e) {
         UI.inDrag = false;
 
-    
-
-
-    var thisNode = e.target;
-// find the id of the parent if actual dropped target doesn't have one:
-while(!thisNode.id) {
-thisNode = thisNode.parentNode;
-}
-    var droppedSlot = thisNode.id;
+        var thisNode = e.target;
+        
+        // find the id of the parent if actual dropped target doesn't have one:
+        while (!thisNode.id) {
+            thisNode = thisNode.parentNode;
+        }
+        var droppedSlot = thisNode.id;
 
         console.log("dropped on: " + droppedSlot);
-
         // check if this has "slot" or "inventorybag" in
         // if not, slide back - restore to inventory data
         // if ok, add to inventory data, update slot
-        // hide the cloned dragslot
-
         console.log("came from: " + UI.sourceSlot);
 
 
 
         if (droppedSlot.substring(0, 4) == "slot") {
-            console.log("is slot");
             // check it's empty:
             var droppedSlotId = droppedSlot.substring(4);
             if (hero.inventory[droppedSlotId] == undefined) {
                 addToInventory(droppedSlotId, UI.draggedInventoryObject);
+                UI.droppedSuccessfully();
             } else {
-                console.log("not empty");
                 if (itemAttributesMatch(UI.draggedInventoryObject, hero.inventory[droppedSlotId])) {
-                    console.log("attrs match");
                     if (parseInt(UI.draggedInventoryObject.quantity) + parseInt(hero.inventory[droppedSlotId].quantity) <= maxNumberOfItemsPerSlot) {
-                        console.log("less than max");
                         hero.inventory[droppedSlotId].quantity += parseInt(UI.draggedInventoryObject.quantity);
                         // update visually:
                         var thisSlotElem = document.getElementById("slot" + droppedSlotId);
@@ -1480,29 +1466,35 @@ thisNode = thisNode.parentNode;
                                 break;
                             }
                         }
-
+                        UI.droppedSuccessfully();
                     } else {
-                        // ###
+                        // add in the max, and slide the remainder back:
+                        // ######
                     }
                 } else {
-
                     // otherwise slide it back #####
+                    UI.slideDraggedSlotBack();
                 }
             }
 
+        } else {
+                 UI.slideDraggedSlotBack();
         }
 
         // tidy up and remove event listeners:
         document.removeEventListener("mousemove", UI.handleDrag, false);
         document.removeEventListener("mouseup", UI.endInventoryDrag, false);
 
-        // hide the clone:
-        UI.activeDragObject.style.cssText = "z-index:2;left: -100px; top: -100px";
-        UI.activeDragObject = '';
+    
     },
 
-    initInventoryDrag: function() {
+droppedSuccessfully: function() {
+    // hide the clone:
+        UI.activeDragObject.style.cssText = "z-index:2;left: -100px; top: -100px";
+        UI.activeDragObject = '';
+},
 
+    initInventoryDrag: function() {
         var dragTargets = document.querySelectorAll('.inventoryBag li');
         for (var i = 0; i < dragTargets.length; i++) {
             dragTargets[i].addEventListener("mousedown", function(e) {
@@ -1510,18 +1502,10 @@ thisNode = thisNode.parentNode;
                 if (e.button != 2) {
                     UI.sourceSlot = this.id.substring(4);
                     UI.draggedInventoryObject = hero.inventory[UI.sourceSlot];
-
-
                     // clone this slot to draggableInventorySlot:
                     UI.activeDragObject = document.getElementById('draggableInventorySlot');
                     UI.activeDragObject.innerHTML = this.innerHTML;
-
-
-
-
-
                     removeFromInventory(UI.sourceSlot, hero.inventory[UI.sourceSlot].quantity);
-
                     UI.inDrag = true;
                     var clickedSlotRect = this.getBoundingClientRect()
                     objInitLeft = clickedSlotRect.left;
@@ -1533,6 +1517,20 @@ thisNode = thisNode.parentNode;
                 }
             }, false);
         }
+    },
+
+    slideDraggedSlotBack: function() {
+        // set the element to its destination, and then add a transform so that it can transition back into place
+        // determine the difference between where it started and where it is now:
+
+console.log("currently: "+UI.activeDragObject.style.left+", "+UI.activeDragObject.style.top);
+console.log("started at: "+objInitLeft+", "+objInitTop);
+var offsetDifferenceX = parseInt(UI.activeDragObject.style.left) - objInitLeft;
+var offsetDifferenceY = parseInt(UI.activeDragObject.style.top) - objInitTop;
+
+UI.activeDragObject.style.cssText = "z-index:2;left: " + (objInitLeft) + "px; top: " + (objInitTop) + "px;transform: translate("+offsetDifferenceX+"px, "+offsetDifferenceY+"px);transition: transform 0.8s ease;";
+UI.activeDragObject.style.transform(translate(0, 0));
+
     }
 
 

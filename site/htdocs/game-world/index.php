@@ -13,10 +13,10 @@
   <meta name="robots" content="noodp,noydir">
   <?php include($_SERVER['DOCUMENT_ROOT']."/includes/meta-content.php"); ?>
 </head>
-
 <body>
+<div id="gameWrapper">
 
-  <div id="gameWrapper">
+  <div id="worldWrapper">
 <canvas id="gameWorld" width="800" height="600" moz-opaque>
   <img src="/images/game-world/no-canvas.jpg" alt="Sorry">
 </canvas>
@@ -24,6 +24,7 @@
 <p id="dialogue"></p>
 <div id="notification"></div>
 <div id="displayZoneName"></div>
+</div>
 <div id="inventoryPanels"></div>
 <div id="draggableInventorySlot"></div>
 <div id="cardAlbum"><div class="draggableBar">Card album</div><ul id="cardAlbumList"></ul></div>
