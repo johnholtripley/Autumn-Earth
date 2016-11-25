@@ -108,7 +108,11 @@ function removeItemTypeFromInventory(itemType, amount) {
     }
 }
 
-
+function addToInventory(whichSlot, itemObject) {
+    // make a copy not a reference:
+hero.inventory[whichSlot] = JSON.parse(JSON.stringify(itemObject));
+document.getElementById("slot" + whichSlot).innerHTML = generateSlotMarkup(whichSlot);
+}
 
 function removeFromInventory(whichSlot, amount) {
     var thisCurrentQuantity = hero.inventory[whichSlot].quantity;
@@ -189,3 +193,11 @@ if (currentActiveInventoryItems[hero.inventory[whichSlotID].type].action == "rec
 
 return tooltipInformationToAdd;
 }
+
+function generateSlotMarkup(thisSlotsId) {
+
+ var slotMarkup = '<img src="/images/game-world/inventory-items/' + hero.inventory[thisSlotsId].type + '.png" alt="">';
+            slotMarkup += '<span class="qty">' + hero.inventory[thisSlotsId].quantity + '</span>';
+            slotMarkup += '<p><em>' + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].shortname + ' </em>' + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].description + ' <span class="price">Sell price: ' + parseMoney(hero.inventory[thisSlotsId].quantity * currentActiveInventoryItems[hero.inventory[thisSlotsId].type].priceCode, 0) + '</span>' + additionalTooltipDetail(thisSlotsId) + '</p>';
+return slotMarkup;
+        }

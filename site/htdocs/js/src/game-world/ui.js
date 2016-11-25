@@ -33,7 +33,7 @@ var UI = {
         var thisColourName, theColourPrefix, thisFileColourSuffix, thisAction, dataActionMarkup;
         // loop through number of bags
         for (var i = 0; i < hero.bags.length; i++) {
-            inventoryMarkup += '<div class="inventoryBag" id="inventoryBag'+i+'"><div class="draggableBar">' + currentActiveInventoryItems[hero.bags[i].type].shortname + '</div><ol class="active" id="bag' + i + '">';
+            inventoryMarkup += '<div class="inventoryBag" id="inventoryBag' + i + '"><div class="draggableBar">' + currentActiveInventoryItems[hero.bags[i].type].shortname + '</div><ol class="active" id="bag' + i + '">';
             //console.log(hero.bags[i].type);
             var thisBagNumberOfSlots = currentActiveInventoryItems[hero.bags[i].type].actionValue;
             // loop through slots for each bag:
@@ -98,9 +98,13 @@ var UI = {
         // loop through the slots that have changed and update their markup:
         for (var j = 0; j < whichSlotsToUpdate.length; j++) {
             thisSlotsId = whichSlotsToUpdate[j];
-            slotMarkup = '<img src="/images/game-world/inventory-items/' + hero.inventory[thisSlotsId].type + '.png" alt="">';
-            slotMarkup += '<span class="qty">' + hero.inventory[thisSlotsId].quantity + '</span>';
-            slotMarkup += '<p><em>' + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].shortname + ' </em>' + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].description + ' <span class="price">Sell price: ' + parseMoney(hero.inventory[thisSlotsId].quantity * currentActiveInventoryItems[hero.inventory[thisSlotsId].type].priceCode, 0) + '</span>' + additionalTooltipDetail(thisSlotsId) + '</p>';
+          
+slotMarkup = generateSlotMarkup(thisSlotsId);
+
+          
+
+
+
             thisSlotElem = document.getElementById("slot" + thisSlotsId);
             thisSlotElem.innerHTML = slotMarkup;
 
@@ -129,6 +133,8 @@ var UI = {
         var dragTargets = document.querySelectorAll(whichElement);
         for (var i = 0; i < dragTargets.length; i++) {
             dragTargets[i].addEventListener("mousedown", function(e) {
+                 // make sure it's not a right click:
+if(e.button != 2) {
                 UI.activeDragObject = this.parentElement;
                 UI.inDrag = true;
                 objInitLeft = UI.activeDragObject.offsetLeft;
@@ -142,6 +148,7 @@ var UI = {
                 for (j = 0; j < dragTargetsInner.length; j++) {
                     dragTargets[j].parentElement.style.zIndex = 1;
                 }
+            }
             }, false);
         }
     },
@@ -242,18 +249,38 @@ var UI = {
 
     endInventoryDrag: function(e) {
         UI.inDrag = false;
-       
-        var droppedSlot = e.target.id;
-         console.log("dropped on: " + droppedSlot);
 
-// chekc if this has "slot" or "inventorybag" in
-// if not, slide back - restore to inventory data
-// if ok, add to inventory data, update slot
-// hide the cloned dragslot
+        var droppedSlot = e.target.id;
+        console.log("dropped on: " + droppedSlot);
+
+        // check if this has "slot" or "inventorybag" in
+        // if not, slide back - restore to inventory data
+        // if ok, add to inventory data, update slot
+        // hide the cloned dragslot
+
+console.log("came from: "+UI.sourceSlot);
+
+
+
+if(droppedSlot.substring(0,4) == "slot") {
+    // check it's empty:
+    var droppedSlotId = droppedSlot.substring(4);
+if(hero.inventory[droppedSlotId] == undefined) {
+addToInventory(droppedSlotId, UI.draggedInventoryObject);
+}
+
+// ####
+// if not, do the attributes match?
+// otherwise slide it back
+
+}
 
         // tidy up and remove event listeners:
         document.removeEventListener("mousemove", UI.handleDrag, false);
         document.removeEventListener("mouseup", UI.endInventoryDrag, false);
+
+        // hide the clone:
+        UI.activeDragObject.style.cssText = "z-index:2;left: -100px; top: -100px";
         UI.activeDragObject = '';
     },
 
@@ -262,14 +289,21 @@ var UI = {
         var dragTargets = document.querySelectorAll('.inventoryBag li');
         for (var i = 0; i < dragTargets.length; i++) {
             dragTargets[i].addEventListener("mousedown", function(e) {
+                // make sure it's not a right click:
+if(e.button != 2) {
+UI.sourceSlot = this.id.substring(4);
+UI.draggedInventoryObject = hero.inventory[UI.sourceSlot];
 
 
                 // clone this slot to draggableInventorySlot:
                 UI.activeDragObject = document.getElementById('draggableInventorySlot');
                 UI.activeDragObject.innerHTML = this.innerHTML;
-                this.innerHTML = '<img alt="Empty slot" src="/images/game-world/inventory-items/blank.png">';
+                
 
-                // remove from inventory data###
+
+
+                
+                removeFromInventory(UI.sourceSlot, hero.inventory[UI.sourceSlot].quantity);
 
                 UI.inDrag = true;
                 var clickedSlotRect = this.getBoundingClientRect()
@@ -279,6 +313,7 @@ var UI = {
                 dragStartY = e.pageY;
                 document.addEventListener("mousemove", UI.handleDrag, false);
                 document.addEventListener("mouseup", UI.endInventoryDrag, false);
+            }
             }, false);
         }
     }

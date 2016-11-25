@@ -417,6 +417,9 @@ canvas {
             &.active {
                 display: block;
             }
+            img {
+                float: left;
+            }
         }
     }
 }
