@@ -1,8 +1,7 @@
-    // global vars:
-    var recipeSearch = document.getElementById('recipeSearch');
-        var clearRecipeSearch = document.getElementById('clearRecipeSearch');
-        var recipeFilter = document.getElementById('recipeFilter');
-
+// global vars:
+var recipeSearch = document.getElementById('recipeSearch');
+var clearRecipeSearch = document.getElementById('clearRecipeSearch');
+var recipeFilter = document.getElementById('recipeFilter');
 var UI = {
     init: function() {
         // cache all local references to UI elements:
@@ -15,7 +14,7 @@ var UI = {
         var cardAlbumList = document.getElementById('cardAlbumList');
         var boosterPack = document.getElementById('boosterPack');
         var createRecipeList = document.getElementById('createRecipeList');
-    
+
         //
 
     },
@@ -34,7 +33,7 @@ var UI = {
         var thisColourName, theColourPrefix, thisFileColourSuffix, thisAction, dataActionMarkup;
         // loop through number of bags
         for (var i = 0; i < hero.bags.length; i++) {
-            inventoryMarkup += '<div class="inventoryBag"><div class="draggableBar">' + currentActiveInventoryItems[hero.bags[i].type].shortname + '</div><ol class="active" id="bag' + i + '">';
+            inventoryMarkup += '<div class="inventoryBag" id="inventoryBag'+i+'"><div class="draggableBar">' + currentActiveInventoryItems[hero.bags[i].type].shortname + '</div><ol class="active" id="bag' + i + '">';
             //console.log(hero.bags[i].type);
             var thisBagNumberOfSlots = currentActiveInventoryItems[hero.bags[i].type].actionValue;
             // loop through slots for each bag:
@@ -70,6 +69,7 @@ var UI = {
         document.getElementById('inventoryPanels').innerHTML = inventoryMarkup;
         document.getElementById('inventoryPanels').ondblclick = UI.inventoryItemDoubleClick;
         UI.initDrag(".draggableBar");
+        UI.initInventoryDrag();
         UI.updateCardAlbum();
 
         UI.buildRecipePanel();
@@ -127,7 +127,7 @@ var UI = {
     initDrag: function(whichElement) {
 
         var dragTargets = document.querySelectorAll(whichElement);
-        for (i = 0; i < dragTargets.length; i++) {
+        for (var i = 0; i < dragTargets.length; i++) {
             dragTargets[i].addEventListener("mousedown", function(e) {
                 UI.activeDragObject = this.parentElement;
                 UI.inDrag = true;
@@ -210,15 +210,15 @@ var UI = {
 
             createRecipeList.innerHTML = recipeMarkup;
 
-for (var i = 0; i < hero.crafting[whichProfession].filterOrder.length; i++) {
-thisFilter = hero.crafting[whichProfession].filters[(hero.crafting[whichProfession].filterOrder[i])];
-filterMarkup += '<option value="'+thisFilter+'"';
-if(i == 0) {
-filterMarkup += ' selected="selected"';
-}
-filterMarkup += '>'+hero.crafting[whichProfession].filterOrder[i]+'</option>';
-}
-recipeFilter.innerHTML = filterMarkup;
+            for (var i = 0; i < hero.crafting[whichProfession].filterOrder.length; i++) {
+                thisFilter = hero.crafting[whichProfession].filters[(hero.crafting[whichProfession].filterOrder[i])];
+                filterMarkup += '<option value="' + thisFilter + '"';
+                if (i == 0) {
+                    filterMarkup += ' selected="selected"';
+                }
+                filterMarkup += '>' + hero.crafting[whichProfession].filterOrder[i] + '</option>';
+            }
+            recipeFilter.innerHTML = filterMarkup;
             currentRecipePanelProfession = whichProfession;
         }
     },
@@ -230,8 +230,60 @@ recipeFilter.innerHTML = filterMarkup;
 
 
 
-        
+
+    },
+
+
+
+
+
+
+
+
+    endInventoryDrag: function(e) {
+        UI.inDrag = false;
+       
+        var droppedSlot = e.target.id;
+         console.log("dropped on: " + droppedSlot);
+
+// chekc if this has "slot" or "inventorybag" in
+// if not, slide back - restore to inventory data
+// if ok, add to inventory data, update slot
+// hide the cloned dragslot
+
+        // tidy up and remove event listeners:
+        document.removeEventListener("mousemove", UI.handleDrag, false);
+        document.removeEventListener("mouseup", UI.endInventoryDrag, false);
+        UI.activeDragObject = '';
+    },
+
+    initInventoryDrag: function() {
+
+        var dragTargets = document.querySelectorAll('.inventoryBag li');
+        for (var i = 0; i < dragTargets.length; i++) {
+            dragTargets[i].addEventListener("mousedown", function(e) {
+
+
+                // clone this slot to draggableInventorySlot:
+                UI.activeDragObject = document.getElementById('draggableInventorySlot');
+                UI.activeDragObject.innerHTML = this.innerHTML;
+                this.innerHTML = '<img alt="Empty slot" src="/images/game-world/inventory-items/blank.png">';
+
+                // remove from inventory data###
+
+                UI.inDrag = true;
+                var clickedSlotRect = this.getBoundingClientRect()
+                objInitLeft = clickedSlotRect.left;
+                objInitTop = clickedSlotRect.top;
+                dragStartX = e.pageX;
+                dragStartY = e.pageY;
+                document.addEventListener("mousemove", UI.handleDrag, false);
+                document.addEventListener("mouseup", UI.endInventoryDrag, false);
+            }, false);
+        }
     }
+
+
 
 
 

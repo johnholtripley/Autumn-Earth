@@ -196,6 +196,25 @@ canvas {
     }
 }
 
+#draggableInventorySlot {
+    position: absolute;
+    pointer-events: none;
+    left: -100px;
+    top: -100px;
+    p {
+        display: none;
+    }
+                .qty {
+                position: absolute;
+                right: 3px;
+                bottom: 3px;
+                text-align: right;
+                color: #fff;
+                cursor: default;
+                font-size: 11px;
+            }
+}
+
 #toolbar {
     width: 100%;
     height: 40px;

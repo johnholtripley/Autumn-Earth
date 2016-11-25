@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 18, 2016 at 11:03 AM
+-- Generation Time: Nov 23, 2016 at 02:38 PM
 -- Server version: 5.6.24
 -- PHP Version: 5.6.8
 
@@ -537,6 +537,7 @@ CREATE TABLE IF NOT EXISTS `tblinventoryitems` (
   `level` int(11) NOT NULL,
   `prerequisites` varchar(255) NOT NULL,
   `itemGroup` varchar(10) NOT NULL,
+  `itemCategories` varchar(128) DEFAULT NULL,
   `inscribable` tinyint(1) NOT NULL,
   `colour` int(128) NOT NULL,
   `hasInherentColour` tinyint(1) NOT NULL DEFAULT '0',
@@ -547,35 +548,55 @@ CREATE TABLE IF NOT EXISTS `tblinventoryitems` (
 -- Dumping data for table `tblinventoryitems`
 --
 
-INSERT INTO `tblinventoryitems` (`itemID`, `shortname`, `description`, `priceCode`, `centreX`, `centreY`, `width`, `height`, `cleanURL`, `action`, `actionValue`, `dyeable`, `level`, `prerequisites`, `itemGroup`, `inscribable`, `colour`, `hasInherentColour`, `showInTheCodex`) VALUES
-(1, 'Wild Flax', '-', '1', '20.0', '24.0', 0, 0, 'wild-flax', '', 0, 0, 0, '0', '0', 0, 0, 0, 1),
-(2, 'Wild Madder', 'A flower used for its red pigment.', '1', '20.0', '24.0', 0, 0, 'wild-madder', '', 0, 0, 0, '0', '0', 0, 1, 1, 1),
-(3, 'Safflower', 'A flower used for its yellow pigment.', '1', '20.0', '24.0', 0, 0, 'safflower', '', 0, 0, 0, '0', '0', 0, 2, 1, 1),
-(5, 'Whortleberry', 'The berries are used for their blue colour.', '1', '20.0', '24.0', 0, 0, 'whortleberry', '', 0, 0, 0, '0', '0', 0, 4, 1, 1),
-(6, 'Meadowsweet', 'Used to make black pigments.', '1', '20.0', '24.0', 0, 0, 'meadowsweet', '', 0, 0, 0, '0', '0', 0, 16, 1, 1),
-(7, 'Archil', 'A purple dye.', '1', '20.0', '24.0', 0, 0, 'archil', '', 0, 0, 0, '0', 'dye', 0, 5, 1, 1),
-(8, 'Copper Mordant', 'A standard mordant.', '1', '20.0', '24.0', 0, 0, 'copper-mordant', '', 0, 0, 0, '0', 'mrdt', 0, 0, 0, 1),
-(9, 'Iron Mordant', 'A mordant for making darker dyes.', '1', '20.0', '24.0', 0, 0, 'iron-mordant', '', 0, 0, 0, '0', 'mrdt', 0, 16, 1, 1),
-(10, 'Alum Mordant', 'A mordant used for brighter dyes.', '1', '20.0', '24.0', 0, 0, 'alum-mordant', '', 0, 0, 0, '0', 'mrdt', 0, 8, 1, 1),
-(11, 'Small Glass Bottle', '', '1', '20.0', '24.0', 0, 0, 'small-glass-bottle', '', 0, 0, 0, '0', '0', 0, 0, 0, 1),
-(12, 'Dye', 'A standard pigment dye.', '1', '20.0', '24.0', 0, 0, 'dye', '', 0, 0, 0, '0', 'dye', 0, 0, 0, 1),
-(13, 'Dyer''s Cauldron', '', '1', '20.0', '24.0', 0, 0, 'dyers-cauldron', 'dyer', 0, 0, 0, '0', '0', 0, 0, 0, 1),
-(14, 'Linen', '', '1', '20.0', '24.0', 0, 0, 'linen', '', 0, 1, 0, '0', '0', 0, 0, 0, 1),
-(15, 'Wool', '', '1', '20.0', '24.0', 0, 0, 'wool', '', 0, 1, 0, '0', '0', 0, 0, 0, 1),
-(16, 'Yarn', '', '1', '20.0', '24.0', 0, 0, 'yarn.png', '', 0, 1, 0, '0', '0', 0, 0, 0, 1),
-(17, 'Small Backpack', 'A 11 slot bag', '2', '20.0', '24.0', 0, 0, 'small-backpack', 'bag', 11, 1, 0, '0', '0', 0, 0, 0, 1),
-(18, 'Barrel', 'A large wooden barrel.', '2', '25.0', '31.0', 38, 38, 'barrel', 'static', 0, 0, 0, '0', '0', 0, 0, 0, 1),
-(19, 'Pumpkin', 'A tasty pumpkin.', '1', '16.0', '18.0', 25, 23, 'pumpkin', '', 0, 0, 0, '0', '0', 0, 0, 0, 1),
-(20, 'Large Backpack', 'A 20 slot bag', '2', '20.0', '24.0', 0, 0, 'large-backpack', 'bag', 20, 1, 0, '0', '0', 0, 0, 0, 1),
-(21, 'Card Pack', '5 cards', '4', '20.0', '24.0', 0, 0, 'card-pack', 'booster', 0, 0, 0, '0', '0', 0, 0, 0, 1),
-(22, 'Standing Stone', '', '4', '49.0', '81.0', 63, 63, 'standing-stone', 'questToggle', 2, 0, 0, '0', '0', 0, 0, 0, 0),
-(23, 'Mugwort', 'Used to make green dyes', '4', '49.0', '81.0', 63, 63, 'mugwort', '', 0, 0, 0, '0', '0', 0, 6, 1, 1),
-(24, 'Rim Lichen', 'Used to make purple dyes', '4', '49.0', '81.0', 63, 63, 'rim-lichen', '', 0, 0, 0, '0', '0', 0, 5, 1, 1),
-(25, 'Spring water', '', '4', '49.0', '81.0', 63, 63, 'spring-water', '', 0, 0, 0, '0', '0', 0, 0, 0, 1),
-(26, 'Wood Ash', '', '4', '49.0', '81.0', 63, 63, 'wood-ash', '', 0, 0, 0, '0', '0', 0, 0, 0, 1),
-(27, 'Apple Wood', '', '4', '49.0', '81.0', 63, 63, 'apple-wood', '', 0, 0, 0, '0', '0', 0, 0, 0, 1),
-(28, 'Lye', 'Used for bleaching', '4', '49.0', '81.0', 63, 63, 'lye', '', 0, 0, 0, '0', '0', 0, 8, 1, 1),
-(29, 'Green Dye Recipe', 'Learn how to make a green dye.', '4', '49.0', '81.0', 63, 63, '', 'recipe', 9, 0, 0, '0', '0', 0, 0, 0, 1);
+INSERT INTO `tblinventoryitems` (`itemID`, `shortname`, `description`, `priceCode`, `centreX`, `centreY`, `width`, `height`, `cleanURL`, `action`, `actionValue`, `dyeable`, `level`, `prerequisites`, `itemGroup`, `itemCategories`, `inscribable`, `colour`, `hasInherentColour`, `showInTheCodex`) VALUES
+(1, 'Wild Flax', '-', '1', '20.0', '24.0', 0, 0, 'wild-flax', '', 0, 0, 0, '0', '0', '1', 0, 0, 0, 1),
+(2, 'Wild Madder', 'A flower used for its red pigment.', '1', '20.0', '24.0', 0, 0, 'wild-madder', '', 0, 0, 0, '0', '0', '1', 0, 1, 1, 1),
+(3, 'Safflower', 'A flower used for its yellow pigment.', '1', '20.0', '24.0', 0, 0, 'safflower', '', 0, 0, 0, '0', '0', '1', 0, 2, 1, 1),
+(5, 'Whortleberry', 'The berries are used for their blue colour.', '1', '20.0', '24.0', 0, 0, 'whortleberry', '', 0, 0, 0, '0', '0', '1', 0, 4, 1, 1),
+(6, 'Meadowsweet', 'Used to make black pigments.', '1', '20.0', '24.0', 0, 0, 'meadowsweet', '', 0, 0, 0, '0', '0', '1', 0, 16, 1, 1),
+(7, 'Archil', 'A purple dye.', '1', '20.0', '24.0', 0, 0, 'archil', '', 0, 0, 0, '0', 'dye', '2', 0, 5, 1, 1),
+(8, 'Copper Mordant', 'A standard mordant.', '1', '20.0', '24.0', 0, 0, 'copper-mordant', '', 0, 0, 0, '0', 'mrdt', '2', 0, 0, 0, 1),
+(9, 'Iron Mordant', 'A mordant for making darker dyes.', '1', '20.0', '24.0', 0, 0, 'iron-mordant', '', 0, 0, 0, '0', 'mrdt', '2', 0, 16, 1, 1),
+(10, 'Alum Mordant', 'A mordant used for brighter dyes.', '1', '20.0', '24.0', 0, 0, 'alum-mordant', '', 0, 0, 0, '0', 'mrdt', '2', 0, 8, 1, 1),
+(11, 'Small Glass Bottle', '', '1', '20.0', '24.0', 0, 0, 'small-glass-bottle', '', 0, 0, 0, '0', '0', NULL, 0, 0, 0, 1),
+(12, 'Dye', 'A standard pigment dye.', '1', '20.0', '24.0', 0, 0, 'dye', '', 0, 0, 0, '0', 'dye', '2', 0, 0, 0, 1),
+(13, 'Dyer''s Cauldron', '', '1', '20.0', '24.0', 0, 0, 'dyers-cauldron', 'dyer', 0, 0, 0, '0', '0', '2', 0, 0, 0, 1),
+(14, 'Linen', 'A useful fabric.', '1', '20.0', '24.0', 0, 0, 'linen', '', 0, 1, 0, '0', '0', '3', 0, 0, 0, 1),
+(15, 'Wool', '', '1', '20.0', '24.0', 0, 0, 'wool', '', 0, 1, 0, '0', '0', '3', 0, 0, 0, 1),
+(16, 'Yarn', '', '1', '20.0', '24.0', 0, 0, 'yarn', '', 0, 1, 0, '0', '0', '3', 0, 0, 0, 1),
+(17, 'Small Backpack', 'A 11 slot bag', '2', '20.0', '24.0', 0, 0, 'small-backpack', 'bag', 11, 1, 0, '0', '0', NULL, 0, 0, 0, 1),
+(18, 'Barrel', 'A large wooden barrel.', '2', '25.0', '31.0', 38, 38, 'barrel', 'static', 0, 0, 0, '0', '0', NULL, 0, 0, 0, 1),
+(19, 'Pumpkin', 'A tasty pumpkin.', '1', '16.0', '18.0', 25, 23, 'pumpkin', '', 0, 0, 0, '0', '0', NULL, 0, 0, 0, 1),
+(20, 'Large Backpack', 'A 20 slot bag', '2', '20.0', '24.0', 0, 0, 'large-backpack', 'bag', 20, 1, 0, '0', '0', NULL, 0, 0, 0, 1),
+(21, 'Card Pack', '5 cards', '4', '20.0', '24.0', 0, 0, 'card-pack', 'booster', 0, 0, 0, '0', '0', NULL, 0, 0, 0, 1),
+(22, 'Standing Stone', '', '4', '49.0', '81.0', 63, 63, 'standing-stone', 'questToggle', 2, 0, 0, '0', '0', NULL, 0, 0, 0, 0),
+(23, 'Mugwort', 'Used to make green dyes', '4', '49.0', '81.0', 63, 63, 'mugwort', '', 0, 0, 0, '0', '0', '1', 0, 6, 1, 1),
+(24, 'Rim Lichen', 'Used to make purple dyes', '4', '49.0', '81.0', 63, 63, 'rim-lichen', '', 0, 0, 0, '0', '0', '1', 0, 5, 1, 1),
+(25, 'Spring water', '', '4', '49.0', '81.0', 63, 63, 'spring-water', '', 0, 0, 0, '0', '0', NULL, 0, 0, 0, 1),
+(26, 'Wood Ash', '', '4', '49.0', '81.0', 63, 63, 'wood-ash', '', 0, 0, 0, '0', '0', NULL, 0, 0, 0, 1),
+(27, 'Apple Wood', '', '4', '49.0', '81.0', 63, 63, 'apple-wood', '', 0, 0, 0, '0', '0', NULL, 0, 0, 0, 1),
+(28, 'Lye', 'Used for bleaching', '4', '49.0', '81.0', 63, 63, 'lye', '', 0, 0, 0, '0', '0', NULL, 0, 8, 1, 1),
+(29, 'Green Dye Recipe', 'Learn how to make a green dye.', '4', '49.0', '81.0', 63, 63, '', 'recipe', 9, 0, 0, '0', '0', NULL, 0, 0, 0, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tblitemcategories`
+--
+
+CREATE TABLE IF NOT EXISTS `tblitemcategories` (
+  `categoryID` int(11) NOT NULL,
+  `categoryName` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `tblitemcategories`
+--
+
+INSERT INTO `tblitemcategories` (`categoryID`, `categoryName`) VALUES
+(1, 'Plants and Herbs'),
+(2, 'Dyer''s Provisions'),
+(3, 'Tailor''s Provisions');
 
 -- --------------------------------------------------------
 
@@ -992,14 +1013,15 @@ CREATE TABLE IF NOT EXISTS `tblprofessions` (
   `professionID` int(11) NOT NULL,
   `professionName` varchar(128) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
   `cleanurl` varchar(128) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblprofessions`
 --
 
 INSERT INTO `tblprofessions` (`professionID`, `professionName`, `cleanurl`) VALUES
-(0, 'Dyeing', 'dyeing');
+(0, 'Dyeing', 'dyeing'),
+(1, 'Tailoring', 'tailoring');
 
 -- --------------------------------------------------------
 
@@ -1073,7 +1095,7 @@ CREATE TABLE IF NOT EXISTS `tblrecipes` (
   `recipeName` varchar(255) DEFAULT NULL,
   `recipeDescription` varchar(255) DEFAULT NULL,
   `defaultResultingColour` int(11) DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblrecipes`
@@ -1089,7 +1111,9 @@ INSERT INTO `tblrecipes` (`recipeID`, `components`, `creates`, `prerequisite`, `
 (6, 'dye,dye', 12, 0, 0, 'Mix dyes', 'Mix 2 or more dyes to create new colours.', NULL),
 (7, '27', 26, 0, 0, 'Burn Wood', 'Produce Wood Ash by burning', NULL),
 (8, '14,dye', 14, 0, 0, 'Dye Linen', 'Colour some linen.', NULL),
-(9, '11,mrdt,23', 12, 0, 0, NULL, '', 6);
+(9, '11,mrdt,23', 12, 0, 0, NULL, '', 6),
+(10, '1', 14, 0, 1, NULL, '', NULL),
+(11, '15', 16, 0, 1, NULL, '', NULL);
 
 -- --------------------------------------------------------
 
@@ -1480,6 +1504,12 @@ ALTER TABLE `tblinventoryitems`
   ADD PRIMARY KEY (`itemID`);
 
 --
+-- Indexes for table `tblitemcategories`
+--
+ALTER TABLE `tblitemcategories`
+  ADD PRIMARY KEY (`categoryID`);
+
+--
 -- Indexes for table `tbllocations`
 --
 ALTER TABLE `tbllocations`
@@ -1659,6 +1689,11 @@ ALTER TABLE `tblguilds`
 ALTER TABLE `tblinventoryitems`
   MODIFY `itemID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=30;
 --
+-- AUTO_INCREMENT for table `tblitemcategories`
+--
+ALTER TABLE `tblitemcategories`
+  MODIFY `categoryID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
+--
 -- AUTO_INCREMENT for table `tbllocations`
 --
 ALTER TABLE `tbllocations`
@@ -1697,7 +1732,7 @@ ALTER TABLE `tblposts`
 -- AUTO_INCREMENT for table `tblprofessions`
 --
 ALTER TABLE `tblprofessions`
-  MODIFY `professionID` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `professionID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT for table `tblquests`
 --
@@ -1712,7 +1747,7 @@ ALTER TABLE `tblquestsstatus`
 -- AUTO_INCREMENT for table `tblrecipes`
 --
 ALTER TABLE `tblrecipes`
-  MODIFY `recipeID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=10;
+  MODIFY `recipeID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=12;
 --
 -- AUTO_INCREMENT for table `tblsavedsearches`
 --

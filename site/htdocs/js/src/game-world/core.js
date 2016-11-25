@@ -381,8 +381,8 @@ function removeMapAssets() {
 }
 
 function loadingProgress() {
-    // make this graphical ####
-    console.log("loading - " + Loader.getProgress());
+    // make this graphical where appropriate ####
+  //  console.log("loading - " + Loader.getProgress());
 }
 
 function changeMaps(doorX, doorY) {
