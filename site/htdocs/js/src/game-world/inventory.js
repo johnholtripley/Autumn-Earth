@@ -110,8 +110,8 @@ function removeItemTypeFromInventory(itemType, amount) {
 
 function addToInventory(whichSlot, itemObject) {
     // make a copy not a reference:
-hero.inventory[whichSlot] = JSON.parse(JSON.stringify(itemObject));
-document.getElementById("slot" + whichSlot).innerHTML = generateSlotMarkup(whichSlot);
+    hero.inventory[whichSlot] = JSON.parse(JSON.stringify(itemObject));
+    document.getElementById("slot" + whichSlot).innerHTML = generateSlotMarkup(whichSlot);
 }
 
 function removeFromInventory(whichSlot, amount) {
@@ -168,36 +168,36 @@ function inventoryItemAction(whichSlot, whichAction, whichActionValue) {
             // remove the 'slot' prefix with the substring(4):
             removeFromInventory(whichSlot.parentElement.id.substring(4), 1);
             break;
-            case "recipe":
-          learnRecipe(whichActionValue);
-                        // remove the 'slot' prefix with the substring(4):
+        case "recipe":
+            learnRecipe(whichActionValue);
+            // remove the 'slot' prefix with the substring(4):
             removeFromInventory(whichSlot.parentElement.id.substring(4), 1);
     }
 }
 
 
 function additionalTooltipDetail(whichSlotID) {
-// get any information that needs displaying in the tooltip:
-var tooltipInformationToAdd = "";
+    // get any information that needs displaying in the tooltip:
+    var tooltipInformationToAdd = "";
 
 
 
 
-if (currentActiveInventoryItems[hero.inventory[whichSlotID].type].action == "recipe") {
-    // check if it's known already:
-    if (hero.recipesKnown.indexOf(parseInt(currentActiveInventoryItems[hero.inventory[whichSlotID].type].actionValue)) != -1) {
-        tooltipInformationToAdd += " (already known)";
+    if (currentActiveInventoryItems[hero.inventory[whichSlotID].type].action == "recipe") {
+        // check if it's known already:
+        if (hero.recipesKnown.indexOf(parseInt(currentActiveInventoryItems[hero.inventory[whichSlotID].type].actionValue)) != -1) {
+            tooltipInformationToAdd += " (already known)";
+        }
     }
-}
 
 
-return tooltipInformationToAdd;
+    return tooltipInformationToAdd;
 }
 
 function generateSlotMarkup(thisSlotsId) {
 
- var slotMarkup = '<img src="/images/game-world/inventory-items/' + hero.inventory[thisSlotsId].type + '.png" alt="">';
-            slotMarkup += '<span class="qty">' + hero.inventory[thisSlotsId].quantity + '</span>';
-            slotMarkup += '<p><em>' + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].shortname + ' </em>' + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].description + ' <span class="price">Sell price: ' + parseMoney(hero.inventory[thisSlotsId].quantity * currentActiveInventoryItems[hero.inventory[thisSlotsId].type].priceCode, 0) + '</span>' + additionalTooltipDetail(thisSlotsId) + '</p>';
-return slotMarkup;
-        }
+    var slotMarkup = '<img src="/images/game-world/inventory-items/' + hero.inventory[thisSlotsId].type + '.png" alt="">';
+    slotMarkup += '<span class="qty">' + hero.inventory[thisSlotsId].quantity + '</span>';
+    slotMarkup += '<p><em>' + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].shortname + ' </em>' + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].description + ' <span class="price">Sell price: ' + parseMoney(hero.inventory[thisSlotsId].quantity * currentActiveInventoryItems[hero.inventory[thisSlotsId].type].priceCode, 0) + '</span>' + additionalTooltipDetail(thisSlotsId) + '</p>';
+    return slotMarkup;
+}
