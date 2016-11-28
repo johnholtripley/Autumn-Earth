@@ -182,7 +182,7 @@ var colourNames = [];
 var currentRecipePanelProfession = -1;
 
 // key bindings
-var key = [0, 0, 0, 0, 0, 0];
+var key = [0, 0, 0, 0, 0, 0, 0];
 
 var hero = {
     x: 0,
@@ -962,7 +962,7 @@ var Input = {
                     key[4] = 1;
                 }
                 break;
-            case KeyBindings.run:
+            case KeyBindings.shift:
                 key[5] = to;
                 break;
             case KeyBindings.challenge:
@@ -1176,7 +1176,7 @@ var KeyBindings = {
     'down': 40,
     'pause': 80,
     'action': 17,
-    'run': 16,
+    'shift': 16,
     'challenge': 67
 }
 
@@ -1496,6 +1496,13 @@ var UI = {
             dragTargets[i].addEventListener("mousedown", function(e) {
                 // make sure it's not a right click:
                 if (e.button != 2) {
+// check if the shift key is pressed as well:
+if(key[5]) {
+   // it is - split stack:
+   // ######
+    key[5] = 0;
+}
+
                     var thisNode = e.target;
                     // find the id of the parent if actual dragged target doesn't have one:
                     while (!thisNode.id) {

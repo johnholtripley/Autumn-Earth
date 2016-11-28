@@ -314,6 +314,13 @@ var UI = {
             dragTargets[i].addEventListener("mousedown", function(e) {
                 // make sure it's not a right click:
                 if (e.button != 2) {
+// check if the shift key is pressed as well:
+if(key[5]) {
+   // it is - split stack:
+   // ######
+    key[5] = 0;
+}
+
                     var thisNode = e.target;
                     // find the id of the parent if actual dragged target doesn't have one:
                     while (!thisNode.id) {

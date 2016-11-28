@@ -28,7 +28,7 @@ var Input = {
                     key[4] = 1;
                 }
                 break;
-            case KeyBindings.run:
+            case KeyBindings.shift:
                 key[5] = to;
                 break;
             case KeyBindings.challenge:

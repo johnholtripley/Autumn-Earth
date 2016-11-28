@@ -58,7 +58,7 @@ var colourNames = [];
 var currentRecipePanelProfession = -1;
 
 // key bindings
-var key = [0, 0, 0, 0, 0, 0];
+var key = [0, 0, 0, 0, 0, 0, 0];
 
 var hero = {
     x: 0,
