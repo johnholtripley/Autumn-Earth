@@ -1338,7 +1338,7 @@ var UI = {
     },
 
     inventoryItemDoubleClick: function(e) {
-
+console.log("double click called");
         var thisItemsAction = e.target.getAttribute('data-action');
 
         if (thisItemsAction) {
@@ -1447,8 +1447,16 @@ var UI = {
 
 
         if (droppedSlot.substring(0, 4) == "slot") {
+
+
+
+
+
             // check it's empty:
             var droppedSlotId = droppedSlot.substring(4);
+
+
+
             if (hero.inventory[droppedSlotId] == undefined) {
                 addToInventory(droppedSlotId, UI.draggedInventoryObject);
                 UI.droppedSuccessfully();
@@ -1486,7 +1494,7 @@ var UI = {
 
     droppedSuccessfully: function() {
         // hide the clone:
-        UI.activeDragObject.style.cssText = "z-index:2;left: -100px; top: -100px";
+        UI.activeDragObject.style.cssText = "z-index:2;";
         UI.activeDragObject = '';
     },
 
@@ -1530,13 +1538,12 @@ if(key[5]) {
 
     slideDraggedSlotBack: function() {
         // slide it back visually - add a transition:
-        UI.activeDragObject.style.cssText = "z-index:2;left: " + (objInitLeft) + "px; top: " + (objInitTop) + "px;transition: transform 0.8s ease;";
+        UI.activeDragObject.style.cssText = "z-index:2;left: " + (objInitLeft) + "px; top: " + (objInitTop) + "px;transition: transform 0.4s ease;";
         UI.activeDragObject.addEventListener(whichTransitionEvent, function snapDraggedSlotBack(e) {
             // it's now back, so restore to the inventory:
             addToInventory(UI.sourceSlot, UI.draggedInventoryObject);
             // hide the clone:
-            UI.activeDragObject.style.cssText = "";
-            UI.activeDragObject = '';
+            UI.droppedSuccessfully();
             // remove this event listener now:
             return e.currentTarget.removeEventListener(whichTransitionEvent, snapDraggedSlotBack, false);
         }, false);
