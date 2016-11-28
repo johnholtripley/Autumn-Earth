@@ -114,9 +114,9 @@ var UI = {
 
 
     handleDrag: function(e) {
-        if (UI.inDrag) {
+           if (UI.inDrag) {
             // don't access the element multiple times - do it all in one go:
-            UI.activeDragObject.style.cssText = "z-index:2;left: " + (objInitLeft + e.pageX - dragStartX) + "px; top: " + (objInitTop + e.pageY - dragStartY) + "px";
+            UI.activeDragObject.style.cssText = "z-index:2;top: " + objInitTop + "px; left: " + objInitLeft + "px; transform: translate(" + (e.pageX - dragStartX) + "px, " + (e.pageY - dragStartY) + "px);";
         }
     },
 
@@ -137,10 +137,12 @@ var UI = {
                 if (e.button != 2) {
                     UI.activeDragObject = this.parentElement;
                     UI.inDrag = true;
-                    objInitLeft = UI.activeDragObject.offsetLeft;
-                    objInitTop = UI.activeDragObject.offsetTop;
+                     var clickedSlotRect = this.getBoundingClientRect();
+                   objInitLeft = clickedSlotRect.left;
+                    objInitTop = clickedSlotRect.top;
                     dragStartX = e.pageX;
                     dragStartY = e.pageY;
+
                     document.addEventListener("mousemove", UI.handleDrag, false);
                     document.addEventListener("mouseup", UI.endDrag, false);
                     // remove z-index of other draggable elements:
@@ -234,10 +236,6 @@ var UI = {
         recipeSearch.onkeyup = recipeSearchInput;
         recipeFilter.onchange = recipeSearchAndFilter;
         clearRecipeSearch.onclick = recipeSearchClear;
-
-
-
-
     },
 
 
@@ -251,7 +249,7 @@ var UI = {
         UI.inDrag = false;
 
         var thisNode = e.target;
-        
+
         // find the id of the parent if actual dropped target doesn't have one:
         while (!thisNode.id) {
             thisNode = thisNode.parentNode;
@@ -296,21 +294,22 @@ var UI = {
             }
 
         } else {
-                 UI.slideDraggedSlotBack();
+            UI.slideDraggedSlotBack();
         }
 
         // tidy up and remove event listeners:
         document.removeEventListener("mousemove", UI.handleDrag, false);
         document.removeEventListener("mouseup", UI.endInventoryDrag, false);
-
-    
     },
 
-droppedSuccessfully: function() {
-    // hide the clone:
+    droppedSuccessfully: function() {
+        // hide the clone:
         UI.activeDragObject.style.cssText = "z-index:2;left: -100px; top: -100px";
         UI.activeDragObject = '';
-},
+    },
+
+
+
 
     initInventoryDrag: function() {
         var dragTargets = document.querySelectorAll('.inventoryBag li');
@@ -325,11 +324,12 @@ droppedSuccessfully: function() {
                     UI.activeDragObject.innerHTML = this.innerHTML;
                     removeFromInventory(UI.sourceSlot, hero.inventory[UI.sourceSlot].quantity);
                     UI.inDrag = true;
-                    var clickedSlotRect = this.getBoundingClientRect()
+                    var clickedSlotRect = this.getBoundingClientRect();
                     objInitLeft = clickedSlotRect.left;
                     objInitTop = clickedSlotRect.top;
                     dragStartX = e.pageX;
                     dragStartY = e.pageY;
+
                     document.addEventListener("mousemove", UI.handleDrag, false);
                     document.addEventListener("mouseup", UI.endInventoryDrag, false);
                 }
@@ -338,21 +338,16 @@ droppedSuccessfully: function() {
     },
 
     slideDraggedSlotBack: function() {
-        // set the element to its destination, and then add a transform so that it can transition back into place
-        // determine the difference between where it started and where it is now:
-
-console.log("currently: "+UI.activeDragObject.style.left+", "+UI.activeDragObject.style.top);
-console.log("started at: "+objInitLeft+", "+objInitTop);
-var offsetDifferenceX = parseInt(UI.activeDragObject.style.left) - objInitLeft;
-var offsetDifferenceY = parseInt(UI.activeDragObject.style.top) - objInitTop;
-
-UI.activeDragObject.style.cssText = "z-index:2;left: " + (objInitLeft) + "px; top: " + (objInitTop) + "px;transform: translate("+offsetDifferenceX+"px, "+offsetDifferenceY+"px);transition: transform 0.8s ease;";
-UI.activeDragObject.style.transform(translate(0, 0));
-
+        // slide it back visually - add a transition:
+        UI.activeDragObject.style.cssText = "z-index:2;left: " + (objInitLeft) + "px; top: " + (objInitTop) + "px;transition: transform 0.8s ease;";
+        UI.activeDragObject.addEventListener(whichTransitionEvent, function snapDraggedSlotBack(e) {
+            // it's now back, so restore to the inventory:
+            addToInventory(UI.sourceSlot, UI.draggedInventoryObject);
+            // hide the clone:
+            UI.activeDragObject.style.cssText = "";
+            UI.activeDragObject = '';
+            // remove this event listener now:
+            return e.currentTarget.removeEventListener(whichTransitionEvent, snapDraggedSlotBack, false);
+        }, false);
     }
-
-
-
-
-
 }
