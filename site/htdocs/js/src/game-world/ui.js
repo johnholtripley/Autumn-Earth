@@ -114,7 +114,7 @@ var UI = {
 
 
     handleDrag: function(e) {
-           if (UI.inDrag) {
+        if (UI.inDrag) {
             // don't access the element multiple times - do it all in one go:
             UI.activeDragObject.style.cssText = "z-index:2;top: " + objInitTop + "px; left: " + objInitLeft + "px; transform: translate(" + (e.pageX - dragStartX) + "px, " + (e.pageY - dragStartY) + "px);";
         }
@@ -137,8 +137,8 @@ var UI = {
                 if (e.button != 2) {
                     UI.activeDragObject = this.parentElement;
                     UI.inDrag = true;
-                     var clickedSlotRect = this.getBoundingClientRect();
-                   objInitLeft = clickedSlotRect.left;
+                    var clickedSlotRect = this.getBoundingClientRect();
+                    objInitLeft = clickedSlotRect.left;
                     objInitTop = clickedSlotRect.top;
                     dragStartX = e.pageX;
                     dragStartY = e.pageY;
@@ -308,23 +308,25 @@ var UI = {
         UI.activeDragObject = '';
     },
 
-
-
-
     initInventoryDrag: function() {
-        var dragTargets = document.querySelectorAll('.inventoryBag li');
+        var dragTargets = document.querySelectorAll('.inventoryBag ol');
         for (var i = 0; i < dragTargets.length; i++) {
             dragTargets[i].addEventListener("mousedown", function(e) {
                 // make sure it's not a right click:
                 if (e.button != 2) {
-                    UI.sourceSlot = this.id.substring(4);
+                    var thisNode = e.target;
+                    // find the id of the parent if actual dragged target doesn't have one:
+                    while (!thisNode.id) {
+                        thisNode = thisNode.parentNode;
+                    }
+                    UI.sourceSlot = thisNode.id.substring(4);
                     UI.draggedInventoryObject = hero.inventory[UI.sourceSlot];
                     // clone this slot to draggableInventorySlot:
                     UI.activeDragObject = document.getElementById('draggableInventorySlot');
-                    UI.activeDragObject.innerHTML = this.innerHTML;
+                    UI.activeDragObject.innerHTML = thisNode.innerHTML;
                     removeFromInventory(UI.sourceSlot, hero.inventory[UI.sourceSlot].quantity);
                     UI.inDrag = true;
-                    var clickedSlotRect = this.getBoundingClientRect();
+                    var clickedSlotRect = thisNode.getBoundingClientRect();
                     objInitLeft = clickedSlotRect.left;
                     objInitTop = clickedSlotRect.top;
                     dragStartX = e.pageX;
