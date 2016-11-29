@@ -1466,11 +1466,9 @@ var UI = {
                         UI.droppedSuccessfully();
                     } else {
                         // add in the max, and slide the remainder back:
-                        // ######
-var amountAddedToThisSlot = maxNumberOfItemsPerSlot - parseInt(hero.inventory[droppedSlotId].quantity);
-hero.inventory[droppedSlotId].quantity = maxNumberOfItemsPerSlot;
-
-// update visually:
+                        var amountAddedToThisSlot = maxNumberOfItemsPerSlot - parseInt(hero.inventory[droppedSlotId].quantity);
+                        hero.inventory[droppedSlotId].quantity = maxNumberOfItemsPerSlot;
+                        // update visually:
                         var thisSlotElem = document.getElementById("slot" + droppedSlotId);
                         for (var i = 0; i < thisSlotElem.childNodes.length; i++) {
                             if (thisSlotElem.childNodes[i].className == "qty") {
@@ -1478,12 +1476,9 @@ hero.inventory[droppedSlotId].quantity = maxNumberOfItemsPerSlot;
                                 break;
                             }
                         }
-
-
                         // update dragged item quantity and then slide back:
-UI.draggedInventoryObject.quantity -= amountAddedToThisSlot;
-
-// update visually to drop slot
+                        UI.draggedInventoryObject.quantity -= amountAddedToThisSlot;
+                        // update visually to drop slot:
                         var thisSlotElem = document.getElementById("slot" + UI.sourceSlot);
                         for (var i = 0; i < thisSlotElem.childNodes.length; i++) {
                             if (thisSlotElem.childNodes[i].className == "qty") {
@@ -1491,7 +1486,7 @@ UI.draggedInventoryObject.quantity -= amountAddedToThisSlot;
                                 break;
                             }
                         }
-                        // update visually to dragged slot
+                        // update visually to dragged clone:
                         var thisSlotElem = document.getElementById('draggableInventorySlot');
                         for (var i = 0; i < thisSlotElem.childNodes.length; i++) {
                             if (thisSlotElem.childNodes[i].className == "qty") {
@@ -1499,14 +1494,31 @@ UI.draggedInventoryObject.quantity -= amountAddedToThisSlot;
                                 break;
                             }
                         }
-
-UI.slideDraggedSlotBack();
+                        UI.slideDraggedSlotBack();
                     }
+
                 } else {
                     // otherwise slide it back
                     UI.slideDraggedSlotBack();
                 }
             }
+        } else if (droppedSlot.substring(0, 12) == "inventoryBag") {
+            console.log("dropped on inv panel");
+            // if it's the same panel is the slot came from, just slide back:
+
+var thisInventoryPanelId = droppedSlot.substring(12);
+var sourceSlotHyphenPos = UI.sourceSlot.indexOf("-");
+var thisSourceInventoryPanelId = UI.sourceSlot.substring(0,sourceSlotHyphenPos);
+
+if(thisInventoryPanelId == thisSourceInventoryPanelId) {
+UI.slideDraggedSlotBack();
+} else {
+    // otherwise find an empty slot and drop it in ###########
+    // ##########
+    // john
+}
+
+
         } else {
             UI.slideDraggedSlotBack();
         }
