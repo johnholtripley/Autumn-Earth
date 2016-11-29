@@ -137,13 +137,14 @@ canvas {
         }
         li {
             // slot
-            width: 44px;
-            height: 44px;
+            width: 46px;
+            height: 46px;
+            padding: 3px;
             display: block;
             float: left;
-            background: #000;
+            background: url(../images/game-world/interface/inventory-slot.png) no-repeat 50% 50%;
             cursor: url(../images/game-world/cursors/active.gif) 3 3, auto;
-            margin: 0 2px 2px 0;
+            margin: 0;
             @include border-box;
             position: relative;
             box-shadow: 0 0 0 0 #eebb3f;
@@ -214,8 +215,8 @@ canvas {
     }
     .qty {
         position: absolute;
-        right: 3px;
-        bottom: 3px;
+        right: 4px;
+        bottom: 4px;
         text-align: right;
         color: #fff;
         cursor: default;

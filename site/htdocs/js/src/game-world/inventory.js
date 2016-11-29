@@ -131,7 +131,7 @@ function removeFromInventory(whichSlot, amount) {
         // remove the item:
         delete hero.inventory[whichSlot];
         // update visually:
-        thisSlotElem.innerHTML = '<img alt="Empty slot" src="/images/game-world/inventory-items/blank.png">';
+        thisSlotElem.innerHTML = '';
     }
 }
 

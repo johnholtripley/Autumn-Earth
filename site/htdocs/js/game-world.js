@@ -1105,7 +1105,7 @@ function removeFromInventory(whichSlot, amount) {
         // remove the item:
         delete hero.inventory[whichSlot];
         // update visually:
-        thisSlotElem.innerHTML = '<img alt="Empty slot" src="/images/game-world/inventory-items/blank.png">';
+        thisSlotElem.innerHTML = '';
     }
 }
 
@@ -1241,7 +1241,7 @@ var UI = {
                     inventoryMarkup += '<span class="qty">' + hero.inventory[thisSlotsID].quantity + '</span>';
                     inventoryMarkup += '<p><em>' + theColourPrefix + currentActiveInventoryItems[hero.inventory[thisSlotsID].type].shortname + ' </em>' + currentActiveInventoryItems[hero.inventory[thisSlotsID].type].description + ' <span class="price">Sell price: ' + parseMoney(hero.inventory[thisSlotsID].quantity * currentActiveInventoryItems[hero.inventory[thisSlotsID].type].priceCode, 0) + '</span>' + additionalTooltipDetail(thisSlotsID) + '</p>';
                 } else {
-                    inventoryMarkup += '<img alt="Empty slot" src="/images/game-world/inventory-items/blank.png">';
+                    inventoryMarkup += '';
                 }
                 // add item there
                 inventoryMarkup += '</li>';
@@ -1521,13 +1521,16 @@ if(key[5]) {
                     // clone this slot to draggableInventorySlot:
                     UI.activeDragObject = document.getElementById('draggableInventorySlot');
                     UI.activeDragObject.innerHTML = thisNode.innerHTML;
+
                     removeFromInventory(UI.sourceSlot, hero.inventory[UI.sourceSlot].quantity);
                     UI.inDrag = true;
                     var clickedSlotRect = thisNode.getBoundingClientRect();
-                    objInitLeft = clickedSlotRect.left;
-                    objInitTop = clickedSlotRect.top;
+                    // 3px padding on the slots:
+                    objInitLeft = clickedSlotRect.left+3;
+                    objInitTop = clickedSlotRect.top+3;
                     dragStartX = e.pageX;
                     dragStartY = e.pageY;
+                     UI.activeDragObject.style.cssText = "z-index:2;top: " + objInitTop + "px; left: " + objInitLeft + "px; transform: translate(" + (e.pageX - dragStartX) + "px, " + (e.pageY - dragStartY) + "px);";
 
                     document.addEventListener("mousemove", UI.handleDrag, false);
                     document.addEventListener("mouseup", UI.endInventoryDrag, false);
