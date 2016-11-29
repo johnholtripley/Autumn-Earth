@@ -1503,20 +1503,43 @@ var UI = {
                 }
             }
         } else if (droppedSlot.substring(0, 12) == "inventoryBag") {
-            console.log("dropped on inv panel");
+
             // if it's the same panel is the slot came from, just slide back:
 
-var thisInventoryPanelId = droppedSlot.substring(12);
-var sourceSlotHyphenPos = UI.sourceSlot.indexOf("-");
-var thisSourceInventoryPanelId = UI.sourceSlot.substring(0,sourceSlotHyphenPos);
+            var thisInventoryPanelId = droppedSlot.substring(12);
+            var sourceSlotHyphenPos = UI.sourceSlot.indexOf("-");
+            var thisSourceInventoryPanelId = UI.sourceSlot.substring(0, sourceSlotHyphenPos);
 
-if(thisInventoryPanelId == thisSourceInventoryPanelId) {
-UI.slideDraggedSlotBack();
-} else {
-    // otherwise find an empty slot and drop it in ###########
-    // ##########
-    // john
-}
+            if (thisInventoryPanelId == thisSourceInventoryPanelId) {
+                UI.slideDraggedSlotBack();
+            } else {
+                // otherwise find an empty slot and drop it in:
+             
+                var emptySlotFound = -1;
+                var thisBagNumberOfSlots = currentActiveInventoryItems[hero.bags[thisInventoryPanelId].type].actionValue;
+                // loop through slots for this bag:
+                for (var j = 0; j < thisBagNumberOfSlots; j++) {
+                    var thisSlotsID = thisInventoryPanelId + '-' + j;
+                    if (!(thisSlotsID in hero.inventory)) {
+                        emptySlotFound = j;
+break;
+                    }
+                }
+                if (emptySlotFound != -1) {
+
+
+                    document.getElementById("slot" + UI.sourceSlot).innerHTML = '';
+                    addToInventory(thisInventoryPanelId+"-"+emptySlotFound, UI.draggedInventoryObject);
+                    document.getElementById("slot" + UI.sourceSlot).classList.remove("hidden");
+                    UI.droppedSuccessfully();
+
+
+                } else {
+                    UI.slideDraggedSlotBack();
+                }
+
+
+            }
 
 
         } else {
