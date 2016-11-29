@@ -27,6 +27,12 @@
 </div>
 <div id="inventoryPanels"></div>
 <div id="draggableInventorySlot"></div>
+<div id="splitStackPanel">
+<label for="splitStackInput" class="visibleHide">Enter quantity:</label>
+<input type="number" min="0" max="20" pattern="[0-9]*" id="splitStackInput">
+<button id="splitStackCancel">Cancel</button>
+<button id="splitStackSubmit">Ok</button>
+</div>
 <div id="cardAlbum"><div class="draggableBar">Card album</div><ul id="cardAlbumList"></ul></div>
 <div id="cartographicPanel"><div class="draggableBar"><span id="cartographicTitle">Map</span></div><canvas id="cartographyCanvas" width="246" height="246"></canvas><canvas id="offScreenCartographyCanvas" class="offScreenCanvas" width="246" height="246"></canvas></div>
 <div id="craftingPanel"><div class="draggableBar">Recipes</div>

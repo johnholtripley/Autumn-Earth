@@ -385,21 +385,30 @@ break;
                 e.preventDefault();
                 // make sure it's not a right click:
                 if (e.button != 2) {
-                    // check if the shift key is pressed as well:
-                    if (key[5]) {
-                        // it is - split stack:
-                        // ######
-                        // john
-                         console.log("split stack");
-                        key[5] = 0;
-                    }
-                    var thisNode = e.target;
+
+
+ var thisNode = e.target;
                     // find the id of the parent if actual dragged target doesn't have one:
                     while (!thisNode.id) {
                         thisNode = thisNode.parentNode;
                     }
                     UI.sourceSlot = thisNode.id.substring(4);
                     UI.draggedInventoryObject = hero.inventory[UI.sourceSlot];
+
+                    // check if the shift key is pressed as well:
+                    if (key[5]) {
+                        // it is - split stack:
+                        // ######
+                        // john
+                         console.log("split stack");
+
+
+
+document.getElementById('splitStackInput').setAttribute("max",hero.inventory[UI.sourceSlot].quantity);
+
+                        key[5] = 0;
+                    }
+                   
                     // clone this slot to draggableInventorySlot:
                     UI.activeDragObject = document.getElementById('draggableInventorySlot');
                     UI.activeDragObject.innerHTML = thisNode.innerHTML;
