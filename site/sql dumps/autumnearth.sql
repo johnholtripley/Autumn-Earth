@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 23, 2016 at 02:38 PM
+-- Generation Time: Nov 29, 2016 at 01:59 PM
 -- Server version: 5.6.24
 -- PHP Version: 5.6.8
 
@@ -1021,7 +1021,7 @@ CREATE TABLE IF NOT EXISTS `tblprofessions` (
 
 INSERT INTO `tblprofessions` (`professionID`, `professionName`, `cleanurl`) VALUES
 (0, 'Dyeing', 'dyeing'),
-(1, 'Tailoring', 'tailoring');
+(1, 'Weaving', 'weaving');
 
 -- --------------------------------------------------------
 

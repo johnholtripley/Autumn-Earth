@@ -1319,9 +1319,12 @@ var UI = {
                 if (e.button != 2) {
                     UI.activeDragObject = this.parentElement;
                     UI.inDrag = true;
+
+var pageScrollTopY = (window.pageYOffset || document.documentElement.scrollTop)  - (document.documentElement.clientTop || 0);
+
                     var clickedSlotRect = this.getBoundingClientRect();
                     objInitLeft = clickedSlotRect.left;
-                    objInitTop = clickedSlotRect.top;
+                    objInitTop = clickedSlotRect.top + pageScrollTopY;
                     dragStartX = e.pageX;
                     dragStartY = e.pageY;
 
@@ -1568,6 +1571,8 @@ break;
                     if (key[5]) {
                         // it is - split stack:
                         // ######
+                        // john
+                         console.log("split stack");
                         key[5] = 0;
                     }
                     var thisNode = e.target;
@@ -1585,9 +1590,14 @@ break;
                     thisNode.classList.add("hidden");
                     UI.inDrag = true;
                     var clickedSlotRect = thisNode.getBoundingClientRect();
+
+
+
+var pageScrollTopY = (window.pageYOffset || document.documentElement.scrollTop)  - (document.documentElement.clientTop || 0);
+
                     // 3px padding on the slots:
                     objInitLeft = clickedSlotRect.left + 3;
-                    objInitTop = clickedSlotRect.top + 3;
+                    objInitTop = clickedSlotRect.top + 3 + pageScrollTopY;
                     dragStartX = e.pageX;
                     dragStartY = e.pageY;
                     UI.activeDragObject.style.cssText = "z-index:2;top: " + objInitTop + "px; left: " + objInitLeft + "px; transform: translate(" + (e.pageX - dragStartX) + "px, " + (e.pageY - dragStartY) + "px);";
