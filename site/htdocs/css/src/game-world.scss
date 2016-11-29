@@ -173,6 +173,11 @@ canvas {
                 box-shadow: 0 0 5px 3px #eebb3f;
                 z-index: 1;
             }
+            &.hidden {
+                img, p, span {
+                    opacity: 0;
+                }
+            }
         }
     }
     p {

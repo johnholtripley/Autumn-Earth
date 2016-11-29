@@ -1458,7 +1458,20 @@ console.log("double click called");
 
 
             if (hero.inventory[droppedSlotId] == undefined) {
+                
+
+ if(UI.sourceSlot != droppedSlotId) {
+
+            document.getElementById("slot"+UI.sourceSlot).innerHTML = '';
                 addToInventory(droppedSlotId, UI.draggedInventoryObject);
+            } else {
+
+ hero.inventory[droppedSlotId] = JSON.parse(JSON.stringify(UI.draggedInventoryObject));
+            }
+
+            document.getElementById("slot"+UI.sourceSlot).classList.remove("hidden");
+
+               // addToInventory(droppedSlotId, UI.draggedInventoryObject);
                 UI.droppedSuccessfully();
             } else {
                 if (itemAttributesMatch(UI.draggedInventoryObject, hero.inventory[droppedSlotId])) {
@@ -1472,6 +1485,8 @@ console.log("double click called");
                                 break;
                             }
                         }
+                        document.getElementById("slot"+UI.sourceSlot).innerHTML = '';
+                        document.getElementById("slot"+UI.sourceSlot).classList.remove("hidden");
                         UI.droppedSuccessfully();
                     } else {
                         // add in the max, and slide the remainder back:
@@ -1502,6 +1517,7 @@ console.log("double click called");
         var dragTargets = document.querySelectorAll('.inventoryBag ol');
         for (var i = 0; i < dragTargets.length; i++) {
             dragTargets[i].addEventListener("mousedown", function(e) {
+                e.preventDefault();
                 // make sure it's not a right click:
                 if (e.button != 2) {
 // check if the shift key is pressed as well:
@@ -1522,7 +1538,13 @@ if(key[5]) {
                     UI.activeDragObject = document.getElementById('draggableInventorySlot');
                     UI.activeDragObject.innerHTML = thisNode.innerHTML;
 
-                    removeFromInventory(UI.sourceSlot, hero.inventory[UI.sourceSlot].quantity);
+                    // removeFromInventory(UI.sourceSlot, hero.inventory[UI.sourceSlot].quantity);
+
+// remove from inventory data:
+                  delete hero.inventory[UI.sourceSlot];
+thisNode.classList.add("hidden");
+
+
                     UI.inDrag = true;
                     var clickedSlotRect = thisNode.getBoundingClientRect();
                     // 3px padding on the slots:
@@ -1544,7 +1566,12 @@ if(key[5]) {
         UI.activeDragObject.style.cssText = "z-index:2;left: " + (objInitLeft) + "px; top: " + (objInitTop) + "px;transition: transform 0.4s ease;";
         UI.activeDragObject.addEventListener(whichTransitionEvent, function snapDraggedSlotBack(e) {
             // it's now back, so restore to the inventory:
-            addToInventory(UI.sourceSlot, UI.draggedInventoryObject);
+            //addToInventory(UI.sourceSlot, UI.draggedInventoryObject);
+
+hero.inventory[UI.sourceSlot] = JSON.parse(JSON.stringify(UI.draggedInventoryObject));
+document.getElementById("slot"+UI.sourceSlot).classList.remove("hidden");
+
+
             // hide the clone:
             UI.droppedSuccessfully();
             // remove this event listener now:
