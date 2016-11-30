@@ -189,8 +189,28 @@ function additionalTooltipDetail(whichSlotID) {
 }
 
 function generateSlotMarkup(thisSlotsId) {
-    var slotMarkup = '<img src="/images/game-world/inventory-items/' + hero.inventory[thisSlotsId].type + '.png" alt="">';
+    var slotMarkup = '';
+    theColourPrefix = "";
+    thisFileColourSuffix = "";
+    thisColourName = getColourName(hero.inventory[thisSlotsId].colour, hero.inventory[thisSlotsId].type);
+    if (thisColourName != "") {
+        theColourPrefix = thisColourName + " ";
+        thisFileColourSuffix = "-" + thisColourName.toLowerCase();
+    }
+    thisAction = currentActiveInventoryItems[hero.inventory[thisSlotsId].type].action;
+    dataActionMarkup = '';
+    if (thisAction) {
+        dataActionMarkup = 'data-action="' + thisAction + '" data-action-value="' + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].actionValue + '" ';
+    }
+    slotMarkup += '<img src="/images/game-world/inventory-items/' + hero.inventory[thisSlotsId].type + thisFileColourSuffix + '.png" ' + dataActionMarkup + 'alt="">';
     slotMarkup += '<span class="qty">' + hero.inventory[thisSlotsId].quantity + '</span>';
-    slotMarkup += '<p><em>' + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].shortname + ' </em>' + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].description + ' <span class="price">Sell price: ' + parseMoney(hero.inventory[thisSlotsId].quantity * currentActiveInventoryItems[hero.inventory[thisSlotsId].type].priceCode, 0) + '</span>' + additionalTooltipDetail(thisSlotsId) + '</p>';
+    slotMarkup += '<p><em>' + theColourPrefix + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].shortname + ' </em>' + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].description + ' <span class="price">Sell price: ' + parseMoney(hero.inventory[thisSlotsId].quantity * currentActiveInventoryItems[hero.inventory[thisSlotsId].type].priceCode, 0) + '</span>' + additionalTooltipDetail(thisSlotsId) + '</p>';
     return slotMarkup;
+}
+
+function inventorySplitStackSubmit(e) {
+    if (e) {
+        e.preventDefault();
+    }
+    console.log("split stack submitted");
 }

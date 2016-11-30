@@ -2,6 +2,7 @@
 var recipeSearch = document.getElementById('recipeSearch');
 var clearRecipeSearch = document.getElementById('clearRecipeSearch');
 var recipeFilter = document.getElementById('recipeFilter');
+var splitStackInput = document.getElementById('splitStackInput');
 var UI = {
     init: function() {
         // cache all local references to UI elements:
@@ -42,22 +43,10 @@ var UI = {
                 inventoryMarkup += '<li id="slot' + thisSlotsID + '">';
                 // check if that key exists in inventory:
                 if (thisSlotsID in hero.inventory) {
-                    theColourPrefix = "";
-                    thisFileColourSuffix = "";
-                    thisColourName = getColourName(hero.inventory[thisSlotsID].colour, hero.inventory[thisSlotsID].type);
-                    if (thisColourName != "") {
-                        theColourPrefix = thisColourName + " ";
-                        thisFileColourSuffix = "-" + thisColourName.toLowerCase();
-                    }
-                    thisAction = currentActiveInventoryItems[hero.inventory[thisSlotsID].type].action;
+                    
+inventoryMarkup += generateSlotMarkup(thisSlotsID);
 
-                    dataActionMarkup = '';
-                    if (thisAction) {
-                        dataActionMarkup = 'data-action="' + thisAction + '" data-action-value="' + currentActiveInventoryItems[hero.inventory[thisSlotsID].type].actionValue + '" ';
-                    }
-                    inventoryMarkup += '<img src="/images/game-world/inventory-items/' + hero.inventory[thisSlotsID].type + thisFileColourSuffix + '.png" ' + dataActionMarkup + 'alt="">';
-                    inventoryMarkup += '<span class="qty">' + hero.inventory[thisSlotsID].quantity + '</span>';
-                    inventoryMarkup += '<p><em>' + theColourPrefix + currentActiveInventoryItems[hero.inventory[thisSlotsID].type].shortname + ' </em>' + currentActiveInventoryItems[hero.inventory[thisSlotsID].type].description + ' <span class="price">Sell price: ' + parseMoney(hero.inventory[thisSlotsID].quantity * currentActiveInventoryItems[hero.inventory[thisSlotsID].type].priceCode, 0) + '</span>' + additionalTooltipDetail(thisSlotsID) + '</p>';
+
                 } else {
                     inventoryMarkup += '';
                 }
@@ -68,6 +57,7 @@ var UI = {
         }
         document.getElementById('inventoryPanels').innerHTML = inventoryMarkup;
         document.getElementById('inventoryPanels').ondblclick = UI.inventoryItemDoubleClick;
+        document.getElementById('splitStackPanel').onsubmit = inventorySplitStackSubmit;
         UI.initDrag(".draggableBar");
         UI.initInventoryDrag();
         UI.updateCardAlbum();
@@ -404,8 +394,10 @@ break;
 
 
 
-document.getElementById('splitStackInput').setAttribute("max",hero.inventory[UI.sourceSlot].quantity);
-
+splitStackInput.setAttribute("max",hero.inventory[UI.sourceSlot].quantity);
+// set default value to half the current slot:
+splitStackInput.value = Math.floor(hero.inventory[UI.sourceSlot].quantity/2);
+splitStackInput.focus();
                         key[5] = 0;
                     }
                    
