@@ -212,7 +212,7 @@ function inventorySplitStackSubmit(e) {
     if (e) {
         e.preventDefault();
     }
-    console.log("split stack submitted");
+   
 
     var enteredValue = splitStackInput.value;
     var isValid = true;
@@ -238,7 +238,7 @@ isSplitStackBeingDragged = true;
 
         removeFromInventory(UI.sourceSlot, enteredValue);
 
-        UI.draggedInventoryObject.quantity -= enteredValue;
+        UI.draggedInventoryObject.quantity = enteredValue;
 
         // update visually to dragged clone:
 

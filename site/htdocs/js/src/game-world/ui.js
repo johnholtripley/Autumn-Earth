@@ -411,6 +411,7 @@ document.getElementById("slot" + UI.sourceSlot).innerHTML = '';
                         // set default value to half the current slot:
                         splitStackInput.value = Math.floor(hero.inventory[UI.sourceSlot].quantity / 2);
                         splitStackInput.focus();
+                        splitStackInput.setSelectionRange(0, splitStackInput.value.length)
                         splitStackPanel.classList.add("active");
                         key[5] = 0;
                     } else {
@@ -454,6 +455,8 @@ document.getElementById("slot" + UI.sourceSlot).innerHTML = '';
             document.getElementById("slot" + UI.sourceSlot).classList.remove("hidden");
         } else {
             // update quantity on the original slot
+            console.log(hero.inventory[UI.sourceSlot].quantity);
+            console.log(UI.draggedInventoryObject.quantity);
             hero.inventory[UI.sourceSlot].quantity += UI.draggedInventoryObject.quantity;
                var thisSlotElem = document.getElementById("slot" + UI.sourceSlot);
                         for (var i = 0; i < thisSlotElem.childNodes.length; i++) {
