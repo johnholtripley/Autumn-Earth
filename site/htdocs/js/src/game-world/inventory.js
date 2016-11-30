@@ -213,6 +213,58 @@ function inventorySplitStackSubmit(e) {
         e.preventDefault();
     }
     console.log("split stack submitted");
+
+    var enteredValue = splitStackInput.value;
+    var isValid = true;
+    enteredValue = parseInt(enteredValue);
+    if (enteredValue < 1) {
+        isValid = false;
+    }
+    if (!(Number.isInteger(enteredValue))) {
+        isValid = false;
+    }
+    if (enteredValue > hero.inventory[UI.sourceSlot].quantity) {
+        isValid = false;
+    }
+    if (isValid) {
+isSplitStackBeingDragged = true;
+
+        var thisNode = document.getElementById("slot" + UI.sourceSlot);
+        // clone this slot to draggableInventorySlot:
+        UI.activeDragObject = document.getElementById('draggableInventorySlot');
+        UI.activeDragObject.innerHTML = thisNode.innerHTML;
+        // remove from inventory data:
+
+
+        removeFromInventory(UI.sourceSlot, enteredValue);
+
+        UI.draggedInventoryObject.quantity -= enteredValue;
+
+        // update visually to dragged clone:
+
+        for (var i = 0; i < UI.activeDragObject.childNodes.length; i++) {
+            if (UI.activeDragObject.childNodes[i].className == "qty") {
+                UI.activeDragObject.childNodes[i].innerHTML = UI.draggedInventoryObject.quantity;
+                break;
+            }
+        }
+
+        UI.inDrag = true;
+        var clickedSlotRect = thisNode.getBoundingClientRect();
+        var pageScrollTopY = (window.pageYOffset || document.documentElement.scrollTop) - (document.documentElement.clientTop || 0);
+        // 3px padding on the slots:
+        objInitLeft = clickedSlotRect.left + 3;
+        objInitTop = clickedSlotRect.top + 3 + pageScrollTopY;
+        // +22 to centre the slot (half the slot width) under the cursor:
+        dragStartX = objInitLeft+22;
+        dragStartY = objInitTop+22;
+
+        UI.activeDragObject.style.cssText = "z-index:2;top: " + objInitTop + "px; left: " + objInitLeft + "px; transform: translate(0px, 0px);";
+        document.addEventListener("mousemove", UI.handleDrag, false);
+        document.addEventListener("mouseup", UI.endInventoryDrag, false);
+    }
+    splitStackPanel.classList.remove("active");
+
 }
 
 function inventorySplitStackCancel() {

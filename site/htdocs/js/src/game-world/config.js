@@ -37,6 +37,7 @@ var previousZoneName = "";
 
 var currentActiveInventoryItems = [];
 var maxNumberOfItemsPerSlot = 20;
+var isSplitStackBeingDragged = false;
 
 var activeTitles = [];
 

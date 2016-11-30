@@ -161,6 +161,7 @@ var previousZoneName = "";
 
 var currentActiveInventoryItems = [];
 var maxNumberOfItemsPerSlot = 20;
+var isSplitStackBeingDragged = false;
 
 var activeTitles = [];
 
@@ -1187,11 +1188,64 @@ function inventorySplitStackSubmit(e) {
         e.preventDefault();
     }
     console.log("split stack submitted");
+
+    var enteredValue = splitStackInput.value;
+    var isValid = true;
+    enteredValue = parseInt(enteredValue);
+    if (enteredValue < 1) {
+        isValid = false;
+    }
+    if (!(Number.isInteger(enteredValue))) {
+        isValid = false;
+    }
+    if (enteredValue > hero.inventory[UI.sourceSlot].quantity) {
+        isValid = false;
+    }
+    if (isValid) {
+isSplitStackBeingDragged = true;
+
+        var thisNode = document.getElementById("slot" + UI.sourceSlot);
+        // clone this slot to draggableInventorySlot:
+        UI.activeDragObject = document.getElementById('draggableInventorySlot');
+        UI.activeDragObject.innerHTML = thisNode.innerHTML;
+        // remove from inventory data:
+
+
+        removeFromInventory(UI.sourceSlot, enteredValue);
+
+        UI.draggedInventoryObject.quantity -= enteredValue;
+
+        // update visually to dragged clone:
+
+        for (var i = 0; i < UI.activeDragObject.childNodes.length; i++) {
+            if (UI.activeDragObject.childNodes[i].className == "qty") {
+                UI.activeDragObject.childNodes[i].innerHTML = UI.draggedInventoryObject.quantity;
+                break;
+            }
+        }
+
+        UI.inDrag = true;
+        var clickedSlotRect = thisNode.getBoundingClientRect();
+        var pageScrollTopY = (window.pageYOffset || document.documentElement.scrollTop) - (document.documentElement.clientTop || 0);
+        // 3px padding on the slots:
+        objInitLeft = clickedSlotRect.left + 3;
+        objInitTop = clickedSlotRect.top + 3 + pageScrollTopY;
+        // +22 to centre the slot (half the slot width) under the cursor:
+        dragStartX = objInitLeft+22;
+        dragStartY = objInitTop+22;
+
+        UI.activeDragObject.style.cssText = "z-index:2;top: " + objInitTop + "px; left: " + objInitLeft + "px; transform: translate(0px, 0px);";
+        document.addEventListener("mousemove", UI.handleDrag, false);
+        document.addEventListener("mouseup", UI.endInventoryDrag, false);
+    }
+    splitStackPanel.classList.remove("active");
+
 }
 
 function inventorySplitStackCancel() {
     splitStackPanel.classList.remove("active");
 }
+
 var KeyBindings = {
     'left': 37,
     'right': 39,
@@ -1249,8 +1303,8 @@ var UI = {
                 inventoryMarkup += '<li id="slot' + thisSlotsID + '">';
                 // check if that key exists in inventory:
                 if (thisSlotsID in hero.inventory) {
-                    
-inventoryMarkup += generateSlotMarkup(thisSlotsID);
+
+                    inventoryMarkup += generateSlotMarkup(thisSlotsID);
 
 
                 } else {
@@ -1335,7 +1389,7 @@ inventoryMarkup += generateSlotMarkup(thisSlotsID);
                     UI.activeDragObject = this.parentElement;
                     UI.inDrag = true;
 
-var pageScrollTopY = (window.pageYOffset || document.documentElement.scrollTop)  - (document.documentElement.clientTop || 0);
+                    var pageScrollTopY = (window.pageYOffset || document.documentElement.scrollTop) - (document.documentElement.clientTop || 0);
 
                     var clickedSlotRect = this.getBoundingClientRect();
                     objInitLeft = clickedSlotRect.left;
@@ -1459,13 +1513,22 @@ var pageScrollTopY = (window.pageYOffset || document.documentElement.scrollTop) 
             // check it's empty:
             var droppedSlotId = droppedSlot.substring(4);
             if (hero.inventory[droppedSlotId] == undefined) {
+
+if(isSplitStackBeingDragged) {
+document.getElementById("slot" + UI.sourceSlot).innerHTML = '';
+                    addToInventory(droppedSlotId, UI.draggedInventoryObject);
+} else {
+
                 if (UI.sourceSlot != droppedSlotId) {
                     document.getElementById("slot" + UI.sourceSlot).innerHTML = '';
                     addToInventory(droppedSlotId, UI.draggedInventoryObject);
                 } else {
+                   
                     hero.inventory[droppedSlotId] = JSON.parse(JSON.stringify(UI.draggedInventoryObject));
                 }
+
                 document.getElementById("slot" + UI.sourceSlot).classList.remove("hidden");
+            }
                 UI.droppedSuccessfully();
             } else {
                 if (itemAttributesMatch(UI.draggedInventoryObject, hero.inventory[droppedSlotId])) {
@@ -1532,7 +1595,7 @@ var pageScrollTopY = (window.pageYOffset || document.documentElement.scrollTop) 
                 UI.slideDraggedSlotBack();
             } else {
                 // otherwise find an empty slot and drop it in:
-             
+
                 var emptySlotFound = -1;
                 var thisBagNumberOfSlots = currentActiveInventoryItems[hero.bags[thisInventoryPanelId].type].actionValue;
                 // loop through slots for this bag:
@@ -1540,14 +1603,14 @@ var pageScrollTopY = (window.pageYOffset || document.documentElement.scrollTop) 
                     var thisSlotsID = thisInventoryPanelId + '-' + j;
                     if (!(thisSlotsID in hero.inventory)) {
                         emptySlotFound = j;
-break;
+                        break;
                     }
                 }
                 if (emptySlotFound != -1) {
 
 
                     document.getElementById("slot" + UI.sourceSlot).innerHTML = '';
-                    addToInventory(thisInventoryPanelId+"-"+emptySlotFound, UI.draggedInventoryObject);
+                    addToInventory(thisInventoryPanelId + "-" + emptySlotFound, UI.draggedInventoryObject);
                     document.getElementById("slot" + UI.sourceSlot).classList.remove("hidden");
                     UI.droppedSuccessfully();
 
@@ -1573,6 +1636,9 @@ break;
         // hide the clone:
         UI.activeDragObject.style.cssText = "z-index:2;";
         UI.activeDragObject = '';
+        if(isSplitStackBeingDragged) {
+            isSplitStackBeingDragged = false;
+        }
     },
 
     initInventoryDrag: function() {
@@ -1584,56 +1650,58 @@ break;
                 if (e.button != 2) {
 
 
- var thisNode = e.target;
+                    var thisNode = e.target;
                     // find the id of the parent if actual dragged target doesn't have one:
                     while (!thisNode.id) {
                         thisNode = thisNode.parentNode;
                     }
                     UI.sourceSlot = thisNode.id.substring(4);
-                    UI.draggedInventoryObject = hero.inventory[UI.sourceSlot];
+                    
 
                     // check if the shift key is pressed as well:
                     if (key[5]) {
-                        // it is - split stack:
-                        // ######
-                        // john
-                         console.log("split stack");
 
 
+                        // make a copy of the object, not a reference:
 
-splitStackInput.setAttribute("max",hero.inventory[UI.sourceSlot].quantity);
-// set default value to half the current slot:
-splitStackInput.value = Math.floor(hero.inventory[UI.sourceSlot].quantity/2);
-splitStackInput.focus();
-splitStackPanel.classList.add("active");
+                        UI.draggedInventoryObject = JSON.parse(JSON.stringify(hero.inventory[UI.sourceSlot]));
+
+                        splitStackInput.setAttribute("max", hero.inventory[UI.sourceSlot].quantity);
+                        // set default value to half the current slot:
+                        splitStackInput.value = Math.floor(hero.inventory[UI.sourceSlot].quantity / 2);
+                        splitStackInput.focus();
+                        splitStackPanel.classList.add("active");
                         key[5] = 0;
+                    } else {
+                        if(!isSplitStackBeingDragged) {
+                        UI.draggedInventoryObject = hero.inventory[UI.sourceSlot];
+
+                        // clone this slot to draggableInventorySlot:
+                        UI.activeDragObject = document.getElementById('draggableInventorySlot');
+                        UI.activeDragObject.innerHTML = thisNode.innerHTML;
+                        // remove from inventory data:
+                        delete hero.inventory[UI.sourceSlot];
+                        thisNode.classList.add("hidden");
+                        UI.inDrag = true;
+                        var clickedSlotRect = thisNode.getBoundingClientRect();
+                        var pageScrollTopY = (window.pageYOffset || document.documentElement.scrollTop) - (document.documentElement.clientTop || 0);
+                        // 3px padding on the slots:
+                        objInitLeft = clickedSlotRect.left + 3;
+                        objInitTop = clickedSlotRect.top + 3 + pageScrollTopY;
+
+                        dragStartX = e.pageX;
+                        dragStartY = e.pageY;
+
+                        UI.activeDragObject.style.cssText = "z-index:2;top: " + objInitTop + "px; left: " + objInitLeft + "px; transform: translate(0px, 0px);";
+                        document.addEventListener("mousemove", UI.handleDrag, false);
+                        document.addEventListener("mouseup", UI.endInventoryDrag, false);
                     }
-                   
-                    // clone this slot to draggableInventorySlot:
-                    UI.activeDragObject = document.getElementById('draggableInventorySlot');
-                    UI.activeDragObject.innerHTML = thisNode.innerHTML;
-                    // remove from inventory data:
-                    delete hero.inventory[UI.sourceSlot];
-                    thisNode.classList.add("hidden");
-                    UI.inDrag = true;
-                    var clickedSlotRect = thisNode.getBoundingClientRect();
-
-
-
-var pageScrollTopY = (window.pageYOffset || document.documentElement.scrollTop)  - (document.documentElement.clientTop || 0);
-
-                    // 3px padding on the slots:
-                    objInitLeft = clickedSlotRect.left + 3;
-                    objInitTop = clickedSlotRect.top + 3 + pageScrollTopY;
-                    dragStartX = e.pageX;
-                    dragStartY = e.pageY;
-                    UI.activeDragObject.style.cssText = "z-index:2;top: " + objInitTop + "px; left: " + objInitLeft + "px; transform: translate(" + (e.pageX - dragStartX) + "px, " + (e.pageY - dragStartY) + "px);";
-                    document.addEventListener("mousemove", UI.handleDrag, false);
-                    document.addEventListener("mouseup", UI.endInventoryDrag, false);
+                    }
                 }
             }, false);
         }
     },
+
 
     slideDraggedSlotBack: function() {
         // slide it back visually - add a transition:

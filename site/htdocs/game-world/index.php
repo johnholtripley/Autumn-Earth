@@ -31,7 +31,7 @@
   <fieldset>
 <label for="splitStackInput" class="visibleHide">Enter quantity:</label>
 <input type="number" placeholder="Enter quantity" min="0" max="20" pattern="[0-9]*" id="splitStackInput">
-<button id="splitStackCancel">Cancel</button>
+<button id="splitStackCancel" type="button">Cancel</button>
 <input type="submit" value="Ok">
 </fieldset>
 </form>
