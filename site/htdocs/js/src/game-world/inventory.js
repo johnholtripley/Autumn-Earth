@@ -214,3 +214,7 @@ function inventorySplitStackSubmit(e) {
     }
     console.log("split stack submitted");
 }
+
+function inventorySplitStackCancel() {
+    splitStackPanel.classList.remove("active");
+}

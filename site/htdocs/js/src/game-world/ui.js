@@ -3,6 +3,7 @@ var recipeSearch = document.getElementById('recipeSearch');
 var clearRecipeSearch = document.getElementById('clearRecipeSearch');
 var recipeFilter = document.getElementById('recipeFilter');
 var splitStackInput = document.getElementById('splitStackInput');
+var splitStackPanel = document.getElementById('splitStackPanel');
 var UI = {
     init: function() {
         // cache all local references to UI elements:
@@ -57,7 +58,8 @@ inventoryMarkup += generateSlotMarkup(thisSlotsID);
         }
         document.getElementById('inventoryPanels').innerHTML = inventoryMarkup;
         document.getElementById('inventoryPanels').ondblclick = UI.inventoryItemDoubleClick;
-        document.getElementById('splitStackPanel').onsubmit = inventorySplitStackSubmit;
+        splitStackPanel.onsubmit = inventorySplitStackSubmit;
+        document.getElementById('splitStackCancel').onclick = inventorySplitStackCancel;
         UI.initDrag(".draggableBar");
         UI.initInventoryDrag();
         UI.updateCardAlbum();
@@ -398,6 +400,7 @@ splitStackInput.setAttribute("max",hero.inventory[UI.sourceSlot].quantity);
 // set default value to half the current slot:
 splitStackInput.value = Math.floor(hero.inventory[UI.sourceSlot].quantity/2);
 splitStackInput.focus();
+splitStackPanel.classList.add("active");
                         key[5] = 0;
                     }
                    

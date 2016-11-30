@@ -32,7 +32,7 @@
 <label for="splitStackInput" class="visibleHide">Enter quantity:</label>
 <input type="number" placeholder="Enter quantity" min="0" max="20" pattern="[0-9]*" id="splitStackInput">
 <button id="splitStackCancel">Cancel</button>
-<input type="submit" id="splitStackSubmit" value="Ok">
+<input type="submit" value="Ok">
 </fieldset>
 </form>
 <div id="cardAlbum"><div class="draggableBar">Card album</div><ul id="cardAlbumList"></ul></div>

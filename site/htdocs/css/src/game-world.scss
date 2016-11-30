@@ -518,6 +518,13 @@ canvas {
 }
 
 #splitStackPanel {
+    opacity: 0;
+    pointer-events: none;
+    @include transition(opacity 0.2s ease);
+    &.active {
+        pointer-events: auto;
+        opacity: 1;
+    }
     fieldset {
         border: 0;
     }
