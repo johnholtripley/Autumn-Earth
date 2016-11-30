@@ -449,8 +449,20 @@ document.getElementById("slot" + UI.sourceSlot).innerHTML = '';
         UI.activeDragObject.style.cssText = "z-index:2;left: " + (objInitLeft) + "px; top: " + (objInitTop) + "px;transition: transform 0.4s ease;";
         UI.activeDragObject.addEventListener(whichTransitionEvent, function snapDraggedSlotBack(e) {
             // it's now back, so restore to the inventory:
+            if(!isSplitStackBeingDragged) {
             hero.inventory[UI.sourceSlot] = JSON.parse(JSON.stringify(UI.draggedInventoryObject));
             document.getElementById("slot" + UI.sourceSlot).classList.remove("hidden");
+        } else {
+            // update quantity on the original slot
+            hero.inventory[UI.sourceSlot].quantity += UI.draggedInventoryObject.quantity;
+               var thisSlotElem = document.getElementById("slot" + UI.sourceSlot);
+                        for (var i = 0; i < thisSlotElem.childNodes.length; i++) {
+                            if (thisSlotElem.childNodes[i].className == "qty") {
+                                thisSlotElem.childNodes[i].innerHTML = hero.inventory[UI.sourceSlot].quantity;
+                                break;
+                            }
+                        }
+        }
             // hide the clone:
             UI.droppedSuccessfully();
             // remove this event listener now:
