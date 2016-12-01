@@ -523,6 +523,10 @@ canvas {
 #splitStackPanel {
     opacity: 0;
     pointer-events: none;
+    background: #cecece;
+    position: absolute;
+    left: -100px;
+    top: -100px;
     @include transition(opacity 0.2s ease);
     &.active {
         pointer-events: auto;

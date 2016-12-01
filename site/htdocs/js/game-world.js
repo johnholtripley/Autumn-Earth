@@ -1515,25 +1515,27 @@ var UI = {
             var droppedSlotId = droppedSlot.substring(4);
             if (hero.inventory[droppedSlotId] == undefined) {
 
-if(isSplitStackBeingDragged) {
-document.getElementById("slot" + UI.sourceSlot).innerHTML = '';
-                    addToInventory(droppedSlotId, UI.draggedInventoryObject);
-} else {
-
-                if (UI.sourceSlot != droppedSlotId) {
-                    document.getElementById("slot" + UI.sourceSlot).innerHTML = '';
+                if (isSplitStackBeingDragged) {
+                   // document.getElementById("slot" + UI.sourceSlot).innerHTML = '';
                     addToInventory(droppedSlotId, UI.draggedInventoryObject);
                 } else {
-                   
-                    hero.inventory[droppedSlotId] = JSON.parse(JSON.stringify(UI.draggedInventoryObject));
-                }
 
-                document.getElementById("slot" + UI.sourceSlot).classList.remove("hidden");
-            }
+                    if (UI.sourceSlot != droppedSlotId) {
+                        document.getElementById("slot" + UI.sourceSlot).innerHTML = '';
+                        addToInventory(droppedSlotId, UI.draggedInventoryObject);
+                    } else {
+
+                        hero.inventory[droppedSlotId] = JSON.parse(JSON.stringify(UI.draggedInventoryObject));
+                    }
+
+                    document.getElementById("slot" + UI.sourceSlot).classList.remove("hidden");
+                }
                 UI.droppedSuccessfully();
             } else {
                 if (itemAttributesMatch(UI.draggedInventoryObject, hero.inventory[droppedSlotId])) {
+
                     if (parseInt(UI.draggedInventoryObject.quantity) + parseInt(hero.inventory[droppedSlotId].quantity) <= maxNumberOfItemsPerSlot) {
+                        console.log("attr match");
                         hero.inventory[droppedSlotId].quantity += parseInt(UI.draggedInventoryObject.quantity);
                         // update visually:
                         var thisSlotElem = document.getElementById("slot" + droppedSlotId);
@@ -1543,8 +1545,10 @@ document.getElementById("slot" + UI.sourceSlot).innerHTML = '';
                                 break;
                             }
                         }
-                        document.getElementById("slot" + UI.sourceSlot).innerHTML = '';
-                        document.getElementById("slot" + UI.sourceSlot).classList.remove("hidden");
+                        if (!isSplitStackBeingDragged) {
+                            document.getElementById("slot" + UI.sourceSlot).innerHTML = '';
+                            document.getElementById("slot" + UI.sourceSlot).classList.remove("hidden");
+                        }
                         UI.droppedSuccessfully();
                     } else {
                         // add in the max, and slide the remainder back:
@@ -1637,7 +1641,7 @@ document.getElementById("slot" + UI.sourceSlot).innerHTML = '';
         // hide the clone:
         UI.activeDragObject.style.cssText = "z-index:2;";
         UI.activeDragObject = '';
-        if(isSplitStackBeingDragged) {
+        if (isSplitStackBeingDragged) {
             isSplitStackBeingDragged = false;
         }
     },
@@ -1656,13 +1660,13 @@ document.getElementById("slot" + UI.sourceSlot).innerHTML = '';
                     while (!thisNode.id) {
                         thisNode = thisNode.parentNode;
                     }
-                    UI.sourceSlot = thisNode.id.substring(4);
                     
+
 
                     // check if the shift key is pressed as well:
                     if (key[5]) {
 
-
+UI.sourceSlot = thisNode.id.substring(4);
                         // make a copy of the object, not a reference:
 
                         UI.draggedInventoryObject = JSON.parse(JSON.stringify(hero.inventory[UI.sourceSlot]));
@@ -1672,33 +1676,53 @@ document.getElementById("slot" + UI.sourceSlot).innerHTML = '';
                         var defaultSplitValue = Math.floor(hero.inventory[UI.sourceSlot].quantity / 2);
                         splitStackInput.value = defaultSplitValue;
                         splitStackInput.focus();
-                        splitStackInput.setSelectionRange(0, defaultSplitValue.length);
+
+                        splitStackInput.setSelectionRange(0, defaultSplitValue.toString().length);
+
+
+
+
+
+ var clickedSlotRect = thisNode.getBoundingClientRect();
+                            var pageScrollTopY = (window.pageYOffset || document.documentElement.scrollTop) - (document.documentElement.clientTop || 0);
+                            // 3px padding on the slots:
+                            // -44 for the slot height:
+                            objInitLeft = clickedSlotRect.left + 3;
+                            objInitTop = clickedSlotRect.top + 3 + pageScrollTopY - 44;
+splitStackPanel.style.cssText = "z-index:2;top: " + objInitTop + "px; left: " + objInitLeft + "px;";
+
+
+
+
+
+
                         splitStackPanel.classList.add("active");
                         key[5] = 0;
                     } else {
-                        if(!isSplitStackBeingDragged) {
-                        UI.draggedInventoryObject = hero.inventory[UI.sourceSlot];
+                        if (!isSplitStackBeingDragged) {
+                            UI.sourceSlot = thisNode.id.substring(4);
+                            UI.draggedInventoryObject = hero.inventory[UI.sourceSlot];
 
-                        // clone this slot to draggableInventorySlot:
-                        UI.activeDragObject = document.getElementById('draggableInventorySlot');
-                        UI.activeDragObject.innerHTML = thisNode.innerHTML;
-                        // remove from inventory data:
-                        delete hero.inventory[UI.sourceSlot];
-                        thisNode.classList.add("hidden");
-                        UI.inDrag = true;
-                        var clickedSlotRect = thisNode.getBoundingClientRect();
-                        var pageScrollTopY = (window.pageYOffset || document.documentElement.scrollTop) - (document.documentElement.clientTop || 0);
-                        // 3px padding on the slots:
-                        objInitLeft = clickedSlotRect.left + 3;
-                        objInitTop = clickedSlotRect.top + 3 + pageScrollTopY;
+                            // clone this slot to draggableInventorySlot:
+                            UI.activeDragObject = document.getElementById('draggableInventorySlot');
+                            UI.activeDragObject.innerHTML = thisNode.innerHTML;
+                            // remove from inventory data:
+                            delete hero.inventory[UI.sourceSlot];
+                            thisNode.classList.add("hidden");
+                            UI.inDrag = true;
+                            var clickedSlotRect = thisNode.getBoundingClientRect();
+                            var pageScrollTopY = (window.pageYOffset || document.documentElement.scrollTop) - (document.documentElement.clientTop || 0);
+                            // 3px padding on the slots:
+                            objInitLeft = clickedSlotRect.left + 3;
+                            objInitTop = clickedSlotRect.top + 3 + pageScrollTopY;
 
-                        dragStartX = e.pageX;
-                        dragStartY = e.pageY;
+                            dragStartX = e.pageX;
+                            dragStartY = e.pageY;
 
-                        UI.activeDragObject.style.cssText = "z-index:2;top: " + objInitTop + "px; left: " + objInitLeft + "px; transform: translate(0px, 0px);";
-                        document.addEventListener("mousemove", UI.handleDrag, false);
-                        document.addEventListener("mouseup", UI.endInventoryDrag, false);
-                    }
+                            UI.activeDragObject.style.cssText = "z-index:2;top: " + objInitTop + "px; left: " + objInitLeft + "px; transform: translate(0px, 0px);";
+                            document.addEventListener("mousemove", UI.handleDrag, false);
+                            document.addEventListener("mouseup", UI.endInventoryDrag, false);
+                        }
                     }
                 }
             }, false);
@@ -1711,22 +1735,24 @@ document.getElementById("slot" + UI.sourceSlot).innerHTML = '';
         UI.activeDragObject.style.cssText = "z-index:2;left: " + (objInitLeft) + "px; top: " + (objInitTop) + "px;transition: transform 0.4s ease;";
         UI.activeDragObject.addEventListener(whichTransitionEvent, function snapDraggedSlotBack(e) {
             // it's now back, so restore to the inventory:
-            if(!isSplitStackBeingDragged) {
-            hero.inventory[UI.sourceSlot] = JSON.parse(JSON.stringify(UI.draggedInventoryObject));
-            document.getElementById("slot" + UI.sourceSlot).classList.remove("hidden");
-        } else {
-            // update quantity on the original slot
-            console.log(hero.inventory[UI.sourceSlot].quantity);
-            console.log(UI.draggedInventoryObject.quantity);
-            hero.inventory[UI.sourceSlot].quantity += UI.draggedInventoryObject.quantity;
-               var thisSlotElem = document.getElementById("slot" + UI.sourceSlot);
-                        for (var i = 0; i < thisSlotElem.childNodes.length; i++) {
-                            if (thisSlotElem.childNodes[i].className == "qty") {
-                                thisSlotElem.childNodes[i].innerHTML = hero.inventory[UI.sourceSlot].quantity;
-                                break;
-                            }
-                        }
-        }
+            if (!isSplitStackBeingDragged) {
+                hero.inventory[UI.sourceSlot] = JSON.parse(JSON.stringify(UI.draggedInventoryObject));
+                document.getElementById("slot" + UI.sourceSlot).classList.remove("hidden");
+            } else {
+                // update quantity on the original slot
+
+
+                console.log(UI.sourceSlot);
+
+                hero.inventory[UI.sourceSlot].quantity += UI.draggedInventoryObject.quantity;
+                var thisSlotElem = document.getElementById("slot" + UI.sourceSlot);
+                for (var i = 0; i < thisSlotElem.childNodes.length; i++) {
+                    if (thisSlotElem.childNodes[i].className == "qty") {
+                        thisSlotElem.childNodes[i].innerHTML = hero.inventory[UI.sourceSlot].quantity;
+                        break;
+                    }
+                }
+            }
             // hide the clone:
             UI.droppedSuccessfully();
             // remove this event listener now:
