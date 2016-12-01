@@ -1111,7 +1111,7 @@ function removeFromInventory(whichSlot, amount) {
 }
 
 function itemAttributesMatch(item1, item2) {
-    // 'type' has already been checked
+    if (item1.type == item2.type) {
     if (item1.quality == item2.quality) {
         if (item1.durability == item2.durability) {
             if (item1.currentWear == item2.currentWear) {
@@ -1131,6 +1131,7 @@ function itemAttributesMatch(item1, item2) {
             }
         }
     }
+}
     return false;
 }
 
@@ -1501,22 +1502,12 @@ var UI = {
             thisNode = thisNode.parentNode;
         }
         var droppedSlot = thisNode.id;
-
-        // console.log("dropped on: " + droppedSlot);
-        // check if this has "slot" or "inventorybag" in
-        // if not, slide back - restore to inventory data
-        // if ok, add to inventory data, update slot
-        //  console.log("came from: " + UI.sourceSlot);
-
-
-
         if (droppedSlot.substring(0, 4) == "slot") {
             // check it's empty:
             var droppedSlotId = droppedSlot.substring(4);
             if (hero.inventory[droppedSlotId] == undefined) {
-
                 if (isSplitStackBeingDragged) {
-                   // document.getElementById("slot" + UI.sourceSlot).innerHTML = '';
+                    // document.getElementById("slot" + UI.sourceSlot).innerHTML = '';
                     addToInventory(droppedSlotId, UI.draggedInventoryObject);
                 } else {
 
@@ -1524,18 +1515,17 @@ var UI = {
                         document.getElementById("slot" + UI.sourceSlot).innerHTML = '';
                         addToInventory(droppedSlotId, UI.draggedInventoryObject);
                     } else {
-
                         hero.inventory[droppedSlotId] = JSON.parse(JSON.stringify(UI.draggedInventoryObject));
                     }
-
                     document.getElementById("slot" + UI.sourceSlot).classList.remove("hidden");
                 }
                 UI.droppedSuccessfully();
             } else {
+                console.log(droppedSlotId);
                 if (itemAttributesMatch(UI.draggedInventoryObject, hero.inventory[droppedSlotId])) {
-
+ 
                     if (parseInt(UI.draggedInventoryObject.quantity) + parseInt(hero.inventory[droppedSlotId].quantity) <= maxNumberOfItemsPerSlot) {
-                        console.log("attr match");
+                     
                         hero.inventory[droppedSlotId].quantity += parseInt(UI.draggedInventoryObject.quantity);
                         // update visually:
                         var thisSlotElem = document.getElementById("slot" + droppedSlotId);
@@ -1582,25 +1572,21 @@ var UI = {
                         }
                         UI.slideDraggedSlotBack();
                     }
-
                 } else {
+                    console.log("no match");
                     // otherwise slide it back
                     UI.slideDraggedSlotBack();
                 }
             }
         } else if (droppedSlot.substring(0, 12) == "inventoryBag") {
-
             // if it's the same panel is the slot came from, just slide back:
-
             var thisInventoryPanelId = droppedSlot.substring(12);
             var sourceSlotHyphenPos = UI.sourceSlot.indexOf("-");
             var thisSourceInventoryPanelId = UI.sourceSlot.substring(0, sourceSlotHyphenPos);
-
             if (thisInventoryPanelId == thisSourceInventoryPanelId) {
                 UI.slideDraggedSlotBack();
             } else {
                 // otherwise find an empty slot and drop it in:
-
                 var emptySlotFound = -1;
                 var thisBagNumberOfSlots = currentActiveInventoryItems[hero.bags[thisInventoryPanelId].type].actionValue;
                 // loop through slots for this bag:
@@ -1612,22 +1598,14 @@ var UI = {
                     }
                 }
                 if (emptySlotFound != -1) {
-
-
                     document.getElementById("slot" + UI.sourceSlot).innerHTML = '';
                     addToInventory(thisInventoryPanelId + "-" + emptySlotFound, UI.draggedInventoryObject);
                     document.getElementById("slot" + UI.sourceSlot).classList.remove("hidden");
                     UI.droppedSuccessfully();
-
-
                 } else {
                     UI.slideDraggedSlotBack();
                 }
-
-
             }
-
-
         } else {
             UI.slideDraggedSlotBack();
         }
@@ -1653,49 +1631,29 @@ var UI = {
                 e.preventDefault();
                 // make sure it's not a right click:
                 if (e.button != 2) {
-
-
                     var thisNode = e.target;
                     // find the id of the parent if actual dragged target doesn't have one:
                     while (!thisNode.id) {
                         thisNode = thisNode.parentNode;
                     }
-                    
-
-
                     // check if the shift key is pressed as well:
                     if (key[5]) {
-
-UI.sourceSlot = thisNode.id.substring(4);
+                        UI.sourceSlot = thisNode.id.substring(4);
                         // make a copy of the object, not a reference:
-
                         UI.draggedInventoryObject = JSON.parse(JSON.stringify(hero.inventory[UI.sourceSlot]));
-
                         splitStackInput.setAttribute("max", hero.inventory[UI.sourceSlot].quantity);
                         // set default value to half the current slot:
                         var defaultSplitValue = Math.floor(hero.inventory[UI.sourceSlot].quantity / 2);
                         splitStackInput.value = defaultSplitValue;
                         splitStackInput.focus();
-
                         splitStackInput.setSelectionRange(0, defaultSplitValue.toString().length);
-
-
-
-
-
- var clickedSlotRect = thisNode.getBoundingClientRect();
-                            var pageScrollTopY = (window.pageYOffset || document.documentElement.scrollTop) - (document.documentElement.clientTop || 0);
-                            // 3px padding on the slots:
-                            // -44 for the slot height:
-                            objInitLeft = clickedSlotRect.left + 3;
-                            objInitTop = clickedSlotRect.top + 3 + pageScrollTopY - 44;
-splitStackPanel.style.cssText = "z-index:2;top: " + objInitTop + "px; left: " + objInitLeft + "px;";
-
-
-
-
-
-
+                        var clickedSlotRect = thisNode.getBoundingClientRect();
+                        var pageScrollTopY = (window.pageYOffset || document.documentElement.scrollTop) - (document.documentElement.clientTop || 0);
+                        // 3px padding on the slots:
+                        // -44 for the slot height:
+                        objInitLeft = clickedSlotRect.left + 3;
+                        objInitTop = clickedSlotRect.top + 3 + pageScrollTopY - 44;
+                        splitStackPanel.style.cssText = "z-index:2;top: " + objInitTop + "px; left: " + objInitLeft + "px;";
                         splitStackPanel.classList.add("active");
                         key[5] = 0;
                     } else {
@@ -1715,10 +1673,8 @@ splitStackPanel.style.cssText = "z-index:2;top: " + objInitTop + "px; left: " + 
                             // 3px padding on the slots:
                             objInitLeft = clickedSlotRect.left + 3;
                             objInitTop = clickedSlotRect.top + 3 + pageScrollTopY;
-
                             dragStartX = e.pageX;
                             dragStartY = e.pageY;
-
                             UI.activeDragObject.style.cssText = "z-index:2;top: " + objInitTop + "px; left: " + objInitLeft + "px; transform: translate(0px, 0px);";
                             document.addEventListener("mousemove", UI.handleDrag, false);
                             document.addEventListener("mouseup", UI.endInventoryDrag, false);
@@ -1740,10 +1696,6 @@ splitStackPanel.style.cssText = "z-index:2;top: " + objInitTop + "px; left: " + 
                 document.getElementById("slot" + UI.sourceSlot).classList.remove("hidden");
             } else {
                 // update quantity on the original slot
-
-
-                console.log(UI.sourceSlot);
-
                 hero.inventory[UI.sourceSlot].quantity += UI.draggedInventoryObject.quantity;
                 var thisSlotElem = document.getElementById("slot" + UI.sourceSlot);
                 for (var i = 0; i < thisSlotElem.childNodes.length; i++) {

@@ -136,7 +136,7 @@ function removeFromInventory(whichSlot, amount) {
 }
 
 function itemAttributesMatch(item1, item2) {
-    // 'type' has already been checked
+    if (item1.type == item2.type) {
     if (item1.quality == item2.quality) {
         if (item1.durability == item2.durability) {
             if (item1.currentWear == item2.currentWear) {
@@ -156,6 +156,7 @@ function itemAttributesMatch(item1, item2) {
             }
         }
     }
+}
     return false;
 }
 

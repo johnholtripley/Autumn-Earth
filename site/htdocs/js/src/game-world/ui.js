@@ -260,10 +260,11 @@ var UI = {
                 }
                 UI.droppedSuccessfully();
             } else {
+                console.log(droppedSlotId);
                 if (itemAttributesMatch(UI.draggedInventoryObject, hero.inventory[droppedSlotId])) {
-
+ 
                     if (parseInt(UI.draggedInventoryObject.quantity) + parseInt(hero.inventory[droppedSlotId].quantity) <= maxNumberOfItemsPerSlot) {
-                        console.log("attr match");
+                     
                         hero.inventory[droppedSlotId].quantity += parseInt(UI.draggedInventoryObject.quantity);
                         // update visually:
                         var thisSlotElem = document.getElementById("slot" + droppedSlotId);
@@ -311,6 +312,7 @@ var UI = {
                         UI.slideDraggedSlotBack();
                     }
                 } else {
+                    console.log("no match");
                     // otherwise slide it back
                     UI.slideDraggedSlotBack();
                 }
