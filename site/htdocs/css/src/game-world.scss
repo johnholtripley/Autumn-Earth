@@ -135,6 +135,15 @@ canvas {
             pointer-events: auto;
             @include transform(scale(1));
         }
+        img {
+            @include attention() {
+                & + p {
+                    opacity: 1;
+                    pointer-events: auto;
+                    @include transform(translateY(0));
+                }
+            }
+        }
         li {
             // slot
             width: 46px;
@@ -162,13 +171,7 @@ canvas {
             img {
                 display: block;
             }
-            @include attention() {
-                p {
-                    opacity: 1;
-                    pointer-events: auto;
-                    @include transform(translateY(0));
-                }
-            }
+        
             &.changed {
                 box-shadow: 0 0 5px 3px #eebb3f;
                 z-index: 1;

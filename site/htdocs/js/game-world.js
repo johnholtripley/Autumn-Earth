@@ -1178,8 +1178,9 @@ function generateSlotMarkup(thisSlotsId) {
         dataActionMarkup = 'data-action="' + thisAction + '" data-action-value="' + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].actionValue + '" ';
     }
     slotMarkup += '<img src="/images/game-world/inventory-items/' + hero.inventory[thisSlotsId].type + thisFileColourSuffix + '.png" ' + dataActionMarkup + 'alt="">';
-    slotMarkup += '<span class="qty">' + hero.inventory[thisSlotsId].quantity + '</span>';
+   
     slotMarkup += '<p><em>' + theColourPrefix + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].shortname + ' </em>' + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].description + ' <span class="price">Sell price: ' + parseMoney(hero.inventory[thisSlotsId].quantity * currentActiveInventoryItems[hero.inventory[thisSlotsId].type].priceCode, 0) + '</span>' + additionalTooltipDetail(thisSlotsId) + '</p>';
+     slotMarkup += '<span class="qty">' + hero.inventory[thisSlotsId].quantity + '</span>';
     return slotMarkup;
 }
 
@@ -1668,9 +1669,10 @@ document.getElementById("slot" + UI.sourceSlot).innerHTML = '';
 
                         splitStackInput.setAttribute("max", hero.inventory[UI.sourceSlot].quantity);
                         // set default value to half the current slot:
-                        splitStackInput.value = Math.floor(hero.inventory[UI.sourceSlot].quantity / 2);
+                        var defaultSplitValue = Math.floor(hero.inventory[UI.sourceSlot].quantity / 2);
+                        splitStackInput.value = defaultSplitValue;
                         splitStackInput.focus();
-                        splitStackInput.setSelectionRange(0, splitStackInput.value.length)
+                        splitStackInput.setSelectionRange(0, defaultSplitValue.length);
                         splitStackPanel.classList.add("active");
                         key[5] = 0;
                     } else {
