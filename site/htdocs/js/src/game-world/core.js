@@ -541,7 +541,6 @@ function gameLoop() {
     }
     window.requestAnimationFrame(gameLoop);
 }
-
 function update() {
     var now = window.performance.now();
     var elapsed = (now - lastTime);
@@ -575,7 +574,7 @@ function update() {
         if (key[4]) {
             checkForActions();
         }
-              if (key[6]) {
+        if (key[6]) {
             checkForChallenges();
         }
         checkHeroCollisions();
@@ -583,28 +582,21 @@ function update() {
         var heroOldY = hero.tileY;
         hero.tileX = getTileX(hero.x);
         hero.tileY = getTileY(hero.y);
-        if((hero.tileX != heroOldX) || (hero.tileY != heroOldY)) {
+        if ((hero.tileX != heroOldX) || (hero.tileY != heroOldY)) {
             heroIsInNewTile();
         }
-// check to see if a dialogue balloon is open, and if the hero has moved far from the NPC:
-if (activeNPCForDialogue != '') {
-    if (!(isInRange(hero.x, hero.y, activeNPCForDialogue.x, activeNPCForDialogue.y, closeDialogueDistance))) {
-        dialogue.classList.add("slowerFade");
-        dialogue.classList.remove("active");
-        // only remove this after dialogue has faded out completely:
-
-
-    dialogue.addEventListener(whichTransitionEvent, function removeActiveDialogue(e) {
-                               activeNPCForDialogue = '';
-                                return e.currentTarget.removeEventListener(whichTransitionEvent, removeActiveDialogue, false);
-                            }, false);
-
-
-        
-    }
-}
-
-
+        // check to see if a dialogue balloon is open, and if the hero has moved far from the NPC:
+        if (activeNPCForDialogue != '') {
+            if (!(isInRange(hero.x, hero.y, activeNPCForDialogue.x, activeNPCForDialogue.y, closeDialogueDistance))) {
+                dialogue.classList.add("slowerFade");
+                dialogue.classList.remove("active");
+                // only remove this after dialogue has faded out completely:
+                dialogue.addEventListener(whichTransitionEvent, function removeActiveDialogue(e) {
+                    activeNPCForDialogue = '';
+                    return e.currentTarget.removeEventListener(whichTransitionEvent, removeActiveDialogue, false);
+                }, false);
+            }
+        }
     } else {
         hero.isMoving = true;
         // continue the hero moving:
@@ -1323,6 +1315,9 @@ function animateFae() {
 function learnRecipe(recipeIndex) {
     if (hero.recipesKnown.indexOf(recipeIndex) === -1) {
         hero.recipesKnown.push(parseInt(recipeIndex));
+        // need to show a notification
+        // reload the recipe data
+        // ###
     }
 }
 

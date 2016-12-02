@@ -137,16 +137,17 @@ function removeFromInventory(whichSlot, amount) {
 
 function itemAttributesMatch(item1, item2) {
     if (item1.type == item2.type) {
-    if (item1.quality == item2.quality) {
-        if (item1.durability == item2.durability) {
-            if (item1.currentWear == item2.currentWear) {
-                if (item1.effectiveness == item2.effectiveness) {
-                    if (item1.wrapped == item2.wrapped) {
-                        if (item1.colour == item2.colour) {
-                            if (item1.enchanted == item2.enchanted) {
-                                if (item1.hallmark == item2.hallmark) {
-                                    if (item1.inscription == item2.inscription) {
-                                        return true;
+        if (item1.quality == item2.quality) {
+            if (item1.durability == item2.durability) {
+                if (item1.currentWear == item2.currentWear) {
+                    if (item1.effectiveness == item2.effectiveness) {
+                        if (item1.wrapped == item2.wrapped) {
+                            if (item1.colour == item2.colour) {
+                                if (item1.enchanted == item2.enchanted) {
+                                    if (item1.hallmark == item2.hallmark) {
+                                        if (item1.inscription == item2.inscription) {
+                                            return true;
+                                        }
                                     }
                                 }
                             }
@@ -156,7 +157,6 @@ function itemAttributesMatch(item1, item2) {
             }
         }
     }
-}
     return false;
 }
 
@@ -204,9 +204,9 @@ function generateSlotMarkup(thisSlotsId) {
         dataActionMarkup = 'data-action="' + thisAction + '" data-action-value="' + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].actionValue + '" ';
     }
     slotMarkup += '<img src="/images/game-world/inventory-items/' + hero.inventory[thisSlotsId].type + thisFileColourSuffix + '.png" ' + dataActionMarkup + 'alt="">';
-   
+
     slotMarkup += '<p><em>' + theColourPrefix + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].shortname + ' </em>' + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].description + ' <span class="price">Sell price: ' + parseMoney(hero.inventory[thisSlotsId].quantity * currentActiveInventoryItems[hero.inventory[thisSlotsId].type].priceCode, 0) + '</span>' + additionalTooltipDetail(thisSlotsId) + '</p>';
-     slotMarkup += '<span class="qty">' + hero.inventory[thisSlotsId].quantity + '</span>';
+    slotMarkup += '<span class="qty">' + hero.inventory[thisSlotsId].quantity + '</span>';
     return slotMarkup;
 }
 
@@ -214,7 +214,7 @@ function inventorySplitStackSubmit(e) {
     if (e) {
         e.preventDefault();
     }
-   
+
 
     var enteredValue = splitStackInput.value;
     var isValid = true;
@@ -229,7 +229,7 @@ function inventorySplitStackSubmit(e) {
         isValid = false;
     }
     if (isValid) {
-isSplitStackBeingDragged = true;
+        isSplitStackBeingDragged = true;
 
         var thisNode = document.getElementById("slot" + UI.sourceSlot);
         // clone this slot to draggableInventorySlot:
@@ -258,8 +258,8 @@ isSplitStackBeingDragged = true;
         objInitLeft = clickedSlotRect.left + 3;
         objInitTop = clickedSlotRect.top + 3 + pageScrollTopY;
         // +22 to centre the slot (half the slot width) under the cursor:
-        dragStartX = objInitLeft+22;
-        dragStartY = objInitTop+22;
+        dragStartX = objInitLeft + 22;
+        dragStartY = objInitTop + 22;
 
         UI.activeDragObject.style.cssText = "z-index:2;top: " + objInitTop + "px; left: " + objInitLeft + "px; transform: translate(0px, 0px);";
         document.addEventListener("mousemove", UI.handleDrag, false);
