@@ -1422,6 +1422,10 @@ var UI = {
     },
 
     showDialogue: function(whichNPC, text) {
+        if(activeNPCForDialogue != '') {
+
+        dialogue.removeEventListener(whichTransitionEvent, UI.removeActiveDialogue, false);
+    }
         dialogue.innerHTML = text;
         dialogue.classList.remove("slowerFade");
         dialogue.classList.add("active");
@@ -1710,6 +1714,11 @@ var UI = {
             // remove this event listener now:
             return e.currentTarget.removeEventListener(whichTransitionEvent, snapDraggedSlotBack, false);
         }, false);
+    },
+
+    removeActiveDialogue: function() {
+         activeNPCForDialogue = '';
+         dialogue.removeEventListener(whichTransitionEvent, UI.removeActiveDialogue, false);
     }
 }
 
@@ -2306,10 +2315,7 @@ function update() {
                 dialogue.classList.add("slowerFade");
                 dialogue.classList.remove("active");
                 // only remove this after dialogue has faded out completely:
-                dialogue.addEventListener(whichTransitionEvent, function removeActiveDialogue(e) {
-                    activeNPCForDialogue = '';
-                    return e.currentTarget.removeEventListener(whichTransitionEvent, removeActiveDialogue, false);
-                }, false);
+                dialogue.addEventListener(whichTransitionEvent, UI.removeActiveDialogue, false);
             }
         }
     } else {

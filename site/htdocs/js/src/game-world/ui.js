@@ -161,6 +161,10 @@ var UI = {
     },
 
     showDialogue: function(whichNPC, text) {
+        if(activeNPCForDialogue != '') {
+
+        dialogue.removeEventListener(whichTransitionEvent, UI.removeActiveDialogue, false);
+    }
         dialogue.innerHTML = text;
         dialogue.classList.remove("slowerFade");
         dialogue.classList.add("active");
@@ -449,5 +453,10 @@ var UI = {
             // remove this event listener now:
             return e.currentTarget.removeEventListener(whichTransitionEvent, snapDraggedSlotBack, false);
         }, false);
+    },
+
+    removeActiveDialogue: function() {
+         activeNPCForDialogue = '';
+         dialogue.removeEventListener(whichTransitionEvent, UI.removeActiveDialogue, false);
     }
 }

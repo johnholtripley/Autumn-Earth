@@ -591,10 +591,7 @@ function update() {
                 dialogue.classList.add("slowerFade");
                 dialogue.classList.remove("active");
                 // only remove this after dialogue has faded out completely:
-                dialogue.addEventListener(whichTransitionEvent, function removeActiveDialogue(e) {
-                    activeNPCForDialogue = '';
-                    return e.currentTarget.removeEventListener(whichTransitionEvent, removeActiveDialogue, false);
-                }, false);
+                dialogue.addEventListener(whichTransitionEvent, UI.removeActiveDialogue, false);
             }
         }
     } else {
