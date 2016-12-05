@@ -122,6 +122,7 @@
     "stats": {
         "cardGamesWon": 2,
         "cardGamesLost": 4,
+        "cardGamesDrawn": 0,
         "numberOfcardsFlipped": 8
     },
     "titlesEarned": [3,7],

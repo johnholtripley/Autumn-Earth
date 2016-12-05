@@ -43,6 +43,7 @@ function cardGamePlayer1Wins() {
 }
 
 function cardGameIsDrawn() {
+    hero.stats.cardGamesDrawn++;
     processSpeech(thisNPC, thisNPC.cardGameSpeech.draw[0], thisNPC.cardGameSpeech.draw[1]);
     closeCardGame();
 }

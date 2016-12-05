@@ -25,6 +25,7 @@ stats: []
 }
 hero.stats.cardGamesWon = 0;
 hero.stats.cardGamesLost = 0;
+hero.stats.cardGamesDrawn = 0;
 hero.stats.numberOfcardsFlipped = 0;
 
 
