@@ -426,16 +426,38 @@ canvas {
         overflow: auto;
         li {
             display: none;
+            background: #666;
+            @include transition(background 0.4s ease);
+           padding: 6px 0;
             &.active {
                 display: block;
             }
             img {
                 float: left;
             }
+            &.highlighted {
+                background: #b4a435;
+            }
+        }
+        h3, p {
+             margin: 0;
+             padding: 0;
         }
     }
 }
 
+
+#craftingRecipeCreateButton {
+    background: #000;
+    @include transition(background 0.4s ease);
+    color: #fff;
+    border: 0;
+    cursor: default;
+    &.active {
+        background: #682810;
+        cursor: url(../images/game-world/cursors/active.gif) 3 3, auto;
+    }
+}
 .visibleHide {
     @include visibleHide;
 }
@@ -536,3 +558,4 @@ canvas {
         border: 0;
     }
 }
+

@@ -4,6 +4,7 @@ var clearRecipeSearch = document.getElementById('clearRecipeSearch');
 var recipeFilter = document.getElementById('recipeFilter');
 var splitStackInput = document.getElementById('splitStackInput');
 var splitStackPanel = document.getElementById('splitStackPanel');
+var craftingRecipeCreateButton = document.getElementById('craftingRecipeCreateButton');
 var UI = {
     init: function() {
         // cache all local references to UI elements:
@@ -58,6 +59,10 @@ var UI = {
         }
         document.getElementById('inventoryPanels').innerHTML = inventoryMarkup;
         document.getElementById('inventoryPanels').ondblclick = UI.inventoryItemDoubleClick;
+        UI.highlightedRecipe = "";
+        document.getElementById('createRecipeList').ondblclick = UI.craftingPanelDoubleClick;
+        document.getElementById('createRecipeList').onclick = UI.craftingPanelSingleClick;
+        document.getElementById('craftingRecipeCreateButton').onclick = UI.craftingRecipeCreate;
         splitStackPanel.onsubmit = inventorySplitStackSubmit;
         document.getElementById('splitStackCancel').onclick = inventorySplitStackCancel;
         UI.initDrag(".draggableBar");
@@ -151,7 +156,7 @@ var UI = {
     },
 
     inventoryItemDoubleClick: function(e) {
-        console.log("double click called");
+
         var thisItemsAction = e.target.getAttribute('data-action');
 
         if (thisItemsAction) {
@@ -161,10 +166,10 @@ var UI = {
     },
 
     showDialogue: function(whichNPC, text) {
-        if(activeNPCForDialogue != '') {
+        if (activeNPCForDialogue != '') {
 
-        dialogue.removeEventListener(whichTransitionEvent, UI.removeActiveDialogue, false);
-    }
+            dialogue.removeEventListener(whichTransitionEvent, UI.removeActiveDialogue, false);
+        }
         dialogue.innerHTML = text;
         dialogue.classList.remove("slowerFade");
         dialogue.classList.add("active");
@@ -264,11 +269,11 @@ var UI = {
                 }
                 UI.droppedSuccessfully();
             } else {
-            
+
                 if (itemAttributesMatch(UI.draggedInventoryObject, hero.inventory[droppedSlotId])) {
- 
+
                     if (parseInt(UI.draggedInventoryObject.quantity) + parseInt(hero.inventory[droppedSlotId].quantity) <= maxNumberOfItemsPerSlot) {
-                     
+
                         hero.inventory[droppedSlotId].quantity += parseInt(UI.draggedInventoryObject.quantity);
                         // update visually:
                         var thisSlotElem = document.getElementById("slot" + droppedSlotId);
@@ -428,7 +433,6 @@ var UI = {
         }
     },
 
-
     slideDraggedSlotBack: function() {
         // slide it back visually - add a transition:
         UI.activeDragObject.style.cssText = "z-index:2;left: " + (objInitLeft) + "px; top: " + (objInitTop) + "px;transition: transform 0.4s ease;";
@@ -456,7 +460,43 @@ var UI = {
     },
 
     removeActiveDialogue: function() {
-         activeNPCForDialogue = '';
-         dialogue.removeEventListener(whichTransitionEvent, UI.removeActiveDialogue, false);
+        activeNPCForDialogue = '';
+        dialogue.removeEventListener(whichTransitionEvent, UI.removeActiveDialogue, false);
+    },
+
+    craftingPanelDoubleClick: function(e) {
+        var thisNode = e.target;
+        // find the id of the parent if actual dropped target doesn't have one:
+        while (!thisNode.id) {
+            thisNode = thisNode.parentNode;
+        }
+        if (thisNode.id.substring(0, 6) == "recipe") {
+            recipeSelectComponents(thisNode.id);
+        }
+    },
+
+    craftingPanelSingleClick: function(e) {
+
+
+        var thisNode = e.target;
+        // find the id of the parent if actual dropped target doesn't have one:
+        while (!thisNode.id) {
+            thisNode = thisNode.parentNode;
+        }
+        if (thisNode.id.substring(0, 6) == "recipe") {
+            if (UI.highlightedRecipe != "") {
+                document.getElementById(UI.highlightedRecipe).classList.remove('highlighted');
+            }
+            UI.highlightedRecipe = thisNode.id;
+            document.getElementById(UI.highlightedRecipe).classList.add('highlighted');
+            craftingRecipeCreateButton.classList.add("active");
+        }
+
+    },
+
+    craftingRecipeCreate: function() {
+        if (UI.highlightedRecipe != "") {
+            recipeSelectComponents(UI.highlightedRecipe);
+        }
     }
 }

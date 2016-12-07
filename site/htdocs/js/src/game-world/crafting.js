@@ -32,6 +32,16 @@ function recipeSearchAndFilter() {
     if(numberBeingShown == 0) {
 document.getElementById("noRecipesFound").classList.add('active');
     }
+    if (UI.highlightedRecipe != "") {
+    // check if the highlighted one is visible or not:
+   
+    if(!(document.getElementById(UI.highlightedRecipe).classList.contains('active'))) {
+
+document.getElementById(UI.highlightedRecipe).classList.remove('highlighted');
+craftingRecipeCreateButton.classList.remove("active");
+UI.highlightedRecipe = "";
+    }
+}
 }
 
 function recipeSearchInput() {
@@ -47,4 +57,9 @@ function recipeSearchClear() {
     recipeSearch.value = '';
     clearRecipeSearch.classList.remove("active");
     recipeSearchAndFilter();
+}
+
+function recipeSelectComponents(whichRecipe) {
+    var recipeId = whichRecipe.substring(6);
+console.log(recipeId);
 }

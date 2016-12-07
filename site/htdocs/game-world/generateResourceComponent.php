@@ -14,7 +14,7 @@ echo '<h1 style="font-style:italic;">var. '.$latinName.'</h1>';
 $totalLevels = 10;
 $baseMin = 100;
 $baseMax = 1000;
-$itemClassLevelMax = 3;
+$itemClassLevelMax = 4;
 
 for ($itemClassLevel=1;$itemClassLevel<=$itemClassLevelMax;$itemClassLevel++) {
 
