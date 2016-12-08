@@ -182,7 +182,13 @@ function additionalTooltipDetail(whichSlotID) {
     var tooltipInformationToAdd = "";
     if (currentActiveInventoryItems[hero.inventory[whichSlotID].type].action == "recipe") {
         // check if it's known already:
-        if (hero.recipesKnown.indexOf(parseInt(currentActiveInventoryItems[hero.inventory[whichSlotID].type].actionValue)) != -1) {
+        var isKnown = false;
+        for (var i=0; i<hero.recipesKnown.length;i++) {
+            if(hero.recipesKnown[i][0] == currentActiveInventoryItems[hero.inventory[whichSlotID].type].actionValue) {
+isKnown = true;
+            }
+        }
+        if (isKnown) {
             tooltipInformationToAdd += " (already known)";
         }
     }

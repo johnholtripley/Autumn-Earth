@@ -128,5 +128,5 @@
     "titlesEarned": [3,7],
     "activeTitle": 3,
     "professionsKnown": [0],
-    "recipesKnown": [0,1,2,3,10,11,7,6,12,13]
+    "recipesKnown": [[0,1],[1,1],[2,0],[3,0],[10,0],[11,0],[7,0],[6,0],[12,0],[13,0]]
 }
