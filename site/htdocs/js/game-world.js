@@ -259,7 +259,7 @@ document.getElementById("noRecipesFound").classList.add('active');
     if(!(document.getElementById(UI.highlightedRecipe).classList.contains('active'))) {
 
 document.getElementById(UI.highlightedRecipe).classList.remove('highlighted');
-craftingRecipeCreateButton.classList.remove("active");
+craftingRecipeCreateButton.disabled = true;
 UI.highlightedRecipe = "";
     }
 }
@@ -1520,7 +1520,7 @@ var UI = {
             recipeFilter.innerHTML = filterMarkup;
             currentRecipePanelProfession = whichProfession;
             UI.highlightedRecipe = "";
-            craftingRecipeCreateButton.classList.remove("active");
+            craftingRecipeCreateButton.disabled = true;
         }
     },
 
@@ -1769,7 +1769,7 @@ var thisNode = getNearestParentId(e.target);
             }
             UI.highlightedRecipe = thisNode.id;
             document.getElementById(UI.highlightedRecipe).classList.add('highlighted');
-            craftingRecipeCreateButton.classList.add("active");
+            craftingRecipeCreateButton.disabled = false;
         }
 
     },

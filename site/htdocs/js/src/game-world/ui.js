@@ -234,7 +234,7 @@ var UI = {
             recipeFilter.innerHTML = filterMarkup;
             currentRecipePanelProfession = whichProfession;
             UI.highlightedRecipe = "";
-            craftingRecipeCreateButton.classList.remove("active");
+            craftingRecipeCreateButton.disabled = true;
         }
     },
 
@@ -483,7 +483,7 @@ var thisNode = getNearestParentId(e.target);
             }
             UI.highlightedRecipe = thisNode.id;
             document.getElementById(UI.highlightedRecipe).classList.add('highlighted');
-            craftingRecipeCreateButton.classList.add("active");
+            craftingRecipeCreateButton.disabled = false;
         }
 
     },

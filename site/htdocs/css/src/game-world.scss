@@ -448,14 +448,17 @@ canvas {
 
 
 #craftingRecipeCreateButton {
-    background: #000;
+    
     @include transition(background 0.4s ease);
     color: #fff;
     border: 0;
-    cursor: default;
-    &.active {
+    
+   
         background: #682810;
         cursor: url(../images/game-world/cursors/active.gif) 3 3, auto;
+    &:disabled {
+        background: #000;
+        cursor: default;
     }
 }
 .visibleHide {

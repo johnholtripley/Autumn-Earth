@@ -38,7 +38,7 @@ document.getElementById("noRecipesFound").classList.add('active');
     if(!(document.getElementById(UI.highlightedRecipe).classList.contains('active'))) {
 
 document.getElementById(UI.highlightedRecipe).classList.remove('highlighted');
-craftingRecipeCreateButton.classList.remove("active");
+craftingRecipeCreateButton.disabled = true;
 UI.highlightedRecipe = "";
     }
 }
