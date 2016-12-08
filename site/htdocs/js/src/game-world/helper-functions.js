@@ -88,6 +88,16 @@ function accessDynamicVariable(variableToUse) {
 }
 
 
+function getNearestParentId(thisNode) {
+    // find the id of the parent if the passed in element doesn't have one:
+        while (!thisNode.id) {
+            thisNode = thisNode.parentNode;
+        }
+return thisNode;
+    }
+
+
+
  function getObjectKeysForInnerValue( testObject, value, attribute ) {
    // console.log("looking for "+value);
     // return an array of all keys in the object that have a value that match the one passed in

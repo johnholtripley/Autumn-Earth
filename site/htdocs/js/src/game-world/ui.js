@@ -59,7 +59,7 @@ var UI = {
         }
         document.getElementById('inventoryPanels').innerHTML = inventoryMarkup;
         document.getElementById('inventoryPanels').ondblclick = UI.inventoryItemDoubleClick;
-        UI.highlightedRecipe = "";
+        
         document.getElementById('createRecipeList').ondblclick = UI.craftingPanelDoubleClick;
         document.getElementById('createRecipeList').onclick = UI.craftingPanelSingleClick;
         document.getElementById('craftingRecipeCreateButton').onclick = UI.craftingRecipeCreate;
@@ -233,6 +233,8 @@ var UI = {
             }
             recipeFilter.innerHTML = filterMarkup;
             currentRecipePanelProfession = whichProfession;
+            UI.highlightedRecipe = "";
+            craftingRecipeCreateButton.classList.remove("active");
         }
     },
 
@@ -379,11 +381,7 @@ var UI = {
                 e.preventDefault();
                 // make sure it's not a right click:
                 if (e.button != 2) {
-                    var thisNode = e.target;
-                    // find the id of the parent if actual dragged target doesn't have one:
-                    while (!thisNode.id) {
-                        thisNode = thisNode.parentNode;
-                    }
+                    var thisNode = getNearestParentId(e.target);
                     // check if the shift key is pressed as well:
                     if (key[5]) {
                         UI.sourceSlot = thisNode.id.substring(4);
@@ -465,11 +463,7 @@ var UI = {
     },
 
     craftingPanelDoubleClick: function(e) {
-        var thisNode = e.target;
-        // find the id of the parent if actual dropped target doesn't have one:
-        while (!thisNode.id) {
-            thisNode = thisNode.parentNode;
-        }
+     var thisNode = getNearestParentId(e.target);
         if (thisNode.id.substring(0, 6) == "recipe") {
             recipeSelectComponents(thisNode.id);
         }
@@ -478,11 +472,11 @@ var UI = {
     craftingPanelSingleClick: function(e) {
 
 
-        var thisNode = e.target;
-        // find the id of the parent if actual dropped target doesn't have one:
-        while (!thisNode.id) {
-            thisNode = thisNode.parentNode;
-        }
+      
+    
+
+var thisNode = getNearestParentId(e.target);
+
         if (thisNode.id.substring(0, 6) == "recipe") {
             if (UI.highlightedRecipe != "") {
                 document.getElementById(UI.highlightedRecipe).classList.remove('highlighted');
