@@ -2079,13 +2079,9 @@ function findInventoryItemData() {
     var theseRecipeComponents;
     // find out all items in the hero's inventory:
     for (var arrkey in hero.inventory) {
-        if (hero.inventory.hasOwnProperty(arrkey)) {
-            //console.log(key + " -> " + hero.inventory[arrkey].type);
-            // make sure it's not already added:
-            if (itemIdsToGet.indexOf(hero.inventory[arrkey].type) == -1) {
-                itemIdsToGet.push(hero.inventory[arrkey].type);
-            }
-        }
+
+        itemIdsToGet.push(hero.inventory[arrkey].type);
+
     }
     // find bag items:
     for (var i = 0; i < hero.bags.length; i++) {
@@ -2102,19 +2098,22 @@ function findInventoryItemData() {
             itemIdsToGet.push(hero.crafting[i].recipes[(hero.crafting[i].filters['All'][j])].creates);
             // get components:
             theseRecipeComponents = hero.crafting[i].recipes[(hero.crafting[i].filters['All'][j])].components.split(",");
-            for (k=0;k<theseRecipeComponents.length;k++) {
-               
-if(!(isNaN(theseRecipeComponents[k]))) {
-itemIdsToGet.push(theseRecipeComponents[k]);
-}
+            for (k = 0; k < theseRecipeComponents.length; k++) {
+                if (!(isNaN(theseRecipeComponents[k]))) {
+                    itemIdsToGet.push(theseRecipeComponents[k]);
+                }
             }
         }
     }
 
     // find item available in any shops:
     // ####
+
+// remove duplicates:
+    itemIdsToGet = uniqueValues(itemIdsToGet);
     loadInventoryItemData(itemIdsToGet.join("|"));
 }
+
 
 
 
