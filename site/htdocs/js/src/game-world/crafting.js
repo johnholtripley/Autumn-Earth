@@ -66,6 +66,22 @@ function recipeSelectComponents(whichRecipe) {
 var thisRecipe = hero.crafting[currentRecipePanelProfession].recipes[recipeId];
 
 var beingCreatedMarkup = '<img src="/images/game-world/inventory-items/' + thisRecipe.imageId + '.png" alt="' + thisRecipe.recipeName + '"><h3>' + thisRecipe.recipeName + '</h3><p>' + thisRecipe.recipeDescription + '</p>';
+
+beingCreatedMarkup += '<h4>Requires:</h4>';
+
+
+var componentsRequired = thisRecipe.components.split(",");
+beingCreatedMarkup += '<ul>';
+for (var i=0;i<componentsRequired.length;i++) {
+    if(!(isNaN(componentsRequired[i]))) {
+// specific item:
+beingCreatedMarkup += '<li><img src="/images/game-world/inventory-items/' + componentsRequired[i] + '.png" alt="' + currentActiveInventoryItems[componentsRequired[i]].shortname + '">'+currentActiveInventoryItems[componentsRequired[i]].shortname+'</li>';
+    } else {
+        // item group:
+beingCreatedMarkup += '<li>'+componentsRequired[i]+'</li>';
+}
+}
+beingCreatedMarkup += '</ul>';
 selectComponentsItemBeingCreated.innerHTML = beingCreatedMarkup;
 
 

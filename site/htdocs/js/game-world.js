@@ -287,6 +287,22 @@ function recipeSelectComponents(whichRecipe) {
 var thisRecipe = hero.crafting[currentRecipePanelProfession].recipes[recipeId];
 
 var beingCreatedMarkup = '<img src="/images/game-world/inventory-items/' + thisRecipe.imageId + '.png" alt="' + thisRecipe.recipeName + '"><h3>' + thisRecipe.recipeName + '</h3><p>' + thisRecipe.recipeDescription + '</p>';
+
+beingCreatedMarkup += '<h4>Requires:</h4>';
+
+
+var componentsRequired = thisRecipe.components.split(",");
+beingCreatedMarkup += '<ul>';
+for (var i=0;i<componentsRequired.length;i++) {
+    if(!(isNaN(componentsRequired[i]))) {
+// specific item:
+beingCreatedMarkup += '<li><img src="/images/game-world/inventory-items/' + componentsRequired[i] + '.png" alt="' + currentActiveInventoryItems[componentsRequired[i]].shortname + '">'+currentActiveInventoryItems[componentsRequired[i]].shortname+'</li>';
+    } else {
+        // item group:
+beingCreatedMarkup += '<li>'+componentsRequired[i]+'</li>';
+}
+}
+beingCreatedMarkup += '</ul>';
 selectComponentsItemBeingCreated.innerHTML = beingCreatedMarkup;
 
 
@@ -1900,7 +1916,7 @@ function loadMapJSON(mapFilePath) {
              cartographicTitle.innerHTML = thisMapData.zoneName;
         }
        initCartographicMap();
-        findInventoryItemData();
+        findProfessionsAndRecipes();
 
     }, function(status) {
         // alert('Error loading data for map #' + currentMap+" --- "+mapFilePath);
@@ -2045,10 +2061,10 @@ function loadProfessionsAndRecipes(recipeIdsToLoad) {
     getJSON("/game-world/getProfessionsAndRecipes.php?whichIds=" + recipeIdsToLoad, function(data) {
 
         hero.crafting = data.professions;
-        if (!inventoryInterfaceIsBuilt) {
-            UI.buildInventoryInterface();
-        }
-        loadMapAssets();
+
+findInventoryItemData();
+
+       
     }, function(status) {
         // try again:
         loadProfessionsAndRecipes(recipeIdsToLoad);
@@ -2060,6 +2076,7 @@ function loadProfessionsAndRecipes(recipeIdsToLoad) {
 
 function findInventoryItemData() {
     var itemIdsToGet = [];
+    var theseRecipeComponents;
     // find out all items in the hero's inventory:
     for (var arrkey in hero.inventory) {
         if (hero.inventory.hasOwnProperty(arrkey)) {
@@ -2078,6 +2095,21 @@ function findInventoryItemData() {
     for (var i = 0; i < thisMapData.items.length; i++) {
         itemIdsToGet.push(thisMapData.items[i].type);
     }
+    // find items in recipes:
+    for (var i in hero.crafting) {
+        for (var j in hero.crafting[i].filters['All']) {
+            // get what's created:
+            itemIdsToGet.push(hero.crafting[i].recipes[(hero.crafting[i].filters['All'][j])].creates);
+            // get components:
+            theseRecipeComponents = hero.crafting[i].recipes[(hero.crafting[i].filters['All'][j])].components.split(",");
+            for (k=0;k<theseRecipeComponents.length;k++) {
+               
+if(!(isNaN(theseRecipeComponents[k]))) {
+itemIdsToGet.push(theseRecipeComponents[k]);
+}
+            }
+        }
+    }
 
     // find item available in any shops:
     // ####
@@ -2086,11 +2118,16 @@ function findInventoryItemData() {
 
 
 
+
 function loadInventoryItemData(itemIdsToLoad) {
     getJSON("/game-world/getInventoryItems.php?whichIds=" + itemIdsToLoad, function(data) {
         currentActiveInventoryItems = data;
     
-        findProfessionsAndRecipes();
+
+         if (!inventoryInterfaceIsBuilt) {
+            UI.buildInventoryInterface();
+        }
+        loadMapAssets();
     }, function(status) {
         // try again:
         loadInventoryItemData(itemIdsToLoad);

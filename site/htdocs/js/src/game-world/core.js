@@ -104,7 +104,7 @@ function loadMapJSON(mapFilePath) {
              cartographicTitle.innerHTML = thisMapData.zoneName;
         }
        initCartographicMap();
-        findInventoryItemData();
+        findProfessionsAndRecipes();
 
     }, function(status) {
         // alert('Error loading data for map #' + currentMap+" --- "+mapFilePath);
@@ -249,10 +249,10 @@ function loadProfessionsAndRecipes(recipeIdsToLoad) {
     getJSON("/game-world/getProfessionsAndRecipes.php?whichIds=" + recipeIdsToLoad, function(data) {
 
         hero.crafting = data.professions;
-        if (!inventoryInterfaceIsBuilt) {
-            UI.buildInventoryInterface();
-        }
-        loadMapAssets();
+
+findInventoryItemData();
+
+       
     }, function(status) {
         // try again:
         loadProfessionsAndRecipes(recipeIdsToLoad);
@@ -264,6 +264,7 @@ function loadProfessionsAndRecipes(recipeIdsToLoad) {
 
 function findInventoryItemData() {
     var itemIdsToGet = [];
+    var theseRecipeComponents;
     // find out all items in the hero's inventory:
     for (var arrkey in hero.inventory) {
         if (hero.inventory.hasOwnProperty(arrkey)) {
@@ -282,6 +283,21 @@ function findInventoryItemData() {
     for (var i = 0; i < thisMapData.items.length; i++) {
         itemIdsToGet.push(thisMapData.items[i].type);
     }
+    // find items in recipes:
+    for (var i in hero.crafting) {
+        for (var j in hero.crafting[i].filters['All']) {
+            // get what's created:
+            itemIdsToGet.push(hero.crafting[i].recipes[(hero.crafting[i].filters['All'][j])].creates);
+            // get components:
+            theseRecipeComponents = hero.crafting[i].recipes[(hero.crafting[i].filters['All'][j])].components.split(",");
+            for (k=0;k<theseRecipeComponents.length;k++) {
+               
+if(!(isNaN(theseRecipeComponents[k]))) {
+itemIdsToGet.push(theseRecipeComponents[k]);
+}
+            }
+        }
+    }
 
     // find item available in any shops:
     // ####
@@ -290,11 +306,16 @@ function findInventoryItemData() {
 
 
 
+
 function loadInventoryItemData(itemIdsToLoad) {
     getJSON("/game-world/getInventoryItems.php?whichIds=" + itemIdsToLoad, function(data) {
         currentActiveInventoryItems = data;
     
-        findProfessionsAndRecipes();
+
+         if (!inventoryInterfaceIsBuilt) {
+            UI.buildInventoryInterface();
+        }
+        loadMapAssets();
     }, function(status) {
         // try again:
         loadInventoryItemData(itemIdsToLoad);
