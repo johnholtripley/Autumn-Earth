@@ -282,7 +282,14 @@ function recipeSearchClear() {
 
 function recipeSelectComponents(whichRecipe) {
     var recipeId = whichRecipe.substring(6);
-console.log(recipeId);
+
+
+var thisRecipe = hero.crafting[currentRecipePanelProfession].recipes[recipeId];
+
+var beingCreatedMarkup = '<img src="/images/game-world/inventory-items/' + thisRecipe.imageId + '.png" alt="' + thisRecipe.recipeName + '"><h3>' + thisRecipe.recipeName + '</h3><p>' + thisRecipe.recipeDescription + '</p>';
+selectComponentsItemBeingCreated.innerHTML = beingCreatedMarkup;
+
+
 }
 
 // find tile from coords:
@@ -1297,6 +1304,7 @@ var recipeFilter = document.getElementById('recipeFilter');
 var splitStackInput = document.getElementById('splitStackInput');
 var splitStackPanel = document.getElementById('splitStackPanel');
 var craftingRecipeCreateButton = document.getElementById('craftingRecipeCreateButton');
+var selectComponentsItemBeingCreated = document.getElementById('selectComponentsItemBeingCreated');
 var UI = {
     init: function() {
         // cache all local references to UI elements:
@@ -1615,7 +1623,6 @@ var UI = {
                         UI.slideDraggedSlotBack();
                     }
                 } else {
-                    console.log("no match");
                     // otherwise slide it back
                     UI.slideDraggedSlotBack();
                 }

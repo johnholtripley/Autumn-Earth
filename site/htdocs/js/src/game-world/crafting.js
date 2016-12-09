@@ -61,5 +61,12 @@ function recipeSearchClear() {
 
 function recipeSelectComponents(whichRecipe) {
     var recipeId = whichRecipe.substring(6);
-console.log(recipeId);
+
+
+var thisRecipe = hero.crafting[currentRecipePanelProfession].recipes[recipeId];
+
+var beingCreatedMarkup = '<img src="/images/game-world/inventory-items/' + thisRecipe.imageId + '.png" alt="' + thisRecipe.recipeName + '"><h3>' + thisRecipe.recipeName + '</h3><p>' + thisRecipe.recipeDescription + '</p>';
+selectComponentsItemBeingCreated.innerHTML = beingCreatedMarkup;
+
+
 }

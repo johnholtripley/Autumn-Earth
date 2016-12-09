@@ -41,9 +41,13 @@
 <div id="recipeSearchWrapper"><label for="recipeSearch" class="visibleHide">Search for recipes</label><input id="recipeSearch" type="text" placeholder="Search"><button id="clearRecipeSearch"><span>Clear search</span></button></div><label for="recipeFilter" class="visibleHide">Filter by:</label><div class="selectWrapper"><select id="recipeFilter"><option>All</option></select></div>
 <ul id="createRecipeList">
 </ul>
-
 <button id="craftingRecipeCreateButton" disabled="disabled">Create</button>
 </div>
+<div id="craftingSelectComponentsPanel">
+<div id="selectComponentsItemBeingCreated"></div>
+</div>
+
+
 <div id="boosterPack">
 <ol>
 

@@ -5,6 +5,7 @@ var recipeFilter = document.getElementById('recipeFilter');
 var splitStackInput = document.getElementById('splitStackInput');
 var splitStackPanel = document.getElementById('splitStackPanel');
 var craftingRecipeCreateButton = document.getElementById('craftingRecipeCreateButton');
+var selectComponentsItemBeingCreated = document.getElementById('selectComponentsItemBeingCreated');
 var UI = {
     init: function() {
         // cache all local references to UI elements:
@@ -323,7 +324,6 @@ var UI = {
                         UI.slideDraggedSlotBack();
                     }
                 } else {
-                    console.log("no match");
                     // otherwise slide it back
                     UI.slideDraggedSlotBack();
                 }
