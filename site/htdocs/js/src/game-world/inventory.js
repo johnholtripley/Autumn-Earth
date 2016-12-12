@@ -173,6 +173,10 @@ function inventoryItemAction(whichSlot, whichAction, whichActionValue) {
             learnRecipe(whichActionValue);
             // remove the 'slot' prefix with the substring(4):
             removeFromInventory(whichSlot.parentElement.id.substring(4), 1);
+            break;
+            case "craft":
+            UI.populateRecipeList(whichActionValue);
+            break;
     }
 }
 

@@ -81,6 +81,8 @@ while ($colourRow = mysql_fetch_array($colourResult)) {
 
 $outputJson = '{"professions": {';
 
+
+
 $whichIds = '';
 if(isset($_GET["whichIds"]));
 $whichIds = $_GET["whichIds"];
@@ -141,11 +143,12 @@ foreach ($professionsKeys as $value) {
 $outputJson = rtrim($outputJson, ",");
 $outputJson .= ']';
 $outputJson .= '},';
-}
+} 
 $thisRecipeOrder = [];
 $thisProfessionsFilters = [];
 
-$outputJson .= '"'.$profession.'": { "recipes": {';
+$outputJson .= '"'.$profession.'": { "name": "'.$professionName.'", ';
+$outputJson .= '"recipes": {';
 $thisProfession = $profession;
     }
 	

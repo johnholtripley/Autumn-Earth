@@ -1196,6 +1196,10 @@ function inventoryItemAction(whichSlot, whichAction, whichActionValue) {
             learnRecipe(whichActionValue);
             // remove the 'slot' prefix with the substring(4):
             removeFromInventory(whichSlot.parentElement.id.substring(4), 1);
+            break;
+            case "craft":
+            UI.populateRecipeList(whichActionValue);
+            break;
     }
 }
 
@@ -1333,6 +1337,7 @@ var UI = {
         var cardAlbumList = document.getElementById('cardAlbumList');
         var boosterPack = document.getElementById('boosterPack');
         var createRecipeList = document.getElementById('createRecipeList');
+        var recipeTitleBar = document.getElementById('recipeTitleBar');
 
         //
 
@@ -1551,6 +1556,7 @@ var UI = {
             currentRecipePanelProfession = whichProfession;
             UI.highlightedRecipe = "";
             craftingRecipeCreateButton.disabled = true;
+            recipeTitleBar.innerHTML = hero.crafting[whichProfession].name + ' Recipes';
         }
     },
 
@@ -2047,24 +2053,20 @@ function getQuestDetails() {
 
 function findProfessionsAndRecipes() {
     var recipeIdsToGet = "";
-
-for (var i=0;i<hero.recipesKnown.length;i++) {
-recipeIdsToGet += hero.recipesKnown[i][0]+"|";
-}
-// remove final pipe:
-recipeIdsToGet = recipeIdsToGet.slice(0, -1);
+    for (var i = 0; i < hero.recipesKnown.length; i++) {
+        recipeIdsToGet += hero.recipesKnown[i][0] + "|";
+    }
+    // remove final pipe:
+    recipeIdsToGet = recipeIdsToGet.slice(0, -1);
     loadProfessionsAndRecipes(recipeIdsToGet);
 }
 
 
+
 function loadProfessionsAndRecipes(recipeIdsToLoad) {
     getJSON("/game-world/getProfessionsAndRecipes.php?whichIds=" + recipeIdsToLoad, function(data) {
-
         hero.crafting = data.professions;
-
-findInventoryItemData();
-
-       
+        findInventoryItemData();
     }, function(status) {
         // try again:
         loadProfessionsAndRecipes(recipeIdsToLoad);
@@ -2074,14 +2076,13 @@ findInventoryItemData();
 
 
 
+
 function findInventoryItemData() {
     var itemIdsToGet = [];
     var theseRecipeComponents;
     // find out all items in the hero's inventory:
     for (var arrkey in hero.inventory) {
-
         itemIdsToGet.push(hero.inventory[arrkey].type);
-
     }
     // find bag items:
     for (var i = 0; i < hero.bags.length; i++) {
@@ -2109,7 +2110,7 @@ function findInventoryItemData() {
     // find item available in any shops:
     // ####
 
-// remove duplicates:
+    // remove duplicates:
     itemIdsToGet = uniqueValues(itemIdsToGet);
     loadInventoryItemData(itemIdsToGet.join("|"));
 }
@@ -2121,8 +2122,6 @@ function findInventoryItemData() {
 function loadInventoryItemData(itemIdsToLoad) {
     getJSON("/game-world/getInventoryItems.php?whichIds=" + itemIdsToLoad, function(data) {
         currentActiveInventoryItems = data;
-    
-
          if (!inventoryInterfaceIsBuilt) {
             UI.buildInventoryInterface();
         }
@@ -2156,9 +2155,7 @@ function prepareGame() {
     for (var i = 0; i < thisMapData.npcs.length; i++) {
         thisMapData.npcs[i].x = getTileCentreCoordX(thisMapData.npcs[i].tileX);
         thisMapData.npcs[i].y = getTileCentreCoordY(thisMapData.npcs[i].tileY);
-
 thisMapData.npcs[i].drawnFacing = thisMapData.npcs[i].facing;
-
         thisMapData.npcs[i].dx = 0;
         thisMapData.npcs[i].dy = 0;
         // set index to -1 so when it increases, it'll pick up the first (0) element:
@@ -2175,7 +2172,6 @@ thisMapData.npcs[i].drawnFacing = thisMapData.npcs[i].facing;
         thisMapData.items[i].centreX = currentActiveInventoryItems[thisMapData.items[i].type].centreX;
         thisMapData.items[i].centreY = currentActiveInventoryItems[thisMapData.items[i].type].centreY;
     }
-
 activeNPCForDialogue = '';
     // determine tile offset to centre the hero in the centre
     hero.x = getTileCentreCoordX(hero.tileX);
@@ -2193,8 +2189,6 @@ activeNPCForDialogue = '';
     currentAnimationFrame = 0;
     mapTransition = "in";
     mapTransitionCurrentFrames = 1;
-
-
 
     gameMode = "play";
 }
@@ -2220,8 +2214,9 @@ function removeMapAssets() {
 
 function loadingProgress() {
     // make this graphical where appropriate ####
-  //  console.log("loading - " + Loader.getProgress());
+    //  console.log("loading - " + Loader.getProgress());
 }
+
 
 function changeMaps(doorX, doorY) {
     previousZoneName = thisMapData.zoneName;
@@ -2368,7 +2363,6 @@ function gameLoop() {
             //
             break;
             case "cardGame":
-            
             cardGameNameSpace.update();
             cardGameNameSpace.draw();
             break;
@@ -2379,6 +2373,8 @@ function gameLoop() {
     }
     window.requestAnimationFrame(gameLoop);
 }
+
+
 function update() {
     var now = window.performance.now();
     var elapsed = (now - lastTime);
@@ -2477,22 +2473,16 @@ function heroIsInNewTile() {
     }
     var thisHotspot;
     // check for hotspots:
-    for (var i=0; i<thisMapData.hotspots.length; i++) {
-       thisHotspot = thisMapData.hotspots[i];
-       if(isInRange(hero.x, hero.y, getTileCentreCoordX(thisHotspot.centreX), getTileCentreCoordY(thisHotspot.centreY), thisHotspot.radius * tileW)) {
-        if(questData[thisHotspot.quest].hasBeenActivated < 1) {
-UI.showNotification("<p>"+thisHotspot.message+"</p>");
+    for (var i = 0; i < thisMapData.hotspots.length; i++) {
+        thisHotspot = thisMapData.hotspots[i];
+        if (isInRange(hero.x, hero.y, getTileCentreCoordX(thisHotspot.centreX), getTileCentreCoordY(thisHotspot.centreY), thisHotspot.radius * tileW)) {
+            if (questData[thisHotspot.quest].hasBeenActivated < 1) {
+                UI.showNotification("<p>" + thisHotspot.message + "</p>");
+            }
+            questData[thisHotspot.quest].hasBeenActivated = 1;
         }
-questData[thisHotspot.quest].hasBeenActivated = 1;
-       }
     }
 }
-
-
-
-
-
-
 
 
 function checkForActions() {
@@ -2507,13 +2497,9 @@ function checkForActions() {
                     case "static":
                         // can't interact with it - do nothing
                         break;
-
-
                     case "questToggle":
                         // toggle value: (1 or 0)
                         questData[actionValue].hasBeenActivated = Math.abs(questData[actionValue].hasBeenActivated - 1);
-
-
                         break;
                     case "questSet":
                         questData[actionValue].hasBeenActivated = 1;
@@ -2521,12 +2507,9 @@ function checkForActions() {
                     case "questUnset":
                         questData[actionValue].hasBeenActivated = 0;
                         break;
-
                     default:
                         // try and pick it up:
-
                         inventoryCheck = canAddItemToInventory([thisMapData.items[i]]);
-
                         if (inventoryCheck[0]) {
                             // remove from map:
                             thisMapData.items.splice(i, 1);
@@ -2653,21 +2636,14 @@ function processSpeech(thisNPC, thisSpeech, thisSpeechCode, isPartOfNPCsNormalSp
                             break;
                         case "multi":
                             var allSubQuestsRequired = questData[questId].subQuestsRequiredForCompletion.split(",");
-                      
                             var allSubQuestsComplete = true;
                             for (var k = 0; k < allSubQuestsRequired.length; k++) {
                                 // check conditions for this sub-quest and set if it's complete ###############
-
-
                                 switch (questData[allSubQuestsRequired[k]].whatIsRequiredForCompletion) {
                                     case "possess":
                                     case "give":
                                     case "":
-
-
-
                                         var theseItemsNeededForCompletion = questData[allSubQuestsRequired[k]].itemsNeededForCompletion;
-
                                         var itemsToGive = questData[allSubQuestsRequired[k]].startItemsReceived.split(",");
                                         var allItemsToGive = [];
                                         for (var j = 0; j < itemsToGive.length; j++) {
@@ -2685,44 +2661,30 @@ function processSpeech(thisNPC, thisSpeech, thisSpeechCode, isPartOfNPCsNormalSp
                                                 allSubQuestsComplete = false;
                                             }
                                         }
-
-
-
                                         break;
                                     case "world":
-                                        
                                         if (questData[allSubQuestsRequired[k]].hasBeenActivated < 1) {
                                             allSubQuestsComplete = false;
-
                                         }
                                         break;
                                     default:
                                         // threshold quest:
-                                   
                                         var thresholdValueAtStart = questData[allSubQuestsRequired[k]].valueAtQuestStart;
                                         var currentThresholdValue = accessDynamicVariable(questData[allSubQuestsRequired[k]].whatIsRequiredForCompletion);
-  
                                         // check if it's an absolute value to check for, or an increment (whether there is a '+' at the start):
                                         if (questData[allSubQuestsRequired[k]].thresholdNeededForCompletion.charAt(0) == "+") {
-                                            console.log(currentThresholdValue + " < "+questData[allSubQuestsRequired[k]].thresholdNeededForCompletion.substring(1));
-                                           if (currentThresholdValue - thresholdValueAtStart < questData[allSubQuestsRequired[k]].thresholdNeededForCompletion) {
+                                            console.log(currentThresholdValue + " < " + questData[allSubQuestsRequired[k]].thresholdNeededForCompletion.substring(1));
+                                            if (currentThresholdValue - thresholdValueAtStart < questData[allSubQuestsRequired[k]].thresholdNeededForCompletion) {
                                                 allSubQuestsComplete = false;
                                             }
                                         } else {
-                                           
-                                            
-                                             if (currentThresholdValue < questData[allSubQuestsRequired[k]].thresholdNeededForCompletion.substring(1)) {
+                                            if (currentThresholdValue < questData[allSubQuestsRequired[k]].thresholdNeededForCompletion.substring(1)) {
                                                 allSubQuestsComplete = false;
                                             }
                                         }
-
                                         break;
                                 }
-
-
-
                             }
-                            console.log("allSubQuestsComplete: "+allSubQuestsComplete);
                             if (allSubQuestsComplete) {
                                 thisSpeech = questSpeech[2];
                                 closeQuest(thisNPC, questId);
@@ -2751,8 +2713,7 @@ function processSpeech(thisNPC, thisSpeech, thisSpeechCode, isPartOfNPCsNormalSp
                             var thisQuestIsComplete = false;
                             // check if it's an absolute value to check for, or an increment (whether there is a '+' at the start):
                             if (questData[questId].thresholdNeededForCompletion.charAt(0) == "+") {
-                               
-                                 if (currentThresholdValue - thresholdValueAtStart >= questData[questId].thresholdNeededForCompletion) {
+                                if (currentThresholdValue - thresholdValueAtStart >= questData[questId].thresholdNeededForCompletion) {
                                     thisQuestIsComplete = true;
                                 }
                             } else {
@@ -2844,7 +2805,6 @@ function processSpeech(thisNPC, thisSpeech, thisSpeechCode, isPartOfNPCsNormalSp
                                         }
                                         questData[allSubQuestsRequired[k]].isUnderway = true;
                                     }
-
                                     break;
                                 case "world":
                                     // ###

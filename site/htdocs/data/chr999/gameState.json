@@ -116,6 +116,32 @@
             "enchanted": 0,
             "hallmark": 0,
             "inscription": ""
+        },
+        "1-5": {
+            "type": 30,
+            "quantity": 1,
+            "quality": 100,
+            "durability": 100,
+            "currentWear": 0,
+            "effectiveness": 100,
+            "wrapped": 0,
+            "colour": 0,
+            "enchanted": 0,
+            "hallmark": 0,
+            "inscription": ""
+        },
+        "1-6": {
+            "type": 13,
+            "quantity": 1,
+            "quality": 100,
+            "durability": 100,
+            "currentWear": 0,
+            "effectiveness": 100,
+            "wrapped": 0,
+            "colour": 0,
+            "enchanted": 0,
+            "hallmark": 0,
+            "inscription": ""
         }
     },
     "cards": [6, 5, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4],

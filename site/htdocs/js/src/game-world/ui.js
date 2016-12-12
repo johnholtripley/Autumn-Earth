@@ -18,6 +18,7 @@ var UI = {
         var cardAlbumList = document.getElementById('cardAlbumList');
         var boosterPack = document.getElementById('boosterPack');
         var createRecipeList = document.getElementById('createRecipeList');
+        var recipeTitleBar = document.getElementById('recipeTitleBar');
 
         //
 
@@ -236,6 +237,7 @@ var UI = {
             currentRecipePanelProfession = whichProfession;
             UI.highlightedRecipe = "";
             craftingRecipeCreateButton.disabled = true;
+            recipeTitleBar.innerHTML = hero.crafting[whichProfession].name + ' Recipes';
         }
     },
 

@@ -562,6 +562,7 @@ function formatCurrency( $totalamount ) {
 	return $moneystring;
 }
 //
+/*
 function writeFlash( $Fwidth, $Fheight, $Fpath, $Faltimage, $Falttext, $Fobjectname ) {
 	// write flash with noscript and call JS to avoid IE activex issues
 	echo '<script type="text/javascript">'."\n";
@@ -577,7 +578,9 @@ function writeFlash( $Fwidth, $Fheight, $Fpath, $Faltimage, $Falttext, $Fobjectn
 	echo '</object>'."\n";
 	echo '</noscript>'."\n";
 }
+*/
 //
+/*
 function validHexColour( $hexvalue ) {
 	// regex to check valid hex values (could be 3 values eg. fff)
 	// '#' has already been checked for and removed
@@ -588,6 +591,7 @@ function validHexColour( $hexvalue ) {
 		return true;
 	}
 }
+*/
 //
 function cleanURL( $string ) {
 
