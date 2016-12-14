@@ -86,8 +86,8 @@ if($useSepia) {
  // imagefilter($fullImage, IMG_FILTER_EDGEDETECT);
   //imagefilter($fullImage, IMG_FILTER_NEGATE);
   imagefilter($fullImage, IMG_FILTER_GRAYSCALE);
-imagefilter($fullImage, IMG_FILTER_COLORIZE, 148, 77, 14);
-
+imagefilter($fullImage, IMG_FILTER_COLORIZE, 108, 77, 14);
+imagefilter($fullImage, IMG_FILTER_CONTRAST, -40);
 imagelayereffect($fullImage, IMG_EFFECT_OVERLAY);
  imagesettile($fullImage, $pencilSketchTile);
  imagefilledrectangle($fullImage, 0, 0, imagesx($bgImage), imagesy($bgImage), IMG_COLOR_TILED);
