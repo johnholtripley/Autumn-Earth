@@ -83,8 +83,11 @@ for ( $i = 0; $i < $mapTilesX; $i++) {
 
 if($useSepia) {
   // http://www.phpied.com/image-fun-with-php-part-2/
+  imagefilter($fullImage, IMG_FILTER_EDGEDETECT);
+  //imagefilter($fullImage, IMG_FILTER_NEGATE);
   imagefilter($fullImage, IMG_FILTER_GRAYSCALE);
-imagefilter($fullImage, IMG_FILTER_COLORIZE, 100, 50, 0);
+imagefilter($fullImage, IMG_FILTER_COLORIZE, 148, 77, 14);
+
 }
 
 
