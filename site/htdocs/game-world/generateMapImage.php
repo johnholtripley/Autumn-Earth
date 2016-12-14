@@ -46,7 +46,7 @@ $fullImage = imagecreatetruecolor(imagesx($bgImage), imagesy($bgImage));
 
 imagecopy ( $fullImage, $bgImage, 0, 0, 0, 0, imagesx($bgImage), imagesy($bgImage) );
 
-    
+    $pencilSketchTile = imagecreatefromjpeg("../images/cartography/tile-sketch.jpg");
 
 $jsonData = json_decode($json, true);
 
@@ -83,11 +83,15 @@ for ( $i = 0; $i < $mapTilesX; $i++) {
 
 if($useSepia) {
   // http://www.phpied.com/image-fun-with-php-part-2/
-  imagefilter($fullImage, IMG_FILTER_EDGEDETECT);
+ // imagefilter($fullImage, IMG_FILTER_EDGEDETECT);
   //imagefilter($fullImage, IMG_FILTER_NEGATE);
   imagefilter($fullImage, IMG_FILTER_GRAYSCALE);
 imagefilter($fullImage, IMG_FILTER_COLORIZE, 148, 77, 14);
 
+imagelayereffect($fullImage, IMG_EFFECT_OVERLAY);
+ imagesettile($fullImage, $pencilSketchTile);
+ imagefilledrectangle($fullImage, 0, 0, imagesx($bgImage), imagesy($bgImage), IMG_COLOR_TILED);
+ 
 }
 
 
@@ -96,6 +100,7 @@ imagejpeg($fullImage, NULL, 90);
 
 imagedestroy($bgImage);
 imagedestroy($fullImage);
+imagedestroy($pencilSketchTile);
 for ($i=0;$i<count($jsonData["map"]["graphics"]);$i++) {
 imagedestroy(${'assetImg'.$i});
   }
