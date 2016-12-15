@@ -41,6 +41,7 @@ $outputJson .= '"dyeable":"'.$dyeable.'",';
 $outputJson .= '"level":"'.$level.'",';
 $outputJson .= '"prerequisites":"'.$prerequisites.'",';
 $outputJson .= '"group":"'.$itemGroup.'",';
+$outputJson .= '"category":"'.$itemCategories.'",';
 $outputJson .= '"inscribable":"'.$inscribable.'",';
 $outputJson .= '"colour":"'.$colour.'",';
 $outputJson .= '"hasInherentColour":"'.$hasInherentColour.'"';

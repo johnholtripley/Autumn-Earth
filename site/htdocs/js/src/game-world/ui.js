@@ -6,6 +6,7 @@ var splitStackInput = document.getElementById('splitStackInput');
 var splitStackPanel = document.getElementById('splitStackPanel');
 var craftingRecipeCreateButton = document.getElementById('craftingRecipeCreateButton');
 var selectComponentsItemBeingCreated = document.getElementById('selectComponentsItemBeingCreated');
+var componentsAvailableForThisRecipe = document.getElementById('componentsAvailableForThisRecipe');
 var UI = {
     init: function() {
         // cache all local references to UI elements:

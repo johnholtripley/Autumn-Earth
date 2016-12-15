@@ -26,16 +26,16 @@ If you hear text, you have a chance of calling saySomething(with the overheard t
 saySomething(text):
 if the passed in text has any of the following words: food, eat, gold, any of the city names, any of the virtue names, any of the major fictional character names like British or Blackthorn, words related to combat, words related to gameplay
 pick from the following list of other words: kill, eat, no afraid, scared, attack, hunt, ugly, puny, hate, love, etc.
-Build words up to sentence length. If random chance hits, insert one of the list of words instead, or one of the overheard words. End the sentence with a bit of punctuation: ? ! . or … (and capitalize sentences appropriately).
+Build words up to sentence length. If random chance hits, insert one of the list of words instead, or one of the overheard words. End the sentence with a bit of punctuation: ? ! . or â€¦ (and capitalize sentences appropriately).
 Building words: grab random syllables from your syllable list, up to the word length.
-This meant, of course, that if you were near a wisp, and happened to say the word “moongate,” the wisp might respond with “Zthgtts zzkzyz moongate? Yjjkkjwh virtue shrine.”
+This meant, of course, that if you were near a wisp, and happened to say the word â€œmoongate,â€ the wisp might respond with â€œZthgtts zzkzyz moongate? Yjjkkjwh virtue shrine.â€
 ---------------------
 */
 
 
 // need trigger words to include in output to refer to what the player said
 
-$textToAnalyse = strtolower("Tail lîn danner vain erin iúriel hi enni. Lebid lîn edrannel gaded i hír rhíw. Rainc nín aníranner ennas le hebed ar ethiriannel. Mi naergon hen garant nen.");
+$textToAnalyse = strtolower("Tail lÃ®n danner vain erin iÃºriel hi enni. Lebid lÃ®n edrannel gaded i hÃ®r rhÃ®w. Rainc nÃ®n anÃ­ranner ennas le hebed ar ethiriannel. Mi naergon hen garant nen.");
 $textToAnalyse .=" ";
 
 $ignoreList= array(".",",",":",";","\"","'","(",")","!","?", " ", "-");
@@ -142,17 +142,8 @@ $output .= " ";
 
 
 }
-?>
-<!doctype html>
-<html lang="en-gb">
-<head>
-<meta charset="utf-8">
-</head>
-<body>
-<?php
+
 echo $output;
 
 
 ?>
-</body>
-</html>

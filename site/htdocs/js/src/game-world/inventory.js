@@ -90,6 +90,28 @@ function hasItemInInventory(itemType, amountNeeded) {
 }
 
 
+function findSlotItemIdInInventory(itemType) {
+    var slotsFound = [];
+    for (var key in hero.inventory) {
+        if (hero.inventory[key].type == itemType) {
+            slotsFound.push(key);
+        }
+    }
+    return slotsFound;
+}
+
+function hasItemTypeInInventory(itemGroupType) {
+    var slotsFound = [];
+    for (var key in hero.inventory) {
+        if (currentActiveInventoryItems[hero.inventory[key].type].group == itemGroupType) {
+            slotsFound.push(key);
+        }
+    }
+    return slotsFound;
+}
+
+
+
 function removeItemTypeFromInventory(itemType, amount) {
     var quantityStillToRemove = amount;
     var quantityAvailableOnThisSlot;

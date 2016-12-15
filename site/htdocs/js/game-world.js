@@ -250,19 +250,19 @@ function recipeSearchAndFilter() {
             numberBeingShown++;
         }
     }
-    if(numberBeingShown == 0) {
-document.getElementById("noRecipesFound").classList.add('active');
+    if (numberBeingShown == 0) {
+        document.getElementById("noRecipesFound").classList.add('active');
     }
     if (UI.highlightedRecipe != "") {
-    // check if the highlighted one is visible or not:
-   
-    if(!(document.getElementById(UI.highlightedRecipe).classList.contains('active'))) {
+        // check if the highlighted one is visible or not:
 
-document.getElementById(UI.highlightedRecipe).classList.remove('highlighted');
-craftingRecipeCreateButton.disabled = true;
-UI.highlightedRecipe = "";
+        if (!(document.getElementById(UI.highlightedRecipe).classList.contains('active'))) {
+
+            document.getElementById(UI.highlightedRecipe).classList.remove('highlighted');
+            craftingRecipeCreateButton.disabled = true;
+            UI.highlightedRecipe = "";
+        }
     }
-}
 }
 
 function recipeSearchInput() {
@@ -282,31 +282,65 @@ function recipeSearchClear() {
 
 function recipeSelectComponents(whichRecipe) {
     var recipeId = whichRecipe.substring(6);
+    var foundItemGroups;
+
+    var thisRecipe = hero.crafting[currentRecipePanelProfession].recipes[recipeId];
+
+    var beingCreatedMarkup = '<img src="/images/game-world/inventory-items/' + thisRecipe.imageId + '.png" alt="' + thisRecipe.recipeName + '"><h3>' + thisRecipe.recipeName + '</h3><p>' + thisRecipe.recipeDescription + '</p>';
+
+    beingCreatedMarkup += '<h4>Requires:</h4>';
 
 
-var thisRecipe = hero.crafting[currentRecipePanelProfession].recipes[recipeId];
+    // find all components that the player as that are usable for this recipe as well:
+    var availableComponentMarkup = '<h4>Available:</h4><ul>';
 
-var beingCreatedMarkup = '<img src="/images/game-world/inventory-items/' + thisRecipe.imageId + '.png" alt="' + thisRecipe.recipeName + '"><h3>' + thisRecipe.recipeName + '</h3><p>' + thisRecipe.recipeDescription + '</p>';
+    var componentsRequired = thisRecipe.components.split(",");
+    beingCreatedMarkup += '<ul>';
+    for (var i = 0; i < componentsRequired.length; i++) {
+        if (!(isNaN(componentsRequired[i]))) {
+            // specific item:
+            beingCreatedMarkup += '<li><img src="/images/game-world/inventory-items/' + componentsRequired[i] + '.png" alt="' + currentActiveInventoryItems[componentsRequired[i]].shortname + '">' + currentActiveInventoryItems[componentsRequired[i]].shortname + '</li>';
 
-beingCreatedMarkup += '<h4>Requires:</h4>';
 
 
-var componentsRequired = thisRecipe.components.split(",");
-beingCreatedMarkup += '<ul>';
-for (var i=0;i<componentsRequired.length;i++) {
-    if(!(isNaN(componentsRequired[i]))) {
-// specific item:
-beingCreatedMarkup += '<li><img src="/images/game-world/inventory-items/' + componentsRequired[i] + '.png" alt="' + currentActiveInventoryItems[componentsRequired[i]].shortname + '">'+currentActiveInventoryItems[componentsRequired[i]].shortname+'</li>';
-    } else {
-        // item group:
-beingCreatedMarkup += '<li>'+componentsRequired[i]+'</li>';
+foundItemGroups = findSlotItemIdInInventory(componentsRequired[i]);
+console.log(foundItemGroups);
+            if (foundItemGroups.length > 0) {
+                for (var j = 0; j < foundItemGroups.length; j++) {
+                    availableComponentMarkup += generateSlotMarkup(foundItemGroups[j]);
+                }
+            }
+
+            /*if (hasItemInInventory(componentsRequired[i], 1)) {
+                availableComponentMarkup += '<li><img src="/images/game-world/inventory-items/' + componentsRequired[i] + '.png" alt="' + currentActiveInventoryItems[componentsRequired[i]].shortname + '"></li>';
+            }
+            */
+
+        } else {
+            // item group:
+            beingCreatedMarkup += '<li>' + componentsRequired[i] + '</li>';
+
+            foundItemGroups = hasItemTypeInInventory(componentsRequired[i]);
+            if (foundItemGroups.length > 0) {
+                for (var j = 0; j < foundItemGroups.length; j++) {
+                    availableComponentMarkup += generateSlotMarkup(foundItemGroups[j]);
+                }
+            }
+        }
+
+    }
+
+    beingCreatedMarkup += '</ul>';
+    availableComponentMarkup += '</ul>';
+    selectComponentsItemBeingCreated.innerHTML = beingCreatedMarkup;
+
+
+
+
+    componentsAvailableForThisRecipe.innerHTML = availableComponentMarkup;
+
 }
-}
-beingCreatedMarkup += '</ul>';
-selectComponentsItemBeingCreated.innerHTML = beingCreatedMarkup;
 
-
-}
 
 // find tile from coords:
 function getTileX(x) {
@@ -1113,6 +1147,28 @@ function hasItemInInventory(itemType, amountNeeded) {
 }
 
 
+function findSlotItemIdInInventory(itemType) {
+    var slotsFound = [];
+    for (var key in hero.inventory) {
+        if (hero.inventory[key].type == itemType) {
+            slotsFound.push(key);
+        }
+    }
+    return slotsFound;
+}
+
+function hasItemTypeInInventory(itemGroupType) {
+    var slotsFound = [];
+    for (var key in hero.inventory) {
+        if (currentActiveInventoryItems[hero.inventory[key].type].group == itemGroupType) {
+            slotsFound.push(key);
+        }
+    }
+    return slotsFound;
+}
+
+
+
 function removeItemTypeFromInventory(itemType, amount) {
     var quantityStillToRemove = amount;
     var quantityAvailableOnThisSlot;
@@ -1325,6 +1381,7 @@ var splitStackInput = document.getElementById('splitStackInput');
 var splitStackPanel = document.getElementById('splitStackPanel');
 var craftingRecipeCreateButton = document.getElementById('craftingRecipeCreateButton');
 var selectComponentsItemBeingCreated = document.getElementById('selectComponentsItemBeingCreated');
+var componentsAvailableForThisRecipe = document.getElementById('componentsAvailableForThisRecipe');
 var UI = {
     init: function() {
         // cache all local references to UI elements:

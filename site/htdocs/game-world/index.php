@@ -44,6 +44,8 @@
 <button id="craftingRecipeCreateButton" disabled="disabled">Create</button>
 </div>
 <div id="craftingSelectComponentsPanel">
+
+<div id="componentsAvailableForThisRecipe"></div>
 <div id="selectComponentsItemBeingCreated"></div>
 </div>
 
