@@ -171,13 +171,14 @@ canvas {
             img {
                 display: block;
             }
-        
             &.changed {
                 box-shadow: 0 0 5px 3px #eebb3f;
                 z-index: 1;
             }
             &.hidden {
-                img, p, span {
+                img,
+                p,
+                span {
                     opacity: 0;
                 }
             }
@@ -428,7 +429,7 @@ canvas {
             display: none;
             background: #666;
             @include transition(background 0.4s ease);
-           padding: 6px 0;
+            padding: 6px 0;
             &.active {
                 display: block;
             }
@@ -439,28 +440,26 @@ canvas {
                 background: #b4a435;
             }
         }
-        h3, p {
-             margin: 0;
-             padding: 0;
+        h3,
+        p {
+            margin: 0;
+            padding: 0;
         }
     }
 }
 
-
 #craftingRecipeCreateButton {
-    
     @include transition(background 0.4s ease);
     color: #fff;
     border: 0;
-    
-   
-        background: #682810;
-        cursor: url(../images/game-world/cursors/active.gif) 3 3, auto;
+    background: #682810;
+    cursor: url(../images/game-world/cursors/active.gif) 3 3, auto;
     &:disabled {
         background: #000;
         cursor: default;
     }
 }
+
 .visibleHide {
     @include visibleHide;
 }
@@ -562,10 +561,61 @@ canvas {
     }
 }
 
-
-
-#componentsAvailableForThisRecipe, #selectComponentsItemBeingCreated {
+#selectComponentsItemBeingCreated {
     background: #cecece;
     margin: 0 10px 0 0;
     float: left;
 }
+
+#componentsAvailableForThisRecipe {
+    width: 246px;
+    background: #cecece;
+    margin: 0 10px 0 0;
+    float: left;
+    ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+    li {
+   
+        .qty {
+            position: absolute;
+            left: 0px;
+            width: 43px;
+            top: 31px;
+            text-align: right;
+            color: #fff;
+            cursor: default;
+            font-size: 11px;
+            pointer-events: none;
+        }
+   
+        p {
+            display: inline-block;
+        }
+    }
+}
+
+#selectComponentsItemBeingCreated, #componentsAvailableForThisRecipe {
+        ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+    li {
+        display: block;
+        margin: 0;
+        padding: 0;
+        position: relative;
+    }
+         img {
+            background: url(../images/game-world/interface/inventory-slot.png) no-repeat 0% 50%;
+            display: inline-block;
+            cursor: url(../images/game-world/cursors/active.gif) 3 3, auto;
+            width: 46px;
+            height: 46px;
+            padding: 3px;
+            @include border-box;
+        }
+    }

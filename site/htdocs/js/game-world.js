@@ -283,62 +283,43 @@ function recipeSearchClear() {
 function recipeSelectComponents(whichRecipe) {
     var recipeId = whichRecipe.substring(6);
     var foundItemGroups;
-
     var thisRecipe = hero.crafting[currentRecipePanelProfession].recipes[recipeId];
-
-    var beingCreatedMarkup = '<img src="/images/game-world/inventory-items/' + thisRecipe.imageId + '.png" alt="' + thisRecipe.recipeName + '"><h3>' + thisRecipe.recipeName + '</h3><p>' + thisRecipe.recipeDescription + '</p>';
-
-    beingCreatedMarkup += '<h4>Requires:</h4>';
-
-
+    var beingCreatedMarkup = '<img src="/images/game-world/inventory-items/' + thisRecipe.imageId + '.png" alt="' + thisRecipe.recipeName + '"><h3>' + thisRecipe.recipeName + '</h3><p>' + thisRecipe.recipeDescription + '</p><h4>Requires:</h4>';
     // find all components that the player as that are usable for this recipe as well:
     var availableComponentMarkup = '<h4>Available:</h4><ul>';
-
     var componentsRequired = thisRecipe.components.split(",");
+    var componentsFound = 0;
     beingCreatedMarkup += '<ul>';
     for (var i = 0; i < componentsRequired.length; i++) {
         if (!(isNaN(componentsRequired[i]))) {
             // specific item:
             beingCreatedMarkup += '<li><img src="/images/game-world/inventory-items/' + componentsRequired[i] + '.png" alt="' + currentActiveInventoryItems[componentsRequired[i]].shortname + '">' + currentActiveInventoryItems[componentsRequired[i]].shortname + '</li>';
-
-
-
-foundItemGroups = findSlotItemIdInInventory(componentsRequired[i]);
-console.log(foundItemGroups);
+            foundItemGroups = findSlotItemIdInInventory(componentsRequired[i]);
             if (foundItemGroups.length > 0) {
                 for (var j = 0; j < foundItemGroups.length; j++) {
-                    availableComponentMarkup += generateSlotMarkup(foundItemGroups[j]);
+                    availableComponentMarkup += '<li>'+generateSlotMarkup(foundItemGroups[j])+'</li>';
+                    componentsFound ++;
                 }
             }
-
-            /*if (hasItemInInventory(componentsRequired[i], 1)) {
-                availableComponentMarkup += '<li><img src="/images/game-world/inventory-items/' + componentsRequired[i] + '.png" alt="' + currentActiveInventoryItems[componentsRequired[i]].shortname + '"></li>';
-            }
-            */
-
         } else {
             // item group:
             beingCreatedMarkup += '<li>' + componentsRequired[i] + '</li>';
-
             foundItemGroups = hasItemTypeInInventory(componentsRequired[i]);
             if (foundItemGroups.length > 0) {
                 for (var j = 0; j < foundItemGroups.length; j++) {
-                    availableComponentMarkup += generateSlotMarkup(foundItemGroups[j]);
+                    availableComponentMarkup += '<li>'+generateSlotMarkup(foundItemGroups[j])+'</li>';
+                    componentsFound ++;
                 }
             }
         }
-
     }
-
+    if(componentsFound == 0) {
+availableComponentMarkup += "<li><p>You don't have any of the required components for this recipe.</p></li>";
+    }
     beingCreatedMarkup += '</ul>';
     availableComponentMarkup += '</ul>';
     selectComponentsItemBeingCreated.innerHTML = beingCreatedMarkup;
-
-
-
-
     componentsAvailableForThisRecipe.innerHTML = availableComponentMarkup;
-
 }
 
 
