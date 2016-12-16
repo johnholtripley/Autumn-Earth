@@ -594,9 +594,10 @@ canvas {
         p {
             display: inline-block;
             font-size: 13px;
-            padding: 0 0 0 12px;
+            padding: 0;
     width: 180px;
     margin: 0;
+    vertical-align: top;
     .price {
         display: none;
     }
@@ -623,6 +624,7 @@ canvas {
             width: 46px;
             height: 46px;
             padding: 3px;
+            margin-right: 12px;
             @include border-box;
         }
     }
