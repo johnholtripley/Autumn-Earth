@@ -192,9 +192,10 @@ function inventoryItemAction(whichSlot, whichAction, whichActionValue) {
             removeFromInventory(whichSlot.parentElement.id.substring(4), 1);
             break;
         case "recipe":
-            learnRecipe(whichActionValue);
+            if(canLearnRecipe(whichActionValue)) {
             // remove the 'slot' prefix with the substring(4):
             removeFromInventory(whichSlot.parentElement.id.substring(4), 1);
+        }
             break;
             case "craft":
             UI.populateRecipeList(whichActionValue);
@@ -235,7 +236,7 @@ function generateSlotMarkup(thisSlotsId) {
     if (thisAction) {
         dataActionMarkup = 'data-action="' + thisAction + '" data-action-value="' + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].actionValue + '" ';
     }
-    slotMarkup += '<img src="/images/game-world/inventory-items/' + hero.inventory[thisSlotsId].type + thisFileColourSuffix + '.png" ' + dataActionMarkup + 'alt="">';
+    slotMarkup += '<img src="/images/game-world/inventory-items/' + hero.inventory[thisSlotsId].type + thisFileColourSuffix + '.png" ' + dataActionMarkup + 'alt="'+theColourPrefix + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].shortname+'">';
 
     slotMarkup += '<p><em>' + theColourPrefix + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].shortname + ' </em>' + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].description + ' <span class="price">Sell price: ' + parseMoney(hero.inventory[thisSlotsId].quantity * currentActiveInventoryItems[hero.inventory[thisSlotsId].type].priceCode, 0) + '</span>' + additionalTooltipDetail(thisSlotsId) + '</p>';
     slotMarkup += '<span class="qty">' + hero.inventory[thisSlotsId].quantity + '</span>';

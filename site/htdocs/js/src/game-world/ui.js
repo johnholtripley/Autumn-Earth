@@ -159,7 +159,7 @@ var UI = {
     },
 
     inventoryItemDoubleClick: function(e) {
-
+// check if it's wrapped ###
         var thisItemsAction = e.target.getAttribute('data-action');
 
         if (thisItemsAction) {

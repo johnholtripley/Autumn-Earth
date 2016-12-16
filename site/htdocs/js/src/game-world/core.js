@@ -1289,13 +1289,17 @@ function animateFae() {
 
 
 
-function learnRecipe(recipeIndex) {
+function canLearnRecipe(recipeIndex) {
+    var wasSuccessful = false;
     if (hero.recipesKnown.indexOf(recipeIndex) === -1) {
+        // check for pre-requisites
+        // #####
         hero.recipesKnown.push([parseInt(recipeIndex),0]);
         // need to show a notification
         // reload the recipe data
         // ###
     }
+    return wasSuccessful;
 }
 
 

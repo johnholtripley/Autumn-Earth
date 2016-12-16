@@ -303,7 +303,7 @@ function recipeSelectComponents(whichRecipe) {
             }
         } else {
             // item group:
-            beingCreatedMarkup += '<li>' + componentsRequired[i] + '</li>';
+            beingCreatedMarkup += '<li><img src="/images/game-world/inventory-items/' + componentsRequired[i] + '.png" alt=""></li>';
             foundItemGroups = hasItemTypeInInventory(componentsRequired[i]);
             if (foundItemGroups.length > 0) {
                 for (var j = 0; j < foundItemGroups.length; j++) {
@@ -1230,9 +1230,10 @@ function inventoryItemAction(whichSlot, whichAction, whichActionValue) {
             removeFromInventory(whichSlot.parentElement.id.substring(4), 1);
             break;
         case "recipe":
-            learnRecipe(whichActionValue);
+            if(canLearnRecipe(whichActionValue)) {
             // remove the 'slot' prefix with the substring(4):
             removeFromInventory(whichSlot.parentElement.id.substring(4), 1);
+        }
             break;
             case "craft":
             UI.populateRecipeList(whichActionValue);
@@ -1273,7 +1274,7 @@ function generateSlotMarkup(thisSlotsId) {
     if (thisAction) {
         dataActionMarkup = 'data-action="' + thisAction + '" data-action-value="' + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].actionValue + '" ';
     }
-    slotMarkup += '<img src="/images/game-world/inventory-items/' + hero.inventory[thisSlotsId].type + thisFileColourSuffix + '.png" ' + dataActionMarkup + 'alt="">';
+    slotMarkup += '<img src="/images/game-world/inventory-items/' + hero.inventory[thisSlotsId].type + thisFileColourSuffix + '.png" ' + dataActionMarkup + 'alt="'+theColourPrefix + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].shortname+'">';
 
     slotMarkup += '<p><em>' + theColourPrefix + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].shortname + ' </em>' + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].description + ' <span class="price">Sell price: ' + parseMoney(hero.inventory[thisSlotsId].quantity * currentActiveInventoryItems[hero.inventory[thisSlotsId].type].priceCode, 0) + '</span>' + additionalTooltipDetail(thisSlotsId) + '</p>';
     slotMarkup += '<span class="qty">' + hero.inventory[thisSlotsId].quantity + '</span>';
@@ -1515,7 +1516,7 @@ var UI = {
     },
 
     inventoryItemDoubleClick: function(e) {
-
+// check if it's wrapped ###
         var thisItemsAction = e.target.getAttribute('data-action');
 
         if (thisItemsAction) {
@@ -3145,13 +3146,17 @@ function animateFae() {
 
 
 
-function learnRecipe(recipeIndex) {
+function canLearnRecipe(recipeIndex) {
+    var wasSuccessful = false;
     if (hero.recipesKnown.indexOf(recipeIndex) === -1) {
+        // check for pre-requisites
+        // #####
         hero.recipesKnown.push([parseInt(recipeIndex),0]);
         // need to show a notification
         // reload the recipe data
         // ###
     }
+    return wasSuccessful;
 }
 
 
