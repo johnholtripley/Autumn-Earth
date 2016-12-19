@@ -317,10 +317,20 @@ function recipeSelectComponents(whichRecipe) {
     if(componentsFound == 0) {
 availableComponentMarkup += "<li><p>You don't have any of the required components for this recipe.</p></li>";
     }
+
+console.log(thisRecipe.creates);
+console.log(currentActiveInventoryItems[thisRecipe.creates].dyeable);
+
+  if(currentActiveInventoryItems[thisRecipe.creates].dyeable>0) {
+        beingCreatedMarkup += '<li><img src="/images/game-world/inventory-items/dye.png" alt="">Optional dye</li>';
+    }
+
+
     beingCreatedMarkup += '</ul>';
     availableComponentMarkup += '</ul>';
     selectComponentsItemBeingCreated.innerHTML = beingCreatedMarkup;
     componentsAvailableForThisRecipe.innerHTML = availableComponentMarkup;
+
 }
 
 
