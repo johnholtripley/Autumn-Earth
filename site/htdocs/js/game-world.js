@@ -181,6 +181,7 @@ var questData = [];
 var colourNames = [];
 
 var currentRecipePanelProfession = -1;
+var currentItemGroupFilters = "";
 
 // key bindings
 var key = [0, 0, 0, 0, 0, 0, 0];
@@ -303,7 +304,7 @@ function recipeSelectComponents(whichRecipe) {
             }
         } else {
             // item group:
-            beingCreatedMarkup += '<li><img src="/images/game-world/inventory-items/' + componentsRequired[i] + '.png" alt=""></li>';
+            beingCreatedMarkup += '<li><img src="/images/game-world/inventory-items/' + componentsRequired[i] + '.png" alt="">'+currentItemGroupFilters[(componentsRequired[i])]+'</li>';
             foundItemGroups = hasItemTypeInInventory(componentsRequired[i]);
             if (foundItemGroups.length > 0) {
                 for (var j = 0; j < foundItemGroups.length; j++) {
@@ -2105,6 +2106,7 @@ function findProfessionsAndRecipes() {
 function loadProfessionsAndRecipes(recipeIdsToLoad) {
     getJSON("/game-world/getProfessionsAndRecipes.php?whichIds=" + recipeIdsToLoad, function(data) {
         hero.crafting = data.professions;
+        currentItemGroupFilters = data.itemGroups;
         findInventoryItemData();
     }, function(status) {
         // try again:

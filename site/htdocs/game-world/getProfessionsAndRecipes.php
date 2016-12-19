@@ -73,6 +73,7 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
 
 $coloursQuery = "SELECT * from tblcolours";
 $allColours = [];
+$allItemGroups = [];
 $colourResult = mysql_query($coloursQuery) or die ("recipes failed");
 while ($colourRow = mysql_fetch_array($colourResult)) {
 	extract($colourRow);
@@ -154,6 +155,16 @@ $thisProfession = $profession;
 	
 	$outputJson .= '"'.$recipeID.'":{';
 $outputJson .= '"components":"'.$components.'",';
+
+$componentsSplit = explode(",", $components);
+for ($i=0;$i<count($componentsSplit);$i++) {
+    if(!(is_numeric($componentsSplit[$i]))) {
+
+
+        array_push($allItemGroups, $componentsSplit[$i]);
+        }
+    }
+
 $outputJson .= '"creates":"'.$creates.'",';
 
 
@@ -235,7 +246,40 @@ foreach ($professionsKeys as $value) {
 
 $outputJson = rtrim($outputJson, ",");
 $outputJson .= ']';
-$outputJson .= '}}}';
+
+
+$outputJson .= '}}';
+
+
+if(count($allItemGroups)>0) {
+$outputJson .= ',"itemGroups": {';
+
+$groupQuery = "select * from tblitemgroups where itemgroupcode in (";
+
+for($i=0;$i<count($allItemGroups);$i++) {
+$groupQuery .= '"'.$allItemGroups[$i].'",';
+}
+   
+$groupQuery = rtrim($groupQuery, ",");
+$groupQuery .= ")";
+
+
+$groupResult = mysql_query($groupQuery) or die ("item groups failed");
+while ($groupRow = mysql_fetch_array($groupResult)) {
+    extract($groupRow);
+    //echo $itemGroupCode." - ".$itemGroupDescription."<br />";
+
+$outputJson .= '"'.$itemGroupCode.'": "'.$itemGroupDescription.'",';
+
+}
+$outputJson = rtrim($outputJson, ",");
+$outputJson .= '}';
+
+}
+
+
+
+$outputJson .= '}';
 
 echo $outputJson;
 //echo '<code><pre>'.prettyPrint($outputJson).'</pre></code>';

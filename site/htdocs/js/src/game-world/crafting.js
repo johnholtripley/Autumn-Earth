@@ -82,7 +82,7 @@ function recipeSelectComponents(whichRecipe) {
             }
         } else {
             // item group:
-            beingCreatedMarkup += '<li><img src="/images/game-world/inventory-items/' + componentsRequired[i] + '.png" alt=""></li>';
+            beingCreatedMarkup += '<li><img src="/images/game-world/inventory-items/' + componentsRequired[i] + '.png" alt="">'+currentItemGroupFilters[(componentsRequired[i])]+'</li>';
             foundItemGroups = hasItemTypeInInventory(componentsRequired[i]);
             if (foundItemGroups.length > 0) {
                 for (var j = 0; j < foundItemGroups.length; j++) {

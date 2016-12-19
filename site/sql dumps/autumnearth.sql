@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 12, 2016 at 11:35 AM
+-- Generation Time: Dec 19, 2016 at 10:28 AM
 -- Server version: 5.6.24
 -- PHP Version: 5.6.8
 
@@ -562,8 +562,8 @@ INSERT INTO `tblinventoryitems` (`itemID`, `shortname`, `description`, `priceCod
 (12, 'Dye', 'A standard pigment dye.', '1', '20.0', '24.0', 0, 0, 'dye', '', 0, 0, 0, '0', 'dye', '2', 0, 0, 0, 1),
 (13, 'Dyer''s Cauldron', '', '1', '20.0', '24.0', 0, 0, 'dyers-cauldron', 'craft', 0, 0, 0, '0', '0', '2', 0, 0, 0, 1),
 (14, 'Linen', 'A useful fabric.', '1', '20.0', '24.0', 0, 0, 'linen', '', 0, 1, 0, '0', '0', '3', 0, 0, 0, 1),
-(15, 'Wool', '', '1', '20.0', '24.0', 0, 0, 'wool', '', 0, 1, 0, '0', '0', '3', 0, 0, 0, 1),
-(16, 'Yarn', '', '1', '20.0', '24.0', 0, 0, 'yarn', '', 0, 1, 0, '0', '0', '3', 0, 0, 0, 1),
+(15, 'Wool', 'Basic wool, unspun.', '1', '20.0', '24.0', 0, 0, 'wool', '', 0, 1, 0, '0', '0', '3', 0, 0, 0, 1),
+(16, 'Yarn', 'Spun wool.', '1', '20.0', '24.0', 0, 0, 'yarn', '', 0, 1, 0, '0', '0', '3', 0, 0, 0, 1),
 (17, 'Small Backpack', 'A 11 slot bag', '2', '20.0', '24.0', 0, 0, 'small-backpack', 'bag', 11, 1, 0, '0', '0', NULL, 0, 0, 0, 1),
 (18, 'Barrel', 'A large wooden barrel.', '2', '25.0', '31.0', 38, 38, 'barrel', 'static', 0, 0, 0, '0', '0', NULL, 0, 0, 0, 1),
 (19, 'Pumpkin', 'A tasty pumpkin.', '1', '16.0', '18.0', 25, 23, 'pumpkin', '', 0, 0, 0, '0', '0', NULL, 0, 0, 0, 1),
@@ -576,7 +576,7 @@ INSERT INTO `tblinventoryitems` (`itemID`, `shortname`, `description`, `priceCod
 (26, 'Wood Ash', '', '4', '49.0', '81.0', 63, 63, 'wood-ash', '', 0, 0, 0, '0', '0', NULL, 0, 0, 0, 1),
 (27, 'Apple Wood', '', '4', '49.0', '81.0', 63, 63, 'apple-wood', '', 0, 0, 0, '0', '0', NULL, 0, 0, 0, 1),
 (28, 'Lye', 'Used for bleaching', '4', '49.0', '81.0', 63, 63, 'lye', '', 0, 0, 0, '0', '0', NULL, 0, 8, 1, 1),
-(29, 'Green Dye Recipe', 'Learn how to make a green dye.', '4', '49.0', '81.0', 63, 63, '', 'recipe', 9, 0, 0, '0', 'scribeCopy', NULL, 0, 0, 0, 1),
+(29, 'Green Dye Recipe', 'Learn how to make a green dye.', '4', '49.0', '81.0', 63, 63, '', 'recipe', 9, 0, 0, '0', 'scribe', NULL, 0, 0, 0, 1),
 (30, 'Weaver''s Loom', 'Tools for weaving and tailoring', '1', '20.0', '24.0', 0, 0, 'weavers-loom', 'craft', 1, 0, 0, '0', '0', NULL, 0, 0, 0, 1);
 
 -- --------------------------------------------------------
@@ -598,6 +598,28 @@ INSERT INTO `tblitemcategories` (`categoryID`, `categoryName`) VALUES
 (1, 'Plants and Herbs'),
 (2, 'Dyer''s Provisions'),
 (3, 'Tailor''s Provisions');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tblitemgroups`
+--
+
+CREATE TABLE IF NOT EXISTS `tblitemgroups` (
+  `itemGroupID` int(11) NOT NULL,
+  `itemGroupCode` varchar(255) DEFAULT NULL,
+  `itemGroupDescription` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `tblitemgroups`
+--
+
+INSERT INTO `tblitemgroups` (`itemGroupID`, `itemGroupCode`, `itemGroupDescription`) VALUES
+(0, '0', '0'),
+(1, 'mrdt', 'Any mordant'),
+(2, 'dye', 'Any dye'),
+(3, 'scribe', 'Anything that a Scribe can copy');
 
 -- --------------------------------------------------------
 
@@ -1513,6 +1535,12 @@ ALTER TABLE `tblitemcategories`
   ADD PRIMARY KEY (`categoryID`);
 
 --
+-- Indexes for table `tblitemgroups`
+--
+ALTER TABLE `tblitemgroups`
+  ADD PRIMARY KEY (`itemGroupID`), ADD UNIQUE KEY `itemGroupCode` (`itemGroupCode`);
+
+--
 -- Indexes for table `tbllocations`
 --
 ALTER TABLE `tbllocations`
@@ -1696,6 +1724,11 @@ ALTER TABLE `tblinventoryitems`
 --
 ALTER TABLE `tblitemcategories`
   MODIFY `categoryID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
+--
+-- AUTO_INCREMENT for table `tblitemgroups`
+--
+ALTER TABLE `tblitemgroups`
+  MODIFY `itemGroupID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT for table `tbllocations`
 --

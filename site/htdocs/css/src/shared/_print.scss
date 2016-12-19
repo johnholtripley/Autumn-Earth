@@ -15,6 +15,12 @@
         text-shadow: none !important;
     }
 
+@page {
+    margin: 1in 0.5in 0.5in;
+    orphans: 4;
+    widows: 3;
+}
+
     a,
     a:visited {
         text-decoration: underline;
@@ -57,7 +63,7 @@
         display: table-header-group; /* h5bp.com/t */
     }
 
-    tr,
+    p,li,figure,tr,
     img {
         page-break-inside: avoid;
     }
@@ -66,19 +72,11 @@
         max-width: 100% !important;
     }
 
-    @page {
-        margin: 0.5cm;
-    }
+ 
 
-    p,
-    h2,
-    h3 {
-        orphans: 3;
-        widows: 3;
-    }
+ 
 
-    h2,
-    h3 {
+    h1,h2,h3,h4,h5,h6 {
         page-break-after: avoid;
     }
 

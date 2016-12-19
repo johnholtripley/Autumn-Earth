@@ -57,6 +57,7 @@ var questData = [];
 var colourNames = [];
 
 var currentRecipePanelProfession = -1;
+var currentItemGroupFilters = "";
 
 // key bindings
 var key = [0, 0, 0, 0, 0, 0, 0];

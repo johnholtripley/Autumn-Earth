@@ -248,6 +248,7 @@ function findProfessionsAndRecipes() {
 function loadProfessionsAndRecipes(recipeIdsToLoad) {
     getJSON("/game-world/getProfessionsAndRecipes.php?whichIds=" + recipeIdsToLoad, function(data) {
         hero.crafting = data.professions;
+        currentItemGroupFilters = data.itemGroups;
         findInventoryItemData();
     }, function(status) {
         // try again:
