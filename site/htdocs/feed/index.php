@@ -4,7 +4,7 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/signalnoise.php");
 include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
 include($_SERVER['DOCUMENT_ROOT']."/includes/functions.php");
 
-$query = "select * from tblNews WHERE status='1' order by timeAdded DESC limit 5";
+$query = "select * from tblnews WHERE status='1' order by timeadded DESC limit 5";
 $result = mysql_query($query) or die ("couldn't execute query");
 
 if (mysql_num_rows($result) > 0) {

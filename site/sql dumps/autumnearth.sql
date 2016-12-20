@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 19, 2016 at 10:28 AM
+-- Generation Time: Dec 20, 2016 at 10:16 AM
 -- Server version: 5.6.24
 -- PHP Version: 5.6.8
 
@@ -554,12 +554,12 @@ INSERT INTO `tblinventoryitems` (`itemID`, `shortname`, `description`, `priceCod
 (3, 'Safflower', 'A flower used for its yellow pigment.', '1', '20.0', '24.0', 0, 0, 'safflower', '', 0, 0, 0, '0', '0', '1', 0, 2, 1, 1),
 (5, 'Whortleberry', 'The berries are used for their blue colour.', '1', '20.0', '24.0', 0, 0, 'whortleberry', '', 0, 0, 0, '0', '0', '1', 0, 4, 1, 1),
 (6, 'Meadowsweet', 'Used to make black pigments.', '1', '20.0', '24.0', 0, 0, 'meadowsweet', '', 0, 0, 0, '0', '0', '1', 0, 16, 1, 1),
-(7, 'Archil', 'A purple dye.', '1', '20.0', '24.0', 0, 0, 'archil', '', 0, 0, 0, '0', 'dye', '2', 0, 5, 1, 1),
+(7, 'Archil', 'A purple dye.', '1', '20.0', '24.0', 0, 0, 'archil', '', 0, 1, 0, '0', 'dye', '2', 0, 5, 1, 1),
 (8, 'Copper Mordant', 'A standard mordant.', '1', '20.0', '24.0', 0, 0, 'copper-mordant', '', 0, 0, 0, '0', 'mrdt', '2', 0, 0, 0, 1),
 (9, 'Iron Mordant', 'A mordant for making darker dyes.', '1', '20.0', '24.0', 0, 0, 'iron-mordant', '', 0, 0, 0, '0', 'mrdt', '2', 0, 16, 1, 1),
 (10, 'Alum Mordant', 'A mordant used for brighter dyes.', '1', '20.0', '24.0', 0, 0, 'alum-mordant', '', 0, 0, 0, '0', 'mrdt', '2', 0, 8, 1, 1),
 (11, 'Small Glass Bottle', '', '1', '20.0', '24.0', 0, 0, 'small-glass-bottle', '', 0, 0, 0, '0', '0', NULL, 0, 0, 0, 1),
-(12, 'Dye', 'A standard pigment dye.', '1', '20.0', '24.0', 0, 0, 'dye', '', 0, 0, 0, '0', 'dye', '2', 0, 0, 0, 1),
+(12, 'Dye', 'A standard pigment dye.', '1', '20.0', '24.0', 0, 0, 'dye', '', 0, 1, 0, '0', 'dye', '2', 0, 0, 0, 1),
 (13, 'Dyer''s Cauldron', '', '1', '20.0', '24.0', 0, 0, 'dyers-cauldron', 'craft', 0, 0, 0, '0', '0', '2', 0, 0, 0, 1),
 (14, 'Linen', 'A useful fabric.', '1', '20.0', '24.0', 0, 0, 'linen', '', 0, 1, 0, '0', '0', '3', 0, 0, 0, 1),
 (15, 'Wool', 'Basic wool, unspun.', '1', '20.0', '24.0', 0, 0, 'wool', '', 0, 1, 0, '0', '0', '3', 0, 0, 0, 1),
@@ -609,7 +609,7 @@ CREATE TABLE IF NOT EXISTS `tblitemgroups` (
   `itemGroupID` int(11) NOT NULL,
   `itemGroupCode` varchar(255) DEFAULT NULL,
   `itemGroupDescription` varchar(255) DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblitemgroups`
@@ -619,7 +619,8 @@ INSERT INTO `tblitemgroups` (`itemGroupID`, `itemGroupCode`, `itemGroupDescripti
 (0, '0', '0'),
 (1, 'mrdt', 'Any mordant'),
 (2, 'dye', 'Any dye'),
-(3, 'scribe', 'Anything that a Scribe can copy');
+(3, 'scribe', 'Anything that a Scribe can copy'),
+(4, 'enchant', 'Any item with raw magical properties');
 
 -- --------------------------------------------------------
 
@@ -1728,7 +1729,7 @@ ALTER TABLE `tblitemcategories`
 -- AUTO_INCREMENT for table `tblitemgroups`
 --
 ALTER TABLE `tblitemgroups`
-  MODIFY `itemGroupID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
+  MODIFY `itemGroupID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=5;
 --
 -- AUTO_INCREMENT for table `tbllocations`
 --
