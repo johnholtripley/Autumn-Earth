@@ -324,7 +324,8 @@ console.log(currentActiveInventoryItems[thisRecipe.creates].dyeable);
   if(currentActiveInventoryItems[thisRecipe.creates].dyeable>0) {
         beingCreatedMarkup += '<li><img src="/images/game-world/inventory-items/dye.png" alt="">Optional dye</li>';
     }
-
+// add the enchant slot:
+beingCreatedMarkup += '<li><img src="/images/game-world/inventory-items/enchant.png" alt="">Optional enchanted item</li>';
 
     beingCreatedMarkup += '</ul>';
     availableComponentMarkup += '</ul>';

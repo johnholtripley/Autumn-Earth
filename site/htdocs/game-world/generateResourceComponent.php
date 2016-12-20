@@ -4,7 +4,7 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/signalnoise.php");
 include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
 include($_SERVER['DOCUMENT_ROOT']."/includes/functions.php");
 
-include($_SERVER['DOCUMENT_ROOT']."/includes/herbarium/plant-latin-names-huge.php");
+include($_SERVER['DOCUMENT_ROOT']."/includes/herbarium/plant-latin-names-genera.php");
 $possiblePlantLatinSyllables = sortSequentialSyllables($plantLatinSyllables);
 $latinName = ucfirst(selectSyllables($possiblePlantLatinSyllables,3,5));
 
