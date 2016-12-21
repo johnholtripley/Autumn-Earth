@@ -34,9 +34,7 @@ function recipeSearchAndFilter() {
     }
     if (UI.highlightedRecipe != "") {
         // check if the highlighted one is visible or not:
-
         if (!(document.getElementById(UI.highlightedRecipe).classList.contains('active'))) {
-
             document.getElementById(UI.highlightedRecipe).classList.remove('highlighted');
             craftingRecipeCreateButton.disabled = true;
             UI.highlightedRecipe = "";
@@ -76,38 +74,33 @@ function recipeSelectComponents(whichRecipe) {
             foundItemGroups = findSlotItemIdInInventory(componentsRequired[i]);
             if (foundItemGroups.length > 0) {
                 for (var j = 0; j < foundItemGroups.length; j++) {
-                    availableComponentMarkup += '<li>'+generateSlotMarkup(foundItemGroups[j])+'</li>';
-                    componentsFound ++;
+                    availableComponentMarkup += '<li id="fromSlot'+foundItemGroups[j]+'">' + generateSlotMarkup(foundItemGroups[j]) + '</li>';
+                    componentsFound++;
                 }
             }
         } else {
             // item group:
-            beingCreatedMarkup += '<li><img src="/images/game-world/inventory-items/' + componentsRequired[i] + '.png" alt="">'+currentItemGroupFilters[(componentsRequired[i])]+'</li>';
+            beingCreatedMarkup += '<li><img src="/images/game-world/inventory-items/' + componentsRequired[i] + '.png" alt="">' + currentItemGroupFilters[(componentsRequired[i])] + '</li>';
             foundItemGroups = hasItemTypeInInventory(componentsRequired[i]);
             if (foundItemGroups.length > 0) {
                 for (var j = 0; j < foundItemGroups.length; j++) {
-                    availableComponentMarkup += '<li>'+generateSlotMarkup(foundItemGroups[j])+'</li>';
-                    componentsFound ++;
+                    availableComponentMarkup += '<li id="fromSlot'+foundItemGroups[j]+'">' + generateSlotMarkup(foundItemGroups[j]) + '</li>';
+                    componentsFound++;
                 }
             }
         }
     }
-    if(componentsFound == 0) {
-availableComponentMarkup += "<li><p>You don't have any of the required components for this recipe.</p></li>";
+    if (componentsFound == 0) {
+        availableComponentMarkup += "<li><p>You don't have any of the required components for this recipe.</p></li>";
     }
-
-console.log(thisRecipe.creates);
-console.log(currentActiveInventoryItems[thisRecipe.creates].dyeable);
-
-  if(currentActiveInventoryItems[thisRecipe.creates].dyeable>0) {
+    // add the dye slot, only if the created item can be dyed:
+    if (currentActiveInventoryItems[thisRecipe.creates].dyeable > 0) {
         beingCreatedMarkup += '<li><img src="/images/game-world/inventory-items/dye.png" alt="">Optional dye</li>';
     }
-// add the enchant slot:
-beingCreatedMarkup += '<li><img src="/images/game-world/inventory-items/enchant.png" alt="">Optional enchanted item</li>';
-
+    // add the enchant slot:
+    beingCreatedMarkup += '<li><img src="/images/game-world/inventory-items/enchant.png" alt="">Optional enchanted item</li>';
     beingCreatedMarkup += '</ul>';
     availableComponentMarkup += '</ul>';
     selectComponentsItemBeingCreated.innerHTML = beingCreatedMarkup;
     componentsAvailableForThisRecipe.innerHTML = availableComponentMarkup;
-
 }

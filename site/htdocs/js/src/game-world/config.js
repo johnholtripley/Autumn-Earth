@@ -93,5 +93,6 @@ var hero = {
 
 var fae = {
 particles: [],
-maxParticles: 10
+maxParticles: 10,
+currentState: "hero"
 };

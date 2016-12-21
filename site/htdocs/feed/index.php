@@ -57,7 +57,7 @@ while ($row = mysql_fetch_array($result)) {
 		$newsContent = str_ireplace("src=\"/","src=\"http://www.autumnearth.com/",$newsContent);
 		// remove any continue tags:
 		$newsContent = str_ireplace('[CONTINUE]','',$newsContent);
-		echo '<content:encoded><![CDATA[<p>'.$newsContent.'</p>';
+		echo '<content:encoded><![CDATA['.$newsContent;
 		if ($postedBy != "") {
 			echo '<p> - posted by '.$postedBy.'</p>';
 		}

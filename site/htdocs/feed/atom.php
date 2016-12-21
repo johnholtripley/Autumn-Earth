@@ -50,7 +50,7 @@ while ($row = mysql_fetch_array($result)) {
 		// remove any continue tags:
 		$newsContent = str_ireplace('[CONTINUE]','',$newsContent);
 		
-	echo '<content type="html"><![CDATA[<p>'.$newsContent.'</p>';
+	echo '<content type="html"><![CDATA['.$newsContent;
 		if ($postedBy != "") {
 			echo '<p> - posted by '.$postedBy.'</p>';
 		}
