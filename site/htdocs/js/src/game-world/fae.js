@@ -63,6 +63,7 @@ function moveFaeToDestination(x, y) {
             fae.x = x;
             fae.y = y;
             if (fae.currentState == "away") {
+                
                 fae.currentState = "wait";
             }
         } else {

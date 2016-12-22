@@ -111,7 +111,7 @@ function loadMapJSON(mapFilePath) {
         }
        initCartographicMap();
         findProfessionsAndRecipes();
-
+fae.recentHotspots = [];
     }, function(status) {
         // alert('Error loading data for map #' + currentMap+" --- "+mapFilePath);
         // try again:
@@ -673,13 +673,26 @@ function heroIsInNewTile() {
             questData[thisHotspot.quest].hasBeenActivated = 1;
         }
         if (fae.currentState == "hero") {
+            // check it's not recently visited this hotspot:
+            if (fae.recentHotspots.indexOf(i) === -1) {
             if (isInRange(fae.x, fae.y, thisTileCentreX, thisTileCentreY, fae.range)) {
                 fae.targetX = thisTileCentreX;
                 fae.targetY = thisTileCentreY;
+                // add this to the list of hotspots so it doesn't return to it again and again:
+                fae.recentHotspots.push(i);
                 fae.currentState = "away";
             }
         }
+        }
     }
+if (fae.currentState == "wait") {
+    // check if hero has moved far away, and return if so:
+    if (!(isInRange(fae.x, fae.y, hero.x, hero.y, fae.abandonRadius))) {
+        fae.currentState = "hero";
+    }
+}
+
+
 
 }
 
