@@ -28,6 +28,57 @@ function createNewSongFile($instrumentsId, $songsID) {
 	array("a4",500), 
 	array("a4",500), 
 	array("g4",1000));
+
+
+
+
+$songListing = array(
+	array("e4",750),
+	array("f4",250),
+	array("e4",250),
+	array("d4",250),
+	array("c4",500),
+	array("as3",500),
+	array("d4",500),
+	array("c4",750),
+	array("z4",250),
+	array("g3",250),
+	array("as3",250),
+	array("c4",500),
+		array("as3",250),
+		array("g3",250),
+		array("f3",500),
+		array("d3",500),
+		array("e3",250),
+		array("f3",250),
+		array("g3",500),
+		array("g3",500),
+		array("z4",500),
+		array("c4",250),
+		array("d4",250),
+		array("c4",250),
+		array("d4",250),
+		array("e4",500),
+		array("c4",500),
+		array("f4",500),
+		array("e4",250),
+		array("d4",250),
+		array("c4",500),
+		array("z4",500),
+		array("f4",250),
+		array("e4",250),
+		array("c4",500),
+		array("f4",250),
+		array("e4",250),
+		array("f4",250),
+		array("g4",750),
+		array("g4",1000)
+	);
+
+
+ 
+
+
 	
 	$fields = "H8ChunkID/VChunkSize/H8Format/H8Subchunk1ID/VSubchunk1Size/vAudioFormat/vNumChannels/VSampleRate/VByteRate/vBlockAlign/vBitsPerSample";
 	$data = '';

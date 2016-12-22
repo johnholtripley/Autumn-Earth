@@ -6,6 +6,26 @@
 // error reporting to user
 
 
+
+
+
+
+include($_SERVER['DOCUMENT_ROOT']."/includes/session.php");
+include($_SERVER['DOCUMENT_ROOT']."/includes/signalnoise.php");
+include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
+include($_SERVER['DOCUMENT_ROOT']."/includes/functions.php");
+
+
+
+
+include($_SERVER['DOCUMENT_ROOT']."/includes/header.php");
+
+
+
+
+
+
+
 function processSongKey($stringToProcess) {
   // ensure key is consistent:
   $stringToProcess = str_replace(' ', '', $stringToProcess);
@@ -334,7 +354,7 @@ if ($uploadedfilesize > 102400) {
           $modifyNextNote = "";
           while ((stristr($validNotes, $thisSubChar) === false) && ($subseqCharIndex <= strlen($melody))) {
             if (is_numeric($thisSubChar)) {
-              $thisNotesLength *= $thisSubChar/;
+              $thisNotesLength *= $thisSubChar;
               // any fractions will be detected next character with the '/' and then the note length will be divided giving the correct fraction
        
             } else {
@@ -419,46 +439,13 @@ if ($uploadedfilesize > 102400) {
 }
 ?>
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
-<head>
-<title>Autumn Earth</title>
-<meta content="salmacis" name="keywords" />
-<meta content="john@salmacis.co.uk" name="author" />
-<meta content="isometric world" name="description" />
-<meta content="text/html; charset=iso-8859-1" http-equiv="content-type" />
-<meta content="no" http-equiv="imagetoolbar" />
-<script language="javascript" src="/includes/core.js" type="text/javascript"></script>
 
-<script type="text/javascript">
-function showUploadAnimation() {
-// check it's an upload, not text entry:
-if (document.abcForm.abcTextFile.value != "") {
-// ######## do this properly with get element not using invalid form name
-  if (getElement('workingIcon')) {
-    if(thiselement) {
-      thiselement.style.display='block';
-    }
-  }
-}
 
-}
-</script>
 
-<style type="text/css">
 
-#workingIcon {
-width: 45px;
-height: 45px;
-background: url(/development/architect/working_progress.gif) no-repeat left top;
-display: none;
-}
+<div class="row">
 
-</style>
-
-</head>
-<body>
+  <div class="column"><h1>Music</h1>
 <h2>Requirements</h2>
 <ul>
 <li>Any mid-song tempo, time signature, default note length or key changes need to be on a new line</li>
@@ -492,21 +479,25 @@ L:1/8
 K:F
 e3 f ed 
 c2 |B2 d2 c3 z |GB c2 BG F2 |D2 EF G2 G2
-z2 cd cd e2 |c2 f2 ed c2 |z2 fe c2 fe |f g3 g4 |]
-%End of file</code></pre>
+z2 cd cd e2 |c2 f2 ed c2 |z2 fe c2 fe |f g3 g4 |]</code></pre>
 
-<form action="upload.php" name="abcForm" id="abcForm" enctype="multipart/form-data" method="post">
+<form action="" name="abcForm" id="abcForm" enctype="multipart/form-data" method="post" style="padding-bottom: 15%;">
 <fieldset>
 <label for="abcTextUpload">paste notation:</label>
 <textarea cols="6" rows="4" style="width:300px; height: 120px;" id="abcTextUpload" name="abcTextUpload"></textarea>
 
-<input type="hidden" name="MAX_FILE_SIZE" value="102400" />
+<input type="hidden" name="MAX_FILE_SIZE" value="102400">
 <label for="abcTextFile">or by upload:</label>
-<input type="file" name="abcTextFile" id="abcTextFile" /> 
+<input type="file" name="abcTextFile" id="abcTextFile"> 
 
-<input type="submit" name="submitbutton" id="submitbutton" value="Upload abc notation" onclick="showUploadAnimation();" />
+<input type="submit" name="submitbutton" id="submitbutton" value="Upload abc notation" >
 </fieldset>
 </form>
-<div id="workingIcon">&nbsp;</div>
-</body>
-</html>
+</div>
+</div>
+
+
+<?php
+
+include($_SERVER['DOCUMENT_ROOT']."/includes/footer.php");
+?>
