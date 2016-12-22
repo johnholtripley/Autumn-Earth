@@ -371,8 +371,8 @@ activeNPCForDialogue = '';
     fae.y = hero.y + tileH * 2;
     fae.z = 40;
     fae.dz = 1;
-    fae.pulse = 0;
-    fae.state = 'idle';
+   // fae.pulse = 0;
+    
 
     timeSinceLastFrameSwap = 0;
     currentAnimationFrame = 0;
@@ -660,18 +660,29 @@ function heroIsInNewTile() {
     if (currentMap < 0) {
         updateCartographicMiniMap();
     }
-    var thisHotspot;
+    var thisHotspot, thisTileCentreX, thisTileCentreY;
     // check for hotspots:
     for (var i = 0; i < thisMapData.hotspots.length; i++) {
         thisHotspot = thisMapData.hotspots[i];
-        if (isInRange(hero.x, hero.y, getTileCentreCoordX(thisHotspot.centreX), getTileCentreCoordY(thisHotspot.centreY), thisHotspot.radius * tileW)) {
+        thisTileCentreX = getTileCentreCoordX(thisHotspot.centreX);
+        thisTileCentreY = getTileCentreCoordY(thisHotspot.centreY);
+        if (isInRange(hero.x, hero.y, thisTileCentreX, thisTileCentreY, thisHotspot.radius * tileW)) {
             if (questData[thisHotspot.quest].hasBeenActivated < 1) {
                 UI.showNotification("<p>" + thisHotspot.message + "</p>");
             }
             questData[thisHotspot.quest].hasBeenActivated = 1;
         }
+        if (fae.currentState == "hero") {
+            if (isInRange(fae.x, fae.y, thisTileCentreX, thisTileCentreY, fae.range)) {
+                fae.targetX = thisTileCentreX;
+                fae.targetY = thisTileCentreY;
+                fae.currentState = "away";
+            }
+        }
     }
+
 }
+
 
 
 function checkForActions() {

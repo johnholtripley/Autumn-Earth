@@ -31,20 +31,20 @@ function moveFae() {
         case "away":
             moveFaeToDestination(fae.targetX, fae.targetY);
             break;
-        case "back":
-            break;
+
         case "wait":
+            if (isInRange(fae.x, fae.y, hero.x, hero.y, tileW * 3)) {
+                // hero is close, move back now
+                fae.currentState = "hero";
+            }
             break;
         default:
             // "hero":
             fae.angleAroundHero += 4;
-            // calc new destination coords
-
-var destinationX = hero.x + fae.radiusAroundHero * Math.cos(fae.angleAroundHero * (Math.PI / 180));
-var destinationY = hero.y + fae.radiusAroundHero * Math.sin(fae.angleAroundHero * (Math.PI / 180));
-moveFaeToDestination(destinationX, destinationY);
-            // 
-            // 
+            // calc new destination coords:
+            var destinationX = hero.x + fae.radiusAroundHero * Math.cos(fae.angleAroundHero * (Math.PI / 180));
+            var destinationY = hero.y + fae.radiusAroundHero * Math.sin(fae.angleAroundHero * (Math.PI / 180));
+            moveFaeToDestination(destinationX, destinationY);
             break;
     }
 }
@@ -62,9 +62,9 @@ function moveFaeToDestination(x, y) {
             // close enough:
             fae.x = x;
             fae.y = y;
-            if(fae.currentState == "away") {
-            fae.currentState = "wait";
-        }
+            if (fae.currentState == "away") {
+                fae.currentState = "wait";
+            }
         } else {
             // move half way:
             fae.x += (x - fae.x) / 2;
