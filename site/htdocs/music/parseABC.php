@@ -1,6 +1,7 @@
 <?php
 
 // to do:
+// ignore W: lines with words in
 //  error handling - unknown index and memory allocation
 // more secure file upload
 // error reporting to user
@@ -457,7 +458,8 @@ do {
 $fp = fopen($songPath.$filename, 'w');
 fwrite($fp, json_encode($songListing));
 fclose($fp);
-echo "Song #".$thisNewSongId." successfully created";
+echo "<p>Song #".$thisNewSongId." successfully created</p>";
+echo '<p><a href="http://ae.dev/music/playsong.php?instrId=1&songId='.$thisNewSongId.'&chr=999">TEST ##### Create this sound file with a psalter</a>';
 
     } else {
       echo "<p>Sorry, but errors were found with in song #".$eachSong.". Please fix this and re-try:</p><ul>".$errors."</ul>\n";
