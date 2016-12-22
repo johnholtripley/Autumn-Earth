@@ -432,6 +432,14 @@ function isATerrainCollision(x, y) {
                 // is a collision:
                 return 1;
                 break;
+            case "<":
+            case ">":
+            case "^":
+            case "v":
+                // stairs
+                // #####
+                return 0;
+                break;
             case "d":
                 // is a door:
 
@@ -445,6 +453,8 @@ function isATerrainCollision(x, y) {
         }
     }
 }
+
+
 
 
 function startDoorTransition() {
@@ -1334,7 +1344,7 @@ function draw() {
           ];
           */
         var assetsToDraw = [
-            [hero.isoy, "img", heroImg, Math.floor(canvasWidth / 2 - hero.feetOffsetX), Math.floor(canvasHeight / 2 - hero.feetOffsetY)]
+            [hero.isoy, "img", heroImg, Math.floor(canvasWidth / 2 - hero.feetOffsetX), Math.floor(canvasHeight / 2 - hero.feetOffsetY - hero.z)]
         ];
 
 
