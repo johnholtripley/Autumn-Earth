@@ -218,7 +218,11 @@ var hero = {
 var fae = {
 particles: [],
 maxParticles: 10,
-currentState: "away"
+radiusAroundHero: 20,
+angleAroundHero: 0,
+targetX: 0,
+targetY: 0,
+currentState: "hero"
 };
 
 function recipeSearchAndFilter() {
@@ -331,10 +335,10 @@ function recipeSelectComponents(whichRecipe) {
 function animateFae() {
     fae.z = Math.floor((Math.sin(fae.dz) + 1) * 8 + 40);
     fae.dz += 0.2;
-// fae.y+=8;
+    // fae.y+=8;
     for (var i = 0; i < fae.particles.length; i++) {
         fae.particles[i].alpha -= 0.1;
-        if(fae.particles[i].alpha<=0) {
+        if (fae.particles[i].alpha <= 0) {
             fae.particles.splice(i, 1);
         }
     }
@@ -349,8 +353,8 @@ function animateFae() {
             // check it's in a circle from the fae's centre:
             if (isInRange(faeIsoX, faeIsoY, particleIsoX, particleIsoY, 6)) {
 
-                fae.particles.push({ 'depth': findIsoCoordsY(fae.x, fae.y),'isoX': particleIsoX, 'isoY': particleIsoY, 'alpha': 1 });
-            
+                fae.particles.push({ 'depth': findIsoCoordsY(fae.x, fae.y), 'isoX': particleIsoX, 'isoY': particleIsoY, 'alpha': 1 });
+
             }
         }
     }
@@ -358,30 +362,56 @@ function animateFae() {
 
 function moveFae() {
     switch (fae.currentState) {
-  case "away":
-  moveFaeToDestination(400,600);
-    break;
-  case "back":
-    break;
-    case "wait":
-    break;
-  default:
-    // "hero"
-    break;
-}
+        case "away":
+            moveFaeToDestination(fae.targetX, fae.targetY);
+            break;
+        case "back":
+            break;
+        case "wait":
+            break;
+        default:
+            // "hero":
+            fae.angleAroundHero += 4;
+            // calc new destination coords
+
+var destinationX = hero.x + fae.radiusAroundHero * Math.cos(fae.angleAroundHero * (Math.PI / 180));
+var destinationY = hero.y + fae.radiusAroundHero * Math.sin(fae.angleAroundHero * (Math.PI / 180));
+moveFaeToDestination(destinationX, destinationY);
+            // 
+            // 
+            break;
+    }
 }
 
-function moveFaeToDestination(x,y) {
-// check pythagoras distance, and if more than fae speed, move as far on that vector as fae speed, otherwise move to half way to destination so fae decelerates
-// ###
-console.log(fae.speed);
+function moveFaeToDestination(x, y) {
+    // check pythagoras distance, and if more than fae speed, move as far on that vector as fae speed, otherwise move to half way to destination so fae decelerates
+    var distanceToDestination = getPythagorasDistance(fae.x, fae.y, x, y);
+    if (distanceToDestination > fae.speed) {
+        // move as far as it can:
+        var ratio = fae.speed / distanceToDestination;
+        fae.x += ratio * (x - fae.x);
+        fae.y += ratio * (y - fae.y);
+    } else {
+        if (distanceToDestination < 2) {
+            // close enough:
+            fae.x = x;
+            fae.y = y;
+            if(fae.currentState == "away") {
+            fae.currentState = "wait";
+        }
+        } else {
+            // move half way:
+            fae.x += (x - fae.x) / 2;
+            fae.y += (y - fae.y) / 2;
+        }
+    }
 }
+
 
 // find tile from coords:
 function getTileX(x) {
     return Math.floor(x/tileW);
 }
-
 function getTileY(y) {
     return Math.floor(y/tileW);
 }
@@ -389,15 +419,11 @@ function getTileY(y) {
 
 // find Iso coords from 2d coords:
 function findIsoCoordsX(x, y) {
-  
    return Math.floor((mapTilesY * tileW/2) -y/2 + x/2);
-
 }
-
 function findIsoCoordsY(x, y) {
     // the -tileH/2 is because the tile centre was at 0,0, and so the tip would be off the top of the screen
 return Math.floor((x/4) + (y/4) - tileH/2);
-
 }
 
 
@@ -405,7 +431,6 @@ return Math.floor((x/4) + (y/4) - tileH/2);
 function getTileCentreCoordX(tileX) {
     return tileX*tileW + tileW/2;
 }
-
 function getTileCentreCoordY(tileY) {
     return tileY*tileW + tileW/2;
 }
@@ -415,7 +440,6 @@ function getTileCentreCoordY(tileY) {
 function getTileIsoCentreCoordX(tileX, tileY) {
     return tileW / 2 * (mapTilesY - tileY + tileX);
 }
-
 function getTileIsoCentreCoordY(tileX, tileY) {
     return tileH / 2 * (tileY + tileX);
 }
@@ -488,8 +512,7 @@ return thisNode;
                  keysFound.push(prop);
              }
         }
-    }
-    
+    }  
    return keysFound;
 }
 
@@ -550,12 +573,16 @@ function getRandomIntegerInclusive(min, max) {
 
 function isInRange(ax, ay, bx, by, ra) {
     // determines if one sprite is within range of another
-    var range = Math.sqrt(((ax - bx) * (ax - bx)) + ((ay - by) * (ay - by)));
+    var range = getPythagorasDistance(ax, ay, bx, by);
     if (range <= ra) {
         return true;
     } else {
         return false;
     }
+}
+
+function getPythagorasDistance(ax, ay, bx, by) {
+    return Math.sqrt(((ax - bx) * (ax - bx)) + ((ay - by) * (ay - by)));
 }
 
 function turntoFace(obj1, obj2) {

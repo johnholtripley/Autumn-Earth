@@ -155,5 +155,5 @@
     "activeTitle": 3,
     "professionsKnown": [0],
     "recipesKnown": [[0,1],[1,1],[2,0],[3,0],[10,0],[11,0],[7,0],[6,0],[12,0],[13,0]],
-    "fae": {"range": 6, "speed": 8}
+    "fae": {"range": 6, "speed": 4}
 }

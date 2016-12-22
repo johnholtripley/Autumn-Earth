@@ -3,7 +3,6 @@
 function getTileX(x) {
     return Math.floor(x/tileW);
 }
-
 function getTileY(y) {
     return Math.floor(y/tileW);
 }
@@ -11,15 +10,11 @@ function getTileY(y) {
 
 // find Iso coords from 2d coords:
 function findIsoCoordsX(x, y) {
-  
    return Math.floor((mapTilesY * tileW/2) -y/2 + x/2);
-
 }
-
 function findIsoCoordsY(x, y) {
     // the -tileH/2 is because the tile centre was at 0,0, and so the tip would be off the top of the screen
 return Math.floor((x/4) + (y/4) - tileH/2);
-
 }
 
 
@@ -27,7 +22,6 @@ return Math.floor((x/4) + (y/4) - tileH/2);
 function getTileCentreCoordX(tileX) {
     return tileX*tileW + tileW/2;
 }
-
 function getTileCentreCoordY(tileY) {
     return tileY*tileW + tileW/2;
 }
@@ -37,7 +31,6 @@ function getTileCentreCoordY(tileY) {
 function getTileIsoCentreCoordX(tileX, tileY) {
     return tileW / 2 * (mapTilesY - tileY + tileX);
 }
-
 function getTileIsoCentreCoordY(tileX, tileY) {
     return tileH / 2 * (tileY + tileX);
 }
@@ -110,8 +103,7 @@ return thisNode;
                  keysFound.push(prop);
              }
         }
-    }
-    
+    }  
    return keysFound;
 }
 
@@ -172,12 +164,16 @@ function getRandomIntegerInclusive(min, max) {
 
 function isInRange(ax, ay, bx, by, ra) {
     // determines if one sprite is within range of another
-    var range = Math.sqrt(((ax - bx) * (ax - bx)) + ((ay - by) * (ay - by)));
+    var range = getPythagorasDistance(ax, ay, bx, by);
     if (range <= ra) {
         return true;
     } else {
         return false;
     }
+}
+
+function getPythagorasDistance(ax, ay, bx, by) {
+    return Math.sqrt(((ax - bx) * (ax - bx)) + ((ay - by) * (ay - by)));
 }
 
 function turntoFace(obj1, obj2) {
