@@ -51,6 +51,12 @@ function getHeroGameState() {
         hero.recipesKnown = data.recipesKnown;
         hero.professionsKnown = data.professionsKnown;
        
+
+// copy the fae properties that will change into the main fae object:
+for (var attrname in data.fae) {
+    fae[attrname] = data.fae[attrname];
+}
+
         hero.inventory = data.inventory;
         if (currentMap > 0) {
             //clean old procedural maps: (don't need a response here)
