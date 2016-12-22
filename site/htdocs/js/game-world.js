@@ -366,7 +366,6 @@ function moveFae() {
         case "away":
             moveFaeToDestination(fae.targetX, fae.targetY);
             break;
-
         case "wait":
             if (isInRange(fae.x, fae.y, hero.x, hero.y, tileW * 3)) {
                 // hero is close, move back now
@@ -398,7 +397,7 @@ function moveFaeToDestination(x, y) {
             fae.x = x;
             fae.y = y;
             if (fae.currentState == "away") {
-                
+
                 fae.currentState = "wait";
             }
         } else {
@@ -653,24 +652,81 @@ var moneyOutput = "";
 
 
 
+function hasLineOfSight(startx, starty, endx, endy) {
+    var nextx = startx;
+    var nexty = starty;
+    var pathy = [];
+    var pathx = [];
+    var deltay = endy - starty;
+    var deltax = endx - startx;
+    var currentStep = 0;
+    var fraction, previousx, previousy, stepx, stepy;
+    //
+    // path direction calculation:
+    if (deltay < 0) {
+        stepy = -1;
+    } else {
+        stepy = 1;
+    }
+    if (deltax < 0) {
+        stepx = -1;
+    } else {
+        stepx = 1;
+    }
+    deltay = Math.abs(deltay * 2);
+    deltax = Math.abs(deltax * 2);
+    previousx = startx;
+    previousy = starty;
+    // bresenham algorithm:
+    if (deltax > deltay) {
+        fraction = deltay * 2 - deltax;
+        while (nextx != endx) {
+            if (fraction >= 0) {
+                nexty += stepy;
+                fraction -= deltax;
+            }
+            nextx += stepx;
+            fraction += deltay;
 
-// ---------------------
-// http://youmightnotneedjquery.com/ - IE8+
-function addClass(whichElement, className) {
-  if (whichElement.classList) {
-    whichElement.classList.add(className);
-  } else {
-    whichElement.className += ' ' + className;
-  }
+            if (thisMapData.collisions[nexty][nextx] != 0) {
+                // tile is non-walkable;
+                return false;
+                break;
+            }
+            // add relative movement to the array:                                                                                                                  
+            pathy[currentStep] = nexty - previousy;
+            pathx[currentStep] = nextx - previousx;
+            previousy = nexty;
+            previousx = nextx;
+            currentStep++;
+        }
+    } else {
+        fraction = deltax * 2 - deltay;
+        while (nexty != endy) {
+            if (fraction >= 0) {
+                nextx += stepx;
+                fraction -= deltay;
+            }
+            nexty += stepy;
+            fraction += deltax;
+
+            if (thisMapData.collisions[nexty][nextx] != 0) {
+                // tile is non-walkable;
+                return false;
+                break;
+            }
+            // add relative movement to the array:                                                                                                                  
+            pathy[currentStep] = nexty - previousy;
+            pathx[currentStep] = nextx - previousx;
+            previousy = nexty;
+            previousx = nextx;
+            currentStep++;
+        }
+    }
+    return true;
 }
 
-function removeClass(el, className) {
-  if (el.classList) {
-    el.classList.remove(className);
-  } else {
-    el.className = el.className.replace(new RegExp('(^|\\b)' + className.split(' ').join('|') + '(\\b|$)', 'gi'), ' ');
-  }
-}
+
 
 
    function determineWhichTransitionEvent() {
@@ -1530,7 +1586,8 @@ var UI = {
         document.getElementById("slot" + whichSlotsToUpdate[0]).addEventListener(whichTransitionEvent, function removeSlotStatus(e) {
             elementList = document.querySelectorAll('#inventoryPanels .changed');
             for (var i = 0; i < elementList.length; i++) {
-                removeClass(elementList[i], 'changed');
+                
+                elementList[i].classList.remove("changed");
             }
             // remove the event listener now:
             return e.currentTarget.removeEventListener(whichTransitionEvent, removeSlotStatus, false);
@@ -1541,14 +1598,10 @@ var UI = {
 
             slotMarkup = generateSlotMarkup(thisSlotsId);
 
-
-
-
-
             thisSlotElem = document.getElementById("slot" + thisSlotsId);
             thisSlotElem.innerHTML = slotMarkup;
-
-            addClass(thisSlotElem, "changed");
+thisSlotElem.classList.add("changed")
+            
         }
     },
 
@@ -2616,11 +2669,13 @@ function heroIsInNewTile() {
             // check it's not recently visited this hotspot:
             if (fae.recentHotspots.indexOf(i) === -1) {
             if (isInRange(fae.x, fae.y, thisTileCentreX, thisTileCentreY, fae.range)) {
+                if (hasLineOfSight(getTileX(fae.x), getTileX(fae.y), thisHotspot.centreX, thisHotspot.centreY)) {
                 fae.targetX = thisTileCentreX;
                 fae.targetY = thisTileCentreY;
                 // add this to the list of hotspots so it doesn't return to it again and again:
                 fae.recentHotspots.push(i);
                 fae.currentState = "away";
+            }
             }
         }
         }

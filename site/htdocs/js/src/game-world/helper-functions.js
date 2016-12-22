@@ -242,24 +242,81 @@ var moneyOutput = "";
 
 
 
+function hasLineOfSight(startx, starty, endx, endy) {
+    var nextx = startx;
+    var nexty = starty;
+    var pathy = [];
+    var pathx = [];
+    var deltay = endy - starty;
+    var deltax = endx - startx;
+    var currentStep = 0;
+    var fraction, previousx, previousy, stepx, stepy;
+    //
+    // path direction calculation:
+    if (deltay < 0) {
+        stepy = -1;
+    } else {
+        stepy = 1;
+    }
+    if (deltax < 0) {
+        stepx = -1;
+    } else {
+        stepx = 1;
+    }
+    deltay = Math.abs(deltay * 2);
+    deltax = Math.abs(deltax * 2);
+    previousx = startx;
+    previousy = starty;
+    // bresenham algorithm:
+    if (deltax > deltay) {
+        fraction = deltay * 2 - deltax;
+        while (nextx != endx) {
+            if (fraction >= 0) {
+                nexty += stepy;
+                fraction -= deltax;
+            }
+            nextx += stepx;
+            fraction += deltay;
 
-// ---------------------
-// http://youmightnotneedjquery.com/ - IE8+
-function addClass(whichElement, className) {
-  if (whichElement.classList) {
-    whichElement.classList.add(className);
-  } else {
-    whichElement.className += ' ' + className;
-  }
+            if (thisMapData.collisions[nexty][nextx] != 0) {
+                // tile is non-walkable;
+                return false;
+                break;
+            }
+            // add relative movement to the array:                                                                                                                  
+            pathy[currentStep] = nexty - previousy;
+            pathx[currentStep] = nextx - previousx;
+            previousy = nexty;
+            previousx = nextx;
+            currentStep++;
+        }
+    } else {
+        fraction = deltax * 2 - deltay;
+        while (nexty != endy) {
+            if (fraction >= 0) {
+                nextx += stepx;
+                fraction -= deltay;
+            }
+            nexty += stepy;
+            fraction += deltax;
+
+            if (thisMapData.collisions[nexty][nextx] != 0) {
+                // tile is non-walkable;
+                return false;
+                break;
+            }
+            // add relative movement to the array:                                                                                                                  
+            pathy[currentStep] = nexty - previousy;
+            pathx[currentStep] = nextx - previousx;
+            previousy = nexty;
+            previousx = nextx;
+            currentStep++;
+        }
+    }
+    return true;
 }
 
-function removeClass(el, className) {
-  if (el.classList) {
-    el.classList.remove(className);
-  } else {
-    el.className = el.className.replace(new RegExp('(^|\\b)' + className.split(' ').join('|') + '(\\b|$)', 'gi'), ' ');
-  }
-}
+
 
 
    function determineWhichTransitionEvent() {

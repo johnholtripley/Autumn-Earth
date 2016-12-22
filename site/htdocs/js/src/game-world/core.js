@@ -676,11 +676,13 @@ function heroIsInNewTile() {
             // check it's not recently visited this hotspot:
             if (fae.recentHotspots.indexOf(i) === -1) {
             if (isInRange(fae.x, fae.y, thisTileCentreX, thisTileCentreY, fae.range)) {
+                if (hasLineOfSight(getTileX(fae.x), getTileX(fae.y), thisHotspot.centreX, thisHotspot.centreY)) {
                 fae.targetX = thisTileCentreX;
                 fae.targetY = thisTileCentreY;
                 // add this to the list of hotspots so it doesn't return to it again and again:
                 fae.recentHotspots.push(i);
                 fae.currentState = "away";
+            }
             }
         }
         }

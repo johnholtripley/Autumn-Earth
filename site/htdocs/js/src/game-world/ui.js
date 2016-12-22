@@ -90,7 +90,8 @@ var UI = {
         document.getElementById("slot" + whichSlotsToUpdate[0]).addEventListener(whichTransitionEvent, function removeSlotStatus(e) {
             elementList = document.querySelectorAll('#inventoryPanels .changed');
             for (var i = 0; i < elementList.length; i++) {
-                removeClass(elementList[i], 'changed');
+                
+                elementList[i].classList.remove("changed");
             }
             // remove the event listener now:
             return e.currentTarget.removeEventListener(whichTransitionEvent, removeSlotStatus, false);
@@ -101,14 +102,10 @@ var UI = {
 
             slotMarkup = generateSlotMarkup(thisSlotsId);
 
-
-
-
-
             thisSlotElem = document.getElementById("slot" + thisSlotsId);
             thisSlotElem.innerHTML = slotMarkup;
-
-            addClass(thisSlotElem, "changed");
+thisSlotElem.classList.add("changed")
+            
         }
     },
 
