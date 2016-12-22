@@ -20,9 +20,16 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/functions.php");
 
 include($_SERVER['DOCUMENT_ROOT']."/includes/header.php");
 
+?>
+
+<div class="row">
+
+  <div class="column"><h1>Music</h1>
+
+<?php
 
 
-
+$thisCharId = "999";
 
 
 
@@ -429,8 +436,29 @@ if ($uploadedfilesize > 102400) {
 			array_push($songListing, array($thisNotesName, $thisNotesLength));
         }
       }
-      echo $melody."<hr />";
-      print_r(array_values($songListing));
+ //     echo $melody."<hr />";
+ //     print_r(array_values($songListing));
+ //   echo "<hr>";
+    // save the song data:
+$songPath = "../data/chr".$thisCharId."/music/";
+
+$thisNewSongId = -1;
+do {
+  $thisNewSongId ++;
+      $filename = "song".$thisNewSongId.".json";
+      
+
+} while(file_exists($songPath.$filename));
+
+
+   
+
+
+$fp = fopen($songPath.$filename, 'w');
+fwrite($fp, json_encode($songListing));
+fclose($fp);
+echo "Song #".$thisNewSongId." successfully created";
+
     } else {
       echo "<p>Sorry, but errors were found with in song #".$eachSong.". Please fix this and re-try:</p><ul>".$errors."</ul>\n";
     }
@@ -443,9 +471,7 @@ if ($uploadedfilesize > 102400) {
 
 
 
-<div class="row">
 
-  <div class="column"><h1>Music</h1>
 <h2>Requirements</h2>
 <ul>
 <li>Any mid-song tempo, time signature, default note length or key changes need to be on a new line</li>

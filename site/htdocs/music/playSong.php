@@ -1,6 +1,7 @@
 <?php
 $thisInstrumentsId = $_GET["instrId"];
 $thisSongsId = $_GET["songId"];
+$thisCharId = $_GET["chr"];
 
 if (is_numeric($thisSongsId)) {
 	// ###### validate instrument name as well - with database check for all known instruments
@@ -13,9 +14,16 @@ if (is_numeric($thisSongsId)) {
 }
 
 function createNewSongFile($instrumentsId, $songsID) {
-	
+	global $thisInstrumentsId, $thisSongsId, $thisCharId;
+
+$songPath = "../data/chr".$thisCharId."/music/";
+$filename = "song".$thisSongsId.".json";
+$getJsonData = file_get_contents($songPath.$filename);
+
 	// $songListing array of elements each with [song name] [length in m/s required]
 	// this comes from pre-processed ABC notation from database
+
+/*
 	$songListing = array(
 	array("g4",500), 
 	array("g4",500), 
@@ -74,9 +82,11 @@ $songListing = array(
 		array("g4",750),
 		array("g4",1000)
 	);
+*/
 
 
- 
+
+$songListing = json_decode($getJsonData, true);
 
 
 	

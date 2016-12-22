@@ -217,7 +217,7 @@ var hero = {
 
 var fae = {
 particles: [],
-maxParticles: 10,
+maxParticles: 36,
 radiusAroundHero: 20,
 angleAroundHero: 0,
 targetX: 0,
@@ -346,7 +346,7 @@ function animateFae() {
 
     // add particles:
     if (fae.particles.length < fae.maxParticles) {
-        if (getRandomInteger(1, 4) == 1) {
+        if (getRandomInteger(1, 2) == 1) {
             var faeIsoX = findIsoCoordsX(fae.x, fae.y);
             var faeIsoY = findIsoCoordsY(fae.x, fae.y) - fae.z;
             var particleIsoX = faeIsoX + getRandomInteger(0, 8) - 4;
