@@ -86,8 +86,8 @@ $songListing = array(
 
 
 
-$songListing = json_decode($getJsonData, true);
-
+$songData = json_decode($getJsonData, true);
+$songListing = $songData["score"];
 
 	
 	$fields = "H8ChunkID/VChunkSize/H8Format/H8Subchunk1ID/VSubchunk1Size/vAudioFormat/vNumChannels/VSampleRate/VByteRate/vBlockAlign/vBitsPerSample";

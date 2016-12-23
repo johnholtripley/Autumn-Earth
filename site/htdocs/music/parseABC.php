@@ -1,7 +1,6 @@
 <?php
 
 // to do:
-// ignore W: lines with words in
 //  error handling - unknown index and memory allocation
 // more secure file upload
 // error reporting to user
@@ -114,6 +113,13 @@ function generateFileName($note,$notesOctave) {
 
 // check for upload:
 if ($_POST) {
+$songIsPrivate = "false";
+if(isset($_POST["switchInput"])) {
+$songIsPrivate = "true";
+}
+
+
+
 if ($_POST["submitbutton"] == "Upload abc notation") {
 
 if (trim($_POST["abcTextUpload"]) != "") { 
@@ -205,6 +211,7 @@ if ($uploadedfilesize > 102400) {
       $thisLinesContents = trim($abcFileContents[$i]);
       if (substr($thisLinesContents, 1, 1) == ":" ) {
         // is a header:
+
         switch (substr($thisLinesContents, 0, 1)) {
         case "X":
           $tuneIndex = substr($thisLinesContents,2);
@@ -451,12 +458,18 @@ do {
 
 } while(file_exists($songPath.$filename));
 
-
-   
-
+$jsonOutput = '{"score": ';
+   $jsonOutput .= json_encode($songListing);
+   $jsonOutput .= ',';
+$jsonOutput .= '"title": "'.$songTitle.'",';
+$jsonOutput .= '"private": '.$songIsPrivate.'}';
 
 $fp = fopen($songPath.$filename, 'w');
-fwrite($fp, json_encode($songListing));
+
+
+
+
+fwrite($fp, $jsonOutput);
 fclose($fp);
 echo "<p>Song #".$thisNewSongId." successfully created</p>";
 echo '<p><a href="http://ae.dev/music/playsong.php?instrId=1&songId='.$thisNewSongId.'&chr=999">TEST ##### Create this sound file with a psalter</a>';
@@ -509,14 +522,25 @@ e3 f ed
 c2 |B2 d2 c3 z |GB c2 BG F2 |D2 EF G2 G2
 z2 cd cd e2 |c2 f2 ed c2 |z2 fe c2 fe |f g3 g4 |]</code></pre>
 
-<form action="" name="abcForm" id="abcForm" enctype="multipart/form-data" method="post" style="padding-bottom: 15%;">
+<form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" name="abcForm" id="abcForm" enctype="multipart/form-data" method="post" style="padding-bottom: 15%;">
 <fieldset>
 <label for="abcTextUpload">paste notation:</label>
 <textarea cols="6" rows="4" style="width:300px; height: 120px;" id="abcTextUpload" name="abcTextUpload"></textarea>
 
 <input type="hidden" name="MAX_FILE_SIZE" value="102400">
-<label for="abcTextFile">or by upload:</label>
-<input type="file" name="abcTextFile" id="abcTextFile"> 
+
+
+
+<input type="file" name="abcTextFile" id="abcTextFile" class="fileInput" data-multiple-caption="{count} files selected" multiple=""> 
+<label for="abcTextFile"><span>or by upload</span></label>
+
+
+<input id="switchInput" name="switchInput" class="switch" value="1" checked="checked" type="checkbox">
+<label for="switchInput">
+<span></span>
+Allow others to copy or share this song
+</label>
+
 
 <input type="submit" name="submitbutton" id="submitbutton" value="Upload abc notation" >
 </fieldset>
