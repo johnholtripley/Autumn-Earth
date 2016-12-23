@@ -667,6 +667,10 @@ function update() {
 }
 
 function heroIsInNewTile() {
+
+
+hero.z = thisMapData.elevation[getCurrentTileY(hero.y)][getCurrentTileX(hero.x)];
+
     if (currentMap < 0) {
         updateCartographicMiniMap();
     }

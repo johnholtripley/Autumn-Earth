@@ -189,6 +189,7 @@ var key = [0, 0, 0, 0, 0, 0, 0];
 var hero = {
     x: 0,
     y: 0,
+    z: 0,
     dx: 0,
     dy: 0,
 
@@ -217,7 +218,7 @@ var hero = {
 
 var fae = {
 particles: [],
-maxParticles: 36,
+maxParticles: 18,
 radiusAroundHero: 20,
 angleAroundHero: 0,
 targetX: 0,
@@ -2425,6 +2426,14 @@ function isATerrainCollision(x, y) {
                 // is a collision:
                 return 1;
                 break;
+            case "<":
+            case ">":
+            case "^":
+            case "v":
+                // stairs
+                // #####
+                return 0;
+                break;
             case "d":
                 // is a door:
 
@@ -2438,6 +2447,8 @@ function isATerrainCollision(x, y) {
         }
     }
 }
+
+
 
 
 function startDoorTransition() {
@@ -2650,6 +2661,10 @@ function update() {
 }
 
 function heroIsInNewTile() {
+
+
+hero.z = thisMapData.elevation[getCurrentTileY(hero.y)][getCurrentTileX(hero.x)];
+
     if (currentMap < 0) {
         updateCartographicMiniMap();
     }
@@ -3327,7 +3342,7 @@ function draw() {
           ];
           */
         var assetsToDraw = [
-            [hero.isoy, "img", heroImg, Math.floor(canvasWidth / 2 - hero.feetOffsetX), Math.floor(canvasHeight / 2 - hero.feetOffsetY)]
+            [hero.isoy, "img", heroImg, Math.floor(canvasWidth / 2 - hero.feetOffsetX), Math.floor(canvasHeight / 2 - hero.feetOffsetY - hero.z)]
         ];
 
 
