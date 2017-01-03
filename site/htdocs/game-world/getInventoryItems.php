@@ -44,7 +44,8 @@ $outputJson .= '"group":"'.$itemGroup.'",';
 $outputJson .= '"category":"'.$itemCategories.'",';
 $outputJson .= '"inscribable":"'.$inscribable.'",';
 $outputJson .= '"colour":"'.$colour.'",';
-$outputJson .= '"hasInherentColour":"'.$hasInherentColour.'"';
+$outputJson .= '"hasInherentColour":"'.$hasInherentColour.'",';
+$outputJson .= '"lockedToThisPlayer":"'.$lockedToThisPlayer.'"';
 
 
 $outputJson .= '},';

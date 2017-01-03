@@ -378,6 +378,11 @@ function sortByLowestValue(a, b) {
 };
 */
 
+function getRandomElementFromArray(whichArray) {
+    return whichArray[Math.floor(Math.random() * whichArray.length)];
+}
+
+
 
 function drawCircle(fillStyle,x,y,radius) {
 gameContext.fillStyle = fillStyle;

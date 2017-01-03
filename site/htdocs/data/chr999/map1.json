@@ -50,7 +50,7 @@
             "speechIndex": 0,
             "speech": [
                 ["hello", "once"],
-                ["hello again", ""]
+                ["hello again/hi/howdo", ""]
             ],
             "cardGameSpeech": {
                 "challenge": ["Do you play? Fancy a game then?", "play"],

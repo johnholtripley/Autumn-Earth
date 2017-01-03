@@ -792,6 +792,13 @@ function processSpeech(thisNPC, thisSpeech, thisSpeechCode, isPartOfNPCsNormalSp
                 // knock this back one so to keep it in step with the removed item:
                 thisNPC.speechIndex--;
                 break;
+                case "profession":
+var professionId = thisNPC.speech[thisNPC.speechIndex][2];
+if(professionsKnown.indexOf(professionId) == -1) {
+professionsKnown.push(professionId);
+showNotification('<p>You learned a new profession</p>');
+}
+                break;
             case "quest":
             case "quest-no-open":
             case "quest-no-close":

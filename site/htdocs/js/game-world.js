@@ -789,6 +789,11 @@ function sortByLowestValue(a, b) {
 };
 */
 
+function getRandomElementFromArray(whichArray) {
+    return whichArray[Math.floor(Math.random() * whichArray.length)];
+}
+
+
 
 function drawCircle(fillStyle,x,y,radius) {
 gameContext.fillStyle = fillStyle;
@@ -1376,7 +1381,11 @@ function inventoryItemAction(whichSlot, whichAction, whichActionValue) {
         }
             break;
             case "craft":
+            if(professionsKnown.indexOf(whichActionValue) != -1) {
             UI.populateRecipeList(whichActionValue);
+        } else {
+            UI.showNotification("<p>You don't know this profession yet.</p>");
+        }
             break;
     }
 }
@@ -1663,11 +1672,15 @@ thisSlotElem.classList.add("changed")
     },
 
     showDialogue: function(whichNPC, text) {
+        // check for random variation in text:
+
+var textToShow = getRandomElementFromArray(text.split("/"));
+
         if (activeNPCForDialogue != '') {
 
             dialogue.removeEventListener(whichTransitionEvent, UI.removeActiveDialogue, false);
         }
-        dialogue.innerHTML = text;
+        dialogue.innerHTML = textToShow;
         dialogue.classList.remove("slowerFade");
         dialogue.classList.add("active");
         activeNPCForDialogue = whichNPC;
@@ -2785,6 +2798,13 @@ function processSpeech(thisNPC, thisSpeech, thisSpeechCode, isPartOfNPCsNormalSp
                 thisNPC.speech.splice(thisNPC.speechIndex, 1);
                 // knock this back one so to keep it in step with the removed item:
                 thisNPC.speechIndex--;
+                break;
+                case "profession":
+var professionId = thisNPC.speech[thisNPC.speechIndex][2];
+if(professionsKnown.indexOf(professionId) == -1) {
+professionsKnown.push(professionId);
+showNotification('<p>You learned a new profession</p>');
+}
                 break;
             case "quest":
             case "quest-no-open":

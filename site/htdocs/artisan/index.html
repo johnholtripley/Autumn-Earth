@@ -1,0 +1,102 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>Autumn Earth</title>
+<meta content="salmacis" name="keywords" />
+<meta content="john@salmacis.co.uk" name="author" />
+<meta content="isometric world" name="description" />
+<meta content="text/html; charset=iso-8859-1" http-equiv="content-type" />
+<meta content="no" http-equiv="imagetoolbar" />
+
+<style type="text/css">
+#imageUpload.formSubmitted {
+background: url(http://www.autumnearth.com/images/working.gif) no-repeat bottom right;
+}
+</style>
+
+
+<script  type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+		<script type="text/javascript">
+		
+
+		
+		
+		function catchNavigationAway() {
+		return "leaving before upload complete";
+		}
+		
+		function uploadStarted() {
+		 // called from flash - catch any action that will navigate away from this page:
+		 $(window).bind('beforeunload', catchNavigationAway);
+
+		}
+		
+		function uploadComplete() {
+			// called from flash - remove alert:
+			$(window).unbind('beforeunload', catchNavigationAway);
+
+		}
+		
+		
+		$(document).ready(function() {
+   
+   // show the button in case it was previously hidden:
+   $('#uploadSubmitButton').show();
+   $('#imageUpload').removeClass('formSubmitted');
+   
+   
+
+
+
+// set up form for non-flash to still give feedback that upload is in progress:
+
+ $('#imageUpload').submit(function() {
+$('#uploadSubmitButton').hide();
+$('#imageUpload').addClass('formSubmitted');
+
+
+  });
+});
+
+		
+		
+		</script>
+
+</head>
+
+<body>
+
+<a href="/">home</a> | <a href="http://www.google.com">google</a>
+
+
+<form enctype="multipart/form-data" id="imageUpload" action="http://www.autumnearth.com/development/architect/upload.php" method="post">
+<fieldset>
+<input type="radio" name="skew" id="skew0" value="0" checked="checked" /> <label for="skew0">don't convert to iso</label>
+ | 
+<input type="radio" name="skew" id="skew1" value="1" /> <label for="skew1">skew left</label>
+ | 
+<input type="radio" name="skew" id="skew2" value="-1" /> <label for="skew2">skew right</label>
+<br />
+<br />
+<input type="radio" name="imagesizing" id="imgsizing1" value="crop" /> <label for="imgsizing1">crop image</label>
+ | 
+<input type="radio" name="imagesizing" id="imgsizing2" value="scale" checked="checked" /> <label for="imgsizing2">scale image</label>
+<br />
+<br />
+<input type="hidden" name="MAX_FILE_SIZE" value="1024000" />
+<input type="hidden" name="sentFromFlash" value="false" />
+<input type="file" name="Filedata" /> 
+<br />
+<br />
+<input type="submit" value="upload image" id="uploadSubmitButton" />
+</fieldset>
+</form>
+
+
+
+
+
+
+
+</body>
+</html>

@@ -20,6 +20,7 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/search.php");
 	</li>
 	<li><a href="/auction/">Auction</a></li>
 	<li><a href="/mail/">Mail</a></li>
+<li><a href="/artisan/">Artisan</a></li>
 	<li><a href="/almanack/">The Almanack</a></li>
 	<li><a href="/chronicle/">The Chronicle</a></li>
 	<li><a href="/retinue/">Retinue</a></li>

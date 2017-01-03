@@ -267,6 +267,7 @@ canvas {
     @include pxRem('padding', 10px 12px);
     @include pxRem('font-size', 12px);
     @include pxRem('padding', 14px);
+    min-width: 20px;
     max-width: 295px;
     opacity: 0;
     @include transition(opacity 0.4s ease);

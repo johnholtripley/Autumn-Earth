@@ -198,7 +198,11 @@ function inventoryItemAction(whichSlot, whichAction, whichActionValue) {
         }
             break;
             case "craft":
+            if(professionsKnown.indexOf(whichActionValue) != -1) {
             UI.populateRecipeList(whichActionValue);
+        } else {
+            UI.showNotification("<p>You don't know this profession yet.</p>");
+        }
             break;
     }
 }

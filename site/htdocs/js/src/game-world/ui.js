@@ -166,11 +166,15 @@ thisSlotElem.classList.add("changed")
     },
 
     showDialogue: function(whichNPC, text) {
+        // check for random variation in text:
+
+var textToShow = getRandomElementFromArray(text.split("/"));
+
         if (activeNPCForDialogue != '') {
 
             dialogue.removeEventListener(whichTransitionEvent, UI.removeActiveDialogue, false);
         }
-        dialogue.innerHTML = text;
+        dialogue.innerHTML = textToShow;
         dialogue.classList.remove("slowerFade");
         dialogue.classList.add("active");
         activeNPCForDialogue = whichNPC;
