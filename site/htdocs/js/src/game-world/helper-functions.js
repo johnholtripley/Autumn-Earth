@@ -109,12 +109,16 @@ return thisNode;
 
 
 
-/*
-function findIsoDepth(x, y) {
- return y;
- //   return x*tileW + y*(mapTilesX+1)*tileW;
+
+function findIsoDepth(x, y, z) {
+ //return y + z;
+ 
+//return (x / 2) + (y / 2) - z;
+
+   // return x*tileW + y*(mapTilesX+1)*tileW;
+   return Math.floor((x/4) + (y/4) - tileH/2);
 }
-*/
+
 
 function isAnObjectCollision(obj1x, obj1y, obj1w, obj1h, obj2x, obj2y, obj2w, obj2h) {
     if (obj1x + obj1w / 2 > obj2x - obj2w / 2) {

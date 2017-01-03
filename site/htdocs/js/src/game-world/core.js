@@ -50,13 +50,10 @@ function getHeroGameState() {
         hero.activeTitle = data.activeTitle;
         hero.recipesKnown = data.recipesKnown;
         hero.professionsKnown = data.professionsKnown;
-       
-
-// copy the fae properties that will change into the main fae object:
-for (var attrname in data.fae) {
-    fae[attrname] = data.fae[attrname];
-}
-
+        // copy the fae properties that will change into the main fae object:
+        for (var attrname in data.fae) {
+            fae[attrname] = data.fae[attrname];
+        }
         hero.inventory = data.inventory;
         if (currentMap > 0) {
             //clean old procedural maps: (don't need a response here)
@@ -70,6 +67,7 @@ for (var attrname in data.fae) {
 }
 
 
+
 function loadCoreAssets() {
     coreImagesToLoad = [];
     coreImagesToLoad.push({
@@ -81,9 +79,7 @@ function loadCoreAssets() {
 
 function prepareCoreAssets() {
     heroImg = Loader.getImage("heroImg");
-
     getColours();
-    
 }
 
 

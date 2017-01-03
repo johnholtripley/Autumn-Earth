@@ -25,12 +25,12 @@ function updateCartographicMiniMap() {
 
 function initCartographicMap() {
     canvasMapImage.src = "/game-world/generateCartographicMap.php?playerId=" + characterId + "&dungeonName=" + randomDungeonName + "&plotChests=true&requestedMap=" + newMap;
+
     canvasMapImage.onload = function() {
         // load the mask (if any) so that previously uncovered areas are revealed:
-        console.log('getting mask - /game-world/getCartographicMapMask.php?chr=' + characterId + '&dungeonName=' + randomDungeonName + '&currentMap=' + newMap);
+        //console.log('getting mask - /game-world/getCartographicMapMask.php?chr=' + characterId + '&dungeonName=' + randomDungeonName + '&currentMap=' + newMap);
         canvasMapMaskImage.src = '/game-world/getCartographicMapMask.php?chr=' + characterId + '&dungeonName=' + randomDungeonName + '&currentMap=' + newMap + '&cache=' + Date.now();
-        canvasMapMaskImage.onload = function() {
-            console.log('canvasMapMaskImage onload');
+        canvasMapMaskImage.onload = function() {        
             offScreenCartographyContext.clearRect(0, 0, 246, 246);
             offScreenCartographyContext.drawImage(canvasMapMaskImage, 0, 0);
             updateCartographicMiniMap();
@@ -520,12 +520,16 @@ return thisNode;
 
 
 
-/*
-function findIsoDepth(x, y) {
- return y;
- //   return x*tileW + y*(mapTilesX+1)*tileW;
+
+function findIsoDepth(x, y, z) {
+ //return y + z;
+ 
+//return (x / 2) + (y / 2) - z;
+
+   // return x*tileW + y*(mapTilesX+1)*tileW;
+   return Math.floor((x/4) + (y/4) - tileH/2);
 }
-*/
+
 
 function isAnObjectCollision(obj1x, obj1y, obj1w, obj1h, obj2x, obj2y, obj2w, obj2h) {
     if (obj1x + obj1w / 2 > obj2x - obj2w / 2) {
@@ -2057,13 +2061,10 @@ function getHeroGameState() {
         hero.activeTitle = data.activeTitle;
         hero.recipesKnown = data.recipesKnown;
         hero.professionsKnown = data.professionsKnown;
-       
-
-// copy the fae properties that will change into the main fae object:
-for (var attrname in data.fae) {
-    fae[attrname] = data.fae[attrname];
-}
-
+        // copy the fae properties that will change into the main fae object:
+        for (var attrname in data.fae) {
+            fae[attrname] = data.fae[attrname];
+        }
         hero.inventory = data.inventory;
         if (currentMap > 0) {
             //clean old procedural maps: (don't need a response here)
@@ -2077,6 +2078,7 @@ for (var attrname in data.fae) {
 }
 
 
+
 function loadCoreAssets() {
     coreImagesToLoad = [];
     coreImagesToLoad.push({
@@ -2088,9 +2090,7 @@ function loadCoreAssets() {
 
 function prepareCoreAssets() {
     heroImg = Loader.getImage("heroImg");
-
     getColours();
-    
 }
 
 

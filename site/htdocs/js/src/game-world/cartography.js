@@ -28,10 +28,9 @@ function initCartographicMap() {
 
     canvasMapImage.onload = function() {
         // load the mask (if any) so that previously uncovered areas are revealed:
-        console.log('getting mask - /game-world/getCartographicMapMask.php?chr=' + characterId + '&dungeonName=' + randomDungeonName + '&currentMap=' + newMap);
+        //console.log('getting mask - /game-world/getCartographicMapMask.php?chr=' + characterId + '&dungeonName=' + randomDungeonName + '&currentMap=' + newMap);
         canvasMapMaskImage.src = '/game-world/getCartographicMapMask.php?chr=' + characterId + '&dungeonName=' + randomDungeonName + '&currentMap=' + newMap + '&cache=' + Date.now();
-        canvasMapMaskImage.onload = function() {
-            
+        canvasMapMaskImage.onload = function() {        
             offScreenCartographyContext.clearRect(0, 0, 246, 246);
             offScreenCartographyContext.drawImage(canvasMapMaskImage, 0, 0);
             updateCartographicMiniMap();
