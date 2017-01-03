@@ -1128,7 +1128,7 @@ function quadBezier($im, $x1, $y1, $x2, $y2, $x3, $y3) {
 function loadAndParseJSON($whichfileToUse) {
   global $loadedMapData, $loadedItemData, $loadedDoorData, $protocol;
 
-$str = file_get_contents($protocol.$_SERVER['SERVER_NAME']."/".$whichfileToUse);
+$str = file_get_contents($whichfileToUse);
 $json = json_decode($str, true);
 
 
