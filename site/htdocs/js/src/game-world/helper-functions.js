@@ -18,6 +18,26 @@ return Math.floor((x/4) + (y/4) - tileH/2);
 }
 
 
+function findIsoDepth(x, y, z) {
+ //return y + z;
+ 
+//return (x / 2) + (y / 2) - z;
+
+   // return x*tileW + y*(mapTilesX+1)*tileW;
+ //  return Math.floor((x/4) * (x/4) + (y/4) * (y/4) - tileH/2) + z;
+
+//return  Math.floor((mapTilesY * tileW/2) -y/2 + x/2) * (Math.floor((x/4) + (y/4) - tileH/2)) + z;
+
+//return (mapTilesY * tileW/2) -y/2 + x/2 + (x/4) + (y/4) - tileH/2;
+
+
+
+return Math.floor((x/4) + (y/4) - tileH/2);
+
+
+}
+
+
 // find non-iso coords for a tile
 function getTileCentreCoordX(tileX) {
     return tileX*tileW + tileW/2;
@@ -110,14 +130,7 @@ return thisNode;
 
 
 
-function findIsoDepth(x, y, z) {
- //return y + z;
- 
-//return (x / 2) + (y / 2) - z;
 
-   // return x*tileW + y*(mapTilesX+1)*tileW;
-   return Math.floor((x/4) + (y/4) - tileH/2);
-}
 
 
 function isAnObjectCollision(obj1x, obj1y, obj1w, obj1h, obj2x, obj2y, obj2w, obj2h) {

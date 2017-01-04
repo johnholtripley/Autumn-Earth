@@ -429,6 +429,26 @@ return Math.floor((x/4) + (y/4) - tileH/2);
 }
 
 
+function findIsoDepth(x, y, z) {
+ //return y + z;
+ 
+//return (x / 2) + (y / 2) - z;
+
+   // return x*tileW + y*(mapTilesX+1)*tileW;
+ //  return Math.floor((x/4) * (x/4) + (y/4) * (y/4) - tileH/2) + z;
+
+//return  Math.floor((mapTilesY * tileW/2) -y/2 + x/2) * (Math.floor((x/4) + (y/4) - tileH/2)) + z;
+
+//return (mapTilesY * tileW/2) -y/2 + x/2 + (x/4) + (y/4) - tileH/2;
+
+
+
+return Math.floor((x/4) + (y/4) - tileH/2);
+
+
+}
+
+
 // find non-iso coords for a tile
 function getTileCentreCoordX(tileX) {
     return tileX*tileW + tileW/2;
@@ -521,14 +541,7 @@ return thisNode;
 
 
 
-function findIsoDepth(x, y, z) {
- //return y + z;
- 
-//return (x / 2) + (y / 2) - z;
 
-   // return x*tileW + y*(mapTilesX+1)*tileW;
-   return Math.floor((x/4) + (y/4) - tileH/2);
-}
 
 
 function isAnObjectCollision(obj1x, obj1y, obj1w, obj1h, obj2x, obj2y, obj2w, obj2h) {
@@ -3362,7 +3375,7 @@ function draw() {
           ];
           */
         var assetsToDraw = [
-            [hero.isoy, "img", heroImg, Math.floor(canvasWidth / 2 - hero.feetOffsetX), Math.floor(canvasHeight / 2 - hero.feetOffsetY - hero.z)]
+            [findIsoDepth(hero.x,hero.y,hero.z), "img", heroImg, Math.floor(canvasWidth / 2 - hero.feetOffsetX), Math.floor(canvasHeight / 2 - hero.feetOffsetY - hero.z)]
         ];
 
 
@@ -3370,7 +3383,7 @@ function draw() {
         thisX = findIsoCoordsX(fae.x, fae.y);
         thisY = findIsoCoordsY(fae.x, fae.y);
 
-        assetsToDraw.push([thisY, "faeCentre", Math.floor(thisX - hero.isox + (canvasWidth / 2)), Math.floor(thisY - hero.isoy + (canvasHeight / 2) - fae.z)]);
+        assetsToDraw.push([findIsoDepth(fae.x,fae.y,0), "faeCentre", Math.floor(thisX - hero.isox + (canvasWidth / 2)), Math.floor(thisY - hero.isoy + (canvasHeight / 2) - fae.z)]);
 
         // draw fae particles:
         for (var i = 0; i < fae.particles.length; i++) {
@@ -3391,7 +3404,7 @@ function draw() {
                     thisY = getTileIsoCentreCoordY(i, j);
                     thisGraphicCentreX = thisMapData.graphics[(map[j][i])].centreX;
                     thisGraphicCentreY = thisMapData.graphics[(map[j][i])].centreY;
-                    assetsToDraw.push([thisY, "img", tileImages[(map[j][i])], Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2))]);
+                    assetsToDraw.push([findIsoDepth(getTileCentreCoordX(i),getTileCentreCoordY(j),0), "img", tileImages[(map[j][i])], Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2))]);
                 }
             }
         }
@@ -3408,7 +3421,7 @@ function draw() {
             //assetsToDraw.push([findIsoDepth(thisX, thisY), npcImages[i], Math.floor(thisX - hero.isox - thisNPC.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisNPC.centreY + (canvasHeight / 2))]);
    
 
-            assetsToDraw.push([thisY, "sprite", npcImages[i], thisNPCOffsetCol * thisNPC.spriteWidth, thisNPCOffsetRow * thisNPC.spriteHeight, thisNPC.spriteWidth, thisNPC.spriteHeight, Math.floor(thisX - hero.isox - thisNPC.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisNPC.centreY + (canvasHeight / 2)), thisNPC.spriteWidth, thisNPC.spriteHeight]);
+            assetsToDraw.push([findIsoDepth(thisNPC.x,thisNPC.y,0), "sprite", npcImages[i], thisNPCOffsetCol * thisNPC.spriteWidth, thisNPCOffsetRow * thisNPC.spriteHeight, thisNPC.spriteWidth, thisNPC.spriteHeight, Math.floor(thisX - hero.isox - thisNPC.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisNPC.centreY + (canvasHeight / 2)), thisNPC.spriteWidth, thisNPC.spriteHeight]);
         }
 
 
@@ -3416,7 +3429,7 @@ function draw() {
             thisItem = thisMapData.items[i];
             thisX = findIsoCoordsX(thisItem.x, thisItem.y);
             thisY = findIsoCoordsY(thisItem.x, thisItem.y);
-            assetsToDraw.push([thisY, "img", itemImages[i], Math.floor(thisX - hero.isox - thisItem.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisItem.centreY + (canvasHeight / 2))]);
+            assetsToDraw.push([findIsoDepth(thisItem.x, thisItem.y,0), "img", itemImages[i], Math.floor(thisX - hero.isox - thisItem.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisItem.centreY + (canvasHeight / 2))]);
         }
 
         assetsToDraw.sort(sortByLowestValue);

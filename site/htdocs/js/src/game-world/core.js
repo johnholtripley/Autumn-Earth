@@ -1351,7 +1351,7 @@ function draw() {
           ];
           */
         var assetsToDraw = [
-            [hero.isoy, "img", heroImg, Math.floor(canvasWidth / 2 - hero.feetOffsetX), Math.floor(canvasHeight / 2 - hero.feetOffsetY - hero.z)]
+            [findIsoDepth(hero.x,hero.y,hero.z), "img", heroImg, Math.floor(canvasWidth / 2 - hero.feetOffsetX), Math.floor(canvasHeight / 2 - hero.feetOffsetY - hero.z)]
         ];
 
 
@@ -1359,7 +1359,7 @@ function draw() {
         thisX = findIsoCoordsX(fae.x, fae.y);
         thisY = findIsoCoordsY(fae.x, fae.y);
 
-        assetsToDraw.push([thisY, "faeCentre", Math.floor(thisX - hero.isox + (canvasWidth / 2)), Math.floor(thisY - hero.isoy + (canvasHeight / 2) - fae.z)]);
+        assetsToDraw.push([findIsoDepth(fae.x,fae.y,0), "faeCentre", Math.floor(thisX - hero.isox + (canvasWidth / 2)), Math.floor(thisY - hero.isoy + (canvasHeight / 2) - fae.z)]);
 
         // draw fae particles:
         for (var i = 0; i < fae.particles.length; i++) {
@@ -1380,7 +1380,7 @@ function draw() {
                     thisY = getTileIsoCentreCoordY(i, j);
                     thisGraphicCentreX = thisMapData.graphics[(map[j][i])].centreX;
                     thisGraphicCentreY = thisMapData.graphics[(map[j][i])].centreY;
-                    assetsToDraw.push([thisY, "img", tileImages[(map[j][i])], Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2))]);
+                    assetsToDraw.push([findIsoDepth(getTileCentreCoordX(i),getTileCentreCoordY(j),0), "img", tileImages[(map[j][i])], Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2))]);
                 }
             }
         }
@@ -1397,7 +1397,7 @@ function draw() {
             //assetsToDraw.push([findIsoDepth(thisX, thisY), npcImages[i], Math.floor(thisX - hero.isox - thisNPC.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisNPC.centreY + (canvasHeight / 2))]);
    
 
-            assetsToDraw.push([thisY, "sprite", npcImages[i], thisNPCOffsetCol * thisNPC.spriteWidth, thisNPCOffsetRow * thisNPC.spriteHeight, thisNPC.spriteWidth, thisNPC.spriteHeight, Math.floor(thisX - hero.isox - thisNPC.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisNPC.centreY + (canvasHeight / 2)), thisNPC.spriteWidth, thisNPC.spriteHeight]);
+            assetsToDraw.push([findIsoDepth(thisNPC.x,thisNPC.y,0), "sprite", npcImages[i], thisNPCOffsetCol * thisNPC.spriteWidth, thisNPCOffsetRow * thisNPC.spriteHeight, thisNPC.spriteWidth, thisNPC.spriteHeight, Math.floor(thisX - hero.isox - thisNPC.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisNPC.centreY + (canvasHeight / 2)), thisNPC.spriteWidth, thisNPC.spriteHeight]);
         }
 
 
@@ -1405,7 +1405,7 @@ function draw() {
             thisItem = thisMapData.items[i];
             thisX = findIsoCoordsX(thisItem.x, thisItem.y);
             thisY = findIsoCoordsY(thisItem.x, thisItem.y);
-            assetsToDraw.push([thisY, "img", itemImages[i], Math.floor(thisX - hero.isox - thisItem.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisItem.centreY + (canvasHeight / 2))]);
+            assetsToDraw.push([findIsoDepth(thisItem.x, thisItem.y,0), "img", itemImages[i], Math.floor(thisX - hero.isox - thisItem.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisItem.centreY + (canvasHeight / 2))]);
         }
 
         assetsToDraw.sort(sortByLowestValue);
