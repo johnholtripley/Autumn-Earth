@@ -3086,19 +3086,19 @@ showNotification('<p>You learned a new profession</p>');
 
 
 
-function closeQuest(whichNPC, whichQestId) {
-    if (giveQuestRewards(whichQestId)) {
-        if (questData[whichQestId].isRepeatable > 0) {
-            questData[whichQestId].hasBeenCompleted = false;
-            questData[whichQestId].isUnderway = false;
+function closeQuest(whichNPC, whichQuestId) {
+    if (giveQuestRewards(whichQuestId)) {
+        if (questData[whichQuestId].isRepeatable > 0) {
+            questData[whichQuestId].hasBeenCompleted = false;
+            questData[whichQuestId].isUnderway = false;
         } else {
-            questData[whichQestId].hasBeenCompleted = true;
+            questData[whichQuestId].hasBeenCompleted = true;
             // remove quest text now:
             whichNPC.speech.splice(whichNPC.speechIndex, 1);
             // knock this back one so to keep it in step with the removed item:
             whichNPC.speechIndex--;
         }
-        checkForTitlesAwarded(whichQestId);
+        checkForTitlesAwarded(whichQuestId);
     } else {
         // keep the NPC on the quest dialogue:
         whichNPC.speechIndex--;
@@ -3114,8 +3114,14 @@ function giveQuestRewards(whichQuestId) {
         var allRewardItems = [];
         var questRewards = questData[whichQuestId].itemsReceivedOnCompletion.split(",");
         for (var i = 0; i < questRewards.length; i++) {
+            // check for variation:
+
+var questPossibilities = questRewards[i].split("/");
+var questRewardToUse = getRandomElementFromArray(questPossibilities);
+
+
             // check for any quantities:
-            var thisQuestReward = questRewards[i].split("x");
+            var thisQuestReward = questRewardToUse.split("x");
             var thisQuantity, thisItem;
             if (thisQuestReward.length > 1) {
                 thisQuantity = thisQuestReward[0];
@@ -3124,6 +3130,13 @@ function giveQuestRewards(whichQuestId) {
                 thisQuantity = 1;
                 thisItem = questRewards[i];
             }
+
+if(questPossibilities.length>1) {
+// need to show the name of the item in the speech
+// is thisSpeech global?
+thisSpeech = thisSpeech.replace(/##itemName##/i, currentActiveInventoryItems[parseInt(thisItem)].shortname);
+// ######
+}
 
             // build item object:
             var thisRewardObject = {
