@@ -19,21 +19,9 @@ return Math.floor((x/4) + (y/4) - tileH/2);
 
 
 function findIsoDepth(x, y, z) {
- //return y + z;
- 
-//return (x / 2) + (y / 2) - z;
 
-   // return x*tileW + y*(mapTilesX+1)*tileW;
- //  return Math.floor((x/4) * (x/4) + (y/4) * (y/4) - tileH/2) + z;
-
-//return  Math.floor((mapTilesY * tileW/2) -y/2 + x/2) * (Math.floor((x/4) + (y/4) - tileH/2)) + z;
-
-//return (mapTilesY * tileW/2) -y/2 + x/2 + (x/4) + (y/4) - tileH/2;
-
-
-
-return Math.floor((x/4) + (y/4) - tileH/2);
-
+//return Math.floor((x/4) + (y/4) - tileH/2);
+return Math.floor((mapTilesY * tileW/2) -y/2 + x/2) + ((Math.floor((x/4) + (y/4) - tileH/2))*mapTilesY * tileW) + z;
 
 }
 
