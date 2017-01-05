@@ -48,6 +48,7 @@ var whichTransitionEvent = '';
 var activeNPCForDialogue = '';
 var closeDialogueDistance = 200;
 var canCloseDialogueBalloonNextClick = false;
+var thisSpeech = '';
 
 var boosterCardsRevealed = 0;
 var boosterCardsToAdd = [];

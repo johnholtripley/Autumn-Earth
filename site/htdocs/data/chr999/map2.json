@@ -320,7 +320,7 @@
                 "isMoving": false,
                 "speechIndex": 0,
                 "speech": [
-                    ["I could really do with some mordant... I wonder if pink guy has any?|2|thanks for giving me that mordant, here's some cards", "quest-no-open", "1"],
+                    ["I could really do with some mordant... I wonder if pink guy has any?|2|thanks for giving me that mordant, here's some ##itemName##.", "quest-no-open", "1"],
                     ["that was really kind of you", ""]
                 ],
                 "cardGameSpeech": {

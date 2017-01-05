@@ -777,7 +777,9 @@ function checkForActions() {
     key[4] = 0;
 }
 
-function processSpeech(thisNPC, thisSpeech, thisSpeechCode, isPartOfNPCsNormalSpeech) {
+function processSpeech(thisNPC, thisSpeechPassedIn, thisSpeechCode, isPartOfNPCsNormalSpeech) {
+    // thisSpeech is global so it can be edited in the close quest functions:
+    thisSpeech = thisSpeechPassedIn;
     // isPartOfNPCsNormalSpeech is false if not set:
     isPartOfNPCsNormalSpeech = typeof isPartOfNPCsNormalSpeech !== 'undefined' ? isPartOfNPCsNormalSpeech : false;
     individualSpeechCodes = thisSpeechCode.split(",");
@@ -788,12 +790,12 @@ function processSpeech(thisNPC, thisSpeech, thisSpeechCode, isPartOfNPCsNormalSp
                 // knock this back one so to keep it in step with the removed item:
                 thisNPC.speechIndex--;
                 break;
-                case "profession":
-var professionId = thisNPC.speech[thisNPC.speechIndex][2];
-if(professionsKnown.indexOf(professionId) == -1) {
-professionsKnown.push(professionId);
-showNotification('<p>You learned a new profession</p>');
-}
+            case "profession":
+                var professionId = thisNPC.speech[thisNPC.speechIndex][2];
+                if (professionsKnown.indexOf(professionId) == -1) {
+                    professionsKnown.push(professionId);
+                    showNotification('<p>You learned a new profession</p>');
+                }
                 break;
             case "quest":
             case "quest-no-open":
@@ -1074,6 +1076,7 @@ showNotification('<p>You learned a new profession</p>');
 
 
 
+
 function closeQuest(whichNPC, whichQuestId) {
     if (giveQuestRewards(whichQuestId)) {
         if (questData[whichQuestId].isRepeatable > 0) {
@@ -1096,6 +1099,7 @@ function closeQuest(whichNPC, whichQuestId) {
 
 
 
+
 function giveQuestRewards(whichQuestId) {
     // give any reward to the player:
     if (questData[whichQuestId].itemsReceivedOnCompletion) {
@@ -1103,11 +1107,8 @@ function giveQuestRewards(whichQuestId) {
         var questRewards = questData[whichQuestId].itemsReceivedOnCompletion.split(",");
         for (var i = 0; i < questRewards.length; i++) {
             // check for variation:
-
-var questPossibilities = questRewards[i].split("/");
-var questRewardToUse = getRandomElementFromArray(questPossibilities);
-
-
+            var questPossibilities = questRewards[i].split("/");
+            var questRewardToUse = getRandomElementFromArray(questPossibilities);
             // check for any quantities:
             var thisQuestReward = questRewardToUse.split("x");
             var thisQuantity, thisItem;
@@ -1119,12 +1120,10 @@ var questRewardToUse = getRandomElementFromArray(questPossibilities);
                 thisItem = questRewards[i];
             }
 
-if(questPossibilities.length>1) {
-// need to show the name of the item in the speech
-// is thisSpeech global?
-thisSpeech = thisSpeech.replace(/##itemName##/i, currentActiveInventoryItems[parseInt(thisItem)].shortname);
-// ######
-}
+            if (questPossibilities.length > 1) {
+                // might need to show the name of the item in the speech:           
+                thisSpeech = thisSpeech.replace(/##itemName##/i, currentActiveInventoryItems[parseInt(thisItem)].shortname);  
+            }
 
             // build item object:
             var thisRewardObject = {
@@ -1142,7 +1141,6 @@ thisSpeech = thisSpeech.replace(/##itemName##/i, currentActiveInventoryItems[par
             }
             allRewardItems.push(thisRewardObject);
         }
-
         inventoryCheck = canAddItemToInventory(allRewardItems);
         if (inventoryCheck[0]) {
             UI.showChangeInInventory(inventoryCheck[1]);
@@ -1155,8 +1153,8 @@ thisSpeech = thisSpeech.replace(/##itemName##/i, currentActiveInventoryItems[par
     } else {
         return true;
     }
-
 }
+
 
 function checkForTitlesAwarded(whichQuestId) {
     // check for any titles:
