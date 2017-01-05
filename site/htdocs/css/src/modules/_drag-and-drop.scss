@@ -1,0 +1,29 @@
+.canDragAndDrop {
+  background: #cecece;
+  outline: 2px dashed black;
+  outline-offset: -10px;
+  padding: 20px;
+
+&.isDraggedOver {
+background: #666;
+
+}
+}
+
+
+progress {
+      /* Reset the default appearance */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+   appearance: none;
+
+border: none;
+
+  width: 250px;
+  height: 20px;
+
+  &:not([value]) {
+display: none;
+    }
+}
+

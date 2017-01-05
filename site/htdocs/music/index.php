@@ -5,10 +5,14 @@
 // more secure file upload
 // error reporting to user
 
+$isAnAJAXRequest = false;
+if(isset($_POST["sentViaAJAX"])) {
+if($_POST["sentViaAJAX"] == "true") {
+  $isAnAJAXRequest = true;
+}
+}
 
-
-
-
+if(!$isAnAJAXRequest) {
 
 include($_SERVER['DOCUMENT_ROOT']."/includes/session.php");
 include($_SERVER['DOCUMENT_ROOT']."/includes/signalnoise.php");
@@ -28,6 +32,7 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/header.php");
 <p><a href="/music/archive/">ABC format archive</a></p>
 <?php
 
+}
 
 $thisCharId = "999";
 
@@ -118,21 +123,36 @@ if(isset($_POST["switchInput"])) {
 $songIsPrivate = "true";
 }
 
+$isOkToProcess = false;
+if($isAnAJAXRequest) {
+$isOkToProcess = true;
+}
+if(isset($_POST["submitbutton"])) {
+  if($_POST["submitbutton"] == "Upload abc notation") {
+  $isOkToProcess = true;
+}
+}
 
+if ($isOkToProcess) {
 
-if ($_POST["submitbutton"] == "Upload abc notation") {
-
+$useTextAreaContent = false;
+if(isset($_POST["abcTextUpload"])) {
 if (trim($_POST["abcTextUpload"]) != "") { 
+$useTextAreaContent = true;
+}
+}
+
+
+if ($useTextAreaContent) { 
    $abcNotation = trim($_POST["abcTextUpload"]);
    } else {
     // read uploaded file contents:
     
-    
-    
+ 
     
 $uploadError = "";
-$thisErrorMessage = $_FILES['abcTextFile']['error'];
-$uploadedfilesize = $_FILES['abcTextFile']['size'];
+$thisErrorMessage = $_FILES['Filedata']['error'];
+$uploadedfilesize = $_FILES['Filedata']['size'];
     
     
 // check file size didn't exceed limit (100k here):
@@ -146,15 +166,15 @@ if ($uploadedfilesize > 102400) {
 } else {
 	
 	// get temporary file name:
-	$temporaryName = $_FILES['abcTextFile']['tmp_name'];
+	$temporaryName = $_FILES['Filedata']['tmp_name'];
 	
 	// check the file has actually been sent by POST
-  if (!(is_uploaded_file($_FILES['abcTextFile']['tmp_name']))) {
+  if (!(is_uploaded_file($_FILES['Filedata']['tmp_name']))) {
     $uploadError = "this file wasn't uploaded";
   }
 
 	// check file extension from client's machine:
-	$filename = $_FILES['abcTextFile']['name'];
+	$filename = $_FILES['Filedata']['name'];
 	$dotposition = strrpos($filename, ".");
 	if ($dotposition !== false) {
 		$fileextension = strtolower(substr($filename, ($dotposition+1), (strlen($filename))));
@@ -169,7 +189,7 @@ if ($uploadedfilesize > 102400) {
 
 
   // check mimetype:
-  $mimeType = $_FILES['abcTextFile']['type'];
+  $mimeType = $_FILES['Filedata']['type'];
 
   if($mimeType != "text/plain") {
   $uploadError = "invalid file type";
@@ -177,11 +197,19 @@ if ($uploadedfilesize > 102400) {
 	
 	if ($uploadError == "") {
 	$abcNotation= file_get_contents($temporaryName);
+  
 	}
 	
 	}
     
    }
+
+
+
+
+
+
+
 
   // parse ABC notation from either file upload or textarea content:
 
@@ -479,8 +507,13 @@ $fp = fopen($songPath.$filename, 'w');
 
 fwrite($fp, $jsonOutput);
 fclose($fp);
+
+if($isAnAJAXRequest) {
+echo "Song #".$thisNewSongId." successfully created";
+  } else {
 echo "<p>Song #".$thisNewSongId." successfully created</p>";
 echo '<p><a href="http://ae.dev/music/playsong.php?instrId=1&songId='.$thisNewSongId.'&chr=999">TEST ##### Create this sound file with a psalter</a>';
+}
 
     } else {
       echo "<p>Sorry, but errors were found with in song #".$eachSong.". Please fix this and re-try:</p><ul>".$errors."</ul>\n";
@@ -488,6 +521,11 @@ echo '<p><a href="http://ae.dev/music/playsong.php?instrId=1&songId='.$thisNewSo
   }
 }
 }
+
+
+
+if(!$isAnAJAXRequest) {
+
 ?>
 
 
@@ -530,7 +568,7 @@ e3 f ed
 c2 |B2 d2 c3 z |GB c2 BG F2 |D2 EF G2 G2
 z2 cd cd e2 |c2 f2 ed c2 |z2 fe c2 fe |f g3 g4 |]</code></pre>
 
-<form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" name="abcForm" id="abcForm" enctype="multipart/form-data" method="post" style="padding-bottom: 15%;">
+<form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" name="abcForm" id="dragAndDropUpload" enctype="multipart/form-data" method="post" style="padding-bottom: 15%;">
 <fieldset>
 <label for="abcTextUpload">paste notation:</label>
 <textarea cols="6" rows="4" style="width:300px; height: 120px;" id="abcTextUpload" name="abcTextUpload"></textarea>
@@ -539,8 +577,8 @@ z2 cd cd e2 |c2 f2 ed c2 |z2 fe c2 fe |f g3 g4 |]</code></pre>
 
 
 
-<input type="file" name="abcTextFile" id="abcTextFile" class="fileInput" data-multiple-caption="{count} files selected" multiple=""> 
-<label for="abcTextFile"><span>or by upload</span></label>
+<input type="file" name="Filedata" id="Filedata" class="fileInput" data-multiple-caption="{count} files selected" multiple=""> 
+<label for="Filedata"><span>or by upload</span></label>
 
 
 <input id="switchInput" name="switchInput" class="switch" value="1" checked="checked" type="checkbox">
@@ -548,6 +586,11 @@ z2 cd cd e2 |c2 f2 ed c2 |z2 fe c2 fe |f g3 g4 |]</code></pre>
 <span></span>
 Allow others to copy or share this song
 </label>
+
+
+<input type="hidden" name="sentViaAJAX" value="false">
+
+<progress max="100" id="progessBar"></progress>
 
 
 <input type="submit" name="submitbutton" id="submitbutton" value="Upload abc notation" >
@@ -560,4 +603,5 @@ Allow others to copy or share this song
 <?php
 
 include($_SERVER['DOCUMENT_ROOT']."/includes/footer.php");
+}
 ?>

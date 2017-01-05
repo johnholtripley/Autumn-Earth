@@ -244,6 +244,9 @@ responsiveBackground('/images/placeholder.jpg', array(300,600,900));
   <input type="file" name="file" id="file" class="fileInput" data-multiple-caption="{count} files selected" multiple>
 <label for="file" class="fileInputLabel"><span>Choose a file</span></label>
 
+
+<progress max="100" value="80"></progress>
+
 <input type='submit' value='Submit button'>
 
   </fieldset>

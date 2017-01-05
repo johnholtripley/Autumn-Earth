@@ -9,10 +9,11 @@ error_reporting(0);
 // when resizing and skewing - part of the image is lost (if width is greater than height)
 // when resizing and skewing, it looks as it the left most column is missed out
 // cropped and skewed images aren't transparent
-// test beforeunload event
 // replace standard JS onbeforeunload alert with stylable modal popup (if possible)
 // upload multiple files and process all indivually
-// allow multiple files to be uploaded at once
+// catch if the user navigates away during upload
+
+
 
 
 
@@ -108,19 +109,7 @@ if ($uploadedfilesize > 1024000) {
 		// psd support on http://www.kingsquare.nl/phppsdreader/
 		// tif not supported
 		
-		case "application/octet-stream":
-		// if uploaded from flash. Determine type from file extension
-		// not very secure though ? ###############
-		
-		if (($fileextension == "jpg") || ($fileextension == "jpeg")) {
-				$uploadedImage = imagecreatefromjpeg($temporary_name);
-				} else if ($fileextension == "gif") {
-				$uploadedImage = imagecreatefromgif($temporary_name);
-			} else if ($fileextension == "png") {
-				$uploadedImage = imagecreatefrompng($temporary_name);
-			}
-		
-		break;
+	
 		
 		
 		default:
@@ -249,7 +238,7 @@ imagesavealpha($resizedImage, true);
 
 // create new unique non-numeric filename:
 do {
-$newfilename = "u".md5(time()).'.png';
+$newfilename = "output/u".md5(time()).'.png';
 } while (file_exists($newfilename));
 
 imagepng ($resizedImage,$newfilename,'0');
@@ -262,12 +251,12 @@ imagedestroy($stretched);
 imagedestroy($resizedImage);
 imagedestroy($uploadedImage);
 
-if ($_POST["sentFromFlash"] == "true") {
-// let flash know that this was successful:
+if($_POST["sentViaAJAX"] == "true") {
+// was an AJAX request:
 echo $newfilename;
 } else {
  // standard form upload - redirect to new image:
- header("Location: displayImage.php?imageSrc=".$newfilename);
+ header("Location: ".$newfilename);
 }
 
 } else {
@@ -278,7 +267,7 @@ echo $newfilename;
 	} else {
 	
 	echo $uploadError;
-	echo '<br /><a href="/development/architect/">back</a>';
+	echo '<br /><a href="/artisan/">back</a>';
 	}
 	// log this error - log error, account name, IP address, filename on the client's machine and date/time
 	
