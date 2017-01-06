@@ -57,3 +57,7 @@ if ('serviceWorker' in navigator) {
 // https://www.filamentgroup.com/lab/enhancing-optimistically.html
 clearTimeout( fallbackTimeout ); 
 document.documentElement.className += " js";
+
+
+// console message:
+console.log("%c%s", "background: #000;color: #e06900; font-size: 24px; font-family: AlegreyaSC,georgia,palatino,'times new roman',serif;", "Welcome to Autumn Earth");

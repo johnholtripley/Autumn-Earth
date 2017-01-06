@@ -3,7 +3,7 @@ var dragAndDropForm = document.getElementById('dragAndDropUpload');
 var isAdvancedUpload = function() {
     // https://css-tricks.com/drag-and-drop-file-uploading/
     return (('draggable' in dragAndDropForm) || ('ondragstart' in dragAndDropForm && 'ondrop' in dragAndDropForm)) && 'FormData' in window && 'FileReader' in window;
-}();
+};
 
 function dragDropEnter(e) {
     e.stopPropagation();
@@ -97,7 +97,8 @@ if(checkbox) {
 }
 
 
-
+if(dragAndDropForm) {
+    
 if (isAdvancedUpload) {
     dragAndDropForm.classList.add('canDragAndDrop');
     dragAndDropForm.addEventListener("dragenter", dragDropEnter, false);
@@ -105,4 +106,5 @@ if (isAdvancedUpload) {
     dragAndDropForm.addEventListener("dragleave", dragDropLeave, false);
     dragAndDropForm.addEventListener("dragend", dragDropLeave, false);
     dragAndDropForm.addEventListener("drop", dragDropDrop, false);
+}
 }

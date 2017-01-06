@@ -432,8 +432,18 @@ return Math.floor((x/4) + (y/4) - tileH/2);
 
 function findIsoDepth(x, y, z) {
 
-//return Math.floor((x/4) + (y/4) - tileH/2);
-return Math.floor((mapTilesY * tileW/2) -y/2 + x/2) + ((Math.floor((x/4) + (y/4) - tileH/2))*mapTilesY * tileW) + z;
+// try getting the 3d distance from the 0,0 origin of the map to the object
+ return Math.sqrt(x*x + y*y + z*z);
+ // try the difference in iso coords from the iso origin #######
+
+// or try this code:
+// https://github.com/as3isolib/as3isolib.v1/blob/master/fp9/src/as3isolib/display/renderers/DefaultSceneLayoutRenderer.as
+
+
+// works but not with z height:
+// (findIsoCoordsY)
+// return Math.floor((x/4) + (y/4) - tileH/2);
+
 
 }
 
