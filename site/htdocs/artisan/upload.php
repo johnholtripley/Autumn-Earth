@@ -11,7 +11,7 @@ error_reporting(0);
 // cropped and skewed images aren't transparent
 // replace standard JS onbeforeunload alert with stylable modal popup (if possible)
 // upload multiple files and process all indivually
-// catch if the user navigates away during upload
+
 
 
 

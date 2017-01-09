@@ -36,7 +36,18 @@ function dragDropHandleFiles(files) {
     }
 }
 
+function unloadPrompt(e) {
+var confirmationMessage = "Upload not complete - are you sure want to leave this page yet?";
+  e.returnValue = confirmationMessage;     
+  return confirmationMessage;   
+}
+
 function dragDropFileUpload(file) {
+
+
+window.addEventListener("beforeunload", unloadPrompt, false);
+
+
     // https://developer.mozilla.org/en/docs/Using_files_from_web_applications
     var xhr = new XMLHttpRequest();
     var fd = new FormData();
@@ -50,6 +61,7 @@ function dragDropFileUpload(file) {
     }, false);
 
     xhr.upload.addEventListener("load", function(e) {
+        window.removeEventListener("beforeunload", unloadPrompt, false);
         progressBar.value = '100';
     }, false);
 
