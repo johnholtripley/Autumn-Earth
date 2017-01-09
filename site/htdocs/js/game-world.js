@@ -1637,14 +1637,14 @@ thisSlotElem.classList.add("changed")
 
 
     handleDrag: function(e) {
-        if (UI.inDrag) {
+     
             // don't access the element multiple times - do it all in one go:
             UI.activeDragObject.style.cssText = "z-index:2;top: " + objInitTop + "px; left: " + objInitLeft + "px; transform: translate(" + (e.pageX - dragStartX) + "px, " + (e.pageY - dragStartY) + "px);";
-        }
+       
     },
 
     endDrag: function(e) {
-        UI.inDrag = false;
+       
         // tidy up and remove event listeners:
         document.removeEventListener("mousemove", UI.handleDrag, false);
         document.removeEventListener("mouseup", UI.endDrag, false);
@@ -1659,7 +1659,7 @@ thisSlotElem.classList.add("changed")
                 // make sure it's not a right click:
                 if (e.button != 2) {
                     UI.activeDragObject = this.parentElement;
-                    UI.inDrag = true;
+                    
 
                     var pageScrollTopY = (window.pageYOffset || document.documentElement.scrollTop) - (document.documentElement.clientTop || 0);
 
@@ -1776,7 +1776,7 @@ var textToShow = getRandomElementFromArray(text.split("/"));
     },
 
     endInventoryDrag: function(e) {
-        UI.inDrag = false;
+      
         var thisNode = e.target;
         // find the id of the parent if actual dropped target doesn't have one:
         while (!thisNode.id) {
@@ -1943,7 +1943,7 @@ var textToShow = getRandomElementFromArray(text.split("/"));
                             // remove from inventory data:
                             delete hero.inventory[UI.sourceSlot];
                             thisNode.classList.add("hidden");
-                            UI.inDrag = true;
+                            
                             var clickedSlotRect = thisNode.getBoundingClientRect();
                             var pageScrollTopY = (window.pageYOffset || document.documentElement.scrollTop) - (document.documentElement.clientTop || 0);
                             // 3px padding on the slots:
