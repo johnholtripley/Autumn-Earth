@@ -433,7 +433,7 @@ return Math.floor((x/4) + (y/4) - tileH/2);
 function findIsoDepth(x, y, z) {
 
 // try getting the 3d distance from the 0,0 origin of the map to the object
- return Math.sqrt(x*x + y*y + z*z);
+ //return Math.sqrt(x*x + y*y + z*z);
  // try the difference in iso coords from the iso origin #######
 
 // or try this code:
@@ -444,6 +444,10 @@ function findIsoDepth(x, y, z) {
 // (findIsoCoordsY)
 // return Math.floor((x/4) + (y/4) - tileH/2);
 
+var isoX = findIsoCoordsX(x, y);
+var isoY = findIsoCoordsY(x, y);
+return isoY;
+//return isoY + (isoX + z)*tileW;
 
 }
 
