@@ -2199,7 +2199,7 @@ function loadMapAssets() {
     npcGraphicsToLoad = thisMapData.npcs;
     for (var i = 0; i < npcGraphicsToLoad.length; i++) {
         imagesToLoad.push({
-            name: "npc" + i,
+            name: "npc" + npcGraphicsToLoad[i].name,
             src: "/images/game-world/npcs/" + npcGraphicsToLoad[i].src
         });
     }
@@ -2220,7 +2220,7 @@ if(itemGraphicsToLoad[i].colour) {
 
 
         imagesToLoad.push({
-            name: "item" + i,
+            name: "item" + itemGraphicsToLoad[i].type,
             src: "/images/game-world/items/" + currentActiveInventoryItems[itemGraphicsToLoad[i].type].worldSrc + thisFileColourSuffix+".png"
         });
     }
@@ -2356,11 +2356,12 @@ function prepareGame() {
     }
     npcImages = [];
     for (var i = 0; i < npcGraphicsToLoad.length; i++) {
-        npcImages[i] = Loader.getImage("npc" + i);
+        npcImages[npcGraphicsToLoad[i].name] = Loader.getImage("npc" + npcGraphicsToLoad[i].name);
     }
     itemImages = [];
     for (var i = 0; i < itemGraphicsToLoad.length; i++) {
-        itemImages[i] = Loader.getImage("item" + i);
+        
+        itemImages[itemGraphicsToLoad[i].type] = Loader.getImage("item" + itemGraphicsToLoad[i].type);
     }
     backgroundImg = Loader.getImage("backgroundImg");
     // initialise and position NPCs:
@@ -3435,7 +3436,7 @@ function draw() {
             //assetsToDraw.push([findIsoDepth(thisX, thisY), npcImages[i], Math.floor(thisX - hero.isox - thisNPC.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisNPC.centreY + (canvasHeight / 2))]);
    
 
-            assetsToDraw.push([findIsoDepth(thisNPC.x,thisNPC.y,0), "sprite", npcImages[i], thisNPCOffsetCol * thisNPC.spriteWidth, thisNPCOffsetRow * thisNPC.spriteHeight, thisNPC.spriteWidth, thisNPC.spriteHeight, Math.floor(thisX - hero.isox - thisNPC.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisNPC.centreY + (canvasHeight / 2)), thisNPC.spriteWidth, thisNPC.spriteHeight]);
+            assetsToDraw.push([findIsoDepth(thisNPC.x,thisNPC.y,0), "sprite", npcImages[thisMapData.npcs[i].name], thisNPCOffsetCol * thisNPC.spriteWidth, thisNPCOffsetRow * thisNPC.spriteHeight, thisNPC.spriteWidth, thisNPC.spriteHeight, Math.floor(thisX - hero.isox - thisNPC.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisNPC.centreY + (canvasHeight / 2)), thisNPC.spriteWidth, thisNPC.spriteHeight]);
         }
 
 
@@ -3443,7 +3444,7 @@ function draw() {
             thisItem = thisMapData.items[i];
             thisX = findIsoCoordsX(thisItem.x, thisItem.y);
             thisY = findIsoCoordsY(thisItem.x, thisItem.y);
-            assetsToDraw.push([findIsoDepth(thisItem.x, thisItem.y,0), "img", itemImages[i], Math.floor(thisX - hero.isox - thisItem.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisItem.centreY + (canvasHeight / 2))]);
+            assetsToDraw.push([findIsoDepth(thisItem.x, thisItem.y,0), "img", itemImages[(thisMapData.items[i].type)], Math.floor(thisX - hero.isox - thisItem.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisItem.centreY + (canvasHeight / 2))]);
         }
 
         assetsToDraw.sort(sortByLowestValue);
