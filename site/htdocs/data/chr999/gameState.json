@@ -33,7 +33,6 @@
             "durability": 100,
             "currentWear": 0,
             "effectiveness": 100,
-            "wrapped": 0,
             "colour": 0,
             "enchanted": 0,
             "hallmark": 0,
@@ -46,20 +45,18 @@
             "durability": 100,
             "currentWear": 0,
             "effectiveness": 100,
-            "wrapped": 0,
             "colour": 7,
             "enchanted": 0,
             "hallmark": 0,
             "inscription": ""
         },
-                "0-3": {
+        "0-3": {
             "type": 19,
             "quantity": 12,
             "quality": 100,
             "durability": 100,
             "currentWear": 0,
             "effectiveness": 100,
-            "wrapped": 0,
             "colour": 0,
             "enchanted": 0,
             "hallmark": 0,
@@ -72,7 +69,6 @@
             "durability": 100,
             "currentWear": 0,
             "effectiveness": 100,
-            "wrapped": 0,
             "colour": 16,
             "enchanted": 0,
             "hallmark": 0,
@@ -85,20 +81,18 @@
             "durability": 100,
             "currentWear": 0,
             "effectiveness": 100,
-            "wrapped": 0,
             "colour": 0,
             "enchanted": 0,
             "hallmark": 0,
             "inscription": ""
         },
-                "1-2": {
+        "1-2": {
             "type": 21,
             "quantity": 1,
             "quality": 100,
             "durability": 100,
             "currentWear": 0,
             "effectiveness": 100,
-            "wrapped": 0,
             "colour": 0,
             "enchanted": 0,
             "hallmark": 0,
@@ -111,7 +105,6 @@
             "durability": 100,
             "currentWear": 0,
             "effectiveness": 100,
-            "wrapped": 0,
             "colour": 0,
             "enchanted": 0,
             "hallmark": 0,
@@ -124,7 +117,6 @@
             "durability": 100,
             "currentWear": 0,
             "effectiveness": 100,
-            "wrapped": 0,
             "colour": 0,
             "enchanted": 0,
             "hallmark": 0,
@@ -137,11 +129,35 @@
             "durability": 100,
             "currentWear": 0,
             "effectiveness": 100,
-            "wrapped": 0,
             "colour": 0,
             "enchanted": 0,
             "hallmark": 0,
             "inscription": ""
+        },
+        "1-8": {
+            "type": 31,
+            "quantity": 1,
+            "quality": 100,
+            "durability": 100,
+            "currentWear": 0,
+            "effectiveness": 100,
+            "colour": 0,
+            "enchanted": 0,
+            "hallmark": 0,
+            "inscription": "",
+            "contains": [{
+
+                "type": 28,
+                "quantity": 1,
+                "quality": 100,
+                "durability": 100,
+                "currentWear": 0,
+                "effectiveness": 100,
+                "colour": 0,
+                "enchanted": 0,
+                "hallmark": 0,
+                "inscription": ""
+            }]
         }
     },
     "cards": [6, 5, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4],
@@ -151,9 +167,20 @@
         "cardGamesDrawn": 0,
         "numberOfcardsFlipped": 8
     },
-    "titlesEarned": [3,7],
+    "titlesEarned": [3, 7],
     "activeTitle": 3,
     "professionsKnown": [0],
-    "recipesKnown": [[0,1],[1,1],[2,0],[3,0],[10,0],[11,0],[7,0],[6,0],[12,0],[13,0]],
-    "fae": {"range": 4950, "speed": 4}
+    "recipesKnown": [
+        [0, 1],
+        [1, 1],
+        [2, 0],
+        [3, 0],
+        [10, 0],
+        [11, 0],
+        [7, 0],
+        [6, 0],
+        [12, 0],
+        [13, 0]
+    ],
+    "fae": { "range": 4950, "speed": 4 }
 }

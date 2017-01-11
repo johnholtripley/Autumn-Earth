@@ -102,7 +102,6 @@ function accessDynamicVariable(variableToUse) {
     return currentElement;
 }
 
-
 function getNearestParentId(thisNode) {
     // find the id of the parent if the passed in element doesn't have one:
         while (!thisNode.id) {

@@ -335,6 +335,102 @@ function recipeSelectComponents(whichRecipe) {
     componentsAvailableForThisRecipe.innerHTML = availableComponentMarkup;
 }
 
+    /*
+
+    http://codepen.io/johnholtripley/pen/eBNYXj
+    //
+    //
+
+    TO DO #########
+
+    allow multiple scroll bars on the page (use local variables to track position and dragger height for each scroll bar)
+
+    If not needed, don't show
+
+    Resize function if content changes 
+
+    cache element references
+
+    */
+
+
+
+
+   function scrollbarWidth() {
+       // Add a temporary scrolling element to the DOM, then check the difference between its outer and inner elements.
+       // only need to call once - won't change
+       var testDiv = document.createElement('div');
+       testDiv.style.cssText = 'width:50px;height:50px;overflow-y:scroll;top:-200px;left:-200px;position:absolute;';
+       var width = 0;
+       var widthMinusScrollbars = 0;
+       document.body.appendChild(testDiv);
+       width = testDiv.offsetWidth;
+       var widthMinusScrollbars = testDiv.clientWidth;
+       document.body.removeChild(testDiv);
+       return (width - widthMinusScrollbars);
+   }
+
+   function handleScrollDrag(e) {
+       translateY = (e.pageY - objInitTop);
+       if (translateY < 0) {
+           translateY = 0;
+       }
+       if (translateY + draggerHeight > paneHeight) {
+           translateY = paneHeight - draggerHeight;
+       }
+       document.getElementById('dragger').style.transform = 'translateY(' + translateY + 'px)';
+       // move content accordingly:
+       document.getElementById('scrollingContent').scrollTop = (translateY / scrollbarRatio);
+   }
+
+   function endScrollDrag(e) {
+       isBeingDragged = false;
+       // tidy up and remove event listeners:
+       document.removeEventListener("mousemove", handleScrollDrag, false);
+       document.removeEventListener("mouseup", endScrollDrag, false);
+   }
+
+   function initDragger() {
+       translateY = 0;
+       isBeingDragged = false;
+       var scrollContentHeight = document.getElementById('scrollingContent').scrollHeight;
+       paneHeight = document.getElementById('scrollParent').offsetHeight;
+       scrollbarRatio = (paneHeight / scrollContentHeight);
+       draggerHeight = Math.floor(scrollbarRatio * paneHeight);
+       document.getElementById('dragger').style.height = draggerHeight + "px";
+       // allow content to be scrolled by dragging the dragger:
+       document.getElementById('dragger').addEventListener('mousedown', function(e) {
+           // stop the content getting highlighted during the drag:
+           e.preventDefault();
+           var pageScrollTopY = (window.pageYOffset || document.documentElement.scrollTop) - (document.documentElement.clientTop || 0);
+           var clickedSlotRect = document.getElementById('dragger').getBoundingClientRect();
+           objInitTop = clickedSlotRect.top + pageScrollTopY;
+           objInitTop = e.pageY - translateY;
+           isBeingDragged = true;
+           document.addEventListener("mousemove", handleScrollDrag, false);
+           document.addEventListener("mouseup", endScrollDrag, false);
+       });
+
+       // update dragger position when the content is scrolled natively:
+       document.getElementById('scrollingContent').addEventListener('scroll', startContentScroll);
+   }
+
+   function startContentScroll() {
+       // prevent it from re-calculating everything during a dragged scroll:
+       if (!isBeingDragged) {
+           scrollOffset = document.getElementById('scrollingContent').scrollTop;
+           handleOffset = Math.round(scrollbarRatio * scrollOffset);
+           translateY = handleOffset;
+           document.getElementById('dragger').style.transform = 'translateY(' + translateY + 'px)';
+       }
+   }
+
+
+
+/*
+   document.getElementById('scrollingContent').style.width = document.getElementById('scrollingContent').offsetWidth + scrollbarWidth() + 'px';
+   initDragger();
+*/
 function animateFae() {
     fae.z = Math.floor((Math.sin(fae.dz) + 1) * 8 + 40);
     fae.dz += 0.2;
@@ -513,7 +609,6 @@ function accessDynamicVariable(variableToUse) {
     }
     return currentElement;
 }
-
 
 function getNearestParentId(thisNode) {
     // find the id of the parent if the passed in element doesn't have one:
@@ -1366,11 +1461,11 @@ function itemAttributesMatch(item1, item2) {
             if (item1.durability == item2.durability) {
                 if (item1.currentWear == item2.currentWear) {
                     if (item1.effectiveness == item2.effectiveness) {
-                        if (item1.wrapped == item2.wrapped) {
-                            if (item1.colour == item2.colour) {
-                                if (item1.enchanted == item2.enchanted) {
-                                    if (item1.hallmark == item2.hallmark) {
-                                        if (item1.inscription == item2.inscription) {
+                        if (item1.colour == item2.colour) {
+                            if (item1.enchanted == item2.enchanted) {
+                                if (item1.hallmark == item2.hallmark) {
+                                    if (item1.inscription == item2.inscription) {
+                                        if (item1.contains == item2.contains) {
                                             return true;
                                         }
                                     }
@@ -1387,28 +1482,42 @@ function itemAttributesMatch(item1, item2) {
 
 
 
-function inventoryItemAction(whichSlot, whichAction, whichActionValue) {
-    switch (whichAction) {
-        case "booster":
-            openBoosterPack();
-            // remove the 'slot' prefix with the substring(4):
-            removeFromInventory(whichSlot.parentElement.id.substring(4), 1);
-            break;
-        case "recipe":
-            if(canLearnRecipe(whichActionValue)) {
-            // remove the 'slot' prefix with the substring(4):
-            removeFromInventory(whichSlot.parentElement.id.substring(4), 1);
+
+
+function inventoryItemAction(whichSlot, whichAction, whichActionValue) {// remove the 'slot' prefix with the substring(4):
+var whichSlotNumber = whichSlot.parentElement.id.substring(4);
+switch (whichAction) {
+    case "container":
+        // check it has contents:
+        if (typeof hero.inventory[whichSlotNumber].contains !== "undefined") {
+            if((hero.inventory[whichSlotNumber].contains.length == 1) && (hero.inventory[whichSlotNumber].quantity ==1)) {
+            // if just a single wrapped item containing a single type of item, replace the wrapped with the contents:
+            hero.inventory[whichSlotNumber] = JSON.parse(JSON.stringify(hero.inventory[whichSlotNumber].contains[0]));
+            document.getElementById("slot" + whichSlotNumber).innerHTML = generateSlotMarkup(whichSlotNumber);
         }
-            break;
-            case "craft":
-            if(professionsKnown.indexOf(whichActionValue) != -1) {
+        }
+        break;
+    case "booster":
+        openBoosterPack();
+
+        removeFromInventory(whichSlotNumber, 1);
+        break;
+    case "recipe":
+        if (canLearnRecipe(whichActionValue)) {
+
+            removeFromInventory(whichSlotNumber, 1);
+        }
+        break;
+    case "craft":
+        if (professionsKnown.indexOf(whichActionValue) != -1) {
             UI.populateRecipeList(whichActionValue);
         } else {
             UI.showNotification("<p>You don't know this profession yet.</p>");
         }
-            break;
-    }
+        break;
 }
+}
+
 
 
 function additionalTooltipDetail(whichSlotID) {
@@ -1682,7 +1791,7 @@ thisSlotElem.classList.add("changed")
     },
 
     inventoryItemDoubleClick: function(e) {
-// check if it's wrapped ###
+
         var thisItemsAction = e.target.getAttribute('data-action');
 
         if (thisItemsAction) {
@@ -2295,6 +2404,13 @@ function findInventoryItemData() {
     // find out all items in the hero's inventory:
     for (var arrkey in hero.inventory) {
         itemIdsToGet.push(hero.inventory[arrkey].type);
+        // check if any are containers:
+        if (typeof hero.inventory[arrkey].contains !== "undefined") {
+            for (var i=0; i<hero.inventory[arrkey].contains.length;i++) {
+                itemIdsToGet.push(hero.inventory[arrkey].contains[i].type);
+            }
+        }
+
     }
     // find bag items:
     for (var i = 0; i < hero.bags.length; i++) {
@@ -3024,7 +3140,6 @@ function processSpeech(thisNPC, thisSpeechPassedIn, thisSpeechCode, isPartOfNPCs
                                     "durability": 100,
                                     "currentWear": 0,
                                     "effectiveness": 100,
-                                    "wrapped": 0,
                                     "colour": currentActiveInventoryItems[parseInt(thisItem)].colour,
                                     "enchanted": 0,
                                     "hallmark": 0,
@@ -3161,7 +3276,6 @@ function giveQuestRewards(whichQuestId) {
                 "durability": 100,
                 "currentWear": 0,
                 "effectiveness": 100,
-                "wrapped": 0,
                 "colour": currentActiveInventoryItems[parseInt(thisItem)].colour,
                 "enchanted": 0,
                 "hallmark": 0,

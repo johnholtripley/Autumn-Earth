@@ -268,6 +268,13 @@ function findInventoryItemData() {
     // find out all items in the hero's inventory:
     for (var arrkey in hero.inventory) {
         itemIdsToGet.push(hero.inventory[arrkey].type);
+        // check if any are containers:
+        if (typeof hero.inventory[arrkey].contains !== "undefined") {
+            for (var i=0; i<hero.inventory[arrkey].contains.length;i++) {
+                itemIdsToGet.push(hero.inventory[arrkey].contains[i].type);
+            }
+        }
+
     }
     // find bag items:
     for (var i = 0; i < hero.bags.length; i++) {
@@ -997,7 +1004,6 @@ function processSpeech(thisNPC, thisSpeechPassedIn, thisSpeechCode, isPartOfNPCs
                                     "durability": 100,
                                     "currentWear": 0,
                                     "effectiveness": 100,
-                                    "wrapped": 0,
                                     "colour": currentActiveInventoryItems[parseInt(thisItem)].colour,
                                     "enchanted": 0,
                                     "hallmark": 0,
@@ -1134,7 +1140,6 @@ function giveQuestRewards(whichQuestId) {
                 "durability": 100,
                 "currentWear": 0,
                 "effectiveness": 100,
-                "wrapped": 0,
                 "colour": currentActiveInventoryItems[parseInt(thisItem)].colour,
                 "enchanted": 0,
                 "hallmark": 0,

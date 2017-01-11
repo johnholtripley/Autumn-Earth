@@ -163,11 +163,11 @@ function itemAttributesMatch(item1, item2) {
             if (item1.durability == item2.durability) {
                 if (item1.currentWear == item2.currentWear) {
                     if (item1.effectiveness == item2.effectiveness) {
-                        if (item1.wrapped == item2.wrapped) {
-                            if (item1.colour == item2.colour) {
-                                if (item1.enchanted == item2.enchanted) {
-                                    if (item1.hallmark == item2.hallmark) {
-                                        if (item1.inscription == item2.inscription) {
+                        if (item1.colour == item2.colour) {
+                            if (item1.enchanted == item2.enchanted) {
+                                if (item1.hallmark == item2.hallmark) {
+                                    if (item1.inscription == item2.inscription) {
+                                        if (item1.contains == item2.contains) {
                                             return true;
                                         }
                                     }
@@ -184,28 +184,42 @@ function itemAttributesMatch(item1, item2) {
 
 
 
-function inventoryItemAction(whichSlot, whichAction, whichActionValue) {
-    switch (whichAction) {
-        case "booster":
-            openBoosterPack();
-            // remove the 'slot' prefix with the substring(4):
-            removeFromInventory(whichSlot.parentElement.id.substring(4), 1);
-            break;
-        case "recipe":
-            if(canLearnRecipe(whichActionValue)) {
-            // remove the 'slot' prefix with the substring(4):
-            removeFromInventory(whichSlot.parentElement.id.substring(4), 1);
+
+
+function inventoryItemAction(whichSlot, whichAction, whichActionValue) {// remove the 'slot' prefix with the substring(4):
+var whichSlotNumber = whichSlot.parentElement.id.substring(4);
+switch (whichAction) {
+    case "container":
+        // check it has contents:
+        if (typeof hero.inventory[whichSlotNumber].contains !== "undefined") {
+            if((hero.inventory[whichSlotNumber].contains.length == 1) && (hero.inventory[whichSlotNumber].quantity ==1)) {
+            // if just a single wrapped item containing a single type of item, replace the wrapped with the contents:
+            hero.inventory[whichSlotNumber] = JSON.parse(JSON.stringify(hero.inventory[whichSlotNumber].contains[0]));
+            document.getElementById("slot" + whichSlotNumber).innerHTML = generateSlotMarkup(whichSlotNumber);
         }
-            break;
-            case "craft":
-            if(professionsKnown.indexOf(whichActionValue) != -1) {
+        }
+        break;
+    case "booster":
+        openBoosterPack();
+
+        removeFromInventory(whichSlotNumber, 1);
+        break;
+    case "recipe":
+        if (canLearnRecipe(whichActionValue)) {
+
+            removeFromInventory(whichSlotNumber, 1);
+        }
+        break;
+    case "craft":
+        if (professionsKnown.indexOf(whichActionValue) != -1) {
             UI.populateRecipeList(whichActionValue);
         } else {
             UI.showNotification("<p>You don't know this profession yet.</p>");
         }
-            break;
-    }
+        break;
 }
+}
+
 
 
 function additionalTooltipDetail(whichSlotID) {
