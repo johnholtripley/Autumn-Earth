@@ -1,10 +1,4 @@
-/*
 
-     TO DO #########
-
-    remove the need to indent the content
-
-    */
 
 function scrollbarWidth() {
     // Add a temporary scrolling element to the DOM, then check the difference between its outer and inner elements
@@ -27,9 +21,9 @@ function customScrollBar(element) {
     this.init = function() {
         this.translateY = 0;
         this.isBeingDragged = false;
-
         this.element.classList.remove("inActive");
-        this.scrollingContent.style.width = this.scrollingContent.offsetWidth + thisDevicesScrollBarWidth + 'px';
+        // hide the native scroll bar by making the content wider by the width of the scroll bar so its pushed off to the side:
+        this.scrollingContent.style.width  = (this.scrollingContent.offsetWidth + thisDevicesScrollBarWidth) + 'px';
         this.paneHeight = this.element.offsetHeight;
         this.scrollContentHeight = this.scrollingContent.scrollHeight;
         if (this.scrollContentHeight > this.paneHeight) {
