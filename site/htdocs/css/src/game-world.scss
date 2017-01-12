@@ -636,38 +636,36 @@ canvas {
 body {
   background: #cecece;
 }
-#scrollParent {
+.customScrollBar {
   
   width: 200px;
   height: 250px;
 position: relative;
  
   background:#fff;
-}
-#scrollParent.needsScrollBar {
+
   overflow: hidden;
 }
 
 
- .needsScrollBar #scrollingContent {
+  .customScrollContent {
   overflow-x: hidden;
     overflow-y: scroll;
     -webkit-overflow-scrolling: touch;
   height: 100%;
   
 }
- #scrollingContent p {
+ .customScrollContent p {
 
   padding: 0;
   margin: 0;
  
-}
-.needsScrollBar #scrollingContent p {
+
   /* not ideal to have to do it on the inner elements ### */
    padding-right: 24px;
 }
 
- .needsScrollBar #trackBar {
+  .trackBar {
   position: absolute;
   top: 0;
   right: 0;
@@ -678,7 +676,7 @@ position: relative;
   /* allow mouse whell scroll when mouse is over the scrollbar: */
   pointer-events: none;
 }
-.needsScrollBar #dragger {
+ .dragger {
   width: 10px;
   background: #000;
 pointer-events: auto;

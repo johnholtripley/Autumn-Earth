@@ -1,18 +1,12 @@
 /*
 
-    http://codepen.io/johnholtripley/pen/eBNYXj
-    //
-    //
-
-    TO DO #########
+     TO DO #########
 
     If not needed, don't show
 
     Re-init function if content changes 
 
     remove the need to indent the content
-
-    use classes instead of ids
 
     */
 
@@ -46,7 +40,7 @@ function customScrollBar(element) {
         this.scrollContentHeight = this.scrollingContent.scrollHeight;
         this.scrollbarRatio = (this.paneHeight / this.scrollContentHeight);
         this.draggerHeight = Math.floor(this.scrollbarRatio * this.paneHeight);
-        this.dragger = this.element.querySelector("#dragger");
+        this.dragger = this.element.querySelector(".dragger");
         this.dragger.style.height = this.draggerHeight + "px";
         // update dragger position when the content is scrolled natively:
         // use bind to pass this - http://stackoverflow.com/questions/1338599/the-value-of-this-within-the-handler-using-addeventlistener#answer-19507086
@@ -114,13 +108,18 @@ function customScrollBar(element) {
 // do this globally once:
 thisDevicesScrollBarWidth = scrollbarWidth();
 if (thisDevicesScrollBarWidth > 0) {
-
+  // eg (not touch device)
     
-    scrollBar1 = new customScrollBar(document.getElementById('scrollParent'));
+  //  scrollBar1 = new customScrollBar(document.getElementById('scrollParent'));
 
 
 
-    // eg (not touch device)
-    //
-    //initDragger();
+var scrollBarElements = document.getElementsByClassName("customScrollBar");
+for(var i = 0; i < scrollBarElements.length; i++) {
+    new customScrollBar(scrollBarElements[i]);
+}
+
+
+  
+    
 }

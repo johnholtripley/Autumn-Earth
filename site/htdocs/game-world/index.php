@@ -69,26 +69,33 @@ for ($i=0;$i<5;$i++) {
 </canvas>
 </div>
 
+</div>
 
 
+<style>
+#gameWrapper {
+  display: none;
+}
+</style>
 
 
-<div id="scrollParent" class="needsScrollBar">
-  <div id="scrollingContent">
+<div class="customScrollBar">
+  <div class="customScrollContent">
     <p>Duis cursus est sed sapien ultricies, nec dapibus risus lobortis. Suspendisse scelerisque erat ac tortor ultrices, a tristique ex congue. Integer facilisis nisl a dignissim dignissim. Nullam vitae aliquet orci, ut suscipit mauris. Phasellus consequat at dui in facilisis.</p><p>Morbi vehicula ipsum id est lobortis, non vulputate erat pulvinar. Integer enim est, dictum nec pellentesque eu, elementum a turpis. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae;</p><p>Quisque non tortor vel orci congue varius.</p><p>Duis cursus est sed sapien ultricies, nec dapibus risus lobortis. Suspendisse scelerisque erat ac tortor ultrices, a tristique ex congue. Integer facilisis nisl a dignissim dignissim. Nullam vitae aliquet orci, ut suscipit mauris. Phasellus consequat at dui in facilisis.</p><p>Morbi vehicula ipsum id est lobortis, non vulputate erat pulvinar. Integer enim est, dictum nec pellentesque eu, elementum a turpis. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae;</p><p>Donec condimentum ipsum ipsum. Suspendisse efficitur, lacus id luctus rutrum, elit eros faucibus arcu, sed iaculis sapien felis eu est. Duis faucibus dui id libero fermentum, quis accumsan diam bibendum.
 
 Donec faucibus libero eu erat accumsan porttitor. Vivamus vel lorem eget leo suscipit venenatis sed eu tortor. Praesent malesuada velit a quam mattis, sed varius sapien sagittis. Mauris tincidunt euismod dui, eget finibus urna accumsan sed. Integer vel lacus nec dolor fermentum fringilla. Vivamus pharetra, libero in consectetur maximus, neque velit accumsan sem, non ultricies risus erat non neque. Sed augue libero, pellentesque eget mauris tempus, tempus faucibus est. Suspendisse tincidunt eu nunc a tincidunt. end</p>
     
   </div>
-  <div id="trackBar">
-    <div id="dragger"></div>
+  <div class="trackBar">
+    <div class="dragger"></div>
   </div>
 </div>
 
 
 
 
-</div>
+
+
 
 
 <script src="/js/card-game-shared.<?php echo $cacheVersion; ?>.js"></script>
