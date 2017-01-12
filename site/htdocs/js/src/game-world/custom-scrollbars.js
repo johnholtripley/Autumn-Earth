@@ -6,15 +6,13 @@
 
     TO DO #########
 
-    allow multiple scroll bars on the page (use local variables to track position and dragger height for each scroll bar) - http://codepen.io/johnholtripley/pen/JEXjGa?editors=1111
-
     If not needed, don't show
 
     Re-init function if content changes 
 
-    cache element references (per each scroll bar)
-
     remove the need to indent the content
+
+    use classes instead of ids
 
     */
 
@@ -32,61 +30,8 @@ function scrollbarWidth() {
     return (width - widthMinusScrollbars);
 }
 
-function handleScrollDrag(e) {
-    translateY = (e.pageY - objInitTop);
-    if (translateY < 0) {
-        translateY = 0;
-    }
-    if (translateY + draggerHeight > paneHeight) {
-        translateY = paneHeight - draggerHeight;
-    }
-    document.getElementById('dragger').style.transform = 'translateY(' + translateY + 'px)';
-    // move content accordingly:
-    document.getElementById('scrollingContent').scrollTop = (translateY / scrollbarRatio);
-}
-
-function endScrollDrag(e) {
-    isBeingDragged = false;
-    // tidy up and remove event listeners:
-    document.removeEventListener("mousemove", handleScrollDrag, false);
-    document.removeEventListener("mouseup", endScrollDrag, false);
-}
-
-function startContentScroll() {
-    // prevent it from re-calculating everything during a dragged scroll:
-    if (!isBeingDragged) {
-        scrollOffset = document.getElementById('scrollingContent').scrollTop;
-        handleOffset = Math.round(scrollbarRatio * scrollOffset);
-        translateY = handleOffset;
-        document.getElementById('dragger').style.transform = 'translateY(' + translateY + 'px)';
-    }
-}
 
 
-function initDragger() {
-    translateY = 0;
-    isBeingDragged = false;
-    var scrollContentHeight = document.getElementById('scrollingContent').scrollHeight;
-    paneHeight = document.getElementById('scrollParent').offsetHeight;
-    scrollbarRatio = (paneHeight / scrollContentHeight);
-    draggerHeight = Math.floor(scrollbarRatio * paneHeight);
-    document.getElementById('dragger').style.height = draggerHeight + "px";
-    // allow content to be scrolled by dragging the dragger:
-    document.getElementById('dragger').addEventListener('mousedown', function(e) {
-        // stop the content getting highlighted during the drag:
-        e.preventDefault();
-        var pageScrollTopY = (window.pageYOffset || document.documentElement.scrollTop) - (document.documentElement.clientTop || 0);
-        var clickedSlotRect = document.getElementById('dragger').getBoundingClientRect();
-        objInitTop = clickedSlotRect.top + pageScrollTopY;
-        objInitTop = e.pageY - translateY;
-        isBeingDragged = true;
-        document.addEventListener("mousemove", handleScrollDrag, false);
-        document.addEventListener("mouseup", endScrollDrag, false);
-    });
-
-    // update dragger position when the content is scrolled natively:
-    document.getElementById('scrollingContent').addEventListener('scroll', startContentScroll);
-}
 
 
 function customScrollBar(element) {
@@ -96,6 +41,7 @@ function customScrollBar(element) {
     this.isBeingDragged = false;
 
     this.init = function() {
+        this.scrollingContent.style.width = this.scrollingContent.offsetWidth + thisDevicesScrollBarWidth + 'px';
         this.paneHeight = this.element.offsetHeight;
         this.scrollContentHeight = this.scrollingContent.scrollHeight;
         this.scrollbarRatio = (this.paneHeight / this.scrollContentHeight);
@@ -119,17 +65,40 @@ function customScrollBar(element) {
         }
     }
 
-this.startScrollDrag = function(e) {
+    this.startScrollDrag = function(e) {
 
-  // stop the content getting highlighted during the drag:
+        // stop the content getting highlighted during the drag:
         e.preventDefault();
-        objInitTop = e.pageY - this.translateY;
+        this.objInitTop = e.pageY - this.translateY;
         this.isBeingDragged = true;
-        
-     //   document.addEventListener("mousemove", handleScrollDrag, false);
-     //   document.addEventListener("mouseup", endScrollDrag, false);
-}
 
+        // http://stackoverflow.com/questions/11565471/removing-event-listener-which-was-added-with-bind#answer-22870717
+        this.mouseMoveEvent = this.handleScrollDrag.bind(this);
+        document.addEventListener('mousemove', this.mouseMoveEvent);
+        this.mouseUpEvent = this.endScrollDrag.bind(this);
+        document.addEventListener('mouseup', this.mouseUpEvent);
+
+    }
+
+    this.handleScrollDrag = function(e) {
+        this.translateY = (e.pageY - this.objInitTop);
+        if (this.translateY < 0) {
+            this.translateY = 0;
+        }
+        if (this.translateY + this.draggerHeight > this.paneHeight) {
+            this.translateY = this.paneHeight - this.draggerHeight;
+        }
+        this.dragger.style.transform = 'translateY(' + this.translateY + 'px)';
+        // move content accordingly:
+        this.scrollingContent.scrollTop = (this.translateY / this.scrollbarRatio);
+    }
+
+    this.endScrollDrag = function(e) {
+        this.isBeingDragged = false;
+        // tidy up and remove event listeners:
+        document.removeEventListener('mousemove', this.mouseMoveEvent);
+        document.removeEventListener('mouseup', this.mouseUpEvent);
+    }
 
     this.init();
 
@@ -143,15 +112,15 @@ this.startScrollDrag = function(e) {
 
 
 // do this globally once:
-var thisDevicesScrollBarWidth = scrollbarWidth();
+thisDevicesScrollBarWidth = scrollbarWidth();
 if (thisDevicesScrollBarWidth > 0) {
+
     
-console.log("-----------------------------------");
-scrollBar1 = new customScrollBar(document.getElementById('scrollParent'));
+    scrollBar1 = new customScrollBar(document.getElementById('scrollParent'));
 
 
 
     // eg (not touch device)
-    //document.getElementById('scrollingContent').style.width = document.getElementById('scrollingContent').offsetWidth + thisDevicesScrollBarWidth + 'px';
+    //
     //initDragger();
 }
