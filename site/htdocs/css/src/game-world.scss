@@ -684,4 +684,16 @@ pointer-events: auto;
  /* position: absolute;
   top: 0;*/
 }
+
+.inActive {
+    overflow: visible;
+    .customScrollContent {
+overflow: visible;
+height: 100%;
+    }
+    .trackBar {
+        display: none;
+    }
+}
+
 // ------------------------------

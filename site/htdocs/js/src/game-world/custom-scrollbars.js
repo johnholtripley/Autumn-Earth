@@ -2,17 +2,13 @@
 
      TO DO #########
 
-    If not needed, don't show
-
-    Re-init function if content changes 
-
     remove the need to indent the content
 
     */
 
 function scrollbarWidth() {
-    // Add a temporary scrolling element to the DOM, then check the difference between its outer and inner elements.
-    // only need to call once - won't change
+    // Add a temporary scrolling element to the DOM, then check the difference between its outer and inner elements
+    // only need to call once as it won't change
     var testDiv = document.createElement('div');
     testDiv.style.cssText = 'width:50px;height:50px;overflow-y:scroll;top:-200px;left:-200px;position:absolute;';
     var width = 0;
@@ -24,30 +20,40 @@ function scrollbarWidth() {
     return (width - widthMinusScrollbars);
 }
 
-
-
-
-
 function customScrollBar(element) {
     this.element = element;
     this.scrollingContent = this.element.firstElementChild;
-    this.translateY = 0;
-    this.isBeingDragged = false;
-
+    this.hasMouseEventsAttached = false;
     this.init = function() {
+        this.translateY = 0;
+        this.isBeingDragged = false;
+
+        this.element.classList.remove("inActive");
         this.scrollingContent.style.width = this.scrollingContent.offsetWidth + thisDevicesScrollBarWidth + 'px';
         this.paneHeight = this.element.offsetHeight;
         this.scrollContentHeight = this.scrollingContent.scrollHeight;
-        this.scrollbarRatio = (this.paneHeight / this.scrollContentHeight);
-        this.draggerHeight = Math.floor(this.scrollbarRatio * this.paneHeight);
-        this.dragger = this.element.querySelector(".dragger");
-        this.dragger.style.height = this.draggerHeight + "px";
-        // update dragger position when the content is scrolled natively:
-        // use bind to pass this - http://stackoverflow.com/questions/1338599/the-value-of-this-within-the-handler-using-addeventlistener#answer-19507086
-        this.scrollingContent.addEventListener('scroll', this.contentScroll.bind(this));
-        // allow content to be scrolled by dragging the dragger:
-        this.dragger.addEventListener('mousedown', this.startScrollDrag.bind(this));
-    };
+        if (this.scrollContentHeight > this.paneHeight) {
+            this.scrollbarRatio = (this.paneHeight / this.scrollContentHeight);
+            this.draggerHeight = Math.floor(this.scrollbarRatio * this.paneHeight);
+            this.dragger = this.element.querySelector(".dragger");
+            this.dragger.style.height = this.draggerHeight + "px";
+            // reset position in case the calling this after content has changed.
+            this.dragger.style.transform = 'translateY(' + this.translateY + 'px)';
+            // prevent the events being attached multiple times if inti is called again after a content change:
+            if (!this.hasMouseEventsAttached) {
+                // update dragger position when the content is scrolled natively:
+                // use bind to pass this - http://stackoverflow.com/questions/1338599/the-value-of-this-within-the-handler-using-addeventlistener#answer-19507086
+                this.scrollingContent.addEventListener('scroll', this.contentScroll.bind(this));
+                // allow content to be scrolled by dragging the dragger:
+                this.dragger.addEventListener('mousedown', this.startScrollDrag.bind(this));
+                this.hasMouseEventsAttached = true;
+            }
+        } else {
+            this.element.classList.add("inActive");
+            // restore natural width:
+            this.scrollingContent.removeAttribute('style');
+        }
+    }
 
     this.contentScroll = function() {
         // prevent it from re-calculating everything during a dragged scroll:
@@ -60,22 +66,19 @@ function customScrollBar(element) {
     }
 
     this.startScrollDrag = function(e) {
-
         // stop the content getting highlighted during the drag:
         e.preventDefault();
-        this.objInitTop = e.pageY - this.translateY;
+        this.initialClickPosition = e.pageY - this.translateY;
         this.isBeingDragged = true;
-
         // http://stackoverflow.com/questions/11565471/removing-event-listener-which-was-added-with-bind#answer-22870717
         this.mouseMoveEvent = this.handleScrollDrag.bind(this);
-        document.addEventListener('mousemove', this.mouseMoveEvent);
+        document.addEventListener('mousemove', this.mouseMoveEvent, false);
         this.mouseUpEvent = this.endScrollDrag.bind(this);
-        document.addEventListener('mouseup', this.mouseUpEvent);
-
+        document.addEventListener('mouseup', this.mouseUpEvent, false);
     }
 
     this.handleScrollDrag = function(e) {
-        this.translateY = (e.pageY - this.objInitTop);
+        this.translateY = (e.pageY - this.initialClickPosition);
         if (this.translateY < 0) {
             this.translateY = 0;
         }
@@ -90,17 +93,12 @@ function customScrollBar(element) {
     this.endScrollDrag = function(e) {
         this.isBeingDragged = false;
         // tidy up and remove event listeners:
-        document.removeEventListener('mousemove', this.mouseMoveEvent);
-        document.removeEventListener('mouseup', this.mouseUpEvent);
+        document.removeEventListener('mousemove', this.mouseMoveEvent, false);
+        document.removeEventListener('mouseup', this.mouseUpEvent, false);
     }
 
     this.init();
-
 }
-
-
-
-
 
 
 
@@ -108,18 +106,10 @@ function customScrollBar(element) {
 // do this globally once:
 thisDevicesScrollBarWidth = scrollbarWidth();
 if (thisDevicesScrollBarWidth > 0) {
-  // eg (not touch device)
-    
-  //  scrollBar1 = new customScrollBar(document.getElementById('scrollParent'));
-
-
-
-var scrollBarElements = document.getElementsByClassName("customScrollBar");
-for(var i = 0; i < scrollBarElements.length; i++) {
-    new customScrollBar(scrollBarElements[i]);
-}
-
-
-  
-    
+    // eg (not touch device)
+    var scrollBarElements = document.getElementsByClassName("customScrollBar");
+    for (var i = 0; i < scrollBarElements.length; i++) {
+        // create a reference to the element using its id:
+        window[scrollBarElements[i].id] = new customScrollBar(scrollBarElements[i]);
+    }
 }
