@@ -186,39 +186,53 @@ function itemAttributesMatch(item1, item2) {
 
 
 
-function inventoryItemAction(whichSlot, whichAction, whichActionValue) {// remove the 'slot' prefix with the substring(4):
-var whichSlotNumber = whichSlot.parentElement.id.substring(4);
-switch (whichAction) {
-    case "container":
-        // check it has contents:
-        if (typeof hero.inventory[whichSlotNumber].contains !== "undefined") {
-            if((hero.inventory[whichSlotNumber].contains.length == 1) && (hero.inventory[whichSlotNumber].quantity ==1)) {
-            // if just a single wrapped item containing a single type of item, replace the wrapped with the contents:
-            hero.inventory[whichSlotNumber] = JSON.parse(JSON.stringify(hero.inventory[whichSlotNumber].contains[0]));
-            document.getElementById("slot" + whichSlotNumber).innerHTML = generateSlotMarkup(whichSlotNumber);
-        }
-        }
-        break;
-    case "booster":
-        openBoosterPack();
-
-        removeFromInventory(whichSlotNumber, 1);
-        break;
-    case "recipe":
-        if (canLearnRecipe(whichActionValue)) {
-
+function inventoryItemAction(whichSlot, whichAction, whichActionValue) { // remove the 'slot' prefix with the substring(4):
+    var whichSlotNumber = whichSlot.parentElement.id.substring(4);
+    switch (whichAction) {
+        case "container":
+            // check it has contents:
+            if (typeof hero.inventory[whichSlotNumber].contains !== "undefined") {
+                if ((hero.inventory[whichSlotNumber].contains.length == 1) && (hero.inventory[whichSlotNumber].quantity == 1)) {
+                    // if just a single wrapped item containing a single type of item, replace the wrapped with the contents:
+                    // (need to ensure that when creating containers that they can't hold more than maxNumberOfItemsPerSlot of an item type)
+                    hero.inventory[whichSlotNumber] = JSON.parse(JSON.stringify(hero.inventory[whichSlotNumber].contains[0]));
+                    document.getElementById("slot" + whichSlotNumber).innerHTML = generateSlotMarkup(whichSlotNumber);
+                } else {
+                    var wrappedObject = JSON.parse(JSON.stringify(hero.inventory[whichSlotNumber]));
+                    removeFromInventory(whichSlotNumber, 1);
+                    var inventoryCheck = canAddItemToInventory(wrappedObject.contains);
+                    if (inventoryCheck[0]) {
+                        document.getElementById("slot" + whichSlotNumber).innerHTML = generateSlotMarkup(whichSlotNumber);
+                    } else {
+                        // restore the wrapped item:
+                        hero.inventory[whichSlotNumber] = JSON.parse(JSON.stringify(wrappedObject));
+                        UI.showNotification("<p>You don't have room for all of these items.</p>");
+                    }
+                }
+            }
+            break;
+        case "booster":
+            openBoosterPack();
             removeFromInventory(whichSlotNumber, 1);
-        }
-        break;
-    case "craft":
-        if (professionsKnown.indexOf(whichActionValue) != -1) {
-            UI.populateRecipeList(whichActionValue);
-        } else {
-            UI.showNotification("<p>You don't know this profession yet.</p>");
-        }
-        break;
+            break;
+        case "recipe":
+            if (canLearnRecipe(whichActionValue)) {
+
+                removeFromInventory(whichSlotNumber, 1);
+            }
+            break;
+        case "craft":
+            if (professionsKnown.indexOf(whichActionValue) != -1) {
+                UI.populateRecipeList(whichActionValue);
+            } else {
+                UI.showNotification("<p>You don't know this profession yet.</p>");
+            }
+            break;
+    }
 }
-}
+
+
+
 
 
 
@@ -255,8 +269,21 @@ function generateSlotMarkup(thisSlotsId) {
         dataActionMarkup = 'data-action="' + thisAction + '" data-action-value="' + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].actionValue + '" ';
     }
     slotMarkup += '<img src="/images/game-world/inventory-items/' + hero.inventory[thisSlotsId].type + thisFileColourSuffix + '.png" ' + dataActionMarkup + 'alt="'+theColourPrefix + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].shortname+'">';
-
-    slotMarkup += '<p><em>' + theColourPrefix + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].shortname + ' </em>' + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].description + ' <span class="price">Sell price: ' + parseMoney(hero.inventory[thisSlotsId].quantity * currentActiveInventoryItems[hero.inventory[thisSlotsId].type].priceCode, 0) + '</span>' + additionalTooltipDetail(thisSlotsId) + '</p>';
+var itemsDescription = currentActiveInventoryItems[hero.inventory[thisSlotsId].type].description;
+if(itemsDescription.indexOf('##contains##') != -1) {
+// check it has got contains content:
+if (typeof hero.inventory[thisSlotsId].contains !== "undefined") {
+var containsItems = '';
+    for (var i=0; i<hero.inventory[thisSlotsId].contains.length;i++) {
+        if(i!= 0) {
+           containsItems+= ", "; 
+        }
+containsItems += hero.inventory[thisSlotsId].contains[i].quantity+"x "+currentActiveInventoryItems[hero.inventory[thisSlotsId].contains[i].type].shortname;
+    }
+    itemsDescription = itemsDescription.replace('##contains##', containsItems);
+    }
+}
+    slotMarkup += '<p><em>' + theColourPrefix + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].shortname + ' </em>' + itemsDescription + ' <span class="price">Sell price: ' + parseMoney(hero.inventory[thisSlotsId].quantity * currentActiveInventoryItems[hero.inventory[thisSlotsId].type].priceCode, 0) + '</span>' + additionalTooltipDetail(thisSlotsId) + '</p>';
     slotMarkup += '<span class="qty">' + hero.inventory[thisSlotsId].quantity + '</span>';
     return slotMarkup;
 }
