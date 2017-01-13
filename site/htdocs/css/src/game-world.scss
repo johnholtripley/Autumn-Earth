@@ -682,7 +682,7 @@ pointer-events: auto;
 }
 
 .inActive {
-    overflow: visible;
+    overflow-y: auto;
     .customScrollContent {
 overflow: visible;
 height: 100%;
