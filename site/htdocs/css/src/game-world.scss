@@ -656,7 +656,7 @@ position: relative;
     -webkit-overflow-scrolling: touch;
   height: 100%;
   // stop content from being obscured by the track bar:
-  padding-right: 16px;
+  padding-right: 10px;
   @include border-box;
 }
 
