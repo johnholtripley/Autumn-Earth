@@ -270,6 +270,9 @@ function recipeSearchAndFilter() {
             UI.highlightedRecipe = "";
         }
     }
+     // resize the scroll bar:
+     
+            recipeCustomScrollBar.init();
 }
 
 function recipeSearchInput() {
