@@ -1,5 +1,3 @@
-
-
 function scrollbarWidth() {
     // Add a temporary scrolling element to the DOM, then check the difference between its outer and inner elements
     // only need to call once as it won't change
@@ -23,7 +21,7 @@ function customScrollBar(element) {
         this.isBeingDragged = false;
         this.element.classList.remove("inActive");
         // hide the native scroll bar by making the content wider by the width of the scroll bar so its pushed off to the side:
-        this.scrollingContent.style.width  = (this.scrollingContent.offsetWidth + thisDevicesScrollBarWidth) + 'px';
+        this.scrollingContent.style.width = (this.scrollingContent.offsetWidth + thisDevicesScrollBarWidth) + 'px';
         this.paneHeight = this.element.offsetHeight;
         this.scrollContentHeight = this.scrollingContent.scrollHeight;
         if (this.scrollContentHeight > this.paneHeight) {
@@ -99,11 +97,15 @@ function customScrollBar(element) {
 
 // do this globally once:
 thisDevicesScrollBarWidth = scrollbarWidth();
-if (thisDevicesScrollBarWidth > 0) {
-    // eg (not touch device)
-    var scrollBarElements = document.getElementsByClassName("customScrollBar");
-    for (var i = 0; i < scrollBarElements.length; i++) {
+
+// eg (not touch device)
+var scrollBarElements = document.getElementsByClassName("customScrollBar");
+for (var i = 0; i < scrollBarElements.length; i++) {
+    if (thisDevicesScrollBarWidth > 0) {
         // create a reference to the element using its id:
         window[scrollBarElements[i].id] = new customScrollBar(scrollBarElements[i]);
+    } else {
+        // remove styling:
+        scrollBarElements[i].classList.add("inActive");
     }
 }

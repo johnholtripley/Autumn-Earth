@@ -420,12 +420,11 @@ canvas {
     background: #222;
     color: #fff;
     ul {
-        margin: 6px;
+        margin: 0;
         padding: 0;
         list-style: none;
-        width: 250px;
-        height: 300px;
-        overflow: auto;
+   
+    
         li {
             display: none;
             background: #666;
@@ -435,7 +434,10 @@ canvas {
                 display: block;
             }
             img {
-                float: left;
+                display: inline-block;
+                // define widths so the scrollbar knows the size while the images are loading:
+                width: 40px;
+                height: 40px;
             }
             &.highlighted {
                 background: #b4a435;

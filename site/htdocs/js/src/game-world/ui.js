@@ -240,6 +240,9 @@ var textToShow = getRandomElementFromArray(text.split("/"));
             UI.highlightedRecipe = "";
             craftingRecipeCreateButton.disabled = true;
             recipeTitleBar.innerHTML = hero.crafting[whichProfession].name + ' Recipes';
+            // resize the scroll bar:
+     
+            recipeCustomScrollBar.init();
         }
     },
 

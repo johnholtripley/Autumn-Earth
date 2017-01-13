@@ -40,8 +40,16 @@
 <div id="cartographicPanel"><div class="draggableBar"><span id="cartographicTitle">Map</span></div><canvas id="cartographyCanvas" width="246" height="246"></canvas><canvas id="offScreenCartographyCanvas" class="offScreenCanvas" width="246" height="246"></canvas></div>
 <div id="craftingPanel"><div class="draggableBar"><span id="recipeTitleBar">Recipes</span></div>
 <div id="recipeSearchWrapper"><label for="recipeSearch" class="visibleHide">Search for recipes</label><input id="recipeSearch" type="text" placeholder="Search"><button id="clearRecipeSearch"><span>Clear search</span></button></div><label for="recipeFilter" class="visibleHide">Filter by:</label><div class="selectWrapper"><select id="recipeFilter"><option>All</option></select></div>
+
+<div class="customScrollBar" id="recipeCustomScrollBar">
+<div class="customScrollContent">
 <ul id="createRecipeList">
 </ul>
+ <div class="trackBar">
+    <div class="dragger"></div>
+  </div>
+</div>
+</div>
 <button id="craftingRecipeCreateButton" disabled="disabled">Add components</button>
 </div>
 <div id="craftingSelectComponentsPanel">
@@ -71,19 +79,6 @@ for ($i=0;$i<5;$i++) {
 
 
 
-
-
-
-<div class="customScrollBar" id="firstOne">
-  <div class="customScrollContent">
-    <p>Duis cursus est sed sapien ultricies, nec dapibus risus lobortis. Suspendisse scelerisque erat ac tortor ultrices, a tristique ex congue. Integer facilisis nisl a dignissim dignissim. Nullam vitae aliquet orci, ut suscipit mauris. Phasellus consequat at dui in facilisis.</p>
-    <p>Morbi vehicula ipsum id est lobortis, non vulputate erat pulvinar. Integer enim est, dictum nec pellentesque eu, elementum a turpis. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae;</p><p>Quisque non tortor vel orci congue varius.</p><p>Duis cursus est sed sapien ultricies, nec dapibus risus lobortis. Suspendisse scelerisque erat ac tortor ultrices, a tristique ex congue. Integer facilisis nisl a dignissim dignissim. Nullam vitae aliquet orci, ut suscipit mauris. Phasellus consequat at dui in facilisis.</p><p>Morbi vehicula ipsum id est lobortis, non vulputate erat pulvinar. Integer enim est, dictum nec pellentesque eu, elementum a turpis. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae;</p><p>Donec condimentum ipsum ipsum. Suspendisse efficitur, lacus id luctus rutrum, elit eros faucibus arcu END</p>
-    
-  </div>
-  <div class="trackBar">
-    <div class="dragger"></div>
-  </div>
-</div>
 
 </div>
 
