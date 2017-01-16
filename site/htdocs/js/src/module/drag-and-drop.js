@@ -69,7 +69,7 @@ window.addEventListener("beforeunload", unloadPrompt, false);
 
     xhr.onreadystatechange = function() {
         if (xhr.readyState == 4 && xhr.status == 200) {
-        	progressBar.removeAttribute('value');
+        	progressBar.classList.remove('active');
             alert(xhr.responseText); // handle response.
         }
     };
@@ -106,6 +106,7 @@ if(checkbox) {
 }
 
     xhr.send(fd);
+    progressBar.classList.add('active');
 }
 
 

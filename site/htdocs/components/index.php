@@ -245,7 +245,7 @@ responsiveBackground('/images/placeholder.jpg', array(300,600,900));
 <label for="file" class="fileInputLabel"><span>Choose a file</span></label>
 
 
-<progress max="100" value="80"></progress>
+<progress max="100" value="80" class="active"><img src="/images/uploading.gif" alt="Uploading..."></progress>
 
 <input type='submit' value='Submit button'>
 

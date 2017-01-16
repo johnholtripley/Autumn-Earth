@@ -11,19 +11,5 @@ background: #666;
 }
 
 
-progress {
-      /* Reset the default appearance */
-  -webkit-appearance: none;
-  -moz-appearance: none;
-   appearance: none;
 
-border: none;
-
-  width: 250px;
-  height: 20px;
-
-  &:not([value]) {
-display: none;
-    }
-}
 

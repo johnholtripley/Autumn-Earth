@@ -590,7 +590,7 @@ Allow others to copy or share this song
 
 <input type="hidden" name="sentViaAJAX" value="false">
 
-<progress max="100" id="progessBar"></progress>
+<progress max="100" id="progessBar"><img src="/images/uploading.gif" alt="Uploading..."></progress>
 
 
 <input type="submit" name="submitbutton" id="submitbutton" value="Upload abc notation" >

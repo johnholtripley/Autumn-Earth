@@ -40,7 +40,7 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/header.php");
 <input type="hidden" name="MAX_FILE_SIZE" value="1024000">
 <input type="hidden" name="sentViaAJAX" value="false">
 
-<progress max="100" id="progessBar"></progress>
+<progress max="100" id="progessBar"><img src="/images/uploading.gif" alt="Uploading..."></progress>
 
 
 <input id="Filedata" class="fileInput" name="Filedata" data-multiple-caption="{count} files selected" multiple="" type="file">
