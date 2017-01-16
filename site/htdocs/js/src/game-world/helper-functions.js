@@ -24,7 +24,7 @@ function findIsoDepth(x, y, z) {
 // replace 9999 with determined value based on map size
 
 var tilePosition = getCurrentTileX(x) + (mapTilesX * getCurrentTileY(y));
-var adjustedTile = (tilePosition) * 9999;
+var adjustedTile = (tilePosition) * 999;
 var positionWithinTileX = x%tileW;
 var positionWithinTileY = y%tileH;
 

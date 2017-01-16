@@ -178,28 +178,29 @@ function loadMapAssets() {
     }
 
     itemGraphicsToLoad = thisMapData.items;
+    var itemImagesRequested = [];
     for (var i = 0; i < itemGraphicsToLoad.length; i++) {
         // get colour name 
+        thisFileColourSuffix = "";
+        if (itemGraphicsToLoad[i].colour) {
+            thisColourName = getColourName(itemGraphicsToLoad[i].colour, itemGraphicsToLoad[i].type);
+            if (thisColourName != "") {
+                thisFileColourSuffix = "-" + thisColourName.toLowerCase();
+            }
+        }
 
-thisFileColourSuffix = "";
-if(itemGraphicsToLoad[i].colour) {
- thisColourName = getColourName(itemGraphicsToLoad[i].colour, itemGraphicsToLoad[i].type);
-
-                    if (thisColourName != "") {
-                       
-                        thisFileColourSuffix = "-" + thisColourName.toLowerCase();
-                    }
-                }
-
-
-        imagesToLoad.push({
-            name: "item" + itemGraphicsToLoad[i].type,
-            src: "/images/game-world/items/" + currentActiveInventoryItems[itemGraphicsToLoad[i].type].worldSrc + thisFileColourSuffix+".png"
-        });
+        if (itemImagesRequested.indexOf(itemGraphicsToLoad[i].type + thisFileColourSuffix) == -1) {
+            imagesToLoad.push({
+                name: "item" + itemGraphicsToLoad[i].type + thisFileColourSuffix,
+                src: "/images/game-world/items/" + currentActiveInventoryItems[itemGraphicsToLoad[i].type].worldSrc + thisFileColourSuffix + ".png"
+            });
+            itemImagesRequested.push(itemGraphicsToLoad[i].type + thisFileColourSuffix);
+        }
     }
 
     Loader.preload(imagesToLoad, prepareGame, loadingProgress);
 }
+
 
 function loadTitles() {
     var itemIdsToGet = hero.titlesEarned.join("|");
@@ -394,12 +395,16 @@ function removeMapAssets() {
         tileImages[i] = null;
     }
     for (var i = 0; i < npcGraphicsToLoad.length; i++) {
-        npcImages[i].src = '';
-        npcImages[i] = null;
+        npcImages[thisMapData.npcs[i].name].src = '';
+        npcImages[thisMapData.npcs[i].name] = null;
     }
+    console.log(itemGraphicsToLoad.length);
     for (var i = 0; i < itemGraphicsToLoad.length; i++) {
-        itemImages[i].src = '';
-        itemImages[i] = null;
+        // itemGraphicsToLoad may well have duplicates in
+        if(itemImages[itemGraphicsToLoad[i].type]) {
+        itemImages[itemGraphicsToLoad[i].type].src = '';
+        itemImages[itemGraphicsToLoad[i].type] = null;
+    }
     }
     backgroundImg.src = '';
     backgroundImg = null;
@@ -1422,6 +1427,10 @@ function draw() {
             thisItem = thisMapData.items[i];
             thisX = findIsoCoordsX(thisItem.x, thisItem.y);
             thisY = findIsoCoordsY(thisItem.x, thisItem.y);
+
+
+
+
             assetsToDraw.push([findIsoDepth(thisItem.x, thisItem.y,0), "img", itemImages[(thisMapData.items[i].type)], Math.floor(thisX - hero.isox - thisItem.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisItem.centreY + (canvasHeight / 2))]);
         }
 
