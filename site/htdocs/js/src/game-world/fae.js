@@ -18,9 +18,7 @@ function animateFae() {
             var particleIsoY = faeIsoY + getRandomInteger(0, 8) - 4;
             // check it's in a circle from the fae's centre:
             if (isInRange(faeIsoX, faeIsoY, particleIsoX, particleIsoY, 6)) {
-
-                fae.particles.push({ 'depth': findIsoCoordsY(fae.x, fae.y), 'isoX': particleIsoX, 'isoY': particleIsoY, 'alpha': 1 });
-
+                fae.particles.push({ 'depth': findIsoDepth(fae.x, fae.y, fae.z), 'isoX': particleIsoX, 'isoY': particleIsoY, 'alpha': 1 });
             }
         }
     }
@@ -62,7 +60,6 @@ function moveFaeToDestination(x, y) {
             fae.x = x;
             fae.y = y;
             if (fae.currentState == "away") {
-
                 fae.currentState = "wait";
             }
         } else {
@@ -70,5 +67,11 @@ function moveFaeToDestination(x, y) {
             fae.x += (x - fae.x) / 2;
             fae.y += (y - fae.y) / 2;
         }
+    }
+    var targetZ = fae.zOffset + hero.z;
+    if (targetZ > fae.z) {
+        fae.z++;
+    } else if (targetZ < fae.z) {
+        fae.z--;
     }
 }

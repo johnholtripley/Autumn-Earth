@@ -225,7 +225,8 @@ angleAroundHero: 0,
 targetX: 0,
 targetY: 0,
 currentState: "hero",
-abandonRadius: 500
+abandonRadius: 500,
+zOffset: 40
 };
 
 function recipeSearchAndFilter() {
@@ -470,9 +471,7 @@ function animateFae() {
             var particleIsoY = faeIsoY + getRandomInteger(0, 8) - 4;
             // check it's in a circle from the fae's centre:
             if (isInRange(faeIsoX, faeIsoY, particleIsoX, particleIsoY, 6)) {
-
-                fae.particles.push({ 'depth': findIsoCoordsY(fae.x, fae.y), 'isoX': particleIsoX, 'isoY': particleIsoY, 'alpha': 1 });
-
+                fae.particles.push({ 'depth': findIsoDepth(fae.x, fae.y, fae.z), 'isoX': particleIsoX, 'isoY': particleIsoY, 'alpha': 1 });
             }
         }
     }
@@ -514,7 +513,6 @@ function moveFaeToDestination(x, y) {
             fae.x = x;
             fae.y = y;
             if (fae.currentState == "away") {
-
                 fae.currentState = "wait";
             }
         } else {
@@ -522,6 +520,12 @@ function moveFaeToDestination(x, y) {
             fae.x += (x - fae.x) / 2;
             fae.y += (y - fae.y) / 2;
         }
+    }
+    var targetZ = fae.zOffset + hero.z;
+    if (targetZ > fae.z) {
+        fae.z++;
+    } else if (targetZ < fae.z) {
+        fae.z--;
     }
 }
 
@@ -548,14 +552,19 @@ return Math.floor((x/4) + (y/4) - tileH/2);
 function findIsoDepth(x, y, z) {
 
 // tidy this up
-// replace 9999 with determined value based on map size
+// ########
 
 var tilePosition = getCurrentTileX(x) + (mapTilesX * getCurrentTileY(y));
+// weight the tile heavily to allow vertical depth within that range
 var adjustedTile = (tilePosition) * 999;
+
+
+
+// find position across tile
 var positionWithinTileX = x%tileW;
 var positionWithinTileY = y%tileH;
-
-return adjustedTile+positionWithinTileX+positionWithinTileY+z;
+// adjust by using iso position across the tile - weighting z depth more heavily:
+return adjustedTile+findIsoCoordsX(positionWithinTileX,positionWithinTileY)+findIsoCoordsY(positionWithinTileX,positionWithinTileY)+(z*z);
 
 // 
 
@@ -2283,18 +2292,18 @@ function loadMapJSON(mapFilePath) {
         mapTilesX = thisMapData.terrain[0].length;
         if (previousZoneName != thisMapData.zoneName) {
             UI.showZoneName(thisMapData.zoneName);
-            document.title = titleTagPrefix+' - '+thisMapData.zoneName;
-             cartographicTitle.innerHTML = thisMapData.zoneName;
+            document.title = titleTagPrefix + ' - ' + thisMapData.zoneName;
+            cartographicTitle.innerHTML = thisMapData.zoneName;
         }
-       initCartographicMap();
+        initCartographicMap();
         findProfessionsAndRecipes();
-fae.recentHotspots = [];
+        fae.recentHotspots = [];
     }, function(status) {
-        // alert('Error loading data for map #' + currentMap+" --- "+mapFilePath);
         // try again:
         loadMapJSON(mapFilePath);
     });
 }
+
 
 function loadMap() {
     var mapFilePath;
@@ -2357,9 +2366,7 @@ function loadMapAssets() {
             src: "/images/game-world/npcs/" + npcGraphicsToLoad[i].src
         });
     }
-
-    
- itemGraphicsToLoad = [];
+    itemGraphicsToLoad = [];
     var thisItemIdentifier = '';
     for (var i = 0; i < thisMapData.items.length; i++) {
         // get colour name 
@@ -2370,8 +2377,8 @@ function loadMapAssets() {
                 thisFileColourSuffix = "-" + thisColourName.toLowerCase();
             }
         }
-thisItemIdentifier = "item" + thisMapData.items[i].type + thisFileColourSuffix;
-// only add unique images:
+        thisItemIdentifier = "item" + thisMapData.items[i].type + thisFileColourSuffix;
+        // only add unique images:
         if (itemGraphicsToLoad.indexOf(thisItemIdentifier) == -1) {
             imagesToLoad.push({
                 name: thisItemIdentifier,
@@ -2383,6 +2390,7 @@ thisItemIdentifier = "item" + thisMapData.items[i].type + thisFileColourSuffix;
 
     Loader.preload(imagesToLoad, prepareGame, loadingProgress);
 }
+
 
 
 function loadTitles() {
@@ -2407,8 +2415,7 @@ function getColours() {
     });
 }
 
-function getQuestDetails() {
-    
+function getQuestDetails() {   
     getJSON("/game-world/getQuestDetails.php?chr=" + characterId, function(data) {
         questData = data.quests;
         loadTitles();
@@ -2532,6 +2539,8 @@ function prepareGame() {
     for (var i = 0; i < thisMapData.npcs.length; i++) {
         thisMapData.npcs[i].x = getTileCentreCoordX(thisMapData.npcs[i].tileX);
         thisMapData.npcs[i].y = getTileCentreCoordY(thisMapData.npcs[i].tileY);
+        thisMapData.npcs[i].z = thisMapData.elevation[thisMapData.npcs[i].tileY][thisMapData.npcs[i].tileX];
+        
 thisMapData.npcs[i].drawnFacing = thisMapData.npcs[i].facing;
         thisMapData.npcs[i].dx = 0;
         thisMapData.npcs[i].dy = 0;
@@ -2542,7 +2551,7 @@ thisMapData.npcs[i].drawnFacing = thisMapData.npcs[i].facing;
     for (var i = 0; i < thisMapData.items.length; i++) {
         thisMapData.items[i].x = getTileCentreCoordX(thisMapData.items[i].tileX);
         thisMapData.items[i].y = getTileCentreCoordY(thisMapData.items[i].tileY);
-
+thisMapData.items[i].z = thisMapData.elevation[thisMapData.items[i].tileY][thisMapData.items[i].tileX];
         thisMapData.items[i].width = currentActiveInventoryItems[thisMapData.items[i].type].width;
         thisMapData.items[i].height = currentActiveInventoryItems[thisMapData.items[i].type].height;
 
@@ -2553,11 +2562,12 @@ activeNPCForDialogue = '';
     // determine tile offset to centre the hero in the centre
     hero.x = getTileCentreCoordX(hero.tileX);
     hero.y = getTileCentreCoordY(hero.tileY);
+hero.z = thisMapData.elevation[hero.tileY][hero.tileX];
 
     // initialise fae:
     fae.x = hero.x + tileW * 2;
     fae.y = hero.y + tileH * 2;
-    fae.z = 40;
+    fae.z = fae.zOffset + hero.z;
     fae.dz = 1;
    // fae.pulse = 0;
     
@@ -3564,7 +3574,7 @@ function draw() {
         thisX = findIsoCoordsX(fae.x, fae.y);
         thisY = findIsoCoordsY(fae.x, fae.y);
 
-        assetsToDraw.push([findIsoDepth(fae.x,fae.y,0), "faeCentre", Math.floor(thisX - hero.isox + (canvasWidth / 2)), Math.floor(thisY - hero.isoy + (canvasHeight / 2) - fae.z)]);
+        assetsToDraw.push([findIsoDepth(fae.x,fae.y,fae.z), "faeCentre", Math.floor(thisX - hero.isox + (canvasWidth / 2)), Math.floor(thisY - hero.isoy + (canvasHeight / 2) - fae.z)]);
 
         // draw fae particles:
         for (var i = 0; i < fae.particles.length; i++) {
@@ -3606,7 +3616,7 @@ function draw() {
             //assetsToDraw.push([findIsoDepth(thisX, thisY), npcImages[i], Math.floor(thisX - hero.isox - thisNPC.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisNPC.centreY + (canvasHeight / 2))]);
    
 
-            assetsToDraw.push([findIsoDepth(thisNPC.x,thisNPC.y,0), "sprite", npcImages[thisMapData.npcs[i].name], thisNPCOffsetCol * thisNPC.spriteWidth, thisNPCOffsetRow * thisNPC.spriteHeight, thisNPC.spriteWidth, thisNPC.spriteHeight, Math.floor(thisX - hero.isox - thisNPC.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisNPC.centreY + (canvasHeight / 2)), thisNPC.spriteWidth, thisNPC.spriteHeight]);
+            assetsToDraw.push([findIsoDepth(thisNPC.x,thisNPC.y,thisNPC.z), "sprite", npcImages[thisMapData.npcs[i].name], thisNPCOffsetCol * thisNPC.spriteWidth, thisNPCOffsetRow * thisNPC.spriteHeight, thisNPC.spriteWidth, thisNPC.spriteHeight, Math.floor(thisX - hero.isox - thisNPC.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisNPC.centreY + (canvasHeight / 2) - thisNPC.z), thisNPC.spriteWidth, thisNPC.spriteHeight]);
         }
 
 
@@ -3625,7 +3635,7 @@ thisFileColourSuffix = "";
         }
 thisItemIdentifier = "item" + thisMapData.items[i].type + thisFileColourSuffix;
 
-            assetsToDraw.push([findIsoDepth(thisItem.x, thisItem.y,0), "img", itemImages[thisItemIdentifier], Math.floor(thisX - hero.isox - thisItem.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisItem.centreY + (canvasHeight / 2))]);
+            assetsToDraw.push([findIsoDepth(thisItem.x, thisItem.y,thisItem.z), "img", itemImages[thisItemIdentifier], Math.floor(thisX - hero.isox - thisItem.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisItem.centreY + (canvasHeight / 2) - thisItem.z)]);
         }
 
         assetsToDraw.sort(sortByLowestValue);

@@ -21,14 +21,19 @@ return Math.floor((x/4) + (y/4) - tileH/2);
 function findIsoDepth(x, y, z) {
 
 // tidy this up
-// replace 9999 with determined value based on map size
+// ########
 
 var tilePosition = getCurrentTileX(x) + (mapTilesX * getCurrentTileY(y));
+// weight the tile heavily to allow vertical depth within that range
 var adjustedTile = (tilePosition) * 999;
+
+
+
+// find position across tile
 var positionWithinTileX = x%tileW;
 var positionWithinTileY = y%tileH;
-
-return adjustedTile+positionWithinTileX+positionWithinTileY+z;
+// adjust by using iso position across the tile - weighting z depth more heavily:
+return adjustedTile+findIsoCoordsX(positionWithinTileX,positionWithinTileY)+findIsoCoordsY(positionWithinTileX,positionWithinTileY)+(z*z);
 
 // 
 

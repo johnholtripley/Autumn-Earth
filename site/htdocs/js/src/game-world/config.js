@@ -101,5 +101,6 @@ angleAroundHero: 0,
 targetX: 0,
 targetY: 0,
 currentState: "hero",
-abandonRadius: 500
+abandonRadius: 500,
+zOffset: 40
 };
