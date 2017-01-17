@@ -2358,24 +2358,26 @@ function loadMapAssets() {
         });
     }
 
-    itemGraphicsToLoad = thisMapData.items;
-    var itemImagesRequested = [];
-    for (var i = 0; i < itemGraphicsToLoad.length; i++) {
+    
+ itemGraphicsToLoad = [];
+    var thisItemIdentifier = '';
+    for (var i = 0; i < thisMapData.items.length; i++) {
         // get colour name 
         thisFileColourSuffix = "";
-        if (itemGraphicsToLoad[i].colour) {
-            thisColourName = getColourName(itemGraphicsToLoad[i].colour, itemGraphicsToLoad[i].type);
+        if (thisMapData.items[i].colour) {
+            thisColourName = getColourName(thisMapData.items[i].colour, thisMapData.items[i].type);
             if (thisColourName != "") {
                 thisFileColourSuffix = "-" + thisColourName.toLowerCase();
             }
         }
-
-        if (itemImagesRequested.indexOf(itemGraphicsToLoad[i].type + thisFileColourSuffix) == -1) {
+thisItemIdentifier = "item" + thisMapData.items[i].type + thisFileColourSuffix;
+// only add unique images:
+        if (itemGraphicsToLoad.indexOf(thisItemIdentifier) == -1) {
             imagesToLoad.push({
-                name: "item" + itemGraphicsToLoad[i].type + thisFileColourSuffix,
-                src: "/images/game-world/items/" + currentActiveInventoryItems[itemGraphicsToLoad[i].type].worldSrc + thisFileColourSuffix + ".png"
+                name: thisItemIdentifier,
+                src: "/images/game-world/items/" + currentActiveInventoryItems[thisMapData.items[i].type].worldSrc + thisFileColourSuffix + ".png"
             });
-            itemImagesRequested.push(itemGraphicsToLoad[i].type + thisFileColourSuffix);
+            itemGraphicsToLoad.push(thisItemIdentifier);
         }
     }
 
@@ -2522,8 +2524,8 @@ function prepareGame() {
     }
     itemImages = [];
     for (var i = 0; i < itemGraphicsToLoad.length; i++) {
-        
-        itemImages[itemGraphicsToLoad[i].type] = Loader.getImage("item" + itemGraphicsToLoad[i].type);
+        console.log(itemGraphicsToLoad[i]);
+        itemImages[itemGraphicsToLoad[i]] = Loader.getImage(itemGraphicsToLoad[i]);
     }
     backgroundImg = Loader.getImage("backgroundImg");
     // initialise and position NPCs:
@@ -2579,13 +2581,13 @@ function removeMapAssets() {
         npcImages[thisMapData.npcs[i].name].src = '';
         npcImages[thisMapData.npcs[i].name] = null;
     }
-    console.log(itemGraphicsToLoad.length);
-    for (var i = 0; i < itemGraphicsToLoad.length; i++) {
-        // itemGraphicsToLoad may well have duplicates in
-        if(itemImages[itemGraphicsToLoad[i].type]) {
-        itemImages[itemGraphicsToLoad[i].type].src = '';
-        itemImages[itemGraphicsToLoad[i].type] = null;
-    }
+    
+    for (var i in itemGraphicsToLoad) {
+    
+        
+        itemImages[itemGraphicsToLoad[i]].src = '';
+        itemImages[itemGraphicsToLoad[i]] = null;
+    
     }
     backgroundImg.src = '';
     backgroundImg = null;
@@ -2913,8 +2915,8 @@ function checkForActions() {
     for (var i = 0; i < thisMapData.items.length; i++) {
         if (isInRange(hero.x, hero.y, thisMapData.items[i].x, thisMapData.items[i].y, (thisMapData.items[i].width / 2 + hero.width / 2 + 6))) {
             if (isFacing(hero, thisMapData.items[i])) {
-                var actionValue = currentActiveInventoryItems[itemGraphicsToLoad[i].type].actionValue;
-                switch (currentActiveInventoryItems[itemGraphicsToLoad[i].type].action) {
+                var actionValue = currentActiveInventoryItems[thisMapData.items[i].type].actionValue;
+                switch (currentActiveInventoryItems[thisMapData.items[i].type].action) {
                     case "static":
                         // can't interact with it - do nothing
                         break;
@@ -3574,6 +3576,10 @@ function draw() {
         var thisNPCOffsetCol = 0;
         var thisNPCOffsetRow = 0;
 
+        var thisFileColourSuffix = '';
+        var thisColourName;
+        var thisItemIdentifier;
+
         for (var i = 0; i < mapTilesX; i++) {
             for (var j = 0; j < mapTilesY; j++) {
                 // the tile coordinates should be positioned by i,j but the way the map is drawn, the reference in the array is j,i
@@ -3610,9 +3616,16 @@ function draw() {
             thisY = findIsoCoordsY(thisItem.x, thisItem.y);
 
 
+thisFileColourSuffix = "";
+        if (thisMapData.items[i].colour) {
+            thisColourName = getColourName(thisMapData.items[i].colour, thisMapData.items[i].type);
+            if (thisColourName != "") {
+                thisFileColourSuffix = "-" + thisColourName.toLowerCase();
+            }
+        }
+thisItemIdentifier = "item" + thisMapData.items[i].type + thisFileColourSuffix;
 
-
-            assetsToDraw.push([findIsoDepth(thisItem.x, thisItem.y,0), "img", itemImages[(thisMapData.items[i].type)], Math.floor(thisX - hero.isox - thisItem.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisItem.centreY + (canvasHeight / 2))]);
+            assetsToDraw.push([findIsoDepth(thisItem.x, thisItem.y,0), "img", itemImages[thisItemIdentifier], Math.floor(thisX - hero.isox - thisItem.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisItem.centreY + (canvasHeight / 2))]);
         }
 
         assetsToDraw.sort(sortByLowestValue);
