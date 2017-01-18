@@ -71,9 +71,9 @@ function moveFaeToDestination(x, y) {
     
     var targetZ = hero.z;
     if (targetZ > fae.z) {
-        fae.z++;
+        fae.z+=0.5;
     } else if (targetZ < fae.z) {
-        fae.z--;
+        fae.z-=0.5;
     }
     
 }
