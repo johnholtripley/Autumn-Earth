@@ -102,5 +102,6 @@ targetX: 0,
 targetY: 0,
 currentState: "hero",
 abandonRadius: 500,
-zOffset: 40
+zOffset: 40,
+oscillateOffset: 0
 };

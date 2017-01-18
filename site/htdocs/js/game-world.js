@@ -226,7 +226,8 @@ targetX: 0,
 targetY: 0,
 currentState: "hero",
 abandonRadius: 500,
-zOffset: 40
+zOffset: 40,
+oscillateOffset: 0
 };
 
 function recipeSearchAndFilter() {
@@ -452,7 +453,7 @@ for (var i = 0; i < scrollBarElements.length; i++) {
 }
 
 function animateFae() {
-    fae.z = Math.floor((Math.sin(fae.dz) + 1) * 8 + 40);
+    //fae.z = Math.floor((Math.sin(fae.dz) + 1) * 8 + 40);
     fae.dz += 0.2;
     // fae.y+=8;
     for (var i = 0; i < fae.particles.length; i++) {
@@ -466,7 +467,7 @@ function animateFae() {
     if (fae.particles.length < fae.maxParticles) {
         if (getRandomInteger(1, 2) == 1) {
             var faeIsoX = findIsoCoordsX(fae.x, fae.y);
-            var faeIsoY = findIsoCoordsY(fae.x, fae.y) - fae.z;
+            var faeIsoY = findIsoCoordsY(fae.x, fae.y) - fae.oscillateOffset;
             var particleIsoX = faeIsoX + getRandomInteger(0, 8) - 4;
             var particleIsoY = faeIsoY + getRandomInteger(0, 8) - 4;
             // check it's in a circle from the fae's centre:
@@ -521,12 +522,14 @@ function moveFaeToDestination(x, y) {
             fae.y += (y - fae.y) / 2;
         }
     }
-    var targetZ = fae.zOffset + hero.z;
+    
+    var targetZ = hero.z;
     if (targetZ > fae.z) {
         fae.z++;
     } else if (targetZ < fae.z) {
         fae.z--;
     }
+    
 }
 
 
@@ -599,7 +602,10 @@ function getCurrentTileY(y) {
 }
 
 
-
+function getElevation(tileX,tileY) {
+ 
+return thisMapData.elevation[tileY][tileX];
+}
 
 function getXOffsetFromHeight(height) {
     // for determining a shadow's offset (for example).
@@ -2539,7 +2545,10 @@ function prepareGame() {
     for (var i = 0; i < thisMapData.npcs.length; i++) {
         thisMapData.npcs[i].x = getTileCentreCoordX(thisMapData.npcs[i].tileX);
         thisMapData.npcs[i].y = getTileCentreCoordY(thisMapData.npcs[i].tileY);
-        thisMapData.npcs[i].z = thisMapData.elevation[thisMapData.npcs[i].tileY][thisMapData.npcs[i].tileX];
+
+
+
+        thisMapData.npcs[i].z = getElevation(thisMapData.npcs[i].tileX,thisMapData.npcs[i].tileY);
         
 thisMapData.npcs[i].drawnFacing = thisMapData.npcs[i].facing;
         thisMapData.npcs[i].dx = 0;
@@ -2551,7 +2560,9 @@ thisMapData.npcs[i].drawnFacing = thisMapData.npcs[i].facing;
     for (var i = 0; i < thisMapData.items.length; i++) {
         thisMapData.items[i].x = getTileCentreCoordX(thisMapData.items[i].tileX);
         thisMapData.items[i].y = getTileCentreCoordY(thisMapData.items[i].tileY);
-thisMapData.items[i].z = thisMapData.elevation[thisMapData.items[i].tileY][thisMapData.items[i].tileX];
+
+
+thisMapData.items[i].z = getElevation(thisMapData.items[i].tileX,thisMapData.items[i].tileY);
         thisMapData.items[i].width = currentActiveInventoryItems[thisMapData.items[i].type].width;
         thisMapData.items[i].height = currentActiveInventoryItems[thisMapData.items[i].type].height;
 
@@ -2562,12 +2573,13 @@ activeNPCForDialogue = '';
     // determine tile offset to centre the hero in the centre
     hero.x = getTileCentreCoordX(hero.tileX);
     hero.y = getTileCentreCoordY(hero.tileY);
-hero.z = thisMapData.elevation[hero.tileY][hero.tileX];
+hero.z = getElevation(hero.tileX,hero.tileY);
 
     // initialise fae:
     fae.x = hero.x + tileW * 2;
     fae.y = hero.y + tileH * 2;
-    fae.z = fae.zOffset + hero.z;
+    fae.z = hero.z;
+
     fae.dz = 1;
    // fae.pulse = 0;
     
@@ -2871,7 +2883,9 @@ function update() {
 function heroIsInNewTile() {
 
 
-hero.z = thisMapData.elevation[getCurrentTileY(hero.y)][getCurrentTileX(hero.x)];
+
+
+hero.z = getElevation(getCurrentTileX(hero.x),getCurrentTileY(hero.y));
 
     if (currentMap < 0) {
         updateCartographicMiniMap();
@@ -3573,8 +3587,8 @@ function draw() {
         // draw fae:
         thisX = findIsoCoordsX(fae.x, fae.y);
         thisY = findIsoCoordsY(fae.x, fae.y);
-
-        assetsToDraw.push([findIsoDepth(fae.x,fae.y,fae.z), "faeCentre", Math.floor(thisX - hero.isox + (canvasWidth / 2)), Math.floor(thisY - hero.isoy + (canvasHeight / 2) - fae.z)]);
+fae.oscillateOffset = ((Math.sin(fae.dz) + 1) * 8) + fae.z + fae.zOffset;
+        assetsToDraw.push([findIsoDepth(fae.x,fae.y,fae.z), "faeCentre", Math.floor(thisX - hero.isox + (canvasWidth / 2)), Math.floor(thisY - hero.isoy + (canvasHeight / 2) - fae.oscillateOffset)]);
 
         // draw fae particles:
         for (var i = 0; i < fae.particles.length; i++) {
@@ -3658,9 +3672,9 @@ switch(assetsToDraw[i][1]) {
                 drawCircle("rgba(255,220,255,0.3)", assetsToDraw[i][2], assetsToDraw[i][3], 4);
 
                 // draw fae's shadow - make it respond to the fae's height:
-                gameContext.fillStyle = "rgba(0,0,0," + (65 - fae.z) * 0.01 + ")";
+                gameContext.fillStyle = "rgba(0,0,0," + (65 - fae.oscillateOffset) * 0.01 + ")";
                 gameContext.beginPath();
-                gameContext.ellipse(assetsToDraw[i][2] - getXOffsetFromHeight(fae.z), assetsToDraw[i][3] + fae.z, 3, 1, 0, 0, 2 * Math.PI);
+                gameContext.ellipse(assetsToDraw[i][2] - getXOffsetFromHeight(fae.oscillateOffset), assetsToDraw[i][3] + fae.oscillateOffset, 3, 1, 0, 0, 2 * Math.PI);
                 gameContext.fill();
         break;
            case "faeParticle":

@@ -1,5 +1,5 @@
 function animateFae() {
-    fae.z = Math.floor((Math.sin(fae.dz) + 1) * 8 + 40);
+    //fae.z = Math.floor((Math.sin(fae.dz) + 1) * 8 + 40);
     fae.dz += 0.2;
     // fae.y+=8;
     for (var i = 0; i < fae.particles.length; i++) {
@@ -13,7 +13,7 @@ function animateFae() {
     if (fae.particles.length < fae.maxParticles) {
         if (getRandomInteger(1, 2) == 1) {
             var faeIsoX = findIsoCoordsX(fae.x, fae.y);
-            var faeIsoY = findIsoCoordsY(fae.x, fae.y) - fae.z;
+            var faeIsoY = findIsoCoordsY(fae.x, fae.y) - fae.oscillateOffset;
             var particleIsoX = faeIsoX + getRandomInteger(0, 8) - 4;
             var particleIsoY = faeIsoY + getRandomInteger(0, 8) - 4;
             // check it's in a circle from the fae's centre:
@@ -68,10 +68,12 @@ function moveFaeToDestination(x, y) {
             fae.y += (y - fae.y) / 2;
         }
     }
-    var targetZ = fae.zOffset + hero.z;
+    
+    var targetZ = hero.z;
     if (targetZ > fae.z) {
         fae.z++;
     } else if (targetZ < fae.z) {
         fae.z--;
     }
+    
 }
