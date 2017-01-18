@@ -166,21 +166,11 @@ a[href^="http"]:not([href*="autumnearth.com"]):after {
     speak: normal;
 }
 
-#mastHead {
-background: #000;
-}
 
 
 
-@include mq($wide) {
 
-    #mastHead h1 {
-        width: 50%;
-        float: left;
-        position: relative;
-        z-index: 2;
-    }
-}
+
 
 
 
@@ -194,15 +184,7 @@ background: #000;
 
 // temp stuff:
 
-@include mq($wide) {
-#autumnEarth {
-    position: relative;
-    z-index: 2;
-}
-#navigation {
-    z-index: 1;
-}
-}
+
 
 
 #magicSquare td {

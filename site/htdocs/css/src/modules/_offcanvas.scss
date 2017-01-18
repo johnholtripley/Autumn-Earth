@@ -18,11 +18,13 @@
     @include transition(left 0.4s ease-out);
 }
 
-.js #navigation {
-    position: absolute;
-    top: 0;
-    width: 100%;
-}
+    #mastHead {
+   
+
+        top: 0;
+        width: 100%;
+        background: #000;
+    }
 
 
 @include mq($useOffCanvasUpTo) {
@@ -32,6 +34,57 @@
     #menuToggle {
         display: none;
     }
+
+
+#mastHead {
+position: absolute;
+top: 0;
+left: 0;
+width: 25%;
+}
+#navigation {
+right: 0;
+top: 0;
+width: 75%;
+position: absolute;
+background: #000;
+}
+
+#offCanvasWrapper {
+/* height of header */
+padding-top: 120px;
+}
+
+ @supports (display: flex) {
+
+#offCanvasWrapper {
+padding-top: 0;
+display: flex;
+flex-flow: row wrap;
+}
+
+#mastHead {
+order: 1;
+position: static;
+position: sticky;
+}
+
+#navigation {
+order: 2;
+position: static;
+position: sticky;
+z-index: 1;
+top: 0;
+
+}
+#footer {
+order: 4;
+}
+#pageContent {
+order: 3;
+}
+}
+
 }
 
 // make content 'stick' to the top of the page when the nav is open:
@@ -53,6 +106,14 @@
         background: #330000;
         height: 100%;
         width: $offCanvasWidth;
+
+
+
+    position: absolute;
+    top: 0;
+    
+
+
     }
  
     .offCanvas #offCanvasWrapper {
