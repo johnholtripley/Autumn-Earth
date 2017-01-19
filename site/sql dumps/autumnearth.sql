@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 12, 2017 at 04:31 PM
+-- Generation Time: Jan 19, 2017 at 02:54 PM
 -- Server version: 5.6.24
 -- PHP Version: 5.6.8
 
@@ -1160,14 +1160,14 @@ CREATE TABLE IF NOT EXISTS `tblsavedsearches` (
 --
 
 INSERT INTO `tblsavedsearches` (`searchID`, `searchTerm`, `searchCount`) VALUES
-(1, 'crafting', 248),
-(2, 'feeding pets', 248),
-(3, 'image', 318),
-(4, 'autumn', 244),
+(1, 'crafting', 252),
+(2, 'feeding pets', 252),
+(3, 'image', 322),
+(4, 'autumn', 248),
 (5, 'autumn earth', 2),
 (6, 'character development', 0),
 (11, 'pte development', 0),
-(8, 'pet development', 244),
+(8, 'pet development', 248),
 (10, 'pte development', 0),
 (12, 'pet developmetn', 0),
 (13, 'carfting', 0),
@@ -1196,14 +1196,14 @@ INSERT INTO `tblsavedsearches` (`searchID`, `searchTerm`, `searchCount`) VALUES
 (36, 'feed-my-pets', 0),
 (37, 'feed my lovely pet', 0),
 (38, 'feed-my-lovely-pet', 0),
-(39, 'images', 246),
+(39, 'images', 250),
 (40, 'feeding my pets', 0),
 (41, 'feeding-my-pets', 0),
 (42, 'feeding-pets', 0),
 (43, 'feeding-pets', 0),
-(44, 'how does that work', 249),
-(45, 'does that work', 244),
-(46, 'dragon', 342),
+(44, 'how does that work', 253),
+(45, 'does that work', 248),
+(46, 'dragon', 346),
 (47, 'autumn earth', 0),
 (48, 'autumn earth', 0),
 (49, 'autumn earth', 0),
@@ -1297,7 +1297,7 @@ INSERT INTO `tblsavedsearches` (`searchID`, `searchTerm`, `searchCount`) VALUES
 (137, 'autumn earth', 0),
 (138, 'autumn earth', 0),
 (139, 'autumn earth', 0),
-(140, 'dilly', 152);
+(140, 'dilly', 156);
 
 -- --------------------------------------------------------
 

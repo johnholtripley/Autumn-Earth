@@ -1253,42 +1253,38 @@ function pickBestCardToTake(whichDeck) {
 
 function openBoosterPack() {
     // pick 5 random, but different, cards:
+    // change this to ensure there is a set ratio of rares in each pack? #####
     boosterCardsToAdd = [];
     var thisCardToAdd;
     do {
         thisCardToAdd = getRandomInteger(1, cardGameNameSpace.allCardData.length);
         if (boosterCardsToAdd.indexOf(thisCardToAdd) == -1) {
             boosterCardsToAdd.push(thisCardToAdd);
-
         }
-
     } while (boosterCardsToAdd.length < 5);
-
-
- var boosterPackCards = document.getElementsByClassName('cardFlip');
+    var boosterPackCards = document.getElementsByClassName('cardFlip');
     for (var i = 0; i < boosterPackCards.length; i++) {
         boosterPackCards[i].classList.remove('active');
     }
 
-    
     // wait for these to load? #######
 
-
-
-
-
+var imageClass;
     for (var i = 0; i < 5; i++) {
-        document.getElementById("boosterCard" + i).innerHTML = '<img src="/images/card-game/cards/' + boosterCardsToAdd[i] + '.png" alt="' + cardGameNameSpace.allCardData[(boosterCardsToAdd[i][3])] + '">';
+        // check if it's a new card:
+imageClass = "";
+        if(hero.cards.indexOf(boosterCardsToAdd[i]) == -1) {
+imageClass = ' class="new"';
+        }
+        document.getElementById("boosterCard" + i).innerHTML = '<img'+imageClass+' src="/images/card-game/cards/' + boosterCardsToAdd[i] + '.png" alt="' + cardGameNameSpace.allCardData[(boosterCardsToAdd[i][3])] + '">';
     }
-
     boosterPack.classList.add('active');
     boosterCardsRevealed = 0;
     boosterPack.addEventListener("click", revealBoosterCard, false);
-
 }
 
-function revealBoosterCard(e) {
 
+function revealBoosterCard(e) {
     if (e.target.nodeName == "IMG") {
         e.target.parentNode.parentNode.parentNode.classList.add('active');
         boosterCardsRevealed++;
