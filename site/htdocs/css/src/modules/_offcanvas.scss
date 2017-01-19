@@ -4,9 +4,6 @@
     width: 100%;
 }
 
-
-
-
 #menuToggle {
     text-decoration: none;
 }
@@ -18,79 +15,69 @@
     @include transition(left 0.4s ease-out);
 }
 
-    #mastHead {
-   
-
-        top: 0;
-        width: 100%;
-        background: #000;
-    }
-
+#mastHead {
+    top: 0;
+    width: 100%;
+    background: #000;
+}
 
 @include mq($useOffCanvasUpTo) {
     #wrapper {
-     overflow: visible;
-}
+        overflow: visible;
+    }
     #menuToggle {
         display: none;
     }
-
-
-#mastHead {
-position: absolute;
-top: 0;
-left: 0;
-width: 25%;
-}
-#navigation {
-right: 0;
-top: 0;
-width: 75%;
-position: absolute;
-background: #000;
-}
-
-#offCanvasWrapper {
-/* height of header */
-padding-top: 120px;
-}
-
- @supports (display: flex) {
-
-#offCanvasWrapper {
-padding-top: 0;
-display: flex;
-flex-flow: row wrap;
-}
-
-#mastHead {
-order: 1;
-position: static;
-position: sticky;
-}
-
-#navigation {
-order: 2;
-position: static;
-position: sticky;
-z-index: 1;
-top: 0;
-
-}
-#footer {
-order: 4;
-}
-#pageContent {
-order: 3;
-}
-}
-
+    #mastHead {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 25%;
+    }
+    #navigation {
+        right: 0;
+        top: 0;
+        width: 75%;
+        position: absolute;
+        background: #000;
+    }
+    #offCanvasWrapper {
+        /* height of header */
+        padding-top: 120px;
+    }
+    @supports (display: flex) {
+        #offCanvasWrapper {
+            padding-top: 0;
+            display: flex;
+            flex-flow: row wrap;
+        }
+        #mastHead {
+            order: 1;
+            position: static;
+            position: sticky;
+        }
+        #navigation {
+            order: 2;
+            position: static;
+            position: sticky;
+            z-index: 1;
+            top: 0;
+        }
+        #footer {
+            order: 4;
+        }
+        #pageContent {
+            order: 3;
+        }
+    }
 }
 
 // make content 'stick' to the top of the page when the nav is open:
 .offCanvas {
     height: 100%;
-    body, #wrapper, #offCanvasWrapper {
+    body,
+    #wrapper,
+    #offCanvasWrapper {
         height: 100%;
     }
     #navigationInner {
@@ -99,64 +86,48 @@ order: 3;
     }
 }
 
-
 @include mq($useOffCanvasUpToMax, 'max') {
     .js #navigation {
         left: -$offCanvasWidth;
         background: #330000;
         height: 100%;
         width: $offCanvasWidth;
-
-
-
-    position: absolute;
-    top: 0;
-    
-
-
+        position: absolute;
+        top: 0;
     }
- 
     .offCanvas #offCanvasWrapper {
         right: -$offCanvasWidth;
         left: auto;
     }
-  
-    
     @supports (transform: translate3d(0, 0, 0)) {
         .js #navigation {
             left: 0;
             transform: translate3d(-100%, 0, 0);
             backface-visibility: hidden;
         }
-     
         .js #offCanvasWrapper {
             left: 0;
             transform: translate3d(0, 0, 0);
-       
-           // http://cubic-bezier.com/
+            // http://cubic-bezier.com/
             transition: transform 0.5s cubic-bezier(.17, .67, .12, .94);
             backface-visibility: hidden;
         }
         .offCanvas #offCanvasWrapper {
             transform: translate3d($offCanvasWidth, 0, 0) scale3d(1, 1, 1);
         }
-      
         .js #offCanvasWrapper #navigationInner {
             transition: transform 0.5s ease-out;
             transform: translate3d(-5%, 0, 0) scale3d(0.9, 0.9, 0.9);
             transform-origin: 100% 0%;
         }
-     
         .offCanvas #offCanvasWrapper #navigationInner {
             transform: translate3d(0, 0, 0);
         }
-     
     }
-    
 }
 
-
-@media (max-width: $useOffCanvasUpToMax) and (-webkit-transform-3d), (max-width: $useOffCanvasUpToMax) and (transform-3d) {
+@media (max-width: $useOffCanvasUpToMax) and (-webkit-transform-3d),
+(max-width: $useOffCanvasUpToMax) and (transform-3d) {
     .js #navigation {
         left: 0;
         -webkit-transform: translate3d(-100%, 0, 0);
@@ -164,7 +135,6 @@ order: 3;
         -webkit-backface-visibility: hidden;
         backface-visibility: hidden;
     }
-
     .js #offCanvasWrapper {
         left: 0;
         -webkit-transform: translate3d(0, 0, 0);
@@ -178,7 +148,6 @@ order: 3;
         -webkit-transform: translate3d($offCanvasWidth, 0, 0) scale3d(1, 1, 1);
         transform: translate3d($offCanvasWidth, 0, 0) scale3d(1, 1, 1);
     }
-  
     .js #offCanvasWrapper #navigationInner {
         -webkit-transition: -webkit-transform 0.5s ease-out;
         transition: transform 0.5s ease-out;
@@ -187,10 +156,8 @@ order: 3;
         -webkit-transform-origin: 100% 0%;
         transform-origin: 100% 0%;
     }
- 
     .offCanvas #offCanvasWrapper #navigationInner {
         -webkit-transform: translate3d(0, 0, 0);
         transform: translate3d(0, 0, 0);
     }
-  
 }

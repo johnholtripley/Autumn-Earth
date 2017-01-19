@@ -45,3 +45,16 @@
         }
     }
 }
+
+
+@include mq($wide) {
+#footer {
+    position: sticky;
+    bottom: 0;
+    background: #000;
+    width: 100%;
+    ul li {
+        display: inline;
+    }
+}
+}
