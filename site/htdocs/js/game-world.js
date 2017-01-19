@@ -557,6 +557,7 @@ function findIsoDepth(x, y, z) {
 // tidy this up
 // ########
 
+/*
 var tilePosition = getCurrentTileX(x) + (mapTilesX * getCurrentTileY(y));
 // weight the tile heavily to allow vertical depth within that range
 var adjustedTile = (tilePosition) * 999;
@@ -569,8 +570,22 @@ var positionWithinTileY = y%tileH;
 // adjust by using iso position across the tile - weighting z depth more heavily:
 return adjustedTile+findIsoCoordsX(positionWithinTileX,positionWithinTileY)+findIsoCoordsY(positionWithinTileX,positionWithinTileY)+(z*z);
 
-// 
+*/
 
+
+
+// isoZ = 0.6 * z
+
+var depth = findIsoCoordsY(x,(y+z));
+depth += findIsoCoordsY(x,y);
+//depth *= tileH/2;
+ //   depth += z;
+if(z>0) {
+// just do this if it's in the top half of the tile:
+// ###########
+   // depth += tileH/2;
+}
+return depth;
 
 }
 
@@ -1550,7 +1565,8 @@ function inventoryItemAction(whichSlot, whichAction, whichActionValue) { // remo
             }
             break;
         case "craft":
-            if (professionsKnown.indexOf(whichActionValue) != -1) {
+     
+            if (hero.professionsKnown.indexOf(parseInt(whichActionValue)) != -1) {
                 UI.populateRecipeList(whichActionValue);
             } else {
                 UI.showNotification("<p>You don't know this profession yet.</p>");
@@ -3012,8 +3028,8 @@ function processSpeech(thisNPC, thisSpeechPassedIn, thisSpeechCode, isPartOfNPCs
                 break;
             case "profession":
                 var professionId = thisNPC.speech[thisNPC.speechIndex][2];
-                if (professionsKnown.indexOf(professionId) == -1) {
-                    professionsKnown.push(professionId);
+                if (hero.professionsKnown.indexOf(professionId) == -1) {
+                    hero.professionsKnown.push(professionId);
                     showNotification('<p>You learned a new profession</p>');
                 }
                 break;

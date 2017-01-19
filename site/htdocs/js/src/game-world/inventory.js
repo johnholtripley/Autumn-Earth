@@ -222,7 +222,8 @@ function inventoryItemAction(whichSlot, whichAction, whichActionValue) { // remo
             }
             break;
         case "craft":
-            if (professionsKnown.indexOf(whichActionValue) != -1) {
+     
+            if (hero.professionsKnown.indexOf(parseInt(whichActionValue)) != -1) {
                 UI.populateRecipeList(whichActionValue);
             } else {
                 UI.showNotification("<p>You don't know this profession yet.</p>");

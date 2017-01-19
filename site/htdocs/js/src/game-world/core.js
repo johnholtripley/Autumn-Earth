@@ -816,8 +816,8 @@ function processSpeech(thisNPC, thisSpeechPassedIn, thisSpeechCode, isPartOfNPCs
                 break;
             case "profession":
                 var professionId = thisNPC.speech[thisNPC.speechIndex][2];
-                if (professionsKnown.indexOf(professionId) == -1) {
-                    professionsKnown.push(professionId);
+                if (hero.professionsKnown.indexOf(professionId) == -1) {
+                    hero.professionsKnown.push(professionId);
                     showNotification('<p>You learned a new profession</p>');
                 }
                 break;
