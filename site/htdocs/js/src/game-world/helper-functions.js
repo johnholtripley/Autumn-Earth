@@ -278,6 +278,26 @@ function isFacing(obj1, obj2) {
 }
 
 
+
+
+
+function generateHash(sourceString) {
+    // http://stackoverflow.com/questions/7616461/generate-a-hash-from-string-in-javascript-jquery
+    var hash = 0,
+        i, chr, len;
+    if (sourceString.length === 0) return hash;
+    for (i = 0, len = sourceString.length; i < len; i++) {
+        chr = sourceString.charCodeAt(i);
+        hash = ((hash << 5) - hash) + chr;
+        hash |= 0; // Convert to 32bit integer
+    }
+    return hash;
+}
+
+
+
+
+
 function parseMoney(amount,whichCurrency) {
     // whichCurrency passed in case alternative currencies are added
 var moneyOutput = "";
