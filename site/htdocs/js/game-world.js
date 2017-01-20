@@ -1589,6 +1589,8 @@ function inventoryItemAction(whichSlot, whichAction, whichActionValue) { // remo
             openBoosterPack();
             removeFromInventory(whichSlotNumber, 1);
             break;
+            case "book":
+            document.getElementById("book"+whichActionValue).classList.add("active");
         case "recipe":
             if (canLearnRecipe(whichActionValue)) {
 
@@ -1641,8 +1643,13 @@ function generateSlotMarkup(thisSlotsId) {
     thisAction = currentActiveInventoryItems[hero.inventory[thisSlotsId].type].action;
     dataActionMarkup = '';
     if (thisAction) {
+        if(thisAction == "book") {
+// link this item up to the book panel using the unique hash:
+dataActionMarkup = 'data-action="' + thisAction + '" data-action-value="' + generateHash(hero.inventory[thisSlotsId].inscription) + '" ';
+        } else {
         dataActionMarkup = 'data-action="' + thisAction + '" data-action-value="' + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].actionValue + '" ';
     }
+}
     slotMarkup += '<img src="/images/game-world/inventory-items/' + hero.inventory[thisSlotsId].type + thisFileColourSuffix + '.png" ' + dataActionMarkup + 'alt="'+theColourPrefix + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].shortname+'">';
 var itemsDescription = currentActiveInventoryItems[hero.inventory[thisSlotsId].type].description;
 if(itemsDescription.indexOf('##contains##') != -1) {
