@@ -515,12 +515,26 @@ var thisNode = getNearestParentId(e.target);
 
     buildBooks: function(whichBooks) {
         var markupToAdd = '';
+        // var parsedDoc, numberOfPages;
+        // var parser = new DOMParser();
         for (var i=0; i<whichBooks.length;i++) {
             
             markupToAdd += '<div class="book" id="book'+generateHash(hero.inventory[(whichBooks[i])].inscription.content)+'">';
             markupToAdd += '<div class="draggableBar">&quot;'+hero.inventory[(whichBooks[i])].inscription.title+'&quot;</div>';
-            markupToAdd += hero.inventory[(whichBooks[i])].inscription.content;
-markupToAdd += '</div>';
+           
+/*
+            // determine the number of pages (identified by the <section> elements):
+            parsedDoc = parser.parseFromString(hero.inventory[(whichBooks[i])].inscription.content, "text/html");
+            numberOfPages = parsedDoc.getElementsByTagName("SECTION").length;
+            if(numberOfPages>1) {
+
+            } else {
+                 markupToAdd += hero.inventory[(whichBooks[i])].inscription.content;
+            }
+           */
+
+           markupToAdd += hero.inventory[(whichBooks[i])].inscription.content;
+            markupToAdd += '</div>';
         }
         booksAndParchments.innerHTML = markupToAdd;
     }
