@@ -144,7 +144,10 @@
             "colour": 0,
             "enchanted": 0,
             "hallmark": 0,
-            "inscription": "<section><h1>Chapter 1</h1><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi non ultricies ipsum, a faucibus neque. Duis rutrum, nunc ac mattis vestibulum, lorem odio facilisis lectus, vel finibus tellus libero non quam. Ut sodales aliquet mauris, sit amet suscipit ante vulputate a. Nulla sed ex tempus lacus rutrum egestas sit amet et eros. Ut sit amet metus tortor. Nulla tincidunt luctus commodo. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae;</p><p>Curabitur ut est vitae quam vehicula efficitur nec at orci. Vivamus semper lectus nisi, et vehicula eros imperdiet viverra. Donec imperdiet magna lectus, sed tempus libero dapibus et. Ut non viverra nulla. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Curabitur turpis justo, vulputate a vehicula ut, pellentesque rutrum dolor. Proin et dolor dignissim, auctor purus vel, accumsan lorem. </p></section>"
+            "inscription": {
+             "title":"An old book",
+             "content":"<section><h1>Chapter 1</h1><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi non ultricies ipsum, a faucibus neque. Duis rutrum, nunc ac mattis vestibulum, lorem odio facilisis lectus, vel finibus tellus libero non quam. Ut sodales aliquet mauris, sit amet suscipit ante vulputate a. Nulla sed ex tempus lacus rutrum egestas sit amet et eros. Ut sit amet metus tortor. Nulla tincidunt luctus commodo. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae;</p><p>Curabitur ut est vitae quam vehicula efficitur nec at orci. Vivamus semper lectus nisi, et vehicula eros imperdiet viverra. Donec imperdiet magna lectus, sed tempus libero dapibus et. Ut non viverra nulla. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Curabitur turpis justo, vulputate a vehicula ut, pellentesque rutrum dolor. Proin et dolor dignissim, auctor purus vel, accumsan lorem. </p></section>"
+            }
         },
         "1-8": {
             "type": 31,

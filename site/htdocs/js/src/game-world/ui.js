@@ -516,9 +516,10 @@ var thisNode = getNearestParentId(e.target);
     buildBooks: function(whichBooks) {
         var markupToAdd = '';
         for (var i=0; i<whichBooks.length;i++) {
-            markupToAdd += '<div class="book" id="book'+generateHash(hero.inventory[(whichBooks[i])].inscription)+'">';
-            markupToAdd += '<div class="draggableBar">Book title goes here</div>';
-            markupToAdd += hero.inventory[(whichBooks[i])].inscription;
+            
+            markupToAdd += '<div class="book" id="book'+generateHash(hero.inventory[(whichBooks[i])].inscription.content)+'">';
+            markupToAdd += '<div class="draggableBar">&quot;'+hero.inventory[(whichBooks[i])].inscription.title+'&quot;</div>';
+            markupToAdd += hero.inventory[(whichBooks[i])].inscription.content;
 markupToAdd += '</div>';
         }
         booksAndParchments.innerHTML = markupToAdd;

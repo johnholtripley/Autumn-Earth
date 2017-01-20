@@ -49,7 +49,8 @@ function canAddItemToInventory(itemObj) {
                         inventoryClone[thisSlotsID].colour = itemObj[k].colour;
                         inventoryClone[thisSlotsID].enchanted = itemObj[k].enchanted;
                         inventoryClone[thisSlotsID].hallmark = itemObj[k].hallmark;
-                        inventoryClone[thisSlotsID].inscription = itemObj[k].inscription;
+                        inventoryClone[thisSlotsID].inscription.title = itemObj[k].inscription.title;
+                        inventoryClone[thisSlotsID].inscription.content = itemObj[k].inscription.content;
                         if (quantityAddedSoFar >= itemObj[k].quantity) {
                             // stop both loops:
                             break outerLoop;
@@ -166,10 +167,12 @@ function itemAttributesMatch(item1, item2) {
                         if (item1.colour == item2.colour) {
                             if (item1.enchanted == item2.enchanted) {
                                 if (item1.hallmark == item2.hallmark) {
-                                    if (item1.inscription == item2.inscription) {
+                                    if (item1.inscription.title == item2.inscription.title) {
+                                    if (item1.inscription.content == item2.inscription.content) {
                                         if (item1.contains == item2.contains) {
                                             return true;
                                         }
+                                    }
                                     }
                                 }
                             }
@@ -259,25 +262,35 @@ isKnown = true;
 
 function generateSlotMarkup(thisSlotsId) {
     var slotMarkup = '';
-    theColourPrefix = "";
-    thisFileColourSuffix = "";
-    thisColourName = getColourName(hero.inventory[thisSlotsId].colour, hero.inventory[thisSlotsId].type);
+    var theColourPrefix = "";
+    var thisFileColourSuffix = "";
+    var thisColourName = getColourName(hero.inventory[thisSlotsId].colour, hero.inventory[thisSlotsId].type);
     if (thisColourName != "") {
         theColourPrefix = thisColourName + " ";
         thisFileColourSuffix = "-" + thisColourName.toLowerCase();
     }
-    thisAction = currentActiveInventoryItems[hero.inventory[thisSlotsId].type].action;
-    dataActionMarkup = '';
+    var thisAction = currentActiveInventoryItems[hero.inventory[thisSlotsId].type].action;
+    var isABook = false;
     if (thisAction) {
         if(thisAction == "book") {
+     isABook = true;
+        }
+    }
+    dataActionMarkup = '';
+    if (thisAction) {
+        if(isABook) {
 // link this item up to the book panel using the unique hash:
-dataActionMarkup = 'data-action="' + thisAction + '" data-action-value="' + generateHash(hero.inventory[thisSlotsId].inscription) + '" ';
+dataActionMarkup = 'data-action="' + thisAction + '" data-action-value="' + generateHash(hero.inventory[thisSlotsId].inscription.content) + '" ';
         } else {
         dataActionMarkup = 'data-action="' + thisAction + '" data-action-value="' + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].actionValue + '" ';
     }
 }
     slotMarkup += '<img src="/images/game-world/inventory-items/' + hero.inventory[thisSlotsId].type + thisFileColourSuffix + '.png" ' + dataActionMarkup + 'alt="'+theColourPrefix + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].shortname+'">';
+    if(isABook) {
+var itemsDescription = "&quot;"+hero.inventory[thisSlotsId].inscription.title+"&quot;";
+    } else {
 var itemsDescription = currentActiveInventoryItems[hero.inventory[thisSlotsId].type].description;
+}
 if(itemsDescription.indexOf('##contains##') != -1) {
 // check it has got contains content:
 if (typeof hero.inventory[thisSlotsId].contains !== "undefined") {
