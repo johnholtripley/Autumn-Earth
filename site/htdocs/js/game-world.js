@@ -553,29 +553,34 @@ return Math.floor((x/4) + (y/4) - tileH/2);
 
 
 function findIsoDepth(x, y, z) {
+// isoZ = 0.6 * z
 
-// tidy this up
-// ########
 
 /*
+// METHOD #1 ------------------
+// works perfectly for non-z depths:
+return findIsoCoordsY(x,y);
+// ----------------------------
+*/
+
+
+/*
+// METHOD #2 ------------------
+// works well with z apart from clipped around the edges of tiles
 var tilePosition = getCurrentTileX(x) + (mapTilesX * getCurrentTileY(y));
 // weight the tile heavily to allow vertical depth within that range
 var adjustedTile = (tilePosition) * 999;
-
-
-
 // find position across tile
 var positionWithinTileX = x%tileW;
 var positionWithinTileY = y%tileH;
 // adjust by using iso position across the tile - weighting z depth more heavily:
 return adjustedTile+findIsoCoordsX(positionWithinTileX,positionWithinTileY)+findIsoCoordsY(positionWithinTileX,positionWithinTileY)+(z*z);
-
+// ----------------------------
 */
 
-
-
-// isoZ = 0.6 * z
-
+/*
+// METHOD #3 ------------------
+// works well except for the back half of raised tiles
 var depth = findIsoCoordsY(x,(y+z));
 depth += findIsoCoordsY(x,y);
 //depth *= tileH/2;
@@ -586,6 +591,16 @@ if(z>0) {
    // depth += tileH/2;
 }
 return depth;
+// ----------------------------
+*/
+
+
+// METHOD #4 ------------------
+// works well, apart from back half of the tile
+return (findIsoCoordsY(x,y) * tileW/2) + (z * 2);
+// ----------------------------
+
+
 
 }
 
@@ -1711,6 +1726,7 @@ var splitStackPanel = document.getElementById('splitStackPanel');
 var craftingRecipeCreateButton = document.getElementById('craftingRecipeCreateButton');
 var selectComponentsItemBeingCreated = document.getElementById('selectComponentsItemBeingCreated');
 var componentsAvailableForThisRecipe = document.getElementById('componentsAvailableForThisRecipe');
+var booksAndParchments = document.getElementById('booksAndParchments');
 var UI = {
     init: function() {
         // cache all local references to UI elements:
@@ -1740,21 +1756,29 @@ var UI = {
 
     buildInventoryInterface: function() {
         var inventoryMarkup = '';
-        var thisColourName, theColourPrefix, thisFileColourSuffix, thisAction, dataActionMarkup;
+        var thisAction, thisBagNumberOfSlots, thisSlotsID;
+        var books = [];
         // loop through number of bags
         for (var i = 0; i < hero.bags.length; i++) {
             inventoryMarkup += '<div class="inventoryBag" id="inventoryBag' + i + '"><div class="draggableBar">' + currentActiveInventoryItems[hero.bags[i].type].shortname + '</div><ol class="active" id="bag' + i + '">';
-            //console.log(hero.bags[i].type);
-            var thisBagNumberOfSlots = currentActiveInventoryItems[hero.bags[i].type].actionValue;
+
+             thisBagNumberOfSlots = currentActiveInventoryItems[hero.bags[i].type].actionValue;
             // loop through slots for each bag:
             for (var j = 0; j < thisBagNumberOfSlots; j++) {
-                var thisSlotsID = i + '-' + j
+                thisSlotsID = i + '-' + j;
+
+
+
                 inventoryMarkup += '<li id="slot' + thisSlotsID + '">';
                 // check if that key exists in inventory:
                 if (thisSlotsID in hero.inventory) {
 
                     inventoryMarkup += generateSlotMarkup(thisSlotsID);
-
+thisAction = currentActiveInventoryItems[hero.inventory[thisSlotsID].type].action;
+            if(thisAction == "book") {
+               
+                books.push(thisSlotsID);
+            }
 
                 } else {
                     inventoryMarkup += '';
@@ -1763,6 +1787,9 @@ var UI = {
                 inventoryMarkup += '</li>';
             }
             inventoryMarkup += '</ol></div></div>';
+        }
+        if(books.length>0) {
+UI.buildBooks(books);
         }
         document.getElementById('inventoryPanels').innerHTML = inventoryMarkup;
         document.getElementById('inventoryPanels').ondblclick = UI.inventoryItemDoubleClick;
@@ -2203,6 +2230,17 @@ var thisNode = getNearestParentId(e.target);
         if (UI.highlightedRecipe != "") {
             recipeSelectComponents(UI.highlightedRecipe);
         }
+    },
+
+    buildBooks: function(whichBooks) {
+        var markupToAdd = '';
+        for (var i=0; i<whichBooks.length;i++) {
+            markupToAdd += '<div class="book" id="book'+i+'">';
+            markupToAdd += '<div class="draggableBar">Book title goes here</div>';
+            markupToAdd += hero.inventory[(whichBooks[i])].inscription;
+markupToAdd += '</div>';
+        }
+        booksAndParchments.innerHTML = markupToAdd;
     }
 }
 

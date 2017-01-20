@@ -7,6 +7,7 @@ var splitStackPanel = document.getElementById('splitStackPanel');
 var craftingRecipeCreateButton = document.getElementById('craftingRecipeCreateButton');
 var selectComponentsItemBeingCreated = document.getElementById('selectComponentsItemBeingCreated');
 var componentsAvailableForThisRecipe = document.getElementById('componentsAvailableForThisRecipe');
+var booksAndParchments = document.getElementById('booksAndParchments');
 var UI = {
     init: function() {
         // cache all local references to UI elements:
@@ -36,21 +37,29 @@ var UI = {
 
     buildInventoryInterface: function() {
         var inventoryMarkup = '';
-        var thisColourName, theColourPrefix, thisFileColourSuffix, thisAction, dataActionMarkup;
+        var thisAction, thisBagNumberOfSlots, thisSlotsID;
+        var books = [];
         // loop through number of bags
         for (var i = 0; i < hero.bags.length; i++) {
             inventoryMarkup += '<div class="inventoryBag" id="inventoryBag' + i + '"><div class="draggableBar">' + currentActiveInventoryItems[hero.bags[i].type].shortname + '</div><ol class="active" id="bag' + i + '">';
-            //console.log(hero.bags[i].type);
-            var thisBagNumberOfSlots = currentActiveInventoryItems[hero.bags[i].type].actionValue;
+
+             thisBagNumberOfSlots = currentActiveInventoryItems[hero.bags[i].type].actionValue;
             // loop through slots for each bag:
             for (var j = 0; j < thisBagNumberOfSlots; j++) {
-                var thisSlotsID = i + '-' + j
+                thisSlotsID = i + '-' + j;
+
+
+
                 inventoryMarkup += '<li id="slot' + thisSlotsID + '">';
                 // check if that key exists in inventory:
                 if (thisSlotsID in hero.inventory) {
 
                     inventoryMarkup += generateSlotMarkup(thisSlotsID);
-
+thisAction = currentActiveInventoryItems[hero.inventory[thisSlotsID].type].action;
+            if(thisAction == "book") {
+               
+                books.push(thisSlotsID);
+            }
 
                 } else {
                     inventoryMarkup += '';
@@ -59,6 +68,9 @@ var UI = {
                 inventoryMarkup += '</li>';
             }
             inventoryMarkup += '</ol></div></div>';
+        }
+        if(books.length>0) {
+UI.buildBooks(books);
         }
         document.getElementById('inventoryPanels').innerHTML = inventoryMarkup;
         document.getElementById('inventoryPanels').ondblclick = UI.inventoryItemDoubleClick;
@@ -499,5 +511,16 @@ var thisNode = getNearestParentId(e.target);
         if (UI.highlightedRecipe != "") {
             recipeSelectComponents(UI.highlightedRecipe);
         }
+    },
+
+    buildBooks: function(whichBooks) {
+        var markupToAdd = '';
+        for (var i=0; i<whichBooks.length;i++) {
+            markupToAdd += '<div class="book" id="book'+i+'">';
+            markupToAdd += '<div class="draggableBar">Book title goes here</div>';
+            markupToAdd += hero.inventory[(whichBooks[i])].inscription;
+markupToAdd += '</div>';
+        }
+        booksAndParchments.innerHTML = markupToAdd;
     }
 }

@@ -697,3 +697,17 @@ height: 100%;
 }
 
 // ------------------------------
+
+
+// books:
+
+.book {
+    background: #bd9e7b url(../images/game-world/interface/parchment.jpg) no-repeat 0 0;
+    width: 238px;
+    position:absolute;
+    p {
+        font-size: 11px;
+        line-height: 1.1;
+        padding: 6px;
+    }
+}

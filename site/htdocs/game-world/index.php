@@ -58,6 +58,7 @@
 <div id="selectComponentsItemBeingCreated"></div>
 </div>
 
+<div id="booksAndParchments"></div>
 
 <div id="boosterPack">
 <ol>

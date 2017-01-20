@@ -19,29 +19,34 @@ return Math.floor((x/4) + (y/4) - tileH/2);
 
 
 function findIsoDepth(x, y, z) {
+// isoZ = 0.6 * z
 
-// tidy this up
-// ########
 
 /*
+// METHOD #1 ------------------
+// works perfectly for non-z depths:
+return findIsoCoordsY(x,y);
+// ----------------------------
+*/
+
+
+/*
+// METHOD #2 ------------------
+// works well with z apart from clipped around the edges of tiles
 var tilePosition = getCurrentTileX(x) + (mapTilesX * getCurrentTileY(y));
 // weight the tile heavily to allow vertical depth within that range
 var adjustedTile = (tilePosition) * 999;
-
-
-
 // find position across tile
 var positionWithinTileX = x%tileW;
 var positionWithinTileY = y%tileH;
 // adjust by using iso position across the tile - weighting z depth more heavily:
 return adjustedTile+findIsoCoordsX(positionWithinTileX,positionWithinTileY)+findIsoCoordsY(positionWithinTileX,positionWithinTileY)+(z*z);
-
+// ----------------------------
 */
 
-
-
-// isoZ = 0.6 * z
-
+/*
+// METHOD #3 ------------------
+// works well except for the back half of raised tiles
 var depth = findIsoCoordsY(x,(y+z));
 depth += findIsoCoordsY(x,y);
 //depth *= tileH/2;
@@ -52,6 +57,16 @@ if(z>0) {
    // depth += tileH/2;
 }
 return depth;
+// ----------------------------
+*/
+
+
+// METHOD #4 ------------------
+// works well, apart from back half of the tile
+return (findIsoCoordsY(x,y) * tileW/2) + (z * 2);
+// ----------------------------
+
+
 
 }
 
