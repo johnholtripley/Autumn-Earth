@@ -7,7 +7,7 @@ $dungeonDetails = array(
 array("11","35"),
 array("1,1","2,1","3,1"),
 array(1,1,2,2,3,4,5,6,7,8,9),
-array("18"),
+array("18","32"),
 "1",
 array(),
 array(),

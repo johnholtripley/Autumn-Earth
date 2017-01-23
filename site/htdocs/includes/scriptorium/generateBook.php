@@ -61,7 +61,7 @@ $builtSentence .= '</p>';
 }
  $builtSentence = str_ireplace(" .", ".", $builtSentence);
 
-return $builtSentence();
+return $builtSentence;
 
 }
 

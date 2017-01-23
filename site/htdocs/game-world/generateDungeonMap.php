@@ -1,4 +1,7 @@
 <?php
+
+include($_SERVER['DOCUMENT_ROOT']."/includes/scriptorium/generateBook.php");
+
 // ---------------------------------
 // http://www.autumnearth.com/generateDungeonMap.php?playerId=1001&originatingMapId=-1&requestedMap=-2&dungeonName=the-barrow-mines&forceMode=nest&outputMode=test&connectingDoorX=18&connectingDoorY=35
 
@@ -1708,7 +1711,7 @@ for ($i = 0;$i < $mapMaxWidth;$i++) {
     // is a door - create hero walkable tile here:
   //  $outputString .= "8,";
 
-// john
+
 
 } else if ($dungeonOutputMap[$i][$j] > 109) {
     $outputString .= '1,';
@@ -1945,9 +1948,16 @@ for ($j = 0;$j < $mapMaxHeight;$j++) {
     
    if($itemMap[$i][$j] != "") {
    
+   // john procedural books #####################
+   
+if($itemMap[$i][$j] == "32") {
+// generate a book:
+    
+    $outputString .= '{"type": '.$itemMap[$i][$j].',"tileX": '.$i.',"tileY": '.$j.', "inscription": { "title":"A procedural book", "content":"'.str_replace('"', '\"', createProceduralBook()).'"}},';
+} else {
 
 $outputString .= '{"type": '.$itemMap[$i][$j].',"tileX": '.$i.',"tileY": '.$j.'},';
-
+}
 
 }
    }
