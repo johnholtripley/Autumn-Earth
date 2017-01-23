@@ -1064,6 +1064,36 @@ var getJSON = function(url, successHandler, errorHandler) {
 };
 
 
+var getJSONWithParams = function(url, params, successHandler, errorHandler) {
+        var xhr = typeof XMLHttpRequest != 'undefined' ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
+    xhr.open('POST', url, true);
+    xhr.onreadystatechange = function() {
+        var status;
+        var data;
+        // https://xhr.spec.whatwg.org/#dom-xmlhttprequest-readystate
+        if (xhr.readyState == 4) { // `DONE`
+            status = xhr.status;
+            var wasParsedOk = true;
+            if (status == 200) {
+                try {
+                    data = JSON.parse(xhr.responseText);
+                } catch (e) {
+                    // JSON parse error:
+                    wasParsedOk = false;
+                    errorHandler && errorHandler(status);
+                }
+                if(wasParsedOk) {
+                successHandler && successHandler(data);
+            }
+            } else {
+                errorHandler && errorHandler(status);
+            }
+        }
+    };
+     xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhr.send(params);
+};
+
 
 function sendDataWithoutNeedingAResponse(url) {
 // send data to the server, without needing to listen for a response:
@@ -1646,43 +1676,62 @@ function generateSlotMarkup(thisSlotsId) {
     var thisAction = currentActiveInventoryItems[hero.inventory[thisSlotsId].type].action;
     var isABook = false;
     if (thisAction) {
-        if(thisAction == "book") {
-     isABook = true;
+        if (thisAction == "book") {
+            isABook = true;
         }
     }
     dataActionMarkup = '';
     if (thisAction) {
-        if(isABook) {
-// link this item up to the book panel using the unique hash:
-dataActionMarkup = 'data-action="' + thisAction + '" data-action-value="' + generateHash(hero.inventory[thisSlotsId].inscription.content) + '" ';
-UI.buildBook(thisSlotsId);
-        } else {
-        dataActionMarkup = 'data-action="' + thisAction + '" data-action-value="' + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].actionValue + '" ';
-    }
-}
-    slotMarkup += '<img src="/images/game-world/inventory-items/' + hero.inventory[thisSlotsId].type + thisFileColourSuffix + '.png" ' + dataActionMarkup + 'alt="'+theColourPrefix + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].shortname+'">';
-    if(isABook) {
-var itemsDescription = "&quot;"+hero.inventory[thisSlotsId].inscription.title+"&quot;";
-    } else {
-var itemsDescription = currentActiveInventoryItems[hero.inventory[thisSlotsId].type].description;
-}
-if(itemsDescription.indexOf('##contains##') != -1) {
-// check it has got contains content:
-if (typeof hero.inventory[thisSlotsId].contains !== "undefined") {
-var containsItems = '';
-    for (var i=0; i<hero.inventory[thisSlotsId].contains.length;i++) {
-        if(i!= 0) {
-           containsItems+= ", "; 
+        if (isABook) {
+            if(hero.inventory[thisSlotsId].inscription.content == "##procedural##") {
+
+dataActionMarkup = '';
+var paramsList = "isAjax=true&whichSlot=" + thisSlotsId;
+    getJSONWithParams("/scriptorium/generateBook.php", paramsList, function(data) {
+         var whichReturnedSlot = data.book.whichSlot;
+         
+                        hero.inventory[whichReturnedSlot].inscription.title = data.book.title;
+                        hero.inventory[whichReturnedSlot].inscription.content = data.book.content;
+                        UI.buildBook(whichReturnedSlot);
+    }, function(status) {
+        // error - try again:
+        
+    });
+
+
+            } else {
+            // link this item up to the book panel using the unique hash:
+            dataActionMarkup = 'data-action="' + thisAction + '" data-action-value="' + generateHash(hero.inventory[thisSlotsId].inscription.content) + '" ';
+            UI.buildBook(thisSlotsId);
         }
-containsItems += hero.inventory[thisSlotsId].contains[i].quantity+"x "+currentActiveInventoryItems[hero.inventory[thisSlotsId].contains[i].type].shortname;
+        } else {
+            dataActionMarkup = 'data-action="' + thisAction + '" data-action-value="' + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].actionValue + '" ';
+        }
     }
-    itemsDescription = itemsDescription.replace('##contains##', containsItems);
+    slotMarkup += '<img src="/images/game-world/inventory-items/' + hero.inventory[thisSlotsId].type + thisFileColourSuffix + '.png" ' + dataActionMarkup + 'alt="' + theColourPrefix + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].shortname + '">';
+    if (isABook) {
+        var itemsDescription = "&quot;" + hero.inventory[thisSlotsId].inscription.title + "&quot;";
+    } else {
+        var itemsDescription = currentActiveInventoryItems[hero.inventory[thisSlotsId].type].description;
     }
-}
+    if (itemsDescription.indexOf('##contains##') != -1) {
+        // check it has got contains content:
+        if (typeof hero.inventory[thisSlotsId].contains !== "undefined") {
+            var containsItems = '';
+            for (var i = 0; i < hero.inventory[thisSlotsId].contains.length; i++) {
+                if (i != 0) {
+                    containsItems += ", ";
+                }
+                containsItems += hero.inventory[thisSlotsId].contains[i].quantity + "x " + currentActiveInventoryItems[hero.inventory[thisSlotsId].contains[i].type].shortname;
+            }
+            itemsDescription = itemsDescription.replace('##contains##', containsItems);
+        }
+    }
     slotMarkup += '<p><em>' + theColourPrefix + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].shortname + ' </em>' + itemsDescription + ' <span class="price">Sell price: ' + parseMoney(hero.inventory[thisSlotsId].quantity * currentActiveInventoryItems[hero.inventory[thisSlotsId].type].priceCode, 0) + '</span>' + additionalTooltipDetail(thisSlotsId) + '</p>';
     slotMarkup += '<span class="qty">' + hero.inventory[thisSlotsId].quantity + '</span>';
     return slotMarkup;
 }
+
 
 function inventorySplitStackSubmit(e) {
     if (e) {
@@ -1800,12 +1849,12 @@ var UI = {
     buildInventoryInterface: function() {
         var inventoryMarkup = '';
         var thisAction, thisBagNumberOfSlots, thisSlotsID;
-     
+
         // loop through number of bags
         for (var i = 0; i < hero.bags.length; i++) {
             inventoryMarkup += '<div class="inventoryBag" id="inventoryBag' + i + '"><div class="draggableBar">' + currentActiveInventoryItems[hero.bags[i].type].shortname + '</div><ol class="active" id="bag' + i + '">';
 
-             thisBagNumberOfSlots = currentActiveInventoryItems[hero.bags[i].type].actionValue;
+            thisBagNumberOfSlots = currentActiveInventoryItems[hero.bags[i].type].actionValue;
             // loop through slots for each bag:
             for (var j = 0; j < thisBagNumberOfSlots; j++) {
                 thisSlotsID = i + '-' + j;
@@ -1817,8 +1866,8 @@ var UI = {
                 if (thisSlotsID in hero.inventory) {
 
                     inventoryMarkup += generateSlotMarkup(thisSlotsID);
-thisAction = currentActiveInventoryItems[hero.inventory[thisSlotsID].type].action;
-            
+                    thisAction = currentActiveInventoryItems[hero.inventory[thisSlotsID].type].action;
+
 
                 } else {
                     inventoryMarkup += '';
@@ -1828,10 +1877,10 @@ thisAction = currentActiveInventoryItems[hero.inventory[thisSlotsID].type].actio
             }
             inventoryMarkup += '</ol></div></div>';
         }
-      
+
         document.getElementById('inventoryPanels').innerHTML = inventoryMarkup;
         document.getElementById('inventoryPanels').ondblclick = UI.inventoryItemDoubleClick;
-        
+
         document.getElementById('createRecipeList').ondblclick = UI.craftingPanelDoubleClick;
         document.getElementById('createRecipeList').onclick = UI.craftingPanelSingleClick;
         document.getElementById('craftingRecipeCreateButton').onclick = UI.craftingRecipeCreate;
@@ -1861,7 +1910,7 @@ thisAction = currentActiveInventoryItems[hero.inventory[thisSlotsID].type].actio
         document.getElementById("slot" + whichSlotsToUpdate[0]).addEventListener(whichTransitionEvent, function removeSlotStatus(e) {
             elementList = document.querySelectorAll('#inventoryPanels .changed');
             for (var i = 0; i < elementList.length; i++) {
-                
+
                 elementList[i].classList.remove("changed");
             }
             // remove the event listener now:
@@ -1875,21 +1924,21 @@ thisAction = currentActiveInventoryItems[hero.inventory[thisSlotsID].type].actio
 
             thisSlotElem = document.getElementById("slot" + thisSlotsId);
             thisSlotElem.innerHTML = slotMarkup;
-thisSlotElem.classList.add("changed")
-            
+            thisSlotElem.classList.add("changed")
+
         }
     },
 
 
     handleDrag: function(e) {
-     
-            // don't access the element multiple times - do it all in one go:
-            UI.activeDragObject.style.cssText = "z-index:2;top: " + objInitTop + "px; left: " + objInitLeft + "px; transform: translate(" + (e.pageX - dragStartX) + "px, " + (e.pageY - dragStartY) + "px);";
-       
+
+        // don't access the element multiple times - do it all in one go:
+        UI.activeDragObject.style.cssText = "z-index:2;top: " + objInitTop + "px; left: " + objInitLeft + "px; transform: translate(" + (e.pageX - dragStartX) + "px, " + (e.pageY - dragStartY) + "px);";
+
     },
 
     endDrag: function(e) {
-       
+
         // tidy up and remove event listeners:
         document.removeEventListener("mousemove", UI.handleDrag, false);
         document.removeEventListener("mouseup", UI.endDrag, false);
@@ -1904,7 +1953,7 @@ thisSlotElem.classList.add("changed")
                 // make sure it's not a right click:
                 if (e.button != 2) {
                     UI.activeDragObject = this.parentElement;
-                    
+
 
                     var pageScrollTopY = (window.pageYOffset || document.documentElement.scrollTop) - (document.documentElement.clientTop || 0);
 
@@ -1939,7 +1988,7 @@ thisSlotElem.classList.add("changed")
     showDialogue: function(whichNPC, text) {
         // check for random variation in text:
 
-var textToShow = getRandomElementFromArray(text.split("/"));
+        var textToShow = getRandomElementFromArray(text.split("/"));
 
         if (activeNPCForDialogue != '') {
 
@@ -2012,7 +2061,7 @@ var textToShow = getRandomElementFromArray(text.split("/"));
             craftingRecipeCreateButton.disabled = true;
             recipeTitleBar.innerHTML = hero.crafting[whichProfession].name + ' Recipes';
             // resize the scroll bar:
-     
+
             recipeCustomScrollBar.init();
         }
         craftingPanel.classList.add("active");
@@ -2025,7 +2074,7 @@ var textToShow = getRandomElementFromArray(text.split("/"));
     },
 
     endInventoryDrag: function(e) {
-      
+
         var thisNode = e.target;
         // find the id of the parent if actual dropped target doesn't have one:
         while (!thisNode.id) {
@@ -2192,7 +2241,7 @@ var textToShow = getRandomElementFromArray(text.split("/"));
                             // remove from inventory data:
                             delete hero.inventory[UI.sourceSlot];
                             thisNode.classList.add("hidden");
-                            
+
                             var clickedSlotRect = thisNode.getBoundingClientRect();
                             var pageScrollTopY = (window.pageYOffset || document.documentElement.scrollTop) - (document.documentElement.clientTop || 0);
                             // 3px padding on the slots:
@@ -2242,7 +2291,7 @@ var textToShow = getRandomElementFromArray(text.split("/"));
     },
 
     craftingPanelDoubleClick: function(e) {
-     var thisNode = getNearestParentId(e.target);
+        var thisNode = getNearestParentId(e.target);
         if (thisNode.id.substring(0, 6) == "recipe") {
             recipeSelectComponents(thisNode.id);
         }
@@ -2251,10 +2300,10 @@ var textToShow = getRandomElementFromArray(text.split("/"));
     craftingPanelSingleClick: function(e) {
 
 
-      
-    
 
-var thisNode = getNearestParentId(e.target);
+
+
+        var thisNode = getNearestParentId(e.target);
 
         if (thisNode.id.substring(0, 6) == "recipe") {
             if (UI.highlightedRecipe != "") {
@@ -2277,37 +2326,47 @@ var thisNode = getNearestParentId(e.target);
         var markupToAdd = '';
         // var parsedDoc, numberOfPages;
         // var parser = new DOMParser();
-       var thisBooksHash = generateHash(hero.inventory[(whichBook)].inscription.content);
-       // check if the book already has been created:
-       if(!document.getElementById('book'+thisBooksHash)) {
-            
-            markupToAdd += '<div class="book" id="book'+thisBooksHash+'">';
-            markupToAdd += '<div class="draggableBar">&quot;'+hero.inventory[(whichBook)].inscription.title+'&quot;</div>';
+        console.log(hero.inventory[(whichBook)].inscription);
+        var thisBooksContent = hero.inventory[(whichBook)].inscription.content;
+        var thisBooksHash = generateHash(thisBooksContent);
+        // check if the book already has been created:
+        if (!document.getElementById('book' + thisBooksHash)) {
+
+            markupToAdd += '<div class="book" id="book' + thisBooksHash + '">';
+            markupToAdd += '<div class="draggableBar">&quot;' + hero.inventory[(whichBook)].inscription.title + '&quot;</div>';
             markupToAdd += '<button class="closePanel">close</button>';
-           
-/*
-            // determine the number of pages (identified by the <section> elements):
-            parsedDoc = parser.parseFromString(hero.inventory[(whichBook)].inscription.content, "text/html");
-            numberOfPages = parsedDoc.getElementsByTagName("SECTION").length;
-            if(numberOfPages>1) {
 
-            } else {
-                 markupToAdd += hero.inventory[(whichBook)].inscription.content;
-            }
-           */
+            /*
+                        // determine the number of pages (identified by the <section> elements):
+                        parsedDoc = parser.parseFromString(hero.inventory[(whichBook)].inscription.content, "text/html");
+                        numberOfPages = parsedDoc.getElementsByTagName("SECTION").length;
+                        if(numberOfPages>1) {
 
-           markupToAdd += hero.inventory[(whichBook)].inscription.content;
+                        } else {
+                             markupToAdd += hero.inventory[(whichBook)].inscription.content;
+                        }
+                       */
+
+
+
+            markupToAdd += hero.inventory[(whichBook)].inscription.content;
+
             markupToAdd += '</div>';
-        
-        booksAndParchments.innerHTML += markupToAdd;
-    }
+
+            booksAndParchments.innerHTML += markupToAdd;
+
+        }
     },
+
+
+
+
     globalClick: function(e) {
-if(e.target.className) {
-    if (e.target.className == "closePanel") {
-        e.target.parentNode.classList.remove("active");
-    }
-}
+        if (e.target.className) {
+            if (e.target.className == "closePanel") {
+                e.target.parentNode.classList.remove("active");
+            }
+        }
     }
 }
 

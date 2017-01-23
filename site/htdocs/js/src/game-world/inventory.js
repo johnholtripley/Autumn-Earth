@@ -272,43 +272,62 @@ function generateSlotMarkup(thisSlotsId) {
     var thisAction = currentActiveInventoryItems[hero.inventory[thisSlotsId].type].action;
     var isABook = false;
     if (thisAction) {
-        if(thisAction == "book") {
-     isABook = true;
+        if (thisAction == "book") {
+            isABook = true;
         }
     }
     dataActionMarkup = '';
     if (thisAction) {
-        if(isABook) {
-// link this item up to the book panel using the unique hash:
-dataActionMarkup = 'data-action="' + thisAction + '" data-action-value="' + generateHash(hero.inventory[thisSlotsId].inscription.content) + '" ';
-UI.buildBook(thisSlotsId);
-        } else {
-        dataActionMarkup = 'data-action="' + thisAction + '" data-action-value="' + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].actionValue + '" ';
-    }
-}
-    slotMarkup += '<img src="/images/game-world/inventory-items/' + hero.inventory[thisSlotsId].type + thisFileColourSuffix + '.png" ' + dataActionMarkup + 'alt="'+theColourPrefix + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].shortname+'">';
-    if(isABook) {
-var itemsDescription = "&quot;"+hero.inventory[thisSlotsId].inscription.title+"&quot;";
-    } else {
-var itemsDescription = currentActiveInventoryItems[hero.inventory[thisSlotsId].type].description;
-}
-if(itemsDescription.indexOf('##contains##') != -1) {
-// check it has got contains content:
-if (typeof hero.inventory[thisSlotsId].contains !== "undefined") {
-var containsItems = '';
-    for (var i=0; i<hero.inventory[thisSlotsId].contains.length;i++) {
-        if(i!= 0) {
-           containsItems+= ", "; 
+        if (isABook) {
+            if(hero.inventory[thisSlotsId].inscription.content == "##procedural##") {
+
+dataActionMarkup = '';
+var paramsList = "isAjax=true&whichSlot=" + thisSlotsId;
+    getJSONWithParams("/scriptorium/generateBook.php", paramsList, function(data) {
+         var whichReturnedSlot = data.book.whichSlot;
+         
+                        hero.inventory[whichReturnedSlot].inscription.title = data.book.title;
+                        hero.inventory[whichReturnedSlot].inscription.content = data.book.content;
+                        UI.buildBook(whichReturnedSlot);
+    }, function(status) {
+        // error - try again:
+        
+    });
+
+
+            } else {
+            // link this item up to the book panel using the unique hash:
+            dataActionMarkup = 'data-action="' + thisAction + '" data-action-value="' + generateHash(hero.inventory[thisSlotsId].inscription.content) + '" ';
+            UI.buildBook(thisSlotsId);
         }
-containsItems += hero.inventory[thisSlotsId].contains[i].quantity+"x "+currentActiveInventoryItems[hero.inventory[thisSlotsId].contains[i].type].shortname;
+        } else {
+            dataActionMarkup = 'data-action="' + thisAction + '" data-action-value="' + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].actionValue + '" ';
+        }
     }
-    itemsDescription = itemsDescription.replace('##contains##', containsItems);
+    slotMarkup += '<img src="/images/game-world/inventory-items/' + hero.inventory[thisSlotsId].type + thisFileColourSuffix + '.png" ' + dataActionMarkup + 'alt="' + theColourPrefix + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].shortname + '">';
+    if (isABook) {
+        var itemsDescription = "&quot;" + hero.inventory[thisSlotsId].inscription.title + "&quot;";
+    } else {
+        var itemsDescription = currentActiveInventoryItems[hero.inventory[thisSlotsId].type].description;
     }
-}
+    if (itemsDescription.indexOf('##contains##') != -1) {
+        // check it has got contains content:
+        if (typeof hero.inventory[thisSlotsId].contains !== "undefined") {
+            var containsItems = '';
+            for (var i = 0; i < hero.inventory[thisSlotsId].contains.length; i++) {
+                if (i != 0) {
+                    containsItems += ", ";
+                }
+                containsItems += hero.inventory[thisSlotsId].contains[i].quantity + "x " + currentActiveInventoryItems[hero.inventory[thisSlotsId].contains[i].type].shortname;
+            }
+            itemsDescription = itemsDescription.replace('##contains##', containsItems);
+        }
+    }
     slotMarkup += '<p><em>' + theColourPrefix + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].shortname + ' </em>' + itemsDescription + ' <span class="price">Sell price: ' + parseMoney(hero.inventory[thisSlotsId].quantity * currentActiveInventoryItems[hero.inventory[thisSlotsId].type].priceCode, 0) + '</span>' + additionalTooltipDetail(thisSlotsId) + '</p>';
     slotMarkup += '<span class="qty">' + hero.inventory[thisSlotsId].quantity + '</span>';
     return slotMarkup;
 }
+
 
 function inventorySplitStackSubmit(e) {
     if (e) {

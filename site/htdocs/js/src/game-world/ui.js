@@ -40,12 +40,12 @@ var UI = {
     buildInventoryInterface: function() {
         var inventoryMarkup = '';
         var thisAction, thisBagNumberOfSlots, thisSlotsID;
-     
+
         // loop through number of bags
         for (var i = 0; i < hero.bags.length; i++) {
             inventoryMarkup += '<div class="inventoryBag" id="inventoryBag' + i + '"><div class="draggableBar">' + currentActiveInventoryItems[hero.bags[i].type].shortname + '</div><ol class="active" id="bag' + i + '">';
 
-             thisBagNumberOfSlots = currentActiveInventoryItems[hero.bags[i].type].actionValue;
+            thisBagNumberOfSlots = currentActiveInventoryItems[hero.bags[i].type].actionValue;
             // loop through slots for each bag:
             for (var j = 0; j < thisBagNumberOfSlots; j++) {
                 thisSlotsID = i + '-' + j;
@@ -57,8 +57,8 @@ var UI = {
                 if (thisSlotsID in hero.inventory) {
 
                     inventoryMarkup += generateSlotMarkup(thisSlotsID);
-thisAction = currentActiveInventoryItems[hero.inventory[thisSlotsID].type].action;
-            
+                    thisAction = currentActiveInventoryItems[hero.inventory[thisSlotsID].type].action;
+
 
                 } else {
                     inventoryMarkup += '';
@@ -68,10 +68,10 @@ thisAction = currentActiveInventoryItems[hero.inventory[thisSlotsID].type].actio
             }
             inventoryMarkup += '</ol></div></div>';
         }
-      
+
         document.getElementById('inventoryPanels').innerHTML = inventoryMarkup;
         document.getElementById('inventoryPanels').ondblclick = UI.inventoryItemDoubleClick;
-        
+
         document.getElementById('createRecipeList').ondblclick = UI.craftingPanelDoubleClick;
         document.getElementById('createRecipeList').onclick = UI.craftingPanelSingleClick;
         document.getElementById('craftingRecipeCreateButton').onclick = UI.craftingRecipeCreate;
@@ -101,7 +101,7 @@ thisAction = currentActiveInventoryItems[hero.inventory[thisSlotsID].type].actio
         document.getElementById("slot" + whichSlotsToUpdate[0]).addEventListener(whichTransitionEvent, function removeSlotStatus(e) {
             elementList = document.querySelectorAll('#inventoryPanels .changed');
             for (var i = 0; i < elementList.length; i++) {
-                
+
                 elementList[i].classList.remove("changed");
             }
             // remove the event listener now:
@@ -115,21 +115,21 @@ thisAction = currentActiveInventoryItems[hero.inventory[thisSlotsID].type].actio
 
             thisSlotElem = document.getElementById("slot" + thisSlotsId);
             thisSlotElem.innerHTML = slotMarkup;
-thisSlotElem.classList.add("changed")
-            
+            thisSlotElem.classList.add("changed")
+
         }
     },
 
 
     handleDrag: function(e) {
-     
-            // don't access the element multiple times - do it all in one go:
-            UI.activeDragObject.style.cssText = "z-index:2;top: " + objInitTop + "px; left: " + objInitLeft + "px; transform: translate(" + (e.pageX - dragStartX) + "px, " + (e.pageY - dragStartY) + "px);";
-       
+
+        // don't access the element multiple times - do it all in one go:
+        UI.activeDragObject.style.cssText = "z-index:2;top: " + objInitTop + "px; left: " + objInitLeft + "px; transform: translate(" + (e.pageX - dragStartX) + "px, " + (e.pageY - dragStartY) + "px);";
+
     },
 
     endDrag: function(e) {
-       
+
         // tidy up and remove event listeners:
         document.removeEventListener("mousemove", UI.handleDrag, false);
         document.removeEventListener("mouseup", UI.endDrag, false);
@@ -144,7 +144,7 @@ thisSlotElem.classList.add("changed")
                 // make sure it's not a right click:
                 if (e.button != 2) {
                     UI.activeDragObject = this.parentElement;
-                    
+
 
                     var pageScrollTopY = (window.pageYOffset || document.documentElement.scrollTop) - (document.documentElement.clientTop || 0);
 
@@ -179,7 +179,7 @@ thisSlotElem.classList.add("changed")
     showDialogue: function(whichNPC, text) {
         // check for random variation in text:
 
-var textToShow = getRandomElementFromArray(text.split("/"));
+        var textToShow = getRandomElementFromArray(text.split("/"));
 
         if (activeNPCForDialogue != '') {
 
@@ -252,7 +252,7 @@ var textToShow = getRandomElementFromArray(text.split("/"));
             craftingRecipeCreateButton.disabled = true;
             recipeTitleBar.innerHTML = hero.crafting[whichProfession].name + ' Recipes';
             // resize the scroll bar:
-     
+
             recipeCustomScrollBar.init();
         }
         craftingPanel.classList.add("active");
@@ -265,7 +265,7 @@ var textToShow = getRandomElementFromArray(text.split("/"));
     },
 
     endInventoryDrag: function(e) {
-      
+
         var thisNode = e.target;
         // find the id of the parent if actual dropped target doesn't have one:
         while (!thisNode.id) {
@@ -432,7 +432,7 @@ var textToShow = getRandomElementFromArray(text.split("/"));
                             // remove from inventory data:
                             delete hero.inventory[UI.sourceSlot];
                             thisNode.classList.add("hidden");
-                            
+
                             var clickedSlotRect = thisNode.getBoundingClientRect();
                             var pageScrollTopY = (window.pageYOffset || document.documentElement.scrollTop) - (document.documentElement.clientTop || 0);
                             // 3px padding on the slots:
@@ -482,7 +482,7 @@ var textToShow = getRandomElementFromArray(text.split("/"));
     },
 
     craftingPanelDoubleClick: function(e) {
-     var thisNode = getNearestParentId(e.target);
+        var thisNode = getNearestParentId(e.target);
         if (thisNode.id.substring(0, 6) == "recipe") {
             recipeSelectComponents(thisNode.id);
         }
@@ -491,10 +491,10 @@ var textToShow = getRandomElementFromArray(text.split("/"));
     craftingPanelSingleClick: function(e) {
 
 
-      
-    
 
-var thisNode = getNearestParentId(e.target);
+
+
+        var thisNode = getNearestParentId(e.target);
 
         if (thisNode.id.substring(0, 6) == "recipe") {
             if (UI.highlightedRecipe != "") {
@@ -517,36 +517,46 @@ var thisNode = getNearestParentId(e.target);
         var markupToAdd = '';
         // var parsedDoc, numberOfPages;
         // var parser = new DOMParser();
-       var thisBooksHash = generateHash(hero.inventory[(whichBook)].inscription.content);
-       // check if the book already has been created:
-       if(!document.getElementById('book'+thisBooksHash)) {
-            
-            markupToAdd += '<div class="book" id="book'+thisBooksHash+'">';
-            markupToAdd += '<div class="draggableBar">&quot;'+hero.inventory[(whichBook)].inscription.title+'&quot;</div>';
+        console.log(hero.inventory[(whichBook)].inscription);
+        var thisBooksContent = hero.inventory[(whichBook)].inscription.content;
+        var thisBooksHash = generateHash(thisBooksContent);
+        // check if the book already has been created:
+        if (!document.getElementById('book' + thisBooksHash)) {
+
+            markupToAdd += '<div class="book" id="book' + thisBooksHash + '">';
+            markupToAdd += '<div class="draggableBar">&quot;' + hero.inventory[(whichBook)].inscription.title + '&quot;</div>';
             markupToAdd += '<button class="closePanel">close</button>';
-           
-/*
-            // determine the number of pages (identified by the <section> elements):
-            parsedDoc = parser.parseFromString(hero.inventory[(whichBook)].inscription.content, "text/html");
-            numberOfPages = parsedDoc.getElementsByTagName("SECTION").length;
-            if(numberOfPages>1) {
 
-            } else {
-                 markupToAdd += hero.inventory[(whichBook)].inscription.content;
-            }
-           */
+            /*
+                        // determine the number of pages (identified by the <section> elements):
+                        parsedDoc = parser.parseFromString(hero.inventory[(whichBook)].inscription.content, "text/html");
+                        numberOfPages = parsedDoc.getElementsByTagName("SECTION").length;
+                        if(numberOfPages>1) {
 
-           markupToAdd += hero.inventory[(whichBook)].inscription.content;
+                        } else {
+                             markupToAdd += hero.inventory[(whichBook)].inscription.content;
+                        }
+                       */
+
+
+
+            markupToAdd += hero.inventory[(whichBook)].inscription.content;
+
             markupToAdd += '</div>';
-        
-        booksAndParchments.innerHTML += markupToAdd;
-    }
+
+            booksAndParchments.innerHTML += markupToAdd;
+
+        }
     },
+
+
+
+
     globalClick: function(e) {
-if(e.target.className) {
-    if (e.target.className == "closePanel") {
-        e.target.parentNode.classList.remove("active");
-    }
-}
+        if (e.target.className) {
+            if (e.target.className == "closePanel") {
+                e.target.parentNode.classList.remove("active");
+            }
+        }
     }
 }

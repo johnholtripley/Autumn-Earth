@@ -5,8 +5,8 @@
 // http://www.gutenberg.org/files/42508/42508-h/42508-h.htm
 
 
-// $textSource = file_get_contents($_SERVER['DOCUMENT_ROOT']."/includes/scriptorium/sources/alices-adventures-in-wonderland-lewis-carroll.txt");
-$textSource = file_get_contents($_SERVER['DOCUMENT_ROOT']."/includes/scriptorium/sources/curious-creatures-in-zoology-john-ashton.txt");
+ $textSource = file_get_contents($_SERVER['DOCUMENT_ROOT']."/includes/scriptorium/sources/alices-adventures-in-wonderland-lewis-carroll.txt");
+// $textSource = file_get_contents($_SERVER['DOCUMENT_ROOT']."/includes/scriptorium/sources/curious-creatures-in-zoology-john-ashton.txt");
 
 // isolate space and full stops:
 $textSource = str_ireplace(" ", "####", $textSource);
@@ -37,10 +37,12 @@ do {
 
 
 $numberOfSentences = 3;
-$numberOfParagraphs = 3;
+$numberOfParagraphs = 2;
+$builtSentence = '';
 for ($i=0;$i<$numberOfParagraphs;$i++) {
+$builtSentence .= '<section><h1>Chapter '.($i+1).'</h1>';
   $thisPair = $startPhrases[mt_rand(0, count($startPhrases) - 1)];
-  $builtSentence = $thisPair;
+  $builtSentence .= $thisPair;
   for ($j=0;$j<$numberOfSentences;$j++) {
     do {
       // split off second word:
@@ -50,9 +52,27 @@ for ($i=0;$i<$numberOfParagraphs;$i++) {
       $thisPair = $thisPairSplit[1]." ".$thisWord;
     } while ($thisWord != ".");
   }
-  $builtSentence = str_ireplace(" .", ".", $builtSentence);
-  echo '<p>'.$builtSentence."</p>";
+ $builtSentence .= '</section>';
+}
+ $builtSentence = str_ireplace(" .", ".", $builtSentence);
+
+$isAjax = false;
+if(isset($_POST["isAjax"])) {
+  if($_POST["isAjax"]==true) {
+    // generating a book for the game:
+    $isAjax = true;
+  }
 }
 
-
+if($isAjax) {
+$outputJson = '{"book": {';
+$outputJson .= '"title": "a procedurally generated book",';
+// escape quotes:
+$outputJson .= '"content": "'.str_replace('"', '\"', $builtSentence).'",';
+$outputJson .= '"whichSlot": "'.$_POST["whichSlot"].'"';
+$outputJson .= '}}';
+echo $outputJson;
+} else {
+  echo $builtSentence;
+}
 ?>
