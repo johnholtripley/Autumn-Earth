@@ -262,6 +262,7 @@ isKnown = true;
     return tooltipInformationToAdd;
 }
 
+/*
 function generateBookContent(thisSlotsId) {
     var paramsList = "isAjax=true&whichSlot=" + thisSlotsId;
                 getJSONWithParams("/scriptorium/generateBook.php", paramsList, function(data) {
@@ -280,6 +281,7 @@ document.getElementById("slot" + whichReturnedSlot).firstElementChild.nextSiblin
                     generateBookContent(thisSlotsId);
                 });
 }
+*/
 
 function generateSlotMarkup(thisSlotsId) {
     var slotMarkup = '';
@@ -300,15 +302,17 @@ function generateSlotMarkup(thisSlotsId) {
     dataActionMarkup = '';
     if (thisAction) {
         if (isABook) {
+            /*
             if (hero.inventory[thisSlotsId].inscription.content == "##procedural##") {
 
                 dataActionMarkup = '';
                 generateBookContent(thisSlotsId);
             } else {
+                */
                 // link this item up to the book panel using the unique hash:
                 dataActionMarkup = 'data-action="' + thisAction + '" data-action-value="' + generateHash(hero.inventory[thisSlotsId].inscription.content) + '" ';
                 UI.buildBook(thisSlotsId);
-            }
+           /* } */
         } else {
             dataActionMarkup = 'data-action="' + thisAction + '" data-action-value="' + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].actionValue + '" ';
         }
