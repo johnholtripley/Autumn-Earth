@@ -1676,6 +1676,9 @@ function generateBookContent(thisSlotsId) {
                     UI.buildBook(whichReturnedSlot);
                     document.getElementById("slot" + whichReturnedSlot).firstElementChild.setAttribute("data-action", "book");
                     document.getElementById("slot" + whichReturnedSlot).firstElementChild.setAttribute("data-action-value", generateHash(hero.inventory[whichReturnedSlot].inscription.content));
+
+document.getElementById("slot" + whichReturnedSlot).firstElementChild.nextSibling.innerHTML = '<em>'  + currentActiveInventoryItems[hero.inventory[whichReturnedSlot].type].shortname + ' </em>&quot;' + data.book.title + '&quot; <span class="price">Sell price: ' + parseMoney(hero.inventory[whichReturnedSlot].quantity * currentActiveInventoryItems[hero.inventory[whichReturnedSlot].type].priceCode, 0) + '</span>' + additionalTooltipDetail(whichReturnedSlot);
+
                 }, function(status) {
                     // error - try again:
                     generateBookContent(thisSlotsId);
