@@ -135,7 +135,7 @@
             "inscription": ""
         },
         "1-7": {
-            "type": 32,
+            "type": 33,
             "quantity": 1,
             "quality": 100,
             "durability": 100,
@@ -199,7 +199,7 @@
     },
     "titlesEarned": [3, 7],
     "activeTitle": 3,
-    "professionsKnown": [0],
+    "professionsKnown": [0,1],
     "recipesKnown": [
         [0, 1],
         [1, 1],

@@ -821,6 +821,15 @@ function processSpeech(thisNPC, thisSpeechPassedIn, thisSpeechCode, isPartOfNPCs
                     showNotification('<p>You learned a new profession</p>');
                 }
                 break;
+                case "follower":
+                 var followerId = thisNPC.speech[thisNPC.speechIndex][2];
+
+  if (hero.professionsKnown.indexOf(followerId) == -1) {
+                    hero.professionsKnown.push(followerId);
+                    showNotification('<p>You gained a new follower</p>');
+                }
+
+                break;
             case "quest":
             case "quest-no-open":
             case "quest-no-close":

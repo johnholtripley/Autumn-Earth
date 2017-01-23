@@ -335,6 +335,7 @@ canvas {
     position: absolute;
     left: 860px;
     top: 320px;
+    
 }
 
 #cardAlbumList {
@@ -423,6 +424,13 @@ canvas {
     top: 320px;
     background: #222;
     color: #fff;
+    pointer-events: none;
+    opacity: 0;
+    @include transition(opacity 0.8s ease);
+    &.active {
+        opacity: 1;
+        pointer-events: auto;
+    }
     ul {
         margin: 0;
         padding: 0;
@@ -705,7 +713,7 @@ height: 100%;
     background: #bd9e7b url(../images/game-world/interface/parchment.jpg) no-repeat 0 0;
     width: 238px;
     position:absolute;
-    @include transition(opacity 0.4s ease);
+    @include transition(opacity 0.8s ease);
     opacity: 0;
     pointer-events: none;
     &.active {

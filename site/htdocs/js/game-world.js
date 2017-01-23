@@ -1655,6 +1655,7 @@ function generateSlotMarkup(thisSlotsId) {
         if(isABook) {
 // link this item up to the book panel using the unique hash:
 dataActionMarkup = 'data-action="' + thisAction + '" data-action-value="' + generateHash(hero.inventory[thisSlotsId].inscription.content) + '" ';
+UI.buildBook(thisSlotsId);
         } else {
         dataActionMarkup = 'data-action="' + thisAction + '" data-action-value="' + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].actionValue + '" ';
     }
@@ -1764,9 +1765,11 @@ var recipeFilter = document.getElementById('recipeFilter');
 var splitStackInput = document.getElementById('splitStackInput');
 var splitStackPanel = document.getElementById('splitStackPanel');
 var craftingRecipeCreateButton = document.getElementById('craftingRecipeCreateButton');
+var craftingPanel = document.getElementById('craftingPanel');
 var selectComponentsItemBeingCreated = document.getElementById('selectComponentsItemBeingCreated');
 var componentsAvailableForThisRecipe = document.getElementById('componentsAvailableForThisRecipe');
 var booksAndParchments = document.getElementById('booksAndParchments');
+var gameWrapper = document.getElementById('gameWrapper');
 var UI = {
     init: function() {
         // cache all local references to UI elements:
@@ -1797,7 +1800,7 @@ var UI = {
     buildInventoryInterface: function() {
         var inventoryMarkup = '';
         var thisAction, thisBagNumberOfSlots, thisSlotsID;
-        var books = [];
+     
         // loop through number of bags
         for (var i = 0; i < hero.bags.length; i++) {
             inventoryMarkup += '<div class="inventoryBag" id="inventoryBag' + i + '"><div class="draggableBar">' + currentActiveInventoryItems[hero.bags[i].type].shortname + '</div><ol class="active" id="bag' + i + '">';
@@ -1815,10 +1818,7 @@ var UI = {
 
                     inventoryMarkup += generateSlotMarkup(thisSlotsID);
 thisAction = currentActiveInventoryItems[hero.inventory[thisSlotsID].type].action;
-            if(thisAction == "book") {
-               
-                books.push(thisSlotsID);
-            }
+            
 
                 } else {
                     inventoryMarkup += '';
@@ -1828,9 +1828,7 @@ thisAction = currentActiveInventoryItems[hero.inventory[thisSlotsID].type].actio
             }
             inventoryMarkup += '</ol></div></div>';
         }
-        if(books.length>0) {
-UI.buildBooks(books);
-        }
+      
         document.getElementById('inventoryPanels').innerHTML = inventoryMarkup;
         document.getElementById('inventoryPanels').ondblclick = UI.inventoryItemDoubleClick;
         
@@ -1848,6 +1846,8 @@ UI.buildBooks(books);
             // load and cache the first profession's recipe assets:
             UI.populateRecipeList(hero.professionsKnown[0]);
         }
+
+        gameWrapper.onclick = UI.globalClick;
 
         inventoryInterfaceIsBuilt = true;
     },
@@ -2015,6 +2015,7 @@ var textToShow = getRandomElementFromArray(text.split("/"));
      
             recipeCustomScrollBar.init();
         }
+        craftingPanel.classList.add("active");
     },
 
     buildRecipePanel: function() {
@@ -2272,16 +2273,41 @@ var thisNode = getNearestParentId(e.target);
         }
     },
 
-    buildBooks: function(whichBooks) {
+    buildBook: function(whichBook) {
         var markupToAdd = '';
-        for (var i=0; i<whichBooks.length;i++) {
+        // var parsedDoc, numberOfPages;
+        // var parser = new DOMParser();
+       var thisBooksHash = generateHash(hero.inventory[(whichBook)].inscription.content);
+       // check if the book already has been created:
+       if(!document.getElementById('book'+thisBooksHash)) {
             
-            markupToAdd += '<div class="book" id="book'+generateHash(hero.inventory[(whichBooks[i])].inscription.content)+'">';
-            markupToAdd += '<div class="draggableBar">&quot;'+hero.inventory[(whichBooks[i])].inscription.title+'&quot;</div>';
-            markupToAdd += hero.inventory[(whichBooks[i])].inscription.content;
-markupToAdd += '</div>';
-        }
-        booksAndParchments.innerHTML = markupToAdd;
+            markupToAdd += '<div class="book" id="book'+thisBooksHash+'">';
+            markupToAdd += '<div class="draggableBar">&quot;'+hero.inventory[(whichBook)].inscription.title+'&quot;</div>';
+            markupToAdd += '<button class="closePanel">close</button>';
+           
+/*
+            // determine the number of pages (identified by the <section> elements):
+            parsedDoc = parser.parseFromString(hero.inventory[(whichBook)].inscription.content, "text/html");
+            numberOfPages = parsedDoc.getElementsByTagName("SECTION").length;
+            if(numberOfPages>1) {
+
+            } else {
+                 markupToAdd += hero.inventory[(whichBook)].inscription.content;
+            }
+           */
+
+           markupToAdd += hero.inventory[(whichBook)].inscription.content;
+            markupToAdd += '</div>';
+        
+        booksAndParchments.innerHTML += markupToAdd;
+    }
+    },
+    globalClick: function(e) {
+if(e.target.className) {
+    if (e.target.className == "closePanel") {
+        e.target.parentNode.classList.remove("active");
+    }
+}
     }
 }
 
@@ -3107,6 +3133,15 @@ function processSpeech(thisNPC, thisSpeechPassedIn, thisSpeechCode, isPartOfNPCs
                     hero.professionsKnown.push(professionId);
                     showNotification('<p>You learned a new profession</p>');
                 }
+                break;
+                case "follower":
+                 var followerId = thisNPC.speech[thisNPC.speechIndex][2];
+
+  if (hero.professionsKnown.indexOf(followerId) == -1) {
+                    hero.professionsKnown.push(followerId);
+                    showNotification('<p>You gained a new follower</p>');
+                }
+
                 break;
             case "quest":
             case "quest-no-open":

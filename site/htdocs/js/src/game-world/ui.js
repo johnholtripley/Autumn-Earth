@@ -5,6 +5,7 @@ var recipeFilter = document.getElementById('recipeFilter');
 var splitStackInput = document.getElementById('splitStackInput');
 var splitStackPanel = document.getElementById('splitStackPanel');
 var craftingRecipeCreateButton = document.getElementById('craftingRecipeCreateButton');
+var craftingPanel = document.getElementById('craftingPanel');
 var selectComponentsItemBeingCreated = document.getElementById('selectComponentsItemBeingCreated');
 var componentsAvailableForThisRecipe = document.getElementById('componentsAvailableForThisRecipe');
 var booksAndParchments = document.getElementById('booksAndParchments');
@@ -254,6 +255,7 @@ var textToShow = getRandomElementFromArray(text.split("/"));
      
             recipeCustomScrollBar.init();
         }
+        craftingPanel.classList.add("active");
     },
 
     buildRecipePanel: function() {
@@ -515,29 +517,29 @@ var thisNode = getNearestParentId(e.target);
         var markupToAdd = '';
         // var parsedDoc, numberOfPages;
         // var parser = new DOMParser();
-       var thisBooksHash = generateHash(hero.inventory[(whichBooks[i])].inscription.content);
+       var thisBooksHash = generateHash(hero.inventory[(whichBook)].inscription.content);
        // check if the book already has been created:
        if(!document.getElementById('book'+thisBooksHash)) {
             
             markupToAdd += '<div class="book" id="book'+thisBooksHash+'">';
-            markupToAdd += '<div class="draggableBar">&quot;'+hero.inventory[(whichBooks[i])].inscription.title+'&quot;</div>';
+            markupToAdd += '<div class="draggableBar">&quot;'+hero.inventory[(whichBook)].inscription.title+'&quot;</div>';
             markupToAdd += '<button class="closePanel">close</button>';
            
 /*
             // determine the number of pages (identified by the <section> elements):
-            parsedDoc = parser.parseFromString(hero.inventory[(whichBooks[i])].inscription.content, "text/html");
+            parsedDoc = parser.parseFromString(hero.inventory[(whichBook)].inscription.content, "text/html");
             numberOfPages = parsedDoc.getElementsByTagName("SECTION").length;
             if(numberOfPages>1) {
 
             } else {
-                 markupToAdd += hero.inventory[(whichBooks[i])].inscription.content;
+                 markupToAdd += hero.inventory[(whichBook)].inscription.content;
             }
            */
 
-           markupToAdd += hero.inventory[(whichBooks[i])].inscription.content;
+           markupToAdd += hero.inventory[(whichBook)].inscription.content;
             markupToAdd += '</div>';
         
-        booksAndParchments.innerHTML = markupToAdd;
+        booksAndParchments.innerHTML += markupToAdd;
     }
     },
     globalClick: function(e) {
