@@ -1404,6 +1404,7 @@ var Input = {
 }
 
 function canAddItemToInventory(itemObj) {
+    console.log(itemObj);
     // takes an array of objects and checks if all of them can be added before adding any of them
     // make copy of inventory:
     var inventoryClone = JSON.parse(JSON.stringify(hero.inventory));
@@ -1455,6 +1456,7 @@ function canAddItemToInventory(itemObj) {
                         inventoryClone[thisSlotsID].colour = itemObj[k].colour;
                         inventoryClone[thisSlotsID].enchanted = itemObj[k].enchanted;
                         inventoryClone[thisSlotsID].hallmark = itemObj[k].hallmark;
+                        inventoryClone[thisSlotsID].inscription = {};
                         inventoryClone[thisSlotsID].inscription.title = itemObj[k].inscription.title;
                         inventoryClone[thisSlotsID].inscription.content = itemObj[k].inscription.content;
                         if (quantityAddedSoFar >= itemObj[k].quantity) {
