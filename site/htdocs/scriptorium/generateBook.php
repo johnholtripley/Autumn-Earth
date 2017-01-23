@@ -51,6 +51,7 @@ $builtSentence .= '<section><h1>Chapter '.($i+1).'</h1>';
       $builtSentence .= " ".$thisWord;
       $thisPair = $thisPairSplit[1]." ".$thisWord;
     } while ($thisWord != ".");
+
   }
  $builtSentence .= '</section>';
 }

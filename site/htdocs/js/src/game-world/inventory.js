@@ -289,6 +289,8 @@ var paramsList = "isAjax=true&whichSlot=" + thisSlotsId;
                         hero.inventory[whichReturnedSlot].inscription.title = data.book.title;
                         hero.inventory[whichReturnedSlot].inscription.content = data.book.content;
                         UI.buildBook(whichReturnedSlot);
+                        document.getElementById("slot"+whichReturnedSlot).firstElementChild.setAttribute("data-action","book");
+                        document.getElementById("slot"+whichReturnedSlot).firstElementChild.setAttribute("data-action-value",generateHash(hero.inventory[whichReturnedSlot].inscription.content));
     }, function(status) {
         // error - try again:
         

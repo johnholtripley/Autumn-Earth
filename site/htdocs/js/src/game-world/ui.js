@@ -546,6 +546,8 @@ var UI = {
 
             booksAndParchments.innerHTML += markupToAdd;
 
+            // UI.initDrag('book' + thisBooksHash + ' .draggableBar');
+
         }
     },
 
