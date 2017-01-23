@@ -1666,6 +1666,22 @@ isKnown = true;
     return tooltipInformationToAdd;
 }
 
+function generateBookContent(thisSlotsId) {
+    var paramsList = "isAjax=true&whichSlot=" + thisSlotsId;
+                getJSONWithParams("/scriptorium/generateBook.php", paramsList, function(data) {
+                    var whichReturnedSlot = data.book.whichSlot;
+
+                    hero.inventory[whichReturnedSlot].inscription.title = data.book.title;
+                    hero.inventory[whichReturnedSlot].inscription.content = data.book.content;
+                    UI.buildBook(whichReturnedSlot);
+                    document.getElementById("slot" + whichReturnedSlot).firstElementChild.setAttribute("data-action", "book");
+                    document.getElementById("slot" + whichReturnedSlot).firstElementChild.setAttribute("data-action-value", generateHash(hero.inventory[whichReturnedSlot].inscription.content));
+                }, function(status) {
+                    // error - try again:
+                    generateBookContent(thisSlotsId);
+                });
+}
+
 function generateSlotMarkup(thisSlotsId) {
     var slotMarkup = '';
     var theColourPrefix = "";
@@ -1685,29 +1701,15 @@ function generateSlotMarkup(thisSlotsId) {
     dataActionMarkup = '';
     if (thisAction) {
         if (isABook) {
-            if(hero.inventory[thisSlotsId].inscription.content == "##procedural##") {
+            if (hero.inventory[thisSlotsId].inscription.content == "##procedural##") {
 
-dataActionMarkup = '';
-var paramsList = "isAjax=true&whichSlot=" + thisSlotsId;
-    getJSONWithParams("/scriptorium/generateBook.php", paramsList, function(data) {
-         var whichReturnedSlot = data.book.whichSlot;
-         
-                        hero.inventory[whichReturnedSlot].inscription.title = data.book.title;
-                        hero.inventory[whichReturnedSlot].inscription.content = data.book.content;
-                        UI.buildBook(whichReturnedSlot);
-                        document.getElementById("slot"+whichReturnedSlot).firstElementChild.setAttribute("data-action","book");
-                        document.getElementById("slot"+whichReturnedSlot).firstElementChild.setAttribute("data-action-value",generateHash(hero.inventory[whichReturnedSlot].inscription.content));
-    }, function(status) {
-        // error - try again:
-        
-    });
-
-
+                dataActionMarkup = '';
+                generateBookContent(thisSlotsId);
             } else {
-            // link this item up to the book panel using the unique hash:
-            dataActionMarkup = 'data-action="' + thisAction + '" data-action-value="' + generateHash(hero.inventory[thisSlotsId].inscription.content) + '" ';
-            UI.buildBook(thisSlotsId);
-        }
+                // link this item up to the book panel using the unique hash:
+                dataActionMarkup = 'data-action="' + thisAction + '" data-action-value="' + generateHash(hero.inventory[thisSlotsId].inscription.content) + '" ';
+                UI.buildBook(thisSlotsId);
+            }
         } else {
             dataActionMarkup = 'data-action="' + thisAction + '" data-action-value="' + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].actionValue + '" ';
         }
@@ -1735,6 +1737,7 @@ var paramsList = "isAjax=true&whichSlot=" + thisSlotsId;
     slotMarkup += '<span class="qty">' + hero.inventory[thisSlotsId].quantity + '</span>';
     return slotMarkup;
 }
+
 
 
 function inventorySplitStackSubmit(e) {
