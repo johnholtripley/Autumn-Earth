@@ -200,12 +200,14 @@ function inventoryItemAction(whichSlot, whichAction, whichActionValue) { // remo
                     // (need to ensure that when creating containers that they can't hold more than maxNumberOfItemsPerSlot of an item type)
                     hero.inventory[whichSlotNumber] = JSON.parse(JSON.stringify(hero.inventory[whichSlotNumber].contains[0]));
                     document.getElementById("slot" + whichSlotNumber).innerHTML = generateSlotMarkup(whichSlotNumber);
+                    UI.showChangeInInventory([whichSlotNumber]);
                 } else {
                     var wrappedObject = JSON.parse(JSON.stringify(hero.inventory[whichSlotNumber]));
                     removeFromInventory(whichSlotNumber, 1);
                     var inventoryCheck = canAddItemToInventory(wrappedObject.contains);
                     if (inventoryCheck[0]) {
                         document.getElementById("slot" + whichSlotNumber).innerHTML = generateSlotMarkup(whichSlotNumber);
+                        UI.showChangeInInventory(inventoryCheck[1]);
                     } else {
                         // restore the wrapped item:
                         hero.inventory[whichSlotNumber] = JSON.parse(JSON.stringify(wrappedObject));

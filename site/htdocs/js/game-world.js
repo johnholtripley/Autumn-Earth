@@ -1604,12 +1604,14 @@ function inventoryItemAction(whichSlot, whichAction, whichActionValue) { // remo
                     // (need to ensure that when creating containers that they can't hold more than maxNumberOfItemsPerSlot of an item type)
                     hero.inventory[whichSlotNumber] = JSON.parse(JSON.stringify(hero.inventory[whichSlotNumber].contains[0]));
                     document.getElementById("slot" + whichSlotNumber).innerHTML = generateSlotMarkup(whichSlotNumber);
+                    UI.showChangeInInventory([whichSlotNumber]);
                 } else {
                     var wrappedObject = JSON.parse(JSON.stringify(hero.inventory[whichSlotNumber]));
                     removeFromInventory(whichSlotNumber, 1);
                     var inventoryCheck = canAddItemToInventory(wrappedObject.contains);
                     if (inventoryCheck[0]) {
                         document.getElementById("slot" + whichSlotNumber).innerHTML = generateSlotMarkup(whichSlotNumber);
+                        UI.showChangeInInventory(inventoryCheck[1]);
                     } else {
                         // restore the wrapped item:
                         hero.inventory[whichSlotNumber] = JSON.parse(JSON.stringify(wrappedObject));
@@ -1888,7 +1890,7 @@ var UI = {
         document.getElementById('craftingRecipeCreateButton').onclick = UI.craftingRecipeCreate;
         splitStackPanel.onsubmit = inventorySplitStackSubmit;
         document.getElementById('splitStackCancel').onclick = inventorySplitStackCancel;
-       
+
         UI.initInventoryDrag();
         UI.updateCardAlbum();
 
@@ -1898,7 +1900,7 @@ var UI = {
             UI.populateRecipeList(hero.professionsKnown[0]);
         }
 
-gameWrapper.onmousedown = UI.globalMouseDown;
+        gameWrapper.onmousedown = UI.globalMouseDown;
         gameWrapper.onclick = UI.globalClick;
 
         inventoryInterfaceIsBuilt = true;
@@ -1907,13 +1909,10 @@ gameWrapper.onmousedown = UI.globalMouseDown;
 
 
     showChangeInInventory: function(whichSlotsToUpdate) {
-
-
         // add a transition end detector to just the first element that will be changed:
         document.getElementById("slot" + whichSlotsToUpdate[0]).addEventListener(whichTransitionEvent, function removeSlotStatus(e) {
             elementList = document.querySelectorAll('#inventoryPanels .changed');
             for (var i = 0; i < elementList.length; i++) {
-
                 elementList[i].classList.remove("changed");
             }
             // remove the event listener now:
@@ -1922,26 +1921,20 @@ gameWrapper.onmousedown = UI.globalMouseDown;
         // loop through the slots that have changed and update their markup:
         for (var j = 0; j < whichSlotsToUpdate.length; j++) {
             thisSlotsId = whichSlotsToUpdate[j];
-
             slotMarkup = generateSlotMarkup(thisSlotsId);
-
             thisSlotElem = document.getElementById("slot" + thisSlotsId);
             thisSlotElem.innerHTML = slotMarkup;
             thisSlotElem.classList.add("changed")
-
         }
     },
 
 
     handleDrag: function(e) {
-
         // don't access the element multiple times - do it all in one go:
         UI.activeDragObject.style.cssText = "z-index:2;top: " + objInitTop + "px; left: " + objInitLeft + "px; transform: translate(" + (e.pageX - dragStartX) + "px, " + (e.pageY - dragStartY) + "px);";
-
     },
 
     endDrag: function(e) {
-
         // tidy up and remove event listeners:
         document.removeEventListener("mousemove", UI.handleDrag, false);
         document.removeEventListener("mouseup", UI.endDrag, false);
@@ -1949,50 +1942,39 @@ gameWrapper.onmousedown = UI.globalMouseDown;
     },
 
     globalMouseDown: function(e) {
-
-  if (e.target.className == "draggableBar") {
-    // check for startting a drag:
-                // make sure it's not a right click:
-                if (e.button != 2) {
-                    UI.activeDragObject = e.target.parentElement;
-
-
-                    var pageScrollTopY = (window.pageYOffset || document.documentElement.scrollTop) - (document.documentElement.clientTop || 0);
-
-                    var clickedSlotRect = e.target.getBoundingClientRect();
-                    objInitLeft = clickedSlotRect.left;
-                    objInitTop = clickedSlotRect.top + pageScrollTopY;
-                    dragStartX = e.pageX;
-                    dragStartY = e.pageY;
-
-                    document.addEventListener("mousemove", UI.handleDrag, false);
-                    document.addEventListener("mouseup", UI.endDrag, false);
-                    // remove z-index of other draggable elements:
-                    var dragTargetsInner = document.querySelectorAll(whichElement);
-                    for (j = 0; j < dragTargetsInner.length; j++) {
-                        dragTargets[j].parentElement.style.zIndex = 1;
-                    }
+        // check for startting a drag:
+        if (e.target.className == "draggableBar") {
+            // make sure it's not a right click:
+            if (e.button != 2) {
+                UI.activeDragObject = e.target.parentElement;
+                var pageScrollTopY = (window.pageYOffset || document.documentElement.scrollTop) - (document.documentElement.clientTop || 0);
+                var clickedSlotRect = e.target.getBoundingClientRect();
+                objInitLeft = clickedSlotRect.left;
+                objInitTop = clickedSlotRect.top + pageScrollTopY;
+                dragStartX = e.pageX;
+                dragStartY = e.pageY;
+                document.addEventListener("mousemove", UI.handleDrag, false);
+                document.addEventListener("mouseup", UI.endDrag, false);
+                // remove z-index of other draggable elements:
+                var dragTargetsInner = document.querySelectorAll(whichElement);
+                for (j = 0; j < dragTargetsInner.length; j++) {
+                    dragTargets[j].parentElement.style.zIndex = 1;
                 }
+            }
         }
     },
 
     inventoryItemDoubleClick: function(e) {
-
         var thisItemsAction = e.target.getAttribute('data-action');
-
         if (thisItemsAction) {
-
             inventoryItemAction(e.target, thisItemsAction, e.target.getAttribute('data-action-value'));
         }
     },
 
     showDialogue: function(whichNPC, text) {
         // check for random variation in text:
-
         var textToShow = getRandomElementFromArray(text.split("/"));
-
         if (activeNPCForDialogue != '') {
-
             dialogue.removeEventListener(whichTransitionEvent, UI.removeActiveDialogue, false);
         }
         dialogue.innerHTML = textToShow;
