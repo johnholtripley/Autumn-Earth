@@ -281,6 +281,7 @@ function generateSlotMarkup(thisSlotsId) {
         if(isABook) {
 // link this item up to the book panel using the unique hash:
 dataActionMarkup = 'data-action="' + thisAction + '" data-action-value="' + generateHash(hero.inventory[thisSlotsId].inscription.content) + '" ';
+UI.buildBook(thisSlotsId);
         } else {
         dataActionMarkup = 'data-action="' + thisAction + '" data-action-value="' + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].actionValue + '" ';
     }

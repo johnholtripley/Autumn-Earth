@@ -8,6 +8,7 @@ var craftingRecipeCreateButton = document.getElementById('craftingRecipeCreateBu
 var selectComponentsItemBeingCreated = document.getElementById('selectComponentsItemBeingCreated');
 var componentsAvailableForThisRecipe = document.getElementById('componentsAvailableForThisRecipe');
 var booksAndParchments = document.getElementById('booksAndParchments');
+var gameWrapper = document.getElementById('gameWrapper');
 var UI = {
     init: function() {
         // cache all local references to UI elements:
@@ -38,7 +39,7 @@ var UI = {
     buildInventoryInterface: function() {
         var inventoryMarkup = '';
         var thisAction, thisBagNumberOfSlots, thisSlotsID;
-        var books = [];
+     
         // loop through number of bags
         for (var i = 0; i < hero.bags.length; i++) {
             inventoryMarkup += '<div class="inventoryBag" id="inventoryBag' + i + '"><div class="draggableBar">' + currentActiveInventoryItems[hero.bags[i].type].shortname + '</div><ol class="active" id="bag' + i + '">';
@@ -56,10 +57,7 @@ var UI = {
 
                     inventoryMarkup += generateSlotMarkup(thisSlotsID);
 thisAction = currentActiveInventoryItems[hero.inventory[thisSlotsID].type].action;
-            if(thisAction == "book") {
-               
-                books.push(thisSlotsID);
-            }
+            
 
                 } else {
                     inventoryMarkup += '';
@@ -69,9 +67,7 @@ thisAction = currentActiveInventoryItems[hero.inventory[thisSlotsID].type].actio
             }
             inventoryMarkup += '</ol></div></div>';
         }
-        if(books.length>0) {
-UI.buildBooks(books);
-        }
+      
         document.getElementById('inventoryPanels').innerHTML = inventoryMarkup;
         document.getElementById('inventoryPanels').ondblclick = UI.inventoryItemDoubleClick;
         
@@ -89,6 +85,8 @@ UI.buildBooks(books);
             // load and cache the first profession's recipe assets:
             UI.populateRecipeList(hero.professionsKnown[0]);
         }
+
+        gameWrapper.onclick = UI.globalClick;
 
         inventoryInterfaceIsBuilt = true;
     },
@@ -513,14 +511,17 @@ var thisNode = getNearestParentId(e.target);
         }
     },
 
-    buildBooks: function(whichBooks) {
+    buildBook: function(whichBook) {
         var markupToAdd = '';
         // var parsedDoc, numberOfPages;
         // var parser = new DOMParser();
-        for (var i=0; i<whichBooks.length;i++) {
+       var thisBooksHash = generateHash(hero.inventory[(whichBooks[i])].inscription.content);
+       // check if the book already has been created:
+       if(!document.getElementById('book'+thisBooksHash)) {
             
-            markupToAdd += '<div class="book" id="book'+generateHash(hero.inventory[(whichBooks[i])].inscription.content)+'">';
+            markupToAdd += '<div class="book" id="book'+thisBooksHash+'">';
             markupToAdd += '<div class="draggableBar">&quot;'+hero.inventory[(whichBooks[i])].inscription.title+'&quot;</div>';
+            markupToAdd += '<button class="closePanel">close</button>';
            
 /*
             // determine the number of pages (identified by the <section> elements):
@@ -535,7 +536,15 @@ var thisNode = getNearestParentId(e.target);
 
            markupToAdd += hero.inventory[(whichBooks[i])].inscription.content;
             markupToAdd += '</div>';
-        }
+        
         booksAndParchments.innerHTML = markupToAdd;
+    }
+    },
+    globalClick: function(e) {
+if(e.target.className) {
+    if (e.target.className == "closePanel") {
+        e.target.parentNode.classList.remove("active");
+    }
+}
     }
 }

@@ -57,7 +57,7 @@ echo $_GET["follower"];
 
 include($_SERVER['DOCUMENT_ROOT']."/includes/retinue/male-first-names.php");
 include($_SERVER['DOCUMENT_ROOT']."/includes/retinue/female-first-names.php");
-include($_SERVER['DOCUMENT_ROOT']."/includes/retinue/surnames.php");
+include($_SERVER['DOCUMENT_ROOT']."/includes/retinue/human-surnames-medieval.php");
 $possibleMaleFirstNames = sortSequentialSyllables($maleFirstNameSyllables);
 $possibleFemaleFirstNames = sortSequentialSyllables($femaleFirstNameSyllables);
 $possibleSurnames = sortSequentialSyllables($surnamesNameSyllables);
@@ -79,28 +79,27 @@ echo "<p>(/retinue/".$_GET["character"]."/".cleanURL($femaleName." ".$surname)."
 
 
 
-echo"<h2>Hobbits</h2>";
-include($_SERVER['DOCUMENT_ROOT']."/includes/retinue/hobbit-male-first-names.php");
-include($_SERVER['DOCUMENT_ROOT']."/includes/retinue/hobbit-female-first-names.php");
-include($_SERVER['DOCUMENT_ROOT']."/includes/retinue/hobbit-surnames.php");
-$possibleHobbitMaleFirstNames = sortSequentialSyllables($hobbitMaleFirstNameSyllables);
-$possibleHobbitFemaleFirstNames = sortSequentialSyllables($hobbitFemaleFirstNameSyllables);
-$possibleHobbitSurnames = sortSequentialSyllables($hobbitSurnamesNameSyllables);
+echo"<h2>Anglo Saxon</h2>";
+include($_SERVER['DOCUMENT_ROOT']."/includes/retinue/human-anglo-saxon-male.php");
+include($_SERVER['DOCUMENT_ROOT']."/includes/retinue/human-anglo-saxon-female.php");
+
+$possibleAngloSaxonFemaleFirstNames = sortSequentialSyllables($anglosaxonFemaleSyllables);
+$possibleAngloSaxonMaleFirstNames = sortSequentialSyllables($anglosaxonMaleSyllables);
 
 
-$maleName = selectSyllables($possibleHobbitMaleFirstNames,2,4);
+
+$maleName = selectSyllables($possibleAngloSaxonMaleFirstNames,2,4);
 $maleName = ucfirst($maleName);
 
-$femaleName = selectSyllables($possibleHobbitFemaleFirstNames,2,4);
+$femaleName = selectSyllables($possibleAngloSaxonFemaleFirstNames,2,4);
 $femaleName = ucfirst($femaleName);
 
-$surname = selectSyllables($possibleHobbitSurnames,2,5);
-$surname = ucfirst($surname);
 
-echo "<h3>".$maleName." ".$surname." (male)</h3>";
-echo "<p>(/retinue/".$_GET["character"]."/".cleanURL($maleName." ".$surname)."/)</p>";
-echo "<h3>".$femaleName." ".$surname." (female)</h3>";
-echo "<p>(/retinue/".$_GET["character"]."/".cleanURL($femaleName." ".$surname)."/)</p>";
+
+echo "<h3>".$maleName." (male)</h3>";
+echo "<p>(/retinue/".$_GET["character"]."/".cleanURL($maleName)."/)</p>";
+echo "<h3>".$femaleName." (female)</h3>";
+echo "<p>(/retinue/".$_GET["character"]."/".cleanURL($femaleName)."/)</p>";
 
 }
 ?>

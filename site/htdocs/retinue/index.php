@@ -24,7 +24,7 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/header.php");
 		<div class="column small-12 wide-4"><p>All available quests:</p></div>
 <div class="column small-12 wide-4"><p>All unassigned followers:</p></div>
 </div>
-</div>
+
 
 <div class="row">
 
@@ -33,11 +33,11 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/header.php");
 </div>
 </div>
 
-</div>
 
 
 
-</div>
+
+
 
 
 
