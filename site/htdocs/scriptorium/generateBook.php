@@ -40,10 +40,13 @@ $numberOfSentences = 3;
 $numberOfParagraphs = 2;
 $builtSentence = '';
 for ($i=0;$i<$numberOfParagraphs;$i++) {
-$builtSentence .= '<section><h1>Chapter '.($i+1).'</h1>';
+$builtSentence .= '<section><h1>Chapter '.($i+1).'</h1><p>';
   $thisPair = $startPhrases[mt_rand(0, count($startPhrases) - 1)];
   $builtSentence .= $thisPair;
   for ($j=0;$j<$numberOfSentences;$j++) {
+    if($j!=0) {
+      $builtSentence .= '<p>';
+    }
     do {
       // split off second word:
       $thisPairSplit = explode(" ",$thisPair);
@@ -51,7 +54,7 @@ $builtSentence .= '<section><h1>Chapter '.($i+1).'</h1>';
       $builtSentence .= " ".$thisWord;
       $thisPair = $thisPairSplit[1]." ".$thisWord;
     } while ($thisWord != ".");
-
+$builtSentence .= '</p>';
   }
  $builtSentence .= '</section>';
 }

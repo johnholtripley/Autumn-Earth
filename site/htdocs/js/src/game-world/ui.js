@@ -77,7 +77,7 @@ var UI = {
         document.getElementById('craftingRecipeCreateButton').onclick = UI.craftingRecipeCreate;
         splitStackPanel.onsubmit = inventorySplitStackSubmit;
         document.getElementById('splitStackCancel').onclick = inventorySplitStackCancel;
-        UI.initDrag(".draggableBar");
+       
         UI.initInventoryDrag();
         UI.updateCardAlbum();
 
@@ -87,6 +87,7 @@ var UI = {
             UI.populateRecipeList(hero.professionsKnown[0]);
         }
 
+gameWrapper.onmousedown = UI.globalMouseDown;
         gameWrapper.onclick = UI.globalClick;
 
         inventoryInterfaceIsBuilt = true;
@@ -136,19 +137,18 @@ var UI = {
         UI.activeDragObject = '';
     },
 
-    initDrag: function(whichElement) {
+    globalMouseDown: function(e) {
 
-        var dragTargets = document.querySelectorAll(whichElement);
-        for (var i = 0; i < dragTargets.length; i++) {
-            dragTargets[i].addEventListener("mousedown", function(e) {
+  if (e.target.className == "draggableBar") {
+    // check for startting a drag:
                 // make sure it's not a right click:
                 if (e.button != 2) {
-                    UI.activeDragObject = this.parentElement;
+                    UI.activeDragObject = e.target.parentElement;
 
 
                     var pageScrollTopY = (window.pageYOffset || document.documentElement.scrollTop) - (document.documentElement.clientTop || 0);
 
-                    var clickedSlotRect = this.getBoundingClientRect();
+                    var clickedSlotRect = e.target.getBoundingClientRect();
                     objInitLeft = clickedSlotRect.left;
                     objInitTop = clickedSlotRect.top + pageScrollTopY;
                     dragStartX = e.pageX;
@@ -162,7 +162,6 @@ var UI = {
                         dragTargets[j].parentElement.style.zIndex = 1;
                     }
                 }
-            }, false);
         }
     },
 
