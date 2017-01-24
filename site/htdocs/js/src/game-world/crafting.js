@@ -40,9 +40,10 @@ function recipeSearchAndFilter() {
             UI.highlightedRecipe = "";
         }
     }
-     // resize the scroll bar:
-     
+                 // resize the scroll bar (if it's used):
+if(recipeCustomScrollBar) {
             recipeCustomScrollBar.init();
+        }
 }
 
 function recipeSearchInput() {

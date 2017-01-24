@@ -272,9 +272,10 @@ function recipeSearchAndFilter() {
             UI.highlightedRecipe = "";
         }
     }
-     // resize the scroll bar:
-     
+                 // resize the scroll bar (if it's used):
+if(recipeCustomScrollBar) {
             recipeCustomScrollBar.init();
+        }
 }
 
 function recipeSearchInput() {
@@ -2057,9 +2058,10 @@ var UI = {
             UI.highlightedRecipe = "";
             craftingRecipeCreateButton.disabled = true;
             recipeTitleBar.innerHTML = hero.crafting[whichProfession].name + ' Recipes';
-            // resize the scroll bar:
-
+            // resize the scroll bar (if it's used):
+if(recipeCustomScrollBar) {
             recipeCustomScrollBar.init();
+        }
         }
         craftingPanel.classList.add("active");
     },
