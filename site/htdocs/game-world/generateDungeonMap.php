@@ -1,6 +1,6 @@
 <?php
 
-include($_SERVER['DOCUMENT_ROOT']."/includes/scriptorium/generateBook.php");
+include($_SERVER['DOCUMENT_ROOT']."/game-world/generateBook.php");
 
 // ---------------------------------
 // http://www.autumnearth.com/generateDungeonMap.php?playerId=1001&originatingMapId=-1&requestedMap=-2&dungeonName=the-barrow-mines&forceMode=nest&outputMode=test&connectingDoorX=18&connectingDoorY=35
