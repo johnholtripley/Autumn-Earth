@@ -88,7 +88,7 @@ $builtSentence .= '</p>';
   }
  $builtSentence .= '</section>';
 }
- $builtSentence = str_ireplace(" .", ".", $builtSentence);
+ $builtSentence = str_ireplace(" .", ". ", $builtSentence);
 
 
 //remove all line breaks:
