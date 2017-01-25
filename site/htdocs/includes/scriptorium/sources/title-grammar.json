@@ -1,13 +1,13 @@
 {
     "origin-english": [
-        "Beginnings of the undead threat",
+        "Beginnings of the #|races# threat",
 "The book of #|god#",
-"The #|legend# of the Fallen",
-"A travelers guide to #|places#",
-"The eye of divinty",
+"The #|legend# of the #|races#",
+"A traveller's guide to #|places#",
+"The #|noun# of divinity",
 "The shaping of the #|vagueGeography#",
 "#|god#'s treatise on shadow magic",
-"Establishing a foothold",
+"#|verb# a foothold",
 "#|progressing# #|places#",
 "The war of #|places#"
 
@@ -19,5 +19,8 @@
     "vagueGeography": ["earth","astral planes"],
     "progressing": ["venturing into", "conquering"],
     "legend": ["tale", "legend", "relics"],
-    "places": ["Anvil", "the shifting sands", "the unknown"]
+    "places": ["Anvil", "the shifting sands", "the unknown"],
+    "noun": ["eye","soul","hand"],
+    "races": ["undead","skaven","Fallen"],
+    "verb": ["establishing","creating","maintaining"]
 }

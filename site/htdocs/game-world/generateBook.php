@@ -16,8 +16,26 @@ function createProceduralTitle() {
 $whichElem = mt_rand(0,(count($json[$whichBaseStringToUse])-1));
 $startingText = $json[$whichBaseStringToUse][$whichElem];
 $startingText = findAndReplaceHashes($startingText);
+$bookTitle = $startingText;
+$suffixChance = mt_rand(1, 11);
+$edition = ["first", "second", "third"];
+$romanNumerals = ["I", "II", "III", "IV", "V", "VI", "VII"];
+switch ($suffixChance) {
+    case 1:
+        $bookTitle .= " (unabridged)";
+        break;
+    case 2:
+        $bookTitle .= " - volume ".mt_rand(1,5);
+        break;
+        case 3:
+        $bookTitle .= " - volume ".$romanNumerals[mt_rand(0, count($romanNumerals) - 1)];
+        break;
+        case 4:
+        $bookTitle .= " - ".$edition[mt_rand(0, count($edition) - 1)]." edition";
+        break;
+}
 
-return $startingText;
+return $bookTitle;
 
 }
 
@@ -25,7 +43,7 @@ function createProceduralBook() {
 
 
  // $textSource = file_get_contents($_SERVER['DOCUMENT_ROOT']."/includes/scriptorium/sources/alices-adventures-in-wonderland-lewis-carroll.txt");
-// $textSource = file_get_contents($_SERVER['DOCUMENT_ROOT']."/includes/scriptorium/sources/curious-creatures-in-zoology-john-ashton.txt");
+ // $textSource = file_get_contents($_SERVER['DOCUMENT_ROOT']."/includes/scriptorium/sources/curious-creatures-in-zoology-john-ashton.txt");
 
 $textSource = file_get_contents($_SERVER['DOCUMENT_ROOT']."/includes/scriptorium/sources/prince-henry-the-navigator-raymond-beazley.txt");
 $textSource .= file_get_contents($_SERVER['DOCUMENT_ROOT']."/includes/scriptorium/sources/the-discovery-of-guiana-sir-walter-raleigh.txt");
@@ -74,7 +92,7 @@ $numberOfSentences = 4;
 $numberOfParagraphs = 3;
 $builtSentence = '';
 for ($i=0;$i<$numberOfParagraphs;$i++) {
-$builtSentence .= '<section><h1>Chapter '.($i+1).'</h1><p>';
+$builtSentence .= '<section><h2>Chapter '.($i+1).'</h2><p>';
   
   
   for ($j=0;$j<$numberOfSentences;$j++) {

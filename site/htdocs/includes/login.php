@@ -182,8 +182,8 @@ WHERE tblacct.accountName='".$processedlogin."' and tblmail.mailread = '0'";
 	echo '<label for="pword">enter password</label>'."\n";
 	echo '<input id="pword" type="password" name="pword" />'."\n";
 	echo '<br />'."\n";
-	echo '<label for="rememberme">Remember me</label> '."\n";
-	echo '<input type="checkbox" value="yes" name="rememberme" id="rememberme" /> <a href="#">(what this does)</a><br />'."\n";
+	
+	echo '<input type="checkbox" value="yes" name="rememberme" id="rememberme" />'."\n";echo '<label for="rememberme"><span></span>Remember me</label> '."\n";
 	echo '<br />'."\n";
 	echo '<a href="/account/ResendPassword.php" title="Click to get password sent to you">forgotten your password?</a>'."\n";
 	echo '<br /><br />'."\n";
@@ -223,8 +223,9 @@ WHERE tblacct.accountName='".$processedlogin."' and tblmail.mailread = '0'";
 	echo '<label for="pword">enter password</label>'."\n";
 	echo '<input id="pword" type="password" name="pword" />'."\n";
 	echo '<br />'."\n";
-	echo '<label for="rememberme">Remember me</label> '."\n";
-	echo '<input type="checkbox" value="yes" name="rememberme" id="rememberme" /> <a href="#">(what this does)</a><br />'."\n";
+	echo '<input type="checkbox" value="yes" name="rememberme" id="rememberme" />'."\n";
+	echo '<label for="rememberme"><span></span>Remember me</label> '."\n";
+	
 	echo '<br />'."\n";
 	echo '<a href="/account/ResendPassword.php" title="Click to get password sent to you">forgotten your password?</a>'."\n";
 	echo '<br /><br />'."\n";
