@@ -1958,7 +1958,7 @@ if($itemMap[$i][$j] == "32") {
 
      $outputString .= '"quantity": 1,"quality": 100,"durability": 100,"currentWear": 0,"effectiveness": 100,"wrapped": 0,"colour": 0,"enchanted": 0,"hallmark": 0,';
 
-    $outputString .= '"inscription": { "title":"A procedural book", "content":"'.str_replace('"', '\"', createProceduralBook()).'"}},';
+    $outputString .= '"inscription": { "title":"'.str_replace('"', '\"', createProceduralTitle()).'", "content":"'.str_replace('"', '\"', createProceduralBook()).'"}},';
 } else {
 
 $outputString .= '{"type": '.$itemMap[$i][$j].',"tileX": '.$i.',"tileY": '.$j.'},';

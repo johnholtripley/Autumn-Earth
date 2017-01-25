@@ -4,7 +4,21 @@
 // https://docs.google.com/presentation/d/1pAW4WGYrrY46UPVGLinhao-BJIHenr7T7kUmTZEXgrQ/mobilepresent?slide=id.g160567ace3_1_176
 // http://www.gutenberg.org/files/42508/42508-h/42508-h.htm
 
+include_once($_SERVER['DOCUMENT_ROOT']."/includes/functions.php");
+
+$jsonResults = file_get_contents($_SERVER['DOCUMENT_ROOT'].'/includes/scriptorium/sources/title-grammar.json');
+$json = json_decode($jsonResults, true);
+
 function createProceduralTitle() {
+  global $json;
+// pick a random item from the Origin to start from:
+  $whichBaseStringToUse = "origin-english";
+$whichElem = mt_rand(0,(count($json[$whichBaseStringToUse])-1));
+$startingText = $json[$whichBaseStringToUse][$whichElem];
+$startingText = findAndReplaceHashes($startingText);
+
+return $startingText;
+
 }
 
 function createProceduralBook() {

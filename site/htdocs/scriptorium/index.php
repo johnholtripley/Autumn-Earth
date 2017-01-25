@@ -23,6 +23,7 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/navigation/the-world.php");
 
 <?php
 include($_SERVER['DOCUMENT_ROOT']."/game-world/generateBook.php");
+echo '<h2>'.createProceduralTitle().'</h2>';
 echo createProceduralBook();
 ?>
 </div>

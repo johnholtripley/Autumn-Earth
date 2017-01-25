@@ -11,6 +11,7 @@ use Abraham\TwitterOAuth\TwitterOAuth;
 //if(!$isLive) {
 include($_SERVER['DOCUMENT_ROOT']."/includes/signalnoise.php");
 include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
+include($_SERVER['DOCUMENT_ROOT']."/includes/functions.php");
 //}
 
 function sendToTwitter() {
@@ -835,29 +836,7 @@ imagedestroy(${'leafBrush'.$k});
 
 }
 
-function findAndReplaceHashes($stringToCheck) {
-	global $json;
-	// check for any '#'s:
-	$hashSplit = explode("#", $stringToCheck);
-	if(count($hashSplit) > 1) {
-		for ($i=0;$i<count($hashSplit);$i++) {
-			if(substr($hashSplit[$i],0,1) == "|") {
-				// look for matching keys
-				$keyToMatch = substr($hashSplit[$i],1);
-				if (array_key_exists($keyToMatch, $json)) {
-					$whichReplaceElem = mt_rand(0,(count($json[$keyToMatch])-1));
-					$replacementString = $json[$keyToMatch][$whichReplaceElem];
-					// check this substitution string to see if it has any hashes itself:
-					$replacementString = findAndReplaceHashes($replacementString); 
-					$hashSplit[$i] = $replacementString;
-				}
-			}
-		}
-		// put it back together:
-		$stringToCheck = implode("", $hashSplit); 
-	}
-	return $stringToCheck;	
-}
+
 
 
 

@@ -1,0 +1,23 @@
+{
+    "origin-english": [
+        "Beginnings of the undead threat",
+"The book of #|god#",
+"The #|legend# of the Fallen",
+"A travelers guide to #|places#",
+"The eye of divinty",
+"The shaping of the #|vagueGeography#",
+"#|god#'s treatise on shadow magic",
+"Establishing a foothold",
+"#|progressing# #|places#",
+"The war of #|places#"
+
+    ],
+    "origin-latin": [
+    "Lorem Ipsum."
+    ],
+    "god": ["Ur", "G'lok"],
+    "vagueGeography": ["earth","astral planes"],
+    "progressing": ["venturing into", "conquering"],
+    "legend": ["tale", "legend", "relics"],
+    "places": ["Anvil", "the shifting sands", "the unknown"]
+}
