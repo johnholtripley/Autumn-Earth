@@ -223,6 +223,12 @@ function inventoryItemAction(whichSlot, whichAction, whichActionValue) { // remo
             openBoosterPack();
             removeFromInventory(whichSlotNumber, 1);
             break;
+            case "card":
+
+hero.cards.unshift(whichActionValue);
+            UI.updateCardAlbum();
+ removeFromInventory(whichSlotNumber, 1);
+ break;
             case "book":
             document.getElementById("book"+whichActionValue).classList.add("active");
         case "recipe":

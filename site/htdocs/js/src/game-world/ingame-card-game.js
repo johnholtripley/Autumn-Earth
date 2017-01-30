@@ -58,7 +58,12 @@ function startCardGame(opponentNPC) {
         cardGameNameSpace.player1Cards = opponentNPC.uniqueCards.concat(allCardPacks[opponentNPC.baseCardPack]).slice(0, 12);
         cardGameNameSpace.player1Skill = opponentNPC.cardSkill;
 
-
+if(opponentNPC.cardBackColour) {
+  
+cardGameNameSpace.NPCCardBackColour = opponentNPC.cardBackColour;
+} else {
+   cardGameNameSpace.NPCCardBackColour = undefined; 
+}
 
 
         cardGameNameSpace.initialiseCardGame();

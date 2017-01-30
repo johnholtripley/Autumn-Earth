@@ -1284,7 +1284,12 @@ function startCardGame(opponentNPC) {
         cardGameNameSpace.player1Cards = opponentNPC.uniqueCards.concat(allCardPacks[opponentNPC.baseCardPack]).slice(0, 12);
         cardGameNameSpace.player1Skill = opponentNPC.cardSkill;
 
-
+if(opponentNPC.cardBackColour) {
+  
+cardGameNameSpace.NPCCardBackColour = opponentNPC.cardBackColour;
+} else {
+   cardGameNameSpace.NPCCardBackColour = undefined; 
+}
 
 
         cardGameNameSpace.initialiseCardGame();
@@ -1629,6 +1634,12 @@ function inventoryItemAction(whichSlot, whichAction, whichActionValue) { // remo
             openBoosterPack();
             removeFromInventory(whichSlotNumber, 1);
             break;
+            case "card":
+
+hero.cards.unshift(whichActionValue);
+            UI.updateCardAlbum();
+ removeFromInventory(whichSlotNumber, 1);
+ break;
             case "book":
             document.getElementById("book"+whichActionValue).classList.add("active");
         case "recipe":

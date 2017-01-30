@@ -16,6 +16,18 @@ cardGameNameSpace = {
         return 0;
     },
 
+    compareColours: function(hex1,hex2) {
+        var r1 = parseInt(hex1.substring(1,3), 16);
+        var g1 = parseInt(hex1.substring(3,5), 16);
+        var b1 = parseInt(hex1.substring(5,7), 16);
+
+          var r2 = parseInt(hex2.substring(1,3), 16);
+        var g2 = parseInt(hex2.substring(3,5), 16);
+        var b2 = parseInt(hex2.substring(5,7), 16);
+  
+return ((r1 - r2)*(r1 - r2)) + ((g1 - g2)*(g1 - g2)) + ((b1 - b2)*(b1 - b2));
+    },
+
     initialiseCardGame: function() {
 
     // 'x' = void space
@@ -33,7 +45,36 @@ cardGameNameSpace = {
 cardGameNameSpace.boardWidth = cardGameNameSpace.board[0].length;
 cardGameNameSpace.boardHeight = cardGameNameSpace.board.length;
 
-cardGameNameSpace.playerColours= ["", "#ffcc00", "#ff00cc"];
+cardGameNameSpace.playerColours= ["", "#36bbed", "#ff00cc"];
+
+
+if (typeof playersCardBack !== "undefined") {
+   cardGameNameSpace.playerColours[2] =  playersCardBack;
+}
+if (typeof cardGameNameSpace.NPCCardBackColour !== "undefined") {
+   cardGameNameSpace.playerColours[1] =  cardGameNameSpace.NPCCardBackColour;
+}
+
+// check how similar the colours are:
+// http://stackoverflow.com/questions/1633828/distance-between-colours-in-php/1634206#1634206
+
+
+if (cardGameNameSpace.compareColours(cardGameNameSpace.playerColours[1], cardGameNameSpace.playerColours[2]) < 3500) {
+
+
+    do {
+    var randomHex = '#' + Math.floor(Math.random() * 16777215).toString(16);
+ 
+} while (cardGameNameSpace.compareColours(randomHex, cardGameNameSpace.playerColours[2]) < 3501); 
+    // too similar - change NPC's value:
+    cardGameNameSpace.playerColours[1] = randomHex;
+    if (thisNPC) {
+        // save this for future games:
+        thisNPC.cardBackColour = cardGameNameSpace.playerColours[1];
+    }
+
+}
+
 
         cardGameNameSpace.allCardsThisGame = cardGameNameSpace.player1Cards.concat(cardGameNameSpace.player2Cards);
         cardGameNameSpace.numberOfCardsInGame = cardGameNameSpace.allCardsThisGame.length;
