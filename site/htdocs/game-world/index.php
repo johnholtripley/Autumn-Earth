@@ -12,6 +12,13 @@
   <link rel="preconnect" href="//www.google-analytics.com">
   <meta name="robots" content="noodp,noydir">
   <?php include($_SERVER['DOCUMENT_ROOT']."/includes/meta-content.php"); ?>
+<style>
+.card.players {
+/* this hero's card back: */
+background: #ceffce;
+}
+</style>
+<script>var playersCardBack = '#ceffce';</script>
 </head>
 <body>
 

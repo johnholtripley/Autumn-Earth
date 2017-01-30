@@ -1,7 +1,9 @@
 <?php
 
-// Second order markov chain to create books. 
+// Second order markov chain to create books:
 // https://docs.google.com/presentation/d/1pAW4WGYrrY46UPVGLinhao-BJIHenr7T7kUmTZEXgrQ/mobilepresent?slide=id.g160567ace3_1_176
+
+// source text:
 // http://www.gutenberg.org/files/42508/42508-h/42508-h.htm
 
 include_once($_SERVER['DOCUMENT_ROOT']."/includes/functions.php");
@@ -35,7 +37,7 @@ switch ($suffixChance) {
         break;
 }
 
-return $bookTitle;
+return ucfirst($bookTitle);
 
 }
 

@@ -150,10 +150,12 @@ WHERE tblposts.threadid = " . $threadID . " ORDER BY tblposts.sticky DESC, tblpo
 				echo '</p>'."\n";
 				echo '<img src="/data/chr'.$currentcharid.'/portrait.jpg" class="characterPortrait" alt="'.$acctusername.'\'s portrait" /><br />'."\n".'<strong>'.$charname.'</strong> - currently in '.$charlocation.'<br />'."\n";
 				echo '<em>'.parseCode(stripslashes($acctsignature)).'</em>';
+				if (isset($_SESSION['username'])) {
 				if (strtolower($acctusername) == strtolower($_SESSION['username'])) {
 				// add edit link
 				echo '<br /><a href="/forum/EditPost.php?post='.$postID.'&amp;page='.$pageNumber.'" title="Edit post">edit post</a>'."\n";
 				}
+			}
 				if ($edited != "0000-00-00 00:00:00") {
 					// add edited time:
 					$edited = strtotime($edited);

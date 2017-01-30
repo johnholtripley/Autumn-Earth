@@ -1696,6 +1696,7 @@ function generateSlotMarkup(thisSlotsId) {
     var slotMarkup = '';
     var theColourPrefix = "";
     var thisFileColourSuffix = "";
+    var imageClassName = "";
     var thisColourName = getColourName(hero.inventory[thisSlotsId].colour, hero.inventory[thisSlotsId].type);
     if (thisColourName != "") {
         theColourPrefix = thisColourName + " ";
@@ -1726,7 +1727,15 @@ function generateSlotMarkup(thisSlotsId) {
             dataActionMarkup = 'data-action="' + thisAction + '" data-action-value="' + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].actionValue + '" ';
         }
     }
-    slotMarkup += '<img src="/images/game-world/inventory-items/' + hero.inventory[thisSlotsId].type + thisFileColourSuffix + '.png" ' + dataActionMarkup + 'alt="' + theColourPrefix + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].shortname + '">';
+
+// check if it's a card:
+
+if(currentActiveInventoryItems[hero.inventory[thisSlotsId].type].category == 4) {
+imageClassName = ' class="players card"';
+
+}
+
+    slotMarkup += '<img src="/images/game-world/inventory-items/' + hero.inventory[thisSlotsId].type + thisFileColourSuffix + '.png" ' + dataActionMarkup + 'alt="' + theColourPrefix + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].shortname + '"'+imageClassName+'>';
     if (isABook) {
         var itemsDescription = "&quot;" + hero.inventory[thisSlotsId].inscription.title + "&quot;";
     } else {

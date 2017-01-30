@@ -1,26 +1,31 @@
 {
     "origin-english": [
-        "Beginnings of the #|races# threat",
-"The book of #|god#",
-"The #|legend# of the #|races#",
-"A traveller's guide to #|places#",
-"The #|noun# of divinity",
-"The shaping of the #|vagueGeography#",
-"#|god#'s treatise on shadow magic",
-"#|verb# a foothold",
-"#|progressing# #|places#",
-"The war of #|places#"
+        "How the #|people# came to be",
+        "The book of #|god#",
+        "The lay of #|god#",
+        "The lore of #|god#",
+        "The #|legend# of the #|people#",
+        "A traveller's guide to #|places#",
+        "The #|noun# of divinity",
+        "The shaping of the #|vagueGeography#",
+        "#|god#'s treatise on shadow magic",
+        "#|verb# a foothold",
+        "#|progressing# #|places#",
+        "The war of #|places#"
 
     ],
     "origin-latin": [
-    "Lorem Ipsum."
+        "Lorem Ipsum"
+    ],
+    "origin-fae": [
+        "Manannán mac Lir"
     ],
     "god": ["Ur", "G'lok"],
-    "vagueGeography": ["earth","astral planes"],
+    "vagueGeography": ["earth", "astral planes"],
     "progressing": ["venturing into", "conquering"],
     "legend": ["tale", "legend", "relics"],
     "places": ["Anvil", "the shifting sands", "the unknown"],
-    "noun": ["eye","soul","hand"],
-    "races": ["undead","skaven","Fallen"],
-    "verb": ["establishing","creating","maintaining"]
+    "noun": ["eye", "soul", "hand", "mind"],
+    "people": ["Lost", "anscestors", "Fallen"],
+    "verb": ["establishing", "creating", "maintaining"]
 }
