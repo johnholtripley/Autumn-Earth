@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 24, 2017 at 03:33 PM
+-- Generation Time: Feb 01, 2017 at 04:12 PM
 -- Server version: 5.6.24
 -- PHP Version: 5.6.8
 
@@ -543,7 +543,7 @@ CREATE TABLE IF NOT EXISTS `tblinventoryitems` (
   `hasInherentColour` tinyint(1) NOT NULL DEFAULT '0',
   `showInTheCodex` tinyint(1) NOT NULL DEFAULT '1',
   `lockedToThisPlayer` tinyint(1) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=35 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblinventoryitems`
@@ -581,7 +581,8 @@ INSERT INTO `tblinventoryitems` (`itemID`, `shortname`, `description`, `priceCod
 (30, 'Weaver''s Loom', 'Tools for weaving and tailoring', '1', '20.0', '24.0', 0, 0, 'weavers-loom', 'craft', 1, 0, 0, '0', '0', NULL, 0, 0, 0, 1, 0),
 (31, 'Wrapped gift', 'Double click to see what''s inside. Contains: ##contains##', '4', '49.0', '81.0', 63, 63, 'wrapped-gift', 'container', 0, 0, 0, '0', '0', NULL, 0, 0, 0, 1, 0),
 (32, 'Book', '', '4', '12.0', '6.0', 20, 13, 'book', 'book', 0, 0, 0, '0', '0', NULL, 1, 0, 0, 1, 0),
-(33, 'Parchment', '', '4', '49.0', '81.0', 63, 63, 'parchment', 'book', 0, 0, 0, '0', '0', NULL, 1, 0, 0, 1, 0);
+(33, 'Parchment', '', '4', '49.0', '81.0', 63, 63, 'parchment', 'book', 0, 0, 0, '0', '0', NULL, 1, 0, 0, 1, 0),
+(34, 'Chocobo Card', 'A chocobo card. Pweeeek!', '4', '49.0', '81.0', 63, 63, 'card-chocobo', 'card', 2, 0, 0, '0', '0', '4', 1, 0, 0, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -592,7 +593,7 @@ INSERT INTO `tblinventoryitems` (`itemID`, `shortname`, `description`, `priceCod
 CREATE TABLE IF NOT EXISTS `tblitemcategories` (
   `categoryID` int(11) NOT NULL,
   `categoryName` varchar(255) DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblitemcategories`
@@ -601,7 +602,8 @@ CREATE TABLE IF NOT EXISTS `tblitemcategories` (
 INSERT INTO `tblitemcategories` (`categoryID`, `categoryName`) VALUES
 (1, 'Plants and Herbs'),
 (2, 'Dyer''s Provisions'),
-(3, 'Tailor''s Provisions');
+(3, 'Tailor''s Provisions'),
+(4, 'Single card game cards');
 
 -- --------------------------------------------------------
 
@@ -878,7 +880,7 @@ CREATE TABLE IF NOT EXISTS `tblplants` (
   `timeCreated` datetime NOT NULL,
   `plantSeed` int(255) NOT NULL,
   `commonNamesJoined` varchar(512) COLLATE utf8_bin NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=272 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=274 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
 -- Dumping data for table `tblplants`
@@ -898,7 +900,9 @@ INSERT INTO `tblplants` (`plantID`, `latinName`, `commonNames`, `plantDesc`, `pl
 (268, 'Brassia drantheniacer', 'Glorytongue', 'Widely used in days gone by to curdle milk for cheese making.', 'brassia-drantheniacer', 'Brassia drantheniacer\r\n(Glorytongue)\r\nWidely used in days gone by to curdle milk for cheese making.', 0, 0, '2016-11-18 10:02:51', 1479499092, 'Glorytongue'),
 (269, 'Verticilla ambrosica', 'Greater emberpaw', 'A once common annual weed of woods and hedges, now rarely seen. The pale blue flowers are produced on tall wiry stems with narrow leaves from June to August. A good butterfly and bee plant.', 'verticilla-ambrosica', 'Verticilla ambrosica\r\n(Greater emberpaw)\r\nA once common annual weed of woods and hedges, now rarely seen.', 0, 0, '2016-11-18 10:02:59', 1479555143, 'Greater emberpaw'),
 (270, 'Parvirinum glutinosa', 'Saintstuber, Lesser song orchid or Stonesedge', 'A native annual with creeping stems, common in disturbed ground, farm land and walls.', 'parvirinum-glutinosa', 'Parvirinum glutinosa\r\n(Saintstuber, Lesser song orchid or Stonesedge)', 0, 0, '2016-11-18 10:03:08', 1479487606, 'Saintstuber/Lesser song orchid/Stonesedge'),
-(271, 'Beckia crocardamine', 'Riverholly, Stavebeam or Pouchpurse', 'A rare creeping native perennial of dry grassland and roadside, with dark red flowers. An excellent nector plant and a caterpillar food plant for the Silken processionary butterfly. Height: 10-40cm (4-16in) Perennial: Flowers May to Sept. Contains plant toxins.', 'beckia-crocardamine', 'Beckia crocardamine\r\n(Riverholly, Stavebeam or Pouchpurse)', 0, 0, '2016-11-18 10:03:15', 1479495853, 'Riverholly/Stavebeam/Pouchpurse');
+(271, 'Beckia crocardamine', 'Riverholly, Stavebeam or Pouchpurse', 'A rare creeping native perennial of dry grassland and roadside, with dark red flowers. An excellent nector plant and a caterpillar food plant for the Silken processionary butterfly. Height: 10-40cm (4-16in) Perennial: Flowers May to Sept. Contains plant toxins.', 'beckia-crocardamine', 'Beckia crocardamine\r\n(Riverholly, Stavebeam or Pouchpurse)', 0, 0, '2016-11-18 10:03:15', 1479495853, 'Riverholly/Stavebeam/Pouchpurse'),
+(272, 'Lutivum coryda', 'Honeystrife', 'The beautiful, bright light red daisy flowers of this annual were once a common sight in hedgerows and pathways. It is now much rarer due to widespread use of selective herbicides.', 'lutivum-coryda', 'Lutivum coryda\r\n(Honeystrife)', 0, 0, '2017-01-25 11:50:25', 1485419349, 'Honeystrife'),
+(273, 'Zyginia curculacinia', 'Skywort, Wimplerose or Downholly', 'A shimmering, bright perennial found growing on cornfields and waste places. The leaves are prized in cookery. The roots are particularly attractive to bumble bee.', 'zyginia-curculacinia', 'Zyginia curculacinia\r\n(Skywort, Wimplerose or Downholly)\r\nA shimmering, bright perennial found growing on cornfields and waste places.', 0, 0, '2017-01-25 11:50:38', 1485378641, 'Skywort/Wimplerose/Downholly');
 
 -- --------------------------------------------------------
 
@@ -1723,12 +1727,12 @@ ALTER TABLE `tblguilds`
 -- AUTO_INCREMENT for table `tblinventoryitems`
 --
 ALTER TABLE `tblinventoryitems`
-  MODIFY `itemID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=34;
+  MODIFY `itemID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=35;
 --
 -- AUTO_INCREMENT for table `tblitemcategories`
 --
 ALTER TABLE `tblitemcategories`
-  MODIFY `categoryID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
+  MODIFY `categoryID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=5;
 --
 -- AUTO_INCREMENT for table `tblitemgroups`
 --
@@ -1763,7 +1767,7 @@ ALTER TABLE `tblnews`
 -- AUTO_INCREMENT for table `tblplants`
 --
 ALTER TABLE `tblplants`
-  MODIFY `plantID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=272;
+  MODIFY `plantID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=274;
 --
 -- AUTO_INCREMENT for table `tblposts`
 --
