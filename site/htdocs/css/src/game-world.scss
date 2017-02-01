@@ -331,6 +331,9 @@ canvas {
     &.npcs {
         background: #ffcc00;
     }
+    &.inactive {
+    @include filter(sepia(100%) opacity(30%));
+    }
 }
 
 #cardAlbum {
@@ -353,9 +356,18 @@ canvas {
         display: block;
         float: left;
         margin: 0 4px 4px 0;
+        position: relative;
         img {
             width: 100%;
             height: auto;
+        }
+        .quantity {
+        position: absolute;
+        text-align: right;
+        color: #fff;
+        bottom: 6px;
+        right: 6px;
+        font-size: 10px;
         }
     }
 }

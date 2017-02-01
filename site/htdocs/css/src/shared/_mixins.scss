@@ -134,7 +134,10 @@
 
 }
 
-
+@mixin filter($values...) {
+  -webkit-filter: $values;
+  filter: $values;
+}
 
  @mixin transform($values...) {
 // adding ... allows multiple values to be passed in

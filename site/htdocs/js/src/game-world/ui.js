@@ -195,12 +195,29 @@ var UI = {
 
     updateCardAlbum: function() {
         var cardAlbumMarkup = '';
-        for (var i = 0; i < 30; i++) {
-            if (hero.cards[i]) {
-                cardAlbumMarkup += '<li><img src="/images/card-game/cards/' + hero.cards[i] + '.png" class="card players" alt="' + cardGameNameSpace.allCardData[(hero.cards[i])][2] + ' card"></li>';
-            } else {
-                cardAlbumMarkup += '<li></li>';
-            }
+        var thisCardsClass, thisCardsQuantityOutput;
+
+// count quantities for each card:
+// http://stackoverflow.com/questions/5667888/counting-the-occurrences-of-javascript-array-elements#answer-5668029
+var counts = {};
+for(var i = 0; i< hero.cards.length; i++) {
+    var num = hero.cards[i];
+    counts[num] = counts[num] ? counts[num]+1 : 1;
+}
+
+
+        for (var i = 1; i <= totalTypesOfCards; i++) {
+
+thisCardsClass = 'card players';
+thisCardsQuantityOutput = '';
+if(!(counts[i])) {
+thisCardsClass += ' inactive';
+} else {
+    thisCardsQuantityOutput = '<span class="quantity">'+counts[i]+'</span>';
+}
+cardAlbumMarkup += '<li><img src="/images/card-game/cards/' + i + '.png" class="'+thisCardsClass+'" alt="' + cardGameNameSpace.allCardData[i][2] + ' card">'+thisCardsQuantityOutput+'</li>';
+
+          
         }
         cardAlbumList.innerHTML = cardAlbumMarkup;
     },
