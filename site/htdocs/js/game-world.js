@@ -1372,23 +1372,28 @@ function revealBoosterCard(e) {
 var Input = {
     init: function() {
         // Set up the keyboard events
-        document.addEventListener('keydown', function(e) { Input.changeKey(e.keyCode, 1, "down") });
-        document.addEventListener('keyup', function(e) { Input.changeKey(e.keyCode, 0, "up") });
+        document.addEventListener('keydown', function(e) { Input.changeKey(e, 1, "down") });
+        document.addEventListener('keyup', function(e) { Input.changeKey(e, 0, "up") });
     },
 
     // called on key up and key down events
-    changeKey: function(which, to, type) {
-        switch (which) {
+    changeKey: function(e, to, type) {
+        switch (e.keyCode) {
             case KeyBindings.left:
+            // prevent the page from scrolling:
+            e.preventDefault();
                 key[0] = to;
                 break;
             case KeyBindings.up:
+            e.preventDefault();
                 key[2] = to;
                 break;
             case KeyBindings.right:
+            e.preventDefault();
                 key[1] = to;
                 break;
             case KeyBindings.down:
+            e.preventDefault();
                 key[3] = to;
                 break;
 

@@ -101,6 +101,25 @@ echo "<p>(/retinue/".$_GET["character"]."/".cleanURL($maleName)."/)</p>";
 echo "<h3>".$femaleName." (female)</h3>";
 echo "<p>(/retinue/".$_GET["character"]."/".cleanURL($femaleName)."/)</p>";
 
+
+
+
+echo"<h2>Elven</h2>";
+
+include($_SERVER['DOCUMENT_ROOT']."/includes/retinue/elven-suname-prefix.php");
+include($_SERVER['DOCUMENT_ROOT']."/includes/retinue/elven-suname-suffix.php");
+
+$elvenSurname = $elvenSurnameSuffixes[mt_rand(0, count($elvenSurnameSuffixes) - 1)] . $elvenSurnamePrefixes[mt_rand(0, count($elvenSurnamePrefixes) - 1)];
+
+
+$elvenSurname = ucfirst($elvenSurname);
+
+$elvenFemale = " ".$elvenSurname;
+
+echo "<h3>".$elvenSurname." (female)</h3>";
+echo "<p>(/retinue/".$_GET["character"]."/".cleanURL($elvenFemale)."/)</p>";
+
+
 }
 ?>
 

@@ -63,6 +63,7 @@ if (cardGameNameSpace.compareColours(cardGameNameSpace.playerColours[1], cardGam
 
 
     do {
+        // https://www.paulirish.com/2009/random-hex-color-code-snippets/
     var randomHex = '#' + Math.floor(Math.random() * 16777215).toString(16);
  
 } while (cardGameNameSpace.compareColours(randomHex, cardGameNameSpace.playerColours[2]) < 3501); 
