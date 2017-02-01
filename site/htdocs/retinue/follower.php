@@ -109,15 +109,27 @@ echo"<h2>Elven</h2>";
 include($_SERVER['DOCUMENT_ROOT']."/includes/retinue/elven-suname-prefix.php");
 include($_SERVER['DOCUMENT_ROOT']."/includes/retinue/elven-suname-suffix.php");
 
-$elvenSurname = $elvenSurnameSuffixes[mt_rand(0, count($elvenSurnameSuffixes) - 1)] . $elvenSurnamePrefixes[mt_rand(0, count($elvenSurnamePrefixes) - 1)];
+
+$thisFirstSurname = $elvenSurnamePrefixes[mt_rand(0, count($elvenSurnamePrefixes) - 1)];
+$thisSecondSurname = $elvenSurnameSuffixes[mt_rand(0, count($elvenSurnameSuffixes) - 1)];
+if (substr($thisFirstSurname, -1, 1) == substr($thisSecondSurname, 0, 1)) {
+	// make sure the last character of the first word isn't the same as the first of the last word - so don't get dragonsstar - get dragonstar instead
+$thisFirstSurname = substr($thisFirstSurname, 0, -1);
+}
+
+
+$elvenSurname = $thisFirstSurname.$thisSecondSurname;
 
 
 $elvenSurname = ucfirst($elvenSurname);
 
 $elvenFemale = " ".$elvenSurname;
 
-echo "<h3>".$elvenSurname." (female)</h3>";
-echo "<p>(/retinue/".$_GET["character"]."/".cleanURL($elvenFemale)."/)</p>";
+$femaleElvenFirstName = "eila";
+$femaleElvenFirstName = ucfirst($femaleElvenFirstName);
+
+echo "<h3>".$femaleElvenFirstName." ".$elvenSurname." (female)</h3>";
+echo "<p>(/retinue/".$_GET["character"]."/".cleanURL($femaleElvenFirstName." ".$elvenFemale)."/)</p>";
 
 
 }

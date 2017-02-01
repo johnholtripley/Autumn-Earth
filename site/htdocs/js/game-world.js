@@ -2030,8 +2030,13 @@ var UI = {
         var thisY = findIsoCoordsY(whichNPC.x, whichNPC.y);
         // +40 y for the toolbar height at the bottom of the canvas:
         // -40 x so the balloon tip is at '0' x
-        var thisTransform = "translate(" + Math.floor(thisX - hero.isox + (canvasWidth / 2) - 40) + "px," + Math.floor(0 - (canvasHeight - (thisY - hero.isoy - whichNPC.centreY + (canvasHeight / 2)) + 40)) + "px)";
+        var thisTransform = "translate(" + Math.floor(thisX - hero.isox + (canvasWidth / 2) - 40) + "px," + Math.floor(0 - (canvasHeight - (thisY - hero.isoy - whichNPC.centreY + (canvasHeight / 2)) + 40) - whichNPC.z) + "px)";
         dialogue.style.transform = thisTransform;
+    },
+
+    removeActiveDialogue: function() {
+        activeNPCForDialogue = '';
+        dialogue.removeEventListener(whichTransitionEvent, UI.removeActiveDialogue, false);
     },
 
     showNotification: function(markup) {
@@ -2236,6 +2241,7 @@ if(recipeCustomScrollBar) {
                     var thisNode = getNearestParentId(e.target);
                     // check if the shift key is pressed as well:
                     if (key[5]) {
+                 
                         UI.sourceSlot = thisNode.id.substring(4);
                         // make a copy of the object, not a reference:
                         UI.draggedInventoryObject = JSON.parse(JSON.stringify(hero.inventory[UI.sourceSlot]));
@@ -2244,7 +2250,11 @@ if(recipeCustomScrollBar) {
                         var defaultSplitValue = Math.floor(hero.inventory[UI.sourceSlot].quantity / 2);
                         splitStackInput.value = defaultSplitValue;
                         splitStackInput.focus();
-                        splitStackInput.setSelectionRange(0, defaultSplitValue.toString().length);
+
+      
+// can't set selection for number type input:
+// http://stackoverflow.com/questions/21177489/selectionstart-selectionend-on-input-type-number-no-longer-allowed-in-chrome
+                     //   splitStackInput.setSelectionRange(0, defaultSplitValue.toString().length);
                         var clickedSlotRect = thisNode.getBoundingClientRect();
                         var pageScrollTopY = (window.pageYOffset || document.documentElement.scrollTop) - (document.documentElement.clientTop || 0);
                         // 3px padding on the slots:
@@ -2309,10 +2319,7 @@ if(recipeCustomScrollBar) {
         }, false);
     },
 
-    removeActiveDialogue: function() {
-        activeNPCForDialogue = '';
-        dialogue.removeEventListener(whichTransitionEvent, UI.removeActiveDialogue, false);
-    },
+
 
     craftingPanelDoubleClick: function(e) {
         var thisNode = getNearestParentId(e.target);
@@ -2826,6 +2833,11 @@ function loadingProgress() {
 function changeMaps(doorX, doorY) {
     previousZoneName = thisMapData.zoneName;
     gameMode = "mapLoading";
+
+
+
+
+    
     removeMapAssets();
     var doorData = thisMapData.doors;
     var whichDoor = getTileX(doorX) + "," + getTileX(doorY);
@@ -2877,11 +2889,18 @@ function startDoorTransition() {
     if (mapTransition == "") {
         mapTransitionCurrentFrames = 1;
         mapTransition = "out";
+        if (activeNPCForDialogue != '') {
+
+            //  dialogue.classList.add("slowerFade");
+            dialogue.classList.remove("active");
+            UI.removeActiveDialogue();
+        }
     }
-    if(currentMap < 0) {
-    saveCartographyMask();
+    if (currentMap < 0) {
+        saveCartographyMask();
+    }
 }
-}
+
 
 function getHeroAsCloseAsPossibleToObject(objx, objy, objw, objh) {
     switch (hero.facing) {

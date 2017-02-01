@@ -246,6 +246,10 @@ canvas {
     left: 860px;
     background: #666;
     color: #fff;
+    #cartographicTitle {
+          // allow the entire panel to be dragged even if dragging from the header text:
+        pointer-events: none;
+    }
     canvas {
         background: #ded49d url(../images/cartography/overlays/1.png) no-repeat 0 0;
     }
@@ -430,6 +434,10 @@ canvas {
     &.active {
         opacity: 1;
         pointer-events: auto;
+    }
+    #recipeTitleBar {
+        // allow the entire panel to be dragged even if dragging from the header text:
+        pointer-events: none;
     }
     ul {
         margin: 0;

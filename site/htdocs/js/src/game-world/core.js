@@ -428,6 +428,11 @@ function loadingProgress() {
 function changeMaps(doorX, doorY) {
     previousZoneName = thisMapData.zoneName;
     gameMode = "mapLoading";
+
+
+
+
+    
     removeMapAssets();
     var doorData = thisMapData.doors;
     var whichDoor = getTileX(doorX) + "," + getTileX(doorY);
@@ -479,11 +484,18 @@ function startDoorTransition() {
     if (mapTransition == "") {
         mapTransitionCurrentFrames = 1;
         mapTransition = "out";
+        if (activeNPCForDialogue != '') {
+
+            //  dialogue.classList.add("slowerFade");
+            dialogue.classList.remove("active");
+            UI.removeActiveDialogue();
+        }
     }
-    if(currentMap < 0) {
-    saveCartographyMask();
+    if (currentMap < 0) {
+        saveCartographyMask();
+    }
 }
-}
+
 
 function getHeroAsCloseAsPossibleToObject(objx, objy, objw, objh) {
     switch (hero.facing) {
