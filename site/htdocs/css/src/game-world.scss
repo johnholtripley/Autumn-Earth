@@ -380,7 +380,7 @@ $albumCardRatio: 1;
                 background-repeat: no-repeat;
                 background-position: 0 0;
                 @include background-size(cover);
-                @include animation(rare-card-play 0.8s steps(29) infinite);
+                @include animation(rare-card-play 1s steps(10) infinite);
             }
         }
     }
@@ -390,7 +390,7 @@ $albumCardRatio: 1;
  
     100% {
         // width of sprite:
-        background-position: -2436px*$albumCardRatio 0;
+        background-position: -840px*$albumCardRatio 0;
     }
 }
 
