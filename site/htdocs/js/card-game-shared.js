@@ -525,8 +525,12 @@ if (cardGameNameSpace.compareColours(cardGameNameSpace.playerColours[1], cardGam
                     }
                     cardGameNameSpace.gameContext.fillStyle = cardGameNameSpace.playerColours[this.currentOwner];
                     cardGameNameSpace.gameContext.fillRect(this.x + offsetX, this.y + offsetY, cardGameNameSpace.cardWidth, cardGameNameSpace.cardHeight);
-                  
+                  if(this.cardType>0) {
                     cardGameNameSpace.gameContext.drawImage(cardGameNameSpace.cardImages[this.cardType], this.x + offsetX, this.y + offsetY);
+                } else {
+                    // sprite sheet:
+                    cardGameNameSpace.gameContext.drawImage(cardGameNameSpace.cardImages[this.cardType], 0, 0, cardGameNameSpace.cardWidth, cardGameNameSpace.cardHeight, this.x + offsetX, this.y + offsetY, cardGameNameSpace.cardWidth, cardGameNameSpace.cardHeight);
+                }
                 }
             }
         }
