@@ -44,7 +44,7 @@ return ((r1 - r2)*(r1 - r2)) + ((g1 - g2)*(g1 - g2)) + ((b1 - b2)*(b1 - b2));
 
 cardGameNameSpace.boardWidth = cardGameNameSpace.board[0].length;
 cardGameNameSpace.boardHeight = cardGameNameSpace.board.length;
-
+cardGameNameSpace.maxCardAnimationFrames = 10;
 cardGameNameSpace.playerColours= ["", "#36bbed", "#ff00cc"];
 
 
@@ -505,6 +505,7 @@ if (cardGameNameSpace.compareColours(cardGameNameSpace.playerColours[1], cardGam
                 //   boardY: -1,
                 zIndex: 0,
                 flippedAnimation: 0,
+                animationSequence: 0,
                 isMovingToBoard: false,
                 originalOwner: (i >= (cardGameNameSpace.numberOfCardsInGame / 2) ? 2 : 1),
                 hasBeenPlaced: false,
@@ -529,7 +530,11 @@ if (cardGameNameSpace.compareColours(cardGameNameSpace.playerColours[1], cardGam
                     cardGameNameSpace.gameContext.drawImage(cardGameNameSpace.cardImages[this.cardType], this.x + offsetX, this.y + offsetY);
                 } else {
                     // sprite sheet:
-                    cardGameNameSpace.gameContext.drawImage(cardGameNameSpace.cardImages[this.cardType], 0, 0, cardGameNameSpace.cardWidth, cardGameNameSpace.cardHeight, this.x + offsetX, this.y + offsetY, cardGameNameSpace.cardWidth, cardGameNameSpace.cardHeight);
+                    cardGameNameSpace.gameContext.drawImage(cardGameNameSpace.cardImages[this.cardType], cardGameNameSpace.cardWidth * this.animationSequence, 0, cardGameNameSpace.cardWidth, cardGameNameSpace.cardHeight, this.x + offsetX, this.y + offsetY, cardGameNameSpace.cardWidth, cardGameNameSpace.cardHeight);
+                    this.animationSequence ++;
+                    if(this.animationSequence>cardGameNameSpace.maxCardAnimationFrames) {
+this.animationSequence = 0;
+                    }
                 }
                 }
             }
