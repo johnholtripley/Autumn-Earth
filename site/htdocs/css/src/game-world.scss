@@ -375,8 +375,8 @@ $albumCardRatio: 0.7142;
         }
         &.rare {
             div {
-            width: $cardWidth*$albumCardRatio;
-        height: $cardHeight*$albumCardRatio;
+                width: $cardWidth*$albumCardRatio;
+                height: $cardHeight*$albumCardRatio;
                 background-repeat: no-repeat;
                 background-position: 0 0;
                 @include background-size(cover);
@@ -386,14 +386,13 @@ $albumCardRatio: 0.7142;
     }
 }
 
+
 @include keyframes(rare-card-play) {
- 
     100% {
         // width of sprite:
         background-position: -840px*$albumCardRatio 0;
     }
 }
-
 
 
 #boosterPack {
@@ -456,7 +455,25 @@ $albumCardRatio: 0.7142;
         // booster cards start with their backs visible:
         @include transform(rotateY(180deg));
     }
+            .rare {
+            div {
+                width: $cardWidth;
+                height: $cardHeight;
+                background-repeat: no-repeat;
+                background-position: 0 0;
+              
+                @include animation(booster-rare-card-play 1s steps(10) infinite);
+            }
+        }
 }
+
+@include keyframes(booster-rare-card-play) {
+    100% {
+        // width of sprite:
+        background-position: -840px 0;
+    }
+}
+
 
 #craftingPanel {
     position: absolute;
