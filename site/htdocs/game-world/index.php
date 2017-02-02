@@ -11,6 +11,7 @@
   <meta name="language" content="english">
   <link rel="preconnect" href="//www.google-analytics.com">
   <meta name="robots" content="noodp,noydir">
+  <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
   <?php include($_SERVER['DOCUMENT_ROOT']."/includes/meta-content.php"); ?>
 <style>
 .card.players {
