@@ -17,13 +17,14 @@
             ["*", 2, 2, "*", "*", "*"],
             ["*", 3, "*", "*", "*", "*"]
         ],
-        "elevation": [  
+        "elevation": [
             [0, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0, 0],
             [0, 0, 33, 0, 0, 0],
             [0, 12, 12, 0, 0, 0],
             [0, 33, 33, 0, 0, 0],
-            [0, 12, 0, 0, 0, 0]],
+            [0, 12, 0, 0, 0, 0]
+        ],
         "graphics": [
             { "src": "grass.png", "centreX": 24, "centreY": 12 },
             { "src": "dirt.png", "centreX": 24, "centreY": 12 },
@@ -60,7 +61,7 @@
                 "draw": ["Well played", ""]
             },
             "cardSkill": 1,
-            "uniqueCards": [2,2],
+            "uniqueCards": [2, 2],
             "cardBackColour": "#666666",
             "baseCardPack": 0,
             "animation": {
@@ -92,23 +93,35 @@
         },
         "items": [{
 
-                "type": 35,
-                "tileX": 4,
-                "tileY": 4,
-                "quantity": 2,
+            "type": 35,
+            "tileX": 4,
+            "tileY": 4,
+            "quantity": 2,
+            "quality": 100,
+            "durability": 100,
+            "currentWear": 0,
+            "effectiveness": 100,
+            "wrapped": 0,
+            "colour": 0,
+            "enchanted": 0,
+            "hallmark": 0,
+            "inscription": "",
+            "contains": [{
+
+                "type": 1,
+                "quantity": 1,
                 "quality": 100,
                 "durability": 100,
                 "currentWear": 0,
                 "effectiveness": 100,
-                "wrapped": 0,
                 "colour": 0,
                 "enchanted": 0,
                 "hallmark": 0,
-                "inscription": "",
-                "contains": [{
+                "inscription": ""
+            },{
 
                 "type": 1,
-                "quantity": 3,
+                "quantity": 2,
                 "quality": 100,
                 "durability": 100,
                 "currentWear": 0,
@@ -119,7 +132,7 @@
                 "inscription": ""
             }]
 
-            }],
+        }],
         "hotspots": []
     }
 }

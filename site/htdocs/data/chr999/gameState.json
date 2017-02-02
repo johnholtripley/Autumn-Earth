@@ -225,6 +225,7 @@
         [12, 0],
         [13, 0]
     ],
+    "totalGameTimePlayed": 0,
     "fae": { "range": 4950, "speed": 4 },
     "retinue": [0,2]
 }

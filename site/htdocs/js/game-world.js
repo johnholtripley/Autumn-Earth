@@ -130,6 +130,7 @@ var timeSinceLastFrameSwap = 0;
 var currentAnimationFrame = 0;
 var animationUpdateTime = (1000 / animationFramesPerSecond);
 
+
 var titleTagPrefix = 'Autumn Earth';
 
 // map changes:
@@ -2496,6 +2497,7 @@ function getHeroGameState() {
         hero.activeTitle = data.activeTitle;
         hero.recipesKnown = data.recipesKnown;
         hero.professionsKnown = data.professionsKnown;
+        hero.totalGameTimePlayed = data.totalGameTimePlayed;
         // copy the fae properties that will change into the main fae object:
         for (var attrname in data.fae) {
             fae[attrname] = data.fae[attrname];
@@ -2821,9 +2823,11 @@ thisMapData.items[i].z = getElevation(thisMapData.items[i].tileX,thisMapData.ite
 
         // check for node resources: (category #5)
         if(currentActiveInventoryItems[thisMapData.items[i].type].category == 5) {
-            // set it so it can be instantly harvested:
-            thisMapData.items[i].timeLastHarvested = Date.now()-currentActiveInventoryItems[thisMapData.items[i].type].respawnRate;
-            
+            // use the saved value if it has one:
+            if(!thisMapData.items[i].timeLastHarvested) {
+            // otherwise, set it so it can be instantly harvested:
+            thisMapData.items[i].timeLastHarvested = hero.totalGameTimePlayed-currentActiveInventoryItems[thisMapData.items[i].type].respawnRate;
+            }
         }
     }
 activeNPCForDialogue = '';
@@ -3059,6 +3063,7 @@ function gameLoop() {
 
 function update() {
     var now = window.performance.now();
+    hero.totalGameTimePlayed ++;
     var elapsed = (now - lastTime);
     lastTime = now;
     hero.isMoving = false;
@@ -3227,7 +3232,8 @@ function checkForActions() {
                         break;
                     case "node":
                         // check it's not still re-spawning:
-                        if (Date.now() - thisMapData.items[i].timeLastHarvested >= currentActiveInventoryItems[thisMapData.items[i].type].respawnRate) {
+                        console.log(hero.totalGameTimePlayed+" "+thisMapData.items[i].timeLastHarvested+" > "+currentActiveInventoryItems[thisMapData.items[i].type].respawnRate);
+                        if (hero.totalGameTimePlayed - thisMapData.items[i].timeLastHarvested >= currentActiveInventoryItems[thisMapData.items[i].type].respawnRate) {
                             // pick a random item from the possible items:
                             var whichItem = getRandomIntegerInclusive(1, thisMapData.items[i].contains.length);
 
@@ -3235,7 +3241,7 @@ function checkForActions() {
                             inventoryCheck = canAddItemToInventory([thisMapData.items[i].contains[whichItem - 1]]);
                             if (inventoryCheck[0]) {
                                 // reset timer:
-                                thisMapData.items[i].timeLastHarvested = Date.now();
+                                thisMapData.items[i].timeLastHarvested = hero.totalGameTimePlayed;
                                 UI.showChangeInInventory(inventoryCheck[1]);
                             } else {
                                 UI.showNotification("<p>Oops - sorry, no room in your bags</p>");
