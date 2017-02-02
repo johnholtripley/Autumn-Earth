@@ -338,7 +338,7 @@ canvas {
 }
 
 #cardAlbum {
-    width: 400px;
+    width: 352px;
     background: #666;
     position: absolute;
     left: 860px;
@@ -346,7 +346,7 @@ canvas {
     
 }
 
-$albumCardRatio: 0.6;
+$albumCardRatio: 1;
 
 #cardAlbumList {
     margin: 0;
