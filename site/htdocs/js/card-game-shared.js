@@ -166,7 +166,7 @@ if (cardGameNameSpace.compareColours(cardGameNameSpace.playerColours[1], cardGam
                         if (whichCards[thisCheckBoardRef].currentOwner == currentOpponent) {
                             isAnOpponentCard = true;
                             opponentsCardsFound.push(thisCheckBoardRef);
-                            var defenseCardType = whichCards[thisCheckBoardRef].cardType;
+                            var defenseCardType = Math.abs(whichCards[thisCheckBoardRef].cardType);
                             defenceRunningTotal += parseInt(cardGameNameSpace.allCardData[defenseCardType][1]);
                             lineTracedX += xDir;
                             lineTracedY += yDir;
@@ -175,7 +175,7 @@ if (cardGameNameSpace.compareColours(cardGameNameSpace.playerColours[1], cardGam
                 }
             }
         } while (isAnOpponentCard);
-        var attackCardType = whichCards[(whichBoard[placedTileY][placedTileX])].cardType;
+        var attackCardType = Math.abs(whichCards[(whichBoard[placedTileY][placedTileX])].cardType);
         cardGameNameSpace.placedCardsAttack = parseInt(cardGameNameSpace.allCardData[attackCardType][0]);
         // then check card after is current player's card, not the board edge:
         if (lineTracedY >= 0) {
@@ -183,7 +183,7 @@ if (cardGameNameSpace.compareColours(cardGameNameSpace.playerColours[1], cardGam
                 // is numeric?
                 if (!(isNaN(whichBoard[lineTracedY][lineTracedX]))) {
                     if (whichCards[(whichBoard[lineTracedY][lineTracedX])].currentOwner == currentPlayersTurn) {
-                        var existingCardType = whichCards[(whichBoard[lineTracedY][lineTracedX])].cardType;
+                        var existingCardType = Math.abs(whichCards[(whichBoard[lineTracedY][lineTracedX])].cardType);
                         var existingCardsAttack = parseInt(cardGameNameSpace.allCardData[existingCardType][0]);
                         if (cardGameNameSpace.placedCardsAttack + existingCardsAttack >= defenceRunningTotal) {
                             if (isAIChecking) {
@@ -283,8 +283,8 @@ if (cardGameNameSpace.compareColours(cardGameNameSpace.playerColours[1], cardGam
                                 // if not placed
                                 if (!cardGameNameSpace.cards[i].hasBeenPlaced) {
                                     // optimisation - don't try this card if a card of this type has already been tried at this position 
-                                    if (cardTypesTriedInThisPosition.indexOf(cardGameNameSpace.cards[i].cardType) == -1) {
-                                        cardTypesTriedInThisPosition.push(cardGameNameSpace.cards[i].cardType);
+                                    if (cardTypesTriedInThisPosition.indexOf(Math.abs(cardGameNameSpace.cards[i].cardType)) == -1) {
+                                        cardTypesTriedInThisPosition.push(Math.abs(cardGameNameSpace.cards[i].cardType));
                                         // copy arrays so original data isn't changed:
                                         // copy an array of objects: http://stackoverflow.com/questions/597588/how-do-you-clone-an-array-of-objects-in-javascript#answer-23481096
                                         var cardState = [];
@@ -330,8 +330,8 @@ if (cardGameNameSpace.compareColours(cardGameNameSpace.playerColours[1], cardGam
                                                                 // if not placed
                                                                 if (!cardState[o].hasBeenPlaced) {
                                                                     //  optimisation - don't try this card if a card of this type has already been tried at this position 
-                                                                    if (counterCardTypesTriedInThisPosition.indexOf(cardState[o].cardType) == -1) {
-                                                                        counterCardTypesTriedInThisPosition.push(cardState[o].cardType);
+                                                                    if (counterCardTypesTriedInThisPosition.indexOf(Math.abs(cardState[o].cardType)) == -1) {
+                                                                        counterCardTypesTriedInThisPosition.push(Math.abs(cardState[o].cardType));
                                                                         // copy board and cards:
                                                                         var counterCardState = [];
                                                                         for (var p = 0; p < cardGameNameSpace.numberOfCardsInGame; p++) {
@@ -469,14 +469,14 @@ if (cardGameNameSpace.compareColours(cardGameNameSpace.playerColours[1], cardGam
         // run through the previous group and find the lowest power card that can be used for this score:
         var lowestGroupScore = 99999;
         for (var cg = 0; cg < cardGameNameSpace.thisGroupsScore.length; cg++) {
-            var thisCardType = cardGameNameSpace.cards[(listOfPossibleBestMoves[(cardGameNameSpace.thisGroupsScore[cg])][1])].cardType;
+            var thisCardType = Math.abs(cardGameNameSpace.cards[(listOfPossibleBestMoves[(cardGameNameSpace.thisGroupsScore[cg])][1])].cardType);
             var thisCardsStrength = parseInt(cardGameNameSpace.allCardData[thisCardType][0]) + parseInt(cardGameNameSpace.allCardData[thisCardType][1]);
             if (thisCardsStrength < lowestGroupScore) {
                 lowestGroupScore = thisCardsStrength;
             }
         }
         for (var cg = 0; cg < cardGameNameSpace.thisGroupsScore.length; cg++) {
-            var thisCardType = cardGameNameSpace.cards[(listOfPossibleBestMoves[(cardGameNameSpace.thisGroupsScore[cg])][1])].cardType;
+            var thisCardType = Math.abs(cardGameNameSpace.cards[(listOfPossibleBestMoves[(cardGameNameSpace.thisGroupsScore[cg])][1])].cardType);
             var thisCardsStrength = parseInt(cardGameNameSpace.allCardData[thisCardType][0]) + parseInt(cardGameNameSpace.allCardData[thisCardType][1]);
             if (thisCardsStrength != lowestGroupScore) {
                 indexesToRemove.push(cardGameNameSpace.thisGroupsScore[cg]);
