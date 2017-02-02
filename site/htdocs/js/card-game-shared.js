@@ -530,8 +530,8 @@ if (cardGameNameSpace.compareColours(cardGameNameSpace.playerColours[1], cardGam
                     cardGameNameSpace.gameContext.drawImage(cardGameNameSpace.cardImages[this.cardType], this.x + offsetX, this.y + offsetY);
                 } else {
                     // sprite sheet:
-                    cardGameNameSpace.gameContext.drawImage(cardGameNameSpace.cardImages[this.cardType], cardGameNameSpace.cardWidth * this.animationSequence, 0, cardGameNameSpace.cardWidth, cardGameNameSpace.cardHeight, this.x + offsetX, this.y + offsetY, cardGameNameSpace.cardWidth, cardGameNameSpace.cardHeight);
-                    this.animationSequence ++;
+                    cardGameNameSpace.gameContext.drawImage(cardGameNameSpace.cardImages[this.cardType], cardGameNameSpace.cardWidth * Math.floor(this.animationSequence), 0, cardGameNameSpace.cardWidth, cardGameNameSpace.cardHeight, this.x + offsetX, this.y + offsetY, cardGameNameSpace.cardWidth, cardGameNameSpace.cardHeight);
+                    this.animationSequence += 0.1;
                     if(this.animationSequence>cardGameNameSpace.maxCardAnimationFrames) {
 this.animationSequence = 0;
                     }
