@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 01, 2017 at 04:12 PM
+-- Generation Time: Feb 02, 2017 at 04:36 PM
 -- Server version: 5.6.24
 -- PHP Version: 5.6.8
 
@@ -543,7 +543,7 @@ CREATE TABLE IF NOT EXISTS `tblinventoryitems` (
   `hasInherentColour` tinyint(1) NOT NULL DEFAULT '0',
   `showInTheCodex` tinyint(1) NOT NULL DEFAULT '1',
   `lockedToThisPlayer` tinyint(1) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB AUTO_INCREMENT=35 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=36 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblinventoryitems`
@@ -582,7 +582,8 @@ INSERT INTO `tblinventoryitems` (`itemID`, `shortname`, `description`, `priceCod
 (31, 'Wrapped gift', 'Double click to see what''s inside. Contains: ##contains##', '4', '49.0', '81.0', 63, 63, 'wrapped-gift', 'container', 0, 0, 0, '0', '0', NULL, 0, 0, 0, 1, 0),
 (32, 'Book', '', '4', '12.0', '6.0', 20, 13, 'book', 'book', 0, 0, 0, '0', '0', NULL, 1, 0, 0, 1, 0),
 (33, 'Parchment', '', '4', '49.0', '81.0', 63, 63, 'parchment', 'book', 0, 0, 0, '0', '0', NULL, 1, 0, 0, 1, 0),
-(34, 'Chocobo Card', 'A chocobo card. Pweeeek!', '4', '49.0', '81.0', 63, 63, 'card-chocobo', 'card', 2, 0, 0, '0', '0', '4', 1, 0, 0, 1, 0);
+(34, 'Chocobo Card', 'A chocobo card. Pweeeek!', '4', '49.0', '81.0', 63, 63, 'card-chocobo', 'card', 2, 0, 0, '0', '0', '4', 1, 0, 0, 1, 0),
+(35, 'Wild Flax Node', '', '4', '19.0', '39.0', 20, 20, 'wild-flax-node', 'node', 2, 0, 0, '0', '0', '', 0, 0, 0, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -1727,7 +1728,7 @@ ALTER TABLE `tblguilds`
 -- AUTO_INCREMENT for table `tblinventoryitems`
 --
 ALTER TABLE `tblinventoryitems`
-  MODIFY `itemID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=35;
+  MODIFY `itemID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=36;
 --
 -- AUTO_INCREMENT for table `tblitemcategories`
 --

@@ -45,7 +45,12 @@ $outputJson .= '"category":"'.$itemCategories.'",';
 $outputJson .= '"inscribable":"'.$inscribable.'",';
 $outputJson .= '"colour":"'.$colour.'",';
 $outputJson .= '"hasInherentColour":"'.$hasInherentColour.'",';
+if($respawnRate) {
+	$outputJson .= '"respawnRate":"'.$respawnRate.'",';
+}
 $outputJson .= '"lockedToThisPlayer":"'.$lockedToThisPlayer.'"';
+
+
 
 
 $outputJson .= '},';

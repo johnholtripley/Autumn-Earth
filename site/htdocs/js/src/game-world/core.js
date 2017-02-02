@@ -372,6 +372,13 @@ thisMapData.items[i].z = getElevation(thisMapData.items[i].tileX,thisMapData.ite
 
         thisMapData.items[i].centreX = currentActiveInventoryItems[thisMapData.items[i].type].centreX;
         thisMapData.items[i].centreY = currentActiveInventoryItems[thisMapData.items[i].type].centreY;
+
+        // check for node resources: (category #5)
+        if(currentActiveInventoryItems[thisMapData.items[i].type].category == 5) {
+            // set it so it can be instantly harvested:
+            thisMapData.items[i].timeLastHarvested = Date.now()-currentActiveInventoryItems[thisMapData.items[i].type].respawnRate;
+            
+        }
     }
 activeNPCForDialogue = '';
     // determine tile offset to centre the hero in the centre
@@ -750,7 +757,7 @@ hero.z = getElevation(getCurrentTileX(hero.x),getCurrentTileY(hero.y));
 
 function checkForActions() {
     var inventoryCheck = [];
- 
+
     var slotMarkup, thisSlotsId, thisSlotElem, thisNPC;
     // loop through items:
     for (var i = 0; i < thisMapData.items.length; i++) {
@@ -772,20 +779,22 @@ function checkForActions() {
                     case "questUnset":
                         questData[actionValue].hasBeenActivated = 0;
                         break;
-                        case "node":
-              
-// pick a random item from the possible items:
-var whichItem = getRandomIntegerInclusive(1,thisMapData.items[i].contains.length);
+                    case "node":
+                        // check it's not still re-spawning:
+                        if (Date.now() - thisMapData.items[i].timeLastHarvested >= currentActiveInventoryItems[thisMapData.items[i].type].respawnRate) {
+                            // pick a random item from the possible items:
+                            var whichItem = getRandomIntegerInclusive(1, thisMapData.items[i].contains.length);
 
-   // try and add it:
-                        inventoryCheck = canAddItemToInventory([thisMapData.items[i].contains[whichItem-1]]);
-                        if (inventoryCheck[0]) {
-                          // reset timer ##########
-                            UI.showChangeInInventory(inventoryCheck[1]);
-                        } else {
-                            UI.showNotification("<p>Oops - sorry, no room in your bags</p>");
+                            // try and add it:
+                            inventoryCheck = canAddItemToInventory([thisMapData.items[i].contains[whichItem - 1]]);
+                            if (inventoryCheck[0]) {
+                                // reset timer:
+                                thisMapData.items[i].timeLastHarvested = Date.now();
+                                UI.showChangeInInventory(inventoryCheck[1]);
+                            } else {
+                                UI.showNotification("<p>Oops - sorry, no room in your bags</p>");
+                            }
                         }
-
                         break;
                     default:
                         // try and pick it up:
@@ -829,6 +838,7 @@ var whichItem = getRandomIntegerInclusive(1,thisMapData.items[i].contains.length
     // action processed, so cancel the key event:
     key[4] = 0;
 }
+
 
 function processSpeech(thisNPC, thisSpeechPassedIn, thisSpeechCode, isPartOfNPCsNormalSpeech) {
     // thisSpeech is global so it can be edited in the close quest functions:
