@@ -112,7 +112,7 @@ function openBoosterPack() {
     /*
     // randomly assign one of these to be a rare:
     // (need graphics)
-    if(getRandomInteger(1,10) == 1) {
+    if(getRandomIntegerInclusive(1,10) == 1) {
         boosterCardsToAdd[0] = (0-boosterCardsToAdd[0]);
     }
     */

@@ -1338,7 +1338,7 @@ function openBoosterPack() {
     /*
     // randomly assign one of these to be a rare:
     // (need graphics)
-    if(getRandomInteger(1,10) == 1) {
+    if(getRandomIntegerInclusive(1,10) == 1) {
         boosterCardsToAdd[0] = (0-boosterCardsToAdd[0]);
     }
     */
@@ -3196,12 +3196,14 @@ hero.z = getElevation(getCurrentTileX(hero.x),getCurrentTileY(hero.y));
 
 function checkForActions() {
     var inventoryCheck = [];
+ 
     var slotMarkup, thisSlotsId, thisSlotElem, thisNPC;
     // loop through items:
     for (var i = 0; i < thisMapData.items.length; i++) {
         if (isInRange(hero.x, hero.y, thisMapData.items[i].x, thisMapData.items[i].y, (thisMapData.items[i].width / 2 + hero.width / 2 + 6))) {
             if (isFacing(hero, thisMapData.items[i])) {
                 var actionValue = currentActiveInventoryItems[thisMapData.items[i].type].actionValue;
+
                 switch (currentActiveInventoryItems[thisMapData.items[i].type].action) {
                     case "static":
                         // can't interact with it - do nothing
@@ -3215,6 +3217,21 @@ function checkForActions() {
                         break;
                     case "questUnset":
                         questData[actionValue].hasBeenActivated = 0;
+                        break;
+                        case "node":
+              
+// pick a random item from the possible items:
+var whichItem = getRandomIntegerInclusive(1,thisMapData.items[i].contains.length);
+
+   // try and add it:
+                        inventoryCheck = canAddItemToInventory([thisMapData.items[i].contains[whichItem-1]]);
+                        if (inventoryCheck[0]) {
+                          // reset timer ##########
+                            UI.showChangeInInventory(inventoryCheck[1]);
+                        } else {
+                            UI.showNotification("<p>Oops - sorry, no room in your bags</p>");
+                        }
+
                         break;
                     default:
                         // try and pick it up:

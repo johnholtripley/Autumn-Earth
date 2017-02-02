@@ -92,8 +92,8 @@
         },
         "items": [{
 
-                "type": 19,
-                "tileX": 2,
+                "type": 35,
+                "tileX": 4,
                 "tileY": 4,
                 "quantity": 2,
                 "quality": 100,
@@ -104,7 +104,20 @@
                 "colour": 0,
                 "enchanted": 0,
                 "hallmark": 0,
+                "inscription": "",
+                "contains": [{
+
+                "type": 1,
+                "quantity": 3,
+                "quality": 100,
+                "durability": 100,
+                "currentWear": 0,
+                "effectiveness": 100,
+                "colour": 0,
+                "enchanted": 0,
+                "hallmark": 0,
                 "inscription": ""
+            }]
 
             }],
         "hotspots": []
