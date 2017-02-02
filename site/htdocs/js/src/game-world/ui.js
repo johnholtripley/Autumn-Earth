@@ -205,8 +205,8 @@ for(var i = 0; i< hero.cards.length; i++) {
     counts[num] = counts[num] ? counts[num]+1 : 1;
 }
 
-
-        for (var i = 1; i <= totalTypesOfCards; i++) {
+// first element in allCardData is null
+        for (var i = 1; i < cardGameNameSpace.allCardData.length; i++) {
 
 thisCardsClass = 'card players';
 thisCardsQuantityOutput = '';
@@ -217,6 +217,10 @@ thisCardsClass += ' inactive';
 }
 cardAlbumMarkup += '<li><img src="/images/card-game/cards/' + i + '.png" class="'+thisCardsClass+'" alt="' + cardGameNameSpace.allCardData[i][2] + ' card">'+thisCardsQuantityOutput+'</li>';
 
+// check for rares - these are the negative of the standard card type:
+if((counts[(0-i)])) {
+    cardAlbumMarkup += '<li class="rare"><div class="card players" style="background-image:url(/images/card-game/cards/' + (0-i) + '.png)"></div><span class="quantity">'+counts[(0-i)]+'</span></li>';
+    }
           
         }
         cardAlbumList.innerHTML = cardAlbumMarkup;

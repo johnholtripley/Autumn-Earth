@@ -346,13 +346,15 @@ canvas {
     
 }
 
+$albumCardRatio: 0.6;
+
 #cardAlbumList {
     margin: 0;
     padding: 0;
     list-style: none;
     li {
-        width: $cardWidth*0.6;
-        height: $cardHeight*0.6;
+        width: $cardWidth*$albumCardRatio;
+        height: $cardHeight*$albumCardRatio;
         background: #cecece;
         display: block;
         float: left;
@@ -363,17 +365,36 @@ canvas {
             height: auto;
         }
         .quantity {
-        position: absolute;
-        text-align: right;
-        color: #fff;
-        bottom: 4px;
-        right: 6px;
-        font-size: 11px;
-        @include text-shadow(0px 0px 2px rgba(0, 0, 0, 1));
-        
+            position: absolute;
+            text-align: right;
+            color: #fff;
+            bottom: 4px;
+            right: 6px;
+            font-size: 11px;
+            @include text-shadow(0px 0px 2px rgba(0, 0, 0, 1));
+        }
+        &.rare {
+            div {
+                width: $cardWidth*$albumCardRatio;
+                height: $cardHeight*$albumCardRatio;
+                background-repeat: no-repeat;
+                background-position: 0 0;
+                @include background-size(cover);
+                @include animation(rare-card-play 0.8s steps(29) infinite);
+            }
         }
     }
 }
+
+@include keyframes(rare-card-play) {
+ 
+    100% {
+        // width of sprite:
+        background-position: -2436px*$albumCardRatio 0;
+    }
+}
+
+
 
 #boosterPack {
     pointer-events: none;

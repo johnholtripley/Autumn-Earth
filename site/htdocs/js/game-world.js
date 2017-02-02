@@ -176,7 +176,6 @@ var thisSpeech = '';
 
 var boosterCardsRevealed = 0;
 var boosterCardsToAdd = [];
-var totalTypesOfCards = 7;
 
 var questData = [];
 
@@ -1335,12 +1334,21 @@ function openBoosterPack() {
             boosterCardsToAdd.push(thisCardToAdd);
         }
     } while (boosterCardsToAdd.length < 5);
+
+/*
+// randomly assign one of these to be a rare:
+// (need graphics)
+if(getRandomInteger(1,10) == 1) {
+    boosterCardsToAdd[0] = (0-boosterCardsToAdd[0]);
+}
+*/
+
     var boosterPackCards = document.getElementsByClassName('cardFlip');
     for (var i = 0; i < boosterPackCards.length; i++) {
         boosterPackCards[i].classList.remove('active');
     }
 
-    // wait for these to load? #######
+   // they should all be in cache from the Card Album, so no need to wait for them to load
 
 var imageClass;
     for (var i = 0; i < 5; i++) {
@@ -2059,8 +2067,8 @@ for(var i = 0; i< hero.cards.length; i++) {
     counts[num] = counts[num] ? counts[num]+1 : 1;
 }
 
-
-        for (var i = 1; i <= totalTypesOfCards; i++) {
+// first element in allCardData is null
+        for (var i = 1; i < cardGameNameSpace.allCardData.length; i++) {
 
 thisCardsClass = 'card players';
 thisCardsQuantityOutput = '';
@@ -2071,6 +2079,10 @@ thisCardsClass += ' inactive';
 }
 cardAlbumMarkup += '<li><img src="/images/card-game/cards/' + i + '.png" class="'+thisCardsClass+'" alt="' + cardGameNameSpace.allCardData[i][2] + ' card">'+thisCardsQuantityOutput+'</li>';
 
+// check for rares - these are the negative of the standard card type:
+if((counts[(0-i)])) {
+    cardAlbumMarkup += '<li class="rare"><div class="card players" style="background-image:url(/images/card-game/cards/' + (0-i) + '.png)"></div><span class="quantity">'+counts[(0-i)]+'</span></li>';
+    }
           
         }
         cardAlbumList.innerHTML = cardAlbumMarkup;

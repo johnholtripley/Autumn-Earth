@@ -108,12 +108,21 @@ function openBoosterPack() {
             boosterCardsToAdd.push(thisCardToAdd);
         }
     } while (boosterCardsToAdd.length < 5);
+
+/*
+// randomly assign one of these to be a rare:
+// (need graphics)
+if(getRandomInteger(1,10) == 1) {
+    boosterCardsToAdd[0] = (0-boosterCardsToAdd[0]);
+}
+*/
+
     var boosterPackCards = document.getElementsByClassName('cardFlip');
     for (var i = 0; i < boosterPackCards.length; i++) {
         boosterPackCards[i].classList.remove('active');
     }
 
-    // wait for these to load? #######
+   // they should all be in cache from the Card Album, so no need to wait for them to load
 
 var imageClass;
     for (var i = 0; i < 5; i++) {

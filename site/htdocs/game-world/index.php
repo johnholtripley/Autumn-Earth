@@ -10,6 +10,7 @@
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="language" content="english">
   <link rel="preconnect" href="//www.google-analytics.com">
+  <link rel="preconnect" href="//fonts.googleapis.com">
   <meta name="robots" content="noodp,noydir">
   <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
   <?php include($_SERVER['DOCUMENT_ROOT']."/includes/meta-content.php"); ?>

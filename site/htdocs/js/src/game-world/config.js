@@ -52,7 +52,6 @@ var thisSpeech = '';
 
 var boosterCardsRevealed = 0;
 var boosterCardsToAdd = [];
-var totalTypesOfCards = 7;
 
 var questData = [];
 
