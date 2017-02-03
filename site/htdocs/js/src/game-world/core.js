@@ -1561,11 +1561,18 @@ if(activeNPCForDialogue != '') {
         // draw the map transition if it's needed:
         if (mapTransition == "out") {
             var gradientSize = (1 - (mapTransitionCurrentFrames / mapTransitionMaxFrames));
+          
+            if(gradientSize<0.02) {
+                // draw a rectangle, otherwise a pixel hole is still visible:
+                gameContext.fillStyle="#000000";
+                gameContext.fillRect(0, 0, canvasWidth, canvasHeight);
+            } else {
             var gradient = gameContext.createRadialGradient(canvasWidth / 2, canvasHeight / 2, gradientSize * canvasWidth / 2, canvasWidth / 2, canvasHeight / 2, 0);
             gradient.addColorStop(0, "rgba(0,0,0,1)");
             gradient.addColorStop(1, "rgba(0,0,0,0)");
             gameContext.fillStyle = gradient;
             gameContext.fillRect(0, 0, canvasWidth, canvasHeight);
+        }
         } else if (mapTransition == "in") {
             var gradientSize = ((mapTransitionCurrentFrames / mapTransitionMaxFrames));
             var gradient = gameContext.createRadialGradient(canvasWidth / 2, canvasHeight / 2, gradientSize * canvasWidth / 2, canvasWidth / 2, canvasHeight / 2, 0);
