@@ -17,10 +17,10 @@
 <style>
 .card.players {
 /* this hero's card back: */
-background: #dda305;
+background: #ec35ea;
 }
 </style>
-<script>var playersCardBack = '#dda305';</script>
+<script>var playersCardBack = '#ec35ea';</script>
 </head>
 <body>
 

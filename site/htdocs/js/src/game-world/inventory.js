@@ -330,7 +330,7 @@ function generateSlotMarkup(thisSlotsId) {
 
 // check if it's a card:
 
-if(currentActiveInventoryItems[hero.inventory[thisSlotsId].type].category == 4) {
+if(currentActiveInventoryItems[hero.inventory[thisSlotsId].type].action == "card") {
 imageClassName = ' class="players card"';
 
 }

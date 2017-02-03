@@ -374,8 +374,8 @@ thisMapData.items[i].z = getElevation(thisMapData.items[i].tileX,thisMapData.ite
         thisMapData.items[i].centreX = currentActiveInventoryItems[thisMapData.items[i].type].centreX;
         thisMapData.items[i].centreY = currentActiveInventoryItems[thisMapData.items[i].type].centreY;
 
-        // check for node resources: (category #5)
-        if(currentActiveInventoryItems[thisMapData.items[i].type].category == 5) {
+        // check for node resources:
+        if(currentActiveInventoryItems[thisMapData.items[i].type].action == "node") {
             // use the saved value if it has one:
             if(!thisMapData.items[i].timeLastHarvested) {
             // otherwise, set it so it can be instantly harvested:
