@@ -1,0 +1,36 @@
+create groups button - with password if required
+
+
+flash have internal copy of users in group (user preference whether ordered by alphabetical or by time joined)
+
+have php authentication page that checks referer to make sure swf was on autumnearth.com and that user has a session
+
+flash determine if user is typing a response and send a broadcasted message for this
+
+Allow private messages to be sent to another user
+
+delete group when it's empty (make check when removing a user)
+
+interface design
+
+
+track ip to prevent too many connections from one address:
+http://java.sun.com/j2se/1.4.2/docs/api/java/net/Socket.html#getInetAddress()
+
+ 
+Prevent flooding on chat client
+ 
+
+ Show number of users in each ‘room’ when in the lobby
+
+ 
+
+Buddy lists
+
+bugs ################
+occassional exception when closing flash client
+
+if one client is in a group and another enters then leaves, the first client gets two 'xxx has left' messages
+
+
+have AFK button that sends afk notice to all in room (and then also marked against username)
