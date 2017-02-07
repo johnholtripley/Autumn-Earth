@@ -12,7 +12,7 @@
   <link rel="preconnect" href="//www.google-analytics.com">
   <link rel="preconnect" href="//fonts.googleapis.com">
   <meta name="robots" content="noodp,noydir">
-  <link href="https://fonts.googleapis.com/css?family=Lato|Bree+Serif" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Lato|Bree+Serif|IM+Fell+English" rel="stylesheet">
   <?php include($_SERVER['DOCUMENT_ROOT']."/includes/meta-content.php"); ?>
 <style>
 .card.players {
