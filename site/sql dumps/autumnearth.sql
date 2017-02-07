@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 02, 2017 at 04:36 PM
+-- Generation Time: Feb 07, 2017 at 04:07 PM
 -- Server version: 5.6.24
 -- PHP Version: 5.6.8
 
@@ -542,48 +542,49 @@ CREATE TABLE IF NOT EXISTS `tblinventoryitems` (
   `colour` int(128) NOT NULL,
   `hasInherentColour` tinyint(1) NOT NULL DEFAULT '0',
   `showInTheCodex` tinyint(1) NOT NULL DEFAULT '1',
-  `lockedToThisPlayer` tinyint(1) NOT NULL DEFAULT '0'
+  `lockedToThisPlayer` tinyint(1) NOT NULL DEFAULT '0',
+  `respawnRate` int(11) DEFAULT NULL
 ) ENGINE=InnoDB AUTO_INCREMENT=36 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblinventoryitems`
 --
 
-INSERT INTO `tblinventoryitems` (`itemID`, `shortname`, `description`, `priceCode`, `centreX`, `centreY`, `width`, `height`, `cleanURL`, `action`, `actionValue`, `dyeable`, `level`, `prerequisites`, `itemGroup`, `itemCategories`, `inscribable`, `colour`, `hasInherentColour`, `showInTheCodex`, `lockedToThisPlayer`) VALUES
-(1, 'Wild Flax', '-', '1', '20.0', '24.0', 0, 0, 'wild-flax', '', 0, 0, 0, '0', '0', '1', 0, 0, 0, 1, 0),
-(2, 'Wild Madder', 'A flower used for its red pigment.', '1', '20.0', '24.0', 0, 0, 'wild-madder', '', 0, 0, 0, '0', '0', '1', 0, 1, 1, 1, 0),
-(3, 'Safflower', 'A flower used for its yellow pigment.', '1', '20.0', '24.0', 0, 0, 'safflower', '', 0, 0, 0, '0', '0', '1', 0, 2, 1, 1, 0),
-(5, 'Whortleberry', 'The berries are used for their blue colour.', '1', '20.0', '24.0', 0, 0, 'whortleberry', '', 0, 0, 0, '0', '0', '1', 0, 4, 1, 1, 0),
-(6, 'Meadowsweet', 'Used to make black pigments.', '1', '20.0', '24.0', 0, 0, 'meadowsweet', '', 0, 0, 0, '0', '0', '1', 0, 16, 1, 1, 0),
-(7, 'Archil', 'A purple dye.', '1', '20.0', '24.0', 0, 0, 'archil', '', 0, 1, 0, '0', 'dye', '2', 0, 5, 1, 1, 0),
-(8, 'Copper Mordant', 'A standard mordant.', '1', '20.0', '24.0', 0, 0, 'copper-mordant', '', 0, 0, 0, '0', 'mrdt', '2', 0, 0, 0, 1, 0),
-(9, 'Iron Mordant', 'A mordant for making darker dyes.', '1', '20.0', '24.0', 0, 0, 'iron-mordant', '', 0, 0, 0, '0', 'mrdt', '2', 0, 16, 1, 1, 0),
-(10, 'Alum Mordant', 'A mordant used for brighter dyes.', '1', '20.0', '24.0', 0, 0, 'alum-mordant', '', 0, 0, 0, '0', 'mrdt', '2', 0, 8, 1, 1, 0),
-(11, 'Small Glass Bottle', '', '1', '20.0', '24.0', 0, 0, 'small-glass-bottle', '', 0, 0, 0, '0', '0', NULL, 0, 0, 0, 1, 0),
-(12, 'Dye', 'A standard pigment dye.', '1', '20.0', '24.0', 0, 0, 'dye', '', 0, 1, 0, '0', 'dye', '2', 0, 0, 0, 1, 0),
-(13, 'Dyer''s Cauldron', '', '1', '20.0', '24.0', 0, 0, 'dyers-cauldron', 'craft', 0, 0, 0, '0', '0', '2', 0, 0, 0, 1, 0),
-(14, 'Linen', 'A useful fabric.', '1', '20.0', '24.0', 0, 0, 'linen', '', 0, 1, 0, '0', '0', '3', 0, 0, 0, 1, 0),
-(15, 'Wool', 'Basic wool, unspun.', '1', '20.0', '24.0', 0, 0, 'wool', '', 0, 1, 0, '0', '0', '3', 0, 0, 0, 1, 0),
-(16, 'Yarn', 'Spun wool.', '1', '20.0', '24.0', 0, 0, 'yarn', '', 0, 1, 0, '0', '0', '3', 0, 0, 0, 1, 0),
-(17, 'Small Backpack', 'A 11 slot bag', '2', '20.0', '24.0', 0, 0, 'small-backpack', 'bag', 11, 1, 0, '0', '0', NULL, 0, 0, 0, 1, 0),
-(18, 'Barrel', 'A large wooden barrel.', '2', '25.0', '31.0', 38, 38, 'barrel', 'static', 0, 0, 0, '0', '0', NULL, 0, 0, 0, 1, 0),
-(19, 'Pumpkin', 'A tasty pumpkin.', '1', '16.0', '18.0', 25, 23, 'pumpkin', '', 0, 0, 0, '0', '0', NULL, 0, 0, 0, 1, 0),
-(20, 'Large Backpack', 'A 20 slot bag', '2', '20.0', '24.0', 0, 0, 'large-backpack', 'bag', 20, 1, 0, '0', '0', NULL, 0, 0, 0, 1, 0),
-(21, 'Card Pack', '5 cards', '4', '20.0', '24.0', 0, 0, 'card-pack', 'booster', 0, 0, 0, '0', '0', NULL, 0, 0, 0, 1, 0),
-(22, 'Standing Stone', '', '4', '49.0', '81.0', 63, 63, 'standing-stone', 'questToggle', 2, 0, 0, '0', '0', NULL, 0, 0, 0, 0, 0),
-(23, 'Mugwort', 'Used to make green dyes', '4', '49.0', '81.0', 63, 63, 'mugwort', '', 0, 0, 0, '0', '0', '1', 0, 6, 1, 1, 0),
-(24, 'Rim Lichen', 'Used to make purple dyes', '4', '49.0', '81.0', 63, 63, 'rim-lichen', '', 0, 0, 0, '0', '0', '1', 0, 5, 1, 1, 0),
-(25, 'Spring water', '', '4', '49.0', '81.0', 63, 63, 'spring-water', '', 0, 0, 0, '0', '0', NULL, 0, 0, 0, 1, 0),
-(26, 'Wood Ash', '', '4', '49.0', '81.0', 63, 63, 'wood-ash', '', 0, 0, 0, '0', '0', NULL, 0, 0, 0, 1, 0),
-(27, 'Apple Wood', '', '4', '49.0', '81.0', 63, 63, 'apple-wood', '', 0, 0, 0, '0', '0', NULL, 0, 0, 0, 1, 0),
-(28, 'Lye', 'Used for bleaching', '4', '49.0', '81.0', 63, 63, 'lye', '', 0, 0, 0, '0', '0', NULL, 0, 8, 1, 1, 0),
-(29, 'Green Dye Recipe', 'Learn how to make a green dye.', '4', '49.0', '81.0', 63, 63, '', 'recipe', 9, 0, 0, '0', 'scribe', NULL, 0, 0, 0, 1, 0),
-(30, 'Weaver''s Loom', 'Tools for weaving and tailoring', '1', '20.0', '24.0', 0, 0, 'weavers-loom', 'craft', 1, 0, 0, '0', '0', NULL, 0, 0, 0, 1, 0),
-(31, 'Wrapped gift', 'Double click to see what''s inside. Contains: ##contains##', '4', '49.0', '81.0', 63, 63, 'wrapped-gift', 'container', 0, 0, 0, '0', '0', NULL, 0, 0, 0, 1, 0),
-(32, 'Book', '', '4', '12.0', '6.0', 20, 13, 'book', 'book', 0, 0, 0, '0', '0', NULL, 1, 0, 0, 1, 0),
-(33, 'Parchment', '', '4', '49.0', '81.0', 63, 63, 'parchment', 'book', 0, 0, 0, '0', '0', NULL, 1, 0, 0, 1, 0),
-(34, 'Chocobo Card', 'A chocobo card. Pweeeek!', '4', '49.0', '81.0', 63, 63, 'card-chocobo', 'card', 2, 0, 0, '0', '0', '4', 1, 0, 0, 1, 0),
-(35, 'Wild Flax Node', '', '4', '19.0', '39.0', 20, 20, 'wild-flax-node', 'node', 2, 0, 0, '0', '0', '', 0, 0, 0, 0, 0);
+INSERT INTO `tblinventoryitems` (`itemID`, `shortname`, `description`, `priceCode`, `centreX`, `centreY`, `width`, `height`, `cleanURL`, `action`, `actionValue`, `dyeable`, `level`, `prerequisites`, `itemGroup`, `itemCategories`, `inscribable`, `colour`, `hasInherentColour`, `showInTheCodex`, `lockedToThisPlayer`, `respawnRate`) VALUES
+(1, 'Wild Flax', '-', '1', '20.0', '24.0', 0, 0, 'wild-flax', '', 0, 0, 0, '0', '0', '1', 0, 0, 0, 1, 0, NULL),
+(2, 'Wild Madder', 'A flower used for its red pigment.', '1', '20.0', '24.0', 0, 0, 'wild-madder', '', 0, 0, 0, '0', '0', '1', 0, 1, 1, 1, 0, NULL),
+(3, 'Safflower', 'A flower used for its yellow pigment.', '1', '20.0', '24.0', 0, 0, 'safflower', '', 0, 0, 0, '0', '0', '1', 0, 2, 1, 1, 0, NULL),
+(5, 'Whortleberry', 'The berries are used for their blue colour.', '1', '20.0', '24.0', 0, 0, 'whortleberry', '', 0, 0, 0, '0', '0', '1', 0, 4, 1, 1, 0, NULL),
+(6, 'Meadowsweet', 'Used to make black pigments.', '1', '20.0', '24.0', 0, 0, 'meadowsweet', '', 0, 0, 0, '0', '0', '1', 0, 16, 1, 1, 0, NULL),
+(7, 'Archil', 'A purple dye.', '1', '20.0', '24.0', 0, 0, 'archil', '', 0, 1, 0, '0', 'dye', '2', 0, 5, 1, 1, 0, NULL),
+(8, 'Copper Mordant', 'A standard mordant.', '1', '20.0', '24.0', 0, 0, 'copper-mordant', '', 0, 0, 0, '0', 'mrdt', '2', 0, 0, 0, 1, 0, NULL),
+(9, 'Iron Mordant', 'A mordant for making darker dyes.', '1', '20.0', '24.0', 0, 0, 'iron-mordant', '', 0, 0, 0, '0', 'mrdt', '2', 0, 16, 1, 1, 0, NULL),
+(10, 'Alum Mordant', 'A mordant used for brighter dyes.', '1', '20.0', '24.0', 0, 0, 'alum-mordant', '', 0, 0, 0, '0', 'mrdt', '2', 0, 8, 1, 1, 0, NULL),
+(11, 'Small Glass Bottle', '', '1', '20.0', '24.0', 0, 0, 'small-glass-bottle', '', 0, 0, 0, '0', '0', NULL, 0, 0, 0, 1, 0, NULL),
+(12, 'Dye', 'A standard pigment dye.', '1', '20.0', '24.0', 0, 0, 'dye', '', 0, 1, 0, '0', 'dye', '2', 0, 0, 0, 1, 0, NULL),
+(13, 'Dyer''s Cauldron', '', '1', '20.0', '24.0', 0, 0, 'dyers-cauldron', 'craft', 0, 0, 0, '0', '0', '2', 0, 0, 0, 1, 0, NULL),
+(14, 'Linen', 'A useful fabric.', '1', '20.0', '24.0', 0, 0, 'linen', '', 0, 1, 0, '0', '0', '3', 0, 0, 0, 1, 0, NULL),
+(15, 'Wool', 'Basic wool, unspun.', '1', '20.0', '24.0', 0, 0, 'wool', '', 0, 1, 0, '0', '0', '3', 0, 0, 0, 1, 0, NULL),
+(16, 'Yarn', 'Spun wool.', '1', '20.0', '24.0', 0, 0, 'yarn', '', 0, 1, 0, '0', '0', '3', 0, 0, 0, 1, 0, NULL),
+(17, 'Small Backpack', 'A 11 slot bag', '2', '20.0', '24.0', 0, 0, 'small-backpack', 'bag', 11, 1, 0, '0', '0', NULL, 0, 0, 0, 1, 0, NULL),
+(18, 'Barrel', 'A large wooden barrel.', '2', '25.0', '31.0', 38, 38, 'barrel', 'static', 0, 0, 0, '0', '0', NULL, 0, 0, 0, 1, 0, NULL),
+(19, 'Pumpkin', 'A tasty pumpkin.', '1', '16.0', '18.0', 25, 23, 'pumpkin', '', 0, 0, 0, '0', '0', NULL, 0, 0, 0, 1, 0, NULL),
+(20, 'Large Backpack', 'A 20 slot bag', '2', '20.0', '24.0', 0, 0, 'large-backpack', 'bag', 20, 1, 0, '0', '0', NULL, 0, 0, 0, 1, 0, NULL),
+(21, 'Card Pack', '5 cards', '4', '20.0', '24.0', 0, 0, 'card-pack', 'booster', 0, 0, 0, '0', '0', NULL, 0, 0, 0, 1, 0, NULL),
+(22, 'Standing Stone', '', '4', '49.0', '81.0', 63, 63, 'standing-stone', 'questToggle', 2, 0, 0, '0', '0', NULL, 0, 0, 0, 0, 0, NULL),
+(23, 'Mugwort', 'Used to make green dyes', '4', '49.0', '81.0', 63, 63, 'mugwort', '', 0, 0, 0, '0', '0', '1', 0, 6, 1, 1, 0, NULL),
+(24, 'Rim Lichen', 'Used to make purple dyes', '4', '49.0', '81.0', 63, 63, 'rim-lichen', '', 0, 0, 0, '0', '0', '1', 0, 5, 1, 1, 0, NULL),
+(25, 'Spring water', '', '4', '49.0', '81.0', 63, 63, 'spring-water', '', 0, 0, 0, '0', '0', NULL, 0, 0, 0, 1, 0, NULL),
+(26, 'Wood Ash', '', '4', '49.0', '81.0', 63, 63, 'wood-ash', '', 0, 0, 0, '0', '0', NULL, 0, 0, 0, 1, 0, NULL),
+(27, 'Apple Wood', '', '4', '49.0', '81.0', 63, 63, 'apple-wood', '', 0, 0, 0, '0', '0', NULL, 0, 0, 0, 1, 0, NULL),
+(28, 'Lye', 'Used for bleaching', '4', '49.0', '81.0', 63, 63, 'lye', '', 0, 0, 0, '0', '0', NULL, 0, 8, 1, 1, 0, NULL),
+(29, 'Green Dye Recipe', 'Learn how to make a green dye.', '4', '49.0', '81.0', 63, 63, '', 'recipe', 9, 0, 0, '0', 'scribe', NULL, 0, 0, 0, 1, 0, NULL),
+(30, 'Weaver''s Loom', 'Tools for weaving and tailoring', '1', '20.0', '24.0', 0, 0, 'weavers-loom', 'craft', 1, 0, 0, '0', '0', NULL, 0, 0, 0, 1, 0, NULL),
+(31, 'Wrapped gift', 'Double click to see what''s inside. Contains: ##contains##', '4', '49.0', '81.0', 63, 63, 'wrapped-gift', 'container', 0, 0, 0, '0', '0', NULL, 0, 0, 0, 1, 0, NULL),
+(32, 'Book', '', '4', '12.0', '6.0', 20, 13, 'book', 'book', 0, 0, 0, '0', '0', NULL, 1, 0, 0, 1, 0, NULL),
+(33, 'Parchment', '', '4', '49.0', '81.0', 63, 63, 'parchment', 'book', 0, 0, 0, '0', '0', NULL, 1, 0, 0, 1, 0, NULL),
+(34, 'Chocobo Card', 'A chocobo card. Pweeeek!', '4', '49.0', '81.0', 63, 63, 'card-chocobo', 'card', 2, 0, 0, '0', '0', '4', 1, 0, 0, 1, 0, NULL),
+(35, 'Wild Flax Node', '', '4', '19.0', '39.0', 20, 20, 'wild-flax-node', 'node', 2, 0, 0, '0', '0', '5', 0, 0, 0, 0, 0, 300);
 
 -- --------------------------------------------------------
 
@@ -594,7 +595,7 @@ INSERT INTO `tblinventoryitems` (`itemID`, `shortname`, `description`, `priceCod
 CREATE TABLE IF NOT EXISTS `tblitemcategories` (
   `categoryID` int(11) NOT NULL,
   `categoryName` varchar(255) DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblitemcategories`
@@ -603,8 +604,7 @@ CREATE TABLE IF NOT EXISTS `tblitemcategories` (
 INSERT INTO `tblitemcategories` (`categoryID`, `categoryName`) VALUES
 (1, 'Plants and Herbs'),
 (2, 'Dyer''s Provisions'),
-(3, 'Tailor''s Provisions'),
-(4, 'Single card game cards');
+(3, 'Tailor''s Provisions');
 
 -- --------------------------------------------------------
 
@@ -1733,7 +1733,7 @@ ALTER TABLE `tblinventoryitems`
 -- AUTO_INCREMENT for table `tblitemcategories`
 --
 ALTER TABLE `tblitemcategories`
-  MODIFY `categoryID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=5;
+  MODIFY `categoryID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT for table `tblitemgroups`
 --
