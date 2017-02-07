@@ -3865,11 +3865,10 @@ function canLearnRecipe(recipeIndex) {
 
 
 
-
 function draw() {
     if (gameMode == "mapLoading") {
         gameContext.fillRect(0, 0, canvasWidth, canvasHeight);
-        gameContext.fillStyle = "black";
+        gameContext.fillStyle = "#000000";
         gameContext.fill();
     } else {
         // get all assets to be drawn in a list - start with the hero:
@@ -3884,15 +3883,15 @@ function draw() {
           ];
           */
         var assetsToDraw = [
-            [findIsoDepth(hero.x,hero.y,hero.z), "img", heroImg, Math.floor(canvasWidth / 2 - hero.feetOffsetX), Math.floor(canvasHeight / 2 - hero.feetOffsetY - hero.z)]
+            [findIsoDepth(hero.x, hero.y, hero.z), "img", heroImg, Math.floor(canvasWidth / 2 - hero.feetOffsetX), Math.floor(canvasHeight / 2 - hero.feetOffsetY - hero.z)]
         ];
 
 
         // draw fae:
         thisX = findIsoCoordsX(fae.x, fae.y);
         thisY = findIsoCoordsY(fae.x, fae.y);
-fae.oscillateOffset = ((Math.sin(fae.dz) + 1) * 8) + fae.z + fae.zOffset;
-        assetsToDraw.push([findIsoDepth(fae.x,fae.y,fae.z), "faeCentre", Math.floor(thisX - hero.isox + (canvasWidth / 2)), Math.floor(thisY - hero.isoy + (canvasHeight / 2) - fae.oscillateOffset)]);
+        fae.oscillateOffset = ((Math.sin(fae.dz) + 1) * 8) + fae.z + fae.zOffset;
+        assetsToDraw.push([findIsoDepth(fae.x, fae.y, fae.z), "faeCentre", Math.floor(thisX - hero.isox + (canvasWidth / 2)), Math.floor(thisY - hero.isoy + (canvasHeight / 2) - fae.oscillateOffset)]);
 
         // draw fae particles:
         for (var i = 0; i < fae.particles.length; i++) {
@@ -3917,7 +3916,7 @@ fae.oscillateOffset = ((Math.sin(fae.dz) + 1) * 8) + fae.z + fae.zOffset;
                     thisY = getTileIsoCentreCoordY(i, j);
                     thisGraphicCentreX = thisMapData.graphics[(map[j][i])].centreX;
                     thisGraphicCentreY = thisMapData.graphics[(map[j][i])].centreY;
-                    assetsToDraw.push([findIsoDepth(getTileCentreCoordX(i),getTileCentreCoordY(j),0), "img", tileImages[(map[j][i])], Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2))]);
+                    assetsToDraw.push([findIsoDepth(getTileCentreCoordX(i), getTileCentreCoordY(j), 0), "img", tileImages[(map[j][i])], Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2))]);
                 }
             }
         }
@@ -3932,9 +3931,9 @@ fae.oscillateOffset = ((Math.sin(fae.dz) + 1) * 8) + fae.z + fae.zOffset;
             thisY = findIsoCoordsY(thisNPC.x, thisNPC.y);
 
             //assetsToDraw.push([findIsoDepth(thisX, thisY), npcImages[i], Math.floor(thisX - hero.isox - thisNPC.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisNPC.centreY + (canvasHeight / 2))]);
-   
 
-            assetsToDraw.push([findIsoDepth(thisNPC.x,thisNPC.y,thisNPC.z), "sprite", npcImages[thisMapData.npcs[i].name], thisNPCOffsetCol * thisNPC.spriteWidth, thisNPCOffsetRow * thisNPC.spriteHeight, thisNPC.spriteWidth, thisNPC.spriteHeight, Math.floor(thisX - hero.isox - thisNPC.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisNPC.centreY + (canvasHeight / 2) - thisNPC.z), thisNPC.spriteWidth, thisNPC.spriteHeight]);
+
+            assetsToDraw.push([findIsoDepth(thisNPC.x, thisNPC.y, thisNPC.z), "sprite", npcImages[thisMapData.npcs[i].name], thisNPCOffsetCol * thisNPC.spriteWidth, thisNPCOffsetRow * thisNPC.spriteHeight, thisNPC.spriteWidth, thisNPC.spriteHeight, Math.floor(thisX - hero.isox - thisNPC.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisNPC.centreY + (canvasHeight / 2) - thisNPC.z), thisNPC.spriteWidth, thisNPC.spriteHeight]);
         }
 
 
@@ -3944,82 +3943,68 @@ fae.oscillateOffset = ((Math.sin(fae.dz) + 1) * 8) + fae.z + fae.zOffset;
             thisY = findIsoCoordsY(thisItem.x, thisItem.y);
 
 
-thisFileColourSuffix = "";
-        if (thisMapData.items[i].colour) {
-            thisColourName = getColourName(thisMapData.items[i].colour, thisMapData.items[i].type);
-            if (thisColourName != "") {
-                thisFileColourSuffix = "-" + thisColourName.toLowerCase();
+            thisFileColourSuffix = "";
+            if (thisMapData.items[i].colour) {
+                thisColourName = getColourName(thisMapData.items[i].colour, thisMapData.items[i].type);
+                if (thisColourName != "") {
+                    thisFileColourSuffix = "-" + thisColourName.toLowerCase();
+                }
             }
-        }
-thisItemIdentifier = "item" + thisMapData.items[i].type + thisFileColourSuffix;
+            thisItemIdentifier = "item" + thisMapData.items[i].type + thisFileColourSuffix;
 
-            assetsToDraw.push([findIsoDepth(thisItem.x, thisItem.y,thisItem.z), "img", itemImages[thisItemIdentifier], Math.floor(thisX - hero.isox - thisItem.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisItem.centreY + (canvasHeight / 2) - thisItem.z)]);
+            assetsToDraw.push([findIsoDepth(thisItem.x, thisItem.y, thisItem.z), "img", itemImages[thisItemIdentifier], Math.floor(thisX - hero.isox - thisItem.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisItem.centreY + (canvasHeight / 2) - thisItem.z)]);
         }
 
         assetsToDraw.sort(sortByLowestValue);
-
-        // don't need to clear, as the background will overwrite anyway - this means there's less to process:
-        //  gameContext.clearRect(0, 0, canvasWidth, canvasHeight);
-
-
-
+        // don't need to clear, as the background will overwrite anyway - this means there's less to process.
         // scroll background to match the top tip and left tip of the tile grid:
         gameContext.drawImage(backgroundImg, Math.floor(getTileIsoCentreCoordX(0, mapTilesX - 1) - hero.isox - tileW / 2), Math.floor(getTileIsoCentreCoordY(0, 0) - hero.isoy - tileH / 2));
         // draw the sorted assets:
         for (var i = 0; i < assetsToDraw.length; i++) {
-
-
-switch(assetsToDraw[i][1]) {
-    case "faeCentre":
-                // draw fae:
-                drawCircle("#ffdc0c", assetsToDraw[i][2], assetsToDraw[i][3], 2);
-                drawCircle("rgba(255,220,255,0.3)", assetsToDraw[i][2], assetsToDraw[i][3], 4);
-
-                // draw fae's shadow - make it respond to the fae's height:
-                gameContext.fillStyle = "rgba(0,0,0," + (65 - fae.oscillateOffset) * 0.01 + ")";
-                gameContext.beginPath();
-                gameContext.ellipse(assetsToDraw[i][2] - getXOffsetFromHeight(fae.oscillateOffset), assetsToDraw[i][3] + fae.oscillateOffset, 3, 1, 0, 0, 2 * Math.PI);
-                gameContext.fill();
-        break;
-           case "faeParticle":
-         gameContext.fillStyle = "rgba(255,220,255," + assetsToDraw[i][4] + ")";
-                gameContext.fillRect(assetsToDraw[i][2], assetsToDraw[i][3], 1, 1);
-        break;
-    case "sprite":
-         // sprite image (needs slicing parameters):
-                gameContext.drawImage(assetsToDraw[i][2], assetsToDraw[i][3], assetsToDraw[i][4], assetsToDraw[i][5], assetsToDraw[i][6], assetsToDraw[i][7], assetsToDraw[i][8], assetsToDraw[i][9], assetsToDraw[i][10]);
-        break;
-    case "img":
-          // standard image:
-                gameContext.drawImage(assetsToDraw[i][2], assetsToDraw[i][3], assetsToDraw[i][4]);
-
-} 
-
-
-         
+            switch (assetsToDraw[i][1]) {
+                case "faeCentre":
+                    // draw fae:
+                    drawCircle("#ffdc0c", assetsToDraw[i][2], assetsToDraw[i][3], 2);
+                    drawCircle("rgba(255,220,255,0.3)", assetsToDraw[i][2], assetsToDraw[i][3], 4);
+                    // draw fae's shadow - make it respond to the fae's height:
+                    gameContext.fillStyle = "rgba(0,0,0," + (65 - fae.oscillateOffset) * 0.01 + ")";
+                    gameContext.beginPath();
+                    gameContext.ellipse(assetsToDraw[i][2] - getXOffsetFromHeight(fae.oscillateOffset), assetsToDraw[i][3] + fae.oscillateOffset, 3, 1, 0, 0, 2 * Math.PI);
+                    gameContext.fill();
+                    break;
+                case "faeParticle":
+                    gameContext.fillStyle = "rgba(255,220,255," + assetsToDraw[i][4] + ")";
+                    gameContext.fillRect(assetsToDraw[i][2], assetsToDraw[i][3], 1, 1);
+                    break;
+                case "sprite":
+                    // sprite image (needs slicing parameters):
+                    gameContext.drawImage(assetsToDraw[i][2], assetsToDraw[i][3], assetsToDraw[i][4], assetsToDraw[i][5], assetsToDraw[i][6], assetsToDraw[i][7], assetsToDraw[i][8], assetsToDraw[i][9], assetsToDraw[i][10]);
+                    break;
+                case "img":
+                    // standard image:
+                    gameContext.drawImage(assetsToDraw[i][2], assetsToDraw[i][3], assetsToDraw[i][4]);
+            }
         }
 
-
-
-if(activeNPCForDialogue != '') {
-    UI.updateDialogue(activeNPCForDialogue);
-}
+        if (activeNPCForDialogue != '') {
+            UI.updateDialogue(activeNPCForDialogue);
+        }
 
         // draw the map transition if it's needed:
         if (mapTransition == "out") {
             var gradientSize = (1 - (mapTransitionCurrentFrames / mapTransitionMaxFrames));
-          
-            if(gradientSize<0.02) {
+
+            if (gradientSize < 0.02) {
                 // draw a rectangle, otherwise a pixel hole is still visible:
-                gameContext.fillStyle="#000000";
+                gameContext.fillStyle = "#000000";
                 gameContext.fillRect(0, 0, canvasWidth, canvasHeight);
             } else {
-            var gradient = gameContext.createRadialGradient(canvasWidth / 2, canvasHeight / 2, gradientSize * canvasWidth / 2, canvasWidth / 2, canvasHeight / 2, 0);
-            gradient.addColorStop(0, "rgba(0,0,0,1)");
-            gradient.addColorStop(1, "rgba(0,0,0,0)");
-            gameContext.fillStyle = gradient;
-            gameContext.fillRect(0, 0, canvasWidth, canvasHeight);
-        }
+                var gradient = gameContext.createRadialGradient(canvasWidth / 2, canvasHeight / 2, gradientSize * canvasWidth / 2, canvasWidth / 2, canvasHeight / 2, 0);
+                gradient.addColorStop(0, "rgba(0,0,0,1)");
+                gradient.addColorStop(1, "rgba(0,0,0,0)");
+                gameContext.fillStyle = gradient;
+                gameContext.fillRect(0, 0, canvasWidth, canvasHeight);
+            }
         } else if (mapTransition == "in") {
             var gradientSize = ((mapTransitionCurrentFrames / mapTransitionMaxFrames));
             var gradient = gameContext.createRadialGradient(canvasWidth / 2, canvasHeight / 2, gradientSize * canvasWidth / 2, canvasWidth / 2, canvasHeight / 2, 0);
@@ -4030,6 +4015,7 @@ if(activeNPCForDialogue != '') {
         }
     }
 }
+
 
 // check if it cuts the mustard and supports Canvas:
 if (('querySelectorAll' in document && 'addEventListener' in window) && (!!window.HTMLCanvasElement)) {
