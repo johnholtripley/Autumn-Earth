@@ -32,6 +32,8 @@ extract($row);
   <dd><?php echo $cardAttack; ?></dd>
   <dt>Defense</dt>
   <dd><?php echo $cardDefense; ?></dd>
+    <dt>Cost to craft</dt>
+  <dd><?php echo $cardCraftingCost; ?></dd>
 </dl> 
 </li>
 
@@ -64,7 +66,7 @@ extract($row);
 
 
 <?php
-$additionalAssets = '<script src="card-game.js"></script>'."\n";
-include($_SERVER['DOCUMENT_ROOT']."/includes/card-sub-nav.php");
+
+include($_SERVER['DOCUMENT_ROOT']."/includes/navigation/card-game.php");
 include($_SERVER['DOCUMENT_ROOT']."/includes/footer.php");
 ?>

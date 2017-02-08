@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 07, 2017 at 04:07 PM
+-- Generation Time: Feb 08, 2017 at 02:12 PM
 -- Server version: 5.6.24
 -- PHP Version: 5.6.8
 
@@ -544,7 +544,7 @@ CREATE TABLE IF NOT EXISTS `tblinventoryitems` (
   `showInTheCodex` tinyint(1) NOT NULL DEFAULT '1',
   `lockedToThisPlayer` tinyint(1) NOT NULL DEFAULT '0',
   `respawnRate` int(11) DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=36 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=37 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblinventoryitems`
@@ -583,8 +583,9 @@ INSERT INTO `tblinventoryitems` (`itemID`, `shortname`, `description`, `priceCod
 (31, 'Wrapped gift', 'Double click to see what''s inside. Contains: ##contains##', '4', '49.0', '81.0', 63, 63, 'wrapped-gift', 'container', 0, 0, 0, '0', '0', NULL, 0, 0, 0, 1, 0, NULL),
 (32, 'Book', '', '4', '12.0', '6.0', 20, 13, 'book', 'book', 0, 0, 0, '0', '0', NULL, 1, 0, 0, 1, 0, NULL),
 (33, 'Parchment', '', '4', '49.0', '81.0', 63, 63, 'parchment', 'book', 0, 0, 0, '0', '0', NULL, 1, 0, 0, 1, 0, NULL),
-(34, 'Chocobo Card', 'A chocobo card. Pweeeek!', '4', '49.0', '81.0', 63, 63, 'card-chocobo', 'card', 2, 0, 0, '0', '0', '4', 1, 0, 0, 1, 0, NULL),
-(35, 'Wild Flax Node', '', '4', '19.0', '39.0', 20, 20, 'wild-flax-node', 'node', 2, 0, 0, '0', '0', '5', 0, 0, 0, 0, 0, 300);
+(34, 'Chocobo Card', 'A chocobo card. Pweeeek!', '4', '49.0', '81.0', 63, 63, 'card-chocobo', 'card', 2, 0, 0, '0', '0', '', 0, 0, 0, 1, 0, NULL),
+(35, 'Wild Flax Node', '', '4', '19.0', '39.0', 20, 20, 'wild-flax-node', 'node', 0, 0, 0, '0', '0', '5', 0, 0, 0, 0, 0, 300),
+(36, 'Chocobo Gold Card', 'A rare chocobo card. Pweeeek!', '4', '49.0', '81.0', 63, 63, 'card-gold-chocobo', 'card', -2, 0, 0, '0', '0', '', 0, 0, 0, 1, 0, NULL);
 
 -- --------------------------------------------------------
 
@@ -1077,7 +1078,7 @@ CREATE TABLE IF NOT EXISTS `tblquests` (
   `titleGainedAfterCompletion` int(11) DEFAULT NULL,
   `thresholdNeededForCompletion` varchar(128) NOT NULL,
   `subQuestsRequiredForCompletion` varchar(128) DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblquests`
@@ -1090,7 +1091,8 @@ INSERT INTO `tblquests` (`questID`, `journalTitle`, `journalDesc`, `isRepeatable
 (4, 'A hero''s peregrination', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 0, NULL, '5,9', '5x19', '2x21,9', 'possess', 7, '', NULL),
 (5, 'A much longer task', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 0, NULL, '', NULL, '2x21,9', 'multi', 7, '', '6,7'),
 (6, 'sub task 1', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 0, NULL, '', '', '', 'world', NULL, '', NULL),
-(7, 'sub task 2', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 0, NULL, '', '', '', 'hero.stats.numberOfcardsFlipped', NULL, '+2', NULL);
+(7, 'sub task 2', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 0, NULL, '', '', '', 'hero.stats.numberOfcardsFlipped', NULL, '+2', NULL),
+(8, 'Win a card game', 'Beat NPC at cards, and got a rare chocobo card', 0, NULL, '0', '0', '36', '', NULL, '', NULL);
 
 -- --------------------------------------------------------
 
@@ -1728,7 +1730,7 @@ ALTER TABLE `tblguilds`
 -- AUTO_INCREMENT for table `tblinventoryitems`
 --
 ALTER TABLE `tblinventoryitems`
-  MODIFY `itemID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=36;
+  MODIFY `itemID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=37;
 --
 -- AUTO_INCREMENT for table `tblitemcategories`
 --
@@ -1783,7 +1785,7 @@ ALTER TABLE `tblprofessions`
 -- AUTO_INCREMENT for table `tblquests`
 --
 ALTER TABLE `tblquests`
-  MODIFY `questID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=8;
+  MODIFY `questID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=9;
 --
 -- AUTO_INCREMENT for table `tblquestsstatus`
 --

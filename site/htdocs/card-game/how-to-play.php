@@ -32,9 +32,9 @@ Pellentesque malesuada tellus vel nisi dapibus, nec consequat lacus pharetra. Mo
 
 
 <?php
-$additionalAssets = '<script src="card-game.js"></script>'."\n";
 
-include($_SERVER['DOCUMENT_ROOT']."/includes/card-sub-nav.php");
+
+include($_SERVER['DOCUMENT_ROOT']."/includes/navigation/card-game.php");
 
 include($_SERVER['DOCUMENT_ROOT']."/includes/footer.php");
 ?>

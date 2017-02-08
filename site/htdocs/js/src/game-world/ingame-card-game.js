@@ -37,7 +37,6 @@ function processPlayerWinSpeech(thisNPC, thisSpeechPassedIn, thisSpeechCode) {
             if (giveQuestRewards(questId)) {
                 if (questData[questId].isRepeatable > 0) {
                     questData[questId].hasBeenCompleted = 0;
-                    questData[questId].isUnderway = false;
                 } else {
                     questData[questId].hasBeenCompleted = 1;
                 }
@@ -120,17 +119,12 @@ function openBoosterPack() {
         boosterCardsToAdd[0] = (0-boosterCardsToAdd[0]);
     }
     */
-
-
-
-
     var boosterPackCards = document.getElementsByClassName('cardFlip');
     for (var i = 0; i < boosterPackCards.length; i++) {
         boosterPackCards[i].classList.remove('active');
     }
 
     // they should all be in cache from the Card Album, so no need to wait for them to load
-
     var imageClass;
     for (var i = 0; i < 5; i++) {
         // check if it's a new card:
@@ -138,19 +132,18 @@ function openBoosterPack() {
         if (hero.cards.indexOf(boosterCardsToAdd[i]) == -1) {
             imageClass = ' class="new"';
         }
-        if(boosterCardsToAdd[i]<0) {
-// rare animated card:
-
-document.getElementById("boosterCard" + i).innerHTML = '<div class="rare"><div class="card players" style="background-image:url(/images/card-game/cards/' + boosterCardsToAdd[i] + '.png)"></div></div>';
-
+        if (boosterCardsToAdd[i] < 0) {
+            // rare animated card:
+            document.getElementById("boosterCard" + i).innerHTML = '<div class="rare"><div class="card players" style="background-image:url(/images/card-game/cards/' + boosterCardsToAdd[i] + '.png)"></div></div>';
         } else {
-        document.getElementById("boosterCard" + i).innerHTML = '<img' + imageClass + ' src="/images/card-game/cards/' + boosterCardsToAdd[i] + '.png" alt="' + cardGameNameSpace.allCardData[(boosterCardsToAdd[i][3])] + '">';
-    }
+            document.getElementById("boosterCard" + i).innerHTML = '<img' + imageClass + ' src="/images/card-game/cards/' + boosterCardsToAdd[i] + '.png" alt="' + cardGameNameSpace.allCardData[(boosterCardsToAdd[i][3])] + '">';
+        }
     }
     boosterPack.classList.add('active');
     boosterCardsRevealed = 0;
     boosterPack.addEventListener("click", revealBoosterCard, false);
 }
+
 
 
 
