@@ -1235,42 +1235,15 @@ allCardPacks = [
 
 function cardGamePlayer2Wins() {
     // player won
-   
     hero.stats.cardGamesWon++;
-    
     processPlayerWinSpeech(thisNPC, thisNPC.cardGameSpeech.lose[0], thisNPC.cardGameSpeech.lose[1]);
-   /*
-    whichCardWon = pickBestCardToTake(cardGameNameSpace.player1Cards);
-    hero.cards.unshift((cardGameNameSpace.player1Cards[whichCardWon]));
-    // need to find this card type in the NPC's unique card array (if it's from the basic deck then don't need to try and remove it):
-    var foundIndexInUniqueCards = thisNPC.uniqueCards.indexOf(cardGameNameSpace.player1Cards[whichCardWon]);
-    if (foundIndexInUniqueCards != -1) {
-        thisNPC.uniqueCards.splice(foundIndexInUniqueCards, 1);
-    }
-    UI.showNotification('<p>You won a ' + cardGameNameSpace.allCardData[(cardGameNameSpace.player1Cards[whichCardWon])][2] + '</p><img class="card players" src="/images/card-game/cards/' + (cardGameNameSpace.player1Cards[whichCardWon]) + '.png">');
-    UI.updateCardAlbum();
-    */
     closeCardGame();
 }
 
 function cardGamePlayer1Wins() {
     // player lost
-    
     hero.stats.cardGamesLost++;
-    
     processSpeech(thisNPC, thisNPC.cardGameSpeech.win[0], thisNPC.cardGameSpeech.win[1]);
-    /*
-    whichCardWon = pickBestCardToTake(cardGameNameSpace.player2Cards);
-    // add it to NPC's unique cards so the player can win it back:
-    thisNPC.uniqueCards.unshift((cardGameNameSpace.player2Cards[whichCardWon]));
-    var foundIndexInUniqueCards = hero.cards.indexOf(cardGameNameSpace.player2Cards[whichCardWon]);
-    if (foundIndexInUniqueCards != -1) {
-        hero.cards.splice(foundIndexInUniqueCards, 1);
-    }
-    UI.showNotification('<p>You lost a ' + cardGameNameSpace.allCardData[(cardGameNameSpace.player2Cards[whichCardWon])][2] + '</p><img class="card npcs" src="/images/card-game/cards/' + (cardGameNameSpace.player2Cards[whichCardWon]) + '.png">');
-    UI.updateCardAlbum();
-
-    */
     closeCardGame();
 }
 
@@ -1281,54 +1254,52 @@ function cardGameIsDrawn() {
 }
 
 function processPlayerWinSpeech(thisNPC, thisSpeechPassedIn, thisSpeechCode) {
-    var questSpeech = thisSpeechCode.split("|");
-    var questId = questSpeech[1];
-    if (questData[questId].hasBeenCompleted < 1) {
-        if (giveQuestRewards(questId)) {
-            if (questData[questId].isRepeatable > 0) {
-                questData[questId].hasBeenCompleted = false;
-                questData[questId].isUnderway = false;
-            } else {
-                questData[questId].hasBeenCompleted = true;
+    if (thisSpeechCode != "") {
+        var questSpeech = thisSpeechCode.split("|");
+        var questId = questSpeech[1];
+        if (questData[questId].hasBeenCompleted < 1) {
+            if (giveQuestRewards(questId)) {
+                if (questData[questId].isRepeatable > 0) {
+                    questData[questId].hasBeenCompleted = 0;
+                    questData[questId].isUnderway = false;
+                } else {
+                    questData[questId].hasBeenCompleted = 1;
+                }
+                UI.showDialogue(thisNPC, thisNPC.cardGameSpeech.lose[0] + questSpeech[2]);
+                canCloseDialogueBalloonNextClick = true;
+                checkForTitlesAwarded(questId);
             }
-            UI.showDialogue(thisNPC, thisNPC.cardGameSpeech.lose[0] + questSpeech[2]);
-            canCloseDialogueBalloonNextClick = false;
-            // set a flag so that pressing action near the NPC will close the balloon:
-            canCloseDialogueBalloonNextClick = true;
-            checkForTitlesAwarded(questId);
-            
+        } else {
+            // there was a quest, but it's been completed - just show ordinary text:
+            processSpeech(thisNPC, thisNPC.cardGameSpeech.lose[0], thisNPC.cardGameSpeech.lose[1]);
         }
     } else {
-        // just show ordinary text:
+        // no quest associated, just show ordinary text:
         processSpeech(thisNPC, thisNPC.cardGameSpeech.lose[0], thisNPC.cardGameSpeech.lose[1]);
     }
 }
 
 
+
+
 function startCardGame(opponentNPC) {
     if (hero.cards.length >= 12) {
-
-
-
         cardGameNameSpace.player2Cards = hero.cards.slice(0, 12);
         // combine the NPC's unique cards with their base pack and pick the first 12:
         cardGameNameSpace.player1Cards = opponentNPC.uniqueCards.concat(allCardPacks[opponentNPC.baseCardPack]).slice(0, 12);
         cardGameNameSpace.player1Skill = opponentNPC.cardSkill;
-
-if(opponentNPC.cardBackColour) {
-  
-cardGameNameSpace.NPCCardBackColour = opponentNPC.cardBackColour;
-} else {
-   cardGameNameSpace.NPCCardBackColour = undefined; 
-}
-
-
+        if (opponentNPC.cardBackColour) {
+            cardGameNameSpace.NPCCardBackColour = opponentNPC.cardBackColour;
+        } else {
+            cardGameNameSpace.NPCCardBackColour = undefined;
+        }
         cardGameNameSpace.initialiseCardGame();
         cardGameWrapper.classList.add("active");
     } else {
         UI.showNotification('<p>You don\'t have enough cards</p>');
     }
 }
+
 
 
 function closeCardGame() {
@@ -3675,11 +3646,8 @@ function giveQuestRewards(whichQuestId) {
 
             if (questPossibilities.length > 1) {
                 // might need to show the name of the item in the speech:           
-                thisSpeech = thisSpeech.replace(/##itemName##/i, currentActiveInventoryItems[parseInt(thisItem)].shortname);  
+                thisSpeech = thisSpeech.replace(/##itemName##/i, currentActiveInventoryItems[parseInt(thisItem)].shortname);
             }
-
-
-
             // build item object:
             var thisRewardObject = {
                 "type": parseInt(thisItem),
@@ -3698,7 +3666,7 @@ function giveQuestRewards(whichQuestId) {
         inventoryCheck = canAddItemToInventory(allRewardItems);
         if (inventoryCheck[0]) {
             UI.showChangeInInventory(inventoryCheck[1]);
-            
+
             return true;
         } else {
             UI.showNotification("<p>Oops - sorry, no room in your bags</p>");

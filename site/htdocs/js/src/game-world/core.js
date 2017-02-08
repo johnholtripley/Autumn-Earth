@@ -1198,11 +1198,8 @@ function giveQuestRewards(whichQuestId) {
 
             if (questPossibilities.length > 1) {
                 // might need to show the name of the item in the speech:           
-                thisSpeech = thisSpeech.replace(/##itemName##/i, currentActiveInventoryItems[parseInt(thisItem)].shortname);  
+                thisSpeech = thisSpeech.replace(/##itemName##/i, currentActiveInventoryItems[parseInt(thisItem)].shortname);
             }
-
-
-
             // build item object:
             var thisRewardObject = {
                 "type": parseInt(thisItem),
@@ -1221,7 +1218,7 @@ function giveQuestRewards(whichQuestId) {
         inventoryCheck = canAddItemToInventory(allRewardItems);
         if (inventoryCheck[0]) {
             UI.showChangeInInventory(inventoryCheck[1]);
-            
+
             return true;
         } else {
             UI.showNotification("<p>Oops - sorry, no room in your bags</p>");
