@@ -10,6 +10,7 @@ var selectComponentsItemBeingCreated = document.getElementById('selectComponents
 var componentsAvailableForThisRecipe = document.getElementById('componentsAvailableForThisRecipe');
 var booksAndParchments = document.getElementById('booksAndParchments');
 var gameWrapper = document.getElementById('gameWrapper');
+
 var UI = {
     init: function() {
         // cache all local references to UI elements:
@@ -23,7 +24,7 @@ var UI = {
         var boosterPack = document.getElementById('boosterPack');
         var createRecipeList = document.getElementById('createRecipeList');
         var recipeTitleBar = document.getElementById('recipeTitleBar');
-
+        var currencies = document.getElementById('currencies');
         //
 
     },
@@ -80,6 +81,7 @@ var UI = {
 
         UI.initInventoryDrag();
         UI.updateCardAlbum();
+        UI.updateCurrencies();
 
         UI.buildRecipePanel();
         if (hero.professionsKnown.length > 0) {
@@ -559,14 +561,17 @@ if(recipeCustomScrollBar) {
         }
     },
 
-
-
-
     globalClick: function(e) {
         if (e.target.className) {
             if (e.target.className == "closePanel") {
                 e.target.parentNode.classList.remove("active");
             }
         }
+    },
+
+
+    updateCurrencies: function() {
+        currencies.innerHTML = '<p>' + parseMoney(hero.currency.gold) + ' | ' + hero.currency.cardDust + '</p>';
     }
+
 }

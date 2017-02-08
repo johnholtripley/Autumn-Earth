@@ -834,9 +834,9 @@ function generateHash(sourceString) {
 
 
 
-function parseMoney(amount,whichCurrency) {
+function parseMoney(amount, whichCurrency) {
     // whichCurrency passed in case alternative currencies are added
-var moneyOutput = "";
+    var moneyOutput = "";
     var silver = amount % 100;
     var gold = (amount - silver) / 100;
     if (gold > 0) {
@@ -847,6 +847,7 @@ var moneyOutput = "";
     }
     return moneyOutput;
 }
+
 
 
 
@@ -1236,6 +1237,8 @@ allCardPacks = [
 function cardGamePlayer2Wins() {
     // player won
     hero.stats.cardGamesWon++;
+    hero.currency.cardDust += 7;
+    UI.updateCurrencies();
     processPlayerWinSpeech(thisNPC, thisNPC.cardGameSpeech.lose[0], thisNPC.cardGameSpeech.lose[1]);
     closeCardGame();
 }
@@ -1243,12 +1246,16 @@ function cardGamePlayer2Wins() {
 function cardGamePlayer1Wins() {
     // player lost
     hero.stats.cardGamesLost++;
+    hero.currency.cardDust += 1;
+    UI.updateCurrencies();
     processSpeech(thisNPC, thisNPC.cardGameSpeech.win[0], thisNPC.cardGameSpeech.win[1]);
     closeCardGame();
 }
 
 function cardGameIsDrawn() {
     hero.stats.cardGamesDrawn++;
+    hero.currency.cardDust += 3;
+    UI.updateCurrencies();
     processSpeech(thisNPC, thisNPC.cardGameSpeech.draw[0], thisNPC.cardGameSpeech.draw[1]);
     closeCardGame();
 }
@@ -1261,7 +1268,6 @@ function processPlayerWinSpeech(thisNPC, thisSpeechPassedIn, thisSpeechCode) {
             if (giveQuestRewards(questId)) {
                 if (questData[questId].isRepeatable > 0) {
                     questData[questId].hasBeenCompleted = 0;
-                    questData[questId].isUnderway = false;
                 } else {
                     questData[questId].hasBeenCompleted = 1;
                 }
@@ -1344,17 +1350,12 @@ function openBoosterPack() {
         boosterCardsToAdd[0] = (0-boosterCardsToAdd[0]);
     }
     */
-
-
-
-
     var boosterPackCards = document.getElementsByClassName('cardFlip');
     for (var i = 0; i < boosterPackCards.length; i++) {
         boosterPackCards[i].classList.remove('active');
     }
 
     // they should all be in cache from the Card Album, so no need to wait for them to load
-
     var imageClass;
     for (var i = 0; i < 5; i++) {
         // check if it's a new card:
@@ -1362,19 +1363,18 @@ function openBoosterPack() {
         if (hero.cards.indexOf(boosterCardsToAdd[i]) == -1) {
             imageClass = ' class="new"';
         }
-        if(boosterCardsToAdd[i]<0) {
-// rare animated card:
-
-document.getElementById("boosterCard" + i).innerHTML = '<div class="rare"><div class="card players" style="background-image:url(/images/card-game/cards/' + boosterCardsToAdd[i] + '.png)"></div></div>';
-
+        if (boosterCardsToAdd[i] < 0) {
+            // rare animated card:
+            document.getElementById("boosterCard" + i).innerHTML = '<div class="rare"><div class="card players" style="background-image:url(/images/card-game/cards/' + boosterCardsToAdd[i] + '.png)"></div></div>';
         } else {
-        document.getElementById("boosterCard" + i).innerHTML = '<img' + imageClass + ' src="/images/card-game/cards/' + boosterCardsToAdd[i] + '.png" alt="' + cardGameNameSpace.allCardData[(boosterCardsToAdd[i][3])] + '">';
-    }
+            document.getElementById("boosterCard" + i).innerHTML = '<img' + imageClass + ' src="/images/card-game/cards/' + boosterCardsToAdd[i] + '.png" alt="' + cardGameNameSpace.allCardData[(boosterCardsToAdd[i][3])] + '">';
+        }
     }
     boosterPack.classList.add('active');
     boosterCardsRevealed = 0;
     boosterPack.addEventListener("click", revealBoosterCard, false);
 }
+
 
 
 
@@ -1885,6 +1885,7 @@ var selectComponentsItemBeingCreated = document.getElementById('selectComponents
 var componentsAvailableForThisRecipe = document.getElementById('componentsAvailableForThisRecipe');
 var booksAndParchments = document.getElementById('booksAndParchments');
 var gameWrapper = document.getElementById('gameWrapper');
+
 var UI = {
     init: function() {
         // cache all local references to UI elements:
@@ -1898,7 +1899,7 @@ var UI = {
         var boosterPack = document.getElementById('boosterPack');
         var createRecipeList = document.getElementById('createRecipeList');
         var recipeTitleBar = document.getElementById('recipeTitleBar');
-
+        var currencies = document.getElementById('currencies');
         //
 
     },
@@ -1955,6 +1956,7 @@ var UI = {
 
         UI.initInventoryDrag();
         UI.updateCardAlbum();
+        UI.updateCurrencies();
 
         UI.buildRecipePanel();
         if (hero.professionsKnown.length > 0) {
@@ -2434,16 +2436,19 @@ if(recipeCustomScrollBar) {
         }
     },
 
-
-
-
     globalClick: function(e) {
         if (e.target.className) {
             if (e.target.className == "closePanel") {
                 e.target.parentNode.classList.remove("active");
             }
         }
+    },
+
+
+    updateCurrencies: function() {
+        currencies.innerHTML = '<p>' + parseMoney(hero.currency.gold) + ' | ' + hero.currency.cardDust + '</p>';
     }
+
 }
 
 // service worker:
@@ -2494,6 +2499,7 @@ function getHeroGameState() {
         hero.bags = data.bags;
         hero.cards = data.cards;
         hero.stats = data.stats;
+        hero.currency = data.currency;
         hero.titlesEarned = data.titlesEarned;
         hero.activeTitle = data.activeTitle;
         hero.recipesKnown = data.recipesKnown;

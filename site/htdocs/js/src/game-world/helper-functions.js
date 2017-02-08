@@ -298,9 +298,9 @@ function generateHash(sourceString) {
 
 
 
-function parseMoney(amount,whichCurrency) {
+function parseMoney(amount, whichCurrency) {
     // whichCurrency passed in case alternative currencies are added
-var moneyOutput = "";
+    var moneyOutput = "";
     var silver = amount % 100;
     var gold = (amount - silver) / 100;
     if (gold > 0) {
@@ -311,6 +311,7 @@ var moneyOutput = "";
     }
     return moneyOutput;
 }
+
 
 
 

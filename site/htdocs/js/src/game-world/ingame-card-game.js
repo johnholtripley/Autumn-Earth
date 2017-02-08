@@ -10,6 +10,7 @@ function cardGamePlayer2Wins() {
     // player won
     hero.stats.cardGamesWon++;
     hero.currency.cardDust += 7;
+    UI.updateCurrencies();
     processPlayerWinSpeech(thisNPC, thisNPC.cardGameSpeech.lose[0], thisNPC.cardGameSpeech.lose[1]);
     closeCardGame();
 }
@@ -18,6 +19,7 @@ function cardGamePlayer1Wins() {
     // player lost
     hero.stats.cardGamesLost++;
     hero.currency.cardDust += 1;
+    UI.updateCurrencies();
     processSpeech(thisNPC, thisNPC.cardGameSpeech.win[0], thisNPC.cardGameSpeech.win[1]);
     closeCardGame();
 }
@@ -25,6 +27,7 @@ function cardGamePlayer1Wins() {
 function cardGameIsDrawn() {
     hero.stats.cardGamesDrawn++;
     hero.currency.cardDust += 3;
+    UI.updateCurrencies();
     processSpeech(thisNPC, thisNPC.cardGameSpeech.draw[0], thisNPC.cardGameSpeech.draw[1]);
     closeCardGame();
 }
