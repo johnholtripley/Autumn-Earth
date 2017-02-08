@@ -571,7 +571,7 @@ if(recipeCustomScrollBar) {
 
 
     updateCurrencies: function() {
-        currencies.innerHTML = '<p>' + parseMoney(hero.currency.gold) + ' | ' + hero.currency.cardDust + '</p>';
+        currencies.innerHTML = '<p>' + parseMoney(hero.currency.gold) + '</p><p>' + hero.currency.cardDust + '<span class="card"><span></p>';
     }
 
 }

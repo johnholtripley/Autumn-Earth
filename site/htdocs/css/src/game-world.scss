@@ -804,3 +804,31 @@ height: 100%;
         margin: 0;
     }
 }
+
+
+#currencies {
+    background: #000;
+    color: #fff;
+    font-family: Lato, "Trebuchet MS", trebuchet, arial, helvetica, sans-serif;
+    font-size: 12px;
+    .card {
+        background: url(/images/game-world/interface/currency/card.png) no-repeat 50% 50%;
+        width: 12px;
+        height: 18px;
+        display: inline-block;
+    }
+    .gold, .silver, .copper {
+           width: 11px;
+        height: 11px;
+        display: inline-block;
+    }
+    .gold {
+background: url(/images/game-world/interface/currency/gold.png) no-repeat 50% 50%;
+    }
+       .silver {
+background: url(/images/game-world/interface/currency/silver.png) no-repeat 50% 50%;
+    }
+       .copper {
+background: url(/images/game-world/interface/currency/copper.png) no-repeat 50% 50%;
+    }
+}
