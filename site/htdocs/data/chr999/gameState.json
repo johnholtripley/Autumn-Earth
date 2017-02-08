@@ -227,5 +227,9 @@
     ],
     "totalGameTimePlayed": 0,
     "fae": { "range": 4950, "speed": 4 },
-    "retinue": [0,2]
+    "retinue": [0,2],
+    "currency": {
+        "gold": 450,
+        "cardDust": 12
+    }
 }
