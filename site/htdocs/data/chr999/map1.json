@@ -57,11 +57,11 @@
             "cardGameSpeech": {
                 "challenge": ["Do you play? Fancy a game then?", "play"],
                 "win": ["Woo! I won!", ""],
-                "lose": ["Ahh, you beat me...", ""],
+                "lose": ["Ahh, you beat me...", "quest|8| Here, take this chocobo card."],
                 "draw": ["Well played", ""]
             },
             "cardSkill": 1,
-            "uniqueCards": [2, 2],
+            "uniqueCards": [1, -2],
             "cardBackColour": "#666666",
             "baseCardPack": 0,
             "animation": {

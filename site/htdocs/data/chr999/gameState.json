@@ -76,7 +76,7 @@
         },
 
         "0-8": {
-            "type": 34,
+            "type": 36,
             "quantity": 1,
             "quality": 100,
             "durability": 100,
@@ -203,7 +203,7 @@
             }
         }
     },
-    "cards": [-2, 6, 5, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4],
+    "cards": [6, 5, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4],
     "stats": {
         "cardGamesWon": 2,
         "cardGamesLost": 4,
