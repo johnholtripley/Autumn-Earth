@@ -13,7 +13,7 @@ $outputJson .= '[null, null, null],';
 
 while ($row = mysql_fetch_array($result)) {
 	extract($row);
-$outputJson .= '["'.$cardAttack.'", "'.$cardDefense.'", "'.$cardName.'"],';
+$outputJson .= '["'.$cardAttack.'", "'.$cardDefense.'", "'.$cardName.'", "'.$cardCraftingCost.'"],';
 }
 
 // remove last comma:

@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 08, 2017 at 02:12 PM
+-- Generation Time: Feb 09, 2017 at 02:17 PM
 -- Server version: 5.6.24
 -- PHP Version: 5.6.8
 
@@ -167,21 +167,22 @@ CREATE TABLE IF NOT EXISTS `tblcards` (
   `cardID` int(11) NOT NULL,
   `cardAttack` int(2) NOT NULL,
   `cardDefense` int(2) NOT NULL,
-  `cardName` varchar(255) COLLATE utf8_bin NOT NULL
+  `cardName` varchar(255) COLLATE utf8_bin NOT NULL,
+  `cardCraftingCost` int(10) NOT NULL
 ) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
 -- Dumping data for table `tblcards`
 --
 
-INSERT INTO `tblcards` (`cardID`, `cardAttack`, `cardDefense`, `cardName`) VALUES
-(1, 5, 10, 'Bomb'),
-(2, 5, 10, 'Chocobo'),
-(3, 5, 10, 'Mog'),
-(4, 5, 10, 'Cactuar'),
-(5, 5, 10, 'Shiva'),
-(6, 5, 10, 'Tonberry'),
-(7, 5, 10, 'Slime');
+INSERT INTO `tblcards` (`cardID`, `cardAttack`, `cardDefense`, `cardName`, `cardCraftingCost`) VALUES
+(1, 5, 10, 'Bomb', 20),
+(2, 5, 10, 'Chocobo', 20),
+(3, 5, 10, 'Mog', 20),
+(4, 5, 10, 'Cactuar', 20),
+(5, 5, 10, 'Shiva', 30),
+(6, 5, 10, 'Tonberry', 20),
+(7, 5, 10, 'Slime', 20);
 
 -- --------------------------------------------------------
 
