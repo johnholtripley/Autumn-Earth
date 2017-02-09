@@ -1665,22 +1665,23 @@ function inventoryItemAction(whichSlot, whichAction, whichActionValue) { // remo
             openBoosterPack();
             removeFromInventory(whichSlotNumber, 1);
             break;
-            case "card":
-
-hero.cards.unshift(whichActionValue);
+                    case "bag":
+            UI.addNewBag(hero.inventory[whichSlotNumber]);
+            removeFromInventory(whichSlotNumber, 1);
+            break;
+        case "card":
+            hero.cards.unshift(whichActionValue);
             UI.updateCardAlbum();
- removeFromInventory(whichSlotNumber, 1);
- break;
-            case "book":
-            document.getElementById("book"+whichActionValue).classList.add("active");
+            removeFromInventory(whichSlotNumber, 1);
+            break;
+        case "book":
+            document.getElementById("book" + whichActionValue).classList.add("active");
         case "recipe":
             if (canLearnRecipe(whichActionValue)) {
-
                 removeFromInventory(whichSlotNumber, 1);
             }
             break;
         case "craft":
-     
             if (hero.professionsKnown.indexOf(parseInt(whichActionValue)) != -1) {
                 UI.populateRecipeList(whichActionValue);
             } else {
@@ -1889,6 +1890,7 @@ var selectComponentsItemBeingCreated = document.getElementById('selectComponents
 var componentsAvailableForThisRecipe = document.getElementById('componentsAvailableForThisRecipe');
 var booksAndParchments = document.getElementById('booksAndParchments');
 var gameWrapper = document.getElementById('gameWrapper');
+var inventoryPanels = document.getElementById('inventoryPanels');
 
 var UI = {
     init: function() {
@@ -1949,8 +1951,8 @@ var UI = {
             inventoryMarkup += '</ol></div></div>';
         }
 
-        document.getElementById('inventoryPanels').innerHTML = inventoryMarkup;
-        document.getElementById('inventoryPanels').ondblclick = UI.inventoryItemDoubleClick;
+        inventoryPanels.innerHTML = inventoryMarkup;
+        inventoryPanels.ondblclick = UI.inventoryItemDoubleClick;
 
         document.getElementById('createRecipeList').ondblclick = UI.craftingPanelDoubleClick;
         document.getElementById('createRecipeList').onclick = UI.craftingPanelSingleClick;
@@ -1958,7 +1960,7 @@ var UI = {
         splitStackPanel.onsubmit = inventorySplitStackSubmit;
         document.getElementById('splitStackCancel').onclick = inventorySplitStackCancel;
 
-        UI.initInventoryDrag();
+        UI.initInventoryDrag('.inventoryBag ol');
         UI.updateCardAlbum();
         UI.updateCurrencies();
 
@@ -1974,7 +1976,20 @@ var UI = {
         inventoryInterfaceIsBuilt = true;
     },
 
-
+addNewBag: function(newBagObject) {
+    // add to object:
+    hero.bags.push(newBagObject);
+    i = hero.bags.length - 1;
+    inventoryMarkup = '<div class="inventoryBag" id="inventoryBag' + i + '"><div class="draggableBar">' + currentActiveInventoryItems[hero.bags[i].type].shortname + '</div><ol class="active" id="bag' + i + '">';
+    var thisBagNumberOfSlots = currentActiveInventoryItems[hero.bags[i].type].actionValue;
+    for (var j = 0; j < thisBagNumberOfSlots; j++) {
+        thisSlotsID = i + '-' + j;
+        inventoryMarkup += '<li id="slot' + thisSlotsID + '"></li>';
+    }
+    inventoryMarkup += '</ol></div></div>';
+    inventoryPanels.insertAdjacentHTML('beforeend', inventoryMarkup);
+    UI.initInventoryDrag('#inventoryBag'+i+' ol');
+},
 
     showChangeInInventory: function(whichSlotsToUpdate) {
         // add a transition end detector to just the first element that will be changed:
@@ -2024,9 +2039,9 @@ var UI = {
                 document.addEventListener("mousemove", UI.handleDrag, false);
                 document.addEventListener("mouseup", UI.endDrag, false);
                 // remove z-index of other draggable elements:
-                var dragTargetsInner = document.querySelectorAll(whichElement);
+                var dragTargetsInner = document.querySelectorAll('.draggableBar');
                 for (j = 0; j < dragTargetsInner.length; j++) {
-                    dragTargets[j].parentElement.style.zIndex = 1;
+                    dragTargetsInner[j].parentElement.style.zIndex = 1;
                 }
             }
         }
@@ -2280,8 +2295,8 @@ if(recipeCustomScrollBar) {
         }
     },
 
-    initInventoryDrag: function() {
-        var dragTargets = document.querySelectorAll('.inventoryBag ol');
+    initInventoryDrag: function(whichElements) {
+        var dragTargets = document.querySelectorAll(whichElements);
         for (var i = 0; i < dragTargets.length; i++) {
             dragTargets[i].addEventListener("mousedown", function(e) {
                 e.preventDefault();
