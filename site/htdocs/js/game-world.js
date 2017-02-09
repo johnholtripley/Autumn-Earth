@@ -835,18 +835,22 @@ function generateHash(sourceString) {
 
 
 function parseMoney(amount) {
-   
     var moneyOutput = "";
-    var silver = amount % 100;
-    var gold = (amount - silver) / 100;
+    var copper = amount % 100;
+    var gold = Math.floor(amount / 10000);
+    var silver = Math.floor((amount - gold * 10000) / 100);
     if (gold > 0) {
         moneyOutput = gold + '<span class="gold"></span>';
     }
     if (silver != 0) {
         moneyOutput += silver + '<span class="silver"></span>';
     }
+    if (copper != 0) {
+        moneyOutput += copper + '<span class="copper"></span>';
+    }
     return moneyOutput;
 }
+
 
 
 
@@ -2446,7 +2450,7 @@ if(recipeCustomScrollBar) {
 
 
     updateCurrencies: function() {
-        currencies.innerHTML = '<p>' + parseMoney(hero.currency.gold) + '</p><p>' + hero.currency.cardDust + '<span class="card"><span></p>';
+        currencies.innerHTML = '<p>' + parseMoney(hero.currency.money) + '</p><p>' + hero.currency.cardDust + '<span class="card"><span></p>';
     }
 
 }

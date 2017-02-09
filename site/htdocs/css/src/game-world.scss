@@ -811,6 +811,10 @@ height: 100%;
     color: #fff;
     font-family: Lato, "Trebuchet MS", trebuchet, arial, helvetica, sans-serif;
     font-size: 12px;
+    p {
+        display: inline-block;
+        padding: 0 8px 0 0;
+    }
     .card {
         background: url(/images/game-world/interface/currency/card.png) no-repeat 50% 50%;
         width: 12px;
