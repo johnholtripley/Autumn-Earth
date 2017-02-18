@@ -69,26 +69,24 @@ mysql_free_result($result2);
 
 // get unique items:
 
-$itemIdsToGet = "";
 if(count($jsonData['shops'][$i]["uniqueItems"])>0) {
 	
-		foreach ($jsonData['shops'][$i]["uniqueItems"] as &$j) {
-$itemIdsToGet.=key($j).",";
-	}
-
-$itemIdsToGet = rtrim($itemIdsToGet, ',');
+	$itemIdsToGet =implode(",",array_keys($jsonData['shops'][$i]["uniqueItems"]));
+	
 
 echo "<code><pre>";
 var_dump($jsonData['shops'][$i]["uniqueItems"]);
 echo "</pre></code>";
 
 $query3 = "SELECT tblinventoryitems.* from tblinventoryitems where tblinventoryitems.itemID in (".$itemIdsToGet.") order by tblinventoryitems.shortname ASC";
+//echo $query3;
 $result3 = mysql_query($query3) or die ("recipes failed:".$query3);
 while ($row = mysql_fetch_array($result3, MYSQL_ASSOC)) {
   
 	// check if any of the unique data overides the defaults:
 	$thisUniqueItem = $jsonData['shops'][$i]["uniqueItems"][$row["itemID"]];
 	var_dump($thisUniqueItem);
+	echo "=====";
 }
 mysql_free_result($result3);
 }
