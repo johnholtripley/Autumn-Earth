@@ -14,7 +14,7 @@ $json ='{
 	"uniqueItems":[],
 	"shopSpecialism": 2,
 	"categories": [1,2],
-	"size":"large",
+	"size":"small",
 	"currency":"money"
 },
 {
@@ -43,7 +43,7 @@ $json ='{
 
 $jsonData = json_decode($json, true);
 
-
+$shopSizePriceLimits = ["small"=>"5", "medium"=>"10", "large"=>"15"];
 
 // get colours:
 $coloursQuery = "SELECT * from tblcolours";
@@ -64,7 +64,7 @@ $inventoryData = [];
 
 if(count($jsonData['shops'][$i]["categories"]) > 0) {
 
-$query2 = "SELECT tblinventoryitems.* from tblinventoryitems where tblinventoryitems.itemcategories in (".implode(",",$jsonData['shops'][$i]["categories"]).") order by tblinventoryitems.shortname ASC";
+$query2 = "SELECT tblinventoryitems.* from tblinventoryitems where tblinventoryitems.itemcategories in (".implode(",",$jsonData['shops'][$i]["categories"]).") and tblinventoryitems.pricecode <= ".$shopSizePriceLimits[($jsonData['shops'][$i]["size"])]." order by tblinventoryitems.shortname ASC";
 // Get colour variants as well for relevant items
 
 $result2 = mysql_query($query2) or die ("failed:".$query2);
