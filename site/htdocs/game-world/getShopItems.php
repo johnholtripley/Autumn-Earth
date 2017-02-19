@@ -24,6 +24,7 @@ $json ='{
 			{"14": [{
 				"colour":3
 			}, 
+		
 			{
 				"colour":7
 			}],
@@ -32,7 +33,7 @@ $json ='{
 			}]}
 		,
 	"shopSpecialism": null,
-	"categories": [3],
+	"categories": [],
 	"size":"small",
 	"currency":"money"
 }
@@ -60,6 +61,9 @@ $colourIndicesToUse = [1,2,4,5,6,8,16];
 for ($i=0;$i<count($jsonData['shops']);$i++) {
 echo "<h4>".$jsonData['shops'][$i]["name"]."</h4>";
 $inventoryData = [];
+
+if(count($jsonData['shops'][$i]["categories"]) > 0) {
+
 $query2 = "SELECT tblinventoryitems.* from tblinventoryitems where tblinventoryitems.itemcategories in (".implode(",",$jsonData['shops'][$i]["categories"]).") order by tblinventoryitems.shortname ASC";
 // Get colour variants as well for relevant items
 
@@ -70,7 +74,7 @@ while ($row = mysql_fetch_array($result2, MYSQL_ASSOC)) {
 }
 mysql_free_result($result2);
 
-
+}
 
 // get unique items:
 
@@ -102,8 +106,6 @@ array_push($inventoryData, $row);
 }
 mysql_free_result($result3);
 }
-
-
 
 
 
