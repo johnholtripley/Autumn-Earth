@@ -43,7 +43,7 @@ $json ='{
 
 $jsonData = json_decode($json, true);
 
-$shopSizePriceLimits = ["small"=>"5", "medium"=>"10", "large"=>"15"];
+$shopSizePriceLimits = ["small"=>"5", "medium"=>"10", "large"=>"9999999999"];
 
 // get colours:
 $coloursQuery = "SELECT * from tblcolours";
