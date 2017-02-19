@@ -10,6 +10,7 @@ $json ='{
 "shops": [
 {
 	"name":"shop #1",
+	"hash":"zAbCd",
 	"uniqueItems":[],
 	"shopSpecialism": 2,
 	"categories": [1,2],
@@ -18,13 +19,17 @@ $json ='{
 },
 {
 	"name":"shop #2",
+	"hash":"3AbCd",
 		"uniqueItems":
-			{"14": {
+			{"14": [{
 				"colour":3
-			},
-			"15": {
-				"colour":11
-			}}
+			}, 
+			{
+				"colour":7
+			}],
+			"15": [{
+				"colour":1
+			}]}
 		,
 	"shopSpecialism": null,
 	"categories": [3],
@@ -54,12 +59,12 @@ $colourIndicesToUse = [1,2,4,5,6,8,16];
 
 for ($i=0;$i<count($jsonData['shops']);$i++) {
 echo "<h4>".$jsonData['shops'][$i]["name"]."</h4>";
-
+$inventoryData = [];
 $query2 = "SELECT tblinventoryitems.* from tblinventoryitems where tblinventoryitems.itemcategories in (".implode(",",$jsonData['shops'][$i]["categories"]).") order by tblinventoryitems.shortname ASC";
 // Get colour variants as well for relevant items
 
 $result2 = mysql_query($query2) or die ("failed:".$query2);
-$inventoryData = [];
+
 while ($row = mysql_fetch_array($result2, MYSQL_ASSOC)) {
     array_push($inventoryData, $row);
 }
@@ -74,9 +79,7 @@ if(count($jsonData['shops'][$i]["uniqueItems"])>0) {
 	$itemIdsToGet =implode(",",array_keys($jsonData['shops'][$i]["uniqueItems"]));
 	
 
-echo "<code><pre>";
-var_dump($jsonData['shops'][$i]["uniqueItems"]);
-echo "</pre></code>";
+
 
 $query3 = "SELECT tblinventoryitems.* from tblinventoryitems where tblinventoryitems.itemID in (".$itemIdsToGet.") order by tblinventoryitems.shortname ASC";
 //echo $query3;
@@ -85,8 +88,17 @@ while ($row = mysql_fetch_array($result3, MYSQL_ASSOC)) {
   
 	// check if any of the unique data overides the defaults:
 	$thisUniqueItem = $jsonData['shops'][$i]["uniqueItems"][$row["itemID"]];
-	var_dump($thisUniqueItem);
-	echo "=====";
+	for ($j=0;$j<count($thisUniqueItem);$j++) {
+			
+	
+
+foreach ($thisUniqueItem[$j] as $key => $value) {
+ $row[$key] = $value;
+}
+array_push($inventoryData, $row);
+
+	}
+
 }
 mysql_free_result($result3);
 }
@@ -122,6 +134,10 @@ if($inventoryData[$l]['colour'] == $colourIndicesToUse[$k]) {
 }
 	}
 	} else {
+		// see if its colour needs to be displaying:
+		if(($inventoryData[$j]['colour'] != 0) && ($inventoryData[$j]['hasInherentColour'] == 0)) {
+echo $allColours[$inventoryData[$j]['colour']]." ";
+		}
 	echo $inventoryData[$j]['shortname']."<br>";
 }
 }
