@@ -1512,4 +1512,26 @@ function findAndReplaceHashes($stringToCheck) {
 }
 
 
+
+
+function parseMoney($amount) {
+     $moneyOutput = "";
+     $copper = $amount % 100;
+     $gold = floor($amount / 10000);
+     $silver = floor(($amount - $gold * 10000) / 100);
+    if ($gold > 0) {
+        $moneyOutput = $gold . '<span class="gold"></span>';
+    }
+    if ($silver != 0) {
+        $moneyOutput .= $silver . '<span class="silver"></span>';
+    }
+    if ($copper != 0) {
+        $moneyOutput .= $copper . '<span class="copper"></span>';
+    }
+    return $moneyOutput;
+}
+
+
+
+
 ?>

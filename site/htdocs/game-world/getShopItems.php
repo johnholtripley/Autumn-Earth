@@ -2,6 +2,7 @@
 
 include($_SERVER['DOCUMENT_ROOT']."/includes/signalnoise.php");
 include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
+include($_SERVER['DOCUMENT_ROOT']."/includes/functions.php");
 
 
 
@@ -62,7 +63,8 @@ $colourIndicesToUse = [1,2,4,5,6,8,16];
 
 
 for ($i=0;$i<count($jsonData['shops']);$i++) {
-$markupToOutput .= "<h4>".$jsonData['shops'][$i]["name"]."</h4>";
+	$markupToOutput .= '<div class="shop" id="shop'.$jsonData['shops'][$i]["hash"].'">';
+$markupToOutput .= '<div class="draggableBar">'.$jsonData['shops'][$i]["name"]."</div><ol>";
 $inventoryData = [];
 
 if(count($jsonData['shops'][$i]["categories"]) > 0) {
@@ -180,12 +182,21 @@ array_multisort($shortname, SORT_ASC, $colour, SORT_ASC, $inventoryDataToSort);
 
 for ($j=0;$j<count($inventoryDataToSort);$j++) {
 	array_push($allItemIdsUsed, $inventoryDataToSort[$j]['itemID']);
-$markupToOutput .= $inventoryDataToSort[$j]['colourName'].$inventoryDataToSort[$j]['shortname']."<br>";
+$markupToOutput .= '<li id="shopSlot'.$i.'-'.$j.'">';
+$markupToOutput .= '<img src="/images/game-world/inventory-items/'.$inventoryDataToSort[$j]['itemID'].'.png" alt="'.$inventoryDataToSort[$j]['colourName'].$inventoryDataToSort[$j]['shortname'].'">';
+$markupToOutput .= '<p><em>'.$inventoryDataToSort[$j]['colourName'].$inventoryDataToSort[$j]['shortname'].'</em>';
+$markupToOutput .= '<span class="price">Sell price: '.parseMoney($inventoryDataToSort[$j]['priceCode']).'</span></p>';
+$markupToOutput .= '</li>';
+
+
+
+
+
 }
 
 
 
-
+$markupToOutput .= '</ol></div></div>';
 
 
 
