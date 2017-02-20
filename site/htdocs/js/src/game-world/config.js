@@ -61,6 +61,8 @@ var colourNames = [];
 var currentRecipePanelProfession = -1;
 var currentItemGroupFilters = "";
 
+var thisMapShopItemIds = '';
+
 // key bindings
 var key = [0, 0, 0, 0, 0, 0, 0];
 

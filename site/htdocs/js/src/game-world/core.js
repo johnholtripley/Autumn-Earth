@@ -253,8 +253,9 @@ function findProfessionsAndRecipes() {
 function loadProfessionsAndRecipes(recipeIdsToLoad) {
     getJSON("/game-world/getProfessionsAndRecipes.php?whichIds=" + recipeIdsToLoad, function(data) {
         hero.crafting = data.professions;
+        console.log("loadProfessionsAndRecipes");
         currentItemGroupFilters = data.itemGroups;
-        findInventoryItemData();
+        getShopData();
     }, function(status) {
         // try again:
         loadProfessionsAndRecipes(recipeIdsToLoad);
@@ -262,6 +263,30 @@ function loadProfessionsAndRecipes(recipeIdsToLoad) {
 }
 
 
+
+function getShopData() {
+    console.log("getShopData");
+ thisMapShopItemIds = '';
+//if no shops:
+// findInventoryItemData();
+// else
+loadShopData();
+}
+
+
+
+function loadShopData() {
+console.log("loadShopData");
+    getJSON("/game-world/getShopItems.php", function(data) {
+
+thisMapShopItemIds = data.allItemIds;
+UI.buildShop(data.markup);
+        findInventoryItemData();
+    }, function(status) {
+        // try again:
+        loadShopData();
+    });
+}
 
 
 
@@ -302,8 +327,11 @@ function findInventoryItemData() {
         }
     }
 
-    // find item available in any shops:
-    // ####
+
+    // add item available in any shops:
+    if(thisMapShopItemIds != '') {
+    itemIdsToGet.push(thisMapShopItemIds);
+}
 
     // remove duplicates:
     itemIdsToGet = uniqueValues(itemIdsToGet);

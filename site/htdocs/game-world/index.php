@@ -70,6 +70,8 @@ background: #ec35ea;
 
 <div id="booksAndParchments"></div>
 
+<div id="shopPanel"></div>
+
 <div id="boosterPack">
 <ol>
 

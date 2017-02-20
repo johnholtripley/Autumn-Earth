@@ -11,6 +11,7 @@ var componentsAvailableForThisRecipe = document.getElementById('componentsAvaila
 var booksAndParchments = document.getElementById('booksAndParchments');
 var gameWrapper = document.getElementById('gameWrapper');
 var inventoryPanels = document.getElementById('inventoryPanels');
+var shopPanel = document.getElementById('shopPanel');
 
 var UI = {
     init: function() {
@@ -586,6 +587,10 @@ if(recipeCustomScrollBar) {
 
     updateCurrencies: function() {
         currencies.innerHTML = '<p>' + parseMoney(hero.currency.money) + '</p><p>' + hero.currency.cardDust + '<span class="card"><span></p>';
+    },
+
+    buildShop: function(markup) {
+        shopPanel.innerHTML = markup;
     }
 
 }
