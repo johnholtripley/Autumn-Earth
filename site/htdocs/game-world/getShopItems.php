@@ -86,16 +86,13 @@ if(count($jsonData['shops'][$i]["uniqueItems"])>0) {
 
 
 $query3 = "SELECT tblinventoryitems.* from tblinventoryitems where tblinventoryitems.itemID in (".$itemIdsToGet.") order by tblinventoryitems.shortname ASC";
-//echo $query3;
+
 $result3 = mysql_query($query3) or die ("recipes failed:".$query3);
 while ($row = mysql_fetch_array($result3, MYSQL_ASSOC)) {
   
 	// check if any of the unique data overides the defaults:
 	$thisUniqueItem = $jsonData['shops'][$i]["uniqueItems"][$row["itemID"]];
 	for ($j=0;$j<count($thisUniqueItem);$j++) {
-			
-	
-
 foreach ($thisUniqueItem[$j] as $key => $value) {
  $row[$key] = $value;
 }
@@ -149,7 +146,7 @@ for ($j=0;$j<$inventoryDataCount;$j++) {
 			}
 		}
 		if($hasFoundAColourVariant) {
-unset($inventoryData[$j]);
+			unset($inventoryData[$j]);
 		}
 	} else {
 		// see if its colour needs to be displaying:
@@ -161,7 +158,11 @@ unset($inventoryData[$j]);
 
 
 $inventoryDataToSort = array_values($inventoryData);
-
+/*
+echo '<code><pre>';
+var_dump($inventoryDataToSort);
+echo "</pre></code>";
+*/
 
 
 // sort by shortname and then colour:
