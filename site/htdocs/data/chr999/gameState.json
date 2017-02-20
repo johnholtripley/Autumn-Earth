@@ -1,7 +1,7 @@
 {
-    "currentMap": 1,
-    "tileX": 3,
-    "tileY": 3,
+    "currentMap": 2,
+    "tileX": 13,
+    "tileY": 13,
     "bags": [{
             "type": 20,
             "quality": 100,
