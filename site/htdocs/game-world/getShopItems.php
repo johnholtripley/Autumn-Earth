@@ -158,15 +158,13 @@ for ($j=0;$j<$inventoryDataCount;$j++) {
 
 
 $inventoryDataToSort = array_values($inventoryData);
-/*
-echo '<code><pre>';
-var_dump($inventoryDataToSort);
-echo "</pre></code>";
-*/
+
 
 
 // sort by shortname and then colour:
 // http://stackoverflow.com/questions/3232965/sort-multidimensional-array-by-multiple-keys/3233009#3233009
+unset($shortname);
+unset($colour);
 foreach ($inventoryDataToSort as $sortkey => $sortrow) {
     $shortname[$sortkey]  = $sortrow['shortname'];
     $colour[$sortkey] = $sortrow['colourName'];
