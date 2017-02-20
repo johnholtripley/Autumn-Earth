@@ -45,6 +45,9 @@ $jsonData = json_decode($json, true);
 
 $shopSizePriceLimits = ["small"=>"5", "medium"=>"10", "large"=>"9999999999"];
 
+$allItemIdsUsed = [];
+$markupToOutput = '';
+
 // get colours:
 $coloursQuery = "SELECT * from tblcolours";
 $allColours = [];
@@ -59,7 +62,7 @@ $colourIndicesToUse = [1,2,4,5,6,8,16];
 
 
 for ($i=0;$i<count($jsonData['shops']);$i++) {
-echo "<h4>".$jsonData['shops'][$i]["name"]."</h4>";
+$markupToOutput .= "<h4>".$jsonData['shops'][$i]["name"]."</h4>";
 $inventoryData = [];
 
 if(count($jsonData['shops'][$i]["categories"]) > 0) {
@@ -176,7 +179,8 @@ array_multisort($shortname, SORT_ASC, $colour, SORT_ASC, $inventoryDataToSort);
 
 
 for ($j=0;$j<count($inventoryDataToSort);$j++) {
-echo $inventoryDataToSort[$j]['colourName'].$inventoryDataToSort[$j]['shortname']."<br>";
+	array_push($allItemIdsUsed, $inventoryDataToSort[$j]['itemID']);
+$markupToOutput .= $inventoryDataToSort[$j]['colourName'].$inventoryDataToSort[$j]['shortname']."<br>";
 }
 
 
@@ -188,7 +192,9 @@ echo $inventoryDataToSort[$j]['colourName'].$inventoryDataToSort[$j]['shortname'
 
 }
 
-
-
+echo $markupToOutput;
+// output all IDs used so they can be loaded into the game's inventory data:
+$allItemIdsUsed = array_unique($allItemIdsUsed);
+echo implode(",",$allItemIdsUsed);
 
 ?>
