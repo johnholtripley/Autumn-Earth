@@ -845,6 +845,7 @@ background: url(/images/game-world/interface/currency/copper.png) no-repeat 50% 
     .shop {
         width: 350px;
         position: absolute;
+        background: #000;
         img {
             @include attention() {
                 & + p {

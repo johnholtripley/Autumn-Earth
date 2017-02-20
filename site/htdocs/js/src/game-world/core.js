@@ -265,26 +265,31 @@ function loadProfessionsAndRecipes(recipeIdsToLoad) {
 
 
 function getShopData() {
-    console.log("getShopData");
+
  thisMapShopItemIds = '';
+
+
+shopJSONData = 'shopData = {"mapNumber": 3,"shops": [{"name":"shop #1","hash":"zAbCd","uniqueItems":[],"shopSpecialism": 2,"categories": [1,2],"size":"small","currency":"money"},{"name":"shop #2","hash":"3AbCd","uniqueItems":{"14": [{"colour":3},{"colour":7}],"15": [{"colour":1}]},"shopSpecialism": null,"categories": [],"size":"small","currency":"money"}]}';
+
+
 //if no shops:
 // findInventoryItemData();
 // else
-loadShopData();
+loadShopData(shopJSONData);
 }
 
 
 
-function loadShopData() {
-console.log("loadShopData");
-    getJSON("/game-world/getShopItems.php", function(data) {
+function loadShopData(shopJSONData) {
+// post data with getJSONWithParams function ####
+    getJSONWithParams("/game-world/getShopItems.php", shopJSONData, function(data) {
 
 thisMapShopItemIds = data.allItemIds;
 UI.buildShop(data.markup);
         findInventoryItemData();
     }, function(status) {
         // try again:
-        loadShopData();
+      loadShopData(shopJSONData);
     });
 }
 

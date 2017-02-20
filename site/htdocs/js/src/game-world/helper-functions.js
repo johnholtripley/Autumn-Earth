@@ -534,7 +534,7 @@ var getJSON = function(url, successHandler, errorHandler) {
     xhr.send();
 };
 
-/*
+
 var getJSONWithParams = function(url, params, successHandler, errorHandler) {
         var xhr = typeof XMLHttpRequest != 'undefined' ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
     xhr.open('POST', url, true);
@@ -564,7 +564,7 @@ var getJSONWithParams = function(url, params, successHandler, errorHandler) {
      xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
         xhr.send(params);
 };
-*/
+
 
 
 function sendDataWithoutNeedingAResponse(url) {

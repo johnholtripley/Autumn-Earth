@@ -5,7 +5,7 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
 include($_SERVER['DOCUMENT_ROOT']."/includes/functions.php");
 
 
-
+/*
 $json ='{
 "mapNumber": 3,
 "shops": [
@@ -41,6 +41,14 @@ $json ='{
 ]
 
 }';
+*/
+
+
+
+
+$json = $_POST['shopData_'];
+
+
 
 $jsonData = json_decode($json, true);
 
@@ -183,7 +191,11 @@ array_multisort($shortname, SORT_ASC, $colour, SORT_ASC, $inventoryDataToSort);
 for ($j=0;$j<count($inventoryDataToSort);$j++) {
 	array_push($allItemIdsUsed, $inventoryDataToSort[$j]['itemID']);
 $markupToOutput .= '<li id="shopSlot'.$i.'-'.$j.'">';
-$markupToOutput .= '<img src="/images/game-world/inventory-items/'.$inventoryDataToSort[$j]['itemID'].'.png" alt="'.$inventoryDataToSort[$j]['colourName'].$inventoryDataToSort[$j]['shortname'].'">';
+$colourSuffix = '';
+if($inventoryDataToSort[$j]['colourName'] != '') {
+	$colourSuffix = '-'.strtolower(trim($inventoryDataToSort[$j]['colourName']));
+}
+$markupToOutput .= '<img src="/images/game-world/inventory-items/'.$inventoryDataToSort[$j]['itemID'].$colourSuffix.'.png" alt="'.$inventoryDataToSort[$j]['colourName'].$inventoryDataToSort[$j]['shortname'].'">';
 $markupToOutput .= '<p><em>'.$inventoryDataToSort[$j]['colourName'].$inventoryDataToSort[$j]['shortname'].'</em>';
 $markupToOutput .= '<span class="price">Sell price: '.parseMoney($inventoryDataToSort[$j]['priceCode']).'</span></p>';
 $markupToOutput .= '</li>';
