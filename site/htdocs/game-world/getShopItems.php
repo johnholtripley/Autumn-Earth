@@ -110,39 +110,82 @@ mysql_free_result($result3);
 
 
 
+// check for items that need colour, add these to the list
+// add a colourName attribute so that can be sorted rather than the numeric value
+// then sort
+
+
+
+
+
+
+
 
 
 $itemIdsThatNeedColourVariants = [12];
-for ($j=0;$j<count($inventoryData);$j++) {
+$inventoryDataCount = count($inventoryData);
+for ($j=0;$j<$inventoryDataCount;$j++) {
+	$inventoryData[$j]['colourName'] = "";
 	// check if this item needs colours (dyes, inks etc)
 	if (in_array($inventoryData[$j]['itemID'], $itemIdsThatNeedColourVariants)) {
-
-for ($k=0;$k<count($colourIndicesToUse);$k++) {
-	// make sure that an equivilent named item doesn't exist: 
-	$foundEquivilent = false;
-	for ($l=0;$l<count($inventoryData);$l++) {
-		if($l!=$j) {
-if($inventoryData[$j]['itemGroup'] == $inventoryData[$l]['itemGroup']) {
-
-if($inventoryData[$l]['colour'] == $colourIndicesToUse[$k]) {
-	$foundEquivilent = true;
-}
-
-}
+		$hasFoundAColourVariant = false;
+		for ($k=0;$k<count($colourIndicesToUse);$k++) {
+			// make sure that an equivilent named item doesn't exist: 
+			$foundEquivilent = false;
+			for ($l=0;$l<count($inventoryData);$l++) {
+				if($l!=$j) {
+					if($inventoryData[$j]['itemGroup'] == $inventoryData[$l]['itemGroup']) {
+						if($inventoryData[$l]['colour'] == $colourIndicesToUse[$k]) {
+							$foundEquivilent = true;
+						}
+					}
+				}
+			}
+			if(!$foundEquivilent) {
+				$newColourItem = $inventoryData[$j];
+				$newColourItem['colourName'] = $allColours[($colourIndicesToUse[$k])]." ";
+				array_push($inventoryData, $newColourItem);
+				$hasFoundAColourVariant = true;
+			}
 		}
-	}
-	if(!$foundEquivilent) {
-	echo $allColours[($colourIndicesToUse[$k])]." ".$inventoryData[$j]['shortname']."<br>";
-}
-	}
+		if($hasFoundAColourVariant) {
+unset($inventoryData[$j]);
+		}
 	} else {
 		// see if its colour needs to be displaying:
 		if(($inventoryData[$j]['colour'] != 0) && ($inventoryData[$j]['hasInherentColour'] == 0)) {
-echo $allColours[$inventoryData[$j]['colour']]." ";
+			$inventoryData[$j]['colourName'] = $allColours[$inventoryData[$j]['colour']]." ";
 		}
-	echo $inventoryData[$j]['shortname']."<br>";
+	}
 }
+
+
+$inventoryDataToSort = array_values($inventoryData);
+
+
+
+// sort by shortname and then colour:
+// http://stackoverflow.com/questions/3232965/sort-multidimensional-array-by-multiple-keys/3233009#3233009
+foreach ($inventoryDataToSort as $sortkey => $sortrow) {
+    $shortname[$sortkey]  = $sortrow['shortname'];
+    $colour[$sortkey] = $sortrow['colourName'];
 }
+array_multisort($shortname, SORT_ASC, $colour, SORT_ASC, $inventoryDataToSort);
+
+
+
+
+
+for ($j=0;$j<count($inventoryDataToSort);$j++) {
+echo $inventoryDataToSort[$j]['colourName'].$inventoryDataToSort[$j]['shortname']."<br>";
+}
+
+
+
+
+
+
+
 
 }
 
