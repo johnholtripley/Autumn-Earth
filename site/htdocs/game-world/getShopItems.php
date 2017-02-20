@@ -188,24 +188,18 @@ $markupToOutput .= '<p><em>'.$inventoryDataToSort[$j]['colourName'].$inventoryDa
 $markupToOutput .= '<span class="price">Sell price: '.parseMoney($inventoryDataToSort[$j]['priceCode']).'</span></p>';
 $markupToOutput .= '</li>';
 
-
-
-
-
 }
-
-
 
 $markupToOutput .= '</ol></div></div>';
 
-
-
-
 }
 
-echo $markupToOutput;
+
 // output all IDs used so they can be loaded into the game's inventory data:
 $allItemIdsUsed = array_unique($allItemIdsUsed);
-echo implode(",",$allItemIdsUsed);
+
+// create JSON response:
+echo '{"markup": ["'.addcslashes($markupToOutput, '"\\/').'"],"allItemIds": ["'.implode(",",$allItemIdsUsed).'"]}';
+
 
 ?>
