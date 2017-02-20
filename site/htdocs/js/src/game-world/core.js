@@ -269,7 +269,7 @@ function getShopData() {
  thisMapShopItemIds = '';
 
 
-shopJSONData = 'shopData = {"mapNumber": 3,"shops": [{"name":"shop #1","hash":"zAbCd","uniqueItems":[],"shopSpecialism": 2,"categories": [1,2],"size":"small","currency":"money"},{"name":"shop #2","hash":"3AbCd","uniqueItems":{"14": [{"colour":3},{"colour":7}],"15": [{"colour":1}]},"shopSpecialism": null,"categories": [],"size":"small","currency":"money"}]}';
+shopJSONData = 'shopData={"mapNumber": 3,"shops": [{"name":"shop #1","hash":"zAbCd","uniqueItems":[],"shopSpecialism": 2,"categories": [1,2],"size":"small","currency":"money"},{"name":"shop #2","hash":"3AbCd","uniqueItems":{"14": [{"colour":3},{"colour":7}],"15": [{"colour":1}]},"shopSpecialism": null,"categories": [],"size":"small","currency":"money"}]}';
 
 
 //if no shops:

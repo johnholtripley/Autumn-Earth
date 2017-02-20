@@ -536,7 +536,7 @@ var getJSON = function(url, successHandler, errorHandler) {
 
 
 var getJSONWithParams = function(url, params, successHandler, errorHandler) {
-        var xhr = typeof XMLHttpRequest != 'undefined' ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
+    var xhr = typeof XMLHttpRequest != 'undefined' ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
     xhr.open('POST', url, true);
     xhr.onreadystatechange = function() {
         var status;
@@ -553,17 +553,18 @@ var getJSONWithParams = function(url, params, successHandler, errorHandler) {
                     wasParsedOk = false;
                     errorHandler && errorHandler(status);
                 }
-                if(wasParsedOk) {
-                successHandler && successHandler(data);
-            }
+                if (wasParsedOk) {
+                    successHandler && successHandler(data);
+                }
             } else {
                 errorHandler && errorHandler(status);
             }
         }
     };
-     xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-        xhr.send(params);
+    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhr.send(params);
 };
+
 
 
 

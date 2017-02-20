@@ -46,7 +46,7 @@ $json ='{
 
 
 
-$json = $_POST['shopData_'];
+$json = $_POST['shopData'];
 
 
 
