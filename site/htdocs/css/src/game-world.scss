@@ -836,3 +836,87 @@ background: url(/images/game-world/interface/currency/silver.png) no-repeat 50% 
 background: url(/images/game-world/interface/currency/copper.png) no-repeat 50% 50%;
     }
 }
+
+
+
+
+
+#shopPanel {
+    .shop {
+        width: 350px;
+        position: absolute;
+        img {
+            @include attention() {
+                & + p {
+                    opacity: 1;
+                    pointer-events: auto;
+                    @include transform(translateY(0));
+                }
+            }
+        }
+        li {
+            // slot
+            width: 46px;
+            height: 46px;
+            padding: 3px;
+            display: block;
+            float: left;
+            background: url(../images/game-world/interface/inventory-slot.png) no-repeat 50% 50%;
+            cursor: url(../images/game-world/cursors/active.gif) 3 3, auto;
+            margin: 0;
+            @include border-box;
+            position: relative;
+            box-shadow: 0 0 0 0 #eebb3f;
+            @include transition(box-shadow 0.2s ease-in-out);
+            .qty {
+                position: absolute;
+                right: 3px;
+                bottom: 3px;
+                text-align: right;
+                color: #fff;
+                cursor: default;
+                font-size: 11px;
+                pointer-events: none;
+            }
+            img {
+                display: block;
+            }
+            &.changed {
+                box-shadow: 0 0 5px 3px #eebb3f;
+                z-index: 1;
+            }
+            &.hidden {
+                img,
+                p,
+                span {
+                    opacity: 0;
+                }
+            }
+        }
+            p {
+        // tooltip
+        background: #eee;
+        z-index: 1;
+        margin: 0;
+        bottom: 100%;
+        color: #000;
+        display: block;
+        left: 0;
+        min-width: 120px;
+        opacity: 0;
+        padding: 8px;
+        pointer-events: none;
+        position: absolute;
+        font-size: 11px;
+        cursor: url(../images/game-world/cursors/default.gif) 3 3, auto;
+        @include transform(translateY(10px));
+        @include transition(all .25s ease-out);
+        em {
+            // tooltip item title
+            display: block;
+            font-size: 1.2em;
+            font-style: normal;
+        }
+    }
+    }
+}

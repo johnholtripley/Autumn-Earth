@@ -2768,7 +2768,6 @@ UI.buildShop(data.markup);
 }
 
 
-
 function findInventoryItemData() {
     var itemIdsToGet = [];
     var theseRecipeComponents;
