@@ -73,9 +73,9 @@ var UI = {
         }
 
         inventoryPanels.innerHTML = inventoryMarkup;
-        inventoryPanels.ondblclick = UI.inventoryItemDoubleClick;
+        gameWrapper.ondblclick = UI.doubleClick;
 
-        document.getElementById('createRecipeList').ondblclick = UI.craftingPanelDoubleClick;
+     
         document.getElementById('createRecipeList').onclick = UI.craftingPanelSingleClick;
         document.getElementById('craftingRecipeCreateButton').onclick = UI.craftingRecipeCreate;
         splitStackPanel.onsubmit = inventorySplitStackSubmit;
@@ -168,11 +168,24 @@ addNewBag: function(newBagObject) {
         }
     },
 
-    inventoryItemDoubleClick: function(e) {
+    doubleClick: function(e) {
         var thisItemsAction = e.target.getAttribute('data-action');
         if (thisItemsAction) {
             inventoryItemAction(e.target, thisItemsAction, e.target.getAttribute('data-action-value'));
+        } else {
+
+
+
+   var thisNode = getNearestParentId(e.target);
+
+        if (thisNode.id.substring(0, 6) == "recipe") {
+            recipeSelectComponents(thisNode.id);
+        } else if (thisNode.id.substring(0, 4) == "shop") {
+            UI.buyFromShopSlot(thisNode.id);
         }
+}
+
+
     },
 
     showDialogue: function(whichNPC, text) {
@@ -506,13 +519,6 @@ if(recipeCustomScrollBar) {
 
 
 
-    craftingPanelDoubleClick: function(e) {
-        var thisNode = getNearestParentId(e.target);
-        if (thisNode.id.substring(0, 6) == "recipe") {
-            recipeSelectComponents(thisNode.id);
-        }
-    },
-
     craftingPanelSingleClick: function(e) {
 
 
@@ -607,6 +613,16 @@ globalClick: function(e) {
     openShop: function(shopHash) {
         shopCurrentlyOpen = shopHash;
         document.getElementById("shop"+shopHash).classList.add("active");
+    },
+
+    buyFromShopSlot: function(slotId) {
+        
+        var thisSlotElement = document.getElementById(slotId);
+     var thisSlotImageElement = thisSlotElement.firstElementChild;
+     var thisShopPanelElement = thisSlotElement.parentNode.parentNode;
+        var buyPriceForOne = thisSlotImageElement.getAttribute('data-price');
+        var thisCurrency = thisShopPanelElement.getAttribute('data-currency');
+        alert("buying from "+slotId+" at "+buyPriceForOne+" "+thisCurrency);
     }
 
 }

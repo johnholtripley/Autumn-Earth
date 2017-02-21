@@ -844,7 +844,9 @@ background: url(/images/game-world/interface/currency/copper.png) no-repeat 50% 
 
 #shopPanel {
     .shop {
-        width: 350px;
+        width: 322px;
+        left: 375px;
+        top: 335px;
         position: absolute;
         background: #000;
         @include transition(opacity 0.4s ease);

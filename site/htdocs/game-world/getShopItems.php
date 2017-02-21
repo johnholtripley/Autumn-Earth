@@ -71,7 +71,7 @@ $colourIndicesToUse = [1,2,4,5,6,8,16];
 
 
 for ($i=0;$i<count($jsonData['shops']);$i++) {
-	$markupToOutput .= '<div class="shop" id="shop'.$jsonData['shops'][$i]["hash"].'">';
+	$markupToOutput .= '<div class="shop" id="shop'.$jsonData['shops'][$i]["hash"].'" data-currency="'.$jsonData['shops'][$i]["currency"].'">';
 $markupToOutput .= '<div class="draggableBar">'.$jsonData['shops'][$i]["name"].'</div><button class="closePanel">close</button><ol>';
 $inventoryData = [];
 
@@ -195,9 +195,20 @@ $colourSuffix = '';
 if($inventoryDataToSort[$j]['colourName'] != '') {
 	$colourSuffix = '-'.strtolower(trim($inventoryDataToSort[$j]['colourName']));
 }
-$markupToOutput .= '<img src="/images/game-world/inventory-items/'.$inventoryDataToSort[$j]['itemID'].$colourSuffix.'.png" alt="'.$inventoryDataToSort[$j]['colourName'].$inventoryDataToSort[$j]['shortname'].'">';
+$imgDataAttributes = 'data-price="'.$inventoryDataToSort[$j]['priceCode'].'"';
+$imgDataAttributes .= ' data-colour="'.$inventoryDataToSort[$j]['colour'].'"';
+$imgDataAttributes .= ' data-type="'.$inventoryDataToSort[$j]['itemID'].'"';
+
+if(isset($inventoryDataToSort[$j]['contains'])) {
+$imgDataAttributes .= ' data-contains="'.$inventoryDataToSort[$j]['contains'].'"';
+}
+if(isset($inventoryDataToSort[$j]['inscription'])) {
+$imgDataAttributes .= ' data-inscription="'.$inventoryDataToSort[$j]['inscription'].'"';
+}
+
+$markupToOutput .= '<img src="/images/game-world/inventory-items/'.$inventoryDataToSort[$j]['itemID'].$colourSuffix.'.png" '.$imgDataAttributes.' alt="'.$inventoryDataToSort[$j]['colourName'].$inventoryDataToSort[$j]['shortname'].'">';
 $markupToOutput .= '<p><em>'.$inventoryDataToSort[$j]['colourName'].$inventoryDataToSort[$j]['shortname'].'</em>';
-$markupToOutput .= '<span class="price">Sell price: '.parseMoney($inventoryDataToSort[$j]['priceCode']).'</span></p>';
+$markupToOutput .= '<span class="price">Buy price: '.parseMoney($inventoryDataToSort[$j]['priceCode']).'</span></p>';
 $markupToOutput .= '</li>';
 
 }
