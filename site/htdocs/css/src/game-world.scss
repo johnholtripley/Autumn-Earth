@@ -926,6 +926,9 @@ background: url(/images/game-world/interface/currency/copper.png) no-repeat 50% 
         position: absolute;
         font-size: 11px;
         cursor: url(../images/game-world/cursors/default.gif) 3 3, auto;
+        .specialPrice {
+            color: #16952b;
+        }
         @include transform(translateY(10px));
         @include transition(all .25s ease-out);
         em {

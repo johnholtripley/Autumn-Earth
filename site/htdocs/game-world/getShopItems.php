@@ -200,11 +200,12 @@ if($inventoryDataToSort[$j]['colourName'] != '') {
 }
 
 $thisItemsPrice = intval($inventoryDataToSort[$j]['priceCode']);
-
+$specialPriceClass = '';
 if($thisShopsSpecialism) {
 // compare the specialism as a string:
 	if(strrpos($inventoryDataToSort[$j]['itemCategories'], ''.$thisShopsSpecialism) !== false) {
 	$thisItemsPrice = floor($thisItemsPrice*0.9);
+	$specialPriceClass = ' specialPrice';
 	if($thisItemsPrice<1) {
 $thisItemsPrice = 1;
 	}
@@ -226,7 +227,7 @@ $imgDataAttributes .= ' data-inscription="'.$inventoryDataToSort[$j]['inscriptio
 
 $markupToOutput .= '<img src="/images/game-world/inventory-items/'.$inventoryDataToSort[$j]['itemID'].$colourSuffix.'.png" '.$imgDataAttributes.' alt="'.$inventoryDataToSort[$j]['colourName'].$inventoryDataToSort[$j]['shortname'].'">';
 $markupToOutput .= '<p><em>'.$inventoryDataToSort[$j]['colourName'].$inventoryDataToSort[$j]['shortname'].'</em>';
-$markupToOutput .= '<span class="price">Buy price: '.parseMoney($thisItemsPrice).'</span></p>';
+$markupToOutput .= '<span class="price'.$specialPriceClass.'">Buy price: '.parseMoney($thisItemsPrice).'</span></p>';
 $markupToOutput .= '</li>';
 
 }
