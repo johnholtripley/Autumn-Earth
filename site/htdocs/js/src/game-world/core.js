@@ -265,22 +265,16 @@ function loadProfessionsAndRecipes(recipeIdsToLoad) {
 
 
 function getShopData() {
-    thisMapShopItemIds = ''; 
+    thisMapShopItemIds = '';
     if (thisMapData.shops.length == 0) {
         findInventoryItemData();
     } else {
-      
-
-        
-var shopData = JSON.parse('{"mapNumber": '+currentMap+',"shops": '+JSON.stringify(thisMapData.shops)+'}');
-// loop through shops and create hashes 
-for (var i=0;i<shopData.shops.length;i++) {
-  
-    shopData.shops[i].hash = generateHash(shopData.shops[i].name);
-}
-        //var shopJSONData = 'shopData={"mapNumber": 3,"shops": [{"name":"shop #1","hash":"zAbCd","uniqueItems":[],"shopSpecialism": 2,"categories": [1,2],"size":"small","currency":"money"},{"name":"shop #2","hash":"3AbCd","uniqueItems":{"14": [{"colour":3},{"colour":7}],"15": [{"colour":1}]},"shopSpecialism": null,"categories": [],"size":"small","currency":"money"}]}';
-       
-        loadShopData('shopData='+JSON.stringify(shopData));
+        var shopData = JSON.parse('{"mapNumber": ' + currentMap + ',"shops": ' + JSON.stringify(thisMapData.shops) + '}');
+        // loop through shops and create hashes 
+        for (var i = 0; i < shopData.shops.length; i++) {
+            shopData.shops[i].hash = generateHash(shopData.shops[i].name);
+        }
+        loadShopData('shopData=' + JSON.stringify(shopData));
     }
 }
 
@@ -705,6 +699,11 @@ function update() {
                 dialogue.classList.remove("active");
                 // only remove this after dialogue has faded out completely:
                 dialogue.addEventListener(whichTransitionEvent, UI.removeActiveDialogue, false);
+                // close the shop
+                if(shopCurrentlyOpen != -1) {
+document.getElementById("shop"+shopCurrentlyOpen).classList.remove("active");
+shopCurrentlyOpen = -1;
+                }
             }
         }
     } else {
@@ -899,6 +898,7 @@ function processSpeech(thisNPC, thisSpeechPassedIn, thisSpeechCode, isPartOfNPCs
                 break;
                 case "shop":
 UI.openShop(generateHash(thisNPC.speech[thisNPC.speechIndex][2]));
+thisNPC.speechIndex--;
                 break;
             case "profession":
                 var professionId = thisNPC.speech[thisNPC.speechIndex][2];

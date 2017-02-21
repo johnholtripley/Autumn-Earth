@@ -576,13 +576,24 @@ if(recipeCustomScrollBar) {
         }
     },
 
-    globalClick: function(e) {
-        if (e.target.className) {
-            if (e.target.className == "closePanel") {
-                e.target.parentNode.classList.remove("active");
+globalClick: function(e) {
+    if (e.target.className) {
+        if (e.target.className == "closePanel") {
+            e.target.parentNode.classList.remove("active");
+            // check if it's a shop panel:
+            if (e.target.parentNode.classList.contains("shop")) {
+                shopCurrentlyOpen = -1;
+                // close shop dialogue as well:
+                if (activeNPCForDialogue != '') {
+                    //  dialogue.classList.add("slowerFade");
+                    dialogue.classList.remove("active");
+                    UI.removeActiveDialogue();
+                }
             }
         }
-    },
+    }
+},
+
 
 
     updateCurrencies: function() {
@@ -591,6 +602,11 @@ if(recipeCustomScrollBar) {
 
     buildShop: function(markup) {
         shopPanel.innerHTML = markup;
+    },
+
+    openShop: function(shopHash) {
+        shopCurrentlyOpen = shopHash;
+        document.getElementById("shop"+shopHash).classList.add("active");
     }
 
 }

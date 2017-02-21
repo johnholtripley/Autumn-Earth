@@ -62,6 +62,7 @@ var currentRecipePanelProfession = -1;
 var currentItemGroupFilters = "";
 
 var thisMapShopItemIds = '';
+var shopCurrentlyOpen = -1;
 
 // key bindings
 var key = [0, 0, 0, 0, 0, 0, 0];
