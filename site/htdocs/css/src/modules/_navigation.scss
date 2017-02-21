@@ -5,7 +5,7 @@
     ul {
         @include mq($useOffCanvasUpTo) {
             float: right;
-            width: 65%;
+            
             position: relative;
             z-index: 1;
             ul {
