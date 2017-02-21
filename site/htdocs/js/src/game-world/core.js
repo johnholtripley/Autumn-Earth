@@ -265,11 +265,13 @@ function loadProfessionsAndRecipes(recipeIdsToLoad) {
 
 
 function getShopData() {
-    thisMapShopItemIds = '';
+    thisMapShopItemIds = ''; 
     if (thisMapData.shops.length == 0) {
         findInventoryItemData();
     } else {
         // thisMapData.shops #########
+        
+        
         var shopJSONData = 'shopData={"mapNumber": 3,"shops": [{"name":"shop #1","hash":"zAbCd","uniqueItems":[],"shopSpecialism": 2,"categories": [1,2],"size":"small","currency":"money"},{"name":"shop #2","hash":"3AbCd","uniqueItems":{"14": [{"colour":3},{"colour":7}],"15": [{"colour":1}]},"shopSpecialism": null,"categories": [],"size":"small","currency":"money"}]}';
         loadShopData(shopJSONData);
     }
@@ -887,6 +889,9 @@ function processSpeech(thisNPC, thisSpeechPassedIn, thisSpeechCode, isPartOfNPCs
                 thisNPC.speech.splice(thisNPC.speechIndex, 1);
                 // knock this back one so to keep it in step with the removed item:
                 thisNPC.speechIndex--;
+                break;
+                case "shop":
+UI.openShop(generateHash(thisNPC.speech[thisNPC.speechIndex][2]));
                 break;
             case "profession":
                 var professionId = thisNPC.speech[thisNPC.speechIndex][2];

@@ -31,6 +31,7 @@
             { "src": "block.png", "centreX": 24, "centreY": 45 },
             { "src": "little-block.png", "centreX": 24, "centreY": 24 }
         ],
+        "shops": [],
         "npcs": [{
             "name": "labourer",
             "src": "labourer.png",
