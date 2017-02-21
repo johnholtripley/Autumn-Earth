@@ -5,6 +5,8 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
 include($_SERVER['DOCUMENT_ROOT']."/includes/functions.php");
 
 
+$json = $_POST['shopData'];
+
 /*
 $json ='{
 "mapNumber": 3,
@@ -13,7 +15,7 @@ $json ='{
 	"name":"shop #1",
 	"hash":"zAbCd",
 	"uniqueItems":[],
-	"shopSpecialism": 2,
+	"specialism": 2,
 	"categories": [1,2],
 	"size":"small",
 	"currency":"money"
@@ -33,7 +35,7 @@ $json ='{
 				"colour":1
 			}]}
 		,
-	"shopSpecialism": null,
+	"specialism": null,
 	"categories": [],
 	"size":"small",
 	"currency":"money"
@@ -46,7 +48,7 @@ $json ='{
 
 
 
-$json = $_POST['shopData'];
+
 
 
 
@@ -185,6 +187,7 @@ foreach ($inventoryDataToSort as $sortkey => $sortrow) {
 array_multisort($shortname, SORT_ASC, $colour, SORT_ASC, $inventoryDataToSort);
 
 
+$thisShopsSpecialism = $jsonData['shops'][$i]["specialism"];
 
 
 
@@ -195,7 +198,22 @@ $colourSuffix = '';
 if($inventoryDataToSort[$j]['colourName'] != '') {
 	$colourSuffix = '-'.strtolower(trim($inventoryDataToSort[$j]['colourName']));
 }
-$imgDataAttributes = 'data-price="'.$inventoryDataToSort[$j]['priceCode'].'"';
+
+$thisItemsPrice = intval($inventoryDataToSort[$j]['priceCode']);
+
+if($thisShopsSpecialism) {
+// compare the specialism as a string:
+	if(strrpos($inventoryDataToSort[$j]['itemCategories'], ''.$thisShopsSpecialism) !== false) {
+	$thisItemsPrice = floor($thisItemsPrice*0.9);
+	if($thisItemsPrice<1) {
+$thisItemsPrice = 1;
+	}
+	
+}
+} 
+
+
+$imgDataAttributes = 'data-price="'.$thisItemsPrice.'"';
 $imgDataAttributes .= ' data-colour="'.$inventoryDataToSort[$j]['colour'].'"';
 $imgDataAttributes .= ' data-type="'.$inventoryDataToSort[$j]['itemID'].'"';
 
@@ -208,7 +226,7 @@ $imgDataAttributes .= ' data-inscription="'.$inventoryDataToSort[$j]['inscriptio
 
 $markupToOutput .= '<img src="/images/game-world/inventory-items/'.$inventoryDataToSort[$j]['itemID'].$colourSuffix.'.png" '.$imgDataAttributes.' alt="'.$inventoryDataToSort[$j]['colourName'].$inventoryDataToSort[$j]['shortname'].'">';
 $markupToOutput .= '<p><em>'.$inventoryDataToSort[$j]['colourName'].$inventoryDataToSort[$j]['shortname'].'</em>';
-$markupToOutput .= '<span class="price">Buy price: '.parseMoney($inventoryDataToSort[$j]['priceCode']).'</span></p>';
+$markupToOutput .= '<span class="price">Buy price: '.parseMoney($thisItemsPrice).'</span></p>';
 $markupToOutput .= '</li>';
 
 }

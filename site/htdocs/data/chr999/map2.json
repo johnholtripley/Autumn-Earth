@@ -124,14 +124,14 @@
         "shops": [{
             "name": "shop #1",
             "uniqueItems": [],
-            "shopSpecialism": 2,
+            "specialism": 2,
             "categories": [1, 2],
             "size": "small",
             "currency": "money"
         }, {
             "name": "shop #2",
             "uniqueItems": { "14": [{ "colour": 3 }, { "colour": 7 }], "15": [{ "colour": 1,"inscription": "stuffffff" }] },
-            "shopSpecialism": null,
+            "specialism": null,
             "categories": [],
             "size": "small",
             "currency": "money"
