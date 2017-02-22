@@ -851,6 +851,9 @@ function parseMoney(amount) {
     if (copper != 0) {
         moneyOutput += copper + '<span class="copper"></span>';
     }
+    if(amount == 0) {
+      moneyOutput = '0<span class="copper"></span>';  
+    }
     return moneyOutput;
 }
 
