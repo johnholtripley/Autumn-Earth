@@ -4,6 +4,8 @@ var clearRecipeSearch = document.getElementById('clearRecipeSearch');
 var recipeFilter = document.getElementById('recipeFilter');
 var splitStackInput = document.getElementById('splitStackInput');
 var splitStackPanel = document.getElementById('splitStackPanel');
+var shopSplitStackInput = document.getElementById('shopSplitStackInput');
+var shopSplitStackPanel = document.getElementById('shopSplitStackPanel');
 var craftingRecipeCreateButton = document.getElementById('craftingRecipeCreateButton');
 var craftingPanel = document.getElementById('craftingPanel');
 var selectComponentsItemBeingCreated = document.getElementById('selectComponentsItemBeingCreated');
@@ -70,7 +72,9 @@ var UI = {
         document.getElementById('createRecipeList').onclick = UI.craftingPanelSingleClick;
         document.getElementById('craftingRecipeCreateButton').onclick = UI.craftingRecipeCreate;
         splitStackPanel.onsubmit = inventorySplitStackSubmit;
+        shopSplitStackPanel.onsubmit = UI.shopSplitStackSubmit;
         document.getElementById('splitStackCancel').onclick = inventorySplitStackCancel;
+        document.getElementById('shopSplitStackCancel').onclick = UI.shopSplitStackCancel;
         UI.initInventoryDrag('.inventoryBag ol');
         UI.initShopDrag();
         UI.updateCardAlbum();
@@ -493,10 +497,10 @@ var UI = {
                 if (key[5]) {
                     UI.sourceSlot = thisNode.id.substring(8);
                      // make a copy of the object, not a reference:
-                        UI.draggedInventoryObject = JSON.parse(JSON.stringify(hero.inventory[UI.sourceSlot]));
-                        splitStackInput.setAttribute("max", maxNumberOfItemsPerSlot);
-                        splitStackInput.value = 1;
-                        splitStackInput.focus();
+                        //UI.draggedInventoryObject = JSON.parse(JSON.stringify(hero.inventory[UI.sourceSlot]));
+                        //shopSplitStackInput.setAttribute("max", maxNumberOfItemsPerSlot);
+                        shopSplitStackInput.value = 1;
+                        shopSplitStackInput.focus();
                           // can't set selection for number type input:
                         // http://stackoverflow.com/questions/21177489/selectionstart-selectionend-on-input-type-number-no-longer-allowed-in-chrome
                         //   splitStackInput.setSelectionRange(0, defaultSplitValue.toString().length);
@@ -506,8 +510,8 @@ var UI = {
                         // -44 for the slot height:
                         objInitLeft = clickedSlotRect.left + 3;
                         objInitTop = clickedSlotRect.top + 3 + pageScrollTopY - 44;
-                        splitStackPanel.style.cssText = "z-index:2;top: " + objInitTop + "px; left: " + objInitLeft + "px;";
-                        splitStackPanel.classList.add("active");
+                        shopSplitStackPanel.style.cssText = "z-index:2;top: " + objInitTop + "px; left: " + objInitLeft + "px;";
+                        shopSplitStackPanel.classList.add("active");
                         key[5] = 0;
                 } else {
                     // this will fire for double click as well
@@ -515,6 +519,28 @@ var UI = {
                 }
             }
         }, false);
+    },
+
+    shopSplitStackSubmit: function() {
+    if (e) {
+        e.preventDefault();
+    }
+
+
+    var enteredValue = shopSplitStackInput.value;
+    var isValid = true;
+    enteredValue = parseInt(enteredValue);
+    if (enteredValue < 1) {
+        isValid = false;
+    }
+    if (!(Number.isInteger(enteredValue))) {
+        isValid = false;
+    }
+    if (enteredValue > maxNumberOfItemsPerSlot) {
+        isValid = false;
+    }
+    if (isValid) {
+    }
     },
 
 
@@ -647,6 +673,10 @@ var UI = {
         document.getElementById("shop" + shopCurrentlyOpen).classList.remove("active");
         shopCurrentlyOpen = -1;
 
+    },
+
+    shopSplitStackCancel: function() {
+        shopSplitStackPanel.classList.remove("active");
     },
 
     buyFromShopSlot: function(slotId) {

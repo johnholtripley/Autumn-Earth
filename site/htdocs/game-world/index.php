@@ -72,6 +72,15 @@ background: #ec35ea;
 <div id="booksAndParchments"></div>
 
 <div id="shopPanel"></div>
+<div id="draggableShopSlot"></div>
+<form id="shopSplitStackPanel">
+  <fieldset>
+<label for="shopSplitStackInput" class="visibleHide">Enter quantity:</label>
+<input type="number" placeholder="Enter quantity" min="0" max="20" pattern="[0-9]*" id="shopSplitStackInput">
+<button id="shopSplitStackCancel" type="button">Cancel</button>
+<input type="submit" value="Ok">
+</fieldset>
+</form>
 
 <div id="boosterPack">
 <ol>
