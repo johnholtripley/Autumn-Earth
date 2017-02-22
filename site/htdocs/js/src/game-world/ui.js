@@ -212,9 +212,16 @@ addNewBag: function(newBagObject) {
     },
 
     removeActiveDialogue: function() {
+
+       /* if (shopCurrentlyOpen != -1) {
+            shopCurrentlyOpen = -1;
+            activeNPCForDialogue.speechIndex = 0;
+        }*/
+
         activeNPCForDialogue = '';
         dialogue.removeEventListener(whichTransitionEvent, UI.removeActiveDialogue, false);
     },
+
 
     showNotification: function(markup) {
         notification.classList.remove("active");
@@ -593,7 +600,9 @@ globalClick: function(e) {
                 if (activeNPCForDialogue != '') {
                     //  dialogue.classList.add("slowerFade");
                     dialogue.classList.remove("active");
+                    activeNPCForDialogue.speechIndex = 0;
                     UI.removeActiveDialogue();
+
                 }
             }
         }
@@ -613,6 +622,13 @@ globalClick: function(e) {
     openShop: function(shopHash) {
         shopCurrentlyOpen = shopHash;
         document.getElementById("shop"+shopHash).classList.add("active");
+    },
+
+    closeShop: function() {
+document.getElementById("shop"+shopCurrentlyOpen).classList.remove("active");
+shopCurrentlyOpen = -1;
+//activeNPCForDialogue = '';
+      //                  canCloseDialogueBalloonNextClick = false;
     },
 
     buyFromShopSlot: function(slotId) {

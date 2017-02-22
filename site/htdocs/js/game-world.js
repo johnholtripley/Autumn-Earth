@@ -2096,9 +2096,16 @@ addNewBag: function(newBagObject) {
     },
 
     removeActiveDialogue: function() {
+
+       /* if (shopCurrentlyOpen != -1) {
+            shopCurrentlyOpen = -1;
+            activeNPCForDialogue.speechIndex = 0;
+        }*/
+
         activeNPCForDialogue = '';
         dialogue.removeEventListener(whichTransitionEvent, UI.removeActiveDialogue, false);
     },
+
 
     showNotification: function(markup) {
         notification.classList.remove("active");
@@ -2477,7 +2484,9 @@ globalClick: function(e) {
                 if (activeNPCForDialogue != '') {
                     //  dialogue.classList.add("slowerFade");
                     dialogue.classList.remove("active");
+                    activeNPCForDialogue.speechIndex = 0;
                     UI.removeActiveDialogue();
+
                 }
             }
         }
@@ -2497,6 +2506,13 @@ globalClick: function(e) {
     openShop: function(shopHash) {
         shopCurrentlyOpen = shopHash;
         document.getElementById("shop"+shopHash).classList.add("active");
+    },
+
+    closeShop: function() {
+document.getElementById("shop"+shopCurrentlyOpen).classList.remove("active");
+shopCurrentlyOpen = -1;
+//activeNPCForDialogue = '';
+      //                  canCloseDialogueBalloonNextClick = false;
     },
 
     buyFromShopSlot: function(slotId) {
@@ -3210,13 +3226,19 @@ function update() {
             if (!(isInRange(hero.x, hero.y, activeNPCForDialogue.x, activeNPCForDialogue.y, closeDialogueDistance))) {
                 dialogue.classList.add("slowerFade");
                 dialogue.classList.remove("active");
-                // only remove this after dialogue has faded out completely:
-                dialogue.addEventListener(whichTransitionEvent, UI.removeActiveDialogue, false);
+               
                 // close the shop
-                if(shopCurrentlyOpen != -1) {
-document.getElementById("shop"+shopCurrentlyOpen).classList.remove("active");
-shopCurrentlyOpen = -1;
-                }
+                
+
+if(shopCurrentlyOpen != -1) {
+
+            activeNPCForDialogue.speechIndex = 0;
+            document.getElementById("shop"+shopCurrentlyOpen).classList.remove("active");
+             shopCurrentlyOpen = -1;
+        }
+         // only remove this after dialogue has faded out completely:
+                dialogue.addEventListener(whichTransitionEvent, UI.removeActiveDialogue, false);
+
             }
         }
     } else {
@@ -3379,6 +3401,11 @@ function checkForActions() {
                         dialogue.classList.remove("active");
                         activeNPCForDialogue = '';
                         canCloseDialogueBalloonNextClick = false;
+
+ if(shopCurrentlyOpen != -1) {
+UI.closeShop();
+                }
+
                     } else {
                         var thisSpeech = thisNPC.speech[thisNPC.speechIndex][0];
                         var thisSpeechCode = thisNPC.speech[thisNPC.speechIndex][1];
@@ -3411,7 +3438,7 @@ function processSpeech(thisNPC, thisSpeechPassedIn, thisSpeechCode, isPartOfNPCs
                 break;
                 case "shop":
 UI.openShop(generateHash(thisNPC.speech[thisNPC.speechIndex][2]));
-thisNPC.speechIndex--;
+//thisNPC.speechIndex--;
                 break;
             case "profession":
                 var professionId = thisNPC.speech[thisNPC.speechIndex][2];
