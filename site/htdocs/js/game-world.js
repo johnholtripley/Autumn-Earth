@@ -1959,7 +1959,7 @@ var UI = {
         inventoryPanels.innerHTML = inventoryMarkup;
         gameWrapper.ondblclick = UI.doubleClick;
 
-     
+
         document.getElementById('createRecipeList').onclick = UI.craftingPanelSingleClick;
         document.getElementById('craftingRecipeCreateButton').onclick = UI.craftingRecipeCreate;
         splitStackPanel.onsubmit = inventorySplitStackSubmit;
@@ -1981,20 +1981,20 @@ var UI = {
         inventoryInterfaceIsBuilt = true;
     },
 
-addNewBag: function(newBagObject) {
-    // add to object:
-    hero.bags.push(newBagObject);
-    i = hero.bags.length - 1;
-    inventoryMarkup = '<div class="inventoryBag" id="inventoryBag' + i + '"><div class="draggableBar">' + currentActiveInventoryItems[hero.bags[i].type].shortname + '</div><ol class="active" id="bag' + i + '">';
-    var thisBagNumberOfSlots = currentActiveInventoryItems[hero.bags[i].type].actionValue;
-    for (var j = 0; j < thisBagNumberOfSlots; j++) {
-        thisSlotsID = i + '-' + j;
-        inventoryMarkup += '<li id="slot' + thisSlotsID + '"></li>';
-    }
-    inventoryMarkup += '</ol></div></div>';
-    inventoryPanels.insertAdjacentHTML('beforeend', inventoryMarkup);
-    UI.initInventoryDrag('#inventoryBag'+i+' ol');
-},
+    addNewBag: function(newBagObject) {
+        // add to object:
+        hero.bags.push(newBagObject);
+        i = hero.bags.length - 1;
+        inventoryMarkup = '<div class="inventoryBag" id="inventoryBag' + i + '"><div class="draggableBar">' + currentActiveInventoryItems[hero.bags[i].type].shortname + '</div><ol class="active" id="bag' + i + '">';
+        var thisBagNumberOfSlots = currentActiveInventoryItems[hero.bags[i].type].actionValue;
+        for (var j = 0; j < thisBagNumberOfSlots; j++) {
+            thisSlotsID = i + '-' + j;
+            inventoryMarkup += '<li id="slot' + thisSlotsID + '"></li>';
+        }
+        inventoryMarkup += '</ol></div></div>';
+        inventoryPanels.insertAdjacentHTML('beforeend', inventoryMarkup);
+        UI.initInventoryDrag('#inventoryBag' + i + ' ol');
+    },
 
     showChangeInInventory: function(whichSlotsToUpdate) {
         // add a transition end detector to just the first element that will be changed:
@@ -2060,14 +2060,14 @@ addNewBag: function(newBagObject) {
 
 
 
-   var thisNode = getNearestParentId(e.target);
+            var thisNode = getNearestParentId(e.target);
 
-        if (thisNode.id.substring(0, 6) == "recipe") {
-            recipeSelectComponents(thisNode.id);
-        } else if (thisNode.id.substring(0, 4) == "shop") {
-            UI.buyFromShopSlot(thisNode.id);
+            if (thisNode.id.substring(0, 6) == "recipe") {
+                recipeSelectComponents(thisNode.id);
+            } else if (thisNode.id.substring(0, 4) == "shop") {
+                UI.buyFromShopSlot(thisNode.id);
+            }
         }
-}
 
 
     },
@@ -2097,10 +2097,10 @@ addNewBag: function(newBagObject) {
 
     removeActiveDialogue: function() {
 
-       /* if (shopCurrentlyOpen != -1) {
-            shopCurrentlyOpen = -1;
-            activeNPCForDialogue.speechIndex = 0;
-        }*/
+        /* if (shopCurrentlyOpen != -1) {
+             shopCurrentlyOpen = -1;
+             activeNPCForDialogue.speechIndex = 0;
+         }*/
 
         activeNPCForDialogue = '';
         dialogue.removeEventListener(whichTransitionEvent, UI.removeActiveDialogue, false);
@@ -2118,31 +2118,31 @@ addNewBag: function(newBagObject) {
         var cardAlbumMarkup = '';
         var thisCardsClass, thisCardsQuantityOutput;
 
-// count quantities for each card:
-// http://stackoverflow.com/questions/5667888/counting-the-occurrences-of-javascript-array-elements#answer-5668029
-var counts = {};
-for(var i = 0; i< hero.cards.length; i++) {
-    var num = hero.cards[i];
-    counts[num] = counts[num] ? counts[num]+1 : 1;
-}
+        // count quantities for each card:
+        // http://stackoverflow.com/questions/5667888/counting-the-occurrences-of-javascript-array-elements#answer-5668029
+        var counts = {};
+        for (var i = 0; i < hero.cards.length; i++) {
+            var num = hero.cards[i];
+            counts[num] = counts[num] ? counts[num] + 1 : 1;
+        }
 
-// first element in allCardData is null
+        // first element in allCardData is null
         for (var i = 1; i < cardGameNameSpace.allCardData.length; i++) {
 
-thisCardsClass = 'card players';
-thisCardsQuantityOutput = '';
-if(!(counts[i])) {
-thisCardsClass += ' inactive';
-} else {
-    thisCardsQuantityOutput = '<span class="quantity">'+counts[i]+'</span>';
-}
-cardAlbumMarkup += '<li><img src="/images/card-game/cards/' + i + '.png" class="'+thisCardsClass+'" alt="' + cardGameNameSpace.allCardData[i][2] + ' card">'+thisCardsQuantityOutput+'</li>';
+            thisCardsClass = 'card players';
+            thisCardsQuantityOutput = '';
+            if (!(counts[i])) {
+                thisCardsClass += ' inactive';
+            } else {
+                thisCardsQuantityOutput = '<span class="quantity">' + counts[i] + '</span>';
+            }
+            cardAlbumMarkup += '<li><img src="/images/card-game/cards/' + i + '.png" class="' + thisCardsClass + '" alt="' + cardGameNameSpace.allCardData[i][2] + ' card">' + thisCardsQuantityOutput + '</li>';
 
-// check for rares - these are the negative of the standard card type:
-if((counts[(0-i)])) {
-    cardAlbumMarkup += '<li class="rare"><div class="card players" style="background-image:url(/images/card-game/cards/' + (0-i) + '.png)"></div><span class="quantity">'+counts[(0-i)]+'</span></li>';
-    }
-          
+            // check for rares - these are the negative of the standard card type:
+            if ((counts[(0 - i)])) {
+                cardAlbumMarkup += '<li class="rare"><div class="card players" style="background-image:url(/images/card-game/cards/' + (0 - i) + '.png)"></div><span class="quantity">' + counts[(0 - i)] + '</span></li>';
+            }
+
         }
         cardAlbumList.innerHTML = cardAlbumMarkup;
     },
@@ -2178,9 +2178,9 @@ if((counts[(0-i)])) {
             craftingRecipeCreateButton.disabled = true;
             recipeTitleBar.innerHTML = hero.crafting[whichProfession].name + ' Recipes';
             // resize the scroll bar (if it's used):
-if(recipeCustomScrollBar) {
-            recipeCustomScrollBar.init();
-        }
+            if (recipeCustomScrollBar) {
+                recipeCustomScrollBar.init();
+            }
         }
         craftingPanel.classList.add("active");
     },
@@ -2330,7 +2330,7 @@ if(recipeCustomScrollBar) {
                     var thisNode = getNearestParentId(e.target);
                     // check if the shift key is pressed as well:
                     if (key[5]) {
-                 
+
                         UI.sourceSlot = thisNode.id.substring(4);
                         // make a copy of the object, not a reference:
                         UI.draggedInventoryObject = JSON.parse(JSON.stringify(hero.inventory[UI.sourceSlot]));
@@ -2340,10 +2340,10 @@ if(recipeCustomScrollBar) {
                         splitStackInput.value = defaultSplitValue;
                         splitStackInput.focus();
 
-      
-// can't set selection for number type input:
-// http://stackoverflow.com/questions/21177489/selectionstart-selectionend-on-input-type-number-no-longer-allowed-in-chrome
-                     //   splitStackInput.setSelectionRange(0, defaultSplitValue.toString().length);
+
+                        // can't set selection for number type input:
+                        // http://stackoverflow.com/questions/21177489/selectionstart-selectionend-on-input-type-number-no-longer-allowed-in-chrome
+                        //   splitStackInput.setSelectionRange(0, defaultSplitValue.toString().length);
                         var clickedSlotRect = thisNode.getBoundingClientRect();
                         var pageScrollTopY = (window.pageYOffset || document.documentElement.scrollTop) - (document.documentElement.clientTop || 0);
                         // 3px padding on the slots:
@@ -2473,26 +2473,25 @@ if(recipeCustomScrollBar) {
         }
     },
 
-globalClick: function(e) {
-    if (e.target.className) {
-        if (e.target.className == "closePanel") {
-            e.target.parentNode.classList.remove("active");
-            // check if it's a shop panel:
-            if (e.target.parentNode.classList.contains("shop")) {
-                shopCurrentlyOpen = -1;
-                // close shop dialogue as well:
-                if (activeNPCForDialogue != '') {
-                    //  dialogue.classList.add("slowerFade");
-                    dialogue.classList.remove("active");
-                    activeNPCForDialogue.speechIndex = 0;
-                    UI.removeActiveDialogue();
+    globalClick: function(e) {
+        if (e.target.className) {
+            if (e.target.className == "closePanel") {
+                e.target.parentNode.classList.remove("active");
+                // check if it's a shop panel:
+                if (e.target.parentNode.classList.contains("shop")) {
+                    shopCurrentlyOpen = -1;
+                    // close shop dialogue as well:
+                    if (activeNPCForDialogue != '') {
+                        //  dialogue.classList.add("slowerFade");
+                        dialogue.classList.remove("active");
+                        activeNPCForDialogue.speechIndex = 0;
+                        UI.removeActiveDialogue();
 
+                    }
                 }
             }
         }
-    }
-},
-
+    },
 
 
     updateCurrencies: function() {
@@ -2505,26 +2504,52 @@ globalClick: function(e) {
 
     openShop: function(shopHash) {
         shopCurrentlyOpen = shopHash;
-        document.getElementById("shop"+shopHash).classList.add("active");
+        document.getElementById("shop" + shopHash).classList.add("active");
     },
 
     closeShop: function() {
-document.getElementById("shop"+shopCurrentlyOpen).classList.remove("active");
-shopCurrentlyOpen = -1;
-//activeNPCForDialogue = '';
-      //                  canCloseDialogueBalloonNextClick = false;
+        document.getElementById("shop" + shopCurrentlyOpen).classList.remove("active");
+        shopCurrentlyOpen = -1;
+
     },
 
     buyFromShopSlot: function(slotId) {
-        
         var thisSlotElement = document.getElementById(slotId);
-     var thisSlotImageElement = thisSlotElement.firstElementChild;
-     var thisShopPanelElement = thisSlotElement.parentNode.parentNode;
+        var thisSlotImageElement = thisSlotElement.firstElementChild;
+        var thisShopPanelElement = thisSlotElement.parentNode.parentNode;
         var buyPriceForOne = thisSlotImageElement.getAttribute('data-price');
         var thisCurrency = thisShopPanelElement.getAttribute('data-currency');
-        alert("buying from "+slotId+" at "+buyPriceForOne+" "+thisCurrency);
+        if (hero.currency[thisCurrency] >= buyPriceForOne) {
+            var thisBoughtObject = {
+                "type": parseInt(thisSlotImageElement.getAttribute('data-type')),
+                "quantity": 1,
+                "quality": 100,
+                "durability": 100,
+                "currentWear": 0,
+                "effectiveness": 100,
+                "colour": parseInt(thisSlotImageElement.getAttribute('data-colour')),
+                "enchanted": 0,
+                "hallmark": 0,
+                "inscription": ""
+            }
+            if (thisSlotImageElement.hasAttribute('data-inscription')) {
+                thisBoughtObject.inscription = thisSlotImageElement.getAttribute('data-inscription');
+            }
+            if (thisSlotImageElement.hasAttribute('data-contains')) {
+                thisBoughtObject.contains = thisSlotImageElement.getAttribute('data-contains');
+            }
+            inventoryCheck = canAddItemToInventory([thisBoughtObject]);
+            if (inventoryCheck[0]) {
+                hero.currency[thisCurrency] -= buyPriceForOne;
+                UI.updateCurrencies();
+                UI.showChangeInInventory(inventoryCheck[1]);
+            } else {
+                UI.showNotification("<p>Oops - sorry, no room in your bags</p>");
+            }
+        } else {
+            UI.showNotification("<p>Oops - sorry, not enough money</p>");
+        }
     }
-
 }
 
 // service worker:
@@ -2782,7 +2807,6 @@ function findProfessionsAndRecipes() {
 function loadProfessionsAndRecipes(recipeIdsToLoad) {
     getJSON("/game-world/getProfessionsAndRecipes.php?whichIds=" + recipeIdsToLoad, function(data) {
         hero.crafting = data.professions;
-        console.log("loadProfessionsAndRecipes");
         currentItemGroupFilters = data.itemGroups;
         getShopData();
     }, function(status) {
@@ -3233,8 +3257,7 @@ function update() {
 if(shopCurrentlyOpen != -1) {
 
             activeNPCForDialogue.speechIndex = 0;
-            document.getElementById("shop"+shopCurrentlyOpen).classList.remove("active");
-             shopCurrentlyOpen = -1;
+            UI.closeShop();
         }
          // only remove this after dialogue has faded out completely:
                 dialogue.addEventListener(whichTransitionEvent, UI.removeActiveDialogue, false);

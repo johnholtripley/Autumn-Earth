@@ -253,7 +253,6 @@ function findProfessionsAndRecipes() {
 function loadProfessionsAndRecipes(recipeIdsToLoad) {
     getJSON("/game-world/getProfessionsAndRecipes.php?whichIds=" + recipeIdsToLoad, function(data) {
         hero.crafting = data.professions;
-        console.log("loadProfessionsAndRecipes");
         currentItemGroupFilters = data.itemGroups;
         getShopData();
     }, function(status) {
@@ -704,8 +703,7 @@ function update() {
 if(shopCurrentlyOpen != -1) {
 
             activeNPCForDialogue.speechIndex = 0;
-            document.getElementById("shop"+shopCurrentlyOpen).classList.remove("active");
-             shopCurrentlyOpen = -1;
+            UI.closeShop();
         }
          // only remove this after dialogue has faded out completely:
                 dialogue.addEventListener(whichTransitionEvent, UI.removeActiveDialogue, false);

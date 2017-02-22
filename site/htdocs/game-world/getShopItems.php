@@ -156,6 +156,7 @@ for ($j=0;$j<$inventoryDataCount;$j++) {
 			if(!$foundEquivilent) {
 				$newColourItem = $inventoryData[$j];
 				$newColourItem['colourName'] = $allColours[($colourIndicesToUse[$k])]." ";
+				$newColourItem['colour'] = $colourIndicesToUse[$k];
 				array_push($inventoryData, $newColourItem);
 				$hasFoundAColourVariant = true;
 			}
@@ -241,7 +242,7 @@ $markupToOutput .= '</ol></div></div>';
 $allItemIdsUsed = array_unique($allItemIdsUsed);
 
 // create JSON response:
-echo '{"markup": ["'.addcslashes($markupToOutput, '"\\/').'"],"allItemIds": ["'.implode(",",$allItemIdsUsed).'"]}';
+echo '{"markup": ["'.addcslashes($markupToOutput, '"\\/').'"],"allItemIds": ["'.implode("|",$allItemIdsUsed).'"]}';
 
 
 ?>
