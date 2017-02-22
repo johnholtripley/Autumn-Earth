@@ -1464,9 +1464,10 @@ function canAddItemToInventory(itemObj) {
                     var amountAddedToThisSlot = (maxNumberOfItemsPerSlot - quantityOnSlotAlready) > (itemObj[k].quantity - quantityAddedSoFar) ? (itemObj[k].quantity - quantityAddedSoFar) : maxNumberOfItemsPerSlot - quantityOnSlotAlready;
                     quantityAddedSoFar += amountAddedToThisSlot;
                     // add item to this slot:
-
+if(amountAddedToThisSlot>0) {
                     slotsUpdated.push((inventoryKeysFound[i]));
                     inventoryClone[inventoryKeysFound[i]].quantity += amountAddedToThisSlot;
+                }
                     if (quantityAddedSoFar >= itemObj[k].quantity) {
                         break;
                     }
