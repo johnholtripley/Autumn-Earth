@@ -241,7 +241,7 @@
     "fae": { "range": 4950, "speed": 4 },
     "retinue": [0,2],
     "currency": {
-        "money": 45430,
+        "money": 34510,
         "cardDust": 12
     }
 }

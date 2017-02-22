@@ -845,17 +845,13 @@ function parseMoney(amount) {
     if (gold > 0) {
         moneyOutput = gold + '<span class="gold"></span>';
     }
-    if (silver != 0) {
+    if ((silver > 0) || (gold > 0)) {
         moneyOutput += silver + '<span class="silver"></span>';
     }
-    if (copper != 0) {
-        moneyOutput += copper + '<span class="copper"></span>';
-    }
-    if(amount == 0) {
-      moneyOutput = '0<span class="copper"></span>';  
-    }
+    moneyOutput += copper + '<span class="copper"></span>';
     return moneyOutput;
 }
+
 
 
 
