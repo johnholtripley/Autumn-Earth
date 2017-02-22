@@ -2375,7 +2375,24 @@ var UI = {
 
                 // check if the shift key is pressed as well:
                 if (key[5]) {
-                    alert("shift");
+                    UI.sourceSlot = thisNode.id.substring(8);
+                     // make a copy of the object, not a reference:
+                        UI.draggedInventoryObject = JSON.parse(JSON.stringify(hero.inventory[UI.sourceSlot]));
+                        splitStackInput.setAttribute("max", maxNumberOfItemsPerSlot);
+                        splitStackInput.value = 1;
+                        splitStackInput.focus();
+                          // can't set selection for number type input:
+                        // http://stackoverflow.com/questions/21177489/selectionstart-selectionend-on-input-type-number-no-longer-allowed-in-chrome
+                        //   splitStackInput.setSelectionRange(0, defaultSplitValue.toString().length);
+                        var clickedSlotRect = thisNode.getBoundingClientRect();
+                        var pageScrollTopY = (window.pageYOffset || document.documentElement.scrollTop) - (document.documentElement.clientTop || 0);
+                        // 3px padding on the slots:
+                        // -44 for the slot height:
+                        objInitLeft = clickedSlotRect.left + 3;
+                        objInitTop = clickedSlotRect.top + 3 + pageScrollTopY - 44;
+                        splitStackPanel.style.cssText = "z-index:2;top: " + objInitTop + "px; left: " + objInitLeft + "px;";
+                        splitStackPanel.classList.add("active");
+                        key[5] = 0;
                 } else {
                     // this will fire for double click as well
 
