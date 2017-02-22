@@ -1931,22 +1931,15 @@ var UI = {
         // loop through number of bags
         for (var i = 0; i < hero.bags.length; i++) {
             inventoryMarkup += '<div class="inventoryBag" id="inventoryBag' + i + '"><div class="draggableBar">' + currentActiveInventoryItems[hero.bags[i].type].shortname + '</div><ol class="active" id="bag' + i + '">';
-
             thisBagNumberOfSlots = currentActiveInventoryItems[hero.bags[i].type].actionValue;
             // loop through slots for each bag:
             for (var j = 0; j < thisBagNumberOfSlots; j++) {
                 thisSlotsID = i + '-' + j;
-
-
-
                 inventoryMarkup += '<li id="slot' + thisSlotsID + '">';
                 // check if that key exists in inventory:
                 if (thisSlotsID in hero.inventory) {
-
                     inventoryMarkup += generateSlotMarkup(thisSlotsID);
                     thisAction = currentActiveInventoryItems[hero.inventory[thisSlotsID].type].action;
-
-
                 } else {
                     inventoryMarkup += '';
                 }
@@ -1958,17 +1951,14 @@ var UI = {
 
         inventoryPanels.innerHTML = inventoryMarkup;
         gameWrapper.ondblclick = UI.doubleClick;
-
-
         document.getElementById('createRecipeList').onclick = UI.craftingPanelSingleClick;
         document.getElementById('craftingRecipeCreateButton').onclick = UI.craftingRecipeCreate;
         splitStackPanel.onsubmit = inventorySplitStackSubmit;
         document.getElementById('splitStackCancel').onclick = inventorySplitStackCancel;
-
         UI.initInventoryDrag('.inventoryBag ol');
+        UI.initShopDrag();
         UI.updateCardAlbum();
         UI.updateCurrencies();
-
         UI.buildRecipePanel();
         if (hero.professionsKnown.length > 0) {
             // load and cache the first profession's recipe assets:
@@ -2096,12 +2086,6 @@ var UI = {
     },
 
     removeActiveDialogue: function() {
-
-        /* if (shopCurrentlyOpen != -1) {
-             shopCurrentlyOpen = -1;
-             activeNPCForDialogue.speechIndex = 0;
-         }*/
-
         activeNPCForDialogue = '';
         dialogue.removeEventListener(whichTransitionEvent, UI.removeActiveDialogue, false);
     },
@@ -2381,6 +2365,25 @@ var UI = {
             }, false);
         }
     },
+
+    initShopDrag: function() {
+        document.getElementById("shopPanel").addEventListener("mousedown", function(e) {
+            e.preventDefault();
+            // make sure it's not a right click:
+            if (e.button != 2) {
+                var thisNode = getNearestParentId(e.target);
+
+                // check if the shift key is pressed as well:
+                if (key[5]) {
+                    alert("shift");
+                } else {
+                    // this will fire for double click as well
+
+                }
+            }
+        }, false);
+    },
+
 
     slideDraggedSlotBack: function() {
         // slide it back visually - add a transition:
