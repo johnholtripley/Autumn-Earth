@@ -296,6 +296,32 @@ var UI = {
     },
 
     endInventoryDrag: function(e) {
+        var isFromAShop = false;
+        if (UI.sourceSlot.substring(0, 8) == "shopSlot") {
+            isFromAShop = true;
+            var thisSlotImageElement = document.getElementById(UI.sourceSlot).firstElementChild;
+            var thisShopPanelElement = document.getElementById(UI.sourceSlot).parentNode.parentNode;
+            var buyPriceForOne = thisSlotImageElement.getAttribute('data-price');
+            var thisCurrency = thisShopPanelElement.getAttribute('data-currency');
+            var thisBoughtObject = {
+                "type": parseInt(thisSlotImageElement.getAttribute('data-type')),
+                "quantity": 1,
+                "quality": 100,
+                "durability": 100,
+                "currentWear": 0,
+                "effectiveness": 100,
+                "colour": parseInt(thisSlotImageElement.getAttribute('data-colour')),
+                "enchanted": 0,
+                "hallmark": 0,
+                "inscription": ""
+            }
+            if (thisSlotImageElement.hasAttribute('data-inscription')) {
+                thisBoughtObject.inscription = thisSlotImageElement.getAttribute('data-inscription');
+            }
+            if (thisSlotImageElement.hasAttribute('data-contains')) {
+                thisBoughtObject.contains = thisSlotImageElement.getAttribute('data-contains');
+            }
+        }
 
         var thisNode = e.target;
         // find the id of the parent if actual dropped target doesn't have one:
@@ -310,100 +336,172 @@ var UI = {
                 if (isSplitStackBeingDragged) {
                     // document.getElementById("slot" + UI.sourceSlot).innerHTML = '';
                     addToInventory(droppedSlotId, UI.draggedInventoryObject);
+                    UI.droppedSuccessfully();
                 } else {
-
-                    if (UI.sourceSlot != droppedSlotId) {
-                        document.getElementById("slot" + UI.sourceSlot).innerHTML = '';
-                        addToInventory(droppedSlotId, UI.draggedInventoryObject);
-                    } else {
-                        hero.inventory[droppedSlotId] = JSON.parse(JSON.stringify(UI.draggedInventoryObject));
-                    }
-                    document.getElementById("slot" + UI.sourceSlot).classList.remove("hidden");
-                }
-                UI.droppedSuccessfully();
-            } else {
-
-                if (itemAttributesMatch(UI.draggedInventoryObject, hero.inventory[droppedSlotId])) {
-
-                    if (parseInt(UI.draggedInventoryObject.quantity) + parseInt(hero.inventory[droppedSlotId].quantity) <= maxNumberOfItemsPerSlot) {
-
-                        hero.inventory[droppedSlotId].quantity += parseInt(UI.draggedInventoryObject.quantity);
-                        // update visually:
-                        var thisSlotElem = document.getElementById("slot" + droppedSlotId);
-                        for (var i = 0; i < thisSlotElem.childNodes.length; i++) {
-                            if (thisSlotElem.childNodes[i].className == "qty") {
-                                thisSlotElem.childNodes[i].innerHTML = hero.inventory[droppedSlotId].quantity;
-                                break;
-                            }
+                    if (isFromAShop) {
+                        if (hero.currency[thisCurrency] >= buyPriceForOne) {
+                            addToInventory(droppedSlotId, thisBoughtObject);
+                            hero.currency[thisCurrency] -= buyPriceForOne;
+                            UI.updateCurrencies();
+                            UI.droppedSuccessfully();
+                        } else {
+                            UI.showNotification("<p>Not enough money</p>");
+                            UI.slideDraggedSlotBack();
                         }
-                        if (!isSplitStackBeingDragged) {
+                    } else {
+                        if (UI.sourceSlot != droppedSlotId) {
                             document.getElementById("slot" + UI.sourceSlot).innerHTML = '';
-                            document.getElementById("slot" + UI.sourceSlot).classList.remove("hidden");
+                            addToInventory(droppedSlotId, UI.draggedInventoryObject);
+                        } else {
+                            hero.inventory[droppedSlotId] = JSON.parse(JSON.stringify(UI.draggedInventoryObject));
                         }
+                        document.getElementById("slot" + UI.sourceSlot).classList.remove("hidden");
                         UI.droppedSuccessfully();
+                    }
+                }
+            } else {
+                if (isFromAShop) {
+                    if (itemAttributesMatch(thisBoughtObject, hero.inventory[droppedSlotId])) {
+                        if (parseInt(hero.inventory[droppedSlotId].quantity) < maxNumberOfItemsPerSlot) {
+                            // (is room for 1 more)
+                            if (hero.currency[thisCurrency] >= buyPriceForOne) {
+                                hero.inventory[droppedSlotId].quantity++;
+                                // update visually:
+                                var thisSlotElem = document.getElementById("slot" + droppedSlotId);
+                                for (var i = 0; i < thisSlotElem.childNodes.length; i++) {
+                                    if (thisSlotElem.childNodes[i].className == "qty") {
+                                        thisSlotElem.childNodes[i].innerHTML = hero.inventory[droppedSlotId].quantity;
+                                        break;
+                                    }
+                                }
+                                hero.currency[thisCurrency] -= buyPriceForOne;
+                                UI.updateCurrencies();
+                                UI.droppedSuccessfully();
+                            } else {
+                                UI.showNotification("<p>Not enough money</p>");
+                                UI.slideDraggedSlotBack();
+                            }
+                        } else {
+                            UI.slideDraggedSlotBack();
+                        }
                     } else {
-                        // add in the max, and slide the remainder back:
-                        var amountAddedToThisSlot = maxNumberOfItemsPerSlot - parseInt(hero.inventory[droppedSlotId].quantity);
-                        hero.inventory[droppedSlotId].quantity = maxNumberOfItemsPerSlot;
-                        // update visually:
-                        var thisSlotElem = document.getElementById("slot" + droppedSlotId);
-                        for (var i = 0; i < thisSlotElem.childNodes.length; i++) {
-                            if (thisSlotElem.childNodes[i].className == "qty") {
-                                thisSlotElem.childNodes[i].innerHTML = hero.inventory[droppedSlotId].quantity;
-                                break;
-                            }
-                        }
-                        // update dragged item quantity and then slide back:
-                        UI.draggedInventoryObject.quantity -= amountAddedToThisSlot;
-                        // update visually to drop slot:
-                        var thisSlotElem = document.getElementById("slot" + UI.sourceSlot);
-                        for (var i = 0; i < thisSlotElem.childNodes.length; i++) {
-                            if (thisSlotElem.childNodes[i].className == "qty") {
-                                thisSlotElem.childNodes[i].innerHTML = UI.draggedInventoryObject.quantity;
-                                break;
-                            }
-                        }
-                        // update visually to dragged clone:
-                        var thisSlotElem = document.getElementById('draggableInventorySlot');
-                        for (var i = 0; i < thisSlotElem.childNodes.length; i++) {
-                            if (thisSlotElem.childNodes[i].className == "qty") {
-                                thisSlotElem.childNodes[i].innerHTML = UI.draggedInventoryObject.quantity;
-                                break;
-                            }
-                        }
+                        // otherwise slide it back
                         UI.slideDraggedSlotBack();
                     }
                 } else {
-                    // otherwise slide it back
-                    UI.slideDraggedSlotBack();
+                    if (itemAttributesMatch(UI.draggedInventoryObject, hero.inventory[droppedSlotId])) {
+                        if (parseInt(UI.draggedInventoryObject.quantity) + parseInt(hero.inventory[droppedSlotId].quantity) <= maxNumberOfItemsPerSlot) {
+                            hero.inventory[droppedSlotId].quantity += parseInt(UI.draggedInventoryObject.quantity);
+                            // update visually:
+                            var thisSlotElem = document.getElementById("slot" + droppedSlotId);
+                            for (var i = 0; i < thisSlotElem.childNodes.length; i++) {
+                                if (thisSlotElem.childNodes[i].className == "qty") {
+                                    thisSlotElem.childNodes[i].innerHTML = hero.inventory[droppedSlotId].quantity;
+                                    break;
+                                }
+                            }
+                            if (!isSplitStackBeingDragged) {
+                                document.getElementById("slot" + UI.sourceSlot).innerHTML = '';
+                                document.getElementById("slot" + UI.sourceSlot).classList.remove("hidden");
+                            }
+                            UI.droppedSuccessfully();
+
+                        } else {
+                            // add in the max, and slide the remainder back:
+                            var amountAddedToThisSlot = maxNumberOfItemsPerSlot - parseInt(hero.inventory[droppedSlotId].quantity);
+                            hero.inventory[droppedSlotId].quantity = maxNumberOfItemsPerSlot;
+                            // update visually:
+                            var thisSlotElem = document.getElementById("slot" + droppedSlotId);
+                            for (var i = 0; i < thisSlotElem.childNodes.length; i++) {
+                                if (thisSlotElem.childNodes[i].className == "qty") {
+                                    thisSlotElem.childNodes[i].innerHTML = hero.inventory[droppedSlotId].quantity;
+                                    break;
+                                }
+                            }
+                            // update dragged item quantity and then slide back:
+                            UI.draggedInventoryObject.quantity -= amountAddedToThisSlot;
+                            // update visually to drop slot:
+                            var thisSlotElem = document.getElementById("slot" + UI.sourceSlot);
+                            for (var i = 0; i < thisSlotElem.childNodes.length; i++) {
+                                if (thisSlotElem.childNodes[i].className == "qty") {
+                                    thisSlotElem.childNodes[i].innerHTML = UI.draggedInventoryObject.quantity;
+                                    break;
+                                }
+                            }
+                            // update visually to dragged clone:
+                            var thisSlotElem = document.getElementById('draggableInventorySlot');
+                            for (var i = 0; i < thisSlotElem.childNodes.length; i++) {
+                                if (thisSlotElem.childNodes[i].className == "qty") {
+                                    thisSlotElem.childNodes[i].innerHTML = UI.draggedInventoryObject.quantity;
+                                    break;
+                                }
+                            }
+                            UI.slideDraggedSlotBack();
+                        }
+                    } else {
+                        // otherwise slide it back
+                        UI.slideDraggedSlotBack();
+                    }
                 }
             }
         } else if (droppedSlot.substring(0, 12) == "inventoryBag") {
-            // if it's the same panel is the slot came from, just slide back:
-            var thisInventoryPanelId = droppedSlot.substring(12);
-            var sourceSlotHyphenPos = UI.sourceSlot.indexOf("-");
-            var thisSourceInventoryPanelId = UI.sourceSlot.substring(0, sourceSlotHyphenPos);
-            if (thisInventoryPanelId == thisSourceInventoryPanelId) {
-                UI.slideDraggedSlotBack();
-            } else {
-                // otherwise find an empty slot and drop it in:
-                var emptySlotFound = -1;
-                var thisBagNumberOfSlots = currentActiveInventoryItems[hero.bags[thisInventoryPanelId].type].actionValue;
-                // loop through slots for this bag:
-                for (var j = 0; j < thisBagNumberOfSlots; j++) {
-                    var thisSlotsID = thisInventoryPanelId + '-' + j;
-                    if (!(thisSlotsID in hero.inventory)) {
-                        emptySlotFound = j;
-                        break;
+            if (isFromAShop) {
+                if (hero.currency[thisCurrency] >= buyPriceForOne) {
+                    // find an empty slot and drop it in:
+                    var emptySlotFound = -1;
+                    var thisInventoryPanelId = droppedSlot.substring(12);
+                    var sourceSlotHyphenPos = UI.sourceSlot.indexOf("-");
+                    var thisSourceInventoryPanelId = UI.sourceSlot.substring(0, sourceSlotHyphenPos);
+                    var thisBagNumberOfSlots = currentActiveInventoryItems[hero.bags[thisInventoryPanelId].type].actionValue;
+                    // loop through slots for this bag:
+                    for (var j = 0; j < thisBagNumberOfSlots; j++) {
+                        var thisSlotsID = thisInventoryPanelId + '-' + j;
+                        if (!(thisSlotsID in hero.inventory)) {
+                            emptySlotFound = j;
+                            break;
+                        }
                     }
-                }
-                if (emptySlotFound != -1) {
-                    document.getElementById("slot" + UI.sourceSlot).innerHTML = '';
-                    addToInventory(thisInventoryPanelId + "-" + emptySlotFound, UI.draggedInventoryObject);
-                    document.getElementById("slot" + UI.sourceSlot).classList.remove("hidden");
+                    if (emptySlotFound != -1) {
+                        hero.currency[thisCurrency] -= buyPriceForOne;
+                        UI.updateCurrencies();
+                        UI.droppedSuccessfully();
+                        addToInventory(thisInventoryPanelId + "-" + emptySlotFound, thisBoughtObject);
+                        UI.droppedSuccessfully();
+                    } else {
+                        UI.slideDraggedSlotBack();
+                    }
                     UI.droppedSuccessfully();
                 } else {
+                    UI.showNotification("<p>Not enough money</p>");
                     UI.slideDraggedSlotBack();
+                }
+            } else {
+                // if it's the same panel is the slot came from, just slide back:
+                var thisInventoryPanelId = droppedSlot.substring(12);
+                var sourceSlotHyphenPos = UI.sourceSlot.indexOf("-");
+                var thisSourceInventoryPanelId = UI.sourceSlot.substring(0, sourceSlotHyphenPos);
+                if (thisInventoryPanelId == thisSourceInventoryPanelId) {
+                    UI.slideDraggedSlotBack();
+                } else {
+                    // otherwise find an empty slot and drop it in:
+                    var emptySlotFound = -1;
+                    var thisBagNumberOfSlots = currentActiveInventoryItems[hero.bags[thisInventoryPanelId].type].actionValue;
+                    // loop through slots for this bag:
+                    for (var j = 0; j < thisBagNumberOfSlots; j++) {
+                        var thisSlotsID = thisInventoryPanelId + '-' + j;
+                        if (!(thisSlotsID in hero.inventory)) {
+                            emptySlotFound = j;
+                            break;
+                        }
+                    }
+                    if (emptySlotFound != -1) {
+                        document.getElementById("slot" + UI.sourceSlot).innerHTML = '';
+                        addToInventory(thisInventoryPanelId + "-" + emptySlotFound, UI.draggedInventoryObject);
+                        document.getElementById("slot" + UI.sourceSlot).classList.remove("hidden");
+                        UI.droppedSuccessfully();
+                    } else {
+                        UI.slideDraggedSlotBack();
+                    }
                 }
             }
         } else {
@@ -414,6 +512,8 @@ var UI = {
         document.removeEventListener("mousemove", UI.handleDrag, false);
         document.removeEventListener("mouseup", UI.endInventoryDrag, false);
     },
+
+
 
     droppedSuccessfully: function() {
         // hide the clone:
@@ -518,13 +618,7 @@ var UI = {
 
 
     craftingPanelSingleClick: function(e) {
-
-
-
-
-
         var thisNode = getNearestParentId(e.target);
-
         if (thisNode.id.substring(0, 6) == "recipe") {
             if (UI.highlightedRecipe != "") {
                 document.getElementById(UI.highlightedRecipe).classList.remove('highlighted');
@@ -533,7 +627,6 @@ var UI = {
             document.getElementById(UI.highlightedRecipe).classList.add('highlighted');
             craftingRecipeCreateButton.disabled = false;
         }
-
     },
 
     craftingRecipeCreate: function() {
@@ -662,7 +755,7 @@ var UI = {
         }
     },
 
-        initShopDrag: function() {
+    initShopDrag: function() {
         document.getElementById("shopPanel").addEventListener("mousedown", function(e) {
             e.preventDefault();
             // make sure it's not a right click:
@@ -672,34 +765,54 @@ var UI = {
                 // check if the shift key is pressed as well:
                 if (key[5]) {
                     UI.sourceSlot = thisNode;
-                      var thisSlotImageElement = thisNode.firstElementChild;
-        var thisShopPanelElement = thisNode.parentNode.parentNode;
-                           var buyPriceForOne = thisSlotImageElement.getAttribute('data-price');
-        var thisCurrency = thisShopPanelElement.getAttribute('data-currency');
+                    var thisSlotImageElement = thisNode.firstElementChild;
+                    var thisShopPanelElement = thisNode.parentNode.parentNode;
+                    var buyPriceForOne = thisSlotImageElement.getAttribute('data-price');
+                    var thisCurrency = thisShopPanelElement.getAttribute('data-currency');
 
-// work out the max they can buy with the relevant currency:
-var maxThatCanBeBought = Math.floor(hero.currency[thisCurrency]/buyPriceForOne);
+                    // work out the max they can buy with the relevant currency:
+                    var maxThatCanBeBought = Math.floor(hero.currency[thisCurrency] / buyPriceForOne);
 
-if(maxThatCanBeBought>maxNumberOfItemsPerSlot) {
-    maxThatCanBeBought = maxNumberOfItemsPerSlot;
-}
-                        shopSplitStackInput.setAttribute("max", maxThatCanBeBought);
-                        shopSplitStackInput.value = 1;
-                        shopSplitStackInput.focus();
-                          // can't set selection for number type input:
-                        // http://stackoverflow.com/questions/21177489/selectionstart-selectionend-on-input-type-number-no-longer-allowed-in-chrome
-                        //   splitStackInput.setSelectionRange(0, defaultSplitValue.toString().length);
-                        var clickedSlotRect = thisNode.getBoundingClientRect();
-                        var pageScrollTopY = (window.pageYOffset || document.documentElement.scrollTop) - (document.documentElement.clientTop || 0);
-                        // 3px padding on the slots:
-                        // -44 for the slot height:
-                        objInitLeft = clickedSlotRect.left + 3;
-                        objInitTop = clickedSlotRect.top + 3 + pageScrollTopY - 44;
-                        shopSplitStackPanel.style.cssText = "z-index:2;top: " + objInitTop + "px; left: " + objInitLeft + "px;";
-                        shopSplitStackPanel.classList.add("active");
-                        key[5] = 0;
+                    if (maxThatCanBeBought > maxNumberOfItemsPerSlot) {
+                        maxThatCanBeBought = maxNumberOfItemsPerSlot;
+                    }
+                    shopSplitStackInput.setAttribute("max", maxThatCanBeBought);
+                    shopSplitStackInput.value = 1;
+                    shopSplitStackInput.focus();
+                    // can't set selection for number type input:
+                    // http://stackoverflow.com/questions/21177489/selectionstart-selectionend-on-input-type-number-no-longer-allowed-in-chrome
+                    //   splitStackInput.setSelectionRange(0, defaultSplitValue.toString().length);
+                    var clickedSlotRect = thisNode.getBoundingClientRect();
+                    var pageScrollTopY = (window.pageYOffset || document.documentElement.scrollTop) - (document.documentElement.clientTop || 0);
+                    // 3px padding on the slots:
+                    // -44 for the slot height:
+                    objInitLeft = clickedSlotRect.left + 3;
+                    objInitTop = clickedSlotRect.top + 3 + pageScrollTopY - 44;
+                    shopSplitStackPanel.style.cssText = "z-index:2;top: " + objInitTop + "px; left: " + objInitLeft + "px;";
+                    shopSplitStackPanel.classList.add("active");
+                    key[5] = 0;
                 } else {
                     // this will fire for double click as well
+
+
+                      UI.sourceSlot = thisNode.id;
+                            UI.draggedInventoryObject = hero.inventory[UI.sourceSlot];
+
+                            // clone this slot to draggableInventorySlot:
+                            UI.activeDragObject = document.getElementById('draggableShopSlot');
+                            UI.activeDragObject.innerHTML = thisNode.innerHTML;
+                
+
+                            var clickedSlotRect = thisNode.getBoundingClientRect();
+                            var pageScrollTopY = (window.pageYOffset || document.documentElement.scrollTop) - (document.documentElement.clientTop || 0);
+                            // 3px padding on the slots:
+                            objInitLeft = clickedSlotRect.left + 3;
+                            objInitTop = clickedSlotRect.top + 3 + pageScrollTopY;
+                            dragStartX = e.pageX;
+                            dragStartY = e.pageY;
+                            UI.activeDragObject.style.cssText = "z-index:2;top: " + objInitTop + "px; left: " + objInitLeft + "px; transform: translate(0px, 0px);";
+                            document.addEventListener("mousemove", UI.handleDrag, false);
+                            document.addEventListener("mouseup", UI.endInventoryDrag, false);
 
                 }
             }
@@ -707,34 +820,28 @@ if(maxThatCanBeBought>maxNumberOfItemsPerSlot) {
     },
 
     shopSplitStackSubmit: function(e) {
-    if (e) {
-        e.preventDefault();
-    }
-
-
-    var enteredValue = shopSplitStackInput.value;
-    var isValid = true;
-    enteredValue = parseInt(enteredValue);
-    if (enteredValue < 1) {
-        isValid = false;
-    }
-    if (!(Number.isInteger(enteredValue))) {
-        isValid = false;
-    }
-    if (enteredValue > shopSplitStackInput.getAttribute("max")) {
-        // this will check if they can afford it as well as not being over a single slot maximum:
-        isValid = false;
-    }
-    if (isValid) {
-
-
-
-var thisSlotImageElement = UI.sourceSlot.firstElementChild;
-        var thisShopPanelElement = UI.sourceSlot.parentNode.parentNode;
-                           var buyPriceForOne = thisSlotImageElement.getAttribute('data-price');
-        var thisCurrency = thisShopPanelElement.getAttribute('data-currency');
-
-var thisBoughtObject = {
+        if (e) {
+            e.preventDefault();
+        }
+        var enteredValue = shopSplitStackInput.value;
+        var isValid = true;
+        enteredValue = parseInt(enteredValue);
+        if (enteredValue < 1) {
+            isValid = false;
+        }
+        if (!(Number.isInteger(enteredValue))) {
+            isValid = false;
+        }
+        if (enteredValue > shopSplitStackInput.getAttribute("max")) {
+            // this will check if they can afford it as well as not being over a single slot maximum:
+            isValid = false;
+        }
+        if (isValid) {
+            var thisSlotImageElement = UI.sourceSlot.firstElementChild;
+            var thisShopPanelElement = UI.sourceSlot.parentNode.parentNode;
+            var buyPriceForOne = thisSlotImageElement.getAttribute('data-price');
+            var thisCurrency = thisShopPanelElement.getAttribute('data-currency');
+            var thisBoughtObject = {
                 "type": parseInt(thisSlotImageElement.getAttribute('data-type')),
                 "quantity": enteredValue,
                 "quality": 100,
@@ -754,20 +861,14 @@ var thisBoughtObject = {
             }
             inventoryCheck = canAddItemToInventory([thisBoughtObject]);
             if (inventoryCheck[0]) {
-                hero.currency[thisCurrency] -= (enteredValue*buyPriceForOne);
+                hero.currency[thisCurrency] -= (enteredValue * buyPriceForOne);
                 UI.updateCurrencies();
                 UI.showChangeInInventory(inventoryCheck[1]);
             } else {
                 UI.showNotification("<p>Oops - sorry, no room in your bags</p>");
             }
-
-
-
-
-
-
-
-    }
-    shopSplitStackPanel.classList.remove("active");
+        }
+        shopSplitStackPanel.classList.remove("active");
     },
+
 }

@@ -222,7 +222,7 @@ canvas {
     }
 }
 
-#draggableInventorySlot {
+#draggableInventorySlot, #draggableShopSlot {
     position: absolute;
     pointer-events: none;
     left: -100px;
