@@ -486,62 +486,7 @@ var UI = {
         }
     },
 
-    initShopDrag: function() {
-        document.getElementById("shopPanel").addEventListener("mousedown", function(e) {
-            e.preventDefault();
-            // make sure it's not a right click:
-            if (e.button != 2) {
-                var thisNode = getNearestParentId(e.target);
 
-                // check if the shift key is pressed as well:
-                if (key[5]) {
-                    UI.sourceSlot = thisNode.id.substring(8);
-                     // make a copy of the object, not a reference:
-                        //UI.draggedInventoryObject = JSON.parse(JSON.stringify(hero.inventory[UI.sourceSlot]));
-                        //shopSplitStackInput.setAttribute("max", maxNumberOfItemsPerSlot);
-                        shopSplitStackInput.value = 1;
-                        shopSplitStackInput.focus();
-                          // can't set selection for number type input:
-                        // http://stackoverflow.com/questions/21177489/selectionstart-selectionend-on-input-type-number-no-longer-allowed-in-chrome
-                        //   splitStackInput.setSelectionRange(0, defaultSplitValue.toString().length);
-                        var clickedSlotRect = thisNode.getBoundingClientRect();
-                        var pageScrollTopY = (window.pageYOffset || document.documentElement.scrollTop) - (document.documentElement.clientTop || 0);
-                        // 3px padding on the slots:
-                        // -44 for the slot height:
-                        objInitLeft = clickedSlotRect.left + 3;
-                        objInitTop = clickedSlotRect.top + 3 + pageScrollTopY - 44;
-                        shopSplitStackPanel.style.cssText = "z-index:2;top: " + objInitTop + "px; left: " + objInitLeft + "px;";
-                        shopSplitStackPanel.classList.add("active");
-                        key[5] = 0;
-                } else {
-                    // this will fire for double click as well
-
-                }
-            }
-        }, false);
-    },
-
-    shopSplitStackSubmit: function() {
-    if (e) {
-        e.preventDefault();
-    }
-
-
-    var enteredValue = shopSplitStackInput.value;
-    var isValid = true;
-    enteredValue = parseInt(enteredValue);
-    if (enteredValue < 1) {
-        isValid = false;
-    }
-    if (!(Number.isInteger(enteredValue))) {
-        isValid = false;
-    }
-    if (enteredValue > maxNumberOfItemsPerSlot) {
-        isValid = false;
-    }
-    if (isValid) {
-    }
-    },
 
 
     slideDraggedSlotBack: function() {
@@ -715,5 +660,114 @@ var UI = {
         } else {
             UI.showNotification("<p>Oops - sorry, not enough money</p>");
         }
+    },
+
+        initShopDrag: function() {
+        document.getElementById("shopPanel").addEventListener("mousedown", function(e) {
+            e.preventDefault();
+            // make sure it's not a right click:
+            if (e.button != 2) {
+                var thisNode = getNearestParentId(e.target);
+
+                // check if the shift key is pressed as well:
+                if (key[5]) {
+                    UI.sourceSlot = thisNode;
+                      var thisSlotImageElement = thisNode.firstElementChild;
+        var thisShopPanelElement = thisNode.parentNode.parentNode;
+                           var buyPriceForOne = thisSlotImageElement.getAttribute('data-price');
+        var thisCurrency = thisShopPanelElement.getAttribute('data-currency');
+
+// work out the max they can buy with the relevant currency:
+var maxThatCanBeBought = Math.floor(hero.currency[thisCurrency]/buyPriceForOne);
+
+if(maxThatCanBeBought>maxNumberOfItemsPerSlot) {
+    maxThatCanBeBought = maxNumberOfItemsPerSlot;
+}
+                        shopSplitStackInput.setAttribute("max", maxThatCanBeBought);
+                        shopSplitStackInput.value = 1;
+                        shopSplitStackInput.focus();
+                          // can't set selection for number type input:
+                        // http://stackoverflow.com/questions/21177489/selectionstart-selectionend-on-input-type-number-no-longer-allowed-in-chrome
+                        //   splitStackInput.setSelectionRange(0, defaultSplitValue.toString().length);
+                        var clickedSlotRect = thisNode.getBoundingClientRect();
+                        var pageScrollTopY = (window.pageYOffset || document.documentElement.scrollTop) - (document.documentElement.clientTop || 0);
+                        // 3px padding on the slots:
+                        // -44 for the slot height:
+                        objInitLeft = clickedSlotRect.left + 3;
+                        objInitTop = clickedSlotRect.top + 3 + pageScrollTopY - 44;
+                        shopSplitStackPanel.style.cssText = "z-index:2;top: " + objInitTop + "px; left: " + objInitLeft + "px;";
+                        shopSplitStackPanel.classList.add("active");
+                        key[5] = 0;
+                } else {
+                    // this will fire for double click as well
+
+                }
+            }
+        }, false);
+    },
+
+    shopSplitStackSubmit: function(e) {
+    if (e) {
+        e.preventDefault();
     }
+
+
+    var enteredValue = shopSplitStackInput.value;
+    var isValid = true;
+    enteredValue = parseInt(enteredValue);
+    if (enteredValue < 1) {
+        isValid = false;
+    }
+    if (!(Number.isInteger(enteredValue))) {
+        isValid = false;
+    }
+    if (enteredValue > shopSplitStackInput.getAttribute("max")) {
+        // this will check if they can afford it as well as not being over a single slot maximum:
+        isValid = false;
+    }
+    if (isValid) {
+
+
+
+var thisSlotImageElement = UI.sourceSlot.firstElementChild;
+        var thisShopPanelElement = UI.sourceSlot.parentNode.parentNode;
+                           var buyPriceForOne = thisSlotImageElement.getAttribute('data-price');
+        var thisCurrency = thisShopPanelElement.getAttribute('data-currency');
+
+var thisBoughtObject = {
+                "type": parseInt(thisSlotImageElement.getAttribute('data-type')),
+                "quantity": enteredValue,
+                "quality": 100,
+                "durability": 100,
+                "currentWear": 0,
+                "effectiveness": 100,
+                "colour": parseInt(thisSlotImageElement.getAttribute('data-colour')),
+                "enchanted": 0,
+                "hallmark": 0,
+                "inscription": ""
+            }
+            if (thisSlotImageElement.hasAttribute('data-inscription')) {
+                thisBoughtObject.inscription = thisSlotImageElement.getAttribute('data-inscription');
+            }
+            if (thisSlotImageElement.hasAttribute('data-contains')) {
+                thisBoughtObject.contains = thisSlotImageElement.getAttribute('data-contains');
+            }
+            inventoryCheck = canAddItemToInventory([thisBoughtObject]);
+            if (inventoryCheck[0]) {
+                hero.currency[thisCurrency] -= (enteredValue*buyPriceForOne);
+                UI.updateCurrencies();
+                UI.showChangeInInventory(inventoryCheck[1]);
+            } else {
+                UI.showNotification("<p>Oops - sorry, no room in your bags</p>");
+            }
+
+
+
+
+
+
+
+    }
+    shopSplitStackPanel.classList.remove("active");
+    },
 }

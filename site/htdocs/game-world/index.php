@@ -39,7 +39,7 @@ background: #ec35ea;
 <div id="currencies"></div>
 <div id="inventoryPanels"></div>
 <div id="draggableInventorySlot"></div>
-<form id="splitStackPanel">
+<form id="splitStackPanel" class="quantityInputPanel">
   <fieldset>
 <label for="splitStackInput" class="visibleHide">Enter quantity:</label>
 <input type="number" placeholder="Enter quantity" min="0" max="20" pattern="[0-9]*" id="splitStackInput">
@@ -73,7 +73,7 @@ background: #ec35ea;
 
 <div id="shopPanel"></div>
 <div id="draggableShopSlot"></div>
-<form id="shopSplitStackPanel">
+<form id="shopSplitStackPanel" class="quantityInputPanel">
   <fieldset>
 <label for="shopSplitStackInput" class="visibleHide">Enter quantity:</label>
 <input type="number" placeholder="Enter quantity" min="0" max="20" pattern="[0-9]*" id="shopSplitStackInput">
