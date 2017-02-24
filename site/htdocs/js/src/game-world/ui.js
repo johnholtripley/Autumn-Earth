@@ -757,11 +757,12 @@ var UI = {
 
     initShopDrag: function() {
         document.getElementById("shopPanel").addEventListener("mousedown", function(e) {
+            var thisNode = getNearestParentId(e.target);
+// check it's a slot and not the close or draggable bar:
+            if(thisNode.id.substring(0,8) == "shopSlot") {
             e.preventDefault();
             // make sure it's not a right click:
             if (e.button != 2) {
-                var thisNode = getNearestParentId(e.target);
-
                 // check if the shift key is pressed as well:
                 if (key[5]) {
                     UI.sourceSlot = thisNode;
@@ -816,6 +817,7 @@ var UI = {
 
                 }
             }
+        }
         }, false);
     },
 
