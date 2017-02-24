@@ -1065,7 +1065,9 @@ order by tblcontractbids.bidAmount DESC limit 1
 function displayUpcomingEvents( $limit ) {
 
 
-	$query = "select * from tblevents where eventEnd > Now() order by eventstart ASC limit ".$limit;
+	//$query = "select * from tblevents where (DATEDIFF( NOW(), tblevents.eventstart ) % tblevents.eventrepeatdays = 0) limit ".$limit;
+	$query = "select * from tblevents where (DATEDIFF( NOW(), tblevents.eventstart ) % tblevents.eventrepeatdays <= tblevents.eventrepeatdays) limit ".$limit;
+	
 
 	$result = mysql_query( $query ) or die ( "couldn't execute query" );
 
