@@ -63,6 +63,8 @@ var currentItemGroupFilters = "";
 
 var thisMapShopItemIds = '';
 var shopCurrentlyOpen = -1;
+var sellPriceModifier = 0.7;
+var sellPriceSpecialismModifier = 0.9;
 
 // key bindings
 var key = [0, 0, 0, 0, 0, 0, 0];

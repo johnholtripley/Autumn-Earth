@@ -187,6 +187,8 @@ var currentItemGroupFilters = "";
 
 var thisMapShopItemIds = '';
 var shopCurrentlyOpen = -1;
+var sellPriceModifier = 0.7;
+var sellPriceSpecialismModifier = 0.9;
 
 // key bindings
 var key = [0, 0, 0, 0, 0, 0, 0];
@@ -1592,19 +1594,26 @@ function removeFromInventory(whichSlot, amount) {
     if (thisCurrentQuantity - amount > 0) {
         // just reduce quantity:
         hero.inventory[whichSlot].quantity -= amount;
-        // update visually:
-        for (var i = 0; i < thisSlotElem.childNodes.length; i++) {
-            if (thisSlotElem.childNodes[i].className == "qty") {
-                thisSlotElem.childNodes[i].innerHTML = hero.inventory[whichSlot].quantity;
-                break;
-            }
-        }
+    updateQuantity(whichSlot);
     } else {
         // remove the item:
         delete hero.inventory[whichSlot];
         // update visually:
         thisSlotElem.innerHTML = '';
     }
+}
+
+function updateQuantity(whichSlot) {
+        // update visually:
+        var thisSlotElem = document.getElementById("slot" + whichSlot);
+        for (var i = 0; i < thisSlotElem.childNodes.length; i++) {
+            if (thisSlotElem.childNodes[i].className == "qty") {
+                thisSlotElem.childNodes[i].innerHTML = hero.inventory[whichSlot].quantity;
+            }
+            if (thisSlotElem.childNodes[i].nodeName == "P") {
+                thisSlotElem.childNodes[i].childNodes[2].innerHTML = 'Sell price: ' + parseMoney(Math.ceil(hero.inventory[whichSlot].quantity * sellPriceModifier * currentActiveInventoryItems[hero.inventory[whichSlot].type].priceCode, 0));
+            }
+        }
 }
 
 function itemAttributesMatch(item1, item2) {
@@ -1801,7 +1810,7 @@ imageClassName = ' class="players card"';
             itemsDescription = itemsDescription.replace('##contains##', containsItems);
         }
     }
-    slotMarkup += '<p><em>' + theColourPrefix + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].shortname + ' </em>' + itemsDescription + ' <span class="price">Sell price: ' + parseMoney(hero.inventory[thisSlotsId].quantity * currentActiveInventoryItems[hero.inventory[thisSlotsId].type].priceCode, 0) + '</span>' + additionalTooltipDetail(thisSlotsId) + '</p>';
+    slotMarkup += '<p><em>' + theColourPrefix + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].shortname + ' </em>' + itemsDescription + ' <span class="price">Sell price: ' + parseMoney(Math.ceil(hero.inventory[thisSlotsId].quantity * sellPriceModifier * currentActiveInventoryItems[hero.inventory[thisSlotsId].type].priceCode, 0)) + '</span>' + additionalTooltipDetail(thisSlotsId) + '</p>';
     slotMarkup += '<span class="qty">' + hero.inventory[thisSlotsId].quantity + '</span>';
     return slotMarkup;
 }
@@ -2083,9 +2092,9 @@ var UI = {
         // maybe store these values if NPCs are never going to move while a speech balloon is attached to them? #####
         var thisX = findIsoCoordsX(whichNPC.x, whichNPC.y);
         var thisY = findIsoCoordsY(whichNPC.x, whichNPC.y);
-        // +40 y for the toolbar height at the bottom of the canvas:
+ 
         // -40 x so the balloon tip is at '0' x
-        var thisTransform = "translate(" + Math.floor(thisX - hero.isox + (canvasWidth / 2) - 40) + "px," + Math.floor(0 - (canvasHeight - (thisY - hero.isoy - whichNPC.centreY + (canvasHeight / 2)) + 40) - whichNPC.z) + "px)";
+        var thisTransform = "translate(" + Math.floor(thisX - hero.isox + (canvasWidth / 2) - 40) + "px," + Math.floor(0 - (canvasHeight - (thisY - hero.isoy - whichNPC.centreY + (canvasHeight / 2))) - whichNPC.z) + "px)";
         dialogue.style.transform = thisTransform;
     },
 
@@ -2250,14 +2259,7 @@ var UI = {
                             // (is room for 1 more)
                             if (hero.currency[thisCurrency] >= buyPriceForOne) {
                                 hero.inventory[droppedSlotId].quantity++;
-                                // update visually:
-                                var thisSlotElem = document.getElementById("slot" + droppedSlotId);
-                                for (var i = 0; i < thisSlotElem.childNodes.length; i++) {
-                                    if (thisSlotElem.childNodes[i].className == "qty") {
-                                        thisSlotElem.childNodes[i].innerHTML = hero.inventory[droppedSlotId].quantity;
-                                        break;
-                                    }
-                                }
+                               updateQuantity(droppedSlotId);
                                 hero.currency[thisCurrency] -= buyPriceForOne;
                                 UI.updateCurrencies();
                                 UI.droppedSuccessfully();
@@ -2276,14 +2278,11 @@ var UI = {
                     if (itemAttributesMatch(UI.draggedInventoryObject, hero.inventory[droppedSlotId])) {
                         if (parseInt(UI.draggedInventoryObject.quantity) + parseInt(hero.inventory[droppedSlotId].quantity) <= maxNumberOfItemsPerSlot) {
                             hero.inventory[droppedSlotId].quantity += parseInt(UI.draggedInventoryObject.quantity);
-                            // update visually:
-                            var thisSlotElem = document.getElementById("slot" + droppedSlotId);
-                            for (var i = 0; i < thisSlotElem.childNodes.length; i++) {
-                                if (thisSlotElem.childNodes[i].className == "qty") {
-                                    thisSlotElem.childNodes[i].innerHTML = hero.inventory[droppedSlotId].quantity;
-                                    break;
-                                }
-                            }
+                            
+                     
+                          
+
+                          updateQuantity(droppedSlotId);
                             if (!isSplitStackBeingDragged) {
                                 document.getElementById("slot" + UI.sourceSlot).innerHTML = '';
                                 document.getElementById("slot" + UI.sourceSlot).classList.remove("hidden");
@@ -2294,14 +2293,11 @@ var UI = {
                             // add in the max, and slide the remainder back:
                             var amountAddedToThisSlot = maxNumberOfItemsPerSlot - parseInt(hero.inventory[droppedSlotId].quantity);
                             hero.inventory[droppedSlotId].quantity = maxNumberOfItemsPerSlot;
-                            // update visually:
-                            var thisSlotElem = document.getElementById("slot" + droppedSlotId);
-                            for (var i = 0; i < thisSlotElem.childNodes.length; i++) {
-                                if (thisSlotElem.childNodes[i].className == "qty") {
-                                    thisSlotElem.childNodes[i].innerHTML = hero.inventory[droppedSlotId].quantity;
-                                    break;
-                                }
-                            }
+                      
+
+
+updateQuantity(droppedSlotId);
+
                             // update dragged item quantity and then slide back:
                             UI.draggedInventoryObject.quantity -= amountAddedToThisSlot;
                             // update visually to drop slot:
@@ -2379,7 +2375,10 @@ var UI = {
                         }
                     }
                     if (emptySlotFound != -1) {
-                        document.getElementById("slot" + UI.sourceSlot).innerHTML = '';
+                        if(!isSplitStackBeingDragged) {
+                           document.getElementById("slot" + UI.sourceSlot).innerHTML = ''; 
+                        }
+                        
                         addToInventory(thisInventoryPanelId + "-" + emptySlotFound, UI.draggedInventoryObject);
                         document.getElementById("slot" + UI.sourceSlot).classList.remove("hidden");
                         UI.droppedSuccessfully();
@@ -2766,13 +2765,22 @@ if ('serviceWorker' in navigator) {
     });
 }
 
+function sizeCanvasSize() {
+    // size it to the screen:
+     gameContext.canvas.width  = window.innerWidth;
+  gameContext.canvas.height = window.innerHeight;
+   canvasWidth = window.innerWidth;
+        canvasHeight = window.innerHeight;
+}
+
 function init() {
     gameCanvas = document.getElementById("gameWorld");
     if (gameCanvas.getContext) {
         gameContext = gameCanvas.getContext('2d');
-        canvasWidth = gameCanvas.width;
-        canvasHeight = gameCanvas.height;
-    
+     
+    sizeCanvasSize();
+
+
     whichTransitionEvent = determineWhichTransitionEvent();
     gameMode = "mapLoading";
 

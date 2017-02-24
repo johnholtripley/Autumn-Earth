@@ -73,7 +73,7 @@ $colourIndicesToUse = [1,2,4,5,6,8,16];
 
 
 for ($i=0;$i<count($jsonData['shops']);$i++) {
-	$markupToOutput .= '<div class="shop" id="shop'.$jsonData['shops'][$i]["hash"].'" data-currency="'.$jsonData['shops'][$i]["currency"].'">';
+	$markupToOutput .= '<div class="shop" id="shop'.$jsonData['shops'][$i]["hash"].'" data-currency="'.$jsonData['shops'][$i]["currency"].'" data-specialism="'.$jsonData['shops'][$i]["specialism"].'">';
 $markupToOutput .= '<div class="draggableBar">'.$jsonData['shops'][$i]["name"].'</div><button class="closePanel">close</button><ol>';
 $inventoryData = [];
 

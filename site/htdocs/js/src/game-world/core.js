@@ -5,13 +5,22 @@ if ('serviceWorker' in navigator) {
     });
 }
 
+function sizeCanvasSize() {
+    // size it to the screen:
+     gameContext.canvas.width  = window.innerWidth;
+  gameContext.canvas.height = window.innerHeight;
+   canvasWidth = window.innerWidth;
+        canvasHeight = window.innerHeight;
+}
+
 function init() {
     gameCanvas = document.getElementById("gameWorld");
     if (gameCanvas.getContext) {
         gameContext = gameCanvas.getContext('2d');
-        canvasWidth = gameCanvas.width;
-        canvasHeight = gameCanvas.height;
-    
+     
+    sizeCanvasSize();
+
+
     whichTransitionEvent = determineWhichTransitionEvent();
     gameMode = "mapLoading";
 

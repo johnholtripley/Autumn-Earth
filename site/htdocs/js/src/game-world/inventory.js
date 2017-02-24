@@ -147,19 +147,26 @@ function removeFromInventory(whichSlot, amount) {
     if (thisCurrentQuantity - amount > 0) {
         // just reduce quantity:
         hero.inventory[whichSlot].quantity -= amount;
-        // update visually:
-        for (var i = 0; i < thisSlotElem.childNodes.length; i++) {
-            if (thisSlotElem.childNodes[i].className == "qty") {
-                thisSlotElem.childNodes[i].innerHTML = hero.inventory[whichSlot].quantity;
-                break;
-            }
-        }
+    updateQuantity(whichSlot);
     } else {
         // remove the item:
         delete hero.inventory[whichSlot];
         // update visually:
         thisSlotElem.innerHTML = '';
     }
+}
+
+function updateQuantity(whichSlot) {
+        // update visually:
+        var thisSlotElem = document.getElementById("slot" + whichSlot);
+        for (var i = 0; i < thisSlotElem.childNodes.length; i++) {
+            if (thisSlotElem.childNodes[i].className == "qty") {
+                thisSlotElem.childNodes[i].innerHTML = hero.inventory[whichSlot].quantity;
+            }
+            if (thisSlotElem.childNodes[i].nodeName == "P") {
+                thisSlotElem.childNodes[i].childNodes[2].innerHTML = 'Sell price: ' + parseMoney(Math.ceil(hero.inventory[whichSlot].quantity * sellPriceModifier * currentActiveInventoryItems[hero.inventory[whichSlot].type].priceCode, 0));
+            }
+        }
 }
 
 function itemAttributesMatch(item1, item2) {
@@ -356,7 +363,7 @@ imageClassName = ' class="players card"';
             itemsDescription = itemsDescription.replace('##contains##', containsItems);
         }
     }
-    slotMarkup += '<p><em>' + theColourPrefix + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].shortname + ' </em>' + itemsDescription + ' <span class="price">Sell price: ' + parseMoney(hero.inventory[thisSlotsId].quantity * currentActiveInventoryItems[hero.inventory[thisSlotsId].type].priceCode, 0) + '</span>' + additionalTooltipDetail(thisSlotsId) + '</p>';
+    slotMarkup += '<p><em>' + theColourPrefix + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].shortname + ' </em>' + itemsDescription + ' <span class="price">Sell price: ' + parseMoney(Math.ceil(hero.inventory[thisSlotsId].quantity * sellPriceModifier * currentActiveInventoryItems[hero.inventory[thisSlotsId].type].priceCode, 0)) + '</span>' + additionalTooltipDetail(thisSlotsId) + '</p>';
     slotMarkup += '<span class="qty">' + hero.inventory[thisSlotsId].quantity + '</span>';
     return slotMarkup;
 }

@@ -4,6 +4,9 @@ $cardWidth: 84px;
 $cardHeight: 102px;
 body {
     margin: 0;
+    overflow: hidden;
+    width: 100%;
+        height: 100%;
 }
 
 ::-moz-selection {
@@ -29,13 +32,18 @@ canvas {
 
 #worldWrapper {
     position: relative;
-    display: inline-block;
+    display: block;
+    canvas {
+        width: 100%;
+        height: 100%;
+    }
 }
 
 #gameWrapper {
     width: 100%;
     width: 100vw;
     height: 100vh;
+
     font-family: "Trebuchet MS", trebuchet, arial, helvetica, sans-serif;
     cursor: url(../images/game-world/cursors/default.gif) 3 3, auto;
 }
@@ -248,13 +256,16 @@ canvas {
     width: 100%;
     height: 40px;
     background: #666;
+    position: absolute;
+    left: 0;
+    bottom: 0;
 }
 
 // cartography panel:
 #cartographicPanel {
     position: absolute;
     top: 20px;
-    left: 860px;
+    left: 60px;
     background: #666;
     color: #fff;
     #cartographicTitle {
@@ -352,7 +363,7 @@ canvas {
     width: 352px;
     background: #666;
     position: absolute;
-    left: 860px;
+    left: 60px;
     top: 320px;
     
 }
@@ -488,8 +499,8 @@ $albumCardRatio: 0.7142;
 
 #craftingPanel {
     position: absolute;
-    left: 1400px;
-    top: 320px;
+    left: 60px;
+    top: 528px;
     background: #222;
     color: #fff;
     pointer-events: none;
@@ -807,9 +818,10 @@ height: 100%;
 
 
 #currencies {
-    background: #000;
-    color: #fff;
-    max-width: 800px;
+background: #000;
+color: #fff;
+padding: 0 20px 0 60px;
+   float: right;
     font-family: Lato, "Trebuchet MS", trebuchet, arial, helvetica, sans-serif;
     font-size: 12px;
     p {
@@ -822,7 +834,11 @@ height: 100%;
         height: 18px;
         display: inline-block;
     }
-    .gold, .silver, .copper {
+    
+}
+
+
+.gold, .silver, .copper {
            width: 11px;
         height: 11px;
         display: inline-block;
@@ -836,10 +852,6 @@ background: url(/images/game-world/interface/currency/silver.png) no-repeat 50% 
        .copper {
 background: url(/images/game-world/interface/currency/copper.png) no-repeat 50% 50%;
     }
-}
-
-
-
 
 
 #shopPanel {
