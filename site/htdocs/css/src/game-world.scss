@@ -4,9 +4,16 @@ $cardWidth: 84px;
 $cardHeight: 102px;
 body {
     margin: 0;
+
+}
+
+
+@include mq($widest) {
+    body {
     overflow: hidden;
     width: 100%;
         height: 100%;
+}
 }
 
 ::-moz-selection {
@@ -47,6 +54,7 @@ canvas {
     font-family: "Trebuchet MS", trebuchet, arial, helvetica, sans-serif;
     cursor: url(../images/game-world/cursors/default.gif) 3 3, auto;
 }
+
 
 // ------------------
 // UI
