@@ -164,7 +164,7 @@ function updateQuantity(whichSlot) {
                 thisSlotElem.childNodes[i].innerHTML = hero.inventory[whichSlot].quantity;
             }
             if (thisSlotElem.childNodes[i].nodeName == "P") {
-                thisSlotElem.childNodes[i].childNodes[2].innerHTML = 'Sell price: ' + parseMoney(Math.ceil(hero.inventory[whichSlot].quantity * sellPriceModifier * currentActiveInventoryItems[hero.inventory[whichSlot].type].priceCode, 0));
+                thisSlotElem.childNodes[i].childNodes[2].innerHTML = 'Sell price: ' + parseMoney(Math.ceil(hero.inventory[whichSlot].quantity * sellPriceModifier * inflationModifier * currentActiveInventoryItems[hero.inventory[whichSlot].type].priceCode, 0));
             }
         }
 }
@@ -363,7 +363,7 @@ imageClassName = ' class="players card"';
             itemsDescription = itemsDescription.replace('##contains##', containsItems);
         }
     }
-    slotMarkup += '<p><em>' + theColourPrefix + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].shortname + ' </em>' + itemsDescription + ' <span class="price">Sell price: ' + parseMoney(Math.ceil(hero.inventory[thisSlotsId].quantity * sellPriceModifier * currentActiveInventoryItems[hero.inventory[thisSlotsId].type].priceCode, 0)) + '</span>' + additionalTooltipDetail(thisSlotsId) + '</p>';
+    slotMarkup += '<p><em>' + theColourPrefix + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].shortname + ' </em>' + itemsDescription + ' <span class="price">Sell price: ' + parseMoney(Math.ceil(hero.inventory[thisSlotsId].quantity * sellPriceModifier * inflationModifier * currentActiveInventoryItems[hero.inventory[thisSlotsId].type].priceCode, 0)) + '</span>' + additionalTooltipDetail(thisSlotsId) + '</p>';
     slotMarkup += '<span class="qty">' + hero.inventory[thisSlotsId].quantity + '</span>';
     return slotMarkup;
 }

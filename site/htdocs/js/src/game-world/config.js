@@ -63,6 +63,7 @@ var currentItemGroupFilters = "";
 
 var thisMapShopItemIds = '';
 var shopCurrentlyOpen = -1;
+var inflationModifier = 10;
 var sellPriceModifier = 0.7;
 var sellPriceSpecialismModifier = 0.9;
 
