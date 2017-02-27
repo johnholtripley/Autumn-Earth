@@ -321,34 +321,26 @@ function generateSlotMarkup(thisSlotsId) {
     dataActionMarkup = '';
     if (thisAction) {
         if (isABook) {
-            /*
-            if (hero.inventory[thisSlotsId].inscription.content == "##procedural##") {
-
-                dataActionMarkup = '';
-                generateBookContent(thisSlotsId);
-            } else {
-                */
-                // link this item up to the book panel using the unique hash:
-                dataActionMarkup = 'data-action="' + thisAction + '" data-action-value="' + generateHash(hero.inventory[thisSlotsId].inscription.content) + '" ';
-                UI.buildBook(thisSlotsId);
-           /* } */
+            // link this item up to the book panel using the unique hash:
+            dataActionMarkup = 'data-action="' + thisAction + '" data-action-value="' + generateHash(hero.inventory[thisSlotsId].inscription.content) + '" ';
+            UI.buildBook(thisSlotsId);
         } else {
             dataActionMarkup = 'data-action="' + thisAction + '" data-action-value="' + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].actionValue + '" ';
         }
     }
 
-var thisCategories = currentActiveInventoryItems[hero.inventory[thisSlotsId].type].category.split(",");
-for(var i=0;i<thisCategories.length;i++) {
-    imageClassName += "itemCategory"+thisCategories[i]+" ";
-}
- 
+    var thisCategories = currentActiveInventoryItems[hero.inventory[thisSlotsId].type].category.split(",");
+    for (var i = 0; i < thisCategories.length; i++) {
+        imageClassName += "itemCategory" + thisCategories[i] + " ";
+    }
 
-// check if it's a card:
-if(currentActiveInventoryItems[hero.inventory[thisSlotsId].type].action == "card") {
-imageClassName += 'players card';
-}
 
-    slotMarkup += '<img src="/images/game-world/inventory-items/' + hero.inventory[thisSlotsId].type + thisFileColourSuffix + '.png" ' + dataActionMarkup + 'alt="' + theColourPrefix + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].shortname + '" class="'+imageClassName+'">';
+    // check if it's a card:
+    if (currentActiveInventoryItems[hero.inventory[thisSlotsId].type].action == "card") {
+        imageClassName += 'players card';
+    }
+
+    slotMarkup += '<img src="/images/game-world/inventory-items/' + hero.inventory[thisSlotsId].type + thisFileColourSuffix + '.png" ' + dataActionMarkup + 'alt="' + theColourPrefix + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].shortname + '" class="' + imageClassName + '">';
     if (isABook) {
         var itemsDescription = "&quot;" + hero.inventory[thisSlotsId].inscription.title + "&quot;";
     } else {
@@ -367,10 +359,14 @@ imageClassName += 'players card';
             itemsDescription = itemsDescription.replace('##contains##', containsItems);
         }
     }
-    slotMarkup += '<p><em>' + theColourPrefix + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].shortname + ' </em>' + itemsDescription + ' <span class="price">Sell price: ' + parseMoney(Math.ceil(hero.inventory[thisSlotsId].quantity * sellPriceModifier * inflationModifier * currentActiveInventoryItems[hero.inventory[thisSlotsId].type].priceCode, 0)) + '</span>' + additionalTooltipDetail(thisSlotsId) + '</p>';
+    slotMarkup += '<p><em>' + theColourPrefix + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].shortname + ' </em>' + itemsDescription + ' ';
+    slotMarkup += '<span class="price">Sell price: ' + parseMoney(Math.ceil(hero.inventory[thisSlotsId].quantity * sellPriceModifier * inflationModifier * currentActiveInventoryItems[hero.inventory[thisSlotsId].type].priceCode, 0)) + '</span>';
+    slotMarkup += '<span class="price specialismPrice">Sell price: ' + parseMoney(Math.ceil(hero.inventory[thisSlotsId].quantity * sellPriceSpecialismModifier * inflationModifier * currentActiveInventoryItems[hero.inventory[thisSlotsId].type].priceCode, 0)) + '</span>';
+    slotMarkup += additionalTooltipDetail(thisSlotsId) + '</p>';
     slotMarkup += '<span class="qty">' + hero.inventory[thisSlotsId].quantity + '</span>';
     return slotMarkup;
 }
+
 
 
 

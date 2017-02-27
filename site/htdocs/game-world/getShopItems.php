@@ -7,7 +7,10 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/functions.php");
 // config: 
 $inflationModifier = 10;
 $sellPriceModifier = 0.7;
-$sellPriceSpecialismModifier = 0.9;
+$sellPriceSpecialismModifier = 0.8;
+$buyPriceSpecialismModifier = 0.9;
+
+
  
  
 $json = $_POST['shopData'];

@@ -65,7 +65,8 @@ var thisMapShopItemIds = '';
 var shopCurrentlyOpen = -1;
 var inflationModifier = 10;
 var sellPriceModifier = 0.7;
-var sellPriceSpecialismModifier = 0.9;
+var sellPriceSpecialismModifier = 0.8;
+var buyPriceSpecialismModifier = 0.9;
 
 // key bindings
 var key = [0, 0, 0, 0, 0, 0, 0];

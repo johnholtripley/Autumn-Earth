@@ -256,10 +256,25 @@ pointer-events: none;
             font-style: normal;
         }
     }
+    .price {
+
+    }
+    .specialismPrice {
+        display: none;
+    }
 
 @for $i from 1 through $numberOfItemCategories {
     &.shopSpecialism#{$i} .itemCategory#{$i} ~ .qty:after {
         opacity: 1;
+    }
+    &.shopSpecialism#{$i} .itemCategory#{$i} ~ p {
+        .price {
+            display: none;
+        }
+        .specialismPrice {
+            display: inline-block;
+            color: #16952b;
+        }
     }
 }
 }
@@ -892,7 +907,7 @@ background: url(/images/game-world/interface/currency/copper.png) no-repeat 50% 
 #shopPanel {
     .shop {
         width: 322px;
-        left: 375px;
+        left: 55%;
         top: 335px;
         position: absolute;
         background: #000;

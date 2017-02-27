@@ -634,11 +634,9 @@ updateQuantity(droppedSlotId);
         var thisBooksHash = generateHash(thisBooksContent);
         // check if the book already has been created:
         if (!document.getElementById('book' + thisBooksHash)) {
-
             markupToAdd += '<div class="book" id="book' + thisBooksHash + '">';
             markupToAdd += '<div class="draggableBar">&quot;' + hero.inventory[(whichBook)].inscription.title + '&quot;</div>';
             markupToAdd += '<button class="closePanel">close</button>';
-
             /*
                         // determine the number of pages (identified by the <section> elements):
                         parsedDoc = parser.parseFromString(hero.inventory[(whichBook)].inscription.content, "text/html");
@@ -649,17 +647,10 @@ updateQuantity(droppedSlotId);
                              markupToAdd += hero.inventory[(whichBook)].inscription.content;
                         }
                        */
-
-
-
             markupToAdd += hero.inventory[(whichBook)].inscription.content;
-
             markupToAdd += '</div>';
-
             booksAndParchments.innerHTML += markupToAdd;
-
             // UI.initDrag('book' + thisBooksHash + ' .draggableBar');
-
         }
     },
 
