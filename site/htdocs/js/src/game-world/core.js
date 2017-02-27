@@ -643,7 +643,7 @@ function checkHeroCollisions() {
 function gameLoop() {
     switch (gameMode) {
         case "mapLoading":
-            console.log("loading map assets...");
+        //    console.log("loading map assets...");
             break;
         case "paused":
             //

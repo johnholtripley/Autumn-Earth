@@ -425,6 +425,7 @@ function inventorySplitStackSubmit(e) {
         document.addEventListener("mousemove", UI.handleDrag, false);
         document.addEventListener("mouseup", UI.endInventoryDrag, false);
     }
+    console.log(UI.draggedInventoryObject);
     splitStackPanel.classList.remove("active");
 
 }

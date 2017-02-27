@@ -487,11 +487,21 @@ var UI = {
             }
         } else if (droppedSlot.substring(0, 8) == "shopSlot") {
             // shop slot:
+            if (isFromAShop) {
+
+                UI.slideDraggedSlotBack();
+            } else {
+            
 UI.sellToShop(thisNode.parentNode.parentNode);
+}
             
         } else if(thisNode.classList.contains('shop')) {
             // shop panel:
+            if (isFromAShop) {
+                UI.slideDraggedSlotBack();
+            } else {
 UI.sellToShop(thisNode);
+}
         } else {
             UI.slideDraggedSlotBack();
         }
@@ -503,32 +513,48 @@ UI.sellToShop(thisNode);
 
 
 sellToShop: function(thisShopPanelElement) {
+   
 // check to see if it's being sold to a relevant specialist shop:
             var thisItemsCategories = currentActiveInventoryItems[UI.draggedInventoryObject.type].category;
        
             var thisShopsSpecialism = thisShopPanelElement.getAttribute('data-specialism');
             var sellPrice;
             var thisCurrency = thisShopPanelElement.getAttribute('data-currency');
-            if (!isSplitStackBeingDragged) {
-                if (thisItemsCategories.indexOf(thisShopsSpecialism) != -1) {
+           
+
+
+
+  if (thisItemsCategories.indexOf(thisShopsSpecialism) != -1) {
                     sellPrice = Math.ceil(UI.draggedInventoryObject.quantity * sellPriceSpecialismModifier * inflationModifier * currentActiveInventoryItems[UI.draggedInventoryObject.type].priceCode, 0);
                 } else {
                     sellPrice = Math.ceil(UI.draggedInventoryObject.quantity * sellPriceModifier * inflationModifier * currentActiveInventoryItems[UI.draggedInventoryObject.type].priceCode, 0);
                 }
                 hero.currency[thisCurrency] += sellPrice;
                 UI.updateCurrencies();
-                document.getElementById("slot" + UI.sourceSlot).innerHTML = '';
+            if (!isSplitStackBeingDragged) {
+              
+             
+            } else {
+
             }
             UI.droppedSuccessfully();
 },
 
     droppedSuccessfully: function() {
         // hide the clone:
+
+
+
+
+
         UI.activeDragObject.style.cssText = "z-index:2;";
         UI.activeDragObject = '';
         if (isSplitStackBeingDragged) {
             isSplitStackBeingDragged = false;
         }
+
+
+    
     },
 
     initInventoryDrag: function(whichElements) {
@@ -597,17 +623,25 @@ sellToShop: function(thisShopPanelElement) {
 
 
     slideDraggedSlotBack: function() {
+  
+
         // slide it back visually - add a transition:
         UI.activeDragObject.style.cssText = "z-index:2;left: " + (objInitLeft) + "px; top: " + (objInitTop) + "px;transition: transform 0.4s ease;";
         UI.activeDragObject.addEventListener(whichTransitionEvent, function snapDraggedSlotBack(e) {
-            // it's now back, so restore to the inventory:
+             // it's now back, so restore to the inventory:
+          if(UI.sourceSlot.substring(0,8) != 'shopSlot') {
+           // not dragged from a shop
             if (!isSplitStackBeingDragged) {
                 hero.inventory[UI.sourceSlot] = JSON.parse(JSON.stringify(UI.draggedInventoryObject));
-                document.getElementById("slot" + UI.sourceSlot).classList.remove("hidden");
+           
+                    document.getElementById("slot" + UI.sourceSlot).classList.remove("hidden");
+                
+                
             } else {
                 // update quantity on the original slot
                 hero.inventory[UI.sourceSlot].quantity += UI.draggedInventoryObject.quantity;
                 var thisSlotElem = document.getElementById("slot" + UI.sourceSlot);
+             if(thisSlotElem) {
                 for (var i = 0; i < thisSlotElem.childNodes.length; i++) {
                     if (thisSlotElem.childNodes[i].className == "qty") {
                         thisSlotElem.childNodes[i].innerHTML = hero.inventory[UI.sourceSlot].quantity;
@@ -615,6 +649,8 @@ sellToShop: function(thisShopPanelElement) {
                     }
                 }
             }
+            }
+}
             // hide the clone:
             UI.droppedSuccessfully();
             // remove this event listener now:
@@ -645,8 +681,8 @@ sellToShop: function(thisShopPanelElement) {
     buildBook: function(whichBook) {
         var markupToAdd = '';
         // var parsedDoc, numberOfPages;
-        // var parser = new DOMParser();
-        console.log(hero.inventory[(whichBook)].inscription);
+     
+        
         var thisBooksContent = hero.inventory[(whichBook)].inscription.content;
         var thisBooksHash = generateHash(thisBooksContent);
         // check if the book already has been created:
@@ -656,7 +692,7 @@ sellToShop: function(thisShopPanelElement) {
             markupToAdd += '<button class="closePanel">close</button>';
             /*
                         // determine the number of pages (identified by the <section> elements):
-                        parsedDoc = parser.parseFromString(hero.inventory[(whichBook)].inscription.content, "text/html");
+                        parsedDoc = new DOMParser().parseFromString(hero.inventory[(whichBook)].inscription.content, "text/html");
                         numberOfPages = parsedDoc.getElementsByTagName("SECTION").length;
                         if(numberOfPages>1) {
 
@@ -719,6 +755,7 @@ sellToShop: function(thisShopPanelElement) {
     },
 
     buyFromShopSlot: function(slotId) {
+
         var thisSlotElement = document.getElementById(slotId);
         var thisSlotImageElement = thisSlotElement.firstElementChild;
         var thisShopPanelElement = thisSlotElement.parentNode.parentNode;
@@ -759,70 +796,95 @@ sellToShop: function(thisShopPanelElement) {
     },
 
     initShopDrag: function() {
+
         document.getElementById("shopPanel").addEventListener("mousedown", function(e) {
+            if(!isSplitStackBeingDragged) {
             var thisNode = getNearestParentId(e.target);
-// check it's a slot and not the close or draggable bar:
-            if(thisNode.id.substring(0,8) == "shopSlot") {
-            e.preventDefault();
-            // make sure it's not a right click:
-            if (e.button != 2) {
-                // check if the shift key is pressed as well:
-                if (key[5]) {
+            // check it's a slot and not the close or draggable bar:
+            if (thisNode.id.substring(0, 8) == "shopSlot") {
+                e.preventDefault();
+                // make sure it's not a right click:
+                if (e.button != 2) {
                     UI.sourceSlot = thisNode;
-                    var thisSlotImageElement = thisNode.firstElementChild;
-                    var thisShopPanelElement = thisNode.parentNode.parentNode;
-                    var buyPriceForOne = thisSlotImageElement.getAttribute('data-price');
-                    var thisCurrency = thisShopPanelElement.getAttribute('data-currency');
+                    // check if the shift key is pressed as well:
+                    if (key[5]) {
 
-                    // work out the max they can buy with the relevant currency:
-                    var maxThatCanBeBought = Math.floor(hero.currency[thisCurrency] / buyPriceForOne);
+                        var thisSlotImageElement = thisNode.firstElementChild;
+                        var thisShopPanelElement = thisNode.parentNode.parentNode;
+                        var buyPriceForOne = thisSlotImageElement.getAttribute('data-price');
+                        var thisCurrency = thisShopPanelElement.getAttribute('data-currency');
 
-                    if (maxThatCanBeBought > maxNumberOfItemsPerSlot) {
-                        maxThatCanBeBought = maxNumberOfItemsPerSlot;
+                        // work out the max they can buy with the relevant currency:
+                        var maxThatCanBeBought = Math.floor(hero.currency[thisCurrency] / buyPriceForOne);
+
+                        if (maxThatCanBeBought > maxNumberOfItemsPerSlot) {
+                            maxThatCanBeBought = maxNumberOfItemsPerSlot;
+                        }
+                        shopSplitStackInput.setAttribute("max", maxThatCanBeBought);
+                        shopSplitStackInput.value = 1;
+                        shopSplitStackInput.focus();
+                        // can't set selection for number type input:
+                        // http://stackoverflow.com/questions/21177489/selectionstart-selectionend-on-input-type-number-no-longer-allowed-in-chrome
+                        //   splitStackInput.setSelectionRange(0, defaultSplitValue.toString().length);
+                        var clickedSlotRect = thisNode.getBoundingClientRect();
+                        var pageScrollTopY = (window.pageYOffset || document.documentElement.scrollTop) - (document.documentElement.clientTop || 0);
+                        // 3px padding on the slots:
+                        // -44 for the slot height:
+                        objInitLeft = clickedSlotRect.left + 3;
+                        objInitTop = clickedSlotRect.top + 3 + pageScrollTopY - 44;
+                        shopSplitStackPanel.style.cssText = "z-index:2;top: " + objInitTop + "px; left: " + objInitLeft + "px;";
+                        shopSplitStackPanel.classList.add("active");
+                        key[5] = 0;
+                    } else {
+                        // this will fire for double click as well
+
+                     
+                        UI.sourceSlot = thisNode.id;
+                        UI.draggedInventoryObject = {
+                            "type": parseInt(thisNode.getAttribute('data-type')),
+                            "quantity": 1,
+                            "quality": 100,
+                            "durability": 100,
+                            "currentWear": 0,
+                            "effectiveness": 100,
+                            "colour": parseInt(thisNode.getAttribute('data-colour')),
+                            "enchanted": 0,
+                            "hallmark": 0,
+                            "inscription": ""
+                        }
+                        if (thisNode.hasAttribute('data-inscription')) {
+                            UI.draggedInventoryObject.inscription = thisNode.getAttribute('data-inscription');
+                        }
+                        if (thisNode.hasAttribute('data-contains')) {
+                            UI.draggedInventoryObject.contains = thisNode.getAttribute('data-contains');
+                        }
+
+
+
+
+                        // clone this slot to draggableInventorySlot:
+                        UI.activeDragObject = document.getElementById('draggableShopSlot');
+                        UI.activeDragObject.innerHTML = thisNode.innerHTML;
+
+
+                        var clickedSlotRect = thisNode.getBoundingClientRect();
+                        var pageScrollTopY = (window.pageYOffset || document.documentElement.scrollTop) - (document.documentElement.clientTop || 0);
+                        // 3px padding on the slots:
+                        objInitLeft = clickedSlotRect.left + 3;
+                        objInitTop = clickedSlotRect.top + 3 + pageScrollTopY;
+                        dragStartX = e.pageX;
+                        dragStartY = e.pageY;
+                        UI.activeDragObject.style.cssText = "z-index:2;top: " + objInitTop + "px; left: " + objInitLeft + "px; transform: translate(0px, 0px);";
+                        document.addEventListener("mousemove", UI.handleDrag, false);
+                        document.addEventListener("mouseup", UI.endInventoryDrag, false);
+
                     }
-                    shopSplitStackInput.setAttribute("max", maxThatCanBeBought);
-                    shopSplitStackInput.value = 1;
-                    shopSplitStackInput.focus();
-                    // can't set selection for number type input:
-                    // http://stackoverflow.com/questions/21177489/selectionstart-selectionend-on-input-type-number-no-longer-allowed-in-chrome
-                    //   splitStackInput.setSelectionRange(0, defaultSplitValue.toString().length);
-                    var clickedSlotRect = thisNode.getBoundingClientRect();
-                    var pageScrollTopY = (window.pageYOffset || document.documentElement.scrollTop) - (document.documentElement.clientTop || 0);
-                    // 3px padding on the slots:
-                    // -44 for the slot height:
-                    objInitLeft = clickedSlotRect.left + 3;
-                    objInitTop = clickedSlotRect.top + 3 + pageScrollTopY - 44;
-                    shopSplitStackPanel.style.cssText = "z-index:2;top: " + objInitTop + "px; left: " + objInitLeft + "px;";
-                    shopSplitStackPanel.classList.add("active");
-                    key[5] = 0;
-                } else {
-                    // this will fire for double click as well
-
-
-                      UI.sourceSlot = thisNode.id;
-                            UI.draggedInventoryObject = hero.inventory[UI.sourceSlot];
-
-                            // clone this slot to draggableInventorySlot:
-                            UI.activeDragObject = document.getElementById('draggableShopSlot');
-                            UI.activeDragObject.innerHTML = thisNode.innerHTML;
-                
-
-                            var clickedSlotRect = thisNode.getBoundingClientRect();
-                            var pageScrollTopY = (window.pageYOffset || document.documentElement.scrollTop) - (document.documentElement.clientTop || 0);
-                            // 3px padding on the slots:
-                            objInitLeft = clickedSlotRect.left + 3;
-                            objInitTop = clickedSlotRect.top + 3 + pageScrollTopY;
-                            dragStartX = e.pageX;
-                            dragStartY = e.pageY;
-                            UI.activeDragObject.style.cssText = "z-index:2;top: " + objInitTop + "px; left: " + objInitLeft + "px; transform: translate(0px, 0px);";
-                            document.addEventListener("mousemove", UI.handleDrag, false);
-                            document.addEventListener("mouseup", UI.endInventoryDrag, false);
-
                 }
             }
         }
         }, false);
     },
+
 
     shopSplitStackSubmit: function(e) {
         if (e) {
