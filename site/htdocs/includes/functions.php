@@ -1064,9 +1064,10 @@ order by tblcontractbids.bidAmount DESC limit 1
 
 function displayUpcomingEvents( $limit ) {
 
+// http://stackoverflow.com/questions/5183630/calendar-recurring-repeating-events-best-storage-method#answer-16659802
 
-	//$query = "select * from tblevents where (DATEDIFF( NOW(), tblevents.eventstart ) % tblevents.eventrepeatdays = 0) limit ".$limit;
-	$query = "select * from tblevents where (DATEDIFF( NOW(), tblevents.eventstart ) % tblevents.eventrepeatdays <= tblevents.eventrepeatdays) limit ".$limit;
+	
+	$query = "SELECT * from tblevents WHERE dayofyear(eventStart) - dayofyear(now()) <= eventDurationDays or dayofyear(eventStart) + 365 - dayofyear(now()) <= eventDurationDays limit ".$limit;
 	
 
 	$result = mysql_query( $query ) or die ( "couldn't execute query" );
@@ -1082,6 +1083,9 @@ function displayUpcomingEvents( $limit ) {
 			extract( $row );
 
 			// https://productforums.google.com/forum/#!topic/webmasters/hqXyipukFOg;context-place=forum/webmasters
+
+
+$eventEnd = $eventStart + $eventDurationDays;
 
 			echo '<li itemscope itemtype="http://schema.org/Event"><a itemprop="url" href="/almanack/'.$cleanURL.'/"><h6 itemprop="name">'.$title.'</h6><p itemprop="description">'.$summary.'</p>';
 			$startDateOutput = date( 'j', strtotime( $eventStart ) )."<sup>".date( 'S', strtotime( $eventStart ) )."</sup> ".date( 'F Y', strtotime( $eventStart ) );

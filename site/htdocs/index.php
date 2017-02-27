@@ -98,7 +98,7 @@ if (mysql_num_rows($result) > 0) {
 
 <div class="column"><div><h4>Upcoming Events</h4>
 	<?php
-displayUpcomingEvents(3);
+displayUpcomingEvents(5);
 ?>
 </div></div>
 
