@@ -486,11 +486,26 @@ var UI = {
                 }
             }
         } else if (droppedSlot.substring(0, 8) == "shopSlot") {
-            // sell the item:
+            // shop slot:
+UI.sellToShop(thisNode.parentNode.parentNode);
+            
+        } else if(thisNode.classList.contains('shop')) {
+            // shop panel:
+UI.sellToShop(thisNode);
+        } else {
+            UI.slideDraggedSlotBack();
+        }
 
-            // check to see if it's being sold to a relevant specialist shop:
+        // tidy up and remove event listeners:
+        document.removeEventListener("mousemove", UI.handleDrag, false);
+        document.removeEventListener("mouseup", UI.endInventoryDrag, false);
+    },
+
+
+sellToShop: function(thisShopPanelElement) {
+// check to see if it's being sold to a relevant specialist shop:
             var thisItemsCategories = currentActiveInventoryItems[UI.draggedInventoryObject.type].category;
-            var thisShopPanelElement = thisNode.parentNode.parentNode;
+       
             var thisShopsSpecialism = thisShopPanelElement.getAttribute('data-specialism');
             var sellPrice;
             var thisCurrency = thisShopPanelElement.getAttribute('data-currency');
@@ -505,17 +520,7 @@ var UI = {
                 document.getElementById("slot" + UI.sourceSlot).innerHTML = '';
             }
             UI.droppedSuccessfully();
-        } else {
-            UI.slideDraggedSlotBack();
-        }
-
-        // tidy up and remove event listeners:
-        document.removeEventListener("mousemove", UI.handleDrag, false);
-        document.removeEventListener("mouseup", UI.endInventoryDrag, false);
-    },
-
-
-
+},
 
     droppedSuccessfully: function() {
         // hide the clone:

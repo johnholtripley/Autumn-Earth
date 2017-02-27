@@ -7,11 +7,17 @@ if ('serviceWorker' in navigator) {
 
 function sizeCanvasSize() {
     // size it to the screen:
-     gameContext.canvas.width  = window.innerWidth;
-  gameContext.canvas.height = window.innerHeight;
-   canvasWidth = window.innerWidth;
-        canvasHeight = window.innerHeight;
+    gameContext.canvas.width = window.innerWidth;
+    gameContext.canvas.height = window.innerHeight;
+    canvasWidth = window.innerWidth;
+    canvasHeight = window.innerHeight;
 }
+
+var debouncedResize = debounce(function() {
+    sizeCanvasSize();
+}, 250);
+window.addEventListener('resize', debouncedResize);
+
 
 function init() {
     gameCanvas = document.getElementById("gameWorld");

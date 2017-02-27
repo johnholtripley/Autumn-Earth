@@ -709,6 +709,21 @@ return thisNode;
 
 
 
+function debounce(func, wait, immediate) {
+    // https://davidwalsh.name/javascript-debounce-function
+    var timeout;
+    return function() {
+        var context = this, args = arguments;
+        var later = function() {
+            timeout = null;
+            if (!immediate) func.apply(context, args);
+        };
+        var callNow = immediate && !timeout;
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+        if (callNow) func.apply(context, args);
+    };
+};
 
 
 function isAnObjectCollision(obj1x, obj1y, obj1w, obj1h, obj2x, obj2y, obj2w, obj2h) {
@@ -2381,11 +2396,26 @@ var UI = {
                 }
             }
         } else if (droppedSlot.substring(0, 8) == "shopSlot") {
-            // sell the item:
+            // shop slot:
+UI.sellToShop(thisNode.parentNode.parentNode);
+            
+        } else if(thisNode.classList.contains('shop')) {
+            // shop panel:
+UI.sellToShop(thisNode);
+        } else {
+            UI.slideDraggedSlotBack();
+        }
 
-            // check to see if it's being sold to a relevant specialist shop:
+        // tidy up and remove event listeners:
+        document.removeEventListener("mousemove", UI.handleDrag, false);
+        document.removeEventListener("mouseup", UI.endInventoryDrag, false);
+    },
+
+
+sellToShop: function(thisShopPanelElement) {
+// check to see if it's being sold to a relevant specialist shop:
             var thisItemsCategories = currentActiveInventoryItems[UI.draggedInventoryObject.type].category;
-            var thisShopPanelElement = thisNode.parentNode.parentNode;
+       
             var thisShopsSpecialism = thisShopPanelElement.getAttribute('data-specialism');
             var sellPrice;
             var thisCurrency = thisShopPanelElement.getAttribute('data-currency');
@@ -2400,17 +2430,7 @@ var UI = {
                 document.getElementById("slot" + UI.sourceSlot).innerHTML = '';
             }
             UI.droppedSuccessfully();
-        } else {
-            UI.slideDraggedSlotBack();
-        }
-
-        // tidy up and remove event listeners:
-        document.removeEventListener("mousemove", UI.handleDrag, false);
-        document.removeEventListener("mouseup", UI.endInventoryDrag, false);
-    },
-
-
-
+},
 
     droppedSuccessfully: function() {
         // hide the clone:
@@ -2777,11 +2797,17 @@ if ('serviceWorker' in navigator) {
 
 function sizeCanvasSize() {
     // size it to the screen:
-     gameContext.canvas.width  = window.innerWidth;
-  gameContext.canvas.height = window.innerHeight;
-   canvasWidth = window.innerWidth;
-        canvasHeight = window.innerHeight;
+    gameContext.canvas.width = window.innerWidth;
+    gameContext.canvas.height = window.innerHeight;
+    canvasWidth = window.innerWidth;
+    canvasHeight = window.innerHeight;
 }
+
+var debouncedResize = debounce(function() {
+    sizeCanvasSize();
+}, 250);
+window.addEventListener('resize', debouncedResize);
+
 
 function init() {
     gameCanvas = document.getElementById("gameWorld");
