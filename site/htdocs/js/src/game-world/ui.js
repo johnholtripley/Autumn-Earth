@@ -695,11 +695,13 @@ updateQuantity(droppedSlotId);
     openShop: function(shopHash) {
         shopCurrentlyOpen = shopHash;
         document.getElementById("shop" + shopHash).classList.add("active");
+        inventoryPanels.classList.add("shopSpecialism"+document.getElementById("shop" + shopHash).getAttribute('data-specialism'));
     },
 
     closeShop: function() {
         document.getElementById("shop" + shopCurrentlyOpen).classList.remove("active");
         shopCurrentlyOpen = -1;
+        inventoryPanels.removeAttribute('class');
 
     },
 

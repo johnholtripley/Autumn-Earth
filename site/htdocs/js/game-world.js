@@ -187,6 +187,7 @@ var currentItemGroupFilters = "";
 
 var thisMapShopItemIds = '';
 var shopCurrentlyOpen = -1;
+var inflationModifier = 10;
 var sellPriceModifier = 0.7;
 var sellPriceSpecialismModifier = 0.9;
 
@@ -1611,7 +1612,7 @@ function updateQuantity(whichSlot) {
                 thisSlotElem.childNodes[i].innerHTML = hero.inventory[whichSlot].quantity;
             }
             if (thisSlotElem.childNodes[i].nodeName == "P") {
-                thisSlotElem.childNodes[i].childNodes[2].innerHTML = 'Sell price: ' + parseMoney(Math.ceil(hero.inventory[whichSlot].quantity * sellPriceModifier * currentActiveInventoryItems[hero.inventory[whichSlot].type].priceCode, 0));
+                thisSlotElem.childNodes[i].childNodes[2].innerHTML = 'Sell price: ' + parseMoney(Math.ceil(hero.inventory[whichSlot].quantity * sellPriceModifier * inflationModifier * currentActiveInventoryItems[hero.inventory[whichSlot].type].priceCode, 0));
             }
         }
 }
@@ -1810,7 +1811,7 @@ imageClassName = ' class="players card"';
             itemsDescription = itemsDescription.replace('##contains##', containsItems);
         }
     }
-    slotMarkup += '<p><em>' + theColourPrefix + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].shortname + ' </em>' + itemsDescription + ' <span class="price">Sell price: ' + parseMoney(Math.ceil(hero.inventory[thisSlotsId].quantity * sellPriceModifier * currentActiveInventoryItems[hero.inventory[thisSlotsId].type].priceCode, 0)) + '</span>' + additionalTooltipDetail(thisSlotsId) + '</p>';
+    slotMarkup += '<p><em>' + theColourPrefix + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].shortname + ' </em>' + itemsDescription + ' <span class="price">Sell price: ' + parseMoney(Math.ceil(hero.inventory[thisSlotsId].quantity * sellPriceModifier * inflationModifier * currentActiveInventoryItems[hero.inventory[thisSlotsId].type].priceCode, 0)) + '</span>' + additionalTooltipDetail(thisSlotsId) + '</p>';
     slotMarkup += '<span class="qty">' + hero.inventory[thisSlotsId].quantity + '</span>';
     return slotMarkup;
 }
@@ -2588,11 +2589,13 @@ updateQuantity(droppedSlotId);
     openShop: function(shopHash) {
         shopCurrentlyOpen = shopHash;
         document.getElementById("shop" + shopHash).classList.add("active");
+        inventoryPanels.classList.add("shopSpecialism"+document.getElementById("shop" + shopHash).getAttribute('data-specialism'));
     },
 
     closeShop: function() {
         document.getElementById("shop" + shopCurrentlyOpen).classList.remove("active");
         shopCurrentlyOpen = -1;
+        inventoryPanels.removeAttribute('class');
 
     },
 
@@ -4331,7 +4334,8 @@ function draw() {
         assetsToDraw.sort(sortByLowestValue);
         // don't need to clear, as the background will overwrite anyway - this means there's less to process.
         // scroll background to match the top tip and left tip of the tile grid:
-        gameContext.drawImage(backgroundImg, Math.floor(getTileIsoCentreCoordX(0, mapTilesX - 1) - hero.isox - tileW / 2), Math.floor(getTileIsoCentreCoordY(0, 0) - hero.isoy - tileH / 2));
+        // the 400px and 300px are "padding" the edges of the background graphics:
+        gameContext.drawImage(backgroundImg, Math.floor(getTileIsoCentreCoordX(0, mapTilesX - 1) - hero.isox - tileW / 2 - 400 + canvasWidth/2), Math.floor(getTileIsoCentreCoordY(0, 0) - hero.isoy - tileH / 2 -300 + canvasHeight/2));
         // draw the sorted assets:
         for (var i = 0; i < assetsToDraw.length; i++) {
             switch (assetsToDraw[i][1]) {
