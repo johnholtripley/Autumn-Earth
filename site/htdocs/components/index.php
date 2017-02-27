@@ -160,7 +160,7 @@ responsiveBackground('/images/placeholder.jpg', array(300,600,900));
 <div class="medium-6 wide-3 columns">
 <table>
   <caption>Sample table</caption>
-  <tr><th>table header</th><th>table header</th><th>table header</th></tr>
+  <tr><th scope="col">table header</th><th scope="col">table header</th><th scope="col">table header</th></tr>
   <tr><td>table cell</td><td>table cell</td><td>table cell</td></tr>
   <tr><td colspan="2">table cell - two span</td><td>table cell</td></tr>
   <tr><td>table cell</td><td>table cell</td><td>table cell</td></tr>

@@ -1,8 +1,13 @@
 $understandsMQs: true;
 @import "variables";
 @import "shared/mixins";
+
 $cardWidth: 84px;
 $cardHeight: 102px;
+$numberOfItemCategories: 20;
+
+
+
 body {
     margin: 0;
 
@@ -171,6 +176,7 @@ canvas {
                     @include transform(translateY(0));
                 }
             }
+
         }
         li {
             // slot
@@ -209,6 +215,18 @@ canvas {
                 span {
                     opacity: 0;
                 }
+            }
+            &:after {
+opacity: 0;
+pointer-events: none;
+  border-bottom: 12px solid transparent;
+   border-left: 12px solid #16952b;
+  content: "";
+  display: block;
+  @include transition(opacity 0.4s ease);
+  position: absolute;
+  left: 2px;
+  top: 2px;
             }
         }
     }
@@ -888,6 +906,7 @@ background: url(/images/game-world/interface/currency/copper.png) no-repeat 50% 
                     @include transform(translateY(0));
                 }
             }
+         
         }
         ol {
             padding: 0;
@@ -959,5 +978,11 @@ background: url(/images/game-world/interface/currency/copper.png) no-repeat 50% 
             font-style: normal;
         }
     }
+    }
+}
+
+@for $i from 1 through $numberOfItemCategories {
+    .shopSpecialism#{$i} .itemCategory#{$i}:after {
+        opacity: 1;
     }
 }
