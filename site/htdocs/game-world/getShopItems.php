@@ -14,8 +14,8 @@ $buyPriceSpecialismModifier = 0.9;
  
  
 $json = $_POST['shopData'];
- 
-/*
+/* 
+
 $json ='{
 "mapNumber": 3,
 "shops": [
@@ -51,8 +51,8 @@ $json ='{
 ]
  
 }';
-*/
- 
+
+ */
  
  
  
@@ -79,6 +79,26 @@ mysql_free_result($colourResult);
 // just use "primary" colours:
 $colourIndicesToUse = [1,2,4,5,6,8,16];
  
+
+
+
+// get current active events:
+$activeEvents = ["null"];
+$eventsQuery = "SELECT eventid from tblevents WHERE dayofyear(eventStart) - dayofyear(now()) <= eventDurationDays or dayofyear(eventStart) + 365 - dayofyear(now()) <= eventDurationDays";
+    $eventsResult = mysql_query( $eventsQuery ) or die ( "couldn't execute events query: ".$eventsQuery );
+$numberofrows = mysql_num_rows( $eventsResult );
+    if ( $numberofrows>0 ) {
+        while ( $row = mysql_fetch_array( $eventsResult ) ) {
+            //extract( $row );
+            array_push($activeEvents, $row['eventid']);
+        }
+    }
+mysql_free_result($eventsResult);
+echo(implode(",",$activeEvents));
+die();
+
+
+
  
 for ($i=0;$i<count($jsonData['shops']);$i++) {
     $markupToOutput .= '<div class="shop" id="shop'.$jsonData['shops'][$i]["hash"].'" data-currency="'.$jsonData['shops'][$i]["currency"].'" data-specialism="'.$jsonData['shops'][$i]["specialism"].'">';
