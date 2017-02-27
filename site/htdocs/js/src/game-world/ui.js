@@ -366,7 +366,7 @@ var UI = {
                             // (is room for 1 more)
                             if (hero.currency[thisCurrency] >= buyPriceForOne) {
                                 hero.inventory[droppedSlotId].quantity++;
-                               updateQuantity(droppedSlotId);
+                                updateQuantity(droppedSlotId);
                                 hero.currency[thisCurrency] -= buyPriceForOne;
                                 UI.updateCurrencies();
                                 UI.droppedSuccessfully();
@@ -385,26 +385,17 @@ var UI = {
                     if (itemAttributesMatch(UI.draggedInventoryObject, hero.inventory[droppedSlotId])) {
                         if (parseInt(UI.draggedInventoryObject.quantity) + parseInt(hero.inventory[droppedSlotId].quantity) <= maxNumberOfItemsPerSlot) {
                             hero.inventory[droppedSlotId].quantity += parseInt(UI.draggedInventoryObject.quantity);
-                            
-                     
-                          
-
-                          updateQuantity(droppedSlotId);
+                            updateQuantity(droppedSlotId);
                             if (!isSplitStackBeingDragged) {
                                 document.getElementById("slot" + UI.sourceSlot).innerHTML = '';
                                 document.getElementById("slot" + UI.sourceSlot).classList.remove("hidden");
                             }
                             UI.droppedSuccessfully();
-
                         } else {
                             // add in the max, and slide the remainder back:
                             var amountAddedToThisSlot = maxNumberOfItemsPerSlot - parseInt(hero.inventory[droppedSlotId].quantity);
                             hero.inventory[droppedSlotId].quantity = maxNumberOfItemsPerSlot;
-                      
-
-
-updateQuantity(droppedSlotId);
-
+                            updateQuantity(droppedSlotId);
                             // update dragged item quantity and then slide back:
                             UI.draggedInventoryObject.quantity -= amountAddedToThisSlot;
                             // update visually to drop slot:
@@ -482,10 +473,10 @@ updateQuantity(droppedSlotId);
                         }
                     }
                     if (emptySlotFound != -1) {
-                        if(!isSplitStackBeingDragged) {
-                           document.getElementById("slot" + UI.sourceSlot).innerHTML = ''; 
+                        if (!isSplitStackBeingDragged) {
+                            document.getElementById("slot" + UI.sourceSlot).innerHTML = '';
                         }
-                        
+
                         addToInventory(thisInventoryPanelId + "-" + emptySlotFound, UI.draggedInventoryObject);
                         document.getElementById("slot" + UI.sourceSlot).classList.remove("hidden");
                         UI.droppedSuccessfully();
@@ -494,6 +485,26 @@ updateQuantity(droppedSlotId);
                     }
                 }
             }
+        } else if (droppedSlot.substring(0, 8) == "shopSlot") {
+            // sell the item:
+
+            // check to see if it's being sold to a relevant specialist shop:
+            var thisItemsCategories = currentActiveInventoryItems[UI.draggedInventoryObject.type].category;
+            var thisShopPanelElement = thisNode.parentNode.parentNode;
+            var thisShopsSpecialism = thisShopPanelElement.getAttribute('data-specialism');
+            var sellPrice;
+            var thisCurrency = thisShopPanelElement.getAttribute('data-currency');
+            if (!isSplitStackBeingDragged) {
+                if (thisItemsCategories.indexOf(thisShopsSpecialism) != -1) {
+                    sellPrice = Math.ceil(UI.draggedInventoryObject.quantity * sellPriceSpecialismModifier * inflationModifier * currentActiveInventoryItems[UI.draggedInventoryObject.type].priceCode, 0);
+                } else {
+                    sellPrice = Math.ceil(UI.draggedInventoryObject.quantity * sellPriceModifier * inflationModifier * currentActiveInventoryItems[UI.draggedInventoryObject.type].priceCode, 0);
+                }
+                hero.currency[thisCurrency] += sellPrice;
+                UI.updateCurrencies();
+                document.getElementById("slot" + UI.sourceSlot).innerHTML = '';
+            }
+            UI.droppedSuccessfully();
         } else {
             UI.slideDraggedSlotBack();
         }
@@ -502,6 +513,7 @@ updateQuantity(droppedSlotId);
         document.removeEventListener("mousemove", UI.handleDrag, false);
         document.removeEventListener("mouseup", UI.endInventoryDrag, false);
     },
+
 
 
 
