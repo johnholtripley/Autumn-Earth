@@ -337,14 +337,18 @@ function generateSlotMarkup(thisSlotsId) {
         }
     }
 
+var thisCategories = currentActiveInventoryItems[hero.inventory[thisSlotsId].type].category.split(",");
+for(var i=0;i<thisCategories.length;i++) {
+    imageClassName += "itemCategory"+thisCategories[i]+" ";
+}
+ 
+
 // check if it's a card:
-
 if(currentActiveInventoryItems[hero.inventory[thisSlotsId].type].action == "card") {
-imageClassName = ' class="players card"';
-
+imageClassName += 'players card';
 }
 
-    slotMarkup += '<img src="/images/game-world/inventory-items/' + hero.inventory[thisSlotsId].type + thisFileColourSuffix + '.png" ' + dataActionMarkup + 'alt="' + theColourPrefix + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].shortname + '"'+imageClassName+'>';
+    slotMarkup += '<img src="/images/game-world/inventory-items/' + hero.inventory[thisSlotsId].type + thisFileColourSuffix + '.png" ' + dataActionMarkup + 'alt="' + theColourPrefix + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].shortname + '" class="'+imageClassName+'">';
     if (isABook) {
         var itemsDescription = "&quot;" + hero.inventory[thisSlotsId].inscription.title + "&quot;";
     } else {

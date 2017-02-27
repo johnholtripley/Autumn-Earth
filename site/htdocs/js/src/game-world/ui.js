@@ -670,6 +670,7 @@ updateQuantity(droppedSlotId);
                 // check if it's a shop panel:
                 if (e.target.parentNode.classList.contains("shop")) {
                     shopCurrentlyOpen = -1;
+                    inventoryPanels.removeAttribute('class');
                     // close shop dialogue as well:
                     if (activeNPCForDialogue != '') {
                         //  dialogue.classList.add("slowerFade");
@@ -745,6 +746,8 @@ updateQuantity(droppedSlotId);
         } else {
             UI.showNotification("<p>Oops - sorry, not enough money</p>");
         }
+        // remove the drag slot that was created by the single click:
+        UI.activeDragObject.innerHTML = '';
     },
 
     initShopDrag: function() {

@@ -1785,14 +1785,18 @@ function generateSlotMarkup(thisSlotsId) {
         }
     }
 
+var thisCategories = currentActiveInventoryItems[hero.inventory[thisSlotsId].type].category.split(",");
+for(var i=0;i<thisCategories.length;i++) {
+    imageClassName += "itemCategory"+thisCategories[i]+" ";
+}
+ 
+
 // check if it's a card:
-
 if(currentActiveInventoryItems[hero.inventory[thisSlotsId].type].action == "card") {
-imageClassName = ' class="players card"';
-
+imageClassName += 'players card';
 }
 
-    slotMarkup += '<img src="/images/game-world/inventory-items/' + hero.inventory[thisSlotsId].type + thisFileColourSuffix + '.png" ' + dataActionMarkup + 'alt="' + theColourPrefix + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].shortname + '"'+imageClassName+'>';
+    slotMarkup += '<img src="/images/game-world/inventory-items/' + hero.inventory[thisSlotsId].type + thisFileColourSuffix + '.png" ' + dataActionMarkup + 'alt="' + theColourPrefix + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].shortname + '" class="'+imageClassName+'">';
     if (isABook) {
         var itemsDescription = "&quot;" + hero.inventory[thisSlotsId].inscription.title + "&quot;";
     } else {
@@ -2564,6 +2568,7 @@ updateQuantity(droppedSlotId);
                 // check if it's a shop panel:
                 if (e.target.parentNode.classList.contains("shop")) {
                     shopCurrentlyOpen = -1;
+                    inventoryPanels.removeAttribute('class');
                     // close shop dialogue as well:
                     if (activeNPCForDialogue != '') {
                         //  dialogue.classList.add("slowerFade");
@@ -2639,6 +2644,8 @@ updateQuantity(droppedSlotId);
         } else {
             UI.showNotification("<p>Oops - sorry, not enough money</p>");
         }
+        // remove the drag slot that was created by the single click:
+        UI.activeDragObject.innerHTML = '';
     },
 
     initShopDrag: function() {

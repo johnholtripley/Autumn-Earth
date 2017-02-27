@@ -201,6 +201,18 @@ canvas {
                 cursor: default;
                 font-size: 11px;
                 pointer-events: none;
+                       &:after {
+opacity: 0;
+pointer-events: none;
+  border-top: 12px solid transparent;
+   border-right: 12px solid #16952b;
+  content: "";
+  display: block;
+  @include transition(opacity 0.4s ease);
+  position: absolute;
+  right: 0;
+  bottom: 0;
+            }
             }
             img {
                 display: block;
@@ -216,18 +228,7 @@ canvas {
                     opacity: 0;
                 }
             }
-            &:after {
-opacity: 0;
-pointer-events: none;
-  border-bottom: 12px solid transparent;
-   border-left: 12px solid #16952b;
-  content: "";
-  display: block;
-  @include transition(opacity 0.4s ease);
-  position: absolute;
-  left: 2px;
-  top: 2px;
-            }
+     
         }
     }
     p {
@@ -255,7 +256,14 @@ pointer-events: none;
             font-style: normal;
         }
     }
+
+@for $i from 1 through $numberOfItemCategories {
+    &.shopSpecialism#{$i} .itemCategory#{$i} ~ .qty:after {
+        opacity: 1;
+    }
 }
+}
+
 
 #draggableInventorySlot, #draggableShopSlot {
     position: absolute;
@@ -981,8 +989,4 @@ background: url(/images/game-world/interface/currency/copper.png) no-repeat 50% 
     }
 }
 
-@for $i from 1 through $numberOfItemCategories {
-    .shopSpecialism#{$i} .itemCategory#{$i}:after {
-        opacity: 1;
-    }
-}
+
