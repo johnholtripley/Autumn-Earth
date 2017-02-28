@@ -83,19 +83,8 @@ $colourIndicesToUse = [1,2,4,5,6,8,16];
 
 
 // get current active events:
-$activeEvents = ["null"];
-$eventsQuery = "SELECT eventid from tblevents WHERE ((repeatsAnnually and ((dayofyear(now()) between (dayofyear(eventstart)) and (dayofyear(eventstart)+eventdurationdays-1)) or (dayofyear(now()) between (dayofyear(eventstart) - 365) and (dayofyear(eventstart)+eventdurationdays-366)))) or (
-
-(repeatsAnnually = 0) and (date(now()) between (eventstart) and (eventstart+eventdurationdays))
-
-    ))";
-
-
-
-
-   
-
-
+$activeEvents = [];
+$eventsQuery = "SELECT eventid from tblevents WHERE ((repeatsAnnually and ((dayofyear(now()) between (dayofyear(eventstart)) and (dayofyear(eventstart)+eventdurationdays-1)) or (dayofyear(now()) between (dayofyear(eventstart) - 365) and (dayofyear(eventstart)+eventdurationdays-366)))) or ((repeatsAnnually = 0) and (date(now()) between (eventstart) and (eventstart+eventdurationdays))))";
 
     $eventsResult = mysql_query( $eventsQuery ) or die ( "couldn't execute events query: ".$eventsQuery );
 $numberofrows = mysql_num_rows( $eventsResult );
@@ -106,8 +95,8 @@ $numberofrows = mysql_num_rows( $eventsResult );
         }
     }
 mysql_free_result($eventsResult);
-echo(implode(",",$activeEvents));
-die();
+
+
 
 
 
@@ -119,7 +108,7 @@ $inventoryData = [];
  
 if(count($jsonData['shops'][$i]["categories"]) > 0) {
  
-$query2 = "SELECT tblinventoryitems.* from tblinventoryitems where tblinventoryitems.itemcategories in (".implode(",",$jsonData['shops'][$i]["categories"]).") and tblinventoryitems.pricecode <= ".$shopSizePriceLimits[($jsonData['shops'][$i]["size"])]." order by tblinventoryitems.shortname ASC";
+$query2 = "SELECT tblinventoryitems.* from tblinventoryitems where tblinventoryitems.itemcategories in (".implode(",",$jsonData['shops'][$i]["categories"]).") and tblinventoryitems.pricecode <= ".$shopSizePriceLimits[($jsonData['shops'][$i]["size"])]." and (tblinventoryitems.activeduringseason in (".implode(",",$activeEvents).") or tblinventoryitems.activeduringseason is null) order by tblinventoryitems.shortname ASC";
 // Get colour variants as well for relevant items
  
 $result2 = mysql_query($query2) or die ("failed:".$query2);
