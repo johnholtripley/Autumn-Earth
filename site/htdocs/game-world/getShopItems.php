@@ -84,7 +84,11 @@ $colourIndicesToUse = [1,2,4,5,6,8,16];
 
 // get current active events:
 $activeEvents = ["null"];
-$eventsQuery = "SELECT eventid from tblevents WHERE repeatsAnnually and ((dayofyear(now()) between (dayofyear(eventstart)) and (dayofyear(eventstart)+eventdurationdays-1)) or (dayofyear(now()) between (dayofyear(eventstart) - 365) and (dayofyear(eventstart)+eventdurationdays-365)))";
+$eventsQuery = "SELECT eventid from tblevents WHERE ((repeatsAnnually and ((dayofyear(now()) between (dayofyear(eventstart)) and (dayofyear(eventstart)+eventdurationdays-1)) or (dayofyear(now()) between (dayofyear(eventstart) - 365) and (dayofyear(eventstart)+eventdurationdays-366)))) or (
+
+(repeatsAnnually = 0) and (date(now()) between (eventstart) and (eventstart+eventdurationdays))
+
+    ))";
 
 
 
