@@ -343,6 +343,7 @@ var UI = {
                             addToInventory(droppedSlotId, thisBoughtObject);
                             hero.currency[thisCurrency] -= buyPriceForOne;
                             UI.updateCurrencies();
+                            audio.playSound(soundEffects['coins'],0);
                             UI.droppedSuccessfully();
                         } else {
                             UI.showNotification("<p>Not enough money</p>");
@@ -369,6 +370,7 @@ var UI = {
                                 updateQuantity(droppedSlotId);
                                 hero.currency[thisCurrency] -= buyPriceForOne;
                                 UI.updateCurrencies();
+                                audio.playSound(soundEffects['coins'],0);
                                 UI.droppedSuccessfully();
                             } else {
                                 UI.showNotification("<p>Not enough money</p>");
@@ -442,6 +444,7 @@ var UI = {
                     if (emptySlotFound != -1) {
                         hero.currency[thisCurrency] -= buyPriceForOne;
                         UI.updateCurrencies();
+                        audio.playSound(soundEffects['coins'],0);
                         UI.droppedSuccessfully();
                         addToInventory(thisInventoryPanelId + "-" + emptySlotFound, thisBoughtObject);
                         UI.droppedSuccessfully();
@@ -531,6 +534,7 @@ sellToShop: function(thisShopPanelElement) {
                 }
                 hero.currency[thisCurrency] += sellPrice;
                 UI.updateCurrencies();
+                audio.playSound(soundEffects['coins'],0);
             if (!isSplitStackBeingDragged) {
               
              
@@ -721,6 +725,7 @@ sellToShop: function(thisShopPanelElement) {
 
     updateCurrencies: function() {
         currencies.innerHTML = '<p>' + parseMoney(hero.currency.money) + '</p><p>' + hero.currency.cardDust + '<span class="card"><span></p>';
+
     },
 
     buildShop: function(markup) {
@@ -774,6 +779,7 @@ sellToShop: function(thisShopPanelElement) {
             if (inventoryCheck[0]) {
                 hero.currency[thisCurrency] -= buyPriceForOne;
                 UI.updateCurrencies();
+                audio.playSound(soundEffects['coins'],0);
                 UI.showChangeInInventory(inventoryCheck[1]);
             } else {
                 UI.showNotification("<p>Oops - sorry, no room in your bags</p>");
@@ -920,6 +926,7 @@ sellToShop: function(thisShopPanelElement) {
             if (inventoryCheck[0]) {
                 hero.currency[thisCurrency] -= (enteredValue * buyPriceForOne);
                 UI.updateCurrencies();
+                audio.playSound(soundEffects['coins'],0);
                 UI.showChangeInInventory(inventoryCheck[1]);
             } else {
                 UI.showNotification("<p>Oops - sorry, no room in your bags</p>");

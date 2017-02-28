@@ -1085,11 +1085,12 @@ function displayUpcomingEvents( $limit ) {
 			// https://productforums.google.com/forum/#!topic/webmasters/hqXyipukFOg;context-place=forum/webmasters
 
 
-$eventEnd = $eventStart + $eventDurationDays;
+$eventEnd = strtotime($eventStart) + ($eventDurationDays*3600*24);
+
 
 			echo '<li itemscope itemtype="http://schema.org/Event"><a itemprop="url" href="/almanack/'.$cleanURL.'/"><h6 itemprop="name">'.$title.'</h6><p itemprop="description">'.$summary.'</p>';
 			$startDateOutput = date( 'j', strtotime( $eventStart ) )."<sup>".date( 'S', strtotime( $eventStart ) )."</sup> ".date( 'F Y', strtotime( $eventStart ) );
-			$endDateOutput = date( 'j', strtotime( $eventEnd ) )."<sup>".date( 'S', strtotime( $eventEnd ) )."</sup> ".date( 'F Y', strtotime( $eventEnd ) );
+			$endDateOutput = date( 'j',  $eventEnd  )."<sup>".date( 'S',  $eventEnd  )."</sup> ".date( 'F Y',  $eventEnd  );
 			echo '<span>From <span itemprop="startDate" content="'.$eventStart.'">'.$startDateOutput.'</span>
     to <span itemprop="endDate" content="'.$eventEnd.'">'.$endDateOutput.'</span></span>';
 			// echo '<span itemprop="location" itemscope itemtype="http://schema.org/Place"><span itemprop="url" href="'.$link.'">'.$link.'</span></span>';

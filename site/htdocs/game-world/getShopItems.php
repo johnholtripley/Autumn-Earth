@@ -84,7 +84,7 @@ $colourIndicesToUse = [1,2,4,5,6,8,16];
 
 // get current active events:
 $activeEvents = ["null"];
-$eventsQuery = "SELECT eventid from tblevents WHERE dayofyear(eventStart) - dayofyear(now()) <= eventDurationDays or dayofyear(eventStart) + 365 - dayofyear(now()) <= eventDurationDays";
+$eventsQuery = "SELECT eventid from tblevents WHERE repeatsAnnually and (dayofyear(eventStart) - dayofyear(now()) <= eventDurationDays or dayofyear(eventStart) + 365 - dayofyear(now()) <= eventDurationDays)";
     $eventsResult = mysql_query( $eventsQuery ) or die ( "couldn't execute events query: ".$eventsQuery );
 $numberofrows = mysql_num_rows( $eventsResult );
     if ( $numberofrows>0 ) {
@@ -94,8 +94,8 @@ $numberofrows = mysql_num_rows( $eventsResult );
         }
     }
 mysql_free_result($eventsResult);
-echo(implode(",",$activeEvents));
-die();
+//echo(implode(",",$activeEvents));
+//die();
 
 
 

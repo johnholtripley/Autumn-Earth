@@ -1,3 +1,111 @@
+function BufferLoader(context, urlList, callback) {
+  this.context = context;
+  this.urlList = urlList;
+  this.onload = callback;
+  this.bufferList = new Array();
+  this.loadCount = 0;
+}
+
+BufferLoader.prototype.loadBuffer = function(url, index) {
+  // Load buffer asynchronously
+  var request = new XMLHttpRequest();
+  request.open("GET", url, true);
+  request.responseType = "arraybuffer";
+
+  var loader = this;
+
+  request.onload = function() {
+    // Asynchronously decode the audio file data in request.response
+    loader.context.decodeAudioData(
+      request.response,
+      function(buffer) {
+        if (!buffer) {
+          console.log('error decoding file data: ' + url);
+          return;
+        }
+        loader.bufferList[index] = buffer;
+        if (++loader.loadCount == loader.urlList.length)
+          loader.onload(loader.bufferList);
+      },
+      function(error) {
+        console.log('decodeAudioData error', error);
+      }
+    );
+  }
+
+  request.onerror = function() {
+    alert('BufferLoader: XHR error');
+  }
+
+  request.send();
+}
+
+BufferLoader.prototype.load = function() {
+  for (var i = 0; i < this.urlList.length; ++i)
+  this.loadBuffer(this.urlList[i], i);
+}
+
+
+var audioContext = null;
+var soundEffects = {};
+var soundsToLoad = {
+  'coins': '../sounds/coins-NOT_MINE-wow.ogg'
+};
+
+var audio = {
+    init: function() {
+        
+        // https://www.html5rocks.com/en/tutorials/webaudio/intro/
+      
+        try {
+            window.AudioContext = window.AudioContext || window.webkitAudioContext;
+            audioContext = new AudioContext();
+            
+         
+  // Array-ify
+  var names = [];
+  var paths = [];
+  for (var name in soundsToLoad) {
+    var path = soundsToLoad[name];
+    names.push(name);
+    paths.push(path);
+  }
+  bufferLoader = new BufferLoader(audioContext, paths, function(bufferList) {
+    for (var i = 0; i < bufferList.length; i++) {
+      var buffer = bufferList[i];
+      var name = names[i];
+      soundEffects[name] = buffer;
+    }
+     
+  });
+  bufferLoader.load();
+
+
+        } catch (e) {
+            // web audio API not supported
+            // fallback? 
+            // ####
+        }
+    },
+
+
+
+
+
+   playSound: function(buffer, delay) {
+
+    var source = audioContext.createBufferSource();
+    source.buffer = buffer;
+
+    source.connect(audioContext.destination);
+    if (!source.start) {
+      source.start = source.noteOn;
+  } else {
+    source.start(delay);
+}
+  }
+}
+
 function updateCartographicMiniMap() {
 
     // cartography canvas is 246px wide
@@ -2254,6 +2362,7 @@ var UI = {
                             addToInventory(droppedSlotId, thisBoughtObject);
                             hero.currency[thisCurrency] -= buyPriceForOne;
                             UI.updateCurrencies();
+                            audio.playSound(soundEffects['coins'],0);
                             UI.droppedSuccessfully();
                         } else {
                             UI.showNotification("<p>Not enough money</p>");
@@ -2280,6 +2389,7 @@ var UI = {
                                 updateQuantity(droppedSlotId);
                                 hero.currency[thisCurrency] -= buyPriceForOne;
                                 UI.updateCurrencies();
+                                audio.playSound(soundEffects['coins'],0);
                                 UI.droppedSuccessfully();
                             } else {
                                 UI.showNotification("<p>Not enough money</p>");
@@ -2353,6 +2463,7 @@ var UI = {
                     if (emptySlotFound != -1) {
                         hero.currency[thisCurrency] -= buyPriceForOne;
                         UI.updateCurrencies();
+                        audio.playSound(soundEffects['coins'],0);
                         UI.droppedSuccessfully();
                         addToInventory(thisInventoryPanelId + "-" + emptySlotFound, thisBoughtObject);
                         UI.droppedSuccessfully();
@@ -2442,6 +2553,7 @@ sellToShop: function(thisShopPanelElement) {
                 }
                 hero.currency[thisCurrency] += sellPrice;
                 UI.updateCurrencies();
+                audio.playSound(soundEffects['coins'],0);
             if (!isSplitStackBeingDragged) {
               
              
@@ -2530,46 +2642,36 @@ sellToShop: function(thisShopPanelElement) {
         }
     },
 
-
-
-
     slideDraggedSlotBack: function() {
-  
-
         // slide it back visually - add a transition:
         UI.activeDragObject.style.cssText = "z-index:2;left: " + (objInitLeft) + "px; top: " + (objInitTop) + "px;transition: transform 0.4s ease;";
         UI.activeDragObject.addEventListener(whichTransitionEvent, function snapDraggedSlotBack(e) {
-             // it's now back, so restore to the inventory:
-          if(UI.sourceSlot.substring(0,8) != 'shopSlot') {
-           // not dragged from a shop
-            if (!isSplitStackBeingDragged) {
-                hero.inventory[UI.sourceSlot] = JSON.parse(JSON.stringify(UI.draggedInventoryObject));
-           
+            // it's now back, so restore to the inventory:
+            if (UI.sourceSlot.substring(0, 8) != 'shopSlot') {
+                // not dragged from a shop
+                if (!isSplitStackBeingDragged) {
+                    hero.inventory[UI.sourceSlot] = JSON.parse(JSON.stringify(UI.draggedInventoryObject));
                     document.getElementById("slot" + UI.sourceSlot).classList.remove("hidden");
-                
-                
-            } else {
-                // update quantity on the original slot
-                hero.inventory[UI.sourceSlot].quantity += UI.draggedInventoryObject.quantity;
-                var thisSlotElem = document.getElementById("slot" + UI.sourceSlot);
-             if(thisSlotElem) {
-                for (var i = 0; i < thisSlotElem.childNodes.length; i++) {
-                    if (thisSlotElem.childNodes[i].className == "qty") {
-                        thisSlotElem.childNodes[i].innerHTML = hero.inventory[UI.sourceSlot].quantity;
-                        break;
+                } else {
+                    // update quantity on the original slot
+                    hero.inventory[UI.sourceSlot].quantity += UI.draggedInventoryObject.quantity;
+                    var thisSlotElem = document.getElementById("slot" + UI.sourceSlot);
+                    if (thisSlotElem) {
+                        for (var i = 0; i < thisSlotElem.childNodes.length; i++) {
+                            if (thisSlotElem.childNodes[i].className == "qty") {
+                                thisSlotElem.childNodes[i].innerHTML = hero.inventory[UI.sourceSlot].quantity;
+                                break;
+                            }
+                        }
                     }
                 }
             }
-            }
-}
             // hide the clone:
             UI.droppedSuccessfully();
             // remove this event listener now:
             return e.currentTarget.removeEventListener(whichTransitionEvent, snapDraggedSlotBack, false);
         }, false);
     },
-
-
 
     craftingPanelSingleClick: function(e) {
         var thisNode = getNearestParentId(e.target);
@@ -2642,6 +2744,7 @@ sellToShop: function(thisShopPanelElement) {
 
     updateCurrencies: function() {
         currencies.innerHTML = '<p>' + parseMoney(hero.currency.money) + '</p><p>' + hero.currency.cardDust + '<span class="card"><span></p>';
+
     },
 
     buildShop: function(markup) {
@@ -2695,6 +2798,7 @@ sellToShop: function(thisShopPanelElement) {
             if (inventoryCheck[0]) {
                 hero.currency[thisCurrency] -= buyPriceForOne;
                 UI.updateCurrencies();
+                audio.playSound(soundEffects['coins'],0);
                 UI.showChangeInInventory(inventoryCheck[1]);
             } else {
                 UI.showNotification("<p>Oops - sorry, no room in your bags</p>");
@@ -2841,6 +2945,7 @@ sellToShop: function(thisShopPanelElement) {
             if (inventoryCheck[0]) {
                 hero.currency[thisCurrency] -= (enteredValue * buyPriceForOne);
                 UI.updateCurrencies();
+                audio.playSound(soundEffects['coins'],0);
                 UI.showChangeInInventory(inventoryCheck[1]);
             } else {
                 UI.showNotification("<p>Oops - sorry, no room in your bags</p>");
@@ -2892,6 +2997,10 @@ function init() {
 canvasMapMaskImage = document.createElement('img');
 
     UI.init();
+    audio.init();
+    
+  
+    
     // detect and set up input methods:
     Input.init();
     // show loading screen while getting assets:
@@ -3000,7 +3109,7 @@ function loadMap() {
         var targetDoorX = 0;
         var targetDoorY = 0;
         var doorData = thisMapData.doors;
-        for (var i = 0 in doorData) {
+        for (var i in doorData) {
             if (doorData[i].map == newMap) {
                 targetDoorX += doorData[i].startX;
                 targetDoorY += doorData[i].startY;

@@ -39,6 +39,10 @@ function init() {
 canvasMapMaskImage = document.createElement('img');
 
     UI.init();
+    audio.init();
+    
+  
+    
     // detect and set up input methods:
     Input.init();
     // show loading screen while getting assets:
@@ -147,7 +151,7 @@ function loadMap() {
         var targetDoorX = 0;
         var targetDoorY = 0;
         var doorData = thisMapData.doors;
-        for (var i = 0 in doorData) {
+        for (var i in doorData) {
             if (doorData[i].map == newMap) {
                 targetDoorX += doorData[i].startX;
                 targetDoorY += doorData[i].startY;
