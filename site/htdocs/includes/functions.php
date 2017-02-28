@@ -1067,7 +1067,7 @@ function displayUpcomingEvents( $limit ) {
 // http://stackoverflow.com/questions/5183630/calendar-recurring-repeating-events-best-storage-method#answer-16659802
 
 	
-	$query = "SELECT * from tblevents WHERE dayofyear(eventStart) - dayofyear(now()) <= eventDurationDays or dayofyear(eventStart) + 365 - dayofyear(now()) <= eventDurationDays limit ".$limit;
+	$query = "SELECT * from tblevents WHERE ((repeatsAnnually and ((dayofyear(now()) <= (dayofyear(eventstart)+eventdurationdays-1)) or (dayofyear(now()) <= (dayofyear(eventstart)+eventdurationdays-366)))) or ((repeatsAnnually = 0) and (date(now()) between (eventstart) and (eventstart+eventdurationdays)))) order by eventstart ASC limit ".$limit;
 	
 
 	$result = mysql_query( $query ) or die ( "couldn't execute query" );
@@ -1086,11 +1086,17 @@ function displayUpcomingEvents( $limit ) {
 
 
 $eventEnd = strtotime($eventStart) + ($eventDurationDays*3600*24);
-
+// get the correct years for repeating events:
+$yearToShowStart = date( 'Y', strtotime( $eventStart ) );
+$yearToShowEnd = date( 'Y',  $eventEnd  );
+if($repeatsAnnually > 0) {
+$yearToShowStart = date('Y');
+$yearToShowEnd = date('Y');
+}
 
 			echo '<li itemscope itemtype="http://schema.org/Event"><a itemprop="url" href="/almanack/'.$cleanURL.'/"><h6 itemprop="name">'.$title.'</h6><p itemprop="description">'.$summary.'</p>';
-			$startDateOutput = date( 'j', strtotime( $eventStart ) )."<sup>".date( 'S', strtotime( $eventStart ) )."</sup> ".date( 'F Y', strtotime( $eventStart ) );
-			$endDateOutput = date( 'j',  $eventEnd  )."<sup>".date( 'S',  $eventEnd  )."</sup> ".date( 'F Y',  $eventEnd  );
+			$startDateOutput = date( 'j', strtotime( $eventStart ) )."<sup>".date( 'S', strtotime( $eventStart ) )."</sup> ".date( 'F', strtotime( $eventStart ) )." ".$yearToShowStart;
+			$endDateOutput = date( 'j',  $eventEnd  )."<sup>".date( 'S',  $eventEnd  )."</sup> ".date( 'F',  $eventEnd  )." ".$yearToShowEnd;
 			echo '<span>From <span itemprop="startDate" content="'.$eventStart.'">'.$startDateOutput.'</span>
     to <span itemprop="endDate" content="'.$eventEnd.'">'.$endDateOutput.'</span></span>';
 			// echo '<span itemprop="location" itemscope itemtype="http://schema.org/Place"><span itemprop="url" href="'.$link.'">'.$link.'</span></span>';
