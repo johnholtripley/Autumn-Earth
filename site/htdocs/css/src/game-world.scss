@@ -838,29 +838,44 @@ height: 100%;
 
 // books:
 
+$inkColours: '#c9271b', '#e4d820', '#e49320', '#200aa8', '#6d18bd', '#11750a', '#58533c', '#fff', '#e540e7';
+
 .book {
     background: #bd9e7b url(../images/game-world/interface/parchment.jpg) no-repeat 0 0;
     width: 238px;
-    position:absolute;
+    position: absolute;
     @include transition(opacity 0.8s ease);
     opacity: 0;
+    left: 20px;
+    top: 50%;
     pointer-events: none;
     font-family: 'IM Fell English', 'Times New Roman', Palatino, Times, Serif;
     &.active {
-      pointer-events: auto;  
-      opacity: 1;
+        pointer-events: auto;
+        opacity: 1;
     }
-    h2 {
+    h1 {
         padding: 3px 6px 8px 6px;
-        margin: 0; 
+        margin: 0;
+        color: #000;
     }
     p {
         font-size: 14px;
         line-height: 1.1;
         padding: 3px 6px;
         margin: 0;
+        color: #000;
+    }
+    @for $i from 1 through length($inkColours) {
+        &.inkColour#{$i} {
+            h1,
+            p {
+                color: #{nth($inkColours, $i)};
+            }
+        }
     }
 }
+
 
 
 #currencies {

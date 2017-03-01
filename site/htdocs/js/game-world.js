@@ -2683,7 +2683,7 @@ sellToShop: function(thisShopPanelElement) {
         var thisBooksHash = generateHash(thisBooksContent);
         // check if the book already has been created:
         if (!document.getElementById('book' + thisBooksHash)) {
-            markupToAdd += '<div class="book" id="book' + thisBooksHash + '">';
+            markupToAdd += '<div class="book inkColour'+hero.inventory[(whichBook)].colour+'" id="book' + thisBooksHash + '">';
             markupToAdd += '<div class="draggableBar">&quot;' + hero.inventory[(whichBook)].inscription.title + '&quot;</div>';
             markupToAdd += '<button class="closePanel">close</button>';
             /*
