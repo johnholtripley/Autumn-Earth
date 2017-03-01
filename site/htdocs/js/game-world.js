@@ -1,7 +1,7 @@
 var audioContext = null;
 var soundEffects = {};
 var soundsToLoad = {
-    'coins': '../sounds/coins-NOT_MINE-wow.ogg'
+    'coins': '../sounds/coins-NOT_MINE-wow.mp3'
 };
 
 
