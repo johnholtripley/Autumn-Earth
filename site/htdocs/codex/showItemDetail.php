@@ -32,6 +32,38 @@ if(isset($_GET["cleanURL"])) {
 	$cleanURL = $_GET["cleanURL"];
 }
 
+
+
+
+
+
+// get events:
+$activeEvents = [];
+$eventsQuery = "SELECT eventid, title, cleanurl from tblevents";
+
+    $eventsResult = mysql_query( $eventsQuery ) or die ( "couldn't execute events query: ".$eventsQuery );
+$numberofrows = mysql_num_rows( $eventsResult );
+  
+ while ($row = mysql_fetch_array($eventsResult)) {
+  //extract($row);
+  
+$activeEvents[($row['eventid'])] = [$row['title'],$row['cleanurl']];
+
+
+  //  array_push($activeEvents, $row);
+
+
+
+}
+    
+mysql_free_result($eventsResult);
+
+
+
+
+
+
+
 $coloursQuery = "SELECT * from tblcolours";
 $allColours = [];
 $colourResult = mysql_query($coloursQuery) or die ("recipes failed");
@@ -39,6 +71,9 @@ while ($colourRow = mysql_fetch_array($colourResult)) {
   extract($colourRow);
   array_push($allColours, $colourName);
 }
+
+
+mysql_free_result($colourResult);
 
 $query = "select * from tblinventoryitems where cleanurl = '".$cleanURL."' and showinthecodex>0";
 $result = mysql_query($query) or die ("couldn't execute query");
@@ -77,6 +112,14 @@ echo '<p>'.$description.'</p>';
   echo'</dd>';
 
 echo'</dl>';
+
+
+
+if($activeDuringSeason>0) {
+  echo '<p>Only available during <a href="/almanack/'.$activeEvents[$activeDuringSeason][1].'">'.$activeEvents[$activeDuringSeason][0].'</a></p>';
+}
+
+
 
 // find any recipes this item is used in
 

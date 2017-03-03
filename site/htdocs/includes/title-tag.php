@@ -132,6 +132,31 @@ $result = mysql_query($query) or die ("couldn't execute query1");
 break;
 
 
+case "codex":
+if (isset($_GET["cleanURL"])) {
+
+$query = "select * from tblinventoryitems where cleanurl = '".$_GET["cleanURL"]."' and showinthecodex>0";
+$result = mysql_query($query) or die ("couldn't execute query");
+$numberofrows = mysql_num_rows($result);
+		if ($numberofrows > 0) {
+			$row = mysql_fetch_array($result);
+			extract ($row);
+			$thisBuiltURL = $thisBuiltURL."codex/".$_GET["cleanURL"];
+		$pagetitle = $shortname.' in the Autumn Earth Codex';
+		$longDescription = $description;
+			} else {
+				$thisBuiltURL = $thisBuiltURL."codex/";
+		$pagetitle = 'Autumn Earth Codex';
+		$longDescription = 'The Codex of Autumn Earth';
+			}
+
+	} else {
+$thisBuiltURL = $thisBuiltURL."codex/";
+		$pagetitle = 'Autumn Earth Codex';
+		$longDescription = 'The Codex of Autumn Earth';
+	}
+break;
+
      case "auction":
     // if auction item show details for that
 
