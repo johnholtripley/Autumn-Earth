@@ -834,6 +834,9 @@ function checkForActions() {
                     case "static":
                         // can't interact with it - do nothing
                         break;
+                        case "sound":
+                        audio.playSound(soundEffects[actionValue],0);
+                        break;
                     case "questToggle":
                         // toggle value: (1 or 0)
                         questData[actionValue].hasBeenActivated = Math.abs(questData[actionValue].hasBeenActivated - 1);
@@ -927,7 +930,11 @@ function processSpeech(thisNPC, thisSpeechPassedIn, thisSpeechCode, isPartOfNPCs
                 case "shop":
 UI.openShop(generateHash(thisNPC.speech[thisNPC.speechIndex][2]));
 //thisNPC.speechIndex--;
+
                 break;
+                case "sound":
+audio.playSound(soundEffects[thisNPC.speech[thisNPC.speechIndex][2]],0);
+break;
             case "profession":
                 var professionId = thisNPC.speech[thisNPC.speechIndex][2];
                 if (hero.professionsKnown.indexOf(professionId) == -1) {
@@ -1211,8 +1218,9 @@ UI.openShop(generateHash(thisNPC.speech[thisNPC.speechIndex][2]));
                 // nothing
         }
     }
-
+if(thisSpeech!= "") {
     UI.showDialogue(thisNPC, thisSpeech);
+}
     canCloseDialogueBalloonNextClick = false;
     if (!isPartOfNPCsNormalSpeech) {
         // set a flag so that pressing action near the NPC will close the balloon:

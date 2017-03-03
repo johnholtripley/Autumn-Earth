@@ -180,7 +180,11 @@
                 "facing": "s",
                 "walkThroughDoors": false,
                 "speed": 2,
-                "speech": "",
+                "speech": [
+                    ["", "sound", "hen"]
+                    
+                ],
+                "speechIndex": 0,
                 "isCollidable": true,
                 "isMoving": false,
                 "animation": {
