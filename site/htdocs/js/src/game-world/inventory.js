@@ -242,6 +242,7 @@ function inventoryItemAction(whichSlot, whichAction, whichActionValue) { // remo
             break;
         case "book":
             document.getElementById("book" + whichActionValue).classList.add("active");
+            audio.playSound(soundEffects['bookOpen'],0);
         case "recipe":
             if (canLearnRecipe(whichActionValue)) {
                 removeFromInventory(whichSlotNumber, 1);
