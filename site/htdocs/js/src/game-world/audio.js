@@ -2,7 +2,9 @@ var audioContext = null;
 var soundEffects = {};
 var soundsToLoad = {
     'coins': '../sounds/coins-NOT_MINE-wow.mp3',
-    'bookOpen': '../sounds/book-open-NOT_MINE-wow.mp3'
+    'bookOpen': '../sounds/book-open-NOT_MINE-wow.mp3',
+    'bagOpen': '../sounds/bag-open-NOT_MINE-wow.mp3',
+    'buttonClick': '../sounds/button-press-NOT_MINE-wow.mp3'
 };
 
 

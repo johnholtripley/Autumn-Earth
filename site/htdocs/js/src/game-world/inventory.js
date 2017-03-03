@@ -233,6 +233,7 @@ function inventoryItemAction(whichSlot, whichAction, whichActionValue) { // remo
             break;
                     case "bag":
             UI.addNewBag(hero.inventory[whichSlotNumber]);
+            audio.playSound(soundEffects['bagOpen'],0);
             removeFromInventory(whichSlotNumber, 1);
             break;
         case "card":
@@ -250,6 +251,7 @@ function inventoryItemAction(whichSlot, whichAction, whichActionValue) { // remo
             break;
         case "craft":
             if (hero.professionsKnown.indexOf(parseInt(whichActionValue)) != -1) {
+                audio.playSound(soundEffects['buttonClick'],0);
                 UI.populateRecipeList(whichActionValue);
             } else {
                 UI.showNotification("<p>You don't know this profession yet.</p>");

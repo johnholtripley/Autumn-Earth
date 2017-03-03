@@ -2,7 +2,9 @@ var audioContext = null;
 var soundEffects = {};
 var soundsToLoad = {
     'coins': '../sounds/coins-NOT_MINE-wow.mp3',
-    'bookOpen': '../sounds/book-open-NOT_MINE-wow.mp3'
+    'bookOpen': '../sounds/book-open-NOT_MINE-wow.mp3',
+    'bagOpen': '../sounds/bag-open-NOT_MINE-wow.mp3',
+    'buttonClick': '../sounds/button-press-NOT_MINE-wow.mp3'
 };
 
 
@@ -1789,6 +1791,7 @@ function inventoryItemAction(whichSlot, whichAction, whichActionValue) { // remo
             break;
                     case "bag":
             UI.addNewBag(hero.inventory[whichSlotNumber]);
+            audio.playSound(soundEffects['bagOpen'],0);
             removeFromInventory(whichSlotNumber, 1);
             break;
         case "card":
@@ -1806,6 +1809,7 @@ function inventoryItemAction(whichSlot, whichAction, whichActionValue) { // remo
             break;
         case "craft":
             if (hero.professionsKnown.indexOf(parseInt(whichActionValue)) != -1) {
+                audio.playSound(soundEffects['buttonClick'],0);
                 UI.populateRecipeList(whichActionValue);
             } else {
                 UI.showNotification("<p>You don't know this profession yet.</p>");
@@ -2108,6 +2112,8 @@ var UI = {
         inventoryMarkup += '</ol></div></div>';
         inventoryPanels.insertAdjacentHTML('beforeend', inventoryMarkup);
         UI.initInventoryDrag('#inventoryBag' + i + ' ol');
+        
+           
     },
 
     showChangeInInventory: function(whichSlotsToUpdate) {
@@ -2290,6 +2296,7 @@ var UI = {
                 recipeCustomScrollBar.init();
             }
         }
+        
         craftingPanel.classList.add("active");
     },
 

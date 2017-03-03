@@ -104,6 +104,8 @@ var UI = {
         inventoryMarkup += '</ol></div></div>';
         inventoryPanels.insertAdjacentHTML('beforeend', inventoryMarkup);
         UI.initInventoryDrag('#inventoryBag' + i + ' ol');
+        
+           
     },
 
     showChangeInInventory: function(whichSlotsToUpdate) {
@@ -286,6 +288,7 @@ var UI = {
                 recipeCustomScrollBar.init();
             }
         }
+        
         craftingPanel.classList.add("active");
     },
 
