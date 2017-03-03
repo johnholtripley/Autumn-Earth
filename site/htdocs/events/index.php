@@ -32,9 +32,30 @@ echo '<h2 itemprop="name">'.$title.'</h2>';
 
 
 
+// get the correct years for repeating events:
+if($repeatsAnnually > 0) {
+$startDateDayAndMonth = date('j-n',strtotime($eventStart));
+$startDateYear = date('Y');
+$eventStart = $startDateDayAndMonth."-".$startDateYear;
+$eventEnd = strtotime($eventStart) + ($eventDurationDays*3600*24);
+// is this event end still current if it was a year previously?
+// (is previous year end of time after now)
+$yearPreviousEndTime = strtotime("-1 year", $eventEnd);
+
+if($yearPreviousEndTime >= date(time())) {
+// use the earlier date instead:
+	$eventStart = $eventStart = $startDateDayAndMonth."-".($startDateYear-1);
+	$eventEnd = $yearPreviousEndTime;
+}
+} else {
+    // just work out the end time:
+    $eventEnd = strtotime($eventStart) + ($eventDurationDays*3600*24);
+}
+
+
 
 			$startDateOutput = date( 'j', strtotime( $eventStart ) )."<sup>".date( 'S', strtotime( $eventStart ) )."</sup> ".date( 'F Y', strtotime( $eventStart ) );
-			$endDateOutput = date( 'j', strtotime( $eventEnd ) )."<sup>".date( 'S', strtotime( $eventEnd ) )."</sup> ".date( 'F Y', strtotime( $eventEnd ) );
+			$endDateOutput = date( 'j', ( $eventEnd ) )."<sup>".date( 'S', ( $eventEnd ) )."</sup> ".date( 'F Y', ( $eventEnd ) );
 			echo '<span>From <span itemprop="startDate" content="'.$eventStart.'">'.$startDateOutput.'</span>
     to <span itemprop="endDate" content="'.$eventEnd.'">'.$endDateOutput.'</span></span>';
 			
