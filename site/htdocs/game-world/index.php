@@ -75,12 +75,17 @@ background: #ec35ea;
 
 
 <div id="inscriptionPanel"><div class="draggableBar">Inscription</div><button class="closePanel">close</button>
+
+<button class="tabs active" id="scribeCopyText">Copy text</button><button class="tabs" id="scribeOriginalText">Original text</button>
+
 <div id="sourceSelection"></div>
 <div id="materialsSelection"></div>
 <div id="inkSelection"></div>
 <div id="originalText" class="book active">
 <div id="inscriptionTextArea" contentEditable="true" role="textbox" aria-multiline="true"></div>
 </div>
+<button class="closePanel">Cancel</button>
+<button>Inscribe</button>
 </div>
 
 

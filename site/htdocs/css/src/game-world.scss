@@ -1028,7 +1028,6 @@ background: url(/images/game-world/interface/currency/copper.png) no-repeat 50% 
     width: 450px;
     background: #000;
     opacity: 0;
-    @include transition(opacity 0.4s ease);
     pointer-events: none;
       &.active {
         opacity: 1;
@@ -1037,6 +1036,25 @@ background: url(/images/game-world/interface/currency/copper.png) no-repeat 50% 
     h3, p {
         color: #fff;
         font-size: 11px;
+    }
+}
+.tabs {
+    background: #000;
+    border: 2px solid #fff;
+    border-bottom: #fff;
+    color: #fff;
+    @include transition(background .4s ease-out);
+    &.active {
+background: #ccc;
+    }
+}
+
+#sourceSelection {
+opacity: 0;
+    pointer-events: none;
+      &.active {
+        opacity: 1;
+        pointer-events: auto;
     }
 }
 

@@ -2035,6 +2035,9 @@ var inscriptionTextArea = document.getElementById('inscriptionTextArea');
 var sourceSelection = document.getElementById('sourceSelection');
 var materialsSelection = document.getElementById('materialsSelection');
 var inkSelection = document.getElementById('inkSelection');
+var originalText = document.getElementById('originalText');
+var scribeCopyText = document.getElementById('scribeCopyText');
+var scribeOriginalText = document.getElementById('scribeOriginalText');
 
 
 
@@ -2745,6 +2748,29 @@ sellToShop: function(thisShopPanelElement) {
 
                     }
                 }
+            } else {
+                var thisNode = getNearestParentId(e.target);
+           
+
+switch (thisNode.id) {
+  case 'scribeCopyText':
+   // inscription panel:
+ originalText.classList.remove('active');
+ sourceSelection.classList.add('active');
+ thisNode.classList.remove('active');
+ scribeOriginalText.classList.add('active');
+ break;
+ case 'scribeOriginalText':
+ // inscription panel:
+ originalText.classList.add('active');
+ sourceSelection.classList.remove('active');
+  thisNode.classList.remove('active');
+ scribeCopyText.classList.add('active');
+ break;
+}
+
+
+
             }
         }
     },
