@@ -1039,13 +1039,13 @@ background: url(/images/game-world/interface/currency/copper.png) no-repeat 50% 
     }
 }
 .tabs {
-    background: #000;
+    background: #ccc;
     border: 2px solid #fff;
     border-bottom: #fff;
     color: #fff;
     @include transition(background .4s ease-out);
     &.active {
-background: #ccc;
+background: #000;
     }
 }
 

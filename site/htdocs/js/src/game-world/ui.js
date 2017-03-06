@@ -741,15 +741,15 @@ switch (thisNode.id) {
    // inscription panel:
  originalText.classList.remove('active');
  sourceSelection.classList.add('active');
- thisNode.classList.remove('active');
- scribeOriginalText.classList.add('active');
+ thisNode.classList.add('active');
+ scribeOriginalText.classList.remove('active');
  break;
  case 'scribeOriginalText':
  // inscription panel:
  originalText.classList.add('active');
  sourceSelection.classList.remove('active');
-  thisNode.classList.remove('active');
- scribeCopyText.classList.add('active');
+  thisNode.classList.add('active');
+ scribeCopyText.classList.remove('active');
  break;
 }
 
