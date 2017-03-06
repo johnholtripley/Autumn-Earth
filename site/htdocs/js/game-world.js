@@ -3013,7 +3013,7 @@ theColourPrefix = thisColourName + " ";
         thisFileColourSuffix = "-" + thisColourName.toLowerCase();
     }
 
-allInksMarkup += '<li><img src="/images/game-world/inventory-items/40'+thisFileColourSuffix+'.png" alt="'+theColourPrefix+currentActiveInventoryItems[40].shortname+'"><h3>'+theColourPrefix+currentActiveInventoryItems[40].shortname+'</h3><p>'+currentActiveInventoryItems[40].description+'</p></li>';
+allInksMarkup += '<li id="scribeFromSlot'+i+'"><img src="/images/game-world/inventory-items/40'+thisFileColourSuffix+'.png" alt="'+theColourPrefix+currentActiveInventoryItems[40].shortname+'"><h3>'+theColourPrefix+currentActiveInventoryItems[40].shortname+'</h3><p>'+currentActiveInventoryItems[40].description+'</p></li>';
     } else {
 
   var thisAction = currentActiveInventoryItems[hero.inventory[i].type].action;
@@ -3030,11 +3030,11 @@ allInksMarkup += '<li><img src="/images/game-world/inventory-items/40'+thisFileC
 if(isABook) {
     if(hero.inventory[i].inscription.content) {
     // has content, so add it to the source list:
-allSourceMarkup += '<li><img src="/images/game-world/inventory-items/'+hero.inventory[i].type+'.png" alt="'+currentActiveInventoryItems[hero.inventory[i].type].shortname+'"><h3>'+currentActiveInventoryItems[hero.inventory[i].type].shortname+'</h3><p>'+hero.inventory[i].inscription.title+'</p></li>';
+allSourceMarkup += '<li id="scribeFromSlot'+i+'"><img src="/images/game-world/inventory-items/'+hero.inventory[i].type+'.png" alt="'+currentActiveInventoryItems[hero.inventory[i].type].shortname+'"><h3>'+currentActiveInventoryItems[hero.inventory[i].type].shortname+'</h3><p>'+hero.inventory[i].inscription.title+'</p></li>';
 
 } else {
     // no content, add it to the materials list:
-    allMaterialsMarkup += '<li><img src="/images/game-world/inventory-items/'+hero.inventory[i].type+'.png" alt="'+currentActiveInventoryItems[hero.inventory[i].type].shortname+'"><h3>'+currentActiveInventoryItems[hero.inventory[i].type].shortname+'</h3><p>'+currentActiveInventoryItems[hero.inventory[i].type].description+'</p></li>';
+    allMaterialsMarkup += '<li id="scribeFromSlot'+i+'"><img src="/images/game-world/inventory-items/'+hero.inventory[i].type+'.png" alt="'+currentActiveInventoryItems[hero.inventory[i].type].shortname+'"><h3>'+currentActiveInventoryItems[hero.inventory[i].type].shortname+'</h3><p>'+currentActiveInventoryItems[hero.inventory[i].type].description+'</p></li>';
 }
 }
     }

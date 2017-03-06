@@ -81,9 +81,7 @@ background: #ec35ea;
 <div id="sourceSelection"></div>
 <div id="materialsSelection"></div>
 <div id="inkSelection"></div>
-<div id="originalText" class="book active">
-<div id="inscriptionTextArea" contentEditable="true" role="textbox" aria-multiline="true"></div>
-</div>
+<div id="originalText" class="book active"><div id="inscriptionTextArea" contentEditable="true" role="textbox" aria-multiline="true"></div></div>
 <button class="closePanel">Cancel</button>
 <button>Inscribe</button>
 </div>
