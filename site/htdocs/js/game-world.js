@@ -1629,8 +1629,7 @@ if(amountAddedToThisSlot>0) {
     if (allItemsAdded) {
         // make the active inventory be the same as the amended one:
         hero.inventory = JSON.parse(JSON.stringify(inventoryClone));
-        // update panels if needed:
-        UI.updateInscriptionPanel();
+       
         // return success, and the slots that were affected:
         return [true, slotsUpdated];
     } else {
@@ -2038,7 +2037,9 @@ var inkSelection = document.getElementById('inkSelection');
 var originalText = document.getElementById('originalText');
 var scribeCopyText = document.getElementById('scribeCopyText');
 var scribeOriginalText = document.getElementById('scribeOriginalText');
-var scribeMode = 'original';
+var scribeStartInscription = document.getElementById('scribeStartInscription');
+var inscriptionTitle = document.getElementById('inscriptionTitle');
+
 
 
 var UI = {
@@ -2107,6 +2108,15 @@ var UI = {
         UI.updateCurrencies();
         UI.buildRecipePanel();
         UI.updateInscriptionPanel();
+        UI.inscription = {
+            scribeMode:'original',
+            selected: {
+                source: '',
+                material: '',
+                ink: ''
+            }
+
+        };
         if (hero.professionsKnown.length > 0) {
             // load and cache the first profession's recipe assets:
             UI.populateRecipeList(hero.professionsKnown[0]);
@@ -2748,14 +2758,50 @@ sellToShop: function(thisShopPanelElement) {
 
                     }
                 }
-            } else {
+            } 
+        } else {
                 var thisNode = getNearestParentId(e.target);
            
-console.log(thisNode.id);
-switch (thisNode.id) {
+
+
+console.log(thisNode.id + ", "+thisNode.className+" : "+thisNode.id.substring(0, 6));
+if (thisNode.id.substring(0, 6) == "scribe") {
+if(thisNode.className) {
+switch(thisNode.className) {
+case 'scribeSource':
+UI.inscription.selected.source = thisNode.id.substring(20);
+break;
+case 'scribeMaterial':
+UI.inscription.selected.material = thisNode.id.substring(22);
+break;
+case 'scribeInk':
+UI.inscription.selected.ink = thisNode.id.substring(17);
+break;
+
+}
+
+ if(UI.inscription.mode=='copy') {
+ if((UI.inscription.selected.ink != '') && (UI.inscription.selected.material != '') && (UI.inscription.selected.source != '')) {
+scribeStartInscription.removeAttribute('disabled');
+} else {
+   scribeStartInscription.setAttribute('disabled','disabled');
+}
+ } else {
+// original:
+if((UI.inscription.selected.ink != '') && (UI.inscription.selected.material != '')) {
+scribeStartInscription.removeAttribute('disabled');
+} else {
+    scribeStartInscription.setAttribute('disabled','disabled');
+}
+ }
+
+
+
+} else {
+switch(thisNode.id) {
   case 'scribeCopyText':
    // inscription panel:
-   scribeMode = 'copy';
+   UI.inscription.scribeMode = 'copy';
  originalText.classList.remove('active');
  sourceSelection.classList.add('active');
  thisNode.classList.add('active');
@@ -2763,18 +2809,51 @@ switch (thisNode.id) {
  break;
  case 'scribeOriginalText':
  // inscription panel:
- scribeMode = 'original';
+ UI.inscription.scribeMode = 'original';
  originalText.classList.add('active');
  sourceSelection.classList.remove('active');
   thisNode.classList.add('active');
  scribeCopyText.classList.remove('active');
  break;
+ case 'scribeStartInscription':
+
+ var newInscribedObject = JSON.parse(JSON.stringify(hero.inventory[UI.inscription.selected.material]));
+newInscribedObject.quantity = 1;
+newInscribedObject.colour = hero.inventory[UI.inscription.selected.ink].colour;
+ if(UI.inscription.mode=='copy') {
+newInscribedObject.inscription = {
+    'title': hero.inventory[UI.inscription.selected.source].inscription.title,
+    'content':hero.inventory[UI.inscription.selected.source].inscription.content
 }
+ } else {
+// original:
+
+newInscribedObject.inscription = {
+    'title': inscriptionTitle.value,
+    'content':'<p>'+inscriptionTextArea.innerHTML+'</p>'
+}
+}
+
+ inventoryCheck = canAddItemToInventory([newInscribedObject]);
+            if (inventoryCheck[0]) {
+               // remove the ink and material used:
+               removeFromInventory(UI.inscription.selected.material,1);
+               removeFromInventory(UI.inscription.selected.ink,1);
+            } else {
+                UI.showNotification("<p>Oops - sorry, no room in your bags</p>");
+            }
+
+
+ 
+ break;
+}
+}
+
+} 
 
 
 
             }
-        }
     },
 
 
@@ -3015,7 +3094,7 @@ theColourPrefix = thisColourName + " ";
         thisFileColourSuffix = "-" + thisColourName.toLowerCase();
     }
 
-allInksMarkup += '<li id="scribeFromSlot'+i+'"><img src="/images/game-world/inventory-items/40'+thisFileColourSuffix+'.png" alt="'+theColourPrefix+currentActiveInventoryItems[40].shortname+'"><h3>'+theColourPrefix+currentActiveInventoryItems[40].shortname+'</h3><p>'+currentActiveInventoryItems[40].description+'</p></li>';
+allInksMarkup += '<li class="scribeInk" id="scribeInkFromSlot'+i+'"><img src="/images/game-world/inventory-items/40'+thisFileColourSuffix+'.png" alt="'+theColourPrefix+currentActiveInventoryItems[40].shortname+'"><h3>'+theColourPrefix+currentActiveInventoryItems[40].shortname+'</h3><p>'+currentActiveInventoryItems[40].description+'</p></li>';
     } else {
 
   var thisAction = currentActiveInventoryItems[hero.inventory[i].type].action;
@@ -3028,15 +3107,14 @@ allInksMarkup += '<li id="scribeFromSlot'+i+'"><img src="/images/game-world/inve
         }
     }
 
-
 if(isABook) {
     if(hero.inventory[i].inscription.content) {
     // has content, so add it to the source list:
-allSourceMarkup += '<li id="scribeFromSlot'+i+'"><img src="/images/game-world/inventory-items/'+hero.inventory[i].type+'.png" alt="'+currentActiveInventoryItems[hero.inventory[i].type].shortname+'"><h3>'+currentActiveInventoryItems[hero.inventory[i].type].shortname+'</h3><p>'+hero.inventory[i].inscription.title+'</p></li>';
+allSourceMarkup += '<li class="scribeSource" id="scribeSourceFromSlot'+i+'"><img src="/images/game-world/inventory-items/'+hero.inventory[i].type+'.png" alt="'+currentActiveInventoryItems[hero.inventory[i].type].shortname+'"><h3>'+currentActiveInventoryItems[hero.inventory[i].type].shortname+'</h3><p>'+hero.inventory[i].inscription.title+'</p></li>';
 
 } else {
     // no content, add it to the materials list:
-    allMaterialsMarkup += '<li id="scribeFromSlot'+i+'"><img src="/images/game-world/inventory-items/'+hero.inventory[i].type+'.png" alt="'+currentActiveInventoryItems[hero.inventory[i].type].shortname+'"><h3>'+currentActiveInventoryItems[hero.inventory[i].type].shortname+'</h3><p>'+currentActiveInventoryItems[hero.inventory[i].type].description+'</p></li>';
+    allMaterialsMarkup += '<li class="scribeMaterial" id="scribeMaterialFromSlot'+i+'"><img src="/images/game-world/inventory-items/'+hero.inventory[i].type+'.png" alt="'+currentActiveInventoryItems[hero.inventory[i].type].shortname+'"><h3>'+currentActiveInventoryItems[hero.inventory[i].type].shortname+'</h3><p>'+currentActiveInventoryItems[hero.inventory[i].type].description+'</p></li>';
 }
 }
     }

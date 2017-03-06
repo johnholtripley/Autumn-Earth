@@ -23,20 +23,20 @@ background: #ec35ea;
 <script>var playersCardBack = '#ec35ea';</script>
 </head>
 <body>
-
+ 
 <div id="gameWrapper">
-
+ 
   <div id="worldWrapper">
 <canvas id="gameWorld" width="800" height="600" moz-opaque>
   <img src="/images/game-world/no-canvas.jpg" alt="Sorry">
 </canvas>
 <div id="toolbar"><div id="currencies"></div></div>
-
+ 
 <p id="dialogue"></p>
 <div id="notification"></div>
 <div id="displayZoneName"></div>
 </div>
-
+ 
 <div id="inventoryPanels"></div>
 <div id="draggableInventorySlot"></div>
 <form id="splitStackPanel" class="quantityInputPanel">
@@ -51,7 +51,7 @@ background: #ec35ea;
 <div id="cartographicPanel"><div class="draggableBar"><span id="cartographicTitle">Map</span></div><canvas id="cartographyCanvas" width="246" height="246"></canvas><canvas id="offScreenCartographyCanvas" class="offScreenCanvas" width="246" height="246"></canvas></div>
 <div id="craftingPanel"><div class="draggableBar"><span id="recipeTitleBar">Recipes</span></div><button class="closePanel">close</button>
 <div id="recipeSearchWrapper"><label for="recipeSearch" class="visibleHide">Search for recipes</label><input id="recipeSearch" type="text" placeholder="Search"><button id="clearRecipeSearch"><span>Clear search</span></button></div><label for="recipeFilter" class="visibleHide">Filter by:</label><div class="selectWrapper"><select id="recipeFilter"><option>All</option></select></div>
-
+ 
 <div class="customScrollBar" id="recipeCustomScrollBar">
 <div class="customScrollContent">
 <ul id="createRecipeList">
@@ -64,30 +64,32 @@ background: #ec35ea;
 <button id="craftingRecipeCreateButton" disabled="disabled">Add components</button>
 </div>
 <div id="craftingSelectComponentsPanel">
-
+ 
 <div id="componentsAvailableForThisRecipe"></div>
 <div id="selectComponentsItemBeingCreated"></div>
 </div>
-
+ 
 <div id="booksAndParchments"></div>
-
-
-
-
+ 
+ 
+ 
+ 
 <div id="inscriptionPanel"><div class="draggableBar">Inscription</div><button class="closePanel">close</button>
-
+ 
 <button class="tabs" id="scribeCopyText">Copy text</button><button class="tabs active" id="scribeOriginalText">Original text</button>
-
+ 
 <div id="sourceSelection"></div>
 <div id="materialsSelection"></div>
 <div id="inkSelection"></div>
-<div id="originalText" class="book active"><div id="inscriptionTextArea" contentEditable="true" role="textbox" aria-multiline="true"></div></div>
+<div id="originalText" class="book active">
+<input id="inscriptionTitle" placeholder="Title"></input>
+  <div id="inscriptionTextArea" contentEditable="true" role="textbox" aria-multiline="true"></div></div>
 <button class="closePanel">Cancel</button>
-<button>Inscribe</button>
+<button id="scribeStartInscription" disabled>Inscribe</button>
 </div>
-
-
-
+ 
+ 
+ 
 <div id="shopPanel"></div>
 <div id="draggableShopSlot"></div>
 <form id="shopSplitStackPanel" class="quantityInputPanel">
@@ -98,10 +100,10 @@ background: #ec35ea;
 <input type="submit" value="Ok">
 </fieldset>
 </form>
-
+ 
 <div id="boosterPack">
 <ol>
-
+ 
 <?php
 for ($i=0;$i<5;$i++) {
   echo '<li class="cardFlip"><div class="flipper"><div class="front card players" id="boosterCard'.$i.'"></div><div class="back"><img src="/images/card-game/cards/back.png" alt="card back"></div></div></li>';
@@ -109,28 +111,28 @@ for ($i=0;$i<5;$i++) {
 ?>
 </ol>
 </div>
-
-
+ 
+ 
 <div id="cardGameWrapper">
 <canvas id="cardGame" moz-opaque width="1008" height="612">
   <img src="/images/card-game/no-canvas.jpg" alt="Card game">
 </canvas>
 </div>
-
-
-
-
+ 
+ 
+ 
+ 
 </div>
-
-
-
-
-
-
-
+ 
+ 
+ 
+ 
+ 
+ 
+ 
 <script src="/js/card-game-shared.<?php echo $cacheVersion; ?>.js"></script>
 <script src="/js/game-world.<?php echo $cacheVersion; ?>.js"></script>
-
+ 
 <?php include($_SERVER['DOCUMENT_ROOT']."/includes/google-analytics.php"); ?>
 </body>
 </html>
