@@ -1049,12 +1049,11 @@ background: #ccc;
     }
 }
 
-#sourceSelection {
-opacity: 0;
-    pointer-events: none;
+#sourceSelection, #originalText {
+display: none;
+
       &.active {
-        opacity: 1;
-        pointer-events: auto;
+     display: block;
     }
 }
 

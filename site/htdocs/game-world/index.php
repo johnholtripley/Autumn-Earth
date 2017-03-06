@@ -76,7 +76,7 @@ background: #ec35ea;
 
 <div id="inscriptionPanel"><div class="draggableBar">Inscription</div><button class="closePanel">close</button>
 
-<button class="tabs active" id="scribeCopyText">Copy text</button><button class="tabs" id="scribeOriginalText">Original text</button>
+<button class="tabs" id="scribeCopyText">Copy text</button><button class="tabs active" id="scribeOriginalText">Original text</button>
 
 <div id="sourceSelection"></div>
 <div id="materialsSelection"></div>
