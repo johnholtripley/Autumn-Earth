@@ -22,7 +22,7 @@ var inkSelection = document.getElementById('inkSelection');
 var originalText = document.getElementById('originalText');
 var scribeCopyText = document.getElementById('scribeCopyText');
 var scribeOriginalText = document.getElementById('scribeOriginalText');
-
+var scribeMode = 'original';
 
 
 var UI = {
@@ -735,10 +735,11 @@ sellToShop: function(thisShopPanelElement) {
             } else {
                 var thisNode = getNearestParentId(e.target);
            
-
+console.log(thisNode.id);
 switch (thisNode.id) {
   case 'scribeCopyText':
    // inscription panel:
+   scribeMode = 'copy';
  originalText.classList.remove('active');
  sourceSelection.classList.add('active');
  thisNode.classList.add('active');
@@ -746,6 +747,7 @@ switch (thisNode.id) {
  break;
  case 'scribeOriginalText':
  // inscription panel:
+ scribeMode = 'original';
  originalText.classList.add('active');
  sourceSelection.classList.remove('active');
   thisNode.classList.add('active');

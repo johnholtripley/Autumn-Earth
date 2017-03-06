@@ -1029,6 +1029,7 @@ background: url(/images/game-world/interface/currency/copper.png) no-repeat 50% 
     background: #000;
     opacity: 0;
     pointer-events: none;
+    @include transition(opacity .4s ease);
       &.active {
         opacity: 1;
         pointer-events: auto;
@@ -1043,7 +1044,7 @@ background: url(/images/game-world/interface/currency/copper.png) no-repeat 50% 
     border: 2px solid #fff;
     border-bottom: #fff;
     color: #fff;
-    @include transition(background .4s ease-out);
+    @include transition(background .4s ease);
     &.active {
 background: #000;
     }
