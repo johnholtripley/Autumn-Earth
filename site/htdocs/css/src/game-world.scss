@@ -1017,3 +1017,22 @@ background: url(/images/game-world/interface/currency/copper.png) no-repeat 50% 
 }
 
 
+
+
+// Inscription:
+
+#inscriptionPanel {
+    position: absolute;
+    left: 325px;
+    top: 650px;
+    width: 450px;
+    background: #000;
+}
+
+#originalText {
+    position: relative;
+}
+
+#inscriptionTextArea {
+    min-height: 120px;
+}

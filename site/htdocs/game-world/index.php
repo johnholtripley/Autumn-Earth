@@ -71,6 +71,20 @@ background: #ec35ea;
 
 <div id="booksAndParchments"></div>
 
+
+
+
+<div id="inscriptionPanel"><div class="draggableBar">Inscription</div><button class="closePanel">close</button>
+<div id="sourceSelection"></div>
+<div id="materialsSelection"></div>
+<div id="inkSelection"></div>
+<div id="originalText" class="book active">
+<div id="inscriptionTextArea" contentEditable="true" role="textbox" aria-multiline="true"></div>
+</div>
+</div>
+
+
+
 <div id="shopPanel"></div>
 <div id="draggableShopSlot"></div>
 <form id="shopSplitStackPanel" class="quantityInputPanel">

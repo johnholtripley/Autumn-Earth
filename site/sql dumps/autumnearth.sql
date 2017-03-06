@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 01, 2017 at 10:17 AM
+-- Generation Time: Mar 06, 2017 at 10:37 AM
 -- Server version: 5.6.24
 -- PHP Version: 5.6.8
 
@@ -398,7 +398,7 @@ INSERT INTO `tblevents` (`eventID`, `eventStart`, `eventDurationDays`, `repeatsA
 (2, '2000-08-01', 31, 1, 'Halloween', 'halloween event', ' Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque faucibus commodo venenatis. Maecenas sed sem lorem. Nunc porta, lectus vel tincidunt luctus, dui risus bibendum ipsum, luctus efficitur turpis mauris vitae magna. Phasellus vitae efficitur dui. Aenean sed sagittis nibh, non malesuada magna. Proin faucibus vehicula dolor, at condimentum neque eleifend in. In sed odio vitae odio hendrerit aliquam eleifend sit amet nisi. Morbi ac erat vel enim pretium molestie suscipit sed lorem. Vestibulum in mauris et purus accumsan fermentum.  Praesent quis tempor urna. Quisque a libero ac ex tincidunt interdum quis non libero. Duis nec diam a velit sollicitudin ultrices vel eu metus. Duis at risus eget augue gravida finibus. Phasellus sed elit turpis. Phasellus fringilla orci id libero ullamcorper, euismod sagittis sapien ultrices. Ut sollicitudin elit non lectus pellentesque, ut faucibus lorem hendrerit. Suspendisse a elementum eros. Fusce sit amet metus enim. Quisque at velit nulla. Nunc rutrum justo sit amet tristique ultricies. Maecenas a purus quis libero interdum ultricies. In ligula mi, ornare non iaculis at, condimentum sed elit. Fusce pretium, dui sit amet molestie pellentesque, tortor massa sollicitudin purus, vitae tempor nisl ante vel nisl. ', 'halloween'),
 (5, '2000-12-01', 31, 1, 'Christmas', 'happy christmas', ' Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque faucibus commodo venenatis. Maecenas sed sem lorem. Nunc porta, lectus vel tincidunt luctus, dui risus bibendum ipsum, luctus efficitur turpis mauris vitae magna. Phasellus vitae efficitur dui. Aenean sed sagittis nibh, non malesuada magna. Proin faucibus vehicula dolor, at condimentum neque eleifend in. In sed odio vitae odio hendrerit aliquam eleifend sit amet nisi. Morbi ac erat vel enim pretium molestie suscipit sed lorem. Vestibulum in mauris et purus accumsan fermentum.  Praesent quis tempor urna. Quisque a libero ac ex tincidunt interdum quis non libero. Duis nec diam a velit sollicitudin ultrices vel eu metus. Duis at risus eget augue gravida finibus. Phasellus sed elit turpis. Phasellus fringilla orci id libero ullamcorper, euismod sagittis sapien ultrices. Ut sollicitudin elit non lectus pellentesque, ut faucibus lorem hendrerit. Suspendisse a elementum eros. Fusce sit amet metus enim. Quisque at velit nulla. Nunc rutrum justo sit amet tristique ultricies. Maecenas a purus quis libero interdum ultricies. In ligula mi, ornare non iaculis at, condimentum sed elit. Fusce pretium, dui sit amet molestie pellentesque, tortor massa sollicitudin purus, vitae tempor nisl ante vel nisl. ', 'christmas'),
 (6, '2000-02-01', 28, 1, 'Valentines', 'valentines', ' Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque faucibus commodo venenatis. Maecenas sed sem lorem. Nunc porta, lectus vel tincidunt luctus, dui risus bibendum ipsum, luctus efficitur turpis mauris vitae magna. Phasellus vitae efficitur dui. Aenean sed sagittis nibh, non malesuada magna. Proin faucibus vehicula dolor, at condimentum neque eleifend in. In sed odio vitae odio hendrerit aliquam eleifend sit amet nisi. Morbi ac erat vel enim pretium molestie suscipit sed lorem. Vestibulum in mauris et purus accumsan fermentum.  Praesent quis tempor urna. Quisque a libero ac ex tincidunt interdum quis non libero. Duis nec diam a velit sollicitudin ultrices vel eu metus. Duis at risus eget augue gravida finibus. Phasellus sed elit turpis. Phasellus fringilla orci id libero ullamcorper, euismod sagittis sapien ultrices. Ut sollicitudin elit non lectus pellentesque, ut faucibus lorem hendrerit. Suspendisse a elementum eros. Fusce sit amet metus enim. Quisque at velit nulla. Nunc rutrum justo sit amet tristique ultricies. Maecenas a purus quis libero interdum ultricies. In ligula mi, ornare non iaculis at, condimentum sed elit. Fusce pretium, dui sit amet molestie pellentesque, tortor massa sollicitudin purus, vitae tempor nisl ante vel nisl. ', 'valentines'),
-(7, '2000-12-20', 74, 1, 'rolls over a year', 'weekend', ' Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque faucibus commodo venenatis. Maecenas sed sem lorem. Nunc porta, lectus vel tincidunt luctus, dui risus bibendum ipsum, luctus efficitur turpis mauris vitae magna. Phasellus vitae efficitur dui. Aenean sed sagittis nibh, non malesuada magna. Proin faucibus vehicula dolor, at condimentum neque eleifend in. In sed odio vitae odio hendrerit aliquam eleifend sit amet nisi. Morbi ac erat vel enim pretium molestie suscipit sed lorem. Vestibulum in mauris et purus accumsan fermentum.  Praesent quis tempor urna. Quisque a libero ac ex tincidunt interdum quis non libero. Duis nec diam a velit sollicitudin ultrices vel eu metus. Duis at risus eget augue gravida finibus. Phasellus sed elit turpis. Phasellus fringilla orci id libero ullamcorper, euismod sagittis sapien ultrices. Ut sollicitudin elit non lectus pellentesque, ut faucibus lorem hendrerit. Suspendisse a elementum eros. Fusce sit amet metus enim. Quisque at velit nulla. Nunc rutrum justo sit amet tristique ultricies. Maecenas a purus quis libero interdum ultricies. In ligula mi, ornare non iaculis at, condimentum sed elit. Fusce pretium, dui sit amet molestie pellentesque, tortor massa sollicitudin purus, vitae tempor nisl ante vel nisl. ', 'weekend'),
+(7, '2000-12-20', 73, 1, 'rolls over a year', 'weekend', ' Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque faucibus commodo venenatis. Maecenas sed sem lorem. Nunc porta, lectus vel tincidunt luctus, dui risus bibendum ipsum, luctus efficitur turpis mauris vitae magna. Phasellus vitae efficitur dui. Aenean sed sagittis nibh, non malesuada magna. Proin faucibus vehicula dolor, at condimentum neque eleifend in. In sed odio vitae odio hendrerit aliquam eleifend sit amet nisi. Morbi ac erat vel enim pretium molestie suscipit sed lorem. Vestibulum in mauris et purus accumsan fermentum.  Praesent quis tempor urna. Quisque a libero ac ex tincidunt interdum quis non libero. Duis nec diam a velit sollicitudin ultrices vel eu metus. Duis at risus eget augue gravida finibus. Phasellus sed elit turpis. Phasellus fringilla orci id libero ullamcorper, euismod sagittis sapien ultrices. Ut sollicitudin elit non lectus pellentesque, ut faucibus lorem hendrerit. Suspendisse a elementum eros. Fusce sit amet metus enim. Quisque at velit nulla. Nunc rutrum justo sit amet tristique ultricies. Maecenas a purus quis libero interdum ultricies. In ligula mi, ornare non iaculis at, condimentum sed elit. Fusce pretium, dui sit amet molestie pellentesque, tortor massa sollicitudin purus, vitae tempor nisl ante vel nisl. ', 'weekend'),
 (8, '2017-02-27', 2, 0, 'Special one off', 'special', ' Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque faucibus commodo venenatis. Maecenas sed sem lorem. Nunc porta, lectus vel tincidunt luctus, dui risus bibendum ipsum, luctus efficitur turpis mauris vitae magna. Phasellus vitae efficitur dui. Aenean sed sagittis nibh, non malesuada magna. Proin faucibus vehicula dolor, at condimentum neque eleifend in. In sed odio vitae odio hendrerit aliquam eleifend sit amet nisi. Morbi ac erat vel enim pretium molestie suscipit sed lorem. Vestibulum in mauris et purus accumsan fermentum.  Praesent quis tempor urna. Quisque a libero ac ex tincidunt interdum quis non libero. Duis nec diam a velit sollicitudin ultrices vel eu metus. Duis at risus eget augue gravida finibus. Phasellus sed elit turpis. Phasellus fringilla orci id libero ullamcorper, euismod sagittis sapien ultrices. Ut sollicitudin elit non lectus pellentesque, ut faucibus lorem hendrerit. Suspendisse a elementum eros. Fusce sit amet metus enim. Quisque at velit nulla. Nunc rutrum justo sit amet tristique ultricies. Maecenas a purus quis libero interdum ultricies. In ligula mi, ornare non iaculis at, condimentum sed elit. Fusce pretium, dui sit amet molestie pellentesque, tortor massa sollicitudin purus, vitae tempor nisl ante vel nisl. ', 'special');
 
 -- --------------------------------------------------------
@@ -547,7 +547,7 @@ CREATE TABLE IF NOT EXISTS `tblinventoryitems` (
   `lockedToThisPlayer` tinyint(1) NOT NULL DEFAULT '0',
   `respawnRate` int(11) DEFAULT NULL,
   `activeDuringSeason` int(11) DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=37 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=42 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblinventoryitems`
@@ -588,7 +588,12 @@ INSERT INTO `tblinventoryitems` (`itemID`, `shortname`, `description`, `priceCod
 (33, 'Parchment', '', '4', '49.0', '81.0', 63, 63, 'parchment', 'book', 0, 0, 0, '0', '0', NULL, NULL, 1, 0, 1, 1, 0, NULL, NULL),
 (34, 'Chocobo Card', 'A chocobo card. Pweeeek!', '4', '49.0', '81.0', 63, 63, 'card-chocobo', 'card', 2, 0, 0, '0', '0', '', NULL, 0, 0, 0, 1, 0, NULL, NULL),
 (35, 'Wild Flax Node', '', '4', '19.0', '39.0', 20, 20, 'wild-flax-node', 'node', 0, 0, 0, '0', '0', '5', NULL, 0, 0, 0, 0, 0, 300, NULL),
-(36, 'Chocobo Gold Card', 'A rare chocobo card. Pweeeek!', '4', '49.0', '81.0', 63, 63, 'card-gold-chocobo', 'card', -2, 0, 0, '0', '0', '', NULL, 0, 0, 0, 1, 0, NULL, NULL);
+(36, 'Chocobo Gold Card', 'A rare chocobo card. Pweeeek!', '4', '49.0', '81.0', 63, 63, 'card-gold-chocobo', 'card', -2, 0, 0, '0', '0', '', NULL, 0, 0, 0, 1, 0, NULL, NULL),
+(37, 'Copperas', '', '4', '49.0', '81.0', 63, 63, 'copperas', '', 0, 0, 0, '0', '0', NULL, NULL, 0, 0, 0, 1, 0, NULL, NULL),
+(38, 'Acacia Resin', '', '4', '49.0', '81.0', 63, 63, 'acacia-resin', '', 0, 0, 0, '0', '0', NULL, NULL, 0, 0, 0, 1, 0, NULL, NULL),
+(39, 'Iron Gall', '', '4', '49.0', '81.0', 63, 63, 'iron gall', '', 0, 0, 0, '0', '0', NULL, NULL, 0, 0, 0, 1, 0, NULL, NULL),
+(40, 'Ink', '', '4', '49.0', '81.0', 63, 63, 'ink', '', 0, 1, 0, '0', '0', NULL, NULL, 0, 0, 0, 1, 0, NULL, NULL),
+(41, 'Scribe''s Quill', '', '1', '20.0', '24.0', 0, 0, 'scribes-quill', 'inscribe', 0, 0, 0, '0', '0', '', NULL, 0, 0, 0, 1, 0, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -1050,7 +1055,7 @@ CREATE TABLE IF NOT EXISTS `tblprofessions` (
   `professionID` int(11) NOT NULL,
   `professionName` varchar(128) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
   `cleanurl` varchar(128) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblprofessions`
@@ -1060,7 +1065,8 @@ INSERT INTO `tblprofessions` (`professionID`, `professionName`, `cleanurl`) VALU
 (0, 'Dyeing', 'dyeing'),
 (1, 'Weaving', 'weaving'),
 (2, 'Scribing', 'scribing'),
-(3, 'Apothecary', 'apothecary');
+(3, 'Apothecary', 'apothecary'),
+(4, 'Ink Making', 'ink-making');
 
 -- --------------------------------------------------------
 
@@ -1135,7 +1141,7 @@ CREATE TABLE IF NOT EXISTS `tblrecipes` (
   `recipeName` varchar(255) DEFAULT NULL,
   `recipeDescription` varchar(255) DEFAULT NULL,
   `defaultResultingColour` int(11) DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblrecipes`
@@ -1153,7 +1159,8 @@ INSERT INTO `tblrecipes` (`recipeID`, `components`, `creates`, `prerequisite`, `
 (8, '14,dye', 14, 0, 0, 'Dye Linen', 'Colour some linen.', NULL),
 (9, '11,mrdt,23', 12, 0, 0, NULL, '', 6),
 (10, '1', 14, 0, 1, NULL, '', NULL),
-(11, '15', 16, 0, 1, NULL, '', NULL);
+(11, '15', 16, 0, 1, NULL, '', NULL),
+(12, '37,38,39', 40, 0, 4, NULL, '', 16);
 
 -- --------------------------------------------------------
 
@@ -1733,7 +1740,7 @@ ALTER TABLE `tblguilds`
 -- AUTO_INCREMENT for table `tblinventoryitems`
 --
 ALTER TABLE `tblinventoryitems`
-  MODIFY `itemID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=37;
+  MODIFY `itemID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=42;
 --
 -- AUTO_INCREMENT for table `tblitemcategories`
 --
@@ -1783,7 +1790,7 @@ ALTER TABLE `tblposts`
 -- AUTO_INCREMENT for table `tblprofessions`
 --
 ALTER TABLE `tblprofessions`
-  MODIFY `professionID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
+  MODIFY `professionID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=5;
 --
 -- AUTO_INCREMENT for table `tblquests`
 --
@@ -1798,7 +1805,7 @@ ALTER TABLE `tblquestsstatus`
 -- AUTO_INCREMENT for table `tblrecipes`
 --
 ALTER TABLE `tblrecipes`
-  MODIFY `recipeID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=12;
+  MODIFY `recipeID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=13;
 --
 -- AUTO_INCREMENT for table `tblsavedsearches`
 --
