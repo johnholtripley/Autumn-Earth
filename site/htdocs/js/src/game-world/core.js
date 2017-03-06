@@ -1219,7 +1219,10 @@ break;
         }
     }
 if(thisSpeech!= "") {
+    // don't show the balloon if there's no speech (which might happen if the NPC is just plays a sound instead)
     UI.showDialogue(thisNPC, thisSpeech);
+} else {
+    thisNPC.speechIndex--;
 }
     canCloseDialogueBalloonNextClick = false;
     if (!isPartOfNPCsNormalSpeech) {

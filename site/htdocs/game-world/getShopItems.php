@@ -97,8 +97,10 @@ $numberofrows = mysql_num_rows( $eventsResult );
 mysql_free_result($eventsResult);
 
 
-
-
+$activeSeasonQuery = 'tblinventoryitems.activeduringseason is null';
+if(count($activeEvents)>0) {
+   $activeSeasonQuery = '(tblinventoryitems.activeduringseason in (".implode(",",$activeEvents).") or tblinventoryitems.activeduringseason is null)'; 
+}
 
  
 for ($i=0;$i<count($jsonData['shops']);$i++) {
@@ -108,7 +110,7 @@ $inventoryData = [];
  
 if(count($jsonData['shops'][$i]["categories"]) > 0) {
  
-$query2 = "SELECT tblinventoryitems.* from tblinventoryitems where tblinventoryitems.itemcategories in (".implode(",",$jsonData['shops'][$i]["categories"]).") and tblinventoryitems.pricecode <= ".$shopSizePriceLimits[($jsonData['shops'][$i]["size"])]." and (tblinventoryitems.activeduringseason in (".implode(",",$activeEvents).") or tblinventoryitems.activeduringseason is null) order by tblinventoryitems.shortname ASC";
+$query2 = "SELECT tblinventoryitems.* from tblinventoryitems where tblinventoryitems.itemcategories in (".implode(",",$jsonData['shops'][$i]["categories"]).") and tblinventoryitems.pricecode <= ".$shopSizePriceLimits[($jsonData['shops'][$i]["size"])]." and ".$activeSeasonQuery." order by tblinventoryitems.shortname ASC";
 // Get colour variants as well for relevant items
  
 $result2 = mysql_query($query2) or die ("failed:".$query2);
