@@ -1034,6 +1034,10 @@ background: url(/images/game-world/interface/currency/copper.png) no-repeat 50% 
         opacity: 1;
         pointer-events: auto;
     }
+    h3, p {
+        color: #fff;
+        font-size: 11px;
+    }
 }
 
 #originalText {

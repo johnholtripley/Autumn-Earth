@@ -323,7 +323,9 @@ function generateSlotMarkup(thisSlotsId) {
     var isABook = false;
     if (thisAction) {
         if (thisAction == "book") {
+            if(hero.inventory[thisSlotsId].inscription.content) {
             isABook = true;
+        }
         }
     }
     dataActionMarkup = '';

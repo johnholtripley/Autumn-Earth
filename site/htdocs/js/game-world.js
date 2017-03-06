@@ -1882,7 +1882,9 @@ function generateSlotMarkup(thisSlotsId) {
     var isABook = false;
     if (thisAction) {
         if (thisAction == "book") {
+            if(hero.inventory[thisSlotsId].inscription.content) {
             isABook = true;
+        }
         }
     }
     dataActionMarkup = '';
@@ -2030,6 +2032,11 @@ var inventoryPanels = document.getElementById('inventoryPanels');
 var shopPanel = document.getElementById('shopPanel');
 var inscriptionPanel = document.getElementById('inscriptionPanel');
 var inscriptionTextArea = document.getElementById('inscriptionTextArea');
+var sourceSelection = document.getElementById('sourceSelection');
+var materialsSelection = document.getElementById('materialsSelection');
+var inkSelection = document.getElementById('inkSelection');
+
+
 
 var UI = {
     init: function() {
@@ -2964,6 +2971,60 @@ inscriptionPanel.classList.add("active");
     },
 
     updateInscriptionPanel: function() {
+        var allInksMarkup = '<h3>Inks available:</h3><ol>';
+        var allSourceMarkup = '<h3>Documents available:</h3><ol>';
+        var allMaterialsMarkup = '<h3>Materials available:</h3><ol>';
+        var thisFileColourSuffix, thisColourName, theColourPrefix;
+for (var i in hero.inventory) {
+    if(hero.inventory[i].type == 40) {
+
+ thisFileColourSuffix = '';
+ theColourPrefix = "";
+   thisColourName = getColourName(hero.inventory[i].colour, hero.inventory[i].type);
+    if (thisColourName != "") {
+
+theColourPrefix = thisColourName + " ";
+        thisFileColourSuffix = "-" + thisColourName.toLowerCase();
+    }
+
+allInksMarkup += '<li><img src="/images/game-world/inventory-items/40'+thisFileColourSuffix+'.png" alt="'+theColourPrefix+currentActiveInventoryItems[40].shortname+'"><h3>'+theColourPrefix+currentActiveInventoryItems[40].shortname+'</h3><p>'+currentActiveInventoryItems[40].description+'</p></li>';
+    } else {
+
+  var thisAction = currentActiveInventoryItems[hero.inventory[i].type].action;
+    var isABook = false;
+    if (thisAction) {
+        if (thisAction == "book") {
+            
+            isABook = true;
+        
+        }
+    }
+
+
+if(isABook) {
+    if(hero.inventory[i].inscription.content) {
+    // has content, so add it to the source list:
+allSourceMarkup += '<li><img src="/images/game-world/inventory-items/'+hero.inventory[i].type+'.png" alt="'+currentActiveInventoryItems[hero.inventory[i].type].shortname+'"><h3>'+currentActiveInventoryItems[hero.inventory[i].type].shortname+'</h3><p>'+hero.inventory[i].inscription.title+'</p></li>';
+
+} else {
+    // no content, add it to the materials list:
+    allMaterialsMarkup += '<li><img src="/images/game-world/inventory-items/'+hero.inventory[i].type+'.png" alt="'+currentActiveInventoryItems[hero.inventory[i].type].shortname+'"><h3>'+currentActiveInventoryItems[hero.inventory[i].type].shortname+'</h3><p>'+currentActiveInventoryItems[hero.inventory[i].type].description+'</p></li>';
+}
+}
+    }
+}
+
+
+ allInksMarkup += '</ol>';
+         allSourceMarkup += '</ol>';
+         allMaterialsMarkup += '</ol>';
+
+
+sourceSelection.innerHTML = allSourceMarkup;
+materialsSelection.innerHTML = allMaterialsMarkup;
+inkSelection.innerHTML = allInksMarkup;
+
+
 
     }
 
