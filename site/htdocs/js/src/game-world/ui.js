@@ -14,6 +14,8 @@ var booksAndParchments = document.getElementById('booksAndParchments');
 var gameWrapper = document.getElementById('gameWrapper');
 var inventoryPanels = document.getElementById('inventoryPanels');
 var shopPanel = document.getElementById('shopPanel');
+var inscriptionPanel = document.getElementById('inscriptionPanel');
+var inscriptionTextArea = document.getElementById('inscriptionTextArea');
 
 var UI = {
     init: function() {
@@ -80,6 +82,7 @@ var UI = {
         UI.updateCardAlbum();
         UI.updateCurrencies();
         UI.buildRecipePanel();
+        UI.updateInscriptionPanel();
         if (hero.professionsKnown.length > 0) {
             // load and cache the first profession's recipe assets:
             UI.populateRecipeList(hero.professionsKnown[0]);
@@ -937,5 +940,17 @@ sellToShop: function(thisShopPanelElement) {
         }
         shopSplitStackPanel.classList.remove("active");
     },
+
+
+    openInscriptionPanel: function() {
+        audio.playSound(soundEffects['bookOpen'],0);
+        // clear previous content:
+        inscriptionTextArea.innerHTML = '';
+inscriptionPanel.classList.add("active");
+    },
+
+    updateInscriptionPanel: function() {
+
+    }
 
 }

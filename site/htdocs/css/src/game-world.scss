@@ -1027,6 +1027,13 @@ background: url(/images/game-world/interface/currency/copper.png) no-repeat 50% 
     top: 650px;
     width: 450px;
     background: #000;
+    opacity: 0;
+    @include transition(opacity 0.4s ease);
+    pointer-events: none;
+      &.active {
+        opacity: 1;
+        pointer-events: auto;
+    }
 }
 
 #originalText {

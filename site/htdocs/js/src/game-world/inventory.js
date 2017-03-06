@@ -70,6 +70,8 @@ if(amountAddedToThisSlot>0) {
     if (allItemsAdded) {
         // make the active inventory be the same as the amended one:
         hero.inventory = JSON.parse(JSON.stringify(inventoryClone));
+        // update panels if needed:
+        UI.updateInscriptionPanel();
         // return success, and the slots that were affected:
         return [true, slotsUpdated];
     } else {
@@ -235,6 +237,9 @@ function inventoryItemAction(whichSlot, whichAction, whichActionValue) { // remo
             UI.addNewBag(hero.inventory[whichSlotNumber]);
             audio.playSound(soundEffects['bagOpen'],0);
             removeFromInventory(whichSlotNumber, 1);
+            break;
+            case "inscribe":
+            UI.openInscriptionPanel();
             break;
         case "card":
             hero.cards.unshift(whichActionValue);

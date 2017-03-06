@@ -1629,6 +1629,8 @@ if(amountAddedToThisSlot>0) {
     if (allItemsAdded) {
         // make the active inventory be the same as the amended one:
         hero.inventory = JSON.parse(JSON.stringify(inventoryClone));
+        // update panels if needed:
+        UI.updateInscriptionPanel();
         // return success, and the slots that were affected:
         return [true, slotsUpdated];
     } else {
@@ -1794,6 +1796,9 @@ function inventoryItemAction(whichSlot, whichAction, whichActionValue) { // remo
             UI.addNewBag(hero.inventory[whichSlotNumber]);
             audio.playSound(soundEffects['bagOpen'],0);
             removeFromInventory(whichSlotNumber, 1);
+            break;
+            case "inscribe":
+            UI.openInscriptionPanel();
             break;
         case "card":
             hero.cards.unshift(whichActionValue);
@@ -2023,6 +2028,8 @@ var booksAndParchments = document.getElementById('booksAndParchments');
 var gameWrapper = document.getElementById('gameWrapper');
 var inventoryPanels = document.getElementById('inventoryPanels');
 var shopPanel = document.getElementById('shopPanel');
+var inscriptionPanel = document.getElementById('inscriptionPanel');
+var inscriptionTextArea = document.getElementById('inscriptionTextArea');
 
 var UI = {
     init: function() {
@@ -2089,6 +2096,7 @@ var UI = {
         UI.updateCardAlbum();
         UI.updateCurrencies();
         UI.buildRecipePanel();
+        UI.updateInscriptionPanel();
         if (hero.professionsKnown.length > 0) {
             // load and cache the first profession's recipe assets:
             UI.populateRecipeList(hero.professionsKnown[0]);
@@ -2946,6 +2954,18 @@ sellToShop: function(thisShopPanelElement) {
         }
         shopSplitStackPanel.classList.remove("active");
     },
+
+
+    openInscriptionPanel: function() {
+        audio.playSound(soundEffects['bookOpen'],0);
+        // clear previous content:
+        inscriptionTextArea.innerHTML = '';
+inscriptionPanel.classList.add("active");
+    },
+
+    updateInscriptionPanel: function() {
+
+    }
 
 }
 
