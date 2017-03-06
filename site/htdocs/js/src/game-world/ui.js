@@ -749,9 +749,9 @@ sellToShop: function(thisShopPanelElement) {
            
 
 
-console.log(thisNode.id + ", "+thisNode.className+" : "+thisNode.id.substring(0, 6));
+
 if (thisNode.id.substring(0, 6) == "scribe") {
-if(thisNode.className) {
+
 switch(thisNode.className) {
 case 'scribeSource':
 UI.inscription.selected.source = thisNode.id.substring(20);
@@ -782,10 +782,10 @@ scribeStartInscription.removeAttribute('disabled');
 
 
 
-} else {
+
 switch(thisNode.id) {
   case 'scribeCopyText':
-   // inscription panel:
+  // reset selected if not already 'copy' ######
    UI.inscription.scribeMode = 'copy';
  originalText.classList.remove('active');
  sourceSelection.classList.add('active');
@@ -793,7 +793,7 @@ switch(thisNode.id) {
  scribeOriginalText.classList.remove('active');
  break;
  case 'scribeOriginalText':
- // inscription panel:
+ // reset selected if not already 'original' ######
  UI.inscription.scribeMode = 'original';
  originalText.classList.add('active');
  sourceSelection.classList.remove('active');
@@ -821,6 +821,8 @@ newInscribedObject.inscription = {
 
  inventoryCheck = canAddItemToInventory([newInscribedObject]);
             if (inventoryCheck[0]) {
+                document.getElementById("slot" + inventoryCheck[1]).innerHTML = generateSlotMarkup(inventoryCheck[1]);
+                UI.showChangeInInventory(inventoryCheck[1]);
                // remove the ink and material used:
                removeFromInventory(UI.inscription.selected.material,1);
                removeFromInventory(UI.inscription.selected.ink,1);
@@ -832,7 +834,7 @@ newInscribedObject.inscription = {
  
  break;
 }
-}
+
 
 } 
 
