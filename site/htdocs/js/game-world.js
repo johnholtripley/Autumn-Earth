@@ -2109,7 +2109,7 @@ var UI = {
         UI.buildRecipePanel();
         UI.updateInscriptionPanel();
         UI.inscription = {
-            scribeMode:'original',
+            scribeMode: 'original',
             selected: {
                 source: '',
                 material: '',
@@ -2141,8 +2141,8 @@ var UI = {
         inventoryMarkup += '</ol></div></div>';
         inventoryPanels.insertAdjacentHTML('beforeend', inventoryMarkup);
         UI.initInventoryDrag('#inventoryBag' + i + ' ol');
-        
-           
+
+
     },
 
     showChangeInInventory: function(whichSlotsToUpdate) {
@@ -2238,7 +2238,7 @@ var UI = {
         // maybe store these values if NPCs are never going to move while a speech balloon is attached to them? #####
         var thisX = findIsoCoordsX(whichNPC.x, whichNPC.y);
         var thisY = findIsoCoordsY(whichNPC.x, whichNPC.y);
- 
+
         // -40 x so the balloon tip is at '0' x
         var thisTransform = "translate(" + Math.floor(thisX - hero.isox + (canvasWidth / 2) - 40) + "px," + Math.floor(0 - (canvasHeight - (thisY - hero.isoy - whichNPC.centreY + (canvasHeight / 2))) - whichNPC.z) + "px)";
         dialogue.style.transform = thisTransform;
@@ -2325,7 +2325,7 @@ var UI = {
                 recipeCustomScrollBar.init();
             }
         }
-        
+
         craftingPanel.classList.add("active");
     },
 
@@ -2383,7 +2383,7 @@ var UI = {
                             addToInventory(droppedSlotId, thisBoughtObject);
                             hero.currency[thisCurrency] -= buyPriceForOne;
                             UI.updateCurrencies();
-                            audio.playSound(soundEffects['coins'],0);
+                            audio.playSound(soundEffects['coins'], 0);
                             UI.droppedSuccessfully();
                         } else {
                             UI.showNotification("<p>Not enough money</p>");
@@ -2410,7 +2410,7 @@ var UI = {
                                 updateQuantity(droppedSlotId);
                                 hero.currency[thisCurrency] -= buyPriceForOne;
                                 UI.updateCurrencies();
-                                audio.playSound(soundEffects['coins'],0);
+                                audio.playSound(soundEffects['coins'], 0);
                                 UI.droppedSuccessfully();
                             } else {
                                 UI.showNotification("<p>Not enough money</p>");
@@ -2484,7 +2484,7 @@ var UI = {
                     if (emptySlotFound != -1) {
                         hero.currency[thisCurrency] -= buyPriceForOne;
                         UI.updateCurrencies();
-                        audio.playSound(soundEffects['coins'],0);
+                        audio.playSound(soundEffects['coins'], 0);
                         UI.droppedSuccessfully();
                         addToInventory(thisInventoryPanelId + "-" + emptySlotFound, thisBoughtObject);
                         UI.droppedSuccessfully();
@@ -2534,17 +2534,17 @@ var UI = {
 
                 UI.slideDraggedSlotBack();
             } else {
-            
-UI.sellToShop(thisNode.parentNode.parentNode);
-}
-            
-        } else if(thisNode.classList.contains('shop')) {
+
+                UI.sellToShop(thisNode.parentNode.parentNode);
+            }
+
+        } else if (thisNode.classList.contains('shop')) {
             // shop panel:
             if (isFromAShop) {
                 UI.slideDraggedSlotBack();
             } else {
-UI.sellToShop(thisNode);
-}
+                UI.sellToShop(thisNode);
+            }
         } else {
             UI.slideDraggedSlotBack();
         }
@@ -2555,34 +2555,34 @@ UI.sellToShop(thisNode);
     },
 
 
-sellToShop: function(thisShopPanelElement) {
-   
-// check to see if it's being sold to a relevant specialist shop:
-            var thisItemsCategories = currentActiveInventoryItems[UI.draggedInventoryObject.type].category;
-       
-            var thisShopsSpecialism = thisShopPanelElement.getAttribute('data-specialism');
-            var sellPrice;
-            var thisCurrency = thisShopPanelElement.getAttribute('data-currency');
-           
+    sellToShop: function(thisShopPanelElement) {
+
+        // check to see if it's being sold to a relevant specialist shop:
+        var thisItemsCategories = currentActiveInventoryItems[UI.draggedInventoryObject.type].category;
+
+        var thisShopsSpecialism = thisShopPanelElement.getAttribute('data-specialism');
+        var sellPrice;
+        var thisCurrency = thisShopPanelElement.getAttribute('data-currency');
 
 
 
-  if (thisItemsCategories.indexOf(thisShopsSpecialism) != -1) {
-                    sellPrice = Math.ceil(UI.draggedInventoryObject.quantity * sellPriceSpecialismModifier * inflationModifier * currentActiveInventoryItems[UI.draggedInventoryObject.type].priceCode, 0);
-                } else {
-                    sellPrice = Math.ceil(UI.draggedInventoryObject.quantity * sellPriceModifier * inflationModifier * currentActiveInventoryItems[UI.draggedInventoryObject.type].priceCode, 0);
-                }
-                hero.currency[thisCurrency] += sellPrice;
-                UI.updateCurrencies();
-                audio.playSound(soundEffects['coins'],0);
-            if (!isSplitStackBeingDragged) {
-              
-             
-            } else {
 
-            }
-            UI.droppedSuccessfully();
-},
+        if (thisItemsCategories.indexOf(thisShopsSpecialism) != -1) {
+            sellPrice = Math.ceil(UI.draggedInventoryObject.quantity * sellPriceSpecialismModifier * inflationModifier * currentActiveInventoryItems[UI.draggedInventoryObject.type].priceCode, 0);
+        } else {
+            sellPrice = Math.ceil(UI.draggedInventoryObject.quantity * sellPriceModifier * inflationModifier * currentActiveInventoryItems[UI.draggedInventoryObject.type].priceCode, 0);
+        }
+        hero.currency[thisCurrency] += sellPrice;
+        UI.updateCurrencies();
+        audio.playSound(soundEffects['coins'], 0);
+        if (!isSplitStackBeingDragged) {
+
+
+        } else {
+
+        }
+        UI.droppedSuccessfully();
+    },
 
     droppedSuccessfully: function() {
         // hide the clone:
@@ -2598,7 +2598,7 @@ sellToShop: function(thisShopPanelElement) {
         }
 
 
-    
+
     },
 
     initInventoryDrag: function(whichElements) {
@@ -2715,13 +2715,13 @@ sellToShop: function(thisShopPanelElement) {
     buildBook: function(whichBook) {
         var markupToAdd = '';
         // var parsedDoc, numberOfPages;
-     
-        
+
+
         var thisBooksContent = hero.inventory[(whichBook)].inscription.content;
         var thisBooksHash = generateHash(thisBooksContent);
         // check if the book already has been created:
         if (!document.getElementById('book' + thisBooksHash)) {
-            markupToAdd += '<div class="book inkColour'+hero.inventory[(whichBook)].colour+'" id="book' + thisBooksHash + '">';
+            markupToAdd += '<div class="book inkColour' + hero.inventory[(whichBook)].colour + '" id="book' + thisBooksHash + '">';
             markupToAdd += '<div class="draggableBar">&quot;' + hero.inventory[(whichBook)].inscription.title + '&quot;</div>';
             markupToAdd += '<button class="closePanel">close</button>';
             /*
@@ -2758,104 +2758,102 @@ sellToShop: function(thisShopPanelElement) {
 
                     }
                 }
-            } 
-        } else {
-                var thisNode = getNearestParentId(e.target);
-           
+            }
+        } 
+            var thisNode = getNearestParentId(e.target);
+            if (thisNode.id.substring(0, 6) == "scribe") {
+
+                switch (thisNode.className) {
+                    case 'scribeSource':
+                        UI.inscription.selected.source = thisNode.id.substring(20);
+                        break;
+                    case 'scribeMaterial':
+                        UI.inscription.selected.material = thisNode.id.substring(22);
+                        break;
+                    case 'scribeInk':
+                        UI.inscription.selected.ink = thisNode.id.substring(17);
+                        break;
+
+                }
+
+                if (UI.inscription.mode == 'copy') {
+                    if ((UI.inscription.selected.ink != '') && (UI.inscription.selected.material != '') && (UI.inscription.selected.source != '')) {
+                        scribeStartInscription.removeAttribute('disabled');
+                    } else {
+                        scribeStartInscription.setAttribute('disabled', 'disabled');
+                    }
+                } else {
+                    // original:
+                    if ((UI.inscription.selected.ink != '') && (UI.inscription.selected.material != '')) {
+                        scribeStartInscription.removeAttribute('disabled');
+                    } else {
+                        scribeStartInscription.setAttribute('disabled', 'disabled');
+                    }
+                }
 
 
 
-if (thisNode.id.substring(0, 6) == "scribe") {
 
-switch(thisNode.className) {
-case 'scribeSource':
-UI.inscription.selected.source = thisNode.id.substring(20);
-break;
-case 'scribeMaterial':
-UI.inscription.selected.material = thisNode.id.substring(22);
-break;
-case 'scribeInk':
-UI.inscription.selected.ink = thisNode.id.substring(17);
-break;
+                switch (thisNode.id) {
+                    case 'scribeCopyText':
+                        // reset selected if not already 'copy' ######
+                        UI.inscription.mode = 'copy';
+                        originalText.classList.remove('active');
+                        sourceSelection.classList.add('active');
+                        thisNode.classList.add('active');
+                        scribeOriginalText.classList.remove('active');
+                        break;
+                    case 'scribeOriginalText':
+                        // reset selected if not already 'original' ######
+                        UI.inscription.mode = 'original';
+                        originalText.classList.add('active');
+                        sourceSelection.classList.remove('active');
+                        thisNode.classList.add('active');
+                        scribeCopyText.classList.remove('active');
+                        break;
+                    case 'scribeStartInscription':
 
-}
+                        var newInscribedObject = JSON.parse(JSON.stringify(hero.inventory[UI.inscription.selected.material]));
+                        newInscribedObject.quantity = 1;
+                        newInscribedObject.colour = hero.inventory[UI.inscription.selected.ink].colour;
 
- if(UI.inscription.mode=='copy') {
- if((UI.inscription.selected.ink != '') && (UI.inscription.selected.material != '') && (UI.inscription.selected.source != '')) {
-scribeStartInscription.removeAttribute('disabled');
-} else {
-   scribeStartInscription.setAttribute('disabled','disabled');
-}
- } else {
-// original:
-if((UI.inscription.selected.ink != '') && (UI.inscription.selected.material != '')) {
-scribeStartInscription.removeAttribute('disabled');
-} else {
-    scribeStartInscription.setAttribute('disabled','disabled');
-}
- }
+                        if (UI.inscription.mode == 'copy') {
+                            newInscribedObject.inscription = {
+                                'title': hero.inventory[UI.inscription.selected.source].inscription.title,
+                                'content': hero.inventory[UI.inscription.selected.source].inscription.content
+                            }
+                          
+                        } else {
+                            // original:
+
+                            newInscribedObject.inscription = {
+                                'title': inscriptionTitle.value,
+                                'content': '<p>' + inscriptionTextArea.innerHTML + '</p>'
+                            }
+                        }
+
+                        inventoryCheck = canAddItemToInventory([newInscribedObject]);
+                        if (inventoryCheck[0]) {
+                            document.getElementById("slot" + inventoryCheck[1]).innerHTML = generateSlotMarkup(inventoryCheck[1]);
+                            UI.showChangeInInventory(inventoryCheck[1]);
+                            // remove the ink and material used:
+                            removeFromInventory(UI.inscription.selected.material, 1);
+                            removeFromInventory(UI.inscription.selected.ink, 1);
+                        } else {
+                            UI.showNotification("<p>Oops - sorry, no room in your bags</p>");
+                        }
 
 
-alert(thisNode.id);
 
-switch(thisNode.id) {
-  case 'scribeCopyText':
-   // inscription panel:
-   UI.inscription.scribeMode = 'copy';
- originalText.classList.remove('active');
- sourceSelection.classList.add('active');
- thisNode.classList.add('active');
- scribeOriginalText.classList.remove('active');
- break;
- case 'scribeOriginalText':
- // inscription panel:
- UI.inscription.scribeMode = 'original';
- originalText.classList.add('active');
- sourceSelection.classList.remove('active');
-  thisNode.classList.add('active');
- scribeCopyText.classList.remove('active');
- break;
- case 'scribeStartInscription':
+                        break;
+                }
 
- var newInscribedObject = JSON.parse(JSON.stringify(hero.inventory[UI.inscription.selected.material]));
-newInscribedObject.quantity = 1;
-newInscribedObject.colour = hero.inventory[UI.inscription.selected.ink].colour;
- if(UI.inscription.mode=='copy') {
-newInscribedObject.inscription = {
-    'title': hero.inventory[UI.inscription.selected.source].inscription.title,
-    'content':hero.inventory[UI.inscription.selected.source].inscription.content
-}
- } else {
-// original:
 
-newInscribedObject.inscription = {
-    'title': inscriptionTitle.value,
-    'content':'<p>'+inscriptionTextArea.innerHTML+'</p>'
-}
-}
-
- inventoryCheck = canAddItemToInventory([newInscribedObject]);
-            if (inventoryCheck[0]) {
-                document.getElementById("slot" + inventoryCheck[1]).innerHTML = generateSlotMarkup(inventoryCheck[1]);
-                UI.showChangeInInventory(inventoryCheck[1]);
-               // remove the ink and material used:
-               removeFromInventory(UI.inscription.selected.material,1);
-               removeFromInventory(UI.inscription.selected.ink,1);
-            } else {
-                UI.showNotification("<p>Oops - sorry, no room in your bags</p>");
             }
 
 
- 
- break;
-}
 
-
-} 
-
-
-
-            }
+        
     },
 
 
@@ -2871,7 +2869,7 @@ newInscribedObject.inscription = {
     openShop: function(shopHash) {
         shopCurrentlyOpen = shopHash;
         document.getElementById("shop" + shopHash).classList.add("active");
-        inventoryPanels.classList.add("shopSpecialism"+document.getElementById("shop" + shopHash).getAttribute('data-specialism'));
+        inventoryPanels.classList.add("shopSpecialism" + document.getElementById("shop" + shopHash).getAttribute('data-specialism'));
     },
 
     closeShop: function() {
@@ -2915,7 +2913,7 @@ newInscribedObject.inscription = {
             if (inventoryCheck[0]) {
                 hero.currency[thisCurrency] -= buyPriceForOne;
                 UI.updateCurrencies();
-                audio.playSound(soundEffects['coins'],0);
+                audio.playSound(soundEffects['coins'], 0);
                 UI.showChangeInInventory(inventoryCheck[1]);
             } else {
                 UI.showNotification("<p>Oops - sorry, no room in your bags</p>");
@@ -2930,90 +2928,90 @@ newInscribedObject.inscription = {
     initShopDrag: function() {
 
         document.getElementById("shopPanel").addEventListener("mousedown", function(e) {
-            if(!isSplitStackBeingDragged) {
-            var thisNode = getNearestParentId(e.target);
-            // check it's a slot and not the close or draggable bar:
-            if (thisNode.id.substring(0, 8) == "shopSlot") {
-                e.preventDefault();
-                // make sure it's not a right click:
-                if (e.button != 2) {
-                    UI.sourceSlot = thisNode;
-                    // check if the shift key is pressed as well:
-                    if (key[5]) {
+            if (!isSplitStackBeingDragged) {
+                var thisNode = getNearestParentId(e.target);
+                // check it's a slot and not the close or draggable bar:
+                if (thisNode.id.substring(0, 8) == "shopSlot") {
+                    e.preventDefault();
+                    // make sure it's not a right click:
+                    if (e.button != 2) {
+                        UI.sourceSlot = thisNode;
+                        // check if the shift key is pressed as well:
+                        if (key[5]) {
 
-                        var thisSlotImageElement = thisNode.firstElementChild;
-                        var thisShopPanelElement = thisNode.parentNode.parentNode;
-                        var buyPriceForOne = thisSlotImageElement.getAttribute('data-price');
-                        var thisCurrency = thisShopPanelElement.getAttribute('data-currency');
+                            var thisSlotImageElement = thisNode.firstElementChild;
+                            var thisShopPanelElement = thisNode.parentNode.parentNode;
+                            var buyPriceForOne = thisSlotImageElement.getAttribute('data-price');
+                            var thisCurrency = thisShopPanelElement.getAttribute('data-currency');
 
-                        // work out the max they can buy with the relevant currency:
-                        var maxThatCanBeBought = Math.floor(hero.currency[thisCurrency] / buyPriceForOne);
+                            // work out the max they can buy with the relevant currency:
+                            var maxThatCanBeBought = Math.floor(hero.currency[thisCurrency] / buyPriceForOne);
 
-                        if (maxThatCanBeBought > maxNumberOfItemsPerSlot) {
-                            maxThatCanBeBought = maxNumberOfItemsPerSlot;
+                            if (maxThatCanBeBought > maxNumberOfItemsPerSlot) {
+                                maxThatCanBeBought = maxNumberOfItemsPerSlot;
+                            }
+                            shopSplitStackInput.setAttribute("max", maxThatCanBeBought);
+                            shopSplitStackInput.value = 1;
+                            shopSplitStackInput.focus();
+                            // can't set selection for number type input:
+                            // http://stackoverflow.com/questions/21177489/selectionstart-selectionend-on-input-type-number-no-longer-allowed-in-chrome
+                            //   splitStackInput.setSelectionRange(0, defaultSplitValue.toString().length);
+                            var clickedSlotRect = thisNode.getBoundingClientRect();
+                            var pageScrollTopY = (window.pageYOffset || document.documentElement.scrollTop) - (document.documentElement.clientTop || 0);
+                            // 3px padding on the slots:
+                            // -44 for the slot height:
+                            objInitLeft = clickedSlotRect.left + 3;
+                            objInitTop = clickedSlotRect.top + 3 + pageScrollTopY - 44;
+                            shopSplitStackPanel.style.cssText = "z-index:2;top: " + objInitTop + "px; left: " + objInitLeft + "px;";
+                            shopSplitStackPanel.classList.add("active");
+                            key[5] = 0;
+                        } else {
+                            // this will fire for double click as well
+
+
+                            UI.sourceSlot = thisNode.id;
+                            UI.draggedInventoryObject = {
+                                "type": parseInt(thisNode.getAttribute('data-type')),
+                                "quantity": 1,
+                                "quality": 100,
+                                "durability": 100,
+                                "currentWear": 0,
+                                "effectiveness": 100,
+                                "colour": parseInt(thisNode.getAttribute('data-colour')),
+                                "enchanted": 0,
+                                "hallmark": 0,
+                                "inscription": ""
+                            }
+                            if (thisNode.hasAttribute('data-inscription')) {
+                                UI.draggedInventoryObject.inscription = thisNode.getAttribute('data-inscription');
+                            }
+                            if (thisNode.hasAttribute('data-contains')) {
+                                UI.draggedInventoryObject.contains = thisNode.getAttribute('data-contains');
+                            }
+
+
+
+
+                            // clone this slot to draggableInventorySlot:
+                            UI.activeDragObject = document.getElementById('draggableShopSlot');
+                            UI.activeDragObject.innerHTML = thisNode.innerHTML;
+
+
+                            var clickedSlotRect = thisNode.getBoundingClientRect();
+                            var pageScrollTopY = (window.pageYOffset || document.documentElement.scrollTop) - (document.documentElement.clientTop || 0);
+                            // 3px padding on the slots:
+                            objInitLeft = clickedSlotRect.left + 3;
+                            objInitTop = clickedSlotRect.top + 3 + pageScrollTopY;
+                            dragStartX = e.pageX;
+                            dragStartY = e.pageY;
+                            UI.activeDragObject.style.cssText = "z-index:2;top: " + objInitTop + "px; left: " + objInitLeft + "px; transform: translate(0px, 0px);";
+                            document.addEventListener("mousemove", UI.handleDrag, false);
+                            document.addEventListener("mouseup", UI.endInventoryDrag, false);
+
                         }
-                        shopSplitStackInput.setAttribute("max", maxThatCanBeBought);
-                        shopSplitStackInput.value = 1;
-                        shopSplitStackInput.focus();
-                        // can't set selection for number type input:
-                        // http://stackoverflow.com/questions/21177489/selectionstart-selectionend-on-input-type-number-no-longer-allowed-in-chrome
-                        //   splitStackInput.setSelectionRange(0, defaultSplitValue.toString().length);
-                        var clickedSlotRect = thisNode.getBoundingClientRect();
-                        var pageScrollTopY = (window.pageYOffset || document.documentElement.scrollTop) - (document.documentElement.clientTop || 0);
-                        // 3px padding on the slots:
-                        // -44 for the slot height:
-                        objInitLeft = clickedSlotRect.left + 3;
-                        objInitTop = clickedSlotRect.top + 3 + pageScrollTopY - 44;
-                        shopSplitStackPanel.style.cssText = "z-index:2;top: " + objInitTop + "px; left: " + objInitLeft + "px;";
-                        shopSplitStackPanel.classList.add("active");
-                        key[5] = 0;
-                    } else {
-                        // this will fire for double click as well
-
-                     
-                        UI.sourceSlot = thisNode.id;
-                        UI.draggedInventoryObject = {
-                            "type": parseInt(thisNode.getAttribute('data-type')),
-                            "quantity": 1,
-                            "quality": 100,
-                            "durability": 100,
-                            "currentWear": 0,
-                            "effectiveness": 100,
-                            "colour": parseInt(thisNode.getAttribute('data-colour')),
-                            "enchanted": 0,
-                            "hallmark": 0,
-                            "inscription": ""
-                        }
-                        if (thisNode.hasAttribute('data-inscription')) {
-                            UI.draggedInventoryObject.inscription = thisNode.getAttribute('data-inscription');
-                        }
-                        if (thisNode.hasAttribute('data-contains')) {
-                            UI.draggedInventoryObject.contains = thisNode.getAttribute('data-contains');
-                        }
-
-
-
-
-                        // clone this slot to draggableInventorySlot:
-                        UI.activeDragObject = document.getElementById('draggableShopSlot');
-                        UI.activeDragObject.innerHTML = thisNode.innerHTML;
-
-
-                        var clickedSlotRect = thisNode.getBoundingClientRect();
-                        var pageScrollTopY = (window.pageYOffset || document.documentElement.scrollTop) - (document.documentElement.clientTop || 0);
-                        // 3px padding on the slots:
-                        objInitLeft = clickedSlotRect.left + 3;
-                        objInitTop = clickedSlotRect.top + 3 + pageScrollTopY;
-                        dragStartX = e.pageX;
-                        dragStartY = e.pageY;
-                        UI.activeDragObject.style.cssText = "z-index:2;top: " + objInitTop + "px; left: " + objInitLeft + "px; transform: translate(0px, 0px);";
-                        document.addEventListener("mousemove", UI.handleDrag, false);
-                        document.addEventListener("mouseup", UI.endInventoryDrag, false);
-
                     }
                 }
             }
-        }
         }, false);
     },
 
@@ -3062,7 +3060,7 @@ newInscribedObject.inscription = {
             if (inventoryCheck[0]) {
                 hero.currency[thisCurrency] -= (enteredValue * buyPriceForOne);
                 UI.updateCurrencies();
-                audio.playSound(soundEffects['coins'],0);
+                audio.playSound(soundEffects['coins'], 0);
                 UI.showChangeInInventory(inventoryCheck[1]);
             } else {
                 UI.showNotification("<p>Oops - sorry, no room in your bags</p>");
@@ -3073,10 +3071,10 @@ newInscribedObject.inscription = {
 
 
     openInscriptionPanel: function() {
-        audio.playSound(soundEffects['bookOpen'],0);
+        audio.playSound(soundEffects['bookOpen'], 0);
         // clear previous content:
         inscriptionTextArea.innerHTML = '';
-inscriptionPanel.classList.add("active");
+        inscriptionPanel.classList.add("active");
     },
 
     updateInscriptionPanel: function() {
@@ -3084,53 +3082,53 @@ inscriptionPanel.classList.add("active");
         var allSourceMarkup = '<h3>Documents available:</h3><ol>';
         var allMaterialsMarkup = '<h3>Materials available:</h3><ol>';
         var thisFileColourSuffix, thisColourName, theColourPrefix;
-for (var i in hero.inventory) {
-    if(hero.inventory[i].type == 40) {
+        for (var i in hero.inventory) {
+            if (hero.inventory[i].type == 40) {
 
- thisFileColourSuffix = '';
- theColourPrefix = "";
-   thisColourName = getColourName(hero.inventory[i].colour, hero.inventory[i].type);
-    if (thisColourName != "") {
+                thisFileColourSuffix = '';
+                theColourPrefix = "";
+                thisColourName = getColourName(hero.inventory[i].colour, hero.inventory[i].type);
+                if (thisColourName != "") {
 
-theColourPrefix = thisColourName + " ";
-        thisFileColourSuffix = "-" + thisColourName.toLowerCase();
-    }
+                    theColourPrefix = thisColourName + " ";
+                    thisFileColourSuffix = "-" + thisColourName.toLowerCase();
+                }
 
-allInksMarkup += '<li class="scribeInk" id="scribeInkFromSlot'+i+'"><img src="/images/game-world/inventory-items/40'+thisFileColourSuffix+'.png" alt="'+theColourPrefix+currentActiveInventoryItems[40].shortname+'"><h3>'+theColourPrefix+currentActiveInventoryItems[40].shortname+'</h3><p>'+currentActiveInventoryItems[40].description+'</p></li>';
-    } else {
+                allInksMarkup += '<li class="scribeInk" id="scribeInkFromSlot' + i + '"><img src="/images/game-world/inventory-items/40' + thisFileColourSuffix + '.png" alt="' + theColourPrefix + currentActiveInventoryItems[40].shortname + '"><h3>' + theColourPrefix + currentActiveInventoryItems[40].shortname + '</h3><p>' + currentActiveInventoryItems[40].description + '</p></li>';
+            } else {
 
-  var thisAction = currentActiveInventoryItems[hero.inventory[i].type].action;
-    var isABook = false;
-    if (thisAction) {
-        if (thisAction == "book") {
-            
-            isABook = true;
-        
+                var thisAction = currentActiveInventoryItems[hero.inventory[i].type].action;
+                var isABook = false;
+                if (thisAction) {
+                    if (thisAction == "book") {
+
+                        isABook = true;
+
+                    }
+                }
+
+                if (isABook) {
+                    if (hero.inventory[i].inscription.content) {
+                        // has content, so add it to the source list:
+                        allSourceMarkup += '<li class="scribeSource" id="scribeSourceFromSlot' + i + '"><img src="/images/game-world/inventory-items/' + hero.inventory[i].type + '.png" alt="' + currentActiveInventoryItems[hero.inventory[i].type].shortname + '"><h3>' + currentActiveInventoryItems[hero.inventory[i].type].shortname + '</h3><p>' + hero.inventory[i].inscription.title + '</p></li>';
+
+                    } else {
+                        // no content, add it to the materials list:
+                        allMaterialsMarkup += '<li class="scribeMaterial" id="scribeMaterialFromSlot' + i + '"><img src="/images/game-world/inventory-items/' + hero.inventory[i].type + '.png" alt="' + currentActiveInventoryItems[hero.inventory[i].type].shortname + '"><h3>' + currentActiveInventoryItems[hero.inventory[i].type].shortname + '</h3><p>' + currentActiveInventoryItems[hero.inventory[i].type].description + '</p></li>';
+                    }
+                }
+            }
         }
-    }
-
-if(isABook) {
-    if(hero.inventory[i].inscription.content) {
-    // has content, so add it to the source list:
-allSourceMarkup += '<li class="scribeSource" id="scribeSourceFromSlot'+i+'"><img src="/images/game-world/inventory-items/'+hero.inventory[i].type+'.png" alt="'+currentActiveInventoryItems[hero.inventory[i].type].shortname+'"><h3>'+currentActiveInventoryItems[hero.inventory[i].type].shortname+'</h3><p>'+hero.inventory[i].inscription.title+'</p></li>';
-
-} else {
-    // no content, add it to the materials list:
-    allMaterialsMarkup += '<li class="scribeMaterial" id="scribeMaterialFromSlot'+i+'"><img src="/images/game-world/inventory-items/'+hero.inventory[i].type+'.png" alt="'+currentActiveInventoryItems[hero.inventory[i].type].shortname+'"><h3>'+currentActiveInventoryItems[hero.inventory[i].type].shortname+'</h3><p>'+currentActiveInventoryItems[hero.inventory[i].type].description+'</p></li>';
-}
-}
-    }
-}
 
 
- allInksMarkup += '</ol>';
-         allSourceMarkup += '</ol>';
-         allMaterialsMarkup += '</ol>';
+        allInksMarkup += '</ol>';
+        allSourceMarkup += '</ol>';
+        allMaterialsMarkup += '</ol>';
 
 
-sourceSelection.innerHTML = allSourceMarkup;
-materialsSelection.innerHTML = allMaterialsMarkup;
-inkSelection.innerHTML = allInksMarkup;
+        sourceSelection.innerHTML = allSourceMarkup;
+        materialsSelection.innerHTML = allMaterialsMarkup;
+        inkSelection.innerHTML = allInksMarkup;
 
 
 
