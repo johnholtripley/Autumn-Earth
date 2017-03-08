@@ -93,15 +93,7 @@ var UI = {
         UI.updateCurrencies();
         UI.buildRecipePanel();
         UI.updateInscriptionPanel();
-        UI.inscription = {
-            mode: 'original',
-            selected: {
-                source: '',
-                material: '',
-                ink: ''
-            }
 
-        };
         if (hero.professionsKnown.length > 0) {
             // load and cache the first profession's recipe assets:
             UI.populateRecipeList(hero.professionsKnown[0]);
@@ -1000,34 +992,26 @@ var UI = {
         var thisFileColourSuffix, thisColourName, theColourPrefix;
         for (var i in hero.inventory) {
             if (hero.inventory[i].type == 40) {
-
                 thisFileColourSuffix = '';
                 theColourPrefix = "";
                 thisColourName = getColourName(hero.inventory[i].colour, hero.inventory[i].type);
                 if (thisColourName != "") {
-
                     theColourPrefix = thisColourName + " ";
                     thisFileColourSuffix = "-" + thisColourName.toLowerCase();
                 }
-
                 allInksMarkup += '<li class="scribeInk" id="scribeInkFromSlot' + i + '"><img src="/images/game-world/inventory-items/40' + thisFileColourSuffix + '.png" alt="' + theColourPrefix + currentActiveInventoryItems[40].shortname + '"><h3>' + theColourPrefix + currentActiveInventoryItems[40].shortname + '</h3><p>' + currentActiveInventoryItems[40].description + '</p></li>';
             } else {
-
                 var thisAction = currentActiveInventoryItems[hero.inventory[i].type].action;
                 var isABook = false;
                 if (thisAction) {
                     if (thisAction == "book") {
-
                         isABook = true;
-
                     }
                 }
-
                 if (isABook) {
                     if (hero.inventory[i].inscription.content) {
                         // has content, so add it to the source list:
                         allSourceMarkup += '<li class="scribeSource" id="scribeSourceFromSlot' + i + '"><img src="/images/game-world/inventory-items/' + hero.inventory[i].type + '.png" alt="' + currentActiveInventoryItems[hero.inventory[i].type].shortname + '"><h3>' + currentActiveInventoryItems[hero.inventory[i].type].shortname + '</h3><p>' + hero.inventory[i].inscription.title + '</p></li>';
-
                     } else {
                         // no content, add it to the materials list:
                         allMaterialsMarkup += '<li class="scribeMaterial" id="scribeMaterialFromSlot' + i + '"><img src="/images/game-world/inventory-items/' + hero.inventory[i].type + '.png" alt="' + currentActiveInventoryItems[hero.inventory[i].type].shortname + '"><h3>' + currentActiveInventoryItems[hero.inventory[i].type].shortname + '</h3><p>' + currentActiveInventoryItems[hero.inventory[i].type].description + '</p></li>';
@@ -1035,19 +1019,24 @@ var UI = {
                 }
             }
         }
-
-
         allInksMarkup += '</ol>';
         allSourceMarkup += '</ol>';
         allMaterialsMarkup += '</ol>';
-
-
         sourceSelection.innerHTML = allSourceMarkup;
         materialsSelection.innerHTML = allMaterialsMarkup;
         inkSelection.innerHTML = allInksMarkup;
+                UI.inscription = {
+            mode: 'original',
+            selected: {
+                source: '',
+                material: '',
+                ink: ''
+            }
 
-
-
+        };
+        scribeStartInscription.setAttribute('disabled', 'disabled');
+        inscriptionTitle.value = '';
+        inscriptionTextArea.innerHTML = '';
     },
 
     processInscriptionClick: function(thisNode) {
@@ -1141,7 +1130,7 @@ var UI = {
                     // remove the ink and material used:
                     removeFromInventory(UI.inscription.selected.material, 1);
                     removeFromInventory(UI.inscription.selected.ink, 1);
-                    UI.resetInscriptionPanel();
+                    UI.updateInscriptionPanel();
                 } else {
                     UI.showNotification("<p>Oops - sorry, no room in your bags</p>");
                 }
