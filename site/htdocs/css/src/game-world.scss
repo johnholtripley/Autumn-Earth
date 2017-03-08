@@ -1025,7 +1025,7 @@ background: url(/images/game-world/interface/currency/copper.png) no-repeat 50% 
     position: absolute;
     left: 325px;
     top: 650px;
-    width: 972px;
+    //width: 972px;
     background: #000;
     opacity: 0;
     pointer-events: none;
@@ -1039,17 +1039,34 @@ background: url(/images/game-world/interface/currency/copper.png) no-repeat 50% 
         font-size: 11px;
     }
 }
+.tabHeader {
+    border-bottom: 1px solid #ccc;
+    text-align: right;
+
+    padding: 0 12px 0 0;
+}
 .tabs {
     background: #ccc;
-    border: 2px solid #fff;
+    border: 1px solid #fff;
     border-bottom: #fff;
     color: #fff;
+    padding: 4px 12px;
+    margin-left: 6px;
+    display: inline-block;
+    position: relative;
+    top: 1px;
+ -webkit-border-radius: 4px 4px 0 0;
+ -moz-border-radius: 4px 4px 0 0;
+ border-radius: 4px 4px 0 0;
     @include transition(background .4s ease);
     &.active {
 background: #000;
     }
 }
-
+ol {
+    margin: 0;
+    padding: 0;
+}
 li {
  background: #000;
  @include transition(background 0.4s ease);
@@ -1068,14 +1085,16 @@ display: none;
 
 #originalText {
     position: relative;
+    left: 0;
+    top: 0;
 }
 
-
+/*
 #sourceSelection, #materialsSelection, #inkSelection, #originalText {
 float: left;
 width: 238px;
 }
-
+*/
 
 
 #inscriptionTextArea {

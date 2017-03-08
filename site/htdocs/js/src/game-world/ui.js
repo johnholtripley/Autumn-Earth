@@ -697,13 +697,13 @@ var UI = {
         }
     },
 
-    buildBook: function(whichBook) {
+    buildBook: function(whichBook, thisBooksHash) {
         var markupToAdd = '';
         // var parsedDoc, numberOfPages;
 
 
         var thisBooksContent = hero.inventory[(whichBook)].inscription.content;
-        var thisBooksHash = generateHash(thisBooksContent);
+        
         // check if the book already has been created:
         if (!document.getElementById('book' + thisBooksHash)) {
             markupToAdd += '<div class="book inkColour' + hero.inventory[(whichBook)].colour + '" id="book' + thisBooksHash + '">';

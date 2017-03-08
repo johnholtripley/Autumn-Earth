@@ -331,8 +331,9 @@ function generateSlotMarkup(thisSlotsId) {
     if (thisAction) {
         if (isABook) {
             // link this item up to the book panel using the unique hash:
-            dataActionMarkup = 'data-action="' + thisAction + '" data-action-value="' + generateHash(hero.inventory[thisSlotsId].inscription.content) + '" ';
-            UI.buildBook(thisSlotsId);
+            var thisBooksHash = generateHash(hero.inventory[thisSlotsId].inscription.content + hero.inventory[thisSlotsId].colour + hero.inventory[thisSlotsId].type);
+            dataActionMarkup = 'data-action="' + thisAction + '" data-action-value="' + thisBooksHash + '" ';
+            UI.buildBook(thisSlotsId, thisBooksHash);
         } else {
             dataActionMarkup = 'data-action="' + thisAction + '" data-action-value="' + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].actionValue + '" ';
         }

@@ -1890,8 +1890,9 @@ function generateSlotMarkup(thisSlotsId) {
     if (thisAction) {
         if (isABook) {
             // link this item up to the book panel using the unique hash:
-            dataActionMarkup = 'data-action="' + thisAction + '" data-action-value="' + generateHash(hero.inventory[thisSlotsId].inscription.content) + '" ';
-            UI.buildBook(thisSlotsId);
+            var thisBooksHash = generateHash(hero.inventory[thisSlotsId].inscription.content + hero.inventory[thisSlotsId].colour + hero.inventory[thisSlotsId].type);
+            dataActionMarkup = 'data-action="' + thisAction + '" data-action-value="' + thisBooksHash + '" ';
+            UI.buildBook(thisSlotsId, thisBooksHash);
         } else {
             dataActionMarkup = 'data-action="' + thisAction + '" data-action-value="' + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].actionValue + '" ';
         }
@@ -2712,13 +2713,13 @@ var UI = {
         }
     },
 
-    buildBook: function(whichBook) {
+    buildBook: function(whichBook, thisBooksHash) {
         var markupToAdd = '';
         // var parsedDoc, numberOfPages;
 
 
         var thisBooksContent = hero.inventory[(whichBook)].inscription.content;
-        var thisBooksHash = generateHash(thisBooksContent);
+        
         // check if the book already has been created:
         if (!document.getElementById('book' + thisBooksHash)) {
             markupToAdd += '<div class="book inkColour' + hero.inventory[(whichBook)].colour + '" id="book' + thisBooksHash + '">';
