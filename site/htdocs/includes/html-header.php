@@ -49,7 +49,7 @@ if($thisSection == "index.php") {
   // is the home page:
   // https://developers.google.com/structured-data/site-name#site_name_requirements
   echo '<head itemscope itemtype="http://schema.org/WebSite">';
-  echo '<link rel="canonical" href="https://www.autumnearth.com" itemprop="url">';
+  //echo '<link rel="canonical" href="https://www.autumnearth.com" itemprop="url">';
 } else {
   echo '<head>';
 }

@@ -84,8 +84,11 @@ background: #ec35ea;
 <div id="originalText" class="book active">
 <input id="inscriptionTitle" placeholder="Title"></input>
   <div id="inscriptionTextArea" contentEditable="true" role="textbox" aria-multiline="true"></div></div>
+
+
 <button class="closePanel">Cancel</button>
 <button id="scribeStartInscription" disabled>Inscribe</button>
+
 </div>
  
  
