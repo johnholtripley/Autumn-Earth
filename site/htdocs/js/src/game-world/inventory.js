@@ -70,7 +70,7 @@ if(amountAddedToThisSlot>0) {
     if (allItemsAdded) {
         // make the active inventory be the same as the amended one:
         hero.inventory = JSON.parse(JSON.stringify(inventoryClone));
-       
+       UI.updatePanelsAfterInventoryChange();
         // return success, and the slots that were affected:
         return [true, slotsUpdated];
     } else {

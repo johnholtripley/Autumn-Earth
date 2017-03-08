@@ -433,6 +433,7 @@ var UI = {
                                     break;
                                 }
                             }
+                            UI.inventorySplitStackCancel();
                             UI.slideDraggedSlotBack();
                         }
                     } else {
@@ -533,17 +534,11 @@ var UI = {
 
 
     sellToShop: function(thisShopPanelElement) {
-
         // check to see if it's being sold to a relevant specialist shop:
         var thisItemsCategories = currentActiveInventoryItems[UI.draggedInventoryObject.type].category;
-
         var thisShopsSpecialism = thisShopPanelElement.getAttribute('data-specialism');
         var sellPrice;
         var thisCurrency = thisShopPanelElement.getAttribute('data-currency');
-
-
-
-
         if (thisItemsCategories.indexOf(thisShopsSpecialism) != -1) {
             sellPrice = Math.ceil(UI.draggedInventoryObject.quantity * sellPriceSpecialismModifier * inflationModifier * currentActiveInventoryItems[UI.draggedInventoryObject.type].priceCode, 0);
         } else {
@@ -563,19 +558,12 @@ var UI = {
 
     droppedSuccessfully: function() {
         // hide the clone:
-
-
-
-
-
         UI.activeDragObject.style.cssText = "z-index:2;";
         UI.activeDragObject = '';
         if (isSplitStackBeingDragged) {
             isSplitStackBeingDragged = false;
         }
-
-
-
+UI.inventorySplitStackCancel();
     },
 
     initInventoryDrag: function(whichElements) {
@@ -695,7 +683,7 @@ var UI = {
 
 
         var thisBooksContent = hero.inventory[(whichBook)].inscription.content;
-        
+
         // check if the book already has been created:
         if (!document.getElementById('book' + thisBooksHash)) {
             markupToAdd += '<div class="book inkColour' + hero.inventory[(whichBook)].colour + '" id="book' + thisBooksHash + '">';
@@ -1025,7 +1013,7 @@ var UI = {
         sourceSelection.innerHTML = allSourceMarkup;
         materialsSelection.innerHTML = allMaterialsMarkup;
         inkSelection.innerHTML = allInksMarkup;
-                UI.inscription = {
+        UI.inscription = {
             mode: 'original',
             selected: {
                 source: '',
@@ -1136,5 +1124,10 @@ var UI = {
                 }
                 break;
         }
+    },
+
+    updatePanelsAfterInventoryChange: function() {
+        // called after any inventory add, remove or move so any panels can be updated to reflect the change
+        UI.updateInscriptionPanel();
     }
 }
