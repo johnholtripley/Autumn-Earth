@@ -853,6 +853,7 @@ if(UI.inscription.mode != 'copy') {
                         // remove the ink and material used:
                         removeFromInventory(UI.inscription.selected.material, 1);
                         removeFromInventory(UI.inscription.selected.ink, 1);
+                        UI.resetInscriptionPanel();
                     } else {
                         UI.showNotification("<p>Oops - sorry, no room in your bags</p>");
                     }
