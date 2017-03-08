@@ -2765,118 +2765,8 @@ var UI = {
         }
         var thisNode = getNearestParentId(e.target);
         if (thisNode.id.substring(0, 6) == "scribe") {
+            UI.processInscriptionClick(thisNode);
 
-            switch (thisNode.className) {
-                case 'scribeSource':
-                    UI.inscription.selected.source = thisNode.id.substring(20);
-                    var itemList = document.querySelectorAll('#sourceSelection li'),
-                        i;
-                    // hide all:
-                    for (i = 0; i < itemList.length; ++i) {
-                        itemList[i].classList.remove('selected');
-                    }
-                    thisNode.classList.add('selected');
-                    break;
-                case 'scribeMaterial':
-                    UI.inscription.selected.material = thisNode.id.substring(22);
-                    var itemList = document.querySelectorAll('#materialsSelection li'),
-                        i;
-                    // hide all:
-                    for (i = 0; i < itemList.length; ++i) {
-                        itemList[i].classList.remove('selected');
-                    }
-                    thisNode.classList.add('selected');
-                    break;
-                case 'scribeInk':
-                    UI.inscription.selected.ink = thisNode.id.substring(17);
-                    var itemList = document.querySelectorAll('#inkSelection li'),
-                        i;
-                    // hide all:
-                    for (i = 0; i < itemList.length; ++i) {
-                        itemList[i].classList.remove('selected');
-                    }
-                    thisNode.classList.add('selected');
-                    break;
-            }
-
-            if (UI.inscription.mode == 'copy') {
-                if ((UI.inscription.selected.ink != '') && (UI.inscription.selected.material != '') && (UI.inscription.selected.source != '')) {
-                    scribeStartInscription.removeAttribute('disabled');
-                } else {
-                    scribeStartInscription.setAttribute('disabled', 'disabled');
-                }
-            } else {
-                // original:
-                if ((UI.inscription.selected.ink != '') && (UI.inscription.selected.material != '')) {
-                    scribeStartInscription.removeAttribute('disabled');
-                } else {
-                    scribeStartInscription.setAttribute('disabled', 'disabled');
-                }
-            }
-
-
-
-
-            switch (thisNode.id) {
-                case 'scribeCopyText':
-                    
-if(UI.inscription.mode != 'copy') {
-    UI.resetInscriptionPanel();
-}
-
-                    UI.inscription.mode = 'copy';
-                    originalText.classList.remove('active');
-                    sourceSelection.classList.add('active');
-                    thisNode.classList.add('active');
-                    scribeOriginalText.classList.remove('active');
-                    break;
-                case 'scribeOriginalText':
-                    if(UI.inscription.mode != 'original') {
-    UI.resetInscriptionPanel();
-}
-                    UI.inscription.mode = 'original';
-                    originalText.classList.add('active');
-                    sourceSelection.classList.remove('active');
-                    thisNode.classList.add('active');
-                    scribeCopyText.classList.remove('active');
-                    break;
-                case 'scribeStartInscription':
-
-                    var newInscribedObject = JSON.parse(JSON.stringify(hero.inventory[UI.inscription.selected.material]));
-                    newInscribedObject.quantity = 1;
-                    newInscribedObject.colour = hero.inventory[UI.inscription.selected.ink].colour;
-
-                    if (UI.inscription.mode == 'copy') {
-                        newInscribedObject.inscription = {
-                            'title': hero.inventory[UI.inscription.selected.source].inscription.title,
-                            'content': hero.inventory[UI.inscription.selected.source].inscription.content
-                        }
-
-                    } else {
-                        // original:
-
-                        newInscribedObject.inscription = {
-                            'title': inscriptionTitle.value,
-                            'content': '<p>' + inscriptionTextArea.innerHTML + '</p>'
-                        }
-                    }
-
-                    inventoryCheck = canAddItemToInventory([newInscribedObject]);
-                    if (inventoryCheck[0]) {
-                        document.getElementById("slot" + inventoryCheck[1]).innerHTML = generateSlotMarkup(inventoryCheck[1]);
-                        UI.showChangeInInventory(inventoryCheck[1]);
-                        // remove the ink and material used:
-                        removeFromInventory(UI.inscription.selected.material, 1);
-                        removeFromInventory(UI.inscription.selected.ink, 1);
-                        UI.resetInscriptionPanel();
-                    } else {
-                        UI.showNotification("<p>Oops - sorry, no room in your bags</p>");
-                    }
-
-
-
-                    break;
-            }
 
 
         }
@@ -3173,8 +3063,106 @@ if(UI.inscription.mode != 'copy') {
 
 
 
-    }
+    },
 
+    processInscriptionClick: function(thisNode) {
+        switch (thisNode.className) {
+            case 'scribeSource':
+                UI.inscription.selected.source = thisNode.id.substring(20);
+                var itemList = document.querySelectorAll('#sourceSelection li'),
+                    i;
+                // hide all:
+                for (i = 0; i < itemList.length; ++i) {
+                    itemList[i].classList.remove('selected');
+                }
+                thisNode.classList.add('selected');
+                break;
+            case 'scribeMaterial':
+                UI.inscription.selected.material = thisNode.id.substring(22);
+                var itemList = document.querySelectorAll('#materialsSelection li'),
+                    i;
+                // hide all:
+                for (i = 0; i < itemList.length; ++i) {
+                    itemList[i].classList.remove('selected');
+                }
+                thisNode.classList.add('selected');
+                break;
+            case 'scribeInk':
+                UI.inscription.selected.ink = thisNode.id.substring(17);
+                var itemList = document.querySelectorAll('#inkSelection li'),
+                    i;
+                // hide all:
+                for (i = 0; i < itemList.length; ++i) {
+                    itemList[i].classList.remove('selected');
+                }
+                thisNode.classList.add('selected');
+                break;
+        }
+        if (UI.inscription.mode == 'copy') {
+            if ((UI.inscription.selected.ink != '') && (UI.inscription.selected.material != '') && (UI.inscription.selected.source != '')) {
+                scribeStartInscription.removeAttribute('disabled');
+            } else {
+                scribeStartInscription.setAttribute('disabled', 'disabled');
+            }
+        } else {
+            // original:
+            if ((UI.inscription.selected.ink != '') && (UI.inscription.selected.material != '')) {
+                scribeStartInscription.removeAttribute('disabled');
+            } else {
+                scribeStartInscription.setAttribute('disabled', 'disabled');
+            }
+        }
+        switch (thisNode.id) {
+            case 'scribeCopyText':
+                if (UI.inscription.mode != 'copy') {
+                    UI.resetInscriptionPanel();
+                }
+                UI.inscription.mode = 'copy';
+                originalText.classList.remove('active');
+                sourceSelection.classList.add('active');
+                thisNode.classList.add('active');
+                scribeOriginalText.classList.remove('active');
+                break;
+            case 'scribeOriginalText':
+                if (UI.inscription.mode != 'original') {
+                    UI.resetInscriptionPanel();
+                }
+                UI.inscription.mode = 'original';
+                originalText.classList.add('active');
+                sourceSelection.classList.remove('active');
+                thisNode.classList.add('active');
+                scribeCopyText.classList.remove('active');
+                break;
+            case 'scribeStartInscription':
+                var newInscribedObject = JSON.parse(JSON.stringify(hero.inventory[UI.inscription.selected.material]));
+                newInscribedObject.quantity = 1;
+                newInscribedObject.colour = hero.inventory[UI.inscription.selected.ink].colour;
+                if (UI.inscription.mode == 'copy') {
+                    newInscribedObject.inscription = {
+                        'title': hero.inventory[UI.inscription.selected.source].inscription.title,
+                        'content': hero.inventory[UI.inscription.selected.source].inscription.content
+                    }
+                } else {
+                    // original:
+                    newInscribedObject.inscription = {
+                        'title': inscriptionTitle.value,
+                        'content': '<p>' + inscriptionTextArea.innerHTML + '</p>'
+                    }
+                }
+                inventoryCheck = canAddItemToInventory([newInscribedObject]);
+                if (inventoryCheck[0]) {
+                    document.getElementById("slot" + inventoryCheck[1]).innerHTML = generateSlotMarkup(inventoryCheck[1]);
+                    UI.showChangeInInventory(inventoryCheck[1]);
+                    // remove the ink and material used:
+                    removeFromInventory(UI.inscription.selected.material, 1);
+                    removeFromInventory(UI.inscription.selected.ink, 1);
+                    UI.resetInscriptionPanel();
+                } else {
+                    UI.showNotification("<p>Oops - sorry, no room in your bags</p>");
+                }
+                break;
+        }
+    }
 }
 
 // service worker:
