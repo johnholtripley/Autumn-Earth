@@ -2104,7 +2104,7 @@ var UI = {
         document.getElementById('craftingRecipeCreateButton').onclick = UI.craftingRecipeCreate;
         splitStackPanel.onsubmit = inventorySplitStackSubmit;
         shopSplitStackPanel.onsubmit = UI.shopSplitStackSubmit;
-        document.getElementById('splitStackCancel').onclick = inventorySplitStackCancel;
+        document.getElementById('splitStackCancel').onclick = UI.inventorySplitStackCancel;
         document.getElementById('shopSplitStackCancel').onclick = UI.shopSplitStackCancel;
         UI.initInventoryDrag('.inventoryBag ol');
         UI.initShopDrag();
@@ -2458,7 +2458,7 @@ if(foundThisType) {
                                     break;
                                 }
                             }
-                            UI.inventorySplitStackCancel();
+                            inventorySplitStackCancel();
                             UI.slideDraggedSlotBack();
                         }
                     } else {
@@ -2588,7 +2588,7 @@ if(foundThisType) {
         if (isSplitStackBeingDragged) {
             isSplitStackBeingDragged = false;
         }
-UI.inventorySplitStackCancel();
+inventorySplitStackCancel();
     },
 
     initInventoryDrag: function(whichElements) {
