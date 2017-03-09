@@ -1614,6 +1614,7 @@ if(amountAddedToThisSlot>0) {
                         inventoryClone[thisSlotsID].inscription = {};
                         inventoryClone[thisSlotsID].inscription.title = itemObj[k].inscription.title;
                         inventoryClone[thisSlotsID].inscription.content = itemObj[k].inscription.content;
+                        inventoryClone[thisSlotsID].inscription.timeCreated = itemObj[k].inscription.timeCreated;
                         if (quantityAddedSoFar >= itemObj[k].quantity) {
                             // stop both loops:
                             break outerLoop;
@@ -1740,9 +1741,11 @@ function itemAttributesMatch(item1, item2) {
                                 if (item1.hallmark == item2.hallmark) {
                                     if (item1.inscription.title == item2.inscription.title) {
                                     if (item1.inscription.content == item2.inscription.content) {
+                                    if (item1.inscription.timeCreated == item2.inscription.timeCreated) {
                                         if (item1.contains == item2.contains) {
                                             return true;
                                         }
+                                    }
                                     }
                                     }
                                 }
@@ -1890,7 +1893,7 @@ function generateSlotMarkup(thisSlotsId) {
     if (thisAction) {
         if (isABook) {
             // link this item up to the book panel using the unique hash:
-            var thisBooksHash = generateHash(hero.inventory[thisSlotsId].inscription.content + hero.inventory[thisSlotsId].colour + hero.inventory[thisSlotsId].type);
+            var thisBooksHash = generateHash(hero.inventory[thisSlotsId].inscription.content + hero.inventory[thisSlotsId].colour + hero.inventory[thisSlotsId].type + hero.inventory[thisSlotsId].inscription.timeCreated);
             dataActionMarkup = 'data-action="' + thisAction + '" data-action-value="' + thisBooksHash + '" ';
             UI.buildBook(thisSlotsId, thisBooksHash);
         } else {
@@ -3124,13 +3127,15 @@ UI.inventorySplitStackCancel();
                 if (UI.inscription.mode == 'copy') {
                     newInscribedObject.inscription = {
                         'title': hero.inventory[UI.inscription.selected.source].inscription.title,
-                        'content': hero.inventory[UI.inscription.selected.source].inscription.content
+                        'content': hero.inventory[UI.inscription.selected.source].inscription.content,
+                        'timeCreated': Date.now()
                     }
                 } else {
                     // original:
                     newInscribedObject.inscription = {
                         'title': inscriptionTitle.value,
-                        'content': '<p>' + inscriptionTextArea.innerHTML + '</p>'
+                        'content': '<p>' + inscriptionTextArea.innerHTML + '</p>',
+                        'timeCreated': Date.now()
                     }
                 }
                 inventoryCheck = canAddItemToInventory([newInscribedObject]);

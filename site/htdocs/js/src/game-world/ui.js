@@ -1108,13 +1108,15 @@ UI.inventorySplitStackCancel();
                 if (UI.inscription.mode == 'copy') {
                     newInscribedObject.inscription = {
                         'title': hero.inventory[UI.inscription.selected.source].inscription.title,
-                        'content': hero.inventory[UI.inscription.selected.source].inscription.content
+                        'content': hero.inventory[UI.inscription.selected.source].inscription.content,
+                        'timeCreated': Date.now()
                     }
                 } else {
                     // original:
                     newInscribedObject.inscription = {
                         'title': inscriptionTitle.value,
-                        'content': '<p>' + inscriptionTextArea.innerHTML + '</p>'
+                        'content': '<p>' + inscriptionTextArea.innerHTML + '</p>',
+                        'timeCreated': Date.now()
                     }
                 }
                 inventoryCheck = canAddItemToInventory([newInscribedObject]);
