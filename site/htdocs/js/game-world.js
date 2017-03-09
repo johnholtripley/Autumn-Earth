@@ -2572,16 +2572,12 @@ if(foundThisType) {
         hero.currency[thisCurrency] += sellPrice;
         UI.updateCurrencies();
         audio.playSound(soundEffects['coins'], 0);
-        if (!isSplitStackBeingDragged) {
-
-
-        } else {
-
-        }
+   
         UI.droppedSuccessfully();
     },
 
     droppedSuccessfully: function() {
+
         // hide the clone:
         UI.activeDragObject.style.cssText = "z-index:2;";
         UI.activeDragObject = '';
@@ -2589,6 +2585,7 @@ if(foundThisType) {
             isSplitStackBeingDragged = false;
         }
 inventorySplitStackCancel();
+    UI.updatePanelsAfterInventoryChange();
     },
 
     initInventoryDrag: function(whichElements) {
@@ -3012,7 +3009,7 @@ inventorySplitStackCancel();
                     theColourPrefix = thisColourName + " ";
                     thisFileColourSuffix = "-" + thisColourName.toLowerCase();
                 }
-                allInksMarkup += '<li class="scribeInk" id="scribeInkFromSlot' + i + '"><img src="/images/game-world/inventory-items/40' + thisFileColourSuffix + '.png" alt="' + theColourPrefix + currentActiveInventoryItems[40].shortname + '"><h3>' + theColourPrefix + currentActiveInventoryItems[40].shortname + '</h3><p>' + currentActiveInventoryItems[40].description + '</p></li>';
+                allInksMarkup += '<li class="scribeInk" id="scribeInkFromSlot' + i + '"><img src="/images/game-world/inventory-items/40' + thisFileColourSuffix + '.png" alt="' + theColourPrefix + currentActiveInventoryItems[40].shortname + '">'+hero.inventory[i].quantity+'<h3>' + theColourPrefix + currentActiveInventoryItems[40].shortname + '</h3><p>' + currentActiveInventoryItems[40].description + '</p></li>';
             } else {
                 var thisAction = currentActiveInventoryItems[hero.inventory[i].type].action;
                 var isABook = false;
@@ -3024,10 +3021,10 @@ inventorySplitStackCancel();
                 if (isABook) {
                     if (hero.inventory[i].inscription.content) {
                         // has content, so add it to the source list:
-                        allSourceMarkup += '<li class="scribeSource" id="scribeSourceFromSlot' + i + '"><img src="/images/game-world/inventory-items/' + hero.inventory[i].type + '.png" alt="' + currentActiveInventoryItems[hero.inventory[i].type].shortname + '"><h3>' + currentActiveInventoryItems[hero.inventory[i].type].shortname + '</h3><p>' + hero.inventory[i].inscription.title + '</p></li>';
+                        allSourceMarkup += '<li class="scribeSource" id="scribeSourceFromSlot' + i + '"><img src="/images/game-world/inventory-items/' + hero.inventory[i].type + '.png" alt="' + currentActiveInventoryItems[hero.inventory[i].type].shortname + '">'+hero.inventory[i].quantity+'<h3>' + currentActiveInventoryItems[hero.inventory[i].type].shortname + '</h3><p>' + hero.inventory[i].inscription.title + '</p></li>';
                     } else {
                         // no content, add it to the materials list:
-                        allMaterialsMarkup += '<li class="scribeMaterial" id="scribeMaterialFromSlot' + i + '"><img src="/images/game-world/inventory-items/' + hero.inventory[i].type + '.png" alt="' + currentActiveInventoryItems[hero.inventory[i].type].shortname + '"><h3>' + currentActiveInventoryItems[hero.inventory[i].type].shortname + '</h3><p>' + currentActiveInventoryItems[hero.inventory[i].type].description + '</p></li>';
+                        allMaterialsMarkup += '<li class="scribeMaterial" id="scribeMaterialFromSlot' + i + '"><img src="/images/game-world/inventory-items/' + hero.inventory[i].type + '.png" alt="' + currentActiveInventoryItems[hero.inventory[i].type].shortname + '">'+hero.inventory[i].quantity+'<h3>' + currentActiveInventoryItems[hero.inventory[i].type].shortname + '</h3><p>' + currentActiveInventoryItems[hero.inventory[i].type].description + '</p></li>';
                     }
                 }
             }
