@@ -3065,6 +3065,7 @@ inventorySplitStackCancel();
                 thisNode.classList.add('selected');
                 break;
             case 'scribeMaterial':
+
                 UI.inscription.selected.material = thisNode.id.substring(22);
                 var itemList = document.querySelectorAll('#materialsSelection li'),
                     i;
@@ -3121,6 +3122,7 @@ inventorySplitStackCancel();
                 scribeCopyText.classList.remove('active');
                 break;
             case 'scribeStartInscription':
+
                 var newInscribedObject = JSON.parse(JSON.stringify(hero.inventory[UI.inscription.selected.material]));
                 newInscribedObject.quantity = 1;
                 newInscribedObject.colour = hero.inventory[UI.inscription.selected.ink].colour;
@@ -3138,13 +3140,21 @@ inventorySplitStackCancel();
                         'timeCreated': Date.now()
                     }
                 }
+// store these as the UI.inscription object will be cleared if the item is successfully added
+var storedSelectedMaterialSlot = UI.inscription.selected.material;
+var storedSelectedInkSlot = UI.inscription.selected.ink;
+
                 inventoryCheck = canAddItemToInventory([newInscribedObject]);
                 if (inventoryCheck[0]) {
                     document.getElementById("slot" + inventoryCheck[1]).innerHTML = generateSlotMarkup(inventoryCheck[1]);
                     UI.showChangeInInventory(inventoryCheck[1]);
                     // remove the ink and material used:
-                    removeFromInventory(UI.inscription.selected.material, 1);
-                    removeFromInventory(UI.inscription.selected.ink, 1);
+                    console.log("mat:");
+                    console.log(UI.inscription.selected.material);
+                    removeFromInventory(storedSelectedMaterialSlot, 1);
+                    console.log("ink:");
+                    console.log(UI.inscription.selected.ink);
+                    removeFromInventory(storedSelectedInkSlot, 1);
                     UI.updateInscriptionPanel();
                 } else {
                     UI.showNotification("<p>Oops - sorry, no room in your bags</p>");
