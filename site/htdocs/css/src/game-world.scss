@@ -406,7 +406,7 @@ pointer-events: none;
 }
 
 #cardAlbum {
-    width: 352px;
+    width: 320px;
     background: #666;
     position: absolute;
     left: 60px;
@@ -417,9 +417,17 @@ pointer-events: none;
 $albumCardRatio: 0.7142;
 
 #cardAlbumList {
+    ul {
     margin: 0;
     padding: 0;
     list-style: none;
+}
+p {
+    color: #fff;
+    font-size: 12px;
+    
+    clear: both;
+}
     li {
         width: $cardWidth*$albumCardRatio;
         height: $cardHeight*$albumCardRatio;
