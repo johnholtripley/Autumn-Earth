@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 09, 2017 at 12:15 PM
+-- Generation Time: Mar 10, 2017 at 11:01 AM
 -- Server version: 5.6.24
 -- PHP Version: 5.6.8
 
@@ -1165,6 +1165,66 @@ INSERT INTO `tblrecipes` (`recipeID`, `components`, `creates`, `prerequisite`, `
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `tblretinuequests`
+--
+
+CREATE TABLE IF NOT EXISTS `tblretinuequests` (
+  `questID` int(11) NOT NULL,
+  `questName` varchar(255) COLLATE utf8_bin NOT NULL,
+  `questCleanURL` varchar(255) COLLATE utf8_bin NOT NULL,
+  `questDescription` varchar(1024) COLLATE utf8_bin NOT NULL,
+  `questType` varchar(128) COLLATE utf8_bin NOT NULL,
+  `questDifficulty` int(11) NOT NULL,
+  `questObstacles` varchar(128) COLLATE utf8_bin NOT NULL,
+  `questTimeRequired` int(128) NOT NULL,
+  `questStartedTime` int(128) NOT NULL,
+  `questCompleted` tinyint(1) NOT NULL DEFAULT '0',
+  `questAssociatedCharacterID` int(10) NOT NULL,
+  `questCostToStart` varchar(128) COLLATE utf8_bin NOT NULL DEFAULT '0',
+  `questPartOfCampaign` int(128) NOT NULL,
+  `questNumberOfFollowersRequired` int(10) NOT NULL DEFAULT '1',
+  `questNPCMinimumLevel` int(10) NOT NULL DEFAULT '1',
+  `questReward` varchar(128) COLLATE utf8_bin NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+--
+-- Dumping data for table `tblretinuequests`
+--
+
+INSERT INTO `tblretinuequests` (`questID`, `questName`, `questCleanURL`, `questDescription`, `questType`, `questDifficulty`, `questObstacles`, `questTimeRequired`, `questStartedTime`, `questCompleted`, `questAssociatedCharacterID`, `questCostToStart`, `questPartOfCampaign`, `questNumberOfFollowersRequired`, `questNPCMinimumLevel`, `questReward`) VALUES
+(1, 'Ancient Salvage', 'ancient-salvage', 'Get to that hoard and save what you can before the looters arrive.', '', 0, '', 3600, 0, 0, 999, '0', 0, 0, 0, '');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tblretinuequesttypes`
+--
+
+CREATE TABLE IF NOT EXISTS `tblretinuequesttypes` (
+  `questTypeID` int(11) NOT NULL,
+  `questTypeName` varchar(255) COLLATE utf8_bin NOT NULL,
+  `questTypeDescription` varchar(255) COLLATE utf8_bin NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+--
+-- Dumping data for table `tblretinuequesttypes`
+--
+
+INSERT INTO `tblretinuequesttypes` (`questTypeID`, `questTypeName`, `questTypeDescription`) VALUES
+(1, 'cartography', 'Lorem ipsum and so on.'),
+(2, 'card game', 'Lorem ipsum and so on.'),
+(3, 'card tournament', 'Lorem ipsum and so on.'),
+(5, 'salvage', 'Lorem ipsum and so on.'),
+(6, 'rescue', 'Lorem ipsum and so on.'),
+(7, 'delivery', 'Lorem ipsum and so on.'),
+(8, 'escort', 'Lorem ipsum and so on.'),
+(9, 'construction', 'Lorem ipsum and so on.'),
+(10, 'dungeon delve', 'Lorem ipsum and so on.'),
+(11, 'crafting', 'Lorem ipsum and so on.');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `tblsavedsearches`
 --
 
@@ -1629,6 +1689,18 @@ ALTER TABLE `tblrecipes`
   ADD PRIMARY KEY (`recipeID`);
 
 --
+-- Indexes for table `tblretinuequests`
+--
+ALTER TABLE `tblretinuequests`
+  ADD PRIMARY KEY (`questID`);
+
+--
+-- Indexes for table `tblretinuequesttypes`
+--
+ALTER TABLE `tblretinuequesttypes`
+  ADD PRIMARY KEY (`questTypeID`);
+
+--
 -- Indexes for table `tblsavedsearches`
 --
 ALTER TABLE `tblsavedsearches`
@@ -1806,6 +1878,16 @@ ALTER TABLE `tblquestsstatus`
 --
 ALTER TABLE `tblrecipes`
   MODIFY `recipeID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=13;
+--
+-- AUTO_INCREMENT for table `tblretinuequests`
+--
+ALTER TABLE `tblretinuequests`
+  MODIFY `questID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
+--
+-- AUTO_INCREMENT for table `tblretinuequesttypes`
+--
+ALTER TABLE `tblretinuequesttypes`
+  MODIFY `questTypeID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=12;
 --
 -- AUTO_INCREMENT for table `tblsavedsearches`
 --
