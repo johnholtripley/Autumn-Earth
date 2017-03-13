@@ -68,7 +68,7 @@ echo " (complete)";
 } else if($retinueQuestData[$j]['timeRemaining'] == INF) {
 echo "(not started yet)";
 } else {
-	echo "time remaining: ".$retinueQuestData[$j]['timeRemaining'];
+	echo "time remaining: ".relativeTime($retinueQuestData[$j]['timeRemaining']);
 }
 echo '</li>';
 }

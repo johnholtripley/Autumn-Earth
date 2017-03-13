@@ -1193,7 +1193,27 @@ inner join tblcharacters on tbldungeonachievements.charID = tblcharacters.charID
  
 }
  
- 
+ function relativeTime($time) {
+
+        $reldays = ( $time )/86400;
+    $relhours = ( $time )/3600;
+    $relminutes = ( $time )/60;
+
+
+
+if( $reldays > 0 ) {
+    if  ( $relhours < 1 ) {
+        return floor($relminutes) . " minutes";
+        } else if  ( $reldays < 1 ) {
+        return floor($relhours) . " hours";
+    } else if ( $reldays < 2 ) {
+            return 'Tomorrow';
+        } else {
+            $reldays = floor( $reldays );
+            return $reldays . " days";
+        } 
+    }
+ }
  
 function relativeShortFutureDate($time) {
     $today = strtotime("now");
