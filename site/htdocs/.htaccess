@@ -352,6 +352,7 @@ RewriteRule    ^community/([A-Za-z0-9-]+)/([A-Za-z0-9-]+)/?$    community/guilds
 RewriteRule    ^chronicle/archive/?$     news/archive.php      [NC,L]
 RewriteRule    ^chronicle/page/([0-9-]+)/?$     news/archive.php?page=$1 [NC,L]
 RewriteRule    ^chronicle/([A-Za-z0-9-]+)/?$     news/index.php?cleaned=1&articleName=$1 [NC,L]
+RewriteRule    ^/amp/chronicle/([A-Za-z0-9-]+)/?$     news/amp.php?cleaned=1&articleName=$1 [NC,L]
 RewriteRule    ^chronicle/?$     news/archive.php [NC,L]
 
 RewriteRule    ^codex/crafting/([A-Za-z0-9-]+)/recipes/?$    codex/getRecipes.php?profession=$1    [NC,L]  

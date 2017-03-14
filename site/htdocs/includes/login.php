@@ -167,7 +167,7 @@ WHERE tblacct.accountName='".$processedlogin."' and tblmail.mailread = '0'";
 	echo '<a href="/account/ManageAccount.php" title="Click to change your Account details">Manage your Account</a>'."\n";
 	echo '<br /><br />'."\n";
 	echo '<form action="' . $thisurl . '" method="post" name="logoutform">'."\n";
-	echo '<input type="submit" name="subbutton" value="log out">'."\n";
+	echo '<input type="submit" name="subbutton" value="Sign out">'."\n";
 	echo '</form>'."\n";
 		} else {
 		
@@ -197,7 +197,7 @@ WHERE tblacct.accountName='".$processedlogin."' and tblmail.mailread = '0'";
 	}
 	
 	echo '<input type="hidden" name="logincheck" value="posted" />'."\n";
-	echo '<input type="submit" name="subbutton" value="log in" alt="Log in" />'."\n";
+	echo '<input type="submit" name="subbutton" value="Sign in" />'."\n";
 
 	
 	
@@ -237,7 +237,7 @@ WHERE tblacct.accountName='".$processedlogin."' and tblmail.mailread = '0'";
 			echo '<input type="hidden" name="itemquantity" value="'.$_POST["itemquantity"].'" />'."\n";
 	}
 	echo '<input type="hidden" name="logincheck" value="posted" />'."\n";
-	echo '<input type="submit" name="subbutton" id="subbutton" value="log in" />'."\n";
+	echo '<input type="submit" name="subbutton" id="subbutton" value="Sign in" />'."\n";
 	echo '</form>'."\n";
 	echo '<br />'."\n";
 	echo '<a href="/account/join/">Create a new account</a>'."\n";

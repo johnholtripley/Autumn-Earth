@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 10, 2017 at 11:01 AM
+-- Generation Time: Mar 13, 2017 at 05:03 PM
 -- Server version: 5.6.24
 -- PHP Version: 5.6.8
 
@@ -591,7 +591,7 @@ INSERT INTO `tblinventoryitems` (`itemID`, `shortname`, `description`, `priceCod
 (36, 'Chocobo Gold Card', 'A rare chocobo card. Pweeeek!', '4', '49.0', '81.0', 63, 63, 'card-gold-chocobo', 'card', -2, 0, 0, '0', '0', '', NULL, 0, 0, 0, 1, 0, NULL, NULL),
 (37, 'Copperas', '', '4', '49.0', '81.0', 63, 63, 'copperas', '', 0, 0, 0, '0', '0', NULL, NULL, 0, 0, 0, 1, 0, NULL, NULL),
 (38, 'Acacia Resin', '', '4', '49.0', '81.0', 63, 63, 'acacia-resin', '', 0, 0, 0, '0', '0', NULL, NULL, 0, 0, 0, 1, 0, NULL, NULL),
-(39, 'Iron Gall', '', '4', '49.0', '81.0', 63, 63, 'iron gall', '', 0, 0, 0, '0', '0', NULL, NULL, 0, 0, 0, 1, 0, NULL, NULL),
+(39, 'Iron Gall', '', '4', '49.0', '81.0', 63, 63, 'iron gall', '', 0, 0, 0, '0', '0', NULL, NULL, 0, 16, 1, 1, 0, NULL, NULL),
 (40, 'Ink', '', '4', '49.0', '81.0', 63, 63, 'ink', '', 0, 1, 0, '0', '0', NULL, NULL, 0, 0, 0, 1, 0, NULL, NULL),
 (41, 'Scribe''s Quill', '', '1', '20.0', '24.0', 0, 0, 'scribes-quill', 'inscribe', 0, 0, 0, '0', '0', '', NULL, 0, 0, 0, 1, 0, NULL, NULL);
 
@@ -1177,7 +1177,7 @@ CREATE TABLE IF NOT EXISTS `tblretinuequests` (
   `questDifficulty` int(11) NOT NULL,
   `questObstacles` varchar(128) COLLATE utf8_bin NOT NULL,
   `questTimeRequired` int(128) NOT NULL,
-  `questStartedTime` int(128) NOT NULL,
+  `questStartedTime` datetime DEFAULT NULL,
   `questCompleted` tinyint(1) NOT NULL DEFAULT '0',
   `questAssociatedCharacterID` int(10) NOT NULL,
   `questCostToStart` varchar(128) COLLATE utf8_bin NOT NULL DEFAULT '0',
@@ -1185,14 +1185,18 @@ CREATE TABLE IF NOT EXISTS `tblretinuequests` (
   `questNumberOfFollowersRequired` int(10) NOT NULL DEFAULT '1',
   `questNPCMinimumLevel` int(10) NOT NULL DEFAULT '1',
   `questReward` varchar(128) COLLATE utf8_bin NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
 -- Dumping data for table `tblretinuequests`
 --
 
 INSERT INTO `tblretinuequests` (`questID`, `questName`, `questCleanURL`, `questDescription`, `questType`, `questDifficulty`, `questObstacles`, `questTimeRequired`, `questStartedTime`, `questCompleted`, `questAssociatedCharacterID`, `questCostToStart`, `questPartOfCampaign`, `questNumberOfFollowersRequired`, `questNPCMinimumLevel`, `questReward`) VALUES
-(1, 'Ancient Salvage', 'ancient-salvage', 'Get to that hoard and save what you can before the looters arrive.', '', 0, '', 3600, 0, 0, 999, '0', 0, 0, 0, '');
+(1, 'Ancient Salvage', 'ancient-salvage', 'Get to that hoard and save what you can before the looters arrive.', 'salvage', 0, '', 3600, '0000-00-00 00:00:00', 0, 999, '0', 0, 1, 1, ''),
+(2, 'Linen manufacture', 'linen-manufacture', 'Need a whole shipment of linen preparing. Get going.', 'crafting', 0, '', 3600, '0000-00-00 00:00:00', 0, 999, '0', 0, 1, 1, ''),
+(3, 'Follow the leader', 'follow-the-leader', 'Standard escort mission really.', 'escort', 0, '', 1800, '2017-03-10 00:00:00', 0, 999, '0', 0, 1, 1, ''),
+(4, 'Already completed', 'already-completed', 'Standard escort mission really.', 'escort', 0, '', 1800, '2017-03-01 00:00:00', 1, 999, '0', 0, 1, 1, ''),
+(5, 'Well underway', 'well-underway', 'Standard escort mission really.', 'escort', 0, '', 86400, '2017-03-13 00:00:00', 0, 999, '0', 0, 1, 1, '');
 
 -- --------------------------------------------------------
 
@@ -1204,7 +1208,7 @@ CREATE TABLE IF NOT EXISTS `tblretinuequesttypes` (
   `questTypeID` int(11) NOT NULL,
   `questTypeName` varchar(255) COLLATE utf8_bin NOT NULL,
   `questTypeDescription` varchar(255) COLLATE utf8_bin NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
 -- Dumping data for table `tblretinuequesttypes`
@@ -1220,7 +1224,9 @@ INSERT INTO `tblretinuequesttypes` (`questTypeID`, `questTypeName`, `questTypeDe
 (8, 'escort', 'Lorem ipsum and so on.'),
 (9, 'construction', 'Lorem ipsum and so on.'),
 (10, 'dungeon delve', 'Lorem ipsum and so on.'),
-(11, 'crafting', 'Lorem ipsum and so on.');
+(11, 'crafting', 'Lorem ipsum and so on.'),
+(12, 'travelling fair', 'Lorem ipsum and so on.'),
+(13, 'pilgrimage', 'Lorem ipsum and so on.');
 
 -- --------------------------------------------------------
 
@@ -1698,7 +1704,7 @@ ALTER TABLE `tblretinuequests`
 -- Indexes for table `tblretinuequesttypes`
 --
 ALTER TABLE `tblretinuequesttypes`
-  ADD PRIMARY KEY (`questTypeID`);
+  ADD PRIMARY KEY (`questTypeID`), ADD UNIQUE KEY `questTypeName` (`questTypeName`);
 
 --
 -- Indexes for table `tblsavedsearches`
@@ -1882,12 +1888,12 @@ ALTER TABLE `tblrecipes`
 -- AUTO_INCREMENT for table `tblretinuequests`
 --
 ALTER TABLE `tblretinuequests`
-  MODIFY `questID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
+  MODIFY `questID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=6;
 --
 -- AUTO_INCREMENT for table `tblretinuequesttypes`
 --
 ALTER TABLE `tblretinuequesttypes`
-  MODIFY `questTypeID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=12;
+  MODIFY `questTypeID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=14;
 --
 -- AUTO_INCREMENT for table `tblsavedsearches`
 --

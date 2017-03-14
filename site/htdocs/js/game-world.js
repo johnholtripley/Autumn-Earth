@@ -3311,8 +3311,9 @@ function loadMap() {
     if ((newMap < 0) && (currentMap > 0)) {
         randomDungeonName = randomDungeons[Math.abs(newMap)];
         newMap = -1;
-    } else {
-        mapFilePath = '/data/chr' + characterId + '/map' + newMap + '.json';
+    } else {  
+        //mapFilePath = '/data/chr' + characterId + '/map' + newMap + '.json';
+        mapFilePath = '/game-world/getMap.php?chr='+characterId+'&map='+newMap;
     }
     if (newMap < 0) {
         // find door centre:

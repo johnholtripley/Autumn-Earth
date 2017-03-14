@@ -51,6 +51,7 @@ if($thisTimeStamp != 0) {
 	// quest has started
 $timeElapsed = time() - $thisTimeStamp;
 $row['timeRemaining'] = $row['questTimeRequired'] - $timeElapsed;
+
 }
 
 	array_push($retinueQuestData, $row);
