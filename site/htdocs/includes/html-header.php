@@ -142,6 +142,7 @@ echo '</noscript>'."\n";
 
 <?php
 include($_SERVER['DOCUMENT_ROOT']."/includes/meta-content.php");
+echo $thisAMPURL;
 ?>
 
 <link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="https://www.autumnearth.com/feed/" />

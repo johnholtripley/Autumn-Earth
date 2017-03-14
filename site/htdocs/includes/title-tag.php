@@ -21,7 +21,7 @@ $shareImagePath = "https://www.autumnearth.com/images/icons/120.png";
 $longDescription="Autumn Earth Community Site";
 
 $needsAModal = "";
-
+$thisAMPURL = "";
 $sectionClass = "";
 switch ($thisSection) {
     case "index.php":
@@ -212,8 +212,10 @@ $pagetitle = 'Autumn Earth latest news';
 
 if(isset($_GET["articleName"])) {
 $cleanURL = $_GET["articleName"];
+$thisAMPURL = '<link rel="amphtml" href="'.$thisBuiltURL.'amp/chronicle/'.$cleanURL.'/">';
+$thisBuiltURL = $thisBuiltURL."chronicle/".$cleanURL."/";
 
-$thisBuiltURL = $thisBuiltURL."news/".$cleanURL."/";
+
 $longDescription = 'A news article from the Autumn Earth community site';
 $query ="select * from tblnews where cleanURL='".$cleanURL."'";
 $result = mysql_query($query) or die ("couldn't execute query1");

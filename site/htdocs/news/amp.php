@@ -7,8 +7,9 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/functions.php");
 include($_SERVER['DOCUMENT_ROOT']."/includes/amp/header.php");
 
 
-?>
-<?php
+ob_start("ampify");
+
+
 if(isset($_GET["cleaned"])) {
 // uses clean URLS - find articleId from the URL
 
@@ -78,30 +79,24 @@ if (mysql_num_rows($result) > 0) {
 		extract($row);
 
 ?>
-<div itemscope itemtype="http://schema.org/NewsArticle">
-  <meta itemscope itemprop="mainEntityOfPage"  itemType="https://schema.org/WebPage" itemid="https://google.com/article"/>
-<div itemprop="publisher" itemscope itemtype="https://schema.org/Organization">
-	<meta itemprop="name" content="The Autumn Earth Chronicle">
-   <div itemprop="logo" itemscope itemtype="https://schema.org/ImageObject">
-      <img src="/images/the-chronicle.png">
-      <meta itemprop="url" content="https://www.autumnearth.com/images/the-chronicle.png">
-      <meta itemprop="width" content="233">
-      <meta itemprop="height" content="64">
-    </div>
 
-</div>
+	
+   
+      <img src="/images/the-chronicle.png" width="233" height="64" alt="The Chronicle">
+
+  
 <?php
 
-		echo '<h1 itemprop="headline">'.$newsTitle.'</h1>';
+		echo '<h1>'.$newsTitle.'</h1>';
 		$thisArticleAdded = $timeAdded;
 		$timeAdded = strtotime($timeAdded);
 		echo '<h2>'.date('jS F Y',$timeAdded).'</h2>';
-		echo'<meta itemprop="datePublished" content="'.date('Y-m-d\TH:i:sO',$timeAdded).'">';
-		echo'<meta itemprop="dateModified" content="'.date('Y-m-d\TH:i:sO',$timeAdded).'">';
+		//echo'<meta itemprop="datePublished" content="'.date('Y-m-d\TH:i:sO',$timeAdded).'">';
+		//echo'<meta itemprop="dateModified" content="'.date('Y-m-d\TH:i:sO',$timeAdded).'">';
 
 		// check for posted by info:
 if ($postedBy != "") {
-echo '<h3 itemprop="author" itemscope itemtype="https://schema.org/Person">posted by <span itemprop="name">'.$postedBy.'</span></h3>';
+echo '<h3>posted by '.$postedBy.'</h3>';
 }
 
 
@@ -110,11 +105,10 @@ if($bannerContent != "") {
 $size = getimagesize($_SERVER['DOCUMENT_ROOT'].'/images/banners/'.$bannerContent);
 
 	?>
-<div itemprop="image" itemscope itemtype="https://schema.org/ImageObject">
+<div>
     <img src="/images/banners/<?php echo $bannerContent; ?>" alt="">
-    <meta itemprop="url" content="https://www.autumnearth.com/images/banners/<?php echo $bannerContent; ?>">
-<meta itemprop="width" content="<?php echo $size[0]; ?>">
-      <meta itemprop="height" content="<?php echo $size[1]; ?>">
+    
+
 
   </div>
 
@@ -165,10 +159,7 @@ if (mysql_num_rows($result) > 0) {
 
 echo '<p><a href="/chronicle/archive/" title="The Chronicle Archive">The Chronicle Archives</a></p>';
 
-?>
-
-
-<?php
+ob_end_flush();
 
 include($_SERVER['DOCUMENT_ROOT']."/includes/amp/footer.php");
 ?>

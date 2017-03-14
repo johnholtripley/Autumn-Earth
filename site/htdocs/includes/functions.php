@@ -1611,7 +1611,7 @@ function parseMoney($amount) {
 
 
 
-function ampify($html='') {
+function ampify($html) {
 // # Replace img, audio, and video elements with AMP custom elements
 // https://gist.github.com/adactio/73f404568bf5e0d000a6
 // # Licensed under a CC0 1.0 Universal (CC0 1.0) Public Domain Dedication
