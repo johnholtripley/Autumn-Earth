@@ -334,7 +334,7 @@ function generateSlotMarkup(thisSlotsId) {
     if (thisAction) {
         if (isABook) {
             // link this item up to the book panel using the unique hash:
-            var thisBooksHash = generateHash(hero.inventory[thisSlotsId].inscription.content + hero.inventory[thisSlotsId].colour + hero.inventory[thisSlotsId].type + hero.inventory[thisSlotsId].inscription.timeCreated);
+            var thisBooksHash = generateHash(hero.inventory[thisSlotsId].inscription.title + hero.inventory[thisSlotsId].colour + hero.inventory[thisSlotsId].type + hero.inventory[thisSlotsId].inscription.timeCreated);
             dataActionMarkup = 'data-action="' + thisAction + '" data-action-value="' + thisBooksHash + '" ';
             UI.buildBook(thisSlotsId, thisBooksHash);
         } else {
