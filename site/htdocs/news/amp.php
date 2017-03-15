@@ -106,7 +106,7 @@ $size = getimagesize($_SERVER['DOCUMENT_ROOT'].'/images/banners/'.$bannerContent
 
 	?>
 <div>
-    <img src="/images/banners/<?php echo $bannerContent; ?>" alt="">
+    <img src="/images/banners/<?php echo $bannerContent; ?>" width="<?php echo $size[0]; ?>" height="<?php echo $size[1]; ?>" alt="">
     
 
 
