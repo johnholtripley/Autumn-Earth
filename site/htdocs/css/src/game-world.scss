@@ -381,9 +381,11 @@ pointer-events: none;
     opacity: 0;
     z-index: 2;
     position: absolute;
-    left: 0;
-    top: 0;
+    left: 50%;
+    top: 50%;
+    @include transform( translate(-400px, -243px));
     @include transition(opacity 0.6s ease);
+    @include box-shadow(0px 12px 36px 0px #000);
     &.active {
         pointer-events: auto;
         opacity: 1;
