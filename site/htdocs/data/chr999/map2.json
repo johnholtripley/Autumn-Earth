@@ -522,6 +522,12 @@
                         "w": 1
                     }
                 }
+            }, {
+                "name": "##procedural##",
+             
+                "tileX": 15,
+                "tileY": 25
+               
             }
 
         ],

@@ -2,23 +2,18 @@
 
 // kudos: http://forums.devnetwork.net/viewtopic.php?f=40&t=43130&start=15
 
-     //   $file = "images/game-world/npcs/labourer.png";
+function replaceHue($file,$colourToChange,$to,$threshold) {
 
-     //   $colourToChange = "f9b846";
-     //   $newColour = "ff0000";
 
-// eg http://ae.dev/game-world/replaceImageHue.php?source=npcs%2Flabourer.png&from=f9b846&to=ff0000
-$file = "../images/game-world/".$_GET["source"];
-$colourToChange = $_GET["from"];
-
-if(isset($_GET["to"])) {
-$newColour = $_GET["to"];
+if($to != "?") {
+$newColour = $to;
 } else {
     // generate a random colour:
     // http://stackoverflow.com/a/11878014/1054212
    $newColour = substr(md5(rand()), 0, 6);
 }
 
+$file = "../images/game-world/".$file;
  $outputFilePath = $file;
         $pos = strrpos($outputFilePath, "/");
         // add a 'procedural' sub folder:
@@ -26,12 +21,10 @@ $newColour = $_GET["to"];
         // add the hex value:
         $outputFilePath = str_replace(".png", "-".$newColour.".png", $outputFilePath);
 
-if (file_exists($outputFilePath)) {
-header("Location: /" . $outputFilePath);
-}
+if (!(file_exists($outputFilePath))) {
 
 
-        $threshold = 40;
+        
         $image = imagecreatefrompng($file);
         imagesavealpha( $image, true );
         $width = imagesx($image);
@@ -71,10 +64,12 @@ header("Location: /" . $outputFilePath);
        
 
        
-        header("Content-Type: image/png");
-        imagepng($image);
+    //    header("Content-Type: image/png");
+    //    imagepng($image);
         // and save it:
          imagepng($image, $outputFilePath);
+}
+     }
         //These are PEAR functions from Image_color2 tweaked to suit my coding style.
         function rgbtohsv($r,$g,$b) {
         $r=$r/255; $g=$g/255; $b=$b/255;
