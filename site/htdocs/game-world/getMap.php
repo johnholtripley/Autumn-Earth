@@ -10,8 +10,9 @@ $map = $_GET["map"];
 header('Content-Type: application/json');
 $mapDataFile = file_get_contents('../data/chr' .  $chr . '/map' . $map . '.json');
 
-$pos = strrpos($mapDataFile, '##procedural##');
-if ($pos !== false) {
+$hasProceduralContent = strrpos($mapDataFile, '##procedural##');
+$hasEventContent = strrpos($mapDataFile, 'eventSpecificContent');
+if ($hasProceduralContent !== false) {
     $mapData = json_decode($mapDataFile, true);
     // check for any procedural elements that need to be added:
 
@@ -61,9 +62,61 @@ if ($pos !== false) {
         }
     }
 
-    echo json_encode($mapData);
+    
+} 
+if ($hasEventContent !== false) {
+
+
+    // check which events are active
+    include_once($_SERVER['DOCUMENT_ROOT']."/includes/signalnoise.php");
+include_once($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
+
+// get current active events:
+$activeEvents = [];
+$eventsQuery = "SELECT cleanURL from tblevents WHERE ((repeatsAnnually and ((dayofyear(now()) between (dayofyear(eventstart)) and (dayofyear(eventstart)+eventdurationdays-1)) or (dayofyear(now()) between (dayofyear(eventstart) - 365) and (dayofyear(eventstart)+eventdurationdays-366)))) or ((repeatsAnnually = 0) and (date(now()) between (eventstart) and (eventstart+eventdurationdays))))";
+
+    $eventsResult = mysql_query( $eventsQuery ) or die ( "couldn't execute events query: ".$eventsQuery );
+$numberofrows = mysql_num_rows( $eventsResult );
+    if ( $numberofrows>0 ) {
+        while ( $row = mysql_fetch_array( $eventsResult ) ) {
+            //extract( $row );
+            array_push($activeEvents, $row['cleanURL']);
+        }
+    }
+mysql_free_result($eventsResult);
+
+//var_dump($mapData['map']['eventSpecificContent']);
+
+
+if(!(isset($mapData))) {
+$mapData = json_decode($mapDataFile, true);
+}
+
+for ($i=0;$i<count($activeEvents);$i++) {
+   
+
+if(isset($mapData['map']['eventSpecificContent'][($activeEvents[$i])])) {
+//var_dump($mapData['map']['eventSpecificContent'][($activeEvents[$i])]);
+
+$thisGroup = $mapData['map']['eventSpecificContent'][($activeEvents[$i])];
+
+foreach ($thisGroup as $key => $j) {
+    echo $key."<br>";
+    var_dump($j);
+    echo "-==============================";
+}
+
+}
+
+}
+
+
+
+}
+
+if(isset($mapData)) {
+echo json_encode($mapData);
 } else {
-    // no procedural content, so don't parse it, just output:
     echo $mapDataFile;
 }
 

@@ -132,7 +132,7 @@
             "name": "shop #2",
             "uniqueItems": { "14": [{ "colour": 3 }, { "colour": 7 }], "15": [{ "colour": 1, "inscription": "stuffffff" }] },
             "specialism": null,
-            "categories": [4],
+            "categories": [3],
             "size": "small",
             "currency": "money"
         }],
@@ -524,10 +524,10 @@
                 }
             }, {
                 "name": "##procedural##",
-             
+
                 "tileX": 11,
                 "tileY": 25
-               
+
             }
 
         ],
@@ -600,6 +600,54 @@
             "quest": 6,
             "message": "you found the ancient standing stone site"
 
-        }]
+        }],
+        "eventSpecificContent": {
+            "halloween": {
+                "items": [{
+                    "type": 18,
+                    "tileX": 11,
+                    "tileY": 3
+                }, {
+                    "type": 18,
+                    "tileX": 10,
+                    "tileY": 3
+                }],
+                "npcs": [{
+                    "name": "butterfly",
+                    "src": "orange-butterfly.png",
+                    "width": 15,
+                    "height": 15,
+                    "spriteWidth": 15,
+                    "spriteHeight": 48,
+                    "centreX": 7,
+                    "centreY": 72,
+                    "tileX": 18,
+                    "tileY": 9,
+                    "movement": ["?"],
+                    "facing": "w",
+                    "walkThroughDoors": false,
+                    "speed": 2,
+                    "speech": "",
+                    "isCollidable": false,
+                    "isMoving": true,
+                    "animation": {
+                        "walk": {
+                            "length": 10,
+                            "n": 0,
+                            "e": 1,
+                            "s": 2,
+                            "w": 3
+                        }
+                    }
+                }]
+            },
+            "christmas": {
+                "items": [{
+                    "type": 18,
+                    "tileX": 11,
+                    "tileY": 2
+                }]
+            }
+        }
     }
 }
