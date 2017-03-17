@@ -101,15 +101,26 @@ if(isset($mapData['map']['eventSpecificContent'][($activeEvents[$i])])) {
 $thisGroup = $mapData['map']['eventSpecificContent'][($activeEvents[$i])];
 
 foreach ($thisGroup as $key => $j) {
-    echo $key."<br>";
-    var_dump($j);
-    echo "-==============================";
+   
+
+
+for ($k=0;$k<count($j);$k++) {
+    
+
+//echo $key;
+//echo " - ";
+//var_dump($j[$k]);
+    array_push($mapData['map'][$key],$j[$k]);
+}
+//echo "<br>-==============================";
 }
 
 }
 
 }
 
+// remove events data so it doesn't get passed to the game:
+unset($mapData['map']['eventSpecificContent']);
 
 
 }

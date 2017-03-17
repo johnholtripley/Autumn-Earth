@@ -454,7 +454,7 @@ hero.z = getElevation(hero.tileX,hero.tileY);
     currentAnimationFrame = 0;
     mapTransition = "in";
     mapTransitionCurrentFrames = 1;
-
+console.log( thisMapData.npcs);
     gameMode = "play";
 }
 
@@ -1414,9 +1414,10 @@ thisNPC.drawnFacing = thisNPC.facing;
                     }
                 }
             }
+            
             // check for collisions against items:
-            for (var i = 0; i < thisMapData.items.length; i++) {
-                thisItem = thisMapData.items[i];
+            for (var j = 0; j < thisMapData.items.length; j++) {
+                thisItem = thisMapData.items[j];
 
                 if (isAnObjectCollision(thisNPC.x, thisNPC.y, thisNPC.width, thisNPC.height, thisItem.x, thisItem.y, thisItem.width, thisItem.height)) {
                     thisNPC.x = oldNPCx;
