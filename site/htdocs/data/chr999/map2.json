@@ -590,7 +590,8 @@
             "centreY": 3,
             "radius": 5,
             "quest": 6,
-            "message": "you found the ancient standing stone site"
+            "message": "you found the ancient standing stone site",
+            "music": "elven-glade-WoW-NOT-MINE.mp3"
 
         }],
         "eventSpecificContent": {

@@ -7,7 +7,7 @@ var soundsToLoad = {
     'buttonClick': '../sounds/button-press-NOT_MINE-wow.mp3',
     'hen': '../sounds/hen-NOT_MINE.mp3'
 };
-
+musicStream = document.getElementById('musicStream');
 
 // https://www.html5rocks.com/en/tutorials/webaudio/intro/
 
@@ -89,6 +89,14 @@ var audio = {
             source.start = source.noteOn;
         } else {
             source.start(delay);
+        }
+    },
+
+    playMusic: function(source) {
+        // cross fade rather than prevent new song's playing:
+        if (musicStream.paused) {
+            musicStream.src = "/music/game-world/" + source;
+            musicStream.play();
         }
     }
 }

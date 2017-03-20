@@ -64,69 +64,43 @@ if ($hasProceduralContent !== false) {
 
     
 } 
+
 if ($hasEventContent !== false) {
-
-
-    // check which events are active
-    include_once($_SERVER['DOCUMENT_ROOT']."/includes/signalnoise.php");
+// check which events are active
+include_once($_SERVER['DOCUMENT_ROOT']."/includes/signalnoise.php");
 include_once($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
 
 // get current active events:
 $activeEvents = [];
 $eventsQuery = "SELECT cleanURL from tblevents WHERE ((repeatsAnnually and ((dayofyear(now()) between (dayofyear(eventstart)) and (dayofyear(eventstart)+eventdurationdays-1)) or (dayofyear(now()) between (dayofyear(eventstart) - 365) and (dayofyear(eventstart)+eventdurationdays-366)))) or ((repeatsAnnually = 0) and (date(now()) between (eventstart) and (eventstart+eventdurationdays))))";
 
-    $eventsResult = mysql_query( $eventsQuery ) or die ( "couldn't execute events query: ".$eventsQuery );
+$eventsResult = mysql_query( $eventsQuery ) or die ( "couldn't execute events query: ".$eventsQuery );
 $numberofrows = mysql_num_rows( $eventsResult );
-    if ( $numberofrows>0 ) {
-        while ( $row = mysql_fetch_array( $eventsResult ) ) {
-            //extract( $row );
-            array_push($activeEvents, $row['cleanURL']);
+if ( $numberofrows>0 ) {
+    while ( $row = mysql_fetch_array( $eventsResult ) ) {
+    array_push($activeEvents, $row['cleanURL']);
+    }
+}
+mysql_free_result($eventsResult);
+if(!(isset($mapData))) {
+    $mapData = json_decode($mapDataFile, true);
+}
+for ($i=0;$i<count($activeEvents);$i++) {
+    if(isset($mapData['map']['eventSpecificContent'][($activeEvents[$i])])) {
+        $thisGroup = $mapData['map']['eventSpecificContent'][($activeEvents[$i])];
+        foreach ($thisGroup as $key => $j) {
+            for ($k=0;$k<count($j);$k++) {
+                array_push($mapData['map'][$key],$j[$k]);
+            }
         }
     }
-mysql_free_result($eventsResult);
-
-//var_dump($mapData['map']['eventSpecificContent']);
-
-
-if(!(isset($mapData))) {
-$mapData = json_decode($mapDataFile, true);
 }
-
-for ($i=0;$i<count($activeEvents);$i++) {
-   
-
-if(isset($mapData['map']['eventSpecificContent'][($activeEvents[$i])])) {
-//var_dump($mapData['map']['eventSpecificContent'][($activeEvents[$i])]);
-
-$thisGroup = $mapData['map']['eventSpecificContent'][($activeEvents[$i])];
-
-foreach ($thisGroup as $key => $j) {
-   
-
-
-for ($k=0;$k<count($j);$k++) {
-    
-
-//echo $key;
-//echo " - ";
-//var_dump($j[$k]);
-    array_push($mapData['map'][$key],$j[$k]);
-}
-//echo "<br>-==============================";
-}
-
-}
-
-}
-
 // remove events data so it doesn't get passed to the game:
 unset($mapData['map']['eventSpecificContent']);
-
-
 }
 
 if(isset($mapData)) {
-echo json_encode($mapData);
+    echo json_encode($mapData);
 } else {
     echo $mapDataFile;
 }

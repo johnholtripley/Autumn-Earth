@@ -770,12 +770,7 @@ if(shopCurrentlyOpen != -1) {
 }
 
 function heroIsInNewTile() {
-
-
-
-
-hero.z = getElevation(getCurrentTileX(hero.x),getCurrentTileY(hero.y));
-
+    hero.z = getElevation(getCurrentTileX(hero.x), getCurrentTileY(hero.y));
     if (currentMap < 0) {
         updateCartographicMiniMap();
     }
@@ -786,10 +781,15 @@ hero.z = getElevation(getCurrentTileX(hero.x),getCurrentTileY(hero.y));
         thisTileCentreX = getTileCentreCoordX(thisHotspot.centreX);
         thisTileCentreY = getTileCentreCoordY(thisHotspot.centreY);
         if (isInRange(hero.x, hero.y, thisTileCentreX, thisTileCentreY, thisHotspot.radius * tileW)) {
-            if (questData[thisHotspot.quest].hasBeenActivated < 1) {
-                UI.showNotification("<p>" + thisHotspot.message + "</p>");
+            if (typeof thisHotspot.quest !== "undefined") {
+                if (questData[thisHotspot.quest].hasBeenActivated < 1) {
+                    UI.showNotification("<p>" + thisHotspot.message + "</p>");
+                }
+                questData[thisHotspot.quest].hasBeenActivated = 1;
             }
-            questData[thisHotspot.quest].hasBeenActivated = 1;
+            if (typeof thisHotspot.music !== "undefined") {
+                audio.playMusic(thisHotspot.music);
+            }
         }
         if (fae.currentState == "hero") {
             // check it's not recently visited this hotspot:
@@ -816,6 +816,7 @@ hero.z = getElevation(getCurrentTileX(hero.x),getCurrentTileY(hero.y));
     }
 
 }
+
 
 
 
