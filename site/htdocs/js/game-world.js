@@ -2051,7 +2051,8 @@ var scribeCopyText = document.getElementById('scribeCopyText');
 var scribeOriginalText = document.getElementById('scribeOriginalText');
 var scribeStartInscription = document.getElementById('scribeStartInscription');
 var inscriptionTitle = document.getElementById('inscriptionTitle');
-
+var soundVolume = document.getElementById('soundVolume');
+var musicVolume = document.getElementById('musicVolume');
 
 
 var UI = {
@@ -2120,7 +2121,7 @@ var UI = {
         UI.updateCurrencies();
         UI.buildRecipePanel();
         UI.updateInscriptionPanel();
-
+UI.getGameSettings();
         if (hero.professionsKnown.length > 0) {
             // load and cache the first profession's recipe assets:
             UI.populateRecipeList(hero.professionsKnown[0]);
@@ -3171,6 +3172,11 @@ var storedSelectedInkSlot = UI.inscription.selected.ink;
     updatePanelsAfterInventoryChange: function() {
         // called after any inventory add, remove or move so any panels can be updated to reflect the change
         UI.updateInscriptionPanel();
+    },
+
+    getGameSettings: function(e) {
+soundVolume.value = gameSettings.soundVolume;
+musicVolume.value = gameSettings.musicVolume;
     }
 }
 
@@ -3241,6 +3247,7 @@ function getHeroGameState() {
         hero.bags = data.bags;
         hero.cards = data.cards;
         hero.stats = data.stats;
+        gameSettings = data.settings;
         hero.currency = data.currency;
         hero.titlesEarned = data.titlesEarned;
         hero.activeTitle = data.activeTitle;

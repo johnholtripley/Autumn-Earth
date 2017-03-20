@@ -285,6 +285,10 @@
         "cardGamesDrawn": 0,
         "numberOfcardsFlipped": 8
     },
+    "settings": {
+"soundVolume": 1,
+"musicVolume": 0.5
+        },
     "titlesEarned": [3, 7],
     "activeTitle": 3,
     "professionsKnown": [0,1],

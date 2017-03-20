@@ -65,6 +65,7 @@ function getHeroGameState() {
         hero.bags = data.bags;
         hero.cards = data.cards;
         hero.stats = data.stats;
+        gameSettings = data.settings;
         hero.currency = data.currency;
         hero.titlesEarned = data.titlesEarned;
         hero.activeTitle = data.activeTitle;
