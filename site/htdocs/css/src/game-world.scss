@@ -7,6 +7,29 @@ $cardHeight: 102px;
 $numberOfItemCategories: 20;
 
 
+@mixin togglePanel($duration) {
+    opacity: 0;
+    @include transition(opacity $duration ease);
+    pointer-events: none;
+    &.active {
+        opacity: 1;
+        pointer-events: auto;
+    }
+    @include mq($wide, 'max') {
+        display: none;
+        opacity: 1;
+        position: relative;
+        left: 0;
+        top: auto;
+        max-width: 100%;
+        clear: both;
+        &.active {
+            display: block;
+            pointer-events: auto;
+        }
+    }
+}
+
 
 body {
     margin: 0;
@@ -314,6 +337,7 @@ pointer-events: none;
     left: 60px;
     background: #666;
     color: #fff;
+    @include togglePanel(0.4s);
     #cartographicTitle {
           // allow the entire panel to be dragged even if dragging from the header text:
         pointer-events: none;
@@ -342,9 +366,8 @@ pointer-events: none;
     min-width: 20px;
     max-width: 295px;
     font-family: Lato, "Trebuchet MS", trebuchet, arial, helvetica, sans-serif;
-    opacity: 0;
-    @include transition(opacity 0.4s ease);
-    pointer-events: none;
+
+    @include togglePanel(0.4s);
     &.slowerFade {
         @include transition-duration(2s);
     }
@@ -370,26 +393,20 @@ pointer-events: none;
         position: absolute;
         width: 0;
     }
-    &.active {
-        opacity: 1;
-        pointer-events: auto;
-    }
+   
 }
 
 #cardGameWrapper {
-    pointer-events: none;
-    opacity: 0;
+  
     z-index: 2;
     position: absolute;
     left: 50%;
     top: 50%;
     @include transform( translate(-400px, -243px));
-    @include transition(opacity 0.6s ease);
+  
     @include box-shadow(0px 12px 36px 0px #000);
-    &.active {
-        pointer-events: auto;
-        opacity: 1;
-    }
+ 
+ @include togglePanel(0.6s);
     canvas {
         width: 800px;
     }
@@ -412,7 +429,7 @@ pointer-events: none;
     background: #666;
     position: absolute;
     left: 60px;
-    top: 320px;
+    top: 320px; @include togglePanel(0.4s);
     
 }
 
@@ -559,13 +576,7 @@ p {
     top: 528px;
     background: #222;
     color: #fff;
-    pointer-events: none;
-    opacity: 0;
-    @include transition(opacity 0.8s ease);
-    &.active {
-        opacity: 1;
-        pointer-events: auto;
-    }
+@include togglePanel(0.8s);
     #recipeTitleBar {
         // allow the entire panel to be dragged even if dragging from the header text:
         pointer-events: none;
@@ -685,14 +696,9 @@ p {
 
 #clearRecipeSearch {
     border: 0;
-    opacity: 0;
-    @include transition(opacity 0.4s ease);
-    pointer-events: none;
+@include togglePanel(0.4s);
     @include border-radius(10);
-    &.active {
-        opacity: 1;
-        pointer-events: auto;
-    }
+
     span {
         @include visibleHide;
     }
@@ -702,17 +708,12 @@ p {
 }
 
 .quantityInputPanel {
-    opacity: 0;
-    pointer-events: none;
+
     background: #cecece;
     position: absolute;
     left: -100px;
     top: -100px;
-    @include transition(opacity 0.2s ease);
-    &.active {
-        pointer-events: auto;
-        opacity: 1;
-    }
+@include togglePanel(0.2s);
     fieldset {
         border: 0;
     }
@@ -857,16 +858,15 @@ $inkColours: '#c9271b', '#e4d820', '#e49320', '#200aa8', '#6d18bd', '#11750a', '
     background: #bd9e7b url(../images/game-world/interface/parchment.jpg) no-repeat 0 0;
     width: 238px;
     position: absolute;
-    @include transition(opacity 0.8s ease);
-    opacity: 0;
+
     left: 20px;
     top: 50%;
-    pointer-events: none;
+  
+
+@include togglePanel(0.8s);
+
     font-family: 'IM Fell English', 'Times New Roman', Palatino, Times, Serif;
-    &.active {
-        pointer-events: auto;
-        opacity: 1;
-    }
+
     h1 {
         padding: 3px 6px 8px 6px;
         margin: 0;
@@ -935,16 +935,8 @@ background: url(/images/game-world/interface/currency/copper.png) no-repeat 50% 
         top: 335px;
         position: absolute;
         background: #000;
-        @include transition(opacity 0.4s ease);
-        // inactive state:
-        opacity: 0;
-    
-        pointer-events: none;
-        &.active {
-            opacity: 1;
-            pointer-events: auto;
-
-        }
+  
+    @include togglePanel(0.4s);
         img {
             @include attention() {
                 & + p {
@@ -1040,13 +1032,7 @@ background: url(/images/game-world/interface/currency/copper.png) no-repeat 50% 
     top: 650px;
     //width: 972px;
     background: #000;
-    opacity: 0;
-    pointer-events: none;
-    @include transition(opacity .4s ease);
-      &.active {
-        opacity: 1;
-        pointer-events: auto;
-    }
+@include togglePanel(0.6s);
     h3, p {
         color: #fff;
         font-size: 11px;
@@ -1115,3 +1101,5 @@ width: 238px;
 #inscriptionTextArea {
     min-height: 120px;
 }
+
+

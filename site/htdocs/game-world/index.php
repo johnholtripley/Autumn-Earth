@@ -47,8 +47,8 @@ background: #ec35ea;
 <input type="submit" value="Ok">
 </fieldset>
 </form>
-<div id="cardAlbum"><div class="draggableBar">Card album</div><div id="cardAlbumList"></div></div>
-<div id="cartographicPanel"><div class="draggableBar"><span id="cartographicTitle">Map</span></div><canvas id="cartographyCanvas" width="246" height="246"></canvas><canvas id="offScreenCartographyCanvas" class="offScreenCanvas" width="246" height="246"></canvas></div>
+<div id="cardAlbum" class="active"><div class="draggableBar">Card album</div><div id="cardAlbumList"></div></div>
+<div id="cartographicPanel" class="active"><div class="draggableBar"><span id="cartographicTitle">Map</span></div><canvas id="cartographyCanvas" width="246" height="246"></canvas><canvas id="offScreenCartographyCanvas" class="offScreenCanvas" width="246" height="246"></canvas></div>
 <div id="craftingPanel"><div class="draggableBar"><span id="recipeTitleBar">Recipes</span></div><button class="closePanel">close</button>
 <div id="recipeSearchWrapper"><label for="recipeSearch" class="visibleHide">Search for recipes</label><input id="recipeSearch" type="text" placeholder="Search"><button id="clearRecipeSearch"><span>Clear search</span></button></div><label for="recipeFilter" class="visibleHide">Filter by:</label><div class="selectWrapper"><select id="recipeFilter"><option>All</option></select></div>
  
