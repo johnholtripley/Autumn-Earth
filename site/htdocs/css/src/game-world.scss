@@ -1124,6 +1124,14 @@ width: 238px;
 
 }
 
+#openSettings {
+    color: #fff;
+    text-decoration: none;
+    background: #000;
+    @include border-radius(5);
+    padding: 8px;
+}
+
 
 
 // range input for volume settings etc:
@@ -1216,3 +1224,5 @@ input[type=range]:focus::-ms-fill-lower {
 input[type=range]:focus::-ms-fill-upper {
   background: #367ebd;
 }
+
+
