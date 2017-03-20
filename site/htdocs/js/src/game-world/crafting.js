@@ -41,7 +41,7 @@ function recipeSearchAndFilter() {
         }
     }
                  // resize the scroll bar (if it's used):
-if(recipeCustomScrollBar) {
+if (thisDevicesScrollBarWidth > 0) {
             recipeCustomScrollBar.init();
         }
 }

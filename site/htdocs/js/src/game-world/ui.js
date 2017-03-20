@@ -304,7 +304,7 @@ if(foundThisType) {
             craftingRecipeCreateButton.disabled = true;
             recipeTitleBar.innerHTML = hero.crafting[whichProfession].name + ' Recipes';
             // resize the scroll bar (if it's used):
-            if (recipeCustomScrollBar) {
+            if (thisDevicesScrollBarWidth > 0) {
                 recipeCustomScrollBar.init();
             }
         }

@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 13, 2017 at 05:03 PM
+-- Generation Time: Mar 20, 2017 at 10:09 AM
 -- Server version: 5.6.24
 -- PHP Version: 5.6.8
 
@@ -591,7 +591,7 @@ INSERT INTO `tblinventoryitems` (`itemID`, `shortname`, `description`, `priceCod
 (36, 'Chocobo Gold Card', 'A rare chocobo card. Pweeeek!', '4', '49.0', '81.0', 63, 63, 'card-gold-chocobo', 'card', -2, 0, 0, '0', '0', '', NULL, 0, 0, 0, 1, 0, NULL, NULL),
 (37, 'Copperas', '', '4', '49.0', '81.0', 63, 63, 'copperas', '', 0, 0, 0, '0', '0', NULL, NULL, 0, 0, 0, 1, 0, NULL, NULL),
 (38, 'Acacia Resin', '', '4', '49.0', '81.0', 63, 63, 'acacia-resin', '', 0, 0, 0, '0', '0', NULL, NULL, 0, 0, 0, 1, 0, NULL, NULL),
-(39, 'Iron Gall', '', '4', '49.0', '81.0', 63, 63, 'iron gall', '', 0, 0, 0, '0', '0', NULL, NULL, 0, 16, 1, 1, 0, NULL, NULL),
+(39, 'Iron Gall', '', '4', '49.0', '81.0', 63, 63, 'iron-gall', '', 0, 0, 0, '0', '0', NULL, NULL, 0, 16, 1, 1, 0, NULL, NULL),
 (40, 'Ink', '', '4', '49.0', '81.0', 63, 63, 'ink', '', 0, 1, 0, '0', '0', NULL, NULL, 0, 0, 0, 1, 0, NULL, NULL),
 (41, 'Scribe''s Quill', '', '1', '20.0', '24.0', 0, 0, 'scribes-quill', 'inscribe', 0, 0, 0, '0', '0', '', NULL, 0, 0, 0, 1, 0, NULL, NULL);
 
@@ -1055,7 +1055,7 @@ CREATE TABLE IF NOT EXISTS `tblprofessions` (
   `professionID` int(11) NOT NULL,
   `professionName` varchar(128) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
   `cleanurl` varchar(128) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblprofessions`
@@ -1066,7 +1066,8 @@ INSERT INTO `tblprofessions` (`professionID`, `professionName`, `cleanurl`) VALU
 (1, 'Weaving', 'weaving'),
 (2, 'Scribing', 'scribing'),
 (3, 'Apothecary', 'apothecary'),
-(4, 'Ink Making', 'ink-making');
+(4, 'Ink Making', 'ink-making'),
+(5, 'Artificer', 'artificer');
 
 -- --------------------------------------------------------
 
@@ -1868,7 +1869,7 @@ ALTER TABLE `tblposts`
 -- AUTO_INCREMENT for table `tblprofessions`
 --
 ALTER TABLE `tblprofessions`
-  MODIFY `professionID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=5;
+  MODIFY `professionID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=6;
 --
 -- AUTO_INCREMENT for table `tblquests`
 --
