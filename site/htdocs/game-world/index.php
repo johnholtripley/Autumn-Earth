@@ -30,7 +30,7 @@ background: #ec35ea;
 <canvas id="gameWorld" width="800" height="600" moz-opaque>
   <img src="/images/game-world/no-canvas.jpg" alt="Sorry">
 </canvas>
-<div id="toolbar"><div id="currencies"></div></div>
+<div id="toolbar"><a href="#gameSettings" id="openSettings">Settings</a><div id="currencies"></div></div>
  
 <p id="dialogue"></p>
 <div id="notification"></div>
@@ -124,7 +124,7 @@ for ($i=0;$i<5;$i++) {
  
  <audio id="musicStream"></audio>
  
- <div id="gameSettings" class="active">
+ <div id="gameSettings"><button class="closePanel">close</button>
 <h2>Volume</h2>
 <label for="soundVolume">Sound effects</label><input id="soundVolume" type="range" min="0" max="1" step="0.05">
 <label for="musicVolume">Music</label><input id="musicVolume" type="range" min="0" max="1" step="0.05">

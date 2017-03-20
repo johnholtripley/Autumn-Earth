@@ -26,6 +26,7 @@ var scribeStartInscription = document.getElementById('scribeStartInscription');
 var inscriptionTitle = document.getElementById('inscriptionTitle');
 var soundVolume = document.getElementById('soundVolume');
 var musicVolume = document.getElementById('musicVolume');
+var gameSettingsPanel = document.getElementById('gameSettings');
 
 
 var UI = {
@@ -88,13 +89,17 @@ var UI = {
         shopSplitStackPanel.onsubmit = UI.shopSplitStackSubmit;
         document.getElementById('splitStackCancel').onclick = UI.inventorySplitStackCancel;
         document.getElementById('shopSplitStackCancel').onclick = UI.shopSplitStackCancel;
+        soundVolume.onchange = audio.adjustEffectsVolume;
+        musicVolume.onchange = audio.adjustMusicVolume;
         UI.initInventoryDrag('.inventoryBag ol');
+        document.getElementById('openSettings').onclick = UI.openSettings;
         UI.initShopDrag();
         UI.updateCardAlbum();
         UI.updateCurrencies();
         UI.buildRecipePanel();
         UI.updateInscriptionPanel();
 UI.getGameSettings();
+
         if (hero.professionsKnown.length > 0) {
             // load and cache the first profession's recipe assets:
             UI.populateRecipeList(hero.professionsKnown[0]);
@@ -1150,5 +1155,15 @@ var storedSelectedInkSlot = UI.inscription.selected.ink;
     getGameSettings: function(e) {
 soundVolume.value = gameSettings.soundVolume;
 musicVolume.value = gameSettings.musicVolume;
-    }
+// apply these:
+audio.adjustEffectsVolume();
+audio.adjustMusicVolume();
+    },
+
+    openSettings: function(e) {
+if(e) {
+    e.preventDefault();
+}
+gameSettingsPanel.classList.add('active');
+     }
 }

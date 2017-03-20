@@ -1,4 +1,5 @@
 var audioContext = null;
+soundGainNode = null;
 var soundEffects = {};
 var soundsToLoad = {
     'coins': '../sounds/coins-NOT_MINE-wow.mp3',
@@ -59,6 +60,7 @@ var audio = {
         try {
             window.AudioContext = window.AudioContext || window.webkitAudioContext;
             audioContext = new AudioContext();
+            soundGainNode = audioContext.createGain();
             var names = [];
             var paths = [];
             for (var name in soundsToLoad) {
@@ -84,7 +86,12 @@ var audio = {
     playSound: function(buffer, delay) {
         var source = audioContext.createBufferSource();
         source.buffer = buffer;
-        source.connect(audioContext.destination);
+
+
+source.connect(soundGainNode);
+
+
+        soundGainNode.connect(audioContext.destination);
         if (!source.start) {
             source.start = source.noteOn;
         } else {
@@ -98,5 +105,11 @@ var audio = {
             musicStream.src = "/music/game-world/" + source;
             musicStream.play();
         }
+    },
+    adjustEffectsVolume: function() {
+        soundGainNode.gain.value = soundVolume.value;
+    },
+    adjustMusicVolume:function() {
+        musicStream.volume = musicVolume.value;
     }
 }
