@@ -96,8 +96,8 @@ var audio = {
         // Create a gain node:
         audio[songName + 'Gain'] = audioContext.createGain();
         // get this from the settings:
-        console.log("music vol: " + gameSettings.musicVolume);
-        audio[songName + 'Gain'].gain.value = gameSettings.musicVolume;
+        
+        audio[songName + 'Gain'].gain.setValueAtTime(gameSettings.musicVolume,0);
         audio[songName + 'Source'] = audioContext.createMediaElementSource(audio[songName]);
         audio[songName + 'Source'].connect(audio[songName + 'Gain']);
         audio[songName + 'Gain'].connect(audioContext.destination);
@@ -145,7 +145,7 @@ var audio = {
     adjustMusicVolume: function() {
         gameSettings.musicVolume = musicVolume.value;
         if (typeof audio.activeTrack !== "undefined") {
-            audio[audio.activeTrack + 'Gain'].gain.value = gameSettings.musicVolume;
+            audio[audio.activeTrack + 'Gain'].gain.setValueAtTime(gameSettings.musicVolume,audioContext.currentTime);
         }
     }
 }
