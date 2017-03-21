@@ -1,5 +1,6 @@
 var audioContext = null;
-soundGainNode = null;
+var soundGainNode = null;
+var musicGainNode = null;
 var soundEffects = {};
 var soundsToLoad = {
     'coins': '../sounds/coins-NOT_MINE-wow.mp3',
@@ -8,7 +9,7 @@ var soundsToLoad = {
     'buttonClick': '../sounds/button-press-NOT_MINE-wow.mp3',
     'hen': '../sounds/hen-NOT_MINE.mp3'
 };
-musicStream = document.getElementById('musicStream');
+
 
 // https://www.html5rocks.com/en/tutorials/webaudio/intro/
 
@@ -61,6 +62,8 @@ var audio = {
             window.AudioContext = window.AudioContext || window.webkitAudioContext;
             audioContext = new AudioContext();
             soundGainNode = audioContext.createGain();
+            soundGainNode.connect(audioContext.destination);
+            musicGainNode.createGain();
             var names = [];
             var paths = [];
             for (var name in soundsToLoad) {
@@ -83,15 +86,29 @@ var audio = {
         }
     },
 
+
+    initMusic: function(songName) {
+        audio[songName] = new Audio();
+        var src = document.createElement("source");
+        src.type = "audio/mpeg";
+        src.src = "/music/game-world/" + songName + ".mp3";
+        audio[songName].appendChild(src);
+        // Create a gain node:
+        audio[songName + 'Gain'] = audioContext.createGain();
+        // get this from the settings:
+        console.log("music vol: " + gameSettings.musicVolume);
+        audio[songName + 'Gain'].gain.value = gameSettings.musicVolume;
+        audio[songName + 'Source'] = audioContext.createMediaElementSource(audio[songName]);
+        audio[songName + 'Source'].connect(audio[songName + 'Gain']);
+        audio[songName + 'Gain'].connect(audioContext.destination);
+
+    },
+
     playSound: function(buffer, delay) {
         var source = audioContext.createBufferSource();
         source.buffer = buffer;
+        source.connect(soundGainNode);
 
-
-source.connect(soundGainNode);
-
-
-        soundGainNode.connect(audioContext.destination);
         if (!source.start) {
             source.start = source.noteOn;
         } else {
@@ -99,17 +116,36 @@ source.connect(soundGainNode);
         }
     },
 
-    playMusic: function(source) {
-        // cross fade rather than prevent new song's playing:
-        if (musicStream.paused) {
-            musicStream.src = "/music/game-world/" + source;
-            musicStream.play();
+    playMusic: function(newTrack) {
+        if (typeof audio.activeTrack !== "undefined") {
+            if (audio.activeTrack != newTrack) {
+                audio.initMusic(newTrack);
+                var fadeTime = 6;
+                var currentTime = audioContext.currentTime;
+                // fade current out:
+                audio[audio.activeTrack + 'Gain'].gain.linearRampToValueAtTime(gameSettings.musicVolume, currentTime);
+                audio[audio.activeTrack + 'Gain'].gain.linearRampToValueAtTime(0, currentTime + fadeTime);
+                // fade new in:
+                audio[newTrack + 'Gain'].gain.linearRampToValueAtTime(0, 0);
+                audio[newTrack + 'Gain'].gain.linearRampToValueAtTime(gameSettings.musicVolume, fadeTime);
+                audio[newTrack].play();
+                audio.activeTrack = newTrack;
+            }
+        } else {
+            // nothing playing currently:
+            audio.initMusic(newTrack);
+            audio[newTrack].play();
+            audio.activeTrack = newTrack;
         }
     },
     adjustEffectsVolume: function() {
-        soundGainNode.gain.value = soundVolume.value;
+        gameSettings.soundVolume = soundVolume.value;
+        soundGainNode.gain.value = gameSettings.soundVolume;
     },
-    adjustMusicVolume:function() {
-        musicStream.volume = musicVolume.value;
+    adjustMusicVolume: function() {
+        gameSettings.musicVolume = musicVolume.value;
+        if (typeof audio.activeTrack !== "undefined") {
+            audio[audio.activeTrack + 'Gain'].gain.value = gameSettings.musicVolume;
+        }
     }
 }

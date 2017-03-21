@@ -591,9 +591,18 @@
             "radius": 5,
             "quest": 6,
             "message": "you found the ancient standing stone site",
-            "music": "elven-glade-WoW-NOT-MINE.mp3"
+            "music": "elven-glade-WoW-NOT-MINE"
 
-        }],
+        },
+
+{
+     "centreX": 13,
+            "centreY": 23,
+            "radius": 5, 
+            "music": "darnassus-WoW-NOT-MINE"
+}
+
+        ],
         "eventSpecificContent": {
             "halloween": {
                 "items": [{

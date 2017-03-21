@@ -122,7 +122,7 @@ for ($i=0;$i<5;$i++) {
 </canvas>
 </div>
  
- <audio id="musicStream"></audio>
+
  
  <div id="gameSettings"><button class="closePanel">close</button>
 <h2>Volume</h2>
