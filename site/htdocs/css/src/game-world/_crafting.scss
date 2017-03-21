@@ -1,0 +1,97 @@
+#clearRecipeSearch {
+    border: 0;
+    background: #fff;
+    opacity: 0;
+    @include transition(opacity 0.4s ease);
+    pointer-events: none;
+    color: #000;
+    cursor: pointer;
+    &.active {
+        pointer-events: auto;
+        opacity: 1;
+    }
+    @include border-radius(10);
+    span {
+        @include visibleHide;
+    }
+    &:after {
+        content: "x";
+    }
+}
+
+.quantityInputPanel {
+    background: #cecece;
+    left: -100px;
+    top: -100px;
+    @include togglePanel(0.2s);
+    fieldset {
+        border: 0;
+    }
+}
+
+#selectComponentsItemBeingCreated {
+    background: #cecece;
+    margin: 0 10px 0 0;
+    float: left;
+}
+
+#componentsAvailableForThisRecipe {
+    width: 246px;
+    background: #cecece;
+    margin: 0 10px 0 0;
+    float: left;
+    ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+    li {
+        .qty {
+            position: absolute;
+            left: 0px;
+            width: 43px;
+            top: 31px;
+            text-align: right;
+            color: #fff;
+            cursor: default;
+            font-size: 11px;
+            pointer-events: none;
+        }
+        p {
+            display: inline-block;
+            font-size: 13px;
+            padding: 0;
+            width: 180px;
+            margin: 0;
+            vertical-align: top;
+            .price {
+                display: none;
+            }
+        }
+    }
+}
+
+#selectComponentsItemBeingCreated,
+#componentsAvailableForThisRecipe {
+    ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+    li {
+        display: block;
+        margin: 0;
+        padding: 0 0 6px 0;
+        position: relative;
+    }
+    img {
+        background: url(../images/game-world/interface/inventory-slot.png) no-repeat 0% 50%;
+        display: inline-block;
+        cursor: url(../images/game-world/cursors/active.gif) 3 3, auto;
+        width: 46px;
+        height: 46px;
+        padding: 3px;
+        margin-right: 12px;
+        @include border-box;
+    }
+}

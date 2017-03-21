@@ -1,0 +1,41 @@
+#dialogue {
+    background: #363636;
+    border: 2px solid #cbbc9f;
+    @include border-radius(10px);
+    filter: drop-shadow(2px 2px 5px rgba(0, 0, 0, 0.69));
+    color: #fff;
+    left: 0px;
+    bottom: 0px;
+    @include pxRem('padding', 10px 12px);
+    @include pxRem('font-size', 12px);
+    @include pxRem('padding', 14px);
+    min-width: 20px;
+    max-width: 295px;
+    font-family: Lato, "Trebuchet MS", trebuchet, arial, helvetica, sans-serif;
+    @include togglePanel(0.4s);
+    &.slowerFade {
+        @include transition-duration(2s);
+    }
+    &:before {
+        border-color: #cbbc9f transparent;
+        border-style: solid;
+        border-width: 14px 2px 0 14px;
+        bottom: -14px;
+        content: "";
+        display: block;
+        left: 25px;
+        position: absolute;
+        width: 0;
+    }
+    &:after {
+        border-color: #363636 transparent;
+        border-style: solid;
+        border-width: 14px 2px 0 14px;
+        bottom: -10px;
+        content: "";
+        display: block;
+        left: 24px;
+        position: absolute;
+        width: 0;
+    }
+}

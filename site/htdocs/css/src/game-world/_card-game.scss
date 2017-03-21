@@ -1,0 +1,165 @@
+$cardWidth: 84px;
+$cardHeight: 102px;
+
+#cardGameWrapper {
+    z-index: 2;
+    left: 50%;
+    top: 50%;
+    @include transform( translate(-400px, -243px));
+    @include box-shadow(0px 12px 36px 0px #000);
+    @include togglePanel(0.6s);
+    canvas {
+        width: 800px;
+    }
+}
+
+.card {
+    &.players {
+        background: #ff00cc;
+    }
+    &.npcs {
+        background: #ffcc00;
+    }
+    &.inactive {
+        @include filter(sepia(100%) opacity(30%));
+    }
+}
+
+#cardAlbum {
+    width: 320px;
+    background: #666;
+    left: 60px;
+    top: 320px;
+    @include togglePanel(0.4s);
+}
+
+$albumCardRatio: 0.7142;
+#cardAlbumList {
+    ul {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+    p {
+        color: #fff;
+        font-size: 12px;
+        clear: both;
+    }
+    li {
+        width: $cardWidth*$albumCardRatio;
+        height: $cardHeight*$albumCardRatio;
+        background: #cecece;
+        display: block;
+        float: left;
+        margin: 0 4px 4px 0;
+        position: relative;
+        img {
+            width: 100%;
+            height: auto;
+        }
+        .quantity {
+            position: absolute;
+            text-align: right;
+            color: #fff;
+            bottom: 4px;
+            right: 6px;
+            font-size: 11px;
+            @include text-shadow(0px 0px 2px rgba(0, 0, 0, 1));
+        }
+        &.rare {
+            div {
+                width: $cardWidth*$albumCardRatio;
+                height: $cardHeight*$albumCardRatio;
+                background-repeat: no-repeat;
+                background-position: 0 0;
+                @include background-size(cover);
+                @include animation(rare-card-play 1s steps(10) infinite);
+            }
+        }
+    }
+}
+
+@include keyframes(rare-card-play) {
+    100% {
+        // width of sprite:
+        background-position: -840px*$albumCardRatio 0;
+    }
+}
+
+#boosterPack {
+    pointer-events: none;
+    opacity: 0;
+    position: absolute;
+    left: 0;
+    top: 50%;
+    margin-top: -$cardHeight/2;
+    width: 100%;
+    @include transition(opacity 0.6s ease 1.5s);
+    &.active {
+        pointer-events: auto;
+        opacity: 1;
+        @include transition-delay(0s);
+    }
+    ol {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        text-align: center;
+    }
+    .cardFlip {
+        display: inline-block;
+        margin: 0 10px;
+        @include perspective(1000px);
+        &.active {
+            .new {
+                // a card the player didn't have before:
+                @include box-shadow(0px 0px 18px 7px #d4a926);
+            }
+            .flipper {
+                @include transform(rotateY(180deg));
+            }
+        }
+    }
+    .cardFlip,
+    .front,
+    .back {
+        width: $cardWidth;
+        height: $cardHeight;
+    }
+    .flipper {
+        @include transition-duration(0.6s);
+        @include transform-style(preserve-3d);
+        position: relative;
+    }
+    .front,
+    .back {
+        @include backface-visibility(hidden);
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+    .back {
+        z-index: 2;
+        @include transform(rotateY(0deg));
+    }
+    .front {
+        // booster cards start with their backs visible:
+        @include transform(rotateY(180deg));
+    }
+    .rare {
+        div {
+            width: $cardWidth;
+            height: $cardHeight;
+            background-repeat: no-repeat;
+            background-position: 0 0;
+            @include animation(booster-rare-card-play 1s steps(10) infinite);
+        }
+    }
+}
+
+@include keyframes(booster-rare-card-play) {
+    100% {
+        // width of sprite:
+        background-position: -840px 0;
+    }
+}

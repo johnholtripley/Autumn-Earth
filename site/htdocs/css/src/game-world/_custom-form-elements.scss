@@ -1,0 +1,223 @@
+// range input for volume settings etc:
+// https://css-tricks.com/styling-cross-browser-compatible-range-inputs-css/
+input[type=range] {
+    -webkit-appearance: none;
+    margin: 18px 0;
+    width: 100%;
+}
+
+input[type=range]:focus {
+    outline: none;
+}
+
+input[type=range]::-webkit-slider-runnable-track {
+    width: 100%;
+    height: 8.4px;
+    cursor: pointer;
+    animate: 0.2s;
+    box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+    background: #3071a9;
+    border-radius: 1.3px;
+    border: 0.2px solid #010101;
+}
+
+input[type=range]::-webkit-slider-thumb {
+    box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+    border: 1px solid #000000;
+    height: 36px;
+    width: 16px;
+    border-radius: 3px;
+    background: #ffffff;
+    cursor: pointer;
+    -webkit-appearance: none;
+    margin-top: -14px;
+}
+
+input[type=range]:focus::-webkit-slider-runnable-track {
+    background: #367ebd;
+}
+
+input[type=range]::-moz-range-track {
+    width: 100%;
+    height: 8.4px;
+    cursor: pointer;
+    animate: 0.2s;
+    box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+    background: #3071a9;
+    border-radius: 1.3px;
+    border: 0.2px solid #010101;
+}
+
+input[type=range]::-moz-range-thumb {
+    box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+    border: 1px solid #000000;
+    height: 36px;
+    width: 16px;
+    border-radius: 3px;
+    background: #ffffff;
+    cursor: pointer;
+}
+
+input[type=range]::-ms-track {
+    width: 100%;
+    height: 8.4px;
+    cursor: pointer;
+    animate: 0.2s;
+    background: transparent;
+    border-color: transparent;
+    border-width: 16px 0;
+    color: transparent;
+}
+
+input[type=range]::-ms-fill-lower {
+    background: #2a6495;
+    border: 0.2px solid #010101;
+    border-radius: 2.6px;
+    box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+}
+
+input[type=range]::-ms-fill-upper {
+    background: #3071a9;
+    border: 0.2px solid #010101;
+    border-radius: 2.6px;
+    box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+}
+
+input[type=range]::-ms-thumb {
+    box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+    border: 1px solid #000000;
+    height: 36px;
+    width: 16px;
+    border-radius: 3px;
+    background: #ffffff;
+    cursor: pointer;
+}
+
+input[type=range]:focus::-ms-fill-lower {
+    background: #3071a9;
+}
+
+input[type=range]:focus::-ms-fill-upper {
+    background: #367ebd;
+}
+
+// ======================================
+
+.customScrollBar {
+    width: 200px;
+    height: 250px;
+    position: relative;
+    background: #fff;
+    overflow: hidden;
+}
+
+.customScrollContent {
+    overflow-x: hidden;
+    overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;
+    height: 100%;
+    // stop content from being obscured by the track bar:
+    padding-right: 10px;
+    @include border-box;
+}
+
+.trackBar {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 10px;
+    border-radius: 10px;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.2);
+    box-shadow: inset 0px 0px 5px 0px rgba(0, 0, 0, 0.75);
+    /* allow mouse whell scroll when mouse is over the scrollbar: */
+    pointer-events: none;
+}
+
+.dragger {
+    width: 10px;
+    background: #000;
+    pointer-events: auto;
+    border-radius: 10px;
+    /* position: absolute;
+  top: 0;*/
+}
+
+.inActive {
+    overflow-y: auto;
+    .customScrollContent {
+        overflow: visible;
+        height: 100%;
+    }
+    .trackBar {
+        display: none;
+    }
+}
+
+// ======================================
+
+
+// select dropdowns --------------------------------
+// http://jsbin.com/juvixufu/10/edit?html,output
+.selectWrapper {
+    position: relative;
+    display: block;
+    margin-top: 0.5em;
+    overflow: hidden;
+    width: 100%;
+    max-width: 100%;
+    select {
+        color: #fff;
+        /* Make sure the select is wider than the container so we can clip the arrow */
+        cursor: pointer;
+        width: 110%;
+        max-width: 110%;
+        min-width: 110%;
+        /* Remove select styling */
+        appearance: none;
+        -webkit-appearance: none;
+        /* Ugly Firefox way of doing it */
+        -moz-appearance: window;
+        text-indent: 0.01px;
+        text-overflow: "";
+        background: none;
+        border: none;
+        outline: none;
+        /* Padding works surpringly well */
+        padding: .4em 19% .4em .8em;
+        font-family: helvetica, sans-serif;
+        line-height: 1.2;
+        margin: .2em;
+    }
+    option {
+        color: #fff;
+    }
+    /* This hides native dropdown button arrow in IE */
+    select::-ms-expand {
+        display: none;
+    }
+    /* Custom arrow - could be an image, SVG, icon font, etc. */
+    &:after {
+        background: none;
+        color: #fff;
+        content: "\25BE";
+        font-size: 1.5em;
+        padding: 0;
+        position: absolute;
+        right: 0.4em;
+        top: 0.2em;
+        bottom: .3em;
+        //z-index: 1;
+        /* This hack makes the select behind the arrow clickable in some browsers */
+        pointer-events: none;
+    }
+    /* Focus style */
+    select:focus {
+        outline: none;
+    }
+    /* This hides focus around selected option in FF */
+    select:-moz-focusring {
+        color: transparent;
+        text-shadow: 0 0 0 #000;
+    }
+}

@@ -30,7 +30,7 @@ var gulp = require('gulp'),
 
 // css:
 gulp.task('sass', ['gameWorldCss'],function() {
-    return gulp.src(['htdocs/css/src/**/*.scss', '!(htdocs/css/src/game-world.scss)'])
+    return gulp.src(['htdocs/css/src/**/*.scss', '!htdocs/css/src/game-world/game-world.scss'])
         .pipe(sourcemaps.init())
         .pipe(sass({
             outputStyle: 'compressed'
@@ -43,7 +43,7 @@ gulp.task('sass', ['gameWorldCss'],function() {
 });
 
 gulp.task('gameWorldCss', function() {
-    return gulp.src('htdocs/css/src/**/game-world.scss')
+    return gulp.src('htdocs/css/src/game-world/game-world.scss')
         .pipe(sourcemaps.init())
         .pipe(sass({
             outputStyle: 'compressed'

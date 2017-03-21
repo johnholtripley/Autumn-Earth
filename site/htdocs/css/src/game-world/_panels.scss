@@ -1,0 +1,354 @@
+
+$numberOfItemCategories: 20;
+
+@mixin togglePanel($duration) {
+    opacity: 0;
+    position: absolute;
+    @include transition(opacity $duration ease);
+    pointer-events: none;
+    &.active {
+        opacity: 1;
+        pointer-events: auto;
+    }
+    @include mq($wide, 'max') {
+        display: none;
+        opacity: 1;
+        position: relative;
+        left: 0;
+        top: auto;
+        max-width: 100%;
+        clear: both;
+        &.active {
+            display: block;
+            pointer-events: auto;
+        }
+    }
+}
+
+#inventoryPanels {
+    .inventoryBag {
+        // bag
+        position: absolute;
+        top: 650px;
+        background: #666;
+        left: 860px;
+        background: #53160d url(../images/game-world/interface/inventory-panel-bg.jpg) no-repeat 0 100%;
+        @include border-radius(3px);
+        @for $i from 2 through 6 {
+            &:nth-child(#{$i}) {
+                left: 200px * (($i)-1) + 870px;
+            }
+        }
+        z-index: 1;
+    }
+    ol {
+        margin: 0;
+        width: 184px;
+        padding: 0;
+        background: #666;
+        @include transition(opacity 0.4s ease, transform 0.4s cubic-bezier(.12, 1.07, .29, 1.24));
+        // inactive state:
+        opacity: 0;
+        @include transform(scale(0.95));
+        pointer-events: none;
+        &.active {
+            opacity: 1;
+            pointer-events: auto;
+            @include transform(scale(1));
+        }
+        img {
+            @include attention() {
+                & + p {
+                    opacity: 1;
+                    pointer-events: auto;
+                    @include transform(translateY(0));
+                }
+            }
+        }
+        li {
+            // slot
+            width: 46px;
+            height: 46px;
+            padding: 3px;
+            display: block;
+            float: left;
+            background: url(../images/game-world/interface/inventory-slot.png) no-repeat 50% 50%;
+            cursor: url(../images/game-world/cursors/active.gif) 3 3, auto;
+            margin: 0;
+            @include border-box;
+            position: relative;
+            box-shadow: 0 0 0 0 #eebb3f;
+            @include transition(box-shadow 0.2s ease-in-out);
+            .qty {
+                position: absolute;
+                right: 3px;
+                bottom: 3px;
+                text-align: right;
+                color: #fff;
+                cursor: default;
+                font-size: 11px;
+                pointer-events: none;
+                &:after {
+                    opacity: 0;
+                    pointer-events: none;
+                    border-top: 12px solid transparent;
+                    border-right: 12px solid #16952b;
+                    content: "";
+                    display: block;
+                    @include transition(opacity 0.4s ease);
+                    position: absolute;
+                    right: 0;
+                    bottom: 0;
+                }
+            }
+            img {
+                display: block;
+            }
+            &.changed {
+                box-shadow: 0 0 5px 3px #eebb3f;
+                z-index: 1;
+            }
+            &.hidden {
+                img,
+                p,
+                span {
+                    opacity: 0;
+                }
+            }
+        }
+    }
+    p {
+        // tooltip
+        background: #eee;
+        z-index: 1;
+        margin: 0;
+        bottom: 100%;
+        color: #000;
+        display: block;
+        left: 0;
+        min-width: 120px;
+        opacity: 0;
+        padding: 8px;
+        pointer-events: none;
+        position: absolute;
+        font-size: 11px;
+        cursor: url(../images/game-world/cursors/default.gif) 3 3, auto;
+        @include transform(translateY(10px));
+        @include transition(all .25s ease-out);
+        em {
+            // tooltip item title
+            display: block;
+            font-size: 1.2em;
+            font-style: normal;
+        }
+    }
+    .price {}
+    .specialismPrice {
+        display: none;
+    }
+    @for $i from 1 through $numberOfItemCategories {
+        &.shopSpecialism#{$i} .itemCategory#{$i} ~ .qty:after {
+            opacity: 1;
+        }
+        &.shopSpecialism#{$i} .itemCategory#{$i} ~ p {
+            .price {
+                display: none;
+            }
+            .specialismPrice {
+                display: inline-block;
+                color: #16952b;
+            }
+        }
+    }
+}
+
+#draggableInventorySlot,
+#draggableShopSlot {
+    position: absolute;
+    pointer-events: none;
+    left: -100px;
+    top: -100px;
+    @include transform-origin(0 0);
+    width: 44px;
+    height: 44px;
+    p {
+        display: none;
+    }
+    .qty {
+        position: absolute;
+        right: 4px;
+        bottom: 4px;
+        text-align: right;
+        color: #fff;
+        cursor: default;
+        font-size: 11px;
+    }
+}
+
+// cartography panel:
+#cartographicPanel {
+    top: 20px;
+    left: 60px;
+    background: #666;
+    color: #fff;
+    @include togglePanel(0.4s);
+    #cartographicTitle {
+        // allow the entire panel to be dragged even if dragging from the header text:
+        pointer-events: none;
+    }
+    canvas {
+        background: #ded49d url(../images/cartography/overlays/1.png) no-repeat 0 0;
+    }
+}
+
+#craftingPanel {
+    left: 60px;
+    top: 528px;
+    background: #222;
+    color: #fff;
+    @include togglePanel(0.8s);
+    #recipeTitleBar {
+        // allow the entire panel to be dragged even if dragging from the header text:
+        pointer-events: none;
+    }
+    ul {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        li {
+            display: none;
+            background: #666;
+            @include transition(background 0.4s ease);
+            padding: 6px 0;
+            &.active {
+                display: block;
+            }
+            img {
+                display: inline-block;
+                // define widths so the scrollbar knows the size while the images are loading:
+                width: 40px;
+                height: 40px;
+            }
+            &.highlighted {
+                background: #b4a435;
+            }
+        }
+        h3,
+        p {
+            margin: 0;
+            padding: 0;
+        }
+    }
+}
+
+#craftingRecipeCreateButton {
+    @include transition(background 0.4s ease);
+    color: #fff;
+    border: 0;
+    background: #682810;
+    cursor: url(../images/game-world/cursors/active.gif) 3 3, auto;
+    &:disabled {
+        background: #000;
+        cursor: default;
+    }
+}
+
+#shopPanel {
+    .shop {
+        width: 322px;
+        left: 55%;
+        top: 335px;
+        background: #000;
+        @include togglePanel(0.4s);
+        img {
+            @include attention() {
+                & + p {
+                    opacity: 1;
+                    pointer-events: auto;
+                    @include transform(translateY(0));
+                }
+            }
+        }
+        ol {
+            padding: 0;
+            margin: 0;
+        }
+        li {
+            // slot
+            width: 46px;
+            height: 46px;
+            padding: 3px;
+            display: block;
+            float: left;
+            background: url(../images/game-world/interface/inventory-slot.png) no-repeat 50% 50%;
+            cursor: url(../images/game-world/cursors/active.gif) 3 3, auto;
+            margin: 0;
+            @include border-box;
+            position: relative;
+            box-shadow: 0 0 0 0 #eebb3f;
+            @include transition(box-shadow 0.2s ease-in-out);
+            .qty {
+                position: absolute;
+                right: 3px;
+                bottom: 3px;
+                text-align: right;
+                color: #fff;
+                cursor: default;
+                font-size: 11px;
+                pointer-events: none;
+            }
+            img {
+                display: block;
+            }
+            &.changed {
+                box-shadow: 0 0 5px 3px #eebb3f;
+                z-index: 1;
+            }
+            &.hidden {
+                img,
+                p,
+                span {
+                    opacity: 0;
+                }
+            }
+        }
+        p {
+            // tooltip
+            background: #eee;
+            z-index: 1;
+            margin: 0;
+            bottom: 100%;
+            color: #000;
+            display: block;
+            left: 0;
+            min-width: 120px;
+            opacity: 0;
+            padding: 8px;
+            pointer-events: none;
+            position: absolute;
+            font-size: 11px;
+            cursor: url(../images/game-world/cursors/default.gif) 3 3, auto;
+            .specialPrice {
+                color: #16952b;
+            }
+            @include transform(translateY(10px));
+            @include transition(all .25s ease-out);
+            em {
+                // tooltip item title
+                display: block;
+                font-size: 1.2em;
+                font-style: normal;
+            }
+        }
+    }
+}
+
+
+#gameSettings {
+    @include togglePanel(0.6s);
+    left: 50%;
+    top: 50%;
+    @include transform( translate(-50%, -50%));
+    background: #000;
+    color: #fff;
+}
