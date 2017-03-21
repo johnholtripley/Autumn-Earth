@@ -1,6 +1,6 @@
 var audioContext = null;
-var soundGainNode = null;
-var musicGainNode = null;
+var soundGainNode;
+var musicGainNode;
 var soundEffects = {};
 var soundsToLoad = {
     'coins': '../sounds/coins-NOT_MINE-wow.mp3',
@@ -12,7 +12,6 @@ var soundsToLoad = {
 
 
 // https://www.html5rocks.com/en/tutorials/webaudio/intro/
-
 function BufferLoader(context, urlList, callback) {
     this.context = context;
     this.urlList = urlList;
@@ -86,7 +85,6 @@ var audio = {
         }
     },
 
-
     initMusic: function(songName) {
         audio[songName] = new Audio();
         var src = document.createElement("source");
@@ -95,20 +93,17 @@ var audio = {
         audio[songName].appendChild(src);
         // Create a gain node:
         audio[songName + 'Gain'] = audioContext.createGain();
-        // get this from the settings:
-        
+        // get this from the settings:      
         audio[songName + 'Gain'].gain.setValueAtTime(gameSettings.musicVolume,0);
         audio[songName + 'Source'] = audioContext.createMediaElementSource(audio[songName]);
         audio[songName + 'Source'].connect(audio[songName + 'Gain']);
         audio[songName + 'Gain'].connect(audioContext.destination);
-
     },
 
     playSound: function(buffer, delay) {
         var source = audioContext.createBufferSource();
         source.buffer = buffer;
         source.connect(soundGainNode);
-
         if (!source.start) {
             source.start = source.noteOn;
         } else {
@@ -138,10 +133,14 @@ var audio = {
             audio.activeTrack = newTrack;
         }
     },
+
     adjustEffectsVolume: function() {
         gameSettings.soundVolume = soundVolume.value;
+        if (typeof soundGainNode !== "undefined") {
         soundGainNode.gain.value = gameSettings.soundVolume;
+    }
     },
+    
     adjustMusicVolume: function() {
         gameSettings.musicVolume = musicVolume.value;
         if (typeof audio.activeTrack !== "undefined") {

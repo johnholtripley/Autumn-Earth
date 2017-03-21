@@ -98,7 +98,7 @@ var UI = {
         UI.updateCurrencies();
         UI.buildRecipePanel();
         UI.updateInscriptionPanel();
-UI.getGameSettings();
+        UI.getGameSettings();
 
         if (hero.professionsKnown.length > 0) {
             // load and cache the first profession's recipe assets:
@@ -254,7 +254,7 @@ UI.getGameSettings();
 
         // first element in allCardData is null
         for (var i = 1; i < cardGameNameSpace.allCardData.length; i++) {
-foundThisType = false;
+            foundThisType = false;
             thisCardsClass = 'card players';
             thisCardsQuantityOutput = '';
             if (!(counts[i])) {
@@ -270,12 +270,12 @@ foundThisType = false;
                 foundThisType = true;
                 cardAlbumMarkup += '<li class="rare"><div class="card players" style="background-image:url(/images/card-game/cards/' + (0 - i) + '.png)"></div><span class="quantity">' + counts[(0 - i)] + '</span></li>';
             }
-if(foundThisType) {
-    typesFound++;
-}
+            if (foundThisType) {
+                typesFound++;
+            }
         }
         cardAlbumMarkup += '</ul>';
-        cardAlbumMarkup += '<p>'+typesFound+' types out of '+(cardGameNameSpace.allCardData.length-1)+'. Total individual cards: '+hero.cards.length+'</p>';
+        cardAlbumMarkup += '<p>' + typesFound + ' types out of ' + (cardGameNameSpace.allCardData.length - 1) + '. Total individual cards: ' + hero.cards.length + '</p>';
         cardAlbumList.innerHTML = cardAlbumMarkup;
     },
 
@@ -559,7 +559,7 @@ if(foundThisType) {
         hero.currency[thisCurrency] += sellPrice;
         UI.updateCurrencies();
         audio.playSound(soundEffects['coins'], 0);
-   
+
         UI.droppedSuccessfully();
     },
 
@@ -571,8 +571,8 @@ if(foundThisType) {
         if (isSplitStackBeingDragged) {
             isSplitStackBeingDragged = false;
         }
-inventorySplitStackCancel();
-    UI.updatePanelsAfterInventoryChange();
+        inventorySplitStackCancel();
+        UI.updatePanelsAfterInventoryChange();
     },
 
     initInventoryDrag: function(whichElements) {
@@ -996,7 +996,7 @@ inventorySplitStackCancel();
                     theColourPrefix = thisColourName + " ";
                     thisFileColourSuffix = "-" + thisColourName.toLowerCase();
                 }
-                allInksMarkup += '<li class="scribeInk" id="scribeInkFromSlot' + i + '"><img src="/images/game-world/inventory-items/40' + thisFileColourSuffix + '.png" alt="' + theColourPrefix + currentActiveInventoryItems[40].shortname + '">'+hero.inventory[i].quantity+'<h3>' + theColourPrefix + currentActiveInventoryItems[40].shortname + '</h3><p>' + currentActiveInventoryItems[40].description + '</p></li>';
+                allInksMarkup += '<li class="scribeInk" id="scribeInkFromSlot' + i + '"><img src="/images/game-world/inventory-items/40' + thisFileColourSuffix + '.png" alt="' + theColourPrefix + currentActiveInventoryItems[40].shortname + '">' + hero.inventory[i].quantity + '<h3>' + theColourPrefix + currentActiveInventoryItems[40].shortname + '</h3><p>' + currentActiveInventoryItems[40].description + '</p></li>';
             } else {
                 var thisAction = currentActiveInventoryItems[hero.inventory[i].type].action;
                 var isABook = false;
@@ -1008,10 +1008,10 @@ inventorySplitStackCancel();
                 if (isABook) {
                     if (hero.inventory[i].inscription.content) {
                         // has content, so add it to the source list:
-                        allSourceMarkup += '<li class="scribeSource" id="scribeSourceFromSlot' + i + '"><img src="/images/game-world/inventory-items/' + hero.inventory[i].type + '.png" alt="' + currentActiveInventoryItems[hero.inventory[i].type].shortname + '">'+hero.inventory[i].quantity+'<h3>' + currentActiveInventoryItems[hero.inventory[i].type].shortname + '</h3><p>' + hero.inventory[i].inscription.title + '</p></li>';
+                        allSourceMarkup += '<li class="scribeSource" id="scribeSourceFromSlot' + i + '"><img src="/images/game-world/inventory-items/' + hero.inventory[i].type + '.png" alt="' + currentActiveInventoryItems[hero.inventory[i].type].shortname + '">' + hero.inventory[i].quantity + '<h3>' + currentActiveInventoryItems[hero.inventory[i].type].shortname + '</h3><p>' + hero.inventory[i].inscription.title + '</p></li>';
                     } else {
                         // no content, add it to the materials list:
-                        allMaterialsMarkup += '<li class="scribeMaterial" id="scribeMaterialFromSlot' + i + '"><img src="/images/game-world/inventory-items/' + hero.inventory[i].type + '.png" alt="' + currentActiveInventoryItems[hero.inventory[i].type].shortname + '">'+hero.inventory[i].quantity+'<h3>' + currentActiveInventoryItems[hero.inventory[i].type].shortname + '</h3><p>' + currentActiveInventoryItems[hero.inventory[i].type].description + '</p></li>';
+                        allMaterialsMarkup += '<li class="scribeMaterial" id="scribeMaterialFromSlot' + i + '"><img src="/images/game-world/inventory-items/' + hero.inventory[i].type + '.png" alt="' + currentActiveInventoryItems[hero.inventory[i].type].shortname + '">' + hero.inventory[i].quantity + '<h3>' + currentActiveInventoryItems[hero.inventory[i].type].shortname + '</h3><p>' + currentActiveInventoryItems[hero.inventory[i].type].description + '</p></li>';
                     }
                 }
             }
@@ -1124,9 +1124,9 @@ inventorySplitStackCancel();
                         'timeCreated': Date.now()
                     }
                 }
-// store these as the UI.inscription object will be cleared if the item is successfully added
-var storedSelectedMaterialSlot = UI.inscription.selected.material;
-var storedSelectedInkSlot = UI.inscription.selected.ink;
+                // store these as the UI.inscription object will be cleared if the item is successfully added
+                var storedSelectedMaterialSlot = UI.inscription.selected.material;
+                var storedSelectedInkSlot = UI.inscription.selected.ink;
 
                 inventoryCheck = canAddItemToInventory([newInscribedObject]);
                 if (inventoryCheck[0]) {
@@ -1153,17 +1153,17 @@ var storedSelectedInkSlot = UI.inscription.selected.ink;
     },
 
     getGameSettings: function(e) {
-soundVolume.value = gameSettings.soundVolume;
-musicVolume.value = gameSettings.musicVolume;
-// apply these:
-audio.adjustEffectsVolume();
-audio.adjustMusicVolume();
+        soundVolume.value = gameSettings.soundVolume;
+        musicVolume.value = gameSettings.musicVolume;
+        // apply these:
+        audio.adjustEffectsVolume();
+        audio.adjustMusicVolume();
     },
 
     openSettings: function(e) {
-if(e) {
-    e.preventDefault();
-}
-gameSettingsPanel.classList.add('active');
-     }
+        if (e) {
+            e.preventDefault();
+        }
+        gameSettingsPanel.classList.add('active');
+    }
 }
