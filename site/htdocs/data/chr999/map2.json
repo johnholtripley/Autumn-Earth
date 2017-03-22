@@ -514,6 +514,45 @@
                         "w": 1
                     }
                 }
+            }, {
+                "name": "market wanderer",
+                "src": "wanderer.png",
+                "width": 20,
+                "height": 20,
+                "spriteWidth": 75,
+                "spriteHeight": 85,
+                "centreX": 56,
+                "centreY": 73,
+                "tileX": 14,
+                "tileY": 28,
+                "movement": [["find","shop"]],
+                "facing": "s",
+                "walkThroughDoors": false,
+                "speed": 2,
+                "isCollidable": true,
+                "isMoving": true,
+                "speechIndex": 0,
+                "speech": [
+                    ["I like walking about all these stalls"]
+                ],
+                "cardGameSpeech": {
+                    "challenge": ["Do you play? Fancy a game then?", "play"],
+                    "win": ["Woo! I won!", ""],
+                    "lose": ["Ahh, you beat me...", ""],
+                    "draw": ["Well played", ""]
+                },
+                "cardSkill": 1,
+                "uniqueCards": [2, 2],
+                "baseCardPack": 0,
+                "animation": {
+                    "walk": {
+                        "length": 1,
+                        "n": 2,
+                        "e": 3,
+                        "s": 0,
+                        "w": 1
+                    }
+                }
             }
 
         ],

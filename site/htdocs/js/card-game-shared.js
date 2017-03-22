@@ -42,10 +42,10 @@ return ((r1 - r2)*(r1 - r2)) + ((g1 - g2)*(g1 - g2)) + ((b1 - b2)*(b1 - b2));
         ['x', 'x', 'x', 'x', 'x', '-', '-', 'x', 'x', 'x', '@', '@']
     ];
 
-cardGameNameSpace.boardWidth = cardGameNameSpace.board[0].length;
-cardGameNameSpace.boardHeight = cardGameNameSpace.board.length;
-cardGameNameSpace.maxCardAnimationFrames = 10;
-cardGameNameSpace.playerColours= ["", "#36bbed", "#ff00cc"];
+    cardGameNameSpace.boardWidth = cardGameNameSpace.board[0].length;
+    cardGameNameSpace.boardHeight = cardGameNameSpace.board.length;
+    cardGameNameSpace.maxCardAnimationFrames = 10;
+    cardGameNameSpace.playerColours= ["", "#36bbed", "#ff00cc"];
 
 
 if (typeof playersCardBack !== "undefined") {

@@ -476,7 +476,7 @@ function getRandomElementFromArray(whichArray) {
 
 
 function drawCircle(fillStyle,x,y,radius) {
-gameContext.fillStyle = fillStyle;
+    gameContext.fillStyle = fillStyle;
     gameContext.beginPath();
     gameContext.arc(x,y,radius, 0, 2 * Math.PI);
     gameContext.fill();

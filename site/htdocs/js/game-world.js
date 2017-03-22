@@ -1194,7 +1194,7 @@ function getRandomElementFromArray(whichArray) {
 
 
 function drawCircle(fillStyle,x,y,radius) {
-gameContext.fillStyle = fillStyle;
+    gameContext.fillStyle = fillStyle;
     gameContext.beginPath();
     gameContext.arc(x,y,radius, 0, 2 * Math.PI);
     gameContext.fill();
@@ -2095,6 +2095,26 @@ var KeyBindings = {
     'action': 17,
     'shift': 16,
     'challenge': 67
+}
+
+if (window.Worker) {
+    var pathfindingWorker = new Worker('/js/worker-pathfinding.min.js');
+    pathfindingWorker.onmessage = function(e) {
+        console.log('Message received from worker');
+        console.log(e.data);
+        thisNPCsName = e.data[0];
+        console.log("looking for " + thisNPCsName);
+        // find which NPC this is:
+        // http://stackoverflow.com/a/16100446/1054212
+        var thisNPCsIndex = thisMapData.npcs.map(function(x) {
+            return x.name; }).indexOf(thisNPCsName);
+        console.log("found at " + thisNPCsIndex);
+          thisMapData.npcs[thisNPCsIndex].foundPath = e.data[1];
+          thisMapData.npcs[thisNPCsIndex].facing = thisMapData.npcs[thisNPCsIndex].foundPath[0];
+          thisMapData.npcs[thisNPCsIndex].isMoving = true;
+
+    }
+
 }
 
 // global vars:
@@ -3682,7 +3702,9 @@ thisMapData.npcs[i].drawnFacing = thisMapData.npcs[i].facing;
         thisMapData.npcs[i].dy = 0;
         // set index to -1 so when it increases, it'll pick up the first (0) element:
         thisMapData.npcs[i].movementIndex = -1;
-        thisMapData.npcs[i].forceNewMovementCheck = false;
+        // allow NPCs to pick up their facing without moving to that first tile:
+        thisMapData.npcs[i].forceNewMovementCheck = true;
+        
     }
     // initialise items:
     for (var i = 0; i < thisMapData.items.length; i++) {
@@ -4738,23 +4760,29 @@ function moveNPCs() {
                     } while (isATerrainCollision(thisNPC.x + (relativeFacing[thisNPC.facing]["x"] * tileW), thisNPC.y + (relativeFacing[thisNPC.facing]["y"] * tileW)));
                     thisNPC.forceNewMovementCheck = false;
                     break;
+                case 'find':
+                    if (thisNPC.isMoving) {
+                        pathfindingWorker.postMessage([thisNextMovement[1], thisNPC, thisMapData]);
+                        // make sure to only request this once:
+                        thisNPC.isMoving = false;
+                    }
+                    break;
                 case 'wait':
+                    // wait for the hero to be nearby
                     thisNPC.forceNewMovementCheck = true;
                     var tileRadius = thisNextMovement[1];
                     if ((isInRange(hero.x, hero.y, thisNPC.x, thisNPC.y, tileRadius * tileW))) {
                         // pick up the next movement code on the next loop round:
-                        
                         thisNPC.isMoving = true;
                     } else {
                         thisNPC.isMoving = false;
-                        
                         // keep it on the waiting item to keep checking:
                         thisNPC.movementIndex--;
                     }
                     break;
-                    case 'remove':
-// remove the element before, as well as this "remove" instruction (so 2 elements to be removed):
-                    thisNPC.movement.splice((thisNPC.movementIndex-1), 2);
+                case 'remove':
+                    // remove the element before, as well as this "remove" instruction (so 2 elements to be removed):
+                    thisNPC.movement.splice((thisNPC.movementIndex - 1), 2);
                     break;
                 default:
                     thisNPC.facing = thisNextMovement;
