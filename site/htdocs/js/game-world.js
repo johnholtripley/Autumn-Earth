@@ -56,6 +56,7 @@ BufferLoader.prototype.load = function() {
 }
 
 var audio = {
+    lastTrack: "",
     init: function() {
         try {
             window.AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -87,6 +88,7 @@ var audio = {
 
     initMusic: function(songName) {
         audio[songName] = new Audio();
+        audio[songName].id = songName;
         var src = document.createElement("source");
         src.type = "audio/mpeg";
         src.src = "/music/game-world/" + songName + ".mp3";
@@ -94,10 +96,26 @@ var audio = {
         // Create a gain node:
         audio[songName + 'Gain'] = audioContext.createGain();
         // get this from the settings:      
-        audio[songName + 'Gain'].gain.setValueAtTime(gameSettings.musicVolume,0);
+        audio[songName + 'Gain'].gain.setValueAtTime(gameSettings.musicVolume, 0);
         audio[songName + 'Source'] = audioContext.createMediaElementSource(audio[songName]);
         audio[songName + 'Source'].connect(audio[songName + 'Gain']);
         audio[songName + 'Gain'].connect(audioContext.destination);
+
+
+        audio[songName].addEventListener("ended", audio.removeMusic, false);
+
+    },
+
+    removeMusic: function(e) {
+        var songName = e.target.id;
+        console.log("removing music: " + songName);
+        audio[songName].removeEventListener("ended", audio.removeMusic, false);
+        delete audio[songName];
+        delete audio[songName + 'Source'];
+        delete audio[songName + 'Gain'];
+        if (audio.activeTrack == songName) {
+            audio.activeTrack = undefined;
+        }
     },
 
     playSound: function(buffer, delay) {
@@ -125,26 +143,32 @@ var audio = {
                 audio[newTrack + 'Gain'].gain.linearRampToValueAtTime(gameSettings.musicVolume, fadeTime);
                 audio[newTrack].play();
                 audio.activeTrack = newTrack;
+                audio.lastTrack = newTrack;
             }
+
         } else {
-            // nothing playing currently:
-            audio.initMusic(newTrack);
-            audio[newTrack].play();
-            audio.activeTrack = newTrack;
+            // make sure it wasn't just played:
+            if (newTrack != audio.lastTrack) {
+                // nothing playing currently:
+                audio.initMusic(newTrack);
+                audio[newTrack].play();
+                audio.activeTrack = newTrack;
+                audio.lastTrack = newTrack;
+            }
         }
     },
 
     adjustEffectsVolume: function() {
         gameSettings.soundVolume = soundVolume.value;
         if (typeof soundGainNode !== "undefined") {
-        soundGainNode.gain.value = gameSettings.soundVolume;
-    }
+            soundGainNode.gain.value = gameSettings.soundVolume;
+        }
     },
-    
+
     adjustMusicVolume: function() {
         gameSettings.musicVolume = musicVolume.value;
         if (typeof audio.activeTrack !== "undefined") {
-            audio[audio.activeTrack + 'Gain'].gain.setValueAtTime(gameSettings.musicVolume,audioContext.currentTime);
+            audio[audio.activeTrack + 'Gain'].gain.setValueAtTime(gameSettings.musicVolume, audioContext.currentTime);
         }
     }
 }
