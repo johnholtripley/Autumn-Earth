@@ -3682,6 +3682,7 @@ thisMapData.npcs[i].drawnFacing = thisMapData.npcs[i].facing;
         thisMapData.npcs[i].dy = 0;
         // set index to -1 so when it increases, it'll pick up the first (0) element:
         thisMapData.npcs[i].movementIndex = -1;
+        thisMapData.npcs[i].forceNewMovementCheck = false;
     }
     // initialise items:
     for (var i = 0; i < thisMapData.items.length; i++) {
@@ -4710,39 +4711,55 @@ function moveNPCs() {
                 }
                 newTile = true;
             }
-            if (newTile) {
-                thisNPC.movementIndex++;
-                if (thisNPC.movementIndex >= thisNPC.movement.length) {
-                    thisNPC.movementIndex = 0;
-                }
-                thisNextMovement = thisNPC.movement[thisNPC.movementIndex];
-                if (typeof thisNextMovement !== 'string') {
-                    // it's an array, get the first element as the code:
-                    thisNextMovementCode = thisNextMovement[0];
-                } else {
-                    thisNextMovementCode = thisNextMovement;
-                }
-                switch (thisNextMovementCode) {
-                    case '-':
-                        // stand still:
+        }
+
+        if (newTile || thisNPC.forceNewMovementCheck) {
+            thisNPC.movementIndex++;
+            if (thisNPC.movementIndex >= thisNPC.movement.length) {
+                thisNPC.movementIndex = 0;
+            }
+            thisNextMovement = thisNPC.movement[thisNPC.movementIndex];
+            if (typeof thisNextMovement !== 'string') {
+                // it's an array, get the first element as the code:
+                thisNextMovementCode = thisNextMovement[0];
+            } else {
+                thisNextMovementCode = thisNextMovement;
+            }
+            switch (thisNextMovementCode) {
+                case '-':
+                    // stand still:
+                    thisNPC.isMoving = false;
+                    thisNPC.forceNewMovementCheck = false;
+                case '?':
+                    do {
+                        // pick a random facing:
+                        thisNPC.facing = facingsPossible[Math.floor(Math.random() * facingsPossible.length)];
+                        // check that the target tile is walkable:
+                    } while (isATerrainCollision(thisNPC.x + (relativeFacing[thisNPC.facing]["x"] * tileW), thisNPC.y + (relativeFacing[thisNPC.facing]["y"] * tileW)));
+                    thisNPC.forceNewMovementCheck = false;
+                    break;
+                case 'wait':
+                    thisNPC.forceNewMovementCheck = true;
+                    var tileRadius = thisNextMovement[1];
+                    if ((isInRange(hero.x, hero.y, thisNPC.x, thisNPC.y, tileRadius * tileW))) {
+                        // pick up the next movement code on the next loop round:
+                        
+                        thisNPC.isMoving = true;
+                    } else {
                         thisNPC.isMoving = false;
-                    case '?':
-                        do {
-                            // pick a random facing:
-                            thisNPC.facing = facingsPossible[Math.floor(Math.random() * facingsPossible.length)];
-                            // check that the target tile is walkable:
-                        } while (isATerrainCollision(thisNPC.x + (relativeFacing[thisNPC.facing]["x"] * tileW), thisNPC.y + (relativeFacing[thisNPC.facing]["y"] * tileW)));
-                        break;
-                    case 'wait':
-                        var tileRadius = thisNextMovement[1];
-                        if ((isInRange(hero.x, hero.y, thisNPC.x, thisNPC.y, tileRadius * tileW))) {
-                            // TO DO ##########
-                        }
-                        break;
-                    default:
-                        thisNPC.facing = thisNextMovement;
-                        break;
-                }
+                        
+                        // keep it on the waiting item to keep checking:
+                        thisNPC.movementIndex--;
+                    }
+                    break;
+                    case 'remove':
+// remove the element before, as well as this "remove" instruction (so 2 elements to be removed):
+                    thisNPC.movement.splice((thisNPC.movementIndex-1), 2);
+                    break;
+                default:
+                    thisNPC.facing = thisNextMovement;
+                    thisNPC.forceNewMovementCheck = false;
+                    break;
             }
         }
     }
