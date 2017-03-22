@@ -4619,9 +4619,7 @@ function moveNPCs() {
         if (thisNPC.isMoving) {
             oldNPCx = thisNPC.x;
             oldNPCy = thisNPC.y;
-
-thisNPC.drawnFacing = thisNPC.facing;
-            
+            thisNPC.drawnFacing = thisNPC.facing;
             switch (thisNPC.facing) {
                 case 'n':
                     thisNPC.y -= thisNPC.speed;
@@ -4633,7 +4631,6 @@ thisNPC.drawnFacing = thisNPC.facing;
                         // use the +1 to make sure it's just clear of the collision tile
                         thisNPC.y = tileBottomEdge + thisNPC.height / 2 + 1;
                     }
-
                     break;
                 case 's':
                     thisNPC.y += thisNPC.speed;
@@ -4664,9 +4661,7 @@ thisNPC.drawnFacing = thisNPC.facing;
                     break;
             }
 
-
             // check for collision against hero:
-
             if (isAnObjectCollision(thisNPC.x, thisNPC.y, thisNPC.width, thisNPC.height, hero.x, hero.y, hero.width, hero.height)) {
                 thisNPC.x = oldNPCx;
                 thisNPC.y = oldNPCy;
@@ -4674,7 +4669,6 @@ thisNPC.drawnFacing = thisNPC.facing;
 
             // check for collisions against other NPCs:
             for (var j = 0; j < thisMapData.npcs.length; j++) {
-
                 if (i != j) {
                     thisOtherNPC = thisMapData.npcs[j];
                     if (thisOtherNPC.isCollidable) {
@@ -4685,20 +4679,15 @@ thisNPC.drawnFacing = thisNPC.facing;
                     }
                 }
             }
-            
+
             // check for collisions against items:
             for (var j = 0; j < thisMapData.items.length; j++) {
                 thisItem = thisMapData.items[j];
-
                 if (isAnObjectCollision(thisNPC.x, thisNPC.y, thisNPC.width, thisNPC.height, thisItem.x, thisItem.y, thisItem.width, thisItem.height)) {
                     thisNPC.x = oldNPCx;
                     thisNPC.y = oldNPCy;
-
                 }
-
             }
-
-
 
             // find the difference for this movement:
             thisNPC.dx += (thisNPC.x - oldNPCx);
@@ -4727,8 +4716,13 @@ thisNPC.drawnFacing = thisNPC.facing;
                     thisNPC.movementIndex = 0;
                 }
                 thisNextMovement = thisNPC.movement[thisNPC.movementIndex];
-
-                switch (thisNextMovement) {
+                if (typeof thisNextMovement !== 'string') {
+                    // it's an array, get the first element as the code:
+                    thisNextMovementCode = thisNextMovement[0];
+                } else {
+                    thisNextMovementCode = thisNextMovement;
+                }
+                switch (thisNextMovementCode) {
                     case '-':
                         // stand still:
                         thisNPC.isMoving = false;
@@ -4738,8 +4732,12 @@ thisNPC.drawnFacing = thisNPC.facing;
                             thisNPC.facing = facingsPossible[Math.floor(Math.random() * facingsPossible.length)];
                             // check that the target tile is walkable:
                         } while (isATerrainCollision(thisNPC.x + (relativeFacing[thisNPC.facing]["x"] * tileW), thisNPC.y + (relativeFacing[thisNPC.facing]["y"] * tileW)));
-
-
+                        break;
+                    case 'wait':
+                        var tileRadius = thisNextMovement[1];
+                        if ((isInRange(hero.x, hero.y, thisNPC.x, thisNPC.y, tileRadius * tileW))) {
+                            // TO DO ##########
+                        }
                         break;
                     default:
                         thisNPC.facing = thisNextMovement;
@@ -4749,7 +4747,6 @@ thisNPC.drawnFacing = thisNPC.facing;
         }
     }
 }
-
 
 
 
