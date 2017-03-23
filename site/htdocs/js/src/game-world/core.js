@@ -1497,6 +1497,23 @@ function moveNPCs() {
                     // remove the element before, as well as this "remove" instruction (so 2 elements to be removed):
                     thisNPC.movement.splice((thisNPC.movementIndex - 1), 2);
                     break;
+                case 'pathEnd':
+                    var thisPreviousMovement;
+                    // find the "find" before this and remove all elements after that to this index:
+                    for (j = thisNPC.movementIndex; j >= 0; j--) {
+                        thisPreviousMovement = thisNPC.movement[j];
+                        if (typeof thisPreviousMovement !== 'string') {
+                            if (thisPreviousMovement[0] == 'find') {
+                                var numberOfElementsRemoved = thisNPC.movementIndex - (j);
+                                thisNPC.movement.splice(j + 1, numberOfElementsRemoved);
+                                thisNPC.movementIndex -= numberOfElementsRemoved;
+                                thisNPC.forceNewMovementCheck = true;
+                                break;
+                            }
+                        }
+                    }
+
+                    break;
                 default:
                     thisNPC.facing = thisNextMovement;
                     thisNPC.forceNewMovementCheck = false;
