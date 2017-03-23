@@ -89,7 +89,7 @@ function findPath(startX, startY, endX, endY) {
                 foundPath.unshift([thisNode.parentX, thisNode.parentY])
                 thisNode = nodes[thisNode.parentX + "-" + thisNode.parentY];
             }
-            console.log(foundPath);
+            
             var builtPath = [];
             for (var i = 1; i < foundPath.length; i++) {
                 if (foundPath[i][0] == foundPath[i - 1][0]) {
@@ -108,7 +108,7 @@ function findPath(startX, startY, endX, endY) {
                 }
             }
             builtPath.push('pathEnd');
-            console.log(builtPath);
+            
         } else {
             addNode(thisNode, thisNode.x + 1, thisNode.y, endX, endY);
             addNode(thisNode, thisNode.x - 1, thisNode.y, endX, endY);
@@ -132,7 +132,7 @@ function findPath(startX, startY, endX, endY) {
 onmessage = function(e) {
     switch (e.data[0]) {
         case 'shop':
-            console.log('web worker is looking for a shop');
+           
             var thisNPC = e.data[1];
             thisMapData = e.data[2];
 

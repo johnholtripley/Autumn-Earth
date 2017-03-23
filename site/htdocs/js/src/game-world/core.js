@@ -418,6 +418,7 @@ thisMapData.npcs[i].drawnFacing = thisMapData.npcs[i].facing;
         // used for making sure that pathfinding NPCs don't head straight back to the last place they visited:
         thisMapData.npcs[i].lastTargetDestination = "";
         
+        
     }
     // initialise items:
     for (var i = 0; i < thisMapData.items.length; i++) {
@@ -1348,6 +1349,8 @@ function checkForChallenges() {
     key[6] = 0;
 }
 
+
+
 function moveNPCs() {
     var thisNPC, newTile, thisNextMovement, oldNPCx, oldNPCy;
     for (var i = 0; i < thisMapData.npcs.length; i++) {
@@ -1461,10 +1464,12 @@ function moveNPCs() {
                 thisNextMovementCode = thisNextMovement;
             }
             switch (thisNextMovementCode) {
+
                 case '-':
                     // stand still:
                     thisNPC.isMoving = false;
                     thisNPC.forceNewMovementCheck = false;
+
                 case '?':
                     do {
                         // pick a random facing:
@@ -1473,14 +1478,36 @@ function moveNPCs() {
                     } while (isATerrainCollision(thisNPC.x + (relativeFacing[thisNPC.facing]["x"] * tileW), thisNPC.y + (relativeFacing[thisNPC.facing]["y"] * tileW)));
                     thisNPC.forceNewMovementCheck = false;
                     break;
+
                 case 'find':
+                    thisNPC.forceNewMovementCheck = true;
+                    console.log("finding");
                     if (thisNPC.isMoving) {
-                        pathfindingWorker.postMessage([thisNextMovement[1], thisNPC, thisMapData]);
-                        // make sure to only request this once:
-                        thisNPC.isMoving = false;
+                        if (!thisNPC.waitingForAPath) {
+                            pathfindingWorker.postMessage([thisNextMovement[1], thisNPC, thisMapData]);
+                            // make sure to only request this once:
+                            thisNPC.isMoving = false;
+                            thisNPC.waitingForAPath = true;
+                            thisNPC.waitingTimer = 0;
+                            // play animation while waiting
+                            // thisNextMovement[2]
+                            // #######
+                        }
+                        // keep the NPC waiting:
+                        thisNPC.movementIndex--;
+                    } else {
+                        // check timer:
+                        thisNPC.waitingTimer++;
+                        if ((!thisNPC.waitingForAPath) && (thisNPC.waitingTimer > thisNextMovement[3])) {
+                               thisNPC.isMoving = true;
+                        } else {
+                            // keep waiting until got a path, and the timer has expired
+                            thisNPC.movementIndex--;
+                        }
                     }
                     break;
-                case 'wait':
+
+                case 'proximity':
                     // wait for the hero to be nearby
                     thisNPC.forceNewMovementCheck = true;
                     var tileRadius = thisNextMovement[1];
@@ -1493,12 +1520,13 @@ function moveNPCs() {
                         thisNPC.movementIndex--;
                     }
                     break;
+
                 case 'remove':
                     // remove the element before, as well as this "remove" instruction (so 2 elements to be removed):
                     thisNPC.movement.splice((thisNPC.movementIndex - 1), 2);
                     break;
+
                 case 'pathEnd':
-                //thisNPC.isMoving = false;
                     var thisPreviousMovement;
                     // find the "find" before this and remove all elements after that to this index:
                     for (j = thisNPC.movementIndex; j >= 0; j--) {
@@ -1513,8 +1541,8 @@ function moveNPCs() {
                             }
                         }
                     }
-
                     break;
+
                 default:
                     thisNPC.facing = thisNextMovement;
                     thisNPC.forceNewMovementCheck = false;
@@ -1523,7 +1551,6 @@ function moveNPCs() {
         }
     }
 }
-
 
 
 

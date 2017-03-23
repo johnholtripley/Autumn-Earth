@@ -9,9 +9,9 @@ if (window.Worker) {
         }).indexOf(thisNPCsName);
         // insert the new path:
         // http://stackoverflow.com/a/7032717/1054212
-        thisMapData.npcs[thisNPCsIndex].movement.splice.apply(thisMapData.npcs[thisNPCsIndex].movement, [thisMapData.npcs[thisNPCsIndex].movementIndex + 1, 0].concat(e.data[1]));
-        thisMapData.npcs[thisNPCsIndex].isMoving = true;
-        // store the target tile so it doesn't try and go straight back to it after:
-        thisNPC.lastTargetDestination = e.data[2];
+        thisMapData.npcs[thisNPCsIndex].movement.splice.apply(thisMapData.npcs[thisNPCsIndex].movement, [thisMapData.npcs[thisNPCsIndex].movementIndex + 2, 0].concat(e.data[1]));
+thisMapData.npcs[thisNPCsIndex].waitingForAPath = false;
+          // store the target tile so it doesn't try and go straight back to it after:
+        thisMapData.npcs[thisNPCsIndex].lastTargetDestination = e.data[2];
     }
 }
