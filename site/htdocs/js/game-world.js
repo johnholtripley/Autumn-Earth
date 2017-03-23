@@ -2109,7 +2109,11 @@ if (window.Worker) {
         var thisNPCsIndex = thisMapData.npcs.map(function(x) {
             return x.name; }).indexOf(thisNPCsName);
         console.log("found at " + thisNPCsIndex);
-          thisMapData.npcs[thisNPCsIndex].foundPath = e.data[1];
+          
+
+// insert the new path:
+thisMapData.npcs[thisNPCsIndex].movement.splice(thisMapData.npcs[thisNPCsIndex].movementIndex+1, 0, e.data[1]);
+
           thisMapData.npcs[thisNPCsIndex].facing = thisMapData.npcs[thisNPCsIndex].foundPath[0];
           thisMapData.npcs[thisNPCsIndex].isMoving = true;
 
@@ -3704,6 +3708,8 @@ thisMapData.npcs[i].drawnFacing = thisMapData.npcs[i].facing;
         thisMapData.npcs[i].movementIndex = -1;
         // allow NPCs to pick up their facing without moving to that first tile:
         thisMapData.npcs[i].forceNewMovementCheck = true;
+        // used for making sure that pathfinding NPCs don't head straight back to the last place they visited:
+        thisMapData.npcs[i].lastTargetDestination = "";
         
     }
     // initialise items:

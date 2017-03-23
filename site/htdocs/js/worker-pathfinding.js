@@ -6,7 +6,7 @@ onmessage = function(e) {
             var thisNPC = e.data[1];
             var thisMapData = e.data[2];
 
-            postMessage([thisNPC.name,["n","n","e"]]);
+            postMessage([thisNPC.name,["n","n","e","endPath"]]);
             break;
     }
 }

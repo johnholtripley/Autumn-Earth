@@ -10,7 +10,11 @@ if (window.Worker) {
         var thisNPCsIndex = thisMapData.npcs.map(function(x) {
             return x.name; }).indexOf(thisNPCsName);
         console.log("found at " + thisNPCsIndex);
-          thisMapData.npcs[thisNPCsIndex].foundPath = e.data[1];
+          
+
+// insert the new path:
+thisMapData.npcs[thisNPCsIndex].movement.splice(thisMapData.npcs[thisNPCsIndex].movementIndex+1, 0, e.data[1]);
+
           thisMapData.npcs[thisNPCsIndex].facing = thisMapData.npcs[thisNPCsIndex].foundPath[0];
           thisMapData.npcs[thisNPCsIndex].isMoving = true;
 

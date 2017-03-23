@@ -415,6 +415,8 @@ thisMapData.npcs[i].drawnFacing = thisMapData.npcs[i].facing;
         thisMapData.npcs[i].movementIndex = -1;
         // allow NPCs to pick up their facing without moving to that first tile:
         thisMapData.npcs[i].forceNewMovementCheck = true;
+        // used for making sure that pathfinding NPCs don't head straight back to the last place they visited:
+        thisMapData.npcs[i].lastTargetDestination = "";
         
     }
     // initialise items:
