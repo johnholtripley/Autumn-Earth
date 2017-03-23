@@ -2098,7 +2098,7 @@ var KeyBindings = {
 }
 
 if (window.Worker) {
-    var pathfindingWorker = new Worker('/js/worker-pathfinding.min.js');
+    var pathfindingWorker = new Worker('/js/worker-pathfinding.js');
     pathfindingWorker.onmessage = function(e) {
         thisNPCsName = e.data[0];
         // find which NPC this is:
@@ -2106,12 +2106,12 @@ if (window.Worker) {
         var thisNPCsIndex = thisMapData.npcs.map(function(x) {
             return x.name;
         }).indexOf(thisNPCsName);
-        //thisMapData.npcs[thisNPCsIndex].movementIndex ++;
         // insert the new path:
         // http://stackoverflow.com/a/7032717/1054212
-        thisMapData.npcs[thisNPCsIndex].movement.splice.apply(thisMapData.npcs[thisNPCsIndex].movement, [thisMapData.npcs[thisNPCsIndex].movementIndex+1, 0].concat(e.data[1]));
- 
+        thisMapData.npcs[thisNPCsIndex].movement.splice.apply(thisMapData.npcs[thisNPCsIndex].movement, [thisMapData.npcs[thisNPCsIndex].movementIndex + 1, 0].concat(e.data[1]));
         thisMapData.npcs[thisNPCsIndex].isMoving = true;
+        // store the target tile so it doesn't try and go straight back to it after:
+        thisNPC.lastTargetDestination = e.data[2];
     }
 }
 
@@ -4784,28 +4784,22 @@ function moveNPCs() {
                     // remove the element before, as well as this "remove" instruction (so 2 elements to be removed):
                     thisNPC.movement.splice((thisNPC.movementIndex - 1), 2);
                     break;
-                    case 'pathEnd':
-                 
+                case 'pathEnd':
                     var thisPreviousMovement;
                     // find the "find" before this and remove all elements after that to this index:
-                    for (j = thisNPC.movementIndex; j>=0; j--) {
+                    for (j = thisNPC.movementIndex; j >= 0; j--) {
                         thisPreviousMovement = thisNPC.movement[j];
-            if (typeof thisPreviousMovement !== 'string') {
-                if(thisPreviousMovement[0] == 'find') {
-console.log("found at "+j);
-console.log("revmoing until "+thisNPC.movementIndex);
-console.log(thisNPC.movement);
-var numberOfElementsRemoved = thisNPC.movementIndex - (j);
-thisNPC.movement.splice(j+1,numberOfElementsRemoved);
-thisNPC.movementIndex -= numberOfElementsRemoved;
-console.log(thisNPC.movement);
-console.log(thisNPC.movementIndex);
-thisNPC.forceNewMovementCheck = true;
-break;
-                }
-            }
+                        if (typeof thisPreviousMovement !== 'string') {
+                            if (thisPreviousMovement[0] == 'find') {
+                                var numberOfElementsRemoved = thisNPC.movementIndex - (j);
+                                thisNPC.movement.splice(j + 1, numberOfElementsRemoved);
+                                thisNPC.movementIndex -= numberOfElementsRemoved;
+                                thisNPC.forceNewMovementCheck = true;
+                                break;
+                            }
+                        }
                     }
-//####
+
                     break;
                 default:
                     thisNPC.facing = thisNextMovement;
