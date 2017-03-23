@@ -26,9 +26,13 @@ function addNode(parentNode, tileX, tileY, endX, endY) {
                 }
             }
         }
+        // check for hero
+        // ########
+        // check for other NPCs
+        // ########
         if (!isABlockingItem) {
-            if (typeof nodes[tileX + "-" + tileY] !== "undefined") {
-                var cost = Math.abs(tileX - endX) + Math.abs(tileY - endY);
+            var cost = Math.abs(tileX - endX) + Math.abs(tileY - endY);
+            if (typeof nodes[tileX + "-" + tileY] === "undefined") {
                 nodes[tileX + "-" + tileY] = {
                     x: tileX,
                     y: tileY,
@@ -46,6 +50,13 @@ function addNode(parentNode, tileX, tileY, endX, endY) {
                     // add to end of array:
                     uncheckedTiles.push(nodes[tileX + "-" + tileY]);
                 }
+            } else {
+                // check cost and change parent if this is faster
+                if (cost < nodes[tileX + "-" + tileY].cost) {
+                    nodes[tileX + "-" + tileY].cost = cost;
+                    nodes[tileX + "-" + tileY].parentX = parentNode.x;
+                    nodes[tileX + "-" + tileY].parentY = parentNode.y;
+                }
             }
         }
     }
@@ -53,19 +64,17 @@ function addNode(parentNode, tileX, tileY, endX, endY) {
 
 
 function findPath(startX, startY, endX, endY) {
-
     uncheckedTiles = [];
     var cost = Math.abs(startX - endX) + Math.abs(startY - endY);
     nodes = {};
     nodes[startX + "-" + startY] = {
         x: startX,
         y: startY,
-        parentX: null,
-        parentY: null,
+        parentX: undefined,
+        parentY: undefined,
         cost: cost
     }
     uncheckedTiles.push(nodes[startX + "-" + startY]);
-
     var thisNode;
     var targetFound = false;
     do {
@@ -74,21 +83,49 @@ function findPath(startX, startY, endX, endY) {
         // check if this is the target:
         if ((thisNode.x == endX) && (thisNode.y == endY)) {
             targetFound = true;
-            // make path ########
+            var foundPath = [];
+            while (typeof thisNode.parentX !== "undefined") {
+
+                foundPath.unshift([thisNode.parentX, thisNode.parentY])
+                thisNode = nodes[thisNode.parentX + "-" + thisNode.parentY];
+            }
+            console.log(foundPath);
+            var builtPath = [];
+            for (var i = 1; i < foundPath.length; i++) {
+                if (foundPath[i][0] == foundPath[i - 1][0]) {
+                    // x values are the same
+                    if (foundPath[i][1] > foundPath[i - 1][1]) {
+                        builtPath.push('s');
+                    } else {
+                        builtPath.push('n');
+                    }
+                } else {
+                    if (foundPath[i][0] > foundPath[i - 1][0]) {
+                        builtPath.push('e');
+                    } else {
+                        builtPath.push('w');
+                    }
+                }
+            }
+            builtPath.push('pathEnd');
+            console.log(builtPath);
         } else {
             addNode(thisNode, thisNode.x + 1, thisNode.y, endX, endY);
             addNode(thisNode, thisNode.x - 1, thisNode.y, endX, endY);
             addNode(thisNode, thisNode.x, thisNode.y + 1, endX, endY);
             addNode(thisNode, thisNode.x, thisNode.y - 1, endX, endY);
         }
-
     } while ((uncheckedTiles.length > 0) && !targetFound);
 
     // tidy up:
     delete uncheckedTiles;
     delete thisMapData;
     delete nodes;
-    return ["n", "n", "e", "pathEnd"];
+    if (!targetFound) {
+        return ["-", "pathEnd"];
+    } else {
+        return builtPath;
+    }
 }
 
 
@@ -128,6 +165,7 @@ onmessage = function(e) {
                         distanceToThisShop = Math.sqrt(((thisNPC.tileX - thisMapData.npcs[(shopsFound[i])].tileX) * (thisNPC.tileX - thisMapData.npcs[(shopsFound[i])].tileX)) + ((thisNPC.tileY - thisMapData.npcs[(shopsFound[i])].tileY) * (thisNPC.tileY - thisMapData.npcs[(shopsFound[i])].tileY)));
                         if (distanceToThisShop < shortestDistance) {
                             chosenShop = i;
+                            shortestDistance = distanceToThisShop;
                         }
                     }
                 }

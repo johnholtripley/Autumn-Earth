@@ -4785,6 +4785,7 @@ function moveNPCs() {
                     thisNPC.movement.splice((thisNPC.movementIndex - 1), 2);
                     break;
                 case 'pathEnd':
+                //thisNPC.isMoving = false;
                     var thisPreviousMovement;
                     // find the "find" before this and remove all elements after that to this index:
                     for (j = thisNPC.movementIndex; j >= 0; j--) {

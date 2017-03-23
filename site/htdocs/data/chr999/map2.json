@@ -524,7 +524,7 @@
                 "centreX": 56,
                 "centreY": 73,
                 "tileX": 14,
-                "tileY": 23,
+                "tileY": 27,
                 "movement": [["find","shop"]],
                 "facing": "s",
                 "walkThroughDoors": false,
