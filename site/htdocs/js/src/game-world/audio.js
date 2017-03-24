@@ -1,6 +1,6 @@
 var audioContext = null;
 var soundGainNode;
-var musicGainNode;
+//var musicGainNode;
 var soundEffects = {};
 var soundsToLoad = {
     'coins': '../sounds/coins-NOT_MINE-wow.mp3',
@@ -63,7 +63,7 @@ var audio = {
             audioContext = new AudioContext();
             soundGainNode = audioContext.createGain();
             soundGainNode.connect(audioContext.destination);
-            musicGainNode.createGain();
+            //musicGainNode.createGain();
             var names = [];
             var paths = [];
             for (var name in soundsToLoad) {
@@ -119,6 +119,7 @@ var audio = {
     },
 
     playSound: function(buffer, delay) {
+
         var source = audioContext.createBufferSource();
         source.buffer = buffer;
         source.connect(soundGainNode);

@@ -446,7 +446,7 @@
                 "centreX": 56,
                 "centreY": 73,
                 "tileX": 15,
-                "tileY": 23,
+                "tileY": 3,
                 "movement": ["-"],
                 "facing": "s",
                 "walkThroughDoors": false,
@@ -485,7 +485,7 @@
                 "centreX": 56,
                 "centreY": 73,
                 "tileX": 9,
-                "tileY": 23,
+                "tileY": 21,
                 "movement": ["-"],
                 "facing": "s",
                 "walkThroughDoors": false,
@@ -576,8 +576,8 @@
         "items": [{
 
                 "type": 18,
-                "tileX": 12,
-                "tileY": 3
+                "tileX": 15,
+                "tileY": 15
 
             }, {
 
