@@ -263,6 +263,25 @@ function turntoFace(obj1, obj2) {
     }
 }
 
+function turntoFaceTile(obj, tile2x, tile2y) {
+    var xDiff = obj.x - getTileCentreCoordX(tile2x);
+    var yDiff = obj.y - getTileCentreCoordY(tile2y);
+    // find the greatest difference:
+    if (Math.abs(xDiff) > Math.abs(yDiff)) {
+        if (xDiff > 0) {
+            return "w";
+        } else {
+            return "e";
+        }
+    } else {
+        if (yDiff > 0) {
+            return "n";
+        } else {
+            return "s";
+        }
+    } 
+}
+
 
 function isFacing(obj1, obj2) {
     var isFacing = false;
