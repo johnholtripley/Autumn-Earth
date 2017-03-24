@@ -574,7 +574,7 @@
                 "centreY": 73,
                 "tileX": 14,
                 "tileY": 27,
-                "movement": [["find","shop","waitingAnimationName",360],["talkToNeighbour"]],
+                "movement": [["find","shop","waitingAnimationName",0],["remove"],["find","shop","waitingAnimationName",360],["talkToNeighbour"]],
                 "facing": "s",
                 "walkThroughDoors": false,
                 "speed": 2,
