@@ -13,5 +13,8 @@ if (window.Worker) {
 thisMapData.npcs[thisNPCsIndex].waitingForAPath = false;
           // store the target tile so it doesn't try and go straight back to it after:
         thisMapData.npcs[thisNPCsIndex].lastTargetDestination = e.data[2];
+
+
+
     }
 }

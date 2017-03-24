@@ -2112,6 +2112,9 @@ if (window.Worker) {
 thisMapData.npcs[thisNPCsIndex].waitingForAPath = false;
           // store the target tile so it doesn't try and go straight back to it after:
         thisMapData.npcs[thisNPCsIndex].lastTargetDestination = e.data[2];
+
+
+
     }
 }
 
@@ -3682,7 +3685,7 @@ function prepareGame() {
     }
     itemImages = [];
     for (var i = 0; i < itemGraphicsToLoad.length; i++) {
-        console.log(itemGraphicsToLoad[i]);
+        
         itemImages[itemGraphicsToLoad[i]] = Loader.getImage(itemGraphicsToLoad[i]);
     }
     backgroundImg = Loader.getImage("backgroundImg");
@@ -4727,6 +4730,7 @@ function moveNPCs() {
                     thisNPC.dx += tileW;
                 }
                 newTile = true;
+           
             }
             if (Math.abs(thisNPC.dy) >= tileW) {
                 if (thisNPC.dy > 0) {
@@ -4739,6 +4743,8 @@ function moveNPCs() {
         }
 
         if (newTile || thisNPC.forceNewMovementCheck) {
+                 thisNPC.tileX = getTileX(thisNPC.x);
+                thisNPC.tileY = getTileY(thisNPC.y);
             thisNPC.movementIndex++;
             if (thisNPC.movementIndex >= thisNPC.movement.length) {
                 thisNPC.movementIndex = 0;
@@ -4768,9 +4774,10 @@ function moveNPCs() {
 
                 case 'find':
                     thisNPC.forceNewMovementCheck = true;
-                    console.log("finding");
+                    
                     if (thisNPC.isMoving) {
                         if (!thisNPC.waitingForAPath) {
+                          
                             pathfindingWorker.postMessage([thisNextMovement[1], thisNPC, thisMapData]);
                             // make sure to only request this once:
                             thisNPC.isMoving = false;
@@ -4785,6 +4792,7 @@ function moveNPCs() {
                     } else {
                         // check timer:
                         thisNPC.waitingTimer++;
+                        
                         if ((!thisNPC.waitingForAPath) && (thisNPC.waitingTimer > thisNextMovement[3])) {
                                thisNPC.isMoving = true;
                         } else {

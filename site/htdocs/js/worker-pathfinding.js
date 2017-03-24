@@ -108,7 +108,7 @@ function findPath(startX, startY, endX, endY) {
                 }
             }
             builtPath.push('pathEnd');
-            
+        
         } else {
             addNode(thisNode, thisNode.x + 1, thisNode.y, endX, endY);
             addNode(thisNode, thisNode.x - 1, thisNode.y, endX, endY);
