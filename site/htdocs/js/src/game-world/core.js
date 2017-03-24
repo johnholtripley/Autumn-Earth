@@ -395,7 +395,7 @@ function prepareGame() {
     }
     itemImages = [];
     for (var i = 0; i < itemGraphicsToLoad.length; i++) {
-        
+
         itemImages[itemGraphicsToLoad[i]] = Loader.getImage(itemGraphicsToLoad[i]);
     }
     backgroundImg = Loader.getImage("backgroundImg");
@@ -403,12 +403,8 @@ function prepareGame() {
     for (var i = 0; i < thisMapData.npcs.length; i++) {
         thisMapData.npcs[i].x = getTileCentreCoordX(thisMapData.npcs[i].tileX);
         thisMapData.npcs[i].y = getTileCentreCoordY(thisMapData.npcs[i].tileY);
-
-
-
-        thisMapData.npcs[i].z = getElevation(thisMapData.npcs[i].tileX,thisMapData.npcs[i].tileY);
-        
-thisMapData.npcs[i].drawnFacing = thisMapData.npcs[i].facing;
+        thisMapData.npcs[i].z = getElevation(thisMapData.npcs[i].tileX, thisMapData.npcs[i].tileY);
+        thisMapData.npcs[i].drawnFacing = thisMapData.npcs[i].facing;
         thisMapData.npcs[i].dx = 0;
         thisMapData.npcs[i].dy = 0;
         // set index to -1 so when it increases, it'll pick up the first (0) element:
@@ -417,51 +413,44 @@ thisMapData.npcs[i].drawnFacing = thisMapData.npcs[i].facing;
         thisMapData.npcs[i].forceNewMovementCheck = true;
         // used for making sure that pathfinding NPCs don't head straight back to the last place they visited:
         thisMapData.npcs[i].lastTargetDestination = "";
-        
-        
     }
+
     // initialise items:
     for (var i = 0; i < thisMapData.items.length; i++) {
         thisMapData.items[i].x = getTileCentreCoordX(thisMapData.items[i].tileX);
         thisMapData.items[i].y = getTileCentreCoordY(thisMapData.items[i].tileY);
-
-
-thisMapData.items[i].z = getElevation(thisMapData.items[i].tileX,thisMapData.items[i].tileY);
+        thisMapData.items[i].z = getElevation(thisMapData.items[i].tileX, thisMapData.items[i].tileY);
         thisMapData.items[i].width = currentActiveInventoryItems[thisMapData.items[i].type].width;
         thisMapData.items[i].height = currentActiveInventoryItems[thisMapData.items[i].type].height;
-
         thisMapData.items[i].centreX = currentActiveInventoryItems[thisMapData.items[i].type].centreX;
         thisMapData.items[i].centreY = currentActiveInventoryItems[thisMapData.items[i].type].centreY;
 
         // check for node resources:
-        if(currentActiveInventoryItems[thisMapData.items[i].type].action == "node") {
+        if (currentActiveInventoryItems[thisMapData.items[i].type].action == "node") {
             // use the saved value if it has one:
-            if(!thisMapData.items[i].timeLastHarvested) {
-            // otherwise, set it so it can be instantly harvested:
-            thisMapData.items[i].timeLastHarvested = hero.totalGameTimePlayed-currentActiveInventoryItems[thisMapData.items[i].type].respawnRate;
+            if (!thisMapData.items[i].timeLastHarvested) {
+                // otherwise, set it so it can be instantly harvested:
+                thisMapData.items[i].timeLastHarvested = hero.totalGameTimePlayed - currentActiveInventoryItems[thisMapData.items[i].type].respawnRate;
             }
         }
     }
-activeNPCForDialogue = '';
+    activeNPCForDialogue = '';
     // determine tile offset to centre the hero in the centre
     hero.x = getTileCentreCoordX(hero.tileX);
     hero.y = getTileCentreCoordY(hero.tileY);
-hero.z = getElevation(hero.tileX,hero.tileY);
+    hero.z = getElevation(hero.tileX, hero.tileY);
 
     // initialise fae:
     fae.x = hero.x + tileW * 2;
     fae.y = hero.y + tileH * 2;
     fae.z = hero.z;
-
     fae.dz = 1;
-   // fae.pulse = 0;
-    
+    // fae.pulse = 0;
 
     timeSinceLastFrameSwap = 0;
     currentAnimationFrame = 0;
     mapTransition = "in";
     mapTransitionCurrentFrames = 1;
-console.log( thisMapData.npcs);
     gameMode = "play";
 }
 
@@ -476,17 +465,14 @@ function removeMapAssets() {
         npcImages[thisMapData.npcs[i].name].src = '';
         npcImages[thisMapData.npcs[i].name] = null;
     }
-    
     for (var i in itemGraphicsToLoad) {
-    
-        
         itemImages[itemGraphicsToLoad[i]].src = '';
         itemImages[itemGraphicsToLoad[i]] = null;
-    
     }
     backgroundImg.src = '';
     backgroundImg = null;
 }
+
 
 function loadingProgress() {
     // make this graphical where appropriate ####
@@ -497,11 +483,6 @@ function loadingProgress() {
 function changeMaps(doorX, doorY) {
     previousZoneName = thisMapData.zoneName;
     gameMode = "mapLoading";
-
-
-
-
-    
     removeMapAssets();
     var doorData = thisMapData.doors;
     var whichDoor = getTileX(doorX) + "," + getTileX(doorY);
