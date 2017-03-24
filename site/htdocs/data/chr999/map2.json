@@ -574,15 +574,15 @@
                 "centreY": 73,
                 "tileX": 14,
                 "tileY": 27,
-                "movement": [["find","shop","waitingAnimationName",180]],
+                "movement": [["find","shop","waitingAnimationName",360]],
                 "facing": "s",
                 "walkThroughDoors": false,
                 "speed": 2,
                 "isCollidable": true,
-                "isMoving": true,
+                "isMoving": false,
                 "speechIndex": 0,
                 "speech": [
-                    ["I like walking about all these stalls"]
+                    ["I like walking about all these stalls",""]
                 ],
                 "cardGameSpeech": {
                     "challenge": ["Do you play? Fancy a game then?", "play"],
