@@ -156,20 +156,14 @@ onmessage = function(e) {
                 }
             }
             if (shopsFound.length > 0) {
-                var thisShopLocation, distanceToThisShop, chosenShop;
-                var shortestDistance = 9999999;
-                for (var i = 0; i < shopsFound.length; i++) {
-                    thisShopLocation = thisMapData.npcs[(shopsFound[i])].tileX + "-" + thisMapData.npcs[(shopsFound[i])].tileY;
-                    // make sure it's not the one just visited:
-                    if (thisShopLocation != thisNPC.lastTargetDestination) {
-                        distanceToThisShop = Math.sqrt(((thisNPC.tileX - thisMapData.npcs[(shopsFound[i])].tileX) * (thisNPC.tileX - thisMapData.npcs[(shopsFound[i])].tileX)) + ((thisNPC.tileY - thisMapData.npcs[(shopsFound[i])].tileY) * (thisNPC.tileY - thisMapData.npcs[(shopsFound[i])].tileY)));
-                        if (distanceToThisShop < shortestDistance) {
-                            chosenShop = i;
-                            shortestDistance = distanceToThisShop;
-                        }
-                    }
-                }
-                var chosenShopLocation = thisMapData.npcs[(shopsFound[chosenShop])].tileX + "-" + thisMapData.npcs[(shopsFound[chosenShop])].tileY;
+            
+var chosenShopLocation, chosenShop;
+do {
+    chosenShop = Math.floor(Math.random() * shopsFound.length);
+chosenShopLocation = thisMapData.npcs[(shopsFound[chosenShop])].tileX + "-" + thisMapData.npcs[(shopsFound[chosenShop])].tileY;
+} while (chosenShopLocation == thisNPC.lastTargetDestination);
+
+                 
                 postMessage([thisNPC.name, findPath(thisNPC.tileX, thisNPC.tileY, thisMapData.npcs[(shopsFound[chosenShop])].tileX, thisMapData.npcs[(shopsFound[chosenShop])].tileY), chosenShopLocation]);
             } else {
                 // stay still:
