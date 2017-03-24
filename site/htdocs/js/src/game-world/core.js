@@ -1332,7 +1332,7 @@ function checkForChallenges() {
 
 
 function moveNPCs() {
-    var thisNPC, newTile, thisNextMovement, oldNPCx, oldNPCy;
+    var thisNPC, newTile, thisNextMovement, oldNPCx, oldNPCy, thisOtherNPC;
     for (var i = 0; i < thisMapData.npcs.length; i++) {
         thisNPC = thisMapData.npcs[i];
         if (thisNPC.isMoving) {
@@ -1510,10 +1510,9 @@ function moveNPCs() {
                     break;
 
                 case 'pathEnd':
-
                     var targetDestination = thisNPC.lastTargetDestination.split("-");
                     thisNPC.drawnFacing = turntoFaceTile(thisNPC, targetDestination[0], targetDestination[1]);
-                    console.log(thisNPC.drawnFacing);
+
                     var thisPreviousMovement;
                     // find the "find" before this and remove all elements after that to this index:
                     for (j = thisNPC.movementIndex; j >= 0; j--) {
@@ -1532,6 +1531,20 @@ function moveNPCs() {
                     }
                     break;
 
+                case 'talkToNeighbour':
+                    // find an adjacent NPC and get them to turn to face this NPC
+                    for (var j = 0; j < thisMapData.npcs.length; j++) {
+                        if (i != j) {
+                            thisOtherNPC = thisMapData.npcs[j];
+                            if (Math.abs(thisOtherNPC.tileX - thisNPC.tileX) <= 1) {
+                                if (Math.abs(thisOtherNPC.tileY - thisNPC.tileY) <= 1) {
+                                    thisOtherNPC.drawnFacing = turntoFace(thisOtherNPC, thisNPC);
+                                }
+                            }
+                        }
+                    }
+                    break;
+
                 default:
                     thisNPC.facing = thisNextMovement;
                     thisNPC.forceNewMovementCheck = false;
@@ -1540,7 +1553,6 @@ function moveNPCs() {
         }
     }
 }
-
 
 
 
