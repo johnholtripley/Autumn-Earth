@@ -135,6 +135,14 @@
             "categories": [3],
             "size": "small",
             "currency": "money"
+        },
+        {
+            "name": "shop #3",
+            "uniqueItems": [],
+            "specialism": 2,
+            "categories": [1, 2],
+            "size": "small",
+            "currency": "money"
         }],
         "npcs": [
 
@@ -446,7 +454,7 @@
                 "centreX": 56,
                 "centreY": 73,
                 "tileX": 15,
-                "tileY": 3,
+                "tileY": 2,
                 "movement": ["-"],
                 "facing": "s",
                 "walkThroughDoors": false,
@@ -514,7 +522,48 @@
                         "w": 1
                     }
                 }
-            }, {
+            }, 
+{
+                "name": "shopkeeper3",
+                "src": "shopkeeper1.png",
+                "width": 20,
+                "height": 20,
+                "spriteWidth": 75,
+                "spriteHeight": 85,
+                "centreX": 56,
+                "centreY": 73,
+                "tileX": 3,
+                "tileY": 11,
+                "movement": ["-"],
+                "facing": "e",
+                "walkThroughDoors": false,
+                "speed": 2,
+                "isCollidable": true,
+                "isMoving": false,
+                "speechIndex": 0,
+                "speech": [
+                    ["Hi there - welcome!/Feel free to have a good look around/Welcome, welcome!", "shop", "shop #3"]
+                ],
+                "cardGameSpeech": {
+                    "challenge": ["Do you play? Fancy a game then?", "play"],
+                    "win": ["Woo! I won!", ""],
+                    "lose": ["Ahh, you beat me...", ""],
+                    "draw": ["Well played", ""]
+                },
+                "cardSkill": 1,
+                "uniqueCards": [2, 2],
+                "baseCardPack": 0,
+                "animation": {
+                    "walk": {
+                        "length": 1,
+                        "n": 2,
+                        "e": 3,
+                        "s": 0,
+                        "w": 1
+                    }
+                }
+            },
+            {
                 "name": "market wanderer",
                 "src": "wanderer.png",
                 "width": 20,
