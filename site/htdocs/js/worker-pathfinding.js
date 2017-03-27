@@ -80,6 +80,7 @@ function addNode(parentNode, tileX, tileY, endX, endY) {
 
 
 function findPath(startX, startY, endX, endY) {
+    console.log("start path: "+startX+", "+startY);
     uncheckedTiles = [];
     var heuristic = Math.abs(startX - endX) + Math.abs(startY - endY);
     nodes = {};
