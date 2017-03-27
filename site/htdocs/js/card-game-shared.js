@@ -1,3 +1,5 @@
+'use strict';
+
 // core card game code shared between in-game world and standalone card game
 
 // name space the card game code so it doesn't cause conflicts with the core game code:

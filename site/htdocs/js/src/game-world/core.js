@@ -91,7 +91,7 @@ function getHeroGameState() {
 
 
 function loadCoreAssets() {
-    coreImagesToLoad = [];
+    var coreImagesToLoad = [];
     coreImagesToLoad.push({
         name: "heroImg",
         src: '/images/game-world/core/test-iso-hero.png'
@@ -343,7 +343,7 @@ function findInventoryItemData() {
             itemIdsToGet.push(hero.crafting[i].recipes[(hero.crafting[i].filters['All'][j])].creates);
             // get components:
             theseRecipeComponents = hero.crafting[i].recipes[(hero.crafting[i].filters['All'][j])].components.split(",");
-            for (k = 0; k < theseRecipeComponents.length; k++) {
+            for (var k = 0; k < theseRecipeComponents.length; k++) {
                 if (!(isNaN(theseRecipeComponents[k]))) {
                     itemIdsToGet.push(theseRecipeComponents[k]);
                 }
@@ -612,7 +612,7 @@ function checkHeroCollisions() {
         }
     }
 
-
+var thisNPC, thisItem;
     // check for collisions against NPCs:
     for (var i = 0; i < thisMapData.npcs.length; i++) {
         thisNPC = thisMapData.npcs[i];
@@ -660,8 +660,8 @@ function update() {
     var elapsed = (now - lastTime);
     lastTime = now;
     hero.isMoving = false;
-    oldHeroX = hero.x;
-    oldHeroY = hero.y;
+    //oldHeroX = hero.x;
+    //oldHeroY = hero.y;
     var thisSpeed = hero.speed;
     if (key[5]) {
         thisSpeed *= 2;
@@ -909,7 +909,7 @@ function processSpeech(thisNPC, thisSpeechPassedIn, thisSpeechCode, isPartOfNPCs
     thisSpeech = thisSpeechPassedIn;
     // isPartOfNPCsNormalSpeech is false if not set:
     isPartOfNPCsNormalSpeech = typeof isPartOfNPCsNormalSpeech !== 'undefined' ? isPartOfNPCsNormalSpeech : false;
-    individualSpeechCodes = thisSpeechCode.split(",");
+    var individualSpeechCodes = thisSpeechCode.split(",");
     for (var i = 0; i < individualSpeechCodes.length; i++) {
         switch (individualSpeechCodes[i]) {
             case "once":
@@ -1332,7 +1332,7 @@ function checkForChallenges() {
 
 
 function moveNPCs() {
-    var thisNPC, newTile, thisNextMovement, oldNPCx, oldNPCy, thisOtherNPC;
+    var thisNPC, newTile, thisNextMovement, oldNPCx, oldNPCy, thisOtherNPC, thisItem, thisNextMovement, thisNextMovementCode;
     for (var i = 0; i < thisMapData.npcs.length; i++) {
         thisNPC = thisMapData.npcs[i];
         if (thisNPC.isMoving) {

@@ -564,10 +564,11 @@ var UI = {
     },
 
     droppedSuccessfully: function() {
-
+if (typeof UI.activeDragObject !== "undefined") {
         // hide the clone:
         UI.activeDragObject.style.cssText = "z-index:2;";
         UI.activeDragObject = '';
+    }
         if (isSplitStackBeingDragged) {
             isSplitStackBeingDragged = false;
         }

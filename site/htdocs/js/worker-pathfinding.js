@@ -1,3 +1,5 @@
+'use strict';
+
 function isATerrainCollision(tileX, tileY) {
     if ((tileX < 0) || (tileY < 0) || (tileX >= mapTilesX) || (tileY >= mapTilesY)) {
         // is out of the bounds of the current map:
@@ -168,7 +170,7 @@ onmessage = function(e) {
                 if (i != thisNPCsIndex) {
                     // just make sure it's not checking its own shop (...just in case)
                     thisLoopNPC = thisMapData.npcs[i];
-                    if (thisLoopNPC.speech) {
+                    if (typeof thisLoopNPC.speech !== "undefined") {
                         if (thisLoopNPC.speech[thisLoopNPC.speechIndex][1] == "shop") {
                             shopsFound.push(i);
                         }

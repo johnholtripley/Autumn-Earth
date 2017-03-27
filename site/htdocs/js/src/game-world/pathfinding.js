@@ -1,7 +1,7 @@
 if (window.Worker) {
     var pathfindingWorker = new Worker('/js/worker-pathfinding.js');
     pathfindingWorker.onmessage = function(e) {
-        thisNPCsName = e.data[0];
+        var thisNPCsName = e.data[0];
         // find which NPC this is:
         // http://stackoverflow.com/a/16100446/1054212
         var thisNPCsIndex = thisMapData.npcs.map(function(x) {

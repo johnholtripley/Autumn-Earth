@@ -96,7 +96,7 @@ function customScrollBar(element) {
 
 
 // do this globally once:
-thisDevicesScrollBarWidth = scrollbarWidth();
+var thisDevicesScrollBarWidth = scrollbarWidth();
 
 // eg (not touch device)
 var scrollBarElements = document.getElementsByClassName("customScrollBar");

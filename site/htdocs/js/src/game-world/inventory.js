@@ -330,7 +330,7 @@ function generateSlotMarkup(thisSlotsId) {
         }
         }
     }
-    dataActionMarkup = '';
+    var dataActionMarkup = '';
     if (thisAction) {
         if (isABook) {
             // link this item up to the book panel using the unique hash:

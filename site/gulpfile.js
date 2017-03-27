@@ -84,8 +84,8 @@ gulp.task('alternateScripts', ['gameScripts'], function() {
 });
 
 gulp.task('gameScripts',function() {
-    // make sure that core is compiled last after all modules are loaded:
-    return gulp.src(['htdocs/js/src/game-world/**/!(core)*.js', 'htdocs/js/src/game-world/core.js'])
+    // make sure that core is compiled last after all modules are loaded, and strict is first:
+    return gulp.src(['htdocs/js/src/game-world/_strict.js','htdocs/js/src/game-world/**/!(core|_strict)*.js', 'htdocs/js/src/game-world/core.js'])
         .pipe(concat('game-world.js'))
         .pipe(gulp.dest('htdocs/js'))
         .pipe(rename({
