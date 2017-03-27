@@ -1,5 +1,7 @@
 'use strict';
 
+var thisMapData, mapTilesY, mapTilesX, thisNPCsIndex, uncheckedTiles, nodes;
+
 function isATerrainCollision(tileX, tileY) {
     if ((tileX < 0) || (tileY < 0) || (tileX >= mapTilesX) || (tileY >= mapTilesY)) {
         // is out of the bounds of the current map:
@@ -139,10 +141,10 @@ console.log(builtPath.join(", "));
     } while ((uncheckedTiles.length > 0) && !targetFound);
 
     // tidy up:
-    delete uncheckedTiles;
-    delete thisMapData;
-    delete nodes;
-    delete thisNPCsIndex;
+     uncheckedTiles = null;
+     thisMapData = null;
+     nodes = null;
+     thisNPCsIndex = null;
     if (!targetFound) {
         return ["-", "pathEnd"];
     } else {
@@ -171,9 +173,11 @@ onmessage = function(e) {
                     // just make sure it's not checking its own shop (...just in case)
                     thisLoopNPC = thisMapData.npcs[i];
                     if (typeof thisLoopNPC.speech !== "undefined") {
+                    if (typeof thisLoopNPC.speechIndex !== "undefined") {
                         if (thisLoopNPC.speech[thisLoopNPC.speechIndex][1] == "shop") {
                             shopsFound.push(i);
                         }
+                    }
                     }
                 }
             }

@@ -1315,6 +1315,7 @@ function checkForTitlesAwarded(whichQuestId) {
 
 
 function checkForChallenges() {
+    var thisNPC;
     for (var i = 0; i < thisMapData.npcs.length; i++) {
         thisNPC = thisMapData.npcs[i];
         if (isInRange(hero.x, hero.y, thisNPC.x, thisNPC.y, (thisNPC.width + hero.width))) {
