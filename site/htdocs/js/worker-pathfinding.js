@@ -28,10 +28,13 @@ function addNode(parentNode, tileX, tileY, endX, endY) {
         for (var i = 0; i < thisMapData.npcs.length; i++) {
             // make sure other NPCs don't block - except for the any in the destination tile:
             if (i != thisNPCsIndex) {
-                if (!((tileX == endX) && (tileY == endY))) {
-                    if (parseInt(thisMapData.npcs[i].tileX) == parseInt(tileX)) {
-                        if (parseInt(thisMapData.npcs[i].tileY) == parseInt(tileY)) {
-                            isBlocked = true;
+                // only include stationary NPCS:
+                if (thisMapData.npcs[i].movement[thisMapData.npcs[i].movementIndex] == '-') {
+                    if (!((tileX == endX) && (tileY == endY))) {
+                        if (parseInt(thisMapData.npcs[i].tileX) == parseInt(tileX)) {
+                            if (parseInt(thisMapData.npcs[i].tileY) == parseInt(tileY)) {
+                                isBlocked = true;
+                            }
                         }
                     }
                 }
