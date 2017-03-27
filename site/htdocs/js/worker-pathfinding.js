@@ -81,6 +81,7 @@ function addNode(parentNode, tileX, tileY, endX, endY) {
 
 function findPath(startX, startY, endX, endY) {
     console.log("start path: "+startX+", "+startY);
+    console.log("end path: "+endX+", "+endY);
     uncheckedTiles = [];
     var heuristic = Math.abs(startX - endX) + Math.abs(startY - endY);
     nodes = {};
@@ -126,7 +127,7 @@ function findPath(startX, startY, endX, endY) {
                 }
             }
             builtPath.push('pathEnd');
-
+console.log(builtPath.join(", "));
         } else {
             addNode(thisNode, thisNode.x + 1, thisNode.y, endX, endY);
             addNode(thisNode, thisNode.x - 1, thisNode.y, endX, endY);
