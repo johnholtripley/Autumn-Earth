@@ -38,17 +38,20 @@ function addNode(parentNode, tileX, tileY, endX, endY) {
             }
         }
         if (!isBlocked) {
-            var cost = Math.abs(tileX - endX) + Math.abs(tileY - endY);
+            var heuristic = Math.abs(tileX - endX) + Math.abs(tileY - endY);
+            var thisCost = parentNode.cost + 1;
+            var thisSummedCost = thisCost + heuristic;
             if (typeof nodes[tileX + "-" + tileY] === "undefined") {
                 nodes[tileX + "-" + tileY] = {
                     x: tileX,
                     y: tileY,
                     parentX: parentNode.x,
                     parentY: parentNode.y,
-                    cost: cost
+                    cost: thisCost,
+                    summedCost: thisSummedCost
                 }
                 for (var i = 0; i < uncheckedTiles.length; i++) {
-                    if (cost < uncheckedTiles[i].cost) {
+                    if (thisSummedCost < uncheckedTiles[i].summedCost) {
                         uncheckedTiles.splice(i, 0, nodes[tileX + "-" + tileY]);
                         break;
                     }
@@ -59,8 +62,9 @@ function addNode(parentNode, tileX, tileY, endX, endY) {
                 }
             } else {
                 // check cost and change parent if this is faster
-                if (cost < nodes[tileX + "-" + tileY].cost) {
-                    nodes[tileX + "-" + tileY].cost = cost;
+                if (thisCost < nodes[tileX + "-" + tileY].cost) {
+                    nodes[tileX + "-" + tileY].cost = thisSummedCost;
+                    nodes[tileX + "-" + tileY].summedCost = thisCost;
                     nodes[tileX + "-" + tileY].parentX = parentNode.x;
                     nodes[tileX + "-" + tileY].parentY = parentNode.y;
                 }
@@ -74,14 +78,15 @@ function addNode(parentNode, tileX, tileY, endX, endY) {
 
 function findPath(startX, startY, endX, endY) {
     uncheckedTiles = [];
-    var cost = Math.abs(startX - endX) + Math.abs(startY - endY);
+    var heuristic = Math.abs(startX - endX) + Math.abs(startY - endY);
     nodes = {};
     nodes[startX + "-" + startY] = {
         x: startX,
         y: startY,
         parentX: undefined,
         parentY: undefined,
-        cost: cost
+        cost: 0,
+        summedCost: heuristic
     }
     uncheckedTiles.push(nodes[startX + "-" + startY]);
     var thisNode;
