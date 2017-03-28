@@ -229,6 +229,11 @@ function getRandomIntegerInclusive(min, max) {
    return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+function getRandomKeyFromObject(object) {
+    var keys = Object.keys(object)
+    return keys[ keys.length * Math.random() << 0];
+}
+
 function isInRange(ax, ay, bx, by, ra) {
     // determines if one sprite is within range of another
     var range = getPythagorasDistance(ax, ay, bx, by);

@@ -42,7 +42,7 @@ var loadBuffer = function(url, name) {
 var audio = {
     lastTrack: "",
     init: function() {
-             try {
+        try {
             window.AudioContext = window.AudioContext || window.webkitAudioContext;
             audioContext = new AudioContext();
             soundGainNode = audioContext.createGain();
@@ -138,6 +138,23 @@ var audio = {
         if (typeof audio.activeTrack !== "undefined") {
             audio[audio.activeTrack + 'Gain'].gain.setValueAtTime(gameSettings.musicVolume, audioContext.currentTime);
         }
+    },
+
+    loadAmbientSounds: function(soundsToLoad) {
+        for (var soundName in soundsToLoad) {
+            loadBuffer(soundsToLoad[soundName], soundName);
+        }
+    },
+
+    checkForAmbientSounds: function() {
+        if(thisMapData.ambientSounds) {
+        if(hero.totalGameTimePlayed == 320) {
+
+
+audio.playSound(soundEffects[getRandomKeyFromObject(thisMapData.ambientSounds)], 0);
+
+        }
+    }
     }
 }
 
@@ -915,6 +932,11 @@ function getRandomInteger(min, max) {
 
 function getRandomIntegerInclusive(min, max) {
    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function getRandomKeyFromObject(object) {
+    var keys = Object.keys(object)
+    return keys[ keys.length * Math.random() << 0];
 }
 
 function isInRange(ax, ay, bx, by, ra) {
@@ -3398,7 +3420,6 @@ function loadCardData() {
 }
 
 function loadMapJSON(mapFilePath) {
-    console.log("mapFilePath: " + mapFilePath);
     getJSON(mapFilePath, function(data) {
         thisMapData = data.map;
         mapTilesY = thisMapData.terrain.length;
@@ -3410,6 +3431,9 @@ function loadMapJSON(mapFilePath) {
         }
         initCartographicMap();
         findProfessionsAndRecipes();
+        if(thisMapData.ambientSounds) {
+audio.loadAmbientSounds(thisMapData.ambientSounds);
+        }
         fae.recentHotspots = [];
     }, function(status) {
         // try again:
@@ -4036,6 +4060,7 @@ if(shopCurrentlyOpen != -1) {
     }
     moveFae();
     moveNPCs();
+    audio.checkForAmbientSounds();
 }
 
 function heroIsInNewTile() {

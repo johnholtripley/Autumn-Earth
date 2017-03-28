@@ -117,7 +117,6 @@ function loadCardData() {
 }
 
 function loadMapJSON(mapFilePath) {
-    console.log("mapFilePath: " + mapFilePath);
     getJSON(mapFilePath, function(data) {
         thisMapData = data.map;
         mapTilesY = thisMapData.terrain.length;
@@ -129,6 +128,9 @@ function loadMapJSON(mapFilePath) {
         }
         initCartographicMap();
         findProfessionsAndRecipes();
+        if(thisMapData.ambientSounds) {
+audio.loadAmbientSounds(thisMapData.ambientSounds);
+        }
         fae.recentHotspots = [];
     }, function(status) {
         // try again:
@@ -755,6 +757,7 @@ if(shopCurrentlyOpen != -1) {
     }
     moveFae();
     moveNPCs();
+    audio.checkForAmbientSounds();
 }
 
 function heroIsInNewTile() {

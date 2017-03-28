@@ -41,7 +41,7 @@ var loadBuffer = function(url, name) {
 var audio = {
     lastTrack: "",
     init: function() {
-             try {
+        try {
             window.AudioContext = window.AudioContext || window.webkitAudioContext;
             audioContext = new AudioContext();
             soundGainNode = audioContext.createGain();
@@ -137,5 +137,22 @@ var audio = {
         if (typeof audio.activeTrack !== "undefined") {
             audio[audio.activeTrack + 'Gain'].gain.setValueAtTime(gameSettings.musicVolume, audioContext.currentTime);
         }
+    },
+
+    loadAmbientSounds: function(soundsToLoad) {
+        for (var soundName in soundsToLoad) {
+            loadBuffer(soundsToLoad[soundName], soundName);
+        }
+    },
+
+    checkForAmbientSounds: function() {
+        if(thisMapData.ambientSounds) {
+        if(hero.totalGameTimePlayed == 320) {
+
+
+audio.playSound(soundEffects[getRandomKeyFromObject(thisMapData.ambientSounds)], 0);
+
+        }
+    }
     }
 }
