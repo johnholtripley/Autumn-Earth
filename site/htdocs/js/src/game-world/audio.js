@@ -31,19 +31,17 @@ var loadBuffer = function(url, name) {
         );
     }
     request.onerror = function() {
-        console.log('BufferLoader: XHR error');
+        console.log('audio XHR error');
     }
     request.send();
 };
 
 
-var bufferLoader = {};
+
 var audio = {
     lastTrack: "",
-    names: [],
     init: function() {
-        bufferLoader.urlList = [];
-        try {
+             try {
             window.AudioContext = window.AudioContext || window.webkitAudioContext;
             audioContext = new AudioContext();
             soundGainNode = audioContext.createGain();

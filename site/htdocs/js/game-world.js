@@ -13,12 +13,10 @@ var soundsToLoad = {
 
 
 var loadBuffer = function(url, name) {
-    // Load buffer asynchronously
     var request = new XMLHttpRequest();
     request.open("GET", url, true);
     request.responseType = "arraybuffer";
     request.onload = function() {
-        // Asynchronously decode the audio file data in request.response
         audioContext.decodeAudioData(
             request.response,
             function(buffer) {
@@ -26,10 +24,7 @@ var loadBuffer = function(url, name) {
                     console.log('error decoding file data: ' + url);
                     return;
                 }
-          
-                       
-                        soundEffects[name] = buffer;
-               
+                soundEffects[name] = buffer;
             },
             function(error) {
                 console.log('decodeAudioData error', error);
@@ -37,31 +32,24 @@ var loadBuffer = function(url, name) {
         );
     }
     request.onerror = function() {
-        console.log('BufferLoader: XHR error');
+        console.log('audio XHR error');
     }
     request.send();
 };
 
 
-var bufferLoader = {};
+
 var audio = {
     lastTrack: "",
-    names: [],
     init: function() {
-        bufferLoader.urlList = [];
-        try {
+             try {
             window.AudioContext = window.AudioContext || window.webkitAudioContext;
             audioContext = new AudioContext();
             soundGainNode = audioContext.createGain();
             soundGainNode.connect(audioContext.destination);
             for (var name in soundsToLoad) {
                 loadBuffer(soundsToLoad[name], name);
-          
             }
-
-                  
-
-
         } catch (e) {
             // web audio API not supported
             // fallback? 
@@ -76,17 +64,13 @@ var audio = {
         src.type = "audio/mpeg";
         src.src = "/music/game-world/" + songName + ".mp3";
         audio[songName].appendChild(src);
-        // Create a gain node:
         audio[songName + 'Gain'] = audioContext.createGain();
         // get this from the settings:      
         audio[songName + 'Gain'].gain.setValueAtTime(gameSettings.musicVolume, 0);
         audio[songName + 'Source'] = audioContext.createMediaElementSource(audio[songName]);
         audio[songName + 'Source'].connect(audio[songName + 'Gain']);
         audio[songName + 'Gain'].connect(audioContext.destination);
-
-
         audio[songName].addEventListener("ended", audio.removeMusic, false);
-
     },
 
     removeMusic: function(e) {
