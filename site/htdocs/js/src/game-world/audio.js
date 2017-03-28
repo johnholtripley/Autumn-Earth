@@ -9,9 +9,11 @@ var soundsToLoad = {
     'buttonClick': '../sounds/button-press-NOT_MINE-wow.mp3',
     'hen': '../sounds/hen-NOT_MINE.mp3'
 };
+var ambientSoundsToLoad = {
+    'birdSong': '../sounds/bird-song.mp3'
+}
 
 var loadBuffer = function(url, index) {
-    console.log("buffer loading running");
     // Load buffer asynchronously
     var request = new XMLHttpRequest();
     request.open("GET", url, true);
@@ -27,7 +29,6 @@ var loadBuffer = function(url, index) {
                 }
                 bufferLoader.bufferList[index] = buffer;
                 if (++bufferLoader.loadCount == bufferLoader.urlList.length) {
-                    //  bufferLoader.onload(bufferLoader.bufferList);
                     var buffer, name;
                     for (var i = 0; i < bufferLoader.bufferList.length; i++) {
                         buffer = bufferLoader.bufferList[i];
@@ -53,7 +54,7 @@ var audio = {
     lastTrack: "",
     names: [],
     init: function() {
-        var paths = [];
+        bufferLoader.urlList = [];
         try {
             window.AudioContext = window.AudioContext || window.webkitAudioContext;
             audioContext = new AudioContext();
@@ -63,14 +64,24 @@ var audio = {
             for (var name in soundsToLoad) {
                 var path = soundsToLoad[name];
                 audio.names.push(name);
-                paths.push(path);
+                bufferLoader.urlList.push(path);
             }
-            bufferLoader.urlList = paths;
             bufferLoader.bufferList = new Array();
             bufferLoader.loadCount = 0;
             for (var i = 0; i < bufferLoader.urlList.length; i++) {
                 loadBuffer(bufferLoader.urlList[i], i);
             }
+
+
+
+
+
+
+
+
+
+
+
         } catch (e) {
             // web audio API not supported
             // fallback? 
