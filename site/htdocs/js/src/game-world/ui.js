@@ -129,9 +129,10 @@ var UI = {
     },
 
     showChangeInInventory: function(whichSlotsToUpdate) {
+        var thisSlotsId, slotMarkup, thisSlotElem;
         // add a transition end detector to just the first element that will be changed:
         document.getElementById("slot" + whichSlotsToUpdate[0]).addEventListener(whichTransitionEvent, function removeSlotStatus(e) {
-            elementList = document.querySelectorAll('#inventoryPanels .changed');
+            var elementList = document.querySelectorAll('#inventoryPanels .changed');
             for (var i = 0; i < elementList.length; i++) {
                 elementList[i].classList.remove("changed");
             }
@@ -564,11 +565,11 @@ var UI = {
     },
 
     droppedSuccessfully: function() {
-if (typeof UI.activeDragObject !== "undefined") {
+
         // hide the clone:
         UI.activeDragObject.style.cssText = "z-index:2;";
         UI.activeDragObject = '';
-    }
+    
         if (isSplitStackBeingDragged) {
             isSplitStackBeingDragged = false;
         }

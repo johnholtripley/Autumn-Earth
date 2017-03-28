@@ -355,6 +355,7 @@ var thisSpeech = '';
 
 var boosterCardsRevealed = 0;
 var boosterCardsToAdd = [];
+var thisChallengeNPC;
 
 var questData = [];
 
@@ -1462,7 +1463,7 @@ function cardGamePlayer2Wins() {
     hero.stats.cardGamesWon++;
     hero.currency.cardDust += 7;
     UI.updateCurrencies();
-    processPlayerWinSpeech(thisNPC, thisNPC.cardGameSpeech.lose[0], thisNPC.cardGameSpeech.lose[1]);
+    processPlayerWinSpeech(thisChallengeNPC, thisChallengeNPC.cardGameSpeech.lose[0], thisChallengeNPC.cardGameSpeech.lose[1]);
     closeCardGame();
 }
 
@@ -1471,7 +1472,7 @@ function cardGamePlayer1Wins() {
     hero.stats.cardGamesLost++;
     hero.currency.cardDust += 1;
     UI.updateCurrencies();
-    processSpeech(thisNPC, thisNPC.cardGameSpeech.win[0], thisNPC.cardGameSpeech.win[1]);
+    processSpeech(thisChallengeNPC, thisChallengeNPC.cardGameSpeech.win[0], thisChallengeNPC.cardGameSpeech.win[1]);
     closeCardGame();
 }
 
@@ -1479,11 +1480,11 @@ function cardGameIsDrawn() {
     hero.stats.cardGamesDrawn++;
     hero.currency.cardDust += 3;
     UI.updateCurrencies();
-    processSpeech(thisNPC, thisNPC.cardGameSpeech.draw[0], thisNPC.cardGameSpeech.draw[1]);
+    processSpeech(thisChallengeNPC, thisChallengeNPC.cardGameSpeech.draw[0], thisChallengeNPC.cardGameSpeech.draw[1]);
     closeCardGame();
 }
 
-function processPlayerWinSpeech(thisNPC, thisSpeechPassedIn, thisSpeechCode) {
+function processPlayerWinSpeech(thisChallengeNPC, thisSpeechPassedIn, thisSpeechCode) {
     if (thisSpeechCode != "") {
         var questSpeech = thisSpeechCode.split("|");
         var questId = questSpeech[1];
@@ -1494,17 +1495,17 @@ function processPlayerWinSpeech(thisNPC, thisSpeechPassedIn, thisSpeechCode) {
                 } else {
                     questData[questId].hasBeenCompleted = 1;
                 }
-                UI.showDialogue(thisNPC, thisNPC.cardGameSpeech.lose[0] + questSpeech[2]);
+                UI.showDialogue(thisChallengeNPC, thisChallengeNPC.cardGameSpeech.lose[0] + questSpeech[2]);
                 canCloseDialogueBalloonNextClick = true;
                 checkForTitlesAwarded(questId);
             }
         } else {
             // there was a quest, but it's been completed - just show ordinary text:
-            processSpeech(thisNPC, thisNPC.cardGameSpeech.lose[0], thisNPC.cardGameSpeech.lose[1]);
+            processSpeech(thisChallengeNPC, thisChallengeNPC.cardGameSpeech.lose[0], thisChallengeNPC.cardGameSpeech.lose[1]);
         }
     } else {
         // no quest associated, just show ordinary text:
-        processSpeech(thisNPC, thisNPC.cardGameSpeech.lose[0], thisNPC.cardGameSpeech.lose[1]);
+        processSpeech(thisChallengeNPC, thisChallengeNPC.cardGameSpeech.lose[0], thisChallengeNPC.cardGameSpeech.lose[1]);
     }
 }
 
@@ -2271,9 +2272,10 @@ var UI = {
     },
 
     showChangeInInventory: function(whichSlotsToUpdate) {
+        var thisSlotsId, slotMarkup, thisSlotElem;
         // add a transition end detector to just the first element that will be changed:
         document.getElementById("slot" + whichSlotsToUpdate[0]).addEventListener(whichTransitionEvent, function removeSlotStatus(e) {
-            elementList = document.querySelectorAll('#inventoryPanels .changed');
+            var elementList = document.querySelectorAll('#inventoryPanels .changed');
             for (var i = 0; i < elementList.length; i++) {
                 elementList[i].classList.remove("changed");
             }
@@ -2706,11 +2708,11 @@ var UI = {
     },
 
     droppedSuccessfully: function() {
-if (typeof UI.activeDragObject !== "undefined") {
+
         // hide the clone:
         UI.activeDragObject.style.cssText = "z-index:2;";
         UI.activeDragObject = '';
-    }
+    
         if (isSplitStackBeingDragged) {
             isSplitStackBeingDragged = false;
         }
@@ -4628,13 +4630,14 @@ function checkForTitlesAwarded(whichQuestId) {
 
 
 function checkForChallenges() {
+ 
     for (var i = 0; i < thisMapData.npcs.length; i++) {
-        thisNPC = thisMapData.npcs[i];
-        if (isInRange(hero.x, hero.y, thisNPC.x, thisNPC.y, (thisNPC.width + hero.width))) {
-            if (isFacing(hero, thisNPC)) {
-                if(thisNPC.cardGameSpeech) {
-                thisNPC.drawnFacing = turntoFace(thisNPC, hero);
-                processSpeech(thisNPC, thisNPC.cardGameSpeech.challenge[0], thisNPC.cardGameSpeech.challenge[1]);
+        thisChallengeNPC = thisMapData.npcs[i];
+        if (isInRange(hero.x, hero.y, thisChallengeNPC.x, thisChallengeNPC.y, (thisChallengeNPC.width + hero.width))) {
+            if (isFacing(hero, thisChallengeNPC)) {
+                if(thisChallengeNPC.cardGameSpeech) {
+                thisChallengeNPC.drawnFacing = turntoFace(thisChallengeNPC, hero);
+                processSpeech(thisChallengeNPC, thisChallengeNPC.cardGameSpeech.challenge[0], thisChallengeNPC.cardGameSpeech.challenge[1]);
             }
             }
         }

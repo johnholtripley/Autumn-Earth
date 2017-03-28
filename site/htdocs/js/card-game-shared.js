@@ -2,6 +2,14 @@
 
 // core card game code shared between in-game world and standalone card game
 
+ // isANetworkGameis defined in card-sockets.js so if not a network game, this won't be set:
+        if (typeof isCardGameANetworkGame === "undefined") {
+            var isCardGameANetworkGame = false;
+        }
+
+
+var thisMovesScore, indexToCheck, indexesToRemove, whichMoveToMake, listOfPossibleBestMoves;
+
 // name space the card game code so it doesn't cause conflicts with the core game code:
 var cardGameNameSpace = {
     'cardWidth': 84,
@@ -87,10 +95,7 @@ if (cardGameNameSpace.compareColours(cardGameNameSpace.playerColours[1], cardGam
 
 
 
-        // isANetworkGameis defined in card-sockets.js so if not a network game, this won't be set:
-        if (typeof isCardGameANetworkGame === "undefined") {
-            isCardGameANetworkGame = false;
-        }
+       
 
         cardGameNameSpace.imagesToLoad = [{
             name: "board",
@@ -225,8 +230,8 @@ if (cardGameNameSpace.compareColours(cardGameNameSpace.playerColours[1], cardGam
         switch (gameMode) {
             case "play":
             case "cardGame":
-                gridX = Math.floor((x / cardGameNameSpace.outerCanvasWidth) * cardGameNameSpace.boardWidth);
-                gridY = Math.floor((y / cardGameNameSpace.outerCanvasHeight) * cardGameNameSpace.boardHeight);
+                var gridX = Math.floor((x / cardGameNameSpace.outerCanvasWidth) * cardGameNameSpace.boardWidth);
+                var gridY = Math.floor((y / cardGameNameSpace.outerCanvasHeight) * cardGameNameSpace.boardHeight);
                 var thisBoardRef = cardGameNameSpace.board[gridY][gridX];
                 if (thisBoardRef == "-") {
                     if (cardGameNameSpace.currentlySelectedCard != -1) {
@@ -262,15 +267,16 @@ if (cardGameNameSpace.compareColours(cardGameNameSpace.playerColours[1], cardGam
     },
 
     findBestMove: function(boardState, whichPlayerCurrently) {
-        whichOpponentCurrently = (whichPlayerCurrently == 1) ? 2 : 1;
+        var whichOpponentCurrently = (whichPlayerCurrently == 1) ? 2 : 1;
         // [best score, card ref, gridx, gridy]:
-        listOfPossibleBestMoves = [
+         listOfPossibleBestMoves = [
             [-999999, -1, -1, -1]
         ];
         var bestImmediatePlayerMove = [];
         // these values might change if the board is vertical - but use them to not include starting grid positions
         var horizInset = 2;
         var vertInset = 0;
+        var AIScore, bestCounterMove, bestCounterMovePositions, whichCounterPlayerCurrently, whichCounterOpponentCurrently;
         // loop through all board tiles:
         for (var j = horizInset; j < (cardGameNameSpace.boardWidth - horizInset); j++) {
             for (var k = vertInset; k < (cardGameNameSpace.boardHeight - vertInset); k++) {
@@ -306,7 +312,7 @@ if (cardGameNameSpace.compareColours(cardGameNameSpace.playerColours[1], cardGam
                                         // try card in position:
                                         tempBoard[k][j] = i;
                                         cardState[i].hasBeenPlaced = true;
-                                        thisMovesScore = 0;
+                                         thisMovesScore = 0;
                                         //  console.log("placing " + i + " at " + j + ", " + k);
                                         cardGameNameSpace.checkAttacksInAllDirections(j, k, tempBoard, cardState, whichOpponentCurrently, whichPlayerCurrently, true);
                                         // count AI flips *1.01 so it favours more aggressive moves         
@@ -514,10 +520,10 @@ if (cardGameNameSpace.compareColours(cardGameNameSpace.playerColours[1], cardGam
                 cardType: cardGameNameSpace.allCardsThisGame[i],
                 currentOwner: (i >= (cardGameNameSpace.numberOfCardsInGame / 2) ? 2 : 1),
                 draw: function() {
-                    offsetX = 0;
-                    offsetY = 0;
+                    var offsetX = 0;
+                    var offsetY = 0;
                     if (this.flippedAnimation > 0) {
-                        randomAmount = this.flippedAnimation * 4;
+                        var randomAmount = this.flippedAnimation * 4;
                         offsetX = getRandomIntegerInclusive(0, randomAmount);
                         offsetY = getRandomIntegerInclusive(0, randomAmount);
                         this.flippedAnimation--;

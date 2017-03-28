@@ -54,6 +54,7 @@ var thisSpeech = '';
 
 var boosterCardsRevealed = 0;
 var boosterCardsToAdd = [];
+var thisChallengeNPC;
 
 var questData = [];
 

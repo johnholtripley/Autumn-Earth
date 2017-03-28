@@ -11,7 +11,7 @@ function cardGamePlayer2Wins() {
     hero.stats.cardGamesWon++;
     hero.currency.cardDust += 7;
     UI.updateCurrencies();
-    processPlayerWinSpeech(thisNPC, thisNPC.cardGameSpeech.lose[0], thisNPC.cardGameSpeech.lose[1]);
+    processPlayerWinSpeech(thisChallengeNPC, thisChallengeNPC.cardGameSpeech.lose[0], thisChallengeNPC.cardGameSpeech.lose[1]);
     closeCardGame();
 }
 
@@ -20,7 +20,7 @@ function cardGamePlayer1Wins() {
     hero.stats.cardGamesLost++;
     hero.currency.cardDust += 1;
     UI.updateCurrencies();
-    processSpeech(thisNPC, thisNPC.cardGameSpeech.win[0], thisNPC.cardGameSpeech.win[1]);
+    processSpeech(thisChallengeNPC, thisChallengeNPC.cardGameSpeech.win[0], thisChallengeNPC.cardGameSpeech.win[1]);
     closeCardGame();
 }
 
@@ -28,11 +28,11 @@ function cardGameIsDrawn() {
     hero.stats.cardGamesDrawn++;
     hero.currency.cardDust += 3;
     UI.updateCurrencies();
-    processSpeech(thisNPC, thisNPC.cardGameSpeech.draw[0], thisNPC.cardGameSpeech.draw[1]);
+    processSpeech(thisChallengeNPC, thisChallengeNPC.cardGameSpeech.draw[0], thisChallengeNPC.cardGameSpeech.draw[1]);
     closeCardGame();
 }
 
-function processPlayerWinSpeech(thisNPC, thisSpeechPassedIn, thisSpeechCode) {
+function processPlayerWinSpeech(thisChallengeNPC, thisSpeechPassedIn, thisSpeechCode) {
     if (thisSpeechCode != "") {
         var questSpeech = thisSpeechCode.split("|");
         var questId = questSpeech[1];
@@ -43,17 +43,17 @@ function processPlayerWinSpeech(thisNPC, thisSpeechPassedIn, thisSpeechCode) {
                 } else {
                     questData[questId].hasBeenCompleted = 1;
                 }
-                UI.showDialogue(thisNPC, thisNPC.cardGameSpeech.lose[0] + questSpeech[2]);
+                UI.showDialogue(thisChallengeNPC, thisChallengeNPC.cardGameSpeech.lose[0] + questSpeech[2]);
                 canCloseDialogueBalloonNextClick = true;
                 checkForTitlesAwarded(questId);
             }
         } else {
             // there was a quest, but it's been completed - just show ordinary text:
-            processSpeech(thisNPC, thisNPC.cardGameSpeech.lose[0], thisNPC.cardGameSpeech.lose[1]);
+            processSpeech(thisChallengeNPC, thisChallengeNPC.cardGameSpeech.lose[0], thisChallengeNPC.cardGameSpeech.lose[1]);
         }
     } else {
         // no quest associated, just show ordinary text:
-        processSpeech(thisNPC, thisNPC.cardGameSpeech.lose[0], thisNPC.cardGameSpeech.lose[1]);
+        processSpeech(thisChallengeNPC, thisChallengeNPC.cardGameSpeech.lose[0], thisChallengeNPC.cardGameSpeech.lose[1]);
     }
 }
 

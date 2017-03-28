@@ -1315,14 +1315,14 @@ function checkForTitlesAwarded(whichQuestId) {
 
 
 function checkForChallenges() {
-    var thisNPC;
+ 
     for (var i = 0; i < thisMapData.npcs.length; i++) {
-        thisNPC = thisMapData.npcs[i];
-        if (isInRange(hero.x, hero.y, thisNPC.x, thisNPC.y, (thisNPC.width + hero.width))) {
-            if (isFacing(hero, thisNPC)) {
-                if(thisNPC.cardGameSpeech) {
-                thisNPC.drawnFacing = turntoFace(thisNPC, hero);
-                processSpeech(thisNPC, thisNPC.cardGameSpeech.challenge[0], thisNPC.cardGameSpeech.challenge[1]);
+        thisChallengeNPC = thisMapData.npcs[i];
+        if (isInRange(hero.x, hero.y, thisChallengeNPC.x, thisChallengeNPC.y, (thisChallengeNPC.width + hero.width))) {
+            if (isFacing(hero, thisChallengeNPC)) {
+                if(thisChallengeNPC.cardGameSpeech) {
+                thisChallengeNPC.drawnFacing = turntoFace(thisChallengeNPC, hero);
+                processSpeech(thisChallengeNPC, thisChallengeNPC.cardGameSpeech.challenge[0], thisChallengeNPC.cardGameSpeech.challenge[1]);
             }
             }
         }
