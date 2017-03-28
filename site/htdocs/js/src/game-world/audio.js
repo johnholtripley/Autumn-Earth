@@ -9,17 +9,13 @@ var soundsToLoad = {
     'buttonClick': '../sounds/button-press-NOT_MINE-wow.mp3',
     'hen': '../sounds/hen-NOT_MINE.mp3'
 };
-var ambientSoundsToLoad = {
-    'birdSong': '../sounds/bird-song.mp3'
-}
 
-var loadBuffer = function(url, index) {
-    // Load buffer asynchronously
+
+var loadBuffer = function(url, name) {
     var request = new XMLHttpRequest();
     request.open("GET", url, true);
     request.responseType = "arraybuffer";
     request.onload = function() {
-        // Asynchronously decode the audio file data in request.response
         audioContext.decodeAudioData(
             request.response,
             function(buffer) {
@@ -27,15 +23,7 @@ var loadBuffer = function(url, index) {
                     console.log('error decoding file data: ' + url);
                     return;
                 }
-                bufferLoader.bufferList[index] = buffer;
-                if (++bufferLoader.loadCount == bufferLoader.urlList.length) {
-                    var buffer, name;
-                    for (var i = 0; i < bufferLoader.bufferList.length; i++) {
-                        buffer = bufferLoader.bufferList[i];
-                        name = audio.names[i];
-                        soundEffects[name] = buffer;
-                    }
-                }
+                soundEffects[name] = buffer;
             },
             function(error) {
                 console.log('decodeAudioData error', error);
@@ -60,28 +48,9 @@ var audio = {
             audioContext = new AudioContext();
             soundGainNode = audioContext.createGain();
             soundGainNode.connect(audioContext.destination);
-
             for (var name in soundsToLoad) {
-                var path = soundsToLoad[name];
-                audio.names.push(name);
-                bufferLoader.urlList.push(path);
+                loadBuffer(soundsToLoad[name], name);
             }
-            bufferLoader.bufferList = new Array();
-            bufferLoader.loadCount = 0;
-            for (var i = 0; i < bufferLoader.urlList.length; i++) {
-                loadBuffer(bufferLoader.urlList[i], i);
-            }
-
-
-
-
-
-
-
-
-
-
-
         } catch (e) {
             // web audio API not supported
             // fallback? 
@@ -96,17 +65,13 @@ var audio = {
         src.type = "audio/mpeg";
         src.src = "/music/game-world/" + songName + ".mp3";
         audio[songName].appendChild(src);
-        // Create a gain node:
         audio[songName + 'Gain'] = audioContext.createGain();
         // get this from the settings:      
         audio[songName + 'Gain'].gain.setValueAtTime(gameSettings.musicVolume, 0);
         audio[songName + 'Source'] = audioContext.createMediaElementSource(audio[songName]);
         audio[songName + 'Source'].connect(audio[songName + 'Gain']);
         audio[songName + 'Gain'].connect(audioContext.destination);
-
-
         audio[songName].addEventListener("ended", audio.removeMusic, false);
-
     },
 
     removeMusic: function(e) {

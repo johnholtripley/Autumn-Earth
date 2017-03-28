@@ -10,11 +10,9 @@ var soundsToLoad = {
     'buttonClick': '../sounds/button-press-NOT_MINE-wow.mp3',
     'hen': '../sounds/hen-NOT_MINE.mp3'
 };
-var ambientSoundsToLoad = {
-    'birdSong': '../sounds/bird-song.mp3'
-}
 
-var loadBuffer = function(url, index) {
+
+var loadBuffer = function(url, name) {
     // Load buffer asynchronously
     var request = new XMLHttpRequest();
     request.open("GET", url, true);
@@ -28,15 +26,10 @@ var loadBuffer = function(url, index) {
                     console.log('error decoding file data: ' + url);
                     return;
                 }
-                bufferLoader.bufferList[index] = buffer;
-                if (++bufferLoader.loadCount == bufferLoader.urlList.length) {
-                    var buffer, name;
-                    for (var i = 0; i < bufferLoader.bufferList.length; i++) {
-                        buffer = bufferLoader.bufferList[i];
-                        name = audio.names[i];
+          
+                       
                         soundEffects[name] = buffer;
-                    }
-                }
+               
             },
             function(error) {
                 console.log('decodeAudioData error', error);
@@ -61,26 +54,12 @@ var audio = {
             audioContext = new AudioContext();
             soundGainNode = audioContext.createGain();
             soundGainNode.connect(audioContext.destination);
-
             for (var name in soundsToLoad) {
-                var path = soundsToLoad[name];
-                audio.names.push(name);
-                bufferLoader.urlList.push(path);
-            }
-            bufferLoader.bufferList = new Array();
-            bufferLoader.loadCount = 0;
-            for (var i = 0; i < bufferLoader.urlList.length; i++) {
-                loadBuffer(bufferLoader.urlList[i], i);
+                loadBuffer(soundsToLoad[name], name);
+          
             }
 
-
-
-
-
-
-
-
-
+                  
 
 
         } catch (e) {
