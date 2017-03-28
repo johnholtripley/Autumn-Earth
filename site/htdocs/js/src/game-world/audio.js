@@ -146,7 +146,7 @@ var audio = {
     checkForAmbientSounds: function() {
         if(thisMapData.ambientSounds) {
 if((hero.totalGameTimePlayed - timeSinceLastAmbientSoundWasPlayed) > minTimeBetweenAmbientSounds)  {
- if(getRandomIntegerInclusive(1,80) == 1) {      
+ if(getRandomIntegerInclusive(1,240) == 1) {      
 timeSinceLastAmbientSoundWasPlayed = hero.totalGameTimePlayed;
 audio.playSound(soundEffects[getRandomKeyFromObject(thisMapData.ambientSounds)], 0);
 }
