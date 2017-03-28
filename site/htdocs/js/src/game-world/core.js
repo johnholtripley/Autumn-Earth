@@ -72,6 +72,7 @@ function getHeroGameState() {
         hero.recipesKnown = data.recipesKnown;
         hero.professionsKnown = data.professionsKnown;
         hero.totalGameTimePlayed = data.totalGameTimePlayed;
+        timeSinceLastAmbientSoundWasPlayed = hero.totalGameTimePlayed + (minTimeBetweenAmbientSounds*1.25);
         // copy the fae properties that will change into the main fae object:
         for (var attrname in data.fae) {
             fae[attrname] = data.fae[attrname];

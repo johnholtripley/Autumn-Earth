@@ -74,7 +74,6 @@ var audio = {
 
     removeMusic: function(e) {
         var songName = e.target.id;
-        console.log("removing music: " + songName);
         audio[songName].removeEventListener("ended", audio.removeMusic, false);
         delete audio[songName];
         delete audio[songName + 'Source'];
@@ -85,8 +84,7 @@ var audio = {
     },
 
     playSound: function(buffer, delay) {
-        console.log(buffer);
-        var source = audioContext.createBufferSource();
+              var source = audioContext.createBufferSource();
         source.buffer = buffer;
         source.connect(soundGainNode);
         if (!source.start) {
@@ -147,11 +145,11 @@ var audio = {
 
     checkForAmbientSounds: function() {
         if(thisMapData.ambientSounds) {
-        if(hero.totalGameTimePlayed == 320) {
-
-
+if((hero.totalGameTimePlayed - timeSinceLastAmbientSoundWasPlayed) > minTimeBetweenAmbientSounds)  {
+ if(getRandomIntegerInclusive(1,80) == 1) {      
+timeSinceLastAmbientSoundWasPlayed = hero.totalGameTimePlayed;
 audio.playSound(soundEffects[getRandomKeyFromObject(thisMapData.ambientSounds)], 0);
-
+}
         }
     }
     }

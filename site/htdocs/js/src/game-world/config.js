@@ -1,19 +1,19 @@
 // frame rate:
-var animationFramesPerSecond = 16;
+const animationFramesPerSecond = 16;
 var lastTime = 0;
 var elapsed = 0;
 var timeSinceLastFrameSwap = 0;
 var currentAnimationFrame = 0;
 var animationUpdateTime = (1000 / animationFramesPerSecond);
 
-var gameCanvas, gameContext, gameMode, cartographyContext, offScreenCartographyContext, canvasMapImage, canvasMapImage, canvasMapMaskImage, heroImg, imagesToLoad, tileImages, npcImages, itemImages, backgroundImg, objInitLeft, objInitTop, dragStartX, dragStartY, inventoryCheck;
+var gameCanvas, gameContext, gameMode, cartographyContext, offScreenCartographyContext, canvasMapImage, canvasMapImage, canvasMapMaskImage, heroImg, imagesToLoad, tileImages, npcImages, itemImages, backgroundImg, objInitLeft, objInitTop, dragStartX, dragStartY, inventoryCheck, timeSinceLastAmbientSoundWasPlayed;
 
-var titleTagPrefix = 'Autumn Earth';
+const titleTagPrefix = 'Autumn Earth';
 
 // map changes:
 var mapTransition = "";
 var mapTransitionCurrentFrames = 1;
-var mapTransitionMaxFrames = 60;
+const mapTransitionMaxFrames = 60;
 var activeDoorX = -1;
 var activeDoorY = -1;
 
@@ -25,8 +25,8 @@ var mapTilesX = 0;
 var mapTilesY = 0;
 
 var tileGraphics = [];
-var tileW = 48;
-var tileH = tileW/2;
+const tileW = 48;
+const tileH = tileW/2;
 var tileGraphicsToLoad = 0;
 var npcGraphicsToLoad = 0;
 var itemGraphicsToLoad = 0;
@@ -48,7 +48,7 @@ var inventoryInterfaceIsBuilt = false;
 var whichTransitionEvent = '';
 
 var activeNPCForDialogue = '';
-var closeDialogueDistance = 200;
+const closeDialogueDistance = 200;
 var canCloseDialogueBalloonNextClick = false;
 var thisSpeech = '';
 
@@ -58,6 +58,8 @@ var thisChallengeNPC;
 
 var questData = [];
 
+const minTimeBetweenAmbientSounds = 1200;
+
 var colourNames = [];
 
 var currentRecipePanelProfession = -1;
@@ -65,10 +67,10 @@ var currentItemGroupFilters = "";
 
 var thisMapShopItemIds = '';
 var shopCurrentlyOpen = -1;
-var inflationModifier = 10;
-var sellPriceModifier = 0.7;
-var sellPriceSpecialismModifier = 0.8;
-var buyPriceSpecialismModifier = 0.9;
+const inflationModifier = 10;
+const sellPriceModifier = 0.7;
+const sellPriceSpecialismModifier = 0.8;
+const buyPriceSpecialismModifier = 0.9;
 
 // key bindings
 var key = [0, 0, 0, 0, 0, 0, 0];
