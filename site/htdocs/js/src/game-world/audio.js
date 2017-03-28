@@ -10,34 +10,31 @@ var soundsToLoad = {
     'hen': '../sounds/hen-NOT_MINE.mp3'
 };
 
-
-// https://www.html5rocks.com/en/tutorials/webaudio/intro/
-function BufferLoader(context, urlList, callback) {
-    this.context = context;
-    this.urlList = urlList;
-    this.onload = callback;
-    this.bufferList = new Array();
-    this.loadCount = 0;
-}
-
-BufferLoader.prototype.loadBuffer = function(url, index) {
+var loadBuffer = function(url, index) {
+    console.log("buffer loading running");
     // Load buffer asynchronously
     var request = new XMLHttpRequest();
     request.open("GET", url, true);
     request.responseType = "arraybuffer";
-    var loader = this;
     request.onload = function() {
         // Asynchronously decode the audio file data in request.response
-        loader.context.decodeAudioData(
+        audioContext.decodeAudioData(
             request.response,
             function(buffer) {
                 if (!buffer) {
                     console.log('error decoding file data: ' + url);
                     return;
                 }
-                loader.bufferList[index] = buffer;
-                if (++loader.loadCount == loader.urlList.length)
-                    loader.onload(loader.bufferList);
+                bufferLoader.bufferList[index] = buffer;
+                if (++bufferLoader.loadCount == bufferLoader.urlList.length) {
+                    //  bufferLoader.onload(bufferLoader.bufferList);
+                    var buffer, name;
+                    for (var i = 0; i < bufferLoader.bufferList.length; i++) {
+                        buffer = bufferLoader.bufferList[i];
+                        name = audio.names[i];
+                        soundEffects[name] = buffer;
+                    }
+                }
             },
             function(error) {
                 console.log('decodeAudioData error', error);
@@ -48,37 +45,32 @@ BufferLoader.prototype.loadBuffer = function(url, index) {
         console.log('BufferLoader: XHR error');
     }
     request.send();
-}
+};
 
-BufferLoader.prototype.load = function() {
-    for (var i = 0; i < this.urlList.length; ++i)
-        this.loadBuffer(this.urlList[i], i);
-}
 
+var bufferLoader = {};
 var audio = {
     lastTrack: "",
+    names: [],
     init: function() {
+        var paths = [];
         try {
             window.AudioContext = window.AudioContext || window.webkitAudioContext;
             audioContext = new AudioContext();
             soundGainNode = audioContext.createGain();
             soundGainNode.connect(audioContext.destination);
-            //musicGainNode.createGain();
-            var names = [];
-            var paths = [];
+
             for (var name in soundsToLoad) {
                 var path = soundsToLoad[name];
-                names.push(name);
+                audio.names.push(name);
                 paths.push(path);
             }
-            bufferLoader = new BufferLoader(audioContext, paths, function(bufferList) {
-                for (var i = 0; i < bufferList.length; i++) {
-                    var buffer = bufferList[i];
-                    var name = names[i];
-                    soundEffects[name] = buffer;
-                }
-            });
-            bufferLoader.load();
+            bufferLoader.urlList = paths;
+            bufferLoader.bufferList = new Array();
+            bufferLoader.loadCount = 0;
+            for (var i = 0; i < bufferLoader.urlList.length; i++) {
+                loadBuffer(bufferLoader.urlList[i], i);
+            }
         } catch (e) {
             // web audio API not supported
             // fallback? 
@@ -119,7 +111,7 @@ var audio = {
     },
 
     playSound: function(buffer, delay) {
-
+        console.log(buffer);
         var source = audioContext.createBufferSource();
         source.buffer = buffer;
         source.connect(soundGainNode);

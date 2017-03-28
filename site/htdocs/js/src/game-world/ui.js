@@ -114,8 +114,9 @@ var UI = {
     addNewBag: function(newBagObject) {
         // add to object:
         hero.bags.push(newBagObject);
+        var thisSlotsID;
         i = hero.bags.length - 1;
-        inventoryMarkup = '<div class="inventoryBag" id="inventoryBag' + i + '"><div class="draggableBar">' + currentActiveInventoryItems[hero.bags[i].type].shortname + '</div><ol class="active" id="bag' + i + '">';
+        var inventoryMarkup = '<div class="inventoryBag" id="inventoryBag' + i + '"><div class="draggableBar">' + currentActiveInventoryItems[hero.bags[i].type].shortname + '</div><ol class="active" id="bag' + i + '">';
         var thisBagNumberOfSlots = currentActiveInventoryItems[hero.bags[i].type].actionValue;
         for (var j = 0; j < thisBagNumberOfSlots; j++) {
             thisSlotsID = i + '-' + j;
@@ -326,6 +327,7 @@ var UI = {
     },
 
     endInventoryDrag: function(e) {
+
         var isFromAShop = false;
         if (UI.sourceSlot.substring(0, 8) == "shopSlot") {
             isFromAShop = true;
@@ -565,16 +567,17 @@ var UI = {
     },
 
     droppedSuccessfully: function() {
-
-        // hide the clone:
-        UI.activeDragObject.style.cssText = "z-index:2;";
-        UI.activeDragObject = '';
-    
-        if (isSplitStackBeingDragged) {
-            isSplitStackBeingDragged = false;
+        // this can get fired twice for double click, so just make sure it needs tidying up:
+        if (UI.activeDragObject != "") {
+            // hide the clone:
+            UI.activeDragObject.style.cssText = "z-index:2;";
+            UI.activeDragObject = '';
+            if (isSplitStackBeingDragged) {
+                isSplitStackBeingDragged = false;
+            }
+            inventorySplitStackCancel();
+            UI.updatePanelsAfterInventoryChange();
         }
-        inventorySplitStackCancel();
-        UI.updatePanelsAfterInventoryChange();
     },
 
     initInventoryDrag: function(whichElements) {
@@ -1135,11 +1138,9 @@ var UI = {
                     document.getElementById("slot" + inventoryCheck[1]).innerHTML = generateSlotMarkup(inventoryCheck[1]);
                     UI.showChangeInInventory(inventoryCheck[1]);
                     // remove the ink and material used:
-                    console.log("mat:");
-                    console.log(UI.inscription.selected.material);
+
                     removeFromInventory(storedSelectedMaterialSlot, 1);
-                    console.log("ink:");
-                    console.log(UI.inscription.selected.ink);
+
                     removeFromInventory(storedSelectedInkSlot, 1);
                     UI.updateInscriptionPanel();
                 } else {

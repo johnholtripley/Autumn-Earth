@@ -1,5 +1,4 @@
 function canAddItemToInventory(itemObj) {
-    console.log(itemObj);
     // takes an array of objects and checks if all of them can be added before adding any of them
     // make copy of inventory:
     var inventoryClone = JSON.parse(JSON.stringify(hero.inventory));
@@ -13,15 +12,15 @@ function canAddItemToInventory(itemObj) {
             // loop through keysFound and add to the slot maximum
             for (var i = 0; i < inventoryKeysFound.length; i++) {
                 if (itemAttributesMatch(inventoryClone[inventoryKeysFound[i]], itemObj[k])) {
-                   
+
                     var quantityOnSlotAlready = inventoryClone[inventoryKeysFound[i]].quantity;
                     var amountAddedToThisSlot = (maxNumberOfItemsPerSlot - quantityOnSlotAlready) > (itemObj[k].quantity - quantityAddedSoFar) ? (itemObj[k].quantity - quantityAddedSoFar) : maxNumberOfItemsPerSlot - quantityOnSlotAlready;
                     quantityAddedSoFar += amountAddedToThisSlot;
                     // add item to this slot:
-if(amountAddedToThisSlot>0) {
-                    slotsUpdated.push((inventoryKeysFound[i]));
-                    inventoryClone[inventoryKeysFound[i]].quantity += amountAddedToThisSlot;
-                }
+                    if (amountAddedToThisSlot > 0) {
+                        slotsUpdated.push((inventoryKeysFound[i]));
+                        inventoryClone[inventoryKeysFound[i]].quantity += amountAddedToThisSlot;
+                    }
                     if (quantityAddedSoFar >= itemObj[k].quantity) {
                         break;
                     }
@@ -71,7 +70,7 @@ if(amountAddedToThisSlot>0) {
     if (allItemsAdded) {
         // make the active inventory be the same as the amended one:
         hero.inventory = JSON.parse(JSON.stringify(inventoryClone));
-       UI.updatePanelsAfterInventoryChange();
+        UI.updatePanelsAfterInventoryChange();
         // return success, and the slots that were affected:
         return [true, slotsUpdated];
     } else {
@@ -149,7 +148,7 @@ function removeFromInventory(whichSlot, amount) {
     if (thisCurrentQuantity - amount > 0) {
         // just reduce quantity:
         hero.inventory[whichSlot].quantity -= amount;
-    updateQuantity(whichSlot);
+        updateQuantity(whichSlot);
     } else {
         // remove the item:
         delete hero.inventory[whichSlot];
@@ -159,16 +158,16 @@ function removeFromInventory(whichSlot, amount) {
 }
 
 function updateQuantity(whichSlot) {
-        // update visually:
-        var thisSlotElem = document.getElementById("slot" + whichSlot);
-        for (var i = 0; i < thisSlotElem.childNodes.length; i++) {
-            if (thisSlotElem.childNodes[i].className == "qty") {
-                thisSlotElem.childNodes[i].innerHTML = hero.inventory[whichSlot].quantity;
-            }
-            if (thisSlotElem.childNodes[i].nodeName == "P") {
-                thisSlotElem.childNodes[i].childNodes[2].innerHTML = 'Sell price: ' + parseMoney(Math.ceil(hero.inventory[whichSlot].quantity * sellPriceModifier * inflationModifier * currentActiveInventoryItems[hero.inventory[whichSlot].type].priceCode, 0));
-            }
+    // update visually:
+    var thisSlotElem = document.getElementById("slot" + whichSlot);
+    for (var i = 0; i < thisSlotElem.childNodes.length; i++) {
+        if (thisSlotElem.childNodes[i].className == "qty") {
+            thisSlotElem.childNodes[i].innerHTML = hero.inventory[whichSlot].quantity;
         }
+        if (thisSlotElem.childNodes[i].nodeName == "P") {
+            thisSlotElem.childNodes[i].childNodes[2].innerHTML = 'Sell price: ' + parseMoney(Math.ceil(hero.inventory[whichSlot].quantity * sellPriceModifier * inflationModifier * currentActiveInventoryItems[hero.inventory[whichSlot].type].priceCode, 0));
+        }
+    }
 }
 
 function itemAttributesMatch(item1, item2) {
@@ -181,13 +180,13 @@ function itemAttributesMatch(item1, item2) {
                             if (item1.enchanted == item2.enchanted) {
                                 if (item1.hallmark == item2.hallmark) {
                                     if (item1.inscription.title == item2.inscription.title) {
-                                    if (item1.inscription.content == item2.inscription.content) {
-                                    if (item1.inscription.timeCreated == item2.inscription.timeCreated) {
-                                        if (item1.contains == item2.contains) {
-                                            return true;
+                                        if (item1.inscription.content == item2.inscription.content) {
+                                            if (item1.inscription.timeCreated == item2.inscription.timeCreated) {
+                                                if (item1.contains == item2.contains) {
+                                                    return true;
+                                                }
+                                            }
                                         }
-                                    }
-                                    }
                                     }
                                 }
                             }
@@ -235,12 +234,12 @@ function inventoryItemAction(whichSlot, whichAction, whichActionValue) { // remo
             openBoosterPack();
             removeFromInventory(whichSlotNumber, 1);
             break;
-                    case "bag":
+        case "bag":
             UI.addNewBag(hero.inventory[whichSlotNumber]);
-            audio.playSound(soundEffects['bagOpen'],0);
+            audio.playSound(soundEffects['bagOpen'], 0);
             removeFromInventory(whichSlotNumber, 1);
             break;
-            case "inscribe":
+        case "inscribe":
             UI.openInscriptionPanel();
             break;
         case "card":
@@ -250,7 +249,7 @@ function inventoryItemAction(whichSlot, whichAction, whichActionValue) { // remo
             break;
         case "book":
             document.getElementById("book" + whichActionValue).classList.add("active");
-            audio.playSound(soundEffects['bookOpen'],0);
+            audio.playSound(soundEffects['bookOpen'], 0);
         case "recipe":
             if (canLearnRecipe(whichActionValue)) {
                 removeFromInventory(whichSlotNumber, 1);
@@ -258,7 +257,7 @@ function inventoryItemAction(whichSlot, whichAction, whichActionValue) { // remo
             break;
         case "craft":
             if (hero.professionsKnown.indexOf(parseInt(whichActionValue)) != -1) {
-                audio.playSound(soundEffects['buttonClick'],0);
+                audio.playSound(soundEffects['buttonClick'], 0);
                 UI.populateRecipeList(whichActionValue);
             } else {
                 UI.showNotification("<p>You don't know this profession yet.</p>");
@@ -278,9 +277,9 @@ function additionalTooltipDetail(whichSlotID) {
     if (currentActiveInventoryItems[hero.inventory[whichSlotID].type].action == "recipe") {
         // check if it's known already:
         var isKnown = false;
-        for (var i=0; i<hero.recipesKnown.length;i++) {
-            if(hero.recipesKnown[i][0] == currentActiveInventoryItems[hero.inventory[whichSlotID].type].actionValue) {
-isKnown = true;
+        for (var i = 0; i < hero.recipesKnown.length; i++) {
+            if (hero.recipesKnown[i][0] == currentActiveInventoryItems[hero.inventory[whichSlotID].type].actionValue) {
+                isKnown = true;
             }
         }
         if (isKnown) {
@@ -325,9 +324,9 @@ function generateSlotMarkup(thisSlotsId) {
     var isABook = false;
     if (thisAction) {
         if (thisAction == "book") {
-            if(hero.inventory[thisSlotsId].inscription.content) {
-            isABook = true;
-        }
+            if (hero.inventory[thisSlotsId].inscription.content) {
+                isABook = true;
+            }
         }
     }
     var dataActionMarkup = '';
@@ -438,7 +437,7 @@ function inventorySplitStackSubmit(e) {
         document.addEventListener("mousemove", UI.handleDrag, false);
         document.addEventListener("mouseup", UI.endInventoryDrag, false);
     }
-    console.log(UI.draggedInventoryObject);
+
     splitStackPanel.classList.remove("active");
 
 }

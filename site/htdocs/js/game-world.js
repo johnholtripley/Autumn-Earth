@@ -11,34 +11,31 @@ var soundsToLoad = {
     'hen': '../sounds/hen-NOT_MINE.mp3'
 };
 
-
-// https://www.html5rocks.com/en/tutorials/webaudio/intro/
-function BufferLoader(context, urlList, callback) {
-    this.context = context;
-    this.urlList = urlList;
-    this.onload = callback;
-    this.bufferList = new Array();
-    this.loadCount = 0;
-}
-
-BufferLoader.prototype.loadBuffer = function(url, index) {
+var loadBuffer = function(url, index) {
+    console.log("buffer loading running");
     // Load buffer asynchronously
     var request = new XMLHttpRequest();
     request.open("GET", url, true);
     request.responseType = "arraybuffer";
-    var loader = this;
     request.onload = function() {
         // Asynchronously decode the audio file data in request.response
-        loader.context.decodeAudioData(
+        audioContext.decodeAudioData(
             request.response,
             function(buffer) {
                 if (!buffer) {
                     console.log('error decoding file data: ' + url);
                     return;
                 }
-                loader.bufferList[index] = buffer;
-                if (++loader.loadCount == loader.urlList.length)
-                    loader.onload(loader.bufferList);
+                bufferLoader.bufferList[index] = buffer;
+                if (++bufferLoader.loadCount == bufferLoader.urlList.length) {
+                    //  bufferLoader.onload(bufferLoader.bufferList);
+                    var buffer, name;
+                    for (var i = 0; i < bufferLoader.bufferList.length; i++) {
+                        buffer = bufferLoader.bufferList[i];
+                        name = audio.names[i];
+                        soundEffects[name] = buffer;
+                    }
+                }
             },
             function(error) {
                 console.log('decodeAudioData error', error);
@@ -49,37 +46,32 @@ BufferLoader.prototype.loadBuffer = function(url, index) {
         console.log('BufferLoader: XHR error');
     }
     request.send();
-}
+};
 
-BufferLoader.prototype.load = function() {
-    for (var i = 0; i < this.urlList.length; ++i)
-        this.loadBuffer(this.urlList[i], i);
-}
 
+var bufferLoader = {};
 var audio = {
     lastTrack: "",
+    names: [],
     init: function() {
+        var paths = [];
         try {
             window.AudioContext = window.AudioContext || window.webkitAudioContext;
             audioContext = new AudioContext();
             soundGainNode = audioContext.createGain();
             soundGainNode.connect(audioContext.destination);
-            //musicGainNode.createGain();
-            var names = [];
-            var paths = [];
+
             for (var name in soundsToLoad) {
                 var path = soundsToLoad[name];
-                names.push(name);
+                audio.names.push(name);
                 paths.push(path);
             }
-            bufferLoader = new BufferLoader(audioContext, paths, function(bufferList) {
-                for (var i = 0; i < bufferList.length; i++) {
-                    var buffer = bufferList[i];
-                    var name = names[i];
-                    soundEffects[name] = buffer;
-                }
-            });
-            bufferLoader.load();
+            bufferLoader.urlList = paths;
+            bufferLoader.bufferList = new Array();
+            bufferLoader.loadCount = 0;
+            for (var i = 0; i < bufferLoader.urlList.length; i++) {
+                loadBuffer(bufferLoader.urlList[i], i);
+            }
         } catch (e) {
             // web audio API not supported
             // fallback? 
@@ -120,7 +112,7 @@ var audio = {
     },
 
     playSound: function(buffer, delay) {
-
+        console.log(buffer);
         var source = audioContext.createBufferSource();
         source.buffer = buffer;
         source.connect(soundGainNode);
@@ -1661,7 +1653,6 @@ var Input = {
 }
 
 function canAddItemToInventory(itemObj) {
-    console.log(itemObj);
     // takes an array of objects and checks if all of them can be added before adding any of them
     // make copy of inventory:
     var inventoryClone = JSON.parse(JSON.stringify(hero.inventory));
@@ -1675,15 +1666,15 @@ function canAddItemToInventory(itemObj) {
             // loop through keysFound and add to the slot maximum
             for (var i = 0; i < inventoryKeysFound.length; i++) {
                 if (itemAttributesMatch(inventoryClone[inventoryKeysFound[i]], itemObj[k])) {
-                   
+
                     var quantityOnSlotAlready = inventoryClone[inventoryKeysFound[i]].quantity;
                     var amountAddedToThisSlot = (maxNumberOfItemsPerSlot - quantityOnSlotAlready) > (itemObj[k].quantity - quantityAddedSoFar) ? (itemObj[k].quantity - quantityAddedSoFar) : maxNumberOfItemsPerSlot - quantityOnSlotAlready;
                     quantityAddedSoFar += amountAddedToThisSlot;
                     // add item to this slot:
-if(amountAddedToThisSlot>0) {
-                    slotsUpdated.push((inventoryKeysFound[i]));
-                    inventoryClone[inventoryKeysFound[i]].quantity += amountAddedToThisSlot;
-                }
+                    if (amountAddedToThisSlot > 0) {
+                        slotsUpdated.push((inventoryKeysFound[i]));
+                        inventoryClone[inventoryKeysFound[i]].quantity += amountAddedToThisSlot;
+                    }
                     if (quantityAddedSoFar >= itemObj[k].quantity) {
                         break;
                     }
@@ -1733,7 +1724,7 @@ if(amountAddedToThisSlot>0) {
     if (allItemsAdded) {
         // make the active inventory be the same as the amended one:
         hero.inventory = JSON.parse(JSON.stringify(inventoryClone));
-       UI.updatePanelsAfterInventoryChange();
+        UI.updatePanelsAfterInventoryChange();
         // return success, and the slots that were affected:
         return [true, slotsUpdated];
     } else {
@@ -1811,7 +1802,7 @@ function removeFromInventory(whichSlot, amount) {
     if (thisCurrentQuantity - amount > 0) {
         // just reduce quantity:
         hero.inventory[whichSlot].quantity -= amount;
-    updateQuantity(whichSlot);
+        updateQuantity(whichSlot);
     } else {
         // remove the item:
         delete hero.inventory[whichSlot];
@@ -1821,16 +1812,16 @@ function removeFromInventory(whichSlot, amount) {
 }
 
 function updateQuantity(whichSlot) {
-        // update visually:
-        var thisSlotElem = document.getElementById("slot" + whichSlot);
-        for (var i = 0; i < thisSlotElem.childNodes.length; i++) {
-            if (thisSlotElem.childNodes[i].className == "qty") {
-                thisSlotElem.childNodes[i].innerHTML = hero.inventory[whichSlot].quantity;
-            }
-            if (thisSlotElem.childNodes[i].nodeName == "P") {
-                thisSlotElem.childNodes[i].childNodes[2].innerHTML = 'Sell price: ' + parseMoney(Math.ceil(hero.inventory[whichSlot].quantity * sellPriceModifier * inflationModifier * currentActiveInventoryItems[hero.inventory[whichSlot].type].priceCode, 0));
-            }
+    // update visually:
+    var thisSlotElem = document.getElementById("slot" + whichSlot);
+    for (var i = 0; i < thisSlotElem.childNodes.length; i++) {
+        if (thisSlotElem.childNodes[i].className == "qty") {
+            thisSlotElem.childNodes[i].innerHTML = hero.inventory[whichSlot].quantity;
         }
+        if (thisSlotElem.childNodes[i].nodeName == "P") {
+            thisSlotElem.childNodes[i].childNodes[2].innerHTML = 'Sell price: ' + parseMoney(Math.ceil(hero.inventory[whichSlot].quantity * sellPriceModifier * inflationModifier * currentActiveInventoryItems[hero.inventory[whichSlot].type].priceCode, 0));
+        }
+    }
 }
 
 function itemAttributesMatch(item1, item2) {
@@ -1843,13 +1834,13 @@ function itemAttributesMatch(item1, item2) {
                             if (item1.enchanted == item2.enchanted) {
                                 if (item1.hallmark == item2.hallmark) {
                                     if (item1.inscription.title == item2.inscription.title) {
-                                    if (item1.inscription.content == item2.inscription.content) {
-                                    if (item1.inscription.timeCreated == item2.inscription.timeCreated) {
-                                        if (item1.contains == item2.contains) {
-                                            return true;
+                                        if (item1.inscription.content == item2.inscription.content) {
+                                            if (item1.inscription.timeCreated == item2.inscription.timeCreated) {
+                                                if (item1.contains == item2.contains) {
+                                                    return true;
+                                                }
+                                            }
                                         }
-                                    }
-                                    }
                                     }
                                 }
                             }
@@ -1897,12 +1888,12 @@ function inventoryItemAction(whichSlot, whichAction, whichActionValue) { // remo
             openBoosterPack();
             removeFromInventory(whichSlotNumber, 1);
             break;
-                    case "bag":
+        case "bag":
             UI.addNewBag(hero.inventory[whichSlotNumber]);
-            audio.playSound(soundEffects['bagOpen'],0);
+            audio.playSound(soundEffects['bagOpen'], 0);
             removeFromInventory(whichSlotNumber, 1);
             break;
-            case "inscribe":
+        case "inscribe":
             UI.openInscriptionPanel();
             break;
         case "card":
@@ -1912,7 +1903,7 @@ function inventoryItemAction(whichSlot, whichAction, whichActionValue) { // remo
             break;
         case "book":
             document.getElementById("book" + whichActionValue).classList.add("active");
-            audio.playSound(soundEffects['bookOpen'],0);
+            audio.playSound(soundEffects['bookOpen'], 0);
         case "recipe":
             if (canLearnRecipe(whichActionValue)) {
                 removeFromInventory(whichSlotNumber, 1);
@@ -1920,7 +1911,7 @@ function inventoryItemAction(whichSlot, whichAction, whichActionValue) { // remo
             break;
         case "craft":
             if (hero.professionsKnown.indexOf(parseInt(whichActionValue)) != -1) {
-                audio.playSound(soundEffects['buttonClick'],0);
+                audio.playSound(soundEffects['buttonClick'], 0);
                 UI.populateRecipeList(whichActionValue);
             } else {
                 UI.showNotification("<p>You don't know this profession yet.</p>");
@@ -1940,9 +1931,9 @@ function additionalTooltipDetail(whichSlotID) {
     if (currentActiveInventoryItems[hero.inventory[whichSlotID].type].action == "recipe") {
         // check if it's known already:
         var isKnown = false;
-        for (var i=0; i<hero.recipesKnown.length;i++) {
-            if(hero.recipesKnown[i][0] == currentActiveInventoryItems[hero.inventory[whichSlotID].type].actionValue) {
-isKnown = true;
+        for (var i = 0; i < hero.recipesKnown.length; i++) {
+            if (hero.recipesKnown[i][0] == currentActiveInventoryItems[hero.inventory[whichSlotID].type].actionValue) {
+                isKnown = true;
             }
         }
         if (isKnown) {
@@ -1987,9 +1978,9 @@ function generateSlotMarkup(thisSlotsId) {
     var isABook = false;
     if (thisAction) {
         if (thisAction == "book") {
-            if(hero.inventory[thisSlotsId].inscription.content) {
-            isABook = true;
-        }
+            if (hero.inventory[thisSlotsId].inscription.content) {
+                isABook = true;
+            }
         }
     }
     var dataActionMarkup = '';
@@ -2100,7 +2091,7 @@ function inventorySplitStackSubmit(e) {
         document.addEventListener("mousemove", UI.handleDrag, false);
         document.addEventListener("mouseup", UI.endInventoryDrag, false);
     }
-    console.log(UI.draggedInventoryObject);
+
     splitStackPanel.classList.remove("active");
 
 }
@@ -2257,8 +2248,9 @@ var UI = {
     addNewBag: function(newBagObject) {
         // add to object:
         hero.bags.push(newBagObject);
+        var thisSlotsID;
         i = hero.bags.length - 1;
-        inventoryMarkup = '<div class="inventoryBag" id="inventoryBag' + i + '"><div class="draggableBar">' + currentActiveInventoryItems[hero.bags[i].type].shortname + '</div><ol class="active" id="bag' + i + '">';
+        var inventoryMarkup = '<div class="inventoryBag" id="inventoryBag' + i + '"><div class="draggableBar">' + currentActiveInventoryItems[hero.bags[i].type].shortname + '</div><ol class="active" id="bag' + i + '">';
         var thisBagNumberOfSlots = currentActiveInventoryItems[hero.bags[i].type].actionValue;
         for (var j = 0; j < thisBagNumberOfSlots; j++) {
             thisSlotsID = i + '-' + j;
@@ -2469,6 +2461,7 @@ var UI = {
     },
 
     endInventoryDrag: function(e) {
+
         var isFromAShop = false;
         if (UI.sourceSlot.substring(0, 8) == "shopSlot") {
             isFromAShop = true;
@@ -2708,16 +2701,17 @@ var UI = {
     },
 
     droppedSuccessfully: function() {
-
-        // hide the clone:
-        UI.activeDragObject.style.cssText = "z-index:2;";
-        UI.activeDragObject = '';
-    
-        if (isSplitStackBeingDragged) {
-            isSplitStackBeingDragged = false;
+        // this can get fired twice for double click, so just make sure it needs tidying up:
+        if (UI.activeDragObject != "") {
+            // hide the clone:
+            UI.activeDragObject.style.cssText = "z-index:2;";
+            UI.activeDragObject = '';
+            if (isSplitStackBeingDragged) {
+                isSplitStackBeingDragged = false;
+            }
+            inventorySplitStackCancel();
+            UI.updatePanelsAfterInventoryChange();
         }
-        inventorySplitStackCancel();
-        UI.updatePanelsAfterInventoryChange();
     },
 
     initInventoryDrag: function(whichElements) {
@@ -3278,11 +3272,9 @@ var UI = {
                     document.getElementById("slot" + inventoryCheck[1]).innerHTML = generateSlotMarkup(inventoryCheck[1]);
                     UI.showChangeInInventory(inventoryCheck[1]);
                     // remove the ink and material used:
-                    console.log("mat:");
-                    console.log(UI.inscription.selected.material);
+
                     removeFromInventory(storedSelectedMaterialSlot, 1);
-                    console.log("ink:");
-                    console.log(UI.inscription.selected.ink);
+
                     removeFromInventory(storedSelectedInkSlot, 1);
                     UI.updateInscriptionPanel();
                 } else {

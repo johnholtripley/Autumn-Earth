@@ -84,8 +84,8 @@ function addNode(parentNode, tileX, tileY, endX, endY) {
 
 
 function findPath(startX, startY, endX, endY) {
-    console.log("start path: "+startX+", "+startY);
-    console.log("end path: "+endX+", "+endY);
+    console.log("start path: " + startX + ", " + startY);
+    console.log("end path: " + endX + ", " + endY);
     uncheckedTiles = [];
     var heuristic = Math.abs(startX - endX) + Math.abs(startY - endY);
     nodes = {};
@@ -131,7 +131,7 @@ function findPath(startX, startY, endX, endY) {
                 }
             }
             builtPath.push('pathEnd');
-console.log(builtPath.join(", "));
+            console.log(builtPath.join(", "));
         } else {
             addNode(thisNode, thisNode.x + 1, thisNode.y, endX, endY);
             addNode(thisNode, thisNode.x - 1, thisNode.y, endX, endY);
@@ -141,10 +141,10 @@ console.log(builtPath.join(", "));
     } while ((uncheckedTiles.length > 0) && !targetFound);
 
     // tidy up:
-     uncheckedTiles = null;
-     thisMapData = null;
-     nodes = null;
-     thisNPCsIndex = null;
+    uncheckedTiles = null;
+    thisMapData = null;
+    nodes = null;
+    thisNPCsIndex = null;
     if (!targetFound) {
         return ["-", "pathEnd"];
     } else {
@@ -172,12 +172,10 @@ onmessage = function(e) {
                 if (i != thisNPCsIndex) {
                     // just make sure it's not checking its own shop (...just in case)
                     thisLoopNPC = thisMapData.npcs[i];
-                    if (typeof thisLoopNPC.speech !== "undefined") {
-                    if (typeof thisLoopNPC.speechIndex !== "undefined") {
+                    if (thisLoopNPC.speech) {
                         if (thisLoopNPC.speech[thisLoopNPC.speechIndex][1] == "shop") {
                             shopsFound.push(i);
                         }
-                    }
                     }
                 }
             }
