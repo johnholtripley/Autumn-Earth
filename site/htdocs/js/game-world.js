@@ -2142,50 +2142,50 @@ console.log("gameMode: "+gameMode);
 }
 
 // global vars:
-var recipeSearch = document.getElementById('recipeSearch');
-var clearRecipeSearch = document.getElementById('clearRecipeSearch');
-var recipeFilter = document.getElementById('recipeFilter');
-var splitStackInput = document.getElementById('splitStackInput');
-var splitStackPanel = document.getElementById('splitStackPanel');
-var shopSplitStackInput = document.getElementById('shopSplitStackInput');
-var shopSplitStackPanel = document.getElementById('shopSplitStackPanel');
-var craftingRecipeCreateButton = document.getElementById('craftingRecipeCreateButton');
-var craftingPanel = document.getElementById('craftingPanel');
-var selectComponentsItemBeingCreated = document.getElementById('selectComponentsItemBeingCreated');
-var componentsAvailableForThisRecipe = document.getElementById('componentsAvailableForThisRecipe');
-var booksAndParchments = document.getElementById('booksAndParchments');
-var gameWrapper = document.getElementById('gameWrapper');
-var inventoryPanels = document.getElementById('inventoryPanels');
-var shopPanel = document.getElementById('shopPanel');
-var inscriptionPanel = document.getElementById('inscriptionPanel');
-var inscriptionTextArea = document.getElementById('inscriptionTextArea');
-var sourceSelection = document.getElementById('sourceSelection');
-var materialsSelection = document.getElementById('materialsSelection');
-var inkSelection = document.getElementById('inkSelection');
-var originalText = document.getElementById('originalText');
-var scribeCopyText = document.getElementById('scribeCopyText');
-var scribeOriginalText = document.getElementById('scribeOriginalText');
-var scribeStartInscription = document.getElementById('scribeStartInscription');
-var inscriptionTitle = document.getElementById('inscriptionTitle');
-var soundVolume = document.getElementById('soundVolume');
-var musicVolume = document.getElementById('musicVolume');
-var gameSettingsPanel = document.getElementById('gameSettings');
+const recipeSearch = document.getElementById('recipeSearch');
+const clearRecipeSearch = document.getElementById('clearRecipeSearch');
+const recipeFilter = document.getElementById('recipeFilter');
+const splitStackInput = document.getElementById('splitStackInput');
+const splitStackPanel = document.getElementById('splitStackPanel');
+const shopSplitStackInput = document.getElementById('shopSplitStackInput');
+const shopSplitStackPanel = document.getElementById('shopSplitStackPanel');
+const craftingRecipeCreateButton = document.getElementById('craftingRecipeCreateButton');
+const craftingPanel = document.getElementById('craftingPanel');
+const selectComponentsItemBeingCreated = document.getElementById('selectComponentsItemBeingCreated');
+const componentsAvailableForThisRecipe = document.getElementById('componentsAvailableForThisRecipe');
+const booksAndParchments = document.getElementById('booksAndParchments');
+const gameWrapper = document.getElementById('gameWrapper');
+const inventoryPanels = document.getElementById('inventoryPanels');
+const shopPanel = document.getElementById('shopPanel');
+const inscriptionPanel = document.getElementById('inscriptionPanel');
+const inscriptionTextArea = document.getElementById('inscriptionTextArea');
+const sourceSelection = document.getElementById('sourceSelection');
+const materialsSelection = document.getElementById('materialsSelection');
+const inkSelection = document.getElementById('inkSelection');
+const originalText = document.getElementById('originalText');
+const scribeCopyText = document.getElementById('scribeCopyText');
+const scribeOriginalText = document.getElementById('scribeOriginalText');
+const scribeStartInscription = document.getElementById('scribeStartInscription');
+const inscriptionTitle = document.getElementById('inscriptionTitle');
+const soundVolume = document.getElementById('soundVolume');
+const musicVolume = document.getElementById('musicVolume');
+const gameSettingsPanel = document.getElementById('gameSettings');
 
 
 var UI = {
     init: function() {
         // cache all local references to UI elements:
-        var displayZoneName = document.getElementById('displayZoneName');
-        var activeCartographicMap = document.getElementById('activeCartographicMap');
-        var cartographicTitle = document.getElementById('cartographicTitle');
-        var dialogue = document.getElementById('dialogue');
-        var notification = document.getElementById('notification');
-        var cardGameWrapper = document.getElementById('cardGameWrapper');
-        var cardAlbumList = document.getElementById('cardAlbumList');
-        var boosterPack = document.getElementById('boosterPack');
-        var createRecipeList = document.getElementById('createRecipeList');
-        var recipeTitleBar = document.getElementById('recipeTitleBar');
-        var currencies = document.getElementById('currencies');
+        const displayZoneName = document.getElementById('displayZoneName');
+        const activeCartographicMap = document.getElementById('activeCartographicMap');
+        const cartographicTitle = document.getElementById('cartographicTitle');
+        const dialogue = document.getElementById('dialogue');
+        const notification = document.getElementById('notification');
+        const cardGameWrapper = document.getElementById('cardGameWrapper');
+        const cardAlbumList = document.getElementById('cardAlbumList');
+        const boosterPack = document.getElementById('boosterPack');
+        const createRecipeList = document.getElementById('createRecipeList');
+        const recipeTitleBar = document.getElementById('recipeTitleBar');
+        const currencies = document.getElementById('currencies');
         //
 
     },
@@ -2321,7 +2321,7 @@ var UI = {
                 document.addEventListener("mouseup", UI.endDrag, false);
                 // remove z-index of other draggable elements:
                 var dragTargetsInner = document.querySelectorAll('.draggableBar');
-                for (j = 0; j < dragTargetsInner.length; j++) {
+                for (var j = 0; j < dragTargetsInner.length; j++) {
                     dragTargetsInner[j].parentElement.style.zIndex = 1;
                 }
             }
