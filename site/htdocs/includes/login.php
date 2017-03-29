@@ -119,7 +119,7 @@ if(!isset($accountType)) {
 			$ismod = false;
 			$isadmin = false;
 		}
-		
+		$hasmail = "false";
 		// check for mail:
 			$query = "SELECT tblMail.*, tblacct.accountID, tblacct.accountName as useracctid
 FROM tblMail
@@ -132,9 +132,7 @@ WHERE tblacct.accountName='".$processedlogin."' and tblmail.mailread = '0'";
 	if ($returned > 0) {
 		// user has new mail
 		$hasmail = "true";
-	} else {
-		$hasmail = "false";
-	}
+	} 
 	
 
 		
@@ -157,7 +155,7 @@ WHERE tblacct.accountName='".$processedlogin."' and tblmail.mailread = '0'";
 	
 	if ($_SESSION['hasmail'] == "true" ) {
 	// show new mail icon
-	 echo '<br /><a href="/mail/" class="ttipanchor" onmouseover="tooltip(\'tooltipone\');" onmouseout="exit(\'tooltipone\');"><img src="/assets/mail/new_mail.gif" width="31" height="31" alt="you have new mail" /></a>'."\n";
+	 echo '<p><a href="/mail/">You have new mail"></a></p>'."\n";
 	}
 		
 		
@@ -167,7 +165,7 @@ WHERE tblacct.accountName='".$processedlogin."' and tblmail.mailread = '0'";
 	echo '<a href="/account/ManageAccount.php" title="Click to change your Account details">Manage your Account</a>'."\n";
 	echo '<br /><br />'."\n";
 	echo '<form action="' . $thisurl . '" method="post" name="logoutform">'."\n";
-	echo '<input type="submit" name="subbutton" value="Sign out">'."\n";
+	echo '<input type="submit" name="subbutton" value="Log out">'."\n";
 	echo '</form>'."\n";
 		} else {
 		
@@ -197,13 +195,13 @@ WHERE tblacct.accountName='".$processedlogin."' and tblmail.mailread = '0'";
 	}
 	
 	echo '<input type="hidden" name="logincheck" value="posted" />'."\n";
-	echo '<input type="submit" name="subbutton" value="Sign in" />'."\n";
+	echo '<input type="submit" name="subbutton" value="Log in" />'."\n";
 
 	
 	
 	echo '</form>'."\n";
-	echo '<br />'."\n";
-	echo '<a href="/account/join/">Create a new account</a>'."\n";
+	
+	echo '<p><a href="/account/join/">Create a new account</a></p>'."\n";
 		
 		
 		}
@@ -237,10 +235,10 @@ WHERE tblacct.accountName='".$processedlogin."' and tblmail.mailread = '0'";
 			echo '<input type="hidden" name="itemquantity" value="'.$_POST["itemquantity"].'" />'."\n";
 	}
 	echo '<input type="hidden" name="logincheck" value="posted" />'."\n";
-	echo '<input type="submit" name="subbutton" id="subbutton" value="Sign in" />'."\n";
+	echo '<input type="submit" name="subbutton" id="subbutton" value="Log in" />'."\n";
 	echo '</form>'."\n";
-	echo '<br />'."\n";
-	echo '<a href="/account/join/">Create a new account</a>'."\n";
+	
+	echo '<p><a href="/account/join/">Create a new account</a></p>'."\n";
 }
 
 echo'</div>'."\n";

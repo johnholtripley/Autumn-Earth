@@ -2249,7 +2249,8 @@ function movePet() {
             } else {
                 // check the breadcrumb for next direction:
                 var breadcrumbFound = false;
-                console.log("------------");
+                console.log(hero.tileX+","+hero.tileY+"------------");
+                console.log(heroBreadcrumb);
                 for (var i = 0; i < heroBreadcrumblength; i++) {
                     console.log(hero.activePet.tileX + "," + hero.activePet.tileY + " - " + heroBreadcrumb[i][0] + "," + heroBreadcrumb[i][1]);
                     if ((hero.activePet.tileY) == heroBreadcrumb[i][1]) {
