@@ -68,7 +68,7 @@ if ($hasProceduralContent !== false) {
             include_once($_SERVER['DOCUMENT_ROOT']."/includes/signalnoise.php");
             include_once($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
             // get random items that aren't locked to events:
-            $query = "select itemid from tblinventoryitems where activeduringseason is null order by rand() limit 10";
+            $query = "select itemid from tblinventoryitems where activeduringseason is null and showinthecodex = 1 order by rand() limit 10";
 $result = mysql_query( $query ) or die ( "couldn't execute events query: ".$query );
         $numberofrows = mysql_num_rows( $result );
         $itemIds = [];
