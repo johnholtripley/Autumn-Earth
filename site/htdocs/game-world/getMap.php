@@ -62,6 +62,28 @@ if ($hasProceduralContent !== false) {
         }
     }
 
+    for($i=0;$i<count($mapData['map']['shops']); $i++) {
+        if($mapData['map']['shops'][$i]['uniqueItems'] == "##procedural##") {
+            // get random items from database:
+            include_once($_SERVER['DOCUMENT_ROOT']."/includes/signalnoise.php");
+            include_once($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
+            // get random items that aren't locked to events:
+            $query = "select itemid from tblinventoryitems where activeduringseason is null order by rand() limit 10";
+$result = mysql_query( $query ) or die ( "couldn't execute events query: ".$query );
+        $numberofrows = mysql_num_rows( $result );
+        $itemIds = [];
+    if ( $numberofrows>0 ) {
+        while ( $row = mysql_fetch_array( $result ) ) {
+        $itemIds[$row['itemid']] = array(array());
+           //array_push($itemIds, $row['itemid']);
+
+        }
+      
+    }
+mysql_free_result($result);
+$mapData['map']['shops'][$i]['uniqueItems'] = $itemIds;
+        }
+    }
     
 } 
 

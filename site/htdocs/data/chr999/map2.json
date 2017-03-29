@@ -139,9 +139,9 @@
         },
         {
             "name": "shop #3",
-            "uniqueItems": [],
-            "specialism": 2,
-            "categories": [1, 2],
+            "uniqueItems": "##procedural##",
+            "specialism": null,
+            "categories": [],
             "size": "small",
             "currency": "money"
         }],
