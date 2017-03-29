@@ -6,7 +6,7 @@ var timeSinceLastFrameSwap = 0;
 var currentAnimationFrame = 0;
 var animationUpdateTime = (1000 / animationFramesPerSecond);
 
-var gameCanvas, gameContext, gameMode, cartographyContext, offScreenCartographyContext, canvasMapImage, canvasMapImage, canvasMapMaskImage, heroImg, imagesToLoad, tileImages, npcImages, itemImages, backgroundImg, objInitLeft, objInitTop, dragStartX, dragStartY, inventoryCheck, timeSinceLastAmbientSoundWasPlayed;
+var gameCanvas, gameContext, gameMode, cartographyContext, offScreenCartographyContext, canvasMapImage, canvasMapImage, canvasMapMaskImage, heroImg, activePetImg, imagesToLoad, tileImages, npcImages, itemImages, backgroundImg, objInitLeft, objInitTop, dragStartX, dragStartY, inventoryCheck, timeSinceLastAmbientSoundWasPlayed;
 
 const titleTagPrefix = 'Autumn Earth';
 
@@ -57,6 +57,10 @@ var boosterCardsToAdd = [];
 var thisChallengeNPC;
 
 var questData = [];
+
+var hasActivePet = false;
+const heroBreadcrumblength = 10;
+var heroBreadcrumb = [];
 
 const minTimeBetweenAmbientSounds = 1200;
 
@@ -117,3 +121,4 @@ abandonRadius: 500,
 zOffset: 40,
 oscillateOffset: 0
 };
+

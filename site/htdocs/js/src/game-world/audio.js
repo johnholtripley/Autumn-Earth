@@ -84,7 +84,7 @@ var audio = {
     },
 
     playSound: function(buffer, delay) {
-              var source = audioContext.createBufferSource();
+        var source = audioContext.createBufferSource();
         source.buffer = buffer;
         source.connect(soundGainNode);
         if (!source.start) {
@@ -144,13 +144,13 @@ var audio = {
     },
 
     checkForAmbientSounds: function() {
-        if(thisMapData.ambientSounds) {
-if((hero.totalGameTimePlayed - timeSinceLastAmbientSoundWasPlayed) > minTimeBetweenAmbientSounds)  {
- if(getRandomIntegerInclusive(1,240) == 1) {      
-timeSinceLastAmbientSoundWasPlayed = hero.totalGameTimePlayed;
-audio.playSound(soundEffects[getRandomKeyFromObject(thisMapData.ambientSounds)], 0);
-}
+        if (thisMapData.ambientSounds) {
+            if ((hero.totalGameTimePlayed - timeSinceLastAmbientSoundWasPlayed) > minTimeBetweenAmbientSounds) {
+                if (getRandomIntegerInclusive(1, 240) == 1) {
+                    timeSinceLastAmbientSoundWasPlayed = hero.totalGameTimePlayed;
+                    audio.playSound(soundEffects[getRandomKeyFromObject(thisMapData.ambientSounds)], 0);
+                }
+            }
         }
-    }
     }
 }

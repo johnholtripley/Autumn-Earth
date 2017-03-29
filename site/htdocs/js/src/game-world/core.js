@@ -72,7 +72,11 @@ function getHeroGameState() {
         hero.recipesKnown = data.recipesKnown;
         hero.professionsKnown = data.professionsKnown;
         hero.totalGameTimePlayed = data.totalGameTimePlayed;
-        timeSinceLastAmbientSoundWasPlayed = hero.totalGameTimePlayed + (minTimeBetweenAmbientSounds*1.25);
+        timeSinceLastAmbientSoundWasPlayed = hero.totalGameTimePlayed + (minTimeBetweenAmbientSounds * 1.25);
+        if (data.activePet) {
+            hasActivePet = true;
+            hero.activePet = data.activePet;
+        }
         // copy the fae properties that will change into the main fae object:
         for (var attrname in data.fae) {
             fae[attrname] = data.fae[attrname];
@@ -97,11 +101,21 @@ function loadCoreAssets() {
         name: "heroImg",
         src: '/images/game-world/core/test-iso-hero.png'
     });
+    if(hasActivePet) {
+    coreImagesToLoad.push({
+        name: "activePet",
+        src: '/images/game-world/npcs/' + hero.activePet.src
+    });
+}
     Loader.preload(coreImagesToLoad, prepareCoreAssets, loadingProgress);
 }
 
+
 function prepareCoreAssets() {
     heroImg = Loader.getImage("heroImg");
+    if(hasActivePet) {
+    activePetImg = Loader.getImage("activePet");
+}
     getColours();
 }
 
@@ -417,6 +431,20 @@ function prepareGame() {
         // used for making sure that pathfinding NPCs don't head straight back to the last place they visited:
         thisMapData.npcs[i].lastTargetDestination = "";
     }
+    // initialise pet:
+         if (hasActivePet) {
+            hero.activePet.x = getTileCentreCoordX(hero.activePet.tileX);
+            hero.activePet.y = getTileCentreCoordY(hero.activePet.tileY);
+            hero.activePet.z = getElevation(hero.activePet.tileX, hero.activePet.tileY);
+            hero.activePet.dx = 0;
+            hero.activePet.dy = 0;
+            hero.activePet.state = "wait";
+        }
+            // fill breadcrumb array with herox and heroy:
+    for (var i = 0; i < heroBreadcrumblength; i++) {
+        heroBreadcrumb[i] = [hero.tileX,hero.tileY];
+       
+    }
 
     // initialise items:
     for (var i = 0; i < thisMapData.items.length; i++) {
@@ -456,8 +484,6 @@ function prepareGame() {
     mapTransitionCurrentFrames = 1;
     gameMode = "play";
 }
-
-
 
 function removeMapAssets() {
     for (var i = 0; i < tileGraphicsToLoad.length; i++) {
@@ -758,6 +784,7 @@ if(shopCurrentlyOpen != -1) {
     }
     moveFae();
     moveNPCs();
+    movePet();
     audio.checkForAmbientSounds();
 }
 
@@ -806,7 +833,9 @@ function heroIsInNewTile() {
             }
         }
     }
-
+    // update the hero's breadcrub trail:
+    heroBreadcrumb.pop();
+    heroBreadcrumb.unshift([hero.tileX,hero.tileY]);
 }
 
 
@@ -1391,6 +1420,14 @@ function moveNPCs() {
                 thisNPC.y = oldNPCy;
             }
 
+            // check for collision against pet:
+            if(hasActivePet) {
+                 if (isAnObjectCollision(thisNPC.x, thisNPC.y, thisNPC.width, thisNPC.height, hero.activePet.x, hero.activePet.y, hero.activePet.width, hero.activePet.height)) {
+                thisNPC.x = oldNPCx;
+                thisNPC.y = oldNPCy;
+            }
+            }
+
             // check for collisions against other NPCs:
             for (var j = 0; j < thisMapData.npcs.length; j++) {
                 if (i != j) {
@@ -1636,7 +1673,13 @@ function draw() {
             }
         }
 
-
+        if (hasActivePet) {
+            thisNPCOffsetCol = currentAnimationFrame % hero.activePet["animation"]["walk"]["length"];
+            thisNPCOffsetRow = hero.activePet["animation"]["walk"][hero.activePet.facing];
+            thisX = findIsoCoordsX(hero.activePet.x, hero.activePet.y);
+            thisY = findIsoCoordsY(hero.activePet.x, hero.activePet.y);
+            assetsToDraw.push([findIsoDepth(hero.activePet.x, hero.activePet.y, hero.activePet.z), "sprite", activePetImg, thisNPCOffsetCol * hero.activePet.spriteWidth, thisNPCOffsetRow * hero.activePet.spriteHeight, hero.activePet.spriteWidth, hero.activePet.spriteHeight, Math.floor(thisX - hero.isox - hero.activePet.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - hero.activePet.centreY + (canvasHeight / 2) - hero.activePet.z), hero.activePet.spriteWidth, hero.activePet.spriteHeight]);
+        }
 
         for (var i = 0; i < thisMapData.npcs.length; i++) {
             thisNPC = thisMapData.npcs[i];
@@ -1674,7 +1717,7 @@ function draw() {
         // don't need to clear, as the background will overwrite anyway - this means there's less to process.
         // scroll background to match the top tip and left tip of the tile grid:
         // the 400px and 300px are "padding" the edges of the background graphics:
-        gameContext.drawImage(backgroundImg, Math.floor(getTileIsoCentreCoordX(0, mapTilesX - 1) - hero.isox - tileW / 2 - 400 + canvasWidth/2), Math.floor(getTileIsoCentreCoordY(0, 0) - hero.isoy - tileH / 2 -300 + canvasHeight/2));
+        gameContext.drawImage(backgroundImg, Math.floor(getTileIsoCentreCoordX(0, mapTilesX - 1) - hero.isox - tileW / 2 - 400 + canvasWidth / 2), Math.floor(getTileIsoCentreCoordY(0, 0) - hero.isoy - tileH / 2 - 300 + canvasHeight / 2));
         // draw the sorted assets:
         for (var i = 0; i < assetsToDraw.length; i++) {
             switch (assetsToDraw[i][1]) {
@@ -1731,6 +1774,7 @@ function draw() {
         }
     }
 }
+
 
 
 // check if it cuts the mustard and supports Canvas:
