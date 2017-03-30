@@ -179,6 +179,7 @@ function loadMap() {
         // this assumes random maps always have a 3x1 doorway (the average of the doors will be the centre door)
         var centreDoorX = targetDoorX / 3;
         var centreDoorY = targetDoorY / 3;
+
         mapFilePath = '/game-world/generateDungeonMap.php?playerId=' + characterId + '&originatingMapId=' + currentMap + '&requestedMap=' + newMap + '&dungeonName=' + randomDungeonName + '&connectingDoorX=' + centreDoorX + '&connectingDoorY=' + centreDoorY;
          
     }
@@ -517,9 +518,32 @@ function changeMaps(doorX, doorY) {
     var whichDoor = getTileX(doorX) + "," + getTileX(doorY);
     hero.tileX = doorData[whichDoor].startX;
     hero.tileY = doorData[whichDoor].startY;
+    if (hasActivePet) {
+        var tileOffsetX = 0;
+        var tileOffsetY = 0;
+        switch (hero.facing) {
+            case "n":
+                tileOffsetY = 1;
+                break
+            case "s":
+                tileOffsetY = -1;
+                break
+            case "e":
+                tileOffsetY = -1;
+                break
+            case "w":
+                tileOffsetY = 1;
+                break
+        }
+        hero.activePet.tileX = doorData[whichDoor].startX + tileOffsetX;
+        hero.activePet.tileY = doorData[whichDoor].startY + tileOffsetY;
+        hero.activePet.state = "follow";
+        hero.activePet.facing = hero.facing;
+    }
     newMap = doorData[whichDoor].map;
     loadMap();
 }
+
 
 function isATerrainCollision(x, y) {
     // check map bounds first:
@@ -641,7 +665,7 @@ function checkHeroCollisions() {
         }
     }
 
-var thisNPC, thisItem;
+    var thisNPC, thisItem;
     // check for collisions against NPCs:
     for (var i = 0; i < thisMapData.npcs.length; i++) {
         thisNPC = thisMapData.npcs[i];
@@ -657,6 +681,15 @@ var thisNPC, thisItem;
         if (isAnObjectCollision(thisItem.x, thisItem.y, thisItem.width, thisItem.height, hero.x, hero.y, hero.width, hero.height)) {
             getHeroAsCloseAsPossibleToObject(thisItem.x, thisItem.y, thisItem.width, thisItem.height);
         }
+    }
+
+    // check against pet:
+    if(hasActivePet) {
+if (isAnObjectCollision(hero.activePet.x, hero.activePet.y, hero.activePet.width, hero.activePet.height, hero.x, hero.y, hero.width, hero.height)) {
+    getHeroAsCloseAsPossibleToObject(hero.activePet.x, hero.activePet.y, hero.activePet.width, hero.activePet.height);
+    pushPetAway();
+
+}
     }
 }
 

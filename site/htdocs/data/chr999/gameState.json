@@ -319,7 +319,7 @@
         "tileX": 16,
         "tileY": 22,
         "facing": "s",
-        "speed": 2,
+        "speed": 4,
         "animation": {
             "walk": {
                 "length": 1,

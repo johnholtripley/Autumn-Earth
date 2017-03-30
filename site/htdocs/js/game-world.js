@@ -341,7 +341,7 @@ var thisChallengeNPC;
 var questData = [];
 
 var hasActivePet = false;
-const heroBreadcrumblength = 10;
+const heroBreadcrumblength = 16;
 var heroBreadcrumb = [];
 
 const minTimeBetweenAmbientSounds = 1200;
@@ -2249,36 +2249,35 @@ function movePet() {
             } else {
                 // check the breadcrumb for next direction:
                 var breadcrumbFound = false;
-                console.log(hero.tileX+","+hero.tileY+"------------");
-                console.log(heroBreadcrumb);
+                //    console.log(hero.tileX+","+hero.tileY+"------------");
+                //    console.log(heroBreadcrumb);
                 for (var i = 0; i < heroBreadcrumblength; i++) {
-                    console.log(hero.activePet.tileX + "," + hero.activePet.tileY + " - " + heroBreadcrumb[i][0] + "," + heroBreadcrumb[i][1]);
+                    //   console.log(hero.activePet.tileX + "," + hero.activePet.tileY + " - " + heroBreadcrumb[i][0] + "," + heroBreadcrumb[i][1]);
                     if ((hero.activePet.tileY) == heroBreadcrumb[i][1]) {
                         if ((hero.activePet.tileX - 1) == heroBreadcrumb[i][0]) {
                             hero.activePet.facing = "w";
-                            console.log("found at " + i + " - w");
+                            //   console.log("found at " + i + " - w");
                             breadcrumbFound = true;
                             break;
                         } else if ((hero.activePet.tileX + 1) == heroBreadcrumb[i][0]) {
                             hero.activePet.facing = "e";
-                            console.log("found at " + i + " - e");
+                            //   console.log("found at " + i + " - e");
                             breadcrumbFound = true;
                             break;
                         }
                     } else if ((hero.activePet.tileX) == heroBreadcrumb[i][0]) {
                         if ((hero.activePet.tileY + 1) == heroBreadcrumb[i][1]) {
                             hero.activePet.facing = "s";
-                            console.log("found at " + i + " - s");
+                            // console.log("found at " + i + " - s");
                             breadcrumbFound = true;
                             break;
                         } else if ((hero.activePet.tileY - 1) == heroBreadcrumb[i][1]) {
                             hero.activePet.facing = "n";
-                            console.log("found at " + i + " - n");
+                            //   console.log("found at " + i + " - n");
                             breadcrumbFound = true;
                             break;
                         }
                     }
-
                 }
                 if (breadcrumbFound) {
                     hero.activePet.state = "follow";
@@ -2288,20 +2287,14 @@ function movePet() {
                     hero.activePet.state = "findingPath";
                 }
             }
-
-
-
-
         }
-
-
-
-
-
-
-
-
     }
+}
+
+function pushPetAway() {
+    // hero has collided with the pet, move the pet away so they don't block the hero in:
+    hero.activePet.state = "follow";
+    hero.activePet.facing = hero.facing;
 }
 
 // global vars:
@@ -3658,6 +3651,7 @@ function loadMap() {
         // this assumes random maps always have a 3x1 doorway (the average of the doors will be the centre door)
         var centreDoorX = targetDoorX / 3;
         var centreDoorY = targetDoorY / 3;
+
         mapFilePath = '/game-world/generateDungeonMap.php?playerId=' + characterId + '&originatingMapId=' + currentMap + '&requestedMap=' + newMap + '&dungeonName=' + randomDungeonName + '&connectingDoorX=' + centreDoorX + '&connectingDoorY=' + centreDoorY;
          
     }
@@ -3996,9 +3990,32 @@ function changeMaps(doorX, doorY) {
     var whichDoor = getTileX(doorX) + "," + getTileX(doorY);
     hero.tileX = doorData[whichDoor].startX;
     hero.tileY = doorData[whichDoor].startY;
+    if (hasActivePet) {
+        var tileOffsetX = 0;
+        var tileOffsetY = 0;
+        switch (hero.facing) {
+            case "n":
+                tileOffsetY = 1;
+                break
+            case "s":
+                tileOffsetY = -1;
+                break
+            case "e":
+                tileOffsetY = -1;
+                break
+            case "w":
+                tileOffsetY = 1;
+                break
+        }
+        hero.activePet.tileX = doorData[whichDoor].startX + tileOffsetX;
+        hero.activePet.tileY = doorData[whichDoor].startY + tileOffsetY;
+        hero.activePet.state = "follow";
+        hero.activePet.facing = hero.facing;
+    }
     newMap = doorData[whichDoor].map;
     loadMap();
 }
+
 
 function isATerrainCollision(x, y) {
     // check map bounds first:
@@ -4120,7 +4137,7 @@ function checkHeroCollisions() {
         }
     }
 
-var thisNPC, thisItem;
+    var thisNPC, thisItem;
     // check for collisions against NPCs:
     for (var i = 0; i < thisMapData.npcs.length; i++) {
         thisNPC = thisMapData.npcs[i];
@@ -4136,6 +4153,15 @@ var thisNPC, thisItem;
         if (isAnObjectCollision(thisItem.x, thisItem.y, thisItem.width, thisItem.height, hero.x, hero.y, hero.width, hero.height)) {
             getHeroAsCloseAsPossibleToObject(thisItem.x, thisItem.y, thisItem.width, thisItem.height);
         }
+    }
+
+    // check against pet:
+    if(hasActivePet) {
+if (isAnObjectCollision(hero.activePet.x, hero.activePet.y, hero.activePet.width, hero.activePet.height, hero.x, hero.y, hero.width, hero.height)) {
+    getHeroAsCloseAsPossibleToObject(hero.activePet.x, hero.activePet.y, hero.activePet.width, hero.activePet.height);
+    pushPetAway();
+
+}
     }
 }
 

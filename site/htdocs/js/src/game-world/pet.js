@@ -114,36 +114,35 @@ function movePet() {
             } else {
                 // check the breadcrumb for next direction:
                 var breadcrumbFound = false;
-                console.log(hero.tileX+","+hero.tileY+"------------");
-                console.log(heroBreadcrumb);
+                //    console.log(hero.tileX+","+hero.tileY+"------------");
+                //    console.log(heroBreadcrumb);
                 for (var i = 0; i < heroBreadcrumblength; i++) {
-                    console.log(hero.activePet.tileX + "," + hero.activePet.tileY + " - " + heroBreadcrumb[i][0] + "," + heroBreadcrumb[i][1]);
+                    //   console.log(hero.activePet.tileX + "," + hero.activePet.tileY + " - " + heroBreadcrumb[i][0] + "," + heroBreadcrumb[i][1]);
                     if ((hero.activePet.tileY) == heroBreadcrumb[i][1]) {
                         if ((hero.activePet.tileX - 1) == heroBreadcrumb[i][0]) {
                             hero.activePet.facing = "w";
-                            console.log("found at " + i + " - w");
+                            //   console.log("found at " + i + " - w");
                             breadcrumbFound = true;
                             break;
                         } else if ((hero.activePet.tileX + 1) == heroBreadcrumb[i][0]) {
                             hero.activePet.facing = "e";
-                            console.log("found at " + i + " - e");
+                            //   console.log("found at " + i + " - e");
                             breadcrumbFound = true;
                             break;
                         }
                     } else if ((hero.activePet.tileX) == heroBreadcrumb[i][0]) {
                         if ((hero.activePet.tileY + 1) == heroBreadcrumb[i][1]) {
                             hero.activePet.facing = "s";
-                            console.log("found at " + i + " - s");
+                            // console.log("found at " + i + " - s");
                             breadcrumbFound = true;
                             break;
                         } else if ((hero.activePet.tileY - 1) == heroBreadcrumb[i][1]) {
                             hero.activePet.facing = "n";
-                            console.log("found at " + i + " - n");
+                            //   console.log("found at " + i + " - n");
                             breadcrumbFound = true;
                             break;
                         }
                     }
-
                 }
                 if (breadcrumbFound) {
                     hero.activePet.state = "follow";
@@ -153,18 +152,12 @@ function movePet() {
                     hero.activePet.state = "findingPath";
                 }
             }
-
-
-
-
         }
-
-
-
-
-
-
-
-
     }
+}
+
+function pushPetAway() {
+    // hero has collided with the pet, move the pet away so they don't block the hero in:
+    hero.activePet.state = "follow";
+    hero.activePet.facing = hero.facing;
 }

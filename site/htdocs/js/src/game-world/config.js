@@ -59,7 +59,7 @@ var thisChallengeNPC;
 var questData = [];
 
 var hasActivePet = false;
-const heroBreadcrumblength = 10;
+const heroBreadcrumblength = 16;
 var heroBreadcrumb = [];
 
 const minTimeBetweenAmbientSounds = 1200;
