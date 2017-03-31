@@ -59,12 +59,24 @@ var UI = {
 
     buildInventoryInterface: function() {
         var inventoryMarkup = '';
-        var thisAction, thisBagNumberOfSlots, thisSlotsID;
-
+        var thisAction, thisBagNumberOfSlots, thisSlotsID, thisPanelName;
+        var numberOfPanels = hero.bags.length;
         // loop through number of bags
-        for (var i = 0; i < hero.bags.length; i++) {
-            inventoryMarkup += '<div class="inventoryBag" id="inventoryBag' + i + '"><div class="draggableBar">' + currentActiveInventoryItems[hero.bags[i].type].shortname + '</div><ol class="active" id="bag' + i + '">';
-            thisBagNumberOfSlots = currentActiveInventoryItems[hero.bags[i].type].actionValue;
+        if (hasActivePet) {
+            if (hero.activePet.inventorySize > 0) {
+                numberOfPanels++;
+            }
+        }
+        for (var i = 0; i < numberOfPanels; i++) {
+            if (i < hero.bags.length) {
+                thisPanelName = currentActiveInventoryItems[hero.bags[i].type].shortname;
+                thisBagNumberOfSlots = currentActiveInventoryItems[hero.bags[i].type].actionValue;
+            } else {
+                // is the pet inventory panel:
+                thisPanelName = hero.activePet.name;
+                thisBagNumberOfSlots = hero.activePet.inventorySize;
+            }
+            inventoryMarkup += '<div class="inventoryBag" id="inventoryBag' + i + '"><div class="draggableBar">' + thisPanelName + '</div><ol class="active" id="bag' + i + '">';
             // loop through slots for each bag:
             for (var j = 0; j < thisBagNumberOfSlots; j++) {
                 thisSlotsID = i + '-' + j;

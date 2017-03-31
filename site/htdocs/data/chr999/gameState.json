@@ -75,7 +75,7 @@
             "inscription": ""
         },
 
-        "0-8": {
+        "2-2": {
             "type": 36,
             "quantity": 1,
             "quality": 100,
@@ -320,6 +320,7 @@
         "tileY": 22,
         "facing": "s",
         "speed": 4,
+        "inventorySize": 6,
         "animation": {
             "walk": {
                 "length": 1,
