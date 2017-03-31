@@ -82,6 +82,7 @@ var UI = {
             inventoryMarkup += '</ol></div></div>';
         }
 
+
         inventoryPanels.innerHTML = inventoryMarkup;
         gameWrapper.ondblclick = UI.doubleClick;
         document.getElementById('createRecipeList').onclick = UI.craftingPanelSingleClick;
@@ -268,7 +269,7 @@ var UI = {
                 thisCardsQuantityOutput = '<span class="quantity">' + counts[i] + '</span>';
                 foundThisType = true;
             }
-            cardAlbumMarkup += '<li'+parentClass+'><img src="/images/card-game/cards/' + i + '.png" class="' + thisCardsClass + '" alt="' + cardGameNameSpace.allCardData[i][2] + ' card">' + thisCardsQuantityOutput + '</li>';
+            cardAlbumMarkup += '<li' + parentClass + '><img src="/images/card-game/cards/' + i + '.png" class="' + thisCardsClass + '" alt="' + cardGameNameSpace.allCardData[i][2] + ' card">' + thisCardsQuantityOutput + '</li>';
 
             // check for rares - these are the negative of the standard card type:
             if ((counts[(0 - i)])) {
@@ -1176,7 +1177,7 @@ var UI = {
     toggleCardsDisplayed: function(e) {
         cardAlbumList.classList.toggle('showOnlyPlayers');
 
-toggleActiveCards.innerHTML = (toggleActiveCards.innerHTML == 'Show only collected cards' ? 'Show all cards' : 'Show only collected cards');
+        toggleActiveCards.innerHTML = (toggleActiveCards.innerHTML == 'Show only collected cards' ? 'Show all cards' : 'Show only collected cards');
 
     }
 }

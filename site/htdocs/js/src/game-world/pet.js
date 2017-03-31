@@ -97,6 +97,7 @@ function movePet() {
                 }
             }
         }
+        
         if (newTile) {
             hero.activePet.tileX = getTileX(hero.activePet.x);
             hero.activePet.tileY = getTileY(hero.activePet.y);
