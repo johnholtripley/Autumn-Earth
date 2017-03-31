@@ -27,6 +27,7 @@ const inscriptionTitle = document.getElementById('inscriptionTitle');
 const soundVolume = document.getElementById('soundVolume');
 const musicVolume = document.getElementById('musicVolume');
 const gameSettingsPanel = document.getElementById('gameSettings');
+const toggleActiveCards = document.getElementById('toggleActiveCards');
 
 
 var UI = {
@@ -87,6 +88,7 @@ var UI = {
         document.getElementById('craftingRecipeCreateButton').onclick = UI.craftingRecipeCreate;
         splitStackPanel.onsubmit = inventorySplitStackSubmit;
         shopSplitStackPanel.onsubmit = UI.shopSplitStackSubmit;
+        toggleActiveCards.onclick = UI.toggleCardsDisplayed;
         document.getElementById('splitStackCancel').onclick = UI.inventorySplitStackCancel;
         document.getElementById('shopSplitStackCancel').onclick = UI.shopSplitStackCancel;
         soundVolume.onchange = audio.adjustEffectsVolume;
@@ -1169,5 +1171,12 @@ var UI = {
             e.preventDefault();
         }
         gameSettingsPanel.classList.add('active');
+    },
+
+    toggleCardsDisplayed: function(e) {
+        cardAlbumList.classList.toggle('showOnlyPlayers');
+
+toggleActiveCards.innerHTML = (toggleActiveCards.innerHTML == 'Show only collected cards' ? 'Show all cards' : 'Show only collected cards');
+
     }
 }
