@@ -1,6 +1,6 @@
 'use strict';
 
-var thisMapData, mapTilesY, mapTilesX, thisNPCsIndex, uncheckedTiles, nodes;
+var thisMapData, mapTilesY, mapTilesX, thisAgentsIndex, uncheckedTiles, nodes;
 
 function isATerrainCollision(tileX, tileY) {
     if ((tileX < 0) || (tileY < 0) || (tileX >= mapTilesX) || (tileY >= mapTilesY)) {
@@ -20,6 +20,7 @@ function isATerrainCollision(tileX, tileY) {
 }
 
 function addNode(parentNode, tileX, tileY, endX, endY) {
+    // console.log(tileX+", "+tileY);
     if (!isATerrainCollision(tileX, tileY)) {
         var isBlocked = false;
         for (var i = 0; i < thisMapData.items.length; i++) {
@@ -31,7 +32,7 @@ function addNode(parentNode, tileX, tileY, endX, endY) {
         }
         for (var i = 0; i < thisMapData.npcs.length; i++) {
             // make sure other NPCs don't block - except for the any in the destination tile:
-            if (i != thisNPCsIndex) {
+            if (i != thisAgentsIndex) {
                 // only include stationary NPCS:
                 if (thisMapData.npcs[i].movement[thisMapData.npcs[i].movementIndex] == '-') {
                     if (!((tileX == endX) && (tileY == endY))) {
@@ -81,11 +82,7 @@ function addNode(parentNode, tileX, tileY, endX, endY) {
 }
 
 
-
-
 function findPath(startX, startY, endX, endY) {
-   // console.log("start path: " + startX + ", " + startY);
-   // console.log("end path: " + endX + ", " + endY);
     uncheckedTiles = [];
     var heuristic = Math.abs(startX - endX) + Math.abs(startY - endY);
     nodes = {};
@@ -131,7 +128,7 @@ function findPath(startX, startY, endX, endY) {
                 }
             }
             builtPath.push('pathEnd');
-           // console.log(builtPath.join(", "));
+            // console.log(builtPath.join(", "));
         } else {
             addNode(thisNode, thisNode.x + 1, thisNode.y, endX, endY);
             addNode(thisNode, thisNode.x - 1, thisNode.y, endX, endY);
@@ -144,7 +141,7 @@ function findPath(startX, startY, endX, endY) {
     uncheckedTiles = null;
     thisMapData = null;
     nodes = null;
-    thisNPCsIndex = null;
+    thisAgentsIndex = null;
     if (!targetFound) {
         return ["-", "pathEnd"];
     } else {
@@ -156,20 +153,17 @@ function findPath(startX, startY, endX, endY) {
 onmessage = function(e) {
     switch (e.data[0]) {
         case 'shop':
-
-            var thisNPC = e.data[1];
+            var thisAgent = e.data[1];
             thisMapData = e.data[2];
-
             mapTilesY = thisMapData.terrain.length;
             mapTilesX = thisMapData.terrain[0].length;
-
-            thisNPCsIndex = thisMapData.npcs.map(function(x) {
+            thisAgentsIndex = thisMapData.npcs.map(function(x) {
                 return x.name;
-            }).indexOf(thisNPC.name);
+            }).indexOf(thisAgent.name);
             var thisLoopNPC;
             var shopsFound = [];
             for (var i = 0; i < thisMapData.npcs.length; i++) {
-                if (i != thisNPCsIndex) {
+                if (i != thisAgentsIndex) {
                     // just make sure it's not checking its own shop (...just in case)
                     thisLoopNPC = thisMapData.npcs[i];
                     if (thisLoopNPC.speech) {
@@ -180,19 +174,25 @@ onmessage = function(e) {
                 }
             }
             if (shopsFound.length > 0) {
-
                 var chosenShopLocation, chosenShop;
                 do {
                     chosenShop = Math.floor(Math.random() * shopsFound.length);
                     chosenShopLocation = thisMapData.npcs[(shopsFound[chosenShop])].tileX + "-" + thisMapData.npcs[(shopsFound[chosenShop])].tileY;
-                } while (chosenShopLocation == thisNPC.lastTargetDestination);
-
-
-                postMessage([thisNPC.name, findPath(thisNPC.tileX, thisNPC.tileY, thisMapData.npcs[(shopsFound[chosenShop])].tileX, thisMapData.npcs[(shopsFound[chosenShop])].tileY), chosenShopLocation]);
+                } while (chosenShopLocation == thisAgent.lastTargetDestination);
+                postMessage([thisAgent.name, findPath(thisAgent.tileX, thisAgent.tileY, thisMapData.npcs[(shopsFound[chosenShop])].tileX, thisMapData.npcs[(shopsFound[chosenShop])].tileY), chosenShopLocation]);
             } else {
                 // stay still:
-                postMessage([thisNPC.name, ["-", "pathEnd"], ""]);
+                postMessage([thisAgent.name, ["-", "pathEnd"], ""]);
             }
+            break;
+        case 'petToHero':
+            var thisAgent = e.data[1];
+            thisMapData = e.data[2];
+            // pet isn't an NPC:
+            thisAgentsIndex = -1;
+            mapTilesY = thisMapData.terrain.length;
+            mapTilesX = thisMapData.terrain[0].length;
+            postMessage(['pet', findPath(thisAgent.tileX, thisAgent.tileY, e.data[3], e.data[4])]);
             break;
     }
 }

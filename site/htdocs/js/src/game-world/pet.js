@@ -1,10 +1,6 @@
 function movePet() {
     if (hasActivePet) {
-
-
-
-
-        if (hero.activePet.state == "follow") {
+        if (hero.activePet.state == "moving") {
             var thisNPC, thisItem;
             var oldPetX = hero.activePet.x;
             var oldPetY = hero.activePet.y;
@@ -84,7 +80,6 @@ function movePet() {
                     hero.activePet.dx += tileW;
                 }
                 newTile = true;
-
             }
             if (Math.abs(hero.activePet.dy) >= tileW) {
                 if (hero.activePet.dy > 0) {
@@ -95,61 +90,68 @@ function movePet() {
                 newTile = true;
             }
         } else {
-
             if (hero.activePet.state != "findingPath") {
                 // check proximity to hero to see if pet should start moving:
                 if (!(isInRange(hero.x, hero.y, hero.activePet.x, hero.activePet.y, tileW * 2))) {
-                    hero.activePet.state = "follow";
+                    hero.activePet.state = "moving";
                 }
             }
         }
-
         if (newTile) {
             hero.activePet.tileX = getTileX(hero.activePet.x);
             hero.activePet.tileY = getTileY(hero.activePet.y);
-
             // check proximity to hero to see if pet should stop moving:
             if ((isInRange(hero.x, hero.y, hero.activePet.x, hero.activePet.y, tileW * 2))) {
                 hero.activePet.state = "wait";
             } else {
                 // check the breadcrumb for next direction:
                 var breadcrumbFound = false;
-                //    console.log(hero.tileX+","+hero.tileY+"------------");
-                //    console.log(heroBreadcrumb);
                 for (var i = 0; i < heroBreadcrumblength; i++) {
                     //   console.log(hero.activePet.tileX + "," + hero.activePet.tileY + " - " + heroBreadcrumb[i][0] + "," + heroBreadcrumb[i][1]);
                     if ((hero.activePet.tileY) == heroBreadcrumb[i][1]) {
                         if ((hero.activePet.tileX - 1) == heroBreadcrumb[i][0]) {
                             hero.activePet.facing = "w";
-                            //   console.log("found at " + i + " - w");
                             breadcrumbFound = true;
                             break;
                         } else if ((hero.activePet.tileX + 1) == heroBreadcrumb[i][0]) {
                             hero.activePet.facing = "e";
-                            //   console.log("found at " + i + " - e");
                             breadcrumbFound = true;
                             break;
                         }
                     } else if ((hero.activePet.tileX) == heroBreadcrumb[i][0]) {
                         if ((hero.activePet.tileY + 1) == heroBreadcrumb[i][1]) {
                             hero.activePet.facing = "s";
-                            // console.log("found at " + i + " - s");
                             breadcrumbFound = true;
                             break;
                         } else if ((hero.activePet.tileY - 1) == heroBreadcrumb[i][1]) {
                             hero.activePet.facing = "n";
-                            //   console.log("found at " + i + " - n");
                             breadcrumbFound = true;
                             break;
                         }
                     }
                 }
                 if (breadcrumbFound) {
-                    hero.activePet.state = "follow";
+                    hero.activePet.state = "moving";
+                    hero.activePet.foundPath = '';
                 } else {
-                    // pathfind to hero
-                    // #####
-                    hero.activePet.state = "findingPath";
+                    if (hero.activePet.foundPath != '') {
+                        // try for breadcrumbs first, but use path if not
+                        hero.activePet.facing = hero.activePet.foundPath[hero.activePet.pathIndex];
+                        hero.activePet.pathIndex++;
+                        if (hero.activePet.pathIndex >= hero.activePet.foundPath.length) {
+                            console.log("path ran out");
+                            // come to end of the path, try and find a new one:
+                            pathfindingWorker.postMessage(['petToHero', hero.activePet, thisMapData, hero.tileX, hero.tileY]);
+                            hero.activePet.state = "findingPath";
+                            hero.activePet.foundPath = '';
+                        }
+                    } else {
+                        if (hero.activePet.state != 'findingPath') {
+                            // pathfind to hero
+                            pathfindingWorker.postMessage(['petToHero', hero.activePet, thisMapData, hero.tileX, hero.tileY]);
+                            hero.activePet.state = "findingPath";
+                        }
+                    }
                 }
             }
         }
@@ -158,6 +160,6 @@ function movePet() {
 
 function pushPetAway() {
     // hero has collided with the pet, move the pet away so they don't block the hero in:
-    hero.activePet.state = "follow";
+    hero.activePet.state = "moving";
     hero.activePet.facing = hero.facing;
 }

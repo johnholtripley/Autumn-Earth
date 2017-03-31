@@ -439,6 +439,7 @@ function prepareGame() {
             hero.activePet.z = getElevation(hero.activePet.tileX, hero.activePet.tileY);
             hero.activePet.dx = 0;
             hero.activePet.dy = 0;
+            hero.activePet.foundPath = '';
             hero.activePet.state = "wait";
         }
             // fill breadcrumb array with herox and heroy:
@@ -537,7 +538,7 @@ function changeMaps(doorX, doorY) {
         }
         hero.activePet.tileX = doorData[whichDoor].startX + tileOffsetX;
         hero.activePet.tileY = doorData[whichDoor].startY + tileOffsetY;
-        hero.activePet.state = "follow";
+        hero.activePet.state = "moving";
         hero.activePet.facing = hero.facing;
     }
     newMap = doorData[whichDoor].map;

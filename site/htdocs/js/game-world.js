@@ -2115,31 +2115,31 @@ var KeyBindings = {
 if (window.Worker) {
     var pathfindingWorker = new Worker('/js/worker-pathfinding.js');
     pathfindingWorker.onmessage = function(e) {
-        var thisNPCsName = e.data[0];
-        // find which NPC this is:
-        // http://stackoverflow.com/a/16100446/1054212
-        var thisNPCsIndex = thisMapData.npcs.map(function(x) {
-            return x.name;
-        }).indexOf(thisNPCsName);
-        // insert the new path:
-        // http://stackoverflow.com/a/7032717/1054212
-        thisMapData.npcs[thisNPCsIndex].movement.splice.apply(thisMapData.npcs[thisNPCsIndex].movement, [thisMapData.npcs[thisNPCsIndex].movementIndex + 2, 0].concat(e.data[1]));
-thisMapData.npcs[thisNPCsIndex].waitingForAPath = false;
-          // store the target tile so it doesn't try and go straight back to it after:
-        thisMapData.npcs[thisNPCsIndex].lastTargetDestination = e.data[2];
-
-//console.log("gameMode: "+gameMode);
-
+        var thisAgentsName = e.data[0];
+        if (thisAgentsName == 'pet') {
+            hero.activePet.foundPath = e.data[1];
+            hero.activePet.pathIndex = 1;
+            hero.activePet.state = 'moving';
+            hero.activePet.facing = e.data[1][0];
+        } else {
+            // find which NPC this is:
+            // http://stackoverflow.com/a/16100446/1054212
+            var thisNPCsIndex = thisMapData.npcs.map(function(x) {
+                return x.name;
+            }).indexOf(thisAgentsName);
+            // insert the new path:
+            // http://stackoverflow.com/a/7032717/1054212
+            thisMapData.npcs[thisNPCsIndex].movement.splice.apply(thisMapData.npcs[thisNPCsIndex].movement, [thisMapData.npcs[thisNPCsIndex].movementIndex + 2, 0].concat(e.data[1]));
+            thisMapData.npcs[thisNPCsIndex].waitingForAPath = false;
+            // store the target tile so it doesn't try and go straight back to it after:
+            thisMapData.npcs[thisNPCsIndex].lastTargetDestination = e.data[2];
+        }
     }
 }
 
 function movePet() {
     if (hasActivePet) {
-
-
-
-
-        if (hero.activePet.state == "follow") {
+        if (hero.activePet.state == "moving") {
             var thisNPC, thisItem;
             var oldPetX = hero.activePet.x;
             var oldPetY = hero.activePet.y;
@@ -2219,7 +2219,6 @@ function movePet() {
                     hero.activePet.dx += tileW;
                 }
                 newTile = true;
-
             }
             if (Math.abs(hero.activePet.dy) >= tileW) {
                 if (hero.activePet.dy > 0) {
@@ -2230,61 +2229,68 @@ function movePet() {
                 newTile = true;
             }
         } else {
-
             if (hero.activePet.state != "findingPath") {
                 // check proximity to hero to see if pet should start moving:
                 if (!(isInRange(hero.x, hero.y, hero.activePet.x, hero.activePet.y, tileW * 2))) {
-                    hero.activePet.state = "follow";
+                    hero.activePet.state = "moving";
                 }
             }
         }
-
         if (newTile) {
             hero.activePet.tileX = getTileX(hero.activePet.x);
             hero.activePet.tileY = getTileY(hero.activePet.y);
-
             // check proximity to hero to see if pet should stop moving:
             if ((isInRange(hero.x, hero.y, hero.activePet.x, hero.activePet.y, tileW * 2))) {
                 hero.activePet.state = "wait";
             } else {
                 // check the breadcrumb for next direction:
                 var breadcrumbFound = false;
-                //    console.log(hero.tileX+","+hero.tileY+"------------");
-                //    console.log(heroBreadcrumb);
                 for (var i = 0; i < heroBreadcrumblength; i++) {
                     //   console.log(hero.activePet.tileX + "," + hero.activePet.tileY + " - " + heroBreadcrumb[i][0] + "," + heroBreadcrumb[i][1]);
                     if ((hero.activePet.tileY) == heroBreadcrumb[i][1]) {
                         if ((hero.activePet.tileX - 1) == heroBreadcrumb[i][0]) {
                             hero.activePet.facing = "w";
-                            //   console.log("found at " + i + " - w");
                             breadcrumbFound = true;
                             break;
                         } else if ((hero.activePet.tileX + 1) == heroBreadcrumb[i][0]) {
                             hero.activePet.facing = "e";
-                            //   console.log("found at " + i + " - e");
                             breadcrumbFound = true;
                             break;
                         }
                     } else if ((hero.activePet.tileX) == heroBreadcrumb[i][0]) {
                         if ((hero.activePet.tileY + 1) == heroBreadcrumb[i][1]) {
                             hero.activePet.facing = "s";
-                            // console.log("found at " + i + " - s");
                             breadcrumbFound = true;
                             break;
                         } else if ((hero.activePet.tileY - 1) == heroBreadcrumb[i][1]) {
                             hero.activePet.facing = "n";
-                            //   console.log("found at " + i + " - n");
                             breadcrumbFound = true;
                             break;
                         }
                     }
                 }
                 if (breadcrumbFound) {
-                    hero.activePet.state = "follow";
+                    hero.activePet.state = "moving";
+                    hero.activePet.foundPath = '';
                 } else {
-                    // pathfind to hero
-                    // #####
-                    hero.activePet.state = "findingPath";
+                    if (hero.activePet.foundPath != '') {
+                        // try for breadcrumbs first, but use path if not
+                        hero.activePet.facing = hero.activePet.foundPath[hero.activePet.pathIndex];
+                        hero.activePet.pathIndex++;
+                        if (hero.activePet.pathIndex >= hero.activePet.foundPath.length) {
+                            console.log("path ran out");
+                            // come to end of the path, try and find a new one:
+                            pathfindingWorker.postMessage(['petToHero', hero.activePet, thisMapData, hero.tileX, hero.tileY]);
+                            hero.activePet.state = "findingPath";
+                            hero.activePet.foundPath = '';
+                        }
+                    } else {
+                        if (hero.activePet.state != 'findingPath') {
+                            // pathfind to hero
+                            pathfindingWorker.postMessage(['petToHero', hero.activePet, thisMapData, hero.tileX, hero.tileY]);
+                            hero.activePet.state = "findingPath";
+                        }
+                    }
                 }
             }
         }
@@ -2293,7 +2299,7 @@ function movePet() {
 
 function pushPetAway() {
     // hero has collided with the pet, move the pet away so they don't block the hero in:
-    hero.activePet.state = "follow";
+    hero.activePet.state = "moving";
     hero.activePet.facing = hero.facing;
 }
 
@@ -3911,6 +3917,7 @@ function prepareGame() {
             hero.activePet.z = getElevation(hero.activePet.tileX, hero.activePet.tileY);
             hero.activePet.dx = 0;
             hero.activePet.dy = 0;
+            hero.activePet.foundPath = '';
             hero.activePet.state = "wait";
         }
             // fill breadcrumb array with herox and heroy:
@@ -4009,7 +4016,7 @@ function changeMaps(doorX, doorY) {
         }
         hero.activePet.tileX = doorData[whichDoor].startX + tileOffsetX;
         hero.activePet.tileY = doorData[whichDoor].startY + tileOffsetY;
-        hero.activePet.state = "follow";
+        hero.activePet.state = "moving";
         hero.activePet.facing = hero.facing;
     }
     newMap = doorData[whichDoor].map;
