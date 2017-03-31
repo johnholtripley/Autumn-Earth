@@ -569,7 +569,6 @@ function isATerrainCollision(x, y) {
                 break;
             case "d":
                 // is a door:
-
                 activeDoorX = x;
                 activeDoorY = y;
                 return 0;
@@ -719,7 +718,7 @@ function gameLoop() {
 
 function update() {
     var now = window.performance.now();
-    hero.totalGameTimePlayed ++;
+    hero.totalGameTimePlayed++;
     var elapsed = (now - lastTime);
     lastTime = now;
     hero.isMoving = false;
@@ -767,18 +766,13 @@ function update() {
             if (!(isInRange(hero.x, hero.y, activeNPCForDialogue.x, activeNPCForDialogue.y, closeDialogueDistance))) {
                 dialogue.classList.add("slowerFade");
                 dialogue.classList.remove("active");
-               
                 // close the shop
-                
-
-if(shopCurrentlyOpen != -1) {
-
-            activeNPCForDialogue.speechIndex = 0;
-            UI.closeShop();
-        }
-         // only remove this after dialogue has faded out completely:
+                if (shopCurrentlyOpen != -1) {
+                    activeNPCForDialogue.speechIndex = 0;
+                    UI.closeShop();
+                }
+                // only remove this after dialogue has faded out completely:
                 dialogue.addEventListener(whichTransitionEvent, UI.removeActiveDialogue, false);
-
             }
         }
     } else {
@@ -821,6 +815,8 @@ if(shopCurrentlyOpen != -1) {
     movePet();
     audio.checkForAmbientSounds();
 }
+
+
 
 function heroIsInNewTile() {
     hero.z = getElevation(getCurrentTileX(hero.x), getCurrentTileY(hero.y));
