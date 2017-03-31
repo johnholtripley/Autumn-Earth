@@ -2549,7 +2549,7 @@ var UI = {
 
     updateCardAlbum: function() {
         var cardAlbumMarkup = '<ul>';
-        var thisCardsClass, thisCardsQuantityOutput, foundThisType, typesFound = 0;
+        var thisCardsClass, thisCardsQuantityOutput, foundThisType, parentClass, typesFound = 0;
 
         // count quantities for each card:
         // http://stackoverflow.com/questions/5667888/counting-the-occurrences-of-javascript-array-elements#answer-5668029
@@ -2564,13 +2564,14 @@ var UI = {
             foundThisType = false;
             thisCardsClass = 'card players';
             thisCardsQuantityOutput = '';
+            parentClass = '';
             if (!(counts[i])) {
-                thisCardsClass += ' inactive';
+                parentClass = ' class="inactive"';
             } else {
                 thisCardsQuantityOutput = '<span class="quantity">' + counts[i] + '</span>';
                 foundThisType = true;
             }
-            cardAlbumMarkup += '<li><img src="/images/card-game/cards/' + i + '.png" class="' + thisCardsClass + '" alt="' + cardGameNameSpace.allCardData[i][2] + ' card">' + thisCardsQuantityOutput + '</li>';
+            cardAlbumMarkup += '<li'+parentClass+'><img src="/images/card-game/cards/' + i + '.png" class="' + thisCardsClass + '" alt="' + cardGameNameSpace.allCardData[i][2] + ' card">' + thisCardsQuantityOutput + '</li>';
 
             // check for rares - these are the negative of the standard card type:
             if ((counts[(0 - i)])) {

@@ -20,10 +20,13 @@ $cardHeight: 102px;
     &.npcs {
         background: #ffcc00;
     }
-    &.inactive {
-        @include filter(sepia(100%) opacity(30%));
-    }
+
 }
+.inactive .card {
+ @include filter(sepia(100%) opacity(30%));
+}
+
+
 
 #cardAlbum {
     width: 320px;
@@ -35,10 +38,14 @@ $cardHeight: 102px;
 
 $albumCardRatio: 0.7142;
 #cardAlbumList {
+        &.showOnlyPlayers li.inactive {
+display: none;
+}
     ul {
         margin: 0;
         padding: 0;
         list-style: none;
+
     }
     p {
         color: #fff;
