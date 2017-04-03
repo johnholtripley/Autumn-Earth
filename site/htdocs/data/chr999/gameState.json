@@ -307,7 +307,7 @@
     ],
     "totalGameTimePlayed": 0,
     "fae": { "range": 4950, "speed": 4 },
-    "activePets": [0],
+    "activePets": [0, 1],
     "allPets": [{
         "name": "Dilly",
         "src": "dilly.png",
@@ -333,7 +333,7 @@
         }
     }, {
         "name": "Elvis",
-        "src": "dilly.png",
+        "src": "elvis.png",
         "width": 46,
         "height": 46,
         "spriteWidth": 50,
@@ -341,7 +341,7 @@
         "centreX": 35,
         "centreY": 41,
         "tileX": 16,
-        "tileY": 22,
+        "tileY": 19,
         "facing": "s",
         "speed": 4,
         "inventorySize": 6,

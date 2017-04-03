@@ -288,7 +288,7 @@ var timeSinceLastFrameSwap = 0;
 var currentAnimationFrame = 0;
 var animationUpdateTime = (1000 / animationFramesPerSecond);
 
-var gameCanvas, gameContext, gameMode, cartographyContext, offScreenCartographyContext, canvasMapImage, canvasMapImage, canvasMapMaskImage, heroImg, activePetImg, imagesToLoad, tileImages, npcImages, itemImages, backgroundImg, objInitLeft, objInitTop, dragStartX, dragStartY, inventoryCheck, timeSinceLastAmbientSoundWasPlayed;
+var gameCanvas, gameContext, gameMode, cartographyContext, offScreenCartographyContext, canvasMapImage, canvasMapImage, canvasMapMaskImage, heroImg, imagesToLoad, tileImages, npcImages, itemImages, backgroundImg, objInitLeft, objInitTop, dragStartX, dragStartY, inventoryCheck, timeSinceLastAmbientSoundWasPlayed;
 
 const titleTagPrefix = 'Autumn Earth';
 
@@ -341,8 +341,8 @@ var thisChallengeNPC;
 var questData = [];
 
 var hasActivePet = false;
-const heroBreadcrumblength = 16;
-var heroBreadcrumb = [];
+const breadCrumbLength = 16;
+var activePetImages = [];
 
 const minTimeBetweenAmbientSounds = 1200;
 
@@ -367,6 +367,8 @@ var hero = {
     z: 0,
     dx: 0,
     dy: 0,
+
+breadcrumb: [],
 
     width: 20,
     height: 20,
@@ -2142,7 +2144,7 @@ function movePet() {
     if (hasActivePet) {
         for (var p = 0; p < hero.activePets.length; p++) {
             if (hero.allPets[hero.activePets[p]].state == "moving") {
-                var thisNPC, thisItem;
+                var thisNPC, thisItem, thisPetsTarget, thisOtherPet;
                 var oldPetX = hero.allPets[hero.activePets[p]].x;
                 var oldPetY = hero.allPets[hero.activePets[p]].y;
                 hero.allPets[hero.activePets[p]].drawnFacing = hero.allPets[hero.activePets[p]].facing;
@@ -2189,13 +2191,22 @@ function movePet() {
 
                 // check for collisions against NPCs:
                 for (var j = 0; j < thisMapData.npcs.length; j++) {
-                    if (i != j) {
-                        thisNPC = thisMapData.npcs[j];
-                        if (thisNPC.isCollidable) {
-                            if (isAnObjectCollision(hero.allPets[hero.activePets[p]].x, hero.allPets[hero.activePets[p]].y, hero.allPets[hero.activePets[p]].width, hero.allPets[hero.activePets[p]].height, thisNPC.x, thisNPC.y, thisNPC.width, thisNPC.height)) {
-                                hero.allPets[hero.activePets[p]].x = oldPetX;
-                                hero.allPets[hero.activePets[p]].y = oldPetY;
-                            }
+                    thisNPC = thisMapData.npcs[j];
+                    if (thisNPC.isCollidable) {
+                        if (isAnObjectCollision(hero.allPets[hero.activePets[p]].x, hero.allPets[hero.activePets[p]].y, hero.allPets[hero.activePets[p]].width, hero.allPets[hero.activePets[p]].height, thisNPC.x, thisNPC.y, thisNPC.width, thisNPC.height)) {
+                            hero.allPets[hero.activePets[p]].x = oldPetX;
+                            hero.allPets[hero.activePets[p]].y = oldPetY;
+                        }
+                    }
+                }
+
+                // check for collisions against other pets:
+                for (var j = 0; j < hero.activePets.length; j++) {
+                    if (p != j) {
+                        thisOtherPet = hero.allPets[hero.activePets[j]];
+                        if (isAnObjectCollision(hero.allPets[hero.activePets[p]].x, hero.allPets[hero.activePets[p]].y, hero.allPets[hero.activePets[p]].width, hero.allPets[hero.activePets[p]].height, thisOtherPet.x, thisOtherPet.y, thisOtherPet.width, thisOtherPet.height)) {
+                            hero.allPets[hero.activePets[p]].x = oldPetX;
+                            hero.allPets[hero.activePets[p]].y = oldPetY;
                         }
                     }
                 }
@@ -2242,30 +2253,44 @@ function movePet() {
             if (newTile) {
                 hero.allPets[hero.activePets[p]].tileX = getTileX(hero.allPets[hero.activePets[p]].x);
                 hero.allPets[hero.activePets[p]].tileY = getTileY(hero.allPets[hero.activePets[p]].y);
-                // check proximity to hero to see if pet should stop moving:
-                if ((isInRange(hero.x, hero.y, hero.allPets[hero.activePets[p]].x, hero.allPets[hero.activePets[p]].y, tileW * 2))) {
+
+                if (p != (hero.activePets.length - 1)) {
+                    // it's not the last one, so need to update its breadcrumb:
+                    hero.allPets[hero.activePets[p]].breadcrumb.pop();
+                    hero.allPets[hero.activePets[p]].breadcrumb.unshift([hero.allPets[hero.activePets[p]].tileX, hero.allPets[hero.activePets[p]].tileY]);
+                }
+
+                thisPetsTarget = hero.allPets[hero.activePets[p]].following;
+
+
+                // check proximity to target to see if pet should stop moving:
+                if (p == 1) {
+                    console.log(thisPetsTarget.x + ", " + thisPetsTarget.y + " - " + hero.allPets[hero.activePets[p]].x + ", " + hero.allPets[hero.activePets[p]].y);
+                }
+                if ((isInRange(thisPetsTarget.x, thisPetsTarget.y, hero.allPets[hero.activePets[p]].x, hero.allPets[hero.activePets[p]].y, tileW * 2))) {
+                    if (p == 1) { console.log("pet close enough"); }
                     hero.allPets[hero.activePets[p]].state = "wait";
                 } else {
                     // check the breadcrumb for next direction:
                     var breadcrumbFound = false;
-                    for (var i = 0; i < heroBreadcrumblength; i++) {
+                    for (var i = 0; i < thisPetsTarget.breadcrumb.length; i++) {
                         //   console.log(hero.allPets[hero.activePets[p]].tileX + "," + hero.allPets[hero.activePets[p]].tileY + " - " + heroBreadcrumb[i][0] + "," + heroBreadcrumb[i][1]);
-                        if ((hero.allPets[hero.activePets[p]].tileY) == heroBreadcrumb[i][1]) {
-                            if ((hero.allPets[hero.activePets[p]].tileX - 1) == heroBreadcrumb[i][0]) {
+                        if ((hero.allPets[hero.activePets[p]].tileY) == thisPetsTarget.breadcrumb[i][1]) {
+                            if ((hero.allPets[hero.activePets[p]].tileX - 1) == thisPetsTarget.breadcrumb[i][0]) {
                                 hero.allPets[hero.activePets[p]].facing = "w";
                                 breadcrumbFound = true;
                                 break;
-                            } else if ((hero.allPets[hero.activePets[p]].tileX + 1) == heroBreadcrumb[i][0]) {
+                            } else if ((hero.allPets[hero.activePets[p]].tileX + 1) == thisPetsTarget.breadcrumb[i][0]) {
                                 hero.allPets[hero.activePets[p]].facing = "e";
                                 breadcrumbFound = true;
                                 break;
                             }
-                        } else if ((hero.allPets[hero.activePets[p]].tileX) == heroBreadcrumb[i][0]) {
-                            if ((hero.allPets[hero.activePets[p]].tileY + 1) == heroBreadcrumb[i][1]) {
+                        } else if ((hero.allPets[hero.activePets[p]].tileX) == thisPetsTarget.breadcrumb[i][0]) {
+                            if ((hero.allPets[hero.activePets[p]].tileY + 1) == thisPetsTarget.breadcrumb[i][1]) {
                                 hero.allPets[hero.activePets[p]].facing = "s";
                                 breadcrumbFound = true;
                                 break;
-                            } else if ((hero.allPets[hero.activePets[p]].tileY - 1) == heroBreadcrumb[i][1]) {
+                            } else if ((hero.allPets[hero.activePets[p]].tileY - 1) == thisPetsTarget.breadcrumb[i][1]) {
                                 hero.allPets[hero.activePets[p]].facing = "n";
                                 breadcrumbFound = true;
                                 break;
@@ -2283,14 +2308,14 @@ function movePet() {
                             if (hero.allPets[hero.activePets[p]].pathIndex >= hero.allPets[hero.activePets[p]].foundPath.length) {
                                 console.log("path ran out");
                                 // come to end of the path, try and find a new one:
-                                pathfindingWorker.postMessage(['petToHero', hero.allPets[hero.activePets[p]], thisMapData, hero.tileX, hero.tileY, p]);
+                                pathfindingWorker.postMessage(['petToHero', hero.allPets[hero.activePets[p]], thisMapData, thisPetsTarget.tileX, thisPetsTarget.tileY, p]);
                                 hero.allPets[hero.activePets[p]].state = "findingPath";
                                 hero.allPets[hero.activePets[p]].foundPath = '';
                             }
                         } else {
                             if (hero.allPets[hero.activePets[p]].state != 'findingPath') {
                                 // pathfind to hero
-                                pathfindingWorker.postMessage(['petToHero', hero.allPets[hero.activePets[p]], thisMapData, hero.tileX, hero.tileY, p]);
+                                pathfindingWorker.postMessage(['petToHero', hero.allPets[hero.activePets[p]], thisMapData, thisPetsTarget.tileX, thisPetsTarget.tileY, p]);
                                 hero.allPets[hero.activePets[p]].state = "findingPath";
                             }
                         }
@@ -3623,10 +3648,12 @@ function loadCoreAssets() {
         src: '/images/game-world/core/test-iso-hero.png'
     });
     if (hasActivePet) {
+        for(var i=0;i<hero.activePets.length;i++) {
         coreImagesToLoad.push({
-            name: "activePet",
-            src: '/images/game-world/npcs/' + hero.allPets[hero.activePets[0]].src
+            name: "activePet"+hero.activePets[i],
+            src: '/images/game-world/npcs/' + hero.allPets[hero.activePets[i]].src
         });
+    }
     }
     Loader.preload(coreImagesToLoad, prepareCoreAssets, loadingProgress);
 }
@@ -3635,7 +3662,9 @@ function loadCoreAssets() {
 function prepareCoreAssets() {
     heroImg = Loader.getImage("heroImg");
     if (hasActivePet) {
-        activePetImg = Loader.getImage("activePet");
+        for(var i=0;i<hero.activePets.length;i++) {
+        activePetImages[i] = Loader.getImage("activePet"+hero.activePets[i]);
+    }
     }
     getColours();
 }
@@ -3955,20 +3984,33 @@ function prepareGame() {
     }
     // initialise pet:
     if (hasActivePet) {
-        for(var i=0;i<hero.activePets.length;i++) {
-  hero.allPets[hero.activePets[i]].x = getTileCentreCoordX(hero.allPets[hero.activePets[i]].tileX);
-        hero.allPets[hero.activePets[i]].y = getTileCentreCoordY(hero.allPets[hero.activePets[i]].tileY);
-        hero.allPets[hero.activePets[i]].z = getElevation(hero.allPets[hero.activePets[i]].tileX, hero.allPets[hero.activePets[i]].tileY);
-        hero.allPets[hero.activePets[i]].dx = 0;
-        hero.allPets[hero.activePets[i]].dy = 0;
-        hero.allPets[hero.activePets[i]].foundPath = '';
-        hero.allPets[hero.activePets[i]].state = "wait";
+        for (var i = 0; i < hero.activePets.length; i++) {
+            hero.allPets[hero.activePets[i]].x = getTileCentreCoordX(hero.allPets[hero.activePets[i]].tileX);
+            hero.allPets[hero.activePets[i]].y = getTileCentreCoordY(hero.allPets[hero.activePets[i]].tileY);
+            hero.allPets[hero.activePets[i]].z = getElevation(hero.allPets[hero.activePets[i]].tileX, hero.allPets[hero.activePets[i]].tileY);
+            hero.allPets[hero.activePets[i]].dx = 0;
+            hero.allPets[hero.activePets[i]].dy = 0;
+            hero.allPets[hero.activePets[i]].foundPath = '';
+            hero.allPets[hero.activePets[i]].state = "wait";
+            if (i == 0) {
+                // first pet follows the hero:
+                hero.allPets[hero.activePets[i]].following = hero;
+            } else {
+                // subsequent pets follow the one in front:
+                hero.allPets[hero.activePets[i]].following = hero.allPets[hero.activePets[i - 1]];
+            }
+            if (i != (hero.activePets.length - 1)) {
+                // it's not the last one, so drop a breadcrumb trail:
+                hero.allPets[hero.activePets[i]].breadcrumb = [];
+                for (var j = 0; j < breadCrumbLength; j++) {
+                    hero.allPets[hero.activePets[i]].breadcrumb[j] = [hero.allPets[hero.activePets[i]].tileX, hero.allPets[hero.activePets[i]].tileY];
+                }
+            }
+        }
     }
-    }
-    // fill breadcrumb array with herox and heroy:
-    for (var i = 0; i < heroBreadcrumblength; i++) {
-        heroBreadcrumb[i] = [hero.tileX, hero.tileY];
-
+    // fill hero breadcrumb array with herox and heroy:
+    for (var i = 0; i < breadCrumbLength; i++) {
+        hero.breadcrumb[i] = [hero.tileX, hero.tileY];
     }
 
     // initialise items:
@@ -4009,6 +4051,7 @@ function prepareGame() {
     mapTransitionCurrentFrames = 1;
     gameMode = "play";
 }
+
 
 function removeMapAssets() {
     for (var i = 0; i < tileGraphicsToLoad.length; i++) {
@@ -4059,14 +4102,18 @@ function changeMaps(doorX, doorY) {
                 tileOffsetY = 1;
                 break
         }
-        hero.activePet.tileX = doorData[whichDoor].startX + tileOffsetX;
-        hero.activePet.tileY = doorData[whichDoor].startY + tileOffsetY;
-        hero.activePet.state = "moving";
-        hero.activePet.facing = hero.facing;
+        for (var i = 0; i < hero.activePets.length; i++) {
+            hero.allPets[hero.activePets[i]].tileX = doorData[whichDoor].startX + tileOffsetX;
+            hero.allPets[hero.activePets[i]].tileY = doorData[whichDoor].startY + tileOffsetY;
+            hero.allPets[hero.activePets[i]].state = "moving";
+            hero.allPets[hero.activePets[i]].facing = hero.facing;
+        }
     }
     newMap = doorData[whichDoor].map;
     loadMap();
 }
+
+
 
 
 function isATerrainCollision(x, y) {
@@ -4389,8 +4436,8 @@ function heroIsInNewTile() {
         }
     }
     // update the hero's breadcrub trail:
-    heroBreadcrumb.pop();
-    heroBreadcrumb.unshift([hero.tileX, hero.tileY]);
+    hero.breadcrumb.pop();
+    hero.breadcrumb.unshift([hero.tileX, hero.tileY]);
 }
 
 
@@ -5236,7 +5283,7 @@ function draw() {
             thisNPCOffsetRow = hero.allPets[hero.activePets[i]]["animation"]["walk"][hero.allPets[hero.activePets[i]].facing];
             thisX = findIsoCoordsX(hero.allPets[hero.activePets[i]].x, hero.allPets[hero.activePets[i]].y);
             thisY = findIsoCoordsY(hero.allPets[hero.activePets[i]].x, hero.allPets[hero.activePets[i]].y);
-            assetsToDraw.push([findIsoDepth(hero.allPets[hero.activePets[i]].x, hero.allPets[hero.activePets[i]].y, hero.allPets[hero.activePets[i]].z), "sprite", activePetImg, thisNPCOffsetCol * hero.allPets[hero.activePets[i]].spriteWidth, thisNPCOffsetRow * hero.allPets[hero.activePets[i]].spriteHeight, hero.allPets[hero.activePets[i]].spriteWidth, hero.allPets[hero.activePets[i]].spriteHeight, Math.floor(thisX - hero.isox - hero.allPets[hero.activePets[i]].centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - hero.allPets[hero.activePets[i]].centreY + (canvasHeight / 2) - hero.allPets[hero.activePets[i]].z), hero.allPets[hero.activePets[i]].spriteWidth, hero.allPets[hero.activePets[i]].spriteHeight]);
+            assetsToDraw.push([findIsoDepth(hero.allPets[hero.activePets[i]].x, hero.allPets[hero.activePets[i]].y, hero.allPets[hero.activePets[i]].z), "sprite", activePetImages[i], thisNPCOffsetCol * hero.allPets[hero.activePets[i]].spriteWidth, thisNPCOffsetRow * hero.allPets[hero.activePets[i]].spriteHeight, hero.allPets[hero.activePets[i]].spriteWidth, hero.allPets[hero.activePets[i]].spriteHeight, Math.floor(thisX - hero.isox - hero.allPets[hero.activePets[i]].centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - hero.allPets[hero.activePets[i]].centreY + (canvasHeight / 2) - hero.allPets[hero.activePets[i]].z), hero.allPets[hero.activePets[i]].spriteWidth, hero.allPets[hero.activePets[i]].spriteHeight]);
         }
     }
 

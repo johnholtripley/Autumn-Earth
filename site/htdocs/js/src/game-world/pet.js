@@ -2,7 +2,7 @@ function movePet() {
     if (hasActivePet) {
         for (var p = 0; p < hero.activePets.length; p++) {
             if (hero.allPets[hero.activePets[p]].state == "moving") {
-                var thisNPC, thisItem;
+                var thisNPC, thisItem, thisPetsTarget, thisOtherPet;
                 var oldPetX = hero.allPets[hero.activePets[p]].x;
                 var oldPetY = hero.allPets[hero.activePets[p]].y;
                 hero.allPets[hero.activePets[p]].drawnFacing = hero.allPets[hero.activePets[p]].facing;
@@ -49,13 +49,22 @@ function movePet() {
 
                 // check for collisions against NPCs:
                 for (var j = 0; j < thisMapData.npcs.length; j++) {
-                    if (i != j) {
-                        thisNPC = thisMapData.npcs[j];
-                        if (thisNPC.isCollidable) {
-                            if (isAnObjectCollision(hero.allPets[hero.activePets[p]].x, hero.allPets[hero.activePets[p]].y, hero.allPets[hero.activePets[p]].width, hero.allPets[hero.activePets[p]].height, thisNPC.x, thisNPC.y, thisNPC.width, thisNPC.height)) {
-                                hero.allPets[hero.activePets[p]].x = oldPetX;
-                                hero.allPets[hero.activePets[p]].y = oldPetY;
-                            }
+                    thisNPC = thisMapData.npcs[j];
+                    if (thisNPC.isCollidable) {
+                        if (isAnObjectCollision(hero.allPets[hero.activePets[p]].x, hero.allPets[hero.activePets[p]].y, hero.allPets[hero.activePets[p]].width, hero.allPets[hero.activePets[p]].height, thisNPC.x, thisNPC.y, thisNPC.width, thisNPC.height)) {
+                            hero.allPets[hero.activePets[p]].x = oldPetX;
+                            hero.allPets[hero.activePets[p]].y = oldPetY;
+                        }
+                    }
+                }
+
+                // check for collisions against other pets:
+                for (var j = 0; j < hero.activePets.length; j++) {
+                    if (p != j) {
+                        thisOtherPet = hero.allPets[hero.activePets[j]];
+                        if (isAnObjectCollision(hero.allPets[hero.activePets[p]].x, hero.allPets[hero.activePets[p]].y, hero.allPets[hero.activePets[p]].width, hero.allPets[hero.activePets[p]].height, thisOtherPet.x, thisOtherPet.y, thisOtherPet.width, thisOtherPet.height)) {
+                            hero.allPets[hero.activePets[p]].x = oldPetX;
+                            hero.allPets[hero.activePets[p]].y = oldPetY;
                         }
                     }
                 }
@@ -102,30 +111,44 @@ function movePet() {
             if (newTile) {
                 hero.allPets[hero.activePets[p]].tileX = getTileX(hero.allPets[hero.activePets[p]].x);
                 hero.allPets[hero.activePets[p]].tileY = getTileY(hero.allPets[hero.activePets[p]].y);
-                // check proximity to hero to see if pet should stop moving:
-                if ((isInRange(hero.x, hero.y, hero.allPets[hero.activePets[p]].x, hero.allPets[hero.activePets[p]].y, tileW * 2))) {
+
+                if (p != (hero.activePets.length - 1)) {
+                    // it's not the last one, so need to update its breadcrumb:
+                    hero.allPets[hero.activePets[p]].breadcrumb.pop();
+                    hero.allPets[hero.activePets[p]].breadcrumb.unshift([hero.allPets[hero.activePets[p]].tileX, hero.allPets[hero.activePets[p]].tileY]);
+                }
+
+                thisPetsTarget = hero.allPets[hero.activePets[p]].following;
+
+
+                // check proximity to target to see if pet should stop moving:
+                if (p == 1) {
+                    console.log(thisPetsTarget.x + ", " + thisPetsTarget.y + " - " + hero.allPets[hero.activePets[p]].x + ", " + hero.allPets[hero.activePets[p]].y);
+                }
+                if ((isInRange(thisPetsTarget.x, thisPetsTarget.y, hero.allPets[hero.activePets[p]].x, hero.allPets[hero.activePets[p]].y, tileW * 2))) {
+                    if (p == 1) { console.log("pet close enough"); }
                     hero.allPets[hero.activePets[p]].state = "wait";
                 } else {
                     // check the breadcrumb for next direction:
                     var breadcrumbFound = false;
-                    for (var i = 0; i < heroBreadcrumblength; i++) {
+                    for (var i = 0; i < thisPetsTarget.breadcrumb.length; i++) {
                         //   console.log(hero.allPets[hero.activePets[p]].tileX + "," + hero.allPets[hero.activePets[p]].tileY + " - " + heroBreadcrumb[i][0] + "," + heroBreadcrumb[i][1]);
-                        if ((hero.allPets[hero.activePets[p]].tileY) == heroBreadcrumb[i][1]) {
-                            if ((hero.allPets[hero.activePets[p]].tileX - 1) == heroBreadcrumb[i][0]) {
+                        if ((hero.allPets[hero.activePets[p]].tileY) == thisPetsTarget.breadcrumb[i][1]) {
+                            if ((hero.allPets[hero.activePets[p]].tileX - 1) == thisPetsTarget.breadcrumb[i][0]) {
                                 hero.allPets[hero.activePets[p]].facing = "w";
                                 breadcrumbFound = true;
                                 break;
-                            } else if ((hero.allPets[hero.activePets[p]].tileX + 1) == heroBreadcrumb[i][0]) {
+                            } else if ((hero.allPets[hero.activePets[p]].tileX + 1) == thisPetsTarget.breadcrumb[i][0]) {
                                 hero.allPets[hero.activePets[p]].facing = "e";
                                 breadcrumbFound = true;
                                 break;
                             }
-                        } else if ((hero.allPets[hero.activePets[p]].tileX) == heroBreadcrumb[i][0]) {
-                            if ((hero.allPets[hero.activePets[p]].tileY + 1) == heroBreadcrumb[i][1]) {
+                        } else if ((hero.allPets[hero.activePets[p]].tileX) == thisPetsTarget.breadcrumb[i][0]) {
+                            if ((hero.allPets[hero.activePets[p]].tileY + 1) == thisPetsTarget.breadcrumb[i][1]) {
                                 hero.allPets[hero.activePets[p]].facing = "s";
                                 breadcrumbFound = true;
                                 break;
-                            } else if ((hero.allPets[hero.activePets[p]].tileY - 1) == heroBreadcrumb[i][1]) {
+                            } else if ((hero.allPets[hero.activePets[p]].tileY - 1) == thisPetsTarget.breadcrumb[i][1]) {
                                 hero.allPets[hero.activePets[p]].facing = "n";
                                 breadcrumbFound = true;
                                 break;
@@ -143,14 +166,14 @@ function movePet() {
                             if (hero.allPets[hero.activePets[p]].pathIndex >= hero.allPets[hero.activePets[p]].foundPath.length) {
                                 console.log("path ran out");
                                 // come to end of the path, try and find a new one:
-                                pathfindingWorker.postMessage(['petToHero', hero.allPets[hero.activePets[p]], thisMapData, hero.tileX, hero.tileY, p]);
+                                pathfindingWorker.postMessage(['petToHero', hero.allPets[hero.activePets[p]], thisMapData, thisPetsTarget.tileX, thisPetsTarget.tileY, p]);
                                 hero.allPets[hero.activePets[p]].state = "findingPath";
                                 hero.allPets[hero.activePets[p]].foundPath = '';
                             }
                         } else {
                             if (hero.allPets[hero.activePets[p]].state != 'findingPath') {
                                 // pathfind to hero
-                                pathfindingWorker.postMessage(['petToHero', hero.allPets[hero.activePets[p]], thisMapData, hero.tileX, hero.tileY, p]);
+                                pathfindingWorker.postMessage(['petToHero', hero.allPets[hero.activePets[p]], thisMapData, thisPetsTarget.tileX, thisPetsTarget.tileY, p]);
                                 hero.allPets[hero.activePets[p]].state = "findingPath";
                             }
                         }

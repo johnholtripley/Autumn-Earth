@@ -6,7 +6,7 @@ var timeSinceLastFrameSwap = 0;
 var currentAnimationFrame = 0;
 var animationUpdateTime = (1000 / animationFramesPerSecond);
 
-var gameCanvas, gameContext, gameMode, cartographyContext, offScreenCartographyContext, canvasMapImage, canvasMapImage, canvasMapMaskImage, heroImg, activePetImg, imagesToLoad, tileImages, npcImages, itemImages, backgroundImg, objInitLeft, objInitTop, dragStartX, dragStartY, inventoryCheck, timeSinceLastAmbientSoundWasPlayed;
+var gameCanvas, gameContext, gameMode, cartographyContext, offScreenCartographyContext, canvasMapImage, canvasMapImage, canvasMapMaskImage, heroImg, imagesToLoad, tileImages, npcImages, itemImages, backgroundImg, objInitLeft, objInitTop, dragStartX, dragStartY, inventoryCheck, timeSinceLastAmbientSoundWasPlayed;
 
 const titleTagPrefix = 'Autumn Earth';
 
@@ -59,8 +59,8 @@ var thisChallengeNPC;
 var questData = [];
 
 var hasActivePet = false;
-const heroBreadcrumblength = 16;
-var heroBreadcrumb = [];
+const breadCrumbLength = 16;
+var activePetImages = [];
 
 const minTimeBetweenAmbientSounds = 1200;
 
@@ -85,6 +85,8 @@ var hero = {
     z: 0,
     dx: 0,
     dy: 0,
+
+breadcrumb: [],
 
     width: 20,
     height: 20,
