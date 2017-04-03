@@ -23,33 +23,33 @@ function init() {
     gameCanvas = document.getElementById("gameWorld");
     if (gameCanvas.getContext) {
         gameContext = gameCanvas.getContext('2d');
-     
-    sizeCanvasSize();
+
+        sizeCanvasSize();
 
 
-    whichTransitionEvent = determineWhichTransitionEvent();
-    gameMode = "mapLoading";
+        whichTransitionEvent = determineWhichTransitionEvent();
+        gameMode = "mapLoading";
 
-    cartographyCanvas = document.getElementById("cartographyCanvas");
-    cartographyContext = cartographyCanvas.getContext('2d');
-    offScreenCartographyCanvas = document.getElementById("offScreenCartographyCanvas");
-    offScreenCartographyContext = offScreenCartographyCanvas.getContext('2d');
+        cartographyCanvas = document.getElementById("cartographyCanvas");
+        cartographyContext = cartographyCanvas.getContext('2d');
+        offScreenCartographyCanvas = document.getElementById("offScreenCartographyCanvas");
+        offScreenCartographyContext = offScreenCartographyCanvas.getContext('2d');
 
-    canvasMapImage = document.createElement('img');
-canvasMapMaskImage = document.createElement('img');
+        canvasMapImage = document.createElement('img');
+        canvasMapMaskImage = document.createElement('img');
 
-    UI.init();
-    audio.init();
-    
-  
-    
-    // detect and set up input methods:
-    Input.init();
-    // show loading screen while getting assets:
-    gameLoop();
+        UI.init();
+        audio.init();
 
-    getHeroGameState();
-}
+
+
+        // detect and set up input methods:
+        Input.init();
+        // show loading screen while getting assets:
+        gameLoop();
+
+        getHeroGameState();
+    }
 
 
 
@@ -73,9 +73,12 @@ function getHeroGameState() {
         hero.professionsKnown = data.professionsKnown;
         hero.totalGameTimePlayed = data.totalGameTimePlayed;
         timeSinceLastAmbientSoundWasPlayed = hero.totalGameTimePlayed + (minTimeBetweenAmbientSounds * 1.25);
-        if (data.activePet) {
-            hasActivePet = true;
-            hero.activePet = data.activePet;
+        if (data.allPets) {
+            if (data.activePets.length > 0) {
+                hasActivePet = true;
+            }
+            hero.activePets = data.activePets;
+            hero.allPets = data.allPets;
         }
         // copy the fae properties that will change into the main fae object:
         for (var attrname in data.fae) {
@@ -101,21 +104,21 @@ function loadCoreAssets() {
         name: "heroImg",
         src: '/images/game-world/core/test-iso-hero.png'
     });
-    if(hasActivePet) {
-    coreImagesToLoad.push({
-        name: "activePet",
-        src: '/images/game-world/npcs/' + hero.activePet.src
-    });
-}
+    if (hasActivePet) {
+        coreImagesToLoad.push({
+            name: "activePet",
+            src: '/images/game-world/npcs/' + hero.allPets[hero.activePets[0]].src
+        });
+    }
     Loader.preload(coreImagesToLoad, prepareCoreAssets, loadingProgress);
 }
 
 
 function prepareCoreAssets() {
     heroImg = Loader.getImage("heroImg");
-    if(hasActivePet) {
-    activePetImg = Loader.getImage("activePet");
-}
+    if (hasActivePet) {
+        activePetImg = Loader.getImage("activePet");
+    }
     getColours();
 }
 
@@ -143,8 +146,8 @@ function loadMapJSON(mapFilePath) {
         }
         initCartographicMap();
         findProfessionsAndRecipes();
-        if(thisMapData.ambientSounds) {
-audio.loadAmbientSounds(thisMapData.ambientSounds);
+        if (thisMapData.ambientSounds) {
+            audio.loadAmbientSounds(thisMapData.ambientSounds);
         }
         fae.recentHotspots = [];
     }, function(status) {
@@ -161,9 +164,9 @@ function loadMap() {
     if ((newMap < 0) && (currentMap > 0)) {
         randomDungeonName = randomDungeons[Math.abs(newMap)];
         newMap = -1;
-    } else {  
+    } else {
         //mapFilePath = '/data/chr' + characterId + '/map' + newMap + '.json';
-        mapFilePath = '/game-world/getMap.php?chr='+characterId+'&map='+newMap;
+        mapFilePath = '/game-world/getMap.php?chr=' + characterId + '&map=' + newMap;
     }
     if (newMap < 0) {
         // find door centre:
@@ -181,7 +184,7 @@ function loadMap() {
         var centreDoorY = targetDoorY / 3;
 
         mapFilePath = '/game-world/generateDungeonMap.php?playerId=' + characterId + '&originatingMapId=' + currentMap + '&requestedMap=' + newMap + '&dungeonName=' + randomDungeonName + '&connectingDoorX=' + centreDoorX + '&connectingDoorY=' + centreDoorY;
-         
+
     }
     currentMap = newMap;
     loadMapJSON(mapFilePath);
@@ -248,7 +251,7 @@ function loadTitles() {
     var itemIdsToGet = hero.titlesEarned.join("|");
     getJSON("/game-world/getActiveTitles.php?whichIds=" + itemIdsToGet, function(data) {
         activeTitles = data;
-       
+
         loadCardData();
     }, function(status) {
         // try again:
@@ -257,7 +260,7 @@ function loadTitles() {
 }
 
 function getColours() {
-        getJSON("/game-world/getColours.php", function(data) {
+    getJSON("/game-world/getColours.php", function(data) {
         colourNames = data.colourNames;
         getQuestDetails();
     }, function(status) {
@@ -266,7 +269,7 @@ function getColours() {
     });
 }
 
-function getQuestDetails() {   
+function getQuestDetails() {
     getJSON("/game-world/getQuestDetails.php?chr=" + characterId, function(data) {
         questData = data.quests;
         loadTitles();
@@ -340,7 +343,7 @@ function findInventoryItemData() {
         itemIdsToGet.push(hero.inventory[arrkey].type);
         // check if any are containers:
         if (typeof hero.inventory[arrkey].contains !== "undefined") {
-            for (var i=0; i<hero.inventory[arrkey].contains.length;i++) {
+            for (var i = 0; i < hero.inventory[arrkey].contains.length; i++) {
                 itemIdsToGet.push(hero.inventory[arrkey].contains[i].type);
             }
         }
@@ -371,9 +374,9 @@ function findInventoryItemData() {
 
 
     // add item available in any shops:
-    if(thisMapShopItemIds != '') {
-    itemIdsToGet.push(thisMapShopItemIds);
-}
+    if (thisMapShopItemIds != '') {
+        itemIdsToGet.push(thisMapShopItemIds);
+    }
 
     // remove duplicates:
     itemIdsToGet = uniqueValues(itemIdsToGet);
@@ -387,7 +390,7 @@ function findInventoryItemData() {
 function loadInventoryItemData(itemIdsToLoad) {
     getJSON("/game-world/getInventoryItems.php?whichIds=" + itemIdsToLoad, function(data) {
         currentActiveInventoryItems = data;
-         if (!inventoryInterfaceIsBuilt) {
+        if (!inventoryInterfaceIsBuilt) {
             UI.buildInventoryInterface();
         }
         loadMapAssets();
@@ -433,19 +436,21 @@ function prepareGame() {
         thisMapData.npcs[i].lastTargetDestination = "";
     }
     // initialise pet:
-         if (hasActivePet) {
-            hero.activePet.x = getTileCentreCoordX(hero.activePet.tileX);
-            hero.activePet.y = getTileCentreCoordY(hero.activePet.tileY);
-            hero.activePet.z = getElevation(hero.activePet.tileX, hero.activePet.tileY);
-            hero.activePet.dx = 0;
-            hero.activePet.dy = 0;
-            hero.activePet.foundPath = '';
-            hero.activePet.state = "wait";
-        }
-            // fill breadcrumb array with herox and heroy:
+    if (hasActivePet) {
+        for(var i=0;i<hero.activePets.length;i++) {
+  hero.allPets[hero.activePets[i]].x = getTileCentreCoordX(hero.allPets[hero.activePets[i]].tileX);
+        hero.allPets[hero.activePets[i]].y = getTileCentreCoordY(hero.allPets[hero.activePets[i]].tileY);
+        hero.allPets[hero.activePets[i]].z = getElevation(hero.allPets[hero.activePets[i]].tileX, hero.allPets[hero.activePets[i]].tileY);
+        hero.allPets[hero.activePets[i]].dx = 0;
+        hero.allPets[hero.activePets[i]].dy = 0;
+        hero.allPets[hero.activePets[i]].foundPath = '';
+        hero.allPets[hero.activePets[i]].state = "wait";
+    }
+    }
+    // fill breadcrumb array with herox and heroy:
     for (var i = 0; i < heroBreadcrumblength; i++) {
-        heroBreadcrumb[i] = [hero.tileX,hero.tileY];
-       
+        heroBreadcrumb[i] = [hero.tileX, hero.tileY];
+
     }
 
     // initialise items:
@@ -683,13 +688,15 @@ function checkHeroCollisions() {
         }
     }
 
-    // check against pet:
-    if(hasActivePet) {
-if (isAnObjectCollision(hero.activePet.x, hero.activePet.y, hero.activePet.width, hero.activePet.height, hero.x, hero.y, hero.width, hero.height)) {
-    getHeroAsCloseAsPossibleToObject(hero.activePet.x, hero.activePet.y, hero.activePet.width, hero.activePet.height);
-    pushPetAway();
+    // check against pets:
+    if (hasActivePet) {
+        for (var i = 0; i < hero.activePets.length; i++) {
+        if (isAnObjectCollision(hero.allPets[hero.activePets[i]].x, hero.allPets[hero.activePets[i]].y, hero.allPets[hero.activePets[i]].width, hero.allPets[hero.activePets[i]].height, hero.x, hero.y, hero.width, hero.height)) {
+            getHeroAsCloseAsPossibleToObject(hero.allPets[hero.activePets[i]].x, hero.allPets[hero.activePets[i]].y, hero.allPets[hero.activePets[i]].width, hero.allPets[hero.activePets[i]].height);
+            pushPetAway(i);
 
-}
+        }
+    }
     }
 }
 
@@ -698,12 +705,12 @@ if (isAnObjectCollision(hero.activePet.x, hero.activePet.y, hero.activePet.width
 function gameLoop() {
     switch (gameMode) {
         case "mapLoading":
-        //    console.log("loading map assets...");
+            //    console.log("loading map assets...");
             break;
         case "paused":
             //
             break;
-            case "cardGame":
+        case "cardGame":
             cardGameNameSpace.update();
             cardGameNameSpace.draw();
             break;
@@ -865,7 +872,7 @@ function heroIsInNewTile() {
     }
     // update the hero's breadcrub trail:
     heroBreadcrumb.pop();
-    heroBreadcrumb.unshift([hero.tileX,hero.tileY]);
+    heroBreadcrumb.unshift([hero.tileX, hero.tileY]);
 }
 
 
@@ -887,8 +894,8 @@ function checkForActions() {
                     case "static":
                         // can't interact with it - do nothing
                         break;
-                        case "sound":
-                        audio.playSound(soundEffects[actionValue],0);
+                    case "sound":
+                        audio.playSound(soundEffects[actionValue], 0);
                         break;
                     case "questToggle":
                         // toggle value: (1 or 0)
@@ -902,7 +909,7 @@ function checkForActions() {
                         break;
                     case "node":
                         // check it's not still re-spawning:
-                        console.log(hero.totalGameTimePlayed+" "+thisMapData.items[i].timeLastHarvested+" > "+currentActiveInventoryItems[thisMapData.items[i].type].respawnRate);
+                        console.log(hero.totalGameTimePlayed + " " + thisMapData.items[i].timeLastHarvested + " > " + currentActiveInventoryItems[thisMapData.items[i].type].respawnRate);
                         if (hero.totalGameTimePlayed - thisMapData.items[i].timeLastHarvested >= currentActiveInventoryItems[thisMapData.items[i].type].respawnRate) {
                             // pick a random item from the possible items:
                             var whichItem = getRandomIntegerInclusive(1, thisMapData.items[i].contains.length);
@@ -946,9 +953,9 @@ function checkForActions() {
                         activeNPCForDialogue = '';
                         canCloseDialogueBalloonNextClick = false;
 
- if(shopCurrentlyOpen != -1) {
-UI.closeShop();
-                }
+                        if (shopCurrentlyOpen != -1) {
+                            UI.closeShop();
+                        }
 
                     } else {
                         var thisSpeech = thisNPC.speech[thisNPC.speechIndex][0];
@@ -980,14 +987,14 @@ function processSpeech(thisNPC, thisSpeechPassedIn, thisSpeechCode, isPartOfNPCs
                 // knock this back one so to keep it in step with the removed item:
                 thisNPC.speechIndex--;
                 break;
-                case "shop":
-UI.openShop(generateHash(thisNPC.speech[thisNPC.speechIndex][2]));
-//thisNPC.speechIndex--;
+            case "shop":
+                UI.openShop(generateHash(thisNPC.speech[thisNPC.speechIndex][2]));
+                //thisNPC.speechIndex--;
 
                 break;
-                case "sound":
-audio.playSound(soundEffects[thisNPC.speech[thisNPC.speechIndex][2]],0);
-break;
+            case "sound":
+                audio.playSound(soundEffects[thisNPC.speech[thisNPC.speechIndex][2]], 0);
+                break;
             case "profession":
                 var professionId = thisNPC.speech[thisNPC.speechIndex][2];
                 if (hero.professionsKnown.indexOf(professionId) == -1) {
@@ -995,10 +1002,10 @@ break;
                     showNotification('<p>You learned a new profession</p>');
                 }
                 break;
-                case "follower":
-                 var followerId = thisNPC.speech[thisNPC.speechIndex][2];
+            case "follower":
+                var followerId = thisNPC.speech[thisNPC.speechIndex][2];
 
-  if (hero.professionsKnown.indexOf(followerId) == -1) {
+                if (hero.professionsKnown.indexOf(followerId) == -1) {
                     hero.professionsKnown.push(followerId);
                     showNotification('<p>You gained a new follower</p>');
                 }
@@ -1271,12 +1278,12 @@ break;
                 // nothing
         }
     }
-if(thisSpeech!= "") {
-    // don't show the balloon if there's no speech (which might happen if the NPC is just plays a sound instead)
-    UI.showDialogue(thisNPC, thisSpeech);
-} else {
-    thisNPC.speechIndex--;
-}
+    if (thisSpeech != "") {
+        // don't show the balloon if there's no speech (which might happen if the NPC is just plays a sound instead)
+        UI.showDialogue(thisNPC, thisSpeech);
+    } else {
+        thisNPC.speechIndex--;
+    }
     canCloseDialogueBalloonNextClick = false;
     if (!isPartOfNPCsNormalSpeech) {
         // set a flag so that pressing action near the NPC will close the balloon:
@@ -1378,15 +1385,15 @@ function checkForTitlesAwarded(whichQuestId) {
 
 
 function checkForChallenges() {
- 
+
     for (var i = 0; i < thisMapData.npcs.length; i++) {
         thisChallengeNPC = thisMapData.npcs[i];
         if (isInRange(hero.x, hero.y, thisChallengeNPC.x, thisChallengeNPC.y, (thisChallengeNPC.width + hero.width))) {
             if (isFacing(hero, thisChallengeNPC)) {
-                if(thisChallengeNPC.cardGameSpeech) {
-                thisChallengeNPC.drawnFacing = turntoFace(thisChallengeNPC, hero);
-                processSpeech(thisChallengeNPC, thisChallengeNPC.cardGameSpeech.challenge[0], thisChallengeNPC.cardGameSpeech.challenge[1]);
-            }
+                if (thisChallengeNPC.cardGameSpeech) {
+                    thisChallengeNPC.drawnFacing = turntoFace(thisChallengeNPC, hero);
+                    processSpeech(thisChallengeNPC, thisChallengeNPC.cardGameSpeech.challenge[0], thisChallengeNPC.cardGameSpeech.challenge[1]);
+                }
             }
         }
     }
@@ -1451,10 +1458,12 @@ function moveNPCs() {
             }
 
             // check for collision against pet:
-            if(hasActivePet) {
-                 if (isAnObjectCollision(thisNPC.x, thisNPC.y, thisNPC.width, thisNPC.height, hero.activePet.x, hero.activePet.y, hero.activePet.width, hero.activePet.height)) {
-                thisNPC.x = oldNPCx;
-                thisNPC.y = oldNPCy;
+            if (hasActivePet) {
+                for (var i = 0; i < hero.activePets.length; i++) {
+                if (isAnObjectCollision(thisNPC.x, thisNPC.y, thisNPC.width, thisNPC.height, hero.allPets[hero.activePets[i]].x, hero.allPets[hero.activePets[i]].y, hero.allPets[hero.activePets[i]].width, hero.allPets[hero.activePets[i]].height)) {
+                    thisNPC.x = oldNPCx;
+                    thisNPC.y = oldNPCy;
+                }
             }
             }
 
@@ -1634,7 +1643,7 @@ function canLearnRecipe(recipeIndex) {
     if (hero.recipesKnown.indexOf(recipeIndex) === -1) {
         // check for pre-requisites
         // #####
-        hero.recipesKnown.push([parseInt(recipeIndex),0]);
+        hero.recipesKnown.push([parseInt(recipeIndex), 0]);
         // need to show a notification
         // reload the recipe data
         // ###
@@ -1704,12 +1713,14 @@ function draw() {
         }
 
         if (hasActivePet) {
-            thisNPCOffsetCol = currentAnimationFrame % hero.activePet["animation"]["walk"]["length"];
-            thisNPCOffsetRow = hero.activePet["animation"]["walk"][hero.activePet.facing];
-            thisX = findIsoCoordsX(hero.activePet.x, hero.activePet.y);
-            thisY = findIsoCoordsY(hero.activePet.x, hero.activePet.y);
-            assetsToDraw.push([findIsoDepth(hero.activePet.x, hero.activePet.y, hero.activePet.z), "sprite", activePetImg, thisNPCOffsetCol * hero.activePet.spriteWidth, thisNPCOffsetRow * hero.activePet.spriteHeight, hero.activePet.spriteWidth, hero.activePet.spriteHeight, Math.floor(thisX - hero.isox - hero.activePet.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - hero.activePet.centreY + (canvasHeight / 2) - hero.activePet.z), hero.activePet.spriteWidth, hero.activePet.spriteHeight]);
+             for (var i = 0; i < hero.activePets.length; i++) {
+            thisNPCOffsetCol = currentAnimationFrame % hero.allPets[hero.activePets[i]]["animation"]["walk"]["length"];
+            thisNPCOffsetRow = hero.allPets[hero.activePets[i]]["animation"]["walk"][hero.allPets[hero.activePets[i]].facing];
+            thisX = findIsoCoordsX(hero.allPets[hero.activePets[i]].x, hero.allPets[hero.activePets[i]].y);
+            thisY = findIsoCoordsY(hero.allPets[hero.activePets[i]].x, hero.allPets[hero.activePets[i]].y);
+            assetsToDraw.push([findIsoDepth(hero.allPets[hero.activePets[i]].x, hero.allPets[hero.activePets[i]].y, hero.allPets[hero.activePets[i]].z), "sprite", activePetImg, thisNPCOffsetCol * hero.allPets[hero.activePets[i]].spriteWidth, thisNPCOffsetRow * hero.allPets[hero.activePets[i]].spriteHeight, hero.allPets[hero.activePets[i]].spriteWidth, hero.allPets[hero.activePets[i]].spriteHeight, Math.floor(thisX - hero.isox - hero.allPets[hero.activePets[i]].centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - hero.allPets[hero.activePets[i]].centreY + (canvasHeight / 2) - hero.allPets[hero.activePets[i]].z), hero.allPets[hero.activePets[i]].spriteWidth, hero.allPets[hero.activePets[i]].spriteHeight]);
         }
+    }
 
         for (var i = 0; i < thisMapData.npcs.length; i++) {
             thisNPC = thisMapData.npcs[i];
@@ -1813,4 +1824,3 @@ if (('querySelectorAll' in document && 'addEventListener' in window) && (!!windo
 } else {
     // sorry message / fallback? #####
 }
-

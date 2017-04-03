@@ -59,23 +59,11 @@ var UI = {
 
     buildInventoryInterface: function() {
         var inventoryMarkup = '';
-        var thisAction, thisBagNumberOfSlots, thisSlotsID, thisPanelName;
-        var numberOfPanels = hero.bags.length;
-        // loop through number of bags
-        if (hasActivePet) {
-            if (hero.activePet.inventorySize > 0) {
-                numberOfPanels++;
-            }
-        }
-        for (var i = 0; i < numberOfPanels; i++) {
-            if (i < hero.bags.length) {
-                thisPanelName = currentActiveInventoryItems[hero.bags[i].type].shortname;
-                thisBagNumberOfSlots = currentActiveInventoryItems[hero.bags[i].type].actionValue;
-            } else {
-                // is the pet inventory panel:
-                thisPanelName = hero.activePet.name;
-                thisBagNumberOfSlots = hero.activePet.inventorySize;
-            }
+        var thisAction, thisBagNumberOfSlots, thisSlotsID, thisPanelName, thisPet;
+
+        for (var i = 0; i < hero.bags.length; i++) {
+            thisPanelName = currentActiveInventoryItems[hero.bags[i].type].shortname;
+            thisBagNumberOfSlots = currentActiveInventoryItems[hero.bags[i].type].actionValue;
             inventoryMarkup += '<div class="inventoryBag" id="inventoryBag' + i + '"><div class="draggableBar">' + thisPanelName + '</div><ol class="active" id="bag' + i + '">';
             // loop through slots for each bag:
             for (var j = 0; j < thisBagNumberOfSlots; j++) {
@@ -93,7 +81,29 @@ var UI = {
             }
             inventoryMarkup += '</ol></div></div>';
         }
-
+        // add pet inventory panels:
+        for (var i = 0; i < hero.allPets.length; i++) {
+            thisPet = hero.allPets[i];
+            if (thisPet.inventorySize > 0) {
+           
+            inventoryMarkup += '<div class="inventoryBag" id="inventoryBag' + i + '"><div class="draggableBar">' + thisPet.name + '</div><ol class="active" id="bag' + i + '">';
+            // loop through slots for each bag:
+            for (var j = 0; j < thisPet.inventorySize; j++) {
+                thisSlotsID = 'p' + i + '-' + j;
+                inventoryMarkup += '<li id="slot' + thisSlotsID + '">';
+                // check if that key exists in inventory:
+                if (thisSlotsID in hero.inventory) {
+                    inventoryMarkup += generateSlotMarkup(thisSlotsID);
+                    thisAction = currentActiveInventoryItems[hero.inventory[thisSlotsID].type].action;
+                } else {
+                    inventoryMarkup += '';
+                }
+                // add item there
+                inventoryMarkup += '</li>';
+            }
+            inventoryMarkup += '</ol></div></div>';
+        }
+        }
 
         inventoryPanels.innerHTML = inventoryMarkup;
         gameWrapper.ondblclick = UI.doubleClick;

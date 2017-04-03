@@ -75,7 +75,7 @@
             "inscription": ""
         },
 
-        "2-2": {
+        "p0-2": {
             "type": 36,
             "quantity": 1,
             "quality": 100,
@@ -307,8 +307,9 @@
     ],
     "totalGameTimePlayed": 0,
     "fae": { "range": 4950, "speed": 4 },
-    "activePet": {
-        "name": "friendly mog",
+    "activePets": [0],
+    "allPets": [{
+        "name": "Dilly",
         "src": "dilly.png",
         "width": 46,
         "height": 46,
@@ -330,7 +331,30 @@
                 "w": 1
             }
         }
-    },
+    }, {
+        "name": "Elvis",
+        "src": "dilly.png",
+        "width": 46,
+        "height": 46,
+        "spriteWidth": 50,
+        "spriteHeight": 54,
+        "centreX": 35,
+        "centreY": 41,
+        "tileX": 16,
+        "tileY": 22,
+        "facing": "s",
+        "speed": 4,
+        "inventorySize": 6,
+        "animation": {
+            "walk": {
+                "length": 1,
+                "n": 2,
+                "e": 3,
+                "s": 0,
+                "w": 1
+            }
+        }
+    }],
     "retinue": [0, 2],
     "currency": {
         "money": 34510,
