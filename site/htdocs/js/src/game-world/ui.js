@@ -40,8 +40,6 @@ var UI = {
         const cartographicTitle = document.getElementById('cartographicTitle');
         const dialogue = document.getElementById('dialogue');
         const notification = document.getElementById('notification');
-        notification.addEventListener(whichAnimationEvent, UI.notificationEnded, false);
-
         const cardGameWrapper = document.getElementById('cardGameWrapper');
         const cardAlbumList = document.getElementById('cardAlbumList');
         const boosterPack = document.getElementById('boosterPack');
@@ -275,6 +273,7 @@ var UI = {
             // cause re-draw to reset the animation:
             void notification.offsetWidth;
             notification.classList.add('active');
+            notification.addEventListener(whichAnimationEvent, UI.notificationEnded, false);
         } else {
             notificationQueue.push(markup);
         }
@@ -284,6 +283,7 @@ var UI = {
         // remove the one that's just been shown:
         notificationQueue.shift();
         notificationIsShowing = false;
+        dialogue.removeEventListener(whichAnimationEvent, UI.notificationEnded, false);
         // see if any more need showing now:
         if (notificationQueue.length > 0) {
             UI.showNotification(notificationQueue[0]);
