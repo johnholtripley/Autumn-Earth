@@ -499,6 +499,7 @@ function prepareGame() {
     // initialise fae:
     fae.x = hero.x + tileW * 2;
     fae.y = hero.y + tileH * 2;
+    fae.currentState = "hero";
     fae.z = hero.z;
     fae.dz = 1;
     // fae.pulse = 0;
