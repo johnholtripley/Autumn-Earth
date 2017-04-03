@@ -3,10 +3,11 @@ if (window.Worker) {
     pathfindingWorker.onmessage = function(e) {
         var thisAgentsName = e.data[0];
         if (thisAgentsName == 'pet') {
-            hero.activePet.foundPath = e.data[1];
-            hero.activePet.pathIndex = 1;
-            hero.activePet.state = 'moving';
-            hero.activePet.facing = e.data[1][0];
+            var thisPet = hero.allPets[hero.activePets[e.data[1]]];
+            thisPet.foundPath = e.data[2];
+            thisPet.pathIndex = 1;
+            thisPet.state = 'moving';
+            thisPet.facing = e.data[2][0];
         } else {
             // find which NPC this is:
             // http://stackoverflow.com/a/16100446/1054212

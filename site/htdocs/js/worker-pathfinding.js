@@ -192,7 +192,8 @@ onmessage = function(e) {
             thisAgentsIndex = -1;
             mapTilesY = thisMapData.terrain.length;
             mapTilesX = thisMapData.terrain[0].length;
-            postMessage(['pet', findPath(thisAgent.tileX, thisAgent.tileY, e.data[3], e.data[4])]);
+           // e.data[5] is the pets index:
+            postMessage(['pet', e.data[5], findPath(thisAgent.tileX, thisAgent.tileY, e.data[3], e.data[4])]);
             break;
     }
 }
