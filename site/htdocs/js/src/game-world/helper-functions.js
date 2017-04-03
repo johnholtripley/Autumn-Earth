@@ -449,9 +449,26 @@ function hasLineOfSight(startx, starty, endx, endy) {
                return transitions[t];
            }
        }
+       el = null;
    }
 
-
+   function determineWhichAnimationEvent() {
+       // https://davidwalsh.name/css-animation-callback
+       var t;
+       var el = document.createElement('fakeelement');
+       var animations = {
+           'animation': 'animationend',
+           'OAnimation': 'oAnimationEnd',
+           'MozAnimation': 'animationend',
+           'WebkitAnimation': 'webkitAnimationEnd'
+       }
+       for (t in animations) {
+           if (el.style[t] !== undefined) {
+               return animations[t];
+           }
+       }
+       el = null;
+   }
 
 
 // http://stackoverflow.com/questions/9229645/remove-duplicates-from-javascript-array#answer-9229821

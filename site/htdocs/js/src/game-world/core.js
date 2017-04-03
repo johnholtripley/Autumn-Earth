@@ -28,6 +28,7 @@ function init() {
 
 
         whichTransitionEvent = determineWhichTransitionEvent();
+        whichAnimationEvent = determineWhichAnimationEvent();
         gameMode = "mapLoading";
 
         cartographyCanvas = document.getElementById("cartographyCanvas");

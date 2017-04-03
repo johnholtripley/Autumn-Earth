@@ -46,6 +46,7 @@ var activeTitles = [];
 var inventoryInterfaceIsBuilt = false;
 
 var whichTransitionEvent = '';
+var whichAnimationEvent = '';
 
 var activeNPCForDialogue = '';
 const closeDialogueDistance = 200;

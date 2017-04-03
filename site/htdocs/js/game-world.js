@@ -328,6 +328,7 @@ var activeTitles = [];
 var inventoryInterfaceIsBuilt = false;
 
 var whichTransitionEvent = '';
+var whichAnimationEvent = '';
 
 var activeNPCForDialogue = '';
 const closeDialogueDistance = 200;
@@ -1161,9 +1162,26 @@ function hasLineOfSight(startx, starty, endx, endy) {
                return transitions[t];
            }
        }
+       el = null;
    }
 
-
+   function determineWhichAnimationEvent() {
+       // https://davidwalsh.name/css-animation-callback
+       var t;
+       var el = document.createElement('fakeelement');
+       var animations = {
+           'animation': 'animationend',
+           'OAnimation': 'oAnimationEnd',
+           'MozAnimation': 'animationend',
+           'WebkitAnimation': 'webkitAnimationEnd'
+       }
+       for (t in animations) {
+           if (el.style[t] !== undefined) {
+               return animations[t];
+           }
+       }
+       el = null;
+   }
 
 
 // http://stackoverflow.com/questions/9229645/remove-duplicates-from-javascript-array#answer-9229821
@@ -2363,6 +2381,8 @@ const musicVolume = document.getElementById('musicVolume');
 const gameSettingsPanel = document.getElementById('gameSettings');
 const toggleActiveCards = document.getElementById('toggleActiveCards');
 
+var notificationQueue = [];
+var notificationIsShowing = false;
 
 var UI = {
     init: function() {
@@ -2372,6 +2392,8 @@ var UI = {
         const cartographicTitle = document.getElementById('cartographicTitle');
         const dialogue = document.getElementById('dialogue');
         const notification = document.getElementById('notification');
+        notification.addEventListener(whichAnimationEvent, UI.notificationEnded, false);
+
         const cardGameWrapper = document.getElementById('cardGameWrapper');
         const cardAlbumList = document.getElementById('cardAlbumList');
         const boosterPack = document.getElementById('boosterPack');
@@ -2420,10 +2442,10 @@ var UI = {
             thisPet = hero.allPets[i];
             if (thisPet.inventorySize > 0) {
                 activeClass = '';
-                if(hero.activePets.indexOf(i) != -1) {
-activeClass = ' active';
+                if (hero.activePets.indexOf(i) != -1) {
+                    activeClass = ' active';
                 }
-                inventoryMarkup += '<div class="inventoryBag'+activeClass+'" id="inventoryBag' + i + '"><div class="draggableBar">' + thisPet.name + '</div><ol id="bag' + i + '">';
+                inventoryMarkup += '<div class="inventoryBag' + activeClass + '" id="inventoryBag' + i + '"><div class="draggableBar">' + thisPet.name + '</div><ol id="bag' + i + '">';
                 // loop through slots for each bag:
                 for (var j = 0; j < thisPet.inventorySize; j++) {
                     thisSlotsID = 'p' + i + '-' + j;
@@ -2598,10 +2620,26 @@ activeClass = ' active';
 
 
     showNotification: function(markup) {
-        notification.classList.remove("active");
-        notification.innerHTML = markup;
-        void notification.offsetWidth;
-        notification.classList.add('active');
+        if (!notificationIsShowing) {
+            notificationIsShowing = true;
+            notification.classList.remove("active");
+            notification.innerHTML = markup;
+            // cause re-draw to reset the animation:
+            void notification.offsetWidth;
+            notification.classList.add('active');
+        } else {
+            notificationQueue.push(markup);
+        }
+    },
+
+    notificationEnded: function() {
+        // remove the one that's just been shown:
+        notificationQueue.shift();
+        notificationIsShowing = false;
+        // see if any more need showing now:
+        if (notificationQueue.length > 0) {
+            UI.showNotification(notificationQueue[0]);
+        }
     },
 
     updateCardAlbum: function() {
@@ -3571,6 +3609,7 @@ function init() {
 
 
         whichTransitionEvent = determineWhichTransitionEvent();
+        whichAnimationEvent = determineWhichAnimationEvent();
         gameMode = "mapLoading";
 
         cartographyCanvas = document.getElementById("cartographyCanvas");

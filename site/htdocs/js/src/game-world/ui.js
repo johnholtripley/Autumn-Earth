@@ -29,6 +29,8 @@ const musicVolume = document.getElementById('musicVolume');
 const gameSettingsPanel = document.getElementById('gameSettings');
 const toggleActiveCards = document.getElementById('toggleActiveCards');
 
+var notificationQueue = [];
+var notificationIsShowing = false;
 
 var UI = {
     init: function() {
@@ -38,6 +40,8 @@ var UI = {
         const cartographicTitle = document.getElementById('cartographicTitle');
         const dialogue = document.getElementById('dialogue');
         const notification = document.getElementById('notification');
+        notification.addEventListener(whichAnimationEvent, UI.notificationEnded, false);
+
         const cardGameWrapper = document.getElementById('cardGameWrapper');
         const cardAlbumList = document.getElementById('cardAlbumList');
         const boosterPack = document.getElementById('boosterPack');
@@ -86,10 +90,10 @@ var UI = {
             thisPet = hero.allPets[i];
             if (thisPet.inventorySize > 0) {
                 activeClass = '';
-                if(hero.activePets.indexOf(i) != -1) {
-activeClass = ' active';
+                if (hero.activePets.indexOf(i) != -1) {
+                    activeClass = ' active';
                 }
-                inventoryMarkup += '<div class="inventoryBag'+activeClass+'" id="inventoryBag' + i + '"><div class="draggableBar">' + thisPet.name + '</div><ol id="bag' + i + '">';
+                inventoryMarkup += '<div class="inventoryBag' + activeClass + '" id="inventoryBag' + i + '"><div class="draggableBar">' + thisPet.name + '</div><ol id="bag' + i + '">';
                 // loop through slots for each bag:
                 for (var j = 0; j < thisPet.inventorySize; j++) {
                     thisSlotsID = 'p' + i + '-' + j;
@@ -264,10 +268,26 @@ activeClass = ' active';
 
 
     showNotification: function(markup) {
-        notification.classList.remove("active");
-        notification.innerHTML = markup;
-        void notification.offsetWidth;
-        notification.classList.add('active');
+        if (!notificationIsShowing) {
+            notificationIsShowing = true;
+            notification.classList.remove("active");
+            notification.innerHTML = markup;
+            // cause re-draw to reset the animation:
+            void notification.offsetWidth;
+            notification.classList.add('active');
+        } else {
+            notificationQueue.push(markup);
+        }
+    },
+
+    notificationEnded: function() {
+        // remove the one that's just been shown:
+        notificationQueue.shift();
+        notificationIsShowing = false;
+        // see if any more need showing now:
+        if (notificationQueue.length > 0) {
+            UI.showNotification(notificationQueue[0]);
+        }
     },
 
     updateCardAlbum: function() {

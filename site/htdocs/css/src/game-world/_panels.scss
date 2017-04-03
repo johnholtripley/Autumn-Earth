@@ -34,11 +34,13 @@ $numberOfItemCategories: 20;
         left: 860px;
         background: #53160d url(../images/game-world/interface/inventory-panel-bg.jpg) no-repeat 0 100%;
         @include border-radius(3px);
+        @include mq($wide) {
         @for $i from 2 through 6 {
             &:nth-child(#{$i}) {
                 left: 200px * (($i)-1) + 870px;
             }
         }
+    }
         z-index: 1;
            @include togglePanel(0.4s);
     }
