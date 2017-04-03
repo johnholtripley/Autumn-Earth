@@ -40,22 +40,14 @@ $numberOfItemCategories: 20;
             }
         }
         z-index: 1;
+           @include togglePanel(0.4s);
     }
     ol {
         margin: 0;
         width: 184px;
         padding: 0;
         background: #666;
-        @include transition(opacity 0.4s ease, transform 0.4s cubic-bezier(.12, 1.07, .29, 1.24));
-        // inactive state:
-        opacity: 0;
-        @include transform(scale(0.95));
-        pointer-events: none;
-        &.active {
-            opacity: 1;
-            pointer-events: auto;
-            @include transform(scale(1));
-        }
+   
         img {
             @include attention() {
                 & + p {

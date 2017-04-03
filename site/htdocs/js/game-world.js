@@ -2367,12 +2367,12 @@ var UI = {
 
     buildInventoryInterface: function() {
         var inventoryMarkup = '';
-        var thisAction, thisBagNumberOfSlots, thisSlotsID, thisPanelName, thisPet;
+        var thisAction, thisBagNumberOfSlots, thisSlotsID, thisPanelName, thisPet, activeClass;
 
         for (var i = 0; i < hero.bags.length; i++) {
             thisPanelName = currentActiveInventoryItems[hero.bags[i].type].shortname;
             thisBagNumberOfSlots = currentActiveInventoryItems[hero.bags[i].type].actionValue;
-            inventoryMarkup += '<div class="inventoryBag" id="inventoryBag' + i + '"><div class="draggableBar">' + thisPanelName + '</div><ol class="active" id="bag' + i + '">';
+            inventoryMarkup += '<div class="inventoryBag active" id="inventoryBag' + i + '"><div class="draggableBar">' + thisPanelName + '</div><ol id="bag' + i + '">';
             // loop through slots for each bag:
             for (var j = 0; j < thisBagNumberOfSlots; j++) {
                 thisSlotsID = i + '-' + j;
@@ -2393,24 +2393,27 @@ var UI = {
         for (var i = 0; i < hero.allPets.length; i++) {
             thisPet = hero.allPets[i];
             if (thisPet.inventorySize > 0) {
-           
-            inventoryMarkup += '<div class="inventoryBag" id="inventoryBag' + i + '"><div class="draggableBar">' + thisPet.name + '</div><ol class="active" id="bag' + i + '">';
-            // loop through slots for each bag:
-            for (var j = 0; j < thisPet.inventorySize; j++) {
-                thisSlotsID = 'p' + i + '-' + j;
-                inventoryMarkup += '<li id="slot' + thisSlotsID + '">';
-                // check if that key exists in inventory:
-                if (thisSlotsID in hero.inventory) {
-                    inventoryMarkup += generateSlotMarkup(thisSlotsID);
-                    thisAction = currentActiveInventoryItems[hero.inventory[thisSlotsID].type].action;
-                } else {
-                    inventoryMarkup += '';
+                activeClass = '';
+                if(hero.activePets.indexOf(i) != -1) {
+activeClass = ' active';
                 }
-                // add item there
-                inventoryMarkup += '</li>';
+                inventoryMarkup += '<div class="inventoryBag'+activeClass+'" id="inventoryBag' + i + '"><div class="draggableBar">' + thisPet.name + '</div><ol id="bag' + i + '">';
+                // loop through slots for each bag:
+                for (var j = 0; j < thisPet.inventorySize; j++) {
+                    thisSlotsID = 'p' + i + '-' + j;
+                    inventoryMarkup += '<li id="slot' + thisSlotsID + '">';
+                    // check if that key exists in inventory:
+                    if (thisSlotsID in hero.inventory) {
+                        inventoryMarkup += generateSlotMarkup(thisSlotsID);
+                        thisAction = currentActiveInventoryItems[hero.inventory[thisSlotsID].type].action;
+                    } else {
+                        inventoryMarkup += '';
+                    }
+                    // add item there
+                    inventoryMarkup += '</li>';
+                }
+                inventoryMarkup += '</ol></div></div>';
             }
-            inventoryMarkup += '</ol></div></div>';
-        }
         }
 
         inventoryPanels.innerHTML = inventoryMarkup;
