@@ -1,48 +1,50 @@
 function movePet() {
     if (hasActivePet) {
+        var thisNPC, thisItem, thisPetsTarget, thisOtherPet, oldPetX, oldPetY, thisPet;
         for (var p = 0; p < hero.activePets.length; p++) {
-            if (hero.allPets[hero.activePets[p]].state == "moving") {
-                var thisNPC, thisItem, thisPetsTarget, thisOtherPet;
-                var oldPetX = hero.allPets[hero.activePets[p]].x;
-                var oldPetY = hero.allPets[hero.activePets[p]].y;
-                hero.allPets[hero.activePets[p]].drawnFacing = hero.allPets[hero.activePets[p]].facing;
-                switch (hero.allPets[hero.activePets[p]].facing) {
+            thisPet = hero.allPets[hero.activePets[p]];
+            thisPetsTarget = thisPet.following;
+            if (thisPet.state == "moving") {
+                oldPetX = thisPet.x;
+                oldPetY = thisPet.y;
+                thisPet.drawnFacing = thisPet.facing;
+                switch (thisPet.facing) {
                     case 'n':
-                        hero.allPets[hero.activePets[p]].y -= hero.allPets[hero.activePets[p]].speed;
+                        thisPet.y -= thisPet.speed;
                         // check for collisions:
-                        if ((isATerrainCollision(hero.allPets[hero.activePets[p]].x - hero.allPets[hero.activePets[p]].width / 2, hero.allPets[hero.activePets[p]].y - hero.allPets[hero.activePets[p]].height / 2)) || (isATerrainCollision(hero.allPets[hero.activePets[p]].x + hero.allPets[hero.activePets[p]].width / 2, hero.allPets[hero.activePets[p]].y - hero.allPets[hero.activePets[p]].height / 2))) {
+                        if ((isATerrainCollision(thisPet.x - thisPet.width / 2, thisPet.y - thisPet.height / 2)) || (isATerrainCollision(thisPet.x + thisPet.width / 2, thisPet.y - thisPet.height / 2))) {
                             // find the tile's bottom edge
-                            var tileCollidedWith = getTileY(hero.allPets[hero.activePets[p]].y - hero.allPets[hero.activePets[p]].height / 2);
+                            var tileCollidedWith = getTileY(thisPet.y - thisPet.height / 2);
                             var tileBottomEdge = (tileCollidedWith + 1) * tileW;
                             // use the +1 to make sure it's just clear of the collision tile
-                            hero.allPets[hero.activePets[p]].y = tileBottomEdge + hero.allPets[hero.activePets[p]].height / 2 + 1;
+                            thisPet.y = tileBottomEdge + thisPet.height / 2 + 1;
                         }
                         break;
                     case 's':
-                        hero.allPets[hero.activePets[p]].y += hero.allPets[hero.activePets[p]].speed;
+                        thisPet.y += thisPet.speed;
                         // check for collisions:
-                        if ((isATerrainCollision(hero.allPets[hero.activePets[p]].x - hero.allPets[hero.activePets[p]].width / 2, hero.allPets[hero.activePets[p]].y + hero.allPets[hero.activePets[p]].height / 2)) || (isATerrainCollision(hero.allPets[hero.activePets[p]].x + hero.allPets[hero.activePets[p]].width / 2, hero.allPets[hero.activePets[p]].y + hero.allPets[hero.activePets[p]].height / 2))) {
-                            var tileCollidedWith = getTileY(hero.allPets[hero.activePets[p]].y + hero.allPets[hero.activePets[p]].height / 2);
+                        if ((isATerrainCollision(thisPet.x - thisPet.width / 2, thisPet.y + thisPet.height / 2)) || (isATerrainCollision(thisPet.x + thisPet.width / 2, thisPet.y + thisPet.height / 2))) {
+                            var tileCollidedWith = getTileY(thisPet.y + thisPet.height / 2);
                             var tileTopEdge = (tileCollidedWith) * tileW;
-                            hero.allPets[hero.activePets[p]].y = tileTopEdge - hero.allPets[hero.activePets[p]].height / 2 - 1;
+                            thisPet.y = tileTopEdge - thisPet.height / 2 - 1;
                         }
                         break;
                     case 'w':
-                        hero.allPets[hero.activePets[p]].x -= hero.allPets[hero.activePets[p]].speed;
+                        thisPet.x -= thisPet.speed;
                         // check for collisions:
-                        if ((isATerrainCollision(hero.allPets[hero.activePets[p]].x - hero.allPets[hero.activePets[p]].width / 2, hero.allPets[hero.activePets[p]].y + hero.allPets[hero.activePets[p]].height / 2)) || (isATerrainCollision(hero.allPets[hero.activePets[p]].x - hero.allPets[hero.activePets[p]].width / 2, hero.allPets[hero.activePets[p]].y - hero.allPets[hero.activePets[p]].height / 2))) {
-                            var tileCollidedWith = getTileX(hero.allPets[hero.activePets[p]].x - hero.allPets[hero.activePets[p]].width / 2);
+                        if ((isATerrainCollision(thisPet.x - thisPet.width / 2, thisPet.y + thisPet.height / 2)) || (isATerrainCollision(thisPet.x - thisPet.width / 2, thisPet.y - thisPet.height / 2))) {
+                            var tileCollidedWith = getTileX(thisPet.x - thisPet.width / 2);
                             var tileRightEdge = (tileCollidedWith + 1) * tileW;
-                            hero.allPets[hero.activePets[p]].x = tileRightEdge + hero.allPets[hero.activePets[p]].width / 2 + 1;
+                            thisPet.x = tileRightEdge + thisPet.width / 2 + 1;
                         }
                         break;
                     case 'e':
-                        hero.allPets[hero.activePets[p]].x += hero.allPets[hero.activePets[p]].speed;
+                        thisPet.x += thisPet.speed;
                         // check for collisions:
-                        if ((isATerrainCollision(hero.allPets[hero.activePets[p]].x + hero.allPets[hero.activePets[p]].width / 2, hero.allPets[hero.activePets[p]].y + hero.allPets[hero.activePets[p]].height / 2)) || (isATerrainCollision(hero.allPets[hero.activePets[p]].x + hero.allPets[hero.activePets[p]].width / 2, hero.allPets[hero.activePets[p]].y - hero.allPets[hero.activePets[p]].height / 2))) {
-                            var tileCollidedWith = getTileX(hero.allPets[hero.activePets[p]].x + hero.allPets[hero.activePets[p]].width / 2);
+                        if ((isATerrainCollision(thisPet.x + thisPet.width / 2, thisPet.y + thisPet.height / 2)) || (isATerrainCollision(thisPet.x + thisPet.width / 2, thisPet.y - thisPet.height / 2))) {
+                            var tileCollidedWith = getTileX(thisPet.x + thisPet.width / 2);
                             var tileLeftEdge = (tileCollidedWith) * tileW;
-                            hero.allPets[hero.activePets[p]].x = tileLeftEdge - hero.allPets[hero.activePets[p]].width / 2 - 1;
+                            thisPet.x = tileLeftEdge - thisPet.width / 2 - 1;
                         }
                         break;
                 }
@@ -51,9 +53,9 @@ function movePet() {
                 for (var j = 0; j < thisMapData.npcs.length; j++) {
                     thisNPC = thisMapData.npcs[j];
                     if (thisNPC.isCollidable) {
-                        if (isAnObjectCollision(hero.allPets[hero.activePets[p]].x, hero.allPets[hero.activePets[p]].y, hero.allPets[hero.activePets[p]].width, hero.allPets[hero.activePets[p]].height, thisNPC.x, thisNPC.y, thisNPC.width, thisNPC.height)) {
-                            hero.allPets[hero.activePets[p]].x = oldPetX;
-                            hero.allPets[hero.activePets[p]].y = oldPetY;
+                        if (isAnObjectCollision(thisPet.x, thisPet.y, thisPet.width, thisPet.height, thisNPC.x, thisNPC.y, thisNPC.width, thisNPC.height)) {
+                            thisPet.x = oldPetX;
+                            thisPet.y = oldPetY;
                         }
                     }
                 }
@@ -62,9 +64,9 @@ function movePet() {
                 for (var j = 0; j < hero.activePets.length; j++) {
                     if (p != j) {
                         thisOtherPet = hero.allPets[hero.activePets[j]];
-                        if (isAnObjectCollision(hero.allPets[hero.activePets[p]].x, hero.allPets[hero.activePets[p]].y, hero.allPets[hero.activePets[p]].width, hero.allPets[hero.activePets[p]].height, thisOtherPet.x, thisOtherPet.y, thisOtherPet.width, thisOtherPet.height)) {
-                            hero.allPets[hero.activePets[p]].x = oldPetX;
-                            hero.allPets[hero.activePets[p]].y = oldPetY;
+                        if (isAnObjectCollision(thisPet.x, thisPet.y, thisPet.width, thisPet.height, thisOtherPet.x, thisOtherPet.y, thisOtherPet.width, thisOtherPet.height)) {
+                            thisPet.x = oldPetX;
+                            thisPet.y = oldPetY;
                         }
                     }
                 }
@@ -72,109 +74,103 @@ function movePet() {
                 // check for collisions against items:
                 for (var j = 0; j < thisMapData.items.length; j++) {
                     thisItem = thisMapData.items[j];
-                    if (isAnObjectCollision(hero.allPets[hero.activePets[p]].x, hero.allPets[hero.activePets[p]].y, hero.allPets[hero.activePets[p]].width, hero.allPets[hero.activePets[p]].height, thisItem.x, thisItem.y, thisItem.width, thisItem.height)) {
-                        hero.allPets[hero.activePets[p]].x = oldPetX;
-                        hero.allPets[hero.activePets[p]].y = oldPetY;
+                    if (isAnObjectCollision(thisPet.x, thisPet.y, thisPet.width, thisPet.height, thisItem.x, thisItem.y, thisItem.width, thisItem.height)) {
+                        thisPet.x = oldPetX;
+                        thisPet.y = oldPetY;
                     }
                 }
 
                 // find the difference for this movement:
-                hero.allPets[hero.activePets[p]].dx += (hero.allPets[hero.activePets[p]].x - oldPetX);
-                hero.allPets[hero.activePets[p]].dy += (hero.allPets[hero.activePets[p]].y - oldPetY);
+                thisPet.dx += (thisPet.x - oldPetX);
+                thisPet.dy += (thisPet.y - oldPetY);
                 // see if it's at a new tile centre:
                 var newTile = false;
-                if (Math.abs(hero.allPets[hero.activePets[p]].dx) >= tileW) {
-                    if (hero.allPets[hero.activePets[p]].dx > 0) {
-                        hero.allPets[hero.activePets[p]].dx -= tileW;
+                if (Math.abs(thisPet.dx) >= tileW) {
+                    if (thisPet.dx > 0) {
+                        thisPet.dx -= tileW;
                     } else {
-                        hero.allPets[hero.activePets[p]].dx += tileW;
+                        thisPet.dx += tileW;
                     }
                     newTile = true;
                 }
-                if (Math.abs(hero.allPets[hero.activePets[p]].dy) >= tileW) {
-                    if (hero.allPets[hero.activePets[p]].dy > 0) {
-                        hero.allPets[hero.activePets[p]].dy -= tileW;
+                if (Math.abs(thisPet.dy) >= tileW) {
+                    if (thisPet.dy > 0) {
+                        thisPet.dy -= tileW;
                     } else {
-                        hero.allPets[hero.activePets[p]].dy += tileW;
+                        thisPet.dy += tileW;
                     }
                     newTile = true;
                 }
             } else {
-                if (hero.allPets[hero.activePets[p]].state != "findingPath") {
+                if (thisPet.state != "findingPath") {
                     // check proximity to hero to see if pet should start moving:
-                    if (!(isInRange(hero.x, hero.y, hero.allPets[hero.activePets[p]].x, hero.allPets[hero.activePets[p]].y, tileW * 2))) {
-                        hero.allPets[hero.activePets[p]].state = "moving";
+                    if (!(isInRange(thisPetsTarget.x, thisPetsTarget.y, thisPet.x, thisPet.y, tileW * 2))) {
+                        thisPet.state = "moving";
                     }
                 }
             }
 
             if (newTile) {
-                hero.allPets[hero.activePets[p]].tileX = getTileX(hero.allPets[hero.activePets[p]].x);
-                hero.allPets[hero.activePets[p]].tileY = getTileY(hero.allPets[hero.activePets[p]].y);
-
+                thisPet.tileX = getTileX(thisPet.x);
+                thisPet.tileY = getTileY(thisPet.y);
                 if (p != (hero.activePets.length - 1)) {
                     // it's not the last one, so need to update its breadcrumb:
-                    hero.allPets[hero.activePets[p]].breadcrumb.pop();
-                    hero.allPets[hero.activePets[p]].breadcrumb.unshift([hero.allPets[hero.activePets[p]].tileX, hero.allPets[hero.activePets[p]].tileY]);
+                    thisPet.breadcrumb.pop();
+                    thisPet.breadcrumb.unshift([thisPet.tileX, thisPet.tileY]);
                 }
-
-                thisPetsTarget = hero.allPets[hero.activePets[p]].following;
-
-
+                
                 // check proximity to target to see if pet should stop moving:
-                if (p == 1) {
-                    console.log(thisPetsTarget.x + ", " + thisPetsTarget.y + " - " + hero.allPets[hero.activePets[p]].x + ", " + hero.allPets[hero.activePets[p]].y);
-                }
-                if ((isInRange(thisPetsTarget.x, thisPetsTarget.y, hero.allPets[hero.activePets[p]].x, hero.allPets[hero.activePets[p]].y, tileW * 2))) {
-                    if (p == 1) { console.log("pet close enough"); }
-                    hero.allPets[hero.activePets[p]].state = "wait";
+            
+                if ((isInRange(thisPetsTarget.x, thisPetsTarget.y, thisPet.x, thisPet.y, tileW * 2))) {
+                     console.log("pet #"+p+" close enough"); 
+                    thisPet.state = "wait";
                 } else {
                     // check the breadcrumb for next direction:
                     var breadcrumbFound = false;
                     for (var i = 0; i < thisPetsTarget.breadcrumb.length; i++) {
-                        //   console.log(hero.allPets[hero.activePets[p]].tileX + "," + hero.allPets[hero.activePets[p]].tileY + " - " + heroBreadcrumb[i][0] + "," + heroBreadcrumb[i][1]);
-                        if ((hero.allPets[hero.activePets[p]].tileY) == thisPetsTarget.breadcrumb[i][1]) {
-                            if ((hero.allPets[hero.activePets[p]].tileX - 1) == thisPetsTarget.breadcrumb[i][0]) {
-                                hero.allPets[hero.activePets[p]].facing = "w";
+                        //   console.log(thisPet.tileX + "," + thisPet.tileY + " - " + heroBreadcrumb[i][0] + "," + heroBreadcrumb[i][1]);
+                        if ((thisPet.tileY) == thisPetsTarget.breadcrumb[i][1]) {
+                            if ((thisPet.tileX - 1) == thisPetsTarget.breadcrumb[i][0]) {
+                                thisPet.facing = "w";
                                 breadcrumbFound = true;
                                 break;
-                            } else if ((hero.allPets[hero.activePets[p]].tileX + 1) == thisPetsTarget.breadcrumb[i][0]) {
-                                hero.allPets[hero.activePets[p]].facing = "e";
+                            } else if ((thisPet.tileX + 1) == thisPetsTarget.breadcrumb[i][0]) {
+                                thisPet.facing = "e";
                                 breadcrumbFound = true;
                                 break;
                             }
-                        } else if ((hero.allPets[hero.activePets[p]].tileX) == thisPetsTarget.breadcrumb[i][0]) {
-                            if ((hero.allPets[hero.activePets[p]].tileY + 1) == thisPetsTarget.breadcrumb[i][1]) {
-                                hero.allPets[hero.activePets[p]].facing = "s";
+                        } else if ((thisPet.tileX) == thisPetsTarget.breadcrumb[i][0]) {
+                            if ((thisPet.tileY + 1) == thisPetsTarget.breadcrumb[i][1]) {
+                                thisPet.facing = "s";
                                 breadcrumbFound = true;
                                 break;
-                            } else if ((hero.allPets[hero.activePets[p]].tileY - 1) == thisPetsTarget.breadcrumb[i][1]) {
-                                hero.allPets[hero.activePets[p]].facing = "n";
+                            } else if ((thisPet.tileY - 1) == thisPetsTarget.breadcrumb[i][1]) {
+                                thisPet.facing = "n";
                                 breadcrumbFound = true;
                                 break;
                             }
                         }
                     }
                     if (breadcrumbFound) {
-                        hero.allPets[hero.activePets[p]].state = "moving";
-                        hero.allPets[hero.activePets[p]].foundPath = '';
+                        thisPet.state = "moving";
+                        thisPet.foundPath = '';
                     } else {
-                        if (hero.allPets[hero.activePets[p]].foundPath != '') {
+                        if (thisPet.foundPath != '') {
                             // try for breadcrumbs first, but use path if not
-                            hero.allPets[hero.activePets[p]].facing = hero.allPets[hero.activePets[p]].foundPath[hero.allPets[hero.activePets[p]].pathIndex];
-                            hero.allPets[hero.activePets[p]].pathIndex++;
-                            if (hero.allPets[hero.activePets[p]].pathIndex >= hero.allPets[hero.activePets[p]].foundPath.length) {
+                            thisPet.facing = thisPet.foundPath[thisPet.pathIndex];
+                            thisPet.pathIndex++;
+                            if (thisPet.pathIndex >= thisPet.foundPath.length) {
                                 console.log("path ran out");
                                 // come to end of the path, try and find a new one:
                                 pathfindingWorker.postMessage(['petToHero', hero.allPets[hero.activePets[p]], thisMapData, thisPetsTarget.tileX, thisPetsTarget.tileY, p]);
-                                hero.allPets[hero.activePets[p]].state = "findingPath";
-                                hero.allPets[hero.activePets[p]].foundPath = '';
+                                thisPet.state = "findingPath";
+                                thisPet.foundPath = '';
                             }
                         } else {
-                            if (hero.allPets[hero.activePets[p]].state != 'findingPath') {
+                            if (thisPet.state != 'findingPath') {
                                 // pathfind to hero
                                 pathfindingWorker.postMessage(['petToHero', hero.allPets[hero.activePets[p]], thisMapData, thisPetsTarget.tileX, thisPetsTarget.tileY, p]);
-                                hero.allPets[hero.activePets[p]].state = "findingPath";
+                                thisPet.state = "findingPath";
                             }
                         }
                     }

@@ -106,12 +106,12 @@ function loadCoreAssets() {
         src: '/images/game-world/core/test-iso-hero.png'
     });
     if (hasActivePet) {
-        for(var i=0;i<hero.activePets.length;i++) {
-        coreImagesToLoad.push({
-            name: "activePet"+hero.activePets[i],
-            src: '/images/game-world/npcs/' + hero.allPets[hero.activePets[i]].src
-        });
-    }
+        for (var i = 0; i < hero.activePets.length; i++) {
+            coreImagesToLoad.push({
+                name: "activePet" + hero.activePets[i],
+                src: '/images/game-world/npcs/' + hero.allPets[hero.activePets[i]].src
+            });
+        }
     }
     Loader.preload(coreImagesToLoad, prepareCoreAssets, loadingProgress);
 }
@@ -120,12 +120,13 @@ function loadCoreAssets() {
 function prepareCoreAssets() {
     heroImg = Loader.getImage("heroImg");
     if (hasActivePet) {
-        for(var i=0;i<hero.activePets.length;i++) {
-        activePetImages[i] = Loader.getImage("activePet"+hero.activePets[i]);
-    }
+        for (var i = 0; i < hero.activePets.length; i++) {
+            activePetImages[i] = Loader.getImage("activePet" + hero.activePets[i]);
+        }
     }
     getColours();
 }
+
 
 
 
