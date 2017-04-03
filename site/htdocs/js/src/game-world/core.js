@@ -1459,8 +1459,8 @@ function moveNPCs() {
 
             // check for collision against pet:
             if (hasActivePet) {
-                for (var i = 0; i < hero.activePets.length; i++) {
-                if (isAnObjectCollision(thisNPC.x, thisNPC.y, thisNPC.width, thisNPC.height, hero.allPets[hero.activePets[i]].x, hero.allPets[hero.activePets[i]].y, hero.allPets[hero.activePets[i]].width, hero.allPets[hero.activePets[i]].height)) {
+                for (var j = 0; j < hero.activePets.length; j++) {
+                if (isAnObjectCollision(thisNPC.x, thisNPC.y, thisNPC.width, thisNPC.height, hero.allPets[hero.activePets[j]].x, hero.allPets[hero.activePets[j]].y, hero.allPets[hero.activePets[j]].width, hero.allPets[hero.activePets[j]].height)) {
                     thisNPC.x = oldNPCx;
                     thisNPC.y = oldNPCy;
                 }
