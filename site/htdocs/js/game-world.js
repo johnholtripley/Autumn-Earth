@@ -2288,7 +2288,7 @@ function movePet() {
                     var breadcrumbFound = false;
                     for (var i = 0; i < thisPetsTarget.breadcrumb.length; i++) {
                          if (mapTransition != "") {
-                           console.log("pet "+p+" - "+thisPet.tileX + "," + thisPet.tileY + " - " + heroBreadcrumb[i][0] + "," + heroBreadcrumb[i][1]);
+                           console.log("pet "+p+" - "+thisPet.tileX + "," + thisPet.tileY + " - " + hero.breadcrumb[i][0] + "," + hero.breadcrumb[i][1]);
                        }
                         if ((thisPet.tileY) == thisPetsTarget.breadcrumb[i][1]) {
                             if ((thisPet.tileX - 1) == thisPetsTarget.breadcrumb[i][0]) {
