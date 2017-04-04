@@ -121,8 +121,7 @@ function movePet() {
                 
                 // check proximity to target to see if pet should stop moving:
             
-                if ((isInRange(thisPetsTarget.x, thisPetsTarget.y, thisPet.x, thisPet.y, tileW * 2))) {
-                     console.log("pet #"+p+" close enough"); 
+                if ((isInRange(thisPetsTarget.x, thisPetsTarget.y, thisPet.x, thisPet.y, tileW * 2))) { 
                     thisPet.state = "wait";
                 } else {
                     // check the breadcrumb for next direction:

@@ -103,7 +103,7 @@ function loadCoreAssets() {
     var coreImagesToLoad = [];
     coreImagesToLoad.push({
         name: "heroImg",
-        src: '/images/game-world/core/test-iso-hero.png'
+        src: '/images/game-world/core/hero.png'
     });
     if (hasActivePet) {
         for (var i = 0; i < hero.activePets.length; i++) {
@@ -1693,15 +1693,16 @@ function draw() {
 
         hero.isox = findIsoCoordsX(hero.x, hero.y);
         hero.isoy = findIsoCoordsY(hero.x, hero.y);
-        /*
-          var assetsToDraw = [
-              [hero.y, heroImg, hero.offsetX, hero.offsetY, hero.width, hero.height, Math.floor(canvasWidth / 2 - hero.feetOffsetX), Math.floor(canvasHeight / 2 - hero.feetOffsetY), hero.width, hero.height]
-          ];
-          */
+      /*
         var assetsToDraw = [
             [findIsoDepth(hero.x, hero.y, hero.z), "img", heroImg, Math.floor(canvasWidth / 2 - hero.feetOffsetX), Math.floor(canvasHeight / 2 - hero.feetOffsetY - hero.z)]
         ];
-
+        */
+            var heroOffsetCol = currentAnimationFrame % hero["animation"]["walk"]["length"];
+            var heroOffsetRow = hero["animation"]["walk"][hero.facing];
+    var assetsToDraw = [
+            [findIsoDepth(hero.x, hero.y, hero.z), "sprite", heroImg, heroOffsetCol * hero.spriteWidth, heroOffsetRow * hero.spriteHeight, hero.spriteWidth, hero.spriteHeight, Math.floor(canvasWidth / 2 - hero.feetOffsetX), Math.floor(canvasHeight / 2 - hero.feetOffsetY - hero.z), hero.spriteWidth, hero.spriteHeight]
+        ];
 
         // draw fae:
         thisX = findIsoCoordsX(fae.x, fae.y);

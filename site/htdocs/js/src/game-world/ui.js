@@ -91,7 +91,7 @@ var UI = {
                 if (hero.activePets.indexOf(i) != -1) {
                     activeClass = ' active';
                 }
-                inventoryMarkup += '<div class="inventoryBag' + activeClass + '" id="inventoryBag' + i + '"><div class="draggableBar">' + thisPet.name + '</div><ol id="bag' + i + '">';
+                inventoryMarkup += '<div class="inventoryBag' + activeClass + '" id="petInventoryBag' + i + '"><div class="draggableBar">' + thisPet.name + '</div><ol id="bag' + i + '">';
                 // loop through slots for each bag:
                 for (var j = 0; j < thisPet.inventorySize; j++) {
                     thisSlotsID = 'p' + i + '-' + j;
