@@ -2287,7 +2287,9 @@ function movePet() {
                     // check the breadcrumb for next direction:
                     var breadcrumbFound = false;
                     for (var i = 0; i < thisPetsTarget.breadcrumb.length; i++) {
-                        //   console.log(thisPet.tileX + "," + thisPet.tileY + " - " + heroBreadcrumb[i][0] + "," + heroBreadcrumb[i][1]);
+                         if (mapTransition != "") {
+                           console.log("pet "+p+" - "+thisPet.tileX + "," + thisPet.tileY + " - " + heroBreadcrumb[i][0] + "," + heroBreadcrumb[i][1]);
+                       }
                         if ((thisPet.tileY) == thisPetsTarget.breadcrumb[i][1]) {
                             if ((thisPet.tileX - 1) == thisPetsTarget.breadcrumb[i][0]) {
                                 thisPet.facing = "w";
