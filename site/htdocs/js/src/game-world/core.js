@@ -623,11 +623,17 @@ function startDoorTransition() {
             dialogue.classList.remove("active");
             UI.removeActiveDialogue();
         }
+        /*
+        // drop breadcrumb for the door, as the tile centre check won't be reached while map transitioning:
+        hero.breadcrumb.pop();
+        hero.breadcrumb.unshift([getTileCentreCoordX(activeDoorX), getTileCentreCoordY(activeDoorY)]);
+        */
     }
     if (currentMap < 0) {
         saveCartographyMask();
     }
 }
+
 
 
 function getHeroAsCloseAsPossibleToObject(objx, objy, objw, objh) {
