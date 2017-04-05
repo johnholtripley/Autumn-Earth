@@ -309,14 +309,14 @@
     "fae": { "range": 4950, "speed": 4 },
     "activePets": [0, 1],
     "allPets": [{
-        "name": "Dilly",
-        "src": "dilly.png",
-        "width": 46,
-        "height": 46,
-        "spriteWidth": 50,
-        "spriteHeight": 54,
-        "centreX": 35,
-        "centreY": 41,
+        "name": "White Hen",
+        "src": "white-hen.png",
+       "width": 20,
+                "height": 20,
+                "spriteWidth": 28,
+                "spriteHeight": 34,
+                "centreX": 19,
+                "centreY": 28,
         "tileX": 16,
         "tileY": 22,
         "facing": "s",
@@ -325,21 +325,21 @@
         "animation": {
             "walk": {
                 "length": 1,
-                "n": 2,
-                "e": 3,
-                "s": 0,
-                "w": 1
+                "n": 0,
+                "e": 1,
+                "s": 2,
+                "w": 3
             }
         }
     }, {
-        "name": "Elvis",
-        "src": "elvis.png",
-        "width": 46,
-        "height": 46,
-        "spriteWidth": 50,
-        "spriteHeight": 54,
-        "centreX": 35,
-        "centreY": 41,
+        "name": "Brown Hen",
+        "src": "brown-hen.png",
+    "width": 20,
+                "height": 20,
+                "spriteWidth": 28,
+                "spriteHeight": 34,
+                "centreX": 19,
+                "centreY": 28,
         "tileX": 17,
         "tileY": 22,
         "facing": "s",
@@ -348,10 +348,10 @@
         "animation": {
             "walk": {
                 "length": 1,
-                "n": 2,
-                "e": 3,
-                "s": 0,
-                "w": 1
+                "n": 0,
+                "e": 1,
+                "s": 2,
+                "w": 3
             }
         }
     }],

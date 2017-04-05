@@ -179,10 +179,10 @@
                 "src": "white-hen.png",
                 "width": 20,
                 "height": 20,
-                "spriteWidth": 31,
-                "spriteHeight": 29,
-                "centreX": 21,
-                "centreY": 24,
+                "spriteWidth": 28,
+                "spriteHeight": 34,
+                "centreX": 19,
+                "centreY": 28,
                 "tileX": 14,
                 "tileY": 3,
                 "movement": ["-"],
@@ -200,9 +200,9 @@
                     "walk": {
                         "length": 1,
                         "n": 0,
-                        "e": 0,
-                        "s": 0,
-                        "w": 0
+                        "e": 1,
+                        "s": 2,
+                        "w": 3
                     }
                 }
             }, {
