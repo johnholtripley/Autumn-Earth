@@ -2227,6 +2227,12 @@ function movePet() {
                         if (isAnObjectCollision(thisPet.x, thisPet.y, thisPet.width, thisPet.height, thisOtherPet.x, thisOtherPet.y, thisOtherPet.width, thisOtherPet.height)) {
                             thisPet.x = oldPetX;
                             thisPet.y = oldPetY;
+                            // push the other pet:
+
+
+thisOtherPet.state = "moving";
+    thisOtherPet.facing = thisPet.facing;
+                            
                         }
                     }
                 }
@@ -2278,18 +2284,13 @@ function movePet() {
                     thisPet.breadcrumb.pop();
                     thisPet.breadcrumb.unshift([thisPet.tileX, thisPet.tileY]);
                 }
-                
-                // check proximity to target to see if pet should stop moving:
-            
+                // check proximity to target to see if pet should stop moving:        
                 if ((isInRange(thisPetsTarget.x, thisPetsTarget.y, thisPet.x, thisPet.y, tileW * 2))) { 
                     thisPet.state = "wait";
                 } else {
                     // check the breadcrumb for next direction:
                     var breadcrumbFound = false;
                     for (var i = 0; i < thisPetsTarget.breadcrumb.length; i++) {
-                         if (mapTransition != "") {
-                           console.log("pet "+p+" - "+thisPet.tileX + "," + thisPet.tileY + " - " + hero.breadcrumb[i][0] + "," + hero.breadcrumb[i][1]);
-                       }
                         if ((thisPet.tileY) == thisPetsTarget.breadcrumb[i][1]) {
                             if ((thisPet.tileX - 1) == thisPetsTarget.breadcrumb[i][0]) {
                                 thisPet.facing = "w";
@@ -2495,7 +2496,7 @@ var UI = {
         hero.bags.push(newBagObject);
         var thisSlotsID;
         i = hero.bags.length - 1;
-        var inventoryMarkup = '<div class="inventoryBag" id="inventoryBag' + i + '"><div class="draggableBar">' + currentActiveInventoryItems[hero.bags[i].type].shortname + '</div><ol class="active" id="bag' + i + '">';
+        var inventoryMarkup = '<div class="inventoryBag active" id="inventoryBag' + i + '"><div class="draggableBar">' + currentActiveInventoryItems[hero.bags[i].type].shortname + '</div><ol class="active" id="bag' + i + '">';
         var thisBagNumberOfSlots = currentActiveInventoryItems[hero.bags[i].type].actionValue;
         for (var j = 0; j < thisBagNumberOfSlots; j++) {
             thisSlotsID = i + '-' + j;

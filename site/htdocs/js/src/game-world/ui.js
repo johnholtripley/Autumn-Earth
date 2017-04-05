@@ -146,7 +146,7 @@ var UI = {
         hero.bags.push(newBagObject);
         var thisSlotsID;
         i = hero.bags.length - 1;
-        var inventoryMarkup = '<div class="inventoryBag" id="inventoryBag' + i + '"><div class="draggableBar">' + currentActiveInventoryItems[hero.bags[i].type].shortname + '</div><ol class="active" id="bag' + i + '">';
+        var inventoryMarkup = '<div class="inventoryBag active" id="inventoryBag' + i + '"><div class="draggableBar">' + currentActiveInventoryItems[hero.bags[i].type].shortname + '</div><ol class="active" id="bag' + i + '">';
         var thisBagNumberOfSlots = currentActiveInventoryItems[hero.bags[i].type].actionValue;
         for (var j = 0; j < thisBagNumberOfSlots; j++) {
             thisSlotsID = i + '-' + j;

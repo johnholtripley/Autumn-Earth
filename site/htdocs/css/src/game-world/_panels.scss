@@ -31,13 +31,13 @@ $numberOfItemCategories: 20;
         position: absolute;
         top: 650px;
         background: #666;
-        left: 860px;
+        left: 1060px;
         background: #53160d url(../images/game-world/interface/inventory-panel-bg.jpg) no-repeat 0 100%;
         @include border-radius(3px);
         @include mq($wide) {
         @for $i from 2 through 6 {
             &:nth-child(#{$i}) {
-                left: 200px * (($i)-1) + 870px;
+                left: 200px * (($i)-1) + 1070px;
             }
         }
     }
