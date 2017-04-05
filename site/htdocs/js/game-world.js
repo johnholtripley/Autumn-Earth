@@ -2536,6 +2536,8 @@ var UI = {
         if (hero.professionsKnown.length > 0) {
             // load and cache the first profession's recipe assets:
             UI.populateRecipeList(hero.professionsKnown[0]);
+            // but hide the panel initially:
+            craftingPanel.classList.remove("active");
         }
 
         gameWrapper.onmousedown = UI.globalMouseDown;

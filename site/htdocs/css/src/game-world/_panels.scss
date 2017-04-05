@@ -37,7 +37,7 @@ $numberOfItemCategories: 20;
         @include mq($wide) {
         @for $i from 2 through 6 {
             &:nth-child(#{$i}) {
-                left: 200px * (($i)-1) + 1070px;
+                left: 200px * (($i)-1) + 1060px;
             }
         }
     }
