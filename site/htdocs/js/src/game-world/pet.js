@@ -68,11 +68,8 @@ function movePet() {
                             thisPet.x = oldPetX;
                             thisPet.y = oldPetY;
                             // push the other pet:
-
-
-thisOtherPet.state = "moving";
-    thisOtherPet.facing = thisPet.facing;
-                            
+                            thisOtherPet.state = "moving";
+                            thisOtherPet.facing = thisPet.facing;
                         }
                     }
                 }
@@ -125,7 +122,7 @@ thisOtherPet.state = "moving";
                     thisPet.breadcrumb.unshift([thisPet.tileX, thisPet.tileY]);
                 }
                 // check proximity to target to see if pet should stop moving:        
-                if ((isInRange(thisPetsTarget.x, thisPetsTarget.y, thisPet.x, thisPet.y, tileW * 2))) { 
+                if ((isInRange(thisPetsTarget.x, thisPetsTarget.y, thisPet.x, thisPet.y, tileW * 2))) {
                     thisPet.state = "wait";
                 } else {
                     // check the breadcrumb for next direction:
@@ -182,8 +179,64 @@ thisOtherPet.state = "moving";
     }
 }
 
+function isPetBlocked(whichPet, whichFacing) {
+    var isBlocked = false;
+    switch (whichFacing) {
+        case 'n':
+            if (isATerrainCollision(getTileCentreCoordX(whichPet.tileX), getTileCentreCoordY(whichPet.tileY - 1))) {
+                isBlocked = true;
+            }
+            break;
+
+        case 's':
+            if (isATerrainCollision(getTileCentreCoordX(whichPet.tileX), getTileCentreCoordY(whichPet.tileY + 1))) {
+                isBlocked = true;
+            }
+            break;
+
+        case 'e':
+            if (isATerrainCollision(getTileCentreCoordX(whichPet.tileX + 1), getTileCentreCoordY(whichPet.tileY))) {
+                isBlocked = true;
+            }
+            break;
+
+        case 'w':
+            if (isATerrainCollision(getTileCentreCoordX(whichPet.tileX - 1), getTileCentreCoordY(whichPet.tileY))) {
+                isBlocked = true;
+            }
+            break;
+
+    }
+    return isBlocked;
+}
+
 function pushPetAway(whichPet) {
     // hero has collided with the pet, move the pet away so they don't block the hero in:
-    hero.allPets[hero.activePets[whichPet]].state = "moving";
-    hero.allPets[hero.activePets[whichPet]].facing = hero.facing;
+    var thisPet = hero.allPets[hero.activePets[whichPet]];
+    if (!isPetBlocked(thisPet, hero.facing)) {
+        thisPet.state = "moving";
+        thisPet.facing = hero.facing;
+    } else {
+        // try a side:
+        var possibleSidewaysMoves = [];
+        switch (hero.facing) {
+            case 'n':
+            case 's':
+                possibleSidewaysMoves = ['e', 'w'];
+                break;
+            case 'w':
+            case 'e':
+                possibleSidewaysMoves = ['n', 's'];
+                break;
+        }
+        if (!isPetBlocked(thisPet, possibleSidewaysMoves[0])) {
+            thisPet.state = "moving";
+            thisPet.facing = possibleSidewaysMoves[0];
+        } else if (!isPetBlocked(thisPet, possibleSidewaysMoves[1])) {
+            thisPet.state = "moving";
+            thisPet.facing = possibleSidewaysMoves[1];
+        } else {
+            thisPet.state = "wait";
+        }
+    }
 }
