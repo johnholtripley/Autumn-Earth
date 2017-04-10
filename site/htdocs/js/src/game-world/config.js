@@ -6,7 +6,7 @@ var timeSinceLastFrameSwap = 0;
 var currentAnimationFrame = 0;
 var animationUpdateTime = (1000 / animationFramesPerSecond);
 
-var gameCanvas, gameContext, gameMode, cartographyContext, offScreenCartographyContext, canvasMapImage, canvasMapImage, canvasMapMaskImage, heroImg, imagesToLoad, tileImages, npcImages, itemImages, backgroundImg, objInitLeft, objInitTop, dragStartX, dragStartY, inventoryCheck, timeSinceLastAmbientSoundWasPlayed, thisPetIsOnADoor;
+var gameCanvas, gameContext, gameMode, cartographyContext, offScreenCartographyContext, canvasMapImage, canvasMapImage, canvasMapMaskImage, heroImg, imagesToLoad, tileImages, npcImages, itemImages, backgroundImg, objInitLeft, objInitTop, dragStartX, dragStartY, inventoryCheck, timeSinceLastAmbientSoundWasPlayed;
 
 const titleTagPrefix = 'Autumn Earth';
 
