@@ -166,6 +166,7 @@ function loadMapJSON(mapFilePath) {
 function loadMap() {
     var mapFilePath;
     console.log("going from " + currentMap + " to " + newMap);
+
     // check for newly entering a random dungeon:
     if ((newMap < 0) && (currentMap > 0)) {
         randomDungeonName = randomDungeons[Math.abs(newMap)];
@@ -505,6 +506,8 @@ function prepareGame() {
     fae.dz = 1;
     // fae.pulse = 0;
 
+
+
     timeSinceLastFrameSwap = 0;
     currentAnimationFrame = 0;
     mapTransition = "in";
@@ -538,11 +541,15 @@ function loadingProgress() {
 
 
 function changeMaps(doorX, doorY) {
+
     previousZoneName = thisMapData.zoneName;
     gameMode = "mapLoading";
     removeMapAssets();
     var doorData = thisMapData.doors;
-    var whichDoor = getTileX(doorX) + "," + getTileX(doorY);
+    var whichDoor = doorX + "," + doorY;
+    console.log("changeMaps");
+    console.log(doorData);
+    console.log(whichDoor);
     hero.tileX = doorData[whichDoor].startX;
     hero.tileY = doorData[whichDoor].startY;
     if (hasActivePet) {
@@ -599,8 +606,8 @@ function isATerrainCollision(x, y) {
                 break;
             case "d":
                 // is a door:
-                activeDoorX = x;
-                activeDoorY = y;
+             //   activeDoorX = x;
+             //   activeDoorY = y;
                 return 0;
                 break;
             default:
@@ -654,8 +661,7 @@ function getHeroAsCloseAsPossibleToObject(objx, objy, objw, objh) {
 }
 
 function checkHeroCollisions() {
-    activeDoorX = -1;
-    activeDoorY = -1;
+    
 
     // tile collisions:
     if (key[2]) {
@@ -666,9 +672,7 @@ function checkHeroCollisions() {
             var tileBottomEdge = (tileCollidedWith + 1) * tileW;
             // use the +1 to make sure it's just clear of the collision tile
             hero.y = tileBottomEdge + hero.height / 2 + 1;
-        } else if (activeDoorX != -1) {
-            startDoorTransition();
-        }
+        } 
     }
     if (key[3]) {
         // down
@@ -676,9 +680,7 @@ function checkHeroCollisions() {
             var tileCollidedWith = getTileY(hero.y + hero.height / 2);
             var tileTopEdge = (tileCollidedWith) * tileW;
             hero.y = tileTopEdge - hero.height / 2 - 1;
-        } else if (activeDoorX != -1) {
-            startDoorTransition();
-        }
+        } 
     }
     if (key[0]) {
         // left/west
@@ -686,9 +688,7 @@ function checkHeroCollisions() {
             var tileCollidedWith = getTileX(hero.x - hero.width / 2);
             var tileRightEdge = (tileCollidedWith + 1) * tileW;
             hero.x = tileRightEdge + hero.width / 2 + 1;
-        } else if (activeDoorX != -1) {
-            startDoorTransition();
-        }
+        } 
     }
     if (key[1]) {
         //right/east
@@ -696,9 +696,7 @@ function checkHeroCollisions() {
             var tileCollidedWith = getTileX(hero.x + hero.width / 2);
             var tileLeftEdge = (tileCollidedWith) * tileW;
             hero.x = tileLeftEdge - hero.width / 2 - 1;
-        } else if (activeDoorX != -1) {
-            startDoorTransition();
-        }
+        } 
     }
 
     var thisNPC, thisItem;
@@ -832,6 +830,8 @@ function update() {
         }
         mapTransitionCurrentFrames++;
         if (mapTransitionCurrentFrames >= mapTransitionMaxFrames) {
+            console.log("changing");
+            console.log(activeDoorX+", "+activeDoorY);
             changeMaps(activeDoorX, activeDoorY);
         }
     }
@@ -840,6 +840,8 @@ function update() {
         mapTransitionCurrentFrames += 2;
         if (mapTransitionCurrentFrames >= mapTransitionMaxFrames) {
             mapTransition = "";
+              activeDoorX = -1;
+    activeDoorY = -1;
         }
     }
     timeSinceLastFrameSwap += elapsed;
@@ -904,6 +906,12 @@ function heroIsInNewTile() {
     // update the hero's breadcrub trail:
     hero.breadcrumb.pop();
     hero.breadcrumb.unshift([hero.tileX, hero.tileY]);
+
+if(thisMapData.collisions[hero.tileY][hero.tileX] == "d") {
+     activeDoorX = hero.tileX;
+ activeDoorY = hero.tileY;
+startDoorTransition();
+}
 }
 
 
