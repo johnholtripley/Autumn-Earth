@@ -606,8 +606,6 @@ function isATerrainCollision(x, y) {
                 break;
             case "d":
                 // is a door:
-             //   activeDoorX = x;
-             //   activeDoorY = y;
                 return 0;
                 break;
             default:
