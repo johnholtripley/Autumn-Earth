@@ -452,7 +452,9 @@ if ((hero.allPets[hero.activePets[i]].tileX < 0) || (hero.allPets[hero.activePet
             hero.allPets[hero.activePets[i]].dx = 0;
             hero.allPets[hero.activePets[i]].dy = 0;
             hero.allPets[hero.activePets[i]].foundPath = '';
+            if(hero.allPets[hero.activePets[i]].state != "queuing") {
             hero.allPets[hero.activePets[i]].state = "wait";
+        }
             if (i == 0) {
                 // first pet follows the hero:
                 hero.allPets[hero.activePets[i]].following = hero;
@@ -573,6 +575,7 @@ function changeMaps(doorX, doorY) {
                 hero.allPets[hero.activePets[i]].state = "moving";
             } else {
                 // will be placed out of the normal map grid:
+                console.log("pet "+i+" is queuing");
                 hero.allPets[hero.activePets[i]].state = "queuing";
             }
             hero.allPets[hero.activePets[i]].facing = hero.facing;

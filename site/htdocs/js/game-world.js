@@ -2181,10 +2181,10 @@ function isAPetTerrainCollision(object, x, y) {
                 break;
             case "d":
                 // is a door:
-                if(mapTransition != "") {
-                // if the hero is going off the map:
-                object.state = "door";
-            }
+                if (mapTransition != "") {
+                    // if the hero is going off the map:
+                    object.state = "door";
+                }
                 return 0;
                 break;
             default:
@@ -2324,12 +2324,102 @@ function movePet() {
                 case 'findingPath':
                     // wait
                     break;
-                    case 'queuing':
-                    // waiting to move onto the normal map grid after transitioning in:
-                    // #######
+                case 'queuing':
+                    // move onto the normal map grid after transitioning in:
+                    if (!(isInRange(thisPetsTarget.x, thisPetsTarget.y, thisPet.x, thisPet.y, tileW * 2))) {
+                    oldPetX = thisPet.x;
+                    oldPetY = thisPet.y;
+                    thisPet.drawnFacing = thisPet.facing;
+                    switch (thisPet.facing) {
+                        case 'n':
+                            thisPet.y -= thisPet.speed;
+
+                            break;
+                        case 's':
+                            thisPet.y += thisPet.speed;
+
+                            break;
+                        case 'w':
+                            thisPet.x -= thisPet.speed;
+
+                            break;
+                        case 'e':
+                            thisPet.x += thisPet.speed;
+
+                            break;
+                    }
+
+                    // check for collisions against NPCs:
+                    for (var j = 0; j < thisMapData.npcs.length; j++) {
+                        thisNPC = thisMapData.npcs[j];
+                        if (thisNPC.isCollidable) {
+                            if (isAnObjectCollision(thisPet.x, thisPet.y, thisPet.width, thisPet.height, thisNPC.x, thisNPC.y, thisNPC.width, thisNPC.height)) {
+                                thisPet.x = oldPetX;
+                                thisPet.y = oldPetY;
+                            }
+                        }
+                    }
+
+                    // check for collisions against other pets:
+                    for (var j = 0; j < hero.activePets.length; j++) {
+                        if (p != j) {
+                            thisOtherPet = hero.allPets[hero.activePets[j]];
+                            if (isAnObjectCollision(thisPet.x, thisPet.y, thisPet.width, thisPet.height, thisOtherPet.x, thisOtherPet.y, thisOtherPet.width, thisOtherPet.height)) {
+                                thisPet.x = oldPetX;
+                                thisPet.y = oldPetY;
+                                /*
+                                // push the other pet:
+                                thisOtherPet.state = "moving";
+                                thisOtherPet.facing = thisPet.facing;
+                                */
+                            }
+                        }
+                    }
+
+                    // check for collisions against items:
+                    for (var j = 0; j < thisMapData.items.length; j++) {
+                        thisItem = thisMapData.items[j];
+                        if (isAnObjectCollision(thisPet.x, thisPet.y, thisPet.width, thisPet.height, thisItem.x, thisItem.y, thisItem.width, thisItem.height)) {
+                            thisPet.x = oldPetX;
+                            thisPet.y = oldPetY;
+                        }
+                    }
+
+                    // find the difference for this movement:
+                    thisPet.dx += (thisPet.x - oldPetX);
+                    thisPet.dy += (thisPet.y - oldPetY);
+                    // see if it's at a new tile centre:
+
+                    if (Math.abs(thisPet.dx) >= tileW) {
+                        if (thisPet.dx > 0) {
+                            thisPet.dx -= tileW;
+                        } else {
+                            thisPet.dx += tileW;
+                        }
+                        newTile = true;
+                    }
+                    if (Math.abs(thisPet.dy) >= tileW) {
+                        if (thisPet.dy > 0) {
+                            thisPet.dy -= tileW;
+                        } else {
+                            thisPet.dy += tileW;
+                        }
+                        newTile = true;
+                    }
+                    if (newTile) {
+                        thisPet.tileX = getTileX(thisPet.x);
+                thisPet.tileY = getTileY(thisPet.y);
+                         console.log("checking whole tile");
+                        if ((thisPet.tileX < 0) || (thisPet.tileY < 0) || (thisPet.tileX >= mapTilesX) || (thisPet.tileY >= mapTilesY)) {
+                            //not on a valid tile yet:
+                            console.log("not new yet");
+                            newTile = false;
+                        } 
+                    }
+                }
                     break;
                 default:
-                // not finding a path so check proximity to hero to see if pet should start moving:
+                    // not finding a path so check proximity to hero to see if pet should start moving:
                     if (!(isInRange(thisPetsTarget.x, thisPetsTarget.y, thisPet.x, thisPet.y, tileW * 2))) {
                         thisPet.state = "moving";
                     }
@@ -4147,7 +4237,9 @@ if ((hero.allPets[hero.activePets[i]].tileX < 0) || (hero.allPets[hero.activePet
             hero.allPets[hero.activePets[i]].dx = 0;
             hero.allPets[hero.activePets[i]].dy = 0;
             hero.allPets[hero.activePets[i]].foundPath = '';
+            if(hero.allPets[hero.activePets[i]].state != "queuing") {
             hero.allPets[hero.activePets[i]].state = "wait";
+        }
             if (i == 0) {
                 // first pet follows the hero:
                 hero.allPets[hero.activePets[i]].following = hero;
@@ -4268,6 +4360,7 @@ function changeMaps(doorX, doorY) {
                 hero.allPets[hero.activePets[i]].state = "moving";
             } else {
                 // will be placed out of the normal map grid:
+                console.log("pet "+i+" is queuing");
                 hero.allPets[hero.activePets[i]].state = "queuing";
             }
             hero.allPets[hero.activePets[i]].facing = hero.facing;
