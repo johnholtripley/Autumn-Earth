@@ -21,7 +21,10 @@ function isAPetTerrainCollision(object, x, y) {
                 break;
             case "d":
                 // is a door:
+                if(mapTransition != "") {
+                // if the hero is going off the map:
                 object.state = "door";
+            }
                 return 0;
                 break;
             default:
