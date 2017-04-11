@@ -152,7 +152,7 @@ function loadMapJSON(mapFilePath) {
 
 function loadMap() {
     var mapFilePath;
-    console.log("going from " + currentMap + " to " + newMap);
+    //console.log("going from " + currentMap + " to " + newMap);
 
     // check for newly entering a random dungeon:
     if ((newMap < 0) && (currentMap > 0)) {
@@ -519,19 +519,24 @@ if ((hero.allPets[hero.activePets[i]].tileX < 0) || (hero.allPets[hero.activePet
 }
 
 
-function removeMapAssets() {
+function removeMapAssets() {  
     for (var i = 0; i < tileGraphicsToLoad.length; i++) {
+        // remove the on error handler so it doesn't fire when the image is removed:
+        tileImages[i].onerror = '';
         tileImages[i].src = '';
         tileImages[i] = null;
     }
     for (var i = 0; i < npcGraphicsToLoad.length; i++) {
+        npcImages[thisMapData.npcs[i].name].onerror = '';
         npcImages[thisMapData.npcs[i].name].src = '';
         npcImages[thisMapData.npcs[i].name] = null;
     }
     for (var i in itemGraphicsToLoad) {
+        itemImages[itemGraphicsToLoad[i]].onerror = '';
         itemImages[itemGraphicsToLoad[i]].src = '';
         itemImages[itemGraphicsToLoad[i]] = null;
     }
+    backgroundImg.onerror = '';
     backgroundImg.src = '';
     backgroundImg = null;
 }
@@ -575,7 +580,6 @@ function changeMaps(doorX, doorY) {
                 hero.allPets[hero.activePets[i]].state = "moving";
             } else {
                 // will be placed out of the normal map grid:
-                console.log("pet "+i+" is queuing");
                 hero.allPets[hero.activePets[i]].state = "queuing";
             }
             hero.allPets[hero.activePets[i]].facing = hero.facing;
@@ -834,8 +838,6 @@ function update() {
         }
         mapTransitionCurrentFrames++;
         if (mapTransitionCurrentFrames >= mapTransitionMaxFrames) {
-            console.log("changing");
-            console.log(activeDoorX+", "+activeDoorY);
             changeMaps(activeDoorX, activeDoorY);
         }
     }

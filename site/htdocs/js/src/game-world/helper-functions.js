@@ -711,6 +711,7 @@ function reset() {
     // optionaly set the onProgressUpdate callback to be called each time an image is loaded (useful for loading screens) 
     function preload(_images, _onComplete, _onProgressUpdate) {
         reset();
+
         if (!loading) {
 
             //  console.log("Loading...");

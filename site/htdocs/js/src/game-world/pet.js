@@ -249,10 +249,10 @@ function movePet() {
                     if (newTile) {
                         thisPet.tileX = getTileX(thisPet.x);
                 thisPet.tileY = getTileY(thisPet.y);
-                         console.log("checking whole tile");
+                
                         if ((thisPet.tileX < 0) || (thisPet.tileY < 0) || (thisPet.tileX >= mapTilesX) || (thisPet.tileY >= mapTilesY)) {
                             //not on a valid tile yet:
-                            console.log("not new yet");
+                      
                             newTile = false;
                         } 
                     }
