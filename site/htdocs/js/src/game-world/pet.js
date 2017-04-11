@@ -161,8 +161,12 @@ function movePet() {
                 case 'findingPath':
                     // wait
                     break;
+                    case 'queuing':
+                    // waiting to move onto the normal map grid after transitioning in:
+                    // #######
+                    break;
                 default:
-                    // check proximity to hero to see if pet should start moving:
+                // not finding a path so check proximity to hero to see if pet should start moving:
                     if (!(isInRange(thisPetsTarget.x, thisPetsTarget.y, thisPet.x, thisPet.y, tileW * 2))) {
                         thisPet.state = "moving";
                     }

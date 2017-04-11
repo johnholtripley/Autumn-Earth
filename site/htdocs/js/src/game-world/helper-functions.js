@@ -98,10 +98,10 @@ function getCurrentTileY(y) {
 }
 
 
-function getElevation(tileX,tileY) {
- 
-return thisMapData.elevation[tileY][tileX];
+function getElevation(tileX, tileY) {
+    return thisMapData.elevation[tileY][tileX];
 }
+
 
 function getXOffsetFromHeight(height) {
     // for determining a shadow's offset (for example).

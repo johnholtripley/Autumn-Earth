@@ -23,37 +23,24 @@ function init() {
     gameCanvas = document.getElementById("gameWorld");
     if (gameCanvas.getContext) {
         gameContext = gameCanvas.getContext('2d');
-
         sizeCanvasSize();
-
-
         whichTransitionEvent = determineWhichTransitionEvent();
         whichAnimationEvent = determineWhichAnimationEvent();
         gameMode = "mapLoading";
-
         cartographyCanvas = document.getElementById("cartographyCanvas");
         cartographyContext = cartographyCanvas.getContext('2d');
         offScreenCartographyCanvas = document.getElementById("offScreenCartographyCanvas");
         offScreenCartographyContext = offScreenCartographyCanvas.getContext('2d');
-
         canvasMapImage = document.createElement('img');
         canvasMapMaskImage = document.createElement('img');
-
         UI.init();
         audio.init();
-
-
-
         // detect and set up input methods:
         Input.init();
         // show loading screen while getting assets:
         gameLoop();
-
         getHeroGameState();
     }
-
-
-
 }
 
 function getHeroGameState() {
@@ -412,6 +399,7 @@ function loadInventoryItemData(itemIdsToLoad) {
 
 
 function prepareGame() {
+   
     // get map image references:
     tileImages = [];
     for (var i = 0; i < tileGraphicsToLoad.length; i++) {
@@ -431,7 +419,7 @@ function prepareGame() {
     for (var i = 0; i < thisMapData.npcs.length; i++) {
         thisMapData.npcs[i].x = getTileCentreCoordX(thisMapData.npcs[i].tileX);
         thisMapData.npcs[i].y = getTileCentreCoordY(thisMapData.npcs[i].tileY);
-        thisMapData.npcs[i].z = getElevation(thisMapData.npcs[i].tileX, thisMapData.npcs[i].tileY);
+        thisMapData.npcs[i].z = getElevation(thisMapData.npcs[i].tileX, thisMapData.npcs[i].tileY);   
         thisMapData.npcs[i].drawnFacing = thisMapData.npcs[i].facing;
         thisMapData.npcs[i].dx = 0;
         thisMapData.npcs[i].dy = 0;
@@ -447,7 +435,20 @@ function prepareGame() {
         for (var i = 0; i < hero.activePets.length; i++) {
             hero.allPets[hero.activePets[i]].x = getTileCentreCoordX(hero.allPets[hero.activePets[i]].tileX);
             hero.allPets[hero.activePets[i]].y = getTileCentreCoordY(hero.allPets[hero.activePets[i]].tileY);
-            hero.allPets[hero.activePets[i]].z = getElevation(hero.allPets[hero.activePets[i]].tileX, hero.allPets[hero.activePets[i]].tileY);
+
+
+// check these tiles are within the normal grid - if not use the pet in front's z depth:
+
+
+if ((hero.allPets[hero.activePets[i]].tileX < 0) || (hero.allPets[hero.activePets[i]].tileY < 0) || (hero.allPets[hero.activePets[i]].tileX >= mapTilesX) || (hero.allPets[hero.activePets[i]].tileY >= mapTilesY)) {
+    hero.allPets[hero.activePets[i]].z = hero.allPets[hero.activePets[i-1]].z;
+    
+} else {
+    hero.allPets[hero.activePets[i]].z = getElevation(hero.allPets[hero.activePets[i]].tileX, hero.allPets[hero.activePets[i]].tileY);
+}
+
+
+            
             hero.allPets[hero.activePets[i]].dx = 0;
             hero.allPets[hero.activePets[i]].dy = 0;
             hero.allPets[hero.activePets[i]].foundPath = '';
@@ -541,15 +542,11 @@ function loadingProgress() {
 
 
 function changeMaps(doorX, doorY) {
-
     previousZoneName = thisMapData.zoneName;
     gameMode = "mapLoading";
     removeMapAssets();
     var doorData = thisMapData.doors;
     var whichDoor = doorX + "," + doorY;
-    console.log("changeMaps");
-    console.log(doorData);
-    console.log(whichDoor);
     hero.tileX = doorData[whichDoor].startX;
     hero.tileY = doorData[whichDoor].startY;
     if (hasActivePet) {
@@ -563,22 +560,28 @@ function changeMaps(doorX, doorY) {
                 tileOffsetY = -1;
                 break
             case "e":
-                tileOffsetY = -1;
+                tileOffsetX = -1;
                 break
             case "w":
-                tileOffsetY = 1;
+                tileOffsetX = 1;
                 break
         }
         for (var i = 0; i < hero.activePets.length; i++) {
-            hero.allPets[hero.activePets[i]].tileX = doorData[whichDoor].startX + tileOffsetX;
-            hero.allPets[hero.activePets[i]].tileY = doorData[whichDoor].startY + tileOffsetY;
-            hero.allPets[hero.activePets[i]].state = "moving";
+            hero.allPets[hero.activePets[i]].tileX = doorData[whichDoor].startX + (tileOffsetX * (i + 1));
+            hero.allPets[hero.activePets[i]].tileY = doorData[whichDoor].startY + (tileOffsetY * (i + 1));
+            if (i == 0) {
+                hero.allPets[hero.activePets[i]].state = "moving";
+            } else {
+                // will be placed out of the normal map grid:
+                hero.allPets[hero.activePets[i]].state = "queuing";
+            }
             hero.allPets[hero.activePets[i]].facing = hero.facing;
         }
     }
     newMap = doorData[whichDoor].map;
     loadMap();
 }
+
 
 
 
