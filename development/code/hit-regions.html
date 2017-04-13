@@ -1,0 +1,65 @@
+<html>
+<head>
+<title>hit regions</title>
+<meta charset="utf-8">
+<style>
+#hoverText {
+position: absolute;
+left: 0;
+top: 200px;
+transition: opacity 0.6s ease;
+opacity: 0;
+}
+
+#hoverText.active {
+opacity: 1;
+}
+
+* {
+padding: 0;
+margin: 0;
+}
+</style>
+
+
+</head>
+<body>
+
+<p id="hoverText">nothing yet...</p>
+<canvas id="canvas"></canvas>
+
+<script>
+var canvas = document.getElementById('canvas');
+var ctx = canvas.getContext('2d');
+
+var hoverText = document.getElementById('hoverText');
+
+var nodes={
+"one": {x:20, y:20, w:50, h:50},
+"two": {x:90, y:50, w:50, h:50},
+};
+
+
+for (var i in nodes) {
+  if(nodes.hasOwnProperty(i)) {
+    ctx.beginPath();
+    ctx.rect(nodes[i].x,nodes[i].y,nodes[i].w,nodes[i].h);
+    ctx.stroke();  
+    if(ctx.addHitRegion) {    ctx.addHitRegion({id: i});
+    }
+  }
+}
+
+canvas.addEventListener('mousemove', function(event) {
+  if (event.region) {
+    hoverText.innerHTML = event.region;
+    hoverText.style.left = nodes[event.region].x;
+    hoverText.style.top = nodes[event.region].y - 20;
+    hoverText.classList.add('active');
+  } else {
+    hoverText.classList.remove('active');
+  }
+});
+</script>
+</body>
+</html>
