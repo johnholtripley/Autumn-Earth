@@ -23,7 +23,7 @@ ins {
 
 
 
-
+// selected text:
 ::-moz-selection {
     background: $accentColour;
     color: $secondaryColour;
@@ -36,6 +36,16 @@ ins {
     -webkit-text-shadow: none;
     text-shadow: none;
 }
+
+.selected {
+    background: $accentColour;
+    color: $secondaryColour;
+    -webkit-text-shadow: none;
+    text-shadow: none;
+}
+
+
+
 /* =============================================================================
    Links
    ========================================================================== */
