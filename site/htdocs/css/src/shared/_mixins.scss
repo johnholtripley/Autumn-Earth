@@ -75,6 +75,8 @@
 
 
 @mixin animation($values) {
+  // Safari doesn't like the short hand for animation - might need to split this out into individual parts #############
+  // http://stackoverflow.com/questions/9211261/css3-animation-not-working-in-safari#answer-17529003
       -webkit-animation: $values;
      -moz-animation: $values;
      -o-animation: $values;
