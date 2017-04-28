@@ -672,11 +672,21 @@
             "centreX": 9,
             "centreY": 3,
             "radius": 5,
-            "quest": 6,
+            "quest": 1,
             "message": "you found the ancient standing stone site",
             "music": "elven-glade-WoW-NOT-MINE"
 
         },
+
+
+{
+     "centreX": 9,
+            "centreY": 5,
+            "radius": 5, 
+            "quest": 6,
+            "message": "first message!"
+},
+
 
 {
      "centreX": 13,
