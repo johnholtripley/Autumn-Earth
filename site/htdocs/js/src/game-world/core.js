@@ -29,7 +29,7 @@ function init() {
         gameMode = "mapLoading";
         cartographyCanvas = document.getElementById("cartographyCanvas");
         cartographyContext = cartographyCanvas.getContext('2d');
-        offScreenCartographyCanvas = document.getElementById("offScreenCartographyCanvas");
+        offScreenCartographyCanvas = document.getElementById('offScreenCartographyCanvas');
         offScreenCartographyContext = offScreenCartographyCanvas.getContext('2d');
         canvasMapImage = document.createElement('img');
         canvasMapMaskImage = document.createElement('img');
