@@ -239,7 +239,7 @@ if the hero moves along the side of stairs and then moves up them, the pet will 
 
 
 
-set visually clues that are visible from a path to indicate that there is something of interest off the path. it can be an unexpected NPC walking about, a flag, or some ruined architecture that leads towards an encampment or area of interest
+set visual clues that are visible from a path to indicate that there is something of interest off the path. it can be an unexpected NPC walking about, a flag, or some ruined architecture that leads towards an encampment or area of interest
 
 have a geomantic skill to freeze water - so lakes can be frozen and then moved across, allowing access to previously in-accessible regions
 
@@ -325,9 +325,6 @@ equip slots should have a maximum of 1 quantity
  
 
  
-
-
-
 
 
 

@@ -278,28 +278,26 @@ transition-delay: $values;
 
 @mixin visibleHide {
     /* http://css-tricks.com/places-its-tempting-to-use-display-none-but-dont/ */
-    position: absolute;
-    overflow: hidden;
-    clip-path: inset(100%);
+    border: 0;
     clip: rect(0 0 0 0);
     height: 1px;
-    width: 1px;
     margin: -1px;
+    overflow: hidden;
     padding: 0;
-    border: 0;
+    position: absolute;
+    width: 1px;
 }
 
 @mixin clearfix {
     /* Contain floats: h5bp.com/q */
     &:before,
     &:after {
-        content: "";
-        display: block;
+        content: " ";
+        display: table;
     }
     &:after {
         clear: both;
     }
-    *zoom: 1;
 }
 
 @mixin iconFont {
