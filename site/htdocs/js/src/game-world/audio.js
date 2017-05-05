@@ -65,7 +65,7 @@ var audio = {
         audio[songName].appendChild(src);
         audio[songName + 'Gain'] = audioContext.createGain();
         // get this from the settings:      
-        audio[songName + 'Gain'].gain.setValueAtTime(gameSettings.musicVolume, 0);
+     
         audio[songName + 'Source'] = audioContext.createMediaElementSource(audio[songName]);
         audio[songName + 'Source'].connect(audio[songName + 'Gain']);
         audio[songName + 'Gain'].connect(audioContext.destination);
@@ -95,8 +95,10 @@ var audio = {
     },
 
     playMusic: function(newTrack) {
+
         if (typeof audio.activeTrack !== "undefined") {
             if (audio.activeTrack != newTrack) {
+
                 audio.initMusic(newTrack);
                 var fadeTime = 6;
                 var currentTime = audioContext.currentTime;

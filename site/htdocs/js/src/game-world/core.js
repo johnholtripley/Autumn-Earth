@@ -882,6 +882,7 @@ function heroIsInNewTile() {
                 }
                 questData[thisHotspot.quest].hasBeenActivated = 1;
             }
+            
             if (typeof thisHotspot.music !== "undefined") {
                 audio.playMusic(thisHotspot.music);
             }
