@@ -406,11 +406,11 @@ var UI = {
             }
         }
 
-        var thisNode = e.target;
-        // find the id of the parent if actual dropped target doesn't have one:
-        while (!thisNode.id) {
-            thisNode = thisNode.parentNode;
-        }
+
+
+ var thisNode = getNearestParentId(e.target);
+
+
         var droppedSlot = thisNode.id;
         if (droppedSlot.substring(0, 4) == "slot") {
             // check it's empty:
