@@ -2953,12 +2953,7 @@ var UI = {
                 thisBoughtObject.contains = thisSlotImageElement.getAttribute('data-contains');
             }
         }
-
-
-
- var thisNode = getNearestParentId(e.target);
-
-
+        var thisNode = getNearestParentId(e.target);
         var droppedSlot = thisNode.id;
         if (droppedSlot.substring(0, 4) == "slot") {
             // check it's empty:
@@ -3057,15 +3052,14 @@ var UI = {
                 }
             }
         } else if (droppedSlot.substring(0, 12) == "inventoryBag") {
+            var thisInventoryPanelId = droppedSlot.substring(12);
+            var sourceSlotHyphenPos = UI.sourceSlot.indexOf("-");
+            var thisSourceInventoryPanelId = UI.sourceSlot.substring(0, sourceSlotHyphenPos);
+            var thisBagNumberOfSlots = currentActiveInventoryItems[hero.bags[thisInventoryPanelId].type].actionValue;
+            var emptySlotFound = -1;
             if (isFromAShop) {
                 if (hero.currency[thisCurrency] >= buyPriceForOne) {
                     // find an empty slot and drop it in:
-                    var emptySlotFound = -1;
-                    var thisInventoryPanelId = droppedSlot.substring(12);
-                    var sourceSlotHyphenPos = UI.sourceSlot.indexOf("-");
-                    var thisSourceInventoryPanelId = UI.sourceSlot.substring(0, sourceSlotHyphenPos);
-                    var thisBagNumberOfSlots = currentActiveInventoryItems[hero.bags[thisInventoryPanelId].type].actionValue;
-                    // loop through slots for this bag:
                     for (var j = 0; j < thisBagNumberOfSlots; j++) {
                         var thisSlotsID = thisInventoryPanelId + '-' + j;
                         if (!(thisSlotsID in hero.inventory)) {
@@ -3090,16 +3084,10 @@ var UI = {
                 }
             } else {
                 // if it's the same panel is the slot came from, just slide back:
-                var thisInventoryPanelId = droppedSlot.substring(12);
-                var sourceSlotHyphenPos = UI.sourceSlot.indexOf("-");
-                var thisSourceInventoryPanelId = UI.sourceSlot.substring(0, sourceSlotHyphenPos);
                 if (thisInventoryPanelId == thisSourceInventoryPanelId) {
                     UI.slideDraggedSlotBack();
                 } else {
                     // otherwise find an empty slot and drop it in:
-                    var emptySlotFound = -1;
-                    var thisBagNumberOfSlots = currentActiveInventoryItems[hero.bags[thisInventoryPanelId].type].actionValue;
-                    // loop through slots for this bag:
                     for (var j = 0; j < thisBagNumberOfSlots; j++) {
                         var thisSlotsID = thisInventoryPanelId + '-' + j;
                         if (!(thisSlotsID in hero.inventory)) {
@@ -3111,7 +3099,6 @@ var UI = {
                         if (!isSplitStackBeingDragged) {
                             document.getElementById("slot" + UI.sourceSlot).innerHTML = '';
                         }
-
                         addToInventory(thisInventoryPanelId + "-" + emptySlotFound, UI.draggedInventoryObject);
                         document.getElementById("slot" + UI.sourceSlot).classList.remove("hidden");
                         UI.droppedSuccessfully();
