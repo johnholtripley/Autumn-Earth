@@ -16,7 +16,7 @@ function openLargerSocialPopup(e) {
     if (e) {
         e.preventDefault();
     }
-    windowPopup(this.getAttribute("href"), 750, 552);
+    windowPopup(this.getAttribute("href"), 740, 552);
 }
 
 

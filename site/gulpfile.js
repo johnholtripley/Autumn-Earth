@@ -504,8 +504,8 @@ gulp.task('generateCritical', function() {
             base: 'htdocs/',
             inline: false,
             dimensions: [{
-                height: 200,
-                width: 500
+                height: 500,
+                width: 280
             }, {
                 height: 900,
                 width: 1200

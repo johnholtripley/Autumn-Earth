@@ -84,11 +84,18 @@ $thisBuiltURL = "https://www.autumnearth.com/herbarium/".$plantUrl."/";
         <a class="popupWindow" target="_blank" href="https://plus.google.com/share?url=<?php echo $urlToShare; ?>">Share on Google+</a>
     </li>
         <li class="socialTumblr">
-        <a class="popupWindow" target="_blank" href="http://tumblr.com/widgets/share/tool?canonicalUrl=<?php echo $urlToShare; ?>&amp;posttype=photo&amp;caption=<?php echo $descToShare; ?>&amp;content=<?php echo $shareImagePath; ?>">Share on Tumblr</a>
+        <a class="popupWindow" target="_blank" href="https://tumblr.com/widgets/share/tool?canonicalUrl=<?php echo $urlToShare; ?>&amp;posttype=photo&amp;caption=<?php echo $descToShare; ?>&amp;content=<?php echo $shareImagePath; ?>">Share on Tumblr</a>
     </li>
     <li class="socialPinterest">
         <a class="largerPopupWindow" target="_blank" href="https://www.pinterest.com/pin/create/button/?url=<?php echo $urlToShare; ?>&amp;media=<?php echo $imageToShare; ?>&amp;description=<?php echo $descToShare; ?>&amp;hashtags=<?php echo $hashTag; ?>">Share on Pinterest</a>
     </li>
+<li class="socialReddit">
+        <a target="_blank" href="https://www.reddit.com/submit?url=<?php echo $urlToShare; ?>">Share on Reddit</a>
+    </li>
+
+
+
+
 </ul>
 </div>
 </div>
