@@ -4191,6 +4191,7 @@ function prepareGame() {
         thisMapData.npcs[i].drawnFacing = thisMapData.npcs[i].facing;
         thisMapData.npcs[i].dx = 0;
         thisMapData.npcs[i].dy = 0;
+        thisMapData.npcs[i].currentAnimation = 'walk';
         // set index to -1 so when it increases, it'll pick up the first (0) element:
         thisMapData.npcs[i].movementIndex = -1;
         // allow NPCs to pick up their facing without moving to that first tile:
@@ -5367,6 +5368,7 @@ function moveNPCs() {
                         thisNPC.waitingTimer = 0;
 
                         // play animation while waiting
+                        thisNPC.currentAnimation = 'wait';
                         // thisNextMovement[2]
                         // #######
 
@@ -5377,6 +5379,7 @@ function moveNPCs() {
                         thisNPC.waitingTimer++;
                         if (thisNPC.waitingTimer > thisNextMovement[3]) {
                             thisNPC.isMoving = true;
+                            thisNPC.currentAnimation = 'walk';
                         } else {
                             // keep waiting until got a path, and the timer has expired
                             thisNPC.movementIndex--;
@@ -5539,8 +5542,8 @@ function draw() {
 
         for (var i = 0; i < thisMapData.npcs.length; i++) {
             thisNPC = thisMapData.npcs[i];
-            thisNPCOffsetCol = currentAnimationFrame % thisNPC["animation"]["walk"]["length"];
-            thisNPCOffsetRow = thisNPC["animation"]["walk"][thisNPC.drawnFacing];
+            thisNPCOffsetCol = currentAnimationFrame % thisNPC["animation"][thisNPC.currentAnimation]["length"];
+            thisNPCOffsetRow = thisNPC["animation"][thisNPC.currentAnimation][thisNPC.drawnFacing];
             thisX = findIsoCoordsX(thisNPC.x, thisNPC.y);
             thisY = findIsoCoordsY(thisNPC.x, thisNPC.y);
 
