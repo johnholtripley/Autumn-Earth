@@ -122,6 +122,8 @@ var audio = {
                 audio[newTrack].play();
                 audio.activeTrack = newTrack;
                 audio.lastTrack = newTrack;
+                // set initial volume to match settings:
+                audio[audio.activeTrack + 'Gain'].gain.setValueAtTime(gameSettings.musicVolume, audioContext.currentTime);
             }
         }
     },
