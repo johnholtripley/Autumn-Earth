@@ -55,8 +55,8 @@ $thisBuiltURL = $thisBuiltURL."forum/".$cleanURL."/";
 		if ($numberofrows > 0) {
 			$row = mysql_fetch_array($result);
 			extract ($row);
-			$pagetitle = stripCode($title).' - Autumn Earth community site';
-			$longDescription = stripcode($postcontent);
+			$pagetitle = strip_tags($title).' - Autumn Earth community site';
+			$longDescription = strip_tags($postcontent);
 
 		}
 } else {
@@ -69,7 +69,7 @@ $result = mysql_query($query) or die ("couldn't execute query1");
 			$row = mysql_fetch_array($result);
 			extract ($row);
 		$thisBuiltURL = $thisBuiltURL."forum/".$cleanURL."/";
-			$pagetitle = stripCode($title).' - Autumn Earth community site';
+			$pagetitle = strip_tags($title).' - Autumn Earth community site';
 		}
 
 
@@ -83,7 +83,7 @@ $result = mysql_query($query) or die ("couldn't execute query1");
 			$row = mysql_fetch_array($result);
 			extract ($row);
 		$thisBuiltURL = $thisBuiltURL."forum/".$cleanURL."/";
-			$pagetitle = stripCode($title).' - Autumn Earth community site';
+			$pagetitle = strip_tags($title).' - Autumn Earth community site';
 		}
 } else {
 // forum home
@@ -190,7 +190,7 @@ if (mysql_num_rows($result) > 0) {
 while ($row = mysql_fetch_array($result)) {
 extract ($row);
 	$pagetitle = $title." - an Event in Autumn Earth";
-	$longDescription = stripcode($eventContent);
+	$longDescription = strip_tags($eventContent);
 	$thisBuiltURL = $thisBuiltURL."almanack/".$cleanURL."/"; 
 }
 }
@@ -223,8 +223,8 @@ $result = mysql_query($query) or die ("couldn't execute query1");
 		if ($numberofrows > 0) {
 			$row = mysql_fetch_array($result);
 			extract ($row);
-			$pagetitle = stripCode($newsTitle).' - Autumn Earth news';
-			$longDescription = stripcode($newsContent);
+			$pagetitle = strip_tags($newsTitle).' - Autumn Earth news';
+			$longDescription = strip_tags($newsContent);
 		}
 } else {
 	$needsSeoPagination = true;

@@ -129,6 +129,11 @@ $size = getimagesize($_SERVER['DOCUMENT_ROOT'].'/images/banners/'.$bannerContent
 ?>
 
 </div>
+
+<?php $urlToShare = urlencode($thisBuiltURL); ?>
+<p><a class="shareLink" target="_blank" href="https://twitter.com/intent/tweet/?url=<?php echo $urlToShare; ?>">Share</a></p>
+
+
 <?php
 
 

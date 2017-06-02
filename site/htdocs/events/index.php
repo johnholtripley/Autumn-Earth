@@ -72,15 +72,16 @@ echo '</div>';
 
 
 ?>
+
+<?php $urlToShare = urlencode($thisBuiltURL); ?>
+<p><a class="shareLink" target="_blank" href="https://twitter.com/intent/tweet/?url=<?php echo $urlToShare; ?>">Share</a></p>
+
 </div>
 </div>
+
+
+
 
 <?php
-
-
-
-
-
-
 include($_SERVER['DOCUMENT_ROOT']."/includes/footer.php");
 ?>
