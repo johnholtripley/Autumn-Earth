@@ -90,7 +90,7 @@ $thisBuiltURL = "https://www.autumnearth.com/herbarium/".$plantUrl."/";
         <a class="largerPopupWindow" target="_blank" href="https://www.pinterest.com/pin/create/button/?url=<?php echo $urlToShare; ?>&amp;media=<?php echo $imageToShare; ?>&amp;description=<?php echo $descToShare; ?>&amp;hashtags=<?php echo $hashTag; ?>">Share on Pinterest</a>
     </li>
 <li class="socialReddit">
-        <a target="_blank" href="https://www.reddit.com/submit?url=<?php echo $urlToShare; ?>">Share on Reddit</a>
+        <a target="_blank" href="https://www.reddit.com/submit?url=<?php echo $urlToShare; ?>&amp;title=<?php echo urlencode($pagetitle); ?>">Share on Reddit</a>
     </li>
 
 
