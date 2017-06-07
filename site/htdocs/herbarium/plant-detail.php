@@ -71,9 +71,6 @@ echo "<h2>Sorry, couldn't find that plant</h2>";
 
 
 
-</div>
-</div>
-
 
 
 <?php
