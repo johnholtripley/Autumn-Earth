@@ -171,9 +171,19 @@
         "doors": {
 
         },
-        "items": [
-
-        ],
+        "items": [{
+            "type": 18,
+            "tileX": 1,
+            "tileY": 3
+        },{
+            "type": 18,
+            "tileX": 1,
+            "tileY": 6
+        },{
+            "type": 18,
+            "tileX": 1,
+            "tileY": 9
+        }],
         "hotspots": [
 
         ]

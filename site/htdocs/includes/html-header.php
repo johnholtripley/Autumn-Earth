@@ -100,6 +100,22 @@ echo '<link rel="next" href="/'.$thisSection.'/page/'.($pagenumber+1).'">';
 ?>
 
 
+
+
+<?php if ($useCriticalCssInling): ?>
+ <style><?php include($_SERVER['DOCUMENT_ROOT']."/css/critical.css"); ?></style>
+<noscript>
+  <?php  endif;  ?>
+<!--[if (gt IE 8) | (IEMobile)]><!-->
+    <link href="/css/base.<?php echo $cacheVersion; ?>.css" rel="stylesheet">
+<!--<![endif]-->
+<!--[if (lt IE 9) & (!IEMobile)]>
+    <link href="/css/IE8Support.<?php echo $cacheVersion; ?>.css" rel="stylesheet">
+<![endif]-->
+<?php if ($useCriticalCssInling) {
+echo '</noscript>'."\n";
+}?>
+
 <script>
   var cutsTheMustard = false;
   function removeClass() {
@@ -114,20 +130,6 @@ echo '<link rel="next" href="/'.$thisSection.'/page/'.($pagenumber+1).'">';
   }
   cacheVersion = <?php echo $cacheVersion; ?>;
 </script>
-
-<?php if ($useCriticalCssInling): ?>
- <style><?php include '/css/critical.css'; ?></style>
-<noscript>
-  <?php  endif;  ?>
-<!--[if (gt IE 8) | (IEMobile)]><!-->
-    <link href="/css/base.<?php echo $cacheVersion; ?>.css" rel="stylesheet">
-<!--<![endif]-->
-<!--[if (lt IE 9) & (!IEMobile)]>
-    <link href="/css/IE8Support.<?php echo $cacheVersion; ?>.css" rel="stylesheet">
-<![endif]-->
-<?php if ($useCriticalCssInling) {
-echo '</noscript>'."\n";
-}?>
 
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="language" content="english">
