@@ -669,9 +669,8 @@ function getHeroAsCloseAsPossibleToObject(objx, objy, objw, objh) {
     }
 }
 
-function checkHeroCollisions() {
-    
 
+function checkHeroCollisions() {
     // tile collisions:
     if (key[2]) {
         // up
@@ -681,7 +680,7 @@ function checkHeroCollisions() {
             var tileBottomEdge = (tileCollidedWith + 1) * tileW;
             // use the +1 to make sure it's just clear of the collision tile
             hero.y = tileBottomEdge + hero.height / 2 + 1;
-        } 
+        }
     }
     if (key[3]) {
         // down
@@ -689,7 +688,7 @@ function checkHeroCollisions() {
             var tileCollidedWith = getTileY(hero.y + hero.height / 2);
             var tileTopEdge = (tileCollidedWith) * tileW;
             hero.y = tileTopEdge - hero.height / 2 - 1;
-        } 
+        }
     }
     if (key[0]) {
         // left/west
@@ -697,7 +696,7 @@ function checkHeroCollisions() {
             var tileCollidedWith = getTileX(hero.x - hero.width / 2);
             var tileRightEdge = (tileCollidedWith + 1) * tileW;
             hero.x = tileRightEdge + hero.width / 2 + 1;
-        } 
+        }
     }
     if (key[1]) {
         //right/east
@@ -705,10 +704,10 @@ function checkHeroCollisions() {
             var tileCollidedWith = getTileX(hero.x + hero.width / 2);
             var tileLeftEdge = (tileCollidedWith) * tileW;
             hero.x = tileLeftEdge - hero.width / 2 - 1;
-        } 
+        }
     }
 
-    var thisNPC, thisItem;
+    var thisNPC, thisItem, thisInnerDoor;
     // check for collisions against NPCs:
     for (var i = 0; i < thisMapData.npcs.length; i++) {
         thisNPC = thisMapData.npcs[i];
@@ -729,14 +728,27 @@ function checkHeroCollisions() {
     // check against pets:
     if (hasActivePet) {
         for (var i = 0; i < hero.activePets.length; i++) {
-        if (isAnObjectCollision(hero.allPets[hero.activePets[i]].x, hero.allPets[hero.activePets[i]].y, hero.allPets[hero.activePets[i]].width, hero.allPets[hero.activePets[i]].height, hero.x, hero.y, hero.width, hero.height)) {
-            getHeroAsCloseAsPossibleToObject(hero.allPets[hero.activePets[i]].x, hero.allPets[hero.activePets[i]].y, hero.allPets[hero.activePets[i]].width, hero.allPets[hero.activePets[i]].height);
-            pushPetAway(i);
+            if (isAnObjectCollision(hero.allPets[hero.activePets[i]].x, hero.allPets[hero.activePets[i]].y, hero.allPets[hero.activePets[i]].width, hero.allPets[hero.activePets[i]].height, hero.x, hero.y, hero.width, hero.height)) {
+                getHeroAsCloseAsPossibleToObject(hero.allPets[hero.activePets[i]].x, hero.allPets[hero.activePets[i]].y, hero.allPets[hero.activePets[i]].width, hero.allPets[hero.activePets[i]].height);
+                pushPetAway(i);
 
+            }
         }
     }
+
+    // check for inner doors:
+    if (typeof thisMapData.innerDoors !== "undefined") {
+        for (var i = 0; i < thisMapData.innerDoors.length; i++) {
+            thisInnerDoor = thisMapData.innerDoors[i];
+            if (!thisInnerDoor.open) {
+                if (isAnObjectCollision(getTileCentreCoordX(thisInnerDoor.tileX), getTileCentreCoordY(thisInnerDoor.tileY), tileW, tileW, hero.x, hero.y, hero.width, hero.height)) {
+                    getHeroAsCloseAsPossibleToObject(getTileCentreCoordX(thisInnerDoor.tileX), getTileCentreCoordY(thisInnerDoor.tileY), tileW, tileW);
+                }
+            }
+        }
     }
 }
+
 
 
 
@@ -1704,7 +1716,6 @@ function canLearnRecipe(recipeIndex) {
 
 
 
-
 function draw() {
     if (gameMode == "mapLoading") {
         gameContext.fillRect(0, 0, canvasWidth, canvasHeight);
@@ -1717,14 +1728,14 @@ function draw() {
 
         hero.isox = findIsoCoordsX(hero.x, hero.y);
         hero.isoy = findIsoCoordsY(hero.x, hero.y);
-      /*
+        /*
+          var assetsToDraw = [
+              [findIsoDepth(hero.x, hero.y, hero.z), "img", heroImg, Math.floor(canvasWidth / 2 - hero.feetOffsetX), Math.floor(canvasHeight / 2 - hero.feetOffsetY - hero.z)]
+          ];
+          */
+        var heroOffsetCol = currentAnimationFrame % hero["animation"]["walk"]["length"];
+        var heroOffsetRow = hero["animation"]["walk"][hero.facing];
         var assetsToDraw = [
-            [findIsoDepth(hero.x, hero.y, hero.z), "img", heroImg, Math.floor(canvasWidth / 2 - hero.feetOffsetX), Math.floor(canvasHeight / 2 - hero.feetOffsetY - hero.z)]
-        ];
-        */
-            var heroOffsetCol = currentAnimationFrame % hero["animation"]["walk"]["length"];
-            var heroOffsetRow = hero["animation"]["walk"][hero.facing];
-    var assetsToDraw = [
             [findIsoDepth(hero.x, hero.y, hero.z), "sprite", heroImg, heroOffsetCol * hero.spriteWidth, heroOffsetRow * hero.spriteHeight, hero.spriteWidth, hero.spriteHeight, Math.floor(canvasWidth / 2 - hero.feetOffsetX), Math.floor(canvasHeight / 2 - hero.feetOffsetY - hero.z), hero.spriteWidth, hero.spriteHeight]
         ];
 
@@ -1766,21 +1777,22 @@ function draw() {
             for (var i = 0; i < thisMapData.innerDoors.length; i++) {
                 thisX = getTileIsoCentreCoordX(thisMapData.innerDoors[i]['tileX'], thisMapData.innerDoors[i]['tileY']);
                 thisY = getTileIsoCentreCoordY(thisMapData.innerDoors[i]['tileX'], thisMapData.innerDoors[i]['tileY']);
-                     thisGraphicCentreX = thisMapData.graphics[(thisMapData.innerDoors[i]['graphic'])].centreX;
-                    thisGraphicCentreY = thisMapData.graphics[(thisMapData.innerDoors[i]['graphic'])].centreY;
-                    assetsToDraw.push([findIsoDepth(getTileCentreCoordX(thisMapData.innerDoors[i]['tileX']), getTileCentreCoordY(thisMapData.innerDoors[i]['tileY']), 0), "img", tileImages[(thisMapData.innerDoors[i]['graphic'])], Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2))]);
+                // check for open status to get the right graphic ###########
+                thisGraphicCentreX = thisMapData.graphics[(thisMapData.innerDoors[i]['graphic'])].centreX;
+                thisGraphicCentreY = thisMapData.graphics[(thisMapData.innerDoors[i]['graphic'])].centreY;
+                assetsToDraw.push([findIsoDepth(getTileCentreCoordX(thisMapData.innerDoors[i]['tileX']), getTileCentreCoordY(thisMapData.innerDoors[i]['tileY']), 0), "img", tileImages[(thisMapData.innerDoors[i]['graphic'])], Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2))]);
             }
         }
 
         if (hasActivePet) {
-             for (var i = 0; i < hero.activePets.length; i++) {
-            thisNPCOffsetCol = currentAnimationFrame % hero.allPets[hero.activePets[i]]["animation"]["walk"]["length"];
-            thisNPCOffsetRow = hero.allPets[hero.activePets[i]]["animation"]["walk"][hero.allPets[hero.activePets[i]].facing];
-            thisX = findIsoCoordsX(hero.allPets[hero.activePets[i]].x, hero.allPets[hero.activePets[i]].y);
-            thisY = findIsoCoordsY(hero.allPets[hero.activePets[i]].x, hero.allPets[hero.activePets[i]].y);
-            assetsToDraw.push([findIsoDepth(hero.allPets[hero.activePets[i]].x, hero.allPets[hero.activePets[i]].y, hero.allPets[hero.activePets[i]].z), "sprite", activePetImages[i], thisNPCOffsetCol * hero.allPets[hero.activePets[i]].spriteWidth, thisNPCOffsetRow * hero.allPets[hero.activePets[i]].spriteHeight, hero.allPets[hero.activePets[i]].spriteWidth, hero.allPets[hero.activePets[i]].spriteHeight, Math.floor(thisX - hero.isox - hero.allPets[hero.activePets[i]].centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - hero.allPets[hero.activePets[i]].centreY + (canvasHeight / 2) - hero.allPets[hero.activePets[i]].z), hero.allPets[hero.activePets[i]].spriteWidth, hero.allPets[hero.activePets[i]].spriteHeight]);
+            for (var i = 0; i < hero.activePets.length; i++) {
+                thisNPCOffsetCol = currentAnimationFrame % hero.allPets[hero.activePets[i]]["animation"]["walk"]["length"];
+                thisNPCOffsetRow = hero.allPets[hero.activePets[i]]["animation"]["walk"][hero.allPets[hero.activePets[i]].facing];
+                thisX = findIsoCoordsX(hero.allPets[hero.activePets[i]].x, hero.allPets[hero.activePets[i]].y);
+                thisY = findIsoCoordsY(hero.allPets[hero.activePets[i]].x, hero.allPets[hero.activePets[i]].y);
+                assetsToDraw.push([findIsoDepth(hero.allPets[hero.activePets[i]].x, hero.allPets[hero.activePets[i]].y, hero.allPets[hero.activePets[i]].z), "sprite", activePetImages[i], thisNPCOffsetCol * hero.allPets[hero.activePets[i]].spriteWidth, thisNPCOffsetRow * hero.allPets[hero.activePets[i]].spriteHeight, hero.allPets[hero.activePets[i]].spriteWidth, hero.allPets[hero.activePets[i]].spriteHeight, Math.floor(thisX - hero.isox - hero.allPets[hero.activePets[i]].centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - hero.allPets[hero.activePets[i]].centreY + (canvasHeight / 2) - hero.allPets[hero.activePets[i]].z), hero.allPets[hero.activePets[i]].spriteWidth, hero.allPets[hero.activePets[i]].spriteHeight]);
+            }
         }
-    }
 
         for (var i = 0; i < thisMapData.npcs.length; i++) {
             thisNPC = thisMapData.npcs[i];
@@ -1875,6 +1887,7 @@ function draw() {
         }
     }
 }
+
 
 
 
