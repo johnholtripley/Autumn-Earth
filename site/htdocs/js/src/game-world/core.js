@@ -1775,12 +1775,15 @@ function draw() {
 
         if (typeof thisMapData.innerDoors !== "undefined") {
             for (var i = 0; i < thisMapData.innerDoors.length; i++) {
+                // check for open status to get the right graphic ###########
+                if (!thisMapData.innerDoors[i]['open']) {
                 thisX = getTileIsoCentreCoordX(thisMapData.innerDoors[i]['tileX'], thisMapData.innerDoors[i]['tileY']);
                 thisY = getTileIsoCentreCoordY(thisMapData.innerDoors[i]['tileX'], thisMapData.innerDoors[i]['tileY']);
-                // check for open status to get the right graphic ###########
+                
                 thisGraphicCentreX = thisMapData.graphics[(thisMapData.innerDoors[i]['graphic'])].centreX;
                 thisGraphicCentreY = thisMapData.graphics[(thisMapData.innerDoors[i]['graphic'])].centreY;
                 assetsToDraw.push([findIsoDepth(getTileCentreCoordX(thisMapData.innerDoors[i]['tileX']), getTileCentreCoordY(thisMapData.innerDoors[i]['tileY']), 0), "img", tileImages[(thisMapData.innerDoors[i]['graphic'])], Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2))]);
+            }
             }
         }
 

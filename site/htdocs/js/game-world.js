@@ -2202,7 +2202,7 @@ function isAPetTerrainCollision(object, x, y) {
 
 function movePet() {
     if (hasActivePet) {
-        var thisNPC, thisItem, thisPetsTarget, thisOtherPet, oldPetX, oldPetY, thisPet, newTile;
+        var thisNPC, thisItem, thisPetsTarget, thisOtherPet, oldPetX, oldPetY, thisPet, newTile, thisInnerDoor;
         for (var p = 0; p < hero.activePets.length; p++) {
             thisPet = hero.allPets[hero.activePets[p]];
             thisPetsTarget = thisPet.following;
@@ -2294,6 +2294,21 @@ function movePet() {
                             }
                         }
                     }
+
+
+    // check for inner doors:
+    if (typeof thisMapData.innerDoors !== "undefined") {
+        for (var i = 0; i < thisMapData.innerDoors.length; i++) {
+            thisInnerDoor = thisMapData.innerDoors[i];
+            if (!thisInnerDoor.open) {
+                if (isAnObjectCollision(getTileCentreCoordX(thisInnerDoor.tileX), getTileCentreCoordY(thisInnerDoor.tileY), tileW, tileW, thisPet.x, thisPet.y, thisPet.width, thisPet.height)) {
+                     thisPet.x = oldPetX;
+                                thisPet.y = oldPetY;
+                }
+            }
+        }
+    }
+
 
                     // check for collisions against items:
                     for (var j = 0; j < thisMapData.items.length; j++) {
@@ -5545,12 +5560,15 @@ function draw() {
 
         if (typeof thisMapData.innerDoors !== "undefined") {
             for (var i = 0; i < thisMapData.innerDoors.length; i++) {
+                // check for open status to get the right graphic ###########
+                if (!thisMapData.innerDoors[i]['open']) {
                 thisX = getTileIsoCentreCoordX(thisMapData.innerDoors[i]['tileX'], thisMapData.innerDoors[i]['tileY']);
                 thisY = getTileIsoCentreCoordY(thisMapData.innerDoors[i]['tileX'], thisMapData.innerDoors[i]['tileY']);
-                // check for open status to get the right graphic ###########
+                
                 thisGraphicCentreX = thisMapData.graphics[(thisMapData.innerDoors[i]['graphic'])].centreX;
                 thisGraphicCentreY = thisMapData.graphics[(thisMapData.innerDoors[i]['graphic'])].centreY;
                 assetsToDraw.push([findIsoDepth(getTileCentreCoordX(thisMapData.innerDoors[i]['tileX']), getTileCentreCoordY(thisMapData.innerDoors[i]['tileY']), 0), "img", tileImages[(thisMapData.innerDoors[i]['graphic'])], Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2))]);
+            }
             }
         }
 
