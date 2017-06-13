@@ -5532,6 +5532,16 @@ function draw() {
             }
         }
 
+        if (typeof thisMapData.innerDoors !== "undefined") {
+            for (var i = 0; i < thisMapData.innerDoors.length; i++) {
+                thisX = getTileIsoCentreCoordX(thisMapData.innerDoors[i]['tileX'], thisMapData.innerDoors[i]['tileY']);
+                thisY = getTileIsoCentreCoordY(thisMapData.innerDoors[i]['tileX'], thisMapData.innerDoors[i]['tileY']);
+                     thisGraphicCentreX = thisMapData.graphics[(thisMapData.innerDoors[i]['graphic'])].centreX;
+                    thisGraphicCentreY = thisMapData.graphics[(thisMapData.innerDoors[i]['graphic'])].centreY;
+                    assetsToDraw.push([findIsoDepth(getTileCentreCoordX(thisMapData.innerDoors[i]['tileX']), getTileCentreCoordY(thisMapData.innerDoors[i]['tileY']), 0), "img", tileImages[(thisMapData.innerDoors[i]['graphic'])], Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2))]);
+            }
+        }
+
         if (hasActivePet) {
              for (var i = 0; i < hero.activePets.length; i++) {
             thisNPCOffsetCol = currentAnimationFrame % hero.allPets[hero.activePets[i]]["animation"]["walk"]["length"];
