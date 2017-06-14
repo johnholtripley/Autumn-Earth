@@ -904,13 +904,16 @@ function heroIsInNewTile() {
 
 
    if (typeof thisHotspot.openInnerDoor !== "undefined") {
-                thisMapData.innerDoors[thisHotspot.openInnerDoor]['open'] = true;
+    openInnerDoor(thisHotspot.openInnerDoor);
+                
             }
                if (typeof thisHotspot.closeInnerDoor !== "undefined") {
-                thisMapData.innerDoors[thisHotspot.closeInnerDoor]['open'] = false;
+                   closeInnerDoor(thisHotspot.closeInnerDoor);
+                
             }
                       if (typeof thisHotspot.toggleInnerDoor !== "undefined") {
-                thisMapData.innerDoors[thisHotspot.toggleInnerDoor]['open'] = !(thisMapData.innerDoors[thisHotspot.toggleInnerDoor]['open']);
+                         toggleInnerDoor(thisHotspot.toggleInnerDoor);
+              
             }
 
 
@@ -951,7 +954,18 @@ startDoorTransition();
 }
 
 
+function openInnerDoor(whichInnerDoor) {
+    // animation ######
+thisMapData.innerDoors[whichInnerDoor]['open'] = true;
+}
 
+function closeInnerDoor(whichInnerDoor) {
+thisMapData.innerDoors[whichInnerDoor]['open'] = false;
+}
+
+function toggleInnerDoor(whichInnerDoor) {
+  thisMapData.innerDoors[whichInnerDoor]['open'] = !(thisMapData.innerDoors[whichInnerDoor]['open']);
+  }
 
 
 

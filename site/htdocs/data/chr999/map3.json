@@ -209,6 +209,11 @@
             "centreY": 4,
             "radius": 2,
             "openInnerDoor": "3-14-11"
+        }, {
+            "centreX": 14,
+            "centreY": 14,
+            "radius": 2,
+            "closeInnerDoor": "3-14-11"
         }]
     }
 }
