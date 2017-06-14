@@ -740,32 +740,27 @@ function checkHeroCollisions() {
     if (typeof thisMapData.innerDoors !== "undefined") {
         var thisInnerDoor;
         for (var i in thisMapData.innerDoors) {
-thisInnerDoor = thisMapData.innerDoors[i];
+            thisInnerDoor = thisMapData.innerDoors[i];
             if (!thisInnerDoor.open) {
                 if (isAnObjectCollision(getTileCentreCoordX(thisInnerDoor.tileX), getTileCentreCoordY(thisInnerDoor.tileY), tileW, tileW, hero.x, hero.y, hero.width, hero.height)) {
                     if (thisInnerDoor.locked) {
-                    
-// check for key
-var hasInnerDoorKey = hero.currency.keys.indexOf(i);
-if(hasInnerDoorKey != -1) {
-
-unlockInnerDoor(i);
-openInnerDoor(i);
-
-hero.currency.keys.splice(hasInnerDoorKey, 1);
- UI.updateCurrencies();
-}
-
-                } else {
-openInnerDoor(i);
-                }
-                getHeroAsCloseAsPossibleToObject(getTileCentreCoordX(thisInnerDoor.tileX), getTileCentreCoordY(thisInnerDoor.tileY), tileW, tileW);
+                        // check for key
+                        var hasInnerDoorKey = hero.currency.keys.indexOf(i);
+                        if (hasInnerDoorKey != -1) {
+                            unlockInnerDoor(i);
+                            openInnerDoor(i);
+                            hero.currency.keys.splice(hasInnerDoorKey, 1);
+                            UI.updateCurrencies();
+                        }
+                    } else {
+                        openInnerDoor(i);
+                    }
+                    getHeroAsCloseAsPossibleToObject(getTileCentreCoordX(thisInnerDoor.tileX), getTileCentreCoordY(thisInnerDoor.tileY), tileW, tileW);
                 }
             }
         }
     }
 }
-
 
 
 
@@ -912,29 +907,22 @@ function heroIsInNewTile() {
                 }
                 questData[thisHotspot.quest].hasBeenActivated = 1;
             }
-            
+
             if (typeof thisHotspot.music !== "undefined") {
                 audio.playMusic(thisHotspot.music);
             }
-
-
-
-   if (typeof thisHotspot.openInnerDoor !== "undefined") {
-    openInnerDoor(thisHotspot.openInnerDoor);
-                
+            if (typeof thisHotspot.openInnerDoor !== "undefined") {
+                unlockInnerDoor(thisHotspot.openInnerDoor);
+                openInnerDoor(thisHotspot.openInnerDoor);
             }
-               if (typeof thisHotspot.closeInnerDoor !== "undefined") {
-                   closeInnerDoor(thisHotspot.closeInnerDoor);
-                
+            if (typeof thisHotspot.closeInnerDoor !== "undefined") {
+                closeInnerDoor(thisHotspot.closeInnerDoor);
             }
-                      if (typeof thisHotspot.toggleInnerDoor !== "undefined") {
-                         toggleInnerDoor(thisHotspot.toggleInnerDoor);
-              
+            if (typeof thisHotspot.toggleInnerDoor !== "undefined") {
+                toggleInnerDoor(thisHotspot.toggleInnerDoor);
             }
-
-
-
         }
+
         if (fae.currentState == "hero") {
             // check it's not recently visited this hotspot:
             if (fae.recentHotspots.indexOf(i) === -1) {
@@ -962,12 +950,13 @@ function heroIsInNewTile() {
     hero.breadcrumb.pop();
     hero.breadcrumb.unshift([hero.tileX, hero.tileY]);
 
-if(thisMapData.collisions[hero.tileY][hero.tileX] == "d") {
-     activeDoorX = hero.tileX;
- activeDoorY = hero.tileY;
-startDoorTransition();
+    if (thisMapData.collisions[hero.tileY][hero.tileX] == "d") {
+        activeDoorX = hero.tileX;
+        activeDoorY = hero.tileY;
+        startDoorTransition();
+    }
 }
-}
+
 
 
 function openInnerDoor(whichInnerDoor) {
@@ -1045,6 +1034,12 @@ function checkForActions() {
                     case "closeInnerDoor":
                         closeInnerDoor(thisMapData.items[i].additional);
                         break;
+                    case "key":
+                    hero.currency.keys.push(thisMapData.items[i].additional);
+                    UI.updateCurrencies();
+                    // remove from map:
+                            thisMapData.items.splice(i, 1);
+                    break;
                     default:
                         // try and pick it up:
                         inventoryCheck = canAddItemToInventory([thisMapData.items[i]]);
