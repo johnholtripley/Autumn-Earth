@@ -1083,7 +1083,7 @@ function hasLineOfSight(startX, startY, endX, endY) {
     var deltaY = endY - startY;
     var deltaX = endX - startX;
     var currentStep = 0;
-    var fraction, previousX, previousY, stepX, stepY;
+    var fraction, previousX, previousY, stepX, stepY, thisInnerDoor;
     //
     // path direction calculation:
     if (deltaY < 0) {
@@ -1120,11 +1120,13 @@ function hasLineOfSight(startX, startY, endX, endY) {
                 return false;
                 break;
             }
-
-            if (thisMapData.innerDoors.hasOwnProperty(currentMap + "-" + nextX + "-" + nextY)) {
+thisInnerDoor = currentMap + "-" + nextX + "-" + nextY;
+            if (thisMapData.innerDoors.hasOwnProperty(thisInnerDoor)) {
                 // an Inner Door exists at this location:
+                if(!thisMapData.innerDoors[thisInnerDoor]['open']) {
                 return false;
                 break;
+            }
             }
 
             // add relative movement to the array:                                                                                                                  
@@ -1153,10 +1155,13 @@ function hasLineOfSight(startX, startY, endX, endY) {
                 return false;
                 break;
             }
-            if (thisMapData.innerDoors.hasOwnProperty(currentMap + "-" + nextX + "-" + nextY)) {
+            thisInnerDoor = currentMap + "-" + nextX + "-" + nextY;
+            if (thisMapData.innerDoors.hasOwnProperty(thisInnerDoor)) {
                 // an Inner Door exists at this location:
+                if(!thisMapData.innerDoors[thisInnerDoor]['open']) {
                 return false;
                 break;
+            }
             }
 
             // add relative movement to the array:                                                                                                                  
