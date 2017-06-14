@@ -743,7 +743,12 @@ function checkHeroCollisions() {
 thisInnerDoor = thisMapData.innerDoors[i];
             if (!thisInnerDoor.open) {
                 if (isAnObjectCollision(getTileCentreCoordX(thisInnerDoor.tileX), getTileCentreCoordY(thisInnerDoor.tileY), tileW, tileW, hero.x, hero.y, hero.width, hero.height)) {
-                    getHeroAsCloseAsPossibleToObject(getTileCentreCoordX(thisInnerDoor.tileX), getTileCentreCoordY(thisInnerDoor.tileY), tileW, tileW);
+                    if (thisInnerDoor.locked) {
+                    // check for key ####
+                } else {
+openInnerDoor(i);
+                }
+                getHeroAsCloseAsPossibleToObject(getTileCentreCoordX(thisInnerDoor.tileX), getTileCentreCoordY(thisInnerDoor.tileY), tileW, tileW);
                 }
             }
         }
@@ -1492,7 +1497,7 @@ function checkForChallenges() {
 
 
 function moveNPCs() {
-    var thisNPC, newTile, thisNextMovement, oldNPCx, oldNPCy, thisOtherNPC, thisItem, thisNextMovement, thisNextMovementCode;
+    var thisNPC, newTile, thisNextMovement, oldNPCx, oldNPCy, thisOtherNPC, thisItem, thisNextMovement, thisNextMovementCode, thisInnerDoor;
     for (var i = 0; i < thisMapData.npcs.length; i++) {
         thisNPC = thisMapData.npcs[i];
         if (thisNPC.isMoving) {
@@ -1577,6 +1582,20 @@ function moveNPCs() {
                     thisNPC.y = oldNPCy;
                 }
             }
+
+
+                // check for inner doors:
+    if (typeof thisMapData.innerDoors !== "undefined") {
+        for (var i in thisMapData.innerDoors) {
+            thisInnerDoor = thisMapData.innerDoors[i];
+            if (!thisInnerDoor.open) {
+                if (isAnObjectCollision(getTileCentreCoordX(thisInnerDoor.tileX), getTileCentreCoordY(thisInnerDoor.tileY), tileW, tileW, thisNPC.x, thisNPC.y, thisNPC.width, thisNPC.height)) {
+           thisNPC.x = oldNPCx;
+                    thisNPC.y = oldNPCy;
+                }
+            }
+        }
+    }
 
             // find the difference for this movement:
             thisNPC.dx += (thisNPC.x - oldNPCx);
