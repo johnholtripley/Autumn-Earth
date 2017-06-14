@@ -357,77 +357,102 @@ function parseMoney(amount) {
 
 
 
-function hasLineOfSight(startx, starty, endx, endy) {
-    var nextx = startx;
-    var nexty = starty;
-    var pathy = [];
-    var pathx = [];
-    var deltay = endy - starty;
-    var deltax = endx - startx;
+function hasLineOfSight(startX, startY, endX, endY) {
+    
+    var nextX = startX;
+    var nextY = startY;
+    var pathY = [];
+    var pathX = [];
+    var deltaY = endY - startY;
+    var deltaX = endX - startX;
     var currentStep = 0;
-    var fraction, previousx, previousy, stepx, stepy;
+    var fraction, previousX, previousY, stepX, stepY;
     //
     // path direction calculation:
-    if (deltay < 0) {
-        stepy = -1;
+    if (deltaY < 0) {
+        stepY = -1;
     } else {
-        stepy = 1;
+        stepY = 1;
     }
-    if (deltax < 0) {
-        stepx = -1;
+    if (deltaX < 0) {
+        stepX = -1;
     } else {
-        stepx = 1;
+        stepX = 1;
     }
-    deltay = Math.abs(deltay * 2);
-    deltax = Math.abs(deltax * 2);
-    previousx = startx;
-    previousy = starty;
+    
+    deltaY = Math.abs(deltaY * 2);
+    deltaX = Math.abs(deltaX * 2);
+    previousX = startX;
+    previousY = startY;
     // bresenham algorithm:
-    if (deltax > deltay) {
-        fraction = deltay * 2 - deltax;
-        while (nextx != endx) {
+    
+    if (deltaX > deltaY) {
+        fraction = deltaY * 2 - deltaX;
+        
+        while (nextX != endX) {
+            
             if (fraction >= 0) {
-                nexty += stepy;
-                fraction -= deltax;
+                nextY += stepY;
+                fraction -= deltaX;
             }
-            nextx += stepx;
-            fraction += deltay;
+            nextX += stepX;
+            fraction += deltaY;
 
-            if (thisMapData.collisions[nexty][nextx] != 0) {
-                // tile is non-walkable;
+            if (thisMapData.collisions[nextY][nextX] != 0) {
+                // tile is non-walkable:
                 return false;
                 break;
             }
+
+            if (thisMapData.innerDoors.hasOwnProperty(currentMap + "-" + nextX + "-" + nextY)) {
+                // an Inner Door exists at this location:
+                return false;
+                break;
+            }
+
             // add relative movement to the array:                                                                                                                  
-            pathy[currentStep] = nexty - previousy;
-            pathx[currentStep] = nextx - previousx;
-            previousy = nexty;
-            previousx = nextx;
+            pathY[currentStep] = nextY - previousY;
+            pathX[currentStep] = nextX - previousX;
+            previousY = nextY;
+            previousX = nextX;
             currentStep++;
+            
         }
+        
     } else {
-        fraction = deltax * 2 - deltay;
-        while (nexty != endy) {
+        fraction = deltaX * 2 - deltaY;
+        
+        while (nextY != endY) {
+            
             if (fraction >= 0) {
-                nextx += stepx;
-                fraction -= deltay;
+                nextX += stepX;
+                fraction -= deltaY;
             }
-            nexty += stepy;
-            fraction += deltax;
+            nextY += stepY;
+            fraction += deltaX;
 
-            if (thisMapData.collisions[nexty][nextx] != 0) {
+            if (thisMapData.collisions[nextY][nextX] != 0) {
                 // tile is non-walkable;
                 return false;
                 break;
             }
+            if (thisMapData.innerDoors.hasOwnProperty(currentMap + "-" + nextX + "-" + nextY)) {
+                // an Inner Door exists at this location:
+                return false;
+                break;
+            }
+
             // add relative movement to the array:                                                                                                                  
-            pathy[currentStep] = nexty - previousy;
-            pathx[currentStep] = nextx - previousx;
-            previousy = nexty;
-            previousx = nextx;
+            pathY[currentStep] = nextY - previousY;
+            pathX[currentStep] = nextX - previousX;
+            previousY = nextY;
+            previousX = nextX;
             currentStep++;
+            
         }
+        
     }
+    
     return true;
 }
 

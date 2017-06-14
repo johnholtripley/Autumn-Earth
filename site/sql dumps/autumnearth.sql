@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 20, 2017 at 10:09 AM
+-- Generation Time: Jun 14, 2017 at 04:48 PM
 -- Server version: 5.6.24
 -- PHP Version: 5.6.8
 
@@ -547,7 +547,7 @@ CREATE TABLE IF NOT EXISTS `tblinventoryitems` (
   `lockedToThisPlayer` tinyint(1) NOT NULL DEFAULT '0',
   `respawnRate` int(11) DEFAULT NULL,
   `activeDuringSeason` int(11) DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=42 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=44 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblinventoryitems`
@@ -572,8 +572,8 @@ INSERT INTO `tblinventoryitems` (`itemID`, `shortname`, `description`, `priceCod
 (17, 'Small Backpack', 'A 20 slot bag', '2', '20.0', '24.0', 0, 0, 'small-backpack', 'bag', 20, 1, 0, '0', '0', NULL, NULL, 0, 0, 0, 1, 0, NULL, NULL),
 (18, 'Barrel', 'A large wooden barrel.', '2', '25.0', '31.0', 38, 38, 'barrel', 'static', 0, 0, 0, '0', '0', NULL, NULL, 0, 0, 0, 1, 0, NULL, NULL),
 (19, 'Pumpkin', 'A tasty pumpkin.', '1', '16.0', '18.0', 25, 23, 'pumpkin', '', 0, 0, 0, '0', '0', '4', NULL, 0, 0, 0, 1, 0, NULL, 2),
-(20, 'Large Backpack', 'A 30 slot bag', '2', '20.0', '24.0', 0, 0, 'large-backpack', 'bag', 30, 1, 0, '0', '0', NULL, NULL, 0, 0, 0, 1, 0, NULL, NULL),
-(21, 'Card Pack', '5 cards', '4', '20.0', '24.0', 0, 0, 'card-pack', 'booster', 0, 0, 0, '0', '0', NULL, NULL, 0, 0, 0, 1, 0, NULL, NULL),
+(20, 'Large Backpack', 'A 24 slot bag', '2', '20.0', '24.0', 0, 0, 'large-backpack', 'bag', 24, 1, 0, '0', '0', NULL, NULL, 0, 0, 0, 1, 0, NULL, NULL),
+(21, 'Totem Card Pack', '5 cards', '4', '20.0', '24.0', 0, 0, 'card-pack', 'booster', 0, 0, 0, '0', '0', NULL, NULL, 0, 0, 0, 1, 0, NULL, NULL),
 (22, 'Standing Stone', '', '4', '49.0', '81.0', 63, 63, 'standing-stone', 'questToggle', 2, 0, 0, '0', '0', NULL, NULL, 0, 0, 0, 0, 0, NULL, NULL),
 (23, 'Mugwort', 'Used to make green dyes', '4', '49.0', '81.0', 63, 63, 'mugwort', '', 0, 0, 0, '0', '0', '1', NULL, 0, 6, 1, 1, 0, NULL, NULL),
 (24, 'Rim Lichen', 'Used to make purple dyes', '4', '49.0', '81.0', 63, 63, 'rim-lichen', '', 0, 0, 0, '0', '0', '1', NULL, 0, 5, 1, 1, 0, NULL, NULL),
@@ -593,7 +593,9 @@ INSERT INTO `tblinventoryitems` (`itemID`, `shortname`, `description`, `priceCod
 (38, 'Acacia Resin', '', '4', '49.0', '81.0', 63, 63, 'acacia-resin', '', 0, 0, 0, '0', '0', NULL, NULL, 0, 0, 0, 1, 0, NULL, NULL),
 (39, 'Iron Gall', '', '4', '49.0', '81.0', 63, 63, 'iron-gall', '', 0, 0, 0, '0', '0', NULL, NULL, 0, 16, 1, 1, 0, NULL, NULL),
 (40, 'Ink', '', '4', '49.0', '81.0', 63, 63, 'ink', '', 0, 1, 0, '0', '0', NULL, NULL, 0, 0, 0, 1, 0, NULL, NULL),
-(41, 'Scribe''s Quill', '', '1', '20.0', '24.0', 0, 0, 'scribes-quill', 'inscribe', 0, 0, 0, '0', '0', '', NULL, 0, 0, 0, 1, 0, NULL, NULL);
+(41, 'Scribe''s Quill', '', '1', '20.0', '24.0', 0, 0, 'scribes-quill', 'inscribe', 0, 0, 0, '0', '0', '', NULL, 0, 0, 0, 1, 0, NULL, NULL),
+(42, 'Inner Door Lever', '', '1', '19.0', '34.0', 38, 38, 'inner-door-lever', 'toggleInnerDoor', 0, 0, 0, '0', '0', '', NULL, 0, 0, 0, 0, 0, NULL, NULL),
+(43, 'Inner Door Key', '', '1', '10.0', '6.0', 12, 12, 'inner-door-key', 'key', 0, 0, 0, '0', '0', '', NULL, 0, 0, 0, 0, 0, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -890,7 +892,7 @@ CREATE TABLE IF NOT EXISTS `tblplants` (
   `timeCreated` datetime NOT NULL,
   `plantSeed` int(255) NOT NULL,
   `commonNamesJoined` varchar(512) COLLATE utf8_bin NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=274 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=276 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
 -- Dumping data for table `tblplants`
@@ -912,7 +914,9 @@ INSERT INTO `tblplants` (`plantID`, `latinName`, `commonNames`, `plantDesc`, `pl
 (270, 'Parvirinum glutinosa', 'Saintstuber, Lesser song orchid or Stonesedge', 'A native annual with creeping stems, common in disturbed ground, farm land and walls.', 'parvirinum-glutinosa', 'Parvirinum glutinosa\r\n(Saintstuber, Lesser song orchid or Stonesedge)', 0, 0, '2016-11-18 10:03:08', 1479487606, 'Saintstuber/Lesser song orchid/Stonesedge'),
 (271, 'Beckia crocardamine', 'Riverholly, Stavebeam or Pouchpurse', 'A rare creeping native perennial of dry grassland and roadside, with dark red flowers. An excellent nector plant and a caterpillar food plant for the Silken processionary butterfly. Height: 10-40cm (4-16in) Perennial: Flowers May to Sept. Contains plant toxins.', 'beckia-crocardamine', 'Beckia crocardamine\r\n(Riverholly, Stavebeam or Pouchpurse)', 0, 0, '2016-11-18 10:03:15', 1479495853, 'Riverholly/Stavebeam/Pouchpurse'),
 (272, 'Lutivum coryda', 'Honeystrife', 'The beautiful, bright light red daisy flowers of this annual were once a common sight in hedgerows and pathways. It is now much rarer due to widespread use of selective herbicides.', 'lutivum-coryda', 'Lutivum coryda\r\n(Honeystrife)', 0, 0, '2017-01-25 11:50:25', 1485419349, 'Honeystrife'),
-(273, 'Zyginia curculacinia', 'Skywort, Wimplerose or Downholly', 'A shimmering, bright perennial found growing on cornfields and waste places. The leaves are prized in cookery. The roots are particularly attractive to bumble bee.', 'zyginia-curculacinia', 'Zyginia curculacinia\r\n(Skywort, Wimplerose or Downholly)\r\nA shimmering, bright perennial found growing on cornfields and waste places.', 0, 0, '2017-01-25 11:50:38', 1485378641, 'Skywort/Wimplerose/Downholly');
+(273, 'Zyginia curculacinia', 'Skywort, Wimplerose or Downholly', 'A shimmering, bright perennial found growing on cornfields and waste places. The leaves are prized in cookery. The roots are particularly attractive to bumble bee.', 'zyginia-curculacinia', 'Zyginia curculacinia\r\n(Skywort, Wimplerose or Downholly)\r\nA shimmering, bright perennial found growing on cornfields and waste places.', 0, 0, '2017-01-25 11:50:38', 1485378641, 'Skywort/Wimplerose/Downholly'),
+(274, 'Hanium curculum', 'Bitterfoot or Ridgeseed', 'A dark red flower of disturbed ground, farm land and walls. Likes calcareous soils.', 'hanium-curculum', 'Hanium curculum\r\n(Bitterfoot or Ridgeseed)\r\nA dark red flower of disturbed ground, farm land and walls. Likes calcareous soils.', 0, 0, '2017-04-10 13:50:31', 1491881113, 'Bitterfoot/Ridgeseed'),
+(275, 'Xicoryda niachille', 'Hearthfern', 'A native biennial with creeping stems, common in ditches, marshes, pond edges, and river banks.', 'xicoryda-niachille', 'Xicoryda niachille\r\n(Hearthfern)\r\nA native biennial with creeping stems, common in ditches, marshes, pond edges, and river banks.', 0, 0, '2017-06-13 13:21:24', 1497405393, 'Hearthfern');
 
 -- --------------------------------------------------------
 
@@ -1819,7 +1823,7 @@ ALTER TABLE `tblguilds`
 -- AUTO_INCREMENT for table `tblinventoryitems`
 --
 ALTER TABLE `tblinventoryitems`
-  MODIFY `itemID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=42;
+  MODIFY `itemID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=44;
 --
 -- AUTO_INCREMENT for table `tblitemcategories`
 --
@@ -1859,7 +1863,7 @@ ALTER TABLE `tblnews`
 -- AUTO_INCREMENT for table `tblplants`
 --
 ALTER TABLE `tblplants`
-  MODIFY `plantID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=274;
+  MODIFY `plantID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=276;
 --
 -- AUTO_INCREMENT for table `tblposts`
 --
