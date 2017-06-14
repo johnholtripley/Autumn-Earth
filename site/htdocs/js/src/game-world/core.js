@@ -707,7 +707,7 @@ function checkHeroCollisions() {
         }
     }
 
-    var thisNPC, thisItem, thisInnerDoor;
+    var thisNPC, thisItem;
     // check for collisions against NPCs:
     for (var i = 0; i < thisMapData.npcs.length; i++) {
         thisNPC = thisMapData.npcs[i];
@@ -738,8 +738,9 @@ function checkHeroCollisions() {
 
     // check for inner doors:
     if (typeof thisMapData.innerDoors !== "undefined") {
-        for (var i = 0; i < thisMapData.innerDoors.length; i++) {
-            thisInnerDoor = thisMapData.innerDoors[i];
+        var thisInnerDoor;
+        for (var i in thisMapData.innerDoors) {
+thisInnerDoor = thisMapData.innerDoors[i];
             if (!thisInnerDoor.open) {
                 if (isAnObjectCollision(getTileCentreCoordX(thisInnerDoor.tileX), getTileCentreCoordY(thisInnerDoor.tileY), tileW, tileW, hero.x, hero.y, hero.width, hero.height)) {
                     getHeroAsCloseAsPossibleToObject(getTileCentreCoordX(thisInnerDoor.tileX), getTileCentreCoordY(thisInnerDoor.tileY), tileW, tileW);
@@ -899,6 +900,21 @@ function heroIsInNewTile() {
             if (typeof thisHotspot.music !== "undefined") {
                 audio.playMusic(thisHotspot.music);
             }
+
+
+
+   if (typeof thisHotspot.openInnerDoor !== "undefined") {
+                thisMapData.innerDoors[thisHotspot.openInnerDoor]['open'] = true;
+            }
+               if (typeof thisHotspot.closeInnerDoor !== "undefined") {
+                thisMapData.innerDoors[thisHotspot.closeInnerDoor]['open'] = false;
+            }
+                      if (typeof thisHotspot.toggleInnerDoor !== "undefined") {
+                thisMapData.innerDoors[thisHotspot.toggleInnerDoor]['open'] = !(thisMapData.innerDoors[thisHotspot.toggleInnerDoor]['open']);
+            }
+
+
+
         }
         if (fae.currentState == "hero") {
             // check it's not recently visited this hotspot:
@@ -1774,7 +1790,7 @@ function draw() {
         }
 
         if (typeof thisMapData.innerDoors !== "undefined") {
-            for (var i = 0; i < thisMapData.innerDoors.length; i++) {
+            for (var i in thisMapData.innerDoors) {
                 // check for open status to get the right graphic ###########
                 if (!thisMapData.innerDoors[i]['open']) {
                 thisX = getTileIsoCentreCoordX(thisMapData.innerDoors[i]['tileX'], thisMapData.innerDoors[i]['tileY']);
