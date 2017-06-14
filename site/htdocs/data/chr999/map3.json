@@ -203,6 +203,11 @@
             "type": 18,
             "tileX": 1,
             "tileY": 9
+        },{
+            "type": 42,
+            "tileX": 6,
+            "tileY": 6,
+            "additional": "3-14-11"
         }],
         "hotspots": []
     }

@@ -1019,6 +1019,15 @@ function checkForActions() {
                             }
                         }
                         break;
+                        case "toggleInnerDoor":
+                        toggleInnerDoor(thisMapData.items[i].additional);
+                        break;
+                         case "openInnerDoor":
+                        openInnerDoor(thisMapData.items[i].additional);
+                        break;
+                         case "closeInnerDoor":
+                        closeInnerDoor(thisMapData.items[i].additional);
+                        break;
                     default:
                         // try and pick it up:
                         inventoryCheck = canAddItemToInventory([thisMapData.items[i]]);
