@@ -744,7 +744,18 @@ thisInnerDoor = thisMapData.innerDoors[i];
             if (!thisInnerDoor.open) {
                 if (isAnObjectCollision(getTileCentreCoordX(thisInnerDoor.tileX), getTileCentreCoordY(thisInnerDoor.tileY), tileW, tileW, hero.x, hero.y, hero.width, hero.height)) {
                     if (thisInnerDoor.locked) {
-                    // check for key ####
+                    
+// check for key
+var hasInnerDoorKey = hero.currency.keys.indexOf(i);
+if(hasInnerDoorKey != -1) {
+
+unlockInnerDoor(i);
+openInnerDoor(i);
+
+hero.currency.keys.splice(hasInnerDoorKey, 1);
+ UI.updateCurrencies();
+}
+
                 } else {
 openInnerDoor(i);
                 }
@@ -972,6 +983,12 @@ function toggleInnerDoor(whichInnerDoor) {
   thisMapData.innerDoors[whichInnerDoor]['open'] = !(thisMapData.innerDoors[whichInnerDoor]['open']);
   }
 
+  function unlockInnerDoor(whichInnerDoor) {
+    thisMapData.innerDoors[whichInnerDoor]['locked'] = false;
+
+    // play sound ####
+  }
+
 
 
 function checkForActions() {
@@ -1019,13 +1036,13 @@ function checkForActions() {
                             }
                         }
                         break;
-                        case "toggleInnerDoor":
+                    case "toggleInnerDoor":
                         toggleInnerDoor(thisMapData.items[i].additional);
                         break;
-                         case "openInnerDoor":
+                    case "openInnerDoor":
                         openInnerDoor(thisMapData.items[i].additional);
                         break;
-                         case "closeInnerDoor":
+                    case "closeInnerDoor":
                         closeInnerDoor(thisMapData.items[i].additional);
                         break;
                     default:
@@ -1075,6 +1092,7 @@ function checkForActions() {
     // action processed, so cancel the key event:
     key[4] = 0;
 }
+
 
 
 function processSpeech(thisNPC, thisSpeechPassedIn, thisSpeechCode, isPartOfNPCsNormalSpeech) {

@@ -177,7 +177,7 @@
                 "tileX": 14,
                 "tileY": 11,
                 "open": false,
-                "locked": false,
+                "locked": true,
                 "graphic": 3,
                 "animation": {
                     "opening": {

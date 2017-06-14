@@ -358,6 +358,7 @@
     "retinue": [0, 2],
     "currency": {
         "money": 34510,
-        "cardDust": 12
+        "cardDust": 12,
+        "keys": ["3-14-11"]
     }
 }
