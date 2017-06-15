@@ -176,8 +176,8 @@
             "3-14-11": {
                 "tileX": 14,
                 "tileY": 11,
-                "open": false,
-                "locked": true,
+                "isOpen": false,
+                "isLocked": true,
                 "graphic": 3,
                 "animation": {
                     "opening": {

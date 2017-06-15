@@ -741,9 +741,9 @@ function checkHeroCollisions() {
         var thisInnerDoor;
         for (var i in thisMapData.innerDoors) {
             thisInnerDoor = thisMapData.innerDoors[i];
-            if (!thisInnerDoor.open) {
+            if (!thisInnerDoor.isOpen) {
                 if (isAnObjectCollision(getTileCentreCoordX(thisInnerDoor.tileX), getTileCentreCoordY(thisInnerDoor.tileY), tileW, tileW, hero.x, hero.y, hero.width, hero.height)) {
-                    if (thisInnerDoor.locked) {
+                    if (thisInnerDoor.isLocked) {
                         // check for key
                         var hasInnerDoorKey = hero.currency.keys.indexOf(i);
                         if (hasInnerDoorKey != -1) {
@@ -961,19 +961,19 @@ function heroIsInNewTile() {
 
 function openInnerDoor(whichInnerDoor) {
     // animation ######
-thisMapData.innerDoors[whichInnerDoor]['open'] = true;
+thisMapData.innerDoors[whichInnerDoor]['isOpen'] = true;
 }
 
 function closeInnerDoor(whichInnerDoor) {
-thisMapData.innerDoors[whichInnerDoor]['open'] = false;
+thisMapData.innerDoors[whichInnerDoor]['isOpen'] = false;
 }
 
 function toggleInnerDoor(whichInnerDoor) {
-  thisMapData.innerDoors[whichInnerDoor]['open'] = !(thisMapData.innerDoors[whichInnerDoor]['open']);
+  thisMapData.innerDoors[whichInnerDoor]['isOpen'] = !(thisMapData.innerDoors[whichInnerDoor]['isOpen']);
   }
 
   function unlockInnerDoor(whichInnerDoor) {
-    thisMapData.innerDoors[whichInnerDoor]['locked'] = false;
+    thisMapData.innerDoors[whichInnerDoor]['isLocked'] = false;
 
     // play sound ####
   }
@@ -1610,7 +1610,7 @@ function moveNPCs() {
     if (typeof thisMapData.innerDoors !== "undefined") {
         for (var i in thisMapData.innerDoors) {
             thisInnerDoor = thisMapData.innerDoors[i];
-            if (!thisInnerDoor.open) {
+            if (!thisInnerDoor.isOpen) {
                 if (isAnObjectCollision(getTileCentreCoordX(thisInnerDoor.tileX), getTileCentreCoordY(thisInnerDoor.tileY), tileW, tileW, thisNPC.x, thisNPC.y, thisNPC.width, thisNPC.height)) {
            thisNPC.x = oldNPCx;
                     thisNPC.y = oldNPCy;
@@ -1847,7 +1847,7 @@ function draw() {
         if (typeof thisMapData.innerDoors !== "undefined") {
             for (var i in thisMapData.innerDoors) {
                 // check for open status to get the right graphic ###########
-                if (!thisMapData.innerDoors[i]['open']) {
+                if (!thisMapData.innerDoors[i]['isOpen']) {
                 thisX = getTileIsoCentreCoordX(thisMapData.innerDoors[i]['tileX'], thisMapData.innerDoors[i]['tileY']);
                 thisY = getTileIsoCentreCoordY(thisMapData.innerDoors[i]['tileX'], thisMapData.innerDoors[i]['tileY']);
                 

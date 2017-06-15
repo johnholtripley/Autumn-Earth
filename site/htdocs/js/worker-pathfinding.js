@@ -45,6 +45,28 @@ function addNode(parentNode, tileX, tileY, endX, endY) {
                 }
             }
         }
+        // check for items:
+        for (var i = 0; i < thisMapData.items.length; i++) {
+            if (thisMapData.items[i].tileX == tileX) {
+                if (thisMapData.items[i].tileY == tileY) {
+                    isBlocked = true;
+                }
+            }
+        }
+
+        // check for inner doors:
+        if (typeof thisMapData.innerDoors !== "undefined") {
+            for (var i in thisMapData.innerDoors) {
+                if (!thisMapData.innerDoors[i].isOpen) {
+                    if (thisMapData.innerDoors[i].tileX == tileX) {
+                        if (thisMapData.innerDoors[i].tileY == tileY) {
+                            isBlocked = true;
+                        }
+                    }
+                }
+            }
+        }
+
         if (!isBlocked) {
             var heuristic = Math.abs(tileX - endX) + Math.abs(tileY - endY);
             var thisCost = parentNode.cost + 1;
@@ -80,6 +102,7 @@ function addNode(parentNode, tileX, tileY, endX, endY) {
         }
     }
 }
+
 
 
 function findPath(startX, startY, endX, endY) {

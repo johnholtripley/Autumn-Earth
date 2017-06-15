@@ -503,7 +503,7 @@
                 "isMoving": false,
                 "speechIndex": 0,
                 "speech": [
-                    ["Hi there - welcome!/Feel free to have a good look around/Welcome, welcome!", "shop", "shop #2"]
+                    ["Hi there - welcome!/Feel free to have a good look around/Welcome, welcome!", "shoop", "shop #2"]
                 ],
                 "cardGameSpeech": {
                     "challenge": ["Do you play? Fancy a game then?", "play"],
@@ -543,7 +543,7 @@
                 "isMoving": false,
                 "speechIndex": 0,
                 "speech": [
-                    ["Hi there - welcome!/Feel free to have a good look around/Welcome, welcome!", "shop", "shop #3"]
+                    ["Hi there - welcome!/Feel free to have a good look around/Welcome, welcome!", "shoop", "shop #3"]
                 ],
                 "cardGameSpeech": {
                     "challenge": ["Do you play? Fancy a game then?", "play"],
@@ -633,10 +633,22 @@
         "items": [{
 
                 "type": 18,
-                "tileX": 15,
-                "tileY": 15
+                "tileX": 14,
+                "tileY": 18
 
             }, {
+
+                "type": 18,
+                "tileX": 15,
+                "tileY": 18
+
+            },{
+
+                "type": 18,
+                "tileX": 16,
+                "tileY": 18
+
+            },{
 
                 "type": 19,
                 "tileX": 12,

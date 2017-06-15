@@ -1073,9 +1073,8 @@ function parseMoney(amount) {
 
 
 
-
 function hasLineOfSight(startX, startY, endX, endY) {
-    
+
     var nextX = startX;
     var nextY = startY;
     var pathY = [];
@@ -1084,6 +1083,10 @@ function hasLineOfSight(startX, startY, endX, endY) {
     var deltaX = endX - startX;
     var currentStep = 0;
     var fraction, previousX, previousY, stepX, stepY, thisInnerDoor;
+    var needToCheckInnerDoors = false;
+    if (typeof thisMapData.innerDoors !== "undefined") {
+        needToCheckInnerDoors = true;
+    }
     //
     // path direction calculation:
     if (deltaY < 0) {
@@ -1096,18 +1099,18 @@ function hasLineOfSight(startX, startY, endX, endY) {
     } else {
         stepX = 1;
     }
-    
+
     deltaY = Math.abs(deltaY * 2);
     deltaX = Math.abs(deltaX * 2);
     previousX = startX;
     previousY = startY;
     // bresenham algorithm:
-    
+
     if (deltaX > deltaY) {
         fraction = deltaY * 2 - deltaX;
-        
+
         while (nextX != endX) {
-            
+
             if (fraction >= 0) {
                 nextY += stepY;
                 fraction -= deltaX;
@@ -1120,13 +1123,15 @@ function hasLineOfSight(startX, startY, endX, endY) {
                 return false;
                 break;
             }
-thisInnerDoor = currentMap + "-" + nextX + "-" + nextY;
-            if (thisMapData.innerDoors.hasOwnProperty(thisInnerDoor)) {
-                // an Inner Door exists at this location:
-                if(!thisMapData.innerDoors[thisInnerDoor]['open']) {
-                return false;
-                break;
-            }
+            if (needToCheckInnerDoors) {
+                thisInnerDoor = currentMap + "-" + nextX + "-" + nextY;
+                if (thisMapData.innerDoors.hasOwnProperty(thisInnerDoor)) {
+                    // an Inner Door exists at this location:
+                    if (!thisMapData.innerDoors[thisInnerDoor]['open']) {
+                        return false;
+                        break;
+                    }
+                }
             }
 
             // add relative movement to the array:                                                                                                                  
@@ -1135,14 +1140,14 @@ thisInnerDoor = currentMap + "-" + nextX + "-" + nextY;
             previousY = nextY;
             previousX = nextX;
             currentStep++;
-            
+
         }
-        
+
     } else {
         fraction = deltaX * 2 - deltaY;
-        
+
         while (nextY != endY) {
-            
+
             if (fraction >= 0) {
                 nextX += stepX;
                 fraction -= deltaY;
@@ -1155,13 +1160,15 @@ thisInnerDoor = currentMap + "-" + nextX + "-" + nextY;
                 return false;
                 break;
             }
-            thisInnerDoor = currentMap + "-" + nextX + "-" + nextY;
-            if (thisMapData.innerDoors.hasOwnProperty(thisInnerDoor)) {
-                // an Inner Door exists at this location:
-                if(!thisMapData.innerDoors[thisInnerDoor]['open']) {
-                return false;
-                break;
-            }
+            if (needToCheckInnerDoors) {
+                thisInnerDoor = currentMap + "-" + nextX + "-" + nextY;
+                if (thisMapData.innerDoors.hasOwnProperty(thisInnerDoor)) {
+                    // an Inner Door exists at this location:
+                    if (!thisMapData.innerDoors[thisInnerDoor]['open']) {
+                        return false;
+                        break;
+                    }
+                }
             }
 
             // add relative movement to the array:                                                                                                                  
@@ -1170,11 +1177,11 @@ thisInnerDoor = currentMap + "-" + nextX + "-" + nextY;
             previousY = nextY;
             previousX = nextX;
             currentStep++;
-            
+
         }
-        
+
     }
-    
+
     return true;
 }
 
@@ -2330,7 +2337,7 @@ function movePet() {
     if (typeof thisMapData.innerDoors !== "undefined") {
         for (var i in thisMapData.innerDoors) {
             thisInnerDoor = thisMapData.innerDoors[i];
-            if (!thisInnerDoor.open) {
+            if (!thisInnerDoor.isOpen) {
                 if (isAnObjectCollision(getTileCentreCoordX(thisInnerDoor.tileX), getTileCentreCoordY(thisInnerDoor.tileY), tileW, tileW, thisPet.x, thisPet.y, thisPet.width, thisPet.height)) {
                      thisPet.x = oldPetX;
                                 thisPet.y = oldPetY;
@@ -4556,9 +4563,9 @@ function checkHeroCollisions() {
         var thisInnerDoor;
         for (var i in thisMapData.innerDoors) {
             thisInnerDoor = thisMapData.innerDoors[i];
-            if (!thisInnerDoor.open) {
+            if (!thisInnerDoor.isOpen) {
                 if (isAnObjectCollision(getTileCentreCoordX(thisInnerDoor.tileX), getTileCentreCoordY(thisInnerDoor.tileY), tileW, tileW, hero.x, hero.y, hero.width, hero.height)) {
-                    if (thisInnerDoor.locked) {
+                    if (thisInnerDoor.isLocked) {
                         // check for key
                         var hasInnerDoorKey = hero.currency.keys.indexOf(i);
                         if (hasInnerDoorKey != -1) {
@@ -4776,19 +4783,19 @@ function heroIsInNewTile() {
 
 function openInnerDoor(whichInnerDoor) {
     // animation ######
-thisMapData.innerDoors[whichInnerDoor]['open'] = true;
+thisMapData.innerDoors[whichInnerDoor]['isOpen'] = true;
 }
 
 function closeInnerDoor(whichInnerDoor) {
-thisMapData.innerDoors[whichInnerDoor]['open'] = false;
+thisMapData.innerDoors[whichInnerDoor]['isOpen'] = false;
 }
 
 function toggleInnerDoor(whichInnerDoor) {
-  thisMapData.innerDoors[whichInnerDoor]['open'] = !(thisMapData.innerDoors[whichInnerDoor]['open']);
+  thisMapData.innerDoors[whichInnerDoor]['isOpen'] = !(thisMapData.innerDoors[whichInnerDoor]['isOpen']);
   }
 
   function unlockInnerDoor(whichInnerDoor) {
-    thisMapData.innerDoors[whichInnerDoor]['locked'] = false;
+    thisMapData.innerDoors[whichInnerDoor]['isLocked'] = false;
 
     // play sound ####
   }
@@ -5425,7 +5432,7 @@ function moveNPCs() {
     if (typeof thisMapData.innerDoors !== "undefined") {
         for (var i in thisMapData.innerDoors) {
             thisInnerDoor = thisMapData.innerDoors[i];
-            if (!thisInnerDoor.open) {
+            if (!thisInnerDoor.isOpen) {
                 if (isAnObjectCollision(getTileCentreCoordX(thisInnerDoor.tileX), getTileCentreCoordY(thisInnerDoor.tileY), tileW, tileW, thisNPC.x, thisNPC.y, thisNPC.width, thisNPC.height)) {
            thisNPC.x = oldNPCx;
                     thisNPC.y = oldNPCy;
@@ -5662,7 +5669,7 @@ function draw() {
         if (typeof thisMapData.innerDoors !== "undefined") {
             for (var i in thisMapData.innerDoors) {
                 // check for open status to get the right graphic ###########
-                if (!thisMapData.innerDoors[i]['open']) {
+                if (!thisMapData.innerDoors[i]['isOpen']) {
                 thisX = getTileIsoCentreCoordX(thisMapData.innerDoors[i]['tileX'], thisMapData.innerDoors[i]['tileY']);
                 thisY = getTileIsoCentreCoordY(thisMapData.innerDoors[i]['tileX'], thisMapData.innerDoors[i]['tileY']);
                 

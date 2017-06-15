@@ -135,7 +135,7 @@ function movePet() {
     if (typeof thisMapData.innerDoors !== "undefined") {
         for (var i in thisMapData.innerDoors) {
             thisInnerDoor = thisMapData.innerDoors[i];
-            if (!thisInnerDoor.open) {
+            if (!thisInnerDoor.isOpen) {
                 if (isAnObjectCollision(getTileCentreCoordX(thisInnerDoor.tileX), getTileCentreCoordY(thisInnerDoor.tileY), tileW, tileW, thisPet.x, thisPet.y, thisPet.width, thisPet.height)) {
                      thisPet.x = oldPetX;
                                 thisPet.y = oldPetY;
