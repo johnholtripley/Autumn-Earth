@@ -4743,6 +4743,14 @@ function heroIsInNewTile() {
             if (typeof thisHotspot.toggleInnerDoor !== "undefined") {
                 toggleInnerDoor(thisHotspot.toggleInnerDoor);
             }
+
+
+if (typeof thisHotspot.remove !== "undefined") {
+    // remove this hotspot now it's been triggered:
+    thisMapData.hotspots.splice(i, 1);
+    i--;
+}
+
         }
 
         if (fae.currentState == "hero") {

@@ -177,6 +177,40 @@
                 "tileX": 14,
                 "tileY": 11,
                 "isOpen": false,
+                "isLocked": false,
+                "graphic": 3,
+                "animation": {
+                    "opening": {
+                        "length": 8,
+                        "row": 0
+                    },
+                    "closing": {
+                        "length": 8,
+                        "row": 1
+                    }
+                }
+            },
+            "3-10-14": {
+                "tileX": 10,
+                "tileY": 14,
+                "isOpen": false,
+                "isLocked": false,
+                "graphic": 3,
+                "animation": {
+                    "opening": {
+                        "length": 8,
+                        "row": 0
+                    },
+                    "closing": {
+                        "length": 8,
+                        "row": 1
+                    }
+                }
+            },
+            "3-3-11": {
+                "tileX": 3,
+                "tileY": 11,
+                "isOpen": false,
                 "isLocked": true,
                 "graphic": 3,
                 "animation": {
@@ -203,17 +237,30 @@
             "type": 18,
             "tileX": 1,
             "tileY": 9
-        },{
+        }, {
             "type": 42,
-            "tileX": 6,
-            "tileY": 6,
-            "additional": "3-14-11"
-        },{
+            "tileX": 8,
+            "tileY": 19,
+            "additional": "3-3-11"
+        }, {
             "type": 43,
             "tileX": 16,
             "tileY": 3,
             "additional": "3-14-11"
+        },{
+            "type": 42,
+            "tileX": 8,
+            "tileY": 1,
+            "additional": "3-3-11"
         }],
-        "hotspots": []
+        "hotspots": [{
+            "centreX": 3,
+            "centreY": 7,
+            "radius": 3,
+            "message": "",
+            "closeInnerDoor": "3-3-11",
+            "remove": true
+
+        }]
     }
 }
