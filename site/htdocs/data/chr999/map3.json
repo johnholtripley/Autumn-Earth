@@ -345,7 +345,8 @@
             "radius": 3,
             "message": "",
             "closeInnerDoor": "3-3-11",
-            "remove": true
+            "remove": true,
+            "faeIgnore": true
 
         }]
     }

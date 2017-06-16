@@ -1084,11 +1084,32 @@ function hasLineOfSight(startX, startY, endX, endY) {
     var deltaX = endX - startX;
     var currentStep = 0;
     var fraction, previousX, previousY, stepX, stepY, thisInnerDoor;
+
+
+
     var needToCheckInnerDoors = false;
     if (typeof thisMapData.innerDoors !== "undefined") {
         needToCheckInnerDoors = true;
     }
-    //
+
+
+// check the starting tile:
+   if (thisMapData.collisions[startY][startX] != 0) {
+                // tile is non-walkable;
+                return false;
+                
+            }
+                    if (needToCheckInnerDoors) {
+                thisInnerDoor = currentMap + "-" + startX + "-" + startY;
+                if (thisMapData.innerDoors.hasOwnProperty(thisInnerDoor)) {
+                    // an Inner Door exists at this location:
+                    if (!thisMapData.innerDoors[thisInnerDoor]['isOpen']) {
+                        return false;
+                        
+                    }
+                }
+            }
+
     // path direction calculation:
     if (deltaY < 0) {
         stepY = -1;
@@ -1106,19 +1127,15 @@ function hasLineOfSight(startX, startY, endX, endY) {
     previousX = startX;
     previousY = startY;
     // bresenham algorithm:
-
     if (deltaX > deltaY) {
         fraction = deltaY * 2 - deltaX;
-
         while (nextX != endX) {
-
             if (fraction >= 0) {
                 nextY += stepY;
                 fraction -= deltaX;
             }
             nextX += stepX;
             fraction += deltaY;
-
             if (thisMapData.collisions[nextY][nextX] != 0) {
                 // tile is non-walkable:
                 return false;
@@ -1128,34 +1145,28 @@ function hasLineOfSight(startX, startY, endX, endY) {
                 thisInnerDoor = currentMap + "-" + nextX + "-" + nextY;
                 if (thisMapData.innerDoors.hasOwnProperty(thisInnerDoor)) {
                     // an Inner Door exists at this location:
-                    if (!thisMapData.innerDoors[thisInnerDoor]['open']) {
+                    if (!thisMapData.innerDoors[thisInnerDoor]['isOpen']) {
                         return false;
                         break;
                     }
                 }
             }
-
             // add relative movement to the array:                                                                                                                  
             pathY[currentStep] = nextY - previousY;
             pathX[currentStep] = nextX - previousX;
             previousY = nextY;
             previousX = nextX;
             currentStep++;
-
         }
-
     } else {
         fraction = deltaX * 2 - deltaY;
-
         while (nextY != endY) {
-
             if (fraction >= 0) {
                 nextX += stepX;
                 fraction -= deltaY;
             }
             nextY += stepY;
             fraction += deltaX;
-
             if (thisMapData.collisions[nextY][nextX] != 0) {
                 // tile is non-walkable;
                 return false;
@@ -1165,26 +1176,23 @@ function hasLineOfSight(startX, startY, endX, endY) {
                 thisInnerDoor = currentMap + "-" + nextX + "-" + nextY;
                 if (thisMapData.innerDoors.hasOwnProperty(thisInnerDoor)) {
                     // an Inner Door exists at this location:
-                    if (!thisMapData.innerDoors[thisInnerDoor]['open']) {
+                    if (!thisMapData.innerDoors[thisInnerDoor]['isOpen']) {
                         return false;
                         break;
                     }
                 }
             }
-
             // add relative movement to the array:                                                                                                                  
             pathY[currentStep] = nextY - previousY;
             pathX[currentStep] = nextX - previousX;
             previousY = nextY;
             previousX = nextX;
             currentStep++;
-
         }
-
     }
-
     return true;
 }
+
 
 
 
