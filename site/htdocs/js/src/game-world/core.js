@@ -932,6 +932,8 @@ if (typeof thisHotspot.remove !== "undefined") {
         }
 
         if (fae.currentState == "hero") {
+            // check if the fae should react to this one:
+            if (typeof thisHotspot.faeIgnore === "undefined") {
             // check it's not recently visited this hotspot:
             if (fae.recentHotspots.indexOf(i) === -1) {
                 if (isInRange(fae.x, fae.y, thisTileCentreX, thisTileCentreY, fae.range)) {
@@ -944,6 +946,7 @@ if (typeof thisHotspot.remove !== "undefined") {
                     }
                 }
             }
+        }
         }
     }
     if (fae.currentState == "wait") {
@@ -970,6 +973,7 @@ if (typeof thisHotspot.remove !== "undefined") {
 function openInnerDoor(whichInnerDoor) {
     // animation ######
 thisMapData.innerDoors[whichInnerDoor]['isOpen'] = true;
+ 
 }
 
 function closeInnerDoor(whichInnerDoor) {
@@ -1035,9 +1039,13 @@ function checkForActions() {
                         break;
                     case "toggleInnerDoor":
                         toggleInnerDoor(thisMapData.items[i].additional);
+                       
+                        audio.playSound(soundEffects['lever'], 0);
                         break;
                     case "openInnerDoor":
                         openInnerDoor(thisMapData.items[i].additional);
+
+                        
                         break;
                     case "closeInnerDoor":
                         closeInnerDoor(thisMapData.items[i].additional);

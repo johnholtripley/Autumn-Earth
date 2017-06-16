@@ -7,7 +7,8 @@ var soundsToLoad = {
     'bookOpen': '../sounds/book-open-NOT_MINE-wow.mp3',
     'bagOpen': '../sounds/bag-open-NOT_MINE-wow.mp3',
     'buttonClick': '../sounds/button-press-NOT_MINE-wow.mp3',
-    'hen': '../sounds/hen-NOT_MINE.mp3'
+    'hen': '../sounds/hen-NOT_MINE.mp3',
+    'lever': '../sounds/lever-NOT_MINE.mp3'
 };
 
 
