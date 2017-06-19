@@ -13,7 +13,7 @@ ob_start("ampify");
 if(isset($_GET["cleaned"])) {
 // uses clean URLS - find articleId from the URL
 
-$query = "select newsid, cleanurl from tblnews WHERE cleanurl = '".$_GET["articleName"]."'";
+$query = "select newsid, cleanurl from tblnews where cleanurl = '".$_GET["articleName"]."'";
 $result = mysql_query($query) or die ("couldn't execute query");
 
 if (mysql_num_rows($result) > 0) {

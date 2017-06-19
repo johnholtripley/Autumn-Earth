@@ -10,7 +10,7 @@ $pagetitle = 'Autumn Earth latest news';
 if(isset($_GET["articleName"])) {
 $cleanURL = $_GET["articleName"];
 $thisBuiltURL = $thisBuiltURL."chronicle/".$cleanURL."/";
-$query ="select * from tblnews where cleanURL='".$cleanURL."'";
+$query ="select * from tblnews where cleanurl='".$cleanURL."'";
 $result = mysql_query($query) or die ("couldn't execute query1");
     $numberofrows = mysql_num_rows($result);
     if ($numberofrows > 0) {
