@@ -259,7 +259,7 @@ function getColours() {
         getQuestDetails();
     }, function(status) {
         // try again:
-        getColours();
+      //  getColours();
     });
 }
 

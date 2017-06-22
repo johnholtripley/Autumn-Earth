@@ -1,5 +1,5 @@
 <?php
-echo $_SERVER['SERVER_NAME'];
+
 
 
 if (strpos($_SERVER['SERVER_NAME'], 'autumnearth.com') !== false) {
