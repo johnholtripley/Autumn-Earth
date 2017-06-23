@@ -381,7 +381,7 @@ function addGoal($param1, $param2, $param3 = false, $param4 = false) {
       }
     }
     if (count($loc8Array) > 0) {
-      $loc10Node            = addGoal(end($loc8Array), $param3, false);
+      $loc10Node            = addGoal($loc8Array[array_rand($loc8Array,1)], $param3, false);
       $loc10Node->holdsKey  = $loc7;
       $loc10Node->type      = "KEYHOLDER";
       $loc7->nodeWhereFound = $loc10Node;
@@ -407,7 +407,7 @@ function init() {
   global $numberOfGoals;
   $i = 0;
   while ($i < $numberOfGoals) {
-    $loc2       = addGoal(end($nodeList), true, true);
+    $loc2       = addGoal($nodeList[array_rand($nodeList,1)], true, true);
     $loc2->type = "ENDGOAL";
     $i++;
   }
@@ -444,7 +444,7 @@ function insertNodeAfterJoint($param1) {
   return $loc4Node;
 }
 function getRNGNumber() {
-  return mt_rand(-1, 1);
+  return mt_rand(0, 10000)/10000;
 }
 function enterFrame() {
   global $delayedGoals, $nodeList, $maxJointsPerNode, $numKeysAdded, $jointList, $debug;
@@ -453,11 +453,12 @@ function enterFrame() {
     $loc6ArrayOfArrays = array();
     foreach ($nodeList as $loc7Node) {
       if (count($loc7Node->j) == 1) {
-        $loc6ArrayOfArrays . push($loc7Node);
+        array_push($loc6ArrayOfArrays, $loc7Node);
       }
     }
-    $loc8Node = $loc6ArrayOfArrays[count($loc6ArrayOfArrays)];
-    if (mt_rand(0, 10) > 2) {
+    //  _loc8_ = _loc6_[int(_loc6_.length * rng.instance.giveNumber())];
+    $loc8Node = $loc6ArrayOfArrays[array_rand($loc6ArrayOfArrays,1)];
+    if (getRNGNumber() > 0.2) {
       insertNodeBeforeJoint($loc8Node->j[0]);
     } else {
       insertNodeAfterJoint($loc8Node->j[0]);
@@ -465,7 +466,7 @@ function enterFrame() {
   } else if (count($nodeList) > 0) {
     updateKeyNeedOfNodes();
     //array_push($nodeList, "");
-    $loc9Node     = end($nodeList);
+    $loc9Node = $nodeList[array_rand($nodeList,1)];
     $loc10KeyList = $loc9Node->keysNeededToReach;
     $loc11Array   = array();
     foreach ($nodeList as $loc12Node) {
@@ -507,7 +508,7 @@ function enterFrame() {
       }
     }
     if (count($loc20ArrayOfNodes) > 0) {
-      $loc22Node = addGoal(end($loc20ArrayOfNodes), $thisDelayedAddGoal->addLock, $thisDelayedAddGoal->andLockAwayTheKey);
+      $loc22Node = addGoal($loc20ArrayOfNodes[array_rand($loc20ArrayOfNodes,1)], $thisDelayedAddGoal->addLock, $thisDelayedAddGoal->andLockAwayTheKey);
       if (count($delayedGoals) == 0) {
         $loc22Node->type = "ENDGOAL";
       } else {
@@ -585,5 +586,6 @@ mt_srand($storedSeed);
 worldGraph();
 //init();
 enterFrame();
+
 output();
 ?>
