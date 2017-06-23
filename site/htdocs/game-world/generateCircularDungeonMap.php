@@ -363,10 +363,7 @@ function setNodeKeyNeed($param1Node, $param2Keylist) {
 }
 function addGoal($param1, $param2, $param3 = false, $param4 = false) {
   global $numKeysAdded, $maxJointsPerNode, $nodeList;
-  $loc7      = null;
   $loc8Array = array();
-  $loc9Node  = null;
-  $loc10Node = null;
   $loc5Node  = new node();
   $loc6Joint = addBranch($param1, $loc5Node);
   if ($param2) {
@@ -392,11 +389,6 @@ function addGoal($param1, $param2, $param3 = false, $param4 = false) {
   return $loc5Node;
 }
 function addBranch($param1Node, $param2Node) {
-  /*
-  var_dump($param1Node);
-  echo "<br>---------<br>";
-  var_dump($param2Node);
-  */
   $loc3 = getRNGNumber();
   if ($loc3 > 0.5) {
     $param2Node->x = $param1Node->x - 2 + getRNGNumber();
@@ -411,7 +403,7 @@ function init() {
   global $numberOfGoals;
   $i = 0;
   while ($i < $numberOfGoals) {
-    $loc2       = addGoal($nodeList[count($nodeList)], true, true);
+    $loc2       = addGoal(end($nodeList), true, true);
     $loc2->type = "ENDGOAL";
     $i++;
   }
@@ -524,8 +516,12 @@ function enterFrame() {
     }
     $loc20ArrayOfNodes = array();
     foreach ($nodeList as $loc21Node) {
+
+      //echo count($loc21Node->keysNeededToReach->v) . ">=" . $numKeysAdded . " && " . count($loc21Node->j) . " < " . $maxJointsPerNode."<br>";
+
       if (count($loc21Node->keysNeededToReach->v) >= $numKeysAdded - 1 && count($loc21Node->j) < $maxJointsPerNode) {
         array_push($loc20ArrayOfNodes, $loc21Node);
+        echo'<code style="display:block;width: 20%;float:left;"><pre>';var_dump($loc20ArrayOfNodes);echo'</pre></code>';
       }
     }
     if (count($loc20ArrayOfNodes) > 0) {
