@@ -69,6 +69,9 @@ outputGraph();
 // http://stackoverflow.com/questions/13318489/algorithm-to-draw-connections-between-nodes-without-overlapping-nodes
 
 */
+
+$debug = false;
+
 class delayedAddGoal {
   // property declaration:
   public $framesRemaining;
@@ -193,8 +196,8 @@ class key {
   }
 }
 class joint {
-  private $endA;
-  private $endB;
+  public $endA;
+  public $endB;
   public $openedByKey;
   function joint($param1Node, $param2Node, $param3Key = null) {
     global $jointList;
@@ -390,12 +393,13 @@ function addGoal($param1, $param2, $param3 = false, $param4 = false) {
 }
 function addBranch($param1Node, $param2Node) {
   $loc3 = getRNGNumber();
+  $scaleFactor = 50;
   if ($loc3 > 0.5) {
-    $param2Node->x = $param1Node->x - 2 + getRNGNumber();
-    $param2Node->y = $param1Node->y + 0.5;
+    $param2Node->x = $param1Node->x - (2 + getRNGNumber())*$scaleFactor;
+    $param2Node->y = $param1Node->y + (0.5 * $scaleFactor);
   } else {
-    $param2Node->x = $param1Node->x + 0.5;
-    $param2Node->y = $param1Node->y - 2 + getRNGNumber();
+    $param2Node->x = $param1Node->x + (0.5 * $scaleFactor);
+    $param2Node->y = $param1Node->y - (2 + getRNGNumber())*$scaleFactor;
   }
   return new joint($param1Node, $param2Node);
 }
@@ -443,29 +447,8 @@ function getRNGNumber() {
   return mt_rand(-1, 1);
 }
 function enterFrame() {
-  global $delayedGoals, $nodeList, $maxJointsPerNode, $numKeysAdded, $jointList;
-  /*
-  $loc3Number = -1;
-  $loc4Node = null;
-  $loc5Joint = null;
-  $loc6ArrayOfArrays = null;
-  $loc7Node = null;
-  $loc8Node = null;
-  $loc9Node = null;
-  $loc10KeyList = null;
-  $loc11Array = null;
-  $loc12Node = null;
-  */
+  global $delayedGoals, $nodeList, $maxJointsPerNode, $numKeysAdded, $jointList, $debug;
   $loc13Bool = false;
-  /*
-  $loc14Joint = null;
-  $loc15Num = -1;
-  $loc16Num = -1;
-  $loc17Num = -1;
-  $loc18Node = null;
-  $loc21Node = null;
-  $loc22Node = null;
-  */
   if (count($jointList) > 0) {
     $loc6ArrayOfArrays = array();
     foreach ($nodeList as $loc7Node) {
@@ -516,12 +499,11 @@ function enterFrame() {
     }
     $loc20ArrayOfNodes = array();
     foreach ($nodeList as $loc21Node) {
-
-      //echo count($loc21Node->keysNeededToReach->v) . ">=" . $numKeysAdded . " && " . count($loc21Node->j) . " < " . $maxJointsPerNode."<br>";
-
       if (count($loc21Node->keysNeededToReach->v) >= $numKeysAdded - 1 && count($loc21Node->j) < $maxJointsPerNode) {
         array_push($loc20ArrayOfNodes, $loc21Node);
-        echo'<code style="display:block;width: 20%;float:left;"><pre>';var_dump($loc20ArrayOfNodes);echo'</pre></code>';
+        if($debug) {
+          echo'<code style="display:block;width: 20%;float:left;"><pre>';var_dump($loc20ArrayOfNodes);echo'</pre></code>';
+        }
       }
     }
     if (count($loc20ArrayOfNodes) > 0) {
@@ -532,7 +514,9 @@ function enterFrame() {
         $loc22Node->type = "SIDEGOAL";
       }
     } else {
-      echo "FAIL: Adding a (delayed) goal, but no nodes are available with free joint slots";
+      if($debug) {
+        echo "FAIL: Adding a (delayed) goal, but no nodes are available with free joint slots";
+      }
     }
   }
   // $loc3Number = 1 / this.assumedFPS;
@@ -553,9 +537,45 @@ function enterFrame() {
   */
 }
 
+function makeSeed() {
+  // http://php.net/manual/en/function.mt_srand.php
+  list($usec, $sec) = explode(' ', microtime());
+  return floor((float) $sec + ((float) $usec * 100000));
+}
 
+if(isset($_GET["seed"])) {
+  $storedSeed = $_GET["seed"];
+} else {
+  $storedSeed = makeSeed();
+}
 
+function output() {
+  global $debug, $nodeList, $jointList;
+  if(!$debug) {
+    $canvaDimension = 600;
+    $outputCanvas = imagecreatetruecolor($canvaDimension, $canvaDimension);
+    $groundColour = array(219, 215, 190);
+    $ground = imagecolorallocate($outputCanvas, $groundColour[0], $groundColour[1], $groundColour[2]);
+    imagefilledrectangle($outputCanvas, 0, 0, $canvaDimension, $canvaDimension, $ground);
+    // draw joints:
+    $jointColour = imagecolorallocate($outputCanvas, 128, 128, 128);
+    foreach ($jointList as $thisJoint) {
+      imageline ($outputCanvas, $thisJoint->endA->x , $thisJoint->endA->y, $thisJoint->endB->x, $thisJoint->endB->y, $jointColour);
+    }
+    // draw nodes:
+    foreach ($nodeList as $thisNode) {
+      $thisNodeColour = imagecolorallocate($outputCanvas, 255, 128, 128);
+      imagefilledellipse($outputCanvas, $thisNode->x, $thisNode->y, $thisNode->finalRadius, $thisNode->finalRadius, $thisNodeColour);
+    }
+    header('Content-Type: image/jpeg');
+    imagejpeg($outputCanvas);
+    imagedestroy($outputCanvas);
+  }
+}
+
+mt_srand($storedSeed);
 worldGraph();
 //init();
 enterFrame();
+output();
 ?>
