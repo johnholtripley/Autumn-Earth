@@ -125,12 +125,81 @@ class node {
         $this->radius = 1;
         $this->type = "NORMAL";
         $this->j = array();
-        $this->keysNeededToReach = '';
+        $this->x = 0;
+        $this->y = 0;
+        $this->keysNeededToReach = new keyList();
         $this->finalRadius = mt_rand(8,18);
         $this->arbitaryName = chr($arbitaryNameCounter);
         $arbitaryNameCounter++;
         array_push($nodeList, $this);
     }
+
+
+
+public  function update() {
+  global $nodeList;
+       $loc2Number = 50;
+      
+
+
+foreach ($nodeList as $loc5Node) {
+
+         if($loc5Node != $this) {
+            $loc3Number = $loc5Node->x - $this->x;
+            $loc4Number = $loc5Node->y - $this->y;
+            $loc6Number = sqrt($loc3Number * $loc3Number + $loc4Number * $loc4Number);
+            $loc7Number = ($loc6Number - ($this->radius + $loc5Node->radius)) * 0.5;
+            if($loc7Number < 0) {
+               if($loc7Number < -1) {
+                  //this.isHappy = false;
+               }
+               $loc3Number = $loc3Number / $loc6Number;
+               $loc4Number = $loc4Number / $loc6Number;
+               $loc3Number = $loc3Number * $loc7Number;
+               $loc4Number = $loc4Number * $loc7Number;
+               $this->x = $this->x + $loc3Number;
+               $this->y = $this->y + $loc4Number;
+               $loc5Node->x = $loc5Node->x - $loc3Number;
+               $loc5Node->y = $loc5Node->y - $loc4Number;
+            }
+         }
+      }
+
+      if($this->radius < $this->finalRadius) {
+         $this->radius++;
+         $this->type = $this->type;
+      }
+   }
+
+
+   public function setType($param1String) {
+      $this->type = $param1String;
+      if($this->type == "KEYHOLDER") {
+       //  $this->icon.graphics.clear();
+         if($this->holdsKey) {
+         //   $this->icon.graphics.beginFill($this->holdsKey.colour);
+         } else {
+         //   $this->icon.graphics.beginFill(4210752);
+         }
+        // $this->icon.graphics.drawCircle(0,0,$this->radius);
+        // $this->icon.graphics.endFill();
+      } else if($this->_type == "START") {
+        // $this->icon.graphics.clear();
+       //  $this->icon.graphics.beginFill(16711744);
+       //  $this->icon.graphics.drawCircle(0,0,$this->radius);
+       //  $this->icon.graphics.endFill();
+      } else {
+       //  $this->icon.graphics.clear();
+       //  $this->icon.graphics.beginFill(16777215);
+       //  $this->icon.graphics.drawCircle(0,0,$this->radius);
+       //  $this->icon.graphics.endFill();
+      }
+   }
+
+   public function getType() {
+      return $this->type;
+   }
+
 
     /*  
     this.icon = new Shape();
@@ -162,8 +231,8 @@ class key {
 
 
 class joint {
-   private $_endA;
-   private $_endB;  
+   private $endA;
+   private $endB;  
    public $openedByKey;
    
    
@@ -187,75 +256,38 @@ global $jointList;
          }
       }
    }
-   /*
-   public function update() : void
-   {
-      this.lineImage.graphics.clear();
-      if(this.openedByKey)
-      {
-         this.lineImage.graphics.lineStyle(3,this.openedByKey.colour);
-      }
-      else
-      {
-         this.lineImage.graphics.lineStyle(3,11579568);
-      }
-      this.lineImage.graphics.moveTo(this._endA.x,this._endA.y);
-      this.lineImage.graphics.lineTo(this._endB.x,this._endB.y);
-      this.dBug.x = (this._endA.x + this._endB.x) / 2;
-      this.dBug.y = (this._endA.y + this._endB.y) / 2 + 20;
-      var _loc1_:Number = this._endA.x - this._endB.x;
-      var _loc2_:Number = this._endA.y - this._endB.y;
-      var _loc3_:Number = Math.sqrt(_loc1_ * _loc1_ + _loc2_ * _loc2_);
-      var _loc4_:Number = (_loc3_ - (this._endA.radius + this._endB.radius)) * 0.5;
-      if(_loc4_ > 0)
-      {
-         if(_loc4_ > 1)
-         {
-            this._endA.isHappy = false;
-            this._endB.isHappy = false;
-         }
-         _loc1_ = _loc1_ / _loc3_;
-         _loc2_ = _loc2_ / _loc3_;
-         _loc1_ = _loc1_ * _loc4_;
-         _loc2_ = _loc2_ * _loc4_;
-         this._endA.x = this._endA.x - _loc1_;
-         this._endA.y = this._endA.y - _loc2_;
-         this._endB.x = this._endB.x + _loc1_;
-         this._endB.y = this._endB.y + _loc2_;
-      }
-   }
-   */
+
    public function getEndA() {
-      return $this->_endA;
+      return $this->endA;
    }
    
    public function setEndB($param1Node) {
       $loc2Node = null;
-      if($param1Node != $this->_endA && $param1Node != $this->_endB) {
-         $loc2 = $this->_endB;
-         $this->_endB = $param1Node;
+      if($param1Node != $this->endA && $param1Node != $this->endB) {
+         $loc2 = $this->endB;
+         $this->endB = $param1Node;
          $this->removeJointFromList($loc2);
-         $this->addJointToList($this->_endB);
+         $this->addJointToList($this->endB);
       }
    }
    
    public function getEndB() {
-      return $this->_endB;
+      return $this->endB;
    }
    
    public function dumpInformation()  {
     /*
-      if(this._endA && this._endB)
+      if(this.endA && this.endB)
       {
-         return String(this._endA.arbitaryName + " to " + this._endB.arbitaryName);
+         return String(this.endA.arbitaryName + " to " + this.endB.arbitaryName);
       }
-      if(this._endA)
+      if(this.endA)
       {
-         return String(this._endA.arbitaryName + " to something");
+         return String(this.endA.arbitaryName + " to something");
       }
-      if(this._endB)
+      if(this.endB)
       {
-         return String("Something to " + this._endB.arbitaryName);
+         return String("Something to " + this.endB.arbitaryName);
       }
       return String("Joint with no known ends");
       */
@@ -263,11 +295,11 @@ global $jointList;
    
    public function setEndA($param1Node) {
       $loc2Node = null;
-      if($param1Node != $this->_endA && $param1Node != $this->_endB) {
-         $loc2 = $this->_endA;
-         $this->_endA = $param1Node;
+      if($param1Node != $this->endA && $param1Node != $this->endB) {
+         $loc2 = $this->endA;
+         $this->endA = $param1Node;
          $this->removeJointFromList($loc2);
-         $this->addJointToList($this->_endA);
+         $this->addJointToList($this->endA);
       }
    }
    
@@ -284,6 +316,41 @@ global $jointList;
       return null;
    }
    
+
+
+
+   public function update() {
+      // $this->lineImage.graphics.clear();
+      if($this->openedByKey) {
+        // this.lineImage.graphics.lineStyle(3,this.openedByKey.colour);
+      } else {
+        // this.lineImage.graphics.lineStyle(3,11579568);
+      }
+      //this.lineImage.graphics.moveTo(this.endA.x,this.endA.y);
+      //this.lineImage.graphics.lineTo(this.endB.x,this.endB.y);
+      //this.dBug.x = (this.endA.x + this.endB.x) / 2;
+      //this.dBug.y = (this.endA.y + this.endB.y) / 2 + 20;
+       $loc1Number = $this->endA->x - $this->endB->x;
+       $loc2Number =$this->endA->y - $this->endB->y;
+       $loc3Number = sqrt($loc1Number * $loc1Number + $loc2Number * $loc2Number);
+       $loc4Number = ($loc3Number - ($this->endA->radius + $this->endB->radius)) * 0.5;
+      if($loc4Number > 0) {
+         if($loc4Number > 1) {
+            //this.endA.isHappy = false;
+            //this.endB.isHappy = false;
+         }
+         $loc1Number = $loc1Number / $loc3Number;
+         $loc2Number = $loc2Number / $loc3Number;
+         $loc1Number = $loc1Number * $loc4Number;
+         $loc2Number = $loc2Number * $loc4Number;
+         $this->endA->x = $this->endA->x - $loc1Number;
+         $this->endA->y = $this->endA->y - $loc2Number;
+         $this->endB->x = $this->endB->x + $loc1Number;
+         $this->endB->y = $this->endB->y + $loc2Number;
+      }
+   }
+
+
    private function removeJointFromList($param1Node) {
    
       if($param1Node != null) {
@@ -295,22 +362,6 @@ global $jointList;
    }
    
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -337,7 +388,7 @@ function worldGraph() {
     $startNode->x = 300;
     $startNode->y = 300;
     
-    $startNode->keysNeededToReach = new keyList();
+  //  $startNode->keysNeededToReach = new keyList();
 
     $i = 0;
     while($i < $numberOfGoals) {
@@ -402,7 +453,7 @@ function addGoal($param1, $param2, $param3 = false, $param4 = false) {
                }
             }
             if(count($loc8Array) > 0) {
-               $loc10Node = addGoal($loc8Array[count($loc8Array)],$param3,false);
+               $loc10Node = addGoal(end($loc8Array),$param3,false);
                $loc10Node->holdsKey = $loc7;
                $loc10Node->type = "KEYHOLDER";
                $loc7->nodeWhereFound = $loc10Node;
@@ -480,6 +531,10 @@ function insertNodeAfterJoint($param1) {
 function getRNGNumber() {
   return mt_rand(-1,1);
 }
+
+
+
+
 
 function enterFrame() {
 global $delayedGoals, $nodeList, $maxJointsPerNode, $numKeysAdded, $jointList;
@@ -580,10 +635,10 @@ $loc20ArrayOfNodes = array();
             $loc4Node->isHappy = true;
          }
              foreach ($jointList as $loc5Joint) {
-            $loc5Joint.update();
+            $loc5Joint->update();
          }
           foreach ($nodeList as $loc4Node) {
-            $loc4Node.update();
+            $loc4Node->update();
          }
          /*
          this.framesPassed++;
