@@ -564,7 +564,15 @@ function output() {
     }
     // draw nodes:
     foreach ($nodeList as $thisNode) {
-      $thisNodeColour = imagecolorallocate($outputCanvas, 255, 128, 128);
+      if ($thisNode->type == "KEYHOLDER") {
+        if ($thisNode->holdsKey) {
+          $thisNodeColour = imagecolorallocate($outputCanvas, 0, 128, 128);
+        }
+      } else if ($thisNode->type == "START") {
+        $thisNodeColour = imagecolorallocate($outputCanvas, 255, 255, 0);
+      } else {
+        $thisNodeColour = imagecolorallocate($outputCanvas, 255, 128, 128);
+      }
       imagefilledellipse($outputCanvas, $thisNode->x, $thisNode->y, $thisNode->finalRadius, $thisNode->finalRadius, $thisNodeColour);
     }
     header('Content-Type: image/jpeg');
