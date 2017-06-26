@@ -67,14 +67,13 @@ class node {
     array_push($nodeList, $this);
   }
   public function update() {
-    global $nodeList;
-    $loc2Number = 50;
+    global $nodeList, $scaleFactor;
     foreach ($nodeList as $loc5Node) {
-      if ($loc5Node != $this) {
+      if ($loc5Node !== $this) {
         $loc3Number = $loc5Node->x - $this->x;
         $loc4Number = $loc5Node->y - $this->y;
         $loc6Number = sqrt($loc3Number * $loc3Number + $loc4Number * $loc4Number);
-        $loc7Number = ($loc6Number - ($this->radius + $loc5Node->radius)) * 0.5;
+        $loc7Number = ($loc6Number - ($this->radius + $loc5Node->radius)) * 0.5 * $scaleFactor;
         if ($loc7Number < 0) {
           if ($loc7Number < -1) {
             $this->isHappy = false;
@@ -245,13 +244,14 @@ class joint {
   }
 }
 function worldGraph() {
-  global $arbitaryNameCounter, $nodeList, $delayedGoals, $maxJointsPerNode, $numKeysAdded, $keyColours, $jointList, $startNode, $nodesExploredForKeySet;
+  global $arbitaryNameCounter, $nodeList, $delayedGoals, $maxJointsPerNode, $numKeysAdded, $keyColours, $jointList, $startNode, $nodesExploredForKeySet, $scaleFactor;
   $numberOfGoals          = 3;
   $delayedGoals           = array();
   $nodeList               = array();
   $jointList              = array();
   $nodesExploredForKeySet = array();
   $numKeysAdded           = 0;
+  $scaleFactor            = 50;
   $keyColours             = array(
     "ff0040",
     "ffeb0f",
@@ -279,15 +279,14 @@ function updateKeyNeedOfNodes() {
 }
 function setNodeKeyNeed($param1Node, $param2Keylist) {
   global $nodesExploredForKeySet;
-  $loc4Joint = null;
-  if (!(in_array($param1Node, $nodesExploredForKeySet))) {
+  if (!(in_array($param1Node, $nodesExploredForKeySet, true))) {
     array_push($nodesExploredForKeySet, $param1Node);
     $param1Node->keysNeededToReach = $param2Keylist;
     foreach ($param1Node->j as $loc3Joint) {
       if ($loc3Joint->endA == $param1Node) {
         if ($loc3Joint->openedByKey != null && !$param2Keylist->hasKey($loc3Joint->openedByKey)) {
           // clone array:
-          $loc4Joint = $param2Keylist;
+          $loc4Joint = clone $param2Keylist;
           $loc4Joint->addKey($loc3Joint->openedByKey);
           setNodeKeyNeed($loc3Joint->endB, $loc4Joint);
         } else {
@@ -327,14 +326,14 @@ function addGoal($param1, $param2, $param3 = false, $param4 = false) {
   return $loc5Node;
 }
 function addBranch($param1Node, $param2Node) {
+  global $scaleFactor;
   $loc3 = getRNGNumber();
-  $scaleFactor = 50;
   if ($loc3 > 0.5) {
-    $param2Node->x = $param1Node->x - (2 + getRNGNumber())*$scaleFactor;
+    $param2Node->x = $param1Node->x - (2 + getRNGNumber())*$scaleFactor/2;
     $param2Node->y = $param1Node->y + (0.5 * $scaleFactor);
   } else {
     $param2Node->x = $param1Node->x + (0.5 * $scaleFactor);
-    $param2Node->y = $param1Node->y - (2 + getRNGNumber())*$scaleFactor;
+    $param2Node->y = $param1Node->y - (2 + getRNGNumber())*$scaleFactor/2;
   }
   return new joint($param1Node, $param2Node);
 }
