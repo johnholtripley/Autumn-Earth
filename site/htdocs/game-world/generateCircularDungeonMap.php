@@ -5,7 +5,7 @@
 //
 // TO DO: 
 // get seed working so that it regenerates the same layout when given a seed
-// check for any joints crossing
+// check for any joints crossing - https://stackoverflow.com/questions/563198/how-do-you-detect-where-two-line-segments-intersect/563275#563275
 // prevent nodes overlapping
 //
 */
@@ -240,7 +240,7 @@ class joint {
 }
 function worldGraph() {
   global $arbitaryNameCounter, $nodeList, $delayedGoals, $maxJointsPerNode, $numKeysAdded, $keyColours, $jointList, $startNode, $nodesExploredForKeySet, $scaleFactor;
-  $numberOfGoals          = 3;
+  $numberOfGoals          = 4;
   $delayedGoals           = array();
   $nodeList               = array();
   $jointList              = array();
@@ -323,11 +323,11 @@ function addBranch($param1Node, $param2Node) {
   global $scaleFactor;
   $loc3 = getRNGNumber();
   if ($loc3 > 0.5) {
-    $param2Node->x = $param1Node->x - (2 + getRNGNumber())*$scaleFactor/2;
+    $param2Node->x = $param1Node->x - (2 + getRNGNumber())*$scaleFactor;
     $param2Node->y = $param1Node->y + (0.5 * $scaleFactor);
   } else {
     $param2Node->x = $param1Node->x + (0.5 * $scaleFactor);
-    $param2Node->y = $param1Node->y - (2 + getRNGNumber())*$scaleFactor/2;
+    $param2Node->y = $param1Node->y - (2 + getRNGNumber())*$scaleFactor;
   }
   return new joint($param1Node, $param2Node);
 }
@@ -335,7 +335,7 @@ function init() {
   global $numberOfGoals;
   $i = 0;
   while ($i < $numberOfGoals) {
-    $loc2       = addGoal($nodeList[array_rand($nodeList,1)], true, true);
+    $loc2 = addGoal($nodeList[array_rand($nodeList,1)], true, true);
     $loc2->type = "ENDGOAL";
     $i++;
   }
