@@ -3,7 +3,10 @@
  
 /*
 //
-// TO DO - get seed working so that it regenerates the same layout when given a seed
+// TO DO: 
+// get seed working so that it regenerates the same layout when given a seed
+// check for any joints crossing
+// prevent nodes overlapping
 //
 */
  
@@ -68,31 +71,30 @@ class node {
   }
   public function update() {
     global $nodeList, $scaleFactor;
+        if ($this->radius < $this->finalRadius) {
+      $this->radius++;
+      //$this->type = $this->type;
+    }
     foreach ($nodeList as $loc5Node) {
       if ($loc5Node !== $this) {
         $xDifference = $loc5Node->x - $this->x;
         $yDifference = $loc5Node->y - $this->y;
         $distanceBetweenCentres = sqrt($xDifference * $xDifference + $yDifference * $yDifference);
-        $spaceBetweenNodes = ($distanceBetweenCentres - ($this->radius + $loc5Node->radius));
-        if ($spaceBetweenNodes < 0) {
-          //if ($spaceBetweenNodes < -1) {
-          //  $this->isHappy = false;
-          //}
-          $xDifference  = $xDifference / $distanceBetweenCentres;
-          $yDifference  = $yDifference / $distanceBetweenCentres;
-          $xDifference  = $xDifference * $spaceBetweenNodes;
-          $yDifference  = $yDifference * $spaceBetweenNodes;
-          $this->x     = $this->x + $xDifference;
-          $this->y     = $this->y + $yDifference;
-          $loc5Node->x = $loc5Node->x - $xDifference;
-          $loc5Node->y = $loc5Node->y - $yDifference;
+        $spaceBetweenNodes = ($distanceBetweenCentres - ($this->radius + $loc5Node->radius)) * 0.5;
+        if ($spaceBetweenNodes <= 0) {
+          if ($spaceBetweenNodes < -1) {
+            $this->isHappy = false;
+          }
+          $xDifference  = $xDifference / $distanceBetweenCentres * $spaceBetweenNodes;
+          $yDifference  = $yDifference / $distanceBetweenCentres * $spaceBetweenNodes;
+          $this->x     += $xDifference;
+          $this->y     += $yDifference;
+          $loc5Node->x -= $xDifference;
+          $loc5Node->y -= $yDifference;
         }
       }
     }
-    if ($this->radius < $this->finalRadius) {
-      $this->radius++;
-      $this->type = $this->type;
-    }
+
   }
   public function setType($param1String) {
     $this->type = $param1String;
@@ -176,7 +178,7 @@ class joint {
   }
   public function setEndA($param1Node) {
     if ($param1Node != $this->endA && $param1Node != $this->endB) {
-      $loc2Node       = $this->endA;
+      $loc2Node = $this->endA;
       $this->endA = $param1Node;
       $this->removeJointFromList($loc2Node);
       $this->addJointToList($this->endA);
@@ -212,7 +214,7 @@ class joint {
     $loc2Number = $this->endA->y - $this->endB->y;
     $loc3Number = sqrt($loc1Number * $loc1Number + $loc2Number * $loc2Number);
     $loc4Number = ($loc3Number - ($this->endA->radius + $this->endB->radius)) * 0.5;
-    if ($loc4Number > 0) {
+    if ($loc4Number >= 0) {
       if ($loc4Number > 1) {
         $this->endA->isHappy = false;
         $this->endB->isHappy = false;
@@ -376,7 +378,6 @@ function enterFrame() {
         array_push($loc6ArrayOfArrays, $loc7Node);
       }
     }
-    //  _loc8_ = _loc6_[int(_loc6_.length * rng.instance.giveNumber())];
     $loc8Node = $loc6ArrayOfArrays[array_rand($loc6ArrayOfArrays)];
     if (getRNGNumber() > 0.2) {
       insertNodeBeforeJoint($loc8Node->j[0]);
@@ -490,9 +491,10 @@ function output() {
       } else {
         $thisNodeColour = imagecolorallocate($outputCanvas, 128, 128, 128);
       }
-      imagefilledellipse($outputCanvas, $thisNode->x, $thisNode->y, $thisNode->radius, $thisNode->radius, $thisNodeColour);
+      imagefilledellipse($outputCanvas, $thisNode->x, $thisNode->y, $thisNode->radius*2, $thisNode->radius*2, $thisNodeColour);
     }
-    // draw joints:    
+    // draw joints: 
+    imagesetthickness($outputCanvas, 2);   
     foreach ($jointList as $thisJoint) {
       if (isset($thisJoint->openedByKey->colour)) {
         $thisJointColour = imagecolorallocate($outputCanvas, $thisJoint->openedByKey->colour[0], $thisJoint->openedByKey->colour[1], $thisJoint->openedByKey->colour[2]);
@@ -513,8 +515,9 @@ worldGraph();
 //init();
  
 for ($i = 1; $i <= $numberOfIterations; $i++) {
-enterFrame();
+  enterFrame();
 }
- 
+
+
 output();
 ?>
