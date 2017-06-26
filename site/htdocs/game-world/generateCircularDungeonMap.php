@@ -1,74 +1,14 @@
 <?php
-// https://www.sitepoint.com/data-structures-4/
+
+
 /*
-
-function array_remove_by_value($array, $value) {
-return array_values(array_diff($array, array($value)));
-}
-
-
-function insertNodeBetween($newNode, $firstNode, $secondNode) {
-global $mapNodes;
-foreach ($mapNodes as $key => $value) {
-if($key == $firstNode) {
-// remove the other node:
-$mapNodes[$key] = array_remove_by_value($value, $secondNode);
-// add the new node:
-array_push($mapNodes[$key], $newNode);
-} else if($key == $secondNode) {
-// remove the other node:
-$mapNodes[$key] = array_remove_by_value($value, $firstNode);
-// add the new node:
-array_push($mapNodes[$key], $newNode);
-}
-}
-// add the new node as a key:
-$mapNodes[$newNode] = array($firstNode, $secondNode);
-}
-
-function outputGraph() {
-global $mapNodes;
-foreach ($mapNodes as $key => $value) {
-echo $key." connected to ";
-for ($i=0;$i<count($value);$i++) {
-echo $value[$i].",";
-}
-echo "<br>";
-}
-echo "<hr>";
-}
-
-
-echo '<h4>simple</h4>';
-// start with a simple graph with A connected to B:
-$mapNodes = array(
-'a' => array('b'),
-'b' => array('a')
-);
-outputGraph();
-insertNodeBetween('c','a','b');
-outputGraph();
-insertNodeBetween('d','a','c');
-outputGraph();
-
-
-echo '<h4>circular</h4>';
-// start with a 'circular' graph
-$mapNodes = array(
-'a' => array('b','c'),
-'b' => array('a','c'),
-'c' => array('a','b')
-);
-outputGraph();
-insertNodeBetween('d','a','b');
-outputGraph();
-
-
-// https://github.com/ebobby/Jsqueens
-// https://github.com/Hrant-Khachatrian/NiceGraph-js
-// http://stackoverflow.com/questions/13318489/algorithm-to-draw-connections-between-nodes-without-overlapping-nodes
-
+//
+// TO DO - get seed working so that it regenerates the same layout when given a seed
+//
 */
+
+
+
 
 $debug = false;
 
@@ -119,6 +59,7 @@ class node {
     $this->j                 = array();
     $this->x                 = 0;
     $this->y                 = 0;
+    $this->isHappy           = true;
     $this->keysNeededToReach = new keyList();
     $this->finalRadius       = mt_rand(8, 18);
     $this->arbitaryName      = chr($arbitaryNameCounter);
@@ -136,7 +77,7 @@ class node {
         $loc7Number = ($loc6Number - ($this->radius + $loc5Node->radius)) * 0.5;
         if ($loc7Number < 0) {
           if ($loc7Number < -1) {
-            //this.isHappy = false;
+            $this->isHappy = false;
           }
           $loc3Number  = $loc3Number / $loc6Number;
           $loc4Number  = $loc4Number / $loc6Number;
@@ -196,13 +137,13 @@ class key {
   }
 }
 class joint {
-  public $endA;
-  public $endB;
+  public $endA = array();
+  public $endB = array();
   public $openedByKey;
   function joint($param1Node, $param2Node, $param3Key = null) {
     global $jointList;
-    $this->endA        = $param1Node;
-    $this->endB        = $param2Node;
+    $this->setEndA($param1Node);
+    $this->setEndB($param2Node);
     $this->openedByKey = $param3Key;
     /*
     this.lineImage = new Shape();
@@ -218,47 +159,38 @@ class joint {
       }
     }
   }
+  
   public function getEndA() {
     return $this->endA;
-  }
-  public function setEndB($param1Node) {
-    $loc2Node = null;
-    if ($param1Node != $this->endA && $param1Node != $this->endB) {
-      $loc2       = $this->endB;
-      $this->endB = $param1Node;
-      $this->removeJointFromList($loc2);
-      $this->addJointToList($this->endB);
-    }
   }
   public function getEndB() {
     return $this->endB;
   }
-  public function dumpInformation() {
-    /*
-    if(this.endA && this.endB)
-    {
-    return String(this.endA.arbitaryName + " to " + this.endB.arbitaryName);
+  
+
+
+  // http://php.net/manual/en/language.oop5.overloading.php#language.oop5.interfaces.examples.ex2
+  // public function __get($name) {
+  // return $this->[$name];
+  //}
+  
+  public function setEndB($param1Node) {
+    if ($param1Node != $this->endA && $param1Node != $this->endB) {
+      $loc2Node = $this->endB;
+      $this->endB = $param1Node;
+      $this->removeJointFromList($loc2Node);
+      $this->addJointToList($this->endB);
     }
-    if(this.endA)
-    {
-    return String(this.endA.arbitaryName + " to something");
-    }
-    if(this.endB)
-    {
-    return String("Something to " + this.endB.arbitaryName);
-    }
-    return String("Joint with no known ends");
-    */
   }
   public function setEndA($param1Node) {
-    $loc2Node = null;
     if ($param1Node != $this->endA && $param1Node != $this->endB) {
-      $loc2       = $this->endA;
+      $loc2Node       = $this->endA;
       $this->endA = $param1Node;
-      $this->removeJointFromList($loc2);
+      $this->removeJointFromList($loc2Node);
       $this->addJointToList($this->endA);
     }
   }
+
   public function giveOtherEnd($param1Node) {
     if ($param1Node == $this->endA) {
       return $this->endB;
@@ -266,9 +198,11 @@ class joint {
     if ($param1Node == $this->endB) {
       return $this->endA;
     }
-    echo "FAIL: worldGraph.as/joint/giveOtherEnd not supplied with a valid node. ";
-    echo "<br>my nodes are:" . $this->endA . "," . $this->endB;
-    echo "<br>and I was called from: " . $param1Node;
+    if($debug) {
+      echo "FAIL: worldGraph.as/joint/giveOtherEnd not supplied with a valid node. ";
+      echo "<br>my nodes are:" . $this->endA . "," . $this->endB;
+      echo "<br>and I was called from: " . $param1Node;
+    }
     return null;
   }
   public function update() {
@@ -288,8 +222,8 @@ class joint {
     $loc4Number = ($loc3Number - ($this->endA->radius + $this->endB->radius)) * 0.5;
     if ($loc4Number > 0) {
       if ($loc4Number > 1) {
-        //this.endA.isHappy = false;
-        //this.endB.isHappy = false;
+        $this->endA->isHappy = false;
+        $this->endB->isHappy = false;
       }
       $loc1Number    = $loc1Number / $loc3Number;
       $loc2Number    = $loc2Number / $loc3Number;
@@ -304,7 +238,7 @@ class joint {
   private function removeJointFromList($param1Node) {
     if ($param1Node != null) {
       $loc2 = array_search($this, $param1Node->j);
-      if ($loc2 !== FALSE) {
+      if ($loc2 !== false) {
         array_splice($param1Node->j, $loc2, 1);
       }
     }
@@ -331,8 +265,8 @@ function worldGraph() {
   $startNode->type        = "START";
   $startNode->x           = 300;
   $startNode->y           = 300;
-  //  $startNode->keysNeededToReach = new keyList();
-  $i                      = 0;
+  $startNode->keysNeededToReach = new keyList();
+  $i = 0;
   while ($i < $numberOfGoals) {
     array_push($delayedGoals, new delayedAddGoal(true, false));
     $i++;
@@ -345,7 +279,6 @@ function updateKeyNeedOfNodes() {
 }
 function setNodeKeyNeed($param1Node, $param2Keylist) {
   global $nodesExploredForKeySet;
-  $loc3Joint = null;
   $loc4Joint = null;
   if (!(in_array($param1Node, $nodesExploredForKeySet))) {
     array_push($nodesExploredForKeySet, $param1Node);
@@ -355,7 +288,7 @@ function setNodeKeyNeed($param1Node, $param2Keylist) {
         if ($loc3Joint->openedByKey != null && !$param2Keylist->hasKey($loc3Joint->openedByKey)) {
           // clone array:
           $loc4Joint = $param2Keylist;
-          $loc4Joint . addKey($loc3Joint->openedByKey);
+          $loc4Joint->addKey($loc3Joint->openedByKey);
           setNodeKeyNeed($loc3Joint->endB, $loc4Joint);
         } else {
           setNodeKeyNeed($loc3Joint->endB, $param2Keylist);
@@ -365,7 +298,7 @@ function setNodeKeyNeed($param1Node, $param2Keylist) {
   }
 }
 function addGoal($param1, $param2, $param3 = false, $param4 = false) {
-  global $numKeysAdded, $maxJointsPerNode, $nodeList;
+  global $numKeysAdded, $maxJointsPerNode, $nodeList, $debug;
   $loc8Array = array();
   $loc5Node  = new node();
   $loc6Joint = addBranch($param1, $loc5Node);
@@ -386,7 +319,9 @@ function addGoal($param1, $param2, $param3 = false, $param4 = false) {
       $loc10Node->type      = "KEYHOLDER";
       $loc7->nodeWhereFound = $loc10Node;
     } else {
-      echo ("FAIL: Attempting to add a key, but no anchor node found with a spare joint slot and correct key requirements.");
+      if($debug) {
+        echo ("FAIL: Attempting to add a key, but no anchor node found with a spare joint slot and correct key requirements.");
+      }
     }
   }
   return $loc5Node;
@@ -414,9 +349,6 @@ function init() {
   updateKeyNeedOfNodes();
 }
 function insertNodeBeforeJoint($param1) {
-  $loc2Node     = null;
-  $loc3Node     = null;
-  $loc4Node     = null;
   $loc2Node     = $param1->endA;
   $loc3Node     = $param1->endB;
   $loc4Node     = new node();
@@ -452,12 +384,13 @@ function enterFrame() {
   if (count($jointList) > 0) {
     $loc6ArrayOfArrays = array();
     foreach ($nodeList as $loc7Node) {
+      echo count($loc7Node->j)."<br>";
       if (count($loc7Node->j) == 1) {
         array_push($loc6ArrayOfArrays, $loc7Node);
       }
     }
     //  _loc8_ = _loc6_[int(_loc6_.length * rng.instance.giveNumber())];
-    $loc8Node = $loc6ArrayOfArrays[array_rand($loc6ArrayOfArrays,1)];
+    $loc8Node = $loc6ArrayOfArrays[array_rand($loc6ArrayOfArrays)];
     if (getRNGNumber() > 0.2) {
       insertNodeBeforeJoint($loc8Node->j[0]);
     } else {
@@ -472,7 +405,7 @@ function enterFrame() {
     foreach ($nodeList as $loc12Node) {
       if ($loc12Node != $loc9Node && $loc10KeyList->sameAs($loc12Node->keysNeededToReach)) {
         $loc13Bool = false;
-        foreach ($loc9Node . j as $loc14Joint) {
+        foreach ($loc9Node->j as $loc14Joint) {
           if ($loc14Joint->giveOtherEnd($loc9Node) == $loc12Node) {
             $loc13Bool = true;
             break;
@@ -500,15 +433,15 @@ function enterFrame() {
     }
     $loc20ArrayOfNodes = array();
     foreach ($nodeList as $loc21Node) {
-      if (count($loc21Node->keysNeededToReach->v) >= $numKeysAdded - 1 && count($loc21Node->j) < $maxJointsPerNode) {
+      if ((count($loc21Node->keysNeededToReach->v) >= ($numKeysAdded - 1)) && (count($loc21Node->j) < $maxJointsPerNode)) {
         array_push($loc20ArrayOfNodes, $loc21Node);
         if($debug) {
-          echo'<code style="display:block;width: 20%;float:left;"><pre>';var_dump($loc20ArrayOfNodes);echo'</pre></code>';
+          echo'<code style="display:block;width: 20%;float:left;"><pre>';var_dump($loc21Node);echo'</pre></code>';
         }
       }
     }
     if (count($loc20ArrayOfNodes) > 0) {
-      $loc22Node = addGoal($loc20ArrayOfNodes[array_rand($loc20ArrayOfNodes,1)], $thisDelayedAddGoal->addLock, $thisDelayedAddGoal->andLockAwayTheKey);
+      $loc22Node = addGoal($loc20ArrayOfNodes[array_rand($loc20ArrayOfNodes)], $thisDelayedAddGoal->addLock, $thisDelayedAddGoal->andLockAwayTheKey);
       if (count($delayedGoals) == 0) {
         $loc22Node->type = "ENDGOAL";
       } else {
@@ -567,17 +500,19 @@ function output() {
     foreach ($nodeList as $thisNode) {
       if ($thisNode->type == "KEYHOLDER") {
         if ($thisNode->holdsKey) {
-          $thisNodeColour = imagecolorallocate($outputCanvas, 0, 128, 128);
+          $thisNodeColour = imagecolorallocate($outputCanvas, 0, 255, 0);
         }
       } else if ($thisNode->type == "START") {
-        $thisNodeColour = imagecolorallocate($outputCanvas, 255, 255, 0);
+        $thisNodeColour = imagecolorallocate($outputCanvas, 255, 0, 0);
+      } else if ($thisNode->type == "ENDGOAL") {
+        $thisNodeColour = imagecolorallocate($outputCanvas, 0, 0, 255);
       } else {
-        $thisNodeColour = imagecolorallocate($outputCanvas, 255, 128, 128);
+        $thisNodeColour = imagecolorallocate($outputCanvas, 128, 128, 128);
       }
       imagefilledellipse($outputCanvas, $thisNode->x, $thisNode->y, $thisNode->finalRadius, $thisNode->finalRadius, $thisNodeColour);
     }
     header('Content-Type: image/jpeg');
-    imagejpeg($outputCanvas);
+    imagejpeg($outputCanvas, null, 100);
     imagedestroy($outputCanvas);
   }
 }
@@ -586,6 +521,7 @@ mt_srand($storedSeed);
 worldGraph();
 //init();
 enterFrame();
+//enterFrame();
 
 output();
 ?>
