@@ -383,7 +383,6 @@ function enterFrame() {
   if (count($jointList) > 0) {
     $loc6ArrayOfArrays = array();
     foreach ($nodeList as $loc7Node) {
-      echo count($loc7Node->j)."<br>";
       if (count($loc7Node->j) == 1) {
         array_push($loc6ArrayOfArrays, $loc7Node);
       }
@@ -517,10 +516,13 @@ function output() {
 }
 
 mt_srand($storedSeed);
+$numberOfIterations = 6;
 worldGraph();
 //init();
+
+for ($i = 1; $i <= $numberOfIterations; $i++) {
 enterFrame();
-//enterFrame();
+}
 
 output();
 ?>
