@@ -1,17 +1,17 @@
 <?php
-
-
+ 
+ 
 /*
 //
 // TO DO - get seed working so that it regenerates the same layout when given a seed
 //
 */
-
-
-
-
+ 
+ 
+ 
+ 
 $debug = false;
-
+ 
 class delayedAddGoal {
   // property declaration:
   public $framesRemaining;
@@ -158,21 +158,14 @@ class joint {
       }
     }
   }
-  
+   
   public function getEndA() {
     return $this->endA;
   }
   public function getEndB() {
     return $this->endB;
   }
-  
-
-
-  // http://php.net/manual/en/language.oop5.overloading.php#language.oop5.interfaces.examples.ex2
-  // public function __get($name) {
-  // return $this->[$name];
-  //}
-  
+   
   public function setEndB($param1Node) {
     if ($param1Node != $this->endA && $param1Node != $this->endB) {
       $loc2Node = $this->endB;
@@ -189,7 +182,7 @@ class joint {
       $this->addJointToList($this->endA);
     }
   }
-
+ 
   public function giveOtherEnd($param1Node) {
     if ($param1Node == $this->endA) {
       return $this->endB;
@@ -253,11 +246,10 @@ function worldGraph() {
   $numKeysAdded           = 0;
   $scaleFactor            = 50;
   $keyColours             = array(
-    "ff0040",
-    "ffeb0f",
-    "0f86ff",
-    "13d12e",
-    "ffffff"
+    array(255,0,64),
+    array(255,235,15),
+    array(15,134,255),
+    array(19,209,46)
   );
   $maxJointsPerNode       = 3;
   $arbitaryNameCounter    = ord("A");
@@ -434,7 +426,7 @@ function enterFrame() {
       if ((count($loc21Node->keysNeededToReach->v) >= ($numKeysAdded - 1)) && (count($loc21Node->j) < $maxJointsPerNode)) {
         array_push($loc20ArrayOfNodes, $loc21Node);
         if($debug) {
-          echo'<code style="display:block;width: 20%;float:left;"><pre>';var_dump($loc21Node);echo'</pre></code>';
+          //echo'<code style="display:block;width: 20%;float:left;"><pre>';var_dump($loc21Node);echo'</pre></code>';
         }
       }
     }
@@ -468,19 +460,19 @@ function enterFrame() {
   }
   */
 }
-
+ 
 function makeSeed() {
   // http://php.net/manual/en/function.mt_srand.php
   list($usec, $sec) = explode(' ', microtime());
   return floor((float) $sec + ((float) $usec * 100000));
 }
-
+ 
 if(isset($_GET["seed"])) {
   $storedSeed = $_GET["seed"];
 } else {
   $storedSeed = makeSeed();
 }
-
+ 
 function output() {
   global $debug, $nodeList, $jointList;
   if(!$debug) {
@@ -489,21 +481,25 @@ function output() {
     $groundColour = array(219, 215, 190);
     $ground = imagecolorallocate($outputCanvas, $groundColour[0], $groundColour[1], $groundColour[2]);
     imagefilledrectangle($outputCanvas, 0, 0, $canvaDimension, $canvaDimension, $ground);
-    // draw joints:
-    $jointColour = imagecolorallocate($outputCanvas, 128, 128, 128);
+    // draw joints:    
     foreach ($jointList as $thisJoint) {
-      imageline ($outputCanvas, $thisJoint->endA->x , $thisJoint->endA->y, $thisJoint->endB->x, $thisJoint->endB->y, $jointColour);
+      if (isset($thisJoint->openedByKey->colour)) {
+        $thisJointColour = imagecolorallocate($outputCanvas, $thisJoint->openedByKey->colour[0], $thisJoint->openedByKey->colour[1], $thisJoint->openedByKey->colour[2]);
+      } else {
+        $thisJointColour = imagecolorallocate($outputCanvas, 128, 128, 128);
+      }
+      imageline ($outputCanvas, $thisJoint->endA->x , $thisJoint->endA->y, $thisJoint->endB->x, $thisJoint->endB->y, $thisJointColour);
     }
     // draw nodes:
     foreach ($nodeList as $thisNode) {
       if ($thisNode->type == "KEYHOLDER") {
         if ($thisNode->holdsKey) {
-          $thisNodeColour = imagecolorallocate($outputCanvas, 0, 255, 0);
+          $thisNodeColour = imagecolorallocate($outputCanvas, $thisNode->holdsKey->colour[0], $thisNode->holdsKey->colour[1], $thisNode->holdsKey->colour[2]);
         }
       } else if ($thisNode->type == "START") {
-        $thisNodeColour = imagecolorallocate($outputCanvas, 255, 0, 0);
+        $thisNodeColour = imagecolorallocate($outputCanvas, 255, 255, 255);
       } else if ($thisNode->type == "ENDGOAL") {
-        $thisNodeColour = imagecolorallocate($outputCanvas, 0, 0, 255);
+        $thisNodeColour = imagecolorallocate($outputCanvas, 0, 0, 0);
       } else {
         $thisNodeColour = imagecolorallocate($outputCanvas, 128, 128, 128);
       }
@@ -514,15 +510,15 @@ function output() {
     imagedestroy($outputCanvas);
   }
 }
-
+ 
 mt_srand($storedSeed);
 $numberOfIterations = 6;
 worldGraph();
 //init();
-
+ 
 for ($i = 1; $i <= $numberOfIterations; $i++) {
 enterFrame();
 }
-
+ 
 output();
 ?>
