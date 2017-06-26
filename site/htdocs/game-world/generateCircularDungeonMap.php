@@ -54,14 +54,14 @@ class keyList {
 class node {
   public function __construct() {
     global $arbitaryNameCounter, $nodeList;
-    $this->radius            = 1;
+    $this->radius            = 12;
     $this->type              = "NORMAL";
     $this->j                 = array();
     $this->x                 = 0;
     $this->y                 = 0;
     $this->isHappy           = true;
     $this->keysNeededToReach = new keyList();
-    $this->finalRadius       = mt_rand(8, 18);
+    $this->finalRadius       = mt_rand(24, 64);
     $this->arbitaryName      = chr($arbitaryNameCounter);
     $arbitaryNameCounter++;
     array_push($nodeList, $this);
@@ -70,22 +70,22 @@ class node {
     global $nodeList, $scaleFactor;
     foreach ($nodeList as $loc5Node) {
       if ($loc5Node !== $this) {
-        $loc3Number = $loc5Node->x - $this->x;
-        $loc4Number = $loc5Node->y - $this->y;
-        $loc6Number = sqrt($loc3Number * $loc3Number + $loc4Number * $loc4Number);
-        $loc7Number = ($loc6Number - ($this->radius + $loc5Node->radius)) * 0.5 * $scaleFactor;
-        if ($loc7Number < 0) {
-          if ($loc7Number < -1) {
-            $this->isHappy = false;
-          }
-          $loc3Number  = $loc3Number / $loc6Number;
-          $loc4Number  = $loc4Number / $loc6Number;
-          $loc3Number  = $loc3Number * $loc7Number;
-          $loc4Number  = $loc4Number * $loc7Number;
-          $this->x     = $this->x + $loc3Number;
-          $this->y     = $this->y + $loc4Number;
-          $loc5Node->x = $loc5Node->x - $loc3Number;
-          $loc5Node->y = $loc5Node->y - $loc4Number;
+        $xDifference = $loc5Node->x - $this->x;
+        $yDifference = $loc5Node->y - $this->y;
+        $distanceBetweenCentres = sqrt($xDifference * $xDifference + $yDifference * $yDifference);
+        $spaceBetweenNodes = ($distanceBetweenCentres - ($this->radius + $loc5Node->radius));
+        if ($spaceBetweenNodes < 0) {
+          //if ($spaceBetweenNodes < -1) {
+          //  $this->isHappy = false;
+          //}
+          $xDifference  = $xDifference / $distanceBetweenCentres;
+          $yDifference  = $yDifference / $distanceBetweenCentres;
+          $xDifference  = $xDifference * $spaceBetweenNodes;
+          $yDifference  = $yDifference * $spaceBetweenNodes;
+          $this->x     = $this->x + $xDifference;
+          $this->y     = $this->y + $yDifference;
+          $loc5Node->x = $loc5Node->x - $xDifference;
+          $loc5Node->y = $loc5Node->y - $yDifference;
         }
       }
     }
@@ -352,9 +352,6 @@ function insertNodeBeforeJoint($param1) {
   return $loc4Node;
 }
 function insertNodeAfterJoint($param1) {
-  $loc2Node     = null;
-  $loc3Node     = null;
-  $loc4Node     = null;
   $loc2Node     = $param1->endA;
   $loc3Node     = $param1->endB;
   $loc4Node     = new node();
@@ -388,7 +385,6 @@ function enterFrame() {
     }
   } else if (count($nodeList) > 0) {
     updateKeyNeedOfNodes();
-    //array_push($nodeList, "");
     $loc9Node = $nodeList[array_rand($nodeList,1)];
     $loc10KeyList = $loc9Node->keysNeededToReach;
     $loc11Array   = array();
@@ -481,15 +477,6 @@ function output() {
     $groundColour = array(219, 215, 190);
     $ground = imagecolorallocate($outputCanvas, $groundColour[0], $groundColour[1], $groundColour[2]);
     imagefilledrectangle($outputCanvas, 0, 0, $canvaDimension, $canvaDimension, $ground);
-    // draw joints:    
-    foreach ($jointList as $thisJoint) {
-      if (isset($thisJoint->openedByKey->colour)) {
-        $thisJointColour = imagecolorallocate($outputCanvas, $thisJoint->openedByKey->colour[0], $thisJoint->openedByKey->colour[1], $thisJoint->openedByKey->colour[2]);
-      } else {
-        $thisJointColour = imagecolorallocate($outputCanvas, 128, 128, 128);
-      }
-      imageline ($outputCanvas, $thisJoint->endA->x , $thisJoint->endA->y, $thisJoint->endB->x, $thisJoint->endB->y, $thisJointColour);
-    }
     // draw nodes:
     foreach ($nodeList as $thisNode) {
       if ($thisNode->type == "KEYHOLDER") {
@@ -503,7 +490,16 @@ function output() {
       } else {
         $thisNodeColour = imagecolorallocate($outputCanvas, 128, 128, 128);
       }
-      imagefilledellipse($outputCanvas, $thisNode->x, $thisNode->y, $thisNode->finalRadius, $thisNode->finalRadius, $thisNodeColour);
+      imagefilledellipse($outputCanvas, $thisNode->x, $thisNode->y, $thisNode->radius, $thisNode->radius, $thisNodeColour);
+    }
+    // draw joints:    
+    foreach ($jointList as $thisJoint) {
+      if (isset($thisJoint->openedByKey->colour)) {
+        $thisJointColour = imagecolorallocate($outputCanvas, $thisJoint->openedByKey->colour[0], $thisJoint->openedByKey->colour[1], $thisJoint->openedByKey->colour[2]);
+      } else {
+        $thisJointColour = imagecolorallocate($outputCanvas, 32, 32, 32);
+      }
+      imageline ($outputCanvas, $thisJoint->endA->x , $thisJoint->endA->y, $thisJoint->endB->x, $thisJoint->endB->y, $thisJointColour);
     }
     header('Content-Type: image/jpeg');
     imagejpeg($outputCanvas, null, 100);
@@ -512,7 +508,7 @@ function output() {
 }
  
 mt_srand($storedSeed);
-$numberOfIterations = 6;
+$numberOfIterations = 18;
 worldGraph();
 //init();
  
