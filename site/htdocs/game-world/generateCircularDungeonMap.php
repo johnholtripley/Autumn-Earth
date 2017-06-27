@@ -238,9 +238,10 @@ class joint {
   }
 }
 function worldGraph() {
-  global $arbitaryNameCounter, $nodeList, $delayedGoals, $maxJointsPerNode, $numKeysAdded, $keyColours, $jointList, $startNode, $nodesExploredForKeySet, $scaleFactor, $canvaDimension, $framesPassed;
+  global $arbitaryNameCounter, $nodeList, $delayedGoals, $maxJointsPerNode, $numKeysAdded, $keyColours, $jointList, $startNode, $nodesExploredForKeySet, $scaleFactor, $canvaDimension, $framesPassed, $framesSinceFinishedAddingGoals;
   $numberOfGoals          = 4;
   $framesPassed           = 0;
+  $framesSinceFinishedAddingGoals = 0;
   $canvaDimension         = 900;
   $delayedGoals           = array();
   $nodeList               = array();
@@ -278,7 +279,7 @@ function setNodeKeyNeed($param1Node, $param2Keylist) {
     array_push($nodesExploredForKeySet, $param1Node);
     $param1Node->keysNeededToReach = $param2Keylist;
     foreach ($param1Node->j as $loc3Joint) {
-      if ($loc3Joint->endA == $param1Node) {
+      if ($loc3Joint->endA === $param1Node) {
         if ($loc3Joint->openedByKey != null && !$param2Keylist->hasKey($loc3Joint->openedByKey)) {
           // clone array:
           $loc4Joint = clone $param2Keylist;
@@ -377,9 +378,9 @@ function getRNGNumber() {
   // return mt_rand(0, 10000)/10000;
 }
 function enterFrame() {
-  global $delayedGoals, $nodeList, $maxJointsPerNode, $numKeysAdded, $jointList, $debug, $framesPassed;
+  global $delayedGoals, $nodeList, $maxJointsPerNode, $numKeysAdded, $jointList, $debug, $framesPassed, $framesSinceFinishedAddingGoals;
   $loc13Bool = false;
-  if (($framesPassed % 10 == 0) && (count($jointList) > 0)) {
+  if (($framesSinceFinishedAddingGoals < 120) && ($framesPassed % 10 == 0) && (count($jointList) > 0)) {
     $loc6ArrayOfArrays = array();
     foreach ($nodeList as $loc7Node) {
       if (count($loc7Node->j) == 1) {
@@ -392,7 +393,7 @@ function enterFrame() {
     } else {
       insertNodeAfterJoint($loc8Node->j[0]);
     }
-  } else if (($framesPassed % 1 == 0) && (count($nodeList) > 0)) {
+  } else if (($framesSinceFinishedAddingGoals > 120) && ($framesSinceFinishedAddingGoals < 130) && ($framesPassed % 1 == 0) && (count($nodeList) > 0)) {
     updateKeyNeedOfNodes();
     $loc9Node = $nodeList[array_rand($nodeList,1)];
     $loc10KeyList = $loc9Node->keysNeededToReach;
@@ -459,11 +460,9 @@ function enterFrame() {
     $loc4Node->update();
   }
   $framesPassed++;
-  /*
-  if(this.delayedGoals.length == 0) {
-  this.framesSinceFinishedAddingGoals++;
+  if (count($delayedGoals) == 0) {
+    $framesSinceFinishedAddingGoals++;
   }
-  */
 }
  
 function makeSeed() {
@@ -518,7 +517,7 @@ function output() {
 }
  
 mt_srand($storedSeed);
-$numberOfIterations = 120;
+$numberOfIterations = 200;
 worldGraph();
 //init();
  
