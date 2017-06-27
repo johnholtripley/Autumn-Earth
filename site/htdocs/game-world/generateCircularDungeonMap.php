@@ -6,7 +6,6 @@
 // TO DO: 
 // get seed working so that it regenerates the same layout when given a seed
 // check for any joints crossing - https://stackoverflow.com/questions/563198/how-do-you-detect-where-two-line-segments-intersect/563275#563275
-// prevent nodes overlapping
 //
 */
  
@@ -64,7 +63,7 @@ class node {
     $this->y                 = 0;
     $this->isHappy           = true;
     $this->keysNeededToReach = new keyList();
-    $this->finalRadius       = mt_rand(24, 64);
+    $this->finalRadius       = (8 + (getRNGNumber() * 10));
     $this->arbitaryName      = chr($arbitaryNameCounter);
     $arbitaryNameCounter++;
     array_push($nodeList, $this);
@@ -155,7 +154,7 @@ class joint {
   }
   private function addJointToList($param1Node) {
     if ($param1Node != null) {
-      if (!(in_array($this, $param1Node->j))) {
+      if (!(in_array($this, $param1Node->j, true))) {
         array_push($param1Node->j, $this);
       }
     }
@@ -169,7 +168,7 @@ class joint {
   }
    
   public function setEndB($param1Node) {
-    if ($param1Node != $this->endA && $param1Node != $this->endB) {
+    if ($param1Node !== $this->endA && $param1Node !== $this->endB) {
       $loc2Node = $this->endB;
       $this->endB = $param1Node;
       $this->removeJointFromList($loc2Node);
@@ -239,8 +238,10 @@ class joint {
   }
 }
 function worldGraph() {
-  global $arbitaryNameCounter, $nodeList, $delayedGoals, $maxJointsPerNode, $numKeysAdded, $keyColours, $jointList, $startNode, $nodesExploredForKeySet, $scaleFactor;
+  global $arbitaryNameCounter, $nodeList, $delayedGoals, $maxJointsPerNode, $numKeysAdded, $keyColours, $jointList, $startNode, $nodesExploredForKeySet, $scaleFactor, $canvaDimension, $framesPassed;
   $numberOfGoals          = 4;
+  $framesPassed           = 0;
+  $canvaDimension         = 900;
   $delayedGoals           = array();
   $nodeList               = array();
   $jointList              = array();
@@ -257,12 +258,12 @@ function worldGraph() {
   $arbitaryNameCounter    = ord("A");
   $startNode              = new node();
   $startNode->type        = "START";
-  $startNode->x           = 300;
-  $startNode->y           = 300;
+  $startNode->x           = $canvaDimension/2;
+  $startNode->y           = $canvaDimension/2;
   $startNode->keysNeededToReach = new keyList();
   $i = 0;
   while ($i < $numberOfGoals) {
-    array_push($delayedGoals, new delayedAddGoal(true, false));
+    array_push($delayedGoals, new delayedAddGoal(true, false, 30 + 60 * $i));
     $i++;
   }
 }
@@ -366,12 +367,19 @@ function insertNodeAfterJoint($param1) {
   return $loc4Node;
 }
 function getRNGNumber() {
-  return mt_rand(0, 10000)/10000;
+  $a = 17;
+  $c = 3;
+
+  $m = pow(2,12);
+  $seed = mt_rand(0, 10000)/10000  * $m;
+  $seed = ($a * $seed + $c) % $m;
+         return $seed / $m;
+  // return mt_rand(0, 10000)/10000;
 }
 function enterFrame() {
-  global $delayedGoals, $nodeList, $maxJointsPerNode, $numKeysAdded, $jointList, $debug;
+  global $delayedGoals, $nodeList, $maxJointsPerNode, $numKeysAdded, $jointList, $debug, $framesPassed;
   $loc13Bool = false;
-  if (count($jointList) > 0) {
+  if (($framesPassed % 10 == 0) && (count($jointList) > 0)) {
     $loc6ArrayOfArrays = array();
     foreach ($nodeList as $loc7Node) {
       if (count($loc7Node->j) == 1) {
@@ -384,13 +392,13 @@ function enterFrame() {
     } else {
       insertNodeAfterJoint($loc8Node->j[0]);
     }
-  } else if (count($nodeList) > 0) {
+  } else if (($framesPassed % 1 == 0) && (count($nodeList) > 0)) {
     updateKeyNeedOfNodes();
     $loc9Node = $nodeList[array_rand($nodeList,1)];
     $loc10KeyList = $loc9Node->keysNeededToReach;
     $loc11Array   = array();
     foreach ($nodeList as $loc12Node) {
-      if ($loc12Node != $loc9Node && $loc10KeyList->sameAs($loc12Node->keysNeededToReach)) {
+      if ($loc12Node !== $loc9Node && $loc10KeyList->sameAs($loc12Node->keysNeededToReach)) {
         $loc13Bool = false;
         foreach ($loc9Node->j as $loc14Joint) {
           if ($loc14Joint->giveOtherEnd($loc9Node) == $loc12Node) {
@@ -450,8 +458,8 @@ function enterFrame() {
   foreach ($nodeList as $loc4Node) {
     $loc4Node->update();
   }
+  $framesPassed++;
   /*
-  this.framesPassed++;
   if(this.delayedGoals.length == 0) {
   this.framesSinceFinishedAddingGoals++;
   }
@@ -471,9 +479,8 @@ if(isset($_GET["seed"])) {
 }
  
 function output() {
-  global $debug, $nodeList, $jointList;
+  global $debug, $nodeList, $jointList, $canvaDimension;
   if(!$debug) {
-    $canvaDimension = 600;
     $outputCanvas = imagecreatetruecolor($canvaDimension, $canvaDimension);
     $groundColour = array(219, 215, 190);
     $ground = imagecolorallocate($outputCanvas, $groundColour[0], $groundColour[1], $groundColour[2]);
@@ -492,6 +499,7 @@ function output() {
         $thisNodeColour = imagecolorallocate($outputCanvas, 128, 128, 128);
       }
       imagefilledellipse($outputCanvas, $thisNode->x, $thisNode->y, $thisNode->radius*2, $thisNode->radius*2, $thisNodeColour);
+      // imagefilledrectangle($outputCanvas, $thisNode->x-$thisNode->radius, $thisNode->y-$thisNode->radius,$thisNode->x+$thisNode->radius,$thisNode->y+$thisNode->radius, $thisNodeColour);
     }
     // draw joints: 
     imagesetthickness($outputCanvas, 2);   
@@ -510,14 +518,13 @@ function output() {
 }
  
 mt_srand($storedSeed);
-$numberOfIterations = 18;
+$numberOfIterations = 120;
 worldGraph();
 //init();
  
 for ($i = 1; $i <= $numberOfIterations; $i++) {
   enterFrame();
 }
-
 
 output();
 ?>
