@@ -5,7 +5,6 @@
 //
 // TO DO: 
 // get seed working so that it regenerates the same layout when given a seed
-// allow more than 2 joint per node
 //
 */
  
@@ -35,8 +34,30 @@ class keyList {
     $foundKey = in_array($thisKey, $this->v);
     return $foundKey;
   }
-  public function sameAs($param1) {
-    return ($this->v == $param1);
+  public function sameAs($param1)    {
+    $loc2Boolean = false;
+    $loc4Boolean = false;
+    if(count($this->v) == count($param1->v)) {
+       $loc2Boolean = true;
+        foreach ($this->v as $loc3Key) {
+          $loc4Boolean = false;
+            foreach ($param1->v as $loc5Key) {
+             if($loc3Key == $loc5Key) {
+                $loc4Boolean = true;
+                break;
+             }
+          }
+          if(!$loc4Boolean) {
+             $loc2Boolean = false;
+             break;
+          }
+       }
+       if($loc2Boolean) {
+          return true;
+       }
+       return false;
+    }
+    return false;
   }
   public function sameOrLessThan($param1) {
     $match = true;
@@ -185,6 +206,7 @@ class joint {
   }
  
   public function giveOtherEnd($param1Node) {
+    global $debug;
     if ($param1Node == $this->endA) {
       return $this->endB;
     }
@@ -397,12 +419,12 @@ function enterFrame() {
     updateKeyNeedOfNodes();
     $loc9Node = $nodeList[array_rand($nodeList,1)];
     $loc10KeyList = $loc9Node->keysNeededToReach;
-    $loc11Array   = array();
+    $loc11Array = array();
     foreach ($nodeList as $loc12Node) {
-      if ($loc12Node !== $loc9Node && $loc10KeyList->sameAs($loc12Node->keysNeededToReach)) {
+      if (($loc12Node !== $loc9Node) && ($loc10KeyList->sameAs($loc12Node->keysNeededToReach))) {
         $loc13Bool = false;
         foreach ($loc9Node->j as $loc14Joint) {
-          if ($loc14Joint->giveOtherEnd($loc9Node) == $loc12Node) {
+          if ($loc14Joint->giveOtherEnd($loc9Node) === $loc12Node) {
             $loc13Bool = true;
             break;
           }
@@ -418,7 +440,10 @@ function enterFrame() {
       }
     }
     if (count($loc11Array) > 0) {
-      $loc18Node = $loc11Array[count($loc11Array)];
+      $loc18Node = $loc11Array[array_rand($loc11Array,1)];
+      if($debug) {
+        echo "adding a joint";
+      }
       new joint($loc9Node, $loc18Node);
     }
   }
@@ -486,7 +511,7 @@ function lineIntersects($a,$b,$c,$d,$p,$q,$r,$s) {
   // https://stackoverflow.com/questions/9043805/test-if-two-lines-intersect-javascript-function#answer-24392281
   // returns true if the line from (a,b)->(c,d) intersects with (p,q)->(r,s)
   $delta = ($c - $a) * ($s - $q) - ($r - $p) * ($d - $b);
-  if ($delta === 0) {
+  if ($delta == 0) {
     return false;
   } else {
     $lambda = (($s - $q) * ($r - $a) + ($p - $r) * ($s - $b)) / $delta;
