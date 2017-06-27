@@ -5,7 +5,7 @@
 //
 // TO DO: 
 // get seed working so that it regenerates the same layout when given a seed
-// check for any joints crossing - https://stackoverflow.com/questions/563198/how-do-you-detect-where-two-line-segments-intersect/563275#563275
+// allow more than 2 joint per node
 //
 */
  
@@ -304,7 +304,7 @@ function addGoal($param1, $param2, $param3 = false, $param4 = false) {
     updateKeyNeedOfNodes();
     $loc8Array = array();
     foreach ($nodeList as $loc9Node) {
-      if (count($loc9Node->j) < $maxJointsPerNode && $loc9Node->keysNeededToReach->sameOrLessThan($param1->keysNeededToReach)) {
+      if ((count($loc9Node->j) < $maxJointsPerNode) && ($loc9Node->keysNeededToReach->sameOrLessThan($param1->keysNeededToReach))) {
         array_push($loc8Array, $loc9Node);
       }
     }
@@ -481,6 +481,33 @@ if(isset($_GET["seed"])) {
 } else {
   $storedSeed = makeSeed();
 }
+
+function lineIntersects($a,$b,$c,$d,$p,$q,$r,$s) {
+  // https://stackoverflow.com/questions/9043805/test-if-two-lines-intersect-javascript-function#answer-24392281
+  // returns true if the line from (a,b)->(c,d) intersects with (p,q)->(r,s)
+  $delta = ($c - $a) * ($s - $q) - ($r - $p) * ($d - $b);
+  if ($delta === 0) {
+    return false;
+  } else {
+    $lambda = (($s - $q) * ($r - $a) + ($p - $r) * ($s - $b)) / $delta;
+    $gamma = (($b - $d) * ($r - $a) + ($c - $a) * ($s - $b)) / $delta;
+    return (0 < $lambda && $lambda < 1) && (0 < $gamma && $gamma < 1);
+  }
+}
+
+function anyJointHasIntersected() {
+  global $jointList;
+  foreach ($jointList as $thisJoint) {
+    foreach ($jointList as $thisInnerJoint) {
+      if($thisJoint !== $thisInnerJoint) {
+        if(lineIntersects($thisJoint->endA->x,$thisJoint->endA->y,$thisJoint->endB->x,$thisJoint->endB->y, $thisInnerJoint->endA->x,$thisInnerJoint->endA->y,$thisInnerJoint->endB->x,$thisInnerJoint->endB->y)) {
+          return true;
+        }
+      }
+    }
+  }
+  return false;
+}
  
 function output() {
   global $debug, $nodeList, $jointList, $canvaDimension;
@@ -521,15 +548,17 @@ function output() {
   }
 }
  
-mt_srand($storedSeed);
+
+
+do {
+  mt_srand($storedSeed);
 $numberOfIterations = 500;
 worldGraph();
 //init();
- 
 do {
   
 } while (enterFrame());
-
+} while (anyJointHasIntersected());
 
 output();
 ?>
