@@ -463,6 +463,11 @@ function enterFrame() {
   if (count($delayedGoals) == 0) {
     $framesSinceFinishedAddingGoals++;
   }
+  if($framesSinceFinishedAddingGoals > 130) {
+    return false;
+  } else {
+    return true;
+  }
 }
  
 function makeSeed() {
@@ -517,13 +522,14 @@ function output() {
 }
  
 mt_srand($storedSeed);
-$numberOfIterations = 200;
+$numberOfIterations = 500;
 worldGraph();
 //init();
  
-for ($i = 1; $i <= $numberOfIterations; $i++) {
-  enterFrame();
-}
+do {
+  
+} while (enterFrame());
+
 
 output();
 ?>
