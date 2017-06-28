@@ -1,20 +1,29 @@
 <?php
  
+// All credit for the lock and key code goes to http://web.archive.org/web/20111110164304/http://www.saltgames.com/2009/procedural-progression/
+// https://twitter.com/SamDriver_
+
+
  
 /*
 //
 // TO DO: 
 // get seed working so that it regenerates the same layout when given a seed
-// check for any joints crossing - https://stackoverflow.com/questions/563198/how-do-you-detect-where-two-line-segments-intersect/563275#563275
-// prevent nodes overlapping
 //
+// make the last key required link to the chain of locks towards the exit, so the dungeon is circular (but previous locks aren't by-passed) - add a node between the start and the first lock in the chain to the exit and link the last key's node to that. 
+//
+// it sometimes places a last key, but no lock. could check for locks and remove any keys that don't match
 */
  
  
  
  
-$debug = false;
  
+$debug = false;
+
+// avoid script time out:
+set_time_limit(0);
+
 class delayedAddGoal {
   // property declaration:
   public $framesRemaining;
@@ -23,7 +32,7 @@ class delayedAddGoal {
   public $andLockAwayTheKey;
   // method declaration:
   public function delayedAddGoal($param1, $param2) {
-    $this->addLock           = $param1;
+    $this->addLock = $param1;
     $this->andLockAwayTheKey = $param2;
   }
 }
@@ -36,8 +45,30 @@ class keyList {
     $foundKey = in_array($thisKey, $this->v);
     return $foundKey;
   }
-  public function sameAs($param1) {
-    return ($this->v == $param1);
+  public function sameAs($param1)    {
+    $loc2Boolean = false;
+    $loc4Boolean = false;
+    if(count($this->v) == count($param1->v)) {
+       $loc2Boolean = true;
+        foreach ($this->v as $loc3Key) {
+          $loc4Boolean = false;
+            foreach ($param1->v as $loc5Key) {
+             if($loc3Key == $loc5Key) {
+                $loc4Boolean = true;
+                break;
+             }
+          }
+          if(!$loc4Boolean) {
+             $loc2Boolean = false;
+             break;
+          }
+       }
+       if($loc2Boolean) {
+          return true;
+       }
+       return false;
+    }
+    return false;
   }
   public function sameOrLessThan($param1) {
     $match = true;
@@ -62,16 +93,16 @@ class node {
     $this->j                 = array();
     $this->x                 = 0;
     $this->y                 = 0;
-    $this->isHappy           = true;
+    //$this->isHappy           = true;
     $this->keysNeededToReach = new keyList();
-    $this->finalRadius       = mt_rand(24, 64);
+    $this->finalRadius       = (8 + (getRNGNumber() * 10));
     $this->arbitaryName      = chr($arbitaryNameCounter);
     $arbitaryNameCounter++;
     array_push($nodeList, $this);
   }
   public function update() {
     global $nodeList, $scaleFactor;
-        if ($this->radius < $this->finalRadius) {
+    if ($this->radius < $this->finalRadius) {
       $this->radius++;
       //$this->type = $this->type;
     }
@@ -82,9 +113,9 @@ class node {
         $distanceBetweenCentres = sqrt($xDifference * $xDifference + $yDifference * $yDifference);
         $spaceBetweenNodes = ($distanceBetweenCentres - ($this->radius + $loc5Node->radius)) * 0.5;
         if ($spaceBetweenNodes <= 0) {
-          if ($spaceBetweenNodes < -1) {
-            $this->isHappy = false;
-          }
+          //if ($spaceBetweenNodes < -1) {
+          //  $this->isHappy = false;
+          //}
           $xDifference  = $xDifference / $distanceBetweenCentres * $spaceBetweenNodes;
           $yDifference  = $yDifference / $distanceBetweenCentres * $spaceBetweenNodes;
           $this->x     += $xDifference;
@@ -94,39 +125,7 @@ class node {
         }
       }
     }
-
   }
-  public function setType($param1String) {
-    $this->type = $param1String;
-    if ($this->type == "KEYHOLDER") {
-      //  $this->icon.graphics.clear();
-      if ($this->holdsKey) {
-        //   $this->icon.graphics.beginFill($this->holdsKey.colour);
-      } else {
-        //   $this->icon.graphics.beginFill(4210752);
-      }
-      // $this->icon.graphics.drawCircle(0,0,$this->radius);
-      // $this->icon.graphics.endFill();
-    } else if ($this->_type == "START") {
-      // $this->icon.graphics.clear();
-      //  $this->icon.graphics.beginFill(16711744);
-      //  $this->icon.graphics.drawCircle(0,0,$this->radius);
-      //  $this->icon.graphics.endFill();
-    } else {
-      //  $this->icon.graphics.clear();
-      //  $this->icon.graphics.beginFill(16777215);
-      //  $this->icon.graphics.drawCircle(0,0,$this->radius);
-      //  $this->icon.graphics.endFill();
-    }
-  }
-  public function getType() {
-    return $this->type;
-  }
-  /*  
-  this.icon = new Shape();
-  addChild(this.icon);
-  node.a.graphLayer.addChild(this);
-  */
 }
 class key {
   public $colour;
@@ -155,7 +154,7 @@ class joint {
   }
   private function addJointToList($param1Node) {
     if ($param1Node != null) {
-      if (!(in_array($this, $param1Node->j))) {
+      if (!(in_array($this, $param1Node->j, true))) {
         array_push($param1Node->j, $this);
       }
     }
@@ -169,7 +168,7 @@ class joint {
   }
    
   public function setEndB($param1Node) {
-    if ($param1Node != $this->endA && $param1Node != $this->endB) {
+    if ($param1Node !== $this->endA && $param1Node !== $this->endB) {
       $loc2Node = $this->endB;
       $this->endB = $param1Node;
       $this->removeJointFromList($loc2Node);
@@ -186,10 +185,11 @@ class joint {
   }
  
   public function giveOtherEnd($param1Node) {
-    if ($param1Node == $this->endA) {
+    global $debug;
+    if ($param1Node === $this->endA) {
       return $this->endB;
     }
-    if ($param1Node == $this->endB) {
+    if ($param1Node === $this->endB) {
       return $this->endA;
     }
     if($debug) {
@@ -200,25 +200,15 @@ class joint {
     return null;
   }
   public function update() {
-    // $this->lineImage.graphics.clear();
-    if ($this->openedByKey) {
-      // this.lineImage.graphics.lineStyle(3,this.openedByKey.colour);
-    } else {
-      // this.lineImage.graphics.lineStyle(3,11579568);
-    }
-    //this.lineImage.graphics.moveTo(this.endA.x,this.endA.y);
-    //this.lineImage.graphics.lineTo(this.endB.x,this.endB.y);
-    //this.dBug.x = (this.endA.x + this.endB.x) / 2;
-    //this.dBug.y = (this.endA.y + this.endB.y) / 2 + 20;
     $loc1Number = $this->endA->x - $this->endB->x;
     $loc2Number = $this->endA->y - $this->endB->y;
     $loc3Number = sqrt($loc1Number * $loc1Number + $loc2Number * $loc2Number);
     $loc4Number = ($loc3Number - ($this->endA->radius + $this->endB->radius)) * 0.5;
     if ($loc4Number >= 0) {
-      if ($loc4Number > 1) {
-        $this->endA->isHappy = false;
-        $this->endB->isHappy = false;
-      }
+      //if ($loc4Number > 1) {
+      //  $this->endA->isHappy = false;
+      //  $this->endB->isHappy = false;
+      //}
       $loc1Number    = $loc1Number / $loc3Number;
       $loc2Number    = $loc2Number / $loc3Number;
       $loc1Number    = $loc1Number * $loc4Number;
@@ -239,8 +229,11 @@ class joint {
   }
 }
 function worldGraph() {
-  global $arbitaryNameCounter, $nodeList, $delayedGoals, $maxJointsPerNode, $numKeysAdded, $keyColours, $jointList, $startNode, $nodesExploredForKeySet, $scaleFactor;
-  $numberOfGoals          = 4;
+  global $arbitaryNameCounter, $nodeList, $delayedGoals, $maxJointsPerNode, $numKeysAdded, $keyColours, $jointList, $startNode, $nodesExploredForKeySet, $scaleFactor, $canvaDimension, $framesPassed, $framesSinceFinishedAddingGoals;
+  $numberOfGoals          = 3;
+  $framesPassed           = 0;
+  $framesSinceFinishedAddingGoals = 0;
+  $canvaDimension         = 900;
   $delayedGoals           = array();
   $nodeList               = array();
   $jointList              = array();
@@ -257,12 +250,12 @@ function worldGraph() {
   $arbitaryNameCounter    = ord("A");
   $startNode              = new node();
   $startNode->type        = "START";
-  $startNode->x           = 300;
-  $startNode->y           = 300;
+  $startNode->x           = $canvaDimension/2;
+  $startNode->y           = $canvaDimension/2;
   $startNode->keysNeededToReach = new keyList();
   $i = 0;
   while ($i < $numberOfGoals) {
-    array_push($delayedGoals, new delayedAddGoal(true, false));
+    array_push($delayedGoals, new delayedAddGoal(true, false, 30 + 240 * $i));
     $i++;
   }
 }
@@ -277,9 +270,8 @@ function setNodeKeyNeed($param1Node, $param2Keylist) {
     array_push($nodesExploredForKeySet, $param1Node);
     $param1Node->keysNeededToReach = $param2Keylist;
     foreach ($param1Node->j as $loc3Joint) {
-      if ($loc3Joint->endA == $param1Node) {
+      if ($loc3Joint->endA === $param1Node) {
         if ($loc3Joint->openedByKey != null && !$param2Keylist->hasKey($loc3Joint->openedByKey)) {
-          // clone array:
           $loc4Joint = clone $param2Keylist;
           $loc4Joint->addKey($loc3Joint->openedByKey);
           setNodeKeyNeed($loc3Joint->endB, $loc4Joint);
@@ -302,7 +294,7 @@ function addGoal($param1, $param2, $param3 = false, $param4 = false) {
     updateKeyNeedOfNodes();
     $loc8Array = array();
     foreach ($nodeList as $loc9Node) {
-      if (count($loc9Node->j) < $maxJointsPerNode && $loc9Node->keysNeededToReach->sameOrLessThan($param1->keysNeededToReach)) {
+      if ((count($loc9Node->j) < $maxJointsPerNode) && ($loc9Node->keysNeededToReach->sameOrLessThan($param1->keysNeededToReach))) {
         array_push($loc8Array, $loc9Node);
       }
     }
@@ -322,12 +314,12 @@ function addGoal($param1, $param2, $param3 = false, $param4 = false) {
 function addBranch($param1Node, $param2Node) {
   global $scaleFactor;
   $loc3 = getRNGNumber();
-  if ($loc3 > 0.5) {
-    $param2Node->x = $param1Node->x - (2 + getRNGNumber())*$scaleFactor;
-    $param2Node->y = $param1Node->y + (0.5 * $scaleFactor);
+  if ($loc3 > 0.2) {
+    $param2Node->x = $param1Node->x - (2 + getRNGNumber());
+    $param2Node->y = $param1Node->y + (0.5);
   } else {
-    $param2Node->x = $param1Node->x + (0.5 * $scaleFactor);
-    $param2Node->y = $param1Node->y - (2 + getRNGNumber())*$scaleFactor;
+    $param2Node->x = $param1Node->x + (0.5);
+    $param2Node->y = $param1Node->y - (2 + getRNGNumber());
   }
   return new joint($param1Node, $param2Node);
 }
@@ -342,36 +334,44 @@ function init() {
   updateKeyNeedOfNodes();
 }
 function insertNodeBeforeJoint($param1) {
+  global $scaleFactor;
   $loc2Node     = $param1->endA;
   $loc3Node     = $param1->endB;
   $loc4Node     = new node();
   $loc4Node->x  = $loc3Node->x;
   $loc4Node->y  = $loc3Node->y;
-  $loc3Node->x  = $loc3Node->x + (-0.5 + getRNGNumber());
-  $loc3Node->y  = $loc3Node->y + (-0.5 + getRNGNumber());
+  $loc3Node->x  = $loc3Node->x + (-0.5 + getRNGNumber())*$scaleFactor;
+  $loc3Node->y  = $loc3Node->y + (-0.5 + getRNGNumber())*$scaleFactor;
   $param1->endA = $loc4Node;
   $loc5Joint    = new joint($loc2Node, $loc4Node);
   return $loc4Node;
 }
 function insertNodeAfterJoint($param1) {
+  global $scaleFactor;
   $loc2Node     = $param1->endA;
   $loc3Node     = $param1->endB;
   $loc4Node     = new node();
   $loc4Node->x  = $loc3Node->x;
   $loc4Node->y  = $loc3Node->y;
-  $loc3Node->x  = $loc3Node->x + (-0.5 + getRNGNumber());
-  $loc3Node->y  = $loc3Node->y + (-0.5 + getRNGNumber());
+  $loc3Node->x  = $loc3Node->x + (-0.5 + getRNGNumber())*$scaleFactor;
+  $loc3Node->y  = $loc3Node->y + (-0.5 + getRNGNumber())*$scaleFactor;
   $param1->endB = $loc4Node;
   $loc5Joint    = new joint($loc4Node, $loc3Node);
   return $loc4Node;
 }
 function getRNGNumber() {
-  return mt_rand(0, 10000)/10000;
+  $a = 17;
+  $c = 3;
+  $m = pow(2,12);
+  $seed = mt_rand(0, 10000)/10000  * $m;
+  $seed = ($a * $seed + $c) % $m;
+  return $seed / $m;
+  // return mt_rand(0, 10000)/10000;
 }
 function enterFrame() {
-  global $delayedGoals, $nodeList, $maxJointsPerNode, $numKeysAdded, $jointList, $debug;
+  global $delayedGoals, $nodeList, $maxJointsPerNode, $numKeysAdded, $jointList, $debug, $framesPassed, $framesSinceFinishedAddingGoals;
   $loc13Bool = false;
-  if (count($jointList) > 0) {
+  if (($framesSinceFinishedAddingGoals < 120) && ($framesPassed % 7 == 0) && (count($jointList) > 0)) {
     $loc6ArrayOfArrays = array();
     foreach ($nodeList as $loc7Node) {
       if (count($loc7Node->j) == 1) {
@@ -384,16 +384,16 @@ function enterFrame() {
     } else {
       insertNodeAfterJoint($loc8Node->j[0]);
     }
-  } else if (count($nodeList) > 0) {
+  } else if (($framesSinceFinishedAddingGoals > 120) && ($framesSinceFinishedAddingGoals < 130) && ($framesPassed % 1 == 0) && (count($nodeList) > 0)) {
     updateKeyNeedOfNodes();
     $loc9Node = $nodeList[array_rand($nodeList,1)];
     $loc10KeyList = $loc9Node->keysNeededToReach;
-    $loc11Array   = array();
+    $loc11Array = array();
     foreach ($nodeList as $loc12Node) {
-      if ($loc12Node != $loc9Node && $loc10KeyList->sameAs($loc12Node->keysNeededToReach)) {
+      if (($loc12Node !== $loc9Node) && ($loc10KeyList->sameAs($loc12Node->keysNeededToReach))) {
         $loc13Bool = false;
         foreach ($loc9Node->j as $loc14Joint) {
-          if ($loc14Joint->giveOtherEnd($loc9Node) == $loc12Node) {
+          if ($loc14Joint->giveOtherEnd($loc9Node) === $loc12Node) {
             $loc13Bool = true;
             break;
           }
@@ -409,7 +409,10 @@ function enterFrame() {
       }
     }
     if (count($loc11Array) > 0) {
-      $loc18Node = $loc11Array[count($loc11Array)];
+      $loc18Node = $loc11Array[array_rand($loc11Array,1)];
+      if($debug) {
+        echo "adding a joint";
+      }
       new joint($loc9Node, $loc18Node);
     }
   }
@@ -441,21 +444,24 @@ function enterFrame() {
     }
   }
   // $loc3Number = 1 / this.assumedFPS;
-  foreach ($nodeList as $loc4Node) {
-    $loc4Node->isHappy = true;
-  }
+  //foreach ($nodeList as $loc4Node) {
+  //  $loc4Node->isHappy = true;
+  //}
   foreach ($jointList as $loc5Joint) {
     $loc5Joint->update();
   }
   foreach ($nodeList as $loc4Node) {
     $loc4Node->update();
   }
-  /*
-  this.framesPassed++;
-  if(this.delayedGoals.length == 0) {
-  this.framesSinceFinishedAddingGoals++;
+  $framesPassed++;
+  if (count($delayedGoals) == 0) {
+    $framesSinceFinishedAddingGoals++;
   }
-  */
+  if($framesSinceFinishedAddingGoals > 130) {
+    return false;
+  } else {
+    return true;
+  }
 }
  
 function makeSeed() {
@@ -469,11 +475,37 @@ if(isset($_GET["seed"])) {
 } else {
   $storedSeed = makeSeed();
 }
+
+function lineIntersects($a,$b,$c,$d,$p,$q,$r,$s) {
+  // https://stackoverflow.com/questions/9043805/test-if-two-lines-intersect-javascript-function#answer-24392281
+  // returns true if the line from (a,b)->(c,d) intersects with (p,q)->(r,s)
+  $delta = ($c - $a) * ($s - $q) - ($r - $p) * ($d - $b);
+  if ($delta == 0) {
+    return false;
+  } else {
+    $lambda = (($s - $q) * ($r - $a) + ($p - $r) * ($s - $b)) / $delta;
+    $gamma = (($b - $d) * ($r - $a) + ($c - $a) * ($s - $b)) / $delta;
+    return (0 < $lambda && $lambda < 1) && (0 < $gamma && $gamma < 1);
+  }
+}
+
+function anyJointHasIntersected() {
+  global $jointList;
+  foreach ($jointList as $thisJoint) {
+    foreach ($jointList as $thisInnerJoint) {
+      if($thisJoint !== $thisInnerJoint) {
+        if(lineIntersects($thisJoint->endA->x,$thisJoint->endA->y,$thisJoint->endB->x,$thisJoint->endB->y, $thisInnerJoint->endA->x,$thisInnerJoint->endA->y,$thisInnerJoint->endB->x,$thisInnerJoint->endB->y)) {
+          return true;
+        }
+      }
+    }
+  }
+  return false;
+}
  
 function output() {
-  global $debug, $nodeList, $jointList;
+  global $debug, $nodeList, $jointList, $canvaDimension;
   if(!$debug) {
-    $canvaDimension = 600;
     $outputCanvas = imagecreatetruecolor($canvaDimension, $canvaDimension);
     $groundColour = array(219, 215, 190);
     $ground = imagecolorallocate($outputCanvas, $groundColour[0], $groundColour[1], $groundColour[2]);
@@ -486,12 +518,15 @@ function output() {
         }
       } else if ($thisNode->type == "START") {
         $thisNodeColour = imagecolorallocate($outputCanvas, 255, 255, 255);
+      } else if ($thisNode->type == "SIDEGOAL") {
+        $thisNodeColour = imagecolorallocate($outputCanvas, 90, 90, 90);
       } else if ($thisNode->type == "ENDGOAL") {
         $thisNodeColour = imagecolorallocate($outputCanvas, 0, 0, 0);
       } else {
         $thisNodeColour = imagecolorallocate($outputCanvas, 128, 128, 128);
       }
       imagefilledellipse($outputCanvas, $thisNode->x, $thisNode->y, $thisNode->radius*2, $thisNode->radius*2, $thisNodeColour);
+      // imagefilledrectangle($outputCanvas, $thisNode->x-$thisNode->radius, $thisNode->y-$thisNode->radius,$thisNode->x+$thisNode->radius,$thisNode->y+$thisNode->radius, $thisNodeColour);
     }
     // draw joints: 
     imagesetthickness($outputCanvas, 2);   
@@ -509,14 +544,17 @@ function output() {
   }
 }
  
-mt_srand($storedSeed);
-$numberOfIterations = 18;
-worldGraph();
-//init();
- 
-for ($i = 1; $i <= $numberOfIterations; $i++) {
-  enterFrame();
-}
+
+
+do {
+  mt_srand($storedSeed);
+  worldGraph();
+  //init();
+  do {
+  } while (enterFrame());
+} while (anyJointHasIntersected());
+
+
 
 
 output();
