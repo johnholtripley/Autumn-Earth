@@ -46,7 +46,7 @@ class keyList {
     return $foundKey;
   }
   public function sameAs($param1)    {
-    $loc2Boolean = false;
+    /*$loc2Boolean = false;
     $loc4Boolean = false;
     if(count($this->v) == count($param1->v)) {
        $loc2Boolean = true;
@@ -69,6 +69,8 @@ class keyList {
        return false;
     }
     return false;
+    */
+    return $this == $param1;
   }
   public function sameOrLessThan($param1) {
     $match = true;
@@ -209,14 +211,12 @@ class joint {
       //  $this->endA->isHappy = false;
       //  $this->endB->isHappy = false;
       //}
-      $loc1Number    = $loc1Number / $loc3Number;
-      $loc2Number    = $loc2Number / $loc3Number;
-      $loc1Number    = $loc1Number * $loc4Number;
-      $loc2Number    = $loc2Number * $loc4Number;
-      $this->endA->x = $this->endA->x - $loc1Number;
-      $this->endA->y = $this->endA->y - $loc2Number;
-      $this->endB->x = $this->endB->x + $loc1Number;
-      $this->endB->y = $this->endB->y + $loc2Number;
+      $loc1Number    = $loc1Number / $loc3Number * $loc4Number;
+      $loc2Number    = $loc2Number / $loc3Number * $loc4Number;
+      $this->endA->x -= $loc1Number;
+      $this->endA->y -= $loc2Number;
+      $this->endB->x += $loc1Number;
+      $this->endB->y += $loc2Number;
     }
   }
   private function removeJointFromList($param1Node) {
@@ -340,8 +340,8 @@ function insertNodeBeforeJoint($param1) {
   $loc4Node     = new node();
   $loc4Node->x  = $loc3Node->x;
   $loc4Node->y  = $loc3Node->y;
-  $loc3Node->x  = $loc3Node->x + (-0.5 + getRNGNumber())*$scaleFactor;
-  $loc3Node->y  = $loc3Node->y + (-0.5 + getRNGNumber())*$scaleFactor;
+  $loc3Node->x  = $loc3Node->x + (-0.5 + getRNGNumber());
+  $loc3Node->y  = $loc3Node->y + (-0.5 + getRNGNumber());
   $param1->endA = $loc4Node;
   $loc5Joint    = new joint($loc2Node, $loc4Node);
   return $loc4Node;
@@ -353,8 +353,8 @@ function insertNodeAfterJoint($param1) {
   $loc4Node     = new node();
   $loc4Node->x  = $loc3Node->x;
   $loc4Node->y  = $loc3Node->y;
-  $loc3Node->x  = $loc3Node->x + (-0.5 + getRNGNumber())*$scaleFactor;
-  $loc3Node->y  = $loc3Node->y + (-0.5 + getRNGNumber())*$scaleFactor;
+  $loc3Node->x  = $loc3Node->x + (-0.5 + getRNGNumber());
+  $loc3Node->y  = $loc3Node->y + (-0.5 + getRNGNumber());
   $param1->endB = $loc4Node;
   $loc5Joint    = new joint($loc4Node, $loc3Node);
   return $loc4Node;
@@ -371,7 +371,7 @@ function getRNGNumber() {
 function enterFrame() {
   global $delayedGoals, $nodeList, $maxJointsPerNode, $numKeysAdded, $jointList, $debug, $framesPassed, $framesSinceFinishedAddingGoals;
   $loc13Bool = false;
-  if (($framesSinceFinishedAddingGoals < 120) && ($framesPassed % 7 == 0) && (count($jointList) > 0)) {
+  if (($framesSinceFinishedAddingGoals < 120) && ($framesPassed % 3 == 0) && (count($jointList) > 0)) {
     $loc6ArrayOfArrays = array();
     foreach ($nodeList as $loc7Node) {
       if (count($loc7Node->j) == 1) {
@@ -447,11 +447,11 @@ function enterFrame() {
   //foreach ($nodeList as $loc4Node) {
   //  $loc4Node->isHappy = true;
   //}
-  foreach ($jointList as $loc5Joint) {
-    $loc5Joint->update();
+  foreach ($jointList as $thisJoint) {
+    $thisJoint->update();
   }
-  foreach ($nodeList as $loc4Node) {
-    $loc4Node->update();
+  foreach ($nodeList as $thisNode) {
+    $thisNode->update();
   }
   $framesPassed++;
   if (count($delayedGoals) == 0) {
@@ -481,7 +481,7 @@ function lineIntersects($a,$b,$c,$d,$p,$q,$r,$s) {
   // returns true if the line from (a,b)->(c,d) intersects with (p,q)->(r,s)
   $delta = ($c - $a) * ($s - $q) - ($r - $p) * ($d - $b);
   if ($delta == 0) {
-    return false;
+    //return false;
   } else {
     $lambda = (($s - $q) * ($r - $a) + ($p - $r) * ($s - $b)) / $delta;
     $gamma = (($b - $d) * ($r - $a) + ($c - $a) * ($s - $b)) / $delta;
