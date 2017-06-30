@@ -13,13 +13,16 @@
 // make the last key required link to the chain of locks towards the exit, so the dungeon is circular (but previous locks aren't by-passed) - add a node between the start and the first lock in the chain to the exit and link the last key's node to that. 
 //
 // it sometimes places a last key, but no lock. could check for locks and remove any keys that don't match
+
+// when adding joints at the end, check if tll cross before adding, so hopefully that'll reduce the chance of having any crossed joints at the end, and make it less likely to have to abort that layout
+
 */
  
  
  
  
  
-$debug = false;
+$debug = true;
 
 // avoid script time out:
 set_time_limit(0);
@@ -195,9 +198,9 @@ class joint {
       return $this->endA;
     }
     if($debug) {
-      echo "FAIL: worldGraph.as/joint/giveOtherEnd not supplied with a valid node. ";
-      echo "<br>my nodes are:" . $this->endA . "," . $this->endB;
-      echo "<br>and I was called from: " . $param1Node;
+      echo "FAIL: /joint/giveOtherEnd not supplied with a valid node. ";
+      echo "<br>my nodes are:" . $this->endA->arbitaryName . "," . $this->endB->arbitaryName;
+      echo "<br>and I was called from: " . $param1Node->arbitaryName."<hr>";
     }
     return null;
   }
@@ -371,7 +374,7 @@ function getRNGNumber() {
 function enterFrame() {
   global $delayedGoals, $nodeList, $maxJointsPerNode, $numKeysAdded, $jointList, $debug, $framesPassed, $framesSinceFinishedAddingGoals;
   $loc13Bool = false;
-  if (($framesSinceFinishedAddingGoals < 120) && ($framesPassed % 3 == 0) && (count($jointList) > 0)) {
+  if (($framesSinceFinishedAddingGoals < 120) && ($framesPassed % 10 == 0) && (count($jointList) > 0)) {
     $loc6ArrayOfArrays = array();
     foreach ($nodeList as $loc7Node) {
       if (count($loc7Node->j) == 1) {
@@ -411,7 +414,7 @@ function enterFrame() {
     if (count($loc11Array) > 0) {
       $loc18Node = $loc11Array[array_rand($loc11Array,1)];
       if($debug) {
-        echo "adding a joint";
+      //  echo "adding a joint";
       }
       new joint($loc9Node, $loc18Node);
     }
