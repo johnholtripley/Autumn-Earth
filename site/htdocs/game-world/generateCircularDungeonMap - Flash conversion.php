@@ -1,7 +1,22 @@
 <?php
  
-/*
+// All credit for the lock and key code goes to http://web.archive.org/web/20111110164304/http://www.saltgames.com/2009/procedural-progression/
+// https://twitter.com/SamDriver_
 
+
+ 
+/*
+//
+// TO DO: 
+// get seed working so that it regenerates the same layout when given a seed
+//
+// make the last key required link to the chain of locks towards the exit, so the dungeon is circular (but previous locks aren't by-passed) - add a node between the start and the first lock in the chain to the exit and link the last key's node to that. 
+//
+// it sometimes places a last key, but no lock. could check for locks and remove any keys that don't match
+
+// when adding joints at the end, check if tll cross before adding, so hopefully that'll reduce the chance of having any crossed joints at the end, and make it less likely to have to abort that layout
+
+*/
  
  
  
@@ -34,7 +49,30 @@ class keyList {
     return $foundKey;
   }
   public function sameAs($param1)    {
-
+    /*$loc2Boolean = false;
+    $loc4Boolean = false;
+    if(count($this->v) == count($param1->v)) {
+       $loc2Boolean = true;
+        foreach ($this->v as $loc3Key) {
+          $loc4Boolean = false;
+            foreach ($param1->v as $loc5Key) {
+             if($loc3Key == $loc5Key) {
+                $loc4Boolean = true;
+                break;
+             }
+          }
+          if(!$loc4Boolean) {
+             $loc2Boolean = false;
+             break;
+          }
+       }
+       if($loc2Boolean) {
+          return true;
+       }
+       return false;
+    }
+    return false;
+    */
     return $this == $param1;
   }
   public function sameOrLessThan($param1) {
@@ -112,7 +150,10 @@ class joint {
     $this->setEndA($param1Node);
     $this->setEndB($param2Node);
     $this->openedByKey = $param3Key;
-
+    /*
+    this.lineImage = new Shape();
+    addChild(this.lineImage);
+    */
     array_push($jointList, $this);
     // joint.a.jointLayer.addChild(this);
   }
@@ -519,153 +560,5 @@ do {
 
 
 
-output();
-
-
-*/
-
-
-
-class node {
-  public function __construct() {
-    global $nodeList;
-    $this->radius = 12;
-    $this->type = "NORMAL";
-    $this->x = 0;
-    $this->y = 0;
-    $this->name = count($nodeList);
-
-    array_push($nodeList, $this);
-  }
-}
-
-class joint {
-  public function __construct() {
-    global $jointList;
-
-    array_push($jointList, $this);
-  }
-}
-
-function addNode($type, $x, $y) {
-$newNode = new node();
-  $newNode->type = $type;
-  $newNode->x = $x;
-  $newNode->y = $y;
-}
-
-function addJoint($connectNodeAId, $connectNodeBId) {
-  global $nodeList;
-  $newJoint = new joint();
-  $newJoint->nodeA = $nodeList[$connectNodeAId]->name;
-  $newJoint->nodeB = $nodeList[$connectNodeBId]->name;
-}
-
-function addNodeAndJointTo($connectNodeId, $type, $x, $y) {
-  global $nodeList;
-$newNode = new node();
-  $newNode->type = $type;
-  $newNode->x = $x;
-  $newNode->y = $y;
-  $newJoint = new joint();
-  $newJoint->nodeA = $nodeList[$connectNodeId]->name;
-  $newJoint->nodeB = $newNode->name;
-}
-
-function addNodeBetween($connectNodeAId, $connectNodeBId) {
-  global $nodeList;
-  addNodeAndJointTo($connectNodeBId, "NORMAL", ($nodeList[$connectNodeAId]->x + $nodeList[$connectNodeBId]->x)/2-20, ($nodeList[$connectNodeAId]->y + $nodeList[$connectNodeBId]->y)/2-40);
-removeJoint($connectNodeAId, $connectNodeBId);
-  addJoint($connectNodeAId,count($nodeList)-1);
-
-}
-
-function removeJoint($connectNodeAId, $connectNodeBId) {
-  global $jointList, $debug;
-  foreach ($jointList as $jointKey => $jointElement) {
-
-if((($jointElement->nodeA === $connectNodeAId) && ($jointElement->nodeB === $connectNodeBId)) || (($jointElement->nodeB === $connectNodeAId) && ($jointElement->nodeA === $connectNodeBId))) {
-
-unset($jointList[$jointKey]);
-break;
-}
-
-  }
-}
-
-function init() {
-global $nodeList, $jointList, $debug, $canvaDimension;
-$debug = false;
-if(isset($_GET["seed"])) {
-  $storedSeed = $_GET["seed"];
-} else {
- // http://php.net/manual/en/function.mt_srand.php
-   list($usec, $sec) = explode(' ', microtime());
-  $storedSeed = floor((float) $sec + ((float) $usec * 100000));
-}
-mt_srand($storedSeed);
-$canvaDimension = 600;
-  $nodeList = array();
-  $jointList = array();
-
-
-
-addNode("START",$canvaDimension/2,$canvaDimension*2/3);
-addNodeAndJointTo(0, "ENDGOAL", $canvaDimension/2,$canvaDimension/3);
-addNodeAndJointTo(0, "NORMAL", $canvaDimension/4,$canvaDimension/4);
-addJoint(1,2);
-addNodeBetween(1,2);
-if($debug) {
-echo "<hr>";
-}
-addNodeBetween(1,0);
-}
-
-function output() {
-  global $debug, $nodeList, $jointList, $canvaDimension;
-
-
-
-
-  if(!$debug) {
-    $outputCanvas = imagecreatetruecolor($canvaDimension, $canvaDimension);
-    $groundColour = array(219, 215, 190);
-    $ground = imagecolorallocate($outputCanvas, $groundColour[0], $groundColour[1], $groundColour[2]);
-    imagefilledrectangle($outputCanvas, 0, 0, $canvaDimension, $canvaDimension, $ground);
-    // draw nodes:
-    foreach ($nodeList as $thisNode) {
-      if ($thisNode->type == "KEYHOLDER") {
-        if ($thisNode->holdsKey) {
-          $thisNodeColour = imagecolorallocate($outputCanvas, $thisNode->holdsKey->colour[0], $thisNode->holdsKey->colour[1], $thisNode->holdsKey->colour[2]);
-        }
-      } else if ($thisNode->type == "START") {
-        $thisNodeColour = imagecolorallocate($outputCanvas, 255, 255, 255);
-      } else if ($thisNode->type == "SIDEGOAL") {
-        $thisNodeColour = imagecolorallocate($outputCanvas, 90, 90, 90);
-      } else if ($thisNode->type == "ENDGOAL") {
-        $thisNodeColour = imagecolorallocate($outputCanvas, 0, 0, 0);
-      } else {
-        $thisNodeColour = imagecolorallocate($outputCanvas, 128, 128, 128);
-      }
-      imagefilledellipse($outputCanvas, $thisNode->x, $thisNode->y, $thisNode->radius*2, $thisNode->radius*2, $thisNodeColour);
-      // imagefilledrectangle($outputCanvas, $thisNode->x-$thisNode->radius, $thisNode->y-$thisNode->radius,$thisNode->x+$thisNode->radius,$thisNode->y+$thisNode->radius, $thisNodeColour);
-    }
-    // draw joints: 
-    imagesetthickness($outputCanvas, 2);   
-    foreach ($jointList as $thisJoint) {
-      if (isset($thisJoint->openedByKey->colour)) {
-        $thisJointColour = imagecolorallocate($outputCanvas, $thisJoint->openedByKey->colour[0], $thisJoint->openedByKey->colour[1], $thisJoint->openedByKey->colour[2]);
-      } else {
-        $thisJointColour = imagecolorallocate($outputCanvas, 32, 32, 32);
-      }
-      imageline ($outputCanvas, $nodeList[$thisJoint->nodeA]->x , $nodeList[$thisJoint->nodeA]->y, $nodeList[$thisJoint->nodeB]->x, $nodeList[$thisJoint->nodeB]->y, $thisJointColour);
-    }
-    header('Content-Type: image/jpeg');
-    imagejpeg($outputCanvas, null, 100);
-    imagedestroy($outputCanvas);
-  }
-}
-
-init();
 output();
 ?>
