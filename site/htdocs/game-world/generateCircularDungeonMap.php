@@ -615,10 +615,8 @@ addNodeAndJointTo(0, "ENDGOAL", $canvaDimension/2,$canvaDimension/3);
 addNodeAndJointTo(0, "NORMAL", $canvaDimension/4,$canvaDimension/4);
 addJoint(1,2);
 addNodeBetween(1,2);
-if($debug) {
-echo "<hr>";
-}
 addNodeBetween(1,0);
+addNodeBetween(2,3);
 }
 
 function output() {
