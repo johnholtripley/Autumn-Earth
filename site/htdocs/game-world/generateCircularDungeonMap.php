@@ -565,6 +565,7 @@ class joint {
 }
 
 function addNode($type, $x, $y) {
+  global $keysUsed;
 $newNode = new node();
   $newNode->type = $type;
 
@@ -583,15 +584,21 @@ $newNode = new node();
   $newNode->radius = getRNGNumber() * 15 + 5;
   // might be inefficient to call this every time: ###
   moveNodesApart();
+  if($type == "KEYHOLDER") {
+    $newNode->whichKey = $keysUsed;
+  }
   return $newNode;
 }
 
 function addJoint($connectNodeAId, $connectNodeBId, $isLocked = false) {
-  global $nodeList;
+  global $nodeList, $keysUsed;
   $newJoint = new joint();
   $newJoint->nodeA = $nodeList[$connectNodeAId]->name;
   $newJoint->nodeB = $nodeList[$connectNodeBId]->name;
   $newJoint->isLocked = $isLocked;
+  if($newJoint->isLocked) {
+    $newJoint->whichKey = $keysUsed;
+  }
   return $newJoint;
 }
 
@@ -611,7 +618,8 @@ return $newNode;
 }
 
 function addCircularLockAndKeyBetween($connectNodeAId, $connectNodeBId) {
-  global $nodeList;
+  global $nodeList, $keysUsed;
+  $keysUsed ++;
   // add new node between:
   $newNode = addNodeBetween($connectNodeAId, $connectNodeBId, false, true);
   // add key node joined to that:
@@ -665,7 +673,7 @@ function moveNodesApart() {
 }
 
 function output() {
-  global $debug, $nodeList, $jointList, $canvaDimension;
+  global $debug, $nodeList, $jointList, $canvaDimension, $keyColours;
 
 
 
@@ -679,10 +687,10 @@ function output() {
     foreach ($nodeList as $thisNode) {
       if ($thisNode->type == "KEYHOLDER") {
       //  if ($thisNode->holdsKey) {
-      //    $thisNodeColour = imagecolorallocate($outputCanvas, $thisNode->holdsKey->colour[0], $thisNode->holdsKey->colour[1], $thisNode->holdsKey->colour[2]);
+          $thisNodeColour = imagecolorallocate($outputCanvas, $keyColours[$thisNode->whichKey][0], $keyColours[$thisNode->whichKey][1], $keyColours[$thisNode->whichKey][2]);
       //  }
       
-$thisNodeColour = imagecolorallocate($outputCanvas, 255,235,15);
+//$thisNodeColour = imagecolorallocate($outputCanvas, 255,235,15);
       } else if ($thisNode->type == "START") {
         $thisNodeColour = imagecolorallocate($outputCanvas, 255, 255, 255);
       } else if ($thisNode->type == "SIDEGOAL") {
@@ -699,8 +707,8 @@ $thisNodeColour = imagecolorallocate($outputCanvas, 255,235,15);
     imagesetthickness($outputCanvas, 2);   
     foreach ($jointList as $thisJoint) {
       if ($thisJoint->isLocked) {
-      //  $thisJointColour = imagecolorallocate($outputCanvas, $thisJoint->openedByKey->colour[0], $thisJoint->openedByKey->colour[1], $thisJoint->openedByKey->colour[2]);
-        $thisJointColour = imagecolorallocate($outputCanvas, 255,235,15);
+        $thisJointColour = imagecolorallocate($outputCanvas, $keyColours[$thisJoint->whichKey][0], $keyColours[$thisJoint->whichKey][1], $keyColours[$thisJoint->whichKey][2]);
+        //$thisJointColour = imagecolorallocate($outputCanvas, 255,235,15);
       } else {
         $thisJointColour = imagecolorallocate($outputCanvas, 32, 32, 32);
       }
@@ -714,8 +722,18 @@ $thisNodeColour = imagecolorallocate($outputCanvas, 255,235,15);
 
 
 function init() {
-global $nodeList, $jointList, $debug, $canvaDimension;
+global $nodeList, $jointList, $debug, $canvaDimension, $keyColours, $keysUsed;
 $debug = false;
+  $keyColours = array(
+    array(255,0,64),
+    array(255,235,15),
+    array(15,134,255),
+    array(19,209,46)
+  );
+  $keysUsed = 0;
+  $canvaDimension = 600;
+  $nodeList = array();
+  $jointList = array();
 if(isset($_GET["seed"])) {
   $storedSeed = $_GET["seed"];
 } else {
@@ -724,9 +742,7 @@ if(isset($_GET["seed"])) {
   $storedSeed = floor((float) $sec + ((float) $usec * 100000));
 }
 mt_srand($storedSeed);
-$canvaDimension = 600;
-  $nodeList = array();
-  $jointList = array();
+
 
 
 
@@ -737,6 +753,7 @@ addNodeAndJointTo(0, "ENDGOAL", $canvaDimension/2,$canvaDimension/2);
 //addNodeBetween(1,2);
 //addNodeBetween(1,0);
 addCircularLockAndKeyBetween(0,1);
+//addCircularLockAndKeyBetween(1,2);
 
 }
 
