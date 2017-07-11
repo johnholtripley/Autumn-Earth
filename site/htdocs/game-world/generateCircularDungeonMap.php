@@ -753,7 +753,7 @@ addNodeAndJointTo(0, "ENDGOAL", $canvaDimension/2,$canvaDimension/2);
 //addNodeBetween(1,2);
 //addNodeBetween(1,0);
 addCircularLockAndKeyBetween(0,1);
-//addCircularLockAndKeyBetween(1,2);
+addCircularLockAndKeyBetween(0,4);
 
 }
 
