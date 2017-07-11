@@ -550,8 +550,21 @@ class joint {
 function addNode($type, $x, $y) {
 $newNode = new node();
   $newNode->type = $type;
+
+
+  if (getRNGNumber() > 0.5) {
+    $x -= (2 + getRNGNumber());
+    $y += (0.5);
+  } else {
+    $x += (0.5);
+    $y -= (2 + getRNGNumber());
+  }
+
+
   $newNode->x = $x;
   $newNode->y = $y;
+  $newNode->radius = getRNGNumber() * 15 + 5;
+  return $newNode;
 }
 
 function addJoint($connectNodeAId, $connectNodeBId) {
@@ -559,25 +572,21 @@ function addJoint($connectNodeAId, $connectNodeBId) {
   $newJoint = new joint();
   $newJoint->nodeA = $nodeList[$connectNodeAId]->name;
   $newJoint->nodeB = $nodeList[$connectNodeBId]->name;
+  return $newJoint;
 }
 
 function addNodeAndJointTo($connectNodeId, $type, $x, $y) {
   global $nodeList;
-$newNode = new node();
-  $newNode->type = $type;
-  $newNode->x = $x;
-  $newNode->y = $y;
-  $newJoint = new joint();
-  $newJoint->nodeA = $nodeList[$connectNodeId]->name;
-  $newJoint->nodeB = $newNode->name;
+$newNode = addNode($type, $x, $y);
+addJoint($nodeList[$connectNodeId]->name, $newNode->name);
 }
 
 function addNodeBetween($connectNodeAId, $connectNodeBId) {
   global $nodeList;
-  addNodeAndJointTo($connectNodeBId, "NORMAL", ($nodeList[$connectNodeAId]->x + $nodeList[$connectNodeBId]->x)/2-20, ($nodeList[$connectNodeAId]->y + $nodeList[$connectNodeBId]->y)/2-40);
+  addNodeAndJointTo($connectNodeBId, "NORMAL", ($nodeList[$connectNodeAId]->x + $nodeList[$connectNodeBId]->x)/2, ($nodeList[$connectNodeAId]->y + $nodeList[$connectNodeBId]->y)/2);
 removeJoint($connectNodeAId, $connectNodeBId);
   addJoint($connectNodeAId,count($nodeList)-1);
-
+moveNodesApart();
 }
 
 function removeJoint($connectNodeAId, $connectNodeBId) {
@@ -591,6 +600,10 @@ break;
 }
 
   }
+}
+
+function getRNGNumber() {
+ return mt_rand(0, 10000)/10000;
 }
 
 function init() {
@@ -610,13 +623,38 @@ $canvaDimension = 600;
 
 
 
-addNode("START",$canvaDimension/2,$canvaDimension*2/3);
-addNodeAndJointTo(0, "ENDGOAL", $canvaDimension/2,$canvaDimension/3);
-addNodeAndJointTo(0, "NORMAL", $canvaDimension/4,$canvaDimension/4);
+addNode("START",$canvaDimension/2,$canvaDimension/2+10);
+addNodeAndJointTo(0, "ENDGOAL", $canvaDimension/2,$canvaDimension/2);
+addNodeAndJointTo(0, "NORMAL", $canvaDimension/2,$canvaDimension/2-10);
 addJoint(1,2);
 addNodeBetween(1,2);
 addNodeBetween(1,0);
 addNodeBetween(2,3);
+}
+
+function moveNodesApart() {
+  global $nodeList, $debug;
+  foreach ($nodeList as $thisOuterNode) {
+  foreach ($nodeList as $thisNode) {
+      if ($thisNode !== $thisOuterNode) {
+     if($debug) {
+        echo $thisNode->name." !== ".$thisOuterNode->name."<br>";
+      }
+        $xDifference = $thisNode->x - $thisOuterNode->x;
+        $yDifference = $thisNode->y - $thisOuterNode->y;
+        $distanceBetweenCentres = sqrt($xDifference * $xDifference + $yDifference * $yDifference);
+        $spaceBetweenNodes = ($distanceBetweenCentres - ($thisOuterNode->radius + $thisNode->radius)) * 0.5;
+        if ($spaceBetweenNodes <= 0) {
+          $xDifference = $xDifference / $distanceBetweenCentres * $spaceBetweenNodes;
+          $yDifference = $yDifference / $distanceBetweenCentres * $spaceBetweenNodes;
+          $thisOuterNode->x += $xDifference;
+          $thisOuterNode->y += $yDifference;
+          $thisNode->x -= $xDifference;
+          $thisNode->y -= $yDifference;
+        }
+      }
+    }
+  }
 }
 
 function output() {
@@ -665,5 +703,6 @@ function output() {
 }
 
 init();
+moveNodesApart();
 output();
 ?>
