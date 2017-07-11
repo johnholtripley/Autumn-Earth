@@ -1,5 +1,23 @@
 <?php
  
+
+// avoid script time out:
+set_time_limit(0);
+
+
+/*
+TO DO
+
+check nodes are within the map boundaries
+prevent joints crossing
+add locks and keys
+
+
+
+*/
+
+
+
 /*
 
  
@@ -9,8 +27,7 @@
  
 $debug = true;
 
-// avoid script time out:
-set_time_limit(0);
+
 
 class delayedAddGoal {
   // property declaration:
@@ -564,30 +581,44 @@ $newNode = new node();
   $newNode->x = $x;
   $newNode->y = $y;
   $newNode->radius = getRNGNumber() * 15 + 5;
+  // might be inefficient to call this every time: ###
+  moveNodesApart();
   return $newNode;
 }
 
-function addJoint($connectNodeAId, $connectNodeBId) {
+function addJoint($connectNodeAId, $connectNodeBId, $isLocked = false) {
   global $nodeList;
   $newJoint = new joint();
   $newJoint->nodeA = $nodeList[$connectNodeAId]->name;
   $newJoint->nodeB = $nodeList[$connectNodeBId]->name;
+  $newJoint->isLocked = $isLocked;
   return $newJoint;
 }
 
-function addNodeAndJointTo($connectNodeId, $type, $x, $y) {
+function addNodeAndJointTo($connectNodeId, $type, $x, $y, $isLocked = false) {
   global $nodeList;
 $newNode = addNode($type, $x, $y);
-addJoint($nodeList[$connectNodeId]->name, $newNode->name);
+addJoint($nodeList[$connectNodeId]->name, $newNode->name, $isLocked);
+return $newNode;
 }
 
-function addNodeBetween($connectNodeAId, $connectNodeBId) {
+function addNodeBetween($connectNodeAId, $connectNodeBId, $isFirstjointLocked = false, $isLastjointLocked = false) {
   global $nodeList;
-  addNodeAndJointTo($connectNodeBId, "NORMAL", ($nodeList[$connectNodeAId]->x + $nodeList[$connectNodeBId]->x)/2, ($nodeList[$connectNodeAId]->y + $nodeList[$connectNodeBId]->y)/2);
+  $newNode = addNodeAndJointTo($connectNodeBId, "NORMAL", ($nodeList[$connectNodeAId]->x + $nodeList[$connectNodeBId]->x)/2, ($nodeList[$connectNodeAId]->y + $nodeList[$connectNodeBId]->y)/2, $isLastjointLocked);
 removeJoint($connectNodeAId, $connectNodeBId);
-  addJoint($connectNodeAId,count($nodeList)-1);
-moveNodesApart();
+  addJoint($connectNodeAId,count($nodeList)-1,$isFirstjointLocked);
+return $newNode;
 }
+
+function addCircularLockAndKeyBetween($connectNodeAId, $connectNodeBId) {
+  global $nodeList;
+  // add new node between:
+  $newNode = addNodeBetween($connectNodeAId, $connectNodeBId, false, true);
+  // add key node joined to that:
+  $keyNode = addNodeAndJointTo($newNode->name, "KEYHOLDER",$newNode->x+0.5,$newNode->y+0.5);
+  // add node between first and key node:
+  addNodeBetween($connectNodeAId, $keyNode->name);
+  }
 
 function removeJoint($connectNodeAId, $connectNodeBId) {
   global $jointList, $debug;
@@ -606,31 +637,7 @@ function getRNGNumber() {
  return mt_rand(0, 10000)/10000;
 }
 
-function init() {
-global $nodeList, $jointList, $debug, $canvaDimension;
-$debug = false;
-if(isset($_GET["seed"])) {
-  $storedSeed = $_GET["seed"];
-} else {
- // http://php.net/manual/en/function.mt_srand.php
-   list($usec, $sec) = explode(' ', microtime());
-  $storedSeed = floor((float) $sec + ((float) $usec * 100000));
-}
-mt_srand($storedSeed);
-$canvaDimension = 600;
-  $nodeList = array();
-  $jointList = array();
 
-
-
-addNode("START",$canvaDimension/2,$canvaDimension/2+10);
-addNodeAndJointTo(0, "ENDGOAL", $canvaDimension/2,$canvaDimension/2);
-addNodeAndJointTo(0, "NORMAL", $canvaDimension/2,$canvaDimension/2-10);
-addJoint(1,2);
-addNodeBetween(1,2);
-addNodeBetween(1,0);
-addNodeBetween(2,3);
-}
 
 function moveNodesApart() {
   global $nodeList, $debug;
@@ -671,9 +678,11 @@ function output() {
     // draw nodes:
     foreach ($nodeList as $thisNode) {
       if ($thisNode->type == "KEYHOLDER") {
-        if ($thisNode->holdsKey) {
-          $thisNodeColour = imagecolorallocate($outputCanvas, $thisNode->holdsKey->colour[0], $thisNode->holdsKey->colour[1], $thisNode->holdsKey->colour[2]);
-        }
+      //  if ($thisNode->holdsKey) {
+      //    $thisNodeColour = imagecolorallocate($outputCanvas, $thisNode->holdsKey->colour[0], $thisNode->holdsKey->colour[1], $thisNode->holdsKey->colour[2]);
+      //  }
+      
+$thisNodeColour = imagecolorallocate($outputCanvas, 255,235,15);
       } else if ($thisNode->type == "START") {
         $thisNodeColour = imagecolorallocate($outputCanvas, 255, 255, 255);
       } else if ($thisNode->type == "SIDEGOAL") {
@@ -689,8 +698,9 @@ function output() {
     // draw joints: 
     imagesetthickness($outputCanvas, 2);   
     foreach ($jointList as $thisJoint) {
-      if (isset($thisJoint->openedByKey->colour)) {
-        $thisJointColour = imagecolorallocate($outputCanvas, $thisJoint->openedByKey->colour[0], $thisJoint->openedByKey->colour[1], $thisJoint->openedByKey->colour[2]);
+      if ($thisJoint->isLocked) {
+      //  $thisJointColour = imagecolorallocate($outputCanvas, $thisJoint->openedByKey->colour[0], $thisJoint->openedByKey->colour[1], $thisJoint->openedByKey->colour[2]);
+        $thisJointColour = imagecolorallocate($outputCanvas, 255,235,15);
       } else {
         $thisJointColour = imagecolorallocate($outputCanvas, 32, 32, 32);
       }
@@ -700,6 +710,34 @@ function output() {
     imagejpeg($outputCanvas, null, 100);
     imagedestroy($outputCanvas);
   }
+}
+
+
+function init() {
+global $nodeList, $jointList, $debug, $canvaDimension;
+$debug = false;
+if(isset($_GET["seed"])) {
+  $storedSeed = $_GET["seed"];
+} else {
+ // http://php.net/manual/en/function.mt_srand.php
+   list($usec, $sec) = explode(' ', microtime());
+  $storedSeed = floor((float) $sec + ((float) $usec * 100000));
+}
+mt_srand($storedSeed);
+$canvaDimension = 600;
+  $nodeList = array();
+  $jointList = array();
+
+
+
+addNode("START",$canvaDimension/2,$canvaDimension/2+10);
+addNodeAndJointTo(0, "ENDGOAL", $canvaDimension/2,$canvaDimension/2);
+//addNodeAndJointTo(0, "NORMAL", $canvaDimension/2,$canvaDimension/2-10);
+//addJoint(1,2);
+//addNodeBetween(1,2);
+//addNodeBetween(1,0);
+addCircularLockAndKeyBetween(0,1);
+
 }
 
 init();
