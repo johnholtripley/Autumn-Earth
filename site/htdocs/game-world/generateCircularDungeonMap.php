@@ -745,7 +745,7 @@ mt_srand($storedSeed);
 
 
 
-
+/*
 addNode("START",$canvaDimension/2,$canvaDimension/2+10);
 addNodeAndJointTo(0, "ENDGOAL", $canvaDimension/2,$canvaDimension/2);
 //addNodeAndJointTo(0, "NORMAL", $canvaDimension/2,$canvaDimension/2-10);
@@ -754,6 +754,22 @@ addNodeAndJointTo(0, "ENDGOAL", $canvaDimension/2,$canvaDimension/2);
 //addNodeBetween(1,0);
 addCircularLockAndKeyBetween(0,1);
 addCircularLockAndKeyBetween(0,4);
+*/
+
+// http://garethrees.org/2004/12/01/ocarina-of-time/
+// 0:
+addNode("START",$canvaDimension/2,$canvaDimension/2);
+// 1:
+addNodeAndJointTo(0, "ENDGOAL", $canvaDimension/2,$canvaDimension/2);
+// 2:
+addNodeBetween(0,1);
+// 3:
+addNodeBetween(0,1);
+addJoint(2,3);
+// 4:
+addNodeBetween(0,3);
+// 5:
+addNodeBetween(2,1);
 
 }
 
