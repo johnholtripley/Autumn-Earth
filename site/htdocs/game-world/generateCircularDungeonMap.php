@@ -551,7 +551,6 @@ class node {
     $this->x = 0;
     $this->y = 0;
     $this->name = count($nodeList);
-
     array_push($nodeList, $this);
   }
 }
@@ -559,7 +558,6 @@ class node {
 class joint {
   public function __construct() {
     global $jointList;
-
     array_push($jointList, $this);
   }
 }
@@ -642,7 +640,7 @@ break;
 }
 
 function getRNGNumber() {
- return mt_rand(0, 10000)/10000;
+  return mt_rand(0, 10000)/10000;
 }
 
 
@@ -704,7 +702,7 @@ function output() {
       // imagefilledrectangle($outputCanvas, $thisNode->x-$thisNode->radius, $thisNode->y-$thisNode->radius,$thisNode->x+$thisNode->radius,$thisNode->y+$thisNode->radius, $thisNodeColour);
     }
     // draw joints: 
-    imagesetthickness($outputCanvas, 2);   
+    imagesetthickness($outputCanvas, 2);  
     foreach ($jointList as $thisJoint) {
       if ($thisJoint->isLocked) {
         $thisJointColour = imagecolorallocate($outputCanvas, $keyColours[$thisJoint->whichKey][0], $keyColours[$thisJoint->whichKey][1], $keyColours[$thisJoint->whichKey][2]);
@@ -720,6 +718,12 @@ function output() {
   }
 }
 
+function fillUpWithMoreNodes() {
+  global $nodeList;
+  for ($i =0; $i<8; $i++) {
+    addNodeBetween(0,count($nodeList)-1);
+  }
+}
 
 function init() {
 global $nodeList, $jointList, $debug, $canvaDimension, $keyColours, $keysUsed;
@@ -770,6 +774,8 @@ addJoint(2,3);
 addNodeBetween(0,3);
 // 5:
 addNodeBetween(2,1);
+
+// fillUpWithMoreNodes();
 
 }
 
