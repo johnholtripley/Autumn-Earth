@@ -9,8 +9,8 @@ set_time_limit(0);
 TO DO
 
 check nodes are within the map boundaries
-prevent joints crossing
 add locks and keys
+check joints don't cross through other nodes too
 
 
 
@@ -455,18 +455,7 @@ if(isset($_GET["seed"])) {
   $storedSeed = makeSeed();
 }
 
-function lineIntersects($a,$b,$c,$d,$p,$q,$r,$s) {
-  // https://stackoverflow.com/questions/9043805/test-if-two-lines-intersect-javascript-function#answer-24392281
-  // returns true if the line from (a,b)->(c,d) intersects with (p,q)->(r,s)
-  $delta = ($c - $a) * ($s - $q) - ($r - $p) * ($d - $b);
-  if ($delta == 0) {
-    //return false;
-  } else {
-    $lambda = (($s - $q) * ($r - $a) + ($p - $r) * ($s - $b)) / $delta;
-    $gamma = (($b - $d) * ($r - $a) + ($c - $a) * ($s - $b)) / $delta;
-    return (0 < $lambda && $lambda < 1) && (0 < $gamma && $gamma < 1);
-  }
-}
+
 
 function anyJointHasIntersected() {
   global $jointList;
@@ -639,6 +628,34 @@ break;
   }
 }
 
+function lineIntersects($a,$b,$c,$d,$p,$q,$r,$s) {
+  // https://stackoverflow.com/questions/9043805/test-if-two-lines-intersect-javascript-function#answer-24392281
+  // returns true if the line from (a,b)->(c,d) intersects with (p,q)->(r,s)
+  $delta = ($c - $a) * ($s - $q) - ($r - $p) * ($d - $b);
+  if ($delta == 0) {
+    //return false;
+  } else {
+    $lambda = (($s - $q) * ($r - $a) + ($p - $r) * ($s - $b)) / $delta;
+    $gamma = (($b - $d) * ($r - $a) + ($c - $a) * ($s - $b)) / $delta;
+    return (0 < $lambda && $lambda < 1) && (0 < $gamma && $gamma < 1);
+  }
+}
+
+function anyJointHasIntersected() {
+  global $jointList, $nodeList;
+  foreach ($jointList as $thisJoint) {
+    foreach ($jointList as $thisInnerJoint) {
+      if($thisJoint !== $thisInnerJoint) {
+
+        if(lineIntersects($nodeList[$thisJoint->nodeA]->x,$nodeList[$thisJoint->nodeA]->y,$nodeList[$thisJoint->nodeB]->x,$nodeList[$thisJoint->nodeB]->y, $nodeList[$thisInnerJoint->nodeA]->x,$nodeList[$thisInnerJoint->nodeA]->y,$nodeList[$thisInnerJoint->nodeB]->x,$nodeList[$thisInnerJoint->nodeB]->y)) {
+          return true;
+        }
+      }
+    }
+  }
+  return false;
+}
+
 function getRNGNumber() {
   return mt_rand(0, 10000)/10000;
 }
@@ -651,13 +668,17 @@ function moveNodesApart() {
   foreach ($nodeList as $thisNode) {
       if ($thisNode !== $thisOuterNode) {
      if($debug) {
-        echo $thisNode->name." !== ".$thisOuterNode->name."<br>";
+      //  echo $thisNode->name." !== ".$thisOuterNode->name."<br>";
       }
         $xDifference = $thisNode->x - $thisOuterNode->x;
         $yDifference = $thisNode->y - $thisOuterNode->y;
         $distanceBetweenCentres = sqrt($xDifference * $xDifference + $yDifference * $yDifference);
         $spaceBetweenNodes = ($distanceBetweenCentres - ($thisOuterNode->radius + $thisNode->radius)) * 0.5;
         if ($spaceBetweenNodes <= 0) {
+          // avoid division by zero:
+          if($distanceBetweenCentres == 0) {
+            $distanceBetweenCentres = 0.1;
+          }
           $xDifference = $xDifference / $distanceBetweenCentres * $spaceBetweenNodes;
           $yDifference = $yDifference / $distanceBetweenCentres * $spaceBetweenNodes;
           $thisOuterNode->x += $xDifference;
@@ -775,11 +796,13 @@ addNodeBetween(0,3);
 // 5:
 addNodeBetween(2,1);
 
-// fillUpWithMoreNodes();
+ fillUpWithMoreNodes();
 
 }
 
+do {
 init();
 moveNodesApart();
+} while (anyJointHasIntersected());
 output();
 ?>
