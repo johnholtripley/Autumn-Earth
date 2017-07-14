@@ -739,9 +739,9 @@ function output() {
   }
 }
 
-function fillUpWithMoreNodes() {
+function fillUpWithMoreNodes($howMany) {
   global $nodeList;
-  for ($i =0; $i<8; $i++) {
+  for ($i =0; $i<$howMany; $i++) {
     addNodeBetween(0,count($nodeList)-1);
   }
 }
@@ -795,8 +795,17 @@ addJoint(2,3);
 addNodeBetween(0,3);
 // 5:
 addNodeBetween(2,1);
+ /*
+ // get 2 random nodes:
+ do {
+$firstNode = mt_rand(0,count($nodeList)-1);
+$secondNode = mt_rand(0,count($nodeList)-1);
+ } while ($firstNode == $secondNode);
+ addCircularLockAndKeyBetween($firstNode,$secondNode);
+ */
+ fillUpWithMoreNodes(3);
 
- fillUpWithMoreNodes();
+ //fillUpWithMoreNodes(3);
 
 }
 
