@@ -781,7 +781,9 @@ addCircularLockAndKeyBetween(0,1);
 
  fillUpWithMoreNodes(8);
  addCircularLockAndKeyBetween(2,4);
+
 /*
+// nice branching layout:
 // http://garethrees.org/2004/12/01/ocarina-of-time/
 // 0:
 addNode("START",$canvaDimension/2,$canvaDimension/2);
@@ -796,18 +798,7 @@ addJoint(2,3);
 addNodeBetween(0,3);
 // 5:
 addNodeBetween(2,1);
- /*
- // get 2 random nodes:
- do {
-$firstNode = mt_rand(0,count($nodeList)-1);
-$secondNode = mt_rand(0,count($nodeList)-1);
- } while ($firstNode == $secondNode);
- addCircularLockAndKeyBetween($firstNode,$secondNode);
- */
- /*
  fillUpWithMoreNodes(3);
-
- //fillUpWithMoreNodes(3);
 */
 }
 

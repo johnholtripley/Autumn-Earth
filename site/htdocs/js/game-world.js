@@ -1679,7 +1679,7 @@ function revealBoosterCard(e) {
     }
 }
 
-var Input = {
+const Input = {
     init: function() {
         // Set up the keyboard events
         document.addEventListener('keydown', function(e) { Input.changeKey(e, 1, "down") });
