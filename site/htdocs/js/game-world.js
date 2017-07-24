@@ -5640,6 +5640,13 @@ function draw() {
         gameContext.fillStyle = "#000000";
         gameContext.fill();
     } else {
+
+
+        if(thisMapData.showOnlyLineOfSight) {
+            // determine line of sight ############
+        } 
+
+
         // get all assets to be drawn in a list - start with the hero:
 
         var thisGraphicCentreX, thisGraphicCentreY, thisX, thisY, thisNPC, thisItem;

@@ -348,6 +348,7 @@
             "remove": true,
             "faeIgnore": true
 
-        }]
+        }],
+        "showOnlyLineOfSight": true
     }
 }
