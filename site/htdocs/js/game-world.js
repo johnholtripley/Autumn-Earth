@@ -4830,6 +4830,9 @@ if (typeof thisHotspot.remove !== "undefined") {
     // update the hero's breadcrub trail:
     hero.breadcrumb.pop();
     hero.breadcrumb.unshift([hero.tileX, hero.tileY]);
+if (thisMapData.showOnlyLineOfSight) {
+updateLightMap();
+}
 
     if (thisMapData.collisions[hero.tileY][hero.tileX] == "d") {
         activeDoorX = hero.tileX;
@@ -5830,7 +5833,9 @@ function draw() {
                             // shade is very slow: ###
                           //  gameContext.drawImage(shadeImage(assetsToDraw[i][2], thisLightMapValue), assetsToDraw[i][3], assetsToDraw[i][4]);
                           gameContext.save();
-                          gameContext.globalAlpha = thisLightMapValue;
+                        //  gameContext.globalAlpha = thisLightMapValue;
+                      gameContext.filter = 'brightness('+thisLightMapValue * 100+'%)';
+                    
                           gameContext.drawImage(assetsToDraw[i][2], assetsToDraw[i][3], assetsToDraw[i][4]);
                           gameContext.restore();
                         } else {
