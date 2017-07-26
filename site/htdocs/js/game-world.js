@@ -293,7 +293,7 @@ var timeSinceLastFrameSwap = 0;
 var currentAnimationFrame = 0;
 var animationUpdateTime = (1000 / animationFramesPerSecond);
 
-var gameCanvas, gameContext, gameMode, cartographyContext, cartographyCanvas, offScreenCartographyCanvas, offScreenCartographyContext, canvasMapImage, canvasMapImage, canvasMapMaskImage, heroImg, imagesToLoad, tileImages, npcImages, itemImages, backgroundImg, objInitLeft, objInitTop, dragStartX, dragStartY, inventoryCheck, timeSinceLastAmbientSoundWasPlayed, gameSettings;
+var gameCanvas, gameContext, gameMode, cartographyContext, cartographyCanvas, offScreenCartographyCanvas, offScreenCartographyContext, canvasMapImage, canvasMapImage, canvasMapMaskImage, heroImg, imagesToLoad, tileImages, npcImages, itemImages, backgroundImg, objInitLeft, objInitTop, dragStartX, dragStartY, inventoryCheck, timeSinceLastAmbientSoundWasPlayed, gameSettings, lightMap;
 
 const titleTagPrefix = 'Autumn Earth';
 
@@ -2184,6 +2184,31 @@ var KeyBindings = {
 }
 
 if (window.Worker) {
+    var lightMapWorker = new Worker('/js/worker-lightmap.js');
+    lightMapWorker.onmessage = function(e) {
+        lightMap = e.data;
+    }
+}
+
+// make a temporary canvas for the tinted items:
+const tintCanvas = document.createElement("canvas");
+
+function shadeImage(image, tintAmount) {
+    tintCanvas.width = image.width;
+    tintCanvas.height = image.height;
+    tintCanvas.context = tintCanvas.getContext("2d");
+    tintCanvas.context.drawImage(image, 0, 0);
+    tintCanvas.context.fillStyle = 'rgba(0,0,0,' + tintAmount + ')';
+    tintCanvas.context.fillRect(0, 0, tintCanvas.width, tintCanvas.height);
+    tintCanvas.context.globalCompositeOperation = "destination-atop";
+    tintCanvas.context.drawImage(image, 0, 0);
+    return tintCanvas;
+}
+
+function updateLightMap() {
+    lightMapWorker.postMessage([thisMapData, hero.tileX, hero.tileY, hero.lineOfSightRange]);
+}
+if (window.Worker) {
     var pathfindingWorker = new Worker('/js/worker-pathfinding.js');
     pathfindingWorker.onmessage = function(e) {
         var thisAgentsName = e.data[0];
@@ -3886,6 +3911,7 @@ function getHeroGameState() {
         hero.stats = data.stats;
         gameSettings = data.settings;
         hero.currency = data.currency;
+        hero.lineOfSightRange = data.lineOfSightRange;
         hero.titlesEarned = data.titlesEarned;
         hero.activeTitle = data.activeTitle;
         hero.recipesKnown = data.recipesKnown;
@@ -3960,24 +3986,37 @@ function loadCardData() {
 
 function loadMapJSON(mapFilePath) {
     getJSON(mapFilePath, function(data) {
-        thisMapData = data.map;
-        mapTilesY = thisMapData.terrain.length;
-        mapTilesX = thisMapData.terrain[0].length;
-        if (previousZoneName != thisMapData.zoneName) {
-            UI.showZoneName(thisMapData.zoneName);
-            document.title = titleTagPrefix + ' - ' + thisMapData.zoneName;
-            cartographicTitle.innerHTML = thisMapData.zoneName;
-        }
-        initCartographicMap();
-        findProfessionsAndRecipes();
-        if (thisMapData.ambientSounds) {
-            audio.loadAmbientSounds(thisMapData.ambientSounds);
-        }
-        fae.recentHotspots = [];
-    }, function(status) {
-        // try again:
-        loadMapJSON(mapFilePath);
-    });
+            thisMapData = data.map;
+            mapTilesY = thisMapData.terrain.length;
+            mapTilesX = thisMapData.terrain[0].length;
+            if (previousZoneName != thisMapData.zoneName) {
+                UI.showZoneName(thisMapData.zoneName);
+                document.title = titleTagPrefix + ' - ' + thisMapData.zoneName;
+                cartographicTitle.innerHTML = thisMapData.zoneName;
+            }
+            initCartographicMap();
+            findProfessionsAndRecipes();
+            if (thisMapData.showOnlyLineOfSight) {
+                // initialise the lightmap with default values:
+                lightMap = [];
+                for (var row = mapTilesY - 1; row >= 0; row--) {
+                    var defaultRow = [];
+                    for (var col = mapTilesX - 1; col >= 0; col--) {
+                        defaultRow[col] = 0;
+                    }
+                    lightMap[row] = defaultRow;
+                }
+                updateLightMap();
+            }
+            if (thisMapData.ambientSounds) {
+                audio.loadAmbientSounds(thisMapData.ambientSounds);
+            }
+            fae.recentHotspots = [];
+        },
+        function(status) {
+            // try again:
+            loadMapJSON(mapFilePath);
+        });
 }
 
 
@@ -5642,9 +5681,7 @@ function draw() {
     } else {
 
 
-        if(thisMapData.showOnlyLineOfSight) {
-            // determine line of sight ############
-        } 
+   
 
 
         // get all assets to be drawn in a list - start with the hero:
@@ -5683,6 +5720,7 @@ function draw() {
         var thisFileColourSuffix = '';
         var thisColourName;
         var thisItemIdentifier;
+        var thisLightMapValue;
 
         for (var i = 0; i < mapTilesX; i++) {
             for (var j = 0; j < mapTilesY; j++) {
@@ -5693,7 +5731,7 @@ function draw() {
                     thisY = getTileIsoCentreCoordY(i, j);
                     thisGraphicCentreX = thisMapData.graphics[(map[j][i])].centreX;
                     thisGraphicCentreY = thisMapData.graphics[(map[j][i])].centreY;
-                    assetsToDraw.push([findIsoDepth(getTileCentreCoordX(i), getTileCentreCoordY(j), 0), "img", tileImages[(map[j][i])], Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2))]);
+                    assetsToDraw.push([findIsoDepth(getTileCentreCoordX(i), getTileCentreCoordY(j), 0), "img", tileImages[(map[j][i])], Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2)),i,j]);
                 }
             }
         }
@@ -5707,7 +5745,7 @@ function draw() {
                 
                 thisGraphicCentreX = thisMapData.graphics[(thisMapData.innerDoors[i]['graphic'])].centreX;
                 thisGraphicCentreY = thisMapData.graphics[(thisMapData.innerDoors[i]['graphic'])].centreY;
-                assetsToDraw.push([findIsoDepth(getTileCentreCoordX(thisMapData.innerDoors[i]['tileX']), getTileCentreCoordY(thisMapData.innerDoors[i]['tileY']), 0), "img", tileImages[(thisMapData.innerDoors[i]['graphic'])], Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2))]);
+                assetsToDraw.push([findIsoDepth(getTileCentreCoordX(thisMapData.innerDoors[i]['tileX']), getTileCentreCoordY(thisMapData.innerDoors[i]['tileY']), 0), "img", tileImages[(thisMapData.innerDoors[i]['graphic'])], Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2)), thisMapData.innerDoors[i]['tileX'], thisMapData.innerDoors[i]['tileY']]);
             }
             }
         }
@@ -5751,7 +5789,7 @@ function draw() {
             }
             thisItemIdentifier = "item" + thisMapData.items[i].type + thisFileColourSuffix;
 
-            assetsToDraw.push([findIsoDepth(thisItem.x, thisItem.y, thisItem.z), "img", itemImages[thisItemIdentifier], Math.floor(thisX - hero.isox - thisItem.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisItem.centreY + (canvasHeight / 2) - thisItem.z)]);
+            assetsToDraw.push([findIsoDepth(thisItem.x, thisItem.y, thisItem.z), "img", itemImages[thisItemIdentifier], Math.floor(thisX - hero.isox - thisItem.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisItem.centreY + (canvasHeight / 2) - thisItem.z),thisItem.tileX,thisItem.tileY]);
         }
 
         assetsToDraw.sort(sortByLowestValue);
@@ -5782,9 +5820,28 @@ function draw() {
                     break;
                 case "img":
                     // standard image:
-                    gameContext.drawImage(assetsToDraw[i][2], assetsToDraw[i][3], assetsToDraw[i][4]);
+                    if (thisMapData.showOnlyLineOfSight) {
+                       
+                        thisLightMapValue = lightMap[(assetsToDraw[i][6])][(assetsToDraw[i][5])];
+                        if (thisLightMapValue != 0) {
+                            console.log(assetsToDraw[i][6] + ", " + assetsToDraw[i][5] + " - " + thisLightMapValue);
+                        }
+                        if (thisLightMapValue < 1) {
+                            gameContext.drawImage(shadeImage(assetsToDraw[i][2], thisLightMapValue), assetsToDraw[i][3], assetsToDraw[i][4]);
+                        } else {
+                            // no need to shade:
+                            gameContext.drawImage(assetsToDraw[i][2], assetsToDraw[i][3], assetsToDraw[i][4]);
+                        }
+
+                    } else {
+                        gameContext.drawImage(assetsToDraw[i][2], assetsToDraw[i][3], assetsToDraw[i][4]);
+                    }
             }
         }
+
+
+
+
 
         if (activeNPCForDialogue != '') {
             UI.updateDialogue(activeNPCForDialogue);

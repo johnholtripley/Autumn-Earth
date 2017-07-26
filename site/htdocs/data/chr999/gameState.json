@@ -1,7 +1,7 @@
 {
     "currentMap": 3,
     "tileX": 14,
-    "tileY": 1,
+    "tileY": 2,
     "bags": [{
             "type": 20,
             "quality": 100,
@@ -360,5 +360,6 @@
         "money": 34510,
         "cardDust": 12,
         "keys": []
-    }
+    },
+    "lineOfSightRange": 25
 }
