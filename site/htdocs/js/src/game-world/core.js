@@ -1966,12 +1966,17 @@ function draw() {
                     // standard image:
                     if (thisMapData.showOnlyLineOfSight) {
                        
-                        thisLightMapValue = lightMap[(assetsToDraw[i][6])][(assetsToDraw[i][5])];
+                        thisLightMapValue = lightMap[(assetsToDraw[i][5])][(assetsToDraw[i][6])];
                         if (thisLightMapValue != 0) {
                             console.log(assetsToDraw[i][6] + ", " + assetsToDraw[i][5] + " - " + thisLightMapValue);
                         }
                         if (thisLightMapValue < 1) {
-                            gameContext.drawImage(shadeImage(assetsToDraw[i][2], thisLightMapValue), assetsToDraw[i][3], assetsToDraw[i][4]);
+                            // shade is very slow: ###
+                          //  gameContext.drawImage(shadeImage(assetsToDraw[i][2], thisLightMapValue), assetsToDraw[i][3], assetsToDraw[i][4]);
+                          gameContext.save();
+                          gameContext.globalAlpha = thisLightMapValue;
+                          gameContext.drawImage(assetsToDraw[i][2], assetsToDraw[i][3], assetsToDraw[i][4]);
+                          gameContext.restore()
                         } else {
                             // no need to shade:
                             gameContext.drawImage(assetsToDraw[i][2], assetsToDraw[i][3], assetsToDraw[i][4]);
