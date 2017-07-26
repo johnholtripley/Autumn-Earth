@@ -1976,7 +1976,7 @@ function draw() {
                           gameContext.save();
                           gameContext.globalAlpha = thisLightMapValue;
                           gameContext.drawImage(assetsToDraw[i][2], assetsToDraw[i][3], assetsToDraw[i][4]);
-                          gameContext.restore()
+                          gameContext.restore();
                         } else {
                             // no need to shade:
                             gameContext.drawImage(assetsToDraw[i][2], assetsToDraw[i][3], assetsToDraw[i][4]);
