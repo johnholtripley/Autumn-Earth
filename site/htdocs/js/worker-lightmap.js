@@ -59,15 +59,15 @@ function castLight(row, start, end, xx, xy, yx, yy) {
                     break;
                 }
                 //check if it's within the lightable area and light if needed
-                radiusFromHero = getRadiusFromHero(deltaX, deltaY);
+                radiusFromHero = getRadiusFromHero(currentX, currentY);
                 if (radiusFromHero <= herosLineOfSightRange) {
-                    bright = radiusFromHero / herosLineOfSightRange;
-console.log(currentX +", " + currentY +" = "+bright);
+                    bright = 1-(radiusFromHero / herosLineOfSightRange);
+//console.log(currentX +", " + currentY +" = "+bright);
                     lightMap[currentY][currentX] = bright;
                 }
                 if (blocked) {
                     // previous cell was a blocking one
-                    if (tileIsBlocked(currentY, currentX)) {
+                    if (tileIsBlocked(currentX, currentY)) {
                         // hit a wall
                         newStart = rightSlope;
                         continue;
@@ -76,7 +76,7 @@ console.log(currentX +", " + currentY +" = "+bright);
                         start = newStart;
                     }
                 } else {
-                    if (tileIsBlocked(currentY, currentX) && distance < herosLineOfSightRange) {
+                    if (tileIsBlocked(currentX, currentY) && distance < herosLineOfSightRange) {
                         // hit a wall within sight line
                         blocked = true;
                         castLight(distance + 1, start, leftSlope, xx, xy, yx, yy);

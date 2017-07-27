@@ -1970,22 +1970,23 @@ function draw() {
                     if (thisMapData.showOnlyLineOfSight) {
                        
                         thisLightMapValue = lightMap[(assetsToDraw[i][6])][(assetsToDraw[i][5])];
+                      //  thisLightMapValue = Math.floor(thisLightMapValue*100);
                         if (thisLightMapValue != 0) {
-                      //      console.log(assetsToDraw[i][6] + ", " + assetsToDraw[i][5] + " - " + thisLightMapValue);
+                         //   console.log(assetsToDraw[i][6] + ", " + assetsToDraw[i][5] + " - " + thisLightMapValue);
                         }
-                        if (thisLightMapValue < 1) {
+                     //   if (thisLightMapValue < 1) {
                             // shade is very slow: ###
                           //  gameContext.drawImage(shadeImage(assetsToDraw[i][2], thisLightMapValue), assetsToDraw[i][3], assetsToDraw[i][4]);
                           gameContext.save();
-                          gameContext.globalAlpha = thisLightMapValue*100;
-                     // gameContext.filter = 'brightness('+thisLightMapValue * 100+'%)';
+                     //     gameContext.globalAlpha = thisLightMapValue;
+                      gameContext.filter = 'brightness('+thisLightMapValue * 100+'%)';
                     
                           gameContext.drawImage(assetsToDraw[i][2], assetsToDraw[i][3], assetsToDraw[i][4]);
                           gameContext.restore();
-                        } else {
-                            // no need to shade:
-                            gameContext.drawImage(assetsToDraw[i][2], assetsToDraw[i][3], assetsToDraw[i][4]);
-                        }
+                     //   } else {
+                     //       // no need to shade:
+                     //       gameContext.drawImage(assetsToDraw[i][2], assetsToDraw[i][3], assetsToDraw[i][4]);
+                     //   }
 
                     } else {
                         gameContext.drawImage(assetsToDraw[i][2], assetsToDraw[i][3], assetsToDraw[i][4]);
