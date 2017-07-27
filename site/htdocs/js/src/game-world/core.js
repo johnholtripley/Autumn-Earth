@@ -989,24 +989,33 @@ updateLightMap();
 
 function openInnerDoor(whichInnerDoor) {
     // animation ######
-thisMapData.innerDoors[whichInnerDoor]['isOpen'] = true;
- 
+    thisMapData.innerDoors[whichInnerDoor]['isOpen'] = true;
+    if (thisMapData.showOnlyLineOfSight) {
+        updateLightMap();
+    }
 }
 
 function closeInnerDoor(whichInnerDoor) {
-thisMapData.innerDoors[whichInnerDoor]['isOpen'] = false;
+    thisMapData.innerDoors[whichInnerDoor]['isOpen'] = false;
+    if (thisMapData.showOnlyLineOfSight) {
+        updateLightMap();
+    }
 }
 
 function toggleInnerDoor(whichInnerDoor) {
-  thisMapData.innerDoors[whichInnerDoor]['isOpen'] = !(thisMapData.innerDoors[whichInnerDoor]['isOpen']);
-  }
+    thisMapData.innerDoors[whichInnerDoor]['isOpen'] = !(thisMapData.innerDoors[whichInnerDoor]['isOpen']);
+    if (thisMapData.showOnlyLineOfSight) {
+        updateLightMap();
+    }
+}
 
-  function unlockInnerDoor(whichInnerDoor) {
+function unlockInnerDoor(whichInnerDoor) {
     thisMapData.innerDoors[whichInnerDoor]['isLocked'] = false;
-
+    if (thisMapData.showOnlyLineOfSight) {
+        updateLightMap();
+    }
     // play sound ####
-  }
-
+}
 
 
 function checkForActions() {
@@ -1967,30 +1976,31 @@ function draw() {
                     break;
                 case "img":
                     // standard image:
-                    if (thisMapData.showOnlyLineOfSight) {
-                       
-                        thisLightMapValue = lightMap[(assetsToDraw[i][6])][(assetsToDraw[i][5])];
-                      //  thisLightMapValue = Math.floor(thisLightMapValue*100);
-                        if (thisLightMapValue != 0) {
-                         //   console.log(assetsToDraw[i][6] + ", " + assetsToDraw[i][5] + " - " + thisLightMapValue);
-                        }
-                     //   if (thisLightMapValue < 1) {
-                            // shade is very slow: ###
-                          //  gameContext.drawImage(shadeImage(assetsToDraw[i][2], thisLightMapValue), assetsToDraw[i][3], assetsToDraw[i][4]);
-                          gameContext.save();
-                     //     gameContext.globalAlpha = thisLightMapValue;
-                      gameContext.filter = 'brightness('+thisLightMapValue * 100+'%)';
-                    
-                          gameContext.drawImage(assetsToDraw[i][2], assetsToDraw[i][3], assetsToDraw[i][4]);
-                          gameContext.restore();
-                     //   } else {
-                     //       // no need to shade:
-                     //       gameContext.drawImage(assetsToDraw[i][2], assetsToDraw[i][3], assetsToDraw[i][4]);
-                     //   }
 
+
+                    if (thisMapData.showOnlyLineOfSight) {
+                        thisLightMapValue = lightMap[(assetsToDraw[i][6])][(assetsToDraw[i][5])];
+                        if (thisLightMapValue < 1) {
+
+                            gameContext.save();
+                                 gameContext.globalAlpha = thisLightMapValue;
+                            //gameContext.filter = 'brightness(' + thisLightMapValue * 100 + '%)';
+                          //  gameContext.filter = 'blur(' + (1-thisLightMapValue) * 10 + 'px)';
+                            gameContext.drawImage(assetsToDraw[i][2], assetsToDraw[i][3], assetsToDraw[i][4]);
+                            gameContext.restore();
+                        
+
+
+                        } else {
+                            // no need to shade:
+                            gameContext.drawImage(assetsToDraw[i][2], assetsToDraw[i][3], assetsToDraw[i][4]);
+                        }
                     } else {
                         gameContext.drawImage(assetsToDraw[i][2], assetsToDraw[i][3], assetsToDraw[i][4]);
                     }
+
+
+
             }
         }
 

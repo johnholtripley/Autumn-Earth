@@ -61,8 +61,7 @@ function castLight(row, start, end, xx, xy, yx, yy) {
                 //check if it's within the lightable area and light if needed
                 radiusFromHero = getRadiusFromHero(currentX, currentY);
                 if (radiusFromHero <= herosLineOfSightRange) {
-                    bright = 1-(radiusFromHero / herosLineOfSightRange);
-//console.log(currentX +", " + currentY +" = "+bright);
+                    bright = 1 - (radiusFromHero / herosLineOfSightRange);
                     lightMap[currentY][currentX] = bright;
                 }
                 if (blocked) {
