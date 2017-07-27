@@ -5,6 +5,7 @@ if (window.Worker) {
     }
 }
 
+/*
 // make a temporary canvas for the tinted items:
 const tintCanvas = document.createElement("canvas");
 
@@ -19,6 +20,7 @@ function shadeImage(image, tintAmount) {
     tintCanvas.context.drawImage(image, 0, 0);
     return tintCanvas;
 }
+*/
 
 function updateLightMap() {
     lightMapWorker.postMessage([thisMapData, hero.tileX, hero.tileY, hero.lineOfSightRange]);

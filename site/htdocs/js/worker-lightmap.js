@@ -17,10 +17,31 @@ function getRadiusFromHero(xTile, yTile) {
     return Math.sqrt(a * a + b * b);
 }
 
+function tileIsBlocked(xTile, yTile) {
+    if (thisMapData.collisions[yTile][xTile] >= 1) {
+        return true;
+    }
+    if (typeof thisMapData.innerDoors !== "undefined") {
+        var thisInnerDoor;
+        for (var i in thisMapData.innerDoors) {
+            thisInnerDoor = thisMapData.innerDoors[i];
+            if (!thisInnerDoor.isOpen) {
+                if (thisInnerDoor.tileX == xTile) {
+                    if (thisInnerDoor.tileY == yTile) {
+                        return true;
+                    }
+
+                }
+            }
+        }
+    }
+    return false;
+}
+
 function castLight(row, start, end, xx, xy, yx, yy) {
     var newStart = 0.0;
     var blocked = false;
-    var distance, deltaX, deltaY, currentX, currentY, leftSlope, rightSlope, bright;
+    var distance, deltaX, deltaY, currentX, currentY, leftSlope, rightSlope, bright, radiusFromHero;
     if (start < end) {
         return;
     }
@@ -38,14 +59,15 @@ function castLight(row, start, end, xx, xy, yx, yy) {
                     break;
                 }
                 //check if it's within the lightable area and light if needed
-                if (getRadiusFromHero(deltaX, deltaY) <= herosLineOfSightRange) {
-                    bright = (1 - (getRadiusFromHero(deltaX, deltaY) / herosLineOfSightRange));
-
-                    lightMap[currentX][currentY] = bright;
+                radiusFromHero = getRadiusFromHero(deltaX, deltaY);
+                if (radiusFromHero <= herosLineOfSightRange) {
+                    bright = radiusFromHero / herosLineOfSightRange;
+console.log(currentX +", " + currentY +" = "+bright);
+                    lightMap[currentY][currentX] = bright;
                 }
                 if (blocked) {
                     // previous cell was a blocking one
-                    if (thisMapData.collisions[currentX][currentY] >= 1) {
+                    if (tileIsBlocked(currentY, currentX)) {
                         // hit a wall
                         newStart = rightSlope;
                         continue;
@@ -54,7 +76,7 @@ function castLight(row, start, end, xx, xy, yx, yy) {
                         start = newStart;
                     }
                 } else {
-                    if (thisMapData.collisions[currentX][currentY] >= 1 && distance < herosLineOfSightRange) {
+                    if (tileIsBlocked(currentY, currentX) && distance < herosLineOfSightRange) {
                         // hit a wall within sight line
                         blocked = true;
                         castLight(distance + 1, start, leftSlope, xx, xy, yx, yy);
@@ -84,7 +106,7 @@ onmessage = function(e) {
     }
 
     //light the starting cell:
-    lightMap[herosTileX][herosTileY] = 1;
+    lightMap[herosTileY][herosTileX] = 1;
     for (var d in directionDiagonals) {
         castLight(1, 1.0, 0.0, 0, directionDiagonals[d][0], directionDiagonals[d][1], 0);
         castLight(1, 1.0, 0.0, directionDiagonals[d][0], 0, 0, directionDiagonals[d][1]);
