@@ -11,7 +11,7 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/header.php");
 
 <div class="row">
 <div class="column">
-<h1>Whoops</h1>
+<h1>You've wandered off the map&hellip;</h1>
 
 
 
