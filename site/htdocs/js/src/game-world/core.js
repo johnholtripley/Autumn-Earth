@@ -800,6 +800,7 @@ function gameLoop() {
 
 
 function update() {
+    checkForGamePadInput();
     var now = window.performance.now();
     hero.totalGameTimePlayed++;
     var elapsed = (now - lastTime);

@@ -1,28 +1,40 @@
 const Input = {
+    hasGamePadSupport: false,
+    gamePad: null,
     init: function() {
         // Set up the keyboard events
         document.addEventListener('keydown', function(e) { Input.changeKey(e, 1, "down") });
         document.addEventListener('keyup', function(e) { Input.changeKey(e, 0, "up") });
+
+ 
+        if (navigator.getGamepads || navigator.getGamepads()) {
+            Input.hasGamePadSupport = true;
+            window.addEventListener("gamepadconnected", function() {
+            Input.gamePad = navigator.getGamepads()[0];
+        });
+        }
+
+
     },
 
     // called on key up and key down events
     changeKey: function(e, to, type) {
         switch (e.keyCode) {
             case KeyBindings.left:
-            // prevent the page from scrolling:
-            e.preventDefault();
+                // prevent the page from scrolling:
+                e.preventDefault();
                 key[0] = to;
                 break;
             case KeyBindings.up:
-            e.preventDefault();
+                e.preventDefault();
                 key[2] = to;
                 break;
             case KeyBindings.right:
-            e.preventDefault();
+                e.preventDefault();
                 key[1] = to;
                 break;
             case KeyBindings.down:
-            e.preventDefault();
+                e.preventDefault();
                 key[3] = to;
                 break;
 
