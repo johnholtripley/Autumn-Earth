@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 14, 2017 at 04:48 PM
+-- Generation Time: Jul 31, 2017 at 12:21 PM
 -- Server version: 5.6.24
 -- PHP Version: 5.6.8
 
@@ -325,6 +325,47 @@ INSERT INTO `tblcontracts` (`contractID`, `contractStart`, `contractEnd`, `chara
 (1, '2014-07-01 00:00:00', '2014-10-22 00:00:00', 15, 6, 6, 1, 1, 4),
 (2, '2015-07-09 00:28:00', '2015-08-27 19:00:00', 8, 16, 1, 1, 4, 2),
 (3, '2015-07-09 00:28:00', '2015-10-30 00:00:00', 8, 11, 4, 2, 3, 3);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tblcreatures`
+--
+
+CREATE TABLE IF NOT EXISTS `tblcreatures` (
+  `creatureID` int(11) NOT NULL,
+  `creatureName` varchar(255) DEFAULT NULL,
+  `creatureDescription` longtext,
+  `creatureType` varchar(128) NOT NULL,
+  `cleanURL` varchar(128) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `tblcreatures`
+--
+
+INSERT INTO `tblcreatures` (`creatureID`, `creatureName`, `creatureDescription`, `creatureType`, `cleanURL`) VALUES
+(0, 'Pilcrow', 'A black bird with a curious fascination for anything with writing on.', '0', 'pilcrow');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tblcreaturetypes`
+--
+
+CREATE TABLE IF NOT EXISTS `tblcreaturetypes` (
+  `creatureTypeId` int(11) NOT NULL,
+  `creatureTypeName` varchar(255) DEFAULT NULL,
+  `creatureTypeURL` varchar(128) NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `tblcreaturetypes`
+--
+
+INSERT INTO `tblcreaturetypes` (`creatureTypeId`, `creatureTypeName`, `creatureTypeURL`) VALUES
+(0, 'Bird', 'bird'),
+(1, 'Animal', 'animal');
 
 -- --------------------------------------------------------
 
@@ -892,7 +933,7 @@ CREATE TABLE IF NOT EXISTS `tblplants` (
   `timeCreated` datetime NOT NULL,
   `plantSeed` int(255) NOT NULL,
   `commonNamesJoined` varchar(512) COLLATE utf8_bin NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=276 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=278 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
 -- Dumping data for table `tblplants`
@@ -916,7 +957,9 @@ INSERT INTO `tblplants` (`plantID`, `latinName`, `commonNames`, `plantDesc`, `pl
 (272, 'Lutivum coryda', 'Honeystrife', 'The beautiful, bright light red daisy flowers of this annual were once a common sight in hedgerows and pathways. It is now much rarer due to widespread use of selective herbicides.', 'lutivum-coryda', 'Lutivum coryda\r\n(Honeystrife)', 0, 0, '2017-01-25 11:50:25', 1485419349, 'Honeystrife'),
 (273, 'Zyginia curculacinia', 'Skywort, Wimplerose or Downholly', 'A shimmering, bright perennial found growing on cornfields and waste places. The leaves are prized in cookery. The roots are particularly attractive to bumble bee.', 'zyginia-curculacinia', 'Zyginia curculacinia\r\n(Skywort, Wimplerose or Downholly)\r\nA shimmering, bright perennial found growing on cornfields and waste places.', 0, 0, '2017-01-25 11:50:38', 1485378641, 'Skywort/Wimplerose/Downholly'),
 (274, 'Hanium curculum', 'Bitterfoot or Ridgeseed', 'A dark red flower of disturbed ground, farm land and walls. Likes calcareous soils.', 'hanium-curculum', 'Hanium curculum\r\n(Bitterfoot or Ridgeseed)\r\nA dark red flower of disturbed ground, farm land and walls. Likes calcareous soils.', 0, 0, '2017-04-10 13:50:31', 1491881113, 'Bitterfoot/Ridgeseed'),
-(275, 'Xicoryda niachille', 'Hearthfern', 'A native biennial with creeping stems, common in ditches, marshes, pond edges, and river banks.', 'xicoryda-niachille', 'Xicoryda niachille\r\n(Hearthfern)\r\nA native biennial with creeping stems, common in ditches, marshes, pond edges, and river banks.', 0, 0, '2017-06-13 13:21:24', 1497405393, 'Hearthfern');
+(275, 'Xicoryda niachille', 'Hearthfern', 'A native biennial with creeping stems, common in ditches, marshes, pond edges, and river banks.', 'xicoryda-niachille', 'Xicoryda niachille\r\n(Hearthfern)\r\nA native biennial with creeping stems, common in ditches, marshes, pond edges, and river banks.', 0, 0, '2017-06-13 13:21:24', 1497405393, 'Hearthfern'),
+(276, 'Virginia concanata', 'Pouchwhistle', 'A native biennial commonly found in England and Wales, usually on light soils, in open woods, grassland and hedgerows.', 'virginia-concanata', 'Virginia concanata\r\n(Pouchwhistle)', 0, 0, '2017-07-21 16:01:05', 1500709523, 'Pouchwhistle'),
+(277, 'Rhantemelanchier cladrastis', 'Dragonsgrass, Heath lichen or Trailing goldenthistle', 'Widely used in days gone by to curdle milk for cheese making.', 'rhantemelanchier-cladrastis', 'Rhantemelanchier cladrastis\r\n(Dragonsgrass, Heath lichen or Trailing goldenthistle)', 0, 0, '2017-07-21 16:01:23', 1500658341, 'Dragonsgrass/Heath lichen/Trailing goldenthistle');
 
 -- --------------------------------------------------------
 
@@ -1568,6 +1611,18 @@ ALTER TABLE `tblcontracts`
   ADD PRIMARY KEY (`contractID`);
 
 --
+-- Indexes for table `tblcreatures`
+--
+ALTER TABLE `tblcreatures`
+  ADD PRIMARY KEY (`creatureID`);
+
+--
+-- Indexes for table `tblcreaturetypes`
+--
+ALTER TABLE `tblcreaturetypes`
+  ADD PRIMARY KEY (`creatureTypeId`);
+
+--
 -- Indexes for table `tbldungeonachievements`
 --
 ALTER TABLE `tbldungeonachievements`
@@ -1780,6 +1835,16 @@ ALTER TABLE `tblcontractbids`
 ALTER TABLE `tblcontracts`
   MODIFY `contractID` int(255) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
 --
+-- AUTO_INCREMENT for table `tblcreatures`
+--
+ALTER TABLE `tblcreatures`
+  MODIFY `creatureID` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `tblcreaturetypes`
+--
+ALTER TABLE `tblcreaturetypes`
+  MODIFY `creatureTypeId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
+--
 -- AUTO_INCREMENT for table `tbldungeonachievements`
 --
 ALTER TABLE `tbldungeonachievements`
@@ -1863,7 +1928,7 @@ ALTER TABLE `tblnews`
 -- AUTO_INCREMENT for table `tblplants`
 --
 ALTER TABLE `tblplants`
-  MODIFY `plantID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=276;
+  MODIFY `plantID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=278;
 --
 -- AUTO_INCREMENT for table `tblposts`
 --

@@ -49,11 +49,12 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/search.php");
 	<li><a href="/colophon/">Colophon</a></li>
 	<li><a href="/cookies/">Cookies</a></li>
 	</ul>
-<ul>
-	<li><a href="https://twitter.com/autumnearth/">Twitter</a></li>
+<ul itemscope="" itemtype="http://schema.org/Organization">
+	<meta itemprop="url" content="https://www.autumnearth.com">
+	<li><a href="https://twitter.com/autumnearth/" rel="me" itemprop="sameAs">Twitter</a></li>
 	<li><a href="https://twitter.com/HerbariumArcana">Twitter (Herbarium)</a></li>
-	<li><a href="https://www.youtube.com/c/autumnearth/">YouTube</a></li>
-	<li><a href="https://autumnearth.tumblr.com/">Tumblr</a></li>
+	<li><a href="https://www.youtube.com/c/autumnearth/" rel="me" itemprop="sameAs">YouTube</a></li>
+	<li><a href="https://autumnearth.tumblr.com/" rel="me" itemprop="sameAs">Tumblr</a></li>
 	<li><a href="/feed/">RSS</a></li>
 	
 </ul>

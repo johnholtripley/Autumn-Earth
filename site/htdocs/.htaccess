@@ -359,6 +359,10 @@ RewriteRule    ^codex/crafting/([A-Za-z0-9-]+)/recipes/?$    codex/getRecipes.ph
 RewriteRule    ^codex/items/([A-Za-z0-9-]+)/?$    codex/showItemDetail.php?cleanURL=$1    [NC,L]  
 RewriteRule    ^codex/items/     codex/items.php [NC,L]
 
+RewriteRule    ^bestiary/([A-Za-z0-9-]+)/?$    bestiary/listTypes.php?type=$1    [NC,L]  
+RewriteRule    ^bestiary/([A-Za-z0-9-]+)/([A-Za-z0-9-]+)/?$    bestiary/showCreatureDetail.php?type=$1&cleanURL=$2    [NC,L]  
+
+
 RewriteRule    ^almanack/?$     events/all.php [NC,L]
 RewriteRule    ^almanack/([A-Za-z0-9-]+)/?$     events/index.php?cleaned=1&eventName=$1 [NC,L]
 RewriteRule    ^forum/([A-Za-z0-9-]+)/?$     forum/viewforum.php?cleaned=1&forum=$1 [NC,L]

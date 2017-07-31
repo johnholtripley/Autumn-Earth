@@ -1133,7 +1133,7 @@ usort($eventData, 'date_compare');
  
             echo '<li itemscope itemtype="http://schema.org/Event"><a itemprop="url" href="/almanack/'.$eventData[$j]['cleanURL'].'/"><h6 itemprop="name">'.$eventData[$j]['title'].'</h6><p itemprop="description">'.$eventData[$j]['summary'].'</p>';
             $startDateOutput = date( 'j', strtotime( $eventData[$j]['eventStart'] ) )."<sup>".date( 'S', strtotime( $eventData[$j]['eventStart'] ) )."</sup> ".date( 'F Y', strtotime( $eventData[$j]['eventStart'] ) );
-            $endDateOutput = date( 'j',  $eventData[$j]['eventEnd']  )."<sup>".date( 'S',  $eventData[$j]['eventEnd']  )."</sup> ".date( 'F Y',  $eventData[$j]['eventEnd']  );
+            $endDateOutput = date( 'j',  strtotime($eventData[$j]['eventEnd'])  )."<sup>".date( 'S',  $eventData[$j]['eventEnd']  )."</sup> ".date( 'F Y',  strtotime($eventData[$j]['eventEnd'])  );
             echo '<span>From <span itemprop="startDate" content="'.$eventData[$j]['eventStart'].'">'.$startDateOutput.'</span> to <span itemprop="endDate" content="'.$eventData[$j]['eventEnd'].'">'.$endDateOutput.'</span></span>';
             // echo '<span itemprop="location" itemscope itemtype="http://schema.org/Place"><span itemprop="url" href="'.$link.'">'.$link.'</span></span>';
             echo '</a></li>';
