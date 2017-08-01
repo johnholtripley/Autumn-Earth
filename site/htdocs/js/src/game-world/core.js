@@ -9,6 +9,8 @@ function sizeCanvasSize() {
     // size it to the screen:
     gameContext.canvas.width = window.innerWidth;
     gameContext.canvas.height = window.innerHeight;
+    lightMapContext.canvas.width = window.innerWidth;
+    lightMapContext.canvas.height = window.innerHeight;
     canvasWidth = window.innerWidth;
     canvasHeight = window.innerHeight;
 }
@@ -23,6 +25,8 @@ function init() {
     gameCanvas = document.getElementById("gameWorld");
     if (gameCanvas.getContext) {
         gameContext = gameCanvas.getContext('2d');
+        lightMapOverlay = document.getElementById("lightMapOverlay");
+        lightMapContext = lightMapOverlay.getContext('2d');
         sizeCanvasSize();
         whichTransitionEvent = determineWhichTransitionEvent();
         whichAnimationEvent = determineWhichAnimationEvent();
@@ -1872,7 +1876,7 @@ function draw() {
         var thisFileColourSuffix = '';
         var thisColourName;
         var thisItemIdentifier;
-        var thisLightMapValue;
+       
 
         for (var i = 0; i < mapTilesX; i++) {
             for (var j = 0; j < mapTilesY; j++) {
@@ -1980,7 +1984,11 @@ function draw() {
             UI.updateDialogue(activeNPCForDialogue);
         }
 
+if (thisMapData.showOnlyLineOfSight) {
+    lightMapContext.clearRect(0, 0, canvasWidth, canvasHeight);
+ var thisLightMapValue;
         // draw light map:
+       // lightMapContext.filter = 'blur(20px)';
         for (var i = 0; i < mapTilesX; i++) {
             for (var j = 0; j < mapTilesY; j++) {
                 // the tile coordinates should be positioned by i,j but the way the map is drawn, the reference in the array is j,i
@@ -1990,21 +1998,23 @@ function draw() {
                 thisY = getTileIsoCentreCoordY(i, j);
                 thisGraphicCentreX = 24;
                 thisGraphicCentreY = 12;
-                thisLightMapValue = 1 - lightMap[j][i];
-                if (thisLightMapValue < 1) {
+                thisLightMapValue = 1.01 - lightMap[j][i];
+               
+                if (thisLightMapValue > 0) {
 
-                    gameContext.save();
-                    gameContext.globalAlpha = thisLightMapValue;
+                    lightMapContext.save();
+                    lightMapContext.globalAlpha = thisLightMapValue;
                     //gameContext.filter = 'brightness(' + thisLightMapValue * 100 + '%)';
-                    //  gameContext.filter = 'blur(' + (1-thisLightMapValue) * 10 + 'px)';
-                    gameContext.drawImage(tileImages[0], Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2)));
-                    gameContext.restore();
+                      
+                    lightMapContext.drawImage(tileImages[0], Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2)));
+                    lightMapContext.restore();
                 } else {
                     // no need to shade:
-                    gameContext.drawImage(tileImages[0], Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2)));
+                    lightMapContext.drawImage(tileImages[0], Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2)));
                 }
             }
         }
+    }
 
 
         // draw the map transition if it's needed:

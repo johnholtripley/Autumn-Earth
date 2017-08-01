@@ -32,12 +32,12 @@
         position: absolute;
         top: 0;
         left: 0;
-        width: 25%;
+        width: 100%;
     }
     #navigation {
         right: 0;
         top: 0;
-        width: 75%;
+        width: 100%;
         position: absolute;
         background: #000;
     }
@@ -69,6 +69,7 @@
         }
         #pageContent {
             order: 3;
+            width: 100%;
         }
     }
 }

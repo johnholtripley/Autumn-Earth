@@ -33,6 +33,12 @@ canvas {
     display: block;
 }
 
+#lightMapOverlay {
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
 #worldWrapper {
     position: relative;
     display: block;
