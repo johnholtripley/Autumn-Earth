@@ -1,17 +1,22 @@
 const Input = {
-    hasGamePadSupport: false,
+    isUsingGamePad: false,
     gamePad: null,
     init: function() {
         // Set up the keyboard events
         document.addEventListener('keydown', function(e) { Input.changeKey(e, 1, "down") });
         document.addEventListener('keyup', function(e) { Input.changeKey(e, 0, "up") });
 
- 
+
         if (navigator.getGamepads || navigator.getGamepads()) {
-            Input.hasGamePadSupport = true;
+
             window.addEventListener("gamepadconnected", function() {
-            Input.gamePad = navigator.getGamepads()[0];
-        });
+                Input.isUsingGamePad = true;
+                Input.gamePad = navigator.getGamepads()[0];
+            });
+            window.addEventListener("gamepaddisconnected", function(e) {
+                Input.isUsingGamePad = false;
+                Input.gamePad = null;
+            });
         }
 
 

@@ -1,5 +1,5 @@
 function checkForGamePadInput() {
-    if (Input.hasGamePadSupport) {
+    if (Input.isUsingGamePad) {
         // left:
         key[0] = Input.gamePad.axes[1] <= -0.5;
         // right:
