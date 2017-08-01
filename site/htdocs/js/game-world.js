@@ -718,21 +718,22 @@ function moveFaeToDestination(x, y) {
 
 function checkForGamePadInput() {
     if (Input.isUsingGamePad) {
+        // check if an update has happened since the last one that was acted on:
         if (Input.gamePad.timestamp != Input.gameLastPadTimeStamp) {
             Input.gameLastPadTimeStamp = Input.gamePad.timestamp;
-        // left:
-        key[0] = Input.gamePad.axes[1] <= -0.5;
-        // right:
-        key[1] = Input.gamePad.axes[1] >= 0.5;
-        // up: 
-        key[2] = Input.gamePad.axes[2] <= -0.5;
-        // down:
-        key[3] = Input.gamePad.axes[2] >= 0.5;
-        // action (X):
-        key[4] = Input.gamePad.buttons[2].value > 0;
-        // shift (right shoulder 1):
-        key[5] = Input.gamePad.buttons[7].value > 0;
-    }
+            // left:
+            key[0] = Input.gamePad.axes[1] <= -0.5;
+            // right:
+            key[1] = Input.gamePad.axes[1] >= 0.5;
+            // up: 
+            key[2] = Input.gamePad.axes[2] <= -0.5;
+            // down:
+            key[3] = Input.gamePad.axes[2] >= 0.5;
+            // action (X):
+            key[4] = Input.gamePad.buttons[2].value > 0;
+            // shift (right shoulder 1):
+            key[5] = Input.gamePad.buttons[7].value > 0;
+        }
     }
 }
 
@@ -5706,17 +5707,12 @@ function canLearnRecipe(recipeIndex) {
 
 
 
-
 function draw() {
     if (gameMode == "mapLoading") {
         gameContext.fillRect(0, 0, canvasWidth, canvasHeight);
         gameContext.fillStyle = "#000000";
         gameContext.fill();
     } else {
-
-
-   
-
 
         // get all assets to be drawn in a list - start with the hero:
 
@@ -5765,7 +5761,7 @@ function draw() {
                     thisY = getTileIsoCentreCoordY(i, j);
                     thisGraphicCentreX = thisMapData.graphics[(map[j][i])].centreX;
                     thisGraphicCentreY = thisMapData.graphics[(map[j][i])].centreY;
-                    assetsToDraw.push([findIsoDepth(getTileCentreCoordX(i), getTileCentreCoordY(j), 0), "img", tileImages[(map[j][i])], Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2)),i,j]);
+                    assetsToDraw.push([findIsoDepth(getTileCentreCoordX(i), getTileCentreCoordY(j), 0), "img", tileImages[(map[j][i])], Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2))]);
                 }
             }
         }
@@ -5774,13 +5770,13 @@ function draw() {
             for (var i in thisMapData.innerDoors) {
                 // check for open status to get the right graphic ###########
                 if (!thisMapData.innerDoors[i]['isOpen']) {
-                thisX = getTileIsoCentreCoordX(thisMapData.innerDoors[i]['tileX'], thisMapData.innerDoors[i]['tileY']);
-                thisY = getTileIsoCentreCoordY(thisMapData.innerDoors[i]['tileX'], thisMapData.innerDoors[i]['tileY']);
-                
-                thisGraphicCentreX = thisMapData.graphics[(thisMapData.innerDoors[i]['graphic'])].centreX;
-                thisGraphicCentreY = thisMapData.graphics[(thisMapData.innerDoors[i]['graphic'])].centreY;
-                assetsToDraw.push([findIsoDepth(getTileCentreCoordX(thisMapData.innerDoors[i]['tileX']), getTileCentreCoordY(thisMapData.innerDoors[i]['tileY']), 0), "img", tileImages[(thisMapData.innerDoors[i]['graphic'])], Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2)), thisMapData.innerDoors[i]['tileX'], thisMapData.innerDoors[i]['tileY']]);
-            }
+                    thisX = getTileIsoCentreCoordX(thisMapData.innerDoors[i]['tileX'], thisMapData.innerDoors[i]['tileY']);
+                    thisY = getTileIsoCentreCoordY(thisMapData.innerDoors[i]['tileX'], thisMapData.innerDoors[i]['tileY']);
+
+                    thisGraphicCentreX = thisMapData.graphics[(thisMapData.innerDoors[i]['graphic'])].centreX;
+                    thisGraphicCentreY = thisMapData.graphics[(thisMapData.innerDoors[i]['graphic'])].centreY;
+                    assetsToDraw.push([findIsoDepth(getTileCentreCoordX(thisMapData.innerDoors[i]['tileX']), getTileCentreCoordY(thisMapData.innerDoors[i]['tileY']), 0), "img", tileImages[(thisMapData.innerDoors[i]['graphic'])], Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2))]);
+                }
             }
         }
 
@@ -5823,7 +5819,7 @@ function draw() {
             }
             thisItemIdentifier = "item" + thisMapData.items[i].type + thisFileColourSuffix;
 
-            assetsToDraw.push([findIsoDepth(thisItem.x, thisItem.y, thisItem.z), "img", itemImages[thisItemIdentifier], Math.floor(thisX - hero.isox - thisItem.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisItem.centreY + (canvasHeight / 2) - thisItem.z),thisItem.tileX,thisItem.tileY]);
+            assetsToDraw.push([findIsoDepth(thisItem.x, thisItem.y, thisItem.z), "img", itemImages[thisItemIdentifier], Math.floor(thisX - hero.isox - thisItem.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisItem.centreY + (canvasHeight / 2) - thisItem.z)]);
         }
 
         assetsToDraw.sort(sortByLowestValue);
@@ -5854,41 +5850,40 @@ function draw() {
                     break;
                 case "img":
                     // standard image:
-
-
-                    if (thisMapData.showOnlyLineOfSight) {
-                        thisLightMapValue = lightMap[(assetsToDraw[i][6])][(assetsToDraw[i][5])];
-                        if (thisLightMapValue < 1) {
-
-                            gameContext.save();
-                                 gameContext.globalAlpha = thisLightMapValue;
-                            //gameContext.filter = 'brightness(' + thisLightMapValue * 100 + '%)';
-                          //  gameContext.filter = 'blur(' + (1-thisLightMapValue) * 10 + 'px)';
-                            gameContext.drawImage(assetsToDraw[i][2], assetsToDraw[i][3], assetsToDraw[i][4]);
-                            gameContext.restore();
-                        
-
-
-                        } else {
-                            // no need to shade:
-                            gameContext.drawImage(assetsToDraw[i][2], assetsToDraw[i][3], assetsToDraw[i][4]);
-                        }
-                    } else {
-                        gameContext.drawImage(assetsToDraw[i][2], assetsToDraw[i][3], assetsToDraw[i][4]);
-                    }
-
-
-
+                    gameContext.drawImage(assetsToDraw[i][2], assetsToDraw[i][3], assetsToDraw[i][4]);
             }
         }
-
-
-
-
 
         if (activeNPCForDialogue != '') {
             UI.updateDialogue(activeNPCForDialogue);
         }
+
+        // draw light map:
+        for (var i = 0; i < mapTilesX; i++) {
+            for (var j = 0; j < mapTilesY; j++) {
+                // the tile coordinates should be positioned by i,j but the way the map is drawn, the reference in the array is j,i
+                // this makes the map array more readable when editing
+
+                thisX = getTileIsoCentreCoordX(i, j);
+                thisY = getTileIsoCentreCoordY(i, j);
+                thisGraphicCentreX = 24;
+                thisGraphicCentreY = 12;
+                thisLightMapValue = 1 - lightMap[j][i];
+                if (thisLightMapValue < 1) {
+
+                    gameContext.save();
+                    gameContext.globalAlpha = thisLightMapValue;
+                    //gameContext.filter = 'brightness(' + thisLightMapValue * 100 + '%)';
+                    //  gameContext.filter = 'blur(' + (1-thisLightMapValue) * 10 + 'px)';
+                    gameContext.drawImage(tileImages[0], Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2)));
+                    gameContext.restore();
+                } else {
+                    // no need to shade:
+                    gameContext.drawImage(tileImages[0], Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2)));
+                }
+            }
+        }
+
 
         // draw the map transition if it's needed:
         if (mapTransition == "out") {
@@ -5915,8 +5910,6 @@ function draw() {
         }
     }
 }
-
-
 
 
 // check if it cuts the mustard and supports Canvas:
