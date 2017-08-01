@@ -1,5 +1,7 @@
 function checkForGamePadInput() {
     if (Input.isUsingGamePad) {
+        if (Input.gamePad.timestamp != Input.gameLastPadTimeStamp) {
+            Input.gameLastPadTimeStamp = Input.gamePad.timestamp;
         // left:
         key[0] = Input.gamePad.axes[1] <= -0.5;
         // right:
@@ -12,5 +14,6 @@ function checkForGamePadInput() {
         key[4] = Input.gamePad.buttons[2].value > 0;
         // shift (right shoulder 1):
         key[5] = Input.gamePad.buttons[7].value > 0;
+    }
     }
 }

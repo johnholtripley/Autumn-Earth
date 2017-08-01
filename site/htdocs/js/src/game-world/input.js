@@ -1,6 +1,7 @@
 const Input = {
     isUsingGamePad: false,
     gamePad: null,
+    gameLastPadTimeStamp: null,
     init: function() {
         // Set up the keyboard events
         document.addEventListener('keydown', function(e) { Input.changeKey(e, 1, "down") });
