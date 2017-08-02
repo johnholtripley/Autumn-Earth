@@ -97,6 +97,10 @@ function loadCoreAssets() {
         name: "heroImg",
         src: '/images/game-world/core/hero.png'
     });
+        coreImagesToLoad.push({
+        name: "shadowImg",
+        src: '/images/game-world/core/shadow.png'
+    });
     if (hasActivePet) {
         for (var i = 0; i < hero.activePets.length; i++) {
             coreImagesToLoad.push({
@@ -111,6 +115,7 @@ function loadCoreAssets() {
 
 function prepareCoreAssets() {
     heroImg = Loader.getImage("heroImg");
+    shadowImg = Loader.getImage("shadowImg");
     if (hasActivePet) {
         for (var i = 0; i < hero.activePets.length; i++) {
             activePetImages[i] = Loader.getImage("activePet" + hero.activePets[i]);
@@ -1996,8 +2001,8 @@ if (thisMapData.showOnlyLineOfSight) {
 
                 thisX = getTileIsoCentreCoordX(i, j);
                 thisY = getTileIsoCentreCoordY(i, j);
-                thisGraphicCentreX = 24;
-                thisGraphicCentreY = 12;
+                thisGraphicCentreX = 28;
+                thisGraphicCentreY = 17;
                 thisLightMapValue = 1.01 - lightMap[j][i];
                
                 if (thisLightMapValue > 0) {
@@ -2006,11 +2011,11 @@ if (thisMapData.showOnlyLineOfSight) {
                     lightMapContext.globalAlpha = thisLightMapValue;
                     //gameContext.filter = 'brightness(' + thisLightMapValue * 100 + '%)';
                       
-                    lightMapContext.drawImage(tileImages[0], Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2)));
+                    lightMapContext.drawImage(shadowImg, Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2)));
                     lightMapContext.restore();
                 } else {
                     // no need to shade:
-                    lightMapContext.drawImage(tileImages[0], Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2)));
+                    lightMapContext.drawImage(shadowImg, Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2)));
                 }
             }
         }
