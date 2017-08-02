@@ -5871,9 +5871,10 @@ if (thisMapData.showOnlyLineOfSight) {
     lightMapContext.clearRect(0, 0, canvasWidth, canvasHeight);
  var thisLightMapValue;
         // draw light map:
-       // lightMapContext.filter = 'blur(20px)';
-        for (var i = 0; i < mapTilesX; i++) {
-            for (var j = 0; j < mapTilesY; j++) {
+ 
+       // start at -1 to cover the back edge tiles:
+        for (var i = -1; i < mapTilesX; i++) {
+            for (var j = -1; j < mapTilesY; j++) {
                 // the tile coordinates should be positioned by i,j but the way the map is drawn, the reference in the array is j,i
                 // this makes the map array more readable when editing
 
@@ -5881,8 +5882,10 @@ if (thisMapData.showOnlyLineOfSight) {
                 thisY = getTileIsoCentreCoordY(i, j);
                 thisGraphicCentreX = 28;
                 thisGraphicCentreY = 17;
+                thisLightMapValue = 1;
+                if((i>-1) && (j>-1)) {
                 thisLightMapValue = 1.01 - lightMap[j][i];
-               
+               }
                 if (thisLightMapValue > 0) {
 
                     lightMapContext.save();
