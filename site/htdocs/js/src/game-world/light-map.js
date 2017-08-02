@@ -6,5 +6,5 @@ if (window.Worker) {
 }
 
 function updateLightMap() {
-    lightMapWorker.postMessage([thisMapData, hero.tileX, hero.tileY, hero.lineOfSightRange]);
+    lightMapWorker.postMessage([thisMapData, hero.tileX, hero.tileY, hero.lineOfSightRange, lightMap]);
 }

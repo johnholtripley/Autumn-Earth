@@ -3,13 +3,14 @@
 // http://www.roguebasin.com/index.php?title=FOV_using_recursive_shadowcasting_-_improved
 // http://www.roguebasin.com/index.php?title=Improved_Shadowcasting_in_Java
 
-var thisMapData, mapTilesY, mapTilesX, herosTileX, herosTileY, herosLineOfSightRange, lightMap;
+var thisMapData, mapTilesY, mapTilesX, herosTileX, herosTileY, herosLineOfSightRange, lightMap, oldBright;
 const directionDiagonals = [
     [-1, -1],
     [1, -1],
     [-1, 1],
     [1, 1]
 ];
+const persistentLightLevel = 0.4;
 
 function getRadiusFromHero(xTile, yTile) {
     var a = herosTileX - xTile;
@@ -62,6 +63,14 @@ function castLight(row, start, end, xx, xy, yx, yy) {
                 radiusFromHero = getRadiusFromHero(currentX, currentY);
                 if (radiusFromHero <= herosLineOfSightRange) {
                     bright = 1 - (radiusFromHero / herosLineOfSightRange);
+
+
+oldBright = lightMap[currentY][currentX];
+                     if (bright < persistentLightLevel) {
+                        if (oldBright >= persistentLightLevel) {
+                            bright = persistentLightLevel;
+                        }
+                    }
                     lightMap[currentY][currentX] = bright;
                 }
                 if (blocked) {
@@ -94,18 +103,16 @@ onmessage = function(e) {
     herosLineOfSightRange = e.data[3];
     mapTilesY = thisMapData.terrain.length;
     mapTilesX = thisMapData.terrain[0].length;
-
-    lightMap = [];
+    lightMap = e.data[4];
     for (var row = mapTilesY - 1; row >= 0; row--) {
-        var defaultRow = [];
         for (var col = mapTilesX - 1; col >= 0; col--) {
-            defaultRow[col] = 0;
+            if (lightMap[row][col] > persistentLightLevel) {
+                lightMap[row][col] = persistentLightLevel;
+            }
         }
-        lightMap[row] = defaultRow;
     }
 
-    //light the starting cell:
-    lightMap[herosTileY][herosTileX] = 1;
+ lightMap[herosTileY][herosTileX] = 1;
     for (var d in directionDiagonals) {
         castLight(1, 1.0, 0.0, 0, directionDiagonals[d][0], directionDiagonals[d][1], 0);
         castLight(1, 1.0, 0.0, directionDiagonals[d][0], 0, 0, directionDiagonals[d][1]);
