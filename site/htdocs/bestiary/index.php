@@ -53,7 +53,7 @@ echo '<ul>';
 while ($row = mysql_fetch_array($result)) {
 	extract($row);
 
-echo '<li><a href="/bestiary/'.$typeURL.'/'.$cleanURL.'">'.$creatureName.'</a></li>';
+echo '<li><a href="/bestiary/'.$typeURL.'/'.$cleanURL.'/">'.$creatureName.'</a></li>';
 
 }
 echo '</ul>';

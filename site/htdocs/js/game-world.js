@@ -3887,8 +3887,8 @@ function sizeCanvasSize() {
     // size it to the screen:
     gameContext.canvas.width = window.innerWidth;
     gameContext.canvas.height = window.innerHeight;
-    lightMapContext.canvas.width = window.innerWidth;
-    lightMapContext.canvas.height = window.innerHeight;
+    lightMapContext.canvas.width = window.innerWidth/4;
+    lightMapContext.canvas.height = window.innerHeight/4;
     canvasWidth = window.innerWidth;
     canvasHeight = window.innerHeight;
 }
@@ -3977,7 +3977,7 @@ function loadCoreAssets() {
     });
         coreImagesToLoad.push({
         name: "shadowImg",
-        src: '/images/game-world/core/shadow.png'
+        src: '/images/game-world/core/shadow-quarter.png'
     });
     if (hasActivePet) {
         for (var i = 0; i < hero.activePets.length; i++) {
@@ -5892,11 +5892,11 @@ if (thisMapData.showOnlyLineOfSight) {
                     lightMapContext.globalAlpha = thisLightMapValue;
                     //gameContext.filter = 'brightness(' + thisLightMapValue * 100 + '%)';
                       
-                    lightMapContext.drawImage(shadowImg, Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2)));
+                    lightMapContext.drawImage(shadowImg, Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2))/4, Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2))/4);
                     lightMapContext.restore();
                 } else {
                     // no need to shade:
-                    lightMapContext.drawImage(shadowImg, Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2)));
+                    lightMapContext.drawImage(shadowImg, Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2))/4, Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2))/4);
                 }
             }
         }

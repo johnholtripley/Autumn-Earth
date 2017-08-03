@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 31, 2017 at 12:21 PM
+-- Generation Time: Aug 03, 2017 at 09:57 AM
 -- Server version: 5.6.24
 -- PHP Version: 5.6.8
 
@@ -338,14 +338,15 @@ CREATE TABLE IF NOT EXISTS `tblcreatures` (
   `creatureDescription` longtext,
   `creatureType` varchar(128) NOT NULL,
   `cleanURL` varchar(128) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblcreatures`
 --
 
 INSERT INTO `tblcreatures` (`creatureID`, `creatureName`, `creatureDescription`, `creatureType`, `cleanURL`) VALUES
-(0, 'Pilcrow', 'A black bird with a curious fascination for anything with writing on.', '0', 'pilcrow');
+(0, 'Pilcrow', 'A black bird with a curious fascination for anything with writing on.', 'Birds', 'pilcrow'),
+(1, 'Auroch', 'A surprisingly gentle herd animal given its enormous horns.', 'Animals', 'auroch');
 
 -- --------------------------------------------------------
 
@@ -364,8 +365,8 @@ CREATE TABLE IF NOT EXISTS `tblcreaturetypes` (
 --
 
 INSERT INTO `tblcreaturetypes` (`creatureTypeId`, `creatureTypeName`, `creatureTypeURL`) VALUES
-(0, 'Bird', 'bird'),
-(1, 'Animal', 'animal');
+(0, 'Birds', 'birds'),
+(1, 'Animals', 'animals');
 
 -- --------------------------------------------------------
 
@@ -1620,7 +1621,7 @@ ALTER TABLE `tblcreatures`
 -- Indexes for table `tblcreaturetypes`
 --
 ALTER TABLE `tblcreaturetypes`
-  ADD PRIMARY KEY (`creatureTypeId`);
+  ADD PRIMARY KEY (`creatureTypeId`), ADD UNIQUE KEY `creatureTypeName` (`creatureTypeName`);
 
 --
 -- Indexes for table `tbldungeonachievements`
@@ -1838,7 +1839,7 @@ ALTER TABLE `tblcontracts`
 -- AUTO_INCREMENT for table `tblcreatures`
 --
 ALTER TABLE `tblcreatures`
-  MODIFY `creatureID` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `creatureID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT for table `tblcreaturetypes`
 --

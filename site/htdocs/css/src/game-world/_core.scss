@@ -25,7 +25,7 @@ body {
     text-shadow: none;
 }
 
-canvas {
+#gameWorld {
     image-rendering: -moz-crisp-edges;
     image-rendering: -webkit-crisp-edges;
     -ms-interpolation-mode: nearest-neighbor;
@@ -37,6 +37,8 @@ canvas {
     position: absolute;
     left: 0;
     top: 0;
+    @include transform(scale(4,4));
+    @include transform-origin(0 0);
 }
 
 #worldWrapper {

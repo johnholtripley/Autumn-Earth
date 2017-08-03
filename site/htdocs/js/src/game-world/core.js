@@ -9,8 +9,8 @@ function sizeCanvasSize() {
     // size it to the screen:
     gameContext.canvas.width = window.innerWidth;
     gameContext.canvas.height = window.innerHeight;
-    lightMapContext.canvas.width = window.innerWidth;
-    lightMapContext.canvas.height = window.innerHeight;
+    lightMapContext.canvas.width = window.innerWidth/4;
+    lightMapContext.canvas.height = window.innerHeight/4;
     canvasWidth = window.innerWidth;
     canvasHeight = window.innerHeight;
 }
@@ -99,7 +99,7 @@ function loadCoreAssets() {
     });
         coreImagesToLoad.push({
         name: "shadowImg",
-        src: '/images/game-world/core/shadow.png'
+        src: '/images/game-world/core/shadow-quarter.png'
     });
     if (hasActivePet) {
         for (var i = 0; i < hero.activePets.length; i++) {
@@ -1990,16 +1990,12 @@ function draw() {
         }
 
 if (thisMapData.showOnlyLineOfSight) {
+    // draw light map:
     lightMapContext.clearRect(0, 0, canvasWidth, canvasHeight);
  var thisLightMapValue;
-        // draw light map:
- 
        // start at -1 to cover the back edge tiles:
         for (var i = -1; i < mapTilesX; i++) {
             for (var j = -1; j < mapTilesY; j++) {
-                // the tile coordinates should be positioned by i,j but the way the map is drawn, the reference in the array is j,i
-                // this makes the map array more readable when editing
-
                 thisX = getTileIsoCentreCoordX(i, j);
                 thisY = getTileIsoCentreCoordY(i, j);
                 thisGraphicCentreX = 28;
@@ -2009,21 +2005,17 @@ if (thisMapData.showOnlyLineOfSight) {
                 thisLightMapValue = 1.01 - lightMap[j][i];
                }
                 if (thisLightMapValue > 0) {
-
                     lightMapContext.save();
                     lightMapContext.globalAlpha = thisLightMapValue;
-                    //gameContext.filter = 'brightness(' + thisLightMapValue * 100 + '%)';
-                      
-                    lightMapContext.drawImage(shadowImg, Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2)));
+                    lightMapContext.drawImage(shadowImg, Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2))/4, Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2))/4);
                     lightMapContext.restore();
                 } else {
                     // no need to shade:
-                    lightMapContext.drawImage(shadowImg, Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2)));
+                    lightMapContext.drawImage(shadowImg, Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2))/4, Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2))/4);
                 }
             }
         }
     }
-
 
         // draw the map transition if it's needed:
         if (mapTransition == "out") {
