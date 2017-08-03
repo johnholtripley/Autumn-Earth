@@ -40,7 +40,7 @@ if(isset($_GET["cleanURL"])) {
 
 
 
-$creatureResultQuery = "select tblcreatures.*, tblcreaturetypes.creaturetypename as creaturetype, tblcreaturetypes.creaturetypeurl as typeURL from tblcreatures INNER JOIN tblcreaturetypes on tblcreatures.creatureType = tblcreaturetypes.creaturetypeid where tblcreatures.cleanurl = '".$cleanURL."'";
+$creatureResultQuery = "select tblcreatures.*, tblcreaturetypes.creaturetypename as creaturetype, tblcreaturetypes.creaturetypeurl as typeURL from tblcreatures INNER JOIN tblcreaturetypes on tblcreatures.creatureType = tblcreaturetypes.creaturetypename where tblcreatures.cleanurl = '".$cleanURL."'";
 
     $creatureResult = mysql_query( $creatureResultQuery ) or die ( "couldn't execute events query: ".$creatureResultQuery );
 $numberofrows = mysql_num_rows( $creatureResult );
