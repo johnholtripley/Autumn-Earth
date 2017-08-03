@@ -7,10 +7,11 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/search.php");
 
 </div>
 </div>
+<div id="offCanvasOverlay"></div>
 <div id="navigation" role="navigation">
 <div id="navigationInner">
 <div class="row">
-<div class="wide-8 columns">
+<div class="columns">
 <ul>
 	<li><a href="/">Home</a></li>
 	<li><a href="/game-world/">Enter the world</a></li>
