@@ -108,4 +108,5 @@ $outputJson = rtrim($outputJson, ",");
 $outputJson .= '}}';
 
 echo $outputJson;
+mysql_free_result($result);
 ?>

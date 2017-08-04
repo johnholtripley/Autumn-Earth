@@ -4,8 +4,9 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/signalnoise.php");
 include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
 
 $whichIds = '';
-if(isset($_GET["whichIds"]));
+if(isset($_GET["whichIds"])) {
 $whichIds = $_GET["whichIds"];
+}
  
 $allIds = explode("|", $whichIds);
 $titleIdString="";
@@ -37,5 +38,5 @@ $outputJson = rtrim($outputJson, ",");
 $outputJson .= '}';
 
 echo $outputJson;
-
+mysql_free_result($result);
 ?>
