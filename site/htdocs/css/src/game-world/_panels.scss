@@ -358,6 +358,10 @@ $numberOfItemCategories: 20;
         }
         img {
             display: inline-block;
+            margin: 0 2px 2px 0;
+        }
+        .notCollected img {
+             @include filter(sepia(100%) opacity(30%));
         }
     }
 }

@@ -1240,8 +1240,14 @@ var UI = {
         var panelMarkup = '<div class="collectionQuestPanel active" id="collection' + whichZone + '"><div class="draggableBar">' + zoneName + '</div>';
         panelMarkup += '<p>&ldquo;' + zoneLore + '&rdquo;</p><ol>';
         // add items:
+        var thisCollectionItem, thisItemCollectedClass;
         for (var i in hero.collections[whichZone]) {
-            panelMarkup += '<li><img src="/images/game-world/inventory-items/' + hero.collections[whichZone][i] + '.png"></li>';
+            thisCollectionItem = hero.collections[whichZone][i];
+            thisItemCollectedClass = "notCollected";
+            if(thisCollectionItem < 0) {
+thisItemCollectedClass = "";
+            }
+            panelMarkup += '<li class="'+thisItemCollectedClass+'"><img src="/images/game-world/inventory-items/' + Math.abs(hero.collections[whichZone][i]) + '.png"></li>';
         }
         panelMarkup += '</ol></div>';
         activeCollectionQuestPanels.insertAdjacentHTML('beforeend', panelMarkup);
