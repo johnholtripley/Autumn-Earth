@@ -129,6 +129,8 @@ for ($i=0;$i<5;$i++) {
 <h2>Volume</h2>
 <label for="soundVolume">Sound effects</label><input id="soundVolume" type="range" min="0" max="1" step="0.05">
 <label for="musicVolume">Music</label><input id="musicVolume" type="range" min="0" max="1" step="0.05">
+<h2>Full screen</h2>
+<input type="checkbox" value="1" id="toggleFullScreen" class="switch"> <label for="toggleFullScreen"><span></span>Enable Fullscreen</label>
  </div>
  
 </div>

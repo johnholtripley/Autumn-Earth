@@ -901,7 +901,28 @@ return thisNode;
 }
 
 
+function launchFullScreen(element) {
+    // https://davidwalsh.name/fullscreen
+  if(element.requestFullscreen) {
+    element.requestFullscreen();
+  } else if(element.mozRequestFullScreen) {
+    element.mozRequestFullScreen();
+  } else if(element.webkitRequestFullscreen) {
+    element.webkitRequestFullscreen();
+  } else if(element.msRequestFullscreen) {
+    element.msRequestFullscreen();
+  }
+}
 
+function exitFullScreen() {
+  if(document.exitFullscreen) {
+    document.exitFullscreen();
+  } else if(document.mozCancelFullScreen) {
+    document.mozCancelFullScreen();
+  } else if(document.webkitExitFullscreen) {
+    document.webkitExitFullscreen();
+  }
+}
 
 
 function debounce(func, wait, immediate) {
@@ -2688,6 +2709,7 @@ const soundVolume = document.getElementById('soundVolume');
 const musicVolume = document.getElementById('musicVolume');
 const gameSettingsPanel = document.getElementById('gameSettings');
 const toggleActiveCards = document.getElementById('toggleActiveCards');
+const toggleFullscreenSwitch = document.getElementById('toggleFullScreen');
 
 var notificationQueue = [];
 var notificationIsShowing = false;
@@ -2779,6 +2801,10 @@ var UI = {
         toggleActiveCards.onclick = UI.toggleCardsDisplayed;
         document.getElementById('splitStackCancel').onclick = UI.inventorySplitStackCancel;
         document.getElementById('shopSplitStackCancel').onclick = UI.shopSplitStackCancel;
+        toggleFullscreenSwitch.onchange = UI.toggleFullScreen;
+        document.onfullscreenchange = UI.fullScreenChangeDetected;
+        document.onmozfullscreenchange = UI.fullScreenChangeDetected;
+        document.onwebkitfullscreenchange = UI.fullScreenChangeDetected;
         soundVolume.onchange = audio.adjustEffectsVolume;
         musicVolume.onchange = audio.adjustMusicVolume;
         UI.initInventoryDrag('.inventoryBag ol');
@@ -2801,6 +2827,23 @@ var UI = {
         gameWrapper.onclick = UI.globalClick;
 
         inventoryInterfaceIsBuilt = true;
+    },
+
+    toggleFullScreen: function() {
+        if (toggleFullscreenSwitch.checked) {
+            launchFullScreen(document.documentElement);
+        } else {
+            exitFullScreen();
+        }
+    },
+
+    fullScreenChangeDetected: function() {
+        // change the Settings toggle acordingly (in case the user used another means to come out of full screen mode):
+        if (document.fullscreenElement || document.mozFullScreenElement || document.webkitFullscreenElement) {
+            toggleFullscreenSwitch.checked = true;
+        } else {
+            toggleFullscreenSwitch.checked = false;
+        }
     },
 
     addNewBag: function(newBagObject) {

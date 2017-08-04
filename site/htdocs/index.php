@@ -14,7 +14,9 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/header.php");
 ?>
 <div class="row">
 	<div class="column">
-		<p style="text-align:center;margin: 3% auto;"><a href="/game-world/" class="button">Enter the world</a></p>
+		<p style="text-align:center;margin: 3% auto;"><a href="/game-world/" class="button" onclick="launchIntoFullscreen(document.documentElement)">Enter the world</a></p>
+
+
 	</div>
 	</div>
 <div class="row medium-2up wide-4up equalHeights">

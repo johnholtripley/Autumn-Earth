@@ -1,4 +1,3 @@
-
 $numberOfItemCategories: 20;
 
 @mixin togglePanel($duration) {
@@ -33,26 +32,30 @@ $numberOfItemCategories: 20;
         background: #666;
         left: 1060px;
         background: #53160d url(../images/game-world/interface/inventory-panel-bg.jpg) no-repeat 0 100%;
+        z-index: 1;
+        &:hover {
+            // override inline z-index with !important:
+            z-index: 3 !important;
+        }
+        @include togglePanel(0.4s);
         @include border-radius(3px);
         @include mq($wide) {
-        @for $i from 2 through 6 {
-            &:nth-child(#{$i}) {
-                left: 200px * (($i)-1) + 1060px;
+            @for $i from 2 through 6 {
+                &:nth-child(#{$i}) {
+                    left: 200px * (($i)-1) + 1060px;
+                }
             }
         }
-    }
-        z-index: 1;
-           @include togglePanel(0.4s);
     }
     ol {
         margin: 0;
         width: 184px;
         padding: 0;
         background: #666;
-   
+
         img {
             @include attention() {
-                & + p {
+                &+p {
                     opacity: 1;
                     pointer-events: auto;
                     @include transform(translateY(0));
@@ -141,10 +144,10 @@ $numberOfItemCategories: 20;
         display: none;
     }
     @for $i from 1 through $numberOfItemCategories {
-        &.shopSpecialism#{$i} .itemCategory#{$i} ~ .qty:after {
+        &.shopSpecialism#{$i} .itemCategory#{$i}~.qty:after {
             opacity: 1;
         }
-        &.shopSpecialism#{$i} .itemCategory#{$i} ~ p {
+        &.shopSpecialism#{$i} .itemCategory#{$i}~p {
             .price {
                 display: none;
             }
@@ -218,8 +221,7 @@ $numberOfItemCategories: 20;
                 display: block;
             }
             img {
-                display: inline-block;
-                // define widths so the scrollbar knows the size while the images are loading:
+                display: inline-block; // define widths so the scrollbar knows the size while the images are loading:
                 width: 40px;
                 height: 40px;
             }
@@ -256,7 +258,7 @@ $numberOfItemCategories: 20;
         @include togglePanel(0.4s);
         img {
             @include attention() {
-                & + p {
+                &+p {
                     opacity: 1;
                     pointer-events: auto;
                     @include transform(translateY(0));
