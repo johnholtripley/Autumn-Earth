@@ -349,7 +349,7 @@ function getShopData() {
 
 
 function loadShopData(shopJSONData) {
-    // post data with getJSONWithParams function ####
+    // post data with getJSONWithParams function
     getJSONWithParams("/game-world/getShopItems.php", shopJSONData, function(data) {
         thisMapShopItemIds = data.allItemIds;
         UI.buildShop(data.markup);
@@ -1211,12 +1211,12 @@ function processSpeech(thisNPC, thisSpeechPassedIn, thisSpeechCode, isPartOfNPCs
                         if (typeof collectionQuestSpeech[3] !== "undefined") {
                             if (awardQuestRewards[collectionQuestSpeech[3]]) {
                                 thisSpeech = collectionQuestSpeech[2];
-                                // remove panel ####
+                                UI.removeCollectionQuestPanel(collectionQuestZoneName);
                                 delete hero.collections[collectionQuestZoneName];
                             }
                         } else {
                             thisSpeech = collectionQuestSpeech[2];
-                            // remove panel ####
+                            UI.removeCollectionQuestPanel(collectionQuestZoneName);
                             delete hero.collections[collectionQuestZoneName];
                         }
                     }
@@ -1224,7 +1224,7 @@ function processSpeech(thisNPC, thisSpeechPassedIn, thisSpeechCode, isPartOfNPCs
                     // collection not started yet:
                     thisSpeech = collectionQuestSpeech[0];
                     hero.collections[collectionQuestZoneName] = thisMapData.collection;
-                    // create panel ####
+                    UI.createCollectionQuestPanel(collectionQuestZoneName);
                 }
 
                 break;

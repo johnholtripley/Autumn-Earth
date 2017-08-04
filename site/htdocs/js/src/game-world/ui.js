@@ -29,6 +29,7 @@ const musicVolume = document.getElementById('musicVolume');
 const gameSettingsPanel = document.getElementById('gameSettings');
 const toggleActiveCards = document.getElementById('toggleActiveCards');
 const toggleFullscreenSwitch = document.getElementById('toggleFullScreen');
+const activeCollectionQuestPanels = document.getElementById('activeCollectionQuestPanels');
 
 var notificationQueue = [];
 var notificationIsShowing = false;
@@ -1232,8 +1233,31 @@ var UI = {
 
     toggleCardsDisplayed: function(e) {
         cardAlbumList.classList.toggle('showOnlyPlayers');
-
         toggleActiveCards.innerHTML = (toggleActiveCards.innerHTML == 'Show only collected cards' ? 'Show all cards' : 'Show only collected cards');
+    },
+
+    addCollectionQuestPanel: function(whichZone, zoneName, zoneLore) {
+        var panelMarkup = '<div class="collectionQuestPanel active" id="collection' + whichZone + '"><div class="draggableBar">' + zoneName + '</div>';
+        panelMarkup += '<p>&ldquo;' + zoneLore + '&rdquo;</p><ol>';
+        // add items:
+        for (var i in hero.collections[whichZone]) {
+            panelMarkup += '<li><img src="/images/game-world/inventory-items/' + hero.collections[whichZone][i] + '.png"></li>';
+        }
+        panelMarkup += '</ol></div>';
+        activeCollectionQuestPanels.insertAdjacentHTML('beforeend', panelMarkup);
+    },
+
+    createCollectionQuestPanel: function(whichZone) {
+        // post data with getJSONWithParams function
+        getJSON("/game-world/getCollectionQuestInformation.php?whichCollectionQuest=" + whichZone, function(data) {
+            UI.addCollectionQuestPanel(whichZone, data[whichZone].questName, data[whichZone].questLore);
+        }, function(status) {
+            // try again:
+            UI.createCollectionQuestPanel(whichZone);
+        });
+    },
+
+    removeCollectionQuestPanel: function(whichZone) {
 
     }
 }

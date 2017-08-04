@@ -72,7 +72,7 @@ background: #ec35ea;
  
 <div id="booksAndParchments"></div>
  
- 
+ <div id="activeCollectionQuestPanels"></div>
  
  
 <div id="inscriptionPanel"><div class="draggableBar">Inscription</div><button class="closePanel">close</button>
