@@ -5100,6 +5100,12 @@ function processSpeech(thisNPC, thisSpeechPassedIn, thisSpeechCode, isPartOfNPCs
                 }
 
                 break;
+            case "collection-quest":
+var collectionQuestSpeech = thisSpeech.split("|");
+                var collectionQuestZoneName = thisNPC.speech[thisNPC.speechIndex][2];
+                thisSpeech = "checking your collection for you&hellip;";
+                                  
+            break;
             case "quest":
             case "quest-no-open":
             case "quest-no-close":
