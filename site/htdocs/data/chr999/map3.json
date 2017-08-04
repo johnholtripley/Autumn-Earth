@@ -185,7 +185,7 @@
                 "isMoving": false,
                 "speechIndex": 0,
                 "speech": [
-                    ["give this mordant to the green bloke please|the green bloke - over there|thanks for taking that over", "collection-quest", "the-barrow-mines"]
+                    ["Start a collection - it's fun|Still a few to get I see|Fantastic, you got them all", "collection-quest", "the-barrow-mines", "2x21,9"]
                 ],
                 "cardGameSpeech": {
                     "challenge": ["Do you play? Fancy a game then?", "play"],
@@ -388,6 +388,7 @@
             "faeIgnore": true
 
         }],
-        "showOnlyLineOfSight": true
+        "showOnlyLineOfSight": true,
+        "collection": [1,3,5,7]
     }
 }

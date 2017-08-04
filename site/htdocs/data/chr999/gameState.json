@@ -361,5 +361,7 @@
         "cardDust": 12,
         "keys": []
     },
-    "lineOfSightRange": 20
+    "lineOfSightRange": 20,
+    "collections": {
+    }
 }

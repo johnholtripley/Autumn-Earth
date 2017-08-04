@@ -50,34 +50,45 @@ function init() {
 function getHeroGameState() {
     getJSON("/data/chr" + characterId + "/gameState.json", function(data) {
         //  thisMapData = data.map;
+        /*
         hero.tileX = data.tileX;
         hero.tileY = data.tileY;
-        currentMap = data.currentMap;
-        newMap = currentMap;
+  
         hero.bags = data.bags;
         hero.cards = data.cards;
         hero.stats = data.stats;
-        gameSettings = data.settings;
+     
         hero.currency = data.currency;
         hero.lineOfSightRange = data.lineOfSightRange;
+        hero.collections = data.collections;
         hero.titlesEarned = data.titlesEarned;
         hero.activeTitle = data.activeTitle;
         hero.recipesKnown = data.recipesKnown;
         hero.professionsKnown = data.professionsKnown;
         hero.totalGameTimePlayed = data.totalGameTimePlayed;
+*/
+
+        // copy the data to the hero object:
+        for (var attribute in data) {
+            hero[attribute] = data[attribute];
+        }
+        currentMap = data.currentMap;
+        newMap = currentMap;
+        gameSettings = data.settings;
+
         timeSinceLastAmbientSoundWasPlayed = hero.totalGameTimePlayed + (minTimeBetweenAmbientSounds * 1.25);
         if (data.allPets) {
             if (data.activePets.length > 0) {
                 hasActivePet = true;
             }
-            hero.activePets = data.activePets;
-            hero.allPets = data.allPets;
+            // hero.activePets = data.activePets;
+            // hero.allPets = data.allPets;
         }
         // copy the fae properties that will change into the main fae object:
         for (var attrname in data.fae) {
             fae[attrname] = data.fae[attrname];
         }
-        hero.inventory = data.inventory;
+        //  hero.inventory = data.inventory;
         if (currentMap > 0) {
             //clean old procedural maps: (don't need a response here)
             sendDataWithoutNeedingAResponse('/game-world/generateDungeonMap.php?playerId=' + characterId + '&clearMaps=true');
@@ -88,7 +99,6 @@ function getHeroGameState() {
         getHeroGameState();
     });
 }
-
 
 
 function loadCoreAssets() {
@@ -1180,11 +1190,44 @@ function processSpeech(thisNPC, thisSpeechPassedIn, thisSpeechCode, isPartOfNPCs
 
                 break;
             case "collection-quest":
-var collectionQuestSpeech = thisSpeech.split("|");
+                var collectionQuestSpeech = thisSpeech.split("|");
                 var collectionQuestZoneName = thisNPC.speech[thisNPC.speechIndex][2];
-                thisSpeech = "checking your collection for you&hellip;";
-                                  
-            break;
+                // check if this zone key exists in the hero.collections object
+                if (hero.collections.hasOwnProperty(collectionQuestZoneName)) {
+                    // key exists - collection is underway.
+                    // check if all are negative (if they are, collection is complete):
+                    var foundAPositive = false;
+                    for (var j in hero.collections[collectionQuestZoneName]) {
+                        if (hero.collections[collectionQuestZoneName][j] > 0) {
+                            foundAPositive = true;
+                            break;
+                        }
+                    }
+                    if (foundAPositive) {
+                        // not complete yet:
+                        thisSpeech = collectionQuestSpeech[1];
+                    } else {
+                        // complete:
+                        if (typeof collectionQuestSpeech[3] !== "undefined") {
+                            if (awardQuestRewards[collectionQuestSpeech[3]]) {
+                                thisSpeech = collectionQuestSpeech[2];
+                                // remove panel ####
+                                delete hero.collections[collectionQuestZoneName];
+                            }
+                        } else {
+                            thisSpeech = collectionQuestSpeech[2];
+                            // remove panel ####
+                            delete hero.collections[collectionQuestZoneName];
+                        }
+                    }
+                } else {
+                    // collection not started yet:
+                    thisSpeech = collectionQuestSpeech[0];
+                    hero.collections[collectionQuestZoneName] = thisMapData.collection;
+                    // create panel ####
+                }
+
+                break;
             case "quest":
             case "quest-no-open":
             case "quest-no-close":
@@ -1488,14 +1531,20 @@ function closeQuest(whichNPC, whichQuestId) {
 }
 
 
-
-
-
 function giveQuestRewards(whichQuestId) {
     // give any reward to the player:
     if (questData[whichQuestId].itemsReceivedOnCompletion) {
-        var allRewardItems = [];
         var questRewards = questData[whichQuestId].itemsReceivedOnCompletion.split(",");
+        return awardQuestRewards(questRewards);
+    } else {
+        return true;
+    }
+}
+
+function awardQuestRewards(questRewards) {
+    
+        var allRewardItems = [];
+        
         for (var i = 0; i < questRewards.length; i++) {
             // check for variation:
             var questPossibilities = questRewards[i].split("/");
@@ -1540,9 +1589,7 @@ function giveQuestRewards(whichQuestId) {
             // don't close quest
             return false;
         }
-    } else {
-        return true;
-    }
+   
 }
 
 
