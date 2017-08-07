@@ -83,7 +83,7 @@ $query = "SELECT * FROM tblcollectionquests";
 $result = mysql_query($query) or die ();
 while ($row = mysql_fetch_array($result)) {
 extract($row);
-echo '<section data-collection="'.$cleanurl.'"><h2>'.$collectionQuestName.'</h2>';
+echo '<section id="collection'.$cleanurl.'" data-collection="'.$cleanurl.'"><h2>'.$collectionQuestName.'</h2>';
 echo '<p>'.base64_encode($collectionQuestLore).'</p><ol></ol></section>';
 }
 mysql_free_result($result);
@@ -99,7 +99,7 @@ mysql_free_result($result);
 <div id="materialsSelection"></div>
 <div id="inkSelection"></div>
 <div id="originalText" class="book active">
-<input id="inscriptionTitle" placeholder="Title"></input>
+<input id="inscriptionTitle" placeholder="Title">
   <div id="inscriptionTextArea" contentEditable="true" role="textbox" aria-multiline="true"></div></div>
 
 

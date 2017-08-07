@@ -363,5 +363,6 @@
     },
     "lineOfSightRange": 20,
     "collections": {
+        "the-barrow-mines": {"required": [1,3,-5,7], "complete": true}
     }
 }

@@ -1222,9 +1222,10 @@ function processSpeech(thisNPC, thisSpeechPassedIn, thisSpeechCode, isPartOfNPCs
                 } else {
                     // collection not started yet:
                     thisSpeech = collectionQuestSpeech[0];
+                    hero.collections[collectionQuestZoneName] = {};
                     hero.collections[collectionQuestZoneName].required = thisMapData.collection;
                     hero.collections[collectionQuestZoneName].complete = false;
-                    UI.createCollectionQuestPanel(collectionQuestZoneName);
+                    UI.initiateCollectionQuestPanel(collectionQuestZoneName);
                 }
 
                 break;

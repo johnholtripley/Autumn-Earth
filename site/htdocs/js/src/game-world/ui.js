@@ -1238,33 +1238,56 @@ var UI = {
     },
 
     buildCollectionPanel: function() {
-        var collectionPanels = document.querySelectorAll('#collectionQuestPanels section');
-        var thisZoneName, panelMarkup, thisCollectionItem, thisItemCollectedClass, thisParagraphNode;
-        for (var i = 0; i < collectionPanels.length; i++) {
-            thisZoneName = collectionPanels[i].dataset.collection;
-            if (hero.collections.hasOwnProperty(thisZoneName)) {
-            
-           
-if(hero.collections[thisZoneName].complete) {
-     // is complete, de-obfuscate the lore:
-            var thisParagraphNode = collectionPanels[i].getElementsByTagName("P")[0];
-            thisParagraphNode.textContent = window.atob(thisParagraphNode.textContent);
-            thisParagraphNode.classList.add('active');
-      }
-            // if exist in hero.collections, then write in items required as well:
-            
-                panelMarkup = '';
-                for (var i in hero.collections[thisZoneName]) {
-                    thisCollectionItem = hero.collections[thisZoneName][i];
-                    thisItemCollectedClass = "notCollected";
-                    if (thisCollectionItem < 0) {
-                        thisItemCollectedClass = "";
-                    }
-                    panelMarkup += '<li class="' + thisItemCollectedClass + '"><img src="/images/game-world/inventory-items/' + Math.abs(hero.collections[thisZoneName].required[i]) + '.png"></li>';
-                        collectionPanels[i].getElementsByTagName("OL")[0].innerHTML = panelMarkup;
-                    }
-                }
+    var collectionPanels = document.querySelectorAll('#collectionQuestPanels section');
+    var thisZoneName, panelMarkup, thisCollectionItem, thisItemCollectedClass, thisParagraphNode;
+    for (var i = 0; i < collectionPanels.length; i++) {
+        thisZoneName = collectionPanels[i].dataset.collection;
+      
+        if (hero.collections.hasOwnProperty(thisZoneName)) {
+
+
+            if (hero.collections[thisZoneName].complete) {
+                // is complete, de-obfuscate the lore:
+                var thisParagraphNode = collectionPanels[i].getElementsByTagName("P")[0];
+                thisParagraphNode.textContent = window.atob(thisParagraphNode.textContent);
+                thisParagraphNode.classList.add('active');
             }
-            collectionQuestPanels.classList.add('active');
+            // if exist in hero.collections, then write in items required as well:
+
+            panelMarkup = '';
+            for (var j in hero.collections[thisZoneName].required) {
+                thisCollectionItem = hero.collections[thisZoneName].required[j];
+                thisItemCollectedClass = "notCollected";
+                if (thisCollectionItem < 0) {
+                    thisItemCollectedClass = "";
+                }
+                panelMarkup += '<li class="' + thisItemCollectedClass + '"><img src="/images/game-world/inventory-items/' + Math.abs(thisCollectionItem) + '.png"></li>';
+                collectionPanels[i].getElementsByTagName("OL")[0].innerHTML = panelMarkup;
+            }
         }
+    }
+    collectionQuestPanels.classList.add('active');
+    },
+
+    initiateCollectionQuestPanel: function(whichZone) {
+// add objects needed for this collection:
+var thisCollectionItem, thisItemCollectedClass;
+var panelMarkup = '';
+ for (var j in hero.collections[whichZone].required) {
+                thisCollectionItem = hero.collections[whichZone].required[j];
+                thisItemCollectedClass = "notCollected";
+                if (thisCollectionItem < 0) {
+                    thisItemCollectedClass = "";
+                }
+                panelMarkup += '<li class="' + thisItemCollectedClass + '"><img src="/images/game-world/inventory-items/' + Math.abs(thisCollectionItem) + '.png"></li>';
+                document.querySelector('#collection'+whichZone+' ol').innerHTML = panelMarkup;
+            }
+    },
+
+    completeCollectionQuestPanel: function(whichZone) {
+// reveal lore:
+var thisParagraphNode = document.querySelector('#collection'+whichZone+' p');
+   thisParagraphNode.textContent = window.atob(thisParagraphNode.textContent);
+                thisParagraphNode.classList.add('active');
+    }
 }
