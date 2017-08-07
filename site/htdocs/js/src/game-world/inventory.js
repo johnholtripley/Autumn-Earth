@@ -1,4 +1,5 @@
 function canAddItemToInventory(itemObj) {
+    console.log(itemObj);
     // takes an array of objects and checks if all of them can be added before adding any of them
     // make copy of inventory:
     var inventoryClone = JSON.parse(JSON.stringify(hero.inventory));
@@ -242,6 +243,14 @@ function inventoryItemAction(whichSlot, whichAction, whichActionValue) { // remo
         case "inscribe":
             UI.openInscriptionPanel();
             break;
+             case "collection":
+                     // check if this zone key exists in the hero.collections object
+                if (hero.collections.hasOwnProperty(whichActionValue)) {
+                    // find the item id in the array and make it negative ####
+                    // update the panel visually ####
+                        removeFromInventory(whichSlotNumber, 1);
+                }
+                    break;
         case "card":
             hero.cards.unshift(whichActionValue);
             UI.updateCardAlbum();

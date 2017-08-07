@@ -50,24 +50,6 @@ function init() {
 function getHeroGameState() {
     getJSON("/data/chr" + characterId + "/gameState.json", function(data) {
         //  thisMapData = data.map;
-        /*
-        hero.tileX = data.tileX;
-        hero.tileY = data.tileY;
-  
-        hero.bags = data.bags;
-        hero.cards = data.cards;
-        hero.stats = data.stats;
-     
-        hero.currency = data.currency;
-        hero.lineOfSightRange = data.lineOfSightRange;
-        hero.collections = data.collections;
-        hero.titlesEarned = data.titlesEarned;
-        hero.activeTitle = data.activeTitle;
-        hero.recipesKnown = data.recipesKnown;
-        hero.professionsKnown = data.professionsKnown;
-        hero.totalGameTimePlayed = data.totalGameTimePlayed;
-*/
-
         // copy the data to the hero object:
         for (var attribute in data) {
             hero[attribute] = data[attribute];

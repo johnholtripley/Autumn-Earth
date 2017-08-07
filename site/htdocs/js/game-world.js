@@ -1783,6 +1783,7 @@ const Input = {
     }
 }
 function canAddItemToInventory(itemObj) {
+    console.log(itemObj);
     // takes an array of objects and checks if all of them can be added before adding any of them
     // make copy of inventory:
     var inventoryClone = JSON.parse(JSON.stringify(hero.inventory));
@@ -2026,6 +2027,14 @@ function inventoryItemAction(whichSlot, whichAction, whichActionValue) { // remo
         case "inscribe":
             UI.openInscriptionPanel();
             break;
+             case "collection":
+                     // check if this zone key exists in the hero.collections object
+                if (hero.collections.hasOwnProperty(whichActionValue)) {
+                    // find the item id in the array and make it negative ####
+                    // update the panel visually ####
+                        removeFromInventory(whichSlotNumber, 1);
+                }
+                    break;
         case "card":
             hero.cards.unshift(whichActionValue);
             UI.updateCardAlbum();
@@ -4025,24 +4034,6 @@ function init() {
 function getHeroGameState() {
     getJSON("/data/chr" + characterId + "/gameState.json", function(data) {
         //  thisMapData = data.map;
-        /*
-        hero.tileX = data.tileX;
-        hero.tileY = data.tileY;
-  
-        hero.bags = data.bags;
-        hero.cards = data.cards;
-        hero.stats = data.stats;
-     
-        hero.currency = data.currency;
-        hero.lineOfSightRange = data.lineOfSightRange;
-        hero.collections = data.collections;
-        hero.titlesEarned = data.titlesEarned;
-        hero.activeTitle = data.activeTitle;
-        hero.recipesKnown = data.recipesKnown;
-        hero.professionsKnown = data.professionsKnown;
-        hero.totalGameTimePlayed = data.totalGameTimePlayed;
-*/
-
         // copy the data to the hero object:
         for (var attribute in data) {
             hero[attribute] = data[attribute];
