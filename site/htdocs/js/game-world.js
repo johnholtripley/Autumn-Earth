@@ -2710,7 +2710,7 @@ const musicVolume = document.getElementById('musicVolume');
 const gameSettingsPanel = document.getElementById('gameSettings');
 const toggleActiveCards = document.getElementById('toggleActiveCards');
 const toggleFullscreenSwitch = document.getElementById('toggleFullScreen');
-const activeCollectionQuestPanels = document.getElementById('activeCollectionQuestPanels');
+const collectionQuestPanels = document.getElementById('collectionQuestPanels');
 
 var notificationQueue = [];
 var notificationIsShowing = false;
@@ -2816,6 +2816,7 @@ var UI = {
         UI.buildRecipePanel();
         UI.updateInscriptionPanel();
         UI.getGameSettings();
+        UI.buildCollectionPanel();
 
         if (hero.professionsKnown.length > 0) {
             // load and cache the first profession's recipe assets:
@@ -3917,8 +3918,11 @@ var UI = {
         toggleActiveCards.innerHTML = (toggleActiveCards.innerHTML == 'Show only collected cards' ? 'Show all cards' : 'Show only collected cards');
     },
 
-    addCollectionQuestPanel: function(whichZone, zoneName, zoneLore) {
-        var panelMarkup = '<div class="collectionQuestPanel active" id="collection' + whichZone + '"><div class="draggableBar">' + zoneName + '</div>';
+
+
+    createCollectionQuestPanel: function(whichZone) {
+       /*
+ var panelMarkup = '<div class="collectionQuestPanel active" id="collection' + whichZone + '"><div class="draggableBar">' + zoneName + '</div>';
         panelMarkup += '<p>&ldquo;' + zoneLore + '&rdquo;</p><ol>';
         // add items:
         var thisCollectionItem, thisItemCollectedClass;
@@ -3931,21 +3935,16 @@ thisItemCollectedClass = "";
             panelMarkup += '<li class="'+thisItemCollectedClass+'"><img src="/images/game-world/inventory-items/' + Math.abs(hero.collections[whichZone][i]) + '.png"></li>';
         }
         panelMarkup += '</ol></div>';
-        activeCollectionQuestPanels.insertAdjacentHTML('beforeend', panelMarkup);
+        collectionQuestPanels.insertAdjacentHTML('beforeend', panelMarkup);
+       */
     },
 
-    createCollectionQuestPanel: function(whichZone) {
-        // post data with getJSONWithParams function
-        getJSON("/game-world/getCollectionQuestInformation.php?whichCollectionQuest=" + whichZone, function(data) {
-            UI.addCollectionQuestPanel(whichZone, data[whichZone].questName, data[whichZone].questLore);
-        }, function(status) {
-            // try again:
-            UI.createCollectionQuestPanel(whichZone);
-        });
-    },
-
-    removeCollectionQuestPanel: function(whichZone) {
-
+    buildCollectionPanel: function() {
+var collectionPanels = document.querySelectorAll('#collectionQuestPanels p');
+for ( var i = 0; i < collectionPanels.length; i++) {
+  collectionPanels[i].textContent = window.atob(collectionPanels[i].textContent);
+}
+collectionQuestPanels.classList.add('active');
     }
 }
 
@@ -5162,13 +5161,12 @@ function processSpeech(thisNPC, thisSpeechPassedIn, thisSpeechCode, isPartOfNPCs
                         if (typeof collectionQuestSpeech[3] !== "undefined") {
                             if (awardQuestRewards[collectionQuestSpeech[3]]) {
                                 thisSpeech = collectionQuestSpeech[2];
-                                UI.removeCollectionQuestPanel(collectionQuestZoneName);
-                                delete hero.collections[collectionQuestZoneName];
+                      
                             }
                         } else {
                             thisSpeech = collectionQuestSpeech[2];
-                            UI.removeCollectionQuestPanel(collectionQuestZoneName);
-                            delete hero.collections[collectionQuestZoneName];
+                        
+                           
                         }
                     }
                 } else {

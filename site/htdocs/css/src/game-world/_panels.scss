@@ -339,9 +339,8 @@ $numberOfItemCategories: 20;
     }
 }
 
-#activeCollectionQuestPanels {
-    .collectionQuestPanel {
-        @include togglePanel(0.4s);
+#collectionQuestPanels {
+         @include togglePanel(0.4s);
         width: 322px;
         left: 60px;
         top: 575px;
@@ -363,7 +362,6 @@ $numberOfItemCategories: 20;
         .notCollected img {
              @include filter(sepia(100%) opacity(30%));
         }
-    }
 }
 
 #gameSettings {

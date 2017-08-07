@@ -1211,13 +1211,12 @@ function processSpeech(thisNPC, thisSpeechPassedIn, thisSpeechCode, isPartOfNPCs
                         if (typeof collectionQuestSpeech[3] !== "undefined") {
                             if (awardQuestRewards[collectionQuestSpeech[3]]) {
                                 thisSpeech = collectionQuestSpeech[2];
-                                UI.removeCollectionQuestPanel(collectionQuestZoneName);
-                                delete hero.collections[collectionQuestZoneName];
+                      
                             }
                         } else {
                             thisSpeech = collectionQuestSpeech[2];
-                            UI.removeCollectionQuestPanel(collectionQuestZoneName);
-                            delete hero.collections[collectionQuestZoneName];
+                        
+                           
                         }
                     }
                 } else {
