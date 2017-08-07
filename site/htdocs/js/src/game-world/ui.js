@@ -1237,32 +1237,34 @@ var UI = {
         toggleActiveCards.innerHTML = (toggleActiveCards.innerHTML == 'Show only collected cards' ? 'Show all cards' : 'Show only collected cards');
     },
 
-
-
-    createCollectionQuestPanel: function(whichZone) {
-       /*
- var panelMarkup = '<div class="collectionQuestPanel active" id="collection' + whichZone + '"><div class="draggableBar">' + zoneName + '</div>';
-        panelMarkup += '<p>&ldquo;' + zoneLore + '&rdquo;</p><ol>';
-        // add items:
-        var thisCollectionItem, thisItemCollectedClass;
-        for (var i in hero.collections[whichZone]) {
-            thisCollectionItem = hero.collections[whichZone][i];
-            thisItemCollectedClass = "notCollected";
-            if(thisCollectionItem < 0) {
-thisItemCollectedClass = "";
-            }
-            panelMarkup += '<li class="'+thisItemCollectedClass+'"><img src="/images/game-world/inventory-items/' + Math.abs(hero.collections[whichZone][i]) + '.png"></li>';
-        }
-        panelMarkup += '</ol></div>';
-        collectionQuestPanels.insertAdjacentHTML('beforeend', panelMarkup);
-       */
-    },
-
     buildCollectionPanel: function() {
-var collectionPanels = document.querySelectorAll('#collectionQuestPanels p');
-for ( var i = 0; i < collectionPanels.length; i++) {
-  collectionPanels[i].textContent = window.atob(collectionPanels[i].textContent);
-}
-collectionQuestPanels.classList.add('active');
-    }
+        var collectionPanels = document.querySelectorAll('#collectionQuestPanels section');
+        var thisZoneName, panelMarkup, thisCollectionItem, thisItemCollectedClass, thisParagraphNode;
+        for (var i = 0; i < collectionPanels.length; i++) {
+            thisZoneName = collectionPanels[i].dataset.collection;
+            if (hero.collections.hasOwnProperty(thisZoneName)) {
+            
+           
+if(hero.collections[thisZoneName].complete) {
+     // is complete, de-obfuscate the lore:
+            var thisParagraphNode = collectionPanels[i].getElementsByTagName("P")[0];
+            thisParagraphNode.textContent = window.atob(thisParagraphNode.textContent);
+            thisParagraphNode.classList.add('active');
+      }
+            // if exist in hero.collections, then write in items required as well:
+            
+                panelMarkup = '';
+                for (var i in hero.collections[thisZoneName]) {
+                    thisCollectionItem = hero.collections[thisZoneName][i];
+                    thisItemCollectedClass = "notCollected";
+                    if (thisCollectionItem < 0) {
+                        thisItemCollectedClass = "";
+                    }
+                    panelMarkup += '<li class="' + thisItemCollectedClass + '"><img src="/images/game-world/inventory-items/' + Math.abs(hero.collections[thisZoneName].required[i]) + '.png"></li>';
+                        collectionPanels[i].getElementsByTagName("OL")[0].innerHTML = panelMarkup;
+                    }
+                }
+            }
+            collectionQuestPanels.classList.add('active');
+        }
 }

@@ -1197,8 +1197,8 @@ function processSpeech(thisNPC, thisSpeechPassedIn, thisSpeechCode, isPartOfNPCs
                     // key exists - collection is underway.
                     // check if all are negative (if they are, collection is complete):
                     var foundAPositive = false;
-                    for (var j in hero.collections[collectionQuestZoneName]) {
-                        if (hero.collections[collectionQuestZoneName][j] > 0) {
+                    for (var j in hero.collections[collectionQuestZoneName].required) {
+                        if (hero.collections[collectionQuestZoneName].required[j] > 0) {
                             foundAPositive = true;
                             break;
                         }
@@ -1211,7 +1211,7 @@ function processSpeech(thisNPC, thisSpeechPassedIn, thisSpeechCode, isPartOfNPCs
                         if (typeof collectionQuestSpeech[3] !== "undefined") {
                             if (awardQuestRewards[collectionQuestSpeech[3]]) {
                                 thisSpeech = collectionQuestSpeech[2];
-                      
+                      hero.collections[collectionQuestZoneName].complete = true;
                             }
                         } else {
                             thisSpeech = collectionQuestSpeech[2];
@@ -1222,7 +1222,8 @@ function processSpeech(thisNPC, thisSpeechPassedIn, thisSpeechCode, isPartOfNPCs
                 } else {
                     // collection not started yet:
                     thisSpeech = collectionQuestSpeech[0];
-                    hero.collections[collectionQuestZoneName] = thisMapData.collection;
+                    hero.collections[collectionQuestZoneName].required = thisMapData.collection;
+                    hero.collections[collectionQuestZoneName].complete = false;
                     UI.createCollectionQuestPanel(collectionQuestZoneName);
                 }
 
