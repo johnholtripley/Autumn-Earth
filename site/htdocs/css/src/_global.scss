@@ -200,9 +200,12 @@ a[href^="http"]:not([href*="autumnearth.com"]):after {
 #magicSquare td {
     padding: 10px;
 }
+.inventorySlot {
+        width: 40px;
+    height: 40px;
+}
 
-
-.inventorySlot, .characterPortrait, .cardFront {
+.characterPortrait, .cardFront {
     width: 64px;
     height: 64px;
 }

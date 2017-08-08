@@ -1,0 +1,9 @@
+/* TEAM */
+Site:       http://www.autumnearth.com
+Twitter:    @Autumnearth
+Location:   England
+/* SITE */
+Updated:     2011/06/14
+Language:    English (UK)
+Standards:   HTML5, CSS3, JavaScript
+Software:    Adobe Photoshop, Sublime 2

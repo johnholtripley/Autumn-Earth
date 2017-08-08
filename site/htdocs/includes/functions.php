@@ -788,7 +788,7 @@ function outputAuctionCard($itemID, $auctionID, $quantity, $shortname, $currentp
  
         echo '<div itemscope itemtype="http://schema.org/Product">';
  
-echo '<img src="/images/inventory/'.$itemID.'.jpg" class="inventorySlot" itemprop="image" alt="'.$shortname.'">';
+echo '<img src="/images/game-world/inventory-items/'.$itemID.'.png" class="inventorySlot" itemprop="image" alt="'.$shortname.'">';
  
             echo'<p itemprop="name"><a href="/auction/ViewItem.php?item='.$auctionID.'" title="more information">'.$shortname.'</a></p>'."\n";
             echo'<p itemprop="offers" itemscope itemtype="http://schema.org/Offer">Current price: <span itemprop="price">'.formatCurrency( $currentprice ).'</span>';
