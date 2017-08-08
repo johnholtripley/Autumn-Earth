@@ -1,5 +1,6 @@
 {
-    "map": {
+    "map":
+    {
         "zoneName": "Unexplored - The Crawling Tombs of Embers",
         "collisions": [
             [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -159,268 +160,348 @@
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         ],
         "graphics": [
-            { "src": "blank.png", "centreX": 24, "centreY": 12 },
-            { "src": "dirt.png", "centreX": 24, "centreY": 24 },
-            { "src": "block.png", "centreX": 24, "centreY": 45 },
-            { "src": "green-door.png", "centreX": 24, "centreY": 24 }
-        ],
+        {
+            "src": "blank.png",
+            "centreX": 24,
+            "centreY": 12
+        },
+        {
+            "src": "dirt.png",
+            "centreX": 24,
+            "centreY": 24
+        },
+        {
+            "src": "block.png",
+            "centreX": 24,
+            "centreY": 45
+        },
+        {
+            "src": "green-door.png",
+            "centreX": 24,
+            "centreY": 24
+        }],
         "shops": [],
         "npcs": [
-{
-                "name": "labourer3",
-                "src": "labourer3.png",
-                "width": 20,
-                "height": 20,
-                "spriteWidth": 75,
-                "spriteHeight": 85,
-                "centreX": 56,
-                "centreY": 73,
-                "tileX": 22,
-                "tileY": 14,
-                "movement": ["-"],
-                "facing": "w",
-                "walkThroughDoors": false,
-                "speed": 2,
-                "isCollidable": true,
-                "isMoving": false,
-                "speechIndex": 0,
-                "speech": [
-                    ["Start a collection - it's fun|Still a few to get I see|Fantastic, you got them all", "collection-quest", "the-barrow-mines", "2x21,9"]
-                ],
-                "cardGameSpeech": {
-                    "challenge": ["Do you play? Fancy a game then?", "play"],
-                    "win": ["Woo! I won!", ""],
-                    "lose": ["Ahh, you beat me...", ""],
-                    "draw": ["Well played", ""]
-                },
-                "cardSkill": 1,
-                "uniqueCards": [2, 2],
-                "baseCardPack": 0,
-                "animation": {
-                    "walk": {
-                        "length": 1,
-                        "n": 2,
-                        "e": 3,
-                        "s": 0,
-                        "w": 1
-                    }
+        {
+            "name": "labourer3",
+            "src": "labourer3.png",
+            "width": 20,
+            "height": 20,
+            "spriteWidth": 75,
+            "spriteHeight": 85,
+            "centreX": 56,
+            "centreY": 73,
+            "tileX": 22,
+            "tileY": 14,
+            "movement": ["-"],
+            "facing": "w",
+            "walkThroughDoors": false,
+            "speed": 2,
+            "isCollidable": true,
+            "isMoving": false,
+            "speechIndex": 0,
+            "speech": [
+                ["Start a collection - it's fun|Still a few to get I see|Fantastic, you got them all", "collection-quest", "the-barrow-mines", "2x21,9"]
+            ],
+            "cardGameSpeech":
+            {
+                "challenge": ["Do you play? Fancy a game then?", "play"],
+                "win": ["Woo! I won!", ""],
+                "lose": ["Ahh, you beat me...", ""],
+                "draw": ["Well played", ""]
+            },
+            "cardSkill": 1,
+            "uniqueCards": [2, 2],
+            "baseCardPack": 0,
+            "animation":
+            {
+                "walk":
+                {
+                    "length": 1,
+                    "n": 2,
+                    "e": 3,
+                    "s": 0,
+                    "w": 1
                 }
             }
-        ],
-        "doors": {
+        }],
+        "doors":
+        {
 
         },
-        "innerDoors": {
-            "3-14-11": {
+        "innerDoors":
+        {
+            "3-14-11":
+            {
                 "tileX": 14,
                 "tileY": 11,
                 "isOpen": false,
                 "isLocked": false,
                 "graphic": 3,
-                "animation": {
-                    "opening": {
+                "animation":
+                {
+                    "opening":
+                    {
                         "length": 8,
                         "row": 0
                     },
-                    "closing": {
+                    "closing":
+                    {
                         "length": 8,
                         "row": 1
                     }
                 }
             },
-            "3-10-14": {
+            "3-10-14":
+            {
                 "tileX": 10,
                 "tileY": 14,
                 "isOpen": false,
                 "isLocked": false,
                 "graphic": 3,
-                "animation": {
-                    "opening": {
+                "animation":
+                {
+                    "opening":
+                    {
                         "length": 8,
                         "row": 0
                     },
-                    "closing": {
+                    "closing":
+                    {
                         "length": 8,
                         "row": 1
                     }
                 }
             },
-            "3-3-11": {
+            "3-3-11":
+            {
                 "tileX": 3,
                 "tileY": 11,
                 "isOpen": false,
                 "isLocked": true,
                 "graphic": 3,
-                "animation": {
-                    "opening": {
+                "animation":
+                {
+                    "opening":
+                    {
                         "length": 8,
                         "row": 0
                     },
-                    "closing": {
+                    "closing":
+                    {
                         "length": 8,
                         "row": 1
                     }
                 }
             },
-                "3-42-42": {
+            "3-42-42":
+            {
                 "tileX": 42,
                 "tileY": 42,
                 "isOpen": false,
                 "isLocked": false,
                 "graphic": 3,
-                "animation": {
-                    "opening": {
+                "animation":
+                {
+                    "opening":
+                    {
                         "length": 8,
                         "row": 0
                     },
-                    "closing": {
+                    "closing":
+                    {
                         "length": 8,
                         "row": 1
                     }
                 }
-            }, "3-38-45": {
+            },
+            "3-38-45":
+            {
                 "tileX": 38,
                 "tileY": 45,
                 "isOpen": false,
                 "isLocked": false,
                 "graphic": 3,
-                "animation": {
-                    "opening": {
+                "animation":
+                {
+                    "opening":
+                    {
                         "length": 8,
                         "row": 0
                     },
-                    "closing": {
+                    "closing":
+                    {
                         "length": 8,
                         "row": 1
                     }
                 }
-            }, "3-28-45": {
+            },
+            "3-28-45":
+            {
                 "tileX": 28,
                 "tileY": 45,
                 "isOpen": false,
                 "isLocked": true,
                 "graphic": 3,
-                "animation": {
-                    "opening": {
+                "animation":
+                {
+                    "opening":
+                    {
                         "length": 8,
                         "row": 0
                     },
-                    "closing": {
+                    "closing":
+                    {
                         "length": 8,
                         "row": 1
                     }
                 }
-            }, "3-18-45": {
+            },
+            "3-18-45":
+            {
                 "tileX": 18,
                 "tileY": 45,
                 "isOpen": false,
                 "isLocked": true,
                 "graphic": 3,
-                "animation": {
-                    "opening": {
+                "animation":
+                {
+                    "opening":
+                    {
                         "length": 8,
                         "row": 0
                     },
-                    "closing": {
+                    "closing":
+                    {
                         "length": 8,
                         "row": 1
                     }
                 }
-            }
-            , "3-22-41": {
+            },
+            "3-22-41":
+            {
                 "tileX": 22,
                 "tileY": 41,
                 "isOpen": false,
                 "isLocked": false,
                 "graphic": 3,
-                "animation": {
-                    "opening": {
+                "animation":
+                {
+                    "opening":
+                    {
                         "length": 8,
                         "row": 0
                     },
-                    "closing": {
+                    "closing":
+                    {
                         "length": 8,
                         "row": 1
                     }
                 }
             }
         },
-        "items": [{
+        "items": [
+        {
             "type": 18,
             "tileX": 1,
             "tileY": 3
-        }, {
+        },
+        {
             "type": 18,
             "tileX": 1,
             "tileY": 6
-        }, {
+        },
+        {
             "type": 18,
             "tileX": 1,
             "tileY": 9
-        }, {
+        },
+        {
             "type": 42,
             "tileX": 8,
             "tileY": 19,
             "additional": "3-3-11"
-        },{
+        },
+        {
             "type": 42,
             "tileX": 8,
             "tileY": 1,
             "additional": "3-3-11"
-        },{
+        },
+        {
             "type": 43,
             "tileX": 30,
             "tileY": 39,
             "additional": "3-18-45"
-        },{
+        },
+        {
             "type": 42,
             "tileX": 35,
             "tileY": 48,
             "additional": "3-28-45"
-        },{
+        },
+        {
             "type": 44,
             "tileX": 22,
             "tileY": 16,
-                 "quantity": 1,
-                "quality": 100,
-                "durability": 100,
-                "currentWear": 0,
-                "effectiveness": 100,
-                "wrapped": 0,
-                "colour": 0,
-                "enchanted": 0,
-                "hallmark": 0,
-                "inscription": ""
-        },{
+            "quantity": 1,
+            "quality": 100,
+            "durability": 100,
+            "currentWear": 0,
+            "effectiveness": 100,
+            "wrapped": 0,
+            "colour": 0,
+            "enchanted": 0,
+            "hallmark": 0,
+            "inscription": ""
+        },
+        {
+            "type": 44,
+            "tileX": 25,
+            "tileY": 16,
+            "quantity": 1,
+            "quality": 100,
+            "durability": 100,
+            "currentWear": 0,
+            "effectiveness": 100,
+            "wrapped": 0,
+            "colour": 0,
+            "enchanted": 0,
+            "hallmark": 0,
+            "inscription": ""
+        },
+        {
             "type": 45,
             "tileX": 23,
             "tileY": 16,
-                "quantity": 1,
-                "quality": 100,
-                "durability": 100,
-                "currentWear": 0,
-                "effectiveness": 100,
-                "wrapped": 0,
-                "colour": 0,
-                "enchanted": 0,
-                "hallmark": 0,
-                "inscription": ""
-        },{
+            "quantity": 1,
+            "quality": 100,
+            "durability": 100,
+            "currentWear": 0,
+            "effectiveness": 100,
+            "wrapped": 0,
+            "colour": 0,
+            "enchanted": 0,
+            "hallmark": 0,
+            "inscription": ""
+        },
+        {
             "type": 46,
             "tileX": 24,
             "tileY": 16,
-                "quantity": 1,
-                "quality": 100,
-                "durability": 100,
-                "currentWear": 0,
-                "effectiveness": 100,
-                "wrapped": 0,
-                "colour": 0,
-                "enchanted": 0,
-                "hallmark": 0,
-                "inscription": ""
+            "quantity": 1,
+            "quality": 100,
+            "durability": 100,
+            "currentWear": 0,
+            "effectiveness": 100,
+            "wrapped": 0,
+            "colour": 0,
+            "enchanted": 0,
+            "hallmark": 0,
+            "inscription": ""
         }],
-        "hotspots": [{
+        "hotspots": [
+        {
             "centreX": 3,
             "centreY": 7,
             "radius": 3,
@@ -431,6 +512,6 @@
 
         }],
         "showOnlyLineOfSight": true,
-        "collection": [44,45,46]
+        "collection": [44, 45, 46]
     }
 }

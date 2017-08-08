@@ -1,5 +1,4 @@
 function canAddItemToInventory(itemObj) {
-    console.log(itemObj);
     // takes an array of objects and checks if all of them can be added before adding any of them
     // make copy of inventory:
     var inventoryClone = JSON.parse(JSON.stringify(hero.inventory));
@@ -243,14 +242,23 @@ function inventoryItemAction(whichSlot, whichAction, whichActionValue) { // remo
         case "inscribe":
             UI.openInscriptionPanel();
             break;
-             case "collection":
-                     // check if this zone key exists in the hero.collections object
-                if (hero.collections.hasOwnProperty(whichActionValue)) {
-                    // find the item id in the array and make it negative ####
-                    // update the panel visually ####
+        case "collection":
+            // check if this zone key exists in the hero.collections object
+            if (hero.collections.hasOwnProperty(whichActionValue)) {
+                // find  in the array and make it negative ####
+                var foundIndex = hero.collections[whichActionValue].required.indexOf(hero.inventory[whichSlotNumber].type);
+                if (foundIndex != -1) {
+                    if (hero.collections[whichActionValue].required[foundIndex] > 0) {
+                        hero.collections[whichActionValue].required[foundIndex] = 0 - (hero.collections[whichActionValue].required[foundIndex]);
+                        // update the panel visually:
+                        document.getElementById(whichActionValue + '-' + hero.inventory[whichSlotNumber].type).classList.remove('notCollected');
                         removeFromInventory(whichSlotNumber, 1);
+                    } else {
+                        UI.showNotification("<p>Already added to a collection</p>");
+                    }
                 }
-                    break;
+            }
+            break;
         case "card":
             hero.cards.unshift(whichActionValue);
             UI.updateCardAlbum();
@@ -279,21 +287,39 @@ function inventoryItemAction(whichSlot, whichAction, whichActionValue) { // remo
 
 
 
-
 function additionalTooltipDetail(whichSlotID) {
     // get any information that needs displaying in the tooltip:
     var tooltipInformationToAdd = "";
-    if (currentActiveInventoryItems[hero.inventory[whichSlotID].type].action == "recipe") {
-        // check if it's known already:
-        var isKnown = false;
-        for (var i = 0; i < hero.recipesKnown.length; i++) {
-            if (hero.recipesKnown[i][0] == currentActiveInventoryItems[hero.inventory[whichSlotID].type].actionValue) {
-                isKnown = true;
+    switch (currentActiveInventoryItems[hero.inventory[whichSlotID].type].action) {
+        case "recipe":
+            // check if it's known already:
+            var isKnown = false;
+            for (var i = 0; i < hero.recipesKnown.length; i++) {
+                if (hero.recipesKnown[i][0] == currentActiveInventoryItems[hero.inventory[whichSlotID].type].actionValue) {
+                    isKnown = true;
+                }
             }
-        }
-        if (isKnown) {
-            tooltipInformationToAdd += " (already known)";
-        }
+            if (isKnown) {
+                tooltipInformationToAdd += " (already known)";
+            }
+            break;
+        case "collection":
+            // see if the already have one in a collection:
+            var isKnown = false;
+            var whichZone = currentActiveInventoryItems[hero.inventory[whichSlotID].type].actionValue;
+            if (hero.collections.hasOwnProperty(whichZone)) {
+                console.log("underway");
+                // key exists - collection is underway:
+                var foundIndex = hero.collections[whichZone].required.indexOf(hero.inventory[whichSlotID].type);
+                if (foundIndex != -1) {
+                    if (hero.collections[whichZone].required[foundIndex] > 0) {
+                        tooltipInformationToAdd += " (needed for an active collection)";
+                    }
+                } else {
+                    tooltipInformationToAdd += " (already added to a collection)";
+                }
+            }
+            break;
     }
     return tooltipInformationToAdd;
 }
@@ -442,7 +468,7 @@ function inventorySplitStackSubmit(e) {
         dragStartX = objInitLeft + 22;
         dragStartY = objInitTop + 22;
 
-        UI.activeDragObject.style.cssText = "z-index:2;top: " + objInitTop + "px; left: " + objInitLeft + "px; transform: translate(0px, 0px);";
+        UI.activeDragObject.style.cssText = "z-index:4;top: " + objInitTop + "px; left: " + objInitLeft + "px; transform: translate(0px, 0px);";
         document.addEventListener("mousemove", UI.handleDrag, false);
         document.addEventListener("mouseup", UI.endInventoryDrag, false);
     }

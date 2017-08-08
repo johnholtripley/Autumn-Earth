@@ -1193,13 +1193,16 @@ function processSpeech(thisNPC, thisSpeechPassedIn, thisSpeechCode, isPartOfNPCs
                         if (typeof collectionQuestSpeech[3] !== "undefined") {
                             if (awardQuestRewards[collectionQuestSpeech[3]]) {
                                 thisSpeech = collectionQuestSpeech[2];
-                      hero.collections[collectionQuestZoneName].complete = true;
                             }
+
+                     
                         } else {
                             thisSpeech = collectionQuestSpeech[2];
                         
                            
                         }
+                               hero.collections[collectionQuestZoneName].complete = true;
+                            UI.completeCollectionQuestPanel(collectionQuestZoneName);
                     }
                 } else {
                     // collection not started yet:

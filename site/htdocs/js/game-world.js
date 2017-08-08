@@ -1783,7 +1783,6 @@ const Input = {
     }
 }
 function canAddItemToInventory(itemObj) {
-    console.log(itemObj);
     // takes an array of objects and checks if all of them can be added before adding any of them
     // make copy of inventory:
     var inventoryClone = JSON.parse(JSON.stringify(hero.inventory));
@@ -2027,14 +2026,23 @@ function inventoryItemAction(whichSlot, whichAction, whichActionValue) { // remo
         case "inscribe":
             UI.openInscriptionPanel();
             break;
-             case "collection":
-                     // check if this zone key exists in the hero.collections object
-                if (hero.collections.hasOwnProperty(whichActionValue)) {
-                    // find the item id in the array and make it negative ####
-                    // update the panel visually ####
+        case "collection":
+            // check if this zone key exists in the hero.collections object
+            if (hero.collections.hasOwnProperty(whichActionValue)) {
+                // find  in the array and make it negative ####
+                var foundIndex = hero.collections[whichActionValue].required.indexOf(hero.inventory[whichSlotNumber].type);
+                if (foundIndex != -1) {
+                    if (hero.collections[whichActionValue].required[foundIndex] > 0) {
+                        hero.collections[whichActionValue].required[foundIndex] = 0 - (hero.collections[whichActionValue].required[foundIndex]);
+                        // update the panel visually:
+                        document.getElementById(whichActionValue + '-' + hero.inventory[whichSlotNumber].type).classList.remove('notCollected');
                         removeFromInventory(whichSlotNumber, 1);
+                    } else {
+                        UI.showNotification("<p>Already added to a collection</p>");
+                    }
                 }
-                    break;
+            }
+            break;
         case "card":
             hero.cards.unshift(whichActionValue);
             UI.updateCardAlbum();
@@ -2063,21 +2071,39 @@ function inventoryItemAction(whichSlot, whichAction, whichActionValue) { // remo
 
 
 
-
 function additionalTooltipDetail(whichSlotID) {
     // get any information that needs displaying in the tooltip:
     var tooltipInformationToAdd = "";
-    if (currentActiveInventoryItems[hero.inventory[whichSlotID].type].action == "recipe") {
-        // check if it's known already:
-        var isKnown = false;
-        for (var i = 0; i < hero.recipesKnown.length; i++) {
-            if (hero.recipesKnown[i][0] == currentActiveInventoryItems[hero.inventory[whichSlotID].type].actionValue) {
-                isKnown = true;
+    switch (currentActiveInventoryItems[hero.inventory[whichSlotID].type].action) {
+        case "recipe":
+            // check if it's known already:
+            var isKnown = false;
+            for (var i = 0; i < hero.recipesKnown.length; i++) {
+                if (hero.recipesKnown[i][0] == currentActiveInventoryItems[hero.inventory[whichSlotID].type].actionValue) {
+                    isKnown = true;
+                }
             }
-        }
-        if (isKnown) {
-            tooltipInformationToAdd += " (already known)";
-        }
+            if (isKnown) {
+                tooltipInformationToAdd += " (already known)";
+            }
+            break;
+        case "collection":
+            // see if the already have one in a collection:
+            var isKnown = false;
+            var whichZone = currentActiveInventoryItems[hero.inventory[whichSlotID].type].actionValue;
+            if (hero.collections.hasOwnProperty(whichZone)) {
+                console.log("underway");
+                // key exists - collection is underway:
+                var foundIndex = hero.collections[whichZone].required.indexOf(hero.inventory[whichSlotID].type);
+                if (foundIndex != -1) {
+                    if (hero.collections[whichZone].required[foundIndex] > 0) {
+                        tooltipInformationToAdd += " (needed for an active collection)";
+                    }
+                } else {
+                    tooltipInformationToAdd += " (already added to a collection)";
+                }
+            }
+            break;
     }
     return tooltipInformationToAdd;
 }
@@ -2226,7 +2252,7 @@ function inventorySplitStackSubmit(e) {
         dragStartX = objInitLeft + 22;
         dragStartY = objInitTop + 22;
 
-        UI.activeDragObject.style.cssText = "z-index:2;top: " + objInitTop + "px; left: " + objInitLeft + "px; transform: translate(0px, 0px);";
+        UI.activeDragObject.style.cssText = "z-index:4;top: " + objInitTop + "px; left: " + objInitLeft + "px; transform: translate(0px, 0px);";
         document.addEventListener("mousemove", UI.handleDrag, false);
         document.addEventListener("mouseup", UI.endInventoryDrag, false);
     }
@@ -2899,7 +2925,7 @@ var UI = {
 
     handleDrag: function(e) {
         // don't access the element multiple times - do it all in one go:
-        UI.activeDragObject.style.cssText = "z-index:2;top: " + objInitTop + "px; left: " + objInitLeft + "px; transform: translate(" + (e.pageX - dragStartX) + "px, " + (e.pageY - dragStartY) + "px);";
+        UI.activeDragObject.style.cssText = "z-index:4;top: " + objInitTop + "px; left: " + objInitLeft + "px; transform: translate(" + (e.pageX - dragStartX) + "px, " + (e.pageY - dragStartY) + "px);";
     },
 
     endDrag: function(e) {
@@ -3362,7 +3388,7 @@ var UI = {
                         // -44 for the slot height:
                         objInitLeft = clickedSlotRect.left + 3;
                         objInitTop = clickedSlotRect.top + 3 + pageScrollTopY - 44;
-                        splitStackPanel.style.cssText = "z-index:2;top: " + objInitTop + "px; left: " + objInitLeft + "px;";
+                        splitStackPanel.style.cssText = "z-index:4;top: " + objInitTop + "px; left: " + objInitLeft + "px;";
                         splitStackPanel.classList.add("active");
                         key[5] = 0;
                     } else {
@@ -3384,7 +3410,7 @@ var UI = {
                             objInitTop = clickedSlotRect.top + 3 + pageScrollTopY;
                             dragStartX = e.pageX;
                             dragStartY = e.pageY;
-                            UI.activeDragObject.style.cssText = "z-index:2;top: " + objInitTop + "px; left: " + objInitLeft + "px; transform: translate(0px, 0px);";
+                            UI.activeDragObject.style.cssText = "z-index:4;top: " + objInitTop + "px; left: " + objInitLeft + "px; transform: translate(0px, 0px);";
                             document.addEventListener("mousemove", UI.handleDrag, false);
                             document.addEventListener("mouseup", UI.endInventoryDrag, false);
                         }
@@ -3396,7 +3422,7 @@ var UI = {
 
     slideDraggedSlotBack: function() {
         // slide it back visually - add a transition:
-        UI.activeDragObject.style.cssText = "z-index:2;left: " + (objInitLeft) + "px; top: " + (objInitTop) + "px;transition: transform 0.4s ease;";
+        UI.activeDragObject.style.cssText = "z-index:4;left: " + (objInitLeft) + "px; top: " + (objInitTop) + "px;transition: transform 0.4s ease;";
         UI.activeDragObject.addEventListener(whichTransitionEvent, function snapDraggedSlotBack(e) {
             // it's now back, so restore to the inventory:
             if (UI.sourceSlot.substring(0, 8) != 'shopSlot') {
@@ -3613,7 +3639,7 @@ var UI = {
                             // -44 for the slot height:
                             objInitLeft = clickedSlotRect.left + 3;
                             objInitTop = clickedSlotRect.top + 3 + pageScrollTopY - 44;
-                            shopSplitStackPanel.style.cssText = "z-index:2;top: " + objInitTop + "px; left: " + objInitLeft + "px;";
+                            shopSplitStackPanel.style.cssText = "z-index:4;top: " + objInitTop + "px; left: " + objInitLeft + "px;";
                             shopSplitStackPanel.classList.add("active");
                             key[5] = 0;
                         } else {
@@ -3655,7 +3681,7 @@ var UI = {
                             objInitTop = clickedSlotRect.top + 3 + pageScrollTopY;
                             dragStartX = e.pageX;
                             dragStartY = e.pageY;
-                            UI.activeDragObject.style.cssText = "z-index:2;top: " + objInitTop + "px; left: " + objInitLeft + "px; transform: translate(0px, 0px);";
+                            UI.activeDragObject.style.cssText = "z-index:4;top: " + objInitTop + "px; left: " + objInitLeft + "px; transform: translate(0px, 0px);";
                             document.addEventListener("mousemove", UI.handleDrag, false);
                             document.addEventListener("mouseup", UI.endInventoryDrag, false);
 
@@ -3960,25 +3986,25 @@ var UI = {
     },
 
     initiateCollectionQuestPanel: function(whichZone) {
-// add objects needed for this collection:
-var thisCollectionItem, thisItemCollectedClass;
-var panelMarkup = '';
- for (var j in hero.collections[whichZone].required) {
-                thisCollectionItem = hero.collections[whichZone].required[j];
-                thisItemCollectedClass = "notCollected";
-                if (thisCollectionItem < 0) {
-                    thisItemCollectedClass = "";
-                }
-                panelMarkup += '<li class="' + thisItemCollectedClass + '"><img src="/images/game-world/inventory-items/' + Math.abs(thisCollectionItem) + '.png"></li>';
-                document.querySelector('#collection'+whichZone+' ol').innerHTML = panelMarkup;
+        // add objects needed for this collection:
+        var thisCollectionItem, thisItemCollectedClass;
+        var panelMarkup = '';
+        for (var j in hero.collections[whichZone].required) {
+            thisCollectionItem = hero.collections[whichZone].required[j];
+            thisItemCollectedClass = "notCollected";
+            if (thisCollectionItem < 0) {
+                thisItemCollectedClass = "";
             }
+            panelMarkup += '<li class="' + thisItemCollectedClass + '" id="'+whichZone+'-'+Math.abs(thisCollectionItem)+'"><img src="/images/game-world/inventory-items/' + Math.abs(thisCollectionItem) + '.png"></li>';
+            document.querySelector('#collection-' + whichZone + ' ol').innerHTML = panelMarkup;
+        }
     },
 
     completeCollectionQuestPanel: function(whichZone) {
-// reveal lore:
-var thisParagraphNode = document.querySelector('#collection'+whichZone+' p');
-   thisParagraphNode.textContent = window.atob(thisParagraphNode.textContent);
-                thisParagraphNode.classList.add('active');
+        // reveal lore:
+        var thisParagraphNode = document.querySelector('#collection-' + whichZone + ' p');
+        thisParagraphNode.textContent = window.atob(thisParagraphNode.textContent);
+        thisParagraphNode.classList.add('active');
     }
 }
 
@@ -5177,13 +5203,16 @@ function processSpeech(thisNPC, thisSpeechPassedIn, thisSpeechCode, isPartOfNPCs
                         if (typeof collectionQuestSpeech[3] !== "undefined") {
                             if (awardQuestRewards[collectionQuestSpeech[3]]) {
                                 thisSpeech = collectionQuestSpeech[2];
-                      hero.collections[collectionQuestZoneName].complete = true;
                             }
+
+                     
                         } else {
                             thisSpeech = collectionQuestSpeech[2];
                         
                            
                         }
+                               hero.collections[collectionQuestZoneName].complete = true;
+                            UI.completeCollectionQuestPanel(collectionQuestZoneName);
                     }
                 } else {
                     // collection not started yet:

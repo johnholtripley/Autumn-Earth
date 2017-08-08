@@ -209,7 +209,7 @@ var UI = {
 
     handleDrag: function(e) {
         // don't access the element multiple times - do it all in one go:
-        UI.activeDragObject.style.cssText = "z-index:2;top: " + objInitTop + "px; left: " + objInitLeft + "px; transform: translate(" + (e.pageX - dragStartX) + "px, " + (e.pageY - dragStartY) + "px);";
+        UI.activeDragObject.style.cssText = "z-index:4;top: " + objInitTop + "px; left: " + objInitLeft + "px; transform: translate(" + (e.pageX - dragStartX) + "px, " + (e.pageY - dragStartY) + "px);";
     },
 
     endDrag: function(e) {
@@ -672,7 +672,7 @@ var UI = {
                         // -44 for the slot height:
                         objInitLeft = clickedSlotRect.left + 3;
                         objInitTop = clickedSlotRect.top + 3 + pageScrollTopY - 44;
-                        splitStackPanel.style.cssText = "z-index:2;top: " + objInitTop + "px; left: " + objInitLeft + "px;";
+                        splitStackPanel.style.cssText = "z-index:4;top: " + objInitTop + "px; left: " + objInitLeft + "px;";
                         splitStackPanel.classList.add("active");
                         key[5] = 0;
                     } else {
@@ -694,7 +694,7 @@ var UI = {
                             objInitTop = clickedSlotRect.top + 3 + pageScrollTopY;
                             dragStartX = e.pageX;
                             dragStartY = e.pageY;
-                            UI.activeDragObject.style.cssText = "z-index:2;top: " + objInitTop + "px; left: " + objInitLeft + "px; transform: translate(0px, 0px);";
+                            UI.activeDragObject.style.cssText = "z-index:4;top: " + objInitTop + "px; left: " + objInitLeft + "px; transform: translate(0px, 0px);";
                             document.addEventListener("mousemove", UI.handleDrag, false);
                             document.addEventListener("mouseup", UI.endInventoryDrag, false);
                         }
@@ -706,7 +706,7 @@ var UI = {
 
     slideDraggedSlotBack: function() {
         // slide it back visually - add a transition:
-        UI.activeDragObject.style.cssText = "z-index:2;left: " + (objInitLeft) + "px; top: " + (objInitTop) + "px;transition: transform 0.4s ease;";
+        UI.activeDragObject.style.cssText = "z-index:4;left: " + (objInitLeft) + "px; top: " + (objInitTop) + "px;transition: transform 0.4s ease;";
         UI.activeDragObject.addEventListener(whichTransitionEvent, function snapDraggedSlotBack(e) {
             // it's now back, so restore to the inventory:
             if (UI.sourceSlot.substring(0, 8) != 'shopSlot') {
@@ -923,7 +923,7 @@ var UI = {
                             // -44 for the slot height:
                             objInitLeft = clickedSlotRect.left + 3;
                             objInitTop = clickedSlotRect.top + 3 + pageScrollTopY - 44;
-                            shopSplitStackPanel.style.cssText = "z-index:2;top: " + objInitTop + "px; left: " + objInitLeft + "px;";
+                            shopSplitStackPanel.style.cssText = "z-index:4;top: " + objInitTop + "px; left: " + objInitLeft + "px;";
                             shopSplitStackPanel.classList.add("active");
                             key[5] = 0;
                         } else {
@@ -965,7 +965,7 @@ var UI = {
                             objInitTop = clickedSlotRect.top + 3 + pageScrollTopY;
                             dragStartX = e.pageX;
                             dragStartY = e.pageY;
-                            UI.activeDragObject.style.cssText = "z-index:2;top: " + objInitTop + "px; left: " + objInitLeft + "px; transform: translate(0px, 0px);";
+                            UI.activeDragObject.style.cssText = "z-index:4;top: " + objInitTop + "px; left: " + objInitLeft + "px; transform: translate(0px, 0px);";
                             document.addEventListener("mousemove", UI.handleDrag, false);
                             document.addEventListener("mouseup", UI.endInventoryDrag, false);
 
@@ -1270,24 +1270,24 @@ var UI = {
     },
 
     initiateCollectionQuestPanel: function(whichZone) {
-// add objects needed for this collection:
-var thisCollectionItem, thisItemCollectedClass;
-var panelMarkup = '';
- for (var j in hero.collections[whichZone].required) {
-                thisCollectionItem = hero.collections[whichZone].required[j];
-                thisItemCollectedClass = "notCollected";
-                if (thisCollectionItem < 0) {
-                    thisItemCollectedClass = "";
-                }
-                panelMarkup += '<li class="' + thisItemCollectedClass + '"><img src="/images/game-world/inventory-items/' + Math.abs(thisCollectionItem) + '.png"></li>';
-                document.querySelector('#collection'+whichZone+' ol').innerHTML = panelMarkup;
+        // add objects needed for this collection:
+        var thisCollectionItem, thisItemCollectedClass;
+        var panelMarkup = '';
+        for (var j in hero.collections[whichZone].required) {
+            thisCollectionItem = hero.collections[whichZone].required[j];
+            thisItemCollectedClass = "notCollected";
+            if (thisCollectionItem < 0) {
+                thisItemCollectedClass = "";
             }
+            panelMarkup += '<li class="' + thisItemCollectedClass + '" id="'+whichZone+'-'+Math.abs(thisCollectionItem)+'"><img src="/images/game-world/inventory-items/' + Math.abs(thisCollectionItem) + '.png"></li>';
+            document.querySelector('#collection-' + whichZone + ' ol').innerHTML = panelMarkup;
+        }
     },
 
     completeCollectionQuestPanel: function(whichZone) {
-// reveal lore:
-var thisParagraphNode = document.querySelector('#collection'+whichZone+' p');
-   thisParagraphNode.textContent = window.atob(thisParagraphNode.textContent);
-                thisParagraphNode.classList.add('active');
+        // reveal lore:
+        var thisParagraphNode = document.querySelector('#collection-' + whichZone + ' p');
+        thisParagraphNode.textContent = window.atob(thisParagraphNode.textContent);
+        thisParagraphNode.classList.add('active');
     }
 }
