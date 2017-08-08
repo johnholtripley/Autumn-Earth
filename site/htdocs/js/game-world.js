@@ -4478,6 +4478,15 @@ if ((hero.allPets[hero.activePets[i]].tileX < 0) || (hero.allPets[hero.activePet
             }
         }
     }
+
+if (thisMapData.movingPlatforms) {
+// initialise moving platforms:
+for (var i = 0; i < thisMapData.movingPlatforms.length; i++) {
+    thisMapData.movingPlatforms[i].x = getTileCentreCoordX(thisMapData.movingPlatforms[i].tileX);
+    thisMapData.movingPlatforms[i].y = getTileCentreCoordY(thisMapData.movingPlatforms[i].tileX);
+    }
+}
+
     // fill hero breadcrumb array with herox and heroy:
     for (var i = 0; i < breadCrumbLength; i++) {
         hero.breadcrumb[i] = [hero.tileX, hero.tileY];
@@ -5911,6 +5920,7 @@ function draw() {
         var thisFileColourSuffix = '';
         var thisColourName;
         var thisItemIdentifier;
+        var thisPlatform;
        
 
         for (var i = 0; i < mapTilesX; i++) {
@@ -5982,6 +5992,19 @@ function draw() {
 
             assetsToDraw.push([findIsoDepth(thisItem.x, thisItem.y, thisItem.z), "img", itemImages[thisItemIdentifier], Math.floor(thisX - hero.isox - thisItem.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisItem.centreY + (canvasHeight / 2) - thisItem.z)]);
         }
+
+
+        if (thisMapData.movingPlatforms) {
+            for (var i = 0; i < thisMapData.movingPlatforms.length; i++) {
+                thisPlatform = thisMapData.movingPlatforms[i];
+                thisX = findIsoCoordsX(thisPlatform.x, thisPlatform.y);
+                thisY = findIsoCoordsY(thisPlatform.x, thisPlatform.y);
+                   thisGraphicCentreX = thisMapData.graphics[thisPlatform.graphic].centreX;
+                    thisGraphicCentreY = thisMapData.graphics[thisPlatform.graphic].centreY;
+                assetsToDraw.push([findIsoDepth(thisPlatform.x, thisPlatform.y, 0), "img", tileImages[thisPlatform.graphic], Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2))]);
+            }
+        }
+
 
         assetsToDraw.sort(sortByLowestValue);
         // don't need to clear, as the background will overwrite anyway - this means there's less to process.
