@@ -124,8 +124,8 @@
         },
         {
             "src": "barge.png",
-            "centreX": 73,
-            "centreY": 0
+            "centreX": 72,
+            "centreY": 12
         }],
         "shops": [],
         "movingPlatforms": [

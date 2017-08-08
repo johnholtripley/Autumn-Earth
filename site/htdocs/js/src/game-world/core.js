@@ -492,7 +492,7 @@ if (thisMapData.movingPlatforms) {
 // initialise moving platforms:
 for (var i = 0; i < thisMapData.movingPlatforms.length; i++) {
     thisMapData.movingPlatforms[i].x = getTileCentreCoordX(thisMapData.movingPlatforms[i].tileX);
-    thisMapData.movingPlatforms[i].y = getTileCentreCoordY(thisMapData.movingPlatforms[i].tileX);
+    thisMapData.movingPlatforms[i].y = getTileCentreCoordY(thisMapData.movingPlatforms[i].tileY);
     }
 }
 
