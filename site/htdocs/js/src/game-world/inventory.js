@@ -304,18 +304,18 @@ function additionalTooltipDetail(whichSlotID) {
             }
             break;
         case "collection":
-            // see if the already have one in a collection:
+            // see if the hero already has one in a collection:
             var isKnown = false;
             var whichZone = currentActiveInventoryItems[hero.inventory[whichSlotID].type].actionValue;
             if (hero.collections.hasOwnProperty(whichZone)) {
-                console.log("underway");
                 // key exists - collection is underway:
                 var foundIndex = hero.collections[whichZone].required.indexOf(hero.inventory[whichSlotID].type);
                 if (foundIndex != -1) {
                     if (hero.collections[whichZone].required[foundIndex] > 0) {
-                        tooltipInformationToAdd += " (needed for an active collection)";
+                        tooltipInformationToAdd += " (needed for an active collection - double click to add)";
                     }
                 } else {
+                    // collection type is negative, so won't match the item type:
                     tooltipInformationToAdd += " (already added to a collection)";
                 }
             }
@@ -324,26 +324,7 @@ function additionalTooltipDetail(whichSlotID) {
     return tooltipInformationToAdd;
 }
 
-/*
-function generateBookContent(thisSlotsId) {
-    var paramsList = "isAjax=true&whichSlot=" + thisSlotsId;
-                getJSONWithParams("/scriptorium/generateBook.php", paramsList, function(data) {
-                    var whichReturnedSlot = data.book.whichSlot;
 
-                    hero.inventory[whichReturnedSlot].inscription.title = data.book.title;
-                    hero.inventory[whichReturnedSlot].inscription.content = data.book.content;
-                    UI.buildBook(whichReturnedSlot);
-                    document.getElementById("slot" + whichReturnedSlot).firstElementChild.setAttribute("data-action", "book");
-                    document.getElementById("slot" + whichReturnedSlot).firstElementChild.setAttribute("data-action-value", generateHash(hero.inventory[whichReturnedSlot].inscription.content));
-
-document.getElementById("slot" + whichReturnedSlot).firstElementChild.nextSibling.innerHTML = '<em>'  + currentActiveInventoryItems[hero.inventory[whichReturnedSlot].type].shortname + ' </em>&quot;' + data.book.title + '&quot; <span class="price">Sell price: ' + parseMoney(hero.inventory[whichReturnedSlot].quantity * currentActiveInventoryItems[hero.inventory[whichReturnedSlot].type].priceCode, 0) + '</span>' + additionalTooltipDetail(whichReturnedSlot);
-
-                }, function(status) {
-                    // error - try again:
-                    generateBookContent(thisSlotsId);
-                });
-}
-*/
 
 function generateSlotMarkup(thisSlotsId) {
     var slotMarkup = '';

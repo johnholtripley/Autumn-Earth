@@ -3,17 +3,20 @@
   "name": "Autumn Earth community site",
   "icons": [
     {
-      "src": "/images/icons/114.png",
+      "src": "/images/icons/android-chrome-144x144.png",
       "sizes": "114x114",
       "type": "image/png"
     },
     {
-      "src": "/images/icons/144.png",
+      "src": "/images/icons/apple-touch-icon-144x144.png",
       "sizes": "144x144",
       "type": "image/png"
     }
   ],
   "start_url": "/",
   "display": "standalone",
-  "orientation": "portrait"
+  "orientation": "portrait-primary",
+  "theme_color": "#212121",
+  "background_color": "#212121",
+  "lang": "en-GB"
 }
