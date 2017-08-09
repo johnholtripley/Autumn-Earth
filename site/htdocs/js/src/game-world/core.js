@@ -491,9 +491,9 @@ if ((hero.allPets[hero.activePets[i]].tileX < 0) || (hero.allPets[hero.activePet
 if (thisMapData.movingPlatforms) {
 // initialise moving platforms:
 for (var i = 0; i < thisMapData.movingPlatforms.length; i++) {
-    thisMapData.movingPlatforms[i].x = getTileCentreCoordX(thisMapData.movingPlatforms[i].tileX);
-    thisMapData.movingPlatforms[i].y = getTileCentreCoordY(thisMapData.movingPlatforms[i].tileY);
-    thisMapData.movingPlatforms[i].z = 0;
+    thisMapData.movingPlatforms[i].x = getTileCentreCoordX(thisMapData.movingPlatforms[i].tileXMin);
+    thisMapData.movingPlatforms[i].y = getTileCentreCoordY(thisMapData.movingPlatforms[i].tileYMin);
+    thisMapData.movingPlatforms[i].z = thisMapData.movingPlatforms[i].zMin;
     }
 }
 
@@ -910,13 +910,14 @@ function update() {
     moveFae();
     moveNPCs();
     movePet();
+    movePlatforms();
     audio.checkForAmbientSounds();
 }
 
 
 
 function heroIsInNewTile() {
-    hero.z = getElevation(getCurrentTileX(hero.x), getCurrentTileY(hero.y));
+    hero.z = getElevation(getTileX(hero.x), getTileY(hero.y));
     if (currentMap < 0) {
         updateCartographicMiniMap();
     }
@@ -1869,7 +1870,27 @@ function moveNPCs() {
 }
 
 
-
+function movePlatforms() {
+    if (thisMapData.movingPlatforms) {
+        var thisPlatform;
+        for (var i = 0; i < thisMapData.movingPlatforms.length; i++) {
+            thisPlatform = thisMapData.movingPlatforms[i];
+            thisPlatform.x += thisPlatform.xSpeed;
+            thisPlatform.y += thisPlatform.ySpeed;
+            thisPlatform.z += thisPlatform.zSpeed;
+            // x coords start off at tile centre, so need to check the edges - hence the tileW/2
+            if ((getTileX(thisPlatform.x + tileW/2) > thisPlatform.tileXMax) || (getTileX(thisPlatform.x  - tileW/2) < thisPlatform.tileXMin)) {
+                thisPlatform.xSpeed *= -1;
+            }
+            if ((getTileY(thisPlatform.y + tileW/2) > thisPlatform.tileYMax) || (getTileY(thisPlatform.y -  tileW/2) < thisPlatform.tileYMin)) {
+                thisPlatform.ySpeed *= -1;
+            }
+            if ((thisPlatform.z > thisPlatform.zMax) || (thisPlatform.z < thisPlatform.zMin)) {
+                thisPlatform.zSpeed *= -1;
+            }
+        }
+    }
+}
 
 function canLearnRecipe(recipeIndex) {
     var wasSuccessful = false;

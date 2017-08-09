@@ -132,10 +132,14 @@
         {
             "width": 6,
             "height": 3,
-            "tileX": 4,
-            "tileY": 8,
+            "tileXMin": 4,
+            "tileYMin": 8,
+            "tileXMax": 4,
+            "tileYMax": 22,
+            "zMin": 0,
+            "zMax": 0,
             "xSpeed": 0,
-            "ySpeed": 1,
+            "ySpeed": 2,
             "zSpeed": 0,
             "graphic": 1
         }],

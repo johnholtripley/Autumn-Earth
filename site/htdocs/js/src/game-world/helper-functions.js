@@ -1,11 +1,5 @@
 
-// find tile from coords:
-function getTileX(x) {
-    return Math.floor(x/tileW);
-}
-function getTileY(y) {
-    return Math.floor(y/tileW);
-}
+
 
 
 // find Iso coords from 2d coords:
@@ -88,12 +82,22 @@ function getTileIsoCentreCoordY(tileX, tileY) {
     return tileH / 2 * (tileY + tileX);
 }
 
-
+/*
+DUPLICATE
 // find current tile based on non-iso coords
 function getCurrentTileX(x) {
     return Math.floor(x/tileW);
 }
 function getCurrentTileY(y) {
+    return Math.floor(y/tileW);
+}
+*/
+
+// find current tile based on non-iso coords
+function getTileX(x) {
+    return Math.floor(x/tileW);
+}
+function getTileY(y) {
     return Math.floor(y/tileW);
 }
 

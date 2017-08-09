@@ -23,3 +23,4 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/favicons.html");
 <meta itemprop="image" content="<?php echo $shareImagePath; ?>">
 
 <link rel="canonical" href="<?php echo $thisBuiltURL; ?>" itemprop="url">
+<link href="https://plus.google.com/+Autumnearth" rel="publisher">
