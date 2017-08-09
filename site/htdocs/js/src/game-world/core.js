@@ -493,6 +493,7 @@ if (thisMapData.movingPlatforms) {
 for (var i = 0; i < thisMapData.movingPlatforms.length; i++) {
     thisMapData.movingPlatforms[i].x = getTileCentreCoordX(thisMapData.movingPlatforms[i].tileX);
     thisMapData.movingPlatforms[i].y = getTileCentreCoordY(thisMapData.movingPlatforms[i].tileY);
+    thisMapData.movingPlatforms[i].z = 0;
     }
 }
 
@@ -2010,7 +2011,7 @@ function draw() {
                 thisY = findIsoCoordsY(thisPlatform.x, thisPlatform.y);
                    thisGraphicCentreX = thisMapData.graphics[thisPlatform.graphic].centreX;
                     thisGraphicCentreY = thisMapData.graphics[thisPlatform.graphic].centreY;
-                assetsToDraw.push([findIsoDepth(thisPlatform.x, thisPlatform.y, 0), "img", tileImages[thisPlatform.graphic], Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2))]);
+                assetsToDraw.push([findIsoDepth(thisPlatform.x, thisPlatform.y, thisPlatform.z), "img", tileImages[thisPlatform.graphic], Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2))]);
             }
         }
 
