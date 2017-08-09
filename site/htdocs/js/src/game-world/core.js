@@ -634,26 +634,6 @@ function isATerrainCollision(x, y) {
         // is out of the bounds of the current map:
         return 1;
     } else {
-
-        if (thisMapData.movingPlatforms) {
-            // check for platforms:
-            var thisPlatform;
-            // needs width and height of object ########## john
-            for (var i = 0; i < thisMapData.movingPlatforms.length; i++) {
-                thisPlatform = thisMapData.movingPlatforms[i];
-                if (x >= thisPlatform.x + thisPlatform.xMinEdge) {
-                    if (x <= thisPlatform.x + thisPlatform.xMaxEdge) {
-                        if (y >= thisPlatform.y + thisPlatform.yMaxEdge) {
-                            if (y <= thisPlatform.y + thisPlatform.yMaxEdge) {
-                                // is on this platform:
-                                return 0;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
         switch (thisMapData.collisions[tileY][tileX]) {
             case 1:
                 // is a collision:
@@ -723,6 +703,14 @@ function getHeroAsCloseAsPossibleToObject(objx, objy, objw, objh) {
 
 
 function checkHeroCollisions() {
+    if (thisMapData.movingPlatforms) {
+        var thisPlatform;
+        for (var i = 0; i < thisMapData.movingPlatforms.length; i++) {
+            thisPlatform = thisMapData.movingPlatforms[i];
+            // check the leading edge of movement to see if the hero is moving onto (or fully on) a platform:
+
+        }
+    }
     // tile collisions:
     if (key[2]) {
         // up
