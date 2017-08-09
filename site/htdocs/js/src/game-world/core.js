@@ -488,14 +488,21 @@ if ((hero.allPets[hero.activePets[i]].tileX < 0) || (hero.allPets[hero.activePet
         }
     }
 
-if (thisMapData.movingPlatforms) {
-// initialise moving platforms:
-for (var i = 0; i < thisMapData.movingPlatforms.length; i++) {
-    thisMapData.movingPlatforms[i].x = getTileCentreCoordX(thisMapData.movingPlatforms[i].tileXMin);
-    thisMapData.movingPlatforms[i].y = getTileCentreCoordY(thisMapData.movingPlatforms[i].tileYMin);
-    thisMapData.movingPlatforms[i].z = thisMapData.movingPlatforms[i].zMin;
+    if (thisMapData.movingPlatforms) {
+        // initialise moving platforms:
+        var thisPlatform;
+        for (var i = 0; i < thisMapData.movingPlatforms.length; i++) {
+            thisPlatform = thisMapData.movingPlatforms[i];
+            thisPlatform.x = getTileCentreCoordX(thisPlatform.tileXMin);
+            thisPlatform.y = getTileCentreCoordY(thisPlatform.tileYMin);
+            thisPlatform.z = thisPlatform.zMin;
+            // determine offsets from platform's x and y coords (as these won't change):
+            thisPlatform.xMinEdge = -tileW / 2;
+            thisPlatform.xMaxEdge = tileW / 2 + ((thisPlatform.width - 1) * tileW);
+            thisPlatform.yMinEdge = -tileW / 2;
+            thisPlatform.yMaxEdge = tileW / 2 + ((thisPlatform.height - 1) * tileW);
+        }
     }
-}
 
     // fill hero breadcrumb array with herox and heroy:
     for (var i = 0; i < breadCrumbLength; i++) {
@@ -627,6 +634,26 @@ function isATerrainCollision(x, y) {
         // is out of the bounds of the current map:
         return 1;
     } else {
+
+        if (thisMapData.movingPlatforms) {
+            // check for platforms:
+            var thisPlatform;
+            // needs width and height of object ########## john
+            for (var i = 0; i < thisMapData.movingPlatforms.length; i++) {
+                thisPlatform = thisMapData.movingPlatforms[i];
+                if (x >= thisPlatform.x + thisPlatform.xMinEdge) {
+                    if (x <= thisPlatform.x + thisPlatform.xMaxEdge) {
+                        if (y >= thisPlatform.y + thisPlatform.yMaxEdge) {
+                            if (y <= thisPlatform.y + thisPlatform.yMaxEdge) {
+                                // is on this platform:
+                                return 0;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         switch (thisMapData.collisions[tileY][tileX]) {
             case 1:
                 // is a collision:
