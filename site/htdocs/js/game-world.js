@@ -4269,7 +4269,7 @@ function getColours() {
         getQuestDetails();
     }, function(status) {
         // try again:
-      //  getColours();
+        getColours();
     });
 }
 
@@ -4483,14 +4483,23 @@ if ((hero.allPets[hero.activePets[i]].tileX < 0) || (hero.allPets[hero.activePet
         }
     }
 
-if (thisMapData.movingPlatforms) {
-// initialise moving platforms:
-for (var i = 0; i < thisMapData.movingPlatforms.length; i++) {
-    thisMapData.movingPlatforms[i].x = getTileCentreCoordX(thisMapData.movingPlatforms[i].tileXMin);
-    thisMapData.movingPlatforms[i].y = getTileCentreCoordY(thisMapData.movingPlatforms[i].tileYMin);
-    thisMapData.movingPlatforms[i].z = thisMapData.movingPlatforms[i].zMin;
+    if (thisMapData.movingPlatforms) {
+        // initialise moving platforms:
+        var thisPlatform;
+        for (var i = 0; i < thisMapData.movingPlatforms.length; i++) {
+            thisPlatform = thisMapData.movingPlatforms[i];
+            thisPlatform.x = getTileCentreCoordX(thisPlatform.tileXMin);
+            thisPlatform.y = getTileCentreCoordY(thisPlatform.tileYMin);
+            thisPlatform.z = thisPlatform.zMin;
+            // this will be set to false if any character is moving over an edge, so the platform will stop until they're clear:
+            thisPlatform.canMove = true;
+            // determine offsets from platform's x and y coords (as these won't change):
+            thisPlatform.xMinEdge = -tileW / 2;
+            thisPlatform.xMaxEdge = tileW / 2 + ((thisPlatform.width - 1) * tileW);
+            thisPlatform.yMinEdge = -tileW / 2;
+            thisPlatform.yMaxEdge = tileW / 2 + ((thisPlatform.height - 1) * tileW);
+        }
     }
-}
 
     // fill hero breadcrumb array with herox and heroy:
     for (var i = 0; i < breadCrumbLength; i++) {
@@ -4691,42 +4700,65 @@ function getHeroAsCloseAsPossibleToObject(objx, objy, objw, objh) {
 
 
 function checkHeroCollisions() {
-    // tile collisions:
-    if (key[2]) {
-        // up
-        if ((isATerrainCollision(hero.x - hero.width / 2, hero.y - hero.height / 2)) || (isATerrainCollision(hero.x + hero.width / 2, hero.y - hero.height / 2))) {
-            // find the tile's bottom edge
-            var tileCollidedWith = getTileY(hero.y - hero.height / 2);
-            var tileBottomEdge = (tileCollidedWith + 1) * tileW;
-            // use the +1 to make sure it's just clear of the collision tile
-            hero.y = tileBottomEdge + hero.height / 2 + 1;
+    var isOnAPlatform = false;
+    if (thisMapData.movingPlatforms) {
+        var thisPlatform;
+        for (var i = 0; i < thisMapData.movingPlatforms.length; i++) {
+            thisPlatform = thisMapData.movingPlatforms[i];
+            // check the leading edge of movement to see if the hero is moving onto (or fully on) a platform:
+       
+                if ((hero.y + hero.height / 2) > (thisPlatform.y - tileW / 2)) {
+                    if ((hero.y - hero.height / 2) < (thisPlatform.y + tileW / 2 + (thisPlatform.height - 1) * tileW)) {
+                        if ((hero.x - hero.width / 2) > (thisPlatform.x - tileW / 2)) {
+                            if ((hero.x - hero.width / 2) < (thisPlatform.x + tileW / 2 + (thisPlatform.width - 1) * tileW)) {
+                                isOnAPlatform = true;
+                                hero.x += thisPlatform.xSpeed;
+                                hero.y += thisPlatform.ySpeed;
+                                hero.z += thisPlatform.zSpeed;
+                            }
+                        }
+                    }
+                }
+       
         }
     }
-    if (key[3]) {
-        // down
-        if ((isATerrainCollision(hero.x - hero.width / 2, hero.y + hero.height / 2)) || (isATerrainCollision(hero.x + hero.width / 2, hero.y + hero.height / 2))) {
-            var tileCollidedWith = getTileY(hero.y + hero.height / 2);
-            var tileTopEdge = (tileCollidedWith) * tileW;
-            hero.y = tileTopEdge - hero.height / 2 - 1;
+    if (!isOnAPlatform) {
+        // tile collisions:
+        if (key[2]) {
+            // up
+            if ((isATerrainCollision(hero.x - hero.width / 2, hero.y - hero.height / 2)) || (isATerrainCollision(hero.x + hero.width / 2, hero.y - hero.height / 2))) {
+                // find the tile's bottom edge
+                var tileCollidedWith = getTileY(hero.y - hero.height / 2);
+                var tileBottomEdge = (tileCollidedWith + 1) * tileW;
+                // use the +1 to make sure it's just clear of the collision tile
+                hero.y = tileBottomEdge + hero.height / 2 + 1;
+            }
+        }
+        if (key[3]) {
+            // down
+            if ((isATerrainCollision(hero.x - hero.width / 2, hero.y + hero.height / 2)) || (isATerrainCollision(hero.x + hero.width / 2, hero.y + hero.height / 2))) {
+                var tileCollidedWith = getTileY(hero.y + hero.height / 2);
+                var tileTopEdge = (tileCollidedWith) * tileW;
+                hero.y = tileTopEdge - hero.height / 2 - 1;
+            }
+        }
+        if (key[0]) {
+            // left/west
+            if ((isATerrainCollision(hero.x - hero.width / 2, hero.y + hero.height / 2)) || (isATerrainCollision(hero.x - hero.width / 2, hero.y - hero.height / 2))) {
+                var tileCollidedWith = getTileX(hero.x - hero.width / 2);
+                var tileRightEdge = (tileCollidedWith + 1) * tileW;
+                hero.x = tileRightEdge + hero.width / 2 + 1;
+            }
+        }
+        if (key[1]) {
+            //right/east
+            if ((isATerrainCollision(hero.x + hero.width / 2, hero.y + hero.height / 2)) || (isATerrainCollision(hero.x + hero.width / 2, hero.y - hero.height / 2))) {
+                var tileCollidedWith = getTileX(hero.x + hero.width / 2);
+                var tileLeftEdge = (tileCollidedWith) * tileW;
+                hero.x = tileLeftEdge - hero.width / 2 - 1;
+            }
         }
     }
-    if (key[0]) {
-        // left/west
-        if ((isATerrainCollision(hero.x - hero.width / 2, hero.y + hero.height / 2)) || (isATerrainCollision(hero.x - hero.width / 2, hero.y - hero.height / 2))) {
-            var tileCollidedWith = getTileX(hero.x - hero.width / 2);
-            var tileRightEdge = (tileCollidedWith + 1) * tileW;
-            hero.x = tileRightEdge + hero.width / 2 + 1;
-        }
-    }
-    if (key[1]) {
-        //right/east
-        if ((isATerrainCollision(hero.x + hero.width / 2, hero.y + hero.height / 2)) || (isATerrainCollision(hero.x + hero.width / 2, hero.y - hero.height / 2))) {
-            var tileCollidedWith = getTileX(hero.x + hero.width / 2);
-            var tileLeftEdge = (tileCollidedWith) * tileW;
-            hero.x = tileLeftEdge - hero.width / 2 - 1;
-        }
-    }
-
     var thisNPC, thisItem;
     // check for collisions against NPCs:
     for (var i = 0; i < thisMapData.npcs.length; i++) {
@@ -4781,7 +4813,6 @@ function checkHeroCollisions() {
         }
     }
 }
-
 
 
 function gameLoop() {
@@ -5870,18 +5901,20 @@ function movePlatforms() {
         var thisPlatform;
         for (var i = 0; i < thisMapData.movingPlatforms.length; i++) {
             thisPlatform = thisMapData.movingPlatforms[i];
-            thisPlatform.x += thisPlatform.xSpeed;
-            thisPlatform.y += thisPlatform.ySpeed;
-            thisPlatform.z += thisPlatform.zSpeed;
-            // x coords start off at tile centre, so need to check the edges - hence the tileW/2
-            if ((getTileX(thisPlatform.x + tileW/2) > thisPlatform.tileXMax) || (getTileX(thisPlatform.x  - tileW/2) < thisPlatform.tileXMin)) {
-                thisPlatform.xSpeed *= -1;
-            }
-            if ((getTileY(thisPlatform.y + tileW/2) > thisPlatform.tileYMax) || (getTileY(thisPlatform.y -  tileW/2) < thisPlatform.tileYMin)) {
-                thisPlatform.ySpeed *= -1;
-            }
-            if ((thisPlatform.z > thisPlatform.zMax) || (thisPlatform.z < thisPlatform.zMin)) {
-                thisPlatform.zSpeed *= -1;
+            if (thisPlatform.canMove) {
+                thisPlatform.x += thisPlatform.xSpeed;
+                thisPlatform.y += thisPlatform.ySpeed;
+                thisPlatform.z += thisPlatform.zSpeed;
+                // x coords start off at tile centre, so need to check the edges - hence the tileW/2
+                if ((getTileX(thisPlatform.x + tileW / 2) > thisPlatform.tileXMax) || (getTileX(thisPlatform.x - tileW / 2) < thisPlatform.tileXMin)) {
+                    thisPlatform.xSpeed *= -1;
+                }
+                if ((getTileY(thisPlatform.y + tileW / 2) > thisPlatform.tileYMax) || (getTileY(thisPlatform.y - tileW / 2) < thisPlatform.tileYMin)) {
+                    thisPlatform.ySpeed *= -1;
+                }
+                if ((thisPlatform.z > thisPlatform.zMax) || (thisPlatform.z < thisPlatform.zMin)) {
+                    thisPlatform.zSpeed *= -1;
+                }
             }
         }
     }
