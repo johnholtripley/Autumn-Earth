@@ -496,6 +496,8 @@ if ((hero.allPets[hero.activePets[i]].tileX < 0) || (hero.allPets[hero.activePet
             thisPlatform.x = getTileCentreCoordX(thisPlatform.tileXMin);
             thisPlatform.y = getTileCentreCoordY(thisPlatform.tileYMin);
             thisPlatform.z = thisPlatform.zMin;
+            // this will be set to false if any character is moving over an edge, so the platform will stop until they're clear:
+            thisPlatform.canMove = true;
             // determine offsets from platform's x and y coords (as these won't change):
             thisPlatform.xMinEdge = -tileW / 2;
             thisPlatform.xMaxEdge = tileW / 2 + ((thisPlatform.width - 1) * tileW);
@@ -1890,18 +1892,20 @@ function movePlatforms() {
         var thisPlatform;
         for (var i = 0; i < thisMapData.movingPlatforms.length; i++) {
             thisPlatform = thisMapData.movingPlatforms[i];
-            thisPlatform.x += thisPlatform.xSpeed;
-            thisPlatform.y += thisPlatform.ySpeed;
-            thisPlatform.z += thisPlatform.zSpeed;
-            // x coords start off at tile centre, so need to check the edges - hence the tileW/2
-            if ((getTileX(thisPlatform.x + tileW/2) > thisPlatform.tileXMax) || (getTileX(thisPlatform.x  - tileW/2) < thisPlatform.tileXMin)) {
-                thisPlatform.xSpeed *= -1;
-            }
-            if ((getTileY(thisPlatform.y + tileW/2) > thisPlatform.tileYMax) || (getTileY(thisPlatform.y -  tileW/2) < thisPlatform.tileYMin)) {
-                thisPlatform.ySpeed *= -1;
-            }
-            if ((thisPlatform.z > thisPlatform.zMax) || (thisPlatform.z < thisPlatform.zMin)) {
-                thisPlatform.zSpeed *= -1;
+            if (thisPlatform.canMove) {
+                thisPlatform.x += thisPlatform.xSpeed;
+                thisPlatform.y += thisPlatform.ySpeed;
+                thisPlatform.z += thisPlatform.zSpeed;
+                // x coords start off at tile centre, so need to check the edges - hence the tileW/2
+                if ((getTileX(thisPlatform.x + tileW / 2) > thisPlatform.tileXMax) || (getTileX(thisPlatform.x - tileW / 2) < thisPlatform.tileXMin)) {
+                    thisPlatform.xSpeed *= -1;
+                }
+                if ((getTileY(thisPlatform.y + tileW / 2) > thisPlatform.tileYMax) || (getTileY(thisPlatform.y - tileW / 2) < thisPlatform.tileYMin)) {
+                    thisPlatform.ySpeed *= -1;
+                }
+                if ((thisPlatform.z > thisPlatform.zMax) || (thisPlatform.z < thisPlatform.zMin)) {
+                    thisPlatform.zSpeed *= -1;
+                }
             }
         }
     }
