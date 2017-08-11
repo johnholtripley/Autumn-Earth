@@ -714,7 +714,7 @@ function checkHeroCollisions() {
        
                 if ((hero.y + hero.height / 2) > (thisPlatform.y - tileW / 2)) {
                     if ((hero.y - hero.height / 2) < (thisPlatform.y + tileW / 2 + (thisPlatform.height - 1) * tileW)) {
-                        if ((hero.x - hero.width / 2) > (thisPlatform.x - tileW / 2)) {
+                        if ((hero.x + hero.width / 2) > (thisPlatform.x - tileW / 2)) {
                             if ((hero.x - hero.width / 2) < (thisPlatform.x + tileW / 2 + (thisPlatform.width - 1) * tileW)) {
                                 isOnAPlatform = true;
                                 hero.x += thisPlatform.xSpeed;
@@ -724,6 +724,20 @@ function checkHeroCollisions() {
                         }
                     }
                 }
+
+                /*
+                // check the hero is fully contained within the platform:
+                    if ((hero.y - hero.height / 2) > (thisPlatform.y - tileW / 2)) {
+                    if ((hero.y + hero.height / 2) < (thisPlatform.y + tileW / 2 + (thisPlatform.height - 1) * tileW)) {
+                        if ((hero.x - hero.width / 2) > (thisPlatform.x - tileW / 2)) {
+                            if ((hero.x + hero.width / 2) < (thisPlatform.x + tileW / 2 + (thisPlatform.width - 1) * tileW)) {
+                            
+                            }
+                        }
+                    }
+                }
+                */
+                // so leading edge reverse the height/width modifier? ################
        
         }
     }
