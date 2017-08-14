@@ -5931,6 +5931,16 @@ function movePlatforms() {
                 }
             }
         }
+        // check for any items on platforms:
+          for (var i = 0; i < thisMapData.items.length; i++) {
+
+if(thisMapData.items[i].isOnPlatform != undefined) {
+
+thisMapData.items[i].x += thisMapData.movingPlatforms[thisMapData.items[i].isOnPlatform].xSpeed;
+thisMapData.items[i].y += thisMapData.movingPlatforms[thisMapData.items[i].isOnPlatform].ySpeed;
+thisMapData.items[i].z += thisMapData.movingPlatforms[thisMapData.items[i].isOnPlatform].zSpeed;
+}
+          }
     }
 }
 
