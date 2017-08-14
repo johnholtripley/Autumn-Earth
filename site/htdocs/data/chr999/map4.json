@@ -153,6 +153,10 @@
             "tileX": 4,
             "tileY": 9,
             "isOnPlatform": 0
+        },  {
+            "type": 18,
+            "tileX": 4,
+            "tileY": 5
         }],
         "hotspots": []
 

@@ -116,7 +116,7 @@ var hero = {
 var fae = {
     particles: [],
     maxParticles: 18,
-    radiusAroundHero: 20,
+    radiusAroundHero: 35,
     angleAroundHero: 0,
     targetX: 0,
     targetY: 0,

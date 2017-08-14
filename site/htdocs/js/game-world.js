@@ -403,7 +403,7 @@ var hero = {
 var fae = {
     particles: [],
     maxParticles: 18,
-    radiusAroundHero: 20,
+    radiusAroundHero: 35,
     angleAroundHero: 0,
     targetX: 0,
     targetY: 0,
@@ -4701,39 +4701,48 @@ function getHeroAsCloseAsPossibleToObject(objx, objy, objw, objh) {
 
 function checkHeroCollisions() {
     var isOnAPlatform = false;
+    var isPartiallyOnAPlatform = false;
     if (thisMapData.movingPlatforms) {
         var thisPlatform;
         for (var i = 0; i < thisMapData.movingPlatforms.length; i++) {
             thisPlatform = thisMapData.movingPlatforms[i];
-            // check the leading edge of movement to see if the hero is moving onto (or fully on) a platform:
-       
-                if ((hero.y + hero.height / 2) > (thisPlatform.y - tileW / 2)) {
-                    if ((hero.y - hero.height / 2) < (thisPlatform.y + tileW / 2 + (thisPlatform.height - 1) * tileW)) {
-                        if ((hero.x + hero.width / 2) > (thisPlatform.x - tileW / 2)) {
-                            if ((hero.x - hero.width / 2) < (thisPlatform.x + tileW / 2 + (thisPlatform.width - 1) * tileW)) {
-                                isOnAPlatform = true;
-                                hero.x += thisPlatform.xSpeed;
-                                hero.y += thisPlatform.ySpeed;
-                                hero.z += thisPlatform.zSpeed;
-                            }
-                        }
-                    }
-                }
 
-                /*
-                // check the hero is fully contained within the platform:
-                    if ((hero.y - hero.height / 2) > (thisPlatform.y - tileW / 2)) {
-                    if ((hero.y + hero.height / 2) < (thisPlatform.y + tileW / 2 + (thisPlatform.height - 1) * tileW)) {
-                        if ((hero.x - hero.width / 2) > (thisPlatform.x - tileW / 2)) {
-                            if ((hero.x + hero.width / 2) < (thisPlatform.x + tileW / 2 + (thisPlatform.width - 1) * tileW)) {
-                            
-                            }
+            // check to see if the hero is moving on or off a platform:
+            thisPlatform.canMove = true;
+            if ((hero.y + hero.height / 2) >= (thisPlatform.y - tileW / 2)) {
+                if ((hero.y - hero.height / 2) <= (thisPlatform.y + tileW / 2 + (thisPlatform.height - 1) * tileW)) {
+                    if ((hero.x + hero.width / 2) >= (thisPlatform.x - tileW / 2)) {
+                        if ((hero.x - hero.width / 2) <= (thisPlatform.x + tileW / 2 + (thisPlatform.width - 1) * tileW)) {
+                            isPartiallyOnAPlatform = true;
+
+                            thisPlatform.canMove = false;
                         }
                     }
                 }
-                */
-                // so leading edge reverse the height/width modifier? ################
-       
+            }
+
+
+            // check the hero is fully contained within the platform:
+            if ((hero.y - hero.height / 2) >= (thisPlatform.y - tileW / 2)) {
+                if ((hero.y + hero.height / 2) <= (thisPlatform.y + tileW / 2 + (thisPlatform.height - 1) * tileW)) {
+                    if ((hero.x - hero.width / 2) >= (thisPlatform.x - tileW / 2)) {
+                        if ((hero.x + hero.width / 2) <= (thisPlatform.x + tileW / 2 + (thisPlatform.width - 1) * tileW)) {
+                            isOnAPlatform = true;
+                            isPartiallyOnAPlatform = false;
+                            thisPlatform.canMove = true;
+                        }
+                    }
+                }
+            }
+
+            if (isOnAPlatform) {
+                hero.x += thisPlatform.xSpeed;
+                hero.y += thisPlatform.ySpeed;
+                hero.z += thisPlatform.zSpeed;
+            }
+
+
+
         }
     }
     if (!isOnAPlatform) {
@@ -5932,15 +5941,15 @@ function movePlatforms() {
             }
         }
         // check for any items on platforms:
-          for (var i = 0; i < thisMapData.items.length; i++) {
-
-if(thisMapData.items[i].isOnPlatform != undefined) {
-
-thisMapData.items[i].x += thisMapData.movingPlatforms[thisMapData.items[i].isOnPlatform].xSpeed;
-thisMapData.items[i].y += thisMapData.movingPlatforms[thisMapData.items[i].isOnPlatform].ySpeed;
-thisMapData.items[i].z += thisMapData.movingPlatforms[thisMapData.items[i].isOnPlatform].zSpeed;
-}
-          }
+        for (var i = 0; i < thisMapData.items.length; i++) {
+            if (thisMapData.items[i].isOnPlatform != undefined) {
+                if (thisMapData.movingPlatforms[thisMapData.items[i].isOnPlatform].canMove) {
+                    thisMapData.items[i].x += thisMapData.movingPlatforms[thisMapData.items[i].isOnPlatform].xSpeed;
+                    thisMapData.items[i].y += thisMapData.movingPlatforms[thisMapData.items[i].isOnPlatform].ySpeed;
+                    thisMapData.items[i].z += thisMapData.movingPlatforms[thisMapData.items[i].isOnPlatform].zSpeed;
+                }
+            }
+        }
     }
 }
 
