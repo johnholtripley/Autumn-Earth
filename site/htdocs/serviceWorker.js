@@ -5,9 +5,10 @@
 (function() {
 
 // the version number is updated in the Gulp cacheBusting task: 
-    var version = 'v::153::';
+    var version = 'v::170::';
+    var versionNumber = version.split("::")[1];
     var staticCacheName = version + 'static';
-    var pagesCacheName = 'pages';
+    var pagesCacheName = version + 'pages';
     var imagesCacheName = version + 'images';
     var assetsCacheName = version + 'assets';
     var fallBackImage = '/images/offline-fallback.jpg';
@@ -23,8 +24,8 @@
                 return cache.addAll([
                     '/',
                     '/images/autumn-earth.svg',
-                    '/css/base.css',
-                    '/js/core.min.js',
+                    '/css/base.'+versionNumber+'.css',
+                    '/js/core.min.'+versionNumber+'.js',
                     '/offline/',
                     fallBackImage
                 ]);
@@ -91,6 +92,122 @@
             trimCache(assetsCacheName, 10);
         }
     });
+
+
+
+
+
+
+self.addEventListener('fetch', function(event) {
+
+    var request = event.request;
+    var url = new URL(request.url);
+
+  // Only deal with requests to my own server
+        if (url.origin !== location.origin) {
+            return;
+        }
+
+    // Ignore non-GET requests
+    if (request.method !== 'GET') {
+        return;
+    }
+
+
+    // For HTML requests, try the network first, fall back to the cache, finally the offline page
+    if (request.headers.get('Accept').indexOf('text/html') !== -1) {
+
+        event.respondWith(
+            fetch(request)
+                .then(function(response) {
+                    // NETWORK
+                    // Stash a copy of this page in the pages cache
+                    var copy = response.clone();
+                  //  if (offlinePages.includes(url.pathname) || offlinePages.includes(url.pathname + '/')) {
+                  //      stashInCache(staticCacheName, request, copy);
+                  //  } else {
+                        stashInCache(pagesCacheName, request, copy);
+                   // }
+                    return response;
+                })
+                .catch(function() {
+                    // CACHE or FALLBACK
+                    return caches.match(request)
+                         .then(function(response) {
+                            return response || caches.match('/offline/');
+                        });
+                })
+        );
+        return;
+    }
+
+    // For non-HTML requests, look in the cache first, fall back to the network
+    event.respondWith(
+        caches.match(request)
+            .then(function(response) {
+                // CACHE
+                return response || fetch(request)
+                    .then(function(response) {
+                        // NETWORK
+                        // If the request is for an image, stash a copy of this image in the images cache
+                        if (request.headers.get('Accept').indexOf('image') !== -1) {
+                            var copy = response.clone();
+                            stashInCache(imagesCacheName, request, copy);
+                        }
+                               // check if it's js, css, or a font file and add it to the assets cache
+                        if ((request.url.indexOf("/fonts/") !== -1) || (request.url.indexOf("/js/") !== -1) || (request.url.indexOf("/css/") !== -1)) {
+                            // cache the font that's required by the browser:
+                            var copy = response.clone();
+                            stashInCache(assetsCacheName, request, copy);
+                        }
+                        return response;
+                    })
+                    .catch(function() {
+                        // OFFLINE
+                        // If the request is for an image, show an offline placeholder
+                        if (request.headers.get('Accept').indexOf('image') !== -1) {
+                            return caches.match(fallBackImage);
+                        }
+                    });
+            })
+    );
+
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+
 
     self.addEventListener('fetch', function(event) {
         var request = event.request;
@@ -182,5 +299,6 @@
             })
         );
     });
+*/
 
 }());

@@ -719,7 +719,6 @@ function checkHeroCollisions() {
                     if ((hero.x + hero.width / 2) >= (thisPlatform.x - tileW / 2)) {
                         if ((hero.x - hero.width / 2) <= (thisPlatform.x + tileW / 2 + (thisPlatform.width - 1) * tileW)) {
                             isPartiallyOnAPlatform = true;
-
                             thisPlatform.canMove = false;
                         }
                     }
@@ -727,7 +726,7 @@ function checkHeroCollisions() {
             }
 
 
-            // check the hero is fully contained within the platform:
+            // check if the hero is fully contained within the platform:
             if ((hero.y - hero.height / 2) >= (thisPlatform.y - tileW / 2)) {
                 if ((hero.y + hero.height / 2) <= (thisPlatform.y + tileW / 2 + (thisPlatform.height - 1) * tileW)) {
                     if ((hero.x - hero.width / 2) >= (thisPlatform.x - tileW / 2)) {
@@ -735,22 +734,18 @@ function checkHeroCollisions() {
                             isOnAPlatform = true;
                             isPartiallyOnAPlatform = false;
                             thisPlatform.canMove = true;
+                            hero.x += thisPlatform.xSpeed;
+                            hero.y += thisPlatform.ySpeed;
+                            hero.z += thisPlatform.zSpeed;
                         }
                     }
                 }
             }
-
-            if (isOnAPlatform) {
-                hero.x += thisPlatform.xSpeed;
-                hero.y += thisPlatform.ySpeed;
-                hero.z += thisPlatform.zSpeed;
-            }
-
-
-
         }
     }
-    if (!isOnAPlatform) {
+    if (isPartiallyOnAPlatform) {
+        // check the corners that are not on the platform for terrain collisions ##########
+    } else if (!isOnAPlatform) {
         // tile collisions:
         if (key[2]) {
             // up
@@ -841,7 +836,6 @@ function checkHeroCollisions() {
         }
     }
 }
-
 
 function gameLoop() {
     switch (gameMode) {
@@ -951,8 +945,8 @@ function update() {
         mapTransitionCurrentFrames += 2;
         if (mapTransitionCurrentFrames >= mapTransitionMaxFrames) {
             mapTransition = "";
-              activeDoorX = -1;
-    activeDoorY = -1;
+            activeDoorX = -1;
+            activeDoorY = -1;
         }
     }
     timeSinceLastFrameSwap += elapsed;
@@ -967,7 +961,6 @@ function update() {
     movePlatforms();
     audio.checkForAmbientSounds();
 }
-
 
 
 function heroIsInNewTile() {
@@ -988,7 +981,6 @@ function heroIsInNewTile() {
                 }
                 questData[thisHotspot.quest].hasBeenActivated = 1;
             }
-
             if (typeof thisHotspot.music !== "undefined") {
                 audio.playMusic(thisHotspot.music);
             }
@@ -1002,32 +994,29 @@ function heroIsInNewTile() {
             if (typeof thisHotspot.toggleInnerDoor !== "undefined") {
                 toggleInnerDoor(thisHotspot.toggleInnerDoor);
             }
-
-
-if (typeof thisHotspot.remove !== "undefined") {
-    // remove this hotspot now it's been triggered:
-    thisMapData.hotspots.splice(i, 1);
-    i--;
-}
-
+            if (typeof thisHotspot.remove !== "undefined") {
+                // remove this hotspot now it's been triggered:
+                thisMapData.hotspots.splice(i, 1);
+                i--;
+            }
         }
 
         if (fae.currentState == "hero") {
             // check if the fae should react to this one:
             if (typeof thisHotspot.faeIgnore === "undefined") {
-            // check it's not recently visited this hotspot:
-            if (fae.recentHotspots.indexOf(i) === -1) {
-                if (isInRange(fae.x, fae.y, thisTileCentreX, thisTileCentreY, fae.range)) {
-                    if (hasLineOfSight(getTileX(fae.x), getTileX(fae.y), thisHotspot.centreX, thisHotspot.centreY)) {
-                        fae.targetX = thisTileCentreX;
-                        fae.targetY = thisTileCentreY;
-                        // add this to the list of hotspots so it doesn't return to it again and again:
-                        fae.recentHotspots.push(i);
-                        fae.currentState = "away";
+                // check it's not recently visited this hotspot:
+                if (fae.recentHotspots.indexOf(i) === -1) {
+                    if (isInRange(fae.x, fae.y, thisTileCentreX, thisTileCentreY, fae.range)) {
+                        if (hasLineOfSight(getTileX(fae.x), getTileX(fae.y), thisHotspot.centreX, thisHotspot.centreY)) {
+                            fae.targetX = thisTileCentreX;
+                            fae.targetY = thisTileCentreY;
+                            // add this to the list of hotspots so it doesn't return to it again and again:
+                            fae.recentHotspots.push(i);
+                            fae.currentState = "away";
+                        }
                     }
                 }
             }
-        }
         }
     }
     if (fae.currentState == "wait") {
@@ -1038,12 +1027,13 @@ if (typeof thisHotspot.remove !== "undefined") {
             }
         }
     }
+
     // update the hero's breadcrub trail:
     hero.breadcrumb.pop();
     hero.breadcrumb.unshift([hero.tileX, hero.tileY]);
-if (thisMapData.showOnlyLineOfSight) {
-updateLightMap();
-}
+    if (thisMapData.showOnlyLineOfSight) {
+        updateLightMap();
+    }
 
     if (thisMapData.collisions[hero.tileY][hero.tileX] == "d") {
         activeDoorX = hero.tileX;
@@ -1051,7 +1041,6 @@ updateLightMap();
         startDoorTransition();
     }
 }
-
 
 
 function openInnerDoor(whichInnerDoor) {
@@ -1087,9 +1076,7 @@ function unlockInnerDoor(whichInnerDoor) {
 
 function checkForActions() {
     var inventoryCheck = [];
-
     var slotMarkup, thisSlotsId, thisSlotElem, thisNPC;
-    // loop through items:
     for (var i = 0; i < thisMapData.items.length; i++) {
         if (isInRange(hero.x, hero.y, thisMapData.items[i].x, thisMapData.items[i].y, (thisMapData.items[i].width / 2 + hero.width / 2 + 6))) {
             if (isFacing(hero, thisMapData.items[i])) {
@@ -1118,7 +1105,6 @@ function checkForActions() {
                         if (hero.totalGameTimePlayed - thisMapData.items[i].timeLastHarvested >= currentActiveInventoryItems[thisMapData.items[i].type].respawnRate) {
                             // pick a random item from the possible items:
                             var whichItem = getRandomIntegerInclusive(1, thisMapData.items[i].contains.length);
-
                             // try and add it:
                             inventoryCheck = canAddItemToInventory([thisMapData.items[i].contains[whichItem - 1]]);
                             if (inventoryCheck[0]) {
@@ -1132,23 +1118,20 @@ function checkForActions() {
                         break;
                     case "toggleInnerDoor":
                         toggleInnerDoor(thisMapData.items[i].additional);
-                       
                         audio.playSound(soundEffects['lever'], 0);
                         break;
                     case "openInnerDoor":
                         openInnerDoor(thisMapData.items[i].additional);
-
-                        
                         break;
                     case "closeInnerDoor":
                         closeInnerDoor(thisMapData.items[i].additional);
                         break;
                     case "key":
-                    hero.currency.keys.push(thisMapData.items[i].additional);
-                    UI.updateCurrencies();
-                    // remove from map:
-                            thisMapData.items.splice(i, 1);
-                    break;
+                        hero.currency.keys.push(thisMapData.items[i].additional);
+                        UI.updateCurrencies();
+                        // remove from map:
+                        thisMapData.items.splice(i, 1);
+                        break;
                     default:
                         // try and pick it up:
                         inventoryCheck = canAddItemToInventory([thisMapData.items[i]]);
@@ -1196,7 +1179,6 @@ function checkForActions() {
     // action processed, so cancel the key event:
     key[4] = 0;
 }
-
 
 
 function processSpeech(thisNPC, thisSpeechPassedIn, thisSpeechCode, isPartOfNPCsNormalSpeech) {

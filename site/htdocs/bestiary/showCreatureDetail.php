@@ -57,7 +57,7 @@ echo buildBreadCrumb('bestiary/'.$typeURL.'/'.$cleanURL,'The Bestiary/'.$creatur
 ?>
 <h2><?php echo $creatureName; ?></h2>
 <p><?php echo $creatureDescription; ?></p>
-<img src="/images/game-world/npcs/<?php echo $cleanURL; ?>.png" alt="">
+<img src="/images/game-world/npcs/<?php echo $cleanURL; ?>.png" alt="<?php echo $creatureName; ?>">
 <?php
 
 } else {

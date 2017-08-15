@@ -26,6 +26,7 @@
 ];
 */
 
+
 function getColourName(colour, itemType) {
     var colourName = "";
     // check it's not got an inherent colour:
