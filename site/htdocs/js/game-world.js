@@ -4197,8 +4197,6 @@ function loadMap() {
 
 
 
-
-
 function loadMapAssets() {
     imagesToLoad = [];
     var thisFileColourSuffix, thisColourName;
@@ -4217,13 +4215,28 @@ function loadMapAssets() {
             src: "/images/game-world/maps/" + assetPath + "/" + tileGraphicsToLoad[i].src
         });
     }
-    npcGraphicsToLoad = thisMapData.npcs;
+    npcGraphicsToLoad = JSON.parse(JSON.stringify(thisMapData.npcs));
+
+    // check for nests, and get the graphics for any creatures they will spawn:
+    for (var i = 0; i < thisMapData.items.length; i++) {
+        if (currentActiveInventoryItems[thisMapData.items[i].type].action == "nest") {
+            for (var j = 0; j < thisMapData.items[i].contains.length; j++) {
+
+                npcGraphicsToLoad.push({
+                    name: thisMapData.items[i].contains[j].name,
+                    src: thisMapData.items[i].contains[j].src
+                });
+            }
+        }
+    }
+
     for (var i = 0; i < npcGraphicsToLoad.length; i++) {
         imagesToLoad.push({
             name: "npc" + npcGraphicsToLoad[i].name,
             src: "/images/game-world/npcs/" + npcGraphicsToLoad[i].src
         });
     }
+
     itemGraphicsToLoad = [];
     var thisItemIdentifier = '';
     for (var i = 0; i < thisMapData.items.length; i++) {
@@ -4405,7 +4418,21 @@ function loadInventoryItemData(itemIdsToLoad) {
 }
 
 
-
+function initialiseNPC(whichNPC) {
+  thisMapData.npcs[whichNPC].x = getTileCentreCoordX(thisMapData.npcs[whichNPC].tileX);
+        thisMapData.npcs[whichNPC].y = getTileCentreCoordY(thisMapData.npcs[whichNPC].tileY);
+        thisMapData.npcs[whichNPC].z = getElevation(thisMapData.npcs[whichNPC].tileX, thisMapData.npcs[whichNPC].tileY);   
+        thisMapData.npcs[whichNPC].drawnFacing = thisMapData.npcs[whichNPC].facing;
+        thisMapData.npcs[whichNPC].dx = 0;
+        thisMapData.npcs[whichNPC].dy = 0;
+        thisMapData.npcs[whichNPC].currentAnimation = 'walk';
+        // set index to -1 so when it increases, it'll pick up the first (0) element:
+        thisMapData.npcs[whichNPC].movementIndex = -1;
+        // allow NPCs to pick up their facing without moving to that first tile:
+        thisMapData.npcs[whichNPC].forceNewMovementCheck = true;
+        // used for making sure that pathfinding NPCs don't head straight back to the last place they visited:
+        thisMapData.npcs[whichNPC].lastTargetDestination = "";
+}
 
 
 function prepareGame() {
@@ -4427,19 +4454,7 @@ function prepareGame() {
     backgroundImg = Loader.getImage("backgroundImg");
     // initialise and position NPCs:
     for (var i = 0; i < thisMapData.npcs.length; i++) {
-        thisMapData.npcs[i].x = getTileCentreCoordX(thisMapData.npcs[i].tileX);
-        thisMapData.npcs[i].y = getTileCentreCoordY(thisMapData.npcs[i].tileY);
-        thisMapData.npcs[i].z = getElevation(thisMapData.npcs[i].tileX, thisMapData.npcs[i].tileY);   
-        thisMapData.npcs[i].drawnFacing = thisMapData.npcs[i].facing;
-        thisMapData.npcs[i].dx = 0;
-        thisMapData.npcs[i].dy = 0;
-        thisMapData.npcs[i].currentAnimation = 'walk';
-        // set index to -1 so when it increases, it'll pick up the first (0) element:
-        thisMapData.npcs[i].movementIndex = -1;
-        // allow NPCs to pick up their facing without moving to that first tile:
-        thisMapData.npcs[i].forceNewMovementCheck = true;
-        // used for making sure that pathfinding NPCs don't head straight back to the last place they visited:
-        thisMapData.npcs[i].lastTargetDestination = "";
+      initialiseNPC(i);
     }
     // initialise pet:
     if (hasActivePet) {
@@ -4523,6 +4538,9 @@ if ((hero.allPets[hero.activePets[i]].tileX < 0) || (hero.allPets[hero.activePet
                 // otherwise, set it so it can be instantly harvested:
                 thisMapData.items[i].timeLastHarvested = hero.totalGameTimePlayed - currentActiveInventoryItems[thisMapData.items[i].type].respawnRate;
             }
+        }
+        if (currentActiveInventoryItems[thisMapData.items[i].type].action == "nest") {
+            thisMapData.items[i].timeLastSpawned = hero.totalGameTimePlayed;
         }
     }
     activeNPCForDialogue = '';
@@ -5010,6 +5028,7 @@ function update() {
     moveNPCs();
     movePet();
     movePlatforms();
+    updateItems();
     audio.checkForAmbientSounds();
 }
 
@@ -5675,6 +5694,31 @@ function awardQuestRewards(questRewards) {
         }
    
 }
+
+
+
+function updateItems() {
+    var thisItem, whichCreature;
+    // check for any items that do anything based on time (eg. nests):
+    for (var i = 0; i < thisMapData.items.length; i++) {
+        thisItem = thisMapData.items[i];
+        if (currentActiveInventoryItems[thisItem.type].action == "nest") {
+            if (hero.totalGameTimePlayed - thisItem.timeLastSpawned >= currentActiveInventoryItems[thisItem.type].respawnRate) {
+                // pick a random creature from all possible:
+                whichCreature = thisItem.contains[(getRandomIntegerInclusive(1, thisItem.contains.length)-1)];
+                whichCreature.tileX = thisItem.tileX;
+                whichCreature.tileY = thisItem.tileY+1;
+                thisMapData.npcs.push(whichCreature);
+                initialiseNPC(thisMapData.npcs.length-1);
+                //console.log(whichCreature);
+                // reset timer:
+                thisItem.timeLastSpawned = hero.totalGameTimePlayed;
+            }
+        }
+
+    }
+}
+
 
 
 function checkForTitlesAwarded(whichQuestId) {

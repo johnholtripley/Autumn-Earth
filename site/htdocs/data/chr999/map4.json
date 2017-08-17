@@ -148,15 +148,63 @@
         "npcs": [],
         "doors":
         {},
-        "items": [   {
+        "items": [
+        {
             "type": 18,
             "tileX": 4,
             "tileY": 9,
             "isOnPlatform": 0
-        },  {
+        },
+        {
             "type": 18,
             "tileX": 4,
             "tileY": 5
+        },
+        {
+            "type": 47,
+            "tileX": 4,
+            "tileY": 34,
+            "quantity": 2,
+            "quality": 100,
+            "durability": 100,
+            "currentWear": 0,
+            "effectiveness": 100,
+            "wrapped": 0,
+            "colour": 0,
+            "enchanted": 0,
+            "hallmark": 0,
+            "inscription": "",
+            "contains": [
+            {
+                "name": "butterfly",
+                "src": "orange-butterfly.png",
+                "width": 15,
+                "height": 15,
+                "spriteWidth": 15,
+                "spriteHeight": 48,
+                "centreX": 7,
+                "centreY": 72,
+                "tileX": 11,
+                "tileY": 17,
+                "movement": ["?"],
+                "facing": "w",
+                "walkThroughDoors": false,
+                "speed": 2,
+                "speech": "",
+                "isCollidable": false,
+                "isMoving": true,
+                "animation":
+                {
+                    "walk":
+                    {
+                        "length": 10,
+                        "n": 0,
+                        "e": 1,
+                        "s": 2,
+                        "w": 3
+                    }
+                }
+            }]
         }],
         "hotspots": []
 
