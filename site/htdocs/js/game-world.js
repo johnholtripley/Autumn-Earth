@@ -5188,16 +5188,22 @@ function openInnerDoor(whichInnerDoor) {
 }
 
 function closeInnerDoor(whichInnerDoor) {
-    thisMapData.innerDoors[whichInnerDoor]['isOpen'] = false;
-    if (thisMapData.showOnlyLineOfSight) {
-        updateLightMap();
+    // make sure nothing's blocking the door (as it would become stuck):
+    if (tileIsClear(thisMapData.innerDoors[whichInnerDoor]['tileX'], thisMapData.innerDoors[whichInnerDoor]['tileY'])) {
+        thisMapData.innerDoors[whichInnerDoor]['isOpen'] = false;
+        if (thisMapData.showOnlyLineOfSight) {
+            updateLightMap();
+        }
     }
 }
 
 function toggleInnerDoor(whichInnerDoor) {
-    thisMapData.innerDoors[whichInnerDoor]['isOpen'] = !(thisMapData.innerDoors[whichInnerDoor]['isOpen']);
-    if (thisMapData.showOnlyLineOfSight) {
-        updateLightMap();
+    // make sure nothing's blocking the door (as it would become stuck):
+    if (tileIsClear(thisMapData.innerDoors[whichInnerDoor]['tileX'], thisMapData.innerDoors[whichInnerDoor]['tileY'])) {
+        thisMapData.innerDoors[whichInnerDoor]['isOpen'] = !(thisMapData.innerDoors[whichInnerDoor]['isOpen']);
+        if (thisMapData.showOnlyLineOfSight) {
+            updateLightMap();
+        }
     }
 }
 
