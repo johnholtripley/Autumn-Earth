@@ -4215,13 +4215,17 @@ function loadMapAssets() {
             src: "/images/game-world/maps/" + assetPath + "/" + tileGraphicsToLoad[i].src
         });
     }
-    npcGraphicsToLoad = JSON.parse(JSON.stringify(thisMapData.npcs));
-
+    npcGraphicsToLoad = [];
+    for (var i = 0; i < thisMapData.npcs.length; i++) {
+        npcGraphicsToLoad.push({
+            name: thisMapData.npcs[i].name,
+            src: thisMapData.npcs[i].src
+        });
+    }
     // check for nests, and get the graphics for any creatures they will spawn:
     for (var i = 0; i < thisMapData.items.length; i++) {
         if (currentActiveInventoryItems[thisMapData.items[i].type].action == "nest") {
             for (var j = 0; j < thisMapData.items[i].contains.length; j++) {
-
                 npcGraphicsToLoad.push({
                     name: thisMapData.items[i].contains[j].name,
                     src: thisMapData.items[i].contains[j].src
@@ -4419,19 +4423,19 @@ function loadInventoryItemData(itemIdsToLoad) {
 
 
 function initialiseNPC(whichNPC) {
-  thisMapData.npcs[whichNPC].x = getTileCentreCoordX(thisMapData.npcs[whichNPC].tileX);
-        thisMapData.npcs[whichNPC].y = getTileCentreCoordY(thisMapData.npcs[whichNPC].tileY);
-        thisMapData.npcs[whichNPC].z = getElevation(thisMapData.npcs[whichNPC].tileX, thisMapData.npcs[whichNPC].tileY);   
-        thisMapData.npcs[whichNPC].drawnFacing = thisMapData.npcs[whichNPC].facing;
-        thisMapData.npcs[whichNPC].dx = 0;
-        thisMapData.npcs[whichNPC].dy = 0;
-        thisMapData.npcs[whichNPC].currentAnimation = 'walk';
-        // set index to -1 so when it increases, it'll pick up the first (0) element:
-        thisMapData.npcs[whichNPC].movementIndex = -1;
-        // allow NPCs to pick up their facing without moving to that first tile:
-        thisMapData.npcs[whichNPC].forceNewMovementCheck = true;
-        // used for making sure that pathfinding NPCs don't head straight back to the last place they visited:
-        thisMapData.npcs[whichNPC].lastTargetDestination = "";
+    thisMapData.npcs[whichNPC].x = getTileCentreCoordX(thisMapData.npcs[whichNPC].tileX);
+    thisMapData.npcs[whichNPC].y = getTileCentreCoordY(thisMapData.npcs[whichNPC].tileY);
+    thisMapData.npcs[whichNPC].z = getElevation(thisMapData.npcs[whichNPC].tileX, thisMapData.npcs[whichNPC].tileY);
+    thisMapData.npcs[whichNPC].drawnFacing = thisMapData.npcs[whichNPC].facing;
+    thisMapData.npcs[whichNPC].dx = 0;
+    thisMapData.npcs[whichNPC].dy = 0;
+    thisMapData.npcs[whichNPC].currentAnimation = 'walk';
+    // set index to -1 so when it increases, it'll pick up the first (0) element:
+    thisMapData.npcs[whichNPC].movementIndex = -1;
+    // allow NPCs to pick up their facing without moving to that first tile:
+    thisMapData.npcs[whichNPC].forceNewMovementCheck = true;
+    // used for making sure that pathfinding NPCs don't head straight back to the last place they visited:
+    thisMapData.npcs[whichNPC].lastTargetDestination = "";
 }
 
 
@@ -4541,6 +4545,7 @@ if ((hero.allPets[hero.activePets[i]].tileX < 0) || (hero.allPets[hero.activePet
         }
         if (currentActiveInventoryItems[thisMapData.items[i].type].action == "nest") {
             thisMapData.items[i].timeLastSpawned = hero.totalGameTimePlayed;
+            thisMapData.items[i].spawnsRemaining = thisMapData.items[i].additional;
         }
     }
     activeNPCForDialogue = '';
@@ -4638,7 +4643,66 @@ function changeMaps(doorX, doorY) {
 }
 
 
+function tileIsClear(tileX, tileY) {
+    if ((tileX < 0) || (tileY < 0) || (tileX >= mapTilesX) || (tileY >= mapTilesY)) {
+        // is out of the bounds of the current map:
+        return false;
+    } else {
+        switch (thisMapData.collisions[tileY][tileX]) {
+            case 1:
+                // is a collision:
+                return false;
+                break;
+            case "<":
+            case ">":
+            case "^":
+            case "v":
+                // stairs
+                return false;
+                break;
+            case "d":
+                // is a door:
+                return false;
+                break;
+            default:
+                //
+        }
+    }
+    // check against hero:
+    if (tileX == hero.tileX) {
+        if (tileY == hero.tileY) {
+            return false;
+        }
+    }
+    // against items:
+    for (var i = 0; i < thisMapData.items.length; i++) {
+        if (tileX == thisMapData.items[i].tileX) {
+            if (tileY == thisMapData.items[i].tileY) {
+                return false;
+            }
+        }
+    }
+    // against pets:
+    if (hasActivePet) {
+        for (var i = 0; i < hero.activePets.length; i++) {
+            if (tileX == hero.allPets[hero.activePets[i]].tileX) {
+                if (tileY == hero.allPets[hero.activePets[i]].tileY) {
+                    return false;
+                }
+            }
+        }
+    }
+    // against NPCs:
+    for (var i = 0; i < thisMapData.npcs.length; i++) {
+        if (tileX == thisMapData.npcs[i].tileX) {
+            if (tileY == thisMapData.npcs[i].tileY) {
+                return false;
+            }
+        }
+    }
 
+    return true;
+}
 
 
 function isATerrainCollision(x, y) {
@@ -5154,6 +5218,9 @@ function checkForActions() {
 
                 switch (currentActiveInventoryItems[thisMapData.items[i].type].action) {
                     case "static":
+                        // can't interact with it - do nothing
+                        break;
+                    case "nest":
                         // can't interact with it - do nothing
                         break;
                     case "sound":
@@ -5698,28 +5765,38 @@ function awardQuestRewards(questRewards) {
 
 
 function updateItems() {
-    var thisItem, whichCreature;
+    var thisItem, whichCreature, whichStartPoint;
+    var startPointsPossible = [
+        [0, 1],
+        [0, -1],
+        [1, 0],
+        [-1, 0]
+    ];
     // check for any items that do anything based on time (eg. nests):
     for (var i = 0; i < thisMapData.items.length; i++) {
         thisItem = thisMapData.items[i];
         if (currentActiveInventoryItems[thisItem.type].action == "nest") {
+            if(thisItem.spawnsRemaining>0) {
             if (hero.totalGameTimePlayed - thisItem.timeLastSpawned >= currentActiveInventoryItems[thisItem.type].respawnRate) {
                 // pick a random creature from all possible:
-                whichCreature = thisItem.contains[(getRandomIntegerInclusive(1, thisItem.contains.length)-1)];
-                whichCreature.tileX = thisItem.tileX;
-                whichCreature.tileY = thisItem.tileY+1;
-                thisMapData.npcs.push(whichCreature);
-                initialiseNPC(thisMapData.npcs.length-1);
-                //console.log(whichCreature);
-                // reset timer:
-                thisItem.timeLastSpawned = hero.totalGameTimePlayed;
+                whichCreature = thisItem.contains[(getRandomIntegerInclusive(1, thisItem.contains.length) - 1)];
+                // find a clear space around the item:
+                whichStartPoint = getRandomElementFromArray(startPointsPossible);
+                whichCreature.tileX = thisItem.tileX + whichStartPoint[0];
+                whichCreature.tileY = thisItem.tileY + whichStartPoint[1];
+                if (tileIsClear(whichCreature.tileX, whichCreature.tileY)) {
+                    // create a copy so they are distinct:
+                    thisMapData.npcs.push(JSON.parse(JSON.stringify(whichCreature)));
+                    initialiseNPC(thisMapData.npcs.length - 1);
+                    thisItem.spawnsRemaining --;
+                    // reset timer:
+                    thisItem.timeLastSpawned = hero.totalGameTimePlayed;
+                }
             }
         }
-
+    }
     }
 }
-
-
 
 function checkForTitlesAwarded(whichQuestId) {
     // check for any titles:
