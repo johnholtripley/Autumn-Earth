@@ -35,6 +35,7 @@ function addNode(parentNode, tileX, tileY, endX, endY) {
             if (i != thisAgentsIndex) {
                 // only include stationary NPCS:
                 if (thisMapData.npcs[i].movement[thisMapData.npcs[i].movementIndex] == '-') {
+                 if (thisMapData.npcs[i].isCollidable) {
                     if (!((tileX == endX) && (tileY == endY))) {
                         if (parseInt(thisMapData.npcs[i].tileX) == parseInt(tileX)) {
                             if (parseInt(thisMapData.npcs[i].tileY) == parseInt(tileY)) {
@@ -42,6 +43,7 @@ function addNode(parentNode, tileX, tileY, endX, endY) {
                             }
                         }
                     }
+                }
                 }
             }
         }

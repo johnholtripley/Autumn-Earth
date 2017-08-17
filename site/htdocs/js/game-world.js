@@ -4694,11 +4694,13 @@ function tileIsClear(tileX, tileY) {
     }
     // against NPCs:
     for (var i = 0; i < thisMapData.npcs.length; i++) {
+     if (thisMapData.npcs[i].isCollidable) {
         if (tileX == thisMapData.npcs[i].tileX) {
             if (tileY == thisMapData.npcs[i].tileY) {
                 return false;
             }
         }
+    }
     }
 
     return true;
