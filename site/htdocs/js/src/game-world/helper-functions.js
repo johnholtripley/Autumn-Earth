@@ -169,25 +169,25 @@ return thisNode;
 
 function launchFullScreen(element) {
     // https://davidwalsh.name/fullscreen
-  if(element.requestFullscreen) {
-    element.requestFullscreen();
-  } else if(element.mozRequestFullScreen) {
-    element.mozRequestFullScreen();
-  } else if(element.webkitRequestFullscreen) {
-    element.webkitRequestFullscreen();
-  } else if(element.msRequestFullscreen) {
-    element.msRequestFullscreen();
-  }
+    if (element.requestFullscreen) {
+        element.requestFullscreen();
+    } else if (element.mozRequestFullScreen) {
+        element.mozRequestFullScreen();
+    } else if (element.webkitRequestFullscreen) {
+        element.webkitRequestFullscreen();
+    } else if (element.msRequestFullscreen) {
+        element.msRequestFullscreen();
+    }
 }
 
 function exitFullScreen() {
-  if(document.exitFullscreen) {
-    document.exitFullscreen();
-  } else if(document.mozCancelFullScreen) {
-    document.mozCancelFullScreen();
-  } else if(document.webkitExitFullscreen) {
-    document.webkitExitFullscreen();
-  }
+    if (document.exitFullscreen) {
+        document.exitFullscreen();
+    } else if (document.mozCancelFullScreen) {
+        document.mozCancelFullScreen();
+    } else if (document.webkitExitFullscreen) {
+        document.webkitExitFullscreen();
+    }
 }
 
 
@@ -502,44 +502,41 @@ function hasLineOfSight(startX, startY, endX, endY) {
 
 
 
+function determineWhichTransitionEvent() {
+    // https://davidwalsh.name/css-animation-callback
+    var t;
+    var el = document.createElement('fakeelement');
+    var transitions = {
+        'transition': 'transitionend',
+        'OTransition': 'oTransitionEnd',
+        'MozTransition': 'transitionend',
+        'WebkitTransition': 'webkitTransitionEnd'
+    }
+    for (t in transitions) {
+        if (el.style[t] !== undefined) {
+            return transitions[t];
+        }
+    }
+    el = null;
+}
 
-
-   function determineWhichTransitionEvent() {
-       // https://davidwalsh.name/css-animation-callback
-       var t;
-       var el = document.createElement('fakeelement');
-       var transitions = {
-           'transition': 'transitionend',
-           'OTransition': 'oTransitionEnd',
-           'MozTransition': 'transitionend',
-           'WebkitTransition': 'webkitTransitionEnd'
-       }
-       for (t in transitions) {
-           if (el.style[t] !== undefined) {
-               return transitions[t];
-           }
-       }
-       el = null;
-   }
-
-   function determineWhichAnimationEvent() {
-       // https://davidwalsh.name/css-animation-callback
-       var t;
-       var el = document.createElement('fakeelement');
-       var animations = {
-           'animation': 'animationend',
-           'OAnimation': 'oAnimationEnd',
-           'MozAnimation': 'animationend',
-           'WebkitAnimation': 'webkitAnimationEnd'
-       }
-       for (t in animations) {
-           if (el.style[t] !== undefined) {
-               return animations[t];
-           }
-       }
-       el = null;
-   }
-
+function determineWhichAnimationEvent() {
+    // https://davidwalsh.name/css-animation-callback
+    var t;
+    var el = document.createElement('fakeelement');
+    var animations = {
+        'animation': 'animationend',
+        'OAnimation': 'oAnimationEnd',
+        'MozAnimation': 'animationend',
+        'WebkitAnimation': 'webkitAnimationEnd'
+    }
+    for (t in animations) {
+        if (el.style[t] !== undefined) {
+            return animations[t];
+        }
+    }
+    el = null;
+}
 
 // http://stackoverflow.com/questions/9229645/remove-duplicates-from-javascript-array#answer-9229821
 function uniqueValues(a) {

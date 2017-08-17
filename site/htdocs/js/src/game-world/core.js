@@ -1789,25 +1789,25 @@ function updateItems() {
     for (var i = 0; i < thisMapData.items.length; i++) {
         thisItem = thisMapData.items[i];
         if (currentActiveInventoryItems[thisItem.type].action == "nest") {
-            if(thisItem.spawnsRemaining>0) {
-            if (hero.totalGameTimePlayed - thisItem.timeLastSpawned >= currentActiveInventoryItems[thisItem.type].respawnRate) {
-                // pick a random creature from all possible:
-                whichCreature = thisItem.contains[(getRandomIntegerInclusive(1, thisItem.contains.length) - 1)];
-                // find a clear space around the item:
-                whichStartPoint = getRandomElementFromArray(startPointsPossible);
-                whichCreature.tileX = thisItem.tileX + whichStartPoint[0];
-                whichCreature.tileY = thisItem.tileY + whichStartPoint[1];
-                if (tileIsClear(whichCreature.tileX, whichCreature.tileY)) {
-                    // create a copy so they are distinct:
-                    thisMapData.npcs.push(JSON.parse(JSON.stringify(whichCreature)));
-                    initialiseNPC(thisMapData.npcs.length - 1);
-                    thisItem.spawnsRemaining --;
-                    // reset timer:
-                    thisItem.timeLastSpawned = hero.totalGameTimePlayed;
+            if (thisItem.spawnsRemaining > 0) {
+                if (hero.totalGameTimePlayed - thisItem.timeLastSpawned >= currentActiveInventoryItems[thisItem.type].respawnRate) {
+                    // pick a random creature from all possible:
+                    whichCreature = thisItem.contains[(getRandomIntegerInclusive(1, thisItem.contains.length) - 1)];
+                    // find a clear space around the item:
+                    whichStartPoint = getRandomElementFromArray(startPointsPossible);
+                    whichCreature.tileX = thisItem.tileX + whichStartPoint[0];
+                    whichCreature.tileY = thisItem.tileY + whichStartPoint[1];
+                    if (tileIsClear(whichCreature.tileX, whichCreature.tileY)) {
+                        // create a copy so they are distinct:
+                        thisMapData.npcs.push(JSON.parse(JSON.stringify(whichCreature)));
+                        initialiseNPC(thisMapData.npcs.length - 1);
+                        thisItem.spawnsRemaining--;
+                        // reset timer:
+                        thisItem.timeLastSpawned = hero.totalGameTimePlayed;
+                    }
                 }
             }
         }
-    }
     }
 }
 
@@ -1824,7 +1824,6 @@ function checkForTitlesAwarded(whichQuestId) {
 
 
 function checkForChallenges() {
-
     for (var i = 0; i < thisMapData.npcs.length; i++) {
         thisChallengeNPC = thisMapData.npcs[i];
         if (isInRange(hero.x, hero.y, thisChallengeNPC.x, thisChallengeNPC.y, (thisChallengeNPC.width + hero.width))) {
@@ -1899,11 +1898,11 @@ function moveNPCs() {
             // check for collision against pet:
             if (hasActivePet) {
                 for (var j = 0; j < hero.activePets.length; j++) {
-                if (isAnObjectCollision(thisNPC.x, thisNPC.y, thisNPC.width, thisNPC.height, hero.allPets[hero.activePets[j]].x, hero.allPets[hero.activePets[j]].y, hero.allPets[hero.activePets[j]].width, hero.allPets[hero.activePets[j]].height)) {
-                    thisNPC.x = oldNPCx;
-                    thisNPC.y = oldNPCy;
+                    if (isAnObjectCollision(thisNPC.x, thisNPC.y, thisNPC.width, thisNPC.height, hero.allPets[hero.activePets[j]].x, hero.allPets[hero.activePets[j]].y, hero.allPets[hero.activePets[j]].width, hero.allPets[hero.activePets[j]].height)) {
+                        thisNPC.x = oldNPCx;
+                        thisNPC.y = oldNPCy;
+                    }
                 }
-            }
             }
 
             // check for collisions against other NPCs:
@@ -1929,18 +1928,18 @@ function moveNPCs() {
             }
 
 
-                // check for inner doors:
-    if (typeof thisMapData.innerDoors !== "undefined") {
-        for (var i in thisMapData.innerDoors) {
-            thisInnerDoor = thisMapData.innerDoors[i];
-            if (!thisInnerDoor.isOpen) {
-                if (isAnObjectCollision(getTileCentreCoordX(thisInnerDoor.tileX), getTileCentreCoordY(thisInnerDoor.tileY), tileW, tileW, thisNPC.x, thisNPC.y, thisNPC.width, thisNPC.height)) {
-           thisNPC.x = oldNPCx;
-                    thisNPC.y = oldNPCy;
+            // check for inner doors:
+            if (typeof thisMapData.innerDoors !== "undefined") {
+                for (var i in thisMapData.innerDoors) {
+                    thisInnerDoor = thisMapData.innerDoors[i];
+                    if (!thisInnerDoor.isOpen) {
+                        if (isAnObjectCollision(getTileCentreCoordX(thisInnerDoor.tileX), getTileCentreCoordY(thisInnerDoor.tileY), tileW, tileW, thisNPC.x, thisNPC.y, thisNPC.width, thisNPC.height)) {
+                            thisNPC.x = oldNPCx;
+                            thisNPC.y = oldNPCy;
+                        }
+                    }
                 }
             }
-        }
-    }
 
             // find the difference for this movement:
             thisNPC.dx += (thisNPC.x - oldNPCx);
@@ -2147,9 +2146,7 @@ function draw() {
         gameContext.fillStyle = "#000000";
         gameContext.fill();
     } else {
-
-        // get all assets to be drawn in a list - start with the hero:
-
+        // get all assets to be drawn in a list
         var thisGraphicCentreX, thisGraphicCentreY, thisX, thisY, thisNPC, thisItem;
 
         hero.isox = findIsoCoordsX(hero.x, hero.y);
@@ -2177,15 +2174,12 @@ function draw() {
         }
 
         var map = thisMapData.terrain;
-
         var thisNPCOffsetCol = 0;
         var thisNPCOffsetRow = 0;
-
         var thisFileColourSuffix = '';
         var thisColourName;
         var thisItemIdentifier;
         var thisPlatform;
-       
 
         for (var i = 0; i < mapTilesX; i++) {
             for (var j = 0; j < mapTilesY; j++) {
@@ -2207,7 +2201,6 @@ function draw() {
                 if (!thisMapData.innerDoors[i]['isOpen']) {
                     thisX = getTileIsoCentreCoordX(thisMapData.innerDoors[i]['tileX'], thisMapData.innerDoors[i]['tileY']);
                     thisY = getTileIsoCentreCoordY(thisMapData.innerDoors[i]['tileX'], thisMapData.innerDoors[i]['tileY']);
-
                     thisGraphicCentreX = thisMapData.graphics[(thisMapData.innerDoors[i]['graphic'])].centreX;
                     thisGraphicCentreY = thisMapData.graphics[(thisMapData.innerDoors[i]['graphic'])].centreY;
                     assetsToDraw.push([findIsoDepth(getTileCentreCoordX(thisMapData.innerDoors[i]['tileX']), getTileCentreCoordY(thisMapData.innerDoors[i]['tileY']), 0), "img", tileImages[(thisMapData.innerDoors[i]['graphic'])], Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2))]);
@@ -2243,8 +2236,6 @@ function draw() {
             thisItem = thisMapData.items[i];
             thisX = findIsoCoordsX(thisItem.x, thisItem.y);
             thisY = findIsoCoordsY(thisItem.x, thisItem.y);
-
-
             thisFileColourSuffix = "";
             if (thisMapData.items[i].colour) {
                 thisColourName = getColourName(thisMapData.items[i].colour, thisMapData.items[i].type);
@@ -2253,7 +2244,6 @@ function draw() {
                 }
             }
             thisItemIdentifier = "item" + thisMapData.items[i].type + thisFileColourSuffix;
-
             assetsToDraw.push([findIsoDepth(thisItem.x, thisItem.y, thisItem.z), "img", itemImages[thisItemIdentifier], Math.floor(thisX - hero.isox - thisItem.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisItem.centreY + (canvasHeight / 2) - thisItem.z)]);
         }
 
@@ -2263,8 +2253,8 @@ function draw() {
                 thisPlatform = thisMapData.movingPlatforms[i];
                 thisX = findIsoCoordsX(thisPlatform.x, thisPlatform.y);
                 thisY = findIsoCoordsY(thisPlatform.x, thisPlatform.y);
-                   thisGraphicCentreX = thisMapData.graphics[thisPlatform.graphic].centreX;
-                    thisGraphicCentreY = thisMapData.graphics[thisPlatform.graphic].centreY;
+                thisGraphicCentreX = thisMapData.graphics[thisPlatform.graphic].centreX;
+                thisGraphicCentreY = thisMapData.graphics[thisPlatform.graphic].centreY;
                 assetsToDraw.push([findIsoDepth(thisPlatform.x, thisPlatform.y, thisPlatform.z), "img", tileImages[thisPlatform.graphic], Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2))]);
             }
         }
@@ -2306,33 +2296,33 @@ function draw() {
             UI.updateDialogue(activeNPCForDialogue);
         }
 
-if (thisMapData.showOnlyLineOfSight) {
-    // draw light map:
-    lightMapContext.clearRect(0, 0, canvasWidth, canvasHeight);
- var thisLightMapValue;
-       // start at -1 to cover the back edge tiles:
-        for (var i = -1; i < mapTilesX; i++) {
-            for (var j = -1; j < mapTilesY; j++) {
-                thisX = getTileIsoCentreCoordX(i, j);
-                thisY = getTileIsoCentreCoordY(i, j);
-                thisGraphicCentreX = 28;
-                thisGraphicCentreY = 17;
-                thisLightMapValue = 1;
-                if((i>-1) && (j>-1)) {
-                thisLightMapValue = 1.01 - lightMap[j][i];
-               }
-                if (thisLightMapValue > 0) {
-                    lightMapContext.save();
-                    lightMapContext.globalAlpha = thisLightMapValue;
-                    lightMapContext.drawImage(shadowImg, Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2))/4, Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2))/4);
-                    lightMapContext.restore();
-                } else {
-                    // no need to shade:
-                    lightMapContext.drawImage(shadowImg, Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2))/4, Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2))/4);
+        if (thisMapData.showOnlyLineOfSight) {
+            // draw light map:
+            lightMapContext.clearRect(0, 0, canvasWidth, canvasHeight);
+            var thisLightMapValue;
+            // start at -1 to cover the back edge tiles:
+            for (var i = -1; i < mapTilesX; i++) {
+                for (var j = -1; j < mapTilesY; j++) {
+                    thisX = getTileIsoCentreCoordX(i, j);
+                    thisY = getTileIsoCentreCoordY(i, j);
+                    thisGraphicCentreX = 28;
+                    thisGraphicCentreY = 17;
+                    thisLightMapValue = 1;
+                    if ((i > -1) && (j > -1)) {
+                        thisLightMapValue = 1.01 - lightMap[j][i];
+                    }
+                    if (thisLightMapValue > 0) {
+                        lightMapContext.save();
+                        lightMapContext.globalAlpha = thisLightMapValue;
+                        lightMapContext.drawImage(shadowImg, Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2)) / 4, Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2)) / 4);
+                        lightMapContext.restore();
+                    } else {
+                        // no need to shade:
+                        lightMapContext.drawImage(shadowImg, Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2)) / 4, Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2)) / 4);
+                    }
                 }
             }
         }
-    }
 
         // draw the map transition if it's needed:
         if (mapTransition == "out") {
