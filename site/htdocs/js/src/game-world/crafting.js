@@ -66,7 +66,7 @@ function recipeSelectComponents(whichRecipe) {
     var foundItemGroups;
     var thisRecipe = hero.crafting[currentRecipePanelProfession].recipes[recipeId];
     var beingCreatedMarkup = '<img src="/images/game-world/inventory-items/' + thisRecipe.imageId + '.png" alt="' + thisRecipe.recipeName + '"><h3>' + thisRecipe.recipeName + '</h3><p>' + thisRecipe.recipeDescription + '</p><h4>Requires:</h4>';
-    // find all components that the player as that are usable for this recipe as well:
+    // find all components that the player has that are usable for this recipe as well:
     var availableComponentMarkup = '<h4>Available:</h4><ul>';
     var componentsRequired = thisRecipe.components.split(",");
     var componentsFound = 0;
@@ -102,7 +102,7 @@ function recipeSelectComponents(whichRecipe) {
         beingCreatedMarkup += '<li><img src="/images/game-world/inventory-items/dye.png" alt="">Optional dye</li>';
     }
     // add the enchant slot:
-    beingCreatedMarkup += '<li><img src="/images/game-world/inventory-items/enchant.png" alt="">Optional enchanted item</li>';
+    beingCreatedMarkup += '<li><img src="/images/game-world/inventory-items/enchant.png" alt="">Imbue item (optional)</li>';
     beingCreatedMarkup += '</ul>';
     availableComponentMarkup += '</ul>';
     selectComponentsItemBeingCreated.innerHTML = beingCreatedMarkup;

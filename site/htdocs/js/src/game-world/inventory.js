@@ -4,73 +4,83 @@ function canAddItemToInventory(itemObj) {
     var inventoryClone = JSON.parse(JSON.stringify(hero.inventory));
     var slotsUpdated = [];
     var allItemsAdded = true;
+    var moneyToAdd = 0;
     for (var k = 0; k < itemObj.length; k++) {
-        var quantityAddedSoFar = 0;
-        // check if this type exist in the current inventory:
-        var inventoryKeysFound = getObjectKeysForInnerValue(inventoryClone, itemObj[k].type, "type");
-        if (inventoryKeysFound.length > 0) {
-            // loop through keysFound and add to the slot maximum
-            for (var i = 0; i < inventoryKeysFound.length; i++) {
-                if (itemAttributesMatch(inventoryClone[inventoryKeysFound[i]], itemObj[k])) {
+        // check for any money items:
+        if ((typeof(itemObj[k]) === 'string') && (itemObj[k].charAt(0) == "$")) {
+            moneyToAdd += parseInt(itemObj[k].substring(1));
+        } else {
+            var quantityAddedSoFar = 0;
+            // check if this type exist in the current inventory:
+            var inventoryKeysFound = getObjectKeysForInnerValue(inventoryClone, itemObj[k].type, "type");
+            if (inventoryKeysFound.length > 0) {
+                // loop through keysFound and add to the slot maximum
+                for (var i = 0; i < inventoryKeysFound.length; i++) {
+                    if (itemAttributesMatch(inventoryClone[inventoryKeysFound[i]], itemObj[k])) {
 
-                    var quantityOnSlotAlready = inventoryClone[inventoryKeysFound[i]].quantity;
-                    var amountAddedToThisSlot = (maxNumberOfItemsPerSlot - quantityOnSlotAlready) > (itemObj[k].quantity - quantityAddedSoFar) ? (itemObj[k].quantity - quantityAddedSoFar) : maxNumberOfItemsPerSlot - quantityOnSlotAlready;
-                    quantityAddedSoFar += amountAddedToThisSlot;
-                    // add item to this slot:
-                    if (amountAddedToThisSlot > 0) {
-                        slotsUpdated.push((inventoryKeysFound[i]));
-                        inventoryClone[inventoryKeysFound[i]].quantity += amountAddedToThisSlot;
-                    }
-                    if (quantityAddedSoFar >= itemObj[k].quantity) {
-                        break;
-                    }
-                }
-            }
-        }
-        if (quantityAddedSoFar < itemObj[k].quantity) {
-            // either filled all matching slots, or couldn't find any matching slots - find an empty slot
-            outerLoop: for (var i = 0; i < hero.bags.length; i++) {
-                var thisBagNumberOfSlots = currentActiveInventoryItems[hero.bags[i].type].actionValue;
-                // loop through slots for each bag:
-                for (var j = 0; j < thisBagNumberOfSlots; j++) {
-                    var thisSlotsID = i + '-' + j;
-                    if (!(thisSlotsID in inventoryClone)) {
-                        // empty slot:
-                        var amountAddedToThisSlot = maxNumberOfItemsPerSlot > (itemObj[k].quantity - quantityAddedSoFar) ? (itemObj[k].quantity - quantityAddedSoFar) : maxNumberOfItemsPerSlot;
+                        var quantityOnSlotAlready = inventoryClone[inventoryKeysFound[i]].quantity;
+                        var amountAddedToThisSlot = (maxNumberOfItemsPerSlot - quantityOnSlotAlready) > (itemObj[k].quantity - quantityAddedSoFar) ? (itemObj[k].quantity - quantityAddedSoFar) : maxNumberOfItemsPerSlot - quantityOnSlotAlready;
                         quantityAddedSoFar += amountAddedToThisSlot;
                         // add item to this slot:
-                        slotsUpdated.push(thisSlotsID);
-                        inventoryClone[thisSlotsID] = new Object();
-                        inventoryClone[thisSlotsID].type = itemObj[k].type;
-                        inventoryClone[thisSlotsID].quantity = amountAddedToThisSlot;
-                        inventoryClone[thisSlotsID].quality = itemObj[k].quality;
-                        inventoryClone[thisSlotsID].durability = itemObj[k].durability;
-                        inventoryClone[thisSlotsID].currentWear = itemObj[k].currentWear;
-                        inventoryClone[thisSlotsID].effectiveness = itemObj[k].effectiveness;
-                        inventoryClone[thisSlotsID].wrapped = itemObj[k].wrapped;
-                        inventoryClone[thisSlotsID].colour = itemObj[k].colour;
-                        inventoryClone[thisSlotsID].enchanted = itemObj[k].enchanted;
-                        inventoryClone[thisSlotsID].hallmark = itemObj[k].hallmark;
-                        inventoryClone[thisSlotsID].inscription = {};
-                        inventoryClone[thisSlotsID].inscription.title = itemObj[k].inscription.title;
-                        inventoryClone[thisSlotsID].inscription.content = itemObj[k].inscription.content;
-                        inventoryClone[thisSlotsID].inscription.timeCreated = itemObj[k].inscription.timeCreated;
+                        if (amountAddedToThisSlot > 0) {
+                            slotsUpdated.push((inventoryKeysFound[i]));
+                            inventoryClone[inventoryKeysFound[i]].quantity += amountAddedToThisSlot;
+                        }
                         if (quantityAddedSoFar >= itemObj[k].quantity) {
-                            // stop both loops:
-                            break outerLoop;
+                            break;
                         }
                     }
                 }
             }
-        }
-        if (quantityAddedSoFar != itemObj[k].quantity) {
-            allItemsAdded = false;
+            if (quantityAddedSoFar < itemObj[k].quantity) {
+                // either filled all matching slots, or couldn't find any matching slots - find an empty slot
+                outerLoop: for (var i = 0; i < hero.bags.length; i++) {
+                    var thisBagNumberOfSlots = currentActiveInventoryItems[hero.bags[i].type].actionValue;
+                    // loop through slots for each bag:
+                    for (var j = 0; j < thisBagNumberOfSlots; j++) {
+                        var thisSlotsID = i + '-' + j;
+                        if (!(thisSlotsID in inventoryClone)) {
+                            // empty slot:
+                            var amountAddedToThisSlot = maxNumberOfItemsPerSlot > (itemObj[k].quantity - quantityAddedSoFar) ? (itemObj[k].quantity - quantityAddedSoFar) : maxNumberOfItemsPerSlot;
+                            quantityAddedSoFar += amountAddedToThisSlot;
+                            // add item to this slot:
+                            slotsUpdated.push(thisSlotsID);
+                            inventoryClone[thisSlotsID] = new Object();
+                            inventoryClone[thisSlotsID].type = itemObj[k].type;
+                            inventoryClone[thisSlotsID].quantity = amountAddedToThisSlot;
+                            inventoryClone[thisSlotsID].quality = itemObj[k].quality;
+                            inventoryClone[thisSlotsID].durability = itemObj[k].durability;
+                            inventoryClone[thisSlotsID].currentWear = itemObj[k].currentWear;
+                            inventoryClone[thisSlotsID].effectiveness = itemObj[k].effectiveness;
+                            inventoryClone[thisSlotsID].wrapped = itemObj[k].wrapped;
+                            inventoryClone[thisSlotsID].colour = itemObj[k].colour;
+                            inventoryClone[thisSlotsID].enchanted = itemObj[k].enchanted;
+                            inventoryClone[thisSlotsID].hallmark = itemObj[k].hallmark;
+                            inventoryClone[thisSlotsID].inscription = {};
+                            inventoryClone[thisSlotsID].inscription.title = itemObj[k].inscription.title;
+                            inventoryClone[thisSlotsID].inscription.content = itemObj[k].inscription.content;
+                            inventoryClone[thisSlotsID].inscription.timeCreated = itemObj[k].inscription.timeCreated;
+                            if (quantityAddedSoFar >= itemObj[k].quantity) {
+                                // stop both loops:
+                                break outerLoop;
+                            }
+                        }
+                    }
+                }
+            }
+            if (quantityAddedSoFar != itemObj[k].quantity) {
+                allItemsAdded = false;
+            }
         }
     }
     if (allItemsAdded) {
         // make the active inventory be the same as the amended one:
         hero.inventory = JSON.parse(JSON.stringify(inventoryClone));
         UI.updatePanelsAfterInventoryChange();
+     if(moneyToAdd>0) {
+        hero.currency['money'] += moneyToAdd;
+        UI.updateCurrencies();
+    }
         // return success, and the slots that were affected:
         return [true, slotsUpdated];
     } else {
@@ -78,7 +88,6 @@ function canAddItemToInventory(itemObj) {
         return [false];
     }
 }
-
 
 function hasItemInInventory(itemType, amountNeeded) {
     var quantityFound = 0;

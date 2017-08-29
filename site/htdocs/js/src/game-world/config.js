@@ -10,6 +10,7 @@ var gameCanvas, gameContext, gameMode, cartographyContext, cartographyCanvas, of
 
 const titleTagPrefix = 'Autumn Earth';
 
+
 // map changes:
 var mapTransition = "";
 var mapTransitionCurrentFrames = 1;

@@ -2,7 +2,6 @@
 
 include($_SERVER['DOCUMENT_ROOT']."/includes/signalnoise.php");
 include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
-
 $chr = $_GET["chr"];
 
 /*

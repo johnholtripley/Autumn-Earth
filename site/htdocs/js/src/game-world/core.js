@@ -1330,7 +1330,6 @@ function checkForActions() {
     key[4] = 0;
 }
 
-
 function processSpeech(thisNPC, thisSpeechPassedIn, thisSpeechCode, isPartOfNPCsNormalSpeech) {
     // thisSpeech is global so it can be edited in the close quest functions:
     thisSpeech = thisSpeechPassedIn;
@@ -1391,15 +1390,11 @@ function processSpeech(thisNPC, thisSpeechPassedIn, thisSpeechCode, isPartOfNPCs
                             if (awardQuestRewards[collectionQuestSpeech[3]]) {
                                 thisSpeech = collectionQuestSpeech[2];
                             }
-
-                     
                         } else {
                             thisSpeech = collectionQuestSpeech[2];
-                        
-                           
                         }
-                               hero.collections[collectionQuestZoneName].complete = true;
-                            UI.completeCollectionQuestPanel(collectionQuestZoneName);
+                        hero.collections[collectionQuestZoneName].complete = true;
+                        UI.completeCollectionQuestPanel(collectionQuestZoneName);
                     }
                 } else {
                     // collection not started yet:
@@ -1592,28 +1587,34 @@ function processSpeech(thisNPC, thisSpeechPassedIn, thisSpeechCode, isPartOfNPCs
                             var itemsToAdd = questData[questId].startItemsReceived.split(",");
                             var allItemsToGive = [];
                             for (var l = 0; l < itemsToAdd.length; l++) {
-                                // check for any quantities:
-                                var thisQuestItem = itemsToAdd[l].split("x");
-                                var thisQuantity, thisItem;
-                                if (thisQuestItem.length > 1) {
-                                    thisQuantity = thisQuestItem[0];
-                                    thisItem = thisQuestItem[1];
+
+                                // check if it's money:
+                                if (itemsToAdd[l].charAt(0) == "$") {
+                                    thisRewardObject = itemsToAdd[l];
                                 } else {
-                                    thisQuantity = 1;
-                                    thisItem = itemsToAdd[l];
-                                }
-                                // build item object:
-                                var thisRewardObject = {
-                                    "type": parseInt(thisItem),
-                                    "quantity": parseInt(thisQuantity),
-                                    "quality": 100,
-                                    "durability": 100,
-                                    "currentWear": 0,
-                                    "effectiveness": 100,
-                                    "colour": currentActiveInventoryItems[parseInt(thisItem)].colour,
-                                    "enchanted": 0,
-                                    "hallmark": 0,
-                                    "inscription": ""
+                                    // check for any quantities:
+                                    var thisQuestItem = itemsToAdd[l].split("x");
+                                    var thisQuantity, thisItem;
+                                    if (thisQuestItem.length > 1) {
+                                        thisQuantity = thisQuestItem[0];
+                                        thisItem = thisQuestItem[1];
+                                    } else {
+                                        thisQuantity = 1;
+                                        thisItem = itemsToAdd[l];
+                                    }
+                                    // build item object:
+                                    var thisRewardObject = {
+                                        "type": parseInt(thisItem),
+                                        "quantity": parseInt(thisQuantity),
+                                        "quality": 100,
+                                        "durability": 100,
+                                        "currentWear": 0,
+                                        "effectiveness": 100,
+                                        "colour": currentActiveInventoryItems[parseInt(thisItem)].colour,
+                                        "enchanted": 0,
+                                        "hallmark": 0,
+                                        "inscription": ""
+                                    }
                                 }
                                 allItemsToGive.push(thisRewardObject);
                             }
@@ -1693,7 +1694,6 @@ function processSpeech(thisNPC, thisSpeechPassedIn, thisSpeechCode, isPartOfNPCs
 
 
 
-
 function closeQuest(whichNPC, whichQuestId) {
     if (giveQuestRewards(whichQuestId)) {
         if (questData[whichQuestId].isRepeatable > 0) {
@@ -1732,6 +1732,13 @@ function awardQuestRewards(questRewards) {
             // check for variation:
             var questPossibilities = questRewards[i].split("/");
             var questRewardToUse = getRandomElementFromArray(questPossibilities);
+            console.log(questRewardToUse);
+
+  // check if it's money:
+                                if (questRewardToUse.charAt(0) == "$") {
+                                    thisRewardObject = questRewardToUse;
+                                } else {
+
             // check for any quantities:
             var thisQuestReward = questRewardToUse.split("x");
             var thisQuantity, thisItem;
@@ -1760,6 +1767,7 @@ function awardQuestRewards(questRewards) {
                 "hallmark": 0,
                 "inscription": ""
             }
+        }
             allRewardItems.push(thisRewardObject);
         }
         inventoryCheck = canAddItemToInventory(allRewardItems);

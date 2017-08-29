@@ -52,8 +52,6 @@ var audio = {
             }
         } catch (e) {
             // web audio API not supported
-            // fallback? 
-            // ####
         }
     },
 

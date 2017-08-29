@@ -53,8 +53,6 @@ var audio = {
             }
         } catch (e) {
             // web audio API not supported
-            // fallback? 
-            // ####
         }
     },
 
@@ -160,7 +158,6 @@ var audio = {
         }
     }
 }
-
 function updateCartographicMiniMap() {
 
     // cartography canvas is 246px wide
@@ -296,6 +293,7 @@ var animationUpdateTime = (1000 / animationFramesPerSecond);
 var gameCanvas, gameContext, gameMode, cartographyContext, cartographyCanvas, offScreenCartographyCanvas, offScreenCartographyContext, canvasMapImage, canvasMapImage, canvasMapMaskImage, heroImg, shadowImg, imagesToLoad, tileImages, npcImages, itemImages, backgroundImg, objInitLeft, objInitTop, dragStartX, dragStartY, inventoryCheck, timeSinceLastAmbientSoundWasPlayed, gameSettings, lightMap, lightMapOverlay, lightMapContext;
 
 const titleTagPrefix = 'Autumn Earth';
+
 
 // map changes:
 var mapTransition = "";
@@ -481,7 +479,7 @@ function recipeSelectComponents(whichRecipe) {
     var foundItemGroups;
     var thisRecipe = hero.crafting[currentRecipePanelProfession].recipes[recipeId];
     var beingCreatedMarkup = '<img src="/images/game-world/inventory-items/' + thisRecipe.imageId + '.png" alt="' + thisRecipe.recipeName + '"><h3>' + thisRecipe.recipeName + '</h3><p>' + thisRecipe.recipeDescription + '</p><h4>Requires:</h4>';
-    // find all components that the player as that are usable for this recipe as well:
+    // find all components that the player has that are usable for this recipe as well:
     var availableComponentMarkup = '<h4>Available:</h4><ul>';
     var componentsRequired = thisRecipe.components.split(",");
     var componentsFound = 0;
@@ -517,13 +515,12 @@ function recipeSelectComponents(whichRecipe) {
         beingCreatedMarkup += '<li><img src="/images/game-world/inventory-items/dye.png" alt="">Optional dye</li>';
     }
     // add the enchant slot:
-    beingCreatedMarkup += '<li><img src="/images/game-world/inventory-items/enchant.png" alt="">Optional enchanted item</li>';
+    beingCreatedMarkup += '<li><img src="/images/game-world/inventory-items/enchant.png" alt="">Imbue item (optional)</li>';
     beingCreatedMarkup += '</ul>';
     availableComponentMarkup += '</ul>';
     selectComponentsItemBeingCreated.innerHTML = beingCreatedMarkup;
     componentsAvailableForThisRecipe.innerHTML = availableComponentMarkup;
 }
-
 function scrollbarWidth() {
     // Add a temporary scrolling element to the DOM, then check the difference between its outer and inner elements
     // only need to call once as it won't change
@@ -907,25 +904,25 @@ return thisNode;
 
 function launchFullScreen(element) {
     // https://davidwalsh.name/fullscreen
-  if(element.requestFullscreen) {
-    element.requestFullscreen();
-  } else if(element.mozRequestFullScreen) {
-    element.mozRequestFullScreen();
-  } else if(element.webkitRequestFullscreen) {
-    element.webkitRequestFullscreen();
-  } else if(element.msRequestFullscreen) {
-    element.msRequestFullscreen();
-  }
+    if (element.requestFullscreen) {
+        element.requestFullscreen();
+    } else if (element.mozRequestFullScreen) {
+        element.mozRequestFullScreen();
+    } else if (element.webkitRequestFullscreen) {
+        element.webkitRequestFullscreen();
+    } else if (element.msRequestFullscreen) {
+        element.msRequestFullscreen();
+    }
 }
 
 function exitFullScreen() {
-  if(document.exitFullscreen) {
-    document.exitFullscreen();
-  } else if(document.mozCancelFullScreen) {
-    document.mozCancelFullScreen();
-  } else if(document.webkitExitFullscreen) {
-    document.webkitExitFullscreen();
-  }
+    if (document.exitFullscreen) {
+        document.exitFullscreen();
+    } else if (document.mozCancelFullScreen) {
+        document.mozCancelFullScreen();
+    } else if (document.webkitExitFullscreen) {
+        document.webkitExitFullscreen();
+    }
 }
 
 
@@ -1240,44 +1237,41 @@ function hasLineOfSight(startX, startY, endX, endY) {
 
 
 
+function determineWhichTransitionEvent() {
+    // https://davidwalsh.name/css-animation-callback
+    var t;
+    var el = document.createElement('fakeelement');
+    var transitions = {
+        'transition': 'transitionend',
+        'OTransition': 'oTransitionEnd',
+        'MozTransition': 'transitionend',
+        'WebkitTransition': 'webkitTransitionEnd'
+    }
+    for (t in transitions) {
+        if (el.style[t] !== undefined) {
+            return transitions[t];
+        }
+    }
+    el = null;
+}
 
-
-   function determineWhichTransitionEvent() {
-       // https://davidwalsh.name/css-animation-callback
-       var t;
-       var el = document.createElement('fakeelement');
-       var transitions = {
-           'transition': 'transitionend',
-           'OTransition': 'oTransitionEnd',
-           'MozTransition': 'transitionend',
-           'WebkitTransition': 'webkitTransitionEnd'
-       }
-       for (t in transitions) {
-           if (el.style[t] !== undefined) {
-               return transitions[t];
-           }
-       }
-       el = null;
-   }
-
-   function determineWhichAnimationEvent() {
-       // https://davidwalsh.name/css-animation-callback
-       var t;
-       var el = document.createElement('fakeelement');
-       var animations = {
-           'animation': 'animationend',
-           'OAnimation': 'oAnimationEnd',
-           'MozAnimation': 'animationend',
-           'WebkitAnimation': 'webkitAnimationEnd'
-       }
-       for (t in animations) {
-           if (el.style[t] !== undefined) {
-               return animations[t];
-           }
-       }
-       el = null;
-   }
-
+function determineWhichAnimationEvent() {
+    // https://davidwalsh.name/css-animation-callback
+    var t;
+    var el = document.createElement('fakeelement');
+    var animations = {
+        'animation': 'animationend',
+        'OAnimation': 'oAnimationEnd',
+        'MozAnimation': 'animationend',
+        'WebkitAnimation': 'webkitAnimationEnd'
+    }
+    for (t in animations) {
+        if (el.style[t] !== undefined) {
+            return animations[t];
+        }
+    }
+    el = null;
+}
 
 // http://stackoverflow.com/questions/9229645/remove-duplicates-from-javascript-array#answer-9229821
 function uniqueValues(a) {
@@ -1792,73 +1786,83 @@ function canAddItemToInventory(itemObj) {
     var inventoryClone = JSON.parse(JSON.stringify(hero.inventory));
     var slotsUpdated = [];
     var allItemsAdded = true;
+    var moneyToAdd = 0;
     for (var k = 0; k < itemObj.length; k++) {
-        var quantityAddedSoFar = 0;
-        // check if this type exist in the current inventory:
-        var inventoryKeysFound = getObjectKeysForInnerValue(inventoryClone, itemObj[k].type, "type");
-        if (inventoryKeysFound.length > 0) {
-            // loop through keysFound and add to the slot maximum
-            for (var i = 0; i < inventoryKeysFound.length; i++) {
-                if (itemAttributesMatch(inventoryClone[inventoryKeysFound[i]], itemObj[k])) {
+        // check for any money items:
+        if ((typeof(itemObj[k]) === 'string') && (itemObj[k].charAt(0) == "$")) {
+            moneyToAdd += parseInt(itemObj[k].substring(1));
+        } else {
+            var quantityAddedSoFar = 0;
+            // check if this type exist in the current inventory:
+            var inventoryKeysFound = getObjectKeysForInnerValue(inventoryClone, itemObj[k].type, "type");
+            if (inventoryKeysFound.length > 0) {
+                // loop through keysFound and add to the slot maximum
+                for (var i = 0; i < inventoryKeysFound.length; i++) {
+                    if (itemAttributesMatch(inventoryClone[inventoryKeysFound[i]], itemObj[k])) {
 
-                    var quantityOnSlotAlready = inventoryClone[inventoryKeysFound[i]].quantity;
-                    var amountAddedToThisSlot = (maxNumberOfItemsPerSlot - quantityOnSlotAlready) > (itemObj[k].quantity - quantityAddedSoFar) ? (itemObj[k].quantity - quantityAddedSoFar) : maxNumberOfItemsPerSlot - quantityOnSlotAlready;
-                    quantityAddedSoFar += amountAddedToThisSlot;
-                    // add item to this slot:
-                    if (amountAddedToThisSlot > 0) {
-                        slotsUpdated.push((inventoryKeysFound[i]));
-                        inventoryClone[inventoryKeysFound[i]].quantity += amountAddedToThisSlot;
-                    }
-                    if (quantityAddedSoFar >= itemObj[k].quantity) {
-                        break;
-                    }
-                }
-            }
-        }
-        if (quantityAddedSoFar < itemObj[k].quantity) {
-            // either filled all matching slots, or couldn't find any matching slots - find an empty slot
-            outerLoop: for (var i = 0; i < hero.bags.length; i++) {
-                var thisBagNumberOfSlots = currentActiveInventoryItems[hero.bags[i].type].actionValue;
-                // loop through slots for each bag:
-                for (var j = 0; j < thisBagNumberOfSlots; j++) {
-                    var thisSlotsID = i + '-' + j;
-                    if (!(thisSlotsID in inventoryClone)) {
-                        // empty slot:
-                        var amountAddedToThisSlot = maxNumberOfItemsPerSlot > (itemObj[k].quantity - quantityAddedSoFar) ? (itemObj[k].quantity - quantityAddedSoFar) : maxNumberOfItemsPerSlot;
+                        var quantityOnSlotAlready = inventoryClone[inventoryKeysFound[i]].quantity;
+                        var amountAddedToThisSlot = (maxNumberOfItemsPerSlot - quantityOnSlotAlready) > (itemObj[k].quantity - quantityAddedSoFar) ? (itemObj[k].quantity - quantityAddedSoFar) : maxNumberOfItemsPerSlot - quantityOnSlotAlready;
                         quantityAddedSoFar += amountAddedToThisSlot;
                         // add item to this slot:
-                        slotsUpdated.push(thisSlotsID);
-                        inventoryClone[thisSlotsID] = new Object();
-                        inventoryClone[thisSlotsID].type = itemObj[k].type;
-                        inventoryClone[thisSlotsID].quantity = amountAddedToThisSlot;
-                        inventoryClone[thisSlotsID].quality = itemObj[k].quality;
-                        inventoryClone[thisSlotsID].durability = itemObj[k].durability;
-                        inventoryClone[thisSlotsID].currentWear = itemObj[k].currentWear;
-                        inventoryClone[thisSlotsID].effectiveness = itemObj[k].effectiveness;
-                        inventoryClone[thisSlotsID].wrapped = itemObj[k].wrapped;
-                        inventoryClone[thisSlotsID].colour = itemObj[k].colour;
-                        inventoryClone[thisSlotsID].enchanted = itemObj[k].enchanted;
-                        inventoryClone[thisSlotsID].hallmark = itemObj[k].hallmark;
-                        inventoryClone[thisSlotsID].inscription = {};
-                        inventoryClone[thisSlotsID].inscription.title = itemObj[k].inscription.title;
-                        inventoryClone[thisSlotsID].inscription.content = itemObj[k].inscription.content;
-                        inventoryClone[thisSlotsID].inscription.timeCreated = itemObj[k].inscription.timeCreated;
+                        if (amountAddedToThisSlot > 0) {
+                            slotsUpdated.push((inventoryKeysFound[i]));
+                            inventoryClone[inventoryKeysFound[i]].quantity += amountAddedToThisSlot;
+                        }
                         if (quantityAddedSoFar >= itemObj[k].quantity) {
-                            // stop both loops:
-                            break outerLoop;
+                            break;
                         }
                     }
                 }
             }
-        }
-        if (quantityAddedSoFar != itemObj[k].quantity) {
-            allItemsAdded = false;
+            if (quantityAddedSoFar < itemObj[k].quantity) {
+                // either filled all matching slots, or couldn't find any matching slots - find an empty slot
+                outerLoop: for (var i = 0; i < hero.bags.length; i++) {
+                    var thisBagNumberOfSlots = currentActiveInventoryItems[hero.bags[i].type].actionValue;
+                    // loop through slots for each bag:
+                    for (var j = 0; j < thisBagNumberOfSlots; j++) {
+                        var thisSlotsID = i + '-' + j;
+                        if (!(thisSlotsID in inventoryClone)) {
+                            // empty slot:
+                            var amountAddedToThisSlot = maxNumberOfItemsPerSlot > (itemObj[k].quantity - quantityAddedSoFar) ? (itemObj[k].quantity - quantityAddedSoFar) : maxNumberOfItemsPerSlot;
+                            quantityAddedSoFar += amountAddedToThisSlot;
+                            // add item to this slot:
+                            slotsUpdated.push(thisSlotsID);
+                            inventoryClone[thisSlotsID] = new Object();
+                            inventoryClone[thisSlotsID].type = itemObj[k].type;
+                            inventoryClone[thisSlotsID].quantity = amountAddedToThisSlot;
+                            inventoryClone[thisSlotsID].quality = itemObj[k].quality;
+                            inventoryClone[thisSlotsID].durability = itemObj[k].durability;
+                            inventoryClone[thisSlotsID].currentWear = itemObj[k].currentWear;
+                            inventoryClone[thisSlotsID].effectiveness = itemObj[k].effectiveness;
+                            inventoryClone[thisSlotsID].wrapped = itemObj[k].wrapped;
+                            inventoryClone[thisSlotsID].colour = itemObj[k].colour;
+                            inventoryClone[thisSlotsID].enchanted = itemObj[k].enchanted;
+                            inventoryClone[thisSlotsID].hallmark = itemObj[k].hallmark;
+                            inventoryClone[thisSlotsID].inscription = {};
+                            inventoryClone[thisSlotsID].inscription.title = itemObj[k].inscription.title;
+                            inventoryClone[thisSlotsID].inscription.content = itemObj[k].inscription.content;
+                            inventoryClone[thisSlotsID].inscription.timeCreated = itemObj[k].inscription.timeCreated;
+                            if (quantityAddedSoFar >= itemObj[k].quantity) {
+                                // stop both loops:
+                                break outerLoop;
+                            }
+                        }
+                    }
+                }
+            }
+            if (quantityAddedSoFar != itemObj[k].quantity) {
+                allItemsAdded = false;
+            }
         }
     }
     if (allItemsAdded) {
         // make the active inventory be the same as the amended one:
         hero.inventory = JSON.parse(JSON.stringify(inventoryClone));
         UI.updatePanelsAfterInventoryChange();
+     if(moneyToAdd>0) {
+        hero.currency['money'] += moneyToAdd;
+        UI.updateCurrencies();
+    }
         // return success, and the slots that were affected:
         return [true, slotsUpdated];
     } else {
@@ -1866,7 +1870,6 @@ function canAddItemToInventory(itemObj) {
         return [false];
     }
 }
-
 
 function hasItemInInventory(itemType, amountNeeded) {
     var quantityFound = 0;
@@ -5325,7 +5328,6 @@ function checkForActions() {
     key[4] = 0;
 }
 
-
 function processSpeech(thisNPC, thisSpeechPassedIn, thisSpeechCode, isPartOfNPCsNormalSpeech) {
     // thisSpeech is global so it can be edited in the close quest functions:
     thisSpeech = thisSpeechPassedIn;
@@ -5386,15 +5388,11 @@ function processSpeech(thisNPC, thisSpeechPassedIn, thisSpeechCode, isPartOfNPCs
                             if (awardQuestRewards[collectionQuestSpeech[3]]) {
                                 thisSpeech = collectionQuestSpeech[2];
                             }
-
-                     
                         } else {
                             thisSpeech = collectionQuestSpeech[2];
-                        
-                           
                         }
-                               hero.collections[collectionQuestZoneName].complete = true;
-                            UI.completeCollectionQuestPanel(collectionQuestZoneName);
+                        hero.collections[collectionQuestZoneName].complete = true;
+                        UI.completeCollectionQuestPanel(collectionQuestZoneName);
                     }
                 } else {
                     // collection not started yet:
@@ -5587,28 +5585,34 @@ function processSpeech(thisNPC, thisSpeechPassedIn, thisSpeechCode, isPartOfNPCs
                             var itemsToAdd = questData[questId].startItemsReceived.split(",");
                             var allItemsToGive = [];
                             for (var l = 0; l < itemsToAdd.length; l++) {
-                                // check for any quantities:
-                                var thisQuestItem = itemsToAdd[l].split("x");
-                                var thisQuantity, thisItem;
-                                if (thisQuestItem.length > 1) {
-                                    thisQuantity = thisQuestItem[0];
-                                    thisItem = thisQuestItem[1];
+
+                                // check if it's money:
+                                if (itemsToAdd[l].charAt(0) == "$") {
+                                    thisRewardObject = itemsToAdd[l];
                                 } else {
-                                    thisQuantity = 1;
-                                    thisItem = itemsToAdd[l];
-                                }
-                                // build item object:
-                                var thisRewardObject = {
-                                    "type": parseInt(thisItem),
-                                    "quantity": parseInt(thisQuantity),
-                                    "quality": 100,
-                                    "durability": 100,
-                                    "currentWear": 0,
-                                    "effectiveness": 100,
-                                    "colour": currentActiveInventoryItems[parseInt(thisItem)].colour,
-                                    "enchanted": 0,
-                                    "hallmark": 0,
-                                    "inscription": ""
+                                    // check for any quantities:
+                                    var thisQuestItem = itemsToAdd[l].split("x");
+                                    var thisQuantity, thisItem;
+                                    if (thisQuestItem.length > 1) {
+                                        thisQuantity = thisQuestItem[0];
+                                        thisItem = thisQuestItem[1];
+                                    } else {
+                                        thisQuantity = 1;
+                                        thisItem = itemsToAdd[l];
+                                    }
+                                    // build item object:
+                                    var thisRewardObject = {
+                                        "type": parseInt(thisItem),
+                                        "quantity": parseInt(thisQuantity),
+                                        "quality": 100,
+                                        "durability": 100,
+                                        "currentWear": 0,
+                                        "effectiveness": 100,
+                                        "colour": currentActiveInventoryItems[parseInt(thisItem)].colour,
+                                        "enchanted": 0,
+                                        "hallmark": 0,
+                                        "inscription": ""
+                                    }
                                 }
                                 allItemsToGive.push(thisRewardObject);
                             }
@@ -5688,7 +5692,6 @@ function processSpeech(thisNPC, thisSpeechPassedIn, thisSpeechCode, isPartOfNPCs
 
 
 
-
 function closeQuest(whichNPC, whichQuestId) {
     if (giveQuestRewards(whichQuestId)) {
         if (questData[whichQuestId].isRepeatable > 0) {
@@ -5727,6 +5730,13 @@ function awardQuestRewards(questRewards) {
             // check for variation:
             var questPossibilities = questRewards[i].split("/");
             var questRewardToUse = getRandomElementFromArray(questPossibilities);
+            console.log(questRewardToUse);
+
+  // check if it's money:
+                                if (questRewardToUse.charAt(0) == "$") {
+                                    thisRewardObject = questRewardToUse;
+                                } else {
+
             // check for any quantities:
             var thisQuestReward = questRewardToUse.split("x");
             var thisQuantity, thisItem;
@@ -5755,6 +5765,7 @@ function awardQuestRewards(questRewards) {
                 "hallmark": 0,
                 "inscription": ""
             }
+        }
             allRewardItems.push(thisRewardObject);
         }
         inventoryCheck = canAddItemToInventory(allRewardItems);
@@ -5784,25 +5795,25 @@ function updateItems() {
     for (var i = 0; i < thisMapData.items.length; i++) {
         thisItem = thisMapData.items[i];
         if (currentActiveInventoryItems[thisItem.type].action == "nest") {
-            if(thisItem.spawnsRemaining>0) {
-            if (hero.totalGameTimePlayed - thisItem.timeLastSpawned >= currentActiveInventoryItems[thisItem.type].respawnRate) {
-                // pick a random creature from all possible:
-                whichCreature = thisItem.contains[(getRandomIntegerInclusive(1, thisItem.contains.length) - 1)];
-                // find a clear space around the item:
-                whichStartPoint = getRandomElementFromArray(startPointsPossible);
-                whichCreature.tileX = thisItem.tileX + whichStartPoint[0];
-                whichCreature.tileY = thisItem.tileY + whichStartPoint[1];
-                if (tileIsClear(whichCreature.tileX, whichCreature.tileY)) {
-                    // create a copy so they are distinct:
-                    thisMapData.npcs.push(JSON.parse(JSON.stringify(whichCreature)));
-                    initialiseNPC(thisMapData.npcs.length - 1);
-                    thisItem.spawnsRemaining --;
-                    // reset timer:
-                    thisItem.timeLastSpawned = hero.totalGameTimePlayed;
+            if (thisItem.spawnsRemaining > 0) {
+                if (hero.totalGameTimePlayed - thisItem.timeLastSpawned >= currentActiveInventoryItems[thisItem.type].respawnRate) {
+                    // pick a random creature from all possible:
+                    whichCreature = thisItem.contains[(getRandomIntegerInclusive(1, thisItem.contains.length) - 1)];
+                    // find a clear space around the item:
+                    whichStartPoint = getRandomElementFromArray(startPointsPossible);
+                    whichCreature.tileX = thisItem.tileX + whichStartPoint[0];
+                    whichCreature.tileY = thisItem.tileY + whichStartPoint[1];
+                    if (tileIsClear(whichCreature.tileX, whichCreature.tileY)) {
+                        // create a copy so they are distinct:
+                        thisMapData.npcs.push(JSON.parse(JSON.stringify(whichCreature)));
+                        initialiseNPC(thisMapData.npcs.length - 1);
+                        thisItem.spawnsRemaining--;
+                        // reset timer:
+                        thisItem.timeLastSpawned = hero.totalGameTimePlayed;
+                    }
                 }
             }
         }
-    }
     }
 }
 
@@ -5819,7 +5830,6 @@ function checkForTitlesAwarded(whichQuestId) {
 
 
 function checkForChallenges() {
-
     for (var i = 0; i < thisMapData.npcs.length; i++) {
         thisChallengeNPC = thisMapData.npcs[i];
         if (isInRange(hero.x, hero.y, thisChallengeNPC.x, thisChallengeNPC.y, (thisChallengeNPC.width + hero.width))) {
@@ -5894,11 +5904,11 @@ function moveNPCs() {
             // check for collision against pet:
             if (hasActivePet) {
                 for (var j = 0; j < hero.activePets.length; j++) {
-                if (isAnObjectCollision(thisNPC.x, thisNPC.y, thisNPC.width, thisNPC.height, hero.allPets[hero.activePets[j]].x, hero.allPets[hero.activePets[j]].y, hero.allPets[hero.activePets[j]].width, hero.allPets[hero.activePets[j]].height)) {
-                    thisNPC.x = oldNPCx;
-                    thisNPC.y = oldNPCy;
+                    if (isAnObjectCollision(thisNPC.x, thisNPC.y, thisNPC.width, thisNPC.height, hero.allPets[hero.activePets[j]].x, hero.allPets[hero.activePets[j]].y, hero.allPets[hero.activePets[j]].width, hero.allPets[hero.activePets[j]].height)) {
+                        thisNPC.x = oldNPCx;
+                        thisNPC.y = oldNPCy;
+                    }
                 }
-            }
             }
 
             // check for collisions against other NPCs:
@@ -5924,18 +5934,18 @@ function moveNPCs() {
             }
 
 
-                // check for inner doors:
-    if (typeof thisMapData.innerDoors !== "undefined") {
-        for (var i in thisMapData.innerDoors) {
-            thisInnerDoor = thisMapData.innerDoors[i];
-            if (!thisInnerDoor.isOpen) {
-                if (isAnObjectCollision(getTileCentreCoordX(thisInnerDoor.tileX), getTileCentreCoordY(thisInnerDoor.tileY), tileW, tileW, thisNPC.x, thisNPC.y, thisNPC.width, thisNPC.height)) {
-           thisNPC.x = oldNPCx;
-                    thisNPC.y = oldNPCy;
+            // check for inner doors:
+            if (typeof thisMapData.innerDoors !== "undefined") {
+                for (var i in thisMapData.innerDoors) {
+                    thisInnerDoor = thisMapData.innerDoors[i];
+                    if (!thisInnerDoor.isOpen) {
+                        if (isAnObjectCollision(getTileCentreCoordX(thisInnerDoor.tileX), getTileCentreCoordY(thisInnerDoor.tileY), tileW, tileW, thisNPC.x, thisNPC.y, thisNPC.width, thisNPC.height)) {
+                            thisNPC.x = oldNPCx;
+                            thisNPC.y = oldNPCy;
+                        }
+                    }
                 }
             }
-        }
-    }
 
             // find the difference for this movement:
             thisNPC.dx += (thisNPC.x - oldNPCx);
@@ -6142,9 +6152,7 @@ function draw() {
         gameContext.fillStyle = "#000000";
         gameContext.fill();
     } else {
-
-        // get all assets to be drawn in a list - start with the hero:
-
+        // get all assets to be drawn in a list
         var thisGraphicCentreX, thisGraphicCentreY, thisX, thisY, thisNPC, thisItem;
 
         hero.isox = findIsoCoordsX(hero.x, hero.y);
@@ -6172,15 +6180,12 @@ function draw() {
         }
 
         var map = thisMapData.terrain;
-
         var thisNPCOffsetCol = 0;
         var thisNPCOffsetRow = 0;
-
         var thisFileColourSuffix = '';
         var thisColourName;
         var thisItemIdentifier;
         var thisPlatform;
-       
 
         for (var i = 0; i < mapTilesX; i++) {
             for (var j = 0; j < mapTilesY; j++) {
@@ -6202,7 +6207,6 @@ function draw() {
                 if (!thisMapData.innerDoors[i]['isOpen']) {
                     thisX = getTileIsoCentreCoordX(thisMapData.innerDoors[i]['tileX'], thisMapData.innerDoors[i]['tileY']);
                     thisY = getTileIsoCentreCoordY(thisMapData.innerDoors[i]['tileX'], thisMapData.innerDoors[i]['tileY']);
-
                     thisGraphicCentreX = thisMapData.graphics[(thisMapData.innerDoors[i]['graphic'])].centreX;
                     thisGraphicCentreY = thisMapData.graphics[(thisMapData.innerDoors[i]['graphic'])].centreY;
                     assetsToDraw.push([findIsoDepth(getTileCentreCoordX(thisMapData.innerDoors[i]['tileX']), getTileCentreCoordY(thisMapData.innerDoors[i]['tileY']), 0), "img", tileImages[(thisMapData.innerDoors[i]['graphic'])], Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2))]);
@@ -6238,8 +6242,6 @@ function draw() {
             thisItem = thisMapData.items[i];
             thisX = findIsoCoordsX(thisItem.x, thisItem.y);
             thisY = findIsoCoordsY(thisItem.x, thisItem.y);
-
-
             thisFileColourSuffix = "";
             if (thisMapData.items[i].colour) {
                 thisColourName = getColourName(thisMapData.items[i].colour, thisMapData.items[i].type);
@@ -6248,7 +6250,6 @@ function draw() {
                 }
             }
             thisItemIdentifier = "item" + thisMapData.items[i].type + thisFileColourSuffix;
-
             assetsToDraw.push([findIsoDepth(thisItem.x, thisItem.y, thisItem.z), "img", itemImages[thisItemIdentifier], Math.floor(thisX - hero.isox - thisItem.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisItem.centreY + (canvasHeight / 2) - thisItem.z)]);
         }
 
@@ -6258,8 +6259,8 @@ function draw() {
                 thisPlatform = thisMapData.movingPlatforms[i];
                 thisX = findIsoCoordsX(thisPlatform.x, thisPlatform.y);
                 thisY = findIsoCoordsY(thisPlatform.x, thisPlatform.y);
-                   thisGraphicCentreX = thisMapData.graphics[thisPlatform.graphic].centreX;
-                    thisGraphicCentreY = thisMapData.graphics[thisPlatform.graphic].centreY;
+                thisGraphicCentreX = thisMapData.graphics[thisPlatform.graphic].centreX;
+                thisGraphicCentreY = thisMapData.graphics[thisPlatform.graphic].centreY;
                 assetsToDraw.push([findIsoDepth(thisPlatform.x, thisPlatform.y, thisPlatform.z), "img", tileImages[thisPlatform.graphic], Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2))]);
             }
         }
@@ -6301,33 +6302,33 @@ function draw() {
             UI.updateDialogue(activeNPCForDialogue);
         }
 
-if (thisMapData.showOnlyLineOfSight) {
-    // draw light map:
-    lightMapContext.clearRect(0, 0, canvasWidth, canvasHeight);
- var thisLightMapValue;
-       // start at -1 to cover the back edge tiles:
-        for (var i = -1; i < mapTilesX; i++) {
-            for (var j = -1; j < mapTilesY; j++) {
-                thisX = getTileIsoCentreCoordX(i, j);
-                thisY = getTileIsoCentreCoordY(i, j);
-                thisGraphicCentreX = 28;
-                thisGraphicCentreY = 17;
-                thisLightMapValue = 1;
-                if((i>-1) && (j>-1)) {
-                thisLightMapValue = 1.01 - lightMap[j][i];
-               }
-                if (thisLightMapValue > 0) {
-                    lightMapContext.save();
-                    lightMapContext.globalAlpha = thisLightMapValue;
-                    lightMapContext.drawImage(shadowImg, Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2))/4, Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2))/4);
-                    lightMapContext.restore();
-                } else {
-                    // no need to shade:
-                    lightMapContext.drawImage(shadowImg, Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2))/4, Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2))/4);
+        if (thisMapData.showOnlyLineOfSight) {
+            // draw light map:
+            lightMapContext.clearRect(0, 0, canvasWidth, canvasHeight);
+            var thisLightMapValue;
+            // start at -1 to cover the back edge tiles:
+            for (var i = -1; i < mapTilesX; i++) {
+                for (var j = -1; j < mapTilesY; j++) {
+                    thisX = getTileIsoCentreCoordX(i, j);
+                    thisY = getTileIsoCentreCoordY(i, j);
+                    thisGraphicCentreX = 28;
+                    thisGraphicCentreY = 17;
+                    thisLightMapValue = 1;
+                    if ((i > -1) && (j > -1)) {
+                        thisLightMapValue = 1.01 - lightMap[j][i];
+                    }
+                    if (thisLightMapValue > 0) {
+                        lightMapContext.save();
+                        lightMapContext.globalAlpha = thisLightMapValue;
+                        lightMapContext.drawImage(shadowImg, Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2)) / 4, Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2)) / 4);
+                        lightMapContext.restore();
+                    } else {
+                        // no need to shade:
+                        lightMapContext.drawImage(shadowImg, Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2)) / 4, Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2)) / 4);
+                    }
                 }
             }
         }
-    }
 
         // draw the map transition if it's needed:
         if (mapTransition == "out") {
