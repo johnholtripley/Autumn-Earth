@@ -19,7 +19,7 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/header.php");
 
 	</div>
 	</div>
-<div class="row medium-2up wide-4up equalHeights">
+<div class="row medium-2up wide-5up equalHeights">
 
 	<div class="column"><div><h4>Latest forum threads with new posts</h4>
 
@@ -103,6 +103,11 @@ if (mysql_num_rows($result) > 0) {
 displayUpcomingEvents(5);
 ?>
 </div></div>
+
+<div class="column"><div><h4>Promotions</h4>
+<p>Coming soon&hellip;</p>
+</div></div>
+
 
 </div>
 
