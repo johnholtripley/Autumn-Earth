@@ -788,27 +788,31 @@ function getHeroAsCloseAsPossibleToObject(objx, objy, objw, objh) {
 }
 
 function isOnAPlatform(x, y) {
-    var isOnAPlatform = false;
-    for (var i = 0; i < thisMapData.movingPlatforms.length; i++) {
-        thisPlatform = thisMapData.movingPlatforms[i];
-        if (y >= (thisPlatform.y - tileW / 2)) {
-            if (y <= (thisPlatform.y + tileW / 2 + (thisPlatform.height - 1) * tileW)) {
-                if (x >= (thisPlatform.x - tileW / 2)) {
-                    if (x <= (thisPlatform.x + tileW / 2 + (thisPlatform.width - 1) * tileW)) {
-                        isOnAPlatform = true;
+    var thisPlatform;
+    var whichPlatform = -1;
+    if (thisMapData.movingPlatforms) {
+        for (var i = 0; i < thisMapData.movingPlatforms.length; i++) {
+            thisPlatform = thisMapData.movingPlatforms[i];
+            if (y >= (thisPlatform.y - tileW / 2)) {
+                if (y <= (thisPlatform.y + tileW / 2 + (thisPlatform.height - 1) * tileW)) {
+                    if (x >= (thisPlatform.x - tileW / 2)) {
+                        if (x <= (thisPlatform.x + tileW / 2 + (thisPlatform.width - 1) * tileW)) {
+                            whichPlatform = i;
+                            break;
+                        }
                     }
                 }
             }
         }
     }
-    return isOnAPlatform;
+    return whichPlatform;
 }
 
 function checkHeroCollisions() {
-    var topLeftIsOnAPlatform = false;
-    var topRightIsOnAPlatform = false;
-    var bottomLeftIsOnAPlatform = false;
-    var bottomRightIsOnAPlatform = false;
+    var topLeftIsOnAPlatform = -1;
+    var topRightIsOnAPlatform = -1;
+    var bottomLeftIsOnAPlatform = -1;
+    var bottomRightIsOnAPlatform = -1;
 
     var topLeftIsCollidingWithTerrain = isATerrainCollision(hero.x - hero.width / 2, hero.y - hero.height / 2);
     var topRightIsCollidingWithTerrain = isATerrainCollision(hero.x + hero.width / 2, hero.y - hero.height / 2);
@@ -816,15 +820,30 @@ function checkHeroCollisions() {
     var bottomRightIsCollidingWithTerrain = isATerrainCollision(hero.x + hero.width / 2, hero.y + hero.height / 2);
 
 
-if (thisMapData.movingPlatforms) {
+
   
 topLeftIsOnAPlatform = isOnAPlatform(hero.x - hero.width / 2, hero.y - hero.height / 2);
 topRightIsOnAPlatform = isOnAPlatform(hero.x + hero.width / 2, hero.y - hero.height / 2);
 bottomLeftIsOnAPlatform = isOnAPlatform(hero.x - hero.width / 2, hero.y + hero.height / 2);
 bottomRightIsOnAPlatform = isOnAPlatform(hero.x + hero.width / 2, hero.y + hero.height / 2);
         
-}
 
+    if (key[2]) {
+            // up
+   
+        }
+        if (key[3]) {
+            // down
+ 
+        }
+        if (key[0]) {
+            // left/west
+
+        }
+        if (key[1]) {
+            //right/east
+
+        }
 
 
     /*
