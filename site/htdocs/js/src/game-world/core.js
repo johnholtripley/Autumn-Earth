@@ -808,6 +808,7 @@ function isOnAPlatform(x, y) {
     return whichPlatform;
 }
 
+
 function checkHeroCollisions() {
     var topLeftIsOnAPlatform = -1;
     var topRightIsOnAPlatform = -1;
@@ -832,19 +833,26 @@ function checkHeroCollisions() {
 
     var movementIsOk = false;
     var platformIsClear = true;
+
+    if (topLeftIsOnAPlatform >= 0) {
+        platformIsClear = (topLeftIsOnAPlatform == bottomLeftIsOnAPlatform && bottomLeftIsOnAPlatform == topRightIsOnAPlatform && topRightIsOnAPlatform == bottomRightIsOnAPlatform);
+    }
+
     if (key[2]) {
         // up
         if ((topLeftIsOnAPlatform > -1) && (topRightIsOnAPlatform > -1)) {
             movementIsOk = true;
             // check trailing edge to see if platform can move:
-            platformIsClear = (topLeftIsOnAPlatform == bottomLeftIsOnAPlatform && bottomLeftIsOnAPlatform == topRightIsOnAPlatform && topRightIsOnAPlatform == bottomRightIsOnAPlatform);
+
         }
         if ((!topLeftIsCollidingWithTerrain && !topRightIsCollidingWithTerrain)) {
             movementIsOk = true;
         } else {
             // leading edge is a collision - check if trailing edge is on a platform, and nudge hero back onto the platform if so:
             if ((bottomLeftIsOnAPlatform > -1) && (bottomRightIsOnAPlatform > -1)) {
+                if ((topLeftIsOnAPlatform == -1) && (topRightIsOnAPlatform == -1)) {
                 hero.y = thisMapData.movingPlatforms[bottomLeftIsOnAPlatform].y - (tileW / 2) + (hero.height / 2) + 1;
+            }
             }
         }
     }
@@ -862,11 +870,11 @@ function checkHeroCollisions() {
     }
 
     if (platformIsClear) {
-         if (topLeftIsOnAPlatform >= 0) {
- hero.x += thisMapData.movingPlatforms[topLeftIsOnAPlatform].xSpeed;
-                                            hero.y += thisMapData.movingPlatforms[topLeftIsOnAPlatform].ySpeed;
-                                            hero.z += thisMapData.movingPlatforms[topLeftIsOnAPlatform].zSpeed;
-                                        }
+if (topLeftIsOnAPlatform >= 0) {
+        hero.x += thisMapData.movingPlatforms[topLeftIsOnAPlatform].xSpeed;
+        hero.y += thisMapData.movingPlatforms[topLeftIsOnAPlatform].ySpeed;
+        hero.z += thisMapData.movingPlatforms[topLeftIsOnAPlatform].zSpeed;
+}
     } else {
         if (topLeftIsOnAPlatform >= 0) {
             thisMapData.movingPlatforms[topLeftIsOnAPlatform].canMove = false;
@@ -980,43 +988,43 @@ function checkHeroCollisions() {
     }
     */
     if (!movementIsOk) {
-        
-    // tile collisions:
-    if (key[2]) {
-        // up
-        if ((isATerrainCollision(hero.x - hero.width / 2, hero.y - hero.height / 2)) || (isATerrainCollision(hero.x + hero.width / 2, hero.y - hero.height / 2))) {
-            // find the tile's bottom edge
-            var tileCollidedWith = getTileY(hero.y - hero.height / 2);
-            var tileBottomEdge = (tileCollidedWith + 1) * tileW;
-            // use the +1 to make sure it's just clear of the collision tile
-            hero.y = tileBottomEdge + hero.height / 2 + 1;
+
+        // tile collisions:
+        if (key[2]) {
+            // up
+            if ((isATerrainCollision(hero.x - hero.width / 2, hero.y - hero.height / 2)) || (isATerrainCollision(hero.x + hero.width / 2, hero.y - hero.height / 2))) {
+                // find the tile's bottom edge
+                var tileCollidedWith = getTileY(hero.y - hero.height / 2);
+                var tileBottomEdge = (tileCollidedWith + 1) * tileW;
+                // use the +1 to make sure it's just clear of the collision tile
+                hero.y = tileBottomEdge + hero.height / 2 + 1;
+            }
+        }
+        if (key[3]) {
+            // down
+            if ((isATerrainCollision(hero.x - hero.width / 2, hero.y + hero.height / 2)) || (isATerrainCollision(hero.x + hero.width / 2, hero.y + hero.height / 2))) {
+                var tileCollidedWith = getTileY(hero.y + hero.height / 2);
+                var tileTopEdge = (tileCollidedWith) * tileW;
+                hero.y = tileTopEdge - hero.height / 2 - 1;
+            }
+        }
+        if (key[0]) {
+            // left/west
+            if ((isATerrainCollision(hero.x - hero.width / 2, hero.y + hero.height / 2)) || (isATerrainCollision(hero.x - hero.width / 2, hero.y - hero.height / 2))) {
+                var tileCollidedWith = getTileX(hero.x - hero.width / 2);
+                var tileRightEdge = (tileCollidedWith + 1) * tileW;
+                hero.x = tileRightEdge + hero.width / 2 + 1;
+            }
+        }
+        if (key[1]) {
+            //right/east
+            if ((isATerrainCollision(hero.x + hero.width / 2, hero.y + hero.height / 2)) || (isATerrainCollision(hero.x + hero.width / 2, hero.y - hero.height / 2))) {
+                var tileCollidedWith = getTileX(hero.x + hero.width / 2);
+                var tileLeftEdge = (tileCollidedWith) * tileW;
+                hero.x = tileLeftEdge - hero.width / 2 - 1;
+            }
         }
     }
-    if (key[3]) {
-        // down
-        if ((isATerrainCollision(hero.x - hero.width / 2, hero.y + hero.height / 2)) || (isATerrainCollision(hero.x + hero.width / 2, hero.y + hero.height / 2))) {
-            var tileCollidedWith = getTileY(hero.y + hero.height / 2);
-            var tileTopEdge = (tileCollidedWith) * tileW;
-            hero.y = tileTopEdge - hero.height / 2 - 1;
-        }
-    }
-    if (key[0]) {
-        // left/west
-        if ((isATerrainCollision(hero.x - hero.width / 2, hero.y + hero.height / 2)) || (isATerrainCollision(hero.x - hero.width / 2, hero.y - hero.height / 2))) {
-            var tileCollidedWith = getTileX(hero.x - hero.width / 2);
-            var tileRightEdge = (tileCollidedWith + 1) * tileW;
-            hero.x = tileRightEdge + hero.width / 2 + 1;
-        }
-    }
-    if (key[1]) {
-        //right/east
-        if ((isATerrainCollision(hero.x + hero.width / 2, hero.y + hero.height / 2)) || (isATerrainCollision(hero.x + hero.width / 2, hero.y - hero.height / 2))) {
-            var tileCollidedWith = getTileX(hero.x + hero.width / 2);
-            var tileLeftEdge = (tileCollidedWith) * tileW;
-            hero.x = tileLeftEdge - hero.width / 2 - 1;
-        }
-    }
-     }
     var thisNPC, thisItem;
     // check for collisions against NPCs:
     for (var i = 0; i < thisMapData.npcs.length; i++) {
@@ -1046,32 +1054,36 @@ function checkHeroCollisions() {
         }
     }
 
-    // check for inner doors:
-    if (typeof thisMapData.innerDoors !== "undefined") {
-        var thisInnerDoor;
-        for (var i in thisMapData.innerDoors) {
-            thisInnerDoor = thisMapData.innerDoors[i];
-            if (!thisInnerDoor.isOpen) {
-                if (isAnObjectCollision(getTileCentreCoordX(thisInnerDoor.tileX), getTileCentreCoordY(thisInnerDoor.tileY), tileW, tileW, hero.x, hero.y, hero.width, hero.height)) {
-                    if (thisInnerDoor.isLocked) {
-                        // check for key
-                        var hasInnerDoorKey = hero.currency.keys.indexOf(i);
-                        if (hasInnerDoorKey != -1) {
-                            unlockInnerDoor(i);
-                            openInnerDoor(i);
-                            hero.currency.keys.splice(hasInnerDoorKey, 1);
-                            UI.updateCurrencies();
-                        }
-                    } else {
+
+
+
+
+
+// check for inner doors:
+if (typeof thisMapData.innerDoors !== "undefined") {
+    var thisInnerDoor;
+    for (var i in thisMapData.innerDoors) {
+        thisInnerDoor = thisMapData.innerDoors[i];
+        if (!thisInnerDoor.isOpen) {
+            if (isAnObjectCollision(getTileCentreCoordX(thisInnerDoor.tileX), getTileCentreCoordY(thisInnerDoor.tileY), tileW, tileW, hero.x, hero.y, hero.width, hero.height)) {
+                if (thisInnerDoor.isLocked) {
+                    // check for key
+                    var hasInnerDoorKey = hero.currency.keys.indexOf(i);
+                    if (hasInnerDoorKey != -1) {
+                        unlockInnerDoor(i);
                         openInnerDoor(i);
+                        hero.currency.keys.splice(hasInnerDoorKey, 1);
+                        UI.updateCurrencies();
                     }
-                    getHeroAsCloseAsPossibleToObject(getTileCentreCoordX(thisInnerDoor.tileX), getTileCentreCoordY(thisInnerDoor.tileY), tileW, tileW);
+                } else {
+                    openInnerDoor(i);
                 }
+                getHeroAsCloseAsPossibleToObject(getTileCentreCoordX(thisInnerDoor.tileX), getTileCentreCoordY(thisInnerDoor.tileY), tileW, tileW);
             }
         }
     }
 }
-
+}
 
 
 
