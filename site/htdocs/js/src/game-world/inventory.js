@@ -17,7 +17,6 @@ function canAddItemToInventory(itemObj) {
                 // loop through keysFound and add to the slot maximum
                 for (var i = 0; i < inventoryKeysFound.length; i++) {
                     if (itemAttributesMatch(inventoryClone[inventoryKeysFound[i]], itemObj[k])) {
-
                         var quantityOnSlotAlready = inventoryClone[inventoryKeysFound[i]].quantity;
                         var amountAddedToThisSlot = (maxNumberOfItemsPerSlot - quantityOnSlotAlready) > (itemObj[k].quantity - quantityAddedSoFar) ? (itemObj[k].quantity - quantityAddedSoFar) : maxNumberOfItemsPerSlot - quantityOnSlotAlready;
                         quantityAddedSoFar += amountAddedToThisSlot;

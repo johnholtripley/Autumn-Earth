@@ -1799,7 +1799,6 @@ function canAddItemToInventory(itemObj) {
                 // loop through keysFound and add to the slot maximum
                 for (var i = 0; i < inventoryKeysFound.length; i++) {
                     if (itemAttributesMatch(inventoryClone[inventoryKeysFound[i]], itemObj[k])) {
-
                         var quantityOnSlotAlready = inventoryClone[inventoryKeysFound[i]].quantity;
                         var amountAddedToThisSlot = (maxNumberOfItemsPerSlot - quantityOnSlotAlready) > (itemObj[k].quantity - quantityAddedSoFar) ? (itemObj[k].quantity - quantityAddedSoFar) : maxNumberOfItemsPerSlot - quantityOnSlotAlready;
                         quantityAddedSoFar += amountAddedToThisSlot;
@@ -4785,105 +4784,145 @@ function getHeroAsCloseAsPossibleToObject(objx, objy, objw, objh) {
     }
 }
 
+function isOnAPlatform(x, y) {
+    var isOnAPlatform = false;
+    for (var i = 0; i < thisMapData.movingPlatforms.length; i++) {
+        thisPlatform = thisMapData.movingPlatforms[i];
+        if (y >= (thisPlatform.y - tileW / 2)) {
+            if (y <= (thisPlatform.y + tileW / 2 + (thisPlatform.height - 1) * tileW)) {
+                if (x >= (thisPlatform.x - tileW / 2)) {
+                    if (x <= (thisPlatform.x + tileW / 2 + (thisPlatform.width - 1) * tileW)) {
+                        isOnAPlatform = true;
+                    }
+                }
+            }
+        }
+    }
+    return isOnAPlatform;
+}
 
 function checkHeroCollisions() {
-    var isOnAPlatform = false;
+    var topLeftIsOnAPlatform = false;
+    var topRightIsOnAPlatform = false;
+    var bottomLeftIsOnAPlatform = false;
+    var bottomRightIsOnAPlatform = false;
+
+    var topLeftIsCollidingWithTerrain = isATerrainCollision(hero.x - hero.width / 2, hero.y - hero.height / 2);
+    var topRightIsCollidingWithTerrain = isATerrainCollision(hero.x + hero.width / 2, hero.y - hero.height / 2);
+    var bottomLeftIsCollidingWithTerrain = isATerrainCollision(hero.x - hero.width / 2, hero.y + hero.height / 2);
+    var bottomRightIsCollidingWithTerrain = isATerrainCollision(hero.x + hero.width / 2, hero.y + hero.height / 2);
+
+
+if (thisMapData.movingPlatforms) {
+  
+topLeftIsOnAPlatform = isOnAPlatform(hero.x - hero.width / 2, hero.y - hero.height / 2);
+topRightIsOnAPlatform = isOnAPlatform(hero.x + hero.width / 2, hero.y - hero.height / 2);
+bottomLeftIsOnAPlatform = isOnAPlatform(hero.x - hero.width / 2, hero.y + hero.height / 2);
+bottomRightIsOnAPlatform = isOnAPlatform(hero.x + hero.width / 2, hero.y + hero.height / 2);
+        
+}
+
+
+
+    /*
     if (thisMapData.movingPlatforms) {
         var thisPlatform, leadingEdgePoint1x, leadingEdgePoint1y, leadingEdgePoint2x, leadingEdgePoint2y, trailingEdgePoint1x, trailingEdgePoint1y, trailingEdgePoint2x, trailingEdgePoint2y;
-    
-// defaults if no key pressed:
-    leadingEdgePoint1x = hero.x;
-               leadingEdgePoint1y = hero.y;
-               leadingEdgePoint2x = hero.x;
-               leadingEdgePoint2y = hero.y;
- trailingEdgePoint1x = hero.x;
-               trailingEdgePoint1y = hero.y;
-               trailingEdgePoint2x = hero.x;
-               trailingEdgePoint2y = hero.y;
-           if (key[2]) {
-               // up
-               leadingEdgePoint1x = hero.x - hero.width / 2;
-               leadingEdgePoint1y = hero.y - hero.height / 2;
-               leadingEdgePoint2x = hero.x + hero.width / 2;
-               leadingEdgePoint2y = hero.y - hero.height / 2;
 
-                   trailingEdgePoint1x = hero.x - hero.width / 2;
-               trailingEdgePoint1y = hero.y + hero.height / 2;
-               trailingEdgePoint2x = hero.x + hero.width / 2;
-               trailingEdgePoint2y = hero.y + hero.height / 2;
-           }
-           if (key[3]) {
-               // down
-               leadingEdgePoint1x = hero.x - hero.width / 2;
-               leadingEdgePoint1y = hero.y + hero.height / 2;
-               leadingEdgePoint2x = hero.x + hero.width / 2;
-               leadingEdgePoint2y = hero.y + hero.height / 2;
+        // defaults if no key pressed:
+        leadingEdgePoint1x = hero.x;
+        leadingEdgePoint1y = hero.y;
+        leadingEdgePoint2x = hero.x;
+        leadingEdgePoint2y = hero.y;
+        trailingEdgePoint1x = hero.x;
+        trailingEdgePoint1y = hero.y;
+        trailingEdgePoint2x = hero.x;
+        trailingEdgePoint2y = hero.y;
+        if (key[2]) {
+            // up
+            leadingEdgePoint1x = hero.x - hero.width / 2;
+            leadingEdgePoint1y = hero.y - hero.height / 2;
+            leadingEdgePoint2x = hero.x + hero.width / 2;
+            leadingEdgePoint2y = hero.y - hero.height / 2;
 
-                  trailingEdgePoint1x = hero.x - hero.width / 2;
-               trailingEdgePoint1y = hero.y - hero.height / 2;
-               trailingEdgePoint2x = hero.x + hero.width / 2;
-               trailingEdgePoint2y = hero.y - hero.height / 2;
-           }
-           if (key[0]) {
-               // left/west
-               leadingEdgePoint1x = hero.x - hero.width / 2;
-               leadingEdgePoint1y = hero.y - hero.height / 2;
-               leadingEdgePoint2x = hero.x - hero.width / 2;
-               leadingEdgePoint2y = hero.y + hero.height / 2;
+            trailingEdgePoint1x = hero.x - hero.width / 2;
+            trailingEdgePoint1y = hero.y + hero.height / 2;
+            trailingEdgePoint2x = hero.x + hero.width / 2;
+            trailingEdgePoint2y = hero.y + hero.height / 2;
+        }
+        if (key[3]) {
+            // down
+            leadingEdgePoint1x = hero.x - hero.width / 2;
+            leadingEdgePoint1y = hero.y + hero.height / 2;
+            leadingEdgePoint2x = hero.x + hero.width / 2;
+            leadingEdgePoint2y = hero.y + hero.height / 2;
 
-                  trailingEdgePoint1x = hero.x + hero.width / 2;
-               trailingEdgePoint1y = hero.y - hero.height / 2;
-               trailingEdgePoint2x = hero.x + hero.width / 2;
-               trailingEdgePoint2y = hero.y + hero.height / 2;
-           }
-           if (key[1]) {
-               //right/east
-               leadingEdgePoint1x = hero.x + hero.width / 2;
-               leadingEdgePoint1y = hero.y - hero.height / 2;
-               leadingEdgePoint2x = hero.x + hero.width / 2;
-               leadingEdgePoint2y = hero.y + hero.height / 2;
+            trailingEdgePoint1x = hero.x - hero.width / 2;
+            trailingEdgePoint1y = hero.y - hero.height / 2;
+            trailingEdgePoint2x = hero.x + hero.width / 2;
+            trailingEdgePoint2y = hero.y - hero.height / 2;
+        }
+        if (key[0]) {
+            // left/west
+            leadingEdgePoint1x = hero.x - hero.width / 2;
+            leadingEdgePoint1y = hero.y - hero.height / 2;
+            leadingEdgePoint2x = hero.x - hero.width / 2;
+            leadingEdgePoint2y = hero.y + hero.height / 2;
 
-                         trailingEdgePoint1x = hero.x - hero.width / 2;
-               trailingEdgePoint1y = hero.y - hero.height / 2;
-               trailingEdgePoint2x = hero.x - hero.width / 2;
-               trailingEdgePoint2y = hero.y + hero.height / 2;
-           }
+            trailingEdgePoint1x = hero.x + hero.width / 2;
+            trailingEdgePoint1y = hero.y - hero.height / 2;
+            trailingEdgePoint2x = hero.x + hero.width / 2;
+            trailingEdgePoint2y = hero.y + hero.height / 2;
+        }
+        if (key[1]) {
+            //right/east
+            leadingEdgePoint1x = hero.x + hero.width / 2;
+            leadingEdgePoint1y = hero.y - hero.height / 2;
+            leadingEdgePoint2x = hero.x + hero.width / 2;
+            leadingEdgePoint2y = hero.y + hero.height / 2;
+
+            trailingEdgePoint1x = hero.x - hero.width / 2;
+            trailingEdgePoint1y = hero.y - hero.height / 2;
+            trailingEdgePoint2x = hero.x - hero.width / 2;
+            trailingEdgePoint2y = hero.y + hero.height / 2;
+        }
 
 
-                for (var i = 0; i < thisMapData.movingPlatforms.length; i++) {
-                    thisPlatform = thisMapData.movingPlatforms[i];
+        for (var i = 0; i < thisMapData.movingPlatforms.length; i++) {
+            thisPlatform = thisMapData.movingPlatforms[i];
 
-thisPlatform.canMove = true;
+            thisPlatform.canMove = true;
 
-if (leadingEdgePoint1y >= (thisPlatform.y - tileW / 2)) {
+            if (leadingEdgePoint1y >= (thisPlatform.y - tileW / 2)) {
                 if (leadingEdgePoint2y <= (thisPlatform.y + tileW / 2 + (thisPlatform.height - 1) * tileW)) {
                     if (leadingEdgePoint1x >= (thisPlatform.x - tileW / 2)) {
                         if (leadingEdgePoint2x <= (thisPlatform.x + tileW / 2 + (thisPlatform.width - 1) * tileW)) {
-    isOnAPlatform = true;
-    thisPlatform.canMove = false;
-if (trailingEdgePoint1y >= (thisPlatform.y - tileW / 2)) {
-                if (trailingEdgePoint2y <= (thisPlatform.y + tileW / 2 + (thisPlatform.height - 1) * tileW)) {
-                    if (trailingEdgePoint1x >= (thisPlatform.x - tileW / 2)) {
-                        if (trailingEdgePoint2x <= (thisPlatform.x + tileW / 2 + (thisPlatform.width - 1) * tileW)) {
-                            // if the trailing edge is on the platform as well, then the platform is clear to move
-thisPlatform.canMove = true;
- hero.x += thisPlatform.xSpeed;
-                            hero.y += thisPlatform.ySpeed;
-                            hero.z += thisPlatform.zSpeed;
-  }
-}
-}
-}
-}
-}
-}
-}
+                            isOnAPlatform = true;
+                            thisPlatform.canMove = false;
+                            if (trailingEdgePoint1y >= (thisPlatform.y - tileW / 2)) {
+                                if (trailingEdgePoint2y <= (thisPlatform.y + tileW / 2 + (thisPlatform.height - 1) * tileW)) {
+                                    if (trailingEdgePoint1x >= (thisPlatform.x - tileW / 2)) {
+                                        if (trailingEdgePoint2x <= (thisPlatform.x + tileW / 2 + (thisPlatform.width - 1) * tileW)) {
+                                            // if the trailing edge is on the platform as well, then the platform is clear to move
+                                            thisPlatform.canMove = true;
+                                            hero.x += thisPlatform.xSpeed;
+                                            hero.y += thisPlatform.ySpeed;
+                                            hero.z += thisPlatform.zSpeed;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
 
 
 
         }
     }
-   if (!isOnAPlatform) {
+    
+    if (!isOnAPlatform) {
+        */
         // tile collisions:
         if (key[2]) {
             // up
@@ -4919,7 +4958,7 @@ thisPlatform.canMove = true;
                 hero.x = tileLeftEdge - hero.width / 2 - 1;
             }
         }
-    }
+   // }
     var thisNPC, thisItem;
     // check for collisions against NPCs:
     for (var i = 0; i < thisMapData.npcs.length; i++) {
