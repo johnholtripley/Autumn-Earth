@@ -4810,7 +4810,6 @@ function isOnAPlatform(x, y) {
 
 
 
-
 function checkHeroCollisions() {
     var topLeftIsOnAPlatform = -1;
     var topRightIsOnAPlatform = -1;
@@ -4844,7 +4843,6 @@ function checkHeroCollisions() {
         // up
         if ((topLeftIsOnAPlatform > -1) && (topRightIsOnAPlatform > -1)) {
             movementIsOk = true;
-          
         }
         if (!(topLeftIsCollidingWithTerrain || topRightIsCollidingWithTerrain)) {
             movementIsOk = true;
@@ -4866,13 +4864,8 @@ function checkHeroCollisions() {
     }
     if (key[3]) {
         // down
-
-
-
-
         if ((bottomLeftIsOnAPlatform > -1) && (bottomRightIsOnAPlatform > -1)) {
             movementIsOk = true;
-            
         }
         if (!(bottomLeftIsCollidingWithTerrain || bottomRightIsCollidingWithTerrain)) {
             movementIsOk = true;
@@ -4890,20 +4883,11 @@ function checkHeroCollisions() {
                 hero.y = tileTopEdge - hero.height / 2 - 1;
             }
         }
-
-
-
-
-
-
     }
     if (key[0]) {
         // left/west
-
-
         if ((bottomLeftIsOnAPlatform > -1) && (topLeftIsOnAPlatform > -1)) {
             movementIsOk = true;
-            
         }
         if (!(bottomLeftIsCollidingWithTerrain || topLeftIsCollidingWithTerrain)) {
             movementIsOk = true;
@@ -4916,23 +4900,16 @@ function checkHeroCollisions() {
                 }
             } else {
                 // platform not involved - find the tile's bottom edge
-         var tileCollidedWith = getTileX(hero.x - hero.width / 2);
-                    var tileRightEdge = (tileCollidedWith + 1) * tileW;
-                    hero.x = tileRightEdge + hero.width / 2 + 1;
+                var tileCollidedWith = getTileX(hero.x - hero.width / 2);
+                var tileRightEdge = (tileCollidedWith + 1) * tileW;
+                hero.x = tileRightEdge + hero.width / 2 + 1;
             }
         }
-
-
     }
     if (key[1]) {
         //right/east
-
-
-
-
-      if ((bottomRightIsOnAPlatform > -1) && (topRightIsOnAPlatform > -1)) {
+        if ((bottomRightIsOnAPlatform > -1) && (topRightIsOnAPlatform > -1)) {
             movementIsOk = true;
-            
         }
         if (!(bottomRightIsCollidingWithTerrain || topRightIsCollidingWithTerrain)) {
             movementIsOk = true;
@@ -4945,16 +4922,11 @@ function checkHeroCollisions() {
                 }
             } else {
                 // platform not involved - find the tile's bottom edge
-      var tileCollidedWith = getTileX(hero.x + hero.width / 2);
-                    var tileLeftEdge = (tileCollidedWith) * tileW;
-                    hero.x = tileLeftEdge - hero.width / 2 - 1;
+                var tileCollidedWith = getTileX(hero.x + hero.width / 2);
+                var tileLeftEdge = (tileCollidedWith) * tileW;
+                hero.x = tileLeftEdge - hero.width / 2 - 1;
             }
         }
-
-
-
-
-
     }
 
     if (platformIsClear) {
@@ -4978,17 +4950,17 @@ function checkHeroCollisions() {
         }
     }
 
-/*
+    /*
 
 
-   if (trailingEdgePoint1y >= (thisPlatform.y - tileW / 2)) {
-                                if (trailingEdgePoint2y <= (thisPlatform.y + tileW / 2 + (thisPlatform.height - 1) * tileW)) {
-                                    if (trailingEdgePoint1x >= (thisPlatform.x - tileW / 2)) {
-                                        if (trailingEdgePoint2x <= (thisPlatform.x + tileW / 2 + (thisPlatform.width - 1) * tileW)) {
-                                            // if the trailing edge is on the platform as well, then the platform is clear to move
-                                            thisPlatform.canMove = true;
+       if (trailingEdgePoint1y >= (thisPlatform.y - tileW / 2)) {
+                                    if (trailingEdgePoint2y <= (thisPlatform.y + tileW / 2 + (thisPlatform.height - 1) * tileW)) {
+                                        if (trailingEdgePoint1x >= (thisPlatform.x - tileW / 2)) {
+                                            if (trailingEdgePoint2x <= (thisPlatform.x + tileW / 2 + (thisPlatform.width - 1) * tileW)) {
+                                                // if the trailing edge is on the platform as well, then the platform is clear to move
+                                                thisPlatform.canMove = true;
 
-*/
+    */
 
     /*
             // tile collisions:
@@ -5083,8 +5055,6 @@ function checkHeroCollisions() {
         }
     }
 }
-
-
 
 
 
