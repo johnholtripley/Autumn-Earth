@@ -809,6 +809,11 @@ function isOnAPlatform(x, y) {
 }
 
 
+
+
+
+
+
 function checkHeroCollisions() {
     var topLeftIsOnAPlatform = -1;
     var topRightIsOnAPlatform = -1;
@@ -819,6 +824,9 @@ function checkHeroCollisions() {
     var topRightIsCollidingWithTerrain = isATerrainCollision(hero.x + hero.width / 2, hero.y - hero.height / 2);
     var bottomLeftIsCollidingWithTerrain = isATerrainCollision(hero.x - hero.width / 2, hero.y + hero.height / 2);
     var bottomRightIsCollidingWithTerrain = isATerrainCollision(hero.x + hero.width / 2, hero.y + hero.height / 2);
+
+    var movementIsOk = false;
+    var platformIsClear = true;
 
     topLeftIsOnAPlatform = isOnAPlatform(hero.x - hero.width / 2, hero.y - hero.height / 2);
     topRightIsOnAPlatform = isOnAPlatform(hero.x + hero.width / 2, hero.y - hero.height / 2);
@@ -831,9 +839,6 @@ function checkHeroCollisions() {
         }
     }
 
-    var movementIsOk = false;
-    var platformIsClear = true;
-
     if (topLeftIsOnAPlatform >= 0) {
         platformIsClear = (topLeftIsOnAPlatform == bottomLeftIsOnAPlatform && bottomLeftIsOnAPlatform == topRightIsOnAPlatform && topRightIsOnAPlatform == bottomRightIsOnAPlatform);
     }
@@ -842,19 +847,19 @@ function checkHeroCollisions() {
         // up
         if ((topLeftIsOnAPlatform > -1) && (topRightIsOnAPlatform > -1)) {
             movementIsOk = true;
-            // check trailing edge to see if platform can move:
-
+          
         }
         if (!(topLeftIsCollidingWithTerrain || topRightIsCollidingWithTerrain)) {
             movementIsOk = true;
-        } else {
+        }
+        if (!movementIsOk) {
             // leading edge is a collision - check if trailing edge is on a platform, and nudge hero back onto the platform if so:
             if ((bottomLeftIsOnAPlatform > -1) && (bottomRightIsOnAPlatform > -1)) {
                 if ((topLeftIsOnAPlatform == -1) && (topRightIsOnAPlatform == -1)) {
-                hero.y = thisMapData.movingPlatforms[bottomLeftIsOnAPlatform].y - (tileW / 2) + (hero.height / 2) + 1;
-            }
+                    hero.y = thisMapData.movingPlatforms[bottomLeftIsOnAPlatform].y - (tileW / 2) + (hero.height / 2) + 1;
+                }
             } else {
-                   // platform not involved - find the tile's bottom edge
+                // platform not involved - find the tile's bottom edge
                 var tileCollidedWith = getTileY(hero.y - hero.height / 2);
                 var tileBottomEdge = (tileCollidedWith + 1) * tileW;
                 // use the +1 to make sure it's just clear of the collision tile
@@ -865,22 +870,102 @@ function checkHeroCollisions() {
     if (key[3]) {
         // down
 
+
+
+
+        if ((bottomLeftIsOnAPlatform > -1) && (bottomRightIsOnAPlatform > -1)) {
+            movementIsOk = true;
+            
+        }
+        if (!(bottomLeftIsCollidingWithTerrain || bottomRightIsCollidingWithTerrain)) {
+            movementIsOk = true;
+        }
+        if (!movementIsOk) {
+            // leading edge is a collision - check if trailing edge is on a platform, and nudge hero back onto the platform if so:
+            if ((topLeftIsOnAPlatform > -1) && (topRightIsOnAPlatform > -1)) {
+                if ((bottomLeftIsOnAPlatform == -1) && (bottomRightIsOnAPlatform == -1)) {
+                    hero.y = (thisMapData.movingPlatforms[topLeftIsOnAPlatform].y + tileW / 2 + (thisMapData.movingPlatforms[topLeftIsOnAPlatform].height - 1) * tileW) - (hero.height / 2) - 1;
+                }
+            } else {
+                // platform not involved - find the tile's bottom edge
+                var tileCollidedWith = getTileY(hero.y + hero.height / 2);
+                var tileTopEdge = (tileCollidedWith) * tileW;
+                hero.y = tileTopEdge - hero.height / 2 - 1;
+            }
+        }
+
+
+
+
+
+
     }
     if (key[0]) {
         // left/west
+
+
+        if ((bottomLeftIsOnAPlatform > -1) && (topLeftIsOnAPlatform > -1)) {
+            movementIsOk = true;
+            
+        }
+        if (!(bottomLeftIsCollidingWithTerrain || topLeftIsCollidingWithTerrain)) {
+            movementIsOk = true;
+        }
+        if (!movementIsOk) {
+            // leading edge is a collision - check if trailing edge is on a platform, and nudge hero back onto the platform if so:
+            if ((topRightIsOnAPlatform > -1) && (bottomRightIsOnAPlatform > -1)) {
+                if ((bottomLeftIsOnAPlatform == -1) && (topLeftIsOnAPlatform == -1)) {
+                    hero.x = thisMapData.movingPlatforms[topRightIsOnAPlatform].x - tileW / 2 + (hero.height / 2) + 1;
+                }
+            } else {
+                // platform not involved - find the tile's bottom edge
+         var tileCollidedWith = getTileX(hero.x - hero.width / 2);
+                    var tileRightEdge = (tileCollidedWith + 1) * tileW;
+                    hero.x = tileRightEdge + hero.width / 2 + 1;
+            }
+        }
+
 
     }
     if (key[1]) {
         //right/east
 
+
+
+
+      if ((bottomRightIsOnAPlatform > -1) && (topRightIsOnAPlatform > -1)) {
+            movementIsOk = true;
+            
+        }
+        if (!(bottomRightIsCollidingWithTerrain || topRightIsCollidingWithTerrain)) {
+            movementIsOk = true;
+        }
+        if (!movementIsOk) {
+            // leading edge is a collision - check if trailing edge is on a platform, and nudge hero back onto the platform if so:
+            if ((topLeftIsOnAPlatform > -1) && (bottomLeftIsOnAPlatform > -1)) {
+                if ((bottomRightIsOnAPlatform == -1) && (topRightIsOnAPlatform == -1)) {
+                    hero.x = thisMapData.movingPlatforms[topLeftIsOnAPlatform].x + tileW / 2 + ((thisMapData.movingPlatforms[topLeftIsOnAPlatform].width - 1) * tileW) - (hero.height / 2) - 1;
+                }
+            } else {
+                // platform not involved - find the tile's bottom edge
+      var tileCollidedWith = getTileX(hero.x + hero.width / 2);
+                    var tileLeftEdge = (tileCollidedWith) * tileW;
+                    hero.x = tileLeftEdge - hero.width / 2 - 1;
+            }
+        }
+
+
+
+
+
     }
 
     if (platformIsClear) {
-if (topLeftIsOnAPlatform >= 0) {
-        hero.x += thisMapData.movingPlatforms[topLeftIsOnAPlatform].xSpeed;
-        hero.y += thisMapData.movingPlatforms[topLeftIsOnAPlatform].ySpeed;
-        hero.z += thisMapData.movingPlatforms[topLeftIsOnAPlatform].zSpeed;
-}
+        if (topLeftIsOnAPlatform >= 0) {
+            hero.x += thisMapData.movingPlatforms[topLeftIsOnAPlatform].xSpeed;
+            hero.y += thisMapData.movingPlatforms[topLeftIsOnAPlatform].ySpeed;
+            hero.z += thisMapData.movingPlatforms[topLeftIsOnAPlatform].zSpeed;
+        }
     } else {
         if (topLeftIsOnAPlatform >= 0) {
             thisMapData.movingPlatforms[topLeftIsOnAPlatform].canMove = false;
@@ -896,46 +981,56 @@ if (topLeftIsOnAPlatform >= 0) {
         }
     }
 
-   
- 
 /*
-        // tile collisions:
-        if (key[2]) {
-            // up
-            if ((isATerrainCollision(hero.x - hero.width / 2, hero.y - hero.height / 2)) || (isATerrainCollision(hero.x + hero.width / 2, hero.y - hero.height / 2))) {
-                // find the tile's bottom edge
-                var tileCollidedWith = getTileY(hero.y - hero.height / 2);
-                var tileBottomEdge = (tileCollidedWith + 1) * tileW;
-                // use the +1 to make sure it's just clear of the collision tile
-                hero.y = tileBottomEdge + hero.height / 2 + 1;
+
+
+   if (trailingEdgePoint1y >= (thisPlatform.y - tileW / 2)) {
+                                if (trailingEdgePoint2y <= (thisPlatform.y + tileW / 2 + (thisPlatform.height - 1) * tileW)) {
+                                    if (trailingEdgePoint1x >= (thisPlatform.x - tileW / 2)) {
+                                        if (trailingEdgePoint2x <= (thisPlatform.x + tileW / 2 + (thisPlatform.width - 1) * tileW)) {
+                                            // if the trailing edge is on the platform as well, then the platform is clear to move
+                                            thisPlatform.canMove = true;
+
+*/
+
+    /*
+            // tile collisions:
+            if (key[2]) {
+                // up
+                if ((isATerrainCollision(hero.x - hero.width / 2, hero.y - hero.height / 2)) || (isATerrainCollision(hero.x + hero.width / 2, hero.y - hero.height / 2))) {
+                    // find the tile's bottom edge
+                    var tileCollidedWith = getTileY(hero.y - hero.height / 2);
+                    var tileBottomEdge = (tileCollidedWith + 1) * tileW;
+                    // use the +1 to make sure it's just clear of the collision tile
+                    hero.y = tileBottomEdge + hero.height / 2 + 1;
+                }
             }
-        }
-        if (key[3]) {
-            // down
-            if ((isATerrainCollision(hero.x - hero.width / 2, hero.y + hero.height / 2)) || (isATerrainCollision(hero.x + hero.width / 2, hero.y + hero.height / 2))) {
-                var tileCollidedWith = getTileY(hero.y + hero.height / 2);
-                var tileTopEdge = (tileCollidedWith) * tileW;
-                hero.y = tileTopEdge - hero.height / 2 - 1;
+            if (key[3]) {
+                // down
+                if ((isATerrainCollision(hero.x - hero.width / 2, hero.y + hero.height / 2)) || (isATerrainCollision(hero.x + hero.width / 2, hero.y + hero.height / 2))) {
+                    var tileCollidedWith = getTileY(hero.y + hero.height / 2);
+                    var tileTopEdge = (tileCollidedWith) * tileW;
+                    hero.y = tileTopEdge - hero.height / 2 - 1;
+                }
             }
-        }
-        if (key[0]) {
-            // left/west
-            if ((isATerrainCollision(hero.x - hero.width / 2, hero.y + hero.height / 2)) || (isATerrainCollision(hero.x - hero.width / 2, hero.y - hero.height / 2))) {
-                var tileCollidedWith = getTileX(hero.x - hero.width / 2);
-                var tileRightEdge = (tileCollidedWith + 1) * tileW;
-                hero.x = tileRightEdge + hero.width / 2 + 1;
+            if (key[0]) {
+                // left/west
+                if ((isATerrainCollision(hero.x - hero.width / 2, hero.y + hero.height / 2)) || (isATerrainCollision(hero.x - hero.width / 2, hero.y - hero.height / 2))) {
+                    var tileCollidedWith = getTileX(hero.x - hero.width / 2);
+                    var tileRightEdge = (tileCollidedWith + 1) * tileW;
+                    hero.x = tileRightEdge + hero.width / 2 + 1;
+                }
             }
-        }
-        if (key[1]) {
-            //right/east
-            if ((isATerrainCollision(hero.x + hero.width / 2, hero.y + hero.height / 2)) || (isATerrainCollision(hero.x + hero.width / 2, hero.y - hero.height / 2))) {
-                var tileCollidedWith = getTileX(hero.x + hero.width / 2);
-                var tileLeftEdge = (tileCollidedWith) * tileW;
-                hero.x = tileLeftEdge - hero.width / 2 - 1;
+            if (key[1]) {
+                //right/east
+                if ((isATerrainCollision(hero.x + hero.width / 2, hero.y + hero.height / 2)) || (isATerrainCollision(hero.x + hero.width / 2, hero.y - hero.height / 2))) {
+                    var tileCollidedWith = getTileX(hero.x + hero.width / 2);
+                    var tileLeftEdge = (tileCollidedWith) * tileW;
+                    hero.x = tileLeftEdge - hero.width / 2 - 1;
+                }
             }
-        }
-    */
-    
+        */
+
     var thisNPC, thisItem;
     // check for collisions against NPCs:
     for (var i = 0; i < thisMapData.npcs.length; i++) {
@@ -946,6 +1041,7 @@ if (topLeftIsOnAPlatform >= 0) {
             }
         }
     }
+
     // check for collisions against items:
     for (var i = 0; i < thisMapData.items.length; i++) {
         thisItem = thisMapData.items[i];
@@ -965,36 +1061,33 @@ if (topLeftIsOnAPlatform >= 0) {
         }
     }
 
-
-
-
-
-
-// check for inner doors:
-if (typeof thisMapData.innerDoors !== "undefined") {
-    var thisInnerDoor;
-    for (var i in thisMapData.innerDoors) {
-        thisInnerDoor = thisMapData.innerDoors[i];
-        if (!thisInnerDoor.isOpen) {
-            if (isAnObjectCollision(getTileCentreCoordX(thisInnerDoor.tileX), getTileCentreCoordY(thisInnerDoor.tileY), tileW, tileW, hero.x, hero.y, hero.width, hero.height)) {
-                if (thisInnerDoor.isLocked) {
-                    // check for key
-                    var hasInnerDoorKey = hero.currency.keys.indexOf(i);
-                    if (hasInnerDoorKey != -1) {
-                        unlockInnerDoor(i);
+    // check for inner doors:
+    if (typeof thisMapData.innerDoors !== "undefined") {
+        var thisInnerDoor;
+        for (var i in thisMapData.innerDoors) {
+            thisInnerDoor = thisMapData.innerDoors[i];
+            if (!thisInnerDoor.isOpen) {
+                if (isAnObjectCollision(getTileCentreCoordX(thisInnerDoor.tileX), getTileCentreCoordY(thisInnerDoor.tileY), tileW, tileW, hero.x, hero.y, hero.width, hero.height)) {
+                    if (thisInnerDoor.isLocked) {
+                        // check for key
+                        var hasInnerDoorKey = hero.currency.keys.indexOf(i);
+                        if (hasInnerDoorKey != -1) {
+                            unlockInnerDoor(i);
+                            openInnerDoor(i);
+                            hero.currency.keys.splice(hasInnerDoorKey, 1);
+                            UI.updateCurrencies();
+                        }
+                    } else {
                         openInnerDoor(i);
-                        hero.currency.keys.splice(hasInnerDoorKey, 1);
-                        UI.updateCurrencies();
                     }
-                } else {
-                    openInnerDoor(i);
+                    getHeroAsCloseAsPossibleToObject(getTileCentreCoordX(thisInnerDoor.tileX), getTileCentreCoordY(thisInnerDoor.tileY), tileW, tileW);
                 }
-                getHeroAsCloseAsPossibleToObject(getTileCentreCoordX(thisInnerDoor.tileX), getTileCentreCoordY(thisInnerDoor.tileY), tileW, tileW);
             }
         }
     }
 }
-}
+
+
 
 
 
