@@ -144,7 +144,7 @@
             "zMin": 0,
             "zMax": 0,
             "xSpeed": 0,
-            "ySpeed": 2,
+            "ySpeed": 8,
             "zSpeed": 0,
             "graphic": 1
         }],
