@@ -841,7 +841,7 @@ function checkHeroCollisions() {
     }
 
 
-    var movementIsOk = false;
+     movementIsOk = false;
 
 
 
@@ -938,10 +938,7 @@ function checkHeroCollisions() {
                     bottomRightIsOnAPlatform = isOnAPlatform(hero.x + hero.width / 2, hero.y + hero.height / 2);
 
 
-                    topLeftIsOnAPlatform = isOnAPlatform(hero.x - hero.width / 2, hero.y - hero.height / 2);
-                    topRightIsOnAPlatform = isOnAPlatform(hero.x + hero.width / 2, hero.y - hero.height / 2);
-                    bottomLeftIsOnAPlatform = isOnAPlatform(hero.x - hero.width / 2, hero.y + hero.height / 2);
-                    bottomRightIsOnAPlatform = isOnAPlatform(hero.x + hero.width / 2, hero.y + hero.height / 2);
+
 
                     if (topLeftIsOnAPlatform >= 0) {
                         platformIsClear = (topLeftIsOnAPlatform == bottomLeftIsOnAPlatform && bottomLeftIsOnAPlatform == topRightIsOnAPlatform && topRightIsOnAPlatform == bottomRightIsOnAPlatform);
@@ -971,7 +968,7 @@ function checkHeroCollisions() {
     }
 
 
-    var movementIsOk = false;
+     movementIsOk = false;
 
 
 
@@ -1002,10 +999,7 @@ function checkHeroCollisions() {
                     bottomRightIsOnAPlatform = isOnAPlatform(hero.x + hero.width / 2, hero.y + hero.height / 2);
 
 
-                    topLeftIsOnAPlatform = isOnAPlatform(hero.x - hero.width / 2, hero.y - hero.height / 2);
-                    topRightIsOnAPlatform = isOnAPlatform(hero.x + hero.width / 2, hero.y - hero.height / 2);
-                    bottomLeftIsOnAPlatform = isOnAPlatform(hero.x - hero.width / 2, hero.y + hero.height / 2);
-                    bottomRightIsOnAPlatform = isOnAPlatform(hero.x + hero.width / 2, hero.y + hero.height / 2);
+
 
                     if (topLeftIsOnAPlatform >= 0) {
                         platformIsClear = (topLeftIsOnAPlatform == bottomLeftIsOnAPlatform && bottomLeftIsOnAPlatform == topRightIsOnAPlatform && topRightIsOnAPlatform == bottomRightIsOnAPlatform);
@@ -1035,7 +1029,7 @@ function checkHeroCollisions() {
 
 
 
-    var movementIsOk = false;
+     movementIsOk = false;
 
 
 
