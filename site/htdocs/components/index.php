@@ -192,7 +192,7 @@ responsiveBackground('/images/placeholder.jpg', array(300,600,900));
 </div>
 <div class="medium-6 wide-3 columns"><div>
   <h6>Heading 6</h6>
-<p>Alice was beginning to get very tired of sitting by her sister on the bank, <span class="selected">an example of text when selected</span> and of having nothing to do: once or twice she had peeped into the book her sister was reading.</p></div>
+<p>Alice was beginning to get very tired of sitting by her sister on the bank, <mark>an example of text when selected</mark> and of having nothing to do: once or twice she had peeped into the book her sister was reading.</p></div>
 </div>
 </div>
 
