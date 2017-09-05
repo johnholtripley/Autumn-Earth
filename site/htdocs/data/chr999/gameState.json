@@ -342,7 +342,7 @@
         "centreY": 28,
         "tileX": 13,
         "tileY": 3,
-        "facing": "s",
+        "facing": "e",
         "speed": 4,
         "inventorySize": 6,
         "animation": {

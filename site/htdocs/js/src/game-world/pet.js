@@ -281,6 +281,9 @@ function movePet() {
                     thisPet.breadcrumb.pop();
                     thisPet.breadcrumb.unshift([thisPet.tileX, thisPet.tileY]);
                 }
+
+
+
                 // check proximity to target to see if pet should stop moving:        
                 if ((isInRange(thisPetsTarget.x, thisPetsTarget.y, thisPet.x, thisPet.y, tileW * 2))) {
                     thisPet.state = "wait";
@@ -310,11 +313,16 @@ function movePet() {
                             }
                         }
                     }
+                     
                     if (breadcrumbFound) {
                         thisPet.state = "moving";
                         thisPet.foundPath = '';
                     } else {
+
+
+
                         if (thisPet.foundPath != '') {
+
                             // try for breadcrumbs first, but use path if not
                             thisPet.facing = thisPet.foundPath[thisPet.pathIndex];
                             thisPet.pathIndex++;

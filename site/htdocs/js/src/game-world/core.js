@@ -445,7 +445,7 @@ function initialiseNPC(whichNPC) {
 
 
 function prepareGame() {
-   
+
     // get map image references:
     tileImages = [];
     for (var i = 0; i < tileGraphicsToLoad.length; i++) {
@@ -463,33 +463,25 @@ function prepareGame() {
     backgroundImg = Loader.getImage("backgroundImg");
     // initialise and position NPCs:
     for (var i = 0; i < thisMapData.npcs.length; i++) {
-      initialiseNPC(i);
+        initialiseNPC(i);
     }
     // initialise pet:
     if (hasActivePet) {
         for (var i = 0; i < hero.activePets.length; i++) {
             hero.allPets[hero.activePets[i]].x = getTileCentreCoordX(hero.allPets[hero.activePets[i]].tileX);
             hero.allPets[hero.activePets[i]].y = getTileCentreCoordY(hero.allPets[hero.activePets[i]].tileY);
-
-
-// check these tiles are within the normal grid - if not use the pet in front's z depth:
-
-
-if ((hero.allPets[hero.activePets[i]].tileX < 0) || (hero.allPets[hero.activePets[i]].tileY < 0) || (hero.allPets[hero.activePets[i]].tileX >= mapTilesX) || (hero.allPets[hero.activePets[i]].tileY >= mapTilesY)) {
-    hero.allPets[hero.activePets[i]].z = hero.allPets[hero.activePets[i-1]].z;
-    
-} else {
-    hero.allPets[hero.activePets[i]].z = getElevation(hero.allPets[hero.activePets[i]].tileX, hero.allPets[hero.activePets[i]].tileY);
-}
-
-
-            
+            // check these tiles are within the normal grid - if not use the pet in front's z depth:
+            if ((hero.allPets[hero.activePets[i]].tileX < 0) || (hero.allPets[hero.activePets[i]].tileY < 0) || (hero.allPets[hero.activePets[i]].tileX >= mapTilesX) || (hero.allPets[hero.activePets[i]].tileY >= mapTilesY)) {
+                hero.allPets[hero.activePets[i]].z = hero.allPets[hero.activePets[i - 1]].z;
+            } else {
+                hero.allPets[hero.activePets[i]].z = getElevation(hero.allPets[hero.activePets[i]].tileX, hero.allPets[hero.activePets[i]].tileY);
+            }
             hero.allPets[hero.activePets[i]].dx = 0;
             hero.allPets[hero.activePets[i]].dy = 0;
             hero.allPets[hero.activePets[i]].foundPath = '';
-            if(hero.allPets[hero.activePets[i]].state != "queuing") {
-            hero.allPets[hero.activePets[i]].state = "wait";
-        }
+            if (hero.allPets[hero.activePets[i]].state != "queuing") {
+                hero.allPets[hero.activePets[i]].state = "wait";
+            }
             if (i == 0) {
                 // first pet follows the hero:
                 hero.allPets[hero.activePets[i]].following = hero;
@@ -498,7 +490,7 @@ if ((hero.allPets[hero.activePets[i]].tileX < 0) || (hero.allPets[hero.activePet
                 hero.allPets[hero.activePets[i]].following = hero.allPets[hero.activePets[i - 1]];
             }
             if (i != (hero.activePets.length - 1)) {
-                // it's not the last one, so drop a breadcrumb trail:
+                // it's not the last one, drop a breadcrumb trail:
                 hero.allPets[hero.activePets[i]].breadcrumb = [];
                 for (var j = 0; j < breadCrumbLength; j++) {
                     hero.allPets[hero.activePets[i]].breadcrumb[j] = [hero.allPets[hero.activePets[i]].tileX, hero.allPets[hero.activePets[i]].tileY];
@@ -566,8 +558,6 @@ if ((hero.allPets[hero.activePets[i]].tileX < 0) || (hero.allPets[hero.activePet
     fae.z = hero.z;
     fae.dz = 1;
     // fae.pulse = 0;
-
-
 
     timeSinceLastFrameSwap = 0;
     currentAnimationFrame = 0;
@@ -809,267 +799,125 @@ function isOnAPlatform(x, y) {
 }
 
 
+
+
+
+
 function checkHeroCollisions() {
-    var topLeftIsOnAPlatform = -1;
-    var topRightIsOnAPlatform = -1;
-    var bottomLeftIsOnAPlatform = -1;
-    var bottomRightIsOnAPlatform = -1;
+    var topLeftIsOnAPlatform, topRightIsOnAPlatform, bottomLeftIsOnAPlatform, bottomRightIsOnAPlatform, platformIsClear, movementIsOk;
 
-    var movementIsOk = false;
-    var platformIsClear = true;
-
-    var topLeftIsCollidingWithTerrain = isATerrainCollision(hero.x - hero.width / 2, hero.y - hero.height / 2);
-    var topRightIsCollidingWithTerrain = isATerrainCollision(hero.x + hero.width / 2, hero.y - hero.height / 2);
-    var bottomLeftIsCollidingWithTerrain = isATerrainCollision(hero.x - hero.width / 2, hero.y + hero.height / 2);
-    var bottomRightIsCollidingWithTerrain = isATerrainCollision(hero.x + hero.width / 2, hero.y + hero.height / 2);
-
-
-
-    topLeftIsOnAPlatform = isOnAPlatform(hero.x - hero.width / 2, hero.y - hero.height / 2);
-    topRightIsOnAPlatform = isOnAPlatform(hero.x + hero.width / 2, hero.y - hero.height / 2);
-    bottomLeftIsOnAPlatform = isOnAPlatform(hero.x - hero.width / 2, hero.y + hero.height / 2);
-    bottomRightIsOnAPlatform = isOnAPlatform(hero.x + hero.width / 2, hero.y + hero.height / 2);
-
-    if (thisMapData.movingPlatforms) {
-        for (var i = 0; i < thisMapData.movingPlatforms.length; i++) {
-            thisMapData.movingPlatforms[i].canMove = true;
-        }
-    }
-
-    if (topLeftIsOnAPlatform >= 0) {
-        platformIsClear = (topLeftIsOnAPlatform == bottomLeftIsOnAPlatform && bottomLeftIsOnAPlatform == topRightIsOnAPlatform && topRightIsOnAPlatform == bottomRightIsOnAPlatform);
-    }
-
-
-     movementIsOk = false;
-
-
-
-
-
+    movementIsOk = false;
     if (key[2]) {
-
         // up
-        if ((topLeftIsOnAPlatform > -1) && (topRightIsOnAPlatform > -1)) {
+        if ((isOnAPlatform(hero.x - hero.width / 2, hero.y - hero.height / 2) > -1) && (isOnAPlatform(hero.x + hero.width / 2, hero.y - hero.height / 2) > -1)) {
             movementIsOk = true;
-
         }
-        if (!(topLeftIsCollidingWithTerrain || topRightIsCollidingWithTerrain)) {
+        if (!(isATerrainCollision(hero.x - hero.width / 2, hero.y - hero.height / 2) || isATerrainCollision(hero.x + hero.width / 2, hero.y - hero.height / 2))) {
             movementIsOk = true;
-
         }
         if (!movementIsOk) {
-
             // leading edge is a collision - check if trailing edge is on a platform, and nudge hero back onto the platform if so:
-            if ((bottomLeftIsOnAPlatform > -1) && (bottomRightIsOnAPlatform > -1)) {
-                if ((topLeftIsOnAPlatform == -1) && (topRightIsOnAPlatform == -1)) {
-                    hero.y = thisMapData.movingPlatforms[bottomLeftIsOnAPlatform].y - (tileW / 2) + (hero.height / 2) + 1;
-
-
-                    topLeftIsCollidingWithTerrain = isATerrainCollision(hero.x - hero.width / 2, hero.y - hero.height / 2);
-                    topRightIsCollidingWithTerrain = isATerrainCollision(hero.x + hero.width / 2, hero.y - hero.height / 2);
-                    bottomLeftIsCollidingWithTerrain = isATerrainCollision(hero.x - hero.width / 2, hero.y + hero.height / 2);
-                    bottomRightIsCollidingWithTerrain = isATerrainCollision(hero.x + hero.width / 2, hero.y + hero.height / 2);
-
-
-
-                    topLeftIsOnAPlatform = isOnAPlatform(hero.x - hero.width / 2, hero.y - hero.height / 2);
-                    topRightIsOnAPlatform = isOnAPlatform(hero.x + hero.width / 2, hero.y - hero.height / 2);
-                    bottomLeftIsOnAPlatform = isOnAPlatform(hero.x - hero.width / 2, hero.y + hero.height / 2);
-                    bottomRightIsOnAPlatform = isOnAPlatform(hero.x + hero.width / 2, hero.y + hero.height / 2);
+            if ((isOnAPlatform(hero.x - hero.width / 2, hero.y + hero.height / 2) > -1) && (isOnAPlatform(hero.x + hero.width / 2, hero.y + hero.height / 2) > -1)) {
+                if ((isOnAPlatform(hero.x - hero.width / 2, hero.y - hero.height / 2) == -1) && (isOnAPlatform(hero.x + hero.width / 2, hero.y - hero.height / 2) == -1)) {
+                    hero.y = thisMapData.movingPlatforms[isOnAPlatform(hero.x - hero.width / 2, hero.y + hero.height / 2)].y - (tileW / 2) + (hero.height / 2) + 1;
                 }
             } else {
-
                 // platform not involved - find the tile's bottom edge
                 var tileCollidedWith = getTileY(hero.y - hero.height / 2);
                 var tileBottomEdge = (tileCollidedWith + 1) * tileW;
                 // use the +1 to make sure it's just clear of the collision tile
                 hero.y = tileBottomEdge + hero.height / 2 + 1;
-
-
-                topLeftIsCollidingWithTerrain = isATerrainCollision(hero.x - hero.width / 2, hero.y - hero.height / 2);
-                topRightIsCollidingWithTerrain = isATerrainCollision(hero.x + hero.width / 2, hero.y - hero.height / 2);
-                bottomLeftIsCollidingWithTerrain = isATerrainCollision(hero.x - hero.width / 2, hero.y + hero.height / 2);
-                bottomRightIsCollidingWithTerrain = isATerrainCollision(hero.x + hero.width / 2, hero.y + hero.height / 2);
-
-
-
-                topLeftIsOnAPlatform = isOnAPlatform(hero.x - hero.width / 2, hero.y - hero.height / 2);
-                topRightIsOnAPlatform = isOnAPlatform(hero.x + hero.width / 2, hero.y - hero.height / 2);
-                bottomLeftIsOnAPlatform = isOnAPlatform(hero.x - hero.width / 2, hero.y + hero.height / 2);
-                bottomRightIsOnAPlatform = isOnAPlatform(hero.x + hero.width / 2, hero.y + hero.height / 2);
-
-
             }
         }
     }
 
-
-
     movementIsOk = false;
-
-
-
     if (key[3]) {
         // down
-        if ((bottomLeftIsOnAPlatform > -1) && (bottomRightIsOnAPlatform > -1)) {
+        if ((isOnAPlatform(hero.x - hero.width / 2, hero.y + hero.height / 2) > -1) && (isOnAPlatform(hero.x + hero.width / 2, hero.y + hero.height / 2) > -1)) {
             movementIsOk = true;
         }
-        if (!(bottomLeftIsCollidingWithTerrain || bottomRightIsCollidingWithTerrain)) {
+        if (!(isATerrainCollision(hero.x - hero.width / 2, hero.y + hero.height / 2) || isATerrainCollision(hero.x + hero.width / 2, hero.y + hero.height / 2))) {
             movementIsOk = true;
         }
         if (!movementIsOk) {
             // leading edge is a collision - check if trailing edge is on a platform, and nudge hero back onto the platform if so:
-            if ((topLeftIsOnAPlatform > -1) && (topRightIsOnAPlatform > -1)) {
-                if ((bottomLeftIsOnAPlatform == -1) && (bottomRightIsOnAPlatform == -1)) {
-                    hero.y = (thisMapData.movingPlatforms[topLeftIsOnAPlatform].y + tileW / 2 + (thisMapData.movingPlatforms[topLeftIsOnAPlatform].height - 1) * tileW) - (hero.height / 2) - 1;
-
-
-                    topLeftIsCollidingWithTerrain = isATerrainCollision(hero.x - hero.width / 2, hero.y - hero.height / 2);
-                    topRightIsCollidingWithTerrain = isATerrainCollision(hero.x + hero.width / 2, hero.y - hero.height / 2);
-                    bottomLeftIsCollidingWithTerrain = isATerrainCollision(hero.x - hero.width / 2, hero.y + hero.height / 2);
-                    bottomRightIsCollidingWithTerrain = isATerrainCollision(hero.x + hero.width / 2, hero.y + hero.height / 2);
-
-
-
-                    topLeftIsOnAPlatform = isOnAPlatform(hero.x - hero.width / 2, hero.y - hero.height / 2);
-                    topRightIsOnAPlatform = isOnAPlatform(hero.x + hero.width / 2, hero.y - hero.height / 2);
-                    bottomLeftIsOnAPlatform = isOnAPlatform(hero.x - hero.width / 2, hero.y + hero.height / 2);
-                    bottomRightIsOnAPlatform = isOnAPlatform(hero.x + hero.width / 2, hero.y + hero.height / 2);
-
-
-
-
-                    if (topLeftIsOnAPlatform >= 0) {
-                        platformIsClear = (topLeftIsOnAPlatform == bottomLeftIsOnAPlatform && bottomLeftIsOnAPlatform == topRightIsOnAPlatform && topRightIsOnAPlatform == bottomRightIsOnAPlatform);
-                    }
-
+            if ((isOnAPlatform(hero.x - hero.width / 2, hero.y - hero.height / 2) > -1) && (isOnAPlatform(hero.x + hero.width / 2, hero.y - hero.height / 2) > -1)) {
+                if ((isOnAPlatform(hero.x - hero.width / 2, hero.y + hero.height / 2) == -1) && (isOnAPlatform(hero.x + hero.width / 2, hero.y + hero.height / 2) == -1)) {
+                    hero.y = (thisMapData.movingPlatforms[isOnAPlatform(hero.x - hero.width / 2, hero.y - hero.height / 2)].y + tileW / 2 + (thisMapData.movingPlatforms[isOnAPlatform(hero.x - hero.width / 2, hero.y - hero.height / 2)].height - 1) * tileW) - (hero.height / 2) - 1;
                 }
             } else {
                 // platform not involved - find the tile's bottom edge
                 var tileCollidedWith = getTileY(hero.y + hero.height / 2);
                 var tileTopEdge = (tileCollidedWith) * tileW;
                 hero.y = tileTopEdge - hero.height / 2 - 1;
-
-
-                topLeftIsCollidingWithTerrain = isATerrainCollision(hero.x - hero.width / 2, hero.y - hero.height / 2);
-                topRightIsCollidingWithTerrain = isATerrainCollision(hero.x + hero.width / 2, hero.y - hero.height / 2);
-                bottomLeftIsCollidingWithTerrain = isATerrainCollision(hero.x - hero.width / 2, hero.y + hero.height / 2);
-                bottomRightIsCollidingWithTerrain = isATerrainCollision(hero.x + hero.width / 2, hero.y + hero.height / 2);
-
-
-
-                topLeftIsOnAPlatform = isOnAPlatform(hero.x - hero.width / 2, hero.y - hero.height / 2);
-                topRightIsOnAPlatform = isOnAPlatform(hero.x + hero.width / 2, hero.y - hero.height / 2);
-                bottomLeftIsOnAPlatform = isOnAPlatform(hero.x - hero.width / 2, hero.y + hero.height / 2);
-                bottomRightIsOnAPlatform = isOnAPlatform(hero.x + hero.width / 2, hero.y + hero.height / 2);
             }
         }
     }
 
-
-     movementIsOk = false;
-
-
-
-
+    movementIsOk = false;
     if (key[0]) {
         // left/west
-        if ((bottomLeftIsOnAPlatform > -1) && (topLeftIsOnAPlatform > -1)) {
+        if ((isOnAPlatform(hero.x - hero.width / 2, hero.y + hero.height / 2) > -1) && (isOnAPlatform(hero.x - hero.width / 2, hero.y - hero.height / 2) > -1)) {
             movementIsOk = true;
         }
-        if (!(bottomLeftIsCollidingWithTerrain || topLeftIsCollidingWithTerrain)) {
+        if (!(isATerrainCollision(hero.x - hero.width / 2, hero.y + hero.height / 2) || isATerrainCollision(hero.x - hero.width / 2, hero.y - hero.height / 2))) {
             movementIsOk = true;
         }
         if (!movementIsOk) {
             // leading edge is a collision - check if trailing edge is on a platform, and nudge hero back onto the platform if so:
-            if ((topRightIsOnAPlatform > -1) && (bottomRightIsOnAPlatform > -1)) {
-                if ((bottomLeftIsOnAPlatform == -1) && (topLeftIsOnAPlatform == -1)) {
-                    hero.x = thisMapData.movingPlatforms[topRightIsOnAPlatform].x - tileW / 2 + (hero.height / 2) + 1;
-                    topLeftIsCollidingWithTerrain = isATerrainCollision(hero.x - hero.width / 2, hero.y - hero.height / 2);
-                    topRightIsCollidingWithTerrain = isATerrainCollision(hero.x + hero.width / 2, hero.y - hero.height / 2);
-                    bottomLeftIsCollidingWithTerrain = isATerrainCollision(hero.x - hero.width / 2, hero.y + hero.height / 2);
-                    bottomRightIsCollidingWithTerrain = isATerrainCollision(hero.x + hero.width / 2, hero.y + hero.height / 2);
-
-
-
-                    topLeftIsOnAPlatform = isOnAPlatform(hero.x - hero.width / 2, hero.y - hero.height / 2);
-                    topRightIsOnAPlatform = isOnAPlatform(hero.x + hero.width / 2, hero.y - hero.height / 2);
-                    bottomLeftIsOnAPlatform = isOnAPlatform(hero.x - hero.width / 2, hero.y + hero.height / 2);
-                    bottomRightIsOnAPlatform = isOnAPlatform(hero.x + hero.width / 2, hero.y + hero.height / 2);
-
-
-
-
-                    if (topLeftIsOnAPlatform >= 0) {
-                        platformIsClear = (topLeftIsOnAPlatform == bottomLeftIsOnAPlatform && bottomLeftIsOnAPlatform == topRightIsOnAPlatform && topRightIsOnAPlatform == bottomRightIsOnAPlatform);
-                    }
-
-
+            if ((isOnAPlatform(hero.x + hero.width / 2, hero.y - hero.height / 2) > -1) && (isOnAPlatform(hero.x + hero.width / 2, hero.y + hero.height / 2) > -1)) {
+                if ((isOnAPlatform(hero.x - hero.width / 2, hero.y + hero.height / 2) == -1) && (isOnAPlatform(hero.x - hero.width / 2, hero.y - hero.height / 2) == -1)) {
+                    hero.x = thisMapData.movingPlatforms[isOnAPlatform(hero.x + hero.width / 2, hero.y - hero.height / 2)].x - tileW / 2 + (hero.height / 2) + 1;
                 }
             } else {
                 // platform not involved - find the tile's bottom edge
                 var tileCollidedWith = getTileX(hero.x - hero.width / 2);
                 var tileRightEdge = (tileCollidedWith + 1) * tileW;
                 hero.x = tileRightEdge + hero.width / 2 + 1;
-                topLeftIsCollidingWithTerrain = isATerrainCollision(hero.x - hero.width / 2, hero.y - hero.height / 2);
-                topRightIsCollidingWithTerrain = isATerrainCollision(hero.x + hero.width / 2, hero.y - hero.height / 2);
-                bottomLeftIsCollidingWithTerrain = isATerrainCollision(hero.x - hero.width / 2, hero.y + hero.height / 2);
-                bottomRightIsCollidingWithTerrain = isATerrainCollision(hero.x + hero.width / 2, hero.y + hero.height / 2);
+            }
+        }
+    }
 
-
-
-                topLeftIsOnAPlatform = isOnAPlatform(hero.x - hero.width / 2, hero.y - hero.height / 2);
-                topRightIsOnAPlatform = isOnAPlatform(hero.x + hero.width / 2, hero.y - hero.height / 2);
-                bottomLeftIsOnAPlatform = isOnAPlatform(hero.x - hero.width / 2, hero.y + hero.height / 2);
-                bottomRightIsOnAPlatform = isOnAPlatform(hero.x + hero.width / 2, hero.y + hero.height / 2);
+    movementIsOk = false;
+    if (key[1]) {
+        //right/east
+        if ((isOnAPlatform(hero.x + hero.width / 2, hero.y + hero.height / 2) > -1) && (isOnAPlatform(hero.x + hero.width / 2, hero.y - hero.height / 2) > -1)) {
+            movementIsOk = true;
+        }
+        if (!(isATerrainCollision(hero.x + hero.width / 2, hero.y + hero.height / 2) || isATerrainCollision(hero.x + hero.width / 2, hero.y - hero.height / 2))) {
+            movementIsOk = true;
+        }
+        if (!movementIsOk) {
+            // leading edge is a collision - check if trailing edge is on a platform, and nudge hero back onto the platform if so:
+            if ((isOnAPlatform(hero.x - hero.width / 2, hero.y - hero.height / 2) > -1) && (isOnAPlatform(hero.x - hero.width / 2, hero.y + hero.height / 2) > -1)) {
+                if ((isOnAPlatform(hero.x + hero.width / 2, hero.y + hero.height / 2) == -1) && (isOnAPlatform(hero.x + hero.width / 2, hero.y - hero.height / 2) == -1)) {
+                    hero.x = thisMapData.movingPlatforms[isOnAPlatform(hero.x - hero.width / 2, hero.y - hero.height / 2)].x + tileW / 2 + ((thisMapData.movingPlatforms[isOnAPlatform(hero.x - hero.width / 2, hero.y - hero.height / 2)].width - 1) * tileW) - (hero.height / 2) - 1;
+                }
+            } else {
+                // platform not involved - find the tile's bottom edge
+                var tileCollidedWith = getTileX(hero.x + hero.width / 2);
+                var tileLeftEdge = (tileCollidedWith) * tileW;
+                hero.x = tileLeftEdge - hero.width / 2 - 1;
             }
         }
     }
 
 
-
-     movementIsOk = false;
-
-
-
-
-    if (key[1]) {
-
-        //right/east
-        if ((bottomRightIsOnAPlatform > -1) && (topRightIsOnAPlatform > -1)) {
-            movementIsOk = true;
+    // determine if platforms are free to move:
+    if (thisMapData.movingPlatforms) {
+        for (var i = 0; i < thisMapData.movingPlatforms.length; i++) {
+            thisMapData.movingPlatforms[i].canMove = true;
         }
-        if (!(bottomRightIsCollidingWithTerrain || topRightIsCollidingWithTerrain)) {
-            movementIsOk = true;
-        }
-        if (!movementIsOk) {
+    }
 
-            // leading edge is a collision - check if trailing edge is on a platform, and nudge hero back onto the platform if so:
-            if ((topLeftIsOnAPlatform > -1) && (bottomLeftIsOnAPlatform > -1)) {
-                if ((bottomRightIsOnAPlatform == -1) && (topRightIsOnAPlatform == -1)) {
-                    hero.x = thisMapData.movingPlatforms[topLeftIsOnAPlatform].x + tileW / 2 + ((thisMapData.movingPlatforms[topLeftIsOnAPlatform].width - 1) * tileW) - (hero.height / 2) - 1;
-                }
+    topLeftIsOnAPlatform = isOnAPlatform(hero.x - hero.width / 2, hero.y - hero.height / 2);
+    topRightIsOnAPlatform = isOnAPlatform(hero.x + hero.width / 2, hero.y - hero.height / 2);
+    bottomLeftIsOnAPlatform = isOnAPlatform(hero.x - hero.width / 2, hero.y + hero.height / 2);
+    bottomRightIsOnAPlatform = isOnAPlatform(hero.x + hero.width / 2, hero.y + hero.height / 2);
 
-                topLeftIsOnAPlatform = isOnAPlatform(hero.x - hero.width / 2, hero.y - hero.height / 2);
-                topRightIsOnAPlatform = isOnAPlatform(hero.x + hero.width / 2, hero.y - hero.height / 2);
-                bottomLeftIsOnAPlatform = isOnAPlatform(hero.x - hero.width / 2, hero.y + hero.height / 2);
-                bottomRightIsOnAPlatform = isOnAPlatform(hero.x + hero.width / 2, hero.y + hero.height / 2);
-
-                if (topLeftIsOnAPlatform >= 0) {
-                    platformIsClear = (topLeftIsOnAPlatform == bottomLeftIsOnAPlatform && bottomLeftIsOnAPlatform == topRightIsOnAPlatform && topRightIsOnAPlatform == bottomRightIsOnAPlatform);
-                }
-
-
-            } else {
-
-                // platform not involved - find the tile's bottom edge
-                var tileCollidedWith = getTileX(hero.x + hero.width / 2);
-                var tileLeftEdge = (tileCollidedWith) * tileW;
-                hero.x = tileLeftEdge - hero.width / 2 - 1;
-
-            }
-        }
+    if (topLeftIsOnAPlatform >= 0) {
+        platformIsClear = (topLeftIsOnAPlatform == bottomLeftIsOnAPlatform && bottomLeftIsOnAPlatform == topRightIsOnAPlatform && topRightIsOnAPlatform == bottomRightIsOnAPlatform);
     }
 
     if (platformIsClear) {
@@ -1188,6 +1036,7 @@ function checkHeroCollisions() {
         }
     }
 }
+
 
 
 

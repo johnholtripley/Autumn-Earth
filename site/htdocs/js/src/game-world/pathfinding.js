@@ -5,9 +5,16 @@ if (window.Worker) {
         if (thisAgentsName == 'pet') {
             var thisPet = hero.allPets[hero.activePets[e.data[1]]];
             thisPet.foundPath = e.data[2];
-            thisPet.pathIndex = 1;
-            thisPet.state = 'moving';
-            thisPet.facing = e.data[2][0];
+            if (thisPet.foundPath.join() == "-,pathEnd") {
+                // couldn't find a path:
+                thisPet.state = 'waiting';
+                thisPet.foundPath = '';
+            } else {
+                // found one, so use it:
+                thisPet.pathIndex = 1;
+                thisPet.state = 'moving';
+                thisPet.facing = e.data[2][0];
+            }
         } else {
             // find which NPC this is:
             // http://stackoverflow.com/a/16100446/1054212
