@@ -934,7 +934,7 @@ $thisCommonName = substr($thisCommonName, 0, -1);
 
 $thisCommonName .= $thisSecondCommonName;
 
-$shouldAddPrefix = mt_rand(1,42);
+$shouldAddPrefix = mt_rand(1,44);
 switch ($shouldAddPrefix) {
     case 1:
         $thisCommonName = "Lesser ".$thisCommonName;
@@ -950,6 +950,12 @@ switch ($shouldAddPrefix) {
         break;
                   case 5:
          $thisCommonName = "Trailing ".$thisCommonName;
+        break;
+      case 6:
+         $thisCommonName = "Marsh* ".$thisCommonName;
+        break;
+case 7:
+         $thisCommonName = "Autumn ".$thisCommonName;
         break;
     default:
        $thisCommonName = ucfirst($thisCommonName);

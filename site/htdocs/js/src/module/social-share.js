@@ -53,6 +53,7 @@ function bindSocialLinks() {
     }
     // look for Web Share API links:
     var socialAPILinks = document.querySelectorAll('.shareLink');
+
     for (i = 0; i < socialAPILinks.length; ++i) {
         socialAPILinks[i].addEventListener("click", webShareAPI);
     }

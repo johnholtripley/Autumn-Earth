@@ -1,4 +1,4 @@
 <?php
-$butterflyPrefixes = array("barred", "++colour++", "clouded", "long-tailed", "marbled", "marsh", "meadow", "painted", "dark", "dwarf", "ghost", "mottled", "spined", "banded", "jewelled", "imperial", "speckled", "dusted", "ragged", "++colour++-tipped", "inked", "atlas", "silken", "shaded", "frosted", "++colour++-bordered", "peppered", "++colour++-studded", "++colour++-washed", "brimstone");
+$butterflyPrefixes = array("barred", "++colour++", "clouded", "long-tailed", "marbled", "marsh", "meadow", "painted", "dark", "dwarf", "ghost", "mottled", "spined", "banded", "jewelled", "imperial", "speckled", "dusted", "ragged", "++colour++-tipped", "inked", "atlas", "silken", "shaded", "frosted", "++colour++-bordered", "peppered", "++colour++-studded", "++colour++-washed", "brimstone", "++colour++-veined", "scorched");
 $butterflyColourPrefixes = array("copper", "orange", "purple", "iron", "yellow", "scarlet", "flame", "pearl");
 ?>
