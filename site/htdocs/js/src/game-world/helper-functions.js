@@ -254,6 +254,15 @@ function getRandomIntegerInclusive(min, max) {
    return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+function rollDice(quantity, sidedDice) {
+    // eg to roll 3d6, use rollDice(3,6);
+    var result = 0;
+    for (var i = 0; i < quantity; i++) {
+        result += getRandomIntegerInclusive(1, sidedDice);
+    }
+    return result;
+}
+
 function getRandomKeyFromObject(object) {
     var keys = Object.keys(object)
     return keys[ keys.length * Math.random() << 0];
