@@ -812,24 +812,12 @@ function growGrammar()
 
 }
 
-class grammarNodeConnection
-{
 
-    public function __construct()
-    {
-        global $grammarNodes;
-        $this->parents = array();
-        $this->name    = count($grammarNodes);
-        array_push($grammarNodes, $this);
-    }
-}
 
 function parseStringGrammar($thisGrammar)
 {
-    global $nodeList, $jointList, $debug, $canvaDimension, $grammarNodes;
-    $isInner             = false;
+    global $nodeList, $jointList, $debug, $canvaDimension;
     $characterCounter    = 0;
-    $grammarNodes        = array();
     $thisBranchesParents = null;
     do {
         $thisCharacter = substr($thisGrammar, $characterCounter, 1);
@@ -857,28 +845,27 @@ function parseStringGrammar($thisGrammar)
                 for ($i = 0; $i < count($activeParents); $i++) {
                     addJoint($activeParents[$i]->name, $newNode->name);
                 }
-if($thisBranchesParents !== null) {
-                array_push($thisBranchesParents, $newNode);
-} else {
-  $activeParents = array($newNode);
-}
+                if ($thisBranchesParents !== null) {
+                    array_push($thisBranchesParents, $newNode);
+                } else {
+                    $activeParents = array($newNode);
+                }
                 break;
             case "{":
 // branch opens
-                //$activeParents = array();
+             
                 $thisBranchesParents = array();
 
                 break;
             case "}":
                 // branch closes
-                //   $activeParent = $activeParent->parent;
-                $activeParents = $thisBranchesParents;
+            
+                $activeParents       = $thisBranchesParents;
                 $thisBranchesParents = null;
                 break;
 
             case ",":
-                // get the parent when the branch opened:
-                //   $activeParents = $parentAtBranch;
+           
                 break;
             default:
                 // nothing
@@ -895,7 +882,7 @@ do {
 
     $startGrammar = "S{O,O{O,O}}E";
     $startGrammar = "S{O,O}E";
- //   $startGrammar = "SOOE";
+    //   $startGrammar = "SOOE";
     growGrammar();
     parseStringGrammar($startGrammar);
     moveNodesApart();
