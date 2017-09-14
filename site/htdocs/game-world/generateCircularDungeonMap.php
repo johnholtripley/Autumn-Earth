@@ -812,56 +812,73 @@ function growGrammar()
 
 }
 
+class grammarNodeConnection
+{
 
-
+    public function __construct()
+    {
+        global $grammarNodes;
+        $this->parents = array();
+        $this->name    = count($grammarNodes);
+        array_push($grammarNodes, $this);
+    }
+}
 
 function parseStringGrammar($thisGrammar)
 {
-    global $nodeList, $jointList, $debug, $canvaDimension;
-$isInner = false;
-    $characterCounter = 0;
+    global $nodeList, $jointList, $debug, $canvaDimension, $grammarNodes;
+    $isInner             = false;
+    $characterCounter    = 0;
+    $grammarNodes        = array();
+    $thisBranchesParents = null;
     do {
         $thisCharacter = substr($thisGrammar, $characterCounter, 1);
 
         switch ($thisCharacter) {
             case "S":
                 // start node:
-                $newNode      = addNode("START", $canvaDimension / 2, $canvaDimension / 2);
-                $lastNodeName = array($newNode);
+                $newNode = addNode("START", $canvaDimension / 2, $canvaDimension / 2);
+
+                $activeParents = array($newNode);
                 break;
             case "E":
                 // end node:
-                $newNode = addNode("ENDGOAL", $canvaDimension / 2, $canvaDimension / 2 - 35);
-                for ($i = 0; $i < count($lastNodeName); $i++) {
-                    addJoint($lastNodeName[$i]->name, $newNode->name);
+                $newNode = addNode("ENDGOAL", $canvaDimension / 2 - 50, $canvaDimension / 2 - 35);
+
+                for ($i = 0; $i < count($activeParents); $i++) {
+                    addJoint($activeParents[$i]->name, $newNode->name);
                 }
                 break;
             case "O":
                 // add node:
-                if($isInner){
-     // add a node
-                        $newInnerNode = addNode("NORMAL", $canvaDimension / 2, $canvaDimension / 2 - 10);
-                        for ($i = 0; $i < count($lastNodeName); $i++) {
-                            addJoint($lastNodeName[$i]->name, $newInnerNode->name);
-                        }
-                        array_push($innerLastNodeName, $newInnerNode);
-                } else {
-                              $newNode = addNode("NORMAL", $canvaDimension / 2, $canvaDimension / 2 - 10);
-                for ($i = 0; $i < count($lastNodeName); $i++) {
-                    addJoint($lastNodeName[$i]->name, $newNode->name);
+
+                $newNode = addNode("NORMAL", $canvaDimension / 2 - 25, $canvaDimension / 2 - 10);
+
+                for ($i = 0; $i < count($activeParents); $i++) {
+                    addJoint($activeParents[$i]->name, $newNode->name);
                 }
-                $lastNodeName = array($newNode);
-                }
+if($thisBranchesParents !== null) {
+                array_push($thisBranchesParents, $newNode);
+} else {
+  $activeParents = array($newNode);
+}
                 break;
-            case "(":
-              $isInner = true;
-// start a new edge - check next character:
-                $innerLastNodeName = array();
-             
+            case "{":
+// branch opens
+                //$activeParents = array();
+                $thisBranchesParents = array();
+
                 break;
-            case ")":
-                $lastNodeName = $innerLastNodeName;
-                $isInner = false;
+            case "}":
+                // branch closes
+                //   $activeParent = $activeParent->parent;
+                $activeParents = $thisBranchesParents;
+                $thisBranchesParents = null;
+                break;
+
+            case ",":
+                // get the parent when the branch opened:
+                //   $activeParents = $parentAtBranch;
                 break;
             default:
                 // nothing
@@ -876,8 +893,9 @@ do {
     init();
 //$startGrammar = "SO(,>O[K#1]>)O(L#1)E";
 
-    $startGrammar = "S(O,O(O,O))E";
-        $startGrammar = "S(O,O)E";
+    $startGrammar = "S{O,O{O,O}}E";
+    $startGrammar = "S{O,O}E";
+ //   $startGrammar = "SOOE";
     growGrammar();
     parseStringGrammar($startGrammar);
     moveNodesApart();
