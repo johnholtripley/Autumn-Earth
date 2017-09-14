@@ -818,7 +818,9 @@ function parseStringGrammar($thisGrammar)
 {
     global $nodeList, $jointList, $debug, $canvaDimension;
     $characterCounter    = 0;
-    $thisBranchesParents = null;
+    $thisDepth = 0;
+    $thisBranchesParents = array();
+    $thisBranchesParents[$thisDepth] = null;
     do {
         $thisCharacter = substr($thisGrammar, $characterCounter, 1);
 
@@ -831,7 +833,7 @@ function parseStringGrammar($thisGrammar)
                 break;
             case "E":
                 // end node:
-                $newNode = addNode("ENDGOAL", $canvaDimension / 2 - 50, $canvaDimension / 2 - 35);
+                $newNode = addNode("ENDGOAL", $canvaDimension / 2 + mt_rand(-150,150), $canvaDimension / 2 - + mt_rand(-150,150));
 
                 for ($i = 0; $i < count($activeParents); $i++) {
                     addJoint($activeParents[$i]->name, $newNode->name);
@@ -840,28 +842,29 @@ function parseStringGrammar($thisGrammar)
             case "O":
                 // add node:
 
-                $newNode = addNode("NORMAL", $canvaDimension / 2 - 25, $canvaDimension / 2 - 10);
+                $newNode = addNode("NORMAL", $canvaDimension / 2 + mt_rand(-50,50), $canvaDimension / 2 + mt_rand(-50,50));
 
                 for ($i = 0; $i < count($activeParents); $i++) {
                     addJoint($activeParents[$i]->name, $newNode->name);
                 }
-                if ($thisBranchesParents !== null) {
-                    array_push($thisBranchesParents, $newNode);
+                if ($thisBranchesParents[$thisDepth] !== null) {
+                    array_push($thisBranchesParents[$thisDepth], $newNode);
                 } else {
                     $activeParents = array($newNode);
                 }
                 break;
             case "{":
 // branch opens
-             
-                $thisBranchesParents = array();
+             $thisDepth ++;
+                $thisBranchesParents[$thisDepth] = array();
 
                 break;
             case "}":
                 // branch closes
             
-                $activeParents       = $thisBranchesParents;
-                $thisBranchesParents = null;
+                $activeParents       = $thisBranchesParents[$thisDepth];
+                $thisBranchesParents[$thisDepth] = null;
+                $thisDepth --;
                 break;
 
             case ",":
@@ -880,9 +883,10 @@ do {
     init();
 //$startGrammar = "SO(,>O[K#1]>)O(L#1)E";
 
-    $startGrammar = "S{O,O{O,O}}E";
+    $startGrammar = "S{O,O{O,O}O}E";
     $startGrammar = "S{O,O}E";
-    //   $startGrammar = "SOOE";
+    $startGrammar = "S{OO,O}E";
+    //  $startGrammar = "SOOE";
     growGrammar();
     parseStringGrammar($startGrammar);
     moveNodesApart();
