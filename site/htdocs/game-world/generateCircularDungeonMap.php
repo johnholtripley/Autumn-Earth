@@ -718,6 +718,11 @@ function output()
             }
             imageline($outputCanvas, $nodeList[$thisJoint->nodeA]->x, $nodeList[$thisJoint->nodeA]->y, $nodeList[$thisJoint->nodeB]->x, $nodeList[$thisJoint->nodeB]->y, $thisJointColour);
         }
+
+
+  
+
+
         header('Content-Type: image/jpeg');
         imagejpeg($outputCanvas, null, 100);
         imagedestroy($outputCanvas);
@@ -833,31 +838,19 @@ function parseStringGrammar($thisGrammar)
             case "E":
                 // end node:
          
-                $newNode = addNode("ENDGOAL", $canvaDimension / 2 + mt_rand(-150, 150), $canvaDimension / 2+mt_rand(-150, 150));
-        
-//var_dump($activeParents);
-//echo "<br>";
-//var_dump($newNode);
+                $newNode = addNode("ENDGOAL", $activeParents[0]->x + mt_rand(-10, 10), $activeParents[0]->y+mt_rand(-10, 10));
                 for ($i = 0; $i < count($activeParents); $i++) {
-//echo $i . ":   ".$activeParents[$i]->name . " -- ". $newNode->name."<br>";
                     addJoint($activeParents[$i]->name, $newNode->name);
                 }
                 break;
             case "O":
                 // add node:
-                $newNode = addNode("NORMAL", $canvaDimension / 2 + mt_rand(-50, 50), $canvaDimension / 2 + mt_rand(-50, 50));
+                $newNode = addNode("NORMAL", $activeParents[0]->x + mt_rand(-10, 10), $activeParents[0]->y + mt_rand(-10, 10));
                 
                 for ($i = 0; $i < count($activeParents); $i++) {
                     addJoint($activeParents[$i]->name, $newNode->name);
                 }
-                /*
-                if ($thisBranchesParents[$thisDepth] !== null) {
-                    array_push($thisBranchesParents[$thisDepth], $newNode);
-                } else {
-                    $activeParents = array($newNode);
-                }
-                */
-                $activeParents = array($newNode);
+                       $activeParents = array($newNode);
                 break;
             case "{":
                 // branch opens
@@ -899,10 +892,11 @@ $activeParents = $thisBranchesParents[$thisDepth];
 
 do {
     init();
+
     //$startGrammar = "SO(,>O[K#1]>)O(L#1)E";
-    $startGrammar = "S{O,O{O,O}O}E";
-    //$startGrammar = "S{O,O}E";
-  //  $startGrammar = "S{OO,O}E";
+    $startGrammar = "S{OOO,O{O,O}O}E";
+    $startGrammar = "S{O,O}E";
+   $startGrammar = "S{OO,O}E";
     //  $startGrammar = "SOOE";
     growGrammar();
     parseStringGrammar($startGrammar);
