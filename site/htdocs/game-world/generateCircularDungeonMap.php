@@ -861,34 +861,34 @@ function parseStringGrammar($thisGrammar)
                 break;
             case "{":
                 // branch opens
-             //   $thisDepth++;
-                $thisBranchesParents = $activeParents;
-                $thisBranchesTerminalNodes = array();
+                $thisDepth++;
+                $thisBranchesParents[$thisDepth] = $activeParents;
+                $thisBranchesTerminalNodes[$thisDepth] = array();
                 break;
             case "}":
                 // branching closes
             // end of this branch - keep track of the terminal nodes
             for ($i = 0; $i < count($activeParents); $i++) {
-    array_push($thisBranchesTerminalNodes, $activeParents[$i]);
+    array_push($thisBranchesTerminalNodes[$thisDepth], $activeParents[$i]);
 }
 
 
 
-                $activeParents = $thisBranchesTerminalNodes;
+                $activeParents = $thisBranchesTerminalNodes[$thisDepth];
 
                 //$thisBranchesParents[$thisDepth] = null;
-              //  $thisDepth--;
+                $thisDepth--;
                 break;
             case ",":
             // end of this branch - keep track of the terminal nodes
 
 for ($i = 0; $i < count($activeParents); $i++) {
-    array_push($thisBranchesTerminalNodes, $activeParents[$i]);
+    array_push($thisBranchesTerminalNodes[$thisDepth], $activeParents[$i]);
 }
 
 
 // reset to the parent
-$activeParents = $thisBranchesParents;
+$activeParents = $thisBranchesParents[$thisDepth];
                 break;
             default:
                 // nothing
@@ -901,8 +901,8 @@ do {
     init();
     //$startGrammar = "SO(,>O[K#1]>)O(L#1)E";
     $startGrammar = "S{O,O{O,O}O}E";
-    $startGrammar = "S{O,O}E";
-    $startGrammar = "S{OO,O}E";
+    //$startGrammar = "S{O,O}E";
+  //  $startGrammar = "S{OO,O}E";
     //  $startGrammar = "SOOE";
     growGrammar();
     parseStringGrammar($startGrammar);
