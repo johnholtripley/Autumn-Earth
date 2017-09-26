@@ -213,8 +213,11 @@ function output()
             imageline($outputCanvas, $nodeList[$thisJoint->nodeA]->x, $nodeList[$thisJoint->nodeA]->y, $nodeList[$thisJoint->nodeB]->x, $nodeList[$thisJoint->nodeB]->y, $thisJointColour);
         }
 
-        header('Content-Type: image/jpeg');
+        //header('Content-Type: image/jpeg');
+        ob_start();
         imagejpeg($outputCanvas, null, 100);
+        $rawImageBytes = ob_get_clean();
+        echo "<img src='data:image/jpeg;base64," . base64_encode($rawImageBytes) . "' />";
         imagedestroy($outputCanvas);
     }
 }
@@ -229,7 +232,7 @@ function fillUpWithMoreNodes($howMany)
 
 function init()
 {
-    global $nodeList, $jointList, $debug, $canvaDimension, $keyColours, $keysUsed;
+    global $nodeList, $jointList, $debug, $canvaDimension, $keyColours, $keysUsed, $storedSeed;
     $debug = false;
     if (isset($_GET['debug'])) {
         $debug = boolval($_GET['debug']);
@@ -245,7 +248,7 @@ function init()
     $nodeList       = array();
     $jointList      = array();
     if (isset($_GET["seed"])) {
-        $storedSeed = $_GET["seed"];
+        $storedSeed = intval($_GET["seed"]);
     } else {
         // http://php.net/manual/en/function.mt_srand.php
         list($usec, $sec) = explode(' ', microtime());
@@ -266,12 +269,9 @@ function parseStringGrammar($thisGrammar)
     $characterCounter    = 0;
     $thisDepth           = 0;
     $thisBranchesParents = array();
-    //  $thisBranchesParents[$thisDepth]       = null;
     $thisBranchesTerminalNodes = array();
-    //  $thisBranchesTerminalNodes[$thisDepth] = null;
     do {
         $thisCharacter = substr($thisGrammar, $characterCounter, 1);
-        // echo $thisCharacter."<br>";
         switch ($thisCharacter) {
             case "S":
                 // start node:
@@ -280,7 +280,6 @@ function parseStringGrammar($thisGrammar)
                 break;
             case "E":
                 // end node:
-
                 $newNode = addNode("ENDGOAL", $activeParents[0]->x + mt_rand(-10, 10), $activeParents[0]->y + mt_rand(-10, 10));
                 for ($i = 0; $i < count($activeParents); $i++) {
                     addJoint($activeParents[$i]->name, $newNode->name);
@@ -289,7 +288,6 @@ function parseStringGrammar($thisGrammar)
             case "O":
                 // add node:
                 $newNode = addNode("NORMAL", $activeParents[0]->x + mt_rand(-10, 10), $activeParents[0]->y + mt_rand(-10, 10));
-
                 for ($i = 0; $i < count($activeParents); $i++) {
                     addJoint($activeParents[$i]->name, $newNode->name);
                 }
@@ -307,21 +305,38 @@ function parseStringGrammar($thisGrammar)
                 for ($i = 0; $i < count($activeParents); $i++) {
                     array_push($thisBranchesTerminalNodes[$thisDepth], $activeParents[$i]);
                 }
-
                 $activeParents = $thisBranchesTerminalNodes[$thisDepth];
-
-                //$thisBranchesParents[$thisDepth] = null;
                 $thisDepth--;
                 break;
             case ",":
                 // end of this branch - keep track of the terminal nodes
-
                 for ($i = 0; $i < count($activeParents); $i++) {
                     array_push($thisBranchesTerminalNodes[$thisDepth], $activeParents[$i]);
                 }
-
-// reset to the parent
+                // reset to the parent:
                 $activeParents = $thisBranchesParents[$thisDepth];
+                break;
+            case "[":
+                // node contains something - get all characters up to the closing ] to see what needs to be added:
+                // ! = hazard
+                // £ = treasure
+                $nodeContents = array();
+                do {
+                    $characterCounter++;
+                    $thisCharacter = substr($thisGrammar, $characterCounter, 1);
+                    array_push($nodeContents, $thisCharacter);
+                } while ($thisCharacter != "]");
+                // remove the ] character:
+                array_pop($nodeContents);
+                // ###
+                break;
+            case ">":
+                // forward valve:
+                // ##
+                break;
+            case "<":
+                // backward valve:
+                // ##
                 break;
             default:
                 // nothing
@@ -335,8 +350,8 @@ do {
 
     //$startGrammar = "SO(,>O[K#1]>)O(L#1)E";
     $startGrammar = "S{OOO,O{O,O}O}E";
-    $startGrammar = "S{O,O}E";
-    $startGrammar = "S{OO,O}E";
+    //$startGrammar = "S{O,O}E";
+    //$startGrammar = "S{OO,O}E";
     //  $startGrammar = "SOOE";
     growGrammar();
     parseStringGrammar($startGrammar);
@@ -344,3 +359,5 @@ do {
 } while (anyJointHasIntersected());
 
 output();
+echo '<p style="font-family:arial,helvetica,sans-serif;font-size:14px;">' . $startGrammar . '</p>';
+echo '<p style="font-family:arial,helvetica,sans-serif;font-size:14px;">' . $storedSeed . '</p>';
