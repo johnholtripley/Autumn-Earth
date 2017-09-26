@@ -412,12 +412,19 @@ function output()
         }
         if ($thisJoint->type == "") {
             imageline($outputCanvas, $nodeList[$thisJoint->nodeA]->x, $nodeList[$thisJoint->nodeA]->y, $nodeList[$thisJoint->nodeB]->x, $nodeList[$thisJoint->nodeB]->y, $thisJointColour);
+        } else if ($thisJoint->type == "?") {
+
+imagedashedline($outputCanvas, $nodeList[$thisJoint->nodeA]->x, $nodeList[$thisJoint->nodeA]->y, $nodeList[$thisJoint->nodeB]->x, $nodeList[$thisJoint->nodeB]->y, $thisJointColour);
         } else {
             // draw valve:
 
             $myArrow        = new GDArrow();
             $myArrow->image = $outputCanvas;
             $myArrow->color = $thisJointColour;
+
+
+
+
             if ($thisJoint->type == ">") {
                 // forward valve
                 $myArrow->x1 = $nodeList[$thisJoint->nodeA]->x;
@@ -603,12 +610,18 @@ if($nextJointLock>=0) {
                 break;
             case "#":
 // locked joint
+            // #1# = lock for key #1
+            // #12# = lock for key #12
 
                 $closingHashPos = strpos($thisGrammar, "#", $characterCounter+1);
                 $whichKey       = substr($thisGrammar, $characterCounter+1, ($closingHashPos - $characterCounter -1));
                 $characterCounter += strlen($whichKey)+1;
              
                 $nextJointLock = $whichKey;
+                break;
+                case "?":
+                 // secret:
+                $nextJointType = "?";
                 break;
             default:
                 // nothing
@@ -629,6 +642,7 @@ do {
     $startGrammar = "SO[!,!,$]E";
     $startGrammar = "SOO[K#1]OO#1#OOE";
     $startGrammar = "SOO[K#1]OO#1#O[K#2]#2#OE";
+    $startGrammar = "SOO?OOE";
     growGrammar();
     parseStringGrammar($startGrammar);
     moveNodesApart();
