@@ -67,6 +67,7 @@ function addJoint($connectNodeAId, $connectNodeBId, $isLocked = false, $jointTyp
     return $newJoint;
 }
 
+/*
 function addNodeAndJointTo($connectNodeId, $type, $x, $y, $isLocked = false)
 {
     global $nodeList;
@@ -98,7 +99,7 @@ function addCircularLockAndKeyBetween($connectNodeAId, $connectNodeBId)
 
 function removeJoint($connectNodeAId, $connectNodeBId)
 {
-    global $jointList, $debug;
+    global $jointList;
     foreach ($jointList as $jointKey => $jointElement) {
 
         if ((($jointElement->nodeA === $connectNodeAId) && ($jointElement->nodeB === $connectNodeBId)) || (($jointElement->nodeB === $connectNodeAId) && ($jointElement->nodeA === $connectNodeBId))) {
@@ -109,6 +110,7 @@ function removeJoint($connectNodeAId, $connectNodeBId)
 
     }
 }
+*/
 
 function lineIntersects($a, $b, $c, $d, $p, $q, $r, $s)
 {
@@ -147,13 +149,11 @@ function getRNGNumber()
 
 function moveNodesApart()
 {
-    global $nodeList, $debug;
+    global $nodeList;
     foreach ($nodeList as $thisOuterNode) {
         foreach ($nodeList as $thisNode) {
             if ($thisNode !== $thisOuterNode) {
-                if ($debug) {
-                    //  echo $thisNode->name." !== ".$thisOuterNode->name."<br>";
-                }
+            
                 $xDifference            = $thisNode->x - $thisOuterNode->x;
                 $yDifference            = $thisNode->y - $thisOuterNode->y;
                 $distanceBetweenCentres = sqrt($xDifference * $xDifference + $yDifference * $yDifference);
@@ -464,11 +464,8 @@ function fillUpWithMoreNodes($howMany)
 
 function init()
 {
-    global $nodeList, $jointList, $debug, $canvaDimension, $keyColours, $keysUsed, $storedSeed;
-    $debug = false;
-    if (isset($_GET['debug'])) {
-        $debug = boolval($_GET['debug']);
-    }
+    global $nodeList, $jointList, $canvaDimension, $keyColours, $keysUsed, $storedSeed;
+
     $keyColours = array(
         array(255, 0, 64),
         array(255, 235, 15),
@@ -497,13 +494,13 @@ function growGrammar()
 
 function parseStringGrammar($thisGrammar)
 {
-    global $nodeList, $jointList, $debug, $canvaDimension;
+    global $nodeList, $jointList, $canvaDimension;
     $characterCounter          = 0;
     $thisDepth                 = 0;
     $thisBranchesParents       = array();
     $thisBranchesTerminalNodes = array();
-    $nextJointType             = "";
-    $nextJointLock = -1;
+    $nextJointType             = array();
+    $nextJointLock = array();
     do {
         $thisCharacter = substr($thisGrammar, $characterCounter, 1);
         switch ($thisCharacter) {
@@ -511,37 +508,37 @@ function parseStringGrammar($thisGrammar)
                 // start node:
                 $newNode       = addNode("START", $canvaDimension / 2, $canvaDimension / 2);
                 $activeParents = array($newNode);
-                $nextJointType = "";
-                 $nextJointLock = -1;
+                $nextJointType = array();
+                 $nextJointLock = array();
                 break;
             case "E":
                 // end node:
                 $newNode = addNode("ENDGOAL", $activeParents[0]->x + mt_rand(-10, 10), $activeParents[0]->y + mt_rand(-10, 10));
                 for ($i = 0; $i < count($activeParents); $i++) {
-                    $newJoint = addJoint($activeParents[$i]->name, $newNode->name, false, $nextJointType);
+                    $newJoint = addJoint($activeParents[$i]->name, $newNode->name, false, array_pop($nextJointType));
                 }
 
-if($nextJointLock>=0) {
+if(count($nextJointLock)>0) {
        $newJoint->isLocked = true;
-                $newJoint->whichKey = $nextJointLock;
+                $newJoint->whichKey = array_pop($nextJointLock);
 }
 
-                $nextJointType = "";
-                 $nextJointLock = -1;
+                $nextJointType = array();
+               //  $nextJointLock = array();
                 break;
             case "O":
                 // add node:
                 $newNode = addNode("NORMAL", $activeParents[0]->x + mt_rand(-10, 10), $activeParents[0]->y + mt_rand(-10, 10));
                 for ($i = 0; $i < count($activeParents); $i++) {
-                    $newJoint = addJoint($activeParents[$i]->name, $newNode->name, false, $nextJointType);
+                    $newJoint = addJoint($activeParents[$i]->name, $newNode->name, false, array_pop($nextJointType));
                 }
                 $activeParents = array($newNode);
-                if($nextJointLock>=0) {
+if(count($nextJointLock)>0) {
        $newJoint->isLocked = true;
-                $newJoint->whichKey = $nextJointLock;
+                $newJoint->whichKey = array_pop($nextJointLock);
 }
-                $nextJointType = "";
-                 $nextJointLock = -1;
+                $nextJointType = array();
+                // $nextJointLock = array();
                 break;
             case "{":
                 // branch opens
@@ -602,11 +599,12 @@ if($nextJointLock>=0) {
                 break;
             case ">":
                 // forward valve:
-                $nextJointType = ">";
+              
+                array_unshift($nextJointType, ">");
                 break;
             case "<":
                 // backward valve:
-                $nextJointType = "<";
+               array_unshift($nextJointType, "<");
                 break;
             case "#":
 // locked joint
@@ -617,11 +615,12 @@ if($nextJointLock>=0) {
                 $whichKey       = substr($thisGrammar, $characterCounter+1, ($closingHashPos - $characterCounter -1));
                 $characterCounter += strlen($whichKey)+1;
              
-                $nextJointLock = $whichKey;
+               
+                array_unshift($nextJointLock, $whichKey);
                 break;
                 case "?":
                  // secret:
-                $nextJointType = "?";
+                array_unshift($nextJointType, "?");
                 break;
             default:
                 // nothing
@@ -642,12 +641,28 @@ do {
     $startGrammar = "SO[!,!,$]E";
     $startGrammar = "SOO[K#1]OO#1#OOE";
     $startGrammar = "SOO[K#1]OO#1#O[K#2]#2#OE";
-    $startGrammar = "SOO?OOE";
+//    $startGrammar = "SOO?OOE";
+ //   $startGrammar = "SO{?O,O}OE";
+
+    // this needs to only have one of the closing joints as the secret:
+    // nextjointtype needs to be something like thisBranchesTerminalJointType[$thisDepth] - same for locks
+    // ########
+  $startGrammar = "SO{O,O?}OE";
+    
+   
     growGrammar();
     parseStringGrammar($startGrammar);
     moveNodesApart();
 } while (anyJointHasIntersected());
 
 output();
-echo '<p style="font-family:arial,helvetica,sans-serif;font-size:14px;">' . $startGrammar . '</p>';
-echo '<p style="font-family:arial,helvetica,sans-serif;font-size:14px;">' . $storedSeed . '</p>';
+?>
+<style>
+body, p {
+font-family:arial,helvetica,sans-serif;font-size:14px;
+}
+</style>
+<?php
+echo '<p>' . $startGrammar . '</p>';
+echo '<p>' . $storedSeed . '</p>';
+?>
