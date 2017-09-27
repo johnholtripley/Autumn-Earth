@@ -70,47 +70,47 @@ function addJoint($connectNodeAId, $connectNodeBId, $isLocked = false, $jointTyp
 /*
 function addNodeAndJointTo($connectNodeId, $type, $x, $y, $isLocked = false)
 {
-    global $nodeList;
-    $newNode = addNode($type, $x, $y);
-    addJoint($nodeList[$connectNodeId]->name, $newNode->name, $isLocked);
-    return $newNode;
+global $nodeList;
+$newNode = addNode($type, $x, $y);
+addJoint($nodeList[$connectNodeId]->name, $newNode->name, $isLocked);
+return $newNode;
 }
 
 function addNodeBetween($connectNodeAId, $connectNodeBId, $isFirstjointLocked = false, $isLastjointLocked = false)
 {
-    global $nodeList;
-    $newNode = addNodeAndJointTo($connectNodeBId, "NORMAL", ($nodeList[$connectNodeAId]->x + $nodeList[$connectNodeBId]->x) / 2, ($nodeList[$connectNodeAId]->y + $nodeList[$connectNodeBId]->y) / 2, $isLastjointLocked);
-    removeJoint($connectNodeAId, $connectNodeBId);
-    addJoint($connectNodeAId, count($nodeList) - 1, $isFirstjointLocked);
-    return $newNode;
+global $nodeList;
+$newNode = addNodeAndJointTo($connectNodeBId, "NORMAL", ($nodeList[$connectNodeAId]->x + $nodeList[$connectNodeBId]->x) / 2, ($nodeList[$connectNodeAId]->y + $nodeList[$connectNodeBId]->y) / 2, $isLastjointLocked);
+removeJoint($connectNodeAId, $connectNodeBId);
+addJoint($connectNodeAId, count($nodeList) - 1, $isFirstjointLocked);
+return $newNode;
 }
 
 function addCircularLockAndKeyBetween($connectNodeAId, $connectNodeBId)
 {
-    global $nodeList, $keysUsed;
-    $keysUsed++;
-    // add new node between:
-    $newNode = addNodeBetween($connectNodeAId, $connectNodeBId, false, true);
-    // add key node joined to that:
-    $keyNode = addNodeAndJointTo($newNode->name, "KEYHOLDER", $newNode->x + 0.5, $newNode->y + 0.5);
-    // add node between first and key node:
-    addNodeBetween($connectNodeAId, $keyNode->name);
+global $nodeList, $keysUsed;
+$keysUsed++;
+// add new node between:
+$newNode = addNodeBetween($connectNodeAId, $connectNodeBId, false, true);
+// add key node joined to that:
+$keyNode = addNodeAndJointTo($newNode->name, "KEYHOLDER", $newNode->x + 0.5, $newNode->y + 0.5);
+// add node between first and key node:
+addNodeBetween($connectNodeAId, $keyNode->name);
 }
 
 function removeJoint($connectNodeAId, $connectNodeBId)
 {
-    global $jointList;
-    foreach ($jointList as $jointKey => $jointElement) {
+global $jointList;
+foreach ($jointList as $jointKey => $jointElement) {
 
-        if ((($jointElement->nodeA === $connectNodeAId) && ($jointElement->nodeB === $connectNodeBId)) || (($jointElement->nodeB === $connectNodeAId) && ($jointElement->nodeA === $connectNodeBId))) {
+if ((($jointElement->nodeA === $connectNodeAId) && ($jointElement->nodeB === $connectNodeBId)) || (($jointElement->nodeB === $connectNodeAId) && ($jointElement->nodeA === $connectNodeBId))) {
 
-            unset($jointList[$jointKey]);
-            break;
-        }
-
-    }
+unset($jointList[$jointKey]);
+break;
 }
-*/
+
+}
+}
+ */
 
 function lineIntersects($a, $b, $c, $d, $p, $q, $r, $s)
 {
@@ -153,7 +153,7 @@ function moveNodesApart()
     foreach ($nodeList as $thisOuterNode) {
         foreach ($nodeList as $thisNode) {
             if ($thisNode !== $thisOuterNode) {
-            
+
                 $xDifference            = $thisNode->x - $thisOuterNode->x;
                 $yDifference            = $thisNode->y - $thisOuterNode->y;
                 $distanceBetweenCentres = sqrt($xDifference * $xDifference + $yDifference * $yDifference);
@@ -414,16 +414,13 @@ function output()
             imageline($outputCanvas, $nodeList[$thisJoint->nodeA]->x, $nodeList[$thisJoint->nodeA]->y, $nodeList[$thisJoint->nodeB]->x, $nodeList[$thisJoint->nodeB]->y, $thisJointColour);
         } else if ($thisJoint->type == "?") {
 
-imagedashedline($outputCanvas, $nodeList[$thisJoint->nodeA]->x, $nodeList[$thisJoint->nodeA]->y, $nodeList[$thisJoint->nodeB]->x, $nodeList[$thisJoint->nodeB]->y, $thisJointColour);
+            imagedashedline($outputCanvas, $nodeList[$thisJoint->nodeA]->x, $nodeList[$thisJoint->nodeA]->y, $nodeList[$thisJoint->nodeB]->x, $nodeList[$thisJoint->nodeB]->y, $thisJointColour);
         } else {
             // draw valve:
 
             $myArrow        = new GDArrow();
             $myArrow->image = $outputCanvas;
             $myArrow->color = $thisJointColour;
-
-
-
 
             if ($thisJoint->type == ">") {
                 // forward valve
@@ -500,7 +497,7 @@ function parseStringGrammar($thisGrammar)
     $thisBranchesParents       = array();
     $thisBranchesTerminalNodes = array();
     $nextJointType             = array();
-    $nextJointLock = array();
+    $nextJointLock             = array();
     do {
         $thisCharacter = substr($thisGrammar, $characterCounter, 1);
         switch ($thisCharacter) {
@@ -508,8 +505,8 @@ function parseStringGrammar($thisGrammar)
                 // start node:
                 $newNode       = addNode("START", $canvaDimension / 2, $canvaDimension / 2);
                 $activeParents = array($newNode);
-                $nextJointType = array();
-                 $nextJointLock = array();
+                $nextJointType = array("");
+                $nextJointLock = array();
                 break;
             case "E":
                 // end node:
@@ -518,13 +515,13 @@ function parseStringGrammar($thisGrammar)
                     $newJoint = addJoint($activeParents[$i]->name, $newNode->name, false, array_pop($nextJointType));
                 }
 
-if(count($nextJointLock)>0) {
-       $newJoint->isLocked = true;
-                $newJoint->whichKey = array_pop($nextJointLock);
-}
+                if (count($nextJointLock) > 0) {
+                    $newJoint->isLocked = true;
+                    $newJoint->whichKey = array_pop($nextJointLock);
+                }
 
-                $nextJointType = array();
-               //  $nextJointLock = array();
+                $nextJointType = array("");
+                //  $nextJointLock = array();
                 break;
             case "O":
                 // add node:
@@ -533,12 +530,11 @@ if(count($nextJointLock)>0) {
                     $newJoint = addJoint($activeParents[$i]->name, $newNode->name, false, array_pop($nextJointType));
                 }
                 $activeParents = array($newNode);
-if(count($nextJointLock)>0) {
-       $newJoint->isLocked = true;
-                $newJoint->whichKey = array_pop($nextJointLock);
-}
-                $nextJointType = array();
-                // $nextJointLock = array();
+                if (count($nextJointLock) > 0) {
+                    $newJoint->isLocked = true;
+                    $newJoint->whichKey = array_pop($nextJointLock);
+                }
+                $nextJointType = array("");
                 break;
             case "{":
                 // branch opens
@@ -547,8 +543,7 @@ if(count($nextJointLock)>0) {
                 $thisBranchesTerminalNodes[$thisDepth] = array();
                 break;
             case "}":
-                // branching closes
-                // end of this branch - keep track of the terminal nodes
+                // branching closes - add in this last branch's terminal nodes:
                 for ($i = 0; $i < count($activeParents); $i++) {
                     array_push($thisBranchesTerminalNodes[$thisDepth], $activeParents[$i]);
                 }
@@ -565,63 +560,56 @@ if(count($nextJointLock)>0) {
                 break;
             case "[":
                 // node contains something - get all characters up to the closing ] to see what needs to be added:
-                // (comma separated)
-                // ! = hazard
-                // $ = treasure
-                // K#1 = key for lock #1
-
                 $closingBracketPos = strpos($thisGrammar, "]", $characterCounter);
                 $nodeContents      = substr($thisGrammar, $characterCounter + 1, ($closingBracketPos - $characterCounter - 1));
                 $characterCounter += strlen($nodeContents);
+                // contents are comma separated:
                 $nodeContentsArray = explode(",", $nodeContents);
                 for ($i = 0; $i < count($nodeContentsArray); $i++) {
                     switch (substr($nodeContentsArray[$i], 0, 1)) {
                         case "!":
-// hazard - add to last created node:
+                            // hazard - add to last created node:
                             $newNode->hazards++;
                             break;
                         case "$":
-// treasure
+                            // treasure
                             $newNode->treasure++;
                             break;
                         case "K":
-// key
-                            $keyArray = explode("#", $nodeContentsArray[$i]);
-
+                            // K#1 = key for lock #1
+                            $keyArray          = explode("#", $nodeContentsArray[$i]);
                             $newNode->type     = "KEYHOLDER";
                             $newNode->whichKey = $keyArray[1];
-
                             break;
                         default:
-// nothing
+                            // nothing
                     }
                 }
                 break;
             case ">":
                 // forward valve:
-              
-                array_unshift($nextJointType, ">");
+                $nextJointType[count( $nextJointType ) - 1] = ">";
                 break;
             case "<":
                 // backward valve:
-               array_unshift($nextJointType, "<");
+                $nextJointType[count( $nextJointType ) - 1] = "<";
+                break;
+            case "?":
+                // secret passage:
+                $nextJointType[count( $nextJointType ) - 1] = "?";
                 break;
             case "#":
-// locked joint
-            // #1# = lock for key #1
-            // #12# = lock for key #12
+                // locked joint
+                // #1# = lock for key #1
+                // #12# = lock for key #12
 
-                $closingHashPos = strpos($thisGrammar, "#", $characterCounter+1);
-                $whichKey       = substr($thisGrammar, $characterCounter+1, ($closingHashPos - $characterCounter -1));
-                $characterCounter += strlen($whichKey)+1;
-             
-               
+                $closingHashPos = strpos($thisGrammar, "#", $characterCounter + 1);
+                $whichKey       = substr($thisGrammar, $characterCounter + 1, ($closingHashPos - $characterCounter - 1));
+                $characterCounter += strlen($whichKey) + 1;
+
                 array_unshift($nextJointLock, $whichKey);
                 break;
-                case "?":
-                 // secret:
-                array_unshift($nextJointType, "?");
-                break;
+
             default:
                 // nothing
         }
@@ -631,10 +619,6 @@ if(count($nextJointLock)>0) {
 
 do {
     init();
-
-  
-    
-  
 
     // linear connection with 2 nodes between the start and end:
     // $startGrammar = "SOOE";
@@ -648,7 +632,7 @@ do {
     // A node containing 2 hazards and 1 lot of treasure:
     // $startGrammar = "SO[!,!,$]E";
 
-    // a secret joint between 2 central nodes: 
+    // a secret joint between 2 central nodes:
     //    $startGrammar = "SO?OE";
 
     // a branch with one of the connecting branches being a secret:
@@ -666,8 +650,11 @@ do {
     // a nested branching structure:
     // $startGrammar = "S{OOO,O{O,O}O}E";
 
-    $startGrammar = "SOOE";
-
+// BUG multiple branches with secret terminal nodes
+    // ########
+    $startGrammar = "S{O{O,O?},O?}E";
+ //   $startGrammar = "S{O{O,O},O?}E";
+//$startGrammar = "S{O{O,O?},O}E";
 
     growGrammar();
     parseStringGrammar($startGrammar);
