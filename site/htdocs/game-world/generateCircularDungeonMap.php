@@ -632,24 +632,43 @@ if(count($nextJointLock)>0) {
 do {
     init();
 
-    // $startGrammar = "SO(,>O[K#1]>)O(L#1)E";
-    $startGrammar = "S{OOO,O{O,O}O}E";
-    // $startGrammar = "S{O,O}E";
-    // $startGrammar = "S{OO,O}E";
-    // $startGrammar = "SOOE";
-    $startGrammar = "SO>OE";
-    $startGrammar = "SO[!,!,$]E";
-    $startGrammar = "SOO[K#1]OO#1#OOE";
-    $startGrammar = "SOO[K#1]OO#1#O[K#2]#2#OE";
-//    $startGrammar = "SOO?OOE";
- //   $startGrammar = "SO{?O,O}OE";
-
-    // this needs to only have one of the closing joints as the secret:
-    // nextjointtype needs to be something like thisBranchesTerminalJointType[$thisDepth] - same for locks
-    // ########
-  $startGrammar = "SO{O,O?}OE";
+  
     
-   
+  
+
+    // linear connection with 2 nodes between the start and end:
+    // $startGrammar = "SOOE";
+
+    // simple branch with a node on each branch:
+    // $startGrammar = "S{O,O}E";
+
+    // a one-way valve between 2 nodes:
+    // $startGrammar = "SO>OE";
+
+    // A node containing 2 hazards and 1 lot of treasure:
+    // $startGrammar = "SO[!,!,$]E";
+
+    // a secret joint between 2 central nodes: 
+    //    $startGrammar = "SO?OE";
+
+    // a branch with one of the connecting branches being a secret:
+    // $startGrammar = "SO{O,O?}OE";
+
+    // A node containing a key, followed by a locked joint that can be opened by the key:
+    // $startGrammar = "SO[K#1]O#1#OE";
+
+    // a sequence of 2 locks and keys:
+    //    $startGrammar = "SOO[K#1]OO#1#O[K#2]#2#OE";
+
+    // a branching structure with one of the closing joints being locked:
+    // $startGrammar = "SO[K#1]{O,O#1#}OE";
+
+    // a nested branching structure:
+    // $startGrammar = "S{OOO,O{O,O}O}E";
+
+    $startGrammar = "SOOE";
+
+
     growGrammar();
     parseStringGrammar($startGrammar);
     moveNodesApart();
