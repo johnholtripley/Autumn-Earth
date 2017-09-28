@@ -496,7 +496,8 @@ function parseStringGrammar($thisGrammar)
     $thisDepth                 = 0;
     $thisBranchesParents       = array();
     $thisBranchesTerminalNodes = array();
-    $nextJointType             = array();
+    $nextJointTypes             = array();
+    $thisBranchesTerminalJointTypes = array();
     $nextJointLock             = array();
     do {
         $thisCharacter = substr($thisGrammar, $characterCounter, 1);
@@ -505,14 +506,16 @@ function parseStringGrammar($thisGrammar)
                 // start node:
                 $newNode       = addNode("START", $canvaDimension / 2, $canvaDimension / 2);
                 $activeParents = array($newNode);
-                $nextJointType = array("");
+                $nextJointTypes = array("");
                 $nextJointLock = array();
                 break;
             case "E":
                 // end node:
                 $newNode = addNode("ENDGOAL", $activeParents[0]->x + mt_rand(-10, 10), $activeParents[0]->y + mt_rand(-10, 10));
+                var_dump($nextJointTypes);
                 for ($i = 0; $i < count($activeParents); $i++) {
-                    $newJoint = addJoint($activeParents[$i]->name, $newNode->name, false, array_pop($nextJointType));
+                    $newJoint = addJoint($activeParents[$i]->name, $newNode->name, false, $nextJointTypes[$i]);
+                    
                 }
 
                 if (count($nextJointLock) > 0) {
@@ -520,40 +523,48 @@ function parseStringGrammar($thisGrammar)
                     $newJoint->whichKey = array_pop($nextJointLock);
                 }
 
-                $nextJointType = array("");
+                $nextJointTypes = array("");
                 //  $nextJointLock = array();
                 break;
             case "O":
                 // add node:
                 $newNode = addNode("NORMAL", $activeParents[0]->x + mt_rand(-10, 10), $activeParents[0]->y + mt_rand(-10, 10));
                 for ($i = 0; $i < count($activeParents); $i++) {
-                    $newJoint = addJoint($activeParents[$i]->name, $newNode->name, false, array_pop($nextJointType));
+                    $newJoint = addJoint($activeParents[$i]->name, $newNode->name, false, $nextJointTypes[$i]);
                 }
                 $activeParents = array($newNode);
                 if (count($nextJointLock) > 0) {
                     $newJoint->isLocked = true;
                     $newJoint->whichKey = array_pop($nextJointLock);
                 }
-                $nextJointType = array("");
+                $nextJointTypes = array("");
                 break;
             case "{":
                 // branch opens
                 $thisDepth++;
                 $thisBranchesParents[$thisDepth]       = $activeParents;
                 $thisBranchesTerminalNodes[$thisDepth] = array();
+                $thisBranchesTerminalJointTypes[$thisDepth] = array();
                 break;
             case "}":
                 // branching closes - add in this last branch's terminal nodes:
                 for ($i = 0; $i < count($activeParents); $i++) {
                     array_push($thisBranchesTerminalNodes[$thisDepth], $activeParents[$i]);
                 }
+                   for ($i = 0; $i < count($nextJointTypes); $i++) {
+                    array_push($thisBranchesTerminalJointTypes[$thisDepth], $nextJointTypes[$i]);
+                }
                 $activeParents = $thisBranchesTerminalNodes[$thisDepth];
+                $nextJointTypes = $thisBranchesTerminalJointTypes[$thisDepth];
                 $thisDepth--;
                 break;
             case ",":
                 // end of this branch - keep track of the terminal nodes
                 for ($i = 0; $i < count($activeParents); $i++) {
                     array_push($thisBranchesTerminalNodes[$thisDepth], $activeParents[$i]);
+                }
+                 for ($i = 0; $i < count($nextJointTypes); $i++) {
+                    array_push($thisBranchesTerminalJointTypes[$thisDepth], $nextJointTypes[$i]);
                 }
                 // reset to the parent:
                 $activeParents = $thisBranchesParents[$thisDepth];
@@ -588,15 +599,15 @@ function parseStringGrammar($thisGrammar)
                 break;
             case ">":
                 // forward valve:
-                $nextJointType[count( $nextJointType ) - 1] = ">";
+                $nextJointTypes[count( $nextJointTypes ) - 1] = ">";
                 break;
             case "<":
                 // backward valve:
-                $nextJointType[count( $nextJointType ) - 1] = "<";
+                $nextJointTypes[count( $nextJointTypes ) - 1] = "<";
                 break;
             case "?":
                 // secret passage:
-                $nextJointType[count( $nextJointType ) - 1] = "?";
+                $nextJointTypes[count( $nextJointTypes ) - 1] = "?";
                 break;
             case "#":
                 // locked joint
@@ -653,7 +664,7 @@ do {
 // BUG multiple branches with secret terminal nodes
     // ########
     $startGrammar = "S{O{O,O?},O?}E";
- //   $startGrammar = "S{O{O,O},O?}E";
+  //  $startGrammar = "S{O{O,O},O?}E";
 //$startGrammar = "S{O{O,O?},O}E";
 
     growGrammar();
