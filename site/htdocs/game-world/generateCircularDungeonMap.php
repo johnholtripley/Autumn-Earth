@@ -1,20 +1,5 @@
 <?php
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // -----------------------------------------
 // NOT MINE
 http: //codetalk.code-kobold.de/drawing-arrows-with-the-gd-library-in-php/
@@ -208,31 +193,6 @@ class GDArrow
 
 // -----------------------------------------
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // avoid script time out:
 set_time_limit(0);
 
@@ -289,19 +249,18 @@ function addNode($type, $x, $y)
 function addJoint($connectNodeAId, $connectNodeBId, $jointType = "", $whichKey = "")
 {
     global $nodeList, $keysUsed;
-    $newJoint           = new joint();
-    $newJoint->nodeA    = $nodeList[$connectNodeAId]->name;
-    $newJoint->nodeB    = $nodeList[$connectNodeBId]->name;
-    $newJoint->type    = $jointType;
+    $newJoint        = new joint();
+    $newJoint->nodeA = $nodeList[$connectNodeAId]->name;
+    $newJoint->nodeB = $nodeList[$connectNodeBId]->name;
+    $newJoint->type  = $jointType;
 
-$newJoint->whichKey = $whichKey;
-if($newJoint->whichKey != "") {
-$newJoint->isLocked = true;
-} else {
-    $newJoint->isLocked = false;
-}
+    $newJoint->whichKey = $whichKey;
+    if ($newJoint->whichKey != "") {
+        $newJoint->isLocked = true;
+    } else {
+        $newJoint->isLocked = false;
+    }
 
- 
     return $newJoint;
 }
 
@@ -412,8 +371,6 @@ function moveNodesApart()
         }
     }
 }
-
-
 
 function output()
 {
@@ -531,48 +488,65 @@ function init()
 
 }
 
-function growGrammar()
+function growGrammar($thisGrammar, $iterations)
 {
+    $grammarTransformations = array(
+        "X" => array("O", "OX", "{OX,OX}", "{OX,O}"),
+    );
 
+    for ($i = 0; $i < $iterations; $i++) {
+        $characterCounter = 0;
+        do {
+            $thisCharacter = substr($thisGrammar, $characterCounter, 1);
+
+            if (array_key_exists($thisCharacter, $grammarTransformations)) {
+                $thisTransform = $grammarTransformations[$thisCharacter][mt_rand(0, count($grammarTransformations[$thisCharacter]) - 1)];
+                echo "was " . $thisGrammar;
+                $thisGrammar = substr_replace($thisGrammar, $thisTransform, $characterCounter, 1);
+                $characterCounter += strlen($thisTransform);
+                echo " now " . $thisGrammar . "<br>";
+            }
+            $characterCounter++;
+        } while ($characterCounter < strlen($thisGrammar));
+    }
+    // remove any remaining 'X's:
+    $thisGrammar = str_replace("X", "", $thisGrammar);
+    echo "final grammar: ".$thisGrammar."<br>";
+    return $thisGrammar;
 }
 
 function parseStringGrammar($thisGrammar)
 {
     global $nodeList, $jointList, $canvaDimension;
-    $characterCounter          = 0;
-    $thisDepth                 = 0;
-    $thisBranchesParents       = array();
-    $thisBranchesTerminalNodes = array();
-    $nextJointTypes             = array();
+    $characterCounter               = 0;
+    $thisDepth                      = 0;
+    $thisBranchesParents            = array();
+    $thisBranchesTerminalNodes      = array();
+    $nextJointTypes                 = array();
     $thisBranchesTerminalJointTypes = array();
-    $nextJointLock             = array();
-     $thisBranchesTerminalJointLocks = array();
+    $nextJointLock                  = array();
+    $thisBranchesTerminalJointLocks = array();
     do {
         $thisCharacter = substr($thisGrammar, $characterCounter, 1);
         switch ($thisCharacter) {
             case "S":
                 // start node:
-                $newNode       = addNode("START", $canvaDimension / 2, $canvaDimension / 2);
-                $activeParents = array($newNode);
+                $newNode        = addNode("START", $canvaDimension / 2, $canvaDimension / 2);
+                $activeParents  = array($newNode);
                 $nextJointTypes = array("");
-                $nextJointLock = array("");
+                $nextJointLock  = array("");
                 break;
             case "E":
                 // end node:
                 $newNode = addNode("ENDGOAL", $activeParents[0]->x + mt_rand(-10, 10), $activeParents[0]->y + mt_rand(-10, 10));
-               
+
                 for ($i = 0; $i < count($activeParents); $i++) {
                     $newJoint = addJoint($activeParents[$i]->name, $newNode->name, $nextJointTypes[$i], $nextJointLock[$i]);
-                    
-
-  
 
                 }
 
-              
-
                 $nextJointTypes = array("");
-                  $nextJointLock = array("");
+                $nextJointLock  = array("");
                 break;
             case "O":
                 // add node:
@@ -581,15 +555,15 @@ function parseStringGrammar($thisGrammar)
                     $newJoint = addJoint($activeParents[$i]->name, $newNode->name, $nextJointTypes[$i], $nextJointLock[$i]);
                 }
                 $activeParents = array($newNode);
-              
+
                 $nextJointTypes = array("");
-                 $nextJointLock = array("");
+                $nextJointLock  = array("");
                 break;
             case "{":
                 // branch opens
                 $thisDepth++;
-                $thisBranchesParents[$thisDepth]       = $activeParents;
-                $thisBranchesTerminalNodes[$thisDepth] = array();
+                $thisBranchesParents[$thisDepth]            = $activeParents;
+                $thisBranchesTerminalNodes[$thisDepth]      = array();
                 $thisBranchesTerminalJointTypes[$thisDepth] = array();
                 $thisBranchesTerminalJointLocks[$thisDepth] = array();
                 break;
@@ -598,15 +572,15 @@ function parseStringGrammar($thisGrammar)
                 for ($i = 0; $i < count($activeParents); $i++) {
                     array_push($thisBranchesTerminalNodes[$thisDepth], $activeParents[$i]);
                 }
-                   for ($i = 0; $i < count($nextJointTypes); $i++) {
+                for ($i = 0; $i < count($nextJointTypes); $i++) {
                     array_push($thisBranchesTerminalJointTypes[$thisDepth], $nextJointTypes[$i]);
                 }
-                 for ($i = 0; $i < count($nextJointLock); $i++) {
+                for ($i = 0; $i < count($nextJointLock); $i++) {
                     array_push($thisBranchesTerminalJointLocks[$thisDepth], $nextJointLock[$i]);
                 }
-                $activeParents = $thisBranchesTerminalNodes[$thisDepth];
+                $activeParents  = $thisBranchesTerminalNodes[$thisDepth];
                 $nextJointTypes = $thisBranchesTerminalJointTypes[$thisDepth];
-                $nextJointLock = $thisBranchesTerminalJointLocks[$thisDepth];
+                $nextJointLock  = $thisBranchesTerminalJointLocks[$thisDepth];
                 $thisDepth--;
                 break;
             case ",":
@@ -614,10 +588,10 @@ function parseStringGrammar($thisGrammar)
                 for ($i = 0; $i < count($activeParents); $i++) {
                     array_push($thisBranchesTerminalNodes[$thisDepth], $activeParents[$i]);
                 }
-                 for ($i = 0; $i < count($nextJointTypes); $i++) {
+                for ($i = 0; $i < count($nextJointTypes); $i++) {
                     array_push($thisBranchesTerminalJointTypes[$thisDepth], $nextJointTypes[$i]);
                 }
-                 for ($i = 0; $i < count($nextJointLock); $i++) {
+                for ($i = 0; $i < count($nextJointLock); $i++) {
                     array_push($thisBranchesTerminalJointLocks[$thisDepth], $nextJointLock[$i]);
                 }
                 // reset to the parent:
@@ -653,15 +627,15 @@ function parseStringGrammar($thisGrammar)
                 break;
             case ">":
                 // forward valve:
-                $nextJointTypes[count( $nextJointTypes ) - 1] = ">";
+                $nextJointTypes[count($nextJointTypes) - 1] = ">";
                 break;
             case "<":
                 // backward valve:
-                $nextJointTypes[count( $nextJointTypes ) - 1] = "<";
+                $nextJointTypes[count($nextJointTypes) - 1] = "<";
                 break;
             case "?":
                 // secret passage:
-                $nextJointTypes[count( $nextJointTypes ) - 1] = "?";
+                $nextJointTypes[count($nextJointTypes) - 1] = "?";
                 break;
             case "#":
                 // locked joint
@@ -672,60 +646,62 @@ function parseStringGrammar($thisGrammar)
                 $whichKey       = substr($thisGrammar, $characterCounter + 1, ($closingHashPos - $characterCounter - 1));
                 $characterCounter += strlen($whichKey) + 1;
 
-$nextJointLock[count( $nextJointLock ) - 1] = $whichKey;
-                
+                $nextJointLock[count($nextJointLock) - 1] = $whichKey;
+
                 break;
 
             default:
                 // nothing
         }
         $characterCounter++;
-    } while ($characterCounter <= strlen($thisGrammar));
+    } while ($characterCounter < strlen($thisGrammar));
 }
 
-do {
-    init();
+init();
 
-    // linear connection with 2 nodes between the start and end:
-    // $startGrammar = "SOOE";
+// linear connection with 2 nodes between the start and end:
+// $startGrammar = "SOOE";
 
-    // simple branch with a node on each branch:
-    // $startGrammar = "S{O,O}E";
+// simple branch with a node on each branch:
+// $startGrammar = "S{O,O}E";
 
-    // a one-way valve between 2 nodes:
-    // $startGrammar = "SO>OE";
+// a one-way valve between 2 nodes:
+// $startGrammar = "SO>OE";
 
-    // A node containing 2 hazards and 1 lot of treasure:
-    // $startGrammar = "SO[!,!,$]E";
+// A node containing 2 hazards and 1 lot of treasure:
+// $startGrammar = "SO[!,!,$]E";
 
-    // a secret joint between 2 central nodes:
-    //    $startGrammar = "SO?OE";
+// a secret joint between 2 central nodes:
+//    $startGrammar = "SO?OE";
 
-    // a branch with one of the connecting branches being a secret:
-    // $startGrammar = "SO{O,O?}OE";
+// a branch with one of the connecting branches being a secret:
+// $startGrammar = "SO{O,O?}OE";
 
-    // A node containing a key, followed by a locked joint that can be opened by the key:
-    // $startGrammar = "SO[K#1]O#1#OE";
+// A node containing a key, followed by a locked joint that can be opened by the key:
+// $startGrammar = "SO[K#1]O#1#OE";
 
-    // a sequence of 2 locks and keys:
-    //    $startGrammar = "SOO[K#1]OO#1#O[K#2]#2#OE";
+// a sequence of 2 locks and keys:
+//   $startGrammar = "SOO[K#1]OO#1#O[K#2]#2#OE";
 
-    // a branching structure with one of the closing joints being locked:
-    // $startGrammar = "SO[K#1]{O,O#1#}OE";
+// a branching structure with one of the closing joints being locked:
+// $startGrammar = "SO[K#1]{O,O#1#}OE";
 
-    // a nested branching structure:
-    // $startGrammar = "S{OOO,O{O,O}O}E";
+// a nested branching structure:
+// $startGrammar = "S{OOO,O{O,O}O}E";
 
-// nested branches with secret terminal nodes
-    $startGrammar = "S{O{O,O?},O?}E";
+// nested branches with secret terminal nodes:
+//   $startGrammar = "S{O{O,O?},O?}E";
 
+// nested locks:
+// $startGrammar = "S{O[K#2#]{O,O#2#},O[K#1]O#1#}E";
 
-$startGrammar = "S{O{O,O#2#},O[K#1]O#1#}E";
+$possibleStartGrammars = array("SXE");
 
-    growGrammar();
-    parseStringGrammar($startGrammar);
+$grownGrammar = growGrammar($possibleStartGrammars[mt_rand(0, count($possibleStartGrammars) - 1)], mt_rand(2, 3));
+//do {
+    parseStringGrammar($grownGrammar);
     moveNodesApart();
-} while (anyJointHasIntersected());
+//} while (anyJointHasIntersected());
 
 output();
 ?>
@@ -735,6 +711,6 @@ font-family:arial,helvetica,sans-serif;font-size:14px;
 }
 </style>
 <?php
-echo '<p>' . $startGrammar . '</p>';
+echo '<p>' . $grownGrammar . '</p>';
 echo '<p>' . $storedSeed . '</p>';
 ?>
