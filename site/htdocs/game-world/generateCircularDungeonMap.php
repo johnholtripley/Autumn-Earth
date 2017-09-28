@@ -221,7 +221,7 @@ class joint
 
 function addNode($type, $x, $y)
 {
-    global $keysUsed;
+    
     $newNode       = new node();
     $newNode->type = $type;
 
@@ -240,15 +240,13 @@ function addNode($type, $x, $y)
     $newNode->radius   = getRNGNumber() * 15 + 5;
     // might be inefficient to call this every time: ###
     moveNodesApart();
-    if ($type == "KEYHOLDER") {
-        $newNode->whichKey = $keysUsed;
-    }
+
     return $newNode;
 }
 
 function addJoint($connectNodeAId, $connectNodeBId, $jointType = "", $whichKey = "")
 {
-    global $nodeList, $keysUsed;
+    global $nodeList;
     $newJoint        = new joint();
     $newJoint->nodeA = $nodeList[$connectNodeAId]->name;
     $newJoint->nodeB = $nodeList[$connectNodeBId]->name;
@@ -390,8 +388,6 @@ function output()
 //$thisNodeColour = imagecolorallocate($outputCanvas, 255,235,15);
         } else if ($thisNode->type == "START") {
             $thisNodeColour = imagecolorallocate($outputCanvas, 255, 255, 255);
-        } else if ($thisNode->type == "SIDEGOAL") {
-            $thisNodeColour = imagecolorallocate($outputCanvas, 90, 90, 90);
         } else if ($thisNode->type == "ENDGOAL") {
             $thisNodeColour = imagecolorallocate($outputCanvas, 0, 0, 0);
         } else {
@@ -402,7 +398,7 @@ function output()
 
 // check for contents:
 
-        echo "Node #" . $thisNode->name . " has " . $thisNode->hazards . " hazards and £" . $thisNode->treasure . "<br>";
+     //   echo "Node #" . $thisNode->name . " has " . $thisNode->hazards . " hazards and £" . $thisNode->treasure . "<br>";
 
     }
     // draw joints:
@@ -414,11 +410,14 @@ function output()
         } else {
             $thisJointColour = imagecolorallocate($outputCanvas, 32, 32, 32);
         }
+
         if ($thisJoint->type == "") {
             imageline($outputCanvas, $nodeList[$thisJoint->nodeA]->x, $nodeList[$thisJoint->nodeA]->y, $nodeList[$thisJoint->nodeB]->x, $nodeList[$thisJoint->nodeB]->y, $thisJointColour);
         } else if ($thisJoint->type == "?") {
 
-            imagedashedline($outputCanvas, $nodeList[$thisJoint->nodeA]->x, $nodeList[$thisJoint->nodeA]->y, $nodeList[$thisJoint->nodeB]->x, $nodeList[$thisJoint->nodeB]->y, $thisJointColour);
+            //imagedashedline($outputCanvas, $nodeList[$thisJoint->nodeA]->x, $nodeList[$thisJoint->nodeA]->y, $nodeList[$thisJoint->nodeB]->x, $nodeList[$thisJoint->nodeB]->y, $thisJointColour);
+            $thisJointColour = imagecolorallocate($outputCanvas, 255, 255, 255);
+            imageline($outputCanvas, $nodeList[$thisJoint->nodeA]->x, $nodeList[$thisJoint->nodeA]->y, $nodeList[$thisJoint->nodeB]->x, $nodeList[$thisJoint->nodeB]->y, $thisJointColour);
         } else {
             // draw valve:
 
@@ -444,13 +443,14 @@ function output()
             $myArrow->radius = 12;
             $myArrow->drawGDArrow();
         }
+        echo "<br>joint from ".$thisJoint->nodeA." (".$nodeList[$thisJoint->nodeA]->type.") to ".$thisJoint->nodeB." (".$nodeList[$thisJoint->nodeB]->type.") - type ".$thisJoint->type;
     }
 
     //header('Content-Type: image/jpeg');
     ob_start();
     imagejpeg($outputCanvas, null, 100);
     $rawImageBytes = ob_get_clean();
-    echo "<img src='data:image/jpeg;base64," . base64_encode($rawImageBytes) . "' />";
+    echo "<br><img src='data:image/jpeg;base64," . base64_encode($rawImageBytes) . "' />";
     imagedestroy($outputCanvas);
 
 }
@@ -465,7 +465,7 @@ function fillUpWithMoreNodes($howMany)
 
 function init()
 {
-    global $nodeList, $jointList, $canvaDimension, $keyColours, $keysUsed, $storedSeed;
+    global $nodeList, $jointList, $canvaDimension, $keyColours, $storedSeed;
 
     $keyColours = array(
         array(255, 0, 64),
@@ -473,7 +473,6 @@ function init()
         array(15, 134, 255),
         array(19, 209, 46),
     );
-    $keysUsed       = 0;
     $canvaDimension = 600;
     $nodeList       = array();
     $jointList      = array();
@@ -494,6 +493,8 @@ function growGrammar($thisGrammar, $iterations)
         "X" => array("O", "OX", "{OX,OX}", "{OX,O}"),
     );
 
+echo "<p>start grammar: ".$thisGrammar."<br>";
+
     for ($i = 0; $i < $iterations; $i++) {
         $characterCounter = 0;
         do {
@@ -501,7 +502,7 @@ function growGrammar($thisGrammar, $iterations)
 
             if (array_key_exists($thisCharacter, $grammarTransformations)) {
                 $thisTransform = $grammarTransformations[$thisCharacter][mt_rand(0, count($grammarTransformations[$thisCharacter]) - 1)];
-                echo "was " . $thisGrammar;
+         echo $thisCharacter." => ".$thisTransform." &hellip; ";
                 $thisGrammar = substr_replace($thisGrammar, $thisTransform, $characterCounter, 1);
                 $characterCounter += strlen($thisTransform);
                 echo " now " . $thisGrammar . "<br>";
@@ -511,7 +512,7 @@ function growGrammar($thisGrammar, $iterations)
     }
     // remove any remaining 'X's:
     $thisGrammar = str_replace("X", "", $thisGrammar);
-    echo "final grammar: ".$thisGrammar."<br>";
+    echo "final grammar: ".$thisGrammar."</p>";
     return $thisGrammar;
 }
 
@@ -541,8 +542,10 @@ function parseStringGrammar($thisGrammar)
                 $newNode = addNode("ENDGOAL", $activeParents[0]->x + mt_rand(-10, 10), $activeParents[0]->y + mt_rand(-10, 10));
 
                 for ($i = 0; $i < count($activeParents); $i++) {
+                    // make sure it's not a dead end:
+                    if($nextJointTypes[$i] != "|") {
                     $newJoint = addJoint($activeParents[$i]->name, $newNode->name, $nextJointTypes[$i], $nextJointLock[$i]);
-
+}
                 }
 
                 $nextJointTypes = array("");
@@ -552,7 +555,10 @@ function parseStringGrammar($thisGrammar)
                 // add node:
                 $newNode = addNode("NORMAL", $activeParents[0]->x + mt_rand(-10, 10), $activeParents[0]->y + mt_rand(-10, 10));
                 for ($i = 0; $i < count($activeParents); $i++) {
+                      // make sure it's not a dead end:
+                    if($nextJointTypes[$i] != "|") {
                     $newJoint = addJoint($activeParents[$i]->name, $newNode->name, $nextJointTypes[$i], $nextJointLock[$i]);
+                }
                 }
                 $activeParents = array($newNode);
 
@@ -596,6 +602,8 @@ function parseStringGrammar($thisGrammar)
                 }
                 // reset to the parent:
                 $activeParents = $thisBranchesParents[$thisDepth];
+                   $nextJointTypes = $thisBranchesTerminalJointTypes[$thisDepth];
+                $nextJointLock  = $thisBranchesTerminalJointLocks[$thisDepth];
                 break;
             case "[":
                 // node contains something - get all characters up to the closing ] to see what needs to be added:
@@ -637,6 +645,10 @@ function parseStringGrammar($thisGrammar)
                 // secret passage:
                 $nextJointTypes[count($nextJointTypes) - 1] = "?";
                 break;
+                  case "|":
+                // dead end:
+                $nextJointTypes[count($nextJointTypes) - 1] = "|";
+                break;
             case "#":
                 // locked joint
                 // #1# = lock for key #1
@@ -657,13 +669,16 @@ function parseStringGrammar($thisGrammar)
     } while ($characterCounter < strlen($thisGrammar));
 }
 
-init();
+
 
 // linear connection with 2 nodes between the start and end:
 // $startGrammar = "SOOE";
 
 // simple branch with a node on each branch:
 // $startGrammar = "S{O,O}E";
+
+// simple branch to dead end:
+// $startGrammer = "S{O,O|}E";
 
 // a one-way valve between 2 nodes:
 // $startGrammar = "SO>OE";
@@ -695,9 +710,15 @@ init();
 // nested locks:
 // $startGrammar = "S{O[K#2#]{O,O#2#},O[K#1]O#1#}E";
 
+init();
+
 $possibleStartGrammars = array("SXE");
 
-$grownGrammar = growGrammar($possibleStartGrammars[mt_rand(0, count($possibleStartGrammars) - 1)], mt_rand(2, 3));
+//$grownGrammar = growGrammar($possibleStartGrammars[mt_rand(0, count($possibleStartGrammars) - 1)], mt_rand(2, 3));
+
+
+
+
 //do {
     parseStringGrammar($grownGrammar);
     moveNodesApart();
