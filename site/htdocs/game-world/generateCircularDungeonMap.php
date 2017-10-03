@@ -1,5 +1,23 @@
 <?php
 
+
+/* ----
+
+TO DO:
+Create meta levels so can have foreshadowing and hints about future encounters
+Map nodes to tiles
+Convert locks, valves, hazards and treasue into interesting variants
+Add NPCs (with relevant quests)
+
+---- */
+
+
+
+
+
+
+
+
 // -----------------------------------------
 // NOT MINE
 http: //codetalk.code-kobold.de/drawing-arrows-with-the-gd-library-in-php/
@@ -492,7 +510,7 @@ function init()
 function growGrammar($thisGrammar, $iterations)
 {
     $grammarTransformations = array(
-        "X" => array("O", "OX", "{OX,O|}", "{OX,O}", "O[!]O[$]", "O[K#]XO##"),
+        "X" => array("O", "OX", "{OX,O|}", "{OX,O}", "O[!]O[$]", "O[K#]XO##", "O[K#]O##X"),
     );
     $currentKey = 0;
 
@@ -715,11 +733,22 @@ function parseStringGrammar($thisGrammar)
 // nested locks:
 // $startGrammar = "S{O[K#2#]{O,O#2#},O[K#1]O#1#}E";
 
+// triangular branch:
+// $startGrammar = "S{,O}E";
+
 init();
 
 $possibleStartGrammars = array("SXE");
 
 $grownGrammar = growGrammar($possibleStartGrammars[mt_rand(0, count($possibleStartGrammars) - 1)], mt_rand(2, 3));
+
+
+// secret to treasure (with one way exit):
+$grownGrammar = "S{?O[£]>,OOO}E";
+
+// circular lock and key:
+
+
 
 
 
@@ -737,6 +766,6 @@ font-family:arial,helvetica,sans-serif;font-size:14px;
 }
 </style>
 <?php
-echo '<p>' . $grownGrammar . '</p>';
-echo '<p>' . $storedSeed . '</p>';
+echo '<p>' . htmlentities($grownGrammar) . '</p>';
+echo '<p><a href="'.explode("?",$_SERVER['REQUEST_URI'])[0].'?seed=' . $storedSeed . '">' . $storedSeed . '</a></p>';
 ?>

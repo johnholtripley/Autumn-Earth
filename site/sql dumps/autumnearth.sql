@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 17, 2017 at 10:26 AM
+-- Generation Time: Sep 29, 2017 at 01:10 PM
 -- Server version: 5.6.24
 -- PHP Version: 5.6.8
 
@@ -359,7 +359,7 @@ CREATE TABLE IF NOT EXISTS `tblcreatures` (
   `creatureDescription` longtext,
   `creatureType` varchar(128) NOT NULL,
   `cleanURL` varchar(128) DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblcreatures`
@@ -370,7 +370,8 @@ INSERT INTO `tblcreatures` (`creatureID`, `creatureName`, `creatureDescription`,
 (1, 'Auroch', 'A surprisingly gentle herd animal given its enormous horns.', 'Animals', 'auroch'),
 (2, 'Ellyll', 'The Ellyllon are delightful little fairy folk.', 'Spirit', 'ellyll'),
 (3, 'Vulpes', 'Why, it''s a cute little fox.', 'Animals', 'vulpes'),
-(4, 'Eldritch', 'A dark, mischievous spirit. Worth avoiding if possible.', 'Spirit', 'eldritch');
+(4, 'Eldritch', 'A dark, mischievous spirit. Worth avoiding if possible.', 'Spirit', 'eldritch'),
+(5, 'Ghast', 'A malevolent trapped soul.', 'Spirit', 'ghast');
 
 -- --------------------------------------------------------
 
@@ -963,7 +964,7 @@ CREATE TABLE IF NOT EXISTS `tblplants` (
   `timeCreated` datetime NOT NULL,
   `plantSeed` int(255) NOT NULL,
   `commonNamesJoined` varchar(512) COLLATE utf8_bin NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=278 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=280 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
 -- Dumping data for table `tblplants`
@@ -989,7 +990,9 @@ INSERT INTO `tblplants` (`plantID`, `latinName`, `commonNames`, `plantDesc`, `pl
 (274, 'Hanium curculum', 'Bitterfoot or Ridgeseed', 'A dark red flower of disturbed ground, farm land and walls. Likes calcareous soils.', 'hanium-curculum', 'Hanium curculum\r\n(Bitterfoot or Ridgeseed)\r\nA dark red flower of disturbed ground, farm land and walls. Likes calcareous soils.', 0, 0, '2017-04-10 13:50:31', 1491881113, 'Bitterfoot/Ridgeseed'),
 (275, 'Xicoryda niachille', 'Hearthfern', 'A native biennial with creeping stems, common in ditches, marshes, pond edges, and river banks.', 'xicoryda-niachille', 'Xicoryda niachille\r\n(Hearthfern)\r\nA native biennial with creeping stems, common in ditches, marshes, pond edges, and river banks.', 0, 0, '2017-06-13 13:21:24', 1497405393, 'Hearthfern'),
 (276, 'Virginia concanata', 'Pouchwhistle', 'A native biennial commonly found in England and Wales, usually on light soils, in open woods, grassland and hedgerows.', 'virginia-concanata', 'Virginia concanata\r\n(Pouchwhistle)', 0, 0, '2017-07-21 16:01:05', 1500709523, 'Pouchwhistle'),
-(277, 'Rhantemelanchier cladrastis', 'Dragonsgrass, Heath lichen or Trailing goldenthistle', 'Widely used in days gone by to curdle milk for cheese making.', 'rhantemelanchier-cladrastis', 'Rhantemelanchier cladrastis\r\n(Dragonsgrass, Heath lichen or Trailing goldenthistle)', 0, 0, '2017-07-21 16:01:23', 1500658341, 'Dragonsgrass/Heath lichen/Trailing goldenthistle');
+(277, 'Rhantemelanchier cladrastis', 'Dragonsgrass, Heath lichen or Trailing goldenthistle', 'Widely used in days gone by to curdle milk for cheese making.', 'rhantemelanchier-cladrastis', 'Rhantemelanchier cladrastis\r\n(Dragonsgrass, Heath lichen or Trailing goldenthistle)', 0, 0, '2017-07-21 16:01:23', 1500658341, 'Dragonsgrass/Heath lichen/Trailing goldenthistle'),
+(278, 'Solanum niacama', 'Motherswhorl, Spindlewhistle or Hengease', 'The delightful bright red daisy flowers of this biennial were once a common sight in cornfields and waste places. It is now much rarer due to widespread use of selective herbicides.', 'solanum-niacama', 'Solanum niacama\r\n(Motherswhorl, Spindlewhistle or Hengease)', 0, 0, '2017-09-18 15:32:55', 1505820661, 'Motherswhorl/Spindlewhistle/Hengease'),
+(279, 'Rosmatis helium', 'Scarletwort or Autumnflax', 'Seeds itself very prolifically and is related to other campions.', 'rosmatis-helium', 'Rosmatis helium\r\n(Scarletwort or Autumnflax)\r\nSeeds itself very prolifically and is related to other campions.', 0, 0, '2017-09-18 15:33:02', 1505842002, 'Scarletwort/Autumnflax');
 
 -- --------------------------------------------------------
 
@@ -1132,7 +1135,7 @@ CREATE TABLE IF NOT EXISTS `tblprofessions` (
   `professionID` int(11) NOT NULL,
   `professionName` varchar(128) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
   `cleanurl` varchar(128) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblprofessions`
@@ -1144,7 +1147,8 @@ INSERT INTO `tblprofessions` (`professionID`, `professionName`, `cleanurl`) VALU
 (2, 'Scribing', 'scribing'),
 (3, 'Apothecary', 'apothecary'),
 (4, 'Ink Making', 'ink-making'),
-(5, 'Artificer', 'artificer');
+(5, 'Artificer', 'artificer'),
+(6, 'Cooking', 'cook');
 
 -- --------------------------------------------------------
 
@@ -1160,7 +1164,7 @@ CREATE TABLE IF NOT EXISTS `tblquests` (
   `childOf` int(11) DEFAULT NULL,
   `startItemsReceived` varchar(255) DEFAULT NULL,
   `itemsNeededForCompletion` varchar(255) DEFAULT NULL,
-  `itemsReceivedOnCompletion` varchar(255) DEFAULT NULL,
+  `itemsReceivedOnCompletion` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
   `whatIsRequiredForCompletion` varchar(128) NOT NULL,
   `titleGainedAfterCompletion` int(11) DEFAULT NULL,
   `thresholdNeededForCompletion` varchar(128) NOT NULL,
@@ -1173,7 +1177,7 @@ CREATE TABLE IF NOT EXISTS `tblquests` (
 
 INSERT INTO `tblquests` (`questID`, `journalTitle`, `journalDesc`, `isRepeatable`, `childOf`, `startItemsReceived`, `itemsNeededForCompletion`, `itemsReceivedOnCompletion`, `whatIsRequiredForCompletion`, `titleGainedAfterCompletion`, `thresholdNeededForCompletion`, `subQuestsRequiredForCompletion`) VALUES
 (1, 'A hero''s journey', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 0, NULL, '9', '9', '2x21/1x1/1x2/1x3', 'give', 4, '', NULL),
-(2, 'An unexpected journey', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 0, NULL, '', '', '9,14', 'world', NULL, '', NULL),
+(2, 'An unexpected journey', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 0, NULL, '', '', '9,14,$10000', 'world', NULL, '', NULL),
 (3, 'A longer journey', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 1, NULL, '', '', '', 'hero.stats.numberOfcardsFlipped', NULL, '+2', NULL),
 (4, 'A hero''s peregrination', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 0, NULL, '5,9', '5x19', '2x21,9', 'possess', 7, '', NULL),
 (5, 'A much longer task', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 0, NULL, '', NULL, '2x21,9', 'multi', 7, '', '6,7'),
@@ -1879,7 +1883,7 @@ ALTER TABLE `tblcontracts`
 -- AUTO_INCREMENT for table `tblcreatures`
 --
 ALTER TABLE `tblcreatures`
-  MODIFY `creatureID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=5;
+  MODIFY `creatureID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=6;
 --
 -- AUTO_INCREMENT for table `tblcreaturetypes`
 --
@@ -1969,7 +1973,7 @@ ALTER TABLE `tblnews`
 -- AUTO_INCREMENT for table `tblplants`
 --
 ALTER TABLE `tblplants`
-  MODIFY `plantID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=278;
+  MODIFY `plantID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=280;
 --
 -- AUTO_INCREMENT for table `tblposts`
 --
@@ -1979,7 +1983,7 @@ ALTER TABLE `tblposts`
 -- AUTO_INCREMENT for table `tblprofessions`
 --
 ALTER TABLE `tblprofessions`
-  MODIFY `professionID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=6;
+  MODIFY `professionID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=7;
 --
 -- AUTO_INCREMENT for table `tblquests`
 --
