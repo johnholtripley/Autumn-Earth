@@ -418,6 +418,12 @@ function output()
 
            echo "Node #" . $thisNode->name . " has " . $thisNode->hazards . " hazards and £" . $thisNode->treasure . "<br>";
 
+if($thisNode->hazards > 0) {
+imagearc($outputCanvas, $thisNode->x, $thisNode->y, $thisNode->radius * 2, $thisNode->radius * 2,  0, 360, imagecolorallocate($outputCanvas, 255, 0, 0));
+}
+if($thisNode->treasure > 0) {
+imagearc($outputCanvas, $thisNode->x, $thisNode->y, $thisNode->radius * 2, $thisNode->radius * 2,  0, 360, imagecolorallocate($outputCanvas, 0, 255, 0));
+}
     }
     // draw joints:
     imagesetthickness($outputCanvas, 2);
@@ -510,7 +516,10 @@ function init()
 function growGrammar($thisGrammar, $iterations)
 {
     $grammarTransformations = array(
-        "X" => array("O", "OX", "{OX,O|}", "{OX,O}", "O[!]O[$]", "O[K#]XO##", "O[K#]O##X"),
+        // simple branching and layout:
+        "X" => array("O", "OX", "{OX,O|}", "{OX,O}", "Y"),
+        // more intricate 'set piece' arrangements:
+        "Y" => array("O[!]O[$]", "O[K#]XO##", "O[K#]O##X"),
     );
     $currentKey = 0;
 
@@ -743,10 +752,10 @@ $possibleStartGrammars = array("SXE");
 $grownGrammar = growGrammar($possibleStartGrammars[mt_rand(0, count($possibleStartGrammars) - 1)], mt_rand(2, 3));
 
 
-// secret to treasure (with one way exit):
-$grownGrammar = "S{?O[£]>,OOO}E";
+// secret to treasure (with one way continuation back to the main path):
+$grownGrammar = "S{?O[$]>,OOO}E";
 
-// circular lock and key:
+
 
 
 
