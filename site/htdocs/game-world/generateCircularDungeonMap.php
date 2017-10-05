@@ -1,6 +1,5 @@
 <?php
 
-
 /* ----
 
 TO DO:
@@ -10,13 +9,6 @@ Convert locks, valves, hazards and treasue into interesting variants
 Add NPCs (with relevant quests)
 
 ---- */
-
-
-
-
-
-
-
 
 // -----------------------------------------
 // NOT MINE
@@ -237,6 +229,27 @@ class joint
     }
 }
 
+class delaunayVertex
+{
+    public function __construct($x, $y)
+    {
+        $this->x = $x;
+        $this->y = $y;
+
+    }
+}
+
+class delaunayTriangle
+{
+    public function __construct($v1, $v2, $v3)
+    {
+        $this->v1 = $v1;
+        $this->v2 = $v2;
+        $this->v3 = $v3;
+
+    }
+}
+
 function addNode($type, $x, $y)
 {
 
@@ -388,7 +401,7 @@ function moveNodesApart()
     }
 }
 
-function output()
+function outputConnections()
 {
     global $nodeList, $jointList, $canvaDimension, $keyColours;
 
@@ -399,15 +412,14 @@ function output()
     // draw nodes:
     foreach ($nodeList as $thisNode) {
         if ($thisNode->type == "KEYHOLDER") {
-           
+
             $thisNodeColour = imagecolorallocate($outputCanvas, $keyColours[$thisNode->whichKey][0], $keyColours[$thisNode->whichKey][1], $keyColours[$thisNode->whichKey][2]);
-            
 
 //$thisNodeColour = imagecolorallocate($outputCanvas, 255,235,15);
         } else if ($thisNode->type == "START") {
             $thisNodeColour = imagecolorallocate($outputCanvas, 255, 255, 255);
         } else if ($thisNode->type == "ENDGOAL") {
-            $thisNodeColour = imagecolorallocate($outputCanvas, 0, 0, 0);
+            $thisNodeColour = imagecolorallocate($outputCanvas, 64, 64, 64);
         } else {
             $thisNodeColour = imagecolorallocate($outputCanvas, 128, 128, 128);
         }
@@ -416,14 +428,14 @@ function output()
 
 // check for contents:
 
-           echo "Node #" . $thisNode->name . " has " . $thisNode->hazards . " hazards and £" . $thisNode->treasure . "<br>";
+        echo "Node #" . $thisNode->name . " has " . $thisNode->hazards . " hazards and £" . $thisNode->treasure . "<br>";
 
-if($thisNode->hazards > 0) {
-imagearc($outputCanvas, $thisNode->x, $thisNode->y, $thisNode->radius * 2, $thisNode->radius * 2,  0, 360, imagecolorallocate($outputCanvas, 255, 0, 0));
-}
-if($thisNode->treasure > 0) {
-imagearc($outputCanvas, $thisNode->x, $thisNode->y, $thisNode->radius * 2, $thisNode->radius * 2,  0, 360, imagecolorallocate($outputCanvas, 0, 255, 0));
-}
+        if ($thisNode->hazards > 0) {
+            imagearc($outputCanvas, $thisNode->x, $thisNode->y, $thisNode->radius * 2, $thisNode->radius * 2, 0, 360, imagecolorallocate($outputCanvas, 255, 0, 0));
+        }
+        if ($thisNode->treasure > 0) {
+            imagearc($outputCanvas, $thisNode->x, $thisNode->y, $thisNode->radius * 2, $thisNode->radius * 2, 0, 360, imagecolorallocate($outputCanvas, 0, 255, 0));
+        }
     }
     // draw joints:
     imagesetthickness($outputCanvas, 2);
@@ -442,6 +454,10 @@ imagearc($outputCanvas, $thisNode->x, $thisNode->y, $thisNode->radius * 2, $this
             //imagedashedline($outputCanvas, $nodeList[$thisJoint->nodeA]->x, $nodeList[$thisJoint->nodeA]->y, $nodeList[$thisJoint->nodeB]->x, $nodeList[$thisJoint->nodeB]->y, $thisJointColour);
             $thisJointColour = imagecolorallocate($outputCanvas, 255, 255, 255);
             imageline($outputCanvas, $nodeList[$thisJoint->nodeA]->x, $nodeList[$thisJoint->nodeA]->y, $nodeList[$thisJoint->nodeB]->x, $nodeList[$thisJoint->nodeB]->y, $thisJointColour);
+        } else if ($thisJoint->type == ":") {
+// window 'joint':
+            imagedashedline($outputCanvas, $nodeList[$thisJoint->nodeA]->x, $nodeList[$thisJoint->nodeA]->y, $nodeList[$thisJoint->nodeB]->x, $nodeList[$thisJoint->nodeB]->y, $thisJointColour);
+
         } else {
             // draw valve:
 
@@ -467,7 +483,7 @@ imagearc($outputCanvas, $thisNode->x, $thisNode->y, $thisNode->radius * 2, $this
             $myArrow->radius = 12;
             $myArrow->drawGDArrow();
         }
-        echo "<br>joint from " . $thisJoint->nodeA . " (" . $nodeList[$thisJoint->nodeA]->type . ") to " . $thisJoint->nodeB . " (" . $nodeList[$thisJoint->nodeB]->type . ") - type " . $thisJoint->type . " locked: ".$thisJoint->isLocked;
+        echo "<br>joint from " . $thisJoint->nodeA . " (" . $nodeList[$thisJoint->nodeA]->type . ") to " . $thisJoint->nodeB . " (" . $nodeList[$thisJoint->nodeB]->type . ") - type " . $thisJoint->type . " locked: " . $thisJoint->isLocked;
     }
 
     //header('Content-Type: image/jpeg');
@@ -482,12 +498,12 @@ imagearc($outputCanvas, $thisNode->x, $thisNode->y, $thisNode->radius * 2, $this
 /*
 function fillUpWithMoreNodes($howMany)
 {
-    global $nodeList;
-    for ($i = 0; $i < $howMany; $i++) {
-        addNodeBetween(0, count($nodeList) - 1);
-    }
+global $nodeList;
+for ($i = 0; $i < $howMany; $i++) {
+addNodeBetween(0, count($nodeList) - 1);
 }
-*/
+}
+ */
 
 function init()
 {
@@ -517,9 +533,11 @@ function growGrammar($thisGrammar, $iterations)
 {
     $grammarTransformations = array(
         // simple branching and layout:
-        "X" => array("O", "OX", "{OX,O|}", "{OX,O}", "Y"),
+        "X"  => array("O", "OX", "{OX,O|}", "{OX,O}", "OO"),
         // more intricate 'set piece' arrangements:
-        "Y" => array("O[!]O[$]", "O[K#]XO##", "O[K#]O##X"),
+        "OO" => array("O[!]O[$]", "O[K#]XO##", "O[K#]O##X"),
+        // valves could be lock and keys:
+        ">"  => array("O[K#]XO##"),
     );
     $currentKey = 0;
 
@@ -534,10 +552,10 @@ function growGrammar($thisGrammar, $iterations)
                 $thisTransform = $grammarTransformations[$thisCharacter][mt_rand(0, count($grammarTransformations[$thisCharacter]) - 1)];
                 // check for locks and keys:
                 if (strpos($thisTransform, 'K#') !== false) {
-                $thisTransform = str_replace("K#", "K#".$currentKey, $thisTransform);
-                $thisTransform = str_replace("##", "#".$currentKey."#", $thisTransform);
+                    $thisTransform = str_replace("K#", "K#" . $currentKey, $thisTransform);
+                    $thisTransform = str_replace("##", "#" . $currentKey . "#", $thisTransform);
 
-                $currentKey ++;
+                    $currentKey++;
                 }
                 echo $thisCharacter . " => " . $thisTransform . " &hellip; ";
                 $thisGrammar = substr_replace($thisGrammar, $thisTransform, $characterCounter, 1);
@@ -682,6 +700,10 @@ function parseStringGrammar($thisGrammar)
                 // secret passage:
                 $nextJointTypes[count($nextJointTypes) - 1] = "?";
                 break;
+            case ":":
+                // 'window' - the nodes are visible from each other, but not directly traversable:
+                $nextJointTypes[count($nextJointTypes) - 1] = ":";
+                break;
             case "|":
                 // dead end:
                 $nextJointTypes[count($nextJointTypes) - 1] = "|";
@@ -701,6 +723,84 @@ function parseStringGrammar($thisGrammar)
         }
         $characterCounter++;
     } while ($characterCounter < strlen($thisGrammar));
+}
+
+function createDelauneyGraph()
+{
+    global $delaunayVertices, $delaunayTriangles, $canvaDimension;
+    $delaunayVertices = array();
+
+    $edgeBuffer       = 250;
+    $numberOfVertices = 50;
+
+    $minX = 99999999999;
+    $minY = 99999999999;
+    $maxX = 0;
+    $maxY = 0;
+
+    $delaunayTriangles = array();
+
+    for ($i = 0; $i < $numberOfVertices; $i++) {
+        $newVertex = new delaunayVertex(mt_rand($edgeBuffer, $canvaDimension - $edgeBuffer), mt_rand($edgeBuffer, $canvaDimension - $edgeBuffer));
+
+        array_push($delaunayVertices, $newVertex);
+        if ($newVertex->x < $minX) {
+            $minX = $newVertex->x;
+        }
+        if ($newVertex->y < $minY) {
+            $minY = $newVertex->y;
+        }
+        if ($newVertex->x > $maxX) {
+            $maxX = $newVertex->x;
+        }
+        if ($newVertex->y > $maxY) {
+            $maxY = $newVertex->y;
+        }
+    }
+    // do triangulation:
+    // Kudos - Joshua Bell. https://travellermap.com/tmp/delaunay.htm
+
+    // create a bounding triangle for all vertices:
+    $dx = ($maxX - $minX) * 10;
+    $dy = ($maxY - $minY) * 10;
+
+    $boundingTriangle = new delaunayTriangle(
+        new delaunayVertex($minX - $dx, $minY - $dy * 3),
+        new delaunayVertex($minX - $dx, $maxY + $dy),
+        new delaunayVertex($maxX + $dx * 3, $maxY + $dy)
+    );
+
+    array_push($delaunayTriangles, $boundingTriangle);
+
+}
+
+function outputDelauneyGraph()
+{
+    global $canvaDimension, $delaunayVertices, $delaunayTriangles;
+    $nodeRadius   = 5;
+    $outputCanvas = imagecreatetruecolor($canvaDimension, $canvaDimension);
+    $groundColour = array(219, 215, 190);
+    $ground       = imagecolorallocate($outputCanvas, $groundColour[0], $groundColour[1], $groundColour[2]);
+    imagefilledrectangle($outputCanvas, 0, 0, $canvaDimension, $canvaDimension, $ground);
+
+    // draw nodes:
+    $nodeColour = imagecolorallocate($outputCanvas, 255, 255, 255);
+    for ($i = 0; $i < count($delaunayVertices); $i++) {
+        imagefilledellipse($outputCanvas, $delaunayVertices[$i]->x, $delaunayVertices[$i]->y, $nodeRadius, $nodeRadius, $nodeColour);
+    }
+
+    // draw triangles:
+    $edgeColour = imagecolorallocate($outputCanvas, 50, 50, 50);
+    for ($i = 0; $i < count($delaunayTriangles); $i++) {
+        imagepolygon($outputCanvas, array($delaunayTriangles[$i]->v1->x, $delaunayTriangles[$i]->v1->y, $delaunayTriangles[$i]->v2->x, $delaunayTriangles[$i]->v2->y,
+            $delaunayTriangles[$i]->v3->x, $delaunayTriangles[$i]->v3->y), 3, $edgeColour);
+    }
+
+    ob_start();
+    imagejpeg($outputCanvas, null, 100);
+    $rawImageBytes = ob_get_clean();
+    echo "<img src='data:image/jpeg;base64," . base64_encode($rawImageBytes) . "' />";
+    imagedestroy($outputCanvas);
 }
 
 // linear connection with 2 nodes between the start and end:
@@ -742,39 +842,69 @@ function parseStringGrammar($thisGrammar)
 // nested locks:
 // $startGrammar = "S{O[K#2#]{O,O#2#},O[K#1]O#1#}E";
 
+// 'window' - the 2 nodes are visible but not accessible from each other:
+// $startGrammar = "S:E";
+
 // triangular branch:
 // $startGrammar = "S{,O}E";
 
 init();
 
-$possibleStartGrammars = array("SXE");
-
-$grownGrammar = growGrammar($possibleStartGrammars[mt_rand(0, count($possibleStartGrammars) - 1)], mt_rand(2, 3));
-
+$possibleStartGrammars = array(
+    // really simple, linear path:
+    "SXE",
+);
 
 // secret to treasure (with one way continuation back to the main path):
-$grownGrammar = "S{?O[$]>,OOO}E";
+$grownGrammar = "S{?O[$]>,O}E";
 
+// dramatic cycle (see the goal early on, but can't get to it yet, so builds anticipation):
+$grownGrammar = "S{:,OO}E";
 
+// simple lock and key cycle:
+$grownGrammar = "S{,O[K#1]>}O#1#E";
 
+// variant lock and key cycle:
+$grownGrammar = "SO{,<O[K#1]}O#1#E";
 
+// branching with a shorter but more hazardous path:
+$grownGrammar = "S{O[!!],OOOOO}E";
 
+// double lock and key:
+$grownGrammar = "S{O[K#1],#1#O[K#2]>}O#2#E";
 
+// unknown return path (eg. bridge collapses behind to get to the goal):
+$grownGrammar = "S{<,>O[K#1#],#1#E|}O";
 
+// gambit with visible reward on alternate path:
+$grownGrammar = "S{,:O[$]O[!]}E";
+
+// key item cycle:
+$grownGrammar = "S{#1#,O{,#1#E|}}>O[K#1]";
+
+$grownGrammar = growGrammar($possibleStartGrammars[mt_rand(0, count($possibleStartGrammars) - 1)], mt_rand(2, 3));
 
 //do {
 parseStringGrammar($grownGrammar);
 moveNodesApart();
 //} while (anyJointHasIntersected());
 
-output();
+outputConnections();
+createDelauneyGraph();
+outputDelauneyGraph();
+
 ?>
 <style>
 body, p {
 font-family:arial,helvetica,sans-serif;font-size:14px;
 }
+img {
+    display: block;
+    float:left;
+    margin: 20px;
+}
 </style>
 <?php
-echo '<p>' . htmlentities($grownGrammar) . '</p>';
-echo '<p><a href="'.explode("?",$_SERVER['REQUEST_URI'])[0].'?seed=' . $storedSeed . '">' . $storedSeed . '</a></p>';
+echo '<p style="clear: both;">' . htmlentities($grownGrammar) . '</p>';
+echo '<p><a href="' . explode("?", $_SERVER['REQUEST_URI'])[0] . '?seed=' . $storedSeed . '">' . $storedSeed . '</a></p>';
 ?>

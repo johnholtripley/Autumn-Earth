@@ -18,145 +18,150 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
   <meta name="robots" content="noodp,noydir">
   <link href="https://fonts.googleapis.com/css?family=Lato%7CBree+Serif%7CIM+Fell+English" rel="stylesheet">
   <?php include($_SERVER['DOCUMENT_ROOT']."/includes/meta-content.php"); ?>
-<style>
-.card.players {
-/* this hero's card back: */
-background: #ec35ea;
-}
-</style>
-<script>var playersCardBack = '#ec35ea';</script>
+  <style>
+    .card.players {
+    /* this hero's card back: */
+    background: #ec35ea;
+  }
+  </style>
+  <script>var playersCardBack = '#ec35ea';</script>
 </head>
 <body>
  
 <div id="gameWrapper">
- 
   <div id="worldWrapper">
-<canvas id="gameWorld" width="800" height="600" moz-opaque>
-  <img src="/images/game-world/no-canvas.jpg" alt="Sorry">
-</canvas>
-<canvas id="lightMapOverlay" width="800" height="600"></canvas>
-<div id="toolbar"><a href="#gameSettings" id="openSettings">Settings</a><div id="currencies"></div></div>
- 
-<p id="dialogue"></p>
-<div id="notification"></div>
-<div id="displayZoneName"></div>
-</div>
- 
-<div id="inventoryPanels"></div>
-<div id="draggableInventorySlot"></div>
-<form id="splitStackPanel" class="quantityInputPanel">
-  <fieldset>
-<label for="splitStackInput" class="visibleHide">Enter quantity:</label>
-<input type="number" placeholder="Enter quantity" min="0" max="20" pattern="[0-9]*" id="splitStackInput">
-<button id="splitStackCancel" type="button">Cancel</button>
-<input type="submit" value="Ok">
-</fieldset>
-</form>
-<div id="cardAlbum" class="active"><div class="draggableBar">Totem Card album</div><div id="cardAlbumList"></div><button id="toggleActiveCards">Show only collected cards</button></div>
-<div id="cartographicPanel" class="active"><div class="draggableBar"><span id="cartographicTitle">Map</span></div><canvas id="cartographyCanvas" width="246" height="246"></canvas><canvas id="offScreenCartographyCanvas" class="offScreenCanvas" width="246" height="246"></canvas></div>
-<div id="craftingPanel"><div class="draggableBar"><span id="recipeTitleBar">Recipes</span></div><button class="closePanel">close</button>
-<div id="recipeSearchWrapper"><label for="recipeSearch" class="visibleHide">Search for recipes</label><input id="recipeSearch" type="text" placeholder="Search"><button id="clearRecipeSearch"><span>Clear search</span></button></div><label for="recipeFilter" class="visibleHide">Filter by:</label><div class="selectWrapper"><select id="recipeFilter"><option>All</option></select></div>
- 
-<div class="customScrollBar" id="recipeCustomScrollBar">
-<div class="customScrollContent">
-<ul id="createRecipeList">
-</ul>
- <div class="trackBar">
-    <div class="dragger"></div>
+    <canvas id="gameWorld" width="800" height="600" moz-opaque>
+      <img src="/images/game-world/no-canvas.jpg" alt="Sorry">
+    </canvas>
+    <canvas id="lightMapOverlay" width="800" height="600"></canvas>
+
+    <div id="toolbar"><a href="#gameSettings" id="openSettings">Settings</a><div id="currencies"></div></div>
+
+    <p id="dialogue"></p>
+    <div id="notification"></div>
+    <div id="displayZoneName"></div>
   </div>
-</div>
-</div>
-<button id="craftingRecipeCreateButton" disabled="disabled">Add components</button>
-</div>
-<div id="craftingSelectComponentsPanel">
- 
-<div id="componentsAvailableForThisRecipe"></div>
-<div id="selectComponentsItemBeingCreated"></div>
-</div>
- 
-<div id="booksAndParchments"></div>
- 
-<div id="collectionQuestPanels">
-<div class="draggableBar">Collection Album</div><button class="closePanel">close</button>
-<?php
-$query = "SELECT * FROM tblcollectionquests";
-$result = mysql_query($query) or die ();
-while ($row = mysql_fetch_array($result)) {
-extract($row);
-echo '<section id="collection-'.$cleanurl.'" data-collection="'.$cleanurl.'"><h2>'.$collectionQuestName.'</h2>';
-echo '<p>'.base64_encode($collectionQuestLore).'</p><ol></ol></section>';
-}
-mysql_free_result($result);
-?>
-</div>
- 
- 
-<div id="inscriptionPanel"><div class="draggableBar">Inscription</div><button class="closePanel">close</button>
- <div class="tabHeader">
-<button class="tabs" id="scribeCopyText">Copy text</button><button class="tabs active" id="scribeOriginalText">Original text</button></div>
- 
-<div id="sourceSelection"></div>
-<div id="materialsSelection"></div>
-<div id="inkSelection"></div>
-<div id="originalText" class="book active">
-<input id="inscriptionTitle" placeholder="Title">
-  <div id="inscriptionTextArea" contentEditable="true" role="textbox" aria-multiline="true"></div></div>
+
+  <div id="inventoryPanels"></div>
+  <div id="draggableInventorySlot"></div>
+  <form id="splitStackPanel" class="quantityInputPanel">
+    <fieldset>
+      <label for="splitStackInput" class="visibleHide">Enter quantity:</label>
+      <input type="number" placeholder="Enter quantity" min="0" max="20" pattern="[0-9]*" id="splitStackInput">
+      <button id="splitStackCancel" type="button">Cancel</button>
+      <input type="submit" value="Ok">
+    </fieldset>
+  </form>
+  <div id="cardAlbum" class="active">
+    <div class="draggableBar">Totem Card album</div>
+    <div id="cardAlbumList"></div>
+    <button id="toggleActiveCards">Show only collected cards</button>
+  </div>
+  <div id="cartographicPanel" class="active">
+    <div class="draggableBar">
+      <span id="cartographicTitle">Map</span>
+    </div>
+    <canvas id="cartographyCanvas" width="246" height="246"></canvas>
+    <canvas id="offScreenCartographyCanvas" class="offScreenCanvas" width="246" height="246"></canvas>
+  </div>
+  <div id="craftingPanel">
+    <div class="draggableBar">
+      <span id="recipeTitleBar">Recipes</span>
+    </div>
+    <button class="closePanel">close</button>
+    <div id="recipeSearchWrapper"><label for="recipeSearch" class="visibleHide">Search for recipes</label><input id="recipeSearch" type="text" placeholder="Search"><button id="clearRecipeSearch"><span>Clear search</span></button></div><label for="recipeFilter" class="visibleHide">Filter by:</label><div class="selectWrapper"><select id="recipeFilter"><option>All</option></select></div>
+    <div class="customScrollBar" id="recipeCustomScrollBar">
+      <div class="customScrollContent">
+        <ul id="createRecipeList">
+        </ul>
+        <div class="trackBar">
+        <div class="dragger"></div>
+        </div>
+      </div>
+    </div>
+    <button id="craftingRecipeCreateButton" disabled="disabled">Add components</button>
+  </div>
+  <div id="craftingSelectComponentsPanel">
+    <div id="componentsAvailableForThisRecipe"></div>
+    <div id="selectComponentsItemBeingCreated"></div>
+  </div>
+
+  <div id="booksAndParchments"></div>
+
+  <div id="collectionQuestPanels">
+    <div class="draggableBar">Collection Album</div>
+    <button class="closePanel">close</button>
+    <?php
+    $query = "SELECT * FROM tblcollectionquests";
+    $result = mysql_query($query) or die ();
+    while ($row = mysql_fetch_array($result)) {
+    extract($row);
+    echo '<section id="collection-'.$cleanurl.'" data-collection="'.$cleanurl.'"><h2>'.$collectionQuestName.'</h2>';
+    echo '<p>'.base64_encode($collectionQuestLore).'</p><ol></ol></section>';
+    }
+    mysql_free_result($result);
+    ?>
+  </div>
 
 
-<button class="closePanel">Cancel</button>
-<button id="scribeStartInscription" disabled>Inscribe</button>
+  <div id="inscriptionPanel">
+    <div class="draggableBar">Inscription</div>
+    <button class="closePanel">close</button>
+    <div class="tabHeader">
+      <button class="tabs" id="scribeCopyText">Copy text</button>
+      <button class="tabs active" id="scribeOriginalText">Original text</button>
+    </div>
+    <div id="sourceSelection"></div>
+    <div id="materialsSelection"></div>
+    <div id="inkSelection"></div>
+    <div id="originalText" class="book active">
+      <input id="inscriptionTitle" placeholder="Title">
+      <div id="inscriptionTextArea" contentEditable="true" role="textbox" aria-multiline="true"></div>
+    </div>
+    <button class="closePanel">Cancel</button>
+    <button id="scribeStartInscription" disabled>Inscribe</button>
+  </div>
+
+
+  <div id="shopPanel"></div>
+  <div id="draggableShopSlot"></div>
+  <form id="shopSplitStackPanel" class="quantityInputPanel">
+    <fieldset>
+      <label for="shopSplitStackInput" class="visibleHide">Enter quantity:</label>
+      <input type="number" placeholder="Enter quantity" min="0" max="20" pattern="[0-9]*" id="shopSplitStackInput">
+      <button id="shopSplitStackCancel" type="button">Cancel</button>
+      <input type="submit" value="Ok">
+    </fieldset>
+  </form>
+
+  <div id="boosterPack">
+    <ol>
+    <?php
+    for ($i=0;$i<5;$i++) {
+    echo '<li class="cardFlip"><div class="flipper"><div class="front card players" id="boosterCard'.$i.'"></div><div class="back"><img src="/images/card-game/cards/back.png" alt="card back"></div></div></li>';
+    }
+    ?>
+    </ol>
+  </div>
+
+  <div id="cardGameWrapper">
+    <canvas id="cardGame" moz-opaque width="1008" height="612">
+      <img src="/images/card-game/no-canvas.jpg" alt="Card game">
+    </canvas>
+  </div>
+
+
+
+  <div id="gameSettings"><button class="closePanel">close</button>
+    <h2>Volume</h2>
+    <label for="soundVolume">Sound effects</label><input id="soundVolume" type="range" min="0" max="1" step="0.05">
+    <label for="musicVolume">Music</label><input id="musicVolume" type="range" min="0" max="1" step="0.05">
+    <h2>Full screen</h2>
+    <input type="checkbox" value="1" id="toggleFullScreen" class="switch"> <label for="toggleFullScreen"><span></span>Enable Fullscreen</label>
+  </div>
 
 </div>
- 
- 
- 
-<div id="shopPanel"></div>
-<div id="draggableShopSlot"></div>
-<form id="shopSplitStackPanel" class="quantityInputPanel">
-  <fieldset>
-<label for="shopSplitStackInput" class="visibleHide">Enter quantity:</label>
-<input type="number" placeholder="Enter quantity" min="0" max="20" pattern="[0-9]*" id="shopSplitStackInput">
-<button id="shopSplitStackCancel" type="button">Cancel</button>
-<input type="submit" value="Ok">
-</fieldset>
-</form>
- 
-<div id="boosterPack">
-<ol>
- 
-<?php
-for ($i=0;$i<5;$i++) {
-  echo '<li class="cardFlip"><div class="flipper"><div class="front card players" id="boosterCard'.$i.'"></div><div class="back"><img src="/images/card-game/cards/back.png" alt="card back"></div></div></li>';
-}
-?>
-</ol>
-</div>
- 
- 
-<div id="cardGameWrapper">
-<canvas id="cardGame" moz-opaque width="1008" height="612">
-  <img src="/images/card-game/no-canvas.jpg" alt="Card game">
-</canvas>
-</div>
- 
 
- 
- <div id="gameSettings"><button class="closePanel">close</button>
-<h2>Volume</h2>
-<label for="soundVolume">Sound effects</label><input id="soundVolume" type="range" min="0" max="1" step="0.05">
-<label for="musicVolume">Music</label><input id="musicVolume" type="range" min="0" max="1" step="0.05">
-<h2>Full screen</h2>
-<input type="checkbox" value="1" id="toggleFullScreen" class="switch"> <label for="toggleFullScreen"><span></span>Enable Fullscreen</label>
- </div>
- 
-</div>
- 
- 
- 
- 
- 
- 
- 
 <script src="/js/card-game-shared.<?php echo $cacheVersion; ?>.js"></script>
 <script src="/js/game-world.<?php echo $cacheVersion; ?>.js"></script>
  
