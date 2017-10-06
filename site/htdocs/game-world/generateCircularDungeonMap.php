@@ -239,14 +239,85 @@ class delaunayVertex
     }
 }
 
+class delaunayEdge
+{
+    public function __construct($v0, $v1)
+    {
+        $this->v0 = $v0;
+        $this->v1 = $v1;
+
+    }
+
+
+  public function equals($other) {
+    return ($this->v0 === $other->v0 && $this->v1 === $other->v1);
+  }
+
+  public function inverse() {
+    return new delaunayEdge($this->v1, $this->v0);
+  }
+
+
+}
+
 class delaunayTriangle
 {
-    public function __construct($v1, $v2, $v3)
+    public function __construct($v0, $v1, $v2)
     {
+        $this->v0 = $v0;
         $this->v1 = $v1;
         $this->v2 = $v2;
-        $this->v3 = $v3;
 
+
+
+// calculate the circumcircle:
+        // From: http://www.exaflop.org/docs/cgafaq/cga1.html
+
+        $A = $this->v1->x - $this->v0->x;
+        $B = $this->v1->y - $this->v0->y;
+        $C = $this->v2->x - $this->v0->x;
+        $D = $this->v2->y - $this->v0->y;
+
+        $E = $A * ($this->v0->x + $this->v1->x) + $B * ($this->v0->y + $this->v1->y);
+        $F = $C * ($this->v0->x + $this->v2->x) + $D * ($this->v0->y + $this->v2->y);
+
+        $G = 2.0 * ($A * ($this->v2->y - $this->v1->y) - $B * ($this->v2->x - $this->v1->x));
+
+// var EPSILON = 1.0e-6;
+        if (abs($G) < 0.000001) {
+            // Collinear - find extremes and use the midpoint:
+
+            $minX = min($this->v0->x, $this->v1->x, $this->v2->x);
+            $minY = min($this->v0->y, $this->v1->y, $this->v2->y);
+            $maxX = max($this->v0->x, $this->v1->x, $this->v2->x);
+            $maxY = max($this->v0->y, $this->v1->y, $this->v2->y);
+
+            $this->center = new delaunayVertex(($minX + $maxX) / 2, ($minY + $maxY) / 2);
+
+            $dx = $this->center->x - $minX;
+            $dy = $this->center->y - $minY;
+        } else {
+            $cx = ($D * $E - $B * $F) / $G;
+            $cy = ($A * $F - $C * $E) / $G;
+
+            $this->center = new delaunayVertex($cx, $cy);
+
+            $dx = $this->center->x - $this->v0->x;
+            $dy = $this->center->y - $this->v0->y;
+        }
+
+        $this->radius_squared = $dx * $dx + $dy * $dy;
+        $this->radius         = sqrt($this->radius_squared);
+
+    }
+
+    public function inCircumcircle($v)
+    {
+        $dx           = $this->center->x - $v->x;
+        $dy           = $this->center->y - $v->y;
+        $dist_squared = $dx * $dx + $dy * $dy;
+
+        return ($dist_squared <= $this->radius_squared);
     }
 }
 
@@ -495,16 +566,6 @@ function outputConnections()
 
 }
 
-/*
-function fillUpWithMoreNodes($howMany)
-{
-global $nodeList;
-for ($i = 0; $i < $howMany; $i++) {
-addNodeBetween(0, count($nodeList) - 1);
-}
-}
- */
-
 function init()
 {
     global $nodeList, $jointList, $canvaDimension, $keyColours, $storedSeed;
@@ -725,16 +786,73 @@ function parseStringGrammar($thisGrammar)
     } while ($characterCounter < strlen($thisGrammar));
 }
 
-function createDelauneyGraph()
+function inCircumcircle($triangle)
 {
-    global $delaunayVertices, $delaunayTriangles, $canvaDimension;
+    global $delaunayEdges, $activeDelaunayVertex;
+    if ($triangle->inCircumcircle($activeDelaunayVertex)) {
+        array_push($delaunayEdges, new delaunayEdge($triangle->v0, $triangle->v1));
+        array_push($delaunayEdges, new delaunayEdge($triangle->v1, $triangle->v2));
+        array_push($delaunayEdges, new delaunayEdge($triangle->v2, $triangle->v0));
+
+        return false;
+    }
+
+    return true;
+}
+
+function addDelaunayVertex($vertex, $triangles)
+{
+    global $delaunayEdges, $activeDelaunayVertex;
+    $delaunayEdges = array();
+// Remove triangles with circumcircles containing the vertex:
+
+    $activeDelaunayVertex = $vertex;
+    $triangles            = array_filter($triangles, "inCircumcircle");
+
+    $delaunayEdges = uniqueDelaunayEdges($delaunayEdges);
+
+    // Create new triangles from the unique edges and new vertex
+    for ($i = 0; $i < count($delaunayEdges); $i++) {
+
+        array_push($triangles, new delaunayTriangle($delaunayEdges[$i]->v0, $delaunayEdges[$i]->v1, $activeDelaunayVertex));
+    }
+
+    return $triangles;
+}
+
+function uniqueDelaunayEdges($edges)
+{
+    //  remove duplicate edges from the array
+    $uniqueEdges = array();
+    for ($i = 0; $i < count($edges); $i++) {
+        $thisEdge = $edges[$i];
+        $isUnique = true;
+        for ($j = 0; $j < count($edges); $j++) {
+            if ($i != $j) {
+                $thisInnerEdge = $edges[$j];
+                if ($thisEdge->equals($thisInnerEdge) || $thisEdge->inverse()->equals($thisInnerEdge)) {
+                    $isUnique = false;
+                    break;
+                }
+            }
+        }
+        if ($isUnique) {
+            array_push($uniqueEdges, $thisEdge);
+        }
+    }
+    return $uniqueEdges;
+}
+
+function createDelaunayGraph()
+{
+    global $delaunayVertices, $delaunayTriangles, $canvaDimension, $boundingTriangle;
     $delaunayVertices = array();
 
-    $edgeBuffer       = 250;
+    $edgeBuffer       = 50;
     $numberOfVertices = 50;
 
-    $minX = 99999999999;
-    $minY = 99999999999;
+    $minX = INF;
+    $minY = INF;
     $maxX = 0;
     $maxY = 0;
 
@@ -758,7 +876,7 @@ function createDelauneyGraph()
         }
     }
     // do triangulation:
-    // Kudos - Joshua Bell. https://travellermap.com/tmp/delaunay.htm
+    // thanks - Joshua Bell. https://travellermap.com/tmp/delaunay.htm
 
     // create a bounding triangle for all vertices:
     $dx = ($maxX - $minX) * 10;
@@ -772,9 +890,25 @@ function createDelauneyGraph()
 
     array_push($delaunayTriangles, $boundingTriangle);
 
+// do triangulation for each vertex:
+    for ($i = 0; $i < $numberOfVertices; $i++) {
+        $delaunayTriangles = addDelaunayVertex($delaunayVertices[$i], $delaunayTriangles);
+    }
+
+// remove triangles with shared edges with the bounding triangle:
+    $delaunayTriangles = array_filter($delaunayTriangles, "removeSharedTriangleEdges");
+
 }
 
-function outputDelauneyGraph()
+function removeSharedTriangleEdges($triangle)
+{
+    global $boundingTriangle;
+    return !($triangle->v0 == $boundingTriangle->v0 || $triangle->v0 == $boundingTriangle->v1 || $triangle->v0 == $boundingTriangle->v2 ||
+        $triangle->v1 == $boundingTriangle->v0 || $triangle->v1 == $boundingTriangle->v1 || $triangle->v1 == $boundingTriangle->v2 ||
+        $triangle->v2 == $boundingTriangle->v0 || $triangle->v2 == $boundingTriangle->v1 || $triangle->v2 == $boundingTriangle->v2);
+}
+
+function outputDelaunayGraph()
 {
     global $canvaDimension, $delaunayVertices, $delaunayTriangles;
     $nodeRadius   = 5;
@@ -791,9 +925,10 @@ function outputDelauneyGraph()
 
     // draw triangles:
     $edgeColour = imagecolorallocate($outputCanvas, 50, 50, 50);
-    for ($i = 0; $i < count($delaunayTriangles); $i++) {
-        imagepolygon($outputCanvas, array($delaunayTriangles[$i]->v1->x, $delaunayTriangles[$i]->v1->y, $delaunayTriangles[$i]->v2->x, $delaunayTriangles[$i]->v2->y,
-            $delaunayTriangles[$i]->v3->x, $delaunayTriangles[$i]->v3->y), 3, $edgeColour);
+
+    //for ($i = 0; $i < count($delaunayTriangles); $i++) {
+      foreach ($delaunayTriangles as &$thisTriangle) {  
+       imagepolygon($outputCanvas, array($thisTriangle->v0->x, $thisTriangle->v0->y, $thisTriangle->v1->x, $thisTriangle->v1->y, $thisTriangle->v2->x, $thisTriangle->v2->y), 3, $edgeColour);
     }
 
     ob_start();
@@ -890,8 +1025,8 @@ moveNodesApart();
 //} while (anyJointHasIntersected());
 
 outputConnections();
-createDelauneyGraph();
-outputDelauneyGraph();
+createDelaunayGraph();
+outputDelaunayGraph();
 
 ?>
 <style>
