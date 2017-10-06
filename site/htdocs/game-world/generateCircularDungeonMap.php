@@ -248,15 +248,15 @@ class delaunayEdge
 
     }
 
+    public function equals($other)
+    {
+        return ($this->v0 === $other->v0 && $this->v1 === $other->v1);
+    }
 
-  public function equals($other) {
-    return ($this->v0 === $other->v0 && $this->v1 === $other->v1);
-  }
-
-  public function inverse() {
-    return new delaunayEdge($this->v1, $this->v0);
-  }
-
+    public function inverse()
+    {
+        return new delaunayEdge($this->v1, $this->v0);
+    }
 
 }
 
@@ -267,8 +267,6 @@ class delaunayTriangle
         $this->v0 = $v0;
         $this->v1 = $v1;
         $this->v2 = $v2;
-
-
 
 // calculate the circumcircle:
         // From: http://www.exaflop.org/docs/cgafaq/cga1.html
@@ -845,11 +843,13 @@ function uniqueDelaunayEdges($edges)
 
 function createDelaunayGraph()
 {
-    global $delaunayVertices, $delaunayTriangles, $canvaDimension, $boundingTriangle;
+    global $delaunayVertices, $delaunayTriangles, $canvaDimension, $boundingTriangle, $delaunayNodeRadius;
     $delaunayVertices = array();
 
     $edgeBuffer       = 50;
     $numberOfVertices = 50;
+
+$delaunayNodeRadius   = 10;
 
     $minX = INF;
     $minY = INF;
@@ -858,23 +858,57 @@ function createDelaunayGraph()
 
     $delaunayTriangles = array();
 
+
+
     for ($i = 0; $i < $numberOfVertices; $i++) {
         $newVertex = new delaunayVertex(mt_rand($edgeBuffer, $canvaDimension - $edgeBuffer), mt_rand($edgeBuffer, $canvaDimension - $edgeBuffer));
 
         array_push($delaunayVertices, $newVertex);
-        if ($newVertex->x < $minX) {
-            $minX = $newVertex->x;
-        }
-        if ($newVertex->y < $minY) {
-            $minY = $newVertex->y;
-        }
-        if ($newVertex->x > $maxX) {
-            $maxX = $newVertex->x;
-        }
-        if ($newVertex->y > $maxY) {
-            $maxY = $newVertex->y;
+     
+    }
+
+// push nodes apart a bit:
+  foreach ($delaunayVertices as &$thisOuterVertex) {
+        foreach ($delaunayVertices as &$thisVertex) {
+            if ($thisVertex !== $thisOuterVertex) {
+
+                $xDifference            = $thisVertex->x - $thisOuterVertex->x;
+                $yDifference            = $thisVertex->y - $thisOuterVertex->y;
+                $distanceBetweenCentres = sqrt($xDifference * $xDifference + $yDifference * $yDifference);
+                $spaceBetweenNodes      = ($distanceBetweenCentres - ($delaunayNodeRadius * 5));
+                if ($spaceBetweenNodes <= 0) {
+                    // avoid division by zero:
+                    if ($distanceBetweenCentres == 0) {
+                        $distanceBetweenCentres = 0.1;
+                    }
+                    $xDifference = $xDifference / $distanceBetweenCentres * $spaceBetweenNodes;
+                    $yDifference = $yDifference / $distanceBetweenCentres * $spaceBetweenNodes;
+                    $thisOuterVertex->x += $xDifference;
+                    $thisOuterVertex->y += $yDifference;
+                    $thisVertex->x -= $xDifference;
+                    $thisVertex->y -= $yDifference;
+                }
+            }
         }
     }
+
+
+
+foreach ($delaunayVertices as &$thisVertex) {
+       if ($thisVertex->x < $minX) {
+            $minX = $thisVertex->x;
+        }
+        if ($thisVertex->y < $minY) {
+            $minY = $thisVertex->y;
+        }
+        if ($thisVertex->x > $maxX) {
+            $maxX = $thisVertex->x;
+        }
+        if ($thisVertex->y > $maxY) {
+            $maxY = $thisVertex->y;
+        }
+}
+
     // do triangulation:
     // thanks - Joshua Bell. https://travellermap.com/tmp/delaunay.htm
 
@@ -910,25 +944,25 @@ function removeSharedTriangleEdges($triangle)
 
 function outputDelaunayGraph()
 {
-    global $canvaDimension, $delaunayVertices, $delaunayTriangles;
-    $nodeRadius   = 5;
+    global $canvaDimension, $delaunayVertices, $delaunayTriangles, $delaunayNodeRadius;
+    
     $outputCanvas = imagecreatetruecolor($canvaDimension, $canvaDimension);
     $groundColour = array(219, 215, 190);
     $ground       = imagecolorallocate($outputCanvas, $groundColour[0], $groundColour[1], $groundColour[2]);
     imagefilledrectangle($outputCanvas, 0, 0, $canvaDimension, $canvaDimension, $ground);
 
-    // draw nodes:
-    $nodeColour = imagecolorallocate($outputCanvas, 255, 255, 255);
-    for ($i = 0; $i < count($delaunayVertices); $i++) {
-        imagefilledellipse($outputCanvas, $delaunayVertices[$i]->x, $delaunayVertices[$i]->y, $nodeRadius, $nodeRadius, $nodeColour);
-    }
-
     // draw triangles:
     $edgeColour = imagecolorallocate($outputCanvas, 50, 50, 50);
 
     //for ($i = 0; $i < count($delaunayTriangles); $i++) {
-      foreach ($delaunayTriangles as &$thisTriangle) {  
-       imagepolygon($outputCanvas, array($thisTriangle->v0->x, $thisTriangle->v0->y, $thisTriangle->v1->x, $thisTriangle->v1->y, $thisTriangle->v2->x, $thisTriangle->v2->y), 3, $edgeColour);
+    foreach ($delaunayTriangles as &$thisTriangle) {
+        imagepolygon($outputCanvas, array($thisTriangle->v0->x, $thisTriangle->v0->y, $thisTriangle->v1->x, $thisTriangle->v1->y, $thisTriangle->v2->x, $thisTriangle->v2->y), 3, $edgeColour);
+    }
+
+    // draw nodes:
+    $nodeColour = imagecolorallocate($outputCanvas, 255, 255, 255);
+    for ($i = 0; $i < count($delaunayVertices); $i++) {
+        imagefilledellipse($outputCanvas, $delaunayVertices[$i]->x, $delaunayVertices[$i]->y, $delaunayNodeRadius, $delaunayNodeRadius, $nodeColour);
     }
 
     ob_start();
