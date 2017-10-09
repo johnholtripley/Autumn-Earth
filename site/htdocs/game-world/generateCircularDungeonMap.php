@@ -727,10 +727,8 @@ function plotConnectivityOnDelaunayGraph()
 
 // find the graph node with the most connections:
 
-var_dump($nodeList);echo "<hr>";
-
     usort($nodeList, 'sortNodesByConnections');
-var_dump($nodeList);echo "<hr>";
+
     $nodesPlottedOnDelaunayGraph = array();
     $edgesPlottedOnDelaunayGraph = array();
 
@@ -813,19 +811,17 @@ function outputDelaunayGraph()
 
     for ($i = 0; $i < count($delaunayVertices); $i++) {
         if (isset($delaunayVertices[$i]->whichNode)) {
-           // $nodeColour = imagecolorallocate($outputCanvas, 255, 255, 255);
+            // $nodeColour = imagecolorallocate($outputCanvas, 255, 255, 255);
 
-
- if ($delaunayVertices[$i]->whichNode->type == "KEYHOLDER") {
-            $nodeColour = imagecolorallocate($outputCanvas, $keyColours[$delaunayVertices[$i]->whichNode->whichKey][0], $keyColours[$delaunayVertices[$i]->whichNode->whichKey][1], $keyColours[$delaunayVertices[$i]->whichNode->whichKey][2]);
-        } else if ($delaunayVertices[$i]->whichNode->type == "START") {
-            $nodeColour = imagecolorallocate($outputCanvas, 255, 255, 255);
-        } else if ($delaunayVertices[$i]->whichNode->type == "ENDGOAL") {
-            $nodeColour = imagecolorallocate($outputCanvas, 64, 64, 64);
-        } else {
-            $nodeColour = imagecolorallocate($outputCanvas, 128, 128, 128);
-        }
-
+            if ($delaunayVertices[$i]->whichNode->type == "KEYHOLDER") {
+                $nodeColour = imagecolorallocate($outputCanvas, $keyColours[$delaunayVertices[$i]->whichNode->whichKey][0], $keyColours[$delaunayVertices[$i]->whichNode->whichKey][1], $keyColours[$delaunayVertices[$i]->whichNode->whichKey][2]);
+            } else if ($delaunayVertices[$i]->whichNode->type == "START") {
+                $nodeColour = imagecolorallocate($outputCanvas, 255, 255, 255);
+            } else if ($delaunayVertices[$i]->whichNode->type == "ENDGOAL") {
+                $nodeColour = imagecolorallocate($outputCanvas, 64, 64, 64);
+            } else {
+                $nodeColour = imagecolorallocate($outputCanvas, 128, 128, 128);
+            }
 
         } else {
 // unused node:
