@@ -720,7 +720,7 @@ function sortNodesByConnections($a, $b)
 
 function plotConnectivityOnDelaunayGraph()
 {
-    global $centreVertex, $delaunayVertices, $nodeList, $jointList, $delaunayTriangles;
+    global $centreVertex, $delaunayVertices, $nodeList, $jointList, $delaunayTriangles, $edgesUsedOnDelaunayGraph;
 
     // for each strand, plot the entire path out. mark used edges and whether a node has all of its connections used. pathfind to find unused edges #######
 
@@ -730,6 +730,7 @@ function plotConnectivityOnDelaunayGraph()
 
     $nodesPlottedOnDelaunayGraph = array();
     $verticesUsedOnDelaunayGraph = array();
+    $edgesUsedOnDelaunayGraph = array();
 
     // find the centre vertex:
     for ($i = 0; $i < count($delaunayVertices); $i++) {
@@ -759,18 +760,21 @@ $activeNode = $sortedNodeList[0];
                         $thisTriangle->v1->whichNode = $nodeList[$thisJoint->nodeB];
                         array_push($nodesPlottedOnDelaunayGraph, $nodeList[$thisJoint->nodeB]);
                         array_push($verticesUsedOnDelaunayGraph, $thisTriangle->v1);
+                        array_push($edgesUsedOnDelaunayGraph, new delaunayEdge($thisTriangle->v0, $thisTriangle->v1));
                         break;
                     }
                     if (($thisTriangle->v1 === $centreVertex) && (!in_array($thisTriangle->v2, $verticesUsedOnDelaunayGraph))) {
                         $thisTriangle->v2->whichNode = $nodeList[$thisJoint->nodeB];
                         array_push($nodesPlottedOnDelaunayGraph, $nodeList[$thisJoint->nodeB]);
                         array_push($verticesUsedOnDelaunayGraph, $thisTriangle->v2);
+                        array_push($edgesUsedOnDelaunayGraph, new delaunayEdge($thisTriangle->v1, $thisTriangle->v2));
                         break;
                     }
                     if (($thisTriangle->v2 === $centreVertex) && (!in_array($thisTriangle->v0, $verticesUsedOnDelaunayGraph))) {
                         $thisTriangle->v0->whichNode = $nodeList[$thisJoint->nodeB];
                         array_push($nodesPlottedOnDelaunayGraph, $nodeList[$thisJoint->nodeB]);
                         array_push($verticesUsedOnDelaunayGraph, $thisTriangle->v0);
+                        array_push($edgesUsedOnDelaunayGraph, new delaunayEdge($thisTriangle->v2, $thisTriangle->v0));
                         break;
                     }
                 }
@@ -786,18 +790,21 @@ $activeNode = $sortedNodeList[0];
                         $thisTriangle->v1->whichNode = $nodeList[$thisJoint->nodeA];
                         array_push($nodesPlottedOnDelaunayGraph, $nodeList[$thisJoint->nodeA]);
                         array_push($verticesUsedOnDelaunayGraph, $thisTriangle->v1);
+                        array_push($edgesUsedOnDelaunayGraph, new delaunayEdge($thisTriangle->v0, $thisTriangle->v1));
                         break;
                     }
                     if (($thisTriangle->v1 === $centreVertex) && (!in_array($thisTriangle->v2, $verticesUsedOnDelaunayGraph))) {
                         $thisTriangle->v2->whichNode = $nodeList[$thisJoint->nodeA];
                         array_push($nodesPlottedOnDelaunayGraph, $nodeList[$thisJoint->nodeA]);
                         array_push($verticesUsedOnDelaunayGraph, $thisTriangle->v2);
+                        array_push($edgesUsedOnDelaunayGraph, new delaunayEdge($thisTriangle->v1, $thisTriangle->v2));
                         break;
                     }
                      if (($thisTriangle->v2 === $centreVertex) && (!in_array($thisTriangle->v0, $verticesUsedOnDelaunayGraph))) {
                         $thisTriangle->v0->whichNode = $nodeList[$thisJoint->nodeA];
                         array_push($nodesPlottedOnDelaunayGraph, $nodeList[$thisJoint->nodeA]);
                         array_push($verticesUsedOnDelaunayGraph, $thisTriangle->v0);
+                        array_push($edgesUsedOnDelaunayGraph, new delaunayEdge($thisTriangle->v2, $thisTriangle->v0));
                         break;
                     }
                 }
@@ -817,7 +824,7 @@ function removeSharedTriangleEdges($triangle)
 
 function outputDelaunayGraph()
 {
-    global $canvaDimension, $delaunayVertices, $delaunayTriangles, $delaunayNodeRadius, $centreVertex;
+    global $canvaDimension, $delaunayVertices, $delaunayTriangles, $delaunayNodeRadius, $centreVertex, $edgesUsedOnDelaunayGraph;
 
     $outputCanvas = imagecreatetruecolor($canvaDimension, $canvaDimension);
     $groundColour = array(219, 215, 190);
@@ -825,11 +832,32 @@ function outputDelaunayGraph()
     imagefilledrectangle($outputCanvas, 0, 0, $canvaDimension, $canvaDimension, $ground);
 
     // draw triangles:
-    $edgeColour = imagecolorallocate($outputCanvas, 50, 50, 50);
+    
 
     //for ($i = 0; $i < count($delaunayTriangles); $i++) {
     foreach ($delaunayTriangles as &$thisTriangle) {
-        imagepolygon($outputCanvas, array($thisTriangle->v0->x, $thisTriangle->v0->y, $thisTriangle->v1->x, $thisTriangle->v1->y, $thisTriangle->v2->x, $thisTriangle->v2->y), 3, $edgeColour);
+      //  imagepolygon($outputCanvas, array($thisTriangle->v0->x, $thisTriangle->v0->y, $thisTriangle->v1->x, $thisTriangle->v1->y, $thisTriangle->v2->x, $thisTriangle->v2->y), 3, $edgeColour);
+    if ((in_array(new delaunayEdge($thisTriangle->v0, $thisTriangle->v1),$edgesUsedOnDelaunayGraph)) || (in_array(new delaunayEdge($thisTriangle->v1, $thisTriangle->v0),$edgesUsedOnDelaunayGraph))) {
+$edgeColour = imagecolorallocate($outputCanvas, 50, 50, 50);
+    } else {
+        $edgeColour = imagecolorallocate($outputCanvas, 194, 190, 169);
+    }
+imageline($outputCanvas, $thisTriangle->v0->x, $thisTriangle->v0->y, $thisTriangle->v1->x, $thisTriangle->v1->y, $edgeColour);
+ if ((in_array(new delaunayEdge($thisTriangle->v2, $thisTriangle->v1),$edgesUsedOnDelaunayGraph)) || (in_array(new delaunayEdge($thisTriangle->v1, $thisTriangle->v2),$edgesUsedOnDelaunayGraph))) {
+$edgeColour = imagecolorallocate($outputCanvas, 50, 50, 50);
+    } else {
+       $edgeColour = imagecolorallocate($outputCanvas, 194, 190, 169);
+    }
+imageline($outputCanvas, $thisTriangle->v1->x, $thisTriangle->v1->y, $thisTriangle->v2->x, $thisTriangle->v2->y, $edgeColour);
+if ((in_array(new delaunayEdge($thisTriangle->v0, $thisTriangle->v2),$edgesUsedOnDelaunayGraph)) || (in_array(new delaunayEdge($thisTriangle->v2, $thisTriangle->v0),$edgesUsedOnDelaunayGraph))) {
+$edgeColour = imagecolorallocate($outputCanvas, 50, 50, 50);
+    } else {
+        $edgeColour = imagecolorallocate($outputCanvas, 194, 190, 169);
+    }
+imageline($outputCanvas, $thisTriangle->v2->x, $thisTriangle->v2->y, $thisTriangle->v0->x, $thisTriangle->v0->y, $edgeColour);
+
+
+
     }
 
     // draw nodes:
