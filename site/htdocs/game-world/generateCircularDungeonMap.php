@@ -1,5 +1,7 @@
 <?php
 
+include $_SERVER['DOCUMENT_ROOT'] . "/game-world/generateCircularDungeonMap-third-party-arrow-code.php";
+
 /* ----
 
 TO DO:
@@ -9,199 +11,6 @@ Convert locks, valves, hazards and treasue into interesting variants
 Add NPCs (with relevant quests)
 
 ---- */
-
-// -----------------------------------------
-// NOT MINE
-http: //codetalk.code-kobold.de/drawing-arrows-with-the-gd-library-in-php/
-class GDArrow
-{
-
-    /**
-     * The referenced canvas
-     */
-    public $image;
-
-    /**
-     * Arrow color
-     */
-    public $color;
-
-    /**
-     * X-Coordinate of arrow's starting point
-     */
-    public $x1;
-
-    /**
-     * Y-Coordinate of arrow's starting point
-     */
-    public $y1;
-
-    /**
-     * X-Coordinate of arrow's endpoint
-     */
-    public $x2;
-
-    /**
-     * Y-Coordinate of arrow's starting point
-     */
-    public $y2;
-
-    /**
-     * Arm angle of the arrowhead
-     */
-    public $angle;
-
-    /**
-     * Length of the arrowhead
-     */
-    public $radius;
-
-    /**
-     * The constructor
-     */
-    public function __construct()
-    {}
-
-    /**
-     * Draws the arrow according the given parameters
-     */
-    public function drawGDArrow()
-    {
-
-        $l_m      = null;
-        $l_x1     = null;
-        $l_y1     = null;
-        $l_x2     = null;
-        $l_y2     = null;
-        $l_angle1 = null;
-        $l_angle2 = null;
-        $l_cos1   = null;
-        $l_sin1   = null;
-
-        // Draws the arrow's line
-        Imageline($this->image, $this->x1, $this->y1, $this->x2, $this->y2, $this->color);
-
-        // Gradient infinite?
-        if ($this->x2 == $this->x1) {
-
-            $l_m = false;
-
-            if ($this->y1 < $this->y2) {
-
-                $l_x1 = $this->x2 - $this->radius * sin(deg2rad($this->angle));
-                $l_y1 = $this->y2 - $this->radius * cos(deg2rad($this->angle));
-                $l_x2 = $this->x2 + $this->radius * sin(deg2rad($this->angle));
-                $l_y2 = $this->y2 - $this->radius * cos(deg2rad($this->angle));
-
-            } else {
-
-                $l_x1 = $this->x2 - $this->radius * sin(deg2rad($this->angle));
-                $l_y1 = $this->y2 + $this->radius * cos(deg2rad($this->angle));
-                $l_x2 = $this->x2 + $this->radius * sin(deg2rad($this->angle));
-                $l_y2 = $this->y2 + $this->radius * cos(deg2rad($this->angle));
-
-            } // endelse
-
-        } // endif $this -> x2 == $this -> x1
-
-        // Gradient = 0
-        elseif ($this->y2 == $this->y1) {
-
-            $l_m = 0;
-
-            if ($this->x1 < $this->x2) {
-
-                $l_x1 = $this->x2 - $this->radius * cos(deg2rad($this->angle));
-                $l_y1 = $this->y2 - $this->radius * sin(deg2rad($this->angle));
-                $l_x2 = $this->x2 - $this->radius * cos(deg2rad($this->angle));
-                $l_y2 = $this->y2 + $this->radius * sin(deg2rad($this->angle));
-
-            } else {
-
-                $l_x1 = $this->x2 + $this->radius * cos(deg2rad($this->angle));
-                $l_y1 = $this->y2 + $this->radius * sin(deg2rad($this->angle));
-                $l_x2 = $this->x2 + $this->radius * cos(deg2rad($this->angle));
-                $l_y2 = $this->y2 - $this->radius * sin(deg2rad($this->angle));
-
-            }
-
-        } // endif $this -> y2 == $this -> y1
-
-        // Gradient positive?
-        elseif ($this->x2 > $this->x1) {
-
-            // Calculate gradient
-            $l_m = (($this->y2 - $this->y1) / ($this->x2 - $this->x1));
-
-            // Convert gradient (= Arc tangent(m)) from radian to degree
-            $l_alpha = rad2deg(atan($l_m));
-
-            // Right arm angle = gradient + 180 + arm angle
-            $l_angle1 = $l_alpha + $this->angle + 180;
-            // Left arm angle = gradient + 180 - arm angle
-            $l_angle2 = $l_alpha - $this->angle + 180;
-
-            // Right arm angle of arrowhead
-            // Abscissa = cos(gradient + 180 + arm angle) * radius
-            $l_cos1 = $this->radius * cos(deg2rad($l_angle1));
-            $l_x1   = $this->x2 + $l_cos1;
-
-            // Ordinate = sin(gradient + 180 + arm angle) * radius
-            $l_sin1 = $this->radius * sin(deg2rad($l_angle1));
-            $l_y1   = $this->y2 + $l_sin1;
-
-            // Left arm angle of arrowhead
-            $RCos2 = $this->radius * cos(deg2rad($l_angle2));
-            $RSin2 = $this->radius * sin(deg2rad($l_angle2));
-
-            $l_x2 = $this->x2 + $RCos2;
-            $l_y2 = $this->y2 + $RSin2;
-
-        } // endif $this -> x2 > $this -> x1
-
-        // Gradient negative?
-        elseif ($this->x2 < $this->x1) {
-
-            $this->angle = 90 - $this->angle;
-
-            // Calculate gradient
-            $l_m = (($this->y2 - $this->y1) / ($this->x2 - $this->x1));
-
-            // Convert gradient (= Arc tangent(m)) from radian to degree
-            $l_alpha = rad2deg(atan($l_m));
-
-            // Right arm angle = gradient + 180 + arm angle
-            $l_angle1 = $l_alpha + $this->angle + 180;
-            // Left arm angle = gradient + 180 - arm angle
-            $l_angle2 = $l_alpha - $this->angle + 180;
-
-            // Right arm angle of arrowhead
-            // Abscissa = cos(gradient + 180 + arm angle) * radius
-            $l_cos1 = $this->radius * cos(deg2rad($l_angle1));
-
-            // Ordinate = sin(gradient + 180 + arm angle) * radius
-            $l_sin1 = $this->radius * sin(deg2rad($l_angle1));
-
-            // Left arm angle of arrowhead
-            $RCos2 = $this->radius * cos(deg2rad($l_angle2));
-            $RSin2 = $this->radius * sin(deg2rad($l_angle2));
-
-            $l_x1 = $this->x2 - $l_sin1;
-            $l_y1 = $this->y2 + $l_cos1;
-
-            $l_x2 = $this->x2 + $RSin2;
-            $l_y2 = $this->y2 - $RCos2;
-
-        } // endif $this -> x2 < $this -> x1
-
-        Imageline($this->image, $l_x1, $l_y1, $this->x2, $this->y2, $this->color);
-        Imageline($this->image, $l_x2, $l_y2, $this->x2, $this->y2, $this->color);
-
-    } // drawGDArrow()
-
-} // class GDArrow
-
-// -----------------------------------------
 
 // avoid script time out:
 set_time_limit(0);
@@ -333,11 +142,12 @@ function addNode($type, $x, $y)
         $y -= (2 + getRNGNumber());
     }
 
-    $newNode->x        = $x;
-    $newNode->y        = $y;
-    $newNode->hazards  = 0;
-    $newNode->treasure = 0;
-    $newNode->radius   = getRNGNumber() * 10 + 15;
+    $newNode->x           = $x;
+    $newNode->y           = $y;
+    $newNode->hazards     = 0;
+    $newNode->treasure    = 0;
+    $newNode->radius      = getRNGNumber() * 10 + 15;
+    $newNode->connections = 0;
     // might be inefficient to call this every time: ###
     moveNodesApart();
 
@@ -359,53 +169,11 @@ function addJoint($connectNodeAId, $connectNodeBId, $jointType = "", $whichKey =
         $newJoint->isLocked = false;
     }
 
+    $nodeList[$connectNodeAId]->connections++;
+    $nodeList[$connectNodeBId]->connections++;
+
     return $newJoint;
 }
-
-/*
-function addNodeAndJointTo($connectNodeId, $type, $x, $y, $isLocked = false)
-{
-global $nodeList;
-$newNode = addNode($type, $x, $y);
-addJoint($nodeList[$connectNodeId]->name, $newNode->name, $isLocked);
-return $newNode;
-}
-
-function addNodeBetween($connectNodeAId, $connectNodeBId, $isFirstjointLocked = false, $isLastjointLocked = false)
-{
-global $nodeList;
-$newNode = addNodeAndJointTo($connectNodeBId, "NORMAL", ($nodeList[$connectNodeAId]->x + $nodeList[$connectNodeBId]->x) / 2, ($nodeList[$connectNodeAId]->y + $nodeList[$connectNodeBId]->y) / 2, $isLastjointLocked);
-removeJoint($connectNodeAId, $connectNodeBId);
-addJoint($connectNodeAId, count($nodeList) - 1, $isFirstjointLocked);
-return $newNode;
-}
-
-function addCircularLockAndKeyBetween($connectNodeAId, $connectNodeBId)
-{
-global $nodeList, $keysUsed;
-$keysUsed++;
-// add new node between:
-$newNode = addNodeBetween($connectNodeAId, $connectNodeBId, false, true);
-// add key node joined to that:
-$keyNode = addNodeAndJointTo($newNode->name, "KEYHOLDER", $newNode->x + 0.5, $newNode->y + 0.5);
-// add node between first and key node:
-addNodeBetween($connectNodeAId, $keyNode->name);
-}
-
-function removeJoint($connectNodeAId, $connectNodeBId)
-{
-global $jointList;
-foreach ($jointList as $jointKey => $jointElement) {
-
-if ((($jointElement->nodeA === $connectNodeAId) && ($jointElement->nodeB === $connectNodeBId)) || (($jointElement->nodeB === $connectNodeAId) && ($jointElement->nodeA === $connectNodeBId))) {
-
-unset($jointList[$jointKey]);
-break;
-}
-
-}
-}
- */
 
 function lineIntersects($a, $b, $c, $d, $p, $q, $r, $s)
 {
@@ -843,59 +611,60 @@ function uniqueDelaunayEdges($edges)
 
 function createDelaunayGraph()
 {
-    global $delaunayVertices, $delaunayTriangles, $canvaDimension, $boundingTriangle, $delaunayNodeRadius;
+    global $delaunayVertices, $delaunayTriangles, $canvaDimension, $boundingTriangle, $delaunayNodeRadius, $centreVertex;
     $delaunayVertices = array();
 
-    $edgeBuffer       = 50;
+    $edgeBuffer       = 80;
     $numberOfVertices = 50;
 
-$delaunayNodeRadius   = 10;
-
-    $minX = INF;
-    $minY = INF;
-    $maxX = 0;
-    $maxY = 0;
+    $delaunayNodeRadius = 10;
 
     $delaunayTriangles = array();
-
-
 
     for ($i = 0; $i < $numberOfVertices; $i++) {
         $newVertex = new delaunayVertex(mt_rand($edgeBuffer, $canvaDimension - $edgeBuffer), mt_rand($edgeBuffer, $canvaDimension - $edgeBuffer));
 
         array_push($delaunayVertices, $newVertex);
-     
+
     }
 
+    $minDistance = 20;
 // push nodes apart a bit:
-  foreach ($delaunayVertices as &$thisOuterVertex) {
-        foreach ($delaunayVertices as &$thisVertex) {
-            if ($thisVertex !== $thisOuterVertex) {
+    for ($i = 0; $i < 6; $i++) {
+        foreach ($delaunayVertices as &$thisOuterVertex) {
+            foreach ($delaunayVertices as &$thisVertex) {
+                if ($thisVertex !== $thisOuterVertex) {
 
-                $xDifference            = $thisVertex->x - $thisOuterVertex->x;
-                $yDifference            = $thisVertex->y - $thisOuterVertex->y;
-                $distanceBetweenCentres = sqrt($xDifference * $xDifference + $yDifference * $yDifference);
-                $spaceBetweenNodes      = ($distanceBetweenCentres - ($delaunayNodeRadius * 5));
-                if ($spaceBetweenNodes <= 0) {
-                    // avoid division by zero:
-                    if ($distanceBetweenCentres == 0) {
-                        $distanceBetweenCentres = 0.1;
+                    $xDifference            = $thisVertex->x - $thisOuterVertex->x;
+                    $yDifference            = $thisVertex->y - $thisOuterVertex->y;
+                    $distanceBetweenCentres = sqrt($xDifference * $xDifference + $yDifference * $yDifference);
+                    // $spaceBetweenNodes      = ($distanceBetweenCentres - ($delaunayNodeRadius * 6));
+                    if ($distanceBetweenCentres <= $minDistance) {
+                        // avoid division by zero:
+                        if ($distanceBetweenCentres == 0) {
+                            $distanceBetweenCentres = 0.1;
+                        }
+                        // $xDifference = $xDifference / $distanceBetweenCentres * $spaceBetweenNodes;
+                        // $yDifference = $yDifference / $distanceBetweenCentres * $spaceBetweenNodes;
+                        $thisOuterVertex->x += $minDistance;
+                        $thisOuterVertex->y -= $minDistance;
+                        $thisVertex->x -= $minDistance;
+                        $thisVertex->y += $minDistance;
                     }
-                    $xDifference = $xDifference / $distanceBetweenCentres * $spaceBetweenNodes;
-                    $yDifference = $yDifference / $distanceBetweenCentres * $spaceBetweenNodes;
-                    $thisOuterVertex->x += $xDifference;
-                    $thisOuterVertex->y += $yDifference;
-                    $thisVertex->x -= $xDifference;
-                    $thisVertex->y -= $yDifference;
                 }
             }
         }
     }
 
-
-
-foreach ($delaunayVertices as &$thisVertex) {
-       if ($thisVertex->x < $minX) {
+    $minX               = INF;
+    $minY               = INF;
+    $maxX               = 0;
+    $maxY               = 0;
+    $distanceFromCentre = INF;
+    $centreVertex       = null;
+// find boundaries
+    foreach ($delaunayVertices as &$thisVertex) {
+        if ($thisVertex->x < $minX) {
             $minX = $thisVertex->x;
         }
         if ($thisVertex->y < $minY) {
@@ -907,7 +676,17 @@ foreach ($delaunayVertices as &$thisVertex) {
         if ($thisVertex->y > $maxY) {
             $maxY = $thisVertex->y;
         }
-}
+
+// find closest node to the centre:
+        $xDifference            = $thisVertex->x - $canvaDimension / 2;
+        $yDifference            = $thisVertex->y - $canvaDimension / 2;
+        $thisDistanceFromCentre = sqrt($xDifference * $xDifference + $yDifference * $yDifference);
+        if ($thisDistanceFromCentre < $distanceFromCentre) {
+            $distanceFromCentre = $thisDistanceFromCentre;
+            $centreVertex       = $thisVertex;
+        }
+
+    }
 
     // do triangulation:
     // thanks - Joshua Bell. https://travellermap.com/tmp/delaunay.htm
@@ -934,6 +713,77 @@ foreach ($delaunayVertices as &$thisVertex) {
 
 }
 
+function sortNodesByConnections($a, $b)
+{
+    if ($a->connections == $b->connections) {return 0;}
+    return ($a->connections < $b->connections) ? 1 : -1;
+}
+
+function plotConnectivityOnDelaunayGraph()
+{
+    global $centreVertex, $delaunayVertices, $nodeList, $jointList, $delaunayTriangles;
+
+    // for each strand, plot the entire path out. mark used edges and whether a node has all of its connections used. pathfind to find unused edges
+
+// find the graph node with the most connections:
+
+var_dump($nodeList);echo "<hr>";
+
+    usort($nodeList, 'sortNodesByConnections');
+var_dump($nodeList);echo "<hr>";
+    $nodesPlottedOnDelaunayGraph = array();
+    $edgesPlottedOnDelaunayGraph = array();
+
+// find the centre vertex:
+    for ($i = 0; $i < count($delaunayVertices); $i++) {
+        if ($delaunayVertices[$i] === $centreVertex) {
+            $delaunayVertices[$i]->whichNode = $nodeList[0];
+            array_push($nodesPlottedOnDelaunayGraph, $nodeList[0]);
+            break;
+        }
+    }
+
+    // find edges connected to that node:
+    foreach ($jointList as $thisJoint) {
+        if ($nodeList[$thisJoint->nodeA]->name === $nodeList[0]->name) {
+            // find a connected vertex on the Delaunay graph for the other end of this joint:
+            foreach ($delaunayTriangles as &$thisTriangle) {
+                if ($thisTriangle->v0 === $centreVertex) {
+                    // randomly pick v1 or v2?
+                    $thisTriangle->v1->whichNode = $nodeList[$thisJoint->nodeB];
+                    array_push($nodesPlottedOnDelaunayGraph, $nodeList[$thisJoint->nodeB]);
+                    break;
+                } else if ($thisTriangle->v1 === $centreVertex) {
+                    $thisTriangle->v2->whichNode = $nodeList[$thisJoint->nodeB];
+                    array_push($nodesPlottedOnDelaunayGraph, $nodeList[$thisJoint->nodeB]);
+                    break;
+                } else if ($thisTriangle->v2 === $centreVertex) {
+                    $thisTriangle->v0->whichNode = $nodeList[$thisJoint->nodeB];
+                    array_push($nodesPlottedOnDelaunayGraph, $nodeList[$thisJoint->nodeB]);
+                    break;
+                }
+            }
+        } else if ($nodeList[$thisJoint->nodeB]->name === $nodeList[0]->name) {
+            // find a connected vertex on the Delaunay graph for the other end of this joint:
+            foreach ($delaunayEdges as &$thisTriangle) {
+                if ($thisTriangle->v0 === $centreVertex) {
+                    $thisTriangle->v1->whichNode = $nodeList[$thisJoint->nodeA];
+                    array_push($nodesPlottedOnDelaunayGraph, $nodeList[$thisJoint->nodeA]);
+                    break;
+                } else if ($thisTriangle->v1 === $centreVertex) {
+                    $thisTriangle->v2->whichNode = $nodeList[$thisJoint->nodeA];
+                    array_push($nodesPlottedOnDelaunayGraph, $nodeList[$thisJoint->nodeA]);
+                    break;
+                } else if ($thisTriangle->v1 === $centreVertex) {
+                    $thisTriangle->v0->whichNode = $nodeList[$thisJoint->nodeA];
+                    array_push($nodesPlottedOnDelaunayGraph, $nodeList[$thisJoint->nodeA]);
+                    break;
+                }
+            }
+        }
+    }
+}
+
 function removeSharedTriangleEdges($triangle)
 {
     global $boundingTriangle;
@@ -944,8 +794,8 @@ function removeSharedTriangleEdges($triangle)
 
 function outputDelaunayGraph()
 {
-    global $canvaDimension, $delaunayVertices, $delaunayTriangles, $delaunayNodeRadius;
-    
+    global $canvaDimension, $delaunayVertices, $delaunayTriangles, $delaunayNodeRadius, $centreVertex;
+
     $outputCanvas = imagecreatetruecolor($canvaDimension, $canvaDimension);
     $groundColour = array(219, 215, 190);
     $ground       = imagecolorallocate($outputCanvas, $groundColour[0], $groundColour[1], $groundColour[2]);
@@ -960,8 +810,27 @@ function outputDelaunayGraph()
     }
 
     // draw nodes:
-    $nodeColour = imagecolorallocate($outputCanvas, 255, 255, 255);
+
     for ($i = 0; $i < count($delaunayVertices); $i++) {
+        if (isset($delaunayVertices[$i]->whichNode)) {
+           // $nodeColour = imagecolorallocate($outputCanvas, 255, 255, 255);
+
+
+ if ($delaunayVertices[$i]->whichNode->type == "KEYHOLDER") {
+            $nodeColour = imagecolorallocate($outputCanvas, $keyColours[$delaunayVertices[$i]->whichNode->whichKey][0], $keyColours[$delaunayVertices[$i]->whichNode->whichKey][1], $keyColours[$delaunayVertices[$i]->whichNode->whichKey][2]);
+        } else if ($delaunayVertices[$i]->whichNode->type == "START") {
+            $nodeColour = imagecolorallocate($outputCanvas, 255, 255, 255);
+        } else if ($delaunayVertices[$i]->whichNode->type == "ENDGOAL") {
+            $nodeColour = imagecolorallocate($outputCanvas, 64, 64, 64);
+        } else {
+            $nodeColour = imagecolorallocate($outputCanvas, 128, 128, 128);
+        }
+
+
+        } else {
+// unused node:
+            $nodeColour = imagecolorallocate($outputCanvas, 227, 224, 205);
+        }
         imagefilledellipse($outputCanvas, $delaunayVertices[$i]->x, $delaunayVertices[$i]->y, $delaunayNodeRadius, $delaunayNodeRadius, $nodeColour);
     }
 
@@ -1053,6 +922,8 @@ $grownGrammar = "S{#1#,O{,#1#E|}}>O[K#1]";
 
 $grownGrammar = growGrammar($possibleStartGrammars[mt_rand(0, count($possibleStartGrammars) - 1)], mt_rand(2, 3));
 
+$grownGrammar = "SOE";
+
 //do {
 parseStringGrammar($grownGrammar);
 moveNodesApart();
@@ -1060,6 +931,7 @@ moveNodesApart();
 
 outputConnections();
 createDelaunayGraph();
+plotConnectivityOnDelaunayGraph();
 outputDelaunayGraph();
 
 ?>
@@ -1075,5 +947,5 @@ img {
 </style>
 <?php
 echo '<p style="clear: both;">' . htmlentities($grownGrammar) . '</p>';
-echo '<p><a href="' . explode("?", $_SERVER['REQUEST_URI'])[0] . '?seed=' . $storedSeed . '">' . $storedSeed . '</a></p>';
+echo '<p><a href="' . explode("?", $_SERVER['REQUEST_URI'])[0] . '?seed=' . $storedSeed . '">' . $storedSeed . '</a> | <a href="' . explode("?", $_SERVER['REQUEST_URI'])[0] . '">New seed</a></p>';
 ?>
