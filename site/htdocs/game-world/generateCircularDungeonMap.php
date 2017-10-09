@@ -157,11 +157,10 @@ function addNode($type, $x, $y)
 function addJoint($connectNodeAId, $connectNodeBId, $jointType = "", $whichKey = "")
 {
     global $nodeList;
-    $newJoint        = new joint();
-    $newJoint->nodeA = $nodeList[$connectNodeAId]->name;
-    $newJoint->nodeB = $nodeList[$connectNodeBId]->name;
-    $newJoint->type  = $jointType;
-
+    $newJoint           = new joint();
+    $newJoint->nodeA    = $nodeList[$connectNodeAId]->name;
+    $newJoint->nodeB    = $nodeList[$connectNodeBId]->name;
+    $newJoint->type     = $jointType;
     $newJoint->whichKey = $whichKey;
     if ($newJoint->whichKey != "") {
         $newJoint->isLocked = true;
@@ -723,63 +722,89 @@ function plotConnectivityOnDelaunayGraph()
 {
     global $centreVertex, $delaunayVertices, $nodeList, $jointList, $delaunayTriangles;
 
-    // for each strand, plot the entire path out. mark used edges and whether a node has all of its connections used. pathfind to find unused edges
+    // for each strand, plot the entire path out. mark used edges and whether a node has all of its connections used. pathfind to find unused edges #######
 
-// find the graph node with the most connections:
-
-    usort($nodeList, 'sortNodesByConnections');
+    // find the graph node with the most connections:
+    $sortedNodeList = $nodeList;
+    usort($sortedNodeList, 'sortNodesByConnections');
 
     $nodesPlottedOnDelaunayGraph = array();
-    $edgesPlottedOnDelaunayGraph = array();
+    $verticesUsedOnDelaunayGraph = array();
 
-// find the centre vertex:
+    // find the centre vertex:
     for ($i = 0; $i < count($delaunayVertices); $i++) {
         if ($delaunayVertices[$i] === $centreVertex) {
-            $delaunayVertices[$i]->whichNode = $nodeList[0];
-            array_push($nodesPlottedOnDelaunayGraph, $nodeList[0]);
+            $delaunayVertices[$i]->whichNode = $sortedNodeList[0];
+            array_push($nodesPlottedOnDelaunayGraph, $sortedNodeList[0]);
             break;
         }
     }
 
+
+$activeNode = $sortedNodeList[0];
+
+   
+
     // find edges connected to that node:
     foreach ($jointList as $thisJoint) {
-        if ($nodeList[$thisJoint->nodeA]->name === $nodeList[0]->name) {
+
+    
+        if ($nodeList[$thisJoint->nodeA]->name === $activeNode->name) {
+          
             // find a connected vertex on the Delaunay graph for the other end of this joint:
-            foreach ($delaunayTriangles as &$thisTriangle) {
-                if ($thisTriangle->v0 === $centreVertex) {
-                    // randomly pick v1 or v2?
-                    $thisTriangle->v1->whichNode = $nodeList[$thisJoint->nodeB];
-                    array_push($nodesPlottedOnDelaunayGraph, $nodeList[$thisJoint->nodeB]);
-                    break;
-                } else if ($thisTriangle->v1 === $centreVertex) {
-                    $thisTriangle->v2->whichNode = $nodeList[$thisJoint->nodeB];
-                    array_push($nodesPlottedOnDelaunayGraph, $nodeList[$thisJoint->nodeB]);
-                    break;
-                } else if ($thisTriangle->v2 === $centreVertex) {
-                    $thisTriangle->v0->whichNode = $nodeList[$thisJoint->nodeB];
-                    array_push($nodesPlottedOnDelaunayGraph, $nodeList[$thisJoint->nodeB]);
-                    break;
+            if (!in_array($nodeList[$thisJoint->nodeB], $nodesPlottedOnDelaunayGraph)) {
+                foreach ($delaunayTriangles as &$thisTriangle) {
+                    if (($thisTriangle->v0 === $centreVertex) && (!in_array($thisTriangle->v1, $verticesUsedOnDelaunayGraph))) {
+
+                        $thisTriangle->v1->whichNode = $nodeList[$thisJoint->nodeB];
+                        array_push($nodesPlottedOnDelaunayGraph, $nodeList[$thisJoint->nodeB]);
+                        array_push($verticesUsedOnDelaunayGraph, $thisTriangle->v1);
+                        break;
+                    }
+                    if (($thisTriangle->v1 === $centreVertex) && (!in_array($thisTriangle->v2, $verticesUsedOnDelaunayGraph))) {
+                        $thisTriangle->v2->whichNode = $nodeList[$thisJoint->nodeB];
+                        array_push($nodesPlottedOnDelaunayGraph, $nodeList[$thisJoint->nodeB]);
+                        array_push($verticesUsedOnDelaunayGraph, $thisTriangle->v2);
+                        break;
+                    }
+                    if (($thisTriangle->v2 === $centreVertex) && (!in_array($thisTriangle->v0, $verticesUsedOnDelaunayGraph))) {
+                        $thisTriangle->v0->whichNode = $nodeList[$thisJoint->nodeB];
+                        array_push($nodesPlottedOnDelaunayGraph, $nodeList[$thisJoint->nodeB]);
+                        array_push($verticesUsedOnDelaunayGraph, $thisTriangle->v0);
+                        break;
+                    }
                 }
             }
-        } else if ($nodeList[$thisJoint->nodeB]->name === $nodeList[0]->name) {
+        }
+        if ($nodeList[$thisJoint->nodeB]->name === $activeNode->name) {
+            
             // find a connected vertex on the Delaunay graph for the other end of this joint:
-            foreach ($delaunayEdges as &$thisTriangle) {
-                if ($thisTriangle->v0 === $centreVertex) {
-                    $thisTriangle->v1->whichNode = $nodeList[$thisJoint->nodeA];
-                    array_push($nodesPlottedOnDelaunayGraph, $nodeList[$thisJoint->nodeA]);
-                    break;
-                } else if ($thisTriangle->v1 === $centreVertex) {
-                    $thisTriangle->v2->whichNode = $nodeList[$thisJoint->nodeA];
-                    array_push($nodesPlottedOnDelaunayGraph, $nodeList[$thisJoint->nodeA]);
-                    break;
-                } else if ($thisTriangle->v1 === $centreVertex) {
-                    $thisTriangle->v0->whichNode = $nodeList[$thisJoint->nodeA];
-                    array_push($nodesPlottedOnDelaunayGraph, $nodeList[$thisJoint->nodeA]);
-                    break;
+  if (!in_array($nodeList[$thisJoint->nodeA], $nodesPlottedOnDelaunayGraph)) {
+                foreach ($delaunayTriangles as &$thisTriangle) {
+                         if (($thisTriangle->v0 === $centreVertex) && (!in_array($thisTriangle->v1, $verticesUsedOnDelaunayGraph))) {
+                        // randomly pick v1 or v2? ####
+                        $thisTriangle->v1->whichNode = $nodeList[$thisJoint->nodeA];
+                        array_push($nodesPlottedOnDelaunayGraph, $nodeList[$thisJoint->nodeA]);
+                        array_push($verticesUsedOnDelaunayGraph, $thisTriangle->v1);
+                        break;
+                    }
+                    if (($thisTriangle->v1 === $centreVertex) && (!in_array($thisTriangle->v2, $verticesUsedOnDelaunayGraph))) {
+                        $thisTriangle->v2->whichNode = $nodeList[$thisJoint->nodeA];
+                        array_push($nodesPlottedOnDelaunayGraph, $nodeList[$thisJoint->nodeA]);
+                        array_push($verticesUsedOnDelaunayGraph, $thisTriangle->v2);
+                        break;
+                    }
+                     if (($thisTriangle->v2 === $centreVertex) && (!in_array($thisTriangle->v0, $verticesUsedOnDelaunayGraph))) {
+                        $thisTriangle->v0->whichNode = $nodeList[$thisJoint->nodeA];
+                        array_push($nodesPlottedOnDelaunayGraph, $nodeList[$thisJoint->nodeA]);
+                        array_push($verticesUsedOnDelaunayGraph, $thisTriangle->v0);
+                        break;
+                    }
                 }
             }
         }
     }
+    
 }
 
 function removeSharedTriangleEdges($triangle)
