@@ -7,6 +7,7 @@ include $_SERVER['DOCUMENT_ROOT'] . "/game-world/generateCircularDungeonMap-thir
 TO DO:
 Create meta levels so can have foreshadowing and hints about future encounters
 Map nodes to tiles
+add template sections
 Convert locks, valves, hazards and treasue into interesting variants
 Add NPCs (with relevant quests)
 
@@ -264,7 +265,7 @@ function outputConnections()
 
 // check for contents:
 
-        echo "Node #" . $thisNode->name . " has " . $thisNode->hazards . " hazards and £" . $thisNode->treasure . "<br>";
+        // echo "Node #" . $thisNode->name . " has " . $thisNode->hazards . " hazards and £" . $thisNode->treasure . "<br>";
 
         if ($thisNode->hazards > 0) {
             imagearc($outputCanvas, $thisNode->x, $thisNode->y, $thisNode->radius * 2, $thisNode->radius * 2, 0, 360, imagecolorallocate($outputCanvas, 255, 0, 0));
@@ -323,12 +324,13 @@ function outputConnections()
     }
 
     //header('Content-Type: image/jpeg');
+    echo '</div><div class="sequenceBlock">';
     ob_start();
     imagejpeg($outputCanvas, null, 100);
     $rawImageBytes = ob_get_clean();
-    echo "<br><img src='data:image/jpeg;base64," . base64_encode($rawImageBytes) . "' />";
+    echo "<img src='data:image/jpeg;base64," . base64_encode($rawImageBytes) . "'>";
     imagedestroy($outputCanvas);
-
+    echo "</div>";
 }
 
 function init()
@@ -367,7 +369,7 @@ function growGrammar($thisGrammar, $iterations)
     );
     $currentKey = 0;
 
-    echo "<p>start grammar: " . $thisGrammar . "<br>";
+    echo '<div class="sequenceBlock"><p>start grammar: ' . htmlentities($thisGrammar) . '<br>';
 
     for ($i = 0; $i < $iterations; $i++) {
         $characterCounter = 0;
@@ -386,14 +388,14 @@ function growGrammar($thisGrammar, $iterations)
                 echo $thisCharacter . " => " . $thisTransform . " &hellip; ";
                 $thisGrammar = substr_replace($thisGrammar, $thisTransform, $characterCounter, 1);
                 $characterCounter += strlen($thisTransform);
-                echo " now " . $thisGrammar . "<br>";
+                echo " now " . htmlentities($thisGrammar) . "<br>";
             }
             $characterCounter++;
         } while ($characterCounter < strlen($thisGrammar));
     }
     // remove any remaining 'X's:
     $thisGrammar = str_replace("X", "", $thisGrammar);
-    echo "final grammar: " . $thisGrammar . "</p>";
+    echo "final grammar: " . htmlentities($thisGrammar) . "</p>";
     return $thisGrammar;
 }
 
@@ -614,17 +616,28 @@ function createDelaunayGraph()
     $delaunayVertices = array();
 
     $edgeBuffer       = 80;
-    $numberOfVertices = 50;
+    $numberOfVertices = 64;
 
     $delaunayNodeRadius = 10;
 
     $delaunayTriangles = array();
 
-    for ($i = 0; $i < $numberOfVertices; $i++) {
-        $newVertex = new delaunayVertex(mt_rand($edgeBuffer, $canvaDimension - $edgeBuffer), mt_rand($edgeBuffer, $canvaDimension - $edgeBuffer));
+/*
+// random nodes:
+for ($i = 0; $i < $numberOfVertices; $i++) {
+$newVertex = new delaunayVertex(mt_rand($edgeBuffer, $canvaDimension - $edgeBuffer), mt_rand($edgeBuffer, $canvaDimension - $edgeBuffer));
+array_push($delaunayVertices, $newVertex);
+}
+ */
 
-        array_push($delaunayVertices, $newVertex);
+// grid:
+    for ($i = 0; $i < sqrt($numberOfVertices); $i++) {
+        for ($j = 0; $j < sqrt($numberOfVertices); $j++) {
 
+            $newVertex = new delaunayVertex($i * 50 + $edgeBuffer, $j * 50 + $edgeBuffer);
+
+            array_push($delaunayVertices, $newVertex);
+        }
     }
 
     $minDistance = 20;
@@ -718,9 +731,42 @@ function sortNodesByConnections($a, $b)
     return ($a->connections < $b->connections) ? 1 : -1;
 }
 
+function randomTriangleSorting($a, $b) {
+    return mt_rand(-1,1);
+}
+
+function findUnusedNeighbouringDelaunayVertex($whichTriangle, $whichVertex, $partnerNode, $activeVertex)
+{
+    global $verticesUsedOnDelaunayGraph, $nodesPlottedOnDelaunayGraph, $edgesUsedOnDelaunayGraph;
+    $otherVertices = array(
+        'v0' => array('v1', 'v2'),
+        'v1' => array('v0', 'v2'),
+        'v2' => array('v0', 'v1'),
+    );
+
+    $randomArrayElement  = mt_rand(0, 1);
+    $firstVertexToCheck  = $otherVertices[$whichVertex][$randomArrayElement];
+    $secondVertexToCheck = $otherVertices[$whichVertex][abs($randomArrayElement - 1)];
+
+    if (($whichTriangle->$whichVertex === $activeVertex) && (!in_array($whichTriangle->$firstVertexToCheck, $verticesUsedOnDelaunayGraph))) {
+        $whichTriangle->$firstVertexToCheck->whichNode = $partnerNode;
+        array_push($nodesPlottedOnDelaunayGraph, $partnerNode);
+        array_push($verticesUsedOnDelaunayGraph, $whichTriangle->$firstVertexToCheck);
+        array_push($edgesUsedOnDelaunayGraph, new delaunayEdge($whichTriangle->$whichVertex, $whichTriangle->$firstVertexToCheck));
+        return $whichTriangle->$firstVertexToCheck;
+    } else if (($whichTriangle->$whichVertex === $activeVertex) && (!in_array($whichTriangle->$secondVertexToCheck, $verticesUsedOnDelaunayGraph))) {
+        $whichTriangle->$secondVertexToCheck->whichNode = $partnerNode;
+        array_push($nodesPlottedOnDelaunayGraph, $partnerNode);
+        array_push($verticesUsedOnDelaunayGraph, $whichTriangle->$secondVertexToCheck);
+        array_push($edgesUsedOnDelaunayGraph, new delaunayEdge($whichTriangle->$whichVertex, $whichTriangle->$secondVertexToCheck));
+        return $whichTriangle->$secondVertexToCheck;
+    }
+    return false;
+}
+
 function plotConnectivityOnDelaunayGraph()
 {
-    global $centreVertex, $delaunayVertices, $nodeList, $jointList, $delaunayTriangles, $edgesUsedOnDelaunayGraph;
+    global $centreVertex, $delaunayVertices, $nodeList, $jointList, $delaunayTriangles, $edgesUsedOnDelaunayGraph, $verticesUsedOnDelaunayGraph, $nodesPlottedOnDelaunayGraph;
 
     // for each strand, plot the entire path out. mark used edges and whether a node has all of its connections used. pathfind to find unused edges #######
 
@@ -730,88 +776,155 @@ function plotConnectivityOnDelaunayGraph()
 
     $nodesPlottedOnDelaunayGraph = array();
     $verticesUsedOnDelaunayGraph = array();
-    $edgesUsedOnDelaunayGraph = array();
+    $edgesUsedOnDelaunayGraph    = array();
+
+    $activeNode = $sortedNodeList[0];
 
     // find the centre vertex:
     for ($i = 0; $i < count($delaunayVertices); $i++) {
         if ($delaunayVertices[$i] === $centreVertex) {
-            $delaunayVertices[$i]->whichNode = $sortedNodeList[0];
-            array_push($nodesPlottedOnDelaunayGraph, $sortedNodeList[0]);
+            $delaunayVertices[$i]->whichNode = $activeNode;
+            array_push($nodesPlottedOnDelaunayGraph, $activeNode);
             break;
         }
     }
 
+    $activeVertex = $centreVertex;
 
-$activeNode = $sortedNodeList[0];
 
-   
 
-    // find edges connected to that node:
+// find a node connected to the active Node:
     foreach ($jointList as $thisJoint) {
-
-    
         if ($nodeList[$thisJoint->nodeA]->name === $activeNode->name) {
-          
-            // find a connected vertex on the Delaunay graph for the other end of this joint:
-            if (!in_array($nodeList[$thisJoint->nodeB], $nodesPlottedOnDelaunayGraph)) {
-                foreach ($delaunayTriangles as &$thisTriangle) {
-                    if (($thisTriangle->v0 === $centreVertex) && (!in_array($thisTriangle->v1, $verticesUsedOnDelaunayGraph))) {
-
-                        $thisTriangle->v1->whichNode = $nodeList[$thisJoint->nodeB];
-                        array_push($nodesPlottedOnDelaunayGraph, $nodeList[$thisJoint->nodeB]);
-                        array_push($verticesUsedOnDelaunayGraph, $thisTriangle->v1);
-                        array_push($edgesUsedOnDelaunayGraph, new delaunayEdge($thisTriangle->v0, $thisTriangle->v1));
-                        break;
-                    }
-                    if (($thisTriangle->v1 === $centreVertex) && (!in_array($thisTriangle->v2, $verticesUsedOnDelaunayGraph))) {
-                        $thisTriangle->v2->whichNode = $nodeList[$thisJoint->nodeB];
-                        array_push($nodesPlottedOnDelaunayGraph, $nodeList[$thisJoint->nodeB]);
-                        array_push($verticesUsedOnDelaunayGraph, $thisTriangle->v2);
-                        array_push($edgesUsedOnDelaunayGraph, new delaunayEdge($thisTriangle->v1, $thisTriangle->v2));
-                        break;
-                    }
-                    if (($thisTriangle->v2 === $centreVertex) && (!in_array($thisTriangle->v0, $verticesUsedOnDelaunayGraph))) {
-                        $thisTriangle->v0->whichNode = $nodeList[$thisJoint->nodeB];
-                        array_push($nodesPlottedOnDelaunayGraph, $nodeList[$thisJoint->nodeB]);
-                        array_push($verticesUsedOnDelaunayGraph, $thisTriangle->v0);
-                        array_push($edgesUsedOnDelaunayGraph, new delaunayEdge($thisTriangle->v2, $thisTriangle->v0));
-                        break;
-                    }
-                }
-            }
-        }
-        if ($nodeList[$thisJoint->nodeB]->name === $activeNode->name) {
-            
-            // find a connected vertex on the Delaunay graph for the other end of this joint:
-  if (!in_array($nodeList[$thisJoint->nodeA], $nodesPlottedOnDelaunayGraph)) {
-                foreach ($delaunayTriangles as &$thisTriangle) {
-                         if (($thisTriangle->v0 === $centreVertex) && (!in_array($thisTriangle->v1, $verticesUsedOnDelaunayGraph))) {
-                        // randomly pick v1 or v2? ####
-                        $thisTriangle->v1->whichNode = $nodeList[$thisJoint->nodeA];
-                        array_push($nodesPlottedOnDelaunayGraph, $nodeList[$thisJoint->nodeA]);
-                        array_push($verticesUsedOnDelaunayGraph, $thisTriangle->v1);
-                        array_push($edgesUsedOnDelaunayGraph, new delaunayEdge($thisTriangle->v0, $thisTriangle->v1));
-                        break;
-                    }
-                    if (($thisTriangle->v1 === $centreVertex) && (!in_array($thisTriangle->v2, $verticesUsedOnDelaunayGraph))) {
-                        $thisTriangle->v2->whichNode = $nodeList[$thisJoint->nodeA];
-                        array_push($nodesPlottedOnDelaunayGraph, $nodeList[$thisJoint->nodeA]);
-                        array_push($verticesUsedOnDelaunayGraph, $thisTriangle->v2);
-                        array_push($edgesUsedOnDelaunayGraph, new delaunayEdge($thisTriangle->v1, $thisTriangle->v2));
-                        break;
-                    }
-                     if (($thisTriangle->v2 === $centreVertex) && (!in_array($thisTriangle->v0, $verticesUsedOnDelaunayGraph))) {
-                        $thisTriangle->v0->whichNode = $nodeList[$thisJoint->nodeA];
-                        array_push($nodesPlottedOnDelaunayGraph, $nodeList[$thisJoint->nodeA]);
-                        array_push($verticesUsedOnDelaunayGraph, $thisTriangle->v0);
-                        array_push($edgesUsedOnDelaunayGraph, new delaunayEdge($thisTriangle->v2, $thisTriangle->v0));
-                        break;
-                    }
-                }
-            }
+            $partnerNode = $nodeList[$thisJoint->nodeB];
+        } else if ($nodeList[$thisJoint->nodeB]->name === $activeNode->name) {
+            $partnerNode = $nodeList[$thisJoint->nodeA];
         }
     }
-    
+
+// check if the partner node has already been plotted
+    if (in_array($partnerNode, $nodesPlottedOnDelaunayGraph)) {
+// pathfind to it ####
+    } else {
+        // find an unused vertex that joins the active vertex:
+        // randonly order triangles for more variation:
+$sortedRandomTriangles = $delaunayTriangles;
+        usort($sortedRandomTriangles, 'randomTriangleSorting');
+        foreach ($sortedRandomTriangles as &$thisTriangle) {
+
+$checkVertex = findUnusedNeighbouringDelaunayVertex($thisTriangle, 'v0', $partnerNode, $activeVertex);
+            if ($checkVertex !== false) {
+                $activeNode->connections --;
+                $partnerNode->connections --;
+                $activeNode = $partnerNode;
+                $activeVertex = $checkVertex;
+                break;
+            }
+            $checkVertex = findUnusedNeighbouringDelaunayVertex($thisTriangle, 'v1', $partnerNode, $activeVertex);
+            if ($checkVertex !== false) {
+                    $activeNode->connections --;
+              $partnerNode->connections --;
+                $activeNode = $partnerNode;
+                $activeVertex = $checkVertex;
+                break;
+            }
+            $checkVertex = findUnusedNeighbouringDelaunayVertex($thisTriangle, 'v2', $partnerNode, $activeVertex);
+            if ($checkVertex !== false) {
+                    $activeNode->connections --;
+               $partnerNode->connections --;
+                $activeNode = $partnerNode;
+                $activeVertex = $checkVertex;
+                break;
+            }
+          
+
+        }
+    }
+
+
+// sort nodes by connectedness
+    // find a node connected to this first one
+    // plot 2 vertices and a joint for those nodes
+    // from the new node, find a connected node to that.
+    // if that new node hasn't been plotted already, then find a neighbouring vertex and plot a joint to that
+    // if it has been plotted, pathfind to it
+    // when a vertex is plotted, mark which node it's assigned to
+    // when a node is plotted, reduce its connections by 1
+    // if no connected nodes are found, start back at the array and find the first with connections>0
+
+/*
+$previousVertex = $centreVertex;
+do {
+$activeNode = array_shift($sortedNodeList);
+
+// find edges connected to that node:
+foreach ($jointList as $thisJoint) {
+if ($nodeList[$thisJoint->nodeA]->name === $activeNode->name) {
+// find a connected vertex on the Delaunay graph for the other end of this joint:
+if (!in_array($nodeList[$thisJoint->nodeB], $nodesPlottedOnDelaunayGraph)) {
+foreach ($delaunayTriangles as &$thisTriangle) {
+if (($thisTriangle->v0 === $previousVertex) && (!in_array($thisTriangle->v1, $verticesUsedOnDelaunayGraph))) {
+$thisTriangle->v1->whichNode = $nodeList[$thisJoint->nodeB];
+array_push($nodesPlottedOnDelaunayGraph, $nodeList[$thisJoint->nodeB]);
+array_push($verticesUsedOnDelaunayGraph, $thisTriangle->v1);
+array_push($edgesUsedOnDelaunayGraph, new delaunayEdge($thisTriangle->v0, $thisTriangle->v1));
+$previousVertex = $thisTriangle->v1;
+break;
+}
+if (($thisTriangle->v1 === $previousVertex) && (!in_array($thisTriangle->v2, $verticesUsedOnDelaunayGraph))) {
+$thisTriangle->v2->whichNode = $nodeList[$thisJoint->nodeB];
+array_push($nodesPlottedOnDelaunayGraph, $nodeList[$thisJoint->nodeB]);
+array_push($verticesUsedOnDelaunayGraph, $thisTriangle->v2);
+array_push($edgesUsedOnDelaunayGraph, new delaunayEdge($thisTriangle->v1, $thisTriangle->v2));
+$previousVertex = $thisTriangle->v2;
+break;
+}
+if (($thisTriangle->v2 === $previousVertex) && (!in_array($thisTriangle->v0, $verticesUsedOnDelaunayGraph))) {
+$thisTriangle->v0->whichNode = $nodeList[$thisJoint->nodeB];
+array_push($nodesPlottedOnDelaunayGraph, $nodeList[$thisJoint->nodeB]);
+array_push($verticesUsedOnDelaunayGraph, $thisTriangle->v0);
+array_push($edgesUsedOnDelaunayGraph, new delaunayEdge($thisTriangle->v2, $thisTriangle->v0));
+$previousVertex = $thisTriangle->v0;
+break;
+}
+}
+}
+}
+if ($nodeList[$thisJoint->nodeB]->name === $activeNode->name) {
+// find a connected vertex on the Delaunay graph for the other end of this joint:
+if (!in_array($nodeList[$thisJoint->nodeA], $nodesPlottedOnDelaunayGraph)) {
+foreach ($delaunayTriangles as &$thisTriangle) {
+if (($thisTriangle->v0 === $previousVertex) && (!in_array($thisTriangle->v1, $verticesUsedOnDelaunayGraph))) {
+$thisTriangle->v1->whichNode = $nodeList[$thisJoint->nodeA];
+array_push($nodesPlottedOnDelaunayGraph, $nodeList[$thisJoint->nodeA]);
+array_push($verticesUsedOnDelaunayGraph, $thisTriangle->v1);
+array_push($edgesUsedOnDelaunayGraph, new delaunayEdge($thisTriangle->v0, $thisTriangle->v1));
+$previousVertex = $thisTriangle->v1;
+break;
+}
+if (($thisTriangle->v1 === $previousVertex) && (!in_array($thisTriangle->v2, $verticesUsedOnDelaunayGraph))) {
+$thisTriangle->v2->whichNode = $nodeList[$thisJoint->nodeA];
+array_push($nodesPlottedOnDelaunayGraph, $nodeList[$thisJoint->nodeA]);
+array_push($verticesUsedOnDelaunayGraph, $thisTriangle->v2);
+array_push($edgesUsedOnDelaunayGraph, new delaunayEdge($thisTriangle->v1, $thisTriangle->v2));
+$previousVertex = $thisTriangle->v2;
+break;
+}
+if (($thisTriangle->v2 === $previousVertex) && (!in_array($thisTriangle->v0, $verticesUsedOnDelaunayGraph))) {
+$thisTriangle->v0->whichNode = $nodeList[$thisJoint->nodeA];
+array_push($nodesPlottedOnDelaunayGraph, $nodeList[$thisJoint->nodeA]);
+array_push($verticesUsedOnDelaunayGraph, $thisTriangle->v0);
+array_push($edgesUsedOnDelaunayGraph, new delaunayEdge($thisTriangle->v2, $thisTriangle->v0));
+$previousVertex = $thisTriangle->v0;
+break;
+}
+}
+}
+}
+}
+
+} while (count($sortedNodeList) > 0);
+ */
 }
 
 function removeSharedTriangleEdges($triangle)
@@ -832,31 +945,34 @@ function outputDelaunayGraph()
     imagefilledrectangle($outputCanvas, 0, 0, $canvaDimension, $canvaDimension, $ground);
 
     // draw triangles:
-    
 
     //for ($i = 0; $i < count($delaunayTriangles); $i++) {
     foreach ($delaunayTriangles as &$thisTriangle) {
-      //  imagepolygon($outputCanvas, array($thisTriangle->v0->x, $thisTriangle->v0->y, $thisTriangle->v1->x, $thisTriangle->v1->y, $thisTriangle->v2->x, $thisTriangle->v2->y), 3, $edgeColour);
-    if ((in_array(new delaunayEdge($thisTriangle->v0, $thisTriangle->v1),$edgesUsedOnDelaunayGraph)) || (in_array(new delaunayEdge($thisTriangle->v1, $thisTriangle->v0),$edgesUsedOnDelaunayGraph))) {
-$edgeColour = imagecolorallocate($outputCanvas, 50, 50, 50);
-    } else {
-        $edgeColour = imagecolorallocate($outputCanvas, 194, 190, 169);
-    }
-imageline($outputCanvas, $thisTriangle->v0->x, $thisTriangle->v0->y, $thisTriangle->v1->x, $thisTriangle->v1->y, $edgeColour);
- if ((in_array(new delaunayEdge($thisTriangle->v2, $thisTriangle->v1),$edgesUsedOnDelaunayGraph)) || (in_array(new delaunayEdge($thisTriangle->v1, $thisTriangle->v2),$edgesUsedOnDelaunayGraph))) {
-$edgeColour = imagecolorallocate($outputCanvas, 50, 50, 50);
-    } else {
-       $edgeColour = imagecolorallocate($outputCanvas, 194, 190, 169);
-    }
-imageline($outputCanvas, $thisTriangle->v1->x, $thisTriangle->v1->y, $thisTriangle->v2->x, $thisTriangle->v2->y, $edgeColour);
-if ((in_array(new delaunayEdge($thisTriangle->v0, $thisTriangle->v2),$edgesUsedOnDelaunayGraph)) || (in_array(new delaunayEdge($thisTriangle->v2, $thisTriangle->v0),$edgesUsedOnDelaunayGraph))) {
-$edgeColour = imagecolorallocate($outputCanvas, 50, 50, 50);
-    } else {
-        $edgeColour = imagecolorallocate($outputCanvas, 194, 190, 169);
-    }
-imageline($outputCanvas, $thisTriangle->v2->x, $thisTriangle->v2->y, $thisTriangle->v0->x, $thisTriangle->v0->y, $edgeColour);
-
-
+        //  imagepolygon($outputCanvas, array($thisTriangle->v0->x, $thisTriangle->v0->y, $thisTriangle->v1->x, $thisTriangle->v1->y, $thisTriangle->v2->x, $thisTriangle->v2->y), 3, $edgeColour);
+        if ((in_array(new delaunayEdge($thisTriangle->v0, $thisTriangle->v1), $edgesUsedOnDelaunayGraph)) || (in_array(new delaunayEdge($thisTriangle->v1, $thisTriangle->v0), $edgesUsedOnDelaunayGraph))) {
+            imagesetthickness($outputCanvas, 2);
+            $edgeColour = imagecolorallocate($outputCanvas, 50, 50, 50);
+        } else {
+            imagesetthickness($outputCanvas, 1);
+            $edgeColour = imagecolorallocate($outputCanvas, 194, 190, 169);
+        }
+        imageline($outputCanvas, $thisTriangle->v0->x, $thisTriangle->v0->y, $thisTriangle->v1->x, $thisTriangle->v1->y, $edgeColour);
+        if ((in_array(new delaunayEdge($thisTriangle->v2, $thisTriangle->v1), $edgesUsedOnDelaunayGraph)) || (in_array(new delaunayEdge($thisTriangle->v1, $thisTriangle->v2), $edgesUsedOnDelaunayGraph))) {
+            imagesetthickness($outputCanvas, 2);
+            $edgeColour = imagecolorallocate($outputCanvas, 50, 50, 50);
+        } else {
+            imagesetthickness($outputCanvas, 1);
+            $edgeColour = imagecolorallocate($outputCanvas, 194, 190, 169);
+        }
+        imageline($outputCanvas, $thisTriangle->v1->x, $thisTriangle->v1->y, $thisTriangle->v2->x, $thisTriangle->v2->y, $edgeColour);
+        if ((in_array(new delaunayEdge($thisTriangle->v0, $thisTriangle->v2), $edgesUsedOnDelaunayGraph)) || (in_array(new delaunayEdge($thisTriangle->v2, $thisTriangle->v0), $edgesUsedOnDelaunayGraph))) {
+            imagesetthickness($outputCanvas, 2);
+            $edgeColour = imagecolorallocate($outputCanvas, 50, 50, 50);
+        } else {
+            imagesetthickness($outputCanvas, 1);
+            $edgeColour = imagecolorallocate($outputCanvas, 194, 190, 169);
+        }
+        imageline($outputCanvas, $thisTriangle->v2->x, $thisTriangle->v2->y, $thisTriangle->v0->x, $thisTriangle->v0->y, $edgeColour);
 
     }
 
@@ -882,11 +998,12 @@ imageline($outputCanvas, $thisTriangle->v2->x, $thisTriangle->v2->y, $thisTriang
         }
         imagefilledellipse($outputCanvas, $delaunayVertices[$i]->x, $delaunayVertices[$i]->y, $delaunayNodeRadius, $delaunayNodeRadius, $nodeColour);
     }
-
+    echo '<div class="sequenceBlock">';
     ob_start();
     imagejpeg($outputCanvas, null, 100);
     $rawImageBytes = ob_get_clean();
-    echo "<img src='data:image/jpeg;base64," . base64_encode($rawImageBytes) . "' />";
+
+    echo "<img src='data:image/jpeg;base64," . base64_encode($rawImageBytes) . "'></div>";
     imagedestroy($outputCanvas);
 }
 
@@ -971,7 +1088,7 @@ $grownGrammar = "S{#1#,O{,#1#E|}}>O[K#1]";
 
 $grownGrammar = growGrammar($possibleStartGrammars[mt_rand(0, count($possibleStartGrammars) - 1)], mt_rand(2, 3));
 
-$grownGrammar = "SOE";
+$grownGrammar = "SOOOE";
 
 //do {
 parseStringGrammar($grownGrammar);
@@ -985,16 +1102,23 @@ outputDelaunayGraph();
 
 ?>
 <style>
+
 body, p {
 font-family:arial,helvetica,sans-serif;font-size:14px;
 }
+
+.sequenceBlock {
+    float: left;
+    width: 30%;
+    margin-right: 3.33%;
+}
+
 img {
     display: block;
-    float:left;
-    margin: 20px;
+   width: 100%;
 }
 </style>
 <?php
-echo '<p style="clear: both;">' . htmlentities($grownGrammar) . '</p>';
-echo '<p><a href="' . explode("?", $_SERVER['REQUEST_URI'])[0] . '?seed=' . $storedSeed . '">' . $storedSeed . '</a> | <a href="' . explode("?", $_SERVER['REQUEST_URI'])[0] . '">New seed</a></p>';
+
+echo '<p style="clear:both;padding-top:20px;"><a href="' . explode("?", $_SERVER['REQUEST_URI'])[0] . '?seed=' . $storedSeed . '">' . $storedSeed . '</a> | <a href="' . explode("?", $_SERVER['REQUEST_URI'])[0] . '">New seed</a></p>';
 ?>
