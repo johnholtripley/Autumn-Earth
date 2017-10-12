@@ -800,6 +800,7 @@ function plotConnectivityOnDelaunayGraph()
         if ($delaunayVertices[$i] === $centreVertex) {
             $delaunayVertices[$i]->whichNode = $activeNode;
             array_push($nodesPlottedOnDelaunayGraph, $activeNode);
+            array_push($verticesUsedOnDelaunayGraph, $centreVertex);
             break;
         }
     }
@@ -810,7 +811,7 @@ function plotConnectivityOnDelaunayGraph()
     foreach ($nodeList as $thisNode) {
         $connectionsRemainingToBePlotted += $thisNode->connections;
     }
-    // connections count at each node, so for the joints, only need half the number:
+    // connections are counted at each node, so for the joint number, only need half that number:
     $connectionsRemainingToBePlotted /= 2;
    
     do {
@@ -1118,7 +1119,7 @@ $grownGrammar = "S{#1#,O{,#1#E|}}>O[K#1]";
 
 $grownGrammar = growGrammar($possibleStartGrammars[mt_rand(0, count($possibleStartGrammars) - 1)], mt_rand(2, 3));
 
-$grownGrammar = "SOOOE";
+$grownGrammar = "SOOOOOE";
 
 //do {
 parseStringGrammar($grownGrammar);
