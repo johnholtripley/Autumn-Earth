@@ -255,7 +255,7 @@ function outputConnections()
 //$thisNodeColour = imagecolorallocate($outputCanvas, 255,235,15);
         } else if ($thisNode->type == "START") {
             $thisNodeColour = imagecolorallocate($outputCanvas, 255, 255, 255);
-        } else if ($thisNode->type == "ENDGOAL") {
+        } else if ($thisNode->type == "END") {
             $thisNodeColour = imagecolorallocate($outputCanvas, 64, 64, 64);
         } else {
             $thisNodeColour = imagecolorallocate($outputCanvas, 128, 128, 128);
@@ -422,7 +422,7 @@ function parseStringGrammar($thisGrammar)
                 break;
             case "E":
                 // end node:
-                $newNode = addNode("ENDGOAL", $activeParents[0]->x + mt_rand(-10, 10), $activeParents[0]->y + mt_rand(-10, 10));
+                $newNode = addNode("END", $activeParents[0]->x + mt_rand(-10, 10), $activeParents[0]->y + mt_rand(-10, 10));
 
                 for ($i = 0; $i < count($activeParents); $i++) {
                     // make sure it's not a dead end:
@@ -731,8 +731,9 @@ function sortNodesByConnections($a, $b)
     return ($a->connections < $b->connections) ? 1 : -1;
 }
 
-function randomTriangleSorting($a, $b) {
-    return mt_rand(-1,1);
+function randomTriangleSorting($a, $b)
+{
+    return mt_rand(-1, 1);
 }
 
 function findUnusedNeighbouringDelaunayVertex($whichTriangle, $whichVertex, $partnerNode, $activeVertex)
@@ -764,6 +765,20 @@ function findUnusedNeighbouringDelaunayVertex($whichTriangle, $whichVertex, $par
     return false;
 }
 
+function findPartnerNode($activeNode)
+{
+    global $jointList, $nodeList;
+    $partnerNode = null;
+    foreach ($jointList as $thisJoint) {
+        if ($nodeList[$thisJoint->nodeA]->name === $activeNode->name) {
+            $partnerNode = $nodeList[$thisJoint->nodeB];
+        } else if ($nodeList[$thisJoint->nodeB]->name === $activeNode->name) {
+            $partnerNode = $nodeList[$thisJoint->nodeA];
+        }
+    }
+    return $partnerNode;
+}
+
 function plotConnectivityOnDelaunayGraph()
 {
     global $centreVertex, $delaunayVertices, $nodeList, $jointList, $delaunayTriangles, $edgesUsedOnDelaunayGraph, $verticesUsedOnDelaunayGraph, $nodesPlottedOnDelaunayGraph;
@@ -772,7 +787,7 @@ function plotConnectivityOnDelaunayGraph()
 
     // find the graph node with the most connections:
     $sortedNodeList = $nodeList;
-    usort($sortedNodeList, 'sortNodesByConnections');
+  //  usort($sortedNodeList, 'sortNodesByConnections');
 
     $nodesPlottedOnDelaunayGraph = array();
     $verticesUsedOnDelaunayGraph = array();
@@ -791,56 +806,71 @@ function plotConnectivityOnDelaunayGraph()
 
     $activeVertex = $centreVertex;
 
-
-
-// find a node connected to the active Node:
-    foreach ($jointList as $thisJoint) {
-        if ($nodeList[$thisJoint->nodeA]->name === $activeNode->name) {
-            $partnerNode = $nodeList[$thisJoint->nodeB];
-        } else if ($nodeList[$thisJoint->nodeB]->name === $activeNode->name) {
-            $partnerNode = $nodeList[$thisJoint->nodeA];
-        }
+    $connectionsRemainingToBePlotted = 0;
+    foreach ($nodeList as $thisNode) {
+        $connectionsRemainingToBePlotted += $thisNode->connections;
     }
+    // connections count at each node, so for the joints, only need half the number:
+    $connectionsRemainingToBePlotted /= 2;
+   
+    do {
+// find a node connected to the active Node:
+        $partnerNode = findPartnerNode($activeNode);
+    //    echo $activeNode->name . " -- " . $partnerNode->name . "<br>";
+        if ($partnerNode === null) {
+
+            // find another node that hasn't been plotted yet:
+            foreach ($sortedNodeList as $thisNode) {
+                if ($thisNode->connections > 0) {
+
+                    $partnerNode = findPartnerNode($activeNode);
+// check this is ok as well ################
+                }
+            }
+        }
 
 // check if the partner node has already been plotted
-    if (in_array($partnerNode, $nodesPlottedOnDelaunayGraph)) {
+        if (in_array($partnerNode, $nodesPlottedOnDelaunayGraph)) {
 // pathfind to it ####
-    } else {
-        // find an unused vertex that joins the active vertex:
-        // randonly order triangles for more variation:
-$sortedRandomTriangles = $delaunayTriangles;
-        usort($sortedRandomTriangles, 'randomTriangleSorting');
-        foreach ($sortedRandomTriangles as &$thisTriangle) {
+        } else {
+            // find an unused vertex that joins the active vertex:
+            // randonly order triangles for more variation:
+            $sortedRandomTriangles = $delaunayTriangles;
+            usort($sortedRandomTriangles, 'randomTriangleSorting');
+            foreach ($sortedRandomTriangles as &$thisTriangle) {
 
-$checkVertex = findUnusedNeighbouringDelaunayVertex($thisTriangle, 'v0', $partnerNode, $activeVertex);
-            if ($checkVertex !== false) {
-                $activeNode->connections --;
-                $partnerNode->connections --;
-                $activeNode = $partnerNode;
-                $activeVertex = $checkVertex;
-                break;
+                $checkVertex = findUnusedNeighbouringDelaunayVertex($thisTriangle, 'v0', $partnerNode, $activeVertex);
+                if ($checkVertex !== false) {
+                    $activeNode->connections--;
+                    $partnerNode->connections--;
+                    $activeNode   = $partnerNode;
+                    $activeVertex = $checkVertex;
+                    $connectionsRemainingToBePlotted--;
+                    break;
+                }
+                $checkVertex = findUnusedNeighbouringDelaunayVertex($thisTriangle, 'v1', $partnerNode, $activeVertex);
+                if ($checkVertex !== false) {
+                    $activeNode->connections--;
+                    $partnerNode->connections--;
+                    $activeNode   = $partnerNode;
+                    $activeVertex = $checkVertex;
+                    $connectionsRemainingToBePlotted--;
+                    break;
+                }
+                $checkVertex = findUnusedNeighbouringDelaunayVertex($thisTriangle, 'v2', $partnerNode, $activeVertex);
+                if ($checkVertex !== false) {
+                    $activeNode->connections--;
+                    $partnerNode->connections--;
+                    $activeNode   = $partnerNode;
+                    $activeVertex = $checkVertex;
+                    $connectionsRemainingToBePlotted--;
+                    break;
+                }
+
             }
-            $checkVertex = findUnusedNeighbouringDelaunayVertex($thisTriangle, 'v1', $partnerNode, $activeVertex);
-            if ($checkVertex !== false) {
-                    $activeNode->connections --;
-              $partnerNode->connections --;
-                $activeNode = $partnerNode;
-                $activeVertex = $checkVertex;
-                break;
-            }
-            $checkVertex = findUnusedNeighbouringDelaunayVertex($thisTriangle, 'v2', $partnerNode, $activeVertex);
-            if ($checkVertex !== false) {
-                    $activeNode->connections --;
-               $partnerNode->connections --;
-                $activeNode = $partnerNode;
-                $activeVertex = $checkVertex;
-                break;
-            }
-          
 
         }
-    }
-
+    } while ($connectionsRemainingToBePlotted > 0);
 
 // sort nodes by connectedness
     // find a node connected to this first one
@@ -986,7 +1016,7 @@ function outputDelaunayGraph()
                 $nodeColour = imagecolorallocate($outputCanvas, $keyColours[$delaunayVertices[$i]->whichNode->whichKey][0], $keyColours[$delaunayVertices[$i]->whichNode->whichKey][1], $keyColours[$delaunayVertices[$i]->whichNode->whichKey][2]);
             } else if ($delaunayVertices[$i]->whichNode->type == "START") {
                 $nodeColour = imagecolorallocate($outputCanvas, 255, 255, 255);
-            } else if ($delaunayVertices[$i]->whichNode->type == "ENDGOAL") {
+            } else if ($delaunayVertices[$i]->whichNode->type == "END") {
                 $nodeColour = imagecolorallocate($outputCanvas, 64, 64, 64);
             } else {
                 $nodeColour = imagecolorallocate($outputCanvas, 128, 128, 128);
