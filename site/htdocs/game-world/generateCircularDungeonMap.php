@@ -577,7 +577,6 @@ function addDelaunayVertex($vertex, $triangles)
     $triangles            = array_filter($triangles, "inCircumcircle");
 
     $delaunayEdges = uniqueDelaunayEdges($delaunayEdges);
-
     // Create new triangles from the unique edges and new vertex
     for ($i = 0; $i < count($delaunayEdges); $i++) {
 
@@ -612,7 +611,7 @@ function uniqueDelaunayEdges($edges)
 
 function createDelaunayGraph($graphType)
 {
-    global $delaunayVertices, $delaunayTriangles, $canvaDimension, $boundingTriangle, $delaunayNodeRadius, $centreVertex;
+    global $delaunayVertices, $delaunayTriangles, $canvaDimension, $boundingTriangle, $delaunayNodeRadius, $centreVertex, $allDelaunayEdges;
     $delaunayVertices = array();
 
     $edgeBuffer       = 80;
@@ -725,6 +724,16 @@ function createDelaunayGraph($graphType)
 // remove triangles with shared edges with the bounding triangle:
     $delaunayTriangles = array_filter($delaunayTriangles, "removeSharedTriangleEdges");
 
+
+// find all edges used in the graph:
+$allDelaunayEdges = array();
+ foreach ($delaunayTriangles as &$thisTriangle) {
+
+if((!in_array(new delaunayEdge($thisTriangle->v0, $thisTriangle->v1), $allDelaunayEdges)) && (!in_array(new delaunayEdge($thisTriangle->v1, $thisTriangle->v0), $allDelaunayEdges)))  {
+array_push($allDelaunayEdges, new delaunayEdge($thisTriangle->v0, $thisTriangle->v1));
+}
+ }
+
 }
 
 function sortNodesByConnections($a, $b)
@@ -793,6 +802,49 @@ function findPartnerNode($activeNode)
     return $partnerNode;
 }
 
+function pathfindThroughDelaunayGraph($startNode, $endNode)
+{
+    global $allDelaunayEdges, $delaunayVertices, $verticesUsedOnDelaunayGraph, $edgesUsedOnDelaunayGraph;
+    // find start and end vertices:
+    foreach ($delaunayVertices as $thisVertex) {
+        if ($thisVertex->whichNode === $startNode) {
+            $startVertex = $thisVertex;
+        }
+        if ($thisVertex->whichNode === $endNode) {
+            $endVertex = $thisVertex;
+        }
+    }
+
+
+
+echo "..........................<br>";
+    // find edges that connect those (moving through unused vertices)
+    $searchNodes = array();
+    $heuristic = sqrt(  (($endVertex->x-$startVertex->x)*($endVertex->x-$startVertex->x))  + (($endVertex->y-$startVertex->y)*($endVertex->y-$startVertex->y))     );
+    $searchNodes[$startVertex->x."-".$startVertex->y] = array('parentNode' => null, 'cost'=>0,'summedCost'=>$heuristic);
+    $targetFound = false;
+    // create an array with all edges in, and remove any that have been used: 
+    echo "<hr>".count($allDelaunayEdges)."<br>";
+    var_dump($allDelaunayEdges);echo "<hr>";
+    var_dump($edgesUsedOnDelaunayGraph);echo "<hr>";
+    $uncheckedEdges = array_udiff($allDelaunayEdges, $edgesUsedOnDelaunayGraph, 'compareByEdges');
+        var_dump($uncheckedEdges);echo "<hr>";
+ //   do {
+
+ //   } while ((count($uncheckedEdges) > 0) && !$targetFound);
+        echo "..........................<br>";
+}
+
+function compareByEdges($a, $b) {
+    if(($a->v0 === $b->v0) && ($a->v1 === $b->v1)) {
+return 1;
+    }
+     if(($a->v0 === $b->v1) && ($a->v1 === $b->v0)) {
+return 1;
+    }
+    return -1;
+}
+
 function plotConnectivityOnDelaunayGraph()
 {
     global $centreVertex, $delaunayVertices, $nodeList, $jointList, $delaunayTriangles, $edgesUsedOnDelaunayGraph, $verticesUsedOnDelaunayGraph, $nodesPlottedOnDelaunayGraph, $connectionsPlottedOnDelaunayGraph;
@@ -846,13 +898,10 @@ function plotConnectivityOnDelaunayGraph()
                         $activeNode  = $thisNode;
                         $partnerNode = findPartnerNode($activeNode);
                         // find the vertex that has this node:
-
                         foreach ($verticesUsedOnDelaunayGraph as $thisVertex) {
-
                             if ($thisVertex->whichNode === $activeNode) {
                                 $activeVertex = $thisVertex;
                             }
-
                         }
 
 // check this is ok as well ################
@@ -866,13 +915,19 @@ function plotConnectivityOnDelaunayGraph()
             echo "need pathfinding from " . $activeNode->name . " -- " . $partnerNode->name . "<br>";
 // pathfind to it ####
 
-// see if there's a single triangle edge that joins the 2:
+            pathfindThroughDelaunayGraph($activeNode, $partnerNode);
 
 // temp #########
             $activeNode->connections--;
             $partnerNode->connections--;
             $activeNode = $partnerNode;
             $connectionsRemainingToBePlotted--;
+            // find the vertex that has this node:
+            foreach ($verticesUsedOnDelaunayGraph as $thisVertex) {
+                if ($thisVertex->whichNode === $activeNode) {
+                    $activeVertex = $thisVertex;
+                }
+            }
 //array_push($edgesUsedOnDelaunayGraph, new delaunayEdge($thisTriangle->v0, $thisTriangle->v1));
             //   array_push($connectionsPlottedOnDelaunayGraph, $activeNode->name . "-" . $partnerNode->name);
 
@@ -932,79 +987,6 @@ function plotConnectivityOnDelaunayGraph()
     // when a node is plotted, reduce its connections by 1
     // if no connected nodes are found, start back at the array and find the first with connections>0
 
-/*
-$previousVertex = $centreVertex;
-do {
-$activeNode = array_shift($sortedNodeList);
-
-// find edges connected to that node:
-foreach ($jointList as $thisJoint) {
-if ($nodeList[$thisJoint->nodeA]->name === $activeNode->name) {
-// find a connected vertex on the Delaunay graph for the other end of this joint:
-if (!in_array($nodeList[$thisJoint->nodeB], $nodesPlottedOnDelaunayGraph)) {
-foreach ($delaunayTriangles as &$thisTriangle) {
-if (($thisTriangle->v0 === $previousVertex) && (!in_array($thisTriangle->v1, $verticesUsedOnDelaunayGraph))) {
-$thisTriangle->v1->whichNode = $nodeList[$thisJoint->nodeB];
-array_push($nodesPlottedOnDelaunayGraph, $nodeList[$thisJoint->nodeB]);
-array_push($verticesUsedOnDelaunayGraph, $thisTriangle->v1);
-array_push($edgesUsedOnDelaunayGraph, new delaunayEdge($thisTriangle->v0, $thisTriangle->v1));
-$previousVertex = $thisTriangle->v1;
-break;
-}
-if (($thisTriangle->v1 === $previousVertex) && (!in_array($thisTriangle->v2, $verticesUsedOnDelaunayGraph))) {
-$thisTriangle->v2->whichNode = $nodeList[$thisJoint->nodeB];
-array_push($nodesPlottedOnDelaunayGraph, $nodeList[$thisJoint->nodeB]);
-array_push($verticesUsedOnDelaunayGraph, $thisTriangle->v2);
-array_push($edgesUsedOnDelaunayGraph, new delaunayEdge($thisTriangle->v1, $thisTriangle->v2));
-$previousVertex = $thisTriangle->v2;
-break;
-}
-if (($thisTriangle->v2 === $previousVertex) && (!in_array($thisTriangle->v0, $verticesUsedOnDelaunayGraph))) {
-$thisTriangle->v0->whichNode = $nodeList[$thisJoint->nodeB];
-array_push($nodesPlottedOnDelaunayGraph, $nodeList[$thisJoint->nodeB]);
-array_push($verticesUsedOnDelaunayGraph, $thisTriangle->v0);
-array_push($edgesUsedOnDelaunayGraph, new delaunayEdge($thisTriangle->v2, $thisTriangle->v0));
-$previousVertex = $thisTriangle->v0;
-break;
-}
-}
-}
-}
-if ($nodeList[$thisJoint->nodeB]->name === $activeNode->name) {
-// find a connected vertex on the Delaunay graph for the other end of this joint:
-if (!in_array($nodeList[$thisJoint->nodeA], $nodesPlottedOnDelaunayGraph)) {
-foreach ($delaunayTriangles as &$thisTriangle) {
-if (($thisTriangle->v0 === $previousVertex) && (!in_array($thisTriangle->v1, $verticesUsedOnDelaunayGraph))) {
-$thisTriangle->v1->whichNode = $nodeList[$thisJoint->nodeA];
-array_push($nodesPlottedOnDelaunayGraph, $nodeList[$thisJoint->nodeA]);
-array_push($verticesUsedOnDelaunayGraph, $thisTriangle->v1);
-array_push($edgesUsedOnDelaunayGraph, new delaunayEdge($thisTriangle->v0, $thisTriangle->v1));
-$previousVertex = $thisTriangle->v1;
-break;
-}
-if (($thisTriangle->v1 === $previousVertex) && (!in_array($thisTriangle->v2, $verticesUsedOnDelaunayGraph))) {
-$thisTriangle->v2->whichNode = $nodeList[$thisJoint->nodeA];
-array_push($nodesPlottedOnDelaunayGraph, $nodeList[$thisJoint->nodeA]);
-array_push($verticesUsedOnDelaunayGraph, $thisTriangle->v2);
-array_push($edgesUsedOnDelaunayGraph, new delaunayEdge($thisTriangle->v1, $thisTriangle->v2));
-$previousVertex = $thisTriangle->v2;
-break;
-}
-if (($thisTriangle->v2 === $previousVertex) && (!in_array($thisTriangle->v0, $verticesUsedOnDelaunayGraph))) {
-$thisTriangle->v0->whichNode = $nodeList[$thisJoint->nodeA];
-array_push($nodesPlottedOnDelaunayGraph, $nodeList[$thisJoint->nodeA]);
-array_push($verticesUsedOnDelaunayGraph, $thisTriangle->v0);
-array_push($edgesUsedOnDelaunayGraph, new delaunayEdge($thisTriangle->v2, $thisTriangle->v0));
-$previousVertex = $thisTriangle->v0;
-break;
-}
-}
-}
-}
-}
-
-} while (count($sortedNodeList) > 0);
- */
 }
 
 function removeSharedTriangleEdges($triangle)
@@ -1168,7 +1150,7 @@ $grownGrammar = "S{#1#,O{,#1#E|}}>O[K#1]";
 
 $grownGrammar = growGrammar($possibleStartGrammars[mt_rand(0, count($possibleStartGrammars) - 1)], mt_rand(2, 3));
 
-$grownGrammar = "SOOOOOOOOE";
+$grownGrammar = "SO{O,O}OE";
 
 //do {
 parseStringGrammar($grownGrammar);
