@@ -120,6 +120,39 @@ p, ol, ul, dl {
     color: $baseColour;
 }
 
+p {
+  // use Old Style numerals in running text
+  // https://alistapart.com/article/web-typography-numerals
+  font-variant-numeric: oldstyle-nums;
+}
+
+// https://alistapart.com/article/web-typography-numerals
+sub { font-feature-settings: "subs" 1; }
+
+@supports (font-variant-position: sub) {
+    sub { font-feature-settings: normal;
+          font-variant-position: sub; }
+}
+
+@supports ((font-variant-position: sub) or (font-feature-settings: "subs" 1)) {
+    sub { vertical-align: inherit;
+          font-size: inherit; }
+}
+
+
+
+sup { font-feature-settings: "sups" 1; }
+
+@supports (font-variant-position: super) {
+    sup { font-feature-settings: normal;
+          font-variant-position: super; }
+}
+
+@supports ((font-variant-position: super) or (font-feature-settings: "sups" 1)) {
+    sup { vertical-align: inherit;
+          font-size: inherit; }
+}
+
 
 .js {
     // defaulting to show fonts, but if JS is enabled, then use the font face observer

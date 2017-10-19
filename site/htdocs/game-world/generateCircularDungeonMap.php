@@ -724,15 +724,14 @@ function createDelaunayGraph($graphType)
 // remove triangles with shared edges with the bounding triangle:
     $delaunayTriangles = array_filter($delaunayTriangles, "removeSharedTriangleEdges");
 
-
 // find all edges used in the graph:
-$allDelaunayEdges = array();
- foreach ($delaunayTriangles as &$thisTriangle) {
+    $allDelaunayEdges = array();
+    foreach ($delaunayTriangles as &$thisTriangle) {
 
-if((!in_array(new delaunayEdge($thisTriangle->v0, $thisTriangle->v1), $allDelaunayEdges)) && (!in_array(new delaunayEdge($thisTriangle->v1, $thisTriangle->v0), $allDelaunayEdges)))  {
-array_push($allDelaunayEdges, new delaunayEdge($thisTriangle->v0, $thisTriangle->v1));
-}
- }
+        if ((!in_array(new delaunayEdge($thisTriangle->v0, $thisTriangle->v1), $allDelaunayEdges)) && (!in_array(new delaunayEdge($thisTriangle->v1, $thisTriangle->v0), $allDelaunayEdges))) {
+            array_push($allDelaunayEdges, new delaunayEdge($thisTriangle->v0, $thisTriangle->v1));
+        }
+    }
 
 }
 
@@ -815,32 +814,43 @@ function pathfindThroughDelaunayGraph($startNode, $endNode)
         }
     }
 
-
-
-echo "..........................<br>";
     // find edges that connect those (moving through unused vertices)
-    $searchNodes = array();
-    $heuristic = sqrt(  (($endVertex->x-$startVertex->x)*($endVertex->x-$startVertex->x))  + (($endVertex->y-$startVertex->y)*($endVertex->y-$startVertex->y))     );
-    $searchNodes[$startVertex->x."-".$startVertex->y] = array('parentNode' => null, 'cost'=>0,'summedCost'=>$heuristic);
-    $targetFound = false;
-    // create an array with all edges in, and remove any that have been used: 
-    echo "<hr>".count($allDelaunayEdges)."<br>";
-    var_dump($allDelaunayEdges);echo "<hr>";
-    var_dump($edgesUsedOnDelaunayGraph);echo "<hr>";
-    $uncheckedEdges = array_udiff($allDelaunayEdges, $edgesUsedOnDelaunayGraph, 'compareByEdges');
-        var_dump($uncheckedEdges);echo "<hr>";
- //   do {
+    $searchNodes                                          = array();
+    $heuristic                                            = sqrt((($endVertex->x - $startVertex->x) * ($endVertex->x - $startVertex->x)) + (($endVertex->y - $startVertex->y) * ($endVertex->y - $startVertex->y)));
+    $searchNodes[$startVertex->x . "-" . $startVertex->y] = array('parentNode' => null, 'cost' => 0, 'summedCost' => $heuristic);
+    $targetFound                                          = false;
+    // create an array with all unused edges in:
 
- //   } while ((count($uncheckedEdges) > 0) && !$targetFound);
-        echo "..........................<br>";
+    $uncheckedEdges = array();
+    foreach ($allDelaunayEdges as $thisEdge) {
+        if (!((in_array(new delaunayEdge($thisEdge->v0, $thisEdge->v1), $edgesUsedOnDelaunayGraph)) || (in_array(new delaunayEdge($thisEdge->v1, $thisEdge->v0), $edgesUsedOnDelaunayGraph)))) {
+            if (!(in_array($thisEdge, $uncheckedEdges))) {
+                array_push($uncheckedEdges, $thisEdge);
+            }
+        }
+    }
+
+    echo count($allDelaunayEdges);
+    echo "<br>";
+    echo count($edgesUsedOnDelaunayGraph);
+    echo "<br>";
+    echo count($uncheckedEdges);
+    echo "<hr>";
+    //   do {
+
+    //   } while ((count($uncheckedEdges) > 0) && !$targetFound);
+
 }
 
-function compareByEdges($a, $b) {
-    if(($a->v0 === $b->v0) && ($a->v1 === $b->v1)) {
-return 1;
+function compareByEdges($a, $b)
+{
+    if (($a->v0 === $b->v0) && ($a->v1 === $b->v1)) {
+
+        return 1;
     }
-     if(($a->v0 === $b->v1) && ($a->v1 === $b->v0)) {
-return 1;
+    if (($a->v0 === $b->v1) && ($a->v1 === $b->v0)) {
+
+        return 1;
     }
     return -1;
 }
