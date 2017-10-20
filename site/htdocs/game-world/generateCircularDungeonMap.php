@@ -8,13 +8,13 @@ TO DO:
 Create meta levels so can have foreshadowing and hints about future encounters
 Map nodes to tiles
 add template sections
-Convert locks, valves, hazards and treasue into interesting variants
+Convert locks, valves, hazards and treasure into interesting variants
 Add NPCs (with relevant quests)
 
 ---- */
 
 // avoid script time out:
-//set_time_limit(0);
+set_time_limit(0);
 
 class node
 {
@@ -821,42 +821,47 @@ function pathfindThroughDelaunayGraph($startNode, $endNode)
     }
 
     // find edges that connect those (moving through unused vertices)
-    $searchNodes                                          = array();
-    $heuristic                                            = sqrt((($endVertex->x - $startVertex->x) * ($endVertex->x - $startVertex->x)) + (($endVertex->y - $startVertex->y) * ($endVertex->y - $startVertex->y)));
-    $searchNodes[$startVertex->x . "-" . $startVertex->y] = array('parentNode' => null, 'cost' => 0, 'summedCost' => $heuristic);
-    $targetFound                                          = false;
+    $searchVertices = array();
+    $heuristic = sqrt((($endVertex->x - $startVertex->x) * ($endVertex->x - $startVertex->x)) + (($endVertex->y - $startVertex->y) * ($endVertex->y - $startVertex->y)));
+    $searchVertices[$startVertex->x . "-" . $startVertex->y] = array('vertex' => $startVertex, 'parentNode' => null, 'cost' => 0, 'summedCost' => $heuristic);
+    $targetFound = false;
+    
+
+
+
     // create an array with all unused edges in:
-
-    $uncheckedEdges = array();
-
+    $unusedEdges = array();
     foreach ($allDelaunayEdges as $thisEdge) {
         if (!((in_array(new delaunayEdge($thisEdge->v0, $thisEdge->v1), $edgesUsedOnDelaunayGraph)) || (in_array(new delaunayEdge($thisEdge->v1, $thisEdge->v0), $edgesUsedOnDelaunayGraph)))) {
-            if (!(in_array($thisEdge, $uncheckedEdges))) {
-                array_push($uncheckedEdges, $thisEdge);
+            if (!(in_array($thisEdge, $unusedEdges))) {
+                array_push($unusedEdges, $thisEdge);
             }
         }
     }
 
-    echo "<hr>all Edges (" . count($allDelaunayEdges) . ")<br>";
-//foreach ($allDelaunayEdges as $thisEdge) {
-    //    echo spl_object_hash($thisEdge).", ";
-    //}
 
-    echo "<hr>used edges (" . count($edgesUsedOnDelaunayGraph) . ")<br>";
-    //   foreach ($edgesUsedOnDelaunayGraph as $thisEdge) {
-    //   echo spl_object_hash($thisEdge).", ";
-    //}
 
-    echo "<hr>unused Edges (" . count($uncheckedEdges) . ")<br>";
-//foreach ($uncheckedEdges as $thisEdge) {
-    //    echo spl_object_hash($thisEdge).", ";
-    //}
+       do {
+        // get the next vertex:
+$thisNextVertex = array_shift($searchVertices);
+// check if this is the target:
 
-    echo "<hr>";
 
-    //   do {
+if(($thisNextVertex['vertex'] === $endVertex)) {
+$targetFound = true;
+echo "<br>found target path<br>";
+} else {
+    // add connected vertices:
+    foreach ($delaunayVertices as $thisVertex) {
+if($thisVertex == $thisNextVertex['vertex']) {
+// check if this edge has been used or not
+    // ###
+}
+    }
+}
 
-    //   } while ((count($uncheckedEdges) > 0) && !$targetFound);
+
+       } while ((count($searchVertices) > 0) && !$targetFound);
 
 }
 
