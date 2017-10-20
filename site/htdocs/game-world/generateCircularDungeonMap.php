@@ -731,6 +731,12 @@ function createDelaunayGraph($graphType)
         if ((!in_array(new delaunayEdge($thisTriangle->v0, $thisTriangle->v1), $allDelaunayEdges)) && (!in_array(new delaunayEdge($thisTriangle->v1, $thisTriangle->v0), $allDelaunayEdges))) {
             array_push($allDelaunayEdges, new delaunayEdge($thisTriangle->v0, $thisTriangle->v1));
         }
+          if ((!in_array(new delaunayEdge($thisTriangle->v1, $thisTriangle->v2), $allDelaunayEdges)) && (!in_array(new delaunayEdge($thisTriangle->v2, $thisTriangle->v1), $allDelaunayEdges))) {
+            array_push($allDelaunayEdges, new delaunayEdge($thisTriangle->v1, $thisTriangle->v2));
+        }
+          if ((!in_array(new delaunayEdge($thisTriangle->v0, $thisTriangle->v2), $allDelaunayEdges)) && (!in_array(new delaunayEdge($thisTriangle->v2, $thisTriangle->v0), $allDelaunayEdges))) {
+            array_push($allDelaunayEdges, new delaunayEdge($thisTriangle->v0, $thisTriangle->v2));
+        }
     }
 
 }
@@ -803,7 +809,7 @@ function findPartnerNode($activeNode)
 
 function pathfindThroughDelaunayGraph($startNode, $endNode)
 {
-    global $allDelaunayEdges, $delaunayVertices, $verticesUsedOnDelaunayGraph, $edgesUsedOnDelaunayGraph;
+    global $allDelaunayEdges, $delaunayVertices, $verticesUsedOnDelaunayGraph, $edgesUsedOnDelaunayGraph, $delaunayTriangles;
     // find start and end vertices:
     foreach ($delaunayVertices as $thisVertex) {
         if ($thisVertex->whichNode === $startNode) {
@@ -822,6 +828,7 @@ function pathfindThroughDelaunayGraph($startNode, $endNode)
     // create an array with all unused edges in:
 
     $uncheckedEdges = array();
+
     foreach ($allDelaunayEdges as $thisEdge) {
         if (!((in_array(new delaunayEdge($thisEdge->v0, $thisEdge->v1), $edgesUsedOnDelaunayGraph)) || (in_array(new delaunayEdge($thisEdge->v1, $thisEdge->v0), $edgesUsedOnDelaunayGraph)))) {
             if (!(in_array($thisEdge, $uncheckedEdges))) {
@@ -830,12 +837,23 @@ function pathfindThroughDelaunayGraph($startNode, $endNode)
         }
     }
 
-    echo count($allDelaunayEdges);
-    echo "<br>";
-    echo count($edgesUsedOnDelaunayGraph);
-    echo "<br>";
-    echo count($uncheckedEdges);
+    echo "<hr>all Edges (" . count($allDelaunayEdges) . ")<br>";
+//foreach ($allDelaunayEdges as $thisEdge) {
+    //    echo spl_object_hash($thisEdge).", ";
+    //}
+
+    echo "<hr>used edges (" . count($edgesUsedOnDelaunayGraph) . ")<br>";
+    //   foreach ($edgesUsedOnDelaunayGraph as $thisEdge) {
+    //   echo spl_object_hash($thisEdge).", ";
+    //}
+
+    echo "<hr>unused Edges (" . count($uncheckedEdges) . ")<br>";
+//foreach ($uncheckedEdges as $thisEdge) {
+    //    echo spl_object_hash($thisEdge).", ";
+    //}
+
     echo "<hr>";
+
     //   do {
 
     //   } while ((count($uncheckedEdges) > 0) && !$targetFound);
