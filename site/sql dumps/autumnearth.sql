@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 06, 2017 at 04:29 PM
+-- Generation Time: Oct 20, 2017 at 09:25 AM
 -- Server version: 5.6.24
 -- PHP Version: 5.6.8
 
@@ -1135,7 +1135,7 @@ CREATE TABLE IF NOT EXISTS `tblprofessions` (
   `professionID` int(11) NOT NULL,
   `professionName` varchar(128) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
   `cleanurl` varchar(128) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblprofessions`
@@ -1144,13 +1144,14 @@ CREATE TABLE IF NOT EXISTS `tblprofessions` (
 INSERT INTO `tblprofessions` (`professionID`, `professionName`, `cleanurl`) VALUES
 (0, 'Dyeing', 'dyeing'),
 (1, 'Weaving', 'weaving'),
-(2, 'Scribing', 'scribing'),
+(2, 'Scrivener', 'scribing'),
 (3, 'Apothecary', 'apothecary'),
 (4, 'Ink Making', 'ink-making'),
 (5, 'Artificing', 'artificing'),
 (6, 'Cooking', 'cooking'),
 (7, 'Thaumaturgy', 'thaumaturgy'),
-(8, 'Translation', 'translation');
+(8, 'Translation', 'translation'),
+(9, 'Dendromancy', 'dendromancy');
 
 -- --------------------------------------------------------
 
@@ -1985,7 +1986,7 @@ ALTER TABLE `tblposts`
 -- AUTO_INCREMENT for table `tblprofessions`
 --
 ALTER TABLE `tblprofessions`
-  MODIFY `professionID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=9;
+  MODIFY `professionID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=10;
 --
 -- AUTO_INCREMENT for table `tblquests`
 --
