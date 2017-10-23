@@ -731,10 +731,10 @@ function createDelaunayGraph($graphType)
         if ((!in_array(new delaunayEdge($thisTriangle->v0, $thisTriangle->v1), $allDelaunayEdges)) && (!in_array(new delaunayEdge($thisTriangle->v1, $thisTriangle->v0), $allDelaunayEdges))) {
             array_push($allDelaunayEdges, new delaunayEdge($thisTriangle->v0, $thisTriangle->v1));
         }
-          if ((!in_array(new delaunayEdge($thisTriangle->v1, $thisTriangle->v2), $allDelaunayEdges)) && (!in_array(new delaunayEdge($thisTriangle->v2, $thisTriangle->v1), $allDelaunayEdges))) {
+        if ((!in_array(new delaunayEdge($thisTriangle->v1, $thisTriangle->v2), $allDelaunayEdges)) && (!in_array(new delaunayEdge($thisTriangle->v2, $thisTriangle->v1), $allDelaunayEdges))) {
             array_push($allDelaunayEdges, new delaunayEdge($thisTriangle->v1, $thisTriangle->v2));
         }
-          if ((!in_array(new delaunayEdge($thisTriangle->v0, $thisTriangle->v2), $allDelaunayEdges)) && (!in_array(new delaunayEdge($thisTriangle->v2, $thisTriangle->v0), $allDelaunayEdges))) {
+        if ((!in_array(new delaunayEdge($thisTriangle->v0, $thisTriangle->v2), $allDelaunayEdges)) && (!in_array(new delaunayEdge($thisTriangle->v2, $thisTriangle->v0), $allDelaunayEdges))) {
             array_push($allDelaunayEdges, new delaunayEdge($thisTriangle->v0, $thisTriangle->v2));
         }
     }
@@ -825,9 +825,6 @@ function pathfindThroughDelaunayGraph($startNode, $endNode)
     $heuristic = sqrt((($endVertex->x - $startVertex->x) * ($endVertex->x - $startVertex->x)) + (($endVertex->y - $startVertex->y) * ($endVertex->y - $startVertex->y)));
     $searchVertices[$startVertex->x . "-" . $startVertex->y] = array('vertex' => $startVertex, 'parentNode' => null, 'cost' => 0, 'summedCost' => $heuristic);
     $targetFound = false;
-    
-
-
 
     // create an array with all unused edges in:
     $unusedEdges = array();
@@ -839,30 +836,59 @@ function pathfindThroughDelaunayGraph($startNode, $endNode)
         }
     }
 
-
-
-       do {
+/*
+ foreach ($unusedEdges as $thisEdge) {
+    echo $thisEdge->v0->x.",".$thisEdge->v0->y." - ".$thisEdge->v1->x.",".$thisEdge->v1->y."<br>";
+ }
+*/
+    do {
         // get the next vertex:
-$thisNextVertex = array_shift($searchVertices);
-// check if this is the target:
+        $thisNextVertex = array_shift($searchVertices);
+        // check if this is the target:
 
+        if (($thisNextVertex['vertex'] === $endVertex)) {
+            $targetFound = true;
+            echo "<br>found target path<br>";
+        } else {
+            // add connected vertices:
+            foreach ($allDelaunayEdges as $thisEdge) {
+                if ($thisEdge->v1 == $thisNextVertex['vertex']) {
+                    // check the edge hasn't already been used:
+                   //   echo "checking: ".$thisEdge->v0->x.",".$thisEdge->v0->y." - ".$thisNextVertex['vertex']->x.",".$thisNextVertex['vertex']->y."<br>";
+                    if (in_array(new delaunayEdge($thisEdge->v0, $thisNextVertex['vertex']), $unusedEdges)) {
+                     echo "<br>found unused edge<br>";
+                     var_dump($thisNextVertex['vertex']);
+                        // Check new vertex isn't a node that has already been used:
+                        if ($thisNextVertex['vertex']->whichNode === null) {
+                            
+                            array_push($unusedEdges, new delaunayEdge($thisEdge->v0, $thisNextVertex['vertex']));
+                            $heuristic = sqrt((($endVertex->x - $thisNextVertex['vertex']->x) * ($endVertex->x - $thisNextVertex['vertex']->x)) + (($endVertex->y - $thisNextVertex['vertex']->y) * ($endVertex->y - $thisNextVertex['vertex']->y)));
+                            $searchVertices[$thisNextVertex['vertex']->x . "-" . $thisNextVertex['vertex']->y] = array('vertex' => $thisNextVertex['vertex'], 'parentNode' => $thisNextVertex, 'cost' => ($thisNextVertex->cost)+1, 'summedCost' => $heuristic + ($thisNextVertex->cost)+1);
+                        }
+                    }
+                } else if ($thisEdge->v0 == $thisNextVertex['vertex']) {
+                    // check the edge hasn't already been used:
+                     
+                    if (in_array(new delaunayEdge($thisEdge->v1, $thisNextVertex['vertex']), $unusedEdges)) {
+                      echo "<br>found unused edge<br>";
+                        var_dump($thisNextVertex['vertex']);
+                        if ($thisNextVertex['vertex']->whichNode === null) {
+                            
+                            array_push($unusedEdges, new delaunayEdge($thisEdge->v1, $thisNextVertex['vertex']));
+                            $heuristic = sqrt((($endVertex->x - $thisNextVertex['vertex']->x) * ($endVertex->x - $thisNextVertex['vertex']->x)) + (($endVertex->y - $thisNextVertex['vertex']->y) * ($endVertex->y - $thisNextVertex['vertex']->y)));
+                               $searchVertices[$thisNextVertex['vertex']->x . "-" . $thisNextVertex['vertex']->y] = array('vertex' => $thisNextVertex['vertex'], 'parentNode' => $thisNextVertex, 'cost' => ($thisNextVertex->cost)+1, 'summedCost' => $heuristic + ($thisNextVertex->cost)+1);
+                        }
+                    }
+                }
+            }
+        }
 
-if(($thisNextVertex['vertex'] === $endVertex)) {
-$targetFound = true;
-echo "<br>found target path<br>";
-} else {
-    // add connected vertices:
-    foreach ($delaunayVertices as $thisVertex) {
-if($thisVertex == $thisNextVertex['vertex']) {
-// check if this edge has been used or not
-    // ###
-}
+    } while ((count($searchVertices) > 0) && !$targetFound);
+    if ($targetFound) {
+        echo "<br>found path<br>";
+    } else {
+        echo "<br>DIDN'T find path<br>";
     }
-}
-
-
-       } while ((count($searchVertices) > 0) && !$targetFound);
-
 }
 
 function compareByEdges($a, $b)
