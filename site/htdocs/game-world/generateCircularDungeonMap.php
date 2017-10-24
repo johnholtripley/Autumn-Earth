@@ -821,9 +821,11 @@ function pathfindThroughDelaunayGraph($startNode, $endNode)
     }
 
     // find edges that connect those (moving through unused vertices)
-    $searchVertices = array();
-    $heuristic = sqrt((($endVertex->x - $startVertex->x) * ($endVertex->x - $startVertex->x)) + (($endVertex->y - $startVertex->y) * ($endVertex->y - $startVertex->y)));
+    $searchVertices                                          = array();
+    $uncheckedVertices                                       = array();
+    $heuristic                                               = sqrt((($endVertex->x - $startVertex->x) * ($endVertex->x - $startVertex->x)) + (($endVertex->y - $startVertex->y) * ($endVertex->y - $startVertex->y)));
     $searchVertices[$startVertex->x . "-" . $startVertex->y] = array('vertex' => $startVertex, 'parentNode' => null, 'cost' => 0, 'summedCost' => $heuristic);
+    array_push($uncheckedVertices, $searchVertices[$startVertex->x . "-" . $startVertex->y]);
     $targetFound = false;
 
     // create an array with all unused edges in:
@@ -836,16 +838,15 @@ function pathfindThroughDelaunayGraph($startNode, $endNode)
         }
     }
 
-/*
- foreach ($unusedEdges as $thisEdge) {
-    echo $thisEdge->v0->x.",".$thisEdge->v0->y." - ".$thisEdge->v1->x.",".$thisEdge->v1->y."<br>";
- }
-*/
+
+echo "target vertex:";
+var_dump($endVertex);
+echo "<br>";
+
     do {
         // get the next vertex:
-        $thisNextVertex = array_shift($searchVertices);
+        $thisNextVertex = array_shift($uncheckedVertices);
         // check if this is the target:
-
         if (($thisNextVertex['vertex'] === $endVertex)) {
             $targetFound = true;
             echo "<br>found target path<br>";
@@ -854,36 +855,58 @@ function pathfindThroughDelaunayGraph($startNode, $endNode)
             foreach ($allDelaunayEdges as $thisEdge) {
                 if ($thisEdge->v1 == $thisNextVertex['vertex']) {
                     // check the edge hasn't already been used:
-                   //   echo "checking: ".$thisEdge->v0->x.",".$thisEdge->v0->y." - ".$thisNextVertex['vertex']->x.",".$thisNextVertex['vertex']->y."<br>";
-                    if (in_array(new delaunayEdge($thisEdge->v0, $thisNextVertex['vertex']), $unusedEdges)) {
-                     echo "<br>found unused edge<br>";
-                     var_dump($thisNextVertex['vertex']);
-                        // Check new vertex isn't a node that has already been used:
-                        if ($thisNextVertex['vertex']->whichNode === null) {
-                            
-                            array_push($unusedEdges, new delaunayEdge($thisEdge->v0, $thisNextVertex['vertex']));
-                            $heuristic = sqrt((($endVertex->x - $thisNextVertex['vertex']->x) * ($endVertex->x - $thisNextVertex['vertex']->x)) + (($endVertex->y - $thisNextVertex['vertex']->y) * ($endVertex->y - $thisNextVertex['vertex']->y)));
-                            $searchVertices[$thisNextVertex['vertex']->x . "-" . $thisNextVertex['vertex']->y] = array('vertex' => $thisNextVertex['vertex'], 'parentNode' => $thisNextVertex, 'cost' => ($thisNextVertex->cost)+1, 'summedCost' => $heuristic + ($thisNextVertex->cost)+1);
+                    if (in_array($thisEdge, $unusedEdges)) {
+                        $otherVertex = $thisEdge->v0;
+                        // Check new vertex isn't a node that has already been used (unless it's the target node)
+                        if (($otherVertex->whichNode === null) || ($otherVertex === $endVertex)) {
+                            array_push($unusedEdges, $thisEdge);
+
+                            $thisCost  = intval($thisNextVertex['cost']);
+                            $heuristic = sqrt((($endVertex->x - $otherVertex->x) * ($endVertex->x - $otherVertex->x)) + (($endVertex->y - $otherVertex->y) * ($endVertex->y - $otherVertex->y)));
+                            if (isset($searchVertices[$otherVertex->x . "-" . $otherVertex->y])) {
+                                // update the details if this is faster
+                                if ($thisCost < $searchVertices[$otherVertex->x . "-" . $otherVertex->y]['cost']) {
+                                    $searchVertices[$otherVertex->x . "-" . $otherVertex->y]['parentNode'] = $thisNextVertex;
+                                    $searchVertices[$otherVertex->x . "-" . $otherVertex->y]['cost']       = $thisCost;
+                                    $searchVertices[$otherVertex->x . "-" . $otherVertex->y]['summedCost'] = $heuristic + $thisCost;
+                                }
+                            } else {
+                    
+                                $searchVertices[$otherVertex->x . "-" . $otherVertex->y] = array('vertex' => $otherVertex, 'parentNode' => $thisNextVertex, 'cost' => $thisCost, 'summedCost' => $heuristic + $thisCost);
+                                array_push($uncheckedVertices, $searchVertices[$otherVertex->x . "-" . $otherVertex->y]);
+                            }
                         }
                     }
                 } else if ($thisEdge->v0 == $thisNextVertex['vertex']) {
                     // check the edge hasn't already been used:
-                     
-                    if (in_array(new delaunayEdge($thisEdge->v1, $thisNextVertex['vertex']), $unusedEdges)) {
-                      echo "<br>found unused edge<br>";
-                        var_dump($thisNextVertex['vertex']);
-                        if ($thisNextVertex['vertex']->whichNode === null) {
-                            
-                            array_push($unusedEdges, new delaunayEdge($thisEdge->v1, $thisNextVertex['vertex']));
-                            $heuristic = sqrt((($endVertex->x - $thisNextVertex['vertex']->x) * ($endVertex->x - $thisNextVertex['vertex']->x)) + (($endVertex->y - $thisNextVertex['vertex']->y) * ($endVertex->y - $thisNextVertex['vertex']->y)));
-                               $searchVertices[$thisNextVertex['vertex']->x . "-" . $thisNextVertex['vertex']->y] = array('vertex' => $thisNextVertex['vertex'], 'parentNode' => $thisNextVertex, 'cost' => ($thisNextVertex->cost)+1, 'summedCost' => $heuristic + ($thisNextVertex->cost)+1);
+
+                    if (in_array($thisEdge, $unusedEdges)) {
+                        $otherVertex = $thisEdge->v1;
+
+                         if (($otherVertex->whichNode === null) || ($otherVertex === $endVertex)) {
+
+                            array_push($unusedEdges, $thisEdge);
+                            $thisCost  = intval($thisNextVertex['cost']);
+                            $heuristic = sqrt((($endVertex->x - $otherVertex->x) * ($endVertex->x - $otherVertex->x)) + (($endVertex->y - $otherVertex->y) * ($endVertex->y - $otherVertex->y)));
+                            if (isset($searchVertices[$otherVertex->x . "-" . $otherVertex->y])) {
+                                // update the details if this is faster
+                                if ($thisCost < $searchVertices[$otherVertex->x . "-" . $otherVertex->y]['cost']) {
+                                    $searchVertices[$otherVertex->x . "-" . $otherVertex->y]['parentNode'] = $thisNextVertex;
+                                    $searchVertices[$otherVertex->x . "-" . $otherVertex->y]['cost']       = $thisCost;
+                                    $searchVertices[$otherVertex->x . "-" . $otherVertex->y]['summedCost'] = $heuristic + $thisCost;
+                                }
+                            } else {
+                                             
+                                $searchVertices[$otherVertex->x . "-" . $otherVertex->y] = array('vertex' => $otherVertex, 'parentNode' => $thisNextVertex, 'cost' => $thisCost, 'summedCost' => $heuristic + $thisCost);
+                               array_push($uncheckedVertices, $searchVertices[$otherVertex->x . "-" . $otherVertex->y]);
+                            }
                         }
                     }
                 }
             }
         }
-
-    } while ((count($searchVertices) > 0) && !$targetFound);
+       // echo count($uncheckedVertices) . ", ";
+    } while ((count($uncheckedVertices) > 0) && !$targetFound);
     if ($targetFound) {
         echo "<br>found path<br>";
     } else {
@@ -971,7 +994,7 @@ function plotConnectivityOnDelaunayGraph()
 
 // check if the partner node has already been plotted
         if (in_array($partnerNode, $nodesPlottedOnDelaunayGraph)) {
-            echo "need pathfinding from " . $activeNode->name . " -- " . $partnerNode->name . "<br>";
+            echo "<br><br><br><br>need pathfinding from " . $activeNode->name . " -- " . $partnerNode->name . "<br>";
 // pathfind to it ####
 
             pathfindThroughDelaunayGraph($activeNode, $partnerNode);
