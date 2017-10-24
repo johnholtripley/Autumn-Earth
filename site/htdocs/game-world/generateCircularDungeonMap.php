@@ -838,16 +838,13 @@ function canPathfindThroughDelaunayGraph($startNode, $endNode)
         }
     }
 
-
-
-
     do {
         // get the next vertex:
         $thisNextVertex = array_shift($uncheckedVertices);
         // check if this is the target:
         if (($thisNextVertex['vertex'] === $endVertex)) {
             $targetFound = true;
-           
+
         } else {
             // add connected vertices:
             foreach ($allDelaunayEdges as $thisEdge) {
@@ -870,7 +867,7 @@ function canPathfindThroughDelaunayGraph($startNode, $endNode)
                                     $searchVertices[$otherVertex->x . "-" . $otherVertex->y]['summedCost'] = $heuristic + $thisCost;
                                 }
                             } else {
-                    
+
                                 $searchVertices[$otherVertex->x . "-" . $otherVertex->y] = array('vertex' => $otherVertex, 'parentNode' => $thisNextVertex, 'edge' => $thisEdge, 'cost' => $thisCost, 'summedCost' => $heuristic + $thisCost);
                                 array_push($uncheckedVertices, $searchVertices[$otherVertex->x . "-" . $otherVertex->y]);
                             }
@@ -882,7 +879,7 @@ function canPathfindThroughDelaunayGraph($startNode, $endNode)
                     if (in_array($thisEdge, $unusedEdges)) {
                         $otherVertex = $thisEdge->v1;
 
-                         if (($otherVertex->whichNode === null) || ($otherVertex === $endVertex)) {
+                        if (($otherVertex->whichNode === null) || ($otherVertex === $endVertex)) {
 
                             array_push($unusedEdges, $thisEdge);
                             $thisCost  = intval($thisNextVertex['cost']);
@@ -896,27 +893,24 @@ function canPathfindThroughDelaunayGraph($startNode, $endNode)
                                     $searchVertices[$otherVertex->x . "-" . $otherVertex->y]['summedCost'] = $heuristic + $thisCost;
                                 }
                             } else {
-                                             
+
                                 $searchVertices[$otherVertex->x . "-" . $otherVertex->y] = array('vertex' => $otherVertex, 'parentNode' => $thisNextVertex, 'edge' => $thisEdge, 'cost' => $thisCost, 'summedCost' => $heuristic + $thisCost);
-                               array_push($uncheckedVertices, $searchVertices[$otherVertex->x . "-" . $otherVertex->y]);
+                                array_push($uncheckedVertices, $searchVertices[$otherVertex->x . "-" . $otherVertex->y]);
                             }
                         }
                     }
                 }
             }
         }
-       // echo count($uncheckedVertices) . ", ";
+        // echo count($uncheckedVertices) . ", ";
     } while ((count($uncheckedVertices) > 0) && !$targetFound);
     if ($targetFound) {
-        
 
-  while ($thisNextVertex['parentNode'] !== null) {
-    array_push($edgesUsedOnDelaunayGraph, $thisNextVertex['edge']);
+        while ($thisNextVertex['parentNode'] !== null) {
+            array_push($edgesUsedOnDelaunayGraph, $thisNextVertex['edge']);
 
-               
-              $thisNextVertex = $thisNextVertex['parentNode'];
-            }
-
+            $thisNextVertex = $thisNextVertex['parentNode'];
+        }
 
     } else {
         echo "<br>DIDN'T find path<br>";
@@ -1003,26 +997,39 @@ function plotConnectivityOnDelaunayGraph()
         }
 
 // check if the partner node has already been plotted
-        // check if the edge has been plotted already ############
+        // check if the edge has been plotted already:
+
         if (in_array($partnerNode, $nodesPlottedOnDelaunayGraph)) {
-            echo "<br><br>need pathfinding from " . $activeNode->name . " -- " . $partnerNode->name . "<br>";
-// pathfind to it ####
-
-            if(canPathfindThroughDelaunayGraph($activeNode, $partnerNode)) {
-
-
-                $activeNode->connections--;
-                $partnerNode->connections--;
-                $activeNode = $partnerNode;
-                $connectionsRemainingToBePlotted--;
-                // find the vertex that has this node:
-                foreach ($verticesUsedOnDelaunayGraph as $thisVertex) {
-                    if ($thisVertex->whichNode === $activeNode) {
-                        $activeVertex = $thisVertex;
+            if (!(in_array($activeNode->name . "-" . $partnerNode->name, $connectionsPlottedOnDelaunayGraph)) && !(in_array($partnerNode->name . "-" . $activeNode->name, $connectionsPlottedOnDelaunayGraph))) {
+                echo "need pathfinding from " . $activeNode->name . " -- " . $partnerNode->name;
+                if (canPathfindThroughDelaunayGraph($activeNode, $partnerNode)) {
+                    echo " ...found path<br>";
+                    array_push($connectionsPlottedOnDelaunayGraph, $activeNode->name . "-" . $partnerNode->name);
+                    $activeNode->connections--;
+                    $partnerNode->connections--;
+                    $activeNode = $partnerNode;
+                    $connectionsRemainingToBePlotted--;
+                    // find the vertex that has this node:
+                    foreach ($verticesUsedOnDelaunayGraph as $thisVertex) {
+                        if ($thisVertex->whichNode === $activeNode) {
+                            $activeVertex = $thisVertex;
+                        }
                     }
-                }
-            }
 
+                }
+            } else {
+                // connection has been already plotted
+                  $activeNode->connections--;
+                    $partnerNode->connections--;
+                    $activeNode = $partnerNode;
+                    $connectionsRemainingToBePlotted--;
+                    // find the vertex that has this node:
+                    foreach ($verticesUsedOnDelaunayGraph as $thisVertex) {
+                        if ($thisVertex->whichNode === $activeNode) {
+                            $activeVertex = $thisVertex;
+                        }
+                    }
+            }
 
         } else {
             // find an unused vertex that joins the active vertex:
@@ -1030,44 +1037,44 @@ function plotConnectivityOnDelaunayGraph()
             $sortedRandomTriangles = $delaunayTriangles;
             usort($sortedRandomTriangles, 'randomTriangleSorting');
             foreach ($sortedRandomTriangles as &$thisTriangle) {
-
                 $checkVertex = findUnusedNeighbouringDelaunayVertex($thisTriangle, 'v0', $partnerNode, $activeVertex, $activeNode);
                 if ($checkVertex !== false) {
+                    array_push($connectionsPlottedOnDelaunayGraph, $activeNode->name . "-" . $partnerNode->name);
                     echo "plotted " . $activeNode->name . "(" . $activeNode->type . ") -- " . $partnerNode->name . "(" . $partnerNode->type . ")<br>";
                     $activeNode->connections--;
                     $partnerNode->connections--;
                     $activeNode   = $partnerNode;
                     $activeVertex = $checkVertex;
                     $connectionsRemainingToBePlotted--;
-//outputDelaunayGraph();
                     break;
                 }
                 $checkVertex = findUnusedNeighbouringDelaunayVertex($thisTriangle, 'v1', $partnerNode, $activeVertex, $activeNode);
                 if ($checkVertex !== false) {
+                    array_push($connectionsPlottedOnDelaunayGraph, $activeNode->name . "-" . $partnerNode->name);
                     echo "plotted " . $activeNode->name . "(" . $activeNode->type . ") -- " . $partnerNode->name . "(" . $partnerNode->type . ")<br>";
                     $activeNode->connections--;
                     $partnerNode->connections--;
                     $activeNode   = $partnerNode;
                     $activeVertex = $checkVertex;
                     $connectionsRemainingToBePlotted--;
-                    //outputDelaunayGraph();
                     break;
                 }
                 $checkVertex = findUnusedNeighbouringDelaunayVertex($thisTriangle, 'v2', $partnerNode, $activeVertex, $activeNode);
                 if ($checkVertex !== false) {
+                    array_push($connectionsPlottedOnDelaunayGraph, $activeNode->name . "-" . $partnerNode->name);
                     echo "plotted " . $activeNode->name . "(" . $activeNode->type . ") -- " . $partnerNode->name . "(" . $partnerNode->type . ")<br>";
                     $activeNode->connections--;
                     $partnerNode->connections--;
                     $activeNode   = $partnerNode;
                     $activeVertex = $checkVertex;
                     $connectionsRemainingToBePlotted--;
-                    //outputDelaunayGraph();
                     break;
                 }
 
             }
 
         }
+
     } while ($connectionsRemainingToBePlotted > 0);
 
 // sort nodes by connectedness
