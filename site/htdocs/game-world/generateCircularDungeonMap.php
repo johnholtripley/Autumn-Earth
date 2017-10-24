@@ -807,7 +807,7 @@ function findPartnerNode($activeNode)
     return $partnerNode;
 }
 
-function pathfindThroughDelaunayGraph($startNode, $endNode)
+function canPathfindThroughDelaunayGraph($startNode, $endNode)
 {
     global $allDelaunayEdges, $delaunayVertices, $verticesUsedOnDelaunayGraph, $edgesUsedOnDelaunayGraph, $delaunayTriangles;
     // find start and end vertices:
@@ -824,7 +824,7 @@ function pathfindThroughDelaunayGraph($startNode, $endNode)
     $searchVertices                                          = array();
     $uncheckedVertices                                       = array();
     $heuristic                                               = sqrt((($endVertex->x - $startVertex->x) * ($endVertex->x - $startVertex->x)) + (($endVertex->y - $startVertex->y) * ($endVertex->y - $startVertex->y)));
-    $searchVertices[$startVertex->x . "-" . $startVertex->y] = array('vertex' => $startVertex, 'parentNode' => null, 'cost' => 0, 'summedCost' => $heuristic);
+    $searchVertices[$startVertex->x . "-" . $startVertex->y] = array('vertex' => $startVertex, 'parentNode' => null, 'edge' => null, 'cost' => 0, 'summedCost' => $heuristic);
     array_push($uncheckedVertices, $searchVertices[$startVertex->x . "-" . $startVertex->y]);
     $targetFound = false;
 
@@ -839,9 +839,7 @@ function pathfindThroughDelaunayGraph($startNode, $endNode)
     }
 
 
-echo "target vertex:";
-var_dump($endVertex);
-echo "<br>";
+
 
     do {
         // get the next vertex:
@@ -849,7 +847,7 @@ echo "<br>";
         // check if this is the target:
         if (($thisNextVertex['vertex'] === $endVertex)) {
             $targetFound = true;
-            echo "<br>found target path<br>";
+           
         } else {
             // add connected vertices:
             foreach ($allDelaunayEdges as $thisEdge) {
@@ -868,11 +866,12 @@ echo "<br>";
                                 if ($thisCost < $searchVertices[$otherVertex->x . "-" . $otherVertex->y]['cost']) {
                                     $searchVertices[$otherVertex->x . "-" . $otherVertex->y]['parentNode'] = $thisNextVertex;
                                     $searchVertices[$otherVertex->x . "-" . $otherVertex->y]['cost']       = $thisCost;
+                                    $searchVertices[$otherVertex->x . "-" . $otherVertex->y]['edge']       = $thisEdge;
                                     $searchVertices[$otherVertex->x . "-" . $otherVertex->y]['summedCost'] = $heuristic + $thisCost;
                                 }
                             } else {
                     
-                                $searchVertices[$otherVertex->x . "-" . $otherVertex->y] = array('vertex' => $otherVertex, 'parentNode' => $thisNextVertex, 'cost' => $thisCost, 'summedCost' => $heuristic + $thisCost);
+                                $searchVertices[$otherVertex->x . "-" . $otherVertex->y] = array('vertex' => $otherVertex, 'parentNode' => $thisNextVertex, 'edge' => $thisEdge, 'cost' => $thisCost, 'summedCost' => $heuristic + $thisCost);
                                 array_push($uncheckedVertices, $searchVertices[$otherVertex->x . "-" . $otherVertex->y]);
                             }
                         }
@@ -893,11 +892,12 @@ echo "<br>";
                                 if ($thisCost < $searchVertices[$otherVertex->x . "-" . $otherVertex->y]['cost']) {
                                     $searchVertices[$otherVertex->x . "-" . $otherVertex->y]['parentNode'] = $thisNextVertex;
                                     $searchVertices[$otherVertex->x . "-" . $otherVertex->y]['cost']       = $thisCost;
+                                    $searchVertices[$otherVertex->x . "-" . $otherVertex->y]['edge']       = $thisEdge;
                                     $searchVertices[$otherVertex->x . "-" . $otherVertex->y]['summedCost'] = $heuristic + $thisCost;
                                 }
                             } else {
                                              
-                                $searchVertices[$otherVertex->x . "-" . $otherVertex->y] = array('vertex' => $otherVertex, 'parentNode' => $thisNextVertex, 'cost' => $thisCost, 'summedCost' => $heuristic + $thisCost);
+                                $searchVertices[$otherVertex->x . "-" . $otherVertex->y] = array('vertex' => $otherVertex, 'parentNode' => $thisNextVertex, 'edge' => $thisEdge, 'cost' => $thisCost, 'summedCost' => $heuristic + $thisCost);
                                array_push($uncheckedVertices, $searchVertices[$otherVertex->x . "-" . $otherVertex->y]);
                             }
                         }
@@ -908,10 +908,20 @@ echo "<br>";
        // echo count($uncheckedVertices) . ", ";
     } while ((count($uncheckedVertices) > 0) && !$targetFound);
     if ($targetFound) {
-        echo "<br>found path<br>";
+        
+
+  while ($thisNextVertex['parentNode'] !== null) {
+    array_push($edgesUsedOnDelaunayGraph, $thisNextVertex['edge']);
+
+               
+              $thisNextVertex = $thisNextVertex['parentNode'];
+            }
+
+
     } else {
         echo "<br>DIDN'T find path<br>";
     }
+    return $targetFound;
 }
 
 function compareByEdges($a, $b)
@@ -993,25 +1003,26 @@ function plotConnectivityOnDelaunayGraph()
         }
 
 // check if the partner node has already been plotted
+        // check if the edge has been plotted already ############
         if (in_array($partnerNode, $nodesPlottedOnDelaunayGraph)) {
-            echo "<br><br><br><br>need pathfinding from " . $activeNode->name . " -- " . $partnerNode->name . "<br>";
+            echo "<br><br>need pathfinding from " . $activeNode->name . " -- " . $partnerNode->name . "<br>";
 // pathfind to it ####
 
-            pathfindThroughDelaunayGraph($activeNode, $partnerNode);
+            if(canPathfindThroughDelaunayGraph($activeNode, $partnerNode)) {
 
-// temp #########
-            $activeNode->connections--;
-            $partnerNode->connections--;
-            $activeNode = $partnerNode;
-            $connectionsRemainingToBePlotted--;
-            // find the vertex that has this node:
-            foreach ($verticesUsedOnDelaunayGraph as $thisVertex) {
-                if ($thisVertex->whichNode === $activeNode) {
-                    $activeVertex = $thisVertex;
+
+                $activeNode->connections--;
+                $partnerNode->connections--;
+                $activeNode = $partnerNode;
+                $connectionsRemainingToBePlotted--;
+                // find the vertex that has this node:
+                foreach ($verticesUsedOnDelaunayGraph as $thisVertex) {
+                    if ($thisVertex->whichNode === $activeNode) {
+                        $activeVertex = $thisVertex;
+                    }
                 }
             }
-//array_push($edgesUsedOnDelaunayGraph, new delaunayEdge($thisTriangle->v0, $thisTriangle->v1));
-            //   array_push($connectionsPlottedOnDelaunayGraph, $activeNode->name . "-" . $partnerNode->name);
+
 
         } else {
             // find an unused vertex that joins the active vertex:
