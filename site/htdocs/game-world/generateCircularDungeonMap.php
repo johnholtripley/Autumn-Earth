@@ -1158,7 +1158,6 @@ function outputDelaunayGraph()
             imagesetthickness($outputCanvas, 2);
 
 // check nodes attached to these vertices to see if a joint exists which is locked ###########
-
 $theseConnectedNodes = "";
 foreach ($delaunayVertices as $thisVertex) {
         if ($thisVertex->whichNode === $thisTriangle->v0->whichNode) {
@@ -1168,18 +1167,10 @@ foreach ($delaunayVertices as $thisVertex) {
             $theseConnectedNodes .= "-".$thisVertex->whichNode->name;
         }
     }
-
 if(isset($lockedJoints[$theseConnectedNodes])) {
-// $edgeColour = imagecolorallocate($outputCanvas, $lockedJoints[$theseConnectedNodes][0], $lockedJoints[$theseConnectedNodes][1], $lockedJoints[$theseConnectedNodes][2]);
-
-
 $edgeColour = imagecolorallocate($outputCanvas, $keyColours[$lockedJoints[$theseConnectedNodes]][0], $keyColours[$lockedJoints[$theseConnectedNodes]][1], $keyColours[$lockedJoints[$theseConnectedNodes]][2]);
 
 } else {
-
-
-
-
             $edgeColour = imagecolorallocate($outputCanvas, 50, 50, 50);
         }
         } else {
@@ -1189,7 +1180,22 @@ $edgeColour = imagecolorallocate($outputCanvas, $keyColours[$lockedJoints[$these
         imageline($outputCanvas, $thisTriangle->v0->x, $thisTriangle->v0->y, $thisTriangle->v1->x, $thisTriangle->v1->y, $edgeColour);
         if ((in_array(new delaunayEdge($thisTriangle->v2, $thisTriangle->v1), $edgesUsedOnDelaunayGraph)) || (in_array(new delaunayEdge($thisTriangle->v1, $thisTriangle->v2), $edgesUsedOnDelaunayGraph))) {
             imagesetthickness($outputCanvas, 2);
+            // check nodes attached to these vertices to see if a joint exists which is locked ###########
+$theseConnectedNodes = "";
+foreach ($delaunayVertices as $thisVertex) {
+        if ($thisVertex->whichNode === $thisTriangle->v1->whichNode) {
+            $theseConnectedNodes .= "-".$thisVertex->whichNode->name;
+        }
+            if ($thisVertex->whichNode === $thisTriangle->v2->whichNode) {
+            $theseConnectedNodes .= "-".$thisVertex->whichNode->name;
+        }
+    }
+if(isset($lockedJoints[$theseConnectedNodes])) {
+$edgeColour = imagecolorallocate($outputCanvas, $keyColours[$lockedJoints[$theseConnectedNodes]][0], $keyColours[$lockedJoints[$theseConnectedNodes]][1], $keyColours[$lockedJoints[$theseConnectedNodes]][2]);
+
+} else {
             $edgeColour = imagecolorallocate($outputCanvas, 50, 50, 50);
+        }
         } else {
             imagesetthickness($outputCanvas, 1);
             $edgeColour = imagecolorallocate($outputCanvas, 194, 190, 169);
@@ -1197,7 +1203,22 @@ $edgeColour = imagecolorallocate($outputCanvas, $keyColours[$lockedJoints[$these
         imageline($outputCanvas, $thisTriangle->v1->x, $thisTriangle->v1->y, $thisTriangle->v2->x, $thisTriangle->v2->y, $edgeColour);
         if ((in_array(new delaunayEdge($thisTriangle->v0, $thisTriangle->v2), $edgesUsedOnDelaunayGraph)) || (in_array(new delaunayEdge($thisTriangle->v2, $thisTriangle->v0), $edgesUsedOnDelaunayGraph))) {
             imagesetthickness($outputCanvas, 2);
+                // check nodes attached to these vertices to see if a joint exists which is locked ###########
+$theseConnectedNodes = "";
+foreach ($delaunayVertices as $thisVertex) {
+        if ($thisVertex->whichNode === $thisTriangle->v0->whichNode) {
+            $theseConnectedNodes .= "-".$thisVertex->whichNode->name;
+        }
+            if ($thisVertex->whichNode === $thisTriangle->v2->whichNode) {
+            $theseConnectedNodes .= "-".$thisVertex->whichNode->name;
+        }
+    }
+if(isset($lockedJoints[$theseConnectedNodes])) {
+$edgeColour = imagecolorallocate($outputCanvas, $keyColours[$lockedJoints[$theseConnectedNodes]][0], $keyColours[$lockedJoints[$theseConnectedNodes]][1], $keyColours[$lockedJoints[$theseConnectedNodes]][2]);
+
+} else {
             $edgeColour = imagecolorallocate($outputCanvas, 50, 50, 50);
+        }
         } else {
             imagesetthickness($outputCanvas, 1);
             $edgeColour = imagecolorallocate($outputCanvas, 194, 190, 169);
