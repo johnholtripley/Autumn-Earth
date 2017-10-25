@@ -969,7 +969,7 @@ function plotConnectivityOnDelaunayGraph()
         }
     }
 
-    echo "centre node picked is " . $activeNode->name . "<br>";
+ //   echo "centre node picked is " . $activeNode->name . "<br>";
 
     $activeVertex = $centreVertex;
 
@@ -985,7 +985,7 @@ function plotConnectivityOnDelaunayGraph()
         $partnerNode       = findPartnerNode($activeNode);
         $foundUnusedVertex = false;
               if ($partnerNode === null) {
-            echo "end of this branch<br>";
+         //   echo "end of this branch<br>";
             // find another node that hasn't been plotted yet (ideally one that's already been plotted):
 
             $foundAlreadyUsedNodeToConnectTo = false;
@@ -1033,9 +1033,9 @@ function plotConnectivityOnDelaunayGraph()
         // check if the edge has been plotted already:
         if (in_array($partnerNode, $nodesPlottedOnDelaunayGraph)) {
             if (!(in_array($activeNode->name . "-" . $partnerNode->name, $connectionsPlottedOnDelaunayGraph)) && !(in_array($partnerNode->name . "-" . $activeNode->name, $connectionsPlottedOnDelaunayGraph))) {
-                echo "need pathfinding from " . $activeNode->name . " -- " . $partnerNode->name;
+             //   echo "need pathfinding from " . $activeNode->name . " -- " . $partnerNode->name;
                 if (canPathfindThroughDelaunayGraph($activeNode, $partnerNode)) {
-                    echo " ...found path<br>";
+               //     echo " ...found path<br>";
                     array_push($connectionsPlottedOnDelaunayGraph, $activeNode->name . "-" . $partnerNode->name);
                     $activeNode->connections--;
                     $partnerNode->connections--;
@@ -1074,7 +1074,7 @@ function plotConnectivityOnDelaunayGraph()
                 $checkVertex = findUnusedNeighbouringDelaunayVertex($thisTriangle, 'v0', $partnerNode, $activeVertex, $activeNode);
                 if ($checkVertex !== false) {
                     array_push($connectionsPlottedOnDelaunayGraph, $activeNode->name . "-" . $partnerNode->name);
-                    echo "plotted " . $activeNode->name . "(" . $activeNode->type . ") -- " . $partnerNode->name . "(" . $partnerNode->type . ")<br>";
+               //     echo "plotted " . $activeNode->name . "(" . $activeNode->type . ") -- " . $partnerNode->name . "(" . $partnerNode->type . ")<br>";
                     $activeNode->connections--;
                     $partnerNode->connections--;
                     $activeNode   = $partnerNode;
@@ -1086,7 +1086,7 @@ function plotConnectivityOnDelaunayGraph()
                 $checkVertex = findUnusedNeighbouringDelaunayVertex($thisTriangle, 'v1', $partnerNode, $activeVertex, $activeNode);
                 if ($checkVertex !== false) {
                     array_push($connectionsPlottedOnDelaunayGraph, $activeNode->name . "-" . $partnerNode->name);
-                    echo "plotted " . $activeNode->name . "(" . $activeNode->type . ") -- " . $partnerNode->name . "(" . $partnerNode->type . ")<br>";
+                 //   echo "plotted " . $activeNode->name . "(" . $activeNode->type . ") -- " . $partnerNode->name . "(" . $partnerNode->type . ")<br>";
                     $activeNode->connections--;
                     $partnerNode->connections--;
                     $activeNode   = $partnerNode;
@@ -1098,7 +1098,7 @@ function plotConnectivityOnDelaunayGraph()
                 $checkVertex = findUnusedNeighbouringDelaunayVertex($thisTriangle, 'v2', $partnerNode, $activeVertex, $activeNode);
                 if ($checkVertex !== false) {
                     array_push($connectionsPlottedOnDelaunayGraph, $activeNode->name . "-" . $partnerNode->name);
-                    echo "plotted " . $activeNode->name . "(" . $activeNode->type . ") -- " . $partnerNode->name . "(" . $partnerNode->type . ")<br>";
+                //    echo "plotted " . $activeNode->name . "(" . $activeNode->type . ") -- " . $partnerNode->name . "(" . $partnerNode->type . ")<br>";
                     $activeNode->connections--;
                     $partnerNode->connections--;
                     $activeNode   = $partnerNode;
@@ -1283,7 +1283,7 @@ do {
 
     $grownGrammar = growGrammar($possibleStartGrammars[mt_rand(0, count($possibleStartGrammars) - 1)], mt_rand(2, 3));
 
-    $grownGrammar = "SO{O,O}E";
+    
 
     parseStringGrammar($grownGrammar);
     moveNodesApart();
