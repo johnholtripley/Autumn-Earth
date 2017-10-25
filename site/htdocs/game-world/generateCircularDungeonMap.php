@@ -2,6 +2,9 @@
 
 include $_SERVER['DOCUMENT_ROOT'] . "/game-world/generateCircularDungeonMap-third-party-arrow-code.php";
 
+
+
+
 /* ----
 
 TO DO:
@@ -10,6 +13,8 @@ Map nodes to tiles
 add template sections
 Convert locks, valves, hazards and treasure into interesting variants
 Add NPCs (with relevant quests)
+
+BUG - http://ae.dev/game-world/generateCircularDungeonMap.php?seed=1508913096 - start node can't find a clear joining vertex
 
 ---- */
 
@@ -771,6 +776,7 @@ function findUnusedNeighbouringDelaunayVertex($whichTriangle, $whichVertex, $par
         array_push($verticesUsedOnDelaunayGraph, $whichTriangle->$firstVertexToCheck);
         array_push($edgesUsedOnDelaunayGraph, new delaunayEdge($whichTriangle->$whichVertex, $whichTriangle->$firstVertexToCheck));
         array_push($connectionsPlottedOnDelaunayGraph, $activeNode->name . "-" . $partnerNode->name);
+
         return $whichTriangle->$firstVertexToCheck;
     } else if (($whichTriangle->$whichVertex === $activeVertex) && (!in_array($whichTriangle->$secondVertexToCheck, $verticesUsedOnDelaunayGraph))) {
         $whichTriangle->$secondVertexToCheck->whichNode = $partnerNode;
@@ -778,8 +784,10 @@ function findUnusedNeighbouringDelaunayVertex($whichTriangle, $whichVertex, $par
         array_push($verticesUsedOnDelaunayGraph, $whichTriangle->$secondVertexToCheck);
         array_push($edgesUsedOnDelaunayGraph, new delaunayEdge($whichTriangle->$whichVertex, $whichTriangle->$secondVertexToCheck));
         array_push($connectionsPlottedOnDelaunayGraph, $activeNode->name . "-" . $partnerNode->name);
+
         return $whichTriangle->$secondVertexToCheck;
     }
+
     return false;
 }
 
@@ -809,7 +817,7 @@ function findPartnerNode($activeNode)
 
 function canPathfindThroughDelaunayGraph($startNode, $endNode)
 {
-    global $allDelaunayEdges, $delaunayVertices, $verticesUsedOnDelaunayGraph, $edgesUsedOnDelaunayGraph, $delaunayTriangles;
+    global $allDelaunayEdges, $delaunayVertices, $verticesUsedOnDelaunayGraph, $edgesUsedOnDelaunayGraph, $delaunayTriangles, $nodesPlottedOnDelaunayGraph;
     // find start and end vertices:
     foreach ($delaunayVertices as $thisVertex) {
         if ($thisVertex->whichNode === $startNode) {
@@ -908,6 +916,14 @@ function canPathfindThroughDelaunayGraph($startNode, $endNode)
 
         while ($thisNextVertex['parentNode'] !== null) {
             array_push($edgesUsedOnDelaunayGraph, $thisNextVertex['edge']);
+            array_push($verticesUsedOnDelaunayGraph, $thisNextVertex['vertex']);
+// mark the used nodes as well so they can't be used:
+            if ($thisNextVertex['vertex']->whichNode === null) {
+                $thisNextVertex['vertex']->whichNode       = new node();
+                $thisNextVertex['vertex']->whichNode->type = "BLOCKED";
+
+                array_push($nodesPlottedOnDelaunayGraph, $thisNextVertex['vertex']->whichNode);
+            }
 
             $thisNextVertex = $thisNextVertex['parentNode'];
         }
@@ -934,77 +950,93 @@ function compareByEdges($a, $b)
 function plotConnectivityOnDelaunayGraph()
 {
     global $centreVertex, $delaunayVertices, $nodeList, $jointList, $delaunayTriangles, $edgesUsedOnDelaunayGraph, $verticesUsedOnDelaunayGraph, $nodesPlottedOnDelaunayGraph, $connectionsPlottedOnDelaunayGraph;
+    
 
-    // for each strand, plot the entire path out. mark used edges and whether a node has all of its connections used. pathfind to find unused edges #######
+        // for each strand, plot the entire path out. mark used edges and whether a node has all of its connections used. pathfind to find unused edges #######
 
-    // find the graph node with the most connections:
-    $sortedNodeList = $nodeList;
-    usort($sortedNodeList, 'sortNodesByConnections');
+        // find the graph node with the most connections:
+        $sortedNodeList = $nodeList;
+        usort($sortedNodeList, 'sortNodesByConnections');
 
-    $nodesPlottedOnDelaunayGraph       = array();
-    $verticesUsedOnDelaunayGraph       = array();
-    $edgesUsedOnDelaunayGraph          = array();
-    $connectionsPlottedOnDelaunayGraph = array();
+        $nodesPlottedOnDelaunayGraph       = array();
+        $verticesUsedOnDelaunayGraph       = array();
+        $edgesUsedOnDelaunayGraph          = array();
+        $connectionsPlottedOnDelaunayGraph = array();
 
-    $activeNode = $sortedNodeList[0];
+        $activeNode = $sortedNodeList[0];
 
-    // find the centre vertex:
-    for ($i = 0; $i < count($delaunayVertices); $i++) {
-        if ($delaunayVertices[$i] === $centreVertex) {
-            $delaunayVertices[$i]->whichNode = $activeNode;
-            array_push($nodesPlottedOnDelaunayGraph, $activeNode);
-            array_push($verticesUsedOnDelaunayGraph, $centreVertex);
-            break;
+        // find the centre vertex:
+        for ($i = 0; $i < count($delaunayVertices); $i++) {
+            if ($delaunayVertices[$i] === $centreVertex) {
+                $delaunayVertices[$i]->whichNode = $activeNode;
+                array_push($nodesPlottedOnDelaunayGraph, $activeNode);
+                array_push($verticesUsedOnDelaunayGraph, $centreVertex);
+                break;
+            }
         }
-    }
 
-    echo "centre node picked is " . $activeNode->name . "<br>";
+        echo "centre node picked is " . $activeNode->name . "<br>";
 
-    $activeVertex = $centreVertex;
+        $activeVertex = $centreVertex;
 
-    $connectionsRemainingToBePlotted = 0;
-    foreach ($nodeList as $thisNode) {
-        $connectionsRemainingToBePlotted += $thisNode->connections;
-    }
-    // connections are counted at each node, so for the joint number, only need half that number:
-    $connectionsRemainingToBePlotted /= 2;
+        $connectionsRemainingToBePlotted = 0;
+        foreach ($nodeList as $thisNode) {
+            $connectionsRemainingToBePlotted += $thisNode->connections;
+        }
+        // connections are counted at each node, so for the joint number, only need half that number:
+        $connectionsRemainingToBePlotted /= 2;
 
-    do {
+        do {
 // find a node connected to the active Node:
-        $partnerNode = findPartnerNode($activeNode);
-        //  echo $activeNode->name . " -- " . $partnerNode->name . "<br>";
-        if ($partnerNode === null) {
-            echo "end of this branch<br>";
-            // find another node that hasn't been plotted yet:
-            // ideally one that's already been plotted:
-            // need to make sure that if one doesn't exist then it picks a new one ###########
-            foreach ($sortedNodeList as $thisNode) {
-                if ($thisNode->connections > 0) {
-                    if (in_array($thisNode, $nodesPlottedOnDelaunayGraph)) {
-                        $activeNode  = $thisNode;
-                        $partnerNode = findPartnerNode($activeNode);
+            $partnerNode       = findPartnerNode($activeNode);
+            $foundUnusedVertex = false;
+            //  echo $activeNode->name . " -- " . $partnerNode->name . "<br>";
+            if ($partnerNode === null) {
+                echo "end of this branch<br>";
+                // find another node that hasn't been plotted yet:
+                // ideally one that's already been plotted:
+                // need to make sure that if one doesn't exist then it picks a new one ###########
+                foreach ($sortedNodeList as $thisNode) {
+                    if ($thisNode->connections > 0) {
+                        if (in_array($thisNode, $nodesPlottedOnDelaunayGraph)) {
+                            $activeNode  = $thisNode;
+                            $partnerNode = findPartnerNode($activeNode);
+                            // find the vertex that has this node:
+                            foreach ($verticesUsedOnDelaunayGraph as $thisVertex) {
+                                if ($thisVertex->whichNode === $activeNode) {
+                                    $activeVertex = $thisVertex;
+                                }
+                            }
+
+// check this is ok as well ################
+                        }
+                    }
+                }
+            }
+
+// check if the partner node has already been plotted
+            // check if the edge has been plotted already:
+
+            if (in_array($partnerNode, $nodesPlottedOnDelaunayGraph)) {
+                if (!(in_array($activeNode->name . "-" . $partnerNode->name, $connectionsPlottedOnDelaunayGraph)) && !(in_array($partnerNode->name . "-" . $activeNode->name, $connectionsPlottedOnDelaunayGraph))) {
+                    echo "need pathfinding from " . $activeNode->name . " -- " . $partnerNode->name;
+                    if (canPathfindThroughDelaunayGraph($activeNode, $partnerNode)) {
+                        echo " ...found path<br>";
+                        array_push($connectionsPlottedOnDelaunayGraph, $activeNode->name . "-" . $partnerNode->name);
+                        $activeNode->connections--;
+                        $partnerNode->connections--;
+                        $activeNode = $partnerNode;
+                        $connectionsRemainingToBePlotted--;
                         // find the vertex that has this node:
                         foreach ($verticesUsedOnDelaunayGraph as $thisVertex) {
                             if ($thisVertex->whichNode === $activeNode) {
                                 $activeVertex = $thisVertex;
                             }
                         }
-
-// check this is ok as well ################
+                        $foundUnusedVertex = true;
                     }
-                }
-            }
-        }
-
-// check if the partner node has already been plotted
-        // check if the edge has been plotted already:
-
-        if (in_array($partnerNode, $nodesPlottedOnDelaunayGraph)) {
-            if (!(in_array($activeNode->name . "-" . $partnerNode->name, $connectionsPlottedOnDelaunayGraph)) && !(in_array($partnerNode->name . "-" . $activeNode->name, $connectionsPlottedOnDelaunayGraph))) {
-                echo "need pathfinding from " . $activeNode->name . " -- " . $partnerNode->name;
-                if (canPathfindThroughDelaunayGraph($activeNode, $partnerNode)) {
-                    echo " ...found path<br>";
-                    array_push($connectionsPlottedOnDelaunayGraph, $activeNode->name . "-" . $partnerNode->name);
+                } else {
+                    // connection has been already plotted
                     $activeNode->connections--;
                     $partnerNode->connections--;
                     $activeNode = $partnerNode;
@@ -1015,78 +1047,62 @@ function plotConnectivityOnDelaunayGraph()
                             $activeVertex = $thisVertex;
                         }
                     }
-
+                    $foundUnusedVertex = true;
                 }
+
             } else {
-                // connection has been already plotted
-                  $activeNode->connections--;
-                    $partnerNode->connections--;
-                    $activeNode = $partnerNode;
-                    $connectionsRemainingToBePlotted--;
-                    // find the vertex that has this node:
-                    foreach ($verticesUsedOnDelaunayGraph as $thisVertex) {
-                        if ($thisVertex->whichNode === $activeNode) {
-                            $activeVertex = $thisVertex;
-                        }
+                // find an unused vertex that joins the active vertex:
+
+                // randomly order triangles for more variation:
+                $sortedRandomTriangles = $delaunayTriangles;
+                usort($sortedRandomTriangles, 'randomTriangleSorting');
+                foreach ($sortedRandomTriangles as &$thisTriangle) {
+                    $checkVertex = findUnusedNeighbouringDelaunayVertex($thisTriangle, 'v0', $partnerNode, $activeVertex, $activeNode);
+                    if ($checkVertex !== false) {
+                        array_push($connectionsPlottedOnDelaunayGraph, $activeNode->name . "-" . $partnerNode->name);
+                        echo "plotted " . $activeNode->name . "(" . $activeNode->type . ") -- " . $partnerNode->name . "(" . $partnerNode->type . ")<br>";
+                        $activeNode->connections--;
+                        $partnerNode->connections--;
+                        $activeNode   = $partnerNode;
+                        $activeVertex = $checkVertex;
+                        $connectionsRemainingToBePlotted--;
+                        $foundUnusedVertex = true;
+                        break;
                     }
-            }
+                    $checkVertex = findUnusedNeighbouringDelaunayVertex($thisTriangle, 'v1', $partnerNode, $activeVertex, $activeNode);
+                    if ($checkVertex !== false) {
+                        array_push($connectionsPlottedOnDelaunayGraph, $activeNode->name . "-" . $partnerNode->name);
+                        echo "plotted " . $activeNode->name . "(" . $activeNode->type . ") -- " . $partnerNode->name . "(" . $partnerNode->type . ")<br>";
+                        $activeNode->connections--;
+                        $partnerNode->connections--;
+                        $activeNode   = $partnerNode;
+                        $activeVertex = $checkVertex;
+                        $connectionsRemainingToBePlotted--;
+                        $foundUnusedVertex = true;
+                        break;
+                    }
+                    $checkVertex = findUnusedNeighbouringDelaunayVertex($thisTriangle, 'v2', $partnerNode, $activeVertex, $activeNode);
+                    if ($checkVertex !== false) {
+                        array_push($connectionsPlottedOnDelaunayGraph, $activeNode->name . "-" . $partnerNode->name);
+                        echo "plotted " . $activeNode->name . "(" . $activeNode->type . ") -- " . $partnerNode->name . "(" . $partnerNode->type . ")<br>";
+                        $activeNode->connections--;
+                        $partnerNode->connections--;
+                        $activeNode   = $partnerNode;
+                        $activeVertex = $checkVertex;
+                        $connectionsRemainingToBePlotted--;
+                        $foundUnusedVertex = true;
+                        break;
+                    }
 
-        } else {
-            // find an unused vertex that joins the active vertex:
-            // randomly order triangles for more variation:
-            $sortedRandomTriangles = $delaunayTriangles;
-            usort($sortedRandomTriangles, 'randomTriangleSorting');
-            foreach ($sortedRandomTriangles as &$thisTriangle) {
-                $checkVertex = findUnusedNeighbouringDelaunayVertex($thisTriangle, 'v0', $partnerNode, $activeVertex, $activeNode);
-                if ($checkVertex !== false) {
-                    array_push($connectionsPlottedOnDelaunayGraph, $activeNode->name . "-" . $partnerNode->name);
-                    echo "plotted " . $activeNode->name . "(" . $activeNode->type . ") -- " . $partnerNode->name . "(" . $partnerNode->type . ")<br>";
-                    $activeNode->connections--;
-                    $partnerNode->connections--;
-                    $activeNode   = $partnerNode;
-                    $activeVertex = $checkVertex;
-                    $connectionsRemainingToBePlotted--;
-                    break;
-                }
-                $checkVertex = findUnusedNeighbouringDelaunayVertex($thisTriangle, 'v1', $partnerNode, $activeVertex, $activeNode);
-                if ($checkVertex !== false) {
-                    array_push($connectionsPlottedOnDelaunayGraph, $activeNode->name . "-" . $partnerNode->name);
-                    echo "plotted " . $activeNode->name . "(" . $activeNode->type . ") -- " . $partnerNode->name . "(" . $partnerNode->type . ")<br>";
-                    $activeNode->connections--;
-                    $partnerNode->connections--;
-                    $activeNode   = $partnerNode;
-                    $activeVertex = $checkVertex;
-                    $connectionsRemainingToBePlotted--;
-                    break;
-                }
-                $checkVertex = findUnusedNeighbouringDelaunayVertex($thisTriangle, 'v2', $partnerNode, $activeVertex, $activeNode);
-                if ($checkVertex !== false) {
-                    array_push($connectionsPlottedOnDelaunayGraph, $activeNode->name . "-" . $partnerNode->name);
-                    echo "plotted " . $activeNode->name . "(" . $activeNode->type . ") -- " . $partnerNode->name . "(" . $partnerNode->type . ")<br>";
-                    $activeNode->connections--;
-                    $partnerNode->connections--;
-                    $activeNode   = $partnerNode;
-                    $activeVertex = $checkVertex;
-                    $connectionsRemainingToBePlotted--;
-                    break;
                 }
 
             }
 
+        } while (($connectionsRemainingToBePlotted > 0) && ($foundUnusedVertex));
+        if (!$foundUnusedVertex) {
+            echo "FAILED... RESTARTING...<br>";
         }
-
-    } while ($connectionsRemainingToBePlotted > 0);
-
-// sort nodes by connectedness
-    // find a node connected to this first one
-    // plot 2 vertices and a joint for those nodes
-    // from the new node, find a connected node to that.
-    // if that new node hasn't been plotted already, then find a neighbouring vertex and plot a joint to that
-    // if it has been plotted, pathfind to it
-    // when a vertex is plotted, mark which node it's assigned to
-    // when a node is plotted, reduce its connections by 1
-    // if no connected nodes are found, start back at the array and find the first with connections>0
-
+    return $foundUnusedVertex;
 }
 
 function removeSharedTriangleEdges($triangle)
@@ -1150,7 +1166,10 @@ function outputDelaunayGraph()
                 $nodeColour = imagecolorallocate($outputCanvas, 255, 255, 255);
             } else if ($delaunayVertices[$i]->whichNode->type == "END") {
                 $nodeColour = imagecolorallocate($outputCanvas, 64, 64, 64);
+            } else if ($delaunayVertices[$i]->whichNode->type == "BLOCKED") {
+                $nodeColour = imagecolorallocate($outputCanvas, 200, 200, 200);
             } else {
+
                 $nodeColour = imagecolorallocate($outputCanvas, 128, 128, 128);
             }
 
@@ -1213,7 +1232,7 @@ function outputDelaunayGraph()
 
 // triangular branch:
 // $startGrammar = "S{,O}E";
-
+do {
 init();
 
 $possibleStartGrammars = array(
@@ -1252,14 +1271,15 @@ $grownGrammar = growGrammar($possibleStartGrammars[mt_rand(0, count($possibleSta
 
 $grownGrammar = "SO{O,O}OE";
 
-//do {
+
 parseStringGrammar($grownGrammar);
 moveNodesApart();
-//} while (anyJointHasIntersected());
+
 
 outputConnections();
 createDelaunayGraph("grid");
-plotConnectivityOnDelaunayGraph();
+} while (!plotConnectivityOnDelaunayGraph());
+//plotConnectivityOnDelaunayGraph();
 outputDelaunayGraph();
 
 ?>
