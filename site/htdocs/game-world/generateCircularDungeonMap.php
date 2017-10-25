@@ -11,6 +11,7 @@ add template sections
 Convert locks, valves, hazards and treasure into interesting variants
 Add NPCs (with relevant quests)
 
+
 ---- */
 
 // avoid script time out:
@@ -240,7 +241,7 @@ function moveNodesApart()
 
 function outputConnections()
 {
-    global $nodeList, $jointList, $canvaDimension, $keyColours;
+    global $nodeList, $jointList, $canvaDimension, $keyColours, $lockedJoints;
 
     $outputCanvas = imagecreatetruecolor($canvaDimension, $canvaDimension);
     $groundColour = array(219, 215, 190);
@@ -276,10 +277,18 @@ function outputConnections()
     }
     // draw joints:
     imagesetthickness($outputCanvas, 2);
+    $lockedJoints = array();
     foreach ($jointList as $thisJoint) {
         if ($thisJoint->isLocked) {
             $thisJointColour = imagecolorallocate($outputCanvas, $keyColours[$thisJoint->whichKey][0], $keyColours[$thisJoint->whichKey][1], $keyColours[$thisJoint->whichKey][2]);
             //$thisJointColour = imagecolorallocate($outputCanvas, 255,235,15);
+
+
+$lockedJoints["-".$nodeList[$thisJoint->nodeA]->name."-".$nodeList[$thisJoint->nodeB]->name] = $thisJoint->whichKey;
+// add the reverse in as well to be able to check both directions:
+$lockedJoints["-".$nodeList[$thisJoint->nodeB]->name."-".$nodeList[$thisJoint->nodeA]->name] = $thisJoint->whichKey;
+
+
         } else {
             $thisJointColour = imagecolorallocate($outputCanvas, 32, 32, 32);
         }
@@ -361,9 +370,9 @@ function growGrammar($thisGrammar, $iterations)
 {
     $grammarTransformations = array(
         // simple branching and layout:
-        "X"  => array("O", "OX", "{OX,O|}", "{OX,O}", "OO"),
+        "X"  => array("O", "OX", "{OX,O|}", "{OX,O}", "Z+"),
         // more intricate 'set piece' arrangements:
-        "OO" => array("O[!]O[$]", "O[K#]XO##", "O[K#]O##X"),
+        "Z" => array("O[!]O[$]", "O[K#]XO##", "O[K#]O##X"),
         // valves could be lock and keys:
         ">"  => array("O[K#]XO##"),
     );
@@ -395,6 +404,7 @@ function growGrammar($thisGrammar, $iterations)
     }
     // remove any remaining 'X's:
     $thisGrammar = str_replace("X", "", $thisGrammar);
+    $thisGrammar = str_replace("Z", "OO", $thisGrammar);
     echo "final grammar: " . htmlentities($thisGrammar) . "</p>";
     return $thisGrammar;
 }
@@ -1002,7 +1012,7 @@ function plotConnectivityOnDelaunayGraph()
                             }
                         }
                     if ($partnerNode === null) {
-                        // is a check needed here - or will it just fail the foundUnusedVertex check?  ##########
+                        // is a check needed here - or will it just fail the foundUnusedVertex check?  ###
                     }
                     }
                 }
@@ -1022,7 +1032,7 @@ function plotConnectivityOnDelaunayGraph()
                         }
                        if ($partnerNode === null) {
 
-                        // is a check needed here - or will it just fail the foundUnusedVertex check?  ##########
+                        // is a check needed here - or will it just fail the foundUnusedVertex check?  ###
                     }
                     }
                 }
@@ -1129,7 +1139,10 @@ function removeSharedTriangleEdges($triangle)
 
 function outputDelaunayGraph()
 {
-    global $canvaDimension, $delaunayVertices, $delaunayTriangles, $delaunayNodeRadius, $centreVertex, $edgesUsedOnDelaunayGraph, $keyColours;
+    global $canvaDimension, $delaunayVertices, $delaunayTriangles, $delaunayNodeRadius, $centreVertex, $edgesUsedOnDelaunayGraph, $keyColours, $lockedJoints;
+
+
+
 
     $outputCanvas = imagecreatetruecolor($canvaDimension, $canvaDimension);
     $groundColour = array(219, 215, 190);
@@ -1143,7 +1156,32 @@ function outputDelaunayGraph()
         //  imagepolygon($outputCanvas, array($thisTriangle->v0->x, $thisTriangle->v0->y, $thisTriangle->v1->x, $thisTriangle->v1->y, $thisTriangle->v2->x, $thisTriangle->v2->y), 3, $edgeColour);
         if ((in_array(new delaunayEdge($thisTriangle->v0, $thisTriangle->v1), $edgesUsedOnDelaunayGraph)) || (in_array(new delaunayEdge($thisTriangle->v1, $thisTriangle->v0), $edgesUsedOnDelaunayGraph))) {
             imagesetthickness($outputCanvas, 2);
+
+// check nodes attached to these vertices to see if a joint exists which is locked ###########
+
+$theseConnectedNodes = "";
+foreach ($delaunayVertices as $thisVertex) {
+        if ($thisVertex->whichNode === $thisTriangle->v0->whichNode) {
+            $theseConnectedNodes .= "-".$thisVertex->whichNode->name;
+        }
+            if ($thisVertex->whichNode === $thisTriangle->v1->whichNode) {
+            $theseConnectedNodes .= "-".$thisVertex->whichNode->name;
+        }
+    }
+
+if(isset($lockedJoints[$theseConnectedNodes])) {
+// $edgeColour = imagecolorallocate($outputCanvas, $lockedJoints[$theseConnectedNodes][0], $lockedJoints[$theseConnectedNodes][1], $lockedJoints[$theseConnectedNodes][2]);
+
+
+$edgeColour = imagecolorallocate($outputCanvas, $keyColours[$lockedJoints[$theseConnectedNodes]][0], $keyColours[$lockedJoints[$theseConnectedNodes]][1], $keyColours[$lockedJoints[$theseConnectedNodes]][2]);
+
+} else {
+
+
+
+
             $edgeColour = imagecolorallocate($outputCanvas, 50, 50, 50);
+        }
         } else {
             imagesetthickness($outputCanvas, 1);
             $edgeColour = imagecolorallocate($outputCanvas, 194, 190, 169);
@@ -1281,7 +1319,7 @@ do {
 // key item cycle:
     $grownGrammar = "S{#1#,O{,#1#E|}}>O[K#1]";
 
-    $grownGrammar = growGrammar($possibleStartGrammars[mt_rand(0, count($possibleStartGrammars) - 1)], mt_rand(2, 3));
+    $grownGrammar = growGrammar($possibleStartGrammars[mt_rand(0, count($possibleStartGrammars) - 1)], mt_rand(3, 4));
 
     
 
