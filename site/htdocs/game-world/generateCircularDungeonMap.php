@@ -12,6 +12,7 @@ Convert locks, valves, hazards and treasure into interesting variants
 Add NPCs (with relevant quests)
 
 
+
 ---- */
 
 // avoid script time out:
@@ -44,9 +45,11 @@ class delaunayVertex
 {
     public function __construct($x, $y)
     {
-        $this->x         = $x;
-        $this->y         = $y;
-        $this->whichNode = null;
+        $this->x                     = $x;
+        $this->y                     = $y;
+        $this->whichNode             = null;
+        $this->proximityToNeighbours = INF;
+        $this->neighbours            = array();
     }
 }
 
@@ -283,11 +286,9 @@ function outputConnections()
             $thisJointColour = imagecolorallocate($outputCanvas, $keyColours[$thisJoint->whichKey][0], $keyColours[$thisJoint->whichKey][1], $keyColours[$thisJoint->whichKey][2]);
             //$thisJointColour = imagecolorallocate($outputCanvas, 255,235,15);
 
-
-$lockedJoints["-".$nodeList[$thisJoint->nodeA]->name."-".$nodeList[$thisJoint->nodeB]->name] = $thisJoint->whichKey;
+            $lockedJoints["-" . $nodeList[$thisJoint->nodeA]->name . "-" . $nodeList[$thisJoint->nodeB]->name] = $thisJoint->whichKey;
 // add the reverse in as well to be able to check both directions:
-$lockedJoints["-".$nodeList[$thisJoint->nodeB]->name."-".$nodeList[$thisJoint->nodeA]->name] = $thisJoint->whichKey;
-
+            $lockedJoints["-" . $nodeList[$thisJoint->nodeB]->name . "-" . $nodeList[$thisJoint->nodeA]->name] = $thisJoint->whichKey;
 
         } else {
             $thisJointColour = imagecolorallocate($outputCanvas, 32, 32, 32);
@@ -370,11 +371,11 @@ function growGrammar($thisGrammar, $iterations)
 {
     $grammarTransformations = array(
         // simple branching and layout:
-        "X"  => array("O", "OX", "{OX,O|}", "{OX,O}", "Z+"),
+        "X" => array("O", "OX", "{OX,O|}", "{OX,O}", "Z"),
         // more intricate 'set piece' arrangements:
         "Z" => array("O[!]O[$]", "O[K#]XO##", "O[K#]O##X"),
         // valves could be lock and keys:
-        ">"  => array("O[K#]XO##"),
+        ">" => array("O[K#]XO##"),
     );
     $currentKey = 0;
 
@@ -402,7 +403,7 @@ function growGrammar($thisGrammar, $iterations)
             $characterCounter++;
         } while ($characterCounter < strlen($thisGrammar));
     }
-    // remove any remaining 'X's:
+    // remove any remaining non-plottable grammars:
     $thisGrammar = str_replace("X", "", $thisGrammar);
     $thisGrammar = str_replace("Z", "OO", $thisGrammar);
     echo "final grammar: " . htmlentities($thisGrammar) . "</p>";
@@ -921,7 +922,9 @@ function canPathfindThroughDelaunayGraph($startNode, $endNode)
 
         while ($thisNextVertex['parentNode'] !== null) {
             array_push($edgesUsedOnDelaunayGraph, $thisNextVertex['edge']);
-            array_push($verticesUsedOnDelaunayGraph, $thisNextVertex['vertex']);
+            if (!in_array($thisNextVertex['vertex'], $verticesUsedOnDelaunayGraph)) {
+                array_push($verticesUsedOnDelaunayGraph, $thisNextVertex['vertex']);
+            }
 // mark the used nodes as well so they can't be used:
             if ($thisNextVertex['vertex']->whichNode === null) {
                 $thisNextVertex['vertex']->whichNode       = new node();
@@ -979,7 +982,7 @@ function plotConnectivityOnDelaunayGraph()
         }
     }
 
- //   echo "centre node picked is " . $activeNode->name . "<br>";
+    //   echo "centre node picked is " . $activeNode->name . "<br>";
 
     $activeVertex = $centreVertex;
 
@@ -994,8 +997,8 @@ function plotConnectivityOnDelaunayGraph()
 // find a node connected to the active Node:
         $partnerNode       = findPartnerNode($activeNode);
         $foundUnusedVertex = false;
-              if ($partnerNode === null) {
-         //   echo "end of this branch<br>";
+        if ($partnerNode === null) {
+            //   echo "end of this branch<br>";
             // find another node that hasn't been plotted yet (ideally one that's already been plotted):
 
             $foundAlreadyUsedNodeToConnectTo = false;
@@ -1011,9 +1014,9 @@ function plotConnectivityOnDelaunayGraph()
                                 $activeVertex = $thisVertex;
                             }
                         }
-                    if ($partnerNode === null) {
-                        // is a check needed here - or will it just fail the foundUnusedVertex check?  ###
-                    }
+                        if ($partnerNode === null) {
+                            // is a check needed here - or will it just fail the foundUnusedVertex check?  ###
+                        }
                     }
                 }
             }
@@ -1030,10 +1033,10 @@ function plotConnectivityOnDelaunayGraph()
                                 $activeVertex = $thisVertex;
                             }
                         }
-                       if ($partnerNode === null) {
+                        if ($partnerNode === null) {
 
-                        // is a check needed here - or will it just fail the foundUnusedVertex check?  ###
-                    }
+                            // is a check needed here - or will it just fail the foundUnusedVertex check?  ###
+                        }
                     }
                 }
             }
@@ -1043,9 +1046,9 @@ function plotConnectivityOnDelaunayGraph()
         // check if the edge has been plotted already:
         if (in_array($partnerNode, $nodesPlottedOnDelaunayGraph)) {
             if (!(in_array($activeNode->name . "-" . $partnerNode->name, $connectionsPlottedOnDelaunayGraph)) && !(in_array($partnerNode->name . "-" . $activeNode->name, $connectionsPlottedOnDelaunayGraph))) {
-             //   echo "need pathfinding from " . $activeNode->name . " -- " . $partnerNode->name;
+                //   echo "need pathfinding from " . $activeNode->name . " -- " . $partnerNode->name;
                 if (canPathfindThroughDelaunayGraph($activeNode, $partnerNode)) {
-               //     echo " ...found path<br>";
+                    //     echo " ...found path<br>";
                     array_push($connectionsPlottedOnDelaunayGraph, $activeNode->name . "-" . $partnerNode->name);
                     $activeNode->connections--;
                     $partnerNode->connections--;
@@ -1084,7 +1087,7 @@ function plotConnectivityOnDelaunayGraph()
                 $checkVertex = findUnusedNeighbouringDelaunayVertex($thisTriangle, 'v0', $partnerNode, $activeVertex, $activeNode);
                 if ($checkVertex !== false) {
                     array_push($connectionsPlottedOnDelaunayGraph, $activeNode->name . "-" . $partnerNode->name);
-               //     echo "plotted " . $activeNode->name . "(" . $activeNode->type . ") -- " . $partnerNode->name . "(" . $partnerNode->type . ")<br>";
+                    //     echo "plotted " . $activeNode->name . "(" . $activeNode->type . ") -- " . $partnerNode->name . "(" . $partnerNode->type . ")<br>";
                     $activeNode->connections--;
                     $partnerNode->connections--;
                     $activeNode   = $partnerNode;
@@ -1096,7 +1099,7 @@ function plotConnectivityOnDelaunayGraph()
                 $checkVertex = findUnusedNeighbouringDelaunayVertex($thisTriangle, 'v1', $partnerNode, $activeVertex, $activeNode);
                 if ($checkVertex !== false) {
                     array_push($connectionsPlottedOnDelaunayGraph, $activeNode->name . "-" . $partnerNode->name);
-                 //   echo "plotted " . $activeNode->name . "(" . $activeNode->type . ") -- " . $partnerNode->name . "(" . $partnerNode->type . ")<br>";
+                    //   echo "plotted " . $activeNode->name . "(" . $activeNode->type . ") -- " . $partnerNode->name . "(" . $partnerNode->type . ")<br>";
                     $activeNode->connections--;
                     $partnerNode->connections--;
                     $activeNode   = $partnerNode;
@@ -1108,7 +1111,7 @@ function plotConnectivityOnDelaunayGraph()
                 $checkVertex = findUnusedNeighbouringDelaunayVertex($thisTriangle, 'v2', $partnerNode, $activeVertex, $activeNode);
                 if ($checkVertex !== false) {
                     array_push($connectionsPlottedOnDelaunayGraph, $activeNode->name . "-" . $partnerNode->name);
-                //    echo "plotted " . $activeNode->name . "(" . $activeNode->type . ") -- " . $partnerNode->name . "(" . $partnerNode->type . ")<br>";
+                    //    echo "plotted " . $activeNode->name . "(" . $activeNode->type . ") -- " . $partnerNode->name . "(" . $partnerNode->type . ")<br>";
                     $activeNode->connections--;
                     $partnerNode->connections--;
                     $activeNode   = $partnerNode;
@@ -1141,9 +1144,6 @@ function outputDelaunayGraph()
 {
     global $canvaDimension, $delaunayVertices, $delaunayTriangles, $delaunayNodeRadius, $centreVertex, $edgesUsedOnDelaunayGraph, $keyColours, $lockedJoints;
 
-
-
-
     $outputCanvas = imagecreatetruecolor($canvaDimension, $canvaDimension);
     $groundColour = array(219, 215, 190);
     $ground       = imagecolorallocate($outputCanvas, $groundColour[0], $groundColour[1], $groundColour[2]);
@@ -1158,21 +1158,21 @@ function outputDelaunayGraph()
             imagesetthickness($outputCanvas, 2);
 
 // check nodes attached to these vertices to see if a joint exists which is locked ###########
-$theseConnectedNodes = "";
-foreach ($delaunayVertices as $thisVertex) {
-        if ($thisVertex->whichNode === $thisTriangle->v0->whichNode) {
-            $theseConnectedNodes .= "-".$thisVertex->whichNode->name;
-        }
-            if ($thisVertex->whichNode === $thisTriangle->v1->whichNode) {
-            $theseConnectedNodes .= "-".$thisVertex->whichNode->name;
-        }
-    }
-if(isset($lockedJoints[$theseConnectedNodes])) {
-$edgeColour = imagecolorallocate($outputCanvas, $keyColours[$lockedJoints[$theseConnectedNodes]][0], $keyColours[$lockedJoints[$theseConnectedNodes]][1], $keyColours[$lockedJoints[$theseConnectedNodes]][2]);
+            $theseConnectedNodes = "";
+            foreach ($delaunayVertices as $thisVertex) {
+                if ($thisVertex->whichNode === $thisTriangle->v0->whichNode) {
+                    $theseConnectedNodes .= "-" . $thisVertex->whichNode->name;
+                }
+                if ($thisVertex->whichNode === $thisTriangle->v1->whichNode) {
+                    $theseConnectedNodes .= "-" . $thisVertex->whichNode->name;
+                }
+            }
+            if (isset($lockedJoints[$theseConnectedNodes])) {
+                $edgeColour = imagecolorallocate($outputCanvas, $keyColours[$lockedJoints[$theseConnectedNodes]][0], $keyColours[$lockedJoints[$theseConnectedNodes]][1], $keyColours[$lockedJoints[$theseConnectedNodes]][2]);
 
-} else {
-            $edgeColour = imagecolorallocate($outputCanvas, 50, 50, 50);
-        }
+            } else {
+                $edgeColour = imagecolorallocate($outputCanvas, 50, 50, 50);
+            }
         } else {
             imagesetthickness($outputCanvas, 1);
             $edgeColour = imagecolorallocate($outputCanvas, 194, 190, 169);
@@ -1181,21 +1181,21 @@ $edgeColour = imagecolorallocate($outputCanvas, $keyColours[$lockedJoints[$these
         if ((in_array(new delaunayEdge($thisTriangle->v2, $thisTriangle->v1), $edgesUsedOnDelaunayGraph)) || (in_array(new delaunayEdge($thisTriangle->v1, $thisTriangle->v2), $edgesUsedOnDelaunayGraph))) {
             imagesetthickness($outputCanvas, 2);
             // check nodes attached to these vertices to see if a joint exists which is locked ###########
-$theseConnectedNodes = "";
-foreach ($delaunayVertices as $thisVertex) {
-        if ($thisVertex->whichNode === $thisTriangle->v1->whichNode) {
-            $theseConnectedNodes .= "-".$thisVertex->whichNode->name;
-        }
-            if ($thisVertex->whichNode === $thisTriangle->v2->whichNode) {
-            $theseConnectedNodes .= "-".$thisVertex->whichNode->name;
-        }
-    }
-if(isset($lockedJoints[$theseConnectedNodes])) {
-$edgeColour = imagecolorallocate($outputCanvas, $keyColours[$lockedJoints[$theseConnectedNodes]][0], $keyColours[$lockedJoints[$theseConnectedNodes]][1], $keyColours[$lockedJoints[$theseConnectedNodes]][2]);
+            $theseConnectedNodes = "";
+            foreach ($delaunayVertices as $thisVertex) {
+                if ($thisVertex->whichNode === $thisTriangle->v1->whichNode) {
+                    $theseConnectedNodes .= "-" . $thisVertex->whichNode->name;
+                }
+                if ($thisVertex->whichNode === $thisTriangle->v2->whichNode) {
+                    $theseConnectedNodes .= "-" . $thisVertex->whichNode->name;
+                }
+            }
+            if (isset($lockedJoints[$theseConnectedNodes])) {
+                $edgeColour = imagecolorallocate($outputCanvas, $keyColours[$lockedJoints[$theseConnectedNodes]][0], $keyColours[$lockedJoints[$theseConnectedNodes]][1], $keyColours[$lockedJoints[$theseConnectedNodes]][2]);
 
-} else {
-            $edgeColour = imagecolorallocate($outputCanvas, 50, 50, 50);
-        }
+            } else {
+                $edgeColour = imagecolorallocate($outputCanvas, 50, 50, 50);
+            }
         } else {
             imagesetthickness($outputCanvas, 1);
             $edgeColour = imagecolorallocate($outputCanvas, 194, 190, 169);
@@ -1203,22 +1203,22 @@ $edgeColour = imagecolorallocate($outputCanvas, $keyColours[$lockedJoints[$these
         imageline($outputCanvas, $thisTriangle->v1->x, $thisTriangle->v1->y, $thisTriangle->v2->x, $thisTriangle->v2->y, $edgeColour);
         if ((in_array(new delaunayEdge($thisTriangle->v0, $thisTriangle->v2), $edgesUsedOnDelaunayGraph)) || (in_array(new delaunayEdge($thisTriangle->v2, $thisTriangle->v0), $edgesUsedOnDelaunayGraph))) {
             imagesetthickness($outputCanvas, 2);
-                // check nodes attached to these vertices to see if a joint exists which is locked ###########
-$theseConnectedNodes = "";
-foreach ($delaunayVertices as $thisVertex) {
-        if ($thisVertex->whichNode === $thisTriangle->v0->whichNode) {
-            $theseConnectedNodes .= "-".$thisVertex->whichNode->name;
-        }
-            if ($thisVertex->whichNode === $thisTriangle->v2->whichNode) {
-            $theseConnectedNodes .= "-".$thisVertex->whichNode->name;
-        }
-    }
-if(isset($lockedJoints[$theseConnectedNodes])) {
-$edgeColour = imagecolorallocate($outputCanvas, $keyColours[$lockedJoints[$theseConnectedNodes]][0], $keyColours[$lockedJoints[$theseConnectedNodes]][1], $keyColours[$lockedJoints[$theseConnectedNodes]][2]);
+            // check nodes attached to these vertices to see if a joint exists which is locked ###########
+            $theseConnectedNodes = "";
+            foreach ($delaunayVertices as $thisVertex) {
+                if ($thisVertex->whichNode === $thisTriangle->v0->whichNode) {
+                    $theseConnectedNodes .= "-" . $thisVertex->whichNode->name;
+                }
+                if ($thisVertex->whichNode === $thisTriangle->v2->whichNode) {
+                    $theseConnectedNodes .= "-" . $thisVertex->whichNode->name;
+                }
+            }
+            if (isset($lockedJoints[$theseConnectedNodes])) {
+                $edgeColour = imagecolorallocate($outputCanvas, $keyColours[$lockedJoints[$theseConnectedNodes]][0], $keyColours[$lockedJoints[$theseConnectedNodes]][1], $keyColours[$lockedJoints[$theseConnectedNodes]][2]);
 
-} else {
-            $edgeColour = imagecolorallocate($outputCanvas, 50, 50, 50);
-        }
+            } else {
+                $edgeColour = imagecolorallocate($outputCanvas, 50, 50, 50);
+            }
         } else {
             imagesetthickness($outputCanvas, 1);
             $edgeColour = imagecolorallocate($outputCanvas, 194, 190, 169);
@@ -1259,6 +1259,189 @@ $edgeColour = imagecolorallocate($outputCanvas, $keyColours[$lockedJoints[$these
 
     echo "<img src='data:image/jpeg;base64," . base64_encode($rawImageBytes) . "'></div>";
     imagedestroy($outputCanvas);
+}
+
+function sortVerticesByConnections($a, $b)
+{
+    if (count($a->neighbours) == count($b->neighbours)) {return 0;}
+    return (count($a->neighbours) < count($b->neighbours)) ? 1 : -1;
+}
+
+function createGridLayout()
+{
+    global $delaunayVertices, $verticesUsedOnDelaunayGraph, $edgesUsedOnDelaunayGraph, $allDelaunayEdges;
+
+    foreach ($verticesUsedOnDelaunayGraph as $thisVertex) {
+        foreach ($verticesUsedOnDelaunayGraph as $thisNeighbour) {
+            if ($thisVertex !== $thisNeighbour) {
+                // calculate distance between them:
+                $distanceBetweenTheseTwoVertices = sqrt(($thisNeighbour->x - $thisVertex->x) * ($thisNeighbour->x - $thisVertex->x) + ($thisNeighbour->y - $thisVertex->y) * ($thisNeighbour->y - $thisVertex->y)) / 2;
+                if ($distanceBetweenTheseTwoVertices < $thisVertex->proximityToNeighbours) {
+                    // make sure this vertex has a node (so should be considered):
+                    if ($thisNeighbour->whichNode !== null) {
+                        $thisVertex->proximityToNeighbours = $distanceBetweenTheseTwoVertices;
+                        array_push($thisVertex->neighbours, $thisNeighbour);
+                    }
+                }
+            }
+        }
+    }
+
+    // order by most connected vertices:
+    $sortedVertices = $verticesUsedOnDelaunayGraph;
+    usort($sortedVertices, 'sortVerticesByConnections');
+ // loop through, and enlarge the radius so it touches the closest neighbour
+    foreach ($sortedVertices as $thisVertex) {
+        $closestNeighbourDistance = INF;
+        foreach ($verticesUsedOnDelaunayGraph as $thisNeighbour) {
+            if ($thisVertex !== $thisNeighbour) {
+        
+                if ($thisNeighbour->proximityToNeighbours < $closestNeighbourDistance) {
+                    $closestNeighbourDistance = $thisNeighbour->proximityToNeighbours;
+                }
+            }
+        }
+        echo $thisVertex->proximityToNeighbours . " - " . $closestNeighbourDistance . "<br>";
+        if ($thisVertex->proximityToNeighbours > $closestNeighbourDistance) {
+$thisVertex->proximityToNeighbours += ($thisVertex->proximityToNeighbours - $closestNeighbourDistance);
+        }
+    }
+
+   
+
+    // plot on a square grid node vertices at the max radius (making sure they don't touch)
+    // draw joints from vertex centres to vertex centres to connect rooms up
+    // ########
+}
+
+function outputSizedNodesLayout()
+{
+
+    global $canvaDimension, $delaunayVertices, $delaunayTriangles, $delaunayNodeRadius, $centreVertex, $edgesUsedOnDelaunayGraph, $keyColours, $lockedJoints;
+
+    $outputCanvas = imagecreatetruecolor($canvaDimension, $canvaDimension);
+    $groundColour = array(219, 215, 190);
+    $ground       = imagecolorallocate($outputCanvas, $groundColour[0], $groundColour[1], $groundColour[2]);
+    imagefilledrectangle($outputCanvas, 0, 0, $canvaDimension, $canvaDimension, $ground);
+
+    // draw nodes:
+
+    for ($i = 0; $i < count($delaunayVertices); $i++) {
+        if (isset($delaunayVertices[$i]->whichNode)) {
+            // $nodeColour = imagecolorallocate($outputCanvas, 255, 255, 255);
+
+            if ($delaunayVertices[$i]->whichNode->type == "KEYHOLDER") {
+                $nodeColour = imagecolorallocate($outputCanvas, $keyColours[$delaunayVertices[$i]->whichNode->whichKey][0], $keyColours[$delaunayVertices[$i]->whichNode->whichKey][1], $keyColours[$delaunayVertices[$i]->whichNode->whichKey][2]);
+            } else if ($delaunayVertices[$i]->whichNode->type == "START") {
+                $nodeColour = imagecolorallocate($outputCanvas, 255, 255, 255);
+            } else if ($delaunayVertices[$i]->whichNode->type == "END") {
+                $nodeColour = imagecolorallocate($outputCanvas, 64, 64, 64);
+            } else if ($delaunayVertices[$i]->whichNode->type == "BLOCKED") {
+                $nodeColour = imagecolorallocate($outputCanvas, 200, 200, 200);
+            } else {
+
+                $nodeColour = imagecolorallocate($outputCanvas, 128, 128, 128);
+            }
+
+        } else {
+// unused node:
+            $nodeColour = imagecolorallocate($outputCanvas, 227, 224, 205);
+        }
+
+// php needs width not radius:
+        $outputWidth = $delaunayVertices[$i]->proximityToNeighbours * 2;
+
+        imagefilledellipse($outputCanvas, $delaunayVertices[$i]->x, $delaunayVertices[$i]->y, $outputWidth, $outputWidth, $nodeColour);
+    }
+
+    // draw triangles:
+
+    //for ($i = 0; $i < count($delaunayTriangles); $i++) {
+    foreach ($delaunayTriangles as &$thisTriangle) {
+        //  imagepolygon($outputCanvas, array($thisTriangle->v0->x, $thisTriangle->v0->y, $thisTriangle->v1->x, $thisTriangle->v1->y, $thisTriangle->v2->x, $thisTriangle->v2->y), 3, $edgeColour);
+        if ((in_array(new delaunayEdge($thisTriangle->v0, $thisTriangle->v1), $edgesUsedOnDelaunayGraph)) || (in_array(new delaunayEdge($thisTriangle->v1, $thisTriangle->v0), $edgesUsedOnDelaunayGraph))) {
+            imagesetthickness($outputCanvas, 2);
+
+// check nodes attached to these vertices to see if a joint exists which is locked ###########
+            $theseConnectedNodes = "";
+            foreach ($delaunayVertices as $thisVertex) {
+                if ($thisVertex->whichNode === $thisTriangle->v0->whichNode) {
+                    $theseConnectedNodes .= "-" . $thisVertex->whichNode->name;
+                }
+                if ($thisVertex->whichNode === $thisTriangle->v1->whichNode) {
+                    $theseConnectedNodes .= "-" . $thisVertex->whichNode->name;
+                }
+            }
+            if (isset($lockedJoints[$theseConnectedNodes])) {
+                $edgeColour = imagecolorallocate($outputCanvas, $keyColours[$lockedJoints[$theseConnectedNodes]][0], $keyColours[$lockedJoints[$theseConnectedNodes]][1], $keyColours[$lockedJoints[$theseConnectedNodes]][2]);
+
+            } else {
+                $edgeColour = imagecolorallocate($outputCanvas, 50, 50, 50);
+            }
+        } else {
+            imagesetthickness($outputCanvas, 1);
+            $edgeColour = imagecolorallocate($outputCanvas, 194, 190, 169);
+        }
+        imageline($outputCanvas, $thisTriangle->v0->x, $thisTriangle->v0->y, $thisTriangle->v1->x, $thisTriangle->v1->y, $edgeColour);
+        if ((in_array(new delaunayEdge($thisTriangle->v2, $thisTriangle->v1), $edgesUsedOnDelaunayGraph)) || (in_array(new delaunayEdge($thisTriangle->v1, $thisTriangle->v2), $edgesUsedOnDelaunayGraph))) {
+            imagesetthickness($outputCanvas, 2);
+            // check nodes attached to these vertices to see if a joint exists which is locked ###########
+            $theseConnectedNodes = "";
+            foreach ($delaunayVertices as $thisVertex) {
+                if ($thisVertex->whichNode === $thisTriangle->v1->whichNode) {
+                    $theseConnectedNodes .= "-" . $thisVertex->whichNode->name;
+                }
+                if ($thisVertex->whichNode === $thisTriangle->v2->whichNode) {
+                    $theseConnectedNodes .= "-" . $thisVertex->whichNode->name;
+                }
+            }
+            if (isset($lockedJoints[$theseConnectedNodes])) {
+                $edgeColour = imagecolorallocate($outputCanvas, $keyColours[$lockedJoints[$theseConnectedNodes]][0], $keyColours[$lockedJoints[$theseConnectedNodes]][1], $keyColours[$lockedJoints[$theseConnectedNodes]][2]);
+
+            } else {
+                $edgeColour = imagecolorallocate($outputCanvas, 50, 50, 50);
+            }
+        } else {
+            imagesetthickness($outputCanvas, 1);
+            $edgeColour = imagecolorallocate($outputCanvas, 194, 190, 169);
+        }
+        imageline($outputCanvas, $thisTriangle->v1->x, $thisTriangle->v1->y, $thisTriangle->v2->x, $thisTriangle->v2->y, $edgeColour);
+        if ((in_array(new delaunayEdge($thisTriangle->v0, $thisTriangle->v2), $edgesUsedOnDelaunayGraph)) || (in_array(new delaunayEdge($thisTriangle->v2, $thisTriangle->v0), $edgesUsedOnDelaunayGraph))) {
+            imagesetthickness($outputCanvas, 2);
+            // check nodes attached to these vertices to see if a joint exists which is locked ###########
+            $theseConnectedNodes = "";
+            foreach ($delaunayVertices as $thisVertex) {
+                if ($thisVertex->whichNode === $thisTriangle->v0->whichNode) {
+                    $theseConnectedNodes .= "-" . $thisVertex->whichNode->name;
+                }
+                if ($thisVertex->whichNode === $thisTriangle->v2->whichNode) {
+                    $theseConnectedNodes .= "-" . $thisVertex->whichNode->name;
+                }
+            }
+            if (isset($lockedJoints[$theseConnectedNodes])) {
+                $edgeColour = imagecolorallocate($outputCanvas, $keyColours[$lockedJoints[$theseConnectedNodes]][0], $keyColours[$lockedJoints[$theseConnectedNodes]][1], $keyColours[$lockedJoints[$theseConnectedNodes]][2]);
+
+            } else {
+                $edgeColour = imagecolorallocate($outputCanvas, 50, 50, 50);
+            }
+        } else {
+            imagesetthickness($outputCanvas, 1);
+            $edgeColour = imagecolorallocate($outputCanvas, 194, 190, 169);
+        }
+        imageline($outputCanvas, $thisTriangle->v2->x, $thisTriangle->v2->y, $thisTriangle->v0->x, $thisTriangle->v0->y, $edgeColour);
+
+    }
+
+    echo '<div class="sequenceBlock">';
+    ob_start();
+    imagejpeg($outputCanvas, null, 100);
+    $rawImageBytes = ob_get_clean();
+
+    echo "<img src='data:image/jpeg;base64," . base64_encode($rawImageBytes) . "'></div>";
+    imagedestroy($outputCanvas);
+
+    echo '<div class="sequenceBlock">';
+    echo '</div>';
 }
 
 // linear connection with 2 nodes between the start and end:
@@ -1342,16 +1525,16 @@ do {
 
     $grownGrammar = growGrammar($possibleStartGrammars[mt_rand(0, count($possibleStartGrammars) - 1)], mt_rand(3, 4));
 
-    
-
     parseStringGrammar($grownGrammar);
     moveNodesApart();
 
     outputConnections();
     createDelaunayGraph("grid");
 } while (!plotConnectivityOnDelaunayGraph());
-//plotConnectivityOnDelaunayGraph();
 outputDelaunayGraph();
+
+createGridLayout();
+outputSizedNodesLayout();
 
 ?>
 <style>
@@ -1362,8 +1545,8 @@ font-family:arial,helvetica,sans-serif;font-size:14px;
 
 .sequenceBlock {
     float: left;
-    width: 30%;
-    margin-right: 3.33%;
+    width: 22.5%;
+    margin-right: 2.5%;
 }
 
 img {
