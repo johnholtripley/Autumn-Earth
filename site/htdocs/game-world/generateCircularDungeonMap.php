@@ -11,8 +11,8 @@ add template sections
 Convert locks, valves, hazards and treasure into interesting variants
 Add NPCs (with relevant quests)
 
-http://ae.dev/game-world/generateCircularDungeonMap.php?seed=1509130238 - overlapping
-need to make sure expanding nodes don't cut through an edge either
+
+need to make sure expanding nodes don't cut through an edge it's not connected to either
 
 ---- */
 
@@ -1272,19 +1272,20 @@ function createGridLayout()
 {
     global $delaunayVertices, $verticesUsedOnDelaunayGraph, $edgesUsedOnDelaunayGraph, $allDelaunayEdges;
 
+// increase the nodes to be half way between that and the closest other used node:
     foreach ($verticesUsedOnDelaunayGraph as $thisVertex) {
         foreach ($verticesUsedOnDelaunayGraph as $thisNeighbour) {
             if ($thisVertex !== $thisNeighbour) {
                 // calculate distance between them:
-                $distanceBetweenTheseTwoVertices = sqrt(($thisNeighbour->x - $thisVertex->x) * ($thisNeighbour->x - $thisVertex->x) + ($thisNeighbour->y - $thisVertex->y) * ($thisNeighbour->y - $thisVertex->y)) / 2;
+                $halfWayBetweenTheseTwoVertices = sqrt(($thisNeighbour->x - $thisVertex->x) * ($thisNeighbour->x - $thisVertex->x) + ($thisNeighbour->y - $thisVertex->y) * ($thisNeighbour->y - $thisVertex->y))/2;
                 // make sure this vertex has a node (so should be considered):
                 if ($thisNeighbour->whichNode !== null) {
                     if ((in_array(new delaunayEdge($thisVertex, $thisNeighbour), $edgesUsedOnDelaunayGraph)) || (in_array(new delaunayEdge($thisNeighbour, $thisVertex), $edgesUsedOnDelaunayGraph))) {
                         // it is a connected neighbour:
                         array_push($thisVertex->neighbours, $thisNeighbour);
                     }
-                    if ($distanceBetweenTheseTwoVertices < $thisVertex->proximityToNeighbours) {
-                        $thisVertex->proximityToNeighbours = $distanceBetweenTheseTwoVertices;
+                    if ($halfWayBetweenTheseTwoVertices < $thisVertex->proximityToNeighbours) {
+                        $thisVertex->proximityToNeighbours = $halfWayBetweenTheseTwoVertices;
 
                     }
                 }
@@ -1292,28 +1293,33 @@ function createGridLayout()
         }
     }
 
-    // order by most connected vertices:
+// grow the nodes to be as large as possible (order by most connected vertices so these are larger):
     $sortedVertices = $verticesUsedOnDelaunayGraph;
     usort($sortedVertices, 'sortVerticesByConnections');
     // loop through, and enlarge the radius so it touches the closest neighbour
     foreach ($sortedVertices as $thisVertex) {
         $closestNeighbourDistance = INF;
-      //  echo "<hr>(" . count($thisVertex->neighbours) . ") ";
-        foreach ($sortedVertices as $thisNeighbour) {
+     //   echo "<hr>";
+    //    echo $thisVertex->proximityToNeighbours."<br>";
+        //echo"(" . count($thisVertex->neighbours) . ") ";
+        foreach ($verticesUsedOnDelaunayGraph as $thisNeighbour) {
             if ($thisVertex !== $thisNeighbour) {
 
- $distanceBetweenTheseTwoVertices = sqrt(($thisNeighbour->x - $thisVertex->x) * ($thisNeighbour->x - $thisVertex->x) + ($thisNeighbour->y - $thisVertex->y) * ($thisNeighbour->y - $thisVertex->y)) / 2;
-  //echo $thisVertex->whichNode->name." closest to ".$thisNeighbour->whichNode->name." (".$thisNeighbour->proximityToNeighbours.") (".$distanceBetweenTheseTwoVertices.")<br>";
+ $distanceBetweenTheseTwoVertices = sqrt(($thisNeighbour->x - $thisVertex->x) * ($thisNeighbour->x - $thisVertex->x) + ($thisNeighbour->y - $thisVertex->y) * ($thisNeighbour->y - $thisVertex->y));
+ // echo $thisVertex->whichNode->name." checking ".$thisNeighbour->whichNode->name." (".$distanceBetweenTheseTwoVertices." - ".$thisNeighbour->proximityToNeighbours.") < ".$closestNeighbourDistance."<br>";
                 if ($distanceBetweenTheseTwoVertices - $thisNeighbour->proximityToNeighbours < $closestNeighbourDistance) {
-                  
-                    $closestNeighbourDistance = $thisNeighbour->proximityToNeighbours;
+                    $closestNeighbourDistance = $distanceBetweenTheseTwoVertices - $thisNeighbour->proximityToNeighbours;
+                //    echo "now ".$closestNeighbourDistance;
                 }
             }
         }
        // echo $thisVertex->proximityToNeighbours . " - " . $closestNeighbourDistance . "<br>";
-        if ($thisVertex->proximityToNeighbours > $closestNeighbourDistance) {
-            $thisVertex->proximityToNeighbours += ($thisVertex->proximityToNeighbours - $closestNeighbourDistance);
+        if ($thisVertex->proximityToNeighbours < $closestNeighbourDistance) {
+            $thisVertex->proximityToNeighbours = ($closestNeighbourDistance);
+        //     echo " adding ".($closestNeighbourDistance)." to radius - it's now ".$thisVertex->proximityToNeighbours."<br>";
         }
+   
+       
     }
 
     // plot on a square grid node vertices at the max radius (making sure they don't touch)
