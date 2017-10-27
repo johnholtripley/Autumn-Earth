@@ -14,6 +14,8 @@ Add NPCs (with relevant quests)
 
 need to make sure expanding nodes don't cut through an edge it's not connected to either
 
+http://ae.dev/game-world/generateCircularDungeonMap.php?seed=1509123250 - locked joint isn't drawn because the joint is extended from the pathfinding
+
 ---- */
 
 // avoid script time out:
@@ -1158,7 +1160,7 @@ function outputDelaunayGraph()
         if ((in_array(new delaunayEdge($thisTriangle->v0, $thisTriangle->v1), $edgesUsedOnDelaunayGraph)) || (in_array(new delaunayEdge($thisTriangle->v1, $thisTriangle->v0), $edgesUsedOnDelaunayGraph))) {
             imagesetthickness($outputCanvas, 2);
 
-// check nodes attached to these vertices to see if a joint exists which is locked ###########
+// check nodes attached to these vertices to see if a joint exists which is locked
             $theseConnectedNodes = "";
             foreach ($delaunayVertices as $thisVertex) {
                 if ($thisVertex->whichNode === $thisTriangle->v0->whichNode) {
@@ -1181,7 +1183,7 @@ function outputDelaunayGraph()
         imageline($outputCanvas, $thisTriangle->v0->x, $thisTriangle->v0->y, $thisTriangle->v1->x, $thisTriangle->v1->y, $edgeColour);
         if ((in_array(new delaunayEdge($thisTriangle->v2, $thisTriangle->v1), $edgesUsedOnDelaunayGraph)) || (in_array(new delaunayEdge($thisTriangle->v1, $thisTriangle->v2), $edgesUsedOnDelaunayGraph))) {
             imagesetthickness($outputCanvas, 2);
-            // check nodes attached to these vertices to see if a joint exists which is locked ###########
+            // check nodes attached to these vertices to see if a joint exists which is locked
             $theseConnectedNodes = "";
             foreach ($delaunayVertices as $thisVertex) {
                 if ($thisVertex->whichNode === $thisTriangle->v1->whichNode) {
@@ -1204,7 +1206,7 @@ function outputDelaunayGraph()
         imageline($outputCanvas, $thisTriangle->v1->x, $thisTriangle->v1->y, $thisTriangle->v2->x, $thisTriangle->v2->y, $edgeColour);
         if ((in_array(new delaunayEdge($thisTriangle->v0, $thisTriangle->v2), $edgesUsedOnDelaunayGraph)) || (in_array(new delaunayEdge($thisTriangle->v2, $thisTriangle->v0), $edgesUsedOnDelaunayGraph))) {
             imagesetthickness($outputCanvas, 2);
-            // check nodes attached to these vertices to see if a joint exists which is locked ###########
+            // check nodes attached to these vertices to see if a joint exists which is locked
             $theseConnectedNodes = "";
             foreach ($delaunayVertices as $thisVertex) {
                 if ($thisVertex->whichNode === $thisTriangle->v0->whichNode) {
@@ -1375,7 +1377,7 @@ function outputSizedNodesLayout()
         if ((in_array(new delaunayEdge($thisTriangle->v0, $thisTriangle->v1), $edgesUsedOnDelaunayGraph)) || (in_array(new delaunayEdge($thisTriangle->v1, $thisTriangle->v0), $edgesUsedOnDelaunayGraph))) {
             imagesetthickness($outputCanvas, 2);
 
-// check nodes attached to these vertices to see if a joint exists which is locked ###########
+// check nodes attached to these vertices to see if a joint exists which is locked
             $theseConnectedNodes = "";
             foreach ($delaunayVertices as $thisVertex) {
                 if ($thisVertex->whichNode === $thisTriangle->v0->whichNode) {
@@ -1386,6 +1388,7 @@ function outputSizedNodesLayout()
                 }
             }
             if (isset($lockedJoints[$theseConnectedNodes])) {
+
                 $edgeColour = imagecolorallocate($outputCanvas, $keyColours[$lockedJoints[$theseConnectedNodes]][0], $keyColours[$lockedJoints[$theseConnectedNodes]][1], $keyColours[$lockedJoints[$theseConnectedNodes]][2]);
 
             } else {
@@ -1398,7 +1401,7 @@ function outputSizedNodesLayout()
         imageline($outputCanvas, $thisTriangle->v0->x, $thisTriangle->v0->y, $thisTriangle->v1->x, $thisTriangle->v1->y, $edgeColour);
         if ((in_array(new delaunayEdge($thisTriangle->v2, $thisTriangle->v1), $edgesUsedOnDelaunayGraph)) || (in_array(new delaunayEdge($thisTriangle->v1, $thisTriangle->v2), $edgesUsedOnDelaunayGraph))) {
             imagesetthickness($outputCanvas, 2);
-            // check nodes attached to these vertices to see if a joint exists which is locked ###########
+            // check nodes attached to these vertices to see if a joint exists which is locked
             $theseConnectedNodes = "";
             foreach ($delaunayVertices as $thisVertex) {
                 if ($thisVertex->whichNode === $thisTriangle->v1->whichNode) {
@@ -1421,7 +1424,7 @@ function outputSizedNodesLayout()
         imageline($outputCanvas, $thisTriangle->v1->x, $thisTriangle->v1->y, $thisTriangle->v2->x, $thisTriangle->v2->y, $edgeColour);
         if ((in_array(new delaunayEdge($thisTriangle->v0, $thisTriangle->v2), $edgesUsedOnDelaunayGraph)) || (in_array(new delaunayEdge($thisTriangle->v2, $thisTriangle->v0), $edgesUsedOnDelaunayGraph))) {
             imagesetthickness($outputCanvas, 2);
-            // check nodes attached to these vertices to see if a joint exists which is locked ###########
+            // check nodes attached to these vertices to see if a joint exists which is locked
             $theseConnectedNodes = "";
             foreach ($delaunayVertices as $thisVertex) {
                 if ($thisVertex->whichNode === $thisTriangle->v0->whichNode) {
