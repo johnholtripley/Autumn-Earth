@@ -11,10 +11,9 @@ add template sections
 Convert locks, valves, hazards and treasure into interesting variants
 Add NPCs (with relevant quests)
 
+http://ae.dev/game-world/generateCircularDungeonMap.php?seed=1509160518 - (when on random layout) - need to make sure expanding nodes don't cut through an edge it's not connected to either 
 
-need to make sure expanding nodes don't cut through an edge it's not connected to either
 
-http://ae.dev/game-world/generateCircularDungeonMap.php?seed=1509123250 - locked joint isn't drawn because the joint is extended from the pathfinding
 
 ---- */
 
@@ -653,6 +652,17 @@ function createDelaunayGraph($graphType)
             }
             break;
 
+            case "wonky-grid":
+               for ($i = 0; $i < sqrt($numberOfVertices); $i++) {
+                for ($j = 0; $j < sqrt($numberOfVertices); $j++) {
+
+                    $newVertex = new delaunayVertex($i * 50 + $edgeBuffer + mt_rand(-10,10), $j * 50 + $edgeBuffer + mt_rand(-10,10));
+
+                    array_push($delaunayVertices, $newVertex);
+                }
+            }
+            break;
+
     }
 
     $minDistance = 20;
@@ -826,7 +836,7 @@ function findPartnerNode($activeNode)
 
 function canPathfindThroughDelaunayGraph($startNode, $endNode)
 {
-    global $allDelaunayEdges, $delaunayVertices, $verticesUsedOnDelaunayGraph, $edgesUsedOnDelaunayGraph, $delaunayTriangles, $nodesPlottedOnDelaunayGraph;
+    global $allDelaunayEdges, $delaunayVertices, $verticesUsedOnDelaunayGraph, $edgesUsedOnDelaunayGraph, $delaunayTriangles, $nodesPlottedOnDelaunayGraph, $lockedJoints;
     // find start and end vertices:
     foreach ($delaunayVertices as $thisVertex) {
         if ($thisVertex->whichNode === $startNode) {
@@ -932,12 +942,30 @@ function canPathfindThroughDelaunayGraph($startNode, $endNode)
             if ($thisNextVertex['vertex']->whichNode === null) {
                 $thisNextVertex['vertex']->whichNode       = new node();
                 $thisNextVertex['vertex']->whichNode->type = "BLOCKED";
-
+$firstNewNode = $thisNextVertex['vertex']->whichNode;
                 array_push($nodesPlottedOnDelaunayGraph, $thisNextVertex['vertex']->whichNode);
             }
 
             $thisNextVertex = $thisNextVertex['parentNode'];
         }
+
+
+
+        // update lockedJoints to have the start node and the first added node instead of the start and end node (so the first connection can be marked if it's locked)
+
+$originalLockedConnection = "-".$startNode->name."-".$endNode->name;
+$originalLockedConnectionRev = "-".$endNode->name."-".$startNode->name;
+
+$newLockedConnection = "-".$startNode->name."-".$firstNewNode->name;
+$newLockedConnectionRev = "-".$firstNewNode->name."-".$startNode->name;
+ 
+    //  echo "replace ".$endNode->name." with ".$firstNewNode->name."<br>";    
+
+$lockedJoints[$newLockedConnection] = $lockedJoints[$originalLockedConnection];
+$lockedJoints[$newLockedConnectionRev] = $lockedJoints[$originalLockedConnectionRev];
+unset($lockedJoints[$originalLockedConnection]);
+unset($lockedJoints[$originalLockedConnectionRev]);
+
 
     } else {
         echo "<br>DIDN'T find path<br>";
@@ -1369,6 +1397,8 @@ function outputSizedNodesLayout()
         imagefilledellipse($outputCanvas, $delaunayVertices[$i]->x, $delaunayVertices[$i]->y, $outputWidth, $outputWidth, $nodeColour);
     }
 
+
+
     // draw triangles:
 
     //for ($i = 0; $i < count($delaunayTriangles); $i++) {
@@ -1394,6 +1424,7 @@ function outputSizedNodesLayout()
             } else {
                 $edgeColour = imagecolorallocate($outputCanvas, 50, 50, 50);
             }
+          //  echo $theseConnectedNodes."<br>";
         } else {
             imagesetthickness($outputCanvas, 1);
             $edgeColour = imagecolorallocate($outputCanvas, 194, 190, 169);
@@ -1411,6 +1442,7 @@ function outputSizedNodesLayout()
                     $theseConnectedNodes .= "-" . $thisVertex->whichNode->name;
                 }
             }
+            //echo $theseConnectedNodes."<br>";
             if (isset($lockedJoints[$theseConnectedNodes])) {
                 $edgeColour = imagecolorallocate($outputCanvas, $keyColours[$lockedJoints[$theseConnectedNodes]][0], $keyColours[$lockedJoints[$theseConnectedNodes]][1], $keyColours[$lockedJoints[$theseConnectedNodes]][2]);
 
@@ -1434,6 +1466,7 @@ function outputSizedNodesLayout()
                     $theseConnectedNodes .= "-" . $thisVertex->whichNode->name;
                 }
             }
+            //echo $theseConnectedNodes."<br>";
             if (isset($lockedJoints[$theseConnectedNodes])) {
                 $edgeColour = imagecolorallocate($outputCanvas, $keyColours[$lockedJoints[$theseConnectedNodes]][0], $keyColours[$lockedJoints[$theseConnectedNodes]][1], $keyColours[$lockedJoints[$theseConnectedNodes]][2]);
 
@@ -1545,7 +1578,7 @@ do {
     moveNodesApart();
 
     outputConnections();
-    createDelaunayGraph("random");
+    createDelaunayGraph("grid");
 } while (!plotConnectivityOnDelaunayGraph());
 outputDelaunayGraph();
 
