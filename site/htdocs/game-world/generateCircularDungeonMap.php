@@ -11,7 +11,8 @@ add template sections
 Convert locks, valves, hazards and treasure into interesting variants
 Add NPCs (with relevant quests)
 
-
+http://ae.dev/game-world/generateCircularDungeonMap.php?seed=1509130238 - overlapping
+need to make sure expanding nodes don't cut through an edge either
 
 ---- */
 
@@ -1276,11 +1277,15 @@ function createGridLayout()
             if ($thisVertex !== $thisNeighbour) {
                 // calculate distance between them:
                 $distanceBetweenTheseTwoVertices = sqrt(($thisNeighbour->x - $thisVertex->x) * ($thisNeighbour->x - $thisVertex->x) + ($thisNeighbour->y - $thisVertex->y) * ($thisNeighbour->y - $thisVertex->y)) / 2;
-                if ($distanceBetweenTheseTwoVertices < $thisVertex->proximityToNeighbours) {
-                    // make sure this vertex has a node (so should be considered):
-                    if ($thisNeighbour->whichNode !== null) {
-                        $thisVertex->proximityToNeighbours = $distanceBetweenTheseTwoVertices;
+                // make sure this vertex has a node (so should be considered):
+                if ($thisNeighbour->whichNode !== null) {
+                    if ((in_array(new delaunayEdge($thisVertex, $thisNeighbour), $edgesUsedOnDelaunayGraph)) || (in_array(new delaunayEdge($thisNeighbour, $thisVertex), $edgesUsedOnDelaunayGraph))) {
+                        // it is a connected neighbour:
                         array_push($thisVertex->neighbours, $thisNeighbour);
+                    }
+                    if ($distanceBetweenTheseTwoVertices < $thisVertex->proximityToNeighbours) {
+                        $thisVertex->proximityToNeighbours = $distanceBetweenTheseTwoVertices;
+
                     }
                 }
             }
@@ -1290,24 +1295,26 @@ function createGridLayout()
     // order by most connected vertices:
     $sortedVertices = $verticesUsedOnDelaunayGraph;
     usort($sortedVertices, 'sortVerticesByConnections');
- // loop through, and enlarge the radius so it touches the closest neighbour
+    // loop through, and enlarge the radius so it touches the closest neighbour
     foreach ($sortedVertices as $thisVertex) {
         $closestNeighbourDistance = INF;
-        foreach ($verticesUsedOnDelaunayGraph as $thisNeighbour) {
+      //  echo "<hr>(" . count($thisVertex->neighbours) . ") ";
+        foreach ($sortedVertices as $thisNeighbour) {
             if ($thisVertex !== $thisNeighbour) {
-        
-                if ($thisNeighbour->proximityToNeighbours < $closestNeighbourDistance) {
+
+ $distanceBetweenTheseTwoVertices = sqrt(($thisNeighbour->x - $thisVertex->x) * ($thisNeighbour->x - $thisVertex->x) + ($thisNeighbour->y - $thisVertex->y) * ($thisNeighbour->y - $thisVertex->y)) / 2;
+  //echo $thisVertex->whichNode->name." closest to ".$thisNeighbour->whichNode->name." (".$thisNeighbour->proximityToNeighbours.") (".$distanceBetweenTheseTwoVertices.")<br>";
+                if ($distanceBetweenTheseTwoVertices - $thisNeighbour->proximityToNeighbours < $closestNeighbourDistance) {
+                  
                     $closestNeighbourDistance = $thisNeighbour->proximityToNeighbours;
                 }
             }
         }
-        echo $thisVertex->proximityToNeighbours . " - " . $closestNeighbourDistance . "<br>";
+       // echo $thisVertex->proximityToNeighbours . " - " . $closestNeighbourDistance . "<br>";
         if ($thisVertex->proximityToNeighbours > $closestNeighbourDistance) {
-$thisVertex->proximityToNeighbours += ($thisVertex->proximityToNeighbours - $closestNeighbourDistance);
+            $thisVertex->proximityToNeighbours += ($thisVertex->proximityToNeighbours - $closestNeighbourDistance);
         }
     }
-
-   
 
     // plot on a square grid node vertices at the max radius (making sure they don't touch)
     // draw joints from vertex centres to vertex centres to connect rooms up
@@ -1529,7 +1536,7 @@ do {
     moveNodesApart();
 
     outputConnections();
-    createDelaunayGraph("grid");
+    createDelaunayGraph("random");
 } while (!plotConnectivityOnDelaunayGraph());
 outputDelaunayGraph();
 
