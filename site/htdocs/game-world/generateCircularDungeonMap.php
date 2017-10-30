@@ -13,7 +13,10 @@ Add NPCs (with relevant quests)
 
 http://ae.dev/game-world/generateCircularDungeonMap.php?seed=1509160518 - (when on random layout) - need to make sure expanding nodes don't cut through an edge it's not connected to either 
 
+http://ae.dev/game-world/generateCircularDungeonMap.php?seed=1509380331 - undefined index error 
 
+
+http://ae.dev/game-world/generateCircularDungeonMap.php?seed=1509438538 - doesn't fill the horizontal space available
 
 ---- */
 
@@ -50,7 +53,8 @@ class delaunayVertex
         $this->x                     = $x;
         $this->y                     = $y;
         $this->whichNode             = null;
-        $this->proximityToNeighbours = INF;
+        $this->proximityToNeighboursVertical = INF;
+        $this->proximityToNeighboursHorizontal = INF;
         $this->neighbours            = array();
     }
 }
@@ -657,6 +661,22 @@ function createDelaunayGraph($graphType)
                 for ($j = 0; $j < sqrt($numberOfVertices); $j++) {
 
                     $newVertex = new delaunayVertex($i * 50 + $edgeBuffer + mt_rand(-10,10), $j * 50 + $edgeBuffer + mt_rand(-10,10));
+
+                    array_push($delaunayVertices, $newVertex);
+                }
+            }
+
+                        case "offset-grid":
+                        $colOffsets = array();
+                        $rowOffsets = array();
+                   for ($i = 0; $i < sqrt($numberOfVertices); $i++) {
+                   array_push($colOffsets, mt_rand(-15,15));
+                   array_push($rowOffsets, mt_rand(-15,15));
+                   }     
+               for ($i = 0; $i < sqrt($numberOfVertices); $i++) {
+                for ($j = 0; $j < sqrt($numberOfVertices); $j++) {
+
+                    $newVertex = new delaunayVertex($i * 50 + $edgeBuffer + $colOffsets[$i], $j * 50 + $edgeBuffer+ $colOffsets[$j]);
 
                     array_push($delaunayVertices, $newVertex);
                 }
@@ -1307,15 +1327,35 @@ function createGridLayout()
         foreach ($verticesUsedOnDelaunayGraph as $thisNeighbour) {
             if ($thisVertex !== $thisNeighbour) {
                 // calculate distance between them:
-                $halfWayBetweenTheseTwoVertices = sqrt(($thisNeighbour->x - $thisVertex->x) * ($thisNeighbour->x - $thisVertex->x) + ($thisNeighbour->y - $thisVertex->y) * ($thisNeighbour->y - $thisVertex->y))/2;
+             //   $halfWayBetweenTheseTwoVertices = sqrt(($thisNeighbour->x - $thisVertex->x) * ($thisNeighbour->x - $thisVertex->x) + ($thisNeighbour->y - $thisVertex->y) * ($thisNeighbour->y - $thisVertex->y))/2;
+
+
+$halfWayBetweenTheseTwoVerticesHorizontal = abs($thisNeighbour->x - $thisVertex->x)/2;
+$halfWayBetweenTheseTwoVerticesVertical = abs($thisNeighbour->y - $thisVertex->y)/2;
+
+// if there's no difference (on the same axis) then don't use it to determine size:
+if($halfWayBetweenTheseTwoVerticesHorizontal == 0) {
+$halfWayBetweenTheseTwoVerticesHorizontal = INF;
+}
+if($halfWayBetweenTheseTwoVerticesVertical == 0) {
+$halfWayBetweenTheseTwoVerticesVertical = INF;
+}
+
+
+
+//echo $halfWayBetweenTheseTwoVerticesHorizontal.", ".$halfWayBetweenTheseTwoVerticesVertical."<br>";
                 // make sure this vertex has a node (so should be considered):
                 if ($thisNeighbour->whichNode !== null) {
                     if ((in_array(new delaunayEdge($thisVertex, $thisNeighbour), $edgesUsedOnDelaunayGraph)) || (in_array(new delaunayEdge($thisNeighbour, $thisVertex), $edgesUsedOnDelaunayGraph))) {
                         // it is a connected neighbour:
                         array_push($thisVertex->neighbours, $thisNeighbour);
                     }
-                    if ($halfWayBetweenTheseTwoVertices < $thisVertex->proximityToNeighbours) {
-                        $thisVertex->proximityToNeighbours = $halfWayBetweenTheseTwoVertices;
+                    if ($halfWayBetweenTheseTwoVerticesHorizontal < $thisVertex->proximityToNeighboursHorizontal) {
+                        $thisVertex->proximityToNeighboursHorizontal = $halfWayBetweenTheseTwoVerticesHorizontal;
+
+                    }
+                        if ($halfWayBetweenTheseTwoVerticesVertical < $thisVertex->proximityToNeighboursVertical) {
+                        $thisVertex->proximityToNeighboursVertical = $halfWayBetweenTheseTwoVerticesVertical;
 
                     }
                 }
@@ -1328,24 +1368,39 @@ function createGridLayout()
     usort($sortedVertices, 'sortVerticesByConnections');
     // loop through, and enlarge the radius so it touches the closest neighbour
     foreach ($sortedVertices as $thisVertex) {
-        $closestNeighbourDistance = INF;
+        $closestNeighbourDistanceHorizontal = INF;
+        $closestNeighbourDistanceVertical = INF;
      //   echo "<hr>";
     //    echo $thisVertex->proximityToNeighbours."<br>";
         //echo"(" . count($thisVertex->neighbours) . ") ";
         foreach ($verticesUsedOnDelaunayGraph as $thisNeighbour) {
             if ($thisVertex !== $thisNeighbour) {
 
- $distanceBetweenTheseTwoVertices = sqrt(($thisNeighbour->x - $thisVertex->x) * ($thisNeighbour->x - $thisVertex->x) + ($thisNeighbour->y - $thisVertex->y) * ($thisNeighbour->y - $thisVertex->y));
+ //$distanceBetweenTheseTwoVertices = sqrt(($thisNeighbour->x - $thisVertex->x) * ($thisNeighbour->x - $thisVertex->x) + ($thisNeighbour->y - $thisVertex->y) * ($thisNeighbour->y - $thisVertex->y));
  // echo $thisVertex->whichNode->name." checking ".$thisNeighbour->whichNode->name." (".$distanceBetweenTheseTwoVertices." - ".$thisNeighbour->proximityToNeighbours.") < ".$closestNeighbourDistance."<br>";
-                if ($distanceBetweenTheseTwoVertices - $thisNeighbour->proximityToNeighbours < $closestNeighbourDistance) {
-                    $closestNeighbourDistance = $distanceBetweenTheseTwoVertices - $thisNeighbour->proximityToNeighbours;
+
+$halfWayBetweenTheseTwoVerticesHorizontal = abs($thisNeighbour->x - $thisVertex->x)/2;
+$halfWayBetweenTheseTwoVerticesVertical = abs($thisNeighbour->y - $thisVertex->y)/2;
+
+
+                if ($halfWayBetweenTheseTwoVerticesHorizontal - $thisNeighbour->proximityToNeighboursHorizontal < $closestNeighbourDistanceHorizontal) {
+                    $closestNeighbourDistanceHorizontal = $halfWayBetweenTheseTwoVerticesHorizontal - $thisNeighbour->proximityToNeighboursHorizontal;
+                //    echo "now ".$closestNeighbourDistance;
+                }
+                   if ($halfWayBetweenTheseTwoVerticesVertical - $thisNeighbour->proximityToNeighboursVertical < $closestNeighbourDistanceVertical) {
+                    $closestNeighbourDistanceVertical = $halfWayBetweenTheseTwoVerticesVertical - $thisNeighbour->proximityToNeighboursVertical;
                 //    echo "now ".$closestNeighbourDistance;
                 }
             }
         }
        // echo $thisVertex->proximityToNeighbours . " - " . $closestNeighbourDistance . "<br>";
-        if ($thisVertex->proximityToNeighbours < $closestNeighbourDistance) {
-            $thisVertex->proximityToNeighbours = ($closestNeighbourDistance);
+        if ($thisVertex->proximityToNeighboursHorizontal < $closestNeighbourDistanceHorizontal) {
+            $thisVertex->proximityToNeighboursHorizontal = ($closestNeighbourDistanceHorizontal);
+        //     echo " adding ".($closestNeighbourDistance)." to radius - it's now ".$thisVertex->proximityToNeighbours."<br>";
+        }
+
+           if ($thisVertex->proximityToNeighboursVertical < $closestNeighbourDistanceVertical) {
+            $thisVertex->proximityToNeighboursVertical = ($closestNeighbourDistanceVertical);
         //     echo " adding ".($closestNeighbourDistance)." to radius - it's now ".$thisVertex->proximityToNeighbours."<br>";
         }
    
@@ -1355,6 +1410,10 @@ function createGridLayout()
     // plot on a square grid node vertices at the max radius (making sure they don't touch)
     // draw joints from vertex centres to vertex centres to connect rooms up
     // ########
+}
+
+function removeDiagonalEdges() {
+    // ###########
 }
 
 function outputSizedNodesLayout()
@@ -1392,9 +1451,13 @@ function outputSizedNodesLayout()
         }
 
 // php needs width not radius:
-        $outputWidth = $delaunayVertices[$i]->proximityToNeighbours * 2;
+ //       $outputWidth = $delaunayVertices[$i]->proximityToNeighbours * 2;
 
-        imagefilledellipse($outputCanvas, $delaunayVertices[$i]->x, $delaunayVertices[$i]->y, $outputWidth, $outputWidth, $nodeColour);
+      //  imagefilledellipse($outputCanvas, $delaunayVertices[$i]->x, $delaunayVertices[$i]->y, $outputWidth, $outputWidth, $nodeColour);
+
+imagefilledrectangle ( $outputCanvas ,  $delaunayVertices[$i]->x - $delaunayVertices[$i]->proximityToNeighboursHorizontal ,  $delaunayVertices[$i]->y - $delaunayVertices[$i]->proximityToNeighboursVertical ,  $delaunayVertices[$i]->x + $delaunayVertices[$i]->proximityToNeighboursHorizontal ,  $delaunayVertices[$i]->y + $delaunayVertices[$i]->proximityToNeighboursVertical , $nodeColour );
+
+
     }
 
 
@@ -1578,7 +1641,12 @@ do {
     moveNodesApart();
 
     outputConnections();
-    createDelaunayGraph("grid");
+    // random, grid, wonky-grid, offset-grid
+    $layoutType = "offset-grid";
+    createDelaunayGraph($layoutType);
+    if (stripos($layoutType,"grid") !== false) {
+removeDiagonalEdges();
+    }
 } while (!plotConnectivityOnDelaunayGraph());
 outputDelaunayGraph();
 
