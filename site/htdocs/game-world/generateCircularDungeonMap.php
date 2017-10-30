@@ -13,10 +13,10 @@ Add NPCs (with relevant quests)
 
 http://ae.dev/game-world/generateCircularDungeonMap.php?seed=1509160518 - (when on random layout) - need to make sure expanding nodes don't cut through an edge it's not connected to either 
 
-http://ae.dev/game-world/generateCircularDungeonMap.php?seed=1509380331 - undefined index error 
 
 
-http://ae.dev/game-world/generateCircularDungeonMap.php?seed=1509438538 - doesn't fill the horizontal space available
+
+http://ae.dev/game-world/generateCircularDungeonMap.php?seed=1509420130 - doesn't fill the space available
 
 ---- */
 
@@ -979,12 +979,20 @@ $originalLockedConnectionRev = "-".$endNode->name."-".$startNode->name;
 $newLockedConnection = "-".$startNode->name."-".$firstNewNode->name;
 $newLockedConnectionRev = "-".$firstNewNode->name."-".$startNode->name;
  
-    //  echo "replace ".$endNode->name." with ".$firstNewNode->name."<br>";    
 
-$lockedJoints[$newLockedConnection] = $lockedJoints[$originalLockedConnection];
-$lockedJoints[$newLockedConnectionRev] = $lockedJoints[$originalLockedConnectionRev];
+
+if(isset($lockedJoints[$originalLockedConnection])) {
+    $lockedJoints[$newLockedConnection] = $lockedJoints[$originalLockedConnection];
 unset($lockedJoints[$originalLockedConnection]);
+}
+
+if(isset($lockedJoints[$originalLockedConnectionRev])) {
+$lockedJoints[$newLockedConnectionRev] = $lockedJoints[$originalLockedConnectionRev];
+
 unset($lockedJoints[$originalLockedConnectionRev]);
+}
+
+
 
 
     } else {
@@ -1379,8 +1387,8 @@ $halfWayBetweenTheseTwoVerticesVertical = INF;
  //$distanceBetweenTheseTwoVertices = sqrt(($thisNeighbour->x - $thisVertex->x) * ($thisNeighbour->x - $thisVertex->x) + ($thisNeighbour->y - $thisVertex->y) * ($thisNeighbour->y - $thisVertex->y));
  // echo $thisVertex->whichNode->name." checking ".$thisNeighbour->whichNode->name." (".$distanceBetweenTheseTwoVertices." - ".$thisNeighbour->proximityToNeighbours.") < ".$closestNeighbourDistance."<br>";
 
-$halfWayBetweenTheseTwoVerticesHorizontal = abs($thisNeighbour->x - $thisVertex->x)/2;
-$halfWayBetweenTheseTwoVerticesVertical = abs($thisNeighbour->y - $thisVertex->y)/2;
+$halfWayBetweenTheseTwoVerticesHorizontal = abs($thisNeighbour->x - $thisVertex->x);
+$halfWayBetweenTheseTwoVerticesVertical = abs($thisNeighbour->y - $thisVertex->y);
 
 
                 if ($halfWayBetweenTheseTwoVerticesHorizontal - $thisNeighbour->proximityToNeighboursHorizontal < $closestNeighbourDistanceHorizontal) {
@@ -1413,7 +1421,19 @@ $halfWayBetweenTheseTwoVerticesVertical = abs($thisNeighbour->y - $thisVertex->y
 }
 
 function removeDiagonalEdges() {
-    // ###########
+    /*
+    global $allDelaunayEdges;
+    foreach ($allDelaunayEdges as $key => $thisEdge) {
+        echo $thisEdge->v0->x.", ".$thisEdge->v1->x."   ---    "  .$thisEdge->v0->y.", ".$thisEdge->v1->y;
+
+       if(($thisEdge->v0->x != $thisEdge->v1->x) && ($thisEdge->v0->y != $thisEdge->v1->y)) {
+// not on the same axis, so remove:
+   //     echo "  remove";
+        unset($allDelaunayEdges[$key]);
+       }
+    //   echo"<br>";
+    }
+    */
 }
 
 function outputSizedNodesLayout()
