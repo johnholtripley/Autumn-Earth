@@ -950,6 +950,8 @@ function canPathfindThroughDelaunayGraph($startNode, $endNode)
     } while ((count($uncheckedVertices) > 0) && !$targetFound);
     if ($targetFound) {
 
+
+
         while ($thisNextVertex['parentNode'] !== null) {
             array_push($edgesUsedOnDelaunayGraph, $thisNextVertex['edge']);
             if (!in_array($thisNextVertex['vertex'], $verticesUsedOnDelaunayGraph)) {
@@ -967,7 +969,7 @@ function canPathfindThroughDelaunayGraph($startNode, $endNode)
         }
 
         // update lockedJoints to have the start node and the first added node instead of the start and end node (so the first connection can be marked if it's locked)
-
+if(isset($firstNewNode)) {
         $originalLockedConnection    = "-" . $startNode->name . "-" . $endNode->name;
         $originalLockedConnectionRev = "-" . $endNode->name . "-" . $startNode->name;
 
@@ -984,6 +986,7 @@ function canPathfindThroughDelaunayGraph($startNode, $endNode)
 
             unset($lockedJoints[$originalLockedConnectionRev]);
         }
+    }
 
     } else {
         echo "<br>DIDN'T find path<br>";
