@@ -1319,170 +1319,98 @@ function sortVerticesByConnections($a, $b)
     return (count($a->neighbours) < count($b->neighbours)) ? 1 : -1;
 }
 
+        
+
+
+
 function createGridLayout()
-{
+    {
     global $delaunayVertices, $verticesUsedOnDelaunayGraph, $edgesUsedOnDelaunayGraph, $allDelaunayEdges;
-
     $maxNodeDimension = 140;
-
     $sortedVertices = $verticesUsedOnDelaunayGraph;
     usort($sortedVertices, 'sortVerticesByConnections');
 
-// increase the nodes to be half way between that and the closest other used node:
-    foreach ($verticesUsedOnDelaunayGraph as $thisVertex) {
-        foreach ($verticesUsedOnDelaunayGraph as $thisNeighbour) {
+    // increase the nodes to be half way between that and the closest other used node:
+
+    foreach($verticesUsedOnDelaunayGraph as $thisVertex) {
+        foreach($verticesUsedOnDelaunayGraph as $thisNeighbour) {
             if ($thisVertex !== $thisNeighbour) {
-// calculate distance between them:
-                //   $halfWayBetweenTheseTwoVertices = sqrt(($thisNeighbour->x - $thisVertex->x) * ($thisNeighbour->x - $thisVertex->x) + ($thisNeighbour->y - $thisVertex->y) * ($thisNeighbour->y - $thisVertex->y))/2;
+
+                // calculate distance between them:
 
                 $halfWayBetweenTheseTwoVerticesHorizontal = abs($thisNeighbour->x - $thisVertex->x) / 2;
-                $halfWayBetweenTheseTwoVerticesVertical   = abs($thisNeighbour->y - $thisVertex->y) / 2;
+                $halfWayBetweenTheseTwoVerticesVertical = abs($thisNeighbour->y - $thisVertex->y) / 2;
 
-// if there's no difference (on the same axis) then don't use it to determine size:
+                // if there's no difference (on the same axis) then don't use it to determine size:
+
                 if ($halfWayBetweenTheseTwoVerticesHorizontal == 0) {
                     $halfWayBetweenTheseTwoVerticesHorizontal = INF;
-                }
+                    }
+
                 if ($halfWayBetweenTheseTwoVerticesVertical == 0) {
                     $halfWayBetweenTheseTwoVerticesVertical = INF;
-                }
+                    }
 
-//echo $halfWayBetweenTheseTwoVerticesHorizontal.", ".$halfWayBetweenTheseTwoVerticesVertical."<br>";
                 // make sure this vertex has a node (so should be considered):
+
                 if ($thisNeighbour->whichNode !== null) {
-                  //  if ((in_array(new delaunayEdge($thisVertex, $thisNeighbour), $edgesUsedOnDelaunayGraph)) || (in_array(new delaunayEdge($thisNeighbour, $thisVertex), $edgesUsedOnDelaunayGraph))) {
-// it is a connected neighbour:
-                     //   array_push($thisVertex->neighbours, $thisNeighbour);
-                  //  }
                     if ($halfWayBetweenTheseTwoVerticesHorizontal < $thisVertex->proximityToNeighboursHorizontal) {
                         $thisVertex->proximityToNeighboursHorizontal = $halfWayBetweenTheseTwoVerticesHorizontal;
+                        }
 
-                    }
                     if ($halfWayBetweenTheseTwoVerticesVertical < $thisVertex->proximityToNeighboursVertical) {
                         $thisVertex->proximityToNeighboursVertical = $halfWayBetweenTheseTwoVerticesVertical;
-
+                        }
                     }
                 }
             }
         }
 
-    }
+    outputSizedNodesLayout();
+    foreach($sortedVertices as $thisVertex) {
+        $smallestHorizontalSpacingAvailable = INF;
+        $smallestVerticalSpacingAvailable = INF;
+        foreach($sortedVertices as $thisNeighbour) {
+            if ($thisVertex !== $thisNeighbour) {
+                $horizontalSpaceBetweenExpandedBlock = abs($thisNeighbour->x - $thisVertex->x) - $thisVertex->proximityToNeighboursHorizontal - $thisNeighbour->proximityToNeighboursHorizontal;
+                $verticalSpaceBetweenExpandedBlock = abs($thisNeighbour->y - $thisVertex->y) - $thisVertex->proximityToNeighboursVertical - $thisNeighbour->proximityToNeighboursVertical;
+                if ($horizontalSpaceBetweenExpandedBlock < $smallestHorizontalSpacingAvailable) {
+                    if ($horizontalSpaceBetweenExpandedBlock >= 0) {
+                        $smallestHorizontalSpacingAvailable = $horizontalSpaceBetweenExpandedBlock;
+                        }
+                    }
 
-outputSizedNodesLayout();
+                if ($verticalSpaceBetweenExpandedBlock < $smallestVerticalSpacingAvailable) {
+                    if ($verticalSpaceBetweenExpandedBlock >= 0)
+                        {
+                        $smallestVerticalSpacingAvailable = $verticalSpaceBetweenExpandedBlock;
+                        }
+                    }
+                }
+            }
 
+        $thisVertex->proximityToNeighboursHorizontal+= $smallestHorizontalSpacingAvailable;
+        $thisVertex->proximityToNeighboursVertical+= $smallestVerticalSpacingAvailable;
 
+        // make sure they don't get too big:
 
-
-foreach ($sortedVertices as $thisVertex) {
- //   echo "node #".$thisVertex->whichNode->name.": ".$thisVertex->x.", ".$thisVertex->y."<br>";
-$smallestHorizontalSpacingAvailable = INF;
-$smallestVerticalSpacingAvailable = INF;
-
-foreach ($sortedVertices as $thisNeighbour) {
-if ($thisVertex !== $thisNeighbour) {
-
-$horizontalSpaceBetweenExpandedBlock = abs($thisNeighbour->x - $thisVertex->x) - $thisVertex->proximityToNeighboursHorizontal - $thisNeighbour->proximityToNeighboursHorizontal;
-$verticalSpaceBetweenExpandedBlock = abs($thisNeighbour->y - $thisVertex->y) - $thisVertex->proximityToNeighboursVertical - $thisNeighbour->proximityToNeighboursVertical;
-
-/*
-if($thisVertex->whichNode->type == "START" && $thisNeighbour->whichNode->name == 11) {
-    echo "x coord ".$thisVertex->x.", ".$thisNeighbour->x." (".($thisNeighbour->x - $thisVertex->x)." difference)<br>";
-    echo "horiz width ".$thisVertex->proximityToNeighboursHorizontal.", ".$thisNeighbour->proximityToNeighboursHorizontal."<br>";
-    echo "coords of closest edges ".( $thisVertex->x + $thisVertex->proximityToNeighboursHorizontal).", ".($thisNeighbour->x - $thisNeighbour->proximityToNeighboursHorizontal)."<br>";
-echo "space between ".$horizontalSpaceBetweenExpandedBlock."<br>";
-
-}
-*/
-if ($horizontalSpaceBetweenExpandedBlock < $smallestHorizontalSpacingAvailable) {
-if($horizontalSpaceBetweenExpandedBlock >= 0) {
-$smallestHorizontalSpacingAvailable = $horizontalSpaceBetweenExpandedBlock;
-}
-}
-if ($verticalSpaceBetweenExpandedBlock < $smallestVerticalSpacingAvailable) {
-if($verticalSpaceBetweenExpandedBlock >= 0){
-$smallestVerticalSpacingAvailable = $verticalSpaceBetweenExpandedBlock;
-}
-}
-
-
-
-
-
-
-}
-}
-//if ($thisVertex->proximityToNeighboursHorizontal < $smallestHorizontalSpacingAvailable) {
-$thisVertex->proximityToNeighboursHorizontal += $smallestHorizontalSpacingAvailable;
-//}
-//if ($thisVertex->proximityToNeighboursVertical < $smallestVerticalSpacingAvailable) {
-$thisVertex->proximityToNeighboursVertical += $smallestVerticalSpacingAvailable;
-//}
-
-// make sure they don't get too big:
         if ($thisVertex->proximityToNeighboursHorizontal > $maxNodeDimension) {
             $thisVertex->proximityToNeighboursHorizontal = $maxNodeDimension;
-        }
+            }
+
         if ($thisVertex->proximityToNeighboursVertical > $maxNodeDimension) {
             $thisVertex->proximityToNeighboursVertical = $maxNodeDimension;
+            }
         }
-
-}
-
-
-
-/*
-
-
-// loop through, and enlarge the radius so it touches the closest neighbour
-
-echo "<hr>";
-echo $thisVertex->whichNode->name." - ".$thisVertex->whichNode->type.": ";
-echo $thisVertex->proximityToNeighboursHorizontal.", ".$thisVertex->proximityToNeighboursVertical."";
-echo" (" . count($thisVertex->neighbours) . ") <br>";
-foreach ($verticesUsedOnDelaunayGraph as $thisNeighbour) {
-if ($thisVertex !== $thisNeighbour) {
-
-//$distanceBetweenTheseTwoVertices = sqrt(($thisNeighbour->x - $thisVertex->x) * ($thisNeighbour->x - $thisVertex->x) + ($thisNeighbour->y - $thisVertex->y) * ($thisNeighbour->y - $thisVertex->y));
-// echo $thisVertex->whichNode->name." checking ".$thisNeighbour->whichNode->name." (".$distanceBetweenTheseTwoVertices." - ".$thisNeighbour->proximityToNeighbours.") < ".$closestNeighbourDistance."<br>";
-
-echo "&gt;  ".abs($thisNeighbour->x - $thisVertex->x) . " - " .($thisVertex->proximityToNeighboursHorizontal/2) . " - ".($thisNeighbour->proximityToNeighboursHorizontal/2)."<br>";
-
-$horizontalSpaceBetweenExpandedBlock = abs($thisNeighbour->x - $thisVertex->x) - $thisVertex->proximityToNeighboursHorizontal/2 - $thisNeighbour->proximityToNeighboursHorizontal/2;
-$verticalSpaceBetweenExpandedBlock = abs($thisNeighbour->y - $thisVertex->y) - $thisVertex->proximityToNeighboursVertical/2 - $thisNeighbour->proximityToNeighboursVertical/2;
-
-if ($horizontalSpaceBetweenExpandedBlock < $closestNeighbourDistanceHorizontal) {
-if($horizontalSpaceBetweenExpandedBlock > 0) {
-$closestNeighbourDistanceHorizontal = $horizontalSpaceBetweenExpandedBlock;
-}
-// echo "horzi now ".$closestNeighbourDistanceHorizontal;
-}
-if ($verticalSpaceBetweenExpandedBlock < $closestNeighbourDistanceVertical) {
-if($verticalSpaceBetweenExpandedBlock > 0){
-$closestNeighbourDistanceVertical = $verticalSpaceBetweenExpandedBlock;
-}
-//  echo ", vert now ".$closestNeighbourDistanceVertical;
-}
-}
-}
-//     echo $thisVertex->proximityToNeighboursHorizontal . " < " . $closestNeighbourDistanceHorizontal . "<br>";
-if ($thisVertex->proximityToNeighboursHorizontal < $closestNeighbourDistanceHorizontal) {
-$thisVertex->proximityToNeighboursHorizontal += ($closestNeighbourDistanceHorizontal);
-echo " adding ".($closestNeighbourDistanceHorizontal)." to horiz - it's now ".$thisVertex->proximityToNeighboursHorizontal."<br>";
-}
-// echo $thisVertex->proximityToNeighboursVertical . " < " . $closestNeighbourDistanceVertical . "<br>";
-if ($thisVertex->proximityToNeighboursVertical < $closestNeighbourDistanceVertical) {
-$thisVertex->proximityToNeighboursVertical += ($closestNeighbourDistanceVertical);
-echo " adding ".($closestNeighbourDistanceVertical)." to vert - it's now ".$thisVertex->proximityToNeighboursVertical."<br>";
-}
-
-
-
-}
- */
 
     // plot on a square grid node vertices at the max radius (making sure they don't touch)
     // draw joints from vertex centres to vertex centres to connect rooms up
     // ########
-}
+
+    }
+
+
+
 
 function removeDiagonalEdges()
 {
