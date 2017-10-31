@@ -13,8 +13,7 @@ Add NPCs (with relevant quests)
 
 http://ae.dev/game-world/generateCircularDungeonMap.php?seed=1509160518 - (when on random layout) - need to make sure expanding nodes don't cut through an edge it's not connected to either
 
-http://ae.dev/game-world/generateCircularDungeonMap.php?seed=1509492230 - doesn't fill the space available
-http://ae.dev/game-world/generateCircularDungeonMap.php?seed=1509420130 - start node is overwritten by neighbour
+
 
 ---- */
 
@@ -1366,11 +1365,12 @@ function createGridLayout()
     }
 
 outputSizedNodesLayout();
-outputSizedNodesLayout();
+
 
 
 
 foreach ($sortedVertices as $thisVertex) {
+ //   echo "node #".$thisVertex->whichNode->name.": ".$thisVertex->x.", ".$thisVertex->y."<br>";
 $smallestHorizontalSpacingAvailable = INF;
 $smallestVerticalSpacingAvailable = INF;
 
@@ -1380,11 +1380,15 @@ if ($thisVertex !== $thisNeighbour) {
 $horizontalSpaceBetweenExpandedBlock = abs($thisNeighbour->x - $thisVertex->x) - $thisVertex->proximityToNeighboursHorizontal - $thisNeighbour->proximityToNeighboursHorizontal;
 $verticalSpaceBetweenExpandedBlock = abs($thisNeighbour->y - $thisVertex->y) - $thisVertex->proximityToNeighboursVertical - $thisNeighbour->proximityToNeighboursVertical;
 
-if($thisVertex->whichNode->type == "START" && $thisNeighbour->whichNode->type == "END") {
-    echo $thisVertex->proximityToNeighboursHorizontal.", ".$thisNeighbour->proximityToNeighboursHorizontal."<br>";
-echo $horizontalSpaceBetweenExpandedBlock.", ".$verticalSpaceBetweenExpandedBlock."<br>";
-}
+/*
+if($thisVertex->whichNode->type == "START" && $thisNeighbour->whichNode->name == 11) {
+    echo "x coord ".$thisVertex->x.", ".$thisNeighbour->x." (".($thisNeighbour->x - $thisVertex->x)." difference)<br>";
+    echo "horiz width ".$thisVertex->proximityToNeighboursHorizontal.", ".$thisNeighbour->proximityToNeighboursHorizontal."<br>";
+    echo "coords of closest edges ".( $thisVertex->x + $thisVertex->proximityToNeighboursHorizontal).", ".($thisNeighbour->x - $thisNeighbour->proximityToNeighboursHorizontal)."<br>";
+echo "space between ".$horizontalSpaceBetweenExpandedBlock."<br>";
 
+}
+*/
 if ($horizontalSpaceBetweenExpandedBlock < $smallestHorizontalSpacingAvailable) {
 if($horizontalSpaceBetweenExpandedBlock >= 0) {
 $smallestHorizontalSpacingAvailable = $horizontalSpaceBetweenExpandedBlock;
@@ -1404,10 +1408,10 @@ $smallestVerticalSpacingAvailable = $verticalSpaceBetweenExpandedBlock;
 }
 }
 //if ($thisVertex->proximityToNeighboursHorizontal < $smallestHorizontalSpacingAvailable) {
-$thisVertex->proximityToNeighboursHorizontal += $smallestHorizontalSpacingAvailable/2;
+$thisVertex->proximityToNeighboursHorizontal += $smallestHorizontalSpacingAvailable;
 //}
 //if ($thisVertex->proximityToNeighboursVertical < $smallestVerticalSpacingAvailable) {
-$thisVertex->proximityToNeighboursVertical += $smallestVerticalSpacingAvailable/2;
+$thisVertex->proximityToNeighboursVertical += $smallestVerticalSpacingAvailable;
 //}
 
 // make sure they don't get too big:
