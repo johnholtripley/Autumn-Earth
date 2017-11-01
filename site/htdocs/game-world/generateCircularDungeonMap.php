@@ -334,7 +334,11 @@ function outputConnections()
             $myArrow->radius = 12;
             $myArrow->drawGDArrow();
         }
-        echo "<br>joint from " . $thisJoint->nodeA . " (" . $nodeList[$thisJoint->nodeA]->type . ") to " . $thisJoint->nodeB . " (" . $nodeList[$thisJoint->nodeB]->type . ") - type " . $thisJoint->type . " locked: " . $thisJoint->isLocked;
+        echo "<br>joint from " . $thisJoint->nodeA . " (" . strtolower($nodeList[$thisJoint->nodeA]->type) . ") to " . $thisJoint->nodeB . " (" . strtolower($nodeList[$thisJoint->nodeB]->type) . ")";
+if($thisJoint->isLocked) {
+echo " - is locked";
+} 
+         
     }
 
     //header('Content-Type: image/jpeg');
@@ -375,7 +379,7 @@ function growGrammar($thisGrammar, $iterations)
 {
     $grammarTransformations = array(
         // simple branching and layout:
-        "X" => array("O", "OX", "{OX,O|}", "{OX,O}", "Z"),
+        "X" => array("OX", "{OX,O|}", "{OX,O}", "Z"),
         // more intricate 'set piece' arrangements:
         "Z" => array("O[!]O[$]", "O[K#]XO##", "O[K#]O##X"),
         // valves could be lock and keys:
@@ -408,8 +412,11 @@ function growGrammar($thisGrammar, $iterations)
         } while ($characterCounter < strlen($thisGrammar));
     }
     // remove any remaining non-plottable grammars:
-    $thisGrammar = str_replace("X", "", $thisGrammar);
+    $thisGrammar = str_replace("X", "O", $thisGrammar);
     $thisGrammar = str_replace("Z", "OO", $thisGrammar);
+
+
+
     echo "final grammar: " . htmlentities($thisGrammar) . "</p>";
     return $thisGrammar;
 }
@@ -981,7 +988,7 @@ if(isset($firstNewNode)) {
     }
 
     } else {
-        echo "<br>DIDN'T find path<br>";
+        echo "<br>Didn't find path<br>";
     }
     return $targetFound;
 }
