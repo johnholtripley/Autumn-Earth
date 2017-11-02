@@ -11,9 +11,10 @@ add template sections
 Convert locks, valves, hazards and treasure into interesting variants
 Add NPCs (with relevant quests)
 
-http://ae.dev/game-world/generateCircularDungeonMap.php?seed=1509160518 - (when on random layout) - need to make sure expanding nodes don't cut through an edge it's not connected to either
 
 
+
+http://ae.dev/game-world/generateCircularDungeonMap.php?seed=1509565917 - what would this look like on a 50x50 tile grid?
 
 
 ---- */
@@ -675,8 +676,8 @@ function createDelaunayGraph($graphType)
             $colOffsets = array();
             $rowOffsets = array();
             for ($i = 0; $i < sqrt($numberOfVertices); $i++) {
-                array_push($colOffsets, mt_rand(-15, 15));
-                array_push($rowOffsets, mt_rand(-15, 15));
+                array_push($colOffsets, mt_rand(-25, 25));
+                array_push($rowOffsets, mt_rand(-25, 25));
             }
             for ($i = 0; $i < sqrt($numberOfVertices); $i++) {
                 for ($j = 0; $j < sqrt($numberOfVertices); $j++) {
