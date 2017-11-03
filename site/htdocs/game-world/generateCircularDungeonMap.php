@@ -1550,6 +1550,16 @@ function gridTileGrid() {
     // determine the ratio:
     $ratio = max($mapTilesX, $mapTilesY) / max($requiredWidth, $requiredHeight);
     // delaunay graph size * ratio = tile size
+
+
+// work out any space to centre the map:
+    $tileMapWidth = floor($requiredWidth * $ratio);
+    $tileMapHeight = floor($requiredHeight * $ratio);
+    $tileOffsetX = round(($mapTilesX - $tileMapWidth)/2);
+    $tileOffsetY = round(($mapTilesY - $tileMapHeight)/2);
+
+
+
     echo '<div class="sequenceBlock">';
   //  echo $ratio."<br>";
   //  echo $requiredWidth." x ".$requiredHeight."<br>";
@@ -1580,6 +1590,16 @@ $leftTileEdge = floor($leftEdge * $ratio);
 $rightTileEdge = floor($rightEdge * $ratio);
 $topTileEdge = floor($topEdge * $ratio);
 $bottomTileEdge = floor($bottomEdge * $ratio);
+
+
+// centre the map:
+$leftTileEdge += $tileOffsetX;
+$rightTileEdge += $tileOffsetX;
+$topTileEdge += $tileOffsetY;
+$bottomTileEdge += $tileOffsetY;
+
+
+
 //echo $leftEdge.",".$rightEdge." > ".$leftTileEdge.",".$rightTileEdge."<br>";
 for ($j = $leftTileEdge; $j <= $rightTileEdge; $j++) {
 for ($k = $topTileEdge; $k <= $bottomTileEdge; $k++) {
@@ -1603,6 +1623,12 @@ $rightTileEdge = floor($rightEdge * $ratio);
 $topTileEdge = floor($topEdge * $ratio);
 $bottomTileEdge = floor($bottomEdge * $ratio);
 
+// centre the map:
+$leftTileEdge += $tileOffsetX;
+$rightTileEdge += $tileOffsetX;
+$topTileEdge += $tileOffsetY;
+$bottomTileEdge += $tileOffsetY;
+
 // make paths 3 wide at least:
 if($leftTileEdge == $rightTileEdge) {
     $leftTileEdge--;
@@ -1612,6 +1638,8 @@ if($topTileEdge == $bottomTileEdge) {
     $topTileEdge--;
     $bottomTileEdge++;
 }
+
+
 
 
 for ($j = $leftTileEdge; $j <= $rightTileEdge; $j++) {
