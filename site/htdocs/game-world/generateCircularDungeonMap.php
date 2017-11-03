@@ -1600,9 +1600,9 @@ $bottomTileEdge += $tileOffsetY;
 
 
 
-//echo $leftEdge.",".$rightEdge." > ".$leftTileEdge.",".$rightTileEdge."<br>";
-for ($j = $leftTileEdge; $j <= $rightTileEdge; $j++) {
-for ($k = $topTileEdge; $k <= $bottomTileEdge; $k++) {
+// nudge this in to leave walls between rooms intact:
+for ($j = $leftTileEdge+1; $j < $rightTileEdge; $j++) {
+for ($k = $topTileEdge+1; $k < $bottomTileEdge; $k++) {
 $map[$k][$j] = ".";
 }
 }
