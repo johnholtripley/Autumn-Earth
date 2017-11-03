@@ -1421,7 +1421,7 @@ unset($allDelaunayEdges[$key]);
 function outputSizedNodesLayout()
 {
 
-    global $canvaDimension, $delaunayVertices, $delaunayTriangles, $delaunayNodeRadius, $centreVertex, $edgesUsedOnDelaunayGraph, $keyColours, $lockedJoints, $allDelaunayEdges, $verticesUsedOnDelaunayGraph, $requiredWidth, $requiredHeight;
+    global $canvaDimension, $delaunayVertices, $delaunayTriangles, $delaunayNodeRadius, $centreVertex, $edgesUsedOnDelaunayGraph, $keyColours, $lockedJoints, $allDelaunayEdges, $verticesUsedOnDelaunayGraph, $requiredWidth, $requiredHeight, $minLeft, $minTop;
 
     $outputCanvas = imagecreatetruecolor($canvaDimension, $canvaDimension);
     $groundColour = array(219, 215, 190);
@@ -1544,7 +1544,7 @@ $requiredHeight = $maxBottom - $minTop;
 
 
 function gridTileGrid() {
-    global $requiredWidth, $requiredHeight, $mapTilesX, $mapTilesY, $canvaDimension;
+    global $requiredWidth, $requiredHeight, $mapTilesX, $mapTilesY, $canvaDimension, $delaunayVertices, $minLeft, $minTop;
     // define the tile area to be used:
     $mapTilesX = 70;
     $mapTilesY = 70;
@@ -1567,7 +1567,30 @@ $map = array();
 
 
 
+for ($i = 0; $i < count($delaunayVertices); $i++) {
+    if (isset($delaunayVertices[$i]->whichNode)) {
+// plot this on to the tile map:
 
+$leftEdge = $delaunayVertices[$i]->x - $delaunayVertices[$i]->proximityToNeighboursHorizontal - $minLeft;
+$rightEdge = $delaunayVertices[$i]->x + $delaunayVertices[$i]->proximityToNeighboursHorizontal - $minLeft;
+$topEdge = $delaunayVertices[$i]->y - $delaunayVertices[$i]->proximityToNeighboursVertical - $minTop;
+$bottomEdge = $delaunayVertices[$i]->y + $delaunayVertices[$i]->proximityToNeighboursVertical - $minTop;
+
+
+$leftTileEdge = floor($leftEdge * $ratio);
+$rightTileEdge = floor($rightEdge * $ratio);
+$topTileEdge = floor($topEdge * $ratio);
+$bottomTileEdge = floor($bottomEdge * $ratio);
+echo $leftEdge.",".$rightEdge." > ".$leftTileEdge.",".$rightTileEdge."<br>";
+for ($j = $leftTileEdge; $j <= $rightTileEdge; $j++) {
+for ($k = $topTileEdge; $k <= $bottomTileEdge; $k++) {
+$map[$k][$j] = ".";
+}
+}
+
+
+    }
+}
 
 
 
@@ -1575,6 +1598,7 @@ $map = array();
 // output map:
 
 $drawnTileSize = 8; 
+$drawnOffset = 20;
    $outputCanvas = imagecreatetruecolor($canvaDimension, $canvaDimension);
     $groundColour = array(219, 215, 190);
     $ground       = imagecolorallocate($outputCanvas, $groundColour[0], $groundColour[1], $groundColour[2]);
@@ -1586,7 +1610,7 @@ $drawnTileSize = 8;
         
         switch ($map[$j][$i]) {
     case "#":
-       imagefilledrectangle($outputCanvas,($i+1)*$drawnTileSize,($j+1)*$drawnTileSize,($i+2)*$drawnTileSize,($j+2)*$drawnTileSize,  imagecolorallocate($outputCanvas, 60, 60, 60));
+       imagefilledrectangle($outputCanvas,($i)*$drawnTileSize+$drawnOffset,($j)*$drawnTileSize+$drawnOffset,($i+1)*$drawnTileSize+$drawnOffset,($j+1)*$drawnTileSize+$drawnOffset,  imagecolorallocate($outputCanvas, 60, 60, 60));
         break;
     case ".":
         // empty
