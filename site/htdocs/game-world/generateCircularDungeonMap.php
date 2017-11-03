@@ -1428,6 +1428,13 @@ function outputSizedNodesLayout()
     $ground       = imagecolorallocate($outputCanvas, $groundColour[0], $groundColour[1], $groundColour[2]);
     imagefilledrectangle($outputCanvas, 0, 0, $canvaDimension, $canvaDimension, $ground);
 
+// find boundary of the drawn area:
+    $minLeft = INF;
+    $minTop = INF;
+    $maxRight = 0;
+    $maxBottom = 0;
+
+
     // draw nodes:
 
     for ($i = 0; $i < count($delaunayVertices); $i++) {
@@ -1461,9 +1468,29 @@ function outputSizedNodesLayout()
 
 // border:
         imagerectangle($outputCanvas, $delaunayVertices[$i]->x - $delaunayVertices[$i]->proximityToNeighboursHorizontal, $delaunayVertices[$i]->y - $delaunayVertices[$i]->proximityToNeighboursVertical, $delaunayVertices[$i]->x + $delaunayVertices[$i]->proximityToNeighboursHorizontal, $delaunayVertices[$i]->y + $delaunayVertices[$i]->proximityToNeighboursVertical, imagecolorallocate($outputCanvas, 255, 255, 255));
+
+// find the limits of any drawn rooms:
+if (isset($delaunayVertices[$i]->whichNode)) {
+if(($delaunayVertices[$i]->x - $delaunayVertices[$i]->proximityToNeighboursHorizontal) < $minLeft) {
+$minLeft = $delaunayVertices[$i]->x - ($delaunayVertices[$i]->proximityToNeighboursHorizontal);
+}
+
+if(($delaunayVertices[$i]->y - $delaunayVertices[$i]->proximityToNeighboursVertical) <  $minTop) {
+     $minTop = ($delaunayVertices[$i]->y - $delaunayVertices[$i]->proximityToNeighboursVertical);
+
+}
+if(($delaunayVertices[$i]->x + $delaunayVertices[$i]->proximityToNeighboursHorizontal) > $maxRight) {
+$maxRight = ($delaunayVertices[$i]->x + $delaunayVertices[$i]->proximityToNeighboursHorizontal);
+}
+if(($delaunayVertices[$i]->y + $delaunayVertices[$i]->proximityToNeighboursVertical)>$maxBottom) {
+$maxBottom = ($delaunayVertices[$i]->y + $delaunayVertices[$i]->proximityToNeighboursVertical);
+}
+}
+
     }
 
-
+//echo $minLeft.",".$minTop.",".$maxRight.",".$maxBottom;
+imagerectangle($outputCanvas,$minLeft,$minTop,$maxRight,$maxBottom,imagecolorallocate($outputCanvas, 255, 255, 255));
 
 
 // draw edges:
@@ -1495,6 +1522,9 @@ function outputSizedNodesLayout()
           
             imageline($outputCanvas, $thisEdge->v0->x, $thisEdge->v0->y, $thisEdge->v1->x, $thisEdge->v1->y, $edgeColour);
     }
+
+
+
 
 
 
