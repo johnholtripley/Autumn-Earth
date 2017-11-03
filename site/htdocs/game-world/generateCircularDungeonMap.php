@@ -1603,6 +1603,17 @@ $rightTileEdge = floor($rightEdge * $ratio);
 $topTileEdge = floor($topEdge * $ratio);
 $bottomTileEdge = floor($bottomEdge * $ratio);
 
+// make paths 3 wide at least:
+if($leftTileEdge == $rightTileEdge) {
+    $leftTileEdge--;
+    $rightTileEdge++;
+}
+if($topTileEdge == $bottomTileEdge) {
+    $topTileEdge--;
+    $bottomTileEdge++;
+}
+
+
 for ($j = $leftTileEdge; $j <= $rightTileEdge; $j++) {
 for ($k = $topTileEdge; $k <= $bottomTileEdge; $k++) {
 $map[$k][$j] = ".";
@@ -1786,5 +1797,5 @@ img {
 </style>
 <?php
 
-echo '<p style="clear:both;padding-top:20px;"><a href="' . explode("?", $_SERVER['REQUEST_URI'])[0] . '?seed=' . $storedSeed . '">' . $storedSeed . '</a> | <a href="' . explode("?", $_SERVER['REQUEST_URI'])[0] . '">New seed</a></p>';
+echo '<p style="clear:both;padding-top:20px;"><a href="' . explode("?", $_SERVER["REQUEST_URI"])[0] . '?seed=' . $storedSeed . '">' . $storedSeed . '</a> | <a href="' . explode("?", $_SERVER["REQUEST_URI"])[0] . '">New seed</a></p>';
 ?>
