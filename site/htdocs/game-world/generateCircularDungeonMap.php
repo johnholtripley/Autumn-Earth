@@ -1538,8 +1538,7 @@ $requiredHeight = $maxBottom - $minTop;
     echo "<img src='data:image/jpeg;base64," . base64_encode($rawImageBytes) . "'></div>";
     imagedestroy($outputCanvas);
 
-    echo '<div class="sequenceBlock">';
-    echo '</div>';
+ 
 }
 
 
@@ -1552,8 +1551,8 @@ function gridTileGrid() {
     $ratio = max($mapTilesX, $mapTilesY) / max($requiredWidth, $requiredHeight);
     // delaunay graph size * ratio = tile size
     echo '<div class="sequenceBlock">';
-    echo $ratio."<br>";
-    echo $requiredWidth." x ".$requiredHeight."<br>";
+  //  echo $ratio."<br>";
+  //  echo $requiredWidth." x ".$requiredHeight."<br>";
 
 $map = array();
 
@@ -1581,7 +1580,7 @@ $leftTileEdge = floor($leftEdge * $ratio);
 $rightTileEdge = floor($rightEdge * $ratio);
 $topTileEdge = floor($topEdge * $ratio);
 $bottomTileEdge = floor($bottomEdge * $ratio);
-echo $leftEdge.",".$rightEdge." > ".$leftTileEdge.",".$rightTileEdge."<br>";
+//echo $leftEdge.",".$rightEdge." > ".$leftTileEdge.",".$rightTileEdge."<br>";
 for ($j = $leftTileEdge; $j <= $rightTileEdge; $j++) {
 for ($k = $topTileEdge; $k <= $bottomTileEdge; $k++) {
 $map[$k][$j] = ".";
@@ -1743,7 +1742,11 @@ font-family:arial,helvetica,sans-serif;font-size:14px;
 .sequenceBlock {
     float: left;
     width: 22.5%;
-    margin-right: 2.5%;
+    margin: 0 2.5% 2.5% 0;
+}
+
+.sequenceBlock:nth-child(4n+1) {
+    clear: left;
 }
 
 img {
