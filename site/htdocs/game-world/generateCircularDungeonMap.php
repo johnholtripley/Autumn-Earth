@@ -1543,7 +1543,7 @@ $requiredHeight = $maxBottom - $minTop;
 
 
 function gridTileGrid() {
-    global $requiredWidth, $requiredHeight, $mapTilesX, $mapTilesY, $canvaDimension, $delaunayVertices, $minLeft, $minTop;
+    global $requiredWidth, $requiredHeight, $mapTilesX, $mapTilesY, $canvaDimension, $delaunayVertices, $minLeft, $minTop, $edgesUsedOnDelaunayGraph, $allDelaunayEdges;
     // define the tile area to be used:
     $mapTilesX = 70;
     $mapTilesY = 70;
@@ -1575,7 +1575,7 @@ $rightEdge = $delaunayVertices[$i]->x + $delaunayVertices[$i]->proximityToNeighb
 $topEdge = $delaunayVertices[$i]->y - $delaunayVertices[$i]->proximityToNeighboursVertical - $minTop;
 $bottomEdge = $delaunayVertices[$i]->y + $delaunayVertices[$i]->proximityToNeighboursVertical - $minTop;
 
-
+// draw rooms:
 $leftTileEdge = floor($leftEdge * $ratio);
 $rightTileEdge = floor($rightEdge * $ratio);
 $topTileEdge = floor($topEdge * $ratio);
@@ -1586,9 +1586,32 @@ for ($k = $topTileEdge; $k <= $bottomTileEdge; $k++) {
 $map[$k][$j] = ".";
 }
 }
-
-
     }
+
+
+// plot connections:
+    foreach($allDelaunayEdges as $thisEdge) {
+         if ((in_array(new delaunayEdge($thisEdge->v0, $thisEdge->v1), $edgesUsedOnDelaunayGraph)) || (in_array(new delaunayEdge($thisEdge->v1, $thisEdge->v0), $edgesUsedOnDelaunayGraph))) {
+         
+$leftEdge = $thisEdge->v0->x  - $minLeft;
+$rightEdge = $thisEdge->v1->x  - $minLeft;
+$topEdge = $thisEdge->v0->y  - $minTop;
+$bottomEdge = $thisEdge->v1->y  - $minTop;
+
+$leftTileEdge = floor($leftEdge * $ratio);
+$rightTileEdge = floor($rightEdge * $ratio);
+$topTileEdge = floor($topEdge * $ratio);
+$bottomTileEdge = floor($bottomEdge * $ratio);
+
+for ($j = $leftTileEdge; $j <= $rightTileEdge; $j++) {
+for ($k = $topTileEdge; $k <= $bottomTileEdge; $k++) {
+$map[$k][$j] = ".";
+}
+}
+
+         }
+     }
+
 }
 
 
