@@ -1421,7 +1421,7 @@ unset($allDelaunayEdges[$key]);
 function outputSizedNodesLayout()
 {
 
-    global $canvaDimension, $delaunayVertices, $delaunayTriangles, $delaunayNodeRadius, $centreVertex, $edgesUsedOnDelaunayGraph, $keyColours, $lockedJoints, $allDelaunayEdges, $verticesUsedOnDelaunayGraph;
+    global $canvaDimension, $delaunayVertices, $delaunayTriangles, $delaunayNodeRadius, $centreVertex, $edgesUsedOnDelaunayGraph, $keyColours, $lockedJoints, $allDelaunayEdges, $verticesUsedOnDelaunayGraph, $requiredWidth, $requiredHeight;
 
     $outputCanvas = imagecreatetruecolor($canvaDimension, $canvaDimension);
     $groundColour = array(219, 215, 190);
@@ -1489,9 +1489,11 @@ $maxBottom = ($delaunayVertices[$i]->y + $delaunayVertices[$i]->proximityToNeigh
 
     }
 
-//echo $minLeft.",".$minTop.",".$maxRight.",".$maxBottom;
+// draw the boundary:
 imagerectangle($outputCanvas,$minLeft,$minTop,$maxRight,$maxBottom,imagecolorallocate($outputCanvas, 255, 255, 255));
 
+$requiredWidth = $maxRight - $minLeft;
+$requiredHeight = $maxBottom - $minTop;
 
 // draw edges:
     foreach($allDelaunayEdges as $thisEdge) {
@@ -1538,6 +1540,75 @@ imagerectangle($outputCanvas,$minLeft,$minTop,$maxRight,$maxBottom,imagecolorall
 
     echo '<div class="sequenceBlock">';
     echo '</div>';
+}
+
+
+function gridTileGrid() {
+    global $requiredWidth, $requiredHeight, $mapTilesX, $mapTilesY, $canvaDimension;
+    // define the tile area to be used:
+    $mapTilesX = 70;
+    $mapTilesY = 70;
+    // determine the ratio:
+    $ratio = max($mapTilesX, $mapTilesY) / max($requiredWidth, $requiredHeight);
+    // delaunay graph size * ratio = tile size
+    echo '<div class="sequenceBlock">';
+    echo $ratio."<br>";
+    echo $requiredWidth." x ".$requiredHeight."<br>";
+
+$map = array();
+
+    for ($i = 0; $i < $mapTilesX; $i++) {
+        $map[$i] = array();
+            for ($j = 0; $j < $mapTilesY; $j++) {
+            array_push($map[$i], "#");
+            }
+        }
+
+
+
+
+
+
+
+
+
+// output map:
+
+$drawnTileSize = 8; 
+   $outputCanvas = imagecreatetruecolor($canvaDimension, $canvaDimension);
+    $groundColour = array(219, 215, 190);
+    $ground       = imagecolorallocate($outputCanvas, $groundColour[0], $groundColour[1], $groundColour[2]);
+    imagefilledrectangle($outputCanvas, 0, 0, $canvaDimension, $canvaDimension, $ground);
+
+
+  for ($i = 0; $i < $mapTilesX; $i++) {      
+            for ($j = 0; $j < $mapTilesY; $j++) {
+        
+        switch ($map[$j][$i]) {
+    case "#":
+       imagefilledrectangle($outputCanvas,($i+1)*$drawnTileSize,($j+1)*$drawnTileSize,($i+2)*$drawnTileSize,($j+2)*$drawnTileSize,  imagecolorallocate($outputCanvas, 60, 60, 60));
+        break;
+    case ".":
+        // empty
+        break;
+   
+       
+}
+
+
+
+
+            }
+          
+        }
+
+       ob_start();
+    imagejpeg($outputCanvas, null, 100);
+    $rawImageBytes = ob_get_clean();
+
+    echo "<img src='data:image/jpeg;base64," . base64_encode($rawImageBytes) . "'></div>";
+    imagedestroy($outputCanvas);
+   
 }
 
 // linear connection with 2 nodes between the start and end:
@@ -1636,6 +1707,7 @@ outputDelaunayGraph();
 
 createGridLayout();
 outputSizedNodesLayout();
+gridTileGrid();
 
 ?>
 <style>
