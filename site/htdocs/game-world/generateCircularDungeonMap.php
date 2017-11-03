@@ -1547,16 +1547,16 @@ function gridTileGrid() {
     // define the tile area to be used:
     $mapTilesX = 70;
     $mapTilesY = 70;
-    // determine the ratio:
-    $ratio = max($mapTilesX, $mapTilesY) / max($requiredWidth, $requiredHeight);
+    // determine the ratio (-2 to allow 1 tile around each edge)
+    $ratio = max($mapTilesX-1, $mapTilesY-1) / max($requiredWidth, $requiredHeight);
     // delaunay graph size * ratio = tile size
 
 
 // work out any space to centre the map:
     $tileMapWidth = floor($requiredWidth * $ratio);
     $tileMapHeight = floor($requiredHeight * $ratio);
-    $tileOffsetX = round(($mapTilesX - $tileMapWidth)/2);
-    $tileOffsetY = round(($mapTilesY - $tileMapHeight)/2);
+    $tileOffsetX = floor(($mapTilesX - $tileMapWidth)/2);
+    $tileOffsetY = floor(($mapTilesY - $tileMapHeight)/2);
 
 
 
@@ -1687,13 +1687,13 @@ $drawnOffset = 20;
           
         }
 
-
+/*
 // draw border:
         imagefilledrectangle($outputCanvas,0,0,$drawnOffset,$canvaDimension,imagecolorallocate($outputCanvas, 60, 60, 60));
         imagefilledrectangle($outputCanvas,$canvaDimension-$drawnOffset,0,$canvaDimension,$canvaDimension,imagecolorallocate($outputCanvas, 60, 60, 60));
 imagefilledrectangle($outputCanvas,0,0,$canvaDimension,$drawnOffset,imagecolorallocate($outputCanvas, 60, 60, 60));
 imagefilledrectangle($outputCanvas,0,$canvaDimension-$drawnOffset,$canvaDimension,$canvaDimension,imagecolorallocate($outputCanvas, 60, 60, 60));
-
+*/
        ob_start();
     imagejpeg($outputCanvas, null, 100);
     $rawImageBytes = ob_get_clean();
