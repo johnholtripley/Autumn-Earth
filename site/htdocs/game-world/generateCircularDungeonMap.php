@@ -1565,13 +1565,17 @@ function gridTileGrid() {
   //  echo $requiredWidth." x ".$requiredHeight."<br>";
 
 $map = array();
+$itemMap = array();
 $drawnTileRooms = array();
 $drawnTileDoors = array();
+$drawnTileKeys = array();
 
     for ($i = 0; $i < $mapTilesX; $i++) {
         $map[$i] = array();
+        $itemMap[$i] = array();
             for ($j = 0; $j < $mapTilesY; $j++) {
             array_push($map[$i], "#");
+            array_push($itemMap[$i], "");
             }
         }
 
@@ -1579,6 +1583,7 @@ $drawnTileDoors = array();
 
 
 for ($i = 0; $i < count($delaunayVertices); $i++) {
+    $thisKeyPlotted = false;
     if (isset($delaunayVertices[$i]->whichNode)) {
 // plot this on to the tile map:
 
@@ -1613,6 +1618,19 @@ for ($k = $topTileEdge; $k < $bottomTileEdge; $k++) {
 $map[$k][$j] = ".";
 }
 }
+
+// check if it's got a key:
+  if ($delaunayVertices[$i]->whichNode->type == "KEYHOLDER") {
+    if(!$thisKeyPlotted) {
+        $thisKeyPlotted = true;
+
+// draw it in the centre:
+  array_push($drawnTileKeys, array(floor(($leftTileEdge+$rightTileEdge)/2),floor(($topTileEdge+$bottomTileEdge)/2), $delaunayVertices[$i]->whichNode->whichKey));
+
+}
+    }
+
+
     }
 }
 
@@ -1754,15 +1772,33 @@ break;
         // empty
         break;
    
+
+
+
        
 }
 
+// draw border:
  imagerectangle($outputCanvas,($i)*$drawnTileSize+$drawnOffset,($j)*$drawnTileSize+$drawnOffset,($i+1)*$drawnTileSize+$drawnOffset,($j+1)*$drawnTileSize+$drawnOffset,  imagecolorallocate($outputCanvas, 128, 128, 128));
 
 
             }
           
         }
+
+
+
+        // draw keys:
+
+ for ($i = 0; $i < count($drawnTileKeys); $i++) { 
+    $thisKeyColour = imagecolorallocate($outputCanvas, $keyColours[($drawnTileKeys[$i][2])][0], $keyColours[($drawnTileKeys[$i][2])][1], $keyColours[($drawnTileKeys[$i][2])][2]);
+
+imagefilledellipse($outputCanvas, ($drawnTileKeys[$i][0])*$drawnTileSize+$drawnOffset+($drawnTileSize/2), ($drawnTileKeys[$i][1])*$drawnTileSize+$drawnOffset+($drawnTileSize/2),$drawnTileSize,$drawnTileSize,$thisKeyColour);
+
+    }
+
+
+
 
 /*
 // draw border:
