@@ -14,8 +14,8 @@ Add NPCs (with relevant quests)
 
 
 
-http://ae.dev/game-world/generateCircularDungeonMap.php?seed=1509565917 - what would this look like on a 50x50 tile grid?
 
+// http://ae.dev/game-world/generateCircularDungeonMap.php?seed=1510049447 - 3 wide corridors
 
 ---- */
 
@@ -1543,7 +1543,7 @@ $requiredHeight = $maxBottom - $minTop;
 
 
 function gridTileGrid() {
-    global $requiredWidth, $requiredHeight, $mapTilesX, $mapTilesY, $canvaDimension, $delaunayVertices, $minLeft, $minTop, $edgesUsedOnDelaunayGraph, $allDelaunayEdges;
+    global $requiredWidth, $requiredHeight, $mapTilesX, $mapTilesY, $canvaDimension, $delaunayVertices, $minLeft, $minTop, $edgesUsedOnDelaunayGraph, $allDelaunayEdges, $lockedJoints, $keyColours;
     // define the tile area to be used:
     $mapTilesX = 70;
     $mapTilesY = 70;
@@ -1565,6 +1565,8 @@ function gridTileGrid() {
   //  echo $requiredWidth." x ".$requiredHeight."<br>";
 
 $map = array();
+$drawnTileRooms = array();
+$drawnTileDoors = array();
 
     for ($i = 0; $i < $mapTilesX; $i++) {
         $map[$i] = array();
@@ -1601,12 +1603,18 @@ $bottomTileEdge += $tileOffsetY;
 
 
 // nudge this in to leave walls between rooms intact:
-for ($j = $leftTileEdge+1; $j < $rightTileEdge; $j++) {
-for ($k = $topTileEdge+1; $k < $bottomTileEdge; $k++) {
+$leftTileEdge++;
+$topTileEdge++;
+
+array_push($drawnTileRooms, array($leftTileEdge, $topTileEdge, $rightTileEdge, $bottomTileEdge));
+
+for ($j = $leftTileEdge; $j < $rightTileEdge; $j++) {
+for ($k = $topTileEdge; $k < $bottomTileEdge; $k++) {
 $map[$k][$j] = ".";
 }
 }
     }
+}
 
 
 // plot connections:
@@ -1629,29 +1637,76 @@ $rightTileEdge += $tileOffsetX;
 $topTileEdge += $tileOffsetY;
 $bottomTileEdge += $tileOffsetY;
 
-// make paths 3 wide at least:
-if($leftTileEdge == $rightTileEdge) {
-    $leftTileEdge--;
-    $rightTileEdge++;
-}
-if($topTileEdge == $bottomTileEdge) {
-    $topTileEdge--;
-    $bottomTileEdge++;
-}
+
 
 
 
 
 for ($j = $leftTileEdge; $j <= $rightTileEdge; $j++) {
 for ($k = $topTileEdge; $k <= $bottomTileEdge; $k++) {
+    // check if this is in a room or not:
+    $isInRoom = false;
+    for ($l = 0; $l < count($drawnTileRooms); $l++) {
+        if($j>=$drawnTileRooms[$l][0]) {
+        if($k>=$drawnTileRooms[$l][1]) {
+             if($j<=$drawnTileRooms[$l][2]) {
+             if($k<=$drawnTileRooms[$l][3]) {
+                 $isInRoom = true;
+                 if($map[$k][$j] != ".") {
+// not already been plotted by the room, so it's a door:
+                    $map[$k][$j] = "d";
+               // check if it's locked:
+
+
+
+          
+       
+            
+            if (isset($lockedJoints[("-" . $thisEdge->v1->whichNode->name."-" . $thisEdge->v0->whichNode->name)])) {
+                $map[$k][$j] = "D";
+                array_push($drawnTileDoors, array($j,$k, $lockedJoints[("-" . $thisEdge->v1->whichNode->name."-" . $thisEdge->v0->whichNode->name)]));
+            } else {
+                array_push($drawnTileDoors, array($j,$k, -1));
+            }
+
+
+                    
+                 }
+             }
+         }
+}
+        }
+    }
+
+
+
+    if(!$isInRoom) {
+
+
+// make paths 3 wide at least:
+if($leftTileEdge == $rightTileEdge) {
+   $map[$k][$j-1] = ".";
+   $map[$k][$j+1] = ".";
+}
+if($topTileEdge == $bottomTileEdge) {
+      $map[$k-1][$j] = ".";
+   $map[$k+1][$j] = ".";
+}
+
 $map[$k][$j] = ".";
+
+    }
+
+
 }
 }
+
+
 
          }
      }
 
-}
+
 
 
 
@@ -1666,12 +1721,34 @@ $drawnOffset = 20;
     imagefilledrectangle($outputCanvas, 0, 0, $canvaDimension, $canvaDimension, $ground);
 
 
+
+
   for ($i = 0; $i < $mapTilesX; $i++) {      
             for ($j = 0; $j < $mapTilesY; $j++) {
         
         switch ($map[$j][$i]) {
     case "#":
+    // non-walkable tile:
        imagefilledrectangle($outputCanvas,($i)*$drawnTileSize+$drawnOffset,($j)*$drawnTileSize+$drawnOffset,($i+1)*$drawnTileSize+$drawnOffset,($j+1)*$drawnTileSize+$drawnOffset,  imagecolorallocate($outputCanvas, 60, 60, 60));
+        break;
+        case "d":
+        // door
+         imagefilledrectangle($outputCanvas,($i)*$drawnTileSize+$drawnOffset,($j)*$drawnTileSize+$drawnOffset,($i+1)*$drawnTileSize+$drawnOffset,($j+1)*$drawnTileSize+$drawnOffset,  imagecolorallocate($outputCanvas, 255, 255, 255));
+         break;
+               case "D":
+        // locked door - get the colour:
+
+
+   for ($m = 0; $m < count($drawnTileDoors); $m++) {
+    if($i == $drawnTileDoors[$m][0]) {
+    if($j == $drawnTileDoors[$m][1]) {
+$thisKeyColour = imagecolorallocate($outputCanvas, $keyColours[($drawnTileDoors[$m][2])][0], $keyColours[($drawnTileDoors[$m][2])][1], $keyColours[($drawnTileDoors[$m][2])][2]);
+break;
+}
+    }
+    }
+
+         imagefilledrectangle($outputCanvas,($i)*$drawnTileSize+$drawnOffset,($j)*$drawnTileSize+$drawnOffset,($i+1)*$drawnTileSize+$drawnOffset,($j+1)*$drawnTileSize+$drawnOffset, $thisKeyColour);
         break;
     case ".":
         // empty
