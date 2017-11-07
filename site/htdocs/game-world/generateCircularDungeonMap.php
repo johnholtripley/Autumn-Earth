@@ -1631,7 +1631,21 @@ $outputJSON .= '"shops": [],';
 $outputJSON .= '"npcs": [],';
 $outputJSON .= '"doors": [],';
 $outputJSON .= '"innerDoors": [],';
-$outputJSON .= '"items": [],';
+
+$outputJSON .= '"items": [';
+
+if(count($drawnTileKeys)>0) {
+ for ($i = 0; $i < count($drawnTileKeys); $i++) { 
+   
+ $outputJSON .= '{"type": 43, "tileX": '.$drawnTileKeys[$i][0].', "tileY": '.$drawnTileKeys[$i][1].', "additional": "-1-x-x"},';
+
+    }
+     // remove last comma:
+$outputJSON = rtrim($outputJSON, ', ');
+}
+$outputJSON .= '],';
+
+
 $outputJSON .= '"hotspots": []';
 //$outputJSON .= '",showOnlyLineOfSight": true';
 $outputJSON .= '}}';
