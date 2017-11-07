@@ -4160,7 +4160,8 @@ function loadMapJSON(mapFilePath) {
                 document.title = titleTagPrefix + ' - ' + thisMapData.zoneName;
                 cartographicTitle.innerHTML = thisMapData.zoneName;
             }
-            initCartographicMap();
+            // temporarily remove this while working on random dungeons: ###########
+         //   initCartographicMap();
             findProfessionsAndRecipes();
             if (thisMapData.showOnlyLineOfSight) {
                 // initialise the lightmap with default values:
@@ -4181,6 +4182,7 @@ function loadMapJSON(mapFilePath) {
         },
         function(status) {
             // try again:
+            console.log("retrying..."+mapFilePath);
             loadMapJSON(mapFilePath);
         });
 }
@@ -4213,7 +4215,10 @@ function loadMap() {
         var centreDoorX = targetDoorX / 3;
         var centreDoorY = targetDoorY / 3;
 
-        mapFilePath = '/game-world/generateDungeonMap.php?playerId=' + characterId + '&originatingMapId=' + currentMap + '&requestedMap=' + newMap + '&dungeonName=' + randomDungeonName + '&connectingDoorX=' + centreDoorX + '&connectingDoorY=' + centreDoorY;
+     //   mapFilePath = '/game-world/generateDungeonMap.php?playerId=' + characterId + '&originatingMapId=' + currentMap + '&requestedMap=' + newMap + '&dungeonName=' + randomDungeonName + '&connectingDoorX=' + centreDoorX + '&connectingDoorY=' + centreDoorY;
+
+mapFilePath = '/game-world/generateCircularDungeonMap.php?seed=1510100694';
+
 
     }
     currentMap = newMap;

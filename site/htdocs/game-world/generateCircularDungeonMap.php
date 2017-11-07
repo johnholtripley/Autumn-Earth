@@ -6,7 +6,7 @@ include $_SERVER['DOCUMENT_ROOT'] . "/game-world/generateCircularDungeonMap-thir
 
 TO DO:
 Create meta levels so can have foreshadowing and hints about future encounters
-Map nodes to tiles
+elevations
 add template sections
 Convert locks, valves, hazards and treasure into interesting variants
 Add NPCs (with relevant quests)
@@ -15,7 +15,9 @@ Add NPCs (with relevant quests)
 
 
 
-// http://ae.dev/game-world/generateCircularDungeonMap.php?seed=1510049447 - 3 wide corridors
+// http://ae.dev/game-world/generateCircularDungeonMap.php?seed=1510006712 - 3 wide corridors and remove doors for small rooms (unless locked)
+// http://ae.dev/game-world/generateCircularDungeonMap.php?seed=1509990424 - need to sort locks for a corridor
+// http://ae.dev/game-world/generateCircularDungeonMap.php?seed=1509990915 - undrawn connection 
 
 ---- */
 
@@ -354,7 +356,7 @@ echo " - is locked";
 
 function init()
 {
-    global $nodeList, $jointList, $canvaDimension, $keyColours, $storedSeed;
+    global $nodeList, $jointList, $canvaDimension, $keyColours, $storedSeed, $debug;
 
     $keyColours = array(
         array(255, 0, 64),
@@ -373,11 +375,16 @@ function init()
         $storedSeed       = floor((float) $sec + ((float) $usec * 100000));
     }
     mt_srand($storedSeed);
-
+if (isset($_GET["debug"])) {
+        $debug = true;
+    } else {
+        $debug = false;
+    }
 }
 
 function growGrammar($thisGrammar, $iterations)
 {
+    global $debug;
     $grammarTransformations = array(
         // simple branching and layout:
         "X" => array("OX", "{OX,O|}", "{OX,O}", "Z"),
@@ -388,8 +395,9 @@ function growGrammar($thisGrammar, $iterations)
     );
     $currentKey = 0;
 
+if($debug) {
     echo '<div class="sequenceBlock"><p>start grammar: ' . htmlentities($thisGrammar) . '<br>';
-
+}
     for ($i = 0; $i < $iterations; $i++) {
         $characterCounter = 0;
         do {
@@ -404,10 +412,14 @@ function growGrammar($thisGrammar, $iterations)
 
                     $currentKey++;
                 }
+                if($debug) {
                 echo $thisCharacter . " => " . $thisTransform . " &hellip; ";
+            }
                 $thisGrammar = substr_replace($thisGrammar, $thisTransform, $characterCounter, 1);
                 $characterCounter += strlen($thisTransform);
+             if($debug) {
                 echo " now " . htmlentities($thisGrammar) . "<br>";
+            }
             }
             $characterCounter++;
         } while ($characterCounter < strlen($thisGrammar));
@@ -417,8 +429,9 @@ function growGrammar($thisGrammar, $iterations)
     $thisGrammar = str_replace("Z", "OO", $thisGrammar);
 
 
-
+if($debug) {
     echo "final grammar: " . htmlentities($thisGrammar) . "</p>";
+}
     return $thisGrammar;
 }
 
@@ -853,7 +866,7 @@ function findPartnerNode($activeNode)
 
 function canPathfindThroughDelaunayGraph($startNode, $endNode)
 {
-    global $allDelaunayEdges, $delaunayVertices, $verticesUsedOnDelaunayGraph, $edgesUsedOnDelaunayGraph, $delaunayTriangles, $nodesPlottedOnDelaunayGraph, $lockedJoints;
+    global $allDelaunayEdges, $delaunayVertices, $verticesUsedOnDelaunayGraph, $edgesUsedOnDelaunayGraph, $delaunayTriangles, $nodesPlottedOnDelaunayGraph, $lockedJoints, $debug;
     // find start and end vertices:
     foreach ($delaunayVertices as $thisVertex) {
         if ($thisVertex->whichNode === $startNode) {
@@ -989,7 +1002,9 @@ if(isset($firstNewNode)) {
     }
 
     } else {
+        if($debug) {
         echo "<br>Didn't find path<br>";
+    }
     }
     return $targetFound;
 }
@@ -1009,7 +1024,7 @@ function compareByEdges($a, $b)
 
 function plotConnectivityOnDelaunayGraph()
 {
-    global $centreVertex, $delaunayVertices, $nodeList, $jointList, $delaunayTriangles, $edgesUsedOnDelaunayGraph, $verticesUsedOnDelaunayGraph, $nodesPlottedOnDelaunayGraph, $connectionsPlottedOnDelaunayGraph, $allDelaunayEdges;
+    global $centreVertex, $delaunayVertices, $nodeList, $jointList, $delaunayTriangles, $edgesUsedOnDelaunayGraph, $verticesUsedOnDelaunayGraph, $nodesPlottedOnDelaunayGraph, $connectionsPlottedOnDelaunayGraph, $allDelaunayEdges, $debug;
 
     // for each strand, plot the entire path out. mark used edges and whether a node has all of its connections used. pathfind to find unused edges
 
@@ -1168,7 +1183,9 @@ function plotConnectivityOnDelaunayGraph()
 
     } while (($connectionsRemainingToBePlotted > 0) && ($foundUnusedVertex));
     if (!$foundUnusedVertex) {
+        if($debug) {
         echo "FAILED... RESTARTING...<br>";
+    }
     }
     return $foundUnusedVertex;
 }
@@ -1183,7 +1200,7 @@ function removeSharedTriangleEdges($triangle)
 
 function outputDelaunayGraph()
 {
-    global $canvaDimension, $delaunayVertices, $delaunayTriangles, $delaunayNodeRadius, $centreVertex, $edgesUsedOnDelaunayGraph, $keyColours, $lockedJoints;
+    global $canvaDimension, $delaunayVertices, $delaunayTriangles, $delaunayNodeRadius, $centreVertex, $edgesUsedOnDelaunayGraph, $keyColours, $lockedJoints, $debug;
 
     $outputCanvas = imagecreatetruecolor($canvaDimension, $canvaDimension);
     $groundColour = array(219, 215, 190);
@@ -1293,12 +1310,14 @@ function outputDelaunayGraph()
         }
         imagefilledellipse($outputCanvas, $delaunayVertices[$i]->x, $delaunayVertices[$i]->y, $delaunayNodeRadius, $delaunayNodeRadius, $nodeColour);
     }
+    if($debug) {
     echo '<div class="sequenceBlock">';
     ob_start();
     imagejpeg($outputCanvas, null, 100);
     $rawImageBytes = ob_get_clean();
 
     echo "<img src='data:image/jpeg;base64," . base64_encode($rawImageBytes) . "'></div>";
+}
     imagedestroy($outputCanvas);
 }
 
@@ -1314,7 +1333,7 @@ function sortVerticesByConnections($a, $b)
 
 function createGridLayout()
     {
-    global $delaunayVertices, $verticesUsedOnDelaunayGraph, $edgesUsedOnDelaunayGraph, $allDelaunayEdges;
+    global $delaunayVertices, $verticesUsedOnDelaunayGraph, $edgesUsedOnDelaunayGraph, $allDelaunayEdges, $debug;
     $maxNodeDimension = 140;
     $sortedVertices = $verticesUsedOnDelaunayGraph;
     usort($sortedVertices, 'sortVerticesByConnections');
@@ -1356,6 +1375,7 @@ function createGridLayout()
         }
 
     outputSizedNodesLayout();
+
     foreach($sortedVertices as $thisVertex) {
         $smallestHorizontalSpacingAvailable = INF;
         $smallestVerticalSpacingAvailable = INF;
@@ -1421,7 +1441,7 @@ unset($allDelaunayEdges[$key]);
 function outputSizedNodesLayout()
 {
 
-    global $canvaDimension, $delaunayVertices, $delaunayTriangles, $delaunayNodeRadius, $centreVertex, $edgesUsedOnDelaunayGraph, $keyColours, $lockedJoints, $allDelaunayEdges, $verticesUsedOnDelaunayGraph, $requiredWidth, $requiredHeight, $minLeft, $minTop;
+    global $canvaDimension, $delaunayVertices, $delaunayTriangles, $delaunayNodeRadius, $centreVertex, $edgesUsedOnDelaunayGraph, $keyColours, $lockedJoints, $allDelaunayEdges, $verticesUsedOnDelaunayGraph, $requiredWidth, $requiredHeight, $minLeft, $minTop, $debug;
 
     $outputCanvas = imagecreatetruecolor($canvaDimension, $canvaDimension);
     $groundColour = array(219, 215, 190);
@@ -1529,21 +1549,122 @@ $requiredHeight = $maxBottom - $minTop;
 
 
 
-
+if($debug) {
     echo '<div class="sequenceBlock">';
     ob_start();
     imagejpeg($outputCanvas, null, 100);
     $rawImageBytes = ob_get_clean();
 
     echo "<img src='data:image/jpeg;base64," . base64_encode($rawImageBytes) . "'></div>";
+}
     imagedestroy($outputCanvas);
 
  
 }
 
 
+function outputJSONContent() {
+global $debug, $map, $itemMap, $drawnTileDoors, $drawnTileKeys, $mapTilesX, $mapTilesY, $storedSeed;
+if($debug) {
+echo '<code style="width:100%;clear:both;display:block;font-size:0.8em;">';
+}
+
+
+$outputJSON = '{"map":{"zoneName": "A Circular Dungeon",';
+$outputJSON .='"seed": '.$storedSeed.', ';
+$outputJSON .='"collisions": [';
+
+
+  for ($i = 0; $i < $mapTilesX; $i++) {   
+  $outputJSON .= '[';   
+            for ($j = 0; $j < $mapTilesY; $j++) {
+        if($map[$i][$j] == "#") {
+            $outputJSON.= '1, ';
+        } else {
+            $outputJSON.= '0, ';
+        }
+
+    }
+
+    // remove last comma:
+$outputJSON = rtrim($outputJSON, ', ');
+
+    $outputJSON .= '],'; 
+}
+// remove last comma:
+$outputJSON = rtrim($outputJSON, ', ');
+ $outputJSON .= '], "terrain": [';
+
+ for ($i = 0; $i < $mapTilesX; $i++) {   
+  $outputJSON .= '[';   
+            for ($j = 0; $j < $mapTilesY; $j++) {
+        if($map[$i][$j] == "#") {
+            $outputJSON.= '0, ';
+        } else {
+            $outputJSON.= '"*", ';
+        }
+    }
+    // remove last comma:
+$outputJSON = rtrim($outputJSON, ', ');
+    $outputJSON .= '],'; 
+}
+// remove last comma:
+$outputJSON = rtrim($outputJSON, ', ');
+
+$outputJSON .= '], "elevation": [';
+
+  for ($i = 0; $i < $mapTilesX; $i++) {   
+  $outputJSON .= '[';   
+            for ($j = 0; $j < $mapTilesY; $j++) {
+               $outputJSON.= '0, ';
+                }
+                // remove last comma:
+$outputJSON = rtrim($outputJSON, ', ');
+                $outputJSON .= '],'; 
+            }
+            // remove last comma:
+$outputJSON = rtrim($outputJSON, ', ');
+
+
+$outputJSON .= '],"graphics": [{"src": "block.png","centreX": 24,"centreY": 45}],';
+$outputJSON .= '"shops": [],';
+$outputJSON .= '"npcs": [],';
+$outputJSON .= '"doors": [],';
+$outputJSON .= '"innerDoors": [],';
+$outputJSON .= '"items": [],';
+$outputJSON .= '"hotspots": []';
+//$outputJSON .= '",showOnlyLineOfSight": true';
+$outputJSON .= '}}';
+if(!$debug) {
+    header("Content-Type: application/json");
+}
+echo $outputJSON;
+
+
+if(!$debug) {
+
+$thisMapsId = -1;
+$thisDungeonsName = "the-barrow-mines";
+$thisPlayersId = 999;
+
+  $mapFilename = "../data/chr" . $thisPlayersId . "/dungeon/".$thisDungeonsName."/" . $thisMapsId . ".json";  
+    if(!($filename=fopen($mapFilename,"w"))) {
+            // error handling?
+        }
+        fwrite($filename, $outputJSON); 
+        fclose($filename);
+    }
+
+
+
+
+if($debug) {
+echo '</code>';
+}
+}
+
 function gridTileGrid() {
-    global $requiredWidth, $requiredHeight, $mapTilesX, $mapTilesY, $canvaDimension, $delaunayVertices, $minLeft, $minTop, $edgesUsedOnDelaunayGraph, $allDelaunayEdges, $lockedJoints, $keyColours;
+    global $requiredWidth, $requiredHeight, $mapTilesX, $mapTilesY, $canvaDimension, $delaunayVertices, $minLeft, $minTop, $edgesUsedOnDelaunayGraph, $allDelaunayEdges, $lockedJoints, $keyColours, $debug, $map, $itemMap, $drawnTileDoors, $drawnTileKeys;
     // define the tile area to be used:
     $mapTilesX = 70;
     $mapTilesY = 70;
@@ -1559,8 +1680,9 @@ function gridTileGrid() {
     $tileOffsetY = floor(($mapTilesY - $tileMapHeight)/2);
 
 
-
+if($debug) {
     echo '<div class="sequenceBlock">';
+}
   //  echo $ratio."<br>";
   //  echo $requiredWidth." x ".$requiredHeight."<br>";
 
@@ -1807,11 +1929,13 @@ imagefilledellipse($outputCanvas, ($drawnTileKeys[$i][0])*$drawnTileSize+$drawnO
 imagefilledrectangle($outputCanvas,0,0,$canvaDimension,$drawnOffset,imagecolorallocate($outputCanvas, 60, 60, 60));
 imagefilledrectangle($outputCanvas,0,$canvaDimension-$drawnOffset,$canvaDimension,$canvaDimension,imagecolorallocate($outputCanvas, 60, 60, 60));
 */
+if($debug) {
        ob_start();
     imagejpeg($outputCanvas, null, 100);
     $rawImageBytes = ob_get_clean();
 
     echo "<img src='data:image/jpeg;base64," . base64_encode($rawImageBytes) . "'></div>";
+}
     imagedestroy($outputCanvas);
    
 }
@@ -1899,8 +2023,10 @@ do {
 
     parseStringGrammar($grownGrammar);
     moveNodesApart();
-
+   
+if($debug) {
     outputConnections();
+}
     // random, grid, wonky-grid, offset-grid
     $layoutType = "offset-grid";
     createDelaunayGraph($layoutType);
@@ -1908,13 +2034,19 @@ do {
         removeDiagonalEdges();
     }
 } while (!plotConnectivityOnDelaunayGraph());
+
 outputDelaunayGraph();
 
 createGridLayout();
+
 outputSizedNodesLayout();
+
 gridTileGrid();
 
-?>
+outputJSONContent();
+
+if($debug) {
+    ?>
 <style>
 
 body, p {
@@ -1937,6 +2069,8 @@ img {
 }
 </style>
 <?php
-
-echo '<p style="clear:both;padding-top:20px;"><a href="' . explode("?", $_SERVER["REQUEST_URI"])[0] . '?seed=' . $storedSeed . '">' . $storedSeed . '</a> | <a href="' . explode("?", $_SERVER["REQUEST_URI"])[0] . '">New seed</a></p>';
+}
+if($debug) {
+echo '<p style="clear:both;padding-top:20px;"><a href="' . explode("?", $_SERVER["REQUEST_URI"])[0] . '?debug=true&amp;seed=' . $storedSeed . '">' . $storedSeed . '</a> | <a href="' . explode("?", $_SERVER["REQUEST_URI"])[0] . '?debug=true">New seed</a></p>';
+}
 ?>
