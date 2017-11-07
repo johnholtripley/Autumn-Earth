@@ -1682,7 +1682,7 @@ $outputJSON .= '],';
 
 
 $outputJSON .= '"hotspots": []';
-//$outputJSON .= '",showOnlyLineOfSight": true';
+//$outputJSON .= ',"showOnlyLineOfSight": true';
 $outputJSON .= '}}';
 if(!$debug) {
     header("Content-Type: application/json");

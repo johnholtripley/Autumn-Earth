@@ -4217,7 +4217,7 @@ function loadMap() {
 
      //   mapFilePath = '/game-world/generateDungeonMap.php?playerId=' + characterId + '&originatingMapId=' + currentMap + '&requestedMap=' + newMap + '&dungeonName=' + randomDungeonName + '&connectingDoorX=' + centreDoorX + '&connectingDoorY=' + centreDoorY;
 
-mapFilePath = '/game-world/generateCircularDungeonMap.php?seed=1510100694';
+mapFilePath = '/game-world/generateCircularDungeonMap.php?seed=1510158518';
 
 
     }
