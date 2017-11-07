@@ -251,7 +251,7 @@ function moveNodesApart()
 
 function outputConnections()
 {
-    global $nodeList, $jointList, $canvaDimension, $keyColours, $lockedJoints;
+    global $nodeList, $jointList, $canvaDimension, $keyColours, $lockedJoints, $debug;
 
     $outputCanvas = imagecreatetruecolor($canvaDimension, $canvaDimension);
     $groundColour = array(219, 215, 190);
@@ -337,21 +337,30 @@ function outputConnections()
             $myArrow->radius = 12;
             $myArrow->drawGDArrow();
         }
+
+
+        if($debug) {
+
+
         echo "<br>joint from " . $thisJoint->nodeA . " (" . strtolower($nodeList[$thisJoint->nodeA]->type) . ") to " . $thisJoint->nodeB . " (" . strtolower($nodeList[$thisJoint->nodeB]->type) . ")";
 if($thisJoint->isLocked) {
 echo " - is locked";
 } 
+}
          
     }
 
-    //header('Content-Type: image/jpeg');
+if($debug) {
     echo '</div><div class="sequenceBlock">';
     ob_start();
     imagejpeg($outputCanvas, null, 100);
     $rawImageBytes = ob_get_clean();
     echo "<img src='data:image/jpeg;base64," . base64_encode($rawImageBytes) . "'>";
+}
     imagedestroy($outputCanvas);
+ if($debug) {
     echo "</div>";
+}
 }
 
 function init()
@@ -1638,14 +1647,14 @@ $outputJSON .= '"doors": [],';
 $outputJSON .= '"innerDoors": {';
 
 if(count($drawnTileDoors)>0) {
-    
+  
 //array_push($drawnTileDoors, array($j,$k, $lockedJoints[("-" . $thisEdge->v1->whichNode->name."-" . $thisEdge->v0->whichNode->name)]));
 for ($i = 0; $i < count($drawnTileDoors); $i++) {
-$isLocked = false;
+$thisDoorIsLocked = false;
  if($drawnTileDoors[$i][2] != -1) {
-$isLocked = true;
+$thisDoorIsLocked = true;
  }
-$outputJSON .= '"'.$thisMapsId.'-'.$drawnTileDoors[$i][0].'-'.$drawnTileDoors[$i][1].'":{"tileX": '.$drawnTileDoors[$i][0].', "tileY": '.$drawnTileDoors[$i][1].', "isOpen": false, "isLocked": '.json_encode($isLocked).', "graphic": 1, "animation": { "opening": { "length": 8, "row": 0 }, "closing": { "length": 8, "row": 1 } }},';
+$outputJSON .= '"'.$thisMapsId.'-'.$drawnTileDoors[$i][0].'-'.$drawnTileDoors[$i][1].'":{"tileX": '.$drawnTileDoors[$i][0].', "tileY": '.$drawnTileDoors[$i][1].', "isOpen": false, "isLocked": '.json_encode($thisDoorIsLocked).', "graphic": 1, "animation": { "opening": { "length": 8, "row": 0 }, "closing": { "length": 8, "row": 1 } }},';
 // push this door reference:
 $drawnTileDoors[$i][3] = $thisMapsId.'-'.$drawnTileDoors[$i][0].'-'.$drawnTileDoors[$i][1];
 }
@@ -1661,18 +1670,7 @@ $outputJSON .= '"items": [';
 if(count($drawnTileKeys)>0) {
  for ($i = 0; $i < count($drawnTileKeys); $i++) { 
    // find the corresponding door:
-for ($j = 0; $j < count($drawnTileDoors); $j++) {
-    $thisDoorReference = $drawnTileDoors[$j][3];
-    $thisDoorSplit = explode("-",$thisDoorReference);
-    // use end in case the map is negative and thus has a '-' at the start:
-    $thisDoorY = end($thisDoorSplit);
-    $thisDoorX = prev($thisDoorSplit);
-   
-    if(($thisDoorX == $drawnTileKeys[$i][0]) && ($thisDoorY == $drawnTileKeys[$i][1])) {
-$foundDoorReference = $thisDoorReference;
-break;
-    }
-}
+
 
  $outputJSON .= '{"type": 43, "tileX": '.$drawnTileKeys[$i][0].', "tileY": '.$drawnTileKeys[$i][1].', "additional": "'.$drawnTileDoors[($drawnTileKeys[$i][2])][3].'"},';
 
@@ -2073,9 +2071,9 @@ do {
     parseStringGrammar($grownGrammar);
     moveNodesApart();
    
-if($debug) {
+
     outputConnections();
-}
+
     // random, grid, wonky-grid, offset-grid
     $layoutType = "offset-grid";
     createDelaunayGraph($layoutType);
