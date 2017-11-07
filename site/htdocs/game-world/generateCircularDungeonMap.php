@@ -356,7 +356,12 @@ echo " - is locked";
 
 function init()
 {
-    global $nodeList, $jointList, $canvaDimension, $keyColours, $storedSeed, $debug;
+    global $nodeList, $jointList, $canvaDimension, $keyColours, $storedSeed, $debug, $thisMapsId, $thisDungeonsName, $thisPlayersId;
+
+$thisMapsId = -1;
+$thisDungeonsName = "the-barrow-mines";
+$thisPlayersId = 999;
+
 
     $keyColours = array(
         array(255, 0, 64),
@@ -1564,7 +1569,7 @@ if($debug) {
 
 
 function outputJSONContent() {
-global $debug, $map, $itemMap, $drawnTileDoors, $drawnTileKeys, $mapTilesX, $mapTilesY, $storedSeed;
+global $debug, $map, $itemMap, $drawnTileDoors, $drawnTileKeys, $mapTilesX, $mapTilesY, $storedSeed, $thisMapsId, $thisDungeonsName, $thisPlayersId;
 if($debug) {
 echo '<code style="width:100%;clear:both;display:block;font-size:0.8em;">';
 }
@@ -1626,18 +1631,50 @@ $outputJSON = rtrim($outputJSON, ', ');
 $outputJSON = rtrim($outputJSON, ', ');
 
 
-$outputJSON .= '],"graphics": [{"src": "block.png","centreX": 24,"centreY": 45}],';
+$outputJSON .= '],"graphics": [{"src": "block.png","centreX": 24,"centreY": 45},{"src": "red-block.png","centreX": 24,"centreY": 45}],';
 $outputJSON .= '"shops": [],';
 $outputJSON .= '"npcs": [],';
 $outputJSON .= '"doors": [],';
-$outputJSON .= '"innerDoors": [],';
+$outputJSON .= '"innerDoors": {';
+
+if(count($drawnTileDoors)>0) {
+    
+//array_push($drawnTileDoors, array($j,$k, $lockedJoints[("-" . $thisEdge->v1->whichNode->name."-" . $thisEdge->v0->whichNode->name)]));
+for ($i = 0; $i < count($drawnTileDoors); $i++) {
+$isLocked = false;
+ if($drawnTileDoors[$i][2] != -1) {
+$isLocked = true;
+ }
+$outputJSON .= '"'.$thisMapsId.'-'.$drawnTileDoors[$i][0].'-'.$drawnTileDoors[$i][1].'":{"tileX": '.$drawnTileDoors[$i][0].', "tileY": '.$drawnTileDoors[$i][1].', "isOpen": false, "isLocked": '.json_encode($isLocked).', "graphic": 1, "animation": { "opening": { "length": 8, "row": 0 }, "closing": { "length": 8, "row": 1 } }},';
+// push this door reference:
+$drawnTileDoors[$i][3] = $thisMapsId.'-'.$drawnTileDoors[$i][0].'-'.$drawnTileDoors[$i][1];
+}
+     // remove last comma:
+$outputJSON = rtrim($outputJSON, ', ');
+
+}
+
+$outputJSON .= '},';
 
 $outputJSON .= '"items": [';
 
 if(count($drawnTileKeys)>0) {
  for ($i = 0; $i < count($drawnTileKeys); $i++) { 
+   // find the corresponding door:
+for ($j = 0; $j < count($drawnTileDoors); $j++) {
+    $thisDoorReference = $drawnTileDoors[$j][3];
+    $thisDoorSplit = explode("-",$thisDoorReference);
+    // use end in case the map is negative and thus has a '-' at the start:
+    $thisDoorY = end($thisDoorSplit);
+    $thisDoorX = prev($thisDoorSplit);
    
- $outputJSON .= '{"type": 43, "tileX": '.$drawnTileKeys[$i][0].', "tileY": '.$drawnTileKeys[$i][1].', "additional": "-1-x-x"},';
+    if(($thisDoorX == $drawnTileKeys[$i][0]) && ($thisDoorY == $drawnTileKeys[$i][1])) {
+$foundDoorReference = $thisDoorReference;
+break;
+    }
+}
+
+ $outputJSON .= '{"type": 43, "tileX": '.$drawnTileKeys[$i][0].', "tileY": '.$drawnTileKeys[$i][1].', "additional": "'.$drawnTileDoors[($drawnTileKeys[$i][2])][3].'"},';
 
     }
      // remove last comma:
@@ -1657,9 +1694,7 @@ echo $outputJSON;
 
 if(!$debug) {
 
-$thisMapsId = -1;
-$thisDungeonsName = "the-barrow-mines";
-$thisPlayersId = 999;
+
 
   $mapFilename = "../data/chr" . $thisPlayersId . "/dungeon/".$thisDungeonsName."/" . $thisMapsId . ".json";  
     if(!($filename=fopen($mapFilename,"w"))) {
