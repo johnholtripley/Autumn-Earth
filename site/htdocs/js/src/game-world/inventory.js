@@ -295,15 +295,15 @@ function inventoryItemAction(whichSlot, whichAction, whichActionValue) { // remo
 
 
 
-function additionalTooltipDetail(whichSlotID) {
+function additionalTooltipDetail(thisItemObject) {
     // get any information that needs displaying in the tooltip:
     var tooltipInformationToAdd = "";
-    switch (currentActiveInventoryItems[hero.inventory[whichSlotID].type].action) {
+    switch (currentActiveInventoryItems[thisItemObject.type].action) {
         case "recipe":
             // check if it's known already:
             var isKnown = false;
             for (var i = 0; i < hero.recipesKnown.length; i++) {
-                if (hero.recipesKnown[i][0] == currentActiveInventoryItems[hero.inventory[whichSlotID].type].actionValue) {
+                if (hero.recipesKnown[i][0] == currentActiveInventoryItems[thisItemObject.type].actionValue) {
                     isKnown = true;
                 }
             }
@@ -314,10 +314,10 @@ function additionalTooltipDetail(whichSlotID) {
         case "collection":
             // see if the hero already has one in a collection:
             var isKnown = false;
-            var whichZone = currentActiveInventoryItems[hero.inventory[whichSlotID].type].actionValue;
+            var whichZone = currentActiveInventoryItems[thisItemObject.type].actionValue;
             if (hero.collections.hasOwnProperty(whichZone)) {
                 // key exists - collection is underway:
-                var foundIndex = hero.collections[whichZone].required.indexOf(hero.inventory[whichSlotID].type);
+                var foundIndex = hero.collections[whichZone].required.indexOf(thisItemObject.type);
                 if (foundIndex != -1) {
                     if (hero.collections[whichZone].required[foundIndex] > 0) {
                         tooltipInformationToAdd += " (needed for an active collection - double click to add)";
@@ -332,23 +332,22 @@ function additionalTooltipDetail(whichSlotID) {
     return tooltipInformationToAdd;
 }
 
+function generateGenericSlotMarkup(thisItemObject) {
 
-
-function generateSlotMarkup(thisSlotsId) {
     var slotMarkup = '';
     var theColourPrefix = "";
     var thisFileColourSuffix = "";
     var imageClassName = "";
-    var thisColourName = getColourName(hero.inventory[thisSlotsId].colour, hero.inventory[thisSlotsId].type);
+    var thisColourName = getColourName(thisItemObject.colour, thisItemObject.type);
     if (thisColourName != "") {
         theColourPrefix = thisColourName + " ";
         thisFileColourSuffix = "-" + thisColourName.toLowerCase();
     }
-    var thisAction = currentActiveInventoryItems[hero.inventory[thisSlotsId].type].action;
+    var thisAction = currentActiveInventoryItems[thisItemObject.type].action;
     var isABook = false;
     if (thisAction) {
         if (thisAction == "book") {
-            if (hero.inventory[thisSlotsId].inscription.content) {
+            if (thisItemObject.inscription.content) {
                 isABook = true;
             }
         }
@@ -357,50 +356,55 @@ function generateSlotMarkup(thisSlotsId) {
     if (thisAction) {
         if (isABook) {
             // link this item up to the book panel using the unique hash:
-            var thisBooksHash = generateHash(hero.inventory[thisSlotsId].inscription.title + hero.inventory[thisSlotsId].colour + hero.inventory[thisSlotsId].type + hero.inventory[thisSlotsId].inscription.timeCreated);
+            var thisBooksHash = generateHash(thisItemObject.inscription.title + thisItemObject.colour + thisItemObject.type + thisItemObject.inscription.timeCreated);
             dataActionMarkup = 'data-action="' + thisAction + '" data-action-value="' + thisBooksHash + '" ';
-            UI.buildBook(thisSlotsId, thisBooksHash);
+            UI.buildBook(thisItemObject, thisBooksHash);
         } else {
-            dataActionMarkup = 'data-action="' + thisAction + '" data-action-value="' + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].actionValue + '" ';
+            dataActionMarkup = 'data-action="' + thisAction + '" data-action-value="' + currentActiveInventoryItems[thisItemObject.type].actionValue + '" ';
         }
     }
 
-    var thisCategories = currentActiveInventoryItems[hero.inventory[thisSlotsId].type].category.split(",");
+    var thisCategories = currentActiveInventoryItems[thisItemObject.type].category.split(",");
     for (var i = 0; i < thisCategories.length; i++) {
         imageClassName += "itemCategory" + thisCategories[i] + " ";
     }
 
 
     // check if it's a card:
-    if (currentActiveInventoryItems[hero.inventory[thisSlotsId].type].action == "card") {
+    if (currentActiveInventoryItems[thisItemObject.type].action == "card") {
         imageClassName += 'players card';
     }
 
-    slotMarkup += '<img src="/images/game-world/inventory-items/' + hero.inventory[thisSlotsId].type + thisFileColourSuffix + '.png" ' + dataActionMarkup + 'alt="' + theColourPrefix + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].shortname + '" class="' + imageClassName + '">';
+    slotMarkup += '<img src="/images/game-world/inventory-items/' + thisItemObject.type + thisFileColourSuffix + '.png" ' + dataActionMarkup + 'alt="' + theColourPrefix + currentActiveInventoryItems[thisItemObject.type].shortname + '" class="' + imageClassName + '">';
     if (isABook) {
-        var itemsDescription = "&quot;" + hero.inventory[thisSlotsId].inscription.title + "&quot;";
+        var itemsDescription = "&quot;" + thisItemObject.inscription.title + "&quot;";
     } else {
-        var itemsDescription = currentActiveInventoryItems[hero.inventory[thisSlotsId].type].description;
+        var itemsDescription = currentActiveInventoryItems[thisItemObject.type].description;
     }
     if (itemsDescription.indexOf('##contains##') != -1) {
         // check it has got contains content:
-        if (typeof hero.inventory[thisSlotsId].contains !== "undefined") {
+        if (typeof thisItemObject.contains !== "undefined") {
             var containsItems = '';
-            for (var i = 0; i < hero.inventory[thisSlotsId].contains.length; i++) {
+            for (var i = 0; i < thisItemObject.contains.length; i++) {
                 if (i != 0) {
                     containsItems += ", ";
                 }
-                containsItems += hero.inventory[thisSlotsId].contains[i].quantity + "x " + currentActiveInventoryItems[hero.inventory[thisSlotsId].contains[i].type].shortname;
+                containsItems += thisItemObject.contains[i].quantity + "x " + currentActiveInventoryItems[thisItemObject.contains[i].type].shortname;
             }
             itemsDescription = itemsDescription.replace('##contains##', containsItems);
         }
     }
-    slotMarkup += '<p><em>' + theColourPrefix + currentActiveInventoryItems[hero.inventory[thisSlotsId].type].shortname + ' </em>' + itemsDescription + ' ';
-    slotMarkup += '<span class="price">Sell price: ' + parseMoney(Math.ceil(hero.inventory[thisSlotsId].quantity * sellPriceModifier * inflationModifier * currentActiveInventoryItems[hero.inventory[thisSlotsId].type].priceCode, 0)) + '</span>';
-    slotMarkup += '<span class="price specialismPrice">Sell price: ' + parseMoney(Math.ceil(hero.inventory[thisSlotsId].quantity * sellPriceSpecialismModifier * inflationModifier * currentActiveInventoryItems[hero.inventory[thisSlotsId].type].priceCode, 0)) + '</span>';
-    slotMarkup += additionalTooltipDetail(thisSlotsId) + '</p>';
-    slotMarkup += '<span class="qty">' + hero.inventory[thisSlotsId].quantity + '</span>';
+    slotMarkup += '<p><em>' + theColourPrefix + currentActiveInventoryItems[thisItemObject.type].shortname + ' </em>' + itemsDescription + ' ';
+    slotMarkup += '<span class="price">Sell price: ' + parseMoney(Math.ceil(thisItemObject.quantity * sellPriceModifier * inflationModifier * currentActiveInventoryItems[thisItemObject.type].priceCode, 0)) + '</span>';
+    slotMarkup += '<span class="price specialismPrice">Sell price: ' + parseMoney(Math.ceil(thisItemObject.quantity * sellPriceSpecialismModifier * inflationModifier * currentActiveInventoryItems[thisItemObject.type].priceCode, 0)) + '</span>';
+    slotMarkup += additionalTooltipDetail(thisItemObject) + '</p>';
+    slotMarkup += '<span class="qty">' + thisItemObject.quantity + '</span>';
     return slotMarkup;
+}
+
+
+function generateSlotMarkup(thisSlotsId) {
+return generateGenericSlotMarkup(hero.inventory[thisSlotsId]);
 }
 
 

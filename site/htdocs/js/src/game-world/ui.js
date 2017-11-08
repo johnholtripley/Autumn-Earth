@@ -755,29 +755,29 @@ var UI = {
         }
     },
 
-    buildBook: function(whichBook, thisBooksHash) {
+    buildBook: function(whichBookObject, thisBooksHash) {
         var markupToAdd = '';
         // var parsedDoc, numberOfPages;
 
 
-        var thisBooksContent = hero.inventory[(whichBook)].inscription.content;
+        var thisBooksContent = whichBookObject.inscription.content;
 
         // check if the book already has been created:
         if (!document.getElementById('book' + thisBooksHash)) {
-            markupToAdd += '<div class="book inkColour' + hero.inventory[(whichBook)].colour + '" id="book' + thisBooksHash + '">';
-            markupToAdd += '<div class="draggableBar">&quot;' + hero.inventory[(whichBook)].inscription.title + '&quot;</div>';
+            markupToAdd += '<div class="book inkColour' + whichBookObject.colour + '" id="book' + thisBooksHash + '">';
+            markupToAdd += '<div class="draggableBar">&quot;' + whichBookObject.inscription.title + '&quot;</div>';
             markupToAdd += '<button class="closePanel">close</button>';
             /*
                         // determine the number of pages (identified by the <section> elements):
-                        parsedDoc = new DOMParser().parseFromString(hero.inventory[(whichBook)].inscription.content, "text/html");
+                        parsedDoc = new DOMParser().parseFromString(whichBookObject.inscription.content, "text/html");
                         numberOfPages = parsedDoc.getElementsByTagName("SECTION").length;
                         if(numberOfPages>1) {
 
                         } else {
-                             markupToAdd += hero.inventory[(whichBook)].inscription.content;
+                             markupToAdd += whichBookObject.inscription.content;
                         }
                        */
-            markupToAdd += hero.inventory[(whichBook)].inscription.content;
+            markupToAdd += whichBookObject.inscription.content;
             markupToAdd += '</div>';
             booksAndParchments.innerHTML += markupToAdd;
             // UI.initDrag('book' + thisBooksHash + ' .draggableBar');
@@ -1240,35 +1240,35 @@ var UI = {
     },
 
     buildCollectionPanel: function() {
-    var collectionPanels = document.querySelectorAll('#collectionQuestPanels section');
-    var thisZoneName, panelMarkup, thisCollectionItem, thisItemCollectedClass, thisParagraphNode;
-    for (var i = 0; i < collectionPanels.length; i++) {
-        thisZoneName = collectionPanels[i].dataset.collection;
-      
-        if (hero.collections.hasOwnProperty(thisZoneName)) {
+        var collectionPanels = document.querySelectorAll('#collectionQuestPanels section');
+        var thisZoneName, panelMarkup, thisCollectionItem, thisItemCollectedClass, thisParagraphNode;
+        for (var i = 0; i < collectionPanels.length; i++) {
+            thisZoneName = collectionPanels[i].dataset.collection;
+
+            if (hero.collections.hasOwnProperty(thisZoneName)) {
 
 
-            if (hero.collections[thisZoneName].complete) {
-                // is complete, de-obfuscate the lore:
-                var thisParagraphNode = collectionPanels[i].getElementsByTagName("P")[0];
-                thisParagraphNode.textContent = window.atob(thisParagraphNode.textContent);
-                thisParagraphNode.classList.add('active');
-            }
-            // if exist in hero.collections, then write in items required as well:
-
-            panelMarkup = '';
-            for (var j in hero.collections[thisZoneName].required) {
-                thisCollectionItem = hero.collections[thisZoneName].required[j];
-                thisItemCollectedClass = "notCollected";
-                if (thisCollectionItem < 0) {
-                    thisItemCollectedClass = "";
+                if (hero.collections[thisZoneName].complete) {
+                    // is complete, de-obfuscate the lore:
+                    var thisParagraphNode = collectionPanels[i].getElementsByTagName("P")[0];
+                    thisParagraphNode.textContent = window.atob(thisParagraphNode.textContent);
+                    thisParagraphNode.classList.add('active');
                 }
-                panelMarkup += '<li class="' + thisItemCollectedClass + '"><img src="/images/game-world/inventory-items/' + Math.abs(thisCollectionItem) + '.png"></li>';
-                collectionPanels[i].getElementsByTagName("OL")[0].innerHTML = panelMarkup;
+                // if exist in hero.collections, then write in items required as well:
+
+                panelMarkup = '';
+                for (var j in hero.collections[thisZoneName].required) {
+                    thisCollectionItem = hero.collections[thisZoneName].required[j];
+                    thisItemCollectedClass = "notCollected";
+                    if (thisCollectionItem < 0) {
+                        thisItemCollectedClass = "";
+                    }
+                    panelMarkup += '<li class="' + thisItemCollectedClass + '"><img src="/images/game-world/inventory-items/' + Math.abs(thisCollectionItem) + '.png"></li>';
+                    collectionPanels[i].getElementsByTagName("OL")[0].innerHTML = panelMarkup;
+                }
             }
         }
-    }
-    collectionQuestPanels.classList.add('active');
+        collectionQuestPanels.classList.add('active');
     },
 
     initiateCollectionQuestPanel: function(whichZone) {
@@ -1281,7 +1281,7 @@ var UI = {
             if (thisCollectionItem < 0) {
                 thisItemCollectedClass = "";
             }
-            panelMarkup += '<li class="' + thisItemCollectedClass + '" id="'+whichZone+'-'+Math.abs(thisCollectionItem)+'"><img src="/images/game-world/inventory-items/' + Math.abs(thisCollectionItem) + '.png"></li>';
+            panelMarkup += '<li class="' + thisItemCollectedClass + '" id="' + whichZone + '-' + Math.abs(thisCollectionItem) + '"><img src="/images/game-world/inventory-items/' + Math.abs(thisCollectionItem) + '.png"></li>';
             document.querySelector('#collection-' + whichZone + ' ol').innerHTML = panelMarkup;
         }
     },
@@ -1295,36 +1295,38 @@ var UI = {
 
     openChest: function(itemReference, contents) {
         // open chest animation (thisMapData.items[itemReference]) ####
-        
+
         // build contents:
-
-
-        // NEEDS TO USE A GENRIC VERSAION OF generateSlotMarkup
-var chestContents = '';
-    var theColourPrefix = "";
-    var thisFileColourSuffix = "";
-    var dataActionMarkup = '';
-    var thisQuantity = '';
-for (var chestItem in contents) {
-    chestContents += '<li>';
-    if(contents[chestItem].type == "$") {
-         chestContents += '<img src="/images/game-world/inventory-items/coins.png" ' + dataActionMarkup + 'alt="'+contents[chestItem].quantity+' worth of coins">';
-    } else {
-     chestContents += '<img src="/images/game-world/inventory-items/' + contents[chestItem].type + thisFileColourSuffix + '.png" ' + dataActionMarkup + 'alt="' + theColourPrefix + currentActiveInventoryItems[contents[chestItem].type].shortname + '">';
-     chestContents += '<p><em>' + theColourPrefix + currentActiveInventoryItems[contents[chestItem].type].shortname + ' </em>' + currentActiveInventoryItems[contents[chestItem].type].description + ' ';
-
-      thisQuantity = 1;
-      if (typeof contents[chestItem].quantity !== "undefined") {
-          thisQuantity = contents[chestItem].quantity;
-      }
-   
-   
-chestContents += '<span class="qty">' + thisQuantity + '</span>';
- }
-    chestContents += '</li>';
-    }
-
+        var chestContents = '';
+        var thisChestObject;
+        for (var chestItem in contents) {
+            chestContents += '<li>';
+            if (contents[chestItem].type == "$") {
+                // just money
+                chestContents += '<img src="/images/game-world/inventory-items/coins.png" alt="' + contents[chestItem].quantity + ' worth of coins">';
+            } else {
+                // create defaults
+                thisChestObject = {
+                    "quantity": 1,
+                    "quality": 100,
+                    "durability": 100,
+                    "currentWear": 0,
+                    "effectiveness": 100,
+                    "colour": 0,
+                    "enchanted": 0,
+                    "hallmark": 0,
+                    "inscription": ""
+                }
+                // fill any defined values:
+                for (var attrname in contents[chestItem]) {
+                   thisChestObject[attrname] = contents[chestItem][attrname];
+                }
+                console.log(thisChestObject);
+                chestContents += generateGenericSlotMarkup(thisChestObject);
+            }
+            chestContents += '</li>';
+        }
         chestSlotContents.innerHTML = chestContents;
         chestPanel.classList.add('active');
-    } 
+    }
 }
