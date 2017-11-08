@@ -1294,7 +1294,10 @@ var UI = {
     },
 
     openChest: function(itemReference, contents) {
+         audio.playSound(soundEffects['chestOpen'], 0);
         // open chest animation (thisMapData.items[itemReference]) ####
+
+
 
         // build contents:
         var chestContents = '';

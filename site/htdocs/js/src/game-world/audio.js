@@ -5,6 +5,7 @@ var soundEffects = {};
 var soundsToLoad = {
     'coins': '../sounds/coins-NOT_MINE-wow.mp3',
     'bookOpen': '../sounds/book-open-NOT_MINE-wow.mp3',
+    'chestOpen': '../sounds/chest-open-NOT_MINE-wow.mp3',
     'bagOpen': '../sounds/bag-open-NOT_MINE-wow.mp3',
     'buttonClick': '../sounds/button-press-NOT_MINE-wow.mp3',
     'hen': '../sounds/hen-NOT_MINE.mp3',
