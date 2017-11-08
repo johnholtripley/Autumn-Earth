@@ -1304,8 +1304,10 @@ var UI = {
             if (contents[chestItem].type == "$") {
                 // just money
                 chestContents += '<img src="/images/game-world/inventory-items/coins.png" alt="' + contents[chestItem].quantity + ' worth of coins">';
+                chestContents += '<p><em>'+parseMoney(contents[chestItem].quantity)+' worth of coins </em></p>';
+                chestContents += '<span class="qty">'+parseMoney(contents[chestItem].quantity)+'</span>';
             } else {
-                // create defaults
+                // create defaults:
                 thisChestObject = {
                     "quantity": 1,
                     "quality": 100,
@@ -1317,11 +1319,10 @@ var UI = {
                     "hallmark": 0,
                     "inscription": ""
                 }
-                // fill any defined values:
+                // add in any defined values:
                 for (var attrname in contents[chestItem]) {
                    thisChestObject[attrname] = contents[chestItem][attrname];
                 }
-                console.log(thisChestObject);
                 chestContents += generateGenericSlotMarkup(thisChestObject);
             }
             chestContents += '</li>';
