@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 20, 2017 at 09:25 AM
+-- Generation Time: Nov 08, 2017 at 11:16 AM
 -- Server version: 5.6.24
 -- PHP Version: 5.6.8
 
@@ -359,19 +359,20 @@ CREATE TABLE IF NOT EXISTS `tblcreatures` (
   `creatureDescription` longtext,
   `creatureType` varchar(128) NOT NULL,
   `cleanURL` varchar(128) DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblcreatures`
 --
 
 INSERT INTO `tblcreatures` (`creatureID`, `creatureName`, `creatureDescription`, `creatureType`, `cleanURL`) VALUES
-(0, 'Pilcrow', 'A black bird with a curious fascination for anything with writing on.', 'Birds', 'pilcrow'),
-(1, 'Auroch', 'A surprisingly gentle herd animal given its enormous horns.', 'Animals', 'auroch'),
+(0, 'Pilcrow', 'A black bird with a curious fascination for anything with writing on.', 'Bird', 'pilcrow'),
+(1, 'Auroch', 'A surprisingly gentle herd animal given its enormous horns.', 'Animal', 'auroch'),
 (2, 'Ellyll', 'The Ellyllon are delightful little fairy folk.', 'Spirit', 'ellyll'),
-(3, 'Vulpes', 'Why, it''s a cute little fox.', 'Animals', 'vulpes'),
+(3, 'Vulpes', 'Why, it''s a cute little fox.', 'Animal', 'vulpes'),
 (4, 'Eldritch', 'A dark, mischievous spirit. Worth avoiding if possible.', 'Spirit', 'eldritch'),
-(5, 'Ghast', 'A malevolent trapped soul.', 'Spirit', 'ghast');
+(5, 'Ghast', 'A malevolent trapped soul.', 'Spirit', 'ghast'),
+(6, 'Guise', 'A shape shifter. ', 'Animal', 'guise');
 
 -- --------------------------------------------------------
 
@@ -390,8 +391,8 @@ CREATE TABLE IF NOT EXISTS `tblcreaturetypes` (
 --
 
 INSERT INTO `tblcreaturetypes` (`creatureTypeId`, `creatureTypeName`, `creatureTypeURL`) VALUES
-(0, 'Birds', 'birds'),
-(1, 'Animals', 'animals'),
+(0, 'Bird', 'bird'),
+(1, 'Animal', 'animal'),
 (2, 'Spirit', 'spirit');
 
 -- --------------------------------------------------------
@@ -615,7 +616,7 @@ CREATE TABLE IF NOT EXISTS `tblinventoryitems` (
   `lockedToThisPlayer` tinyint(1) NOT NULL DEFAULT '0',
   `respawnRate` int(11) DEFAULT NULL,
   `activeDuringSeason` int(11) DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=48 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=49 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblinventoryitems`
@@ -667,7 +668,8 @@ INSERT INTO `tblinventoryitems` (`itemID`, `shortname`, `description`, `priceCod
 (44, 'Ammonite', 'Fossilised mollusc', '1', '25.0', '31.0', 38, 38, 'collection-fossil', 'collection', 'the-barrow-mines', 0, 0, '0', '0', '', NULL, 0, 0, 0, 0, 0, NULL, NULL),
 (45, 'Echinoid', 'Fossilised sea urchin', '1', '25.0', '31.0', 38, 38, 'collection-fossil', 'collection', 'the-barrow-mines', 0, 0, '0', '0', '', NULL, 0, 0, 0, 0, 0, NULL, NULL),
 (46, 'Crinoid', 'Fossilised coral', '1', '25.0', '31.0', 38, 38, 'collection-fossil', 'collection', 'the-barrow-mines', 0, 0, '0', '0', '', NULL, 0, 0, 0, 0, 0, NULL, NULL),
-(47, 'Butterfly plant', '', '4', '19.0', '39.0', 20, 20, 'butterfly-plant', 'nest', '0', 0, 0, '0', '0', '', NULL, 0, 0, 0, 0, 0, 300, NULL);
+(47, 'Butterfly plant', '', '4', '19.0', '39.0', 20, 20, 'butterfly-plant', 'nest', '0', 0, 0, '0', '0', '', NULL, 0, 0, 0, 0, 0, 300, NULL),
+(48, 'Chest', '', '1', '44.0', '44.0', 40, 40, 'chest', 'chest', '0', 0, 0, '0', '0', '', NULL, 0, 0, 0, 0, 0, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -964,7 +966,7 @@ CREATE TABLE IF NOT EXISTS `tblplants` (
   `timeCreated` datetime NOT NULL,
   `plantSeed` int(255) NOT NULL,
   `commonNamesJoined` varchar(512) COLLATE utf8_bin NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=280 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=281 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
 -- Dumping data for table `tblplants`
@@ -992,7 +994,8 @@ INSERT INTO `tblplants` (`plantID`, `latinName`, `commonNames`, `plantDesc`, `pl
 (276, 'Virginia concanata', 'Pouchwhistle', 'A native biennial commonly found in England and Wales, usually on light soils, in open woods, grassland and hedgerows.', 'virginia-concanata', 'Virginia concanata\r\n(Pouchwhistle)', 0, 0, '2017-07-21 16:01:05', 1500709523, 'Pouchwhistle'),
 (277, 'Rhantemelanchier cladrastis', 'Dragonsgrass, Heath lichen or Trailing goldenthistle', 'Widely used in days gone by to curdle milk for cheese making.', 'rhantemelanchier-cladrastis', 'Rhantemelanchier cladrastis\r\n(Dragonsgrass, Heath lichen or Trailing goldenthistle)', 0, 0, '2017-07-21 16:01:23', 1500658341, 'Dragonsgrass/Heath lichen/Trailing goldenthistle'),
 (278, 'Solanum niacama', 'Motherswhorl, Spindlewhistle or Hengease', 'The delightful bright red daisy flowers of this biennial were once a common sight in cornfields and waste places. It is now much rarer due to widespread use of selective herbicides.', 'solanum-niacama', 'Solanum niacama\r\n(Motherswhorl, Spindlewhistle or Hengease)', 0, 0, '2017-09-18 15:32:55', 1505820661, 'Motherswhorl/Spindlewhistle/Hengease'),
-(279, 'Rosmatis helium', 'Scarletwort or Autumnflax', 'Seeds itself very prolifically and is related to other campions.', 'rosmatis-helium', 'Rosmatis helium\r\n(Scarletwort or Autumnflax)\r\nSeeds itself very prolifically and is related to other campions.', 0, 0, '2017-09-18 15:33:02', 1505842002, 'Scarletwort/Autumnflax');
+(279, 'Rosmatis helium', 'Scarletwort or Autumnflax', 'Seeds itself very prolifically and is related to other campions.', 'rosmatis-helium', 'Rosmatis helium\r\n(Scarletwort or Autumnflax)\r\nSeeds itself very prolifically and is related to other campions.', 0, 0, '2017-09-18 15:33:02', 1505842002, 'Scarletwort/Autumnflax'),
+(280, 'Ringaris tulatago', 'Panscelandine, Brightyarrow or Duskcomb', 'A common night flowering plant pollinated by bats and moths. Particularly favoured by the Meadow dryad moth.', 'ringaris-tulatago', 'Ringaris tulatago\r\n(Panscelandine, Brightyarrow or Duskcomb)\r\nA common night flowering plant pollinated by bats and moths.', 0, 1, '2017-11-08 10:08:32', 1510147873, 'Panscelandine/Brightyarrow/Duskcomb');
 
 -- --------------------------------------------------------
 
@@ -1144,7 +1147,7 @@ CREATE TABLE IF NOT EXISTS `tblprofessions` (
 INSERT INTO `tblprofessions` (`professionID`, `professionName`, `cleanurl`) VALUES
 (0, 'Dyeing', 'dyeing'),
 (1, 'Weaving', 'weaving'),
-(2, 'Scrivener', 'scribing'),
+(2, 'Scrivening', 'scrivening'),
 (3, 'Apothecary', 'apothecary'),
 (4, 'Ink Making', 'ink-making'),
 (5, 'Artificing', 'artificing'),
@@ -1886,7 +1889,7 @@ ALTER TABLE `tblcontracts`
 -- AUTO_INCREMENT for table `tblcreatures`
 --
 ALTER TABLE `tblcreatures`
-  MODIFY `creatureID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=6;
+  MODIFY `creatureID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=7;
 --
 -- AUTO_INCREMENT for table `tblcreaturetypes`
 --
@@ -1936,7 +1939,7 @@ ALTER TABLE `tblguilds`
 -- AUTO_INCREMENT for table `tblinventoryitems`
 --
 ALTER TABLE `tblinventoryitems`
-  MODIFY `itemID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=48;
+  MODIFY `itemID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=49;
 --
 -- AUTO_INCREMENT for table `tblitemcategories`
 --
@@ -1976,7 +1979,7 @@ ALTER TABLE `tblnews`
 -- AUTO_INCREMENT for table `tblplants`
 --
 ALTER TABLE `tblplants`
-  MODIFY `plantID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=280;
+  MODIFY `plantID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=281;
 --
 -- AUTO_INCREMENT for table `tblposts`
 --

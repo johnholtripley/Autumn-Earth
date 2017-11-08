@@ -387,7 +387,19 @@ function findInventoryItemData() {
     // find items placed on this map:
     for (var i = 0; i < thisMapData.items.length; i++) {
         itemIdsToGet.push(thisMapData.items[i].type);
+            // check if any are containers or chests:
+        if (typeof thisMapData.items[i].contains !== "undefined") {
+            for (var j = 0; j < thisMapData.items[i].contains.length; j++) {
+                // make sure it's not money in a chest:
+                if(thisMapData.items[i].contains[j].type != "$") {
+                itemIdsToGet.push(thisMapData.items[i].contains[j].type);
+            }
+            }
+        }
+
     }
+  
+
     // find items in recipes:
     for (var i in hero.crafting) {
         for (var j in hero.crafting[i].filters['All']) {
@@ -1289,6 +1301,10 @@ function checkForActions() {
                         UI.updateCurrencies();
                         // remove from map:
                         thisMapData.items.splice(i, 1);
+                        break;
+                        case "chest":
+                        // open chest and show contents:
+                        UI.openChest(i,thisMapData.items[i].contains);
                         break;
                     default:
                         // try and pick it up:

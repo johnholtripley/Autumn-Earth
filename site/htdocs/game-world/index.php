@@ -134,6 +134,13 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
     </fieldset>
   </form>
 
+  <div id="chestPanel">
+    <div class="draggableBar">Chest</div>
+    <ol id="chest">
+    </ol>
+  </div>
+  <div id="draggableChestSlot"></div>
+
   <div id="boosterPack">
     <ol>
     <?php

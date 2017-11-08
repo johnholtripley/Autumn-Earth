@@ -1678,8 +1678,12 @@ if(count($drawnTileKeys)>0) {
 
     }
      // remove last comma:
-$outputJSON = rtrim($outputJSON, ', ');
+//$outputJSON = rtrim($outputJSON, ', ');
 }
+
+
+// temporarily add a chest to make the exit ###########
+$outputJSON .= '{"type": 48, "tileX": '.$exitX.', "tileY": '.$exitY.', "contains": [{"type": 1},{"type": 3},{"type": "$"}]}';
 $outputJSON .= '],';
 
 

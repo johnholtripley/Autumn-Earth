@@ -30,6 +30,8 @@ const gameSettingsPanel = document.getElementById('gameSettings');
 const toggleActiveCards = document.getElementById('toggleActiveCards');
 const toggleFullscreenSwitch = document.getElementById('toggleFullScreen');
 const collectionQuestPanels = document.getElementById('collectionQuestPanels');
+const chestPanel = document.getElementById('chestPanel');
+const chestSlotContents = document.getElementById('chest');
 
 var notificationQueue = [];
 var notificationIsShowing = false;
@@ -1289,5 +1291,40 @@ var UI = {
         var thisParagraphNode = document.querySelector('#collection-' + whichZone + ' p');
         thisParagraphNode.textContent = window.atob(thisParagraphNode.textContent);
         thisParagraphNode.classList.add('active');
+    },
+
+    openChest: function(itemReference, contents) {
+        // open chest animation (thisMapData.items[itemReference]) ####
+        
+        // build contents:
+
+
+        // NEEDS TO USE A GENRIC VERSAION OF generateSlotMarkup
+var chestContents = '';
+    var theColourPrefix = "";
+    var thisFileColourSuffix = "";
+    var dataActionMarkup = '';
+    var thisQuantity = '';
+for (var chestItem in contents) {
+    chestContents += '<li>';
+    if(contents[chestItem].type == "$") {
+         chestContents += '<img src="/images/game-world/inventory-items/coins.png" ' + dataActionMarkup + 'alt="'+contents[chestItem].quantity+' worth of coins">';
+    } else {
+     chestContents += '<img src="/images/game-world/inventory-items/' + contents[chestItem].type + thisFileColourSuffix + '.png" ' + dataActionMarkup + 'alt="' + theColourPrefix + currentActiveInventoryItems[contents[chestItem].type].shortname + '">';
+     chestContents += '<p><em>' + theColourPrefix + currentActiveInventoryItems[contents[chestItem].type].shortname + ' </em>' + currentActiveInventoryItems[contents[chestItem].type].description + ' ';
+
+      thisQuantity = 1;
+      if (typeof contents[chestItem].quantity !== "undefined") {
+          thisQuantity = contents[chestItem].quantity;
+      }
+   
+   
+chestContents += '<span class="qty">' + thisQuantity + '</span>';
+ }
+    chestContents += '</li>';
     }
+
+        chestSlotContents.innerHTML = chestContents;
+        chestPanel.classList.add('active');
+    } 
 }

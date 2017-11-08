@@ -616,18 +616,18 @@
         "doors": {
             "1,0": {
                 "map": -1,
-                "startX": 20,
-                "startY": 42
+                "startX": 46,
+                "startY": 60
             },
             "2,0": {
                 "map": -1,
-                "startX": 21,
-                "startY": 42
+                "startX": 47,
+                "startY": 60
             },
             "3,0": {
                 "map": -1,
-                "startX": 22,
-                "startY": 42
+                "startX": 48,
+                "startY": 60
             }
         },
         "items": [{
@@ -684,6 +684,11 @@
                 "enchanted": 0,
                 "hallmark": 0,
                 "inscription": "##procedural##"
+            }, {
+                  "type": 48,
+                  "tileX": 17,
+                  "tileY": 4,
+                  "contains": [{"type": 1},{"type": 3},{"type": "$", "quantity": 3000}]
             }
 
         ],
