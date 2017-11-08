@@ -90,7 +90,7 @@ $numberOfItemCategories: 20;
 #chestPanel {
        
         left: 55%;
-        top: 335px;
+        top: 45%;
           background: #53160d url(../images/game-world/interface/inventory-panel-bg.jpg) no-repeat 0 100%;
         z-index: 1;
         @include togglePanel(0.4s);
