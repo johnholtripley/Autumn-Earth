@@ -47,6 +47,58 @@ $numberOfItemCategories: 20;
             }
         }
     }
+    
+    @for $i from 1 through $numberOfItemCategories {
+        &.shopSpecialism#{$i} .itemCategory#{$i}~.qty:after {
+            opacity: 1;
+        }
+        &.shopSpecialism#{$i} .itemCategory#{$i}~p {
+            .price {
+                display: none;
+            }
+            .specialismPrice {
+                display: inline-block;
+                color: #16952b;
+            }
+        }
+    }
+}
+
+#draggableInventorySlot,
+#draggableShopSlot {
+    position: absolute;
+    pointer-events: none;
+    left: -100px;
+    top: -100px;
+    @include transform-origin(0 0);
+    width: 44px;
+    height: 44px;
+    p {
+        display: none;
+    }
+    .qty {
+        position: absolute;
+        right: 4px;
+        bottom: 4px;
+        text-align: right;
+        color: #fff;
+        cursor: default;
+        font-size: 11px;
+    }
+}
+
+#chestPanel {
+       
+        left: 55%;
+        top: 335px;
+          background: #53160d url(../images/game-world/interface/inventory-panel-bg.jpg) no-repeat 0 100%;
+        z-index: 1;
+        @include togglePanel(0.4s);
+       
+   
+}
+
+#inventoryPanels .inventoryBag, #chestPanel {
     ol {
         margin: 0;
         width: 184px;
@@ -143,44 +195,8 @@ $numberOfItemCategories: 20;
     .specialismPrice {
         display: none;
     }
-    @for $i from 1 through $numberOfItemCategories {
-        &.shopSpecialism#{$i} .itemCategory#{$i}~.qty:after {
-            opacity: 1;
-        }
-        &.shopSpecialism#{$i} .itemCategory#{$i}~p {
-            .price {
-                display: none;
-            }
-            .specialismPrice {
-                display: inline-block;
-                color: #16952b;
-            }
-        }
-    }
 }
 
-#draggableInventorySlot,
-#draggableShopSlot {
-    position: absolute;
-    pointer-events: none;
-    left: -100px;
-    top: -100px;
-    @include transform-origin(0 0);
-    width: 44px;
-    height: 44px;
-    p {
-        display: none;
-    }
-    .qty {
-        position: absolute;
-        right: 4px;
-        bottom: 4px;
-        text-align: right;
-        color: #fff;
-        cursor: default;
-        font-size: 11px;
-    }
-}
 
 // cartography panel:
 #cartographicPanel {
@@ -249,106 +265,7 @@ $numberOfItemCategories: 20;
     }
 }
 
-#chestPanel {
-       
-        left: 55%;
-        top: 335px;
-          background: #53160d url(../images/game-world/interface/inventory-panel-bg.jpg) no-repeat 0 100%;
-        z-index: 1;
-        @include togglePanel(0.4s);
-         ol {
-        margin: 0;
-        width: 184px;
-        padding: 0;
-        background: #666;
 
-        img {
-            @include attention() {
-                &+p {
-                    opacity: 1;
-                    pointer-events: auto;
-                    @include transform(translateY(0));
-                }
-            }
-        }
-        li {
-            // slot
-            width: 46px;
-            height: 46px;
-            padding: 3px;
-            display: block;
-            float: left;
-            background: url(../images/game-world/interface/inventory-slot.png) no-repeat 50% 50%;
-            cursor: url(../images/game-world/cursors/active.gif) 3 3, auto;
-            margin: 0;
-            @include border-box;
-            position: relative;
-            box-shadow: 0 0 0 0 #eebb3f;
-            @include transition(box-shadow 0.2s ease-in-out);
-            .qty {
-                position: absolute;
-                right: 3px;
-                bottom: 3px;
-                text-align: right;
-                color: #fff;
-                cursor: default;
-                font-size: 11px;
-                pointer-events: none;
-                &:after {
-                    opacity: 0;
-                    pointer-events: none;
-                    border-top: 12px solid transparent;
-                    border-right: 12px solid #16952b;
-                    content: "";
-                    display: block;
-                    @include transition(opacity 0.4s ease);
-                    position: absolute;
-                    right: 0;
-                    bottom: 0;
-                }
-            }
-            img {
-                display: block;
-            }
-            &.changed {
-                box-shadow: 0 0 5px 3px #eebb3f;
-                z-index: 1;
-            }
-            &.hidden {
-                img,
-                p,
-                span {
-                    opacity: 0;
-                }
-            }
-        }
-    }
-    p {
-        // tooltip
-        background: #eee;
-        z-index: 1;
-        margin: 0;
-        bottom: 100%;
-        color: #000;
-        display: block;
-        left: 0;
-        min-width: 120px;
-        opacity: 0;
-        padding: 8px;
-        pointer-events: none;
-        position: absolute;
-        font-size: 11px;
-        cursor: url(../images/game-world/cursors/default.gif) 3 3, auto;
-        @include transform(translateY(10px));
-        @include transition(all .25s ease-out);
-        em {
-            // tooltip item title
-            display: block;
-            font-size: 1.2em;
-            font-style: normal;
-        }
-    }
-}
 
 #shopPanel {
     .shop {
