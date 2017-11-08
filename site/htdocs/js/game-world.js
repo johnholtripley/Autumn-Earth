@@ -2763,6 +2763,7 @@ const toggleActiveCards = document.getElementById('toggleActiveCards');
 const toggleFullscreenSwitch = document.getElementById('toggleFullScreen');
 const collectionQuestPanels = document.getElementById('collectionQuestPanels');
 const chestPanel = document.getElementById('chestPanel');
+const chestTitle = document.getElementById('chestTitle');
 const chestSlotContents = document.getElementById('chest');
 
 var notificationQueue = [];
@@ -4029,7 +4030,8 @@ var UI = {
          audio.playSound(soundEffects['chestOpen'], 0);
         // open chest animation (thisMapData.items[itemReference]) ####
 
-
+        // show container item name in the title:
+        chestTitle.innerHTML = currentActiveInventoryItems[(thisMapData.items[itemReference].type)].shortname;
 
         // build contents:
         var chestContents = '';

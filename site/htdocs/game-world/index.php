@@ -135,7 +135,7 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
   </form>
 
   <div id="chestPanel">
-    <div class="draggableBar">Chest</div>
+    <div class="draggableBar"><span id="chestTitle">Chest</span></div>
     <button class="closePanel">close</button>
     <ol id="chest">
     </ol>
