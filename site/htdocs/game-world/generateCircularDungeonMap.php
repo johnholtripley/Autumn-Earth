@@ -1578,9 +1578,11 @@ if($debug) {
 
 
 function outputJSONContent() {
-global $debug, $map, $itemMap, $drawnTileDoors, $drawnTileKeys, $mapTilesX, $mapTilesY, $storedSeed, $thisMapsId, $thisDungeonsName, $thisPlayersId;
+global $debug, $map, $itemMap, $drawnTileDoors, $drawnTileKeys, $mapTilesX, $mapTilesY, $storedSeed, $thisMapsId, $thisDungeonsName, $thisPlayersId, $entranceX, $entranceY, $exitX, $exitY;
 if($debug) {
+    echo "Entrance: ".$entranceX.",".$entranceY." - Exit: ".$exitX.",".$exitY."<br>";
 echo '<code style="width:100%;clear:both;display:block;font-size:0.8em;">';
+
 }
 
 
@@ -1656,7 +1658,7 @@ $thisDoorIsLocked = true;
  }
 $outputJSON .= '"'.$thisMapsId.'-'.$drawnTileDoors[$i][0].'-'.$drawnTileDoors[$i][1].'":{"tileX": '.$drawnTileDoors[$i][0].', "tileY": '.$drawnTileDoors[$i][1].', "isOpen": false, "isLocked": '.json_encode($thisDoorIsLocked).', "graphic": 1, "animation": { "opening": { "length": 8, "row": 0 }, "closing": { "length": 8, "row": 1 } }},';
 // push this door reference:
-$drawnTileDoors[$i][3] = $thisMapsId.'-'.$drawnTileDoors[$i][0].'-'.$drawnTileDoors[$i][1];
+$drawnTileDoors[$i][3] = $thisMapsId.'-'.$drawnTileDoors[$i][1].'-'.$drawnTileDoors[$i][0];
 }
      // remove last comma:
 $outputJSON = rtrim($outputJSON, ', ');
@@ -1711,7 +1713,7 @@ echo '</code>';
 }
 
 function gridTileGrid() {
-    global $requiredWidth, $requiredHeight, $mapTilesX, $mapTilesY, $canvaDimension, $delaunayVertices, $minLeft, $minTop, $edgesUsedOnDelaunayGraph, $allDelaunayEdges, $lockedJoints, $keyColours, $debug, $map, $itemMap, $drawnTileDoors, $drawnTileKeys;
+    global $requiredWidth, $requiredHeight, $mapTilesX, $mapTilesY, $canvaDimension, $delaunayVertices, $minLeft, $minTop, $edgesUsedOnDelaunayGraph, $allDelaunayEdges, $lockedJoints, $keyColours, $debug, $map, $itemMap, $drawnTileDoors, $drawnTileKeys, $entranceX, $entranceY, $exitX, $exitY;
     // define the tile area to be used:
     $mapTilesX = 70;
     $mapTilesY = 70;
@@ -1801,6 +1803,16 @@ $map[$k][$j] = ".";
 
 
     }
+
+    if(isset($delaunayVertices[$i]->whichNode)) {
+    if ($delaunayVertices[$i]->whichNode->type == "START") {
+        $entranceX = floor(($leftTileEdge+$rightTileEdge)/2);
+        $entranceY = floor(($topTileEdge+$bottomTileEdge)/2);
+    } else if ($delaunayVertices[$i]->whichNode->type == "END") {
+        $exitX = floor(($leftTileEdge+$rightTileEdge)/2);
+        $exitY = floor(($topTileEdge+$bottomTileEdge)/2);
+    }
+}
 }
 
 
