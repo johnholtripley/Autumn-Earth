@@ -1304,7 +1304,7 @@ function checkForActions() {
                         break;
                         case "chest":
                         // open chest and show contents:
-                        UI.openChest(i,thisMapData.items[i].contains);
+                        UI.openChest(i);
                         break;
                     default:
                         // try and pick it up:

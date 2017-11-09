@@ -2987,10 +2987,14 @@ var UI = {
 
             var thisNode = getNearestParentId(e.target);
 
+
+
             if (thisNode.id.substring(0, 6) == "recipe") {
                 recipeSelectComponents(thisNode.id);
             } else if (thisNode.id.substring(0, 4) == "shop") {
                 UI.buyFromShopSlot(thisNode.id);
+            } else if (thisNode.id.substring(0, 5) == "chest") {
+                UI.addFromChest(thisNode.id);
             }
         }
 
@@ -4026,7 +4030,8 @@ var UI = {
         thisParagraphNode.classList.add('active');
     },
 
-    openChest: function(itemReference, contents) {
+    openChest: function(itemReference) {
+        var contents = thisMapData.items[itemReference].contains;
         audio.playSound(soundEffects['chestOpen'], 0);
         // open chest animation (thisMapData.items[itemReference]) ####
 
@@ -4038,7 +4043,7 @@ var UI = {
         var thisChestObject;
         //   for (var chestItem in contents) {
         for (var i = 0; i < currentActiveInventoryItems[(thisMapData.items[itemReference].type)].actionValue; i++) {
-            chestContents += '<li>';
+            chestContents += '<li id="chestSlot-' + itemReference + '-' + i + '">';
             if (typeof contents[i] !== "undefined") {
                 if (contents[i] != "") {
                     if (contents[i].type == "$") {
@@ -4063,6 +4068,8 @@ var UI = {
                         for (var attrname in contents[i]) {
                             thisChestObject[attrname] = contents[i][attrname];
                         }
+                        // save all these default values to the object for adding it to the inventory later:
+                        contents[i] = thisChestObject;
                         chestContents += generateGenericSlotMarkup(thisChestObject);
                     }
                 }
@@ -4071,6 +4078,33 @@ var UI = {
         }
         chestSlotContents.innerHTML = chestContents;
         chestPanel.classList.add('active');
+    },
+
+    addFromChest: function(chestSlotId) {
+        var itemDetails = chestSlotId.split("-");
+        var chestItemContains = thisMapData.items[(itemDetails[1])].contains;
+        var whichChestItem = chestItemContains[(itemDetails[2])];
+
+        if (typeof whichChestItem !== "undefined") {
+            if (whichChestItem.type == "$") {
+                // money:
+                hero.currency.money += whichChestItem.quantity;
+                audio.playSound(soundEffects['coins'], 0);
+                UI.updateCurrencies();
+                thisMapData.items[(itemDetails[1])].contains[(itemDetails[2])] = "";
+                document.getElementById(chestSlotId).innerHTML = "";
+            } else {
+ inventoryCheck = canAddItemToInventory([whichChestItem]);
+            if (inventoryCheck[0]) {
+                  thisMapData.items[(itemDetails[1])].contains[(itemDetails[2])] = "";
+                  UI.showChangeInInventory(inventoryCheck[1]);
+                document.getElementById(chestSlotId).innerHTML = "";
+            } else {
+                UI.showNotification("<p>Oops - sorry, no room in your bags</p>");
+            }
+            }
+        }
+
     }
 }
 // service worker:
@@ -5379,7 +5413,7 @@ function checkForActions() {
                         break;
                         case "chest":
                         // open chest and show contents:
-                        UI.openChest(i,thisMapData.items[i].contains);
+                        UI.openChest(i);
                         break;
                     default:
                         // try and pick it up:

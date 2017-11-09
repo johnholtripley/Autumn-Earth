@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 08, 2017 at 11:16 AM
+-- Generation Time: Nov 09, 2017 at 09:52 AM
 -- Server version: 5.6.24
 -- PHP Version: 5.6.8
 
@@ -669,7 +669,7 @@ INSERT INTO `tblinventoryitems` (`itemID`, `shortname`, `description`, `priceCod
 (45, 'Echinoid', 'Fossilised sea urchin', '1', '25.0', '31.0', 38, 38, 'collection-fossil', 'collection', 'the-barrow-mines', 0, 0, '0', '0', '', NULL, 0, 0, 0, 0, 0, NULL, NULL),
 (46, 'Crinoid', 'Fossilised coral', '1', '25.0', '31.0', 38, 38, 'collection-fossil', 'collection', 'the-barrow-mines', 0, 0, '0', '0', '', NULL, 0, 0, 0, 0, 0, NULL, NULL),
 (47, 'Butterfly plant', '', '4', '19.0', '39.0', 20, 20, 'butterfly-plant', 'nest', '0', 0, 0, '0', '0', '', NULL, 0, 0, 0, 0, 0, 300, NULL),
-(48, 'Chest', '', '1', '44.0', '44.0', 40, 40, 'chest', 'chest', '0', 0, 0, '0', '0', '', NULL, 0, 0, 0, 0, 0, NULL, NULL);
+(48, 'Chest', '', '1', '44.0', '44.0', 48, 48, 'chest', 'chest', '6', 0, 0, '0', '0', '', NULL, 0, 0, 0, 0, 0, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -1326,7 +1326,7 @@ CREATE TABLE IF NOT EXISTS `tblsavedsearches` (
   `searchID` int(11) NOT NULL,
   `searchTerm` varchar(255) DEFAULT NULL,
   `searchCount` int(11) DEFAULT NULL
-) ENGINE=MyISAM AUTO_INCREMENT=141 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=194 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblsavedsearches`
@@ -1470,7 +1470,60 @@ INSERT INTO `tblsavedsearches` (`searchID`, `searchTerm`, `searchCount`) VALUES
 (137, 'autumn earth', 0),
 (138, 'autumn earth', 0),
 (139, 'autumn earth', 0),
-(140, 'dilly', 156);
+(140, 'dilly', 156),
+(141, 'non existent 918306133', 0),
+(142, 'non existent 1413327932', 0),
+(143, 'signin', 0),
+(144, 'about', 0),
+(145, 'non existent 1364990961', 0),
+(146, 'ChangeLog', 0),
+(147, 'admin', 2),
+(148, 'downloader', 0),
+(149, 'SystemInfo', 0),
+(150, 'viewvc', 0),
+(151, 'feed', 1),
+(152, 'symphony', 0),
+(153, 'listinfo', 0),
+(154, 'login', 0),
+(155, 'login', 0),
+(156, 'viewer', 0),
+(157, 'README', 0),
+(158, 'web', 0),
+(159, 'README', 0),
+(160, 'Login', 0),
+(161, 'res', 1),
+(162, 'about', 0),
+(163, 'README', 0),
+(164, 'extras', 0),
+(165, 'Web', 0),
+(166, 'about', 0),
+(167, 'README', 0),
+(168, 'CHANGES', 0),
+(169, 'lib', 1),
+(170, 'ChangeLog', 0),
+(171, 'setseed hub', 0),
+(172, 'index', 0),
+(173, 'changelog', 0),
+(174, 'query', 0),
+(175, 'home', 0),
+(176, 'search', 0),
+(177, 'search', 0),
+(178, 'cgicso', 0),
+(179, 'WackoWiki', 0),
+(180, 'webplus', 0),
+(181, 'login', 0),
+(182, 'WikiHome', 0),
+(183, 'Login', 0),
+(184, 'ru', 1),
+(185, 'news', 0),
+(186, 'cgicso', 0),
+(187, 'htsearch', 0),
+(188, 'newcomment', 0),
+(189, 'webacc', 0),
+(190, 'start', 1),
+(191, 'applicationengine', 0),
+(192, 'ApplicationEngine', 0),
+(193, 'HomePage', 0);
 
 -- --------------------------------------------------------
 
@@ -2019,7 +2072,7 @@ ALTER TABLE `tblretinuequesttypes`
 -- AUTO_INCREMENT for table `tblsavedsearches`
 --
 ALTER TABLE `tblsavedsearches`
-  MODIFY `searchID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=141;
+  MODIFY `searchID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=194;
 --
 -- AUTO_INCREMENT for table `tblsubscribedthreads`
 --
