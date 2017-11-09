@@ -71,8 +71,8 @@ var_dump($result);
 */
 $textString = $latinName."\r\n".'('.$commonNameString.')';
 $textString .= "\r\n".$startingText;
-
-$characterLimit = 140-$mediaURLLength;
+// with 'tweet_mode'=>'extended' can post 280 instead of 140:
+$characterLimit = 280-$mediaURLLength;
 if(strlen($textString)>$characterLimit) {
 
 // find the first full stop before this limit
@@ -96,7 +96,8 @@ echo "<p>Tweeted content: ".$textString."</p>";
 //if($isLive) {
 	$parameters = [
 	    'status' => $textString,
-	    'media_ids' => $media->media_id_string
+	    'media_ids' => $media->media_id_string,
+	    'tweet_mode'=>'extended'
 	];
 	$result = $connection->post('statuses/update', $parameters);
 	if ($connection->getLastHttpCode() == 200) {
