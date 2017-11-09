@@ -1295,7 +1295,7 @@ var UI = {
     },
 
     openChest: function(itemReference, contents) {
-         audio.playSound(soundEffects['chestOpen'], 0);
+        audio.playSound(soundEffects['chestOpen'], 0);
         // open chest animation (thisMapData.items[itemReference]) ####
 
         // show container item name in the title:
@@ -1304,31 +1304,36 @@ var UI = {
         // build contents:
         var chestContents = '';
         var thisChestObject;
-        for (var chestItem in contents) {
+        //   for (var chestItem in contents) {
+        for (var i = 0; i < currentActiveInventoryItems[(thisMapData.items[itemReference].type)].actionValue; i++) {
             chestContents += '<li>';
-            if (contents[chestItem].type == "$") {
-                // just money
-                chestContents += '<img src="/images/game-world/inventory-items/coins.png" alt="' + contents[chestItem].quantity + ' worth of coins">';
-                chestContents += '<p><em>'+parseMoney(contents[chestItem].quantity)+' worth of coins </em></p>';
-                chestContents += '<span class="qty">'+parseMoney(contents[chestItem].quantity)+'</span>';
-            } else {
-                // create defaults:
-                thisChestObject = {
-                    "quantity": 1,
-                    "quality": 100,
-                    "durability": 100,
-                    "currentWear": 0,
-                    "effectiveness": 100,
-                    "colour": 0,
-                    "enchanted": 0,
-                    "hallmark": 0,
-                    "inscription": ""
+            if (typeof contents[i] !== "undefined") {
+                if (contents[i] != "") {
+                    if (contents[i].type == "$") {
+                        // just money
+                        chestContents += '<img src="/images/game-world/inventory-items/coins.png" alt="' + contents[i].quantity + ' worth of coins">';
+                        chestContents += '<p><em>' + parseMoney(contents[i].quantity) + ' worth of coins </em></p>';
+                        chestContents += '<span class="qty">' + parseMoney(contents[i].quantity) + '</span>';
+                    } else {
+                        // create defaults:
+                        thisChestObject = {
+                            "quantity": 1,
+                            "quality": 100,
+                            "durability": 100,
+                            "currentWear": 0,
+                            "effectiveness": 100,
+                            "colour": 0,
+                            "enchanted": 0,
+                            "hallmark": 0,
+                            "inscription": ""
+                        }
+                        // add in any defined values:
+                        for (var attrname in contents[i]) {
+                            thisChestObject[attrname] = contents[i][attrname];
+                        }
+                        chestContents += generateGenericSlotMarkup(thisChestObject);
+                    }
                 }
-                // add in any defined values:
-                for (var attrname in contents[chestItem]) {
-                   thisChestObject[attrname] = contents[chestItem][attrname];
-                }
-                chestContents += generateGenericSlotMarkup(thisChestObject);
             }
             chestContents += '</li>';
         }

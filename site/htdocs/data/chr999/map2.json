@@ -688,7 +688,7 @@
                   "type": 48,
                   "tileX": 17,
                   "tileY": 4,
-                  "contains": [{"type": 1},{"type": 3},{"type": "$", "quantity": 3000}]
+                  "contains": [{"type": 1},{"type": 3},"",{"type": "$", "quantity": 3000}]
             }
 
         ],
