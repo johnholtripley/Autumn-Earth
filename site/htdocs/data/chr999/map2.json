@@ -616,18 +616,18 @@
         "doors": {
             "1,0": {
                 "map": -1,
-                "startX": 46,
-                "startY": 60
+                "startX": "?-1",
+                "startY": "?"
             },
             "2,0": {
                 "map": -1,
-                "startX": 47,
-                "startY": 60
+                "startX": "?",
+                "startY": "?"
             },
             "3,0": {
                 "map": -1,
-                "startX": 48,
-                "startY": 60
+                "startX": "?+1",
+                "startY": "?"
             }
         },
         "items": [{

@@ -131,7 +131,24 @@ function loadCardData() {
 
 function loadMapJSON(mapFilePath) {
     getJSON(mapFilePath, function(data) {
+
+
+
+
             thisMapData = data.map;
+
+
+// check for any "?" in the target door
+// john ########
+console.log(hero.tileX,hero.tileY);
+if(hero.tileX.toString().indexOf("?") != -1) {
+hero.tileX = thisMapData.entrance[0];
+}
+if(hero.tileY.toString().indexOf("?") != -1) {
+    hero.tileY = thisMapData.entrance[1];
+}
+console.log(hero.tileX,hero.tileY);
+
             mapTilesY = thisMapData.terrain.length;
             mapTilesX = thisMapData.terrain[0].length;
             if (previousZoneName != thisMapData.zoneName) {
@@ -180,6 +197,9 @@ function loadMap() {
         mapFilePath = '/game-world/getMap.php?chr=' + characterId + '&map=' + newMap;
     }
     if (newMap < 0) {
+
+
+        /*
         // find door centre:
         var targetDoorX = 0;
         var targetDoorY = 0;
@@ -193,7 +213,7 @@ function loadMap() {
         // this assumes random maps always have a 3x1 doorway (the average of the doors will be the centre door)
         var centreDoorX = targetDoorX / 3;
         var centreDoorY = targetDoorY / 3;
-
+*/
      //   mapFilePath = '/game-world/generateDungeonMap.php?playerId=' + characterId + '&originatingMapId=' + currentMap + '&requestedMap=' + newMap + '&dungeonName=' + randomDungeonName + '&connectingDoorX=' + centreDoorX + '&connectingDoorY=' + centreDoorY;
 
 mapFilePath = '/game-world/generateCircularDungeonMap.php?seed=1510158518';
@@ -463,6 +483,9 @@ function initialiseNPC(whichNPC) {
 
 function prepareGame() {
 
+
+
+
     // get map image references:
     tileImages = [];
     for (var i = 0; i < tileGraphicsToLoad.length; i++) {
@@ -534,6 +557,9 @@ function prepareGame() {
         }
     }
 
+
+
+
     // fill hero breadcrumb array with herox and heroy:
     for (var i = 0; i < breadCrumbLength; i++) {
         hero.breadcrumb[i] = [hero.tileX, hero.tileY];
@@ -563,6 +589,11 @@ function prepareGame() {
         }
     }
     activeNPCForDialogue = '';
+
+
+
+
+
     // determine tile offset to centre the hero in the centre
     hero.x = getTileCentreCoordX(hero.tileX);
     hero.y = getTileCentreCoordY(hero.tileY);
@@ -618,9 +649,19 @@ function changeMaps(doorX, doorY) {
     gameMode = "mapLoading";
     removeMapAssets();
     var doorData = thisMapData.doors;
-    var whichDoor = doorX + "," + doorY;
+   
+
+
+ var whichDoor = doorX + "," + doorY;
+
+
+
     hero.tileX = doorData[whichDoor].startX;
     hero.tileY = doorData[whichDoor].startY;
+
+
+
+
     if (hasActivePet) {
         var tileOffsetX = 0;
         var tileOffsetY = 0;
@@ -764,7 +805,9 @@ function startDoorTransition() {
             dialogue.classList.remove("active");
             UI.removeActiveDialogue();
         }
+     if(chestIdOpen != -1) {
         UI.closeChest();
+    }
         /*
         // drop breadcrumb for the door, as the tile centre check won't be reached while map transitioning:
         hero.breadcrumb.pop();

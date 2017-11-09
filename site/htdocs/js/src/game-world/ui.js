@@ -1311,7 +1311,6 @@ var UI = {
         // build contents:
         var chestContents = '';
         var thisChestObject;
-        //   for (var chestItem in contents) {
         for (var i = 0; i < currentActiveInventoryItems[(thisMapData.items[itemReference].type)].actionValue; i++) {
             chestContents += '<li id="chestSlot-' + itemReference + '-' + i + '">';
             if (typeof contents[i] !== "undefined") {
@@ -1353,9 +1352,9 @@ var UI = {
 
     closeChest: function() {
         // animate close ####
-chestPanel.classList.remove('active');
-audio.playSound(soundEffects['chestOpen'], 0);
-chestIdOpen = -1;
+        chestPanel.classList.remove('active');
+        audio.playSound(soundEffects['chestOpen'], 0);
+        chestIdOpen = -1;
     },
 
     addFromChest: function(chestSlotId) {
@@ -1372,14 +1371,14 @@ chestIdOpen = -1;
                 thisMapData.items[(itemDetails[1])].contains[(itemDetails[2])] = "";
                 document.getElementById(chestSlotId).innerHTML = "";
             } else {
- inventoryCheck = canAddItemToInventory([whichChestItem]);
-            if (inventoryCheck[0]) {
-                  thisMapData.items[(itemDetails[1])].contains[(itemDetails[2])] = "";
-                  UI.showChangeInInventory(inventoryCheck[1]);
-                document.getElementById(chestSlotId).innerHTML = "";
-            } else {
-                UI.showNotification("<p>Oops - sorry, no room in your bags</p>");
-            }
+                inventoryCheck = canAddItemToInventory([whichChestItem]);
+                if (inventoryCheck[0]) {
+                    thisMapData.items[(itemDetails[1])].contains[(itemDetails[2])] = "";
+                    UI.showChangeInInventory(inventoryCheck[1]);
+                    document.getElementById(chestSlotId).innerHTML = "";
+                } else {
+                    UI.showNotification("<p>Oops - sorry, no room in your bags</p>");
+                }
             }
         }
 
