@@ -808,6 +808,8 @@ var UI = {
                 } else if (e.target.parentNode.id == "inscriptionPanel") {
 
                     UI.resetInscriptionPanel();
+                } else if (e.target.parentNode.id == "chestPanel") {
+                    UI.closeChest();
                 }
             }
         }
@@ -1345,7 +1347,15 @@ var UI = {
             chestContents += '</li>';
         }
         chestSlotContents.innerHTML = chestContents;
+        chestIdOpen = itemReference;
         chestPanel.classList.add('active');
+    },
+
+    closeChest: function() {
+        // animate close ####
+chestPanel.classList.remove('active');
+audio.playSound(soundEffects['chestOpen'], 0);
+chestIdOpen = -1;
     },
 
     addFromChest: function(chestSlotId) {

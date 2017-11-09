@@ -291,8 +291,8 @@ var timeSinceLastFrameSwap = 0;
 var currentAnimationFrame = 0;
 var animationUpdateTime = (1000 / animationFramesPerSecond);
 
-var gameCanvas, gameContext, gameMode, cartographyContext, cartographyCanvas, offScreenCartographyCanvas, offScreenCartographyContext, canvasMapImage, canvasMapImage, canvasMapMaskImage, heroImg, shadowImg, imagesToLoad, tileImages, npcImages, itemImages, backgroundImg, objInitLeft, objInitTop, dragStartX, dragStartY, inventoryCheck, timeSinceLastAmbientSoundWasPlayed, gameSettings, lightMap, lightMapOverlay, lightMapContext, rng;
-
+var gameCanvas, gameContext, gameMode, cartographyContext, cartographyCanvas, offScreenCartographyCanvas, offScreenCartographyContext, canvasMapImage, canvasMapImage, canvasMapMaskImage, heroImg, shadowImg, imagesToLoad, tileImages, npcImages, itemImages, backgroundImg, objInitLeft, objInitTop, dragStartX, dragStartY, inventoryCheck, timeSinceLastAmbientSoundWasPlayed, gameSettings, lightMap, lightMapOverlay, lightMapContext;
+var chestIdOpen = -1;
 const titleTagPrefix = 'Autumn Earth';
 
 
@@ -3540,6 +3540,8 @@ var UI = {
                 } else if (e.target.parentNode.id == "inscriptionPanel") {
 
                     UI.resetInscriptionPanel();
+                } else if (e.target.parentNode.id == "chestPanel") {
+                    UI.closeChest();
                 }
             }
         }
@@ -4077,7 +4079,15 @@ var UI = {
             chestContents += '</li>';
         }
         chestSlotContents.innerHTML = chestContents;
+        chestIdOpen = itemReference;
         chestPanel.classList.add('active');
+    },
+
+    closeChest: function() {
+        // animate close ####
+chestPanel.classList.remove('active');
+audio.playSound(soundEffects['chestOpen'], 0);
+chestIdOpen = -1;
     },
 
     addFromChest: function(chestSlotId) {
@@ -4873,6 +4883,7 @@ function startDoorTransition() {
             dialogue.classList.remove("active");
             UI.removeActiveDialogue();
         }
+        UI.closeChest();
         /*
         // drop breadcrumb for the door, as the tile centre check won't be reached while map transitioning:
         hero.breadcrumb.pop();
@@ -5186,6 +5197,15 @@ function update() {
                 // only remove this after dialogue has faded out completely:
                 dialogue.addEventListener(whichTransitionEvent, UI.removeActiveDialogue, false);
             }
+        }
+        // check if a chest is open and close it if so:
+        if(chestIdOpen!=-1) {
+if (!(isInRange(hero.x, hero.y, thisMapData.items[chestIdOpen].x, thisMapData.items[chestIdOpen].y, closeDialogueDistance))) {
+
+UI.closeChest();
+}
+
+
         }
     } else {
         hero.isMoving = true;

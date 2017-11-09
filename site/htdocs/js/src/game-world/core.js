@@ -764,6 +764,7 @@ function startDoorTransition() {
             dialogue.classList.remove("active");
             UI.removeActiveDialogue();
         }
+        UI.closeChest();
         /*
         // drop breadcrumb for the door, as the tile centre check won't be reached while map transitioning:
         hero.breadcrumb.pop();
@@ -1077,6 +1078,15 @@ function update() {
                 // only remove this after dialogue has faded out completely:
                 dialogue.addEventListener(whichTransitionEvent, UI.removeActiveDialogue, false);
             }
+        }
+        // check if a chest is open and close it if so:
+        if(chestIdOpen!=-1) {
+if (!(isInRange(hero.x, hero.y, thisMapData.items[chestIdOpen].x, thisMapData.items[chestIdOpen].y, closeDialogueDistance))) {
+
+UI.closeChest();
+}
+
+
         }
     } else {
         hero.isMoving = true;
