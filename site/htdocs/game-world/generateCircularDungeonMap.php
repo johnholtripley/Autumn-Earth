@@ -18,6 +18,8 @@ pathfind to confirm map doors are connected
 
 // http://ae.dev/game-world/generateCircularDungeonMap.php?seed=1510006712 - 3 wide corridors and remove doors for small rooms (unless locked)
 
+http://ae.dev/game-world/generateCircularDungeonMap.php?debug=true&seed=1510331114 - double thickness walls look odd
+
 
 
 ---- */
@@ -1700,7 +1702,7 @@ if(count($drawnTileKeys)>0) {
 // find the door reference for this lock:
 $doorReference = "";
 for ($j = 0; $j < count($drawnTileDoors); $j++) {
-    if($drawnTileDoors[$j][2] == $i) {
+    if($drawnTileDoors[$j][2] == $drawnTileKeys[$i][2]) {
 $doorReference = $drawnTileDoors[$j][3];
 break;
     }
