@@ -11,13 +11,14 @@ add template sections
 Convert locks, valves, hazards and treasure into interesting variants
 Add NPCs (with relevant quests)
 
+pathfind to confirm map doors are connected
 
-
-
+// remove unrequired block walls
+// connect exits and the next map up
 
 // http://ae.dev/game-world/generateCircularDungeonMap.php?seed=1510006712 - 3 wide corridors and remove doors for small rooms (unless locked)
-// http://ae.dev/game-world/generateCircularDungeonMap.php?seed=1509990424 - need to sort locks for a corridor
-// http://ae.dev/game-world/generateCircularDungeonMap.php?seed=1509990915 - undrawn connection 
+
+
 
 ---- */
 
@@ -1580,7 +1581,10 @@ if($debug) {
 function outputJSONContent() {
 global $debug, $map, $itemMap, $drawnTileDoors, $drawnTileKeys, $mapTilesX, $mapTilesY, $storedSeed, $thisMapsId, $thisDungeonsName, $thisPlayersId, $entranceX, $entranceY, $exitX, $exitY;
 if($debug) {
-    echo "Entrance: ".$entranceX.",".$entranceY." - Exit: ".$exitX.",".$exitY."<br>";
+  //  echo "Entrance: ".$entranceX.",".$entranceY." - Exit: ".$exitX.",".$exitY."<br>";
+
+
+
 echo '<code style="width:100%;clear:both;display:block;font-size:0.8em;">';
 
 }
@@ -1615,11 +1619,23 @@ $outputJSON = rtrim($outputJSON, ', ');
  for ($i = 0; $i < $mapTilesX; $i++) {   
   $outputJSON .= '[';   
             for ($j = 0; $j < $mapTilesY; $j++) {
-        if($map[$i][$j] == "#") {
-            $outputJSON.= '0, ';
-        } else {
-            $outputJSON.= '"*", ';
-        }
+
+
+
+switch ($map[$i][$j]) {
+    case "-":
+        $outputJSON.= '0, ';
+        break;
+    case "#":
+        $outputJSON.= '1, ';
+        break;
+    default:
+        $outputJSON.= '"*", ';
+        break;
+}
+
+
+    
     }
     // remove last comma:
 $outputJSON = rtrim($outputJSON, ', ');
@@ -1643,7 +1659,7 @@ $outputJSON = rtrim($outputJSON, ', ');
 $outputJSON = rtrim($outputJSON, ', ');
 
 
-$outputJSON .= '],"graphics": [{"src": "block.png","centreX": 24,"centreY": 45},{"src": "red-block.png","centreX": 24,"centreY": 45}],';
+$outputJSON .= '],"graphics": [{"src": "blank.png", "centreX": 24, "centreY": 12},{"src": "block.png","centreX": 24,"centreY": 45},{"src": "red-block.png","centreX": 24,"centreY": 45}],';
 $outputJSON .= '"shops": [],';
 $outputJSON .= '"npcs": [],';
 $outputJSON .= '"doors": [],';
@@ -1657,14 +1673,19 @@ $thisDoorIsLocked = false;
  if($drawnTileDoors[$i][2] != -1) {
 $thisDoorIsLocked = true;
  }
-$outputJSON .= '"'.$thisMapsId.'-'.$drawnTileDoors[$i][0].'-'.$drawnTileDoors[$i][1].'":{"tileX": '.$drawnTileDoors[$i][0].', "tileY": '.$drawnTileDoors[$i][1].', "isOpen": false, "isLocked": '.json_encode($thisDoorIsLocked).', "graphic": 1, "animation": { "opening": { "length": 8, "row": 0 }, "closing": { "length": 8, "row": 1 } }},';
+ $thisDoorsReference = $thisMapsId.'-'.$drawnTileDoors[$i][0].'-'.$drawnTileDoors[$i][1];
+$outputJSON .= '"'.$thisDoorsReference.'":{"tileX": '.$drawnTileDoors[$i][0].', "tileY": '.$drawnTileDoors[$i][1].', "isOpen": false, "isLocked": '.json_encode($thisDoorIsLocked).', "graphic": 2, "animation": { "opening": { "length": 8, "row": 0 }, "closing": { "length": 8, "row": 1 } }},';
 // push this door reference:
-$drawnTileDoors[$i][3] = $thisMapsId.'-'.$drawnTileDoors[$i][1].'-'.$drawnTileDoors[$i][0];
+$drawnTileDoors[$i][3] = $thisDoorsReference;
 }
      // remove last comma:
 $outputJSON = rtrim($outputJSON, ', ');
 
 }
+
+
+
+
 
 $outputJSON .= '},';
 
@@ -1672,10 +1693,24 @@ $outputJSON .= '"items": [';
 
 if(count($drawnTileKeys)>0) {
  for ($i = 0; $i < count($drawnTileKeys); $i++) { 
-   // find the corresponding door:
 
 
- $outputJSON .= '{"type": 43, "tileX": '.$drawnTileKeys[$i][0].', "tileY": '.$drawnTileKeys[$i][1].', "additional": "'.$drawnTileDoors[($drawnTileKeys[$i][2])][3].'"},';
+
+
+// find the door reference for this lock:
+$doorReference = "";
+for ($j = 0; $j < count($drawnTileDoors); $j++) {
+    if($drawnTileDoors[$j][2] == $i) {
+$doorReference = $drawnTileDoors[$j][3];
+break;
+    }
+}
+
+
+// randomly pick a key or a lever:
+$keyType = mt_rand(42,43);
+
+ $outputJSON .= '{"type": '.$keyType.', "tileX": '.$drawnTileKeys[$i][0].', "tileY": '.$drawnTileKeys[$i][1].', "additional": "'.$doorReference.'"},';
 
     }
      // remove last comma:
@@ -1684,7 +1719,7 @@ if(count($drawnTileKeys)>0) {
 
 
 // temporarily add a chest to make the exit ###########
-$outputJSON .= '{"type": 48, "tileX": '.$exitX.', "tileY": '.$exitY.', "contains": [{"type": 1},{"type": 3},{"type": "$"}]}';
+$outputJSON .= '{"type": 48, "tileX": '.$exitX.', "tileY": '.$exitY.', "contains": [{"type": 1},{"type": 3},{"type": "$", "quantity": 2500}]}';
 $outputJSON .= '],';
 
 
@@ -1716,6 +1751,42 @@ if($debug) {
 echo '</code>';
 }
 }
+
+
+
+
+
+
+
+function tileIsSurrounded($tileCheckX,$tileCheckY) {
+  global $map, $mapTilesX, $mapTilesY;
+  $thisTileIsSurrounded = false;
+  if($tileCheckX>=0) {
+    if($tileCheckY>=0) {
+      if($tileCheckX<$mapTilesX) {
+        if($tileCheckY<$mapTilesY) {
+          if(($map[$tileCheckY][$tileCheckX] == "#") || ($map[$tileCheckY][$tileCheckX] == "-")){
+            $thisTileIsSurrounded = true;
+          }
+        } else {
+          // is outside of the map, and therefore counts as bounding the tile being checked:
+          $thisTileIsSurrounded = true;
+        }
+      } else {
+        $thisTileIsSurrounded = true;
+      }
+    } else {
+      $thisTileIsSurrounded = true;
+    }
+  } else {
+    $thisTileIsSurrounded = true;
+  }
+  return $thisTileIsSurrounded;
+}
+
+
+
+
 
 function gridTileGrid() {
     global $requiredWidth, $requiredHeight, $mapTilesX, $mapTilesY, $canvaDimension, $delaunayVertices, $minLeft, $minTop, $edgesUsedOnDelaunayGraph, $allDelaunayEdges, $lockedJoints, $keyColours, $debug, $map, $itemMap, $drawnTileDoors, $drawnTileKeys, $entranceX, $entranceY, $exitX, $exitY;
@@ -1824,7 +1895,7 @@ $map[$k][$j] = ".";
 // plot connections:
     foreach($allDelaunayEdges as $thisEdge) {
          if ((in_array(new delaunayEdge($thisEdge->v0, $thisEdge->v1), $edgesUsedOnDelaunayGraph)) || (in_array(new delaunayEdge($thisEdge->v1, $thisEdge->v0), $edgesUsedOnDelaunayGraph))) {
-         
+        
 $leftEdge = $thisEdge->v0->x  - $minLeft;
 $rightEdge = $thisEdge->v1->x  - $minLeft;
 $topEdge = $thisEdge->v0->y  - $minTop;
@@ -1835,6 +1906,9 @@ $rightTileEdge = floor($rightEdge * $ratio);
 $topTileEdge = floor($topEdge * $ratio);
 $bottomTileEdge = floor($bottomEdge * $ratio);
 
+
+
+
 // centre the map:
 $leftTileEdge += $tileOffsetX;
 $rightTileEdge += $tileOffsetX;
@@ -1843,7 +1917,19 @@ $bottomTileEdge += $tileOffsetY;
 
 
 
+if($topTileEdge > $bottomTileEdge) {
+    // reverse them:
+$storedEdge = $topTileEdge;
+$topTileEdge = $bottomTileEdge;
+$bottomTileEdge = $storedEdge;
+}
 
+
+if($leftTileEdge > $rightTileEdge) {
+$storedEdge = $leftTileEdge;
+$leftTileEdge = $rightTileEdge;
+$rightTileEdge = $storedEdge;
+}
 
 
 for ($j = $leftTileEdge; $j <= $rightTileEdge; $j++) {
@@ -1860,12 +1946,7 @@ for ($k = $topTileEdge; $k <= $bottomTileEdge; $k++) {
 // not already been plotted by the room, so it's a door:
                     $map[$k][$j] = "d";
                // check if it's locked:
-
-
-
-          
-       
-            
+ 
             if (isset($lockedJoints[("-" . $thisEdge->v1->whichNode->name."-" . $thisEdge->v0->whichNode->name)])) {
                 $map[$k][$j] = "D";
                 array_push($drawnTileDoors, array($j,$k, $lockedJoints[("-" . $thisEdge->v1->whichNode->name."-" . $thisEdge->v0->whichNode->name)]));
@@ -1914,6 +1995,17 @@ $map[$k][$j] = ".";
 
 
 
+// find blank tiles (tiles completely surrounded by non-walkable tiles):
+ for ($i = 0; $i < $mapTilesX; $i++) {
+ for ($j = 0; $j < $mapTilesY; $j++) {
+  if(   (tileIsSurrounded($i-1,$j))  && (tileIsSurrounded($i+1,$j))  && (tileIsSurrounded($i-1,$j-1))  && (tileIsSurrounded($i-1,$j+1))  && (tileIsSurrounded($i+1,$j-1)) && (tileIsSurrounded($i+1,$j+1)) && (tileIsSurrounded($i,$j-1))  && (tileIsSurrounded($i,$j+1))      ) {
+  $map[$j][$i] = "-";
+  }
+  }
+  }
+
+
+
 
 // output map:
 
@@ -1933,7 +2025,11 @@ $drawnOffset = 20;
         switch ($map[$j][$i]) {
     case "#":
     // non-walkable tile:
-       imagefilledrectangle($outputCanvas,($i)*$drawnTileSize+$drawnOffset,($j)*$drawnTileSize+$drawnOffset,($i+1)*$drawnTileSize+$drawnOffset,($j+1)*$drawnTileSize+$drawnOffset,  imagecolorallocate($outputCanvas, 60, 60, 60));
+       imagefilledrectangle($outputCanvas,($i)*$drawnTileSize+$drawnOffset,($j)*$drawnTileSize+$drawnOffset,($i+1)*$drawnTileSize+$drawnOffset,($j+1)*$drawnTileSize+$drawnOffset,  imagecolorallocate($outputCanvas, 75, 75, 75));
+        break;
+        case "-":
+        // 'removed' blank non-walkable tile:
+         imagefilledrectangle($outputCanvas,($i)*$drawnTileSize+$drawnOffset,($j)*$drawnTileSize+$drawnOffset,($i+1)*$drawnTileSize+$drawnOffset,($j+1)*$drawnTileSize+$drawnOffset,  imagecolorallocate($outputCanvas, 0, 0, 0));
         break;
         case "d":
         // door

@@ -386,7 +386,7 @@ var hero = {
     spriteWidth: 62,
     spriteHeight: 79,
     isMoving: false,
-    facing: 's',
+    facing: 'n',
     "animation": {
         "walk": {
             "length": 1,
@@ -4336,8 +4336,9 @@ function loadMap() {
     }
     if (newMap < 0) {
         //   mapFilePath = '/game-world/generateDungeonMap.php?playerId=' + characterId + '&originatingMapId=' + currentMap + '&requestedMap=' + newMap + '&dungeonName=' + randomDungeonName + '&connectingDoorX=' + centreDoorX + '&connectingDoorY=' + centreDoorY;
-        //mapFilePath = '/game-world/generateCircularDungeonMap.php?seed=1510158518';
+     
         mapFilePath = '/game-world/generateCircularDungeonMap.php';
+           mapFilePath = '/game-world/generateCircularDungeonMap.php?seed=1510325107';
     }
     currentMap = newMap;
     loadMapJSON(mapFilePath);
