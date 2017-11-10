@@ -9,8 +9,8 @@ function sizeCanvasSize() {
     // size it to the screen:
     gameContext.canvas.width = window.innerWidth;
     gameContext.canvas.height = window.innerHeight;
-    lightMapContext.canvas.width = window.innerWidth/4;
-    lightMapContext.canvas.height = window.innerHeight/4;
+    lightMapContext.canvas.width = window.innerWidth / 4;
+    lightMapContext.canvas.height = window.innerHeight / 4;
     canvasWidth = window.innerWidth;
     canvasHeight = window.innerHeight;
 }
@@ -89,7 +89,7 @@ function loadCoreAssets() {
         name: "heroImg",
         src: '/images/game-world/core/hero.png'
     });
-        coreImagesToLoad.push({
+    coreImagesToLoad.push({
         name: "shadowImg",
         src: '/images/game-world/core/shadow-quarter.png'
     });
@@ -131,55 +131,44 @@ function loadCardData() {
 
 function loadMapJSON(mapFilePath) {
     getJSON(mapFilePath, function(data) {
-
-
-
-
             thisMapData = data.map;
-
-
-// check for any "?" in the target door (for procedural levels):
-
-
-if(hero.tileX.toString().indexOf("?") != -1) {
-hero.tileX = thisMapData.entrance[0];
-}
-if(hero.tileY.toString().indexOf("?") != -1) {
-    hero.tileY = thisMapData.entrance[1];
-}
-
-
-
-// set up pet positions:
-    if (hasActivePet) {
-        var tileOffsetX = 0;
-        var tileOffsetY = 0;
-        switch (hero.facing) {
-            case "n":
-                tileOffsetY = 1;
-                break
-            case "s":
-                tileOffsetY = -1;
-                break
-            case "e":
-                tileOffsetX = -1;
-                break
-            case "w":
-                tileOffsetX = 1;
-                break
-        }
-        for (var i = 0; i < hero.activePets.length; i++) {
-            hero.allPets[hero.activePets[i]].tileX = hero.tileX + (tileOffsetX * (i + 1));
-            hero.allPets[hero.activePets[i]].tileY = hero.tileY + (tileOffsetY * (i + 1));
-            if (i == 0) {
-                hero.allPets[hero.activePets[i]].state = "moving";
-            } else {
-                // will be placed out of the normal map grid:
-                hero.allPets[hero.activePets[i]].state = "queuing";
+            // check for any "?" in the target door (for procedural levels):
+            if (hero.tileX.toString().indexOf("?") != -1) {
+                hero.tileX = thisMapData.entrance[0];
             }
-            hero.allPets[hero.activePets[i]].facing = hero.facing;
-        }
-    }
+            if (hero.tileY.toString().indexOf("?") != -1) {
+                hero.tileY = thisMapData.entrance[1];
+            }
+            // set up pet positions:
+            if (hasActivePet) {
+                var tileOffsetX = 0;
+                var tileOffsetY = 0;
+                switch (hero.facing) {
+                    case "n":
+                        tileOffsetY = 1;
+                        break
+                    case "s":
+                        tileOffsetY = -1;
+                        break
+                    case "e":
+                        tileOffsetX = -1;
+                        break
+                    case "w":
+                        tileOffsetX = 1;
+                        break
+                }
+                for (var i = 0; i < hero.activePets.length; i++) {
+                    hero.allPets[hero.activePets[i]].tileX = hero.tileX + (tileOffsetX * (i + 1));
+                    hero.allPets[hero.activePets[i]].tileY = hero.tileY + (tileOffsetY * (i + 1));
+                    if (i == 0) {
+                        hero.allPets[hero.activePets[i]].state = "moving";
+                    } else {
+                        // will be placed out of the normal map grid:
+                        hero.allPets[hero.activePets[i]].state = "queuing";
+                    }
+                    hero.allPets[hero.activePets[i]].facing = hero.facing;
+                }
+            }
 
 
             mapTilesY = thisMapData.terrain.length;
@@ -190,7 +179,7 @@ if(hero.tileY.toString().indexOf("?") != -1) {
                 cartographicTitle.innerHTML = thisMapData.zoneName;
             }
             // temporarily remove this while working on random dungeons: ###########
-         //   initCartographicMap();
+            //   initCartographicMap();
             findProfessionsAndRecipes();
             if (thisMapData.showOnlyLineOfSight) {
                 // initialise the lightmap with default values:
@@ -211,7 +200,7 @@ if(hero.tileY.toString().indexOf("?") != -1) {
         },
         function(status) {
             // try again:
-            console.log("retrying..."+mapFilePath);
+            console.log("retrying..." + mapFilePath);
             loadMapJSON(mapFilePath);
         });
 }
@@ -219,8 +208,6 @@ if(hero.tileY.toString().indexOf("?") != -1) {
 
 function loadMap() {
     var mapFilePath;
-    //console.log("going from " + currentMap + " to " + newMap);
-
     // check for newly entering a random dungeon:
     if ((newMap < 0) && (currentMap > 0)) {
         randomDungeonName = randomDungeons[Math.abs(newMap)];
@@ -230,28 +217,9 @@ function loadMap() {
         mapFilePath = '/game-world/getMap.php?chr=' + characterId + '&map=' + newMap;
     }
     if (newMap < 0) {
-
-
-        /*
-        // find door centre:
-        var targetDoorX = 0;
-        var targetDoorY = 0;
-        var doorData = thisMapData.doors;
-        for (var i in doorData) {
-            if (doorData[i].map == newMap) {
-                targetDoorX += doorData[i].startX;
-                targetDoorY += doorData[i].startY;
-            }
-        }
-        // this assumes random maps always have a 3x1 doorway (the average of the doors will be the centre door)
-        var centreDoorX = targetDoorX / 3;
-        var centreDoorY = targetDoorY / 3;
-*/
-     //   mapFilePath = '/game-world/generateDungeonMap.php?playerId=' + characterId + '&originatingMapId=' + currentMap + '&requestedMap=' + newMap + '&dungeonName=' + randomDungeonName + '&connectingDoorX=' + centreDoorX + '&connectingDoorY=' + centreDoorY;
-
-mapFilePath = '/game-world/generateCircularDungeonMap.php?seed=1510158518';
-
-
+        //   mapFilePath = '/game-world/generateDungeonMap.php?playerId=' + characterId + '&originatingMapId=' + currentMap + '&requestedMap=' + newMap + '&dungeonName=' + randomDungeonName + '&connectingDoorX=' + centreDoorX + '&connectingDoorY=' + centreDoorY;
+        //mapFilePath = '/game-world/generateCircularDungeonMap.php?seed=1510158518';
+        mapFilePath = '/game-world/generateCircularDungeonMap.php';
     }
     currentMap = newMap;
     loadMapJSON(mapFilePath);
@@ -440,18 +408,18 @@ function findInventoryItemData() {
     // find items placed on this map:
     for (var i = 0; i < thisMapData.items.length; i++) {
         itemIdsToGet.push(thisMapData.items[i].type);
-            // check if any are containers or chests:
+        // check if any are containers or chests:
         if (typeof thisMapData.items[i].contains !== "undefined") {
             for (var j = 0; j < thisMapData.items[i].contains.length; j++) {
                 // make sure it's not money in a chest:
-                if(thisMapData.items[i].contains[j].type != "$") {
-                itemIdsToGet.push(thisMapData.items[i].contains[j].type);
-            }
+                if (thisMapData.items[i].contains[j].type != "$") {
+                    itemIdsToGet.push(thisMapData.items[i].contains[j].type);
+                }
             }
         }
 
     }
-  
+
 
     // find items in recipes:
     for (var i in hero.crafting) {
@@ -649,7 +617,7 @@ function prepareGame() {
 }
 
 
-function removeMapAssets() {  
+function removeMapAssets() {
     for (var i = 0; i < tileGraphicsToLoad.length; i++) {
         // remove the on error handler so it doesn't fire when the image is removed:
         tileImages[i].onerror = '';
@@ -683,10 +651,10 @@ function changeMaps(doorX, doorY) {
     gameMode = "mapLoading";
     removeMapAssets();
     var doorData = thisMapData.doors;
-   
 
 
- var whichDoor = doorX + "," + doorY;
+
+    var whichDoor = doorX + "," + doorY;
 
 
 
@@ -753,13 +721,13 @@ function tileIsClear(tileX, tileY) {
     }
     // against NPCs:
     for (var i = 0; i < thisMapData.npcs.length; i++) {
-     if (thisMapData.npcs[i].isCollidable) {
-        if (tileX == thisMapData.npcs[i].tileX) {
-            if (tileY == thisMapData.npcs[i].tileY) {
-                return false;
+        if (thisMapData.npcs[i].isCollidable) {
+            if (tileX == thisMapData.npcs[i].tileX) {
+                if (tileY == thisMapData.npcs[i].tileY) {
+                    return false;
+                }
             }
         }
-    }
     }
 
     return true;
@@ -811,9 +779,9 @@ function startDoorTransition() {
             dialogue.classList.remove("active");
             UI.removeActiveDialogue();
         }
-     if(chestIdOpen != -1) {
-        UI.closeChest();
-    }
+        if (chestIdOpen != -1) {
+            UI.closeChest();
+        }
         /*
         // drop breadcrumb for the door, as the tile centre check won't be reached while map transitioning:
         hero.breadcrumb.pop();
@@ -875,8 +843,7 @@ function checkHeroCollisions() {
         leadingEdge1OnAPlatform = isOnAPlatform(hero.x - hero.width / 2, hero.y - hero.height / 2);
         leadingEdge2OnAPlatform = isOnAPlatform(hero.x + hero.width / 2, hero.y - hero.height / 2)
         // make sure both leading edge corners are EITHER on a platform or not colliding with terrain:
-        if (((leadingEdge1OnAPlatform > -1) || (!isATerrainCollision(hero.x - hero.width / 2, hero.y - hero.height / 2))) && ((leadingEdge2OnAPlatform > -1) || (!isATerrainCollision(hero.x + hero.width / 2, hero.y - hero.height / 2)))) {
-        } else {
+        if (((leadingEdge1OnAPlatform > -1) || (!isATerrainCollision(hero.x - hero.width / 2, hero.y - hero.height / 2))) && ((leadingEdge2OnAPlatform > -1) || (!isATerrainCollision(hero.x + hero.width / 2, hero.y - hero.height / 2)))) {} else {
             // leading edge is a collision - check if trailing edge is on a platform (and leading isn't), and nudge hero back onto the platform if so:
             if ((isOnAPlatform(hero.x - hero.width / 2, hero.y + hero.height / 2) > -1) && (isOnAPlatform(hero.x + hero.width / 2, hero.y + hero.height / 2) > -1)) {
                 if ((leadingEdge1OnAPlatform == -1) && (leadingEdge2OnAPlatform == -1)) {
@@ -896,8 +863,7 @@ function checkHeroCollisions() {
         // down
         leadingEdge1OnAPlatform = isOnAPlatform(hero.x - hero.width / 2, hero.y + hero.height / 2);
         leadingEdge2OnAPlatform = isOnAPlatform(hero.x + hero.width / 2, hero.y + hero.height / 2);
-        if (((leadingEdge1OnAPlatform > -1) || (!isATerrainCollision(hero.x - hero.width / 2, hero.y + hero.height / 2))) && ((leadingEdge2OnAPlatform > -1) || (!isATerrainCollision(hero.x + hero.width / 2, hero.y + hero.height / 2)))) {
-        } else {
+        if (((leadingEdge1OnAPlatform > -1) || (!isATerrainCollision(hero.x - hero.width / 2, hero.y + hero.height / 2))) && ((leadingEdge2OnAPlatform > -1) || (!isATerrainCollision(hero.x + hero.width / 2, hero.y + hero.height / 2)))) {} else {
             // leading edge is a collision - check if trailing edge is on a platform, and nudge hero back onto the platform if so:
             if ((isOnAPlatform(hero.x - hero.width / 2, hero.y - hero.height / 2) > -1) && (isOnAPlatform(hero.x + hero.width / 2, hero.y - hero.height / 2) > -1)) {
                 if ((leadingEdge1OnAPlatform == -1) && (leadingEdge2OnAPlatform == -1)) {
@@ -916,8 +882,7 @@ function checkHeroCollisions() {
         // left/west
         leadingEdge1OnAPlatform = isOnAPlatform(hero.x - hero.width / 2, hero.y + hero.height / 2);
         leadingEdge2OnAPlatform = isOnAPlatform(hero.x - hero.width / 2, hero.y - hero.height / 2);
-        if (((leadingEdge1OnAPlatform > -1) || (!isATerrainCollision(hero.x - hero.width / 2, hero.y + hero.height / 2))) && ((leadingEdge2OnAPlatform > -1) || (!isATerrainCollision(hero.x - hero.width / 2, hero.y - hero.height / 2)))) {
-        } else {
+        if (((leadingEdge1OnAPlatform > -1) || (!isATerrainCollision(hero.x - hero.width / 2, hero.y + hero.height / 2))) && ((leadingEdge2OnAPlatform > -1) || (!isATerrainCollision(hero.x - hero.width / 2, hero.y - hero.height / 2)))) {} else {
             // leading edge is a collision - check if trailing edge is on a platform, and nudge hero back onto the platform if so:
             if ((isOnAPlatform(hero.x + hero.width / 2, hero.y - hero.height / 2) > -1) && (isOnAPlatform(hero.x + hero.width / 2, hero.y + hero.height / 2) > -1)) {
                 if ((leadingEdge1OnAPlatform == -1) && (leadingEdge2OnAPlatform == -1)) {
@@ -936,8 +901,7 @@ function checkHeroCollisions() {
         //right/east
         leadingEdge1OnAPlatform = isOnAPlatform(hero.x + hero.width / 2, hero.y + hero.height / 2);
         leadingEdge2OnAPlatform = isOnAPlatform(hero.x + hero.width / 2, hero.y - hero.height / 2);
-        if (((leadingEdge1OnAPlatform > -1) || (!isATerrainCollision(hero.x + hero.width / 2, hero.y + hero.height / 2))) && ((leadingEdge2OnAPlatform > -1) || (!isATerrainCollision(hero.x + hero.width / 2, hero.y - hero.height / 2)))) {
-        } else {
+        if (((leadingEdge1OnAPlatform > -1) || (!isATerrainCollision(hero.x + hero.width / 2, hero.y + hero.height / 2))) && ((leadingEdge2OnAPlatform > -1) || (!isATerrainCollision(hero.x + hero.width / 2, hero.y - hero.height / 2)))) {} else {
             // leading edge is a collision - check if trailing edge is on a platform, and nudge hero back onto the platform if so:
             if ((isOnAPlatform(hero.x - hero.width / 2, hero.y - hero.height / 2) > -1) && (isOnAPlatform(hero.x - hero.width / 2, hero.y + hero.height / 2) > -1)) {
                 if ((leadingEdge1OnAPlatform == -1) && (leadingEdge2OnAPlatform == -1)) {
@@ -1129,11 +1093,11 @@ function update() {
             }
         }
         // check if a chest is open and close it if so:
-        if(chestIdOpen!=-1) {
-if (!(isInRange(hero.x, hero.y, thisMapData.items[chestIdOpen].x, thisMapData.items[chestIdOpen].y, closeDialogueDistance))) {
+        if (chestIdOpen != -1) {
+            if (!(isInRange(hero.x, hero.y, thisMapData.items[chestIdOpen].x, thisMapData.items[chestIdOpen].y, closeDialogueDistance))) {
 
-UI.closeChest();
-}
+                UI.closeChest();
+            }
 
 
         }
@@ -1361,7 +1325,7 @@ function checkForActions() {
                         // remove from map:
                         thisMapData.items.splice(i, 1);
                         break;
-                        case "chest":
+                    case "chest":
                         // open chest and show contents:
                         UI.openChest(i);
                         break;
@@ -1808,19 +1772,19 @@ function giveQuestRewards(whichQuestId) {
 }
 
 function awardQuestRewards(questRewards) {
-    
-        var allRewardItems = [];
-        
-        for (var i = 0; i < questRewards.length; i++) {
-            // check for variation:
-            var questPossibilities = questRewards[i].split("/");
-            var questRewardToUse = getRandomElementFromArray(questPossibilities);
-            console.log(questRewardToUse);
 
-  // check if it's money:
-                                if (questRewardToUse.charAt(0) == "$") {
-                                    thisRewardObject = questRewardToUse;
-                                } else {
+    var allRewardItems = [];
+
+    for (var i = 0; i < questRewards.length; i++) {
+        // check for variation:
+        var questPossibilities = questRewards[i].split("/");
+        var questRewardToUse = getRandomElementFromArray(questPossibilities);
+        console.log(questRewardToUse);
+
+        // check if it's money:
+        if (questRewardToUse.charAt(0) == "$") {
+            thisRewardObject = questRewardToUse;
+        } else {
 
             // check for any quantities:
             var thisQuestReward = questRewardToUse.split("x");
@@ -1851,19 +1815,19 @@ function awardQuestRewards(questRewards) {
                 "inscription": ""
             }
         }
-            allRewardItems.push(thisRewardObject);
-        }
-        inventoryCheck = canAddItemToInventory(allRewardItems);
-        if (inventoryCheck[0]) {
-            UI.showChangeInInventory(inventoryCheck[1]);
+        allRewardItems.push(thisRewardObject);
+    }
+    inventoryCheck = canAddItemToInventory(allRewardItems);
+    if (inventoryCheck[0]) {
+        UI.showChangeInInventory(inventoryCheck[1]);
 
-            return true;
-        } else {
-            UI.showNotification("<p>Oops - sorry, no room in your bags</p>");
-            // don't close quest
-            return false;
-        }
-   
+        return true;
+    } else {
+        UI.showNotification("<p>Oops - sorry, no room in your bags</p>");
+        // don't close quest
+        return false;
+    }
+
 }
 
 
@@ -2183,7 +2147,7 @@ function moveNPCs() {
 
 function movePlatforms() {
     if (thisMapData.movingPlatforms) {
-                // check for any items on platforms:
+        // check for any items on platforms:
         for (var i = 0; i < thisMapData.items.length; i++) {
             if (thisMapData.items[i].isOnPlatform != undefined) {
                 if (thisMapData.movingPlatforms[thisMapData.items[i].isOnPlatform].canMove) {

@@ -1586,7 +1586,7 @@ echo '<code style="width:100%;clear:both;display:block;font-size:0.8em;">';
 }
 
 
-$outputJSON = '{"map":{"zoneName": "A Circular Dungeon",';
+$outputJSON = '{"map":{"zoneName": "A Circular Dungeon: '.$storedSeed.'",';
 $outputJSON .='"seed": '.$storedSeed.', ';
 $outputJSON .= '"entrance": ['.$entranceX.','.$entranceY.'],';
 $outputJSON .='"collisions": [';
