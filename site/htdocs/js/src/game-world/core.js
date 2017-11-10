@@ -138,16 +138,49 @@ function loadMapJSON(mapFilePath) {
             thisMapData = data.map;
 
 
-// check for any "?" in the target door
-// john ########
-console.log(hero.tileX,hero.tileY);
+// check for any "?" in the target door (for procedural levels):
+
+
 if(hero.tileX.toString().indexOf("?") != -1) {
 hero.tileX = thisMapData.entrance[0];
 }
 if(hero.tileY.toString().indexOf("?") != -1) {
     hero.tileY = thisMapData.entrance[1];
 }
-console.log(hero.tileX,hero.tileY);
+
+
+
+// set up pet positions:
+    if (hasActivePet) {
+        var tileOffsetX = 0;
+        var tileOffsetY = 0;
+        switch (hero.facing) {
+            case "n":
+                tileOffsetY = 1;
+                break
+            case "s":
+                tileOffsetY = -1;
+                break
+            case "e":
+                tileOffsetX = -1;
+                break
+            case "w":
+                tileOffsetX = 1;
+                break
+        }
+        for (var i = 0; i < hero.activePets.length; i++) {
+            hero.allPets[hero.activePets[i]].tileX = hero.tileX + (tileOffsetX * (i + 1));
+            hero.allPets[hero.activePets[i]].tileY = hero.tileY + (tileOffsetY * (i + 1));
+            if (i == 0) {
+                hero.allPets[hero.activePets[i]].state = "moving";
+            } else {
+                // will be placed out of the normal map grid:
+                hero.allPets[hero.activePets[i]].state = "queuing";
+            }
+            hero.allPets[hero.activePets[i]].facing = hero.facing;
+        }
+    }
+
 
             mapTilesY = thisMapData.terrain.length;
             mapTilesX = thisMapData.terrain[0].length;
@@ -508,6 +541,7 @@ function prepareGame() {
     // initialise pet:
     if (hasActivePet) {
         for (var i = 0; i < hero.activePets.length; i++) {
+
             hero.allPets[hero.activePets[i]].x = getTileCentreCoordX(hero.allPets[hero.activePets[i]].tileX);
             hero.allPets[hero.activePets[i]].y = getTileCentreCoordY(hero.allPets[hero.activePets[i]].tileY);
             // check these tiles are within the normal grid - if not use the pet in front's z depth:
@@ -662,35 +696,7 @@ function changeMaps(doorX, doorY) {
 
 
 
-    if (hasActivePet) {
-        var tileOffsetX = 0;
-        var tileOffsetY = 0;
-        switch (hero.facing) {
-            case "n":
-                tileOffsetY = 1;
-                break
-            case "s":
-                tileOffsetY = -1;
-                break
-            case "e":
-                tileOffsetX = -1;
-                break
-            case "w":
-                tileOffsetX = 1;
-                break
-        }
-        for (var i = 0; i < hero.activePets.length; i++) {
-            hero.allPets[hero.activePets[i]].tileX = doorData[whichDoor].startX + (tileOffsetX * (i + 1));
-            hero.allPets[hero.activePets[i]].tileY = doorData[whichDoor].startY + (tileOffsetY * (i + 1));
-            if (i == 0) {
-                hero.allPets[hero.activePets[i]].state = "moving";
-            } else {
-                // will be placed out of the normal map grid:
-                hero.allPets[hero.activePets[i]].state = "queuing";
-            }
-            hero.allPets[hero.activePets[i]].facing = hero.facing;
-        }
-    }
+
     newMap = doorData[whichDoor].map;
     loadMap();
 }
