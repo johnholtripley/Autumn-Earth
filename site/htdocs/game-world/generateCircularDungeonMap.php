@@ -13,7 +13,7 @@ Add NPCs (with relevant quests)
 
 pathfind to confirm map doors are connected
 
-// remove unrequired block walls
+
 // connect exits and the next map up
 
 // http://ae.dev/game-world/generateCircularDungeonMap.php?seed=1510006712 - 3 wide corridors and remove doors for small rooms (unless locked)
