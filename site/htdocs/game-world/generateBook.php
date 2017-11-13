@@ -136,9 +136,10 @@ $builtSentence .= '</p>';
 
 // find pronouns and replace them with in-game names:
 // https://regex101.com/r/SNWYDa/7/
+// http://www.phpliveregex.com/
 
-
-// $builtSentence = preg_replace( '(?<!^)(?<![.!?]\s)\b[A-Z][\w]+\b', "@@pronoun@@", $builtSentence );
+// do this before the markup is added ###########
+ $builtSentence = preg_replace( "/(?<!^)(?<![.!?]\s)\b[A-Z][\w]+\b/", "@@pronoun@@", $builtSentence );
 
 
 return $builtSentence;
