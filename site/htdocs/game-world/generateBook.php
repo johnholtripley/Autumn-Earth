@@ -56,6 +56,12 @@ $textSource = file_get_contents($_SERVER['DOCUMENT_ROOT']."/includes/scriptorium
 
  // $textSource = file_get_contents($_SERVER['DOCUMENT_ROOT']."/includes/scriptorium/sources/test.txt");
 
+
+// borrowed from WoW ####
+$inGameNames = array("Kael'thas Sunstrider", "Aethas Sunreaver", "Lor'themar Theron", "Grand Magister Rommath", "Halduron Brightwing", "Lady Liadrin", "Valeera Sanguinar", "Koltira Deathweaver", "Zendarin Windrunner");
+
+
+
 // isolate space and full stops:
 $textSource = str_ireplace(" ", "####", $textSource);
  $textSource = str_ireplace(".", "####.", $textSource);
@@ -96,15 +102,16 @@ $numberOfSentences = 4;
 
 
 $numberOfParagraphs = 3;
-$builtSentence = '';
+
+$outputText = '';
 for ($i=0;$i<$numberOfParagraphs;$i++) {
-$builtSentence .= '<section><h2>Chapter '.($i+1).'</h2><p>';
+$outputText .= '<section><h2>Chapter '.($i+1).'</h2>';
   
   
   for ($j=0;$j<$numberOfSentences;$j++) {
-    if($j!=0) {
-      $builtSentence .= '<p>';
-    } 
+    $builtSentence = '';
+   
+    
     $thisPair = $startPhrases[mt_rand(0, count($startPhrases) - 1)];
   $builtSentence .= $thisPair;
     do {
@@ -122,27 +129,44 @@ $builtSentence .= '<section><h2>Chapter '.($i+1).'</h2><p>';
 
     } while ($thisWord != ".");
 
-$builtSentence .= '</p>';
+// find pronouns and replace them with in-game names:
+// https://regex101.com/r/SNWYDa/7/
+    // http://www.phpliveregex.com/
+ $builtSentence = preg_replace( "/(?<!^)(?<![.!?]\s)\b[A-Z][\w]+\b/", "@@pronoun@@", $builtSentence );
+
+$outputText .= '<p>'.$builtSentence.'</p>';
+
+
   }
- $builtSentence .= '</section>';
+ $outputText .= '</section>';
 }
- $builtSentence = str_ireplace(" .", ". ", $builtSentence);
+ $outputText = str_ireplace(" .", ". ", $outputText);
 
 
 //remove all line breaks:
 
- $builtSentence = preg_replace( "/\r|\n/", "", $builtSentence );
+ $outputText = preg_replace( "/\r|\n/", "", $outputText );
 
 
-// find pronouns and replace them with in-game names:
-// https://regex101.com/r/SNWYDa/7/
-// http://www.phpliveregex.com/
-
-// do this before the markup is added ###########
- $builtSentence = preg_replace( "/(?<!^)(?<![.!?]\s)\b[A-Z][\w]+\b/", "@@pronoun@@", $builtSentence );
+// remove any adjoining pronouns:
+ $outputText = str_ireplace("@@pronoun@@ @@pronoun@@", "@@pronoun@@", $outputText);
 
 
-return $builtSentence;
+
+// replace pronouns:
+// https://stackoverflow.com/questions/10973958/php-str-replace-to-replace-need-with-random-replacement-from-array
+
+$outputText = preg_replace_callback('/' . preg_quote("@@pronoun@@") . '/', 
+  function() use ($inGameNames){ return $inGameNames[array_rand($inGameNames)]; }, $outputText);
+
+
+
+
+
+
+
+
+return $outputText;
 
 }
 
