@@ -10,16 +10,14 @@ elevations
 add template sections
 Convert locks, valves, hazards and treasure into interesting variants
 Add NPCs (with relevant quests)
-
 pathfind to confirm map doors are connected
+connect exits and the next map up
+remove doors for small rooms (unless locked)
 
 
-// connect exits and the next map up
 
-// http://ae.dev/game-world/generateCircularDungeonMap.php?seed=1510006712 - 3 wide corridors and remove doors for small rooms (unless locked)
-
-http://ae.dev/game-world/generateCircularDungeonMap.php?debug=true&seed=1510331114 - double thickness walls look odd
-
+ISSUES:
+http://ae.dev/game-world/generateCircularDungeonMap.php?debug=true&seed=1510610103 - double thickness walls look odd
 
 
 ---- */
@@ -2186,7 +2184,7 @@ do {
     $grownGrammar = growGrammar($possibleStartGrammars[mt_rand(0, count($possibleStartGrammars) - 1)], mt_rand(3, 4));
 
 
-// zelda gnarled root:
+// zelda gnarled root dungeon:
 $grownGrammar = "S{O[K#2]|,#2#O{#0#O[K#1#]|,}O{O[K#3#]|,}O#3#O[K#0#]|,}O#1#E";
 
 
