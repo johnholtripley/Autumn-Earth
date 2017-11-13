@@ -9,7 +9,9 @@ var soundsToLoad = {
     'bagOpen': '../sounds/bag-open-NOT_MINE-wow.mp3',
     'buttonClick': '../sounds/button-press-NOT_MINE-wow.mp3',
     'hen': '../sounds/hen-NOT_MINE.mp3',
-    'lever': '../sounds/lever-NOT_MINE.mp3'
+    'lever': '../sounds/lever-NOT_MINE.mp3',
+    'keys': '../sounds/keys-NOT_MINE-wow.mp3',
+    'unlock': '../sounds/unlock-NOT_MINE-wow.mp3'
 };
 
 

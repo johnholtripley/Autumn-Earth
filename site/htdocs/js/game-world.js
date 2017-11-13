@@ -10,7 +10,9 @@ var soundsToLoad = {
     'bagOpen': '../sounds/bag-open-NOT_MINE-wow.mp3',
     'buttonClick': '../sounds/button-press-NOT_MINE-wow.mp3',
     'hen': '../sounds/hen-NOT_MINE.mp3',
-    'lever': '../sounds/lever-NOT_MINE.mp3'
+    'lever': '../sounds/lever-NOT_MINE.mp3',
+    'keys': '../sounds/keys-NOT_MINE-wow.mp3',
+    'unlock': '../sounds/unlock-NOT_MINE-wow.mp3'
 };
 
 
@@ -4309,8 +4311,8 @@ function loadMapJSON(mapFilePath) {
                 document.title = titleTagPrefix + ' - ' + thisMapData.zoneName;
                 cartographicTitle.innerHTML = thisMapData.zoneName;
             }
-            // temporarily remove this while working on random dungeons: ###########
-            //   initCartographicMap();
+          
+               initCartographicMap();
             findProfessionsAndRecipes();
             if (thisMapData.showOnlyLineOfSight) {
                 // initialise the lightmap with default values:
@@ -5388,6 +5390,7 @@ function toggleInnerDoor(whichInnerDoor) {
 }
 
 function unlockInnerDoor(whichInnerDoor) {
+    audio.playSound(soundEffects['unlock'], 0);
     thisMapData.innerDoors[whichInnerDoor]['isLocked'] = false;
     if (thisMapData.showOnlyLineOfSight) {
         updateLightMap();
@@ -5454,6 +5457,7 @@ function checkForActions() {
                     case "key":
                         hero.currency.keys.push(thisMapData.items[i].additional);
                         UI.updateCurrencies();
+                        audio.playSound(soundEffects['keys'], 0);
                         // remove from map:
                         thisMapData.items.splice(i, 1);
                         break;

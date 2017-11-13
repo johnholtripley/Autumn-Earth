@@ -1661,7 +1661,7 @@ $outputJSON = rtrim($outputJSON, ', ');
 $outputJSON = rtrim($outputJSON, ', ');
 
 
-$outputJSON .= '],"graphics": [{"src": "blank.png", "centreX": 24, "centreY": 12},{"src": "block.png","centreX": 24,"centreY": 45},{"src": "red-block.png","centreX": 24,"centreY": 45}],';
+$outputJSON .= '],"graphics": [{"src": "blank.png", "centreX": 24, "centreY": 12},{"src": "block.png","centreX": 24,"centreY": 45},{"src": "red-block.png","centreX": 24,"centreY": 45},{"src": "grey-block.png","centreX": 24,"centreY": 45}],';
 $outputJSON .= '"shops": [],';
 $outputJSON .= '"npcs": [],';
 $outputJSON .= '"doors": [],';
@@ -1672,11 +1672,13 @@ if(count($drawnTileDoors)>0) {
 //array_push($drawnTileDoors, array($j,$k, $lockedJoints[("-" . $thisEdge->v1->whichNode->name."-" . $thisEdge->v0->whichNode->name)]));
 for ($i = 0; $i < count($drawnTileDoors); $i++) {
 $thisDoorIsLocked = false;
+$thisdoorsGraphic = 3;
  if($drawnTileDoors[$i][2] != -1) {
 $thisDoorIsLocked = true;
+$thisdoorsGraphic = 2;
  }
  $thisDoorsReference = $thisMapsId.'-'.$drawnTileDoors[$i][0].'-'.$drawnTileDoors[$i][1];
-$outputJSON .= '"'.$thisDoorsReference.'":{"tileX": '.$drawnTileDoors[$i][0].', "tileY": '.$drawnTileDoors[$i][1].', "isOpen": false, "isLocked": '.json_encode($thisDoorIsLocked).', "graphic": 2, "animation": { "opening": { "length": 8, "row": 0 }, "closing": { "length": 8, "row": 1 } }},';
+$outputJSON .= '"'.$thisDoorsReference.'":{"tileX": '.$drawnTileDoors[$i][0].', "tileY": '.$drawnTileDoors[$i][1].', "isOpen": false, "isLocked": '.json_encode($thisDoorIsLocked).', "graphic": '.$thisdoorsGraphic.', "animation": { "opening": { "length": 8, "row": 0 }, "closing": { "length": 8, "row": 1 } }},';
 // push this door reference:
 $drawnTileDoors[$i][3] = $thisDoorsReference;
 }
@@ -1726,7 +1728,7 @@ $outputJSON .= '],';
 
 
 $outputJSON .= '"hotspots": []';
-//$outputJSON .= ',"showOnlyLineOfSight": true';
+$outputJSON .= ',"showOnlyLineOfSight": true';
 $outputJSON .= '}}';
 if(!$debug) {
     header("Content-Type: application/json");
@@ -2182,6 +2184,11 @@ do {
     $grownGrammar = "S{#1#,O{,#1#E|}}>O[K#1]";
 
     $grownGrammar = growGrammar($possibleStartGrammars[mt_rand(0, count($possibleStartGrammars) - 1)], mt_rand(3, 4));
+
+
+// zelda gnarled root:
+$grownGrammar = "S{O[K#2]|,#2#O{#0#O[K#1#]|,}O{O[K#3#]|,}O#3#O[K#0#]|,}O#1#E";
+
 
     parseStringGrammar($grownGrammar);
     moveNodesApart();

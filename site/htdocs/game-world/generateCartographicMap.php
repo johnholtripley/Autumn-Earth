@@ -65,8 +65,8 @@ $mapFilename = "../data/chr".$playerId."/cartography/".$dungeonName."/".$request
         
 
 
-    $mapMaxWidth = 36;
-    $mapMaxHeight = 36;
+    $mapMaxWidth = 70;
+    $mapMaxHeight = 70;
     
         $loadedMapData = array();
     $loadedDoorData = array();
@@ -130,7 +130,7 @@ createCartographicMap();
 
 
 function createCartographicMap() {
-global $mapMaxWidth, $mapMaxHeight, $dungeonArray, $loadedItemData, $loadedDoorData, $debug, $playerId, $dungeonName, $session, $requestedMap, $plotChests, $update, $useOverlay, $format, $protocol;
+global $mapMaxWidth, $mapMaxHeight, $dungeonArray, $loadedItemData, $loadedDoorData, $debug, $playerId, $dungeonName, $session, $requestedMap, $plotChests, $update, $useOverlay, $format, $protocol, $doorEntranceX, $doorEntranceY;
 
 
 // canvas size should be twice required size as it will be downsampled to anti alias:
@@ -832,17 +832,19 @@ array_push($unusedEdges,$edges[$i]);
 
 
 
-
-$firstDoor = explode(",",$loadedDoorData[0]);
 if($format == "xml") {
+$firstDoor = explode(",",$loadedDoorData[0]);
 $doorX = intval($firstDoor[1])+0.5;
 $doorY = intval($firstDoor[2])+0.5;
 $doorY = $doorX *$tileLineDimension;
 $doorY = ($mapMaxHeight -1 - $doorY)*$tileLineDimension;
 } else {
   // reversed becuase of the rotation of the old XML compared to the json
-$doorX = intval($firstDoor[1])+0.5;
-$doorY = intval($firstDoor[0])+0.5;
+//$doorX = intval($firstDoor[1])+0.5;
+//$doorY = intval($firstDoor[0])+0.5;
+
+$doorX = $doorEntranceX;
+$doorY = $doorEntranceY;
 
 //echo $doorX.",".$doorY."           ";
 
@@ -1028,7 +1030,7 @@ if(!$debug) {
 }
 
 if($update) {
-// Output image to the browser
+// Output response to the browser
 
  print "changeswassuccess=true";
 } else {
@@ -1126,7 +1128,7 @@ function quadBezier($im, $x1, $y1, $x2, $y2, $x3, $y3) {
 
 
 function loadAndParseJSON($whichfileToUse) {
-  global $loadedMapData, $loadedItemData, $loadedDoorData, $protocol;
+  global $loadedMapData, $loadedItemData, $loadedDoorData, $protocol, $doorEntranceX, $doorEntranceY;
 
 $str = file_get_contents($whichfileToUse);
 $json = json_decode($str, true);
@@ -1146,6 +1148,9 @@ foreach ($json['map']['doors'] as $key => $value) {
 array_push($loadedDoorData, $key);
 }
 
+ 
+$doorEntranceX = $json['map']['entrance'][1];
+$doorEntranceY = $json['map']['entrance'][0];
 
 }
 
