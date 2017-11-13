@@ -47,11 +47,12 @@ function createProceduralBook() {
  // $textSource = file_get_contents($_SERVER['DOCUMENT_ROOT']."/includes/scriptorium/sources/alices-adventures-in-wonderland-lewis-carroll.txt");
  // $textSource = file_get_contents($_SERVER['DOCUMENT_ROOT']."/includes/scriptorium/sources/curious-creatures-in-zoology-john-ashton.txt");
 
-$textSource = file_get_contents($_SERVER['DOCUMENT_ROOT']."/includes/scriptorium/sources/prince-henry-the-navigator-raymond-beazley.txt");
-$textSource .= file_get_contents($_SERVER['DOCUMENT_ROOT']."/includes/scriptorium/sources/the-discovery-of-guiana-sir-walter-raleigh.txt");
+//$textSource = file_get_contents($_SERVER['DOCUMENT_ROOT']."/includes/scriptorium/sources/prince-henry-the-navigator-raymond-beazley.txt");
+//$textSource .= file_get_contents($_SERVER['DOCUMENT_ROOT']."/includes/scriptorium/sources/the-discovery-of-guiana-sir-walter-raleigh.txt");
 
 
 //$textSource = file_get_contents($_SERVER['DOCUMENT_ROOT']."/includes/scriptorium/sources/warcraft-mission-text.txt");
+$textSource = file_get_contents($_SERVER['DOCUMENT_ROOT']."/includes/scriptorium/sources/at-the-mountains-of-madness-hp-lovecraft.txt");
 
  // $textSource = file_get_contents($_SERVER['DOCUMENT_ROOT']."/includes/scriptorium/sources/test.txt");
 
@@ -129,7 +130,17 @@ $builtSentence .= '</p>';
 
 
 //remove all line breaks:
+
  $builtSentence = preg_replace( "/\r|\n/", "", $builtSentence );
+
+
+// find pronouns and replace them with in-game names:
+// https://regex101.com/r/SNWYDa/7/
+
+
+// $builtSentence = preg_replace( '(?<!^)(?<![.!?]\s)\b[A-Z][\w]+\b', "@@pronoun@@", $builtSentence );
+
+
 return $builtSentence;
 
 }

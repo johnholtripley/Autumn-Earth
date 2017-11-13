@@ -132,13 +132,26 @@ function loadCardData() {
 function loadMapJSON(mapFilePath) {
     getJSON(mapFilePath, function(data) {
             thisMapData = data.map;
+            var startTileOffsetX, startTileOffsetY;
+            var startTileOffsetXNum = 0;
+            var startTileOffsetYNum = 0;
             // check for any "?" in the target door (for procedural levels):
             if (hero.tileX.toString().indexOf("?") != -1) {
-                hero.tileX = thisMapData.entrance[0];
+                // check for +1 or -1 modifiers:
+                startTileOffsetX = hero.tileX.toString().substring(1);
+                if (startTileOffsetX.length > 0) {
+                    startTileOffsetXNum = parseInt(startTileOffsetX);
+                }
+                hero.tileX = thisMapData.entrance[0] + startTileOffsetXNum;
             }
             if (hero.tileY.toString().indexOf("?") != -1) {
-                hero.tileY = thisMapData.entrance[1];
+                startTileOffsetY = hero.tileY.toString().substring(1);
+                if (startTileOffsetY.length > 0) {
+                    startTileOffsetYNum = parseInt(startTileOffsetY);
+                }
+                hero.tileY = thisMapData.entrance[1] + startTileOffsetYNum;
             }
+
             // set up pet positions:
             if (hasActivePet) {
                 var tileOffsetX = 0;
@@ -218,9 +231,9 @@ function loadMap() {
     }
     if (newMap < 0) {
         //   mapFilePath = '/game-world/generateDungeonMap.php?playerId=' + characterId + '&originatingMapId=' + currentMap + '&requestedMap=' + newMap + '&dungeonName=' + randomDungeonName + '&connectingDoorX=' + centreDoorX + '&connectingDoorY=' + centreDoorY;
-     
+
         mapFilePath = '/game-world/generateCircularDungeonMap.php';
-     //      mapFilePath = '/game-world/generateCircularDungeonMap.php?seed=1510340499';
+        //      mapFilePath = '/game-world/generateCircularDungeonMap.php?seed=1510340499';
     }
     currentMap = newMap;
     loadMapJSON(mapFilePath);
