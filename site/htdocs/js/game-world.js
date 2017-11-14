@@ -4629,11 +4629,15 @@ function prepareGame() {
     npcImages = [];
     for (var i = 0; i < npcGraphicsToLoad.length; i++) {
         npcImages[npcGraphicsToLoad[i].name] = Loader.getImage("npc" + npcGraphicsToLoad[i].name);
+
     }
     itemImages = [];
     for (var i = 0; i < itemGraphicsToLoad.length; i++) {
 
         itemImages[itemGraphicsToLoad[i]] = Loader.getImage(itemGraphicsToLoad[i]);
+        // ####
+      //  itemImages[itemGraphicsToLoad[i]].spriteWidth = Loader.getImage(itemGraphicsToLoad[i]).width;
+      //  itemImages[itemGraphicsToLoad[i]].spriteHeight = Loader.getImage(itemGraphicsToLoad[i]).height;
     }
     backgroundImg = Loader.getImage("backgroundImg");
     // initialise and position NPCs:

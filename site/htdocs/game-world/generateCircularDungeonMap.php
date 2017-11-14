@@ -401,12 +401,11 @@ function growGrammar($thisGrammar, $iterations)
 {
     global $debug;
     $grammarTransformations = array(
-        // simple branching and layout:
-        "X" => array("OX", "{OX,O|}", "{OX,O}", "Z"),
-        // more intricate 'set piece' arrangements:
-        "Z" => array("O[!]O[$]", "O[K#]XO##", "O[K#]O##X"),
+        
+        "X" => array("{O[K#]|,##OX}","{O[K#]|,}O##X","O{##X,}O[K#]"),
+
         // valves could be lock and keys:
-        ">" => array("O[K#]XO##"),
+        //">" => array("O[K#]XO##"),
     );
     $currentKey = 0;
 
@@ -1712,7 +1711,22 @@ break;
 // randomly pick a key or a lever:
 $keyType = mt_rand(42,43);
 
- $outputJSON .= '{"type": '.$keyType.', "tileX": '.$drawnTileKeys[$i][0].', "tileY": '.$drawnTileKeys[$i][1].', "additional": "'.$doorReference.'"},';
+$animationString = '';
+if($keyType == 42) {
+// 42 is a lever - needs animation details:
+    $animationString = ', "animation": {
+"off": {
+"length": 1,
+"n":0
+},"on": {
+"length": 1,
+"n":1
+}
+}
+';
+}
+
+ $outputJSON .= '{"type": '.$keyType.', "tileX": '.$drawnTileKeys[$i][0].', "tileY": '.$drawnTileKeys[$i][1].', "additional": "'.$doorReference.'"'.$animationString.'},';
 
     }
      // remove last comma:
@@ -1726,7 +1740,7 @@ $outputJSON .= '],';
 
 
 $outputJSON .= '"hotspots": []';
-$outputJSON .= ',"showOnlyLineOfSight": true';
+//$outputJSON .= ',"showOnlyLineOfSight": true';
 $outputJSON .= '}}';
 if(!$debug) {
     header("Content-Type: application/json");
@@ -2181,12 +2195,14 @@ do {
 // key item cycle:
     $grownGrammar = "S{#1#,O{,#1#E|}}>O[K#1]";
 
-    $grownGrammar = growGrammar($possibleStartGrammars[mt_rand(0, count($possibleStartGrammars) - 1)], mt_rand(3, 4));
+ 
 
 
 // zelda gnarled root dungeon:
 $grownGrammar = "S{O[K#2]|,#2#O{#0#O[K#1#]|,}O{O[K#3#]|,}O#3#O[K#0#]|,}O#1#E";
 
+
+   $grownGrammar = growGrammar($possibleStartGrammars[mt_rand(0, count($possibleStartGrammars) - 1)], mt_rand(3, 4));
 
     parseStringGrammar($grownGrammar);
     moveNodesApart();
