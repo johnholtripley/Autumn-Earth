@@ -2,6 +2,9 @@
 body {
     margin: 0;
     background: #000;
+
+  // Disables pull-to-refresh but allows overscroll glow effects - https://developers.google.com/web/updates/2017/11/overscroll-behavior
+  overscroll-behavior-y: contain;
 }
 
 @include mq($widest) {

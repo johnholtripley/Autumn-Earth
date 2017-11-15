@@ -1,7 +1,7 @@
 <?php
 
 include $_SERVER['DOCUMENT_ROOT'] . "/game-world/generateCircularDungeonMap-third-party-arrow-code.php";
-
+include("../includes/dungeonMapConfig.php");
 /* ----
 
 TO DO:
@@ -10,11 +10,14 @@ elevations
 add template sections
 Convert locks, valves, hazards and treasure into interesting variants
 Add NPCs (with relevant quests)
-pathfind to confirm map doors are connected
-connect exits and the next map up
-remove doors for small rooms (unless locked)
-
-
+Place items
+Decorate rooms so they are different and identifiable
+pathfind to confirm map doors are connected (including checks for items, elevation, and static NPCs)
+connect exits and the next map
+remove doors for small rooms (unless locked) (?)
+the code for determining whether an area should be black or a solid terrain piece needs to look at height differences as well
+have some sort of persistence between dungeon visits. keep track of creature populations etc.
+water or lava courses (?)
 
 ISSUES:
 http://ae.dev/game-world/generateCircularDungeonMap.php?debug=true&seed=1510610103 - double thickness walls look odd
@@ -366,10 +369,9 @@ if($debug) {
 
 function init()
 {
-    global $nodeList, $jointList, $canvaDimension, $keyColours, $storedSeed, $debug, $thisMapsId, $thisDungeonsName, $thisPlayersId;
+    global $nodeList, $jointList, $canvaDimension, $keyColours, $storedSeed, $debug, $thisMapsId, $thisPlayersId, $dungeonName, $thisMapsId;
 
-$thisMapsId = -1;
-$thisDungeonsName = "the-barrow-mines";
+$thisMapsId = $_GET['requestedMap'];
 $thisPlayersId = 999;
 
 
@@ -389,6 +391,7 @@ $thisPlayersId = 999;
         list($usec, $sec) = explode(' ', microtime());
         $storedSeed       = floor((float) $sec + ((float) $usec * 100000));
     }
+    $dungeonName = $_GET["dungeonName"];
     mt_srand($storedSeed);
 if (isset($_GET["debug"])) {
         $debug = true;
@@ -824,7 +827,7 @@ function sortNodesByConnections($a, $b)
     return ($a->connections < $b->connections) ? 1 : -1;
 }
 
-function randomEdgeSorting($a, $b)
+function randomArraySorting($a, $b)
 {
     return mt_rand(-1, 1);
 }
@@ -1163,7 +1166,7 @@ function plotConnectivityOnDelaunayGraph()
 
             // randomly order edges for more variation:
             $sortedRandomEdges = $allDelaunayEdges;
-            usort($sortedRandomEdges, 'randomEdgeSorting');
+            usort($sortedRandomEdges, 'randomArraySorting');
             foreach ($sortedRandomEdges as &$thisEdge) {
                 $checkVertex = findUnusedNeighbouringDelaunayVertex($thisEdge, 'v0', $partnerNode, $activeVertex, $activeNode);
                 if ($checkVertex !== false) {
@@ -1578,7 +1581,7 @@ if($debug) {
 
 
 function outputJSONContent() {
-global $debug, $map, $itemMap, $drawnTileDoors, $drawnTileKeys, $mapTilesX, $mapTilesY, $storedSeed, $thisMapsId, $thisDungeonsName, $thisPlayersId, $entranceX, $entranceY, $exitX, $exitY;
+global $debug, $map, $itemMap, $drawnTileDoors, $drawnTileKeys, $mapTilesX, $mapTilesY, $storedSeed, $thisMapsId, $thisPlayersId, $entranceX, $entranceY, $exitX, $exitY, $dungeonName, $dungeonDetails;
 if($debug) {
   //  echo "Entrance: ".$entranceX.",".$entranceY." - Exit: ".$exitX.",".$exitY."<br>";
 
@@ -1658,7 +1661,7 @@ $outputJSON = rtrim($outputJSON, ', ');
 $outputJSON = rtrim($outputJSON, ', ');
 
 
-$outputJSON .= '],"graphics": [{"src": "blank.png", "centreX": 24, "centreY": 12},{"src": "block.png","centreX": 24,"centreY": 45},{"src": "red-block.png","centreX": 24,"centreY": 45},{"src": "grey-block.png","centreX": 24,"centreY": 45}],';
+$outputJSON .= '],"graphics": '.$dungeonDetails[$dungeonName]['graphics'].',';
 $outputJSON .= '"shops": [],';
 $outputJSON .= '"npcs": [],';
 $outputJSON .= '"doors": [],';
@@ -1752,7 +1755,7 @@ if(!$debug) {
 
 
 
-  $mapFilename = "../data/chr" . $thisPlayersId . "/dungeon/".$thisDungeonsName."/" . $thisMapsId . ".json";  
+  $mapFilename = "../data/chr" . $thisPlayersId . "/dungeon/".$dungeonName."/" . $thisMapsId . ".json";  
     if(!($filename=fopen($mapFilename,"w"))) {
             // error handling?
         }
@@ -1770,7 +1773,103 @@ echo '</code>';
 
 
 
+function outputTileMap() {
+global $map, $mapTilesX, $mapTilesY, $canvaDimension, $drawnTileDoors, $debug, $keyColours, $drawnTileKeys;
 
+if($debug) {
+    echo '<div class="sequenceBlock">';
+}
+
+$drawnTileSize = 8; 
+$drawnOffset = 20;
+   $outputCanvas = imagecreatetruecolor($canvaDimension, $canvaDimension);
+    $groundColour = array(219, 215, 190);
+    $ground       = imagecolorallocate($outputCanvas, $groundColour[0], $groundColour[1], $groundColour[2]);
+    imagefilledrectangle($outputCanvas, 0, 0, $canvaDimension, $canvaDimension, $ground);
+
+
+
+
+  for ($i = 0; $i < $mapTilesX; $i++) {      
+            for ($j = 0; $j < $mapTilesY; $j++) {
+        
+        switch ($map[$j][$i]) {
+    case "#":
+    // non-walkable tile:
+       imagefilledrectangle($outputCanvas,($i)*$drawnTileSize+$drawnOffset,($j)*$drawnTileSize+$drawnOffset,($i+1)*$drawnTileSize+$drawnOffset,($j+1)*$drawnTileSize+$drawnOffset,  imagecolorallocate($outputCanvas, 75, 75, 75));
+        break;
+        case "-":
+        // 'removed' blank non-walkable tile:
+         imagefilledrectangle($outputCanvas,($i)*$drawnTileSize+$drawnOffset,($j)*$drawnTileSize+$drawnOffset,($i+1)*$drawnTileSize+$drawnOffset,($j+1)*$drawnTileSize+$drawnOffset,  imagecolorallocate($outputCanvas, 0, 0, 0));
+        break;
+        case "d":
+        // door
+         imagefilledrectangle($outputCanvas,($i)*$drawnTileSize+$drawnOffset,($j)*$drawnTileSize+$drawnOffset,($i+1)*$drawnTileSize+$drawnOffset,($j+1)*$drawnTileSize+$drawnOffset,  imagecolorallocate($outputCanvas, 255, 255, 255));
+         break;
+               case "D":
+        // locked door - get the colour:
+
+
+   for ($m = 0; $m < count($drawnTileDoors); $m++) {
+    if($i == $drawnTileDoors[$m][0]) {
+    if($j == $drawnTileDoors[$m][1]) {
+$thisKeyColour = imagecolorallocate($outputCanvas, $keyColours[($drawnTileDoors[$m][2])][0], $keyColours[($drawnTileDoors[$m][2])][1], $keyColours[($drawnTileDoors[$m][2])][2]);
+break;
+}
+    }
+    }
+
+         imagefilledrectangle($outputCanvas,($i)*$drawnTileSize+$drawnOffset,($j)*$drawnTileSize+$drawnOffset,($i+1)*$drawnTileSize+$drawnOffset,($j+1)*$drawnTileSize+$drawnOffset, $thisKeyColour);
+        break;
+    case ".":
+        // empty
+        break;
+   
+
+
+
+       
+}
+
+// draw border:
+ imagerectangle($outputCanvas,($i)*$drawnTileSize+$drawnOffset,($j)*$drawnTileSize+$drawnOffset,($i+1)*$drawnTileSize+$drawnOffset,($j+1)*$drawnTileSize+$drawnOffset,  imagecolorallocate($outputCanvas, 128, 128, 128));
+
+
+            }
+          
+        }
+
+
+
+        // draw keys:
+
+ for ($i = 0; $i < count($drawnTileKeys); $i++) { 
+    $thisKeyColour = imagecolorallocate($outputCanvas, $keyColours[($drawnTileKeys[$i][2])][0], $keyColours[($drawnTileKeys[$i][2])][1], $keyColours[($drawnTileKeys[$i][2])][2]);
+
+imagefilledellipse($outputCanvas, ($drawnTileKeys[$i][0])*$drawnTileSize+$drawnOffset+($drawnTileSize/2), ($drawnTileKeys[$i][1])*$drawnTileSize+$drawnOffset+($drawnTileSize/2),$drawnTileSize,$drawnTileSize,$thisKeyColour);
+
+    }
+
+
+
+
+/*
+// draw border:
+        imagefilledrectangle($outputCanvas,0,0,$drawnOffset,$canvaDimension,imagecolorallocate($outputCanvas, 60, 60, 60));
+        imagefilledrectangle($outputCanvas,$canvaDimension-$drawnOffset,0,$canvaDimension,$canvaDimension,imagecolorallocate($outputCanvas, 60, 60, 60));
+imagefilledrectangle($outputCanvas,0,0,$canvaDimension,$drawnOffset,imagecolorallocate($outputCanvas, 60, 60, 60));
+imagefilledrectangle($outputCanvas,0,$canvaDimension-$drawnOffset,$canvaDimension,$canvaDimension,imagecolorallocate($outputCanvas, 60, 60, 60));
+*/
+if($debug) {
+       ob_start();
+    imagejpeg($outputCanvas, null, 100);
+    $rawImageBytes = ob_get_clean();
+
+    echo "<img src='data:image/jpeg;base64," . base64_encode($rawImageBytes) . "'></div>";
+}
+    imagedestroy($outputCanvas);
+    
+    }
 
 
 
@@ -1801,11 +1900,96 @@ function tileIsSurrounded($tileCheckX,$tileCheckY) {
 }
 
 
+   function findRelevantTemplates() {
+  global $dungeonName, $thisMapsId, $dungeonDetails, $thisMapsId, $drawnTileRooms, $map;
+    // read contents of dir and find number of files:
+    $dir = $_SERVER['DOCUMENT_ROOT'] . "/templates/dungeon/".$dungeonName."/";
+    $filesFound = array();
+    if (is_dir($dir)) {
+        if ($dirHandle = opendir($dir)) {
+            while (($file = readdir($dirHandle)) !== false) {
+                if ((is_file($dir . '/' . $file))) {
+             //   if (!(in_array($file,$templatesAlreadyPlaced))) {
+                    array_push($filesFound, $file);
+               //     }
+                }
+            }
+            closedir($dirHandle);
+        }
+    }
 
+// have a few goes at finding an in-level template:
+    $attempt = 0;
+    $foundSuitableTemplate = false;
+do {
+    $randomFile = mt_rand(0, count($filesFound) - 1);
+    $attempt++;
+
+$templateName = explode(".json",$filesFound[$randomFile])[0];
+
+$mapIdAbsolute = abs($thisMapsId);
+// check if this map level is within the min and max for this template:
+
+if($mapIdAbsolute >= $dungeonDetails['the-barrow-mines']['suitableTemplates'][$templateName][0]) {
+if($mapIdAbsolute <= $dungeonDetails['the-barrow-mines']['suitableTemplates'][$templateName][1]) {
+$foundSuitableTemplate = true;
+}
+}
+} while (!$foundSuitableTemplate && $attempt<4);
+
+if($foundSuitableTemplate) {
+   $fileToUse = $dir . $filesFound[$randomFile];
+    $templateChosen = $filesFound[$randomFile];
+$templateJSONFile = file_get_contents($fileToUse);
+
+$templateJSON = json_decode($templateJSONFile, true);
+
+
+// determine this template's dimensions:
+$templateHeight = count($templateJSON['template']['terrain']);
+$templateWidth = count($templateJSON['template']['terrain'][0]);
+
+// find a room big enough - randomly order the rooms for some variation:
+
+
+
+$randomDrawnTileRooms = $drawnTileRooms;
+            usort($randomDrawnTileRooms, 'randomArraySorting');
+            $foundRoom = null;
+foreach ($randomDrawnTileRooms as &$thisRoom) {
+    $thisRoomsWidth = $thisRoom[2] - $thisRoom[0];
+    $thisRoomsHeight = $thisRoom[3] - $thisRoom[1];
+   
+    if($thisRoomsHeight >= $templateHeight) {
+    if($thisRoomsWidth >= $templateWidth) {
+
+ $foundRoom = $thisRoom;
+ break;
+}
+    }
+}
+
+if($foundRoom != null) {
+// plot room
+// temp john #######
+for ($i = 0; $i < $templateWidth; $i++) {
+for ($j = 0; $j < $templateHeight; $j++) {
+$map[$j+$foundRoom[1]][$i+$foundRoom[0]] = "-";
+}
+}
+
+
+
+}
+
+
+}
+
+}
 
 
 function gridTileGrid() {
-    global $requiredWidth, $requiredHeight, $mapTilesX, $mapTilesY, $canvaDimension, $delaunayVertices, $minLeft, $minTop, $edgesUsedOnDelaunayGraph, $allDelaunayEdges, $lockedJoints, $keyColours, $debug, $map, $itemMap, $drawnTileDoors, $drawnTileKeys, $entranceX, $entranceY, $exitX, $exitY;
+    global $requiredWidth, $requiredHeight, $mapTilesX, $mapTilesY, $canvaDimension, $delaunayVertices, $minLeft, $minTop, $edgesUsedOnDelaunayGraph, $allDelaunayEdges, $lockedJoints, $keyColours, $debug, $map, $itemMap, $drawnTileDoors, $drawnTileKeys, $entranceX, $entranceY, $exitX, $exitY, $drawnTileDoors, $drawnTileKeys, $drawnTileRooms;
     // define the tile area to be used:
     $mapTilesX = 70;
     $mapTilesY = 70;
@@ -1821,9 +2005,7 @@ function gridTileGrid() {
     $tileOffsetY = floor(($mapTilesY - $tileMapHeight)/2);
 
 
-if($debug) {
-    echo '<div class="sequenceBlock">';
-}
+
   //  echo $ratio."<br>";
   //  echo $requiredWidth." x ".$requiredHeight."<br>";
 
@@ -2008,6 +2190,8 @@ $map[$k][$j] = ".";
      }
 
 
+outputTileMap();
+findRelevantTemplates();
 
 
 
@@ -2023,96 +2207,7 @@ $map[$k][$j] = ".";
 
 
 
-// output map:
-
-$drawnTileSize = 8; 
-$drawnOffset = 20;
-   $outputCanvas = imagecreatetruecolor($canvaDimension, $canvaDimension);
-    $groundColour = array(219, 215, 190);
-    $ground       = imagecolorallocate($outputCanvas, $groundColour[0], $groundColour[1], $groundColour[2]);
-    imagefilledrectangle($outputCanvas, 0, 0, $canvaDimension, $canvaDimension, $ground);
-
-
-
-
-  for ($i = 0; $i < $mapTilesX; $i++) {      
-            for ($j = 0; $j < $mapTilesY; $j++) {
-        
-        switch ($map[$j][$i]) {
-    case "#":
-    // non-walkable tile:
-       imagefilledrectangle($outputCanvas,($i)*$drawnTileSize+$drawnOffset,($j)*$drawnTileSize+$drawnOffset,($i+1)*$drawnTileSize+$drawnOffset,($j+1)*$drawnTileSize+$drawnOffset,  imagecolorallocate($outputCanvas, 75, 75, 75));
-        break;
-        case "-":
-        // 'removed' blank non-walkable tile:
-         imagefilledrectangle($outputCanvas,($i)*$drawnTileSize+$drawnOffset,($j)*$drawnTileSize+$drawnOffset,($i+1)*$drawnTileSize+$drawnOffset,($j+1)*$drawnTileSize+$drawnOffset,  imagecolorallocate($outputCanvas, 0, 0, 0));
-        break;
-        case "d":
-        // door
-         imagefilledrectangle($outputCanvas,($i)*$drawnTileSize+$drawnOffset,($j)*$drawnTileSize+$drawnOffset,($i+1)*$drawnTileSize+$drawnOffset,($j+1)*$drawnTileSize+$drawnOffset,  imagecolorallocate($outputCanvas, 255, 255, 255));
-         break;
-               case "D":
-        // locked door - get the colour:
-
-
-   for ($m = 0; $m < count($drawnTileDoors); $m++) {
-    if($i == $drawnTileDoors[$m][0]) {
-    if($j == $drawnTileDoors[$m][1]) {
-$thisKeyColour = imagecolorallocate($outputCanvas, $keyColours[($drawnTileDoors[$m][2])][0], $keyColours[($drawnTileDoors[$m][2])][1], $keyColours[($drawnTileDoors[$m][2])][2]);
-break;
-}
-    }
-    }
-
-         imagefilledrectangle($outputCanvas,($i)*$drawnTileSize+$drawnOffset,($j)*$drawnTileSize+$drawnOffset,($i+1)*$drawnTileSize+$drawnOffset,($j+1)*$drawnTileSize+$drawnOffset, $thisKeyColour);
-        break;
-    case ".":
-        // empty
-        break;
-   
-
-
-
-       
-}
-
-// draw border:
- imagerectangle($outputCanvas,($i)*$drawnTileSize+$drawnOffset,($j)*$drawnTileSize+$drawnOffset,($i+1)*$drawnTileSize+$drawnOffset,($j+1)*$drawnTileSize+$drawnOffset,  imagecolorallocate($outputCanvas, 128, 128, 128));
-
-
-            }
-          
-        }
-
-
-
-        // draw keys:
-
- for ($i = 0; $i < count($drawnTileKeys); $i++) { 
-    $thisKeyColour = imagecolorallocate($outputCanvas, $keyColours[($drawnTileKeys[$i][2])][0], $keyColours[($drawnTileKeys[$i][2])][1], $keyColours[($drawnTileKeys[$i][2])][2]);
-
-imagefilledellipse($outputCanvas, ($drawnTileKeys[$i][0])*$drawnTileSize+$drawnOffset+($drawnTileSize/2), ($drawnTileKeys[$i][1])*$drawnTileSize+$drawnOffset+($drawnTileSize/2),$drawnTileSize,$drawnTileSize,$thisKeyColour);
-
-    }
-
-
-
-
-/*
-// draw border:
-        imagefilledrectangle($outputCanvas,0,0,$drawnOffset,$canvaDimension,imagecolorallocate($outputCanvas, 60, 60, 60));
-        imagefilledrectangle($outputCanvas,$canvaDimension-$drawnOffset,0,$canvaDimension,$canvaDimension,imagecolorallocate($outputCanvas, 60, 60, 60));
-imagefilledrectangle($outputCanvas,0,0,$canvaDimension,$drawnOffset,imagecolorallocate($outputCanvas, 60, 60, 60));
-imagefilledrectangle($outputCanvas,0,$canvaDimension-$drawnOffset,$canvaDimension,$canvaDimension,imagecolorallocate($outputCanvas, 60, 60, 60));
-*/
-if($debug) {
-       ob_start();
-    imagejpeg($outputCanvas, null, 100);
-    $rawImageBytes = ob_get_clean();
-
-    echo "<img src='data:image/jpeg;base64," . base64_encode($rawImageBytes) . "'></div>";
-}
-    imagedestroy($outputCanvas);
+outputTileMap();
    
 }
 
@@ -2254,6 +2349,6 @@ img {
 <?php
 }
 if($debug) {
-echo '<p style="clear:both;padding-top:20px;"><a href="' . explode("?", $_SERVER["REQUEST_URI"])[0] . '?debug=true&amp;seed=' . $storedSeed . '">' . $storedSeed . '</a> | <a href="' . explode("?", $_SERVER["REQUEST_URI"])[0] . '?debug=true">New seed</a></p>';
+echo '<p style="clear:both;padding-top:20px;"><a href="' . explode("?", $_SERVER["REQUEST_URI"])[0] . '?debug=true&amp;dungeonName='.$dungeonName.'&amp;requestedMap='.$thisMapsId.'&amp;seed=' . $storedSeed . '">' . $storedSeed . '</a> | <a href="' . explode("?", $_SERVER["REQUEST_URI"])[0] . '?debug=true&amp;dungeonName='.$dungeonName.'&amp;requestedMap='.$thisMapsId.'">New seed</a></p>';
 }
 ?>

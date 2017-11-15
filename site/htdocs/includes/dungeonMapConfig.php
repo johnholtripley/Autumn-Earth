@@ -1,5 +1,38 @@
 <?php
-  
+
+
+
+
+
+$dungeonDetails = array(
+
+'the-barrow-mines' => array(
+'graphics' => '[{"src": "blank.png", "centreX": 24, "centreY": 12},{"src": "block.png","centreX": 24,"centreY": 45},{"src": "red-block.png","centreX": 24,"centreY": 45},{"src": "grey-block.png","centreX": 24,"centreY": 45}]',
+'possibleItems' => '',
+'levelLockedNPCs' => '',
+'suitableTemplates' => array(
+	// template name => earliest level it can be encountered on, latest level it can be encountered on (INF or numeric):
+'mining-expedition' => array(1,INF)
+	)
+	)
+	);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// OLD FLASH VERSION:
+  /*
     // set up exit doors from each dungeon to the originating map: [destination map number][centre entrance door x and y][tile x and y when leaving dungeon][item frequency][items available][index for this dungeon in Flash's randomDungeons array][level-locked NPCs [npc details, earliest level possible to meet them on, latest level they can be encountered on] ][level-locked templates [xml file name, earliest level possible, latest level possible] ] [npc quantity range min, npc range max][force mode for the first map]
 $dungeonDetails = array(
 'the-barrow-mines' => array(
@@ -19,7 +52,7 @@ array(4,8),
 );
 
 
-/*
+
 $dungeonDetails = array(
 'the-barrow-mines' => array(
 "1",
