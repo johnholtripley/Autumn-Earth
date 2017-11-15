@@ -4352,8 +4352,9 @@ function loadMap() {
     if (newMap < 0) {
         //   mapFilePath = '/game-world/generateDungeonMap.php?playerId=' + characterId + '&originatingMapId=' + currentMap + '&requestedMap=' + newMap + '&dungeonName=' + randomDungeonName + '&connectingDoorX=' + centreDoorX + '&connectingDoorY=' + centreDoorY;
 
-        mapFilePath = '/game-world/generateCircularDungeonMap.php';
-        //      mapFilePath = '/game-world/generateCircularDungeonMap.php?seed=1510340499';
+        mapFilePath = '/game-world/generateCircularDungeonMap.php?dungeonName='+randomDungeonName+ '&requestedMap=' + newMap;
+     //   mapFilePath = '/game-world/generateCircularDungeonMap.php?dungeonName='+randomDungeonName+'&requestedMap=' + newMap + '&seed=1510340499';
+           
     }
     currentMap = newMap;
     loadMapJSON(mapFilePath);

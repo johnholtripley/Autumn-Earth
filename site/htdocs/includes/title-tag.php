@@ -30,6 +30,13 @@ switch ($thisSection) {
 $longDescription="Autumn Earth community site";
 
         break;
+
+
+case "scriptorium":
+	$pagetitle = 'Writings from Autumn Earth';
+	$longDescription = 'Tomes, Journals, Almanacs, Manifests, Letters, Illuminated Manuscripts, Poems and Recipes';
+break;
+
     case "forum":
     $sectionClass = "forum";
 	$pagetitle = 'Autumn Earth community forum thread';

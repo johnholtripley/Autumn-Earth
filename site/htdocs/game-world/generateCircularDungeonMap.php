@@ -21,7 +21,7 @@ water or lava courses (?)
 
 ISSUES:
 http://ae.dev/game-world/generateCircularDungeonMap.php?debug=true&seed=1510610103 - double thickness walls look odd
-
+http://ae.dev/game-world/generateCircularDungeonMap.php?debug=true&dungeonName=the-barrow-mines&requestedMap=-1&seed=1510832016 - as the grid is drawn, it needs to check no row or column offsets overlap
 
 ---- */
 
@@ -705,6 +705,7 @@ function createDelaunayGraph($graphType)
         case "offset-grid":
             $colOffsets = array();
             $rowOffsets = array();
+
             for ($i = 0; $i < sqrt($numberOfVertices); $i++) {
                 array_push($colOffsets, mt_rand(-25, 25));
                 array_push($rowOffsets, mt_rand(-25, 25));
@@ -1971,13 +1972,13 @@ foreach ($randomDrawnTileRooms as &$thisRoom) {
 
 if($foundRoom != null) {
 // plot room
-// temp john #######
+/*
 for ($i = 0; $i < $templateWidth; $i++) {
 for ($j = 0; $j < $templateHeight; $j++) {
 $map[$j+$foundRoom[1]][$i+$foundRoom[0]] = "-";
 }
 }
-
+*/
 
 
 }
