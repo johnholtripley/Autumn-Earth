@@ -1714,13 +1714,13 @@ $keyType = mt_rand(42,43);
 $animationString = '';
 if($keyType == 42) {
 // 42 is a lever - needs animation details:
-    $animationString = ', "animation": {
+    $animationString = ', "state": "off", "animation": {
 "off": {
 "length": 1,
-"n":0
+"row":0
 },"on": {
 "length": 1,
-"n":1
+"row":1
 }
 }
 ';

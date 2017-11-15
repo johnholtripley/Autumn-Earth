@@ -4714,7 +4714,8 @@ function prepareGame() {
         thisMapData.items[i].height = currentActiveInventoryItems[thisMapData.items[i].type].height;
         thisMapData.items[i].centreX = currentActiveInventoryItems[thisMapData.items[i].type].centreX;
         thisMapData.items[i].centreY = currentActiveInventoryItems[thisMapData.items[i].type].centreY;
-
+thisMapData.items[i].spriteWidth = currentActiveInventoryItems[thisMapData.items[i].type].spriteWidth;
+thisMapData.items[i].spriteHeight = currentActiveInventoryItems[thisMapData.items[i].type].spriteHeight;
         // check for node resources:
         if (currentActiveInventoryItems[thisMapData.items[i].type].action == "node") {
             // use the saved value if it has one:
@@ -5451,6 +5452,8 @@ function checkForActions() {
                     case "toggleInnerDoor":
                         toggleInnerDoor(thisMapData.items[i].additional);
                         audio.playSound(soundEffects['lever'], 0);
+                        // toggle the visual state:
+                        thisMapData.items[i].state = thisMapData.items[i].state == "on" ? 'off' : 'on';
                         break;
                     case "openInnerDoor":
                         openInnerDoor(thisMapData.items[i].additional);
@@ -6373,9 +6376,9 @@ function draw() {
         var thisNPCOffsetCol = 0;
         var thisNPCOffsetRow = 0;
         var thisFileColourSuffix = '';
-        var thisColourName;
-        var thisItemIdentifier;
-        var thisPlatform;
+        var thisColourName, thisItemIdentifier, thisPlatform;
+var thisItemOffsetCol = 0;
+var thisItemOffsetRow = 0;
 
         for (var i = 0; i < mapTilesX; i++) {
             for (var j = 0; j < mapTilesY; j++) {
@@ -6440,7 +6443,19 @@ function draw() {
                 }
             }
             thisItemIdentifier = "item" + thisMapData.items[i].type + thisFileColourSuffix;
+
+
+if (typeof thisItem.animation !== "undefined") {
+         thisItemOffsetCol = (thisItem["animation"][thisItem.state]["length"])-1;
+            thisItemOffsetRow = thisItem["animation"][thisItem.state]["row"];
+
+console.log(thisItem.centreX,thisItem.centreY);
+
+assetsToDraw.push([findIsoDepth(thisItem.x, thisItem.y, thisItem.z), "sprite", itemImages[thisItemIdentifier], thisItemOffsetCol * thisItem.spriteWidth, thisItemOffsetRow * thisItem.spriteHeight, thisItem.spriteWidth, thisItem.spriteHeight, Math.floor(thisX - hero.isox - thisItem.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisItem.centreY + (canvasHeight / 2) - thisItem.z), thisItem.spriteWidth, thisItem.spriteHeight]);
+} else {
+
             assetsToDraw.push([findIsoDepth(thisItem.x, thisItem.y, thisItem.z), "img", itemImages[thisItemIdentifier], Math.floor(thisX - hero.isox - thisItem.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisItem.centreY + (canvasHeight / 2) - thisItem.z)]);
+        }
         }
 
 

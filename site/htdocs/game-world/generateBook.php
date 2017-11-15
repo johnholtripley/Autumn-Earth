@@ -58,7 +58,7 @@ $textSource = file_get_contents($_SERVER['DOCUMENT_ROOT']."/includes/scriptorium
 
 
 // borrowed from WoW ####
-$inGameNames = array("Kael'thas Sunstrider", "Aethas Sunreaver", "Lor'themar Theron", "Grand Magister Rommath", "Halduron Brightwing", "Lady Liadrin", "Valeera Sanguinar", "Koltira Deathweaver", "Zendarin Windrunner");
+$inGameNames = array("Kael'thas", "Aethas", "Lor'themar", "Rommath", "Halduron", "Liadrin", "Valeera", "Koltira", "Zendarin");
 
 
 
