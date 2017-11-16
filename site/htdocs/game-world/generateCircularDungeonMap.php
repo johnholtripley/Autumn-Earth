@@ -7,7 +7,7 @@ include("../includes/dungeonMapConfig.php");
 TO DO:
 Create meta levels so can have foreshadowing and hints about future encounters
 elevations
-add template sections
+add template sections - 2 types. More decorative types placed within existing rooms, and others that are added to blank space adjoining existing rooms. 
 Convert locks, valves, hazards and treasure into interesting variants
 Add NPCs (with relevant quests)
 Place items
@@ -18,6 +18,12 @@ remove doors for small rooms (unless locked) (?)
 the code for determining whether an area should be black or a solid terrain piece needs to look at height differences as well
 have some sort of persistence between dungeon visits. keep track of creature populations etc.
 water or lava courses (?)
+
+
+
+when placing items, place them clear of templates
+need to be able to place multiple templates per level
+
 
 ISSUES:
 http://ae.dev/game-world/generateCircularDungeonMap.php?debug=true&seed=1510610103 - double thickness walls look odd
@@ -1582,58 +1588,56 @@ if($debug) {
 
 
 function outputJSONContent() {
-global $debug, $map, $itemMap, $drawnTileDoors, $drawnTileKeys, $mapTilesX, $mapTilesY, $storedSeed, $thisMapsId, $thisPlayersId, $entranceX, $entranceY, $exitX, $exitY, $dungeonName, $dungeonDetails;
-if($debug) {
-  //  echo "Entrance: ".$entranceX.",".$entranceY." - Exit: ".$exitX.",".$exitY."<br>";
+global $debug, $map, $itemMap, $drawnTileDoors, $drawnTileKeys, $mapTilesX, $mapTilesY, $storedSeed, $thisMapsId, $thisPlayersId, $entranceX, $entranceY, $exitX, $exitY, $dungeonName, $dungeonDetails, $outputJSON, $templateGraphicsToAppend, $templateNPCsToAppend, $templateItemsToAppend, $templateJSON, $templateOffsetX, $templateOffsetY;
 
-
-
-echo '<code style="width:100%;clear:both;display:block;font-size:0.8em;">';
-
-}
 
 
 $outputJSON = '{"map":{"zoneName": "A Circular Dungeon: '.$storedSeed.'",';
 $outputJSON .='"seed": '.$storedSeed.', ';
 $outputJSON .= '"entrance": ['.$entranceX.','.$entranceY.'],';
-$outputJSON .='"collisions": [';
+
+
+$collisionsString ='"collisions": [';
 
 
   for ($i = 0; $i < $mapTilesX; $i++) {   
-  $outputJSON .= '[';   
+  $collisionsString .= '[';   
             for ($j = 0; $j < $mapTilesY; $j++) {
         if($map[$i][$j] == "#") {
-            $outputJSON.= '1, ';
+            $collisionsString.= '1, ';
         } else {
-            $outputJSON.= '0, ';
+            $collisionsString.= '0, ';
         }
 
     }
 
     // remove last comma:
-$outputJSON = rtrim($outputJSON, ', ');
+$collisionsString = rtrim($collisionsString, ', ');
 
-    $outputJSON .= '],'; 
+    $collisionsString .= '],'; 
 }
 // remove last comma:
-$outputJSON = rtrim($outputJSON, ', ');
- $outputJSON .= '], "terrain": [';
+$collisionsString = rtrim($collisionsString, ', ');
+$collisionsString .= ']';
+
+
+ $terrainString = '"terrain": [';
 
  for ($i = 0; $i < $mapTilesX; $i++) {   
-  $outputJSON .= '[';   
+  $terrainString .= '[';   
             for ($j = 0; $j < $mapTilesY; $j++) {
 
 
 
 switch ($map[$i][$j]) {
     case "-":
-        $outputJSON.= '0, ';
+        $terrainString.= '0, ';
         break;
     case "#":
-        $outputJSON.= '1, ';
+        $terrainString.= '1, ';
         break;
     default:
-        $outputJSON.= '"*", ';
+        $terrainString.= '"*", ';
         break;
 }
 
@@ -1641,30 +1645,69 @@ switch ($map[$i][$j]) {
     
     }
     // remove last comma:
-$outputJSON = rtrim($outputJSON, ', ');
-    $outputJSON .= '],'; 
+$terrainString = rtrim($terrainString, ', ');
+    $terrainString .= '],'; 
 }
 // remove last comma:
-$outputJSON = rtrim($outputJSON, ', ');
+$terrainString = rtrim($terrainString, ', ');
 
-$outputJSON .= '], "elevation": [';
+$terrainString .= ']';
+
+
+
+
+
+$elevationString = '"elevation": [';
 
   for ($i = 0; $i < $mapTilesX; $i++) {   
-  $outputJSON .= '[';   
+  $elevationString .= '[';   
             for ($j = 0; $j < $mapTilesY; $j++) {
-               $outputJSON.= '0, ';
+               $elevationString.= '0, ';
                 }
                 // remove last comma:
-$outputJSON = rtrim($outputJSON, ', ');
-                $outputJSON .= '],'; 
+$elevationString = rtrim($elevationString, ', ');
+                $elevationString .= '],'; 
             }
             // remove last comma:
-$outputJSON = rtrim($outputJSON, ', ');
+$elevationString = rtrim($elevationString, ', ');
+$elevationString .= ']';
+
+// map templates in (add the {} to get it to convert):
+$collisions = json_decode('{'.$collisionsString.'}', true);
+$terrain = json_decode('{'.$terrainString.'}', true);
+$elevations = json_decode('{'.$elevationString.'}', true);
 
 
-$outputJSON .= '],"graphics": '.$dungeonDetails[$dungeonName]['graphics'].',';
+
+$templateHeight = count($templateJSON['template']['terrain']);
+$templateWidth = count($templateJSON['template']['terrain'][0]);
+
+
+echo($terrain[0]);
+
+$numberOfGraphicsAlreadyPlaced = count($dungeonDetails[$dungeonName]['graphics']);
+for ($i = 0; $i < $templateHeight; $i++) {
+for ($j = 0; $j < $templateWidth; $j++) {
+    if($templateJSON['template']['terrain'][$i][$j] == "*") {
+$terrain[$i+$templateOffsetY][$j+$templateOffsetX] = "*";
+    } else {
+      $terrain[$i+$templateOffsetY][$j+$templateOffsetX] =   $numberOfGraphicsAlreadyPlaced + $templateJSON['template']['terrain'][$i][$j];
+    }
+
+    $terrain[$i+$templateOffsetY][$j+$templateOffsetX] = "1";
+ 
+}
+}
+
+
+
+
+// substr(1,-1) to remove the added { and } earlier:
+$outputJSON .= substr(json_encode($collisions),1,-1).", ".substr(json_encode($terrain),1,-1).", ".substr(json_encode($elevations),1,-1);
+
+$outputJSON .= ',"graphics": ['.$dungeonDetails[$dungeonName]['graphics'].$templateGraphicsToAppend.'],';
 $outputJSON .= '"shops": [],';
-$outputJSON .= '"npcs": [],';
+$outputJSON .= '"npcs": ['.$templateNPCsToAppend.'],';
 $outputJSON .= '"doors": [],';
 $outputJSON .= '"innerDoors": {';
 
@@ -1718,16 +1761,7 @@ $keyType = mt_rand(42,43);
 $animationString = '';
 if($keyType == 42) {
 // 42 is a lever - needs animation details:
-    $animationString = ', "state": "off", "animation": {
-"off": {
-"length": 1,
-"row":0
-},"on": {
-"length": 1,
-"row":1
-}
-}
-';
+    $animationString = ', "state": "off", "animation": {"off": {"length": 1,"row":0},"on": {"length": 1,"row":1}}';
 }
 
  $outputJSON .= '{"type": '.$keyType.', "tileX": '.$drawnTileKeys[$i][0].', "tileY": '.$drawnTileKeys[$i][1].', "additional": "'.$doorReference.'"'.$animationString.'},';
@@ -1740,6 +1774,13 @@ if($keyType == 42) {
 
 // temporarily add a chest to make the exit ###########
 $outputJSON .= '{"type": 48, "tileX": '.$exitX.', "tileY": '.$exitY.', "contains": [{"type": 1},{"type": 3},{"type": "$", "quantity": 2500}]}';
+
+if($templateItemsToAppend != '') {
+$outputJSON .= ', ';
+}
+$outputJSON .= $templateItemsToAppend;
+
+
 $outputJSON .= '],';
 
 
@@ -1749,7 +1790,7 @@ $outputJSON .= '}}';
 if(!$debug) {
     header("Content-Type: application/json");
 }
-echo $outputJSON;
+
 
 
 if(!$debug) {
@@ -1767,9 +1808,7 @@ if(!$debug) {
 
 
 
-if($debug) {
-echo '</code>';
-}
+
 }
 
 
@@ -1902,7 +1941,7 @@ function tileIsSurrounded($tileCheckX,$tileCheckY) {
 
 
    function findRelevantTemplates() {
-  global $dungeonName, $thisMapsId, $dungeonDetails, $thisMapsId, $drawnTileRooms, $map;
+  global $dungeonName, $thisMapsId, $dungeonDetails, $thisMapsId, $drawnTileRooms, $map, $templateGraphicsToAppend, $templateNPCsToAppend, $templateItemsToAppend, $templateJSON, $templateOffsetX, $templateOffsetY;
     // read contents of dir and find number of files:
     $dir = $_SERVER['DOCUMENT_ROOT'] . "/templates/dungeon/".$dungeonName."/";
     $filesFound = array();
@@ -1950,35 +1989,86 @@ $templateJSON = json_decode($templateJSONFile, true);
 $templateHeight = count($templateJSON['template']['terrain']);
 $templateWidth = count($templateJSON['template']['terrain'][0]);
 
+$templateGraphicsToAppend = '';
+$templateNPCsToAppend = '';
+$templateItemsToAppend = '';
+
+
+$templateType = $templateJSON['template']['type'];
+$foundRoom = null;
+$templateOffsetX = 0;
+$templateOffsetY = 0;
+
+
+if($templateType == "inner") {
 // find a room big enough - randomly order the rooms for some variation:
-
-
-
 $randomDrawnTileRooms = $drawnTileRooms;
             usort($randomDrawnTileRooms, 'randomArraySorting');
-            $foundRoom = null;
+            
 foreach ($randomDrawnTileRooms as &$thisRoom) {
     $thisRoomsWidth = $thisRoom[2] - $thisRoom[0];
     $thisRoomsHeight = $thisRoom[3] - $thisRoom[1];
+
    
     if($thisRoomsHeight >= $templateHeight) {
     if($thisRoomsWidth >= $templateWidth) {
 
  $foundRoom = $thisRoom;
+
+// position the template randomly within the available space:
+ $templateOffsetX = $foundRoom[0] + mt_rand(0,($thisRoomsWidth-$templateWidth));
+ $templateOffsetY = $foundRoom[1] + mt_rand(0,($thisRoomsHeight-$templateWidth));
+
  break;
 }
     }
 }
+
+}
+
+
 
 if($foundRoom != null) {
 // plot room
 /*
 for ($i = 0; $i < $templateWidth; $i++) {
 for ($j = 0; $j < $templateHeight; $j++) {
-$map[$j+$foundRoom[1]][$i+$foundRoom[0]] = "-";
+$map[$j+$foundRoom[1]+$templateOffsetY][$i+$foundRoom[0]+$templateOffsetX] = "-";
 }
 }
 */
+// map JSON from the template across:
+
+
+
+
+for($i=0;$i<count($templateJSON['template']['graphics']);$i++) {
+$templateGraphicsToAppend .= ', '.json_encode($templateJSON['template']['graphics'][$i]);
+}
+
+for($i=0;$i<count($templateJSON['template']['npcs']);$i++) {
+$thisNPC = $templateJSON['template']['npcs'][$i];
+// map their location:
+$thisNPC['tileX'] += +$templateOffsetX;
+$thisNPC['tileY'] += $templateOffsetY;
+$templateNPCsToAppend .= json_encode($thisNPC).', ';
+}
+// remove last comma:
+$templateNPCsToAppend = rtrim($templateNPCsToAppend, ', ');
+
+
+for($i=0;$i<count($templateJSON['template']['items']);$i++) {
+$thisItem = $templateJSON['template']['items'][$i];
+// map their location:
+$thisItem['tileX'] += $templateOffsetX;
+$thisItem['tileY'] += $templateOffsetY;
+$templateItemsToAppend .= json_encode($thisItem).', ';
+}
+// remove last comma:
+$templateItemsToAppend = rtrim($templateItemsToAppend, ', ');
+
+
+
 
 
 }
@@ -2212,6 +2302,79 @@ outputTileMap();
    
 }
 
+
+
+function getTileIsoCentreCoordX($tileX, $tileY) {
+  global $tileW, $mapTilesY;
+    return $tileW / 2 * ($mapTilesY - $tileY + $tileX);
+}
+
+function getTileIsoCentreCoordY($tileX, $tileY) {
+  global $tileH;
+    return $tileH / 2 * ($tileY + $tileX);
+}
+
+function outputIsometricView() {
+global $tileW,$tileH, $debug, $dungeonName, $outputJSON, $mapTilesX, $mapTilesY, $canvaDimension;
+$tileW = 48;
+$tileH = $tileW/2;
+
+ 
+
+    echo '<div class="sequenceBlock wider">';
+
+
+$rootFolder = '../images/game-world/maps/dungeon/'.$dungeonName."/";
+$bgImage = imagecreatefrompng($rootFolder."bg.png");
+
+
+$canvasWidth =  imagesx($bgImage); 
+ $canvasHeight =  imagesy($bgImage); 
+
+$canvasOffsetX = 400;
+$canvasOffsetY = 300;
+
+$fullImage = imagecreatetruecolor(imagesx($bgImage), imagesy($bgImage));
+
+imagecopy ( $fullImage, $bgImage, 0, 0, 0, 0, imagesx($bgImage), imagesy($bgImage) );
+ $decodedJSON = json_decode($outputJSON, true);
+for ($i=0;$i<count($decodedJSON["map"]["graphics"]);$i++) {
+  ${'assetImg'.$i} = imagecreatefrompng($rootFolder.$decodedJSON["map"]["graphics"][$i]["src"]);
+}
+
+$isoMap = $decodedJSON["map"]["terrain"];
+// draw tiles
+for ( $i = 0; $i < $mapTilesX; $i++) {
+            for ( $j = 0; $j < $mapTilesY; $j++) {
+                // the tile coordinates should be positioned by i,j but the way the map is drawn, the reference in the array is j,i
+                // this makes the map array more readable when editing
+    if (is_numeric($isoMap[$j][$i])) {
+                    $thisX = getTileIsoCentreCoordX($i, $j);
+                    $thisY = getTileIsoCentreCoordY($i, $j);
+                   $whichAsset = intval($isoMap[$j][$i]); 
+                     $thisGraphicCentreX = $decodedJSON["map"]["graphics"][$whichAsset]["centreX"];
+                    $thisGraphicCentreY = $decodedJSON["map"]["graphics"][$whichAsset]["centreY"];  
+// need to offset by half a tile to match starting hero position at tile centre:
+                    imagecopy ( $fullImage, ${'assetImg'.$whichAsset}, floor($thisX - $thisGraphicCentreX + $canvasOffsetX ), floor($thisY - $thisGraphicCentreY + $canvasOffsetY + $tileH/2), 0, 0, imagesx(${'assetImg'.$whichAsset}), imagesy(${'assetImg'.$whichAsset}) );
+                  }
+
+
+            }
+        }
+
+
+// draw items, doors, npcs ####
+
+       ob_start();
+    imagejpeg($fullImage, null, 100);
+    $rawImageBytes = ob_get_clean();
+
+    echo "<img src='data:image/jpeg;base64," . base64_encode($rawImageBytes) . "'></div>";
+
+    imagedestroy($bgImage);
+imagedestroy($fullImage);
+}
+
 // linear connection with 2 nodes between the start and end:
 // $startGrammar = "SOOE";
 
@@ -2323,6 +2486,19 @@ outputSizedNodesLayout();
 gridTileGrid();
 
 outputJSONContent();
+if($debug) {
+outputIsometricView();
+}
+
+
+if($debug) {
+echo '<code style="width:100%;clear:both;display:block;font-size:0.8em;">';
+}
+echo $outputJSON;
+if($debug) {
+echo '</code>';
+}
+
 
 if($debug) {
     ?>
@@ -2335,7 +2511,11 @@ font-family:arial,helvetica,sans-serif;font-size:14px;
 .sequenceBlock {
     float: left;
     width: 22.5%;
-    margin: 0 2.5% 2.5% 0;
+    margin: 0 1.25% 2.5% 1.25%;
+}
+
+.wider {
+    width: 97.5%;
 }
 
 .sequenceBlock:nth-child(4n+1) {

@@ -7,7 +7,7 @@
 $dungeonDetails = array(
 
 'the-barrow-mines' => array(
-'graphics' => '[{"src": "blank.png", "centreX": 24, "centreY": 12},{"src": "block.png","centreX": 24,"centreY": 45},{"src": "red-block.png","centreX": 24,"centreY": 45},{"src": "grey-block.png","centreX": 24,"centreY": 45}]',
+'graphics' => '{"src": "blank.png", "centreX": 24, "centreY": 12},{"src": "block.png","centreX": 24,"centreY": 45},{"src": "red-block.png","centreX": 24,"centreY": 45},{"src": "grey-block.png","centreX": 24,"centreY": 45}',
 'possibleItems' => '',
 'levelLockedNPCs' => '',
 'suitableTemplates' => array(
