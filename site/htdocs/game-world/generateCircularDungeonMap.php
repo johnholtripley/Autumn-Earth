@@ -23,6 +23,7 @@ water or lava courses (?)
 
 when placing items, place them clear of templates
 need to be able to place multiple templates per level
+rotate templates
 
 
 ISSUES:
@@ -1687,20 +1688,20 @@ $templateWidth = count($templateJSON['template']['terrain'][0]);
 
 
 
-$numberOfGraphicsAlreadyPlaced = count($dungeonDetails[$dungeonName]['graphics']);
+$numberOfGraphicsAlreadyPlaced = count(json_decode('['.$dungeonDetails[$dungeonName]['graphics'].']'));
+
 for ($i = 0; $i < $templateHeight; $i++) {
 for ($j = 0; $j < $templateWidth; $j++) {
-   
     if($templateJSON['template']['terrain'][$i][$j] === "*") {
-        
 $terrain['terrain'][$i+$templateOffsetY][$j+$templateOffsetX] = "*";
     } else {
-       
-      $terrain['terrain'][$i+$templateOffsetY][$j+$templateOffsetX] = $numberOfGraphicsAlreadyPlaced + $templateJSON['template']['terrain'][$i][$j];
+     $terrain['terrain'][$i+$templateOffsetY][$j+$templateOffsetX] = $numberOfGraphicsAlreadyPlaced + $templateJSON['template']['terrain'][$i][$j];
     }
 
-  
- 
+$collisions['collisions'][$i+$templateOffsetY][$j+$templateOffsetX] = $templateJSON['template']['collisions'][$i][$j];
+$elevation['elevation'][$i+$templateOffsetY][$j+$templateOffsetX] = $templateJSON['template']['elevation'][$i][$j];
+
+
 }
 }
 
