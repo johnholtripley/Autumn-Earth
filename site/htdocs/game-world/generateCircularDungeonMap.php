@@ -1674,6 +1674,9 @@ $elevationString .= ']';
 
 // map templates in (add the {} to get it to convert):
 $collisions = json_decode('{'.$collisionsString.'}', true);
+
+
+
 $terrain = json_decode('{'.$terrainString.'}', true);
 $elevations = json_decode('{'.$elevationString.'}', true);
 
@@ -1683,18 +1686,20 @@ $templateHeight = count($templateJSON['template']['terrain']);
 $templateWidth = count($templateJSON['template']['terrain'][0]);
 
 
-echo($terrain[0]);
 
 $numberOfGraphicsAlreadyPlaced = count($dungeonDetails[$dungeonName]['graphics']);
 for ($i = 0; $i < $templateHeight; $i++) {
 for ($j = 0; $j < $templateWidth; $j++) {
-    if($templateJSON['template']['terrain'][$i][$j] == "*") {
-$terrain[$i+$templateOffsetY][$j+$templateOffsetX] = "*";
+   
+    if($templateJSON['template']['terrain'][$i][$j] === "*") {
+        
+$terrain['terrain'][$i+$templateOffsetY][$j+$templateOffsetX] = "*";
     } else {
-      $terrain[$i+$templateOffsetY][$j+$templateOffsetX] =   $numberOfGraphicsAlreadyPlaced + $templateJSON['template']['terrain'][$i][$j];
+       
+      $terrain['terrain'][$i+$templateOffsetY][$j+$templateOffsetX] = $numberOfGraphicsAlreadyPlaced + $templateJSON['template']['terrain'][$i][$j];
     }
 
-    $terrain[$i+$templateOffsetY][$j+$templateOffsetX] = "1";
+  
  
 }
 }
