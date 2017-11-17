@@ -3,6 +3,8 @@
         "entranceX": 1,
         "entranceY": 1,
         "rotatable": true,
+        "uniquePerLevel": false,
+        "uniquePerSession": false,
         "type": "inner",
         "collisions": [
             [1, 1, 1, 1, 1, 1],

@@ -22,7 +22,7 @@ water or lava courses (?)
 
 
 when placing items, place them clear of templates
-need to be able to place multiple templates per level
+make sure templates don't overlap existing placed templates
 rotate templates
 
 
@@ -2005,26 +2005,34 @@ $templateItemsToAppend = '';
 
     $allTemplateJSON = array();
 
+    $uniquePerLevelTemplatesUsed = array();
+
     if(count($templatesToUse>0)) {
 
-        // randomly order the rooms for some variation:
+     
         $randomDrawnTileRooms = $drawnTileRooms;
       
 
 
 
         for($i =0;$i<count($templatesToUse);$i++) {  
+               // randomly order the rooms for some variation:
              usort($randomDrawnTileRooms, 'randomArraySorting'); 
             $fileToUse = $dir . $templatesToUse[$i].'.json';
             $templateJSONFile = file_get_contents($fileToUse);
             $templateJSON = json_decode($templateJSONFile, true);
-            array_push($allTemplateJSON, $templateJSON);
+          
             // determine this template's dimensions:
             $templateHeight = count($templateJSON['template']['terrain']);
             $templateWidth = count($templateJSON['template']['terrain'][0]);
             $templateType = $templateJSON['template']['type'];
+            $isUniquePerLevel = $templateJSON['template']['uniquePerLevel'];
             $foundRoom = null;
-            
+        
+                if(!in_array($fileToUse, $uniquePerLevelTemplatesUsed)) {
+
+                
+          
 
             if($templateType == "inner") {
                 // find a room big enough:      
@@ -2044,6 +2052,7 @@ $templateItemsToAppend = '';
                             $thisTemplateOffsetY = $foundRoom[1] + mt_rand(0,($thisRoomsHeight-$templateWidth));
                             array_push($templateOffsetX, $thisTemplateOffsetX);
                             array_push($templateOffsetY, $thisTemplateOffsetY);
+                              array_push($allTemplateJSON, $templateJSON);
                                       // plot room
                             /*
                             for ($i = 0; $i < $templateWidth; $i++) {
@@ -2052,6 +2061,10 @@ $templateItemsToAppend = '';
                             }
                             }
                             */
+
+if($isUniquePerLevel) {
+    array_push($uniquePerLevelTemplatesUsed, $fileToUse);
+}
 
                             // map JSON from the template across:
                             for($j=0;$j<count($templateJSON['template']['graphics']);$j++) {
@@ -2081,6 +2094,7 @@ $templateItemsToAppend = '';
                     }
                 }
             }
+        }
         }
             // remove last comma:
                             $templateNPCsToAppend = rtrim($templateNPCsToAppend, ', ');
