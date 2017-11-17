@@ -22,8 +22,7 @@ water or lava courses (?)
 
 
 when placing items, place them clear of templates
-make sure templates don't overlap existing placed templates
-rotate templates
+http://ae.dev/game-world/generateCircularDungeonMap.php?debug=true&dungeonName=the-barrow-mines&requestedMap=-1&seed=1510968577 - removes 2 templates instead of just 1 for overlapping reasons
 
 
 ISSUES:
@@ -2004,7 +2003,7 @@ $templateItemsToAppend = '';
     $templateOffsetY = array();
 
     $allTemplateJSON = array();
-
+    $templatesPlacedOnThisLevel = array();
     $uniquePerLevelTemplatesUsed = array();
 
     if(count($templatesToUse>0)) {
@@ -2043,52 +2042,77 @@ $templateItemsToAppend = '';
                         $thisRoomsHeight = $thisRoom[3] - $thisRoom[1];
                         if($thisRoomsHeight >= $templateHeight) {
                             if($thisRoomsWidth >= $templateWidth) {
-                                // check a template hasn't already been placed here:
-                                // #######
-                                // john
+                              
+
+
+
+
                             $foundRoom = $thisRoom;
                             // position the template randomly within the available space:
                             $thisTemplateOffsetX = $foundRoom[0] + mt_rand(0,($thisRoomsWidth-$templateWidth));
-                            $thisTemplateOffsetY = $foundRoom[1] + mt_rand(0,($thisRoomsHeight-$templateWidth));
-                            array_push($templateOffsetX, $thisTemplateOffsetX);
-                            array_push($templateOffsetY, $thisTemplateOffsetY);
-                              array_push($allTemplateJSON, $templateJSON);
-                                      // plot room
-                            /*
-                            for ($i = 0; $i < $templateWidth; $i++) {
-                            for ($j = 0; $j < $templateHeight; $j++) {
-                            $map[$j+$foundRoom[1]+$thisTemplateOffsetY][$i+$foundRoom[0]+$thisTemplateOffsetX] = "-";
-                            }
-                            }
-                            */
+                            $thisTemplateOffsetY = $foundRoom[1] + mt_rand(0,($thisRoomsHeight-$templateHeight));
 
-if($isUniquePerLevel) {
-    array_push($uniquePerLevelTemplatesUsed, $fileToUse);
-}
 
-                            // map JSON from the template across:
-                            for($j=0;$j<count($templateJSON['template']['graphics']);$j++) {
-                                $templateGraphicsToAppend .= ', '.json_encode($templateJSON['template']['graphics'][$j]);
+                            $overlapsExistingTemplate = false;
+                              // check a template hasn't already been placed here:
+                                                            // #######
+                                                            // john
+                   
+                            for($j=0;$j<count($templatesPlacedOnThisLevel);$j++) {
+                                if(($thisTemplateOffsetX + $templateWidth) > $templatesPlacedOnThisLevel[$j][0]) {
+                                    if($thisTemplateOffsetX  < $templatesPlacedOnThisLevel[$j][2]) {
+                                        if($thisTemplateOffsetY  < $templatesPlacedOnThisLevel[$j][3]) {
+                                            if(($thisTemplateOffsetY + $templateHeight)  > $templatesPlacedOnThisLevel[$j][1]) {
+                                              $overlapsExistingTemplate = true;
+                                            }
+                                        }
+                                    }
+                                }
                             }
+                            
 
-                            for($j=0;$j<count($templateJSON['template']['npcs']);$j++) {
-                                $thisNPC = $templateJSON['template']['npcs'][$j];
-                                // map their location:
-                                $thisNPC['tileX'] += $thisTemplateOffsetX;
-                                $thisNPC['tileY'] += $thisTemplateOffsetY;
-                                $templateNPCsToAppend .= json_encode($thisNPC).', ';
-                            }
-                        
+                            if(!$overlapsExistingTemplate) {
+                                array_push($templateOffsetX, $thisTemplateOffsetX);
+                                array_push($templateOffsetY, $thisTemplateOffsetY);
+                                array_push($allTemplateJSON, $templateJSON);
+                                array_push($templatesPlacedOnThisLevel, $foundRoom);
+                                          // plot room
+                                /*
+                                for ($i = 0; $i < $templateWidth; $i++) {
+                                for ($j = 0; $j < $templateHeight; $j++) {
+                                $map[$j+$foundRoom[1]+$thisTemplateOffsetY][$i+$foundRoom[0]+$thisTemplateOffsetX] = "-";
+                                }
+                                }
+                                */
 
-                            for($j=0;$j<count($templateJSON['template']['items']);$j++) {
-                                $thisItem = $templateJSON['template']['items'][$j];
-                                // map their location:
-                                $thisItem['tileX'] += $thisTemplateOffsetX;
-                                $thisItem['tileY'] += $thisTemplateOffsetY;
-                                $templateItemsToAppend .= json_encode($thisItem).', ';
-                            }
+                                if($isUniquePerLevel) {
+                                    // don't use it again:
+                                    array_push($uniquePerLevelTemplatesUsed, $fileToUse);
+                                }
+
+                                // map JSON from the template across:
+                                for($j=0;$j<count($templateJSON['template']['graphics']);$j++) {
+                                    $templateGraphicsToAppend .= ', '.json_encode($templateJSON['template']['graphics'][$j]);
+                                }
+
+                                for($j=0;$j<count($templateJSON['template']['npcs']);$j++) {
+                                    $thisNPC = $templateJSON['template']['npcs'][$j];
+                                    // map their location:
+                                    $thisNPC['tileX'] += $thisTemplateOffsetX;
+                                    $thisNPC['tileY'] += $thisTemplateOffsetY;
+                                    $templateNPCsToAppend .= json_encode($thisNPC).', ';
+                                }
+                            
+
+                                for($j=0;$j<count($templateJSON['template']['items']);$j++) {
+                                    $thisItem = $templateJSON['template']['items'][$j];
+                                    // map their location:
+                                    $thisItem['tileX'] += $thisTemplateOffsetX;
+                                    $thisItem['tileY'] += $thisTemplateOffsetY;
+                                    $templateItemsToAppend .= json_encode($thisItem).', ';
+                                }
                            
-                            //break;
+                            }
                             }
                         }
                     }
