@@ -1589,7 +1589,7 @@ if($debug) {
 
 
 function outputJSONContent() {
-global $debug, $map, $itemMap, $drawnTileDoors, $drawnTileKeys, $mapTilesX, $mapTilesY, $storedSeed, $thisMapsId, $thisPlayersId, $entranceX, $entranceY, $exitX, $exitY, $dungeonName, $dungeonDetails, $outputJSON, $templateGraphicsToAppend, $templateNPCsToAppend, $templateItemsToAppend, $templateJSON, $templateOffsetX, $templateOffsetY;
+global $debug, $map, $itemMap, $drawnTileDoors, $drawnTileKeys, $mapTilesX, $mapTilesY, $storedSeed, $thisMapsId, $thisPlayersId, $entranceX, $entranceY, $exitX, $exitY, $dungeonName, $dungeonDetails, $outputJSON, $templateGraphicsToAppend, $templateNPCsToAppend, $templateItemsToAppend, $allTemplateJSON, $templateOffsetX, $templateOffsetY;
 
 
 
@@ -1681,35 +1681,43 @@ $collisions = json_decode('{'.$collisionsString.'}', true);
 $terrain = json_decode('{'.$terrainString.'}', true);
 $elevations = json_decode('{'.$elevationString.'}', true);
 
-
-
-$templateHeight = count($templateJSON['template']['terrain']);
-$templateWidth = count($templateJSON['template']['terrain'][0]);
-
-
-
 $numberOfGraphicsAlreadyPlaced = count(json_decode('['.$dungeonDetails[$dungeonName]['graphics'].']'));
 
+
+
+
+
+
+for ($t = 0; $t < count($allTemplateJSON); $t++) {
+$templateHeight = count($allTemplateJSON[$t]['template']['terrain']);
+$templateWidth = count($allTemplateJSON[$t]['template']['terrain'][0]);
+//echo $templateOffsetX[$t].", ".$templateOffsetY[$t]."<br>";
+//echo $templateWidth.", ".$templateHeight."<br>";
 for ($i = 0; $i < $templateHeight; $i++) {
-for ($j = 0; $j < $templateWidth; $j++) {
-    if($templateJSON['template']['terrain'][$i][$j] === "*") {
-$terrain['terrain'][$i+$templateOffsetY][$j+$templateOffsetX] = "*";
+    for ($j = 0; $j < $templateWidth; $j++) {
+    if($allTemplateJSON[$t]['template']['terrain'][$i][$j] === "*") {
+        $terrain['terrain'][$i+$templateOffsetY[$t]][$j+$templateOffsetX[$t]] = "*";
     } else {
-     $terrain['terrain'][$i+$templateOffsetY][$j+$templateOffsetX] = $numberOfGraphicsAlreadyPlaced + $templateJSON['template']['terrain'][$i][$j];
+        $terrain['terrain'][$i+$templateOffsetY[$t]][$j+$templateOffsetX[$t]] = $numberOfGraphicsAlreadyPlaced + $allTemplateJSON[$t]['template']['terrain'][$i][$j];
     }
-
-$collisions['collisions'][$i+$templateOffsetY][$j+$templateOffsetX] = $templateJSON['template']['collisions'][$i][$j];
-$elevation['elevation'][$i+$templateOffsetY][$j+$templateOffsetX] = $templateJSON['template']['elevation'][$i][$j];
-
-
-}
+    $collisions['collisions'][$i+$templateOffsetY[$t]][$j+$templateOffsetX[$t]] = $allTemplateJSON[$t]['template']['collisions'][$i][$j];
+    $elevation['elevation'][$i+$templateOffsetY[$t]][$j+$templateOffsetX[$t]] = $allTemplateJSON[$t]['template']['elevation'][$i][$j];
+    }
 }
 
 
+$numberOfGraphicsAlreadyPlaced += count($allTemplateJSON[$t]['template']['graphics']);
+
+}
 
 
 // substr(1,-1) to remove the added { and } earlier:
 $outputJSON .= substr(json_encode($collisions),1,-1).", ".substr(json_encode($terrain),1,-1).", ".substr(json_encode($elevations),1,-1);
+
+
+
+
+
 
 $outputJSON .= ',"graphics": ['.$dungeonDetails[$dungeonName]['graphics'].$templateGraphicsToAppend.'],';
 $outputJSON .= '"shops": [],';
@@ -1947,7 +1955,7 @@ function tileIsSurrounded($tileCheckX,$tileCheckY) {
 
 
    function findRelevantTemplates() {
-  global $dungeonName, $thisMapsId, $dungeonDetails, $thisMapsId, $drawnTileRooms, $map, $templateGraphicsToAppend, $templateNPCsToAppend, $templateItemsToAppend, $templateJSON, $templateOffsetX, $templateOffsetY;
+  global $dungeonName, $thisMapsId, $dungeonDetails, $thisMapsId, $drawnTileRooms, $map, $templateGraphicsToAppend, $templateNPCsToAppend, $templateItemsToAppend, $allTemplateJSON, $templateOffsetX, $templateOffsetY;
     // read contents of dir and find number of files:
     $dir = $_SERVER['DOCUMENT_ROOT'] . "/templates/dungeon/".$dungeonName."/";
     $filesFound = array();
@@ -1966,11 +1974,11 @@ function tileIsSurrounded($tileCheckX,$tileCheckY) {
 
 // have a few goes at finding an in-level template:
     $attempt = 0;
-    $foundSuitableTemplate = false;
-do {
-    $randomFile = mt_rand(0, count($filesFound) - 1);
-    $attempt++;
 
+    $templatesToUse = array();
+for($i =0;$i<mt_rand(2,4);$i++) {
+    $randomFile = mt_rand(0, count($filesFound) - 1);
+   
 $templateName = explode(".json",$filesFound[$randomFile])[0];
 
 $mapIdAbsolute = abs($thisMapsId);
@@ -1978,110 +1986,107 @@ $mapIdAbsolute = abs($thisMapsId);
 
 if($mapIdAbsolute >= $dungeonDetails['the-barrow-mines']['suitableTemplates'][$templateName][0]) {
 if($mapIdAbsolute <= $dungeonDetails['the-barrow-mines']['suitableTemplates'][$templateName][1]) {
-$foundSuitableTemplate = true;
+
+array_push($templatesToUse, $templateName);
 }
 }
-} while (!$foundSuitableTemplate && $attempt<4);
-
-if($foundSuitableTemplate) {
-   $fileToUse = $dir . $filesFound[$randomFile];
-    $templateChosen = $filesFound[$randomFile];
-$templateJSONFile = file_get_contents($fileToUse);
-
-$templateJSON = json_decode($templateJSONFile, true);
+}
 
 
-// determine this template's dimensions:
-$templateHeight = count($templateJSON['template']['terrain']);
-$templateWidth = count($templateJSON['template']['terrain'][0]);
+
+
 
 $templateGraphicsToAppend = '';
 $templateNPCsToAppend = '';
 $templateItemsToAppend = '';
 
+    $templateOffsetX = array();
+    $templateOffsetY = array();
 
-$templateType = $templateJSON['template']['type'];
-$foundRoom = null;
-$templateOffsetX = 0;
-$templateOffsetY = 0;
+    $allTemplateJSON = array();
+
+    if(count($templatesToUse>0)) {
+
+        // randomly order the rooms for some variation:
+        $randomDrawnTileRooms = $drawnTileRooms;
+      
 
 
-if($templateType == "inner") {
-// find a room big enough - randomly order the rooms for some variation:
-$randomDrawnTileRooms = $drawnTileRooms;
-            usort($randomDrawnTileRooms, 'randomArraySorting');
+
+        for($i =0;$i<count($templatesToUse);$i++) {  
+             usort($randomDrawnTileRooms, 'randomArraySorting'); 
+            $fileToUse = $dir . $templatesToUse[$i].'.json';
+            $templateJSONFile = file_get_contents($fileToUse);
+            $templateJSON = json_decode($templateJSONFile, true);
+            array_push($allTemplateJSON, $templateJSON);
+            // determine this template's dimensions:
+            $templateHeight = count($templateJSON['template']['terrain']);
+            $templateWidth = count($templateJSON['template']['terrain'][0]);
+            $templateType = $templateJSON['template']['type'];
+            $foundRoom = null;
             
-foreach ($randomDrawnTileRooms as &$thisRoom) {
-    $thisRoomsWidth = $thisRoom[2] - $thisRoom[0];
-    $thisRoomsHeight = $thisRoom[3] - $thisRoom[1];
 
-   
-    if($thisRoomsHeight >= $templateHeight) {
-    if($thisRoomsWidth >= $templateWidth) {
+            if($templateType == "inner") {
+                // find a room big enough:      
+                foreach ($randomDrawnTileRooms as &$thisRoom) {
+                    // make sure it's not already found a room:
+                    if($foundRoom == null) {
+                        $thisRoomsWidth = $thisRoom[2] - $thisRoom[0];
+                        $thisRoomsHeight = $thisRoom[3] - $thisRoom[1];
+                        if($thisRoomsHeight >= $templateHeight) {
+                            if($thisRoomsWidth >= $templateWidth) {
+                                // check a template hasn't already been placed here:
+                                // #######
+                                // john
+                            $foundRoom = $thisRoom;
+                            // position the template randomly within the available space:
+                            $thisTemplateOffsetX = $foundRoom[0] + mt_rand(0,($thisRoomsWidth-$templateWidth));
+                            $thisTemplateOffsetY = $foundRoom[1] + mt_rand(0,($thisRoomsHeight-$templateWidth));
+                            array_push($templateOffsetX, $thisTemplateOffsetX);
+                            array_push($templateOffsetY, $thisTemplateOffsetY);
+                                      // plot room
+                            /*
+                            for ($i = 0; $i < $templateWidth; $i++) {
+                            for ($j = 0; $j < $templateHeight; $j++) {
+                            $map[$j+$foundRoom[1]+$thisTemplateOffsetY][$i+$foundRoom[0]+$thisTemplateOffsetX] = "-";
+                            }
+                            }
+                            */
 
- $foundRoom = $thisRoom;
+                            // map JSON from the template across:
+                            for($j=0;$j<count($templateJSON['template']['graphics']);$j++) {
+                                $templateGraphicsToAppend .= ', '.json_encode($templateJSON['template']['graphics'][$j]);
+                            }
 
-// position the template randomly within the available space:
- $templateOffsetX = $foundRoom[0] + mt_rand(0,($thisRoomsWidth-$templateWidth));
- $templateOffsetY = $foundRoom[1] + mt_rand(0,($thisRoomsHeight-$templateWidth));
+                            for($j=0;$j<count($templateJSON['template']['npcs']);$j++) {
+                                $thisNPC = $templateJSON['template']['npcs'][$j];
+                                // map their location:
+                                $thisNPC['tileX'] += $thisTemplateOffsetX;
+                                $thisNPC['tileY'] += $thisTemplateOffsetY;
+                                $templateNPCsToAppend .= json_encode($thisNPC).', ';
+                            }
+                        
 
- break;
-}
+                            for($j=0;$j<count($templateJSON['template']['items']);$j++) {
+                                $thisItem = $templateJSON['template']['items'][$j];
+                                // map their location:
+                                $thisItem['tileX'] += $thisTemplateOffsetX;
+                                $thisItem['tileY'] += $thisTemplateOffsetY;
+                                $templateItemsToAppend .= json_encode($thisItem).', ';
+                            }
+                           
+                            //break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+            // remove last comma:
+                            $templateNPCsToAppend = rtrim($templateNPCsToAppend, ', ');
+                             // remove last comma:
+                            $templateItemsToAppend = rtrim($templateItemsToAppend, ', ');
     }
-}
-
-}
-
-
-
-if($foundRoom != null) {
-// plot room
-/*
-for ($i = 0; $i < $templateWidth; $i++) {
-for ($j = 0; $j < $templateHeight; $j++) {
-$map[$j+$foundRoom[1]+$templateOffsetY][$i+$foundRoom[0]+$templateOffsetX] = "-";
-}
-}
-*/
-// map JSON from the template across:
-
-
-
-
-for($i=0;$i<count($templateJSON['template']['graphics']);$i++) {
-$templateGraphicsToAppend .= ', '.json_encode($templateJSON['template']['graphics'][$i]);
-}
-
-for($i=0;$i<count($templateJSON['template']['npcs']);$i++) {
-$thisNPC = $templateJSON['template']['npcs'][$i];
-// map their location:
-$thisNPC['tileX'] += +$templateOffsetX;
-$thisNPC['tileY'] += $templateOffsetY;
-$templateNPCsToAppend .= json_encode($thisNPC).', ';
-}
-// remove last comma:
-$templateNPCsToAppend = rtrim($templateNPCsToAppend, ', ');
-
-
-for($i=0;$i<count($templateJSON['template']['items']);$i++) {
-$thisItem = $templateJSON['template']['items'][$i];
-// map their location:
-$thisItem['tileX'] += $templateOffsetX;
-$thisItem['tileY'] += $templateOffsetY;
-$templateItemsToAppend .= json_encode($thisItem).', ';
-}
-// remove last comma:
-$templateItemsToAppend = rtrim($templateItemsToAppend, ', ');
-
-
-
-
-
-}
-
-
-}
-
 }
 
 
