@@ -9,21 +9,15 @@ Create meta levels so can have foreshadowing and hints about future encounters
 elevations
 add template sections - 2 types. More decorative types placed within existing rooms, and others that are added to blank space adjoining existing rooms. 
 Convert locks, valves, hazards and treasure into interesting variants
-Add NPCs (with relevant quests)
-Place items
+Place additional items from Dungeon Config
 Decorate rooms so they are different and identifiable
-pathfind to confirm map doors are connected (including checks for items, elevation, and static NPCs)
+pathfind to confirm map doors are connected (including checks for items, elevation, locked doors and static NPCs)
 connect exits and the next map
 remove doors for small rooms (unless locked) (?)
 the code for determining whether an area should be black or a solid terrain piece needs to look at height differences as well
 have some sort of persistence between dungeon visits. keep track of creature populations etc.
 water or lava courses (?)
-
-
-
 when placing items, place them clear of templates
-http://ae.dev/game-world/generateCircularDungeonMap.php?debug=true&dungeonName=the-barrow-mines&requestedMap=-1&seed=1510968577 - removes 2 templates instead of just 1 for overlapping reasons
-
 
 ISSUES:
 http://ae.dev/game-world/generateCircularDungeonMap.php?debug=true&seed=1510610103 - double thickness walls look odd
@@ -2048,16 +2042,15 @@ $templateItemsToAppend = '';
 
 
                             $foundRoom = $thisRoom;
+$attempts = 0;
+
+do {
                             // position the template randomly within the available space:
                             $thisTemplateOffsetX = $foundRoom[0] + mt_rand(0,($thisRoomsWidth-$templateWidth));
                             $thisTemplateOffsetY = $foundRoom[1] + mt_rand(0,($thisRoomsHeight-$templateHeight));
-
-
                             $overlapsExistingTemplate = false;
                               // check a template hasn't already been placed here:
-                                                            // #######
-                                                            // john
-                   
+                          
                             for($j=0;$j<count($templatesPlacedOnThisLevel);$j++) {
                                 if(($thisTemplateOffsetX + $templateWidth) > $templatesPlacedOnThisLevel[$j][0]) {
                                     if($thisTemplateOffsetX  < $templatesPlacedOnThisLevel[$j][2]) {
@@ -2069,7 +2062,8 @@ $templateItemsToAppend = '';
                                     }
                                 }
                             }
-                            
+                            $attempts++;
+                            } while ($overlapsExistingTemplate && $attempts<4);
 
                             if(!$overlapsExistingTemplate) {
                                 array_push($templateOffsetX, $thisTemplateOffsetX);
