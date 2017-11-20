@@ -1961,7 +1961,7 @@ function flipArray($inputArray) {
     return $outputArray;
 }
 
-function rotate90Clockwise( $inputArray ) {
+function rotateArray90Clockwise( $inputArray ) {
     // kudos https://stackoverflow.com/questions/30087158/how-can-i-rotate-a-2d-array-in-php-by-90-degrees#answer-43108722
     $inputArray = array_values( $inputArray );
     $outputArray = array();
@@ -1972,7 +1972,7 @@ function rotate90Clockwise( $inputArray ) {
     return $outputArray;
 }
 
-function rotate90Anticlockwise( $inputArray ) {
+function rotateArray90Anticlockwise( $inputArray ) {
     $inputArray = array_values( $inputArray );
     $outputArray = array();
     // make each new row = reversed old column
@@ -1982,7 +1982,7 @@ function rotate90Anticlockwise( $inputArray ) {
     return $outputArray;
 }
 
-function rotate180($inputArray) {
+function rotateArray180($inputArray) {
     $outputArray = array();
     for ($i=0;$i<count($inputArray);$i++) {
         array_unshift($outputArray, array_reverse($inputArray[$i]));
