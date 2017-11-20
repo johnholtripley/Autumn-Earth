@@ -18,6 +18,9 @@ the code for determining whether an area should be black or a solid terrain piec
 have some sort of persistence between dungeon visits. keep track of creature populations etc.
 water or lava courses (?)
 when placing items, place them clear of templates
+offset doors (and connecting corridors)
+
+https://3v4l.org/4626Z - rotate and flip array
 
 ISSUES:
 http://ae.dev/game-world/generateCircularDungeonMap.php?debug=true&seed=1510610103 - double thickness walls look odd
@@ -1944,6 +1947,47 @@ function tileIsSurrounded($tileCheckX,$tileCheckY) {
     $thisTileIsSurrounded = true;
   }
   return $thisTileIsSurrounded;
+}
+
+
+
+
+function flipArray($inputArray) {
+    // mirror vertically:
+    $outputArray = array();
+    for ($i=0;$i<count($inputArray);$i++) {
+        array_push($outputArray, array_reverse($inputArray[$i]));
+    }
+    return $outputArray;
+}
+
+function rotate90Clockwise( $inputArray ) {
+    // kudos https://stackoverflow.com/questions/30087158/how-can-i-rotate-a-2d-array-in-php-by-90-degrees#answer-43108722
+    $inputArray = array_values( $inputArray );
+    $outputArray = array();
+    // make each new row = reversed old column
+    foreach( array_keys( $inputArray[0] ) as $column ){
+        $outputArray[] = array_reverse( array_column( $inputArray, $column ) );
+    }
+    return $outputArray;
+}
+
+function rotate90Anticlockwise( $inputArray ) {
+    $inputArray = array_values( $inputArray );
+    $outputArray = array();
+    // make each new row = reversed old column
+    foreach( array_keys( $inputArray[0] ) as $column ){
+        array_unshift($outputArray , array_column( $inputArray, $column ) );
+    }
+    return $outputArray;
+}
+
+function rotate180($inputArray) {
+    $outputArray = array();
+    for ($i=0;$i<count($inputArray);$i++) {
+        array_unshift($outputArray, array_reverse($inputArray[$i]));
+    }
+    return $outputArray;
 }
 
 
