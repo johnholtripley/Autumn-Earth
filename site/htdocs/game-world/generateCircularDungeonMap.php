@@ -21,7 +21,6 @@ when placing items, place them clear of templates
 offset doors (and connecting corridors)
 templates specific to a dungeon theme - have the dungeon's clean URL within the template folder (?)
 
-https://3v4l.org/4626Z - rotate and flip array
 
 ISSUES:
 http://ae.dev/game-world/generateCircularDungeonMap.php?debug=true&seed=1510610103 - double thickness walls look odd
@@ -1686,15 +1685,19 @@ $numberOfGraphicsAlreadyPlaced = count(json_decode('['.$dungeonDetails[$dungeonN
 
 
 for ($t = 0; $t < count($allTemplateJSON); $t++) {
+
 $templateHeight = count($allTemplateJSON[$t]['template']['terrain']);
 $templateWidth = count($allTemplateJSON[$t]['template']['terrain'][0]);
 //echo $templateOffsetX[$t].", ".$templateOffsetY[$t]."<br>";
 //echo $templateWidth.", ".$templateHeight."<br>";
 for ($i = 0; $i < $templateHeight; $i++) {
+
     for ($j = 0; $j < $templateWidth; $j++) {
     if($allTemplateJSON[$t]['template']['terrain'][$i][$j] === "*") {
         $terrain['terrain'][$i+$templateOffsetY[$t]][$j+$templateOffsetX[$t]] = "*";
+      
     } else {
+      
         $terrain['terrain'][$i+$templateOffsetY[$t]][$j+$templateOffsetX[$t]] = $numberOfGraphicsAlreadyPlaced + $allTemplateJSON[$t]['template']['terrain'][$i][$j];
     }
     $collisions['collisions'][$i+$templateOffsetY[$t]][$j+$templateOffsetX[$t]] = $allTemplateJSON[$t]['template']['collisions'][$i][$j];
@@ -1954,11 +1957,15 @@ function tileIsSurrounded($tileCheckX,$tileCheckY) {
 
 
 function flipArray($inputArray) {
+
     // mirror vertically:
     $outputArray = array();
-    for ($i=0;$i<count($inputArray);$i++) {
-        array_push($outputArray, array_reverse($inputArray[$i]));
-    }
+  foreach($inputArray as $key => $val) {
+    $outputArray[$key] = array_reverse($val);
+}
+
+
+
     return $outputArray;
 }
 
@@ -2061,17 +2068,49 @@ $templateItemsToAppend = '';
             $templateJSON = json_decode($templateJSONFile, true);
           
 
-// flip and 180 don't work ###########
+$rotation = mt_rand(1,4);
+// case 1 is no rotation
 
-$templateJSON['template']['terrain'] = rotateArray90Anticlockwise($templateJSON['template']['terrain']);
+switch ($rotation) {
+    case 2:
+        $templateJSON['template']['terrain'] = rotateArray90Clockwise($templateJSON['template']['terrain']);
+$templateJSON['template']['collisions'] = rotateArray90Clockwise($templateJSON['template']['collisions']);
+$templateJSON['template']['elevation'] = rotateArray90Clockwise($templateJSON['template']['elevation']);
+        break;
+    case 3:
+     $templateJSON['template']['terrain'] = rotateArray90Anticlockwise($templateJSON['template']['terrain']);
 $templateJSON['template']['collisions'] = rotateArray90Anticlockwise($templateJSON['template']['collisions']);
 $templateJSON['template']['elevation'] = rotateArray90Anticlockwise($templateJSON['template']['elevation']);
+        break;
+    case 4:
+     $templateJSON['template']['terrain'] = rotateArray180($templateJSON['template']['terrain']);
+$templateJSON['template']['collisions'] = rotateArray180($templateJSON['template']['collisions']);
+$templateJSON['template']['elevation'] = rotateArray180($templateJSON['template']['elevation']);
+        break;
+}
+
+
+
+
+
+if(mt_rand(1,2) == 1) {
+$templateJSON['template']['terrain'] = flipArray($templateJSON['template']['terrain']);
+$templateJSON['template']['collisions'] = flipArray($templateJSON['template']['collisions']);
+$templateJSON['template']['elevation'] = flipArray($templateJSON['template']['elevation']);
+}
+
+
+
+
 
 
 
             // determine this template's dimensions:
             $templateHeight = count($templateJSON['template']['terrain']);
             $templateWidth = count($templateJSON['template']['terrain'][0]);
+
+
+
             $templateType = $templateJSON['template']['type'];
             $isUniquePerLevel = $templateJSON['template']['uniquePerLevel'];
             $foundRoom = null;
