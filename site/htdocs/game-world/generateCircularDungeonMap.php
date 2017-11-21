@@ -19,6 +19,7 @@ have some sort of persistence between dungeon visits. keep track of creature pop
 water or lava courses (?)
 when placing items, place them clear of templates
 offset doors (and connecting corridors)
+templates specific to a dungeon theme - have the dungeon's clean URL within the template folder (?)
 
 https://3v4l.org/4626Z - rotate and flip array
 
@@ -2059,6 +2060,15 @@ $templateItemsToAppend = '';
             $templateJSONFile = file_get_contents($fileToUse);
             $templateJSON = json_decode($templateJSONFile, true);
           
+
+// flip and 180 don't work ###########
+
+$templateJSON['template']['terrain'] = rotateArray90Anticlockwise($templateJSON['template']['terrain']);
+$templateJSON['template']['collisions'] = rotateArray90Anticlockwise($templateJSON['template']['collisions']);
+$templateJSON['template']['elevation'] = rotateArray90Anticlockwise($templateJSON['template']['elevation']);
+
+
+
             // determine this template's dimensions:
             $templateHeight = count($templateJSON['template']['terrain']);
             $templateWidth = count($templateJSON['template']['terrain'][0]);
