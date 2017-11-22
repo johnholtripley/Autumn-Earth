@@ -1,3 +1,11 @@
+#interface {
+    @include transition(opacity 0.4s ease);
+    opacity: 0;
+    &.active {
+        opacity: 1;
+    }
+}
+
 #displayZoneName {
     pointer-events: none;
     position: absolute;

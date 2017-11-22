@@ -33,6 +33,7 @@ const collectionQuestPanels = document.getElementById('collectionQuestPanels');
 const chestPanel = document.getElementById('chestPanel');
 const chestTitle = document.getElementById('chestTitle');
 const chestSlotContents = document.getElementById('chest');
+const interfaceWrapper = document.getElementById('interface');
 
 var notificationQueue = [];
 var notificationIsShowing = false;
@@ -1382,5 +1383,9 @@ var UI = {
             }
         }
 
+    },
+
+    toggleUI: function() {
+interfaceWrapper.classList.toggle('active');
     }
 }

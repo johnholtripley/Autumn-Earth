@@ -353,7 +353,6 @@ function isFacing(obj1, obj2) {
 
 
 
-
 function generateHash(sourceString) {
     // http://stackoverflow.com/questions/7616461/generate-a-hash-from-string-in-javascript-jquery
     var hash = 0,

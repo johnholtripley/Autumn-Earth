@@ -1092,7 +1092,6 @@ function isFacing(obj1, obj2) {
 
 
 
-
 function generateHash(sourceString) {
     // http://stackoverflow.com/questions/7616461/generate-a-hash-from-string-in-javascript-jquery
     var hash = 0,
@@ -1790,6 +1789,9 @@ const Input = {
             case KeyBindings.challenge:
                 key[6] = to;
                 break;
+                case KeyBindings.toggleUI:
+key[7] = to;
+                break;
         }
     }
 }
@@ -2277,7 +2279,8 @@ var KeyBindings = {
     'pause': 80,
     'action': 17,
     'shift': 16,
-    'challenge': 67
+    'challenge': 67,
+    'toggleUI': 9
 }
 
 if (window.Worker) {
@@ -2767,6 +2770,7 @@ const collectionQuestPanels = document.getElementById('collectionQuestPanels');
 const chestPanel = document.getElementById('chestPanel');
 const chestTitle = document.getElementById('chestTitle');
 const chestSlotContents = document.getElementById('chest');
+const interfaceWrapper = document.getElementById('interface');
 
 var notificationQueue = [];
 var notificationIsShowing = false;
@@ -4116,6 +4120,10 @@ var UI = {
             }
         }
 
+    },
+
+    toggleUI: function() {
+interfaceWrapper.classList.toggle('active');
     }
 }
 // service worker:
@@ -5210,6 +5218,10 @@ function update() {
         if (key[6]) {
             checkForChallenges();
         }
+        if (key[7]) {
+            UI.toggleUI();
+            key[7] = false;
+        }
         checkHeroCollisions();
         var heroOldX = hero.tileX;
         var heroOldY = hero.tileY;
@@ -5709,7 +5721,7 @@ function processSpeech(thisNPC, thisSpeechPassedIn, thisSpeechCode, isPartOfNPCs
                                         var currentThresholdValue = accessDynamicVariable(questData[allSubQuestsRequired[k]].whatIsRequiredForCompletion);
                                         // check if it's an absolute value to check for, or an increment (whether there is a '+' at the start):
                                         if (questData[allSubQuestsRequired[k]].thresholdNeededForCompletion.charAt(0) == "+") {
-                                            console.log(currentThresholdValue + " < " + questData[allSubQuestsRequired[k]].thresholdNeededForCompletion.substring(1));
+                                            //console.log(currentThresholdValue + " < " + questData[allSubQuestsRequired[k]].thresholdNeededForCompletion.substring(1));
                                             if (currentThresholdValue - thresholdValueAtStart < questData[allSubQuestsRequired[k]].thresholdNeededForCompletion) {
                                                 allSubQuestsComplete = false;
                                             }
@@ -5923,7 +5935,7 @@ function awardQuestRewards(questRewards) {
         // check for variation:
         var questPossibilities = questRewards[i].split("/");
         var questRewardToUse = getRandomElementFromArray(questPossibilities);
-        console.log(questRewardToUse);
+      //  console.log(questRewardToUse);
 
         // check if it's money:
         if (questRewardToUse.charAt(0) == "$") {
@@ -6450,7 +6462,7 @@ if (typeof thisItem.animation !== "undefined") {
          thisItemOffsetCol = (thisItem["animation"][thisItem.state]["length"])-1;
             thisItemOffsetRow = thisItem["animation"][thisItem.state]["row"];
 
-console.log(thisItem.centreX,thisItem.centreY);
+//console.log(thisItem.centreX,thisItem.centreY);
 
 assetsToDraw.push([findIsoDepth(thisItem.x, thisItem.y, thisItem.z), "sprite", itemImages[thisItemIdentifier], thisItemOffsetCol * thisItem.spriteWidth, thisItemOffsetRow * thisItem.spriteHeight, thisItem.spriteWidth, thisItem.spriteHeight, Math.floor(thisX - hero.isox - thisItem.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisItem.centreY + (canvasHeight / 2) - thisItem.z), thisItem.spriteWidth, thisItem.spriteHeight]);
 } else {

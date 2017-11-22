@@ -57,6 +57,9 @@ const Input = {
             case KeyBindings.challenge:
                 key[6] = to;
                 break;
+                case KeyBindings.toggleUI:
+key[7] = to;
+                break;
         }
     }
 }
