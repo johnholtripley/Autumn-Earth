@@ -2,6 +2,43 @@
 
 include $_SERVER['DOCUMENT_ROOT'] . "/game-world/generateCircularDungeonMap-third-party-arrow-code.php";
 include("../includes/dungeonMapConfig.php");
+
+if (isset($_GET["debug"])) {
+    $debug = true;
+} else {
+    $debug = false;
+}
+
+if($debug) {
+?>
+<style>
+body, p {
+font-family:arial,helvetica,sans-serif;font-size:14px;
+}
+
+.sequenceBlock {
+    float: left;
+    width: 22.5%;
+    margin: 0 1.25% 2.5% 1.25%;
+}
+
+.wider {
+    width: 97.5%;
+}
+
+.sequenceBlock:nth-child(4n+1) {
+    clear: left;
+}
+
+img {
+    display: block;
+   width: 100%;
+}
+</style>
+<?php
+}
+
+
 /* ----
 
 TO DO:
@@ -20,6 +57,7 @@ water or lava courses (?)
 when placing items, place them clear of templates
 offset doors (and connecting corridors)
 templates specific to a dungeon theme - have the dungeon's clean URL within the template folder (?)
+
 
 
 ISSUES:
@@ -396,11 +434,6 @@ $thisPlayersId = 999;
     }
     $dungeonName = $_GET["dungeonName"];
     mt_srand($storedSeed);
-if (isset($_GET["debug"])) {
-        $debug = true;
-    } else {
-        $debug = false;
-    }
 }
 
 function growGrammar($thisGrammar, $iterations)
@@ -1585,7 +1618,7 @@ if($debug) {
 
 
 function outputJSONContent() {
-global $debug, $map, $itemMap, $drawnTileDoors, $drawnTileKeys, $mapTilesX, $mapTilesY, $storedSeed, $thisMapsId, $thisPlayersId, $entranceX, $entranceY, $exitX, $exitY, $dungeonName, $dungeonDetails, $outputJSON, $templateGraphicsToAppend, $templateNPCsToAppend, $templateItemsToAppend, $allTemplateJSON, $templateOffsetX, $templateOffsetY;
+global $debug, $map, $itemMap, $drawnTileDoors, $drawnTileKeys, $mapTilesX, $mapTilesY, $storedSeed, $thisMapsId, $thisPlayersId, $entranceX, $entranceY, $exitX, $exitY, $dungeonName, $dungeonDetails, $outputJSON, $templateGraphicsToAppend, $templateNPCsToAppend, $templateItemsToAppend, $templateHotspotsToAppend, $allTemplateJSON, $templateOffsetX, $templateOffsetY;
 
 
 
@@ -1722,6 +1755,7 @@ $outputJSON .= substr(json_encode($collisions),1,-1).", ".substr(json_encode($te
 $outputJSON .= ',"graphics": ['.$dungeonDetails[$dungeonName]['graphics'].$templateGraphicsToAppend.'],';
 $outputJSON .= '"shops": [],';
 $outputJSON .= '"npcs": ['.$templateNPCsToAppend.'],';
+$outputJSON .= '"hotspots": ['.$templateHotspotsToAppend.'],';
 $outputJSON .= '"doors": [],';
 $outputJSON .= '"innerDoors": {';
 
@@ -1999,8 +2033,35 @@ function rotateArray180($inputArray) {
 }
 
 
+function flipCoordinatesHorizontally($position, $templateWidth, $templateHeight) {
+   
+    $position[0] = $templateWidth - $position[0] -1;
+    return $position;
+}
+
+function rotateCoordinates180($position, $templateWidth, $templateHeight) {
+
+    $position[0] = $templateWidth - $position[0] -1;
+    $position[1] = $templateHeight - $position[1] -1;
+    return $position;
+}
+
+function rotateCoordinates90Clockwise($position, $templateWidth, $templateHeight) {
+
+    $position[0] = $templateHeight - $position[1] -1;
+    $position[1] = $position[0];
+    return $position;
+}
+
+function rotateCoordinates90Anticlockwise($position, $templateWidth, $templateHeight) {
+
+    $position[0] = $position[1];
+    $position[1] = $templateWidth - $position[0] -1;
+    return $position;
+}
+
    function findRelevantTemplates() {
-  global $dungeonName, $thisMapsId, $dungeonDetails, $thisMapsId, $drawnTileRooms, $map, $templateGraphicsToAppend, $templateNPCsToAppend, $templateItemsToAppend, $allTemplateJSON, $templateOffsetX, $templateOffsetY;
+  global $dungeonName, $thisMapsId, $dungeonDetails, $thisMapsId, $drawnTileRooms, $map, $templateGraphicsToAppend, $templateNPCsToAppend, $templateItemsToAppend, $allTemplateJSON, $templateOffsetX, $templateOffsetY, $templateHotspotsToAppend;
     // read contents of dir and find number of files:
     $dir = $_SERVER['DOCUMENT_ROOT'] . "/templates/dungeon/".$dungeonName."/";
     $filesFound = array();
@@ -2043,6 +2104,7 @@ array_push($templatesToUse, $templateName);
 
 $templateGraphicsToAppend = '';
 $templateNPCsToAppend = '';
+$templateHotspotsToAppend = '';
 $templateItemsToAppend = '';
 
     $templateOffsetX = array();
@@ -2068,7 +2130,14 @@ $templateItemsToAppend = '';
             $templateJSON = json_decode($templateJSONFile, true);
           
 
+
+$rotation = 1;
+$flip = 1;
+
+if($templateJSON['template']['rotatable']) {
+
 $rotation = mt_rand(1,4);
+$flip = mt_rand(1,2);
 // case 1 is no rotation
 
 switch ($rotation) {
@@ -2076,6 +2145,7 @@ switch ($rotation) {
         $templateJSON['template']['terrain'] = rotateArray90Clockwise($templateJSON['template']['terrain']);
 $templateJSON['template']['collisions'] = rotateArray90Clockwise($templateJSON['template']['collisions']);
 $templateJSON['template']['elevation'] = rotateArray90Clockwise($templateJSON['template']['elevation']);
+
         break;
     case 3:
      $templateJSON['template']['terrain'] = rotateArray90Anticlockwise($templateJSON['template']['terrain']);
@@ -2089,25 +2159,112 @@ $templateJSON['template']['elevation'] = rotateArray180($templateJSON['template'
         break;
 }
 
+  // determine this template's dimensions:
+            $templateHeight = count($templateJSON['template']['terrain']);
+            $templateWidth = count($templateJSON['template']['terrain'][0]);
 
+// rotate items, npcs and hotspot positions:
+switch ($rotation) {
+  case 2:
+  for($j=0;$j<count($templateJSON['template']['npcs']);$j++) {
+$thisNPC = $templateJSON['template']['npcs'][$j];
+$newPosition = rotateCoordinates90Clockwise(array($thisNPC['tileX'], $thisNPC['tileY']),$templateWidth,$templateHeight);
+$templateJSON['template']['npcs'][$j]['tileX'] = $newPosition[0];
+$templateJSON['template']['npcs'][$j]['tileX'] = $newPosition[1];
+}
+for($j=0;$j<count($templateJSON['template']['hotspots']);$j++) {
+    $thisHotspot = $templateJSON['template']['hotspots'][$j];
+    $newPosition = rotateCoordinates90Clockwise(array($thisHotspot['centreX'], $thisHotspot['centreY']),$templateWidth,$templateHeight);
+    $templateJSON['template']['hotspots'][$j]['centreX'] = $newPosition[0];
+    $templateJSON['template']['hotspots'][$j]['centreY'] = $newPosition[1];
 
+}
+for($j=0;$j<count($templateJSON['template']['items']);$j++) {
+    $thisItem = $templateJSON['template']['items'][$j];
+    $newPosition = rotateCoordinates90Clockwise(array($thisItem['tileX'], $thisNPC['tileY']),$templateWidth,$templateHeight);
+    $templateJSON['template']['items'][$j]['tileX'] = $newPosition[0];
+$templateJSON['template']['items'][$j]['tileX'] = $newPosition[1];
+}
+  break;
+  case 3:
+  for($j=0;$j<count($templateJSON['template']['npcs']);$j++) {
+$thisNPC = $templateJSON['template']['npcs'][$j];
+$newPosition = rotateCoordinates90Anticlockwise(array($thisNPC['tileX'], $thisNPC['tileY']),$templateWidth,$templateHeight);
+$templateJSON['template']['npcs'][$j]['tileX'] = $newPosition[0];
+$templateJSON['template']['npcs'][$j]['tileX'] = $newPosition[1];
+}
+for($j=0;$j<count($templateJSON['template']['hotspots']);$j++) {
+    $thisHotspot = $templateJSON['template']['hotspots'][$j];
+    $newPosition = rotateCoordinates90Anticlockwise(array($thisHotspot['centreX'], $thisHotspot['centreY']),$templateWidth,$templateHeight);
+    $templateJSON['template']['hotspots'][$j]['centreX'] = $newPosition[0];
+    $templateJSON['template']['hotspots'][$j]['centreY'] = $newPosition[1];
 
+}
+for($j=0;$j<count($templateJSON['template']['items']);$j++) {
+    $thisItem = $templateJSON['template']['items'][$j];
+    $newPosition = rotateCoordinates90Anticlockwise(array($thisItem['tileX'], $thisNPC['tileY']),$templateWidth,$templateHeight);
+    $templateJSON['template']['items'][$j]['tileX'] = $newPosition[0];
+$templateJSON['template']['items'][$j]['tileX'] = $newPosition[1];
+}
+  break;
+  case 4:
+  for($j=0;$j<count($templateJSON['template']['npcs']);$j++) {
+$thisNPC = $templateJSON['template']['npcs'][$j];
+$newPosition = rotateCoordinates180(array($thisNPC['tileX'], $thisNPC['tileY']),$templateWidth,$templateHeight);
+$templateJSON['template']['npcs'][$j]['tileX'] = $newPosition[0];
+$templateJSON['template']['npcs'][$j]['tileX'] = $newPosition[1];
+}
+for($j=0;$j<count($templateJSON['template']['hotspots']);$j++) {
+    $thisHotspot = $templateJSON['template']['hotspots'][$j];
+    $newPosition = rotateCoordinates180(array($thisHotspot['centreX'], $thisHotspot['centreY']),$templateWidth,$templateHeight);
+    $templateJSON['template']['hotspots'][$j]['centreX'] = $newPosition[0];
+    $templateJSON['template']['hotspots'][$j]['centreY'] = $newPosition[1];
 
-if(mt_rand(1,2) == 1) {
+}
+for($j=0;$j<count($templateJSON['template']['items']);$j++) {
+    $thisItem = $templateJSON['template']['items'][$j];
+    $newPosition = rotateCoordinates180(array($thisItem['tileX'], $thisNPC['tileY']),$templateWidth,$templateHeight);
+    $templateJSON['template']['items'][$j]['tileX'] = $newPosition[0];
+$templateJSON['template']['items'][$j]['tileX'] = $newPosition[1];
+}
+  break;
+}
+
+if($flip == 2) {
 $templateJSON['template']['terrain'] = flipArray($templateJSON['template']['terrain']);
 $templateJSON['template']['collisions'] = flipArray($templateJSON['template']['collisions']);
 $templateJSON['template']['elevation'] = flipArray($templateJSON['template']['elevation']);
+// flip items, npcs and hotspot positions:
+
+
+for($j=0;$j<count($templateJSON['template']['npcs']);$j++) {
+$thisNPC = $templateJSON['template']['npcs'][$j];
+$newPosition = flipCoordinatesHorizontally(array($thisNPC['tileX'], $thisNPC['tileY']),$templateWidth,$templateHeight);
+$templateJSON['template']['npcs'][$j]['tileX'] = $newPosition[0];
+$templateJSON['template']['npcs'][$j]['tileX'] = $newPosition[1];
+}
+for($j=0;$j<count($templateJSON['template']['hotspots']);$j++) {
+    $thisHotspot = $templateJSON['template']['hotspots'][$j];
+    $newPosition = flipCoordinatesHorizontally(array($thisHotspot['centreX'], $thisHotspot['centreY']),$templateWidth,$templateHeight);
+    $templateJSON['template']['hotspots'][$j]['centreX'] = $newPosition[0];
+    $templateJSON['template']['hotspots'][$j]['centreY'] = $newPosition[1];
+
+}
+for($j=0;$j<count($templateJSON['template']['items']);$j++) {
+    $thisItem = $templateJSON['template']['items'][$j];
+    $newPosition = flipCoordinatesHorizontally(array($thisItem['tileX'], $thisNPC['tileY']),$templateWidth,$templateHeight);
+    $templateJSON['template']['items'][$j]['tileX'] = $newPosition[0];
+$templateJSON['template']['items'][$j]['tileX'] = $newPosition[1];
+}
+}
+
+
 }
 
 
 
 
-
-
-
-            // determine this template's dimensions:
-            $templateHeight = count($templateJSON['template']['terrain']);
-            $templateWidth = count($templateJSON['template']['terrain'][0]);
+          
 
 
 
@@ -2189,6 +2346,14 @@ do {
                                     $thisNPC['tileY'] += $thisTemplateOffsetY;
                                     $templateNPCsToAppend .= json_encode($thisNPC).', ';
                                 }
+
+                                          for($j=0;$j<count($templateJSON['template']['hotspots']);$j++) {
+                                    $thisHotspot = $templateJSON['template']['hotspots'][$j];
+                                    // map their location:
+                                    $thisHotspot['centreX'] += $thisTemplateOffsetX;
+                                    $thisHotspot['centreY'] += $thisTemplateOffsetY;
+                                    $templateHotspotsToAppend .= json_encode($thisHotspot).', ';
+                                }
                             
 
                                 for($j=0;$j<count($templateJSON['template']['items']);$j++) {
@@ -2211,6 +2376,7 @@ do {
                             $templateNPCsToAppend = rtrim($templateNPCsToAppend, ', ');
                              // remove last comma:
                             $templateItemsToAppend = rtrim($templateItemsToAppend, ', ');
+                            $templateHotspotsToAppend = rtrim($templateHotspotsToAppend, ', ');
     }
 }
 
@@ -2636,35 +2802,7 @@ echo '</code>';
 }
 
 
-if($debug) {
-    ?>
-<style>
 
-body, p {
-font-family:arial,helvetica,sans-serif;font-size:14px;
-}
-
-.sequenceBlock {
-    float: left;
-    width: 22.5%;
-    margin: 0 1.25% 2.5% 1.25%;
-}
-
-.wider {
-    width: 97.5%;
-}
-
-.sequenceBlock:nth-child(4n+1) {
-    clear: left;
-}
-
-img {
-    display: block;
-   width: 100%;
-}
-</style>
-<?php
-}
 if($debug) {
 echo '<p style="clear:both;padding-top:20px;"><a href="' . explode("?", $_SERVER["REQUEST_URI"])[0] . '?debug=true&amp;dungeonName='.$dungeonName.'&amp;requestedMap='.$thisMapsId.'&amp;seed=' . $storedSeed . '">' . $storedSeed . '</a> | <a href="' . explode("?", $_SERVER["REQUEST_URI"])[0] . '?debug=true&amp;dungeonName='.$dungeonName.'&amp;requestedMap='.$thisMapsId.'">New seed</a></p>';
 }

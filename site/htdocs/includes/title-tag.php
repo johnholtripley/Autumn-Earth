@@ -34,7 +34,7 @@ $longDescription="Autumn Earth community site";
 
 case "scriptorium":
 	$pagetitle = 'Writings from Autumn Earth';
-	$longDescription = 'Tomes, Journals, Almanacs, Manifests, Letters, Illuminated Manuscripts, Poems and Recipes';
+	$longDescription = 'Tomes, Journals, Almanacs, Scrolls, Manifests, Letters, Illuminated Manuscripts, Poems and Recipes';
 break;
 
     case "forum":
