@@ -56,7 +56,7 @@ have some sort of persistence between dungeon visits. keep track of creature pop
 water or lava courses (?)
 when placing items, place them clear of templates
 offset doors (and connecting corridors)
-templates specific to a dungeon theme - have the dungeon's clean URL within the template folder (?)
+
 
 
 
@@ -2089,11 +2089,12 @@ $templateName = explode(".json",$filesFound[$randomFile])[0];
 
 $mapIdAbsolute = abs($thisMapsId);
 // check if this map level is within the min and max for this template:
-
+if(isset($dungeonDetails['the-barrow-mines']['suitableTemplates'][$templateName])) {
 if($mapIdAbsolute >= $dungeonDetails['the-barrow-mines']['suitableTemplates'][$templateName][0]) {
 if($mapIdAbsolute <= $dungeonDetails['the-barrow-mines']['suitableTemplates'][$templateName][1]) {
 
 array_push($templatesToUse, $templateName);
+}
 }
 }
 }
@@ -2129,7 +2130,7 @@ $templateItemsToAppend = '';
             $templateJSONFile = file_get_contents($fileToUse);
             $templateJSON = json_decode($templateJSONFile, true);
           
-if($debug) {  echo "<hr>loop ".$i."<br>";}
+
 
 $rotation = 1;
 $flip = 1;
@@ -2149,38 +2150,38 @@ switch ($rotation) {
         $templateJSON['template']['terrain'] = rotateArray90Clockwise($templateJSON['template']['terrain']);
 $templateJSON['template']['collisions'] = rotateArray90Clockwise($templateJSON['template']['collisions']);
 $templateJSON['template']['elevation'] = rotateArray90Clockwise($templateJSON['template']['elevation']);
-if($debug) { echo "90 clockwise<br>";}
+
         break;
     case 3:
      $templateJSON['template']['terrain'] = rotateArray90Anticlockwise($templateJSON['template']['terrain']);
 $templateJSON['template']['collisions'] = rotateArray90Anticlockwise($templateJSON['template']['collisions']);
 $templateJSON['template']['elevation'] = rotateArray90Anticlockwise($templateJSON['template']['elevation']);
-if($debug) { echo "90 anticlockwise<br>";}
+
         break;
     case 4:
      $templateJSON['template']['terrain'] = rotateArray180($templateJSON['template']['terrain']);
 $templateJSON['template']['collisions'] = rotateArray180($templateJSON['template']['collisions']);
 $templateJSON['template']['elevation'] = rotateArray180($templateJSON['template']['elevation']);
-if($debug) { echo "180 rotate<br>";}
+
         break;
 }
-if($debug) { echo "original template size: ".$templateNonRotatedWidth.", ".$templateNonRotatedHeight."<br>";}
+
   // determine this template's dimensions:
             $templateHeight = count($templateJSON['template']['terrain']);
             $templateWidth = count($templateJSON['template']['terrain'][0]);
 
-if($debug) { echo "rotated template size: ".$templateWidth.", ".$templateHeight."<br>";}
+
 
 // rotate items, npcs and hotspot positions:
 switch ($rotation) {
   case 2:
   for($j=0;$j<count($templateJSON['template']['npcs']);$j++) {
 $thisNPC = $templateJSON['template']['npcs'][$j];
-if($debug) { echo "npc: before ".$thisNPC['tileX'].", ".$thisNPC['tileY']."<br>";}
+
 $newPosition = rotateCoordinates90Clockwise(array($thisNPC['tileX'], $thisNPC['tileY']),$templateNonRotatedWidth,$templateNonRotatedHeight);
 $templateJSON['template']['npcs'][$j]['tileX'] = $newPosition[0];
 $templateJSON['template']['npcs'][$j]['tileY'] = $newPosition[1];
-if($debug) { echo "npc: after ".$newPosition[0].", ".$newPosition[1]."<br>";}
+
 }
 for($j=0;$j<count($templateJSON['template']['hotspots']);$j++) {
     $thisHotspot = $templateJSON['template']['hotspots'][$j];
@@ -2191,11 +2192,11 @@ for($j=0;$j<count($templateJSON['template']['hotspots']);$j++) {
 }
 for($j=0;$j<count($templateJSON['template']['items']);$j++) {
     $thisItem = $templateJSON['template']['items'][$j];
-      if($debug) {    echo "item: before ".$thisItem['tileX'].", ".$thisItem['tileY']."<br>";}
+   
     $newPosition = rotateCoordinates90Clockwise(array($thisItem['tileX'], $thisItem['tileY']),$templateNonRotatedWidth,$templateNonRotatedHeight);
     $templateJSON['template']['items'][$j]['tileX'] = $newPosition[0];
 $templateJSON['template']['items'][$j]['tileY'] = $newPosition[1];
-if($debug) { echo "item: after ".$newPosition[0].", ".$newPosition[1]."<br>";}
+
 }
   break;
   case 3:
@@ -2214,11 +2215,11 @@ for($j=0;$j<count($templateJSON['template']['hotspots']);$j++) {
 }
 for($j=0;$j<count($templateJSON['template']['items']);$j++) {
     $thisItem = $templateJSON['template']['items'][$j];
-  if($debug) {    echo "item: before ".$thisItem['tileX'].", ".$thisItem['tileY']."<br>";}
+
     $newPosition = rotateCoordinates90Anticlockwise(array($thisItem['tileX'], $thisItem['tileY']),$templateNonRotatedWidth,$templateNonRotatedHeight);
     $templateJSON['template']['items'][$j]['tileX'] = $newPosition[0];
 $templateJSON['template']['items'][$j]['tileY'] = $newPosition[1];
-if($debug) { echo "item: after ".$newPosition[0].", ".$newPosition[1]."<br>";}
+
 }
   break;
   case 4:
@@ -2237,17 +2238,17 @@ for($j=0;$j<count($templateJSON['template']['hotspots']);$j++) {
 }
 for($j=0;$j<count($templateJSON['template']['items']);$j++) {
     $thisItem = $templateJSON['template']['items'][$j];
-  if($debug) {    echo "item: before ".$thisItem['tileX'].", ".$thisItem['tileY']."<br>";}
+
     $newPosition = rotateCoordinates180(array($thisItem['tileX'], $thisItem['tileY']),$templateNonRotatedWidth,$templateNonRotatedHeight);
     $templateJSON['template']['items'][$j]['tileX'] = $newPosition[0];
 $templateJSON['template']['items'][$j]['tileY'] = $newPosition[1];
-if($debug) { echo "item: after ".$newPosition[0].", ".$newPosition[1]."<br>";}
+
 }
   break;
 }
 
 if($flip == 2) {
-  if($debug) {   echo "flip<br>";}
+
 $templateJSON['template']['terrain'] = flipArray($templateJSON['template']['terrain']);
 $templateJSON['template']['collisions'] = flipArray($templateJSON['template']['collisions']);
 $templateJSON['template']['elevation'] = flipArray($templateJSON['template']['elevation']);
@@ -2271,11 +2272,11 @@ for($j=0;$j<count($templateJSON['template']['hotspots']);$j++) {
 }
 for($j=0;$j<count($templateJSON['template']['items']);$j++) {
     $thisItem = $templateJSON['template']['items'][$j];
- if($debug) {    echo "item: before ".$thisItem['tileX'].", ".$thisItem['tileY']."<br>";}
+
     $newPosition = flipCoordinatesHorizontally(array($thisItem['tileX'], $thisItem['tileY']),$templateWidth,$templateHeight);
     $templateJSON['template']['items'][$j]['tileX'] = $newPosition[0];
 $templateJSON['template']['items'][$j]['tileY'] = $newPosition[1];
-if($debug) { echo "item: after ".$newPosition[0].", ".$newPosition[1]."<br>";}
+
 }
 }
 
