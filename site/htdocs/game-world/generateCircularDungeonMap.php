@@ -1890,6 +1890,10 @@ $drawnOffset = 20;
         // 'removed' blank non-walkable tile:
          imagefilledrectangle($outputCanvas,($i)*$drawnTileSize+$drawnOffset,($j)*$drawnTileSize+$drawnOffset,($i+1)*$drawnTileSize+$drawnOffset,($j+1)*$drawnTileSize+$drawnOffset,  imagecolorallocate($outputCanvas, 0, 0, 0));
         break;
+        case "?":
+        // debugging
+            imagefilledrectangle($outputCanvas,($i)*$drawnTileSize+$drawnOffset,($j)*$drawnTileSize+$drawnOffset,($i+1)*$drawnTileSize+$drawnOffset,($j+1)*$drawnTileSize+$drawnOffset,  imagecolorallocate($outputCanvas, 0, 40, 120));
+            break;
         case "d":
         // door
          imagefilledrectangle($outputCanvas,($i)*$drawnTileSize+$drawnOffset,($j)*$drawnTileSize+$drawnOffset,($i+1)*$drawnTileSize+$drawnOffset,($j+1)*$drawnTileSize+$drawnOffset,  imagecolorallocate($outputCanvas, 255, 255, 255));
@@ -2138,7 +2142,8 @@ $flip = 1;
   // determine this template's dimensions:
             $templateNonRotatedHeight = count($templateJSON['template']['terrain']);
             $templateNonRotatedWidth = count($templateJSON['template']['terrain'][0]);
-
+$templateType = $templateJSON['template']['type'];
+$isUniquePerLevel = $templateJSON['template']['uniquePerLevel'];
 if($templateJSON['template']['rotatable']) {
 
 $rotation = mt_rand(1,4);
@@ -2247,6 +2252,32 @@ $templateJSON['template']['items'][$j]['tileY'] = $newPosition[1];
   break;
 }
 
+
+if($templateType == "outer") {
+    // rotate entrance point:
+switch ($rotation) {
+    case 2:
+    $newPosition = rotateCoordinates90Clockwise(array($templateJSON['template']['entranceX'], $templateJSON['template']['entranceY']),$templateNonRotatedWidth,$templateNonRotatedHeight);
+$templateJSON['template']['entranceX'] = $newPosition[0];
+$templateJSON['template']['entranceX'] = $newPosition[1];
+    break;
+    case 3:
+    
+        $newPosition = rotateCoordinates90Anticlockwise(array($templateJSON['template']['entranceX'], $templateJSON['template']['entranceY']),$templateNonRotatedWidth,$templateNonRotatedHeight);
+$templateJSON['template']['entranceX'] = $newPosition[0];
+$templateJSON['template']['entranceX'] = $newPosition[1];
+    break;
+    case 4:
+    
+     $newPosition = rotateCoordinates180(array($templateJSON['template']['entranceX'], $templateJSON['template']['entranceY']),$templateNonRotatedWidth,$templateNonRotatedHeight);
+$templateJSON['template']['entranceX'] = $newPosition[0];
+$templateJSON['template']['entranceX'] = $newPosition[1];
+    break;
+}
+}
+
+
+
 if($flip == 2) {
 
 $templateJSON['template']['terrain'] = flipArray($templateJSON['template']['terrain']);
@@ -2278,6 +2309,13 @@ for($j=0;$j<count($templateJSON['template']['items']);$j++) {
 $templateJSON['template']['items'][$j]['tileY'] = $newPosition[1];
 
 }
+
+if($templateType == "outer") {
+        $newPosition = flipCoordinatesHorizontally(array($templateJSON['template']['entranceX'], $templateJSON['template']['entranceY']),$templateNonRotatedWidth,$templateNonRotatedHeight);
+$templateJSON['template']['entranceX'] = $newPosition[0];
+$templateJSON['template']['entranceX'] = $newPosition[1];
+}
+
 }
 
 
@@ -2290,109 +2328,180 @@ $templateJSON['template']['items'][$j]['tileY'] = $newPosition[1];
 
 
 
-            $templateType = $templateJSON['template']['type'];
-            $isUniquePerLevel = $templateJSON['template']['uniquePerLevel'];
-            $foundRoom = null;
-        
-                if(!in_array($fileToUse, $uniquePerLevelTemplatesUsed)) {
 
-                
-          
+$foundRoom = null;
 
-            if($templateType == "inner") {
-                // find a room big enough:      
-                foreach ($randomDrawnTileRooms as &$thisRoom) {
-                    // make sure it's not already found a room:
-                    if($foundRoom == null) {
-                        $thisRoomsWidth = $thisRoom[2] - $thisRoom[0];
-                        $thisRoomsHeight = $thisRoom[3] - $thisRoom[1];
-                        if($thisRoomsHeight >= $templateHeight) {
-                            if($thisRoomsWidth >= $templateWidth) {
-                              
+if(!in_array($fileToUse, $uniquePerLevelTemplatesUsed)) {
 
 
 
 
-                            $foundRoom = $thisRoom;
+if($templateType == "inner") {
+// find a room big enough:      
+foreach ($randomDrawnTileRooms as &$thisRoom) {
+// make sure it's not already found a room:
+if($foundRoom == null) {
+$thisRoomsWidth = $thisRoom[2] - $thisRoom[0];
+$thisRoomsHeight = $thisRoom[3] - $thisRoom[1];
+if($thisRoomsHeight >= $templateHeight) {
+if($thisRoomsWidth >= $templateWidth) {
+
+
+
+
+
+$foundRoom = $thisRoom;
 $attempts = 0;
 
 do {
-                            // position the template randomly within the available space:
-                            $thisTemplateOffsetX = $foundRoom[0] + mt_rand(0,($thisRoomsWidth-$templateWidth));
-                            $thisTemplateOffsetY = $foundRoom[1] + mt_rand(0,($thisRoomsHeight-$templateHeight));
-                            $overlapsExistingTemplate = false;
-                              // check a template hasn't already been placed here:
-                          
-                            for($j=0;$j<count($templatesPlacedOnThisLevel);$j++) {
-                                if(($thisTemplateOffsetX + $templateWidth) > $templatesPlacedOnThisLevel[$j][0]) {
-                                    if($thisTemplateOffsetX  < $templatesPlacedOnThisLevel[$j][2]) {
-                                        if($thisTemplateOffsetY  < $templatesPlacedOnThisLevel[$j][3]) {
-                                            if(($thisTemplateOffsetY + $templateHeight)  > $templatesPlacedOnThisLevel[$j][1]) {
-                                              $overlapsExistingTemplate = true;
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                            $attempts++;
-                            } while ($overlapsExistingTemplate && $attempts<4);
+// position the template randomly within the available space:
+$thisTemplateOffsetX = $foundRoom[0] + mt_rand(0,($thisRoomsWidth-$templateWidth));
+$thisTemplateOffsetY = $foundRoom[1] + mt_rand(0,($thisRoomsHeight-$templateHeight));
+$overlapsExistingTemplate = false;
+// check a template hasn't already been placed here:
 
-                            if(!$overlapsExistingTemplate) {
-                                array_push($templateOffsetX, $thisTemplateOffsetX);
-                                array_push($templateOffsetY, $thisTemplateOffsetY);
-                                array_push($allTemplateJSON, $templateJSON);
-                                array_push($templatesPlacedOnThisLevel, $foundRoom);
-                                          // plot room
-                                /*
-                                for ($i = 0; $i < $templateWidth; $i++) {
-                                for ($j = 0; $j < $templateHeight; $j++) {
-                                $map[$j+$foundRoom[1]+$thisTemplateOffsetY][$i+$foundRoom[0]+$thisTemplateOffsetX] = "-";
-                                }
-                                }
-                                */
+for($j=0;$j<count($templatesPlacedOnThisLevel);$j++) {
+if(($thisTemplateOffsetX + $templateWidth) > $templatesPlacedOnThisLevel[$j][0]) {
+if($thisTemplateOffsetX  < $templatesPlacedOnThisLevel[$j][2]) {
+if($thisTemplateOffsetY  < $templatesPlacedOnThisLevel[$j][3]) {
+if(($thisTemplateOffsetY + $templateHeight)  > $templatesPlacedOnThisLevel[$j][1]) {
+$overlapsExistingTemplate = true;
+}
+}
+}
+}
+}
+$attempts++;
+} while ($overlapsExistingTemplate && $attempts<4);
 
-                                if($isUniquePerLevel) {
-                                    // don't use it again:
-                                    array_push($uniquePerLevelTemplatesUsed, $fileToUse);
-                                }
+if(!$overlapsExistingTemplate) {
+array_push($templateOffsetX, $thisTemplateOffsetX);
+array_push($templateOffsetY, $thisTemplateOffsetY);
+array_push($allTemplateJSON, $templateJSON);
+array_push($templatesPlacedOnThisLevel, $foundRoom);
+// plot room
+/*
+for ($i = 0; $i < $templateWidth; $i++) {
+for ($j = 0; $j < $templateHeight; $j++) {
+$map[$j+$foundRoom[1]+$thisTemplateOffsetY][$i+$foundRoom[0]+$thisTemplateOffsetX] = "-";
+}
+}
+*/
 
-                                // map JSON from the template across:
-                                for($j=0;$j<count($templateJSON['template']['graphics']);$j++) {
-                                    $templateGraphicsToAppend .= ', '.json_encode($templateJSON['template']['graphics'][$j]);
-                                }
 
-                                for($j=0;$j<count($templateJSON['template']['npcs']);$j++) {
-                                    $thisNPC = $templateJSON['template']['npcs'][$j];
-                                    // map their location:
-                                    $thisNPC['tileX'] += $thisTemplateOffsetX;
-                                    $thisNPC['tileY'] += $thisTemplateOffsetY;
-                                    $templateNPCsToAppend .= json_encode($thisNPC).', ';
-                                }
 
-                                          for($j=0;$j<count($templateJSON['template']['hotspots']);$j++) {
-                                    $thisHotspot = $templateJSON['template']['hotspots'][$j];
-                                    // map their location:
-                                    $thisHotspot['centreX'] += $thisTemplateOffsetX;
-                                    $thisHotspot['centreY'] += $thisTemplateOffsetY;
-                                    $templateHotspotsToAppend .= json_encode($thisHotspot).', ';
-                                }
-                            
+}
+}
+}
+}
+}
+} else {
+    // 'outer' type:
+    
+    
+// check what side the template needs to connect to
+    // http://ae.dev/game-world/generateCircularDungeonMap.php?debug=true&dungeonName=the-barrow-mines&requestedMap=-1&seed=1511559086
+    // john #####
+    $thisEntranceX = $templateJSON['template']['entranceX'];
+    $thisEntranceY = $templateJSON['template']['entranceY'];
+    $sideToConnectTo = "south";
+     
+    if($thisEntranceX == 0) {
+$sideToConnectTo = "east";
+    }
+     if($thisEntranceX == $templateWidth) {
+$sideToConnectTo = "west";
+    }
+    if($thisEntranceY == $templateHeight) {
+$sideToConnectTo = "north";
+    }
 
-                                for($j=0;$j<count($templateJSON['template']['items']);$j++) {
-                                    $thisItem = $templateJSON['template']['items'][$j];
-                                    // map their location:
-                                    $thisItem['tileX'] += $thisTemplateOffsetX;
-                                    $thisItem['tileY'] += $thisTemplateOffsetY;
-                                    $templateItemsToAppend .= json_encode($thisItem).', ';
-                                }
-                           
-                            }
-                            }
-                        }
-                    }
-                }
-            }
-        }
+//echo $sideToConnectTo;
+//echo $map[0][0]."<br>";
+// loop through rooms, find a corner on the relevant side that is adajcent to the black, 'empty' tile
+    foreach ($randomDrawnTileRooms as &$thisRoom) {
+
+switch ($sideToConnectTo) {
+case "south":
+//var_dump($thisRoom);echo"<br>";
+// try a random corner ####
+//echo $map[$thisRoom[1]-2][$thisRoom[0]]."<br>";
+if($map[$thisRoom[1]-2][$thisRoom[0]-1] == "-") {
+$foundRoom = $thisRoom;
+
+}
+
+$thisTemplateOffsetX = -1;
+$thisTemplateOffsetY = 0-$templateHeight;
+
+/*
+array_push($templateOffsetX, $thisTemplateOffsetX);
+array_push($templateOffsetY, $thisTemplateOffsetY);
+array_push($allTemplateJSON, $templateJSON);
+array_push($templatesPlacedOnThisLevel, $foundRoom);
+*/
+
+
+break;
+
+}
+
+    }
+
+
+
+
+
+// plot room
+for ($i = 0; $i < $templateWidth; $i++) {
+for ($j = 0; $j < $templateHeight; $j++) {
+$map[$j+$foundRoom[1]+$thisTemplateOffsetY][$i+$foundRoom[0]+$thisTemplateOffsetX] = "?";
+}
+}
+
+
+
+
+}
+
+if($isUniquePerLevel) {
+// don't use it again:
+array_push($uniquePerLevelTemplatesUsed, $fileToUse);
+}
+
+// map JSON from the template across:
+for($j=0;$j<count($templateJSON['template']['graphics']);$j++) {
+$templateGraphicsToAppend .= ', '.json_encode($templateJSON['template']['graphics'][$j]);
+}
+
+for($j=0;$j<count($templateJSON['template']['npcs']);$j++) {
+$thisNPC = $templateJSON['template']['npcs'][$j];
+// map their location:
+$thisNPC['tileX'] += $thisTemplateOffsetX;
+$thisNPC['tileY'] += $thisTemplateOffsetY;
+$templateNPCsToAppend .= json_encode($thisNPC).', ';
+}
+
+for($j=0;$j<count($templateJSON['template']['hotspots']);$j++) {
+$thisHotspot = $templateJSON['template']['hotspots'][$j];
+// map their location:
+$thisHotspot['centreX'] += $thisTemplateOffsetX;
+$thisHotspot['centreY'] += $thisTemplateOffsetY;
+$templateHotspotsToAppend .= json_encode($thisHotspot).', ';
+}
+
+
+for($j=0;$j<count($templateJSON['template']['items']);$j++) {
+$thisItem = $templateJSON['template']['items'][$j];
+// map their location:
+$thisItem['tileX'] += $thisTemplateOffsetX;
+$thisItem['tileY'] += $thisTemplateOffsetY;
+$templateItemsToAppend .= json_encode($thisItem).', ';
+}
+
+
+
+}
         }
             // remove last comma:
                             $templateNPCsToAppend = rtrim($templateNPCsToAppend, ', ');
@@ -2606,7 +2715,7 @@ $map[$k][$j] = ".";
 
 
 outputTileMap();
-findRelevantTemplates();
+
 
 
 
@@ -2619,7 +2728,7 @@ findRelevantTemplates();
   }
   }
 
-
+findRelevantTemplates();
 
 
 outputTileMap();
