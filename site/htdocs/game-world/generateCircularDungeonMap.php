@@ -66,6 +66,8 @@ ISSUES:
 http://ae.dev/game-world/generateCircularDungeonMap.php?debug=true&seed=1510610103 - double thickness walls look odd
 http://ae.dev/game-world/generateCircularDungeonMap.php?debug=true&dungeonName=the-barrow-mines&requestedMap=-1&seed=1510832016 - as the grid is drawn, it needs to check no row or column offsets overlap
 
+http://ae.dev/game-world/generateCircularDungeonMap.php?debug=true&dungeonName=the-barrow-mines&requestedMap=-1&seed=1511804557 - west template connection, but not rotated
+
 ---- */
 
 // avoid script time out:
@@ -2221,17 +2223,17 @@ function rotateCoordinates90Anticlockwise($position, $templateWidth, $templateHe
                     // rotate entrance point:
                     switch ($rotation) {
                         case 2:
-                            $newPosition = rotateCoordinates90Clockwise(array($templateJSON['template']['entranceX'], $templateJSON['template']['entranceY']), $templateNonRotatedWidth, $templateNonRotatedHeight);
+                            $newPosition = rotateCoordinates90Clockwise(array($templateJSON['template']['entranceX'], $templateJSON['template']['entranceY']), $templateWidth, $templateHeight);
                             $templateJSON['template']['entranceX'] = $newPosition[0];
                             $templateJSON['template']['entranceY'] = $newPosition[1];
                             break;
                         case 3:
-                            $newPosition = rotateCoordinates90Anticlockwise(array($templateJSON['template']['entranceX'], $templateJSON['template']['entranceY']), $templateNonRotatedWidth, $templateNonRotatedHeight);
+                            $newPosition = rotateCoordinates90Anticlockwise(array($templateJSON['template']['entranceX'], $templateJSON['template']['entranceY']), $templateWidth, $templateHeight);
                             $templateJSON['template']['entranceX'] = $newPosition[0];
                             $templateJSON['template']['entranceY'] = $newPosition[1];
                             break;
                         case 4:
-                            $newPosition = rotateCoordinates180(array($templateJSON['template']['entranceX'], $templateJSON['template']['entranceY']), $templateNonRotatedWidth, $templateNonRotatedHeight);
+                            $newPosition = rotateCoordinates180(array($templateJSON['template']['entranceX'], $templateJSON['template']['entranceY']), $templateWidth, $templateHeight);
                             $templateJSON['template']['entranceX'] = $newPosition[0];
                             $templateJSON['template']['entranceY'] = $newPosition[1];
                             break;
@@ -2262,7 +2264,7 @@ function rotateCoordinates90Anticlockwise($position, $templateWidth, $templateHe
                         $templateJSON['template']['items'][$j]['tileY'] = $newPosition[1];
                     }
                     if ($templateType == "outer") {
-                        $newPosition = flipCoordinatesHorizontally(array($templateJSON['template']['entranceX'], $templateJSON['template']['entranceY']), $templateNonRotatedWidth, $templateNonRotatedHeight);
+                        $newPosition = flipCoordinatesHorizontally(array($templateJSON['template']['entranceX'], $templateJSON['template']['entranceY']), $templateWidth, $templateHeight);
                         $templateJSON['template']['entranceX'] = $newPosition[0];
                         $templateJSON['template']['entranceY'] = $newPosition[1];
                     }
@@ -2329,8 +2331,8 @@ function rotateCoordinates90Anticlockwise($position, $templateWidth, $templateHe
                     // check what side the template needs to connect to
                     $thisEntranceX = $templateJSON['template']['entranceX'];
                     $thisEntranceY = $templateJSON['template']['entranceY'];
-                    //echo $thisEntranceX.",".$thisEntranceY."<br>";
-                    //echo $templateWidth." x ".$templateHeight."<br>";
+                    echo $thisEntranceX.",".$thisEntranceY."<br>";
+                    echo $templateWidth." x ".$templateHeight."<br>";
                     $sideToConnectTo = "south";
                     if ($thisEntranceX == 0) {
                         $sideToConnectTo = "east";
@@ -2342,7 +2344,7 @@ function rotateCoordinates90Anticlockwise($position, $templateWidth, $templateHe
                         $sideToConnectTo = "north";
                     }
                     // loop through rooms, find a corner on the relevant side that is adajcent to the black, 'empty' tile
-                    //echo $sideToConnectTo;
+                    echo $sideToConnectTo;
                     foreach($randomDrawnTileRooms as & $thisRoom) {
                         if ($foundRoom == null) {
                             switch ($sideToConnectTo) {
