@@ -57,7 +57,7 @@ water or lava courses (?)
 when placing items, place them clear of templates
 offset doors (and connecting corridors)
 
-when adding template graphics, check if the same filename has already been added and use that reference instead. 
+when adding template graphics, check if the same filename has already been added and use that reference instead to avoid duplicating images
 
 
 
@@ -2280,12 +2280,12 @@ function rotateCoordinates90Anticlockwise($position, $templateWidth, $templateHe
                             $thisRoomsHeight = $thisRoom[3] - $thisRoom[1];
                             if ($thisRoomsHeight >= $templateHeight) {
                                 if ($thisRoomsWidth >= $templateWidth) {
-                                    $foundRoom = $thisRoom;
+                                   
                                     $attempts = 0;
                                     do {
                                         // position the template randomly within the available space:
-                                        $thisTemplateOffsetX = $foundRoom[0] + mt_rand(0, ($thisRoomsWidth - $templateWidth));
-                                        $thisTemplateOffsetY = $foundRoom[1] + mt_rand(0, ($thisRoomsHeight - $templateHeight));
+                                        $thisTemplateOffsetX = $thisRoom[0] + mt_rand(0, ($thisRoomsWidth - $templateWidth));
+                                        $thisTemplateOffsetY = $thisRoom[1] + mt_rand(0, ($thisRoomsHeight - $templateHeight));
                                         $overlapsExistingTemplate = false;
                                         // check a template hasn't already been placed here:
                                         for ($j = 0; $j < count($templatesPlacedOnThisLevel); $j++) {
@@ -2302,6 +2302,7 @@ function rotateCoordinates90Anticlockwise($position, $templateWidth, $templateHe
                                         $attempts++;
                                     } while ($overlapsExistingTemplate && $attempts < 4);
                                     if (!$overlapsExistingTemplate) {
+                                         $foundRoom = $thisRoom;
                                         array_push($templateOffsetX, $thisTemplateOffsetX);
                                         array_push($templateOffsetY, $thisTemplateOffsetY);
                                         array_push($allTemplateJSON, $templateJSON);
@@ -2351,44 +2352,73 @@ function rotateCoordinates90Anticlockwise($position, $templateWidth, $templateHe
                                     if(mt_rand(1,2) == 2) {
                                         $whichEdge = "bottom";
                                     }
-                                    // make sure EVERY tile that will be under the template is empty ####
-                                    // http://ae.dev/game-world/generateCircularDungeonMap.php?debug=true&dungeonName=the-barrow-mines&requestedMap=-1&seed=1511814333
+                            
+         
                                     // john #####
-                                    $testPointX = $thisRoom[0] - $templateWidth;
+                                    $startTestPointX = $thisRoom[0] - $templateWidth;
                                     if($whichEdge == "top") {
-                                        $testPointY = $thisRoom[1]-1;
+                                        $startTestPointY = $thisRoom[1]-1;
                                     } else {
-                                        $testPointY = $thisRoom[3] - $templateHeight +1;
+                                        $startTestPointY = $thisRoom[3] - $templateHeight +1;
                                     }
-                                    
-                                     if(isset($map[$testPointY][$testPointX])){
-                                        if ($map[$testPointY][$testPointX] == "-") {
-                                            $foundRoom = $thisRoom;
-                                            $thisTemplateOffsetX = $foundRoom[0] - $templateWidth;
-                                            if($whichEdge == "top") {
-                                                $thisTemplateOffsetY = $foundRoom[1]-1;
+                                    $isBlocked = false;
+                                    // -1 on the width as don't need to test the overlapping wall as it'll be over-written:
+                                    for ($i = 0; $i < $templateWidth-1; $i++) {
+                                        for ($j = 0; $j < $templateHeight; $j++) {
+                                            if(isset($map[$startTestPointY+$j][$startTestPointX+$i])){
+                                                if ($map[$startTestPointY+$j][$startTestPointX+$i] != "-") {
+                                                    $isBlocked = true;
+                                                }
                                             } else {
-                                                $thisTemplateOffsetY = $foundRoom[3] - $templateHeight +1;
-                                            }       
+                                                $isBlocked = true;
+                                            }
                                         }
                                     }
+                                    if(!$isBlocked) {
+                                        $foundRoom = $thisRoom;
+                                        $thisTemplateOffsetX = $foundRoom[0] - $templateWidth;
+                                        if($whichEdge == "top") {
+                                            $thisTemplateOffsetY = $foundRoom[1]-1;
+                                        } else {
+                                            $thisTemplateOffsetY = $foundRoom[3] - $templateHeight +1;
+                                        }     
+                                    }
+
+
                                 break;
                             }
                             if ($foundRoom != null) {
-                                array_push($templateOffsetX, $thisTemplateOffsetX);
-                                array_push($templateOffsetY, $thisTemplateOffsetY);
-                                array_push($allTemplateJSON, $templateJSON);
-                                array_push($templatesPlacedOnThisLevel, $foundRoom);
-                                // plot room
-                                for ($i = 0; $i < $templateWidth; $i++) {
-                                    for ($j = 0; $j < $templateHeight; $j++) {
-                                        if($templateJSON['template']['collisions'][$j][$i] == 1) {
-                                            $map[$j + $thisTemplateOffsetY][$i + $thisTemplateOffsetX] = "#";
-                                        } else {
-                                            $map[$j + $thisTemplateOffsetY][$i + $thisTemplateOffsetX] = ".";
+                                // check it doesn't overlap an existing template:
+                                $overlapsExistingTemplate = false;          
+                                for ($j = 0; $j < count($templatesPlacedOnThisLevel); $j++) {
+                                    if (($thisTemplateOffsetX + $templateWidth) > $templatesPlacedOnThisLevel[$j][0]) {
+                                        if ($thisTemplateOffsetX < $templatesPlacedOnThisLevel[$j][2]) {
+                                            if ($thisTemplateOffsetY < $templatesPlacedOnThisLevel[$j][3]) {
+                                                if (($thisTemplateOffsetY + $templateHeight) > $templatesPlacedOnThisLevel[$j][1]) {
+                                                    $overlapsExistingTemplate = true;
+                                                }
+                                            }
                                         }
-                                        
                                     }
+                                }
+                                if(!$overlapsExistingTemplate) {
+                                    array_push($templateOffsetX, $thisTemplateOffsetX);
+                                    array_push($templateOffsetY, $thisTemplateOffsetY);
+                                    array_push($allTemplateJSON, $templateJSON);
+                                    array_push($templatesPlacedOnThisLevel, $foundRoom);
+                                    // plot room
+                                    for ($i = 0; $i < $templateWidth; $i++) {
+                                        for ($j = 0; $j < $templateHeight; $j++) {
+                                            if($templateJSON['template']['collisions'][$j][$i] == 1) {
+                                                $map[$j + $thisTemplateOffsetY][$i + $thisTemplateOffsetX] = "#";
+                                            } else {
+                                                $map[$j + $thisTemplateOffsetY][$i + $thisTemplateOffsetX] = ".";
+                                            }
+                                            
+                                        }
+                                    }
+                                } else {
+                                    $foundRoom = null;
                                 }
                             }
                         }   
