@@ -8,6 +8,7 @@ $dungeonDetails = array(
 
 'the-barrow-mines' => array(
 'graphics' => '{"src": "blank.png", "centreX": 24, "centreY": 12},{"src": "block.png","centreX": 24,"centreY": 45},{"src": "red-block.png","centreX": 24,"centreY": 45},{"src": "grey-block.png","centreX": 24,"centreY": 45}',
+'underlyingGridLayout' => 'offset-grid',
 'possibleItems' => '',
 'suitableTemplates' => array(
 	// template name => earliest level it can be encountered on, latest level it can be encountered on (INF or numeric):
