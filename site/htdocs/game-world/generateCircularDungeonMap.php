@@ -2223,17 +2223,17 @@ function rotateCoordinates90Anticlockwise($position, $templateWidth, $templateHe
                         case 2:
                             $newPosition = rotateCoordinates90Clockwise(array($templateJSON['template']['entranceX'], $templateJSON['template']['entranceY']), $templateNonRotatedWidth, $templateNonRotatedHeight);
                             $templateJSON['template']['entranceX'] = $newPosition[0];
-                            $templateJSON['template']['entranceX'] = $newPosition[1];
+                            $templateJSON['template']['entranceY'] = $newPosition[1];
                             break;
                         case 3:
                             $newPosition = rotateCoordinates90Anticlockwise(array($templateJSON['template']['entranceX'], $templateJSON['template']['entranceY']), $templateNonRotatedWidth, $templateNonRotatedHeight);
                             $templateJSON['template']['entranceX'] = $newPosition[0];
-                            $templateJSON['template']['entranceX'] = $newPosition[1];
+                            $templateJSON['template']['entranceY'] = $newPosition[1];
                             break;
                         case 4:
                             $newPosition = rotateCoordinates180(array($templateJSON['template']['entranceX'], $templateJSON['template']['entranceY']), $templateNonRotatedWidth, $templateNonRotatedHeight);
                             $templateJSON['template']['entranceX'] = $newPosition[0];
-                            $templateJSON['template']['entranceX'] = $newPosition[1];
+                            $templateJSON['template']['entranceY'] = $newPosition[1];
                             break;
                     }
                 }
@@ -2264,7 +2264,7 @@ function rotateCoordinates90Anticlockwise($position, $templateWidth, $templateHe
                     if ($templateType == "outer") {
                         $newPosition = flipCoordinatesHorizontally(array($templateJSON['template']['entranceX'], $templateJSON['template']['entranceY']), $templateNonRotatedWidth, $templateNonRotatedHeight);
                         $templateJSON['template']['entranceX'] = $newPosition[0];
-                        $templateJSON['template']['entranceX'] = $newPosition[1];
+                        $templateJSON['template']['entranceY'] = $newPosition[1];
                     }
                 }
             }
@@ -2326,92 +2326,112 @@ function rotateCoordinates90Anticlockwise($position, $templateWidth, $templateHe
                     // 'outer' type:
 
                     // check what side the template needs to connect to
-                    // http://ae.dev/game-world/generateCircularDungeonMap.php?debug=true&dungeonName=the-barrow-mines&requestedMap=-1&seed=1511559086
-                    // john #####
                     $thisEntranceX = $templateJSON['template']['entranceX'];
                     $thisEntranceY = $templateJSON['template']['entranceY'];
+                    //echo $thisEntranceX.",".$thisEntranceY."<br>";
+                    //echo $templateWidth." x ".$templateHeight."<br>";
                     $sideToConnectTo = "south";
                     if ($thisEntranceX == 0) {
                         $sideToConnectTo = "east";
                     }
-                    if ($thisEntranceX == $templateWidth) {
+                    if ($thisEntranceX == $templateWidth-1) {
                         $sideToConnectTo = "west";
                     }
-                    if ($thisEntranceY == $templateHeight) {
+                    if ($thisEntranceY == $templateHeight-1) {
                         $sideToConnectTo = "north";
                     }
-                    //echo $sideToConnectTo;
-                    //echo $map[0][0]."<br>";
                     // loop through rooms, find a corner on the relevant side that is adajcent to the black, 'empty' tile
+                    //echo $sideToConnectTo;
                     foreach($randomDrawnTileRooms as & $thisRoom) {
                         if ($foundRoom == null) {
                             switch ($sideToConnectTo) {
-                                case "south":
-                                    //var_dump($thisRoom);echo"<br>";
-                                    // try a random corner ####
-                                    //echo $map[$thisRoom[1]-2][$thisRoom[0]]."<br>";
-                                    if ($map[$thisRoom[1] - 2][$thisRoom[0] - 1] == "-") {
-                                        $foundRoom = $thisRoom;
-                                        $thisTemplateOffsetX = $foundRoom[0] - 1;
-                                        $thisTemplateOffsetY = $foundRoom[1] - $templateHeight;  
-                                        array_push($templateOffsetX, $thisTemplateOffsetX);
-                                        array_push($templateOffsetY, $thisTemplateOffsetY);
-                                        array_push($allTemplateJSON, $templateJSON);
-                                        array_push($templatesPlacedOnThisLevel, $foundRoom);
-                                        // plot room
-                                        for ($i = 0; $i < $templateWidth; $i++) {
-                                            for ($j = 0; $j < $templateHeight; $j++) {
-                                                if($templateJSON['template']['collisions'][$j][$i] == 1) {
-                                                    $map[$j + $thisTemplateOffsetY][$i + $thisTemplateOffsetX] = "#";
-                                                } else {
-                                                    $map[$j + $thisTemplateOffsetY][$i + $thisTemplateOffsetX] = ".";
-                                                }
-                                                
-                                            }
+                                case "west":
+                                    // pick randomly from top or bottom edge:
+                                    $whichEdge = "top";
+                                    if(mt_rand(1,2) == 2) {
+                                        $whichEdge = "bottom";
+                                    }
+                                    // make sure EVERY tile that will be under the template is empty ####
+                                    // http://ae.dev/game-world/generateCircularDungeonMap.php?debug=true&dungeonName=the-barrow-mines&requestedMap=-1&seed=1511814333
+                                    // john #####
+                                    $testPointX = $thisRoom[0] - $templateWidth;
+                                    if($whichEdge == "top") {
+                                        $testPointY = $thisRoom[1]-1;
+                                    } else {
+                                        $testPointY = $thisRoom[3] - $templateHeight +1;
+                                    }
+                                    
+                                     if(isset($map[$testPointY][$testPointX])){
+                                        if ($map[$testPointY][$testPointX] == "-") {
+                                            $foundRoom = $thisRoom;
+                                            $thisTemplateOffsetX = $foundRoom[0] - $templateWidth;
+                                            if($whichEdge == "top") {
+                                                $thisTemplateOffsetY = $foundRoom[1]-1;
+                                            } else {
+                                                $thisTemplateOffsetY = $foundRoom[3] - $templateHeight +1;
+                                            }       
                                         }
                                     }
-                                    break;
+                                break;
+                            }
+                            if ($foundRoom != null) {
+                                array_push($templateOffsetX, $thisTemplateOffsetX);
+                                array_push($templateOffsetY, $thisTemplateOffsetY);
+                                array_push($allTemplateJSON, $templateJSON);
+                                array_push($templatesPlacedOnThisLevel, $foundRoom);
+                                // plot room
+                                for ($i = 0; $i < $templateWidth; $i++) {
+                                    for ($j = 0; $j < $templateHeight; $j++) {
+                                        if($templateJSON['template']['collisions'][$j][$i] == 1) {
+                                            $map[$j + $thisTemplateOffsetY][$i + $thisTemplateOffsetX] = "#";
+                                        } else {
+                                            $map[$j + $thisTemplateOffsetY][$i + $thisTemplateOffsetX] = ".";
+                                        }
+                                        
+                                    }
+                                }
                             }
                         }   
                     }
                 }
+                if ($foundRoom != null) {
+                    if ($isUniquePerLevel) {
+                        // don't use it again:
+                        array_push($uniquePerLevelTemplatesUsed, $fileToUse);
+                    }
 
-                if ($isUniquePerLevel) {
-                    // don't use it again:
-                    array_push($uniquePerLevelTemplatesUsed, $fileToUse);
-                }
+                    // map JSON from the template across:
+                    for ($j = 0; $j < count($templateJSON['template']['graphics']); $j++) {
+                        $templateGraphicsToAppend .= ', '.json_encode($templateJSON['template']['graphics'][$j]);
+                    }
 
-                // map JSON from the template across:
-                for ($j = 0; $j < count($templateJSON['template']['graphics']); $j++) {
-                    $templateGraphicsToAppend .= ', '.json_encode($templateJSON['template']['graphics'][$j]);
-                }
+                    for ($j = 0; $j < count($templateJSON['template']['npcs']); $j++) {
+                        $thisNPC = $templateJSON['template']['npcs'][$j];
+                        // map their location:
+                        $thisNPC['tileX'] += $thisTemplateOffsetX;
+                        $thisNPC['tileY'] += $thisTemplateOffsetY;
+                        $templateNPCsToAppend .= json_encode($thisNPC).
+                        ', ';
+                    }
 
-                for ($j = 0; $j < count($templateJSON['template']['npcs']); $j++) {
-                    $thisNPC = $templateJSON['template']['npcs'][$j];
-                    // map their location:
-                    $thisNPC['tileX'] += $thisTemplateOffsetX;
-                    $thisNPC['tileY'] += $thisTemplateOffsetY;
-                    $templateNPCsToAppend .= json_encode($thisNPC).
-                    ', ';
-                }
-
-                for ($j = 0; $j < count($templateJSON['template']['hotspots']); $j++) {
-                    $thisHotspot = $templateJSON['template']['hotspots'][$j];
-                    // map their location:
-                    $thisHotspot['centreX'] += $thisTemplateOffsetX;
-                    $thisHotspot['centreY'] += $thisTemplateOffsetY;
-                    $templateHotspotsToAppend .= json_encode($thisHotspot).
-                    ', ';
-                }
+                    for ($j = 0; $j < count($templateJSON['template']['hotspots']); $j++) {
+                        $thisHotspot = $templateJSON['template']['hotspots'][$j];
+                        // map their location:
+                        $thisHotspot['centreX'] += $thisTemplateOffsetX;
+                        $thisHotspot['centreY'] += $thisTemplateOffsetY;
+                        $templateHotspotsToAppend .= json_encode($thisHotspot).
+                        ', ';
+                    }
 
 
-                for ($j = 0; $j < count($templateJSON['template']['items']); $j++) {
-                    $thisItem = $templateJSON['template']['items'][$j];
-                    // map their location:
-                    $thisItem['tileX'] += $thisTemplateOffsetX;
-                    $thisItem['tileY'] += $thisTemplateOffsetY;
-                    $templateItemsToAppend .= json_encode($thisItem).
-                    ', ';
+                    for ($j = 0; $j < count($templateJSON['template']['items']); $j++) {
+                        $thisItem = $templateJSON['template']['items'][$j];
+                        // map their location:
+                        $thisItem['tileX'] += $thisTemplateOffsetX;
+                        $thisItem['tileY'] += $thisTemplateOffsetY;
+                        $templateItemsToAppend .= json_encode($thisItem).
+                        ', ';
+                    }
                 }
             }
         }
