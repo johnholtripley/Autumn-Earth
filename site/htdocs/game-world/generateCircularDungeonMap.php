@@ -57,8 +57,6 @@ water or lava courses (?)
 when placing items, place them clear of templates
 offset doors (and connecting corridors)
 
-when adding template graphics, check if the same filename has already been added and use that reference instead to avoid duplicating images
-
 
 
 
@@ -1714,17 +1712,24 @@ $collisions = json_decode('{'.$collisionsString.'}', true);
 $terrain = json_decode('{'.$terrainString.'}', true);
 $elevations = json_decode('{'.$elevationString.'}', true);
 
-$numberOfGraphicsAlreadyPlaced = count(json_decode('['.$dungeonDetails[$dungeonName]['graphics'].']'));
 
 
 
+$graphicsToAdd = array();
+$graphicsBeingUsedForThisMap = json_decode('['.$dungeonDetails[$dungeonName]['graphics'].']');
+for ($i=0;$i<count($graphicsBeingUsedForThisMap);$i++) {
+$graphicsToAdd[$graphicsBeingUsedForThisMap[$i]->src] = $i;
 
+}
+
+$templateGraphicsToAppend = '';
 
 
 for ($t = 0; $t < count($allTemplateJSON); $t++) {
 
 $templateHeight = count($allTemplateJSON[$t]['template']['terrain']);
 $templateWidth = count($allTemplateJSON[$t]['template']['terrain'][0]);
+$graphicsBeingUsedForThisTemplate = $allTemplateJSON[$t]['template']['graphics'];
 //echo $templateOffsetX[$t].", ".$templateOffsetY[$t]."<br>";
 //echo $templateWidth.", ".$templateHeight."<br>";
 for ($i = 0; $i < $templateHeight; $i++) {
@@ -1734,8 +1739,24 @@ for ($i = 0; $i < $templateHeight; $i++) {
         $terrain['terrain'][$i+$templateOffsetY[$t]][$j+$templateOffsetX[$t]] = "*";
       
     } else {
-      
-        $terrain['terrain'][$i+$templateOffsetY[$t]][$j+$templateOffsetX[$t]] = $numberOfGraphicsAlreadyPlaced + $allTemplateJSON[$t]['template']['terrain'][$i][$j];
+      // check if the same filename has already been added and use that reference instead to avoid duplicating images:
+
+
+
+if(array_key_exists(($graphicsBeingUsedForThisTemplate[($allTemplateJSON[$t]['template']['terrain'][$i][$j])]['src']),$graphicsToAdd)) {
+
+    // already being used, so use the reference already held:
+$terrain['terrain'][$i+$templateOffsetY[$t]][$j+$templateOffsetX[$t]] = $graphicsToAdd[($graphicsBeingUsedForThisTemplate[($allTemplateJSON[$t]['template']['terrain'][$i][$j])]['src'])];
+} else {
+// add and store for later:
+    $numberOfGraphicsSoFar = count($graphicsToAdd);
+   $terrain['terrain'][$i+$templateOffsetY[$t]][$j+$templateOffsetX[$t]] = $numberOfGraphicsSoFar;
+
+   $templateGraphicsToAppend .= ', '.json_encode($graphicsBeingUsedForThisTemplate[$allTemplateJSON[$t]['template']['terrain'][$i][$j]]);
+}
+
+
+        
     }
     $collisions['collisions'][$i+$templateOffsetY[$t]][$j+$templateOffsetX[$t]] = $allTemplateJSON[$t]['template']['collisions'][$i][$j];
     $elevation['elevation'][$i+$templateOffsetY[$t]][$j+$templateOffsetX[$t]] = $allTemplateJSON[$t]['template']['elevation'][$i][$j];
@@ -1743,7 +1764,7 @@ for ($i = 0; $i < $templateHeight; $i++) {
 }
 
 
-$numberOfGraphicsAlreadyPlaced += count($allTemplateJSON[$t]['template']['graphics']);
+
 
 }
 
@@ -2331,8 +2352,8 @@ function rotateCoordinates90Anticlockwise($position, $templateWidth, $templateHe
                     // check what side the template needs to connect to
                     $thisEntranceX = $templateJSON['template']['entranceX'];
                     $thisEntranceY = $templateJSON['template']['entranceY'];
-                    echo $thisEntranceX.",".$thisEntranceY."<br>";
-                    echo $templateWidth." x ".$templateHeight."<br>";
+                //    echo $thisEntranceX.",".$thisEntranceY."<br>";
+                //    echo $templateWidth." x ".$templateHeight."<br>";
                     $sideToConnectTo = "south";
                     if ($thisEntranceX == 0) {
                         $sideToConnectTo = "east";
@@ -2344,7 +2365,7 @@ function rotateCoordinates90Anticlockwise($position, $templateWidth, $templateHe
                         $sideToConnectTo = "north";
                     }
                     // loop through rooms, find a corner on the relevant side that is adajcent to the black, 'empty' tile
-                    echo $sideToConnectTo;
+                //    echo $sideToConnectTo;
                     foreach($randomDrawnTileRooms as & $thisRoom) {
                         if ($foundRoom == null) {
                             switch ($sideToConnectTo) {
@@ -2433,9 +2454,11 @@ function rotateCoordinates90Anticlockwise($position, $templateWidth, $templateHe
                     }
 
                     // map JSON from the template across:
+                    /*
                     for ($j = 0; $j < count($templateJSON['template']['graphics']); $j++) {
                         $templateGraphicsToAppend .= ', '.json_encode($templateJSON['template']['graphics'][$j]);
                     }
+                    */
 
                     for ($j = 0; $j < count($templateJSON['template']['npcs']); $j++) {
                         $thisNPC = $templateJSON['template']['npcs'][$j];
