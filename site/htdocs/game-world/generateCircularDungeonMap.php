@@ -2361,35 +2361,31 @@ function rotateCoordinates90Anticlockwise($position, $templateWidth, $templateHe
                     if ($thisEntranceX == $templateWidth-1) {
                         $sideToConnectTo = "west";
                     }
-                    if ($thisEntranceY == $templateHeight-1) {
+                  
+                    if ($thisEntranceY == $templateHeight-2) {
                         $sideToConnectTo = "north";
                     }
                     // loop through rooms, find a corner on the relevant side that is adajcent to the black, 'empty' tile
-                //    echo $sideToConnectTo;
+                    echo "<hr>".$sideToConnectTo;
                     foreach($randomDrawnTileRooms as & $thisRoom) {
                         if ($foundRoom == null) {
                             switch ($sideToConnectTo) {
                                 case "west":
                                     // pick randomly from top or bottom edge:
-                                    $whichEdge = "top";
+                                    $thisTemplateOffsetY = $thisRoom[1]-1;
                                     if(mt_rand(1,2) == 2) {
-                                        $whichEdge = "bottom";
+                                        $thisTemplateOffsetY = $thisRoom[3] - $templateHeight +1;
+                                         if($thisTemplateOffsetY<($foundRoom[1]-1)) {
+                                        $thisTemplateOffsetY = $thisRoom[1]-1;
                                     }
-                            
-         
-                                    // john #####
-                                    $startTestPointX = $thisRoom[0] - $templateWidth;
-                                    if($whichEdge == "top") {
-                                        $startTestPointY = $thisRoom[1]-1;
-                                    } else {
-                                        $startTestPointY = $thisRoom[3] - $templateHeight +1;
                                     }
+                                    $thisTemplateOffsetX = $thisRoom[0] - $templateWidth;
                                     $isBlocked = false;
                                     // -1 on the width as don't need to test the overlapping wall as it'll be over-written:
                                     for ($i = 0; $i < $templateWidth-1; $i++) {
                                         for ($j = 0; $j < $templateHeight; $j++) {
-                                            if(isset($map[$startTestPointY+$j][$startTestPointX+$i])){
-                                                if ($map[$startTestPointY+$j][$startTestPointX+$i] != "-") {
+                                            if(isset($map[$thisTemplateOffsetY+$j][$thisTemplateOffsetX+$i])){
+                                                if ($map[$thisTemplateOffsetY+$j][$thisTemplateOffsetX+$i] != "-") {
                                                     $isBlocked = true;
                                                 }
                                             } else {
@@ -2399,15 +2395,99 @@ function rotateCoordinates90Anticlockwise($position, $templateWidth, $templateHe
                                     }
                                     if(!$isBlocked) {
                                         $foundRoom = $thisRoom;
-                                        $thisTemplateOffsetX = $foundRoom[0] - $templateWidth;
-                                        if($whichEdge == "top") {
-                                            $thisTemplateOffsetY = $foundRoom[1]-1;
-                                        } else {
-                                            $thisTemplateOffsetY = $foundRoom[3] - $templateHeight +1;
-                                        }     
                                     }
 
 
+                                break;
+                                case "east":
+                                $thisTemplateOffsetY = $thisRoom[1]-1;
+                                if(mt_rand(1,2) == 2) {
+                                    $thisTemplateOffsetY = $thisRoom[3] - $templateHeight +1;
+                                      if($thisTemplateOffsetY<($foundRoom[1]-1)) {
+                                        $thisTemplateOffsetY = $thisRoom[1]-1;
+                                    }
+                                }
+                                $thisTemplateOffsetX = $thisRoom[2];
+                                $isBlocked = false;
+                                // 1 on the width as don't need to test the overlapping wall as it'll be over-written:
+                                for ($i = 1; $i < $templateWidth; $i++) {
+                                    for ($j = 0; $j < $templateHeight; $j++) {
+                                        if(isset($map[$thisTemplateOffsetY+$j][$thisTemplateOffsetX+$i])){
+                                            if ($map[$thisTemplateOffsetY+$j][$thisTemplateOffsetX+$i] != "-") {
+                                                $isBlocked = true;
+                                            }
+                                        } else {
+                                            $isBlocked = true;
+                                        }
+                                    }
+                                }
+                                 if(!$isBlocked) {
+                                    $foundRoom = $thisRoom;
+                                   
+                                }
+                                
+                                break;
+                                case "south":
+                                $thisTemplateOffsetX = $thisRoom[0]-1;
+                                if(mt_rand(1,2) == 2) {
+                                    $thisTemplateOffsetX = $thisRoom[2]-$templateWidth+1;
+                                    if($thisTemplateOffsetX<$thisRoom[0]) {
+                                        $thisTemplateOffsetX = $thisRoom[0]-1;
+                                    }
+                                }
+                                $thisTemplateOffsetY = $thisRoom[3];
+                                $isBlocked = false;
+// -1 on the width so it can nudge against neighbouring rooms - eg. http://ae.dev/game-world/generateCircularDungeonMap.php?debug=true&dungeonName=the-barrow-mines&requestedMap=-1&seed=1511924848
+                                 for ($i = 0; $i < $templateWidth-1; $i++) {
+                                    // 1 on the height as don't need to test the overlapping wall as it'll be over-written:
+                                    for ($j = 1; $j < $templateHeight; $j++) {
+                                        if(isset($map[$thisTemplateOffsetY+$j][$thisTemplateOffsetX+$i])){
+                                            if ($map[$thisTemplateOffsetY+$j][$thisTemplateOffsetX+$i] != "-") {
+                                               $isBlocked = true;
+                                            }
+                                        } else {
+                                            $isBlocked = true;
+                                        }
+                                    }
+                                }
+
+                                 if(!$isBlocked) {
+                                    $foundRoom = $thisRoom;
+                                   
+                                }
+                                break;
+
+
+                                case "north":
+                            
+                                 $thisTemplateOffsetX = $thisRoom[0]-1;
+                                if(mt_rand(1,2) == 2) {
+                                    $thisTemplateOffsetX = $thisRoom[2]-$templateWidth+1;
+                                    if($thisTemplateOffsetX<$thisRoom[0]) {
+                                        $thisTemplateOffsetX = $thisRoom[0]-1;
+                                    }
+                                }
+                                $thisTemplateOffsetY = $thisRoom[1]-$templateHeight;
+                                $isBlocked = false;
+                                //echo "<code><pre>";var_dump($thisRoom);echo "</pre></code>";
+                                 for ($i = 0; $i < $templateWidth; $i++) {
+                                    // -1 on the height as don't need to test the overlapping wall as it'll be over-written:
+                                    for ($j = 0; $j < $templateHeight-1; $j++) {
+
+                                        if(isset($map[$thisTemplateOffsetY+$j][$thisTemplateOffsetX+$i])){
+                                           // echo ($thisTemplateOffsetX+$i).",".($thisTemplateOffsetY+$j)." - ".$map[$thisTemplateOffsetY+$j][$thisTemplateOffsetX+$i]."<br>";
+                                            if ($map[$thisTemplateOffsetY+$j][$thisTemplateOffsetX+$i] != "-") {
+                                               $isBlocked = true;
+                                            }
+                                        } else {
+                                            $isBlocked = true;
+                                        }
+                                    }
+                                }
+                                 if(!$isBlocked) {
+                                    $foundRoom = $thisRoom;
+                                   
+                                }
                                 break;
                             }
                             if ($foundRoom != null) {
