@@ -386,7 +386,7 @@ Webkit browsers provide two pseudo classes that can be use to style HTML5 progre
 }
 
 
-// Chrome automcomplete styles:
+// Chrome autocomplete styles:
 
 input:-webkit-autofill,
 input:-webkit-autofill:hover, 
@@ -404,3 +404,18 @@ select:-webkit-autofill:focus {
   -webkit-box-shadow: 0 0 0px 1000px #fff inset;
   transition: background-color 5000s ease-in-out 0s;
 }
+
+
+
+
+/*
+// prevent iOS zooming on inputs that are smaller than 16px:
+input[type='text'],
+input[type='password'],
+input[type='email'],
+input[type='number'],
+select,
+textarea {
+  &:focus, &:active {font-size:16px;}
+}
+*/

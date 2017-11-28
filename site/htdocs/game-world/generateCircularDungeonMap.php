@@ -2113,7 +2113,8 @@ function rotateCoordinates90Anticlockwise($position, $templateWidth, $templateHe
     // have a few goes at finding an in-level template:
     $attempt = 0;
     $templatesToUse = array();
-    for ($i = 0; $i < mt_rand(2, 4); $i++) {
+    $numberOfTemplatesToUse = mt_rand($dungeonDetails[$dungeonName]['templatesMin'], $dungeonDetails[$dungeonName]['templatesMax']);
+    for ($i = 0; $i < $numberOfTemplatesToUse; $i++) {
         $randomFile = mt_rand(0, count($filesFound) - 1);
         $templateName = explode(".json", $filesFound[$randomFile])[0];
         $mapIdAbsolute = abs($thisMapsId);
@@ -2331,12 +2332,12 @@ function rotateCoordinates90Anticlockwise($position, $templateWidth, $templateHe
                                         array_push($allTemplateJSON, $templateJSON);
                                         array_push($templatesPlacedOnThisLevel, $foundRoom);
                                         // plot room
-                                        for ($i = 0; $i < $templateWidth; $i++) {
+                                        for ($k = 0; $k < $templateWidth; $k++) {
                                             for ($j = 0; $j < $templateHeight; $j++) {
-                                                if($templateJSON['template']['collisions'][$j][$i] == 1) {
-                                                    $map[$j + $thisTemplateOffsetY][$i + $thisTemplateOffsetX] = "#";
+                                                if($templateJSON['template']['collisions'][$j][$k] == 1) {
+                                                    $map[$j + $thisTemplateOffsetY][$k + $thisTemplateOffsetX] = "#";
                                                 } else {
-                                                    $map[$j + $thisTemplateOffsetY][$i + $thisTemplateOffsetX] = ".";
+                                                    $map[$j + $thisTemplateOffsetY][$k + $thisTemplateOffsetX] = ".";
                                                 }
                                                 
                                             }
@@ -2366,7 +2367,7 @@ function rotateCoordinates90Anticlockwise($position, $templateWidth, $templateHe
                         $sideToConnectTo = "north";
                     }
                     // loop through rooms, find a corner on the relevant side that is adajcent to the black, 'empty' tile
-                    echo "<hr>".$sideToConnectTo;
+                    //echo "<hr>".$sideToConnectTo;
                     foreach($randomDrawnTileRooms as & $thisRoom) {
                         if ($foundRoom == null) {
                             switch ($sideToConnectTo) {
@@ -2382,10 +2383,10 @@ function rotateCoordinates90Anticlockwise($position, $templateWidth, $templateHe
                                     $thisTemplateOffsetX = $thisRoom[0] - $templateWidth;
                                     $isBlocked = false;
                                     // -1 on the width as don't need to test the overlapping wall as it'll be over-written:
-                                    for ($i = 0; $i < $templateWidth-1; $i++) {
+                                    for ($k = 0; $k < $templateWidth-1; $k++) {
                                         for ($j = 0; $j < $templateHeight; $j++) {
-                                            if(isset($map[$thisTemplateOffsetY+$j][$thisTemplateOffsetX+$i])){
-                                                if ($map[$thisTemplateOffsetY+$j][$thisTemplateOffsetX+$i] != "-") {
+                                            if(isset($map[$thisTemplateOffsetY+$j][$thisTemplateOffsetX+$k])){
+                                                if ($map[$thisTemplateOffsetY+$j][$thisTemplateOffsetX+$k] != "-") {
                                                     $isBlocked = true;
                                                 }
                                             } else {
@@ -2410,10 +2411,10 @@ function rotateCoordinates90Anticlockwise($position, $templateWidth, $templateHe
                                 $thisTemplateOffsetX = $thisRoom[2];
                                 $isBlocked = false;
                                 // 1 on the width as don't need to test the overlapping wall as it'll be over-written:
-                                for ($i = 1; $i < $templateWidth; $i++) {
+                                for ($k = 1; $k < $templateWidth; $k++) {
                                     for ($j = 0; $j < $templateHeight; $j++) {
-                                        if(isset($map[$thisTemplateOffsetY+$j][$thisTemplateOffsetX+$i])){
-                                            if ($map[$thisTemplateOffsetY+$j][$thisTemplateOffsetX+$i] != "-") {
+                                        if(isset($map[$thisTemplateOffsetY+$j][$thisTemplateOffsetX+$k])){
+                                            if ($map[$thisTemplateOffsetY+$j][$thisTemplateOffsetX+$k] != "-") {
                                                 $isBlocked = true;
                                             }
                                         } else {
@@ -2438,11 +2439,11 @@ function rotateCoordinates90Anticlockwise($position, $templateWidth, $templateHe
                                 $thisTemplateOffsetY = $thisRoom[3];
                                 $isBlocked = false;
 // -1 on the width so it can nudge against neighbouring rooms - eg. http://ae.dev/game-world/generateCircularDungeonMap.php?debug=true&dungeonName=the-barrow-mines&requestedMap=-1&seed=1511924848
-                                 for ($i = 0; $i < $templateWidth-1; $i++) {
+                                 for ($k = 0; $k < $templateWidth-1; $k++) {
                                     // 1 on the height as don't need to test the overlapping wall as it'll be over-written:
                                     for ($j = 1; $j < $templateHeight; $j++) {
-                                        if(isset($map[$thisTemplateOffsetY+$j][$thisTemplateOffsetX+$i])){
-                                            if ($map[$thisTemplateOffsetY+$j][$thisTemplateOffsetX+$i] != "-") {
+                                        if(isset($map[$thisTemplateOffsetY+$j][$thisTemplateOffsetX+$k])){
+                                            if ($map[$thisTemplateOffsetY+$j][$thisTemplateOffsetX+$k] != "-") {
                                                $isBlocked = true;
                                             }
                                         } else {
@@ -2470,13 +2471,13 @@ function rotateCoordinates90Anticlockwise($position, $templateWidth, $templateHe
                                 $thisTemplateOffsetY = $thisRoom[1]-$templateHeight;
                                 $isBlocked = false;
                                 //echo "<code><pre>";var_dump($thisRoom);echo "</pre></code>";
-                                 for ($i = 0; $i < $templateWidth; $i++) {
+                                 for ($k = 0; $k < $templateWidth; $k++) {
                                     // -1 on the height as don't need to test the overlapping wall as it'll be over-written:
                                     for ($j = 0; $j < $templateHeight-1; $j++) {
 
-                                        if(isset($map[$thisTemplateOffsetY+$j][$thisTemplateOffsetX+$i])){
+                                        if(isset($map[$thisTemplateOffsetY+$j][$thisTemplateOffsetX+$k])){
                                            // echo ($thisTemplateOffsetX+$i).",".($thisTemplateOffsetY+$j)." - ".$map[$thisTemplateOffsetY+$j][$thisTemplateOffsetX+$i]."<br>";
-                                            if ($map[$thisTemplateOffsetY+$j][$thisTemplateOffsetX+$i] != "-") {
+                                            if ($map[$thisTemplateOffsetY+$j][$thisTemplateOffsetX+$k] != "-") {
                                                $isBlocked = true;
                                             }
                                         } else {
@@ -2510,12 +2511,12 @@ function rotateCoordinates90Anticlockwise($position, $templateWidth, $templateHe
                                     array_push($allTemplateJSON, $templateJSON);
                                     array_push($templatesPlacedOnThisLevel, $foundRoom);
                                     // plot room
-                                    for ($i = 0; $i < $templateWidth; $i++) {
+                                    for ($k = 0; $k < $templateWidth; $k++) {
                                         for ($j = 0; $j < $templateHeight; $j++) {
-                                            if($templateJSON['template']['collisions'][$j][$i] == 1) {
-                                                $map[$j + $thisTemplateOffsetY][$i + $thisTemplateOffsetX] = "#";
+                                            if($templateJSON['template']['collisions'][$j][$k] == 1) {
+                                                $map[$j + $thisTemplateOffsetY][$k + $thisTemplateOffsetX] = "#";
                                             } else {
-                                                $map[$j + $thisTemplateOffsetY][$i + $thisTemplateOffsetX] = ".";
+                                                $map[$j + $thisTemplateOffsetY][$k + $thisTemplateOffsetX] = ".";
                                             }
                                             
                                         }
