@@ -1627,7 +1627,8 @@ global $debug, $map, $itemMap, $drawnTileDoors, $drawnTileKeys, $mapTilesX, $map
 
 $outputJSON = '{"map":{"zoneName": "A Circular Dungeon: '.$storedSeed.'",';
 if(isset($dungeonDetails[$dungeonName]['ambientSounds'])){
-$outputJSON .= '"ambientSounds": "'.htmlspecialchars($dungeonDetails[$dungeonName]['ambientSounds'], ENT_QUOTES, 'UTF-8').'",';
+
+$outputJSON .= '"ambientSounds": '.json_encode(json_decode($dungeonDetails[$dungeonName]['ambientSounds'])).',';
 }
 $outputJSON .='"seed": '.$storedSeed.', ';
 $outputJSON .= '"entrance": ['.$entranceX.','.$entranceY.'],';
