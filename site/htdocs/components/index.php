@@ -81,6 +81,7 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/functions.php");
 </head>
 
 <body>
+
 <div id="wrapper">
 
 <div id="pageContent" role="main">

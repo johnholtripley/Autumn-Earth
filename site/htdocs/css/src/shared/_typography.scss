@@ -97,7 +97,7 @@ h6 {
 
 
 
-body, input, select, .selectWrapper, textarea {
+body, input, select, .selectWrapper, textarea, button {
    font-family: $bodyFontLoaded; 
 }
 
@@ -106,13 +106,26 @@ body, input, select, .selectWrapper, textarea {
 p, ol, ul, dl, button, input, select, .selectWrapper, textarea, label, table {
     // load web font if JS is disabled:
 
-   
-      @include pxRem("font-size", $baseFontSize);
      @include pxRem("line-height", round($verticalRhythm*$baseFontSize));
   @include pxRem("margin", 0 0 12 0);
     letter-spacing: 0.02em;
    
    
+}
+
+p, ol, ul, dl, button, label, table {
+    // load web font if JS is disabled:
+        @include pxRem("font-size", $baseFontSize);
+}
+
+// prevent iOS zooming on inputs that are smaller than 16px:
+input[type='text'],
+input[type='password'],
+input[type='email'],
+input[type='number'],
+select,
+textarea {
+  @include preventZoomTextSize($baseFontSize);
 }
 
 p, ol, ul, dl {
@@ -159,6 +172,7 @@ sup { font-feature-settings: "sups" 1; }
     body,
     input,
     select,
+    button,
     .selectWrapper,
     textarea {
         font-family: $bodyFont;

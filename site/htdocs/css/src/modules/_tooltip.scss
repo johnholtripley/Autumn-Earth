@@ -41,6 +41,8 @@
     }
     &:focus:before,
     &:focus:after,
+    &:active:before,
+    &:active:after,
     &:hover:before,
     &:hover:after {
         opacity: 1;
