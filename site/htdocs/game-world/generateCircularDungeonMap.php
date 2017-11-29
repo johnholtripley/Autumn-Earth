@@ -2174,9 +2174,9 @@ $storePositionZero = $position[0];
         $templateName = explode(".json", $filesFound[$randomFile])[0];
         $mapIdAbsolute = abs($thisMapsId);
         // check if this map level is within the min and max for this template:
-        if (isset($dungeonDetails['the-barrow-mines']['suitableTemplates'][$templateName])) {
-            if ($mapIdAbsolute >= $dungeonDetails['the-barrow-mines']['suitableTemplates'][$templateName][0]) {
-                if ($mapIdAbsolute <= $dungeonDetails['the-barrow-mines']['suitableTemplates'][$templateName][1]) {
+        if (isset($dungeonDetails['the-barrow-mines']['levelLockedTemplates'][$templateName])) {
+            if ($mapIdAbsolute >= $dungeonDetails['the-barrow-mines']['levelLockedTemplates'][$templateName][0]) {
+                if ($mapIdAbsolute <= $dungeonDetails['the-barrow-mines']['levelLockedTemplates'][$templateName][1]) {
                     array_push($templatesToUse, $templateName);
                 }
             }
