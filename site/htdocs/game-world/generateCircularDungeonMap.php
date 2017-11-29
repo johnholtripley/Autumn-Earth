@@ -44,7 +44,6 @@ img {
 TO DO:
 Create meta levels so can have foreshadowing and hints about future encounters
 elevations
-add template sections - 2 types. More decorative types placed within existing rooms, and others that are added to blank space adjoining existing rooms. 
 Convert locks, valves, hazards and treasure into interesting variants
 Place additional items from Dungeon Config
 Decorate rooms so they are different and identifiable
@@ -55,7 +54,8 @@ the code for determining whether an area should be black or a solid terrain piec
 have some sort of persistence between dungeon visits. keep track of creature populations etc.
 water or lava courses (?)
 when placing items, place them clear of templates
-offset doors (and connecting corridors)
+offset doors (and connecting corridors) (?)
+make sure templates don't block entrance and exits
 
 
 
@@ -1970,6 +1970,9 @@ imagefilledellipse($outputCanvas, ($drawnTileKeys[$i][0])*$drawnTileSize+$drawnO
 
 
 
+
+
+
 /*
 // draw border:
         imagefilledrectangle($outputCanvas,0,0,$drawnOffset,$canvaDimension,imagecolorallocate($outputCanvas, 60, 60, 60));
@@ -2069,23 +2072,24 @@ function flipCoordinatesHorizontally($position, $templateWidth, $templateHeight)
 }
 
 function rotateCoordinates180($position, $templateWidth, $templateHeight) {
-
+$storePositionOne = $position[1];
     $position[0] = $templateWidth - $position[0] -1;
-    $position[1] = $templateHeight - $position[1] -1;
+    $position[1] = $templateHeight - $storePositionOne -1;
     return $position;
 }
 
 function rotateCoordinates90Clockwise($position, $templateWidth, $templateHeight) {
+    $storePositionOne = $position[1];
    $position[1] = $position[0];
-    $position[0] = $templateHeight - $position[1] -1;
+    $position[0] = $templateHeight - $storePositionOne -1;
  
     return $position;
 }
 
 function rotateCoordinates90Anticlockwise($position, $templateWidth, $templateHeight) {
-
+$storePositionZero = $position[0];
     $position[0] = $position[1];
-    $position[1] = $templateWidth - $position[0] -1;
+    $position[1] = $templateWidth - $storePositionZero -1;
     return $position;
 }
 
@@ -2153,9 +2157,14 @@ function rotateCoordinates90Anticlockwise($position, $templateWidth, $templateHe
             $templateNonRotatedWidth = count($templateJSON['template']['terrain'][0]);
             $templateType = $templateJSON['template']['type'];
             $isUniquePerLevel = $templateJSON['template']['uniquePerLevel'];
+
+
+
+
             if ($templateJSON['template']['rotatable']) {
                 $rotation = mt_rand(1, 4);
                 $flip = mt_rand(1, 2);
+              //  if($debug) {echo "#".$i." - ".$rotation.", ".$flip.", type: ".$templateType."<br>";}
                 // case 1 is no rotation
                 switch ($rotation) {
                     case 2:
@@ -2178,6 +2187,12 @@ function rotateCoordinates90Anticlockwise($position, $templateWidth, $templateHe
                 // determine this template's dimensions:
                 $templateHeight = count($templateJSON['template']['terrain']);
                 $templateWidth = count($templateJSON['template']['terrain'][0]);
+
+
+
+
+           
+
                 // rotate items, npcs and hotspot positions:
                 switch ($rotation) {
                     case 2:
@@ -2193,12 +2208,21 @@ function rotateCoordinates90Anticlockwise($position, $templateWidth, $templateHe
                             $templateJSON['template']['hotspots'][$j]['centreX'] = $newPosition[0];
                             $templateJSON['template']['hotspots'][$j]['centreY'] = $newPosition[1];
                         }
+
+
+  
+
+                        
                         for ($j = 0; $j < count($templateJSON['template']['items']); $j++) {
                             $thisItem = $templateJSON['template']['items'][$j];
                             $newPosition = rotateCoordinates90Clockwise(array($thisItem['tileX'], $thisItem['tileY']), $templateNonRotatedWidth, $templateNonRotatedHeight);
                             $templateJSON['template']['items'][$j]['tileX'] = $newPosition[0];
                             $templateJSON['template']['items'][$j]['tileY'] = $newPosition[1];
                         }
+
+                       
+
+
                         break;
                     case 3:
                         for ($j = 0; $j < count($templateJSON['template']['npcs']); $j++) {
@@ -2213,12 +2237,20 @@ function rotateCoordinates90Anticlockwise($position, $templateWidth, $templateHe
                             $templateJSON['template']['hotspots'][$j]['centreX'] = $newPosition[0];
                             $templateJSON['template']['hotspots'][$j]['centreY'] = $newPosition[1];
                         }
+
+
+
+
                         for ($j = 0; $j < count($templateJSON['template']['items']); $j++) {
                             $thisItem = $templateJSON['template']['items'][$j];
                             $newPosition = rotateCoordinates90Anticlockwise(array($thisItem['tileX'], $thisItem['tileY']), $templateNonRotatedWidth, $templateNonRotatedHeight);
                             $templateJSON['template']['items'][$j]['tileX'] = $newPosition[0];
                             $templateJSON['template']['items'][$j]['tileY'] = $newPosition[1];
                         }
+
+
+
+
                         break;
                     case 4:
                         for ($j = 0; $j < count($templateJSON['template']['npcs']); $j++) {
@@ -2241,6 +2273,10 @@ function rotateCoordinates90Anticlockwise($position, $templateWidth, $templateHe
                         }
                         break;
                 }
+
+
+
+
                 if ($templateType == "outer") {
                     // rotate entrance point:
                     switch ($rotation) {
@@ -2291,6 +2327,9 @@ function rotateCoordinates90Anticlockwise($position, $templateWidth, $templateHe
                         $templateJSON['template']['entranceY'] = $newPosition[1];
                     }
                 }
+
+
+
             }
 
             $foundRoom = null;
@@ -2342,6 +2381,7 @@ function rotateCoordinates90Anticlockwise($position, $templateWidth, $templateHe
                                                 
                                             }
                                         }
+
                                     }
                                 }
                             }
@@ -2397,9 +2437,8 @@ function rotateCoordinates90Anticlockwise($position, $templateWidth, $templateHe
                                     if(!$isBlocked) {
                                         $foundRoom = $thisRoom;
                                     }
-
-
                                 break;
+
                                 case "east":
                                 $thisTemplateOffsetY = $thisRoom[1]-1;
                                 if(mt_rand(1,2) == 2) {
@@ -2426,8 +2465,8 @@ function rotateCoordinates90Anticlockwise($position, $templateWidth, $templateHe
                                     $foundRoom = $thisRoom;
                                    
                                 }
-                                
                                 break;
+
                                 case "south":
                                 $thisTemplateOffsetX = $thisRoom[0]-1;
                                 if(mt_rand(1,2) == 2) {
@@ -2451,7 +2490,6 @@ function rotateCoordinates90Anticlockwise($position, $templateWidth, $templateHe
                                         }
                                     }
                                 }
-
                                  if(!$isBlocked) {
                                     $foundRoom = $thisRoom;
                                    
@@ -2460,7 +2498,6 @@ function rotateCoordinates90Anticlockwise($position, $templateWidth, $templateHe
 
 
                                 case "north":
-                            
                                  $thisTemplateOffsetX = $thisRoom[0]-1;
                                 if(mt_rand(1,2) == 2) {
                                     $thisTemplateOffsetX = $thisRoom[2]-$templateWidth+1;
@@ -2474,9 +2511,7 @@ function rotateCoordinates90Anticlockwise($position, $templateWidth, $templateHe
                                  for ($k = 0; $k < $templateWidth; $k++) {
                                     // -1 on the height as don't need to test the overlapping wall as it'll be over-written:
                                     for ($j = 0; $j < $templateHeight-1; $j++) {
-
                                         if(isset($map[$thisTemplateOffsetY+$j][$thisTemplateOffsetX+$k])){
-                                           // echo ($thisTemplateOffsetX+$i).",".($thisTemplateOffsetY+$j)." - ".$map[$thisTemplateOffsetY+$j][$thisTemplateOffsetX+$i]."<br>";
                                             if ($map[$thisTemplateOffsetY+$j][$thisTemplateOffsetX+$k] != "-") {
                                                $isBlocked = true;
                                             }
@@ -2486,8 +2521,7 @@ function rotateCoordinates90Anticlockwise($position, $templateWidth, $templateHe
                                     }
                                 }
                                  if(!$isBlocked) {
-                                    $foundRoom = $thisRoom;
-                                   
+                                    $foundRoom = $thisRoom; 
                                 }
                                 break;
                             }
@@ -2506,6 +2540,7 @@ function rotateCoordinates90Anticlockwise($position, $templateWidth, $templateHe
                                     }
                                 }
                                 if(!$overlapsExistingTemplate) {
+                                 //   if($debug) {echo "#".$i." - ".$thisTemplateOffsetX.", ".$thisTemplateOffsetY."<br>";}
                                     array_push($templateOffsetX, $thisTemplateOffsetX);
                                     array_push($templateOffsetY, $thisTemplateOffsetY);
                                     array_push($allTemplateJSON, $templateJSON);
@@ -2535,11 +2570,7 @@ function rotateCoordinates90Anticlockwise($position, $templateWidth, $templateHe
                     }
 
                     // map JSON from the template across:
-                    /*
-                    for ($j = 0; $j < count($templateJSON['template']['graphics']); $j++) {
-                        $templateGraphicsToAppend .= ', '.json_encode($templateJSON['template']['graphics'][$j]);
-                    }
-                    */
+        
 
                     for ($j = 0; $j < count($templateJSON['template']['npcs']); $j++) {
                         $thisNPC = $templateJSON['template']['npcs'][$j];

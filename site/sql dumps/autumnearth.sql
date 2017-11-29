@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 14, 2017 at 03:23 PM
+-- Generation Time: Nov 28, 2017 at 05:36 PM
 -- Server version: 5.6.24
 -- PHP Version: 5.6.8
 
@@ -665,7 +665,7 @@ INSERT INTO `tblinventoryitems` (`itemID`, `shortname`, `description`, `priceCod
 (39, 'Iron Gall', '', '4', '49.0', '81.0', 63, 63, NULL, NULL, 'iron-gall', '', '0', 0, 0, '0', '0', NULL, NULL, 0, 16, 1, 1, 0, NULL, NULL),
 (40, 'Ink', '', '4', '49.0', '81.0', 63, 63, NULL, NULL, 'ink', '', '0', 1, 0, '0', '0', NULL, NULL, 0, 0, 0, 1, 0, NULL, NULL),
 (41, 'Scribe''s Quill', '', '1', '20.0', '24.0', 0, 0, NULL, NULL, 'scribes-quill', 'inscribe', '0', 0, 0, '0', '0', '', NULL, 0, 0, 0, 1, 0, NULL, NULL),
-(42, 'Inner Door Lever', '', '1', '33.0', '33.0', 38, 38, 56, 45, 'inner-door-lever', 'toggleInnerDoor', '0', 0, 0, '0', '0', '', NULL, 0, 0, 0, 0, 0, NULL, NULL),
+(42, 'Inner Door Lever', '', '1', '35.0', '35.0', 33, 33, 56, 45, 'inner-door-lever', 'toggleInnerDoor', '0', 0, 0, '0', '0', '', NULL, 0, 0, 0, 0, 0, NULL, NULL),
 (43, 'Inner Door Key', '', '1', '10.0', '6.0', 12, 12, NULL, NULL, 'inner-door-key', 'key', '0', 0, 0, '0', '0', '', NULL, 0, 0, 0, 0, 0, NULL, NULL),
 (44, 'Ammonite', 'Fossilised mollusc', '1', '25.0', '31.0', 38, 38, NULL, NULL, 'collection-fossil', 'collection', 'the-barrow-mines', 0, 0, '0', '0', '', NULL, 0, 0, 0, 0, 0, NULL, NULL),
 (45, 'Echinoid', 'Fossilised sea urchin', '1', '25.0', '31.0', 38, 38, NULL, NULL, 'collection-fossil', 'collection', 'the-barrow-mines', 0, 0, '0', '0', '', NULL, 0, 0, 0, 0, 0, NULL, NULL),
