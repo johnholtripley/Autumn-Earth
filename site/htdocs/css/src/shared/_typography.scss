@@ -105,7 +105,7 @@ body, input, select, .selectWrapper, textarea, button {
 
 p, ol, ul, dl, button, input, select, .selectWrapper, textarea, label, table {
     // load web font if JS is disabled:
-
+@include pxRem("font-size", $baseFontSize);
      @include pxRem("line-height", round($verticalRhythm*$baseFontSize));
   @include pxRem("margin", 0 0 12 0);
     letter-spacing: 0.02em;
@@ -113,12 +113,12 @@ p, ol, ul, dl, button, input, select, .selectWrapper, textarea, label, table {
    
 }
 
-p, ol, ul, dl, button, label, table {
-    // load web font if JS is disabled:
-        @include pxRem("font-size", $baseFontSize);
-}
 
+
+
+/*
 // prevent iOS zooming on inputs that are smaller than 16px:
+// wrap these inputs in .inputWrapper
 input[type='text'],
 input[type='password'],
 input[type='email'],
@@ -127,6 +127,7 @@ select,
 textarea {
   @include preventZoomTextSize($baseFontSize);
 }
+*/
 
 p, ol, ul, dl {
      padding: 0; 

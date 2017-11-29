@@ -17,8 +17,14 @@ button, input, select, .selectWrapper, textarea {
     border: 0;
 }
 
+
+
+
+input {
+    border: 1px solid #000;
+}
 input:not(:focus):valid {
-  border: 1px solid green;
+  border: 1px solid #64bd63;
 }
 
 // select dropdowns --------------------------------
@@ -404,7 +410,6 @@ select:-webkit-autofill:focus {
   -webkit-box-shadow: 0 0 0px 1000px #fff inset;
   transition: background-color 5000s ease-in-out 0s;
 }
-
 
 
 
