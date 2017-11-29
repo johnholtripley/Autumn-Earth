@@ -1626,6 +1626,9 @@ global $debug, $map, $itemMap, $drawnTileDoors, $drawnTileKeys, $mapTilesX, $map
 
 
 $outputJSON = '{"map":{"zoneName": "A Circular Dungeon: '.$storedSeed.'",';
+if(isset($dungeonDetails[$dungeonName]['ambientSounds'])){
+$outputJSON .= '"ambientSounds": "'.htmlspecialchars($dungeonDetails[$dungeonName]['ambientSounds'], ENT_QUOTES, 'UTF-8').'",';
+}
 $outputJSON .='"seed": '.$storedSeed.', ';
 $outputJSON .= '"entrance": ['.$entranceX.','.$entranceY.'],';
 
@@ -1781,7 +1784,6 @@ $outputJSON .= substr(json_encode($collisions),1,-1).", ".substr(json_encode($te
 $outputJSON .= ',"graphics": ['.$dungeonDetails[$dungeonName]['graphics'].$templateGraphicsToAppend.'],';
 $outputJSON .= '"shops": [],';
 $outputJSON .= '"npcs": ['.$templateNPCsToAppend.'],';
-$outputJSON .= '"hotspots": ['.$templateHotspotsToAppend.'],';
 $outputJSON .= '"doors": [],';
 $outputJSON .= '"innerDoors": {';
 
@@ -1858,7 +1860,10 @@ $outputJSON .= $templateItemsToAppend;
 $outputJSON .= '],';
 
 
-$outputJSON .= '"hotspots": []';
+
+
+$outputJSON .= '"hotspots": ['.$templateHotspotsToAppend.']';
+
 //$outputJSON .= ',"showOnlyLineOfSight": true';
 $outputJSON .= '}}';
 if(!$debug) {
