@@ -2180,6 +2180,9 @@ $storePositionZero = $position[0];
                     array_push($templatesToUse, $templateName);
                 }
             }
+        } else {
+            // no restrictions on it, so can use it:
+            array_push($templatesToUse, $templateName);
         }
     }
 

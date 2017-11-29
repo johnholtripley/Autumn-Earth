@@ -14,9 +14,9 @@ $dungeonDetails = array(
 'templatesMax' => '6',
 'suitableTemplates' => array(
 	// template name => earliest level it can be encountered on, latest level it can be encountered on (INF or numeric):
+	// if not included, just use it
 'mining-expedition' => array(1,INF),
-'store-room' => array(1,INF),
-'pillar' => array(1,INF)
+'store-room' => array(1,4)
 	)
 	)
 	);
