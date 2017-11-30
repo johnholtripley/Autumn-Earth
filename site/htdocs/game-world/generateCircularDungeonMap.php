@@ -59,7 +59,7 @@ make sure templates don't block entrance and exits
 rarer items should be placed more often the deeper in to the dungeon the player has gone
 
 
-
+1512098741 - book placed over template barrel. collection item placed in wall
 
 
 ISSUES:
@@ -1876,7 +1876,10 @@ $bookContent = createProceduralBook();
 
     $outputJSON .= '"inscription": { "title":"'.str_replace('"', '\"', createProceduralTitle()).'", "timeCreated":"'.$newTimeStamp->getTimestamp().'", "content":"'.preg_replace( "/\r|\n/", "",(str_replace('"', '\"', $bookContent))).'"}},';
     } else {
-     $outputJSON .= '{"type": '.$placedItems[$i][0].', "tileX": '.$placedItems[$i][1].', "tileY": '.$placedItems[$i][2].'},';
+     $outputJSON .= '{"type": '.$placedItems[$i][0].', "tileX": '.$placedItems[$i][1].', "tileY": '.$placedItems[$i][2].',';
+
+$outputJSON .= '"quantity": 1,"quality": 100,"durability": 100,"currentWear": 0,"effectiveness": 100,"wrapped": 0,"colour": 0,"enchanted": 0,"hallmark": 0,"inscription":""},';
+
  }
  }
 }
