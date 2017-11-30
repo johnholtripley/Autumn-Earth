@@ -58,7 +58,6 @@ offset doors (and connecting corridors) (?)
 make sure templates don't block entrance and exits
 rarer items should be placed more often the deeper in to the dungeon the player has gone
 
-templates could do with a marker to not overwrite underlying terrain to allow the template to have gaps (and overlapping walls then don't get overwritten with nothing for that gap)
 
 
 
@@ -1732,47 +1731,38 @@ $templateGraphicsToAppend = '';
 
 
 for ($t = 0; $t < count($allTemplateJSON); $t++) {
-
-$templateHeight = count($allTemplateJSON[$t]['template']['terrain']);
-$templateWidth = count($allTemplateJSON[$t]['template']['terrain'][0]);
-$graphicsBeingUsedForThisTemplate = $allTemplateJSON[$t]['template']['graphics'];
-//echo $templateOffsetX[$t].", ".$templateOffsetY[$t]."<br>";
-//echo $templateWidth.", ".$templateHeight."<br>";
-for ($i = 0; $i < $templateHeight; $i++) {
-
-    for ($j = 0; $j < $templateWidth; $j++) {
-    if($allTemplateJSON[$t]['template']['terrain'][$i][$j] === "*") {
-        $terrain['terrain'][$i+$templateOffsetY[$t]][$j+$templateOffsetX[$t]] = "*";
-      
-    } else {
-      // check if the same filename has already been added and use that reference instead to avoid duplicating images:
-
-
-
-if(array_key_exists(($graphicsBeingUsedForThisTemplate[($allTemplateJSON[$t]['template']['terrain'][$i][$j])]['src']),$graphicsToAdd)) {
-
-    // already being used, so use the reference already held:
-$terrain['terrain'][$i+$templateOffsetY[$t]][$j+$templateOffsetX[$t]] = $graphicsToAdd[($graphicsBeingUsedForThisTemplate[($allTemplateJSON[$t]['template']['terrain'][$i][$j])]['src'])];
-} else {
-// add and store for later:
-    $numberOfGraphicsSoFar = count($graphicsToAdd);
-   $terrain['terrain'][$i+$templateOffsetY[$t]][$j+$templateOffsetX[$t]] = $numberOfGraphicsSoFar;
-$graphicsToAdd[($graphicsBeingUsedForThisTemplate[($allTemplateJSON[$t]['template']['terrain'][$i][$j])]['src'])] = $numberOfGraphicsSoFar;
-   $templateGraphicsToAppend .= ', '.json_encode($graphicsBeingUsedForThisTemplate[$allTemplateJSON[$t]['template']['terrain'][$i][$j]]);
-}
-
-
-        
+    $templateHeight = count($allTemplateJSON[$t]['template']['terrain']);
+    $templateWidth = count($allTemplateJSON[$t]['template']['terrain'][0]);
+    $graphicsBeingUsedForThisTemplate = $allTemplateJSON[$t]['template']['graphics'];
+    for ($i = 0; $i < $templateHeight; $i++) {
+        for ($j = 0; $j < $templateWidth; $j++) {
+            // don't overwrite underlying terrain with any "?" items in the template:
+            if($allTemplateJSON[$t]['template']['terrain'][$i][$j] != "?") {
+        if($allTemplateJSON[$t]['template']['terrain'][$i][$j] === "*") {
+            $terrain['terrain'][$i+$templateOffsetY[$t]][$j+$templateOffsetX[$t]] = "*";
+        } else {
+            // check if the same filename has already been added and use that reference instead to avoid duplicating images:
+            if(array_key_exists(($graphicsBeingUsedForThisTemplate[($allTemplateJSON[$t]['template']['terrain'][$i][$j])]['src']),$graphicsToAdd)) {
+            // already being used, so use the reference already held:
+            $terrain['terrain'][$i+$templateOffsetY[$t]][$j+$templateOffsetX[$t]] = $graphicsToAdd[($graphicsBeingUsedForThisTemplate[($allTemplateJSON[$t]['template']['terrain'][$i][$j])]['src'])];
+            } else {
+            // add and store for later:
+            $numberOfGraphicsSoFar = count($graphicsToAdd);
+            $terrain['terrain'][$i+$templateOffsetY[$t]][$j+$templateOffsetX[$t]] = $numberOfGraphicsSoFar;
+            $graphicsToAdd[($graphicsBeingUsedForThisTemplate[($allTemplateJSON[$t]['template']['terrain'][$i][$j])]['src'])] = $numberOfGraphicsSoFar;
+            $templateGraphicsToAppend .= ', '.json_encode($graphicsBeingUsedForThisTemplate[$allTemplateJSON[$t]['template']['terrain'][$i][$j]]);
+            }
+        }
+        $collisions['collisions'][$i+$templateOffsetY[$t]][$j+$templateOffsetX[$t]] = $allTemplateJSON[$t]['template']['collisions'][$i][$j];
+        $elevation['elevation'][$i+$templateOffsetY[$t]][$j+$templateOffsetX[$t]] = $allTemplateJSON[$t]['template']['elevation'][$i][$j];
+        }
     }
-    $collisions['collisions'][$i+$templateOffsetY[$t]][$j+$templateOffsetX[$t]] = $allTemplateJSON[$t]['template']['collisions'][$i][$j];
-    $elevation['elevation'][$i+$templateOffsetY[$t]][$j+$templateOffsetX[$t]] = $allTemplateJSON[$t]['template']['elevation'][$i][$j];
     }
 }
 
 
 
 
-}
 
 
 // substr(1,-1) to remove the added { and } earlier:
@@ -2471,11 +2461,14 @@ $storePositionZero = $position[0];
                                         // plot room
                                         for ($k = 0; $k < $templateWidth; $k++) {
                                             for ($j = 0; $j < $templateHeight; $j++) {
+                                                // don't overwrite underlying terrain for any "?"s:
+                                                if($templateJSON['template']['terrain'][$j][$k] != "?") {
                                                 if($templateJSON['template']['collisions'][$j][$k] == 1) {
                                                     $map[$j + $thisTemplateOffsetY][$k + $thisTemplateOffsetX] = "#";
                                                 } else {
                                                     $map[$j + $thisTemplateOffsetY][$k + $thisTemplateOffsetX] = ".";
                                                 }
+                                            }
                                                 
                                             }
                                         }
@@ -2646,11 +2639,14 @@ $storePositionZero = $position[0];
                                     // plot room
                                     for ($k = 0; $k < $templateWidth; $k++) {
                                         for ($j = 0; $j < $templateHeight; $j++) {
+                                            // don't overwrite underlying terrain for any "?"s:
+                                                if($templateJSON['template']['terrain'][$j][$k] != "?") {
                                             if($templateJSON['template']['collisions'][$j][$k] == 1) {
                                                 $map[$j + $thisTemplateOffsetY][$k + $thisTemplateOffsetX] = "#";
                                             } else {
                                                 $map[$j + $thisTemplateOffsetY][$k + $thisTemplateOffsetX] = ".";
                                             }
+                                        }
                                             
                                         }
                                     }
