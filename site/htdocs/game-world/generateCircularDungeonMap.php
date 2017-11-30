@@ -58,8 +58,8 @@ offset doors (and connecting corridors) (?)
 make sure templates don't block entrance and exits
 rarer items should be placed more often the deeper in to the dungeon the player has gone
 
+templates could do with a marker to not overwrite underlying terrain to allow the template to have gaps (and overlapping walls then don't get overwritten with nothing for that gap)
 
-1512098741 - book placed over template barrel. collection item placed in wall
 
 
 ISSUES:
@@ -2942,13 +2942,6 @@ outputTileMap();
 function addRandomItems() {
     global $map, $placedItems, $dungeonDetails, $dungeonName, $mapTilesX, $mapTilesY, $templateNPCsToAppend, $templateItemsToAppend;
     
-    
-
-
-
-
-
-
 
     $numberOfItems = mt_rand($dungeonDetails[$dungeonName]['randomItemsMin'], $dungeonDetails[$dungeonName]['randomItemsMax']);
 
@@ -3024,16 +3017,24 @@ $isAValidItemPosition = false;
 
 // check if a template item or npc has been placed here already:
 
-for ($k = 0; $k < $templateItemsToAppend; $k++) {
-if($templateItemsToAppend[$k]['tileX'] == $i) {
-if($templateItemsToAppend[$k]['tileX'] == $j) {
+$templateItems = json_decode('['.$templateItemsToAppend.']');
+$templateNPCs = json_decode('['.$templateNPCsToAppend.']');
+/*echo"<code><pre>";
+var_dump($templateItems);
+echo"</pre></code>";
+die();
+*/
+for ($k = 0; $k < count($templateItems); $k++) {
+   //echo $i.",".$j." == ".$templateItems[$k]->tileX.",".$templateItems[$k]->tileY."<br>";
+if($templateItems[$k]->tileX == $i) {
+if($templateItems[$k]->tileY == $j) {
 $isAValidItemPosition = false;
 }
 }
 }
-for ($k = 0; $k < $templateNPCsToAppend; $k++) {
-if($templateNPCsToAppend[$k]['tileX'] == $i) {
-if($templateNPCsToAppend[$k]['tileX'] == $j) {
+for ($k = 0; $k < count($templateNPCs); $k++) {
+if($templateNPCs[$k]->tileX == $i) {
+if($templateNPCs[$k]->tileY == $j) {
 $isAValidItemPosition = false;
 }
 }
