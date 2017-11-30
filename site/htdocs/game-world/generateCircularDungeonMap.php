@@ -61,6 +61,7 @@ rarer items should be placed more often the deeper in to the dungeon the player 
 
 
 
+
 ISSUES:
 http://ae.dev/game-world/generateCircularDungeonMap.php?debug=true&seed=1510610103 - double thickness walls look odd
 http://ae.dev/game-world/generateCircularDungeonMap.php?debug=true&dungeonName=the-barrow-mines&requestedMap=-1&seed=1510832016 - as the grid is drawn, it needs to check no row or column offsets overlap
@@ -1737,7 +1738,7 @@ for ($t = 0; $t < count($allTemplateJSON); $t++) {
     for ($i = 0; $i < $templateHeight; $i++) {
         for ($j = 0; $j < $templateWidth; $j++) {
             // don't overwrite underlying terrain with any "?" items in the template:
-            if($allTemplateJSON[$t]['template']['terrain'][$i][$j] != "?") {
+            if($allTemplateJSON[$t]['template']['terrain'][$i][$j] !== "?") {
         if($allTemplateJSON[$t]['template']['terrain'][$i][$j] === "*") {
             $terrain['terrain'][$i+$templateOffsetY[$t]][$j+$templateOffsetX[$t]] = "*";
         } else {
@@ -1776,7 +1777,8 @@ $outputJSON .= substr(json_encode($collisions),1,-1).", ".substr(json_encode($te
 $outputJSON .= ',"graphics": ['.$dungeonDetails[$dungeonName]['graphics'].$templateGraphicsToAppend.'],';
 $outputJSON .= '"shops": [],';
 $outputJSON .= '"npcs": ['.$templateNPCsToAppend.'],';
-$outputJSON .= '"doors": [],';
+// john
+$outputJSON .= '"doors": {"'.($exitX-1).','.$exitY.'": {  "map": '.(0-$thisMapsId-1).',  "startX": "?-1",  "startY": "?"},"'.$exitX.','.$exitY.'": {  "map": '.(0-$thisMapsId-1).',  "startX": "?",  "startY": "?"},"'.($exitX+1).','.$exitY.'": {  "map": '.(0-$thisMapsId-1).',  "startX": "?+1",  "startY": "?"}},';
 $outputJSON .= '"innerDoors": {';
 
 if(count($drawnTileDoors)>0) {
@@ -1842,8 +1844,7 @@ if($keyType == 42) {
  $outputJSON .= '{"type": '.$keyType.', "tileX": '.$drawnTileKeys[$i][0].', "tileY": '.$drawnTileKeys[$i][1].', "additional": "'.$doorReference.'"'.$animationString.'},';
 
     }
-     // remove last comma:
-//$outputJSON = rtrim($outputJSON, ', ');
+
 }
 
 
@@ -1874,9 +1875,12 @@ $outputJSON .= '"quantity": 1,"quality": 100,"durability": 100,"currentWear": 0,
  }
 }
 
+     // remove last comma:
+//$outputJSON = rtrim($outputJSON, ', ');
 
-// temporarily add a chest to make the exit ###########
+// temporarily add a chest to mark the exit ###########
 $outputJSON .= '{"type": 48, "tileX": '.$exitX.', "tileY": '.$exitY.', "contains": [{"type": 1},{"type": 3},{"type": "$", "quantity": 2500}]}';
+
 
 if($templateItemsToAppend != '') {
 $outputJSON .= ', ';
@@ -1948,10 +1952,11 @@ $drawnOffset = 20;
         // 'removed' blank non-walkable tile:
          imagefilledrectangle($outputCanvas,($i)*$drawnTileSize+$drawnOffset,($j)*$drawnTileSize+$drawnOffset,($i+1)*$drawnTileSize+$drawnOffset,($j+1)*$drawnTileSize+$drawnOffset,  imagecolorallocate($outputCanvas, 0, 0, 0));
         break;
-        case "?":
+      /*  case "?":
         // debugging
             imagefilledrectangle($outputCanvas,($i)*$drawnTileSize+$drawnOffset,($j)*$drawnTileSize+$drawnOffset,($i+1)*$drawnTileSize+$drawnOffset,($j+1)*$drawnTileSize+$drawnOffset,  imagecolorallocate($outputCanvas, 0, 40, 120));
             break;
+            */
         case "d":
         // door
          imagefilledrectangle($outputCanvas,($i)*$drawnTileSize+$drawnOffset,($j)*$drawnTileSize+$drawnOffset,($i+1)*$drawnTileSize+$drawnOffset,($j+1)*$drawnTileSize+$drawnOffset,  imagecolorallocate($outputCanvas, 255, 255, 255));
@@ -2462,7 +2467,7 @@ $storePositionZero = $position[0];
                                         for ($k = 0; $k < $templateWidth; $k++) {
                                             for ($j = 0; $j < $templateHeight; $j++) {
                                                 // don't overwrite underlying terrain for any "?"s:
-                                                if($templateJSON['template']['terrain'][$j][$k] != "?") {
+                                                if($templateJSON['template']['terrain'][$j][$k] !== "?") {
                                                 if($templateJSON['template']['collisions'][$j][$k] == 1) {
                                                     $map[$j + $thisTemplateOffsetY][$k + $thisTemplateOffsetX] = "#";
                                                 } else {
@@ -2640,13 +2645,13 @@ $storePositionZero = $position[0];
                                     for ($k = 0; $k < $templateWidth; $k++) {
                                         for ($j = 0; $j < $templateHeight; $j++) {
                                             // don't overwrite underlying terrain for any "?"s:
-                                                if($templateJSON['template']['terrain'][$j][$k] != "?") {
+                                                if($templateJSON['template']['terrain'][$j][$k] !== "?") {
                                             if($templateJSON['template']['collisions'][$j][$k] == 1) {
                                                 $map[$j + $thisTemplateOffsetY][$k + $thisTemplateOffsetX] = "#";
                                             } else {
                                                 $map[$j + $thisTemplateOffsetY][$k + $thisTemplateOffsetX] = ".";
                                             }
-                                        }
+                                       }
                                             
                                         }
                                     }

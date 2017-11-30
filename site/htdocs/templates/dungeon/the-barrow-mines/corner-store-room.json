@@ -43,8 +43,7 @@
             ],
         "graphics": [
         {"src": "blank.png", "centreX": 24, "centreY": 12},
-            { "src": "blue-block.png", "centreX": 24, "centreY": 45 },
-            {"src": "block.png","centreX": 24,"centreY": 45}
+            { "src": "blue-block.png", "centreX": 24, "centreY": 45 }
 
         ],
         "npcs": [
