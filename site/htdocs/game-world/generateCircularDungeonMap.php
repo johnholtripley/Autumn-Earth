@@ -1622,7 +1622,7 @@ if($debug) {
 
 
 function outputJSONContent() {
-global $debug, $map, $itemMap, $drawnTileDoors, $drawnTileKeys, $mapTilesX, $mapTilesY, $storedSeed, $thisMapsId, $thisPlayersId, $entranceX, $entranceY, $exitX, $exitY, $dungeonName, $dungeonDetails, $outputJSON, $templateGraphicsToAppend, $templateNPCsToAppend, $templateItemsToAppend, $templateHotspotsToAppend, $allTemplateJSON, $templateOffsetX, $templateOffsetY, $placedItems;
+global $debug, $map, $itemMap, $drawnTileDoors, $drawnTileKeys, $mapTilesX, $mapTilesY, $storedSeed, $thisMapsId, $thisPlayersId, $entranceX, $entranceY, $exitX, $exitY, $dungeonName, $dungeonDetails, $outputJSON, $templateGraphicsToAppend, $templateNPCsToAppend, $templateItemsToAppend, $templateHotspotsToAppend, $allTemplateJSON, $templateOffsetX, $templateOffsetY, $placedItems, $doorsJSON;
 
 
 
@@ -1641,7 +1641,10 @@ $collisionsString ='"collisions": [';
   for ($i = 0; $i < $mapTilesX; $i++) {   
   $collisionsString .= '[';   
             for ($j = 0; $j < $mapTilesY; $j++) {
-        if($map[$i][$j] == "#") {
+        if($map[$i][$j] == "e") {
+            // entrance or exit:
+            $collisionsString.= '"d", ';
+        } else if($map[$i][$j] == "#") {
             $collisionsString.= '1, ';
         } else {
             $collisionsString.= '0, ';
@@ -1777,8 +1780,9 @@ $outputJSON .= substr(json_encode($collisions),1,-1).", ".substr(json_encode($te
 $outputJSON .= ',"graphics": ['.$dungeonDetails[$dungeonName]['graphics'].$templateGraphicsToAppend.'],';
 $outputJSON .= '"shops": [],';
 $outputJSON .= '"npcs": ['.$templateNPCsToAppend.'],';
-// john
-$outputJSON .= '"doors": {"'.($exitX-1).','.$exitY.'": {  "map": '.(0-$thisMapsId-1).',  "startX": "?-1",  "startY": "?"},"'.$exitX.','.$exitY.'": {  "map": '.(0-$thisMapsId-1).',  "startX": "?",  "startY": "?"},"'.($exitX+1).','.$exitY.'": {  "map": '.(0-$thisMapsId-1).',  "startX": "?+1",  "startY": "?"}},';
+// john ###
+
+$outputJSON .= '"doors": {"'.($exitX-1).','.$exitY.'": {  "map": '.($thisMapsId-1).',  "startX": "?-1",  "startY": "?"},"'.$exitX.','.$exitY.'": {  "map": '.($thisMapsId-1).',  "startX": "?",  "startY": "?"},"'.($exitX+1).','.$exitY.'": {  "map": '.($thisMapsId-1).',  "startX": "?+1",  "startY": "?"}},';
 $outputJSON .= '"innerDoors": {';
 
 if(count($drawnTileDoors)>0) {
@@ -3067,6 +3071,32 @@ echo"</pre></code>";
 }
 
 
+function placeDoors() {
+    global $doorsJSON, $exitX, $exitY, $thisMapsId, $map;
+
+$doorsJSON = '{';
+for ($i=-1;$i<=1;$i++) {
+$doorsJSON .= '"'.($exitX+$i).','.$exitY.'": {  "map": '.($thisMapsId-1).',  "startX": "?';
+if($i =-1) {
+ $doorsJSON .= "-1";
+}
+if($i =1) {
+ $doorsJSON .= "+1";
+}
+$doorsJSON .= '",  "startY": "?"},';
+
+
+$map[$exitY][($exitX+$i)] = "e";
+
+}
+
+    // remove last comma:
+$doorsJSON = rtrim($doorsJSON, ',');
+
+    // john
+  
+}
+
 function getTileIsoCentreCoordX($tileX, $tileY) {
   global $tileW, $mapTilesY;
     return $tileW / 2 * ($mapTilesY - $tileY + $tileX);
@@ -3249,6 +3279,7 @@ outputSizedNodesLayout();
 gridTileGrid();
 
 addRandomItems();
+placeDoors();
 
 outputJSONContent();
 if($debug) {
