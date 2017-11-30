@@ -2,6 +2,7 @@
 
 include $_SERVER['DOCUMENT_ROOT'] . "/game-world/generateCircularDungeonMap-third-party-arrow-code.php";
 include("../includes/dungeonMapConfig.php");
+include($_SERVER['DOCUMENT_ROOT']."/game-world/generateBook.php");
 
 if (isset($_GET["debug"])) {
     $debug = true;
@@ -45,7 +46,6 @@ TO DO:
 Create meta levels so can have foreshadowing and hints about future encounters
 elevations
 Convert locks, valves, hazards and treasure into interesting variants
-Place additional items from Dungeon Config
 Decorate rooms so they are different and identifiable
 pathfind to confirm map doors are connected (including checks for items, elevation, locked doors and static NPCs)
 connect exits and the next map
@@ -56,6 +56,7 @@ water or lava courses (?)
 when placing items, place them clear of templates
 offset doors (and connecting corridors) (?)
 make sure templates don't block entrance and exits
+rarer items should be placed more often the deeper in to the dungeon the player has gone
 
 
 
@@ -1621,7 +1622,7 @@ if($debug) {
 
 
 function outputJSONContent() {
-global $debug, $map, $itemMap, $drawnTileDoors, $drawnTileKeys, $mapTilesX, $mapTilesY, $storedSeed, $thisMapsId, $thisPlayersId, $entranceX, $entranceY, $exitX, $exitY, $dungeonName, $dungeonDetails, $outputJSON, $templateGraphicsToAppend, $templateNPCsToAppend, $templateItemsToAppend, $templateHotspotsToAppend, $allTemplateJSON, $templateOffsetX, $templateOffsetY;
+global $debug, $map, $itemMap, $drawnTileDoors, $drawnTileKeys, $mapTilesX, $mapTilesY, $storedSeed, $thisMapsId, $thisPlayersId, $entranceX, $entranceY, $exitX, $exitY, $dungeonName, $dungeonDetails, $outputJSON, $templateGraphicsToAppend, $templateNPCsToAppend, $templateItemsToAppend, $templateHotspotsToAppend, $allTemplateJSON, $templateOffsetX, $templateOffsetY, $placedItems;
 
 
 
@@ -1814,6 +1815,13 @@ $outputJSON = rtrim($outputJSON, ', ');
 
 $outputJSON .= '},';
 
+
+
+
+
+
+
+
 $outputJSON .= '"items": [';
 
 if(count($drawnTileKeys)>0) {
@@ -1846,6 +1854,31 @@ if($keyType == 42) {
     }
      // remove last comma:
 //$outputJSON = rtrim($outputJSON, ', ');
+}
+
+
+
+if(count($placedItems)>0) {
+ for ($i = 0; $i < count($placedItems); $i++) { 
+    // check for any procedural books or parchments:
+    if(($placedItems[$i][0] == 32) || ($placedItems[$i][0] == 33)) {
+    $outputJSON .= '{"type": '.$placedItems[$i][0].',"tileX": '.$placedItems[$i][1].',"tileY": '.$placedItems[$i][2].',';
+
+
+     $outputJSON .= '"quantity": 1,"quality": 100,"durability": 100,"currentWear": 0,"effectiveness": 100,"wrapped": 0,"colour": 0,"enchanted": 0,"hallmark": 0,';
+
+
+$newTimeStamp = new DateTime();
+
+
+ //   $outputJSON .= '"inscription": { "title":"'.str_replace('"', '\"', createProceduralTitle()).'", "timeCreated":"'.$newTimeStamp->getTimestamp().'", "content":"'.str_replace('"', '\"', createProceduralBook()).'"}},';
+$bookContent = createProceduralBook();
+
+    $outputJSON .= '"inscription": { "title":"'.str_replace('"', '\"', createProceduralTitle()).'", "timeCreated":"'.$newTimeStamp->getTimestamp().'", "content":"'.preg_replace( "/\r|\n/", "",(str_replace('"', '\"', $bookContent))).'"}},';
+    } else {
+     $outputJSON .= '{"type": '.$placedItems[$i][0].', "tileX": '.$placedItems[$i][1].', "tileY": '.$placedItems[$i][2].'},';
+ }
+ }
 }
 
 
@@ -2639,8 +2672,7 @@ $storePositionZero = $position[0];
                         // map their location:
                         $thisNPC['tileX'] += $thisTemplateOffsetX;
                         $thisNPC['tileY'] += $thisTemplateOffsetY;
-                        $templateNPCsToAppend .= json_encode($thisNPC).
-                        ', ';
+                        $templateNPCsToAppend .= json_encode($thisNPC).', ';
                     }
 
                     for ($j = 0; $j < count($templateJSON['template']['hotspots']); $j++) {
@@ -2648,8 +2680,7 @@ $storePositionZero = $position[0];
                         // map their location:
                         $thisHotspot['centreX'] += $thisTemplateOffsetX;
                         $thisHotspot['centreY'] += $thisTemplateOffsetY;
-                        $templateHotspotsToAppend .= json_encode($thisHotspot).
-                        ', ';
+                        $templateHotspotsToAppend .= json_encode($thisHotspot).', ';
                     }
 
 
@@ -2658,8 +2689,7 @@ $storePositionZero = $position[0];
                         // map their location:
                         $thisItem['tileX'] += $thisTemplateOffsetX;
                         $thisItem['tileY'] += $thisTemplateOffsetY;
-                        $templateItemsToAppend .= json_encode($thisItem).
-                        ', ';
+                        $templateItemsToAppend .= json_encode($thisItem).', ';
                     }
                 }
             }
@@ -2898,10 +2928,138 @@ outputTileMap();
 findRelevantTemplates();
 
 
+
+
 outputTileMap();
    
 }
 
+
+
+function addRandomItems() {
+    global $map, $placedItems, $dungeonDetails, $dungeonName, $mapTilesX, $mapTilesY, $templateNPCsToAppend, $templateItemsToAppend;
+    
+    
+
+
+
+
+
+
+
+    $numberOfItems = mt_rand($dungeonDetails[$dungeonName]['randomItemsMin'], $dungeonDetails[$dungeonName]['randomItemsMax']);
+
+
+// find all clear tiles:
+    $allSuitableCornerTiles = array();
+     for ($i = 1; $i < $mapTilesX-1; $i++) {      
+            for ($j = 1; $j < $mapTilesY-1; $j++) {
+        
+        if ($map[$j][$i] == ".") {
+             // try and find an open space where 3 tiles on a corner are walkable while the 3 in the opposite corner aren't:
+
+$tileSouthWalkable = false;
+$tileNorthWalkable = false;
+$tileEastWalkable = false;
+$tileWestWalkable = false;
+$tileNorthWestWalkable = false;
+$tileNorthEastWalkable = false;
+$tileSouthEastWalkable = false;
+$tileSouthWestWalkable = false;
+
+if ($map[$j+1][$i] == ".") {
+    $tileSouthWalkable = true;
+}
+if ($map[$j-1][$i] == ".") {
+    $tileNorthWalkable = true;
+}
+if ($map[$j][$i+1] == ".") {
+    $tileEastWalkable = true;
+}
+if ($map[$j][$i-1] == ".") {
+    $tileWestWalkable = true;
+}
+if ($map[$j-1][$i-1] == ".") {
+    $tileNorthWestWalkable = true;
+}
+if ($map[$j-1][$i+1] == ".") {
+    $tileNorthEastWalkable = true;
+}
+if ($map[$j+1][$i+1] == ".") {
+    $tileSouthEastWalkable = true;
+}
+if ($map[$j+1][$i-1] == ".") {
+    $tileSouthWestWalkable = true;
+}
+
+
+$isAValidItemPosition = false;
+       if($tileWestWalkable && $tileNorthWestWalkable && $tileNorthWalkable) {
+       if(!$tileEastWalkable && !$tileSouthEastWalkable && !$tileSouthWalkable) {
+       $isAValidItemPosition = true;
+       }
+       }
+       if($tileEastWalkable && $tileSouthEastWalkable && $tileSouthWalkable) {
+              if(!$tileWestWalkable && !$tileNorthWestWalkable && !$tileNorthWalkable) {
+       
+       $isAValidItemPosition = true;
+       }
+       }
+       
+          if($tileEastWalkable && $tileNorthEastWalkable && $tileNorthWalkable) {
+       if(!$tileWestWalkable && !$tileSouthWestWalkable && !$tileSouthWalkable) {
+       $isAValidItemPosition = true;
+       }
+       }
+        if($tileWestWalkable && $tileSouthWestWalkable && $tileSouthWalkable) {
+          if(!$tileEastWalkable && !$tileNorthEastWalkable && !$tileNorthWalkable) {
+      
+       $isAValidItemPosition = true;
+       }
+       }
+
+
+// check if a template item or npc has been placed here already:
+
+for ($k = 0; $k < $templateItemsToAppend; $k++) {
+if($templateItemsToAppend[$k]['tileX'] == $i) {
+if($templateItemsToAppend[$k]['tileX'] == $j) {
+$isAValidItemPosition = false;
+}
+}
+}
+for ($k = 0; $k < $templateNPCsToAppend; $k++) {
+if($templateNPCsToAppend[$k]['tileX'] == $i) {
+if($templateNPCsToAppend[$k]['tileX'] == $j) {
+$isAValidItemPosition = false;
+}
+}
+    }
+
+if($isAValidItemPosition) {
+array_push($allSuitableCornerTiles, array($i, $j));
+}
+        }
+    }
+}
+
+// random order:
+   $randomSuitableCornerTiles = $allSuitableCornerTiles;
+            usort($randomSuitableCornerTiles, 'randomArraySorting');
+
+$placedItems = array();
+
+for ($i = 0; $i < $numberOfItems; $i++) {
+ // add random item from all possible to the next suitable location:
+array_push($placedItems, array(($dungeonDetails[$dungeonName]['possibleRandomItems'][mt_rand(0, count($dungeonDetails[$dungeonName]['possibleRandomItems']) - 1)]),$randomSuitableCornerTiles[$i][0],$randomSuitableCornerTiles[$i][1]));
+}
+
+/*
+echo"<code><pre>";
+var_dump($placedItems);
+echo"</pre></code>";
+*/
+}
 
 
 function getTileIsoCentreCoordX($tileX, $tileY) {
@@ -3084,6 +3242,8 @@ createGridLayout();
 outputSizedNodesLayout();
 
 gridTileGrid();
+
+addRandomItems();
 
 outputJSONContent();
 if($debug) {
