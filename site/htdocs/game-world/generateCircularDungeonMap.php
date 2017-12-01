@@ -58,7 +58,7 @@ offset doors (and connecting corridors) (?)
 make sure templates don't block entrance and exits
 rarer items should be placed more often the deeper in to the dungeon the player has gone
 
-
+check the connectivity graph, if there is a short alternate page to the exit, then make that path a secret. 
 
 
 
@@ -1671,6 +1671,9 @@ $collisionsString .= ']';
 
 
 switch ($map[$i][$j]) {
+    case "e":
+        $terrainString.= '4, ';
+        break;
     case "-":
         $terrainString.= '0, ';
         break;
@@ -1880,10 +1883,10 @@ $outputJSON .= '"quantity": 1,"quality": 100,"durability": 100,"currentWear": 0,
 }
 
      // remove last comma:
-//$outputJSON = rtrim($outputJSON, ', ');
+$outputJSON = rtrim($outputJSON, ', ');
 
 // temporarily add a chest to mark the exit ###########
-$outputJSON .= '{"type": 48, "tileX": '.$exitX.', "tileY": '.$exitY.', "contains": [{"type": 1},{"type": 3},{"type": "$", "quantity": 2500}]}';
+//$outputJSON .= '{"type": 48, "tileX": '.$exitX.', "tileY": '.$exitY.', "contains": [{"type": 1},{"type": 3},{"type": "$", "quantity": 2500}]}';
 
 
 if($templateItemsToAppend != '') {
@@ -3072,23 +3075,55 @@ echo"</pre></code>";
 
 
 function placeDoors() {
-    global $doorsJSON, $exitX, $exitY, $thisMapsId, $map;
+    global $doorsJSON, $exitX, $exitY, $thisMapsId, $map, $thisPlayersId, $dungeonName, $entranceX, $entranceY;
 
+// place exit:
 $doorsJSON = '{';
 for ($i=-1;$i<=1;$i++) {
-$doorsJSON .= '"'.($exitX+$i).','.$exitY.'": {  "map": '.($thisMapsId-1).',  "startX": "?';
-if($i =-1) {
- $doorsJSON .= "-1";
+    $doorsJSON .= '"'.($exitX+$i).','.$exitY.'": {  "map": '.($thisMapsId-1).',  "startX": "?';
+    if($i ==-1) {
+        $doorsJSON .= "-1";
+    }
+    if($i ==1) {
+        $doorsJSON .= "+1";
+    }
+    $doorsJSON .= '",  "startY": "?"},';
+    $map[$exitY][($exitX+$i)] = "e";
 }
-if($i =1) {
- $doorsJSON .= "+1";
-}
-$doorsJSON .= '",  "startY": "?"},';
 
 
-$map[$exitY][($exitX+$i)] = "e";
+$previousMap = $thisMapsId+1;
 
+if($previousMap == 0) {
+ // get data from config
+} else {
+
+
+// load previous procedural map json ###
+    $jsonPath = $_SERVER['DOCUMENT_ROOT'].'/data/chr'.$thisPlayersId.'/dungeon/'.$dungeonName.'/'.$previousMap.'.json';
+    $previousMap = file_get_contents($jsonPath);
+$previousMapJSON = json_decode($previousMap, TRUE);
+$previousMapsExitDoors = array();
+foreach ($previousMapJSON['map']['doors'] as $thisDoorKey => $thisDoor) {
+if($thisDoor["map"] == $thisMapsId) {
+$thisDoorLocation = explode(",",$thisDoorKey);
+array_push($previousMapsExitDoors, array($thisDoorLocation[0],$thisDoorLocation[1]));
 }
+}
+
+
+
+for ($i=-1;$i<=1;$i++) {
+    $doorsJSON .= '"'.($entranceX+$i).','.$entranceY.'": {  "map": '.$previousMap.',  "startX": "'.$previousMapsExitDoors[($i+1)][0].'",  "startY": "'.$previousMapsExitDoors[($i+1)][1].'"},';
+    $map[$entranceY][($entranceX+$i)] = "e";
+}
+}
+
+
+
+
+
+
 
     // remove last comma:
 $doorsJSON = rtrim($doorsJSON, ',');
@@ -3289,8 +3324,11 @@ outputIsometricView();
 
 if($debug) {
 echo '<code style="width:100%;clear:both;display:block;font-size:0.8em;">';
+echo htmlentities($outputJSON);
+} else {
+    echo $outputJSON;
 }
-echo $outputJSON;
+
 if($debug) {
 echo '</code>';
 }

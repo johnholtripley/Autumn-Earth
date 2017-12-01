@@ -7,7 +7,7 @@
 $dungeonDetails = array(
 
 'the-barrow-mines' => array(
-'graphics' => '{"src": "blank.png", "centreX": 24, "centreY": 12},{"src": "block.png","centreX": 24,"centreY": 45},{"src": "red-block.png","centreX": 24,"centreY": 45},{"src": "grey-block.png","centreX": 24,"centreY": 45}',
+'graphics' => '{"src": "blank.png", "centreX": 24, "centreY": 12},{"src": "block.png","centreX": 24,"centreY": 45},{"src": "red-block.png","centreX": 24,"centreY": 45},{"src": "grey-block.png","centreX": 24,"centreY": 45},{"src": "trapdoor.png", "centreX": 24, "centreY": 12}',
 'ambientSounds' => '{"birdSong": "../sounds/bats-NOT_MINE-youtube.mp3"}',
 'underlyingGridLayout' => 'offset-grid',
 'possibleRandomItems' => array(32,35,44,45,46),
