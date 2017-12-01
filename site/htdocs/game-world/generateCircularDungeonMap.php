@@ -3139,9 +3139,11 @@ $doorsJSON = rtrim($doorsJSON, ',');
 
 $doorsJSON.="}";
 
+/*
 echo'<code style="width:100%;display:block;clear:both;"><pre>';
 var_dump($doorsJSON);
 echo"</pre></code>";
+*/
     // john
   
 }
