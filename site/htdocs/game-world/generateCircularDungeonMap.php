@@ -1785,7 +1785,11 @@ $outputJSON .= '"shops": [],';
 $outputJSON .= '"npcs": ['.$templateNPCsToAppend.'],';
 // john ###
 
-$outputJSON .= '"doors": {"'.($exitX-1).','.$exitY.'": {  "map": '.($thisMapsId-1).',  "startX": "?-1",  "startY": "?"},"'.$exitX.','.$exitY.'": {  "map": '.($thisMapsId-1).',  "startX": "?",  "startY": "?"},"'.($exitX+1).','.$exitY.'": {  "map": '.($thisMapsId-1).',  "startX": "?+1",  "startY": "?"}},';
+//$outputJSON .= '"doors": {"'.($exitX-1).','.$exitY.'": {  "map": '.($thisMapsId-1).',  "startX": "?-1",  "startY": "?"},"'.$exitX.','.$exitY.'": {  "map": '.($thisMapsId-1).',  "startX": "?",  "startY": "?"},"'.($exitX+1).','.$exitY.'": {  "map": '.($thisMapsId-1).',  "startX": "?+1",  "startY": "?"}},';
+
+
+$outputJSON .= '"doors": '.$doorsJSON.",";
+
 $outputJSON .= '"innerDoors": {';
 
 if(count($drawnTileDoors)>0) {
@@ -3092,6 +3096,11 @@ for ($i=-1;$i<=1;$i++) {
 }
 
 
+echo'<code style="width:100%;display:block;clear:both;"><pre>';
+var_dump($doorsJSON);
+echo"</pre></code>";
+
+
 $previousMap = $thisMapsId+1;
 
 if($previousMap == 0) {
@@ -3101,8 +3110,8 @@ if($previousMap == 0) {
 
 // load previous procedural map json ###
     $jsonPath = $_SERVER['DOCUMENT_ROOT'].'/data/chr'.$thisPlayersId.'/dungeon/'.$dungeonName.'/'.$previousMap.'.json';
-    $previousMap = file_get_contents($jsonPath);
-$previousMapJSON = json_decode($previousMap, TRUE);
+    $previousMapFile = file_get_contents($jsonPath);
+$previousMapJSON = json_decode($previousMapFile, TRUE);
 $previousMapsExitDoors = array();
 foreach ($previousMapJSON['map']['doors'] as $thisDoorKey => $thisDoor) {
 if($thisDoor["map"] == $thisMapsId) {
@@ -3128,6 +3137,11 @@ for ($i=-1;$i<=1;$i++) {
     // remove last comma:
 $doorsJSON = rtrim($doorsJSON, ',');
 
+$doorsJSON.="}";
+
+echo'<code style="width:100%;display:block;clear:both;"><pre>';
+var_dump($doorsJSON);
+echo"</pre></code>";
     // john
   
 }
