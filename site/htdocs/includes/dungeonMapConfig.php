@@ -15,6 +15,8 @@ $dungeonDetails = array(
 'randomItemsMax' => '8',
 'templatesMin' => '4',
 'templatesMax' => '6',
+'doorCentreWhenLeavingTheDungeon' => array(2,1),
+'mapWhenLeavingTheDungeon' => 2,
 'levelLockedTemplates' => array(
 	// template name => earliest level it can be encountered on, latest level it can be encountered on (INF or numeric):
 	// if not included, just use it without restrictions

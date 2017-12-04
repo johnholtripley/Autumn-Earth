@@ -10,6 +10,8 @@ if (isset($_GET["debug"])) {
     $debug = false;
 }
 
+$isFirstTime = true;
+
 if($debug) {
 ?>
 <style>
@@ -416,40 +418,40 @@ if($debug) {
 
 function init()
 {
-    global $nodeList, $jointList, $canvaDimension, $keyColours, $storedSeed, $unadjustedSeed, $debug, $thisMapsId, $thisPlayersId, $dungeonName, $thisMapsId;
+    global $nodeList, $jointList, $canvaDimension, $keyColours, $storedSeed, $unadjustedSeed, $debug, $thisMapsId, $thisPlayersId, $dungeonName, $thisMapsId, $isFirstTime;
 
-$thisMapsId = $_GET['requestedMap'];
-$thisPlayersId = 999;
-
+    $thisMapsId = $_GET['requestedMap'];
+    $thisPlayersId = 999;
 
     $keyColours = array(
         array(255, 0, 64),
         array(255, 235, 15),
         array(15, 134, 255),
-        array(19, 209, 46),
+        array(19, 209, 46)
     );
     $canvaDimension = 600;
     $nodeList       = array();
     $jointList      = array();
-    if (isset($_GET["seed"])) {
+    if (isset($_GET["seed"]) && $isFirstTime) {
         $storedSeed = intval($_GET["seed"]);
+        // allow the seed to be regenerated if this seed fails:
+        $isFirstTime = false;
     } else {
         // http://php.net/manual/en/function.mt_srand.php
         list($usec, $sec) = explode(' ', microtime());
         $storedSeed       = floor((float) $sec + ((float) $usec * 100000));
     }
     $dungeonName = $_GET["dungeonName"];
+
+    
+    $mapFilename = "../data/chr" . $thisPlayersId . "/dungeon/".$dungeonName."/" . $thisMapsId . '.json';
+    if ((is_file($mapFilename)) && !$debug) {
+        header("Location: /" . $mapFilename);
+        die();
+    }
+
+    $unadjustedSeed = $storedSeed;
     // make sure the level is unique even if the same seed is used:
-
-
-$mapFilename = "../data/chr" . $thisPlayersId . "/dungeon/".$dungeonName."/" . $thisMapsId . '.json';
-  if ((is_file($mapFilename)) && !$debug) {
-            header("Location: /" . $mapFilename);
-            die();
-        }
-
-
-$unadjustedSeed = $storedSeed;
     $storedSeed -= intval($thisMapsId);
   
     mt_srand($storedSeed);
@@ -3095,7 +3097,7 @@ echo"</pre></code>";
 
 
 function placeDoors() {
-    global $doorsJSON, $exitX, $exitY, $thisMapsId, $map, $thisPlayersId, $dungeonName, $entranceX, $entranceY;
+    global $doorsJSON, $exitX, $exitY, $thisMapsId, $map, $thisPlayersId, $dungeonName, $entranceX, $entranceY, $dungeonDetails;
 
 // place exit:
 $doorsJSON = '{';
@@ -3120,11 +3122,22 @@ echo"</pre></code>";
 $previousMap = $thisMapsId+1;
 
 if($previousMap == 0) {
- // get data from config
+ // get data from config:
+$exitX = $dungeonDetails[$dungeonName]['doorCentreWhenLeavingTheDungeon'][0];
+$exitY = $dungeonDetails[$dungeonName]['doorCentreWhenLeavingTheDungeon'][1];
+$targetMap = $dungeonDetails[$dungeonName]['mapWhenLeavingTheDungeon']; 
+// +1 on Y to place the doors just before the place the hero will start:
+    for ($i=-1;$i<=1;$i++) {
+    $doorsJSON .= '"'.($entranceX+$i).','.($entranceY+1).'": {  "map": '.$targetMap.',  "startX": "';
+         $doorsJSON .= ($exitX+$i);
+    $doorsJSON .= '",  "startY": "'.$exitY.'"},';
+    $map[$entranceY+1][($entranceX+$i)] = "e";
+}
+   
 } else {
 
 
-// load previous procedural map json ###
+// load previous procedural map json 
     $jsonPath = $_SERVER['DOCUMENT_ROOT'].'/data/chr'.$thisPlayersId.'/dungeon/'.$dungeonName.'/'.$previousMap.'.json';
     $previousMapFile = file_get_contents($jsonPath);
 $previousMapJSON = json_decode($previousMapFile, TRUE);
@@ -3139,9 +3152,9 @@ array_push($previousMapsExitDoors, array($thisDoorLocation[0],$thisDoorLocation[
 
 
 for ($i=-1;$i<=1;$i++) {
-    // -1 on Y to place the doors just before the place the hero will start:
-    $doorsJSON .= '"'.($entranceX+$i).','.($entranceY-1).'": {  "map": '.$previousMap.',  "startX": "'.$previousMapsExitDoors[($i+1)][0].'",  "startY": "'.$previousMapsExitDoors[($i+1)][1].'"},';
-    $map[$entranceY-1][($entranceX+$i)] = "e";
+    // +1 on Y to place the doors just before the place the hero will start:
+    $doorsJSON .= '"'.($entranceX+$i).','.($entranceY+1).'": {  "map": '.$previousMap.',  "startX": "'.$previousMapsExitDoors[($i+1)][0].'",  "startY": "'.$previousMapsExitDoors[($i+1)][1].'"},';
+    $map[$entranceY+1][($entranceX+$i)] = "e";
 }
 }
 
