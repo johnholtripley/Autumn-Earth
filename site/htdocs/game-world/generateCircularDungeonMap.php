@@ -58,8 +58,10 @@ offset doors (and connecting corridors) (?)
 make sure templates don't block entrance and exits
 rarer items should be placed more often the deeper in to the dungeon the player has gone
 
-check the connectivity graph, if there is a short alternate page to the exit, then make that path a secret. 
+check the connectivity graph, if there is a short alternate path to the exit, then make that path a secret. 
 
+
+http://ae.dev/game-world/generateCircularDungeonMap.php?debug=true&dungeonName=the-barrow-mines&requestedMap=-1&seed=1512409032 - no doors drawn
 
 
 ISSUES:
@@ -414,7 +416,7 @@ if($debug) {
 
 function init()
 {
-    global $nodeList, $jointList, $canvaDimension, $keyColours, $storedSeed, $debug, $thisMapsId, $thisPlayersId, $dungeonName, $thisMapsId;
+    global $nodeList, $jointList, $canvaDimension, $keyColours, $storedSeed, $unadjustedSeed, $debug, $thisMapsId, $thisPlayersId, $dungeonName, $thisMapsId;
 
 $thisMapsId = $_GET['requestedMap'];
 $thisPlayersId = 999;
@@ -437,6 +439,19 @@ $thisPlayersId = 999;
         $storedSeed       = floor((float) $sec + ((float) $usec * 100000));
     }
     $dungeonName = $_GET["dungeonName"];
+    // make sure the level is unique even if the same seed is used:
+
+
+$mapFilename = "../data/chr" . $thisPlayersId . "/dungeon/".$dungeonName."/" . $thisMapsId . '.json';
+  if ((is_file($mapFilename)) && !$debug) {
+            header("Location: /" . $mapFilename);
+            die();
+        }
+
+
+$unadjustedSeed = $storedSeed;
+    $storedSeed -= intval($thisMapsId);
+  
     mt_srand($storedSeed);
 }
 
@@ -1243,6 +1258,7 @@ function plotConnectivityOnDelaunayGraph()
     if (!$foundUnusedVertex) {
         if($debug) {
         echo "FAILED... RESTARTING...<br>";
+    
     }
     }
     return $foundUnusedVertex;
@@ -1622,11 +1638,11 @@ if($debug) {
 
 
 function outputJSONContent() {
-global $debug, $map, $itemMap, $drawnTileDoors, $drawnTileKeys, $mapTilesX, $mapTilesY, $storedSeed, $thisMapsId, $thisPlayersId, $entranceX, $entranceY, $exitX, $exitY, $dungeonName, $dungeonDetails, $outputJSON, $templateGraphicsToAppend, $templateNPCsToAppend, $templateItemsToAppend, $templateHotspotsToAppend, $allTemplateJSON, $templateOffsetX, $templateOffsetY, $placedItems, $doorsJSON;
+global $debug, $map, $itemMap, $drawnTileDoors, $drawnTileKeys, $mapTilesX, $mapTilesY, $storedSeed, $thisMapsId, $thisPlayersId, $entranceX, $entranceY, $exitX, $exitY, $dungeonName, $dungeonDetails, $outputJSON, $templateGraphicsToAppend, $templateNPCsToAppend, $templateItemsToAppend, $templateHotspotsToAppend, $allTemplateJSON, $templateOffsetX, $templateOffsetY, $placedItems, $doorsJSON, $unadjustedSeed;
 
 
 
-$outputJSON = '{"map":{"zoneName": "A Circular Dungeon: '.$storedSeed.'",';
+$outputJSON = '{"map":{"zoneName": "A Circular Dungeon: '.$unadjustedSeed.'",';
 if(isset($dungeonDetails[$dungeonName]['ambientSounds'])){
 
 $outputJSON .= '"ambientSounds": '.json_encode(json_decode($dungeonDetails[$dungeonName]['ambientSounds'])).',';
@@ -3095,11 +3111,11 @@ for ($i=-1;$i<=1;$i++) {
     $map[$exitY][($exitX+$i)] = "e";
 }
 
-
+/*
 echo'<code style="width:100%;display:block;clear:both;"><pre>';
 var_dump($doorsJSON);
 echo"</pre></code>";
-
+*/
 
 $previousMap = $thisMapsId+1;
 
@@ -3123,18 +3139,13 @@ array_push($previousMapsExitDoors, array($thisDoorLocation[0],$thisDoorLocation[
 
 
 for ($i=-1;$i<=1;$i++) {
-    $doorsJSON .= '"'.($entranceX+$i).','.$entranceY.'": {  "map": '.$previousMap.',  "startX": "'.$previousMapsExitDoors[($i+1)][0].'",  "startY": "'.$previousMapsExitDoors[($i+1)][1].'"},';
-    $map[$entranceY][($entranceX+$i)] = "e";
+    // -1 on Y to place the doors just before the place the hero will start:
+    $doorsJSON .= '"'.($entranceX+$i).','.($entranceY-1).'": {  "map": '.$previousMap.',  "startX": "'.$previousMapsExitDoors[($i+1)][0].'",  "startY": "'.$previousMapsExitDoors[($i+1)][1].'"},';
+    $map[$entranceY-1][($entranceX+$i)] = "e";
 }
 }
 
-
-
-
-
-
-
-    // remove last comma:
+// remove last comma:
 $doorsJSON = rtrim($doorsJSON, ',');
 
 $doorsJSON.="}";
@@ -3352,6 +3363,6 @@ echo '</code>';
 
 
 if($debug) {
-echo '<p style="clear:both;padding-top:20px;"><a href="' . explode("?", $_SERVER["REQUEST_URI"])[0] . '?debug=true&amp;dungeonName='.$dungeonName.'&amp;requestedMap='.$thisMapsId.'&amp;seed=' . $storedSeed . '">' . $storedSeed . '</a> | <a href="' . explode("?", $_SERVER["REQUEST_URI"])[0] . '?debug=true&amp;dungeonName='.$dungeonName.'&amp;requestedMap='.$thisMapsId.'">New seed</a></p>';
+echo '<p style="clear:both;padding-top:20px;"><a href="' . explode("?", $_SERVER["REQUEST_URI"])[0] . '?debug=true&amp;dungeonName='.$dungeonName.'&amp;requestedMap='.$thisMapsId.'&amp;seed=' . $unadjustedSeed . '">' . $unadjustedSeed . '</a> | <a href="' . explode("?", $_SERVER["REQUEST_URI"])[0] . '?debug=true&amp;dungeonName='.$dungeonName.'&amp;requestedMap='.$thisMapsId.'">New seed</a></p>';
 }
 ?>
