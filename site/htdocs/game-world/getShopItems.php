@@ -54,8 +54,11 @@ $json ='{
 
  */
  
- 
- 
+ /*
+ // has ink (#40) but no colour specified - so needs to pick a random (or more than 1) colour to use: ########
+ // ink is #12
+ $json ='{"mapNumber":2,"shops":[{"name":"shop #1","uniqueItems":[],"specialism":2,"categories":[1,2],"size":"small","currency":"money","hash":2067019224},{"name":"shop #2","uniqueItems":{"12":[{"colour":3},{"colour":7}],"15":[{"colour":1,"inscription":"stuffffff"}]},"specialism":null,"categories":[3],"size":"small","currency":"money","hash":2067019225},{"name":"shop #3","uniqueItems":{"1":[[]],"5":[[]],"8":[[]],"10":[[]],"13":[[]],"16":[[]],"18":[[]],"32":[[]],"36":[[]],"40":[[]]},"specialism":null,"categories":[],"size":"small","currency":"money","hash":2067019226}]}';
+ */
  
  
  
@@ -110,7 +113,7 @@ $inventoryData = [];
  
 if(count($jsonData['shops'][$i]["categories"]) > 0) {
  
-$query2 = "SELECT tblinventoryitems.* from tblinventoryitems where tblinventoryitems.itemcategories in (".implode(",",$jsonData['shops'][$i]["categories"]).") and tblinventoryitems.pricecode <= ".$shopSizePriceLimits[($jsonData['shops'][$i]["size"])]." and ".$activeSeasonQuery." order by tblinventoryitems.shortname ASC";
+$query2 = "SELECT tblinventoryitems.* from tblinventoryitems where tblinventoryitems.itemcategories in (".implode(",",$jsonData['shops'][$i]["categories"]).") and tblinventoryitems.pricecode <= ".$shopSizePriceLimits[($jsonData['shops'][$i]["size"])]." and ".$activeSeasonQuery." and tblinventoryitems.showinthecodex = 1 order by tblinventoryitems.shortname ASC";
 // Get colour variants as well for relevant items
  
 $result2 = mysql_query($query2) or die ("failed:".$query2);
@@ -165,7 +168,7 @@ mysql_free_result($result3);
  
  
  
-$itemIdsThatNeedColourVariants = [12];
+$itemIdsThatNeedColourVariants = [12,40];
 $inventoryDataCount = count($inventoryData);
 for ($j=0;$j<$inventoryDataCount;$j++) {
     $inventoryData[$j]['colourName'] = "";
@@ -196,7 +199,7 @@ for ($j=0;$j<$inventoryDataCount;$j++) {
             unset($inventoryData[$j]);
         }
     } else {
-        // see if its colour needs to be displaying:
+        // see if its colour needs displaying:
         if(($inventoryData[$j]['colour'] != 0) && ($inventoryData[$j]['hasInherentColour'] == 0)) {
             $inventoryData[$j]['colourName'] = $allColours[$inventoryData[$j]['colour']]." ";
         }

@@ -64,6 +64,8 @@ check the connectivity graph, if there is a short alternate path to the exit, th
 
 
 http://ae.dev/game-world/generateCircularDungeonMap.php?debug=true&dungeonName=the-barrow-mines&requestedMap=-1&seed=1512409032 - no doors drawn
+http://ae.dev/game-world/generateCircularDungeonMap.php?debug=true&dungeonName=the-barrow-mines&requestedMap=-1&seed=1512423838 - only 2 doors drawn for block of 3
+
 
 
 ISSUES:
