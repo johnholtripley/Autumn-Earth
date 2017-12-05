@@ -47,18 +47,22 @@ $json ='{
     "categories": [],
     "size":"small",
     "currency":"money"
-}
+},
+{
+    "name":"shop #3",
+    "hash":"zAbCd12",
+    "uniqueItems":{"12":[{}],"15":[{"colour":1,"inscription":"stuffffff"}]},
+    "specialism": 2,
+    "categories": [1,2],
+    "size":"small",
+    "currency":"money"
+},
 ]
  
 }';
 
  */
- 
- /*
- // has ink (#40) but no colour specified - so needs to pick a random (or more than 1) colour to use: ########
- // ink is #12
- $json ='{"mapNumber":2,"shops":[{"name":"shop #1","uniqueItems":[],"specialism":2,"categories":[1,2],"size":"small","currency":"money","hash":2067019224},{"name":"shop #2","uniqueItems":{"12":[{"colour":3},{"colour":7}],"15":[{"colour":1,"inscription":"stuffffff"}]},"specialism":null,"categories":[3],"size":"small","currency":"money","hash":2067019225},{"name":"shop #3","uniqueItems":{"1":[[]],"5":[[]],"8":[[]],"10":[[]],"13":[[]],"16":[[]],"18":[[]],"32":[[]],"36":[[]],"40":[[]]},"specialism":null,"categories":[],"size":"small","currency":"money","hash":2067019226}]}';
- */
+
  
  
  
@@ -161,9 +165,10 @@ mysql_free_result($result3);
 // then sort
  
  
- 
- 
- 
+
+ echo "<pre><code>";
+ var_dump($inventoryData);
+ echo "</code></pre>";
  
  
  
@@ -276,6 +281,7 @@ $allItemIdsUsed = array_unique($allItemIdsUsed);
  
 // create JSON response:
 echo '{"markup": ["'.addcslashes($markupToOutput, '"\\/').'"],"allItemIds": ["'.implode("|",$allItemIdsUsed).'"]}';
+//echo htmlentities($markupToOutput);
  
  
 ?>
