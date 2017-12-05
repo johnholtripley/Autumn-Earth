@@ -649,10 +649,12 @@ function removeMapAssets() {
         tileImages[i].src = '';
         tileImages[i] = null;
     }
+    console.log(itemGraphicsToLoad);
+    console.log(npcGraphicsToLoad);
     for (var i in npcGraphicsToLoad) {
-        npcImages[thisMapData.npcs[i]].onerror = '';
-        npcImages[thisMapData.npcs[i]].src = '';
-        npcImages[thisMapData.npcs[i]] = null;
+        npcImages[npcGraphicsToLoad[i]].onerror = '';
+        npcImages[npcGraphicsToLoad[i]].src = '';
+        npcImages[npcGraphicsToLoad[i]] = null;
     }
     for (var i in itemGraphicsToLoad) {
         itemImages[itemGraphicsToLoad[i]].onerror = '';
@@ -2306,8 +2308,7 @@ var thisItemOffsetRow = 0;
                 assetsToDraw.push([findIsoDepth(hero.allPets[hero.activePets[i]].x, hero.allPets[hero.activePets[i]].y, hero.allPets[hero.activePets[i]].z), "sprite", activePetImages[i], thisNPCOffsetCol * hero.allPets[hero.activePets[i]].spriteWidth, thisNPCOffsetRow * hero.allPets[hero.activePets[i]].spriteHeight, hero.allPets[hero.activePets[i]].spriteWidth, hero.allPets[hero.activePets[i]].spriteHeight, Math.floor(thisX - hero.isox - hero.allPets[hero.activePets[i]].centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - hero.allPets[hero.activePets[i]].centreY + (canvasHeight / 2) - hero.allPets[hero.activePets[i]].z), hero.allPets[hero.activePets[i]].spriteWidth, hero.allPets[hero.activePets[i]].spriteHeight]);
             }
         }
-        console.log(itemImages);
-console.log(npcImages);
+
         for (var i = 0; i < thisMapData.npcs.length; i++) {
             thisNPC = thisMapData.npcs[i];
             thisNPCOffsetCol = currentAnimationFrame % thisNPC["animation"][thisNPC.currentAnimation]["length"];
