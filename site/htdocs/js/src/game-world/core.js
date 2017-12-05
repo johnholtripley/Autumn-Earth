@@ -262,30 +262,34 @@ function loadMapAssets() {
         });
     }
     npcGraphicsToLoad = [];
+var thisNPCIdentifier;
     for (var i = 0; i < thisMapData.npcs.length; i++) {
-        npcGraphicsToLoad.push({
-            name: thisMapData.npcs[i].name,
-            src: thisMapData.npcs[i].src
+        thisNPCIdentifier = "npc" + thisMapData.npcs[i].name;
+        if (npcGraphicsToLoad.indexOf(thisNPCIdentifier) == -1) {
+        imagesToLoad.push({
+            name: thisNPCIdentifier,
+            src: "/images/game-world/npcs/" + thisMapData.npcs[i].src
         });
+        npcGraphicsToLoad.push(thisNPCIdentifier);
+    }
     }
     // check for nests, and get the graphics for any creatures they will spawn:
     for (var i = 0; i < thisMapData.items.length; i++) {
         if (currentActiveInventoryItems[thisMapData.items[i].type].action == "nest") {
             for (var j = 0; j < thisMapData.items[i].contains.length; j++) {
-                npcGraphicsToLoad.push({
-                    name: thisMapData.items[i].contains[j].name,
-                    src: thisMapData.items[i].contains[j].src
+                thisNPCIdentifier = "npc" + thisMapData.items[i].contains[j].name;
+                if (npcGraphicsToLoad.indexOf(thisNPCIdentifier) == -1) {
+                imagesToLoad.push({
+                    name: thisNPCIdentifier,
+                    src: "/images/game-world/npcs/" + thisMapData.items[i].contains[j].src
                 });
+                npcGraphicsToLoad.push(thisNPCIdentifier);
+            }
             }
         }
     }
 
-    for (var i = 0; i < npcGraphicsToLoad.length; i++) {
-        imagesToLoad.push({
-            name: "npc" + npcGraphicsToLoad[i].name,
-            src: "/images/game-world/npcs/" + npcGraphicsToLoad[i].src
-        });
-    }
+
 
     itemGraphicsToLoad = [];
     var thisItemIdentifier = '';
@@ -509,7 +513,7 @@ function prepareGame() {
     }
     npcImages = [];
     for (var i = 0; i < npcGraphicsToLoad.length; i++) {
-        npcImages[npcGraphicsToLoad[i].name] = Loader.getImage("npc" + npcGraphicsToLoad[i].name);
+        npcImages[npcGraphicsToLoad[i]] = Loader.getImage(npcGraphicsToLoad[i]);
 
     }
     itemImages = [];
@@ -645,10 +649,10 @@ function removeMapAssets() {
         tileImages[i].src = '';
         tileImages[i] = null;
     }
-    for (var i = 0; i < npcGraphicsToLoad.length; i++) {
-        npcImages[thisMapData.npcs[i].name].onerror = '';
-        npcImages[thisMapData.npcs[i].name].src = '';
-        npcImages[thisMapData.npcs[i].name] = null;
+    for (var i in npcGraphicsToLoad) {
+        npcImages[thisMapData.npcs[i]].onerror = '';
+        npcImages[thisMapData.npcs[i]].src = '';
+        npcImages[thisMapData.npcs[i]] = null;
     }
     for (var i in itemGraphicsToLoad) {
         itemImages[itemGraphicsToLoad[i]].onerror = '';
@@ -2262,7 +2266,7 @@ function draw() {
         var thisNPCOffsetCol = 0;
         var thisNPCOffsetRow = 0;
         var thisFileColourSuffix = '';
-        var thisColourName, thisItemIdentifier, thisPlatform;
+        var thisColourName, thisItemIdentifier, thisPlatform, thisNPCIdentifier;
 var thisItemOffsetCol = 0;
 var thisItemOffsetRow = 0;
 
@@ -2302,7 +2306,8 @@ var thisItemOffsetRow = 0;
                 assetsToDraw.push([findIsoDepth(hero.allPets[hero.activePets[i]].x, hero.allPets[hero.activePets[i]].y, hero.allPets[hero.activePets[i]].z), "sprite", activePetImages[i], thisNPCOffsetCol * hero.allPets[hero.activePets[i]].spriteWidth, thisNPCOffsetRow * hero.allPets[hero.activePets[i]].spriteHeight, hero.allPets[hero.activePets[i]].spriteWidth, hero.allPets[hero.activePets[i]].spriteHeight, Math.floor(thisX - hero.isox - hero.allPets[hero.activePets[i]].centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - hero.allPets[hero.activePets[i]].centreY + (canvasHeight / 2) - hero.allPets[hero.activePets[i]].z), hero.allPets[hero.activePets[i]].spriteWidth, hero.allPets[hero.activePets[i]].spriteHeight]);
             }
         }
-
+        console.log(itemImages);
+console.log(npcImages);
         for (var i = 0; i < thisMapData.npcs.length; i++) {
             thisNPC = thisMapData.npcs[i];
             thisNPCOffsetCol = currentAnimationFrame % thisNPC["animation"][thisNPC.currentAnimation]["length"];
@@ -2311,9 +2316,9 @@ var thisItemOffsetRow = 0;
             thisY = findIsoCoordsY(thisNPC.x, thisNPC.y);
 
             //assetsToDraw.push([findIsoDepth(thisX, thisY), npcImages[i], Math.floor(thisX - hero.isox - thisNPC.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisNPC.centreY + (canvasHeight / 2))]);
+thisNPCIdentifier = "npc" + thisMapData.npcs[i].name;
 
-
-            assetsToDraw.push([findIsoDepth(thisNPC.x, thisNPC.y, thisNPC.z), "sprite", npcImages[thisMapData.npcs[i].name], thisNPCOffsetCol * thisNPC.spriteWidth, thisNPCOffsetRow * thisNPC.spriteHeight, thisNPC.spriteWidth, thisNPC.spriteHeight, Math.floor(thisX - hero.isox - thisNPC.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisNPC.centreY + (canvasHeight / 2) - thisNPC.z), thisNPC.spriteWidth, thisNPC.spriteHeight]);
+            assetsToDraw.push([findIsoDepth(thisNPC.x, thisNPC.y, thisNPC.z), "sprite", npcImages[thisNPCIdentifier], thisNPCOffsetCol * thisNPC.spriteWidth, thisNPCOffsetRow * thisNPC.spriteHeight, thisNPC.spriteWidth, thisNPC.spriteHeight, Math.floor(thisX - hero.isox - thisNPC.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisNPC.centreY + (canvasHeight / 2) - thisNPC.z), thisNPC.spriteWidth, thisNPC.spriteHeight]);
         }
 
 

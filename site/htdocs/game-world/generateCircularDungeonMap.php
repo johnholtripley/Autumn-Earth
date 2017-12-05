@@ -1,8 +1,8 @@
 <?php
 
-include $_SERVER['DOCUMENT_ROOT'] . "/game-world/generateCircularDungeonMap-third-party-arrow-code.php";
-include("../includes/dungeonMapConfig.php");
-include($_SERVER['DOCUMENT_ROOT']."/game-world/generateBook.php");
+include($_SERVER['DOCUMENT_ROOT'] . "/game-world/generateCircularDungeonMap-third-party-arrow-code.php");
+include($_SERVER['DOCUMENT_ROOT'] . "/includes/dungeonMapConfig.php");
+include($_SERVER['DOCUMENT_ROOT'] . "/game-world/generateBook.php");
 
 if (isset($_GET["debug"])) {
     $debug = true;
@@ -50,30 +50,23 @@ elevations
 Convert locks, valves, hazards and treasure into interesting variants
 Decorate rooms so they are different and identifiable
 pathfind to confirm map doors are connected (including checks for items, elevation, locked doors and static NPCs)
-connect exits and the next map
 remove doors for small rooms (unless locked) (?)
 the code for determining whether an area should be black or a solid terrain piece needs to look at height differences as well
 have some sort of persistence between dungeon visits. keep track of creature populations etc.
 water or lava courses (?)
-when placing items, place them clear of templates
 offset doors (and connecting corridors) (?)
-make sure templates don't block entrance and exits
+make sure templates don't block entrance and exits to the level or individual rooms (stairs themselves are checked, but not the starting space in front of them)
 rarer items should be placed more often the deeper in to the dungeon the player has gone
-
 check the connectivity graph, if there is a short alternate path to the exit, then make that path a secret. 
 
-inner templates check for doors, but need space around the door to be clear as well
 
 
-getShopJSON error when returning from random dungeon - undefined offset line 183
 
 
 
 ISSUES:
 http://ae.dev/game-world/generateCircularDungeonMap.php?debug=true&seed=1510610103 - double thickness walls look odd
 http://ae.dev/game-world/generateCircularDungeonMap.php?debug=true&dungeonName=the-barrow-mines&requestedMap=-1&seed=1510832016 - as the grid is drawn, it needs to check no row or column offsets overlap
-
-http://ae.dev/game-world/generateCircularDungeonMap.php?debug=true&dungeonName=the-barrow-mines&requestedMap=-1&seed=1511804557 - west template connection, but not rotated
 
 ---- */
 
@@ -3357,22 +3350,18 @@ $grownGrammar = "S{O[K#2]|,#2#O{#0#O[K#1#]|,}O{O[K#3#]|,}O#3#O[K#0#]|,}O#1#E";
     }
 } while (!plotConnectivityOnDelaunayGraph());
 
+
 outputDelaunayGraph();
-
 createGridLayout();
-
 outputSizedNodesLayout();
-
 gridTileGrid();
 placeDoors();
 findRelevantTemplates();
 outputTileMap();
 addRandomItems();
-
-
 outputJSONContent();
 if($debug) {
-outputIsometricView();
+    outputIsometricView();
 }
 
 
