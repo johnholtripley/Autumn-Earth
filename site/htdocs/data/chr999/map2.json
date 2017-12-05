@@ -206,6 +206,37 @@
                     }
                 }
             }, {
+                "name": "hen",
+                "src": "white-hen.png",
+                "width": 20,
+                "height": 20,
+                "spriteWidth": 28,
+                "spriteHeight": 34,
+                "centreX": 19,
+                "centreY": 28,
+                "tileX": 15,
+                "tileY": 3,
+                "movement": ["-"],
+                "facing": "s",
+                "walkThroughDoors": false,
+                "speed": 2,
+                "speech": [
+                    ["", "sound", "hen"]
+
+                ],
+                "speechIndex": 0,
+                "isCollidable": true,
+                "isMoving": false,
+                "animation": {
+                    "walk": {
+                        "length": 1,
+                        "n": 0,
+                        "e": 1,
+                        "s": 2,
+                        "w": 3
+                    }
+                }
+            }, {
                 "name": "labourer",
                 "src": "labourer.png",
                 "width": 20,

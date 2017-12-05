@@ -62,9 +62,10 @@ rarer items should be placed more often the deeper in to the dungeon the player 
 
 check the connectivity graph, if there is a short alternate path to the exit, then make that path a secret. 
 
+inner templates check for doors, but need space around the door to be clear as well
 
-http://ae.dev/game-world/generateCircularDungeonMap.php?debug=true&dungeonName=the-barrow-mines&requestedMap=-1&seed=1512409032 - no doors drawn
-http://ae.dev/game-world/generateCircularDungeonMap.php?debug=true&dungeonName=the-barrow-mines&requestedMap=-1&seed=1512423838 - only 2 doors drawn for block of 3
+
+getShopJSON error when returning from random dungeon - undefined offset line 183
 
 
 
@@ -1720,7 +1721,6 @@ $terrainString .= ']';
 
 
 
-
 $elevationString = '"elevation": [';
 
   for ($i = 0; $i < $mapTilesX; $i++) {   
@@ -1988,6 +1988,10 @@ $drawnOffset = 20;
             imagefilledrectangle($outputCanvas,($i)*$drawnTileSize+$drawnOffset,($j)*$drawnTileSize+$drawnOffset,($i+1)*$drawnTileSize+$drawnOffset,($j+1)*$drawnTileSize+$drawnOffset,  imagecolorallocate($outputCanvas, 0, 40, 120));
             break;
             */
+            case "e":
+            // entrance or exit:
+            imagefilledrectangle($outputCanvas,($i)*$drawnTileSize+$drawnOffset,($j)*$drawnTileSize+$drawnOffset,($i+1)*$drawnTileSize+$drawnOffset,($j+1)*$drawnTileSize+$drawnOffset,  imagecolorallocate($outputCanvas, 0, 0, 0));
+            break;
         case "d":
         // door
          imagefilledrectangle($outputCanvas,($i)*$drawnTileSize+$drawnOffset,($j)*$drawnTileSize+$drawnOffset,($i+1)*$drawnTileSize+$drawnOffset,($j+1)*$drawnTileSize+$drawnOffset,  imagecolorallocate($outputCanvas, 255, 255, 255));
@@ -2473,22 +2477,30 @@ $storePositionZero = $position[0];
                                         // position the template randomly within the available space:
                                         $thisTemplateOffsetX = $thisRoom[0] + mt_rand(0, ($thisRoomsWidth - $templateWidth));
                                         $thisTemplateOffsetY = $thisRoom[1] + mt_rand(0, ($thisRoomsHeight - $templateHeight));
-                                        $overlapsExistingTemplate = false;
+                                        $overlapsExistingStructure = false;
                                         // check a template hasn't already been placed here:
                                         for ($j = 0; $j < count($templatesPlacedOnThisLevel); $j++) {
                                             if (($thisTemplateOffsetX + $templateWidth) > $templatesPlacedOnThisLevel[$j][0]) {
                                                 if ($thisTemplateOffsetX < $templatesPlacedOnThisLevel[$j][2]) {
                                                     if ($thisTemplateOffsetY < $templatesPlacedOnThisLevel[$j][3]) {
                                                         if (($thisTemplateOffsetY + $templateHeight) > $templatesPlacedOnThisLevel[$j][1]) {
-                                                            $overlapsExistingTemplate = true;
+                                                            $overlapsExistingStructure = true;
                                                         }
                                                     }
                                                 }
                                             }
                                         }
+                                        // check it doesn't block the doors:
+                                        for ($k = 0; $k < $templateWidth; $k++) {
+                                            for ($j = 0; $j < $templateHeight; $j++) {
+                                                if($map[$j + $thisTemplateOffsetY][$k + $thisTemplateOffsetX] == "e") {
+                                                    $overlapsExistingStructure = true;
+                                                }
+                                            }
+                                        }
                                         $attempts++;
-                                    } while ($overlapsExistingTemplate && $attempts < 4);
-                                    if (!$overlapsExistingTemplate) {
+                                    } while ($overlapsExistingStructure && $attempts < 4);
+                                    if (!$overlapsExistingStructure) {
                                          $foundRoom = $thisRoom;
                                         array_push($templateOffsetX, $thisTemplateOffsetX);
                                         array_push($templateOffsetY, $thisTemplateOffsetY);
@@ -2960,12 +2972,7 @@ outputTileMap();
   }
   }
 
-findRelevantTemplates();
 
-
-
-
-outputTileMap();
    
 }
 
@@ -3130,9 +3137,9 @@ $exitY = $dungeonDetails[$dungeonName]['doorCentreWhenLeavingTheDungeon'][1];
 $targetMap = $dungeonDetails[$dungeonName]['mapWhenLeavingTheDungeon']; 
 // +1 on Y to place the doors just before the place the hero will start:
     for ($i=-1;$i<=1;$i++) {
-    $doorsJSON .= '"'.($entranceX+$i).','.($entranceY+1).'": {  "map": '.$targetMap.',  "startX": "';
+    $doorsJSON .= '"'.($entranceX+$i).','.($entranceY+1).'": {  "map": '.$targetMap.',  "startX": ';
          $doorsJSON .= ($exitX+$i);
-    $doorsJSON .= '",  "startY": "'.$exitY.'"},';
+    $doorsJSON .= ',  "startY": '.$exitY.'},';
     $map[$entranceY+1][($entranceX+$i)] = "e";
     // set the position that the hero wil start on to be blank:
     $map[$entranceY][($entranceX+$i)] = ".";
@@ -3357,9 +3364,11 @@ createGridLayout();
 outputSizedNodesLayout();
 
 gridTileGrid();
-
-addRandomItems();
 placeDoors();
+findRelevantTemplates();
+outputTileMap();
+addRandomItems();
+
 
 outputJSONContent();
 if($debug) {
