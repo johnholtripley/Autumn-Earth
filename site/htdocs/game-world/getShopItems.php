@@ -165,11 +165,11 @@ mysql_free_result($result3);
 // then sort
  
  
-
+/*
  echo "<pre><code>";
  var_dump($inventoryData);
  echo "</code></pre>";
- 
+ */
  
  
  
