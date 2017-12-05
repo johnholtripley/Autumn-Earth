@@ -3134,6 +3134,8 @@ $targetMap = $dungeonDetails[$dungeonName]['mapWhenLeavingTheDungeon'];
          $doorsJSON .= ($exitX+$i);
     $doorsJSON .= '",  "startY": "'.$exitY.'"},';
     $map[$entranceY+1][($entranceX+$i)] = "e";
+    // set the position that the hero wil start on to be blank:
+    $map[$entranceY][($entranceX+$i)] = ".";
 }
    
 } else {
@@ -3157,6 +3159,7 @@ for ($i=-1;$i<=1;$i++) {
     // +1 on Y to place the doors just before the place the hero will start:
     $doorsJSON .= '"'.($entranceX+$i).','.($entranceY+1).'": {  "map": '.$previousMap.',  "startX": "'.$previousMapsExitDoors[($i+1)][0].'",  "startY": "'.$previousMapsExitDoors[($i+1)][1].'"},';
     $map[$entranceY+1][($entranceX+$i)] = "e";
+    $map[$entranceY][($entranceX+$i)] = ".";
 }
 }
 
