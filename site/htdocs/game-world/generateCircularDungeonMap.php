@@ -58,7 +58,7 @@ offset doors (and connecting corridors) (?)
 make sure templates don't block entrance and exits to the level or individual rooms (stairs themselves are checked, but not the starting space in front of them)
 rarer items should be placed more often the deeper in to the dungeon the player has gone
 check the connectivity graph, if there is a short alternate path to the exit, then make that path a secret. 
-
+rotate entrance and exit doors for variation. 
 
 
 
@@ -1796,7 +1796,7 @@ $outputJSON .= substr(json_encode($collisions),1,-1).", ".substr(json_encode($te
 $outputJSON .= ',"graphics": ['.$dungeonDetails[$dungeonName]['graphics'].$templateGraphicsToAppend.'],';
 $outputJSON .= '"shops": [],';
 $outputJSON .= '"npcs": ['.$templateNPCsToAppend.'],';
-// john ###
+
 
 //$outputJSON .= '"doors": {"'.($exitX-1).','.$exitY.'": {  "map": '.($thisMapsId-1).',  "startX": "?-1",  "startY": "?"},"'.$exitX.','.$exitY.'": {  "map": '.($thisMapsId-1).',  "startX": "?",  "startY": "?"},"'.($exitX+1).','.$exitY.'": {  "map": '.($thisMapsId-1).',  "startX": "?+1",  "startY": "?"}},';
 
@@ -3173,9 +3173,152 @@ echo'<code style="width:100%;display:block;clear:both;"><pre>';
 var_dump($doorsJSON);
 echo"</pre></code>";
 */
-    // john
+
   
 }
+
+
+function drawFilledCircle($xp, $yp, $radius, $elevation) {
+    // thanks to http://actionsnippet.com/?p=496
+    $xoff = 0;
+    $yoff = $radius;
+    $balance = - $radius;
+    while ($xoff <= $yoff) {
+        $p0 = $xp - $xoff;
+        $p1 = $xp - $yoff;
+        $w0 = $xoff + $xoff;
+        $w1 = $yoff + $yoff;
+        hLine($p0, $yp + $yoff, $w0, $elevation);
+        hLine($p0, $yp - $yoff, $w0, $elevation);
+        hLine($p1, $yp + $xoff, $w1, $elevation);
+        hLine($p1, $yp - $xoff, $w1, $elevation);
+        if (($balance+= $xoff++ + $xoff) >= 0) {
+            $balance-= --$yoff + $yoff;
+        }
+    }
+}
+function hLine($xp, $yp, $w, $elevation) {
+    global $elevationMap;
+    for ($i = 0;$i < $w;$i++) {
+        $elevationMap[$yp][$xp + $i] = $elevation;
+    }
+}
+
+
+
+function createElevationMap() {
+    global $debug, $mapTilesX, $mapTilesY, $canvaDimension, $dungeonDetails, $dungeonName, $elevationMap;
+
+    $drawnTileSize = 8; 
+    $drawnOffset = 20;
+
+    $maximumElevation = $dungeonDetails[$dungeonName]['maxElevation'];
+
+    for ($i = 0; $i < $mapTilesX; $i++) {      
+        for ($j = 0; $j < $mapTilesY; $j++) {
+            $elevationMap[$j][$i] = 0;
+        }
+    }
+
+
+    if($maximumElevation > 0) {
+    $elevationPoints = mt_rand(0,6);
+
+    for ($i = 0; $i < $elevationPoints; $i++) {
+        // 
+//$elevationMap[mt_rand(0,$mapTilesY)][mt_rand(0,$mapTilesX)] = mt_rand(0,$maximumElevation);
+        drawFilledCircle(mt_rand(0,$mapTilesX),mt_rand(0,$mapTilesY),mt_rand(5,15),mt_rand(0,$maximumElevation));
+    }
+
+    // smooth (// http://nic-gamedev.blogspot.co.uk/2013/02/simple-terrain-smoothing.html)
+$numberOfPasses = 4;
+for ($i = 0; $i < $numberOfPasses; $i++) {
+    $newElevationMap = $elevationMap;
+    
+  for ($y = 0; $y < $mapTilesX; $y++) {
+  for ($x = 0; $x < $mapTilesY; $x++) {
+     $adjacentSections = 0;
+     $sectionsTotal = 0;
+    if ($x - 1 > 0) {
+      // Check to left
+      $sectionsTotal += $elevationMap[$x - 1][$y];
+      $adjacentSections++;
+
+      if ($y - 1 > 0) {
+        // Check up and to the left
+        $sectionsTotal += $elevationMap[$x - 1][$y - 1];
+        $adjacentSections++;
+      }
+
+      if ($y + 1 < $mapTilesY) {
+        // Check down and to the left
+        $sectionsTotal += $elevationMap[$x - 1][$y + 1];
+        $adjacentSections++;
+      }
+    }
+
+    if ($x + 1 < $mapTilesX) {
+      // Check to right
+
+      $sectionsTotal += $elevationMap[$x + 1][$y];
+      $adjacentSections++;
+
+      if ($y - 1 > 0) {
+        // Check up and to the right
+        $sectionsTotal += $elevationMap[$x + 1][$y - 1];
+        $adjacentSections++;
+      }
+
+      if ($y + 1 < $mapTilesY) {
+        // Check down and to the right
+        $sectionsTotal += $elevationMap[$x + 1][$y + 1];
+        $adjacentSections++;
+      }
+    }
+
+    if ($y - 1 > 0) {
+      // Check above
+      $sectionsTotal += $elevationMap[$x][$y - 1];
+      $adjacentSections++;
+    }
+    if ($y + 1 < $mapTilesY) {
+      // Check below
+      $sectionsTotal += $elevationMap[$x][$y + 1];
+      $adjacentSections++;
+    }
+    $newElevationMap[$x][$y] = ($elevationMap[$x][$y] + ($sectionsTotal / $adjacentSections)) * 0.5;
+  }
+}
+
+$elevationMap = $newElevationMap;
+    }
+
+}
+    if($debug) {
+        $outputCanvas = imagecreatetruecolor($canvaDimension, $canvaDimension);
+        $groundColour = array(219, 215, 190);
+        $ground       = imagecolorallocate($outputCanvas, $groundColour[0], $groundColour[1], $groundColour[2]);
+        imagefilledrectangle($outputCanvas, 0, 0, $canvaDimension, $canvaDimension, $ground);
+
+        for ($i = 0; $i < $mapTilesX; $i++) {      
+            for ($j = 0; $j < $mapTilesY; $j++) {
+                $thisTilesColour = 255-(2.55*$elevationMap[$j][$i]);
+          imagefilledrectangle($outputCanvas,($i)*$drawnTileSize+$drawnOffset,($j)*$drawnTileSize+$drawnOffset,($i+1)*$drawnTileSize+$drawnOffset,($j+1)*$drawnTileSize+$drawnOffset, imagecolorallocate($outputCanvas, $thisTilesColour, $thisTilesColour, $thisTilesColour));
+        }
+        }
+
+
+        echo '<div class="sequenceBlock">';
+        ob_start();
+        imagejpeg($outputCanvas, null, 100);
+        $rawImageBytes = ob_get_clean();
+        echo "<img src='data:image/jpeg;base64," . base64_encode($rawImageBytes) . "'></div>";
+        imagedestroy($outputCanvas);
+        echo '</div>';
+    }
+    // john  ###
+}
+
 
 function getTileIsoCentreCoordX($tileX, $tileY) {
   global $tileW, $mapTilesY;
@@ -3355,6 +3498,7 @@ outputDelaunayGraph();
 createGridLayout();
 outputSizedNodesLayout();
 gridTileGrid();
+createElevationMap();
 placeDoors();
 findRelevantTemplates();
 outputTileMap();
