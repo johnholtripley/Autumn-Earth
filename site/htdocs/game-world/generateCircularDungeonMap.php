@@ -65,8 +65,9 @@ rotate entrance and exit doors for variation.
 
 
 ISSUES:
-http://ae.dev/game-world/generateCircularDungeonMap.php?debug=true&seed=1510610103 - double thickness walls look odd
-http://ae.dev/game-world/generateCircularDungeonMap.php?debug=true&dungeonName=the-barrow-mines&requestedMap=-1&seed=1510832016 - as the grid is drawn, it needs to check no row or column offsets overlap
+http://ae.dev/game-world/generateCircularDungeonMap.php?debug=true&dungeonName=the-barrow-mines&requestedMap=-1&seed=1513111772 - joints overlap room node - fix at grid stage? make sure each vertex is a minimum distance from a node?
+http://ae.dev/game-world/generateCircularDungeonMap.php?debug=true&dungeonName=the-dwarrow-mines&requestedMap=-1&seed=1513161267 - double thickness walls look odd
+http://ae.dev/game-world/generateCircularDungeonMap.php?debug=true&dungeonName=the-dwarrow-mines&requestedMap=-1&seed=1510832016 - as the grid is drawn, it needs to check no row or column offsets overlap
 
 ---- */
 
@@ -746,6 +747,11 @@ function createDelaunayGraph($graphType)
             break;
 
         case "wonky-grid":
+        // john
+        // set the surrounds of the graph to be regular to avoid 'bunching' of edges:
+// ########
+
+
             for ($i = 0; $i < sqrt($numberOfVertices); $i++) {
                 for ($j = 0; $j < sqrt($numberOfVertices); $j++) {
 
@@ -754,7 +760,7 @@ function createDelaunayGraph($graphType)
                     array_push($delaunayVertices, $newVertex);
                 }
             }
-
+break;
         case "offset-grid":
             $colOffsets = array();
             $rowOffsets = array();
@@ -851,7 +857,7 @@ function createDelaunayGraph($graphType)
     array_push($delaunayTriangles, $boundingTriangle);
 
 // do triangulation for each vertex:
-    for ($i = 0; $i < $numberOfVertices; $i++) {
+    for ($i = 0; $i < count($delaunayVertices); $i++) {
         $delaunayTriangles = addDelaunayVertex($delaunayVertices[$i], $delaunayTriangles);
     }
 
@@ -1405,8 +1411,9 @@ function sortVerticesByConnections($a, $b)
 
 function createGridLayout()
     {
-    global $delaunayVertices, $verticesUsedOnDelaunayGraph, $edgesUsedOnDelaunayGraph, $allDelaunayEdges, $debug;
+    global $delaunayVertices, $verticesUsedOnDelaunayGraph, $edgesUsedOnDelaunayGraph, $allDelaunayEdges, $debug, $dungeonDetails, $dungeonName;
     $maxNodeDimension = 140;
+
     $sortedVertices = $verticesUsedOnDelaunayGraph;
     usort($sortedVertices, 'sortVerticesByConnections');
 
@@ -1448,7 +1455,12 @@ function createGridLayout()
 
     outputSizedNodesLayout();
 
-    foreach($sortedVertices as $thisVertex) {
+
+
+switch ($dungeonDetails[$dungeonName]['roomType']) {
+    case "adjoining-rooms":
+    // make the rooms as large as possible within their own grid:
+            foreach($sortedVertices as $thisVertex) {
         $smallestHorizontalSpacingAvailable = INF;
         $smallestVerticalSpacingAvailable = INF;
         foreach($sortedVertices as $thisNeighbour) {
@@ -1458,8 +1470,8 @@ function createGridLayout()
                 if ($horizontalSpaceBetweenExpandedBlock < $smallestHorizontalSpacingAvailable) {
                     if ($horizontalSpaceBetweenExpandedBlock >= 0) {
                         $smallestHorizontalSpacingAvailable = $horizontalSpaceBetweenExpandedBlock;
-                        }
                     }
+                }
 
                 if ($verticalSpaceBetweenExpandedBlock < $smallestVerticalSpacingAvailable) {
                     if ($verticalSpaceBetweenExpandedBlock >= 0)
@@ -1483,10 +1495,44 @@ function createGridLayout()
             $thisVertex->proximityToNeighboursVertical = $maxNodeDimension;
             }
         }
+        break;
+    case "cavern":
+        // make the rooms as large as possible without hitting another room:
+    // ###
+    // john
+   
+    foreach($sortedVertices as $thisVertex) {
+      
+       $largestRadiusAvailable = INF;
+        foreach($sortedVertices as $thisNeighbour) {
+            if ($thisVertex !== $thisNeighbour) {
+                    $radiusBetweenNodes = sqrt( (abs($thisNeighbour->x - $thisVertex->x)*abs($thisNeighbour->x - $thisVertex->x))  + (abs($thisNeighbour->y - $thisVertex->y) * abs($thisNeighbour->y - $thisVertex->y))  )/2;
+                      if ($radiusBetweenNodes < $largestRadiusAvailable) {
+                    if ($radiusBetweenNodes >= 0) {
+                        $largestRadiusAvailable = $radiusBetweenNodes;
+                    }
+                }
+                }
+            }
+        
+$thisVertex->proximityToNeighboursHorizontal = $largestRadiusAvailable;
+$thisVertex->proximityToNeighboursVertical = $largestRadiusAvailable;
 
-    // plot on a square grid node vertices at the max radius (making sure they don't touch)
-    // draw joints from vertex centres to vertex centres to connect rooms up
-    // ########
+
+
+
+    }
+        break;
+
+}
+
+
+
+
+
+
+
+
 
     }
 
@@ -1513,7 +1559,7 @@ unset($allDelaunayEdges[$key]);
 function outputSizedNodesLayout()
 {
 
-    global $canvaDimension, $delaunayVertices, $delaunayTriangles, $delaunayNodeRadius, $centreVertex, $edgesUsedOnDelaunayGraph, $keyColours, $lockedJoints, $allDelaunayEdges, $verticesUsedOnDelaunayGraph, $requiredWidth, $requiredHeight, $minLeft, $minTop, $debug;
+    global $canvaDimension, $delaunayVertices, $delaunayTriangles, $delaunayNodeRadius, $centreVertex, $edgesUsedOnDelaunayGraph, $keyColours, $lockedJoints, $allDelaunayEdges, $verticesUsedOnDelaunayGraph, $requiredWidth, $requiredHeight, $minLeft, $minTop, $debug, $dungeonDetails, $dungeonName;
 
     $outputCanvas = imagecreatetruecolor($canvaDimension, $canvaDimension);
     $groundColour = array(219, 215, 190);
@@ -1551,15 +1597,30 @@ function outputSizedNodesLayout()
             $nodeColour = imagecolorallocate($outputCanvas, 227, 224, 205);
         }
 
-// php needs width not radius:
-        //       $outputWidth = $delaunayVertices[$i]->proximityToNeighbours * 2;
 
-        //  imagefilledellipse($outputCanvas, $delaunayVertices[$i]->x, $delaunayVertices[$i]->y, $outputWidth, $outputWidth, $nodeColour);
+
+
+switch ($dungeonDetails[$dungeonName]['roomType']) {
+case "adjoining-rooms":
+
 
         imagefilledrectangle($outputCanvas, $delaunayVertices[$i]->x - $delaunayVertices[$i]->proximityToNeighboursHorizontal, $delaunayVertices[$i]->y - $delaunayVertices[$i]->proximityToNeighboursVertical, $delaunayVertices[$i]->x + $delaunayVertices[$i]->proximityToNeighboursHorizontal, $delaunayVertices[$i]->y + $delaunayVertices[$i]->proximityToNeighboursVertical, $nodeColour);
 
 // border:
         imagerectangle($outputCanvas, $delaunayVertices[$i]->x - $delaunayVertices[$i]->proximityToNeighboursHorizontal, $delaunayVertices[$i]->y - $delaunayVertices[$i]->proximityToNeighboursVertical, $delaunayVertices[$i]->x + $delaunayVertices[$i]->proximityToNeighboursHorizontal, $delaunayVertices[$i]->y + $delaunayVertices[$i]->proximityToNeighboursVertical, imagecolorallocate($outputCanvas, 255, 255, 255));
+
+break;
+case "cavern":
+// php needs width not radius:
+              $outputWidth = $delaunayVertices[$i]->proximityToNeighboursHorizontal * 2;
+
+          imagefilledellipse($outputCanvas, $delaunayVertices[$i]->x, $delaunayVertices[$i]->y, $outputWidth, $outputWidth, $nodeColour);
+          // border:
+imageellipse($outputCanvas, $delaunayVertices[$i]->x, $delaunayVertices[$i]->y, $outputWidth, $outputWidth, imagecolorallocate($outputCanvas, 255, 255, 255));
+break;
+}
+
+
 
 // find the limits of any drawn rooms:
 if (isset($delaunayVertices[$i]->whichNode)) {
@@ -3316,7 +3377,7 @@ $elevationMap = $newElevationMap;
         imagedestroy($outputCanvas);
         echo '</div>';
     }
-    // john  ###
+    
 }
 
 
@@ -3488,8 +3549,8 @@ $grownGrammar = "S{O[K#2]|,#2#O{#0#O[K#1#]|,}O{O[K#3#]|,}O#3#O[K#0#]|,}O#1#E";
     // random, grid, wonky-grid, offset-grid
     $layoutType = $dungeonDetails[$dungeonName]['underlyingGridLayout'];
     createDelaunayGraph($layoutType);
-    if (stripos($layoutType, "grid") !== false) {
-        removeDiagonalEdges();
+    if (($layoutType == "offset-grid") || ($layoutType == "grid")) {
+       removeDiagonalEdges();
     }
 } while (!plotConnectivityOnDelaunayGraph());
 
@@ -3498,7 +3559,7 @@ outputDelaunayGraph();
 createGridLayout();
 outputSizedNodesLayout();
 gridTileGrid();
-createElevationMap();
+//createElevationMap();
 placeDoors();
 findRelevantTemplates();
 outputTileMap();

@@ -6,10 +6,13 @@
 
 $dungeonDetails = array(
 
-'the-barrow-mines' => array(
+'the-dwarrow-mines' => array(
 'graphics' => '{"src": "blank.png", "centreX": 24, "centreY": 12},{"src": "block.png","centreX": 24,"centreY": 45},{"src": "red-block.png","centreX": 24,"centreY": 45},{"src": "grey-block.png","centreX": 24,"centreY": 45},{"src": "trapdoor.png", "centreX": 24, "centreY": 12}',
 'ambientSounds' => '{"birdSong": "../sounds/bats-NOT_MINE-youtube.mp3"}',
+ // random, grid, wonky-grid, offset-grid
 'underlyingGridLayout' => 'offset-grid',
+// adjoining-rooms or caverns:
+'roomType' => 'adjoining-rooms',
 'possibleRandomItems' => array(32,35,44,45,46),
 'randomItemsMin' => '4',
 'randomItemsMax' => '8',
@@ -24,6 +27,21 @@ $dungeonDetails = array(
 'mining-expedition' => array(1,INF),
 'store-room' => array(1,4)
 	)
+	),
+'the-barrow-mines' => array(
+'graphics' => '{"src": "blank.png", "centreX": 24, "centreY": 12},{"src": "block.png","centreX": 24,"centreY": 45},{"src": "red-block.png","centreX": 24,"centreY": 45},{"src": "grey-block.png","centreX": 24,"centreY": 45},{"src": "trapdoor.png", "centreX": 24, "centreY": 12}',
+'ambientSounds' => '{"birdSong": "../sounds/bats-NOT_MINE-youtube.mp3"}',
+'underlyingGridLayout' => 'wonky-grid',
+'roomType' => 'cavern',
+'possibleRandomItems' => array(32,35,44,45,46),
+'randomItemsMin' => '4',
+'randomItemsMax' => '8',
+'templatesMin' => '4',
+'templatesMax' => '6',
+'doorCentreWhenLeavingTheDungeon' => array(2,1),
+'mapWhenLeavingTheDungeon' => 2,
+'maxElevation' => 50,
+'levelLockedTemplates' => array()
 	)
 	);
 
