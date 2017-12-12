@@ -747,13 +747,30 @@ function createDelaunayGraph($graphType)
             break;
 
         case "wonky-grid":
-        // john
+   
         // set the surrounds of the graph to be regular to avoid 'bunching' of edges:
-// ########
 
+for ($j = 0; $j <= sqrt($numberOfVertices); $j++) {
+$i=0;
+    $newVertex = new delaunayVertex($i * 50 + $edgeBuffer, $j * 50 + $edgeBuffer);
+    array_push($delaunayVertices, $newVertex);
+    $i=sqrt($numberOfVertices);
+        $newVertex = new delaunayVertex($i * 50 + $edgeBuffer, $j * 50 + $edgeBuffer);
+    array_push($delaunayVertices, $newVertex);
+}
 
-            for ($i = 0; $i < sqrt($numberOfVertices); $i++) {
-                for ($j = 0; $j < sqrt($numberOfVertices); $j++) {
+for ($i = 1; $i < sqrt($numberOfVertices)-1; $i++) {
+$j=0;
+  $newVertex = new delaunayVertex($i * 50 + $edgeBuffer, $j * 50 + $edgeBuffer);
+    array_push($delaunayVertices, $newVertex);
+    $j=sqrt($numberOfVertices);
+       $newVertex = new delaunayVertex($i * 50 + $edgeBuffer, $j * 50 + $edgeBuffer);
+    array_push($delaunayVertices, $newVertex);
+}
+
+// draw the inner 'wonky' vertices:
+            for ($i = 1; $i < sqrt($numberOfVertices)-1; $i++) {
+                for ($j = 1; $j < sqrt($numberOfVertices)-1; $j++) {
 
                     $newVertex = new delaunayVertex($i * 50 + $edgeBuffer + mt_rand(-10, 10), $j * 50 + $edgeBuffer + mt_rand(-10, 10));
 
