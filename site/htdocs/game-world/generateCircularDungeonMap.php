@@ -61,11 +61,11 @@ check the connectivity graph, if there is a short alternate path to the exit, th
 rotate entrance and exit doors for variation. 
 
 
+http://ae.dev/game-world/generateCircularDungeonMap.php?debug=true&dungeonName=the-barrow-mines&requestedMap=-1&seed=1513103763 - node diameters aren't the maximum they could be
 
 
 
 ISSUES:
-http://ae.dev/game-world/generateCircularDungeonMap.php?debug=true&dungeonName=the-barrow-mines&requestedMap=-1&seed=1513111772 - joints overlap room node - fix at grid stage? make sure each vertex is a minimum distance from a node?
 http://ae.dev/game-world/generateCircularDungeonMap.php?debug=true&dungeonName=the-dwarrow-mines&requestedMap=-1&seed=1513161267 - double thickness walls look odd
 http://ae.dev/game-world/generateCircularDungeonMap.php?debug=true&dungeonName=the-dwarrow-mines&requestedMap=-1&seed=1510832016 - as the grid is drawn, it needs to check no row or column offsets overlap
 
@@ -1436,6 +1436,15 @@ function createGridLayout()
 
     // increase the nodes to be half way between that and the closest other used node:
 
+
+
+
+
+switch ($dungeonDetails[$dungeonName]['roomType']) {
+    case "adjoining-rooms":
+
+
+    // make the rooms as large as possible within their own grid:
     foreach($verticesUsedOnDelaunayGraph as $thisVertex) {
         foreach($verticesUsedOnDelaunayGraph as $thisNeighbour) {
             if ($thisVertex !== $thisNeighbour) {
@@ -1473,10 +1482,6 @@ function createGridLayout()
     outputSizedNodesLayout();
 
 
-
-switch ($dungeonDetails[$dungeonName]['roomType']) {
-    case "adjoining-rooms":
-    // make the rooms as large as possible within their own grid:
             foreach($sortedVertices as $thisVertex) {
         $smallestHorizontalSpacingAvailable = INF;
         $smallestVerticalSpacingAvailable = INF;
@@ -1515,11 +1520,10 @@ switch ($dungeonDetails[$dungeonName]['roomType']) {
         break;
     case "cavern":
         // make the rooms as large as possible without hitting another room:
-    // ###
-    // john
+   
    
     foreach($sortedVertices as $thisVertex) {
-      
+      // make the circular nodes reach at least half way:
        $largestRadiusAvailable = INF;
         foreach($sortedVertices as $thisNeighbour) {
             if ($thisVertex !== $thisNeighbour) {
@@ -1531,14 +1535,45 @@ switch ($dungeonDetails[$dungeonName]['roomType']) {
                 }
                 }
             }
-        
-$thisVertex->proximityToNeighboursHorizontal = $largestRadiusAvailable;
+        $thisVertex->proximityToNeighboursHorizontal = $largestRadiusAvailable;
 $thisVertex->proximityToNeighboursVertical = $largestRadiusAvailable;
+}
+// run again to get as close as possible:
+    outputSizedNodesLayout();
+
+ // ###
+    // john
+foreach($sortedVertices as $thisVertex) {
+    $smallestRadiusSpacingAvailable = INF;
+    foreach($sortedVertices as $thisNeighbour) {
+        if ($thisVertex !== $thisNeighbour) {
+            $radiusBetweenNodes = sqrt( (abs($thisNeighbour->x - $thisVertex->x)*abs($thisNeighbour->x - $thisVertex->x))  + (abs($thisNeighbour->y - $thisVertex->y) * abs($thisNeighbour->y - $thisVertex->y))  )/2;
+            $radiusSpaceRemaining = $radiusBetweenNodes*2 - $thisNeighbour->proximityToNeighboursHorizontal - $thisVertex->proximityToNeighboursHorizontal;
+         //   echo $radiusBetweenNodes.", ".$thisNeighbour->proximityToNeighboursHorizontal.", ".$thisVertex->proximityToNeighboursHorizontal."<br>";
+            if($radiusSpaceRemaining<$smallestRadiusSpacingAvailable) {
+            if($radiusSpaceRemaining>=0) {
+ $smallestRadiusSpacingAvailable = $radiusSpaceRemaining;
 
 
-
-
+}
+            }
+        }
     }
+    
+    $thisVertex->proximityToNeighboursHorizontal+= $smallestRadiusSpacingAvailable;
+$thisVertex->proximityToNeighboursVertical+= $smallestRadiusSpacingAvailable;
+
+}
+
+
+
+
+
+
+
+
+
+    
         break;
 
 }
