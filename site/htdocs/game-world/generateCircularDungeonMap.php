@@ -2343,6 +2343,7 @@ $storePositionZero = $position[0];
         }
     }
 
+    if(count($filesFound) > 0) {
     // have a few goes at finding an in-level template:
     $attempt = 0;
     $templatesToUse = array();
@@ -2853,6 +2854,7 @@ $storePositionZero = $position[0];
         $templateItemsToAppend = rtrim($templateItemsToAppend, ', ');
         $templateHotspotsToAppend = rtrim($templateHotspotsToAppend, ', ');
     }
+}
 }
 
 
