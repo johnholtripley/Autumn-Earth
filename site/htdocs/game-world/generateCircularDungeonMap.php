@@ -1541,8 +1541,7 @@ $thisVertex->proximityToNeighboursVertical = $largestRadiusAvailable;
 // run again to get as close as possible:
     outputSizedNodesLayout();
 
- // ###
-    // john
+
 foreach($sortedVertices as $thisVertex) {
     $smallestRadiusSpacingAvailable = INF;
     foreach($sortedVertices as $thisNeighbour) {
@@ -2860,12 +2859,36 @@ $storePositionZero = $position[0];
 
 
 
-
+function drawFilledGridCircle($xp, $yp, $radius) {
+    // thanks to http://actionsnippet.com/?p=496
+    $xoff = 0;
+    $yoff = $radius;
+    $balance = - $radius;
+    while ($xoff <= $yoff) {
+        $p0 = $xp - $xoff;
+        $p1 = $xp - $yoff;
+        $w0 = $xoff + $xoff;
+        $w1 = $yoff + $yoff;
+        gridHLine($p0, $yp + $yoff, $w0);
+        gridHLine($p0, $yp - $yoff, $w0);
+        gridHLine($p1, $yp + $xoff, $w1);
+        gridHLine($p1, $yp - $xoff, $w1);
+        if (($balance+= $xoff++ + $xoff) >= 0) {
+            $balance-= --$yoff + $yoff;
+        }
+    }
+}
+function gridHLine($xp, $yp, $w) {
+    global $map;
+    for ($i = 0;$i < $w;$i++) {
+        $map[$yp][$xp + $i] = ".";
+    }
+}
 
 
 
 function gridTileGrid() {
-    global $requiredWidth, $requiredHeight, $mapTilesX, $mapTilesY, $canvaDimension, $delaunayVertices, $minLeft, $minTop, $edgesUsedOnDelaunayGraph, $allDelaunayEdges, $lockedJoints, $keyColours, $debug, $map, $itemMap, $drawnTileDoors, $drawnTileKeys, $entranceX, $entranceY, $exitX, $exitY, $drawnTileDoors, $drawnTileKeys, $drawnTileRooms;
+    global $requiredWidth, $requiredHeight, $mapTilesX, $mapTilesY, $canvaDimension, $delaunayVertices, $minLeft, $minTop, $edgesUsedOnDelaunayGraph, $allDelaunayEdges, $lockedJoints, $keyColours, $debug, $map, $itemMap, $drawnTileDoors, $drawnTileKeys, $entranceX, $entranceY, $exitX, $exitY, $drawnTileDoors, $drawnTileKeys, $drawnTileRooms, $dungeonDetails, $dungeonName;
     // define the tile area to be used:
     $mapTilesX = 70;
     $mapTilesY = 70;
@@ -2932,12 +2955,21 @@ $bottomTileEdge += $tileOffsetY;
 $leftTileEdge++;
 $topTileEdge++;
 
+
 array_push($drawnTileRooms, array($leftTileEdge, $topTileEdge, $rightTileEdge, $bottomTileEdge));
 
+switch ($dungeonDetails[$dungeonName]['roomType']) {
+    case "adjoining-rooms":
 for ($j = $leftTileEdge; $j < $rightTileEdge; $j++) {
 for ($k = $topTileEdge; $k < $bottomTileEdge; $k++) {
 $map[$k][$j] = ".";
 }
+}
+break;
+
+case "cavern":
+drawFilledGridCircle(floor(($leftTileEdge+$rightTileEdge)/2),floor(($topTileEdge+$bottomTileEdge)/2),floor(abs($rightTileEdge-$leftTileEdge)/2));
+break;
 }
 
 // check if it's got a key:
@@ -2963,6 +2995,16 @@ $map[$k][$j] = ".";
         $exitY = floor(($topTileEdge+$bottomTileEdge)/2);
     }
 }
+}
+
+// ensure that the edges are still blocked:
+for ($i = 0; $i < $mapTilesX; $i++) {
+$map[0][$i] = "#";
+$map[$mapTilesY-1][$i] = "#";
+}
+for ($j = 0; $j < $mapTilesY; $j++) {
+$map[$j][0] = "#";
+$map[$j][$mapTilesX-1] = "#";
 }
 
 
@@ -3006,59 +3048,65 @@ $rightTileEdge = $storedEdge;
 }
 
 
-for ($j = $leftTileEdge; $j <= $rightTileEdge; $j++) {
-for ($k = $topTileEdge; $k <= $bottomTileEdge; $k++) {
-    // check if this is in a room or not:
-    $isInRoom = false;
-    for ($l = 0; $l < count($drawnTileRooms); $l++) {
-        if($j>=$drawnTileRooms[$l][0]) {
-        if($k>=$drawnTileRooms[$l][1]) {
-             if($j<=$drawnTileRooms[$l][2]) {
-             if($k<=$drawnTileRooms[$l][3]) {
-                 $isInRoom = true;
-                 if($map[$k][$j] != ".") {
-// not already been plotted by the room, so it's a door:
-                    $map[$k][$j] = "d";
-               // check if it's locked:
- 
-            if (isset($lockedJoints[("-" . $thisEdge->v1->whichNode->name."-" . $thisEdge->v0->whichNode->name)])) {
-                $map[$k][$j] = "D";
-                array_push($drawnTileDoors, array($j,$k, $lockedJoints[("-" . $thisEdge->v1->whichNode->name."-" . $thisEdge->v0->whichNode->name)]));
-            } else {
-                array_push($drawnTileDoors, array($j,$k, -1));
+
+
+
+switch ($dungeonDetails[$dungeonName]['roomType']) {
+    case "adjoining-rooms":
+    for ($j = $leftTileEdge; $j <= $rightTileEdge; $j++) {
+        for ($k = $topTileEdge; $k <= $bottomTileEdge; $k++) {
+            // check if this is in a room or not:
+            $isInRoom = false;
+            for ($l = 0; $l < count($drawnTileRooms); $l++) {
+                if($j>=$drawnTileRooms[$l][0]) {
+                    if($k>=$drawnTileRooms[$l][1]) {
+                        if($j<=$drawnTileRooms[$l][2]) {
+                            if($k<=$drawnTileRooms[$l][3]) {
+                                $isInRoom = true;
+                                if($map[$k][$j] != ".") {
+                                    // not already been plotted by the room, so it's a door:
+                                    $map[$k][$j] = "d";
+                                    // check if it's locked:
+                                    if (isset($lockedJoints[("-" . $thisEdge->v1->whichNode->name."-" . $thisEdge->v0->whichNode->name)])) {
+                                        $map[$k][$j] = "D";
+                                        array_push($drawnTileDoors, array($j,$k, $lockedJoints[("-" . $thisEdge->v1->whichNode->name."-" . $thisEdge->v0->whichNode->name)]));
+                                    } else {
+                                        array_push($drawnTileDoors, array($j,$k, -1));
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
-
-
-                    
-                 }
-             }
-         }
-}
+            if(!$isInRoom) {
+                // make paths 3 wide at least:
+                if($leftTileEdge == $rightTileEdge) {
+                    $map[$k][$j-1] = ".";
+                    $map[$k][$j+1] = ".";
+                }
+                if($topTileEdge == $bottomTileEdge) {
+                    $map[$k-1][$j] = ".";
+                    $map[$k+1][$j] = ".";
+                }
+                $map[$k][$j] = ".";
+            }
         }
     }
+break;
 
-
-
-    if(!$isInRoom) {
-
-
-// make paths 3 wide at least:
-if($leftTileEdge == $rightTileEdge) {
-   $map[$k][$j-1] = ".";
-   $map[$k][$j+1] = ".";
-}
-if($topTileEdge == $bottomTileEdge) {
-      $map[$k-1][$j] = ".";
-   $map[$k+1][$j] = ".";
-}
-
-$map[$k][$j] = ".";
-
-    }
-
+case "cavern":
+break;
 
 }
-}
+
+
+
+
+
+
+
+
 
 
 
