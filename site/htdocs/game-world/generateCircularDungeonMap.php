@@ -208,6 +208,7 @@ function addNode($type, $x, $y)
     $newNode->treasure    = 0;
     $newNode->radius      = getRNGNumber() * 10 + 15;
     $newNode->connections = 0;
+  //  $newNode->connectedTo = array();
     // might be inefficient to call this every time: ###
     moveNodesApart();
 
@@ -230,7 +231,8 @@ function addJoint($connectNodeAId, $connectNodeBId, $jointType = "", $whichKey =
 
     $nodeList[$connectNodeAId]->connections++;
     $nodeList[$connectNodeBId]->connections++;
-
+ //   array_push($nodeList[$connectNodeAId]->connectedTo, $connectNodeBId);
+//    array_push($nodeList[$connectNodeBId]->connectedTo, $connectNodeAId);
     return $newJoint;
 }
 
@@ -1056,7 +1058,7 @@ function canPathfindThroughDelaunayGraph($startNode, $endNode)
     if ($targetFound) {
 
 
-
+$blockedNodeName = 0;
         while ($thisNextVertex['parentNode'] !== null) {
             array_push($edgesUsedOnDelaunayGraph, $thisNextVertex['edge']);
             if (!in_array($thisNextVertex['vertex'], $verticesUsedOnDelaunayGraph)) {
@@ -1066,6 +1068,8 @@ function canPathfindThroughDelaunayGraph($startNode, $endNode)
             if ($thisNextVertex['vertex']->whichNode === null) {
                 $thisNextVertex['vertex']->whichNode       = new node();
                 $thisNextVertex['vertex']->whichNode->type = "BLOCKED";
+                $thisNextVertex['vertex']->whichNode->name = "blocked".$blockedNodeName;
+                $blockedNodeName++;
                 $firstNewNode                              = $thisNextVertex['vertex']->whichNode;
                 array_push($nodesPlottedOnDelaunayGraph, $thisNextVertex['vertex']->whichNode);
             }
@@ -2891,7 +2895,7 @@ function gridHLine($xp, $yp, $w) {
 
 
 function gridTileGrid() {
-    global $requiredWidth, $requiredHeight, $mapTilesX, $mapTilesY, $canvaDimension, $delaunayVertices, $minLeft, $minTop, $edgesUsedOnDelaunayGraph, $allDelaunayEdges, $lockedJoints, $keyColours, $debug, $map, $itemMap, $drawnTileDoors, $drawnTileKeys, $entranceX, $entranceY, $exitX, $exitY, $drawnTileDoors, $drawnTileKeys, $drawnTileRooms, $dungeonDetails, $dungeonName;
+    global $requiredWidth, $requiredHeight, $mapTilesX, $mapTilesY, $canvaDimension, $delaunayVertices, $minLeft, $minTop, $edgesUsedOnDelaunayGraph, $allDelaunayEdges, $lockedJoints, $keyColours, $debug, $map, $itemMap, $drawnTileDoors, $drawnTileKeys, $entranceX, $entranceY, $exitX, $exitY, $drawnTileDoors, $drawnTileKeys, $drawnTileRooms, $dungeonDetails, $dungeonName, $jointList, $nodeList;
     // define the tile area to be used:
     $mapTilesX = 70;
     $mapTilesY = 70;
@@ -2959,7 +2963,7 @@ $leftTileEdge++;
 $topTileEdge++;
 
 
-array_push($drawnTileRooms, array($leftTileEdge, $topTileEdge, $rightTileEdge, $bottomTileEdge));
+array_push($drawnTileRooms, array($leftTileEdge, $topTileEdge, $rightTileEdge, $bottomTileEdge, $delaunayVertices[$i]->whichNode->name));
 
 switch ($dungeonDetails[$dungeonName]['roomType']) {
     case "adjoining-rooms":
@@ -3012,7 +3016,15 @@ $map[$j][$mapTilesX-1] = "#";
 
 
 // plot connections:
-    foreach($allDelaunayEdges as $thisEdge) {
+
+
+
+
+
+
+switch ($dungeonDetails[$dungeonName]['roomType']) {
+    case "adjoining-rooms":
+        foreach($allDelaunayEdges as $thisEdge) {
          if ((in_array(new delaunayEdge($thisEdge->v0, $thisEdge->v1), $edgesUsedOnDelaunayGraph)) || (in_array(new delaunayEdge($thisEdge->v1, $thisEdge->v0), $edgesUsedOnDelaunayGraph))) {
         
 $leftEdge = $thisEdge->v0->x  - $minLeft;
@@ -3025,16 +3037,11 @@ $rightTileEdge = floor($rightEdge * $ratio);
 $topTileEdge = floor($topEdge * $ratio);
 $bottomTileEdge = floor($bottomEdge * $ratio);
 
-
-
-
 // centre the map:
 $leftTileEdge += $tileOffsetX;
 $rightTileEdge += $tileOffsetX;
 $topTileEdge += $tileOffsetY;
 $bottomTileEdge += $tileOffsetY;
-
-
 
 if($topTileEdge > $bottomTileEdge) {
     // reverse them:
@@ -3042,20 +3049,11 @@ $storedEdge = $topTileEdge;
 $topTileEdge = $bottomTileEdge;
 $bottomTileEdge = $storedEdge;
 }
-
-
 if($leftTileEdge > $rightTileEdge) {
 $storedEdge = $leftTileEdge;
 $leftTileEdge = $rightTileEdge;
 $rightTileEdge = $storedEdge;
 }
-
-
-
-
-
-switch ($dungeonDetails[$dungeonName]['roomType']) {
-    case "adjoining-rooms":
     for ($j = $leftTileEdge; $j <= $rightTileEdge; $j++) {
         for ($k = $topTileEdge; $k <= $bottomTileEdge; $k++) {
             // check if this is in a room or not:
@@ -3096,12 +3094,87 @@ switch ($dungeonDetails[$dungeonName]['roomType']) {
             }
         }
     }
+}
+}
+
 break;
 
 case "cavern":
-//echo $leftTileEdge .", ".$rightTileEdge.", ".$topTileEdge.", ".$bottomTileEdge."<br>";
-//$map[$topTileEdge][$leftTileEdge] = "#";
-//$map[$bottomTileEdge][$rightTileEdge] = "#";
+// don't use $leftTileEdge, $rightTileEdge, $topTileEdge and $bottomTileEdge - they're not quite the same for different edges - instead use the centre of the room
+// john
+
+
+
+//loop through $jointList:
+foreach ($jointList as $thisJoint) {
+
+// find nodes for each joint:
+    echo "<hr>".$nodeList[$thisJoint->nodeA]->name.", ".$nodeList[$thisJoint->nodeB]->name."<br>";
+// find room coordinates for each room
+
+
+for ($j = 0; $j < count($drawnTileRooms); $j++) {
+    if(($nodeList[$thisJoint->nodeA]->name == $drawnTileRooms[$j][4])) {
+        $room1CentreX = floor(($drawnTileRooms[$j][0]+$drawnTileRooms[$j][2])/2);
+        $room1CentreY = floor(($drawnTileRooms[$j][1]+$drawnTileRooms[$j][3])/2);
+echo "connecting ".$room1CentreX.", ".$room1CentreY;
+$map[$room1CentreY][$room1CentreX] = "#";
+
+}
+
+if(($nodeList[$thisJoint->nodeB]->name == $drawnTileRooms[$j][4])) {
+    $room2CentreX = floor(($drawnTileRooms[$j][0]+$drawnTileRooms[$j][2])/2);
+    $room2CentreY = floor(($drawnTileRooms[$j][1]+$drawnTileRooms[$j][3])/2);
+echo " with ".$room2CentreX.", ".$room2CentreY;
+$map[$room2CentreY][$room2CentreX] = "#";
+}
+
+
+}
+
+}
+
+echo "<hr>";
+
+
+
+
+
+
+
+ 
+
+
+/*
+$nextRoomId = 0;
+for ($i = 0; $i < count($delaunayVertices); $i++) {
+    if (isset($delaunayVertices[$i]->whichNode)) {
+        $room1CentreX = floor(($drawnTileRooms[$nextRoomId][0]+$drawnTileRooms[$nextRoomId][2])/2);
+        $room1CentreY = floor(($drawnTileRooms[$nextRoomId][1]+$drawnTileRooms[$nextRoomId][3])/2);
+        var_dump($delaunayVertices[$i]->whichNode);echo"<br>";
+        //echo $i."(".$room1CentreX.",".$room1CentreY.") connected to ".implode(",", $delaunayVertices[$i]->whichNode->connectedTo)."<br>";
+/*
+        for ($j = 0; $j < count($delaunayVertices); $j++) {
+            if($i!=$j) {
+                if (isset($delaunayVertices[$j]->whichNode)) {
+                    if ((in_array(new delaunayEdge($delaunayVertices[$i], $delaunayVertices[$j]), $edgesUsedOnDelaunayGraph)) || (in_array(new delaunayEdge($delaunayVertices[$j], $delaunayVertices[$i]), $edgesUsedOnDelaunayGraph))) {
+                        
+                        $room2CentreX = floor(($drawnTileRooms[$j][0]+$drawnTileRooms[$j][2])/2);
+                        $room2CentreY = floor(($drawnTileRooms[$j][1]+$drawnTileRooms[$j][3])/2);
+                        $map[$room1CentreY][$room1CentreX] = "#";
+                        //echo "connecting ".$i." (".$room1CentreX.",".$room1CentreY.") with ".$j." (".$room2CentreX.",".$room2CentreY.")<br>";
+                    }
+                }
+            }
+        }
+        */
+        /*
+        $nextRoomId++;
+    
+    }
+}
+*/
+
 break;
 
 }
@@ -3116,9 +3189,8 @@ break;
 
 
 
-         }
-     }
 
+    
 
 outputTileMap();
 
