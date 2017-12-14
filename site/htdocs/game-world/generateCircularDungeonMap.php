@@ -3099,6 +3099,9 @@ switch ($dungeonDetails[$dungeonName]['roomType']) {
 break;
 
 case "cavern":
+//echo $leftTileEdge .", ".$rightTileEdge.", ".$topTileEdge.", ".$bottomTileEdge."<br>";
+//$map[$topTileEdge][$leftTileEdge] = "#";
+//$map[$bottomTileEdge][$rightTileEdge] = "#";
 break;
 
 }
