@@ -61,8 +61,6 @@ check the connectivity graph, if there is a short alternate path to the exit, th
 rotate entrance and exit doors for variation. 
 
 
-http://ae.dev/game-world/generateCircularDungeonMap.php?debug=true&dungeonName=the-barrow-mines&requestedMap=-1&seed=1513103763 - node diameters aren't the maximum they could be
-
 
 
 ISSUES:
@@ -2861,6 +2859,7 @@ $storePositionZero = $position[0];
 
 function drawFilledGridCircle($xp, $yp, $radius) {
     // thanks to http://actionsnippet.com/?p=496
+    // -1 on bottom and lower bottom otherwise circles are 1 taller than they are wide
     $xoff = 0;
     $yoff = $radius;
     $balance = - $radius;
@@ -2869,9 +2868,13 @@ function drawFilledGridCircle($xp, $yp, $radius) {
         $p1 = $xp - $yoff;
         $w0 = $xoff + $xoff;
         $w1 = $yoff + $yoff;
-        gridHLine($p0, $yp + $yoff, $w0);
+        // bottom:
+        gridHLine($p0, $yp + $yoff-1, $w0);
+        // top:
         gridHLine($p0, $yp - $yoff, $w0);
-        gridHLine($p1, $yp + $xoff, $w1);
+        // lower centre:
+       gridHLine($p1, $yp + $xoff-1, $w1);
+        // upper centre:
         gridHLine($p1, $yp - $xoff, $w1);
         if (($balance+= $xoff++ + $xoff) >= 0) {
             $balance-= --$yoff + $yoff;
@@ -2997,7 +3000,7 @@ break;
 }
 }
 
-// ensure that the edges are still blocked:
+// make sure that the edges are still blocked:
 for ($i = 0; $i < $mapTilesX; $i++) {
 $map[0][$i] = "#";
 $map[$mapTilesY-1][$i] = "#";
