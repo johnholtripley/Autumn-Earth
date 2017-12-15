@@ -3110,39 +3110,29 @@ break;
 case "cavern":
 // don't use $leftTileEdge, $rightTileEdge, $topTileEdge and $bottomTileEdge - they're not quite the same for different edges - instead use the centre of the room
 // john
-
+// http://127.0.0.1/game-world/generateCircularDungeonMap.php?debug=true&dungeonName=the-barrow-mines&requestedMap=-1&seed=1513364414
 
 
 //loop through $jointList:
 foreach ($edgesUsedOnDelaunayGraph as $thisJoint) {
-
-// find nodes for each joint:
- 
-
-echo "<hr>".$thisJoint->v0->whichNode->name.", ".$thisJoint->v1->whichNode->name."<br>";
- //   echo "<hr>".$nodeList[$thisJoint->nodeA]->name.", ".$nodeList[$thisJoint->nodeB]->name."<br>";
-// find room coordinates for each room
-
-
-for ($j = 0; $j < count($drawnTileRooms); $j++) {
-    if(($thisJoint->v0->whichNode->name == $drawnTileRooms[$j][4])) {
-        $room1CentreX = floor(($drawnTileRooms[$j][0]+$drawnTileRooms[$j][2])/2);
-        $room1CentreY = floor(($drawnTileRooms[$j][1]+$drawnTileRooms[$j][3])/2);
-echo "connecting ".$room1CentreX.", ".$room1CentreY;
-$map[$room1CentreY][$room1CentreX] = "#";
-
-}
-
-if(($thisJoint->v1->whichNode->name == $drawnTileRooms[$j][4])) {
-    $room2CentreX = floor(($drawnTileRooms[$j][0]+$drawnTileRooms[$j][2])/2);
-    $room2CentreY = floor(($drawnTileRooms[$j][1]+$drawnTileRooms[$j][3])/2);
-echo " with ".$room2CentreX.", ".$room2CentreY;
-$map[$room2CentreY][$room2CentreX] = "#";
-}
-
-
-}
-
+    // find nodes for each joint:
+    echo "<hr>".$thisJoint->v0->whichNode->name.", ".$thisJoint->v1->whichNode->name;
+    //   echo "<hr>".$nodeList[$thisJoint->nodeA]->name.", ".$nodeList[$thisJoint->nodeB]->name."<br>";
+    // find room coordinates for each room
+    for ($j = 0; $j < count($drawnTileRooms); $j++) {
+        if(($thisJoint->v0->whichNode->name == $drawnTileRooms[$j][4])) {
+            $room1CentreX = floor(($drawnTileRooms[$j][0]+$drawnTileRooms[$j][2])/2);
+            $room1CentreY = floor(($drawnTileRooms[$j][1]+$drawnTileRooms[$j][3])/2);
+            echo " connecting ".$room1CentreX.", ".$room1CentreY;
+            $map[$room1CentreY][$room1CentreX] = "#";
+        }
+        if(($thisJoint->v1->whichNode->name == $drawnTileRooms[$j][4])) {
+            $room2CentreX = floor(($drawnTileRooms[$j][0]+$drawnTileRooms[$j][2])/2);
+            $room2CentreY = floor(($drawnTileRooms[$j][1]+$drawnTileRooms[$j][3])/2);
+            echo " with ".$room2CentreX.", ".$room2CentreY;
+            $map[$room2CentreY][$room2CentreX] = "#";
+        }
+    }
 }
 
 echo "<hr>";

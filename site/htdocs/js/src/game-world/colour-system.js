@@ -20,7 +20,7 @@
     "(dark orange/sienna)",
     "(dark blue/sapphire)",
     "(indigo/imperial purple)",
-    "(dark green/emerald/olive)",
+    "(dark green/emerald/olive/celadon)",
     "(dark brown/chestnut)",
     "Grey"
 ];
