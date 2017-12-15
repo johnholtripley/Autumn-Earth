@@ -960,7 +960,7 @@ function findPartnerNode($activeNode)
 
 function canPathfindThroughDelaunayGraph($startNode, $endNode)
 {
-    global $allDelaunayEdges, $delaunayVertices, $verticesUsedOnDelaunayGraph, $edgesUsedOnDelaunayGraph, $delaunayTriangles, $nodesPlottedOnDelaunayGraph, $lockedJoints, $debug;
+    global $allDelaunayEdges, $delaunayVertices, $verticesUsedOnDelaunayGraph, $edgesUsedOnDelaunayGraph, $delaunayTriangles, $nodesPlottedOnDelaunayGraph, $lockedJoints, $debug, $jointList;
     // find start and end vertices:
     foreach ($delaunayVertices as $thisVertex) {
         if ($thisVertex->whichNode === $startNode) {
@@ -1057,7 +1057,7 @@ function canPathfindThroughDelaunayGraph($startNode, $endNode)
     } while ((count($uncheckedVertices) > 0) && !$targetFound);
     if ($targetFound) {
 
-
+$savedThisNextVertex = $thisNextVertex;
 $blockedNodeName = 0;
         while ($thisNextVertex['parentNode'] !== null) {
             array_push($edgesUsedOnDelaunayGraph, $thisNextVertex['edge']);
@@ -1065,17 +1065,21 @@ $blockedNodeName = 0;
                 array_push($verticesUsedOnDelaunayGraph, $thisNextVertex['vertex']);
             }
 // mark the used nodes as well so they can't be used:
+            
             if ($thisNextVertex['vertex']->whichNode === null) {
                 $thisNextVertex['vertex']->whichNode       = new node();
                 $thisNextVertex['vertex']->whichNode->type = "BLOCKED";
                 $thisNextVertex['vertex']->whichNode->name = "blocked".$blockedNodeName;
                 $blockedNodeName++;
-                $firstNewNode                              = $thisNextVertex['vertex']->whichNode;
+                $firstNewNode = $thisNextVertex['vertex']->whichNode;
                 array_push($nodesPlottedOnDelaunayGraph, $thisNextVertex['vertex']->whichNode);
+
+               // $newJoint = addJoint($thisNextVertex['vertex']->whichNode->name, $thisNextVertex['parentNode']['vertex']->whichNode->name);
             }
 
             $thisNextVertex = $thisNextVertex['parentNode'];
         }
+
 
         // update lockedJoints to have the start node and the first added node instead of the start and end node (so the first connection can be marked if it's locked)
 if(isset($firstNewNode)) {
@@ -1096,6 +1100,10 @@ if(isset($firstNewNode)) {
             unset($lockedJoints[$originalLockedConnectionRev]);
         }
     }
+
+
+
+
 
     } else {
         if($debug) {
@@ -3106,15 +3114,18 @@ case "cavern":
 
 
 //loop through $jointList:
-foreach ($jointList as $thisJoint) {
+foreach ($edgesUsedOnDelaunayGraph as $thisJoint) {
 
 // find nodes for each joint:
-    echo "<hr>".$nodeList[$thisJoint->nodeA]->name.", ".$nodeList[$thisJoint->nodeB]->name."<br>";
+ 
+
+echo "<hr>".$thisJoint->v0->whichNode->name.", ".$thisJoint->v1->whichNode->name."<br>";
+ //   echo "<hr>".$nodeList[$thisJoint->nodeA]->name.", ".$nodeList[$thisJoint->nodeB]->name."<br>";
 // find room coordinates for each room
 
 
 for ($j = 0; $j < count($drawnTileRooms); $j++) {
-    if(($nodeList[$thisJoint->nodeA]->name == $drawnTileRooms[$j][4])) {
+    if(($thisJoint->v0->whichNode->name == $drawnTileRooms[$j][4])) {
         $room1CentreX = floor(($drawnTileRooms[$j][0]+$drawnTileRooms[$j][2])/2);
         $room1CentreY = floor(($drawnTileRooms[$j][1]+$drawnTileRooms[$j][3])/2);
 echo "connecting ".$room1CentreX.", ".$room1CentreY;
@@ -3122,7 +3133,7 @@ $map[$room1CentreY][$room1CentreX] = "#";
 
 }
 
-if(($nodeList[$thisJoint->nodeB]->name == $drawnTileRooms[$j][4])) {
+if(($thisJoint->v1->whichNode->name == $drawnTileRooms[$j][4])) {
     $room2CentreX = floor(($drawnTileRooms[$j][0]+$drawnTileRooms[$j][2])/2);
     $room2CentreY = floor(($drawnTileRooms[$j][1]+$drawnTileRooms[$j][3])/2);
 echo " with ".$room2CentreX.", ".$room2CentreY;
@@ -3561,6 +3572,10 @@ $elevationMap = $newElevationMap;
 }
 
 
+
+
+
+
 function getTileIsoCentreCoordX($tileX, $tileY) {
   global $tileW, $mapTilesY;
     return $tileW / 2 * ($mapTilesY - $tileY + $tileX);
@@ -3733,6 +3748,8 @@ $grownGrammar = "S{O[K#2]|,#2#O{#0#O[K#1#]|,}O{O[K#3#]|,}O#3#O[K#0#]|,}O#1#E";
        removeDiagonalEdges();
     }
 } while (!plotConnectivityOnDelaunayGraph());
+
+
 
 
 outputDelaunayGraph();
