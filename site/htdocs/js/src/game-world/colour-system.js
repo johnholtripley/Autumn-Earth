@@ -12,7 +12,7 @@
     "(light orange/coral)",
     "Aquamarine",
     "Violet",
-    "(light green/lime)",
+    "Celadon",
     "Tawny",
     "Black",
     "Ruby/Maroon",
@@ -20,7 +20,7 @@
     "(dark orange/sienna)",
     "(dark blue/sapphire)",
     "(indigo/imperial purple)",
-    "(dark green/emerald/olive/celadon)",
+    "(dark green/emerald/olive/)",
     "(dark brown/chestnut)",
     "Grey"
 ];

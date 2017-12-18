@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 28, 2017 at 05:36 PM
+-- Generation Time: Dec 18, 2017 at 09:50 AM
 -- Server version: 5.6.24
 -- PHP Version: 5.6.8
 
@@ -284,7 +284,7 @@ INSERT INTO `tblcolours` (`colourID`, `colourName`) VALUES
 (11, '(light orange/coral)'),
 (12, 'Aquamarine'),
 (13, 'Violet'),
-(14, '(light green/lime)'),
+(14, 'Celadon'),
 (15, 'Tawny'),
 (16, 'Black'),
 (18, '(dark yellow/amber)'),
@@ -359,7 +359,7 @@ CREATE TABLE IF NOT EXISTS `tblcreatures` (
   `creatureDescription` longtext,
   `creatureType` varchar(128) NOT NULL,
   `cleanURL` varchar(128) DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblcreatures`
@@ -369,10 +369,16 @@ INSERT INTO `tblcreatures` (`creatureID`, `creatureName`, `creatureDescription`,
 (0, 'Pilcrow', 'A black bird with a curious fascination for anything with writing on.', 'Bird', 'pilcrow'),
 (1, 'Auroch', 'A surprisingly gentle herd animal given its enormous horns.', 'Animal', 'auroch'),
 (2, 'Ellyll', 'The Ellyllon are delightful little fairy folk.', 'Spirit', 'ellyll'),
-(3, 'Vulpes', 'Why, it''s a cute little fox.', 'Animal', 'vulpes'),
+(3, 'Gobling', 'Anywhere underground, you''re bound to find some of these.', 'Denizen', 'gobling'),
 (4, 'Eldritch', 'A dark, mischievous spirit. Worth avoiding if possible.', 'Spirit', 'eldritch'),
 (5, 'Ghast', 'A malevolent trapped soul.', 'Spirit', 'ghast'),
-(6, 'Guise', 'A shape shifter. ', 'Animal', 'guise');
+(6, 'Guise', 'A shape shifter. ', 'Animal', 'guise'),
+(7, 'Dwarrow', 'Stocky types who love mining.', 'Denizen', 'dwarrow'),
+(8, 'Uldra', 'The Uldra (also called The Huldra, or Huldra-folk in some regions) are ancient beings.', 'Denizen', 'uldra'),
+(9, 'Spriggan', 'A real mischevious type', 'Denizen', 'spriggan'),
+(11, 'Inkling', 'No-one''s quite sure...', 'Denizen', 'inkling'),
+(12, 'Draugar', 'A reanimated being.', 'Spirit', 'draugar'),
+(13, 'Gnohm', 'Delightful little folk.', 'Denizen', 'gnohm');
 
 -- --------------------------------------------------------
 
@@ -384,7 +390,7 @@ CREATE TABLE IF NOT EXISTS `tblcreaturetypes` (
   `creatureTypeId` int(11) NOT NULL,
   `creatureTypeName` varchar(255) DEFAULT NULL,
   `creatureTypeURL` varchar(128) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblcreaturetypes`
@@ -393,7 +399,8 @@ CREATE TABLE IF NOT EXISTS `tblcreaturetypes` (
 INSERT INTO `tblcreaturetypes` (`creatureTypeId`, `creatureTypeName`, `creatureTypeURL`) VALUES
 (0, 'Bird', 'bird'),
 (1, 'Animal', 'animal'),
-(2, 'Spirit', 'spirit');
+(2, 'Spirit', 'spirit'),
+(3, 'Denizen', 'denizen');
 
 -- --------------------------------------------------------
 
@@ -968,7 +975,7 @@ CREATE TABLE IF NOT EXISTS `tblplants` (
   `timeCreated` datetime NOT NULL,
   `plantSeed` int(255) NOT NULL,
   `commonNamesJoined` varchar(512) COLLATE utf8_bin NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=286 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=287 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
 -- Dumping data for table `tblplants`
@@ -1002,7 +1009,8 @@ INSERT INTO `tblplants` (`plantID`, `latinName`, `commonNames`, `plantDesc`, `pl
 (282, 'Rydaminea rotago', 'Icebeam', 'Icebeams are the food plants of the caterpillars of the Ghost ermine butterfly.', 'rydaminea-rotago', 'Rydaminea rotago\r\n(Icebeam)\r\nIcebeams are the food plants of the caterpillars of the Ghost ermine butterfly.', 0, 0, '2017-11-09 14:11:01', 1510275286, 'Icebeam'),
 (283, 'Ticillanum doxalis', 'Lownip', 'Seeds itself very prolifically and is related to other campions.', 'ticillanum-doxalis', 'Ticillanum doxalis\r\n(Lownip)\r\nSeeds itself very prolifically and is related to other campions.', 0, 0, '2017-11-09 14:11:09', 1510247945, 'Lownip'),
 (284, 'Rhantemisium coryda', 'Glorycampion', 'Glorycampions are the food plants of the caterpillars of the Marbled dart butterfly.', 'rhantemisium-coryda', 'Rhantemisium coryda\r\n(Glorycampion)\r\nGlorycampions are the food plants of the caterpillars of the Marbled dart butterfly.', 0, 0, '2017-11-09 14:11:17', 1510244799, 'Glorycampion'),
-(285, 'Rydalis bliteum', 'Fallow lichen or Lichoats', 'A beautiful, bright annual found growing on hedgerows and pathways. The flowers are prized in cookery. The roots are particularly attractive to the Brimstone gypsy butterfly.', 'rydalis-bliteum', 'Rydalis bliteum\r\n(Fallow lichen or Lichoats)\r\nA beautiful, bright annual found growing on hedgerows and pathways. The flowers are prized in cookery. The roots are particularly attractive to the Brimstone gypsy butterfly.', 0, 0, '2017-11-09 14:11:29', 1510251480, 'Fallow lichen/Lichoats');
+(285, 'Rydalis bliteum', 'Fallow lichen or Lichoats', 'A beautiful, bright annual found growing on hedgerows and pathways. The flowers are prized in cookery. The roots are particularly attractive to the Brimstone gypsy butterfly.', 'rydalis-bliteum', 'Rydalis bliteum\r\n(Fallow lichen or Lichoats)\r\nA beautiful, bright annual found growing on hedgerows and pathways. The flowers are prized in cookery. The roots are particularly attractive to the Brimstone gypsy butterfly.', 0, 0, '2017-11-09 14:11:29', 1510251480, 'Fallow lichen/Lichoats'),
+(286, 'Fraxinus dinginia', 'Autumn sunshade, Hawbloom or Mirecorn', 'Seeds itself very prolifically and is related to other campions.', 'fraxinus-dinginia', 'Fraxinus dinginia\r\n(Autumn sunshade, Hawbloom or Mirecorn)\r\nSeeds itself very prolifically and is related to other campions.', 0, 0, '2017-12-07 14:07:24', 1512723386, 'Autumn sunshade/Hawbloom/Mirecorn');
 
 -- --------------------------------------------------------
 
@@ -1949,12 +1957,12 @@ ALTER TABLE `tblcontracts`
 -- AUTO_INCREMENT for table `tblcreatures`
 --
 ALTER TABLE `tblcreatures`
-  MODIFY `creatureID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=7;
+  MODIFY `creatureID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=14;
 --
 -- AUTO_INCREMENT for table `tblcreaturetypes`
 --
 ALTER TABLE `tblcreaturetypes`
-  MODIFY `creatureTypeId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
+  MODIFY `creatureTypeId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT for table `tbldungeonachievements`
 --
@@ -2039,7 +2047,7 @@ ALTER TABLE `tblnews`
 -- AUTO_INCREMENT for table `tblplants`
 --
 ALTER TABLE `tblplants`
-  MODIFY `plantID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=286;
+  MODIFY `plantID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=287;
 --
 -- AUTO_INCREMENT for table `tblposts`
 --

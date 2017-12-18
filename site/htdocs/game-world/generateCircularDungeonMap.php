@@ -2903,7 +2903,7 @@ function gridHLine($xp, $yp, $w) {
 
 
 function gridTileGrid() {
-    global $requiredWidth, $requiredHeight, $mapTilesX, $mapTilesY, $canvaDimension, $delaunayVertices, $minLeft, $minTop, $edgesUsedOnDelaunayGraph, $allDelaunayEdges, $lockedJoints, $keyColours, $debug, $map, $itemMap, $drawnTileDoors, $drawnTileKeys, $entranceX, $entranceY, $exitX, $exitY, $drawnTileDoors, $drawnTileKeys, $drawnTileRooms, $dungeonDetails, $dungeonName, $jointList, $nodeList;
+    global $requiredWidth, $requiredHeight, $mapTilesX, $mapTilesY, $canvaDimension, $delaunayVertices, $minLeft, $minTop, $edgesUsedOnDelaunayGraph, $allDelaunayEdges, $lockedJoints, $keyColours, $debug, $map, $itemMap, $drawnTileDoors, $drawnTileKeys, $entranceX, $entranceY, $exitX, $exitY, $drawnTileDoors, $drawnTileKeys, $drawnTileRooms, $dungeonDetails, $dungeonName, $jointList, $nodeList, $verticesUsedOnDelaunayGraph;
     // define the tile area to be used:
     $mapTilesX = 70;
     $mapTilesY = 70;
@@ -3111,8 +3111,60 @@ case "cavern":
 // don't use $leftTileEdge, $rightTileEdge, $topTileEdge and $bottomTileEdge - they're not quite the same for different edges - instead use the centre of the room
 // john
 // http://127.0.0.1/game-world/generateCircularDungeonMap.php?debug=true&dungeonName=the-barrow-mines&requestedMap=-1&seed=1513364414
+// need to remove the old joint which was replaced by the pathfinding nodes
+// and any that map to the same location (eg. one from the start node to the start node)
 
 
+// verticesUsedOnDelaunayGraph
+
+
+
+
+    foreach($allDelaunayEdges as $thisEdge) {
+         if ((in_array(new delaunayEdge($thisEdge->v0, $thisEdge->v1), $edgesUsedOnDelaunayGraph)) || (in_array(new delaunayEdge($thisEdge->v1, $thisEdge->v0), $edgesUsedOnDelaunayGraph))) {
+         
+         
+         
+          $theseConnectedNodes = "";
+            foreach ($verticesUsedOnDelaunayGraph as $thisVertex) {
+                if ($thisVertex->whichNode === $thisEdge->v0->whichNode) {
+                    $theseConnectedNodes .= "-" . $thisVertex->whichNode->name;
+                }
+                if ($thisVertex->whichNode === $thisEdge->v1->whichNode) {
+                    $theseConnectedNodes .= "-" . $thisVertex->whichNode->name;
+                }
+            }
+         //   if (isset($lockedJoints[$theseConnectedNodes])) {
+                echo "<hr>".$thisEdge->v0->whichNode->name." to ".$thisEdge->v1->whichNode->name."   ";
+// find room coordinates for each room
+for ($k = 0; $k < count($drawnTileRooms); $k++) {
+    if(($thisEdge->v0->whichNode->name === $drawnTileRooms[$k][4])) {
+        $room1CentreX = floor(($drawnTileRooms[$k][0]+$drawnTileRooms[$k][2])/2);
+            $room1CentreY = floor(($drawnTileRooms[$k][1]+$drawnTileRooms[$k][3])/2);
+            echo " connecting (".$thisEdge->v0->whichNode->name.")".$room1CentreX.", ".$room1CentreY;
+            $map[$room1CentreY][$room1CentreX] = "#";
+    }
+      if(($thisEdge->v1->whichNode->name === $drawnTileRooms[$k][4])) {
+        $room1CentreX = floor(($drawnTileRooms[$k][0]+$drawnTileRooms[$k][2])/2);
+            $room1CentreY = floor(($drawnTileRooms[$k][1]+$drawnTileRooms[$k][3])/2);
+            echo " connecting (".$thisEdge->v1->whichNode->name.")".$room1CentreX.", ".$room1CentreY;
+            $map[$room1CentreY][$room1CentreX] = "#";
+    }
+}
+
+           // }
+        }
+    }
+
+
+
+
+
+
+
+
+
+/*
 //loop through $jointList:
 foreach ($edgesUsedOnDelaunayGraph as $thisJoint) {
     // find nodes for each joint:
@@ -3136,7 +3188,7 @@ foreach ($edgesUsedOnDelaunayGraph as $thisJoint) {
 }
 
 echo "<hr>";
-
+*/
 
 
 
