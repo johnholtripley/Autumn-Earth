@@ -3109,85 +3109,44 @@ break;
 
 case "cavern":
 // don't use $leftTileEdge, $rightTileEdge, $topTileEdge and $bottomTileEdge - they're not quite the same for different edges - instead use the centre of the room
-// john
-// http://127.0.0.1/game-world/generateCircularDungeonMap.php?debug=true&dungeonName=the-barrow-mines&requestedMap=-1&seed=1513364414
-// need to remove the old joint which was replaced by the pathfinding nodes
-// and any that map to the same location (eg. one from the start node to the start node)
 
-
-// verticesUsedOnDelaunayGraph
-
-
-
-
+    $pointsToConnect = array();
     foreach($allDelaunayEdges as $thisEdge) {
-         if ((in_array(new delaunayEdge($thisEdge->v0, $thisEdge->v1), $edgesUsedOnDelaunayGraph)) || (in_array(new delaunayEdge($thisEdge->v1, $thisEdge->v0), $edgesUsedOnDelaunayGraph))) {
-         
-         
-         
-          $theseConnectedNodes = "";
-            foreach ($verticesUsedOnDelaunayGraph as $thisVertex) {
-                if ($thisVertex->whichNode === $thisEdge->v0->whichNode) {
-                    $theseConnectedNodes .= "-" . $thisVertex->whichNode->name;
+        if ((in_array(new delaunayEdge($thisEdge->v0, $thisEdge->v1), $edgesUsedOnDelaunayGraph)) || (in_array(new delaunayEdge($thisEdge->v1, $thisEdge->v0), $edgesUsedOnDelaunayGraph))) {
+            //echo "<hr>".$thisEdge->v0->whichNode->name." to ".$thisEdge->v1->whichNode->name."   ";
+            array_push($pointsToConnect, array());
+            // find room coordinates for each room
+            for ($k = 0; $k < count($drawnTileRooms); $k++) {
+                if(($thisEdge->v0->whichNode->name === $drawnTileRooms[$k][4])) {
+                    $roomCentreX = floor(($drawnTileRooms[$k][0]+$drawnTileRooms[$k][2])/2);
+                    $roomCentreY = floor(($drawnTileRooms[$k][1]+$drawnTileRooms[$k][3])/2);
+                    //echo " connecting (".$thisEdge->v0->whichNode->name.")".$roomCentreX.", ".$roomCentreY;
+                    $map[$roomCentreY][$roomCentreX] = "#";
+                    array_push($pointsToConnect[(count($pointsToConnect) - 1)], array($roomCentreX,$roomCentreY));
                 }
-                if ($thisVertex->whichNode === $thisEdge->v1->whichNode) {
-                    $theseConnectedNodes .= "-" . $thisVertex->whichNode->name;
+                if(($thisEdge->v1->whichNode->name === $drawnTileRooms[$k][4])) {
+                    $roomCentreX = floor(($drawnTileRooms[$k][0]+$drawnTileRooms[$k][2])/2);
+                    $roomCentreY = floor(($drawnTileRooms[$k][1]+$drawnTileRooms[$k][3])/2);
+                    //echo " connecting (".$thisEdge->v1->whichNode->name.")".$roomCentreX.", ".$roomCentreY;
+                    $map[$roomCentreY][$roomCentreX] = "#";
+                    array_push($pointsToConnect[(count($pointsToConnect) - 1)], array($roomCentreX,$roomCentreY));
                 }
             }
-         //   if (isset($lockedJoints[$theseConnectedNodes])) {
-                echo "<hr>".$thisEdge->v0->whichNode->name." to ".$thisEdge->v1->whichNode->name."   ";
-// find room coordinates for each room
-for ($k = 0; $k < count($drawnTileRooms); $k++) {
-    if(($thisEdge->v0->whichNode->name === $drawnTileRooms[$k][4])) {
-        $room1CentreX = floor(($drawnTileRooms[$k][0]+$drawnTileRooms[$k][2])/2);
-            $room1CentreY = floor(($drawnTileRooms[$k][1]+$drawnTileRooms[$k][3])/2);
-            echo " connecting (".$thisEdge->v0->whichNode->name.")".$room1CentreX.", ".$room1CentreY;
-            $map[$room1CentreY][$room1CentreX] = "#";
-    }
-      if(($thisEdge->v1->whichNode->name === $drawnTileRooms[$k][4])) {
-        $room1CentreX = floor(($drawnTileRooms[$k][0]+$drawnTileRooms[$k][2])/2);
-            $room1CentreY = floor(($drawnTileRooms[$k][1]+$drawnTileRooms[$k][3])/2);
-            echo " connecting (".$thisEdge->v1->whichNode->name.")".$room1CentreX.", ".$room1CentreY;
-            $map[$room1CentreY][$room1CentreX] = "#";
-    }
-}
-
-           // }
         }
     }
 
 
-
-
-
-
-
+    for ($k = 0; $k < count($pointsToConnect); $k++) {
+        drawWonkyPath($pointsToConnect[$k][0],$pointsToConnect[$k][1]);
+    }
 
 
 /*
-//loop through $jointList:
-foreach ($edgesUsedOnDelaunayGraph as $thisJoint) {
-    // find nodes for each joint:
-    echo "<hr>".$thisJoint->v0->whichNode->name.", ".$thisJoint->v1->whichNode->name;
-    //   echo "<hr>".$nodeList[$thisJoint->nodeA]->name.", ".$nodeList[$thisJoint->nodeB]->name."<br>";
-    // find room coordinates for each room
-    for ($j = 0; $j < count($drawnTileRooms); $j++) {
-        if(($thisJoint->v0->whichNode->name == $drawnTileRooms[$j][4])) {
-            $room1CentreX = floor(($drawnTileRooms[$j][0]+$drawnTileRooms[$j][2])/2);
-            $room1CentreY = floor(($drawnTileRooms[$j][1]+$drawnTileRooms[$j][3])/2);
-            echo " connecting ".$room1CentreX.", ".$room1CentreY;
-            $map[$room1CentreY][$room1CentreX] = "#";
-        }
-        if(($thisJoint->v1->whichNode->name == $drawnTileRooms[$j][4])) {
-            $room2CentreX = floor(($drawnTileRooms[$j][0]+$drawnTileRooms[$j][2])/2);
-            $room2CentreY = floor(($drawnTileRooms[$j][1]+$drawnTileRooms[$j][3])/2);
-            echo " with ".$room2CentreX.", ".$room2CentreY;
-            $map[$room2CentreY][$room2CentreX] = "#";
-        }
-    }
+if($debug){
+echo'<hr><pre style="display:block;width:100%;clear:both;"><code>';
+var_dump($pointsToConnect);
+echo "</code></pre>";
 }
-
-echo "<hr>";
 */
 
 
@@ -3195,38 +3154,6 @@ echo "<hr>";
 
 
 
- 
-
-
-/*
-$nextRoomId = 0;
-for ($i = 0; $i < count($delaunayVertices); $i++) {
-    if (isset($delaunayVertices[$i]->whichNode)) {
-        $room1CentreX = floor(($drawnTileRooms[$nextRoomId][0]+$drawnTileRooms[$nextRoomId][2])/2);
-        $room1CentreY = floor(($drawnTileRooms[$nextRoomId][1]+$drawnTileRooms[$nextRoomId][3])/2);
-        var_dump($delaunayVertices[$i]->whichNode);echo"<br>";
-        //echo $i."(".$room1CentreX.",".$room1CentreY.") connected to ".implode(",", $delaunayVertices[$i]->whichNode->connectedTo)."<br>";
-/*
-        for ($j = 0; $j < count($delaunayVertices); $j++) {
-            if($i!=$j) {
-                if (isset($delaunayVertices[$j]->whichNode)) {
-                    if ((in_array(new delaunayEdge($delaunayVertices[$i], $delaunayVertices[$j]), $edgesUsedOnDelaunayGraph)) || (in_array(new delaunayEdge($delaunayVertices[$j], $delaunayVertices[$i]), $edgesUsedOnDelaunayGraph))) {
-                        
-                        $room2CentreX = floor(($drawnTileRooms[$j][0]+$drawnTileRooms[$j][2])/2);
-                        $room2CentreY = floor(($drawnTileRooms[$j][1]+$drawnTileRooms[$j][3])/2);
-                        $map[$room1CentreY][$room1CentreX] = "#";
-                        //echo "connecting ".$i." (".$room1CentreX.",".$room1CentreY.") with ".$j." (".$room2CentreX.",".$room2CentreY.")<br>";
-                    }
-                }
-            }
-        }
-        */
-        /*
-        $nextRoomId++;
-    
-    }
-}
-*/
 
 break;
 
@@ -3234,20 +3161,9 @@ break;
 
 
 
-
-
-
-
-
-
-
-
-
     
 
 outputTileMap();
-
-
 
 
 // find blank tiles (tiles completely surrounded by non-walkable tiles):
@@ -3262,6 +3178,19 @@ outputTileMap();
 
    
 }
+
+
+
+
+function drawWonkyPath($from, $to) {
+    // john
+    global $debug;
+    if($debug) {
+        echo "from ".$from[0].",".$from[1]." to ".$to[0].",".$to[1]."<br>";
+    }
+}
+
+
 
 
 
