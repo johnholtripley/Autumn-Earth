@@ -1069,7 +1069,8 @@ $blockedNodeName = 0;
             if ($thisNextVertex['vertex']->whichNode === null) {
                 $thisNextVertex['vertex']->whichNode       = new node();
                 $thisNextVertex['vertex']->whichNode->type = "BLOCKED";
-                $thisNextVertex['vertex']->whichNode->name = "blocked".$blockedNodeName;
+                // use the start and end node in the name to make each path found route unique:
+                $thisNextVertex['vertex']->whichNode->name = "blocked".$startNode->name."-".$endNode->name."-".$blockedNodeName;
                 $blockedNodeName++;
                 $firstNewNode = $thisNextVertex['vertex']->whichNode;
                 array_push($nodesPlottedOnDelaunayGraph, $thisNextVertex['vertex']->whichNode);
@@ -3113,21 +3114,21 @@ case "cavern":
     $pointsToConnect = array();
     foreach($allDelaunayEdges as $thisEdge) {
         if ((in_array(new delaunayEdge($thisEdge->v0, $thisEdge->v1), $edgesUsedOnDelaunayGraph)) || (in_array(new delaunayEdge($thisEdge->v1, $thisEdge->v0), $edgesUsedOnDelaunayGraph))) {
-            //echo "<hr>".$thisEdge->v0->whichNode->name." to ".$thisEdge->v1->whichNode->name."   ";
+            echo "<hr>".$thisEdge->v0->whichNode->name." to ".$thisEdge->v1->whichNode->name."   ";
             array_push($pointsToConnect, array());
             // find room coordinates for each room
             for ($k = 0; $k < count($drawnTileRooms); $k++) {
                 if(($thisEdge->v0->whichNode->name === $drawnTileRooms[$k][4])) {
                     $roomCentreX = floor(($drawnTileRooms[$k][0]+$drawnTileRooms[$k][2])/2);
                     $roomCentreY = floor(($drawnTileRooms[$k][1]+$drawnTileRooms[$k][3])/2);
-                    //echo " connecting (".$thisEdge->v0->whichNode->name.")".$roomCentreX.", ".$roomCentreY;
+                    echo " connecting (".$thisEdge->v0->whichNode->name.")".$roomCentreX.", ".$roomCentreY;
                     $map[$roomCentreY][$roomCentreX] = "#";
                     array_push($pointsToConnect[(count($pointsToConnect) - 1)], array($roomCentreX,$roomCentreY));
                 }
                 if(($thisEdge->v1->whichNode->name === $drawnTileRooms[$k][4])) {
                     $roomCentreX = floor(($drawnTileRooms[$k][0]+$drawnTileRooms[$k][2])/2);
                     $roomCentreY = floor(($drawnTileRooms[$k][1]+$drawnTileRooms[$k][3])/2);
-                    //echo " connecting (".$thisEdge->v1->whichNode->name.")".$roomCentreX.", ".$roomCentreY;
+                    echo " connecting (".$thisEdge->v1->whichNode->name.")".$roomCentreX.", ".$roomCentreY;
                     $map[$roomCentreY][$roomCentreX] = "#";
                     array_push($pointsToConnect[(count($pointsToConnect) - 1)], array($roomCentreX,$roomCentreY));
                 }
@@ -3220,6 +3221,9 @@ function bresenhamLinePath($x1,$y1,$x2,$y2) {
 
 function drawWonkyPath($from, $to) {
     // john
+
+
+
     global $debug;
 /*    if($debug) {
         echo "from ".$from[0].",".$from[1]." to ".$to[0].",".$to[1]."<br>";
