@@ -3180,21 +3180,9 @@ outputTileMap();
 }
 
 
+function bresenhamLinePath($x1,$y1,$x2,$y2) {
+       global $debug, $map;
 
-
-function drawWonkyPath($from, $to) {
-    // john
-    global $debug, $map;
-    if($debug) {
-        echo "from ".$from[0].",".$from[1]." to ".$to[0].",".$to[1]."<br>";
-    }
-
-
-// temporary bresenham line: ############
-$x1 = $from[0];
-$x2 = $to[0];
-$y1 = $from[1];
-$y2 = $to[1];
    $dy = $y2 - $y1;
      $dx = $x2 - $x1;
     if ($dy < 0) { $dy = -$dy;  $stepy = -1; } else { $stepy = 1; }
@@ -3228,9 +3216,21 @@ $y2 = $to[1];
            $map[$y1][$x1] = ".";
         }
      }
-// end bresenham
+}
+
+function drawWonkyPath($from, $to) {
+    // john
+    global $debug;
+/*    if($debug) {
+        echo "from ".$from[0].",".$from[1]." to ".$to[0].",".$to[1]."<br>";
+    }
+*/
 
 
+bresenhamLinePath($from[0],$from[1],$to[0],$to[1]);
+// thicken up the path:
+//bresenhamLinePath($from[0]-1,$from[1],$to[0]-1,$to[1]);
+//bresenhamLinePath($from[0]+1,$from[1],$to[0]+1,$to[1]);
 
 
 
