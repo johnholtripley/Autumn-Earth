@@ -227,7 +227,7 @@ if (cardGameNameSpace.compareColours(cardGameNameSpace.playerColours[1], cardGam
             }
         var x = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft - cardGameNameSpace.outerCanvasLeft;
         var y = e.clientY + document.body.scrollTop + document.documentElement.scrollTop - cardGameNameSpace.outerCanvasTop - cardGameNameSpace.pageLoadScroll;
-        switch (gameMode) {
+        switch (cardGameNameSpace.gameMode) {
             case "play":
             case "cardGame":
                 var gridX = Math.floor((x / cardGameNameSpace.outerCanvasWidth) * cardGameNameSpace.boardWidth);

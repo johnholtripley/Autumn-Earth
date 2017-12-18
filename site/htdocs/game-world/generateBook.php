@@ -60,7 +60,7 @@ $textSource = file_get_contents($_SERVER['DOCUMENT_ROOT']."/includes/scriptorium
 // borrowed from WoW ####
 $inGameNames = array("Kael'thas", "Aethas", "Lor'themar", "Rommath", "Halduron", "Liadrin", "Valeera", "Koltira", "Zendarin");
 
-
+// might need to check for ! and ? terminating sentences - which might be inside speed marks ##############
 
 // isolate space and full stops:
 $textSource = str_ireplace(" ", "####", $textSource);

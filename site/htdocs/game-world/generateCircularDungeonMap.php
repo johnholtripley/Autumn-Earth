@@ -61,7 +61,7 @@ check the connectivity graph, if there is a short alternate path to the exit, th
 rotate entrance and exit doors for variation. 
 
 
-
+http://develop.ae/game-world/generateCircularDungeonMap.php?debug=true&dungeonName=the-barrow-mines&requestedMap=-1&seed=1513619057 - would be good to test wonky path on
 
 ISSUES:
 http://ae.dev/game-world/generateCircularDungeonMap.php?debug=true&dungeonName=the-dwarrow-mines&requestedMap=-1&seed=1513161267 - double thickness walls look odd
@@ -3114,21 +3114,21 @@ case "cavern":
     $pointsToConnect = array();
     foreach($allDelaunayEdges as $thisEdge) {
         if ((in_array(new delaunayEdge($thisEdge->v0, $thisEdge->v1), $edgesUsedOnDelaunayGraph)) || (in_array(new delaunayEdge($thisEdge->v1, $thisEdge->v0), $edgesUsedOnDelaunayGraph))) {
-            echo "<hr>".$thisEdge->v0->whichNode->name." to ".$thisEdge->v1->whichNode->name."   ";
+            //echo "<hr>".$thisEdge->v0->whichNode->name." to ".$thisEdge->v1->whichNode->name."   ";
             array_push($pointsToConnect, array());
             // find room coordinates for each room
             for ($k = 0; $k < count($drawnTileRooms); $k++) {
                 if(($thisEdge->v0->whichNode->name === $drawnTileRooms[$k][4])) {
                     $roomCentreX = floor(($drawnTileRooms[$k][0]+$drawnTileRooms[$k][2])/2);
                     $roomCentreY = floor(($drawnTileRooms[$k][1]+$drawnTileRooms[$k][3])/2);
-                    echo " connecting (".$thisEdge->v0->whichNode->name.")".$roomCentreX.", ".$roomCentreY;
+                    //echo " connecting (".$thisEdge->v0->whichNode->name.")".$roomCentreX.", ".$roomCentreY;
                     $map[$roomCentreY][$roomCentreX] = "#";
                     array_push($pointsToConnect[(count($pointsToConnect) - 1)], array($roomCentreX,$roomCentreY));
                 }
                 if(($thisEdge->v1->whichNode->name === $drawnTileRooms[$k][4])) {
                     $roomCentreX = floor(($drawnTileRooms[$k][0]+$drawnTileRooms[$k][2])/2);
                     $roomCentreY = floor(($drawnTileRooms[$k][1]+$drawnTileRooms[$k][3])/2);
-                    echo " connecting (".$thisEdge->v1->whichNode->name.")".$roomCentreX.", ".$roomCentreY;
+                    //echo " connecting (".$thisEdge->v1->whichNode->name.")".$roomCentreX.", ".$roomCentreY;
                     $map[$roomCentreY][$roomCentreX] = "#";
                     array_push($pointsToConnect[(count($pointsToConnect) - 1)], array($roomCentreX,$roomCentreY));
                 }
@@ -3233,8 +3233,8 @@ function drawWonkyPath($from, $to) {
 
 bresenhamLinePath($from[0],$from[1],$to[0],$to[1]);
 // thicken up the path:
-//bresenhamLinePath($from[0]-1,$from[1],$to[0]-1,$to[1]);
-//bresenhamLinePath($from[0]+1,$from[1],$to[0]+1,$to[1]);
+bresenhamLinePath($from[0]-1,$from[1],$to[0]-1,$to[1]);
+bresenhamLinePath($from[0],$from[1]-1,$to[0],$to[1]-1);
 
 
 

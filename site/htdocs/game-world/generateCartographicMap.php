@@ -1095,8 +1095,7 @@ function quadBezier($im, $x1, $y1, $x2, $y2, $x3, $y3) {
     $b = $pre1 = $pre2 = $pre3 = 0;
     $prevx = 0;
     $prevy = 0;
-    $d = sqrt(($x1 - $x2) * ($x1 - $x2) + ($y1 - $y2) * ($y1 - $y2)) +
-        sqrt(($x2 - $x3) * ($x2 - $x3) + ($y2 - $y3) * ($y2 - $y3));
+    $d = sqrt(($x1 - $x2) * ($x1 - $x2) + ($y1 - $y2) * ($y1 - $y2)) + sqrt(($x2 - $x3) * ($x2 - $x3) + ($y2 - $y3) * ($y2 - $y3));
     $resolution = (1/$d) * 10;
     for ($a = 1; $a >0; $a-=$resolution) {
         $b=1-$a;
