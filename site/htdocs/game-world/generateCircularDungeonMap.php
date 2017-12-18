@@ -3184,10 +3184,57 @@ outputTileMap();
 
 function drawWonkyPath($from, $to) {
     // john
-    global $debug;
+    global $debug, $map;
     if($debug) {
         echo "from ".$from[0].",".$from[1]." to ".$to[0].",".$to[1]."<br>";
     }
+
+
+// temporary bresenham line: ############
+$x1 = $from[0];
+$x2 = $to[0];
+$y1 = $from[1];
+$y2 = $to[1];
+   $dy = $y2 - $y1;
+     $dx = $x2 - $x1;
+    if ($dy < 0) { $dy = -$dy;  $stepy = -1; } else { $stepy = 1; }
+    if ($dx < 0) { $dx = -$dx;  $stepx = -1; } else { $stepx = 1; }
+    $dy <<= 1;        // $dy is now 2*$dy
+    $dx <<= 1;        // $dx is now 2*$dx
+    $map[$y1][$x1] = ".";
+    if ($dx > $dy) 
+    {
+         $fraction = $dy - ($dx >> 1);  // same as 2*$dy - $dx
+        while ($x1 != $x2) 
+        {
+           if ($fraction >= 0) 
+           {
+               $y1 += $stepy;
+               $fraction -= $dx;          // same as $fraction -= 2*$dx
+           }
+           $x1 += $stepx;
+           $fraction += $dy;              // same as $fraction -= 2*$dy
+           $map[$y1][$x1] = ".";
+        }
+     } else {
+         $fraction = $dx - ($dy >> 1);
+        while ($y1 != $y2) {
+           if ($fraction >= 0) {
+               $x1 += $stepx;
+               $fraction -= $dy;
+           }
+           $y1 += $stepy;
+           $fraction += $dx;
+           $map[$y1][$x1] = ".";
+        }
+     }
+// end bresenham
+
+
+
+
+
+
 }
 
 
