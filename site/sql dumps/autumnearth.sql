@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 22, 2017 at 10:43 AM
+-- Generation Time: Jan 02, 2018 at 01:10 PM
 -- Server version: 5.6.24
 -- PHP Version: 5.6.8
 
@@ -359,7 +359,7 @@ CREATE TABLE IF NOT EXISTS `tblcreatures` (
   `creatureDescription` longtext,
   `creatureType` varchar(128) NOT NULL,
   `cleanURL` varchar(128) DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblcreatures`
@@ -378,7 +378,10 @@ INSERT INTO `tblcreatures` (`creatureID`, `creatureName`, `creatureDescription`,
 (9, 'Spriggan', 'A real mischevious type', 'Denizen', 'spriggan'),
 (11, 'Inkling', 'No-one''s quite sure...', 'Denizen', 'inkling'),
 (12, 'Draugar', 'A reanimated being.', 'Spirit', 'draugar'),
-(13, 'Gnohm', 'Delightful little folk.', 'Denizen', 'gnohm');
+(13, 'Gnohm', 'Delightful little folk.', 'Denizen', 'gnohm'),
+(14, 'Hydratid', 'Aquatic creature.', 'Animal', 'hydratid'),
+(15, 'Tarasque', 'Semi aquatic serpentine dragon.', 'Animal', 'tarasque'),
+(16, 'Fomorrah', 'Nether giant.', 'Animal', 'fomorrah');
 
 -- --------------------------------------------------------
 
@@ -1154,7 +1157,7 @@ CREATE TABLE IF NOT EXISTS `tblprofessions` (
   `professionID` int(11) NOT NULL,
   `professionName` varchar(128) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
   `cleanurl` varchar(128) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblprofessions`
@@ -1170,7 +1173,9 @@ INSERT INTO `tblprofessions` (`professionID`, `professionName`, `cleanurl`) VALU
 (6, 'Cooking', 'cooking'),
 (7, 'Thaumaturgy', 'thaumaturgy'),
 (8, 'Translation', 'translation'),
-(9, 'Dendromancy', 'dendromancy');
+(9, 'Dendromancy', 'dendromancy'),
+(10, 'Herbalism', 'herbalism'),
+(11, 'Astronomy', 'astronomy');
 
 -- --------------------------------------------------------
 
@@ -1958,7 +1963,7 @@ ALTER TABLE `tblcontracts`
 -- AUTO_INCREMENT for table `tblcreatures`
 --
 ALTER TABLE `tblcreatures`
-  MODIFY `creatureID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=14;
+  MODIFY `creatureID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=17;
 --
 -- AUTO_INCREMENT for table `tblcreaturetypes`
 --
@@ -2058,7 +2063,7 @@ ALTER TABLE `tblposts`
 -- AUTO_INCREMENT for table `tblprofessions`
 --
 ALTER TABLE `tblprofessions`
-  MODIFY `professionID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=10;
+  MODIFY `professionID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=12;
 --
 -- AUTO_INCREMENT for table `tblquests`
 --
