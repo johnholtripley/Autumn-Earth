@@ -53,6 +53,10 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
         <input type="submit" value="Ok">
       </fieldset>
     </form>
+    <div id="gatheringPanel" class="active">
+      <div class="draggableBar">Gathering</div><button class="closePanel">close</button>
+      <p>Quality</p><div id="gatheringQualityBar" class="progressBarWrapper"><div class="progressBar"></div></div>
+    </div>
     <div id="cardAlbum" class="active">
       <div class="draggableBar">Totem Card album</div>
       <div id="cardAlbumList"></div>

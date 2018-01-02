@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 18, 2017 at 09:50 AM
+-- Generation Time: Dec 22, 2017 at 10:43 AM
 -- Server version: 5.6.24
 -- PHP Version: 5.6.8
 
@@ -390,7 +390,7 @@ CREATE TABLE IF NOT EXISTS `tblcreaturetypes` (
   `creatureTypeId` int(11) NOT NULL,
   `creatureTypeName` varchar(255) DEFAULT NULL,
   `creatureTypeURL` varchar(128) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblcreaturetypes`
@@ -400,7 +400,8 @@ INSERT INTO `tblcreaturetypes` (`creatureTypeId`, `creatureTypeName`, `creatureT
 (0, 'Bird', 'bird'),
 (1, 'Animal', 'animal'),
 (2, 'Spirit', 'spirit'),
-(3, 'Denizen', 'denizen');
+(3, 'Denizen', 'denizen'),
+(4, 'Elemental', 'elemental');
 
 -- --------------------------------------------------------
 
@@ -527,7 +528,7 @@ CREATE TABLE IF NOT EXISTS `tblfreeformpages` (
 --
 
 INSERT INTO `tblfreeformpages` (`pageID`, `status`, `pageContent`, `textColour`, `bgColour`, `freeformPageTitle`, `cleanURL`, `guildID`, `public`, `creationTime`, `fontfamily`) VALUES
-(1, '1', '&lt;P&gt;stuff&lt;/P&gt;\r\n&lt;P&gt;more stuff&lt;/P&gt;\r\n&lt;P style=&quot;TEXT-ALIGN: left&quot;&gt;and &lt;STRONG&gt;a bit more&lt;/STRONG&gt; stuff &lt;/P&gt;\r\n&lt;P&gt;and this&lt;/P&gt;', 'CCCCCC', '330000', 'guild page #1', 'guild-page-1', 1, '1', '2006-07-23 00:00:00', 'Georgia, ''Times New Roman'', Times, serif'),
+(1, '1', '&lt;P&gt;stuff&lt;/P&gt;\n&lt;P&gt;more stuff&lt;/P&gt;\n&lt;P style=&quot;TEXT-ALIGN: left&quot;&gt;and &lt;STRONG&gt;a bit more&lt;/STRONG&gt; stuff &lt;/P&gt;\n&lt;P&gt;and this&lt;/P&gt;', 'CCCCCC', '330000', 'guild page #1', 'guild-page-1', 1, '1', '2006-07-23 00:00:00', 'Georgia, ''Times New Roman'', Times, serif'),
 (2, '1', '&lt;P&gt;second stuff&lt;/P&gt;\r\n&lt;P&gt;more stuff&lt;/P&gt;\r\n&lt;P style=&quot;TEXT-ALIGN: left&quot;&gt;and &lt;STRONG&gt;a bit more&lt;/STRONG&gt; stuff &lt;/P&gt;\r\n&lt;P&gt;and this&lt;/P&gt;', 'CCCCCC', '330000', 'guild page #2', 'guild-page-2', 1, '1', '2006-07-23 00:00:00', 'Georgia, ''Times New Roman'', Times, serif'),
 (3, '1', '&lt;P&gt;earthen stuff&lt;/P&gt;\r\n&lt;P&gt;more stuff&lt;/P&gt;\r\n&lt;P style=&quot;TEXT-ALIGN: left&quot;&gt;and &lt;STRONG&gt;a bit more&lt;/STRONG&gt; stuff &lt;/P&gt;\r\n&lt;P&gt;and this&lt;/P&gt;', 'CCCCCC', '330000', 'earthen page', 'earthen-page', 2, '1', '2006-07-23 00:00:00', 'Georgia, ''Times New Roman'', Times, serif');
 
@@ -1962,7 +1963,7 @@ ALTER TABLE `tblcreatures`
 -- AUTO_INCREMENT for table `tblcreaturetypes`
 --
 ALTER TABLE `tblcreaturetypes`
-  MODIFY `creatureTypeId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
+  MODIFY `creatureTypeId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=5;
 --
 -- AUTO_INCREMENT for table `tbldungeonachievements`
 --
