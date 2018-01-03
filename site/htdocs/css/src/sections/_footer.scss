@@ -1,0 +1,14 @@
+#footer ul {
+    // dull down the sibling links when hovering over a footer link:
+    @include attention() {
+        a {
+            opacity: 0.6;
+        }
+    }
+    a {
+        @include transition(opacity 0.4s ease);
+        @include attention() {
+            opacity: 1;
+        }
+    }
+}
