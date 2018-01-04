@@ -55,7 +55,12 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
     </form>
     <div id="gatheringPanel" class="active">
       <div class="draggableBar">Gathering</div><button class="closePanel">close</button>
-      <p>Quality</p><div id="gatheringQualityBar" class="progressBarWrapper"><div class="progressBar"></div></div>
+      <ul>
+        <li><p>Quality</p><div id="gatheringQualityBar" class="progressBarWrapper"><div class="progressBar"></div></div></li>
+        <li><p>Purity</p><div id="gatheringPurityBar" class="progressBarWrapper"><div class="progressBar"></div></div></li>
+        <li><p>Quantity</p><div id="gatheringQuantityBar" class="progressBarWrapper"><div class="progressBar"></div></div></li>
+        <li><p>Risk</p><div id="gatheringRiskBar" class="progressBarWrapper"><div class="progressBar"></div></div></li>
+      </ul>
     </div>
     <div id="cardAlbum" class="active">
       <div class="draggableBar">Totem Card album</div>
