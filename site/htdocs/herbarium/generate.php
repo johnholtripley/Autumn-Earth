@@ -69,7 +69,7 @@ $result = $connection->post('media/metadata/create', $parameters);
 
 var_dump($result);
 */
-$textString = $latinName."\r\n".'('.$commonNameString.')';
+$textString = $latinName."\r\n".'('.$commonNameString.').';
 $textString .= "\r\n".$startingText;
 // with 'tweet_mode'=>'extended' can post 280 instead of 140:
 $characterLimit = 280-$mediaURLLength;
@@ -81,7 +81,7 @@ if ($pos !== false) {
 $textString = substr($textString, 0, $pos+1);
 } else {
 	// isn't room for the short description:
-	$textString = $latinName."\r\n".'('.$commonNameString.')';
+	$textString = $latinName."\r\n".'('.$commonNameString.').';
 }
 }
 // twitter doesn't handle html entities:
@@ -957,6 +957,12 @@ switch ($shouldAddPrefix) {
         break;
 case 7:
          $thisCommonName = "Autumn ".$thisCommonName;
+         break;
+         case 8:
+         $thisCommonName = "Sweet ".$thisCommonName;
+        break;
+            case 9:
+         $thisCommonName = "Our Lady's ".$thisCommonName;
         break;
     default:
        $thisCommonName = ucfirst($thisCommonName);
@@ -988,9 +994,22 @@ array_push($commonNames,$thisCommonName);
 $commonNameString = implode(", ",$commonNames);
 $commonNamesJoined = implode("/",$commonNames);
 if(count($commonNames)>1) {
-	// replace last "," with a "or":
 	$lastCommaPos = strrpos($commonNameString, ",");
+	$randomDetail = mt_rand(1,8);
+
+if($randomDetail == 1) {
+// add in specific detail:
+	$commonNameString = substr($commonNameString, 0, $lastCommaPos)   .", and by apothecaries,".   substr($commonNameString, $lastCommaPos+1);
+} else if($randomDetail == 2) {
+// add in specific detail:
+	$commonNameString = substr($commonNameString, 0, $lastCommaPos)   ."; some call it".   substr($commonNameString, $lastCommaPos+1);
+} else {
+// replace last "," with a "or":
+	
 	$commonNameString = substr($commonNameString, 0, $lastCommaPos)   ." or".   substr($commonNameString, $lastCommaPos+1);
+}
+
+
 }
 
 $whichBaseStringToUse = "origin";
@@ -1004,6 +1023,21 @@ if($isAquatic == 1) {
 $whichElem = mt_rand(0,(count($json[$whichBaseStringToUse])-1));
 $startingText = $json[$whichBaseStringToUse][$whichElem];
 $startingText = findAndReplaceHashes($startingText);
+
+$whichPlaceElem = mt_rand(0,(count($json["place"])-1));
+$placeText = $json["place"][$whichPlaceElem];
+$placeText = findAndReplaceHashes($placeText);
+
+$whichTimeElem = mt_rand(0,(count($json["time"])-1));
+$timeText = $json["time"][$whichTimeElem];
+$timeText = findAndReplaceHashes($timeText);
+
+$whichVirtuesElem = mt_rand(0,(count($json["virtues"])-1));
+$virtueText = $json["virtues"][$whichVirtuesElem];
+$virtueText = findAndReplaceHashes($virtueText);
+
+$startingText .= " ".$placeText ." ". $timeText;
+//$startingText .= " ".$virtueText;
 
 // generate a butterfly:
 include($_SERVER['DOCUMENT_ROOT']."/includes/herbarium/butterfly-name-prefixes.php");
@@ -1084,9 +1118,37 @@ $petalBlue = capValues($petalBlue,0,255);
 
 $startingText = str_ireplace("++petalcolour++", $displayPetalColourName, $startingText);
 
+$commonNameIntro = array(
+"It is likewise known as ",
+"It is likewise called ",
+"Called also ",
+"",
+"",
+"",
+"",
+"",
+"Also known as ",
+"It is also called ",
+"It is called ",
+"This is called by many as ",
+"Which is also called "
+);
+
+
+$commonNameOutroString = "";
+
+if(mt_rand(1,10) == 1) {
+$commonNameOutro = array(
+" and many others",
+" and too many others to rehearse"
+	);
+$commonNameOutroString = $commonNameOutro[mt_rand(0, count($commonNameOutro) - 1)];
+}
+
+$commonNameString = $commonNameIntro[mt_rand(0, count($commonNameIntro) - 1)].$commonNameString.$commonNameOutroString;
 
 echo '<h1 style="font-style:italic;">'.$latinName.'</h1>';
-echo "<h2>Common names: ".$commonNameString."</h2>";
+echo "<h2>".$commonNameString.".</h2>";
 echo '<p>'.$startingText.'</p>';
 
 $plantURL = str_ireplace(" ", "-", trim(strtolower($latinName)));
