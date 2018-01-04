@@ -1128,9 +1128,7 @@ $displayPetalColourIshName = $displayPetalColourName."ish";
 if($displayPetalColourIshName == "redish") {
 $displayPetalColourIshName = "reddish";
 }
-if($displayPetalColourIshName == "blueish") {
-$displayPetalColourIshName = "bluish";
-}
+
 
 $startingText = str_ireplace("++petalcolourish++", $displayPetalColourIshName, $startingText);
 
