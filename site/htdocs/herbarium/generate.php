@@ -1,5 +1,11 @@
 <?php
 
+// ---------------------------------------
+
+// TO DO:
+// Need a better system to catch duplicated seasons and months - eg. "they flower in spring and spring, and sometimes in spring if mild"
+
+// ---------------------------------------
 
 
 
@@ -1118,6 +1124,53 @@ $petalBlue = capValues($petalBlue,0,255);
 
 $startingText = str_ireplace("++petalcolour++", $displayPetalColourName, $startingText);
 
+$displayPetalColourIshName = $displayPetalColourName."ish";
+if($displayPetalColourIshName == "redish") {
+$displayPetalColourIshName = "reddish";
+}
+if($displayPetalColourIshName == "blueish") {
+$displayPetalColourIshName = "bluish";
+}
+
+$startingText = str_ireplace("++petalcolourish++", $displayPetalColourIshName, $startingText);
+
+// remove any duplicate seasons and months:
+
+$startingText = str_replace("Spring or Spring", "Spring or Summer", $startingText);
+$startingText = str_replace("Summer or Summer", "Spring or Summer", $startingText);
+$startingText = str_replace("Autumn or Autumn", "Autumn or Winter", $startingText);
+$startingText = str_replace("Winter or Winter", "Autumn or Winter", $startingText);
+$startingText = str_replace("Spring and Spring", "Spring and Summer", $startingText);
+$startingText = str_replace("Summer and Summer", "Spring and Summer", $startingText);
+$startingText = str_replace("Autumn and Autumn", "Autumn and Winter", $startingText);
+$startingText = str_replace("Winter and Winter", "Autumn and Winter", $startingText);
+
+
+$startingText = str_replace("January or January", "January or February", $startingText);
+$startingText = str_replace("January and January", "January and February", $startingText);
+$startingText = str_replace("February or February", "January or February", $startingText);
+$startingText = str_replace("February and February", "January and February", $startingText);
+$startingText = str_replace("March or March", "March or April", $startingText);
+$startingText = str_replace("March and March", "March and April", $startingText);
+$startingText = str_replace("April or April", "March or April", $startingText);
+$startingText = str_replace("April and April", "March and April", $startingText);
+$startingText = str_replace("May or May", "May or June", $startingText);
+$startingText = str_replace("May and May", "May and June", $startingText);
+$startingText = str_replace("June or June", "May or June", $startingText);
+$startingText = str_replace("June and June", "May and June", $startingText);
+$startingText = str_replace("July or July", "July or August", $startingText);
+$startingText = str_replace("July and July", "July and August", $startingText);
+$startingText = str_replace("August or August", "July or August", $startingText);
+$startingText = str_replace("August and August", "July and August", $startingText);
+$startingText = str_replace("September or September", "September or October", $startingText);
+$startingText = str_replace("September and September", "September and October", $startingText);
+$startingText = str_replace("October or October", "September or October", $startingText);
+$startingText = str_replace("October and October", "September and October", $startingText);
+$startingText = str_replace("November or November", "November or December", $startingText);
+$startingText = str_replace("November and November", "November and December", $startingText);
+$startingText = str_replace("December or December", "November or December", $startingText);
+$startingText = str_replace("December and December", "November and December", $startingText);
+
 $commonNameIntro = array(
 "It is likewise known as ",
 "It is likewise called ",
@@ -1145,7 +1198,7 @@ $commonNameOutro = array(
 $commonNameOutroString = $commonNameOutro[mt_rand(0, count($commonNameOutro) - 1)];
 }
 
-$commonNameString = $commonNameIntro[mt_rand(0, count($commonNameIntro) - 1)].$commonNameString.$commonNameOutroString;
+$commonNameString = $commonNameIntro[mt_rand(0, count($commonNameIntro) - 1)].trim($commonNameString).$commonNameOutroString;
 
 echo '<h1 style="font-style:italic;">'.$latinName.'</h1>';
 echo "<h2>".$commonNameString.".</h2>";
