@@ -659,7 +659,10 @@ this.animationSequence = 0;
             cardGameNameSpace.currentPlayersTurn = getRandomIntegerInclusive(1, 2);
             cardGameNameSpace.whoCanClick = cardGameNameSpace.currentPlayersTurn;
             cardGameNameSpace.gameMode = "play";
-            gameMode = "cardGame";
+            if (typeof gameMode !== "undefined") {
+                gameMode = "cardGame";
+            }
+            
             if (cardGameNameSpace.currentPlayersTurn == 1) {
                 cardGameNameSpace.currentOpponent = 2;
                 if (cardGameNameSpace.isPlayer1AI) {
