@@ -14,7 +14,7 @@ $json = json_decode($jsonResults, true);
 function createProceduralTitle() {
   global $json;
 // pick a random item from the Origin to start from:
-  $whichBaseStringToUse = "origin-english";
+  $whichBaseStringToUse = "origin-recipes";
 $whichElem = mt_rand(0,(count($json[$whichBaseStringToUse])-1));
 $startingText = $json[$whichBaseStringToUse][$whichElem];
 $startingText = findAndReplaceHashes($startingText);
@@ -41,6 +41,22 @@ return ucfirst($bookTitle);
 
 }
 
+
+$jsonRecipeResults = file_get_contents($_SERVER['DOCUMENT_ROOT'].'/includes/scriptorium/sources/title-grammar-recipes.json');
+$recipeJson = json_decode($jsonRecipeResults, true);
+
+function createProceduralRecipeTitle() {
+  global $recipeJson;
+  // pick a random item from the Origin to start from:
+  $whichBaseStringToUse = "origin";
+$whichElem = mt_rand(0,(count($recipeJson[$whichBaseStringToUse])-1));
+$startingText = $recipeJson[$whichBaseStringToUse][$whichElem];
+$startingText = findAndReplaceHashes($startingText, $recipeJson);
+$bookTitle = $startingText;
+return ucfirst($bookTitle);
+}
+
+
 function createProceduralBook() {
 
 
@@ -52,7 +68,8 @@ function createProceduralBook() {
 
 
 //$textSource = file_get_contents($_SERVER['DOCUMENT_ROOT']."/includes/scriptorium/sources/warcraft-mission-text.txt");
-$textSource = file_get_contents($_SERVER['DOCUMENT_ROOT']."/includes/scriptorium/sources/at-the-mountains-of-madness-hp-lovecraft.txt");
+//$textSource = file_get_contents($_SERVER['DOCUMENT_ROOT']."/includes/scriptorium/sources/at-the-mountains-of-madness-hp-lovecraft.txt");
+$textSource = file_get_contents($_SERVER['DOCUMENT_ROOT']."/includes/scriptorium/sources/the-complete-herbal-nicholas-culpeper-JUST-RECIPES.txt");
 
  // $textSource = file_get_contents($_SERVER['DOCUMENT_ROOT']."/includes/scriptorium/sources/test.txt");
 
@@ -61,6 +78,13 @@ $textSource = file_get_contents($_SERVER['DOCUMENT_ROOT']."/includes/scriptorium
 $inGameNames = array("Kael'thas", "Aethas", "Lor'themar", "Rommath", "Halduron", "Liadrin", "Valeera", "Koltira", "Zendarin");
 
 // might need to check for ! and ? terminating sentences - which might be inside speed marks ##############
+
+
+// config:
+$replacePronouns = false;
+$bookType = "recipe";
+$numberOfSentences = 4;
+$numberOfParagraphs = 8;
 
 // isolate space and full stops:
 $textSource = str_ireplace(" ", "####", $textSource);
@@ -97,16 +121,20 @@ do {
 
 
 
-$numberOfSentences = 4;
 
 
 
-$numberOfParagraphs = 3;
+
+
 
 $outputText = '';
 for ($i=0;$i<$numberOfParagraphs;$i++) {
+  if($bookType == "recipe") {
+    $outputText .= '<section><h2>'.createProceduralRecipeTitle().'</h2>';
+
+  } else {
 $outputText .= '<section><h2>Chapter '.($i+1).'</h2>';
-  
+  }
   
   for ($j=0;$j<$numberOfSentences;$j++) {
     $builtSentence = '';
@@ -129,10 +157,14 @@ $outputText .= '<section><h2>Chapter '.($i+1).'</h2>';
 
     } while ($thisWord != ".");
 
+if($replacePronouns) {
 // find pronouns and replace them with in-game names:
 // https://regex101.com/r/SNWYDa/7/
     // http://www.phpliveregex.com/
  $builtSentence = preg_replace( "/(?<!^)(?<![.!?]\s)\b[A-Z][\w]+\b/", "@@pronoun@@", $builtSentence );
+}
+
+
 
 $outputText .= '<p>'.$builtSentence.'</p>';
 

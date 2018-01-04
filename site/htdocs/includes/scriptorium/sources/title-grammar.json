@@ -20,12 +20,16 @@
     "origin-fae": [
         "Manannán mac Lir"
     ],
+        "origin-recipes": [
+        "The Complete Herbal",
+        "Efficacious remedies"
+    ],
     "god": ["Ur", "G'lok"],
     "vagueGeography": ["earth", "astral planes"],
     "progressing": ["venturing into", "conquering"],
     "legend": ["tale", "legend", "relics"],
     "places": ["Anvil", "the shifting sands", "the unknown"],
     "noun": ["eye", "soul", "hand", "mind"],
-    "people": ["Lost", "anscestors", "Fallen"],
+    "people": ["Lost", "ancestors", "Fallen"],
     "verb": ["establishing", "creating", "maintaining"]
 }

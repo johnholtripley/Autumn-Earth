@@ -1,0 +1,21 @@
+{
+    "origin": [
+        "To cure #|disease#",
+        "To prevent #|disease#",
+        "To preserve from #|disease#",
+        "To purge #|poison#",
+        "To expel #|poison#",
+        "To drive out #|poison#",
+        "To strength #|bodypart#",
+        "To invigorate #|bodypart#",
+        "To clear #|bodypart#",
+        "To restore #|bodypart#"
+   
+
+    ],
+
+    "disease": ["boils", "bruises", "aches in the joints", "burns", "chilblains", "cholic", "cankers", "colds", "corns", "dimness of sight", "dropsy", "dizziness of the head", "faintings", "fevers", "fits", "gout", "hic-coughs", "heart burn", "inflammations", "infection", "lice", "obstructions of the liver", "melancholy", "piles", "ring-worm", "ruptures", "shortness of breath", "venomous bites", "tooth-ache", "warts", "wheezing"],
+    "poison": ["poison", "venom", "toxins"],
+    "bodypart": ["the brain", "the bowels", "the blood", "the skin"]
+
+}

@@ -1,5 +1,5 @@
 
-<div class="row">
+<div class="row" id="loginAndSearchPanel">
 	<?php
 include($_SERVER['DOCUMENT_ROOT']."/includes/login.php");
 include($_SERVER['DOCUMENT_ROOT']."/includes/search.php");

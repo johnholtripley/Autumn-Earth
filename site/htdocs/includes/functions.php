@@ -1556,8 +1556,10 @@ $htmlOutput .= '</li>';
  
  
  
-function findAndReplaceHashes($stringToCheck) {
+function findAndReplaceHashes($stringToCheck, &$json='') {
+    if ($json == '') {
     global $json;
+}
     // check for any '#'s:
     $hashSplit = explode("#", $stringToCheck);
     if(count($hashSplit) > 1) {

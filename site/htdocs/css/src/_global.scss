@@ -261,4 +261,6 @@ width: 84px;
 }
 
 
-
+#loginAndSearchPanel {
+    @include pxRem('padding-top',100);
+}
