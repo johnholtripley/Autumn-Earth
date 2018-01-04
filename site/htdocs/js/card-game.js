@@ -48,7 +48,7 @@ cardGameNameSpace.initialiseCardGame();
 
 
         // resize handler:
-        canvasResizeHandler = debounce(function() {
+        const canvasResizeHandler = debounce(function() {
             cardGameNameSpace.getCanvasPosition();
         }, 250);
         window.addEventListener('resize', canvasResizeHandler);
