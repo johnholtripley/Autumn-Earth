@@ -334,7 +334,7 @@ $startRootAngle = capValues($startRootAngle,0,360);
 
 
 
-	$whichRules = array_rand($allPossibleRules);
+	$whichRules = random_key($allPossibleRules);
 	$rules = $allPossibleRules[$whichRules];
 	$iterations = $allPossibleRuleIterations[$whichRules];
 $distance = $allPossibleRuleDistances[$whichRules];
@@ -342,7 +342,7 @@ $distance = $allPossibleRuleDistances[$whichRules];
 	
 $commandString = createCommandString($axiom, $rules, $iterations);
 
-$whichRootRules = array_rand($allPossibleRootRules);
+$whichRootRules = random_key($allPossibleRootRules);
 	$rootRules = $allPossibleRootRules[$whichRootRules];
 	$rootIterations = $allPossibleRootRuleIterations[$whichRootRules];
 $rootDistance = $allPossibleRootRuleDistances[$whichRootRules];
@@ -846,7 +846,11 @@ imagedestroy(${'leafBrush'.$k});
 }
 
 
-
+function random_key($array){
+	// https://stackoverflow.com/questions/25799466/php-better-than-array-rand-qa
+    $keys=array_keys($array);
+    return $keys[mt_rand(0, count($keys) - 1)];
+}
 
 
 // create latin name:
@@ -858,7 +862,7 @@ $numberOfSyllablesAvailable = count($latinSyllables);
 do {
 $syllableCount = 0;
 // pick a random start syllable:
-$firstWord = array_rand($latinSyllables);
+$firstWord = random_key($latinSyllables);
 $latinName = $firstWord;
 do {
 	
@@ -871,7 +875,7 @@ $syllableCount ++;
 
 do {
 $syllableCount = 0;
-$secondWord = array_rand($latinSyllables);
+$secondWord = random_key($latinSyllables);
 $secondLatinName = $secondWord;
 
 do {
@@ -1046,10 +1050,13 @@ $virtueText = findAndReplaceHashes($virtueText);
 
 $insectDetails = "";
 
+if($isAquatic != 1) {
+	// aquatic plants shouldn't refer to butterflies
 if(mt_rand(1,3) == 1) {
 $whichInsectElem = mt_rand(0,(count($json["insectDetails"])-1));
 $insectDetails = $json["insectDetails"][$whichInsectElem];
 $insectDetails = findAndReplaceHashes($insectDetails)." ";
+}
 }
 
 $startingText .= " ".$placeText ." ". $insectDetails . $timeText;
@@ -1103,7 +1110,7 @@ $primaryCommonNamePlural = substr($primaryCommonName, 0, -4)."feet";
 $startingText = str_ireplace("++commonnameplural++", $primaryCommonNamePlural, $startingText);
 
 include($_SERVER['DOCUMENT_ROOT']."/includes/herbarium/petal-colours.php");
-$petalColourName = array_rand($petalColours, 1);
+$petalColourName = random_key($petalColours);
 $displayPetalColourName = $petalColourName;
 $petalRed = $petalColours[$petalColourName][0];
 $petalGreen = $petalColours[$petalColourName][1];
