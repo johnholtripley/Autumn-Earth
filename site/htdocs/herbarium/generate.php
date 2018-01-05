@@ -4,6 +4,8 @@
 
 // TO DO:
 // Need a better system to catch duplicated seasons and months - eg. "they flower in spring and spring, and sometimes in spring if mild"
+// make the pictures look more hand drawn
+// add virtues to description
 
 // ---------------------------------------
 
@@ -1005,7 +1007,7 @@ if(count($commonNames)>1) {
 
 if($randomDetail == 1) {
 // add in specific detail:
-	$commonNameString = substr($commonNameString, 0, $lastCommaPos)   .", and by apothecaries,".   substr($commonNameString, $lastCommaPos+1);
+	$commonNameString = substr($commonNameString, 0, $lastCommaPos)   .", and by apothecaries known as".   substr($commonNameString, $lastCommaPos+1);
 } else if($randomDetail == 2) {
 // add in specific detail:
 	$commonNameString = substr($commonNameString, 0, $lastCommaPos)   ."; some call it".   substr($commonNameString, $lastCommaPos+1);
@@ -1042,7 +1044,15 @@ $whichVirtuesElem = mt_rand(0,(count($json["virtues"])-1));
 $virtueText = $json["virtues"][$whichVirtuesElem];
 $virtueText = findAndReplaceHashes($virtueText);
 
-$startingText .= " ".$placeText ." ". $timeText;
+$insectDetails = "";
+
+if(mt_rand(1,3) == 1) {
+$whichInsectElem = mt_rand(0,(count($json["insectDetails"])-1));
+$insectDetails = $json["insectDetails"][$whichInsectElem];
+$insectDetails = findAndReplaceHashes($insectDetails)." ";
+}
+
+$startingText .= " ".$placeText ." ". $insectDetails . $timeText;
 //$startingText .= " ".$virtueText;
 
 // generate a butterfly:
