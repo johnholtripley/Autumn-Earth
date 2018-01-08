@@ -258,6 +258,8 @@ $numberOfItemCategories: 20;
     @include togglePanel(0.8s);
     left: 60px;
     top: 528px;
+    background: #222;
+    color: #fff;
 }
 
 #craftingRecipeCreateButton {
