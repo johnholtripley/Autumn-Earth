@@ -5,6 +5,7 @@
 // TO DO:
 // make the pictures look more hand drawn
 // add virtues to description
+// descriptions need more fullstops to allow content to break for twitter
 // descriptions need splitting out for aquatic and night flowering plants
 
 // ---------------------------------------
@@ -1153,34 +1154,56 @@ $startingText = str_ireplace("++petalcolourish++", $displayPetalColourIshName, $
 
 
 
-// add in month name(s):
+
 function str_replace_first($from, $to, $subject) {
 	// https://stackoverflow.com/questions/1252693/using-str-replace-so-that-it-only-acts-on-the-first-match
     $from = '/'.preg_quote($from, '/').'/';
-
     return preg_replace($from, $to, $subject, 1);
 }
 
 
 
 
-
+// add in month name(s):
 if(strpos($startingText, '++month++') !== false) {
-$allMonths = array("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December");
+	$allMonths = array("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December");
 
-$nextMonth = mt_rand(0, count($allMonths) - 1);
+	$nextMonth = mt_rand(0, count($allMonths) - 1);
 
-do {
-	$startingText = str_replace_first('++month++', $allMonths[$nextMonth], $startingText);
-	$nextMonth++;
-	if($nextMonth >= count($allMonths)) {
-$nextMonth = 0;
-	}
-} while (strpos($startingText, '++month++') !== false);
+	do {
+		$startingText = str_replace_first('++month++', $allMonths[$nextMonth], $startingText);
+		// for any further occurences, use the subsequent month name to make more sense:
+		$nextMonth++;
+		if($nextMonth >= count($allMonths)) {
+			$nextMonth = 0;
+		}
+	} while (strpos($startingText, '++month++') !== false);
 
 }
 
-
+if(strpos($startingText, '++otherplants++') !== false) {
+	// find other plant names:
+	$plantNameQuery = "SELECT * from tblplants ORDER BY timeCreated DESC LIMIT 36";
+	$plantNameResult = mysql_query($plantNameQuery) or die ("couldn't execute query");
+	$otherPlantNames = array();
+	if (mysql_num_rows($plantNameResult) > 0) {
+	  while ($row = mysql_fetch_array($plantNameResult)) {
+	    extract($row);
+	    $otherNames =  explode("/",$commonNamesJoined);
+	    array_push($otherPlantNames,$otherNames[0]);
+	  }
+	}
+	mysql_free_result($plantNameResult);
+	$plantNamesUsed = mt_rand(0, count($otherPlantNames) - 1);
+	do {
+		$startingText = str_replace_first('++otherplants++', $otherPlantNames[$plantNamesUsed], $startingText);
+		// for any further occurences, use the subsequent month name to make more sense:
+		$plantNamesUsed++;
+		if($plantNamesUsed >= count($plantNamesUsed)) {
+			$plantNamesUsed = 0;
+		}
+	} while (strpos($startingText, '++plantNamesUsed++') !== false);
+}
 
 $commonNameIntro = array(
 "It is likewise known as ",
@@ -1194,6 +1217,7 @@ $commonNameIntro = array(
 "Also known as ",
 "It is also called ",
 "It is called ",
+"Many know this as ",
 "This is called by many as ",
 "Which is also called "
 );
