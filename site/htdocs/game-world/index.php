@@ -92,6 +92,9 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
       <button id="craftingRecipeCreateButton" disabled="disabled">Add components</button>
     </div>
     <div id="craftingSelectComponentsPanel">
+      <div class="draggableBar">
+        Add components
+      </div><button class="closePanel">close</button>
       <div id="componentsAvailableForThisRecipe"></div>
       <div id="selectComponentsItemBeingCreated"></div>
     </div>

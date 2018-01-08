@@ -3,9 +3,11 @@
 // ---------------------------------------
 
 // TO DO:
-// Need a better system to catch duplicated seasons and months - eg. "they flower in spring and spring, and sometimes in spring if mild"
+// Need a better system to catch duplicated seasons and months - eg. "they flower in spring and spring, and sometimes in spring if mild", and make consecutive lists more sensible. pick the first starting month and then for successive ones use the next month in the calendar
 // make the pictures look more hand drawn
 // add virtues to description
+// check the grammar - there are some 'may' that were replaced by #month and shouldn't have been
+// descriptions need splitting out for aquatic and night flowering plants
 
 // ---------------------------------------
 
@@ -77,7 +79,7 @@ $result = $connection->post('media/metadata/create', $parameters);
 
 var_dump($result);
 */
-$textString = $latinName."\r\n".'('.$commonNameString.').';
+$textString = $latinName."\r\n".$commonNameString;
 $textString .= "\r\n".$startingText;
 // with 'tweet_mode'=>'extended' can post 280 instead of 140:
 $characterLimit = 280-$mediaURLLength;
@@ -89,12 +91,12 @@ if ($pos !== false) {
 $textString = substr($textString, 0, $pos+1);
 } else {
 	// isn't room for the short description:
-	$textString = $latinName."\r\n".'('.$commonNameString.').';
+	$textString = $latinName."\r\n".$commonNameString;
 }
 }
 // twitter doesn't handle html entities:
 $textString = str_replace("&rsquo;", "'", $textString);
-echo "<p>Tweeted content: ".$textString."</p>";
+echo "<p>Tweeted content:<br>".nl2br($textString)."</p>";
 
 
 

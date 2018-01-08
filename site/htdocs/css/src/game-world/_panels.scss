@@ -254,6 +254,12 @@ $numberOfItemCategories: 20;
     }
 }
 
+#craftingSelectComponentsPanel {
+    @include togglePanel(0.8s);
+    left: 60px;
+    top: 528px;
+}
+
 #craftingRecipeCreateButton {
     @include transition(background 0.4s ease);
     color: #fff;

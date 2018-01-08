@@ -479,6 +479,7 @@ function recipeSearchClear() {
 }
 
 function recipeSelectComponents(whichRecipe) {
+    craftingSelectComponentsPanel.classList.add("active");
     var recipeId = whichRecipe.substring(6);
     var foundItemGroups;
     var thisRecipe = hero.crafting[currentRecipePanelProfession].recipes[recipeId];
@@ -2745,6 +2746,7 @@ const shopSplitStackInput = document.getElementById('shopSplitStackInput');
 const shopSplitStackPanel = document.getElementById('shopSplitStackPanel');
 const craftingRecipeCreateButton = document.getElementById('craftingRecipeCreateButton');
 const craftingPanel = document.getElementById('craftingPanel');
+const craftingSelectComponentsPanel = document.getElementById('craftingSelectComponentsPanel');
 const selectComponentsItemBeingCreated = document.getElementById('selectComponentsItemBeingCreated');
 const componentsAvailableForThisRecipe = document.getElementById('componentsAvailableForThisRecipe');
 const booksAndParchments = document.getElementById('booksAndParchments');

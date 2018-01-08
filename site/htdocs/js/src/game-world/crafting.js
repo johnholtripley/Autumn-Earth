@@ -62,6 +62,7 @@ function recipeSearchClear() {
 }
 
 function recipeSelectComponents(whichRecipe) {
+    craftingSelectComponentsPanel.classList.add("active");
     var recipeId = whichRecipe.substring(6);
     var foundItemGroups;
     var thisRecipe = hero.crafting[currentRecipePanelProfession].recipes[recipeId];
