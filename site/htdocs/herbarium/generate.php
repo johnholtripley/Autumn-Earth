@@ -3,10 +3,8 @@
 // ---------------------------------------
 
 // TO DO:
-// Need a better system to catch duplicated seasons and months - eg. "they flower in spring and spring, and sometimes in spring if mild", and make consecutive lists more sensible. pick the first starting month and then for successive ones use the next month in the calendar
 // make the pictures look more hand drawn
 // add virtues to description
-// check the grammar - there are some 'may' that were replaced by #month and shouldn't have been
 // descriptions need splitting out for aquatic and night flowering plants
 
 // ---------------------------------------
@@ -1151,42 +1149,38 @@ $displayPetalColourIshName = "reddish";
 
 $startingText = str_ireplace("++petalcolourish++", $displayPetalColourIshName, $startingText);
 
-// remove any duplicate seasons and months:
-
-$startingText = str_replace("Spring or Spring", "Spring or Summer", $startingText);
-$startingText = str_replace("Summer or Summer", "Spring or Summer", $startingText);
-$startingText = str_replace("Autumn or Autumn", "Autumn or Winter", $startingText);
-$startingText = str_replace("Winter or Winter", "Autumn or Winter", $startingText);
-$startingText = str_replace("Spring and Spring", "Spring and Summer", $startingText);
-$startingText = str_replace("Summer and Summer", "Spring and Summer", $startingText);
-$startingText = str_replace("Autumn and Autumn", "Autumn and Winter", $startingText);
-$startingText = str_replace("Winter and Winter", "Autumn and Winter", $startingText);
 
 
-$startingText = str_replace("January or January", "January or February", $startingText);
-$startingText = str_replace("January and January", "January and February", $startingText);
-$startingText = str_replace("February or February", "January or February", $startingText);
-$startingText = str_replace("February and February", "January and February", $startingText);
-$startingText = str_replace("March or March", "March or April", $startingText);
-$startingText = str_replace("March and March", "March and April", $startingText);
-$startingText = str_replace("April or April", "March or April", $startingText);
-$startingText = str_replace("April and April", "March and April", $startingText);
-$startingText = str_replace("May or May", "May or June", $startingText);
-$startingText = str_replace("May and May", "May and June", $startingText);
-$startingText = str_replace("June or June", "May or June", $startingText);
-$startingText = str_replace("June and June", "May and June", $startingText);
-$startingText = str_replace("July or July", "July or August", $startingText);
-$startingText = str_replace("July and July", "July and August", $startingText);
-$startingText = str_replace("August or August", "July or August", $startingText);
-$startingText = str_replace("August and August", "July and August", $startingText);
-$startingText = str_replace("September or September", "September or October", $startingText);
-$startingText = str_replace("September and September", "September and October", $startingText);
-$startingText = str_replace("October or October", "September or October", $startingText);
-$startingText = str_replace("October and October", "September and October", $startingText);
-$startingText = str_replace("November or November", "November or December", $startingText);
-$startingText = str_replace("November and November", "November and December", $startingText);
-$startingText = str_replace("December or December", "November or December", $startingText);
-$startingText = str_replace("December and December", "November and December", $startingText);
+
+
+// add in month name(s):
+function str_replace_first($from, $to, $subject) {
+	// https://stackoverflow.com/questions/1252693/using-str-replace-so-that-it-only-acts-on-the-first-match
+    $from = '/'.preg_quote($from, '/').'/';
+
+    return preg_replace($from, $to, $subject, 1);
+}
+
+
+
+
+
+if(strpos($startingText, '++month++') !== false) {
+$allMonths = array("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December");
+
+$nextMonth = mt_rand(0, count($allMonths) - 1);
+
+do {
+	$startingText = str_replace_first('++month++', $allMonths[$nextMonth], $startingText);
+	$nextMonth++;
+	if($nextMonth >= count($allMonths)) {
+$nextMonth = 0;
+	}
+} while (strpos($startingText, '++month++') !== false);
+
+}
+
+
 
 $commonNameIntro = array(
 "It is likewise known as ",
