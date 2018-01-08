@@ -308,16 +308,34 @@ $allPossibleRuleDistances = array(50,50);
 	$angle = mt_rand(12,40);
 
 
+
 // root rules:
 $rootAxiom = "F";
 $allPossibleRootRules = array(array("F"=>"FF[+X+X][-X-X]"));
 $allPossibleRootRuleIterations = array(3);
 $allPossibleRootRuleDistances = array(35);
+
+
+
+
 $startRootAngle = 180 + $startAngle;
-$startRootAngle = capValues($startRootAngle,0,360);
-$rootAngle = 30;
+//$startRootAngle = capValues($startRootAngle,0,360);
 
+if($startRootAngle > 360) {
+$startRootAngle -= 360;
+}
+if($startRootAngle < 360) {
+$startRootAngle += 360;
+}
 
+$rootAngle = 180 + $startAngle;
+
+if($rootAngle > 360) {
+$rootAngle -= 360;
+}
+if($rootAngle < 360) {
+$rootAngle += 360;
+}
 
 
 
@@ -424,7 +442,7 @@ for ($i=0;$i<strlen($commandString);$i++) {
 
 // repeat for roots:
 $rootStack = array();
-// start at grid 0,0 facing north with no colour index
+// start at grid 0,0 facing south with no colour index
 $pos = array("x"=>$canvaDimension/2, "y"=>$canvaDimension*2/3, "heading"=>$startRootAngle, "colour"=>0, "size"=>0);
 $allRootNodes = array();
 $allRootParentNodes = array($pos["x"]."_".$pos["y"]);
