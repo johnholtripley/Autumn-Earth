@@ -80,6 +80,11 @@ var_dump($result);
 */
 $textString = $latinName."\r\n".$commonNameString;
 $textString .= "\r\n".$startingText;
+
+
+// twitter doesn't handle html entities:
+$textString = str_replace("&rsquo;", "'", $textString);
+$textString = strip_tags($textString);
 // with 'tweet_mode'=>'extended' can post 280 instead of 140:
 $characterLimit = 280-$mediaURLLength;
 if(strlen($textString)>$characterLimit) {
@@ -93,8 +98,7 @@ $textString = substr($textString, 0, $pos+1);
 	$textString = $latinName."\r\n".$commonNameString;
 }
 }
-// twitter doesn't handle html entities:
-$textString = str_replace("&rsquo;", "'", $textString);
+
 echo "<p>Tweeted content:<br>".nl2br($textString)."</p>";
 
 
@@ -1186,17 +1190,19 @@ if(strpos($startingText, '++otherplants++') !== false) {
 	$plantNameQuery = "SELECT * from tblplants ORDER BY timeCreated DESC LIMIT 36";
 	$plantNameResult = mysql_query($plantNameQuery) or die ("couldn't execute query");
 	$otherPlantNames = array();
+	$otherPlantNameURLs = array();
 	if (mysql_num_rows($plantNameResult) > 0) {
 	  while ($row = mysql_fetch_array($plantNameResult)) {
 	    extract($row);
 	    $otherNames =  explode("/",$commonNamesJoined);
 	    array_push($otherPlantNames,$otherNames[0]);
+	    array_push($otherPlantNameURLs,$plantUrl);
 	  }
 	}
 	mysql_free_result($plantNameResult);
 	$plantNamesUsed = mt_rand(0, count($otherPlantNames) - 1);
 	do {
-		$startingText = str_replace_first('++otherplants++', $otherPlantNames[$plantNamesUsed], $startingText);
+		$startingText = str_replace_first('++otherplants++', '<a href="https://www.autumnearth.com/herbarium/'.$otherPlantNameURLs[$plantNamesUsed].'/">'.$otherPlantNames[$plantNamesUsed].'</a>', $startingText);
 		// for any further occurences, use the subsequent month name to make more sense:
 		$plantNamesUsed++;
 		if($plantNamesUsed >= count($plantNamesUsed)) {
