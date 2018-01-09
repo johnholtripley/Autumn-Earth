@@ -11,6 +11,8 @@
 // BUG
 // http://develop.ae/herbarium/generate.php?seed=1515584486 doesn't crop the image correctly - black bar - also seen flowers trimmed from the top
 // http://develop.ae/herbarium/generate.php?seed=1515581235 - undefined offset
+// http://develop.ae/herbarium/generate.php?seed=1515569947 - undefined index
+
 
 // ---------------------------------------
 
@@ -93,6 +95,9 @@ $textString = strip_tags($textString);
 $characterLimit = 280-$mediaURLLength;
 if(strlen($textString)>$characterLimit) {
 
+// ignore "St." - this shouldn't be the end of a sentence:
+$textString = str_replace("St. ", "+ST+", $textString);
+
 // find the first full stop before this limit
 $pos = strrpos($textString,".",0-(strlen($textString)-$characterLimit));
 if ($pos !== false) {
@@ -101,6 +106,10 @@ $textString = substr($textString, 0, $pos+1);
 	// isn't room for the short description:
 	$textString = $latinName."\r\n".$commonNameString;
 }
+
+// restore any St.:
+$textString = str_replace("+ST+", "St. ", $textString);
+
 }
 
 echo "<p>Tweeted content:<br>".nl2br($textString)."</p>";
