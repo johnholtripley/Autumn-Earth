@@ -8,10 +8,7 @@
 // descriptions need more fullstops to allow content to break for twitter
 // descriptions need splitting out for aquatic and night flowering plants
 
-// BUG
-// http://develop.ae/herbarium/generate.php?seed=1515584486 doesn't crop the image correctly - black bar - also seen flowers trimmed from the top
-// http://develop.ae/herbarium/generate.php?seed=1515581235 - undefined offset
-// http://develop.ae/herbarium/generate.php?seed=1515569947 - undefined index
+
 
 
 // ---------------------------------------
@@ -117,8 +114,6 @@ echo "<p>Tweeted content:<br>".nl2br($textString)."</p>";
 
 
 
-
-
 //if($isLive) {
 	$parameters = [
 	    'status' => $textString,
@@ -138,20 +133,12 @@ echo "<p>Tweeted content:<br>".nl2br($textString)."</p>";
 
 
 
-
-
 //if(!$isLive) {
 $query = "INSERT INTO tblplants (latinName,commonNames,commonNamesJoined,timeCreated,plantDesc,plantUrl,tweetedContent,isAquatic,isNight,plantSeed)
 VALUES ('" . $latinName . "','" . $commonNameString . "','" . $commonNamesJoined . "',NOW(),'".$startingText."','".$plantURL."','".$textString."','".$isAquatic."','".$isNight."','".$storedSeed."')";
 
 $result = mysql_query($query) or die ("couldn't execute tblplant query");
 //}
-
-
-
-
-
-
 
 
 
@@ -314,8 +301,8 @@ for ($i=0;$i<count($rootColours);$i++) {
 	// $allPossibleRules = array(array("X"=>"S2X[+X]X[-X]X"),array("X"=>"S2X[+X]X[-X][X]"),array("X"=>"S3XX-[-X+X+X]+[+X-X-X]"),array("X"=>"S2F[+X]F[-X]+X","F"=>"FF"),array("X"=>"S2F[+X][-X]FX","F"=>"FF"),array("X"=>"S2F-[[X]+X]+F[+FX]-X","F"=>"FF"));
 $allPossibleRules = array(array("X"=>"F","F"=>"FF[+FL][-FL][++FL][--FL]"), array("X"=>"F","F"=>"FF[+FFL][-FFL]"), array("X"=>"F","F"=>"FF[+FL][-FL]"));
 
-	$allPossibleRuleIterations = array(4,4);
-$allPossibleRuleDistances = array(50,50);
+	$allPossibleRuleIterations = array(4,3,4);
+$allPossibleRuleDistances = array(50,50,40);
 
 	//$startAngle = mt_rand (-20,20);
 	$startAngle = 0;
@@ -790,7 +777,7 @@ do {
 	$x=0;
 		$limitMinY ++;
 	}
-} while ( ($limitMinY<$canvaDimension) and ($foundBG));
+} while ( ($limitMinY<$canvaDimension) && ($foundBG));
 
 $x=0;
 $limitMaxY=$canvaDimension-1;
@@ -801,7 +788,7 @@ do {
 	$x=0;
 		$limitMaxY --;
 	}
-} while ( ($limitMaxY>0) and ($foundBG));
+} while ( ($limitMaxY>0) && ($foundBG));
 
 $limitMinX=0;
 $y=0;
@@ -812,7 +799,7 @@ do {
 	$y=0;
 		$limitMinX ++;
 	}
-} while ( ($limitMinX<$canvaDimension) and ($foundBG));
+} while ( ($limitMinX<$canvaDimension) && ($foundBG));
 
 $y=0;
 $limitMaxX=$canvaDimension-1;
@@ -823,7 +810,7 @@ do {
 	$y=0;
 		$limitMaxX --;
 	}
-} while ( ($limitMaxX>0) and ($foundBG));
+} while ( ($limitMaxX>0) && ($foundBG));
 
 
 

@@ -41,7 +41,8 @@ extract($row);
 echo buildBreadCrumb('bestiary/'.$creatureTypeURL.'/','The Bestiary/'.$creatureTypeName.'/');
 
 
-
+echo '<h2>'.$creatureTypeName.'</h2>';
+echo '<div class="row small-2up medium-4up wide-8up equalHeights">';
 
 $letters = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
 for ($i=0;$i<count($letters);$i++) {
@@ -52,7 +53,7 @@ $result = mysql_query($query) or die ("couldn't execute query");
 if(mysql_num_rows($result) > 0) {
 
 
-
+echo '<div class="column"><div>';
 echo '<h3>'.$letters[$i].'</h3>';
 echo '<ul>';
 while ($row = mysql_fetch_array($result)) {
@@ -62,6 +63,7 @@ echo '<li><a href="/bestiary/'.$typeURL.'/'.$cleanURL.'/">'.$creatureName.'</a><
 
 }
 echo '</ul>';
+echo '</div></div>';
 }
 
 
@@ -83,7 +85,8 @@ echo '</ul>';
 
 
 
-<hr>
+</div>
+
 </div>
 </div>
 
