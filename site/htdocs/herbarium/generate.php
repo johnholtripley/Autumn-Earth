@@ -8,6 +8,9 @@
 // descriptions need more fullstops to allow content to break for twitter
 // descriptions need splitting out for aquatic and night flowering plants
 
+// BUG
+// http://develop.ae/herbarium/generate.php?seed=1515584486 doesn't crop the image correctly - black bar - also seen flowers trimmed from the top
+
 // ---------------------------------------
 
 
@@ -299,7 +302,8 @@ for ($i=0;$i<count($rootColours);$i++) {
 	$axiom = "X";
 
 	// $allPossibleRules = array(array("X"=>"S2X[+X]X[-X]X"),array("X"=>"S2X[+X]X[-X][X]"),array("X"=>"S3XX-[-X+X+X]+[+X-X-X]"),array("X"=>"S2F[+X]F[-X]+X","F"=>"FF"),array("X"=>"S2F[+X][-X]FX","F"=>"FF"),array("X"=>"S2F-[[X]+X]+F[+FX]-X","F"=>"FF"));
-$allPossibleRules = array(array("X"=>"F","F"=>"FF[+FL][-FL][++FL][--FL]"), array("X"=>"F","F"=>"FF[++FL][--FL]"));
+$allPossibleRules = array(array("X"=>"F","F"=>"FF[+FL][-FL][++FL][--FL]"), array("X"=>"F","F"=>"FF[+FFL][-FFL]"), array("X"=>"F","F"=>"FF[+FL][-FL]"));
+
 	$allPossibleRuleIterations = array(4,4);
 $allPossibleRuleDistances = array(50,50);
 
@@ -1269,7 +1273,7 @@ drawPlant();
 echo '<img style="display:block;" src="/images/herbarium/plants/'.$plantURL.'.jpg" width="480" height="480" alt="'.$latinName.'">';
 echo '<p style="padding: 12px;display:inline-block;background:rgb('.$petalRed.','.$petalGreen.','.$petalBlue.')">Petal colour: '.$displayPetalColourName.'</p>';
 echo '<p>Associated with the '.$combinedButterflyName.'.</p>';
-echo '<p style="font-size:0.7em;">seed: '.$storedSeed.'</p>';
+echo '<p style="font-size:0.7em;"><a href="'.explode("?", $_SERVER["REQUEST_URI"])[0].'?seed='.$storedSeed.'">Seed: '.$storedSeed.'</a></p>';
 
 
 
