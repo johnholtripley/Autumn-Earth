@@ -10,6 +10,7 @@
 
 // BUG
 // http://develop.ae/herbarium/generate.php?seed=1515584486 doesn't crop the image correctly - black bar - also seen flowers trimmed from the top
+// http://develop.ae/herbarium/generate.php?seed=1515581235 - undefined offset
 
 // ---------------------------------------
 
@@ -1263,6 +1264,14 @@ $commonNameOutroString = $commonNameOutro[mt_rand(0, count($commonNameOutro) - 1
 
 $commonNameString = $commonNameIntro[mt_rand(0, count($commonNameIntro) - 1)].trim($commonNameString).$commonNameOutroString;
 
+?>
+<style>
+body, p {
+font-family:arial,helvetica,sans-serif;font-size:14px;
+}
+</style>
+<?php
+
 echo '<h1 style="font-style:italic;">'.$latinName.'</h1>';
 echo "<h2>".$commonNameString.".</h2>";
 echo '<p>'.$startingText.'</p>';
@@ -1274,12 +1283,17 @@ echo '<img style="display:block;" src="/images/herbarium/plants/'.$plantURL.'.jp
 echo '<p style="padding: 12px;display:inline-block;background:rgb('.$petalRed.','.$petalGreen.','.$petalBlue.')">Petal colour: '.$displayPetalColourName.'</p>';
 echo '<p>Associated with the '.$combinedButterflyName.'.</p>';
 echo '<p style="font-size:0.7em;"><a href="'.explode("?", $_SERVER["REQUEST_URI"])[0].'?seed='.$storedSeed.'">Seed: '.$storedSeed.'</a></p>';
+echo '<p style="font-size:0.7em;"><a href="'.explode("?", $_SERVER["REQUEST_URI"])[0].'">New seed</a></p>';
 
 
+$lastError = error_get_last();
+
+if(stripos($lastError["file"], "generate.php") === false) {
+	// don't Tweet if any errors within this file (may be error reported in connection include for example):
+	sendToTwitter();
+}
 
 
-
-sendToTwitter();
 ?>
 </body>
 </html>
