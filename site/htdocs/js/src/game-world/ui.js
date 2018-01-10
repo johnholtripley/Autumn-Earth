@@ -135,6 +135,7 @@ var UI = {
         musicVolume.onchange = audio.adjustMusicVolume;
         UI.initInventoryDrag('.inventoryBag ol');
         document.getElementById('openSettings').onclick = UI.openSettings;
+        actionBar.onclick = UI.actionBarClick;
         UI.initShopDrag();
         UI.updateCardAlbum();
         UI.updateCurrencies();
@@ -1389,19 +1390,28 @@ var UI = {
     },
 
     toggleUI: function() {
-interfaceWrapper.classList.toggle('active');
+            interfaceWrapper.classList.toggle('active');
     },
 
-    buildActionBar: function () {
-        var actionBarMarkup = '<ol>';
-        for (var i = 0; i < hero.actions.length; i++) {
-if(hero.actions[i] == "-") {
-actionBarMarkup += '<li><img src="/images/game-world/interface/actions/blank.png" alt="Empty Action slot"></li>';
-} else {
-actionBarMarkup += '<li class="active"><img src="/images/game-world/interface/actions/'+hero.actions[i]+'.png" alt="Action '+hero.actions[i]+'"></li>';
-}
-        }
-        actionBarMarkup += '</ol>';
-        actionBar.innerHTML = actionBarMarkup;
+        buildActionBar: function() {
+            var actionBarMarkup = '<ol>';
+            for (var i = 0; i < hero.actions.length; i++) {
+                if (hero.actions[i] == "-") {
+                    actionBarMarkup += '<li><img src="/images/game-world/interface/actions/blank.png" alt="Empty Action slot"></li>';
+                } else {
+                   
+                    actionBarMarkup += '<li class="active" id="actionType' + hero.actions[i][0] + '"><img src="/images/game-world/interface/actions/' + hero.actions[i][0] + '.png" alt="Action ' + hero.actions[i][0] + '"></li>';
+                }
+            }
+            actionBarMarkup += '</ol>';
+            actionBar.innerHTML = actionBarMarkup;
+        },
+
+    actionBarClick: function(e) {
+            var thisNode = getNearestParentId(e.target);
+
+            if (thisNode.id.substring(0, 10) == "actionType") {
+                console.log("clicked action bar " + thisNode.id);
+            }
     }
 }
