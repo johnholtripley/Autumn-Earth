@@ -2341,7 +2341,7 @@ if (typeof thisItem.animation !== "undefined") {
          thisItemOffsetCol = (thisItem["animation"][thisItem.state]["length"])-1;
             thisItemOffsetRow = thisItem["animation"][thisItem.state]["row"];
 
-//console.log(thisItem.centreX,thisItem.centreY);
+
 
 assetsToDraw.push([findIsoDepth(thisItem.x, thisItem.y, thisItem.z), "sprite", itemImages[thisItemIdentifier], thisItemOffsetCol * thisItem.spriteWidth, thisItemOffsetRow * thisItem.spriteHeight, thisItem.spriteWidth, thisItem.spriteHeight, Math.floor(thisX - hero.isox - thisItem.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisItem.centreY + (canvasHeight / 2) - thisItem.z), thisItem.spriteWidth, thisItem.spriteHeight]);
 } else {

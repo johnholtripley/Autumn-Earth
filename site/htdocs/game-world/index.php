@@ -57,7 +57,7 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
         <input type="submit" value="Ok">
       </fieldset>
     </form>
-    <div id="gatheringPanel" class="active">
+    <div id="gatheringPanel">
       <div class="draggableBar">Gathering</div><button class="closePanel">close</button>
       <ul>
         <li><p>Quality</p><div id="gatheringQualityBar" class="progressBarWrapper"><div class="progressBar"></div></div></li>

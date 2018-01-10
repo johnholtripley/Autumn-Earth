@@ -2774,6 +2774,7 @@ const chestTitle = document.getElementById('chestTitle');
 const chestSlotContents = document.getElementById('chest');
 const interfaceWrapper = document.getElementById('interface');
 const actionBar = document.getElementById('actionBar');
+const gatheringPanel = document.getElementById('gatheringPanel');
 
 var notificationQueue = [];
 var notificationIsShowing = false;
@@ -4126,31 +4127,68 @@ var UI = {
         }
 
     },
-
     toggleUI: function() {
-            interfaceWrapper.classList.toggle('active');
+        interfaceWrapper.classList.toggle('active');
     },
 
-        buildActionBar: function() {
-            var actionBarMarkup = '<ol>';
-            for (var i = 0; i < hero.actions.length; i++) {
-                if (hero.actions[i] == "-") {
-                    actionBarMarkup += '<li><img src="/images/game-world/interface/actions/blank.png" alt="Empty Action slot"></li>';
-                } else {
-                   
-                    actionBarMarkup += '<li class="active" id="actionType' + hero.actions[i][0] + '"><img src="/images/game-world/interface/actions/' + hero.actions[i][0] + '.png" alt="Action ' + hero.actions[i][0] + '"></li>';
-                }
+    buildActionBar: function() {
+        var actionBarMarkup = '<ol>';
+        for (var i = 0; i < hero.actions.length; i++) {
+            if (hero.actions[i] == "-") {
+                actionBarMarkup += '<li><img src="/images/game-world/interface/actions/blank.png" alt="Empty Action slot"></li>';
+            } else {
+
+                actionBarMarkup += '<li class="active" data-category="' + hero.actions[i][0] + '" id="actionType' + hero.actions[i][1] + '"><img src="/images/game-world/interface/actions/' + hero.actions[i][0] + '-' + hero.actions[i][1] + '.png" alt="' + hero.actions[i][1] + ' action"></li>';
             }
-            actionBarMarkup += '</ol>';
-            actionBar.innerHTML = actionBarMarkup;
-        },
+        }
+        actionBarMarkup += '</ol>';
+        actionBar.innerHTML = actionBarMarkup;
+    },
 
     actionBarClick: function(e) {
-            var thisNode = getNearestParentId(e.target);
+        var thisNode = getNearestParentId(e.target);
+        if (thisNode.id.substring(0, 10) == "actionType") {
+            var actionType = thisNode.id.substring(10);
+            switch (actionType) {
+                case "gather":
+                    // check if there's a relevant item on the hero's tile, or at arm's length:
+                    var armsLengthXTile = hero.tileX + relativeFacing[hero.facing]["x"];
+                    var armsLengthYTile = hero.tileY + relativeFacing[hero.facing]["y"];
+                    var foundItem = -1;
+                    var thisItem;
+                    for (var i = 0; i < thisMapData.items.length; i++) {
+                        thisItem = thisMapData.items[i];
+                        console.log(thisItem.tileX,thisItem.tileY);
+                        if (hero.tileX == thisItem.tileX) {
+                            if (hero.tileY == thisItem.tileY) {
+                                foundItem = i;
+                                break;
+                            }
+                        }
+                        if (armsLengthXTile == thisItem.tileX) {
+                            if (armsLengthYTile == thisItem.tileY) {
+                                foundItem = i;
+                                break;
+                            }
+                        }
+                    }
+                    if (foundItem != -1) {
+                        // found an item...
+                        if(currentActiveInventoryItems[thisMapData.items[foundItem].type].category == thisNode.dataset.category) {
+                            // this source node and the action match categories:
+                            gatheringPanel.classList.add('active');
+                        } else {
+                            UI.showNotification('<p>Wrong resource type for this action</p>');
+                        }
+                    }
+                    break;
+                case "survey":
+                //
+                break;
 
-            if (thisNode.id.substring(0, 10) == "actionType") {
-                console.log("clicked action bar " + thisNode.id);
             }
+
+        }
     }
 }
 // service worker:
@@ -6496,7 +6534,7 @@ if (typeof thisItem.animation !== "undefined") {
          thisItemOffsetCol = (thisItem["animation"][thisItem.state]["length"])-1;
             thisItemOffsetRow = thisItem["animation"][thisItem.state]["row"];
 
-//console.log(thisItem.centreX,thisItem.centreY);
+
 
 assetsToDraw.push([findIsoDepth(thisItem.x, thisItem.y, thisItem.z), "sprite", itemImages[thisItemIdentifier], thisItemOffsetCol * thisItem.spriteWidth, thisItemOffsetRow * thisItem.spriteHeight, thisItem.spriteWidth, thisItem.spriteHeight, Math.floor(thisX - hero.isox - thisItem.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisItem.centreY + (canvasHeight / 2) - thisItem.z), thisItem.spriteWidth, thisItem.spriteHeight]);
 } else {

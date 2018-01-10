@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 09, 2018 at 05:12 PM
+-- Generation Time: Jan 10, 2018 at 03:42 PM
 -- Server version: 5.6.24
 -- PHP Version: 5.6.8
 
@@ -83,6 +83,46 @@ INSERT INTO `tblacct` (`accountID`, `accountName`, `accountStatus`, `joinedTime`
 (49, 'dilly21', '2', '2015-07-03 14:03:09', '0', 0, 16, 'john.holtripley@gmail.com', '2015-01-01 00:00:00', '1', '1', 'œé+''ÍÍiffA`jÔ@', 'dilly21', '1', '1', '55561f21c5445a16e9e306fae400b08c', '127.0.0.1'),
 (50, 'dilly22', '2', '2015-08-04 15:10:24', '0', 0, 1, 'john.holtripley@gmail.com', '2007-04-03 00:00:00', '1', '1', '.{[ÄX%tl¢"ÔÉF', 'sdsd', '1', '1', 'fb4d713852301b8dff21ff63f376b45f', '127.0.0.1'),
 (51, 'test', '2', '2015-11-20 14:31:58', '0', 0, 1, 'john.holtripley@gmail.com', '2015-01-01 00:00:00', '1', '1', '®)ª¹ì?¨åÑ·“¯ä¥', '', '1', '1', '9c7129e26978a03b58eb1a6375c50067', '127.0.0.1');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tblactions`
+--
+
+CREATE TABLE IF NOT EXISTS `tblactions` (
+  `actionID` int(11) NOT NULL,
+  `actionType` varchar(128) COLLATE utf8_bin NOT NULL,
+  `actionItemCategory` int(11) NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+--
+-- Dumping data for table `tblactions`
+--
+
+INSERT INTO `tblactions` (`actionID`, `actionType`, `actionItemCategory`) VALUES
+(1, 'Gather', 1),
+(2, 'Gather', 4),
+(3, 'Survey', 4);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tblactiontypes`
+--
+
+CREATE TABLE IF NOT EXISTS `tblactiontypes` (
+  `actionTypeID` int(11) NOT NULL,
+  `actionTypeName` varchar(128) COLLATE utf8_bin NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+--
+-- Dumping data for table `tblactiontypes`
+--
+
+INSERT INTO `tblactiontypes` (`actionTypeID`, `actionTypeName`) VALUES
+(1, 'Gather'),
+(2, 'Survey');
 
 -- --------------------------------------------------------
 
@@ -697,7 +737,7 @@ INSERT INTO `tblinventoryitems` (`itemID`, `shortname`, `description`, `priceCod
 CREATE TABLE IF NOT EXISTS `tblitemcategories` (
   `categoryID` int(11) NOT NULL,
   `categoryName` varchar(255) DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblitemcategories`
@@ -706,7 +746,8 @@ CREATE TABLE IF NOT EXISTS `tblitemcategories` (
 INSERT INTO `tblitemcategories` (`categoryID`, `categoryName`) VALUES
 (1, 'Plants and Herbs'),
 (2, 'Dyer''s Provisions'),
-(3, 'Tailor''s Provisions');
+(3, 'Tailor''s Provisions'),
+(4, 'Metalworker''s provisions');
 
 -- --------------------------------------------------------
 
@@ -983,7 +1024,7 @@ CREATE TABLE IF NOT EXISTS `tblplants` (
   `timeCreated` datetime NOT NULL,
   `plantSeed` int(255) NOT NULL,
   `commonNamesJoined` varchar(512) COLLATE utf8_bin NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=456 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=465 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
 -- Dumping data for table `tblplants`
@@ -1190,7 +1231,16 @@ INSERT INTO `tblplants` (`plantID`, `latinName`, `commonNames`, `plantDesc`, `pl
 (452, 'Pervibur phoenia', 'Ashflout', 'If Superstition had not been the father of Tradition, as well as Ignorance the Mother of Devotion, this herb, (as well as St. John&rsquo;s Wort) hath found some other name to be known by; but we may say of our forefathers, as St. Paul of the Athenians, I perceive in many things you are too superstitious. Yet seeing it is come to pass, that custom having got in possession, pleads prescription for the name, I shall let it pass, and come to the description of the herb, which take as follows. It rises up with square upright stalks for the most part, some greater and higher than St. John&rsquo;s Wort (and good reason too, St. Peter being the greater apostle, (ask the Pope else;) for though God would have the saints equal, the Pope is of another opinion,) but brown in the same manner, having two leaves at every joint, somewhat like, but larger, than St. John&rsquo;s Wort, and a little rounder pointed, with few or no holes to be seen thereon, and having sometimes some smaller leaves rising from the bosom of the greater, and sometimes a little hairy also. At the tops of two stalks stand many star-like flowers, with yellow threads in the middle, very like those of St. John&rsquo;s Wort, insomuch that this is hardly discerned from it, but only by the largeness and height, the seed being alike also in both. The root abides long, sending forth new shoots every year. They grow commonly in gardens; some sorts grow wild in the borders of corn fields and pastures, in sundry places of this land; but it is not my purpose to insist upon them. The garden kinds being most used and useful. It flowers about May, and the seed is ripe in June.', 'pervibur-phoenia', 'Pervibur phoenia\r\nAshflout', 0, 0, '2018-01-09 14:53:36', 1515556340, 'Ashflout'),
 (453, 'Camara liacarosa', 'Also known as Marsh broomposie', 'A common sea dwelling plant. This grows frequently in this land, by the ways and hedge-sides, and sometimes in the open fields. It grows as well upon old rotten stumps, or trunks of trees, as oak, beech, hazel, willow, or any other, as in the woods under them, and upon old mud walls, as also in mossy, stony, and gravelly places near unto wood. That which grows upon oak is accounted the best; but the quantity thereof is scarce sufficient for the common use.', 'camara-liacarosa', 'Camara liacarosa\r\nAlso known as Marsh broomposie\r\nA common sea dwelling plant. This grows frequently in this land, by the ways and hedge-sides, and sometimes in the open fields.', 1, 0, '2018-01-09 14:57:31', 1515566860, 'Marsh broomposie'),
 (454, 'Rhabarba blitemine', 'Also known as Meadowtears', 'The herb needs no description, it being known generally where it grows. They grow in divers corn fields, and in borders about them, and in other fertile grounds about Southfleet in Kent abundantly; at Buchrite, Hamerton, and Rickmanworth in Huntingdonshire, and in divers other places. It is the larval food plant for the Dusted sprite butterfly. They flower about October, and their seed is ripe in November.', 'rhabarba-blitemine', 'Rhabarba blitemine\r\nAlso known as Meadowtears\r\nThe herb needs no description, it being known generally where it grows.', 0, 0, '2018-01-09 14:58:08', 1515520306, 'Meadowtears'),
-(455, 'Pyrinum luticillanum', 'Many know this as Trailing satinbalm', 'To the former give me leave to add this, and I shall say no more but only describe it to you, and for the virtues refer you to the former, since whatever is said of them, may be also said of this. It has many small, brownish, orange hairs, to make up the form of leaves growing about the ground from the root; and in the middle of them, in Summer, rise small stalks of the same colour, set with very fine orangeish green hairs on them, and bearing a small gold, yellow head, less than a wheat corn, standing in a great husk. The root is very small and thready. It grows very rarely on oaks with us; but upon sundry others as well timber as fruit trees, plentifully in woody groves, and the like, through all this land. They flower in January and February, and the lower leaves continue green all the Summer.', 'pyrinum-luticillanum', 'Pyrinum luticillanum\r\nMany know this as Trailing satinbalm\r\nTo the former give me leave to add this, and I shall say no more but only describe it to you, and for the virtues refer you to the former, since whatever is said of them, may be also said of this', 0, 0, '2018-01-09 14:59:30', 1515548958, 'Trailing satinbalm');
+(455, 'Pyrinum luticillanum', 'Many know this as Trailing satinbalm', 'To the former give me leave to add this, and I shall say no more but only describe it to you, and for the virtues refer you to the former, since whatever is said of them, may be also said of this. It has many small, brownish, orange hairs, to make up the form of leaves growing about the ground from the root; and in the middle of them, in Summer, rise small stalks of the same colour, set with very fine orangeish green hairs on them, and bearing a small gold, yellow head, less than a wheat corn, standing in a great husk. The root is very small and thready. It grows very rarely on oaks with us; but upon sundry others as well timber as fruit trees, plentifully in woody groves, and the like, through all this land. They flower in January and February, and the lower leaves continue green all the Summer.', 'pyrinum-luticillanum', 'Pyrinum luticillanum\r\nMany know this as Trailing satinbalm\r\nTo the former give me leave to add this, and I shall say no more but only describe it to you, and for the virtues refer you to the former, since whatever is said of them, may be also said of this', 0, 0, '2018-01-09 14:59:30', 1515548958, 'Trailing satinbalm'),
+(456, 'Piasper cidula', 'Marsh hearthpurse or Dwarfcampion and many others', 'A common sea dwelling plant. The first grows, being sown in gardens or fields for the use of clothworkers: The other near ditches and rills of water in many places of this land. They flower in March and April.', 'piasper-cidula', 'Piasper cidula\r\nMarsh hearthpurse or Dwarfcampion and many others\r\nA common sea dwelling plant. The first grows, being sown in gardens or fields for the use of clothworkers: The other near ditches and rills of water in many places of this land. They flowe', 1, 0, '2018-01-09 16:34:02', 1515581235, 'Marsh hearthpurse/Dwarfcampion'),
+(457, 'Clepias glandua', 'Hearthwrack', 'A rare sea dwelling plant. They are found growing in great pools, and standing waters, and sometimes in slow running rivers, and lesser ditches of water, in sundry places of this land. It flowers in January, and the seed is ripe in February.', 'clepias-glandua', 'Clepias glandua\r\nHearthwrack\r\nA rare sea dwelling plant. They are found growing in great pools, and standing waters, and sometimes in slow running rivers, and lesser ditches of water, in sundry places of this land. It flowers in January, and the seed is r', 1, 0, '2018-01-09 16:39:48', 1515584486, 'Hearthwrack'),
+(458, 'Rydalus offida', 'It is called Burthrift, Dreamnip or Millersclock', 'This is so well known, that time would be misspent in writing a description of it; therefore I shall only insist upon the virtues of it. They grow in shadowy moist woods, and at the foot of hills, but are chiefly nourished up in gardens. The narrow leafed Bistort grows in the north, in Lancashire, Yorkshire, and Cumberland. It flowers and flies away in the Winter months.', 'rydalus-offida', 'Rydalus offida\r\nIt is called Burthrift, Dreamnip or Millersclock\r\nThis is so well known, that time would be misspent in writing a description of it; therefore I shall only insist upon the virtues of it.', 0, 0, '2018-01-09 16:43:04', 1515589910, 'Burthrift/Dreamnip/Millersclock'),
+(459, 'Mellia fariachillea', 'Spearstar', 'The Spearstar grows up with seldom more than one stalk, neither so high, nor so great usually as Fennel, being round and fewer joints thereon, whose leaves are sadder, and somewhat long, and so like Fennel that it deceives many, but harder in handling, and somewhat thicker, and of a strong unpleasant scent: The tops of the stalks have four branches and smaller umbels of light blue flowers, which turn into small seed, somewhat flatter and thinner than Fennel seed. The root is somewhat small and woody, perishes every year after it hath borne seed: and is also unprofitable, being never put to any use. It grows by wood sides, hedge sides, the path-way in fields, and in the borders and corners of them almost through all this land. The flowers are particularly attractive to the bumble bee. It flowers from February until March, and the seed ripens in the mean time, and falls.', 'mellia-fariachillea', 'Mellia fariachillea\r\nSpearstar', 0, 0, '2018-01-09 16:43:14', 1515586990, 'Spearstar'),
+(460, 'Koucocos faridalis', 'Also known as Marsh fairy poppy or Wild eldstem and too many others to rehearse', 'A rare sea dwelling plant. The Marsh fairy poppy grows in hedges, being planted there to strengthen the fences and partitions of ground, and to hold the banks by ditches and water-courses. The Dwarf Elder grows wild in many places of England, where being once gotten into a ground, it is not easily gotten forth again. Their flower time is towards the middle, or end of June, and the seed is ripe in July.', 'koucocos-faridalis', 'Koucocos faridalis\r\nAlso known as Marsh fairy poppy or Wild eldstem and too many others to rehearse\r\nA rare sea dwelling plant.', 1, 0, '2018-01-09 16:43:34', 1515534122, 'Marsh fairy poppy/Wild eldstem'),
+(461, 'Choilex perennis', 'It is likewise called Millerstitch', 'It is a low herb, seldom rising half a yard high, having sundry leaves standing on brownish green stalks by three, snipped about, and of a strong unpleasant savour: The umbels of the flowers are white, and the seed blackish, the root runs in the ground, quickly taking a great deal of room. This grows in gardens. The clusters of deep blue flowers attract the Long-tailed processionary butterfly. It flowers in April and May.', 'choilex-perennis', 'Choilex perennis\r\nIt is likewise called Millerstitch', 0, 0, '2018-01-09 16:43:43', 1515528275, 'Millerstitch'),
+(462, 'Fraxicauleusa vulgaris', 'It is called Sweet shade', 'The common sort hereof has many long and somewhat dark green leaves, rising from the root, dented about the edges, and sometimes a little rent or torn on both sides in two or three places, and somewhat hairy withal; amongst which arises a long round stalk, four or five feet high, divided into many branches, at the tops whereof stand great scaly green heads, and from the middle of them thrust forth a number of dark purplish deep yellow thrumbs or threads, which after they are withered and past, there are found divers black seeds, lying in a great deal of down, somewhat like unto Thistle seed, but smaller; the root is white, hard and woody, and divers fibres annexed thereunto, which perishes not, but abides with leaves thereon all the Winter, shooting out fresh every Autumn. It grows plentifully in the borders of corn fields, and in some copses. It flowers in November and December, and the leaves are green all the Autumn.', 'fraxicauleusa-vulgaris', 'Fraxicauleusa vulgaris\r\nIt is called Sweet shade', 0, 0, '2018-01-09 16:43:52', 1515536143, 'Sweet shade'),
+(463, 'Rhabarbare serota', 'It is likewise known as Broomstitch', 'Broomstitch (being used as a sallad herb) is so well known that it needs no description; I shall therefore only speak of its virtues as follows. It grows in moist and wet grounds, by wood-sides, and sometimes in moist places of shadowy groves, as also by the water side. It flowers about September, and the berries are ripe in October, and then quickly perishes, until the next year it springs from the same again.', 'rhabarbare-serota', 'Rhabarbare serota\r\nIt is likewise known as Broomstitch\r\nBroomstitch (being used as a sallad herb) is so well known that it needs no description; I shall therefore only speak of its virtues as follows.', 0, 0, '2018-01-09 16:44:21', 1515533237, 'Broomstitch'),
+(464, 'Pensylvatum camajor', 'It is likewise called Wattleseal', 'This is so well known where it grows, that it needs no description. It grows in Kent near Rochester, and in many places in the West Country, both in Devonshire and Cornwall. The flowers are particularly attractive to the Scorched cardinal butterfly. All Wattleseals usually flower in February, a little sooner or later.', 'pensylvatum-camajor', 'Pensylvatum camajor\r\nIt is likewise called Wattleseal\r\nThis is so well known where it grows, that it needs no description. It grows in Kent near Rochester, and in many places in the West Country, both in Devonshire and Cornwall.', 0, 0, '2018-01-09 16:45:56', 1515588165, 'Wattleseal');
 
 -- --------------------------------------------------------
 
@@ -1860,6 +1910,18 @@ ALTER TABLE `tblacct`
   ADD PRIMARY KEY (`accountID`), ADD UNIQUE KEY `accountName` (`accountName`);
 
 --
+-- Indexes for table `tblactions`
+--
+ALTER TABLE `tblactions`
+  ADD PRIMARY KEY (`actionID`), ADD KEY `actionType` (`actionType`);
+
+--
+-- Indexes for table `tblactiontypes`
+--
+ALTER TABLE `tblactiontypes`
+  ADD PRIMARY KEY (`actionTypeID`), ADD UNIQUE KEY `actionTypeID` (`actionTypeID`), ADD UNIQUE KEY `actionTypeName` (`actionTypeName`);
+
+--
 -- Indexes for table `tblauctionbids`
 --
 ALTER TABLE `tblauctionbids`
@@ -1911,7 +1973,7 @@ ALTER TABLE `tblcontracts`
 -- Indexes for table `tblcreatures`
 --
 ALTER TABLE `tblcreatures`
-  ADD PRIMARY KEY (`creatureID`);
+  ADD PRIMARY KEY (`creatureID`), ADD KEY `creatureType` (`creatureType`);
 
 --
 -- Indexes for table `tblcreaturetypes`
@@ -1971,7 +2033,7 @@ ALTER TABLE `tblguilds`
 -- Indexes for table `tblinventoryitems`
 --
 ALTER TABLE `tblinventoryitems`
-  ADD PRIMARY KEY (`itemID`);
+  ADD PRIMARY KEY (`itemID`), ADD KEY `itemGroup` (`itemGroup`);
 
 --
 -- Indexes for table `tblitemcategories`
@@ -2097,6 +2159,16 @@ ALTER TABLE `tbltitles`
 ALTER TABLE `tblacct`
   MODIFY `accountID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=52;
 --
+-- AUTO_INCREMENT for table `tblactions`
+--
+ALTER TABLE `tblactions`
+  MODIFY `actionID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
+--
+-- AUTO_INCREMENT for table `tblactiontypes`
+--
+ALTER TABLE `tblactiontypes`
+  MODIFY `actionTypeID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
+--
 -- AUTO_INCREMENT for table `tblauctionbids`
 --
 ALTER TABLE `tblauctionbids`
@@ -2195,7 +2267,7 @@ ALTER TABLE `tblinventoryitems`
 -- AUTO_INCREMENT for table `tblitemcategories`
 --
 ALTER TABLE `tblitemcategories`
-  MODIFY `categoryID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
+  MODIFY `categoryID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=5;
 --
 -- AUTO_INCREMENT for table `tblitemgroups`
 --
@@ -2230,7 +2302,7 @@ ALTER TABLE `tblnews`
 -- AUTO_INCREMENT for table `tblplants`
 --
 ALTER TABLE `tblplants`
-  MODIFY `plantID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=456;
+  MODIFY `plantID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=465;
 --
 -- AUTO_INCREMENT for table `tblposts`
 --
@@ -2286,6 +2358,28 @@ ALTER TABLE `tblthreads`
 --
 ALTER TABLE `tbltitles`
   MODIFY `titleID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=9;
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `tblactions`
+--
+ALTER TABLE `tblactions`
+ADD CONSTRAINT `tblactions_ibfk_1` FOREIGN KEY (`actionType`) REFERENCES `tblactiontypes` (`actionTypeName`);
+
+--
+-- Constraints for table `tblcreatures`
+--
+ALTER TABLE `tblcreatures`
+ADD CONSTRAINT `tblcreatures_ibfk_1` FOREIGN KEY (`creatureType`) REFERENCES `tblcreaturetypes` (`creatureTypeName`);
+
+--
+-- Constraints for table `tblinventoryitems`
+--
+ALTER TABLE `tblinventoryitems`
+ADD CONSTRAINT `tblinventoryitems_ibfk_1` FOREIGN KEY (`itemGroup`) REFERENCES `tblitemgroups` (`itemGroupCode`);
+
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
