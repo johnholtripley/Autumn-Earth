@@ -35,6 +35,7 @@ const chestPanel = document.getElementById('chestPanel');
 const chestTitle = document.getElementById('chestTitle');
 const chestSlotContents = document.getElementById('chest');
 const interfaceWrapper = document.getElementById('interface');
+const actionBar = document.getElementById('actionBar');
 
 var notificationQueue = [];
 var notificationIsShowing = false;
@@ -141,6 +142,7 @@ var UI = {
         UI.updateInscriptionPanel();
         UI.getGameSettings();
         UI.buildCollectionPanel();
+        UI.buildActionBar();
 
         if (hero.professionsKnown.length > 0) {
             // load and cache the first profession's recipe assets:
@@ -1388,5 +1390,18 @@ var UI = {
 
     toggleUI: function() {
 interfaceWrapper.classList.toggle('active');
+    },
+
+    buildActionBar: function () {
+        var actionBarMarkup = '<ol>';
+        for (var i = 0; i < hero.actions.length; i++) {
+if(hero.actions[i] == "-") {
+actionBarMarkup += '<li><img src="/images/game-world/interface/actions/blank.png" alt="Empty Action slot"></li>';
+} else {
+actionBarMarkup += '<li class="active"><img src="/images/game-world/interface/actions/'+hero.actions[i]+'.png" alt="Action '+hero.actions[i]+'"></li>';
+}
+        }
+        actionBarMarkup += '</ol>';
+        actionBar.innerHTML = actionBarMarkup;
     }
 }

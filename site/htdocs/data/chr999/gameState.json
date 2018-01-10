@@ -364,5 +364,6 @@
     "lineOfSightRange": 20,
     "collections": {
         
-    }
+    },
+    "actions": [2,"-","-",1,"-","-","-","-","-","-"]
 }

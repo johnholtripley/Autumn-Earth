@@ -38,7 +38,11 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
   
   </div>
   <div id="interface" class="active">
-      <div id="toolbar"><a href="#gameSettings" id="openSettings">Settings</a><div id="currencies"></div></div>
+    <div id="toolbar">
+      <a href="#gameSettings" id="openSettings">Settings</a>
+      <div id="actionBar"></div>
+      <div id="currencies"></div>
+    </div>
 
     <p id="dialogue"></p>
     <div id="notification"></div>

@@ -7,7 +7,9 @@
 // add virtues to description
 // descriptions need more fullstops to allow content to break for twitter
 // descriptions need splitting out for aquatic and night flowering plants
-
+// add more flower variation
+// vary colour of petals between each individual flower head
+// add more leaf variation
 
 
 
