@@ -1175,6 +1175,9 @@ function update() {
     movePlatforms();
     updateItems();
     audio.checkForAmbientSounds();
+    if(isGathering) {
+        UI.updateGatheringPanel();
+    }
 }
 
 

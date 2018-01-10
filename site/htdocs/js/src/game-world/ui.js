@@ -817,6 +817,9 @@ var UI = {
                         UI.removeActiveDialogue();
 
                     }
+
+} else if (e.target.parentNode.id == "gatheringPanel") {
+    isGathering = false;
                 } else if (e.target.parentNode.id == "inscriptionPanel") {
 
                     UI.resetInscriptionPanel();
@@ -1445,12 +1448,18 @@ var UI = {
                         if(currentActiveInventoryItems[thisMapData.items[foundItem].type].category == thisNode.dataset.category) {
                             // this source node and the action match categories:
                             // set the quality bar to the maximum from this node:
-                            UI.gathering.quality = thisMapData.items[foundItem].quality; 
+                            UI.gathering.quality = parseInt(thisMapData.items[foundItem].quality); 
                             UI.gathering.quantity = 100; 
                             UI.gathering.purity = 100; 
                             UI.gathering.risk = 100; 
+                            // update the bar without the transitions, so it's all in place when the panel opens:
+                            gatheringPanel.classList.add('preventTransition');
                             UI.updateGatheringPanel();
+                            // trigger a reflow to push the update without the transition:
+                            gatheringPanel.offsetHeight;
+                            gatheringPanel.classList.remove('preventTransition');
                             gatheringPanel.classList.add('active');
+                            isGathering = true;
                         } else {
                             UI.showNotification('<p>Wrong resource type for this action</p>');
                         }
@@ -1465,9 +1474,10 @@ var UI = {
         }
     },
     updateGatheringPanel: function() {
-gatheringBarQuality.style.width = UI.gathering.quality+'%';
-gatheringBarQuantity.style.width = UI.gathering.quantity+'%';
-gatheringBarPurity.style.width = UI.gathering.purity+'%';
-gatheringBarRisk.style.width = UI.gathering.risk+'%';
+  UI.gathering.quality -=0.5;
+        gatheringBarQuality.style.width = UI.gathering.quality+'%';
+        gatheringBarQuantity.style.width = UI.gathering.quantity+'%';
+        gatheringBarPurity.style.width = UI.gathering.purity+'%';
+        gatheringBarRisk.style.width = UI.gathering.risk+'%';
     }
 }

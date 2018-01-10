@@ -443,9 +443,15 @@ $numberOfItemCategories: 20;
     background-repeat: no-repeat;
     background-position: 100% 50%;
     @include background-size(auto, 100%);
-    @include transition(width 0.4s ease-in-out);
+    @include transition(width 0.1s ease);
     height: 20px;
+
 }
+
+.preventTransition .progressBar {
+  @include transition(none);
+}
+
 .progressBarWrapper {
     border: 1px solid #875c56;
     display: block;

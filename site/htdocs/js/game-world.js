@@ -295,6 +295,7 @@ var animationUpdateTime = (1000 / animationFramesPerSecond);
 
 var gameCanvas, gameContext, gameMode, cartographyContext, cartographyCanvas, offScreenCartographyCanvas, offScreenCartographyContext, canvasMapImage, canvasMapImage, canvasMapMaskImage, heroImg, shadowImg, imagesToLoad, tileImages, npcImages, itemImages, backgroundImg, objInitLeft, objInitTop, dragStartX, dragStartY, inventoryCheck, timeSinceLastAmbientSoundWasPlayed, gameSettings, lightMap, lightMapOverlay, lightMapContext;
 var chestIdOpen = -1;
+var isGathering = false;
 const titleTagPrefix = 'Autumn Earth';
 
 
@@ -2273,10 +2274,10 @@ function inventorySplitStackCancel() {
 }
 
 var KeyBindings = {
-    'left': 37,
-    'right': 39,
-    'up': 38,
-    'down': 40,
+    'left': 65,
+    'right': 68,
+    'up': 87,
+    'down': 83,
     'pause': 80,
     'action': 17,
     'shift': 16,
@@ -3555,6 +3556,9 @@ var UI = {
                         UI.removeActiveDialogue();
 
                     }
+
+} else if (e.target.parentNode.id == "gatheringPanel") {
+    isGathering = false;
                 } else if (e.target.parentNode.id == "inscriptionPanel") {
 
                     UI.resetInscriptionPanel();
@@ -4183,12 +4187,18 @@ var UI = {
                         if(currentActiveInventoryItems[thisMapData.items[foundItem].type].category == thisNode.dataset.category) {
                             // this source node and the action match categories:
                             // set the quality bar to the maximum from this node:
-                            UI.gathering.quality = thisMapData.items[foundItem].quality; 
+                            UI.gathering.quality = parseInt(thisMapData.items[foundItem].quality); 
                             UI.gathering.quantity = 100; 
                             UI.gathering.purity = 100; 
                             UI.gathering.risk = 100; 
+                            // update the bar without the transitions, so it's all in place when the panel opens:
+                            gatheringPanel.classList.add('preventTransition');
                             UI.updateGatheringPanel();
+                            // trigger a reflow to push the update without the transition:
+                            gatheringPanel.offsetHeight;
+                            gatheringPanel.classList.remove('preventTransition');
                             gatheringPanel.classList.add('active');
+                            isGathering = true;
                         } else {
                             UI.showNotification('<p>Wrong resource type for this action</p>');
                         }
@@ -4203,10 +4213,11 @@ var UI = {
         }
     },
     updateGatheringPanel: function() {
-gatheringBarQuality.style.width = UI.gathering.quality+'%';
-gatheringBarQuantity.style.width = UI.gathering.quantity+'%';
-gatheringBarPurity.style.width = UI.gathering.purity+'%';
-gatheringBarRisk.style.width = UI.gathering.risk+'%';
+  UI.gathering.quality -=0.5;
+        gatheringBarQuality.style.width = UI.gathering.quality+'%';
+        gatheringBarQuantity.style.width = UI.gathering.quantity+'%';
+        gatheringBarPurity.style.width = UI.gathering.purity+'%';
+        gatheringBarRisk.style.width = UI.gathering.risk+'%';
     }
 }
 // service worker:
@@ -5386,6 +5397,9 @@ function update() {
     movePlatforms();
     updateItems();
     audio.checkForAmbientSounds();
+    if(isGathering) {
+        UI.updateGatheringPanel();
+    }
 }
 
 
