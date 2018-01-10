@@ -725,6 +725,7 @@
             "type": 35,
             "tileX": 6,
             "tileY": 4,
+            "quality": 80,
              "contains": [{
                 "type": 1,
                 "quantity": 1,

@@ -2775,6 +2775,10 @@ const chestSlotContents = document.getElementById('chest');
 const interfaceWrapper = document.getElementById('interface');
 const actionBar = document.getElementById('actionBar');
 const gatheringPanel = document.getElementById('gatheringPanel');
+const gatheringBarQuality = document.querySelector('#gatheringQualityBar .progressBar');
+const gatheringBarPurity = document.querySelector('#gatheringPurityBar .progressBar');
+const gatheringBarQuantity = document.querySelector('#gatheringQuantityBar .progressBar');
+const gatheringBarRisk = document.querySelector('#gatheringRiskBar .progressBar');
 
 var notificationQueue = [];
 var notificationIsShowing = false;
@@ -2796,6 +2800,8 @@ var UI = {
         //
 
     },
+
+    gathering: {},
 
     showZoneName: function(zoneName) {
         displayZoneName.classList.remove("active");
@@ -4176,6 +4182,12 @@ var UI = {
                         // found an item...
                         if(currentActiveInventoryItems[thisMapData.items[foundItem].type].category == thisNode.dataset.category) {
                             // this source node and the action match categories:
+                            // set the quality bar to the maximum from this node:
+                            UI.gathering.quality = thisMapData.items[foundItem].quality; 
+                            UI.gathering.quantity = 100; 
+                            UI.gathering.purity = 100; 
+                            UI.gathering.risk = 100; 
+                            UI.updateGatheringPanel();
                             gatheringPanel.classList.add('active');
                         } else {
                             UI.showNotification('<p>Wrong resource type for this action</p>');
@@ -4189,6 +4201,12 @@ var UI = {
             }
 
         }
+    },
+    updateGatheringPanel: function() {
+gatheringBarQuality.style.width = UI.gathering.quality+'%';
+gatheringBarQuantity.style.width = UI.gathering.quantity+'%';
+gatheringBarPurity.style.width = UI.gathering.purity+'%';
+gatheringBarRisk.style.width = UI.gathering.risk+'%';
     }
 }
 // service worker:
