@@ -14,7 +14,7 @@ function checkForRespawns() {
 
 
 function processGathering() {
-    UI.gathering.quality -= 0.25;
+    UI.gathering.stability -= 0.25;
 
 
 
