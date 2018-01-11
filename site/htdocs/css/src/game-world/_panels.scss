@@ -449,12 +449,11 @@ $numberOfItemCategories: 20;
 }
 
 #gatheringPanel.active .progressBar {
+    // only show the transition when active - so initial values aren't animated to
  @include transition(width 0.1s ease);
 }
 
-//.preventTransition .progressBar {
-//  @include transition(none);
-//}
+
 
 .progressBarWrapper {
     border: 1px solid #875c56;

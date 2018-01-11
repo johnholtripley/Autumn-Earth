@@ -4168,7 +4168,7 @@ var UI = {
                     var thisItem;
                     for (var i = 0; i < thisMapData.items.length; i++) {
                         thisItem = thisMapData.items[i];
-                        console.log(thisItem.tileX,thisItem.tileY);
+                     
                         if (hero.tileX == thisItem.tileX) {
                             if (hero.tileY == thisItem.tileY) {
                                 foundItem = i;
@@ -4188,7 +4188,8 @@ var UI = {
                             // this source node and the action match categories:
                             // set the quality bar to the maximum from this node:
                             UI.gathering.quality = parseInt(thisMapData.items[foundItem].quality); 
-                            UI.gathering.quantity = 100; 
+                            UI.gathering.quantity = parseInt(thisMapData.items[foundItem].quantity); 
+                            UI.gathering.maxQuantity = UI.gathering.quantity; 
                             UI.gathering.purity = parseInt(thisMapData.items[foundItem].purity);
                             UI.gathering.stability = parseInt(thisMapData.items[foundItem].stability);  
                             // update the bar without the transitions, so it's all in place when the panel opens:
@@ -4215,7 +4216,7 @@ var UI = {
     updateGatheringPanel: function() {
   UI.gathering.quality -=0.5;
         gatheringBarQuality.style.width = UI.gathering.quality+'%';
-        gatheringBarQuantity.style.width = UI.gathering.quantity+'%';
+        gatheringBarQuantity.style.width = (100*(UI.gathering.quantity/UI.gathering.maxQuantity))+'%';
         gatheringBarPurity.style.width = UI.gathering.purity+'%';
         gatheringBarStability.style.width = UI.gathering.stability+'%';
     }
