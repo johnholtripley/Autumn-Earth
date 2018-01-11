@@ -649,8 +649,7 @@ function removeMapAssets() {
         tileImages[i].src = '';
         tileImages[i] = null;
     }
-    console.log(itemGraphicsToLoad);
-    console.log(npcGraphicsToLoad);
+
     for (var i in npcGraphicsToLoad) {
         npcImages[npcGraphicsToLoad[i]].onerror = '';
         npcImages[npcGraphicsToLoad[i]].src = '';
@@ -1176,7 +1175,7 @@ function update() {
     updateItems();
     audio.checkForAmbientSounds();
     if(isGathering) {
-        UI.updateGatheringPanel();
+        processGathering();
     }
 }
 

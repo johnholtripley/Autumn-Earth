@@ -1475,7 +1475,7 @@ var UI = {
         }
     },
     updateGatheringPanel: function() {
-  UI.gathering.quality -=0.5;
+  
         gatheringBarQuality.style.width = UI.gathering.quality+'%';
         gatheringBarQuantity.style.width = (100*(UI.gathering.quantity/UI.gathering.maxQuantity))+'%';
         gatheringBarPurity.style.width = UI.gathering.purity+'%';

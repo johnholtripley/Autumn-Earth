@@ -739,6 +739,10 @@ function checkForGamePadInput() {
         }
     }
 }
+function processGathering() {
+    UI.gathering.quality -=0.5;
+    UI.updateGatheringPanel();
+}
 
 
 
@@ -4214,7 +4218,7 @@ var UI = {
         }
     },
     updateGatheringPanel: function() {
-  UI.gathering.quality -=0.5;
+  
         gatheringBarQuality.style.width = UI.gathering.quality+'%';
         gatheringBarQuantity.style.width = (100*(UI.gathering.quantity/UI.gathering.maxQuantity))+'%';
         gatheringBarPurity.style.width = UI.gathering.purity+'%';
@@ -4872,8 +4876,7 @@ function removeMapAssets() {
         tileImages[i].src = '';
         tileImages[i] = null;
     }
-    console.log(itemGraphicsToLoad);
-    console.log(npcGraphicsToLoad);
+
     for (var i in npcGraphicsToLoad) {
         npcImages[npcGraphicsToLoad[i]].onerror = '';
         npcImages[npcGraphicsToLoad[i]].src = '';
@@ -5399,7 +5402,7 @@ function update() {
     updateItems();
     audio.checkForAmbientSounds();
     if(isGathering) {
-        UI.updateGatheringPanel();
+        processGathering();
     }
 }
 
