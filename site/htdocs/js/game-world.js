@@ -739,8 +739,27 @@ function checkForGamePadInput() {
         }
     }
 }
+function checkForRespawns() {
+    for (var i = 0; i < thisMapData.items.length; i++) {
+        if (currentActiveInventoryItems[thisMapData.items[i].type].action == "node") {
+            if (thisMapData.items[i].state != "active") {
+                console.log("check re-spawn: " + hero.totalGameTimePlayed + "-" + thisMapData.items[i].timeLastHarvested + "(" + (hero.totalGameTimePlayed - thisMapData.items[i].timeLastHarvested) + ") >= " + currentActiveInventoryItems[thisMapData.items[i].type].respawnRate);
+
+                if (hero.totalGameTimePlayed - thisMapData.items[i].timeLastHarvested >= currentActiveInventoryItems[thisMapData.items[i].type].respawnRate) {
+                    thisMapData.items[i].state = "active";
+                }
+            }
+        }
+    }
+}
+
+
 function processGathering() {
     UI.gathering.quality -= 0.25;
+
+    if (UI.gathering.quality < 50) {
+        UI.gathering.stability = 0;
+    }
 
     UI.gathering.quality = capValues(UI.gathering.quality, 0, 100);
     UI.gathering.purity = capValues(UI.gathering.purity, 0, 100);
@@ -748,20 +767,35 @@ function processGathering() {
 
     // if any of the values are 0:
     if (UI.gathering.quality * UI.gathering.purity * UI.gathering.stability * UI.gathering.quantity == 0) {
-        endGathering();
+        gatheringComplete();
     }
 
     UI.updateGatheringPanel();
 }
 
-function endGathering() {
-    isGathering = false;
-    if(UI.gathering.stability == 0) {
+function gatheringComplete() {
+    if (UI.gathering.stability == 0) {
         // get nothing
     } else {
-      //  var generatedObject = currentActiveInventoryItems[UI.gathering.node.type];
+        //  var generatedObject = currentActiveInventoryItems[UI.gathering.node.type];
         var generatedObject = UI.gathering.node.contains[0];
-        console.log("gathered "+UI.gathering.quantity+"x "+currentActiveInventoryItems[generatedObject.type].shortname);
+        console.log("gathered " + UI.gathering.quantity + "x " + currentActiveInventoryItems[generatedObject.type].shortname);
+    }
+    gatheringStopped();
+}
+
+function gatheringStopped() {
+    isGathering = false;
+    // save any changes to the node (even if gathering was aborted by closing the panel):
+    UI.gathering.node.stability = UI.gathering.stability;
+    UI.gathering.node.quantity = UI.gathering.quantity;
+    if ((UI.gathering.node.quantity == 0) || (UI.gathering.node.stability == 0)) {
+        // reset the node, and its respawn timer:
+        UI.gathering.node.timeLastHarvested = hero.totalGameTimePlayed;
+        UI.gathering.node.state = "inactive";
+        // reset quantity and stability
+        UI.gathering.node.stability = UI.gathering.node.maxStability;
+        UI.gathering.node.quantity = UI.gathering.node.maxQuantity;
     }
 }
 
@@ -3600,7 +3634,9 @@ var UI = {
                     }
 
 } else if (e.target.parentNode.id == "gatheringPanel") {
-    isGathering = false;
+ if(isGathering) {
+    gatheringStopped();
+}
                 } else if (e.target.parentNode.id == "inscriptionPanel") {
 
                     UI.resetInscriptionPanel();
@@ -4203,54 +4239,62 @@ var UI = {
             var actionType = thisNode.id.substring(10);
             switch (actionType) {
                 case "gather":
-                    // check if there's a relevant item on the hero's tile, or at arm's length:
-                    var armsLengthXTile = hero.tileX + relativeFacing[hero.facing]["x"];
-                    var armsLengthYTile = hero.tileY + relativeFacing[hero.facing]["y"];
-                    var foundItem = -1;
-                    var thisItem;
-                    for (var i = 0; i < thisMapData.items.length; i++) {
-                        thisItem = thisMapData.items[i];
-                     
-                        if (hero.tileX == thisItem.tileX) {
-                            if (hero.tileY == thisItem.tileY) {
-                                foundItem = i;
-                                break;
+                    // make sure not already gathering:
+                    if (!isGathering) {
+                        // check if there's a relevant item on the hero's tile, or at arm's length:
+                        var armsLengthXTile = hero.tileX + relativeFacing[hero.facing]["x"];
+                        var armsLengthYTile = hero.tileY + relativeFacing[hero.facing]["y"];
+                        var foundItem = -1;
+                        var thisItem;
+                        for (var i = 0; i < thisMapData.items.length; i++) {
+                            thisItem = thisMapData.items[i];
+
+                            if (hero.tileX == thisItem.tileX) {
+                                if (hero.tileY == thisItem.tileY) {
+                                    foundItem = i;
+                                    break;
+                                }
+                            }
+                            if (armsLengthXTile == thisItem.tileX) {
+                                if (armsLengthYTile == thisItem.tileY) {
+                                    foundItem = i;
+                                    break;
+                                }
                             }
                         }
-                        if (armsLengthXTile == thisItem.tileX) {
-                            if (armsLengthYTile == thisItem.tileY) {
-                                foundItem = i;
-                                break;
+                        if (foundItem != -1) {
+                            // found an item...
+                            if (currentActiveInventoryItems[thisMapData.items[foundItem].type].category == thisNode.dataset.category) {
+                                // check it's not still re-spawning:
+                         
+                              if(thisMapData.items[foundItem].state != "inactive") {
+
+                                // this source node and the action match categories:
+                                // set the quality bar to the maximum from this node:
+                                UI.gathering.quality = parseInt(thisMapData.items[foundItem].quality);
+                                UI.gathering.quantity = parseInt(thisMapData.items[foundItem].quantity);
+                                UI.gathering.maxQuantity = UI.gathering.quantity;
+                                UI.gathering.purity = parseInt(thisMapData.items[foundItem].purity);
+                                UI.gathering.stability = parseInt(thisMapData.items[foundItem].stability);
+                                UI.gathering.node = thisMapData.items[foundItem];
+                                // update the bar without the transitions, so it's all in place when the panel opens:
+
+                                UI.updateGatheringPanel();
+                                // trigger a reflow to push the update without the transition:
+                                gatheringPanel.offsetHeight;
+
+                                gatheringPanel.classList.add('active');
+                                isGathering = true;
                             }
-                        }
-                    }
-                    if (foundItem != -1) {
-                        // found an item...
-                        if(currentActiveInventoryItems[thisMapData.items[foundItem].type].category == thisNode.dataset.category) {
-                            // this source node and the action match categories:
-                            // set the quality bar to the maximum from this node:
-                            UI.gathering.quality = parseInt(thisMapData.items[foundItem].quality); 
-                            UI.gathering.quantity = parseInt(thisMapData.items[foundItem].quantity); 
-                            UI.gathering.maxQuantity = UI.gathering.quantity; 
-                            UI.gathering.purity = parseInt(thisMapData.items[foundItem].purity);
-                            UI.gathering.stability = parseInt(thisMapData.items[foundItem].stability);  
-                            UI.gathering.node = thisMapData.items[foundItem];
-                            // update the bar without the transitions, so it's all in place when the panel opens:
-                  
-                            UI.updateGatheringPanel();
-                            // trigger a reflow to push the update without the transition:
-                            gatheringPanel.offsetHeight;
-                   
-                            gatheringPanel.classList.add('active');
-                            isGathering = true;
-                        } else {
-                            UI.showNotification('<p>Wrong resource type for this action</p>');
+                            } else {
+                                UI.showNotification('<p>Wrong resource type for this action</p>');
+                            }
                         }
                     }
                     break;
                 case "survey":
-                //
-                break;
+                    //
+                    break;
 
             }
 
@@ -4874,6 +4918,15 @@ thisMapData.items[i].spriteHeight = currentActiveInventoryItems[thisMapData.item
                 // otherwise, set it so it can be instantly harvested:
                 thisMapData.items[i].timeLastHarvested = hero.totalGameTimePlayed - currentActiveInventoryItems[thisMapData.items[i].type].respawnRate;
             }
+
+// add stability and quantity values if it doesn't have them
+if (typeof thisMapData.items[i].stability === "undefined") {
+    thisMapData.items[i].stability = thisMapData.items[i].maxStability;
+    }
+    if (typeof thisMapData.items[i].quantity === "undefined") {
+    thisMapData.items[i].quantity = thisMapData.items[i].maxQuantity;
+    }
+
         }
         if (currentActiveInventoryItems[thisMapData.items[i].type].action == "nest") {
             thisMapData.items[i].timeLastSpawned = hero.totalGameTimePlayed;
@@ -5439,6 +5492,7 @@ function update() {
     movePlatforms();
     updateItems();
     audio.checkForAmbientSounds();
+    checkForRespawns();
     if(isGathering) {
         processGathering();
     }
@@ -5592,6 +5646,7 @@ function checkForActions() {
                         questData[actionValue].hasBeenActivated = 0;
                         break;
                     case "node":
+                    /*
                         // check it's not still re-spawning:
                         console.log(hero.totalGameTimePlayed + " " + thisMapData.items[i].timeLastHarvested + " > " + currentActiveInventoryItems[thisMapData.items[i].type].respawnRate);
                         if (hero.totalGameTimePlayed - thisMapData.items[i].timeLastHarvested >= currentActiveInventoryItems[thisMapData.items[i].type].respawnRate) {
@@ -5607,6 +5662,7 @@ function checkForActions() {
                                 UI.showNotification("<p>Oops - sorry, no room in your bags</p>");
                             }
                         }
+                        */
                         break;
                     case "toggleInnerDoor":
                         toggleInnerDoor(thisMapData.items[i].additional);
@@ -6654,6 +6710,7 @@ assetsToDraw.push([findIsoDepth(thisItem.x, thisItem.y, thisItem.z), "sprite", i
                     break;
                 case "sprite":
                     // sprite image (needs slicing parameters):
+               
                     gameContext.drawImage(assetsToDraw[i][2], assetsToDraw[i][3], assetsToDraw[i][4], assetsToDraw[i][5], assetsToDraw[i][6], assetsToDraw[i][7], assetsToDraw[i][8], assetsToDraw[i][9], assetsToDraw[i][10]);
                     break;
                 case "img":

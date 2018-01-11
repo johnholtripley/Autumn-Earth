@@ -723,12 +723,17 @@
             }, {
 
             "type": 35,
-            "tileX": 6,
-            "tileY": 4,
+            "tileX": 15,
+            "tileY": 28,
             "quality": 80,
-            "stability": 60,
-            "quantity": 10,
+            "maxStability": 60,
+            "maxQuantity": 10,
             "purity": 90,
+            "state": "active",
+            "animation": {
+                  "active": {"length": 1,"row":0},
+                  "inactive": {"length": 1,"row":1}
+            },
              "contains": [{
                 "type": 1,
                 "quantity": 1,

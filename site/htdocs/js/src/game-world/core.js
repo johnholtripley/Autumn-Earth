@@ -609,6 +609,15 @@ thisMapData.items[i].spriteHeight = currentActiveInventoryItems[thisMapData.item
                 // otherwise, set it so it can be instantly harvested:
                 thisMapData.items[i].timeLastHarvested = hero.totalGameTimePlayed - currentActiveInventoryItems[thisMapData.items[i].type].respawnRate;
             }
+
+// add stability and quantity values if it doesn't have them
+if (typeof thisMapData.items[i].stability === "undefined") {
+    thisMapData.items[i].stability = thisMapData.items[i].maxStability;
+    }
+    if (typeof thisMapData.items[i].quantity === "undefined") {
+    thisMapData.items[i].quantity = thisMapData.items[i].maxQuantity;
+    }
+
         }
         if (currentActiveInventoryItems[thisMapData.items[i].type].action == "nest") {
             thisMapData.items[i].timeLastSpawned = hero.totalGameTimePlayed;
@@ -1174,6 +1183,7 @@ function update() {
     movePlatforms();
     updateItems();
     audio.checkForAmbientSounds();
+    checkForRespawns();
     if(isGathering) {
         processGathering();
     }
@@ -1327,6 +1337,7 @@ function checkForActions() {
                         questData[actionValue].hasBeenActivated = 0;
                         break;
                     case "node":
+                    /*
                         // check it's not still re-spawning:
                         console.log(hero.totalGameTimePlayed + " " + thisMapData.items[i].timeLastHarvested + " > " + currentActiveInventoryItems[thisMapData.items[i].type].respawnRate);
                         if (hero.totalGameTimePlayed - thisMapData.items[i].timeLastHarvested >= currentActiveInventoryItems[thisMapData.items[i].type].respawnRate) {
@@ -1342,6 +1353,7 @@ function checkForActions() {
                                 UI.showNotification("<p>Oops - sorry, no room in your bags</p>");
                             }
                         }
+                        */
                         break;
                     case "toggleInnerDoor":
                         toggleInnerDoor(thisMapData.items[i].additional);
@@ -2389,6 +2401,7 @@ assetsToDraw.push([findIsoDepth(thisItem.x, thisItem.y, thisItem.z), "sprite", i
                     break;
                 case "sprite":
                     // sprite image (needs slicing parameters):
+               
                     gameContext.drawImage(assetsToDraw[i][2], assetsToDraw[i][3], assetsToDraw[i][4], assetsToDraw[i][5], assetsToDraw[i][6], assetsToDraw[i][7], assetsToDraw[i][8], assetsToDraw[i][9], assetsToDraw[i][10]);
                     break;
                 case "img":

@@ -826,7 +826,9 @@ var UI = {
                     }
 
 } else if (e.target.parentNode.id == "gatheringPanel") {
-    isGathering = false;
+ if(isGathering) {
+    gatheringStopped();
+}
                 } else if (e.target.parentNode.id == "inscriptionPanel") {
 
                     UI.resetInscriptionPanel();
@@ -1429,54 +1431,62 @@ var UI = {
             var actionType = thisNode.id.substring(10);
             switch (actionType) {
                 case "gather":
-                    // check if there's a relevant item on the hero's tile, or at arm's length:
-                    var armsLengthXTile = hero.tileX + relativeFacing[hero.facing]["x"];
-                    var armsLengthYTile = hero.tileY + relativeFacing[hero.facing]["y"];
-                    var foundItem = -1;
-                    var thisItem;
-                    for (var i = 0; i < thisMapData.items.length; i++) {
-                        thisItem = thisMapData.items[i];
-                     
-                        if (hero.tileX == thisItem.tileX) {
-                            if (hero.tileY == thisItem.tileY) {
-                                foundItem = i;
-                                break;
+                    // make sure not already gathering:
+                    if (!isGathering) {
+                        // check if there's a relevant item on the hero's tile, or at arm's length:
+                        var armsLengthXTile = hero.tileX + relativeFacing[hero.facing]["x"];
+                        var armsLengthYTile = hero.tileY + relativeFacing[hero.facing]["y"];
+                        var foundItem = -1;
+                        var thisItem;
+                        for (var i = 0; i < thisMapData.items.length; i++) {
+                            thisItem = thisMapData.items[i];
+
+                            if (hero.tileX == thisItem.tileX) {
+                                if (hero.tileY == thisItem.tileY) {
+                                    foundItem = i;
+                                    break;
+                                }
+                            }
+                            if (armsLengthXTile == thisItem.tileX) {
+                                if (armsLengthYTile == thisItem.tileY) {
+                                    foundItem = i;
+                                    break;
+                                }
                             }
                         }
-                        if (armsLengthXTile == thisItem.tileX) {
-                            if (armsLengthYTile == thisItem.tileY) {
-                                foundItem = i;
-                                break;
+                        if (foundItem != -1) {
+                            // found an item...
+                            if (currentActiveInventoryItems[thisMapData.items[foundItem].type].category == thisNode.dataset.category) {
+                                // check it's not still re-spawning:
+                         
+                              if(thisMapData.items[foundItem].state != "inactive") {
+
+                                // this source node and the action match categories:
+                                // set the quality bar to the maximum from this node:
+                                UI.gathering.quality = parseInt(thisMapData.items[foundItem].quality);
+                                UI.gathering.quantity = parseInt(thisMapData.items[foundItem].quantity);
+                                UI.gathering.maxQuantity = UI.gathering.quantity;
+                                UI.gathering.purity = parseInt(thisMapData.items[foundItem].purity);
+                                UI.gathering.stability = parseInt(thisMapData.items[foundItem].stability);
+                                UI.gathering.node = thisMapData.items[foundItem];
+                                // update the bar without the transitions, so it's all in place when the panel opens:
+
+                                UI.updateGatheringPanel();
+                                // trigger a reflow to push the update without the transition:
+                                gatheringPanel.offsetHeight;
+
+                                gatheringPanel.classList.add('active');
+                                isGathering = true;
                             }
-                        }
-                    }
-                    if (foundItem != -1) {
-                        // found an item...
-                        if(currentActiveInventoryItems[thisMapData.items[foundItem].type].category == thisNode.dataset.category) {
-                            // this source node and the action match categories:
-                            // set the quality bar to the maximum from this node:
-                            UI.gathering.quality = parseInt(thisMapData.items[foundItem].quality); 
-                            UI.gathering.quantity = parseInt(thisMapData.items[foundItem].quantity); 
-                            UI.gathering.maxQuantity = UI.gathering.quantity; 
-                            UI.gathering.purity = parseInt(thisMapData.items[foundItem].purity);
-                            UI.gathering.stability = parseInt(thisMapData.items[foundItem].stability);  
-                            UI.gathering.node = thisMapData.items[foundItem];
-                            // update the bar without the transitions, so it's all in place when the panel opens:
-                  
-                            UI.updateGatheringPanel();
-                            // trigger a reflow to push the update without the transition:
-                            gatheringPanel.offsetHeight;
-                   
-                            gatheringPanel.classList.add('active');
-                            isGathering = true;
-                        } else {
-                            UI.showNotification('<p>Wrong resource type for this action</p>');
+                            } else {
+                                UI.showNotification('<p>Wrong resource type for this action</p>');
+                            }
                         }
                     }
                     break;
                 case "survey":
-                //
-                break;
+                    //
+                    break;
 
             }
 
