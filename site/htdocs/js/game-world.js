@@ -740,7 +740,7 @@ function checkForGamePadInput() {
     }
 }
 function processGathering() {
-    UI.gathering.quality -=0.5;
+    UI.gathering.quality -= 0.5;
     UI.updateGatheringPanel();
 }
 
@@ -3054,26 +3054,37 @@ var UI = {
 
 
     showNotification: function(markup) {
+        
         if (!notificationIsShowing) {
+            console.log("showing "+markup);
+            // don't push it to the queue if it's already there:
+            if (notificationQueue.indexOf(markup) === -1) {
+            notificationQueue.push(markup);
+        }
             notificationIsShowing = true;
             notification.classList.remove("active");
             notification.innerHTML = markup;
             // cause re-draw to reset the animation:
-            void notification.offsetWidth;
+            notification.offsetHeight;
             notification.classList.add('active');
             notification.addEventListener(whichAnimationEvent, UI.notificationEnded, false);
         } else {
+            console.log("queing "+markup);
             notificationQueue.push(markup);
         }
     },
 
     notificationEnded: function() {
+        console.log("ended - length before removal: "+notificationQueue.length);
+      //  console.log(notificationQueue);
         // remove the one that's just been shown:
         notificationQueue.shift();
         notificationIsShowing = false;
+        console.log("ended - length after removal: "+notificationQueue.length);
         dialogue.removeEventListener(whichAnimationEvent, UI.notificationEnded, false);
         // see if any more need showing now:
         if (notificationQueue.length > 0) {
+            console.log("showing next in queue");
             UI.showNotification(notificationQueue[0]);
         }
     },
@@ -4218,7 +4229,6 @@ var UI = {
         }
     },
     updateGatheringPanel: function() {
-  
         gatheringBarQuality.style.width = UI.gathering.quality+'%';
         gatheringBarQuantity.style.width = (100*(UI.gathering.quantity/UI.gathering.maxQuantity))+'%';
         gatheringBarPurity.style.width = UI.gathering.purity+'%';
