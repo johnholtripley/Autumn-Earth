@@ -726,6 +726,9 @@
             "tileX": 6,
             "tileY": 4,
             "quality": 80,
+            "stability": 60,
+            "quantity": 10,
+            "purity": 90,
              "contains": [{
                 "type": 1,
                 "quantity": 1,

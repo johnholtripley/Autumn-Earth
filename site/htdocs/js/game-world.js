@@ -2779,7 +2779,7 @@ const gatheringPanel = document.getElementById('gatheringPanel');
 const gatheringBarQuality = document.querySelector('#gatheringQualityBar .progressBar');
 const gatheringBarPurity = document.querySelector('#gatheringPurityBar .progressBar');
 const gatheringBarQuantity = document.querySelector('#gatheringQuantityBar .progressBar');
-const gatheringBarRisk = document.querySelector('#gatheringRiskBar .progressBar');
+const gatheringBarStability = document.querySelector('#gatheringBarStability .progressBar');
 
 var notificationQueue = [];
 var notificationIsShowing = false;
@@ -4189,14 +4189,14 @@ var UI = {
                             // set the quality bar to the maximum from this node:
                             UI.gathering.quality = parseInt(thisMapData.items[foundItem].quality); 
                             UI.gathering.quantity = 100; 
-                            UI.gathering.purity = 100; 
-                            UI.gathering.risk = 100; 
+                            UI.gathering.purity = parseInt(thisMapData.items[foundItem].purity);
+                            UI.gathering.stability = parseInt(thisMapData.items[foundItem].stability);  
                             // update the bar without the transitions, so it's all in place when the panel opens:
-                            gatheringPanel.classList.add('preventTransition');
+                  
                             UI.updateGatheringPanel();
                             // trigger a reflow to push the update without the transition:
                             gatheringPanel.offsetHeight;
-                            gatheringPanel.classList.remove('preventTransition');
+                   
                             gatheringPanel.classList.add('active');
                             isGathering = true;
                         } else {
@@ -4217,7 +4217,7 @@ var UI = {
         gatheringBarQuality.style.width = UI.gathering.quality+'%';
         gatheringBarQuantity.style.width = UI.gathering.quantity+'%';
         gatheringBarPurity.style.width = UI.gathering.purity+'%';
-        gatheringBarRisk.style.width = UI.gathering.risk+'%';
+        gatheringBarStability.style.width = UI.gathering.stability+'%';
     }
 }
 // service worker:
