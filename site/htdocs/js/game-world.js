@@ -743,7 +743,7 @@ function checkForRespawns() {
     for (var i = 0; i < thisMapData.items.length; i++) {
         if (currentActiveInventoryItems[thisMapData.items[i].type].action == "node") {
             if (thisMapData.items[i].state != "active") {
-                console.log("check re-spawn: " + hero.totalGameTimePlayed + "-" + thisMapData.items[i].timeLastHarvested + "(" + (hero.totalGameTimePlayed - thisMapData.items[i].timeLastHarvested) + ") >= " + currentActiveInventoryItems[thisMapData.items[i].type].respawnRate);
+                console.log("check re-spawn: " + hero.totalGameTimePlayed + "-" + thisMapData.items[i].timeLastHarvested + " (" + (hero.totalGameTimePlayed - thisMapData.items[i].timeLastHarvested) + ") >= " + currentActiveInventoryItems[thisMapData.items[i].type].respawnRate);
 
                 if (hero.totalGameTimePlayed - thisMapData.items[i].timeLastHarvested >= currentActiveInventoryItems[thisMapData.items[i].type].respawnRate) {
                     thisMapData.items[i].state = "active";
@@ -757,9 +757,7 @@ function checkForRespawns() {
 function processGathering() {
     UI.gathering.quality -= 0.25;
 
-    if (UI.gathering.quality < 50) {
-        UI.gathering.stability = 0;
-    }
+
 
     UI.gathering.quality = capValues(UI.gathering.quality, 0, 100);
     UI.gathering.purity = capValues(UI.gathering.purity, 0, 100);
