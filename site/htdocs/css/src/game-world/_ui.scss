@@ -121,7 +121,6 @@
     ol {
         margin: 0;
         padding: 0;
-        
     }
     li {
         display: inline-block;
@@ -133,19 +132,19 @@
         background: transparent;
         &.active {
             @include attention() {
-  cursor: url(../images/game-world/cursors/active.gif) 3 3, auto;
+                cursor: url(../images/game-world/cursors/active.gif) 3 3, auto;
             }
         }
-          @include attention() {
-                p {
-                    opacity: 1;
-                    pointer-events: auto;
-                    @include transform(translateY(0));
-                }
+        @include attention() {
+            p {
+                opacity: 1;
+                pointer-events: auto;
+                @include transform(translateY(0));
             }
+        }
     }
     p {
-     // tooltip
+        // tooltip
         background: #eee;
         z-index: 1;
         margin: 0;
@@ -163,5 +162,4 @@
         @include transform(translateY(10px));
         @include transition(all .25s ease-out);
     }
-
 }
