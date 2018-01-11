@@ -310,10 +310,8 @@ var UI = {
     },
 
 
-    showNotification: function(markup) {
-        
+    showNotification: function(markup) {     
         if (!notificationIsShowing) {
-            console.log("showing "+markup);
             // don't push it to the queue if it's already there:
             if (notificationQueue.indexOf(markup) === -1) {
             notificationQueue.push(markup);
@@ -326,22 +324,20 @@ var UI = {
             notification.classList.add('active');
             notification.addEventListener(whichAnimationEvent, UI.notificationEnded, false);
         } else {
-            console.log("queing "+markup);
+            if (notificationQueue.indexOf(markup) === -1) {
             notificationQueue.push(markup);
+        }
         }
     },
 
     notificationEnded: function() {
-        console.log("ended - length before removal: "+notificationQueue.length);
       //  console.log(notificationQueue);
         // remove the one that's just been shown:
         notificationQueue.shift();
         notificationIsShowing = false;
-        console.log("ended - length after removal: "+notificationQueue.length);
         dialogue.removeEventListener(whichAnimationEvent, UI.notificationEnded, false);
         // see if any more need showing now:
         if (notificationQueue.length > 0) {
-            console.log("showing next in queue");
             UI.showNotification(notificationQueue[0]);
         }
     },
@@ -1464,6 +1460,7 @@ var UI = {
                             UI.gathering.maxQuantity = UI.gathering.quantity; 
                             UI.gathering.purity = parseInt(thisMapData.items[foundItem].purity);
                             UI.gathering.stability = parseInt(thisMapData.items[foundItem].stability);  
+                            UI.gathering.node = thisMapData.items[foundItem];
                             // update the bar without the transitions, so it's all in place when the panel opens:
                   
                             UI.updateGatheringPanel();

@@ -129,6 +129,16 @@ function getXOffsetFromHeight(height) {
 }
 */
 
+function capValues(value, min, max) {
+    if (value < min) {
+        value = min;
+    }
+    if (value > max) {
+        value = max;
+    }
+    return value;
+}
+
 function accessDynamicVariable(variableToUse) {
     var variableComponents = variableToUse.split(".");
     var currentElement = window;
