@@ -14,27 +14,50 @@ function checkForRespawns() {
 
 function processGathering() {
     // tool and action need to govern the rate of extraction
-    // higher quality = more harmful, stabiity will drop faster
-    UI.gathering.quality -= 0.25;
-    UI.gathering.quantity -= 0.1;
-    UI.gathering.quality = capValues(UI.gathering.quality, 0, 100);
-    UI.gathering.purity = capValues(UI.gathering.purity, 0, 100);
-    UI.gathering.stability = capValues(UI.gathering.stability, 0, 100);
-    UI.gathering.quantity = capValues(UI.gathering.quantity, 0, 100);
+
+
+    
+
+
+
+    gathering.quantity -= gathering.depletionSpeed;
+gathering.stability -= gathering.stabilitySpeed;
+
+
+    gathering.quality = capValues(gathering.quality, 0, 100);
+    gathering.purity = capValues(gathering.purity, 0, 100);
+    gathering.stability = capValues(gathering.stability, 0, 100);
+    gathering.quantity = capValues(gathering.quantity, 0, 100);
     // if any of the values are 0:
-    if (UI.gathering.quality * UI.gathering.purity * UI.gathering.stability * UI.gathering.quantity == 0) {
+    if (gathering.quality * gathering.purity * gathering.stability * gathering.quantity == 0) {
         gatheringComplete();
     }
     UI.updateGatheringPanel();
 }
 
 function gatheringComplete() {
-    if (UI.gathering.stability == 0) {
+    if (gathering.stability == 0) {
         UI.showNotification('<p>Resource failed - nothing was gathered</p>');
     } else {
-        var generatedObject = UI.gathering.node.contains[0];
-        var quantityOfItem = Math.floor((UI.gathering.purity / 100) * (UI.gathering.node.maxQuantity - UI.gathering.quantity));
-        console.log("gathered " + quantityOfItem + "x " + currentActiveInventoryItems[generatedObject.type].shortname + "of " + UI.gathering.quality + " quality");
+        var generatedObject = gathering.node.contains[0];
+        var quantityOfItem = Math.floor((gathering.purity / 100) * (gathering.node.maxQuantity - gathering.quantity));
+        console.log("gathered " + quantityOfItem + "x " + currentActiveInventoryItems[generatedObject.type].shortname + " of " + gathering.quality + " quality");
+        var createdMarkup = '<ol><li>';
+         var thisGatheredObject = {
+            "type": generatedObject.type,
+                            "quantity": quantityOfItem,
+                            "quality": gathering.quality,
+                            "durability": 100,
+                            "currentWear": 0,
+                            "effectiveness": 100,
+                            "colour": 0,
+                            "enchanted": 0,
+                            "hallmark": 0,
+                            "inscription": ""
+                        }
+                        createdMarkup += generateGenericSlotMarkup(thisGatheredObject);
+        createdMarkup += '</li></ol>';
+        gatheringOutputSlot.innerHTML = createdMarkup;
     }
     gatheringStopped();
 }
@@ -42,13 +65,13 @@ function gatheringComplete() {
 function gatheringStopped() {
     isGathering = false;
     // save any changes to the node (even if gathering was aborted by closing the panel):
-    UI.gathering.node.stability = UI.gathering.stability;
-    UI.gathering.node.quantity = UI.gathering.quantity;
-    if ((UI.gathering.node.quantity == 0) || (UI.gathering.node.stability == 0)) {
+    gathering.node.stability = gathering.stability;
+    gathering.node.quantity = gathering.quantity;
+    if ((gathering.node.quantity == 0) || (gathering.node.stability == 0)) {
         // reset the node, and its respawn timer:
-        UI.gathering.node.stability = UI.gathering.node.maxStability;
-        UI.gathering.node.quantity = UI.gathering.node.maxQuantity;
-        UI.gathering.node.timeLastHarvested = hero.totalGameTimePlayed;
-        UI.gathering.node.state = "inactive";
+        gathering.node.stability = gathering.node.maxStability;
+        gathering.node.timeLastHarvested = hero.totalGameTimePlayed;
+        gathering.node.state = "inactive";
     }
+    gathering = {};
 }

@@ -41,6 +41,7 @@ const gatheringBarQuality = document.querySelector('#gatheringQualityBar .progre
 const gatheringBarPurity = document.querySelector('#gatheringPurityBar .progressBar');
 const gatheringBarQuantity = document.querySelector('#gatheringQuantityBar .progressBar');
 const gatheringBarStability = document.querySelector('#gatheringBarStability .progressBar');
+const gatheringOutputSlot = document.getElementById('gatheringOutputSlot');
 
 var notificationQueue = [];
 var notificationIsShowing = false;
@@ -63,7 +64,6 @@ var UI = {
 
     },
 
-    gathering: {},
 
     showZoneName: function(zoneName) {
         displayZoneName.classList.remove("active");
@@ -310,12 +310,12 @@ var UI = {
     },
 
 
-    showNotification: function(markup) {     
+    showNotification: function(markup) {
         if (!notificationIsShowing) {
             // don't push it to the queue if it's already there:
             if (notificationQueue.indexOf(markup) === -1) {
-            notificationQueue.push(markup);
-        }
+                notificationQueue.push(markup);
+            }
             notificationIsShowing = true;
             notification.classList.remove("active");
             notification.innerHTML = markup;
@@ -325,13 +325,13 @@ var UI = {
             notification.addEventListener(whichAnimationEvent, UI.notificationEnded, false);
         } else {
             if (notificationQueue.indexOf(markup) === -1) {
-            notificationQueue.push(markup);
-        }
+                notificationQueue.push(markup);
+            }
         }
     },
 
     notificationEnded: function() {
-      //  console.log(notificationQueue);
+        //  console.log(notificationQueue);
         // remove the one that's just been shown:
         notificationQueue.shift();
         notificationIsShowing = false;
@@ -825,10 +825,10 @@ var UI = {
 
                     }
 
-} else if (e.target.parentNode.id == "gatheringPanel") {
- if(isGathering) {
-    gatheringStopped();
-}
+                } else if (e.target.parentNode.id == "gatheringPanel") {
+                    if (isGathering) {
+                        gatheringStopped();
+                    }
                 } else if (e.target.parentNode.id == "inscriptionPanel") {
 
                     UI.resetInscriptionPanel();
@@ -1418,7 +1418,7 @@ var UI = {
                 actionBarMarkup += '<li><img src="/images/game-world/interface/actions/blank.png" alt="Empty Action slot"></li>';
             } else {
 
-                actionBarMarkup += '<li class="active" data-category="' + hero.actions[i][0] + '" id="actionType' + hero.actions[i][1] + '"><img src="/images/game-world/interface/actions/' + hero.actions[i][0] + '-' + hero.actions[i][1] + '.png" alt="' + hero.actions[i][1] + ' action"><p>'+hero.actions[i][1] +' type'+hero.actions[i][0]+'</p></li>';
+                actionBarMarkup += '<li class="active" data-index="' + i + '" data-category="' + hero.actions[i][0] + '" id="actionType' + hero.actions[i][1] + '"><img src="/images/game-world/interface/actions/' + hero.actions[i][0] + '-' + hero.actions[i][1] + '.png" alt="' + hero.actions[i][1] + ' action"><p>' + hero.actions[i][2] + ' ('+hero.actions[i][1] + ' type' + hero.actions[i][0] + ')</p></li>';
             }
         }
         actionBarMarkup += '</ol>';
@@ -1458,26 +1458,56 @@ var UI = {
                             // found an item...
                             if (currentActiveInventoryItems[thisMapData.items[foundItem].type].category == thisNode.dataset.category) {
                                 // check it's not still re-spawning:
-                         
-                              if(thisMapData.items[foundItem].state != "inactive") {
 
-                                // this source node and the action match categories:
-                                // set the quality bar to the maximum from this node:
-                                UI.gathering.quality = parseInt(thisMapData.items[foundItem].quality);
-                                UI.gathering.quantity = parseInt(thisMapData.items[foundItem].quantity);
-                                UI.gathering.maxQuantity = UI.gathering.quantity;
-                                UI.gathering.purity = parseInt(thisMapData.items[foundItem].purity);
-                                UI.gathering.stability = parseInt(thisMapData.items[foundItem].stability);
-                                UI.gathering.node = thisMapData.items[foundItem];
-                                // update the bar without the transitions, so it's all in place when the panel opens:
+                                if (thisMapData.items[foundItem].state != "inactive") {
 
-                                UI.updateGatheringPanel();
-                                // trigger a reflow to push the update without the transition:
-                                gatheringPanel.offsetHeight;
+                                    // this source node and the action match categories:
+                                    // set the quality bar to the maximum from this node:
+                                    gathering.quality = parseInt(thisMapData.items[foundItem].quality);
+                                    gathering.quantity = 100;
+                                    gathering.maxQuantity = parseInt(thisMapData.items[foundItem].quantity);
+                                    gathering.purity = parseInt(thisMapData.items[foundItem].purity);
+                                    gathering.stability = parseInt(thisMapData.items[foundItem].stability);
+                                    gathering.node = thisMapData.items[foundItem];
 
-                                gatheringPanel.classList.add('active');
-                                isGathering = true;
-                            }
+                                    gathering.depletionTime = 5000;
+                                    // look for modifiers from the action:
+                                    gathering.modifiers = hero.actions[thisNode.dataset.index][3];
+                                    for (var modifier in gathering.modifiers) {
+                                        switch (modifier) {
+                                            case 'time':
+                                                gathering.depletionTime += gathering.modifiers[modifier];
+                                                break;
+                                            case 'purity':
+                                                gathering.purity += gathering.modifiers[modifier];
+                                                break;
+                                            case 'stability':
+                                                gathering.stability += gathering.modifiers[modifier];
+                                                break;
+                                            case 'quality':
+                                                gathering.quality += gathering.modifiers[modifier];
+                                                break;
+                                        }
+                                    }
+
+                                    // tool needs to modify values as well #####
+
+
+                                    // determine the stability decrease based on the quality being extracted - higher quality = more harmful, stabiity will drop faster
+                                    gathering.stabilitySpeed = gathering.quality * 0.002;
+                                    // quantity remaining will continuously drop:
+                                    gathering.depletionSpeed = gathering.depletionTime * 0.00002;
+
+
+
+                                    // update the bar without the transitions, so it's all in place when the panel opens:
+                                    UI.updateGatheringPanel();
+                                    // trigger a reflow to push the update without the transition:
+                                    gatheringPanel.offsetHeight;
+gatheringOutputSlot.innerHTML = '';
+                                    gatheringPanel.classList.add('active');
+                                    isGathering = true;
+                                }
                             } else {
                                 UI.showNotification('<p>Wrong resource type for this action</p>');
                             }
@@ -1493,9 +1523,9 @@ var UI = {
         }
     },
     updateGatheringPanel: function() {
-        gatheringBarQuality.style.width = UI.gathering.quality+'%';
-        gatheringBarQuantity.style.width = (100*(UI.gathering.quantity/UI.gathering.maxQuantity))+'%';
-        gatheringBarPurity.style.width = UI.gathering.purity+'%';
-        gatheringBarStability.style.width = UI.gathering.stability+'%';
+        gatheringBarQuality.style.width = gathering.quality + '%';
+        gatheringBarQuantity.style.width = gathering.quantity + '%';
+        gatheringBarPurity.style.width = gathering.purity + '%';
+        gatheringBarStability.style.width = gathering.stability + '%';
     }
 }

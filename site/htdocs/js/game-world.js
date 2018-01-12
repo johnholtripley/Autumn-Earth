@@ -295,6 +295,7 @@ var animationUpdateTime = (1000 / animationFramesPerSecond);
 
 var gameCanvas, gameContext, gameMode, cartographyContext, cartographyCanvas, offScreenCartographyCanvas, offScreenCartographyContext, canvasMapImage, canvasMapImage, canvasMapMaskImage, heroImg, shadowImg, imagesToLoad, tileImages, npcImages, itemImages, backgroundImg, objInitLeft, objInitTop, dragStartX, dragStartY, inventoryCheck, timeSinceLastAmbientSoundWasPlayed, gameSettings, lightMap, lightMapOverlay, lightMapContext;
 var chestIdOpen = -1;
+var gathering = {};
 var isGathering = false;
 const titleTagPrefix = 'Autumn Earth';
 
@@ -755,27 +756,50 @@ function checkForRespawns() {
 
 function processGathering() {
     // tool and action need to govern the rate of extraction
-    // higher quality = more harmful, stabiity will drop faster
-    UI.gathering.quality -= 0.25;
-    UI.gathering.quantity -= 0.1;
-    UI.gathering.quality = capValues(UI.gathering.quality, 0, 100);
-    UI.gathering.purity = capValues(UI.gathering.purity, 0, 100);
-    UI.gathering.stability = capValues(UI.gathering.stability, 0, 100);
-    UI.gathering.quantity = capValues(UI.gathering.quantity, 0, 100);
+
+
+    
+
+
+
+    gathering.quantity -= gathering.depletionSpeed;
+gathering.stability -= gathering.stabilitySpeed;
+
+
+    gathering.quality = capValues(gathering.quality, 0, 100);
+    gathering.purity = capValues(gathering.purity, 0, 100);
+    gathering.stability = capValues(gathering.stability, 0, 100);
+    gathering.quantity = capValues(gathering.quantity, 0, 100);
     // if any of the values are 0:
-    if (UI.gathering.quality * UI.gathering.purity * UI.gathering.stability * UI.gathering.quantity == 0) {
+    if (gathering.quality * gathering.purity * gathering.stability * gathering.quantity == 0) {
         gatheringComplete();
     }
     UI.updateGatheringPanel();
 }
 
 function gatheringComplete() {
-    if (UI.gathering.stability == 0) {
+    if (gathering.stability == 0) {
         UI.showNotification('<p>Resource failed - nothing was gathered</p>');
     } else {
-        var generatedObject = UI.gathering.node.contains[0];
-        var quantityOfItem = Math.floor((UI.gathering.purity / 100) * (UI.gathering.node.maxQuantity - UI.gathering.quantity));
-        console.log("gathered " + quantityOfItem + "x " + currentActiveInventoryItems[generatedObject.type].shortname) + "of " + UI.gathering.quality + " quality";
+        var generatedObject = gathering.node.contains[0];
+        var quantityOfItem = Math.floor((gathering.purity / 100) * (gathering.node.maxQuantity - gathering.quantity));
+        console.log("gathered " + quantityOfItem + "x " + currentActiveInventoryItems[generatedObject.type].shortname + " of " + gathering.quality + " quality");
+        var createdMarkup = '<ol><li>';
+         var thisGatheredObject = {
+            "type": generatedObject.type,
+                            "quantity": quantityOfItem,
+                            "quality": gathering.quality,
+                            "durability": 100,
+                            "currentWear": 0,
+                            "effectiveness": 100,
+                            "colour": 0,
+                            "enchanted": 0,
+                            "hallmark": 0,
+                            "inscription": ""
+                        }
+                        createdMarkup += generateGenericSlotMarkup(thisGatheredObject);
+        createdMarkup += '</li></ol>';
+        gatheringOutputSlot.innerHTML = createdMarkup;
     }
     gatheringStopped();
 }
@@ -783,15 +807,15 @@ function gatheringComplete() {
 function gatheringStopped() {
     isGathering = false;
     // save any changes to the node (even if gathering was aborted by closing the panel):
-    UI.gathering.node.stability = UI.gathering.stability;
-    UI.gathering.node.quantity = UI.gathering.quantity;
-    if ((UI.gathering.node.quantity == 0) || (UI.gathering.node.stability == 0)) {
+    gathering.node.stability = gathering.stability;
+    gathering.node.quantity = gathering.quantity;
+    if ((gathering.node.quantity == 0) || (gathering.node.stability == 0)) {
         // reset the node, and its respawn timer:
-        UI.gathering.node.stability = UI.gathering.node.maxStability;
-        UI.gathering.node.quantity = UI.gathering.node.maxQuantity;
-        UI.gathering.node.timeLastHarvested = hero.totalGameTimePlayed;
-        UI.gathering.node.state = "inactive";
+        gathering.node.stability = gathering.node.maxStability;
+        gathering.node.timeLastHarvested = hero.totalGameTimePlayed;
+        gathering.node.state = "inactive";
     }
+    gathering = {};
 }
 
 
@@ -2848,6 +2872,7 @@ const gatheringBarQuality = document.querySelector('#gatheringQualityBar .progre
 const gatheringBarPurity = document.querySelector('#gatheringPurityBar .progressBar');
 const gatheringBarQuantity = document.querySelector('#gatheringQuantityBar .progressBar');
 const gatheringBarStability = document.querySelector('#gatheringBarStability .progressBar');
+const gatheringOutputSlot = document.getElementById('gatheringOutputSlot');
 
 var notificationQueue = [];
 var notificationIsShowing = false;
@@ -2870,7 +2895,6 @@ var UI = {
 
     },
 
-    gathering: {},
 
     showZoneName: function(zoneName) {
         displayZoneName.classList.remove("active");
@@ -3117,12 +3141,12 @@ var UI = {
     },
 
 
-    showNotification: function(markup) {     
+    showNotification: function(markup) {
         if (!notificationIsShowing) {
             // don't push it to the queue if it's already there:
             if (notificationQueue.indexOf(markup) === -1) {
-            notificationQueue.push(markup);
-        }
+                notificationQueue.push(markup);
+            }
             notificationIsShowing = true;
             notification.classList.remove("active");
             notification.innerHTML = markup;
@@ -3132,13 +3156,13 @@ var UI = {
             notification.addEventListener(whichAnimationEvent, UI.notificationEnded, false);
         } else {
             if (notificationQueue.indexOf(markup) === -1) {
-            notificationQueue.push(markup);
-        }
+                notificationQueue.push(markup);
+            }
         }
     },
 
     notificationEnded: function() {
-      //  console.log(notificationQueue);
+        //  console.log(notificationQueue);
         // remove the one that's just been shown:
         notificationQueue.shift();
         notificationIsShowing = false;
@@ -3632,10 +3656,10 @@ var UI = {
 
                     }
 
-} else if (e.target.parentNode.id == "gatheringPanel") {
- if(isGathering) {
-    gatheringStopped();
-}
+                } else if (e.target.parentNode.id == "gatheringPanel") {
+                    if (isGathering) {
+                        gatheringStopped();
+                    }
                 } else if (e.target.parentNode.id == "inscriptionPanel") {
 
                     UI.resetInscriptionPanel();
@@ -4225,7 +4249,7 @@ var UI = {
                 actionBarMarkup += '<li><img src="/images/game-world/interface/actions/blank.png" alt="Empty Action slot"></li>';
             } else {
 
-                actionBarMarkup += '<li class="active" data-category="' + hero.actions[i][0] + '" id="actionType' + hero.actions[i][1] + '"><img src="/images/game-world/interface/actions/' + hero.actions[i][0] + '-' + hero.actions[i][1] + '.png" alt="' + hero.actions[i][1] + ' action"><p>'+hero.actions[i][1] +' type'+hero.actions[i][0]+'</p></li>';
+                actionBarMarkup += '<li class="active" data-index="' + i + '" data-category="' + hero.actions[i][0] + '" id="actionType' + hero.actions[i][1] + '"><img src="/images/game-world/interface/actions/' + hero.actions[i][0] + '-' + hero.actions[i][1] + '.png" alt="' + hero.actions[i][1] + ' action"><p>' + hero.actions[i][2] + ' ('+hero.actions[i][1] + ' type' + hero.actions[i][0] + ')</p></li>';
             }
         }
         actionBarMarkup += '</ol>';
@@ -4265,26 +4289,56 @@ var UI = {
                             // found an item...
                             if (currentActiveInventoryItems[thisMapData.items[foundItem].type].category == thisNode.dataset.category) {
                                 // check it's not still re-spawning:
-                         
-                              if(thisMapData.items[foundItem].state != "inactive") {
 
-                                // this source node and the action match categories:
-                                // set the quality bar to the maximum from this node:
-                                UI.gathering.quality = parseInt(thisMapData.items[foundItem].quality);
-                                UI.gathering.quantity = parseInt(thisMapData.items[foundItem].quantity);
-                                UI.gathering.maxQuantity = UI.gathering.quantity;
-                                UI.gathering.purity = parseInt(thisMapData.items[foundItem].purity);
-                                UI.gathering.stability = parseInt(thisMapData.items[foundItem].stability);
-                                UI.gathering.node = thisMapData.items[foundItem];
-                                // update the bar without the transitions, so it's all in place when the panel opens:
+                                if (thisMapData.items[foundItem].state != "inactive") {
 
-                                UI.updateGatheringPanel();
-                                // trigger a reflow to push the update without the transition:
-                                gatheringPanel.offsetHeight;
+                                    // this source node and the action match categories:
+                                    // set the quality bar to the maximum from this node:
+                                    gathering.quality = parseInt(thisMapData.items[foundItem].quality);
+                                    gathering.quantity = 100;
+                                    gathering.maxQuantity = parseInt(thisMapData.items[foundItem].quantity);
+                                    gathering.purity = parseInt(thisMapData.items[foundItem].purity);
+                                    gathering.stability = parseInt(thisMapData.items[foundItem].stability);
+                                    gathering.node = thisMapData.items[foundItem];
 
-                                gatheringPanel.classList.add('active');
-                                isGathering = true;
-                            }
+                                    gathering.depletionTime = 5000;
+                                    // look for modifiers from the action:
+                                    gathering.modifiers = hero.actions[thisNode.dataset.index][3];
+                                    for (var modifier in gathering.modifiers) {
+                                        switch (modifier) {
+                                            case 'time':
+                                                gathering.depletionTime += gathering.modifiers[modifier];
+                                                break;
+                                            case 'purity':
+                                                gathering.purity += gathering.modifiers[modifier];
+                                                break;
+                                            case 'stability':
+                                                gathering.stability += gathering.modifiers[modifier];
+                                                break;
+                                            case 'quality':
+                                                gathering.quality += gathering.modifiers[modifier];
+                                                break;
+                                        }
+                                    }
+
+                                    // tool needs to modify values as well #####
+
+
+                                    // determine the stability decrease based on the quality being extracted - higher quality = more harmful, stabiity will drop faster
+                                    gathering.stabilitySpeed = gathering.quality * 0.002;
+                                    // quantity remaining will continuously drop:
+                                    gathering.depletionSpeed = gathering.depletionTime * 0.00002;
+
+
+
+                                    // update the bar without the transitions, so it's all in place when the panel opens:
+                                    UI.updateGatheringPanel();
+                                    // trigger a reflow to push the update without the transition:
+                                    gatheringPanel.offsetHeight;
+gatheringOutputSlot.innerHTML = '';
+                                    gatheringPanel.classList.add('active');
+                                    isGathering = true;
+                                }
                             } else {
                                 UI.showNotification('<p>Wrong resource type for this action</p>');
                             }
@@ -4300,10 +4354,10 @@ var UI = {
         }
     },
     updateGatheringPanel: function() {
-        gatheringBarQuality.style.width = UI.gathering.quality+'%';
-        gatheringBarQuantity.style.width = (100*(UI.gathering.quantity/UI.gathering.maxQuantity))+'%';
-        gatheringBarPurity.style.width = UI.gathering.purity+'%';
-        gatheringBarStability.style.width = UI.gathering.stability+'%';
+        gatheringBarQuality.style.width = gathering.quality + '%';
+        gatheringBarQuantity.style.width = gathering.quantity + '%';
+        gatheringBarPurity.style.width = gathering.purity + '%';
+        gatheringBarStability.style.width = gathering.stability + '%';
     }
 }
 // service worker:

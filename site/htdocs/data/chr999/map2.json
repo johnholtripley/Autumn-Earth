@@ -728,7 +728,7 @@
             "quality": 80,
             "maxStability": 60,
             "maxQuantity": 10,
-            "purity": 90,
+            "purity": 70,
             "state": "active",
             "animation": {
                   "active": {"length": 1,"row":0},

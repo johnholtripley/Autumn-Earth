@@ -99,7 +99,7 @@ $numberOfItemCategories: 20;
 }
 
 // slots in Inventory or Chests:
-#inventoryPanels .inventoryBag, #chestPanel {
+#inventoryPanels .inventoryBag, #chestPanel, #gatheringOutputSlot {
     ol {
         margin: 0;
         width: 184px;

@@ -365,5 +365,5 @@
     "collections": {
         
     },
-    "actions": [[1,"gather"],"-","-",[4,"gather"],"-","-","-","-","-","-"]
+    "actions": [[1,"gather","Harmful extraction",{"time":1500,"purity":10,"quality":-40}],[1,"gather","Gentle extraction",{"time":1500,"purity":10,"quality":-50}],"-",[4,"gather","Mineral extraction",{}],"-","-","-","-","-","-"]
 }

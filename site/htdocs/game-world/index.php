@@ -73,6 +73,7 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
         <li><p>Remaining</p><div id="gatheringQuantityBar" class="progressBarWrapper"><div class="progressBar"></div></div></li>
         <li><p>Stability</p><div id="gatheringBarStability" class="progressBarWrapper"><div class="progressBar"></div></div></li>
       </ul>
+      <div id="gatheringOutputSlot"></div>
     </div>
     <div id="cardAlbum" class="active">
       <div class="draggableBar">Totem Card album</div>
