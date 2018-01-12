@@ -1508,6 +1508,7 @@ gathering.itemIndex = foundItem;
                                     gatheringPanel.offsetHeight;
                                     gatheringOutputSlot.innerHTML = '';
                                     gatheringPanel.classList.add('active');
+                                    audio.playSound(soundEffects['gather'+thisNode.dataset.category], 0);
                                     isGathering = true;
                                 }
                             } else {
