@@ -34,7 +34,7 @@ function gatheringComplete() {
     } else {
         var generatedObject = UI.gathering.node.contains[0];
         var quantityOfItem = Math.floor((UI.gathering.purity / 100) * (UI.gathering.node.maxQuantity - UI.gathering.quantity));
-        console.log("gathered " + quantityOfItem + "x " + currentActiveInventoryItems[generatedObject.type].shortname) + "of " + UI.gathering.quality + " quality";
+        console.log("gathered " + quantityOfItem + "x " + currentActiveInventoryItems[generatedObject.type].shortname + "of " + UI.gathering.quality + " quality");
     }
     gatheringStopped();
 }
