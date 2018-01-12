@@ -22,11 +22,11 @@ echo '<div style="float:left;width: '.(100/$itemClassLevelMax).'%">';
 $minCap = round(max($baseMin,$baseMin+($itemClassLevel-13/10)*($baseMax-$baseMin)/$totalLevels));
 $maxCap = round(min($baseMax,$baseMin+($itemClassLevel+3/10)*($baseMax-$baseMin)/$totalLevels));
 
-echo "min: "+$minCap."<br>";
-echo "max: "+$maxCap."<br>";
+echo "min: ".$minCap."<br>";
+echo "max: ".$maxCap."<br>";
 
 for ($i=0;$i<=$totalLevels;$i++) {
-	echo $i." - ".($minCap + (($maxCap-$minCap)/$totalLevels*$i))."<br>";
+	echo $i.": ".($minCap + (($maxCap-$minCap)/$totalLevels*$i))."<br>";
 }
 echo "</div>";
 

@@ -365,5 +365,5 @@
     "collections": {
         
     },
-    "actions": [["Harmful extraction","gather",1,{"time":1500,"purity":10,"quality":-40}],["Gentle extraction","gather",1,{"time":1500,"purity":10,"quality":-50}],"-",["Mineral extraction","gather",4,{}],"-","-","-","-","-","-"]
+    "actions": [["Harmful extraction","gather",1,{"time":1500,"purity":10,"quality":-40}],["Gentle extraction","gather",1,{"time":1500,"purity":10,"quality":-50}],"-",["Mineral extraction","gather",4,{}],["Dowse for metals","dowse",4,{}],"-","-","-","-","-"]
 }

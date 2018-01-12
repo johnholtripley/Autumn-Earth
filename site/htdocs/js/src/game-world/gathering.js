@@ -43,14 +43,18 @@ function gatheringComplete() {
         var quantityOfItem = Math.floor((gathering.purity / 100) * (gathering.node.maxQuantity - gathering.quantity));
         // console.log("gathered " + quantityOfItem + "x " + currentActiveInventoryItems[generatedObject.type].shortname + " of " + gathering.quality + " quality");
         var createdMarkup = '<ol><li>';
+
+// see if the type or colour have any random choices:
+var possibleGatheredTypes = generatedObject.type.toString().split("/");
+var possibleGatheredColours = generatedObject.colour.toString().split("/");
         activeGatheredObject = {
-            "type": generatedObject.type,
+            "type": parseInt(getRandomElementFromArray(possibleGatheredTypes)),
             "quantity": quantityOfItem,
             "quality": gathering.quality,
             "durability": 100,
             "currentWear": 0,
             "effectiveness": 100,
-            "colour": generatedObject.colour,
+            "colour": parseInt(getRandomElementFromArray(possibleGatheredColours)),
             "enchanted": 0,
             "hallmark": 0,
             "inscription": ""

@@ -80,6 +80,10 @@ const sellPriceModifier = 0.7;
 const sellPriceSpecialismModifier = 0.8;
 const buyPriceSpecialismModifier = 0.9;
 
+const baseGatheringTime = 5000;
+const gatheringStabilityModifier = 0.002;
+const gatheringDepletionModifier = 0.00002;
+
 // key bindings
 var key = [0, 0, 0, 0, 0, 0, 0];
 

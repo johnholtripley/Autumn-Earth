@@ -1387,7 +1387,6 @@ var UI = {
         var itemDetails = chestSlotId.split("-");
         var chestItemContains = thisMapData.items[(itemDetails[1])].contains;
         var whichChestItem = chestItemContains[(itemDetails[2])];
-
         if (typeof whichChestItem !== "undefined") {
             if (whichChestItem.type == "$") {
                 // money:
@@ -1407,8 +1406,8 @@ var UI = {
                 }
             }
         }
-
     },
+
     toggleUI: function() {
         interfaceWrapper.classList.toggle('active');
     },
@@ -1457,22 +1456,18 @@ var UI = {
                             }
                         }
                         if (foundItem != -1) {
-                            // found an item...
+                            // found an item - check source node and the action match categories:
                             if (currentActiveInventoryItems[thisMapData.items[foundItem].type].category == thisNode.dataset.category) {
                                 // check it's not still re-spawning:
-
                                 if (thisMapData.items[foundItem].state != "inactive") {
-gathering.itemIndex = foundItem;
-                                    // this source node and the action match categories:
-                                    // set the quality bar to the maximum from this node:
+                                    gathering.itemIndex = foundItem;
                                     gathering.quality = parseInt(thisMapData.items[foundItem].quality);
                                     gathering.quantity = 100;
                                     gathering.maxQuantity = parseInt(thisMapData.items[foundItem].quantity);
                                     gathering.purity = parseInt(thisMapData.items[foundItem].purity);
                                     gathering.stability = parseInt(thisMapData.items[foundItem].stability);
                                     gathering.node = thisMapData.items[foundItem];
-
-                                    gathering.depletionTime = 5000;
+                                    gathering.depletionTime = baseGatheringTime;
                                     // look for modifiers from the action:
                                     gathering.modifiers = hero.actions[thisNode.dataset.index][3];
                                     for (var modifier in gathering.modifiers) {
@@ -1494,13 +1489,10 @@ gathering.itemIndex = foundItem;
 
                                     // tool needs to modify values as well #####
 
-
                                     // determine the stability decrease based on the quality being extracted - higher quality = more harmful, stabiity will drop faster
-                                    gathering.stabilitySpeed = gathering.quality * 0.002;
+                                    gathering.stabilitySpeed = gathering.quality * gatheringStabilityModifier;
                                     // quantity remaining will continuously drop:
-                                    gathering.depletionSpeed = gathering.depletionTime * 0.00002;
-
-
+                                    gathering.depletionSpeed = gathering.depletionTime * gatheringDepletionModifier;
 
                                     // update the bar without the transitions, so it's all in place when the panel opens:
                                     UI.updateGatheringPanel();
@@ -1508,7 +1500,7 @@ gathering.itemIndex = foundItem;
                                     gatheringPanel.offsetHeight;
                                     gatheringOutputSlot.innerHTML = '';
                                     gatheringPanel.classList.add('active');
-                                    audio.playSound(soundEffects['gather'+thisNode.dataset.category], 0);
+                                    audio.playSound(soundEffects['gather' + thisNode.dataset.category], 0);
                                     isGathering = true;
                                 }
                             } else {
@@ -1517,20 +1509,21 @@ gathering.itemIndex = foundItem;
                         }
                     }
                     break;
-                case "survey":
+                case "dowse":
                     //
                     break;
 
             }
-
         }
     },
+
     updateGatheringPanel: function() {
         gatheringBarQuality.style.width = gathering.quality + '%';
         gatheringBarQuantity.style.width = gathering.quantity + '%';
         gatheringBarPurity.style.width = gathering.purity + '%';
         gatheringBarStability.style.width = gathering.stability + '%';
     },
+
     addFromGathering: function() {
         inventoryCheck = canAddItemToInventory([activeGatheredObject]);
         if (inventoryCheck[0]) {
