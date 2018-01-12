@@ -4293,7 +4293,7 @@ var UI = {
                                 // check it's not still re-spawning:
 
                                 if (thisMapData.items[foundItem].state != "inactive") {
-
+gathering.itemIndex = foundItem;
                                     // this source node and the action match categories:
                                     // set the quality bar to the maximum from this node:
                                     gathering.quality = parseInt(thisMapData.items[foundItem].quality);
@@ -5506,12 +5506,19 @@ function update() {
         }
         // check if a chest is open and close it if so:
         if (chestIdOpen != -1) {
-            if (!(isInRange(hero.x, hero.y, thisMapData.items[chestIdOpen].x, thisMapData.items[chestIdOpen].y, closeDialogueDistance))) {
+            if (!(isInRange(hero.x, hero.y, thisMapData.items[chestIdOpen].x, thisMapData.items[chestIdOpen].y, closeDialogueDistance/2))) {
 
                 UI.closeChest();
             }
 
 
+        }
+        if(isGathering) {
+           
+if (!(isInRange(hero.x, hero.y, thisMapData.items[gathering.itemIndex].x, thisMapData.items[gathering.itemIndex].y, closeDialogueDistance/2))) {
+    gatheringPanel.classList.remove("active");
+gatheringStopped();
+}
         }
     } else {
         hero.isMoving = true;

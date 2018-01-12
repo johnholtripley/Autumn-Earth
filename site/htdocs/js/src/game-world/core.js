@@ -1133,12 +1133,19 @@ function update() {
         }
         // check if a chest is open and close it if so:
         if (chestIdOpen != -1) {
-            if (!(isInRange(hero.x, hero.y, thisMapData.items[chestIdOpen].x, thisMapData.items[chestIdOpen].y, closeDialogueDistance))) {
+            if (!(isInRange(hero.x, hero.y, thisMapData.items[chestIdOpen].x, thisMapData.items[chestIdOpen].y, closeDialogueDistance/2))) {
 
                 UI.closeChest();
             }
 
 
+        }
+        if(isGathering) {
+           
+if (!(isInRange(hero.x, hero.y, thisMapData.items[gathering.itemIndex].x, thisMapData.items[gathering.itemIndex].y, closeDialogueDistance/2))) {
+    gatheringPanel.classList.remove("active");
+gatheringStopped();
+}
         }
     } else {
         hero.isMoving = true;

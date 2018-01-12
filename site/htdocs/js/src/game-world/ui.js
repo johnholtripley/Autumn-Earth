@@ -1462,7 +1462,7 @@ var UI = {
                                 // check it's not still re-spawning:
 
                                 if (thisMapData.items[foundItem].state != "inactive") {
-
+gathering.itemIndex = foundItem;
                                     // this source node and the action match categories:
                                     // set the quality bar to the maximum from this node:
                                     gathering.quality = parseInt(thisMapData.items[foundItem].quality);

@@ -747,6 +747,33 @@
                 "inscription": ""
             }]
 
+        }, {
+
+            "type": 35,
+            "tileX": 19,
+            "tileY": 28,
+            "quality": 80,
+            "maxStability": 90,
+            "maxQuantity": 10,
+            "purity": 70,
+            "state": "active",
+            "animation": {
+                  "active": {"length": 1,"row":0},
+                  "inactive": {"length": 1,"row":1}
+            },
+             "contains": [{
+                "type": 1,
+                "quantity": 1,
+                "quality": 100,
+                "durability": 100,
+                "currentWear": 0,
+                "effectiveness": 100,
+                "colour": 0,
+                "enchanted": 0,
+                "hallmark": 0,
+                "inscription": ""
+            }]
+
         }
 
         ],
