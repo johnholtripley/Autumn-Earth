@@ -43,7 +43,7 @@ function gatheringComplete() {
         var quantityOfItem = Math.floor((gathering.purity / 100) * (gathering.node.maxQuantity - gathering.quantity));
         console.log("gathered " + quantityOfItem + "x " + currentActiveInventoryItems[generatedObject.type].shortname + " of " + gathering.quality + " quality");
         var createdMarkup = '<ol><li>';
-         var thisGatheredObject = {
+          activeGatheredObject = {
             "type": generatedObject.type,
                             "quantity": quantityOfItem,
                             "quality": gathering.quality,
@@ -55,7 +55,7 @@ function gatheringComplete() {
                             "hallmark": 0,
                             "inscription": ""
                         }
-                        createdMarkup += generateGenericSlotMarkup(thisGatheredObject);
+                        createdMarkup += generateGenericSlotMarkup(activeGatheredObject);
         createdMarkup += '</li></ol>';
         gatheringOutputSlot.innerHTML = createdMarkup;
     }

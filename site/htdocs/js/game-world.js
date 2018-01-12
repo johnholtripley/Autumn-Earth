@@ -293,7 +293,7 @@ var timeSinceLastFrameSwap = 0;
 var currentAnimationFrame = 0;
 var animationUpdateTime = (1000 / animationFramesPerSecond);
 
-var gameCanvas, gameContext, gameMode, cartographyContext, cartographyCanvas, offScreenCartographyCanvas, offScreenCartographyContext, canvasMapImage, canvasMapImage, canvasMapMaskImage, heroImg, shadowImg, imagesToLoad, tileImages, npcImages, itemImages, backgroundImg, objInitLeft, objInitTop, dragStartX, dragStartY, inventoryCheck, timeSinceLastAmbientSoundWasPlayed, gameSettings, lightMap, lightMapOverlay, lightMapContext;
+var gameCanvas, gameContext, gameMode, cartographyContext, cartographyCanvas, offScreenCartographyCanvas, offScreenCartographyContext, canvasMapImage, canvasMapImage, canvasMapMaskImage, heroImg, shadowImg, imagesToLoad, tileImages, npcImages, itemImages, backgroundImg, objInitLeft, objInitTop, dragStartX, dragStartY, inventoryCheck, timeSinceLastAmbientSoundWasPlayed, gameSettings, lightMap, lightMapOverlay, lightMapContext, activeGatheredObject;
 var chestIdOpen = -1;
 var gathering = {};
 var isGathering = false;
@@ -785,7 +785,7 @@ function gatheringComplete() {
         var quantityOfItem = Math.floor((gathering.purity / 100) * (gathering.node.maxQuantity - gathering.quantity));
         console.log("gathered " + quantityOfItem + "x " + currentActiveInventoryItems[generatedObject.type].shortname + " of " + gathering.quality + " quality");
         var createdMarkup = '<ol><li>';
-         var thisGatheredObject = {
+          activeGatheredObject = {
             "type": generatedObject.type,
                             "quantity": quantityOfItem,
                             "quality": gathering.quality,
@@ -797,7 +797,7 @@ function gatheringComplete() {
                             "hallmark": 0,
                             "inscription": ""
                         }
-                        createdMarkup += generateGenericSlotMarkup(thisGatheredObject);
+                        createdMarkup += generateGenericSlotMarkup(activeGatheredObject);
         createdMarkup += '</li></ol>';
         gatheringOutputSlot.innerHTML = createdMarkup;
     }
@@ -3097,7 +3097,7 @@ var UI = {
 
 
             var thisNode = getNearestParentId(e.target);
-
+            console.log(thisNode.id)
 
 
             if (thisNode.id.substring(0, 6) == "recipe") {
@@ -3106,6 +3106,8 @@ var UI = {
                 UI.buyFromShopSlot(thisNode.id);
             } else if (thisNode.id.substring(0, 5) == "chest") {
                 UI.addFromChest(thisNode.id);
+            } else if (thisNode.id.substring(0, 9) == "gathering") {
+                UI.addFromGathering();
             }
         }
 
@@ -4249,7 +4251,7 @@ var UI = {
                 actionBarMarkup += '<li><img src="/images/game-world/interface/actions/blank.png" alt="Empty Action slot"></li>';
             } else {
 
-                actionBarMarkup += '<li class="active" data-index="' + i + '" data-category="' + hero.actions[i][0] + '" id="actionType' + hero.actions[i][1] + '"><img src="/images/game-world/interface/actions/' + hero.actions[i][0] + '-' + hero.actions[i][1] + '.png" alt="' + hero.actions[i][1] + ' action"><p>' + hero.actions[i][2] + ' ('+hero.actions[i][1] + ' type' + hero.actions[i][0] + ')</p></li>';
+                actionBarMarkup += '<li class="active" data-index="' + i + '" data-category="' + hero.actions[i][0] + '" id="actionType' + hero.actions[i][1] + '"><img src="/images/game-world/interface/actions/' + hero.actions[i][0] + '-' + hero.actions[i][1] + '.png" alt="' + hero.actions[i][1] + ' action"><p>' + hero.actions[i][2] + ' (' + hero.actions[i][1] + ' type' + hero.actions[i][0] + ')</p></li>';
             }
         }
         actionBarMarkup += '</ol>';
@@ -4335,7 +4337,7 @@ var UI = {
                                     UI.updateGatheringPanel();
                                     // trigger a reflow to push the update without the transition:
                                     gatheringPanel.offsetHeight;
-gatheringOutputSlot.innerHTML = '';
+                                    gatheringOutputSlot.innerHTML = '';
                                     gatheringPanel.classList.add('active');
                                     isGathering = true;
                                 }
@@ -4358,7 +4360,16 @@ gatheringOutputSlot.innerHTML = '';
         gatheringBarQuantity.style.width = gathering.quantity + '%';
         gatheringBarPurity.style.width = gathering.purity + '%';
         gatheringBarStability.style.width = gathering.stability + '%';
-    }
+    },
+    addFromGathering: function() {
+        inventoryCheck = canAddItemToInventory([activeGatheredObject]);
+        if (inventoryCheck[0]) {
+            gatheringOutputSlot.innerHTML = "";
+            UI.showChangeInInventory(inventoryCheck[1]);
+        } else {
+            UI.showNotification("<p>Oops - sorry, no room in your bags</p>");
+        }
+    },
 }
 // service worker:
 if ('serviceWorker' in navigator) {
