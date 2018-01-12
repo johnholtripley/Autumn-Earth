@@ -36,3 +36,8 @@ $inkColours: '#c9271b',
         }
     }
 }
+
+// prevent the 'book' part of the inscription panel from reacting to clicks if the inscription panel itself isn't active:
+#inscriptionPanel:not(.active) .book.active {
+    pointer-events: none;
+}

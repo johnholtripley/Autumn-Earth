@@ -13,7 +13,8 @@ var soundsToLoad = {
     'lever': '../sounds/lever-NOT_MINE.mp3',
     'keys': '../sounds/keys-NOT_MINE-wow.mp3',
     'unlock': '../sounds/unlock-NOT_MINE-wow.mp3',
-    'gather1': '../sounds/gather-herb-NOT_MINE-wow.mp3'
+    'gather1': '../sounds/gather-herb-NOT_MINE-wow.mp3',
+    'gather4': '../sounds/mining-NOT_MINE-wow.mp3'
 };
 
 

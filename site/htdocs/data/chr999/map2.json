@@ -792,10 +792,11 @@
 
 
 {
-     "centreX": 13,
-            "centreY": 23,
+     "centreX": 14,
+            "centreY": 28,
             "radius": 5, 
-            "music": "darnassus-WoW-NOT-MINE"
+            "message": "you fote",
+            "music": "ambient-darnassus-WoW-NOT-MINE"
 }
 
         ],
