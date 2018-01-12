@@ -16,12 +16,12 @@ function processGathering() {
     // tool and action need to govern the rate of extraction
 
 
-    
+
 
 
 
     gathering.quantity -= gathering.depletionSpeed;
-gathering.stability -= gathering.stabilitySpeed;
+    gathering.stability -= gathering.stabilitySpeed;
 
 
     gathering.quality = capValues(gathering.quality, 0, 100);
@@ -41,21 +41,21 @@ function gatheringComplete() {
     } else {
         var generatedObject = gathering.node.contains[0];
         var quantityOfItem = Math.floor((gathering.purity / 100) * (gathering.node.maxQuantity - gathering.quantity));
-        console.log("gathered " + quantityOfItem + "x " + currentActiveInventoryItems[generatedObject.type].shortname + " of " + gathering.quality + " quality");
+        // console.log("gathered " + quantityOfItem + "x " + currentActiveInventoryItems[generatedObject.type].shortname + " of " + gathering.quality + " quality");
         var createdMarkup = '<ol><li>';
-          activeGatheredObject = {
+        activeGatheredObject = {
             "type": generatedObject.type,
-                            "quantity": quantityOfItem,
-                            "quality": gathering.quality,
-                            "durability": 100,
-                            "currentWear": 0,
-                            "effectiveness": 100,
-                            "colour": 0,
-                            "enchanted": 0,
-                            "hallmark": 0,
-                            "inscription": ""
-                        }
-                        createdMarkup += generateGenericSlotMarkup(activeGatheredObject);
+            "quantity": quantityOfItem,
+            "quality": gathering.quality,
+            "durability": 100,
+            "currentWear": 0,
+            "effectiveness": 100,
+            "colour": generatedObject.colour,
+            "enchanted": 0,
+            "hallmark": 0,
+            "inscription": ""
+        }
+        createdMarkup += generateGenericSlotMarkup(activeGatheredObject);
         createdMarkup += '</li></ol>';
         gatheringOutputSlot.innerHTML = createdMarkup;
     }

@@ -736,15 +736,7 @@
             },
              "contains": [{
                 "type": 1,
-                "quantity": 1,
-                "quality": 100,
-                "durability": 100,
-                "currentWear": 0,
-                "effectiveness": 100,
-                "colour": 0,
-                "enchanted": 0,
-                "hallmark": 0,
-                "inscription": ""
+                "colour": 0
             }]
 
         }, {

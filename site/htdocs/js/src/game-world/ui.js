@@ -1420,7 +1420,7 @@ var UI = {
                 actionBarMarkup += '<li><img src="/images/game-world/interface/actions/blank.png" alt="Empty Action slot"></li>';
             } else {
 
-                actionBarMarkup += '<li class="active" data-index="' + i + '" data-category="' + hero.actions[i][0] + '" id="actionType' + hero.actions[i][1] + '"><img src="/images/game-world/interface/actions/' + hero.actions[i][0] + '-' + hero.actions[i][1] + '.png" alt="' + hero.actions[i][1] + ' action"><p>' + hero.actions[i][2] + ' (' + hero.actions[i][1] + ' type' + hero.actions[i][0] + ')</p></li>';
+                actionBarMarkup += '<li class="active" data-index="' + i + '" data-category="' + hero.actions[i][2] + '" id="actionType' + hero.actions[i][1] + '"><img src="/images/game-world/interface/actions/' + hero.actions[i][2] + '-' + hero.actions[i][1] + '.png" alt="' + hero.actions[i][0] + ' action"><p>' + hero.actions[i][0] + ' (' + hero.actions[i][1] + ' type' + hero.actions[i][2] + ')</p></li>';
             }
         }
         actionBarMarkup += '</ol>';
@@ -1536,6 +1536,7 @@ gathering.itemIndex = foundItem;
         if (inventoryCheck[0]) {
             gatheringOutputSlot.innerHTML = "";
             UI.showChangeInInventory(inventoryCheck[1]);
+            gatheringPanel.classList.remove('active');
         } else {
             UI.showNotification("<p>Oops - sorry, no room in your bags</p>");
         }

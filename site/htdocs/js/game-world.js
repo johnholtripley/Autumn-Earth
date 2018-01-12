@@ -760,12 +760,12 @@ function processGathering() {
     // tool and action need to govern the rate of extraction
 
 
-    
+
 
 
 
     gathering.quantity -= gathering.depletionSpeed;
-gathering.stability -= gathering.stabilitySpeed;
+    gathering.stability -= gathering.stabilitySpeed;
 
 
     gathering.quality = capValues(gathering.quality, 0, 100);
@@ -785,21 +785,21 @@ function gatheringComplete() {
     } else {
         var generatedObject = gathering.node.contains[0];
         var quantityOfItem = Math.floor((gathering.purity / 100) * (gathering.node.maxQuantity - gathering.quantity));
-        console.log("gathered " + quantityOfItem + "x " + currentActiveInventoryItems[generatedObject.type].shortname + " of " + gathering.quality + " quality");
+        // console.log("gathered " + quantityOfItem + "x " + currentActiveInventoryItems[generatedObject.type].shortname + " of " + gathering.quality + " quality");
         var createdMarkup = '<ol><li>';
-          activeGatheredObject = {
+        activeGatheredObject = {
             "type": generatedObject.type,
-                            "quantity": quantityOfItem,
-                            "quality": gathering.quality,
-                            "durability": 100,
-                            "currentWear": 0,
-                            "effectiveness": 100,
-                            "colour": 0,
-                            "enchanted": 0,
-                            "hallmark": 0,
-                            "inscription": ""
-                        }
-                        createdMarkup += generateGenericSlotMarkup(activeGatheredObject);
+            "quantity": quantityOfItem,
+            "quality": gathering.quality,
+            "durability": 100,
+            "currentWear": 0,
+            "effectiveness": 100,
+            "colour": generatedObject.colour,
+            "enchanted": 0,
+            "hallmark": 0,
+            "inscription": ""
+        }
+        createdMarkup += generateGenericSlotMarkup(activeGatheredObject);
         createdMarkup += '</li></ol>';
         gatheringOutputSlot.innerHTML = createdMarkup;
     }
@@ -4253,7 +4253,7 @@ var UI = {
                 actionBarMarkup += '<li><img src="/images/game-world/interface/actions/blank.png" alt="Empty Action slot"></li>';
             } else {
 
-                actionBarMarkup += '<li class="active" data-index="' + i + '" data-category="' + hero.actions[i][0] + '" id="actionType' + hero.actions[i][1] + '"><img src="/images/game-world/interface/actions/' + hero.actions[i][0] + '-' + hero.actions[i][1] + '.png" alt="' + hero.actions[i][1] + ' action"><p>' + hero.actions[i][2] + ' (' + hero.actions[i][1] + ' type' + hero.actions[i][0] + ')</p></li>';
+                actionBarMarkup += '<li class="active" data-index="' + i + '" data-category="' + hero.actions[i][2] + '" id="actionType' + hero.actions[i][1] + '"><img src="/images/game-world/interface/actions/' + hero.actions[i][2] + '-' + hero.actions[i][1] + '.png" alt="' + hero.actions[i][0] + ' action"><p>' + hero.actions[i][0] + ' (' + hero.actions[i][1] + ' type' + hero.actions[i][2] + ')</p></li>';
             }
         }
         actionBarMarkup += '</ol>';
@@ -4369,6 +4369,7 @@ gathering.itemIndex = foundItem;
         if (inventoryCheck[0]) {
             gatheringOutputSlot.innerHTML = "";
             UI.showChangeInInventory(inventoryCheck[1]);
+            gatheringPanel.classList.remove('active');
         } else {
             UI.showNotification("<p>Oops - sorry, no room in your bags</p>");
         }
