@@ -1103,7 +1103,7 @@ $yearPreviousEndTime = strtotime("-1 year", $row['eventEnd']);
 
 if($yearPreviousEndTime >= date(time())) {
 // use the earlier date instead:
-	$row['eventStart'] = $row['eventStart'] = $startDateDayAndMonth."-".($startDateYear-1);
+	$row['eventStart'] = $startDateDayAndMonth."-".($startDateYear-1);
 	$row['eventEnd'] = $yearPreviousEndTime;
 }
 } else {

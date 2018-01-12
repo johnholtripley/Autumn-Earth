@@ -125,7 +125,9 @@ function openBoosterPack() {
     var boosterPackCards = document.getElementsByClassName('cardFlip');
     for (var i = 0; i < boosterPackCards.length; i++) {
         boosterPackCards[i].classList.remove('active');
+      
     }
+
 
     // they should all be in cache from the Card Album, so no need to wait for them to load
     var imageClass;
@@ -141,7 +143,9 @@ function openBoosterPack() {
         } else {
             document.getElementById("boosterCard" + i).innerHTML = '<img' + imageClass + ' src="/images/card-game/cards/' + boosterCardsToAdd[i] + '.png" alt="' + cardGameNameSpace.allCardData[(boosterCardsToAdd[i][3])] + '">';
         }
+
     }
+
     boosterPack.classList.add('active');
     boosterCardsRevealed = 0;
     boosterPack.addEventListener("click", revealBoosterCard, false);

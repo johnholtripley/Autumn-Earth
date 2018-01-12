@@ -13,10 +13,14 @@ function checkForRespawns() {
 
 
 function processGathering() {
-    UI.gathering.stability -= 0.25;
+    // tool and action need to govern the rate of extraction
+    // higher quality = more harmful, stabiity will drop faster
+    UI.gathering.quality -= 0.25;
+    UI.gathering.quantity -= 0.1;
     UI.gathering.quality = capValues(UI.gathering.quality, 0, 100);
     UI.gathering.purity = capValues(UI.gathering.purity, 0, 100);
     UI.gathering.stability = capValues(UI.gathering.stability, 0, 100);
+    UI.gathering.quantity = capValues(UI.gathering.quantity, 0, 100);
     // if any of the values are 0:
     if (UI.gathering.quality * UI.gathering.purity * UI.gathering.stability * UI.gathering.quantity == 0) {
         gatheringComplete();
@@ -28,9 +32,9 @@ function gatheringComplete() {
     if (UI.gathering.stability == 0) {
         UI.showNotification('<p>Resource failed - nothing was gathered</p>');
     } else {
-        //  var generatedObject = currentActiveInventoryItems[UI.gathering.node.type];
         var generatedObject = UI.gathering.node.contains[0];
-        console.log("gathered " + UI.gathering.quantity + "x " + currentActiveInventoryItems[generatedObject.type].shortname);
+        var quantityOfItem = Math.floor((UI.gathering.purity / 100) * (UI.gathering.node.maxQuantity - UI.gathering.quantity));
+        console.log("gathered " + quantityOfItem + "x " + currentActiveInventoryItems[generatedObject.type].shortname) + "of " + UI.gathering.quality + " quality";
     }
     gatheringStopped();
 }

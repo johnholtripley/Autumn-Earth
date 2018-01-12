@@ -416,8 +416,8 @@ $numberOfItemCategories: 20;
     background: #53160d;
     color: #fff;
     z-index: 1;
-    left: 50%;
-    margin-left: 50px;
+    left: calc(50% + 50px);
+    
     ul {
         @include pxRem('padding',12);
         list-style: none;

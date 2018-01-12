@@ -7,6 +7,7 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
 <head>
   <?php include($_SERVER['DOCUMENT_ROOT']."/includes/title-tag.php"); ?>
   <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="Accept-CH" content="DPR,Width,Viewport-Width"> 
   <?php $cacheVersion = file_get_contents($_SERVER["DOCUMENT_ROOT"].'/includes/siteVersion.txt'); ?>
@@ -15,6 +16,14 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
   <meta name="language" content="english">
   <link rel="preconnect" href="//www.google-analytics.com">
   <link rel="preconnect" href="//fonts.googleapis.com">
+  <?php
+  // link rel="preload" fonts
+  // favicons
+  // meta data
+  // social data
+  ?>
+  <link rel="canonical" href="https://www.autumnearth.com/" itemprop="url">
+  <link href="https://plus.google.com/+Autumnearth" rel="publisher">
   <meta name="robots" content="noodp,noydir">
   <link href="https://fonts.googleapis.com/css?family=Lato%7CBree+Serif%7CIM+Fell+English" rel="stylesheet">
   <?php include($_SERVER['DOCUMENT_ROOT']."/includes/meta-content.php"); ?>
@@ -33,10 +42,9 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
     <canvas id="gameWorld" width="800" height="600" moz-opaque>
       <img src="/images/game-world/no-canvas.jpg" alt="Sorry">
     </canvas>
-    <canvas id="lightMapOverlay" width="800" height="600"></canvas>
-
-  
+    <canvas id="lightMapOverlay" width="800" height="600"></canvas>  
   </div>
+
   <div id="interface" class="active">
     <div id="toolbar">
       <a href="#gameSettings" id="openSettings">Settings</a>
@@ -62,7 +70,7 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
       <ul>
         <li><p>Quality</p><div id="gatheringQualityBar" class="progressBarWrapper"><div class="progressBar"></div></div></li>
         <li><p>Purity</p><div id="gatheringPurityBar" class="progressBarWrapper"><div class="progressBar"></div></div></li>
-        <li><p>Quantity</p><div id="gatheringQuantityBar" class="progressBarWrapper"><div class="progressBar"></div></div></li>
+        <li><p>Remaining</p><div id="gatheringQuantityBar" class="progressBarWrapper"><div class="progressBar"></div></div></li>
         <li><p>Stability</p><div id="gatheringBarStability" class="progressBarWrapper"><div class="progressBar"></div></div></li>
       </ul>
     </div>
@@ -98,7 +106,8 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
     <div id="craftingSelectComponentsPanel">
       <div class="draggableBar">
         Add components
-      </div><button class="closePanel">close</button>
+      </div>
+      <button class="closePanel">close</button>
       <div id="componentsAvailableForThisRecipe"></div>
       <div id="selectComponentsItemBeingCreated"></div>
     </div>
@@ -113,13 +122,15 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
       $result = mysql_query($query) or die ();
       while ($row = mysql_fetch_array($result)) {
       extract($row);
-      echo '<section id="collection-'.$cleanurl.'" data-collection="'.$cleanurl.'"><h2>'.$collectionQuestName.'</h2>';
-      echo '<p>'.base64_encode($collectionQuestLore).'</p><ol></ol></section>';
+      echo '<section id="collection-'.$cleanurl.'" data-collection="'.$cleanurl.'">';
+      echo '<h2>'.$collectionQuestName.'</h2>';
+      echo '<p>'.base64_encode($collectionQuestLore).'</p>';
+      echo '<ol></ol>';
+      echo '</section>';
       }
       mysql_free_result($result);
       ?>
     </div>
-
 
     <div id="inscriptionPanel">
       <div class="draggableBar">Inscription</div>
@@ -138,7 +149,6 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
       <button class="closePanel">Cancel</button>
       <button id="scribeStartInscription" disabled>Inscribe</button>
     </div>
-
 
     <div id="shopPanel"></div>
     <div id="draggableShopSlot"></div>
@@ -176,17 +186,12 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
       <input type="checkbox" value="1" id="toggleFullScreen" class="switch"> <label for="toggleFullScreen"><span></span>Enable Fullscreen</label>
     </div>
   </div>
-    <div id="cardGameWrapper">
+  <div id="cardGameWrapper">
       <canvas id="cardGame" moz-opaque width="1008" height="612">
         <img src="/images/card-game/no-canvas.jpg" alt="Card game">
       </canvas>
-    </div>
-
-
-
-
-
   </div>
+</div>
 
 <script src="/js/card-game-shared.<?php echo $cacheVersion; ?>.js"></script>
 <script src="/js/game-world.<?php echo $cacheVersion; ?>.js"></script>
