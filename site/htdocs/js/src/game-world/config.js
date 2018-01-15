@@ -13,7 +13,6 @@ var gathering = {};
 var isGathering = false;
 var dowsing = {};
 var isDowsing = false;
-var dowsingRingSize = 100;
 const titleTagPrefix = 'Autumn Earth';
 
 
@@ -87,6 +86,9 @@ const buyPriceSpecialismModifier = 0.9;
 const baseGatheringTime = 5000;
 const gatheringStabilityModifier = 0.002;
 const gatheringDepletionModifier = 0.00002;
+
+const dowsingRingSize = 100;
+const baseDowsingRange = 10;
 
 // key bindings
 var key = [0, 0, 0, 0, 0, 0, 0];

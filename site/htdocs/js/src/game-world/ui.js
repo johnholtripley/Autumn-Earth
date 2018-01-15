@@ -1517,12 +1517,11 @@ var UI = {
                 case "dowse":
                     if (!isGathering) {
                         if (!isDowsing) {
-                            dowsing.range = 5;
+                            dowsing.range = baseDowsingRange;
                             isDowsing = true;
                             dowsing.modifiers = hero.actions[thisNode.dataset.index][3];
                                     for (var modifier in dowsing.modifiers) {
-                                        switch (modifier) {
-                                          
+                                        switch (modifier) {                                       
                                             case 'range':
                                                 dowsing.range += dowsing.modifiers[modifier];
                                                 break;
@@ -1532,9 +1531,7 @@ var UI = {
                             isDowsing = false;
                         }
                     }
-                    //
                 break;
-
             }
         }
     },

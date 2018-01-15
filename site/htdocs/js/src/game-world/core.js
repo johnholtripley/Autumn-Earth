@@ -2424,9 +2424,13 @@ assetsToDraw.push([findIsoDepth(thisItem.x, thisItem.y, thisItem.z), "sprite", i
                     gameContext.drawImage(assetsToDraw[i][2], assetsToDraw[i][3], assetsToDraw[i][4], assetsToDraw[i][5], assetsToDraw[i][6], assetsToDraw[i][7], assetsToDraw[i][8], assetsToDraw[i][9], assetsToDraw[i][10]);
                     break;
                     case "dowsingRing":
+                    gameContext.globalCompositeOperation = 'lighten';
                     // draw the dowsing ring:
                     drawEllipse(gameContext, assetsToDraw[i][2]+(100-dowsing.proximity)/2, assetsToDraw[i][3]+(100-dowsing.proximity)/4, dowsingRingSize*dowsing.proximity/100, (dowsingRingSize*dowsing.proximity/100)/2, true, 'rgba(0,255,0,0.3)');
+                    // draw the outline:
                     drawEllipse(gameContext, assetsToDraw[i][2], assetsToDraw[i][3], dowsingRingSize, dowsingRingSize/2, false, 'rgba(0,255,0,0.3)');
+                    // restore the composite mode to the default:
+                    gameContext.globalCompositeOperation = 'source-over';
                     break;
                 case "img":
                     // standard image:

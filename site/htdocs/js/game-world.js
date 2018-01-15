@@ -303,7 +303,6 @@ var gathering = {};
 var isGathering = false;
 var dowsing = {};
 var isDowsing = false;
-var dowsingRingSize = 100;
 const titleTagPrefix = 'Autumn Earth';
 
 
@@ -377,6 +376,9 @@ const buyPriceSpecialismModifier = 0.9;
 const baseGatheringTime = 5000;
 const gatheringStabilityModifier = 0.002;
 const gatheringDepletionModifier = 0.00002;
+
+const dowsingRingSize = 100;
+const baseDowsingRange = 10;
 
 // key bindings
 var key = [0, 0, 0, 0, 0, 0, 0];
@@ -652,8 +654,9 @@ for (var i = 0; i < scrollBarElements.length; i++) {
 }
 
 function processDowsing() {
+    // find the nearest node and react to that:
+    // #######
     dowsing.proximity = 100-(100*((getPythagorasDistance(hero.tileX, hero.tileY, 12, 14))/dowsing.range));
-
     dowsing.proximity = capValues(dowsing.proximity, 0, 100);
 }
 function animateFae() {
@@ -4387,12 +4390,11 @@ var UI = {
                 case "dowse":
                     if (!isGathering) {
                         if (!isDowsing) {
-                            dowsing.range = 5;
+                            dowsing.range = baseDowsingRange;
                             isDowsing = true;
                             dowsing.modifiers = hero.actions[thisNode.dataset.index][3];
                                     for (var modifier in dowsing.modifiers) {
-                                        switch (modifier) {
-                                          
+                                        switch (modifier) {                                       
                                             case 'range':
                                                 dowsing.range += dowsing.modifiers[modifier];
                                                 break;
@@ -4402,9 +4404,7 @@ var UI = {
                             isDowsing = false;
                         }
                     }
-                    //
                 break;
-
             }
         }
     },
@@ -6853,9 +6853,13 @@ assetsToDraw.push([findIsoDepth(thisItem.x, thisItem.y, thisItem.z), "sprite", i
                     gameContext.drawImage(assetsToDraw[i][2], assetsToDraw[i][3], assetsToDraw[i][4], assetsToDraw[i][5], assetsToDraw[i][6], assetsToDraw[i][7], assetsToDraw[i][8], assetsToDraw[i][9], assetsToDraw[i][10]);
                     break;
                     case "dowsingRing":
+                    gameContext.globalCompositeOperation = 'lighten';
                     // draw the dowsing ring:
                     drawEllipse(gameContext, assetsToDraw[i][2]+(100-dowsing.proximity)/2, assetsToDraw[i][3]+(100-dowsing.proximity)/4, dowsingRingSize*dowsing.proximity/100, (dowsingRingSize*dowsing.proximity/100)/2, true, 'rgba(0,255,0,0.3)');
+                    // draw the outline:
                     drawEllipse(gameContext, assetsToDraw[i][2], assetsToDraw[i][3], dowsingRingSize, dowsingRingSize/2, false, 'rgba(0,255,0,0.3)');
+                    // restore the composite mode to the default:
+                    gameContext.globalCompositeOperation = 'source-over';
                     break;
                 case "img":
                     // standard image:
