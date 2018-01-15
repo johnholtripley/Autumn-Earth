@@ -232,7 +232,6 @@ function isAnObjectCollision(obj1x, obj1y, obj1w, obj1h, obj2x, obj2y, obj2w, ob
 }
 
 
-
 var facingsPossible = ["n","e","s","w"];
 
 // useful for determining relative direction based on facing:
@@ -597,6 +596,32 @@ function sortByLowestValue(a, b) {
 
 function getRandomElementFromArray(whichArray) {
     return whichArray[Math.floor(Math.random() * whichArray.length)];
+}
+
+
+function drawEllipse(ctx, x, y, w, h, filled, colour) {
+    // https://stackoverflow.com/questions/14169234/the-relation-of-the-bezier-curve-and-ellipse
+    var kappa = 0.5522848;
+    var ox = (w / 2) * kappa, // control point offset horizontal
+        oy = (h / 2) * kappa, // control point offset vertical
+        xe = x + w, // x-end
+        ye = y + h, // y-end
+        xm = x + w / 2, // x-middle
+        ym = y + h / 2; // y-middle
+    ctx.beginPath();
+    ctx.moveTo(x, ym);
+    ctx.bezierCurveTo(x, ym - oy, xm - ox, y, xm, y);
+    ctx.bezierCurveTo(xm + ox, y, xe, ym - oy, xe, ym);
+    ctx.bezierCurveTo(xe, ym + oy, xm + ox, ye, xm, ye);
+    ctx.bezierCurveTo(xm - ox, ye, x, ym + oy, x, ym);
+    ctx.closePath();
+    if (filled) {
+        ctx.fillStyle = colour;
+        ctx.fill();
+    } else {
+        ctx.strokeStyle = colour;
+        ctx.stroke();
+    }
 }
 
 

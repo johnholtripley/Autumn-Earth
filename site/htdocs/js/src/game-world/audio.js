@@ -121,6 +121,7 @@ var audio = {
             // make sure it wasn't just played:
             if (newTrack != audio.lastTrack) {
                 // nothing playing currently:
+
                 audio.initMusic(newTrack);
                 audio[newTrack].play();
                 audio.activeTrack = newTrack;
@@ -134,7 +135,7 @@ var audio = {
     adjustEffectsVolume: function() {
         gameSettings.soundVolume = soundVolume.value;
         if (typeof soundGainNode !== "undefined") {
-            soundGainNode.gain.value = gameSettings.soundVolume;
+            soundGainNode.gain.setValueAtTime(gameSettings.soundVolume,0);
         }
     },
 

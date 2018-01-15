@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 10, 2018 at 03:42 PM
+-- Generation Time: Jan 12, 2018 at 06:00 PM
 -- Server version: 5.6.24
 -- PHP Version: 5.6.8
 
@@ -83,46 +83,6 @@ INSERT INTO `tblacct` (`accountID`, `accountName`, `accountStatus`, `joinedTime`
 (49, 'dilly21', '2', '2015-07-03 14:03:09', '0', 0, 16, 'john.holtripley@gmail.com', '2015-01-01 00:00:00', '1', '1', 'œé+''ÍÍiffA`jÔ@', 'dilly21', '1', '1', '55561f21c5445a16e9e306fae400b08c', '127.0.0.1'),
 (50, 'dilly22', '2', '2015-08-04 15:10:24', '0', 0, 1, 'john.holtripley@gmail.com', '2007-04-03 00:00:00', '1', '1', '.{[ÄX%tl¢"ÔÉF', 'sdsd', '1', '1', 'fb4d713852301b8dff21ff63f376b45f', '127.0.0.1'),
 (51, 'test', '2', '2015-11-20 14:31:58', '0', 0, 1, 'john.holtripley@gmail.com', '2015-01-01 00:00:00', '1', '1', '®)ª¹ì?¨åÑ·“¯ä¥', '', '1', '1', '9c7129e26978a03b58eb1a6375c50067', '127.0.0.1');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `tblactions`
---
-
-CREATE TABLE IF NOT EXISTS `tblactions` (
-  `actionID` int(11) NOT NULL,
-  `actionType` varchar(128) COLLATE utf8_bin NOT NULL,
-  `actionItemCategory` int(11) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
-
---
--- Dumping data for table `tblactions`
---
-
-INSERT INTO `tblactions` (`actionID`, `actionType`, `actionItemCategory`) VALUES
-(1, 'Gather', 1),
-(2, 'Gather', 4),
-(3, 'Survey', 4);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `tblactiontypes`
---
-
-CREATE TABLE IF NOT EXISTS `tblactiontypes` (
-  `actionTypeID` int(11) NOT NULL,
-  `actionTypeName` varchar(128) COLLATE utf8_bin NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
-
---
--- Dumping data for table `tblactiontypes`
---
-
-INSERT INTO `tblactiontypes` (`actionTypeID`, `actionTypeName`) VALUES
-(1, 'Gather'),
-(2, 'Survey');
 
 -- --------------------------------------------------------
 
@@ -672,14 +632,14 @@ CREATE TABLE IF NOT EXISTS `tblinventoryitems` (
   `lockedToThisPlayer` tinyint(1) NOT NULL DEFAULT '0',
   `respawnRate` int(11) DEFAULT NULL,
   `activeDuringSeason` int(11) DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=50 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=51 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblinventoryitems`
 --
 
 INSERT INTO `tblinventoryitems` (`itemID`, `shortname`, `description`, `priceCode`, `centreX`, `centreY`, `width`, `height`, `spriteWidth`, `spriteHeight`, `cleanURL`, `action`, `actionValue`, `dyeable`, `level`, `prerequisites`, `itemGroup`, `itemCategories`, `racialPreference`, `inscribable`, `colour`, `hasInherentColour`, `showInTheCodex`, `lockedToThisPlayer`, `respawnRate`, `activeDuringSeason`) VALUES
-(1, 'Wild Flax', '-', '1', '20.0', '24.0', 0, 0, NULL, NULL, 'wild-flax', '', '0', 0, 0, '0', '0', '1', NULL, 0, 0, 0, 1, 0, NULL, NULL),
+(1, 'Wild Flax', 'Useful for making linens', '1', '20.0', '24.0', 0, 0, NULL, NULL, 'wild-flax', '', '0', 0, 0, '0', '0', '1', NULL, 0, 0, 0, 1, 0, NULL, NULL),
 (2, 'Wild Madder', 'A flower used for its red pigment.', '1', '20.0', '24.0', 0, 0, NULL, NULL, 'wild-madder', '', '0', 0, 0, '0', '0', '1', NULL, 0, 1, 1, 1, 0, NULL, NULL),
 (3, 'Safflower', 'A flower used for its yellow pigment.', '1', '20.0', '24.0', 0, 0, NULL, NULL, 'safflower', '', '0', 0, 0, '0', '0', '1', NULL, 0, 2, 1, 1, 0, NULL, NULL),
 (5, 'Whortleberry', 'The berries are used for their blue colour.', '1', '20.0', '24.0', 0, 0, NULL, NULL, 'whortleberry', '', '0', 0, 0, '0', '0', '1', NULL, 0, 4, 1, 1, 0, NULL, NULL),
@@ -698,7 +658,7 @@ INSERT INTO `tblinventoryitems` (`itemID`, `shortname`, `description`, `priceCod
 (18, 'Barrel', 'A large wooden barrel.', '2', '25.0', '31.0', 38, 38, NULL, NULL, 'barrel', 'static', '0', 0, 0, '0', '0', NULL, NULL, 0, 0, 0, 1, 0, NULL, NULL),
 (19, 'Pumpkin', 'A tasty pumpkin.', '1', '16.0', '18.0', 25, 23, NULL, NULL, 'pumpkin', '', '0', 0, 0, '0', '0', '4', NULL, 0, 0, 0, 1, 0, NULL, 2),
 (20, 'Large Backpack', 'A 24 slot bag', '2', '20.0', '24.0', 0, 0, NULL, NULL, 'large-backpack', 'bag', '24', 1, 0, '0', '0', NULL, NULL, 0, 0, 0, 1, 0, NULL, NULL),
-(21, 'Totem Card Pack', '5 cards', '4', '20.0', '24.0', 0, 0, NULL, NULL, 'card-pack', 'booster', '0', 0, 0, '0', '0', NULL, NULL, 0, 0, 0, 1, 0, NULL, NULL),
+(21, 'Card Pack', '5 cards', '4', '20.0', '24.0', 0, 0, NULL, NULL, 'card-pack', 'booster', '0', 0, 0, '0', '0', NULL, NULL, 0, 0, 0, 1, 0, NULL, NULL),
 (22, 'Standing Stone', '', '4', '49.0', '81.0', 63, 63, NULL, NULL, 'standing-stone', 'questToggle', '2', 0, 0, '0', '0', NULL, NULL, 0, 0, 0, 0, 0, NULL, NULL),
 (23, 'Mugwort', 'Used to make green dyes', '4', '49.0', '81.0', 63, 63, NULL, NULL, 'mugwort', '', '0', 0, 0, '0', '0', '1', NULL, 0, 6, 1, 1, 0, NULL, NULL),
 (24, 'Rim Lichen', 'Used to make purple dyes', '4', '49.0', '81.0', 63, 63, NULL, NULL, 'rim-lichen', '', '0', 0, 0, '0', '0', '1', NULL, 0, 5, 1, 1, 0, NULL, NULL),
@@ -712,7 +672,7 @@ INSERT INTO `tblinventoryitems` (`itemID`, `shortname`, `description`, `priceCod
 (32, 'Book', '', '4', '12.0', '6.0', 20, 13, NULL, NULL, 'book', 'book', '0', 0, 0, '0', '0', NULL, NULL, 1, 0, 1, 1, 0, NULL, NULL),
 (33, 'Parchment', '', '4', '49.0', '81.0', 63, 63, NULL, NULL, 'parchment', 'book', '0', 0, 0, '0', '0', NULL, NULL, 1, 0, 1, 1, 0, NULL, NULL),
 (34, 'Chocobo Card', 'A chocobo card. Pweeeek!', '4', '49.0', '81.0', 63, 63, NULL, NULL, 'card-chocobo', 'card', '2', 0, 0, '0', '0', '', NULL, 0, 0, 0, 1, 0, NULL, NULL),
-(35, 'Wild Flax Node', '', '4', '19.0', '39.0', 20, 20, NULL, NULL, 'wild-flax-node', 'node', '0', 0, 0, '0', '0', '5', NULL, 0, 0, 0, 0, 0, 300, NULL),
+(35, 'Wild Flax Node', '', '4', '19.0', '39.0', 20, 20, 28, 45, 'wild-flax-node', 'node', '0', 0, 0, '0', '0', '1', NULL, 0, 0, 0, 0, 0, 300, NULL),
 (36, 'Chocobo Gold Card', 'A rare chocobo card. Pweeeek!', '4', '49.0', '81.0', 63, 63, NULL, NULL, 'card-gold-chocobo', 'card', '-2', 0, 0, '0', '0', '', NULL, 0, 0, 0, 1, 0, NULL, NULL),
 (37, 'Copperas', '', '4', '49.0', '81.0', 63, 63, NULL, NULL, 'copperas', '', '0', 0, 0, '0', '0', NULL, NULL, 0, 0, 0, 1, 0, NULL, NULL),
 (38, 'Acacia Resin', '', '4', '49.0', '81.0', 63, 63, NULL, NULL, 'acacia-resin', '', '0', 0, 0, '0', '0', NULL, NULL, 0, 0, 0, 1, 0, NULL, NULL),
@@ -726,7 +686,8 @@ INSERT INTO `tblinventoryitems` (`itemID`, `shortname`, `description`, `priceCod
 (46, 'Crinoid', 'Fossilised coral', '1', '25.0', '31.0', 38, 38, NULL, NULL, 'collection-fossil', 'collection', 'the-barrow-mines', 0, 0, '0', '0', '', NULL, 0, 0, 0, 0, 0, NULL, NULL),
 (47, 'Butterfly plant', '', '4', '19.0', '39.0', 20, 20, NULL, NULL, 'butterfly-plant', 'nest', '0', 0, 0, '0', '0', '', NULL, 0, 0, 0, 0, 0, 300, NULL),
 (48, 'Chest', '', '1', '44.0', '44.0', 48, 48, NULL, NULL, 'chest', 'chest', '6', 0, 0, '0', '0', '', NULL, 0, 0, 0, 0, 0, NULL, NULL),
-(49, 'Worsted Yarn', 'Thicker, spun wool.', '1', '20.0', '24.0', 0, 0, NULL, NULL, 'yarn', '', '0', 1, 0, '0', '0', '3', NULL, 0, 0, 0, 1, 0, NULL, NULL);
+(49, 'Worsted Yarn', 'Thicker, spun wool.', '1', '20.0', '24.0', 0, 0, NULL, NULL, 'yarn', '', '0', 1, 0, '0', '0', '3', NULL, 0, 0, 0, 1, 0, NULL, NULL),
+(50, 'Mineral Node', '', '4', '20.0', '16.0', 38, 38, 34, 25, 'mineral-node', 'node', '0', 0, 0, '0', '0', '4', NULL, 0, 0, 0, 0, 0, 300, NULL);
 
 -- --------------------------------------------------------
 
@@ -1910,18 +1871,6 @@ ALTER TABLE `tblacct`
   ADD PRIMARY KEY (`accountID`), ADD UNIQUE KEY `accountName` (`accountName`);
 
 --
--- Indexes for table `tblactions`
---
-ALTER TABLE `tblactions`
-  ADD PRIMARY KEY (`actionID`), ADD KEY `actionType` (`actionType`);
-
---
--- Indexes for table `tblactiontypes`
---
-ALTER TABLE `tblactiontypes`
-  ADD PRIMARY KEY (`actionTypeID`), ADD UNIQUE KEY `actionTypeID` (`actionTypeID`), ADD UNIQUE KEY `actionTypeName` (`actionTypeName`);
-
---
 -- Indexes for table `tblauctionbids`
 --
 ALTER TABLE `tblauctionbids`
@@ -2093,7 +2042,7 @@ ALTER TABLE `tblposts`
 -- Indexes for table `tblprofessions`
 --
 ALTER TABLE `tblprofessions`
-  ADD PRIMARY KEY (`professionID`);
+  ADD PRIMARY KEY (`professionID`), ADD UNIQUE KEY `professionName` (`professionName`);
 
 --
 -- Indexes for table `tblquests`
@@ -2158,16 +2107,6 @@ ALTER TABLE `tbltitles`
 --
 ALTER TABLE `tblacct`
   MODIFY `accountID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=52;
---
--- AUTO_INCREMENT for table `tblactions`
---
-ALTER TABLE `tblactions`
-  MODIFY `actionID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
---
--- AUTO_INCREMENT for table `tblactiontypes`
---
-ALTER TABLE `tblactiontypes`
-  MODIFY `actionTypeID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
 --
 -- AUTO_INCREMENT for table `tblauctionbids`
 --
@@ -2262,7 +2201,7 @@ ALTER TABLE `tblguilds`
 -- AUTO_INCREMENT for table `tblinventoryitems`
 --
 ALTER TABLE `tblinventoryitems`
-  MODIFY `itemID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=50;
+  MODIFY `itemID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=51;
 --
 -- AUTO_INCREMENT for table `tblitemcategories`
 --
@@ -2361,12 +2300,6 @@ ALTER TABLE `tbltitles`
 --
 -- Constraints for dumped tables
 --
-
---
--- Constraints for table `tblactions`
---
-ALTER TABLE `tblactions`
-ADD CONSTRAINT `tblactions_ibfk_1` FOREIGN KEY (`actionType`) REFERENCES `tblactiontypes` (`actionTypeName`);
 
 --
 -- Constraints for table `tblcreatures`

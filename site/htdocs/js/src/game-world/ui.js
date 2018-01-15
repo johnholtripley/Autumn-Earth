@@ -1410,6 +1410,7 @@ var UI = {
 
     toggleUI: function() {
         interfaceWrapper.classList.toggle('active');
+        interfaceIsVisible = !interfaceIsVisible;
     },
 
     buildActionBar: function() {
@@ -1506,12 +1507,31 @@ var UI = {
                             } else {
                                 UI.showNotification('<p>Wrong resource type for this action</p>');
                             }
+                            if (isDowsing) {
+                                isDowsing = false;
+                            }
                         }
                     }
-                    break;
+
+                break;
                 case "dowse":
+                    if (!isGathering) {
+                        if (!isDowsing) {
+                            dowsing.range = 40;
+                            isDowsing = true;
+                            dowsing.modifiers = hero.actions[thisNode.dataset.index][3];
+                                    for (var modifier in dowsing.modifiers) {
+                                        switch (modifier) {
+                                          
+                                            case 'range':
+                                                dowsing.range += dowsing.modifiers[modifier];
+                                                break;
+                                        }
+                                    }
+                        }
+                    }
                     //
-                    break;
+                break;
 
             }
         }

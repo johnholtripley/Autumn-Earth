@@ -15,19 +15,14 @@ function checkForRespawns() {
 function processGathering() {
     // tool and action need to govern the rate of extraction
 
-
-
-
-
-
     gathering.quantity -= gathering.depletionSpeed;
     gathering.stability -= gathering.stabilitySpeed;
-
 
     gathering.quality = capValues(gathering.quality, 0, 100);
     gathering.purity = capValues(gathering.purity, 0, 100);
     gathering.stability = capValues(gathering.stability, 0, 100);
     gathering.quantity = capValues(gathering.quantity, 0, 100);
+
     // if any of the values are 0:
     if (gathering.quality * gathering.purity * gathering.stability * gathering.quantity == 0) {
         gatheringComplete();
@@ -43,10 +38,9 @@ function gatheringComplete() {
         var quantityOfItem = Math.floor((gathering.purity / 100) * (gathering.node.maxQuantity - gathering.quantity));
         // console.log("gathered " + quantityOfItem + "x " + currentActiveInventoryItems[generatedObject.type].shortname + " of " + gathering.quality + " quality");
         var createdMarkup = '<ol><li>';
-
-// see if the type or colour have any random choices:
-var possibleGatheredTypes = generatedObject.type.toString().split("/");
-var possibleGatheredColours = generatedObject.colour.toString().split("/");
+        // used in case the type or colour have any random choices:
+        var possibleGatheredTypes = generatedObject.type.toString().split("/");
+        var possibleGatheredColours = generatedObject.colour.toString().split("/");
         activeGatheredObject = {
             "type": parseInt(getRandomElementFromArray(possibleGatheredTypes)),
             "quantity": quantityOfItem,

@@ -313,6 +313,8 @@ var thisNPCIdentifier;
         }
     }
 
+
+
     Loader.preload(imagesToLoad, prepareGame, loadingProgress);
 }
 
@@ -425,18 +427,21 @@ function findInventoryItemData() {
         itemIdsToGet.push(hero.bags[i].type);
     }
     // find items placed on this map:
+    var itemChoices;
     for (var i = 0; i < thisMapData.items.length; i++) {
         itemIdsToGet.push(thisMapData.items[i].type);
         // check if any are containers or chests:
         if (typeof thisMapData.items[i].contains !== "undefined") {
             for (var j = 0; j < thisMapData.items[i].contains.length; j++) {
-                // make sure it's not money in a chest:
-                if (thisMapData.items[i].contains[j].type != "$") {
-                    itemIdsToGet.push(thisMapData.items[i].contains[j].type);
+                itemChoices = thisMapData.items[i].contains[j].type.toString().split("/");
+                for (var k = 0; k < itemChoices.length; k++) {
+                    if (itemChoices[k] != "$") {
+                        // make sure it's not money in a chest:
+                        itemIdsToGet.push(itemChoices[k]);
+                    }
                 }
             }
         }
-
     }
 
 
@@ -465,7 +470,6 @@ function findInventoryItemData() {
     itemIdsToGet = uniqueValues(itemIdsToGet);
     loadInventoryItemData(itemIdsToGet.join("|"));
 }
-
 
 
 
@@ -1193,6 +1197,9 @@ gatheringStopped();
     checkForRespawns();
     if(isGathering) {
         processGathering();
+    }
+        if(isDowsing) {
+        processDowsing();
     }
 }
 
@@ -2273,6 +2280,11 @@ function draw() {
         var assetsToDraw = [
             [findIsoDepth(hero.x, hero.y, hero.z), "sprite", heroImg, heroOffsetCol * hero.spriteWidth, heroOffsetRow * hero.spriteHeight, hero.spriteWidth, hero.spriteHeight, Math.floor(canvasWidth / 2 - hero.feetOffsetX), Math.floor(canvasHeight / 2 - hero.feetOffsetY - hero.z), hero.spriteWidth, hero.spriteHeight]
         ];
+if(interfaceIsVisible) {
+        if(isDowsing) {
+             assetsToDraw.push([0, "dowsingRing", Math.floor(canvasWidth / 2 - dowsingRingSize/2), Math.floor(canvasHeight / 2 - dowsingRingSize/4)]);
+        }
+    }
 
         // draw fae:
         thisX = findIsoCoordsX(fae.x, fae.y);
@@ -2410,6 +2422,11 @@ assetsToDraw.push([findIsoDepth(thisItem.x, thisItem.y, thisItem.z), "sprite", i
                     // sprite image (needs slicing parameters):
                
                     gameContext.drawImage(assetsToDraw[i][2], assetsToDraw[i][3], assetsToDraw[i][4], assetsToDraw[i][5], assetsToDraw[i][6], assetsToDraw[i][7], assetsToDraw[i][8], assetsToDraw[i][9], assetsToDraw[i][10]);
+                    break;
+                    case "dowsingRing":
+                    // draw the dowsing ring:
+                    drawEllipse(gameContext, assetsToDraw[i][2]+(100-dowsing.proximity)/2, assetsToDraw[i][3]+(100-dowsing.proximity)/4, dowsingRingSize*dowsing.proximity/100, (dowsingRingSize*dowsing.proximity/100)/2, true, 'rgba(0,255,0,0.3)');
+                    drawEllipse(gameContext, assetsToDraw[i][2], assetsToDraw[i][3], dowsingRingSize, dowsingRingSize/2, false, 'rgba(0,255,0,0.3)');
                     break;
                 case "img":
                     // standard image:

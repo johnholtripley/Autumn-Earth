@@ -122,6 +122,7 @@ var audio = {
             // make sure it wasn't just played:
             if (newTrack != audio.lastTrack) {
                 // nothing playing currently:
+
                 audio.initMusic(newTrack);
                 audio[newTrack].play();
                 audio.activeTrack = newTrack;
@@ -135,7 +136,7 @@ var audio = {
     adjustEffectsVolume: function() {
         gameSettings.soundVolume = soundVolume.value;
         if (typeof soundGainNode !== "undefined") {
-            soundGainNode.gain.value = gameSettings.soundVolume;
+            soundGainNode.gain.setValueAtTime(gameSettings.soundVolume,0);
         }
     },
 
@@ -297,8 +298,12 @@ var animationUpdateTime = (1000 / animationFramesPerSecond);
 
 var gameCanvas, gameContext, gameMode, cartographyContext, cartographyCanvas, offScreenCartographyCanvas, offScreenCartographyContext, canvasMapImage, canvasMapImage, canvasMapMaskImage, heroImg, shadowImg, imagesToLoad, tileImages, npcImages, itemImages, backgroundImg, objInitLeft, objInitTop, dragStartX, dragStartY, inventoryCheck, timeSinceLastAmbientSoundWasPlayed, gameSettings, lightMap, lightMapOverlay, lightMapContext, activeGatheredObject;
 var chestIdOpen = -1;
+var interfaceIsVisible = true;
 var gathering = {};
 var isGathering = false;
+var dowsing = {};
+var isDowsing = false;
+var dowsingRingSize = 100;
 const titleTagPrefix = 'Autumn Earth';
 
 
@@ -646,6 +651,13 @@ for (var i = 0; i < scrollBarElements.length; i++) {
     }
 }
 
+function processDowsing() {
+    dowsing.proximity = 100-(getPythagorasDistance(hero.tileX, hero.tileY, 12, 14)/dowsing.range*100);
+    console.log(dowsing.proximity);
+// need to use range as a max - if distance is greater than range, then proximity = 0;
+// #######
+    dowsing.proximity = capValues(dowsing.proximity, 0, 100);
+}
 function animateFae() {
     //fae.z = Math.floor((Math.sin(fae.dz) + 1) * 8 + 40);
     fae.dz += 0.2;
@@ -763,19 +775,14 @@ function checkForRespawns() {
 function processGathering() {
     // tool and action need to govern the rate of extraction
 
-
-
-
-
-
     gathering.quantity -= gathering.depletionSpeed;
     gathering.stability -= gathering.stabilitySpeed;
-
 
     gathering.quality = capValues(gathering.quality, 0, 100);
     gathering.purity = capValues(gathering.purity, 0, 100);
     gathering.stability = capValues(gathering.stability, 0, 100);
     gathering.quantity = capValues(gathering.quantity, 0, 100);
+
     // if any of the values are 0:
     if (gathering.quality * gathering.purity * gathering.stability * gathering.quantity == 0) {
         gatheringComplete();
@@ -791,10 +798,9 @@ function gatheringComplete() {
         var quantityOfItem = Math.floor((gathering.purity / 100) * (gathering.node.maxQuantity - gathering.quantity));
         // console.log("gathered " + quantityOfItem + "x " + currentActiveInventoryItems[generatedObject.type].shortname + " of " + gathering.quality + " quality");
         var createdMarkup = '<ol><li>';
-
-// see if the type or colour have any random choices:
-var possibleGatheredTypes = generatedObject.type.toString().split("/");
-var possibleGatheredColours = generatedObject.colour.toString().split("/");
+        // used in case the type or colour have any random choices:
+        var possibleGatheredTypes = generatedObject.type.toString().split("/");
+        var possibleGatheredColours = generatedObject.colour.toString().split("/");
         activeGatheredObject = {
             "type": parseInt(getRandomElementFromArray(possibleGatheredTypes)),
             "quantity": quantityOfItem,
@@ -1059,7 +1065,6 @@ function isAnObjectCollision(obj1x, obj1y, obj1w, obj1h, obj2x, obj2y, obj2w, ob
     }
     return false;
 }
-
 
 
 var facingsPossible = ["n","e","s","w"];
@@ -1426,6 +1431,32 @@ function sortByLowestValue(a, b) {
 
 function getRandomElementFromArray(whichArray) {
     return whichArray[Math.floor(Math.random() * whichArray.length)];
+}
+
+
+function drawEllipse(ctx, x, y, w, h, filled, colour) {
+    // https://stackoverflow.com/questions/14169234/the-relation-of-the-bezier-curve-and-ellipse
+    var kappa = 0.5522848;
+    var ox = (w / 2) * kappa, // control point offset horizontal
+        oy = (h / 2) * kappa, // control point offset vertical
+        xe = x + w, // x-end
+        ye = y + h, // y-end
+        xm = x + w / 2, // x-middle
+        ym = y + h / 2; // y-middle
+    ctx.beginPath();
+    ctx.moveTo(x, ym);
+    ctx.bezierCurveTo(x, ym - oy, xm - ox, y, xm, y);
+    ctx.bezierCurveTo(xm + ox, y, xe, ym - oy, xe, ym);
+    ctx.bezierCurveTo(xe, ym + oy, xm + ox, ye, xm, ye);
+    ctx.bezierCurveTo(xm - ox, ye, x, ym + oy, x, ym);
+    ctx.closePath();
+    if (filled) {
+        ctx.fillStyle = colour;
+        ctx.fill();
+    } else {
+        ctx.strokeStyle = colour;
+        ctx.stroke();
+    }
 }
 
 
@@ -4251,6 +4282,7 @@ var UI = {
 
     toggleUI: function() {
         interfaceWrapper.classList.toggle('active');
+        interfaceIsVisible = !interfaceIsVisible;
     },
 
     buildActionBar: function() {
@@ -4347,12 +4379,31 @@ var UI = {
                             } else {
                                 UI.showNotification('<p>Wrong resource type for this action</p>');
                             }
+                            if (isDowsing) {
+                                isDowsing = false;
+                            }
                         }
                     }
-                    break;
+
+                break;
                 case "dowse":
+                    if (!isGathering) {
+                        if (!isDowsing) {
+                            dowsing.range = 40;
+                            isDowsing = true;
+                            dowsing.modifiers = hero.actions[thisNode.dataset.index][3];
+                                    for (var modifier in dowsing.modifiers) {
+                                        switch (modifier) {
+                                          
+                                            case 'range':
+                                                dowsing.range += dowsing.modifiers[modifier];
+                                                break;
+                                        }
+                                    }
+                        }
+                    }
                     //
-                    break;
+                break;
 
             }
         }
@@ -4691,6 +4742,8 @@ var thisNPCIdentifier;
         }
     }
 
+
+
     Loader.preload(imagesToLoad, prepareGame, loadingProgress);
 }
 
@@ -4803,18 +4856,21 @@ function findInventoryItemData() {
         itemIdsToGet.push(hero.bags[i].type);
     }
     // find items placed on this map:
+    var itemChoices;
     for (var i = 0; i < thisMapData.items.length; i++) {
         itemIdsToGet.push(thisMapData.items[i].type);
         // check if any are containers or chests:
         if (typeof thisMapData.items[i].contains !== "undefined") {
             for (var j = 0; j < thisMapData.items[i].contains.length; j++) {
-                // make sure it's not money in a chest:
-                if (thisMapData.items[i].contains[j].type != "$") {
-                    itemIdsToGet.push(thisMapData.items[i].contains[j].type);
+                itemChoices = thisMapData.items[i].contains[j].type.toString().split("/");
+                for (var k = 0; k < itemChoices.length; k++) {
+                    if (itemChoices[k] != "$") {
+                        // make sure it's not money in a chest:
+                        itemIdsToGet.push(itemChoices[k]);
+                    }
                 }
             }
         }
-
     }
 
 
@@ -4843,7 +4899,6 @@ function findInventoryItemData() {
     itemIdsToGet = uniqueValues(itemIdsToGet);
     loadInventoryItemData(itemIdsToGet.join("|"));
 }
-
 
 
 
@@ -5571,6 +5626,9 @@ gatheringStopped();
     checkForRespawns();
     if(isGathering) {
         processGathering();
+    }
+        if(isDowsing) {
+        processDowsing();
     }
 }
 
@@ -6651,6 +6709,11 @@ function draw() {
         var assetsToDraw = [
             [findIsoDepth(hero.x, hero.y, hero.z), "sprite", heroImg, heroOffsetCol * hero.spriteWidth, heroOffsetRow * hero.spriteHeight, hero.spriteWidth, hero.spriteHeight, Math.floor(canvasWidth / 2 - hero.feetOffsetX), Math.floor(canvasHeight / 2 - hero.feetOffsetY - hero.z), hero.spriteWidth, hero.spriteHeight]
         ];
+if(interfaceIsVisible) {
+        if(isDowsing) {
+             assetsToDraw.push([0, "dowsingRing", Math.floor(canvasWidth / 2 - dowsingRingSize/2), Math.floor(canvasHeight / 2 - dowsingRingSize/4)]);
+        }
+    }
 
         // draw fae:
         thisX = findIsoCoordsX(fae.x, fae.y);
@@ -6788,6 +6851,11 @@ assetsToDraw.push([findIsoDepth(thisItem.x, thisItem.y, thisItem.z), "sprite", i
                     // sprite image (needs slicing parameters):
                
                     gameContext.drawImage(assetsToDraw[i][2], assetsToDraw[i][3], assetsToDraw[i][4], assetsToDraw[i][5], assetsToDraw[i][6], assetsToDraw[i][7], assetsToDraw[i][8], assetsToDraw[i][9], assetsToDraw[i][10]);
+                    break;
+                    case "dowsingRing":
+                    // draw the dowsing ring:
+                    drawEllipse(gameContext, assetsToDraw[i][2]+(100-dowsing.proximity)/2, assetsToDraw[i][3]+(100-dowsing.proximity)/4, dowsingRingSize*dowsing.proximity/100, (dowsingRingSize*dowsing.proximity/100)/2, true, 'rgba(0,255,0,0.3)');
+                    drawEllipse(gameContext, assetsToDraw[i][2], assetsToDraw[i][3], dowsingRingSize, dowsingRingSize/2, false, 'rgba(0,255,0,0.3)');
                     break;
                 case "img":
                     // standard image:
