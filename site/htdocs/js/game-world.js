@@ -652,10 +652,8 @@ for (var i = 0; i < scrollBarElements.length; i++) {
 }
 
 function processDowsing() {
-    dowsing.proximity = 100-(getPythagorasDistance(hero.tileX, hero.tileY, 12, 14)/dowsing.range*100);
-    console.log(dowsing.proximity);
-// need to use range as a max - if distance is greater than range, then proximity = 0;
-// #######
+    dowsing.proximity = 100-(100*((getPythagorasDistance(hero.tileX, hero.tileY, 12, 14))/dowsing.range));
+
     dowsing.proximity = capValues(dowsing.proximity, 0, 100);
 }
 function animateFae() {
@@ -4389,7 +4387,7 @@ var UI = {
                 case "dowse":
                     if (!isGathering) {
                         if (!isDowsing) {
-                            dowsing.range = 40;
+                            dowsing.range = 5;
                             isDowsing = true;
                             dowsing.modifiers = hero.actions[thisNode.dataset.index][3];
                                     for (var modifier in dowsing.modifiers) {
@@ -4400,6 +4398,8 @@ var UI = {
                                                 break;
                                         }
                                     }
+                        } else {
+                            isDowsing = false;
                         }
                     }
                     //

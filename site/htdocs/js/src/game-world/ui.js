@@ -1517,7 +1517,7 @@ var UI = {
                 case "dowse":
                     if (!isGathering) {
                         if (!isDowsing) {
-                            dowsing.range = 40;
+                            dowsing.range = 5;
                             isDowsing = true;
                             dowsing.modifiers = hero.actions[thisNode.dataset.index][3];
                                     for (var modifier in dowsing.modifiers) {
@@ -1528,6 +1528,8 @@ var UI = {
                                                 break;
                                         }
                                     }
+                        } else {
+                            isDowsing = false;
                         }
                     }
                     //
