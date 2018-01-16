@@ -15,19 +15,110 @@ $hasEventContent = strrpos($mapDataFile, 'eventSpecificContent');
 $mapData = json_decode($mapDataFile, true);
 
 
-function generatePositionsOfHiddenResourceNodes() {
-    global $mapData;
-    // check seasonal hiddenResourceCategories as well 
-    // make sure accessible from door
-    // make sure not blocked by item, npcs, or active seasonal items or npcs
-    // try and space out so not clustered together
-    $whichCategories = $mapData['map']['hiddenResourceCategories'];
-    $numberOfNodes = mt_rand(2,4);
-    $resources = array();
-    foreach ($whichCategories as &$thisCategory) {
-         // temp:
-    $resources[$thisCategory] = array(array(2,2),array(36,8),array(4,36));
+
+// check which events are active
+include_once($_SERVER['DOCUMENT_ROOT']."/includes/signalnoise.php");
+include_once($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
+
+// get current active events:
+$activeEvents = [];
+$eventsQuery = "SELECT cleanURL from tblevents WHERE ((repeatsAnnually and ((dayofyear(now()) between (dayofyear(eventstart)) and (dayofyear(eventstart)+eventdurationdays-1)) or (dayofyear(now()) between (dayofyear(eventstart) - 365) and (dayofyear(eventstart)+eventdurationdays-366)))) or ((repeatsAnnually = 0) and (date(now()) between (eventstart) and (eventstart+eventdurationdays))))";
+
+$eventsResult = mysql_query( $eventsQuery ) or die ( "couldn't execute events query: ".$eventsQuery );
+$numberofrows = mysql_num_rows( $eventsResult );
+if ( $numberofrows>0 ) {
+    while ( $row = mysql_fetch_array( $eventsResult ) ) {
+    array_push($activeEvents, $row['cleanURL']);
+    }
 }
+mysql_free_result($eventsResult);
+
+
+
+
+function generatePositionsOfHiddenResourceNodes() {
+    global $mapData, $activeEvents;
+
+ 
+    // try and space out so not clustered together #########
+    $whichCategories = $mapData['map']['hiddenResourceCategories'];
+    
+
+   // make sure not blocked by item, static npcs, or active  items or npcs:
+    $clearTiles = $mapData['map']['collisions'];
+    // loop through items and mark those tiles:
+    for($i=0;$i<count($mapData['map']['items']); $i++) {
+        $clearTiles[($mapData['map']['items'][$i]['tileY'])][($mapData['map']['items'][$i]['tileX'])] = '1';
+    }
+    // loop through and mark any static NPCs:
+    for($i=0;$i<count($mapData['map']['npcs']); $i++) {
+        if ($mapData['map']['npcs'][$i]['movement'][0] == '-') {
+            if ($mapData['map']['npcs'][$i]['isCollidable']) {
+                $clearTiles[($mapData['map']['npcs'][$i]['tileY'])][($mapData['map']['npcs'][$i]['tileX'])] = '1';
+            }
+        }
+    }
+
+    // check seasonal content as well:
+    for ($j=0;$j<count($activeEvents);$j++) {
+        if(isset($mapData['map']['eventSpecificContent'][($activeEvents[$j])])) {
+            $thisEvent = $mapData['map']['eventSpecificContent'][($activeEvents[$j])];
+
+            if(isset($thisEvent['hiddenResourceCategories'])) {
+                array_push($whichCategories, $thisEvent['hiddenResourceCategories']);
+            }
+
+            if(isset($thisEvent['items'])) {
+                for($i=0;$i<count($thisEvent['items']); $i++) {
+                    $clearTiles[($thisEvent['items'][$i]['tileY'])][($thisEvent['items'][$i]['tileX'])] = '1';
+                }
+            }
+
+            if(isset($thisEvent['npcs'])) {
+                for($i=0;$i<count($thisEvent['npcs']); $i++) {
+                    if ($thisEvent['npcs'][$i]['movement'][0] == '-') {
+                        if ($thisEvent['npcs'][$i]['isCollidable']) {
+                            $clearTiles[($thisEvent['npcs'][$i]['tileY'])][($thisEvent['npcs'][$i]['tileX'])] = '1';
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+$mapTilesY = count($mapData['map']['terrain']);
+$mapTilesX = count($mapData['map']['terrain'][0]);
+
+$resources = array();
+
+foreach ($whichCategories as &$thisCategory) {
+    $resources[$thisCategory] = array();
+    $numberOfNodes = mt_rand(2,4);
+    $assignedNodes = 0;
+    do {
+        $thisX = mt_rand(0,$mapTilesX-1);
+        $thisY = mt_rand(0,$mapTilesY-1);
+        if($clearTiles[$thisY][$thisX] == '0') {
+            // check it's accessible from the entrance: ##############
+            $isAccessible = true;
+            if($isAccessible) {
+                array_push($resources[$thisCategory],array($thisX,$thisY));
+                $assignedNodes++;
+                // mark it as not clear now:
+                $clearTiles[$thisY][$thisX] == '1';
+            }
+        }
+    } while ($assignedNodes<$numberOfNodes);
+}
+
+
+
+
+
+
+    
+
    
 
     $mapData['map']['hiddenResources'] = $resources;
@@ -114,25 +205,11 @@ $mapData['map']['shops'][$i]['uniqueItems'] = $itemIds;
 } 
 
 if ($hasEventContent !== false) {
-// check which events are active
-include_once($_SERVER['DOCUMENT_ROOT']."/includes/signalnoise.php");
-include_once($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
 
-// get current active events:
-$activeEvents = [];
-$eventsQuery = "SELECT cleanURL from tblevents WHERE ((repeatsAnnually and ((dayofyear(now()) between (dayofyear(eventstart)) and (dayofyear(eventstart)+eventdurationdays-1)) or (dayofyear(now()) between (dayofyear(eventstart) - 365) and (dayofyear(eventstart)+eventdurationdays-366)))) or ((repeatsAnnually = 0) and (date(now()) between (eventstart) and (eventstart+eventdurationdays))))";
-
-$eventsResult = mysql_query( $eventsQuery ) or die ( "couldn't execute events query: ".$eventsQuery );
-$numberofrows = mysql_num_rows( $eventsResult );
-if ( $numberofrows>0 ) {
-    while ( $row = mysql_fetch_array( $eventsResult ) ) {
-    array_push($activeEvents, $row['cleanURL']);
-    }
-}
-mysql_free_result($eventsResult);
-if(!(isset($mapData))) {
+/*if(!(isset($mapData))) {
     $mapData = json_decode($mapDataFile, true);
 }
+*/
 for ($i=0;$i<count($activeEvents);$i++) {
     if(isset($mapData['map']['eventSpecificContent'][($activeEvents[$i])])) {
         $thisGroup = $mapData['map']['eventSpecificContent'][($activeEvents[$i])];
