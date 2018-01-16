@@ -19,5 +19,18 @@ function processDowsing() {
 }
 
 function processSurveying() {
-    
-} 
+    var thisDistance;
+    if (thisMapData.hiddenResources[surveying.category]) {
+        for (var i = 0; i < thisMapData.hiddenResources[surveying.category].length; i++) {
+            thisDistance = getPythagorasDistance(hero.tileX, hero.tileY, thisMapData.hiddenResources[surveying.category][i][0], thisMapData.hiddenResources[surveying.category][i][1]);
+            if (thisDistance < 2) {
+                // found resource ####
+                console.log("found it!");
+
+                activeAction = "";
+                surveying = {};
+                break;
+            }
+        }
+    }
+}

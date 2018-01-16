@@ -12,6 +12,7 @@ var interfaceIsVisible = true;
 var activeAction = "";
 var dowsing = {};
 var gathering = {};
+var surveying = {};
 const titleTagPrefix = 'Autumn Earth';
 
 

@@ -1518,7 +1518,7 @@ var UI = {
                     if (activeAction != "gather") {
                         if (activeAction != "dowse") {
                             dowsing.range = baseDowsingRange;
-                            dowsing.category = thisNode.dataset.category
+                            dowsing.category = thisNode.dataset.category;
                             activeAction = "dowse";
                             dowsing.modifiers = hero.actions[thisNode.dataset.index][3];
                             for (var modifier in dowsing.modifiers) {
@@ -1530,6 +1530,7 @@ var UI = {
                             }
                         } else {
                             activeAction = "";
+                            dowsing = {};
                         }
                     }
                     break;
@@ -1539,6 +1540,7 @@ var UI = {
                         if (activeAction != "survey") {
                             activeAction = "survey";
                             processSurveying();
+                            surveying.category = thisNode.dataset.category
                         }
 
                     }

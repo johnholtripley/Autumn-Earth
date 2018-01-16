@@ -302,6 +302,7 @@ var interfaceIsVisible = true;
 var activeAction = "";
 var dowsing = {};
 var gathering = {};
+var surveying = {};
 const titleTagPrefix = 'Autumn Earth';
 
 
@@ -673,8 +674,21 @@ function processDowsing() {
 }
 
 function processSurveying() {
-    
-} 
+    var thisDistance;
+    if (thisMapData.hiddenResources[surveying.category]) {
+        for (var i = 0; i < thisMapData.hiddenResources[surveying.category].length; i++) {
+            thisDistance = getPythagorasDistance(hero.tileX, hero.tileY, thisMapData.hiddenResources[surveying.category][i][0], thisMapData.hiddenResources[surveying.category][i][1]);
+            if (thisDistance < 2) {
+                // found resource ####
+                console.log("found it!");
+
+                activeAction = "";
+                surveying = {};
+                break;
+            }
+        }
+    }
+}
 function animateFae() {
     //fae.z = Math.floor((Math.sin(fae.dz) + 1) * 8 + 40);
     fae.dz += 0.2;
@@ -4407,7 +4421,7 @@ var UI = {
                     if (activeAction != "gather") {
                         if (activeAction != "dowse") {
                             dowsing.range = baseDowsingRange;
-                            dowsing.category = thisNode.dataset.category
+                            dowsing.category = thisNode.dataset.category;
                             activeAction = "dowse";
                             dowsing.modifiers = hero.actions[thisNode.dataset.index][3];
                             for (var modifier in dowsing.modifiers) {
@@ -4419,6 +4433,7 @@ var UI = {
                             }
                         } else {
                             activeAction = "";
+                            dowsing = {};
                         }
                     }
                     break;
@@ -4428,6 +4443,7 @@ var UI = {
                         if (activeAction != "survey") {
                             activeAction = "survey";
                             processSurveying();
+                            surveying.category = thisNode.dataset.category
                         }
 
                     }
