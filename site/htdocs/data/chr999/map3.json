@@ -512,6 +512,7 @@
 
         }],
 "hiddenResourceCategories": [],
+"hiddenResourceTier": 1,
         "showOnlyLineOfSight": true,
         "collection": [44, 45, 46]
     }

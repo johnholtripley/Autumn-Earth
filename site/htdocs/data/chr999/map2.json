@@ -804,6 +804,7 @@
 
         ],
 "hiddenResourceCategories": [4],
+"hiddenResourceTier": 7,
         "eventSpecificContent": {
             "halloween": {
                 "items": [{

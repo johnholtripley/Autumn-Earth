@@ -214,7 +214,8 @@
             }]
         }],
         "hotspots": [],
-"hiddenResourceCategories": [4]
+"hiddenResourceCategories": [4],
+"hiddenResourceTier": 1
 
     }
 }

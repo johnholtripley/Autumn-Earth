@@ -2043,7 +2043,17 @@ $outputJSON .= '],';
 $outputJSON .= '"hotspots": ['.$templateHotspotsToAppend.'],';
 
 
-$outputJSON .= '"hiddenResourceCategories": ['.$dungeonDetails[$dungeonName]['possibleHiddenResourceCategories'][mt_rand(0,count($dungeonDetails[$dungeonName]['possibleHiddenResourceCategories'])-1)].']';
+$outputJSON .= '"hiddenResourceCategories": ['.$dungeonDetails[$dungeonName]['possibleHiddenResourceCategories'][mt_rand(0,count($dungeonDetails[$dungeonName]['possibleHiddenResourceCategories'])-1)].'],';
+
+
+$resourceTier = 3;
+// deeper levels should have better resources:
+$resourceTier += floor(abs($thisMapsId)/10);
+if($resourceTier>10) {
+    $resourceTier = 10;
+}
+
+$outputJSON .= '"hiddenResourceTier": '.$resourceTier;
 
 
 //$outputJSON .= ',"showOnlyLineOfSight": true';

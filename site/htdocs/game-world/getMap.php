@@ -135,6 +135,16 @@ $firstKey = key($mapData['map']['doors']);
     return $connectionFound;
 }
 
+function capValues($variable, $min, $max) {
+if($variable < $min) {
+    $variable = $min;
+}
+if($variable > $max) {
+$variable = $max;
+}
+return $variable;
+}
+
 function generatePositionsOfHiddenResourceNodes() {
     global $mapData, $activeEvents, $activeEventsID, $clearTiles, $mapTilesY, $mapTilesX;
 
@@ -204,8 +214,7 @@ foreach ($whichCategories as &$thisCategory) {
 $nodeQuery = "SELECT * from tblinventoryitems where (itemcategories in (".implode(",",$whichCategories).") ) and (activeduringseason in (".implode(",",$activeEventsID).") or activeduringseason IS NULL)";
 
 
-//check for items that can have colour variants ############
-// quality values need to be randomly set - by zone? ###########
+
 $nodeResult = mysql_query( $nodeQuery ) or die ( "couldn't execute events query: ".$nodeQuery );
 $numberofrows = mysql_num_rows( $nodeResult );
 if ( $numberofrows>0 ) {
@@ -242,35 +251,54 @@ foreach ($whichCategories as &$thisCategory) {
 
 $containsContent = "";
 $colourContent = "0";
-
+$allItemsAreDyeable = true;
 $numberOfContains = mt_rand(1,count($possibleItems[$thisCategory]));
 for ($i=0;$i<count($numberOfContains);$i++) {
     $thisItem = $possibleItems[$thisCategory][mt_rand(0, count($possibleItems[$thisCategory]) - 1)];
-    if(in_array($thisItem, $possibleDyeableItems[$thisCategory])) {
-$colourContent = "1/2/4/5/6/8/16";
+    if(!(in_array($thisItem, $possibleDyeableItems[$thisCategory]))) {
+        $allItemsAreDyeable = false;
+
     }
 $containsContent .= $thisItem."/";
 }
 $containsContent = rtrim($containsContent, '/');
+if($allItemsAreDyeable) {
+    $colourContent = "1/2/4/5/6/8/16";
+}
 
+$resourceTier = $mapData['map']['hiddenResourceTier'];
+$thisItemQuality = mt_rand($resourceTier*10,($resourceTier+1)*10);
+$thisItemStability = mt_rand($resourceTier*10,($resourceTier+1)*10);
+$thisItemPurity = mt_rand($resourceTier*10,($resourceTier+1)*10);
+$thisItemQuantity = mt_rand($resourceTier+4,($resourceTier+10));
+// allow some variation outside of the constraints:
+$thisItemQuality *= mt_rand(0.8,1.2);
+$thisItemStability *= mt_rand(0.8,1.2);
+$thisItemPurity *= mt_rand(0.8,1.2);
+
+
+$thisItemQuality = capValues($thisItemQuality, 20, 100);
+$thisItemStability = capValues($thisItemStability, 20, 100);
+$thisItemPurity = capValues($thisItemPurity, 20, 100);
+$thisItemQuantity = capValues($thisItemQuantity, 3, 20);
 
 
 $thisItemObject = array(
-"type"=>$possibleNodes[$thisCategory][mt_rand(0, count($possibleNodes[$thisCategory]) - 1)],
-"tileX"=>$thisX,
-"tileY"=>$thisY,
- "quality"=> 80,
-                "maxStability"=> 90,
-                "maxQuantity"=> 10,
-                "purity"=> 70,
-                "state"=> "active",
-                "animation"=> array(
-                      "active"=> array("length"=> 1,"row"=>0),
-                      "inactive"=> array("length"=> 1,"row"=>1)
-                ),
-"contains"=>array(array(
-"type"=>$containsContent,
-"colour"=>$colourContent
+    "type"=>$possibleNodes[$thisCategory][mt_rand(0, count($possibleNodes[$thisCategory]) - 1)],
+    "tileX"=>$thisX,
+    "tileY"=>$thisY,
+    "quality"=> $thisItemQuality,
+    "maxStability"=> $thisItemStability,
+    "maxQuantity"=> $thisItemQuantity,
+    "purity"=> $thisItemPurity,
+    "state"=> "active",
+    "animation"=> array(
+        "active"=> array("length"=> 1,"row"=>0),
+        "inactive"=> array("length"=> 1,"row"=>1)
+    ),
+    "contains"=>array(array(
+        "type"=>$containsContent,
+        "colour"=>$colourContent
     )
     ));
 
