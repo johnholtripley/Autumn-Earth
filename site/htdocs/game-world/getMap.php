@@ -131,7 +131,7 @@ function generatePositionsOfHiddenResourceNodes() {
     global $mapData, $activeEvents, $clearTiles, $mapTilesY, $mapTilesX;
 
  
-    // try and space out so not clustered together #########
+
     $whichCategories = $mapData['map']['hiddenResourceCategories'];
     
 
