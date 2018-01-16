@@ -22,16 +22,24 @@ include_once($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
 
 // get current active events:
 $activeEvents = [];
-$eventsQuery = "SELECT cleanURL from tblevents WHERE ((repeatsAnnually and ((dayofyear(now()) between (dayofyear(eventstart)) and (dayofyear(eventstart)+eventdurationdays-1)) or (dayofyear(now()) between (dayofyear(eventstart) - 365) and (dayofyear(eventstart)+eventdurationdays-366)))) or ((repeatsAnnually = 0) and (date(now()) between (eventstart) and (eventstart+eventdurationdays))))";
+$activeEventsID = [];
+$eventsQuery = "SELECT cleanURL, eventID from tblevents WHERE ((repeatsAnnually and ((dayofyear(now()) between (dayofyear(eventstart)) and (dayofyear(eventstart)+eventdurationdays-1)) or (dayofyear(now()) between (dayofyear(eventstart) - 365) and (dayofyear(eventstart)+eventdurationdays-366)))) or ((repeatsAnnually = 0) and (date(now()) between (eventstart) and (eventstart+eventdurationdays))))";
 
 $eventsResult = mysql_query( $eventsQuery ) or die ( "couldn't execute events query: ".$eventsQuery );
 $numberofrows = mysql_num_rows( $eventsResult );
 if ( $numberofrows>0 ) {
     while ( $row = mysql_fetch_array( $eventsResult ) ) {
     array_push($activeEvents, $row['cleanURL']);
+    array_push($activeEventsID, $row['eventID']);
     }
 }
 mysql_free_result($eventsResult);
+
+
+
+
+
+
 
 
 function pathIsConnected($targetX, $targetY) {
@@ -128,7 +136,7 @@ $firstKey = key($mapData['map']['doors']);
 }
 
 function generatePositionsOfHiddenResourceNodes() {
-    global $mapData, $activeEvents, $clearTiles, $mapTilesY, $mapTilesX;
+    global $mapData, $activeEvents, $activeEventsID, $clearTiles, $mapTilesY, $mapTilesX;
 
  
 
@@ -183,6 +191,42 @@ $mapTilesX = count($mapData['map']['terrain'][0]);
 
 $resources = array();
 
+$possibleNodes = array();
+$possibleItems = array();
+$possibleDyeableItems = array();
+foreach ($whichCategories as &$thisCategory) {
+    $possibleNodes[$thisCategory] = array();
+    $possibleItems[$thisCategory] = array();
+    $possibleDyeableItems[$thisCategory] = array();
+}
+
+// query the database to find all node items of the relevant categories:
+$nodeQuery = "SELECT * from tblinventoryitems where (itemcategories in (".implode(",",$whichCategories).") ) and (activeduringseason in (".implode(",",$activeEventsID).") or activeduringseason IS NULL)";
+
+
+//check for items that can have colour variants ############
+// quality values need to be randomly set - by zone? ###########
+$nodeResult = mysql_query( $nodeQuery ) or die ( "couldn't execute events query: ".$nodeQuery );
+$numberofrows = mysql_num_rows( $nodeResult );
+if ( $numberofrows>0 ) {
+    while ( $row = mysql_fetch_array( $nodeResult ) ) {
+        extract($row);
+        // check action=='node' or not (if not, goes in contains)
+        if($action == "node") {
+array_push($possibleNodes[$itemCategories],$itemID);
+        } else {
+array_push($possibleItems[$itemCategories],$itemID);
+        }
+        if($dyeable) {
+array_push($possibleDyeableItems[$itemCategories],$itemID);
+        }
+ 
+    }
+}
+mysql_free_result($nodeResult);
+
+
+
 foreach ($whichCategories as &$thisCategory) {
     $resources[$thisCategory] = array();
     $numberOfNodes = mt_rand(2,4);
@@ -194,7 +238,44 @@ foreach ($whichCategories as &$thisCategory) {
             
             $isAccessible = pathIsConnected($thisX,$thisY);
             if($isAccessible) {
-                array_push($resources[$thisCategory],array($thisX,$thisY));
+
+
+$containsContent = "";
+$colourContent = "0";
+
+$numberOfContains = mt_rand(1,count($possibleItems[$thisCategory]));
+for ($i=0;$i<count($numberOfContains);$i++) {
+    $thisItem = $possibleItems[$thisCategory][mt_rand(0, count($possibleItems[$thisCategory]) - 1)];
+    if(in_array($thisItem, $possibleDyeableItems[$thisCategory])) {
+$colourContent = "1/2/4/5/6/8/16";
+    }
+$containsContent .= $thisItem."/";
+}
+$containsContent = rtrim($containsContent, '/');
+
+
+
+$thisItemObject = array(
+"type"=>$possibleNodes[$thisCategory][mt_rand(0, count($possibleNodes[$thisCategory]) - 1)],
+"tileX"=>$thisX,
+"tileY"=>$thisY,
+ "quality"=> 80,
+                "maxStability"=> 90,
+                "maxQuantity"=> 10,
+                "purity"=> 70,
+                "state"=> "active",
+                "animation"=> array(
+                      "active"=> array("length"=> 1,"row"=>0),
+                      "inactive"=> array("length"=> 1,"row"=>1)
+                ),
+"contains"=>array(array(
+"type"=>$containsContent,
+"colour"=>$colourContent
+    )
+    ));
+
+                array_push($resources[$thisCategory],$thisItemObject);
+       
                 $assignedNodes++;
                 // mark it as not clear now:
                 $clearTiles[$thisY][$thisX] = '1';
