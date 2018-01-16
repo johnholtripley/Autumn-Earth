@@ -21,6 +21,7 @@ $dungeonDetails = array(
 'doorCentreWhenLeavingTheDungeon' => array(2,1),
 'mapWhenLeavingTheDungeon' => 2,
 'maxElevation' => 50,
+'possibleHiddenResourceCategories' => array(4),
 'levelLockedTemplates' => array(
 	// template name => earliest level it can be encountered on, latest level it can be encountered on (INF or numeric):
 	// if not included, just use it without restrictions
@@ -41,6 +42,7 @@ $dungeonDetails = array(
 'doorCentreWhenLeavingTheDungeon' => array(2,1),
 'mapWhenLeavingTheDungeon' => 2,
 'maxElevation' => 50,
+'possibleHiddenResourceCategories' => array(4),
 'levelLockedTemplates' => array()
 	)
 	);

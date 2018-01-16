@@ -511,6 +511,7 @@
             "faeIgnore": true
 
         }],
+"hiddenResourceCategories": [],
         "showOnlyLineOfSight": true,
         "collection": [44, 45, 46]
     }

@@ -654,10 +654,23 @@ for (var i = 0; i < scrollBarElements.length; i++) {
 }
 
 function processDowsing() {
-    // find the nearest node and react to that:
-    // #######
-    dowsing.proximity = 100-(100*((getPythagorasDistance(hero.tileX, hero.tileY, 12, 14))/dowsing.range));
-    dowsing.proximity = capValues(dowsing.proximity, 0, 100);
+    if (thisMapData.hiddenResources[dowsing.category]) {
+        var closestDistance = Infinity;
+        var thisDistance;
+        var whichIndex = -1;
+        // find the nearest node - of the correct type and react to that:
+        for (var i = 0; i < thisMapData.hiddenResources[dowsing.category].length; i++) {
+            thisDistance = getPythagorasDistance(hero.tileX, hero.tileY, thisMapData.hiddenResources[dowsing.category][i][0], thisMapData.hiddenResources[dowsing.category][i][1]);
+            if (thisDistance < closestDistance) {
+                closestDistance = thisDistance;
+                whichIndex = i;
+            }
+        }
+        if (whichIndex != -1) {
+            dowsing.proximity = 100 - (100 * ((closestDistance) / dowsing.range));
+            dowsing.proximity = capValues(dowsing.proximity, 0, 100);
+        }
+    }
 }
 function animateFae() {
     //fae.z = Math.floor((Math.sin(fae.dz) + 1) * 8 + 40);
@@ -4391,6 +4404,7 @@ var UI = {
                     if (!isGathering) {
                         if (!isDowsing) {
                             dowsing.range = baseDowsingRange;
+                            dowsing.category = thisNode.dataset.category
                             isDowsing = true;
                             dowsing.modifiers = hero.actions[thisNode.dataset.index][3];
                                     for (var modifier in dowsing.modifiers) {

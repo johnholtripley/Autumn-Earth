@@ -803,6 +803,7 @@
 }
 
         ],
+"hiddenResourceCategories": [4],
         "eventSpecificContent": {
             "halloween": {
                 "items": [{

@@ -12,8 +12,34 @@ $mapDataFile = file_get_contents('../data/chr' .  $chr . '/map' . $map . '.json'
 
 $hasProceduralContent = strrpos($mapDataFile, '##procedural##');
 $hasEventContent = strrpos($mapDataFile, 'eventSpecificContent');
+$mapData = json_decode($mapDataFile, true);
+
+
+function generatePositionsOfHiddenResourceNodes() {
+    global $mapData;
+    // check seasonal hiddenResourceCategories as well 
+    // make sure accessible from door
+    // make sure not blocked by item, npcs, or active seasonal items or npcs
+    // try and space out so not clustered together
+    $whichCategories = $mapData['map']['hiddenResourceCategories'];
+    $numberOfNodes = mt_rand(2,4);
+    $resources = array();
+    foreach ($whichCategories as &$thisCategory) {
+         // temp:
+    $resources[$thisCategory] = array(array(2,2),array(36,8),array(4,36));
+}
+   
+
+    $mapData['map']['hiddenResources'] = $resources;
+}
+
+
+
+
+generatePositionsOfHiddenResourceNodes();
+
 if ($hasProceduralContent !== false) {
-    $mapData = json_decode($mapDataFile, true);
+    
     // check for any procedural elements that need to be added:
 
     for($i=0;$i<count($mapData['map']['items']); $i++) {
@@ -121,11 +147,11 @@ for ($i=0;$i<count($activeEvents);$i++) {
 unset($mapData['map']['eventSpecificContent']);
 }
 
-if(isset($mapData)) {
+//if(isset($mapData)) {
     echo json_encode($mapData);
-} else {
-    echo $mapDataFile;
-}
+//} else {
+//    echo $mapDataFile;
+//}
 
 
 

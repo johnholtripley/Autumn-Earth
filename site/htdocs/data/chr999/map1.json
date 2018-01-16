@@ -122,6 +122,7 @@
             }]
 
         }],
-        "hotspots": []
+        "hotspots": [],
+"hiddenResourceCategories": []
     }
 }

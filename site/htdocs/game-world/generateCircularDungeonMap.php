@@ -2040,7 +2040,11 @@ $outputJSON .= '],';
 
 
 
-$outputJSON .= '"hotspots": ['.$templateHotspotsToAppend.']';
+$outputJSON .= '"hotspots": ['.$templateHotspotsToAppend.'],';
+
+
+$outputJSON .= '"hiddenResourceCategories": ['.$dungeonDetails[$dungeonName]['possibleHiddenResourceCategories'][mt_rand(0,count($dungeonDetails[$dungeonName]['possibleHiddenResourceCategories'])-1)].']';
+
 
 //$outputJSON .= ',"showOnlyLineOfSight": true';
 $outputJSON .= '}}';

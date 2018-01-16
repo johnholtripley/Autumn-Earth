@@ -1518,6 +1518,7 @@ var UI = {
                     if (!isGathering) {
                         if (!isDowsing) {
                             dowsing.range = baseDowsingRange;
+                            dowsing.category = thisNode.dataset.category
                             isDowsing = true;
                             dowsing.modifiers = hero.actions[thisNode.dataset.index][3];
                                     for (var modifier in dowsing.modifiers) {
