@@ -2,7 +2,7 @@ function checkForRespawns() {
     for (var i = 0; i < thisMapData.items.length; i++) {
         if (currentActiveInventoryItems[thisMapData.items[i].type].action == "node") {
             if (thisMapData.items[i].state != "active") {
-                console.log("check re-spawn: " + hero.totalGameTimePlayed + "-" + thisMapData.items[i].timeLastHarvested + " (" + (hero.totalGameTimePlayed - thisMapData.items[i].timeLastHarvested) + ") >= " + currentActiveInventoryItems[thisMapData.items[i].type].respawnRate);
+                //console.log("check re-spawn: " + hero.totalGameTimePlayed + "-" + thisMapData.items[i].timeLastHarvested + " (" + (hero.totalGameTimePlayed - thisMapData.items[i].timeLastHarvested) + ") >= " + currentActiveInventoryItems[thisMapData.items[i].type].respawnRate);
                 if (hero.totalGameTimePlayed - thisMapData.items[i].timeLastHarvested >= currentActiveInventoryItems[thisMapData.items[i].type].respawnRate) {
                     thisMapData.items[i].state = "active";
                 }
@@ -61,7 +61,7 @@ function gatheringComplete() {
 }
 
 function gatheringStopped() {
-    isGathering = false;
+    activeAction = "";
     // save any changes to the node (even if gathering was aborted by closing the panel):
     gathering.node.stability = gathering.stability;
     gathering.node.quantity = gathering.quantity;

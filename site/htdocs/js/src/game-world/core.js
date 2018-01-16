@@ -1144,7 +1144,7 @@ function update() {
 
 
         }
-        if(isGathering) {
+        if (activeAction=="gather") {
            
 if (!(isInRange(hero.x, hero.y, thisMapData.items[gathering.itemIndex].x, thisMapData.items[gathering.itemIndex].y, closeDialogueDistance/2))) {
     gatheringPanel.classList.remove("active");
@@ -1195,10 +1195,10 @@ gatheringStopped();
     updateItems();
     audio.checkForAmbientSounds();
     checkForRespawns();
-    if(isGathering) {
+    if (activeAction=="gather") {
         processGathering();
     }
-        if(isDowsing) {
+        if (activeAction=="dowse") {
         processDowsing();
     }
 }
@@ -2281,7 +2281,7 @@ function draw() {
             [findIsoDepth(hero.x, hero.y, hero.z), "sprite", heroImg, heroOffsetCol * hero.spriteWidth, heroOffsetRow * hero.spriteHeight, hero.spriteWidth, hero.spriteHeight, Math.floor(canvasWidth / 2 - hero.feetOffsetX), Math.floor(canvasHeight / 2 - hero.feetOffsetY - hero.z), hero.spriteWidth, hero.spriteHeight]
         ];
 if(interfaceIsVisible) {
-        if(isDowsing) {
+        if (activeAction=="dowse") {
              assetsToDraw.push([0, "dowsingRing", Math.floor(canvasWidth / 2 - dowsingRingSize/2), Math.floor(canvasHeight / 2 - dowsingRingSize/4)]);
         }
     }

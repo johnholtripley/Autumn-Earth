@@ -17,3 +17,7 @@ function processDowsing() {
         }
     }
 }
+
+function processSurveying() {
+    
+} 

@@ -299,10 +299,9 @@ var animationUpdateTime = (1000 / animationFramesPerSecond);
 var gameCanvas, gameContext, gameMode, cartographyContext, cartographyCanvas, offScreenCartographyCanvas, offScreenCartographyContext, canvasMapImage, canvasMapImage, canvasMapMaskImage, heroImg, shadowImg, imagesToLoad, tileImages, npcImages, itemImages, backgroundImg, objInitLeft, objInitTop, dragStartX, dragStartY, inventoryCheck, timeSinceLastAmbientSoundWasPlayed, gameSettings, lightMap, lightMapOverlay, lightMapContext, activeGatheredObject;
 var chestIdOpen = -1;
 var interfaceIsVisible = true;
-var gathering = {};
-var isGathering = false;
+var activeAction = "";
 var dowsing = {};
-var isDowsing = false;
+var gathering = {};
 const titleTagPrefix = 'Autumn Earth';
 
 
@@ -672,6 +671,10 @@ function processDowsing() {
         }
     }
 }
+
+function processSurveying() {
+    
+} 
 function animateFae() {
     //fae.z = Math.floor((Math.sin(fae.dz) + 1) * 8 + 40);
     fae.dz += 0.2;
@@ -776,7 +779,7 @@ function checkForRespawns() {
     for (var i = 0; i < thisMapData.items.length; i++) {
         if (currentActiveInventoryItems[thisMapData.items[i].type].action == "node") {
             if (thisMapData.items[i].state != "active") {
-                console.log("check re-spawn: " + hero.totalGameTimePlayed + "-" + thisMapData.items[i].timeLastHarvested + " (" + (hero.totalGameTimePlayed - thisMapData.items[i].timeLastHarvested) + ") >= " + currentActiveInventoryItems[thisMapData.items[i].type].respawnRate);
+                //console.log("check re-spawn: " + hero.totalGameTimePlayed + "-" + thisMapData.items[i].timeLastHarvested + " (" + (hero.totalGameTimePlayed - thisMapData.items[i].timeLastHarvested) + ") >= " + currentActiveInventoryItems[thisMapData.items[i].type].respawnRate);
                 if (hero.totalGameTimePlayed - thisMapData.items[i].timeLastHarvested >= currentActiveInventoryItems[thisMapData.items[i].type].respawnRate) {
                     thisMapData.items[i].state = "active";
                 }
@@ -835,7 +838,7 @@ function gatheringComplete() {
 }
 
 function gatheringStopped() {
-    isGathering = false;
+    activeAction = "";
     // save any changes to the node (even if gathering was aborted by closing the panel):
     gathering.node.stability = gathering.stability;
     gathering.node.quantity = gathering.quantity;
@@ -3714,7 +3717,7 @@ var UI = {
                     }
 
                 } else if (e.target.parentNode.id == "gatheringPanel") {
-                    if (isGathering) {
+                    if (activeAction == "gather") {
                         gatheringStopped();
                     }
                 } else if (e.target.parentNode.id == "inscriptionPanel") {
@@ -4320,7 +4323,7 @@ var UI = {
             switch (actionType) {
                 case "gather":
                     // make sure not already gathering:
-                    if (!isGathering) {
+                    if (activeAction != "gather") {
                         // check if there's a relevant item on the hero's tile, or at arm's length:
                         var armsLengthXTile = hero.tileX + relativeFacing[hero.facing]["x"];
                         var armsLengthYTile = hero.tileY + relativeFacing[hero.facing]["y"];
@@ -4388,37 +4391,47 @@ var UI = {
                                     gatheringOutputSlot.innerHTML = '';
                                     gatheringPanel.classList.add('active');
                                     audio.playSound(soundEffects['gather' + thisNode.dataset.category], 0);
-                                    isGathering = true;
+                                    activeAction = "gather";
                                 }
                             } else {
                                 UI.showNotification('<p>Wrong resource type for this action</p>');
                             }
-                            if (isDowsing) {
-                                isDowsing = false;
+                            if (activeAction == "dowse") {
+                                activeAction = "";
                             }
                         }
                     }
 
-                break;
+                    break;
                 case "dowse":
-                    if (!isGathering) {
-                        if (!isDowsing) {
+                    if (activeAction != "gather") {
+                        if (activeAction != "dowse") {
                             dowsing.range = baseDowsingRange;
                             dowsing.category = thisNode.dataset.category
-                            isDowsing = true;
+                            activeAction = "dowse";
                             dowsing.modifiers = hero.actions[thisNode.dataset.index][3];
-                                    for (var modifier in dowsing.modifiers) {
-                                        switch (modifier) {                                       
-                                            case 'range':
-                                                dowsing.range += dowsing.modifiers[modifier];
-                                                break;
-                                        }
-                                    }
+                            for (var modifier in dowsing.modifiers) {
+                                switch (modifier) {
+                                    case 'range':
+                                        dowsing.range += dowsing.modifiers[modifier];
+                                        break;
+                                }
+                            }
                         } else {
-                            isDowsing = false;
+                            activeAction = "";
                         }
                     }
-                break;
+                    break;
+                case "survey":
+                    // ok to switch to this from Dowsing
+                    if (activeAction != "gather") {
+                        if (activeAction != "survey") {
+                            activeAction = "survey";
+                            processSurveying();
+                        }
+
+                    }
+                    break;
             }
         }
     },
@@ -5587,7 +5600,7 @@ function update() {
 
 
         }
-        if(isGathering) {
+        if (activeAction=="gather") {
            
 if (!(isInRange(hero.x, hero.y, thisMapData.items[gathering.itemIndex].x, thisMapData.items[gathering.itemIndex].y, closeDialogueDistance/2))) {
     gatheringPanel.classList.remove("active");
@@ -5638,10 +5651,10 @@ gatheringStopped();
     updateItems();
     audio.checkForAmbientSounds();
     checkForRespawns();
-    if(isGathering) {
+    if (activeAction=="gather") {
         processGathering();
     }
-        if(isDowsing) {
+        if (activeAction=="dowse") {
         processDowsing();
     }
 }
@@ -6724,7 +6737,7 @@ function draw() {
             [findIsoDepth(hero.x, hero.y, hero.z), "sprite", heroImg, heroOffsetCol * hero.spriteWidth, heroOffsetRow * hero.spriteHeight, hero.spriteWidth, hero.spriteHeight, Math.floor(canvasWidth / 2 - hero.feetOffsetX), Math.floor(canvasHeight / 2 - hero.feetOffsetY - hero.z), hero.spriteWidth, hero.spriteHeight]
         ];
 if(interfaceIsVisible) {
-        if(isDowsing) {
+        if (activeAction=="dowse") {
              assetsToDraw.push([0, "dowsingRing", Math.floor(canvasWidth / 2 - dowsingRingSize/2), Math.floor(canvasHeight / 2 - dowsingRingSize/4)]);
         }
     }

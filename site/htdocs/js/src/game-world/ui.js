@@ -828,7 +828,7 @@ var UI = {
                     }
 
                 } else if (e.target.parentNode.id == "gatheringPanel") {
-                    if (isGathering) {
+                    if (activeAction == "gather") {
                         gatheringStopped();
                     }
                 } else if (e.target.parentNode.id == "inscriptionPanel") {
@@ -1434,7 +1434,7 @@ var UI = {
             switch (actionType) {
                 case "gather":
                     // make sure not already gathering:
-                    if (!isGathering) {
+                    if (activeAction != "gather") {
                         // check if there's a relevant item on the hero's tile, or at arm's length:
                         var armsLengthXTile = hero.tileX + relativeFacing[hero.facing]["x"];
                         var armsLengthYTile = hero.tileY + relativeFacing[hero.facing]["y"];
@@ -1502,37 +1502,47 @@ var UI = {
                                     gatheringOutputSlot.innerHTML = '';
                                     gatheringPanel.classList.add('active');
                                     audio.playSound(soundEffects['gather' + thisNode.dataset.category], 0);
-                                    isGathering = true;
+                                    activeAction = "gather";
                                 }
                             } else {
                                 UI.showNotification('<p>Wrong resource type for this action</p>');
                             }
-                            if (isDowsing) {
-                                isDowsing = false;
+                            if (activeAction == "dowse") {
+                                activeAction = "";
                             }
                         }
                     }
 
-                break;
+                    break;
                 case "dowse":
-                    if (!isGathering) {
-                        if (!isDowsing) {
+                    if (activeAction != "gather") {
+                        if (activeAction != "dowse") {
                             dowsing.range = baseDowsingRange;
                             dowsing.category = thisNode.dataset.category
-                            isDowsing = true;
+                            activeAction = "dowse";
                             dowsing.modifiers = hero.actions[thisNode.dataset.index][3];
-                                    for (var modifier in dowsing.modifiers) {
-                                        switch (modifier) {                                       
-                                            case 'range':
-                                                dowsing.range += dowsing.modifiers[modifier];
-                                                break;
-                                        }
-                                    }
+                            for (var modifier in dowsing.modifiers) {
+                                switch (modifier) {
+                                    case 'range':
+                                        dowsing.range += dowsing.modifiers[modifier];
+                                        break;
+                                }
+                            }
                         } else {
-                            isDowsing = false;
+                            activeAction = "";
                         }
                     }
-                break;
+                    break;
+                case "survey":
+                    // ok to switch to this from Dowsing
+                    if (activeAction != "gather") {
+                        if (activeAction != "survey") {
+                            activeAction = "survey";
+                            processSurveying();
+                        }
+
+                    }
+                    break;
             }
         }
     },
