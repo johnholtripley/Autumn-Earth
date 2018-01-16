@@ -34,10 +34,101 @@ if ( $numberofrows>0 ) {
 mysql_free_result($eventsResult);
 
 
+function pathIsConnected($targetX, $targetY) {
+  //  echo "looking for ".$targetX . "_" . $targetY.": ";
+    global $mapData, $clearTiles, $mapTilesY, $mapTilesX;
+    $connectionFound = false;
+    // get first element of the doors array (it's associative):
+    reset($mapData['map']['doors']);
+$firstKey = key($mapData['map']['doors']);
+    $startDoor = explode(",",$firstKey);
+    $openList = array($startDoor[0]."_".$startDoor[1]);
 
+    $closedList = array();
+    $stillWorking = true;
+    do {
+       
+        if (count($openList) > 0) {
+            $thisNode = array_pop($openList);
+            array_unshift($closedList, $thisNode);
+      
+            if ($thisNode == $targetX . "_" . $targetY) {
+                  // found exit door:
+            
+                $stillWorking = false;
+                $connectionFound = true;
+            } else {
+                // add valid neighbours to the open list:
+                $nodesPosition = explode("_", $thisNode);
+                // needs to be greater than 1 as 0 will be map edge and don't want to include these:
+
+                if ($nodesPosition[0] > 1) {
+                  //  echo "true1 ";
+                    // check it's clear:
+                //    echo "considering ".($nodesPosition[0]-1)."_".$nodesPosition[1]." - ".$clearTiles[$nodesPosition[1]][$nodesPosition[0]+1]." ... ";
+                    if($clearTiles[$nodesPosition[1]][$nodesPosition[0]-1] !== '1') {
+                        // check it's not already been added:
+                        $newNode = ($nodesPosition[0] - 1) . "_" . $nodesPosition[1];
+                         if (!(in_array($newNode, $closedList))) {
+                            if (!(in_array($newNode, $openList))) {
+                                array_unshift($openList, $newNode);
+                            }
+                        }
+                    }
+                }
+          
+             //   echo (intval($mapTilesX)-2);
+            
+                if ($nodesPosition[0] <= ($mapTilesX - 3)) {
+               //     echo "true2 ";
+               //     echo "considering ".($nodesPosition[0]+1)."_".$nodesPosition[1]." - ".$clearTiles[$nodesPosition[1]][$nodesPosition[0]+1]." ... ";
+                    if($clearTiles[$nodesPosition[1]][$nodesPosition[0]+1] !== '1') {
+                          $newNode = ($nodesPosition[0] + 1) . "_" . $nodesPosition[1];
+                         if (!(in_array($newNode, $closedList))) {
+                            if (!(in_array($newNode, $openList))) {
+                                array_unshift($openList, $newNode);
+                            }
+                        }
+                    }
+                }
+                if ($nodesPosition[1] > 1) {
+                 //   echo "true3 ";
+                //    echo "considering ".($nodesPosition[0])."_".($nodesPosition[1]-1)." - ".$clearTiles[$nodesPosition[1]-1][$nodesPosition[0]]." ... ";
+                    if($clearTiles[$nodesPosition[1]-1][$nodesPosition[0]] !== '1') {
+                         $newNode = ($nodesPosition[0]) . "_" . ($nodesPosition[1]-1);
+                         if (!(in_array($newNode, $closedList))) {
+                            if (!(in_array($newNode, $openList))) {
+                                array_unshift($openList, $newNode);
+                            }
+                        }
+                    }
+                }
+                if ($nodesPosition[1] <= $mapTilesY - 3) {
+                 //   echo "true4 ";
+                 //   echo "considering ".($nodesPosition[0])."_".($nodesPosition[1]+1)." - ".$clearTiles[$nodesPosition[1]+1][$nodesPosition[0]]." ... ";
+                     if($clearTiles[$nodesPosition[1]+1][$nodesPosition[0]] !== '1') {
+                        $newNode = ($nodesPosition[0]) . "_" . ($nodesPosition[1]+1);
+                         if (!(in_array($newNode, $closedList))) {
+                            if (!(in_array($newNode, $openList))) {
+                                array_unshift($openList, $newNode);
+                            }
+                        }
+                    }
+                }
+            }
+        } else {
+             // run out of open tiles:
+            $stillWorking = false;
+            $connectionFound = false;
+        }
+    } while ($stillWorking);
+  //  echo " || ended || ";
+  //  var_dump($connectionFound);
+    return $connectionFound;
+}
 
 function generatePositionsOfHiddenResourceNodes() {
-    global $mapData, $activeEvents;
+    global $mapData, $activeEvents, $clearTiles, $mapTilesY, $mapTilesX;
 
  
     // try and space out so not clustered together #########
@@ -100,13 +191,13 @@ foreach ($whichCategories as &$thisCategory) {
         $thisX = mt_rand(0,$mapTilesX-1);
         $thisY = mt_rand(0,$mapTilesY-1);
         if($clearTiles[$thisY][$thisX] == '0') {
-            // check it's accessible from the entrance: ##############
-            $isAccessible = true;
+            
+            $isAccessible = pathIsConnected($thisX,$thisY);
             if($isAccessible) {
                 array_push($resources[$thisCategory],array($thisX,$thisY));
                 $assignedNodes++;
                 // mark it as not clear now:
-                $clearTiles[$thisY][$thisX] == '1';
+                $clearTiles[$thisY][$thisX] = '1';
             }
         }
     } while ($assignedNodes<$numberOfNodes);
