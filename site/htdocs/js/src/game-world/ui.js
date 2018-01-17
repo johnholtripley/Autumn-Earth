@@ -1510,7 +1510,7 @@ var UI = {
                                     // determine the stability decrease based on the quality being extracted - higher quality = more harmful, stabiity will drop faster
                                     gathering.stabilitySpeed = gathering.quality * gatheringStabilityModifier;
                                     // quantity remaining will continuously drop:
-                                    gathering.depletionSpeed = gathering.depletionTime / gatheringDepletionModifier;
+                                    gathering.depletionSpeed = gatheringDepletionModifier / gathering.depletionTime;
 
                                     // update the bar without the transitions, so it's all in place when the panel opens:
                                     UI.updateGatheringPanel();
@@ -1571,7 +1571,7 @@ var UI = {
                             }
                             surveying.timeRequired = capValues(surveying.timeRequired, 200, 2000);
                             surveying.timeRemaining = 100;
-                            surveying.depletionSpeed = surveying.timeRequired / surveyingDepletionModifier;
+                            surveying.depletionSpeed = surveyingDepletionModifier / surveying.timeRequired;
 
                             UI.updateSurveyingPanel();
                             // trigger a reflow to push the update without the transition:
