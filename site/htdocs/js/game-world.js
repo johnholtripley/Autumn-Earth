@@ -380,6 +380,9 @@ const gatheringDepletionModifier = 0.00002;
 const dowsingRingSize = 100;
 const baseDowsingRange = 10;
 
+const baseSurveyingTime = 1000;
+const surveyingDepletionModifier = 0.001;
+
 // key bindings
 var key = [0, 0, 0, 0, 0, 0, 0];
 
@@ -676,15 +679,23 @@ function processDowsing() {
 }
 
 function processSurveying() {
+    surveying.timeRemaining -= surveying.depletionSpeed;
+    if (surveying.timeRemaining <= 0) {
+        activeAction = "";
+        surveyingComplete();
+    }
+    UI.updateSurveyingPanel();
+}
+
+function surveyingComplete() {
     var thisDistance, thisResource, sourceTileX, sourceTileY, tryFacing, facingsRemaining;
-    var attempts = 0;
+    var resourceFound = false;
     if (thisMapData.hiddenResources[surveying.category]) {
         for (var i = 0; i < thisMapData.hiddenResources[surveying.category].length; i++) {
             thisResource = thisMapData.hiddenResources[surveying.category][i];
             thisDistance = getPythagorasDistance(hero.tileX, hero.tileY, thisResource.tileX, thisResource.tileY);
             if (thisDistance < 2) {
                 tryFacing = hero.facing;
-
                 switch (tryFacing) {
                     case 'n':
                         facingsRemaining = ['e', 'w', 's'];
@@ -698,34 +709,36 @@ function processSurveying() {
                     case 'w':
                         facingsRemaining = ['e', 'w', 'n'];
                         break;
-
                 }
-
-
                 do {
-
                     sourceTileX = hero.tileX + relativeFacing[tryFacing]["x"];
                     sourceTileY = hero.tileY + relativeFacing[tryFacing]["y"];
                     tryFacing = facingsRemaining.shift();
                 } while (!tileIsClear(sourceTileX, sourceTileY) && (facingsRemaining.length > 0));
-
-
                 if (facingsRemaining.length > 0) {
                     thisResource.tileX = sourceTileX;
                     thisResource.tileY = sourceTileY;
                     thisResource.isTemporary = true;
                     thisMapData.items.push(thisResource);
                     initialiseItem(thisMapData.items.length - 1);
-                    activeAction = "";
-                    surveying = {};
+resourceFound = true;
                 } else {
-                    console.log("Couldn't place resource node");
+                    console.log("Error - Couldn't place resource node");
                 }
-
                 break;
             }
         }
     }
+    if(!resourceFound) {
+        UI.showNotification('<p>No resources found</p>');
+    }
+    surveyingStopped();
+}
+
+function surveyingStopped() {
+    activeAction = "";
+    surveying = {};
+    surveyingPanel.classList.remove('active');
 }
 function animateFae() {
     //fae.z = Math.floor((Math.sin(fae.dz) + 1) * 8 + 40);
@@ -2996,7 +3009,9 @@ const gatheringBarQuality = document.querySelector('#gatheringQualityBar .progre
 const gatheringBarPurity = document.querySelector('#gatheringPurityBar .progressBar');
 const gatheringBarQuantity = document.querySelector('#gatheringQuantityBar .progressBar');
 const gatheringBarStability = document.querySelector('#gatheringBarStability .progressBar');
+const surveyingTimeBar = document.querySelector('#surveyingTimeBar .progressBar');
 const gatheringOutputSlot = document.getElementById('gatheringOutputSlot');
+const surveyingPanel = document.getElementById('surveyingPanel');
 
 var notificationQueue = [];
 var notificationIsShowing = false;
@@ -3221,7 +3236,7 @@ var UI = {
 
 
             var thisNode = getNearestParentId(e.target);
-           // console.log(thisNode.id)
+            // console.log(thisNode.id)
 
 
             if (thisNode.id.substring(0, 6) == "recipe") {
@@ -3785,6 +3800,10 @@ var UI = {
                 } else if (e.target.parentNode.id == "gatheringPanel") {
                     if (activeAction == "gather") {
                         gatheringStopped();
+                    }
+                } else if (e.target.parentNode.id == "surveyingPanel") {
+                    if (activeAction == "survey") {
+                        surveyingStopped();
                     }
                 } else if (e.target.parentNode.id == "inscriptionPanel") {
 
@@ -4418,7 +4437,7 @@ var UI = {
                                 if (thisMapData.items[foundItem].state != "inactive") {
                                     gathering.itemIndex = foundItem;
                                     gathering.quality = parseInt(thisMapData.items[foundItem].quality);
-                                  
+
                                     gathering.quantity = 100;
                                     gathering.maxQuantity = parseInt(thisMapData.items[foundItem].quantity);
                                     gathering.purity = parseInt(thisMapData.items[foundItem].purity);
@@ -4446,11 +4465,11 @@ var UI = {
 
                                     // tool needs to modify values as well #####
 
-// make sure not too low, or negative
-    gathering.quality = capValues(gathering.quality, 10, 100);
-    gathering.purity = capValues(gathering.purity, 10, 100);
-    gathering.stability = capValues(gathering.stability, 10, 100);
-    gathering.quantity = capValues(gathering.quantity, 10, 100);
+                                    // make sure not too low, or negative
+                                    gathering.quality = capValues(gathering.quality, 10, 100);
+                                    gathering.purity = capValues(gathering.purity, 10, 100);
+                                    gathering.stability = capValues(gathering.stability, 10, 100);
+                                    gathering.quantity = capValues(gathering.quantity, 10, 100);
 
 
                                     // determine the stability decrease based on the quality being extracted - higher quality = more harmful, stabiity will drop faster
@@ -4498,17 +4517,31 @@ var UI = {
                     }
                     break;
                 case "survey":
-         
                     // ok to switch to this from Dowsing
                     if (activeAction != "gather") {
                         if (activeAction != "survey") {
-
                             activeAction = "survey";
-                              surveying.category = thisNode.dataset.category;
-                            processSurveying();
-                          
-                        }
+                            surveying.category = thisNode.dataset.category;
+                            surveying.timeRequired = baseSurveyingTime;
+                            surveying.modifiers = hero.actions[thisNode.dataset.index][3];
+                            for (var modifier in surveying.modifiers) {
+                                switch (modifier) {
+                                    case 'time':
+                                        surveying.timeRequired += surveying.modifiers[modifier];
+                                        break;
+                                }
+                            }
+                            surveying.timeRequired = capValues(surveying.timeRequired, 200, 2000);
+                            surveying.timeRemaining = 100;
+                            surveying.depletionSpeed = surveying.timeRequired * surveyingDepletionModifier;
 
+UI.updateSurveyingPanel();
+                                    // trigger a reflow to push the update without the transition:
+                                    surveyingPanel.offsetHeight;
+
+                            surveyingPanel.classList.add('active');
+                            
+                        }
                     }
                     break;
             }
@@ -4520,6 +4553,10 @@ var UI = {
         gatheringBarQuantity.style.width = gathering.quantity + '%';
         gatheringBarPurity.style.width = gathering.purity + '%';
         gatheringBarStability.style.width = gathering.stability + '%';
+    },
+
+    updateSurveyingPanel: function() {
+        surveyingTimeBar.style.width = surveying.timeRemaining + '%';
     },
 
     addFromGathering: function() {
@@ -5771,6 +5808,9 @@ gatheringStopped();
         if (activeAction=="dowse") {
         processDowsing();
     }
+       if (activeAction=="survey") {
+        processSurveying();
+    }
 }
 
 
@@ -5850,6 +5890,9 @@ function heroIsInNewTile() {
         activeDoorX = hero.tileX;
         activeDoorY = hero.tileY;
         startDoorTransition();
+    }
+    if (activeAction == "survey") {
+        surveyingStopped();
     }
 }
 

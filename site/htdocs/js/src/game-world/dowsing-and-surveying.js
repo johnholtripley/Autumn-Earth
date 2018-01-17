@@ -21,15 +21,23 @@ function processDowsing() {
 }
 
 function processSurveying() {
+    surveying.timeRemaining -= surveying.depletionSpeed;
+    if (surveying.timeRemaining <= 0) {
+        activeAction = "";
+        surveyingComplete();
+    }
+    UI.updateSurveyingPanel();
+}
+
+function surveyingComplete() {
     var thisDistance, thisResource, sourceTileX, sourceTileY, tryFacing, facingsRemaining;
-    var attempts = 0;
+    var resourceFound = false;
     if (thisMapData.hiddenResources[surveying.category]) {
         for (var i = 0; i < thisMapData.hiddenResources[surveying.category].length; i++) {
             thisResource = thisMapData.hiddenResources[surveying.category][i];
             thisDistance = getPythagorasDistance(hero.tileX, hero.tileY, thisResource.tileX, thisResource.tileY);
             if (thisDistance < 2) {
                 tryFacing = hero.facing;
-
                 switch (tryFacing) {
                     case 'n':
                         facingsRemaining = ['e', 'w', 's'];
@@ -43,32 +51,34 @@ function processSurveying() {
                     case 'w':
                         facingsRemaining = ['e', 'w', 'n'];
                         break;
-
                 }
-
-
                 do {
-
                     sourceTileX = hero.tileX + relativeFacing[tryFacing]["x"];
                     sourceTileY = hero.tileY + relativeFacing[tryFacing]["y"];
                     tryFacing = facingsRemaining.shift();
                 } while (!tileIsClear(sourceTileX, sourceTileY) && (facingsRemaining.length > 0));
-
-
                 if (facingsRemaining.length > 0) {
                     thisResource.tileX = sourceTileX;
                     thisResource.tileY = sourceTileY;
                     thisResource.isTemporary = true;
                     thisMapData.items.push(thisResource);
                     initialiseItem(thisMapData.items.length - 1);
-                    activeAction = "";
-                    surveying = {};
+resourceFound = true;
                 } else {
-                    console.log("Couldn't place resource node");
+                    console.log("Error - Couldn't place resource node");
                 }
-
                 break;
             }
         }
     }
+    if(!resourceFound) {
+        UI.showNotification('<p>No resources found</p>');
+    }
+    surveyingStopped();
+}
+
+function surveyingStopped() {
+    activeAction = "";
+    surveying = {};
+    surveyingPanel.classList.remove('active');
 }

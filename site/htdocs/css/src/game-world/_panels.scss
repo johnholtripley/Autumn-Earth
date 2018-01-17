@@ -47,7 +47,7 @@ $numberOfItemCategories: 20;
             }
         }
     }
-    
+
     @for $i from 1 through $numberOfItemCategories {
         &.shopSpecialism#{$i} .itemCategory#{$i}~.qty:after {
             opacity: 1;
@@ -88,18 +88,18 @@ $numberOfItemCategories: 20;
 }
 
 #chestPanel {
-       
-        left: 55%;
-        top: 45%;
-          background: #53160d url(../images/game-world/interface/inventory-panel-bg.jpg) no-repeat 0 100%;
-        z-index: 1;
-        @include togglePanel(0.4s);
-       
-   
+
+    left: 55%;
+    top: 45%;
+    background: #53160d url(../images/game-world/interface/inventory-panel-bg.jpg) no-repeat 0 100%;
+    z-index: 1;
+    @include togglePanel(0.4s);
 }
 
 // slots in Inventory or Chests:
-#inventoryPanels .inventoryBag, #chestPanel, #gatheringOutputSlot {
+#inventoryPanels .inventoryBag,
+#chestPanel,
+#gatheringOutputSlot {
     ol {
         margin: 0;
         width: 184px;
@@ -409,7 +409,17 @@ $numberOfItemCategories: 20;
     color: #fff;
 }
 
-#gatheringPanel {
+.progressBar {
+    width: 100%; // http://littlesvr.ca/apng/assembler/assembler.php
+    background-image: url(../images/game-world/interface/progress-bar-sparkle.png);
+    background-repeat: no-repeat;
+    background-position: 100% 50%;
+    @include background-size(auto, 100%);
+    height: 20px;
+}
+
+#gatheringPanel,
+#surveyingPanel {
     @include togglePanel(0.4s);
     width: 322px;
     top: 40%;
@@ -417,9 +427,9 @@ $numberOfItemCategories: 20;
     color: #fff;
     z-index: 1;
     left: calc(50% + 50px);
-    
+
     ul {
-        @include pxRem('padding',12);
+        @include pxRem('padding', 12);
         list-style: none;
         margin: 0;
         li {
@@ -429,28 +439,22 @@ $numberOfItemCategories: 20;
         }
     }
     p {
-        @include pxRem('font-size',12);
+        @include pxRem('font-size', 12);
         display: block;
         float: left;
         line-height: 20px;
         margin: 0;
         padding: 0;
     }
-}
-.progressBar {
-    width: 100%;
-    // http://littlesvr.ca/apng/assembler/assembler.php
-    background-image: url(../images/game-world/interface/progress-bar-sparkle.png);
-    background-repeat: no-repeat;
-    background-position: 100% 50%;
-    @include background-size(auto, 100%);
-    height: 20px;
+    &.active .progressBar {
+        // only show the transition when active - so initial values aren't animated to
+        @include transition(width 0.1s ease);
+    }
 }
 
-#gatheringPanel.active .progressBar {
-    // only show the transition when active - so initial values aren't animated to
-    @include transition(width 0.1s ease);
-}
+
+
+
 
 
 
@@ -460,17 +464,25 @@ $numberOfItemCategories: 20;
     float: right;
     width: 224px;
 }
+
 #gatheringQualityBar .progressBar {
     background-color: #1f5440;
 }
+
 #gatheringPurityBar .progressBar {
     background-color: #c6ad47;
 }
+
 #gatheringQuantityBar .progressBar {
     background-color: #517db4;
 }
+
 #gatheringBarStability .progressBar {
     background-color: #9c2717;
+}
+
+#surveyingTimeBar .progressBar {
+    background-color: #517db4;
 }
 
 .closePanel {

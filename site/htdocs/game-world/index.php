@@ -75,6 +75,12 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
       </ul>
       <div id="gatheringOutputSlot"></div>
     </div>
+    <div id="surveyingPanel">
+      <div class="draggableBar">Surveying&hellip;</div><button class="closePanel">close</button>
+      <ul>
+        <li><p>Time</p><div id="surveyingTimeBar" class="progressBarWrapper"><div class="progressBar"></div></div></li>
+      </ul>
+    </div>
     <div id="cardAlbum" class="active">
       <div class="draggableBar">Totem Card album</div>
       <div id="cardAlbumList"></div>

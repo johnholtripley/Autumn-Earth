@@ -90,6 +90,9 @@ const gatheringDepletionModifier = 0.00002;
 const dowsingRingSize = 100;
 const baseDowsingRange = 10;
 
+const baseSurveyingTime = 1000;
+const surveyingDepletionModifier = 0.001;
+
 // key bindings
 var key = [0, 0, 0, 0, 0, 0, 0];
 

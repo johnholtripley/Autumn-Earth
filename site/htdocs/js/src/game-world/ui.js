@@ -41,7 +41,9 @@ const gatheringBarQuality = document.querySelector('#gatheringQualityBar .progre
 const gatheringBarPurity = document.querySelector('#gatheringPurityBar .progressBar');
 const gatheringBarQuantity = document.querySelector('#gatheringQuantityBar .progressBar');
 const gatheringBarStability = document.querySelector('#gatheringBarStability .progressBar');
+const surveyingTimeBar = document.querySelector('#surveyingTimeBar .progressBar');
 const gatheringOutputSlot = document.getElementById('gatheringOutputSlot');
+const surveyingPanel = document.getElementById('surveyingPanel');
 
 var notificationQueue = [];
 var notificationIsShowing = false;
@@ -266,7 +268,7 @@ var UI = {
 
 
             var thisNode = getNearestParentId(e.target);
-           // console.log(thisNode.id)
+            // console.log(thisNode.id)
 
 
             if (thisNode.id.substring(0, 6) == "recipe") {
@@ -830,6 +832,10 @@ var UI = {
                 } else if (e.target.parentNode.id == "gatheringPanel") {
                     if (activeAction == "gather") {
                         gatheringStopped();
+                    }
+                } else if (e.target.parentNode.id == "surveyingPanel") {
+                    if (activeAction == "survey") {
+                        surveyingStopped();
                     }
                 } else if (e.target.parentNode.id == "inscriptionPanel") {
 
@@ -1463,7 +1469,7 @@ var UI = {
                                 if (thisMapData.items[foundItem].state != "inactive") {
                                     gathering.itemIndex = foundItem;
                                     gathering.quality = parseInt(thisMapData.items[foundItem].quality);
-                                  
+
                                     gathering.quantity = 100;
                                     gathering.maxQuantity = parseInt(thisMapData.items[foundItem].quantity);
                                     gathering.purity = parseInt(thisMapData.items[foundItem].purity);
@@ -1491,11 +1497,11 @@ var UI = {
 
                                     // tool needs to modify values as well #####
 
-// make sure not too low, or negative
-    gathering.quality = capValues(gathering.quality, 10, 100);
-    gathering.purity = capValues(gathering.purity, 10, 100);
-    gathering.stability = capValues(gathering.stability, 10, 100);
-    gathering.quantity = capValues(gathering.quantity, 10, 100);
+                                    // make sure not too low, or negative
+                                    gathering.quality = capValues(gathering.quality, 10, 100);
+                                    gathering.purity = capValues(gathering.purity, 10, 100);
+                                    gathering.stability = capValues(gathering.stability, 10, 100);
+                                    gathering.quantity = capValues(gathering.quantity, 10, 100);
 
 
                                     // determine the stability decrease based on the quality being extracted - higher quality = more harmful, stabiity will drop faster
@@ -1543,17 +1549,31 @@ var UI = {
                     }
                     break;
                 case "survey":
-         
                     // ok to switch to this from Dowsing
                     if (activeAction != "gather") {
                         if (activeAction != "survey") {
-
                             activeAction = "survey";
-                              surveying.category = thisNode.dataset.category;
-                            processSurveying();
-                          
-                        }
+                            surveying.category = thisNode.dataset.category;
+                            surveying.timeRequired = baseSurveyingTime;
+                            surveying.modifiers = hero.actions[thisNode.dataset.index][3];
+                            for (var modifier in surveying.modifiers) {
+                                switch (modifier) {
+                                    case 'time':
+                                        surveying.timeRequired += surveying.modifiers[modifier];
+                                        break;
+                                }
+                            }
+                            surveying.timeRequired = capValues(surveying.timeRequired, 200, 2000);
+                            surveying.timeRemaining = 100;
+                            surveying.depletionSpeed = surveying.timeRequired * surveyingDepletionModifier;
 
+UI.updateSurveyingPanel();
+                                    // trigger a reflow to push the update without the transition:
+                                    surveyingPanel.offsetHeight;
+
+                            surveyingPanel.classList.add('active');
+                            
+                        }
                     }
                     break;
             }
@@ -1565,6 +1585,10 @@ var UI = {
         gatheringBarQuantity.style.width = gathering.quantity + '%';
         gatheringBarPurity.style.width = gathering.purity + '%';
         gatheringBarStability.style.width = gathering.stability + '%';
+    },
+
+    updateSurveyingPanel: function() {
+        surveyingTimeBar.style.width = surveying.timeRemaining + '%';
     },
 
     addFromGathering: function() {

@@ -1236,6 +1236,9 @@ gatheringStopped();
         if (activeAction=="dowse") {
         processDowsing();
     }
+       if (activeAction=="survey") {
+        processSurveying();
+    }
 }
 
 
@@ -1315,6 +1318,9 @@ function heroIsInNewTile() {
         activeDoorX = hero.tileX;
         activeDoorY = hero.tileY;
         startDoorTransition();
+    }
+    if (activeAction == "survey") {
+        surveyingStopped();
     }
 }
 
