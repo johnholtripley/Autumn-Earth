@@ -14,24 +14,27 @@ function processDowsing() {
         if (whichIndex != -1) {
             dowsing.proximity = 100 - (100 * ((closestDistance) / dowsing.range));
             dowsing.proximity = capValues(dowsing.proximity, 0, 100);
+        } else {
+            dowsing.proximity = 0;
         }
     }
 }
 
 function processSurveying() {
-    var thisDistance, thisResource;
+    var thisDistance, thisResource, sourceTileX, sourceTileY;
     if (thisMapData.hiddenResources[surveying.category]) {
         for (var i = 0; i < thisMapData.hiddenResources[surveying.category].length; i++) {
             thisResource = thisMapData.hiddenResources[surveying.category][i];
             thisDistance = getPythagorasDistance(hero.tileX, hero.tileY, thisResource.tileX, thisResource.tileY);
             if (thisDistance < 2) {
-                // found resource ####
-                console.log("found it! Type: "+thisResource.type);
-
-                // need to determine type, and contains - hiddenResources should have this
-                // render node to screen
-                // remove the node once gathered
-
+                sourceTileX = hero.tileX + relativeFacing[hero.facing]["x"];
+                sourceTileY = hero.tileY + relativeFacing[hero.facing]["y"];
+                // make sure this is clear ###########
+                thisResource.tileX = sourceTileX;
+                thisResource.tileY = sourceTileY;
+                thisResource.isTemporary = true;
+                thisMapData.items.push(thisResource);
+                initialiseItem(thisMapData.items.length - 1);
                 activeAction = "";
                 surveying = {};
                 break;

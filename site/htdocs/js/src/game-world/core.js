@@ -313,6 +313,20 @@ var thisNPCIdentifier;
         }
     }
 
+    // check for hidden resources:
+    for (var i in thisMapData.hiddenResources) {
+for (var j in thisMapData.hiddenResources[i]) {
+thisItemIdentifier = "item" + thisMapData.hiddenResources[i][j].type;
+if (itemGraphicsToLoad.indexOf(thisItemIdentifier) == -1) {
+     imagesToLoad.push({
+                name: thisItemIdentifier,
+                src: "/images/game-world/items/" + currentActiveInventoryItems[thisMapData.hiddenResources[i][j].type].worldSrc + ".png"
+            });
+            itemGraphicsToLoad.push(thisItemIdentifier);
+    }
+}
+    }
+
 
 
     Loader.preload(imagesToLoad, prepareGame, loadingProgress);
@@ -444,6 +458,23 @@ function findInventoryItemData() {
         }
     }
 
+    // find items in hidden resources (and their contents):
+    var containsSplit;
+    for (var i in thisMapData.hiddenResources) {
+        for (var j in thisMapData.hiddenResources[i]) {
+            itemIdsToGet.push(thisMapData.hiddenResources[i][j].type);
+            if (thisMapData.hiddenResources[i][j].contains) {
+                for (var k in thisMapData.hiddenResources[i][j].contains) {
+                    containsSplit = thisMapData.hiddenResources[i][j].contains[k].type.split("/");
+                    for (var l = 0; l < containsSplit.length; l++) {
+                        itemIdsToGet.push(containsSplit[l]);
+                    }
+
+                }
+
+            }
+        }
+    }
 
     // find items in recipes:
     for (var i in hero.crafting) {
@@ -502,6 +533,39 @@ function initialiseNPC(whichNPC) {
     thisMapData.npcs[whichNPC].forceNewMovementCheck = true;
     // used for making sure that pathfinding NPCs don't head straight back to the last place they visited:
     thisMapData.npcs[whichNPC].lastTargetDestination = "";
+}
+
+function initialiseItem(whichItem) {
+        thisMapData.items[whichItem].x = getTileCentreCoordX(thisMapData.items[whichItem].tileX);
+        thisMapData.items[whichItem].y = getTileCentreCoordY(thisMapData.items[whichItem].tileY);
+        thisMapData.items[whichItem].z = getElevation(thisMapData.items[whichItem].tileX, thisMapData.items[whichItem].tileY);
+        thisMapData.items[whichItem].width = currentActiveInventoryItems[thisMapData.items[whichItem].type].width;
+        thisMapData.items[whichItem].height = currentActiveInventoryItems[thisMapData.items[whichItem].type].height;
+        thisMapData.items[whichItem].centreX = currentActiveInventoryItems[thisMapData.items[whichItem].type].centreX;
+        thisMapData.items[whichItem].centreY = currentActiveInventoryItems[thisMapData.items[whichItem].type].centreY;
+        thisMapData.items[whichItem].spriteWidth = currentActiveInventoryItems[thisMapData.items[whichItem].type].spriteWidth;
+        thisMapData.items[whichItem].spriteHeight = currentActiveInventoryItems[thisMapData.items[whichItem].type].spriteHeight;
+        // check for node resources:
+        if (currentActiveInventoryItems[thisMapData.items[whichItem].type].action == "node") {
+            // use the saved value if it has one:
+            if (!thisMapData.items[whichItem].timeLastHarvested) {
+                // otherwise, set it so it can be instantly harvested:
+                thisMapData.items[whichItem].timeLastHarvested = hero.totalGameTimePlayed - currentActiveInventoryItems[thisMapData.items[whichItem].type].respawnRate;
+            }
+
+            // add stability and quantity values if it doesn't have them
+            if (typeof thisMapData.items[whichItem].stability === "undefined") {
+                thisMapData.items[whichItem].stability = thisMapData.items[whichItem].maxStability;
+            }
+            if (typeof thisMapData.items[whichItem].quantity === "undefined") {
+                thisMapData.items[whichItem].quantity = thisMapData.items[whichItem].maxQuantity;
+            }
+
+        }
+        if (currentActiveInventoryItems[thisMapData.items[whichItem].type].action == "nest") {
+            thisMapData.items[whichItem].timeLastSpawned = hero.totalGameTimePlayed;
+            thisMapData.items[whichItem].spawnsRemaining = thisMapData.items[whichItem].additional;
+        }
 }
 
 
@@ -597,36 +661,7 @@ function prepareGame() {
 
     // initialise items:
     for (var i = 0; i < thisMapData.items.length; i++) {
-        thisMapData.items[i].x = getTileCentreCoordX(thisMapData.items[i].tileX);
-        thisMapData.items[i].y = getTileCentreCoordY(thisMapData.items[i].tileY);
-        thisMapData.items[i].z = getElevation(thisMapData.items[i].tileX, thisMapData.items[i].tileY);
-        thisMapData.items[i].width = currentActiveInventoryItems[thisMapData.items[i].type].width;
-        thisMapData.items[i].height = currentActiveInventoryItems[thisMapData.items[i].type].height;
-        thisMapData.items[i].centreX = currentActiveInventoryItems[thisMapData.items[i].type].centreX;
-        thisMapData.items[i].centreY = currentActiveInventoryItems[thisMapData.items[i].type].centreY;
-thisMapData.items[i].spriteWidth = currentActiveInventoryItems[thisMapData.items[i].type].spriteWidth;
-thisMapData.items[i].spriteHeight = currentActiveInventoryItems[thisMapData.items[i].type].spriteHeight;
-        // check for node resources:
-        if (currentActiveInventoryItems[thisMapData.items[i].type].action == "node") {
-            // use the saved value if it has one:
-            if (!thisMapData.items[i].timeLastHarvested) {
-                // otherwise, set it so it can be instantly harvested:
-                thisMapData.items[i].timeLastHarvested = hero.totalGameTimePlayed - currentActiveInventoryItems[thisMapData.items[i].type].respawnRate;
-            }
-
-// add stability and quantity values if it doesn't have them
-if (typeof thisMapData.items[i].stability === "undefined") {
-    thisMapData.items[i].stability = thisMapData.items[i].maxStability;
-    }
-    if (typeof thisMapData.items[i].quantity === "undefined") {
-    thisMapData.items[i].quantity = thisMapData.items[i].maxQuantity;
-    }
-
-        }
-        if (currentActiveInventoryItems[thisMapData.items[i].type].action == "nest") {
-            thisMapData.items[i].timeLastSpawned = hero.totalGameTimePlayed;
-            thisMapData.items[i].spawnsRemaining = thisMapData.items[i].additional;
-        }
+        initialiseItem(i);
     }
     activeNPCForDialogue = '';
 
@@ -2358,6 +2393,7 @@ thisNPCIdentifier = "npc" + thisMapData.npcs[i].name;
 
         for (var i = 0; i < thisMapData.items.length; i++) {
             thisItem = thisMapData.items[i];
+         
             thisX = findIsoCoordsX(thisItem.x, thisItem.y);
             thisY = findIsoCoordsY(thisItem.x, thisItem.y);
             thisFileColourSuffix = "";

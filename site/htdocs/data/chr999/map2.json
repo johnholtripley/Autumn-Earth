@@ -758,25 +758,6 @@
                 "colour": 0
             }]
 
-        }, {
-
-            "type": 50,
-            "tileX": 19,
-            "tileY": 32,
-            "quality": 80,
-            "maxStability": 90,
-            "maxQuantity": 10,
-            "purity": 70,
-            "state": "active",
-            "animation": {
-                  "active": {"length": 1,"row":0},
-                  "inactive": {"length": 1,"row":1}
-            },
-             "contains": [{
-                "type": "51/52",
-                "colour": 0
-            }]
-
         }
 
         ],

@@ -234,12 +234,13 @@ array_push($possibleDyeableItems[$itemCategories],$itemID);
 }
 mysql_free_result($nodeResult);
 
-
+$maxAttemptsPerCategory = $mapTilesX * $mapTilesY / 4;
 
 foreach ($whichCategories as &$thisCategory) {
     $resources[$thisCategory] = array();
     $numberOfNodes = mt_rand(2,4);
     $assignedNodes = 0;
+    $numberOfAttempts = 0;
     do {
         $thisX = mt_rand(0,$mapTilesX-1);
         $thisY = mt_rand(0,$mapTilesY-1);
@@ -284,7 +285,7 @@ $thisItemQuantity = capValues($thisItemQuantity, 3, 20);
 
 
 $thisItemObject = array(
-    "type"=>$possibleNodes[$thisCategory][mt_rand(0, count($possibleNodes[$thisCategory]) - 1)],
+    "type"=>intval($possibleNodes[$thisCategory][mt_rand(0, count($possibleNodes[$thisCategory]) - 1)]),
     "tileX"=>$thisX,
     "tileY"=>$thisY,
     "quality"=> $thisItemQuality,
@@ -309,7 +310,8 @@ $thisItemObject = array(
                 $clearTiles[$thisY][$thisX] = '1';
             }
         }
-    } while ($assignedNodes<$numberOfNodes);
+        $numberOfAttempts ++;
+    } while (($assignedNodes<$numberOfNodes) && ($numberOfAttempts < $maxAttemptsPerCategory));
 }
 
 

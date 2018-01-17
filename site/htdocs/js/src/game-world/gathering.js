@@ -17,7 +17,7 @@ function processGathering() {
 
     gathering.quantity -= gathering.depletionSpeed;
     gathering.stability -= gathering.stabilitySpeed;
-
+console.log(gathering.quality, gathering.purity, gathering.stability, gathering.quantity);
     gathering.quality = capValues(gathering.quality, 0, 100);
     gathering.purity = capValues(gathering.purity, 0, 100);
     gathering.stability = capValues(gathering.stability, 0, 100);
@@ -57,6 +57,7 @@ function gatheringComplete() {
         createdMarkup += '</li></ol>';
         gatheringOutputSlot.innerHTML = createdMarkup;
     }
+
     gatheringStopped();
 }
 
@@ -71,5 +72,23 @@ function gatheringStopped() {
         gathering.node.timeLastHarvested = hero.totalGameTimePlayed;
         gathering.node.state = "inactive";
     }
+
+
+
+    if (gathering.node.isTemporary) {
+        // loop through hidden resources (of this type) and remove it:
+        for (var i = 0; i < thisMapData.hiddenResources[(currentActiveInventoryItems[gathering.node.type].category)].length; i++) {
+            if (thisMapData.hiddenResources[(currentActiveInventoryItems[gathering.node.type].category)][i] === gathering.node) {
+                thisMapData.hiddenResources[(currentActiveInventoryItems[gathering.node.type].category)].splice(i, 1);
+            }
+        }
+        // loop through items and remove it:
+        for (var i = 0; i < thisMapData.items.length; i++) {
+            if (thisMapData.items[i] === gathering.node) {
+                thisMapData.items.splice(i, 1);
+            }
+        }
+    }
+
     gathering = {};
 }

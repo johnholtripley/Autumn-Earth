@@ -266,7 +266,7 @@ var UI = {
 
 
             var thisNode = getNearestParentId(e.target);
-            console.log(thisNode.id)
+           // console.log(thisNode.id)
 
 
             if (thisNode.id.substring(0, 6) == "recipe") {
@@ -1463,6 +1463,7 @@ var UI = {
                                 if (thisMapData.items[foundItem].state != "inactive") {
                                     gathering.itemIndex = foundItem;
                                     gathering.quality = parseInt(thisMapData.items[foundItem].quality);
+                                  
                                     gathering.quantity = 100;
                                     gathering.maxQuantity = parseInt(thisMapData.items[foundItem].quantity);
                                     gathering.purity = parseInt(thisMapData.items[foundItem].purity);
@@ -1489,6 +1490,13 @@ var UI = {
                                     }
 
                                     // tool needs to modify values as well #####
+
+// make sure not too low, or negative
+    gathering.quality = capValues(gathering.quality, 10, 100);
+    gathering.purity = capValues(gathering.purity, 10, 100);
+    gathering.stability = capValues(gathering.stability, 10, 100);
+    gathering.quantity = capValues(gathering.quantity, 10, 100);
+
 
                                     // determine the stability decrease based on the quality being extracted - higher quality = more harmful, stabiity will drop faster
                                     gathering.stabilitySpeed = gathering.quality * gatheringStabilityModifier;
@@ -1535,12 +1543,15 @@ var UI = {
                     }
                     break;
                 case "survey":
+         
                     // ok to switch to this from Dowsing
                     if (activeAction != "gather") {
                         if (activeAction != "survey") {
+
                             activeAction = "survey";
+                              surveying.category = thisNode.dataset.category;
                             processSurveying();
-                            surveying.category = thisNode.dataset.category
+                          
                         }
 
                     }

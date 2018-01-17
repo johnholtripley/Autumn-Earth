@@ -669,24 +669,27 @@ function processDowsing() {
         if (whichIndex != -1) {
             dowsing.proximity = 100 - (100 * ((closestDistance) / dowsing.range));
             dowsing.proximity = capValues(dowsing.proximity, 0, 100);
+        } else {
+            dowsing.proximity = 0;
         }
     }
 }
 
 function processSurveying() {
-    var thisDistance, thisResource;
+    var thisDistance, thisResource, sourceTileX, sourceTileY;
     if (thisMapData.hiddenResources[surveying.category]) {
         for (var i = 0; i < thisMapData.hiddenResources[surveying.category].length; i++) {
             thisResource = thisMapData.hiddenResources[surveying.category][i];
             thisDistance = getPythagorasDistance(hero.tileX, hero.tileY, thisResource.tileX, thisResource.tileY);
             if (thisDistance < 2) {
-                // found resource ####
-                console.log("found it! Type: "+thisResource.type);
-
-                // need to determine type, and contains - hiddenResources should have this
-                // render node to screen
-                // remove the node once gathered
-
+                sourceTileX = hero.tileX + relativeFacing[hero.facing]["x"];
+                sourceTileY = hero.tileY + relativeFacing[hero.facing]["y"];
+                // make sure this is clear ###########
+                thisResource.tileX = sourceTileX;
+                thisResource.tileY = sourceTileY;
+                thisResource.isTemporary = true;
+                thisMapData.items.push(thisResource);
+                initialiseItem(thisMapData.items.length - 1);
                 activeAction = "";
                 surveying = {};
                 break;
@@ -813,7 +816,7 @@ function processGathering() {
 
     gathering.quantity -= gathering.depletionSpeed;
     gathering.stability -= gathering.stabilitySpeed;
-
+console.log(gathering.quality, gathering.purity, gathering.stability, gathering.quantity);
     gathering.quality = capValues(gathering.quality, 0, 100);
     gathering.purity = capValues(gathering.purity, 0, 100);
     gathering.stability = capValues(gathering.stability, 0, 100);
@@ -853,6 +856,7 @@ function gatheringComplete() {
         createdMarkup += '</li></ol>';
         gatheringOutputSlot.innerHTML = createdMarkup;
     }
+
     gatheringStopped();
 }
 
@@ -867,6 +871,24 @@ function gatheringStopped() {
         gathering.node.timeLastHarvested = hero.totalGameTimePlayed;
         gathering.node.state = "inactive";
     }
+
+
+
+    if (gathering.node.isTemporary) {
+        // loop through hidden resources (of this type) and remove it:
+        for (var i = 0; i < thisMapData.hiddenResources[(currentActiveInventoryItems[gathering.node.type].category)].length; i++) {
+            if (thisMapData.hiddenResources[(currentActiveInventoryItems[gathering.node.type].category)][i] === gathering.node) {
+                thisMapData.hiddenResources[(currentActiveInventoryItems[gathering.node.type].category)].splice(i, 1);
+            }
+        }
+        // loop through items and remove it:
+        for (var i = 0; i < thisMapData.items.length; i++) {
+            if (thisMapData.items[i] === gathering.node) {
+                thisMapData.items.splice(i, 1);
+            }
+        }
+    }
+
     gathering = {};
 }
 
@@ -3174,7 +3196,7 @@ var UI = {
 
 
             var thisNode = getNearestParentId(e.target);
-            console.log(thisNode.id)
+           // console.log(thisNode.id)
 
 
             if (thisNode.id.substring(0, 6) == "recipe") {
@@ -4371,6 +4393,7 @@ var UI = {
                                 if (thisMapData.items[foundItem].state != "inactive") {
                                     gathering.itemIndex = foundItem;
                                     gathering.quality = parseInt(thisMapData.items[foundItem].quality);
+                                  
                                     gathering.quantity = 100;
                                     gathering.maxQuantity = parseInt(thisMapData.items[foundItem].quantity);
                                     gathering.purity = parseInt(thisMapData.items[foundItem].purity);
@@ -4397,6 +4420,13 @@ var UI = {
                                     }
 
                                     // tool needs to modify values as well #####
+
+// make sure not too low, or negative
+    gathering.quality = capValues(gathering.quality, 10, 100);
+    gathering.purity = capValues(gathering.purity, 10, 100);
+    gathering.stability = capValues(gathering.stability, 10, 100);
+    gathering.quantity = capValues(gathering.quantity, 10, 100);
+
 
                                     // determine the stability decrease based on the quality being extracted - higher quality = more harmful, stabiity will drop faster
                                     gathering.stabilitySpeed = gathering.quality * gatheringStabilityModifier;
@@ -4443,12 +4473,15 @@ var UI = {
                     }
                     break;
                 case "survey":
+         
                     // ok to switch to this from Dowsing
                     if (activeAction != "gather") {
                         if (activeAction != "survey") {
+
                             activeAction = "survey";
+                              surveying.category = thisNode.dataset.category;
                             processSurveying();
-                            surveying.category = thisNode.dataset.category
+                          
                         }
 
                     }
@@ -4790,6 +4823,20 @@ var thisNPCIdentifier;
         }
     }
 
+    // check for hidden resources:
+    for (var i in thisMapData.hiddenResources) {
+for (var j in thisMapData.hiddenResources[i]) {
+thisItemIdentifier = "item" + thisMapData.hiddenResources[i][j].type;
+if (itemGraphicsToLoad.indexOf(thisItemIdentifier) == -1) {
+     imagesToLoad.push({
+                name: thisItemIdentifier,
+                src: "/images/game-world/items/" + currentActiveInventoryItems[thisMapData.hiddenResources[i][j].type].worldSrc + ".png"
+            });
+            itemGraphicsToLoad.push(thisItemIdentifier);
+    }
+}
+    }
+
 
 
     Loader.preload(imagesToLoad, prepareGame, loadingProgress);
@@ -4921,6 +4968,23 @@ function findInventoryItemData() {
         }
     }
 
+    // find items in hidden resources (and their contents):
+    var containsSplit;
+    for (var i in thisMapData.hiddenResources) {
+        for (var j in thisMapData.hiddenResources[i]) {
+            itemIdsToGet.push(thisMapData.hiddenResources[i][j].type);
+            if (thisMapData.hiddenResources[i][j].contains) {
+                for (var k in thisMapData.hiddenResources[i][j].contains) {
+                    containsSplit = thisMapData.hiddenResources[i][j].contains[k].type.split("/");
+                    for (var l = 0; l < containsSplit.length; l++) {
+                        itemIdsToGet.push(containsSplit[l]);
+                    }
+
+                }
+
+            }
+        }
+    }
 
     // find items in recipes:
     for (var i in hero.crafting) {
@@ -4979,6 +5043,39 @@ function initialiseNPC(whichNPC) {
     thisMapData.npcs[whichNPC].forceNewMovementCheck = true;
     // used for making sure that pathfinding NPCs don't head straight back to the last place they visited:
     thisMapData.npcs[whichNPC].lastTargetDestination = "";
+}
+
+function initialiseItem(whichItem) {
+        thisMapData.items[whichItem].x = getTileCentreCoordX(thisMapData.items[whichItem].tileX);
+        thisMapData.items[whichItem].y = getTileCentreCoordY(thisMapData.items[whichItem].tileY);
+        thisMapData.items[whichItem].z = getElevation(thisMapData.items[whichItem].tileX, thisMapData.items[whichItem].tileY);
+        thisMapData.items[whichItem].width = currentActiveInventoryItems[thisMapData.items[whichItem].type].width;
+        thisMapData.items[whichItem].height = currentActiveInventoryItems[thisMapData.items[whichItem].type].height;
+        thisMapData.items[whichItem].centreX = currentActiveInventoryItems[thisMapData.items[whichItem].type].centreX;
+        thisMapData.items[whichItem].centreY = currentActiveInventoryItems[thisMapData.items[whichItem].type].centreY;
+        thisMapData.items[whichItem].spriteWidth = currentActiveInventoryItems[thisMapData.items[whichItem].type].spriteWidth;
+        thisMapData.items[whichItem].spriteHeight = currentActiveInventoryItems[thisMapData.items[whichItem].type].spriteHeight;
+        // check for node resources:
+        if (currentActiveInventoryItems[thisMapData.items[whichItem].type].action == "node") {
+            // use the saved value if it has one:
+            if (!thisMapData.items[whichItem].timeLastHarvested) {
+                // otherwise, set it so it can be instantly harvested:
+                thisMapData.items[whichItem].timeLastHarvested = hero.totalGameTimePlayed - currentActiveInventoryItems[thisMapData.items[whichItem].type].respawnRate;
+            }
+
+            // add stability and quantity values if it doesn't have them
+            if (typeof thisMapData.items[whichItem].stability === "undefined") {
+                thisMapData.items[whichItem].stability = thisMapData.items[whichItem].maxStability;
+            }
+            if (typeof thisMapData.items[whichItem].quantity === "undefined") {
+                thisMapData.items[whichItem].quantity = thisMapData.items[whichItem].maxQuantity;
+            }
+
+        }
+        if (currentActiveInventoryItems[thisMapData.items[whichItem].type].action == "nest") {
+            thisMapData.items[whichItem].timeLastSpawned = hero.totalGameTimePlayed;
+            thisMapData.items[whichItem].spawnsRemaining = thisMapData.items[whichItem].additional;
+        }
 }
 
 
@@ -5074,36 +5171,7 @@ function prepareGame() {
 
     // initialise items:
     for (var i = 0; i < thisMapData.items.length; i++) {
-        thisMapData.items[i].x = getTileCentreCoordX(thisMapData.items[i].tileX);
-        thisMapData.items[i].y = getTileCentreCoordY(thisMapData.items[i].tileY);
-        thisMapData.items[i].z = getElevation(thisMapData.items[i].tileX, thisMapData.items[i].tileY);
-        thisMapData.items[i].width = currentActiveInventoryItems[thisMapData.items[i].type].width;
-        thisMapData.items[i].height = currentActiveInventoryItems[thisMapData.items[i].type].height;
-        thisMapData.items[i].centreX = currentActiveInventoryItems[thisMapData.items[i].type].centreX;
-        thisMapData.items[i].centreY = currentActiveInventoryItems[thisMapData.items[i].type].centreY;
-thisMapData.items[i].spriteWidth = currentActiveInventoryItems[thisMapData.items[i].type].spriteWidth;
-thisMapData.items[i].spriteHeight = currentActiveInventoryItems[thisMapData.items[i].type].spriteHeight;
-        // check for node resources:
-        if (currentActiveInventoryItems[thisMapData.items[i].type].action == "node") {
-            // use the saved value if it has one:
-            if (!thisMapData.items[i].timeLastHarvested) {
-                // otherwise, set it so it can be instantly harvested:
-                thisMapData.items[i].timeLastHarvested = hero.totalGameTimePlayed - currentActiveInventoryItems[thisMapData.items[i].type].respawnRate;
-            }
-
-// add stability and quantity values if it doesn't have them
-if (typeof thisMapData.items[i].stability === "undefined") {
-    thisMapData.items[i].stability = thisMapData.items[i].maxStability;
-    }
-    if (typeof thisMapData.items[i].quantity === "undefined") {
-    thisMapData.items[i].quantity = thisMapData.items[i].maxQuantity;
-    }
-
-        }
-        if (currentActiveInventoryItems[thisMapData.items[i].type].action == "nest") {
-            thisMapData.items[i].timeLastSpawned = hero.totalGameTimePlayed;
-            thisMapData.items[i].spawnsRemaining = thisMapData.items[i].additional;
-        }
+        initialiseItem(i);
     }
     activeNPCForDialogue = '';
 
@@ -6835,6 +6903,7 @@ thisNPCIdentifier = "npc" + thisMapData.npcs[i].name;
 
         for (var i = 0; i < thisMapData.items.length; i++) {
             thisItem = thisMapData.items[i];
+         
             thisX = findIsoCoordsX(thisItem.x, thisItem.y);
             thisY = findIsoCoordsY(thisItem.x, thisItem.y);
             thisFileColourSuffix = "";
