@@ -32,6 +32,7 @@ function processGathering() {
 function gatheringComplete() {
     if (gathering.stability == 0) {
         UI.showNotification('<p>Resource failed - nothing was gathered</p>');
+        gatheringPanel.classList.remove('active');
     } else {
         var generatedObject = gathering.node.contains[0];
         var quantityOfItem = Math.floor((gathering.purity / 100) * (gathering.node.maxQuantity - gathering.quantity));
