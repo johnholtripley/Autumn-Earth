@@ -721,7 +721,7 @@ function surveyingComplete() {
                     thisResource.isTemporary = true;
                     thisMapData.items.push(thisResource);
                     initialiseItem(thisMapData.items.length - 1);
-resourceFound = true;
+                    resourceFound = true;
                 } else {
                     console.log("Error - Couldn't place resource node");
                 }
@@ -729,7 +729,7 @@ resourceFound = true;
             }
         }
     }
-    if(!resourceFound) {
+    if (!resourceFound) {
         UI.showNotification('<p>No resources found</p>');
     }
     surveyingStopped();
@@ -4409,9 +4409,9 @@ var UI = {
                 case "gather":
                     // make sure not already gathering:
                     if (activeAction != "gather") {
-                         if (activeAction == "survey") {
-        surveyingStopped();
-    }
+                        if (activeAction == "survey") {
+                            surveyingStopped();
+                        }
                         // check if there's a relevant item on the hero's tile, or at arm's length:
                         var armsLengthXTile = hero.tileX + relativeFacing[hero.facing]["x"];
                         var armsLengthYTile = hero.tileY + relativeFacing[hero.facing]["y"];
@@ -4478,7 +4478,7 @@ var UI = {
                                     // determine the stability decrease based on the quality being extracted - higher quality = more harmful, stabiity will drop faster
                                     gathering.stabilitySpeed = gathering.quality * gatheringStabilityModifier;
                                     // quantity remaining will continuously drop:
-                                    gathering.depletionSpeed = gathering.depletionTime * gatheringDepletionModifier;
+                                    gathering.depletionSpeed = gathering.depletionTime / gatheringDepletionModifier;
 
                                     // update the bar without the transitions, so it's all in place when the panel opens:
                                     UI.updateGatheringPanel();
@@ -4500,9 +4500,9 @@ var UI = {
 
                     break;
                 case "dowse":
-                 if (activeAction == "survey") {
-        surveyingStopped();
-    }
+                    if (activeAction == "survey") {
+                        surveyingStopped();
+                    }
                     if (activeAction != "gather") {
                         if (activeAction != "dowse") {
                             dowsing.range = baseDowsingRange;
@@ -4539,18 +4539,14 @@ var UI = {
                             }
                             surveying.timeRequired = capValues(surveying.timeRequired, 200, 2000);
                             surveying.timeRemaining = 100;
-                            surveying.depletionSpeed = surveying.timeRequired * surveyingDepletionModifier;
+                            surveying.depletionSpeed = surveying.timeRequired / surveyingDepletionModifier;
 
-UI.updateSurveyingPanel();
-                                    // trigger a reflow to push the update without the transition:
-                                    surveyingPanel.offsetHeight;
-
+                            UI.updateSurveyingPanel();
+                            // trigger a reflow to push the update without the transition:
+                            surveyingPanel.offsetHeight;
                             surveyingPanel.classList.add('active');
-                            
                         } else {
-                            
-        surveyingStopped();
-    
+                            surveyingStopped();
                         }
                     }
                     break;

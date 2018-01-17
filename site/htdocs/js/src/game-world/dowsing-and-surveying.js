@@ -63,7 +63,7 @@ function surveyingComplete() {
                     thisResource.isTemporary = true;
                     thisMapData.items.push(thisResource);
                     initialiseItem(thisMapData.items.length - 1);
-resourceFound = true;
+                    resourceFound = true;
                 } else {
                     console.log("Error - Couldn't place resource node");
                 }
@@ -71,7 +71,7 @@ resourceFound = true;
             }
         }
     }
-    if(!resourceFound) {
+    if (!resourceFound) {
         UI.showNotification('<p>No resources found</p>');
     }
     surveyingStopped();
