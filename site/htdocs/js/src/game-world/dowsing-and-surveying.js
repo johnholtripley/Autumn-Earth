@@ -21,22 +21,52 @@ function processDowsing() {
 }
 
 function processSurveying() {
-    var thisDistance, thisResource, sourceTileX, sourceTileY;
+    var thisDistance, thisResource, sourceTileX, sourceTileY, tryFacing, facingsRemaining;
+    var attempts = 0;
     if (thisMapData.hiddenResources[surveying.category]) {
         for (var i = 0; i < thisMapData.hiddenResources[surveying.category].length; i++) {
             thisResource = thisMapData.hiddenResources[surveying.category][i];
             thisDistance = getPythagorasDistance(hero.tileX, hero.tileY, thisResource.tileX, thisResource.tileY);
             if (thisDistance < 2) {
-                sourceTileX = hero.tileX + relativeFacing[hero.facing]["x"];
-                sourceTileY = hero.tileY + relativeFacing[hero.facing]["y"];
-                // make sure this is clear ###########
-                thisResource.tileX = sourceTileX;
-                thisResource.tileY = sourceTileY;
-                thisResource.isTemporary = true;
-                thisMapData.items.push(thisResource);
-                initialiseItem(thisMapData.items.length - 1);
-                activeAction = "";
-                surveying = {};
+                tryFacing = hero.facing;
+
+                switch (tryFacing) {
+                    case 'n':
+                        facingsRemaining = ['e', 'w', 's'];
+                        break;
+                    case 'e':
+                        facingsRemaining = ['n', 's', 'w'];
+                        break;
+                    case 's':
+                        facingsRemaining = ['n', 's', 'e'];
+                        break;
+                    case 'w':
+                        facingsRemaining = ['e', 'w', 'n'];
+                        break;
+
+                }
+
+
+                do {
+
+                    sourceTileX = hero.tileX + relativeFacing[tryFacing]["x"];
+                    sourceTileY = hero.tileY + relativeFacing[tryFacing]["y"];
+                    tryFacing = facingsRemaining.shift();
+                } while (!tileIsClear(sourceTileX, sourceTileY) && (facingsRemaining.length > 0));
+
+
+                if (facingsRemaining.length > 0) {
+                    thisResource.tileX = sourceTileX;
+                    thisResource.tileY = sourceTileY;
+                    thisResource.isTemporary = true;
+                    thisMapData.items.push(thisResource);
+                    initialiseItem(thisMapData.items.length - 1);
+                    activeAction = "";
+                    surveying = {};
+                } else {
+                    console.log("Couldn't place resource node");
+                }
+
                 break;
             }
         }

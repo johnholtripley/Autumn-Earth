@@ -232,7 +232,7 @@ function isAnObjectCollision(obj1x, obj1y, obj1w, obj1h, obj2x, obj2y, obj2w, ob
 }
 
 
-var facingsPossible = ["n","e","s","w"];
+const facingsPossible = ["n","e","s","w"];
 
 // useful for determining relative direction based on facing:
 var relativeFacing = {

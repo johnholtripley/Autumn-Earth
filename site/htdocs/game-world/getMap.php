@@ -199,6 +199,22 @@ function generatePositionsOfHiddenResourceNodes() {
 $mapTilesY = count($mapData['map']['terrain']);
 $mapTilesX = count($mapData['map']['terrain'][0]);
 
+
+// loop through clearTiles (inset from the edge by 1 though) and any that are blocked, mark the tiles immediately adjacent (N, E, S and W) as blocked as well, to allow space for the resource to be spawned
+// ie. 'clear' tiles are themselves and their ordinal neighbours clear:
+for ($i = 1; $i < $mapTilesX-1; $i++) {
+            for ( $j = 1; $j < $mapTilesY-1; $j++) {
+                if ($clearTiles[$j][$i] != "0") {
+                    $clearTiles[$j-1][$i] = "1";
+                    $clearTiles[$j+1][$i] = "1";
+                    $clearTiles[$j][$i+1] = "1";
+                    $clearTiles[$j][$i-1] = "1";
+                    }
+                }
+            }
+
+
+
 $resources = array();
 
 $possibleNodes = array();

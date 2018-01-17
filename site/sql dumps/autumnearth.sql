@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 12, 2018 at 06:00 PM
+-- Generation Time: Jan 17, 2018 at 01:36 PM
 -- Server version: 5.6.24
 -- PHP Version: 5.6.8
 
@@ -632,7 +632,7 @@ CREATE TABLE IF NOT EXISTS `tblinventoryitems` (
   `lockedToThisPlayer` tinyint(1) NOT NULL DEFAULT '0',
   `respawnRate` int(11) DEFAULT NULL,
   `activeDuringSeason` int(11) DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=51 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=53 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblinventoryitems`
@@ -656,7 +656,7 @@ INSERT INTO `tblinventoryitems` (`itemID`, `shortname`, `description`, `priceCod
 (16, 'Woolen Yarn', 'Spun wool.', '1', '20.0', '24.0', 0, 0, NULL, NULL, 'yarn', '', '0', 1, 0, '0', '0', '3', NULL, 0, 0, 0, 1, 0, NULL, NULL),
 (17, 'Small Backpack', 'A 20 slot bag', '2', '20.0', '24.0', 0, 0, NULL, NULL, 'small-backpack', 'bag', '20', 1, 0, '0', '0', NULL, NULL, 0, 0, 0, 1, 0, NULL, NULL),
 (18, 'Barrel', 'A large wooden barrel.', '2', '25.0', '31.0', 38, 38, NULL, NULL, 'barrel', 'static', '0', 0, 0, '0', '0', NULL, NULL, 0, 0, 0, 1, 0, NULL, NULL),
-(19, 'Pumpkin', 'A tasty pumpkin.', '1', '16.0', '18.0', 25, 23, NULL, NULL, 'pumpkin', '', '0', 0, 0, '0', '0', '4', NULL, 0, 0, 0, 1, 0, NULL, 2),
+(19, 'Pumpkin', 'A tasty pumpkin.', '1', '16.0', '18.0', 25, 23, NULL, NULL, 'pumpkin', '', '0', 0, 0, '0', '0', '', NULL, 0, 0, 0, 1, 0, NULL, 2),
 (20, 'Large Backpack', 'A 24 slot bag', '2', '20.0', '24.0', 0, 0, NULL, NULL, 'large-backpack', 'bag', '24', 1, 0, '0', '0', NULL, NULL, 0, 0, 0, 1, 0, NULL, NULL),
 (21, 'Card Pack', '5 cards', '4', '20.0', '24.0', 0, 0, NULL, NULL, 'card-pack', 'booster', '0', 0, 0, '0', '0', NULL, NULL, 0, 0, 0, 1, 0, NULL, NULL),
 (22, 'Standing Stone', '', '4', '49.0', '81.0', 63, 63, NULL, NULL, 'standing-stone', 'questToggle', '2', 0, 0, '0', '0', NULL, NULL, 0, 0, 0, 0, 0, NULL, NULL),
@@ -687,7 +687,9 @@ INSERT INTO `tblinventoryitems` (`itemID`, `shortname`, `description`, `priceCod
 (47, 'Butterfly plant', '', '4', '19.0', '39.0', 20, 20, NULL, NULL, 'butterfly-plant', 'nest', '0', 0, 0, '0', '0', '', NULL, 0, 0, 0, 0, 0, 300, NULL),
 (48, 'Chest', '', '1', '44.0', '44.0', 48, 48, NULL, NULL, 'chest', 'chest', '6', 0, 0, '0', '0', '', NULL, 0, 0, 0, 0, 0, NULL, NULL),
 (49, 'Worsted Yarn', 'Thicker, spun wool.', '1', '20.0', '24.0', 0, 0, NULL, NULL, 'yarn', '', '0', 1, 0, '0', '0', '3', NULL, 0, 0, 0, 1, 0, NULL, NULL),
-(50, 'Mineral Node', '', '4', '20.0', '16.0', 38, 38, 34, 25, 'mineral-node', 'node', '0', 0, 0, '0', '0', '4', NULL, 0, 0, 0, 0, 0, 300, NULL);
+(50, 'Mineral Node', '', '4', '20.0', '16.0', 38, 38, 34, 25, 'mineral-node', 'node', '0', 0, 0, '0', '0', '4', NULL, 0, 0, 0, 0, 0, 300, NULL),
+(51, 'Copper', 'A soft metal.', '1', '20.0', '24.0', 0, 0, NULL, NULL, 'copper', '', '0', 0, 0, '0', '0', '4', NULL, 0, 0, 0, 1, 0, NULL, NULL),
+(52, 'Iron', 'A harder metal.', '1', '20.0', '24.0', 0, 0, NULL, NULL, 'iron', '', '0', 0, 0, '0', '0', '4', NULL, 0, 0, 0, 1, 0, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -985,7 +987,7 @@ CREATE TABLE IF NOT EXISTS `tblplants` (
   `timeCreated` datetime NOT NULL,
   `plantSeed` int(255) NOT NULL,
   `commonNamesJoined` varchar(512) COLLATE utf8_bin NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=465 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=466 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
 -- Dumping data for table `tblplants`
@@ -1201,7 +1203,8 @@ INSERT INTO `tblplants` (`plantID`, `latinName`, `commonNames`, `plantDesc`, `pl
 (461, 'Choilex perennis', 'It is likewise called Millerstitch', 'It is a low herb, seldom rising half a yard high, having sundry leaves standing on brownish green stalks by three, snipped about, and of a strong unpleasant savour: The umbels of the flowers are white, and the seed blackish, the root runs in the ground, quickly taking a great deal of room. This grows in gardens. The clusters of deep blue flowers attract the Long-tailed processionary butterfly. It flowers in April and May.', 'choilex-perennis', 'Choilex perennis\r\nIt is likewise called Millerstitch', 0, 0, '2018-01-09 16:43:43', 1515528275, 'Millerstitch'),
 (462, 'Fraxicauleusa vulgaris', 'It is called Sweet shade', 'The common sort hereof has many long and somewhat dark green leaves, rising from the root, dented about the edges, and sometimes a little rent or torn on both sides in two or three places, and somewhat hairy withal; amongst which arises a long round stalk, four or five feet high, divided into many branches, at the tops whereof stand great scaly green heads, and from the middle of them thrust forth a number of dark purplish deep yellow thrumbs or threads, which after they are withered and past, there are found divers black seeds, lying in a great deal of down, somewhat like unto Thistle seed, but smaller; the root is white, hard and woody, and divers fibres annexed thereunto, which perishes not, but abides with leaves thereon all the Winter, shooting out fresh every Autumn. It grows plentifully in the borders of corn fields, and in some copses. It flowers in November and December, and the leaves are green all the Autumn.', 'fraxicauleusa-vulgaris', 'Fraxicauleusa vulgaris\r\nIt is called Sweet shade', 0, 0, '2018-01-09 16:43:52', 1515536143, 'Sweet shade'),
 (463, 'Rhabarbare serota', 'It is likewise known as Broomstitch', 'Broomstitch (being used as a sallad herb) is so well known that it needs no description; I shall therefore only speak of its virtues as follows. It grows in moist and wet grounds, by wood-sides, and sometimes in moist places of shadowy groves, as also by the water side. It flowers about September, and the berries are ripe in October, and then quickly perishes, until the next year it springs from the same again.', 'rhabarbare-serota', 'Rhabarbare serota\r\nIt is likewise known as Broomstitch\r\nBroomstitch (being used as a sallad herb) is so well known that it needs no description; I shall therefore only speak of its virtues as follows.', 0, 0, '2018-01-09 16:44:21', 1515533237, 'Broomstitch'),
-(464, 'Pensylvatum camajor', 'It is likewise called Wattleseal', 'This is so well known where it grows, that it needs no description. It grows in Kent near Rochester, and in many places in the West Country, both in Devonshire and Cornwall. The flowers are particularly attractive to the Scorched cardinal butterfly. All Wattleseals usually flower in February, a little sooner or later.', 'pensylvatum-camajor', 'Pensylvatum camajor\r\nIt is likewise called Wattleseal\r\nThis is so well known where it grows, that it needs no description. It grows in Kent near Rochester, and in many places in the West Country, both in Devonshire and Cornwall.', 0, 0, '2018-01-09 16:45:56', 1515588165, 'Wattleseal');
+(464, 'Pensylvatum camajor', 'It is likewise called Wattleseal', 'This is so well known where it grows, that it needs no description. It grows in Kent near Rochester, and in many places in the West Country, both in Devonshire and Cornwall. The flowers are particularly attractive to the Scorched cardinal butterfly. All Wattleseals usually flower in February, a little sooner or later.', 'pensylvatum-camajor', 'Pensylvatum camajor\r\nIt is likewise called Wattleseal\r\nThis is so well known where it grows, that it needs no description. It grows in Kent near Rochester, and in many places in the West Country, both in Devonshire and Cornwall.', 0, 0, '2018-01-09 16:45:56', 1515588165, 'Wattleseal'),
+(465, 'Misium beckia', 'Also known as Trailing dragonsbine', 'Trailing dragonsbine has a small creeping root running under the uppermost crust of the ground, somewhat like couch grass root, but not so white, shooting forth stalks with leaves, some whereof carry no berries, the others do; every stalk smooth without joints, and blackish green, rising about half a foot high, if it bear berries, otherwise seldom so high, bearing at the top four leaves set directly one against another, in manner of a cross or ribband tied (as it is called in a true-loves knot,) which are each of them apart somewhat like unto a night-shade leaf, but somewhat broader, having sometimes three leaves, sometimes five, sometimes six, and those sometimes greater than in others, in the middle of the four leaves rise up one small slender stalk, about an inch high, bearing at the tops thereof one flower spread open like a star, consisting of four small and long narrow pointed leaves of a yellowish green colour, and four others lying between them lesser than they; in the middle whereof stands a round dark purplish button or head, compassed about with eight small yellow mealy threads with three colours, making it the more conspicuous, and lovely to behold. This button or head in the middle, when the other leaves are withered, becomes a blackish purple berry, full of juice, of the bigness of a reasonable grape, having within it many white seeds. The whole plant is without any manifest taste. It is frequent in almost every county of this land, and is cherished in gardens with us, where it grows greater than that which is wild, and grows in shadowy sides of fields and woods. It flowers in Autumn, some sooner, some later.', 'misium-beckia', 'Misium beckia\r\nAlso known as Trailing dragonsbine', 0, 0, '2018-01-16 15:58:58', 1516216305, 'Trailing dragonsbine');
 
 -- --------------------------------------------------------
 
@@ -2201,7 +2204,7 @@ ALTER TABLE `tblguilds`
 -- AUTO_INCREMENT for table `tblinventoryitems`
 --
 ALTER TABLE `tblinventoryitems`
-  MODIFY `itemID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=51;
+  MODIFY `itemID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=53;
 --
 -- AUTO_INCREMENT for table `tblitemcategories`
 --
@@ -2241,7 +2244,7 @@ ALTER TABLE `tblnews`
 -- AUTO_INCREMENT for table `tblplants`
 --
 ALTER TABLE `tblplants`
-  MODIFY `plantID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=465;
+  MODIFY `plantID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=466;
 --
 -- AUTO_INCREMENT for table `tblposts`
 --
