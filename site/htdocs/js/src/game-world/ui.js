@@ -1441,6 +1441,9 @@ var UI = {
                 case "gather":
                     // make sure not already gathering:
                     if (activeAction != "gather") {
+                         if (activeAction == "survey") {
+        surveyingStopped();
+    }
                         // check if there's a relevant item on the hero's tile, or at arm's length:
                         var armsLengthXTile = hero.tileX + relativeFacing[hero.facing]["x"];
                         var armsLengthYTile = hero.tileY + relativeFacing[hero.facing]["y"];
@@ -1529,6 +1532,9 @@ var UI = {
 
                     break;
                 case "dowse":
+                 if (activeAction == "survey") {
+        surveyingStopped();
+    }
                     if (activeAction != "gather") {
                         if (activeAction != "dowse") {
                             dowsing.range = baseDowsingRange;
@@ -1573,6 +1579,10 @@ UI.updateSurveyingPanel();
 
                             surveyingPanel.classList.add('active');
                             
+                        } else {
+                            
+        surveyingStopped();
+    
                         }
                     }
                     break;
