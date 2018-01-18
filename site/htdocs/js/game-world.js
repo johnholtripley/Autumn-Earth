@@ -14,7 +14,8 @@ var soundsToLoad = {
     'keys': '../sounds/keys-NOT_MINE-wow.mp3',
     'unlock': '../sounds/unlock-NOT_MINE-wow.mp3',
     'gather1': '../sounds/gather-herb-NOT_MINE-wow.mp3',
-    'gather4': '../sounds/mining-NOT_MINE-wow.mp3'
+    'gather4': '../sounds/mining-NOT_MINE-wow.mp3',
+    'rain': '../sounds/rain-NOT_MINE-youtube.mp3'
 };
 
 
@@ -4611,11 +4612,14 @@ function changeWeather(newWeather) {
         if (currentWeather != "") {
             document.getElementById(currentWeather).classList.add("active");
         }
+
+        // see if relevant sound exists:
+        // needs to fade in, loop, fade out when changed ###
+        if (currentWeather in soundEffects) {
+            audio.playSound(soundEffects[currentWeather], 0);
+        }
     }
 }
-
-
-// play sound
 // service worker:
 if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('/game-world/serviceWorker.min.js', {

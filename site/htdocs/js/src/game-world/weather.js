@@ -31,8 +31,11 @@ function changeWeather(newWeather) {
         if (currentWeather != "") {
             document.getElementById(currentWeather).classList.add("active");
         }
+
+        // see if relevant sound exists:
+        // needs to fade in, loop, fade out when changed ###
+        if (currentWeather in soundEffects) {
+            audio.playSound(soundEffects[currentWeather], 0);
+        }
     }
 }
-
-
-// play sound
