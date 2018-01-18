@@ -681,7 +681,7 @@ function prepareGame() {
     fae.z = hero.z;
     fae.dz = 1;
     // fae.pulse = 0;
-    checkWeather();
+    setupWeather();
     timeSinceLastFrameSwap = 0;
     currentAnimationFrame = 0;
     mapTransition = "in";
@@ -1228,6 +1228,7 @@ gatheringStopped();
     movePet();
     movePlatforms();
     updateItems();
+    checkForWeatherChange();
     audio.checkForAmbientSounds();
     checkForRespawns();
     if (activeAction=="gather") {

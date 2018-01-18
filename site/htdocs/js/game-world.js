@@ -299,6 +299,7 @@ var animationUpdateTime = (1000 / animationFramesPerSecond);
 var gameCanvas, gameContext, gameMode, cartographyContext, cartographyCanvas, offScreenCartographyCanvas, offScreenCartographyContext, canvasMapImage, canvasMapImage, canvasMapMaskImage, heroImg, shadowImg, imagesToLoad, tileImages, npcImages, itemImages, backgroundImg, objInitLeft, objInitTop, dragStartX, dragStartY, inventoryCheck, timeSinceLastAmbientSoundWasPlayed, gameSettings, lightMap, lightMapOverlay, lightMapContext, activeGatheredObject;
 var chestIdOpen = -1;
 var currentWeather = "";
+var weatherLastChangedTime = 0;
 var interfaceIsVisible = true;
 var activeAction = "";
 var dowsing = {};
@@ -4577,32 +4578,43 @@ var UI = {
         }
     },
 }
-function checkWeather() {
+function setupWeather() {
     var previousWeather = currentWeather;
     if (thisMapData.weather.length == 1) {
-        currentWeather = thisMapData.weather[0];
-        if (currentWeather != "") {
-            document.getElementById(currentWeather).classList.add("active");
-        }
+        changeWeather(thisMapData.weather[0]);
     } else {
         // check if previous weather is an option here, and use that if so:
         if (thisMapData.weather.indexOf(previousWeather) !== -1) {
-            currentWeather = previousWeather;
+            changeWeather(previousWeather);
         } else {
-            currentWeather = getRandomElementFromArray[thisMapData.weather];
+            changeWeather(getRandomElementFromArray(thisMapData.weather));
+        }
+    }
+
+}
+
+function checkForWeatherChange() {
+    if (thisMapData.weather.length > 1) {
+        if ((hero.totalGameTimePlayed - weatherLastChangedTime) > 5000) {
+            changeWeather(getRandomElementFromArray(thisMapData.weather));
+        }
+    }
+}
+
+function changeWeather(newWeather) {
+    if (newWeather != currentWeather) {
+        weatherLastChangedTime = hero.totalGameTimePlayed;
+        if (currentWeather != "") {
+            document.getElementById(currentWeather).classList.remove("active");
+        }
+        currentWeather = newWeather;
+        if (currentWeather != "") {
+            document.getElementById(currentWeather).classList.add("active");
         }
     }
 }
 
 
-
-function changeWeather(newWeather) {
-    if(newWeather != currentWeather) {
-
-    }
-}
-
-// random change over time, if array length > 1 ###
 // play sound
 // service worker:
 if ('serviceWorker' in navigator) {
@@ -5287,7 +5299,7 @@ function prepareGame() {
     fae.z = hero.z;
     fae.dz = 1;
     // fae.pulse = 0;
-    checkWeather();
+    setupWeather();
     timeSinceLastFrameSwap = 0;
     currentAnimationFrame = 0;
     mapTransition = "in";
@@ -5834,6 +5846,7 @@ gatheringStopped();
     movePet();
     movePlatforms();
     updateItems();
+    checkForWeatherChange();
     audio.checkForAmbientSounds();
     checkForRespawns();
     if (activeAction=="gather") {
