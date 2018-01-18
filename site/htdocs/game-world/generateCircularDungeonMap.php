@@ -1917,6 +1917,7 @@ $outputJSON .= substr(json_encode($collisions),1,-1).", ".substr(json_encode($te
 
 
 $outputJSON .= ',"graphics": ['.$dungeonDetails[$dungeonName]['graphics'].$templateGraphicsToAppend.'],';
+$outputJSON .= '"weather": [""],';
 $outputJSON .= '"shops": [],';
 $outputJSON .= '"npcs": ['.$templateNPCsToAppend.'],';
 

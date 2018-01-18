@@ -681,7 +681,7 @@ function prepareGame() {
     fae.z = hero.z;
     fae.dz = 1;
     // fae.pulse = 0;
-
+    checkWeather();
     timeSinceLastFrameSwap = 0;
     currentAnimationFrame = 0;
     mapTransition = "in";
@@ -1262,6 +1262,9 @@ function heroIsInNewTile() {
             }
             if (typeof thisHotspot.music !== "undefined") {
                 audio.playMusic(thisHotspot.music);
+            }
+              if (typeof thisHotspot.weather !== "undefined") {
+                changeWeather(thisHotspot.weather);
             }
             if (typeof thisHotspot.openInnerDoor !== "undefined") {
                 unlockInnerDoor(thisHotspot.openInnerDoor);

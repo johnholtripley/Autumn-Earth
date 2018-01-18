@@ -131,6 +131,7 @@
             "centreX": 24,
             "centreY": 45
         }],
+        "weather": [""],
         "shops": [],
         "movingPlatforms": [
         {

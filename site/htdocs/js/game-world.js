@@ -298,6 +298,7 @@ var animationUpdateTime = (1000 / animationFramesPerSecond);
 
 var gameCanvas, gameContext, gameMode, cartographyContext, cartographyCanvas, offScreenCartographyCanvas, offScreenCartographyContext, canvasMapImage, canvasMapImage, canvasMapMaskImage, heroImg, shadowImg, imagesToLoad, tileImages, npcImages, itemImages, backgroundImg, objInitLeft, objInitTop, dragStartX, dragStartY, inventoryCheck, timeSinceLastAmbientSoundWasPlayed, gameSettings, lightMap, lightMapOverlay, lightMapContext, activeGatheredObject;
 var chestIdOpen = -1;
+var currentWeather = "";
 var interfaceIsVisible = true;
 var activeAction = "";
 var dowsing = {};
@@ -4576,6 +4577,33 @@ var UI = {
         }
     },
 }
+function checkWeather() {
+    var previousWeather = currentWeather;
+    if (thisMapData.weather.length == 1) {
+        currentWeather = thisMapData.weather[0];
+        if (currentWeather != "") {
+            document.getElementById(currentWeather).classList.add("active");
+        }
+    } else {
+        // check if previous weather is an option here, and use that if so:
+        if (thisMapData.weather.indexOf(previousWeather) !== -1) {
+            currentWeather = previousWeather;
+        } else {
+            currentWeather = getRandomElementFromArray[thisMapData.weather];
+        }
+    }
+}
+
+
+
+function changeWeather(newWeather) {
+    if(newWeather != currentWeather) {
+
+    }
+}
+
+// random change over time, if array length > 1 ###
+// play sound
 // service worker:
 if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('/game-world/serviceWorker.min.js', {
@@ -5259,7 +5287,7 @@ function prepareGame() {
     fae.z = hero.z;
     fae.dz = 1;
     // fae.pulse = 0;
-
+    checkWeather();
     timeSinceLastFrameSwap = 0;
     currentAnimationFrame = 0;
     mapTransition = "in";
@@ -5840,6 +5868,9 @@ function heroIsInNewTile() {
             }
             if (typeof thisHotspot.music !== "undefined") {
                 audio.playMusic(thisHotspot.music);
+            }
+              if (typeof thisHotspot.weather !== "undefined") {
+                changeWeather(thisHotspot.weather);
             }
             if (typeof thisHotspot.openInnerDoor !== "undefined") {
                 unlockInnerDoor(thisHotspot.openInnerDoor);

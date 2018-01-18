@@ -180,6 +180,7 @@
             "centreX": 24,
             "centreY": 24
         }],
+        "weather": [""],
         "shops": [],
         "npcs": [
         {

@@ -45,6 +45,11 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
     <canvas id="lightMapOverlay" width="800" height="600"></canvas>  
   </div>
 
+  <div id="weather">
+    <div id="rain"></div>
+    <div id="snow"></div>
+  </div>
+
   <div id="interface" class="active">
     <div id="toolbar">
       <a href="#gameSettings" id="openSettings">Settings</a>

@@ -122,6 +122,7 @@
             { "src": "pendean-overlay.png", "centreX": 182, "centreY": 187 },
             { "src": "pine-tree.png", "centreX": 296, "centreY": 399 }
         ],
+        "weather": ["rain"],
         "shops": [{
             "name": "shop #1",
             "uniqueItems": [],
