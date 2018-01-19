@@ -237,6 +237,10 @@ foreach ($whichCategories as &$thisCategory) {
     $possibleDyeableItems[$thisCategory] = array();
 }
 
+
+if(count($whichCategories) > 0) {
+
+
 // query the database to find all node items of the relevant categories:
 $nodeQuery = "SELECT * from tblinventoryitems where (itemcategories in (".implode(",",$whichCategories).") ) and (activeduringseason in (".implode(",",$activeEventsID).") or activeduringseason IS NULL)";
 
@@ -351,6 +355,9 @@ $thisItemObject = array(
    
 
     $mapData['map']['hiddenResources'] = $resources;
+} else {
+    $mapData['map']['hiddenResources'] = '';
+}
 }
 
 

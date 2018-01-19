@@ -151,6 +151,7 @@ function loadMapJSON(mapFilePath) {
                 }
                 hero.tileY = thisMapData.entrance[1] + startTileOffsetYNum;
             }
+           
 
             // set up pet positions:
             if (hasActivePet) {
@@ -170,9 +171,13 @@ function loadMapJSON(mapFilePath) {
                         tileOffsetX = 1;
                         break
                 }
+             
                 for (var i = 0; i < hero.activePets.length; i++) {
                     hero.allPets[hero.activePets[i]].tileX = hero.tileX + (tileOffsetX * (i + 1));
                     hero.allPets[hero.activePets[i]].tileY = hero.tileY + (tileOffsetY * (i + 1));
+
+
+
                     if (i == 0) {
                         hero.allPets[hero.activePets[i]].state = "moving";
                     } else {
@@ -180,6 +185,7 @@ function loadMapJSON(mapFilePath) {
                         hero.allPets[hero.activePets[i]].state = "queuing";
                     }
                     hero.allPets[hero.activePets[i]].facing = hero.facing;
+
                 }
             }
 
@@ -193,7 +199,7 @@ function loadMapJSON(mapFilePath) {
             }
           
                initCartographicMap();
-            findProfessionsAndRecipes();
+            
             if (thisMapData.showOnlyLineOfSight) {
                 // initialise the lightmap with default values:
                 lightMap = [];
@@ -210,6 +216,7 @@ function loadMapJSON(mapFilePath) {
                 audio.loadAmbientSounds(thisMapData.ambientSounds);
             }
             fae.recentHotspots = [];
+            findProfessionsAndRecipes();
         },
         function(status) {
             // try again:
@@ -724,24 +731,21 @@ function changeMaps(doorX, doorY) {
     previousZoneName = thisMapData.zoneName;
     gameMode = "mapLoading";
     removeMapAssets();
+    if(jumpMapId == null) {
     var doorData = thisMapData.doors;
-
-
-
     var whichDoor = doorX + "," + doorY;
-
-
-
     hero.tileX = doorData[whichDoor].startX;
     hero.tileY = doorData[whichDoor].startY;
-
-
-
-
-
     newMap = doorData[whichDoor].map;
+} else {
+    newMap = jumpMapId;
+    jumpMapId = null;
+    hero.tileX = parseInt(doorX);
+    hero.tileY = parseInt(doorY);
+}
     loadMap();
 }
+
 
 
 function tileIsClear(tileX, tileY) {
@@ -1187,6 +1191,8 @@ gatheringStopped();
 }
         }
     } else {
+        if(jumpMapId == null) {
+            // if jumping maps (eg with a home stone, then don't walk forwards)
         hero.isMoving = true;
         // continue the hero moving:
         switch (hero.facing) {
@@ -1203,6 +1209,7 @@ gatheringStopped();
                 hero.x -= thisSpeed;
                 break;
         }
+    }
         mapTransitionCurrentFrames++;
         if (mapTransitionCurrentFrames >= mapTransitionMaxFrames) {
             changeMaps(activeDoorX, activeDoorY);
@@ -1847,8 +1854,6 @@ function processSpeech(thisNPC, thisSpeechPassedIn, thisSpeechCode, isPartOfNPCs
     }
 }
 
-
-
 function closeQuest(whichNPC, whichQuestId) {
     if (giveQuestRewards(whichQuestId)) {
         if (questData[whichQuestId].isRepeatable > 0) {
@@ -2002,6 +2007,25 @@ function checkForChallenges() {
     key[6] = 0;
 }
 
+function jumpToLocation(mapId, tileX, tileY) {
+    
+    if(mapId == currentMap) {
+hero.tileX = tileX;
+hero.tileY = tileY;
+    hero.x = getTileCentreCoordX(hero.tileX);
+    hero.y = getTileCentreCoordY(hero.tileY);
+    hero.z = getElevation(hero.tileX, hero.tileY);
+    for (var i = 0; i < breadCrumbLength; i++) {
+        hero.breadcrumb[i] = [hero.tileX, hero.tileY];
+    }
+    } else {
+  activeDoorX = tileX;
+        activeDoorY = tileY;
+        jumpMapId = mapId;
+        startDoorTransition();
+    }
+   
+}
 
 function moveNPCs() {
     var thisNPC, newTile, thisNextMovement, oldNPCx, oldNPCy, thisOtherNPC, thisItem, thisNextMovement, thisNextMovementCode, thisInnerDoor;

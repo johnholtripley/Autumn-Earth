@@ -247,6 +247,10 @@ function inventoryItemAction(whichSlot, whichAction, whichActionValue) { // remo
             audio.playSound(soundEffects['bagOpen'], 0);
             removeFromInventory(whichSlotNumber, 1);
             break;
+        case "home":
+        var location = hero.inventory[whichSlotNumber].additional.split("|");
+jumpToLocation(location[0],location[1],location[2]);
+        break;
         case "inscribe":
             UI.openInscriptionPanel();
             break;
