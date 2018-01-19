@@ -458,6 +458,7 @@ var UI = {
         }
         var thisNode = getNearestParentId(e.target);
         var droppedSlot = thisNode.id;
+       
         if (droppedSlot.substring(0, 4) == "slot") {
             // check it's empty:
             var droppedSlotId = droppedSlot.substring(4);
