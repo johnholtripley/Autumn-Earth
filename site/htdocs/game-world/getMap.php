@@ -10,12 +10,16 @@ $map = $_GET["map"];
 
 // get from logged in account ###
 $characterName = "Eleaddai";
+$characterClass = "Druid";
+$primaryProfession = "Herbalist";
 
 
 header('Content-Type: application/json');
 $mapDataFile = file_get_contents('../data/chr' .  $chr . '/map' . $map . '.json');
 
 $mapDataFile = str_replace('##characterName##', $characterName, $mapDataFile);
+$mapDataFile = str_replace('##characterClass##', $characterClass, $mapDataFile);
+$mapDataFile = str_replace('##characterProfession##', $primaryProfession, $mapDataFile);
 
 $hasProceduralContent = strrpos($mapDataFile, '##procedural##');
 $hasEventContent = strrpos($mapDataFile, 'eventSpecificContent');
