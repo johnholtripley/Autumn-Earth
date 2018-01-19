@@ -6635,23 +6635,10 @@ function checkForChallenges() {
 }
 
 function jumpToLocation(mapId, tileX, tileY) {
-    
-    if(mapId == currentMap) {
-hero.tileX = tileX;
-hero.tileY = tileY;
-    hero.x = getTileCentreCoordX(hero.tileX);
-    hero.y = getTileCentreCoordY(hero.tileY);
-    hero.z = getElevation(hero.tileX, hero.tileY);
-    for (var i = 0; i < breadCrumbLength; i++) {
-        hero.breadcrumb[i] = [hero.tileX, hero.tileY];
-    }
-    } else {
-  activeDoorX = tileX;
-        activeDoorY = tileY;
-        jumpMapId = mapId;
-        startDoorTransition();
-    }
-   
+    activeDoorX = tileX;
+    activeDoorY = tileY;
+    jumpMapId = mapId;
+    startDoorTransition();
 }
 
 function moveNPCs() {
