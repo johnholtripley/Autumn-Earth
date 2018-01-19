@@ -7,8 +7,15 @@
 $chr = $_GET["chr"];
 $map = $_GET["map"];
 
+
+// get from logged in account ###
+$characterName = "Eleaddai";
+
+
 header('Content-Type: application/json');
 $mapDataFile = file_get_contents('../data/chr' .  $chr . '/map' . $map . '.json');
+
+$mapDataFile = str_replace('##characterName##', $characterName, $mapDataFile);
 
 $hasProceduralContent = strrpos($mapDataFile, '##procedural##');
 $hasEventContent = strrpos($mapDataFile, 'eventSpecificContent');

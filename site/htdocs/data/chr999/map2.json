@@ -496,7 +496,7 @@
                 "isMoving": false,
                 "speechIndex": 0,
                 "speech": [
-                    ["Hi there - welcome!/Feel free to have a good look around/Welcome, welcome!", "shop", "shop #1"]
+                    ["Hi there - welcome!/Feel free to have a good look around, ##characterName##/Welcome, welcome!", "shop", "shop #1"]
                 ],
                 "cardGameSpeech": {
                     "challenge": ["Do you play? Fancy a game then?", "play"],
@@ -535,7 +535,7 @@
                 "isMoving": false,
                 "speechIndex": 0,
                 "speech": [
-                    ["Hi there - welcome!/Feel free to have a good look around/Welcome, welcome!", "shop", "shop #2"]
+                    ["Hi there - welcome!/Feel free to have a good look around, ##characterName##/Welcome, welcome!", "shop", "shop #2"]
                 ],
                 "cardGameSpeech": {
                     "challenge": ["Do you play? Fancy a game then?", "play"],
@@ -575,7 +575,7 @@
                 "isMoving": false,
                 "speechIndex": 0,
                 "speech": [
-                    ["Hi there - welcome!/Feel free to have a good look around/Welcome, welcome!", "shop", "shop #3"]
+                    ["Hi there - welcome!/Feel free to have a good look around, ##characterName##/Welcome, welcome!", "shop", "shop #3"]
                 ],
                 "cardGameSpeech": {
                     "challenge": ["Do you play? Fancy a game then?", "play"],

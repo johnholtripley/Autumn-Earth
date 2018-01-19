@@ -33,8 +33,8 @@ function changeWeather(newWeather) {
         }
 
         // see if relevant sound exists:
-        // needs to fade in, loop, fade out when changed ###
         if (currentWeather in soundEffects) {
+            // needs to fade in, loop, fade out when changed ###
             audio.playSound(soundEffects[currentWeather], 0);
         }
     }
