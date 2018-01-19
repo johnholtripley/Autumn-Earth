@@ -263,7 +263,8 @@
             "enchanted": 0,
             "hallmark": 0,
             "inscription": "",
-            "additional": "2|4|4"
+            "additional": "2|4|4",
+            "cooldown": 500
         },
         "1-19": {
             "type": 32,

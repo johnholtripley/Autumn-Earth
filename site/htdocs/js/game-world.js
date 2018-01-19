@@ -2108,10 +2108,10 @@ function canAddItemToInventory(itemObj) {
         // make the active inventory be the same as the amended one:
         hero.inventory = JSON.parse(JSON.stringify(inventoryClone));
         UI.updatePanelsAfterInventoryChange();
-     if(moneyToAdd>0) {
-        hero.currency['money'] += moneyToAdd;
-        UI.updateCurrencies();
-    }
+        if (moneyToAdd > 0) {
+            hero.currency['money'] += moneyToAdd;
+            UI.updateCurrencies();
+        }
         // return success, and the slots that were affected:
         return [true, slotsUpdated];
     } else {
@@ -2243,87 +2243,100 @@ function itemAttributesMatch(item1, item2) {
 
 
 
-function inventoryItemAction(whichSlot, whichAction, whichActionValue) { // remove the 'slot' prefix with the substring(4):
+function inventoryItemAction(whichSlot, whichAction, whichActionValue) {
+    // remove the 'slot' prefix with the substring(4):
     var whichSlotNumber = whichSlot.parentElement.id.substring(4);
-    switch (whichAction) {
-        case "container":
-            // check it has contents:
-            if (typeof hero.inventory[whichSlotNumber].contains !== "undefined") {
-                if ((hero.inventory[whichSlotNumber].contains.length == 1) && (hero.inventory[whichSlotNumber].quantity == 1)) {
-                    // if just a single wrapped item containing a single type of item, replace the wrapped with the contents:
-                    // (need to ensure that when creating containers that they can't hold more than maxNumberOfItemsPerSlot of an item type)
-                    hero.inventory[whichSlotNumber] = JSON.parse(JSON.stringify(hero.inventory[whichSlotNumber].contains[0]));
-                    document.getElementById("slot" + whichSlotNumber).innerHTML = generateSlotMarkup(whichSlotNumber);
-                    UI.showChangeInInventory([whichSlotNumber]);
-                } else {
-                    var wrappedObject = JSON.parse(JSON.stringify(hero.inventory[whichSlotNumber]));
-                    removeFromInventory(whichSlotNumber, 1);
-                    var inventoryCheck = canAddItemToInventory(wrappedObject.contains);
-                    if (inventoryCheck[0]) {
+    // check if it has a cooldown:
+    var canBeClicked = true;
+    if (typeof hero.inventory[whichSlotNumber].cooldown !== "undefined") {
+        if (hero.inventory[whichSlotNumber].cooldownTimer > 0) {
+            canBeClicked = false;
+        }
+    }
+    if (canBeClicked) {
+        switch (whichAction) {
+            case "container":
+                // check it has contents:
+                if (typeof hero.inventory[whichSlotNumber].contains !== "undefined") {
+                    if ((hero.inventory[whichSlotNumber].contains.length == 1) && (hero.inventory[whichSlotNumber].quantity == 1)) {
+                        // if just a single wrapped item containing a single type of item, replace the wrapped with the contents:
+                        // (need to ensure that when creating containers that they can't hold more than maxNumberOfItemsPerSlot of an item type)
+                        hero.inventory[whichSlotNumber] = JSON.parse(JSON.stringify(hero.inventory[whichSlotNumber].contains[0]));
                         document.getElementById("slot" + whichSlotNumber).innerHTML = generateSlotMarkup(whichSlotNumber);
-                        UI.showChangeInInventory(inventoryCheck[1]);
+                        UI.showChangeInInventory([whichSlotNumber]);
                     } else {
-                        // restore the wrapped item:
-                        hero.inventory[whichSlotNumber] = JSON.parse(JSON.stringify(wrappedObject));
-                        UI.showNotification("<p>You don't have room for all of these items.</p>");
-                    }
-                }
-            }
-            break;
-        case "booster":
-            openBoosterPack();
-            removeFromInventory(whichSlotNumber, 1);
-            break;
-        case "bag":
-            UI.addNewBag(hero.inventory[whichSlotNumber]);
-            audio.playSound(soundEffects['bagOpen'], 0);
-            removeFromInventory(whichSlotNumber, 1);
-            break;
-        case "home":
-        var location = hero.inventory[whichSlotNumber].additional.split("|");
-jumpToLocation(location[0],location[1],location[2]);
-        break;
-        case "inscribe":
-            UI.openInscriptionPanel();
-            break;
-        case "collection":
-            // check if this zone key exists in the hero.collections object
-            if (hero.collections.hasOwnProperty(whichActionValue)) {
-                // find  in the array and make it negative ####
-                var foundIndex = hero.collections[whichActionValue].required.indexOf(hero.inventory[whichSlotNumber].type);
-                if (foundIndex != -1) {
-                    if (hero.collections[whichActionValue].required[foundIndex] > 0) {
-                        hero.collections[whichActionValue].required[foundIndex] = 0 - (hero.collections[whichActionValue].required[foundIndex]);
-                        // update the panel visually:
-                        document.getElementById(whichActionValue + '-' + hero.inventory[whichSlotNumber].type).classList.remove('notCollected');
+                        var wrappedObject = JSON.parse(JSON.stringify(hero.inventory[whichSlotNumber]));
                         removeFromInventory(whichSlotNumber, 1);
-                    } else {
-                        UI.showNotification("<p>Already added to a collection</p>");
+                        var inventoryCheck = canAddItemToInventory(wrappedObject.contains);
+                        if (inventoryCheck[0]) {
+                            document.getElementById("slot" + whichSlotNumber).innerHTML = generateSlotMarkup(whichSlotNumber);
+                            UI.showChangeInInventory(inventoryCheck[1]);
+                        } else {
+                            // restore the wrapped item:
+                            hero.inventory[whichSlotNumber] = JSON.parse(JSON.stringify(wrappedObject));
+                            UI.showNotification("<p>You don't have room for all of these items.</p>");
+                        }
                     }
                 }
-            }
-            break;
-        case "card":
-            hero.cards.unshift(whichActionValue);
-            UI.updateCardAlbum();
-            removeFromInventory(whichSlotNumber, 1);
-            break;
-        case "book":
-            document.getElementById("book" + whichActionValue).classList.add("active");
-            audio.playSound(soundEffects['bookOpen'], 0);
-        case "recipe":
-            if (canLearnRecipe(whichActionValue)) {
+                break;
+            case "booster":
+                openBoosterPack();
                 removeFromInventory(whichSlotNumber, 1);
-            }
-            break;
-        case "craft":
-            if (hero.professionsKnown.indexOf(parseInt(whichActionValue)) != -1) {
-                audio.playSound(soundEffects['buttonClick'], 0);
-                UI.populateRecipeList(whichActionValue);
-            } else {
-                UI.showNotification("<p>You don't know this profession yet.</p>");
-            }
-            break;
+                break;
+            case "bag":
+                UI.addNewBag(hero.inventory[whichSlotNumber]);
+                audio.playSound(soundEffects['bagOpen'], 0);
+                removeFromInventory(whichSlotNumber, 1);
+                break;
+            case "home":
+                var location = hero.inventory[whichSlotNumber].additional.split("|");
+                jumpToLocation(location[0], location[1], location[2]);
+                break;
+            case "inscribe":
+                UI.openInscriptionPanel();
+                break;
+            case "collection":
+                // check if this zone key exists in the hero.collections object
+                if (hero.collections.hasOwnProperty(whichActionValue)) {
+                    // find  in the array and make it negative ####
+                    var foundIndex = hero.collections[whichActionValue].required.indexOf(hero.inventory[whichSlotNumber].type);
+                    if (foundIndex != -1) {
+                        if (hero.collections[whichActionValue].required[foundIndex] > 0) {
+                            hero.collections[whichActionValue].required[foundIndex] = 0 - (hero.collections[whichActionValue].required[foundIndex]);
+                            // update the panel visually:
+                            document.getElementById(whichActionValue + '-' + hero.inventory[whichSlotNumber].type).classList.remove('notCollected');
+                            removeFromInventory(whichSlotNumber, 1);
+                        } else {
+                            UI.showNotification("<p>Already added to a collection</p>");
+                        }
+                    }
+                }
+                break;
+            case "card":
+                hero.cards.unshift(whichActionValue);
+                UI.updateCardAlbum();
+                removeFromInventory(whichSlotNumber, 1);
+                break;
+            case "book":
+                document.getElementById("book" + whichActionValue).classList.add("active");
+                audio.playSound(soundEffects['bookOpen'], 0);
+            case "recipe":
+                if (canLearnRecipe(whichActionValue)) {
+                    removeFromInventory(whichSlotNumber, 1);
+                }
+                break;
+            case "craft":
+                if (hero.professionsKnown.indexOf(parseInt(whichActionValue)) != -1) {
+                    audio.playSound(soundEffects['buttonClick'], 0);
+                    UI.populateRecipeList(whichActionValue);
+                } else {
+                    UI.showNotification("<p>You don't know this profession yet.</p>");
+                }
+                break;
+        }
+        if (typeof hero.inventory[whichSlotNumber].cooldown !== "undefined") {
+hero.inventory[whichSlotNumber].cooldownTimer = hero.inventory[whichSlotNumber].cooldown;
+        }
     }
 }
 
@@ -2406,6 +2419,7 @@ function generateGenericSlotMarkup(thisItemObject) {
     }
 
 
+
     // check if it's a card:
     if (currentActiveInventoryItems[thisItemObject.type].action == "card") {
         imageClassName += 'players card';
@@ -2435,12 +2449,13 @@ function generateGenericSlotMarkup(thisItemObject) {
     slotMarkup += '<span class="price specialismPrice">Sell price: ' + parseMoney(Math.ceil(thisItemObject.quantity * sellPriceSpecialismModifier * inflationModifier * currentActiveInventoryItems[thisItemObject.type].priceCode, 0)) + '</span>';
     slotMarkup += additionalTooltipDetail(thisItemObject) + '</p>';
     slotMarkup += '<span class="qty">' + thisItemObject.quantity + '</span>';
+    slotMarkup += '<div class="coolDown"></div>';
     return slotMarkup;
 }
 
 
 function generateSlotMarkup(thisSlotsId) {
-return generateGenericSlotMarkup(hero.inventory[thisSlotsId]);
+    return generateGenericSlotMarkup(hero.inventory[thisSlotsId]);
 }
 
 
@@ -2509,7 +2524,6 @@ function inventorySplitStackSubmit(e) {
 function inventorySplitStackCancel() {
     splitStackPanel.classList.remove("active");
 }
-
 var KeyBindings = {
     'left': 65,
     'right': 68,
@@ -3068,11 +3082,16 @@ var UI = {
                 if (thisSlotsID in hero.inventory) {
                     inventoryMarkup += generateSlotMarkup(thisSlotsID);
                     thisAction = currentActiveInventoryItems[hero.inventory[thisSlotsID].type].action;
+                    // check for cooldown attribute, and add a timer if so:
+                    if (typeof hero.inventory[thisSlotsID].cooldown !== "undefined") {
+                        hero.inventory[thisSlotsID].cooldownTimer = 0;
+                    }
                 } else {
                     inventoryMarkup += '';
                 }
                 // add item there
                 inventoryMarkup += '</li>';
+
             }
             inventoryMarkup += '</ol></div></div>';
         }
@@ -3240,13 +3259,8 @@ var UI = {
         if (thisItemsAction) {
             inventoryItemAction(e.target, thisItemsAction, e.target.getAttribute('data-action-value'));
         } else {
-
-
-
             var thisNode = getNearestParentId(e.target);
             // console.log(thisNode.id)
-
-
             if (thisNode.id.substring(0, 6) == "recipe") {
                 recipeSelectComponents(thisNode.id);
             } else if (thisNode.id.substring(0, 4) == "shop") {
@@ -3257,8 +3271,6 @@ var UI = {
                 UI.addFromGathering();
             }
         }
-
-
     },
 
     showDialogue: function(whichNPC, text) {
@@ -3408,7 +3420,6 @@ var UI = {
     },
 
     endInventoryDrag: function(e) {
-
         var isFromAShop = false;
         if (UI.sourceSlot.substring(0, 8) == "shopSlot") {
             isFromAShop = true;
@@ -4583,6 +4594,22 @@ var UI = {
             UI.showNotification("<p>Oops - sorry, no room in your bags</p>");
         }
     },
+
+    updateCooldowns: function() {
+        var thisPercent;
+        for (var thisSlotsID in hero.inventory) {
+            if (typeof hero.inventory[thisSlotsID].cooldown !== "undefined") {
+                if (hero.inventory[thisSlotsID].cooldownTimer > 0) {
+                    hero.inventory[thisSlotsID].cooldownTimer--;
+                    //console.log(hero.inventory[thisSlotsID].cooldownTimer);
+                    //update visually:
+                    thisPercent = (hero.inventory[thisSlotsID].cooldownTimer/hero.inventory[thisSlotsID].cooldown)*100;
+      
+                    document.querySelector("#slot"+thisSlotsID+" .coolDown").style.height = thisPercent+'%';
+                }
+            }
+        }
+    }
 }
 function setupWeather() {
     var previousWeather = currentWeather;
@@ -5865,6 +5892,7 @@ gatheringStopped();
     checkForWeatherChange();
     audio.checkForAmbientSounds();
     checkForRespawns();
+    UI.updateCooldowns();
     if (activeAction=="gather") {
         processGathering();
     }

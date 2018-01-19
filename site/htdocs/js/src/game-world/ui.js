@@ -92,11 +92,16 @@ var UI = {
                 if (thisSlotsID in hero.inventory) {
                     inventoryMarkup += generateSlotMarkup(thisSlotsID);
                     thisAction = currentActiveInventoryItems[hero.inventory[thisSlotsID].type].action;
+                    // check for cooldown attribute, and add a timer if so:
+                    if (typeof hero.inventory[thisSlotsID].cooldown !== "undefined") {
+                        hero.inventory[thisSlotsID].cooldownTimer = 0;
+                    }
                 } else {
                     inventoryMarkup += '';
                 }
                 // add item there
                 inventoryMarkup += '</li>';
+
             }
             inventoryMarkup += '</ol></div></div>';
         }
@@ -264,13 +269,8 @@ var UI = {
         if (thisItemsAction) {
             inventoryItemAction(e.target, thisItemsAction, e.target.getAttribute('data-action-value'));
         } else {
-
-
-
             var thisNode = getNearestParentId(e.target);
             // console.log(thisNode.id)
-
-
             if (thisNode.id.substring(0, 6) == "recipe") {
                 recipeSelectComponents(thisNode.id);
             } else if (thisNode.id.substring(0, 4) == "shop") {
@@ -281,8 +281,6 @@ var UI = {
                 UI.addFromGathering();
             }
         }
-
-
     },
 
     showDialogue: function(whichNPC, text) {
@@ -432,7 +430,6 @@ var UI = {
     },
 
     endInventoryDrag: function(e) {
-
         var isFromAShop = false;
         if (UI.sourceSlot.substring(0, 8) == "shopSlot") {
             isFromAShop = true;
@@ -1607,4 +1604,20 @@ var UI = {
             UI.showNotification("<p>Oops - sorry, no room in your bags</p>");
         }
     },
+
+    updateCooldowns: function() {
+        var thisPercent;
+        for (var thisSlotsID in hero.inventory) {
+            if (typeof hero.inventory[thisSlotsID].cooldown !== "undefined") {
+                if (hero.inventory[thisSlotsID].cooldownTimer > 0) {
+                    hero.inventory[thisSlotsID].cooldownTimer--;
+                    //console.log(hero.inventory[thisSlotsID].cooldownTimer);
+                    //update visually:
+                    thisPercent = (hero.inventory[thisSlotsID].cooldownTimer/hero.inventory[thisSlotsID].cooldown)*100;
+      
+                    document.querySelector("#slot"+thisSlotsID+" .coolDown").style.height = thisPercent+'%';
+                }
+            }
+        }
+    }
 }

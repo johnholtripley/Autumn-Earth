@@ -496,3 +496,13 @@ $numberOfItemCategories: 20;
     border: 0;
     cursor: url(../images/game-world/cursors/active.gif) 3 3, auto;
 }
+
+.coolDown {
+    pointer-events: none;
+    position: absolute;
+    left: 0;
+    width: 100%;
+    bottom: 0;
+    height: 0;
+    background: rgba(0,0,0,0.8);
+}

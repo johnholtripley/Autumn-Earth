@@ -1238,6 +1238,7 @@ gatheringStopped();
     checkForWeatherChange();
     audio.checkForAmbientSounds();
     checkForRespawns();
+    UI.updateCooldowns();
     if (activeAction=="gather") {
         processGathering();
     }
