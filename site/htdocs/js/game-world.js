@@ -4409,12 +4409,23 @@ var UI = {
 
     buildActionBar: function() {
         var actionBarMarkup = '<ol>';
+        var imageSrc, toolTipText;
         for (var i = 0; i < hero.actions.length; i++) {
             if (hero.actions[i] == "-") {
                 actionBarMarkup += '<li><img src="/images/game-world/interface/actions/blank.png" alt="Empty Action slot"></li>';
             } else {
+                if(hero.actions[i][2] == null) {
+imageSrc = hero.actions[i][1];
+toolTipText = hero.actions[i][0];
+if(typeof hero.actions[i][3]['pet-name'] !== "undefined") {
+toolTipText += " "+hero.actions[i][3]['pet-name'];
+}
+                } else {
+                    imageSrc = hero.actions[i][2] + '-' + hero.actions[i][1];
+                    toolTipText = hero.actions[i][0] + ' (' + hero.actions[i][1] + ' type' + hero.actions[i][2] + ')';
+                }
 
-                actionBarMarkup += '<li class="active" data-index="' + i + '" data-category="' + hero.actions[i][2] + '" id="actionType' + hero.actions[i][1] + '"><img src="/images/game-world/interface/actions/' + hero.actions[i][2] + '-' + hero.actions[i][1] + '.png" alt="' + hero.actions[i][0] + ' action"><p>' + hero.actions[i][0] + ' (' + hero.actions[i][1] + ' type' + hero.actions[i][2] + ')</p></li>';
+                actionBarMarkup += '<li class="active" data-index="' + i + '" data-category="' + hero.actions[i][2] + '" id="actionType' + hero.actions[i][1] + '"><img src="/images/game-world/interface/actions/' + imageSrc + '.png" alt="' + hero.actions[i][0] + ' action"><p>'+toolTipText+'</p></li>';
             }
         }
         actionBarMarkup += '</ol>';
@@ -4569,6 +4580,9 @@ var UI = {
                             surveyingStopped();
                         }
                     }
+                    break;
+                    case "mount":
+                    // ###
                     break;
             }
         }

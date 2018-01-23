@@ -379,5 +379,5 @@
     "collections": {
         
     },
-    "actions": [["Harmful extraction","gather",1,{"time":1500,"purity":10,"quality":-40}],["Gentle extraction","gather",1,{"time":1500,"purity":10,"quality":-50}],"-","-",["Dowse for metals","dowse",4,{"range":30}],["Survey for metals","survey",4,{"time":-500}],["Mineral extraction","gather",4,{"time":1500,"purity":10,"quality":-40}],"-","-","-"]
+    "actions": [["Harmful extraction","gather",1,{"time":1500,"purity":10,"quality":-40}],["Gentle extraction","gather",1,{"time":1500,"purity":10,"quality":-50}],"-","-",["Dowse for metals","dowse",4,{"range":30}],["Survey for metals","survey",4,{"time":-500}],["Mineral extraction","gather",4,{"time":1500,"purity":10,"quality":-40}],"-","-",["Mount","mount",null,{"pet-name":"brown horse"}]]
 }
