@@ -502,7 +502,10 @@ $numberOfItemCategories: 20;
     position: absolute;
     left: 3px;
     width: 40px;
-    bottom: 0;
-    height: 0;
+    bottom: 3px;
+    height: 40px;
+// the JavaScript isn't vendor prefixed. does it need to be? ####
+ transform: scaleY(0);
+ @include transform-origin(0 100%);
     background: rgba(0,0,0,0.7);
 }

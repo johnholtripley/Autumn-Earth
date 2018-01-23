@@ -4597,16 +4597,17 @@ var UI = {
     },
 
     updateCooldowns: function() {
-        var thisPercent;
+        var thisValue;
         for (var thisSlotsID in hero.inventory) {
             if (typeof hero.inventory[thisSlotsID].cooldown !== "undefined") {
                 if (hero.inventory[thisSlotsID].cooldownTimer > 0) {
                     hero.inventory[thisSlotsID].cooldownTimer--;
                     //console.log(hero.inventory[thisSlotsID].cooldownTimer);
-                    //update visually:
-                    thisPercent = (hero.inventory[thisSlotsID].cooldownTimer/hero.inventory[thisSlotsID].cooldown)*100;
+                    //update visually (scaleY uses 0 - 1):
+                    thisValue = (hero.inventory[thisSlotsID].cooldownTimer/hero.inventory[thisSlotsID].cooldown);
       
-                    document.querySelector("#slot"+thisSlotsID+" .coolDown").style.height = thisPercent+'%';
+   // does this need vendor prefixes?            
+    document.querySelector("#slot"+thisSlotsID+" .coolDown").style.transform = 'scaleY('+thisValue+')';
                 }
             }
         }
@@ -4806,7 +4807,7 @@ function loadMapJSON(mapFilePath) {
                 }
                 hero.tileY = thisMapData.entrance[1] + startTileOffsetYNum;
             }
-           
+
 
             // set up pet positions:
             if (hasActivePet) {
@@ -4826,7 +4827,7 @@ function loadMapJSON(mapFilePath) {
                         tileOffsetX = 1;
                         break
                 }
-             
+
                 for (var i = 0; i < hero.activePets.length; i++) {
                     hero.allPets[hero.activePets[i]].tileX = hero.tileX + (tileOffsetX * (i + 1));
                     hero.allPets[hero.activePets[i]].tileY = hero.tileY + (tileOffsetY * (i + 1));
@@ -4852,9 +4853,9 @@ function loadMapJSON(mapFilePath) {
                 document.title = titleTagPrefix + ' - ' + thisMapData.zoneName;
                 cartographicTitle.innerHTML = thisMapData.zoneName;
             }
-          
-               initCartographicMap();
-            
+
+            initCartographicMap();
+
             if (thisMapData.showOnlyLineOfSight) {
                 // initialise the lightmap with default values:
                 lightMap = [];
@@ -4894,9 +4895,9 @@ function loadMap() {
     if (newMap < 0) {
         //   mapFilePath = '/game-world/generateDungeonMap.php?playerId=' + characterId + '&originatingMapId=' + currentMap + '&requestedMap=' + newMap + '&dungeonName=' + randomDungeonName + '&connectingDoorX=' + centreDoorX + '&connectingDoorY=' + centreDoorY;
 
-        mapFilePath = '/game-world/generateCircularDungeonMap.php?dungeonName='+randomDungeonName+ '&requestedMap=' + newMap;
-   //  mapFilePath = '/game-world/generateCircularDungeonMap.php?dungeonName='+randomDungeonName+'&requestedMap=' + newMap + '&seed=1512098741';
-           
+        mapFilePath = '/game-world/generateCircularDungeonMap.php?dungeonName=' + randomDungeonName + '&requestedMap=' + newMap;
+        //  mapFilePath = '/game-world/generateCircularDungeonMap.php?dungeonName='+randomDungeonName+'&requestedMap=' + newMap + '&seed=1512098741';
+
     }
     currentMap = newMap;
     loadMapJSON(mapFilePath);
@@ -4924,16 +4925,16 @@ function loadMapAssets() {
         });
     }
     npcGraphicsToLoad = [];
-var thisNPCIdentifier;
+    var thisNPCIdentifier;
     for (var i = 0; i < thisMapData.npcs.length; i++) {
         thisNPCIdentifier = "npc" + thisMapData.npcs[i].name;
         if (npcGraphicsToLoad.indexOf(thisNPCIdentifier) == -1) {
-        imagesToLoad.push({
-            name: thisNPCIdentifier,
-            src: "/images/game-world/npcs/" + thisMapData.npcs[i].src
-        });
-        npcGraphicsToLoad.push(thisNPCIdentifier);
-    }
+            imagesToLoad.push({
+                name: thisNPCIdentifier,
+                src: "/images/game-world/npcs/" + thisMapData.npcs[i].src
+            });
+            npcGraphicsToLoad.push(thisNPCIdentifier);
+        }
     }
     // check for nests, and get the graphics for any creatures they will spawn:
     for (var i = 0; i < thisMapData.items.length; i++) {
@@ -4941,12 +4942,12 @@ var thisNPCIdentifier;
             for (var j = 0; j < thisMapData.items[i].contains.length; j++) {
                 thisNPCIdentifier = "npc" + thisMapData.items[i].contains[j].name;
                 if (npcGraphicsToLoad.indexOf(thisNPCIdentifier) == -1) {
-                imagesToLoad.push({
-                    name: thisNPCIdentifier,
-                    src: "/images/game-world/npcs/" + thisMapData.items[i].contains[j].src
-                });
-                npcGraphicsToLoad.push(thisNPCIdentifier);
-            }
+                    imagesToLoad.push({
+                        name: thisNPCIdentifier,
+                        src: "/images/game-world/npcs/" + thisMapData.items[i].contains[j].src
+                    });
+                    npcGraphicsToLoad.push(thisNPCIdentifier);
+                }
             }
         }
     }
@@ -4977,16 +4978,16 @@ var thisNPCIdentifier;
 
     // check for hidden resources:
     for (var i in thisMapData.hiddenResources) {
-for (var j in thisMapData.hiddenResources[i]) {
-thisItemIdentifier = "item" + thisMapData.hiddenResources[i][j].type;
-if (itemGraphicsToLoad.indexOf(thisItemIdentifier) == -1) {
-     imagesToLoad.push({
-                name: thisItemIdentifier,
-                src: "/images/game-world/items/" + currentActiveInventoryItems[thisMapData.hiddenResources[i][j].type].worldSrc + ".png"
-            });
-            itemGraphicsToLoad.push(thisItemIdentifier);
-    }
-}
+        for (var j in thisMapData.hiddenResources[i]) {
+            thisItemIdentifier = "item" + thisMapData.hiddenResources[i][j].type;
+            if (itemGraphicsToLoad.indexOf(thisItemIdentifier) == -1) {
+                imagesToLoad.push({
+                    name: thisItemIdentifier,
+                    src: "/images/game-world/items/" + currentActiveInventoryItems[thisMapData.hiddenResources[i][j].type].worldSrc + ".png"
+                });
+                itemGraphicsToLoad.push(thisItemIdentifier);
+            }
+        }
     }
 
 
@@ -5198,36 +5199,36 @@ function initialiseNPC(whichNPC) {
 }
 
 function initialiseItem(whichItem) {
-        thisMapData.items[whichItem].x = getTileCentreCoordX(thisMapData.items[whichItem].tileX);
-        thisMapData.items[whichItem].y = getTileCentreCoordY(thisMapData.items[whichItem].tileY);
-        thisMapData.items[whichItem].z = getElevation(thisMapData.items[whichItem].tileX, thisMapData.items[whichItem].tileY);
-        thisMapData.items[whichItem].width = currentActiveInventoryItems[thisMapData.items[whichItem].type].width;
-        thisMapData.items[whichItem].height = currentActiveInventoryItems[thisMapData.items[whichItem].type].height;
-        thisMapData.items[whichItem].centreX = currentActiveInventoryItems[thisMapData.items[whichItem].type].centreX;
-        thisMapData.items[whichItem].centreY = currentActiveInventoryItems[thisMapData.items[whichItem].type].centreY;
-        thisMapData.items[whichItem].spriteWidth = currentActiveInventoryItems[thisMapData.items[whichItem].type].spriteWidth;
-        thisMapData.items[whichItem].spriteHeight = currentActiveInventoryItems[thisMapData.items[whichItem].type].spriteHeight;
-        // check for node resources:
-        if (currentActiveInventoryItems[thisMapData.items[whichItem].type].action == "node") {
-            // use the saved value if it has one:
-            if (!thisMapData.items[whichItem].timeLastHarvested) {
-                // otherwise, set it so it can be instantly harvested:
-                thisMapData.items[whichItem].timeLastHarvested = hero.totalGameTimePlayed - currentActiveInventoryItems[thisMapData.items[whichItem].type].respawnRate;
-            }
-
-            // add stability and quantity values if it doesn't have them
-            if (typeof thisMapData.items[whichItem].stability === "undefined") {
-                thisMapData.items[whichItem].stability = thisMapData.items[whichItem].maxStability;
-            }
-            if (typeof thisMapData.items[whichItem].quantity === "undefined") {
-                thisMapData.items[whichItem].quantity = thisMapData.items[whichItem].maxQuantity;
-            }
-
+    thisMapData.items[whichItem].x = getTileCentreCoordX(thisMapData.items[whichItem].tileX);
+    thisMapData.items[whichItem].y = getTileCentreCoordY(thisMapData.items[whichItem].tileY);
+    thisMapData.items[whichItem].z = getElevation(thisMapData.items[whichItem].tileX, thisMapData.items[whichItem].tileY);
+    thisMapData.items[whichItem].width = currentActiveInventoryItems[thisMapData.items[whichItem].type].width;
+    thisMapData.items[whichItem].height = currentActiveInventoryItems[thisMapData.items[whichItem].type].height;
+    thisMapData.items[whichItem].centreX = currentActiveInventoryItems[thisMapData.items[whichItem].type].centreX;
+    thisMapData.items[whichItem].centreY = currentActiveInventoryItems[thisMapData.items[whichItem].type].centreY;
+    thisMapData.items[whichItem].spriteWidth = currentActiveInventoryItems[thisMapData.items[whichItem].type].spriteWidth;
+    thisMapData.items[whichItem].spriteHeight = currentActiveInventoryItems[thisMapData.items[whichItem].type].spriteHeight;
+    // check for node resources:
+    if (currentActiveInventoryItems[thisMapData.items[whichItem].type].action == "node") {
+        // use the saved value if it has one:
+        if (!thisMapData.items[whichItem].timeLastHarvested) {
+            // otherwise, set it so it can be instantly harvested:
+            thisMapData.items[whichItem].timeLastHarvested = hero.totalGameTimePlayed - currentActiveInventoryItems[thisMapData.items[whichItem].type].respawnRate;
         }
-        if (currentActiveInventoryItems[thisMapData.items[whichItem].type].action == "nest") {
-            thisMapData.items[whichItem].timeLastSpawned = hero.totalGameTimePlayed;
-            thisMapData.items[whichItem].spawnsRemaining = thisMapData.items[whichItem].additional;
+
+        // add stability and quantity values if it doesn't have them
+        if (typeof thisMapData.items[whichItem].stability === "undefined") {
+            thisMapData.items[whichItem].stability = thisMapData.items[whichItem].maxStability;
         }
+        if (typeof thisMapData.items[whichItem].quantity === "undefined") {
+            thisMapData.items[whichItem].quantity = thisMapData.items[whichItem].maxQuantity;
+        }
+
+    }
+    if (currentActiveInventoryItems[thisMapData.items[whichItem].type].action == "nest") {
+        thisMapData.items[whichItem].timeLastSpawned = hero.totalGameTimePlayed;
+        thisMapData.items[whichItem].spawnsRemaining = thisMapData.items[whichItem].additional;
+    }
 }
 
 
@@ -5251,8 +5252,8 @@ function prepareGame() {
 
         itemImages[itemGraphicsToLoad[i]] = Loader.getImage(itemGraphicsToLoad[i]);
         // ####
-      //  itemImages[itemGraphicsToLoad[i]].spriteWidth = Loader.getImage(itemGraphicsToLoad[i]).width;
-      //  itemImages[itemGraphicsToLoad[i]].spriteHeight = Loader.getImage(itemGraphicsToLoad[i]).height;
+        //  itemImages[itemGraphicsToLoad[i]].spriteWidth = Loader.getImage(itemGraphicsToLoad[i]).width;
+        //  itemImages[itemGraphicsToLoad[i]].spriteHeight = Loader.getImage(itemGraphicsToLoad[i]).height;
     }
     backgroundImg = Loader.getImage("backgroundImg");
     // initialise and position NPCs:
@@ -5268,7 +5269,7 @@ function prepareGame() {
             // check these tiles are within the normal grid - if not use the pet in front's z depth:
             if ((hero.allPets[hero.activePets[i]].tileX < 0) || (hero.allPets[hero.activePets[i]].tileY < 0) || (hero.allPets[hero.activePets[i]].tileX >= mapTilesX) || (hero.allPets[hero.activePets[i]].tileY >= mapTilesY)) {
                 hero.allPets[hero.activePets[i]].z = hero.allPets[hero.activePets[i - 1]].z;
-             
+
             } else {
                 hero.allPets[hero.activePets[i]].z = getElevation(hero.allPets[hero.activePets[i]].tileX, hero.allPets[hero.activePets[i]].tileY);
             }
@@ -5386,18 +5387,18 @@ function changeMaps(doorX, doorY) {
     previousZoneName = thisMapData.zoneName;
     gameMode = "mapLoading";
     removeMapAssets();
-    if(jumpMapId == null) {
-    var doorData = thisMapData.doors;
-    var whichDoor = doorX + "," + doorY;
-    hero.tileX = doorData[whichDoor].startX;
-    hero.tileY = doorData[whichDoor].startY;
-    newMap = doorData[whichDoor].map;
-} else {
-    newMap = jumpMapId;
-    jumpMapId = null;
-    hero.tileX = parseInt(doorX);
-    hero.tileY = parseInt(doorY);
-}
+    if (jumpMapId == null) {
+        var doorData = thisMapData.doors;
+        var whichDoor = doorX + "," + doorY;
+        hero.tileX = doorData[whichDoor].startX;
+        hero.tileY = doorData[whichDoor].startY;
+        newMap = doorData[whichDoor].map;
+    } else {
+        newMap = jumpMapId;
+        jumpMapId = null;
+        hero.tileX = parseInt(doorX);
+        hero.tileY = parseInt(doorY);
+    }
     loadMap();
 }
 
@@ -5831,40 +5832,40 @@ function update() {
         }
         // check if a chest is open and close it if so:
         if (chestIdOpen != -1) {
-            if (!(isInRange(hero.x, hero.y, thisMapData.items[chestIdOpen].x, thisMapData.items[chestIdOpen].y, closeDialogueDistance/2))) {
+            if (!(isInRange(hero.x, hero.y, thisMapData.items[chestIdOpen].x, thisMapData.items[chestIdOpen].y, closeDialogueDistance / 2))) {
 
                 UI.closeChest();
             }
 
 
         }
-        if (activeAction=="gather") {
-           
-if (!(isInRange(hero.x, hero.y, thisMapData.items[gathering.itemIndex].x, thisMapData.items[gathering.itemIndex].y, closeDialogueDistance/2))) {
-    gatheringPanel.classList.remove("active");
-gatheringStopped();
-}
+        if (activeAction == "gather") {
+
+            if (!(isInRange(hero.x, hero.y, thisMapData.items[gathering.itemIndex].x, thisMapData.items[gathering.itemIndex].y, closeDialogueDistance / 2))) {
+                gatheringPanel.classList.remove("active");
+                gatheringStopped();
+            }
         }
     } else {
-        if(jumpMapId == null) {
+        if (jumpMapId == null) {
             // if jumping maps (eg with a home stone, then don't walk forwards)
-        hero.isMoving = true;
-        // continue the hero moving:
-        switch (hero.facing) {
-            case 'n':
-                hero.y -= thisSpeed;
-                break;
-            case 's':
-                hero.y += thisSpeed;
-                break;
-            case 'e':
-                hero.x += thisSpeed;
-                break;
-            case 'w':
-                hero.x -= thisSpeed;
-                break;
+            hero.isMoving = true;
+            // continue the hero moving:
+            switch (hero.facing) {
+                case 'n':
+                    hero.y -= thisSpeed;
+                    break;
+                case 's':
+                    hero.y += thisSpeed;
+                    break;
+                case 'e':
+                    hero.x += thisSpeed;
+                    break;
+                case 'w':
+                    hero.x -= thisSpeed;
+                    break;
+            }
         }
-    }
         mapTransitionCurrentFrames++;
         if (mapTransitionCurrentFrames >= mapTransitionMaxFrames) {
             changeMaps(activeDoorX, activeDoorY);
@@ -5894,13 +5895,13 @@ gatheringStopped();
     audio.checkForAmbientSounds();
     checkForRespawns();
     UI.updateCooldowns();
-    if (activeAction=="gather") {
+    if (activeAction == "gather") {
         processGathering();
     }
-        if (activeAction=="dowse") {
+    if (activeAction == "dowse") {
         processDowsing();
     }
-       if (activeAction=="survey") {
+    if (activeAction == "survey") {
         processSurveying();
     }
 }
@@ -5927,7 +5928,7 @@ function heroIsInNewTile() {
             if (typeof thisHotspot.music !== "undefined") {
                 audio.playMusic(thisHotspot.music);
             }
-              if (typeof thisHotspot.weather !== "undefined") {
+            if (typeof thisHotspot.weather !== "undefined") {
                 changeWeather(thisHotspot.weather);
             }
             if (typeof thisHotspot.openInnerDoor !== "undefined") {
@@ -6059,23 +6060,23 @@ function checkForActions() {
                         questData[actionValue].hasBeenActivated = 0;
                         break;
                     case "node":
-                    /*
-                        // check it's not still re-spawning:
-                        console.log(hero.totalGameTimePlayed + " " + thisMapData.items[i].timeLastHarvested + " > " + currentActiveInventoryItems[thisMapData.items[i].type].respawnRate);
-                        if (hero.totalGameTimePlayed - thisMapData.items[i].timeLastHarvested >= currentActiveInventoryItems[thisMapData.items[i].type].respawnRate) {
-                            // pick a random item from the possible items:
-                            var whichItem = getRandomIntegerInclusive(1, thisMapData.items[i].contains.length);
-                            // try and add it:
-                            inventoryCheck = canAddItemToInventory([thisMapData.items[i].contains[whichItem - 1]]);
-                            if (inventoryCheck[0]) {
-                                // reset timer:
-                                thisMapData.items[i].timeLastHarvested = hero.totalGameTimePlayed;
-                                UI.showChangeInInventory(inventoryCheck[1]);
-                            } else {
-                                UI.showNotification("<p>Oops - sorry, no room in your bags</p>");
+                        /*
+                            // check it's not still re-spawning:
+                            console.log(hero.totalGameTimePlayed + " " + thisMapData.items[i].timeLastHarvested + " > " + currentActiveInventoryItems[thisMapData.items[i].type].respawnRate);
+                            if (hero.totalGameTimePlayed - thisMapData.items[i].timeLastHarvested >= currentActiveInventoryItems[thisMapData.items[i].type].respawnRate) {
+                                // pick a random item from the possible items:
+                                var whichItem = getRandomIntegerInclusive(1, thisMapData.items[i].contains.length);
+                                // try and add it:
+                                inventoryCheck = canAddItemToInventory([thisMapData.items[i].contains[whichItem - 1]]);
+                                if (inventoryCheck[0]) {
+                                    // reset timer:
+                                    thisMapData.items[i].timeLastHarvested = hero.totalGameTimePlayed;
+                                    UI.showChangeInInventory(inventoryCheck[1]);
+                                } else {
+                                    UI.showNotification("<p>Oops - sorry, no room in your bags</p>");
+                                }
                             }
-                        }
-                        */
+                            */
                         break;
                     case "toggleInnerDoor":
                         toggleInnerDoor(thisMapData.items[i].additional);
@@ -6548,7 +6549,7 @@ function awardQuestRewards(questRewards) {
         // check for variation:
         var questPossibilities = questRewards[i].split("/");
         var questRewardToUse = getRandomElementFromArray(questPossibilities);
-      //  console.log(questRewardToUse);
+        //  console.log(questRewardToUse);
 
         // check if it's money:
         if (questRewardToUse.charAt(0) == "$") {
@@ -6992,11 +6993,11 @@ function draw() {
         var assetsToDraw = [
             [findIsoDepth(hero.x, hero.y, hero.z), "sprite", heroImg, heroOffsetCol * hero.spriteWidth, heroOffsetRow * hero.spriteHeight, hero.spriteWidth, hero.spriteHeight, Math.floor(canvasWidth / 2 - hero.feetOffsetX), Math.floor(canvasHeight / 2 - hero.feetOffsetY - hero.z), hero.spriteWidth, hero.spriteHeight]
         ];
-if(interfaceIsVisible) {
-        if (activeAction=="dowse") {
-             assetsToDraw.push([0, "dowsingRing", Math.floor(canvasWidth / 2 - dowsingRingSize/2), Math.floor(canvasHeight / 2 - dowsingRingSize/4)]);
+        if (interfaceIsVisible) {
+            if (activeAction == "dowse") {
+                assetsToDraw.push([0, "dowsingRing", Math.floor(canvasWidth / 2 - dowsingRingSize / 2), Math.floor(canvasHeight / 2 - dowsingRingSize / 4)]);
+            }
         }
-    }
 
         // draw fae:
         thisX = findIsoCoordsX(fae.x, fae.y);
@@ -7014,8 +7015,8 @@ if(interfaceIsVisible) {
         var thisNPCOffsetRow = 0;
         var thisFileColourSuffix = '';
         var thisColourName, thisItemIdentifier, thisPlatform, thisNPCIdentifier;
-var thisItemOffsetCol = 0;
-var thisItemOffsetRow = 0;
+        var thisItemOffsetCol = 0;
+        var thisItemOffsetRow = 0;
 
         for (var i = 0; i < mapTilesX; i++) {
             for (var j = 0; j < mapTilesY; j++) {
@@ -7062,7 +7063,7 @@ var thisItemOffsetRow = 0;
             thisY = findIsoCoordsY(thisNPC.x, thisNPC.y);
 
             //assetsToDraw.push([findIsoDepth(thisX, thisY), npcImages[i], Math.floor(thisX - hero.isox - thisNPC.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisNPC.centreY + (canvasHeight / 2))]);
-thisNPCIdentifier = "npc" + thisMapData.npcs[i].name;
+            thisNPCIdentifier = "npc" + thisMapData.npcs[i].name;
 
             assetsToDraw.push([findIsoDepth(thisNPC.x, thisNPC.y, thisNPC.z), "sprite", npcImages[thisNPCIdentifier], thisNPCOffsetCol * thisNPC.spriteWidth, thisNPCOffsetRow * thisNPC.spriteHeight, thisNPC.spriteWidth, thisNPC.spriteHeight, Math.floor(thisX - hero.isox - thisNPC.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisNPC.centreY + (canvasHeight / 2) - thisNPC.z), thisNPC.spriteWidth, thisNPC.spriteHeight]);
         }
@@ -7070,7 +7071,7 @@ thisNPCIdentifier = "npc" + thisMapData.npcs[i].name;
 
         for (var i = 0; i < thisMapData.items.length; i++) {
             thisItem = thisMapData.items[i];
-         
+
             thisX = findIsoCoordsX(thisItem.x, thisItem.y);
             thisY = findIsoCoordsY(thisItem.x, thisItem.y);
             thisFileColourSuffix = "";
@@ -7083,17 +7084,17 @@ thisNPCIdentifier = "npc" + thisMapData.npcs[i].name;
             thisItemIdentifier = "item" + thisMapData.items[i].type + thisFileColourSuffix;
 
 
-if (typeof thisItem.animation !== "undefined") {
-         thisItemOffsetCol = (thisItem["animation"][thisItem.state]["length"])-1;
-            thisItemOffsetRow = thisItem["animation"][thisItem.state]["row"];
+            if (typeof thisItem.animation !== "undefined") {
+                thisItemOffsetCol = (thisItem["animation"][thisItem.state]["length"]) - 1;
+                thisItemOffsetRow = thisItem["animation"][thisItem.state]["row"];
 
 
 
-assetsToDraw.push([findIsoDepth(thisItem.x, thisItem.y, thisItem.z), "sprite", itemImages[thisItemIdentifier], thisItemOffsetCol * thisItem.spriteWidth, thisItemOffsetRow * thisItem.spriteHeight, thisItem.spriteWidth, thisItem.spriteHeight, Math.floor(thisX - hero.isox - thisItem.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisItem.centreY + (canvasHeight / 2) - thisItem.z), thisItem.spriteWidth, thisItem.spriteHeight]);
-} else {
+                assetsToDraw.push([findIsoDepth(thisItem.x, thisItem.y, thisItem.z), "sprite", itemImages[thisItemIdentifier], thisItemOffsetCol * thisItem.spriteWidth, thisItemOffsetRow * thisItem.spriteHeight, thisItem.spriteWidth, thisItem.spriteHeight, Math.floor(thisX - hero.isox - thisItem.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisItem.centreY + (canvasHeight / 2) - thisItem.z), thisItem.spriteWidth, thisItem.spriteHeight]);
+            } else {
 
-            assetsToDraw.push([findIsoDepth(thisItem.x, thisItem.y, thisItem.z), "img", itemImages[thisItemIdentifier], Math.floor(thisX - hero.isox - thisItem.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisItem.centreY + (canvasHeight / 2) - thisItem.z)]);
-        }
+                assetsToDraw.push([findIsoDepth(thisItem.x, thisItem.y, thisItem.z), "img", itemImages[thisItemIdentifier], Math.floor(thisX - hero.isox - thisItem.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisItem.centreY + (canvasHeight / 2) - thisItem.z)]);
+            }
         }
 
 
@@ -7133,15 +7134,15 @@ assetsToDraw.push([findIsoDepth(thisItem.x, thisItem.y, thisItem.z), "sprite", i
                     break;
                 case "sprite":
                     // sprite image (needs slicing parameters):
-               
+
                     gameContext.drawImage(assetsToDraw[i][2], assetsToDraw[i][3], assetsToDraw[i][4], assetsToDraw[i][5], assetsToDraw[i][6], assetsToDraw[i][7], assetsToDraw[i][8], assetsToDraw[i][9], assetsToDraw[i][10]);
                     break;
-                    case "dowsingRing":
+                case "dowsingRing":
                     gameContext.globalCompositeOperation = 'lighten';
                     // draw the dowsing ring:
-                    drawEllipse(gameContext, assetsToDraw[i][2]+(100-dowsing.proximity)/2, assetsToDraw[i][3]+(100-dowsing.proximity)/4, dowsingRingSize*dowsing.proximity/100, (dowsingRingSize*dowsing.proximity/100)/2, true, 'rgba(0,255,0,0.3)');
+                    drawEllipse(gameContext, assetsToDraw[i][2] + (100 - dowsing.proximity) / 2, assetsToDraw[i][3] + (100 - dowsing.proximity) / 4, dowsingRingSize * dowsing.proximity / 100, (dowsingRingSize * dowsing.proximity / 100) / 2, true, 'rgba(0,255,0,0.3)');
                     // draw the outline:
-                    drawEllipse(gameContext, assetsToDraw[i][2], assetsToDraw[i][3], dowsingRingSize, dowsingRingSize/2, false, 'rgba(0,255,0,0.3)');
+                    drawEllipse(gameContext, assetsToDraw[i][2], assetsToDraw[i][3], dowsingRingSize, dowsingRingSize / 2, false, 'rgba(0,255,0,0.3)');
                     // restore the composite mode to the default:
                     gameContext.globalCompositeOperation = 'source-over';
                     break;

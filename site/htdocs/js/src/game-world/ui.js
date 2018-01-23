@@ -1607,16 +1607,17 @@ var UI = {
     },
 
     updateCooldowns: function() {
-        var thisPercent;
+        var thisValue;
         for (var thisSlotsID in hero.inventory) {
             if (typeof hero.inventory[thisSlotsID].cooldown !== "undefined") {
                 if (hero.inventory[thisSlotsID].cooldownTimer > 0) {
                     hero.inventory[thisSlotsID].cooldownTimer--;
                     //console.log(hero.inventory[thisSlotsID].cooldownTimer);
-                    //update visually:
-                    thisPercent = (hero.inventory[thisSlotsID].cooldownTimer/hero.inventory[thisSlotsID].cooldown)*100;
+                    //update visually (scaleY uses 0 - 1):
+                    thisValue = (hero.inventory[thisSlotsID].cooldownTimer/hero.inventory[thisSlotsID].cooldown);
       
-                    document.querySelector("#slot"+thisSlotsID+" .coolDown").style.height = thisPercent+'%';
+   // does this need vendor prefixes?            
+    document.querySelector("#slot"+thisSlotsID+" .coolDown").style.transform = 'scaleY('+thisValue+')';
                 }
             }
         }
