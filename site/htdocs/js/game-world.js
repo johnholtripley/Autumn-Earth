@@ -5270,7 +5270,7 @@ function prepareGame() {
         itemImages[itemGraphicsToLoad[i]] = Loader.getImage(itemGraphicsToLoad[i]);
         // ####
         //  itemImages[itemGraphicsToLoad[i]].spriteWidth = Loader.getImage(itemGraphicsToLoad[i]).width;
-        //  itemImages[itemGraphicsToLoad[i]].spriteHeight = Loader.getImage(itemGraphicsToLoad[i]).height;
+        //  itemImages[itemGraphicsToLoad[i]].spriteHeight = Loader.getImage(itemGraphicsToLoad[i]).length;
     }
     backgroundImg = Loader.getImage("backgroundImg");
     // initialise and position NPCs:
@@ -7072,6 +7072,7 @@ function draw() {
         }
 
         for (var i = 0; i < thisMapData.npcs.length; i++) {
+
             thisNPC = thisMapData.npcs[i];
             thisNPCOffsetCol = currentAnimationFrame % thisNPC["animation"][thisNPC.currentAnimation]["length"];
             thisNPCOffsetRow = thisNPC["animation"][thisNPC.currentAnimation][thisNPC.drawnFacing];
@@ -7080,6 +7081,15 @@ function draw() {
 
             //assetsToDraw.push([findIsoDepth(thisX, thisY), npcImages[i], Math.floor(thisX - hero.isox - thisNPC.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisNPC.centreY + (canvasHeight / 2))]);
             thisNPCIdentifier = "npc" + thisMapData.npcs[i].name;
+
+
+  if(i==13) {
+    console.log("----");
+                console.log(thisNPC.currentAnimation);
+                console.log(thisNPC.drawnFacing);
+                console.log(thisNPC["animation"][thisNPC.currentAnimation][thisNPC.drawnFacing]);
+              
+            } 
 
             assetsToDraw.push([findIsoDepth(thisNPC.x, thisNPC.y, thisNPC.z), "sprite", npcImages[thisNPCIdentifier], thisNPCOffsetCol * thisNPC.spriteWidth, thisNPCOffsetRow * thisNPC.spriteHeight, thisNPC.spriteWidth, thisNPC.spriteHeight, Math.floor(thisX - hero.isox - thisNPC.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisNPC.centreY + (canvasHeight / 2) - thisNPC.z), thisNPC.spriteWidth, thisNPC.spriteHeight]);
         }

@@ -651,9 +651,9 @@
                 "spriteHeight": 120,
                 "centreX": 75,
                 "centreY": 96,
-                "tileX": 13,
+                "tileX": 20,
                 "tileY": 28,
-                "movement": ["-"],
+                "movement": ["s","s","e","e","n","n","w","w"],
                 "facing": "s",
                 "walkThroughDoors": false,
                 "speed": 2,
@@ -663,9 +663,15 @@
                 ],
                 "speechIndex": 0,
                 "isCollidable": true,
-                "isMoving": false,
+                "isMoving": true,
                 "animation": {
                     "walk": {
+                        "length": 1,
+                        "n": 0,
+                        "e": 1,
+                        "s": 2,
+                        "w": 3
+                    },    "wait": {
                         "length": 1,
                         "n": 0,
                         "e": 1,
