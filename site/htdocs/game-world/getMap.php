@@ -277,7 +277,8 @@ foreach ($whichCategories as &$thisCategory) {
         $thisY = mt_rand(0,$mapTilesY-1);
         if($clearTiles[$thisY][$thisX] == '0') {
             
-            $isAccessible = pathIsConnected($thisX,$thisY);
+         //   $isAccessible = pathIsConnected($thisX,$thisY);
+           $isAccessible = true;
             if($isAccessible) {
 
 

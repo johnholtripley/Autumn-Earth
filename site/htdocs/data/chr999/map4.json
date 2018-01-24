@@ -136,7 +136,7 @@
         "movingPlatforms": [
         {
             "width": 6,
-            "height": 3,
+            "length": 3,
             "zHeight": 0,
             "tileXMin": 4,
             "tileYMin": 8,
@@ -150,7 +150,7 @@
             "graphic": 1
         },      {
             "width": 6,
-            "height": 3,
+            "length": 3,
             "zHeight": 0,
             "tileXMin": 10,
             "tileYMin": 8,

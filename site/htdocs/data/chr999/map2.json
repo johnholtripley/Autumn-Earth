@@ -642,6 +642,37 @@
                         "w": 3
                     }
                 }
+            }, {
+                "name": "brown horse",
+                "src": "brown-horse.png",
+                "width": 36,
+                "height": 94,
+                "spriteWidth": 127,
+                "spriteHeight": 120,
+                "centreX": 75,
+                "centreY": 96,
+                "tileX": 13,
+                "tileY": 28,
+                "movement": ["-"],
+                "facing": "s",
+                "walkThroughDoors": false,
+                "speed": 2,
+                "speech": [
+                    ["", "sound", "horse"]
+
+                ],
+                "speechIndex": 0,
+                "isCollidable": true,
+                "isMoving": false,
+                "animation": {
+                    "walk": {
+                        "length": 1,
+                        "n": 0,
+                        "e": 1,
+                        "s": 2,
+                        "w": 3
+                    }
+                }
             }
 
         ],

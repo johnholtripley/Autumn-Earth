@@ -10,6 +10,7 @@ var soundsToLoad = {
     'bagOpen': '../sounds/bag-open-NOT_MINE-wow.mp3',
     'buttonClick': '../sounds/button-press-NOT_MINE-wow.mp3',
     'hen': '../sounds/hen-NOT_MINE.mp3',
+    'horse': '../sounds/horse-NOT_MINE.mp3',
     'lever': '../sounds/lever-NOT_MINE.mp3',
     'keys': '../sounds/keys-NOT_MINE-wow.mp3',
     'unlock': '../sounds/unlock-NOT_MINE-wow.mp3',
@@ -5124,6 +5125,7 @@ function findInventoryItemData() {
         // check if any are containers or chests:
         if (typeof thisMapData.items[i].contains !== "undefined") {
             for (var j = 0; j < thisMapData.items[i].contains.length; j++) {
+if (typeof thisMapData.items[i].contains[j].type !== "undefined") {
                 itemChoices = thisMapData.items[i].contains[j].type.toString().split("/");
                 for (var k = 0; k < itemChoices.length; k++) {
                     if (itemChoices[k] != "$") {
@@ -5131,6 +5133,7 @@ function findInventoryItemData() {
                         itemIdsToGet.push(itemChoices[k]);
                     }
                 }
+            }
             }
         }
     }
@@ -5324,7 +5327,7 @@ function prepareGame() {
             thisPlatform.xMinEdge = -tileW / 2;
             thisPlatform.xMaxEdge = tileW / 2 + ((thisPlatform.width - 1) * tileW);
             thisPlatform.yMinEdge = -tileW / 2;
-            thisPlatform.yMaxEdge = tileW / 2 + ((thisPlatform.height - 1) * tileW);
+            thisPlatform.yMaxEdge = tileW / 2 + ((thisPlatform.length - 1) * tileW);
         }
     }
 
@@ -5341,7 +5344,6 @@ function prepareGame() {
         initialiseItem(i);
     }
     activeNPCForDialogue = '';
-
 
 
 
@@ -5567,7 +5569,7 @@ function isOnAPlatform(x, y) {
         for (var i = 0; i < thisMapData.movingPlatforms.length; i++) {
             thisPlatform = thisMapData.movingPlatforms[i];
             if (y >= (thisPlatform.y - tileW / 2)) {
-                if (y <= (thisPlatform.y + tileW / 2 + (thisPlatform.height - 1) * tileW)) {
+                if (y <= (thisPlatform.y + tileW / 2 + (thisPlatform.length - 1) * tileW)) {
                     if (x >= (thisPlatform.x - tileW / 2)) {
                         if (x <= (thisPlatform.x + tileW / 2 + (thisPlatform.width - 1) * tileW)) {
                             whichPlatform = i;
@@ -5615,7 +5617,7 @@ function checkHeroCollisions() {
             // leading edge is a collision - check if trailing edge is on a platform, and nudge hero back onto the platform if so:
             if ((isOnAPlatform(hero.x - hero.width / 2, hero.y - hero.height / 2) > -1) && (isOnAPlatform(hero.x + hero.width / 2, hero.y - hero.height / 2) > -1)) {
                 if ((leadingEdge1OnAPlatform == -1) && (leadingEdge2OnAPlatform == -1)) {
-                    hero.y = (thisMapData.movingPlatforms[isOnAPlatform(hero.x - hero.width / 2, hero.y - hero.height / 2)].y + tileW / 2 + (thisMapData.movingPlatforms[isOnAPlatform(hero.x - hero.width / 2, hero.y - hero.height / 2)].height - 1) * tileW) - (hero.height / 2) - 1;
+                    hero.y = (thisMapData.movingPlatforms[isOnAPlatform(hero.x - hero.width / 2, hero.y - hero.height / 2)].y + tileW / 2 + (thisMapData.movingPlatforms[isOnAPlatform(hero.x - hero.width / 2, hero.y - hero.height / 2)].length - 1) * tileW) - (hero.height / 2) - 1;
                 }
             } else {
                 // platform not involved - find the tile's bottom edge
