@@ -1642,5 +1642,7 @@ toolTipText += " "+hero.actions[i][3]['pet-name'];
         // ###############
         console.log("right click");
         console.log(e);
+        var thisNode = getNearestParentId(e.target);
+        console.log(thisNode.id);
     }
 }
