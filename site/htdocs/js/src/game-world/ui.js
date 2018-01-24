@@ -134,6 +134,7 @@ var UI = {
 
         inventoryPanels.innerHTML = inventoryMarkup;
         gameWrapper.ondblclick = UI.doubleClick;
+        gameWrapper.addEventListener( "contextmenu", UI.handleRightClick, false);
         document.getElementById('createRecipeList').onclick = UI.craftingPanelSingleClick;
         document.getElementById('craftingRecipeCreateButton').onclick = UI.craftingRecipeCreate;
         splitStackPanel.onsubmit = inventorySplitStackSubmit;
@@ -1635,5 +1636,10 @@ toolTipText += " "+hero.actions[i][3]['pet-name'];
                 }
             }
         }
+    }, 
+    handleRightClick: function(e) {
+        // ###############
+        console.log("right click");
+        console.log(e);
     }
 }

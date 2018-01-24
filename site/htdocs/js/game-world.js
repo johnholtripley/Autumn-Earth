@@ -3125,6 +3125,7 @@ var UI = {
 
         inventoryPanels.innerHTML = inventoryMarkup;
         gameWrapper.ondblclick = UI.doubleClick;
+        gameWrapper.addEventListener( "contextmenu", UI.handleRightClick, false);
         document.getElementById('createRecipeList').onclick = UI.craftingPanelSingleClick;
         document.getElementById('craftingRecipeCreateButton').onclick = UI.craftingRecipeCreate;
         splitStackPanel.onsubmit = inventorySplitStackSubmit;
@@ -4626,6 +4627,11 @@ toolTipText += " "+hero.actions[i][3]['pet-name'];
                 }
             }
         }
+    }, 
+    handleRightClick: function(e) {
+        // ###############
+        console.log("right click");
+        console.log(e);
     }
 }
 function setupWeather() {
@@ -7081,15 +7087,6 @@ function draw() {
 
             //assetsToDraw.push([findIsoDepth(thisX, thisY), npcImages[i], Math.floor(thisX - hero.isox - thisNPC.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisNPC.centreY + (canvasHeight / 2))]);
             thisNPCIdentifier = "npc" + thisMapData.npcs[i].name;
-
-
-  if(i==13) {
-    console.log("----");
-                console.log(thisNPC.currentAnimation);
-                console.log(thisNPC.drawnFacing);
-                console.log(thisNPC["animation"][thisNPC.currentAnimation][thisNPC.drawnFacing]);
-              
-            } 
 
             assetsToDraw.push([findIsoDepth(thisNPC.x, thisNPC.y, thisNPC.z), "sprite", npcImages[thisNPCIdentifier], thisNPCOffsetCol * thisNPC.spriteWidth, thisNPCOffsetRow * thisNPC.spriteHeight, thisNPC.spriteWidth, thisNPC.spriteHeight, Math.floor(thisX - hero.isox - thisNPC.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisNPC.centreY + (canvasHeight / 2) - thisNPC.z), thisNPC.spriteWidth, thisNPC.spriteHeight]);
         }
