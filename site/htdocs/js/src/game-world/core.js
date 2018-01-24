@@ -877,10 +877,10 @@ function startDoorTransition() {
 function getHeroAsCloseAsPossibleToObject(objx, objy, objw, objh) {
     switch (hero.facing) {
         case "n":
-            hero.y = objy + objh / 2 + hero.height / 2 + 1;
+            hero.y = objy + objh / 2 + hero.length / 2 + 1;
             break;
         case "s":
-            hero.y = objy - objh / 2 - hero.height / 2 - 1;
+            hero.y = objy - objh / 2 - hero.length / 2 - 1;
             break;
         case "w":
             hero.x = objx + objw / 2 + hero.width / 2 + 1;
@@ -919,53 +919,53 @@ function checkHeroCollisions() {
 
     if (key[2]) {
         // up
-        leadingEdge1OnAPlatform = isOnAPlatform(hero.x - hero.width / 2, hero.y - hero.height / 2);
-        leadingEdge2OnAPlatform = isOnAPlatform(hero.x + hero.width / 2, hero.y - hero.height / 2)
+        leadingEdge1OnAPlatform = isOnAPlatform(hero.x - hero.width / 2, hero.y - hero.length / 2);
+        leadingEdge2OnAPlatform = isOnAPlatform(hero.x + hero.width / 2, hero.y - hero.length / 2)
         // make sure both leading edge corners are EITHER on a platform or not colliding with terrain:
-        if (((leadingEdge1OnAPlatform > -1) || (!isATerrainCollision(hero.x - hero.width / 2, hero.y - hero.height / 2))) && ((leadingEdge2OnAPlatform > -1) || (!isATerrainCollision(hero.x + hero.width / 2, hero.y - hero.height / 2)))) {} else {
+        if (((leadingEdge1OnAPlatform > -1) || (!isATerrainCollision(hero.x - hero.width / 2, hero.y - hero.length / 2))) && ((leadingEdge2OnAPlatform > -1) || (!isATerrainCollision(hero.x + hero.width / 2, hero.y - hero.length / 2)))) {} else {
             // leading edge is a collision - check if trailing edge is on a platform (and leading isn't), and nudge hero back onto the platform if so:
-            if ((isOnAPlatform(hero.x - hero.width / 2, hero.y + hero.height / 2) > -1) && (isOnAPlatform(hero.x + hero.width / 2, hero.y + hero.height / 2) > -1)) {
+            if ((isOnAPlatform(hero.x - hero.width / 2, hero.y + hero.length / 2) > -1) && (isOnAPlatform(hero.x + hero.width / 2, hero.y + hero.length / 2) > -1)) {
                 if ((leadingEdge1OnAPlatform == -1) && (leadingEdge2OnAPlatform == -1)) {
-                    hero.y = thisMapData.movingPlatforms[isOnAPlatform(hero.x - hero.width / 2, hero.y + hero.height / 2)].y - (tileW / 2) + (hero.height / 2) + 1;
+                    hero.y = thisMapData.movingPlatforms[isOnAPlatform(hero.x - hero.width / 2, hero.y + hero.length / 2)].y - (tileW / 2) + (hero.length / 2) + 1;
                 }
             } else {
                 // platform not involved - find the tile's bottom edge
-                var tileCollidedWith = getTileY(hero.y - hero.height / 2);
+                var tileCollidedWith = getTileY(hero.y - hero.length / 2);
                 var tileBottomEdge = (tileCollidedWith + 1) * tileW;
                 // use the +1 to make sure it's just clear of the collision tile
-                hero.y = tileBottomEdge + hero.height / 2 + 1;
+                hero.y = tileBottomEdge + hero.length / 2 + 1;
             }
         }
     }
 
     if (key[3]) {
         // down
-        leadingEdge1OnAPlatform = isOnAPlatform(hero.x - hero.width / 2, hero.y + hero.height / 2);
-        leadingEdge2OnAPlatform = isOnAPlatform(hero.x + hero.width / 2, hero.y + hero.height / 2);
-        if (((leadingEdge1OnAPlatform > -1) || (!isATerrainCollision(hero.x - hero.width / 2, hero.y + hero.height / 2))) && ((leadingEdge2OnAPlatform > -1) || (!isATerrainCollision(hero.x + hero.width / 2, hero.y + hero.height / 2)))) {} else {
+        leadingEdge1OnAPlatform = isOnAPlatform(hero.x - hero.width / 2, hero.y + hero.length / 2);
+        leadingEdge2OnAPlatform = isOnAPlatform(hero.x + hero.width / 2, hero.y + hero.length / 2);
+        if (((leadingEdge1OnAPlatform > -1) || (!isATerrainCollision(hero.x - hero.width / 2, hero.y + hero.length / 2))) && ((leadingEdge2OnAPlatform > -1) || (!isATerrainCollision(hero.x + hero.width / 2, hero.y + hero.length / 2)))) {} else {
             // leading edge is a collision - check if trailing edge is on a platform, and nudge hero back onto the platform if so:
-            if ((isOnAPlatform(hero.x - hero.width / 2, hero.y - hero.height / 2) > -1) && (isOnAPlatform(hero.x + hero.width / 2, hero.y - hero.height / 2) > -1)) {
+            if ((isOnAPlatform(hero.x - hero.width / 2, hero.y - hero.length / 2) > -1) && (isOnAPlatform(hero.x + hero.width / 2, hero.y - hero.length / 2) > -1)) {
                 if ((leadingEdge1OnAPlatform == -1) && (leadingEdge2OnAPlatform == -1)) {
-                    hero.y = (thisMapData.movingPlatforms[isOnAPlatform(hero.x - hero.width / 2, hero.y - hero.height / 2)].y + tileW / 2 + (thisMapData.movingPlatforms[isOnAPlatform(hero.x - hero.width / 2, hero.y - hero.height / 2)].length - 1) * tileW) - (hero.height / 2) - 1;
+                    hero.y = (thisMapData.movingPlatforms[isOnAPlatform(hero.x - hero.width / 2, hero.y - hero.length / 2)].y + tileW / 2 + (thisMapData.movingPlatforms[isOnAPlatform(hero.x - hero.width / 2, hero.y - hero.length / 2)].length - 1) * tileW) - (hero.length / 2) - 1;
                 }
             } else {
                 // platform not involved - find the tile's bottom edge
-                var tileCollidedWith = getTileY(hero.y + hero.height / 2);
+                var tileCollidedWith = getTileY(hero.y + hero.length / 2);
                 var tileTopEdge = (tileCollidedWith) * tileW;
-                hero.y = tileTopEdge - hero.height / 2 - 1;
+                hero.y = tileTopEdge - hero.length / 2 - 1;
             }
         }
     }
 
     if (key[0]) {
         // left/west
-        leadingEdge1OnAPlatform = isOnAPlatform(hero.x - hero.width / 2, hero.y + hero.height / 2);
-        leadingEdge2OnAPlatform = isOnAPlatform(hero.x - hero.width / 2, hero.y - hero.height / 2);
-        if (((leadingEdge1OnAPlatform > -1) || (!isATerrainCollision(hero.x - hero.width / 2, hero.y + hero.height / 2))) && ((leadingEdge2OnAPlatform > -1) || (!isATerrainCollision(hero.x - hero.width / 2, hero.y - hero.height / 2)))) {} else {
+        leadingEdge1OnAPlatform = isOnAPlatform(hero.x - hero.width / 2, hero.y + hero.length / 2);
+        leadingEdge2OnAPlatform = isOnAPlatform(hero.x - hero.width / 2, hero.y - hero.length / 2);
+        if (((leadingEdge1OnAPlatform > -1) || (!isATerrainCollision(hero.x - hero.width / 2, hero.y + hero.length / 2))) && ((leadingEdge2OnAPlatform > -1) || (!isATerrainCollision(hero.x - hero.width / 2, hero.y - hero.length / 2)))) {} else {
             // leading edge is a collision - check if trailing edge is on a platform, and nudge hero back onto the platform if so:
-            if ((isOnAPlatform(hero.x + hero.width / 2, hero.y - hero.height / 2) > -1) && (isOnAPlatform(hero.x + hero.width / 2, hero.y + hero.height / 2) > -1)) {
+            if ((isOnAPlatform(hero.x + hero.width / 2, hero.y - hero.length / 2) > -1) && (isOnAPlatform(hero.x + hero.width / 2, hero.y + hero.length / 2) > -1)) {
                 if ((leadingEdge1OnAPlatform == -1) && (leadingEdge2OnAPlatform == -1)) {
-                    hero.x = thisMapData.movingPlatforms[isOnAPlatform(hero.x + hero.width / 2, hero.y - hero.height / 2)].x - tileW / 2 + (hero.height / 2) + 1;
+                    hero.x = thisMapData.movingPlatforms[isOnAPlatform(hero.x + hero.width / 2, hero.y - hero.length / 2)].x - tileW / 2 + (hero.length / 2) + 1;
                 }
             } else {
                 // platform not involved - find the tile's bottom edge
@@ -978,13 +978,13 @@ function checkHeroCollisions() {
 
     if (key[1]) {
         //right/east
-        leadingEdge1OnAPlatform = isOnAPlatform(hero.x + hero.width / 2, hero.y + hero.height / 2);
-        leadingEdge2OnAPlatform = isOnAPlatform(hero.x + hero.width / 2, hero.y - hero.height / 2);
-        if (((leadingEdge1OnAPlatform > -1) || (!isATerrainCollision(hero.x + hero.width / 2, hero.y + hero.height / 2))) && ((leadingEdge2OnAPlatform > -1) || (!isATerrainCollision(hero.x + hero.width / 2, hero.y - hero.height / 2)))) {} else {
+        leadingEdge1OnAPlatform = isOnAPlatform(hero.x + hero.width / 2, hero.y + hero.length / 2);
+        leadingEdge2OnAPlatform = isOnAPlatform(hero.x + hero.width / 2, hero.y - hero.length / 2);
+        if (((leadingEdge1OnAPlatform > -1) || (!isATerrainCollision(hero.x + hero.width / 2, hero.y + hero.length / 2))) && ((leadingEdge2OnAPlatform > -1) || (!isATerrainCollision(hero.x + hero.width / 2, hero.y - hero.length / 2)))) {} else {
             // leading edge is a collision - check if trailing edge is on a platform, and nudge hero back onto the platform if so:
-            if ((isOnAPlatform(hero.x - hero.width / 2, hero.y - hero.height / 2) > -1) && (isOnAPlatform(hero.x - hero.width / 2, hero.y + hero.height / 2) > -1)) {
+            if ((isOnAPlatform(hero.x - hero.width / 2, hero.y - hero.length / 2) > -1) && (isOnAPlatform(hero.x - hero.width / 2, hero.y + hero.length / 2) > -1)) {
                 if ((leadingEdge1OnAPlatform == -1) && (leadingEdge2OnAPlatform == -1)) {
-                    hero.x = thisMapData.movingPlatforms[isOnAPlatform(hero.x - hero.width / 2, hero.y - hero.height / 2)].x + tileW / 2 + ((thisMapData.movingPlatforms[isOnAPlatform(hero.x - hero.width / 2, hero.y - hero.height / 2)].width - 1) * tileW) - (hero.height / 2) - 1;
+                    hero.x = thisMapData.movingPlatforms[isOnAPlatform(hero.x - hero.width / 2, hero.y - hero.length / 2)].x + tileW / 2 + ((thisMapData.movingPlatforms[isOnAPlatform(hero.x - hero.width / 2, hero.y - hero.length / 2)].width - 1) * tileW) - (hero.length / 2) - 1;
                 }
             } else {
                 // platform not involved - find the tile's bottom edge
@@ -1001,10 +1001,10 @@ function checkHeroCollisions() {
             thisMapData.movingPlatforms[i].canMove = true;
         }
     }
-    topLeftIsOnAPlatform = isOnAPlatform(hero.x - hero.width / 2, hero.y - hero.height / 2);
-    topRightIsOnAPlatform = isOnAPlatform(hero.x + hero.width / 2, hero.y - hero.height / 2);
-    bottomLeftIsOnAPlatform = isOnAPlatform(hero.x - hero.width / 2, hero.y + hero.height / 2);
-    bottomRightIsOnAPlatform = isOnAPlatform(hero.x + hero.width / 2, hero.y + hero.height / 2);
+    topLeftIsOnAPlatform = isOnAPlatform(hero.x - hero.width / 2, hero.y - hero.length / 2);
+    topRightIsOnAPlatform = isOnAPlatform(hero.x + hero.width / 2, hero.y - hero.length / 2);
+    bottomLeftIsOnAPlatform = isOnAPlatform(hero.x - hero.width / 2, hero.y + hero.length / 2);
+    bottomRightIsOnAPlatform = isOnAPlatform(hero.x + hero.width / 2, hero.y + hero.length / 2);
 
     if (topLeftIsOnAPlatform >= 0) {
         platformIsClear = (topLeftIsOnAPlatform == bottomLeftIsOnAPlatform && bottomLeftIsOnAPlatform == topRightIsOnAPlatform && topRightIsOnAPlatform == bottomRightIsOnAPlatform);
@@ -1037,7 +1037,7 @@ function checkHeroCollisions() {
     for (var i = 0; i < thisMapData.npcs.length; i++) {
         thisNPC = thisMapData.npcs[i];
         if (thisNPC.isCollidable) {
-            if (isAnObjectCollision(thisNPC.x, thisNPC.y, thisNPC.width, thisNPC.height, hero.x, hero.y, hero.width, hero.height)) {
+            if (isAnObjectCollision(thisNPC.x, thisNPC.y, thisNPC.width, thisNPC.height, hero.x, hero.y, hero.width, hero.length)) {
                 getHeroAsCloseAsPossibleToObject(thisNPC.x, thisNPC.y, thisNPC.width, thisNPC.height);
             }
         }
@@ -1046,7 +1046,7 @@ function checkHeroCollisions() {
     // check for collisions against items:
     for (var i = 0; i < thisMapData.items.length; i++) {
         thisItem = thisMapData.items[i];
-        if (isAnObjectCollision(thisItem.x, thisItem.y, thisItem.width, thisItem.height, hero.x, hero.y, hero.width, hero.height)) {
+        if (isAnObjectCollision(thisItem.x, thisItem.y, thisItem.width, thisItem.height, hero.x, hero.y, hero.width, hero.length)) {
             getHeroAsCloseAsPossibleToObject(thisItem.x, thisItem.y, thisItem.width, thisItem.height);
         }
     }
@@ -1054,7 +1054,7 @@ function checkHeroCollisions() {
     // check against pets:
     if (hasActivePet) {
         for (var i = 0; i < hero.activePets.length; i++) {
-            if (isAnObjectCollision(hero.allPets[hero.activePets[i]].x, hero.allPets[hero.activePets[i]].y, hero.allPets[hero.activePets[i]].width, hero.allPets[hero.activePets[i]].height, hero.x, hero.y, hero.width, hero.height)) {
+            if (isAnObjectCollision(hero.allPets[hero.activePets[i]].x, hero.allPets[hero.activePets[i]].y, hero.allPets[hero.activePets[i]].width, hero.allPets[hero.activePets[i]].height, hero.x, hero.y, hero.width, hero.length)) {
                 getHeroAsCloseAsPossibleToObject(hero.allPets[hero.activePets[i]].x, hero.allPets[hero.activePets[i]].y, hero.allPets[hero.activePets[i]].width, hero.allPets[hero.activePets[i]].height);
                 pushPetAway(i);
 
@@ -1068,7 +1068,7 @@ function checkHeroCollisions() {
         for (var i in thisMapData.innerDoors) {
             thisInnerDoor = thisMapData.innerDoors[i];
             if (!thisInnerDoor.isOpen) {
-                if (isAnObjectCollision(getTileCentreCoordX(thisInnerDoor.tileX), getTileCentreCoordY(thisInnerDoor.tileY), tileW, tileW, hero.x, hero.y, hero.width, hero.height)) {
+                if (isAnObjectCollision(getTileCentreCoordX(thisInnerDoor.tileX), getTileCentreCoordY(thisInnerDoor.tileY), tileW, tileW, hero.x, hero.y, hero.width, hero.length)) {
                     if (thisInnerDoor.isLocked) {
                         // check for key
                         var hasInnerDoorKey = hero.currency.keys.indexOf(i);
@@ -2066,7 +2066,7 @@ function moveNPCs() {
             }
 
             // check for collision against hero:
-            if (isAnObjectCollision(thisNPC.x, thisNPC.y, thisNPC.width, thisNPC.height, hero.x, hero.y, hero.width, hero.height)) {
+            if (isAnObjectCollision(thisNPC.x, thisNPC.y, thisNPC.width, thisNPC.height, hero.x, hero.y, hero.width, hero.length)) {
                 thisNPC.x = oldNPCx;
                 thisNPC.y = oldNPCy;
             }

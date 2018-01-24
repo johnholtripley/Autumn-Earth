@@ -109,7 +109,7 @@ var hero = {
     breadcrumb: [],
 
     width: 20,
-    height: 20,
+    length: 20,
     feetOffsetX: 40,
     feetOffsetY: 69,
     speed: 4,
