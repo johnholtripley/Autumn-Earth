@@ -68,27 +68,27 @@ function movePet() {
                         case 'n':
                             thisPet.y -= thisPet.speed;
                             // check for collisions:
-                            if ((isAPetTerrainCollision(thisPet, thisPet.x - thisPet.width / 2, thisPet.y - thisPet.height / 2)) || (isAPetTerrainCollision(thisPet, thisPet.x + thisPet.width / 2, thisPet.y - thisPet.height / 2))) {
+                            if ((isAPetTerrainCollision(thisPet, thisPet.x - thisPet.width / 2, thisPet.y - thisPet.length / 2)) || (isAPetTerrainCollision(thisPet, thisPet.x + thisPet.width / 2, thisPet.y - thisPet.length / 2))) {
                                 // find the tile's bottom edge
-                                var tileCollidedWith = getTileY(thisPet.y - thisPet.height / 2);
+                                var tileCollidedWith = getTileY(thisPet.y - thisPet.length / 2);
                                 var tileBottomEdge = (tileCollidedWith + 1) * tileW;
                                 // use the +1 to make sure it's just clear of the collision tile
-                                thisPet.y = tileBottomEdge + thisPet.height / 2 + 1;
+                                thisPet.y = tileBottomEdge + thisPet.heilengthght / 2 + 1;
                             }
                             break;
                         case 's':
                             thisPet.y += thisPet.speed;
                             // check for collisions:
-                            if ((isAPetTerrainCollision(thisPet, thisPet.x - thisPet.width / 2, thisPet.y + thisPet.height / 2)) || (isAPetTerrainCollision(thisPet, thisPet.x + thisPet.width / 2, thisPet.y + thisPet.height / 2))) {
-                                var tileCollidedWith = getTileY(thisPet.y + thisPet.height / 2);
+                            if ((isAPetTerrainCollision(thisPet, thisPet.x - thisPet.width / 2, thisPet.y + thisPet.length / 2)) || (isAPetTerrainCollision(thisPet, thisPet.x + thisPet.width / 2, thisPet.y + thisPet.length / 2))) {
+                                var tileCollidedWith = getTileY(thisPet.y + thisPet.length / 2);
                                 var tileTopEdge = (tileCollidedWith) * tileW;
-                                thisPet.y = tileTopEdge - thisPet.height / 2 - 1;
+                                thisPet.y = tileTopEdge - thisPet.length / 2 - 1;
                             }
                             break;
                         case 'w':
                             thisPet.x -= thisPet.speed;
                             // check for collisions:
-                            if ((isAPetTerrainCollision(thisPet, thisPet.x - thisPet.width / 2, thisPet.y + thisPet.height / 2)) || (isAPetTerrainCollision(thisPet, thisPet.x - thisPet.width / 2, thisPet.y - thisPet.height / 2))) {
+                            if ((isAPetTerrainCollision(thisPet, thisPet.x - thisPet.width / 2, thisPet.y + thisPet.length / 2)) || (isAPetTerrainCollision(thisPet, thisPet.x - thisPet.width / 2, thisPet.y - thisPet.length / 2))) {
                                 var tileCollidedWith = getTileX(thisPet.x - thisPet.width / 2);
                                 var tileRightEdge = (tileCollidedWith + 1) * tileW;
                                 thisPet.x = tileRightEdge + thisPet.width / 2 + 1;
@@ -97,7 +97,7 @@ function movePet() {
                         case 'e':
                             thisPet.x += thisPet.speed;
                             // check for collisions:
-                            if ((isAPetTerrainCollision(thisPet, thisPet.x + thisPet.width / 2, thisPet.y + thisPet.height / 2)) || (isAPetTerrainCollision(thisPet, thisPet.x + thisPet.width / 2, thisPet.y - thisPet.height / 2))) {
+                            if ((isAPetTerrainCollision(thisPet, thisPet.x + thisPet.width / 2, thisPet.y + thisPet.length / 2)) || (isAPetTerrainCollision(thisPet, thisPet.x + thisPet.width / 2, thisPet.y - thisPet.length / 2))) {
                                 var tileCollidedWith = getTileX(thisPet.x + thisPet.width / 2);
                                 var tileLeftEdge = (tileCollidedWith) * tileW;
                                 thisPet.x = tileLeftEdge - thisPet.width / 2 - 1;
@@ -109,7 +109,7 @@ function movePet() {
                     for (var j = 0; j < thisMapData.npcs.length; j++) {
                         thisNPC = thisMapData.npcs[j];
                         if (thisNPC.isCollidable) {
-                            if (isAnObjectCollision(thisPet.x, thisPet.y, thisPet.width, thisPet.height, thisNPC.x, thisNPC.y, thisNPC.width, thisNPC.height)) {
+                            if (isAnObjectCollision(thisPet.x, thisPet.y, thisPet.width, thisPet.length, thisNPC.x, thisNPC.y, thisNPC.width, thisNPC.length)) {
                                 thisPet.x = oldPetX;
                                 thisPet.y = oldPetY;
                             }
@@ -120,7 +120,7 @@ function movePet() {
                     for (var j = 0; j < hero.activePets.length; j++) {
                         if (p != j) {
                             thisOtherPet = hero.allPets[hero.activePets[j]];
-                            if (isAnObjectCollision(thisPet.x, thisPet.y, thisPet.width, thisPet.height, thisOtherPet.x, thisOtherPet.y, thisOtherPet.width, thisOtherPet.height)) {
+                            if (isAnObjectCollision(thisPet.x, thisPet.y, thisPet.width, thisPet.length, thisOtherPet.x, thisOtherPet.y, thisOtherPet.width, thisOtherPet.length)) {
                                 thisPet.x = oldPetX;
                                 thisPet.y = oldPetY;
                                 // push the other pet:
@@ -136,7 +136,7 @@ function movePet() {
         for (var i in thisMapData.innerDoors) {
             thisInnerDoor = thisMapData.innerDoors[i];
             if (!thisInnerDoor.isOpen) {
-                if (isAnObjectCollision(getTileCentreCoordX(thisInnerDoor.tileX), getTileCentreCoordY(thisInnerDoor.tileY), tileW, tileW, thisPet.x, thisPet.y, thisPet.width, thisPet.height)) {
+                if (isAnObjectCollision(getTileCentreCoordX(thisInnerDoor.tileX), getTileCentreCoordY(thisInnerDoor.tileY), tileW, tileW, thisPet.x, thisPet.y, thisPet.width, thisPet.length)) {
                      thisPet.x = oldPetX;
                                 thisPet.y = oldPetY;
                 }
@@ -148,7 +148,7 @@ function movePet() {
                     // check for collisions against items:
                     for (var j = 0; j < thisMapData.items.length; j++) {
                         thisItem = thisMapData.items[j];
-                        if (isAnObjectCollision(thisPet.x, thisPet.y, thisPet.width, thisPet.height, thisItem.x, thisItem.y, thisItem.width, thisItem.height)) {
+                        if (isAnObjectCollision(thisPet.x, thisPet.y, thisPet.width, thisPet.length, thisItem.x, thisItem.y, thisItem.width, thisItem.length)) {
                             thisPet.x = oldPetX;
                             thisPet.y = oldPetY;
                         }
@@ -204,7 +204,7 @@ function movePet() {
                         for (var j = 0; j < thisMapData.npcs.length; j++) {
                             thisNPC = thisMapData.npcs[j];
                             if (thisNPC.isCollidable) {
-                                if (isAnObjectCollision(thisPet.x, thisPet.y, thisPet.width, thisPet.height, thisNPC.x, thisNPC.y, thisNPC.width, thisNPC.height)) {
+                                if (isAnObjectCollision(thisPet.x, thisPet.y, thisPet.width, thisPet.length, thisNPC.x, thisNPC.y, thisNPC.width, thisNPC.length)) {
                                     thisPet.x = oldPetX;
                                     thisPet.y = oldPetY;
                                 }
@@ -215,7 +215,7 @@ function movePet() {
                         for (var j = 0; j < hero.activePets.length; j++) {
                             if (p != j) {
                                 thisOtherPet = hero.allPets[hero.activePets[j]];
-                                if (isAnObjectCollision(thisPet.x, thisPet.y, thisPet.width, thisPet.height, thisOtherPet.x, thisOtherPet.y, thisOtherPet.width, thisOtherPet.height)) {
+                                if (isAnObjectCollision(thisPet.x, thisPet.y, thisPet.width, thisPet.length, thisOtherPet.x, thisOtherPet.y, thisOtherPet.width, thisOtherPet.length)) {
                                     thisPet.x = oldPetX;
                                     thisPet.y = oldPetY;
                                     /*
@@ -230,7 +230,7 @@ function movePet() {
                         // check for collisions against items:
                         for (var j = 0; j < thisMapData.items.length; j++) {
                             thisItem = thisMapData.items[j];
-                            if (isAnObjectCollision(thisPet.x, thisPet.y, thisPet.width, thisPet.height, thisItem.x, thisItem.y, thisItem.width, thisItem.height)) {
+                            if (isAnObjectCollision(thisPet.x, thisPet.y, thisPet.width, thisPet.length, thisItem.x, thisItem.y, thisItem.width, thisItem.length)) {
                                 thisPet.x = oldPetX;
                                 thisPet.y = oldPetY;
                             }

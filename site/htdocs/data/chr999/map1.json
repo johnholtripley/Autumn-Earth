@@ -37,7 +37,7 @@
             "name": "labourer",
             "src": "labourer.png",
             "width": 20,
-            "height": 20,
+            "length": 20,
             "spriteWidth": 75,
             "spriteHeight": 85,
             "centreX": 56,

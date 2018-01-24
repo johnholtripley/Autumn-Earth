@@ -549,7 +549,7 @@ function initialiseItem(whichItem) {
     thisMapData.items[whichItem].y = getTileCentreCoordY(thisMapData.items[whichItem].tileY);
     thisMapData.items[whichItem].z = getElevation(thisMapData.items[whichItem].tileX, thisMapData.items[whichItem].tileY);
     thisMapData.items[whichItem].width = currentActiveInventoryItems[thisMapData.items[whichItem].type].width;
-    thisMapData.items[whichItem].height = currentActiveInventoryItems[thisMapData.items[whichItem].type].height;
+    thisMapData.items[whichItem].length = currentActiveInventoryItems[thisMapData.items[whichItem].type].length;
     thisMapData.items[whichItem].centreX = currentActiveInventoryItems[thisMapData.items[whichItem].type].centreX;
     thisMapData.items[whichItem].centreY = currentActiveInventoryItems[thisMapData.items[whichItem].type].centreY;
     thisMapData.items[whichItem].spriteWidth = currentActiveInventoryItems[thisMapData.items[whichItem].type].spriteWidth;
@@ -1037,8 +1037,8 @@ function checkHeroCollisions() {
     for (var i = 0; i < thisMapData.npcs.length; i++) {
         thisNPC = thisMapData.npcs[i];
         if (thisNPC.isCollidable) {
-            if (isAnObjectCollision(thisNPC.x, thisNPC.y, thisNPC.width, thisNPC.height, hero.x, hero.y, hero.width, hero.length)) {
-                getHeroAsCloseAsPossibleToObject(thisNPC.x, thisNPC.y, thisNPC.width, thisNPC.height);
+            if (isAnObjectCollision(thisNPC.x, thisNPC.y, thisNPC.width, thisNPC.length, hero.x, hero.y, hero.width, hero.length)) {
+                getHeroAsCloseAsPossibleToObject(thisNPC.x, thisNPC.y, thisNPC.width, thisNPC.length);
             }
         }
     }
@@ -1046,16 +1046,16 @@ function checkHeroCollisions() {
     // check for collisions against items:
     for (var i = 0; i < thisMapData.items.length; i++) {
         thisItem = thisMapData.items[i];
-        if (isAnObjectCollision(thisItem.x, thisItem.y, thisItem.width, thisItem.height, hero.x, hero.y, hero.width, hero.length)) {
-            getHeroAsCloseAsPossibleToObject(thisItem.x, thisItem.y, thisItem.width, thisItem.height);
+        if (isAnObjectCollision(thisItem.x, thisItem.y, thisItem.width, thisItem.length, hero.x, hero.y, hero.width, hero.length)) {
+            getHeroAsCloseAsPossibleToObject(thisItem.x, thisItem.y, thisItem.width, thisItem.length);
         }
     }
 
     // check against pets:
     if (hasActivePet) {
         for (var i = 0; i < hero.activePets.length; i++) {
-            if (isAnObjectCollision(hero.allPets[hero.activePets[i]].x, hero.allPets[hero.activePets[i]].y, hero.allPets[hero.activePets[i]].width, hero.allPets[hero.activePets[i]].height, hero.x, hero.y, hero.width, hero.length)) {
-                getHeroAsCloseAsPossibleToObject(hero.allPets[hero.activePets[i]].x, hero.allPets[hero.activePets[i]].y, hero.allPets[hero.activePets[i]].width, hero.allPets[hero.activePets[i]].height);
+            if (isAnObjectCollision(hero.allPets[hero.activePets[i]].x, hero.allPets[hero.activePets[i]].y, hero.allPets[hero.activePets[i]].width, hero.allPets[hero.activePets[i]].length, hero.x, hero.y, hero.width, hero.length)) {
+                getHeroAsCloseAsPossibleToObject(hero.allPets[hero.activePets[i]].x, hero.allPets[hero.activePets[i]].y, hero.allPets[hero.activePets[i]].width, hero.allPets[hero.activePets[i]].length);
                 pushPetAway(i);
 
             }
@@ -2028,27 +2028,27 @@ function moveNPCs() {
                 case 'n':
                     thisNPC.y -= thisNPC.speed;
                     // check for collisions:
-                    if ((isATerrainCollision(thisNPC.x - thisNPC.width / 2, thisNPC.y - thisNPC.height / 2)) || (isATerrainCollision(thisNPC.x + thisNPC.width / 2, thisNPC.y - thisNPC.height / 2))) {
+                    if ((isATerrainCollision(thisNPC.x - thisNPC.width / 2, thisNPC.y - thisNPC.length / 2)) || (isATerrainCollision(thisNPC.x + thisNPC.width / 2, thisNPC.y - thisNPC.length / 2))) {
                         // find the tile's bottom edge
-                        var tileCollidedWith = getTileY(thisNPC.y - thisNPC.height / 2);
+                        var tileCollidedWith = getTileY(thisNPC.y - thisNPC.length / 2);
                         var tileBottomEdge = (tileCollidedWith + 1) * tileW;
                         // use the +1 to make sure it's just clear of the collision tile
-                        thisNPC.y = tileBottomEdge + thisNPC.height / 2 + 1;
+                        thisNPC.y = tileBottomEdge + thisNPC.length / 2 + 1;
                     }
                     break;
                 case 's':
                     thisNPC.y += thisNPC.speed;
                     // check for collisions:
-                    if ((isATerrainCollision(thisNPC.x - thisNPC.width / 2, thisNPC.y + thisNPC.height / 2)) || (isATerrainCollision(thisNPC.x + thisNPC.width / 2, thisNPC.y + thisNPC.height / 2))) {
-                        var tileCollidedWith = getTileY(thisNPC.y + thisNPC.height / 2);
+                    if ((isATerrainCollision(thisNPC.x - thisNPC.width / 2, thisNPC.y + thisNPC.length / 2)) || (isATerrainCollision(thisNPC.x + thisNPC.width / 2, thisNPC.y + thisNPC.length / 2))) {
+                        var tileCollidedWith = getTileY(thisNPC.y + thisNPC.length / 2);
                         var tileTopEdge = (tileCollidedWith) * tileW;
-                        thisNPC.y = tileTopEdge - thisNPC.height / 2 - 1;
+                        thisNPC.y = tileTopEdge - thisNPC.length / 2 - 1;
                     }
                     break;
                 case 'w':
                     thisNPC.x -= thisNPC.speed;
                     // check for collisions:
-                    if ((isATerrainCollision(thisNPC.x - thisNPC.width / 2, thisNPC.y + thisNPC.height / 2)) || (isATerrainCollision(thisNPC.x - thisNPC.width / 2, thisNPC.y - thisNPC.height / 2))) {
+                    if ((isATerrainCollision(thisNPC.x - thisNPC.width / 2, thisNPC.y + thisNPC.length / 2)) || (isATerrainCollision(thisNPC.x - thisNPC.width / 2, thisNPC.y - thisNPC.length / 2))) {
                         var tileCollidedWith = getTileX(thisNPC.x - thisNPC.width / 2);
                         var tileRightEdge = (tileCollidedWith + 1) * tileW;
                         thisNPC.x = tileRightEdge + thisNPC.width / 2 + 1;
@@ -2057,7 +2057,7 @@ function moveNPCs() {
                 case 'e':
                     thisNPC.x += thisNPC.speed;
                     // check for collisions:
-                    if ((isATerrainCollision(thisNPC.x + thisNPC.width / 2, thisNPC.y + thisNPC.height / 2)) || (isATerrainCollision(thisNPC.x + thisNPC.width / 2, thisNPC.y - thisNPC.height / 2))) {
+                    if ((isATerrainCollision(thisNPC.x + thisNPC.width / 2, thisNPC.y + thisNPC.length / 2)) || (isATerrainCollision(thisNPC.x + thisNPC.width / 2, thisNPC.y - thisNPC.length / 2))) {
                         var tileCollidedWith = getTileX(thisNPC.x + thisNPC.width / 2);
                         var tileLeftEdge = (tileCollidedWith) * tileW;
                         thisNPC.x = tileLeftEdge - thisNPC.width / 2 - 1;
@@ -2066,7 +2066,7 @@ function moveNPCs() {
             }
 
             // check for collision against hero:
-            if (isAnObjectCollision(thisNPC.x, thisNPC.y, thisNPC.width, thisNPC.height, hero.x, hero.y, hero.width, hero.length)) {
+            if (isAnObjectCollision(thisNPC.x, thisNPC.y, thisNPC.width, thisNPC.length, hero.x, hero.y, hero.width, hero.length)) {
                 thisNPC.x = oldNPCx;
                 thisNPC.y = oldNPCy;
             }
@@ -2074,7 +2074,7 @@ function moveNPCs() {
             // check for collision against pet:
             if (hasActivePet) {
                 for (var j = 0; j < hero.activePets.length; j++) {
-                    if (isAnObjectCollision(thisNPC.x, thisNPC.y, thisNPC.width, thisNPC.height, hero.allPets[hero.activePets[j]].x, hero.allPets[hero.activePets[j]].y, hero.allPets[hero.activePets[j]].width, hero.allPets[hero.activePets[j]].height)) {
+                    if (isAnObjectCollision(thisNPC.x, thisNPC.y, thisNPC.width, thisNPC.length, hero.allPets[hero.activePets[j]].x, hero.allPets[hero.activePets[j]].y, hero.allPets[hero.activePets[j]].width, hero.allPets[hero.activePets[j]].length)) {
                         thisNPC.x = oldNPCx;
                         thisNPC.y = oldNPCy;
                     }
@@ -2086,7 +2086,7 @@ function moveNPCs() {
                 if (i != j) {
                     thisOtherNPC = thisMapData.npcs[j];
                     if (thisOtherNPC.isCollidable) {
-                        if (isAnObjectCollision(thisNPC.x, thisNPC.y, thisNPC.width, thisNPC.height, thisOtherNPC.x, thisOtherNPC.y, thisOtherNPC.width, thisOtherNPC.height)) {
+                        if (isAnObjectCollision(thisNPC.x, thisNPC.y, thisNPC.width, thisNPC.length, thisOtherNPC.x, thisOtherNPC.y, thisOtherNPC.width, thisOtherNPC.length)) {
                             thisNPC.x = oldNPCx;
                             thisNPC.y = oldNPCy;
                         }
@@ -2097,7 +2097,7 @@ function moveNPCs() {
             // check for collisions against items:
             for (var j = 0; j < thisMapData.items.length; j++) {
                 thisItem = thisMapData.items[j];
-                if (isAnObjectCollision(thisNPC.x, thisNPC.y, thisNPC.width, thisNPC.height, thisItem.x, thisItem.y, thisItem.width, thisItem.height)) {
+                if (isAnObjectCollision(thisNPC.x, thisNPC.y, thisNPC.width, thisNPC.length, thisItem.x, thisItem.y, thisItem.width, thisItem.length)) {
                     thisNPC.x = oldNPCx;
                     thisNPC.y = oldNPCy;
                 }
@@ -2109,7 +2109,7 @@ function moveNPCs() {
                 for (var i in thisMapData.innerDoors) {
                     thisInnerDoor = thisMapData.innerDoors[i];
                     if (!thisInnerDoor.isOpen) {
-                        if (isAnObjectCollision(getTileCentreCoordX(thisInnerDoor.tileX), getTileCentreCoordY(thisInnerDoor.tileY), tileW, tileW, thisNPC.x, thisNPC.y, thisNPC.width, thisNPC.height)) {
+                        if (isAnObjectCollision(getTileCentreCoordX(thisInnerDoor.tileX), getTileCentreCoordY(thisInnerDoor.tileY), tileW, tileW, thisNPC.x, thisNPC.y, thisNPC.width, thisNPC.length)) {
                             thisNPC.x = oldNPCx;
                             thisNPC.y = oldNPCy;
                         }

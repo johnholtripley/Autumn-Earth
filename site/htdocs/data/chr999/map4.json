@@ -189,7 +189,7 @@
                 "name": "butterfly",
                 "src": "orange-butterfly.png",
                 "width": 15,
-                "height": 15,
+                "length": 15,
                 "spriteWidth": 15,
                 "spriteHeight": 48,
                 "centreX": 7,
