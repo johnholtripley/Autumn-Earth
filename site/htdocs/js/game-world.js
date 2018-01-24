@@ -4629,6 +4629,7 @@ toolTipText += " "+hero.actions[i][3]['pet-name'];
         }
     }, 
     handleRightClick: function(e) {
+        // e.preventDefault();
         // ###############
         console.log("right click");
         console.log(e);
