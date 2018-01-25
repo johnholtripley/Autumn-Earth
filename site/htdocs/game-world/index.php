@@ -196,8 +196,7 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
       <div class="customScrollBar" id="logCustomScrollBar">
         <div class="customScrollContent">
           <ol id="logTextarea">
-            <li><?php echo date('l jS F Y'); ?></li>
-          </ol>
+           </ol>
           <div class="trackBar">
             <div class="dragger"></div>
           </div>
