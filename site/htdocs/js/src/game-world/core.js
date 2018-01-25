@@ -1442,6 +1442,11 @@ function checkForActions() {
                         // remove from map:
                         thisMapData.items.splice(i, 1);
                         break;
+                        case "notice":
+                        // #########
+                        console.log("notice");
+console.log(thisMapData.items[i].contains[0][0]);
+                        break;
                     case "chest":
                         // open chest and show contents:
                         UI.openChest(i);
@@ -1524,12 +1529,12 @@ function processSpeech(thisNPC, thisSpeechPassedIn, thisSpeechCode, isPartOfNPCs
                 break;
             case "follower":
                 var followerId = thisNPC.speech[thisNPC.speechIndex][2];
-
+                /*
                 if (hero.professionsKnown.indexOf(followerId) == -1) {
                     hero.professionsKnown.push(followerId);
                     showNotification('<p>You gained a new follower</p>');
                 }
-
+                */
                 break;
             case "collection-quest":
                 var collectionQuestSpeech = thisSpeech.split("|");

@@ -176,7 +176,6 @@ input[type=range]:focus::-ms-fill-upper {
         /* Remove select styling */
         appearance: none;
         -webkit-appearance: none;
-        /* Ugly Firefox way of doing it */
         -moz-appearance: none;
         text-indent: 0.01px;
         text-overflow: "";

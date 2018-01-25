@@ -679,6 +679,46 @@
                         "w": 3
                     }
                 }
+            },{
+                "name": "Wizard searcher",
+                "src": "labourer7.png",
+                "width": 20,
+                "length": 20,
+                "spriteWidth": 75,
+                "spriteHeight": 85,
+                "centreX": 56,
+                "centreY": 73,
+                "tileX": 35,
+                "tileY": 13,
+                "movement": ["-"],
+                "facing": "s",
+                "walkThroughDoors": false,
+                "speed": 2,
+                "isCollidable": true,
+                "isMoving": false,
+                "speechIndex": 0,
+                "speech": [
+                    ["Have you seen the poster?|Keep looking|You found him - good job", "quest-no-open", "9"],
+                    ["good job finding him", ""]
+                ],
+                "cardGameSpeech": {
+                    "challenge": ["Do you play? Fancy a game then?", "play"],
+                    "win": ["Woo! I won!", ""],
+                    "lose": ["Ahh, you beat me...", ""],
+                    "draw": ["Well played", ""]
+                },
+                "cardSkill": 1,
+                "uniqueCards": [2, 2],
+                "baseCardPack": 0,
+                "animation": {
+                    "walk": {
+                        "length": 1,
+                        "n": 2,
+                        "e": 3,
+                        "s": 0,
+                        "w": 1
+                    }
+                }
             }
 
         ],
@@ -699,7 +739,18 @@
                 "startY": "?"
             }
         },
-        "items": [{
+        "items": [
+
+{
+
+                "type": 54,
+                "tileX": 33,
+                "tileY": 17,
+                "contains": [["Have you seen this wizard?","quest",9]]
+
+            },
+
+        {
 
                 "type": 18,
                 "tileX": 23,
