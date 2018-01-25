@@ -349,7 +349,7 @@ var inventoryInterfaceIsBuilt = false;
 var whichTransitionEvent = '';
 var whichAnimationEvent = '';
 
-var activeNPCForDialogue = '';
+var activeObjectForDialogue = '';
 const closeDialogueDistance = 200;
 var canCloseDialogueBalloonNextClick = false;
 var thisSpeech = '';
@@ -3275,32 +3275,49 @@ var UI = {
         }
     },
 
-    showDialogue: function(whichNPC, text) {
+    showDialogue: function(thisObjectSpeaking, text) {
+
         // check for random variation in text:
         var textToShow = getRandomElementFromArray(text.split("/"));
-        if (activeNPCForDialogue != '') {
+        if (activeObjectForDialogue != '') {
             dialogue.removeEventListener(whichTransitionEvent, UI.removeActiveDialogue, false);
         }
         dialogue.innerHTML = textToShow;
         dialogue.classList.remove("slowerFade");
         dialogue.classList.add("active");
-        activeNPCForDialogue = whichNPC;
-        UI.updateDialogue(activeNPCForDialogue);
+        activeObjectForDialogue = thisObjectSpeaking;
+        UI.updateDialogue(activeObjectForDialogue);
     },
 
-    updateDialogue: function(whichNPC) {
-        // maybe store these values if NPCs are never going to move while a speech balloon is attached to them? #####
-        var thisX = findIsoCoordsX(whichNPC.x, whichNPC.y);
-        var thisY = findIsoCoordsY(whichNPC.x, whichNPC.y);
+    updateDialogue: function(thisObjectSpeaking) {
+      
 
-        // -40 x so the balloon tip is at '0' x
-        var thisTransform = "translate(" + Math.floor(thisX - hero.isox + (canvasWidth / 2) - 40) + "px," + Math.floor(0 - (canvasHeight - (thisY - hero.isoy - whichNPC.centreY + (canvasHeight / 2))) - whichNPC.z) + "px)";
+        
+        // maybe store these values if NPCs are never going to move while a speech balloon is attached to them? #####
+        var thisX = findIsoCoordsX(thisObjectSpeaking.x, thisObjectSpeaking.y);
+        var thisY = findIsoCoordsY(thisObjectSpeaking.x, thisObjectSpeaking.y);
+var thisTransform;
+// check if it's an NPC or not
+if(typeof thisObjectSpeaking.speech !== "undefined") {
+ // -40 x so the balloon tip is at '0' x
+         thisTransform = "translate(" + Math.floor(thisX - hero.isox + (canvasWidth / 2) - 40) + "px," + Math.floor(0 - (canvasHeight - (thisY - hero.isoy - thisObjectSpeaking.centreY + (canvasHeight / 2))) - thisObjectSpeaking.z) + "px)";
+} else {
+    // the -20 and the -34 are arbitary numbers to get the position working better for the Notice item - will need adjusting to suit different notice graphics
+    // ###############
+      thisTransform = "translate(" + Math.floor(thisX - hero.isox + (canvasWidth / 2) - 20) + "px," + Math.floor(0 - (canvasHeight - (thisY - hero.isoy - thisObjectSpeaking.centreY + (canvasHeight / 2))) - thisObjectSpeaking.z -34) + "px)";
+}
+
+
+
+       
+ 
         dialogue.style.transform = thisTransform;
     },
 
     removeActiveDialogue: function() {
-        activeNPCForDialogue = '';
+        activeObjectForDialogue = '';
         dialogue.removeEventListener(whichTransitionEvent, UI.removeActiveDialogue, false);
+        thisObjectSpeaking = {};
     },
 
 
@@ -3811,10 +3828,10 @@ var UI = {
                     shopCurrentlyOpen = -1;
                     inventoryPanels.removeAttribute('class');
                     // close shop dialogue as well:
-                    if (activeNPCForDialogue != '') {
+                    if (activeObjectForDialogue != '') {
                         //  dialogue.classList.add("slowerFade");
                         dialogue.classList.remove("active");
-                        activeNPCForDialogue.speechIndex = 0;
+                        activeObjectForDialogue.speechIndex = 0;
                         UI.removeActiveDialogue();
 
                     }
@@ -5352,7 +5369,7 @@ function prepareGame() {
     for (var i = 0; i < thisMapData.items.length; i++) {
         initialiseItem(i);
     }
-    activeNPCForDialogue = '';
+    activeObjectForDialogue = '';
 
 
 
@@ -5532,7 +5549,7 @@ function startDoorTransition() {
     if (mapTransition == "") {
         mapTransitionCurrentFrames = 1;
         mapTransition = "out";
-        if (activeNPCForDialogue != '') {
+        if (activeObjectForDialogue != '') {
 
             //  dialogue.classList.add("slowerFade");
             dialogue.classList.remove("active");
@@ -5842,18 +5859,20 @@ function update() {
             heroIsInNewTile();
         }
         // check to see if a dialogue balloon is open, and if the hero has moved far from the NPC:
-        if (activeNPCForDialogue != '') {
-            if (!(isInRange(hero.x, hero.y, activeNPCForDialogue.x, activeNPCForDialogue.y, closeDialogueDistance))) {
+        if (activeObjectForDialogue != '') {
+            if(activeObjectForDialogue != null) {
+            if (!(isInRange(hero.x, hero.y, activeObjectForDialogue.x, activeObjectForDialogue.y, closeDialogueDistance))) {
                 dialogue.classList.add("slowerFade");
                 dialogue.classList.remove("active");
                 // close the shop
                 if (shopCurrentlyOpen != -1) {
-                    activeNPCForDialogue.speechIndex = 0;
+                    activeObjectForDialogue.speechIndex = 0;
                     UI.closeShop();
                 }
                 // only remove this after dialogue has faded out completely:
                 dialogue.addEventListener(whichTransitionEvent, UI.removeActiveDialogue, false);
             }
+        }
         }
         // check if a chest is open and close it if so:
         if (chestIdOpen != -1) {
@@ -6123,9 +6142,7 @@ function checkForActions() {
                         thisMapData.items.splice(i, 1);
                         break;
                         case "notice":
-                        // #########
-                        console.log("notice");
-                        // processSpeech(null, thisMapData.items[i].contains[0][0], thisMapData.items[i].contains[0][1], false);
+                         processSpeech(thisMapData.items[i], thisMapData.items[i].contains[0][0], thisMapData.items[i].contains[0][1], false, thisMapData.items[i].contains[0][2]);
                         break;
                     case "chest":
                         // open chest and show contents:
@@ -6153,10 +6170,10 @@ function checkForActions() {
             if (isInRange(hero.x, hero.y, thisNPC.x, thisNPC.y, (thisNPC.width + hero.width))) {
                 if (isFacing(hero, thisNPC)) {
                     // if at the end of the NPC's speech list, or the dialogue isn't part of the NPC's normal speech list, then close the balloon with an action click:
-                    if ((thisNPC.speechIndex >= thisNPC.speech.length) || (canCloseDialogueBalloonNextClick && activeNPCForDialogue == thisNPC)) {
+                    if ((thisNPC.speechIndex >= thisNPC.speech.length) || (canCloseDialogueBalloonNextClick && activeObjectForDialogue == thisNPC)) {
                         thisNPC.speechIndex = 0;
                         dialogue.classList.remove("active");
-                        activeNPCForDialogue = '';
+                        activeObjectForDialogue = '';
                         canCloseDialogueBalloonNextClick = false;
 
                         if (shopCurrentlyOpen != -1) {
@@ -6179,7 +6196,8 @@ function checkForActions() {
     key[4] = 0;
 }
 
-function processSpeech(thisNPC, thisSpeechPassedIn, thisSpeechCode, isPartOfNPCsNormalSpeech) {
+function processSpeech(thisObjectSpeaking, thisSpeechPassedIn, thisSpeechCode, isPartOfNPCsNormalSpeech, speechCodeExtraParameter) {
+    // thisObjectSpeaking could be an NPC, or could be an item object (if from a Notice for example)
     // thisSpeech is global so it can be edited in the close quest functions:
     thisSpeech = thisSpeechPassedIn;
     // isPartOfNPCsNormalSpeech is false if not set:
@@ -6188,27 +6206,27 @@ function processSpeech(thisNPC, thisSpeechPassedIn, thisSpeechCode, isPartOfNPCs
     for (var i = 0; i < individualSpeechCodes.length; i++) {
         switch (individualSpeechCodes[i]) {
             case "once":
-                thisNPC.speech.splice(thisNPC.speechIndex, 1);
+                thisObjectSpeaking.speech.splice(thisObjectSpeaking.speechIndex, 1);
                 // knock this back one so to keep it in step with the removed item:
-                thisNPC.speechIndex--;
+                thisObjectSpeaking.speechIndex--;
                 break;
             case "shop":
-                UI.openShop(generateHash(thisNPC.speech[thisNPC.speechIndex][2]));
-                //thisNPC.speechIndex--;
+                UI.openShop(generateHash(thisObjectSpeaking.speech[thisObjectSpeaking.speechIndex][2]));
+                //thisObjectSpeaking.speechIndex--;
 
                 break;
             case "sound":
-                audio.playSound(soundEffects[thisNPC.speech[thisNPC.speechIndex][2]], 0);
+                audio.playSound(soundEffects[thisObjectSpeaking.speech[thisObjectSpeaking.speechIndex][2]], 0);
                 break;
             case "profession":
-                var professionId = thisNPC.speech[thisNPC.speechIndex][2];
+                var professionId = thisObjectSpeaking.speech[thisObjectSpeaking.speechIndex][2];
                 if (hero.professionsKnown.indexOf(professionId) == -1) {
                     hero.professionsKnown.push(professionId);
                     showNotification('<p>You learned a new profession</p>');
                 }
                 break;
             case "follower":
-                var followerId = thisNPC.speech[thisNPC.speechIndex][2];
+                var followerId = thisObjectSpeaking.speech[thisObjectSpeaking.speechIndex][2];
                 /*
                 if (hero.professionsKnown.indexOf(followerId) == -1) {
                     hero.professionsKnown.push(followerId);
@@ -6218,7 +6236,7 @@ function processSpeech(thisNPC, thisSpeechPassedIn, thisSpeechCode, isPartOfNPCs
                 break;
             case "collection-quest":
                 var collectionQuestSpeech = thisSpeech.split("|");
-                var collectionQuestZoneName = thisNPC.speech[thisNPC.speechIndex][2];
+                var collectionQuestZoneName = thisObjectSpeaking.speech[thisObjectSpeaking.speechIndex][2];
                 // check if this zone key exists in the hero.collections object
                 if (hero.collections.hasOwnProperty(collectionQuestZoneName)) {
                     // key exists - collection is underway.
@@ -6260,7 +6278,14 @@ function processSpeech(thisNPC, thisSpeechPassedIn, thisSpeechCode, isPartOfNPCs
             case "quest-no-close":
             case "quest-no-open-no-close":
                 var questSpeech = thisSpeech.split("|");
-                var questId = thisNPC.speech[thisNPC.speechIndex][2];
+
+                var questId;
+                if(typeof thisObjectSpeaking.speech !== "undefined") {
+                    questId = thisObjectSpeaking.speech[thisObjectSpeaking.speechIndex][2];
+                } else {
+                    // something like a notice:
+                    questId = speechCodeExtraParameter;
+                }
                 if (questData[questId].isUnderway) {
                     // quest has been opened - check if it's complete:
                     switch (questData[questId].whatIsRequiredForCompletion) {
@@ -6308,23 +6333,23 @@ function processSpeech(thisNPC, thisSpeechPassedIn, thisSpeechCode, isPartOfNPCs
                                     }
                                     // close quest:
                                     thisSpeech = questSpeech[2];
-                                    closeQuest(thisNPC, questId);
+                                    closeQuest(thisObjectSpeaking, questId);
                                 } else {
                                     // show 'underway' text:
                                     thisSpeech = questSpeech[1];
                                     // keep the NPC on this quest speech:
-                                    thisNPC.speechIndex--;
+                                    thisObjectSpeaking.speechIndex--;
                                 }
                             } else {
                                 // check if it's been closed elsewhere:
                                 if (questData[questId].hasBeenCompleted > 0) {
                                     thisSpeech = questSpeech[2];
-                                    closeQuest(thisNPC, questId);
+                                    closeQuest(thisObjectSpeaking, questId);
                                 } else {
                                     // show 'underway' text:
                                     thisSpeech = questSpeech[1];
                                     // keep the NPC on this quest speech:
-                                    thisNPC.speechIndex--;
+                                    thisObjectSpeaking.speechIndex--;
                                 }
                             }
                             break;
@@ -6381,23 +6406,23 @@ function processSpeech(thisNPC, thisSpeechPassedIn, thisSpeechCode, isPartOfNPCs
                             }
                             if (allSubQuestsComplete) {
                                 thisSpeech = questSpeech[2];
-                                closeQuest(thisNPC, questId);
+                                closeQuest(thisObjectSpeaking, questId);
                             } else {
                                 // show 'underway' text:
                                 thisSpeech = questSpeech[1];
                                 // keep the NPC on this quest speech:
-                                thisNPC.speechIndex--;
+                                thisObjectSpeaking.speechIndex--;
                             }
                             break;
                         case "world":
                             if (questData[questId].hasBeenActivated > 0) {
                                 thisSpeech = questSpeech[2];
-                                closeQuest(thisNPC, questId);
+                                closeQuest(thisObjectSpeaking, questId);
                             } else {
                                 // show 'underway' text:
                                 thisSpeech = questSpeech[1];
                                 // keep the NPC on this quest speech:
-                                thisNPC.speechIndex--;
+                                thisObjectSpeaking.speechIndex--;
                             }
                             break;
                         default:
@@ -6418,12 +6443,12 @@ function processSpeech(thisNPC, thisSpeechPassedIn, thisSpeechCode, isPartOfNPCs
                             if (thisQuestIsComplete) {
                                 // threshold quest is complete:
                                 thisSpeech = questSpeech[2];
-                                closeQuest(thisNPC, questId);
+                                closeQuest(thisObjectSpeaking, questId);
                             } else {
                                 // show 'underway' text:
                                 thisSpeech = questSpeech[1];
                                 // keep the NPC on this quest speech:
-                                thisNPC.speechIndex--;
+                                thisObjectSpeaking.speechIndex--;
                             }
                             break;
                     }
@@ -6436,7 +6461,6 @@ function processSpeech(thisNPC, thisSpeechPassedIn, thisSpeechCode, isPartOfNPCs
                             var itemsToAdd = questData[questId].startItemsReceived.split(",");
                             var allItemsToGive = [];
                             for (var l = 0; l < itemsToAdd.length; l++) {
-
                                 // check if it's money:
                                 if (itemsToAdd[l].charAt(0) == "$") {
                                     thisRewardObject = itemsToAdd[l];
@@ -6517,12 +6541,14 @@ function processSpeech(thisNPC, thisSpeechPassedIn, thisSpeechCode, isPartOfNPCs
                         }
                     }
                     thisSpeech = questSpeech[0];
-                    // keep the NPC on this quest speech:
-                    thisNPC.speechIndex--;
+                    if(thisObjectSpeaking != null) {
+                        // keep the NPC on this quest speech:
+                        thisObjectSpeaking.speechIndex--;
+                    }
                 }
                 break;
             case "play":
-                startCardGame(thisNPC);
+                startCardGame(thisObjectSpeaking);
                 break;
             default:
                 // nothing
@@ -6530,9 +6556,14 @@ function processSpeech(thisNPC, thisSpeechPassedIn, thisSpeechCode, isPartOfNPCs
     }
     if (thisSpeech != "") {
         // don't show the balloon if there's no speech (which might happen if the NPC is just plays a sound instead)
-        UI.showDialogue(thisNPC, thisSpeech);
+
+        // check that it's not undefined (eg. a Notice with an opened quest, but the text won't change)
+        if(typeof thisSpeech === "undefined") {
+            thisSpeech = questSpeech[0];
+        }
+        UI.showDialogue(thisObjectSpeaking, thisSpeech);
     } else {
-        thisNPC.speechIndex--;
+        thisObjectSpeaking.speechIndex--;
     }
     canCloseDialogueBalloonNextClick = false;
     if (!isPartOfNPCsNormalSpeech) {
@@ -7183,8 +7214,8 @@ function draw() {
             }
         }
 
-        if (activeNPCForDialogue != '') {
-            UI.updateDialogue(activeNPCForDialogue);
+        if (activeObjectForDialogue != '') {
+            UI.updateDialogue(activeObjectForDialogue);
         }
 
         if (thisMapData.showOnlyLineOfSight) {

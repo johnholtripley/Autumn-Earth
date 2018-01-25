@@ -57,7 +57,7 @@ var inventoryInterfaceIsBuilt = false;
 var whichTransitionEvent = '';
 var whichAnimationEvent = '';
 
-var activeNPCForDialogue = '';
+var activeObjectForDialogue = '';
 const closeDialogueDistance = 200;
 var canCloseDialogueBalloonNextClick = false;
 var thisSpeech = '';

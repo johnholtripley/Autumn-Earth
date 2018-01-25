@@ -284,32 +284,49 @@ var UI = {
         }
     },
 
-    showDialogue: function(whichNPC, text) {
+    showDialogue: function(thisObjectSpeaking, text) {
+
         // check for random variation in text:
         var textToShow = getRandomElementFromArray(text.split("/"));
-        if (activeNPCForDialogue != '') {
+        if (activeObjectForDialogue != '') {
             dialogue.removeEventListener(whichTransitionEvent, UI.removeActiveDialogue, false);
         }
         dialogue.innerHTML = textToShow;
         dialogue.classList.remove("slowerFade");
         dialogue.classList.add("active");
-        activeNPCForDialogue = whichNPC;
-        UI.updateDialogue(activeNPCForDialogue);
+        activeObjectForDialogue = thisObjectSpeaking;
+        UI.updateDialogue(activeObjectForDialogue);
     },
 
-    updateDialogue: function(whichNPC) {
-        // maybe store these values if NPCs are never going to move while a speech balloon is attached to them? #####
-        var thisX = findIsoCoordsX(whichNPC.x, whichNPC.y);
-        var thisY = findIsoCoordsY(whichNPC.x, whichNPC.y);
+    updateDialogue: function(thisObjectSpeaking) {
+      
 
-        // -40 x so the balloon tip is at '0' x
-        var thisTransform = "translate(" + Math.floor(thisX - hero.isox + (canvasWidth / 2) - 40) + "px," + Math.floor(0 - (canvasHeight - (thisY - hero.isoy - whichNPC.centreY + (canvasHeight / 2))) - whichNPC.z) + "px)";
+        
+        // maybe store these values if NPCs are never going to move while a speech balloon is attached to them? #####
+        var thisX = findIsoCoordsX(thisObjectSpeaking.x, thisObjectSpeaking.y);
+        var thisY = findIsoCoordsY(thisObjectSpeaking.x, thisObjectSpeaking.y);
+var thisTransform;
+// check if it's an NPC or not
+if(typeof thisObjectSpeaking.speech !== "undefined") {
+ // -40 x so the balloon tip is at '0' x
+         thisTransform = "translate(" + Math.floor(thisX - hero.isox + (canvasWidth / 2) - 40) + "px," + Math.floor(0 - (canvasHeight - (thisY - hero.isoy - thisObjectSpeaking.centreY + (canvasHeight / 2))) - thisObjectSpeaking.z) + "px)";
+} else {
+    // the -20 and the -34 are arbitary numbers to get the position working better for the Notice item - will need adjusting to suit different notice graphics
+    // ###############
+      thisTransform = "translate(" + Math.floor(thisX - hero.isox + (canvasWidth / 2) - 20) + "px," + Math.floor(0 - (canvasHeight - (thisY - hero.isoy - thisObjectSpeaking.centreY + (canvasHeight / 2))) - thisObjectSpeaking.z -34) + "px)";
+}
+
+
+
+       
+ 
         dialogue.style.transform = thisTransform;
     },
 
     removeActiveDialogue: function() {
-        activeNPCForDialogue = '';
+        activeObjectForDialogue = '';
         dialogue.removeEventListener(whichTransitionEvent, UI.removeActiveDialogue, false);
+        thisObjectSpeaking = {};
     },
 
 
@@ -820,10 +837,10 @@ var UI = {
                     shopCurrentlyOpen = -1;
                     inventoryPanels.removeAttribute('class');
                     // close shop dialogue as well:
-                    if (activeNPCForDialogue != '') {
+                    if (activeObjectForDialogue != '') {
                         //  dialogue.classList.add("slowerFade");
                         dialogue.classList.remove("active");
-                        activeNPCForDialogue.speechIndex = 0;
+                        activeObjectForDialogue.speechIndex = 0;
                         UI.removeActiveDialogue();
 
                     }
