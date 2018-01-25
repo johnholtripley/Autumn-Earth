@@ -62,6 +62,7 @@ var UI = {
         const createRecipeList = document.getElementById('createRecipeList');
         const recipeTitleBar = document.getElementById('recipeTitleBar');
         const currencies = document.getElementById('currencies');
+        const logTextarea = document.getElementById('logTextarea');
         //
 
     },
@@ -296,6 +297,11 @@ var UI = {
         dialogue.classList.add("active");
         activeObjectForDialogue = thisObjectSpeaking;
         UI.updateDialogue(activeObjectForDialogue);
+        var logText = text;
+        if(typeof thisObjectSpeaking.speech !== "undefined") {
+logText = thisObjectSpeaking.name + ' says "' + logText + '"';
+        }
+        UI.addToLog(logText);
     },
 
     updateDialogue: function(thisObjectSpeaking) {
@@ -312,6 +318,7 @@ if(typeof thisObjectSpeaking.speech !== "undefined") {
          thisTransform = "translate(" + Math.floor(thisX - hero.isox + (canvasWidth / 2) - 40) + "px," + Math.floor(0 - (canvasHeight - (thisY - hero.isoy - thisObjectSpeaking.centreY + (canvasHeight / 2))) - thisObjectSpeaking.z) + "px)";
 } else {
     // the -20 and the -34 are arbitary numbers to get the position working better for the Notice item - will need adjusting to suit different notice graphics
+    // (although, if the notice graphics themselves are invisible, and the poster is part of the terrain wall, then the centreX and centreY could be used to get this just right for each individual poster)
     // ###############
       thisTransform = "translate(" + Math.floor(thisX - hero.isox + (canvasWidth / 2) - 20) + "px," + Math.floor(0 - (canvasHeight - (thisY - hero.isoy - thisObjectSpeaking.centreY + (canvasHeight / 2))) - thisObjectSpeaking.z -34) + "px)";
 }
@@ -343,6 +350,9 @@ if(typeof thisObjectSpeaking.speech !== "undefined") {
             notification.offsetHeight;
             notification.classList.add('active');
             notification.addEventListener(whichAnimationEvent, UI.notificationEnded, false);
+            // remove html for the log:
+            // https://stackoverflow.com/questions/822452/strip-html-from-text-javascript
+            UI.addToLog(markup.replace(/<(?:.|\n)*?>/gm, ''));
         } else {
             if (notificationQueue.indexOf(markup) === -1) {
                 notificationQueue.push(markup);
@@ -1661,5 +1671,11 @@ toolTipText += " "+hero.actions[i][3]['pet-name'];
         console.log(e);
         var thisNode = getNearestParentId(e.target);
         console.log(thisNode.id);
+    },
+    addToLog: function(textToAdd) {
+logTextarea.innerHTML = '<li>'+textToAdd+'</li>' + logTextarea.innerHTML;
+if (thisDevicesScrollBarWidth > 0) {
+            logCustomScrollBar.init();
+        }
     }
 }

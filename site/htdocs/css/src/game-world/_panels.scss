@@ -509,3 +509,27 @@ $numberOfItemCategories: 20;
  @include transform-origin(0 100%);
     background: rgba(0,0,0,0.7);
 }
+
+#logWindow {
+        @include togglePanel(0.4s);
+ 
+    top: 920px;
+    left: 60px;
+    background: #53160d;
+    color: #fff;
+    z-index: 1;
+    .customScrollBar {
+        background: none;
+    }
+    ol {
+            padding: 0;
+margin: 0;
+     
+        list-style: none;
+    }
+    li {
+        background: none;
+        padding: 2px 8px;
+        font-size: 11px;
+    }
+}
