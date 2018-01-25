@@ -75,6 +75,7 @@ var UI = {
         // -> triggering reflow:
         void displayZoneName.offsetWidth;
         displayZoneName.classList.add("active");
+        UI.addToLog("Entered "+zoneName, false);
     },
 
     buildInventoryInterface: function() {
@@ -301,7 +302,7 @@ var UI = {
         if(typeof thisObjectSpeaking.speech !== "undefined") {
 logText = thisObjectSpeaking.name + ' says "' + logText + '"';
         }
-        UI.addToLog(logText);
+        UI.addToLog(logText, false);
     },
 
     updateDialogue: function(thisObjectSpeaking) {
@@ -350,9 +351,7 @@ if(typeof thisObjectSpeaking.speech !== "undefined") {
             notification.offsetHeight;
             notification.classList.add('active');
             notification.addEventListener(whichAnimationEvent, UI.notificationEnded, false);
-            // remove html for the log:
-            // https://stackoverflow.com/questions/822452/strip-html-from-text-javascript
-            UI.addToLog(markup.replace(/<(?:.|\n)*?>/gm, ''));
+                   UI.addToLog(markup, true);
         } else {
             if (notificationQueue.indexOf(markup) === -1) {
                 notificationQueue.push(markup);
@@ -1672,7 +1671,11 @@ toolTipText += " "+hero.actions[i][3]['pet-name'];
         var thisNode = getNearestParentId(e.target);
         console.log(thisNode.id);
     },
-    addToLog: function(textToAdd) {
+    addToLog: function(textToAdd, shouldStripHTML) {
+        if(shouldStripHTML) {
+            // https://stackoverflow.com/questions/822452/strip-html-from-text-javascript
+            textToAdd = textToAdd.replace(/<(?:.|\n)*?>/gm, '');
+        }
 logTextarea.innerHTML = '<li>'+textToAdd+'</li>' + logTextarea.innerHTML;
 if (thisDevicesScrollBarWidth > 0) {
             logCustomScrollBar.init();
