@@ -3038,6 +3038,7 @@ const surveyingPanel = document.getElementById('surveyingPanel');
 
 var notificationQueue = [];
 var notificationIsShowing = false;
+var lastLogText = '';
 
 var UI = {
     init: function() {
@@ -3054,6 +3055,7 @@ var UI = {
         const recipeTitleBar = document.getElementById('recipeTitleBar');
         const currencies = document.getElementById('currencies');
         const logTextarea = document.getElementById('logTextarea');
+        
         //
 
     },
@@ -3066,7 +3068,7 @@ var UI = {
         // -> triggering reflow:
         void displayZoneName.offsetWidth;
         displayZoneName.classList.add("active");
-        UI.addToLog("Entered "+zoneName, false);
+        UI.addToLog("Entered " + zoneName, false);
     },
 
     buildInventoryInterface: function() {
@@ -3127,7 +3129,7 @@ var UI = {
 
         inventoryPanels.innerHTML = inventoryMarkup;
         gameWrapper.ondblclick = UI.doubleClick;
-        gameWrapper.addEventListener( "contextmenu", UI.handleRightClick, false);
+        gameWrapper.addEventListener("contextmenu", UI.handleRightClick, false);
         document.getElementById('createRecipeList').onclick = UI.craftingPanelSingleClick;
         document.getElementById('craftingRecipeCreateButton').onclick = UI.craftingRecipeCreate;
         splitStackPanel.onsubmit = inventorySplitStackSubmit;
@@ -3290,35 +3292,35 @@ var UI = {
         activeObjectForDialogue = thisObjectSpeaking;
         UI.updateDialogue(activeObjectForDialogue);
         var logText = text;
-        if(typeof thisObjectSpeaking.speech !== "undefined") {
-logText = thisObjectSpeaking.name + ' says "' + logText + '"';
+        if (typeof thisObjectSpeaking.speech !== "undefined") {
+            logText = thisObjectSpeaking.name + ' says "' + logText + '"';
         }
         UI.addToLog(logText, false);
     },
 
     updateDialogue: function(thisObjectSpeaking) {
-      
 
-        
+
+
         // maybe store these values if NPCs are never going to move while a speech balloon is attached to them? #####
         var thisX = findIsoCoordsX(thisObjectSpeaking.x, thisObjectSpeaking.y);
         var thisY = findIsoCoordsY(thisObjectSpeaking.x, thisObjectSpeaking.y);
-var thisTransform;
-// check if it's an NPC or not
-if(typeof thisObjectSpeaking.speech !== "undefined") {
- // -40 x so the balloon tip is at '0' x
-         thisTransform = "translate(" + Math.floor(thisX - hero.isox + (canvasWidth / 2) - 40) + "px," + Math.floor(0 - (canvasHeight - (thisY - hero.isoy - thisObjectSpeaking.centreY + (canvasHeight / 2))) - thisObjectSpeaking.z) + "px)";
-} else {
-    // the -20 and the -34 are arbitary numbers to get the position working better for the Notice item - will need adjusting to suit different notice graphics
-    // (although, if the notice graphics themselves are invisible, and the poster is part of the terrain wall, then the centreX and centreY could be used to get this just right for each individual poster)
-    // ###############
-      thisTransform = "translate(" + Math.floor(thisX - hero.isox + (canvasWidth / 2) - 20) + "px," + Math.floor(0 - (canvasHeight - (thisY - hero.isoy - thisObjectSpeaking.centreY + (canvasHeight / 2))) - thisObjectSpeaking.z -34) + "px)";
-}
+        var thisTransform;
+        // check if it's an NPC or not
+        if (typeof thisObjectSpeaking.speech !== "undefined") {
+            // -40 x so the balloon tip is at '0' x
+            thisTransform = "translate(" + Math.floor(thisX - hero.isox + (canvasWidth / 2) - 40) + "px," + Math.floor(0 - (canvasHeight - (thisY - hero.isoy - thisObjectSpeaking.centreY + (canvasHeight / 2))) - thisObjectSpeaking.z) + "px)";
+        } else {
+            // the -20 and the -34 are arbitary numbers to get the position working better for the Notice item - will need adjusting to suit different notice graphics
+            // (although, if the notice graphics themselves are invisible, and the poster is part of the terrain wall, then the centreX and centreY could be used to get this just right for each individual poster)
+            // ###############
+            thisTransform = "translate(" + Math.floor(thisX - hero.isox + (canvasWidth / 2) - 20) + "px," + Math.floor(0 - (canvasHeight - (thisY - hero.isoy - thisObjectSpeaking.centreY + (canvasHeight / 2))) - thisObjectSpeaking.z - 34) + "px)";
+        }
 
 
 
-       
- 
+
+
         dialogue.style.transform = thisTransform;
     },
 
@@ -3342,7 +3344,7 @@ if(typeof thisObjectSpeaking.speech !== "undefined") {
             notification.offsetHeight;
             notification.classList.add('active');
             notification.addEventListener(whichAnimationEvent, UI.notificationEnded, false);
-                   UI.addToLog(markup, true);
+            UI.addToLog(markup, true);
         } else {
             if (notificationQueue.indexOf(markup) === -1) {
                 notificationQueue.push(markup);
@@ -3476,7 +3478,7 @@ if(typeof thisObjectSpeaking.speech !== "undefined") {
         }
         var thisNode = getNearestParentId(e.target);
         var droppedSlot = thisNode.id;
-       
+
         if (droppedSlot.substring(0, 4) == "slot") {
             // check it's empty:
             var droppedSlotId = droppedSlot.substring(4);
@@ -4442,18 +4444,18 @@ if(typeof thisObjectSpeaking.speech !== "undefined") {
             if (hero.actions[i] == "-") {
                 actionBarMarkup += '<li><img src="/images/game-world/interface/actions/blank.png" alt="Empty Action slot"></li>';
             } else {
-                if(hero.actions[i][2] == null) {
-imageSrc = hero.actions[i][1];
-toolTipText = hero.actions[i][0];
-if(typeof hero.actions[i][3]['pet-name'] !== "undefined") {
-toolTipText += " "+hero.actions[i][3]['pet-name'];
-}
+                if (hero.actions[i][2] == null) {
+                    imageSrc = hero.actions[i][1];
+                    toolTipText = hero.actions[i][0];
+                    if (typeof hero.actions[i][3]['pet-name'] !== "undefined") {
+                        toolTipText += " " + hero.actions[i][3]['pet-name'];
+                    }
                 } else {
                     imageSrc = hero.actions[i][2] + '-' + hero.actions[i][1];
                     toolTipText = hero.actions[i][0] + ' (' + hero.actions[i][1] + ' type' + hero.actions[i][2] + ')';
                 }
 
-                actionBarMarkup += '<li class="active" data-index="' + i + '" data-category="' + hero.actions[i][2] + '" id="actionType' + hero.actions[i][1] + '"><img src="/images/game-world/interface/actions/' + imageSrc + '.png" alt="' + hero.actions[i][0] + ' action"><p>'+toolTipText+'</p></li>';
+                actionBarMarkup += '<li class="active" data-index="' + i + '" data-category="' + hero.actions[i][2] + '" id="actionType' + hero.actions[i][1] + '"><img src="/images/game-world/interface/actions/' + imageSrc + '.png" alt="' + hero.actions[i][0] + ' action"><p>' + toolTipText + '</p></li>';
             }
         }
         actionBarMarkup += '</ol>';
@@ -4609,7 +4611,7 @@ toolTipText += " "+hero.actions[i][3]['pet-name'];
                         }
                     }
                     break;
-                    case "mount":
+                case "mount":
                     // ###
                     break;
             }
@@ -4646,14 +4648,14 @@ toolTipText += " "+hero.actions[i][3]['pet-name'];
                     hero.inventory[thisSlotsID].cooldownTimer--;
                     //console.log(hero.inventory[thisSlotsID].cooldownTimer);
                     //update visually (scaleY uses 0 - 1):
-                    thisValue = (hero.inventory[thisSlotsID].cooldownTimer/hero.inventory[thisSlotsID].cooldown);
-      
-   // does this need vendor prefixes?            
-    document.querySelector("#slot"+thisSlotsID+" .coolDown").style.transform = 'scaleY('+thisValue+')';
+                    thisValue = (hero.inventory[thisSlotsID].cooldownTimer / hero.inventory[thisSlotsID].cooldown);
+
+                    // does this need vendor prefixes?            
+                    document.querySelector("#slot" + thisSlotsID + " .coolDown").style.transform = 'scaleY(' + thisValue + ')';
                 }
             }
         }
-    }, 
+    },
     handleRightClick: function(e) {
         // e.preventDefault();
         // ###############
@@ -4663,13 +4665,17 @@ toolTipText += " "+hero.actions[i][3]['pet-name'];
         console.log(thisNode.id);
     },
     addToLog: function(textToAdd, shouldStripHTML) {
-        if(shouldStripHTML) {
+        if (shouldStripHTML) {
             // https://stackoverflow.com/questions/822452/strip-html-from-text-javascript
             textToAdd = textToAdd.replace(/<(?:.|\n)*?>/gm, '');
         }
-logTextarea.innerHTML = '<li>'+textToAdd+'</li>' + logTextarea.innerHTML;
-if (thisDevicesScrollBarWidth > 0) {
-            logCustomScrollBar.init();
+        // don't add repetitions:
+        if (textToAdd != lastLogText) {
+            logTextarea.innerHTML = '<li>' + textToAdd + '</li>' + logTextarea.innerHTML;
+            if (thisDevicesScrollBarWidth > 0) {
+                logCustomScrollBar.init();
+            }
+            lastLogText = textToAdd;
         }
     }
 }
