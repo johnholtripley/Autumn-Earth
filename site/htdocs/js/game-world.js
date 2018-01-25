@@ -6125,7 +6125,7 @@ function checkForActions() {
                         case "notice":
                         // #########
                         console.log("notice");
-console.log(thisMapData.items[i].contains[0][0]);
+                        // processSpeech(null, thisMapData.items[i].contains[0][0], thisMapData.items[i].contains[0][1], false);
                         break;
                     case "chest":
                         // open chest and show contents:
