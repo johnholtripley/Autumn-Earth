@@ -190,19 +190,6 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
       ?>
       </ol>
     </div>
-    <div id="logWindow" class="active">
-      <div class="draggableBar">Log</div>
-      <button class="closePanel">close</button>
-      <div class="customScrollBar" id="logCustomScrollBar">
-        <div class="customScrollContent">
-          <ol id="logTextarea">
-           </ol>
-          <div class="trackBar">
-            <div class="dragger"></div>
-          </div>
-        </div>
-      </div>
-    </div>
     <div id="gameSettings"><button class="closePanel">close</button>
       <h2>Volume</h2>
       <label for="soundVolume">Sound effects</label><input id="soundVolume" type="range" min="0" max="1" step="0.05">

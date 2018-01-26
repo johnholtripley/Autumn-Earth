@@ -47,7 +47,6 @@ const surveyingPanel = document.getElementById('surveyingPanel');
 
 var notificationQueue = [];
 var notificationIsShowing = false;
-var lastLogText = '';
 
 var UI = {
     init: function() {
@@ -63,7 +62,6 @@ var UI = {
         const createRecipeList = document.getElementById('createRecipeList');
         const recipeTitleBar = document.getElementById('recipeTitleBar');
         const currencies = document.getElementById('currencies');
-        const logTextarea = document.getElementById('logTextarea');
         
         //
 
@@ -77,7 +75,6 @@ var UI = {
         // -> triggering reflow:
         void displayZoneName.offsetWidth;
         displayZoneName.classList.add("active");
-        UI.addToLog("Entered " + zoneName, false);
     },
 
     buildInventoryInterface: function() {
@@ -304,7 +301,6 @@ var UI = {
         if (typeof thisObjectSpeaking.speech !== "undefined") {
             logText = thisObjectSpeaking.name + ' says "' + logText + '"';
         }
-        UI.addToLog(logText, false);
     },
 
     updateDialogue: function(thisObjectSpeaking) {
@@ -339,7 +335,6 @@ var UI = {
         thisObjectSpeaking = {};
     },
 
-
     showNotification: function(markup) {
         if (!notificationIsShowing) {
             // don't push it to the queue if it's already there:
@@ -353,7 +348,6 @@ var UI = {
             notification.offsetHeight;
             notification.classList.add('active');
             notification.addEventListener(whichAnimationEvent, UI.notificationEnded, false);
-            UI.addToLog(markup, true);
         } else {
             if (notificationQueue.indexOf(markup) === -1) {
                 notificationQueue.push(markup);
@@ -1672,19 +1666,5 @@ var UI = {
         console.log(e);
         var thisNode = getNearestParentId(e.target);
         console.log(thisNode.id);
-    },
-    addToLog: function(textToAdd, shouldStripHTML) {
-        if (shouldStripHTML) {
-            // https://stackoverflow.com/questions/822452/strip-html-from-text-javascript
-            textToAdd = textToAdd.replace(/<(?:.|\n)*?>/gm, '');
-        }
-        // don't add repetitions:
-        if (textToAdd != lastLogText) {
-            logTextarea.innerHTML = '<li>' + textToAdd + '</li>' + logTextarea.innerHTML;
-            if (thisDevicesScrollBarWidth > 0) {
-                logCustomScrollBar.init();
-            }
-            lastLogText = textToAdd;
-        }
     }
 }
