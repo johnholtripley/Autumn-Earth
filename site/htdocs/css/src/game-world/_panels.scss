@@ -24,6 +24,92 @@ $numberOfItemCategories: 20;
     }
 }
 
+@mixin inventorySlot() {
+    // slot
+    width: 46px;
+    height: 46px;
+    padding: 3px;
+    display: block;
+    float: left;
+    background: url(../images/game-world/interface/inventory-slot.png) no-repeat 50% 50%;
+    cursor: url(../images/game-world/cursors/active.gif) 3 3, auto;
+    margin: 0;
+    @include border-box;
+    position: relative;
+    box-shadow: 0 0 0 0 #eebb3f;
+    @include transition(box-shadow 0.2s ease-in-out);
+    .qty {
+        position: absolute;
+        right: 3px;
+        bottom: 3px;
+        text-align: right;
+        color: #fff;
+        cursor: default;
+        font-size: 11px;
+        pointer-events: none;
+        &:after {
+            opacity: 0;
+            pointer-events: none;
+            border-top: 12px solid transparent;
+            border-right: 12px solid #16952b;
+            content: "";
+            display: block;
+            @include transition(opacity 0.4s ease);
+            position: absolute;
+            right: 0;
+            bottom: 0;
+        }
+    }
+    img {
+        display: block;
+        @include attention() {
+            &+p {
+                // reveal tooltip
+                opacity: 1;
+                pointer-events: auto;
+                @include transform(translateY(0));
+            }
+        }
+    }
+    &.changed {
+        box-shadow: 0 0 5px 3px #eebb3f;
+        z-index: 1;
+    }
+    &.hidden {
+        img,
+        p,
+        span {
+            opacity: 0;
+        }
+    }
+
+    p {
+        // tooltip
+        background: #eee;
+        z-index: 1;
+        margin: 0;
+        bottom: 100%;
+        color: #000;
+        display: block;
+        left: 0;
+        min-width: 120px;
+        opacity: 0;
+        padding: 8px;
+        pointer-events: none;
+        position: absolute;
+        font-size: 11px;
+        cursor: url(../images/game-world/cursors/default.gif) 3 3, auto;
+        @include transform(translateY(10px));
+        @include transition(all .25s ease-out);
+        em {
+            // tooltip item title
+            display: block;
+            font-size: 1.2em;
+            font-style: normal;
+        }
+    }
+}
+
 #inventoryPanels {
     .inventoryBag {
         // bag
@@ -105,92 +191,12 @@ $numberOfItemCategories: 20;
         padding: 0;
         background: #666;
 
-        img {
-            @include attention() {
-                &+p {
-                    opacity: 1;
-                    pointer-events: auto;
-                    @include transform(translateY(0));
-                }
-            }
-        }
+
         li {
-            // slot
-            width: 46px;
-            height: 46px;
-            padding: 3px;
-            display: block;
-            float: left;
-            background: url(../images/game-world/interface/inventory-slot.png) no-repeat 50% 50%;
-            cursor: url(../images/game-world/cursors/active.gif) 3 3, auto;
-            margin: 0;
-            @include border-box;
-            position: relative;
-            box-shadow: 0 0 0 0 #eebb3f;
-            @include transition(box-shadow 0.2s ease-in-out);
-            .qty {
-                position: absolute;
-                right: 3px;
-                bottom: 3px;
-                text-align: right;
-                color: #fff;
-                cursor: default;
-                font-size: 11px;
-                pointer-events: none;
-                &:after {
-                    opacity: 0;
-                    pointer-events: none;
-                    border-top: 12px solid transparent;
-                    border-right: 12px solid #16952b;
-                    content: "";
-                    display: block;
-                    @include transition(opacity 0.4s ease);
-                    position: absolute;
-                    right: 0;
-                    bottom: 0;
-                }
-            }
-            img {
-                display: block;
-            }
-            &.changed {
-                box-shadow: 0 0 5px 3px #eebb3f;
-                z-index: 1;
-            }
-            &.hidden {
-                img,
-                p,
-                span {
-                    opacity: 0;
-                }
-            }
+            @include inventorySlot;
         }
     }
-    p {
-        // tooltip
-        background: #eee;
-        z-index: 1;
-        margin: 0;
-        bottom: 100%;
-        color: #000;
-        display: block;
-        left: 0;
-        min-width: 120px;
-        opacity: 0;
-        padding: 8px;
-        pointer-events: none;
-        position: absolute;
-        font-size: 11px;
-        cursor: url(../images/game-world/cursors/default.gif) 3 3, auto;
-        @include transform(translateY(10px));
-        @include transition(all .25s ease-out);
-        em {
-            // tooltip item title
-            display: block;
-            font-size: 1.2em;
-            font-style: normal;
-        }
-    }
+
     .price {}
     .specialismPrice {
         display: none;
@@ -502,11 +508,10 @@ $numberOfItemCategories: 20;
     left: 3px;
     width: 40px;
     bottom: 3px;
-    height: 40px;
-// the JavaScript isn't vendor prefixed. does it need to be? ####
- transform: scaleY(0);
- @include transform-origin(0 100%);
-    background: rgba(0,0,0,0.7);
+    height: 40px; // the JavaScript isn't vendor prefixed. does it need to be? ####
+    transform: scaleY(0);
+    @include transform-origin(0 100%);
+    background: rgba(0, 0, 0, 0.7);
 }
 
 #questJournal {
@@ -523,8 +528,8 @@ $numberOfItemCategories: 20;
     li {
         background: #cecece;
         display: none;
-       @include clearfix;
-       border-bottom: 4px solid #666;
+        @include clearfix;
+        border-bottom: 4px solid #666;
         &.active {
             display: block;
         }
@@ -532,80 +537,12 @@ $numberOfItemCategories: 20;
     p {
         font-size: 12px;
     }
-    h4, h5 {
+    h4,
+    h5 {
         margin: 0;
     }
 
-      .item {
-            // slot
-            width: 46px;
-            height: 46px;
-            padding: 3px;
-            display: block;
-            float: left;
-            background: url(../images/game-world/interface/inventory-slot.png) no-repeat 50% 50%;
-            cursor: url(../images/game-world/cursors/active.gif) 3 3, auto;
-            margin: 0;
-            @include border-box;
-            position: relative;
-            box-shadow: 0 0 0 0 #eebb3f;
-            @include transition(box-shadow 0.2s ease-in-out);
-            .qty {
-                position: absolute;
-                right: 3px;
-                bottom: 3px;
-                text-align: right;
-                color: #fff;
-                cursor: default;
-                font-size: 11px;
-                pointer-events: none;
-                &:after {
-                    opacity: 0;
-                    pointer-events: none;
-                    border-top: 12px solid transparent;
-                    border-right: 12px solid #16952b;
-                    content: "";
-                    display: block;
-                    @include transition(opacity 0.4s ease);
-                    position: absolute;
-                    right: 0;
-                    bottom: 0;
-                }
-            }
-            img {
-                display: block;
-                 @include attention() {
-                &+p {
-                    opacity: 1;
-                    pointer-events: auto;
-                    @include transform(translateY(0));
-                }
-            }
-            }
-                p {
-        // tooltip
-        background: #eee;
-        z-index: 1;
-        margin: 0;
-        bottom: 100%;
-        color: #000;
-        display: block;
-        left: 0;
-        min-width: 120px;
-        opacity: 0;
-        padding: 8px;
-        pointer-events: none;
-        position: absolute;
-        font-size: 11px;
-        cursor: url(../images/game-world/cursors/default.gif) 3 3, auto;
-        @include transform(translateY(10px));
-        @include transition(all .25s ease-out);
-        em {
-            // tooltip item title
-            display: block;
-            font-size: 1.2em;
-            font-style: normal;
-        }
+    .item {
+        @include inventorySlot;
     }
-            }
 }
