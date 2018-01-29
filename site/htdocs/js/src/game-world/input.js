@@ -60,6 +60,9 @@ const Input = {
                 case KeyBindings.toggleUI:
 key[7] = to;
                 break;
+                 case KeyBindings.toggleJournal:
+key[8] = to;
+                break;
         }
     }
 }

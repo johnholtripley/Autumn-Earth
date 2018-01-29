@@ -7,5 +7,6 @@ var KeyBindings = {
     'action': 17,
     'shift': 16,
     'challenge': 67,
-    'toggleUI': 9
+    'toggleUI': 9,
+    'toggleJournal': 81
 }

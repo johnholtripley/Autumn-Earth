@@ -1167,6 +1167,10 @@ function update() {
             UI.toggleUI();
             key[7] = false;
         }
+           if (key[8]) {
+            UI.toggleJournal();
+            key[8] = false;
+        }
         checkHeroCollisions();
         var heroOldX = hero.tileX;
         var heroOldY = hero.tileY;

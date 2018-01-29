@@ -64,7 +64,7 @@ var UI = {
         const createRecipeList = document.getElementById('createRecipeList');
         const recipeTitleBar = document.getElementById('recipeTitleBar');
         const currencies = document.getElementById('currencies');
-        
+
         //
 
     },
@@ -1679,31 +1679,26 @@ var UI = {
         questJournalRegionFilter.innerHTML = regionMarkup;
         questJournalRegionFilter.onchange = UI.filterJournal;
         questJournal.classList.add('active');
-    }, filterJournal: function(e) {
-
-
-    var journalItems = document.querySelectorAll('#questJournalEntries li'),
-        i;
-       
-        if(questJournalRegionFilter.value == "all") {
-  for (i = 0; i < journalItems.length; ++i) {
-        journalItems[i].classList.add('active');
-    }
+    },
+    filterJournal: function(e) {
+        var journalItems = document.querySelectorAll('#questJournalEntries li'),i;
+        if (questJournalRegionFilter.value == "all") {
+            for (i = 0; i < journalItems.length; ++i) {
+                journalItems[i].classList.add('active');
+            }
         } else {
-    // hide all:
-    for (i = 0; i < journalItems.length; ++i) {
-        if(journalItems[i].dataset.region == questJournalRegionFilter.value) {
-journalItems[i].classList.add('active');
-        } else {
-            journalItems[i].classList.remove('active');
+            // hide all:
+            for (i = 0; i < journalItems.length; ++i) {
+                if (journalItems[i].dataset.region == questJournalRegionFilter.value) {
+                    journalItems[i].classList.add('active');
+                } else {
+                    journalItems[i].classList.remove('active');
+                }
+            }
         }
-        
-       
-    }
-
-}
-
-
+    },
+    toggleJournal: function() {
+        questJournal.classList.toggle('active');
     }
 
 }
