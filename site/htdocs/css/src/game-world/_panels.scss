@@ -522,6 +522,10 @@ $numberOfItemCategories: 20;
     }
     li {
         background: #cecece;
+        display: none;
+        &.active {
+            display: block;
+        }
     }
     p {
         font-size: 12px;

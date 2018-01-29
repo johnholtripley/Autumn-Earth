@@ -18,7 +18,7 @@ $query = "SELECT tblquests.questid, tblquests.journaltitle, tblquests.journaldes
 $result = mysql_query($query) or die ();
 while ($row = mysql_fetch_array($result)) {
     extract($row);
-    $markupToOutput .= '<li data-region="'.$questregion.'">';
+    $markupToOutput .= '<li class="active" data-region="'.$questregion.'">';
     $markupToOutput .= '<h4>'.$journaltitle.'</h4>';
     $markupToOutput .= '<p>'.$journaldesc.'</p>';
     $markupToOutput .= '<h5>Rewards</h5>';

@@ -1672,11 +1672,38 @@ var UI = {
     buildQuestJournal: function(markup, regions) {
         questJournalEntries.innerHTML = markup;
         // build region filter:
-        var regionMarkup;
+        var regionMarkup = '<option value="all">Show all</option>'
         for (var region in regions) {
-            regionMarkup += '<option>' + regions[region] + '</option>';
+            regionMarkup += '<option value="' + regions[region] + '">' + regions[region] + '</option>';
         }
         questJournalRegionFilter.innerHTML = regionMarkup;
+        questJournalRegionFilter.onchange = UI.filterJournal;
         questJournal.classList.add('active');
+    }, filterJournal: function(e) {
+
+
+    var journalItems = document.querySelectorAll('#questJournalEntries li'),
+        i;
+       
+        if(questJournalRegionFilter.value == "all") {
+  for (i = 0; i < journalItems.length; ++i) {
+        journalItems[i].classList.add('active');
     }
+        } else {
+    // hide all:
+    for (i = 0; i < journalItems.length; ++i) {
+        if(journalItems[i].dataset.region == questJournalRegionFilter.value) {
+journalItems[i].classList.add('active');
+        } else {
+            journalItems[i].classList.remove('active');
+        }
+        
+       
+    }
+
+}
+
+
+    }
+
 }
