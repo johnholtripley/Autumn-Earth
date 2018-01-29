@@ -523,6 +523,8 @@ $numberOfItemCategories: 20;
     li {
         background: #cecece;
         display: none;
+       @include clearfix;
+       border-bottom: 4px solid #666;
         &.active {
             display: block;
         }
@@ -533,4 +535,52 @@ $numberOfItemCategories: 20;
     h4, h5 {
         margin: 0;
     }
+
+      .item {
+            // slot
+            width: 46px;
+            height: 46px;
+            padding: 3px;
+            display: block;
+            float: left;
+            background: url(../images/game-world/interface/inventory-slot.png) no-repeat 50% 50%;
+            cursor: url(../images/game-world/cursors/active.gif) 3 3, auto;
+            margin: 0;
+            @include border-box;
+            position: relative;
+            box-shadow: 0 0 0 0 #eebb3f;
+            @include transition(box-shadow 0.2s ease-in-out);
+            .qty {
+                position: absolute;
+                right: 3px;
+                bottom: 3px;
+                text-align: right;
+                color: #fff;
+                cursor: default;
+                font-size: 11px;
+                pointer-events: none;
+                &:after {
+                    opacity: 0;
+                    pointer-events: none;
+                    border-top: 12px solid transparent;
+                    border-right: 12px solid #16952b;
+                    content: "";
+                    display: block;
+                    @include transition(opacity 0.4s ease);
+                    position: absolute;
+                    right: 0;
+                    bottom: 0;
+                }
+            }
+            img {
+                display: block;
+                 @include attention() {
+                &+p {
+                    opacity: 1;
+                    pointer-events: auto;
+                    @include transform(translateY(0));
+                }
+            }
+            }
+            }
 }

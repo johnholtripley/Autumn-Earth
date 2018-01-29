@@ -46,9 +46,9 @@ $xPos = strpos($item, 'x');
     }
     }
     
-$markupToOutput .= '<img src="/images/game-world/inventory-items/'.$item.'.png">';
+$markupToOutput .= '<div class="item"><img src="/images/game-world/inventory-items/'.$item.'.png">';
 
-$markupToOutput .= '<span class="qty">'.$quantity.'</span>';
+$markupToOutput .= '<span class="qty">'.$quantity.'</span></div>';
     }
     
   }
