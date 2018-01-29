@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 17, 2018 at 01:36 PM
+-- Generation Time: Jan 29, 2018 at 10:20 AM
 -- Server version: 5.6.24
 -- PHP Version: 5.6.8
 
@@ -613,7 +613,7 @@ CREATE TABLE IF NOT EXISTS `tblinventoryitems` (
   `centreX` decimal(11,1) DEFAULT NULL,
   `centreY` decimal(11,1) DEFAULT NULL,
   `width` int(11) NOT NULL,
-  `height` int(11) NOT NULL,
+  `length` int(11) NOT NULL,
   `spriteWidth` int(11) DEFAULT NULL,
   `spriteHeight` int(11) DEFAULT NULL,
   `cleanURL` varchar(255) DEFAULT NULL,
@@ -632,13 +632,13 @@ CREATE TABLE IF NOT EXISTS `tblinventoryitems` (
   `lockedToThisPlayer` tinyint(1) NOT NULL DEFAULT '0',
   `respawnRate` int(11) DEFAULT NULL,
   `activeDuringSeason` int(11) DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=53 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=55 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblinventoryitems`
 --
 
-INSERT INTO `tblinventoryitems` (`itemID`, `shortname`, `description`, `priceCode`, `centreX`, `centreY`, `width`, `height`, `spriteWidth`, `spriteHeight`, `cleanURL`, `action`, `actionValue`, `dyeable`, `level`, `prerequisites`, `itemGroup`, `itemCategories`, `racialPreference`, `inscribable`, `colour`, `hasInherentColour`, `showInTheCodex`, `lockedToThisPlayer`, `respawnRate`, `activeDuringSeason`) VALUES
+INSERT INTO `tblinventoryitems` (`itemID`, `shortname`, `description`, `priceCode`, `centreX`, `centreY`, `width`, `length`, `spriteWidth`, `spriteHeight`, `cleanURL`, `action`, `actionValue`, `dyeable`, `level`, `prerequisites`, `itemGroup`, `itemCategories`, `racialPreference`, `inscribable`, `colour`, `hasInherentColour`, `showInTheCodex`, `lockedToThisPlayer`, `respawnRate`, `activeDuringSeason`) VALUES
 (1, 'Wild Flax', 'Useful for making linens', '1', '20.0', '24.0', 0, 0, NULL, NULL, 'wild-flax', '', '0', 0, 0, '0', '0', '1', NULL, 0, 0, 0, 1, 0, NULL, NULL),
 (2, 'Wild Madder', 'A flower used for its red pigment.', '1', '20.0', '24.0', 0, 0, NULL, NULL, 'wild-madder', '', '0', 0, 0, '0', '0', '1', NULL, 0, 1, 1, 1, 0, NULL, NULL),
 (3, 'Safflower', 'A flower used for its yellow pigment.', '1', '20.0', '24.0', 0, 0, NULL, NULL, 'safflower', '', '0', 0, 0, '0', '0', '1', NULL, 0, 2, 1, 1, 0, NULL, NULL),
@@ -689,7 +689,9 @@ INSERT INTO `tblinventoryitems` (`itemID`, `shortname`, `description`, `priceCod
 (49, 'Worsted Yarn', 'Thicker, spun wool.', '1', '20.0', '24.0', 0, 0, NULL, NULL, 'yarn', '', '0', 1, 0, '0', '0', '3', NULL, 0, 0, 0, 1, 0, NULL, NULL),
 (50, 'Mineral Node', '', '4', '20.0', '16.0', 38, 38, 34, 25, 'mineral-node', 'node', '0', 0, 0, '0', '0', '4', NULL, 0, 0, 0, 0, 0, 300, NULL),
 (51, 'Copper', 'A soft metal.', '1', '20.0', '24.0', 0, 0, NULL, NULL, 'copper', '', '0', 0, 0, '0', '0', '4', NULL, 0, 0, 0, 1, 0, NULL, NULL),
-(52, 'Iron', 'A harder metal.', '1', '20.0', '24.0', 0, 0, NULL, NULL, 'iron', '', '0', 0, 0, '0', '0', '4', NULL, 0, 0, 0, 1, 0, NULL, NULL);
+(52, 'Iron', 'A harder metal.', '1', '20.0', '24.0', 0, 0, NULL, NULL, 'iron', '', '0', 0, 0, '0', '0', '4', NULL, 0, 0, 0, 1, 0, NULL, NULL),
+(53, 'Home stone', 'Return to your home location.', '1', '20.0', '24.0', 0, 0, NULL, NULL, 'home-stone', 'home', '0', 0, 0, '0', '0', '', NULL, 0, 0, 0, 1, 0, NULL, NULL),
+(54, 'Wanted Poster', 'poster', '1', '25.0', '36.0', 52, 52, NULL, NULL, 'wanted-poster', 'notice', '0', 0, 0, '0', '0', '', NULL, 0, 0, 0, 0, 0, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -1377,6 +1379,7 @@ CREATE TABLE IF NOT EXISTS `tblquests` (
   `questID` int(11) NOT NULL,
   `journalTitle` varchar(128) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
   `journalDesc` varchar(255) DEFAULT NULL,
+  `questRegion` varchar(128) NOT NULL,
   `isRepeatable` tinyint(1) NOT NULL,
   `childOf` int(11) DEFAULT NULL,
   `startItemsReceived` varchar(255) DEFAULT NULL,
@@ -1386,21 +1389,22 @@ CREATE TABLE IF NOT EXISTS `tblquests` (
   `titleGainedAfterCompletion` int(11) DEFAULT NULL,
   `thresholdNeededForCompletion` varchar(128) NOT NULL,
   `subQuestsRequiredForCompletion` varchar(128) DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblquests`
 --
 
-INSERT INTO `tblquests` (`questID`, `journalTitle`, `journalDesc`, `isRepeatable`, `childOf`, `startItemsReceived`, `itemsNeededForCompletion`, `itemsReceivedOnCompletion`, `whatIsRequiredForCompletion`, `titleGainedAfterCompletion`, `thresholdNeededForCompletion`, `subQuestsRequiredForCompletion`) VALUES
-(1, 'A hero''s journey', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 0, NULL, '9', '9', '2x21/1x1/1x2/1x3', 'give', 4, '', NULL),
-(2, 'An unexpected journey', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 0, NULL, '', '', '9,14,$10000', 'world', NULL, '', NULL),
-(3, 'A longer journey', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 1, NULL, '', '', '', 'hero.stats.numberOfcardsFlipped', NULL, '+2', NULL),
-(4, 'A hero''s peregrination', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 0, NULL, '5,9', '5x19', '2x21,9', 'possess', 7, '', NULL),
-(5, 'A much longer task', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 0, NULL, '', NULL, '2x21,9', 'multi', 7, '', '6,7'),
-(6, 'sub task 1', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 0, NULL, '', '', '', 'world', NULL, '', NULL),
-(7, 'sub task 2', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 0, NULL, '', '', '', 'hero.stats.numberOfcardsFlipped', NULL, '+2', NULL),
-(8, 'Win a card game', 'Beat NPC at cards, and got a rare chocobo card', 0, NULL, '0', '0', '36', '', NULL, '', NULL);
+INSERT INTO `tblquests` (`questID`, `journalTitle`, `journalDesc`, `questRegion`, `isRepeatable`, `childOf`, `startItemsReceived`, `itemsNeededForCompletion`, `itemsReceivedOnCompletion`, `whatIsRequiredForCompletion`, `titleGainedAfterCompletion`, `thresholdNeededForCompletion`, `subQuestsRequiredForCompletion`) VALUES
+(1, 'A hero''s journey', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 'Teldrassil', 0, NULL, '9', '9', '2x21/1x1/1x2/1x3', 'give', 4, '', NULL),
+(2, 'An unexpected journey', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 'Teldrassil', 0, NULL, '', '', '9,14,$10000', 'world', NULL, '', NULL),
+(3, 'A longer journey', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 'Teldrassil', 1, NULL, '', '', '', 'hero.stats.numberOfcardsFlipped', NULL, '+2', NULL),
+(4, 'A hero''s peregrination', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 'Teldrassil', 0, NULL, '5,9', '5x19', '2x21,9', 'possess', 7, '', NULL),
+(5, 'A much longer task', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 'Teldrassil', 0, NULL, '', NULL, '2x21,9', 'multi', 7, '', '6,7'),
+(6, 'sub task 1', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 'Central Kalimdor', 0, NULL, '', '', '', 'world', NULL, '', NULL),
+(7, 'sub task 2', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 'Central Kalimdor', 0, NULL, '', '', '', 'hero.stats.numberOfcardsFlipped', NULL, '+2', NULL),
+(8, 'Win a card game', 'Beat NPC at cards, and got a rare chocobo card', 'Central Kalimdor', 0, NULL, '', '0', '36', '', NULL, '', NULL),
+(9, 'Find the wizard', 'Locate the wizard', 'Teldrassil', 0, NULL, '', '0', '20', '', NULL, '', NULL);
 
 -- --------------------------------------------------------
 
@@ -1461,6 +1465,46 @@ INSERT INTO `tblrecipes` (`recipeID`, `components`, `creates`, `prerequisite`, `
 (11, '15', 16, 0, 1, NULL, '', NULL),
 (12, '37,38,39', 40, 0, 4, NULL, '', 16),
 (13, '15', 49, 0, 1, NULL, '', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tblregionalpricemodifiers`
+--
+
+CREATE TABLE IF NOT EXISTS `tblregionalpricemodifiers` (
+  `modifierID` int(11) NOT NULL,
+  `whichRegion` varchar(128) NOT NULL,
+  `itemCategory` int(10) NOT NULL,
+  `priceModifier` float NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `tblregionalpricemodifiers`
+--
+
+INSERT INTO `tblregionalpricemodifiers` (`modifierID`, `whichRegion`, `itemCategory`, `priceModifier`) VALUES
+(0, 'Teldrassil', 2, 0.9);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tblregions`
+--
+
+CREATE TABLE IF NOT EXISTS `tblregions` (
+  `regionID` int(11) NOT NULL,
+  `regionName` varchar(128) NOT NULL,
+  `InWhichcontinent` varchar(128) NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `tblregions`
+--
+
+INSERT INTO `tblregions` (`regionID`, `regionName`, `InWhichcontinent`) VALUES
+(0, 'Teldrassil', 'Kalimdor'),
+(1, 'Central Kalimdor', 'Kalimdor');
 
 -- --------------------------------------------------------
 
@@ -2066,6 +2110,18 @@ ALTER TABLE `tblrecipes`
   ADD PRIMARY KEY (`recipeID`);
 
 --
+-- Indexes for table `tblregionalpricemodifiers`
+--
+ALTER TABLE `tblregionalpricemodifiers`
+  ADD PRIMARY KEY (`modifierID`);
+
+--
+-- Indexes for table `tblregions`
+--
+ALTER TABLE `tblregions`
+  ADD PRIMARY KEY (`regionID`), ADD UNIQUE KEY `regionName` (`regionName`);
+
+--
 -- Indexes for table `tblretinuequests`
 --
 ALTER TABLE `tblretinuequests`
@@ -2204,7 +2260,7 @@ ALTER TABLE `tblguilds`
 -- AUTO_INCREMENT for table `tblinventoryitems`
 --
 ALTER TABLE `tblinventoryitems`
-  MODIFY `itemID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=53;
+  MODIFY `itemID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=55;
 --
 -- AUTO_INCREMENT for table `tblitemcategories`
 --
@@ -2259,7 +2315,7 @@ ALTER TABLE `tblprofessions`
 -- AUTO_INCREMENT for table `tblquests`
 --
 ALTER TABLE `tblquests`
-  MODIFY `questID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=9;
+  MODIFY `questID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=10;
 --
 -- AUTO_INCREMENT for table `tblquestsstatus`
 --
@@ -2270,6 +2326,16 @@ ALTER TABLE `tblquestsstatus`
 --
 ALTER TABLE `tblrecipes`
   MODIFY `recipeID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=14;
+--
+-- AUTO_INCREMENT for table `tblregionalpricemodifiers`
+--
+ALTER TABLE `tblregionalpricemodifiers`
+  MODIFY `modifierID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
+--
+-- AUTO_INCREMENT for table `tblregions`
+--
+ALTER TABLE `tblregions`
+  MODIFY `regionID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT for table `tblretinuequests`
 --

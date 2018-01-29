@@ -5106,7 +5106,7 @@ function getShopData() {
     if (thisMapData.shops.length == 0) {
         findInventoryItemData();
     } else {
-        var shopData = JSON.parse('{"mapNumber": ' + currentMap + ',"shops": ' + JSON.stringify(thisMapData.shops) + '}');
+        var shopData = JSON.parse('{"mapNumber": ' + currentMap + ',"region":"'+thisMapData.region+'","shops": ' + JSON.stringify(thisMapData.shops) + '}');
         // loop through shops and create hashes 
         for (var i = 0; i < shopData.shops.length; i++) {
             shopData.shops[i].hash = generateHash(shopData.shops[i].name);

@@ -1,6 +1,7 @@
 {
     "map": {
         "zoneName": "The Old Meadows",
+        "region": "Teldrassil",
         "ambientSounds": {"birdSong": "../sounds/bird-song.mp3"},
         "collisions": [
             [1, "d", "d", "d", 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -656,7 +657,7 @@
                 "movement": ["s","s","e","e","n","n","w","w"],
                 "facing": "s",
                 "walkThroughDoors": false,
-                "speed": 2,
+                "speed": 1,
                 "speech": [
                     ["", "sound", "horse"]
 

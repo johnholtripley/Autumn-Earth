@@ -11,13 +11,14 @@ $sellPriceSpecialismModifier = 0.8;
 $buyPriceSpecialismModifier = 0.9;
 
 
- 
+
  
 $json = $_POST['shopData'];
-/* 
 
+/*
 $json ='{
 "mapNumber": 3,
+"region": "Teldrassil",
 "shops": [
 {
     "name":"shop #1",
@@ -60,15 +61,39 @@ $json ='{
 ]
  
 }';
+*/
 
- */
+
+/*
+$json ='{"mapNumber":2,"region":"Teldrassil","shops":[{"name":"shop #1","uniqueItems":[],"specialism":2,"categories":[1,2],"size":"small","currency":"money","hash":2067019224},{"name":"shop #2","uniqueItems":{"14":[{"colour":3},{"colour":7}],"15":[{"colour":1,"inscription":"stuffffff"}]},"specialism":null,"categories":[3],"size":"small","currency":"money","hash":2067019225},{"name":"shop #3","uniqueItems":{"5":[[]],"9":[[]],"11":[[]],"12":[[]],"15":[[]],"20":[[]],"25":[[]],"27":[[]],"37":[[]],"52":[[]]},"specialism":null,"categories":[],"size":"small","currency":"money","hash":2067019226}]}';
+*/
 
  
  
  
  
 $jsonData = json_decode($json, true);
+$thisMapsRegion = $jsonData['region'];
+
  
+
+// get any Regional modifiers:
+$modifiersQuery = "SELECT * from tblregionalpricemodifiers WHERE whichregion = '".$thisMapsRegion ."'";
+$categoryModifier = array();
+    $modifiersResult = mysql_query( $modifiersQuery ) or die ( "couldn't execute events query: ".$modifiersQuery );
+$numberofrows = mysql_num_rows( $modifiersResult );
+    if ( $numberofrows>0 ) {
+        while ( $modifierRow = mysql_fetch_array( $modifiersResult ) ) {
+            extract( $modifierRow );
+
+            $categoryModifier[$itemCategory] = floatval($priceModifier);
+        }
+    }
+mysql_free_result($modifiersResult);
+
+
+
+
 $shopSizePriceLimits = ["small"=>"5", "medium"=>"10", "large"=>"9999999999"];
  
 $allItemIdsUsed = [];
@@ -128,7 +153,7 @@ while ($row = mysql_fetch_array($result2, MYSQL_ASSOC)) {
 mysql_free_result($result2);
  
 }
- 
+
 // get unique items:
  
 if(count($jsonData['shops'][$i]["uniqueItems"])>0) {
@@ -171,7 +196,7 @@ mysql_free_result($result3);
  echo "</code></pre>";
  */
  
- 
+
  
 $itemIdsThatNeedColourVariants = [12,40];
 $inventoryDataCount = count($inventoryData);
@@ -230,6 +255,20 @@ array_multisort($shortname, SORT_ASC, $colour, SORT_ASC, $inventoryDataToSort);
 $thisShopsSpecialism = $jsonData['shops'][$i]["specialism"];
  
  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
  
 for ($j=0;$j<count($inventoryDataToSort);$j++) {
     array_push($allItemIdsUsed, $inventoryDataToSort[$j]['itemID']);
@@ -240,6 +279,7 @@ if($inventoryDataToSort[$j]['colourName'] != '') {
 }
  
 $thisItemsPrice = intval($inventoryDataToSort[$j]['priceCode']);
+
 $specialPriceClass = '';
 if($thisShopsSpecialism) {
 // compare the specialism as a string:
@@ -250,6 +290,17 @@ if($thisShopsSpecialism) {
      
 }
 } 
+
+
+// check for regional price variation too
+if(isset($categoryModifier[($inventoryDataToSort[$j]['itemCategories'])])) {
+
+ $thisItemsPrice = $thisItemsPrice*$categoryModifier[($inventoryDataToSort[$j]['itemCategories'])];
+
+    $specialPriceClass = ' specialPrice';
+}
+
+
  
 $thisItemsPrice = ceil($thisItemsPrice * $inflationModifier);
  
@@ -278,7 +329,7 @@ $markupToOutput .= '</ol></div></div>';
  
 // output all IDs used so they can be loaded into the game's inventory data:
 $allItemIdsUsed = array_unique($allItemIdsUsed);
- 
+
 // create JSON response:
 echo '{"markup": ["'.addcslashes($markupToOutput, '"\\/').'"],"allItemIds": ["'.implode("|",$allItemIdsUsed).'"]}';
 //echo htmlentities($markupToOutput);
