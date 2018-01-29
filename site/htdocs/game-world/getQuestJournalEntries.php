@@ -6,7 +6,7 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/functions.php");
 
  // if no quest id is passed in, then get all active
 
-$activeQuests = array(2,4,8);
+$activeQuests = array(1,2,4,8);
 
 
 
@@ -32,15 +32,19 @@ while ($row = mysql_fetch_array($result)) {
     if (strpos($item, '$') !== false) {
         $markupToOutput .= parseMoney(str_replace('$','',$item)).' silver';
     } else {
-            // check for "/" for random ####
-$quantity = 1;
+        $quantity = 1;
+            // check for "/" for random:
+        if (strpos($item, '/') !== false) {
+$item = "unknown";
+        } else {
+
 // check for x for quantity:
 $xPos = strpos($item, 'x');
  if ($xPos !== false) {
     $quantity = substr($item,0,$xPos);
     $item = substr($item,$xPos+1);
     }
-    
+    }
     
 $markupToOutput .= '<img src="/images/game-world/inventory-items/'.$item.'.png">';
 
