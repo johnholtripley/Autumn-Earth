@@ -2,6 +2,7 @@
  
 include($_SERVER['DOCUMENT_ROOT']."/includes/signalnoise.php");
 include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
+include($_SERVER['DOCUMENT_ROOT']."/includes/functions.php");
 
  // if no quest id is passed in, then get all active
 
@@ -24,11 +25,28 @@ while ($row = mysql_fetch_array($result)) {
 
     // build reward items:
 
-    // check for "/" for random ####
-    // check for $ for money ####
+
   $allRewards = explode(",",$itemsreceivedoncompletion);
   foreach ($allRewards as $item) {
-    $markupToOutput .= '<img src="/images/game-world/inventory-items/'.$item.'.png">';
+        // check for $ for money:
+    if (strpos($item, '$') !== false) {
+        $markupToOutput .= parseMoney(str_replace('$','',$item)).' silver';
+    } else {
+            // check for "/" for random ####
+$quantity = 1;
+// check for x for quantity:
+$xPos = strpos($item, 'x');
+ if ($xPos !== false) {
+    $quantity = substr($item,0,$xPos);
+    $item = substr($item,$xPos+1);
+    }
+    
+    
+$markupToOutput .= '<img src="/images/game-world/inventory-items/'.$item.'.png">';
+
+$markupToOutput .= '<span class="qty">'.$quantity.'</span>';
+    }
+    
   }
 
 /*
