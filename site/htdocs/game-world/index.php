@@ -144,6 +144,15 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
       ?>
     </div>
 
+    <div id="questJournal">
+      <div class="draggableBar">Quest Journal</div>
+      <button class="closePanel">close</button>
+      <select id="questJournalRegionFilter">
+      </select>
+      <div id="questJournalEntries">
+      </div>
+    </div>
+
     <div id="inscriptionPanel">
       <div class="draggableBar">Inscription</div>
       <button class="closePanel">close</button>

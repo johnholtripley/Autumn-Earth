@@ -420,12 +420,26 @@ function loadShopData(shopJSONData) {
     getJSONWithParams("/game-world/getShopItems.php", shopJSONData, function(data) {
         thisMapShopItemIds = data.allItemIds;
         UI.buildShop(data.markup);
-        findInventoryItemData();
+        getQuestJournal();
     }, function(status) {
         // try again:
         loadShopData(shopJSONData);
     });
 }
+
+
+function getQuestJournal() {
+     getJSON("/game-world/getQuestJournalEntries.php", function(data) {
+        UI.buildQuestJournal(data.markup, data.regions);
+        findInventoryItemData();
+    }, function(status) {
+        // try again:
+        getQuestJournal();
+    });
+}
+
+
+
 
 
 

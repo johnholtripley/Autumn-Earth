@@ -3035,6 +3035,8 @@ const gatheringBarStability = document.querySelector('#gatheringBarStability .pr
 const surveyingTimeBar = document.querySelector('#surveyingTimeBar .progressBar');
 const gatheringOutputSlot = document.getElementById('gatheringOutputSlot');
 const surveyingPanel = document.getElementById('surveyingPanel');
+const questJournalEntries = document.getElementById('questJournalEntries');
+const questJournalRegionFilter = document.getElementById('questJournalRegionFilter');
 
 var notificationQueue = [];
 var notificationIsShowing = false;
@@ -4657,6 +4659,16 @@ var UI = {
         console.log(e);
         var thisNode = getNearestParentId(e.target);
         console.log(thisNode.id);
+    },
+    buildQuestJournal: function(markup, regions) {
+        questJournalEntries.innerHTML = markup;
+        // build region filter:
+        var regionMarkup;
+        for (var region in regions) {
+            regionMarkup += '<option>' + regions[region] + '</option>';
+        }
+        questJournalRegionFilter.innerHTML = regionMarkup;
+        questJournal.classList.add('active');
     }
 }
 function setupWeather() {
@@ -5122,12 +5134,26 @@ function loadShopData(shopJSONData) {
     getJSONWithParams("/game-world/getShopItems.php", shopJSONData, function(data) {
         thisMapShopItemIds = data.allItemIds;
         UI.buildShop(data.markup);
-        findInventoryItemData();
+        getQuestJournal();
     }, function(status) {
         // try again:
         loadShopData(shopJSONData);
     });
 }
+
+
+function getQuestJournal() {
+     getJSON("/game-world/getQuestJournalEntries.php", function(data) {
+        UI.buildQuestJournal(data.markup, data.regions);
+        findInventoryItemData();
+    }, function(status) {
+        // try again:
+        getQuestJournal();
+    });
+}
+
+
+
 
 
 
