@@ -582,5 +582,30 @@ $numberOfItemCategories: 20;
                 }
             }
             }
+                p {
+        // tooltip
+        background: #eee;
+        z-index: 1;
+        margin: 0;
+        bottom: 100%;
+        color: #000;
+        display: block;
+        left: 0;
+        min-width: 120px;
+        opacity: 0;
+        padding: 8px;
+        pointer-events: none;
+        position: absolute;
+        font-size: 11px;
+        cursor: url(../images/game-world/cursors/default.gif) 3 3, auto;
+        @include transform(translateY(10px));
+        @include transition(all .25s ease-out);
+        em {
+            // tooltip item title
+            display: block;
+            font-size: 1.2em;
+            font-style: normal;
+        }
+    }
             }
 }
