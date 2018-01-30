@@ -1993,44 +1993,48 @@ const Input = {
 
     // called on key up and key down events
     changeKey: function(e, to, type) {
-        switch (e.keyCode) {
-            case KeyBindings.left:
-                // prevent the page from scrolling:
-                e.preventDefault();
-                key[0] = to;
-                break;
-            case KeyBindings.up:
-                e.preventDefault();
-                key[2] = to;
-                break;
-            case KeyBindings.right:
-                e.preventDefault();
-                key[1] = to;
-                break;
-            case KeyBindings.down:
-                e.preventDefault();
-                key[3] = to;
-                break;
+        var focussedTagType = document.activeElement.tagName;
+        // don't react to key presses if the currently focussed element is an input:
+        if ((focussedTagType != "INPUT") && (focussedTagType != "TEXTAREA") && (focussedTagType != "SELECT")) {
+            switch (e.keyCode) {
+                case KeyBindings.left:
+                    // prevent the page from scrolling:
+                    e.preventDefault();
+                    key[0] = to;
+                    break;
+                case KeyBindings.up:
+                    e.preventDefault();
+                    key[2] = to;
+                    break;
+                case KeyBindings.right:
+                    e.preventDefault();
+                    key[1] = to;
+                    break;
+                case KeyBindings.down:
+                    e.preventDefault();
+                    key[3] = to;
+                    break;
 
-            case KeyBindings.action:
-                // action should only be on key Up:
-                key[4] = 0;
-                if (type === "up") {
-                    key[4] = 1;
-                }
-                break;
-            case KeyBindings.shift:
-                key[5] = to;
-                break;
-            case KeyBindings.challenge:
-                key[6] = to;
-                break;
+                case KeyBindings.action:
+                    // action should only be on key Up:
+                    key[4] = 0;
+                    if (type === "up") {
+                        key[4] = 1;
+                    }
+                    break;
+                case KeyBindings.shift:
+                    key[5] = to;
+                    break;
+                case KeyBindings.challenge:
+                    key[6] = to;
+                    break;
                 case KeyBindings.toggleUI:
-key[7] = to;
-                break;
-                 case KeyBindings.toggleJournal:
-key[8] = to;
-                break;
+                    key[7] = to;
+                    break;
+                case KeyBindings.toggleJournal:
+                    key[8] = to;
+                    break;
+            }
         }
     }
 }
@@ -2993,6 +2997,21 @@ function pushPetAway(whichPet) {
     }
 }
 
+function addToJournal(whichQuestId) {
+    // pass hero.totalGameTimePlayed to allow sorting when loading from scratch? ###
+    getJSON("/game-world/getQuestJournalEntries.php?questID=" + whichQuestId, function(data) {
+        UI.addToQuestJournal(data);
+    }, function(status) {
+        // error - try again:
+        addToJournal(whichQuestId);
+    });
+}
+
+function removeFromJournal(whichQuestId) {
+    console.log("remove"+whichQuestId);
+    var elementToRemove = document.getElementById("quest" + whichQuestId);
+    elementToRemove.remove();
+}
 // global vars:
 const recipeSearch = document.getElementById('recipeSearch');
 const clearRecipeSearch = document.getElementById('clearRecipeSearch');
@@ -4676,7 +4695,8 @@ var UI = {
         questJournal.classList.add('active');
     },
     filterJournal: function(e) {
-        var journalItems = document.querySelectorAll('#questJournalEntries li'),i;
+        var journalItems = document.querySelectorAll('#questJournalEntries li'),
+            i;
         if (questJournalRegionFilter.value == "all") {
             for (i = 0; i < journalItems.length; ++i) {
                 journalItems[i].classList.add('active');
@@ -4694,6 +4714,23 @@ var UI = {
     },
     toggleJournal: function() {
         questJournal.classList.toggle('active');
+    },
+    addToQuestJournal: function(data) {
+        // add the entry:
+        questJournalEntries.innerHTML = data.markup + questJournalEntries.innerHTML;
+        // check to see if a new region needs adding to the filter:
+        var foundThisRegion = false;
+        for (var i = 0; i < questJournalRegionFilter.length; i++) {
+            if (questJournalRegionFilter.options[i].value == data.regions) {
+                foundThisRegion = true;
+                break;
+            }
+        }
+        if (!foundThisRegion) {
+            // add it alphabetically? ###
+            var regionMarkup = '<option value="' + data.regions + '">' + data.regions + '</option>';
+            questJournalRegionFilter.innerHTML = questJournalRegionFilter.innerHTML + regionMarkup;
+        }
     }
 
 }
@@ -6572,7 +6609,7 @@ function processSpeech(thisObjectSpeaking, thisSpeechPassedIn, thisSpeechCode, i
                                     var allSubQuestsRequired = questData[questId].subQuestsRequiredForCompletion.split(",");
 
                                     for (var k = 0; k < allSubQuestsRequired.length; k++) {
-                                        questData[allSubQuestsRequired[k]].isUnderway = 1;
+                                        //questData[allSubQuestsRequired[k]].isUnderway = 1;
                                         switch (questData[allSubQuestsRequired[k]].whatIsRequiredForCompletion) {
                                             case "possess":
                                             case "give":
@@ -6599,6 +6636,7 @@ function processSpeech(thisObjectSpeaking, thisSpeechPassedIn, thisSpeechCode, i
                                     break;
                             }
                             questData[questId].isUnderway = true;
+                            addToJournal(questId);
                         }
                     }
                     thisSpeech = questSpeech[0];
@@ -6638,6 +6676,7 @@ function closeQuest(whichNPC, whichQuestId) {
         if (questData[whichQuestId].isRepeatable > 0) {
             questData[whichQuestId].hasBeenCompleted = false;
             questData[whichQuestId].isUnderway = false;
+            
         } else {
             questData[whichQuestId].hasBeenCompleted = true;
             // remove quest text now:
@@ -6650,6 +6689,7 @@ function closeQuest(whichNPC, whichQuestId) {
         // keep the NPC on the quest dialogue:
         whichNPC.speechIndex--;
     }
+    removeFromJournal(whichQuestId);
 }
 
 
@@ -7340,3 +7380,4 @@ if (('querySelectorAll' in document && 'addEventListener' in window) && (!!windo
 } else {
     // sorry message / fallback? #####
 }
+

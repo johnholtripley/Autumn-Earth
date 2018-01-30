@@ -1832,7 +1832,7 @@ function processSpeech(thisObjectSpeaking, thisSpeechPassedIn, thisSpeechCode, i
                                     var allSubQuestsRequired = questData[questId].subQuestsRequiredForCompletion.split(",");
 
                                     for (var k = 0; k < allSubQuestsRequired.length; k++) {
-                                        questData[allSubQuestsRequired[k]].isUnderway = 1;
+                                        //questData[allSubQuestsRequired[k]].isUnderway = 1;
                                         switch (questData[allSubQuestsRequired[k]].whatIsRequiredForCompletion) {
                                             case "possess":
                                             case "give":
@@ -1859,6 +1859,7 @@ function processSpeech(thisObjectSpeaking, thisSpeechPassedIn, thisSpeechCode, i
                                     break;
                             }
                             questData[questId].isUnderway = true;
+                            addToJournal(questId);
                         }
                     }
                     thisSpeech = questSpeech[0];
@@ -1898,6 +1899,7 @@ function closeQuest(whichNPC, whichQuestId) {
         if (questData[whichQuestId].isRepeatable > 0) {
             questData[whichQuestId].hasBeenCompleted = false;
             questData[whichQuestId].isUnderway = false;
+            
         } else {
             questData[whichQuestId].hasBeenCompleted = true;
             // remove quest text now:
@@ -1910,6 +1912,7 @@ function closeQuest(whichNPC, whichQuestId) {
         // keep the NPC on the quest dialogue:
         whichNPC.speechIndex--;
     }
+    removeFromJournal(whichQuestId);
 }
 
 
@@ -2600,3 +2603,4 @@ if (('querySelectorAll' in document && 'addEventListener' in window) && (!!windo
 } else {
     // sorry message / fallback? #####
 }
+

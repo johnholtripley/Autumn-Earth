@@ -1681,7 +1681,8 @@ var UI = {
         questJournal.classList.add('active');
     },
     filterJournal: function(e) {
-        var journalItems = document.querySelectorAll('#questJournalEntries li'),i;
+        var journalItems = document.querySelectorAll('#questJournalEntries li'),
+            i;
         if (questJournalRegionFilter.value == "all") {
             for (i = 0; i < journalItems.length; ++i) {
                 journalItems[i].classList.add('active');
@@ -1699,6 +1700,23 @@ var UI = {
     },
     toggleJournal: function() {
         questJournal.classList.toggle('active');
+    },
+    addToQuestJournal: function(data) {
+        // add the entry:
+        questJournalEntries.innerHTML = data.markup + questJournalEntries.innerHTML;
+        // check to see if a new region needs adding to the filter:
+        var foundThisRegion = false;
+        for (var i = 0; i < questJournalRegionFilter.length; i++) {
+            if (questJournalRegionFilter.options[i].value == data.regions) {
+                foundThisRegion = true;
+                break;
+            }
+        }
+        if (!foundThisRegion) {
+            // add it alphabetically? ###
+            var regionMarkup = '<option value="' + data.regions + '">' + data.regions + '</option>';
+            questJournalRegionFilter.innerHTML = questJournalRegionFilter.innerHTML + regionMarkup;
+        }
     }
 
 }

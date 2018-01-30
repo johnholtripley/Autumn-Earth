@@ -25,44 +25,48 @@ const Input = {
 
     // called on key up and key down events
     changeKey: function(e, to, type) {
-        switch (e.keyCode) {
-            case KeyBindings.left:
-                // prevent the page from scrolling:
-                e.preventDefault();
-                key[0] = to;
-                break;
-            case KeyBindings.up:
-                e.preventDefault();
-                key[2] = to;
-                break;
-            case KeyBindings.right:
-                e.preventDefault();
-                key[1] = to;
-                break;
-            case KeyBindings.down:
-                e.preventDefault();
-                key[3] = to;
-                break;
+        var focussedTagType = document.activeElement.tagName;
+        // don't react to key presses if the currently focussed element is an input:
+        if ((focussedTagType != "INPUT") && (focussedTagType != "TEXTAREA") && (focussedTagType != "SELECT")) {
+            switch (e.keyCode) {
+                case KeyBindings.left:
+                    // prevent the page from scrolling:
+                    e.preventDefault();
+                    key[0] = to;
+                    break;
+                case KeyBindings.up:
+                    e.preventDefault();
+                    key[2] = to;
+                    break;
+                case KeyBindings.right:
+                    e.preventDefault();
+                    key[1] = to;
+                    break;
+                case KeyBindings.down:
+                    e.preventDefault();
+                    key[3] = to;
+                    break;
 
-            case KeyBindings.action:
-                // action should only be on key Up:
-                key[4] = 0;
-                if (type === "up") {
-                    key[4] = 1;
-                }
-                break;
-            case KeyBindings.shift:
-                key[5] = to;
-                break;
-            case KeyBindings.challenge:
-                key[6] = to;
-                break;
+                case KeyBindings.action:
+                    // action should only be on key Up:
+                    key[4] = 0;
+                    if (type === "up") {
+                        key[4] = 1;
+                    }
+                    break;
+                case KeyBindings.shift:
+                    key[5] = to;
+                    break;
+                case KeyBindings.challenge:
+                    key[6] = to;
+                    break;
                 case KeyBindings.toggleUI:
-key[7] = to;
-                break;
-                 case KeyBindings.toggleJournal:
-key[8] = to;
-                break;
+                    key[7] = to;
+                    break;
+                case KeyBindings.toggleJournal:
+                    key[8] = to;
+                    break;
+            }
         }
     }
 }
