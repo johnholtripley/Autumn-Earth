@@ -1710,14 +1710,16 @@ var UI = {
         for (var i = 0; i < questJournalRegionFilter.length; i++) {
             if (questJournalRegionFilter.options[i].value == data.regions) {
                 foundThisRegion = true;
+                break;
             }
+            // find the position to insert it next too (ignore the 'Show all' option as that needs to stay at the top):
             if (questJournalRegionFilter.options[i].value != "all") {
-            if (questJournalRegionFilter.options[i].value > data.regions) {
-                if (storedIndex == -1) {
-                    storedIndex = i;
+                if (questJournalRegionFilter.options[i].value > data.regions) {
+                    if (storedIndex == -1) {
+                        storedIndex = i;
+                    }
                 }
             }
-        }
         }
         if (!foundThisRegion) {
             // add it alphabetically:   
