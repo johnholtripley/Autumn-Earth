@@ -34,11 +34,13 @@ while ($row = mysql_fetch_array($result)) {
     $markupToOutput .= '<li class="active" id="quest'.$questid.'" data-region="'.$questregion.'">';
     $markupToOutput .= '<h4>'.$journaltitle.'</h4>';
     $markupToOutput .= '<p>'.$journaldesc.'</p>';
-    $markupToOutput .= '<h5>Rewards</h5>';
+   
 
-    // build reward items:
+   
 
-
+if($itemsreceivedoncompletion) {
+     // build reward items:
+ $markupToOutput .= '<h5>Rewards</h5>';
   $allRewards = explode(",",$itemsreceivedoncompletion);
   foreach ($allRewards as $item) {
         // check for $ for money:
@@ -58,6 +60,9 @@ $xPos = strpos($item, 'x');
     $item = substr($item,$xPos+1);
     }
     }
+
+
+
     $markupToOutput .= '<div class="item"><img src="/images/game-world/inventory-items/'.$item.'.png">';
 $itemQuery = "SELECT itemid, shortname, description, pricecode from tblinventoryitems where itemid = '".$item."'";
 $itemResult = mysql_query($itemQuery) or die ();
@@ -73,6 +78,7 @@ mysql_free_result($itemResult);
 
 $markupToOutput .= '<span class="qty">'.$quantity.'</span></div>';
     }
+}
     
   }
 
