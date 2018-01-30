@@ -209,106 +209,116 @@ function itemAttributesMatch(item1, item2) {
 
 
 
-
-
-function inventoryItemAction(whichSlot, whichAction, whichActionValue) {
+function inventoryItemAction(whichSlot, whichAction, allActionValues) {
     // remove the 'slot' prefix with the substring(4):
     var whichSlotNumber = whichSlot.parentElement.id.substring(4);
     // check if it has a cooldown:
     var canBeClicked = true;
+    var whichActionValue;
     if (typeof hero.inventory[whichSlotNumber].cooldown !== "undefined") {
         if (hero.inventory[whichSlotNumber].cooldownTimer > 0) {
             canBeClicked = false;
         }
     }
     if (canBeClicked) {
-        switch (whichAction) {
-            case "container":
-                // check it has contents:
-                if (typeof hero.inventory[whichSlotNumber].contains !== "undefined") {
-                    if ((hero.inventory[whichSlotNumber].contains.length == 1) && (hero.inventory[whichSlotNumber].quantity == 1)) {
-                        // if just a single wrapped item containing a single type of item, replace the wrapped with the contents:
-                        // (need to ensure that when creating containers that they can't hold more than maxNumberOfItemsPerSlot of an item type)
-                        hero.inventory[whichSlotNumber] = JSON.parse(JSON.stringify(hero.inventory[whichSlotNumber].contains[0]));
-                        document.getElementById("slot" + whichSlotNumber).innerHTML = generateSlotMarkup(whichSlotNumber);
-                        UI.showChangeInInventory([whichSlotNumber]);
-                    } else {
-                        var wrappedObject = JSON.parse(JSON.stringify(hero.inventory[whichSlotNumber]));
-                        removeFromInventory(whichSlotNumber, 1);
-                        var inventoryCheck = canAddItemToInventory(wrappedObject.contains);
-                        if (inventoryCheck[0]) {
+        var whichActionSplit = whichAction.split(",");
+        var allActionValuesSplit = allActionValues.split(",");
+        for (var i = 0; i < whichActionSplit.length; i++) {
+      
+            whichActionValue = allActionValuesSplit[i];
+          
+            switch (whichActionSplit[i]) {
+                case "container":
+                    // check it has contents:
+                    if (typeof hero.inventory[whichSlotNumber].contains !== "undefined") {
+                        if ((hero.inventory[whichSlotNumber].contains.length == 1) && (hero.inventory[whichSlotNumber].quantity == 1)) {
+                            // if just a single wrapped item containing a single type of item, replace the wrapped with the contents:
+                            // (need to ensure that when creating containers that they can't hold more than maxNumberOfItemsPerSlot of an item type)
+                            hero.inventory[whichSlotNumber] = JSON.parse(JSON.stringify(hero.inventory[whichSlotNumber].contains[0]));
                             document.getElementById("slot" + whichSlotNumber).innerHTML = generateSlotMarkup(whichSlotNumber);
-                            UI.showChangeInInventory(inventoryCheck[1]);
+                            UI.showChangeInInventory([whichSlotNumber]);
                         } else {
-                            // restore the wrapped item:
-                            hero.inventory[whichSlotNumber] = JSON.parse(JSON.stringify(wrappedObject));
-                            UI.showNotification("<p>You don't have room for all of these items.</p>");
-                        }
-                    }
-                }
-                break;
-            case "booster":
-                openBoosterPack();
-                removeFromInventory(whichSlotNumber, 1);
-                break;
-            case "bag":
-                UI.addNewBag(hero.inventory[whichSlotNumber]);
-                audio.playSound(soundEffects['bagOpen'], 0);
-                removeFromInventory(whichSlotNumber, 1);
-                break;
-            case "home":
-                var location = hero.inventory[whichSlotNumber].additional.split("|");
-                jumpToLocation(location[0], location[1], location[2]);
-                break;
-            case "inscribe":
-                UI.openInscriptionPanel();
-                break;
-            case "collection":
-                // check if this zone key exists in the hero.collections object
-                if (hero.collections.hasOwnProperty(whichActionValue)) {
-                    // find  in the array and make it negative ####
-                    var foundIndex = hero.collections[whichActionValue].required.indexOf(hero.inventory[whichSlotNumber].type);
-                    if (foundIndex != -1) {
-                        if (hero.collections[whichActionValue].required[foundIndex] > 0) {
-                            hero.collections[whichActionValue].required[foundIndex] = 0 - (hero.collections[whichActionValue].required[foundIndex]);
-                            // update the panel visually:
-                            document.getElementById(whichActionValue + '-' + hero.inventory[whichSlotNumber].type).classList.remove('notCollected');
+                            var wrappedObject = JSON.parse(JSON.stringify(hero.inventory[whichSlotNumber]));
                             removeFromInventory(whichSlotNumber, 1);
-                        } else {
-                            UI.showNotification("<p>Already added to a collection</p>");
+                            var inventoryCheck = canAddItemToInventory(wrappedObject.contains);
+                            if (inventoryCheck[0]) {
+                                document.getElementById("slot" + whichSlotNumber).innerHTML = generateSlotMarkup(whichSlotNumber);
+                                UI.showChangeInInventory(inventoryCheck[1]);
+                            } else {
+                                // restore the wrapped item:
+                                hero.inventory[whichSlotNumber] = JSON.parse(JSON.stringify(wrappedObject));
+                                UI.showNotification("<p>You don't have room for all of these items.</p>");
+                            }
                         }
                     }
-                }
-                break;
-            case "card":
-                hero.cards.unshift(whichActionValue);
-                UI.updateCardAlbum();
-                removeFromInventory(whichSlotNumber, 1);
-                break;
-            case "book":
-                document.getElementById("book" + whichActionValue).classList.add("active");
-                audio.playSound(soundEffects['bookOpen'], 0);
-            case "recipe":
-                if (canLearnRecipe(whichActionValue)) {
+                    break;
+                case "booster":
+                    openBoosterPack();
                     removeFromInventory(whichSlotNumber, 1);
+                    break;
+                case "bag":
+                    UI.addNewBag(hero.inventory[whichSlotNumber]);
+                    audio.playSound(soundEffects['bagOpen'], 0);
+                    removeFromInventory(whichSlotNumber, 1);
+                    break;
+                case "home":
+                    var location = hero.inventory[whichSlotNumber].additional.split("|");
+                    jumpToLocation(location[0], location[1], location[2]);
+                    break;
+                case "inscribe":
+                    UI.openInscriptionPanel();
+                    break;
+                case "collection":
+                    // check if this zone key exists in the hero.collections object
+                    if (hero.collections.hasOwnProperty(whichActionValue)) {
+                        // find  in the array and make it negative ####
+                        var foundIndex = hero.collections[whichActionValue].required.indexOf(hero.inventory[whichSlotNumber].type);
+                        if (foundIndex != -1) {
+                            if (hero.collections[whichActionValue].required[foundIndex] > 0) {
+                                hero.collections[whichActionValue].required[foundIndex] = 0 - (hero.collections[whichActionValue].required[foundIndex]);
+                                // update the panel visually:
+                                document.getElementById(whichActionValue + '-' + hero.inventory[whichSlotNumber].type).classList.remove('notCollected');
+                                removeFromInventory(whichSlotNumber, 1);
+                            } else {
+                                UI.showNotification("<p>Already added to a collection</p>");
+                            }
+                        }
+                    }
+                    break;
+                case "card":
+                    hero.cards.unshift(whichActionValue);
+                    UI.updateCardAlbum();
+                    removeFromInventory(whichSlotNumber, 1);
+                    break;
+                case "questSet":
+                if(!questData[whichActionValue].isUnderway) {
+                    questData[whichActionValue].isUnderway = true;
+                    addToJournal(whichActionValue);
                 }
-                break;
-            case "craft":
-                if (hero.professionsKnown.indexOf(parseInt(whichActionValue)) != -1) {
-                    audio.playSound(soundEffects['buttonClick'], 0);
-                    UI.populateRecipeList(whichActionValue);
-                } else {
-                    UI.showNotification("<p>You don't know this profession yet.</p>");
-                }
-                break;
+                    break;
+                case "book":
+                    document.getElementById("book" + whichActionValue).classList.add("active");
+                    audio.playSound(soundEffects['bookOpen'], 0);
+                case "recipe":
+                    if (canLearnRecipe(whichActionValue)) {
+                        removeFromInventory(whichSlotNumber, 1);
+                    }
+                    break;
+                case "craft":
+                    if (hero.professionsKnown.indexOf(parseInt(whichActionValue)) != -1) {
+                        audio.playSound(soundEffects['buttonClick'], 0);
+                        UI.populateRecipeList(whichActionValue);
+                    } else {
+                        UI.showNotification("<p>You don't know this profession yet.</p>");
+                    }
+                    break;
+            }
         }
         if (typeof hero.inventory[whichSlotNumber].cooldown !== "undefined") {
-hero.inventory[whichSlotNumber].cooldownTimer = hero.inventory[whichSlotNumber].cooldown;
+            hero.inventory[whichSlotNumber].cooldownTimer = hero.inventory[whichSlotNumber].cooldown;
         }
     }
 }
-
-
 
 
 
@@ -363,18 +373,26 @@ function generateGenericSlotMarkup(thisItemObject) {
     var thisAction = currentActiveInventoryItems[thisItemObject.type].action;
     var isABook = false;
     if (thisAction) {
-        if (thisAction == "book") {
+        if (thisAction.indexOf("book") != -1) {
             if (thisItemObject.inscription.content) {
                 isABook = true;
+
             }
         }
     }
     var dataActionMarkup = '';
     if (thisAction) {
         if (isABook) {
+            var booksActionValue;
             // link this item up to the book panel using the unique hash:
             var thisBooksHash = generateHash(thisItemObject.inscription.title + thisItemObject.colour + thisItemObject.type + thisItemObject.inscription.timeCreated);
-            dataActionMarkup = 'data-action="' + thisAction + '" data-action-value="' + thisBooksHash + '" ';
+            // check if the item has multiple actions, and create the action value accordingly:
+            if (thisAction.indexOf(",") == -1) {
+                booksActionValue = thisBooksHash;
+            } else {
+                booksActionValue = currentActiveInventoryItems[thisItemObject.type].actionValue.replace("?", thisBooksHash);
+            }
+            dataActionMarkup = 'data-action="' + thisAction + '" data-action-value="' + booksActionValue + '" ';
             UI.buildBook(thisItemObject, thisBooksHash);
         } else {
             dataActionMarkup = 'data-action="' + thisAction + '" data-action-value="' + currentActiveInventoryItems[thisItemObject.type].actionValue + '" ';
