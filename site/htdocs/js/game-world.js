@@ -4720,16 +4720,26 @@ var UI = {
         questJournalEntries.innerHTML = data.markup + questJournalEntries.innerHTML;
         // check to see if a new region needs adding to the filter:
         var foundThisRegion = false;
+        var storedIndex = -1;
         for (var i = 0; i < questJournalRegionFilter.length; i++) {
             if (questJournalRegionFilter.options[i].value == data.regions) {
                 foundThisRegion = true;
-                break;
+            }
+            if (questJournalRegionFilter.options[i].value != "all") {
+            if (questJournalRegionFilter.options[i].value > data.regions) {
+                if (storedIndex == -1) {
+                    storedIndex = i;
+                }
             }
         }
+        }
         if (!foundThisRegion) {
-            // add it alphabetically? ###
-            var regionMarkup = '<option value="' + data.regions + '">' + data.regions + '</option>';
-            questJournalRegionFilter.innerHTML = questJournalRegionFilter.innerHTML + regionMarkup;
+            // add it alphabetically:   
+            var newOption = document.createElement("OPTION");
+            newOption.innerText = data.regions;
+            newOption.value = data.regions;
+            questJournalRegionFilter.options.add(newOption, storedIndex);
+
         }
     }
 

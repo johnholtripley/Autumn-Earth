@@ -103,7 +103,7 @@ if(!$isAnUpdate) {
 $markupToOutput .= "</ol>";
 }
 
-
+sort($regions);
 // create JSON response:
 echo '{"markup": ["'.addcslashes($markupToOutput, '"\\/').'"],"regions": '.json_encode($regions).'}';
 
