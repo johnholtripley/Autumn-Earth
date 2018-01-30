@@ -306,3 +306,9 @@ opacity: 1;
         }
     }
 }
+
+
+select, input {
+    // remove blue highlight in Chrome etc:
+    outline: none;
+}
