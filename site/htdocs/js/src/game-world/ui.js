@@ -1654,7 +1654,6 @@ var UI = {
                     //console.log(hero.inventory[thisSlotsID].cooldownTimer);
                     //update visually (scaleY uses 0 - 1):
                     thisValue = (hero.inventory[thisSlotsID].cooldownTimer / hero.inventory[thisSlotsID].cooldown);
-
                     // does this need vendor prefixes?            
                     document.querySelector("#slot" + thisSlotsID + " .coolDown").style.transform = 'scaleY(' + thisValue + ')';
                 }

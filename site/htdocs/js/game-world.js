@@ -923,12 +923,14 @@ function gatheringStopped() {
         for (var i = 0; i < thisMapData.hiddenResources[(currentActiveInventoryItems[gathering.node.type].category)].length; i++) {
             if (thisMapData.hiddenResources[(currentActiveInventoryItems[gathering.node.type].category)][i] === gathering.node) {
                 thisMapData.hiddenResources[(currentActiveInventoryItems[gathering.node.type].category)].splice(i, 1);
+                break;
             }
         }
         // loop through items and remove it:
         for (var i = 0; i < thisMapData.items.length; i++) {
             if (thisMapData.items[i] === gathering.node) {
                 thisMapData.items.splice(i, 1);
+                break;
             }
         }
     }
@@ -3026,7 +3028,6 @@ function addToJournal(whichQuestId) {
 }
 
 function removeFromJournal(whichQuestId) {
-    console.log("remove"+whichQuestId);
     var elementToRemove = document.getElementById("quest" + whichQuestId);
     elementToRemove.remove();
 }
@@ -4686,7 +4687,6 @@ var UI = {
                     //console.log(hero.inventory[thisSlotsID].cooldownTimer);
                     //update visually (scaleY uses 0 - 1):
                     thisValue = (hero.inventory[thisSlotsID].cooldownTimer / hero.inventory[thisSlotsID].cooldown);
-
                     // does this need vendor prefixes?            
                     document.querySelector("#slot" + thisSlotsID + " .coolDown").style.transform = 'scaleY(' + thisValue + ')';
                 }
@@ -6005,14 +6005,10 @@ function update() {
         // check if a chest is open and close it if so:
         if (chestIdOpen != -1) {
             if (!(isInRange(hero.x, hero.y, thisMapData.items[chestIdOpen].x, thisMapData.items[chestIdOpen].y, closeDialogueDistance / 2))) {
-
                 UI.closeChest();
             }
-
-
         }
         if (activeAction == "gather") {
-
             if (!(isInRange(hero.x, hero.y, thisMapData.items[gathering.itemIndex].x, thisMapData.items[gathering.itemIndex].y, closeDialogueDistance / 2))) {
                 gatheringPanel.classList.remove("active");
                 gatheringStopped();

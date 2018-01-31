@@ -9,7 +9,6 @@ function addToJournal(whichQuestId) {
 }
 
 function removeFromJournal(whichQuestId) {
-    console.log("remove"+whichQuestId);
     var elementToRemove = document.getElementById("quest" + whichQuestId);
     elementToRemove.remove();
 }
