@@ -5211,7 +5211,7 @@ function getShopData() {
     if (thisMapData.shops.length == 0) {
         findInventoryItemData();
     } else {
-        var shopData = JSON.parse('{"mapNumber": ' + currentMap + ',"region":"'+thisMapData.region+'","shops": ' + JSON.stringify(thisMapData.shops) + '}');
+        var shopData = JSON.parse('{"mapNumber": ' + currentMap + ',"region":"' + thisMapData.region + '","shops": ' + JSON.stringify(thisMapData.shops) + '}');
         // loop through shops and create hashes 
         for (var i = 0; i < shopData.shops.length; i++) {
             shopData.shops[i].hash = generateHash(shopData.shops[i].name);
@@ -5236,7 +5236,7 @@ function loadShopData(shopJSONData) {
 
 
 function getQuestJournal() {
-     getJSON("/game-world/getQuestJournalEntries.php", function(data) {
+    getJSON("/game-world/getQuestJournalEntries.php", function(data) {
         UI.buildQuestJournal(data.markup, data.regions);
         findInventoryItemData();
     }, function(status) {
@@ -5275,15 +5275,15 @@ function findInventoryItemData() {
         // check if any are containers or chests:
         if (typeof thisMapData.items[i].contains !== "undefined") {
             for (var j = 0; j < thisMapData.items[i].contains.length; j++) {
-if (typeof thisMapData.items[i].contains[j].type !== "undefined") {
-                itemChoices = thisMapData.items[i].contains[j].type.toString().split("/");
-                for (var k = 0; k < itemChoices.length; k++) {
-                    if (itemChoices[k] != "$") {
-                        // make sure it's not money in a chest:
-                        itemIdsToGet.push(itemChoices[k]);
+                if (typeof thisMapData.items[i].contains[j].type !== "undefined") {
+                    itemChoices = thisMapData.items[i].contains[j].type.toString().split("/");
+                    for (var k = 0; k < itemChoices.length; k++) {
+                        if (itemChoices[k] != "$") {
+                            // make sure it's not money in a chest:
+                            itemIdsToGet.push(itemChoices[k]);
+                        }
                     }
                 }
-            }
             }
         }
     }
@@ -5977,7 +5977,7 @@ function update() {
             UI.toggleUI();
             key[7] = false;
         }
-           if (key[8]) {
+        if (key[8]) {
             UI.toggleJournal();
             key[8] = false;
         }
@@ -5991,19 +5991,19 @@ function update() {
         }
         // check to see if a dialogue balloon is open, and if the hero has moved far from the NPC:
         if (activeObjectForDialogue != '') {
-            if(activeObjectForDialogue != null) {
-            if (!(isInRange(hero.x, hero.y, activeObjectForDialogue.x, activeObjectForDialogue.y, closeDialogueDistance))) {
-                dialogue.classList.add("slowerFade");
-                dialogue.classList.remove("active");
-                // close the shop
-                if (shopCurrentlyOpen != -1) {
-                    activeObjectForDialogue.speechIndex = 0;
-                    UI.closeShop();
+            if (activeObjectForDialogue != null) {
+                if (!(isInRange(hero.x, hero.y, activeObjectForDialogue.x, activeObjectForDialogue.y, closeDialogueDistance))) {
+                    dialogue.classList.add("slowerFade");
+                    dialogue.classList.remove("active");
+                    // close the shop
+                    if (shopCurrentlyOpen != -1) {
+                        activeObjectForDialogue.speechIndex = 0;
+                        UI.closeShop();
+                    }
+                    // only remove this after dialogue has faded out completely:
+                    dialogue.addEventListener(whichTransitionEvent, UI.removeActiveDialogue, false);
                 }
-                // only remove this after dialogue has faded out completely:
-                dialogue.addEventListener(whichTransitionEvent, UI.removeActiveDialogue, false);
             }
-        }
         }
         // check if a chest is open and close it if so:
         if (chestIdOpen != -1) {
@@ -6268,8 +6268,8 @@ function checkForActions() {
                         // remove from map:
                         thisMapData.items.splice(i, 1);
                         break;
-                        case "notice":
-                         processSpeech(thisMapData.items[i], thisMapData.items[i].contains[0][0], thisMapData.items[i].contains[0][1], false, thisMapData.items[i].contains[0][2]);
+                    case "notice":
+                        processSpeech(thisMapData.items[i], thisMapData.items[i].contains[0][0], thisMapData.items[i].contains[0][1], false, thisMapData.items[i].contains[0][2]);
                         break;
                     case "chest":
                         // open chest and show contents:
@@ -6337,10 +6337,10 @@ function processSpeech(thisObjectSpeaking, thisSpeechPassedIn, thisSpeechCode, i
                 // knock this back one so to keep it in step with the removed item:
                 thisObjectSpeaking.speechIndex--;
                 break;
-                case "move":
-            thisObjectSpeaking.forceNewMovementCheck = true;
-            thisObjectSpeaking.isMoving = true;   
-            break;
+            case "move":
+                thisObjectSpeaking.forceNewMovementCheck = true;
+                thisObjectSpeaking.isMoving = true;
+                break;
             case "shop":
                 UI.openShop(generateHash(thisObjectSpeaking.speech[thisObjectSpeaking.speechIndex][2]));
                 //thisObjectSpeaking.speechIndex--;
@@ -6411,7 +6411,7 @@ function processSpeech(thisObjectSpeaking, thisSpeechPassedIn, thisSpeechCode, i
                 var questSpeech = thisSpeech.split("|");
 
                 var questId;
-                if(typeof thisObjectSpeaking.speech !== "undefined") {
+                if (typeof thisObjectSpeaking.speech !== "undefined") {
                     questId = thisObjectSpeaking.speech[thisObjectSpeaking.speechIndex][2];
                 } else {
                     // something like a notice:
@@ -6673,7 +6673,7 @@ function processSpeech(thisObjectSpeaking, thisSpeechPassedIn, thisSpeechCode, i
                         }
                     }
                     thisSpeech = questSpeech[0];
-                    if(thisObjectSpeaking != null) {
+                    if (thisObjectSpeaking != null) {
                         // keep the NPC on this quest speech:
                         thisObjectSpeaking.speechIndex--;
                     }
@@ -6690,7 +6690,7 @@ function processSpeech(thisObjectSpeaking, thisSpeechPassedIn, thisSpeechCode, i
         // don't show the balloon if there's no speech (which might happen if the NPC is just plays a sound instead)
 
         // check that it's not undefined (eg. a Notice with an opened quest, but the text won't change)
-        if(typeof thisSpeech === "undefined") {
+        if (typeof thisSpeech === "undefined") {
             thisSpeech = questSpeech[0];
         }
         UI.showDialogue(thisObjectSpeaking, thisSpeech);
@@ -6709,7 +6709,7 @@ function closeQuest(whichNPC, whichQuestId) {
         if (questData[whichQuestId].isRepeatable > 0) {
             questData[whichQuestId].hasBeenCompleted = false;
             questData[whichQuestId].isUnderway = false;
-            
+
         } else {
             questData[whichQuestId].hasBeenCompleted = true;
             // remove quest text now:
@@ -7001,10 +7001,6 @@ function moveNPCs() {
                 thisNPC.movementIndex = 0;
             }
             thisNextMovement = thisNPC.movement[thisNPC.movementIndex];
-
-
-
-
             if (typeof thisNextMovement !== 'string') {
                 // it's an array, get the first element as the code:
                 thisNextMovementCode = thisNextMovement[0];
@@ -7017,7 +7013,7 @@ function moveNPCs() {
                     // stand still:
                     thisNPC.isMoving = false;
                     thisNPC.forceNewMovementCheck = false;
-
+                    break;
                 case '?':
                     do {
                         // pick a random facing:
@@ -7110,6 +7106,11 @@ function moveNPCs() {
                             }
                         }
                     }
+                    break;
+
+
+                case 'follow':
+                    console.log("follow " + thisNextMovement[1]);
                     break;
 
                 default:
@@ -7420,4 +7421,3 @@ if (('querySelectorAll' in document && 'addEventListener' in window) && (!!windo
 } else {
     // sorry message / fallback? #####
 }
-
