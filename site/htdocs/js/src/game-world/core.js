@@ -1531,10 +1531,9 @@ function processSpeech(thisObjectSpeaking, thisSpeechPassedIn, thisSpeechCode, i
                 thisObjectSpeaking.speechIndex--;
                 break;
                 case "move":
-                thisObjectSpeaking.movementIndex++;
-                   if (thisObjectSpeaking.movementIndex >= thisObjectSpeaking.movement.length) {
-                thisObjectSpeaking.movementIndex = 0;
-            }
+            thisObjectSpeaking.forceNewMovementCheck = true;
+            thisObjectSpeaking.isMoving = true;   
+            break;
             case "shop":
                 UI.openShop(generateHash(thisObjectSpeaking.speech[thisObjectSpeaking.speechIndex][2]));
                 //thisObjectSpeaking.speechIndex--;
@@ -2063,7 +2062,9 @@ function jumpToLocation(mapId, tileX, tileY) {
 function moveNPCs() {
     var thisNPC, newTile, thisNextMovement, oldNPCx, oldNPCy, thisOtherNPC, thisItem, thisNextMovement, thisNextMovementCode, thisInnerDoor;
     for (var i = 0; i < thisMapData.npcs.length; i++) {
+
         thisNPC = thisMapData.npcs[i];
+
         if (thisNPC.isMoving) {
             oldNPCx = thisNPC.x;
             oldNPCy = thisNPC.y;
@@ -2193,6 +2194,10 @@ function moveNPCs() {
                 thisNPC.movementIndex = 0;
             }
             thisNextMovement = thisNPC.movement[thisNPC.movementIndex];
+
+
+
+
             if (typeof thisNextMovement !== 'string') {
                 // it's an array, get the first element as the code:
                 thisNextMovementCode = thisNextMovement[0];
@@ -2301,6 +2306,7 @@ function moveNPCs() {
                     break;
 
                 default:
+
                     thisNPC.facing = thisNextMovement;
                     thisNPC.forceNewMovementCheck = false;
                     break;

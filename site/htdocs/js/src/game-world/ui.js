@@ -334,7 +334,7 @@ var UI = {
     removeActiveDialogue: function() {
         activeObjectForDialogue = '';
         dialogue.removeEventListener(whichTransitionEvent, UI.removeActiveDialogue, false);
-        thisObjectSpeaking = {};
+        //thisObjectSpeaking = {};
     },
 
     showNotification: function(markup) {

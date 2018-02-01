@@ -489,7 +489,7 @@
                 "centreY": 73,
                 "tileX": 30,
                 "tileY": 25,
-                 "movement": ["-",["remove"],["s","s","e","e","n","n","w","w"]],
+                   "movement": ["-","s","s","s","s","s"],
                 "facing": "s",
                 "walkThroughDoors": false,
                 "speed": 2,
@@ -498,7 +498,7 @@
                
                 "speech": [
                  
-                    ["Can you take me to Dalaran?", "move"]
+                    ["Can you take me to Dalaran?", "move"],["please?",""]
                 ],
                 "cardGameSpeech": {
                     "challenge": ["Do you play? Fancy a game then?", "play"],
