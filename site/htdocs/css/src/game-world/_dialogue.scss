@@ -6,7 +6,6 @@
     color: #fff;
     left: 0px;
     bottom: 0px;
-    @include pxRem('padding', 10px 12px);
     @include pxRem('font-size', 12px);
     @include pxRem('padding', 14px);
     min-width: 20px;

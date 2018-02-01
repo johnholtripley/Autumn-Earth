@@ -1495,7 +1495,6 @@ function checkForActions() {
                         dialogue.classList.remove("active");
                         activeObjectForDialogue = '';
                         canCloseDialogueBalloonNextClick = false;
-
                         if (shopCurrentlyOpen != -1) {
                             UI.closeShop();
                         }
@@ -1505,7 +1504,6 @@ function checkForActions() {
                         var thisSpeechCode = thisNPC.speech[thisNPC.speechIndex][1];
                         thisNPC.drawnFacing = turntoFace(thisNPC, hero);
                         processSpeech(thisNPC, thisSpeech, thisSpeechCode, true);
-
                         thisNPC.speechIndex++;
                     }
                 }
@@ -1537,7 +1535,6 @@ function processSpeech(thisObjectSpeaking, thisSpeechPassedIn, thisSpeechCode, i
             case "shop":
                 UI.openShop(generateHash(thisObjectSpeaking.speech[thisObjectSpeaking.speechIndex][2]));
                 //thisObjectSpeaking.speechIndex--;
-
                 break;
             case "sound":
                 audio.playSound(soundEffects[thisObjectSpeaking.speech[thisObjectSpeaking.speechIndex][2]], 0);
@@ -1595,15 +1592,14 @@ function processSpeech(thisObjectSpeaking, thisSpeechPassedIn, thisSpeechCode, i
                     hero.collections[collectionQuestZoneName].complete = false;
                     UI.initiateCollectionQuestPanel(collectionQuestZoneName);
                 }
-
                 break;
+
             case "quest":
             case "quest-no-open":
             case "quest-no-close":
             case "quest-no-open-no-close":
             case "quest-optional":
                 var questSpeech = thisSpeech.split("|");
-
                 var questId;
                 if (typeof thisObjectSpeaking.speech !== "undefined") {
                     questId = thisObjectSpeaking.speech[thisObjectSpeaking.speechIndex][2];
@@ -1617,7 +1613,7 @@ function processSpeech(thisObjectSpeaking, thisSpeechPassedIn, thisSpeechCode, i
                         case "possess":
                         case "give":
                         case "":
-                            if ((individualSpeechCodes[i] == "quest") || (individualSpeechCodes[i] == "quest-no-open")) {
+                            if ((individualSpeechCodes[i] == "quest") || (individualSpeechCodes[i] == "quest-no-open") || (individualSpeechCodes[i] == "quest-optional")) {
                                 // ie. it's not a '-no-close' speech
                                 // check items:
                                 var theseItemsNeededForCompletion = questData[questId].itemsNeededForCompletion;
@@ -1664,6 +1660,7 @@ function processSpeech(thisObjectSpeaking, thisSpeechPassedIn, thisSpeechCode, i
                                     thisSpeech = questSpeech[1];
                                     // keep the NPC on this quest speech:
                                     thisObjectSpeaking.speechIndex--;
+
                                 }
                             } else {
                                 // check if it's been closed elsewhere:
@@ -1777,103 +1774,27 @@ function processSpeech(thisObjectSpeaking, thisSpeechPassedIn, thisSpeechCode, i
                             }
                             break;
                     }
-                } else {
-
-
-                    
-                    if ((individualSpeechCodes[i] == "quest") || (individualSpeechCodes[i] == "quest-no-close")) {
-                        // ie. don't open the quest if it's "-no-open":
-                        var okToStartQuest = true;
-                        // see if any items need to be given to start the quest:
-                        if (questData[questId].startItemsReceived) {
-                            var itemsToAdd = questData[questId].startItemsReceived.split(",");
-                            var allItemsToGive = [];
-                            for (var l = 0; l < itemsToAdd.length; l++) {
-                                // check if it's money:
-                                if (itemsToAdd[l].charAt(0) == "$") {
-                                    thisRewardObject = itemsToAdd[l];
-                                } else {
-                                    // check for any quantities:
-                                    var thisQuestItem = itemsToAdd[l].split("x");
-                                    var thisQuantity, thisItem;
-                                    if (thisQuestItem.length > 1) {
-                                        thisQuantity = thisQuestItem[0];
-                                        thisItem = thisQuestItem[1];
-                                    } else {
-                                        thisQuantity = 1;
-                                        thisItem = itemsToAdd[l];
-                                    }
-                                    // build item object:
-                                    var thisRewardObject = {
-                                        "type": parseInt(thisItem),
-                                        "quantity": parseInt(thisQuantity),
-                                        "quality": 100,
-                                        "durability": 100,
-                                        "currentWear": 0,
-                                        "effectiveness": 100,
-                                        "colour": currentActiveInventoryItems[parseInt(thisItem)].colour,
-                                        "enchanted": 0,
-                                        "hallmark": 0,
-                                        "inscription": ""
-                                    }
-                                }
-                                allItemsToGive.push(thisRewardObject);
-                            }
-                            inventoryCheck = canAddItemToInventory(allItemsToGive);
-                            if (inventoryCheck[0]) {
-                                UI.showChangeInInventory(inventoryCheck[1]);
-                            } else {
-                                okToStartQuest = false;
-                            }
-                        }
-                        if (okToStartQuest) {
-                            // open quest:
-                            switch (questData[questId].whatIsRequiredForCompletion) {
-                                case "possess":
-                                case "give":
-                                case "":
-                                    // ###
-                                    break;
-                                case "multi":
-                                    // open all sub quests:
-                                    var allSubQuestsRequired = questData[questId].subQuestsRequiredForCompletion.split(",");
-
-                                    for (var k = 0; k < allSubQuestsRequired.length; k++) {
-                                        //questData[allSubQuestsRequired[k]].isUnderway = 1;
-                                        switch (questData[allSubQuestsRequired[k]].whatIsRequiredForCompletion) {
-                                            case "possess":
-                                            case "give":
-                                            case "":
-                                                //
-                                                break;
-                                            case "world":
-                                                //
-                                                break;
-                                            default:
-                                                // threshold quest:
-                                                questData[allSubQuestsRequired[k]].valueAtQuestStart = accessDynamicVariable(questData[allSubQuestsRequired[k]].whatIsRequiredForCompletion);
-                                                break;
-                                        }
-                                        questData[allSubQuestsRequired[k]].isUnderway = true;
-                                    }
-                                    break;
-                                case "world":
-                                    // ###
-                                    break;
-                                default:
-                                    // threshold quest:
-                                    questData[questId].valueAtQuestStart = accessDynamicVariable(questData[questId].whatIsRequiredForCompletion);
-                                    break;
-                            }
-                            questData[questId].isUnderway = true;
-                            addToJournal(questId);
-                        }
-                    }
+                } else if (individualSpeechCodes[i] == "quest-optional") {
+                    // the player has a choice whether to accept this or not:
+                    questResponseNPC = thisObjectSpeaking;
+                    acceptQuestChoice.classList.add('active');
                     thisSpeech = questSpeech[0];
                     if (thisObjectSpeaking != null) {
                         // keep the NPC on this quest speech:
                         thisObjectSpeaking.speechIndex--;
                     }
+                } else {
+                    if ((individualSpeechCodes[i] == "quest") || (individualSpeechCodes[i] == "quest-no-close")) {
+                        // ie. don't open the quest if it's "-no-open":
+                        openQuest(questId);
+                    }
+                    thisSpeech = questSpeech[0];
+                    if (thisObjectSpeaking != null) {
+                        // keep the NPC on this quest speech:
+                        thisObjectSpeaking.speechIndex--;
+
+                    }
+
                 }
                 break;
             case "play":
@@ -1884,8 +1805,7 @@ function processSpeech(thisObjectSpeaking, thisSpeechPassedIn, thisSpeechCode, i
         }
     }
     if (thisSpeech != "") {
-        // don't show the balloon if there's no speech (which might happen if the NPC is just plays a sound instead)
-
+        // don't show the balloon if there's no speech (which might happen if the NPC just plays a sound instead)
         // check that it's not undefined (eg. a Notice with an opened quest, but the text won't change)
         if (typeof thisSpeech === "undefined") {
             thisSpeech = questSpeech[0];
@@ -1906,7 +1826,6 @@ function closeQuest(whichNPC, whichQuestId) {
         if (questData[whichQuestId].isRepeatable > 0) {
             questData[whichQuestId].hasBeenCompleted = false;
             questData[whichQuestId].isUnderway = false;
-
         } else {
             questData[whichQuestId].hasBeenCompleted = true;
             // remove quest text now:
@@ -1920,6 +1839,7 @@ function closeQuest(whichNPC, whichQuestId) {
         whichNPC.speechIndex--;
     }
     removeFromJournal(whichQuestId);
+
 }
 
 

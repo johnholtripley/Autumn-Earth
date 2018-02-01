@@ -46,6 +46,9 @@ const gatheringOutputSlot = document.getElementById('gatheringOutputSlot');
 const surveyingPanel = document.getElementById('surveyingPanel');
 const questJournalEntries = document.getElementById('questJournalEntries');
 const questJournalRegionFilter = document.getElementById('questJournalRegionFilter');
+const acceptQuestChoice = document.getElementById('acceptQuestChoice');
+const questDecline = document.getElementById('questDecline');
+const questAccept = document.getElementById('questAccept');
 
 var notificationQueue = [];
 var notificationIsShowing = false;
@@ -154,6 +157,8 @@ var UI = {
         UI.initInventoryDrag('.inventoryBag ol');
         document.getElementById('openSettings').onclick = UI.openSettings;
         actionBar.onclick = UI.actionBarClick;
+        questDecline.onclick = declineQuest;
+        questAccept.onclick = acceptQuest;
         UI.initShopDrag();
         UI.updateCardAlbum();
         UI.updateCurrencies();
@@ -299,10 +304,7 @@ var UI = {
         dialogue.classList.add("active");
         activeObjectForDialogue = thisObjectSpeaking;
         UI.updateDialogue(activeObjectForDialogue);
-        var logText = text;
-        if (typeof thisObjectSpeaking.speech !== "undefined") {
-            logText = thisObjectSpeaking.name + ' says "' + logText + '"';
-        }
+
     },
 
     updateDialogue: function(thisObjectSpeaking) {

@@ -337,7 +337,7 @@
                 "isMoving": false,
                
                 "speech": [
-                    ["give this mordant to the green bloke please|the green bloke - over there|thanks for taking that over", "quest-no-close", "1"],
+                    ["give this mordant to the green bloke please|the near by green bloke - over there|thanks for taking that over", "quest-no-close", "1"],
                     ["that was really kind", ""]
                 ],
                 "cardGameSpeech": {
@@ -377,7 +377,7 @@
                 "isMoving": false,
                
                 "speech": [
-                    ["I could really do with some mordant... I wonder if pink guy has any?|2|thanks for giving me that mordant, here's some ##itemName##.", "quest-no-open", "1"],
+                    ["I could really do with some mordant... I wonder if pink guy has any?|-|thanks for giving me that mordant, here's some ##itemName##.", "quest-no-open", "1"],
                     ["that was really kind of you", ""]
                 ],
                 "cardGameSpeech": {
@@ -496,7 +496,7 @@
                 "isCollidable": true,
                 "isMoving": false,
                 "speech": [    
-                    ["Can you take me to Dalaran?", "quest-optional", "10"],["please?",""]
+                    ["Can you take me to Dalaran?|Are we there yet?|Thanks, I'd never have made it on my own.", "quest-optional", "10", "another time maybe?", "you will? fantastic!"],["so kind of you thanks",""]
                 ],
                 "cardGameSpeech": {
                     "challenge": ["Do you play? Fancy a game then?", "play"],

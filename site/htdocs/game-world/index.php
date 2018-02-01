@@ -199,6 +199,7 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
       ?>
       </ol>
     </div>
+
     <div id="gameSettings"><button class="closePanel">close</button>
       <h2>Volume</h2>
       <label for="soundVolume">Sound effects</label><input id="soundVolume" type="range" min="0" max="1" step="0.05">
@@ -206,6 +207,12 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
       <h2>Full screen</h2>
       <input type="checkbox" value="1" id="toggleFullScreen" class="switch"> <label for="toggleFullScreen"><span></span>Enable Fullscreen</label>
     </div>
+
+    <div id="acceptQuestChoice">
+      <button id="questDecline">Decline</button>
+      <button id="questAccept">Accept</button>
+    </div>
+
   </div>
   <div id="cardGameWrapper">
       <canvas id="cardGame" moz-opaque width="1008" height="612">
