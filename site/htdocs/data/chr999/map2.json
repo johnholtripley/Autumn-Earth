@@ -496,7 +496,45 @@
                 "isCollidable": true,
                 "isMoving": false,
                 "speech": [    
-                    ["Can you take me to Dalaran?", "move"],["please?",""]
+                    ["Can you take me to Dalaran?", "quest-optional", "10"],["please?",""]
+                ],
+                "cardGameSpeech": {
+                    "challenge": ["Do you play? Fancy a game then?", "play"],
+                    "win": ["Woo! I won!", ""],
+                    "lose": ["Ahh, you beat me...", ""],
+                    "draw": ["Well played", ""]
+                },
+                "cardSkill": 1,
+                "uniqueCards": [2, 2],
+                "baseCardPack": 0,
+                "animation": {
+                    "walk": {
+                        "length": 1,
+                        "n": 2,
+                        "e": 3,
+                        "s": 0,
+                        "w": 1
+                    }
+                }
+            }, {
+                "name": "labourer9",
+                "src": "labourer4.png",
+                "width": 20,
+                "length": 20,
+                "spriteWidth": 75,
+                "spriteHeight": 85,
+                "centreX": 56,
+                "centreY": 73,
+                "tileX": 14,
+                "tileY": 25,
+                "movement": ["-","s","s","s","s"],
+                "facing": "n",
+                "walkThroughDoors": false,
+                "speed": 2,
+                "isCollidable": true,
+                "isMoving": false,
+                "speech": [    
+                    ["Can I go now?", "move,once"],["please?",""]
                 ],
                 "cardGameSpeech": {
                     "challenge": ["Do you play? Fancy a game then?", "play"],

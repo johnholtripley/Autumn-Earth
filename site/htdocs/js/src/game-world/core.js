@@ -1601,6 +1601,7 @@ function processSpeech(thisObjectSpeaking, thisSpeechPassedIn, thisSpeechCode, i
             case "quest-no-open":
             case "quest-no-close":
             case "quest-no-open-no-close":
+            case "quest-optional":
                 var questSpeech = thisSpeech.split("|");
 
                 var questId;
@@ -1777,6 +1778,9 @@ function processSpeech(thisObjectSpeaking, thisSpeechPassedIn, thisSpeechCode, i
                             break;
                     }
                 } else {
+
+
+                    
                     if ((individualSpeechCodes[i] == "quest") || (individualSpeechCodes[i] == "quest-no-close")) {
                         // ie. don't open the quest if it's "-no-open":
                         var okToStartQuest = true;

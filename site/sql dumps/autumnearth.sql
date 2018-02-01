@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 31, 2018 at 04:45 PM
+-- Generation Time: Feb 01, 2018 at 03:57 PM
 -- Server version: 5.6.24
 -- PHP Version: 5.6.8
 
@@ -1390,7 +1390,7 @@ CREATE TABLE IF NOT EXISTS `tblquests` (
   `titleGainedAfterCompletion` int(11) DEFAULT NULL,
   `thresholdNeededForCompletion` varchar(128) NOT NULL,
   `subQuestsRequiredForCompletion` varchar(128) DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblquests`
@@ -1405,7 +1405,8 @@ INSERT INTO `tblquests` (`questID`, `journalTitle`, `journalDesc`, `questRegion`
 (6, 'sub task 1', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 'Teldrassil', 0, NULL, '', '', '', 'world', NULL, '', NULL),
 (7, 'sub task 2', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 'Teldrassil', 0, NULL, '', '', '', 'hero.stats.numberOfcardsFlipped', NULL, '+2', NULL),
 (8, 'Win a card game', 'Beat NPC at cards, and got a rare chocobo card', 'Teldrassil', 0, NULL, '', '0', '36', '', NULL, '', NULL),
-(9, 'Find the wizard', 'Locate the wizard', 'Central Kalimdor', 0, NULL, '', '0', '20', '', NULL, '', NULL);
+(9, 'Find the wizard', 'Locate the wizard', 'Central Kalimdor', 0, NULL, '', '0', '20', '', NULL, '', NULL),
+(10, 'Escort to Dalaran', 'Help a traveller find their way to Dalaran.', 'Central Kalimdor', 0, NULL, '', '0', '20', '', NULL, '', NULL);
 
 -- --------------------------------------------------------
 
@@ -2316,7 +2317,7 @@ ALTER TABLE `tblprofessions`
 -- AUTO_INCREMENT for table `tblquests`
 --
 ALTER TABLE `tblquests`
-  MODIFY `questID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=10;
+  MODIFY `questID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=11;
 --
 -- AUTO_INCREMENT for table `tblquestsstatus`
 --
