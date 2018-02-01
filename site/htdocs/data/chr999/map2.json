@@ -195,7 +195,7 @@
                     ["", "sound", "hen"]
 
                 ],
-                "speechIndex": 0,
+               
                 "isCollidable": true,
                 "isMoving": false,
                 "animation": {
@@ -226,7 +226,7 @@
                     ["", "sound", "hen"]
 
                 ],
-                "speechIndex": 0,
+               
                 "isCollidable": true,
                 "isMoving": false,
                 "animation": {
@@ -255,7 +255,7 @@
                 "speed": 2,
                 "isCollidable": true,
                 "isMoving": false,
-                "speechIndex": 0,
+               
                 "speech": [
                     ["hello", "once"],
                     ["hello again/hi/howdo", ""]
@@ -295,7 +295,7 @@
                 "speed": 2,
                 "isCollidable": true,
                 "isMoving": false,
-                "speechIndex": 0,
+               
                 "speech": [
                     ["Flip at least 2 cards|quest open but not complete|complete - good work", "quest", "3"],
                     ["after quest", ""]
@@ -335,7 +335,7 @@
                 "speed": 2,
                 "isCollidable": true,
                 "isMoving": false,
-                "speechIndex": 0,
+               
                 "speech": [
                     ["give this mordant to the green bloke please|the green bloke - over there|thanks for taking that over", "quest-no-close", "1"],
                     ["that was really kind", ""]
@@ -375,7 +375,7 @@
                 "speed": 2,
                 "isCollidable": true,
                 "isMoving": false,
-                "speechIndex": 0,
+               
                 "speech": [
                     ["I could really do with some mordant... I wonder if pink guy has any?|2|thanks for giving me that mordant, here's some ##itemName##.", "quest-no-open", "1"],
                     ["that was really kind of you", ""]
@@ -415,7 +415,7 @@
                 "speed": 2,
                 "isCollidable": true,
                 "isMoving": false,
-                "speechIndex": 0,
+               
                 "speech": [
                     ["Touch that standing stone|Just touch it|Did you feel the power?", "quest", "2"],
                     ["I like standing stones...", ""]
@@ -455,10 +455,50 @@
                 "speed": 2,
                 "isCollidable": true,
                 "isMoving": false,
-                "speechIndex": 0,
+               
                 "speech": [
                     ["flip 2 cards and go near the stone|near the stone and 2 cards - done it yet?|great stuff on both tasks", "quest", "5"],
                     ["Great work", ""]
+                ],
+                "cardGameSpeech": {
+                    "challenge": ["Do you play? Fancy a game then?", "play"],
+                    "win": ["Woo! I won!", ""],
+                    "lose": ["Ahh, you beat me...", ""],
+                    "draw": ["Well played", ""]
+                },
+                "cardSkill": 1,
+                "uniqueCards": [2, 2],
+                "baseCardPack": 0,
+                "animation": {
+                    "walk": {
+                        "length": 1,
+                        "n": 2,
+                        "e": 3,
+                        "s": 0,
+                        "w": 1
+                    }
+                }
+            }, {
+                "name": "labourer8",
+                "src": "labourer8.png",
+                "width": 20,
+                "length": 20,
+                "spriteWidth": 75,
+                "spriteHeight": 85,
+                "centreX": 56,
+                "centreY": 73,
+                "tileX": 30,
+                "tileY": 25,
+                 "movement": ["-",["remove"],["s","s","e","e","n","n","w","w"]],
+                "facing": "s",
+                "walkThroughDoors": false,
+                "speed": 2,
+                "isCollidable": true,
+                "isMoving": false,
+               
+                "speech": [
+                 
+                    ["Can you take me to Dalaran?", "move"]
                 ],
                 "cardGameSpeech": {
                     "challenge": ["Do you play? Fancy a game then?", "play"],
@@ -495,7 +535,7 @@
                 "speed": 2,
                 "isCollidable": true,
                 "isMoving": false,
-                "speechIndex": 0,
+               
                 "speech": [
                     ["Hi there - welcome!/Feel free to have a good look around, ##characterName##/Welcome, welcome!", "shop", "shop #1"]
                 ],
@@ -534,7 +574,7 @@
                 "speed": 2,
                 "isCollidable": true,
                 "isMoving": false,
-                "speechIndex": 0,
+               
                 "speech": [
                     ["Hi there - welcome!/Feel free to have a good look around, ##characterName##/Welcome, welcome!", "shop", "shop #2"]
                 ],
@@ -574,7 +614,7 @@
                 "speed": 2,
                 "isCollidable": true,
                 "isMoving": false,
-                "speechIndex": 0,
+               
                 "speech": [
                     ["Hi there - welcome!/Feel free to have a good look around, ##characterName##/Welcome, welcome!", "shop", "shop #3"]
                 ],
@@ -614,7 +654,7 @@
                 "speed": 2,
                 "isCollidable": true,
                 "isMoving": false,
-                "speechIndex": 0,
+               
                 "speech": [
                     ["Need to keep an eye out...",""]
                 ],
@@ -662,7 +702,7 @@
                     ["", "sound", "horse"]
 
                 ],
-                "speechIndex": 0,
+               
                 "isCollidable": true,
                 "isMoving": true,
                 "animation": {
@@ -697,7 +737,7 @@
                 "speed": 2,
                 "isCollidable": true,
                 "isMoving": false,
-                "speechIndex": 0,
+               
                 "speech": [
                     ["Have you seen the poster?|Keep looking|You found him - good job", "quest-no-open", "9"],
                     ["good job finding him", ""]

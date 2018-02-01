@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 29, 2018 at 10:20 AM
+-- Generation Time: Jan 31, 2018 at 04:45 PM
 -- Server version: 5.6.24
 -- PHP Version: 5.6.8
 
@@ -632,7 +632,7 @@ CREATE TABLE IF NOT EXISTS `tblinventoryitems` (
   `lockedToThisPlayer` tinyint(1) NOT NULL DEFAULT '0',
   `respawnRate` int(11) DEFAULT NULL,
   `activeDuringSeason` int(11) DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=55 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=56 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblinventoryitems`
@@ -691,7 +691,8 @@ INSERT INTO `tblinventoryitems` (`itemID`, `shortname`, `description`, `priceCod
 (51, 'Copper', 'A soft metal.', '1', '20.0', '24.0', 0, 0, NULL, NULL, 'copper', '', '0', 0, 0, '0', '0', '4', NULL, 0, 0, 0, 1, 0, NULL, NULL),
 (52, 'Iron', 'A harder metal.', '1', '20.0', '24.0', 0, 0, NULL, NULL, 'iron', '', '0', 0, 0, '0', '0', '4', NULL, 0, 0, 0, 1, 0, NULL, NULL),
 (53, 'Home stone', 'Return to your home location.', '1', '20.0', '24.0', 0, 0, NULL, NULL, 'home-stone', 'home', '0', 0, 0, '0', '0', '', NULL, 0, 0, 0, 1, 0, NULL, NULL),
-(54, 'Wanted Poster', 'poster', '1', '25.0', '36.0', 52, 52, NULL, NULL, 'wanted-poster', 'notice', '0', 0, 0, '0', '0', '', NULL, 0, 0, 0, 0, 0, NULL, NULL);
+(54, 'Wanted Poster', 'poster', '1', '25.0', '36.0', 52, 52, NULL, NULL, 'wanted-poster', 'notice', '0', 0, 0, '0', '0', '', NULL, 0, 0, 0, 0, 0, NULL, NULL),
+(55, 'Quest Book', '', '4', '12.0', '6.0', 20, 13, NULL, NULL, 'quest book', 'book,questSet', '?,9', 0, 0, '0', '0', NULL, NULL, 1, 0, 1, 0, 0, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -1401,10 +1402,10 @@ INSERT INTO `tblquests` (`questID`, `journalTitle`, `journalDesc`, `questRegion`
 (3, 'A longer journey', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 'Teldrassil', 1, NULL, '', '', '', 'hero.stats.numberOfcardsFlipped', NULL, '+2', NULL),
 (4, 'A hero''s peregrination', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 'Teldrassil', 0, NULL, '5,9', '5x19', '2x21,9', 'possess', 7, '', NULL),
 (5, 'A much longer task', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 'Teldrassil', 0, NULL, '', NULL, '2x21,9', 'multi', 7, '', '6,7'),
-(6, 'sub task 1', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 'Central Kalimdor', 0, NULL, '', '', '', 'world', NULL, '', NULL),
-(7, 'sub task 2', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 'Central Kalimdor', 0, NULL, '', '', '', 'hero.stats.numberOfcardsFlipped', NULL, '+2', NULL),
-(8, 'Win a card game', 'Beat NPC at cards, and got a rare chocobo card', 'Central Kalimdor', 0, NULL, '', '0', '36', '', NULL, '', NULL),
-(9, 'Find the wizard', 'Locate the wizard', 'Teldrassil', 0, NULL, '', '0', '20', '', NULL, '', NULL);
+(6, 'sub task 1', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 'Teldrassil', 0, NULL, '', '', '', 'world', NULL, '', NULL),
+(7, 'sub task 2', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 'Teldrassil', 0, NULL, '', '', '', 'hero.stats.numberOfcardsFlipped', NULL, '+2', NULL),
+(8, 'Win a card game', 'Beat NPC at cards, and got a rare chocobo card', 'Teldrassil', 0, NULL, '', '0', '36', '', NULL, '', NULL),
+(9, 'Find the wizard', 'Locate the wizard', 'Central Kalimdor', 0, NULL, '', '0', '20', '', NULL, '', NULL);
 
 -- --------------------------------------------------------
 
@@ -1477,7 +1478,7 @@ CREATE TABLE IF NOT EXISTS `tblregionalpricemodifiers` (
   `whichRegion` varchar(128) NOT NULL,
   `itemCategory` int(10) NOT NULL,
   `priceModifier` float NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblregionalpricemodifiers`
@@ -2260,7 +2261,7 @@ ALTER TABLE `tblguilds`
 -- AUTO_INCREMENT for table `tblinventoryitems`
 --
 ALTER TABLE `tblinventoryitems`
-  MODIFY `itemID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=55;
+  MODIFY `itemID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=56;
 --
 -- AUTO_INCREMENT for table `tblitemcategories`
 --
@@ -2330,7 +2331,7 @@ ALTER TABLE `tblrecipes`
 -- AUTO_INCREMENT for table `tblregionalpricemodifiers`
 --
 ALTER TABLE `tblregionalpricemodifiers`
-  MODIFY `modifierID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
+  MODIFY `modifierID` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `tblregions`
 --

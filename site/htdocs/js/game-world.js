@@ -5356,6 +5356,9 @@ function initialiseNPC(whichNPC) {
     thisMapData.npcs[whichNPC].drawnFacing = thisMapData.npcs[whichNPC].facing;
     thisMapData.npcs[whichNPC].dx = 0;
     thisMapData.npcs[whichNPC].dy = 0;
+    if (typeof thisMapData.npcs[whichNPC].speechIndex === "undefined") {
+        thisMapData.npcs[whichNPC].speechIndex = 0;
+    }
     thisMapData.npcs[whichNPC].currentAnimation = 'walk';
     // set index to -1 so when it increases, it'll pick up the first (0) element:
     thisMapData.npcs[whichNPC].movementIndex = -1;
@@ -6334,6 +6337,11 @@ function processSpeech(thisObjectSpeaking, thisSpeechPassedIn, thisSpeechCode, i
                 // knock this back one so to keep it in step with the removed item:
                 thisObjectSpeaking.speechIndex--;
                 break;
+                case "move":
+                thisObjectSpeaking.movementIndex++;
+                   if (thisObjectSpeaking.movementIndex >= thisObjectSpeaking.movement.length) {
+                thisObjectSpeaking.movementIndex = 0;
+            }
             case "shop":
                 UI.openShop(generateHash(thisObjectSpeaking.speech[thisObjectSpeaking.speechIndex][2]));
                 //thisObjectSpeaking.speechIndex--;
