@@ -16,8 +16,7 @@ function removeFromJournal(whichQuestId) {
 function declineQuest() {
     acceptQuestChoice.classList.remove('active');
     // show declined speech:
-    //UI.showDialogue(questResponseNPC, );
-    processSpeech(questResponseNPC, questResponseNPC.speech[questResponseNPC.speechIndex][3], questResponseNPC.speech[questResponseNPC.speechIndex][4], false);
+    processSpeech(questResponseNPC, questResponseNPC.speech[questResponseNPC.speechIndex][4], questResponseNPC.speech[questResponseNPC.speechIndex][5], false);
     canCloseDialogueBalloonNextClick = true;
     questResponseNPC = null;
 }
@@ -25,8 +24,7 @@ function declineQuest() {
 function acceptQuest() {
     acceptQuestChoice.classList.remove('active');
     // show accepted speech:
- //   UI.showDialogue(questResponseNPC, questResponseNPC.speech[questResponseNPC.speechIndex][5]);
- processSpeech(questResponseNPC, questResponseNPC.speech[questResponseNPC.speechIndex][5], questResponseNPC.speech[questResponseNPC.speechIndex][6], false);
+    processSpeech(questResponseNPC, questResponseNPC.speech[questResponseNPC.speechIndex][6], questResponseNPC.speech[questResponseNPC.speechIndex][7], false);
     openQuest(questResponseNPC.speech[questResponseNPC.speechIndex][2]);
     canCloseDialogueBalloonNextClick = true;
     questResponseNPC = null;
@@ -121,4 +119,137 @@ function openQuest(questId) {
         questData[questId].isUnderway = true;
         addToJournal(questId);
     }
+}
+
+
+function checkForEscortQuestEnd(whichNPC) {
+    var destination = whichNPC.speech[whichNPC.speechIndex][3].split("|");
+    if (destination[0] == currentMap) {
+        var destinationTileCentreX = getTileCentreCoordX(destination[1]);
+        var destinationTileCentreY = getTileCentreCoordY(destination[2]);
+        if (isInRange(whichNPC.x, whichNPC.y, destinationTileCentreX, destinationTileCentreY, destination[3] * tileW)) {
+            // quest complete
+            console.log("escort quest complete!!");
+            whichNPC.drawnFacing = turntoFace(whichNPC, hero);
+            // remove the reference to it in the hero object:
+            for (var i = 0; i < hero.npcsFollowing.length; i++) {
+                if (hero.npcsFollowing[i] === whichNPC) {
+                    hero.npcsFollowing.splice(i, 1);
+                    break;
+                }
+            }
+            
+
+            // speech shows - but if hero too far away closes immediately ######
+  var questSpeech = whichNPC.speech[whichNPC.speechIndex][0].split("|");
+ 
+   UI.showDialogue(whichNPC, questSpeech[2]);
+
+ 
+                                closeQuest(whichNPC, (whichNPC.speech[whichNPC.speechIndex][2]));
+
+
+            //whichNPC.movement[whichNPC.movementIndex] = "-";
+            whichNPC.isMoving = false;
+            whichNPC.movementIndex--;
+            whichNPC.forceNewMovementCheck = false;
+            delete whichNPC.following;
+        }
+    }
+}
+
+
+
+
+
+
+function closeQuest(whichNPC, whichQuestId) {
+    if (giveQuestRewards(whichQuestId)) {
+        if (questData[whichQuestId].isRepeatable > 0) {
+            questData[whichQuestId].hasBeenCompleted = false;
+            questData[whichQuestId].isUnderway = false;
+        } else {
+            questData[whichQuestId].hasBeenCompleted = true;
+            // remove quest text now:
+            whichNPC.speech.splice(whichNPC.speechIndex, 1);
+            // knock this back one so to keep it in step with the removed item:
+            whichNPC.speechIndex--;
+        }
+        checkForTitlesAwarded(whichQuestId);
+    } else {
+        // keep the NPC on the quest dialogue:
+        whichNPC.speechIndex--;
+    }
+    removeFromJournal(whichQuestId);
+
+}
+
+
+function giveQuestRewards(whichQuestId) {
+    // give any reward to the player:
+    if (questData[whichQuestId].itemsReceivedOnCompletion) {
+        var questRewards = questData[whichQuestId].itemsReceivedOnCompletion.split(",");
+        return awardQuestRewards(questRewards);
+    } else {
+        return true;
+    }
+}
+
+function awardQuestRewards(questRewards) {
+
+    var allRewardItems = [];
+
+    for (var i = 0; i < questRewards.length; i++) {
+        // check for variation:
+        var questPossibilities = questRewards[i].split("/");
+        var questRewardToUse = getRandomElementFromArray(questPossibilities);
+        //  console.log(questRewardToUse);
+
+        // check if it's money:
+        if (questRewardToUse.charAt(0) == "$") {
+            thisRewardObject = questRewardToUse;
+        } else {
+
+            // check for any quantities:
+            var thisQuestReward = questRewardToUse.split("x");
+            var thisQuantity, thisItem;
+            if (thisQuestReward.length > 1) {
+                thisQuantity = thisQuestReward[0];
+                thisItem = thisQuestReward[1];
+            } else {
+                thisQuantity = 1;
+                thisItem = questRewards[i];
+            }
+
+            if (questPossibilities.length > 1) {
+                // might need to show the name of the item in the speech:           
+                thisSpeech = thisSpeech.replace(/##itemName##/i, currentActiveInventoryItems[parseInt(thisItem)].shortname);
+            }
+            // build item object:
+            var thisRewardObject = {
+                "type": parseInt(thisItem),
+                "quantity": parseInt(thisQuantity),
+                "quality": 100,
+                "durability": 100,
+                "currentWear": 0,
+                "effectiveness": 100,
+                "colour": currentActiveInventoryItems[parseInt(thisItem)].colour,
+                "enchanted": 0,
+                "hallmark": 0,
+                "inscription": ""
+            }
+        }
+        allRewardItems.push(thisRewardObject);
+    }
+    inventoryCheck = canAddItemToInventory(allRewardItems);
+    if (inventoryCheck[0]) {
+        UI.showChangeInInventory(inventoryCheck[1]);
+
+        return true;
+    } else {
+        UI.showNotification("<p>Oops - sorry, no room in your bags</p>");
+        // don't close quest
+        return false;
+    }
+
 }

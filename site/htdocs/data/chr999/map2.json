@@ -487,14 +487,14 @@
                 "centreY": 73,
                 "tileX": 30,
                 "tileY": 25,
-                "movement": ["-",["follow","hero"]],
+                "movement": ["-",["follow","hero"],"-"],
                 "facing": "n",
                 "walkThroughDoors": false,
                 "speed": 2,
                 "isCollidable": true,
                 "isMoving": false,
                 "speech": [    
-                    ["Hi ##characterName##, can you take me to Brythillion?|Are we there yet?|Thanks, I'd never have made it on my own.", "quest-optional", "10", "another time maybe?", "","you will? fantastic!", "move"],["so kind of you thanks",""]
+                    ["Hi ##characterName##, can you take me to Brythillion?|Are we there yet?|Thanks, I'd never have made it on my own.", "quest-optional", "10", "2|28|5|10", "another time maybe?", "","you will? fantastic!", "move"],["so kind of you thanks",""]
                 ],
                 "cardGameSpeech": {
                     "challenge": ["Do you play? Fancy a game then?", "play"],
