@@ -415,7 +415,6 @@
                 "speed": 2,
                 "isCollidable": true,
                 "isMoving": false,
-               
                 "speech": [
                     ["Touch that standing stone|Just touch it|Did you feel the power?", "quest", "2"],
                     ["I like standing stones...", ""]
@@ -454,8 +453,7 @@
                 "walkThroughDoors": false,
                 "speed": 2,
                 "isCollidable": true,
-                "isMoving": false,
-               
+                "isMoving": false,           
                 "speech": [
                     ["flip 2 cards and go near the stone|near the stone and 2 cards - done it yet?|great stuff on both tasks", "quest", "5"],
                     ["Great work", ""]
@@ -571,7 +569,6 @@
                 "speed": 2,
                 "isCollidable": true,
                 "isMoving": false,
-               
                 "speech": [
                     ["Hi there - welcome!/Feel free to have a good look around, ##characterName##/Welcome, welcome!", "shop", "shop #1"]
                 ],
@@ -610,7 +607,6 @@
                 "speed": 2,
                 "isCollidable": true,
                 "isMoving": false,
-               
                 "speech": [
                     ["Hi there - welcome!/Feel free to have a good look around, ##characterName##/Welcome, welcome!", "shop", "shop #2"]
                 ],
@@ -650,7 +646,6 @@
                 "speed": 2,
                 "isCollidable": true,
                 "isMoving": false,
-               
                 "speech": [
                     ["Hi there - welcome!/Feel free to have a good look around, ##characterName##/Welcome, welcome!", "shop", "shop #3"]
                 ],
@@ -690,7 +685,6 @@
                 "speed": 2,
                 "isCollidable": true,
                 "isMoving": false,
-               
                 "speech": [
                     ["Need to keep an eye out...",""]
                 ],
@@ -738,7 +732,6 @@
                     ["", "sound", "horse"]
 
                 ],
-               
                 "isCollidable": true,
                 "isMoving": true,
                 "animation": {
@@ -773,7 +766,6 @@
                 "speed": 2,
                 "isCollidable": true,
                 "isMoving": false,
-               
                 "speech": [
                     ["Have you seen the poster?|Keep looking|You found him - good job", "quest-no-open", "9"],
                     ["good job finding him", ""]

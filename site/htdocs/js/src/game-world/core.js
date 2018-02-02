@@ -342,19 +342,19 @@ function loadMapAssets() {
 
 
 function loadTitles() {
-  
+
     var possibleTitleIds = [];
     // loop through quests and get any titles needs:
 
-for (var i in questData) {
+    for (var i in questData) {
 
-if(questData[i].titleGainedAfterCompletion != "") {
-possibleTitleIds.push(questData[i].titleGainedAfterCompletion);
-}
-}
+        if (questData[i].titleGainedAfterCompletion != "") {
+            possibleTitleIds.push(questData[i].titleGainedAfterCompletion);
+        }
+    }
 
 
-var allTitleIdsToGet = possibleTitleIds.concat(hero.titlesEarned).join("|");
+    var allTitleIdsToGet = possibleTitleIds.concat(hero.titlesEarned).join("|");
     // john
     getJSON("/game-world/getTitles.php?whichIds=" + allTitleIdsToGet, function(data) {
         possibleTitles = data;
@@ -662,13 +662,13 @@ function prepareGame() {
                 // subsequent pets follow the one in front:
                 hero.allPets[hero.activePets[i]].following = hero.allPets[hero.activePets[i - 1]];
             }
-            if (i != (hero.activePets.length - 1)) {
-                // it's not the last one, drop a breadcrumb trail:
-                hero.allPets[hero.activePets[i]].breadcrumb = [];
-                for (var j = 0; j < breadCrumbLength; j++) {
-                    hero.allPets[hero.activePets[i]].breadcrumb[j] = [hero.allPets[hero.activePets[i]].tileX, hero.allPets[hero.activePets[i]].tileY];
-                }
+            // if (i != (hero.activePets.length - 1)) {
+            // even the last one should drop a breadcrumb in case an escort quest NPC needs it
+            hero.allPets[hero.activePets[i]].breadcrumb = [];
+            for (var j = 0; j < breadCrumbLength; j++) {
+                hero.allPets[hero.activePets[i]].breadcrumb[j] = [hero.allPets[hero.activePets[i]].tileX, hero.allPets[hero.activePets[i]].tileY];
             }
+            //  }
         }
     }
 
@@ -1199,6 +1199,8 @@ function update() {
                         activeObjectForDialogue.speechIndex = 0;
                         UI.closeShop();
                     }
+                    // close the accept/decline buttons as well in case they're open:
+                    acceptQuestChoice.classList.remove('active');
                     // only remove this after dialogue has faded out completely:
                     dialogue.addEventListener(whichTransitionEvent, UI.removeActiveDialogue, false);
                 }
@@ -1995,9 +1997,8 @@ function jumpToLocation(mapId, tileX, tileY) {
 function moveNPCs() {
     var thisNPC, newTile, thisNextMovement, oldNPCx, oldNPCy, thisOtherNPC, thisItem, thisNextMovement, thisNextMovementCode, thisInnerDoor;
     for (var i = 0; i < thisMapData.npcs.length; i++) {
-
         thisNPC = thisMapData.npcs[i];
-newTile = false;
+        newTile = false;
         if (thisNPC.isMoving) {
             oldNPCx = thisNPC.x;
             oldNPCy = thisNPC.y;
@@ -2099,7 +2100,7 @@ newTile = false;
             thisNPC.dx += (thisNPC.x - oldNPCx);
             thisNPC.dy += (thisNPC.y - oldNPCy);
             // see if it's at a new tile centre:
-            
+
             if (Math.abs(thisNPC.dx) >= tileW) {
                 if (thisNPC.dx > 0) {
                     thisNPC.dx -= tileW;
@@ -2234,15 +2235,44 @@ newTile = false;
                     }
                     break;
 
-
                 case 'follow':
-                console.log(thisNPC);
-      
+                    // initialise following another object:
                     console.log(" follow " + thisNextMovement[1]);
+                    switch (thisNextMovement[1]) {
+                        case 'hero':
+                            if (hero.npcsFollowing.length > 0) {
+                                // already has an NPC following, so follow that:
+                                thisNPC.following = hero.npcsFollowing[hero.npcsFollowing[(hero.npcsFollowing.length - 1)]];
+                            } else if (hero.activePets.length > 0) {
+                                // follow the last pet:
+                                thisNPC.following = hero.allPets[hero.activePets[(hero.activePets.length - 1)]];
+                            } else {
+                                // follow the hero:
+                                thisNPC.following = hero;
+                            }
+                            hero.npcsFollowing.push(thisNPC);
+                            thisNPC.movement[thisNPC.movementIndex] = "following";
+                            // keep it on the waiting item to keep checking:
+                            thisNPC.movementIndex--;
+                            break;
+                        default:
+                            //
+                    }
+                    break;
+                case 'following':
+                    // is already following, need to process that movement - check proximity to target to see if pet should stop moving: 
+                    if ((isInRange(thisNPC.following.x, thisNPC.following.y, thisNPC.x, thisNPC.y, tileW * 2))) {
+                        console.log("wait");
+                        // keep it on the waiting item to keep checking:
+                        thisNPC.movementIndex--;
+                    } else {
+                        console.log("follow breadcrumb");
+                        // keep it on the waiting item to keep checking:
+                        thisNPC.movementIndex--;
+                    }
                     break;
 
                 default:
-
                     thisNPC.facing = thisNextMovement;
                     thisNPC.forceNewMovementCheck = false;
                     break;

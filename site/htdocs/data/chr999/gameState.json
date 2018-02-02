@@ -391,6 +391,7 @@
         "cardDust": 12,
         "keys": []
     },
+    "npcsFollowing": [],
     "lineOfSightRange": 20,
     "collections": {
         

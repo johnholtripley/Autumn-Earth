@@ -131,18 +131,18 @@ function movePet() {
                     }
 
 
-    // check for inner doors:
-    if (typeof thisMapData.innerDoors !== "undefined") {
-        for (var i in thisMapData.innerDoors) {
-            thisInnerDoor = thisMapData.innerDoors[i];
-            if (!thisInnerDoor.isOpen) {
-                if (isAnObjectCollision(getTileCentreCoordX(thisInnerDoor.tileX), getTileCentreCoordY(thisInnerDoor.tileY), tileW, tileW, thisPet.x, thisPet.y, thisPet.width, thisPet.length)) {
-                     thisPet.x = oldPetX;
-                                thisPet.y = oldPetY;
-                }
-            }
-        }
-    }
+                    // check for inner doors:
+                    if (typeof thisMapData.innerDoors !== "undefined") {
+                        for (var i in thisMapData.innerDoors) {
+                            thisInnerDoor = thisMapData.innerDoors[i];
+                            if (!thisInnerDoor.isOpen) {
+                                if (isAnObjectCollision(getTileCentreCoordX(thisInnerDoor.tileX), getTileCentreCoordY(thisInnerDoor.tileY), tileW, tileW, thisPet.x, thisPet.y, thisPet.width, thisPet.length)) {
+                                     thisPet.x = oldPetX;
+                                                thisPet.y = oldPetY;
+                                }
+                            }
+                        }
+                    }
 
 
                     // check for collisions against items:
@@ -267,7 +267,7 @@ function movePet() {
                     }
                     break;
                 default:
-                    // not finding a path so check proximity to hero to see if pet should start moving:
+                    // not finding a path so check proximity to the hero (or pet that this pet is following) to see if pet should start moving:
                     if (!(isInRange(thisPetsTarget.x, thisPetsTarget.y, thisPet.x, thisPet.y, tileW * 2))) {
                         thisPet.state = "moving";
                     }
@@ -276,11 +276,11 @@ function movePet() {
             if (newTile) {
                 thisPet.tileX = getTileX(thisPet.x);
                 thisPet.tileY = getTileY(thisPet.y);
-                if (p != (hero.activePets.length - 1)) {
-                    // it's not the last one, so need to update its breadcrumb:
+              //  if (p != (hero.activePets.length - 1)) {
+                    // even the last one should drop a breadcrumb in case an escort quest NPC needs it
                     thisPet.breadcrumb.pop();
                     thisPet.breadcrumb.unshift([thisPet.tileX, thisPet.tileY]);
-                }
+              //  }
 
 
 
@@ -318,11 +318,7 @@ function movePet() {
                         thisPet.state = "moving";
                         thisPet.foundPath = '';
                     } else {
-
-
-
                         if (thisPet.foundPath != '') {
-
                             // try for breadcrumbs first, but use path if not
                             thisPet.facing = thisPet.foundPath[thisPet.pathIndex];
                             thisPet.pathIndex++;
