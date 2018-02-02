@@ -6919,7 +6919,7 @@ function moveNPCs() {
     for (var i = 0; i < thisMapData.npcs.length; i++) {
 
         thisNPC = thisMapData.npcs[i];
-
+newTile = false;
         if (thisNPC.isMoving) {
             oldNPCx = thisNPC.x;
             oldNPCy = thisNPC.y;
@@ -7158,7 +7158,9 @@ function moveNPCs() {
 
 
                 case 'follow':
-                    console.log("follow " + thisNextMovement[1]);
+                console.log(thisNPC);
+                console.log(newTile);
+                    console.log(i+" follow " + thisNextMovement[1]);
                     break;
 
                 default:
@@ -7215,7 +7217,7 @@ function canLearnRecipe(recipeIndex) {
         hero.recipesKnown.push([parseInt(recipeIndex), 0]);
         // need to show a notification
         // reload the recipe data
-        // ###
+        // #####
     }
     return wasSuccessful;
 }
@@ -7234,11 +7236,7 @@ function draw() {
 
         hero.isox = findIsoCoordsX(hero.x, hero.y);
         hero.isoy = findIsoCoordsY(hero.x, hero.y);
-        /*
-          var assetsToDraw = [
-              [findIsoDepth(hero.x, hero.y, hero.z), "img", heroImg, Math.floor(canvasWidth / 2 - hero.feetOffsetX), Math.floor(canvasHeight / 2 - hero.feetOffsetY - hero.z)]
-          ];
-          */
+
         var heroOffsetCol = currentAnimationFrame % hero["animation"]["walk"]["length"];
         var heroOffsetRow = hero["animation"]["walk"][hero.facing];
         var assetsToDraw = [
@@ -7307,23 +7305,17 @@ function draw() {
         }
 
         for (var i = 0; i < thisMapData.npcs.length; i++) {
-
             thisNPC = thisMapData.npcs[i];
             thisNPCOffsetCol = currentAnimationFrame % thisNPC["animation"][thisNPC.currentAnimation]["length"];
             thisNPCOffsetRow = thisNPC["animation"][thisNPC.currentAnimation][thisNPC.drawnFacing];
             thisX = findIsoCoordsX(thisNPC.x, thisNPC.y);
             thisY = findIsoCoordsY(thisNPC.x, thisNPC.y);
-
             //assetsToDraw.push([findIsoDepth(thisX, thisY), npcImages[i], Math.floor(thisX - hero.isox - thisNPC.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisNPC.centreY + (canvasHeight / 2))]);
             thisNPCIdentifier = "npc" + thisMapData.npcs[i].name;
-
             assetsToDraw.push([findIsoDepth(thisNPC.x, thisNPC.y, thisNPC.z), "sprite", npcImages[thisNPCIdentifier], thisNPCOffsetCol * thisNPC.spriteWidth, thisNPCOffsetRow * thisNPC.spriteHeight, thisNPC.spriteWidth, thisNPC.spriteHeight, Math.floor(thisX - hero.isox - thisNPC.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisNPC.centreY + (canvasHeight / 2) - thisNPC.z), thisNPC.spriteWidth, thisNPC.spriteHeight]);
         }
-
-
         for (var i = 0; i < thisMapData.items.length; i++) {
             thisItem = thisMapData.items[i];
-
             thisX = findIsoCoordsX(thisItem.x, thisItem.y);
             thisY = findIsoCoordsY(thisItem.x, thisItem.y);
             thisFileColourSuffix = "";
@@ -7334,21 +7326,15 @@ function draw() {
                 }
             }
             thisItemIdentifier = "item" + thisMapData.items[i].type + thisFileColourSuffix;
-
-
             if (typeof thisItem.animation !== "undefined") {
                 thisItemOffsetCol = (thisItem["animation"][thisItem.state]["length"]) - 1;
                 thisItemOffsetRow = thisItem["animation"][thisItem.state]["row"];
-
-
-
                 assetsToDraw.push([findIsoDepth(thisItem.x, thisItem.y, thisItem.z), "sprite", itemImages[thisItemIdentifier], thisItemOffsetCol * thisItem.spriteWidth, thisItemOffsetRow * thisItem.spriteHeight, thisItem.spriteWidth, thisItem.spriteHeight, Math.floor(thisX - hero.isox - thisItem.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisItem.centreY + (canvasHeight / 2) - thisItem.z), thisItem.spriteWidth, thisItem.spriteHeight]);
             } else {
 
                 assetsToDraw.push([findIsoDepth(thisItem.x, thisItem.y, thisItem.z), "img", itemImages[thisItemIdentifier], Math.floor(thisX - hero.isox - thisItem.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisItem.centreY + (canvasHeight / 2) - thisItem.z)]);
             }
         }
-
 
         if (thisMapData.movingPlatforms) {
             for (var i = 0; i < thisMapData.movingPlatforms.length; i++) {
@@ -7360,7 +7346,6 @@ function draw() {
                 assetsToDraw.push([findIsoDepth(thisPlatform.x, thisPlatform.y, thisPlatform.z), "img", tileImages[thisPlatform.graphic], Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2))]);
             }
         }
-
 
         assetsToDraw.sort(sortByLowestValue);
         // don't need to clear, as the background will overwrite anyway - this means there's less to process.
@@ -7386,7 +7371,6 @@ function draw() {
                     break;
                 case "sprite":
                     // sprite image (needs slicing parameters):
-
                     gameContext.drawImage(assetsToDraw[i][2], assetsToDraw[i][3], assetsToDraw[i][4], assetsToDraw[i][5], assetsToDraw[i][6], assetsToDraw[i][7], assetsToDraw[i][8], assetsToDraw[i][9], assetsToDraw[i][10]);
                     break;
                 case "dowsingRing":
