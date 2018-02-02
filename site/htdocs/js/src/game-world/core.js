@@ -1660,15 +1660,17 @@ function processSpeech(thisObjectSpeaking, thisSpeechPassedIn, thisSpeechCode, i
                                     thisSpeech = questSpeech[1];
                                     // keep the NPC on this quest speech:
                                     thisObjectSpeaking.speechIndex--;
-
                                 }
                             } else {
                                 // check if it's been closed elsewhere:
+
                                 if (questData[questId].hasBeenCompleted > 0) {
+                                    console.log("closing");
                                     thisSpeech = questSpeech[2];
-                                    closeQuest(thisObjectSpeaking, questId);
+                                    //closeQuest(thisObjectSpeaking, questId);
                                 } else {
                                     // show 'underway' text:
+
                                     thisSpeech = questSpeech[1];
                                     // keep the NPC on this quest speech:
                                     thisObjectSpeaking.speechIndex--;
