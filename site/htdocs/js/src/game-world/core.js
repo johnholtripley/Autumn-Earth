@@ -2263,10 +2263,43 @@ function moveNPCs() {
                     // is already following, need to process that movement - check proximity to target to see if pet should stop moving: 
                     if ((isInRange(thisNPC.following.x, thisNPC.following.y, thisNPC.x, thisNPC.y, tileW * 2))) {
                         console.log("wait");
+                        thisNPC.isMoving = false;
                         // keep it on the waiting item to keep checking:
                         thisNPC.movementIndex--;
                     } else {
                         console.log("follow breadcrumb");
+                        thisNPC.isMoving = true;
+                                // check the breadcrumb for next direction:
+                    var breadcrumbFound = false;
+                    for (var k = 0; k < thisNPC.following.breadcrumb.length; k++) {
+                        if ((thisNPC.tileY) == thisNPC.following.breadcrumb[k][1]) {
+                            if ((thisNPC.tileX - 1) == thisNPC.following.breadcrumb[k][0]) {
+                                thisNPC.facing = "w";
+                                breadcrumbFound = true;
+                                break;
+                            } else if ((thisNPC.tileX + 1) == thisNPC.following.breadcrumb[k][0]) {
+                                thisNPC.facing = "e";
+                                breadcrumbFound = true;
+                                break;
+                            }
+                        } else if ((thisNPC.tileX) == thisNPC.following.breadcrumb[k][0]) {
+                            if ((thisNPC.tileY + 1) == thisNPC.following.breadcrumb[k][1]) {
+                                thisNPC.facing = "s";
+                                breadcrumbFound = true;
+                                break;
+                            } else if ((thisNPC.tileY - 1) == thisNPC.following.breadcrumb[k][1]) {
+                                thisNPC.facing = "n";
+                                breadcrumbFound = true;
+                                break;
+                            }
+                        }
+                    }
+                    if (!breadcrumbFound) {
+
+          
+                        // pathfind ####
+                    }
+                    console.log(breadcrumbFound);
                         // keep it on the waiting item to keep checking:
                         thisNPC.movementIndex--;
                     }
