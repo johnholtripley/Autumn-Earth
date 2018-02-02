@@ -16,6 +16,7 @@ function cardGamePlayer2Wins() {
 }
 
 function cardGamePlayer1Wins() {
+    console.log(thisChallengeNPC);
     // player lost
     hero.stats.cardGamesLost++;
     hero.currency.cardDust += 1;
@@ -25,6 +26,7 @@ function cardGamePlayer1Wins() {
 }
 
 function cardGameIsDrawn() {
+     console.log(thisChallengeNPC);
     hero.stats.cardGamesDrawn++;
     hero.currency.cardDust += 3;
     UI.updateCurrencies();

@@ -1681,7 +1681,7 @@ function processSpeech(thisObjectSpeaking, thisSpeechPassedIn, thisSpeechCode, i
                             var allSubQuestsRequired = questData[questId].subQuestsRequiredForCompletion.split(",");
                             var allSubQuestsComplete = true;
                             for (var k = 0; k < allSubQuestsRequired.length; k++) {
-                                // check conditions for this sub-quest and set if it's complete ###############
+                                // check conditions for this sub-quest and set if it's complete
                                 switch (questData[allSubQuestsRequired[k]].whatIsRequiredForCompletion) {
                                     case "possess":
                                     case "give":
@@ -1970,6 +1970,7 @@ function checkForChallenges() {
                 if (thisChallengeNPC.cardGameSpeech) {
                     thisChallengeNPC.drawnFacing = turntoFace(thisChallengeNPC, hero);
                     processSpeech(thisChallengeNPC, thisChallengeNPC.cardGameSpeech.challenge[0], thisChallengeNPC.cardGameSpeech.challenge[1]);
+                    break;
                 }
             }
         }
