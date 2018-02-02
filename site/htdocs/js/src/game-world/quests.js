@@ -15,20 +15,19 @@ function removeFromJournal(whichQuestId) {
 
 function declineQuest() {
     acceptQuestChoice.classList.remove('active');
-    // show declined speech
-
-    UI.showDialogue(questResponseNPC, questResponseNPC.speech[questResponseNPC.speechIndex][3]);
+    // show declined speech:
+    //UI.showDialogue(questResponseNPC, );
+    processSpeech(questResponseNPC, questResponseNPC.speech[questResponseNPC.speechIndex][3], questResponseNPC.speech[questResponseNPC.speechIndex][4], false);
     canCloseDialogueBalloonNextClick = true;
     questResponseNPC = null;
 }
 
 function acceptQuest() {
     acceptQuestChoice.classList.remove('active');
-    // show accepted speech 
+    // show accepted speech:
+ //   UI.showDialogue(questResponseNPC, questResponseNPC.speech[questResponseNPC.speechIndex][5]);
+ processSpeech(questResponseNPC, questResponseNPC.speech[questResponseNPC.speechIndex][5], questResponseNPC.speech[questResponseNPC.speechIndex][6], false);
     openQuest(questResponseNPC.speech[questResponseNPC.speechIndex][2]);
-
-
-    UI.showDialogue(questResponseNPC, questResponseNPC.speech[questResponseNPC.speechIndex][4]);
     canCloseDialogueBalloonNextClick = true;
     questResponseNPC = null;
 }

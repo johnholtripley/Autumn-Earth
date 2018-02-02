@@ -2099,7 +2099,7 @@ newTile = false;
             thisNPC.dx += (thisNPC.x - oldNPCx);
             thisNPC.dy += (thisNPC.y - oldNPCy);
             // see if it's at a new tile centre:
-            newTile = false;
+            
             if (Math.abs(thisNPC.dx) >= tileW) {
                 if (thisNPC.dx > 0) {
                     thisNPC.dx -= tileW;
@@ -2237,8 +2237,8 @@ newTile = false;
 
                 case 'follow':
                 console.log(thisNPC);
-                console.log(newTile);
-                    console.log(i+" follow " + thisNextMovement[1]);
+      
+                    console.log(" follow " + thisNextMovement[1]);
                     break;
 
                 default:

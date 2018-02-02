@@ -3036,20 +3036,19 @@ function removeFromJournal(whichQuestId) {
 
 function declineQuest() {
     acceptQuestChoice.classList.remove('active');
-    // show declined speech
-
-    UI.showDialogue(questResponseNPC, questResponseNPC.speech[questResponseNPC.speechIndex][3]);
+    // show declined speech:
+    //UI.showDialogue(questResponseNPC, );
+    processSpeech(questResponseNPC, questResponseNPC.speech[questResponseNPC.speechIndex][3], questResponseNPC.speech[questResponseNPC.speechIndex][4], false);
     canCloseDialogueBalloonNextClick = true;
     questResponseNPC = null;
 }
 
 function acceptQuest() {
     acceptQuestChoice.classList.remove('active');
-    // show accepted speech 
+    // show accepted speech:
+ //   UI.showDialogue(questResponseNPC, questResponseNPC.speech[questResponseNPC.speechIndex][5]);
+ processSpeech(questResponseNPC, questResponseNPC.speech[questResponseNPC.speechIndex][5], questResponseNPC.speech[questResponseNPC.speechIndex][6], false);
     openQuest(questResponseNPC.speech[questResponseNPC.speechIndex][2]);
-
-
-    UI.showDialogue(questResponseNPC, questResponseNPC.speech[questResponseNPC.speechIndex][4]);
     canCloseDialogueBalloonNextClick = true;
     questResponseNPC = null;
 }
@@ -7021,7 +7020,7 @@ newTile = false;
             thisNPC.dx += (thisNPC.x - oldNPCx);
             thisNPC.dy += (thisNPC.y - oldNPCy);
             // see if it's at a new tile centre:
-            newTile = false;
+            
             if (Math.abs(thisNPC.dx) >= tileW) {
                 if (thisNPC.dx > 0) {
                     thisNPC.dx -= tileW;
@@ -7159,8 +7158,8 @@ newTile = false;
 
                 case 'follow':
                 console.log(thisNPC);
-                console.log(newTile);
-                    console.log(i+" follow " + thisNextMovement[1]);
+      
+                    console.log(" follow " + thisNextMovement[1]);
                     break;
 
                 default:
