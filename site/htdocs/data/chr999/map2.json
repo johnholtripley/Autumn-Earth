@@ -496,7 +496,7 @@
                 "isCollidable": true,
                 "isMoving": false,
                 "speech": [    
-                    ["Can you take me to Brythillion?|Are we there yet?|Thanks, I'd never have made it on my own.", "quest-optional", "10", "another time maybe?", "","you will? fantastic!", "move"],["so kind of you thanks",""]
+                    ["Hi ##characterName##, can you take me to Brythillion?|Are we there yet?|Thanks, I'd never have made it on my own.", "quest-optional", "10", "another time maybe?", "","you will? fantastic!", "move"],["so kind of you thanks",""]
                 ],
                 "cardGameSpeech": {
                     "challenge": ["Do you play? Fancy a game then?", "play"],
