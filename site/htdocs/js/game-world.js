@@ -342,7 +342,7 @@ var currentActiveInventoryItems = [];
 var maxNumberOfItemsPerSlot = 20;
 var isSplitStackBeingDragged = false;
 
-var activeTitles = [];
+var possibleTitles = [];
 
 var inventoryInterfaceIsBuilt = false;
 
@@ -5264,9 +5264,22 @@ function loadMapAssets() {
 
 
 function loadTitles() {
-    var itemIdsToGet = hero.titlesEarned.join("|");
-    getJSON("/game-world/getActiveTitles.php?whichIds=" + itemIdsToGet, function(data) {
-        activeTitles = data;
+  
+    var possibleTitleIds = [];
+    // loop through quests and get any titles needs:
+
+for (var i in questData) {
+
+if(questData[i].titleGainedAfterCompletion != "") {
+possibleTitleIds.push(questData[i].titleGainedAfterCompletion);
+}
+}
+
+
+var allTitleIdsToGet = possibleTitleIds.concat(hero.titlesEarned).join("|");
+    // john
+    getJSON("/game-world/getTitles.php?whichIds=" + allTitleIdsToGet, function(data) {
+        possibleTitles = data;
 
         loadCardData();
     }, function(status) {
@@ -5747,7 +5760,6 @@ function tileIsClear(tileX, tileY) {
             }
         }
     }
-
     return true;
 }
 
@@ -5792,7 +5804,6 @@ function startDoorTransition() {
         mapTransitionCurrentFrames = 1;
         mapTransition = "out";
         if (activeObjectForDialogue != '') {
-
             //  dialogue.classList.add("slowerFade");
             dialogue.classList.remove("active");
             UI.removeActiveDialogue();
@@ -5800,11 +5811,6 @@ function startDoorTransition() {
         if (chestIdOpen != -1) {
             UI.closeChest();
         }
-        /*
-        // drop breadcrumb for the door, as the tile centre check won't be reached while map transitioning:
-        hero.breadcrumb.pop();
-        hero.breadcrumb.unshift([getTileCentreCoordX(activeDoorX), getTileCentreCoordY(activeDoorY)]);
-        */
     }
     if (currentMap < 0) {
         saveCartographyMask();
@@ -6878,7 +6884,7 @@ function checkForTitlesAwarded(whichQuestId) {
         var thisTitle = questData[whichQuestId].titleGainedAfterCompletion;
         if (hero.titlesEarned.indexOf(thisTitle) == -1) {
             hero.titlesEarned.push(thisTitle);
-            UI.showNotification('<p>You earned the &quot;' + activeTitles[thisTitle] + '&quot; title</p>');
+            UI.showNotification('<p>You earned the &quot;' + possibleTitles[thisTitle] + '&quot; title</p>');
         }
     }
 }

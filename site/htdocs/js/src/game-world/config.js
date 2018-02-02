@@ -50,7 +50,7 @@ var currentActiveInventoryItems = [];
 var maxNumberOfItemsPerSlot = 20;
 var isSplitStackBeingDragged = false;
 
-var activeTitles = [];
+var possibleTitles = [];
 
 var inventoryInterfaceIsBuilt = false;
 
