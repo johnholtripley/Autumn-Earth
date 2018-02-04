@@ -3158,18 +3158,24 @@ function checkForEscortQuestEnd(whichNPC) {
             
 
             // speech shows - but if hero too far away closes immediately ######
-  var questSpeech = whichNPC.speech[whichNPC.speechIndex][0].split("|");
- 
-   UI.showDialogue(whichNPC, questSpeech[2]);
+  //var questSpeech = whichNPC.speech[whichNPC.speechIndex][0].split("|");
+   // UI.showDialogue(whichNPC, questSpeech[2]);
+                            //    closeQuest(whichNPC, (whichNPC.speech[whichNPC.speechIndex][2]));
 
- 
-                                closeQuest(whichNPC, (whichNPC.speech[whichNPC.speechIndex][2]));
+
+
+// get fae to move to this NPC:
+fae.targetX = whichNPC.x;
+fae.targetY = whichNPC.y;
+fae.currentState = "away";
+
 
 
             //whichNPC.movement[whichNPC.movementIndex] = "-";
             whichNPC.isMoving = false;
             whichNPC.movementIndex--;
             whichNPC.forceNewMovementCheck = false;
+            whichNPC.hasCompletedEscortQuest = true;
             delete whichNPC.following;
         }
     }
@@ -6793,6 +6799,17 @@ function processSpeech(thisObjectSpeaking, thisSpeechPassedIn, thisSpeechCode, i
                                 // keep the NPC on this quest speech:
                                 thisObjectSpeaking.speechIndex--;
                             }
+                            break;
+                            case "escort":
+if(typeof thisObjectSpeaking.hasCompletedEscortQuest !== "undefined") {
+ thisSpeech = questSpeech[2];
+                                closeQuest(thisObjectSpeaking, questId);
+} else {
+      // show 'underway' text:
+                                thisSpeech = questSpeech[1];
+                                // keep the NPC on this quest speech:
+                                thisObjectSpeaking.speechIndex--;
+}
                             break;
                         case "world":
                             if (questData[questId].hasBeenActivated > 0) {

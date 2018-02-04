@@ -141,18 +141,24 @@ function checkForEscortQuestEnd(whichNPC) {
             
 
             // speech shows - but if hero too far away closes immediately ######
-  var questSpeech = whichNPC.speech[whichNPC.speechIndex][0].split("|");
- 
-   UI.showDialogue(whichNPC, questSpeech[2]);
+  //var questSpeech = whichNPC.speech[whichNPC.speechIndex][0].split("|");
+   // UI.showDialogue(whichNPC, questSpeech[2]);
+                            //    closeQuest(whichNPC, (whichNPC.speech[whichNPC.speechIndex][2]));
 
- 
-                                closeQuest(whichNPC, (whichNPC.speech[whichNPC.speechIndex][2]));
+
+
+// get fae to move to this NPC:
+fae.targetX = whichNPC.x;
+fae.targetY = whichNPC.y;
+fae.currentState = "away";
+
 
 
             //whichNPC.movement[whichNPC.movementIndex] = "-";
             whichNPC.isMoving = false;
             whichNPC.movementIndex--;
             whichNPC.forceNewMovementCheck = false;
+            whichNPC.hasCompletedEscortQuest = true;
             delete whichNPC.following;
         }
     }

@@ -1746,6 +1746,17 @@ function processSpeech(thisObjectSpeaking, thisSpeechPassedIn, thisSpeechCode, i
                                 thisObjectSpeaking.speechIndex--;
                             }
                             break;
+                            case "escort":
+if(typeof thisObjectSpeaking.hasCompletedEscortQuest !== "undefined") {
+ thisSpeech = questSpeech[2];
+                                closeQuest(thisObjectSpeaking, questId);
+} else {
+      // show 'underway' text:
+                                thisSpeech = questSpeech[1];
+                                // keep the NPC on this quest speech:
+                                thisObjectSpeaking.speechIndex--;
+}
+                            break;
                         case "world":
                             if (questData[questId].hasBeenActivated > 0) {
                                 thisSpeech = questSpeech[2];
