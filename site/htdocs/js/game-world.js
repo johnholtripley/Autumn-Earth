@@ -6792,7 +6792,7 @@ function processSpeech(thisObjectSpeaking, thisSpeechPassedIn, thisSpeechCode, i
 if(typeof thisObjectSpeaking.hasCompletedEscortQuest !== "undefined") {
  thisSpeech = questSpeech[2];
                                 closeQuest(thisObjectSpeaking, questId);
-                                delete whichNPC.hasCompletedEscortQuest;
+                                delete thisObjectSpeaking.hasCompletedEscortQuest;
 } else {
       // show 'underway' text:
                                 thisSpeech = questSpeech[1];

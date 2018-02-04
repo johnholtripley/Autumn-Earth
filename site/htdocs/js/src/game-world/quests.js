@@ -140,11 +140,7 @@ function checkForEscortQuestEnd(whichNPC) {
             }
             
 
-            // speech shows - but if hero too far away closes immediately ######
-  //var questSpeech = whichNPC.speech[whichNPC.speechIndex][0].split("|");
-   // UI.showDialogue(whichNPC, questSpeech[2]);
-                            //    closeQuest(whichNPC, (whichNPC.speech[whichNPC.speechIndex][2]));
-
+      
 
 
 // get fae to move to this NPC:
