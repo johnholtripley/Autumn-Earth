@@ -1617,12 +1617,14 @@ function processSpeech(thisObjectSpeaking, thisSpeechPassedIn, thisSpeechCode, i
                 }
                 if (questData[questId].isUnderway) {
                     // quest has been opened - check if it's complete:
+                     if ((individualSpeechCodes[i] == "quest") || (individualSpeechCodes[i] == "quest-no-open") || (individualSpeechCodes[i] == "quest-optional")) {
+                                // ie. it's not a '-no-close' speech
+                    
                     switch (questData[questId].whatIsRequiredForCompletion) {
                         case "possess":
                         case "give":
                         case "":
-                            if ((individualSpeechCodes[i] == "quest") || (individualSpeechCodes[i] == "quest-no-open") || (individualSpeechCodes[i] == "quest-optional")) {
-                                // ie. it's not a '-no-close' speech
+                           
                                 // check items:
                                 var theseItemsNeededForCompletion = questData[questId].itemsNeededForCompletion;
                                 var allItemsFound = true;
@@ -1669,21 +1671,7 @@ function processSpeech(thisObjectSpeaking, thisSpeechPassedIn, thisSpeechCode, i
                                     // keep the NPC on this quest speech:
                                     thisObjectSpeaking.speechIndex--;
                                 }
-                            } else {
-                                // check if it's been closed elsewhere:
-
-                                if (questData[questId].hasBeenCompleted > 0) {
-                                
-                                    thisSpeech = questSpeech[2];
-                                    //closeQuest(thisObjectSpeaking, questId);
-                                } else {
-                                    // show 'underway' text:
-
-                                    thisSpeech = questSpeech[1];
-                                    // keep the NPC on this quest speech:
-                                    thisObjectSpeaking.speechIndex--;
-                                }
-                            }
+                           
                             break;
                         case "multi":
                             var allSubQuestsRequired = questData[questId].subQuestsRequiredForCompletion.split(",");
@@ -1750,6 +1738,7 @@ function processSpeech(thisObjectSpeaking, thisSpeechPassedIn, thisSpeechCode, i
 if(typeof thisObjectSpeaking.hasCompletedEscortQuest !== "undefined") {
  thisSpeech = questSpeech[2];
                                 closeQuest(thisObjectSpeaking, questId);
+                                delete whichNPC.hasCompletedEscortQuest;
 } else {
       // show 'underway' text:
                                 thisSpeech = questSpeech[1];
@@ -1795,6 +1784,25 @@ if(typeof thisObjectSpeaking.hasCompletedEscortQuest !== "undefined") {
                             }
                             break;
                     }
+
+
+ } else {
+                                // check if it's been closed elsewhere:
+
+                                if (questData[questId].hasBeenCompleted > 0) {
+                                
+                                    thisSpeech = questSpeech[2];
+                                    //closeQuest(thisObjectSpeaking, questId);
+                                } else {
+                                    // show 'underway' text:
+
+                                    thisSpeech = questSpeech[1];
+                                    // keep the NPC on this quest speech:
+                                    thisObjectSpeaking.speechIndex--;
+                                }
+                            }
+
+
                 } else if (individualSpeechCodes[i] == "quest-optional") {
                     // the player has a choice whether to accept this or not:
                     questResponseNPC = thisObjectSpeaking;
