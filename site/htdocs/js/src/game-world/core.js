@@ -1432,23 +1432,7 @@ function checkForActions() {
                         questData[actionValue].hasBeenActivated = 0;
                         break;
                     case "node":
-                        /*
-                            // check it's not still re-spawning:
-                            console.log(hero.totalGameTimePlayed + " " + thisMapData.items[i].timeLastHarvested + " > " + currentActiveInventoryItems[thisMapData.items[i].type].respawnRate);
-                            if (hero.totalGameTimePlayed - thisMapData.items[i].timeLastHarvested >= currentActiveInventoryItems[thisMapData.items[i].type].respawnRate) {
-                                // pick a random item from the possible items:
-                                var whichItem = getRandomIntegerInclusive(1, thisMapData.items[i].contains.length);
-                                // try and add it:
-                                inventoryCheck = canAddItemToInventory([thisMapData.items[i].contains[whichItem - 1]]);
-                                if (inventoryCheck[0]) {
-                                    // reset timer:
-                                    thisMapData.items[i].timeLastHarvested = hero.totalGameTimePlayed;
-                                    UI.showChangeInInventory(inventoryCheck[1]);
-                                } else {
-                                    UI.showNotification("<p>Oops - sorry, no room in your bags</p>");
-                                }
-                            }
-                            */
+                        // handled by Action Bar - no effect here
                         break;
                     case "toggleInnerDoor":
                         toggleInnerDoor(thisMapData.items[i].additional);
@@ -1471,6 +1455,10 @@ function checkForActions() {
                         break;
                     case "notice":
                         processSpeech(thisMapData.items[i], thisMapData.items[i].contains[0][0], thisMapData.items[i].contains[0][1], false, thisMapData.items[i].contains[0][2]);
+                        break;
+                    case "sit":
+                        hero.facing = thisMapData.items[i].facing;
+                        console.log("switch to sit animation");
                         break;
                     case "chest":
                         // open chest and show contents:
@@ -2140,7 +2128,7 @@ function moveNPCs() {
                     break;
 
                 case 'pathEnd':
-                var thisPreviousMovement;
+                    var thisPreviousMovement;
                     // check if it's a escort quest NPC that's come to the end of their pathfinding path:
                     if (typeof thisNPC.following !== "undefined") {
                         for (j = thisNPC.movementIndex; j >= 0; j--) {
