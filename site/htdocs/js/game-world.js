@@ -2602,17 +2602,25 @@ if (window.Worker) {
                 thisPet.facing = e.data[2][0];
             }
         } else {
+
             // find which NPC this is:
             // http://stackoverflow.com/a/16100446/1054212
             var thisNPCsIndex = thisMapData.npcs.map(function(x) {
                 return x.name;
-            }).indexOf(thisAgentsName);
+            }).indexOf(thisAgentsName);  
+             
             // insert the new path:
             // http://stackoverflow.com/a/7032717/1054212
             thisMapData.npcs[thisNPCsIndex].movement.splice.apply(thisMapData.npcs[thisNPCsIndex].movement, [thisMapData.npcs[thisNPCsIndex].movementIndex + 2, 0].concat(e.data[1]));
+
+
+
+
             thisMapData.npcs[thisNPCsIndex].waitingForAPath = false;
-            // store the target tile so it doesn't try and go straight back to it after:
-            thisMapData.npcs[thisNPCsIndex].lastTargetDestination = e.data[2];
+            if (typeof e.data[2] !== "undefined") {
+                // store the target tile so it doesn't try and go straight back to it after:
+                thisMapData.npcs[thisNPCsIndex].lastTargetDestination = e.data[2];
+            }
         }
     }
 }
@@ -7130,6 +7138,10 @@ function moveNPCs() {
 
                 case '-':
                     // stand still:
+
+
+
+
                     thisNPC.isMoving = false;
                     thisNPC.forceNewMovementCheck = false;
                     break;
@@ -7164,6 +7176,7 @@ function moveNPCs() {
                         if (thisNPC.waitingTimer > thisNextMovement[3]) {
                             thisNPC.isMoving = true;
                             thisNPC.currentAnimation = 'walk';
+                            delete thisNPC.waitingTimer;
                         } else {
                             // keep waiting until got a path, and the timer has expired
                             thisNPC.movementIndex--;
@@ -7192,22 +7205,41 @@ function moveNPCs() {
                     break;
 
                 case 'pathEnd':
-                    var targetDestination = thisNPC.lastTargetDestination.split("-");
-                    thisNPC.drawnFacing = turntoFaceTile(thisNPC, targetDestination[0], targetDestination[1]);
-
-                    var thisPreviousMovement;
-                    // find the "find" before this and remove all elements after that to this index:
-                    for (j = thisNPC.movementIndex; j >= 0; j--) {
-                        thisPreviousMovement = thisNPC.movement[j];
-                        if (typeof thisPreviousMovement !== 'string') {
-                            if (thisPreviousMovement[0] == 'find') {
-                                var numberOfElementsRemoved = thisNPC.movementIndex - (j);
-                                thisNPC.movement.splice(j + 1, numberOfElementsRemoved);
-                                thisNPC.movementIndex -= numberOfElementsRemoved;
-                                thisNPC.isMoving = false;
-                                thisNPC.forceNewMovementCheck = true;
-                                thisNPC.waitingTimer = undefined;
-                                break;
+                var thisPreviousMovement;
+                    // check if it's a escort quest NPC that's come to the end of their pathfinding path:
+                    if (typeof thisNPC.following !== "undefined") {
+                        for (j = thisNPC.movementIndex; j >= 0; j--) {
+                            thisPreviousMovement = thisNPC.movement[j];
+                            if (typeof thisPreviousMovement === 'string') {
+                                if (thisPreviousMovement == 'following') {
+                                    var numberOfElementsRemoved = thisNPC.movementIndex - (j);
+                                    thisNPC.movement.splice(j + 1, numberOfElementsRemoved);
+                                    // this needs to be one more than the equivilient for 'find' types:
+                                    thisNPC.movementIndex -= (numberOfElementsRemoved + 1);
+                                    thisNPC.isMoving = true;
+                                    thisNPC.forceNewMovementCheck = true;
+                                    delete thisNPC.waitingTimer;
+                                    break;
+                                }
+                            }
+                        }
+                    } else {
+                        // it's a 'find' type movement that's just ended:
+                        var targetDestination = thisNPC.lastTargetDestination.split("-");
+                        thisNPC.drawnFacing = turntoFaceTile(thisNPC, targetDestination[0], targetDestination[1]);
+                        // find the "find" before this and remove all elements after that to this index:
+                        for (j = thisNPC.movementIndex; j >= 0; j--) {
+                            thisPreviousMovement = thisNPC.movement[j];
+                            if (typeof thisPreviousMovement !== 'string') {
+                                if (thisPreviousMovement[0] == 'find') {
+                                    var numberOfElementsRemoved = thisNPC.movementIndex - (j);
+                                    thisNPC.movement.splice(j + 1, numberOfElementsRemoved);
+                                    thisNPC.movementIndex -= numberOfElementsRemoved;
+                                    thisNPC.isMoving = false;
+                                    thisNPC.forceNewMovementCheck = true;
+                                    delete thisNPC.waitingTimer;
+                                    break;
+                                }
                             }
                         }
                     }
@@ -7254,6 +7286,7 @@ function moveNPCs() {
                     }
                     break;
                 case 'following':
+
                     // is already following, need to process that movement - check proximity to target to see if pet should stop moving: 
                     if ((isInRange(thisNPC.following.x, thisNPC.following.y, thisNPC.x, thisNPC.y, tileW * 2))) {
                         thisNPC.isMoving = false;
@@ -7287,22 +7320,36 @@ function moveNPCs() {
                                 }
                             }
                         }
-                        // keep it on the waiting item to keep checking:
-                        thisNPC.movementIndex--;
 
                         if (!breadcrumbFound) {
-
-                            // pathfind ####
-                            console.log("escort quest NPC lost breadcrumb - needs pathfinding");
-                            thisNPC.isMoving = false;
                             thisNPC.forceNewMovementCheck = true;
+                            if ((!thisNPC.waitingForAPath) && (typeof thisNPC.waitingTimer === "undefined")) {
+
+                                pathfindingWorker.postMessage(["npcFindFollowing", thisNPC, thisMapData]);
+                                // make sure to only request this once:
+                                thisNPC.isMoving = false;
+                                thisNPC.waitingForAPath = true;
+                                // play animation while waiting
+                                // thisNPC.currentAnimation = 'wait';
+                                thisNPC.waitingTimer = 0;
+                                // keep it on the waiting item to keep checking:
+                                thisNPC.movementIndex--;
+                            } else {
+
+                                thisNPC.isMoving = true;
+                                //delete thisNPC.waitingTimer;
+                                // thisNPC.currentAnimation = 'walk';
+                            }
                         } else {
+                            // keep it on the waiting item to keep checking:
+                            thisNPC.movementIndex--;
                             thisNPC.forceNewMovementCheck = false;
                         }
                     }
                     break;
 
                 default:
+
                     thisNPC.facing = thisNextMovement;
                     thisNPC.forceNewMovementCheck = false;
                     break;
@@ -7466,13 +7513,13 @@ function draw() {
             thisItemIdentifier = "item" + thisMapData.items[i].type + thisFileColourSuffix;
             if (typeof thisItem.animation !== "undefined") {
                 if (typeof thisItem.state !== "undefined") {
-                thisItemOffsetCol = (thisItem["animation"][thisItem.state]["length"]) - 1;
-                thisItemOffsetRow = thisItem["animation"][thisItem.state]["row"];
-            } else {
-                // use facing:
-thisItemOffsetCol = (thisItem["animation"]['facing']["length"]) - 1;
-                thisItemOffsetRow = thisItem["animation"]['facing'][thisItem.facing];
-            }
+                    thisItemOffsetCol = (thisItem["animation"][thisItem.state]["length"]) - 1;
+                    thisItemOffsetRow = thisItem["animation"][thisItem.state]["row"];
+                } else {
+                    // use facing:
+                    thisItemOffsetCol = (thisItem["animation"]['facing']["length"]) - 1;
+                    thisItemOffsetRow = thisItem["animation"]['facing'][thisItem.facing];
+                }
                 assetsToDraw.push([findIsoDepth(thisItem.x, thisItem.y, thisItem.z), "sprite", itemImages[thisItemIdentifier], thisItemOffsetCol * thisItem.spriteWidth, thisItemOffsetRow * thisItem.spriteHeight, thisItem.spriteWidth, thisItem.spriteHeight, Math.floor(thisX - hero.isox - thisItem.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisItem.centreY + (canvasHeight / 2) - thisItem.z), thisItem.spriteWidth, thisItem.spriteHeight]);
             } else {
 

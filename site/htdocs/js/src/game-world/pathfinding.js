@@ -16,17 +16,25 @@ if (window.Worker) {
                 thisPet.facing = e.data[2][0];
             }
         } else {
+
             // find which NPC this is:
             // http://stackoverflow.com/a/16100446/1054212
             var thisNPCsIndex = thisMapData.npcs.map(function(x) {
                 return x.name;
-            }).indexOf(thisAgentsName);
+            }).indexOf(thisAgentsName);  
+             
             // insert the new path:
             // http://stackoverflow.com/a/7032717/1054212
             thisMapData.npcs[thisNPCsIndex].movement.splice.apply(thisMapData.npcs[thisNPCsIndex].movement, [thisMapData.npcs[thisNPCsIndex].movementIndex + 2, 0].concat(e.data[1]));
+
+
+
+
             thisMapData.npcs[thisNPCsIndex].waitingForAPath = false;
-            // store the target tile so it doesn't try and go straight back to it after:
-            thisMapData.npcs[thisNPCsIndex].lastTargetDestination = e.data[2];
+            if (typeof e.data[2] !== "undefined") {
+                // store the target tile so it doesn't try and go straight back to it after:
+                thisMapData.npcs[thisNPCsIndex].lastTargetDestination = e.data[2];
+            }
         }
     }
 }

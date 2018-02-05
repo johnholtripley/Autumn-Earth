@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 05, 2018 at 09:54 AM
+-- Generation Time: Feb 05, 2018 at 11:22 AM
 -- Server version: 5.6.24
 -- PHP Version: 5.6.8
 
@@ -632,7 +632,7 @@ CREATE TABLE IF NOT EXISTS `tblinventoryitems` (
   `lockedToThisPlayer` tinyint(1) NOT NULL DEFAULT '0',
   `respawnRate` int(11) DEFAULT NULL,
   `activeDuringSeason` int(11) DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=56 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=57 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblinventoryitems`
@@ -692,7 +692,8 @@ INSERT INTO `tblinventoryitems` (`itemID`, `shortname`, `description`, `priceCod
 (52, 'Iron', 'A harder metal.', '1', '20.0', '24.0', 0, 0, NULL, NULL, 'iron', '', '0', 0, 0, '0', '0', '4', NULL, 0, 0, 0, 1, 0, NULL, NULL),
 (53, 'Home stone', 'Return to your home location.', '1', '20.0', '24.0', 0, 0, NULL, NULL, 'home-stone', 'home', '0', 0, 0, '0', '0', '', NULL, 0, 0, 0, 1, 0, NULL, NULL),
 (54, 'Wanted Poster', 'poster', '1', '25.0', '36.0', 52, 52, NULL, NULL, 'wanted-poster', 'notice', '0', 0, 0, '0', '0', '', NULL, 0, 0, 0, 0, 0, NULL, NULL),
-(55, 'Quest Book', '', '4', '12.0', '6.0', 20, 13, NULL, NULL, 'quest book', 'book,questSet', '?,9', 0, 0, '0', '0', NULL, NULL, 1, 0, 1, 0, 0, NULL, NULL);
+(55, 'Quest Book', '', '4', '12.0', '6.0', 20, 13, NULL, NULL, 'quest-book', 'book,questSet', '?,9', 0, 0, '0', '0', NULL, NULL, 1, 0, 1, 0, 0, NULL, NULL),
+(56, 'Simple Chair', '', '4', '32.0', '40.0', 38, 38, 44, 49, 'simple-chair', '', '', 1, 0, '0', '0', NULL, NULL, 1, 0, 0, 0, 0, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -2262,7 +2263,7 @@ ALTER TABLE `tblguilds`
 -- AUTO_INCREMENT for table `tblinventoryitems`
 --
 ALTER TABLE `tblinventoryitems`
-  MODIFY `itemID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=56;
+  MODIFY `itemID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=57;
 --
 -- AUTO_INCREMENT for table `tblitemcategories`
 --

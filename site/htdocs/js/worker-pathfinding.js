@@ -35,15 +35,15 @@ function addNode(parentNode, tileX, tileY, endX, endY) {
             if (i != thisAgentsIndex) {
                 // only include stationary NPCS:
                 if (thisMapData.npcs[i].movement[thisMapData.npcs[i].movementIndex] == '-') {
-                 if (thisMapData.npcs[i].isCollidable) {
-                    if (!((tileX == endX) && (tileY == endY))) {
-                        if (parseInt(thisMapData.npcs[i].tileX) == parseInt(tileX)) {
-                            if (parseInt(thisMapData.npcs[i].tileY) == parseInt(tileY)) {
-                                isBlocked = true;
+                    if (thisMapData.npcs[i].isCollidable) {
+                        if (!((tileX == endX) && (tileY == endY))) {
+                            if (parseInt(thisMapData.npcs[i].tileX) == parseInt(tileX)) {
+                                if (parseInt(thisMapData.npcs[i].tileY) == parseInt(tileY)) {
+                                    isBlocked = true;
+                                }
                             }
                         }
                     }
-                }
                 }
             }
         }
@@ -217,8 +217,18 @@ onmessage = function(e) {
             thisAgentsIndex = -1;
             mapTilesY = thisMapData.terrain.length;
             mapTilesX = thisMapData.terrain[0].length;
-           // e.data[5] is the pets index:
+            // e.data[5] is the pets index:
             postMessage(['pet', e.data[5], findPath(thisAgent.tileX, thisAgent.tileY, e.data[3], e.data[4])]);
+            break;
+        case 'npcFindFollowing':
+            var thisAgent = e.data[1];
+            thisMapData = e.data[2];
+            mapTilesY = thisMapData.terrain.length;
+            mapTilesX = thisMapData.terrain[0].length;
+            thisAgentsIndex = thisMapData.npcs.map(function(x) {
+                return x.name;
+            }).indexOf(thisAgent.name);
+            postMessage([thisAgent.name, findPath(thisAgent.tileX, thisAgent.tileY, thisAgent.following.tileX, thisAgent.following.tileY)]);
             break;
     }
 }
