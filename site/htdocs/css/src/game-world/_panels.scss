@@ -62,7 +62,9 @@ $numberOfItemCategories: 20;
     }
     img {
         display: block;
-        @include attention() {
+       // don't want :active otherwise the tooltip blocks dragging the item up a slot in Chrome
+       // @include attention() {
+        &:hover, &:focus {
             &+p {
                 // reveal tooltip
                 opacity: 1;

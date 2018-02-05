@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 05, 2018 at 11:22 AM
+-- Generation Time: Feb 05, 2018 at 03:51 PM
 -- Server version: 5.6.24
 -- PHP Version: 5.6.8
 
@@ -693,7 +693,7 @@ INSERT INTO `tblinventoryitems` (`itemID`, `shortname`, `description`, `priceCod
 (53, 'Home stone', 'Return to your home location.', '1', '20.0', '24.0', 0, 0, NULL, NULL, 'home-stone', 'home', '0', 0, 0, '0', '0', '', NULL, 0, 0, 0, 1, 0, NULL, NULL),
 (54, 'Wanted Poster', 'poster', '1', '25.0', '36.0', 52, 52, NULL, NULL, 'wanted-poster', 'notice', '0', 0, 0, '0', '0', '', NULL, 0, 0, 0, 0, 0, NULL, NULL),
 (55, 'Quest Book', '', '4', '12.0', '6.0', 20, 13, NULL, NULL, 'quest-book', 'book,questSet', '?,9', 0, 0, '0', '0', NULL, NULL, 1, 0, 1, 0, 0, NULL, NULL),
-(56, 'Simple Chair', '', '4', '32.0', '40.0', 38, 38, 44, 49, 'simple-chair', '', '', 1, 0, '0', '0', NULL, NULL, 1, 0, 0, 0, 0, NULL, NULL);
+(56, 'Simple Chair', '', '4', '32.0', '40.0', 38, 38, 44, 49, 'simple-chair', 'sit', '0', 1, 0, '0', '0', NULL, NULL, 1, 0, 0, 0, 0, NULL, NULL);
 
 -- --------------------------------------------------------
 
