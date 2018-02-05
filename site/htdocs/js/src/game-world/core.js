@@ -1124,6 +1124,27 @@ function gameLoop() {
         case "cardGame":
             cardGameNameSpace.update();
             cardGameNameSpace.draw();
+            // keep the surrounding game world running:
+             var now = window.performance.now();
+    hero.totalGameTimePlayed++;
+    var elapsed = (now - lastTime);
+    lastTime = now;
+  timeSinceLastFrameSwap += elapsed;
+    if (timeSinceLastFrameSwap > animationUpdateTime) {
+        currentAnimationFrame++;
+        timeSinceLastFrameSwap = 0;
+        animateFae();
+    }
+    moveFae();
+    moveNPCs();
+    movePet();
+    movePlatforms();
+    updateItems();
+  audio.checkForAmbientSounds();
+    checkForRespawns();
+    UI.updateCooldowns();
+    // only need to draw if the game board doesn't cover the screen: ####
+     draw();
             break;
         case "play":
             update();
@@ -1915,6 +1936,8 @@ function moveNPCs() {
     var thisNPC, newTile, thisNextMovement, oldNPCx, oldNPCy, thisOtherNPC, thisItem, thisNextMovement, thisNextMovementCode, thisInnerDoor;
     for (var i = 0; i < thisMapData.npcs.length; i++) {
         thisNPC = thisMapData.npcs[i];
+        // check this NPC is playing cards with the hero:
+        if(typeof thisNPC.isPlayingCards === "undefined") {
         newTile = false;
         if (thisNPC.isMoving) {
             oldNPCx = thisNPC.x;
@@ -2278,6 +2301,7 @@ function moveNPCs() {
                     break;
             }
         }
+    }
     }
 }
 

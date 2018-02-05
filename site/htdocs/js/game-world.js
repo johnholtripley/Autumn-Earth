@@ -1819,6 +1819,7 @@ function cardGamePlayer2Wins() {
     hero.stats.cardGamesWon++;
     hero.currency.cardDust += 7;
     UI.updateCurrencies();
+    delete thisChallengeNPC.isPlayingCards;
     processPlayerWinSpeech(thisChallengeNPC, thisChallengeNPC.cardGameSpeech.lose[0], thisChallengeNPC.cardGameSpeech.lose[1]);
     closeCardGame();
 }
@@ -1829,6 +1830,7 @@ function cardGamePlayer1Wins() {
     hero.stats.cardGamesLost++;
     hero.currency.cardDust += 1;
     UI.updateCurrencies();
+     delete thisChallengeNPC.isPlayingCards;
     processSpeech(thisChallengeNPC, thisChallengeNPC.cardGameSpeech.win[0], thisChallengeNPC.cardGameSpeech.win[1]);
     closeCardGame();
 }
@@ -1838,6 +1840,7 @@ function cardGameIsDrawn() {
     hero.stats.cardGamesDrawn++;
     hero.currency.cardDust += 3;
     UI.updateCurrencies();
+     delete thisChallengeNPC.isPlayingCards;
     processSpeech(thisChallengeNPC, thisChallengeNPC.cardGameSpeech.draw[0], thisChallengeNPC.cardGameSpeech.draw[1]);
     closeCardGame();
 }
@@ -1883,6 +1886,7 @@ function startCardGame(opponentNPC) {
         }
         cardGameNameSpace.initialiseCardGame();
         cardGameWrapper.classList.add("active");
+        opponentNPC.isPlayingCards = true;
     } else {
         UI.showNotification('<p>You don\'t have enough cards</p>');
     }
@@ -6189,6 +6193,27 @@ function gameLoop() {
         case "cardGame":
             cardGameNameSpace.update();
             cardGameNameSpace.draw();
+            // keep the surrounding game world running:
+             var now = window.performance.now();
+    hero.totalGameTimePlayed++;
+    var elapsed = (now - lastTime);
+    lastTime = now;
+  timeSinceLastFrameSwap += elapsed;
+    if (timeSinceLastFrameSwap > animationUpdateTime) {
+        currentAnimationFrame++;
+        timeSinceLastFrameSwap = 0;
+        animateFae();
+    }
+    moveFae();
+    moveNPCs();
+    movePet();
+    movePlatforms();
+    updateItems();
+  audio.checkForAmbientSounds();
+    checkForRespawns();
+    UI.updateCooldowns();
+    // only need to draw if the game board doesn't cover the screen: ####
+     draw();
             break;
         case "play":
             update();
@@ -6980,6 +7005,8 @@ function moveNPCs() {
     var thisNPC, newTile, thisNextMovement, oldNPCx, oldNPCy, thisOtherNPC, thisItem, thisNextMovement, thisNextMovementCode, thisInnerDoor;
     for (var i = 0; i < thisMapData.npcs.length; i++) {
         thisNPC = thisMapData.npcs[i];
+        // check this NPC is playing cards with the hero:
+        if(typeof thisNPC.isPlayingCards === "undefined") {
         newTile = false;
         if (thisNPC.isMoving) {
             oldNPCx = thisNPC.x;
@@ -7343,6 +7370,7 @@ function moveNPCs() {
                     break;
             }
         }
+    }
     }
 }
 
