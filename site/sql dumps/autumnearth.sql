@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 02, 2018 at 11:36 AM
+-- Generation Time: Feb 05, 2018 at 09:54 AM
 -- Server version: 5.6.24
 -- PHP Version: 5.6.8
 
@@ -1397,16 +1397,16 @@ CREATE TABLE IF NOT EXISTS `tblquests` (
 --
 
 INSERT INTO `tblquests` (`questID`, `journalTitle`, `journalDesc`, `questRegion`, `isRepeatable`, `childOf`, `startItemsReceived`, `itemsNeededForCompletion`, `itemsReceivedOnCompletion`, `whatIsRequiredForCompletion`, `titleGainedAfterCompletion`, `thresholdNeededForCompletion`, `subQuestsRequiredForCompletion`) VALUES
-(1, 'A hero''s journey', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 'Teldrassil', 0, NULL, '9', '9', '2x21/1x1/1x2/1x3', 'give', 4, '', NULL),
-(2, 'An unexpected journey', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 'Teldrassil', 0, NULL, '', '', '9,14,$10000', 'world', NULL, '', NULL),
-(3, 'A longer journey', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 'Teldrassil', 1, NULL, '', '', '', 'hero.stats.numberOfcardsFlipped', NULL, '+2', NULL),
-(4, 'A hero''s peregrination', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 'Teldrassil', 0, NULL, '5,9', '5x19', '2x21,9', 'possess', 7, '', NULL),
-(5, 'A much longer task', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 'Teldrassil', 0, NULL, '', NULL, '2x21,9', 'multi', 7, '', '6,7'),
-(6, 'sub task 1', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 'Teldrassil', 0, NULL, '', '', '', 'world', NULL, '', NULL),
-(7, 'sub task 2', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 'Teldrassil', 0, NULL, '', '', '', 'hero.stats.numberOfcardsFlipped', NULL, '+2', NULL),
-(8, 'Win a card game', 'Beat NPC at cards, and got a rare chocobo card', 'Teldrassil', 0, NULL, '', '0', '36', '', NULL, '', NULL),
-(9, 'Find the wizard', 'Locate the wizard', 'Central Kalimdor', 0, NULL, '', '0', '20', '', NULL, '', NULL),
-(10, 'Escort to Dalaran', 'Help a traveller find their way to Dalaran.', 'Central Kalimdor', 0, NULL, '', '0', '20', '', NULL, '', NULL);
+(1, 'A hero''s journey', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 'Iylan', 0, NULL, '9', '9', '2x21/1x1/1x2/1x3', 'give', 4, '', NULL),
+(2, 'An unexpected journey', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 'Iylan', 0, NULL, '', '', '9,14,$10000', 'world', NULL, '', NULL),
+(3, 'A longer journey', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 'Iylan', 1, NULL, '', '', '', 'hero.stats.numberOfcardsFlipped', NULL, '+2', NULL),
+(4, 'A hero''s peregrination', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 'Iylan', 0, NULL, '5,9', '5x19', '2x21,9', 'possess', 7, '', NULL),
+(5, 'A much longer task', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 'Iylan', 0, NULL, '', NULL, '2x21,9', 'multi', 7, '', '6,7'),
+(6, 'sub task 1', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 'Iylan', 0, NULL, '', '', '', 'world', NULL, '', NULL),
+(7, 'sub task 2', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 'Iylan', 0, NULL, '', '', '', 'hero.stats.numberOfcardsFlipped', NULL, '+2', NULL),
+(8, 'Win a card game', 'Beat NPC at cards, and got a rare chocobo card', 'Iylan', 0, NULL, '', '0', '36', '', NULL, '', NULL),
+(9, 'Find the wizard', 'Locate the wizard', 'Brythillion', 0, NULL, '', '0', '20', '', NULL, '', NULL),
+(10, 'Escort to Brythillion', 'Help a traveller find their way to Brythillion.', 'Brythillion', 0, NULL, '', '0', '20', 'escort', NULL, '', NULL);
 
 -- --------------------------------------------------------
 
@@ -1505,8 +1505,8 @@ CREATE TABLE IF NOT EXISTS `tblregions` (
 --
 
 INSERT INTO `tblregions` (`regionID`, `regionName`, `InWhichcontinent`) VALUES
-(0, 'Teldrassil', 'Kalimdor'),
-(1, 'Central Kalimdor', 'Kalimdor');
+(0, 'Iylan', 'Kalimdor'),
+(1, 'Brythillion', 'Kalimdor');
 
 -- --------------------------------------------------------
 

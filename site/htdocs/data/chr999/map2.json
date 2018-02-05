@@ -1,8 +1,12 @@
 {
-    "map": {
+    "map":
+    {
         "zoneName": "The Old Meadows",
         "region": "Teldrassil",
-        "ambientSounds": {"birdSong": "../sounds/bird-song.mp3"},
+        "ambientSounds":
+        {
+            "birdSong": "../sounds/bird-song.mp3"
+        },
         "collisions": [
             [1, "d", "d", "d", 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -118,22 +122,53 @@
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         ],
         "graphics": [
-            { "src": "pendean-left.png", "centreX": 134, "centreY": 313 },
-            { "src": "pendean-right.png", "centreX": 117, "centreY": 361 },
-            { "src": "pendean-overlay.png", "centreX": 182, "centreY": 187 },
-            { "src": "pine-tree.png", "centreX": 296, "centreY": 399 }
-        ],
-        "weather": ["","rain"],
-        "shops": [{
+        {
+            "src": "pendean-left.png",
+            "centreX": 134,
+            "centreY": 313
+        },
+        {
+            "src": "pendean-right.png",
+            "centreX": 117,
+            "centreY": 361
+        },
+        {
+            "src": "pendean-overlay.png",
+            "centreX": 182,
+            "centreY": 187
+        },
+        {
+            "src": "pine-tree.png",
+            "centreX": 296,
+            "centreY": 399
+        }],
+        "weather": ["", "rain"],
+        "shops": [
+        {
             "name": "shop #1",
             "uniqueItems": [],
             "specialism": 2,
             "categories": [1, 2],
             "size": "small",
             "currency": "money"
-        }, {
+        },
+        {
             "name": "shop #2",
-            "uniqueItems": { "14": [{ "colour": 3 }, { "colour": 7 }], "15": [{ "colour": 1, "inscription": "stuffffff" }] },
+            "uniqueItems":
+            {
+                "14": [
+                {
+                    "colour": 3
+                },
+                {
+                    "colour": 7
+                }],
+                "15": [
+                {
+                    "colour": 1,
+                    "inscription": "stuffffff"
+                }]
+            },
             "specialism": null,
             "categories": [3],
             "size": "small",
@@ -160,15 +195,19 @@
                 "centreY": 72,
                 "tileX": 11,
                 "tileY": 17,
-                "movement": [["proximity",4],"remove","?"],
+                "movement": [
+                    ["proximity", 4], "remove", "?"
+                ],
                 "facing": "w",
                 "walkThroughDoors": false,
                 "speed": 2,
                 "speech": "",
                 "isCollidable": false,
                 "isMoving": true,
-                "animation": {
-                    "walk": {
+                "animation":
+                {
+                    "walk":
+                    {
                         "length": 10,
                         "n": 0,
                         "e": 1,
@@ -176,7 +215,8 @@
                         "w": 3
                     }
                 }
-            }, {
+            },
+            {
                 "name": "hen",
                 "src": "white-hen.png",
                 "width": 20,
@@ -195,11 +235,13 @@
                     ["", "sound", "hen"]
 
                 ],
-               
+
                 "isCollidable": true,
                 "isMoving": false,
-                "animation": {
-                    "walk": {
+                "animation":
+                {
+                    "walk":
+                    {
                         "length": 1,
                         "n": 0,
                         "e": 1,
@@ -207,7 +249,8 @@
                         "w": 3
                     }
                 }
-            }, {
+            },
+            {
                 "name": "hen",
                 "src": "white-hen.png",
                 "width": 20,
@@ -226,11 +269,13 @@
                     ["", "sound", "hen"]
 
                 ],
-               
+
                 "isCollidable": true,
                 "isMoving": false,
-                "animation": {
-                    "walk": {
+                "animation":
+                {
+                    "walk":
+                    {
                         "length": 1,
                         "n": 0,
                         "e": 1,
@@ -238,7 +283,8 @@
                         "w": 3
                     }
                 }
-            }, {
+            },
+            {
                 "name": "labourer",
                 "src": "labourer.png",
                 "width": 20,
@@ -255,12 +301,13 @@
                 "speed": 2,
                 "isCollidable": true,
                 "isMoving": false,
-               
+
                 "speech": [
                     ["hello", "once"],
                     ["hello again/hi/howdo", ""]
                 ],
-                "cardGameSpeech": {
+                "cardGameSpeech":
+                {
                     "challenge": ["Do you play? Fancy a game then?", "play"],
                     "win": ["Woo! I won!", ""],
                     "lose": ["Ahh, you beat me...", ""],
@@ -269,8 +316,10 @@
                 "cardSkill": 1,
                 "uniqueCards": [2, 2],
                 "baseCardPack": 0,
-                "animation": {
-                    "walk": {
+                "animation":
+                {
+                    "walk":
+                    {
                         "length": 1,
                         "n": 2,
                         "e": 3,
@@ -278,7 +327,8 @@
                         "w": 1
                     }
                 }
-            }, {
+            },
+            {
                 "name": "labourer2",
                 "src": "labourer2.png",
                 "width": 20,
@@ -295,12 +345,13 @@
                 "speed": 2,
                 "isCollidable": true,
                 "isMoving": false,
-               
+
                 "speech": [
                     ["Flip at least 2 cards|quest open but not complete|complete - good work", "quest", "3"],
                     ["after quest", ""]
                 ],
-                "cardGameSpeech": {
+                "cardGameSpeech":
+                {
                     "challenge": ["Do you play? Fancy a game then?", "play"],
                     "win": ["Woo! I won!", ""],
                     "lose": ["Ahh, you beat me...", ""],
@@ -309,8 +360,10 @@
                 "cardSkill": 1,
                 "uniqueCards": [2, 2],
                 "baseCardPack": 0,
-                "animation": {
-                    "walk": {
+                "animation":
+                {
+                    "walk":
+                    {
                         "length": 1,
                         "n": 2,
                         "e": 3,
@@ -318,7 +371,8 @@
                         "w": 1
                     }
                 }
-            }, {
+            },
+            {
                 "name": "labourer3",
                 "src": "labourer3.png",
                 "width": 20,
@@ -335,12 +389,13 @@
                 "speed": 2,
                 "isCollidable": true,
                 "isMoving": false,
-               
+
                 "speech": [
                     ["give this mordant to the green bloke please|the near by green bloke - over there|thanks for taking that over", "quest-no-close", "1"],
                     ["that was really kind", ""]
                 ],
-                "cardGameSpeech": {
+                "cardGameSpeech":
+                {
                     "challenge": ["Do you play? Fancy a game then?", "play"],
                     "win": ["Woo! I won!", ""],
                     "lose": ["Ahh, you beat me...", ""],
@@ -349,8 +404,10 @@
                 "cardSkill": 1,
                 "uniqueCards": [2, 2],
                 "baseCardPack": 0,
-                "animation": {
-                    "walk": {
+                "animation":
+                {
+                    "walk":
+                    {
                         "length": 1,
                         "n": 2,
                         "e": 3,
@@ -358,7 +415,8 @@
                         "w": 1
                     }
                 }
-            }, {
+            },
+            {
                 "name": "labourer4",
                 "src": "labourer4.png",
                 "width": 20,
@@ -375,12 +433,13 @@
                 "speed": 2,
                 "isCollidable": true,
                 "isMoving": false,
-               
+
                 "speech": [
                     ["I could really do with some mordant... I wonder if pink guy has any?|-|thanks for giving me that mordant, here's some ##itemName##.", "quest-no-open", "1"],
                     ["that was really kind of you", ""]
                 ],
-                "cardGameSpeech": {
+                "cardGameSpeech":
+                {
                     "challenge": ["Do you play? Fancy a game then?", "play"],
                     "win": ["Woo! I won!", ""],
                     "lose": ["Ahh, you beat me...", ""],
@@ -389,8 +448,10 @@
                 "cardSkill": 1,
                 "uniqueCards": [2, 2],
                 "baseCardPack": 0,
-                "animation": {
-                    "walk": {
+                "animation":
+                {
+                    "walk":
+                    {
                         "length": 1,
                         "n": 2,
                         "e": 3,
@@ -398,7 +459,8 @@
                         "w": 1
                     }
                 }
-            }, {
+            },
+            {
                 "name": "labourer5",
                 "src": "labourer5.png",
                 "width": 20,
@@ -419,7 +481,8 @@
                     ["Touch that standing stone|Just touch it|Did you feel the power?", "quest", "2"],
                     ["I like standing stones...", ""]
                 ],
-                "cardGameSpeech": {
+                "cardGameSpeech":
+                {
                     "challenge": ["Do you play? Fancy a game then?", "play"],
                     "win": ["Woo! I won!", ""],
                     "lose": ["Ahh, you beat me...", ""],
@@ -428,8 +491,10 @@
                 "cardSkill": 1,
                 "uniqueCards": [2, 2],
                 "baseCardPack": 0,
-                "animation": {
-                    "walk": {
+                "animation":
+                {
+                    "walk":
+                    {
                         "length": 1,
                         "n": 2,
                         "e": 3,
@@ -437,7 +502,8 @@
                         "w": 1
                     }
                 }
-            }, {
+            },
+            {
                 "name": "labourer6",
                 "src": "labourer6.png",
                 "width": 20,
@@ -453,12 +519,13 @@
                 "walkThroughDoors": false,
                 "speed": 2,
                 "isCollidable": true,
-                "isMoving": false,           
+                "isMoving": false,
                 "speech": [
                     ["flip 2 cards and go near the stone|near the stone and 2 cards - done it yet?|great stuff on both tasks", "quest", "5"],
                     ["Great work", ""]
                 ],
-                "cardGameSpeech": {
+                "cardGameSpeech":
+                {
                     "challenge": ["Do you play? Fancy a game then?", "play"],
                     "win": ["Woo! I won!", ""],
                     "lose": ["Ahh, you beat me...", ""],
@@ -467,8 +534,10 @@
                 "cardSkill": 1,
                 "uniqueCards": [2, 2],
                 "baseCardPack": 0,
-                "animation": {
-                    "walk": {
+                "animation":
+                {
+                    "walk":
+                    {
                         "length": 1,
                         "n": 2,
                         "e": 3,
@@ -476,7 +545,8 @@
                         "w": 1
                     }
                 }
-            }, {
+            },
+            {
                 "name": "labourer8",
                 "src": "labourer8.png",
                 "width": 20,
@@ -487,16 +557,18 @@
                 "centreY": 73,
                 "tileX": 30,
                 "tileY": 25,
-                "movement": ["-",["follow","hero"],"-"],
+                "movement": ["-", ["follow", "hero"], "-"],
                 "facing": "n",
                 "walkThroughDoors": false,
                 "speed": 2,
                 "isCollidable": true,
                 "isMoving": false,
-                "speech": [    
-                    ["Hi ##characterName##, can you take me to Brythillion?|Are we there yet?|Thanks, I'd never have made it on my own.", "quest-optional", "10", "2|28|5|10", "another time maybe?", "","you will? fantastic!", "move"],["so kind of you thanks",""]
+                "speech": [
+                    ["Hi ##characterName##, can you take me to Brythillion?|Are we there yet?|Thanks, I'd never have made it on my own.", "quest-optional", "10", "2|28|5|10", "another time maybe?", "", "you will? fantastic!", "move"],
+                    ["so kind of you thanks", ""]
                 ],
-                "cardGameSpeech": {
+                "cardGameSpeech":
+                {
                     "challenge": ["Do you play? Fancy a game then?", "play"],
                     "win": ["Woo! I won!", ""],
                     "lose": ["Ahh, you beat me...", ""],
@@ -505,8 +577,10 @@
                 "cardSkill": 1,
                 "uniqueCards": [2, 2],
                 "baseCardPack": 0,
-                "animation": {
-                    "walk": {
+                "animation":
+                {
+                    "walk":
+                    {
                         "length": 1,
                         "n": 2,
                         "e": 3,
@@ -514,7 +588,8 @@
                         "w": 1
                     }
                 }
-            }, {
+            },
+            {
                 "name": "labourer9",
                 "src": "labourer4.png",
                 "width": 20,
@@ -525,16 +600,18 @@
                 "centreY": 73,
                 "tileX": 14,
                 "tileY": 25,
-                "movement": ["-","s","s","s","s"],
+                "movement": ["-", "s", "s", "s", "s"],
                 "facing": "n",
                 "walkThroughDoors": false,
                 "speed": 2,
                 "isCollidable": true,
                 "isMoving": false,
-                "speech": [    
-                    ["Can I go now?", "move,once"],["please?",""]
+                "speech": [
+                    ["Can I go now?", "move,once"],
+                    ["please?", ""]
                 ],
-                "cardGameSpeech": {
+                "cardGameSpeech":
+                {
                     "challenge": ["Do you play? Fancy a game then?", "play"],
                     "win": ["Woo! I won!", ""],
                     "lose": ["Ahh, you beat me...", ""],
@@ -543,8 +620,10 @@
                 "cardSkill": 1,
                 "uniqueCards": [2, 2],
                 "baseCardPack": 0,
-                "animation": {
-                    "walk": {
+                "animation":
+                {
+                    "walk":
+                    {
                         "length": 1,
                         "n": 2,
                         "e": 3,
@@ -552,7 +631,8 @@
                         "w": 1
                     }
                 }
-            }, {
+            },
+            {
                 "name": "shopkeeper1",
                 "src": "shopkeeper1.png",
                 "width": 20,
@@ -572,7 +652,8 @@
                 "speech": [
                     ["Hi there - welcome!/Feel free to have a good look around, ##characterName##/Welcome, welcome!", "shop", "shop #1"]
                 ],
-                "cardGameSpeech": {
+                "cardGameSpeech":
+                {
                     "challenge": ["Do you play? Fancy a game then?", "play"],
                     "win": ["Woo! I won!", ""],
                     "lose": ["Ahh, you beat me...", ""],
@@ -581,8 +662,10 @@
                 "cardSkill": 1,
                 "uniqueCards": [2, 2],
                 "baseCardPack": 0,
-                "animation": {
-                    "walk": {
+                "animation":
+                {
+                    "walk":
+                    {
                         "length": 1,
                         "n": 2,
                         "e": 3,
@@ -590,7 +673,8 @@
                         "w": 1
                     }
                 }
-            }, {
+            },
+            {
                 "name": "shopkeeper2",
                 "src": "shopkeeper1.png",
                 "width": 20,
@@ -610,7 +694,8 @@
                 "speech": [
                     ["Hi there - welcome!/Feel free to have a good look around, ##characterName##/Welcome, welcome!", "shop", "shop #2"]
                 ],
-                "cardGameSpeech": {
+                "cardGameSpeech":
+                {
                     "challenge": ["Do you play? Fancy a game then?", "play"],
                     "win": ["Woo! I won!", ""],
                     "lose": ["Ahh, you beat me...", ""],
@@ -619,8 +704,10 @@
                 "cardSkill": 1,
                 "uniqueCards": [2, 2],
                 "baseCardPack": 0,
-                "animation": {
-                    "walk": {
+                "animation":
+                {
+                    "walk":
+                    {
                         "length": 1,
                         "n": 2,
                         "e": 3,
@@ -628,8 +715,8 @@
                         "w": 1
                     }
                 }
-            }, 
-{
+            },
+            {
                 "name": "shopkeeper3",
                 "src": "shopkeeper1.png",
                 "width": 20,
@@ -649,7 +736,8 @@
                 "speech": [
                     ["Hi there - welcome!/Feel free to have a good look around, ##characterName##/Welcome, welcome!", "shop", "shop #3"]
                 ],
-                "cardGameSpeech": {
+                "cardGameSpeech":
+                {
                     "challenge": ["Do you play? Fancy a game then?", "play"],
                     "win": ["Woo! I won!", ""],
                     "lose": ["Ahh, you beat me...", ""],
@@ -658,8 +746,10 @@
                 "cardSkill": 1,
                 "uniqueCards": [2, 2],
                 "baseCardPack": 0,
-                "animation": {
-                    "walk": {
+                "animation":
+                {
+                    "walk":
+                    {
                         "length": 1,
                         "n": 2,
                         "e": 3,
@@ -679,16 +769,22 @@
                 "centreY": 76,
                 "tileX": 14,
                 "tileY": 27,
-                "movement": [["find","shop","waitingAnimationName",0],["remove"],["find","shop","waitingAnimationName",360],["talkToNeighbour"]],
+                "movement": [
+                    ["find", "shop", "waitingAnimationName", 0],
+                    ["remove"],
+                    ["find", "shop", "waitingAnimationName", 360],
+                    ["talkToNeighbour"]
+                ],
                 "facing": "s",
                 "walkThroughDoors": false,
                 "speed": 2,
                 "isCollidable": true,
                 "isMoving": false,
                 "speech": [
-                    ["Need to keep an eye out...",""]
+                    ["Need to keep an eye out...", ""]
                 ],
-                "cardGameSpeech": {
+                "cardGameSpeech":
+                {
                     "challenge": ["Do you play? Fancy a game then?", "play"],
                     "win": ["Woo! I won!", ""],
                     "lose": ["Ahh, you beat me...", ""],
@@ -697,23 +793,27 @@
                 "cardSkill": 1,
                 "uniqueCards": [2, 2],
                 "baseCardPack": 0,
-                "animation": {
-                    "walk": {
+                "animation":
+                {
+                    "walk":
+                    {
                         "length": 30,
                         "n": 0,
                         "e": 1,
                         "s": 2,
                         "w": 3
                     },
-                    "wait": {
-                         "length": 1,
+                    "wait":
+                    {
+                        "length": 1,
                         "n": 0,
                         "e": 1,
                         "s": 2,
                         "w": 3
                     }
                 }
-            }, {
+            },
+            {
                 "name": "brown horse",
                 "src": "brown-horse.png",
                 "width": 36,
@@ -724,7 +824,7 @@
                 "centreY": 96,
                 "tileX": 20,
                 "tileY": 28,
-                "movement": ["s","s","e","e","n","n","w","w"],
+                "movement": ["s", "s", "e", "e", "n", "n", "w", "w"],
                 "facing": "s",
                 "walkThroughDoors": false,
                 "speed": 1,
@@ -734,14 +834,18 @@
                 ],
                 "isCollidable": true,
                 "isMoving": true,
-                "animation": {
-                    "walk": {
+                "animation":
+                {
+                    "walk":
+                    {
                         "length": 1,
                         "n": 0,
                         "e": 1,
                         "s": 2,
                         "w": 3
-                    },    "wait": {
+                    },
+                    "wait":
+                    {
                         "length": 1,
                         "n": 0,
                         "e": 1,
@@ -749,7 +853,8 @@
                         "w": 3
                     }
                 }
-            },{
+            },
+            {
                 "name": "Wizard searcher",
                 "src": "labourer7.png",
                 "width": 20,
@@ -770,7 +875,8 @@
                     ["Have you seen the poster?|Keep looking|You found him - good job", "quest-no-open", "9"],
                     ["good job finding him", ""]
                 ],
-                "cardGameSpeech": {
+                "cardGameSpeech":
+                {
                     "challenge": ["Do you play? Fancy a game then?", "play"],
                     "win": ["Woo! I won!", ""],
                     "lose": ["Ahh, you beat me...", ""],
@@ -779,8 +885,10 @@
                 "cardSkill": 1,
                 "uniqueCards": [2, 2],
                 "baseCardPack": 0,
-                "animation": {
-                    "walk": {
+                "animation":
+                {
+                    "walk":
+                    {
                         "length": 1,
                         "n": 2,
                         "e": 3,
@@ -791,53 +899,80 @@
             }
 
         ],
-        "doors": {
-            "1,0": {
+        "doors":
+        {
+            "1,0":
+            {
                 "map": -1,
                 "startX": "?-1",
                 "startY": "?"
             },
-            "2,0": {
+            "2,0":
+            {
                 "map": -1,
                 "startX": "?",
                 "startY": "?"
             },
-            "3,0": {
+            "3,0":
+            {
                 "map": -1,
                 "startX": "?+1",
                 "startY": "?"
             }
         },
         "items": [
+            {
 
-{
+                "type": 56,
+                "tileX": 30,
+                "tileY": 20,
+                "facing": "s",
+                "animation":
+                {
+                    "facing":
+                    {
+                        "length": 1,
+                        "n": 0,
+                        "e": 1,
+                        "s": 2,
+                        "w": 3
+                    }
+                }
+
+            },
+            {
 
                 "type": 54,
                 "tileX": 33,
                 "tileY": 17,
-                "contains": [["Have you seen this wizard?","quest",9]]
+                "contains": [
+                    ["Have you seen this wizard?", "quest", 9]
+                ]
 
             },
 
-        {
+            {
 
                 "type": 18,
                 "tileX": 23,
                 "tileY": 28
 
-            }, {
+            },
+            {
 
                 "type": 18,
                 "tileX": 22,
                 "tileY": 26
 
-            },{
+            },
+            {
 
                 "type": 18,
                 "tileX": 16,
                 "tileY": 18
 
-            },{
+            },
+            {
 
                 "type": 19,
                 "tileX": 12,
@@ -853,13 +988,15 @@
                 "hallmark": 0,
                 "inscription": ""
 
-            }, {
+            },
+            {
 
                 "type": 22,
                 "tileX": 9,
                 "tileY": 3
 
-            }, {
+            },
+            {
                 "type": 32,
                 "tileX": 10,
                 "tileY": 3,
@@ -873,89 +1010,128 @@
                 "enchanted": 0,
                 "hallmark": 0,
                 "inscription": "##procedural##"
-            }, {
-                  "type": 48,
-                  "tileX": 17,
-                  "tileY": 4,
-                  "contains": [{"type": 1},{"type": 3},{"type": "$", "quantity": 3000}]
-            }, {
-
-            "type": 35,
-            "tileX": 15,
-            "tileY": 28,
-            "quality": 80,
-            "maxStability": 60,
-            "maxQuantity": 10,
-            "purity": 70,
-            "state": "active",
-            "animation": {
-                  "active": {"length": 1,"row":0},
-                  "inactive": {"length": 1,"row":1}
             },
-             "contains": [{
-                "type": 1,
-                "colour": 0
-            }]
-
-        }, {
-
-            "type": 35,
-            "tileX": 19,
-            "tileY": 28,
-            "quality": 80,
-            "maxStability": 90,
-            "maxQuantity": 10,
-            "purity": 70,
-            "state": "active",
-            "animation": {
-                  "active": {"length": 1,"row":0},
-                  "inactive": {"length": 1,"row":1}
+            {
+                "type": 48,
+                "tileX": 17,
+                "tileY": 4,
+                "contains": [
+                {
+                    "type": 1
+                },
+                {
+                    "type": 3
+                },
+                {
+                    "type": "$",
+                    "quantity": 3000
+                }]
             },
-             "contains": [{
-                "type": 1,
-                "colour": 0
-            }]
+            {
 
-        }
+                "type": 35,
+                "tileX": 15,
+                "tileY": 28,
+                "quality": 80,
+                "maxStability": 60,
+                "maxQuantity": 10,
+                "purity": 70,
+                "state": "active",
+                "animation":
+                {
+                    "active":
+                    {
+                        "length": 1,
+                        "row": 0
+                    },
+                    "inactive":
+                    {
+                        "length": 1,
+                        "row": 1
+                    }
+                },
+                "contains": [
+                {
+                    "type": 1,
+                    "colour": 0
+                }]
+
+            },
+            {
+
+                "type": 35,
+                "tileX": 19,
+                "tileY": 28,
+                "quality": 80,
+                "maxStability": 90,
+                "maxQuantity": 10,
+                "purity": 70,
+                "state": "active",
+                "animation":
+                {
+                    "active":
+                    {
+                        "length": 1,
+                        "row": 0
+                    },
+                    "inactive":
+                    {
+                        "length": 1,
+                        "row": 1
+                    }
+                },
+                "contains": [
+                {
+                    "type": 1,
+                    "colour": 0
+                }]
+
+            }
 
         ],
-        "hotspots": [{
-            "centreX": 9,
-            "centreY": 3,
-            "radius": 5,
-            "quest": 2,
-            "message": "you found the ancient standing stone site",
-            "music": "elven-glade-WoW-NOT-MINE"
+        "hotspots": [
+            {
+                "centreX": 9,
+                "centreY": 3,
+                "radius": 5,
+                "quest": 2,
+                "message": "you found the ancient standing stone site",
+                "music": "elven-glade-WoW-NOT-MINE"
 
-        },
-
-
-
+            },
 
 
-{
-     "centreX": 14,
-            "centreY": 28,
-            "radius": 5, 
-            "message": "you fote",
-            "music": "ambient-darnassus-WoW-NOT-MINE"
-}
+
+
+
+            {
+                "centreX": 14,
+                "centreY": 28,
+                "radius": 5,
+                "message": "you fote",
+                "music": "ambient-darnassus-WoW-NOT-MINE"
+            }
 
         ],
-"hiddenResourceCategories": [4],
-"hiddenResourceTier": 7,
-        "eventSpecificContent": {
-            "halloween": {
-                "items": [{
+        "hiddenResourceCategories": [4],
+        "hiddenResourceTier": 7,
+        "eventSpecificContent":
+        {
+            "halloween":
+            {
+                "items": [
+                {
                     "type": 18,
                     "tileX": 11,
                     "tileY": 3
-                }, {
+                },
+                {
                     "type": 18,
                     "tileX": 10,
                     "tileY": 3
                 }],
-                "npcs": [{
+                "npcs": [
+                {
                     "name": "butterfly2",
                     "src": "orange-butterfly.png",
                     "width": 15,
@@ -973,8 +1149,10 @@
                     "speech": "",
                     "isCollidable": false,
                     "isMoving": true,
-                    "animation": {
-                        "walk": {
+                    "animation":
+                    {
+                        "walk":
+                        {
                             "length": 10,
                             "n": 0,
                             "e": 1,
@@ -984,8 +1162,10 @@
                     }
                 }]
             },
-            "christmas": {
-                "items": [{
+            "christmas":
+            {
+                "items": [
+                {
                     "type": 18,
                     "tileX": 11,
                     "tileY": 2
