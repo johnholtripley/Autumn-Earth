@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 05, 2018 at 03:51 PM
+-- Generation Time: Feb 06, 2018 at 11:08 AM
 -- Server version: 5.6.24
 -- PHP Version: 5.6.8
 
@@ -632,7 +632,7 @@ CREATE TABLE IF NOT EXISTS `tblinventoryitems` (
   `lockedToThisPlayer` tinyint(1) NOT NULL DEFAULT '0',
   `respawnRate` int(11) DEFAULT NULL,
   `activeDuringSeason` int(11) DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=57 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=59 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblinventoryitems`
@@ -693,7 +693,9 @@ INSERT INTO `tblinventoryitems` (`itemID`, `shortname`, `description`, `priceCod
 (53, 'Home stone', 'Return to your home location.', '1', '20.0', '24.0', 0, 0, NULL, NULL, 'home-stone', 'home', '0', 0, 0, '0', '0', '', NULL, 0, 0, 0, 1, 0, NULL, NULL),
 (54, 'Wanted Poster', 'poster', '1', '25.0', '36.0', 52, 52, NULL, NULL, 'wanted-poster', 'notice', '0', 0, 0, '0', '0', '', NULL, 0, 0, 0, 0, 0, NULL, NULL),
 (55, 'Quest Book', '', '4', '12.0', '6.0', 20, 13, NULL, NULL, 'quest-book', 'book,questSet', '?,9', 0, 0, '0', '0', NULL, NULL, 1, 0, 1, 0, 0, NULL, NULL),
-(56, 'Simple Chair', '', '4', '32.0', '40.0', 38, 38, 44, 49, 'simple-chair', 'sit', '0', 1, 0, '0', '0', NULL, NULL, 1, 0, 0, 0, 0, NULL, NULL);
+(56, 'Simple Chair', '', '4', '32.0', '40.0', 38, 38, 44, 49, 'simple-chair', 'sit', '0', 1, 0, '0', '0', NULL, NULL, 1, 0, 0, 1, 0, NULL, NULL),
+(57, 'House Deed (6x6)', '6 by 6 plot', '8000', '32.0', '40.0', 38, 38, NULL, NULL, 'house-deed', 'deed', '6x6', 0, 0, '0', '0', '6', NULL, 0, 0, 0, 1, 0, NULL, NULL),
+(58, 'House Deed (8x6)', '8 by 6 plot', '12000', '32.0', '40.0', 38, 38, NULL, NULL, 'house-deed', 'deed', '8x6', 0, 0, '0', '0', '6', NULL, 0, 0, 0, 1, 0, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -704,7 +706,7 @@ INSERT INTO `tblinventoryitems` (`itemID`, `shortname`, `description`, `priceCod
 CREATE TABLE IF NOT EXISTS `tblitemcategories` (
   `categoryID` int(11) NOT NULL,
   `categoryName` varchar(255) DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblitemcategories`
@@ -714,7 +716,9 @@ INSERT INTO `tblitemcategories` (`categoryID`, `categoryName`) VALUES
 (1, 'Plants and Herbs'),
 (2, 'Dyer''s Provisions'),
 (3, 'Tailor''s Provisions'),
-(4, 'Metalworker''s provisions');
+(4, 'Metalworker''s provisions'),
+(5, 'Books'),
+(6, 'House Deeds');
 
 -- --------------------------------------------------------
 
@@ -2263,12 +2267,12 @@ ALTER TABLE `tblguilds`
 -- AUTO_INCREMENT for table `tblinventoryitems`
 --
 ALTER TABLE `tblinventoryitems`
-  MODIFY `itemID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=57;
+  MODIFY `itemID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=59;
 --
 -- AUTO_INCREMENT for table `tblitemcategories`
 --
 ALTER TABLE `tblitemcategories`
-  MODIFY `categoryID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=5;
+  MODIFY `categoryID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=7;
 --
 -- AUTO_INCREMENT for table `tblitemgroups`
 --

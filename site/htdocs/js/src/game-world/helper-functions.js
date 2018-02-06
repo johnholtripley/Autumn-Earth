@@ -634,6 +634,24 @@ function drawCircle(fillStyle,x,y,radius) {
 }
 
 
+function drawIsoRectangle(topLeftX, topLeftY, bottomRightX, bottomRightY, filled, colour) {
+    gameContext.fillStyle = colour;
+    gameContext.beginPath();
+    gameContext.moveTo(findIsoCoordsX(topLeftX, topLeftY), findIsoCoordsY(topLeftX, topLeftY));
+    gameContext.lineTo(findIsoCoordsX(bottomRightX, topLeftY), findIsoCoordsY(bottomRightX, topLeftY));
+    gameContext.lineTo(findIsoCoordsX(bottomRightX, bottomRightY), findIsoCoordsY(bottomRightX, bottomRightY));
+    gameContext.lineTo(findIsoCoordsX(topLeftX, bottomRightY), findIsoCoordsY(topLeftX, bottomRightY));
+    gameContext.lineTo(findIsoCoordsX(topLeftX, topLeftY), findIsoCoordsY(topLeftX, topLeftY));
+    gameContext.closePath();
+        if (filled) {
+        gameContext.fillStyle = colour;
+        gameContext.fill();
+    } else {
+        gameContext.strokeStyle = colour;
+        gameContext.stroke();
+    }
+}
+
 // -----------------------------------------------------------
 
 // http://paulirish.com/2011/requestanimationframe-for-smart-animating/

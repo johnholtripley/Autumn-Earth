@@ -2359,8 +2359,8 @@ function canLearnRecipe(recipeIndex) {
 
 function draw() {
     if (gameMode == "mapLoading") {
-        gameContext.fillRect(0, 0, canvasWidth, canvasHeight);
         gameContext.fillStyle = "#000000";
+        gameContext.fillRect(0, 0, canvasWidth, canvasHeight);
         gameContext.fill();
     } else {
         // get all assets to be drawn in a list

@@ -312,6 +312,10 @@ function inventoryItemAction(whichSlot, whichAction, allActionValues) {
                         UI.showNotification("<p>You don't know this profession yet.</p>");
                     }
                     break;
+                    case "deed":
+                    // #####
+                    console.log("start house placement");
+                    break;
             }
         }
         if (typeof hero.inventory[whichSlotNumber].cooldown !== "undefined") {
