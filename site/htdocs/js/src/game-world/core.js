@@ -2475,7 +2475,6 @@ function draw() {
                 }
                 assetsToDraw.push([findIsoDepth(thisItem.x, thisItem.y, thisItem.z), "sprite", itemImages[thisItemIdentifier], thisItemOffsetCol * thisItem.spriteWidth, thisItemOffsetRow * thisItem.spriteHeight, thisItem.spriteWidth, thisItem.spriteHeight, Math.floor(thisX - hero.isox - thisItem.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisItem.centreY + (canvasHeight / 2) - thisItem.z), thisItem.spriteWidth, thisItem.spriteHeight]);
             } else {
-
                 assetsToDraw.push([findIsoDepth(thisItem.x, thisItem.y, thisItem.z), "img", itemImages[thisItemIdentifier], Math.floor(thisX - hero.isox - thisItem.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisItem.centreY + (canvasHeight / 2) - thisItem.z)]);
             }
         }
@@ -2532,11 +2531,20 @@ function draw() {
                     var plotWidth = 6;
                     var plotHeight = 8;
                     gameContext.globalCompositeOperation = 'lighten';
-                    var topLeftX = cursorPositionX - 100;
-                    var topLeftY = cursorPositionY - 100;
-                    var bottomRightX = cursorPositionX + 100;
-                    var bottomRightY = cursorPositionY + 100;
-                    // need to convert screen coords to game coords:
+                
+
+
+var nonIsoCoordX = find2DCoordsX(cursorPositionX, cursorPositionY);
+var nonIsoCoordY = find2DCoordsY(cursorPositionX, cursorPositionY);
+              
+
+    var topLeftX = nonIsoCoordX - 100;
+                    var topLeftY = nonIsoCoordY - 100;
+                    var bottomRightX = nonIsoCoordX + 100;
+                    var bottomRightY = nonIsoCoordY + 100;
+                 
+                    // need to convert screen coords to tile grid position
+                    // needs to be relative to hero's position as that's centred
                     // ################
                     drawIsoRectangle(topLeftX, topLeftY, bottomRightX, bottomRightY, true, 'rgba(0,255,0,0.3)');
                     // restore the composite mode to the default:

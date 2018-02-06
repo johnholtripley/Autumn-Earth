@@ -949,13 +949,25 @@ function gatheringStopped() {
 
 // find Iso coords from 2d coords:
 function findIsoCoordsX(x, y) {
-   return Math.floor((mapTilesY * tileW/2) -y/2 + x/2);
+   // return Math.floor((mapTilesY * tileW/2) -y/2 + x/2);
+   return Math.floor((mapTilesY * tileW - y + x)/2);
 }
 function findIsoCoordsY(x, y) {
     // the -tileH/2 is because the tile centre was at 0,0, and so the tip would be off the top of the screen
-return Math.floor((x/4) + (y/4) - tileH/2);
+//return Math.floor((x/4) + (y/4) - tileH/2);
+return Math.floor((x + y - (tileH * 2))/4);
 }
 
+
+
+// find 2d coords from iso coords:
+function find2DCoordsX(isoX, isoY) {
+    return isoX + tileH + (2*isoY) - (mapTilesY*tileW)/2;
+}
+
+function find2DCoordsY(isoX, isoY) {
+    return 2*isoY + tileH - isoX + (mapTilesY*tileW)/2;
+}
 
 function findIsoDepth(x, y, z) {
 // isoZ = 0.6 * z
@@ -7577,7 +7589,6 @@ function draw() {
                 }
                 assetsToDraw.push([findIsoDepth(thisItem.x, thisItem.y, thisItem.z), "sprite", itemImages[thisItemIdentifier], thisItemOffsetCol * thisItem.spriteWidth, thisItemOffsetRow * thisItem.spriteHeight, thisItem.spriteWidth, thisItem.spriteHeight, Math.floor(thisX - hero.isox - thisItem.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisItem.centreY + (canvasHeight / 2) - thisItem.z), thisItem.spriteWidth, thisItem.spriteHeight]);
             } else {
-
                 assetsToDraw.push([findIsoDepth(thisItem.x, thisItem.y, thisItem.z), "img", itemImages[thisItemIdentifier], Math.floor(thisX - hero.isox - thisItem.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisItem.centreY + (canvasHeight / 2) - thisItem.z)]);
             }
         }
@@ -7634,11 +7645,20 @@ function draw() {
                     var plotWidth = 6;
                     var plotHeight = 8;
                     gameContext.globalCompositeOperation = 'lighten';
-                    var topLeftX = cursorPositionX - 100;
-                    var topLeftY = cursorPositionY - 100;
-                    var bottomRightX = cursorPositionX + 100;
-                    var bottomRightY = cursorPositionY + 100;
-                    // need to convert screen coords to game coords:
+                
+
+
+var nonIsoCoordX = find2DCoordsX(cursorPositionX, cursorPositionY);
+var nonIsoCoordY = find2DCoordsY(cursorPositionX, cursorPositionY);
+              
+
+    var topLeftX = nonIsoCoordX - 100;
+                    var topLeftY = nonIsoCoordY - 100;
+                    var bottomRightX = nonIsoCoordX + 100;
+                    var bottomRightY = nonIsoCoordY + 100;
+                 
+                    // need to convert screen coords to tile grid position
+                    // needs to be relative to hero's position as that's centred
                     // ################
                     drawIsoRectangle(topLeftX, topLeftY, bottomRightX, bottomRightY, true, 'rgba(0,255,0,0.3)');
                     // restore the composite mode to the default:

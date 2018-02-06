@@ -4,13 +4,25 @@
 
 // find Iso coords from 2d coords:
 function findIsoCoordsX(x, y) {
-   return Math.floor((mapTilesY * tileW/2) -y/2 + x/2);
+   // return Math.floor((mapTilesY * tileW/2) -y/2 + x/2);
+   return Math.floor((mapTilesY * tileW - y + x)/2);
 }
 function findIsoCoordsY(x, y) {
     // the -tileH/2 is because the tile centre was at 0,0, and so the tip would be off the top of the screen
-return Math.floor((x/4) + (y/4) - tileH/2);
+//return Math.floor((x/4) + (y/4) - tileH/2);
+return Math.floor((x + y - (tileH * 2))/4);
 }
 
+
+
+// find 2d coords from iso coords:
+function find2DCoordsX(isoX, isoY) {
+    return isoX + tileH + (2*isoY) - (mapTilesY*tileW)/2;
+}
+
+function find2DCoordsY(isoX, isoY) {
+    return 2*isoY + tileH - isoX + (mapTilesY*tileW)/2;
+}
 
 function findIsoDepth(x, y, z) {
 // isoZ = 0.6 * z
