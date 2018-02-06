@@ -7642,24 +7642,22 @@ function draw() {
                 case "plotPlacementOverlay":
                     // centre under the cursor - but 'snap' to nearest tiles
                     // ###
-                    var plotWidth = 6;
-                    var plotHeight = 8;
+                    
                     gameContext.globalCompositeOperation = 'lighten';
                 
 
-
-var nonIsoCoordX = find2DCoordsX(cursorPositionX, cursorPositionY);
-var nonIsoCoordY = find2DCoordsY(cursorPositionX, cursorPositionY);
-              
-
-    var topLeftX = nonIsoCoordX - 100;
-                    var topLeftY = nonIsoCoordY - 100;
-                    var bottomRightX = nonIsoCoordX + 100;
-                    var bottomRightY = nonIsoCoordY + 100;
+                    var plotWidth = 6;
+                    var plotHeight = 8;
+                    var nonIsoCoordX = find2DCoordsX(cursorPositionX, cursorPositionY);
+                    var nonIsoCoordY = find2DCoordsY(cursorPositionX, cursorPositionY);
+                    var topLeftX = nonIsoCoordX - plotWidth*tileW/2;
+                    var topLeftY = nonIsoCoordY - plotHeight*tileW/2;
+                    var bottomRightX = nonIsoCoordX + plotWidth*tileW/2;
+                    var bottomRightY = nonIsoCoordY + plotHeight*tileW/2;
                  
-                    // need to convert screen coords to tile grid position
-                    // needs to be relative to hero's position as that's centred
-                    // ################
+                 // need to 'snap' to whole tiles:
+                 // #############
+
                     drawIsoRectangle(topLeftX, topLeftY, bottomRightX, bottomRightY, true, 'rgba(0,255,0,0.3)');
                     // restore the composite mode to the default:
                     gameContext.globalCompositeOperation = 'source-over';
