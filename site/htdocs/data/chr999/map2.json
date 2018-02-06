@@ -144,44 +144,59 @@
         }],
         "weather": ["", "rain"],
         "shops": [
-        {
-            "name": "shop #1",
-            "uniqueItems": [],
-            "specialism": 2,
-            "categories": [1, 2],
-            "size": "small",
-            "currency": "money"
-        },
-        {
-            "name": "shop #2",
-            "uniqueItems":
             {
-                "14": [
-                {
-                    "colour": 3
-                },
-                {
-                    "colour": 7
-                }],
-                "15": [
-                {
-                    "colour": 1,
-                    "inscription": "stuffffff"
-                }]
+                "name": "shop #1",
+                "uniqueItems": [],
+                "specialism": 2,
+                "categories": [1, 2],
+                "size": "small",
+                "currency": "money"
             },
-            "specialism": null,
-            "categories": [3],
-            "size": "small",
-            "currency": "money"
-        },
-        {
-            "name": "shop #3",
-            "uniqueItems": "##procedural##",
-            "specialism": null,
-            "categories": [],
-            "size": "small",
-            "currency": "money"
-        }],
+            {
+                "name": "shop #2",
+                "uniqueItems":
+                {
+                    "14": [
+                    {
+                        "colour": 3
+                    },
+                    {
+                        "colour": 7
+                    }],
+                    "15": [
+                    {
+                        "colour": 1,
+                        "inscription": "stuffffff"
+                    }]
+                },
+                "specialism": null,
+                "categories": [3],
+                "size": "small",
+                "currency": "money"
+            },
+            {
+                "name": "shop #3",
+                "uniqueItems": "##procedural##",
+                "specialism": null,
+                "categories": [],
+                "size": "small",
+                "currency": "money"
+            },
+            {
+                "name": "architect deeds office",
+                "uniqueItems": [],
+                "specialism": null,
+                "categories": [6],
+                "size": "large",
+                "currency": "money"
+            }
+
+
+
+
+
+
+        ],
         "npcs": [
 
             {
@@ -735,6 +750,48 @@
                 "isMoving": false,
                 "speech": [
                     ["Hi there - welcome!/Feel free to have a good look around, ##characterName##/Welcome, welcome!", "shop", "shop #3"]
+                ],
+                "cardGameSpeech":
+                {
+                    "challenge": ["Do you play? Fancy a game then?", "play"],
+                    "win": ["Woo! I won!", ""],
+                    "lose": ["Ahh, you beat me...", ""],
+                    "draw": ["Well played", ""]
+                },
+                "cardSkill": 1,
+                "uniqueCards": [2, 2],
+                "baseCardPack": 0,
+                "animation":
+                {
+                    "walk":
+                    {
+                        "length": 1,
+                        "n": 2,
+                        "e": 3,
+                        "s": 0,
+                        "w": 1
+                    }
+                }
+            },
+            {
+                "name": "Architect",
+                "src": "architect.png",
+                "width": 20,
+                "length": 20,
+                "spriteWidth": 75,
+                "spriteHeight": 85,
+                "centreX": 56,
+                "centreY": 73,
+                "tileX": 24,
+                "tileY": 21,
+                "movement": ["-"],
+                "facing": "e",
+                "walkThroughDoors": false,
+                "speed": 2,
+                "isCollidable": true,
+                "isMoving": false,
+                "speech": [
+                    ["Hi there ##characterName##, let's get you a house", "shop", "architect deeds office"]
                 ],
                 "cardGameSpeech":
                 {

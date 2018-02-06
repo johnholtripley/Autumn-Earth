@@ -69,7 +69,7 @@ $json ='{"mapNumber":2,"region":"Teldrassil","shops":[{"name":"shop #1","uniqueI
 */
 
  
- 
+ //$json = '{"mapNumber":2,"region":"Teldrassil","shops":[{"name":"architect deeds office","uniqueItems":[],"specialism":null,"categories":[6],"size":"large","currency":"money","hash":-551176652}]}';
  
  
 $jsonData = json_decode($json, true);
@@ -131,7 +131,7 @@ mysql_free_result($eventsResult);
 
 $activeSeasonQuery = 'tblinventoryitems.activeduringseason is null';
 if(count($activeEvents)>0) {
-   $activeSeasonQuery = '(tblinventoryitems.activeduringseason in (".implode(",",$activeEvents).") or tblinventoryitems.activeduringseason is null)'; 
+   $activeSeasonQuery = '(tblinventoryitems.activeduringseason in ('.implode(",",$activeEvents).') or tblinventoryitems.activeduringseason is null)'; 
 }
 
  
@@ -141,7 +141,7 @@ $markupToOutput .= '<div class="draggableBar">'.$jsonData['shops'][$i]["name"].'
 $inventoryData = [];
  
 if(count($jsonData['shops'][$i]["categories"]) > 0) {
- 
+
 $query2 = "SELECT tblinventoryitems.* from tblinventoryitems where tblinventoryitems.itemcategories in (".implode(",",$jsonData['shops'][$i]["categories"]).") and tblinventoryitems.pricecode <= ".$shopSizePriceLimits[($jsonData['shops'][$i]["size"])]." and ".$activeSeasonQuery." and tblinventoryitems.showinthecodex = 1 order by tblinventoryitems.shortname ASC";
 // Get colour variants as well for relevant items
  
@@ -245,6 +245,7 @@ $inventoryDataToSort = array_values($inventoryData);
 // http://stackoverflow.com/questions/3232965/sort-multidimensional-array-by-multiple-keys/3233009#3233009
 unset($shortname);
 unset($colour);
+
 foreach ($inventoryDataToSort as $sortkey => $sortrow) {
     $shortname[$sortkey]  = $sortrow['shortname'];
     $colour[$sortkey] = $sortrow['colourName'];
