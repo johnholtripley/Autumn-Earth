@@ -224,9 +224,9 @@ function inventoryItemAction(whichSlot, whichAction, allActionValues) {
         var whichActionSplit = whichAction.split(",");
         var allActionValuesSplit = allActionValues.split(",");
         for (var i = 0; i < whichActionSplit.length; i++) {
-      
+
             whichActionValue = allActionValuesSplit[i];
-          
+
             switch (whichActionSplit[i]) {
                 case "container":
                     // check it has contents:
@@ -291,10 +291,10 @@ function inventoryItemAction(whichSlot, whichAction, allActionValues) {
                     removeFromInventory(whichSlotNumber, 1);
                     break;
                 case "questSet":
-                if(!questData[whichActionValue].isUnderway) {
-                    questData[whichActionValue].isUnderway = true;
-                    addToJournal(whichActionValue);
-                }
+                    if (!questData[whichActionValue].isUnderway) {
+                        questData[whichActionValue].isUnderway = true;
+                        addToJournal(whichActionValue);
+                    }
                     break;
                 case "book":
                     document.getElementById("book" + whichActionValue).classList.add("active");
@@ -312,9 +312,12 @@ function inventoryItemAction(whichSlot, whichAction, allActionValues) {
                         UI.showNotification("<p>You don't know this profession yet.</p>");
                     }
                     break;
-                    case "deed":
+                case "deed":
                     // #####
                     console.log("start house placement");
+                    activeAction = "plotPlacement";
+                    document.addEventListener("mousemove", UI.movePlotPlacementOverlay, false);
+//document.removeEventListener("mousemove", UI.movePlotPlacementOverlay, false);
                     break;
             }
         }

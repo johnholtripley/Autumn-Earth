@@ -1125,26 +1125,26 @@ function gameLoop() {
             cardGameNameSpace.update();
             cardGameNameSpace.draw();
             // keep the surrounding game world running:
-             var now = window.performance.now();
-    hero.totalGameTimePlayed++;
-    var elapsed = (now - lastTime);
-    lastTime = now;
-  timeSinceLastFrameSwap += elapsed;
-    if (timeSinceLastFrameSwap > animationUpdateTime) {
-        currentAnimationFrame++;
-        timeSinceLastFrameSwap = 0;
-        animateFae();
-    }
-    moveFae();
-    moveNPCs();
-    movePet();
-    movePlatforms();
-    updateItems();
-  audio.checkForAmbientSounds();
-    checkForRespawns();
-    UI.updateCooldowns();
-    // only need to draw if the game board doesn't cover the screen: ####
-     draw();
+            var now = window.performance.now();
+            hero.totalGameTimePlayed++;
+            var elapsed = (now - lastTime);
+            lastTime = now;
+            timeSinceLastFrameSwap += elapsed;
+            if (timeSinceLastFrameSwap > animationUpdateTime) {
+                currentAnimationFrame++;
+                timeSinceLastFrameSwap = 0;
+                animateFae();
+            }
+            moveFae();
+            moveNPCs();
+            movePet();
+            movePlatforms();
+            updateItems();
+            audio.checkForAmbientSounds();
+            checkForRespawns();
+            UI.updateCooldowns();
+            // only need to draw if the game board doesn't cover the screen: ####
+            draw();
             break;
         case "play":
             update();
@@ -1937,371 +1937,371 @@ function moveNPCs() {
     for (var i = 0; i < thisMapData.npcs.length; i++) {
         thisNPC = thisMapData.npcs[i];
         // check this NPC is playing cards with the hero:
-        if(typeof thisNPC.isPlayingCards === "undefined") {
-        newTile = false;
-        if (thisNPC.isMoving) {
-            oldNPCx = thisNPC.x;
-            oldNPCy = thisNPC.y;
-            thisNPC.drawnFacing = thisNPC.facing;
-            switch (thisNPC.facing) {
-                case 'n':
-                    thisNPC.y -= thisNPC.speed;
-                    // check for collisions:
-                    if ((isATerrainCollision(thisNPC.x - thisNPC.width / 2, thisNPC.y - thisNPC.length / 2)) || (isATerrainCollision(thisNPC.x + thisNPC.width / 2, thisNPC.y - thisNPC.length / 2))) {
-                        // find the tile's bottom edge
-                        var tileCollidedWith = getTileY(thisNPC.y - thisNPC.length / 2);
-                        var tileBottomEdge = (tileCollidedWith + 1) * tileW;
-                        // use the +1 to make sure it's just clear of the collision tile
-                        thisNPC.y = tileBottomEdge + thisNPC.length / 2 + 1;
-                    }
-                    break;
-                case 's':
-                    thisNPC.y += thisNPC.speed;
-                    // check for collisions:
-                    if ((isATerrainCollision(thisNPC.x - thisNPC.width / 2, thisNPC.y + thisNPC.length / 2)) || (isATerrainCollision(thisNPC.x + thisNPC.width / 2, thisNPC.y + thisNPC.length / 2))) {
-                        var tileCollidedWith = getTileY(thisNPC.y + thisNPC.length / 2);
-                        var tileTopEdge = (tileCollidedWith) * tileW;
-                        thisNPC.y = tileTopEdge - thisNPC.length / 2 - 1;
-                    }
-                    break;
-                case 'w':
-                    thisNPC.x -= thisNPC.speed;
-                    // check for collisions:
-                    if ((isATerrainCollision(thisNPC.x - thisNPC.width / 2, thisNPC.y + thisNPC.length / 2)) || (isATerrainCollision(thisNPC.x - thisNPC.width / 2, thisNPC.y - thisNPC.length / 2))) {
-                        var tileCollidedWith = getTileX(thisNPC.x - thisNPC.width / 2);
-                        var tileRightEdge = (tileCollidedWith + 1) * tileW;
-                        thisNPC.x = tileRightEdge + thisNPC.width / 2 + 1;
-                    }
-                    break;
-                case 'e':
-                    thisNPC.x += thisNPC.speed;
-                    // check for collisions:
-                    if ((isATerrainCollision(thisNPC.x + thisNPC.width / 2, thisNPC.y + thisNPC.length / 2)) || (isATerrainCollision(thisNPC.x + thisNPC.width / 2, thisNPC.y - thisNPC.length / 2))) {
-                        var tileCollidedWith = getTileX(thisNPC.x + thisNPC.width / 2);
-                        var tileLeftEdge = (tileCollidedWith) * tileW;
-                        thisNPC.x = tileLeftEdge - thisNPC.width / 2 - 1;
-                    }
-                    break;
-            }
+        if (typeof thisNPC.isPlayingCards === "undefined") {
+            newTile = false;
+            if (thisNPC.isMoving) {
+                oldNPCx = thisNPC.x;
+                oldNPCy = thisNPC.y;
+                thisNPC.drawnFacing = thisNPC.facing;
+                switch (thisNPC.facing) {
+                    case 'n':
+                        thisNPC.y -= thisNPC.speed;
+                        // check for collisions:
+                        if ((isATerrainCollision(thisNPC.x - thisNPC.width / 2, thisNPC.y - thisNPC.length / 2)) || (isATerrainCollision(thisNPC.x + thisNPC.width / 2, thisNPC.y - thisNPC.length / 2))) {
+                            // find the tile's bottom edge
+                            var tileCollidedWith = getTileY(thisNPC.y - thisNPC.length / 2);
+                            var tileBottomEdge = (tileCollidedWith + 1) * tileW;
+                            // use the +1 to make sure it's just clear of the collision tile
+                            thisNPC.y = tileBottomEdge + thisNPC.length / 2 + 1;
+                        }
+                        break;
+                    case 's':
+                        thisNPC.y += thisNPC.speed;
+                        // check for collisions:
+                        if ((isATerrainCollision(thisNPC.x - thisNPC.width / 2, thisNPC.y + thisNPC.length / 2)) || (isATerrainCollision(thisNPC.x + thisNPC.width / 2, thisNPC.y + thisNPC.length / 2))) {
+                            var tileCollidedWith = getTileY(thisNPC.y + thisNPC.length / 2);
+                            var tileTopEdge = (tileCollidedWith) * tileW;
+                            thisNPC.y = tileTopEdge - thisNPC.length / 2 - 1;
+                        }
+                        break;
+                    case 'w':
+                        thisNPC.x -= thisNPC.speed;
+                        // check for collisions:
+                        if ((isATerrainCollision(thisNPC.x - thisNPC.width / 2, thisNPC.y + thisNPC.length / 2)) || (isATerrainCollision(thisNPC.x - thisNPC.width / 2, thisNPC.y - thisNPC.length / 2))) {
+                            var tileCollidedWith = getTileX(thisNPC.x - thisNPC.width / 2);
+                            var tileRightEdge = (tileCollidedWith + 1) * tileW;
+                            thisNPC.x = tileRightEdge + thisNPC.width / 2 + 1;
+                        }
+                        break;
+                    case 'e':
+                        thisNPC.x += thisNPC.speed;
+                        // check for collisions:
+                        if ((isATerrainCollision(thisNPC.x + thisNPC.width / 2, thisNPC.y + thisNPC.length / 2)) || (isATerrainCollision(thisNPC.x + thisNPC.width / 2, thisNPC.y - thisNPC.length / 2))) {
+                            var tileCollidedWith = getTileX(thisNPC.x + thisNPC.width / 2);
+                            var tileLeftEdge = (tileCollidedWith) * tileW;
+                            thisNPC.x = tileLeftEdge - thisNPC.width / 2 - 1;
+                        }
+                        break;
+                }
 
-            // check for collision against hero:
-            if (isAnObjectCollision(thisNPC.x, thisNPC.y, thisNPC.width, thisNPC.length, hero.x, hero.y, hero.width, hero.length)) {
-                thisNPC.x = oldNPCx;
-                thisNPC.y = oldNPCy;
-            }
+                // check for collision against hero:
+                if (isAnObjectCollision(thisNPC.x, thisNPC.y, thisNPC.width, thisNPC.length, hero.x, hero.y, hero.width, hero.length)) {
+                    thisNPC.x = oldNPCx;
+                    thisNPC.y = oldNPCy;
+                }
 
-            // check for collision against pet:
-            if (hasActivePet) {
-                for (var j = 0; j < hero.activePets.length; j++) {
-                    if (isAnObjectCollision(thisNPC.x, thisNPC.y, thisNPC.width, thisNPC.length, hero.allPets[hero.activePets[j]].x, hero.allPets[hero.activePets[j]].y, hero.allPets[hero.activePets[j]].width, hero.allPets[hero.activePets[j]].length)) {
+                // check for collision against pet:
+                if (hasActivePet) {
+                    for (var j = 0; j < hero.activePets.length; j++) {
+                        if (isAnObjectCollision(thisNPC.x, thisNPC.y, thisNPC.width, thisNPC.length, hero.allPets[hero.activePets[j]].x, hero.allPets[hero.activePets[j]].y, hero.allPets[hero.activePets[j]].width, hero.allPets[hero.activePets[j]].length)) {
+                            thisNPC.x = oldNPCx;
+                            thisNPC.y = oldNPCy;
+                        }
+                    }
+                }
+
+                // check for collisions against other NPCs:
+                for (var j = 0; j < thisMapData.npcs.length; j++) {
+                    if (i != j) {
+                        thisOtherNPC = thisMapData.npcs[j];
+                        if (thisOtherNPC.isCollidable) {
+                            if (isAnObjectCollision(thisNPC.x, thisNPC.y, thisNPC.width, thisNPC.length, thisOtherNPC.x, thisOtherNPC.y, thisOtherNPC.width, thisOtherNPC.length)) {
+                                thisNPC.x = oldNPCx;
+                                thisNPC.y = oldNPCy;
+                            }
+                        }
+                    }
+                }
+
+                // check for collisions against items:
+                for (var j = 0; j < thisMapData.items.length; j++) {
+                    thisItem = thisMapData.items[j];
+                    if (isAnObjectCollision(thisNPC.x, thisNPC.y, thisNPC.width, thisNPC.length, thisItem.x, thisItem.y, thisItem.width, thisItem.length)) {
                         thisNPC.x = oldNPCx;
                         thisNPC.y = oldNPCy;
                     }
                 }
-            }
 
-            // check for collisions against other NPCs:
-            for (var j = 0; j < thisMapData.npcs.length; j++) {
-                if (i != j) {
-                    thisOtherNPC = thisMapData.npcs[j];
-                    if (thisOtherNPC.isCollidable) {
-                        if (isAnObjectCollision(thisNPC.x, thisNPC.y, thisNPC.width, thisNPC.length, thisOtherNPC.x, thisOtherNPC.y, thisOtherNPC.width, thisOtherNPC.length)) {
-                            thisNPC.x = oldNPCx;
-                            thisNPC.y = oldNPCy;
+
+                // check for inner doors:
+                if (typeof thisMapData.innerDoors !== "undefined") {
+                    for (var i in thisMapData.innerDoors) {
+                        thisInnerDoor = thisMapData.innerDoors[i];
+                        if (!thisInnerDoor.isOpen) {
+                            if (isAnObjectCollision(getTileCentreCoordX(thisInnerDoor.tileX), getTileCentreCoordY(thisInnerDoor.tileY), tileW, tileW, thisNPC.x, thisNPC.y, thisNPC.width, thisNPC.length)) {
+                                thisNPC.x = oldNPCx;
+                                thisNPC.y = oldNPCy;
+                            }
                         }
                     }
                 }
-            }
 
-            // check for collisions against items:
-            for (var j = 0; j < thisMapData.items.length; j++) {
-                thisItem = thisMapData.items[j];
-                if (isAnObjectCollision(thisNPC.x, thisNPC.y, thisNPC.width, thisNPC.length, thisItem.x, thisItem.y, thisItem.width, thisItem.length)) {
-                    thisNPC.x = oldNPCx;
-                    thisNPC.y = oldNPCy;
-                }
-            }
+                // find the difference for this movement:
+                thisNPC.dx += (thisNPC.x - oldNPCx);
+                thisNPC.dy += (thisNPC.y - oldNPCy);
+                // see if it's at a new tile centre:
 
-
-            // check for inner doors:
-            if (typeof thisMapData.innerDoors !== "undefined") {
-                for (var i in thisMapData.innerDoors) {
-                    thisInnerDoor = thisMapData.innerDoors[i];
-                    if (!thisInnerDoor.isOpen) {
-                        if (isAnObjectCollision(getTileCentreCoordX(thisInnerDoor.tileX), getTileCentreCoordY(thisInnerDoor.tileY), tileW, tileW, thisNPC.x, thisNPC.y, thisNPC.width, thisNPC.length)) {
-                            thisNPC.x = oldNPCx;
-                            thisNPC.y = oldNPCy;
-                        }
-                    }
-                }
-            }
-
-            // find the difference for this movement:
-            thisNPC.dx += (thisNPC.x - oldNPCx);
-            thisNPC.dy += (thisNPC.y - oldNPCy);
-            // see if it's at a new tile centre:
-
-            if (Math.abs(thisNPC.dx) >= tileW) {
-                if (thisNPC.dx > 0) {
-                    thisNPC.dx -= tileW;
-                } else {
-                    thisNPC.dx += tileW;
-                }
-                newTile = true;
-
-            }
-            if (Math.abs(thisNPC.dy) >= tileW) {
-                if (thisNPC.dy > 0) {
-                    thisNPC.dy -= tileW;
-                } else {
-                    thisNPC.dy += tileW;
-                }
-                newTile = true;
-            }
-        }
-
-        if (newTile || thisNPC.forceNewMovementCheck) {
-            thisNPC.tileX = getTileX(thisNPC.x);
-            thisNPC.tileY = getTileY(thisNPC.y);
-            if (typeof thisNPC.following !== "undefined") {
-                if (!thisNPC.forceNewMovementCheck) {
-                    checkForEscortQuestEnd(thisNPC);
-
-                }
-            }
-            thisNPC.movementIndex++;
-            if (thisNPC.movementIndex >= thisNPC.movement.length) {
-                thisNPC.movementIndex = 0;
-            }
-            thisNextMovement = thisNPC.movement[thisNPC.movementIndex];
-            if (typeof thisNextMovement !== 'string') {
-                // it's an array, get the first element as the code:
-                thisNextMovementCode = thisNextMovement[0];
-            } else {
-                thisNextMovementCode = thisNextMovement;
-            }
-            switch (thisNextMovementCode) {
-
-                case '-':
-                    // stand still:
-
-
-
-
-                    thisNPC.isMoving = false;
-                    thisNPC.forceNewMovementCheck = false;
-                    break;
-                case '?':
-                    do {
-                        // pick a random facing:
-                        thisNPC.facing = facingsPossible[Math.floor(Math.random() * facingsPossible.length)];
-                        // check that the target tile is walkable:
-                    } while (isATerrainCollision(thisNPC.x + (relativeFacing[thisNPC.facing]["x"] * tileW), thisNPC.y + (relativeFacing[thisNPC.facing]["y"] * tileW)));
-                    thisNPC.forceNewMovementCheck = false;
-                    break;
-
-                case 'find':
-                    thisNPC.forceNewMovementCheck = true;
-                    if ((!thisNPC.waitingForAPath) && (typeof thisNPC.waitingTimer === "undefined")) {
-                        pathfindingWorker.postMessage([thisNextMovement[1], thisNPC, thisMapData]);
-                        // make sure to only request this once:
-                        thisNPC.isMoving = false;
-                        thisNPC.waitingForAPath = true;
-                        thisNPC.waitingTimer = 0;
-
-                        // play animation while waiting
-                        thisNPC.currentAnimation = 'wait';
-                        // thisNextMovement[2]
-                        // #######
-
-                        // keep the NPC waiting:
-                        thisNPC.movementIndex--;
+                if (Math.abs(thisNPC.dx) >= tileW) {
+                    if (thisNPC.dx > 0) {
+                        thisNPC.dx -= tileW;
                     } else {
-                        // check timer:
-                        thisNPC.waitingTimer++;
-                        if (thisNPC.waitingTimer > thisNextMovement[3]) {
-                            thisNPC.isMoving = true;
-                            thisNPC.currentAnimation = 'walk';
-                            delete thisNPC.waitingTimer;
-                        } else {
-                            // keep waiting until got a path, and the timer has expired
-                            thisNPC.movementIndex--;
+                        thisNPC.dx += tileW;
+                    }
+                    newTile = true;
+
+                }
+                if (Math.abs(thisNPC.dy) >= tileW) {
+                    if (thisNPC.dy > 0) {
+                        thisNPC.dy -= tileW;
+                    } else {
+                        thisNPC.dy += tileW;
+                    }
+                    newTile = true;
+                }
+            }
+
+            if (newTile || thisNPC.forceNewMovementCheck) {
+                thisNPC.tileX = getTileX(thisNPC.x);
+                thisNPC.tileY = getTileY(thisNPC.y);
+                if (typeof thisNPC.following !== "undefined") {
+                    if (!thisNPC.forceNewMovementCheck) {
+                        checkForEscortQuestEnd(thisNPC);
+
+                    }
+                }
+                thisNPC.movementIndex++;
+                if (thisNPC.movementIndex >= thisNPC.movement.length) {
+                    thisNPC.movementIndex = 0;
+                }
+                thisNextMovement = thisNPC.movement[thisNPC.movementIndex];
+                if (typeof thisNextMovement !== 'string') {
+                    // it's an array, get the first element as the code:
+                    thisNextMovementCode = thisNextMovement[0];
+                } else {
+                    thisNextMovementCode = thisNextMovement;
+                }
+                switch (thisNextMovementCode) {
+
+                    case '-':
+                        // stand still:
+
+
+
+
+                        thisNPC.isMoving = false;
+                        thisNPC.forceNewMovementCheck = false;
+                        break;
+                    case '?':
+                        do {
+                            // pick a random facing:
+                            thisNPC.facing = facingsPossible[Math.floor(Math.random() * facingsPossible.length)];
+                            // check that the target tile is walkable:
+                        } while (isATerrainCollision(thisNPC.x + (relativeFacing[thisNPC.facing]["x"] * tileW), thisNPC.y + (relativeFacing[thisNPC.facing]["y"] * tileW)));
+                        thisNPC.forceNewMovementCheck = false;
+                        break;
+
+                    case 'find':
+                        thisNPC.forceNewMovementCheck = true;
+                        if ((!thisNPC.waitingForAPath) && (typeof thisNPC.waitingTimer === "undefined")) {
+                            pathfindingWorker.postMessage([thisNextMovement[1], thisNPC, thisMapData]);
+                            // make sure to only request this once:
                             thisNPC.isMoving = false;
-                        }
-                    }
-                    break;
+                            thisNPC.waitingForAPath = true;
+                            thisNPC.waitingTimer = 0;
 
-                case 'proximity':
-                    // wait for the hero to be nearby
-                    thisNPC.forceNewMovementCheck = true;
-                    var tileRadius = thisNextMovement[1];
-                    if ((isInRange(hero.x, hero.y, thisNPC.x, thisNPC.y, tileRadius * tileW))) {
-                        // pick up the next movement code on the next loop round:
-                        thisNPC.isMoving = true;
-                    } else {
-                        thisNPC.isMoving = false;
-                        // keep it on the waiting item to keep checking:
-                        thisNPC.movementIndex--;
-                    }
-                    break;
+                            // play animation while waiting
+                            thisNPC.currentAnimation = 'wait';
+                            // thisNextMovement[2]
+                            // #######
 
-                case 'remove':
-                    // remove the element before, as well as this "remove" instruction (so 2 elements to be removed):
-                    thisNPC.movement.splice((thisNPC.movementIndex - 1), 2);
-                    break;
-
-                case 'pathEnd':
-                    var thisPreviousMovement;
-                    // check if it's a escort quest NPC that's come to the end of their pathfinding path:
-                    if (typeof thisNPC.following !== "undefined") {
-                        for (j = thisNPC.movementIndex; j >= 0; j--) {
-                            thisPreviousMovement = thisNPC.movement[j];
-                            if (typeof thisPreviousMovement === 'string') {
-                                if (thisPreviousMovement == 'following') {
-                                    var numberOfElementsRemoved = thisNPC.movementIndex - (j);
-                                    thisNPC.movement.splice(j + 1, numberOfElementsRemoved);
-                                    // this needs to be one more than the equivilient for 'find' types:
-                                    thisNPC.movementIndex -= (numberOfElementsRemoved + 1);
-                                    thisNPC.isMoving = true;
-                                    thisNPC.forceNewMovementCheck = true;
-                                    delete thisNPC.waitingTimer;
-                                    break;
-                                }
-                            }
-                        }
-                    } else {
-                        // it's a 'find' type movement that's just ended:
-                        var targetDestination = thisNPC.lastTargetDestination.split("-");
-                        thisNPC.drawnFacing = turntoFaceTile(thisNPC, targetDestination[0], targetDestination[1]);
-                        // find the "find" before this and remove all elements after that to this index:
-                        for (j = thisNPC.movementIndex; j >= 0; j--) {
-                            thisPreviousMovement = thisNPC.movement[j];
-                            if (typeof thisPreviousMovement !== 'string') {
-                                if (thisPreviousMovement[0] == 'find') {
-                                    var numberOfElementsRemoved = thisNPC.movementIndex - (j);
-                                    thisNPC.movement.splice(j + 1, numberOfElementsRemoved);
-                                    thisNPC.movementIndex -= numberOfElementsRemoved;
-                                    thisNPC.isMoving = false;
-                                    thisNPC.forceNewMovementCheck = true;
-                                    delete thisNPC.waitingTimer;
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                    break;
-
-                case 'talkToNeighbour':
-                    // find an adjacent NPC and get them to turn to face this NPC
-                    for (var j = 0; j < thisMapData.npcs.length; j++) {
-                        if (i != j) {
-                            thisOtherNPC = thisMapData.npcs[j];
-                            if (Math.abs(thisOtherNPC.tileX - thisNPC.tileX) <= 1) {
-                                if (Math.abs(thisOtherNPC.tileY - thisNPC.tileY) <= 1) {
-                                    thisOtherNPC.drawnFacing = turntoFace(thisOtherNPC, thisNPC);
-                                }
-                            }
-                        }
-                    }
-                    break;
-
-                case 'follow':
-                    // initialise following another object:
-
-                    switch (thisNextMovement[1]) {
-                        case 'hero':
-                            if (hero.npcsFollowing.length > 0) {
-                                // already has an NPC following, so follow that:
-                                thisNPC.following = hero.npcsFollowing[hero.npcsFollowing[(hero.npcsFollowing.length - 1)]];
-                            } else if (hero.activePets.length > 0) {
-                                // follow the last pet:
-                                thisNPC.following = hero.allPets[hero.activePets[(hero.activePets.length - 1)]];
+                            // keep the NPC waiting:
+                            thisNPC.movementIndex--;
+                        } else {
+                            // check timer:
+                            thisNPC.waitingTimer++;
+                            if (thisNPC.waitingTimer > thisNextMovement[3]) {
+                                thisNPC.isMoving = true;
+                                thisNPC.currentAnimation = 'walk';
+                                delete thisNPC.waitingTimer;
                             } else {
-                                // follow the hero:
-                                thisNPC.following = hero;
+                                // keep waiting until got a path, and the timer has expired
+                                thisNPC.movementIndex--;
+                                thisNPC.isMoving = false;
                             }
-                            hero.npcsFollowing.push(thisNPC);
-                            thisNPC.movement[thisNPC.movementIndex] = "following";
+                        }
+                        break;
+
+                    case 'proximity':
+                        // wait for the hero to be nearby
+                        thisNPC.forceNewMovementCheck = true;
+                        var tileRadius = thisNextMovement[1];
+                        if ((isInRange(hero.x, hero.y, thisNPC.x, thisNPC.y, tileRadius * tileW))) {
+                            // pick up the next movement code on the next loop round:
+                            thisNPC.isMoving = true;
+                        } else {
+                            thisNPC.isMoving = false;
                             // keep it on the waiting item to keep checking:
                             thisNPC.movementIndex--;
-                            thisNPC.forceNewMovementCheck = false;
-                            thisNPC.isMoving = true;
-                            break;
-                        default:
-                            //
-                    }
-                    break;
-                case 'following':
+                        }
+                        break;
 
-                    // is already following, need to process that movement - check proximity to target to see if pet should stop moving: 
-                    if ((isInRange(thisNPC.following.x, thisNPC.following.y, thisNPC.x, thisNPC.y, tileW * 2))) {
-                        thisNPC.isMoving = false;
-                        // keep it on the waiting item to keep checking:
-                        thisNPC.movementIndex--;
-                        thisNPC.forceNewMovementCheck = true;
-                    } else {
-                        thisNPC.isMoving = true;
-                        // check the breadcrumb for next direction:
-                        var breadcrumbFound = false;
-                        for (var k = 0; k < thisNPC.following.breadcrumb.length; k++) {
-                            if ((thisNPC.tileY) == thisNPC.following.breadcrumb[k][1]) {
-                                if ((thisNPC.tileX - 1) == thisNPC.following.breadcrumb[k][0]) {
-                                    thisNPC.facing = "w";
-                                    breadcrumbFound = true;
-                                    break;
-                                } else if ((thisNPC.tileX + 1) == thisNPC.following.breadcrumb[k][0]) {
-                                    thisNPC.facing = "e";
-                                    breadcrumbFound = true;
-                                    break;
+                    case 'remove':
+                        // remove the element before, as well as this "remove" instruction (so 2 elements to be removed):
+                        thisNPC.movement.splice((thisNPC.movementIndex - 1), 2);
+                        break;
+
+                    case 'pathEnd':
+                        var thisPreviousMovement;
+                        // check if it's a escort quest NPC that's come to the end of their pathfinding path:
+                        if (typeof thisNPC.following !== "undefined") {
+                            for (j = thisNPC.movementIndex; j >= 0; j--) {
+                                thisPreviousMovement = thisNPC.movement[j];
+                                if (typeof thisPreviousMovement === 'string') {
+                                    if (thisPreviousMovement == 'following') {
+                                        var numberOfElementsRemoved = thisNPC.movementIndex - (j);
+                                        thisNPC.movement.splice(j + 1, numberOfElementsRemoved);
+                                        // this needs to be one more than the equivilient for 'find' types:
+                                        thisNPC.movementIndex -= (numberOfElementsRemoved + 1);
+                                        thisNPC.isMoving = true;
+                                        thisNPC.forceNewMovementCheck = true;
+                                        delete thisNPC.waitingTimer;
+                                        break;
+                                    }
                                 }
-                            } else if ((thisNPC.tileX) == thisNPC.following.breadcrumb[k][0]) {
-                                if ((thisNPC.tileY + 1) == thisNPC.following.breadcrumb[k][1]) {
-                                    thisNPC.facing = "s";
-                                    breadcrumbFound = true;
-                                    break;
-                                } else if ((thisNPC.tileY - 1) == thisNPC.following.breadcrumb[k][1]) {
-                                    thisNPC.facing = "n";
-                                    breadcrumbFound = true;
-                                    break;
+                            }
+                        } else {
+                            // it's a 'find' type movement that's just ended:
+                            var targetDestination = thisNPC.lastTargetDestination.split("-");
+                            thisNPC.drawnFacing = turntoFaceTile(thisNPC, targetDestination[0], targetDestination[1]);
+                            // find the "find" before this and remove all elements after that to this index:
+                            for (j = thisNPC.movementIndex; j >= 0; j--) {
+                                thisPreviousMovement = thisNPC.movement[j];
+                                if (typeof thisPreviousMovement !== 'string') {
+                                    if (thisPreviousMovement[0] == 'find') {
+                                        var numberOfElementsRemoved = thisNPC.movementIndex - (j);
+                                        thisNPC.movement.splice(j + 1, numberOfElementsRemoved);
+                                        thisNPC.movementIndex -= numberOfElementsRemoved;
+                                        thisNPC.isMoving = false;
+                                        thisNPC.forceNewMovementCheck = true;
+                                        delete thisNPC.waitingTimer;
+                                        break;
+                                    }
                                 }
                             }
                         }
+                        break;
 
-                        if (!breadcrumbFound) {
-                            thisNPC.forceNewMovementCheck = true;
-                            if ((!thisNPC.waitingForAPath) && (typeof thisNPC.waitingTimer === "undefined")) {
+                    case 'talkToNeighbour':
+                        // find an adjacent NPC and get them to turn to face this NPC
+                        for (var j = 0; j < thisMapData.npcs.length; j++) {
+                            if (i != j) {
+                                thisOtherNPC = thisMapData.npcs[j];
+                                if (Math.abs(thisOtherNPC.tileX - thisNPC.tileX) <= 1) {
+                                    if (Math.abs(thisOtherNPC.tileY - thisNPC.tileY) <= 1) {
+                                        thisOtherNPC.drawnFacing = turntoFace(thisOtherNPC, thisNPC);
+                                    }
+                                }
+                            }
+                        }
+                        break;
 
-                                pathfindingWorker.postMessage(["npcFindFollowing", thisNPC, thisMapData]);
-                                // make sure to only request this once:
-                                thisNPC.isMoving = false;
-                                thisNPC.waitingForAPath = true;
-                                // play animation while waiting
-                                // thisNPC.currentAnimation = 'wait';
-                                thisNPC.waitingTimer = 0;
+                    case 'follow':
+                        // initialise following another object:
+
+                        switch (thisNextMovement[1]) {
+                            case 'hero':
+                                if (hero.npcsFollowing.length > 0) {
+                                    // already has an NPC following, so follow that:
+                                    thisNPC.following = hero.npcsFollowing[hero.npcsFollowing[(hero.npcsFollowing.length - 1)]];
+                                } else if (hero.activePets.length > 0) {
+                                    // follow the last pet:
+                                    thisNPC.following = hero.allPets[hero.activePets[(hero.activePets.length - 1)]];
+                                } else {
+                                    // follow the hero:
+                                    thisNPC.following = hero;
+                                }
+                                hero.npcsFollowing.push(thisNPC);
+                                thisNPC.movement[thisNPC.movementIndex] = "following";
                                 // keep it on the waiting item to keep checking:
                                 thisNPC.movementIndex--;
-                            } else {
-
+                                thisNPC.forceNewMovementCheck = false;
                                 thisNPC.isMoving = true;
-                                //delete thisNPC.waitingTimer;
-                                // thisNPC.currentAnimation = 'walk';
-                            }
-                        } else {
+                                break;
+                            default:
+                                //
+                        }
+                        break;
+                    case 'following':
+
+                        // is already following, need to process that movement - check proximity to target to see if pet should stop moving: 
+                        if ((isInRange(thisNPC.following.x, thisNPC.following.y, thisNPC.x, thisNPC.y, tileW * 2))) {
+                            thisNPC.isMoving = false;
                             // keep it on the waiting item to keep checking:
                             thisNPC.movementIndex--;
-                            thisNPC.forceNewMovementCheck = false;
+                            thisNPC.forceNewMovementCheck = true;
+                        } else {
+                            thisNPC.isMoving = true;
+                            // check the breadcrumb for next direction:
+                            var breadcrumbFound = false;
+                            for (var k = 0; k < thisNPC.following.breadcrumb.length; k++) {
+                                if ((thisNPC.tileY) == thisNPC.following.breadcrumb[k][1]) {
+                                    if ((thisNPC.tileX - 1) == thisNPC.following.breadcrumb[k][0]) {
+                                        thisNPC.facing = "w";
+                                        breadcrumbFound = true;
+                                        break;
+                                    } else if ((thisNPC.tileX + 1) == thisNPC.following.breadcrumb[k][0]) {
+                                        thisNPC.facing = "e";
+                                        breadcrumbFound = true;
+                                        break;
+                                    }
+                                } else if ((thisNPC.tileX) == thisNPC.following.breadcrumb[k][0]) {
+                                    if ((thisNPC.tileY + 1) == thisNPC.following.breadcrumb[k][1]) {
+                                        thisNPC.facing = "s";
+                                        breadcrumbFound = true;
+                                        break;
+                                    } else if ((thisNPC.tileY - 1) == thisNPC.following.breadcrumb[k][1]) {
+                                        thisNPC.facing = "n";
+                                        breadcrumbFound = true;
+                                        break;
+                                    }
+                                }
+                            }
+
+                            if (!breadcrumbFound) {
+                                thisNPC.forceNewMovementCheck = true;
+                                if ((!thisNPC.waitingForAPath) && (typeof thisNPC.waitingTimer === "undefined")) {
+
+                                    pathfindingWorker.postMessage(["npcFindFollowing", thisNPC, thisMapData]);
+                                    // make sure to only request this once:
+                                    thisNPC.isMoving = false;
+                                    thisNPC.waitingForAPath = true;
+                                    // play animation while waiting
+                                    // thisNPC.currentAnimation = 'wait';
+                                    thisNPC.waitingTimer = 0;
+                                    // keep it on the waiting item to keep checking:
+                                    thisNPC.movementIndex--;
+                                } else {
+
+                                    thisNPC.isMoving = true;
+                                    //delete thisNPC.waitingTimer;
+                                    // thisNPC.currentAnimation = 'walk';
+                                }
+                            } else {
+                                // keep it on the waiting item to keep checking:
+                                thisNPC.movementIndex--;
+                                thisNPC.forceNewMovementCheck = false;
+                            }
                         }
-                    }
-                    break;
+                        break;
 
-                default:
+                    default:
 
-                    thisNPC.facing = thisNextMovement;
-                    thisNPC.forceNewMovementCheck = false;
-                    break;
+                        thisNPC.facing = thisNextMovement;
+                        thisNPC.forceNewMovementCheck = false;
+                        break;
+                }
             }
         }
-    }
     }
 }
 
@@ -2375,9 +2375,15 @@ function draw() {
             [findIsoDepth(hero.x, hero.y, hero.z), "sprite", heroImg, heroOffsetCol * hero.spriteWidth, heroOffsetRow * hero.spriteHeight, hero.spriteWidth, hero.spriteHeight, Math.floor(canvasWidth / 2 - hero.feetOffsetX), Math.floor(canvasHeight / 2 - hero.feetOffsetY - hero.z), hero.spriteWidth, hero.spriteHeight]
         ];
         if (interfaceIsVisible) {
-            if (activeAction == "dowse") {
-                assetsToDraw.push([0, "dowsingRing", Math.floor(canvasWidth / 2 - dowsingRingSize / 2), Math.floor(canvasHeight / 2 - dowsingRingSize / 4)]);
+            switch (activeAction) {
+                case 'dowse':
+                    assetsToDraw.push([0, "dowsingRing", Math.floor(canvasWidth / 2 - dowsingRingSize / 2), Math.floor(canvasHeight / 2 - dowsingRingSize / 4)]);
+                    break;
+                case 'plotPlacement':
+                    assetsToDraw.push([0, "plotPlacementOverlay"]);
+                    break;
             }
+
         }
 
         // draw fae:
@@ -2517,6 +2523,22 @@ function draw() {
                     drawEllipse(gameContext, assetsToDraw[i][2] + (100 - dowsing.proximity) / 2, assetsToDraw[i][3] + (100 - dowsing.proximity) / 4, dowsingRingSize * dowsing.proximity / 100, (dowsingRingSize * dowsing.proximity / 100) / 2, true, 'rgba(0,255,0,0.3)');
                     // draw the outline:
                     drawEllipse(gameContext, assetsToDraw[i][2], assetsToDraw[i][3], dowsingRingSize, dowsingRingSize / 2, false, 'rgba(0,255,0,0.3)');
+                    // restore the composite mode to the default:
+                    gameContext.globalCompositeOperation = 'source-over';
+                    break;
+                case "plotPlacementOverlay":
+                    // centre under the cursor - but 'snap' to nearest tiles
+                    // ###
+                    var plotWidth = 6;
+                    var plotHeight = 8;
+                    gameContext.globalCompositeOperation = 'lighten';
+                    var topLeftX = cursorPositionX - 100;
+                    var topLeftY = cursorPositionY - 100;
+                    var bottomRightX = cursorPositionX + 100;
+                    var bottomRightY = cursorPositionY + 100;
+                    // need to convert screen coords to game coords:
+                    // ################
+                    drawIsoRectangle(topLeftX, topLeftY, bottomRightX, bottomRightY, true, 'rgba(0,255,0,0.3)');
                     // restore the composite mode to the default:
                     gameContext.globalCompositeOperation = 'source-over';
                     break;

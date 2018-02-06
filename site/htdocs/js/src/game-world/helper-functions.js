@@ -634,9 +634,11 @@ function drawCircle(fillStyle,x,y,radius) {
 }
 
 
+
 function drawIsoRectangle(topLeftX, topLeftY, bottomRightX, bottomRightY, filled, colour) {
     gameContext.fillStyle = colour;
     gameContext.beginPath();
+    // find iso coordinates from non-iso values passed in:
     gameContext.moveTo(findIsoCoordsX(topLeftX, topLeftY), findIsoCoordsY(topLeftX, topLeftY));
     gameContext.lineTo(findIsoCoordsX(bottomRightX, topLeftY), findIsoCoordsY(bottomRightX, topLeftY));
     gameContext.lineTo(findIsoCoordsX(bottomRightX, bottomRightY), findIsoCoordsY(bottomRightX, bottomRightY));
@@ -651,6 +653,8 @@ function drawIsoRectangle(topLeftX, topLeftY, bottomRightX, bottomRightY, filled
         gameContext.stroke();
     }
 }
+
+
 
 // -----------------------------------------------------------
 

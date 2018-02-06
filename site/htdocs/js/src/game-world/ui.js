@@ -1730,6 +1730,10 @@ var UI = {
             questJournalRegionFilter.options.add(newOption, storedIndex);
 
         }
+    }, 
+    movePlotPlacementOverlay: function(e) {
+cursorPositionX = e.pageX;
+cursorPositionY = e.pageY;
     }
 
 }
