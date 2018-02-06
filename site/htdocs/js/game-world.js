@@ -7654,8 +7654,14 @@ function draw() {
                     var topLeftY = nonIsoCoordY - plotHeight*tileW/2;
                     var bottomRightX = nonIsoCoordX + plotWidth*tileW/2;
                     var bottomRightY = nonIsoCoordY + plotHeight*tileW/2;
-                 
-                 // need to 'snap' to whole tiles:
+  // need to 'snap' to whole tiles:
+/*
+                    topLeftX = Math.floor(topLeftX/tileW) * tileW;
+                    topLeftY = Math.floor(topLeftY/tileW) * tileW;
+                    bottomRightX = Math.floor(bottomRightX/tileW) * tileW;
+                    bottomRightY = Math.floor(bottomRightY/tileW) * tileW;
+  */               
+               
                  // #############
 
                     drawIsoRectangle(topLeftX, topLeftY, bottomRightX, bottomRightY, true, 'rgba(0,255,0,0.3)');
