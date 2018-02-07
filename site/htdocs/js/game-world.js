@@ -7633,9 +7633,9 @@ function draw() {
                 case "dowsingRing":
                     gameContext.globalCompositeOperation = 'lighten';
                     // draw the dowsing ring:
-                    drawEllipse(gameContext, assetsToDraw[i][2] + (100 - dowsing.proximity) / 2, assetsToDraw[i][3] + (100 - dowsing.proximity) / 4, dowsingRingSize * dowsing.proximity / 100, (dowsingRingSize * dowsing.proximity / 100) / 2, true, 'rgba(0,255,0,0.3)');
+                    drawEllipse(gameContext, assetsToDraw[i][2] + (100 - dowsing.proximity) / 2, assetsToDraw[i][3] + (100 - dowsing.proximity) / 4, dowsingRingSize * dowsing.proximity / 100, (dowsingRingSize * dowsing.proximity / 100) / 2, true, 'rgba(255,255,0,0.3)');
                     // draw the outline:
-                    drawEllipse(gameContext, assetsToDraw[i][2], assetsToDraw[i][3], dowsingRingSize, dowsingRingSize / 2, false, 'rgba(0,255,0,0.3)');
+                    drawEllipse(gameContext, assetsToDraw[i][2], assetsToDraw[i][3], dowsingRingSize, dowsingRingSize / 2, false, 'rgba(255,255,0,0.3)');
                     // restore the composite mode to the default:
                     gameContext.globalCompositeOperation = 'source-over';
                     break;
@@ -7647,7 +7647,7 @@ function draw() {
                 
 
                     var plotWidth = 6;
-                    var plotHeight = 8;
+                    var plotHeight = 6;
                     var nonIsoCoordX = find2DCoordsX(cursorPositionX, cursorPositionY);
                     var nonIsoCoordY = find2DCoordsY(cursorPositionX, cursorPositionY);
                     var topLeftX = nonIsoCoordX - plotWidth*tileW/2;
@@ -7655,12 +7655,23 @@ function draw() {
                     var bottomRightX = nonIsoCoordX + plotWidth*tileW/2;
                     var bottomRightY = nonIsoCoordY + plotHeight*tileW/2;
   // need to 'snap' to whole tiles:
+
+                    
+
+ 
+  
 /*
                     topLeftX = Math.floor(topLeftX/tileW) * tileW;
                     topLeftY = Math.floor(topLeftY/tileW) * tileW;
                     bottomRightX = Math.floor(bottomRightX/tileW) * tileW;
-                    bottomRightY = Math.floor(bottomRightY/tileW) * tileW;
-  */               
+                    bottomRightY = Math.floor(bottomRightY/tileW) * tileW; 
+                   
+              
+  topLeftX +=    30;      
+  topLeftY +=    6;
+  bottomRightX +=    30;      
+  bottomRightY +=    6; 
+*/
                
                  // #############
 
