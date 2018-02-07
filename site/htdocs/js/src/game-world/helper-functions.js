@@ -648,16 +648,18 @@ function drawCircle(fillStyle,x,y,radius) {
 
 
 function drawIsoRectangle(topLeftX, topLeftY, bottomRightX, bottomRightY, filled, colour) {
+    var drawnOffsetX = (canvasWidth / 2) - hero.isox;
+    var drawnOffsetY = (canvasHeight / 2) - hero.isoy;
     gameContext.fillStyle = colour;
     gameContext.beginPath();
     // find iso coordinates from non-iso values passed in:
-    gameContext.moveTo(findIsoCoordsX(topLeftX, topLeftY), findIsoCoordsY(topLeftX, topLeftY));
-    gameContext.lineTo(findIsoCoordsX(bottomRightX, topLeftY), findIsoCoordsY(bottomRightX, topLeftY));
-    gameContext.lineTo(findIsoCoordsX(bottomRightX, bottomRightY), findIsoCoordsY(bottomRightX, bottomRightY));
-    gameContext.lineTo(findIsoCoordsX(topLeftX, bottomRightY), findIsoCoordsY(topLeftX, bottomRightY));
-    gameContext.lineTo(findIsoCoordsX(topLeftX, topLeftY), findIsoCoordsY(topLeftX, topLeftY));
+    gameContext.moveTo(findIsoCoordsX(topLeftX, topLeftY) + drawnOffsetX, findIsoCoordsY(topLeftX, topLeftY) + drawnOffsetY);
+    gameContext.lineTo(findIsoCoordsX(bottomRightX, topLeftY) + drawnOffsetX, findIsoCoordsY(bottomRightX, topLeftY) + drawnOffsetY);
+    gameContext.lineTo(findIsoCoordsX(bottomRightX, bottomRightY) + drawnOffsetX, findIsoCoordsY(bottomRightX, bottomRightY) + drawnOffsetY);
+    gameContext.lineTo(findIsoCoordsX(topLeftX, bottomRightY) + drawnOffsetX, findIsoCoordsY(topLeftX, bottomRightY) + drawnOffsetY);
+    gameContext.lineTo(findIsoCoordsX(topLeftX, topLeftY) + drawnOffsetX, findIsoCoordsY(topLeftX, topLeftY) + drawnOffsetY);
     gameContext.closePath();
-        if (filled) {
+    if (filled) {
         gameContext.fillStyle = colour;
         gameContext.fill();
     } else {

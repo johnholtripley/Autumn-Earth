@@ -2534,8 +2534,18 @@ function draw() {
 
                     var plotWidth = 4;
                     var plotHeight = 4;
-                    var nonIsoCoordX = find2DCoordsX(cursorPositionX, cursorPositionY);
-                    var nonIsoCoordY = find2DCoordsY(cursorPositionX, cursorPositionY);
+
+
+// hovered over tile:
+
+var xDiff = cursorPositionX-(canvasWidth/2);
+var yDiff = cursorPositionY-(canvasHeight/2);
+
+
+var nonIsoCoordX = find2DCoordsX(hero.isox+xDiff,hero.isoy+yDiff);
+var nonIsoCoordY = find2DCoordsY(hero.isox+xDiff,hero.isoy+yDiff);
+
+
 
                     
                     var topLeftX = nonIsoCoordX - (plotWidth*tileW/2);
@@ -2544,38 +2554,15 @@ function draw() {
                     var bottomRightY = nonIsoCoordY + (plotHeight*tileW/2);
 
 
+// snap to tiles:
+topLeftX = Math.floor(topLeftX/tileW)*tileW;
+topLeftY = Math.floor(topLeftY/tileW)*tileW;
+bottomRightX = Math.floor(bottomRightX/tileW)*tileW;
+bottomRightY = Math.floor(bottomRightY/tileW)*tileW;
 
 
-
-
-
-
-/*
-                        var topLeftX = nonIsoCoordX;
-                    var topLeftY = nonIsoCoordY;
-                    var bottomRightX = nonIsoCoordX + plotWidth*tileW;
-                    var bottomRightY = nonIsoCoordY + plotHeight*tileW;
-                    */
-  // need to 'snap' to whole tiles:
-
-               /*     
-var nonIsoTileW = 0.6 * tileW;
- 
-  
-
-                    topLeftX = Math.floor(topLeftX/nonIsoTileW) * nonIsoTileW;
-                    topLeftY = Math.floor(topLeftY/nonIsoTileW) * nonIsoTileW;
-                    bottomRightX = Math.floor(bottomRightX/nonIsoTileW) * nonIsoTileW;
-                    bottomRightY = Math.floor(bottomRightY/nonIsoTileW) * nonIsoTileW; 
-                  */
-    /*          
-  topLeftX +=    30;      
-  topLeftY +=    6;
-  bottomRightX +=    30;      
-  bottomRightY +=    6; 
-*/
-               
-                 // #############
+drawIsoRectangle(0, 0, tileW, tileW, true, 'rgba(0,255,0,0.3)');
+drawIsoRectangle((mapTilesX-1) * tileW, (mapTilesY-1) * tileW, mapTilesX * tileW, mapTilesY * tileW, true, 'rgba(0,255,0,0.3)');
 
                     drawIsoRectangle(topLeftX, topLeftY, bottomRightX, bottomRightY, true, 'rgba(0,255,0,0.3)');
                     // restore the composite mode to the default:
