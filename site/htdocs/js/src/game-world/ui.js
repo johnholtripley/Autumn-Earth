@@ -679,7 +679,8 @@ var UI = {
         hero.currency[thisCurrency] += sellPrice;
         UI.updateCurrencies();
         audio.playSound(soundEffects['coins'], 0);
-
+document.getElementById("slot" + UI.sourceSlot).classList.remove("hidden");
+document.getElementById("slot" + UI.sourceSlot).innerHTML = '';
         UI.droppedSuccessfully();
     },
 

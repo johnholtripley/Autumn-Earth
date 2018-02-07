@@ -4013,7 +4013,8 @@ var UI = {
         hero.currency[thisCurrency] += sellPrice;
         UI.updateCurrencies();
         audio.playSound(soundEffects['coins'], 0);
-
+document.getElementById("slot" + UI.sourceSlot).classList.remove("hidden");
+document.getElementById("slot" + UI.sourceSlot).innerHTML = '';
         UI.droppedSuccessfully();
     },
 
@@ -7646,27 +7647,43 @@ function draw() {
                     gameContext.globalCompositeOperation = 'lighten';
                 
 
-                    var plotWidth = 6;
-                    var plotHeight = 6;
+                    var plotWidth = 4;
+                    var plotHeight = 4;
                     var nonIsoCoordX = find2DCoordsX(cursorPositionX, cursorPositionY);
                     var nonIsoCoordY = find2DCoordsY(cursorPositionX, cursorPositionY);
-                    var topLeftX = nonIsoCoordX - plotWidth*tileW/2;
-                    var topLeftY = nonIsoCoordY - plotHeight*tileW/2;
-                    var bottomRightX = nonIsoCoordX + plotWidth*tileW/2;
-                    var bottomRightY = nonIsoCoordY + plotHeight*tileW/2;
+
+                    
+                    var topLeftX = nonIsoCoordX - (plotWidth*tileW/2);
+                    var topLeftY = nonIsoCoordY - (plotHeight*tileW/2);
+                    var bottomRightX = nonIsoCoordX + (plotWidth*tileW/2);
+                    var bottomRightY = nonIsoCoordY + (plotHeight*tileW/2);
+
+
+
+
+
+
+
+
+/*
+                        var topLeftX = nonIsoCoordX;
+                    var topLeftY = nonIsoCoordY;
+                    var bottomRightX = nonIsoCoordX + plotWidth*tileW;
+                    var bottomRightY = nonIsoCoordY + plotHeight*tileW;
+                    */
   // need to 'snap' to whole tiles:
 
                     
-
+var nonIsoTileW = 0.6 * tileW;
  
   
-/*
-                    topLeftX = Math.floor(topLeftX/tileW) * tileW;
-                    topLeftY = Math.floor(topLeftY/tileW) * tileW;
-                    bottomRightX = Math.floor(bottomRightX/tileW) * tileW;
-                    bottomRightY = Math.floor(bottomRightY/tileW) * tileW; 
-                   
-              
+
+                    topLeftX = Math.floor(topLeftX/nonIsoTileW) * nonIsoTileW;
+                    topLeftY = Math.floor(topLeftY/nonIsoTileW) * nonIsoTileW;
+                    bottomRightX = Math.floor(bottomRightX/nonIsoTileW) * nonIsoTileW;
+                    bottomRightY = Math.floor(bottomRightY/nonIsoTileW) * nonIsoTileW; 
+                  
+    /*          
   topLeftX +=    30;      
   topLeftY +=    6;
   bottomRightX +=    30;      
