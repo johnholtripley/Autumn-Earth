@@ -7644,46 +7644,50 @@ function draw() {
                     break;
                 case "plotPlacementOverlay":
                     // centre under the cursor - but 'snap' to nearest tiles
-                    // ###
+
+
+                   // gameContext.globalCompositeOperation = 'lighten';
+
+
+                    var plotWidth = 7;
+                    var plotHeight = 7;
+
+
+                    // find the difference in position between the cursor and the hero:
+                    var xDiff = cursorPositionX - (canvasWidth / 2);
+                    var yDiff = cursorPositionY - (canvasHeight / 2);
+                    if (cursorPositionX) {
+                       
                     
-                    gameContext.globalCompositeOperation = 'lighten';
-                
 
-                    var plotWidth = 4;
-                    var plotHeight = 4;
-
-
-// hovered over tile:
-
-var xDiff = cursorPositionX-(canvasWidth/2);
-var yDiff = cursorPositionY-(canvasHeight/2);
+                    // use the hero's iso position and that difference and calculate the non-iso coordinates:
+                    var nonIsoCoordX = find2DCoordsX(hero.isox + xDiff, hero.isoy + yDiff);
+                    var nonIsoCoordY = find2DCoordsY(hero.isox + xDiff, hero.isoy + yDiff);
 
 
-var nonIsoCoordX = find2DCoordsX(hero.isox+xDiff,hero.isoy+yDiff);
-var nonIsoCoordY = find2DCoordsY(hero.isox+xDiff,hero.isoy+yDiff);
-
-
-
-                    
-                    var topLeftX = nonIsoCoordX - (plotWidth*tileW/2);
-                    var topLeftY = nonIsoCoordY - (plotHeight*tileW/2);
-                    var bottomRightX = nonIsoCoordX + (plotWidth*tileW/2);
-                    var bottomRightY = nonIsoCoordY + (plotHeight*tileW/2);
-
-
-// snap to tiles:
-topLeftX = Math.floor(topLeftX/tileW)*tileW;
-topLeftY = Math.floor(topLeftY/tileW)*tileW;
-bottomRightX = Math.floor(bottomRightX/tileW)*tileW;
-bottomRightY = Math.floor(bottomRightY/tileW)*tileW;
-
-
-drawIsoRectangle(0, 0, tileW, tileW, true, 'rgba(0,255,0,0.3)');
-drawIsoRectangle((mapTilesX-1) * tileW, (mapTilesY-1) * tileW, mapTilesX * tileW, mapTilesY * tileW, true, 'rgba(0,255,0,0.3)');
-
-                    drawIsoRectangle(topLeftX, topLeftY, bottomRightX, bottomRightY, true, 'rgba(0,255,0,0.3)');
+                    // drawIsoRectangle(topLeftX, topLeftY, bottomRightX, bottomRightY, true, 'rgba(0,255,0,0.3)');
+                    var thisOverlayX, thisOverlayY, thisOverlayFill;
+                    var numberOfBlockedTiles = 0;
+                    for (var j = 0 - plotWidth / 2; j < plotWidth / 2; j++) {
+                        for (var k = 0 - plotHeight / 2; k < plotHeight / 2; k++) {
+                            thisOverlayX = nonIsoCoordX + tileW * j;
+                            thisOverlayY = nonIsoCoordY + tileW * k;
+                            thisOverlayFill = 'rgba(0,255,0,0.3)';
+                            if (!tileIsClear(getTileX(thisOverlayX), getTileY(thisOverlayY))) {
+                                
+                                thisOverlayFill = 'rgba(255,0,0,0.3)';
+                                numberOfBlockedTiles++;
+                            }
+                             // snap to tiles:
+                            thisOverlayX = Math.floor(thisOverlayX / tileW) * tileW;
+                            thisOverlayY = Math.floor(thisOverlayY / tileW) * tileW;
+                            drawIsoRectangle(thisOverlayX, thisOverlayY, thisOverlayX + tileW, thisOverlayY + tileW, true, thisOverlayFill);
+                        }
+                    }
+                    console.log("number of blocked tiles: "+numberOfBlockedTiles);
+                }
                     // restore the composite mode to the default:
-                    gameContext.globalCompositeOperation = 'source-over';
+                  //  gameContext.globalCompositeOperation = 'source-over';
                     break;
                 case "img":
                     // standard image:
