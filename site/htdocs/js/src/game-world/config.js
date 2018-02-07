@@ -15,6 +15,7 @@ var activeAction = "";
 var dowsing = {};
 var gathering = {};
 var surveying = {};
+var plotPlacement = {};
 var jumpMapId = null;
 const titleTagPrefix = 'Autumn Earth';
 

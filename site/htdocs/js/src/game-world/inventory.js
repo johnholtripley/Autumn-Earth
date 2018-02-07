@@ -314,7 +314,9 @@ function inventoryItemAction(whichSlot, whichAction, allActionValues) {
                     break;
                 case "deed":
                     // #####
-                    console.log("start house placement");
+                    var actionValueSplit = whichActionValue.split('x');
+                 plotPlacement.width = actionValueSplit[0];
+                 plotPlacement.length = actionValueSplit[1];
                     activeAction = "plotPlacement";
                     document.addEventListener("mousemove", UI.movePlotPlacementOverlay, false);
 //document.removeEventListener("mousemove", UI.movePlotPlacementOverlay, false);
