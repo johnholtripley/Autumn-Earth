@@ -243,6 +243,10 @@ function loadMap() {
         //  mapFilePath = '/game-world/generateCircularDungeonMap.php?dungeonName='+randomDungeonName+'&requestedMap=' + newMap + '&seed=1512098741';
 
     }
+
+
+
+
     currentMap = newMap;
     loadMapJSON(mapFilePath);
 }
@@ -257,10 +261,17 @@ function loadMapAssets() {
     if (currentMap < 0) {
         assetPath = 'dungeon/' + randomDungeonName;
     }
+    if(newMap.toString().indexOf('housing') !== -1) {
+  imagesToLoad.push({
+        name: "backgroundImg",
+        src: '/images/game-world/maps/housing/bg.png'
+    });
+    } else {
     imagesToLoad.push({
         name: "backgroundImg",
         src: '/images/game-world/maps/' + assetPath + '/bg.png'
     });
+}
     tileGraphicsToLoad = thisMapData.graphics;
     for (var i = 0; i < tileGraphicsToLoad.length; i++) {
         if(tileGraphicsToLoad[i].src.indexOf('housing') !== -1) {
@@ -425,7 +436,7 @@ function getShopData() {
     if (thisMapData.shops.length == 0) {
         findInventoryItemData();
     } else {
-        var shopData = JSON.parse('{"mapNumber": ' + currentMap + ',"region":"' + thisMapData.region + '","shops": ' + JSON.stringify(thisMapData.shops) + '}');
+        var shopData = JSON.parse('{"mapNumber": "' + currentMap + '","region":"' + thisMapData.region + '","shops": ' + JSON.stringify(thisMapData.shops) + '}');
         // loop through shops and create hashes 
         for (var i = 0; i < shopData.shops.length; i++) {
             shopData.shops[i].hash = generateHash(shopData.shops[i].name);
@@ -782,6 +793,7 @@ function changeMaps(doorX, doorY) {
         hero.tileX = parseInt(doorX);
         hero.tileY = parseInt(doorY);
     }
+
     loadMap();
 }
 

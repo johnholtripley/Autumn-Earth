@@ -15,7 +15,21 @@ $primaryProfession = "Herbalist";
 
 
 header('Content-Type: application/json');
-$mapDataFile = file_get_contents('../data/chr' .  $chr . '/map' . $map . '.json');
+
+$isPlayerHousing = false;
+// check for player housing:
+if(stripos($map, "housing") !== false) {
+    // is player housing:
+    $isPlayerHousing = true;
+    $housingDetails = explode("-",$map);
+    // eg. // house-999-floor0
+
+    $mapDataFile = file_get_contents('../data/chr' .  $housingDetails[1] . '/housing/' . $housingDetails[2] . '.json');
+} else {
+    $mapDataFile = file_get_contents('../data/chr' .  $chr . '/map' . $map . '.json');
+}
+
+
 
 $mapDataFile = str_replace('##characterName##', $characterName, $mapDataFile);
 $mapDataFile = str_replace('##characterClass##', $characterClass, $mapDataFile);
@@ -361,19 +375,15 @@ $thisItemObject = array(
 }
 }
 
+if(!$isPlayerHousing) {
+
+
 // see if there's any player housing on this map:
-
 $housingQuery = "SELECT * from tblplayerhousing where mapid = ".$map;
-
-
 
 $housingResult = mysql_query( $housingQuery ) or die ( "couldn't execute events query: ".$housingQuery );
 $numberOfHouses = mysql_num_rows( $housingResult );
 if ( $numberOfHouses>0 ) {
-
-
-
-
     while ( $row = mysql_fetch_array( $housingResult ) ) {
 
 $graphicsBeingUsed = array();
@@ -397,8 +407,7 @@ $graphicsForThisHouse = $housingData['map']['graphics'];
         if($housingData['map']['terrain'][$j][$i] !== "?") {
             if($housingData['map']['terrain'][$j][$i] === "*") {
                 $mapData['map']['terrain'][$j+$northWestCornerTileY][$i+$northWestCornerTileX] = "*";
-                $mapData['map']['collisions'][$j+$northWestCornerTileY][$i+$northWestCornerTileX] = "0";
-                $mapData['map']['elevation'][$j+$northWestCornerTileY][$i+$northWestCornerTileX] = "0";
+          
             } else {
 // check if the same filename has already been added and use that reference instead to avoid duplicating images:
                 if(array_key_exists(($graphicsForThisHouse[($housingData['map']['terrain'][$j][$i])]['src']),$graphicsBeingUsed)) {
@@ -414,10 +423,10 @@ $graphicsForThisHouse = $housingData['map']['graphics'];
 
 
 
-                $mapData['map']['collisions'][$j+$northWestCornerTileY][$i+$northWestCornerTileX] = $housingData['map']['collisions'][$j][$i];
-$mapData['map']['elevation'][$j+$northWestCornerTileY][$i+$northWestCornerTileX] = $housingData['map']['elevation'][$j][$i];
+             
             }
-
+   $mapData['map']['collisions'][$j+$northWestCornerTileY][$i+$northWestCornerTileX] = $housingData['map']['collisions'][$j][$i];
+$mapData['map']['elevation'][$j+$northWestCornerTileY][$i+$northWestCornerTileX] = $housingData['map']['elevation'][$j][$i];
 }
 
      }
@@ -436,32 +445,19 @@ $mapData['map']['elevation'][$j+$northWestCornerTileY][$i+$northWestCornerTileX]
 // add shops:
   for ($i=0;$i<count($housingData['map']['shops']);$i++) {
     // see if this shop name exists already:
+    // (ideally this check is done when assigning a name to the shop - but just in case)
     $thisShopName = $housingData['map']['shops'][$i]['name'];
     for ($j=0;$j<count($mapData['map']['shops']);$j++) {
         if($thisShopName == $mapData['map']['shops'][$j]['name']) {
 
-$housingData['map']['shops'][$i]['name'] = $characterName.' - '.$thisShopName; 
+$housingData['map']['shops'][$i]['name'] = $characterName."'s ".$thisShopName; 
 // find the corresponding NPC's dialogue:
 
 $thisHousesNPCs = json_encode($housingData['map']['npcs']);
-$thisHousesNPCs = str_replace($thisShopName, $characterName.' - '.$thisShopName, $thisHousesNPCs);
+$thisHousesNPCs = str_replace($thisShopName, $characterName."'s ".$thisShopName, $thisHousesNPCs);
 $housingData['map']['npcs'] = json_decode($thisHousesNPCs, true);
 
-/*
-for ($k=0;$k<count($housingData['map']['npcs']);$k++) {
-   // for ($l=0;$l<count($housingData['map']['npcs'][$k]['speech'][0]);$l++) {
-       
-foreach ($housingData['map']['npcs'][$k]['speech'][0] as $thisSpeechKey => $thisSpeechValue) {
-   if($thisSpeechValue == $thisShopName) {
-$housingData['map']['npcs'][$k]['speech'][0][$thisSpeechKey] = $characterName.' - '.$thisShopName;
-   }
-}
 
-
-       
-    //}
-}
-*/
 break;
         }
     }
@@ -487,10 +483,20 @@ $housingData['map']['npcs'] = json_decode($thisHousesNPCs, true);
     array_push($mapData['map']['npcs'], $housingData['map']['npcs'][$i]);
   }  
 
-       // ###################
+    
       
-      // add doors
+      // add doors:
+  foreach ($housingData['map']['doors'] as $key => $i) {
 
+$keySplit = explode(",", $key);
+$newKey = ($keySplit[0]+$northWestCornerTileX).",".($keySplit[1]+$northWestCornerTileY);
+
+// update with the new key:
+$housingData['map']['doors'][$newKey] = $housingData['map']['doors'][$key];
+unset($housingData['map']['doors'][$key]);
+
+    $mapData['map']['doors'][$newKey] = $housingData['map']['doors'][$newKey];
+  }  
 
 
 
@@ -501,7 +507,11 @@ mysql_free_result($housingResult);
 
 
 
+
 generatePositionsOfHiddenResourceNodes();
+
+}
+
 
 if ($hasProceduralContent !== false) {
     

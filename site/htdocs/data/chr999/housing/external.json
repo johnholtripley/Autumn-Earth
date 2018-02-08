@@ -1,20 +1,21 @@
 {
-    "map": {
+    "map":
+    {
         "collisions": [
+            [1, 1, 1, 1, 1, 1],
             [1, 0, 0, 0, 0, 1],
-            [0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0],
-            [1, 0, 0, 0, 0, 1]
+            [1, 0, 0, 0, 0, 1],
+            ["d", 0, 0, 0, 0, 1],
+            [1, 0, 0, 0, 0, 1],
+            [1, 1, 1, 1, 1, 1]
         ],
         "terrain": [
-            [1, 0, "*", "*", 0, 1],
-            [0, 0, "*", "*", 0, 0],
-            ["*", "*", "*", "*", "*", "*"],
-            ["*", "*", "*", "*", "*", "*"],
-            [0, 0, "*", "*", 0, 0],
-            [1, 0, "*", "*", 0, 1]
+            [1, 1, 1, 1, 1, 1],
+            [1, "*", "*", "*", "*", 1],
+            [1, "*", "*", "*", "*", 1],
+            ["*", "*", "*", "*", "*", 1],
+            [1, "*", "*", "*", "*", 1],
+            [1, 1, 1, 1, 1, 1]
         ],
         "elevation": [
             [0, 0, 0, 0, 0, 0],
@@ -26,19 +27,29 @@
         ],
         "graphics": [
 
-            { "src": "housing/dirt.png", "centreX": 24, "centreY": 12 },
-            { "src": "housing/block.png", "centreX": 24, "centreY": 45 }
-       
+            {
+                "src": "housing/dirt.png",
+                "centreX": 24,
+                "centreY": 12
+            },
+            {
+                "src": "housing/block.png",
+                "centreX": 24,
+                "centreY": 45
+            }
+
         ],
-        "shops": [   {
-                "name": "architect deeds office",
-                "uniqueItems": [],
-                "specialism": null,
-                "categories": [3],
-                "size": "large",
-                "currency": "money"
-            }],
-        "npcs": [{
+        "shops": [
+        {
+            "name": "architect deeds office",
+            "uniqueItems": [],
+            "specialism": null,
+            "categories": [3],
+            "size": "large",
+            "currency": "money"
+        }],
+        "npcs": [
+        {
             "name": "labourer",
             "src": "labourer.png",
             "width": 20,
@@ -58,9 +69,10 @@
             "isMoving": false,
             "speechIndex": 0,
             "speech": [
-              ["Hi there ##characterProfession##, let's get you a house", "shop", "architect deeds office"]
+                ["Hi there ##characterProfession##, let's get you a house", "shop", "architect deeds office"]
             ],
-            "cardGameSpeech": {
+            "cardGameSpeech":
+            {
                 "challenge": ["Do you play? Fancy a game then?", "play"],
                 "win": ["Woo! I won!", ""],
                 "lose": ["Ahh, you beat me...", "quest|8| Here, take this chocobo card."],
@@ -70,8 +82,10 @@
             "uniqueCards": [1, -2],
             "cardBackColour": "#666666",
             "baseCardPack": 0,
-            "animation": {
-                "walk": {
+            "animation":
+            {
+                "walk":
+                {
                     "length": 1,
                     "n": 2,
                     "e": 3,
@@ -80,15 +94,24 @@
                 }
             }
         }],
-        "doors": {
-           
+        "doors":
+        {
+            "0,3":
+            {
+                "map": "housing-999-floor0",
+                "startX": 1,
+                "startY": 3
+            }
         },
-        "items": [{
+        "items": [
+        {
 
             "type": 18,
             "tileX": 3,
             "tileY": 3
 
-        }]
+        }],
+        "weather": [""],
+        "hotspots": [""]
     }
 }
