@@ -422,8 +422,78 @@ $mapData['map']['elevation'][$j+$northWestCornerTileY][$i+$northWestCornerTileX]
 
      }
      }
-     
-        // john
+    
+// add items:
+  for ($i=0;$i<count($housingData['map']['items']);$i++) {
+    $housingData['map']['items'][$i]['tileX'] += $northWestCornerTileX;
+    $housingData['map']['items'][$i]['tileY'] += $northWestCornerTileY;
+    array_push($mapData['map']['items'], $housingData['map']['items'][$i]);
+  }  
+
+
+
+
+// add shops:
+  for ($i=0;$i<count($housingData['map']['shops']);$i++) {
+    // see if this shop name exists already:
+    $thisShopName = $housingData['map']['shops'][$i]['name'];
+    for ($j=0;$j<count($mapData['map']['shops']);$j++) {
+        if($thisShopName == $mapData['map']['shops'][$j]['name']) {
+
+$housingData['map']['shops'][$i]['name'] = $characterName.' - '.$thisShopName; 
+// find the corresponding NPC's dialogue:
+
+$thisHousesNPCs = json_encode($housingData['map']['npcs']);
+$thisHousesNPCs = str_replace($thisShopName, $characterName.' - '.$thisShopName, $thisHousesNPCs);
+$housingData['map']['npcs'] = json_decode($thisHousesNPCs, true);
+
+/*
+for ($k=0;$k<count($housingData['map']['npcs']);$k++) {
+   // for ($l=0;$l<count($housingData['map']['npcs'][$k]['speech'][0]);$l++) {
+       
+foreach ($housingData['map']['npcs'][$k]['speech'][0] as $thisSpeechKey => $thisSpeechValue) {
+   if($thisSpeechValue == $thisShopName) {
+$housingData['map']['npcs'][$k]['speech'][0][$thisSpeechKey] = $characterName.' - '.$thisShopName;
+   }
+}
+
+
+       
+    //}
+}
+*/
+break;
+        }
+    }
+     array_push($mapData['map']['shops'], $housingData['map']['shops'][$i]);
+  }
+
+
+$thisHousesNPCs = json_encode($housingData['map']['npcs']);
+$thisHousesNPCs = str_replace('##characterName##', $characterName, $thisHousesNPCs);
+$thisHousesNPCs = str_replace('##characterClass##', $characterClass, $thisHousesNPCs);
+$thisHousesNPCs = str_replace('##characterProfession##', $primaryProfession, $thisHousesNPCs);
+$housingData['map']['npcs'] = json_decode($thisHousesNPCs, true);
+
+
+  // add NPCs:
+    for ($i=0;$i<count($housingData['map']['npcs']);$i++) {
+    $housingData['map']['npcs'][$i]['tileX'] += $northWestCornerTileX;
+    $housingData['map']['npcs'][$i]['tileY'] += $northWestCornerTileY;
+
+
+
+
+    array_push($mapData['map']['npcs'], $housingData['map']['npcs'][$i]);
+  }  
+
+       // ###################
+      
+      // add doors
+
+
+
+
     }
 }
 mysql_free_result($housingResult);

@@ -30,7 +30,14 @@
             { "src": "housing/block.png", "centreX": 24, "centreY": 45 }
        
         ],
-        "shops": [],
+        "shops": [   {
+                "name": "architect deeds office",
+                "uniqueItems": [],
+                "specialism": null,
+                "categories": [3],
+                "size": "large",
+                "currency": "money"
+            }],
         "npcs": [{
             "name": "labourer",
             "src": "labourer.png",
@@ -51,8 +58,7 @@
             "isMoving": false,
             "speechIndex": 0,
             "speech": [
-                ["hello", "once"],
-                ["hello again/hi/howdo", ""]
+              ["Hi there ##characterProfession##, let's get you a house", "shop", "architect deeds office"]
             ],
             "cardGameSpeech": {
                 "challenge": ["Do you play? Fancy a game then?", "play"],
@@ -79,32 +85,9 @@
         },
         "items": [{
 
-            "type": 35,
+            "type": 18,
             "tileX": 3,
-            "tileY": 3,
-            "contains": [{
-                "type": 1,
-                "quantity": 1,
-                "quality": 100,
-                "durability": 100,
-                "currentWear": 0,
-                "effectiveness": 100,
-                "colour": 0,
-                "enchanted": 0,
-                "hallmark": 0,
-                "inscription": ""
-            },{
-                "type": 1,
-                "quantity": 2,
-                "quality": 100,
-                "durability": 100,
-                "currentWear": 0,
-                "effectiveness": 100,
-                "colour": 0,
-                "enchanted": 0,
-                "hallmark": 0,
-                "inscription": ""
-            }]
+            "tileY": 3
 
         }]
     }
