@@ -3,6 +3,7 @@
     {
         "zoneName": "The Old Meadows",
         "region": "Teldrassil",
+        "isInside": false,
         "ambientSounds":
         {
             "birdSong": "../sounds/bird-song.mp3"

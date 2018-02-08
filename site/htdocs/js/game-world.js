@@ -5381,31 +5381,32 @@ function loadMapAssets() {
     if (currentMap < 0) {
         assetPath = 'dungeon/' + randomDungeonName;
     }
-    if(newMap.toString().indexOf('housing') !== -1) {
-  imagesToLoad.push({
-        name: "backgroundImg",
-        src: '/images/game-world/maps/housing/bg.png'
-    });
+    if (newMap.toString().indexOf('housing') !== -1) {
+   
+        imagesToLoad.push({
+            name: "backgroundImg",
+            src: '/images/game-world/maps/housing/bg-'+mapTilesX+'x'+mapTilesY+'.png'
+        });
     } else {
-    imagesToLoad.push({
-        name: "backgroundImg",
-        src: '/images/game-world/maps/' + assetPath + '/bg.png'
-    });
-}
+        imagesToLoad.push({
+            name: "backgroundImg",
+            src: '/images/game-world/maps/' + assetPath + '/bg.png'
+        });
+    }
     tileGraphicsToLoad = thisMapData.graphics;
     for (var i = 0; i < tileGraphicsToLoad.length; i++) {
-        if(tileGraphicsToLoad[i].src.indexOf('housing') !== -1) {
- imagesToLoad.push({
-            name: "tile" + i,
-            src: "/images/game-world/maps/" + tileGraphicsToLoad[i].src
-        });
+        if (tileGraphicsToLoad[i].src.indexOf('housing') !== -1) {
+            imagesToLoad.push({
+                name: "tile" + i,
+                src: "/images/game-world/maps/" + tileGraphicsToLoad[i].src
+            });
         } else {
             imagesToLoad.push({
-            name: "tile" + i,
-            src: "/images/game-world/maps/" + assetPath + "/" + tileGraphicsToLoad[i].src
-        }); 
+                name: "tile" + i,
+                src: "/images/game-world/maps/" + assetPath + "/" + tileGraphicsToLoad[i].src
+            });
         }
-       
+
     }
     npcGraphicsToLoad = [];
     var thisNPCIdentifier;
@@ -7666,7 +7667,7 @@ function draw() {
                     gameContext.globalCompositeOperation = 'source-over';
                     break;
                 case "plotPlacementOverlay":
-                gameContext.globalCompositeOperation = 'soft-light';
+                    gameContext.globalCompositeOperation = 'soft-light';
                     // centre under the cursor - but 'snap' to nearest tiles
                     // find the difference in position between the cursor and the hero (at the centre of the screen):
                     var xDiff = cursorPositionX - (canvasWidth / 2);
@@ -7695,7 +7696,7 @@ function draw() {
                         }
                         console.log("number of blocked tiles: " + plotPlacement.numberOfBlockedTiles);
                     }
-gameContext.globalCompositeOperation = 'source-over';
+                    gameContext.globalCompositeOperation = 'source-over';
                     break;
                 case "img":
                     // standard image:

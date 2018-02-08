@@ -1,6 +1,7 @@
 {
     "map":
     {
+        "isInside": true,
         "collisions": [
             [1, 1, 1, 1, 1, 1],
             [1, 0, 0, 0, 0, 1],
@@ -98,9 +99,9 @@
         {
             "0,3":
             {
-                "map": "housing-999-floor0",
-                "startX": 1,
-                "startY": 3
+                "map": "2",
+                "startX": 29,
+                "startY": 33
             }
         },
         "items": [
@@ -111,6 +112,7 @@
             "tileY": 3
 
         }],
-        "weather": [""]
+        "weather": [""],
+        "hotspots": [""]
     }
 }
