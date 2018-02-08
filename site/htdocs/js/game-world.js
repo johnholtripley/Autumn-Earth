@@ -5383,10 +5383,18 @@ function loadMapAssets() {
     });
     tileGraphicsToLoad = thisMapData.graphics;
     for (var i = 0; i < tileGraphicsToLoad.length; i++) {
-        imagesToLoad.push({
+        if(tileGraphicsToLoad[i].src.indexOf('housing') !== -1) {
+ imagesToLoad.push({
+            name: "tile" + i,
+            src: "/images/game-world/maps/" + tileGraphicsToLoad[i].src
+        });
+        } else {
+            imagesToLoad.push({
             name: "tile" + i,
             src: "/images/game-world/maps/" + assetPath + "/" + tileGraphicsToLoad[i].src
-        });
+        }); 
+        }
+       
     }
     npcGraphicsToLoad = [];
     var thisNPCIdentifier;

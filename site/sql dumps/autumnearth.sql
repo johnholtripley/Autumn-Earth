@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 06, 2018 at 11:08 AM
+-- Generation Time: Feb 08, 2018 at 11:30 AM
 -- Server version: 5.6.24
 -- PHP Version: 5.6.8
 
@@ -694,8 +694,8 @@ INSERT INTO `tblinventoryitems` (`itemID`, `shortname`, `description`, `priceCod
 (54, 'Wanted Poster', 'poster', '1', '25.0', '36.0', 52, 52, NULL, NULL, 'wanted-poster', 'notice', '0', 0, 0, '0', '0', '', NULL, 0, 0, 0, 0, 0, NULL, NULL),
 (55, 'Quest Book', '', '4', '12.0', '6.0', 20, 13, NULL, NULL, 'quest-book', 'book,questSet', '?,9', 0, 0, '0', '0', NULL, NULL, 1, 0, 1, 0, 0, NULL, NULL),
 (56, 'Simple Chair', '', '4', '32.0', '40.0', 38, 38, 44, 49, 'simple-chair', 'sit', '0', 1, 0, '0', '0', NULL, NULL, 1, 0, 0, 1, 0, NULL, NULL),
-(57, 'House Deed (6x6)', '6 by 6 plot', '8000', '32.0', '40.0', 38, 38, NULL, NULL, 'house-deed', 'deed', '6x6', 0, 0, '0', '0', '6', NULL, 0, 0, 0, 1, 0, NULL, NULL),
-(58, 'House Deed (8x6)', '8 by 6 plot', '12000', '32.0', '40.0', 38, 38, NULL, NULL, 'house-deed', 'deed', '8x6', 0, 0, '0', '0', '6', NULL, 0, 0, 0, 1, 0, NULL, NULL);
+(57, 'House Deed', '6 by 6 plot', '8000', '32.0', '40.0', 38, 38, NULL, NULL, 'house-deed', 'deed', '6x6', 0, 0, '0', '0', '6', NULL, 0, 0, 0, 1, 0, NULL, NULL),
+(58, 'House Deed', '8 by 6 plot', '12000', '32.0', '40.0', 38, 38, NULL, NULL, 'house-deed', 'deed', '8x6', 0, 0, '0', '0', '6', NULL, 0, 0, 0, 1, 0, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -1213,6 +1213,27 @@ INSERT INTO `tblplants` (`plantID`, `latinName`, `commonNames`, `plantDesc`, `pl
 (463, 'Rhabarbare serota', 'It is likewise known as Broomstitch', 'Broomstitch (being used as a sallad herb) is so well known that it needs no description; I shall therefore only speak of its virtues as follows. It grows in moist and wet grounds, by wood-sides, and sometimes in moist places of shadowy groves, as also by the water side. It flowers about September, and the berries are ripe in October, and then quickly perishes, until the next year it springs from the same again.', 'rhabarbare-serota', 'Rhabarbare serota\r\nIt is likewise known as Broomstitch\r\nBroomstitch (being used as a sallad herb) is so well known that it needs no description; I shall therefore only speak of its virtues as follows.', 0, 0, '2018-01-09 16:44:21', 1515533237, 'Broomstitch'),
 (464, 'Pensylvatum camajor', 'It is likewise called Wattleseal', 'This is so well known where it grows, that it needs no description. It grows in Kent near Rochester, and in many places in the West Country, both in Devonshire and Cornwall. The flowers are particularly attractive to the Scorched cardinal butterfly. All Wattleseals usually flower in February, a little sooner or later.', 'pensylvatum-camajor', 'Pensylvatum camajor\r\nIt is likewise called Wattleseal\r\nThis is so well known where it grows, that it needs no description. It grows in Kent near Rochester, and in many places in the West Country, both in Devonshire and Cornwall.', 0, 0, '2018-01-09 16:45:56', 1515588165, 'Wattleseal'),
 (465, 'Misium beckia', 'Also known as Trailing dragonsbine', 'Trailing dragonsbine has a small creeping root running under the uppermost crust of the ground, somewhat like couch grass root, but not so white, shooting forth stalks with leaves, some whereof carry no berries, the others do; every stalk smooth without joints, and blackish green, rising about half a foot high, if it bear berries, otherwise seldom so high, bearing at the top four leaves set directly one against another, in manner of a cross or ribband tied (as it is called in a true-loves knot,) which are each of them apart somewhat like unto a night-shade leaf, but somewhat broader, having sometimes three leaves, sometimes five, sometimes six, and those sometimes greater than in others, in the middle of the four leaves rise up one small slender stalk, about an inch high, bearing at the tops thereof one flower spread open like a star, consisting of four small and long narrow pointed leaves of a yellowish green colour, and four others lying between them lesser than they; in the middle whereof stands a round dark purplish button or head, compassed about with eight small yellow mealy threads with three colours, making it the more conspicuous, and lovely to behold. This button or head in the middle, when the other leaves are withered, becomes a blackish purple berry, full of juice, of the bigness of a reasonable grape, having within it many white seeds. The whole plant is without any manifest taste. It is frequent in almost every county of this land, and is cherished in gardens with us, where it grows greater than that which is wild, and grows in shadowy sides of fields and woods. It flowers in Autumn, some sooner, some later.', 'misium-beckia', 'Misium beckia\r\nAlso known as Trailing dragonsbine', 0, 0, '2018-01-16 15:58:58', 1516216305, 'Trailing dragonsbine');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tblplayerhousing`
+--
+
+CREATE TABLE IF NOT EXISTS `tblplayerhousing` (
+  `mapHousingID` int(11) NOT NULL,
+  `characterID` int(10) NOT NULL,
+  `mapID` int(10) NOT NULL,
+  `northWestCornerTileX` int(3) NOT NULL,
+  `northWestCornerTileY` int(3) NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+--
+-- Dumping data for table `tblplayerhousing`
+--
+
+INSERT INTO `tblplayerhousing` (`mapHousingID`, `characterID`, `mapID`, `northWestCornerTileX`, `northWestCornerTileY`) VALUES
+(1, 999, 2, 30, 30);
 
 -- --------------------------------------------------------
 
@@ -2087,6 +2108,12 @@ ALTER TABLE `tblplants`
   ADD PRIMARY KEY (`plantID`);
 
 --
+-- Indexes for table `tblplayerhousing`
+--
+ALTER TABLE `tblplayerhousing`
+  ADD PRIMARY KEY (`mapHousingID`);
+
+--
 -- Indexes for table `tblposts`
 --
 ALTER TABLE `tblposts`
@@ -2308,6 +2335,11 @@ ALTER TABLE `tblnews`
 --
 ALTER TABLE `tblplants`
   MODIFY `plantID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=466;
+--
+-- AUTO_INCREMENT for table `tblplayerhousing`
+--
+ALTER TABLE `tblplayerhousing`
+  MODIFY `mapHousingID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT for table `tblposts`
 --

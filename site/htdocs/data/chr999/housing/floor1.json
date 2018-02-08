@@ -1,0 +1,125 @@
+{
+    "map": {
+        "collisions": [
+            [1, "d", "d", "d", 1, 1],
+            [0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0]
+        ],
+        "terrain": [
+            ["*", "*", "*", "*", "*", "*"],
+            ["*", "*", "*", "*", "*", "*"],
+            ["*", "*", 2, "*", "*", "*"],
+            ["*", 3, 3, "*", "*", "*"],
+            ["*", 2, 2, "*", "*", "*"],
+            ["*", 3, "*", "*", "*", "*"]
+        ],
+        "elevation": [
+            [0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0],
+            [0, 0, 33, 0, 0, 0],
+            [0, 12, 12, 0, 0, 0],
+            [0, 33, 33, 0, 0, 0],
+            [0, 12, 0, 0, 0, 0]
+        ],
+        "graphics": [
+            { "src": "grass.png", "centreX": 24, "centreY": 12 },
+            { "src": "dirt.png", "centreX": 24, "centreY": 12 },
+            { "src": "block.png", "centreX": 24, "centreY": 45 },
+            { "src": "little-block.png", "centreX": 24, "centreY": 24 }
+        ],
+        "shops": [],
+        "npcs": [{
+            "name": "labourer",
+            "src": "labourer.png",
+            "width": 20,
+            "length": 20,
+            "spriteWidth": 75,
+            "spriteHeight": 85,
+            "centreX": 56,
+            "centreY": 73,
+            "tileX": 1,
+            "tileY": 4,
+            "movement": ["-"],
+            "facing": "e",
+            "walkThroughDoors": false,
+            "speed": 2,
+            "speech": "",
+            "isCollidable": true,
+            "isMoving": false,
+            "speechIndex": 0,
+            "speech": [
+                ["hello", "once"],
+                ["hello again/hi/howdo", ""]
+            ],
+            "cardGameSpeech": {
+                "challenge": ["Do you play? Fancy a game then?", "play"],
+                "win": ["Woo! I won!", ""],
+                "lose": ["Ahh, you beat me...", "quest|8| Here, take this chocobo card."],
+                "draw": ["Well played", ""]
+            },
+            "cardSkill": 1,
+            "uniqueCards": [1, -2],
+            "cardBackColour": "#666666",
+            "baseCardPack": 0,
+            "animation": {
+                "walk": {
+                    "length": 1,
+                    "n": 2,
+                    "e": 3,
+                    "s": 0,
+                    "w": 1
+                }
+            }
+        }],
+        "doors": {
+            "1,0": {
+                "map": -1,
+                "startX": 10,
+                "startY": 34
+            },
+            "2,0": {
+                "map": -1,
+                "startX": 11,
+                "startY": 34
+            },
+            "3,0": {
+                "map": -1,
+                "startX": 12,
+                "startY": 34
+            }
+        },
+        "items": [{
+
+            "type": 35,
+            "tileX": 4,
+            "tileY": 4,
+            "contains": [{
+                "type": 1,
+                "quantity": 1,
+                "quality": 100,
+                "durability": 100,
+                "currentWear": 0,
+                "effectiveness": 100,
+                "colour": 0,
+                "enchanted": 0,
+                "hallmark": 0,
+                "inscription": ""
+            },{
+                "type": 1,
+                "quantity": 2,
+                "quality": 100,
+                "durability": 100,
+                "currentWear": 0,
+                "effectiveness": 100,
+                "colour": 0,
+                "enchanted": 0,
+                "hallmark": 0,
+                "inscription": ""
+            }]
+
+        }]
+    }
+}

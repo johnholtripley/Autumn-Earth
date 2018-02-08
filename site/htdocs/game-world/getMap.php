@@ -361,6 +361,73 @@ $thisItemObject = array(
 }
 }
 
+// see if there's any player housing on this map:
+
+$housingQuery = "SELECT * from tblplayerhousing where mapid = ".$map;
+
+
+
+$housingResult = mysql_query( $housingQuery ) or die ( "couldn't execute events query: ".$housingQuery );
+$numberOfHouses = mysql_num_rows( $housingResult );
+if ( $numberOfHouses>0 ) {
+
+
+
+
+    while ( $row = mysql_fetch_array( $housingResult ) ) {
+
+$graphicsBeingUsed = array();
+
+for ($i=0;$i<count($mapData['map']['graphics']);$i++) {
+$graphicsBeingUsed[$mapData['map']['graphics'][$i]['src']] = $i;
+}
+
+        extract($row);
+        // load in external housing
+        $housingFile = file_get_contents('../data/chr'.$chr.'/housing/external.json');
+        $housingData = json_decode($housingFile, true);
+        $thisHouseWidth = count($housingData['map']['terrain'][0]);
+        $thisHouseLength = count($housingData['map']['terrain']);
+$graphicsForThisHouse = $housingData['map']['graphics'];
+     for ($i=0;$i<$thisHouseWidth;$i++) {
+     for ($j=0;$j<$thisHouseLength;$j++) {
+
+// check if graphics are already used, if not add them to the list and map the id appropriately:
+        // don't overwrite underlying terrain with any "?" items in the housing data:
+        if($housingData['map']['terrain'][$j][$i] !== "?") {
+            if($housingData['map']['terrain'][$j][$i] === "*") {
+                $mapData['map']['terrain'][$j+$northWestCornerTileY][$i+$northWestCornerTileX] = "*";
+                $mapData['map']['collisions'][$j+$northWestCornerTileY][$i+$northWestCornerTileX] = "0";
+                $mapData['map']['elevation'][$j+$northWestCornerTileY][$i+$northWestCornerTileX] = "0";
+            } else {
+// check if the same filename has already been added and use that reference instead to avoid duplicating images:
+                if(array_key_exists(($graphicsForThisHouse[($housingData['map']['terrain'][$j][$i])]['src']),$graphicsBeingUsed)) {
+            // already being used, so use the reference already held:
+                     $mapData['map']['terrain'][$j+$northWestCornerTileY][$i+$northWestCornerTileX] = $graphicsBeingUsed[($graphicsForThisHouse[($housingData['map']['terrain'][$j][$i])]['src'])];
+                } else {
+                    // add and store for later:
+                     $numberOfGraphicsSoFar = count($graphicsBeingUsed);
+                     $mapData['map']['terrain'][$j+$northWestCornerTileY][$i+$northWestCornerTileX] = $numberOfGraphicsSoFar;
+                     $graphicsBeingUsed[($graphicsForThisHouse[($housingData['map']['terrain'][$j][$i])]['src'])] = $numberOfGraphicsSoFar;
+                     array_push($mapData['map']['graphics'],  $graphicsForThisHouse[$housingData['map']['terrain'][$j][$i]]  );
+                }
+
+
+
+                $mapData['map']['collisions'][$j+$northWestCornerTileY][$i+$northWestCornerTileX] = $housingData['map']['collisions'][$j][$i];
+$mapData['map']['elevation'][$j+$northWestCornerTileY][$i+$northWestCornerTileX] = $housingData['map']['elevation'][$j][$i];
+            }
+
+}
+
+     }
+     }
+     
+        // john
+    }
+}
+mysql_free_result($housingResult);
+
 
 
 
