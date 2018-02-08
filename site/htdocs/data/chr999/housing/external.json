@@ -62,7 +62,7 @@
             "tileX": 2,
             "tileY": 2,
             "movement": ["-"],
-            "facing": "e",
+            "facing": "w",
             "walkThroughDoors": false,
             "speed": 2,
             "speech": "",
@@ -112,7 +112,6 @@
             "tileY": 3
 
         }],
-        "weather": [""],
         "hotspots": [""]
     }
 }

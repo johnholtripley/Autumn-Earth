@@ -301,6 +301,7 @@ var animationUpdateTime = (1000 / animationFramesPerSecond);
 var gameCanvas, gameContext, gameMode, cartographyContext, cartographyCanvas, offScreenCartographyCanvas, offScreenCartographyContext, canvasMapImage, canvasMapImage, canvasMapMaskImage, heroImg, shadowImg, imagesToLoad, tileImages, npcImages, itemImages, backgroundImg, objInitLeft, objInitTop, dragStartX, dragStartY, inventoryCheck, timeSinceLastAmbientSoundWasPlayed, gameSettings, lightMap, lightMapOverlay, lightMapContext, activeGatheredObject, questResponseNPC, cursorPositionX, cursorPositionY;
 var chestIdOpen = -1;
 var currentWeather = "";
+var outsideWeather = "";
 var weatherLastChangedTime = 0;
 var interfaceIsVisible = true;
 var activeAction = "";
@@ -5078,24 +5079,39 @@ cursorPositionY = e.pageY;
 
 }
 function setupWeather() {
-    var previousWeather = currentWeather;
-    if (thisMapData.weather.length == 1) {
-        changeWeather(thisMapData.weather[0]);
-    } else {
-        // check if previous weather is an option here, and use that if so:
-        if (thisMapData.weather.indexOf(previousWeather) !== -1) {
-            changeWeather(previousWeather);
+    if (!thisMapData.isInside) {
+        // check if any outside weather is stored:
+        if (outsideWeather != "") {
+            changeWeather(outsideWeather);
         } else {
-            changeWeather(getRandomElementFromArray(thisMapData.weather));
+            var previousWeather = currentWeather;
+            if (thisMapData.weather.length == 1) {
+                changeWeather(thisMapData.weather[0]);
+            } else {
+                // check if previous weather is an option here, and use that if so:
+                if (thisMapData.weather.indexOf(previousWeather) !== -1) {
+                    changeWeather(previousWeather);
+                } else {
+                    changeWeather(getRandomElementFromArray(thisMapData.weather));
+                }
+            }
+        }
+        outsideWeather = "";
+    } else {
+        if (outsideWeather == "") {
+            // store the outside weather:
+            outsideWeather = currentWeather;
+            changeWeather("");
         }
     }
-
 }
 
 function checkForWeatherChange() {
-    if (thisMapData.weather.length > 1) {
-        if ((hero.totalGameTimePlayed - weatherLastChangedTime) > 5000) {
-            changeWeather(getRandomElementFromArray(thisMapData.weather));
+    if (!thisMapData.isInside) {
+        if (thisMapData.weather.length > 1) {
+            if ((hero.totalGameTimePlayed - weatherLastChangedTime) > 5000) {
+                changeWeather(getRandomElementFromArray(thisMapData.weather));
+            }
         }
     }
 }
