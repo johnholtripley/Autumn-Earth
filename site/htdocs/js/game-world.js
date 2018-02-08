@@ -303,6 +303,7 @@ var chestIdOpen = -1;
 var currentWeather = "";
 var outsideWeather = "";
 var weatherLastChangedTime = 0;
+const minTimeBetweenWeatherChanges = 5000;
 var interfaceIsVisible = true;
 var activeAction = "";
 var dowsing = {};
@@ -5109,7 +5110,7 @@ function setupWeather() {
 function checkForWeatherChange() {
     if (!thisMapData.isInside) {
         if (thisMapData.weather.length > 1) {
-            if ((hero.totalGameTimePlayed - weatherLastChangedTime) > 5000) {
+            if ((hero.totalGameTimePlayed - weatherLastChangedTime) > minTimeBetweenWeatherChanges) {
                 changeWeather(getRandomElementFromArray(thisMapData.weather));
             }
         }

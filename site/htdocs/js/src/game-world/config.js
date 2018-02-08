@@ -11,6 +11,7 @@ var chestIdOpen = -1;
 var currentWeather = "";
 var outsideWeather = "";
 var weatherLastChangedTime = 0;
+const minTimeBetweenWeatherChanges = 5000;
 var interfaceIsVisible = true;
 var activeAction = "";
 var dowsing = {};

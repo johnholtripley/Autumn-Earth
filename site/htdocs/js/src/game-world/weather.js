@@ -29,7 +29,7 @@ function setupWeather() {
 function checkForWeatherChange() {
     if (!thisMapData.isInside) {
         if (thisMapData.weather.length > 1) {
-            if ((hero.totalGameTimePlayed - weatherLastChangedTime) > 5000) {
+            if ((hero.totalGameTimePlayed - weatherLastChangedTime) > minTimeBetweenWeatherChanges) {
                 changeWeather(getRandomElementFromArray(thisMapData.weather));
             }
         }

@@ -415,6 +415,10 @@ $numberOfItemCategories: 20;
     .notCollected img {
         @include filter(sepia(100%) opacity(30%));
     }
+    h2 {
+        font-size: 14px;
+        padding: 3px 8px 6px 8px;
+    }
 }
 
 #gameSettings {
