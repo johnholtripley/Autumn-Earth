@@ -49,7 +49,11 @@ $fileToUse = "../data/chr".$playerId."/dungeon/".$dungeonName."/".$requestedMap.
   if($isADungeon) {
 $fileToUse = "../data/chr".$playerId."/dungeon/".$dungeonName."/".$requestedMap.".json";
 } else {
-  $fileToUse = "../data/chr".$playerId."/map".$requestedMap.".json";
+
+  //$fileToUse = "../data/chr".$playerId."/map".$requestedMap.".json";
+  // use getMap to pull in seasonal or player housing etc:
+  $fileToUse = $protocol.$_SERVER['SERVER_NAME']."/game-world/getMap.php?chr=".$playerId."&map=".$requestedMap;
+
 }
 }
 
@@ -1146,8 +1150,12 @@ function quadBezier($im, $x1, $y1, $x2, $y2, $x3, $y3) {
 function loadAndParseJSON($whichfileToUse) {
   global $loadedMapData, $loadedItemData, $loadedDoorData, $protocol, $doorEntranceX, $doorEntranceY, $mapMaxWidth, $mapMaxHeight, $isADungeon;
 
+
+//$whichfileToUse = urlencode($whichfileToUse);
+
 $str = file_get_contents($whichfileToUse);
 $json = json_decode($str, true);
+
 
 
 //var_dump($json['map']['collisions']);
