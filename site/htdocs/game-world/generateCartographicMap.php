@@ -25,9 +25,9 @@ $update = true;
 }
 
 $format = "json";
-if(isset($_GET["format"])) {
-$format = $_GET["format"];
-}
+//if(isset($_GET["format"])) {
+//$format = $_GET["format"];
+//}
 
 $requestedMap = $_GET["requestedMap"];
 $playerId=$_GET["playerId"];
@@ -43,9 +43,9 @@ if($requestedMap<0) {
   $isADungeon = true;
 }
 
-if($format == "xml") {
-$fileToUse = "../data/chr".$playerId."/dungeon/".$dungeonName."/".$requestedMap.".xml";
-} else {
+//if($format == "xml") {
+//$fileToUse = "../data/chr".$playerId."/dungeon/".$dungeonName."/".$requestedMap.".xml";
+//} else {
   if($isADungeon) {
 $fileToUse = "../data/chr".$playerId."/dungeon/".$dungeonName."/".$requestedMap.".json";
 } else {
@@ -55,7 +55,7 @@ $fileToUse = "../data/chr".$playerId."/dungeon/".$dungeonName."/".$requestedMap.
   $fileToUse = $protocol.$_SERVER['SERVER_NAME']."/game-world/getMap.php?chr=".$playerId."&map=".$requestedMap;
 
 }
-}
+//}
 
 $plotChests = false;
 if(isset($_GET["plotChests"])) {
@@ -87,6 +87,11 @@ $mapFilename = "../data/chr".$playerId."/cartography/".$dungeonName."/".$request
         $loadedMapData = array();
     $loadedDoorData = array();
     $loadedItemData = array();
+
+
+
+
+/*
     if($format == "xml") {
       $xmlparser = xml_parser_create();
     $nodeType = "";
@@ -102,13 +107,15 @@ $fp = fopen($fileToUse, "r");
         }
 
 xml_parser_free($xmlparser);
-} else {
-  // load json
+*/
+//} else {
 
+
+  // load json
 loadAndParseJSON($fileToUse);
 
 
-}
+//}
 
 
 
@@ -124,14 +131,14 @@ for ($i = 0;$i < $mapMaxWidth;$i++) {
 }
 
 for ($i = 0;$i < $mapMaxWidth;$i++) {
-  if($format == "xml") {
-$thisRow = explode(",", $loadedMapData[$i]);
-for ($j = 0;$j < $mapMaxHeight;$j++) {
-  $dungeonArray[$i][$j] = $thisRow[$j];
-  }
-} else {
+//  if($format == "xml") {
+//$thisRow = explode(",", $loadedMapData[$i]);
+//for ($j = 0;$j < $mapMaxHeight;$j++) {
+//  $dungeonArray[$i][$j] = $thisRow[$j];
+//  }
+//} else {
   $dungeonArray[$i] = $loadedMapData[$i];
-}
+//}
 }
 
 
@@ -850,7 +857,7 @@ array_push($unusedEdges,$edges[$i]);
 // flood fill from centre of a door tile:
 
 
-
+/*
 if($format == "xml") {
 $firstDoor = explode(",",$loadedDoorData[0]);
 $doorX = intval($firstDoor[1])+0.5;
@@ -858,6 +865,7 @@ $doorY = intval($firstDoor[2])+0.5;
 $doorY = $doorX *$tileLineDimension;
 $doorY = ($mapMaxHeight -1 - $doorY)*$tileLineDimension;
 } else {
+  */
   // reversed becuase of the rotation of the old XML compared to the json
 //$doorX = intval($firstDoor[1])+0.5;
 //$doorY = intval($firstDoor[0])+0.5;
@@ -869,7 +877,7 @@ $doorY = $doorEntranceY;
 
 $doorX = $doorX *$tileLineDimension;
 $doorY = ($mapMaxHeight -1 - $doorY)*$tileLineDimension;
-}
+//}
 
 //echo $doorX.",".$doorY."<br>";
 
@@ -913,15 +921,15 @@ if($doorY>$canvaDimension) {
 
 
 // json maps are rotate compared to the old xml maps:
-if($format!="xml") {
+//if($format!="xml") {
 
    imagefill($mapCanvas, $doorX, $doorY, $walkableColour);
 $rotatedImage = imagerotate($mapCanvas, -90, 0);
  imagefilter($rotatedImage, IMG_FILTER_GAUSSIAN_BLUR);
-} else {
-   imagefill($mapCanvas, $doorX, $doorY, $walkableColour);
-imagefilter($mapCanvas, IMG_FILTER_GAUSSIAN_BLUR);
-}
+//} else {
+//   imagefill($mapCanvas, $doorX, $doorY, $walkableColour);
+//imagefilter($mapCanvas, IMG_FILTER_GAUSSIAN_BLUR);
+//}
 
 
 
@@ -932,11 +940,11 @@ imagefilter($mapCanvas, IMG_FILTER_GAUSSIAN_BLUR);
 
 
 $imageResampled = imagecreatetruecolor($canvaDimension/2, $canvaDimension/2);
-if($format!="xml") {
+//if($format!="xml") {
 imagecopyresampled($imageResampled, $rotatedImage, 0, 0, 0, 0, $canvaDimension/2, $canvaDimension/2, $canvaDimension, $canvaDimension);
-} else {
-  imagecopyresampled($imageResampled, $mapCanvas, 0, 0, 0, 0, $canvaDimension/2, $canvaDimension/2, $canvaDimension, $canvaDimension);
-}
+//} else {
+//  imagecopyresampled($imageResampled, $mapCanvas, 0, 0, 0, 0, $canvaDimension/2, $canvaDimension/2, $canvaDimension, $canvaDimension);
+//}
 // pick a random overlay
 $overlayDir = "images/cartography/overlays/";
  $templatesFound = 0;
@@ -1070,9 +1078,9 @@ imagedestroy($mapCanvas);
 imagedestroy($overlayTexture);
 imagedestroy($imageResampled);
 imagedestroy($brush);
-if($format!="xml") {
+//if($format!="xml") {
 imagedestroy($rotatedImage);
-}
+//}
 
 if($plotChests) {
 imagedestroy($chestLocator);
