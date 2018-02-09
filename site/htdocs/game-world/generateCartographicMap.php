@@ -1167,6 +1167,14 @@ array_push($loadedDoorData, $key);
  if(isset($json['map']['entrance'])) {
 $doorEntranceX = $json['map']['entrance'][1];
 $doorEntranceY = $json['map']['entrance'][0];
+} else {
+  // get first door:
+  if(count($json['map']['doors'])>0) {
+  reset($json['map']['doors']);
+$firstKey = key($json['map']['doors']);
+$doorEntranceX = $json['map']['doors'][$firstKey]['startX'];
+$doorEntranceY = $json['map']['doors'][$firstKey]['startY'];
+}
 }
 
 
