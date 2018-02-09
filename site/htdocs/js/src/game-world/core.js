@@ -911,9 +911,9 @@ function startDoorTransition() {
             UI.closeChest();
         }
     }
-    if (currentMap < 0) {
+   // if (currentMap < 0) {
         saveCartographyMask();
-    }
+   // }
 }
 
 
@@ -1323,9 +1323,9 @@ function update() {
 
 function heroIsInNewTile() {
     hero.z = getElevation(getTileX(hero.x), getTileY(hero.y));
-    if (currentMap < 0) {
+  //  if (currentMap < 0) {
         updateCartographicMiniMap();
-    }
+  //  }
     var thisHotspot, thisTileCentreX, thisTileCentreY;
     // check for hotspots:
     for (var i = 0; i < thisMapData.hotspots.length; i++) {

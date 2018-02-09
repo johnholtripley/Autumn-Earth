@@ -192,12 +192,19 @@ function updateCartographicMiniMap() {
 }
 
 function initCartographicMap() {
+    if(newMap<0) {
     canvasMapImage.src = "/game-world/generateCartographicMap.php?playerId=" + characterId + "&dungeonName=" + randomDungeonName + "&plotChests=true&requestedMap=" + newMap;
-
+} else {
+canvasMapImage.src = "/game-world/generateCartographicMap.php?playerId=" + characterId + "&plotChests=true&requestedMap=" + newMap;
+}
     canvasMapImage.onload = function() {
         // load the mask (if any) so that previously uncovered areas are revealed:
         //console.log('getting mask - /game-world/getCartographicMapMask.php?chr=' + characterId + '&dungeonName=' + randomDungeonName + '&currentMap=' + newMap);
+        if(newMap<0) {
         canvasMapMaskImage.src = '/game-world/getCartographicMapMask.php?chr=' + characterId + '&dungeonName=' + randomDungeonName + '&currentMap=' + newMap + '&cache=' + Date.now();
+    } else {
+        canvasMapMaskImage.src = '/game-world/getCartographicMapMask.php?chr=' + characterId + '&currentMap=' + newMap + '&cache=' + Date.now();
+    }
         canvasMapMaskImage.onload = function() {        
             offScreenCartographyContext.clearRect(0, 0, 246, 246);
             offScreenCartographyContext.drawImage(canvasMapMaskImage, 0, 0);
@@ -208,7 +215,11 @@ function initCartographicMap() {
 
 function saveCartographyMask() {
     var dataURL = offScreenCartographyCanvas.toDataURL();
+    if(currentMap<0) {
     postData('/game-world/saveCartographicMapMask.php', 'chr=' + characterId + '&dungeonName=' + randomDungeonName + '&currentMap=' + currentMap + '&data=' + dataURL);
+} else {
+    postData('/game-world/saveCartographicMapMask.php', 'chr=' + characterId + '&currentMap=' + currentMap + '&data=' + dataURL);
+}
 }
 
 /*colourNames = ["",
@@ -6048,9 +6059,9 @@ function startDoorTransition() {
             UI.closeChest();
         }
     }
-    if (currentMap < 0) {
+   // if (currentMap < 0) {
         saveCartographyMask();
-    }
+   // }
 }
 
 
@@ -6460,9 +6471,9 @@ function update() {
 
 function heroIsInNewTile() {
     hero.z = getElevation(getTileX(hero.x), getTileY(hero.y));
-    if (currentMap < 0) {
+  //  if (currentMap < 0) {
         updateCartographicMiniMap();
-    }
+  //  }
     var thisHotspot, thisTileCentreX, thisTileCentreY;
     // check for hotspots:
     for (var i = 0; i < thisMapData.hotspots.length; i++) {
