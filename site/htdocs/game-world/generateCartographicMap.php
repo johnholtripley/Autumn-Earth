@@ -36,7 +36,11 @@ $dungeonName="";
 $isADungeon = false;
 if(isset($_GET["dungeonName"])) {
 $dungeonName=$_GET["dungeonName"];
-$isADungeon = true;
+
+}
+
+if($requestedMap<0) {
+  $isADungeon = true;
 }
 
 if($format == "xml") {
