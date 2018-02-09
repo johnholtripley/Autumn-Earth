@@ -31,12 +31,22 @@ $format = $_GET["format"];
 
 $requestedMap = $_GET["requestedMap"];
 $playerId=$_GET["playerId"];
+
+$dungeonName="";
+$isADungeon = false;
+if(isset($_GET["dungeonName"])) {
 $dungeonName=$_GET["dungeonName"];
+$isADungeon = true;
+}
 
 if($format == "xml") {
 $fileToUse = "../data/chr".$playerId."/dungeon/".$dungeonName."/".$requestedMap.".xml";
 } else {
+  if($isADungeon) {
 $fileToUse = "../data/chr".$playerId."/dungeon/".$dungeonName."/".$requestedMap.".json";
+} else {
+  $fileToUse = "../data/chr".$playerId."/map".$requestedMap.".json";
+}
 }
 
 $plotChests = false;
@@ -65,8 +75,6 @@ $mapFilename = "../data/chr".$playerId."/cartography/".$dungeonName."/".$request
         
 
 
-    $mapMaxWidth = 70;
-    $mapMaxHeight = 70;
     
         $loadedMapData = array();
     $loadedDoorData = array();
@@ -130,7 +138,7 @@ createCartographicMap();
 
 
 function createCartographicMap() {
-global $mapMaxWidth, $mapMaxHeight, $dungeonArray, $loadedItemData, $loadedDoorData, $debug, $playerId, $dungeonName, $session, $requestedMap, $plotChests, $update, $useOverlay, $format, $protocol, $doorEntranceX, $doorEntranceY;
+global $mapMaxWidth, $mapMaxHeight, $dungeonArray, $loadedItemData, $loadedDoorData, $debug, $playerId, $dungeonName, $session, $requestedMap, $plotChests, $update, $useOverlay, $format, $protocol, $doorEntranceX, $doorEntranceY, $isADungeon;
 
 
 // canvas size should be twice required size as it will be downsampled to anti alias:
@@ -740,6 +748,7 @@ $isASingleTile = true;
 }
 
 if(!$isASingleTile) {
+  if(count($tidiedOrderedPoints)>3) {
 for ($i = 1; $i<count($tidiedOrderedPoints)-2; $i++) {
 
   $controlX = ($tidiedOrderedPoints[$i][0] + $tidiedOrderedPoints[$i+1][0]) / 2;
@@ -757,7 +766,9 @@ $previousY = $controlY;
 
 }
 
+
 quadBezier($mapCanvas, $previousX, $previousY,$tidiedOrderedPoints[$i][0], $tidiedOrderedPoints[$i][1], $tidiedOrderedPoints[$i+1][0],$tidiedOrderedPoints[$i+1][1]);
+}
 } else {
 
 $lineColour = imagecolorallocate($mapCanvas, 96, 35, 14);
@@ -1004,16 +1015,18 @@ if (!file_exists("../data/chr".$playerId."/cartography")) {
 }
 
 
-
+if($isADungeon) {
 if (!file_exists("../data/chr".$playerId."/cartography/".$dungeonName)) {
     mkdir("../data/chr".$playerId."/cartography/".$dungeonName, 0777, true);
 }
+}
 
 
-
-
+if($isADungeon) {
 $mapFilename = "../data/chr".$playerId."/cartography/".$dungeonName."/".$requestedMap.".jpg";
-
+} else {
+  $mapFilename = "../data/chr".$playerId."/cartography/map".$requestedMap.".jpg";
+}
 
 
 
@@ -1036,7 +1049,7 @@ if($update) {
 } else {
 // Output image to the browser
 
- // if(!$debug) {
+//  if(!$debug) {
 header('Content-type: image/jpg');
 //}
   imagejpeg($imageResampled,null,100);
@@ -1127,7 +1140,7 @@ function quadBezier($im, $x1, $y1, $x2, $y2, $x3, $y3) {
 
 
 function loadAndParseJSON($whichfileToUse) {
-  global $loadedMapData, $loadedItemData, $loadedDoorData, $protocol, $doorEntranceX, $doorEntranceY;
+  global $loadedMapData, $loadedItemData, $loadedDoorData, $protocol, $doorEntranceX, $doorEntranceY, $mapMaxWidth, $mapMaxHeight, $isADungeon;
 
 $str = file_get_contents($whichfileToUse);
 $json = json_decode($str, true);
@@ -1147,9 +1160,22 @@ foreach ($json['map']['doors'] as $key => $value) {
 array_push($loadedDoorData, $key);
 }
 
- 
+ if(isset($json['map']['entrance'])) {
 $doorEntranceX = $json['map']['entrance'][1];
 $doorEntranceY = $json['map']['entrance'][0];
+}
+
+
+
+if($isADungeon) {
+    $mapMaxWidth = 70;
+    $mapMaxHeight = 70;
+  } else {
+     $mapMaxWidth = count($json['map']['terrain'][0]);
+        $mapMaxHeight = count($json['map']['terrain']);
+  }
+
+
 
 }
 
