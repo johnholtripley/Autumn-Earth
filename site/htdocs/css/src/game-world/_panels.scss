@@ -61,10 +61,10 @@ $numberOfItemCategories: 20;
         }
     }
     img {
-        display: block;
-       // don't want :active otherwise the tooltip blocks dragging the item up a slot in Chrome
-       // @include attention() {
-        &:hover, &:focus {
+        display: block; // don't want :active otherwise the tooltip blocks dragging the item up a slot in Chrome
+        // @include attention() {
+        &:hover,
+        &:focus {
             &+p {
                 // reveal tooltip
                 opacity: 1;
@@ -575,5 +575,56 @@ $numberOfItemCategories: 20;
         @include attention() {
             background: #857d6e;
         }
+    }
+}
+
+#postPanel {
+    width: 322px;
+    left: 70%;
+    top: 335px;
+    background: #000;
+    font-size: 13px;
+    @include togglePanel(0.4s);
+    color: #fff;
+    ol {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+    li {
+        display: block;
+        border-bottom: 1px solid #111;
+        &:last-child {
+            border-bottom: 0;
+        }
+        &.unread {
+            background: #8a6800;
+        }
+        @include attention() {
+            cursor: url(../images/game-world/cursors/active.gif) 3 3, auto;
+        }
+    }
+    p {
+        padding: 5px 6px;
+        margin: 0;
+    }
+}
+
+.postMessagePanel {
+    display: none;
+        background: #bd9e7b url(../images/game-world/interface/parchment.jpg) no-repeat 0 0;
+    width: 238px;
+    left: 60%;
+    top: 335px;
+    color: #111;
+    font-size: 14px;
+    @include togglePanel(0.4s);
+    &.active {
+        display: block;
+    }
+    p {
+        padding: 6px;
+        margin: 0;
+        font-family: 'IM Fell English', 'Times New Roman', Palatino, Times, Serif;
     }
 }

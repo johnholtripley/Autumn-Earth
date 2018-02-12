@@ -1506,6 +1506,9 @@ function checkForActions() {
                         // open chest and show contents:
                         UI.openChest(i);
                         break;
+                        case "post":
+                        // open the Post panel:
+                        UI.openPost();
                     default:
                         // try and pick it up:
                         inventoryCheck = canAddItemToInventory([thisMapData.items[i]]);
@@ -1573,6 +1576,9 @@ function processSpeech(thisObjectSpeaking, thisSpeechPassedIn, thisSpeechCode, i
             case "shop":
                 UI.openShop(generateHash(thisObjectSpeaking.speech[thisObjectSpeaking.speechIndex][2]));
                 //thisObjectSpeaking.speechIndex--;
+                break;
+                case "post":
+UI.openPost();
                 break;
             case "sound":
                 audio.playSound(soundEffects[thisObjectSpeaking.speech[thisObjectSpeaking.speechIndex][2]], 0);

@@ -3395,6 +3395,7 @@ const questJournalRegionFilter = document.getElementById('questJournalRegionFilt
 const acceptQuestChoice = document.getElementById('acceptQuestChoice');
 const questDecline = document.getElementById('questDecline');
 const questAccept = document.getElementById('questAccept');
+const postPanel = document.getElementById('#postPanel');
 
 var notificationQueue = [];
 var notificationIsShowing = false;
@@ -3625,7 +3626,7 @@ var UI = {
             inventoryItemAction(e.target, thisItemsAction, e.target.getAttribute('data-action-value'));
         } else {
             var thisNode = getNearestParentId(e.target);
-            // console.log(thisNode.id)
+
             if (thisNode.id.substring(0, 6) == "recipe") {
                 recipeSelectComponents(thisNode.id);
             } else if (thisNode.id.substring(0, 4) == "shop") {
@@ -3634,6 +3635,9 @@ var UI = {
                 UI.addFromChest(thisNode.id);
             } else if (thisNode.id.substring(0, 9) == "gathering") {
                 UI.addFromGathering();
+            } else if (thisNode.id.substring(0, 4) == "post") {
+
+                UI.readPostMessage(thisNode.id);
             }
         }
     },
@@ -4025,8 +4029,8 @@ var UI = {
         hero.currency[thisCurrency] += sellPrice;
         UI.updateCurrencies();
         audio.playSound(soundEffects['coins'], 0);
-document.getElementById("slot" + UI.sourceSlot).classList.remove("hidden");
-document.getElementById("slot" + UI.sourceSlot).innerHTML = '';
+        document.getElementById("slot" + UI.sourceSlot).classList.remove("hidden");
+        document.getElementById("slot" + UI.sourceSlot).innerHTML = '';
         UI.droppedSuccessfully();
     },
 
@@ -5077,12 +5081,25 @@ document.getElementById("slot" + UI.sourceSlot).innerHTML = '';
             questJournalRegionFilter.options.add(newOption, storedIndex);
 
         }
-    }, 
+    },
     movePlotPlacementOverlay: function(e) {
-cursorPositionX = e.pageX;
-cursorPositionY = e.pageY;
-    }
+        cursorPositionX = e.pageX;
+        cursorPositionY = e.pageY;
+    },
+    openPost: function() {
+        postPanel.classList.add('active');
+    },
 
+    readPostMessage: function(whichElement) {
+        var thisElement = document.getElementById(whichElement);
+        if (thisElement.classList.contains('unread')) {
+            thisElement.classList.remove('unread');
+            // send this to DB to mark as read there:
+            sendDataWithoutNeedingAResponse("/game-world/readPost.php?id=" + whichElement);
+        }
+        var correspondingPostMessage = "postMessage" + whichElement.substr(4);
+        document.getElementById(correspondingPostMessage).classList.add("active");
+    }
 }
 function setupWeather() {
     if (!thisMapData.isInside) {
@@ -6648,6 +6665,9 @@ function checkForActions() {
                         // open chest and show contents:
                         UI.openChest(i);
                         break;
+                        case "post":
+                        // open the Post panel:
+                        UI.openPost();
                     default:
                         // try and pick it up:
                         inventoryCheck = canAddItemToInventory([thisMapData.items[i]]);
@@ -6715,6 +6735,9 @@ function processSpeech(thisObjectSpeaking, thisSpeechPassedIn, thisSpeechCode, i
             case "shop":
                 UI.openShop(generateHash(thisObjectSpeaking.speech[thisObjectSpeaking.speechIndex][2]));
                 //thisObjectSpeaking.speechIndex--;
+                break;
+                case "post":
+UI.openPost();
                 break;
             case "sound":
                 audio.playSound(soundEffects[thisObjectSpeaking.speech[thisObjectSpeaking.speechIndex][2]], 0);

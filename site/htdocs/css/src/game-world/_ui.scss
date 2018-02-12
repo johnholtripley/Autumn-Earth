@@ -164,3 +164,43 @@
         @include transition(all .25s ease-out);
     }
 }
+
+#newPost {
+    display: inline-block;
+    opacity: 0;
+    @include transition(opacity .4s ease-out);
+    position: relative;
+    width :40px;
+    height: 40px;
+    background: url(../images/game-world/interface/new-post.png) no-repeat 50% 50%;
+    cursor: url(../images/game-world/cursors/default.gif) 3 3, auto;
+        @include attention() {
+            p {
+                opacity: 1;
+                pointer-events: auto;
+                @include transform(translateY(0));
+            }
+        }
+        p {
+        // tooltip
+        background: #eee;
+        z-index: 1;
+        margin: 0;
+        bottom: 100%;
+        color: #000;
+        display: block;
+        left: 0;
+        min-width: 120px;
+        opacity: 0;
+        padding: 8px;
+        pointer-events: none;
+        position: absolute;
+        font-size: 11px;
+        cursor: url(../images/game-world/cursors/default.gif) 3 3, auto;
+        @include transform(translateY(10px));
+        @include transition(all .25s ease-out);
+    }
+}
+#newPost.active {
+    opacity: 1;
+}

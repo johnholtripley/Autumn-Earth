@@ -27,6 +27,7 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
   <meta name="robots" content="noodp,noydir">
   <link href="https://fonts.googleapis.com/css?family=Lato%7CBree+Serif%7CIM+Fell+English" rel="stylesheet">
   <?php include($_SERVER['DOCUMENT_ROOT']."/includes/meta-content.php"); ?>
+  <?php include($_SERVER['DOCUMENT_ROOT']."/game-world/getPost.php"); ?>
   <style>
     .card.players {
     /* this hero's card back: */
@@ -54,6 +55,7 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
     <div id="toolbar">
       <a href="#gameSettings" id="openSettings">Settings</a>
       <div id="actionBar"></div>
+      <div id="newPost"<?php if($hasUnReadPost) { echo 'class="active"';} ?>><p>You have new post</p></div>
       <div id="currencies"></div>
     </div>
 
@@ -181,6 +183,10 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
         <input type="submit" value="Ok">
       </fieldset>
     </form>
+
+    <?php // defined in getPost.php: ?>
+    <?php echo $postPanelMarkup; ?>
+    <?php echo $allMessagePanels; ?>
 
     <div id="chestPanel">
       <div class="draggableBar"><span id="chestTitle">Chest</span></div>
