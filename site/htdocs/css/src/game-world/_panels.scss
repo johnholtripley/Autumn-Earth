@@ -122,6 +122,7 @@ $numberOfItemCategories: 20;
     height: 19px;
     border: 0;
     cursor: url(../images/game-world/cursors/active.gif) 3 3, auto;
+    outline: none;
 }
 
 #inventoryPanels {
@@ -594,6 +595,7 @@ $numberOfItemCategories: 20;
     li {
         display: block;
         border-bottom: 1px solid #111;
+        @include clearfix;
         &:last-child {
             border-bottom: 0;
         }
@@ -607,6 +609,10 @@ $numberOfItemCategories: 20;
     p {
         padding: 5px 6px;
         margin: 0;
+    }
+    .previewSlot {
+@include inventorySlot();
+margin-right: 6px;
     }
 }
 
@@ -626,5 +632,8 @@ $numberOfItemCategories: 20;
         padding: 6px;
         margin: 0;
         font-family: 'IM Fell English', 'Times New Roman', Palatino, Times, Serif;
+    }
+    .postSlot {
+        @include inventorySlot();
     }
 }

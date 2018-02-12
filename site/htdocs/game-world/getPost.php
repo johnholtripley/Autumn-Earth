@@ -74,11 +74,21 @@ $hasUnReadPost = true;
      }
       $postPanelMarkup .= '<li id="post'.md5($mailID).'"'.$hasBeenReadClass.'>';
       $timeAgo = relativeGameTime(strtotime($sentTime));
-      $postPanelMarkup .= '<p>'.$senderName.' - '.$title.' - '.$timeAgo.'</p>';
-
+      
+$postPanelMarkup .= '<div class="previewSlot">';
+if($attachment) {
+$attachmentObject = json_decode($attachment);
+$postPanelMarkup .= '<img src="/images/game-world/inventory-items/'.$attachmentObject->type.'.png"><span class="qty">'.$attachmentObject->quantity.'</span>';
+}
+$postPanelMarkup .= '</div><p>'.$senderName.' - '.$title.' - '.$timeAgo.'</p>';
 
 $postPanelMarkup .= '</li>';
-$allMessagePanels .= '<div class="postMessagePanel" id="postMessage'.md5($mailID).'"><div class="draggableBar">'.$senderName.' - '.$title.'</div><button class="closePanel">close</button><p>'.$mailContents.'</p></div>';
+$allMessagePanels .= '<div class="postMessagePanel" id="postMessage'.md5($mailID).'"><div class="draggableBar">'.$senderName.' - '.$title.'</div><button class="closePanel">close</button><p>'.$mailContents.'</p>';
+
+if($attachment) {
+$allMessagePanels .= '<div class="postSlot"><img src="/images/game-world/inventory-items/'.$attachmentObject->type.'.png"><span class="qty">'.$attachmentObject->quantity.'</span></div>';
+}
+$allMessagePanels .= '</div>';
 
       }
       $postPanelMarkup .= '</ol>';
@@ -86,6 +96,7 @@ $allMessagePanels .= '<div class="postMessagePanel" id="postMessage'.md5($mailID
       mysql_free_result($result);
 
 $postPanelMarkup .= '</div>';
+
 ?>
 
 
