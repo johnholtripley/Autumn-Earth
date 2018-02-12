@@ -3635,6 +3635,8 @@ var UI = {
                 UI.addFromChest(thisNode.id);
             } else if (thisNode.id.substring(0, 9) == "gathering") {
                 UI.addFromGathering();
+            } else if (thisNode.id.substring(0, 11) == "postMessage") {
+                UI.takePostAttachments(thisNode.id);
             } else if (thisNode.id.substring(0, 4) == "post") {
 
                 UI.readPostMessage(thisNode.id);
@@ -5094,11 +5096,37 @@ var UI = {
         var thisElement = document.getElementById(whichElement);
         if (thisElement.classList.contains('unread')) {
             thisElement.classList.remove('unread');
-            // send this to DB to mark as read there:
+            // send this to the database to mark as read there:
             sendDataWithoutNeedingAResponse("/game-world/readPost.php?id=" + whichElement);
         }
         var correspondingPostMessage = "postMessage" + whichElement.substr(4);
         document.getElementById(correspondingPostMessage).classList.add("active");
+    },
+    takePostAttachments: function(whichElement) {
+        getJSON("/game-world/getPostAttachment.php?id=" + whichElement, function(data) {
+            if (data.item != "null") {
+                // try and add to inventory:
+                inventoryCheck = canAddItemToInventory([data.item]);
+                if (inventoryCheck[0]) {
+                    UI.showChangeInInventory(inventoryCheck[1]);
+                    // remove attachment from message:
+                    document.querySelector("#postMessage" + data.id + " .postSlot").outerHTML = '';
+
+                    // remove it from message preview list:
+                    document.querySelector("#post" + data.id + " .previewSlot").innerHTML = '';
+                    // send notification that it's been added to database:
+                    sendDataWithoutNeedingAResponse("/game-world/gotPostAttachment.php?id=" + data.id);
+                } else {
+                    UI.showNotification("<p>Oops - sorry, no room in your bags</p>");
+                }
+            }
+        }, function(status) {
+            // error - try again:
+            UI.takePostAttachments(whichElement);
+        });
+
+
+
     }
 }
 function setupWeather() {

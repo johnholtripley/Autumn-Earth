@@ -61,7 +61,7 @@ $postPanelMarkup .= '<button class="closePanel">close</button>';
 $chr = 999;
 $hasUnReadPost = false;
 
-  $query = "SELECT * FROM tblmail where accountID='".$chr."' order by senttime DESC LIMIT 12";
+  $query = "SELECT * FROM tblmail where characterID='".$chr."' order by senttime DESC LIMIT 12";
       $result = mysql_query($query) or die ();
       if(mysql_num_rows($result)>0) {
       	$postPanelMarkup .= '<ol>';
@@ -77,8 +77,10 @@ $hasUnReadPost = true;
       
 $postPanelMarkup .= '<div class="previewSlot">';
 if($attachment) {
+if(!$attachmentTaken) {
 $attachmentObject = json_decode($attachment);
 $postPanelMarkup .= '<img src="/images/game-world/inventory-items/'.$attachmentObject->type.'.png"><span class="qty">'.$attachmentObject->quantity.'</span>';
+}
 }
 $postPanelMarkup .= '</div><p>'.$senderName.' - '.$title.' - '.$timeAgo.'</p>';
 
@@ -86,9 +88,16 @@ $postPanelMarkup .= '</li>';
 $allMessagePanels .= '<div class="postMessagePanel" id="postMessage'.md5($mailID).'"><div class="draggableBar">'.$senderName.' - '.$title.'</div><button class="closePanel">close</button><p>'.$mailContents.'</p>';
 
 if($attachment) {
+	if(!$attachmentTaken) {
 $allMessagePanels .= '<div class="postSlot"><img src="/images/game-world/inventory-items/'.$attachmentObject->type.'.png"><span class="qty">'.$attachmentObject->quantity.'</span></div>';
+
+
+}
 }
 $allMessagePanels .= '</div>';
+
+
+
 
       }
       $postPanelMarkup .= '</ol>';

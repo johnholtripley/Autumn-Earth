@@ -635,5 +635,6 @@ margin-right: 6px;
     }
     .postSlot {
         @include inventorySlot();
+        margin: 5px 6px;
     }
 }
