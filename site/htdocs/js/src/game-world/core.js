@@ -697,16 +697,20 @@ function prepareGame() {
         var thisPlatform;
         for (var i = 0; i < thisMapData.movingPlatforms.length; i++) {
             thisPlatform = thisMapData.movingPlatforms[i];
-            thisPlatform.x = getTileCentreCoordX(thisPlatform.tileXMin);
-            thisPlatform.y = getTileCentreCoordY(thisPlatform.tileYMin);
-            thisPlatform.z = thisPlatform.zMin;
+            thisPlatform.x = getTileCentreCoordX(thisPlatform.startTileX);
+            thisPlatform.y = getTileCentreCoordY(thisPlatform.startTileY);
+            thisPlatform.z = thisPlatform.startZ;
+            thisPlatform.movementIndex = 0;
             // this will be set to false if any character is moving over an edge, so the platform will stop until they're clear:
             thisPlatform.canMove = true;
+            /*
             // determine offsets from platform's x and y coords (as these won't change):
             thisPlatform.xMinEdge = -tileW / 2;
             thisPlatform.xMaxEdge = tileW / 2 + ((thisPlatform.width - 1) * tileW);
             thisPlatform.yMinEdge = -tileW / 2;
             thisPlatform.yMaxEdge = tileW / 2 + ((thisPlatform.length - 1) * tileW);
+            */
+            
         }
     }
 
@@ -2349,9 +2353,10 @@ function movePlatforms() {
         for (var i = 0; i < thisMapData.movingPlatforms.length; i++) {
             thisPlatform = thisMapData.movingPlatforms[i];
             if (thisPlatform.canMove) {
-                thisPlatform.x += thisPlatform.xSpeed;
-                thisPlatform.y += thisPlatform.ySpeed;
-                thisPlatform.z += thisPlatform.zSpeed;
+                //thisPlatform.x += thisPlatform.xSpeed;
+                //thisPlatform.y += thisPlatform.ySpeed;
+                //thisPlatform.z += thisPlatform.zSpeed;
+                /*
                 // x coords start off at tile centre, so need to check the edges - hence the tileW/2
                 if ((getTileX(thisPlatform.x + tileW / 2) > thisPlatform.tileXMax) || (getTileX(thisPlatform.x - tileW / 2) < thisPlatform.tileXMin)) {
                     thisPlatform.xSpeed *= -1;
@@ -2362,6 +2367,7 @@ function movePlatforms() {
                 if ((thisPlatform.z > thisPlatform.zMax) || (thisPlatform.z < thisPlatform.zMin)) {
                     thisPlatform.zSpeed *= -1;
                 }
+                */
             }
         }
 
