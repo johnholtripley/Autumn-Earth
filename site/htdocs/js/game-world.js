@@ -7556,28 +7556,25 @@ function movePlatforms() {
                 thisPlatform.x += thisPlatform.dx;
                 thisPlatform.y += thisPlatform.dy;
                 thisPlatform.z += thisPlatform.dz;
-
-
-                // check to see if it's reached it's next target:
-//console.log(thisPlatform.targetX, thisPlatform.x,thisPlatform.targetY, thisPlatform.y);
-if(thisPlatform.targetX == thisPlatform.x) {
-if(thisPlatform.targetY == thisPlatform.y) {
-if(thisPlatform.targetZ == thisPlatform.z) {
-   
-thisPlatformMovements = determinePlatformIncrements(thisPlatform);
-    thisPlatform.dx = thisPlatformMovements[0];
-            thisPlatform.dy = thisPlatformMovements[1];
-            thisPlatform.dz = thisPlatformMovements[2];
-}
-}
-}
-
-
-
-               
+                // check to see if it's reached it's next target (within in a tolerance):
+                //console.log(thisPlatform.targetX, thisPlatform.x,thisPlatform.targetY, thisPlatform.y);
+                if (Math.abs(thisPlatform.targetX - thisPlatform.x) < 0.5) {
+                    if (Math.abs(thisPlatform.targetY - thisPlatform.y) < 0.5) {
+                        if (Math.abs(thisPlatform.targetZ - thisPlatform.z) < 0.5) {
+                            // snap to target:
+                            thisPlatform.x = thisPlatform.targetX;
+                            thisPlatform.y = thisPlatform.targetY;
+                            thisPlatform.z = thisPlatform.targetZ;
+                            // find next movement:
+                            thisPlatformMovements = determinePlatformIncrements(thisPlatform);
+                            thisPlatform.dx = thisPlatformMovements[0];
+                            thisPlatform.dy = thisPlatformMovements[1];
+                            thisPlatform.dz = thisPlatformMovements[2];
+                        }
+                    }
+                }
             }
         }
-
     }
 }
 
@@ -7585,19 +7582,17 @@ function determinePlatformIncrements(whichPlatform) {
     var nextMovement = whichPlatform.movement[whichPlatform.movementIndex];
     var targetX = getTileCentreCoordX(nextMovement[0]);
     var targetY = getTileCentreCoordY(nextMovement[1]);
-
     var targetZ = nextMovement[2];
     var dx, dy, dz;
-
+    var totalDistance = getPythagorasDistance(whichPlatform.x, whichPlatform.y, targetX, targetY);
+    var numberOfTurns = totalDistance / whichPlatform.speed;
     // determine differences:
     var xDiff = whichPlatform.x - targetX;
     var yDiff = whichPlatform.y - targetY;
     var zDiff = whichPlatform.z - targetZ;
-    dx = 0 - xDiff / (whichPlatform.speed * tileW);
-    dy = 0 - yDiff / (whichPlatform.speed * tileW);
-    dz = 0 - zDiff / (whichPlatform.speed * tileW);
-
-
+    dx = 0 - xDiff / (numberOfTurns);
+    dy = 0 - yDiff / (numberOfTurns);
+    dz = 0 - zDiff / (numberOfTurns);
     if (typeof nextMovement[3] !== "undefined") {
         switch (nextMovement[3]) {
             case 'jump':
@@ -7605,21 +7600,17 @@ function determinePlatformIncrements(whichPlatform) {
                 whichPlatform.x = targetX;
                 whichPlatform.y = targetY;
                 whichPlatform.z = targetZ;
-
                 dx = dy = dz = 0;
                 break;
         }
     }
-
     whichPlatform.targetX = targetX;
     whichPlatform.targetY = targetY;
     whichPlatform.targetZ = targetZ;
-
     whichPlatform.movementIndex++;
-     if (whichPlatform.movementIndex >= whichPlatform.movement.length) {
-                    whichPlatform.movementIndex = 0;
-                }
-
+    if (whichPlatform.movementIndex >= whichPlatform.movement.length) {
+        whichPlatform.movementIndex = 0;
+    }
     return [dx, dy, dz];
 }
 
