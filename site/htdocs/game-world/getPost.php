@@ -119,7 +119,7 @@ $postPanelMarkup .= '<datalist id="recentContacts">';
 $postPanelMarkup .= '</datalist>';
 
 
-$postPanelMarkup .= '<input type="text" placeholder="Subject line&hellip;">';
+$postPanelMarkup .= '<input type="text" id="sendPostSubject" placeholder="Subject line&hellip;">';
 $postPanelMarkup .= '<textarea placeholder="Message&hellip;"></textarea>';
 
 $postPanelMarkup .= '<button id="sendPost">Send post</button>';

@@ -3400,6 +3400,7 @@ const sendPostTab = document.getElementById('sendPostTab');
 const sendPostPanel = document.getElementById('sendPostPanel');
 const receivedPostTab = document.getElementById('receivedPostTab');
 const receivedPostPanel = document.getElementById('receivedPostPanel');
+const sendPostSubject = document.getElementById('sendPostSubject');
 
 var notificationQueue = [];
 var notificationIsShowing = false;
@@ -5149,7 +5150,12 @@ var UI = {
                 receivedPostPanel.classList.add('active');
                 break;
                 case 'sendPost':
-                // get data
+                
+
+    sendPost('{"subject":"'+sendPostSubject.value+'"}');
+ 
+
+
                 break;
                  case 'cancelPost':
                  // ####
@@ -7657,7 +7663,20 @@ function canLearnRecipe(recipeIndex) {
     return wasSuccessful;
 }
 
+function sendPost(postData) {
+    var postDataToSend = JSON.parse(postData);
 
+   getJSONWithParams("/game-world/sendPost.php", 'postData=' + JSON.stringify(postDataToSend), function(data) {
+     if(data.success) {
+ console.log("done");
+     } else {
+console.log("failed");
+     }
+    }, function(status) {
+      // let user try again
+      // ########
+    });
+}
 
 
 function draw() {

@@ -2442,7 +2442,20 @@ function canLearnRecipe(recipeIndex) {
     return wasSuccessful;
 }
 
+function sendPost(postData) {
+    var postDataToSend = JSON.parse(postData);
 
+   getJSONWithParams("/game-world/sendPost.php", 'postData=' + JSON.stringify(postDataToSend), function(data) {
+     if(data.success) {
+ console.log("done");
+     } else {
+console.log("failed");
+     }
+    }, function(status) {
+      // let user try again
+      // ########
+    });
+}
 
 
 function draw() {
