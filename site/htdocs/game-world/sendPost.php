@@ -29,6 +29,7 @@ if($_POST['postData']) {
 $postedData = json_decode($_POST['postData'],true);
 $postSubject = $postedData['subject'];
 $postMessage = $postedData['message'];
+$senderID = $postedData['senderID'];
 }
 
         

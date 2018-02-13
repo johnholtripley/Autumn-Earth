@@ -1759,6 +1759,10 @@ var UI = {
             thisElement.classList.remove('unread');
             // send this to the database to mark as read there:
             sendDataWithoutNeedingAResponse("/game-world/readPost.php?id=" + whichElement);
+            // see if there are any unread messages left, if not, hide the 'new mail icon':
+            if(document.querySelectorAll('#receivedPostPanel .unread').length == 0) {
+document.getElementById('newPost').classList.remove('active');
+            }
         }
         var correspondingPostMessage = "postMessage" + whichElement.substr(4);
         document.getElementById(correspondingPostMessage).classList.add("active");
@@ -1804,16 +1808,11 @@ var UI = {
                 receivedPostTab.classList.add('active');
                 receivedPostPanel.classList.add('active');
                 break;
-                case 'sendPost':
-                
-
-    sendPost('{"subject":"'+sendPostSubject.value+'","message":"'+sendPostMessage.value+'"}');
- 
-
-
+            case 'sendPost':
+                sendUserPost('{"subject":"' + sendPostSubject.value + '","message":"' + sendPostMessage.value + '","senderID":"' + characterId + '"}');
                 break;
-                 case 'cancelPost':
-                 // ####
+            case 'cancelPost':
+                // ####
                 break;
         }
     }

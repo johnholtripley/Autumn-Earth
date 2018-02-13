@@ -618,7 +618,7 @@ margin-right: 6px;
 
 .postMessagePanel {
     display: none;
-        background: #bd9e7b url(../images/game-world/interface/parchment.jpg) no-repeat 0 0;
+       
     width: 238px;
     left: 60%;
     top: 335px;
@@ -636,6 +636,10 @@ margin-right: 6px;
     .postSlot {
         @include inventorySlot();
         margin: 5px 6px;
+    }
+    .postParchment {
+         background: #bd9e7b url(../images/game-world/interface/parchment.jpg) no-repeat 0 0;
+         @include clearfix;
     }
 }
 #receivedPostPanel, #sendPostPanel {

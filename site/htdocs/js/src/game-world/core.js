@@ -262,10 +262,10 @@ function loadMapAssets() {
         assetPath = 'dungeon/' + randomDungeonName;
     }
     if (newMap.toString().indexOf('housing') !== -1) {
-   
+
         imagesToLoad.push({
             name: "backgroundImg",
-            src: '/images/game-world/maps/housing/bg-'+mapTilesX+'x'+mapTilesY+'.png'
+            src: '/images/game-world/maps/housing/bg-' + mapTilesX + 'x' + mapTilesY + '.png'
         });
     } else {
         imagesToLoad.push({
@@ -715,15 +715,15 @@ function prepareGame() {
 
 
             // temp:
-        
 
-thisPlatformMovements = determinePlatformIncrements(thisPlatform);
 
-    thisPlatform.dx = thisPlatformMovements[0];
+            thisPlatformMovements = determinePlatformIncrements(thisPlatform);
+
+            thisPlatform.dx = thisPlatformMovements[0];
             thisPlatform.dy = thisPlatformMovements[1];
             thisPlatform.dz = thisPlatformMovements[2];
 
-            
+
         }
     }
 
@@ -928,9 +928,9 @@ function startDoorTransition() {
             UI.closeChest();
         }
     }
-   // if (currentMap < 0) {
-        saveCartographyMask();
-   // }
+    // if (currentMap < 0) {
+    saveCartographyMask();
+    // }
 }
 
 
@@ -1340,9 +1340,9 @@ function update() {
 
 function heroIsInNewTile() {
     hero.z = getElevation(getTileX(hero.x), getTileY(hero.y));
-  //  if (currentMap < 0) {
-        updateCartographicMiniMap();
-  //  }
+    //  if (currentMap < 0) {
+    updateCartographicMiniMap();
+    //  }
     var thisHotspot, thisTileCentreX, thisTileCentreY;
     // check for hotspots:
     for (var i = 0; i < thisMapData.hotspots.length; i++) {
@@ -1523,7 +1523,7 @@ function checkForActions() {
                         // open chest and show contents:
                         UI.openChest(i);
                         break;
-                        case "post":
+                    case "post":
                         // open the Post panel:
                         UI.openPost();
                     default:
@@ -1594,8 +1594,8 @@ function processSpeech(thisObjectSpeaking, thisSpeechPassedIn, thisSpeechCode, i
                 UI.openShop(generateHash(thisObjectSpeaking.speech[thisObjectSpeaking.speechIndex][2]));
                 //thisObjectSpeaking.speechIndex--;
                 break;
-                case "post":
-UI.openPost();
+            case "post":
+                UI.openPost();
                 break;
             case "sound":
                 audio.playSound(soundEffects[thisObjectSpeaking.speech[thisObjectSpeaking.speechIndex][2]], 0);
@@ -1636,12 +1636,9 @@ UI.openPost();
                     } else {
                         // complete:
                         if (typeof collectionQuestSpeech[3] !== "undefined") {
-                            if (awardQuestRewards[collectionQuestSpeech[3]]) {
-                                thisSpeech = collectionQuestSpeech[2];
-                            }
-                        } else {
-                            thisSpeech = collectionQuestSpeech[2];
+                            awardQuestRewards([collectionQuestSpeech[3]]); 
                         }
+                        thisSpeech = collectionQuestSpeech[2];
                         hero.collections[collectionQuestZoneName].complete = true;
                         UI.completeCollectionQuestPanel(collectionQuestZoneName);
                     }
@@ -2442,18 +2439,33 @@ function canLearnRecipe(recipeIndex) {
     return wasSuccessful;
 }
 
-function sendPost(postData) {
+function sendUserPost(postData) {
     var postDataToSend = JSON.parse(postData);
-
-   getJSONWithParams("/game-world/sendPost.php", 'postData=' + JSON.stringify(postDataToSend), function(data) {
-     if(data.success) {
- console.log("done");
-     } else {
-console.log("failed");
-     }
+    getJSONWithParams("/game-world/sendPost.php", 'postData=' + JSON.stringify(postDataToSend), function(data) {
+        if (data.success) {
+            console.log("done");
+        } else {
+            console.log("failed #1");
+            // let user try again ########
+        }
     }, function(status) {
-      // let user try again
-      // ########
+        console.log("failed #2");
+        // let user try again ########
+    });
+}
+
+function sendNPCPost(postData) {
+    var postDataToSend = JSON.parse(postData);
+    getJSONWithParams("/game-world/sendPost.php", 'postData=' + JSON.stringify(postDataToSend), function(data) {
+        if (data.success) {
+            console.log("done");
+        } else {
+            console.log("failed #1");
+            // try again?
+        }
+    }, function(status) {
+        console.log("failed #2");
+        // try again ?
     });
 }
 

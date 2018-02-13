@@ -249,9 +249,18 @@ function awardQuestRewards(questRewards) {
 
         return true;
     } else {
+       
         UI.showNotification("<p>Oops - sorry, no room in your bags</p>");
         // don't close quest
         return false;
+        
+        /*
+        // send the item by post:
+        // need NPC name, quest name, and quest text
+        sendNPCPost('{"subject":"'+sendPostSubject.value+'","message":"'+sendPostMessage.value+'","senderID:"-1"}');
+
+        return true;
+*/
     }
 
 }

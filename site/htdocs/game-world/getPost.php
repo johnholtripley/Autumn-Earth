@@ -89,7 +89,7 @@ $postPanelMarkup .= '<img src="/images/game-world/inventory-items/'.$attachmentO
 $postPanelMarkup .= '</div><p>'.$senderName.' - '.$title.' - '.$timeAgo.'</p>';
 
 $postPanelMarkup .= '</li>';
-$allMessagePanels .= '<div class="postMessagePanel" id="postMessage'.md5($mailID).'"><div class="draggableBar">'.$senderName.' - '.$title.'</div><button class="closePanel">close</button><p>'.$mailContents.'</p>';
+$allMessagePanels .= '<div class="postMessagePanel" id="postMessage'.md5($mailID).'"><div class="draggableBar">'.$senderName.' - '.$title.'</div><button class="closePanel">close</button><div class="postParchment"><p>'.$mailContents.'</p>';
 
 if($attachment) {
 	if(!$attachmentTaken) {
@@ -98,7 +98,7 @@ $allMessagePanels .= '<div class="postSlot"><img src="/images/game-world/invento
 
 }
 }
-$allMessagePanels .= '</div>';
+$allMessagePanels .= '</div></div>';
 
 
 
