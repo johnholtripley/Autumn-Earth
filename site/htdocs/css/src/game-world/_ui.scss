@@ -54,14 +54,14 @@
 }
 
 .tabHeader {
-    border-bottom: 1px solid #ccc;
+    border-bottom: 1px solid #666;
     text-align: right;
     padding: 0 12px 0 0;
 }
 
 .tabs {
-    background: #ccc;
-    border: 1px solid #fff;
+    background: #4d4d4d;
+    border: 1px solid #666;
     border-bottom: #fff;
     color: #fff;
     padding: 4px 12px;
@@ -69,12 +69,15 @@
     display: inline-block;
     position: relative;
     top: 1px;
+    outline: none;
     -webkit-border-radius: 4px 4px 0 0;
     -moz-border-radius: 4px 4px 0 0;
     border-radius: 4px 4px 0 0;
     @include transition(background .4s ease);
+    cursor: url(../images/game-world/cursors/active.gif) 3 3, auto;
     &.active {
         background: #000;
+        cursor: url(../images/game-world/cursors/default.gif) 3 3, auto;
     }
 }
 

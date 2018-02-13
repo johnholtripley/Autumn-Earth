@@ -55,8 +55,12 @@ $allMessagePanels = '';
 $postPanelMarkup = '<div id="postPanel" class="active">';
 $postPanelMarkup .= '<div class="draggableBar">Post</div>';
 $postPanelMarkup .= '<button class="closePanel">close</button>';
-      
+ $postPanelMarkup .= '<div class="tabHeader">';
+$postPanelMarkup .= '<button class="tabs active" id="receivedPostTab">Received Post</button>';
+$postPanelMarkup .= '<button class="tabs" id="sendPostTab">Send Post</button>';
+$postPanelMarkup .= '</div>';
 
+$postPanelMarkup .= '<div id="receivedPostPanel" class="active">';
 // get from game state: ####
 $chr = 999;
 $hasUnReadPost = false;
@@ -103,7 +107,19 @@ $allMessagePanels .= '</div>';
       $postPanelMarkup .= '</ol>';
   }
       mysql_free_result($result);
+$postPanelMarkup .= '</div>';
+$postPanelMarkup .= '<div id="sendPostPanel">';
 
+$postPanelMarkup .= '<fieldset>';
+$postPanelMarkup .= '<input type="text" placeholder="To&hellip;">';
+$postPanelMarkup .= '<input type="text" placeholder="Subject line&hellip;">';
+$postPanelMarkup .= '<textarea placeholder="Message&hellip;"></textarea>';
+
+$postPanelMarkup .= '<button>Send post</button>';
+$postPanelMarkup .= '<button>Cancel</button>';
+$postPanelMarkup .= '</fieldset>';
+
+$postPanelMarkup .= '</div>';
 $postPanelMarkup .= '</div>';
 
 ?>

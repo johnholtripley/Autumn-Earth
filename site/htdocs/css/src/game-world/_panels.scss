@@ -638,3 +638,9 @@ margin-right: 6px;
         margin: 5px 6px;
     }
 }
+#receivedPostPanel, #sendPostPanel {
+display: none;
+&.active {
+    display:block;
+}
+}

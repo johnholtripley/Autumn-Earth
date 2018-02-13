@@ -312,3 +312,7 @@ select, input {
     // remove blue highlight in Chrome etc:
     outline: none;
 }
+
+fieldset {
+    border: 0;
+}

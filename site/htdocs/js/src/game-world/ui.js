@@ -49,7 +49,11 @@ const questJournalRegionFilter = document.getElementById('questJournalRegionFilt
 const acceptQuestChoice = document.getElementById('acceptQuestChoice');
 const questDecline = document.getElementById('questDecline');
 const questAccept = document.getElementById('questAccept');
-const postPanel = document.getElementById('#postPanel');
+const postPanel = document.getElementById('postPanel');
+const sendPostTab = document.getElementById('sendPostTab');
+const sendPostPanel = document.getElementById('sendPostPanel');
+const receivedPostTab = document.getElementById('receivedPostTab');
+const receivedPostPanel = document.getElementById('receivedPostPanel');
 
 var notificationQueue = [];
 var notificationIsShowing = false;
@@ -142,7 +146,8 @@ var UI = {
         inventoryPanels.innerHTML = inventoryMarkup;
         gameWrapper.ondblclick = UI.doubleClick;
         gameWrapper.addEventListener("contextmenu", UI.handleRightClick, false);
-        document.getElementById('createRecipeList').onclick = UI.craftingPanelSingleClick;
+        createRecipeList.onclick = UI.craftingPanelSingleClick;
+        postPanel.onclick = UI.postPanelSingleClick;
         document.getElementById('craftingRecipeCreateButton').onclick = UI.craftingRecipeCreate;
         splitStackPanel.onsubmit = inventorySplitStackSubmit;
         shopSplitStackPanel.onsubmit = UI.shopSplitStackSubmit;
@@ -1781,5 +1786,21 @@ var UI = {
 
 
 
+    }, postPanelSingleClick: function(e) {
+        
+        switch (e.target.id) {
+case 'sendPostTab':
+sendPostTab.classList.add('active');
+sendPostPanel.classList.add('active');
+receivedPostTab.classList.remove('active');
+receivedPostPanel.classList.remove('active');
+break;
+case 'receivedPostTab':
+sendPostTab.classList.remove('active');
+sendPostPanel.classList.remove('active');
+receivedPostTab.classList.add('active');
+receivedPostPanel.classList.add('active');
+break;
+        }
     }
 }
