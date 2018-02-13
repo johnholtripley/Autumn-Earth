@@ -55,6 +55,7 @@ const sendPostPanel = document.getElementById('sendPostPanel');
 const receivedPostTab = document.getElementById('receivedPostTab');
 const receivedPostPanel = document.getElementById('receivedPostPanel');
 const sendPostSubject = document.getElementById('sendPostSubject');
+const sendPostMessage = document.getElementById('sendPostMessage');
 
 var notificationQueue = [];
 var notificationIsShowing = false;
@@ -1806,7 +1807,7 @@ var UI = {
                 case 'sendPost':
                 
 
-    sendPost('{"subject":"'+sendPostSubject.value+'"}');
+    sendPost('{"subject":"'+sendPostSubject.value+'","message":"'+sendPostMessage.value+'"}');
  
 
 

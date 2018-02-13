@@ -120,7 +120,7 @@ $postPanelMarkup .= '</datalist>';
 
 
 $postPanelMarkup .= '<input type="text" id="sendPostSubject" placeholder="Subject line&hellip;">';
-$postPanelMarkup .= '<textarea placeholder="Message&hellip;"></textarea>';
+$postPanelMarkup .= '<textarea placeholder="Message&hellip;" id="sendPostMessage"></textarea>';
 
 $postPanelMarkup .= '<button id="sendPost">Send post</button>';
 $postPanelMarkup .= '<button id="cancelPost">Cancel</button>';
