@@ -2406,6 +2406,7 @@ function determinePlatformIncrements(whichPlatform) {
     dx = 0 - xDiff / (numberOfTurns);
     dy = 0 - yDiff / (numberOfTurns);
     dz = 0 - zDiff / (numberOfTurns);
+    /*
     if (typeof nextMovement[3] !== "undefined") {
         switch (nextMovement[3]) {
             case 'jump':
@@ -2417,6 +2418,7 @@ function determinePlatformIncrements(whichPlatform) {
                 break;
         }
     }
+    */
     whichPlatform.targetX = targetX;
     whichPlatform.targetY = targetY;
     whichPlatform.targetZ = targetZ;
