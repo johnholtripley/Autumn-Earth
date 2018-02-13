@@ -111,12 +111,19 @@ $postPanelMarkup .= '</div>';
 $postPanelMarkup .= '<div id="sendPostPanel">';
 
 $postPanelMarkup .= '<fieldset>';
-$postPanelMarkup .= '<input type="text" placeholder="To&hellip;">';
+$postPanelMarkup .= '<input type="text" list="recentContacts" placeholder="To&hellip;">';
+
+$postPanelMarkup .= '<datalist id="recentContacts">';
+  $postPanelMarkup .= '<option value="Chrome">';
+  $postPanelMarkup .= '<option value="Firefox">';
+$postPanelMarkup .= '</datalist>';
+
+
 $postPanelMarkup .= '<input type="text" placeholder="Subject line&hellip;">';
 $postPanelMarkup .= '<textarea placeholder="Message&hellip;"></textarea>';
 
-$postPanelMarkup .= '<button>Send post</button>';
-$postPanelMarkup .= '<button>Cancel</button>';
+$postPanelMarkup .= '<button id="sendPost">Send post</button>';
+$postPanelMarkup .= '<button id="cancelPost">Cancel</button>';
 $postPanelMarkup .= '</fieldset>';
 
 $postPanelMarkup .= '</div>';

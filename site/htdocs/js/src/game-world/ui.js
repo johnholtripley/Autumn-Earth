@@ -1786,21 +1786,28 @@ var UI = {
 
 
 
-    }, postPanelSingleClick: function(e) {
-        
+    },
+    postPanelSingleClick: function(e) {
+
         switch (e.target.id) {
-case 'sendPostTab':
-sendPostTab.classList.add('active');
-sendPostPanel.classList.add('active');
-receivedPostTab.classList.remove('active');
-receivedPostPanel.classList.remove('active');
-break;
-case 'receivedPostTab':
-sendPostTab.classList.remove('active');
-sendPostPanel.classList.remove('active');
-receivedPostTab.classList.add('active');
-receivedPostPanel.classList.add('active');
-break;
+            case 'sendPostTab':
+                sendPostTab.classList.add('active');
+                sendPostPanel.classList.add('active');
+                receivedPostTab.classList.remove('active');
+                receivedPostPanel.classList.remove('active');
+                break;
+            case 'receivedPostTab':
+                sendPostTab.classList.remove('active');
+                sendPostPanel.classList.remove('active');
+                receivedPostTab.classList.add('active');
+                receivedPostPanel.classList.add('active');
+                break;
+                case 'sendPost':
+                // get data
+                break;
+                 case 'cancelPost':
+                 // ####
+                break;
         }
     }
 }

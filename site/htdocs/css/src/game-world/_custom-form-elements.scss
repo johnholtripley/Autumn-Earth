@@ -316,3 +316,9 @@ select, input {
 fieldset {
     border: 0;
 }
+
+input::-webkit-calendar-picker-indicator {
+    // remove the arrow in datalist inputs:
+    // https://stackoverflow.com/questions/20937475/remove-datalist-dropdown-arrow-in-chrome
+  display: none;
+}
