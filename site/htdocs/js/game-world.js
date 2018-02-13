@@ -5881,13 +5881,14 @@ function prepareGame() {
 
     if (thisMapData.movingPlatforms) {
         // initialise moving platforms:
-        var thisPlatform;
+        var thisPlatform, thisPlatformMovements;
         for (var i = 0; i < thisMapData.movingPlatforms.length; i++) {
             thisPlatform = thisMapData.movingPlatforms[i];
             thisPlatform.x = getTileCentreCoordX(thisPlatform.startTileX);
             thisPlatform.y = getTileCentreCoordY(thisPlatform.startTileY);
             thisPlatform.z = thisPlatform.startZ;
             thisPlatform.movementIndex = 0;
+            thisPlatform.waitingTimer = 0;
             // this will be set to false if any character is moving over an edge, so the platform will stop until they're clear:
             thisPlatform.canMove = true;
             /*
@@ -5897,6 +5898,18 @@ function prepareGame() {
             thisPlatform.yMinEdge = -tileW / 2;
             thisPlatform.yMaxEdge = tileW / 2 + ((thisPlatform.length - 1) * tileW);
             */
+
+
+
+            // temp:
+        
+
+thisPlatformMovements = determinePlatformIncrements(thisPlatform);
+
+    thisPlatform.dx = thisPlatformMovements[0];
+            thisPlatform.dy = thisPlatformMovements[1];
+            thisPlatform.dz = thisPlatformMovements[2];
+
             
         }
     }
@@ -6247,9 +6260,9 @@ function checkHeroCollisions() {
 
     if (platformIsClear) {
         if (topLeftIsOnAPlatform >= 0) {
-            hero.x += thisMapData.movingPlatforms[topLeftIsOnAPlatform].xSpeed;
-            hero.y += thisMapData.movingPlatforms[topLeftIsOnAPlatform].ySpeed;
-            hero.z += thisMapData.movingPlatforms[topLeftIsOnAPlatform].zSpeed;
+            hero.x += thisMapData.movingPlatforms[topLeftIsOnAPlatform].dx;
+            hero.y += thisMapData.movingPlatforms[topLeftIsOnAPlatform].dy;
+            hero.z += thisMapData.movingPlatforms[topLeftIsOnAPlatform].dz;
         }
     } else {
         if (topLeftIsOnAPlatform >= 0) {
@@ -7530,9 +7543,9 @@ function movePlatforms() {
         for (var i = 0; i < thisMapData.items.length; i++) {
             if (thisMapData.items[i].isOnPlatform != undefined) {
                 if (thisMapData.movingPlatforms[thisMapData.items[i].isOnPlatform].canMove) {
-                    thisMapData.items[i].x += thisMapData.movingPlatforms[thisMapData.items[i].isOnPlatform].xSpeed;
-                    thisMapData.items[i].y += thisMapData.movingPlatforms[thisMapData.items[i].isOnPlatform].ySpeed;
-                    thisMapData.items[i].z += thisMapData.movingPlatforms[thisMapData.items[i].isOnPlatform].zSpeed;
+                    thisMapData.items[i].x += thisMapData.movingPlatforms[thisMapData.items[i].isOnPlatform].dx;
+                    thisMapData.items[i].y += thisMapData.movingPlatforms[thisMapData.items[i].isOnPlatform].dy;
+                    thisMapData.items[i].z += thisMapData.movingPlatforms[thisMapData.items[i].isOnPlatform].dz;
                 }
             }
         }
@@ -7540,9 +7553,9 @@ function movePlatforms() {
         for (var i = 0; i < thisMapData.movingPlatforms.length; i++) {
             thisPlatform = thisMapData.movingPlatforms[i];
             if (thisPlatform.canMove) {
-                //thisPlatform.x += thisPlatform.xSpeed;
-                //thisPlatform.y += thisPlatform.ySpeed;
-                //thisPlatform.z += thisPlatform.zSpeed;
+                thisPlatform.x += thisPlatform.dx;
+                thisPlatform.y += thisPlatform.dy;
+                thisPlatform.z += thisPlatform.dz;
                 /*
                 // x coords start off at tile centre, so need to check the edges - hence the tileW/2
                 if ((getTileX(thisPlatform.x + tileW / 2) > thisPlatform.tileXMax) || (getTileX(thisPlatform.x - tileW / 2) < thisPlatform.tileXMin)) {
@@ -7559,6 +7572,12 @@ function movePlatforms() {
         }
 
     }
+}
+
+function determinePlatformIncrements(whichPlatform) {
+    var nextMovement = whichPlatform.movement[whichPlatform.movementIndex];
+    console.log(nextMovement);
+    return [0,2,0];
 }
 
 function canLearnRecipe(recipeIndex) {
