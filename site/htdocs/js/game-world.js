@@ -7549,25 +7549,32 @@ function movePlatforms() {
                 }
             }
         }
-        var thisPlatform;
+        var thisPlatform, thisPlatformMovements;
         for (var i = 0; i < thisMapData.movingPlatforms.length; i++) {
             thisPlatform = thisMapData.movingPlatforms[i];
             if (thisPlatform.canMove) {
                 thisPlatform.x += thisPlatform.dx;
                 thisPlatform.y += thisPlatform.dy;
                 thisPlatform.z += thisPlatform.dz;
-                /*
-                // x coords start off at tile centre, so need to check the edges - hence the tileW/2
-                if ((getTileX(thisPlatform.x + tileW / 2) > thisPlatform.tileXMax) || (getTileX(thisPlatform.x - tileW / 2) < thisPlatform.tileXMin)) {
-                    thisPlatform.xSpeed *= -1;
-                }
-                if ((getTileY(thisPlatform.y + tileW / 2) > thisPlatform.tileYMax) || (getTileY(thisPlatform.y - tileW / 2) < thisPlatform.tileYMin)) {
-                    thisPlatform.ySpeed *= -1;
-                }
-                if ((thisPlatform.z > thisPlatform.zMax) || (thisPlatform.z < thisPlatform.zMin)) {
-                    thisPlatform.zSpeed *= -1;
-                }
-                */
+
+
+                // check to see if it's reached it's next target:
+//console.log(thisPlatform.targetX, thisPlatform.x,thisPlatform.targetY, thisPlatform.y);
+if(thisPlatform.targetX == thisPlatform.x) {
+if(thisPlatform.targetY == thisPlatform.y) {
+if(thisPlatform.targetZ == thisPlatform.z) {
+   
+thisPlatformMovements = determinePlatformIncrements(thisPlatform);
+    thisPlatform.dx = thisPlatformMovements[0];
+            thisPlatform.dy = thisPlatformMovements[1];
+            thisPlatform.dz = thisPlatformMovements[2];
+}
+}
+}
+
+
+
+               
             }
         }
 
@@ -7576,8 +7583,44 @@ function movePlatforms() {
 
 function determinePlatformIncrements(whichPlatform) {
     var nextMovement = whichPlatform.movement[whichPlatform.movementIndex];
-    console.log(nextMovement);
-    return [0,2,0];
+    var targetX = getTileCentreCoordX(nextMovement[0]);
+    var targetY = getTileCentreCoordY(nextMovement[1]);
+
+    var targetZ = nextMovement[2];
+    var dx, dy, dz;
+
+    // determine differences:
+    var xDiff = whichPlatform.x - targetX;
+    var yDiff = whichPlatform.y - targetY;
+    var zDiff = whichPlatform.z - targetZ;
+    dx = 0 - xDiff / (whichPlatform.speed * tileW);
+    dy = 0 - yDiff / (whichPlatform.speed * tileW);
+    dz = 0 - zDiff / (whichPlatform.speed * tileW);
+
+
+    if (typeof nextMovement[3] !== "undefined") {
+        switch (nextMovement[3]) {
+            case 'jump':
+                // don't ease to the new location, jump straight to it:
+                whichPlatform.x = targetX;
+                whichPlatform.y = targetY;
+                whichPlatform.z = targetZ;
+
+                dx = dy = dz = 0;
+                break;
+        }
+    }
+
+    whichPlatform.targetX = targetX;
+    whichPlatform.targetY = targetY;
+    whichPlatform.targetZ = targetZ;
+
+    whichPlatform.movementIndex++;
+     if (whichPlatform.movementIndex >= whichPlatform.movement.length) {
+                    whichPlatform.movementIndex = 0;
+                }
+
+    return [dx, dy, dz];
 }
 
 function canLearnRecipe(recipeIndex) {

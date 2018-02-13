@@ -141,7 +141,7 @@
             "length": 3,
             "zHeight": 0,
            "speed": 4,
-           "movement": [[4,12],[4,8]],
+           "movement": [[4,22,0],[4,8,0]],
            "startTileX": 4,
            "startTileY": 8,
            "startZ": 0,
