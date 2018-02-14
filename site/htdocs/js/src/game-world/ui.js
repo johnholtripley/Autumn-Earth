@@ -56,6 +56,7 @@ const receivedPostTab = document.getElementById('receivedPostTab');
 const receivedPostPanel = document.getElementById('receivedPostPanel');
 const sendPostSubject = document.getElementById('sendPostSubject');
 const sendPostMessage = document.getElementById('sendPostMessage');
+const newPost = document.getElementById('newPost');
 
 var notificationQueue = [];
 var notificationIsShowing = false;
@@ -1761,7 +1762,7 @@ var UI = {
             sendDataWithoutNeedingAResponse("/game-world/readPost.php?id=" + whichElement);
             // see if there are any unread messages left, if not, hide the 'new mail icon':
             if(document.querySelectorAll('#receivedPostPanel .unread').length == 0) {
-document.getElementById('newPost').classList.remove('active');
+newPost.classList.remove('active');
             }
         }
         var correspondingPostMessage = "postMessage" + whichElement.substr(4);

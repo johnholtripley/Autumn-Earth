@@ -1636,7 +1636,7 @@ function processSpeech(thisObjectSpeaking, thisSpeechPassedIn, thisSpeechCode, i
                     } else {
                         // complete:
                         if (typeof collectionQuestSpeech[3] !== "undefined") {
-                            awardQuestRewards([collectionQuestSpeech[3]]); 
+                            awardQuestRewards(thisObjectSpeaking,[collectionQuestSpeech[3]],true);
                         }
                         thisSpeech = collectionQuestSpeech[2];
                         hero.collections[collectionQuestZoneName].complete = true;
@@ -2457,23 +2457,23 @@ function sendUserPost(postData) {
 function sendNPCPost(postData, attachments) {
     //console.log(postData);
     var postDataToSend = JSON.parse(postData);
-    console.log(postDataToSend);
+   
     if(attachments) {
         postDataToSend['attachments'] = attachments;
     }
-    console.log("added attachments");
-    console.log(postDataToSend);
-    console.log(JSON.stringify(postDataToSend));
+
     getJSONWithParams("/game-world/sendPost.php", 'postData=' + JSON.stringify(postDataToSend), function(data) {
         if (data.success) {
-            console.log("done");
+            // show new post notification:
+            newPost.classList.add('active');
+            // get new post ######
         } else {
             console.log("failed #1");
-            // try again?
+            // try again? ####
         }
     }, function(status) {
         console.log("failed #2");
-        // try again ?
+        // try again ? #######
     });
 }
 
