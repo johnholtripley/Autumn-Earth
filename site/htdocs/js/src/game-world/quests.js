@@ -246,13 +246,13 @@ function awardQuestRewards(whichNPC, questRewards) {
     inventoryCheck = canAddItemToInventory(allRewardItems);
 
 
-    /*
+    
     if (inventoryCheck[0]) {
         UI.showChangeInInventory(inventoryCheck[1]);
 
         return true;
     } else {
-       */
+       
        // send the item by post:
         var questSpeech = whichNPC.speech[whichNPC.speechIndex][0].split("|");
         var whichQuest = whichNPC.speech[whichNPC.speechIndex][2];
@@ -265,11 +265,11 @@ function awardQuestRewards(whichNPC, questRewards) {
         // add in the name of the item if required:
         message = message.replace(/##itemName##/i, currentActiveInventoryItems[parseInt(allRewardItems[0].type)].shortname);
    
-   console.log(allRewardItems);
+   
         sendNPCPost('{"subject":"'+subjectLine+'","message":"'+message+'","senderID":"-1","fromName":"'+fromName+'"}',allRewardItems);
 
         return true;
-/*
+
     }
-*/
+
 }
