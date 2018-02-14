@@ -83,7 +83,11 @@ $postPanelMarkup .= '<div class="previewSlot">';
 if($attachment) {
 if(!$attachmentTaken) {
 $attachmentObject = json_decode($attachment);
-$postPanelMarkup .= '<img src="/images/game-world/inventory-items/'.$attachmentObject->type.'.png"><span class="qty">'.$attachmentObject->quantity.'</span>';
+
+	// only want the first here:
+$firstElement = reset($attachmentObject);
+$postPanelMarkup .= '<img src="/images/game-world/inventory-items/'.$firstElement->type.'.png"><span class="qty">'.$firstElement->quantity.'</span>';
+
 }
 }
 $postPanelMarkup .= '</div><p>'.$senderName.' - '.$title.' - '.$timeAgo.'</p>';
@@ -93,8 +97,9 @@ $allMessagePanels .= '<div class="postMessagePanel" id="postMessage'.md5($mailID
 
 if($attachment) {
 	if(!$attachmentTaken) {
-$allMessagePanels .= '<div class="postSlot"><img src="/images/game-world/inventory-items/'.$attachmentObject->type.'.png"><span class="qty">'.$attachmentObject->quantity.'</span></div>';
-
+		foreach ($attachmentObject as &$thisAttachment) {
+$allMessagePanels .= '<div class="postSlot"><img src="/images/game-world/inventory-items/'.$thisAttachment->type.'.png"><span class="qty">'.$thisAttachment->quantity.'</span></div>';
+}
 
 }
 }

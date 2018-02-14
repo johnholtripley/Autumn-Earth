@@ -166,7 +166,7 @@ function checkForEscortQuestEnd(whichNPC) {
 
 
 function closeQuest(whichNPC, whichQuestId) {
-    if (giveQuestRewards(whichNPC, whichQuestId)) {
+  //  if (giveQuestRewards(whichNPC, whichQuestId)) {
         if (questData[whichQuestId].isRepeatable > 0) {
             questData[whichQuestId].hasBeenCompleted = false;
             questData[whichQuestId].isUnderway = false;
@@ -178,10 +178,11 @@ function closeQuest(whichNPC, whichQuestId) {
             whichNPC.speechIndex--;
         }
         checkForTitlesAwarded(whichQuestId);
-    } else {
+   /* } else {
         // keep the NPC on the quest dialogue:
         whichNPC.speechIndex--;
     }
+    */
     removeFromJournal(whichQuestId);
 
 }
@@ -191,10 +192,12 @@ function giveQuestRewards(whichNPC, whichQuestId) {
     // give any reward to the player:
     if (questData[whichQuestId].itemsReceivedOnCompletion) {
         var questRewards = questData[whichQuestId].itemsReceivedOnCompletion.split(",");
-        return awardQuestRewards(whichNPC, questRewards);
-    } else {
+     //   return awardQuestRewards(whichNPC, questRewards);
+    } 
+    /*else {
         return true;
     }
+    */
 }
 
 function awardQuestRewards(whichNPC, questRewards) {
@@ -246,7 +249,7 @@ function awardQuestRewards(whichNPC, questRewards) {
     inventoryCheck = canAddItemToInventory(allRewardItems);
     if (inventoryCheck[0]) {
         UI.showChangeInInventory(inventoryCheck[1]);
-        return true;
+      //  return true;
     } else {
         // send the item(s) by post:
         var questSpeech = whichNPC.speech[whichNPC.speechIndex][0].split("|");
@@ -254,6 +257,6 @@ function awardQuestRewards(whichNPC, questRewards) {
         // add in the name of the item if required:
         message = message.replace(/##itemName##/i, currentActiveInventoryItems[parseInt(allRewardItems[0].type)].shortname);
         sendNPCPost('{"subject":"' + questData[whichQuest].journalTitle + '","message":"' + questSpeech[2] + '","senderID":"-1","fromName":"' + whichNPC.name + '"}', allRewardItems);
-        return true;
+      //  return true;
     }
 }

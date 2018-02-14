@@ -1771,7 +1771,7 @@ document.getElementById('newPost').classList.remove('active');
         getJSON("/game-world/getPostAttachment.php?id=" + whichElement, function(data) {
             if (data.item != "null") {
                 // try and add to inventory:
-                inventoryCheck = canAddItemToInventory([data.item]);
+                inventoryCheck = canAddItemToInventory(data.item);
                 if (inventoryCheck[0]) {
                     UI.showChangeInInventory(inventoryCheck[1]);
                     // remove attachment from message:
