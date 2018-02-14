@@ -49,6 +49,7 @@ $outputJson = '{"quests": {';
 while ($row = mysql_fetch_array($result)) {
 	extract($row);
 	$outputJson .= '"'.$questID.'": {';
+	$outputJson .= '"journalTitle": "'.$journalTitle.'",';
 	$outputJson .= '"isRepeatable": "'.$isRepeatable.'",';
 	$outputJson .= '"startItemsReceived": "'.$startItemsReceived.'",';
 	$outputJson .= '"itemsReceivedOnCompletion": "'.$itemsReceivedOnCompletion.'",';

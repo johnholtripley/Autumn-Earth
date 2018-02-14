@@ -3255,7 +3255,7 @@ fae.currentState = "away";
 
 
 function closeQuest(whichNPC, whichQuestId) {
-    if (giveQuestRewards(whichQuestId)) {
+    if (giveQuestRewards(whichNPC, whichQuestId)) {
         if (questData[whichQuestId].isRepeatable > 0) {
             questData[whichQuestId].hasBeenCompleted = false;
             questData[whichQuestId].isUnderway = false;
@@ -3276,17 +3276,17 @@ function closeQuest(whichNPC, whichQuestId) {
 }
 
 
-function giveQuestRewards(whichQuestId) {
+function giveQuestRewards(whichNPC, whichQuestId) {
     // give any reward to the player:
     if (questData[whichQuestId].itemsReceivedOnCompletion) {
         var questRewards = questData[whichQuestId].itemsReceivedOnCompletion.split(",");
-        return awardQuestRewards(questRewards);
+        return awardQuestRewards(whichNPC, questRewards);
     } else {
         return true;
     }
 }
 
-function awardQuestRewards(questRewards) {
+function awardQuestRewards(whichNPC, questRewards) {
 
     var allRewardItems = [];
 
@@ -3333,25 +3333,34 @@ function awardQuestRewards(questRewards) {
         allRewardItems.push(thisRewardObject);
     }
     inventoryCheck = canAddItemToInventory(allRewardItems);
+
+
+    /*
     if (inventoryCheck[0]) {
         UI.showChangeInInventory(inventoryCheck[1]);
 
         return true;
     } else {
+       */
+       // send the item by post:
+        var questSpeech = whichNPC.speech[whichNPC.speechIndex][0].split("|");
+        var whichQuest = whichNPC.speech[whichNPC.speechIndex][2];
        
-        UI.showNotification("<p>Oops - sorry, no room in your bags</p>");
-        // don't close quest
-        return false;
-        
-        /*
-        // send the item by post:
-        // need NPC name, quest name, and quest text
-        sendNPCPost('{"subject":"'+sendPostSubject.value+'","message":"'+sendPostMessage.value+'","senderID:"-1"}');
+  
+        var subjectLine = questData[whichQuest].journalTitle;
+        var message = questSpeech[2];
+        var fromName = whichNPC.name;
+
+        // add in the name of the item if required:
+        message = message.replace(/##itemName##/i, currentActiveInventoryItems[parseInt(allRewardItems[0].type)].shortname);
+   
+   console.log(allRewardItems);
+        sendNPCPost('{"subject":"'+subjectLine+'","message":"'+message+'","senderID":"-1","fromName":"'+fromName+'"}',allRewardItems);
 
         return true;
-*/
+/*
     }
-
+*/
 }
 // global vars:
 const recipeSearch = document.getElementById('recipeSearch');
@@ -7684,8 +7693,16 @@ function sendUserPost(postData) {
     });
 }
 
-function sendNPCPost(postData) {
+function sendNPCPost(postData, attachments) {
+    //console.log(postData);
     var postDataToSend = JSON.parse(postData);
+    console.log(postDataToSend);
+    if(attachments) {
+        postDataToSend['attachments'] = attachments;
+    }
+    console.log("added attachments");
+    console.log(postDataToSend);
+    console.log(JSON.stringify(postDataToSend));
     getJSONWithParams("/game-world/sendPost.php", 'postData=' + JSON.stringify(postDataToSend), function(data) {
         if (data.success) {
             console.log("done");

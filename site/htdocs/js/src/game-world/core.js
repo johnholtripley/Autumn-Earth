@@ -2454,8 +2454,16 @@ function sendUserPost(postData) {
     });
 }
 
-function sendNPCPost(postData) {
+function sendNPCPost(postData, attachments) {
+    //console.log(postData);
     var postDataToSend = JSON.parse(postData);
+    console.log(postDataToSend);
+    if(attachments) {
+        postDataToSend['attachments'] = attachments;
+    }
+    console.log("added attachments");
+    console.log(postDataToSend);
+    console.log(JSON.stringify(postDataToSend));
     getJSONWithParams("/game-world/sendPost.php", 'postData=' + JSON.stringify(postDataToSend), function(data) {
         if (data.success) {
             console.log("done");
