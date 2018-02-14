@@ -3329,15 +3329,19 @@ function awardQuestRewards(whichNPC, questRewards, isACollectionQuest) {
         }
         allRewardItems.push(thisRewardObject);
     }
+
     inventoryCheck = canAddItemToInventory(allRewardItems);
+
     if (inventoryCheck[0]) {
         UI.showChangeInInventory(inventoryCheck[1]);
     } else {
         // send the item(s) by post:
         var questSpeech = whichNPC.speech[whichNPC.speechIndex][0].split("|");
         if (isACollectionQuest) {
-            // use zone name:
-            var subjectLine = whichNPC.speech[whichNPC.speechIndex][1] + " collection";
+            // use zone name (replace hyphens with spaces)
+            var subjectLine = whichNPC.speech[whichNPC.speechIndex][1].replace(/-/g, " ") + " collection";
+            // make the first letter a capital:
+            subjectLine = subjectLine.charAt(0).toUpperCase() + subjectLine.slice(1);
         } else {
             var whichQuest = whichNPC.speech[whichNPC.speechIndex][2];
             var subjectLine = questData[whichQuest].journalTitle;
@@ -3345,7 +3349,7 @@ function awardQuestRewards(whichNPC, questRewards, isACollectionQuest) {
         var message = questSpeech[2];
         // add in the name of the item if required:
         message = message.replace(/##itemName##/i, currentActiveInventoryItems[parseInt(allRewardItems[0].type)].shortname);
-        sendNPCPost('{"subject":"' + questData[whichQuest].journalTitle + '","message":"' + message + '","senderID":"-1","recipientID":"'+characterId+'","fromName":"' + whichNPC.name + '"}', allRewardItems); 
+        sendNPCPost('{"subject":"' + subjectLine + '","message":"' + message + '","senderID":"-1","recipientID":"' + characterId + '","fromName":"' + whichNPC.name + '"}', allRewardItems);
         UI.showNotification("<p>Reward send by post to you</p>");
     }
 }
@@ -6862,9 +6866,10 @@ function processSpeech(thisObjectSpeaking, thisSpeechPassedIn, thisSpeechCode, i
                         // not complete yet:
                         thisSpeech = collectionQuestSpeech[1];
                     } else {
+                        var thisFullSpeech = thisObjectSpeaking.speech[thisObjectSpeaking.speechIndex];
                         // complete:
-                        if (typeof collectionQuestSpeech[3] !== "undefined") {
-                            awardQuestRewards(thisObjectSpeaking,[collectionQuestSpeech[3]],true);
+                        if (typeof thisFullSpeech[3] !== "undefined") {
+                            awardQuestRewards(thisObjectSpeaking, [thisFullSpeech[3]], true);
                         }
                         thisSpeech = collectionQuestSpeech[2];
                         hero.collections[collectionQuestZoneName].complete = true;
@@ -7685,8 +7690,8 @@ function sendUserPost(postData) {
 function sendNPCPost(postData, attachments) {
     //console.log(postData);
     var postDataToSend = JSON.parse(postData);
-   
-    if(attachments) {
+
+    if (attachments) {
         postDataToSend['attachments'] = attachments;
     }
 

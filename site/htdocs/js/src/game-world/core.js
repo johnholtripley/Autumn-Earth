@@ -1634,9 +1634,10 @@ function processSpeech(thisObjectSpeaking, thisSpeechPassedIn, thisSpeechCode, i
                         // not complete yet:
                         thisSpeech = collectionQuestSpeech[1];
                     } else {
+                        var thisFullSpeech = thisObjectSpeaking.speech[thisObjectSpeaking.speechIndex];
                         // complete:
-                        if (typeof collectionQuestSpeech[3] !== "undefined") {
-                            awardQuestRewards(thisObjectSpeaking,[collectionQuestSpeech[3]],true);
+                        if (typeof thisFullSpeech[3] !== "undefined") {
+                            awardQuestRewards(thisObjectSpeaking, [thisFullSpeech[3]], true);
                         }
                         thisSpeech = collectionQuestSpeech[2];
                         hero.collections[collectionQuestZoneName].complete = true;
@@ -2457,8 +2458,8 @@ function sendUserPost(postData) {
 function sendNPCPost(postData, attachments) {
     //console.log(postData);
     var postDataToSend = JSON.parse(postData);
-   
-    if(attachments) {
+
+    if (attachments) {
         postDataToSend['attachments'] = attachments;
     }
 
