@@ -15,10 +15,11 @@ return $output;
 
 
 
-$recipientCharacterID = 999;
+
 
 
 /*
+$recipientCharacterID = 999;
 $senderCharacterID = 999;
 $postFromName = 'Tester person';
  $postSubject = 'Curiouser and curiouser';
@@ -45,6 +46,7 @@ $postMessage = $postedData['message'];
 $senderCharacterID = $postedData['senderID'];
 $postFromName = $postedData['fromName'];
 $attachment = $postedData['attachments'];
+$recipientCharacterID = $postedData['recipientID'];
 }
 
         

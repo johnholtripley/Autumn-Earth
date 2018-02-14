@@ -722,7 +722,6 @@ var UI = {
                     var thisNode = getNearestParentId(e.target);
                     // check if the shift key is pressed as well:
                     if (key[5]) {
-
                         UI.sourceSlot = thisNode.id.substring(4);
                         // make a copy of the object, not a reference:
                         UI.draggedInventoryObject = JSON.parse(JSON.stringify(hero.inventory[UI.sourceSlot]));
@@ -923,6 +922,7 @@ var UI = {
 
     shopSplitStackCancel: function() {
         shopSplitStackPanel.classList.remove("active");
+        document.activeElement.blur();
     },
 
     buyFromShopSlot: function(slotId) {
@@ -1109,6 +1109,7 @@ var UI = {
             }
         }
         shopSplitStackPanel.classList.remove("active");
+      document.activeElement.blur();
     },
 
 

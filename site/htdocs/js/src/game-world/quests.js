@@ -167,6 +167,7 @@ function checkForEscortQuestEnd(whichNPC) {
 
 function closeQuest(whichNPC, whichQuestId) {
     //  if (giveQuestRewards(whichNPC, whichQuestId)) {
+    giveQuestRewards(whichNPC, whichQuestId);
     if (questData[whichQuestId].isRepeatable > 0) {
         questData[whichQuestId].hasBeenCompleted = false;
         questData[whichQuestId].isUnderway = false;
@@ -262,6 +263,7 @@ function awardQuestRewards(whichNPC, questRewards, isACollectionQuest) {
         var message = questSpeech[2];
         // add in the name of the item if required:
         message = message.replace(/##itemName##/i, currentActiveInventoryItems[parseInt(allRewardItems[0].type)].shortname);
-        sendNPCPost('{"subject":"' + questData[whichQuest].journalTitle + '","message":"' + message + '","senderID":"-1","fromName":"' + whichNPC.name + '"}', allRewardItems); 
+        sendNPCPost('{"subject":"' + questData[whichQuest].journalTitle + '","message":"' + message + '","senderID":"-1","recipientID":"'+characterId+'","fromName":"' + whichNPC.name + '"}', allRewardItems); 
+        UI.showNotification("<p>Reward send by post to you</p>");
     }
 }

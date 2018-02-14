@@ -326,7 +326,7 @@ const mapTransitionMaxFrames = 60;
 var activeDoorX = -1;
 var activeDoorY = -1;
 
-var characterId = 999;
+const characterId = 999;
 var currentMap = 0;
 var newMap = 0;
 var thisMapData = '';
@@ -2414,11 +2414,11 @@ function inventoryItemAction(whichSlot, whichAction, allActionValues) {
                 case "deed":
                     // #####
                     var actionValueSplit = whichActionValue.split('x');
-                 plotPlacement.width = actionValueSplit[0];
-                 plotPlacement.length = actionValueSplit[1];
+                    plotPlacement.width = actionValueSplit[0];
+                    plotPlacement.length = actionValueSplit[1];
                     activeAction = "plotPlacement";
                     document.addEventListener("mousemove", UI.movePlotPlacementOverlay, false);
-//document.removeEventListener("mousemove", UI.movePlotPlacementOverlay, false);
+                    //document.removeEventListener("mousemove", UI.movePlotPlacementOverlay, false);
                     break;
             }
         }
@@ -2559,8 +2559,6 @@ function inventorySplitStackSubmit(e) {
     if (e) {
         e.preventDefault();
     }
-
-
     var enteredValue = splitStackInput.value;
     var isValid = true;
     enteredValue = parseInt(enteredValue);
@@ -2581,21 +2579,15 @@ function inventorySplitStackSubmit(e) {
         UI.activeDragObject = document.getElementById('draggableInventorySlot');
         UI.activeDragObject.innerHTML = thisNode.innerHTML;
         // remove from inventory data:
-
-
         removeFromInventory(UI.sourceSlot, enteredValue);
-
         UI.draggedInventoryObject.quantity = enteredValue;
-
         // update visually to dragged clone:
-
         for (var i = 0; i < UI.activeDragObject.childNodes.length; i++) {
             if (UI.activeDragObject.childNodes[i].className == "qty") {
                 UI.activeDragObject.childNodes[i].innerHTML = UI.draggedInventoryObject.quantity;
                 break;
             }
         }
-
         UI.inDrag = true;
         var clickedSlotRect = thisNode.getBoundingClientRect();
         var pageScrollTopY = (window.pageYOffset || document.documentElement.scrollTop) - (document.documentElement.clientTop || 0);
@@ -2605,18 +2597,19 @@ function inventorySplitStackSubmit(e) {
         // +22 to centre the slot (half the slot width) under the cursor:
         dragStartX = objInitLeft + 22;
         dragStartY = objInitTop + 22;
-
         UI.activeDragObject.style.cssText = "z-index:4;top: " + objInitTop + "px; left: " + objInitLeft + "px; transform: translate(0px, 0px);";
         document.addEventListener("mousemove", UI.handleDrag, false);
         document.addEventListener("mouseup", UI.endInventoryDrag, false);
     }
 
     splitStackPanel.classList.remove("active");
-
+    // remove focus
+    document.activeElement.blur();
 }
 
 function inventorySplitStackCancel() {
     splitStackPanel.classList.remove("active");
+    document.activeElement.blur();
 }
 var KeyBindings = {
     'left': 65,
@@ -3255,23 +3248,24 @@ function checkForEscortQuestEnd(whichNPC) {
 
 
 function closeQuest(whichNPC, whichQuestId) {
-  //  if (giveQuestRewards(whichNPC, whichQuestId)) {
-        if (questData[whichQuestId].isRepeatable > 0) {
-            questData[whichQuestId].hasBeenCompleted = false;
-            questData[whichQuestId].isUnderway = false;
-        } else {
-            questData[whichQuestId].hasBeenCompleted = true;
-            // remove quest text now:
-            whichNPC.speech.splice(whichNPC.speechIndex, 1);
-            // knock this back one so to keep it in step with the removed item:
-            whichNPC.speechIndex--;
-        }
-        checkForTitlesAwarded(whichQuestId);
-   /* } else {
-        // keep the NPC on the quest dialogue:
+    //  if (giveQuestRewards(whichNPC, whichQuestId)) {
+    giveQuestRewards(whichNPC, whichQuestId);
+    if (questData[whichQuestId].isRepeatable > 0) {
+        questData[whichQuestId].hasBeenCompleted = false;
+        questData[whichQuestId].isUnderway = false;
+    } else {
+        questData[whichQuestId].hasBeenCompleted = true;
+        // remove quest text now:
+        whichNPC.speech.splice(whichNPC.speechIndex, 1);
+        // knock this back one so to keep it in step with the removed item:
         whichNPC.speechIndex--;
     }
-    */
+    checkForTitlesAwarded(whichQuestId);
+    /* } else {
+         // keep the NPC on the quest dialogue:
+         whichNPC.speechIndex--;
+     }
+     */
     removeFromJournal(whichQuestId);
 
 }
@@ -3281,15 +3275,15 @@ function giveQuestRewards(whichNPC, whichQuestId) {
     // give any reward to the player:
     if (questData[whichQuestId].itemsReceivedOnCompletion) {
         var questRewards = questData[whichQuestId].itemsReceivedOnCompletion.split(",");
-     //   return awardQuestRewards(whichNPC, questRewards);
-    } 
+        awardQuestRewards(whichNPC, questRewards, false);
+    }
     /*else {
         return true;
     }
     */
 }
 
-function awardQuestRewards(whichNPC, questRewards) {
+function awardQuestRewards(whichNPC, questRewards, isACollectionQuest) {
 
     var allRewardItems = [];
 
@@ -3338,15 +3332,21 @@ function awardQuestRewards(whichNPC, questRewards) {
     inventoryCheck = canAddItemToInventory(allRewardItems);
     if (inventoryCheck[0]) {
         UI.showChangeInInventory(inventoryCheck[1]);
-      //  return true;
     } else {
         // send the item(s) by post:
         var questSpeech = whichNPC.speech[whichNPC.speechIndex][0].split("|");
-        var whichQuest = whichNPC.speech[whichNPC.speechIndex][2];
+        if (isACollectionQuest) {
+            // use zone name:
+            var subjectLine = whichNPC.speech[whichNPC.speechIndex][1] + " collection";
+        } else {
+            var whichQuest = whichNPC.speech[whichNPC.speechIndex][2];
+            var subjectLine = questData[whichQuest].journalTitle;
+        }
+        var message = questSpeech[2];
         // add in the name of the item if required:
         message = message.replace(/##itemName##/i, currentActiveInventoryItems[parseInt(allRewardItems[0].type)].shortname);
-        sendNPCPost('{"subject":"' + questData[whichQuest].journalTitle + '","message":"' + questSpeech[2] + '","senderID":"-1","fromName":"' + whichNPC.name + '"}', allRewardItems);
-      //  return true;
+        sendNPCPost('{"subject":"' + questData[whichQuest].journalTitle + '","message":"' + message + '","senderID":"-1","recipientID":"'+characterId+'","fromName":"' + whichNPC.name + '"}', allRewardItems); 
+        UI.showNotification("<p>Reward send by post to you</p>");
     }
 }
 // global vars:
@@ -3407,6 +3407,7 @@ const receivedPostTab = document.getElementById('receivedPostTab');
 const receivedPostPanel = document.getElementById('receivedPostPanel');
 const sendPostSubject = document.getElementById('sendPostSubject');
 const sendPostMessage = document.getElementById('sendPostMessage');
+const newPost = document.getElementById('newPost');
 
 var notificationQueue = [];
 var notificationIsShowing = false;
@@ -4072,7 +4073,6 @@ var UI = {
                     var thisNode = getNearestParentId(e.target);
                     // check if the shift key is pressed as well:
                     if (key[5]) {
-
                         UI.sourceSlot = thisNode.id.substring(4);
                         // make a copy of the object, not a reference:
                         UI.draggedInventoryObject = JSON.parse(JSON.stringify(hero.inventory[UI.sourceSlot]));
@@ -4273,6 +4273,7 @@ var UI = {
 
     shopSplitStackCancel: function() {
         shopSplitStackPanel.classList.remove("active");
+        document.activeElement.blur();
     },
 
     buyFromShopSlot: function(slotId) {
@@ -4459,6 +4460,7 @@ var UI = {
             }
         }
         shopSplitStackPanel.classList.remove("active");
+      document.activeElement.blur();
     },
 
 
@@ -5112,7 +5114,7 @@ var UI = {
             sendDataWithoutNeedingAResponse("/game-world/readPost.php?id=" + whichElement);
             // see if there are any unread messages left, if not, hide the 'new mail icon':
             if(document.querySelectorAll('#receivedPostPanel .unread').length == 0) {
-document.getElementById('newPost').classList.remove('active');
+newPost.classList.remove('active');
             }
         }
         var correspondingPostMessage = "postMessage" + whichElement.substr(4);
@@ -6862,7 +6864,7 @@ function processSpeech(thisObjectSpeaking, thisSpeechPassedIn, thisSpeechCode, i
                     } else {
                         // complete:
                         if (typeof collectionQuestSpeech[3] !== "undefined") {
-                            awardQuestRewards([collectionQuestSpeech[3]]); 
+                            awardQuestRewards(thisObjectSpeaking,[collectionQuestSpeech[3]],true);
                         }
                         thisSpeech = collectionQuestSpeech[2];
                         hero.collections[collectionQuestZoneName].complete = true;
@@ -7683,23 +7685,23 @@ function sendUserPost(postData) {
 function sendNPCPost(postData, attachments) {
     //console.log(postData);
     var postDataToSend = JSON.parse(postData);
-    console.log(postDataToSend);
+   
     if(attachments) {
         postDataToSend['attachments'] = attachments;
     }
-    console.log("added attachments");
-    console.log(postDataToSend);
-    console.log(JSON.stringify(postDataToSend));
+
     getJSONWithParams("/game-world/sendPost.php", 'postData=' + JSON.stringify(postDataToSend), function(data) {
         if (data.success) {
-            console.log("done");
+            // show new post notification:
+            newPost.classList.add('active');
+            // get new post ######
         } else {
             console.log("failed #1");
-            // try again?
+            // try again? ####
         }
     }, function(status) {
         console.log("failed #2");
-        // try again ?
+        // try again ? #######
     });
 }
 

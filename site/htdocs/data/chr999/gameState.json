@@ -337,7 +337,7 @@
     ],
     "totalGameTimePlayed": 0,
     "fae": { "range": 4950, "speed": 4 },
-    "activePets": [1],
+    "activePets": [0,1],
     "allPets": [{
         "name": "White Hen",
         "src": "white-hen.png",

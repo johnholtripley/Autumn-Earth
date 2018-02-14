@@ -29,7 +29,7 @@ const mapTransitionMaxFrames = 60;
 var activeDoorX = -1;
 var activeDoorY = -1;
 
-var characterId = 999;
+const characterId = 999;
 var currentMap = 0;
 var newMap = 0;
 var thisMapData = '';

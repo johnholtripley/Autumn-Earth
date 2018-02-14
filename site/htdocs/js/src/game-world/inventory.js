@@ -315,11 +315,11 @@ function inventoryItemAction(whichSlot, whichAction, allActionValues) {
                 case "deed":
                     // #####
                     var actionValueSplit = whichActionValue.split('x');
-                 plotPlacement.width = actionValueSplit[0];
-                 plotPlacement.length = actionValueSplit[1];
+                    plotPlacement.width = actionValueSplit[0];
+                    plotPlacement.length = actionValueSplit[1];
                     activeAction = "plotPlacement";
                     document.addEventListener("mousemove", UI.movePlotPlacementOverlay, false);
-//document.removeEventListener("mousemove", UI.movePlotPlacementOverlay, false);
+                    //document.removeEventListener("mousemove", UI.movePlotPlacementOverlay, false);
                     break;
             }
         }
@@ -460,8 +460,6 @@ function inventorySplitStackSubmit(e) {
     if (e) {
         e.preventDefault();
     }
-
-
     var enteredValue = splitStackInput.value;
     var isValid = true;
     enteredValue = parseInt(enteredValue);
@@ -482,21 +480,15 @@ function inventorySplitStackSubmit(e) {
         UI.activeDragObject = document.getElementById('draggableInventorySlot');
         UI.activeDragObject.innerHTML = thisNode.innerHTML;
         // remove from inventory data:
-
-
         removeFromInventory(UI.sourceSlot, enteredValue);
-
         UI.draggedInventoryObject.quantity = enteredValue;
-
         // update visually to dragged clone:
-
         for (var i = 0; i < UI.activeDragObject.childNodes.length; i++) {
             if (UI.activeDragObject.childNodes[i].className == "qty") {
                 UI.activeDragObject.childNodes[i].innerHTML = UI.draggedInventoryObject.quantity;
                 break;
             }
         }
-
         UI.inDrag = true;
         var clickedSlotRect = thisNode.getBoundingClientRect();
         var pageScrollTopY = (window.pageYOffset || document.documentElement.scrollTop) - (document.documentElement.clientTop || 0);
@@ -506,16 +498,17 @@ function inventorySplitStackSubmit(e) {
         // +22 to centre the slot (half the slot width) under the cursor:
         dragStartX = objInitLeft + 22;
         dragStartY = objInitTop + 22;
-
         UI.activeDragObject.style.cssText = "z-index:4;top: " + objInitTop + "px; left: " + objInitLeft + "px; transform: translate(0px, 0px);";
         document.addEventListener("mousemove", UI.handleDrag, false);
         document.addEventListener("mouseup", UI.endInventoryDrag, false);
     }
 
     splitStackPanel.classList.remove("active");
-
+    // remove focus
+    document.activeElement.blur();
 }
 
 function inventorySplitStackCancel() {
     splitStackPanel.classList.remove("active");
+    document.activeElement.blur();
 }
