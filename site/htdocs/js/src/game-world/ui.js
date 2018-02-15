@@ -1776,10 +1776,13 @@ newPost.classList.remove('active');
                 inventoryCheck = canAddItemToInventory(data.item);
                 if (inventoryCheck[0]) {
                     UI.showChangeInInventory(inventoryCheck[1]);
-                    // remove attachment from message:
-                    document.querySelector("#postMessage" + data.id + " .postSlot").outerHTML = '';
+                    // remove attachment(s) from message:
+                    var attachmentSlots = document.querySelectorAll("#postMessage" + data.id + " .postSlot");
+                    for (i = 0; i < attachmentSlots.length; ++i) {
+  attachmentSlots[i].outerHTML = '';
+}
 
-                    // remove it from message preview list:
+                    // remove all from message preview list:
                     document.querySelector("#post" + data.id + " .previewSlot").innerHTML = '';
                     // send notification that it's been added to database:
                     sendDataWithoutNeedingAResponse("/game-world/gotPostAttachment.php?id=" + data.id);

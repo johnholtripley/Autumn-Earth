@@ -3339,9 +3339,7 @@ function awardQuestRewards(whichNPC, questRewards, isACollectionQuest) {
         var questSpeech = whichNPC.speech[whichNPC.speechIndex][0].split("|");
         if (isACollectionQuest) {
             // use zone name (replace hyphens with spaces)
-            var subjectLine = whichNPC.speech[whichNPC.speechIndex][1].replace(/-/g, " ") + " collection";
-            // make the first letter a capital:
-            subjectLine = subjectLine.charAt(0).toUpperCase() + subjectLine.slice(1);
+            var subjectLine = whichNPC.speech[whichNPC.speechIndex][2].replace(/-/g, " ") + " collection";
         } else {
             var whichQuest = whichNPC.speech[whichNPC.speechIndex][2];
             var subjectLine = questData[whichQuest].journalTitle;
@@ -5131,10 +5129,13 @@ newPost.classList.remove('active');
                 inventoryCheck = canAddItemToInventory(data.item);
                 if (inventoryCheck[0]) {
                     UI.showChangeInInventory(inventoryCheck[1]);
-                    // remove attachment from message:
-                    document.querySelector("#postMessage" + data.id + " .postSlot").outerHTML = '';
+                    // remove attachment(s) from message:
+                    var attachmentSlots = document.querySelectorAll("#postMessage" + data.id + " .postSlot");
+                    for (i = 0; i < attachmentSlots.length; ++i) {
+  attachmentSlots[i].outerHTML = '';
+}
 
-                    // remove it from message preview list:
+                    // remove all from message preview list:
                     document.querySelector("#post" + data.id + " .previewSlot").innerHTML = '';
                     // send notification that it's been added to database:
                     sendDataWithoutNeedingAResponse("/game-world/gotPostAttachment.php?id=" + data.id);

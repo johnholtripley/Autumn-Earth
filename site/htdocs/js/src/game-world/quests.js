@@ -257,9 +257,7 @@ function awardQuestRewards(whichNPC, questRewards, isACollectionQuest) {
         var questSpeech = whichNPC.speech[whichNPC.speechIndex][0].split("|");
         if (isACollectionQuest) {
             // use zone name (replace hyphens with spaces)
-            var subjectLine = whichNPC.speech[whichNPC.speechIndex][1].replace(/-/g, " ") + " collection";
-            // make the first letter a capital:
-            subjectLine = subjectLine.charAt(0).toUpperCase() + subjectLine.slice(1);
+            var subjectLine = whichNPC.speech[whichNPC.speechIndex][2].replace(/-/g, " ") + " collection";
         } else {
             var whichQuest = whichNPC.speech[whichNPC.speechIndex][2];
             var subjectLine = questData[whichQuest].journalTitle;
