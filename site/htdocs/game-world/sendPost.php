@@ -58,13 +58,7 @@ if(isset($postedData['recipientID'])) {
         
 if($recipientCharacterID == null) {
     // look up to find the id:
-    $characterIdQuery = "SELECT charID, charName from tblcharacters WHERE charName = '".$recipientCharacterName."'";
-    $characterIdResult = mysql_query($characterIdQuery);
-    if(mysql_num_rows($characterIdResult)>0) {
-        $row = mysql_fetch_array($characterIdResult));
-        extract($row);
-        $recipientCharacterID = $charID;
-    }
+    $recipientCharacterID = mysql_result(mysql_query("SELECT charID from tblcharacters WHERE charName = '".$recipientCharacterName."'"),0);
 }
 
 if($recipientCharacterID) {
@@ -75,6 +69,9 @@ if($recipientCharacterID) {
     if($result) {
         $returnedResult = "true";
     }
+} else {
+    // might be an NPC who could create a reply (like Animal Crossing?):
+    // #####################
 }
 
 header('Content-Type: application/json');
