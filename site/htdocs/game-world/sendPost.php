@@ -69,7 +69,7 @@ if($recipientCharacterID) {
     if($result) {
         $returnedResult = "true";
     }
-} else {
+} else if ($recipientCharacterName != null) {
     // might be an NPC who could create a reply (like Animal Crossing?):
     // #####################
 }
