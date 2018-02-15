@@ -9,10 +9,14 @@
         background: #efefef;
         margin: 0 0 4px 0;
     }
+    textarea {
+        resize: none;
+    }
     button {
         border: 1px solid #666;
         background: #cecece;
         color: #000;
         font-size: 12px;
+        outline: none;
     }
 }

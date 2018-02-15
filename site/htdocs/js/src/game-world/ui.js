@@ -1809,7 +1809,7 @@ var UI = {
                 receivedPostPanel.classList.add('active');
                 break;
             case 'sendPost':
-                sendUserPost('{"subject":"' + sendPostSubject.value + '","message":"' + sendPostMessage.value + '","senderID":"' + characterId + '"}');
+                sendUserPost('{"subject":"' + sendPostSubject.value + '","message":"' + sendPostMessage.value + '","senderID":"' + characterId + '","attachments":0,"recipientID":"999","fromName":"Eleaddai"}');
                 break;
             case 'cancelPost':
                 // ####

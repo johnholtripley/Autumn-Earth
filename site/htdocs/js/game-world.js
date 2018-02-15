@@ -5169,7 +5169,7 @@ var UI = {
                 receivedPostPanel.classList.add('active');
                 break;
             case 'sendPost':
-                sendUserPost('{"subject":"' + sendPostSubject.value + '","message":"' + sendPostMessage.value + '","senderID":"' + characterId + '"}');
+                sendUserPost('{"subject":"' + sendPostSubject.value + '","message":"' + sendPostMessage.value + '","senderID":"' + characterId + '","attachments":0,"recipientID":"999","fromName":"Eleaddai"}');
                 break;
             case 'cancelPost':
                 // ####
@@ -7679,13 +7679,13 @@ function sendUserPost(postData) {
     var postDataToSend = JSON.parse(postData);
     getJSONWithParams("/game-world/sendPost.php", 'postData=' + JSON.stringify(postDataToSend), function(data) {
         if (data.success) {
-            console.log("done");
+            console.log("user post sent");
         } else {
-            console.log("failed #1");
+            console.log("user post failed #1");
             // let user try again ########
         }
     }, function(status) {
-        console.log("failed #2");
+        console.log("user post failed #2");
         // let user try again ########
     });
 }
@@ -7704,11 +7704,11 @@ function sendNPCPost(postData, attachments) {
             newPost.classList.add('active');
             // get new post ######
         } else {
-            console.log("failed #1");
+            console.log("npc post failed #1");
             // try again? ####
         }
     }, function(status) {
-        console.log("failed #2");
+        console.log("npc post failed #2");
         // try again ? #######
     });
 }
