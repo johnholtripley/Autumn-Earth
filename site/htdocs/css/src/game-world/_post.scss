@@ -1,0 +1,18 @@
+#sendPostPanel {
+    input,
+    textarea {
+        width: 100%;
+        border: 0;
+        font-family: 'IM Fell English', 'Times New Roman', Palatino, Times, Serif;
+        font-size: 13px;
+        padding: 4px;
+        background: #efefef;
+        margin: 0 0 4px 0;
+    }
+    button {
+        border: 1px solid #666;
+        background: #cecece;
+        color: #000;
+        font-size: 12px;
+    }
+}
