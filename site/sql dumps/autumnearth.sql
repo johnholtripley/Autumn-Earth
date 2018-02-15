@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 12, 2018 at 02:35 PM
+-- Generation Time: Feb 15, 2018 at 02:07 PM
 -- Server version: 5.6.24
 -- PHP Version: 5.6.8
 
@@ -632,7 +632,7 @@ CREATE TABLE IF NOT EXISTS `tblinventoryitems` (
   `lockedToThisPlayer` tinyint(1) NOT NULL DEFAULT '0',
   `respawnRate` int(11) DEFAULT NULL,
   `activeDuringSeason` int(11) DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=59 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=60 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblinventoryitems`
@@ -695,7 +695,8 @@ INSERT INTO `tblinventoryitems` (`itemID`, `shortname`, `description`, `priceCod
 (55, 'Quest Book', '', '4', '12.0', '6.0', 20, 13, NULL, NULL, 'quest-book', 'book,questSet', '?,9', 0, 0, '0', '0', NULL, NULL, 1, 0, 1, 0, 0, NULL, NULL),
 (56, 'Simple Chair', '', '4', '32.0', '40.0', 38, 38, 44, 49, 'simple-chair', 'sit', '0', 1, 0, '0', '0', NULL, NULL, 1, 0, 0, 1, 0, NULL, NULL),
 (57, 'House Deed', '6 by 6 plot', '8000', '32.0', '40.0', 38, 38, NULL, NULL, 'house-deed', 'deed', '6x6', 0, 0, '0', '0', '6', NULL, 0, 0, 0, 1, 0, NULL, NULL),
-(58, 'House Deed', '8 by 6 plot', '12000', '32.0', '40.0', 38, 38, NULL, NULL, 'house-deed', 'deed', '8x6', 0, 0, '0', '0', '6', NULL, 0, 0, 0, 1, 0, NULL, NULL);
+(58, 'House Deed', '8 by 6 plot', '12000', '32.0', '40.0', 38, 38, NULL, NULL, 'house-deed', 'deed', '8x6', 0, 0, '0', '0', '6', NULL, 0, 0, 0, 1, 0, NULL, NULL),
+(59, 'Post Box', 'For posting', '2', '45.0', '63.0', 38, 38, NULL, NULL, 'post-box', 'post', '0', 0, 0, '0', '0', NULL, NULL, 0, 0, 0, 0, 0, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -772,125 +773,132 @@ INSERT INTO `tbllocations` (`locID`, `locName`) VALUES
 
 CREATE TABLE IF NOT EXISTS `tblmail` (
   `mailID` int(11) NOT NULL,
-  `accountID` int(11) DEFAULT NULL,
+  `characterID` int(11) DEFAULT NULL,
   `senderID` int(11) DEFAULT NULL,
   `senderName` varchar(255) DEFAULT NULL,
-  `characterID` int(11) DEFAULT NULL,
   `title` varchar(255) DEFAULT NULL,
   `mailContents` mediumtext,
   `sentTime` datetime DEFAULT NULL,
   `mailRead` char(1) DEFAULT NULL,
-  `attachment` varchar(20000) DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=185 DEFAULT CHARSET=latin1;
+  `attachment` varchar(20000) DEFAULT NULL,
+  `attachmentTaken` tinyint(1) NOT NULL DEFAULT '0',
+  `isArchived` tinyint(1) NOT NULL DEFAULT '0'
+) ENGINE=InnoDB AUTO_INCREMENT=928 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblmail`
 --
 
-INSERT INTO `tblmail` (`mailID`, `accountID`, `senderID`, `senderName`, `characterID`, `title`, `mailContents`, `sentTime`, `mailRead`, `attachment`) VALUES
-(81, 18, 5, 'Eleaddai', 10, 'elli to newmemberchar1', 'c to c', '2006-08-02 22:10:06', '1', '0'),
-(83, 5, 18, 'newmemberchar1', 2, 'Re: elli to newmemberchar1', '[quote=Eleaddai]c to c[/quote] m', '2006-08-02 22:13:05', '2', '0'),
-(84, 18, 5, 'Eleaddai', 10, 'Re: Re: elli to newmemberchar1', '[quote=newmemberchar1][quote=Eleaddai]c to c[/quote] m[/quote]xc', '2006-08-02 22:13:30', '2', '0'),
-(85, 14, 5, 'Alice', 0, 'alice to moderator', 'c to a', '2006-08-02 22:14:08', '1', '0'),
-(86, 5, 14, 'moderator', 3, 'Re: alice to moderator', '[quote=Alice]c to a[/quote]x', '2006-08-02 22:14:24', '2', '0'),
-(87, 14, 5, 'Alice', 0, 'Re: Re: alice to moderator', '[quote=moderator][quote=Alice]c to a[/quote]x[/quote]xc', '2006-08-02 22:14:59', '2', '0'),
-(88, 14, 5, 'seawarrior', 0, 'seawarrior to moderator', 'a to a', '2006-08-02 22:15:22', '2', '0'),
-(89, 5, 14, 'moderator', 0, 'Re: seawarrior to moderator', '[quote=seawarrior]a to a[/quote] ta', '2006-08-02 22:15:39', '2', '0'),
-(90, 14, 5, 'seawarrior', 0, 'Re: Re: seawarrior to moderator', '[quote=moderator][quote=seawarrior]a to a[/quote] ta[/quote] cvc', '2006-08-02 22:15:56', '0', '0'),
-(91, 18, 5, 'seawarrior', 10, 'seawarrior to newmemberchar1', 'a to c', '2006-08-02 22:16:31', '2', '0'),
-(92, 5, 18, 'newmemberchar1', 0, 'Re: seawarrior to newmemberchar1', ' cheers', '2006-08-02 22:16:53', '1', '0'),
-(93, 18, 5, 'seawarrior', 10, 'Re: Re: seawarrior to newmemberchar1', '[quote=newmemberchar1] cheers[/quote] go', '2006-08-02 22:17:07', '2', '0'),
-(94, 18, 14, 'modchar2', 11, 'to newmem char2', 'dffd', '2006-08-03 14:08:45', '1', '0'),
-(95, 14, 5, 'seawarrior', 0, 'styled stuff', 'fgfgfg[link=dfdf]dfdf[/link]cxcxc[image=xcx]\r\n\r\n\r\nh[u]ap[/u]py ', '2006-08-06 21:44:37', '1', '0'),
-(96, 5, 14, 'moderator', 0, 'Re: styled stuff', '[quote=seawarrior]fgfgfg[link=dfdf]dfdf[/link]cxcxc[/quote][image=xcx]\r\n\r\n\r\nh[u]ap[/u]py  cheers boss :) [u]underline[/u][', '2006-08-06 21:46:52', '1', '0'),
-(97, 14, 5, 'seawarrior', 0, 'blibllw', 'sd[s]fdf[/s] this is a report test', '2006-08-13 15:57:15', '1', '0'),
-(98, 14, 5, 'seawarrior', 0, 'test atach', 'df', '2006-08-14 19:21:11', '0', '0'),
-(99, 14, 5, 'seawarrior', 0, 'test', 'dfdf', '2006-08-14 19:22:59', '0', '0'),
-(100, 14, 5, 'seawarrior', 0, 'test', 'dfdfdf', '2006-08-14 19:24:52', '0', '0'),
-(101, 14, 5, 'seawarrior', 0, 'spam', 's', '2006-08-14 19:26:28', '0', '0'),
-(102, 14, 5, 'seawarrior', 0, 'spam2', 'sdsd', '2006-08-14 19:27:02', '0', '0'),
-(103, 14, 5, 'seawarrior', 0, 'spam3', 'dsds', '2006-08-14 19:28:33', '0', '0'),
-(104, 14, 5, 'seawarrior', 0, 'spam4', 'dsds', '2006-08-14 19:29:59', '0', '0'),
-(105, 14, 5, 'seawarrior', 0, 'sfdff', 'dfdf', '2006-08-14 19:31:19', '0', '0'),
-(106, 14, 5, 'seawarrior', 0, 'guess what? spam', 'dsd', '2006-08-14 19:33:15', '0', '0'),
-(107, 14, 5, 'seawarrior', 0, 'stuff', 'sdsd', '2006-08-14 21:48:17', '0', '0'),
-(108, 14, 5, 'seawarrior', 0, 'test', 'test', '2006-08-17 13:02:52', '0', '0'),
-(109, 14, 5, 'seawarrior', 0, 'testing', 'fdlfkdk lfkskf', '2006-08-17 13:12:46', '0', '0'),
-(110, 14, 5, 'Eleaddai', 0, 'john', 'dddddd', '2006-08-17 13:27:41', '0', '0'),
-(111, 5, 14, 'seawarrior', 0, 'Re: blibllw', '[quote=seawarrior]sdfdf this is a report test[/quote]fdf', '2006-08-17 20:45:01', '1', '0'),
-(112, 14, 5, 'seawarrior', 0, 'Re: Re: styled stuff', '[quote=moderator]fgfgfgdfdfcxcxc\r\n\r\n\r\nhappy  cheers boss  underline[/quote]ghghh', '2006-08-17 20:46:00', '0', '0'),
-(113, 14, 5, 'seawarrior', 0, 'Re: Re: styled stuff', '[quote=moderator]fgfgfgdfdfcxcxc\r\n\r\n\r\nhappy  cheers boss  underline[/quote]dfdfdfdf', '2006-08-17 20:47:17', '0', '0'),
-(114, 14, 18, 'newmemberchar2', 8, 'Re: to newmem char2', '[quote=modchar2]dffd[/quote]\r\nklklk', '2006-08-17 20:48:22', '1', '0'),
-(115, 14, 18, 'newmemberchar2', 8, 'Re: to newmem char2', '[quote=modchar2]dffd[/quote]', '2006-08-17 21:03:09', '0', '0'),
-(116, 14, 5, 'seawarrior', 0, 'Re: Re: styled stuff', '[quote=moderator]fgfgfgdfdfcxcxc\r\n\r\n\r\nhappy  cheers boss  underline[/quote]ghg', '2006-08-17 21:03:46', '0', '0'),
-(117, 14, 5, 'seawarrior', 0, 'howdo', 'dfdf', '2006-08-17 21:13:10', '0', '0'),
-(118, 14, 5, 'seawarrior', 0, 'ljlj', 'lkj', '2006-08-17 21:13:56', '0', '0'),
-(119, 14, 5, 'seawarrior', 0, 'lkj', 'lkj', '2006-08-17 21:15:54', '0', '0'),
-(120, 14, 5, 'seawarrior', 0, 'jkh', 'kjhkh', '2006-08-17 21:16:09', '0', '0'),
-(121, 14, 5, 'seawarrior', 0, '(untitled)', 'sd', '2006-08-17 21:23:42', '0', '0'),
-(122, 14, 5, 'seawarrior', 0, 'adding items :)', 'here you go: 3 scrolls', '2006-08-20 10:44:47', '1', '0'),
-(123, 14, 5, 'seawarrior', 0, 'teasing', 'asas', '2006-08-20 10:49:18', '0', '0'),
-(124, 14, 5, 'seawarrior', 0, 'adding then changoing', '3 scrolls then 1 leaf', '2006-08-20 10:49:53', '1', '0'),
-(125, 13, 5, 'seawarrior', 0, 'sending stuff', '1 mushroom coming at ya', '2006-08-20 11:15:20', '1', '11'),
-(126, 14, 5, 'seawarrior', 0, 'another shrooom', '', '2006-08-20 11:17:31', '1', '0'),
-(127, 14, 5, 'seawarrior', 0, 'removing 1 scroll', '1 scroll', '2006-08-20 11:28:46', '1', '0'),
-(128, 14, 5, 'seawarrior', 0, 'all my shrooms', 'sdds', '2006-08-20 11:31:21', '1', '0'),
-(129, 14, 5, 'seawarrior', 0, 'all 4 shrooms', 'sds', '2006-08-20 11:33:32', '1', '0'),
-(130, 14, 5, 'seawarrior', 0, '9 shrooms', 'sd', '2006-08-20 11:37:22', '1', '11'),
-(131, 14, 5, 'seawarrior', 0, 'sd', 'sdsd', '2006-08-20 20:29:10', '1', '0'),
-(132, 14, 5, 'seawarrior', 0, 'sds', 'sd', '2006-08-20 20:29:20', '1', '0'),
-(133, 5, 14, 'moderator', 0, 'df', 'df', '2006-08-20 20:32:20', '1', '0'),
-(134, 14, 5, 'seawarrior', 0, 'sd', 'asas', '2006-08-20 20:34:20', '1', '0'),
-(135, 14, 5, 'seawarrior', 0, 'df', 'dfsfd', '2006-08-20 20:37:45', '1', '0'),
-(136, 5, 14, 'moderator', 0, 'cheers', 'cv', '2006-08-20 20:40:23', '2', '0'),
-(137, 14, 5, 'seawarrior', 0, 'sddf', 'dfdf', '2006-08-20 20:41:35', '1', '0'),
-(138, 14, 23, 'stanley', 0, 'sddsd', 'sads', '2006-08-20 20:42:41', '2', '2'),
-(139, 5, 23, 'stanley', 1, 'stan to angel', '3 scrolls...', '2006-08-20 23:02:56', '1', '0'),
-(140, 14, 23, 'stanley', 7, 'modchar1 from stan', 'sdsds', '2006-08-21 18:55:28', '1', '0'),
-(141, 14, 5, 'seawarrior', 0, 'test attach', 'adding 2 scrolls', '2006-08-30 09:09:04', '1', '0'),
-(142, 14, 5, 'seawarrior', 0, '(untitled)', '', '2006-11-05 10:42:52', '0', '2'),
-(143, 14, 5, 'seawarrior', 0, '(untitled)', '', '2006-11-05 10:43:42', '0', '11'),
-(144, 14, 5, 'Alice', 7, '1 gold', '1 gold!!!', '2006-12-02 21:40:27', '0', '0'),
-(145, 14, 5, 'Alice', 7, '1 gold 27 s', '1g 27s', '2006-12-02 21:49:31', '0', '28'),
-(146, 14, 5, 'seawarrior', 7, '21 silver', '21 !!!!', '2006-12-02 22:04:04', '0', '27'),
-(147, 14, 5, 'seawarrior', 7, '21', '21 again', '2006-12-02 22:06:36', '0', '27'),
-(148, 14, 5, 'seawarrior', 7, '21 .. .again!', 'df', '2006-12-02 22:07:52', '0', '27'),
-(149, 14, 5, 'seawarrior', 7, '(untitled)', '', '2006-12-02 22:08:16', '0', '27'),
-(150, 14, 5, 'seawarrior', 7, 'guess what?', '(no message)', '2006-12-02 22:10:27', '0', '27'),
-(151, 14, 5, 'seawarrior', 7, 'sd', '(no message)', '2006-12-02 22:11:12', '0', '27'),
-(152, 14, 5, 'Alice', 7, 'got to be 21 now', '(no message)', '2006-12-02 22:14:27', '0', '27'),
-(153, 14, 5, 'seawarrior', 7, '(untitled)', '(no message)', '2006-12-02 22:18:16', '0', '27'),
-(154, 14, 5, 'seawarrior', 7, '(untitled)', '(no message)', '2006-12-02 22:18:47', '0', '27'),
-(155, 14, 5, 'seawarrior', 7, '(untitled)', '(no message)', '2006-12-02 22:20:48', '0', '27'),
-(156, 14, 5, 'seawarrior', 7, '(untitled)', '(no message)', '2006-12-02 22:21:11', '0', '27'),
-(157, 14, 5, 'seawarrior', 7, '(untitled)', '(no message)', '2006-12-02 22:22:27', '0', '27'),
-(158, 14, 5, 'seawarrior', 7, '(untitled)', '(no message)', '2006-12-02 22:23:04', '0', '27'),
-(159, 14, 5, 'seawarrior', 7, '(untitled)', '(no message)', '2006-12-02 22:23:28', '0', '28'),
-(160, 14, 5, 'seawarrior', 7, '(untitled)', '(no message)', '2006-12-02 22:24:25', '0', '28'),
-(161, 14, 5, 'seawarrior', 7, '(untitled)', '(no message)', '2006-12-02 22:24:38', '0', '28'),
-(162, 14, 5, 'seawarrior', 7, '(untitled)', '(no message)', '2006-12-02 22:25:03', '0', '27'),
-(163, 23, 5, 'seawarrior', 4, '(untitled)sd', '(no message)sd', '2006-12-18 22:27:09', '0', '28'),
-(164, 23, 5, 'seawarrior', 4, 'hiya', 'fgfg', '2006-12-18 22:31:55', '0', '27'),
-(165, 23, 5, 'seawarrior', 4, '18', 'eighteen coming across!', '2006-12-18 22:33:29', '0', '27'),
-(166, 23, 5, 'Angel', 4, 'ten', 'fg ddf', '2006-12-18 22:46:19', '0', '27'),
-(167, 23, 5, 'Angel', 4, 'seven', 'cvc', '2006-12-18 22:48:39', '0', '27'),
-(168, 23, 5, 'Angel', 4, 'test', 'xc', '2006-12-18 22:49:30', '0', '27'),
-(169, 23, 5, 'Angel', 4, 'ninteen', 'fd', '2006-12-18 22:50:20', '0', '27'),
-(170, 23, 5, 'Angel', 4, 'sdsd', 'sd', '2006-12-18 22:51:09', '0', '27'),
-(171, 23, 5, 'Angel', 4, '78', 'ghgh', '2006-12-18 22:53:01', '0', '27'),
-(172, 23, 5, 'Angel', 1, 'fdfdf', '(no message)', '2006-12-18 22:57:28', '0', '27'),
-(173, 999, 5, 'Angel', 1, 'hi', '(no message)', '2017-12-18 22:58:29', '0', '27'),
-(174, 23, 5, 'Angel', 1, 'jkiol', 'gfg gddf ', '2006-12-18 22:59:53', '0', '27'),
-(175, 23, 5, 'seawarrior', 1, 'more', '(no message)', '2006-12-18 23:00:23', '0', '28'),
-(176, 999, 5, 'seawarrior', 0, 'testing refresh', 'testing! :) ', '2018-02-12 11:45:00', '0', '0'),
-(177, 13, 5, 'seawarrior', 0, 'refresh test 2', 'dsd', '2007-01-08 20:17:46', '1', '0'),
-(178, 999, 5, 'seawarrior', 0, 'another test', 'sdsd aa', '2018-02-11 00:00:00', '0', '0'),
-(179, 5, 13, 'administrator', 0, 'Re: refresh test 2', '[quote=seawarrior]dsd[/quote]cheers matey', '2007-01-10 22:50:47', '1', '0'),
-(180, 5, 13, 'administrator', 0, 'Re: another test', '[quote=seawarrior]sdsd aa[/quote]nice one', '2007-01-10 22:51:18', '0', '0'),
-(181, 13, 5, 'seawarrior', 0, 'Re: Re: refresh test 2', 'thanks', '2007-01-10 22:54:13', '0', '0'),
-(182, 49, 49, 'dilly21', 0, 'hi dilly', 'hi - how are you?', '2015-07-03 14:04:44', '1', '0'),
-(183, 49, 48, 'dilly20', 0, 'dilly21', 'hi 21 - this is 20', '2015-07-03 14:05:11', '1', '0'),
-(184, 999, 49, 'dilly21', 0, 'Re: dilly21', 'hi - good to hear from you [quote=dilly20]hi 21 - this is 20[/quote]', '2015-07-06 14:05:34', '1', '0');
+INSERT INTO `tblmail` (`mailID`, `characterID`, `senderID`, `senderName`, `title`, `mailContents`, `sentTime`, `mailRead`, `attachment`, `attachmentTaken`, `isArchived`) VALUES
+(81, 18, 5, 'Eleaddai', 'elli to newmemberchar1', 'c to c', '2006-08-02 22:10:06', '1', '0', 0, 0),
+(83, 999, 18, 'murphy', 'Re: eleaddai to newmemberchar1', 'hi - have 2 pumpkins!', '2018-02-02 22:13:05', '1', ' [{\n\n                "type": 19,\n                "tileX": 12,\n                "tileY": 6,\n                "quantity": 2,\n                "quality": 100,\n                "durability": 100,\n                "currentWear": 0,\n                "effectiveness": 100,\n                "wrapped": 0,\n                "colour": 0,\n                "enchanted": 0,\n                "hallmark": 0,\n                "inscription": ""\n\n            }]', 0, 0),
+(84, 18, 5, 'Eleaddai', 'Re: Re: elli to newmemberchar1', '[quote=newmemberchar1][quote=Eleaddai]c to c[/quote] m[/quote]xc', '2006-08-02 22:13:30', '2', '0', 0, 0),
+(85, 14, 5, 'Alice', 'alice to moderator', 'c to a', '2006-08-02 22:14:08', '1', '0', 0, 0),
+(86, 5, 14, 'moderator', 'Re: alice to moderator', '[quote=Alice]c to a[/quote]x', '2006-08-02 22:14:24', '2', '0', 0, 0),
+(87, 14, 5, 'Alice', 'Re: Re: alice to moderator', '[quote=moderator][quote=Alice]c to a[/quote]x[/quote]xc', '2006-08-02 22:14:59', '2', '0', 0, 0),
+(88, 14, 5, 'seawarrior', 'seawarrior to moderator', 'a to a', '2006-08-02 22:15:22', '2', '0', 0, 0),
+(89, 5, 14, 'moderator', 'Re: seawarrior to moderator', '[quote=seawarrior]a to a[/quote] ta', '2006-08-02 22:15:39', '2', '0', 0, 0),
+(90, 14, 5, 'seawarrior', 'Re: Re: seawarrior to moderator', '[quote=moderator][quote=seawarrior]a to a[/quote] ta[/quote] cvc', '2006-08-02 22:15:56', '0', '0', 0, 0),
+(91, 18, 5, 'seawarrior', 'seawarrior to newmemberchar1', 'a to c', '2006-08-02 22:16:31', '2', '0', 0, 0),
+(92, 5, 18, 'newmemberchar1', 'Re: seawarrior to newmemberchar1', ' cheers', '2006-08-02 22:16:53', '1', '0', 0, 0),
+(93, 18, 5, 'seawarrior', 'Re: Re: seawarrior to newmemberchar1', '[quote=newmemberchar1] cheers[/quote] go', '2006-08-02 22:17:07', '2', '0', 0, 0),
+(94, 18, 14, 'modchar2', 'to newmem char2', 'dffd', '2006-08-03 14:08:45', '1', '0', 0, 0),
+(95, 14, 5, 'seawarrior', 'styled stuff', 'fgfgfg[link=dfdf]dfdf[/link]cxcxc[image=xcx]\r\n\r\n\r\nh[u]ap[/u]py ', '2006-08-06 21:44:37', '1', '0', 0, 0),
+(96, 5, 14, 'moderator', 'Re: styled stuff', '[quote=seawarrior]fgfgfg[link=dfdf]dfdf[/link]cxcxc[/quote][image=xcx]\r\n\r\n\r\nh[u]ap[/u]py  cheers boss :) [u]underline[/u][', '2006-08-06 21:46:52', '1', '0', 0, 0),
+(97, 14, 5, 'seawarrior', 'blibllw', 'sd[s]fdf[/s] this is a report test', '2006-08-13 15:57:15', '1', '0', 0, 0),
+(98, 14, 5, 'seawarrior', 'test atach', 'df', '2006-08-14 19:21:11', '0', '0', 0, 0),
+(99, 14, 5, 'seawarrior', 'test', 'dfdf', '2006-08-14 19:22:59', '0', '0', 0, 0),
+(100, 14, 5, 'seawarrior', 'test', 'dfdfdf', '2006-08-14 19:24:52', '0', '0', 0, 0),
+(101, 14, 5, 'seawarrior', 'spam', 's', '2006-08-14 19:26:28', '0', '0', 0, 0),
+(102, 14, 5, 'seawarrior', 'spam2', 'sdsd', '2006-08-14 19:27:02', '0', '0', 0, 0),
+(103, 14, 5, 'seawarrior', 'spam3', 'dsds', '2006-08-14 19:28:33', '0', '0', 0, 0),
+(104, 14, 5, 'seawarrior', 'spam4', 'dsds', '2006-08-14 19:29:59', '0', '0', 0, 0),
+(105, 14, 5, 'seawarrior', 'sfdff', 'dfdf', '2006-08-14 19:31:19', '0', '0', 0, 0),
+(106, 14, 5, 'seawarrior', 'guess what? spam', 'dsd', '2006-08-14 19:33:15', '0', '0', 0, 0),
+(107, 14, 5, 'seawarrior', 'stuff', 'sdsd', '2006-08-14 21:48:17', '0', '0', 0, 0),
+(108, 14, 5, 'seawarrior', 'test', 'test', '2006-08-17 13:02:52', '0', '0', 0, 0),
+(109, 14, 5, 'seawarrior', 'testing', 'fdlfkdk lfkskf', '2006-08-17 13:12:46', '0', '0', 0, 0),
+(110, 14, 5, 'Eleaddai', 'john', 'dddddd', '2006-08-17 13:27:41', '0', '0', 0, 0),
+(111, 5, 14, 'seawarrior', 'Re: blibllw', '[quote=seawarrior]sdfdf this is a report test[/quote]fdf', '2006-08-17 20:45:01', '1', '0', 0, 0),
+(112, 14, 5, 'seawarrior', 'Re: Re: styled stuff', '[quote=moderator]fgfgfgdfdfcxcxc\r\n\r\n\r\nhappy  cheers boss  underline[/quote]ghghh', '2006-08-17 20:46:00', '0', '0', 0, 0),
+(113, 14, 5, 'seawarrior', 'Re: Re: styled stuff', '[quote=moderator]fgfgfgdfdfcxcxc\r\n\r\n\r\nhappy  cheers boss  underline[/quote]dfdfdfdf', '2006-08-17 20:47:17', '0', '0', 0, 0),
+(114, 14, 18, 'newmemberchar2', 'Re: to newmem char2', '[quote=modchar2]dffd[/quote]\r\nklklk', '2006-08-17 20:48:22', '1', '0', 0, 0),
+(115, 14, 18, 'newmemberchar2', 'Re: to newmem char2', '[quote=modchar2]dffd[/quote]', '2006-08-17 21:03:09', '0', '0', 0, 0),
+(116, 14, 5, 'seawarrior', 'Re: Re: styled stuff', '[quote=moderator]fgfgfgdfdfcxcxc\r\n\r\n\r\nhappy  cheers boss  underline[/quote]ghg', '2006-08-17 21:03:46', '0', '0', 0, 0),
+(117, 14, 5, 'seawarrior', 'howdo', 'dfdf', '2006-08-17 21:13:10', '0', '0', 0, 0),
+(118, 14, 5, 'seawarrior', 'ljlj', 'lkj', '2006-08-17 21:13:56', '0', '0', 0, 0),
+(119, 14, 5, 'seawarrior', 'lkj', 'lkj', '2006-08-17 21:15:54', '0', '0', 0, 0),
+(120, 14, 5, 'seawarrior', 'jkh', 'kjhkh', '2006-08-17 21:16:09', '0', '0', 0, 0),
+(121, 14, 5, 'seawarrior', '(untitled)', 'sd', '2006-08-17 21:23:42', '0', '0', 0, 0),
+(122, 14, 5, 'seawarrior', 'adding items :)', 'here you go: 3 scrolls', '2006-08-20 10:44:47', '1', '0', 0, 0),
+(123, 14, 5, 'seawarrior', 'teasing', 'asas', '2006-08-20 10:49:18', '0', '0', 0, 0),
+(124, 14, 5, 'seawarrior', 'adding then changoing', '3 scrolls then 1 leaf', '2006-08-20 10:49:53', '1', '0', 0, 0),
+(125, 13, 5, 'seawarrior', 'sending stuff', '1 mushroom coming at ya', '2006-08-20 11:15:20', '1', '11', 0, 0),
+(126, 14, 5, 'seawarrior', 'another shrooom', '', '2006-08-20 11:17:31', '1', '0', 0, 0),
+(127, 14, 5, 'seawarrior', 'removing 1 scroll', '1 scroll', '2006-08-20 11:28:46', '1', '0', 0, 0),
+(128, 14, 5, 'seawarrior', 'all my shrooms', 'sdds', '2006-08-20 11:31:21', '1', '0', 0, 0),
+(129, 14, 5, 'seawarrior', 'all 4 shrooms', 'sds', '2006-08-20 11:33:32', '1', '0', 0, 0),
+(130, 14, 5, 'seawarrior', '9 shrooms', 'sd', '2006-08-20 11:37:22', '1', '11', 0, 0),
+(131, 14, 5, 'seawarrior', 'sd', 'sdsd', '2006-08-20 20:29:10', '1', '0', 0, 0),
+(132, 14, 5, 'seawarrior', 'sds', 'sd', '2006-08-20 20:29:20', '1', '0', 0, 0),
+(133, 5, 14, 'moderator', 'df', 'df', '2006-08-20 20:32:20', '1', '0', 0, 0),
+(134, 14, 5, 'seawarrior', 'sd', 'asas', '2006-08-20 20:34:20', '1', '0', 0, 0),
+(135, 14, 5, 'seawarrior', 'df', 'dfsfd', '2006-08-20 20:37:45', '1', '0', 0, 0),
+(136, 5, 14, 'moderator', 'cheers', 'cv', '2006-08-20 20:40:23', '2', '0', 0, 0),
+(137, 14, 5, 'seawarrior', 'sddf', 'dfdf', '2006-08-20 20:41:35', '1', '0', 0, 0),
+(138, 14, 23, 'stanley', 'sddsd', 'sads', '2006-08-20 20:42:41', '2', '2', 0, 0),
+(139, 5, 23, 'stanley', 'stan to angel', '3 scrolls...', '2006-08-20 23:02:56', '1', '0', 0, 0),
+(140, 14, 23, 'stanley', 'modchar1 from stan', 'sdsds', '2006-08-21 18:55:28', '1', '0', 0, 0),
+(141, 14, 5, 'seawarrior', 'test attach', 'adding 2 scrolls', '2006-08-30 09:09:04', '1', '0', 0, 0),
+(142, 14, 5, 'seawarrior', '(untitled)', '', '2006-11-05 10:42:52', '0', '2', 0, 0),
+(143, 14, 5, 'seawarrior', '(untitled)', '', '2006-11-05 10:43:42', '0', '11', 0, 0),
+(144, 14, 5, 'Alice', '1 gold', '1 gold!!!', '2006-12-02 21:40:27', '0', '0', 0, 0),
+(145, 14, 5, 'Alice', '1 gold 27 s', '1g 27s', '2006-12-02 21:49:31', '0', '28', 0, 0),
+(146, 14, 5, 'seawarrior', '21 silver', '21 !!!!', '2006-12-02 22:04:04', '0', '27', 0, 0),
+(147, 14, 5, 'seawarrior', '21', '21 again', '2006-12-02 22:06:36', '0', '27', 0, 0),
+(148, 14, 5, 'seawarrior', '21 .. .again!', 'df', '2006-12-02 22:07:52', '0', '27', 0, 0),
+(149, 14, 5, 'seawarrior', '(untitled)', '', '2006-12-02 22:08:16', '0', '27', 0, 0),
+(150, 14, 5, 'seawarrior', 'guess what?', '(no message)', '2006-12-02 22:10:27', '0', '27', 0, 0),
+(151, 14, 5, 'seawarrior', 'sd', '(no message)', '2006-12-02 22:11:12', '0', '27', 0, 0),
+(152, 14, 5, 'Alice', 'got to be 21 now', '(no message)', '2006-12-02 22:14:27', '0', '27', 0, 0),
+(153, 14, 5, 'seawarrior', '(untitled)', '(no message)', '2006-12-02 22:18:16', '0', '27', 0, 0),
+(154, 14, 5, 'seawarrior', '(untitled)', '(no message)', '2006-12-02 22:18:47', '0', '27', 0, 0),
+(155, 14, 5, 'seawarrior', '(untitled)', '(no message)', '2006-12-02 22:20:48', '0', '27', 0, 0),
+(156, 14, 5, 'seawarrior', '(untitled)', '(no message)', '2006-12-02 22:21:11', '0', '27', 0, 0),
+(157, 14, 5, 'seawarrior', '(untitled)', '(no message)', '2006-12-02 22:22:27', '0', '27', 0, 0),
+(158, 14, 5, 'seawarrior', '(untitled)', '(no message)', '2006-12-02 22:23:04', '0', '27', 0, 0),
+(159, 14, 5, 'seawarrior', '(untitled)', '(no message)', '2006-12-02 22:23:28', '0', '28', 0, 0),
+(160, 14, 5, 'seawarrior', '(untitled)', '(no message)', '2006-12-02 22:24:25', '0', '28', 0, 0),
+(161, 14, 5, 'seawarrior', '(untitled)', '(no message)', '2006-12-02 22:24:38', '0', '28', 0, 0),
+(162, 14, 5, 'seawarrior', '(untitled)', '(no message)', '2006-12-02 22:25:03', '0', '27', 0, 0),
+(163, 23, 5, 'seawarrior', '(untitled)sd', '(no message)sd', '2006-12-18 22:27:09', '0', '28', 0, 0),
+(164, 23, 5, 'seawarrior', 'hiya', 'fgfg', '2006-12-18 22:31:55', '0', '27', 0, 0),
+(165, 23, 5, 'seawarrior', '18', 'eighteen coming across!', '2006-12-18 22:33:29', '0', '27', 0, 0),
+(166, 23, 5, 'Angel', 'ten', 'fg ddf', '2006-12-18 22:46:19', '0', '27', 0, 0),
+(167, 23, 5, 'Angel', 'seven', 'cvc', '2006-12-18 22:48:39', '0', '27', 0, 0),
+(168, 23, 5, 'Angel', 'test', 'xc', '2006-12-18 22:49:30', '0', '27', 0, 0),
+(169, 23, 5, 'Angel', 'ninteen', 'fd', '2006-12-18 22:50:20', '0', '27', 0, 0),
+(170, 23, 5, 'Angel', 'sdsd', 'sd', '2006-12-18 22:51:09', '0', '27', 0, 0),
+(171, 23, 5, 'Angel', '78', 'ghgh', '2006-12-18 22:53:01', '0', '27', 0, 0),
+(172, 23, 5, 'Angel', 'fdfdf', '(no message)', '2006-12-18 22:57:28', '0', '27', 0, 0),
+(173, 999, 5, 'Angel', 'hi', '(no message)', '2017-12-18 22:58:29', '1', NULL, 0, 0),
+(174, 23, 5, 'Angel', 'jkiol', 'gfg gddf ', '2006-12-18 22:59:53', '0', '27', 0, 0),
+(175, 23, 5, 'seawarrior', 'more', '(no message)', '2006-12-18 23:00:23', '0', '28', 0, 0),
+(176, 999, 5, 'seawarrior', 'testing refresh', 'testing! :) ', '2018-02-12 11:45:00', '1', '0', 0, 0),
+(177, 13, 5, 'seawarrior', 'refresh test 2', 'dsd', '2007-01-08 20:17:46', '1', '0', 0, 0),
+(178, 999, 5, 'seawarrior', 'another test', 'sdsd aa', '2018-02-11 00:00:00', '1', '0', 0, 0),
+(179, 5, 13, 'administrator', 'Re: refresh test 2', '[quote=seawarrior]dsd[/quote]cheers matey', '2007-01-10 22:50:47', '1', '0', 0, 0),
+(180, 5, 13, 'administrator', 'Re: another test', '[quote=seawarrior]sdsd aa[/quote]nice one', '2007-01-10 22:51:18', '0', '0', 0, 0),
+(181, 13, 5, 'seawarrior', 'Re: Re: refresh test 2', 'thanks', '2007-01-10 22:54:13', '0', '0', 0, 0),
+(182, 49, 49, 'dilly21', 'hi dilly', 'hi - how are you?', '2015-07-03 14:04:44', '0', '0', 0, 0),
+(183, 49, 48, 'dilly20', 'dilly21', 'hi 21 - this is 20', '2015-07-03 14:05:11', '1', '0', 0, 0),
+(914, 999, -1, 'Lars the mordant fan', 'Pass the mordant', 'thanks for giving me that mordant, here''s some Card Pack.', '2018-02-14 12:07:15', '1', '[{"type":21,"quantity":2,"quality":100,"durability":100,"currentWear":0,"effectiveness":100,"colour":"0","enchanted":0,"hallmark":0,"inscription":""}]', 0, 0),
+(915, 999, -1, 'Lars the mordant fan', 'Pass the mordant', 'thanks for giving me that mordant, here''s some Wild Madder.', '2018-02-14 12:07:45', '1', '[{"type":2,"quantity":1,"quality":100,"durability":100,"currentWear":0,"effectiveness":100,"colour":"1","enchanted":0,"hallmark":0,"inscription":""}]', 0, 0),
+(916, 999, -1, 'Lars the mordant fan', 'Pass the mordant', 'thanks for giving me that mordant, here''s some Card Pack.', '2018-02-14 12:46:12', '1', '[{"type":21,"quantity":2,"quality":100,"durability":100,"currentWear":0,"effectiveness":100,"colour":"0","enchanted":0,"hallmark":0,"inscription":""}]', 0, 0),
+(917, 999, -1, 'Lars the mordant fan', 'Pass the mordant', 'thanks for giving me that mordant, here''s some Wild Madder.', '2018-02-14 16:25:00', '1', '[{"type":2,"quantity":1,"quality":100,"durability":100,"currentWear":0,"effectiveness":100,"colour":"1","enchanted":0,"hallmark":0,"inscription":""}]', 0, 0),
+(918, 999, -1, 'labourer3', 'collection-quest collection', 'Fantastic, you got them all', '2018-02-14 16:53:40', '1', '\n                \n                \n                [{"type":21,"quantity":2,"quality":100,"durability":100,"currentWear":0,"effectiveness":100,"colour":"0","enchanted":0,"hallmark":0,"inscription":""}, {\n                    "type": "$",\n                    "quantity": 3000\n                }]', 0, 0),
+(919, 999, -1, 'labourer3', 'the barrow mines collection', 'Fantastic, you got them all', '2018-02-15 08:34:09', '1', '[{"type":21,"quantity":2,"quality":100,"durability":100,"currentWear":0,"effectiveness":100,"colour":"0","enchanted":0,"hallmark":0,"inscription":""}, {"type":2,"quantity":1,"quality":100,"durability":100,"currentWear":0,"effectiveness":100,"colour":"1","enchanted":0,"hallmark":0,"inscription":""}]', 0, 0),
+(927, 999, 999, 'Eleaddai', 'just to give you this', '`Curiouser and curiouser!'' cried Alice (she was so much surprised, that for the moment she quite forgot how to speak good English); `now I''m opening out like the largest telescope that ever was! Good-bye, feet!'' (for when she looked down at her feet, they seemed to be almost out of sight, they were getting so far off). `Oh, my poor little feet, I wonder who will put on your shoes and stockings for you now, dears? I''m sure I shan''t be able! I shall be a great deal too far off to trouble myself about you: you must manage the best way you can; --but I must be kind to them,'' thought Alice, `or perhaps they won''t walk the way I want to go! Let me see: I''ll give them a new pair of boots every Christmas.'' ', '2018-02-15 12:40:38', '1', '0', 0, 0);
 
 -- --------------------------------------------------------
 
@@ -1422,7 +1430,7 @@ CREATE TABLE IF NOT EXISTS `tblquests` (
 --
 
 INSERT INTO `tblquests` (`questID`, `journalTitle`, `journalDesc`, `questRegion`, `isRepeatable`, `childOf`, `startItemsReceived`, `itemsNeededForCompletion`, `itemsReceivedOnCompletion`, `whatIsRequiredForCompletion`, `titleGainedAfterCompletion`, `thresholdNeededForCompletion`, `subQuestsRequiredForCompletion`) VALUES
-(1, 'A hero''s journey', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 'Iylan', 0, NULL, '9', '9', '2x21/1x1/1x2/1x3', 'give', 4, '', NULL),
+(1, 'Pass the mordant', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 'Iylan', 0, NULL, '9', '9', '2x21/1x1/1x2/1x3', 'give', 4, '', NULL),
 (2, 'An unexpected journey', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 'Iylan', 0, NULL, '', '', '9,14,$10000', 'world', NULL, '', NULL),
 (3, 'A longer journey', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 'Iylan', 1, NULL, '', '', '', 'hero.stats.numberOfcardsFlipped', NULL, '+2', NULL),
 (4, 'A hero''s peregrination', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 'Iylan', 0, NULL, '5,9', '5x19', '2x21,9', 'possess', 7, '', NULL),
@@ -2293,7 +2301,7 @@ ALTER TABLE `tblguilds`
 -- AUTO_INCREMENT for table `tblinventoryitems`
 --
 ALTER TABLE `tblinventoryitems`
-  MODIFY `itemID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=59;
+  MODIFY `itemID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=60;
 --
 -- AUTO_INCREMENT for table `tblitemcategories`
 --
@@ -2313,7 +2321,7 @@ ALTER TABLE `tbllocations`
 -- AUTO_INCREMENT for table `tblmail`
 --
 ALTER TABLE `tblmail`
-  MODIFY `mailID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=185;
+  MODIFY `mailID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=928;
 --
 -- AUTO_INCREMENT for table `tblmainpoll`
 --

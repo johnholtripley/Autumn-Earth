@@ -315,6 +315,7 @@ var dowsing = {};
 var gathering = {};
 var surveying = {};
 var plotPlacement = {};
+var postObject = {};
 var jumpMapId = null;
 const titleTagPrefix = 'Autumn Earth';
 
@@ -4241,6 +4242,8 @@ var UI = {
                     UI.resetInscriptionPanel();
                 } else if (e.target.parentNode.id == "chestPanel") {
                     UI.closeChest();
+                } else if (e.target.parentNode.id == "postPanel") {
+                    UI.closePost();
                 }
             }
         }
@@ -5111,8 +5114,16 @@ var UI = {
         cursorPositionX = e.pageX;
         cursorPositionY = e.pageY;
     },
-    openPost: function() {
+    openPost: function(postObjectX, postObjectY) {
+        // store the coordinates of the NPC or item that triggered this opening:
+        postObject.x = postObjectX;
+        postObject.y = postObjectY;
+        activeAction = "post";
         postPanel.classList.add('active');
+    },
+    closePost: function() {
+activeAction = "";
+postPanel.classList.remove('active');
     },
 
     readPostMessage: function(whichElement) {
@@ -6511,6 +6522,11 @@ function update() {
                 gatheringPanel.classList.remove("active");
                 gatheringStopped();
             }
+        } else if (activeAction == "post") {
+ if (!(isInRange(hero.x, hero.y, postObject.x, postObject.y, closeDialogueDistance / 2))) {
+                
+                UI.closePost();
+            }
         }
     } else {
         if (jumpMapId == null) {
@@ -6760,7 +6776,8 @@ function checkForActions() {
                         break;
                     case "post":
                         // open the Post panel:
-                        UI.openPost();
+                        UI.openPost(thisMapData.items[i].x,thisMapData.items[i].y);
+                        break;
                     default:
                         // try and pick it up:
                         inventoryCheck = canAddItemToInventory([thisMapData.items[i]]);
@@ -6830,7 +6847,7 @@ function processSpeech(thisObjectSpeaking, thisSpeechPassedIn, thisSpeechCode, i
                 //thisObjectSpeaking.speechIndex--;
                 break;
             case "post":
-                UI.openPost();
+                UI.openPost(thisObjectSpeaking.x,thisObjectSpeaking.y);
                 break;
             case "sound":
                 audio.playSound(soundEffects[thisObjectSpeaking.speech[thisObjectSpeaking.speechIndex][2]], 0);

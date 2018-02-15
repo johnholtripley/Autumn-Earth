@@ -881,6 +881,8 @@ var UI = {
                     UI.resetInscriptionPanel();
                 } else if (e.target.parentNode.id == "chestPanel") {
                     UI.closeChest();
+                } else if (e.target.parentNode.id == "postPanel") {
+                    UI.closePost();
                 }
             }
         }
@@ -1751,8 +1753,16 @@ var UI = {
         cursorPositionX = e.pageX;
         cursorPositionY = e.pageY;
     },
-    openPost: function() {
+    openPost: function(postObjectX, postObjectY) {
+        // store the coordinates of the NPC or item that triggered this opening:
+        postObject.x = postObjectX;
+        postObject.y = postObjectY;
+        activeAction = "post";
         postPanel.classList.add('active');
+    },
+    closePost: function() {
+activeAction = "";
+postPanel.classList.remove('active');
     },
 
     readPostMessage: function(whichElement) {

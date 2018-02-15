@@ -1276,6 +1276,11 @@ function update() {
                 gatheringPanel.classList.remove("active");
                 gatheringStopped();
             }
+        } else if (activeAction == "post") {
+ if (!(isInRange(hero.x, hero.y, postObject.x, postObject.y, closeDialogueDistance / 2))) {
+                
+                UI.closePost();
+            }
         }
     } else {
         if (jumpMapId == null) {
@@ -1525,7 +1530,8 @@ function checkForActions() {
                         break;
                     case "post":
                         // open the Post panel:
-                        UI.openPost();
+                        UI.openPost(thisMapData.items[i].x,thisMapData.items[i].y);
+                        break;
                     default:
                         // try and pick it up:
                         inventoryCheck = canAddItemToInventory([thisMapData.items[i]]);
@@ -1595,7 +1601,7 @@ function processSpeech(thisObjectSpeaking, thisSpeechPassedIn, thisSpeechCode, i
                 //thisObjectSpeaking.speechIndex--;
                 break;
             case "post":
-                UI.openPost();
+                UI.openPost(thisObjectSpeaking.x,thisObjectSpeaking.y);
                 break;
             case "sound":
                 audio.playSound(soundEffects[thisObjectSpeaking.speech[thisObjectSpeaking.speechIndex][2]], 0);

@@ -52,7 +52,7 @@ function relativeGameTime($time) {
 
 
 $allMessagePanels = '';
-$postPanelMarkup = '<div id="postPanel" class="active">';
+$postPanelMarkup = '<div id="postPanel">';
 $postPanelMarkup .= '<div class="draggableBar">Post</div>';
 $postPanelMarkup .= '<button class="closePanel">close</button>';
  $postPanelMarkup .= '<div class="tabHeader">';
@@ -69,8 +69,12 @@ $hasUnReadPost = false;
       $result = mysql_query($query) or die ();
       if(mysql_num_rows($result)>0) {
       	$postPanelMarkup .= '<ol>';
+      	$allSenderNames = array();
       while ($row = mysql_fetch_array($result)) {
       extract($row);
+   if(!(in_array($senderName, $allSenderNames))) {
+      array_push($allSenderNames, $senderName);
+  }
      $hasBeenReadClass = "";
      if(!$mailRead) {
 $hasBeenReadClass = ' class="unread"';
@@ -128,9 +132,14 @@ $postPanelMarkup .= '<div id="sendPostPanel">';
 $postPanelMarkup .= '<fieldset>';
 $postPanelMarkup .= '<input type="text" list="recentContacts" placeholder="To&hellip;">';
 
+
+
 $postPanelMarkup .= '<datalist id="recentContacts">';
-$postPanelMarkup .= '<option value="Chrome">';
-$postPanelMarkup .= '<option value="Firefox">';
+
+for($i=0;$i<count($allSenderNames);$i++) {
+	$postPanelMarkup .= '<option value="'.$allSenderNames[$i].'">';
+}
+
 $postPanelMarkup .= '</datalist>';
 
 
