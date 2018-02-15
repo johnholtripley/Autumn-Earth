@@ -65,7 +65,7 @@ $postPanelMarkup .= '<div id="receivedPostPanel" class="active">';
 $chr = 999;
 $hasUnReadPost = false;
 
-  $query = "SELECT * FROM tblmail where characterID='".$chr."' order by senttime DESC LIMIT 12";
+  $query = "SELECT * FROM tblmail where characterID='".$chr."' and isArchived = false order by senttime DESC LIMIT 12";
       $result = mysql_query($query) or die ();
       if(mysql_num_rows($result)>0) {
       	$postPanelMarkup .= '<ol>';
