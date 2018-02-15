@@ -2106,8 +2106,13 @@ function canAddItemToInventory(itemObj) {
     var moneyToAdd = 0;
     for (var k = 0; k < itemObj.length; k++) {
         // check for any money items:
+    
+
         if ((typeof(itemObj[k]) === 'string') && (itemObj[k].charAt(0) == "$")) {
             moneyToAdd += parseInt(itemObj[k].substring(1));
+           
+        } else if (itemObj[k].type == "$") {
+            moneyToAdd += itemObj[k].quantity;
         } else {
             var quantityAddedSoFar = 0;
             // check if this type exist in the current inventory:
@@ -2178,6 +2183,8 @@ function canAddItemToInventory(itemObj) {
         if (moneyToAdd > 0) {
             hero.currency['money'] += moneyToAdd;
             UI.updateCurrencies();
+              audio.playSound(soundEffects['coins'], 0);
+                
         }
         // return success, and the slots that were affected:
         return [true, slotsUpdated];
@@ -4462,7 +4469,7 @@ var UI = {
             }
         }
         shopSplitStackPanel.classList.remove("active");
-      document.activeElement.blur();
+        document.activeElement.blur();
     },
 
 
@@ -5115,8 +5122,8 @@ var UI = {
             // send this to the database to mark as read there:
             sendDataWithoutNeedingAResponse("/game-world/readPost.php?id=" + whichElement);
             // see if there are any unread messages left, if not, hide the 'new mail icon':
-            if(document.querySelectorAll('#receivedPostPanel .unread').length == 0) {
-newPost.classList.remove('active');
+            if (document.querySelectorAll('#receivedPostPanel .unread').length == 0) {
+                newPost.classList.remove('active');
             }
         }
         var correspondingPostMessage = "postMessage" + whichElement.substr(4);
@@ -5132,9 +5139,8 @@ newPost.classList.remove('active');
                     // remove attachment(s) from message:
                     var attachmentSlots = document.querySelectorAll("#postMessage" + data.id + " .postSlot");
                     for (i = 0; i < attachmentSlots.length; ++i) {
-  attachmentSlots[i].outerHTML = '';
-}
-
+                        attachmentSlots[i].outerHTML = '';
+                    }
                     // remove all from message preview list:
                     document.querySelector("#post" + data.id + " .previewSlot").innerHTML = '';
                     // send notification that it's been added to database:
@@ -5147,12 +5153,8 @@ newPost.classList.remove('active');
             // error - try again:
             UI.takePostAttachments(whichElement);
         });
-
-
-
     },
     postPanelSingleClick: function(e) {
-
         switch (e.target.id) {
             case 'sendPostTab':
                 sendPostTab.classList.add('active');

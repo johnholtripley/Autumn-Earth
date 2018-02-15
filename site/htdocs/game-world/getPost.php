@@ -86,7 +86,12 @@ $attachmentObject = json_decode($attachment);
 
 	// only want the first here:
 $firstElement = reset($attachmentObject);
-$postPanelMarkup .= '<img src="/images/game-world/inventory-items/'.$firstElement->type.'.png"><span class="qty">'.$firstElement->quantity.'</span>';
+if($firstElement->type == "$") {
+$inventoryImage = 'coins';
+} else {
+$inventoryImage = $firstElement->type;
+}
+$postPanelMarkup .= '<img src="/images/game-world/inventory-items/'.$inventoryImage.'.png"><span class="qty">'.$firstElement->quantity.'</span>';
 
 }
 }
@@ -98,7 +103,12 @@ $allMessagePanels .= '<div class="postMessagePanel" id="postMessage'.md5($mailID
 if($attachment) {
 	if(!$attachmentTaken) {
 		foreach ($attachmentObject as &$thisAttachment) {
-$allMessagePanels .= '<div class="postSlot"><img src="/images/game-world/inventory-items/'.$thisAttachment->type.'.png"><span class="qty">'.$thisAttachment->quantity.'</span></div>';
+			if($thisAttachment->type == "$") {
+$inventoryImage = 'coins';
+			} else {
+$inventoryImage = $thisAttachment->type;
+			}
+$allMessagePanels .= '<div class="postSlot"><img src="/images/game-world/inventory-items/'.$inventoryImage.'.png"><span class="qty">'.$thisAttachment->quantity.'</span></div>';
 }
 
 }

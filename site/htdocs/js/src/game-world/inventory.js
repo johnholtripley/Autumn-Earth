@@ -7,8 +7,13 @@ function canAddItemToInventory(itemObj) {
     var moneyToAdd = 0;
     for (var k = 0; k < itemObj.length; k++) {
         // check for any money items:
+    
+
         if ((typeof(itemObj[k]) === 'string') && (itemObj[k].charAt(0) == "$")) {
             moneyToAdd += parseInt(itemObj[k].substring(1));
+           
+        } else if (itemObj[k].type == "$") {
+            moneyToAdd += itemObj[k].quantity;
         } else {
             var quantityAddedSoFar = 0;
             // check if this type exist in the current inventory:
@@ -79,6 +84,8 @@ function canAddItemToInventory(itemObj) {
         if (moneyToAdd > 0) {
             hero.currency['money'] += moneyToAdd;
             UI.updateCurrencies();
+              audio.playSound(soundEffects['coins'], 0);
+                
         }
         // return success, and the slots that were affected:
         return [true, slotsUpdated];
