@@ -56,6 +56,7 @@ const receivedPostTab = document.getElementById('receivedPostTab');
 const receivedPostPanel = document.getElementById('receivedPostPanel');
 const sendPostSubject = document.getElementById('sendPostSubject');
 const sendPostMessage = document.getElementById('sendPostMessage');
+const sendPostCharacter = document.getElementById('sendPostCharacter');
 const newPost = document.getElementById('newPost');
 
 var notificationQueue = [];
@@ -1819,7 +1820,7 @@ postPanel.classList.remove('active');
                 receivedPostPanel.classList.add('active');
                 break;
             case 'sendPost':
-                sendUserPost('{"subject":"' + sendPostSubject.value + '","message":"' + sendPostMessage.value + '","senderID":"' + characterId + '","attachments":0,"recipientID":"999","fromName":"Eleaddai"}');
+                sendUserPost('{"subject":"' + sendPostSubject.value + '","message":"' + sendPostMessage.value + '","senderID":"' + characterId + '","attachments":0,"recipientCharacterName":"'+sendPostCharacter.value+'","fromName":"Eleaddai"}');
                 break;
             case 'cancelPost':
                 // ####

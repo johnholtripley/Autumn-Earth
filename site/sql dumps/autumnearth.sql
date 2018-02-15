@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 15, 2018 at 02:07 PM
+-- Generation Time: Feb 15, 2018 at 03:15 PM
 -- Server version: 5.6.24
 -- PHP Version: 5.6.8
 
@@ -226,8 +226,6 @@ INSERT INTO `tblcharacters` (`charID`, `accountID`, `charName`, `location`, `gam
 (9, 15, 'johnchar1', 1, NULL, NULL, NULL, NULL, NULL, NULL, '', NULL, 0, 200, 0, '2007-03-30', '-1'),
 (10, 18, 'newmemberchar1', 1, NULL, NULL, NULL, NULL, NULL, NULL, '', NULL, 0, 200, 0, '2007-03-30', '-1'),
 (11, 18, 'newmemberchar2', 3, NULL, NULL, NULL, NULL, NULL, NULL, '', NULL, 0, 200, 0, '2007-03-30', '-1'),
-(12, 13, 'Angel', 3, NULL, NULL, NULL, NULL, NULL, NULL, '', NULL, 0, 200, 0, '2007-03-30', '-1'),
-(13, 14, 'Angel', 3, NULL, NULL, NULL, NULL, NULL, NULL, '', NULL, 0, 200, 0, '2007-03-30', '-1'),
 (14, 39, 'eleaddaiMeow', 1, NULL, NULL, NULL, NULL, NULL, NULL, '', NULL, 0, 200, 0, '2015-06-30', '-1'),
 (15, 39, 'dilly20', 4, NULL, NULL, NULL, NULL, NULL, NULL, '1,2,3,1,2,1,1,1,2,1,2,3', NULL, 0, 200, 0, '2015-06-30', '10|38|60'),
 (16, 39, 'dilly21', 1, NULL, NULL, NULL, NULL, NULL, NULL, '', NULL, 0, 200, 0, '2015-06-30', '-1'),
@@ -1974,7 +1972,7 @@ ALTER TABLE `tblcards`
 -- Indexes for table `tblcharacters`
 --
 ALTER TABLE `tblcharacters`
-  ADD PRIMARY KEY (`charID`);
+  ADD PRIMARY KEY (`charID`), ADD UNIQUE KEY `charName` (`charName`);
 
 --
 -- Indexes for table `tblcollectionquests`

@@ -4,17 +4,17 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/signalnoise.php");
 include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
 
 
- function cleanInput($input) {
-      // https://stackoverflow.com/questions/7128856/strip-out-html-and-special-characters
-$output = strip_tags($input);
-// Clean up things like &amp;
-$output = html_entity_decode($output);
-$output = mysql_escape_string($output);
-return $output;
- }	
+function cleanInput($input) {
+    // https://stackoverflow.com/questions/7128856/strip-out-html-and-special-characters
+    $output = strip_tags($input);
+    // Clean up things like &amp;
+    $output = html_entity_decode($output);
+    $output = mysql_escape_string($output);
+    return $output;
+}	
 
 
-
+$returnedResult = false;
 
 
 
@@ -39,26 +39,42 @@ $postFromName = 'Tester person';
         */
 
 
-if($_POST['postData']) {
+//if($_POST['postData']) {
+$recipientCharacterID = null;
+$recipientCharacterName = null;
 $postedData = json_decode($_POST['postData'],true);
 $postSubject = $postedData['subject'];
 $postMessage = $postedData['message'];
 $senderCharacterID = $postedData['senderID'];
+if(isset($postedData['recipientCharacterName'])) {
+    $recipientCharacterName = $postedData['recipientCharacterName'];
+}
 $postFromName = $postedData['fromName'];
 $attachment = $postedData['attachments'];
-$recipientCharacterID = $postedData['recipientID'];
+if(isset($postedData['recipientID'])) {
+    $recipientCharacterID = $postedData['recipientID'];
+}
+//}
+        
+if($recipientCharacterID == null) {
+    // look up to find the id:
+    $characterIdQuery = "SELECT charID, charName from tblcharacters WHERE charName = '".$recipientCharacterName."'";
+    $characterIdResult = mysql_query($characterIdQuery);
+    if(mysql_num_rows($characterIdResult)>0) {
+        $row = mysql_fetch_array($characterIdResult));
+        extract($row);
+        $recipientCharacterID = $charID;
+    }
 }
 
-        
-
-
-$query = "INSERT INTO tblmail (senderID, senderName, characterID, title, mailContents, sentTime,mailRead,attachment,attachmentTaken)
-	VALUES ('".$senderCharacterID."','".$postFromName."','".$recipientCharacterID."','".cleanInput($postSubject)."','".cleanInput($postMessage)."',NOW(),'0','".json_encode($attachment)."','0')";
-
-	 $result = mysql_query($query);
-$returnedResult = "false";
-if($result) {
-	$returnedResult = "true";
+if($recipientCharacterID) {
+    $query = "INSERT INTO tblmail (senderID, senderName, characterID, title, mailContents, sentTime,mailRead,attachment,attachmentTaken)
+    VALUES ('".$senderCharacterID."','".$postFromName."','".$recipientCharacterID."','".cleanInput($postSubject)."','".cleanInput($postMessage)."',NOW(),'0','".json_encode($attachment)."','0')";
+    $result = mysql_query($query);
+    $returnedResult = "false";
+    if($result) {
+        $returnedResult = "true";
+    }
 }
 
 header('Content-Type: application/json');

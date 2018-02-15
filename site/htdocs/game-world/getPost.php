@@ -130,7 +130,7 @@ $postPanelMarkup .= '</div>';
 $postPanelMarkup .= '<div id="sendPostPanel">';
 
 $postPanelMarkup .= '<fieldset>';
-$postPanelMarkup .= '<input type="text" list="recentContacts" placeholder="To&hellip;">';
+$postPanelMarkup .= '<input type="text" list="recentContacts" id="sendPostCharacter" placeholder="To&hellip;">';
 
 
 
