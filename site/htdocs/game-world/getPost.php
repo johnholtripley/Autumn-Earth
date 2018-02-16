@@ -102,7 +102,8 @@ $postPanelMarkup .= '<img src="/images/game-world/inventory-items/'.$inventoryIm
 $postPanelMarkup .= '</div><p>'.$senderName.' - '.$title.' - '.$timeAgo.'</p>';
 
 $postPanelMarkup .= '</li>';
-$allMessagePanels .= '<div class="postMessagePanel" id="postMessage'.md5($mailID).'"><div class="draggableBar">'.$senderName.' - '.$title.'</div><button class="closePanel">close</button><div class="postParchment"><p>'.$mailContents.'</p>';
+// convert the escaped new line characters:
+$allMessagePanels .= '<div class="postMessagePanel" id="postMessage'.md5($mailID).'"><div class="draggableBar">'.$senderName.' - '.$title.'</div><button class="closePanel">close</button><div class="postParchment"><p>'.nl2br(str_replace("\\n","\n",$mailContents)).'</p>';
 
 if($attachment) {
 	if(!$attachmentTaken) {

@@ -5197,7 +5197,8 @@ var UI = {
                 receivedPostPanel.classList.add('active');
                 break;
             case 'sendPost':
-                sendUserPost('{"subject":"' + sendPostSubject.value + '","message":"' + sendPostMessage.value + '","senderID":"' + characterId + '","attachments":0,"recipientCharacterName":"' + sendPostCharacter.value + '","fromName":"Eleaddai"}');
+            // escape new lines in the textarea:
+                sendUserPost('{"subject":"' + sendPostSubject.value + '","message":"' + sendPostMessage.value.replace(/\n/g, "\\\\n") + '","senderID":"' + characterId + '","attachments":0,"recipientCharacterName":"' + sendPostCharacter.value + '","fromName":"Eleaddai"}');
                 break;
             case 'cancelPost':
                 // ####
