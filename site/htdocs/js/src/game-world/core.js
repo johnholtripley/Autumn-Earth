@@ -1276,10 +1276,17 @@ function update() {
                 gatheringPanel.classList.remove("active");
                 gatheringStopped();
             }
-        } else if (activeAction == "post") {
- if (!(isInRange(hero.x, hero.y, postObject.x, postObject.y, closeDialogueDistance / 2))) {
-                
+        } 
+         if (postObject.active) {
+            if (!(isInRange(hero.x, hero.y, postObject.x, postObject.y, closeDialogueDistance / 2))) {
+
                 UI.closePost();
+            }
+        }
+                 if (retinueObject.active) {
+            if (!(isInRange(hero.x, hero.y, retinueObject.x, retinueObject.y, closeDialogueDistance / 2))) {
+
+                UI.closeRetinuePanel();
             }
         }
     } else {
@@ -1340,7 +1347,7 @@ function update() {
     if (activeAction == "survey") {
         processSurveying();
     }
-        if (activeAction == "retinue") {
+    if (retinueObject.active) {
         UI.updateRetinueTimers();
     }
 }
@@ -1533,7 +1540,11 @@ function checkForActions() {
                         break;
                     case "post":
                         // open the Post panel:
-                        UI.openPost(thisMapData.items[i].x,thisMapData.items[i].y);
+                        UI.openPost(thisMapData.items[i].x, thisMapData.items[i].y);
+                        break;
+                    case "retinue":
+                        // open the Retinue panel:
+                        UI.openRetinuePanel(thisMapData.items[i].x, thisMapData.items[i].y);
                         break;
                     default:
                         // try and pick it up:
@@ -1604,7 +1615,10 @@ function processSpeech(thisObjectSpeaking, thisSpeechPassedIn, thisSpeechCode, i
                 //thisObjectSpeaking.speechIndex--;
                 break;
             case "post":
-                UI.openPost(thisObjectSpeaking.x,thisObjectSpeaking.y);
+                UI.openPost(thisObjectSpeaking.x, thisObjectSpeaking.y);
+                break;
+            case "retinue":
+                UI.openRetinuePanel(thisObjectSpeaking.x, thisObjectSpeaking.y);
                 break;
             case "sound":
                 audio.playSound(soundEffects[thisObjectSpeaking.speech[thisObjectSpeaking.speechIndex][2]], 0);
@@ -2503,7 +2517,7 @@ function draw() {
         var heroOffsetCol = currentAnimationFrame % hero["animation"]["walk"]["length"];
         var heroOffsetRow = hero["animation"]["walk"][hero.facing];
         var assetsToDraw = [
-            [findIsoDepth(hero.x, hero.y, hero.z), "sprite", heroImg, heroOffsetCol * hero.spriteWidth, heroOffsetRow * hero.spriteHeight, hero.spriteWidth, hero.spriteHeight, Math.floor(canvasWidth / 2 - hero.feetOffsetX), Math.floor(canvasHeight / 2 - hero.feetOffsetY - hero.z), hero.spriteWidth, hero.spriteHeight]
+            [findIsoDepth(hero.x, hero.y, hero.z), "sprite", heroImg, heroOffsetCol * hero.spriteWidth, heroOffsetRow * hero.spriteHeight, hero.spriteWidth, hero.spriteHeight, Math.floor(canvasWidth / 2 - hero.centreX), Math.floor(canvasHeight / 2 - hero.centreY - hero.z), hero.spriteWidth, hero.spriteHeight]
         ];
         if (interfaceIsVisible) {
             switch (activeAction) {

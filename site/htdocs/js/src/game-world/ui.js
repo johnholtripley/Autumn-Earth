@@ -58,12 +58,13 @@ const sendPostSubject = document.getElementById('sendPostSubject');
 const sendPostMessage = document.getElementById('sendPostMessage');
 const sendPostCharacter = document.getElementById('sendPostCharacter');
 const newPost = document.getElementById('newPost');
+const retinuePanel = document.getElementById('retinuePanel');
 
 var notificationQueue = [];
 var notificationIsShowing = false;
 
-        var retinueQuestTimeRemaining = [];
-        var allRetinueQuestTimers = document.getElementsByClassName('retinueQuestTimer');
+var retinueQuestTimeRemaining = [];
+var allRetinueQuestTimers = document.getElementsByClassName('retinueQuestTimer');
 
 var UI = {
     init: function() {
@@ -83,7 +84,7 @@ var UI = {
 
 
 
-        
+
 
     },
 
@@ -891,6 +892,8 @@ var UI = {
                     UI.closeChest();
                 } else if (e.target.parentNode.id == "postPanel") {
                     UI.closePost();
+                } else if (e.target.parentNode.id == "retinuePanel") {
+                    UI.closeRetinuePanel();
                 }
             }
         }
@@ -1765,11 +1768,11 @@ var UI = {
         // store the coordinates of the NPC or item that triggered this opening:
         postObject.x = postObjectX;
         postObject.y = postObjectY;
-        activeAction = "post";
+        postObject.active = true;
         postPanel.classList.add('active');
     },
     closePost: function() {
-        activeAction = "";
+        postObject.active = false;
         postPanel.classList.remove('active');
     },
 
@@ -1871,5 +1874,15 @@ var UI = {
                 allRetinueQuestTimers[i].innerHTML = "complete";
             }
         }
+    },
+    openRetinuePanel: function(retinueObjectX, retinueObjectY) {
+        retinuePanel.classList.add("active");
+        retinueObject.active = true;
+        retinueObject.x = retinueObjectX;
+        retinueObject.y = retinueObjectY;
+    },
+    closeRetinuePanel: function() {
+        retinuePanel.classList.remove("active");
+        retinueObject.active = false;
     }
 }

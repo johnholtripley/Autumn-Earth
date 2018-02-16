@@ -13,12 +13,17 @@ var outsideWeather = "";
 var weatherLastChangedTime = 0;
 const minTimeBetweenWeatherChanges = 5000;
 var interfaceIsVisible = true;
-var activeAction = "retinue";
+var activeAction = "";
 var dowsing = {};
 var gathering = {};
 var surveying = {};
 var plotPlacement = {};
-var postObject = {};
+var postObject = {
+    "active": false
+};
+var retinueObject = {
+    "active": true
+};
 var jumpMapId = null;
 const titleTagPrefix = 'Autumn Earth';
 
@@ -114,8 +119,8 @@ var hero = {
 
     width: 20,
     length: 20,
-    feetOffsetX: 40,
-    feetOffsetY: 69,
+    centreX: 40,
+    centreY: 69,
     speed: 4,
     //   animationFrameIndex: 0,
     //   timeSinceLastFrameSwap: 0,

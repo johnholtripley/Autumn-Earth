@@ -10,7 +10,7 @@ $chr = 999;
 
 
 
-$retinuePanelOutput = '<div id="retinuePanel" class="active">';
+$retinuePanelOutput = '<div id="retinuePanel">';
 $retinuePanelOutput .= '<div class="draggableBar">Retinue</div>';
 $retinuePanelOutput .= '<button class="closePanel">close</button>';
 

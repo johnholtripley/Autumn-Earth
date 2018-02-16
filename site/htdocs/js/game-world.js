@@ -310,12 +310,17 @@ var outsideWeather = "";
 var weatherLastChangedTime = 0;
 const minTimeBetweenWeatherChanges = 5000;
 var interfaceIsVisible = true;
-var activeAction = "retinue";
+var activeAction = "";
 var dowsing = {};
 var gathering = {};
 var surveying = {};
 var plotPlacement = {};
-var postObject = {};
+var postObject = {
+    "active": false
+};
+var retinueObject = {
+    "active": true
+};
 var jumpMapId = null;
 const titleTagPrefix = 'Autumn Earth';
 
@@ -411,8 +416,8 @@ var hero = {
 
     width: 20,
     length: 20,
-    feetOffsetX: 40,
-    feetOffsetY: 69,
+    centreX: 40,
+    centreY: 69,
     speed: 4,
     //   animationFrameIndex: 0,
     //   timeSinceLastFrameSwap: 0,
@@ -3420,12 +3425,13 @@ const sendPostSubject = document.getElementById('sendPostSubject');
 const sendPostMessage = document.getElementById('sendPostMessage');
 const sendPostCharacter = document.getElementById('sendPostCharacter');
 const newPost = document.getElementById('newPost');
+const retinuePanel = document.getElementById('retinuePanel');
 
 var notificationQueue = [];
 var notificationIsShowing = false;
 
-        var retinueQuestTimeRemaining = [];
-        var allRetinueQuestTimers = document.getElementsByClassName('retinueQuestTimer');
+var retinueQuestTimeRemaining = [];
+var allRetinueQuestTimers = document.getElementsByClassName('retinueQuestTimer');
 
 var UI = {
     init: function() {
@@ -3445,7 +3451,7 @@ var UI = {
 
 
 
-        
+
 
     },
 
@@ -4253,6 +4259,8 @@ var UI = {
                     UI.closeChest();
                 } else if (e.target.parentNode.id == "postPanel") {
                     UI.closePost();
+                } else if (e.target.parentNode.id == "retinuePanel") {
+                    UI.closeRetinuePanel();
                 }
             }
         }
@@ -5127,11 +5135,11 @@ var UI = {
         // store the coordinates of the NPC or item that triggered this opening:
         postObject.x = postObjectX;
         postObject.y = postObjectY;
-        activeAction = "post";
+        postObject.active = true;
         postPanel.classList.add('active');
     },
     closePost: function() {
-        activeAction = "";
+        postObject.active = false;
         postPanel.classList.remove('active');
     },
 
@@ -5233,6 +5241,16 @@ var UI = {
                 allRetinueQuestTimers[i].innerHTML = "complete";
             }
         }
+    },
+    openRetinuePanel: function(retinueObjectX, retinueObjectY) {
+        retinuePanel.classList.add("active");
+        retinueObject.active = true;
+        retinueObject.x = retinueObjectX;
+        retinueObject.y = retinueObjectY;
+    },
+    closeRetinuePanel: function() {
+        retinuePanel.classList.remove("active");
+        retinueObject.active = false;
     }
 }
 function setupWeather() {
@@ -6569,10 +6587,17 @@ function update() {
                 gatheringPanel.classList.remove("active");
                 gatheringStopped();
             }
-        } else if (activeAction == "post") {
- if (!(isInRange(hero.x, hero.y, postObject.x, postObject.y, closeDialogueDistance / 2))) {
-                
+        } 
+         if (postObject.active) {
+            if (!(isInRange(hero.x, hero.y, postObject.x, postObject.y, closeDialogueDistance / 2))) {
+
                 UI.closePost();
+            }
+        }
+                 if (retinueObject.active) {
+            if (!(isInRange(hero.x, hero.y, retinueObject.x, retinueObject.y, closeDialogueDistance / 2))) {
+
+                UI.closeRetinuePanel();
             }
         }
     } else {
@@ -6633,7 +6658,7 @@ function update() {
     if (activeAction == "survey") {
         processSurveying();
     }
-        if (activeAction == "retinue") {
+    if (retinueObject.active) {
         UI.updateRetinueTimers();
     }
 }
@@ -6826,7 +6851,11 @@ function checkForActions() {
                         break;
                     case "post":
                         // open the Post panel:
-                        UI.openPost(thisMapData.items[i].x,thisMapData.items[i].y);
+                        UI.openPost(thisMapData.items[i].x, thisMapData.items[i].y);
+                        break;
+                    case "retinue":
+                        // open the Retinue panel:
+                        UI.openRetinuePanel(thisMapData.items[i].x, thisMapData.items[i].y);
                         break;
                     default:
                         // try and pick it up:
@@ -6897,7 +6926,10 @@ function processSpeech(thisObjectSpeaking, thisSpeechPassedIn, thisSpeechCode, i
                 //thisObjectSpeaking.speechIndex--;
                 break;
             case "post":
-                UI.openPost(thisObjectSpeaking.x,thisObjectSpeaking.y);
+                UI.openPost(thisObjectSpeaking.x, thisObjectSpeaking.y);
+                break;
+            case "retinue":
+                UI.openRetinuePanel(thisObjectSpeaking.x, thisObjectSpeaking.y);
                 break;
             case "sound":
                 audio.playSound(soundEffects[thisObjectSpeaking.speech[thisObjectSpeaking.speechIndex][2]], 0);
@@ -7796,7 +7828,7 @@ function draw() {
         var heroOffsetCol = currentAnimationFrame % hero["animation"]["walk"]["length"];
         var heroOffsetRow = hero["animation"]["walk"][hero.facing];
         var assetsToDraw = [
-            [findIsoDepth(hero.x, hero.y, hero.z), "sprite", heroImg, heroOffsetCol * hero.spriteWidth, heroOffsetRow * hero.spriteHeight, hero.spriteWidth, hero.spriteHeight, Math.floor(canvasWidth / 2 - hero.feetOffsetX), Math.floor(canvasHeight / 2 - hero.feetOffsetY - hero.z), hero.spriteWidth, hero.spriteHeight]
+            [findIsoDepth(hero.x, hero.y, hero.z), "sprite", heroImg, heroOffsetCol * hero.spriteWidth, heroOffsetRow * hero.spriteHeight, hero.spriteWidth, hero.spriteHeight, Math.floor(canvasWidth / 2 - hero.centreX), Math.floor(canvasHeight / 2 - hero.centreY - hero.z), hero.spriteWidth, hero.spriteHeight]
         ];
         if (interfaceIsVisible) {
             switch (activeAction) {
