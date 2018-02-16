@@ -46,7 +46,7 @@ $retinuePanelOutput .= '<div class="postSlot"><img src="/images/game-world/inven
 
 } else {
 //$retinuePanelOutput .= '<p>active on "'.$questName.'"" - '.$completedSoFar.' minutes out of '.$questTimeRequired;
-$retinuePanelOutput .= '<p>active on "'.$questName.'" <span class="retinueQuestTimer" data-minutes="'.($questTimeRequired - $completedSoFar).'">'.($questTimeRequired - $completedSoFar).'</span></p>';
+$retinuePanelOutput .= '<p>active on "'.$questName.'" <span class="retinueQuestTimer" data-minutes="'.($questTimeRequired - $completedSoFar).'"></span></p>';
 }
       }
       $retinuePanelOutput .= '</li>';
