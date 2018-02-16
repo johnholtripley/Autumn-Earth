@@ -1340,6 +1340,9 @@ function update() {
     if (activeAction == "survey") {
         processSurveying();
     }
+        if (activeAction == "retinue") {
+        UI.updateRetinueTimers();
+    }
 }
 
 

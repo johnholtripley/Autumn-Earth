@@ -155,14 +155,3 @@ $postPanelMarkup .= '</div>';
 $postPanelMarkup .= '</div>';
 
 ?>
-
-
-
-
-
-
-
-
-
-
-

@@ -648,3 +648,42 @@ display: none;
     display:block;
 }
 }
+
+
+
+
+
+
+
+
+
+
+#retinuePanel {
+    width: 322px;
+    left: 70%;
+    top: 335px;
+    background: #000;
+    font-size: 13px;
+    @include togglePanel(0.4s);
+    color: #fff;
+    ol {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+    li {
+        display: block;
+        border-bottom: 1px solid #111;
+        @include clearfix;
+        &:last-child {
+            border-bottom: 0;
+        }
+ 
+ 
+    }
+    p {
+        padding: 5px 6px;
+        margin: 0;
+    }
+
+}

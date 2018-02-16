@@ -310,7 +310,7 @@ var outsideWeather = "";
 var weatherLastChangedTime = 0;
 const minTimeBetweenWeatherChanges = 5000;
 var interfaceIsVisible = true;
-var activeAction = "";
+var activeAction = "retinue";
 var dowsing = {};
 var gathering = {};
 var surveying = {};
@@ -3359,6 +3359,7 @@ function awardQuestRewards(whichNPC, questRewards, isACollectionQuest) {
         UI.showNotification("<p>Reward send by post to you</p>");
     }
 }
+
 // global vars:
 const recipeSearch = document.getElementById('recipeSearch');
 const clearRecipeSearch = document.getElementById('clearRecipeSearch');
@@ -3423,6 +3424,9 @@ const newPost = document.getElementById('newPost');
 var notificationQueue = [];
 var notificationIsShowing = false;
 
+        var retinueQuestTimeRemaining = [];
+        var allRetinueQuestTimers = document.getElementsByClassName('retinueQuestTimer');
+
 var UI = {
     init: function() {
         // cache all local references to UI elements:
@@ -3438,7 +3442,10 @@ var UI = {
         const recipeTitleBar = document.getElementById('recipeTitleBar');
         const currencies = document.getElementById('currencies');
 
-        //
+
+
+
+        
 
     },
 
@@ -3538,6 +3545,7 @@ var UI = {
         UI.getGameSettings();
         UI.buildCollectionPanel();
         UI.buildActionBar();
+        UI.initRetinueTimers();
 
         if (hero.professionsKnown.length > 0) {
             // load and cache the first profession's recipe assets:
@@ -5123,8 +5131,8 @@ var UI = {
         postPanel.classList.add('active');
     },
     closePost: function() {
-activeAction = "";
-postPanel.classList.remove('active');
+        activeAction = "";
+        postPanel.classList.remove('active');
     },
 
     readPostMessage: function(whichElement) {
@@ -5181,11 +5189,49 @@ postPanel.classList.remove('active');
                 receivedPostPanel.classList.add('active');
                 break;
             case 'sendPost':
-                sendUserPost('{"subject":"' + sendPostSubject.value + '","message":"' + sendPostMessage.value + '","senderID":"' + characterId + '","attachments":0,"recipientCharacterName":"'+sendPostCharacter.value+'","fromName":"Eleaddai"}');
+                sendUserPost('{"subject":"' + sendPostSubject.value + '","message":"' + sendPostMessage.value + '","senderID":"' + characterId + '","attachments":0,"recipientCharacterName":"' + sendPostCharacter.value + '","fromName":"Eleaddai"}');
                 break;
             case 'cancelPost':
                 // ####
                 break;
+        }
+    },
+    initRetinueTimers: function() {
+        for (var i = 0; i < allRetinueQuestTimers.length; i++) {
+            retinueQuestTimeRemaining.push(new Date().getTime() + (allRetinueQuestTimers[i].dataset.minutes) * 60 * 1000);
+        }
+    },
+
+    updateRetinueTimers: function() {
+        var remainingTime, seconds, minutes, hours, days;
+        var currentTime = new Date().getTime();
+        for (var i = 0; i < allRetinueQuestTimers.length; i++) {
+            remainingTime = retinueQuestTimeRemaining[i] - currentTime;
+
+            var seconds = Math.floor((remainingTime / 1000) % 60);
+            var minutes = Math.floor((remainingTime / (60 * 1000)) % 60);
+            var hours = Math.floor((remainingTime / (60 * 60 * 1000)) % 24);
+            var days = Math.floor(remainingTime / (24 * 60 * 60 * 1000));
+
+            if (days > 1) {
+                allRetinueQuestTimers[i].innerHTML = days + " days remaining";
+            } else if (days == 1) {
+                allRetinueQuestTimers[i].innerHTML = "1 day remaining";
+            } else if (hours > 1) {
+                allRetinueQuestTimers[i].innerHTML = hours + " hours remaining";
+            } else if (hours == 1) {
+                allRetinueQuestTimers[i].innerHTML = "1 hour remaining";
+            } else if (minutes > 1) {
+                allRetinueQuestTimers[i].innerHTML = minutes + " minutes remaining";
+            } else if (minutes == 1) {
+                allRetinueQuestTimers[i].innerHTML = "1 minute remaining";
+            } else if (seconds > 1) {
+                allRetinueQuestTimers[i].innerHTML = seconds + " seconds remaining";
+            } else if (seconds == 1) {
+                allRetinueQuestTimers[i].innerHTML = "1 second remaining";
+            } else {
+                allRetinueQuestTimers[i].innerHTML = "complete";
+            }
         }
     }
 }
@@ -6586,6 +6632,9 @@ function update() {
     }
     if (activeAction == "survey") {
         processSurveying();
+    }
+        if (activeAction == "retinue") {
+        UI.updateRetinueTimers();
     }
 }
 

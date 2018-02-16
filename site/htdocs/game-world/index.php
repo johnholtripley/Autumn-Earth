@@ -28,6 +28,7 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
   <link href="https://fonts.googleapis.com/css?family=Lato%7CBree+Serif%7CIM+Fell+English" rel="stylesheet">
   <?php include($_SERVER['DOCUMENT_ROOT']."/includes/meta-content.php"); ?>
   <?php include($_SERVER['DOCUMENT_ROOT']."/game-world/getPost.php"); ?>
+  <?php include($_SERVER['DOCUMENT_ROOT']."/game-world/getFollowers.php"); ?>
   <style>
     .card.players {
     /* this hero's card back: */
@@ -187,6 +188,9 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
     <?php // defined in getPost.php: ?>
     <?php echo $postPanelMarkup; ?>
     <?php echo $allMessagePanels; ?>
+
+    <?php // defined in getFollowers.php ?>
+    <?php echo $retinuePanelOutput; ?>
 
     <div id="chestPanel">
       <div class="draggableBar"><span id="chestTitle">Chest</span></div>
