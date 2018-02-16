@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 15, 2018 at 03:15 PM
+-- Generation Time: Feb 16, 2018 at 02:11 PM
 -- Server version: 5.6.24
 -- PHP Version: 5.6.8
 
@@ -208,7 +208,7 @@ CREATE TABLE IF NOT EXISTS `tblcharacters` (
   `guildID` int(11) DEFAULT '0',
   `guildmembersince` date DEFAULT NULL,
   `404MagicSquareSum` varchar(255) NOT NULL DEFAULT '-1'
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=1000 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblcharacters`
@@ -216,7 +216,6 @@ CREATE TABLE IF NOT EXISTS `tblcharacters` (
 
 INSERT INTO `tblcharacters` (`charID`, `accountID`, `charName`, `location`, `gamestate`, `journalstate`, `queststate`, `petstate`, `currentbag`, `inventorystate`, `currentCards`, `money`, `house`, `minutesplayed`, `guildID`, `guildmembersince`, `404MagicSquareSum`) VALUES
 (1, 5, 'Angel', 1, '&amp;playsounds=true&amp;herox=23&amp;heroy=9&amp;dowseskill=0&amp;famskill=70&amp;currentmapnumber=1&amp;heightgained=0', 'travel to the coast', '0/0/0/0/0/0', '2,0,100,24,7,-1,0,0,0,0,pet,15,12,13', '16', '32,4/2,8/9,1/1,2/10,3/33,1', '', '299', 0, 1125, 0, '2007-03-30', '9|17|56'),
-(2, 5, 'Eleaddai', 1, NULL, NULL, NULL, NULL, NULL, NULL, '', NULL, 0, 200, 0, '2007-03-30', '-1'),
 (3, 5, 'Alice', 2, NULL, NULL, NULL, NULL, NULL, NULL, '', NULL, 0, 200, 0, '2007-03-30', '-1'),
 (4, 23, 'Eric', 3, NULL, NULL, NULL, NULL, NULL, NULL, '', '501', 0, 200, 0, '2007-03-30', '-1'),
 (5, 13, 'Adminchar1', 1, NULL, NULL, NULL, NULL, NULL, NULL, '', '0', 0, 200, 0, '2007-03-30', '-1'),
@@ -229,7 +228,8 @@ INSERT INTO `tblcharacters` (`charID`, `accountID`, `charName`, `location`, `gam
 (14, 39, 'eleaddaiMeow', 1, NULL, NULL, NULL, NULL, NULL, NULL, '', NULL, 0, 200, 0, '2015-06-30', '-1'),
 (15, 39, 'dilly20', 4, NULL, NULL, NULL, NULL, NULL, NULL, '1,2,3,1,2,1,1,1,2,1,2,3', NULL, 0, 200, 0, '2015-06-30', '10|38|60'),
 (16, 39, 'dilly21', 1, NULL, NULL, NULL, NULL, NULL, NULL, '', NULL, 0, 200, 0, '2015-06-30', '-1'),
-(17, 50, 'dilly22', 1, NULL, NULL, NULL, NULL, NULL, NULL, '', NULL, 0, 200, 0, '2015-06-30', '-1');
+(17, 50, 'dilly22', 1, NULL, NULL, NULL, NULL, NULL, NULL, '', NULL, 0, 200, 0, '2015-06-30', '-1'),
+(999, 5, 'Eleaddai', 1, NULL, NULL, NULL, NULL, NULL, NULL, '', NULL, 0, 200, 0, '2007-03-30', '-1');
 
 -- --------------------------------------------------------
 
@@ -630,7 +630,7 @@ CREATE TABLE IF NOT EXISTS `tblinventoryitems` (
   `lockedToThisPlayer` tinyint(1) NOT NULL DEFAULT '0',
   `respawnRate` int(11) DEFAULT NULL,
   `activeDuringSeason` int(11) DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=60 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=61 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblinventoryitems`
@@ -694,7 +694,8 @@ INSERT INTO `tblinventoryitems` (`itemID`, `shortname`, `description`, `priceCod
 (56, 'Simple Chair', '', '4', '32.0', '40.0', 38, 38, 44, 49, 'simple-chair', 'sit', '0', 1, 0, '0', '0', NULL, NULL, 1, 0, 0, 1, 0, NULL, NULL),
 (57, 'House Deed', '6 by 6 plot', '8000', '32.0', '40.0', 38, 38, NULL, NULL, 'house-deed', 'deed', '6x6', 0, 0, '0', '0', '6', NULL, 0, 0, 0, 1, 0, NULL, NULL),
 (58, 'House Deed', '8 by 6 plot', '12000', '32.0', '40.0', 38, 38, NULL, NULL, 'house-deed', 'deed', '8x6', 0, 0, '0', '0', '6', NULL, 0, 0, 0, 1, 0, NULL, NULL),
-(59, 'Post Box', 'For posting', '2', '45.0', '63.0', 38, 38, NULL, NULL, 'post-box', 'post', '0', 0, 0, '0', '0', NULL, NULL, 0, 0, 0, 0, 0, NULL, NULL);
+(59, 'Post Box', 'For posting', '2', '45.0', '63.0', 38, 38, NULL, NULL, 'post-box', 'post', '0', 0, 0, '0', '0', NULL, NULL, 0, 0, 0, 0, 0, NULL, NULL),
+(60, 'Tellurite', 'A metal with special properties.', '1', '20.0', '24.0', 0, 0, NULL, NULL, 'tellurite', '', '0', 0, 0, '0', '0', '4', NULL, 0, 0, 0, 1, 0, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -781,7 +782,7 @@ CREATE TABLE IF NOT EXISTS `tblmail` (
   `attachment` varchar(20000) DEFAULT NULL,
   `attachmentTaken` tinyint(1) NOT NULL DEFAULT '0',
   `isArchived` tinyint(1) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB AUTO_INCREMENT=928 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=931 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblmail`
@@ -896,7 +897,10 @@ INSERT INTO `tblmail` (`mailID`, `characterID`, `senderID`, `senderName`, `title
 (917, 999, -1, 'Lars the mordant fan', 'Pass the mordant', 'thanks for giving me that mordant, here''s some Wild Madder.', '2018-02-14 16:25:00', '1', '[{"type":2,"quantity":1,"quality":100,"durability":100,"currentWear":0,"effectiveness":100,"colour":"1","enchanted":0,"hallmark":0,"inscription":""}]', 0, 0),
 (918, 999, -1, 'labourer3', 'collection-quest collection', 'Fantastic, you got them all', '2018-02-14 16:53:40', '1', '\n                \n                \n                [{"type":21,"quantity":2,"quality":100,"durability":100,"currentWear":0,"effectiveness":100,"colour":"0","enchanted":0,"hallmark":0,"inscription":""}, {\n                    "type": "$",\n                    "quantity": 3000\n                }]', 0, 0),
 (919, 999, -1, 'labourer3', 'the barrow mines collection', 'Fantastic, you got them all', '2018-02-15 08:34:09', '1', '[{"type":21,"quantity":2,"quality":100,"durability":100,"currentWear":0,"effectiveness":100,"colour":"0","enchanted":0,"hallmark":0,"inscription":""}, {"type":2,"quantity":1,"quality":100,"durability":100,"currentWear":0,"effectiveness":100,"colour":"1","enchanted":0,"hallmark":0,"inscription":""}]', 0, 0),
-(927, 999, 999, 'Eleaddai', 'just to give you this', '`Curiouser and curiouser!'' cried Alice (she was so much surprised, that for the moment she quite forgot how to speak good English); `now I''m opening out like the largest telescope that ever was! Good-bye, feet!'' (for when she looked down at her feet, they seemed to be almost out of sight, they were getting so far off). `Oh, my poor little feet, I wonder who will put on your shoes and stockings for you now, dears? I''m sure I shan''t be able! I shall be a great deal too far off to trouble myself about you: you must manage the best way you can; --but I must be kind to them,'' thought Alice, `or perhaps they won''t walk the way I want to go! Let me see: I''ll give them a new pair of boots every Christmas.'' ', '2018-02-15 12:40:38', '1', '0', 0, 0);
+(927, 999, 999, 'Eleaddai', 'just to give you this', '`Curiouser and curiouser!'' cried Alice (she was so much surprised, that for the moment she quite forgot how to speak good English); `now I''m opening out like the largest telescope that ever was! Good-bye, feet!'' (for when she looked down at her feet, they seemed to be almost out of sight, they were getting so far off). `Oh, my poor little feet, I wonder who will put on your shoes and stockings for you now, dears? I''m sure I shan''t be able! I shall be a great deal too far off to trouble myself about you: you must manage the best way you can; --but I must be kind to them,'' thought Alice, `or perhaps they won''t walk the way I want to go! Let me see: I''ll give them a new pair of boots every Christmas.'' ', '2018-02-15 12:40:38', '1', '0', 0, 0),
+(928, 1, 999, 'Eleaddai', 'hi', 'dsf sdfsd', '2018-02-15 14:36:36', '0', '0', 0, 0),
+(929, 2, 999, 'Eleaddai', 'eer', ' sfsf', '2018-02-15 14:37:25', '0', '0', 0, 0),
+(930, 999, 999, 'Eleaddai', 'hi from me', 'hi', '2018-02-15 14:38:24', '0', '0', 0, 0);
 
 -- --------------------------------------------------------
 
@@ -1542,6 +1546,29 @@ INSERT INTO `tblregions` (`regionID`, `regionName`, `InWhichcontinent`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `tblretinuefollowers`
+--
+
+CREATE TABLE IF NOT EXISTS `tblretinuefollowers` (
+  `followerID` int(11) NOT NULL,
+  `followerName` varchar(255) COLLATE utf8_bin NOT NULL,
+  `followerCleanURL` varchar(255) COLLATE utf8_bin NOT NULL,
+  `characterIdFollowing` int(10) NOT NULL,
+  `activeQuestId` int(10) DEFAULT '-1',
+  `questStartedTime` datetime NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+--
+-- Dumping data for table `tblretinuefollowers`
+--
+
+INSERT INTO `tblretinuefollowers` (`followerID`, `followerName`, `followerCleanURL`, `characterIdFollowing`, `activeQuestId`, `questStartedTime`) VALUES
+(1, 'Eila Myrborn', 'eila-myrborn', 999, -1, '0000-00-00 00:00:00'),
+(2, 'Nellaith Wispfael', 'nellaith-wispfael', 999, 1, '2018-02-16 00:00:00');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `tblretinuequests`
 --
 
@@ -1554,26 +1581,44 @@ CREATE TABLE IF NOT EXISTS `tblretinuequests` (
   `questDifficulty` int(11) NOT NULL,
   `questObstacles` varchar(128) COLLATE utf8_bin NOT NULL,
   `questTimeRequired` int(128) NOT NULL,
-  `questStartedTime` datetime DEFAULT NULL,
-  `questCompleted` tinyint(1) NOT NULL DEFAULT '0',
-  `questAssociatedCharacterID` int(10) NOT NULL,
   `questCostToStart` varchar(128) COLLATE utf8_bin NOT NULL DEFAULT '0',
   `questPartOfCampaign` int(128) NOT NULL,
   `questNumberOfFollowersRequired` int(10) NOT NULL DEFAULT '1',
   `questNPCMinimumLevel` int(10) NOT NULL DEFAULT '1',
-  `questReward` varchar(128) COLLATE utf8_bin NOT NULL
+  `questReward` varchar(20000) CHARACTER SET latin1 NOT NULL,
+  `timeCreated` datetime NOT NULL
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
 -- Dumping data for table `tblretinuequests`
 --
 
-INSERT INTO `tblretinuequests` (`questID`, `questName`, `questCleanURL`, `questDescription`, `questType`, `questDifficulty`, `questObstacles`, `questTimeRequired`, `questStartedTime`, `questCompleted`, `questAssociatedCharacterID`, `questCostToStart`, `questPartOfCampaign`, `questNumberOfFollowersRequired`, `questNPCMinimumLevel`, `questReward`) VALUES
-(1, 'Ancient Salvage', 'ancient-salvage', 'Get to that hoard and save what you can before the looters arrive.', 'salvage', 0, '', 3600, '0000-00-00 00:00:00', 0, 999, '0', 0, 1, 1, ''),
-(2, 'Linen manufacture', 'linen-manufacture', 'Need a whole shipment of linen preparing. Get going.', 'crafting', 0, '', 3600, '0000-00-00 00:00:00', 0, 999, '0', 0, 1, 1, ''),
-(3, 'Follow the leader', 'follow-the-leader', 'Standard escort mission really.', 'escort', 0, '', 1800, '2017-03-10 00:00:00', 0, 999, '0', 0, 1, 1, ''),
-(4, 'Already completed', 'already-completed', 'Standard escort mission really.', 'escort', 0, '', 1800, '2017-03-01 00:00:00', 1, 999, '0', 0, 1, 1, ''),
-(5, 'Well underway', 'well-underway', 'Standard escort mission really.', 'escort', 0, '', 86400, '2017-03-13 00:00:00', 0, 999, '0', 0, 1, 1, '');
+INSERT INTO `tblretinuequests` (`questID`, `questName`, `questCleanURL`, `questDescription`, `questType`, `questDifficulty`, `questObstacles`, `questTimeRequired`, `questCostToStart`, `questPartOfCampaign`, `questNumberOfFollowersRequired`, `questNPCMinimumLevel`, `questReward`, `timeCreated`) VALUES
+(1, 'Ancient Salvage', 'ancient-salvage', 'Get to that hoard and save what you can before the looters arrive.', 'salvage', 0, '', 800, '0', 0, 1, 1, '[{"type":2,"quantity":1,"quality":100,"durability":100,"currentWear":0,"effectiveness":100,"colour":"1","enchanted":0,"hallmark":0,"inscription":""}]', '2018-02-08 00:00:00'),
+(2, 'Linen manufacture', 'linen-manufacture', 'Need a whole shipment of linen preparing. Get going.', 'crafting', 0, '', 3600, '0', 0, 1, 1, '', '2018-02-02 00:00:00'),
+(3, 'Follow the leader', 'follow-the-leader', 'Standard escort mission really.', 'escort', 0, '', 1800, '0', 0, 1, 1, '', '2018-02-04 00:00:00'),
+(4, 'Emissary escort', 'emissary-escort', 'Standard escort mission really.', 'escort', 0, '', 1800, '0', 0, 1, 1, '', '2018-02-05 00:00:00'),
+(5, 'Get to Bowery', 'get-to-bowery', 'Standard escort mission really.', 'escort', 0, '', 86400, '0', 0, 1, 1, '', '2018-02-01 00:00:00');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tblretinuequestsactive`
+--
+
+CREATE TABLE IF NOT EXISTS `tblretinuequestsactive` (
+  `questActiveId` int(11) NOT NULL,
+  `questIdActiveOrComplete` int(10) NOT NULL,
+  `characterId` int(10) NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+--
+-- Dumping data for table `tblretinuequestsactive`
+--
+
+INSERT INTO `tblretinuequestsactive` (`questActiveId`, `questIdActiveOrComplete`, `characterId`) VALUES
+(1, 1, 999),
+(2, 3, 999);
 
 -- --------------------------------------------------------
 
@@ -1585,7 +1630,7 @@ CREATE TABLE IF NOT EXISTS `tblretinuequesttypes` (
   `questTypeID` int(11) NOT NULL,
   `questTypeName` varchar(255) COLLATE utf8_bin NOT NULL,
   `questTypeDescription` varchar(255) COLLATE utf8_bin NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
 -- Dumping data for table `tblretinuequesttypes`
@@ -1603,7 +1648,8 @@ INSERT INTO `tblretinuequesttypes` (`questTypeID`, `questTypeName`, `questTypeDe
 (10, 'dungeon delve', 'Lorem ipsum and so on.'),
 (11, 'crafting', 'Lorem ipsum and so on.'),
 (12, 'travelling fair', 'Lorem ipsum and so on.'),
-(13, 'pilgrimage', 'Lorem ipsum and so on.');
+(13, 'pilgrimage', 'Lorem ipsum and so on.'),
+(14, 'merchant caravan', 'Lorem ipsum and so on.');
 
 -- --------------------------------------------------------
 
@@ -2161,10 +2207,22 @@ ALTER TABLE `tblregions`
   ADD PRIMARY KEY (`regionID`), ADD UNIQUE KEY `regionName` (`regionName`);
 
 --
+-- Indexes for table `tblretinuefollowers`
+--
+ALTER TABLE `tblretinuefollowers`
+  ADD PRIMARY KEY (`followerID`);
+
+--
 -- Indexes for table `tblretinuequests`
 --
 ALTER TABLE `tblretinuequests`
   ADD PRIMARY KEY (`questID`);
+
+--
+-- Indexes for table `tblretinuequestsactive`
+--
+ALTER TABLE `tblretinuequestsactive`
+  ADD PRIMARY KEY (`questActiveId`);
 
 --
 -- Indexes for table `tblretinuequesttypes`
@@ -2224,7 +2282,7 @@ ALTER TABLE `tblcards`
 -- AUTO_INCREMENT for table `tblcharacters`
 --
 ALTER TABLE `tblcharacters`
-  MODIFY `charID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=18;
+  MODIFY `charID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=1000;
 --
 -- AUTO_INCREMENT for table `tblcollectionquests`
 --
@@ -2299,7 +2357,7 @@ ALTER TABLE `tblguilds`
 -- AUTO_INCREMENT for table `tblinventoryitems`
 --
 ALTER TABLE `tblinventoryitems`
-  MODIFY `itemID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=60;
+  MODIFY `itemID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=61;
 --
 -- AUTO_INCREMENT for table `tblitemcategories`
 --
@@ -2319,7 +2377,7 @@ ALTER TABLE `tbllocations`
 -- AUTO_INCREMENT for table `tblmail`
 --
 ALTER TABLE `tblmail`
-  MODIFY `mailID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=928;
+  MODIFY `mailID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=931;
 --
 -- AUTO_INCREMENT for table `tblmainpoll`
 --
@@ -2381,15 +2439,25 @@ ALTER TABLE `tblregionalpricemodifiers`
 ALTER TABLE `tblregions`
   MODIFY `regionID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
 --
+-- AUTO_INCREMENT for table `tblretinuefollowers`
+--
+ALTER TABLE `tblretinuefollowers`
+  MODIFY `followerID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
+--
 -- AUTO_INCREMENT for table `tblretinuequests`
 --
 ALTER TABLE `tblretinuequests`
   MODIFY `questID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=6;
 --
+-- AUTO_INCREMENT for table `tblretinuequestsactive`
+--
+ALTER TABLE `tblretinuequestsactive`
+  MODIFY `questActiveId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
+--
 -- AUTO_INCREMENT for table `tblretinuequesttypes`
 --
 ALTER TABLE `tblretinuequesttypes`
-  MODIFY `questTypeID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=14;
+  MODIFY `questTypeID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=15;
 --
 -- AUTO_INCREMENT for table `tblsavedsearches`
 --
