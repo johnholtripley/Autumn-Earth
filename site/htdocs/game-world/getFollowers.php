@@ -10,8 +10,16 @@ $homeBaseContinent = "eastern-continent";
 $homeBaseX = 200;
 $homeBaseY = 350;
 
+
+
+
+
 // get followers' current positions:
 // ##############
+
+
+
+
 
 $debug = false;
 if(isset($_GET["debug"])) {

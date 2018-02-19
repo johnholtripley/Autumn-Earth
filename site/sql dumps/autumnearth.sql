@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 16, 2018 at 05:15 PM
+-- Generation Time: Feb 19, 2018 at 05:45 PM
 -- Server version: 5.6.24
 -- PHP Version: 5.6.8
 
@@ -782,7 +782,7 @@ CREATE TABLE IF NOT EXISTS `tblmail` (
   `attachment` varchar(20000) DEFAULT NULL,
   `attachmentTaken` tinyint(1) NOT NULL DEFAULT '0',
   `isArchived` tinyint(1) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB AUTO_INCREMENT=931 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=939 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblmail`
@@ -900,7 +900,15 @@ INSERT INTO `tblmail` (`mailID`, `characterID`, `senderID`, `senderName`, `title
 (927, 999, 999, 'Eleaddai', 'just to give you this', '`Curiouser and curiouser!'' cried Alice (she was so much surprised, that for the moment she quite forgot how to speak good English); `now I''m opening out like the largest telescope that ever was! Good-bye, feet!'' (for when she looked down at her feet, they seemed to be almost out of sight, they were getting so far off). `Oh, my poor little feet, I wonder who will put on your shoes and stockings for you now, dears? I''m sure I shan''t be able! I shall be a great deal too far off to trouble myself about you: you must manage the best way you can; --but I must be kind to them,'' thought Alice, `or perhaps they won''t walk the way I want to go! Let me see: I''ll give them a new pair of boots every Christmas.'' ', '2018-02-15 12:40:38', '1', '0', 0, 0),
 (928, 1, 999, 'Eleaddai', 'hi', 'dsf sdfsd', '2018-02-15 14:36:36', '0', '0', 0, 0),
 (929, 2, 999, 'Eleaddai', 'eer', ' sfsf', '2018-02-15 14:37:25', '0', '0', 0, 0),
-(930, 999, 999, 'Eleaddai', 'hi from me', 'hi', '2018-02-15 14:38:24', '1', '0', 0, 0);
+(930, 999, 999, 'Eleaddai', 'hi from me', 'hi', '2018-02-15 14:38:24', '1', '0', 0, 0),
+(931, 999, 999, 'Eleaddai', 'have a lovely weekend', 'Take a spoonful of it given at a time, and then the Opobalsamum, then the chamber being kept safe from putrefaction.', '2018-02-16 16:23:48', '0', '0', 0, 0),
+(932, 999, 999, 'Eleaddai', 'have a lovely weekend', 'They say it purges hot rheums, and provokes urine and the white of an opening quality, thereby carrying away those vapours which might otherwise annoy the brain and nerves, and helps the falling-sickness, astonishment, apoplexies, dulness of sight, want of it to the consumption of the spleen, it stops fluxes, the running of the body, especially such as have laboured under long chronical diseases.', '2018-02-16 16:23:55', '0', '0', 0, 0),
+(933, 999, 999, 'Eleaddai', 'have a lovely weekend', 'They purge gross and putrified humours, and sets the senses oppressed by cold, it remedies cold infirmities of the fresh flowers and leaves, and Wormwood, of each six drams, Indian Spikenard, Schenanth, Pepper white and red, Spodium, Rhubarb, of each one dram, Lapis Hematilis, the wool of a Hare toasted, of each half an ounce, Galbanum, Opopanax, and Galbanum be put in the head.', '2018-02-16 16:24:01', '0', '0', 0, 0),
+(934, 999, 999, 'Eleaddai', 'have a lovely weekend', 'An ounce at a time, at night going to bed; if that provoke not sleep, the next day boil it to the consumption of the roots of Smallage, Fennel, and Sparagus, of each two drams, Gum Arabic, Dragonâ€™s-blood of each one ounce, Canary Wine a whole summerâ€™s day to write more scholastically, the dose) must be consumed and with a Liquorice stick, if you cannot but know both what Vinegar to the heart, and weak stomachs, and helps all diseases coming of cold and moisture.', '2018-02-16 16:24:07', '0', '0', 0, 0),
+(935, 999, 999, 'Eleaddai', 'have a lovely weekend', 'They say it purges hot rheums, and provokes urine and the white of an opening quality, thereby carrying away those vapours which might otherwise annoy the brain and nerves, and helps the falling-sickness, astonishment, apoplexies, dulness of sight, want of it to the consumption of the spleen, it stops fluxes, the running of the body, especially such as have laboured under long chronical diseases.An ounce at a time, at night going to bed; if that provoke not sleep, the next day boil it to the consumption of the roots of Smallage, Fennel, and Sparagus, of each two drams, Gum Arabic, Dragonâ€™s-blood of each one ounce, Canary Wine a whole summerâ€™s day to write more scholastically, the dose) must be consumed and with a Liquorice stick, if you cannot but know both what Vinegar to the heart, and weak stomachs, and helps all diseases coming of cold and moisture.', '2018-02-16 16:26:45', '1', '0', 0, 0),
+(936, 999, 999, 'Eleaddai', 'subject', 'dfsf\\n\\ndsf\\n\\n\\ndsf', '2018-02-16 16:31:15', '1', '0', 0, 0),
+(937, 999, 999, 'Eleaddai', 'asdad', 'asdadasd aadasa aa', '2018-02-16 16:32:33', '1', '0', 0, 0),
+(938, 999, 999, 'Eleaddai', 'just testing some line breaks', '\\nsecond line\\n\\n\\n\\n\\n\\nmore\\n\\n\\nmore\\n\\nand some  here', '2018-02-16 16:58:39', '1', '0', 0, 0);
 
 -- --------------------------------------------------------
 
@@ -1556,16 +1564,19 @@ CREATE TABLE IF NOT EXISTS `tblretinuefollowers` (
   `characterIdFollowing` int(10) NOT NULL,
   `activeQuestId` int(10) DEFAULT '-1',
   `questStartedTime` datetime NOT NULL,
-  `followerSex` varchar(6) COLLATE utf8_bin NOT NULL DEFAULT 'female'
+  `followerSex` varchar(6) COLLATE utf8_bin NOT NULL DEFAULT 'female',
+  `currentContinent` varchar(255) COLLATE utf8_bin NOT NULL,
+  `mapCoordinateX` int(20) NOT NULL,
+  `mapCoordinateY` int(20) NOT NULL
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
 -- Dumping data for table `tblretinuefollowers`
 --
 
-INSERT INTO `tblretinuefollowers` (`followerID`, `followerName`, `followerCleanURL`, `characterIdFollowing`, `activeQuestId`, `questStartedTime`, `followerSex`) VALUES
-(1, 'Eila Myrborn', 'eila-myrborn', 999, 1, '2018-02-16 13:22:00', 'female'),
-(2, 'Nellaith Wispfael', 'nellaith-wispfael', 999, 1, '2018-02-16 13:22:00', 'female');
+INSERT INTO `tblretinuefollowers` (`followerID`, `followerName`, `followerCleanURL`, `characterIdFollowing`, `activeQuestId`, `questStartedTime`, `followerSex`, `currentContinent`, `mapCoordinateX`, `mapCoordinateY`) VALUES
+(1, 'Eila Myrborn', 'eila-myrborn', 999, 1, '2018-02-19 13:22:00', 'female', 'eastern-continent', 120, 70),
+(2, 'Nellaith Wispfael', 'nellaith-wispfael', 999, 1, '2018-02-19 13:22:00', 'female', 'eastern-continent', 50, 135);
 
 -- --------------------------------------------------------
 
@@ -1579,9 +1590,12 @@ CREATE TABLE IF NOT EXISTS `tblretinuequests` (
   `questCleanURL` varchar(255) COLLATE utf8_bin NOT NULL,
   `questDescription` varchar(1024) COLLATE utf8_bin NOT NULL,
   `questType` varchar(128) COLLATE utf8_bin NOT NULL,
+  `continent` varchar(255) COLLATE utf8_bin NOT NULL,
+  `mapCoordinateX` int(20) NOT NULL,
+  `mapCoordinateY` int(20) NOT NULL,
+  `needsToReturnToBase` tinyint(1) NOT NULL DEFAULT '0',
   `questDifficulty` int(11) NOT NULL,
   `questObstacles` varchar(128) COLLATE utf8_bin NOT NULL,
-  `questTimeRequired` int(128) NOT NULL,
   `questCostToStart` varchar(128) COLLATE utf8_bin NOT NULL DEFAULT '0',
   `questPartOfCampaign` int(128) NOT NULL,
   `questNumberOfFollowersRequired` int(10) NOT NULL DEFAULT '1',
@@ -1594,12 +1608,12 @@ CREATE TABLE IF NOT EXISTS `tblretinuequests` (
 -- Dumping data for table `tblretinuequests`
 --
 
-INSERT INTO `tblretinuequests` (`questID`, `questName`, `questCleanURL`, `questDescription`, `questType`, `questDifficulty`, `questObstacles`, `questTimeRequired`, `questCostToStart`, `questPartOfCampaign`, `questNumberOfFollowersRequired`, `questNPCMinimumLevel`, `questReward`, `timeCreated`) VALUES
-(1, 'Ancient Salvage', 'ancient-salvage', 'Get to that hoard and save what you can before the looters arrive.', 'salvage', 0, '', 240, '0', 0, 2, 1, '[{"type":2,"quantity":1,"quality":100,"durability":100,"currentWear":0,"effectiveness":100,"colour":"1","enchanted":0,"hallmark":0,"inscription":""}]', '2018-02-08 00:00:00'),
-(2, 'Linen manufacture', 'linen-manufacture', 'Need a whole shipment of linen preparing. Get going.', 'crafting', 0, '', 480, '0', 0, 1, 1, '', '2018-02-02 00:00:00'),
-(3, 'Follow the leader', 'follow-the-leader', 'Standard escort mission really.', 'escort', 0, '', 1800, '0', 0, 1, 1, '', '2018-02-04 00:00:00'),
-(4, 'Emissary escort', 'emissary-escort', 'Standard escort mission really.', 'escort', 0, '', 1800, '0', 0, 1, 1, '', '2018-02-05 00:00:00'),
-(5, 'Get to Bowery', 'get-to-bowery', 'Standard escort mission really.', 'escort', 0, '', 86400, '0', 0, 1, 1, '', '2018-02-01 00:00:00');
+INSERT INTO `tblretinuequests` (`questID`, `questName`, `questCleanURL`, `questDescription`, `questType`, `continent`, `mapCoordinateX`, `mapCoordinateY`, `needsToReturnToBase`, `questDifficulty`, `questObstacles`, `questCostToStart`, `questPartOfCampaign`, `questNumberOfFollowersRequired`, `questNPCMinimumLevel`, `questReward`, `timeCreated`) VALUES
+(1, 'Ancient Salvage', 'ancient-salvage', 'Get to that hoard and save what you can before the looters arrive.', 'salvage', 'eastern-continent', 0, 0, 1, 0, '', '0', 0, 2, 1, '[{"type":2,"quantity":1,"quality":100,"durability":100,"currentWear":0,"effectiveness":100,"colour":"1","enchanted":0,"hallmark":0,"inscription":""}]', '2018-02-08 00:00:00'),
+(2, 'Linen manufacture', 'linen-manufacture', 'Need a whole shipment of linen preparing. Get going.', 'crafting', 'eastern-continent', 0, 0, 0, 0, '', '0', 0, 1, 1, '', '2018-02-02 00:00:00'),
+(3, 'Follow the leader', 'follow-the-leader', 'Standard escort mission really.', 'escort', 'eastern-continent', 0, 0, 0, 0, '', '0', 0, 1, 1, '', '2018-02-04 00:00:00'),
+(4, 'Emissary escort', 'emissary-escort', 'Standard escort mission really.', 'escort', 'eastern-continent', 0, 0, 0, 0, '', '0', 0, 1, 1, '', '2018-02-05 00:00:00'),
+(5, 'Get to Bowery', 'get-to-bowery', 'Standard escort mission really.', 'escort', 'eastern-continent', 0, 0, 0, 0, '', '0', 0, 1, 1, '', '2018-02-01 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -2380,7 +2394,7 @@ ALTER TABLE `tbllocations`
 -- AUTO_INCREMENT for table `tblmail`
 --
 ALTER TABLE `tblmail`
-  MODIFY `mailID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=931;
+  MODIFY `mailID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=939;
 --
 -- AUTO_INCREMENT for table `tblmainpoll`
 --
