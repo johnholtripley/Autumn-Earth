@@ -6,8 +6,19 @@
 
 // get from game state: ####
 $chr = 999;
+$homeBaseContinent = "eastern-continent";
+$homeBaseX = 200;
+$homeBaseY = 350;
 
+// get followers' current positions:
+// ##############
 
+$debug = false;
+if(isset($_GET["debug"])) {
+  $debug = true;
+  include($_SERVER['DOCUMENT_ROOT']."/includes/signalnoise.php");
+include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
+}
 
 
 $retinuePanelOutput = '<div id="retinuePanel">';
@@ -30,7 +41,12 @@ $retinuePanelOutput .= '<p>waiting for a quest</p>';
 
 // check time started and time required
 $completedSoFar = floor((time() - strtotime($questStartedTime))/60);
-if($completedSoFar >= $questTimeRequired ) {
+// determine the time required based on the distance:
+$questMinutesRequired = sqrt(($mapCoordinateX-$homeBaseX)*($mapCoordinateX-$homeBaseX)+($mapCoordinateY-$homeBaseY)*($mapCoordinateY-$homeBaseY));
+if($needsToReturnToBase) {
+$questMinutesRequired *= 2;
+}
+if($completedSoFar >= $questMinutesRequired ) {
 $retinuePanelOutput .= '<p>COMPLETED "'.$questName.'"</p>';
 if($questReward) {
 $rewardObject = json_decode($questReward);
@@ -45,8 +61,11 @@ $retinuePanelOutput .= '<div class="postSlot"><img src="/images/game-world/inven
 }
 
 } else {
-//$retinuePanelOutput .= '<p>active on "'.$questName.'"" - '.$completedSoFar.' minutes out of '.$questTimeRequired;
-$retinuePanelOutput .= '<p>active on "'.$questName.'" <span class="retinueQuestTimer" data-minutes="'.($questTimeRequired - $completedSoFar).'"></span></p>';
+//$retinuePanelOutput .= '<p>active on "'.$questName.'"" - '.$completedSoFar.' minutes out of '.$questMinutesRequired;
+$retinuePanelOutput .= '<p>active on "'.$questName.'" <span class="retinueQuestTimer" data-minutes="'.($questMinutesRequired - $completedSoFar).'"></span></p>';
+if($debug) {
+  $retinuePanelOutput .= $completedSoFar." out of ".$questMinutesRequired ."<br>";
+}
 }
       }
       $retinuePanelOutput .= '</li>';
@@ -76,5 +95,8 @@ mysql_free_result($questsResult);
 $retinuePanelOutput .= '</div>';
 
 
+if($debug) {
+  echo $retinuePanelOutput;
+}
 
 ?>
