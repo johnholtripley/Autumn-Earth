@@ -3673,7 +3673,7 @@ for ( $i = 0; $i < $mapTilesX; $i++) {
         }
 
 
-// draw items, doors, npcs ####
+
 
        ob_start();
     imagejpeg($fullImage, null, 100);

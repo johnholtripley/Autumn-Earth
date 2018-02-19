@@ -3430,8 +3430,8 @@ const retinuePanel = document.getElementById('retinuePanel');
 var notificationQueue = [];
 var notificationIsShowing = false;
 
-var retinueQuestTimeRemaining = [];
-var allRetinueQuestTimers = document.getElementsByClassName('retinueQuestTimer');
+var retinueQuestTimers = [];
+
 
 var UI = {
     init: function() {
@@ -5197,7 +5197,7 @@ var UI = {
                 receivedPostPanel.classList.add('active');
                 break;
             case 'sendPost':
-            // escape new lines in the textarea:
+                // escape new lines in the textarea:
                 sendUserPost('{"subject":"' + sendPostSubject.value + '","message":"' + sendPostMessage.value.replace(/\n/g, "\\\\n") + '","senderID":"' + characterId + '","attachments":0,"recipientCharacterName":"' + sendPostCharacter.value + '","fromName":"Eleaddai"}');
                 break;
             case 'cancelPost':
@@ -5206,16 +5206,20 @@ var UI = {
         }
     },
     initRetinueTimers: function() {
+        // retinueQuestTimers
+        var allRetinueQuestTimers = document.getElementsByClassName('retinueQuestTimer');
         for (var i = 0; i < allRetinueQuestTimers.length; i++) {
-            retinueQuestTimeRemaining.push(new Date().getTime() + (allRetinueQuestTimers[i].dataset.minutes) * 60 * 1000);
+            retinueQuestTimers.push([allRetinueQuestTimers[i], new Date().getTime() + (allRetinueQuestTimers[i].dataset.minutes) * 60 * 1000, ""]);
         }
+        console.log(retinueQuestTimers);
     },
 
     updateRetinueTimers: function() {
         var remainingTime, seconds, minutes, hours, days;
         var currentTime = new Date().getTime();
-        for (var i = 0; i < allRetinueQuestTimers.length; i++) {
-            remainingTime = retinueQuestTimeRemaining[i] - currentTime;
+        var thisTimerText;
+        for (var i = 0; i < retinueQuestTimers.length; i++) {
+            remainingTime = retinueQuestTimers[i][1] - currentTime;
 
             var seconds = Math.floor((remainingTime / 1000) % 60);
             var minutes = Math.floor((remainingTime / (60 * 1000)) % 60);
@@ -5223,23 +5227,34 @@ var UI = {
             var days = Math.floor(remainingTime / (24 * 60 * 60 * 1000));
 
             if (days > 1) {
-                allRetinueQuestTimers[i].innerHTML = days + " days remaining";
+                thisTimerText = days + " days remaining";
             } else if (days == 1) {
-                allRetinueQuestTimers[i].innerHTML = "1 day remaining";
+                thisTimerText = "1 day remaining";
             } else if (hours > 1) {
-                allRetinueQuestTimers[i].innerHTML = hours + " hours remaining";
+                thisTimerText = hours + " hours remaining";
             } else if (hours == 1) {
-                allRetinueQuestTimers[i].innerHTML = "1 hour remaining";
+                thisTimerText = "1 hour remaining";
             } else if (minutes > 1) {
-                allRetinueQuestTimers[i].innerHTML = minutes + " minutes remaining";
+                thisTimerText = minutes + " minutes remaining";
             } else if (minutes == 1) {
-                allRetinueQuestTimers[i].innerHTML = "1 minute remaining";
+                thisTimerText = "1 minute remaining";
             } else if (seconds > 1) {
-                allRetinueQuestTimers[i].innerHTML = seconds + " seconds remaining";
+                thisTimerText = seconds + " seconds remaining";
             } else if (seconds == 1) {
-                allRetinueQuestTimers[i].innerHTML = "1 second remaining";
+                thisTimerText = "1 second remaining";
             } else {
-                allRetinueQuestTimers[i].innerHTML = "complete";
+                thisTimerText = "complete";
+            }
+            if (thisTimerText != retinueQuestTimers[i][2]) {
+                // only access the DOM if it's changed:
+                console.log(thisTimerText);
+                retinueQuestTimers[i][0].innerHTML = thisTimerText;
+                retinueQuestTimers[i][2] = thisTimerText;
+            }
+            if (thisTimerText == "complete") {
+                // remove this timer
+                retinueQuestTimers.splice(i, 1);
+                i--;
             }
         }
     },
