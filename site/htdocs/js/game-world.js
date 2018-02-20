@@ -3448,12 +3448,6 @@ var UI = {
         const createRecipeList = document.getElementById('createRecipeList');
         const recipeTitleBar = document.getElementById('recipeTitleBar');
         const currencies = document.getElementById('currencies');
-
-
-
-
-
-
     },
 
 
@@ -3554,6 +3548,7 @@ var UI = {
         UI.buildCollectionPanel();
         UI.buildActionBar();
         UI.initRetinueTimers();
+        UI.initRetinueDrag();
 
         if (hero.professionsKnown.length > 0) {
             // load and cache the first profession's recipe assets:
@@ -5272,15 +5267,27 @@ var UI = {
         retinueObject.active = false;
     },
     openRetinueDetailPanel: function(e) {
-var whichLocationButton = e.target.id;
-// get the corresponding panel:
-var targetPanel = whichLocationButton.replace(/retinueQuestLocation/i, "retinueQuestLocationDetail");
-var siblingPanels = document.getElementsByClassName('retinueQuestLocationDetailPanel');
-for (i=0;i<siblingPanels.length;i++) {
-    siblingPanels[i].classList.remove("active");
-}
-
-document.getElementById(targetPanel).classList.add("active");
+        var whichLocationButton = e.target.id;
+        // get the corresponding panel:
+        var targetPanel = whichLocationButton.replace(/retinueQuestLocation/i, "retinueQuestLocationDetail");
+        var siblingPanels = document.getElementsByClassName('retinueQuestLocationDetailPanel');
+        for (i = 0; i < siblingPanels.length; i++) {
+            siblingPanels[i].classList.remove("active");
+        }
+        document.getElementById(targetPanel).classList.add("active");
+    },
+    initRetinueDrag: function() {
+        document.getElementById("retinueList").addEventListener("mousedown", function(e) {
+            e.preventDefault();
+            var thisNode = getNearestParentId(e.target);
+            // make sure it's not a right click:
+            if (e.button != 2) {
+                if (thisNode.classList.contains("waiting")) {
+                    // can be dragged:
+                    console.log(thisNode.id);
+                }
+            }
+        }, false);
     }
 }
 function setupWeather() {

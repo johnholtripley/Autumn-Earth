@@ -40,7 +40,7 @@ $activeQuestsIds = array();
       $result = mysql_query($query) or die ();
       if(mysql_num_rows($result)>0) {
       	$retinuePanelOutput .= '<h2>Your retinue:</h2>';
-     $retinuePanelOutput .= "<ol>";
+     $retinuePanelOutput .= '<ol id="retinueList">';
 
 $followerData = array();
 while ($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
@@ -77,12 +77,13 @@ foreach ($followerData as $followerKey => $thisFollower) {
 
 
 foreach ($followerData as $followerKey => $thisFollower) {
+  $waitingClass='';
   if($thisFollower['activeQuestId'] == -1) {
-     $retinuePanelOutput .= '<li class="waiting">';
+     $waitingClass .= ' class="waiting"';
   } else {
-    $retinuePanelOutput .= '<li>'; 
+    
   }
- 
+ $retinuePanelOutput .= '<li id="retinueFollower'.$thisFollower['followerID'].'"'.$waitingClass.'>'; 
   $retinuePanelOutput .= '<div class="portrait"><img src="/images/retinue/'.$thisFollower['followerID'].'.png" alt=""></div><h3>'.$thisFollower['followerName'].'</h3>';
   if($thisFollower['activeQuestId'] == -1) {
   $retinuePanelOutput .= '<p>waiting for a quest</p>';
