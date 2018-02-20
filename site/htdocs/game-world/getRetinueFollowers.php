@@ -137,7 +137,7 @@ if(mysql_num_rows($questsResult)>0) {
 	while ($questsRow = mysql_fetch_array($questsResult)) {
       extract($questsRow);
       // map is 700 x 450
-$retinuePanelOutput .= '<button id="retinueQuestLocation'.md5($questID).'" class="mapLocation" style="left:'.(($mapCoordinateX/700)*100).'%;top:'.(($mapCoordinateY/450)*100).'%;"></button><div class="mapLocationTooltip" style="left:'.(($mapCoordinateX/700)*100).'%;top:'.(($mapCoordinateY/450)*100).'%;"><h4>'.$questName.'</h4><p>'.$questDescription.' (requires '.$questNumberOfFollowersRequired;
+$retinuePanelOutput .= '<button id="retinueQuestLocation'.($questID).'" class="mapLocation" style="left:'.(($mapCoordinateX/700)*100).'%;top:'.(($mapCoordinateY/450)*100).'%;"></button><div class="mapLocationTooltip" style="left:'.(($mapCoordinateX/700)*100).'%;top:'.(($mapCoordinateY/450)*100).'%;"><h4>'.$questName.'</h4><p>'.$questDescription.' (requires '.$questNumberOfFollowersRequired;
 
 if($questObstacles) {
   $retinuePanelOutput .= ' and ';
@@ -152,7 +152,7 @@ $retinuePanelOutput = rtrim($retinuePanelOutput, ', ');
   $retinuePanelOutput .= ')</p></div>';
 
 
-$questPanelDetailsOutput .= '<div id="retinueQuestLocationDetail'.md5($questID).'" class="retinueQuestLocationDetailPanel">';
+$questPanelDetailsOutput .= '<div id="retinueQuestLocationDetail'.($questID).'" class="retinueQuestLocationDetailPanel">';
 $questPanelDetailsOutput .= '<h4>'.$questName.' <span>('.$questType.')</span></h4>';
 $questPanelDetailsOutput .= '<p>'.$questDescription.'</p>';
 
@@ -168,7 +168,7 @@ $questPanelDetailsOutput .= '<p>'.$questDescription.'</p>';
   }
   }
 
-$questPanelDetailsOutput .= '<div id="dropFollowersPanel">';
+$questPanelDetailsOutput .= '<div id="dropFollowersPanel'.($questID).'" class="dropFollowersPanel">';
   for ($i=0;$i<$questNumberOfFollowersRequired;$i++) {
     $questPanelDetailsOutput .= '<div class="followerSlot"></div>';
   }

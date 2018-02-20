@@ -306,7 +306,7 @@ var UI = {
                         objInitTop = clickedFollowerRect.top + pageScrollTopY;
                         dragStartX = e.pageX;
                         dragStartY = e.pageY;
-                           UI.activeDragObject.style.cssText = "z-index:4;top: " + objInitTop + "px; left: " + objInitLeft + "px; transform: translate(0px, 0px);";
+                        UI.activeDragObject.style.cssText = "z-index:4;top: " + objInitTop + "px; left: " + objInitLeft + "px; transform: translate(0px, 0px);";
                         document.addEventListener("mousemove", UI.handleDrag, false);
                         document.addEventListener("mouseup", UI.endFollowerDrag, false);
                         // remove z-index of other draggable elements:
@@ -1942,32 +1942,24 @@ var UI = {
         document.getElementById(targetPanel).classList.add("active");
     },
     endFollowerDrag: function(e) {
-
         var dropTargetNode = getNearestParentId(e.target);
-
-        if (dropTargetNode.id == "dropFollowersPanel") {
-            console.log("added follower");
+        if (dropTargetNode.id.indexOf("dropFollowersPanel") !== -1) {
+            console.log("added follower " + UI.draggedOriginal.id + " to quest #" + dropTargetNode.parentNode.id);
+            UI.draggedOriginal.classList.remove("hasDragCopy");
+            UI.activeDragObject.style.cssText = "left: -100px; top: -100px;";
         } else {
             // snap back:
             UI.activeDragObject.style.cssText = "z-index:4;left: " + (objInitLeft) + "px; top: " + (objInitTop) + "px;transition: transform 0.4s ease;";
             UI.activeDragObject.addEventListener(whichTransitionEvent, function snapDraggedSlotBack(e) {
-
-                        UI.draggedOriginal.classList.remove("hasDragCopy");
-
-e.currentTarget.style.cssText = "left: -100px; top: -100px;";
-  
-
-
+                UI.draggedOriginal.classList.remove("hasDragCopy");
+                e.currentTarget.style.cssText = "left: -100px; top: -100px;";
                 // remove this event listener now:
                 return e.currentTarget.removeEventListener(whichTransitionEvent, snapDraggedSlotBack, false);
             }, false);
         }
-
         // tidy up and remove event listeners:
         document.removeEventListener("mousemove", UI.handleDrag, false);
         document.removeEventListener("mouseup", UI.endDrag, false);
         UI.activeDragObject = '';
-
     }
-
 }
