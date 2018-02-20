@@ -13,9 +13,10 @@ $homeBaseY = 350;
 
 
 
-
-// get followers' current positions:
-// ##############
+// a list of possible obstacles and their required solution:
+$obstacles = [
+"sea" => "boat"
+];
 
 
 
@@ -124,12 +125,27 @@ foreach ($followerData as $followerKey => $thisFollower) {
 $questsResult = mysql_query($questsQuery) or die ();
 if(mysql_num_rows($questsResult)>0) {
 	$retinuePanelOutput .= '<h2>Available quests:</h2>';
-	$retinuePanelOutput .= "<ol>";
+  $retinuePanelOutput .= '<div class="mapWrapper"><img src="/images/world-maps/eastern-continent.jpg" alt="Eastern Continent">';
+//	$retinuePanelOutput .= "<ol>";
 	while ($questsRow = mysql_fetch_array($questsResult)) {
       extract($questsRow);
-$retinuePanelOutput .= '<li><h3>'.$questName.'</h3><p>'.$questDescription.' (requires '.$questNumberOfFollowersRequired.')</p></li>';
+      // map is 700 x 450
+$retinuePanelOutput .= '<div class="mapLocation" style="left:'.(($mapCoordinateX/700)*100).'%;top:'.(($mapCoordinateY/450)*100).'%;"><div class="tooltip"><h3>'.$questName.'</h3><p>'.$questDescription.' (requires '.$questNumberOfFollowersRequired;
+
+if($questObstacles) {
+  $retinuePanelOutput .= ' and ';
+  $allObstacles = explode(",", $questObstacles);
+  for ($i=0;$i<count($allObstacles);$i++) {
+    $retinuePanelOutput .= $obstacles[($allObstacles[$i])].", ";
   }
-  $retinuePanelOutput .= "</ol>";
+    // remove last comma:
+$retinuePanelOutput = rtrim($retinuePanelOutput, ', ');
+}
+
+  $retinuePanelOutput .= ')</p></div></div>';
+  }
+   $retinuePanelOutput .= '</div>';
+ // $retinuePanelOutput .= "</ol>";
 } else {
 $retinuePanelOutput .= "<p>No quests currently available</p>";
 }
@@ -139,6 +155,7 @@ $retinuePanelOutput .= '</div>';
 
 
 if($debug) {
+  echo '<style>.mapWrapper {position:relative;max-width: 400px;}.mapWrapper img {display:block;width:100%;}.mapLocation{position:absolute;width:20px;height:20px;background:rgba(200,200,20,0.6);border:2px solid #fff;border-radius:20px;transform: translate(-10px,-10px)}.mapLocation .tooltip {display: none;padding:6px;position: absolute;width:200px;top: 0;left:22px;background:#572800;color:#fff;}.mapLocation:hover .tooltip {display:block;}.mapLocation .tooltip h3, .mapLocation .tooltip p {margin:0;padding:0;font-family:arial;font-size:11px;}</style>';
   echo $retinuePanelOutput;
 }
 
