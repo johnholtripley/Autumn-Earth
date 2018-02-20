@@ -62,8 +62,7 @@ margin-right: 6px;
 }
 
 .postMessagePanel {
-  opacity: 0;
-  pointer-events: none;
+
        
     width: 238px;
     left: 60%;
@@ -71,10 +70,7 @@ margin-right: 6px;
     color: #111;
     font-size: 14px;
     @include togglePanel(0.4s);
-    &.active {
-       opacity: 1;
-       pointer-events: auto;
-    }
+
     p {
         padding: 6px;
         margin: 0;

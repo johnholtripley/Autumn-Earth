@@ -146,8 +146,6 @@ $retinuePanelOutput = rtrim($retinuePanelOutput, ', ');
 
 
 $questPanelDetailsOutput .= '<div id="retinueQuestLocationDetail'.md5($questID).'" class="retinueQuestLocationDetailPanel">';
-$questPanelDetailsOutput .= '<div class="draggableBar">Retinue</div>';
-$questPanelDetailsOutput .= '<button class="closePanel">close</button>';
 $questPanelDetailsOutput .= '<h4>'.$questName.' <span>('.$questType.')</span></h4>';
 $questPanelDetailsOutput .= '<p>'.$questDescription.'</p>';
 
@@ -174,13 +172,15 @@ $retinuePanelOutput .= "<p>No quests currently available</p>";
 }
 mysql_free_result($questsResult);
 
+$retinuePanelOutput .= '<div id="retinueDetailWrapper">'.$questPanelDetailsOutput.'</div>';
+
 $retinuePanelOutput .= '</div>';
 
 
 if($debug) {
   echo '<style>.mapWrapper{position:relative;max-width:400px;}.mapWrapper img{display:block;width:100%}.mapLocation{position:absolute;width:20px;height:20px;background:rgba(200,200,20,0.6);border:2px solid #fff;-webkit-border-radius:20px;-moz-border-radius:20px;border-radius:20px;-webkit-transform:translate(-10px, -10px);-moz-transform:translate(-10px, -10px);-o-transform:translate(-10px, -10px);transform:translate(-10px, -10px);z-index:1}@media only all{.mapLocation{-webkit-border-radius:1.25rem;-moz-border-radius:1.25rem;border-radius:1.25rem}}.mapLocation:hover+.mapLocationTooltip,.mapLocation:active+.mapLocationTooltip,.mapLocation:focus+.mapLocationTooltip{opacity:1}.mapLocationTooltip{pointer-events:none;opacity:0;-webkit-transition:opacity 0.4s ease;-moz-transition:opacity 0.4s ease;-o-transition:opacity 0.4s ease;transition:opacity 0.4s ease;padding:6px;position:absolute;width:200px;-webkit-transform:translate(15px, -10px);-moz-transform:translate(15px, -10px);-o-transform:translate(15px, -10px);transform:translate(15px, -10px);background:#572800;color:#fff;z-index:2}.mapLocationTooltip h4,.mapLocationTooltip p{margin:0;padding:0;font-size:11px}</style>';
   echo $retinuePanelOutput;
-  echo $questPanelDetailsOutput;
+  
 }
 
 ?>

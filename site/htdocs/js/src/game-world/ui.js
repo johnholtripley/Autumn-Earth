@@ -1907,9 +1907,13 @@ var UI = {
     },
     openRetinueDetailPanel: function(e) {
 var whichLocationButton = e.target.id;
-console.log(whichLocationButton);
+// get the corresponding panel:
 var targetPanel = whichLocationButton.replace(/retinueQuestLocation/i, "retinueQuestLocationDetail");
-console.log(targetPanel);
+var siblingPanels = document.getElementsByClassName('retinueQuestLocationDetailPanel');
+for (i=0;i<siblingPanels.length;i++) {
+    siblingPanels[i].classList.remove("active");
+}
+
 document.getElementById(targetPanel).classList.add("active");
     }
 }

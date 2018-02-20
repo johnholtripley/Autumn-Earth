@@ -1,6 +1,6 @@
 #retinuePanel {
     width: 322px;
-    left: 70%;
+    left: 130px;
     top: 215px;
     background: #000;
     font-size: 13px;
@@ -76,24 +76,24 @@
     }
 }
 
+#retinueDetailWrapper {
+    position: relative;
+}
+
 .retinueQuestLocationDetailPanel {
-    opacity: 0;
-    pointer-events: none;
-    background: #bd9e7b url(../images/game-world/interface/parchment.jpg) no-repeat 0 0;
+
+    background: #bd9e7b url(../images/game-world/interface/parchment.jpg) no-repeat 100% 0;
     @include clearfix;
-    width: 238px;
-    left: 60%;
-    top: 335px;
+    width: 100%;
+left: 0;
+top: 0;
     color: #111;
     font-size: 14px;
     h4, p {
          padding: 0 6px;
     }
     @include togglePanel(0.4s);
-    &.active {
-        opacity: 1;
-    pointer-events: auto;
-    }
+
     .rewardSlot {
         @include inventorySlot();
         margin: 5px 6px;
