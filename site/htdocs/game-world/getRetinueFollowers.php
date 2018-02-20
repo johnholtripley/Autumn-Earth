@@ -132,7 +132,7 @@ $questPanelDetailsOutput = "";
 $questsResult = mysql_query($questsQuery) or die ();
 if(mysql_num_rows($questsResult)>0) {
 	$retinuePanelOutput .= '<h2>Available quests:</h2>';
-  $retinuePanelOutput .= '<div id="retinueAvailableQuestMap"><img src="/images/world-maps/eastern-continent.jpg" alt="Eastern Continent">';
+  $retinuePanelOutput .= '<div id="retinueAvailableQuestMap"><img src="/images/world-maps/eastern-continent.jpg" id="activeContinent" alt="Eastern Continent">';
 //	$retinuePanelOutput .= "<ol>";
 	while ($questsRow = mysql_fetch_array($questsResult)) {
       extract($questsRow);
@@ -176,6 +176,13 @@ $questPanelDetailsOutput .= '</div>';
 
 
   }
+
+// plot followers:
+  foreach ($followerData as $followerKey => $thisFollower) {
+$retinuePanelOutput .= '<div class="followerLocation" ><img src="/images/retinue/'.$thisFollower['followerID'].'.png" style="left:'.(($thisFollower['followerMapCoordinateX']/700)*100).'%;top:'.(($thisFollower['followerMapCoordinateY']/450)*100).'%;"></div>';
+  }
+
+
    $retinuePanelOutput .= '</div>';
  // $retinuePanelOutput .= "</ol>";
 } else {
