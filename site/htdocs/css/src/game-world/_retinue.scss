@@ -13,11 +13,11 @@
     }
     li {
         display: block;
-       
+
         @include clearfix;
-    &.hasDragCopy {
-        opacity: 0.2;
-    }
+        &.hasDragCopy {
+            opacity: 0.2;
+        }
     }
     p {
         padding: 5px 6px;
@@ -28,17 +28,16 @@
         padding: 5px 6px;
         margin: 0;
     }
-
 }
 
 
 
-#retinuePanel, #draggableFollower {
+#retinuePanel,
+#draggableFollower {
     .portrait {
         float: left;
         display: block;
         margin-right: 6px;
-        background: url(../images/game-world/interface/retinue/active-follower.png) no-repeat 100% 100%;
         width: 49px;
         height: 53px;
         padding: 7px 8px;
@@ -49,19 +48,33 @@
             @include border-radius(33px);
         }
     }
-    .waiting .portrait {
-        background-image: url(../images/game-world/interface/retinue/waiting-follower.png);
-    }
+
     h3 {
- padding: 5px 6px;
+        padding: 5px 6px;
         margin: 0;
         font-size: 13px;
         color: #fff;
     }
     p {
-         padding: 5px 6px;
-        margin: 0 0 9px 0; 
-        font-size: 11px;color: #fff;
+        padding: 5px 6px;
+        margin: 0 0 9px 0;
+        font-size: 11px;
+        color: #fff;
+    }
+}
+
+#retinuePanel {
+    .portrait {
+        background: url(../images/game-world/interface/retinue/active-follower.png) no-repeat 100% 100%;
+    }
+    .waiting .portrait {
+        background-image: url(../images/game-world/interface/retinue/waiting-follower.png);
+    }
+}
+
+#draggableFollower {
+    .portrait {
+        background-image: url(../images/game-world/interface/retinue/waiting-follower.png);
     }
 }
 
@@ -173,15 +186,12 @@
     @include transform-origin(0 0);
     width: 322px;
     background: #000;
-    
-
-
 }
 
 
 #dropFollowersPanel {
     clear: both;
-    background: rgba(0,0,0,0.2);
+    background: rgba(0, 0, 0, 0.2);
     @include clearfix;
     padding: 5px;
     margin: 5px;
