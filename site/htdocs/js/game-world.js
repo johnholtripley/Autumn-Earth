@@ -3364,7 +3364,6 @@ function awardQuestRewards(whichNPC, questRewards, isACollectionQuest) {
         UI.showNotification("<p>Reward send by post to you</p>");
     }
 }
-
 // global vars:
 const recipeSearch = document.getElementById('recipeSearch');
 const clearRecipeSearch = document.getElementById('clearRecipeSearch');
