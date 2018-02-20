@@ -301,11 +301,12 @@ var UI = {
                         UI.activeDragObject = draggableFollower;
                         UI.draggedOriginal = thisNode;
                         var pageScrollTopY = (window.pageYOffset || document.documentElement.scrollTop) - (document.documentElement.clientTop || 0);
-                        var clickedFollowerRect = e.target.getBoundingClientRect();
+                        var clickedFollowerRect = thisNode.getBoundingClientRect();
                         objInitLeft = clickedFollowerRect.left;
                         objInitTop = clickedFollowerRect.top + pageScrollTopY;
                         dragStartX = e.pageX;
                         dragStartY = e.pageY;
+                           UI.activeDragObject.style.cssText = "z-index:4;top: " + objInitTop + "px; left: " + objInitLeft + "px; transform: translate(0px, 0px);";
                         document.addEventListener("mousemove", UI.handleDrag, false);
                         document.addEventListener("mouseup", UI.endFollowerDrag, false);
                         // remove z-index of other draggable elements:
