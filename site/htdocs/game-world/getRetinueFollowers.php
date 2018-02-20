@@ -168,9 +168,11 @@ $questPanelDetailsOutput .= '<p>'.$questDescription.'</p>';
   }
   }
 
+$questPanelDetailsOutput .= '<div id="dropFollowersPanel">';
   for ($i=0;$i<$questNumberOfFollowersRequired;$i++) {
     $questPanelDetailsOutput .= '<div class="followerSlot"></div>';
   }
+$questPanelDetailsOutput .= '</div>';
 
 $questPanelDetailsOutput .= '</div>';
 
@@ -180,6 +182,7 @@ $questPanelDetailsOutput .= '</div>';
 // plot followers:
   foreach ($followerData as $followerKey => $thisFollower) {
 $retinuePanelOutput .= '<div class="followerLocation" ><img src="/images/retinue/'.$thisFollower['followerID'].'.png" style="left:'.(($thisFollower['followerMapCoordinateX']/700)*100).'%;top:'.(($thisFollower['followerMapCoordinateY']/450)*100).'%;"></div>';
+$retinuePanelOutput .= '<div class="mapLocationTooltip" style="left:'.(($thisFollower['followerMapCoordinateX']/700)*100).'%;top:'.(($thisFollower['followerMapCoordinateY']/450)*100).'%;">'.$thisFollower['followerName'].'</div>';
   }
 
 
@@ -193,6 +196,9 @@ mysql_free_result($questsResult);
 $retinuePanelOutput .= '<div id="retinueDetailWrapper">'.$questPanelDetailsOutput.'</div>';
 
 $retinuePanelOutput .= '</div>';
+
+
+$retinuePanelOutput .= '<div id="draggableFollower"></div>';
 
 
 if($debug) {

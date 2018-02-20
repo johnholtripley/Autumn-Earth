@@ -3426,6 +3426,7 @@ const sendPostCharacter = document.getElementById('sendPostCharacter');
 const newPost = document.getElementById('newPost');
 const retinuePanel = document.getElementById('retinuePanel');
 const retinueAvailableQuestMap = document.getElementById('retinueAvailableQuestMap');
+const draggableFollower = document.getElementById('draggableFollower');
 
 
 var notificationQueue = [];
@@ -3548,7 +3549,7 @@ var UI = {
         UI.buildCollectionPanel();
         UI.buildActionBar();
         UI.initRetinueTimers();
-        UI.initRetinueDrag();
+
 
         if (hero.professionsKnown.length > 0) {
             // load and cache the first profession's recipe assets:
@@ -3633,7 +3634,8 @@ var UI = {
     },
 
     globalMouseDown: function(e) {
-        // check for startting a drag:
+        // check for starting a drag:
+
         if (e.target.className == "draggableBar") {
             // make sure it's not a right click:
             if (e.button != 2) {
@@ -3650,6 +3652,34 @@ var UI = {
                 var dragTargetsInner = document.querySelectorAll('.draggableBar');
                 for (var j = 0; j < dragTargetsInner.length; j++) {
                     dragTargetsInner[j].parentElement.style.zIndex = 1;
+                }
+            }
+        } else {
+            var thisNode = getNearestParentId(e.target);
+            if (thisNode.id.indexOf("retinueFollower") !== -1) {
+                e.preventDefault();
+                // make sure it's not a right click:
+                if (e.button != 2) {
+                    if (thisNode.classList.contains("waiting")) {
+                        // can be dragged:
+                        thisNode.classList.add("hasDragCopy");
+                        draggableFollower.innerHTML = thisNode.innerHTML;
+                        UI.activeDragObject = draggableFollower;
+                        UI.draggedOriginal = thisNode;
+                        var pageScrollTopY = (window.pageYOffset || document.documentElement.scrollTop) - (document.documentElement.clientTop || 0);
+                        var clickedFollowerRect = e.target.getBoundingClientRect();
+                        objInitLeft = clickedFollowerRect.left;
+                        objInitTop = clickedFollowerRect.top + pageScrollTopY;
+                        dragStartX = e.pageX;
+                        dragStartY = e.pageY;
+                        document.addEventListener("mousemove", UI.handleDrag, false);
+                        document.addEventListener("mouseup", UI.endFollowerDrag, false);
+                        // remove z-index of other draggable elements:
+                        var dragTargetsInner = document.querySelectorAll('.draggableBar');
+                        for (var j = 0; j < dragTargetsInner.length; j++) {
+                            dragTargetsInner[j].parentElement.style.zIndex = 1;
+                        }
+                    }
                 }
             }
         }
@@ -5276,19 +5306,35 @@ var UI = {
         }
         document.getElementById(targetPanel).classList.add("active");
     },
-    initRetinueDrag: function() {
-        document.getElementById("retinueList").addEventListener("mousedown", function(e) {
-            e.preventDefault();
-            var thisNode = getNearestParentId(e.target);
-            // make sure it's not a right click:
-            if (e.button != 2) {
-                if (thisNode.classList.contains("waiting")) {
-                    // can be dragged:
-                    console.log(thisNode.id);
-                }
-            }
-        }, false);
+    endFollowerDrag: function(e) {
+
+        var dropTargetNode = getNearestParentId(e.target);
+
+        if (dropTargetNode.id == "dropFollowersPanel") {
+            console.log("added follower");
+        } else {
+            // snap back:
+            UI.activeDragObject.style.cssText = "z-index:4;left: " + (objInitLeft) + "px; top: " + (objInitTop) + "px;transition: transform 0.4s ease;";
+            UI.activeDragObject.addEventListener(whichTransitionEvent, function snapDraggedSlotBack(e) {
+
+                        UI.draggedOriginal.classList.remove("hasDragCopy");
+
+e.currentTarget.style.cssText = "left: -100px; top: -100px;";
+  
+
+
+                // remove this event listener now:
+                return e.currentTarget.removeEventListener(whichTransitionEvent, snapDraggedSlotBack, false);
+            }, false);
+        }
+
+        // tidy up and remove event listeners:
+        document.removeEventListener("mousemove", UI.handleDrag, false);
+        document.removeEventListener("mouseup", UI.endDrag, false);
+        UI.activeDragObject = '';
+
     }
+
 }
 function setupWeather() {
     if (!thisMapData.isInside) {

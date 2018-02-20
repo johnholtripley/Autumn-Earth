@@ -13,11 +13,11 @@
     }
     li {
         display: block;
-        border-bottom: 1px solid #111;
+       
         @include clearfix;
-        &:last-child {
-            border-bottom: 0;
-        }
+    &.hasDragCopy {
+        opacity: 0.2;
+    }
     }
     p {
         padding: 5px 6px;
@@ -28,6 +28,12 @@
         padding: 5px 6px;
         margin: 0;
     }
+
+}
+
+
+
+#retinuePanel, #draggableFollower {
     .portrait {
         float: left;
         display: block;
@@ -36,17 +42,29 @@
         width: 49px;
         height: 53px;
         padding: 7px 8px;
-@include border-box;
-img {
-    width: 33px;
-    height: 33px;
-    @include border-radius(33px);
-}
+        @include border-box;
+        img {
+            width: 33px;
+            height: 33px;
+            @include border-radius(33px);
+        }
     }
     .waiting .portrait {
         background-image: url(../images/game-world/interface/retinue/waiting-follower.png);
     }
+    h3 {
+ padding: 5px 6px;
+        margin: 0;
+        font-size: 13px;
+        color: #fff;
+    }
+    p {
+         padding: 5px 6px;
+        margin: 0 0 9px 0; 
+        font-size: 11px;color: #fff;
+    }
 }
+
 
 #retinueAvailableQuestMap {
     position: relative;
@@ -78,13 +96,19 @@ img {
 .followerLocation {
 
     img {
-        @include border-radius(20px);       position: absolute;
-    width: 20px;
-    height: 20px;
+        @include border-radius(20px);
+        position: absolute;
+        width: 20px;
+        height: 20px;
         border: 2px solid #fff;
-    @include border-radius(20px);
+        @include border-radius(20px);
         @include transform(translate(-10px, -10px));
-    z-index: 1;
+        z-index: 1;
+    }
+    &:hover {
+        &+.mapLocationTooltip {
+            opacity: 1;
+        }
     }
 }
 
@@ -116,12 +140,13 @@ img {
     background: #bd9e7b url(../images/game-world/interface/parchment.jpg) no-repeat 100% 0;
     @include clearfix;
     width: 100%;
-left: 0;
-top: 0;
+    left: 0;
+    top: 0;
     color: #111;
     font-size: 14px;
-    h4, p {
-         padding: 0 6px;
+    h4,
+    p {
+        padding: 0 6px;
     }
     @include togglePanel(0.4s);
 
@@ -133,6 +158,31 @@ top: 0;
         background: url(../images/game-world/interface/retinue/empty-follower.png) no-repeat 100% 100%;
         width: 49px;
         height: 53px;
-        float:left;
+        float: left;
     }
+}
+
+
+
+
+#draggableFollower {
+    position: absolute;
+    pointer-events: none;
+    left: -100px;
+    top: -100px;
+    @include transform-origin(0 0);
+    width: 322px;
+    background: #000;
+    
+
+
+}
+
+
+#dropFollowersPanel {
+    clear: both;
+    background: rgba(0,0,0,0.2);
+    @include clearfix;
+    padding: 5px;
+    margin: 5px;
 }
