@@ -43,6 +43,8 @@
     position: absolute;
     width: 20px;
     height: 20px;
+    outline: none;
+    cursor: url(../images/game-world/cursors/active.gif) 3 3, auto;
     background: rgba(200, 200, 20, 0.6);
     border: 2px solid #fff;
     @include border-radius(20px);

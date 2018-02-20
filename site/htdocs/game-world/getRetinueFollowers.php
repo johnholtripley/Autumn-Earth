@@ -130,7 +130,7 @@ if(mysql_num_rows($questsResult)>0) {
 	while ($questsRow = mysql_fetch_array($questsResult)) {
       extract($questsRow);
       // map is 700 x 450
-$retinuePanelOutput .= '<div class="mapLocation" style="left:'.(($mapCoordinateX/700)*100).'%;top:'.(($mapCoordinateY/450)*100).'%;"></div><div class="mapLocationTooltip" style="left:'.(($mapCoordinateX/700)*100).'%;top:'.(($mapCoordinateY/450)*100).'%;"><h4>'.$questName.'</h4><p>'.$questDescription.' (requires '.$questNumberOfFollowersRequired;
+$retinuePanelOutput .= '<button id="retinueQuestLocation'.$questID.'" class="mapLocation" style="left:'.(($mapCoordinateX/700)*100).'%;top:'.(($mapCoordinateY/450)*100).'%;"></button><div class="mapLocationTooltip" style="left:'.(($mapCoordinateX/700)*100).'%;top:'.(($mapCoordinateY/450)*100).'%;"><h4>'.$questName.'</h4><p>'.$questDescription.' (requires '.$questNumberOfFollowersRequired;
 
 if($questObstacles) {
   $retinuePanelOutput .= ' and ';
