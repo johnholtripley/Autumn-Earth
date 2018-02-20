@@ -30,14 +30,14 @@
     }
 }
 
-.mapWrapper {
+#retinueAvailableQuestMap {
     position: relative;
+    img {
+        display: block;
+        width: 100%;
+    }
 }
 
-.mapWrapper img {
-    display: block;
-    width: 100%;
-}
 
 .mapLocation {
     position: absolute;
@@ -73,5 +73,29 @@
         margin: 0;
         padding: 0;
         font-size: 11px;
+    }
+}
+
+.retinueQuestLocationDetailPanel {
+    opacity: 0;
+    pointer-events: none;
+    background: #bd9e7b url(../images/game-world/interface/parchment.jpg) no-repeat 0 0;
+    @include clearfix;
+    width: 238px;
+    left: 60%;
+    top: 335px;
+    color: #111;
+    font-size: 14px;
+    h4, p {
+         padding: 0 6px;
+    }
+    @include togglePanel(0.4s);
+    &.active {
+        opacity: 1;
+    pointer-events: auto;
+    }
+    .rewardSlot {
+        @include inventorySlot();
+        margin: 5px 6px;
     }
 }

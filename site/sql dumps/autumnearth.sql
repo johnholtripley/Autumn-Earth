@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 19, 2018 at 05:45 PM
+-- Generation Time: Feb 20, 2018 at 12:03 PM
 -- Server version: 5.6.24
 -- PHP Version: 5.6.8
 
@@ -1566,17 +1566,17 @@ CREATE TABLE IF NOT EXISTS `tblretinuefollowers` (
   `questStartedTime` datetime NOT NULL,
   `followerSex` varchar(6) COLLATE utf8_bin NOT NULL DEFAULT 'female',
   `currentContinent` varchar(255) COLLATE utf8_bin NOT NULL,
-  `mapCoordinateX` int(20) NOT NULL,
-  `mapCoordinateY` int(20) NOT NULL
+  `followerMapCoordinateX` int(20) NOT NULL,
+  `followerMapCoordinateY` int(20) NOT NULL
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
 -- Dumping data for table `tblretinuefollowers`
 --
 
-INSERT INTO `tblretinuefollowers` (`followerID`, `followerName`, `followerCleanURL`, `characterIdFollowing`, `activeQuestId`, `questStartedTime`, `followerSex`, `currentContinent`, `mapCoordinateX`, `mapCoordinateY`) VALUES
-(1, 'Eila Myrborn', 'eila-myrborn', 999, 1, '2018-02-19 13:22:00', 'female', 'eastern-continent', 120, 70),
-(2, 'Nellaith Wispfael', 'nellaith-wispfael', 999, 1, '2018-02-19 13:22:00', 'female', 'eastern-continent', 50, 135);
+INSERT INTO `tblretinuefollowers` (`followerID`, `followerName`, `followerCleanURL`, `characterIdFollowing`, `activeQuestId`, `questStartedTime`, `followerSex`, `currentContinent`, `followerMapCoordinateX`, `followerMapCoordinateY`) VALUES
+(1, 'Eila Myrborn', 'eila-myrborn', 999, -1, '2018-02-20 08:00:00', 'female', 'eastern-continent', 120, 70),
+(2, 'Nellaith Wispfael', 'nellaith-wispfael', 999, 1, '2018-02-20 08:00:00', 'female', 'eastern-continent', 50, 135);
 
 -- --------------------------------------------------------
 
@@ -1611,9 +1611,9 @@ CREATE TABLE IF NOT EXISTS `tblretinuequests` (
 INSERT INTO `tblretinuequests` (`questID`, `questName`, `questCleanURL`, `questDescription`, `questType`, `continent`, `mapCoordinateX`, `mapCoordinateY`, `needsToReturnToBase`, `questDifficulty`, `questObstacles`, `questCostToStart`, `questPartOfCampaign`, `questNumberOfFollowersRequired`, `questNPCMinimumLevel`, `questReward`, `timeCreated`) VALUES
 (1, 'Ancient Salvage', 'ancient-salvage', 'Get to that hoard and save what you can before the looters arrive.', 'salvage', 'eastern-continent', 0, 0, 1, 0, '', '0', 0, 2, 1, '[{"type":2,"quantity":1,"quality":100,"durability":100,"currentWear":0,"effectiveness":100,"colour":"1","enchanted":0,"hallmark":0,"inscription":""}]', '2018-02-08 00:00:00'),
 (2, 'Linen manufacture', 'linen-manufacture', 'Need a whole shipment of linen preparing. Get going.', 'crafting', 'eastern-continent', 0, 0, 0, 0, '', '0', 0, 1, 1, '', '2018-02-02 00:00:00'),
-(3, 'Follow the leader', 'follow-the-leader', 'Standard escort mission really.', 'escort', 'eastern-continent', 0, 0, 0, 0, '', '0', 0, 1, 1, '', '2018-02-04 00:00:00'),
-(4, 'Emissary escort', 'emissary-escort', 'Standard escort mission really.', 'escort', 'eastern-continent', 0, 0, 0, 0, '', '0', 0, 1, 1, '', '2018-02-05 00:00:00'),
-(5, 'Get to Bowery', 'get-to-bowery', 'Standard escort mission really.', 'escort', 'eastern-continent', 0, 0, 0, 0, '', '0', 0, 1, 1, '', '2018-02-01 00:00:00');
+(3, 'Follow the leader', 'follow-the-leader', 'Standard escort mission really.', 'escort', 'eastern-continent', 350, 180, 0, 0, '', '0', 0, 1, 1, '', '2018-02-04 00:00:00'),
+(4, 'Emissary escort', 'emissary-escort', 'Standard escort mission really.', 'escort', 'eastern-continent', 120, 120, 0, 0, 'sea', '0', 0, 1, 1, '', '2018-02-05 00:00:00'),
+(5, 'Get to Bowery', 'get-to-bowery', 'Standard escort mission really.', 'escort', 'eastern-continent', 550, 375, 0, 0, 'sea', '0', 0, 1, 1, '', '2018-02-01 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -1633,7 +1633,6 @@ CREATE TABLE IF NOT EXISTS `tblretinuequestsactive` (
 
 INSERT INTO `tblretinuequestsactive` (`questActiveId`, `questIdActiveOrComplete`, `characterId`) VALUES
 (1, 1, 999),
-(2, 3, 999),
 (3, 2, 999);
 
 -- --------------------------------------------------------

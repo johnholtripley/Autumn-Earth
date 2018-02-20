@@ -191,6 +191,7 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
 
     <?php // defined in getRetinueFollowers.php ?>
     <?php echo $retinuePanelOutput; ?>
+    <?php echo $questPanelDetailsOutput; ?>
 
     <div id="chestPanel">
       <div class="draggableBar"><span id="chestTitle">Chest</span></div>

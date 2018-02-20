@@ -3425,6 +3425,8 @@ const sendPostMessage = document.getElementById('sendPostMessage');
 const sendPostCharacter = document.getElementById('sendPostCharacter');
 const newPost = document.getElementById('newPost');
 const retinuePanel = document.getElementById('retinuePanel');
+const retinueAvailableQuestMap = document.getElementById('retinueAvailableQuestMap');
+
 
 var notificationQueue = [];
 var notificationIsShowing = false;
@@ -3525,6 +3527,7 @@ var UI = {
         gameWrapper.addEventListener("contextmenu", UI.handleRightClick, false);
         createRecipeList.onclick = UI.craftingPanelSingleClick;
         postPanel.onclick = UI.postPanelSingleClick;
+        retinueAvailableQuestMap.onclick = UI.openRetinueDetailPanel;
         document.getElementById('craftingRecipeCreateButton').onclick = UI.craftingRecipeCreate;
         splitStackPanel.onsubmit = inventorySplitStackSubmit;
         shopSplitStackPanel.onsubmit = UI.shopSplitStackSubmit;
@@ -5136,6 +5139,7 @@ var UI = {
         postObject.y = postObjectY;
         postObject.active = true;
         postPanel.classList.add('active');
+        audio.playSound(soundEffects['bookOpen'], 0);
     },
     closePost: function() {
         postObject.active = false;
@@ -5210,7 +5214,7 @@ var UI = {
         for (var i = 0; i < allRetinueQuestTimers.length; i++) {
             retinueQuestTimers.push([allRetinueQuestTimers[i], new Date().getTime() + (allRetinueQuestTimers[i].dataset.minutes) * 60 * 1000, ""]);
         }
-        console.log(retinueQuestTimers);
+
     },
 
     updateRetinueTimers: function() {
@@ -5245,8 +5249,7 @@ var UI = {
                 thisTimerText = "complete";
             }
             if (thisTimerText != retinueQuestTimers[i][2]) {
-                // only access the DOM if it's changed:
-                console.log(thisTimerText);
+                // only access the DOM if the text has changed:
                 retinueQuestTimers[i][0].innerHTML = thisTimerText;
                 retinueQuestTimers[i][2] = thisTimerText;
             }
@@ -5259,6 +5262,7 @@ var UI = {
     },
     openRetinuePanel: function(retinueObjectX, retinueObjectY) {
         retinuePanel.classList.add("active");
+        audio.playSound(soundEffects['bookOpen'], 0);
         retinueObject.active = true;
         retinueObject.x = retinueObjectX;
         retinueObject.y = retinueObjectY;
@@ -5266,6 +5270,13 @@ var UI = {
     closeRetinuePanel: function() {
         retinuePanel.classList.remove("active");
         retinueObject.active = false;
+    },
+    openRetinueDetailPanel: function(e) {
+var whichLocationButton = e.target.id;
+console.log(whichLocationButton);
+var targetPanel = whichLocationButton.replace(/retinueQuestLocation/i, "retinueQuestLocationDetail");
+console.log(targetPanel);
+document.getElementById(targetPanel).classList.add("active");
     }
 }
 function setupWeather() {
