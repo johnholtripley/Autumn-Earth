@@ -77,7 +77,13 @@ foreach ($followerData as $followerKey => $thisFollower) {
 
 
 foreach ($followerData as $followerKey => $thisFollower) {
-  $retinuePanelOutput .= '<li><h3>'.$thisFollower['followerName'].'</h3>';
+  if($thisFollower['activeQuestId'] == -1) {
+     $retinuePanelOutput .= '<li class="waiting">';
+  } else {
+    $retinuePanelOutput .= '<li>'; 
+  }
+ 
+  $retinuePanelOutput .= '<div class="portrait"><img src="/images/retinue/'.$thisFollower['followerID'].'.png" alt=""></div><h3>'.$thisFollower['followerName'].'</h3>';
   if($thisFollower['activeQuestId'] == -1) {
   $retinuePanelOutput .= '<p>waiting for a quest</p>';
   } else {
@@ -93,7 +99,7 @@ foreach ($followerData as $followerKey => $thisFollower) {
   } else {
   $inventoryImage = $thisReward->type;
   }
-  $retinuePanelOutput .= '<div class="postSlot"><img src="/images/game-world/inventory-items/'.$inventoryImage.'.png"><span class="qty">'.$thisReward->quantity.'</span></div>';
+  $retinuePanelOutput .= '<div class="postSlot"><img src="/images/game-world/inventory-items/'.$inventoryImage.'.png" alt=""><span class="qty">'.$thisReward->quantity.'</span></div>';
   }
   }
 
@@ -159,6 +165,10 @@ $questPanelDetailsOutput .= '<p>'.$questDescription.'</p>';
   }
   $questPanelDetailsOutput .= '<div class="rewardSlot"><img src="/images/game-world/inventory-items/'.$inventoryImage.'.png"><span class="qty">'.$thisReward->quantity.'</span></div>';
   }
+  }
+
+  for ($i=0;$i<$questNumberOfFollowersRequired;$i++) {
+    $questPanelDetailsOutput .= '<div class="followerSlot"></div>';
   }
 
 $questPanelDetailsOutput .= '</div>';
