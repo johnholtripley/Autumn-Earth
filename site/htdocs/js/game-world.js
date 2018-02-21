@@ -5370,6 +5370,7 @@ var UI = {
         retinueObject.destinationLocationX = thisPanelElement.getAttribute('data-locationx');
         retinueObject.destinationLocationY = thisPanelElement.getAttribute('data-locationy');
         retinueObject.hasToReturnToBase = thisPanelElement.getAttribute('data-requiresreturn');
+        retinueObject.questName = thisPanelElement.getAttribute('data-questname');
         retinueObject.followersAdded = [];
         for (var i = 0; i < retinueObject.followersRequired; i++) {
             retinueObject.followersAdded.push("null");
@@ -5391,41 +5392,25 @@ var UI = {
             if (retinueObject.followersAdded.indexOf("null") === -1) {
                 retinueQuestStart.disabled = false;
             }
-
-
-
-
-
-
-
             // determine the time required:
             var thisFollower, thisTimeRequired;
             var longestTimeRequired = 0;
             var longestTimeOutput = "";
             for (i = 0; i < retinueObject.followersAdded.length; i++) {
                 if (retinueObject.followersAdded[i] != "null") {
-thisFollower = document.getElementById("retinueFollower" + retinueObject.followersAdded[i]);
+                    thisFollower = document.getElementById("retinueFollower" + retinueObject.followersAdded[i]);
 
-thisTimeRequired = getRetinueQuestTime(thisFollower.getAttribute('data-locationx'),thisFollower.getAttribute('data-locationy'),retinueObject.destinationLocationX,retinueObject.destinationLocationY,retinueObject.hasToReturnToBase);
-// find the slowest time (if multiple followers) and use that:
-console.log(thisTimeRequired);
-if(thisTimeRequired[0]>longestTimeRequired) {
-longestTimeRequired = thisTimeRequired[0];
-longestTimeOutput  = thisTimeRequired[1];
-}
-
-          
+                    thisTimeRequired = getRetinueQuestTime(thisFollower.getAttribute('data-locationx'), thisFollower.getAttribute('data-locationy'), retinueObject.destinationLocationX, retinueObject.destinationLocationY, retinueObject.hasToReturnToBase);
+                    // find the slowest time (if multiple followers) and use that:
+              
+                    if (thisTimeRequired[0] > longestTimeRequired) {
+                        longestTimeRequired = thisTimeRequired[0];
+                        longestTimeOutput = thisTimeRequired[1];
+                    }
                 }
             }
-           
-            retinueQuestTimeRequired.innerHTML = "Time required: "+longestTimeOutput;
-
-
-
-
-
-
-
+            retinueObject.timeRequired = longestTimeRequired;
+            retinueQuestTimeRequired.innerHTML = "Time required: " + longestTimeOutput;
             UI.draggedOriginal.classList.remove("hasDragCopy");
             UI.activeDragObject.style.cssText = "left: -100px; top: -100px;";
             // add portrait to this slot
@@ -5448,11 +5433,38 @@ longestTimeOutput  = thisTimeRequired[1];
         UI.activeDragObject = '';
     },
     addFollowersToQuest: function() {
-        console.log("adding followers ");
+      var followersAssigned = [];
         for (i = 0; i < retinueObject.followersAdded.length; i++) {
-            console.log(retinueObject.followersAdded[i] + " ");
+           
+            // show status in follower panel:
+            
+document.querySelector('#retinueFollower'+retinueObject.followersAdded[i]+' p').innerHTML = 'active on "'+retinueObject.questName+'" <span class="retinueQuestTimer" data-minutes="'+retinueObject.timeRequired+'"></span>';
+// add to timers:
+retinueQuestTimers.push([document.querySelector('#retinueFollower'+retinueObject.followersAdded[i]+' .retinueQuestTimer'), new Date().getTime() + (retinueObject.timeRequired) * 60 * 1000, ""]);
+       
+followersAssigned.push(retinueObject.followersAdded[i]);
         }
-        console.log("to quest #" + retinueObject.openQuestDetail);
+       
+
+
+sendDataWithoutNeedingAResponse("/game-world/updateRetinueQuest.php?questID="+retinueObject.openQuestDetail+"&chr=999&followers="+followersAssigned.join("|"));
+
+
+        document.getElementById("retinueQuestLocationDetail" + retinueObject.openQuestDetail).classList.remove("active");
+        // remove from the map:
+        document.getElementById("retinueQuestLocation"+retinueObject.openQuestDetail).classList.remove("active");
+        retinueQuestStart.disabled = true;
+        retinueQuestTimeRequired.innerHTML = "Time required:";
+        // clean up:
+        delete retinueObject.draggedFollower;
+        delete retinueObject.openQuestDetail;
+        delete retinueObject.followersAdded;
+        delete retinueObject.followersRequired;
+        delete retinueObject.destinationLocationX;
+        delete retinueObject.destinationLocationY;
+        delete retinueObject.hasToReturnToBase;
+        delete retinueObject.timeRequired;
+        delete retinueObject.questName;
     }
 }
 function setupWeather() {
