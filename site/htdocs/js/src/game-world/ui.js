@@ -1966,48 +1966,73 @@ var UI = {
                 }
             }
         }
-
-
         var thisPanelElement = document.getElementById("retinueQuestLocationDetail" + whichPanelId);
         retinueObject.followersRequired = thisPanelElement.getAttribute('data-requires');
+        retinueObject.destinationLocationX = thisPanelElement.getAttribute('data-locationx');
+        retinueObject.destinationLocationY = thisPanelElement.getAttribute('data-locationy');
+        retinueObject.hasToReturnToBase = thisPanelElement.getAttribute('data-requiresreturn');
         retinueObject.followersAdded = [];
         for (var i = 0; i < retinueObject.followersRequired; i++) {
             retinueObject.followersAdded.push("null");
         }
-
         thisPanelElement.classList.add("active");
     },
     endFollowerDrag: function(e) {
         var dropTargetNode = getNearestParentId(e.target);
         if (dropTargetNode.id.indexOf("dropFollowersPanel") !== -1) {
-
-
-
             var thisDropTargetSplit = dropTargetNode.id.split("-");
             var whichFollowerSlot = thisDropTargetSplit[1];
             // check if a follower has already been added to this slot:
-
             if (retinueObject.followersAdded[whichFollowerSlot] != "null") {
                 // return previous
                 document.getElementById("retinueFollower" + retinueObject.followersAdded[whichFollowerSlot]).classList.add("available");
             }
-
             retinueObject.followersAdded[whichFollowerSlot] = retinueObject.draggedFollower;
             // check if that's all follower slots filled:
             if (retinueObject.followersAdded.indexOf("null") === -1) {
                 retinueQuestStart.disabled = false;
             }
 
+
+
+
+
+
+
             // determine the time required:
-            // ####
-            retinueQuestTimeRequired.innerHTML = "Time required: 60mins";
+            var thisFollower, thisTimeRequired;
+            var longestTimeRequired = 0;
+            var longestTimeOutput = "";
+            for (i = 0; i < retinueObject.followersAdded.length; i++) {
+                if (retinueObject.followersAdded[i] != "null") {
+thisFollower = document.getElementById("retinueFollower" + retinueObject.followersAdded[i]);
+
+thisTimeRequired = getRetinueQuestTime(thisFollower.getAttribute('data-locationx'),thisFollower.getAttribute('data-locationy'),retinueObject.destinationLocationX,retinueObject.destinationLocationY,retinueObject.hasToReturnToBase);
+// find the slowest time (if multiple followers) and use that:
+console.log(thisTimeRequired);
+if(thisTimeRequired[0]>longestTimeRequired) {
+longestTimeRequired = thisTimeRequired[0];
+longestTimeOutput  = thisTimeRequired[1];
+}
+
+          
+                }
+            }
+           
+            retinueQuestTimeRequired.innerHTML = "Time required: "+longestTimeOutput;
+
+
+
+
+
+
+
             UI.draggedOriginal.classList.remove("hasDragCopy");
             UI.activeDragObject.style.cssText = "left: -100px; top: -100px;";
             // add portrait to this slot
             dropTargetNode.innerHTML = '<img src="/images/retinue/' + retinueObject.draggedFollower + '.png">';
             // make this unavailable in the list:
             document.getElementById("retinueFollower" + retinueObject.draggedFollower).classList.remove("available");
-
         } else {
             // snap back:
             UI.activeDragObject.style.cssText = "z-index:4;left: " + (objInitLeft) + "px; top: " + (objInitTop) + "px;transition: transform 0.4s ease;";

@@ -24,6 +24,8 @@ var postObject = {
 var retinueObject = {
     "active": true
 };
+var retinueBaseLocationX = 200;
+var retinueBaseLocationY = 350;
 var jumpMapId = null;
 const titleTagPrefix = 'Autumn Earth';
 
