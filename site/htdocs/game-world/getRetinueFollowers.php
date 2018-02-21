@@ -168,11 +168,11 @@ $questPanelDetailsOutput .= '<p>'.$questDescription.'</p>';
   }
   }
 
-$questPanelDetailsOutput .= '<div id="dropFollowersPanel'.($questID).'" class="dropFollowersPanel">';
+
   for ($i=0;$i<$questNumberOfFollowersRequired;$i++) {
-    $questPanelDetailsOutput .= '<div class="followerSlot"></div>';
+    $questPanelDetailsOutput .= '<div class="followerSlot" id="dropFollowersPanel'.($questID).'-'.$i.'"></div>';
   }
-$questPanelDetailsOutput .= '</div>';
+
 
 $questPanelDetailsOutput .= '</div>';
 

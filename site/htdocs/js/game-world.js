@@ -3525,6 +3525,7 @@ var UI = {
         createRecipeList.onclick = UI.craftingPanelSingleClick;
         postPanel.onclick = UI.postPanelSingleClick;
         retinueAvailableQuestMap.onclick = UI.openRetinueDetailPanel;
+        retinueQuestStart.onclick = UI.addFollowersToQuest;
         document.getElementById('craftingRecipeCreateButton').onclick = UI.craftingRecipeCreate;
         splitStackPanel.onsubmit = inventorySplitStackSubmit;
         shopSplitStackPanel.onsubmit = UI.shopSplitStackSubmit;
@@ -3665,10 +3666,10 @@ var UI = {
                     if (thisNode.classList.contains("available")) {
                         // can be dragged:
                         thisNode.classList.add("hasDragCopy");
-                       // draggableFollower.innerHTML = thisNode.innerHTML;
-                       var thisFollowersId = thisNode.id.substring(15);
-                       retinueObject.draggedFollower = thisFollowersId;
-                       draggableFollower.innerHTML = '<div class="portrait"><img src="/images/retinue/'+thisFollowersId+'.png" alt=""></div>';
+                        // draggableFollower.innerHTML = thisNode.innerHTML;
+                        var thisFollowersId = thisNode.id.substring(15);
+                        retinueObject.draggedFollower = thisFollowersId;
+                        draggableFollower.innerHTML = '<div class="portrait"><img src="/images/retinue/' + thisFollowersId + '.png" alt=""></div>';
                         UI.activeDragObject = draggableFollower;
                         UI.draggedOriginal = thisNode;
                         var pageScrollTopY = (window.pageYOffset || document.documentElement.scrollTop) - (document.documentElement.clientTop || 0);
@@ -5300,39 +5301,79 @@ var UI = {
     },
     closeRetinuePanel: function() {
         retinuePanel.classList.remove("active");
-        retinueObject.active = false;
+        // remove all other retinueObject content:
+        retinueObject = {
+            "active": false
+        };
     },
     openRetinueDetailPanel: function(e) {
 
         var whichPanelId = e.target.id.substring(20);
         // get the corresponding panel:
-     
+
         var siblingPanels = document.getElementsByClassName('retinueQuestLocationDetailPanel');
         for (i = 0; i < siblingPanels.length; i++) {
             siblingPanels[i].classList.remove("active");
         }
         retinueObject.openQuestDetail = whichPanelId;
-       
-        var thisPanelElement =  document.getElementById("retinueQuestLocationDetail"+whichPanelId);
-         retinueObject.followersRequired = thisPanelElement.getAttribute('data-requires');
-         retinueObject.addedSoFar = 0;
-       thisPanelElement.classList.add("active");
+        // reset submit and time output:
+        retinueQuestStart.disabled = true;
+        retinueQuestTimeRequired.innerHTML = "Time required:";
+        // remove portraits from closed templates:
+        var allFollowerSlots = document.getElementsByClassName('followerSlot');
+        for (i = 0; i < allFollowerSlots.length; i++) {
+            allFollowerSlots[i].innerHTML = '';
+        }
+        if (retinueObject.followersAdded) {
+            // make any dragged NPCs available again:
+            for (i = 0; i < retinueObject.followersAdded.length; i++) {
+                if (retinueObject.followersAdded[i] != "null") {
+                    document.getElementById("retinueFollower" + retinueObject.followersAdded[i]).classList.add("available");
+                }
+            }
+        }
+
+
+        var thisPanelElement = document.getElementById("retinueQuestLocationDetail" + whichPanelId);
+        retinueObject.followersRequired = thisPanelElement.getAttribute('data-requires');
+        retinueObject.followersAdded = [];
+        for (var i = 0; i < retinueObject.followersRequired; i++) {
+            retinueObject.followersAdded.push("null");
+        }
+
+        thisPanelElement.classList.add("active");
     },
     endFollowerDrag: function(e) {
         var dropTargetNode = getNearestParentId(e.target);
         if (dropTargetNode.id.indexOf("dropFollowersPanel") !== -1) {
-            
-            console.log("adding "+retinueObject.draggedFollower+" to "+retinueObject.openQuestDetail);
-            retinueObject.addedSoFar++;
-            if(retinueObject.addedSoFar == retinueObject.followersRequired) {
-retinueQuestStart.disabled = false;
+
+
+
+            var thisDropTargetSplit = dropTargetNode.id.split("-");
+            var whichFollowerSlot = thisDropTargetSplit[1];
+            // check if a follower has already been added to this slot:
+
+            if (retinueObject.followersAdded[whichFollowerSlot] != "null") {
+                // return previous
+                document.getElementById("retinueFollower" + retinueObject.followersAdded[whichFollowerSlot]).classList.add("available");
             }
+
+            retinueObject.followersAdded[whichFollowerSlot] = retinueObject.draggedFollower;
+            // check if that's all follower slots filled:
+            if (retinueObject.followersAdded.indexOf("null") === -1) {
+                retinueQuestStart.disabled = false;
+            }
+
             // determine the time required:
             // ####
             retinueQuestTimeRequired.innerHTML = "Time required: 60mins";
             UI.draggedOriginal.classList.remove("hasDragCopy");
             UI.activeDragObject.style.cssText = "left: -100px; top: -100px;";
-            // add portrait to this slot ######
+            // add portrait to this slot
+            dropTargetNode.innerHTML = '<img src="/images/retinue/' + retinueObject.draggedFollower + '.png">';
+            // make this unavailable in the list:
+            document.getElementById("retinueFollower" + retinueObject.draggedFollower).classList.remove("available");
+
         } else {
             // snap back:
             UI.activeDragObject.style.cssText = "z-index:4;left: " + (objInitLeft) + "px; top: " + (objInitTop) + "px;transition: transform 0.4s ease;";
@@ -5345,8 +5386,15 @@ retinueQuestStart.disabled = false;
         }
         // tidy up and remove event listeners:
         document.removeEventListener("mousemove", UI.handleDrag, false);
-        document.removeEventListener("mouseup", UI.endDrag, false);
+        document.removeEventListener("mouseup", UI.endFollowerDrag, false);
         UI.activeDragObject = '';
+    },
+    addFollowersToQuest: function() {
+        console.log("adding followers ");
+        for (i = 0; i < retinueObject.followersAdded.length; i++) {
+            console.log(retinueObject.followersAdded[i] + " ");
+        }
+        console.log("to quest #" + retinueObject.openQuestDetail);
     }
 }
 function setupWeather() {

@@ -31,9 +31,10 @@
 
 
 
-#retinuePanel,
-#draggableFollower {
-    .portrait {
+#retinuePanel .portrait,
+#draggableFollower .portrait,
+.followerSlot {
+     
         float: left;
         display: block;
         
@@ -46,7 +47,7 @@
             height: 33px;
             @include border-radius(33px);
         }
-    }
+    
 
   
 }
@@ -193,7 +194,7 @@
     background: #000;
 }
 
-
+/*
 .dropFollowersPanel {
     clear: both;
     background: rgba(0, 0, 0, 0.2);
@@ -201,6 +202,7 @@
     padding: 5px;
     margin: 5px;
 }
+*/
 
 #retinueQuestTimeRequired {
     color: #fff;
