@@ -599,8 +599,7 @@ function cleanURL( $string ) {
  
     $string=trim( $string );
  
-    // limit to 128 chars:
-    $string = substr( $string, 0, 128 );
+ 
     // http://stackoverflow.com/questions/11330480/strip-php-variable-replace-white-spaces-with-dashes
     //Lower case everything
  
@@ -615,6 +614,9 @@ $string = strtr($string, array('é' => 'e', 'è' => 'e'));
     $string = preg_replace( "/[\s-]+/", " ", $string );
     //Convert whitespaces and underscore to dash
     $string = preg_replace( "/[\s_]/", "-", $string );
+
+       // limit to 128 chars:
+    $string = substr( $string, 0, 128 );
     return $string;
 }
  
