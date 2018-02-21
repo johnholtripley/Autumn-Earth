@@ -1287,6 +1287,7 @@ function update() {
             if (!(isInRange(hero.x, hero.y, retinueObject.x, retinueObject.y, closeDialogueDistance / 2))) {
 
                 UI.closeRetinuePanel();
+
             }
         }
     } else {
@@ -1544,7 +1545,7 @@ function checkForActions() {
                         break;
                     case "retinue":
                         // open the Retinue panel:
-                        UI.openRetinuePanel(thisMapData.items[i].x, thisMapData.items[i].y);
+                        UI.openRetinuePanel(thisMapData.items[i]);
                         break;
                     default:
                         // try and pick it up:
@@ -1618,7 +1619,7 @@ function processSpeech(thisObjectSpeaking, thisSpeechPassedIn, thisSpeechCode, i
                 UI.openPost(thisObjectSpeaking.x, thisObjectSpeaking.y);
                 break;
             case "retinue":
-                UI.openRetinuePanel(thisObjectSpeaking.x, thisObjectSpeaking.y);
+                UI.openRetinuePanel(thisObjectSpeaking);
                 break;
             case "sound":
                 audio.playSound(soundEffects[thisObjectSpeaking.speech[thisObjectSpeaking.speechIndex][2]], 0);

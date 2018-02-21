@@ -142,7 +142,7 @@
     @include transition(opacity 0.4s ease);
     padding: 6px;
     position: absolute;
-    width: 200px;
+    width: 120px;
     @include transform(translate(15px, -10px));
     background: #572800;
     color: #fff;
@@ -211,4 +211,21 @@
 
 #retinueQuestTimeRequired {
     color: #fff;
+}
+
+#retinueQuestStart {
+     cursor: url(../images/game-world/cursors/active.gif) 3 3, auto;
+     border: 0;
+     background: #53160d;
+     color: #fff;
+     text-transform: uppercase;
+     margin: 6px auto;
+     display: block;
+     padding: 6px 16px;
+     border: 2px solid #967834;
+     @include transition(opacity 0.2s ease);
+     &:disabled {
+        cursor: url(../images/game-world/cursors/default.gif) 3 3, auto;
+        opacity: 0.4;
+     }
 }
