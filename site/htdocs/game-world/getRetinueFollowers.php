@@ -77,13 +77,13 @@ foreach ($followerData as $followerKey => $thisFollower) {
 
 
 foreach ($followerData as $followerKey => $thisFollower) {
-  $waitingClass='';
+  $availableClass='';
   if($thisFollower['activeQuestId'] == -1) {
-     $waitingClass .= ' class="waiting"';
+     $availableClass .= ' class="available"';
   } else {
     
   }
- $retinuePanelOutput .= '<li id="retinueFollower'.$thisFollower['followerID'].'"'.$waitingClass.'>'; 
+ $retinuePanelOutput .= '<li id="retinueFollower'.$thisFollower['followerID'].'"'.$availableClass.'>'; 
   $retinuePanelOutput .= '<div class="portrait"><img src="/images/retinue/'.$thisFollower['followerID'].'.png" alt=""></div><h3>'.$thisFollower['followerName'].'</h3>';
   if($thisFollower['activeQuestId'] == -1) {
   $retinuePanelOutput .= '<p>waiting for a quest</p>';
@@ -152,7 +152,7 @@ $retinuePanelOutput = rtrim($retinuePanelOutput, ', ');
   $retinuePanelOutput .= ')</p></div>';
 
 
-$questPanelDetailsOutput .= '<div id="retinueQuestLocationDetail'.($questID).'" class="retinueQuestLocationDetailPanel">';
+$questPanelDetailsOutput .= '<div id="retinueQuestLocationDetail'.($questID).'" class="retinueQuestLocationDetailPanel" data-requires="'.$questNumberOfFollowersRequired.'" data-locationx="'.$mapCoordinateX.'" data-locationy="'.$mapCoordinateY.'" data-requiresreturn="'.$needsToReturnToBase.'">';
 $questPanelDetailsOutput .= '<h4>'.$questName.' <span>('.$questType.')</span></h4>';
 $questPanelDetailsOutput .= '<p>'.$questDescription.'</p>';
 
@@ -187,6 +187,8 @@ $retinuePanelOutput .= '<div class="mapLocationTooltip" style="left:'.(($thisFol
 
 
    $retinuePanelOutput .= '</div>';
+   $retinuePanelOutput .= '<p id="retinueQuestTimeRequired">Time required:</p>';
+   $retinuePanelOutput .= '<button id="retinueQuestStart" disabled="disabled">Start quest</button>';
  // $retinuePanelOutput .= "</ol>";
 } else {
 $retinuePanelOutput .= "<p>No quests currently available</p>";

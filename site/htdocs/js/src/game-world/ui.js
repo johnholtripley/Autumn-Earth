@@ -61,6 +61,8 @@ const newPost = document.getElementById('newPost');
 const retinuePanel = document.getElementById('retinuePanel');
 const retinueAvailableQuestMap = document.getElementById('retinueAvailableQuestMap');
 const draggableFollower = document.getElementById('draggableFollower');
+const retinueQuestStart = document.getElementById('retinueQuestStart');
+const retinueQuestTimeRequired = document.getElementById('retinueQuestTimeRequired');
 
 
 var notificationQueue = [];
@@ -294,10 +296,13 @@ var UI = {
                 e.preventDefault();
                 // make sure it's not a right click:
                 if (e.button != 2) {
-                    if (thisNode.classList.contains("waiting")) {
+                    if (thisNode.classList.contains("available")) {
                         // can be dragged:
                         thisNode.classList.add("hasDragCopy");
-                        draggableFollower.innerHTML = thisNode.innerHTML;
+                       // draggableFollower.innerHTML = thisNode.innerHTML;
+                       var thisFollowersId = thisNode.id.substring(15);
+                       retinueObject.draggedFollower = thisFollowersId;
+                       draggableFollower.innerHTML = '<div class="portrait"><img src="/images/retinue/'+thisFollowersId+'.png" alt=""></div>';
                         UI.activeDragObject = draggableFollower;
                         UI.draggedOriginal = thisNode;
                         var pageScrollTopY = (window.pageYOffset || document.documentElement.scrollTop) - (document.documentElement.clientTop || 0);
@@ -1932,21 +1937,36 @@ var UI = {
         retinueObject.active = false;
     },
     openRetinueDetailPanel: function(e) {
-        var whichLocationButton = e.target.id;
+
+        var whichPanelId = e.target.id.substring(20);
         // get the corresponding panel:
-        var targetPanel = whichLocationButton.replace(/retinueQuestLocation/i, "retinueQuestLocationDetail");
+     
         var siblingPanels = document.getElementsByClassName('retinueQuestLocationDetailPanel');
         for (i = 0; i < siblingPanels.length; i++) {
             siblingPanels[i].classList.remove("active");
         }
-        document.getElementById(targetPanel).classList.add("active");
+        retinueObject.openQuestDetail = whichPanelId;
+       
+        var thisPanelElement =  document.getElementById("retinueQuestLocationDetail"+whichPanelId);
+         retinueObject.followersRequired = thisPanelElement.getAttribute('data-requires');
+         retinueObject.addedSoFar = 0;
+       thisPanelElement.classList.add("active");
     },
     endFollowerDrag: function(e) {
         var dropTargetNode = getNearestParentId(e.target);
         if (dropTargetNode.id.indexOf("dropFollowersPanel") !== -1) {
-            console.log("added follower " + UI.draggedOriginal.id + " to quest #" + dropTargetNode.parentNode.id);
+            
+            console.log("adding "+retinueObject.draggedFollower+" to "+retinueObject.openQuestDetail);
+            retinueObject.addedSoFar++;
+            if(retinueObject.addedSoFar == retinueObject.followersRequired) {
+retinueQuestStart.disabled = false;
+            }
+            // determine the time required:
+            // ####
+            retinueQuestTimeRequired.innerHTML = "Time required: 60mins";
             UI.draggedOriginal.classList.remove("hasDragCopy");
             UI.activeDragObject.style.cssText = "left: -100px; top: -100px;";
+            // add portrait to this slot ######
         } else {
             // snap back:
             UI.activeDragObject.style.cssText = "z-index:4;left: " + (objInitLeft) + "px; top: " + (objInitTop) + "px;transition: transform 0.4s ease;";

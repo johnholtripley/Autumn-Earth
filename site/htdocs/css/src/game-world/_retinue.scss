@@ -5,7 +5,6 @@
     background: #000;
     font-size: 13px;
     @include togglePanel(0.4s);
-    color: #fff;
     ol {
         margin: 0;
         padding: 0;
@@ -37,7 +36,7 @@
     .portrait {
         float: left;
         display: block;
-        margin-right: 6px;
+        
         width: 49px;
         height: 53px;
         padding: 7px 8px;
@@ -49,7 +48,22 @@
         }
     }
 
-    h3 {
+  
+}
+
+#retinuePanel {
+    .portrait {
+        background: url(../images/game-world/interface/retinue/active-follower.png) no-repeat 100% 100%;
+        margin-right: 6px;
+    }
+    .available .portrait {
+        background-image: url(../images/game-world/interface/retinue/waiting-follower.png);
+    }
+
+}
+
+#retinueList {
+          h3 {
         padding: 5px 6px;
         margin: 0;
         font-size: 13px;
@@ -60,15 +74,6 @@
         margin: 0 0 9px 0;
         font-size: 11px;
         color: #fff;
-    }
-}
-
-#retinuePanel {
-    .portrait {
-        background: url(../images/game-world/interface/retinue/active-follower.png) no-repeat 100% 100%;
-    }
-    .waiting .portrait {
-        background-image: url(../images/game-world/interface/retinue/waiting-follower.png);
     }
 }
 
@@ -160,6 +165,7 @@
     h4,
     p {
         padding: 0 6px;
+        color: #111;
     }
     @include togglePanel(0.4s);
 
@@ -184,7 +190,6 @@
     left: -100px;
     top: -100px;
     @include transform-origin(0 0);
-    width: 322px;
     background: #000;
 }
 
@@ -195,4 +200,8 @@
     @include clearfix;
     padding: 5px;
     margin: 5px;
+}
+
+#retinueQuestTimeRequired {
+    color: #fff;
 }
