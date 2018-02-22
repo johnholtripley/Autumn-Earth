@@ -160,6 +160,7 @@ var UI = {
         postPanel.onclick = UI.postPanelSingleClick;
         retinueAvailableQuestMap.onclick = UI.openRetinueDetailPanel;
         retinueQuestStart.onclick = UI.addFollowersToQuest;
+        retinuePanel.onclick = UI.retinueSingleClick;
         document.getElementById('craftingRecipeCreateButton').onclick = UI.craftingRecipeCreate;
         splitStackPanel.onsubmit = inventorySplitStackSubmit;
         shopSplitStackPanel.onsubmit = UI.shopSplitStackSubmit;
@@ -2073,5 +2074,13 @@ var UI = {
         delete retinueObject.hasToReturnToBase;
         delete retinueObject.timeRequired;
         delete retinueObject.questName;
+    }, retinueSingleClick:function(e) {
+        
+        if(e.target.className == 'takeRewards') {
+            e.preventDefault();
+            var parentPanel = getNearestParentId(e.target);
+            retinueMissionCompleted(parentPanel.id.substring(15));
+        }
+
     }
 }

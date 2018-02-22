@@ -119,16 +119,20 @@
 
 .followerLocation {
 
-    img {
-        @include border-radius(20px);
+    
+       
         position: absolute;
-        width: 20px;
+     
+        @include transform(translate(-10px, -10px));
+        img {
+              width: 20px;
         height: 20px;
         border: 2px solid #fff;
-        @include border-radius(20px);
-        @include transform(translate(-10px, -10px));
+        @include border-radius(20px); 
+         @include border-radius(20px);
+        }
         z-index: 1;
-    }
+    
     &:hover {
         &+.mapLocationTooltip {
             opacity: 1;
@@ -218,6 +222,7 @@
      border: 0;
      background: #53160d;
      color: #fff;
+     outline:none;
      text-transform: uppercase;
      margin: 6px auto;
      display: block;
@@ -228,4 +233,56 @@
         cursor: url(../images/game-world/cursors/default.gif) 3 3, auto;
         opacity: 0.4;
      }
+}
+
+
+.retinueCompletePanel {
+    background: #36210c url(../images/game-world/interface/retinue/reward-chest.jpg) no-repeat 50% 0;
+    border: 3px solid #fed308;
+    position: absolute;
+    left:0;
+    top:50%;
+    @include transform(translateY(-50%));
+    width:100%;
+    z-index:3;
+    @include border-box;
+    @include clearfix;
+    padding: 100px 6px 12px 6px;
+    pointer-events: none;
+    opacity: 0;
+    @include transition(opacity 0.4s ease);
+    &.active {
+        opacity: 1;
+        pointer-events: auto;
+    }
+    h2 {
+color: #fff;
+text-align:center;
+font-size: 16px;
+    }
+    h3{
+      color: #fff;
+text-align:center;
+font-size: 14px;
+
+text-transform:uppercase;  
+    }
+
+    .rewardSlot {
+        @include inventorySlot();
+
+    }
+    .takeRewards {
+          cursor: url(../images/game-world/cursors/active.gif) 3 3, auto;
+     border: 0;
+     background: #53160d;
+     color: #fff;
+     text-transform: uppercase;
+     margin: 6px auto;
+     clear: both;
+     display: block;
+     padding: 6px 16px;
+     border: 2px solid #967834;
+     outline:none;
+    }
 }

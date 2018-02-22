@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 21, 2018 at 02:50 PM
+-- Generation Time: Feb 22, 2018 at 10:47 AM
 -- Server version: 5.6.24
 -- PHP Version: 5.6.8
 
@@ -779,7 +779,7 @@ CREATE TABLE IF NOT EXISTS `tblmail` (
   `mailContents` mediumtext,
   `sentTime` datetime DEFAULT NULL,
   `mailRead` char(1) DEFAULT NULL,
-  `attachment` varchar(20000) DEFAULT NULL,
+  `attachment` longtext,
   `attachmentTaken` tinyint(1) NOT NULL DEFAULT '0',
   `isArchived` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB AUTO_INCREMENT=939 DEFAULT CHARSET=latin1;
@@ -1576,7 +1576,7 @@ CREATE TABLE IF NOT EXISTS `tblretinuefollowers` (
 
 INSERT INTO `tblretinuefollowers` (`followerID`, `followerName`, `followerCleanURL`, `characterIdFollowing`, `activeQuestId`, `questStartedTime`, `followerSex`, `currentContinent`, `followerMapCoordinateX`, `followerMapCoordinateY`) VALUES
 (1, 'Eila Myrborn', 'eila-myrborn', 999, -1, '2018-02-21 13:44:49', 'female', 'eastern-continent', 120, 70),
-(2, 'Nellaith Wispfael', 'nellaith-wispfael', 999, -1, '2018-02-21 13:44:49', 'female', 'eastern-continent', 375, 135);
+(2, 'Nellaith Wispfael', 'nellaith-wispfael', 999, -1, '2018-02-21 14:46:02', 'female', 'eastern-continent', 375, 135);
 
 -- --------------------------------------------------------
 
@@ -1600,20 +1600,19 @@ CREATE TABLE IF NOT EXISTS `tblretinuequests` (
   `questPartOfCampaign` int(128) NOT NULL,
   `questNumberOfFollowersRequired` int(10) NOT NULL DEFAULT '1',
   `questNPCMinimumLevel` int(10) NOT NULL DEFAULT '1',
-  `questReward` varchar(20000) CHARACTER SET latin1 NOT NULL,
+  `questReward` longtext CHARACTER SET latin1 NOT NULL,
+  `activeDuringSeason` int(11) DEFAULT NULL,
   `timeCreated` datetime NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=101 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
 -- Dumping data for table `tblretinuequests`
 --
 
-INSERT INTO `tblretinuequests` (`questID`, `questName`, `questCleanURL`, `questDescription`, `questType`, `continent`, `mapCoordinateX`, `mapCoordinateY`, `needsToReturnToBase`, `questDifficulty`, `questObstacles`, `questCostToStart`, `questPartOfCampaign`, `questNumberOfFollowersRequired`, `questNPCMinimumLevel`, `questReward`, `timeCreated`) VALUES
-(1, 'Ancient Salvage', 'ancient-salvage', 'Get to that hoard and save what you can before the looters arrive.', 'salvage', 'eastern-continent', 0, 0, 1, 0, '', '0', 0, 2, 1, '[{"type":2,"quantity":1,"quality":100,"durability":100,"currentWear":0,"effectiveness":100,"colour":"1","enchanted":0,"hallmark":0,"inscription":""}]', '2018-02-08 00:00:00'),
-(2, 'Linen manufacture', 'linen-manufacture', 'Need a whole shipment of linen preparing. Get going.', 'crafting', 'eastern-continent', 0, 0, 0, 0, '', '0', 0, 1, 1, '', '2018-02-02 00:00:00'),
-(3, 'Follow the leader', 'follow-the-leader', 'Standard escort mission really.', 'escort', 'eastern-continent', 350, 180, 0, 0, '', '0', 0, 1, 1, '', '2018-02-04 00:00:00'),
-(4, 'Lay of the land', 'lay-of-the-land', 'Map out the region', 'cartography', 'eastern-continent', 120, 120, 0, 0, 'sea', '0', 0, 1, 1, '[{"type":2,"quantity":1,"quality":100,"durability":100,"currentWear":0,"effectiveness":100,"colour":"1","enchanted":0,"hallmark":0,"inscription":""}]', '2018-02-05 00:00:00'),
-(5, 'Get to Bowery', 'get-to-bowery', 'Standard escort mission really.', 'escort', 'eastern-continent', 550, 375, 0, 0, 'sea', '0', 0, 2, 1, '', '2018-02-01 00:00:00');
+INSERT INTO `tblretinuequests` (`questID`, `questName`, `questCleanURL`, `questDescription`, `questType`, `continent`, `mapCoordinateX`, `mapCoordinateY`, `needsToReturnToBase`, `questDifficulty`, `questObstacles`, `questCostToStart`, `questPartOfCampaign`, `questNumberOfFollowersRequired`, `questNPCMinimumLevel`, `questReward`, `activeDuringSeason`, `timeCreated`) VALUES
+(98, 'Lay of the Land on island', 'lay-of-the-land', 'Map out the region.', 'cartography', 'eastern-continent', 188, 36, 0, 0, 'sea', '0', 0, 1, 1, '', NULL, '2018-02-21 17:01:00'),
+(99, 'All the fun of the fair', 'all-the-fun-of-the-fair', 'Enjoy yourself for a while.', 'travelling fair', 'eastern-continent', 413, 302, 0, 0, '', '0', 0, 1, 1, '', NULL, '2018-02-21 17:01:06'),
+(100, 'Lay of the Land at sea', 'lay-of-the-land-2', 'Map out the region.', 'cartography', 'eastern-continent', 502, 356, 0, 0, 'sea', '0', 0, 1, 1, '', NULL, '2018-02-21 17:01:08');
 
 -- --------------------------------------------------------
 
@@ -1625,7 +1624,7 @@ CREATE TABLE IF NOT EXISTS `tblretinuequestsactive` (
   `questActiveId` int(11) NOT NULL,
   `questIdActiveOrComplete` int(10) NOT NULL,
   `characterId` int(10) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
 -- Dumping data for table `tblretinuequestsactive`
@@ -1644,28 +1643,29 @@ INSERT INTO `tblretinuequestsactive` (`questActiveId`, `questIdActiveOrComplete`
 CREATE TABLE IF NOT EXISTS `tblretinuequesttypes` (
   `questTypeID` int(11) NOT NULL,
   `questTypeName` varchar(255) COLLATE utf8_bin NOT NULL,
-  `questTypeDescription` varchar(255) COLLATE utf8_bin NOT NULL
+  `questTypeBaseTitleGrammar` mediumtext COLLATE utf8_bin NOT NULL,
+  `questTypeBaseGrammar` longtext COLLATE utf8_bin NOT NULL
 ) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
 -- Dumping data for table `tblretinuequesttypes`
 --
 
-INSERT INTO `tblretinuequesttypes` (`questTypeID`, `questTypeName`, `questTypeDescription`) VALUES
-(1, 'cartography', 'Lorem ipsum and so on.'),
-(2, 'card game', 'Lorem ipsum and so on.'),
-(3, 'card tournament', 'Lorem ipsum and so on.'),
-(5, 'salvage', 'Lorem ipsum and so on.'),
-(6, 'rescue', 'Lorem ipsum and so on.'),
-(7, 'delivery', 'Lorem ipsum and so on.'),
-(8, 'escort', 'Lorem ipsum and so on.'),
-(9, 'construction', 'Lorem ipsum and so on.'),
-(10, 'dungeon delve', 'Lorem ipsum and so on.'),
-(11, 'crafting', 'Lorem ipsum and so on.'),
-(12, 'travelling fair', 'Lorem ipsum and so on.'),
-(13, 'pilgrimage', 'Lorem ipsum and so on.'),
-(14, 'merchant caravan', 'Lorem ipsum and so on.'),
-(15, 'diplomacy', 'Lorem ipsum and so on.');
+INSERT INTO `tblretinuequesttypes` (`questTypeID`, `questTypeName`, `questTypeBaseTitleGrammar`, `questTypeBaseGrammar`) VALUES
+(1, 'cartography', 'Lay of the Land', 'Map out the region.'),
+(2, 'card game', 'Play your best hand', 'Be the best at cards.'),
+(3, 'card tournament', 'Climb the ladder', 'Compete in a ranked card game tournament.'),
+(5, 'salvage', 'Get yer boots on', 'There''s salvage to be had.'),
+(6, 'rescue', 'To the rescue', 'They need your help. Pitch in quickly.'),
+(7, 'delivery', 'Knock, knock', 'The post isn''t fast enough for this. Make haste.'),
+(8, 'escort', 'Showing the way', 'Ensure the destination is reached safely.'),
+(9, 'construction', 'Laying the foundations', 'Build up, strengthen and expand.'),
+(10, 'dungeon delve', 'A long descent', 'Enter the depths and face the unknown.'),
+(11, 'crafting', 'Glue and thread', 'Make exquisite items.'),
+(12, 'travelling fair', 'All the fun of the fair', 'Enjoy yourself for a while.'),
+(13, 'pilgrimage', 'Devoting some time', 'A journey of reverence.'),
+(14, 'merchant caravan', 'Across the plains...', 'Large scale trade across vast distances.'),
+(15, 'diplomacy', 'Offering hope', 'Future treaties are in your hands.');
 
 -- --------------------------------------------------------
 
@@ -2463,12 +2463,12 @@ ALTER TABLE `tblretinuefollowers`
 -- AUTO_INCREMENT for table `tblretinuequests`
 --
 ALTER TABLE `tblretinuequests`
-  MODIFY `questID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=6;
+  MODIFY `questID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=101;
 --
 -- AUTO_INCREMENT for table `tblretinuequestsactive`
 --
 ALTER TABLE `tblretinuequestsactive`
-  MODIFY `questActiveId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=8;
+  MODIFY `questActiveId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT for table `tblretinuequesttypes`
 --

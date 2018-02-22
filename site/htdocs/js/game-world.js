@@ -3397,6 +3397,52 @@ function getRetinueQuestTime(followerX, followerY, destinationX, destinationY, h
 
     return ([thisTimeRequired, thisTimerText]);
 }
+
+
+
+
+function retinueMissionCompleted(questId) {
+    getJSON("/game-world/getRetinueRewards.php?id=" + questId + "&chr=" + characterId, function(data) {
+        if (data.item != "null") {
+            // try and add to inventory:
+            inventoryCheck = canAddItemToInventory(data.item);
+            if (inventoryCheck[0]) {
+                UI.showChangeInInventory(inventoryCheck[1]);
+            } else {
+                //post it ##########
+                UI.showNotification("<p>Reward has been posted to you</p>");
+            }
+        } else {
+            // no reward
+        }
+        hero.stats.retinueMissionsCompleted++;
+
+
+var allFollowersOnThisQuest = data.followerIds.split(",");
+var newLocationX = (data.endLocationX/700)*100;
+var newLocationY = (data.endLocationY/450)*100;
+var thisFollower;
+for (var i=0;i< allFollowersOnThisQuest.length;i++) {
+    // set follower to be available again:
+    thisFollower = document.getElementById('retinueFollower'+allFollowersOnThisQuest[i]);
+    thisFollower.classList.add("available");
+    // move follower to completed location:
+    document.getElementById('followerLocation'+allFollowersOnThisQuest[i]).style.cssText = "left: "+newLocationX+"%; top: "+newLocationY+"%;";
+    thisFollower.setAttribute('data-locationx',newLocationX);
+    thisFollower.setAttribute('data-locationy',newLocationY);
+}
+
+        document.getElementById('retinueComplete' + questId).classList.remove('active');
+// update database that these followers are available and with the new location:
+sendDataWithoutNeedingAResponse("/game-world/gotRetinueRewards.php?id=" + questId+"&newLocationX="+data.endLocationX+"&newLocationY="+data.endLocationY);
+
+    
+        
+    }, function(status) {
+        // error - try again:
+        retinueMissionCompleted(questId);
+    });
+}
 // global vars:
 const recipeSearch = document.getElementById('recipeSearch');
 const clearRecipeSearch = document.getElementById('clearRecipeSearch');
@@ -3559,6 +3605,7 @@ var UI = {
         postPanel.onclick = UI.postPanelSingleClick;
         retinueAvailableQuestMap.onclick = UI.openRetinueDetailPanel;
         retinueQuestStart.onclick = UI.addFollowersToQuest;
+        retinuePanel.onclick = UI.retinueSingleClick;
         document.getElementById('craftingRecipeCreateButton').onclick = UI.craftingRecipeCreate;
         splitStackPanel.onsubmit = inventorySplitStackSubmit;
         shopSplitStackPanel.onsubmit = UI.shopSplitStackSubmit;
@@ -5472,6 +5519,14 @@ var UI = {
         delete retinueObject.hasToReturnToBase;
         delete retinueObject.timeRequired;
         delete retinueObject.questName;
+    }, retinueSingleClick:function(e) {
+        
+        if(e.target.className == 'takeRewards') {
+            e.preventDefault();
+            var parentPanel = getNearestParentId(e.target);
+            retinueMissionCompleted(parentPanel.id.substring(15));
+        }
+
     }
 }
 function setupWeather() {

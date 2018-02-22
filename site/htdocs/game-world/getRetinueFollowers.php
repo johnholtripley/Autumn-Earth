@@ -2,7 +2,7 @@
 // get retinue followers for this character:
 
 
-
+date_default_timezone_set('Europe/London');
 
 // get from game state: ####
 $chr = 999;
@@ -30,12 +30,45 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
 }
 
 
+
+
+
+
+// get current active events:
+$activeEvents = [];
+$eventsQuery = "SELECT eventid from tblevents WHERE ((repeatsAnnually and ((dayofyear(now()) between (dayofyear(eventstart)) and (dayofyear(eventstart)+eventdurationdays-1)) or (dayofyear(now()) between (dayofyear(eventstart) - 365) and (dayofyear(eventstart)+eventdurationdays-366)))) or ((repeatsAnnually = 0) and (date(now()) between (eventstart) and (eventstart+eventdurationdays))))";
+
+    $eventsResult = mysql_query( $eventsQuery ) or die ( "couldn't execute events query: ".$eventsQuery );
+$numberofrows = mysql_num_rows( $eventsResult );
+    if ( $numberofrows>0 ) {
+        while ( $row = mysql_fetch_array( $eventsResult ) ) {
+            //extract( $row );
+            array_push($activeEvents, $row['eventid']);
+        }
+    }
+mysql_free_result($eventsResult);
+
+
+$activeSeasonQuery = 'activeduringseason is null';
+if(count($activeEvents)>0) {
+   $activeSeasonQuery = '(activeduringseason in ('.implode(",",$activeEvents).') or activeduringseason is null)'; 
+}
+
+
+
+
+
+
+
+
 $retinuePanelOutput = '<div id="retinuePanel">';
 $retinuePanelOutput .= '<div class="draggableBar">Retinue</div>';
 $retinuePanelOutput .= '<button class="closePanel">close</button>';
 
+$retinuePanelCompleteOutput = '';
+
 $activeQuestsIds = array();
-  $query = "SELECT * FROM tblretinuefollowers left join tblretinuequests on tblretinuefollowers.activeQuestId = tblretinuequests.questID where tblretinuefollowers.characterIdFollowing='".$chr."'";
+  $query = "SELECT * FROM tblretinuefollowers left join tblretinuequests on tblretinuefollowers.activeQuestId = tblretinuequests.questID where tblretinuefollowers.characterIdFollowing='".$chr."' and ".$activeSeasonQuery;
 
       $result = mysql_query($query) or die ();
       if(mysql_num_rows($result)>0) {
@@ -92,6 +125,12 @@ foreach ($followerData as $followerKey => $thisFollower) {
 
   if($thisFollower['completedSoFar'] >= $questTimes[($thisFollower['activeQuestId'])] ) {
   $retinuePanelOutput .= '<p>COMPLETED "'.$thisFollower['questName'].'"</p>';
+
+
+
+$retinuePanelCompleteOutput .= '<div class="retinueCompletePanel active" id="retinueComplete'.$thisFollower['activeQuestId'].'">';
+$retinuePanelCompleteOutput .= '<h2>'.$thisFollower['questName'].'</h2>';
+$retinuePanelCompleteOutput .= '<h3>complete</h3>';
   if($thisFollower['questReward']) {
   $rewardObject = json_decode($thisFollower['questReward']);
   foreach ($rewardObject as &$thisReward) {
@@ -100,9 +139,17 @@ foreach ($followerData as $followerKey => $thisFollower) {
   } else {
   $inventoryImage = $thisReward->type;
   }
-  $retinuePanelOutput .= '<div class="postSlot"><img src="/images/game-world/inventory-items/'.$inventoryImage.'.png" alt=""><span class="qty">'.$thisReward->quantity.'</span></div>';
+  $retinuePanelCompleteOutput .= '<div class="rewardSlot"><img src="/images/game-world/inventory-items/'.$inventoryImage.'.png" alt=""><span class="qty">'.$thisReward->quantity.'</span></div>';
   }
+  $retinuePanelCompleteOutput .= '<button class="takeRewards">Take all</button>';
+  } else {
+   $retinuePanelCompleteOutput .= '<button class="takeRewards">Complete</button>'; 
   }
+  
+$retinuePanelCompleteOutput .= '</div>';
+
+
+
 
   } else {
  
@@ -181,8 +228,8 @@ $questPanelDetailsOutput .= '</div>';
 
 // plot followers:
   foreach ($followerData as $followerKey => $thisFollower) {
-$retinuePanelOutput .= '<div class="followerLocation" ><img src="/images/retinue/'.$thisFollower['followerID'].'.png" style="left:'.(($thisFollower['followerMapCoordinateX']/700)*100).'%;top:'.(($thisFollower['followerMapCoordinateY']/450)*100).'%;"></div>';
-$retinuePanelOutput .= '<div class="mapLocationTooltip" style="left:'.(($thisFollower['followerMapCoordinateX']/700)*100).'%;top:'.(($thisFollower['followerMapCoordinateY']/450)*100).'%;">'.$thisFollower['followerName'].'</div>';
+$retinuePanelOutput .= '<div class="followerLocation" style="left:'.(($thisFollower['followerMapCoordinateX']/700)*100).'%;top:'.(($thisFollower['followerMapCoordinateY']/450)*100).'%;" id="followerLocation'.$thisFollower['followerID'].'"><img src="/images/retinue/'.$thisFollower['followerID'].'.png" ></div>';
+$retinuePanelOutput .= '<div class="mapLocationTooltip" id="followerLocationTooltip'.$thisFollower['followerID'].'" style="left:'.(($thisFollower['followerMapCoordinateX']/700)*100).'%;top:'.(($thisFollower['followerMapCoordinateY']/450)*100).'%;">'.$thisFollower['followerName'].'</div>';
   }
 
 
@@ -196,6 +243,8 @@ $retinuePanelOutput .= "<p>No quests currently available</p>";
 mysql_free_result($questsResult);
 
 $retinuePanelOutput .= '<div id="retinueDetailWrapper">'.$questPanelDetailsOutput.'</div>';
+
+$retinuePanelOutput .= $retinuePanelCompleteOutput;
 
 $retinuePanelOutput .= '</div>';
 

@@ -314,7 +314,8 @@
         "cardGamesWon": 2,
         "cardGamesLost": 4,
         "cardGamesDrawn": 0,
-        "numberOfcardsFlipped": 8
+        "numberOfcardsFlipped": 8,
+        "retinueMissionsCompleted": 0
     },
     "settings": {
         "soundVolume": 1,

@@ -80,7 +80,7 @@ $thisMapsRegion = $jsonData['region'];
 // get any Regional modifiers:
 $modifiersQuery = "SELECT * from tblregionalpricemodifiers WHERE whichregion = '".$thisMapsRegion ."'";
 $categoryModifier = array();
-    $modifiersResult = mysql_query( $modifiersQuery ) or die ( "couldn't execute events query: ".$modifiersQuery );
+    $modifiersResult = mysql_query( $modifiersQuery ) or die ( "couldn't execute query: ".$modifiersQuery );
 $numberofrows = mysql_num_rows( $modifiersResult );
     if ( $numberofrows>0 ) {
         while ( $modifierRow = mysql_fetch_array( $modifiersResult ) ) {

@@ -107,7 +107,7 @@ $questCostToStart  = "0";
 $questPartOfCampaign  = "0";
 $questNumberOfFollowersRequired  = "1";
 $questNPCMinimumLevel  = "1";
-$questReward  = "";
+$questReward  = '[{"type":2,"quantity":2,"quality":100,"durability":100,"currentWear":0,"effectiveness":100,"colour":"0","enchanted":0,"hallmark":0,"inscription":""}]';
 
 
 $query3 = "SELECT * from tblretinuequests where questCleanURL='".$questCleanURL."'";
