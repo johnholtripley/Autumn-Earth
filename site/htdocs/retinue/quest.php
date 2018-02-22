@@ -40,6 +40,21 @@ echo'</dl>';
 
 }
 
+// see if any followers active on this:
+$query2 = "SELECT * from tblretinuefollowers inner join tblcharacters on tblcharacters.charId = tblretinuefollowers.characterIdFollowing WHERE activeQuestId = '".$questID."'";
+$result2 = mysql_query($query2);
+if(mysql_num_rows($result2)>0) {
+	echo '<p>Currently active on this quest:</p>';
+	  	while ($row = mysql_fetch_array($result2)) {
+   
+  		extract($row);
+  echo '<h4><a href="/retinue/'.$charName.'/'.$followerCleanURL.'/">'.$followerName.'</a></h4>';
+  	}
+}
+
+
+mysql_free_result($result2);
+
 } else {
 	echo '<p>Sorry - couldn\'t find that quest</p>';
  header("HTTP/1.0 404 Not Found");
