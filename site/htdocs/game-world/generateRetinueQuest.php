@@ -4,6 +4,9 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/signalnoise.php");
 include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
 include($_SERVER['DOCUMENT_ROOT']."/includes/functions.php");
 
+
+// 1519377963 for island
+
 $debug = false;
 if(isset($_GET["debug"])) {
 $debug = true;
@@ -22,16 +25,81 @@ $debug = true;
 
 
 
+function replaceKeywords($phrase) {
+    global $continent, $region;
+    $phrase = str_ireplace("++region++", $region, $phrase);
+    $phrase = str_ireplace("++continent++", $continent, $phrase);
+    return $phrase;
+}
+
+
 function expandDescriptionGrammar($startingGrammar) {
-return $startingGrammar;
+        $allPossibleStartingDescriptions = explode("|",$startingGrammar);
+    $thisDescription = $allPossibleStartingDescriptions[mt_rand(0, count($allPossibleStartingDescriptions) - 1)];
+    $thisDescription = replaceKeywords($thisDescription);
+    return ucfirst($thisDescription);
 }
+
 function expandTitleGrammar($startingGrammar) {
-return $startingGrammar;
+    $allPossibleStartingTitles = explode("|",$startingGrammar);
+    $thisTitle = $allPossibleStartingTitles[mt_rand(0, count($allPossibleStartingTitles) - 1)];
+    $thisTitle = replaceKeywords($thisTitle);
+    return ucfirst($thisTitle);
 }
 
 
-// get all retinue quest types:
-$query = "SELECT * from tblretinuequesttypes";
+
+
+
+
+
+
+
+
+$continent  = "Eastern Continent";
+$region = "Bowery";
+$mapCoordinateX  = mt_rand(25,675);
+$mapCoordinateY  = mt_rand(25,425);
+
+
+// load image and determine if it's land or sea:
+$landMassImage = imagecreatefromgif("../images/world-maps/land-masses/".cleanURL($continent).".gif");
+$colourIndex = imagecolorat($landMassImage, $mapCoordinateX, $mapCoordinateY);
+
+
+imagedestroy($landMassImage);
+$obstacles = array();
+
+$terrainType = "land";
+
+$isOnLand = true;
+if($colourIndex!=0) {
+// sea or island
+array_push($obstacles, "sea");
+}
+
+if($colourIndex==1) {
+	// sea
+	// change the types of quests that will be generated to suit being at sea #########
+	$terrainType = "sea";
+$isOnLand = false;
+}
+
+if($colourIndex==2) {
+    // don't use 'island' otherwise 'land' will show up for it as well:
+	$terrainType = "isle";
+}
+
+//echo $colourIndex."<br>";
+//echo $terrainType."<br>";
+
+
+// load in the region map to identify which region this is in:
+// ###########################
+
+
+// get a random (but suitable) type:
+$query = "SELECT * from tblretinuequesttypes where suitableFor like '%".$terrainType."%'";
 $questTypes = array();
 $result = mysql_query($query) or die ();
 if(mysql_num_rows($result)>0) {
@@ -42,8 +110,6 @@ while ($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
 mysql_free_result($result);
 }
 
-
-// get a random type:
 $thisType = $questTypes[mt_rand(0, count($questTypes) - 1)];
 
 $questDescription = expandDescriptionGrammar($thisType['questTypeBaseGrammar']);
@@ -52,49 +118,8 @@ $questName = expandTitleGrammar($thisType['questTypeBaseTitleGrammar']);
 $questCleanURL = cleanURL($questName);
 $questDescription = $questDescription;
 $questType = $thisType['questTypeName'];
-$continent  = "eastern-continent";
-$mapCoordinateX  = mt_rand(25,675);
-$mapCoordinateY  = mt_rand(25,425);
 
 
-// load image and determine if it's land or sea:
-// #########
-$landMassImage = imagecreatefromgif("../images/world-maps/land-masses/".$continent.".gif");
-$colourIndex = imagecolorat($landMassImage, $mapCoordinateX, $mapCoordinateY);
-
-
-
-
-echo $colourIndex."<br>";
-
-
-imagedestroy($landMassImage);
-$obstacles = array();
-
-$isOnLand = true;
-if($colourIndex!=0) {
-
-// sea or island
-array_push($obstacles, "sea");
-
-}
-
-
-
-
-
-if($colourIndex==1) {
-	// sea
-	// change the types of quests that will be generated to suit being at sea #########
-	$questName .= " at sea";
-$isOnLand = false;
-}
-
-if($colourIndex==2) {
-
-	$questName .= " on island";
-
-}
 
 
 $needsToReturnToBase  = "0";
@@ -105,7 +130,8 @@ $questObstacles  = implode(",",$obstacles);
 
 $questCostToStart  = "0";
 $questPartOfCampaign  = "0";
-$questNumberOfFollowersRequired  = "1";
+$followersRequiredWeighting = array(1,1,1,1,1,1,2,2,3);
+$questNumberOfFollowersRequired  = $followersRequiredWeighting[mt_rand(0, count($followersRequiredWeighting) - 1)];
 $questNPCMinimumLevel  = "1";
 $questReward  = '[{"type":2,"quantity":2,"quality":100,"durability":100,"currentWear":0,"effectiveness":100,"colour":"0","enchanted":0,"hallmark":0,"inscription":""}]';
 
@@ -128,7 +154,7 @@ $attempts++;
 mysql_free_result($result3);
 
 // add to database:
-$query2 = "INSERT INTO tblretinuequests (questName, questCleanURL, questDescription, questType, continent, mapCoordinateX, mapCoordinateY, needsToReturnToBase, questDifficulty, questObstacles, questCostToStart, questPartOfCampaign, questNumberOfFollowersRequired, questNPCMinimumLevel, questReward, timeCreated) VALUES ('".mysql_escape_string($questName)."','".$questCleanURL."','".mysql_escape_string($questDescription)."','".$questType."','".$continent."',".$mapCoordinateX.",".$mapCoordinateY.",".$needsToReturnToBase.",".$questDifficulty.",'".$questObstacles."',".$questCostToStart.",".$questPartOfCampaign.",".$questNumberOfFollowersRequired.",".$questNPCMinimumLevel.",'".$questReward."',NOW())";
+$query2 = "INSERT INTO tblretinuequests (questName, questCleanURL, questDescription, questType, continent, mapCoordinateX, mapCoordinateY, needsToReturnToBase, questDifficulty, questObstacles, questCostToStart, questPartOfCampaign, questNumberOfFollowersRequired, questNPCMinimumLevel, questReward, timeCreated, seed) VALUES ('".mysql_escape_string($questName)."','".$questCleanURL."','".mysql_escape_string($questDescription)."','".$questType."','".cleanURL($continent)."',".$mapCoordinateX.",".$mapCoordinateY.",".$needsToReturnToBase.",".$questDifficulty.",'".$questObstacles."',".$questCostToStart.",".$questPartOfCampaign.",".$questNumberOfFollowersRequired.",".$questNPCMinimumLevel.",'".$questReward."',NOW(),'".$storedSeed."')";
 echo $query2;
 if(!$debug) {
 $result2 = mysql_query($query2);

@@ -3429,6 +3429,7 @@ for (var i=0;i< allFollowersOnThisQuest.length;i++) {
     thisFollower.classList.add("available");
     // move follower to completed location:
     document.getElementById('followerLocation'+allFollowersOnThisQuest[i]).style.cssText = "left: "+newLocationX+"%; top: "+newLocationY+"%;";
+    document.getElementById('followerLocationTooltip'+allFollowersOnThisQuest[i]).style.cssText = "left: "+newLocationX+"%; top: "+newLocationY+"%;";
     thisFollower.setAttribute('data-locationx',newLocationX);
     thisFollower.setAttribute('data-locationy',newLocationY);
     document.querySelector('#retinueFollower' + allFollowersOnThisQuest[i] + ' p').innerHTML='waiting for a quest';
