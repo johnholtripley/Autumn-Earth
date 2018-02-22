@@ -138,18 +138,10 @@ function checkForEscortQuestEnd(whichNPC) {
                     break;
                 }
             }
-
-
-
-
-
             // get fae to move to this NPC:
             fae.targetX = whichNPC.x;
             fae.targetY = whichNPC.y;
             fae.currentState = "away";
-
-
-
             //whichNPC.movement[whichNPC.movementIndex] = "-";
             whichNPC.isMoving = false;
             whichNPC.movementIndex--;

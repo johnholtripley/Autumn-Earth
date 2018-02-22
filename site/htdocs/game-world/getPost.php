@@ -1,7 +1,7 @@
 <?php
 // get post for this character:
 
-
+date_default_timezone_set('Europe/London');
 
 function relativeGameTime($time) {
 

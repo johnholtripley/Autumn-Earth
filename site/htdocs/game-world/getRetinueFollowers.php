@@ -128,7 +128,7 @@ foreach ($followerData as $followerKey => $thisFollower) {
 
 
 
-$retinuePanelCompleteOutput .= '<div class="retinueCompletePanel active" id="retinueComplete'.$thisFollower['activeQuestId'].'">';
+$retinuePanelCompleteOutput .= '<div class="retinueCompletePanel active" id="retinueComplete'.$thisFollower['activeQuestId'].'" data-questname="'.$thisFollower['questName'].'">';
 $retinuePanelCompleteOutput .= '<h2>'.$thisFollower['questName'].'</h2>';
 $retinuePanelCompleteOutput .= '<h3>complete</h3>';
   if($thisFollower['questReward']) {
@@ -177,9 +177,10 @@ $questPanelDetailsOutput = "";
       $questsQuery = "SELECT * from tblretinuequests where tblretinuequests.questID NOT IN (SELECT questIdActiveOrComplete from tblretinuequestsactive where characterId='".$chr."') order by timeCreated DESC limit 12";
 
 $questsResult = mysql_query($questsQuery) or die ();
-if(mysql_num_rows($questsResult)>0) {
-	$retinuePanelOutput .= '<h2>Available quests:</h2>';
+  $retinuePanelOutput .= '<h2>Available quests:</h2>';
   $retinuePanelOutput .= '<div id="retinueAvailableQuestMap"><img src="/images/world-maps/eastern-continent.jpg" id="activeContinent" alt="Eastern Continent">';
+if(mysql_num_rows($questsResult)>0) {
+
 //	$retinuePanelOutput .= "<ol>";
 	while ($questsRow = mysql_fetch_array($questsResult)) {
       extract($questsRow);
@@ -234,12 +235,13 @@ $retinuePanelOutput .= '<div class="mapLocationTooltip" id="followerLocationTool
 
 
    $retinuePanelOutput .= '</div>';
-   $retinuePanelOutput .= '<p id="retinueQuestTimeRequired">Time required:</p>';
-   $retinuePanelOutput .= '<button id="retinueQuestStart" disabled="disabled">Start quest</button>';
+ 
  // $retinuePanelOutput .= "</ol>";
 } else {
 $retinuePanelOutput .= "<p>No quests currently available</p>";
 }
+  $retinuePanelOutput .= '<p id="retinueQuestTimeRequired">Time required:</p>';
+   $retinuePanelOutput .= '<button id="retinueQuestStart" disabled="disabled">Start quest</button>';
 mysql_free_result($questsResult);
 
 $retinuePanelOutput .= '<div id="retinueDetailWrapper">'.$questPanelDetailsOutput.'</div>';

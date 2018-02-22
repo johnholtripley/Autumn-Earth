@@ -41,8 +41,17 @@ function retinueMissionCompleted(questId) {
             if (inventoryCheck[0]) {
                 UI.showChangeInInventory(inventoryCheck[1]);
             } else {
-                //post it ##########
-                UI.showNotification("<p>Reward has been posted to you</p>");
+                // post it 
+      
+
+       
+            var subjectLine = 'Reward for '+document.getElementById('retinueComplete'+questId).getAttribute('data-questname');
+        var message = "Your followers continue to make you proud...";
+var whichNPC = "Retinue co-ordinator";
+
+
+        sendNPCPost('{"subject":"' + subjectLine + '","message":"' + message + '","senderID":"-1","recipientID":"' + characterId + '","fromName":"' + whichNPC + '"}', data.item);
+        UI.showNotification("<p>Reward send by post to you</p>");
             }
         } else {
             // no reward
@@ -62,6 +71,7 @@ for (var i=0;i< allFollowersOnThisQuest.length;i++) {
     document.getElementById('followerLocation'+allFollowersOnThisQuest[i]).style.cssText = "left: "+newLocationX+"%; top: "+newLocationY+"%;";
     thisFollower.setAttribute('data-locationx',newLocationX);
     thisFollower.setAttribute('data-locationy',newLocationY);
+    document.querySelector('#retinueFollower' + allFollowersOnThisQuest[i] + ' p').innerHTML='waiting for a quest';
 }
 
         document.getElementById('retinueComplete' + questId).classList.remove('active');
