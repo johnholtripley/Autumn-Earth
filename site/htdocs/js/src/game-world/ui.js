@@ -2053,12 +2053,7 @@ var UI = {
 
             followersAssigned.push(retinueObject.followersAdded[i]);
         }
-
-
-
         sendDataWithoutNeedingAResponse("/game-world/updateRetinueQuest.php?questID=" + retinueObject.openQuestDetail + "&chr=999&followers=" + followersAssigned.join("|"));
-
-
         document.getElementById("retinueQuestLocationDetail" + retinueObject.openQuestDetail).classList.remove("active");
         // remove from the map:
         document.getElementById("retinueQuestLocation" + retinueObject.openQuestDetail).classList.remove("active");
@@ -2074,9 +2069,9 @@ var UI = {
         delete retinueObject.hasToReturnToBase;
         delete retinueObject.timeRequired;
         delete retinueObject.questName;
-    }, retinueSingleClick:function(e) {
-        
-        if(e.target.className == 'takeRewards') {
+    },
+    retinueSingleClick: function(e) {
+        if (e.target.className == 'takeRewards') {
             e.preventDefault();
             var parentPanel = getNearestParentId(e.target);
             retinueMissionCompleted(parentPanel.id.substring(15));
