@@ -27,7 +27,6 @@ $showAll = true;
 }
 
 
-// follower names should be unique per character, but not globally, so need to check for followers of that name assigned to that character
 
 
 
@@ -38,100 +37,70 @@ $showAll = true;
 
 
 
-
-
-
-
-
-
-
-
-
-echo $_GET["character"];
-echo "<br>";
 
 if($showAll) {
 echo '<h2>All followers</h2>';
+
+$query = "SELECT * from tblretinuefollowers inner join tblcharacters on tblcharacters.charId = tblretinuefollowers.characterIdFollowing where tblcharacters.charName='".$_GET["character"]."'";
+$result = mysql_query($query);
+if(mysql_num_rows($result)>0) {
+	echo '<ol>';
+	while ($row = mysql_fetch_array($result)) {
+   
+  		extract($row);
+  		echo '<li><h3>'.$followerName.'</h3>';
+
+echo '<img src="/images/retinue/'.$followerID.'.png" style="width:33px;height:auto;" alt="">';
+if($activeQuestId != -1) {
+  			$query2 = "SELECT * from tblretinuequests where questID='".$activeQuestId."'";
+  			$result2 = mysql_query($query2);
+  			if(mysql_num_rows($result2)>0) {
+  				$row = mysql_fetch_array($result2);
+  				extract($row);
+  				echo '<p>Currently on "<a href="/retinue/quest/'.$questCleanURL.'/">'.$questName.'</a>"<p>';
+  			}
+  			mysql_free_result($result2);
+
+  		} else {
+  			echo '<p>Currently inactive</p>';
+  		}
+  		echo'</li>';
+  	}
+  	echo '</ol>';
+  } else {
+  			echo '<p>Sorry - no followers found</p>';
+  }
+
 } else {
-echo $_GET["follower"];
 
-include($_SERVER['DOCUMENT_ROOT']."/includes/retinue/male-first-names.php");
-include($_SERVER['DOCUMENT_ROOT']."/includes/retinue/female-first-names.php");
-include($_SERVER['DOCUMENT_ROOT']."/includes/retinue/human-surnames-medieval.php");
-$possibleMaleFirstNames = sortSequentialSyllables($maleFirstNameSyllables);
-$possibleFemaleFirstNames = sortSequentialSyllables($femaleFirstNameSyllables);
-$possibleSurnames = sortSequentialSyllables($surnamesNameSyllables);
+// follower names should be unique per character, but not globally, so need to check for followers of that name assigned to that character:
+$query = "SELECT * from tblretinuefollowers inner join tblcharacters on tblcharacters.charId = tblretinuefollowers.characterIdFollowing where followerCleanURL = '".$_GET["follower"]."' and tblcharacters.charName='".$_GET["character"]."'";
+$result = mysql_query($query);
+if(mysql_num_rows($result)>0) {
+	while ($row = mysql_fetch_array($result)) {
+   
+  		extract($row);
+  		echo '<h2>'.$followerName.'</h2>';
+  		echo '<img src="/images/retinue/'.$followerID.'.png" style="width:33px;height:auto;" alt="">';
+  		if($activeQuestId != -1) {
+  			$query2 = "SELECT * from tblretinuequests where questID='".$activeQuestId."'";
+  			$result2 = mysql_query($query2);
+  			if(mysql_num_rows($result2)>0) {
+  				$row = mysql_fetch_array($result2);
+  				extract($row);
+  				echo '<p>Currently on "<a href="/retinue/quest/'.$questCleanURL.'/">'.$questName.'</a>"<p>';
+  			}
+  			mysql_free_result($result2);
 
-
-$maleName = selectSyllables($possibleMaleFirstNames,3,5);
-$maleName = ucfirst($maleName);
-
-$femaleName = selectSyllables($possibleFemaleFirstNames,3,5);
-$femaleName = ucfirst($femaleName);
-
-$surname = selectSyllables($possibleSurnames,3,5);
-$surname = ucfirst($surname);
-
-echo "<h3>".$maleName." ".$surname." (male)</h3>";
-echo "<p>(/retinue/".$_GET["character"]."/".cleanURL($maleName." ".$surname)."/)</p>";
-echo "<h3>".$femaleName." ".$surname." (female)</h3>";
-echo "<p>(/retinue/".$_GET["character"]."/".cleanURL($femaleName." ".$surname)."/)</p>";
-
-
-
-echo"<h2>Anglo Saxon</h2>";
-include($_SERVER['DOCUMENT_ROOT']."/includes/retinue/human-anglo-saxon-male.php");
-include($_SERVER['DOCUMENT_ROOT']."/includes/retinue/human-anglo-saxon-female.php");
-
-$possibleAngloSaxonFemaleFirstNames = sortSequentialSyllables($anglosaxonFemaleSyllables);
-$possibleAngloSaxonMaleFirstNames = sortSequentialSyllables($anglosaxonMaleSyllables);
-
-
-
-$maleName = selectSyllables($possibleAngloSaxonMaleFirstNames,2,4);
-$maleName = ucfirst($maleName);
-
-$femaleName = selectSyllables($possibleAngloSaxonFemaleFirstNames,2,4);
-$femaleName = ucfirst($femaleName);
-
-
-
-echo "<h3>".$maleName." (male)</h3>";
-echo "<p>(/retinue/".$_GET["character"]."/".cleanURL($maleName)."/)</p>";
-echo "<h3>".$femaleName." (female)</h3>";
-echo "<p>(/retinue/".$_GET["character"]."/".cleanURL($femaleName)."/)</p>";
-
-
-
-
-echo"<h2>Elven</h2>";
-
-include($_SERVER['DOCUMENT_ROOT']."/includes/retinue/elven-surname-prefix.php");
-include($_SERVER['DOCUMENT_ROOT']."/includes/retinue/elven-surname-suffix.php");
-
-
-$thisFirstSurname = $elvenSurnamePrefixes[mt_rand(0, count($elvenSurnamePrefixes) - 1)];
-$thisSecondSurname = $elvenSurnameSuffixes[mt_rand(0, count($elvenSurnameSuffixes) - 1)];
-if (substr($thisFirstSurname, -1, 1) == substr($thisSecondSurname, 0, 1)) {
-	// make sure the last character of the first word isn't the same as the first of the last word - so don't get dragonsstar - get dragonstar instead
-$thisFirstSurname = substr($thisFirstSurname, 0, -1);
+  		} else {
+  			echo '<p>Currently inactive</p>';
+  		}
+  	}
+} else {
+		echo '<p>Sorry - couldn\'t find that follower</p>';
+ header("HTTP/1.0 404 Not Found");
 }
-
-
-$elvenSurname = $thisFirstSurname.$thisSecondSurname;
-
-
-$elvenSurname = ucfirst($elvenSurname);
-
-$elvenFemale = " ".$elvenSurname;
-
-$femaleElvenFirstName = "eila";
-$femaleElvenFirstName = ucfirst($femaleElvenFirstName);
-
-echo "<h3>".$femaleElvenFirstName." ".$elvenSurname." (female)</h3>";
-echo "<p>(/retinue/".$_GET["character"]."/".cleanURL($femaleElvenFirstName." ".$elvenFemale)."/)</p>";
-
-
+mysql_free_result($result);
 }
 ?>
 
