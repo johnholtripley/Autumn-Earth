@@ -26,9 +26,18 @@ $debug = true;
 
 
 function replaceKeywords($phrase) {
-    global $continent, $region;
+    global $continent, $region, $terrainType;
+
+    $resources = array(
+"land"=>array("stone","food","wood"),
+"sea"=>array("kelp"),
+"isle"=>array("sand")
+        );
+
     $phrase = str_ireplace("++region++", $region, $phrase);
     $phrase = str_ireplace("++continent++", $continent, $phrase);
+    $thisResource = $resources[$terrainType][mt_rand(0, count($resources[$terrainType]) - 1)];
+$phrase = str_ireplace("++resource++", $thisResource, $phrase);
     return $phrase;
 }
 
@@ -57,7 +66,7 @@ function expandTitleGrammar($startingGrammar) {
 
 
 $continent  = "Eastern Continent";
-$region = "Bowery";
+
 $mapCoordinateX  = mt_rand(25,675);
 $mapCoordinateY  = mt_rand(25,425);
 
@@ -95,8 +104,16 @@ if($colourIndex==2) {
 
 
 // load in the region map to identify which region this is in:
-// ###########################
+$regionImage = imagecreatefromgif("../images/world-maps/regions/".cleanURL($continent).".gif");
+$regionColourIndex = imagecolorat($regionImage, $mapCoordinateX, $mapCoordinateY);
 
+$regionNames = array(
+"Eastern Continent" => array("yellow","pink","purple","grey","light green","dark green","red","orange","blue","grey","dark green","black","the sea")
+    );
+
+imagedestroy($regionImage);
+
+$region = $regionNames[$continent][$regionColourIndex];
 
 // get a random (but suitable) type:
 $query = "SELECT * from tblretinuequesttypes where suitableFor like '%".$terrainType."%'";
