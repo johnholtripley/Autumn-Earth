@@ -63,8 +63,8 @@ function retinueMissionCompleted(questId) {
             // move follower to completed location:
             document.getElementById('followerLocation' + allFollowersOnThisQuest[i]).style.cssText = "left: " + newLocationX + "%; top: " + newLocationY + "%;";
             document.getElementById('followerLocationTooltip' + allFollowersOnThisQuest[i]).style.cssText = "left: " + newLocationX + "%; top: " + newLocationY + "%;";
-            thisFollower.setAttribute('data-locationx', newLocationX);
-            thisFollower.setAttribute('data-locationy', newLocationY);
+            thisFollower.setAttribute('data-locationx', data.endLocationX);
+            thisFollower.setAttribute('data-locationy', data.endLocationY);
             document.querySelector('#retinueFollower' + allFollowersOnThisQuest[i] + ' p').innerHTML = 'waiting for a quest';
         }
         document.getElementById('retinueComplete' + questId).classList.remove('active');

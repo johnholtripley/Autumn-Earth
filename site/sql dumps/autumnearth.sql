@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 22, 2018 at 10:47 AM
+-- Generation Time: Feb 22, 2018 at 05:48 PM
 -- Server version: 5.6.24
 -- PHP Version: 5.6.8
 
@@ -782,7 +782,7 @@ CREATE TABLE IF NOT EXISTS `tblmail` (
   `attachment` longtext,
   `attachmentTaken` tinyint(1) NOT NULL DEFAULT '0',
   `isArchived` tinyint(1) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB AUTO_INCREMENT=939 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=940 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblmail`
@@ -908,7 +908,8 @@ INSERT INTO `tblmail` (`mailID`, `characterID`, `senderID`, `senderName`, `title
 (935, 999, 999, 'Eleaddai', 'have a lovely weekend', 'They say it purges hot rheums, and provokes urine and the white of an opening quality, thereby carrying away those vapours which might otherwise annoy the brain and nerves, and helps the falling-sickness, astonishment, apoplexies, dulness of sight, want of it to the consumption of the spleen, it stops fluxes, the running of the body, especially such as have laboured under long chronical diseases.An ounce at a time, at night going to bed; if that provoke not sleep, the next day boil it to the consumption of the roots of Smallage, Fennel, and Sparagus, of each two drams, Gum Arabic, Dragonâ€™s-blood of each one ounce, Canary Wine a whole summerâ€™s day to write more scholastically, the dose) must be consumed and with a Liquorice stick, if you cannot but know both what Vinegar to the heart, and weak stomachs, and helps all diseases coming of cold and moisture.', '2018-02-16 16:26:45', '1', '0', 0, 0),
 (936, 999, 999, 'Eleaddai', 'subject', 'dfsf\\n\\ndsf\\n\\n\\ndsf', '2018-02-16 16:31:15', '1', '0', 0, 0),
 (937, 999, 999, 'Eleaddai', 'asdad', 'asdadasd aadasa aa', '2018-02-16 16:32:33', '1', '0', 0, 0),
-(938, 999, 999, 'Eleaddai', 'just testing some line breaks', '\\nsecond line\\n\\n\\n\\n\\n\\nmore\\n\\n\\nmore\\n\\nand some  here', '2018-02-16 16:58:39', '1', '0', 0, 0);
+(938, 999, 999, 'Eleaddai', 'just testing some line breaks', '\\nsecond line\\n\\n\\n\\n\\n\\nmore\\n\\n\\nmore\\n\\nand some  here', '2018-02-16 16:58:39', '1', '0', 0, 0),
+(939, 999, -1, 'Retinue co-ordinator', 'Reward for Lay of the Land on island', 'Your followers continue to make you proud...', '2018-02-22 12:28:50', '1', '[{"type":2,"quantity":2,"quality":100,"durability":100,"currentWear":0,"effectiveness":100,"colour":"0","enchanted":0,"hallmark":0,"inscription":""}]', 1, 0);
 
 -- --------------------------------------------------------
 
@@ -1575,8 +1576,8 @@ CREATE TABLE IF NOT EXISTS `tblretinuefollowers` (
 --
 
 INSERT INTO `tblretinuefollowers` (`followerID`, `followerName`, `followerCleanURL`, `characterIdFollowing`, `activeQuestId`, `questStartedTime`, `followerSex`, `currentContinent`, `followerMapCoordinateX`, `followerMapCoordinateY`) VALUES
-(1, 'Eila Myrborn', 'eila-myrborn', 999, -1, '2018-02-21 13:44:49', 'female', 'eastern-continent', 120, 70),
-(2, 'Nellaith Wispfael', 'nellaith-wispfael', 999, -1, '2018-02-21 14:46:02', 'female', 'eastern-continent', 375, 135);
+(1, 'Eila Myrborn', 'eila-myrborn', 999, 113, '2018-02-22 15:53:40', 'female', 'eastern-continent', 580, 93),
+(2, 'Nellaith Wispfael', 'nellaith-wispfael', 999, 113, '2018-02-22 15:53:40', 'female', 'eastern-continent', 80, 83);
 
 -- --------------------------------------------------------
 
@@ -1602,17 +1603,29 @@ CREATE TABLE IF NOT EXISTS `tblretinuequests` (
   `questNPCMinimumLevel` int(10) NOT NULL DEFAULT '1',
   `questReward` longtext CHARACTER SET latin1 NOT NULL,
   `activeDuringSeason` int(11) DEFAULT NULL,
-  `timeCreated` datetime NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=101 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+  `timeCreated` datetime NOT NULL,
+  `seed` int(128) NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=116 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
 -- Dumping data for table `tblretinuequests`
 --
 
-INSERT INTO `tblretinuequests` (`questID`, `questName`, `questCleanURL`, `questDescription`, `questType`, `continent`, `mapCoordinateX`, `mapCoordinateY`, `needsToReturnToBase`, `questDifficulty`, `questObstacles`, `questCostToStart`, `questPartOfCampaign`, `questNumberOfFollowersRequired`, `questNPCMinimumLevel`, `questReward`, `activeDuringSeason`, `timeCreated`) VALUES
-(98, 'Lay of the Land on island', 'lay-of-the-land', 'Map out the region.', 'cartography', 'eastern-continent', 188, 36, 0, 0, 'sea', '0', 0, 1, 1, '', NULL, '2018-02-21 17:01:00'),
-(99, 'All the fun of the fair', 'all-the-fun-of-the-fair', 'Enjoy yourself for a while.', 'travelling fair', 'eastern-continent', 413, 302, 0, 0, '', '0', 0, 1, 1, '', NULL, '2018-02-21 17:01:06'),
-(100, 'Lay of the Land at sea', 'lay-of-the-land-2', 'Map out the region.', 'cartography', 'eastern-continent', 502, 356, 0, 0, 'sea', '0', 0, 1, 1, '', NULL, '2018-02-21 17:01:08');
+INSERT INTO `tblretinuequests` (`questID`, `questName`, `questCleanURL`, `questDescription`, `questType`, `continent`, `mapCoordinateX`, `mapCoordinateY`, `needsToReturnToBase`, `questDifficulty`, `questObstacles`, `questCostToStart`, `questPartOfCampaign`, `questNumberOfFollowersRequired`, `questNPCMinimumLevel`, `questReward`, `activeDuringSeason`, `timeCreated`, `seed`) VALUES
+(98, 'Lay of the Land on island', 'lay-of-the-land', 'Map out the region.', 'cartography', 'eastern-continent', 188, 36, 0, 0, 'sea', '0', 0, 1, 1, '[{"type":2,"quantity":2,"quality":100,"durability":100,"currentWear":0,"effectiveness":100,"colour":"0","enchanted":0,"hallmark":0,"inscription":""}]', NULL, '2018-02-21 17:01:00', 0),
+(99, 'All the fun of the fair', 'all-the-fun-of-the-fair', 'Enjoy yourself for a while.', 'travelling fair', 'eastern-continent', 413, 302, 0, 0, '', '0', 0, 1, 1, '[{"type":2,"quantity":2,"quality":100,"durability":100,"currentWear":0,"effectiveness":100,"colour":"0","enchanted":0,"hallmark":0,"inscription":""}]', NULL, '2018-02-21 17:01:06', 0),
+(101, 'Play your best hand at sea', 'play-your-best-hand', 'Be the best at cards.', 'card game', 'eastern-continent', 315, 39, 0, 0, 'sea', '0', 0, 1, 1, '[{"type":2,"quantity":2,"quality":100,"durability":100,"currentWear":0,"effectiveness":100,"colour":"0","enchanted":0,"hallmark":0,"inscription":""}]', NULL, '2018-02-22 12:34:31', 0),
+(102, 'Showing the way at sea', 'showing-the-way', 'Ensure the destination is reached safely.', 'escort', 'eastern-continent', 580, 93, 0, 0, 'sea', '0', 0, 1, 1, '[{"type":2,"quantity":2,"quality":100,"durability":100,"currentWear":0,"effectiveness":100,"colour":"0","enchanted":0,"hallmark":0,"inscription":""}]', NULL, '2018-02-22 12:34:33', 0),
+(104, 'Offering hope at sea', 'offering-hope', 'Future treaties are in your hands.', 'diplomacy', 'eastern-continent', 80, 83, 0, 0, 'sea', '0', 0, 1, 1, '[{"type":2,"quantity":2,"quality":100,"durability":100,"currentWear":0,"effectiveness":100,"colour":"0","enchanted":0,"hallmark":0,"inscription":""}]', NULL, '2018-02-22 12:41:02', 0),
+(106, 'Laying the foundations at sea', 'laying-the-foundations', 'Build up, strengthen and expand.', 'construction', 'eastern-continent', 75, 207, 0, 0, 'sea', '0', 0, 1, 1, '[{"type":2,"quantity":2,"quality":100,"durability":100,"currentWear":0,"effectiveness":100,"colour":"0","enchanted":0,"hallmark":0,"inscription":""}]', NULL, '2018-02-22 12:41:04', 0),
+(107, 'Climb the ladder at sea', 'climb-the-ladder', 'Compete in a ranked card game tournament.', 'card tournament', 'eastern-continent', 100, 292, 0, 0, 'sea', '0', 0, 1, 1, '[{"type":2,"quantity":2,"quality":100,"durability":100,"currentWear":0,"effectiveness":100,"colour":"0","enchanted":0,"hallmark":0,"inscription":""}]', NULL, '2018-02-22 12:41:04', 0),
+(109, 'A long descent', 'a-long-descent', 'Enter the depths of grey and face the unknown.', 'dungeon delve', 'eastern-continent', 443, 265, 0, 0, '', '0', 0, 1, 1, '[{"type":2,"quantity":2,"quality":100,"durability":100,"currentWear":0,"effectiveness":100,"colour":"0","enchanted":0,"hallmark":0,"inscription":""}]', NULL, '2018-02-22 15:04:51', 1519405704),
+(110, 'Showing the way', 'showing-the-way-2', 'Ensure dark green is reached safely.', 'escort', 'eastern-continent', 318, 203, 0, 0, '', '0', 0, 1, 1, '[{"type":2,"quantity":2,"quality":100,"durability":100,"currentWear":0,"effectiveness":100,"colour":"0","enchanted":0,"hallmark":0,"inscription":""}]', NULL, '2018-02-22 15:05:58', 1519350604),
+(111, 'Devoting some time', 'devoting-some-time', 'A journey of reverence.', 'pilgrimage', 'eastern-continent', 412, 126, 0, 0, '', '0', 0, 1, 1, '[{"type":2,"quantity":2,"quality":100,"durability":100,"currentWear":0,"effectiveness":100,"colour":"0","enchanted":0,"hallmark":0,"inscription":""}]', NULL, '2018-02-22 15:53:20', 1519355443),
+(112, 'Lay of the Land', 'lay-of-the-land-2', 'Map out as much of the sea as you can.', 'cartography', 'eastern-continent', 197, 156, 0, 0, 'sea', '0', 0, 1, 1, '[{"type":2,"quantity":2,"quality":100,"durability":100,"currentWear":0,"effectiveness":100,"colour":"0","enchanted":0,"hallmark":0,"inscription":""}]', NULL, '2018-02-22 15:53:22', 1519331255),
+(113, 'Mapping the wilds', 'mapping-the-wilds', 'Map out as much of the sea as you can.', 'cartography', 'eastern-continent', 575, 56, 0, 0, 'sea', '0', 0, 2, 1, '[{"type":2,"quantity":2,"quality":100,"durability":100,"currentWear":0,"effectiveness":100,"colour":"0","enchanted":0,"hallmark":0,"inscription":""}]', NULL, '2018-02-22 15:53:22', 1519381658),
+(114, 'Glue and thread', 'glue-and-thread', 'Make exquisite items.', 'crafting', 'eastern-continent', 501, 286, 0, 0, '', '0', 0, 1, 1, '[{"type":2,"quantity":2,"quality":100,"durability":100,"currentWear":0,"effectiveness":100,"colour":"0","enchanted":0,"hallmark":0,"inscription":""}]', NULL, '2018-02-22 15:53:23', 1519323162),
+(115, 'Bring home the goods', 'bring-home-the-goods', 'Gather what kelp you can.', 'resource gathering', 'eastern-continent', 611, 355, 0, 0, 'sea', '0', 0, 1, 1, '[{"type":2,"quantity":2,"quality":100,"durability":100,"currentWear":0,"effectiveness":100,"colour":"0","enchanted":0,"hallmark":0,"inscription":""}]', NULL, '2018-02-22 15:53:23', 1519340763);
 
 -- --------------------------------------------------------
 
@@ -1624,7 +1637,7 @@ CREATE TABLE IF NOT EXISTS `tblretinuequestsactive` (
   `questActiveId` int(11) NOT NULL,
   `questIdActiveOrComplete` int(10) NOT NULL,
   `characterId` int(10) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
 -- Dumping data for table `tblretinuequestsactive`
@@ -1632,7 +1645,16 @@ CREATE TABLE IF NOT EXISTS `tblretinuequestsactive` (
 
 INSERT INTO `tblretinuequestsactive` (`questActiveId`, `questIdActiveOrComplete`, `characterId`) VALUES
 (1, 1, 999),
-(3, 2, 999);
+(3, 2, 999),
+(4, 98, 999),
+(5, 99, 999),
+(6, 100, 999),
+(7, 101, 999),
+(8, 102, 999),
+(9, 103, 999),
+(10, 105, 999),
+(11, 104, 999),
+(12, 113, 999);
 
 -- --------------------------------------------------------
 
@@ -1644,28 +1666,30 @@ CREATE TABLE IF NOT EXISTS `tblretinuequesttypes` (
   `questTypeID` int(11) NOT NULL,
   `questTypeName` varchar(255) COLLATE utf8_bin NOT NULL,
   `questTypeBaseTitleGrammar` mediumtext COLLATE utf8_bin NOT NULL,
-  `questTypeBaseGrammar` longtext COLLATE utf8_bin NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+  `questTypeBaseGrammar` longtext COLLATE utf8_bin NOT NULL,
+  `suitableFor` varchar(255) COLLATE utf8_bin NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
 -- Dumping data for table `tblretinuequesttypes`
 --
 
-INSERT INTO `tblretinuequesttypes` (`questTypeID`, `questTypeName`, `questTypeBaseTitleGrammar`, `questTypeBaseGrammar`) VALUES
-(1, 'cartography', 'Lay of the Land', 'Map out the region.'),
-(2, 'card game', 'Play your best hand', 'Be the best at cards.'),
-(3, 'card tournament', 'Climb the ladder', 'Compete in a ranked card game tournament.'),
-(5, 'salvage', 'Get yer boots on', 'There''s salvage to be had.'),
-(6, 'rescue', 'To the rescue', 'They need your help. Pitch in quickly.'),
-(7, 'delivery', 'Knock, knock', 'The post isn''t fast enough for this. Make haste.'),
-(8, 'escort', 'Showing the way', 'Ensure the destination is reached safely.'),
-(9, 'construction', 'Laying the foundations', 'Build up, strengthen and expand.'),
-(10, 'dungeon delve', 'A long descent', 'Enter the depths and face the unknown.'),
-(11, 'crafting', 'Glue and thread', 'Make exquisite items.'),
-(12, 'travelling fair', 'All the fun of the fair', 'Enjoy yourself for a while.'),
-(13, 'pilgrimage', 'Devoting some time', 'A journey of reverence.'),
-(14, 'merchant caravan', 'Across the plains...', 'Large scale trade across vast distances.'),
-(15, 'diplomacy', 'Offering hope', 'Future treaties are in your hands.');
+INSERT INTO `tblretinuequesttypes` (`questTypeID`, `questTypeName`, `questTypeBaseTitleGrammar`, `questTypeBaseGrammar`, `suitableFor`) VALUES
+(1, 'cartography', 'Lay of the Land|Mapping the wilds', 'Map out as much of ++region++ as you can.|Map out the region', 'land,sea,isle'),
+(2, 'card game', 'Play your best hand', 'Be the best at cards.', 'land, isle'),
+(3, 'card tournament', 'Climb the ladder', 'Compete in a ranked card game tournament.', 'land,isle'),
+(5, 'salvage', 'Get yer boots on', 'There''s plenty of salvage to be had in ++region++.', 'sea,isle'),
+(6, 'rescue', 'To the rescue|Lend a hand', 'They need your help.|++region++ is in need. Get over there and help.', 'land,sea,isle'),
+(7, 'delivery', 'Knock, knock', 'The post isn''t fast enough for this. Make haste.', 'land,isle'),
+(8, 'escort', 'Showing the way', 'Ensure ++region++ is reached safely.', 'land,isle'),
+(9, 'construction', 'Laying the foundations', 'Build up, strengthen and expand.', 'land,isle'),
+(10, 'dungeon delve', 'A long descent', 'Enter the depths of ++region++ and face the unknown.', 'land,isle'),
+(11, 'crafting', 'Glue and thread', 'Make exquisite items.', 'land,isle'),
+(12, 'travelling fair', 'All the fun of the fair', 'Enjoy yourself for a while.', 'land,isle'),
+(13, 'pilgrimage', 'Devoting some time', 'A journey of reverence.', 'land,isle'),
+(14, 'merchant caravan', 'Across the plains...', 'Large scale trade across vast distances.', 'land,isle'),
+(15, 'diplomacy', 'Offering hope', 'Future treaties are in your hands.', 'land,isle'),
+(16, 'resource gathering', 'Bring home the goods', 'Gather what ++resource++ you can.', 'land,isle,sea');
 
 -- --------------------------------------------------------
 
@@ -2393,7 +2417,7 @@ ALTER TABLE `tbllocations`
 -- AUTO_INCREMENT for table `tblmail`
 --
 ALTER TABLE `tblmail`
-  MODIFY `mailID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=939;
+  MODIFY `mailID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=940;
 --
 -- AUTO_INCREMENT for table `tblmainpoll`
 --
@@ -2463,17 +2487,17 @@ ALTER TABLE `tblretinuefollowers`
 -- AUTO_INCREMENT for table `tblretinuequests`
 --
 ALTER TABLE `tblretinuequests`
-  MODIFY `questID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=101;
+  MODIFY `questID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=116;
 --
 -- AUTO_INCREMENT for table `tblretinuequestsactive`
 --
 ALTER TABLE `tblretinuequestsactive`
-  MODIFY `questActiveId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
+  MODIFY `questActiveId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=13;
 --
 -- AUTO_INCREMENT for table `tblretinuequesttypes`
 --
 ALTER TABLE `tblretinuequesttypes`
-  MODIFY `questTypeID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=16;
+  MODIFY `questTypeID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=17;
 --
 -- AUTO_INCREMENT for table `tblsavedsearches`
 --

@@ -65,6 +65,7 @@ $retinuePanelOutput = '<div id="retinuePanel">';
 $retinuePanelOutput .= '<div class="draggableBar">Retinue</div>';
 $retinuePanelOutput .= '<button class="closePanel">close</button>';
 
+$completePanelsCreated = array();
 $retinuePanelCompleteOutput = '';
 
 $activeQuestsIds = array();
@@ -126,8 +127,8 @@ foreach ($followerData as $followerKey => $thisFollower) {
   if($thisFollower['completedSoFar'] >= $questTimes[($thisFollower['activeQuestId'])] ) {
   $retinuePanelOutput .= '<p>COMPLETED "'.$thisFollower['questName'].'"</p>';
 
-
-
+// don't create another panel if more than 1 follower is on this quest:
+if(!(in_array($thisFollower['activeQuestId'], $completePanelsCreated))) {
 $retinuePanelCompleteOutput .= '<div class="retinueCompletePanel active" id="retinueComplete'.$thisFollower['activeQuestId'].'" data-questname="'.$thisFollower['questName'].'">';
 $retinuePanelCompleteOutput .= '<h2>'.$thisFollower['questName'].'</h2>';
 $retinuePanelCompleteOutput .= '<h3>complete</h3>';
@@ -148,7 +149,8 @@ $retinuePanelCompleteOutput .= '<h3>complete</h3>';
   
 $retinuePanelCompleteOutput .= '</div>';
 
-
+array_push($completePanelsCreated, $thisFollower['activeQuestId']);
+}
 
 
   } else {
