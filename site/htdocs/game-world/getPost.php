@@ -95,7 +95,7 @@ $inventoryImage = 'coins';
 } else {
 $inventoryImage = $firstElement->type;
 }
-$postPanelMarkup .= '<img src="/images/game-world/inventory-items/'.$inventoryImage.'.png"><span class="qty">'.$firstElement->quantity.'</span>';
+$postPanelMarkup .= '<img src="/images/game-world/inventory-items/'.$inventoryImage.'.png" alt=""><span class="qty">'.$firstElement->quantity.'</span>';
 
 }
 }
@@ -113,7 +113,7 @@ $inventoryImage = 'coins';
 			} else {
 $inventoryImage = $thisAttachment->type;
 			}
-$allMessagePanels .= '<div class="postSlot"><img src="/images/game-world/inventory-items/'.$inventoryImage.'.png"><span class="qty">'.$thisAttachment->quantity.'</span></div>';
+$allMessagePanels .= '<div class="postSlot"><img src="/images/game-world/inventory-items/'.$inventoryImage.'.png" alt=""><span class="qty">'.$thisAttachment->quantity.'</span></div>';
 }
 
 }

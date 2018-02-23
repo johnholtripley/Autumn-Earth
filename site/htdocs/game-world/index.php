@@ -56,7 +56,7 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
     <div id="toolbar">
       <a href="#gameSettings" id="openSettings">Settings</a>
       <div id="actionBar"></div>
-      <div id="newPost"<?php if($hasUnReadPost) { echo 'class="active"';} ?>><p>You have new post</p></div>
+      <div id="newPost"<?php if($hasUnReadPost) { echo ' class="active"';} ?>><p>You have new post</p></div>
       <div id="currencies"></div>
     </div>
 
@@ -68,7 +68,7 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
     <form id="splitStackPanel" class="quantityInputPanel">
       <fieldset>
         <label for="splitStackInput" class="visibleHide">Enter quantity:</label>
-        <input type="number" placeholder="Enter quantity" min="0" max="20" pattern="[0-9]*" id="splitStackInput">
+        <input type="number" placeholder="Enter quantity" min="0" max="20" id="splitStackInput">
         <button id="splitStackCancel" type="button">Cancel</button>
         <input type="submit" value="Ok">
       </fieldset>
@@ -179,7 +179,7 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
     <form id="shopSplitStackPanel" class="quantityInputPanel">
       <fieldset>
         <label for="shopSplitStackInput" class="visibleHide">Enter quantity:</label>
-        <input type="number" placeholder="Enter quantity" min="0" max="20" pattern="[0-9]*" id="shopSplitStackInput">
+        <input type="number" placeholder="Enter quantity" min="0" max="20" id="shopSplitStackInput">
         <button id="shopSplitStackCancel" type="button">Cancel</button>
         <input type="submit" value="Ok">
       </fieldset>
