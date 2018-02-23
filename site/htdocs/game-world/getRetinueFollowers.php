@@ -51,9 +51,8 @@ mysql_free_result($eventsResult);
 
 $activeSeasonQuery = 'activeduringseason is null';
 if(count($activeEvents)>0) {
-   $activeSeasonQuery = '(activeduringseason in ('.implode(",",$activeEvents).') or activeduringseason is null)'; 
+   $activeSeasonQuery = '(tblretinuequests.activeduringseason in ('.implode(",",$activeEvents).') or tblretinuequests.activeduringseason is null)'; 
 }
-
 
 
 
@@ -69,7 +68,9 @@ $completePanelsCreated = array();
 $retinuePanelCompleteOutput = '';
 
 $activeQuestsIds = array();
-  $query = "SELECT * FROM tblretinuefollowers left join tblretinuequests on tblretinuefollowers.activeQuestId = tblretinuequests.questID where tblretinuefollowers.characterIdFollowing='".$chr."' and ".$activeSeasonQuery;
+  $query = "SELECT * FROM tblretinuefollowers left join tblretinuequests on tblretinuefollowers.activeQuestId = tblretinuequests.questID where tblretinuefollowers.characterIdFollowing='".$chr."'";
+
+
 
       $result = mysql_query($query) or die ();
       if(mysql_num_rows($result)>0) {
@@ -176,7 +177,7 @@ array_push($completePanelsCreated, $thisFollower['activeQuestId']);
 $questPanelDetailsOutput = "";
 
 // get a pool of the latest available quests (all latest quests, that aren;t active or completed by this character)
-      $questsQuery = "SELECT * from tblretinuequests where tblretinuequests.questID NOT IN (SELECT questIdActiveOrComplete from tblretinuequestsactive where characterId='".$chr."') order by timeCreated DESC limit 12";
+      $questsQuery = "SELECT * from tblretinuequests where tblretinuequests.questID NOT IN (SELECT questIdActiveOrComplete from tblretinuequestsactive where characterId='".$chr."') and ".$activeSeasonQuery." order by timeCreated DESC limit 12";
 
 $questsResult = mysql_query($questsQuery) or die ();
   $retinuePanelOutput .= '<h2>Available quests:</h2>';

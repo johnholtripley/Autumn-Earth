@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 22, 2018 at 05:48 PM
+-- Generation Time: Feb 23, 2018 at 01:39 PM
 -- Server version: 5.6.24
 -- PHP Version: 5.6.8
 
@@ -1576,8 +1576,8 @@ CREATE TABLE IF NOT EXISTS `tblretinuefollowers` (
 --
 
 INSERT INTO `tblretinuefollowers` (`followerID`, `followerName`, `followerCleanURL`, `characterIdFollowing`, `activeQuestId`, `questStartedTime`, `followerSex`, `currentContinent`, `followerMapCoordinateX`, `followerMapCoordinateY`) VALUES
-(1, 'Eila Myrborn', 'eila-myrborn', 999, 113, '2018-02-22 15:53:40', 'female', 'eastern-continent', 580, 93),
-(2, 'Nellaith Wispfael', 'nellaith-wispfael', 999, 113, '2018-02-22 15:53:40', 'female', 'eastern-continent', 80, 83);
+(1, 'Eila Myrborn', 'eila-myrborn', 999, 106, '2018-02-23 08:48:23', 'female', 'eastern-continent', 197, 156),
+(2, 'Nellaith Wispfael', 'nellaith-wispfael', 999, 107, '2018-02-23 10:49:34', 'female', 'eastern-continent', 501, 286);
 
 -- --------------------------------------------------------
 
@@ -1637,7 +1637,7 @@ CREATE TABLE IF NOT EXISTS `tblretinuequestsactive` (
   `questActiveId` int(11) NOT NULL,
   `questIdActiveOrComplete` int(10) NOT NULL,
   `characterId` int(10) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
 -- Dumping data for table `tblretinuequestsactive`
@@ -1654,7 +1654,14 @@ INSERT INTO `tblretinuequestsactive` (`questActiveId`, `questIdActiveOrComplete`
 (9, 103, 999),
 (10, 105, 999),
 (11, 104, 999),
-(12, 113, 999);
+(12, 113, 999),
+(13, 111, 999),
+(14, 110, 999),
+(15, 109, 999),
+(16, 112, 999),
+(17, 114, 999),
+(18, 106, 999),
+(19, 107, 999);
 
 -- --------------------------------------------------------
 
@@ -2492,7 +2499,7 @@ ALTER TABLE `tblretinuequests`
 -- AUTO_INCREMENT for table `tblretinuequestsactive`
 --
 ALTER TABLE `tblretinuequestsactive`
-  MODIFY `questActiveId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=13;
+  MODIFY `questActiveId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=20;
 --
 -- AUTO_INCREMENT for table `tblretinuequesttypes`
 --
