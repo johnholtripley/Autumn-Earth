@@ -211,9 +211,9 @@
 
 
 .isoRight {
-    @include transform(skew(0deg, -26.6deg) scale(1, 0.894) );
+    @include transform(skew(0deg, -26.6deg) scale(0.894, 1));
 }
 
 .isoLeft {
-    @include transform(skew(0deg, 26.6deg) scale(1, 0.894));
+    @include transform(skew(0deg, 26.6deg) scale(0.894, 1));
 }
