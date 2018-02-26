@@ -1628,7 +1628,7 @@ function processSpeech(thisObjectSpeaking, thisSpeechPassedIn, thisSpeechCode, i
                 var professionId = thisObjectSpeaking.speech[thisObjectSpeaking.speechIndex][2];
                 if (hero.professionsKnown.indexOf(professionId) == -1) {
                     hero.professionsKnown.push(professionId);
-                    showNotification('<p>You learned a new profession</p>');
+                    UI.showNewProfession(professionId);
                 }
                 break;
             case "follower":

@@ -2054,8 +2054,8 @@ var UI = {
             retinueQuestTimers.push([document.querySelector('#retinueFollower' + retinueObject.followersAdded[i] + ' .retinueQuestTimer'), new Date().getTime() + (retinueObject.timeRequired) * 60 * 1000, ""]);
 
             followersAssigned.push(retinueObject.followersAdded[i]);
-   
-            document.getElementById('retinueFollower' + retinueObject.followersAdded[i]).setAttribute('data-activeonquest',retinueObject.openQuestDetail);
+
+            document.getElementById('retinueFollower' + retinueObject.followersAdded[i]).setAttribute('data-activeonquest', retinueObject.openQuestDetail);
         }
         sendDataWithoutNeedingAResponse("/game-world/updateRetinueQuest.php?questID=" + retinueObject.openQuestDetail + "&chr=999&followers=" + followersAssigned.join("|"));
         document.getElementById("retinueQuestLocationDetail" + retinueObject.openQuestDetail).classList.remove("active");
@@ -2086,5 +2086,12 @@ var UI = {
         var thisNode = getNearestParentId(whichTimer);
         var whichPanel = thisNode.getAttribute('data-activeonquest');
         document.getElementById("retinueComplete" + whichPanel).classList.add("active");
+    },
+    showNewFollower: function(id, name) {
+        // #####
+        console.log("new follower " + id + " called " + name);
+    },
+    showNewProfession: function(id) {
+        showNotification('<p>You learned a new profession - #' + id + '</p>');
     }
 }
