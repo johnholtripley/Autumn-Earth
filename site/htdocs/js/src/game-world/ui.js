@@ -2054,6 +2054,8 @@ var UI = {
             retinueQuestTimers.push([document.querySelector('#retinueFollower' + retinueObject.followersAdded[i] + ' .retinueQuestTimer'), new Date().getTime() + (retinueObject.timeRequired) * 60 * 1000, ""]);
 
             followersAssigned.push(retinueObject.followersAdded[i]);
+   
+            document.getElementById('retinueFollower' + retinueObject.followersAdded[i]).setAttribute('data-activeonquest',retinueObject.openQuestDetail);
         }
         sendDataWithoutNeedingAResponse("/game-world/updateRetinueQuest.php?questID=" + retinueObject.openQuestDetail + "&chr=999&followers=" + followersAssigned.join("|"));
         document.getElementById("retinueQuestLocationDetail" + retinueObject.openQuestDetail).classList.remove("active");
@@ -2081,12 +2083,8 @@ var UI = {
 
     },
     retinueQuestComplete: function(whichTimer) {
-
         var thisNode = getNearestParentId(whichTimer);
-
-        var whichPanel = thisNode.id.substring(15);
-        console.log(whichPanel);
-        document.getElementById("retinueCompletePanel" + whichPanel).classList.add("active");
-
+        var whichPanel = thisNode.getAttribute('data-activeonquest');
+        document.getElementById("retinueComplete" + whichPanel).classList.add("active");
     }
 }

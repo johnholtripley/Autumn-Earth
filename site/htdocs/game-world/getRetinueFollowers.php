@@ -118,7 +118,7 @@ foreach ($followerData as $followerKey => $thisFollower) {
   } else {
     
   }
- $retinuePanelOutput .= '<li id="retinueFollower'.$thisFollower['followerID'].'"'.$availableClass.' data-locationx="'.$thisFollower['followerMapCoordinateX'].'" data-locationy="'.$thisFollower['followerMapCoordinateY'].'">'; 
+ $retinuePanelOutput .= '<li id="retinueFollower'.$thisFollower['followerID'].'"'.$availableClass.' data-locationx="'.$thisFollower['followerMapCoordinateX'].'" data-locationy="'.$thisFollower['followerMapCoordinateY'].'" data-activeonquest="'.$thisFollower['activeQuestId'].'">'; 
   $retinuePanelOutput .= '<div class="portrait"><img src="/images/retinue/'.$thisFollower['followerID'].'.png" alt=""></div><h3>'.$thisFollower['followerName'].'</h3>';
   if($thisFollower['activeQuestId'] == -1) {
   $retinuePanelOutput .= '<p>waiting for a quest</p>';
