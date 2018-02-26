@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 23, 2018 at 01:39 PM
+-- Generation Time: Feb 23, 2018 at 05:54 PM
 -- Server version: 5.6.24
 -- PHP Version: 5.6.8
 
@@ -1576,7 +1576,7 @@ CREATE TABLE IF NOT EXISTS `tblretinuefollowers` (
 --
 
 INSERT INTO `tblretinuefollowers` (`followerID`, `followerName`, `followerCleanURL`, `characterIdFollowing`, `activeQuestId`, `questStartedTime`, `followerSex`, `currentContinent`, `followerMapCoordinateX`, `followerMapCoordinateY`) VALUES
-(1, 'Eila Myrborn', 'eila-myrborn', 999, 106, '2018-02-23 08:48:23', 'female', 'eastern-continent', 197, 156),
+(1, 'Eila Myrborn', 'eila-myrborn', 999, 118, '2018-02-23 16:32:07', 'female', 'eastern-continent', 75, 207),
 (2, 'Nellaith Wispfael', 'nellaith-wispfael', 999, 107, '2018-02-23 10:49:34', 'female', 'eastern-continent', 501, 286);
 
 -- --------------------------------------------------------
@@ -1605,7 +1605,7 @@ CREATE TABLE IF NOT EXISTS `tblretinuequests` (
   `activeDuringSeason` int(11) DEFAULT NULL,
   `timeCreated` datetime NOT NULL,
   `seed` int(128) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=116 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=129 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
 -- Dumping data for table `tblretinuequests`
@@ -1625,7 +1625,20 @@ INSERT INTO `tblretinuequests` (`questID`, `questName`, `questCleanURL`, `questD
 (112, 'Lay of the Land', 'lay-of-the-land-2', 'Map out as much of the sea as you can.', 'cartography', 'eastern-continent', 197, 156, 0, 0, 'sea', '0', 0, 1, 1, '[{"type":2,"quantity":2,"quality":100,"durability":100,"currentWear":0,"effectiveness":100,"colour":"0","enchanted":0,"hallmark":0,"inscription":""}]', NULL, '2018-02-22 15:53:22', 1519331255),
 (113, 'Mapping the wilds', 'mapping-the-wilds', 'Map out as much of the sea as you can.', 'cartography', 'eastern-continent', 575, 56, 0, 0, 'sea', '0', 0, 2, 1, '[{"type":2,"quantity":2,"quality":100,"durability":100,"currentWear":0,"effectiveness":100,"colour":"0","enchanted":0,"hallmark":0,"inscription":""}]', NULL, '2018-02-22 15:53:22', 1519381658),
 (114, 'Glue and thread', 'glue-and-thread', 'Make exquisite items.', 'crafting', 'eastern-continent', 501, 286, 0, 0, '', '0', 0, 1, 1, '[{"type":2,"quantity":2,"quality":100,"durability":100,"currentWear":0,"effectiveness":100,"colour":"0","enchanted":0,"hallmark":0,"inscription":""}]', NULL, '2018-02-22 15:53:23', 1519323162),
-(115, 'Bring home the goods', 'bring-home-the-goods', 'Gather what kelp you can.', 'resource gathering', 'eastern-continent', 611, 355, 0, 0, 'sea', '0', 0, 1, 1, '[{"type":2,"quantity":2,"quality":100,"durability":100,"currentWear":0,"effectiveness":100,"colour":"0","enchanted":0,"hallmark":0,"inscription":""}]', NULL, '2018-02-22 15:53:23', 1519340763);
+(115, 'Bring home the goods', 'bring-home-the-goods', 'Gather what kelp you can.', 'resource gathering', 'eastern-continent', 611, 355, 0, 0, 'sea', '0', 0, 1, 1, '[{"type":2,"quantity":2,"quality":100,"durability":100,"currentWear":0,"effectiveness":100,"colour":"0","enchanted":0,"hallmark":0,"inscription":""}]', NULL, '2018-02-22 15:53:23', 1519340763),
+(116, 'To the rescue', 'to-the-rescue', 'The sea is in need. Get over there and help.', 'rescue', 'eastern-continent', 646, 218, 0, 0, 'sea', '0', 0, 1, 1, '[{"type":2,"quantity":2,"quality":100,"durability":100,"currentWear":0,"effectiveness":100,"colour":"0","enchanted":0,"hallmark":0,"inscription":""}]', NULL, '2018-02-23 14:27:46', 1519453612),
+(117, 'Bring home the goods', 'bring-home-the-goods-2', 'Gather what kelp you can.', 'resource gathering', 'eastern-continent', 626, 215, 0, 0, 'sea', '0', 0, 2, 1, '[{"type":2,"quantity":2,"quality":100,"durability":100,"currentWear":0,"effectiveness":100,"colour":"0","enchanted":0,"hallmark":0,"inscription":""}]', NULL, '2018-02-23 14:27:47', 1519492621),
+(118, 'To the rescue', 'to-the-rescue-2', 'The sea is in need. Get over there and help.', 'rescue', 'eastern-continent', 39, 158, 0, 0, 'sea', '0', 0, 1, 1, '[{"type":2,"quantity":2,"quality":100,"durability":100,"currentWear":0,"effectiveness":100,"colour":"0","enchanted":0,"hallmark":0,"inscription":""}]', NULL, '2018-02-23 14:27:48', 1519440525),
+(119, 'To the rescue', 'to-the-rescue-3', 'The sea is in need. Get over there and help.', 'rescue', 'eastern-continent', 582, 287, 0, 0, 'sea', '0', 0, 1, 1, '[{"type":2,"quantity":2,"quality":100,"durability":100,"currentWear":0,"effectiveness":100,"colour":"0","enchanted":0,"hallmark":0,"inscription":""}]', NULL, '2018-02-23 14:27:48', 1519459826),
+(120, 'Lay of the Land', 'lay-of-the-land-3', 'Map out the region', 'cartography', 'eastern-continent', 164, 275, 0, 0, 'sea', '0', 0, 1, 1, '[{"type":2,"quantity":2,"quality":100,"durability":100,"currentWear":0,"effectiveness":100,"colour":"0","enchanted":0,"hallmark":0,"inscription":""}]', NULL, '2018-02-23 14:27:48', 1519478027),
+(121, 'Get yer boots on', 'get-yer-boots-on', 'There''s plenty of salvage to be had in the sea.', 'salvage', 'eastern-continent', 622, 256, 0, 0, 'sea', '0', 0, 1, 1, '[{"type":2,"quantity":2,"quality":100,"durability":100,"currentWear":0,"effectiveness":100,"colour":"0","enchanted":0,"hallmark":0,"inscription":""}]', NULL, '2018-02-23 14:27:49', 1519494828),
+(122, 'A long descent', 'a-long-descent-2', 'Enter the depths of grey and face the unknown.', 'dungeon delve', 'eastern-continent', 370, 256, 0, 0, '', '0', 0, 1, 1, '[{"type":2,"quantity":2,"quality":100,"durability":100,"currentWear":0,"effectiveness":100,"colour":"0","enchanted":0,"hallmark":0,"inscription":""}]', NULL, '2018-02-23 14:27:49', 1519412430),
+(123, 'Lay of the Land', 'lay-of-the-land-4', 'Map out the region', 'cartography', 'eastern-continent', 126, 107, 0, 0, 'sea', '0', 0, 1, 1, '[{"type":2,"quantity":2,"quality":100,"durability":100,"currentWear":0,"effectiveness":100,"colour":"0","enchanted":0,"hallmark":0,"inscription":""}]', NULL, '2018-02-23 14:27:49', 1519431131),
+(124, 'Bring home the goods', 'bring-home-the-goods-3', 'Gather what kelp you can.', 'resource gathering', 'eastern-continent', 627, 28, 0, 0, 'sea', '0', 0, 2, 1, '[{"type":2,"quantity":2,"quality":100,"durability":100,"currentWear":0,"effectiveness":100,"colour":"0","enchanted":0,"hallmark":0,"inscription":""}]', 6, '2018-02-23 14:27:49', 1519447932),
+(125, 'Showing the way', 'showing-the-way-3', 'Ensure purple is reached safely.', 'escort', 'eastern-continent', 434, 379, 0, 0, '', '0', 0, 1, 1, '[{"type":2,"quantity":2,"quality":100,"durability":100,"currentWear":0,"effectiveness":100,"colour":"0","enchanted":0,"hallmark":0,"inscription":""}]', NULL, '2018-02-23 16:54:32', 1519407382),
+(126, 'Climb the ladder', 'climb-the-ladder-2', 'Compete in a ranked card game tournament.', 'card tournament', 'eastern-continent', 488, 251, 0, 0, '', '0', 0, 1, 1, '[{"type":2,"quantity":2,"quality":100,"durability":100,"currentWear":0,"effectiveness":100,"colour":"0","enchanted":0,"hallmark":0,"inscription":""}]', NULL, '2018-02-23 16:54:33', 1519503788),
+(127, 'A long descent', 'a-long-descent-3', 'Enter the depths of dark green and face the unknown.', 'dungeon delve', 'eastern-continent', 316, 143, 0, 0, '', '0', 0, 1, 1, '[{"type":2,"quantity":2,"quality":100,"durability":100,"currentWear":0,"effectiveness":100,"colour":"0","enchanted":0,"hallmark":0,"inscription":""}]', NULL, '2018-02-23 16:54:33', 1519445491),
+(128, 'To the rescue', 'to-the-rescue-4', 'Black is in need. Get over there and help.', 'rescue', 'eastern-continent', 544, 238, 0, 0, '', '0', 0, 1, 1, '[{"type":2,"quantity":2,"quality":100,"durability":100,"currentWear":0,"effectiveness":100,"colour":"0","enchanted":0,"hallmark":0,"inscription":""}]', NULL, '2018-02-23 16:54:33', 1519479793);
 
 -- --------------------------------------------------------
 
@@ -1637,7 +1650,7 @@ CREATE TABLE IF NOT EXISTS `tblretinuequestsactive` (
   `questActiveId` int(11) NOT NULL,
   `questIdActiveOrComplete` int(10) NOT NULL,
   `characterId` int(10) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
 -- Dumping data for table `tblretinuequestsactive`
@@ -1661,7 +1674,8 @@ INSERT INTO `tblretinuequestsactive` (`questActiveId`, `questIdActiveOrComplete`
 (16, 112, 999),
 (17, 114, 999),
 (18, 106, 999),
-(19, 107, 999);
+(19, 107, 999),
+(20, 118, 999);
 
 -- --------------------------------------------------------
 
@@ -2494,12 +2508,12 @@ ALTER TABLE `tblretinuefollowers`
 -- AUTO_INCREMENT for table `tblretinuequests`
 --
 ALTER TABLE `tblretinuequests`
-  MODIFY `questID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=116;
+  MODIFY `questID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=129;
 --
 -- AUTO_INCREMENT for table `tblretinuequestsactive`
 --
 ALTER TABLE `tblretinuequestsactive`
-  MODIFY `questActiveId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=20;
+  MODIFY `questActiveId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=21;
 --
 -- AUTO_INCREMENT for table `tblretinuequesttypes`
 --

@@ -13,5 +13,6 @@ $liveHost="185.116.212.163";
 $liveUser="autumnearth.com";
 $livePassword="2Z4vVA1i";
 
+date_default_timezone_set('Europe/London');
 
 ?>

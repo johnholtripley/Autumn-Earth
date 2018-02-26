@@ -3,7 +3,7 @@
 include($_SERVER['DOCUMENT_ROOT']."/includes/signalnoise.php");
 include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
 
-date_default_timezone_set('Europe/London');
+
 
 $questID = $_GET['questID'];
 $chr = $_GET['chr'];

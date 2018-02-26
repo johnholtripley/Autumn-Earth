@@ -5,6 +5,8 @@ include_once($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
 
 header('Content-Type: application/json');
 
+$homeBaseX = 200;
+$homeBaseY = 350;
 
 // trim the first 11 characters to get the MD5 hash of the mail id
 $questId = $_GET["id"];
@@ -22,8 +24,14 @@ if(mysql_num_rows($result)>0) {
         $attachmentOutput = $questReward;
       
     }
-    $endLocationX = $mapCoordinateX;
+    if($needsToReturnToBase) {
+       $endLocationX = $homeBaseX;
+    $endLocationY = $homeBaseY;
+    } else {
+        $endLocationX = $mapCoordinateX;
     $endLocationY = $mapCoordinateY;
+    }
+  
   }
 }
 

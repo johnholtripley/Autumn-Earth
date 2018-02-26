@@ -1914,6 +1914,7 @@ var UI = {
                 thisTimerText = "1 second remaining";
             } else {
                 thisTimerText = "complete";
+
             }
             if (thisTimerText != retinueQuestTimers[i][2]) {
                 // only access the DOM if the text has changed:
@@ -1921,6 +1922,7 @@ var UI = {
                 retinueQuestTimers[i][2] = thisTimerText;
             }
             if (thisTimerText == "complete") {
+                UI.retinueQuestComplete(retinueQuestTimers[i][0]);
                 // remove this timer
                 retinueQuestTimers.splice(i, 1);
                 i--;
@@ -2076,6 +2078,15 @@ var UI = {
             var parentPanel = getNearestParentId(e.target);
             retinueMissionCompleted(parentPanel.id.substring(15));
         }
+
+    },
+    retinueQuestComplete: function(whichTimer) {
+
+        var thisNode = getNearestParentId(whichTimer);
+
+        var whichPanel = thisNode.id.substring(15);
+        console.log(whichPanel);
+        document.getElementById("retinueCompletePanel" + whichPanel).classList.add("active");
 
     }
 }

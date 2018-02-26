@@ -117,6 +117,22 @@
     &.active {
         opacity: 1;
     }
+    &.needsToReturnToBase {
+        background: rgba(200, 200, 20, 0.6) url(../images/game-world/interface/retinue/base-icon.png) no-repeat 50% 50%;
+    }
+}
+
+#homeBaseLocation {
+      position: absolute;
+    width: 20px;
+    height: 20px;
+    outline: none;
+    padding: 0;
+       background: rgba(20, 200, 20, 0.6);
+    border: 2px solid #fff;
+    @include border-radius(20px);
+    @include transform(translate(-10px, -10px));
+    z-index: 1;
 }
 
 .followerLocation {
@@ -141,6 +157,7 @@
         }
     }
 }
+
 
 .mapLocationTooltip {
     pointer-events: none;

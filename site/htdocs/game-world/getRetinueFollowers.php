@@ -2,7 +2,7 @@
 // get retinue followers for this character:
 
 
-date_default_timezone_set('Europe/London');
+
 
 // get from game state: ####
 $chr = 999;
@@ -124,13 +124,26 @@ foreach ($followerData as $followerKey => $thisFollower) {
   $retinuePanelOutput .= '<p>waiting for a quest</p>';
   } else {
 
+$thisQuestCompleteClass = '';
 
   if($thisFollower['completedSoFar'] >= $questTimes[($thisFollower['activeQuestId'])] ) {
   $retinuePanelOutput .= '<p>COMPLETED "'.$thisFollower['questName'].'"</p>';
+$thisQuestCompleteClass = ' active';
+
+
+
+  } else {
+ 
+  $retinuePanelOutput .= '<p>active on "'.$thisFollower['questName'].'" <span class="retinueQuestTimer" data-minutes="'.($questTimes[($thisFollower['activeQuestId'])] - $thisFollower['completedSoFar']).'"></span></p>';
+  if($debug) {
+  $retinuePanelOutput .= $thisFollower['completedSoFar']." out of ".$questTimes[($thisFollower['activeQuestId'])] ."<br>";
+  }
+  }
+
 
 // don't create another panel if more than 1 follower is on this quest:
 if(!(in_array($thisFollower['activeQuestId'], $completePanelsCreated))) {
-$retinuePanelCompleteOutput .= '<div class="retinueCompletePanel active" id="retinueComplete'.$thisFollower['activeQuestId'].'" data-questname="'.$thisFollower['questName'].'">';
+$retinuePanelCompleteOutput .= '<div class="retinueCompletePanel'.$thisQuestCompleteClass.'" id="retinueComplete'.$thisFollower['activeQuestId'].'" data-questname="'.$thisFollower['questName'].'">';
 $retinuePanelCompleteOutput .= '<h2>'.$thisFollower['questName'].'</h2>';
 $retinuePanelCompleteOutput .= '<h3>complete</h3>';
   if($thisFollower['questReward']) {
@@ -154,13 +167,7 @@ array_push($completePanelsCreated, $thisFollower['activeQuestId']);
 }
 
 
-  } else {
- 
-  $retinuePanelOutput .= '<p>active on "'.$thisFollower['questName'].'" <span class="retinueQuestTimer" data-minutes="'.($questTimes[($thisFollower['activeQuestId'])] - $thisFollower['completedSoFar']).'"></span></p>';
-  if($debug) {
-  $retinuePanelOutput .= $thisFollower['completedSoFar']." out of ".$questTimes[($thisFollower['activeQuestId'])] ."<br>";
-  }
-  }
+
   }
   $retinuePanelOutput .= '</li>';
 }
@@ -188,7 +195,11 @@ if(mysql_num_rows($questsResult)>0) {
 	while ($questsRow = mysql_fetch_array($questsResult)) {
       extract($questsRow);
       // map is 700 x 450
-$retinuePanelOutput .= '<button id="retinueQuestLocation'.($questID).'" class="mapLocation active" style="left:'.(($mapCoordinateX/700)*100).'%;top:'.(($mapCoordinateY/450)*100).'%;"></button><div class="mapLocationTooltip" style="left:'.(($mapCoordinateX/700)*100).'%;top:'.(($mapCoordinateY/450)*100).'%;"><h4>'.$questName.'</h4><p>'.$questDescription.' (requires '.$questNumberOfFollowersRequired;
+      $returnToBaseClass='';
+      if($needsToReturnToBase) {
+$returnToBaseClass = ' needsToReturnToBase';
+      }
+$retinuePanelOutput .= '<button id="retinueQuestLocation'.($questID).'" class="mapLocation active'.$returnToBaseClass.'" style="left:'.(($mapCoordinateX/700)*100).'%;top:'.(($mapCoordinateY/450)*100).'%;"></button><div class="mapLocationTooltip" style="left:'.(($mapCoordinateX/700)*100).'%;top:'.(($mapCoordinateY/450)*100).'%;"><h4>'.$questName.'</h4><p>'.$questDescription.' (requires '.$questNumberOfFollowersRequired;
 
 if($questObstacles) {
   $retinuePanelOutput .= ' and ';
@@ -235,6 +246,10 @@ $questPanelDetailsOutput .= '</div>';
 $retinuePanelOutput .= '<div class="followerLocation" style="left:'.(($thisFollower['followerMapCoordinateX']/700)*100).'%;top:'.(($thisFollower['followerMapCoordinateY']/450)*100).'%;" id="followerLocation'.$thisFollower['followerID'].'"><img src="/images/retinue/'.$thisFollower['followerID'].'.png" alt=""></div>';
 $retinuePanelOutput .= '<div class="mapLocationTooltip" id="followerLocationTooltip'.$thisFollower['followerID'].'" style="left:'.(($thisFollower['followerMapCoordinateX']/700)*100).'%;top:'.(($thisFollower['followerMapCoordinateY']/450)*100).'%;">'.$thisFollower['followerName'].'</div>';
   }
+
+  // plot home base:
+  
+  $retinuePanelOutput .= '<div id="homeBaseLocation" style="left:'.(($homeBaseX/700)*100).'%;top:'.(($homeBaseY/450)*100).'%;"></div>';
 
 
    $retinuePanelOutput .= '</div>';
