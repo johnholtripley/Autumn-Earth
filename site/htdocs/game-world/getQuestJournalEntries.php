@@ -80,12 +80,13 @@ while ($row = mysql_fetch_array($followerResult)) {
 
         break;
     default:
-               $quantity = 1;
+               
             // check for "/" for random:
-  //      if (strpos($item, '/') !== false) {
-//$item = "unknown";
-      //  } else {
-        $markupToOutput .= '<div class="item"><img src="/images/game-world/inventory-items/'.$item['type'].'.png">';
+        if (strpos($item['type'], '/') !== false) {
+$markupToOutput .= '<div class="item"><img src="/images/game-world/inventory-items/unknown.png">';
+        } else {
+              
+            $markupToOutput .= '<div class="item"><img src="/images/game-world/inventory-items/'.$item['type'].'.png">';
 $itemQuery = "SELECT itemid, shortname, description, pricecode from tblinventoryitems where itemid = '".$item['type']."'";
 $itemResult = mysql_query($itemQuery) or die ();
 while ($itemRow = mysql_fetch_array($itemResult)) {
@@ -95,10 +96,15 @@ $markupToOutput .= '<span class="price">Sell price: '.parseMoney($itemRow['price
 $markupToOutput .= '</p>';
     }
 mysql_free_result($itemResult);
+             }
 
 
+$quantity = 1;
+if(isset($item['quantity'])) {
+$quantity = $item['quantity'];
+}
 
-$markupToOutput .= '<span class="qty">'.$item['quantity'].'</span></div>';
+$markupToOutput .= '<span class="qty">'.$quantity.'</span></div>';
 }
 
 

@@ -3329,20 +3329,23 @@ function giveQuestRewards(whichNPC, whichQuestId) {
 function awardQuestRewards(whichNPC, questRewards, isACollectionQuest) {
     var allRewardItems = [];
     for (var i = 0; i < questRewards.length; i++) {
-        // check for variation:
-        /*
-           var questPossibilities = questRewards[i].split("/");
-           var questRewardToUse = getRandomElementFromArray(questPossibilities);
-           */
-
-        // need to determine a way within the JSON to define random variants ##############
         var questRewardToUse = questRewards[i];
+
+
+
+
         var thisRewardObject = prepareInventoryObject(questRewardToUse);
-        // if (thisRewardObject.length > 1) {
+ // check for variation:
+  var rewardTypePossibilities = questRewardToUse.type.split("/");
+           thisRewardObject.type = parseInt(getRandomElementFromArray(rewardTypePossibilities));
+
+
+
+    
         if (Number.isInteger(thisRewardObject.type)) {
             // might need to show the name of the item in the speech:           
             thisSpeech = thisSpeech.replace(/##itemName##/i, currentActiveInventoryItems[parseInt(thisRewardObject.type)].shortname);
-            //   }
+            
         }
         allRewardItems.push(thisRewardObject);
     }
