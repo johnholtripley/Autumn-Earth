@@ -15,12 +15,14 @@ function canAddItemToInventory(itemObj) {
                 moneyToAdd += itemObj[k].quantity;
                 break;
             case 'follower':
+            console.log("adding follower");
                 followersAdded.push([itemObj[k].id, itemObj[k].name]);
                 break;
             case 'profession':
                 professionsAdded.push(itemObj[k].id);
                 break;
             default:
+            console.log(itemObj[k].type);
                 var quantityAddedSoFar = 0;
                 // check if this type exist in the current inventory:
                 var inventoryKeysFound = getObjectKeysForInnerValue(inventoryClone, itemObj[k].type, "type");

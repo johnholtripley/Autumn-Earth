@@ -57,20 +57,30 @@ $outputJson .= '"startItemsReceived": '.$startItemsReceived.',';
 		$outputJson .= '"startItemsReceived": "",';
 	}
 	
-	if($itemsReceivedOnCompletion) {
+	if($itemsReceivedOnCompletion != null) {
 
 $itemReceivedJSON = json_decode($itemsReceivedOnCompletion, true);
-foreach ($itemReceivedJSON as $thisItem) {
-if($thisItem['type'] == "follower") {
+
+foreach ($itemReceivedJSON as $thisItemKey => $thisItem) {
+
+if($thisItem['type'] == "follower") {	
+
+
 // check not already defined:
 	if(!(isset($thisItem['id']))) {
 // generate new follower:
 		// #################
-		$itemsReceivedOnCompletion = '[{"type":"follower","id":1,"name":"naileth whisperspringwoodsong"}]';
-
+		
+	
+$itemReceivedJSON[$thisItemKey]['type'] = "follower";
+$itemReceivedJSON[$thisItemKey]['id'] = 1;
+$itemReceivedJSON[$thisItemKey]['name'] = "naileth whisperspringwoodsong";
 	}
 }
 	}
+
+
+$itemsReceivedOnCompletion = json_encode($itemReceivedJSON);
 
 			$outputJson .= '"itemsReceivedOnCompletion": '.$itemsReceivedOnCompletion.',';
 	} else {

@@ -69,6 +69,7 @@ switch ($item['type']) {
     
         break;
         case "follower":
+   /* 
         $followerQuery = "SELECT * from tblretinuefollowers where followerID='".$item["id"]."'";
         $followerResult = mysql_query($followerQuery) or die ();
 while ($row = mysql_fetch_array($followerResult)) {
@@ -77,7 +78,9 @@ while ($row = mysql_fetch_array($followerResult)) {
      $markupToOutput .= '<img src="/images/retinue/'.$item["id"].'.png">';
 }
  mysql_free_result($followerResult);
-
+ */
+ $markupToOutput .= '<p>You will gain a new follower: &quot;generated name goes here&quot;</p>';
+     $markupToOutput .= '<img src="/images/retinue/2.png">';
         break;
     default:
                

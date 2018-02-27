@@ -182,17 +182,20 @@ function awardQuestRewards(whichNPC, questRewards, isACollectionQuest) {
 
         var thisRewardObject = prepareInventoryObject(questRewardToUse);
  // check for variation:
+
   var rewardTypePossibilities = questRewardToUse.type.split("/");
-           thisRewardObject.type = parseInt(getRandomElementFromArray(rewardTypePossibilities));
+           thisRewardObject.type = getRandomElementFromArray(rewardTypePossibilities);
 
 
 
     
-        if (Number.isInteger(thisRewardObject.type)) {
+        if (!(isNaN(thisRewardObject.type))) {
             // might need to show the name of the item in the speech:           
             thisSpeech = thisSpeech.replace(/##itemName##/i, currentActiveInventoryItems[parseInt(thisRewardObject.type)].shortname);
             
         }
+
+
         allRewardItems.push(thisRewardObject);
     }
 

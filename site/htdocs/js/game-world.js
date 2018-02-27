@@ -2123,12 +2123,14 @@ function canAddItemToInventory(itemObj) {
                 moneyToAdd += itemObj[k].quantity;
                 break;
             case 'follower':
+            console.log("adding follower");
                 followersAdded.push([itemObj[k].id, itemObj[k].name]);
                 break;
             case 'profession':
                 professionsAdded.push(itemObj[k].id);
                 break;
             default:
+            console.log(itemObj[k].type);
                 var quantityAddedSoFar = 0;
                 // check if this type exist in the current inventory:
                 var inventoryKeysFound = getObjectKeysForInnerValue(inventoryClone, itemObj[k].type, "type");
@@ -3336,17 +3338,20 @@ function awardQuestRewards(whichNPC, questRewards, isACollectionQuest) {
 
         var thisRewardObject = prepareInventoryObject(questRewardToUse);
  // check for variation:
+
   var rewardTypePossibilities = questRewardToUse.type.split("/");
-           thisRewardObject.type = parseInt(getRandomElementFromArray(rewardTypePossibilities));
+           thisRewardObject.type = getRandomElementFromArray(rewardTypePossibilities);
 
 
 
     
-        if (Number.isInteger(thisRewardObject.type)) {
+        if (!(isNaN(thisRewardObject.type))) {
             // might need to show the name of the item in the speech:           
             thisSpeech = thisSpeech.replace(/##itemName##/i, currentActiveInventoryItems[parseInt(thisRewardObject.type)].shortname);
             
         }
+
+
         allRewardItems.push(thisRewardObject);
     }
 
