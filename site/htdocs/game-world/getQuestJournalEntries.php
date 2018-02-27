@@ -6,6 +6,9 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/functions.php");
 
  // if no quest id is passed in, then get all active
 $isAnUpdate = false;
+
+$chr = $_GET["chr"];
+
 if(isset($_GET["questID"])) {
     // it's set, just find the details for the quest and return it as an update
 $activeQuests = array($_GET["questID"]);
@@ -69,18 +72,19 @@ switch ($item['type']) {
     
         break;
         case "follower":
-   /* 
-        $followerQuery = "SELECT * from tblretinuefollowers where followerID='".$item["id"]."'";
-        $followerResult = mysql_query($followerQuery) or die ();
+
+
+// find followers assigned to this character, and identified as a reward for this particular quest:
+$followerQuery = "SELECT * from tblretinuefollowers where characterIdFollowing='".$chr."' and followerRewardFromQuestId='".$questid."'";
+$followerResult = mysql_query($followerQuery) or die ();
 while ($row = mysql_fetch_array($followerResult)) {
     extract($row);
-     $markupToOutput .= '<p>You will gain a new follower: &quot;'.$followerName.'&quot;</p>';
-     $markupToOutput .= '<img src="/images/retinue/'.$item["id"].'.png">';
-}
- mysql_free_result($followerResult);
- */
- $markupToOutput .= '<p>You will gain a new follower: &quot;generated name goes here&quot;</p>';
-     $markupToOutput .= '<img src="/images/retinue/2.png">';
+         $markupToOutput .= '<p>You will gain a new follower: &quot;'.$followerName.'&quot;</p>';
+     $markupToOutput .= '<img src="/images/retinue/'.$followerID.'.png">';
+    }
+    mysql_free_result($followerResult);
+
+
         break;
     default:
                

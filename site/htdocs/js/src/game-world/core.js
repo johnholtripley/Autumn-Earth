@@ -462,7 +462,7 @@ function loadShopData(shopJSONData) {
 
 
 function getQuestJournal() {
-    getJSON("/game-world/getQuestJournalEntries.php", function(data) {
+    getJSON("/game-world/getQuestJournalEntries.php?chr="+characterId, function(data) {
         UI.buildQuestJournal(data.markup, data.regions);
         findInventoryItemData();
     }, function(status) {

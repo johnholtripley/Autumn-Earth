@@ -73,8 +73,12 @@ if($thisItem['type'] == "follower") {
 		
 	
 $itemReceivedJSON[$thisItemKey]['type'] = "follower";
-$itemReceivedJSON[$thisItemKey]['id'] = 1;
-$itemReceivedJSON[$thisItemKey]['name'] = "naileth whisperspringwoodsong";
+$itemReceivedJSON[$thisItemKey]['id'] = 3;
+$itemReceivedJSON[$thisItemKey]['name'] = "Tyrande Whisperspring";
+// add to database with chr and followerRewardFromQuestId so the journal knows which follower to display
+// ###### 
+
+
 	}
 }
 	}

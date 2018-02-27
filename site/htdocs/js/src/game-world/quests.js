@@ -1,6 +1,6 @@
 function addToJournal(whichQuestId) {
     // pass hero.totalGameTimePlayed to allow sorting when loading from scratch? ###
-    getJSON("/game-world/getQuestJournalEntries.php?questID=" + whichQuestId, function(data) {
+    getJSON("/game-world/getQuestJournalEntries.php?chr="+characterId+"&questID=" + whichQuestId, function(data) {
         UI.addToQuestJournal(data);
     }, function(status) {
         // error - try again:
