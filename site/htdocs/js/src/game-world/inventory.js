@@ -124,6 +124,10 @@ function canAddItemToInventory(itemObj) {
 }
 
 function hasItemInInventory(itemType, amountNeeded) {
+    if(typeof amountNeeded === "undefined") {
+var amountNeeded = 1;
+    }
+
     var quantityFound = 0;
     var inventoryKeysFound = getObjectKeysForInnerValue(hero.inventory, parseInt(itemType), "type");
     if (inventoryKeysFound.length > 0) {
@@ -162,6 +166,12 @@ function hasItemTypeInInventory(itemGroupType) {
 
 
 function removeItemTypeFromInventory(itemType, amount) {
+
+
+    if(typeof amount === "undefined") {
+var amount = 1;
+    }
+    
     var quantityStillToRemove = amount;
     var quantityAvailableOnThisSlot;
     var inventoryKeysFound = getObjectKeysForInnerValue(hero.inventory, parseInt(itemType), "type");
@@ -546,4 +556,25 @@ function inventorySplitStackSubmit(e) {
 function inventorySplitStackCancel() {
     splitStackPanel.classList.remove("active");
     document.activeElement.blur();
+}
+
+
+function prepareInventoryObject(definedObject) {
+    var thisObject = {
+        "type": "$",
+        "quantity": 1,
+        "quality": 100,
+        "durability": 100,
+        "currentWear": 0,
+        "effectiveness": 100,
+        "colour": 0,
+        "enchanted": 0,
+        "hallmark": 0,
+        "inscription": ""
+    }
+    // now copy in any defined attributes - this way don't need to waste space storing default values:
+    for (var attrname in definedObject) {
+        thisObject[attrname] = definedObject[attrname];
+    }
+    return thisObject;
 }

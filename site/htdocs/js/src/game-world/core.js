@@ -73,7 +73,7 @@ function getHeroGameState() {
         //  hero.inventory = data.inventory;
         if (currentMap > 0) {
             //clean old procedural maps: (don't need a response here)
-            sendDataWithoutNeedingAResponse('/game-world/generateDungeonMap.php?playerId=' + characterId + '&clearMaps=true');
+            sendDataWithoutNeedingAResponse('/game-world/generateCircularDungeonMap.php?playerId=' + characterId + '&clearMaps=true');
         }
         loadCoreAssets();
     }, function(status) {
@@ -1703,38 +1703,24 @@ function processSpeech(thisObjectSpeaking, thisSpeechPassedIn, thisSpeechCode, i
                                 // check items:
                                 var theseItemsNeededForCompletion = questData[questId].itemsNeededForCompletion;
                                 var allItemsFound = true;
-                                var itemsToGive = questData[questId].startItemsReceived.split(",");
+                                var itemsToGive = questData[questId].startItemsReceived;
                                 var allItemsToGive = [];
+                                var thisQuantity;
                                 for (var i = 0; i < itemsToGive.length; i++) {
-                                    // check for any quantities:
-                                    var thisQuestItem = itemsToGive[i].split("x");
-                                    var thisQuantity, thisItem;
-                                    if (thisQuestItem.length > 1) {
-                                        thisQuantity = thisQuestItem[0];
-                                        thisItem = thisQuestItem[1];
-                                    } else {
-                                        thisQuantity = 1;
-                                        thisItem = itemsToGive[i];
-                                    }
-                                    if (!hasItemInInventory(thisItem, thisQuantity)) {
+                                  console.log(itemsToGive[i]);
+                               
+                                    if (!hasItemInInventory(itemsToGive[i].type, itemsToGive[i].quantity)) {
                                         allItemsFound = false;
                                     }
                                 }
+                                console.log(allItemsFound);
                                 if (allItemsFound) {
+
                                     if (questData[questId].whatIsRequiredForCompletion == "give") {
                                         // remove items:
                                         for (var i = 0; i < itemsToGive.length; i++) {
-                                            // check for any quantities:
-                                            var thisQuestItem = itemsToGive[i].split("x");
-                                            var thisQuantity, thisItem;
-                                            if (thisQuestItem.length > 1) {
-                                                thisQuantity = thisQuestItem[0];
-                                                thisItem = thisQuestItem[1];
-                                            } else {
-                                                thisQuantity = 1;
-                                                thisItem = itemsToGive[i];
-                                            }
-                                            removeItemTypeFromInventory(thisItem, thisQuantity);
+                                        
+                                            removeItemTypeFromInventory(itemsToGive[i].type, itemsToGive[i].quantity);
                                         }
                                     }
                                     // close quest:
@@ -1761,17 +1747,8 @@ function processSpeech(thisObjectSpeaking, thisSpeechPassedIn, thisSpeechCode, i
                                             var itemsToGive = questData[allSubQuestsRequired[k]].startItemsReceived.split(",");
                                             var allItemsToGive = [];
                                             for (var j = 0; j < itemsToGive.length; j++) {
-                                                // check for any quantities:
-                                                var thisQuestItem = itemsToGive[j].split("x");
-                                                var thisQuantity, thisItem;
-                                                if (thisQuestItem.length > 1) {
-                                                    thisQuantity = thisQuestItem[0];
-                                                    thisItem = thisQuestItem[1];
-                                                } else {
-                                                    thisQuantity = 1;
-                                                    thisItem = itemsToGive[i];
-                                                }
-                                                if (!hasItemInInventory(thisItem, thisQuantity)) {
+                                              
+                                                if (!hasItemInInventory(itemsToGive[i].type, itemsToGive[i].quantity)) {
                                                     allSubQuestsComplete = false;
                                                 }
                                             }

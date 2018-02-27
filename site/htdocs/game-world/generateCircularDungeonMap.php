@@ -72,6 +72,67 @@ http://ae.dev/game-world/generateCircularDungeonMap.php?debug=true&dungeonName=t
 // avoid script time out:
 set_time_limit(0);
 
+
+
+
+
+
+
+
+
+if(isset($_GET["clearMaps"])) {
+
+// Don't just do a single dungeon - do all of them ######################
+
+ if (is_dir($dir)) { 
+    if ($thisDirectory = opendir($dir)) {
+      while (($file = readdir($thisDirectory)) !== false) {
+      if(is_file($dir."/".$file)) {
+      // don't delete any maps that have undiscovered treasure still on ###########################
+        unlink($dir."/".$file);
+      }
+    }
+    closedir($thisDirectory);
+    }
+    
+    // restore session file:
+    if (!copy('../data/source/session.php', $dir.'/session.php')) {
+    // error handling ########
+    }
+    
+    
+  }
+
+// delete cartography too:
+  $cartographyDirectory = "../data/chr" . $thisPlayersId . "/cartography/".$thisDungeonsName;
+ if (is_dir($cartographyDirectory)) { 
+    if ($thisDirectory = opendir($cartographyDirectory)) {
+      while (($file = readdir($thisDirectory)) !== false) {
+      if(is_file($cartographyDirectory."/".$file)) {
+      // don't delete any maps that have undiscovered treasure still on ###########################
+        unlink($cartographyDirectory."/".$file);
+      }
+    }
+    closedir($thisDirectory);
+    }
+  }
+
+
+die();
+
+
+
+}
+
+
+
+
+
+
+
+
+
+
 class node
 {
     public function __construct()

@@ -51,8 +51,18 @@ while ($row = mysql_fetch_array($result)) {
 	$outputJson .= '"'.$questID.'": {';
 	$outputJson .= '"journalTitle": "'.$journalTitle.'",';
 	$outputJson .= '"isRepeatable": "'.$isRepeatable.'",';
-	$outputJson .= '"startItemsReceived": "'.$startItemsReceived.'",';
-	$outputJson .= '"itemsReceivedOnCompletion": "'.$itemsReceivedOnCompletion.'",';
+	if($startItemsReceived) {
+$outputJson .= '"startItemsReceived": '.$startItemsReceived.',';
+	} else {
+		$outputJson .= '"startItemsReceived": "",';
+	}
+	
+	if($itemsReceivedOnCompletion) {
+			$outputJson .= '"itemsReceivedOnCompletion": '.$itemsReceivedOnCompletion.',';
+	} else {
+	$outputJson .= '"itemsReceivedOnCompletion": "",';
+	}
+
 	$outputJson .= '"whatIsRequiredForCompletion": "'.$whatIsRequiredForCompletion.'",';
 
 

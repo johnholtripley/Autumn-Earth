@@ -2231,6 +2231,10 @@ function canAddItemToInventory(itemObj) {
 }
 
 function hasItemInInventory(itemType, amountNeeded) {
+    if(typeof amountNeeded === "undefined") {
+var amountNeeded = 1;
+    }
+
     var quantityFound = 0;
     var inventoryKeysFound = getObjectKeysForInnerValue(hero.inventory, parseInt(itemType), "type");
     if (inventoryKeysFound.length > 0) {
@@ -2269,6 +2273,12 @@ function hasItemTypeInInventory(itemGroupType) {
 
 
 function removeItemTypeFromInventory(itemType, amount) {
+
+
+    if(typeof amount === "undefined") {
+var amount = 1;
+    }
+    
     var quantityStillToRemove = amount;
     var quantityAvailableOnThisSlot;
     var inventoryKeysFound = getObjectKeysForInnerValue(hero.inventory, parseInt(itemType), "type");
@@ -2653,6 +2663,27 @@ function inventorySplitStackSubmit(e) {
 function inventorySplitStackCancel() {
     splitStackPanel.classList.remove("active");
     document.activeElement.blur();
+}
+
+
+function prepareInventoryObject(definedObject) {
+    var thisObject = {
+        "type": "$",
+        "quantity": 1,
+        "quality": 100,
+        "durability": 100,
+        "currentWear": 0,
+        "effectiveness": 100,
+        "colour": 0,
+        "enchanted": 0,
+        "hallmark": 0,
+        "inscription": ""
+    }
+    // now copy in any defined attributes - this way don't need to waste space storing default values:
+    for (var attrname in definedObject) {
+        thisObject[attrname] = definedObject[attrname];
+    }
+    return thisObject;
 }
 var KeyBindings = {
     'left': 65,
@@ -3162,37 +3193,15 @@ function openQuest(questId) {
     var okToStartQuest = true;
     // see if any items need to be given to start the quest:
     if (questData[questId].startItemsReceived) {
-        var itemsToAdd = questData[questId].startItemsReceived.split(",");
+        var itemsToAdd = questData[questId].startItemsReceived;
         var allItemsToGive = [];
         for (var l = 0; l < itemsToAdd.length; l++) {
-            // check if it's money:
-            if (itemsToAdd[l].charAt(0) == "$") {
-                thisRewardObject = itemsToAdd[l];
-            } else {
-                // check for any quantities:
-                var thisQuestItem = itemsToAdd[l].split("x");
-                var thisQuantity, thisItem;
-                if (thisQuestItem.length > 1) {
-                    thisQuantity = thisQuestItem[0];
-                    thisItem = thisQuestItem[1];
-                } else {
-                    thisQuantity = 1;
-                    thisItem = itemsToAdd[l];
-                }
-                // build item object:
-                var thisRewardObject = {
-                    "type": parseInt(thisItem),
-                    "quantity": parseInt(thisQuantity),
-                    "quality": 100,
-                    "durability": 100,
-                    "currentWear": 0,
-                    "effectiveness": 100,
-                    "colour": currentActiveInventoryItems[parseInt(thisItem)].colour,
-                    "enchanted": 0,
-                    "hallmark": 0,
-                    "inscription": ""
-                }
-            }
+
+
+
+ var thisRewardObject = prepareInventoryObject(itemsToAdd[l]);
+
+            
             allItemsToGive.push(thisRewardObject);
         }
         inventoryCheck = canAddItemToInventory(allItemsToGive);
@@ -3309,7 +3318,7 @@ function closeQuest(whichNPC, whichQuestId) {
 function giveQuestRewards(whichNPC, whichQuestId) {
     // give any reward to the player:
     if (questData[whichQuestId].itemsReceivedOnCompletion) {
-        var questRewards = questData[whichQuestId].itemsReceivedOnCompletion.split(",");
+        var questRewards = questData[whichQuestId].itemsReceivedOnCompletion;
         awardQuestRewards(whichNPC, questRewards, false);
     }
     /*else {
@@ -3324,44 +3333,27 @@ function awardQuestRewards(whichNPC, questRewards, isACollectionQuest) {
 
     for (var i = 0; i < questRewards.length; i++) {
         // check for variation:
+     /*
         var questPossibilities = questRewards[i].split("/");
         var questRewardToUse = getRandomElementFromArray(questPossibilities);
+        */
+
+// need to determine a way within the JSON to define random variants ##############
+var questRewardToUse = questRewards[i];
+
         //  console.log(questRewardToUse);
 
-        // check if it's money:
-        if (questRewardToUse.charAt(0) == "$") {
-            thisRewardObject = questRewardToUse;
-        } else {
+    
 
-            // check for any quantities:
-            var thisQuestReward = questRewardToUse.split("x");
-            var thisQuantity, thisItem;
-            if (thisQuestReward.length > 1) {
-                thisQuantity = thisQuestReward[0];
-                thisItem = thisQuestReward[1];
-            } else {
-                thisQuantity = 1;
-                thisItem = questRewards[i];
-            }
+             // build item object:
+            var thisRewardObject = prepareInventoryObject(questRewardToUse);
 
-            if (questPossibilities.length > 1) {
+           // if (thisRewardObject.length > 1) {
                 // might need to show the name of the item in the speech:           
-                thisSpeech = thisSpeech.replace(/##itemName##/i, currentActiveInventoryItems[parseInt(thisItem)].shortname);
-            }
-            // build item object:
-            var thisRewardObject = {
-                "type": parseInt(thisItem),
-                "quantity": parseInt(thisQuantity),
-                "quality": 100,
-                "durability": 100,
-                "currentWear": 0,
-                "effectiveness": 100,
-                "colour": currentActiveInventoryItems[parseInt(thisItem)].colour,
-                "enchanted": 0,
-                "hallmark": 0,
-                "inscription": ""
-            }
-        }
+                thisSpeech = thisSpeech.replace(/##itemName##/i, currentActiveInventoryItems[parseInt(thisRewardObject.type)].shortname);
+          //  }
+          
+        
         allRewardItems.push(thisRewardObject);
     }
 
@@ -5692,7 +5684,7 @@ function getHeroGameState() {
         //  hero.inventory = data.inventory;
         if (currentMap > 0) {
             //clean old procedural maps: (don't need a response here)
-            sendDataWithoutNeedingAResponse('/game-world/generateDungeonMap.php?playerId=' + characterId + '&clearMaps=true');
+            sendDataWithoutNeedingAResponse('/game-world/generateCircularDungeonMap.php?playerId=' + characterId + '&clearMaps=true');
         }
         loadCoreAssets();
     }, function(status) {
@@ -7322,38 +7314,24 @@ function processSpeech(thisObjectSpeaking, thisSpeechPassedIn, thisSpeechCode, i
                                 // check items:
                                 var theseItemsNeededForCompletion = questData[questId].itemsNeededForCompletion;
                                 var allItemsFound = true;
-                                var itemsToGive = questData[questId].startItemsReceived.split(",");
+                                var itemsToGive = questData[questId].startItemsReceived;
                                 var allItemsToGive = [];
+                                var thisQuantity;
                                 for (var i = 0; i < itemsToGive.length; i++) {
-                                    // check for any quantities:
-                                    var thisQuestItem = itemsToGive[i].split("x");
-                                    var thisQuantity, thisItem;
-                                    if (thisQuestItem.length > 1) {
-                                        thisQuantity = thisQuestItem[0];
-                                        thisItem = thisQuestItem[1];
-                                    } else {
-                                        thisQuantity = 1;
-                                        thisItem = itemsToGive[i];
-                                    }
-                                    if (!hasItemInInventory(thisItem, thisQuantity)) {
+                                  console.log(itemsToGive[i]);
+                               
+                                    if (!hasItemInInventory(itemsToGive[i].type, itemsToGive[i].quantity)) {
                                         allItemsFound = false;
                                     }
                                 }
+                                console.log(allItemsFound);
                                 if (allItemsFound) {
+
                                     if (questData[questId].whatIsRequiredForCompletion == "give") {
                                         // remove items:
                                         for (var i = 0; i < itemsToGive.length; i++) {
-                                            // check for any quantities:
-                                            var thisQuestItem = itemsToGive[i].split("x");
-                                            var thisQuantity, thisItem;
-                                            if (thisQuestItem.length > 1) {
-                                                thisQuantity = thisQuestItem[0];
-                                                thisItem = thisQuestItem[1];
-                                            } else {
-                                                thisQuantity = 1;
-                                                thisItem = itemsToGive[i];
-                                            }
-                                            removeItemTypeFromInventory(thisItem, thisQuantity);
+                                        
+                                            removeItemTypeFromInventory(itemsToGive[i].type, itemsToGive[i].quantity);
                                         }
                                     }
                                     // close quest:
@@ -7380,17 +7358,8 @@ function processSpeech(thisObjectSpeaking, thisSpeechPassedIn, thisSpeechCode, i
                                             var itemsToGive = questData[allSubQuestsRequired[k]].startItemsReceived.split(",");
                                             var allItemsToGive = [];
                                             for (var j = 0; j < itemsToGive.length; j++) {
-                                                // check for any quantities:
-                                                var thisQuestItem = itemsToGive[j].split("x");
-                                                var thisQuantity, thisItem;
-                                                if (thisQuestItem.length > 1) {
-                                                    thisQuantity = thisQuestItem[0];
-                                                    thisItem = thisQuestItem[1];
-                                                } else {
-                                                    thisQuantity = 1;
-                                                    thisItem = itemsToGive[i];
-                                                }
-                                                if (!hasItemInInventory(thisItem, thisQuantity)) {
+                                              
+                                                if (!hasItemInInventory(itemsToGive[i].type, itemsToGive[i].quantity)) {
                                                     allSubQuestsComplete = false;
                                                 }
                                             }

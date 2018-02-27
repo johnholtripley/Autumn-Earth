@@ -480,7 +480,7 @@ text-shadow: $values;
 }
 
 
-
+/*
 @mixin preventZoomTextSize($font-size) {
   // set the font-size to 16px to prevent zooming when focussed on iOS, but scale it to make it visually smaller:
     @include pxRem("font-size",16px);
@@ -488,3 +488,4 @@ text-shadow: $values;
     $scaleSize: strip-units($font-size) / 16;
     @include transform(scale($scaleSize));
 }
+*/
