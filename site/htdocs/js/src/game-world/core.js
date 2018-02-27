@@ -1707,13 +1707,13 @@ function processSpeech(thisObjectSpeaking, thisSpeechPassedIn, thisSpeechCode, i
                                 var allItemsToGive = [];
                                 var thisQuantity;
                                 for (var i = 0; i < itemsToGive.length; i++) {
-                                  console.log(itemsToGive[i]);
-                               
+                             
+
                                     if (!hasItemInInventory(itemsToGive[i].type, itemsToGive[i].quantity)) {
                                         allItemsFound = false;
                                     }
                                 }
-                                console.log(allItemsFound);
+                       
                                 if (allItemsFound) {
 
                                     if (questData[questId].whatIsRequiredForCompletion == "give") {

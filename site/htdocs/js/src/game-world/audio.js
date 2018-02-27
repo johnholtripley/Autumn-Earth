@@ -15,7 +15,8 @@ var soundsToLoad = {
     'unlock': '../sounds/unlock-NOT_MINE-wow.mp3',
     'gather1': '../sounds/gather-herb-NOT_MINE-wow.mp3',
     'gather4': '../sounds/mining-NOT_MINE-wow.mp3',
-    'rain': '../sounds/rain-NOT_MINE-youtube.mp3'
+    'rain': '../sounds/rain-NOT_MINE-youtube.mp3',
+    'questComplete': '../sounds/quest-complete-NOT_MINE-wow.mp3'
 };
 
 

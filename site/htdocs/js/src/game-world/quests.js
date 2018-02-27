@@ -154,6 +154,7 @@ function closeQuest(whichNPC, whichQuestId) {
          whichNPC.speechIndex--;
      }
      */
+     audio.playSound(soundEffects['questComplete'], 0);
     removeFromJournal(whichQuestId);
 
 }

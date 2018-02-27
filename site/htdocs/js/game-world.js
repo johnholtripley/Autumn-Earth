@@ -16,7 +16,8 @@ var soundsToLoad = {
     'unlock': '../sounds/unlock-NOT_MINE-wow.mp3',
     'gather1': '../sounds/gather-herb-NOT_MINE-wow.mp3',
     'gather4': '../sounds/mining-NOT_MINE-wow.mp3',
-    'rain': '../sounds/rain-NOT_MINE-youtube.mp3'
+    'rain': '../sounds/rain-NOT_MINE-youtube.mp3',
+    'questComplete': '../sounds/quest-complete-NOT_MINE-wow.mp3'
 };
 
 
@@ -3310,6 +3311,7 @@ function closeQuest(whichNPC, whichQuestId) {
          whichNPC.speechIndex--;
      }
      */
+     audio.playSound(soundEffects['questComplete'], 0);
     removeFromJournal(whichQuestId);
 
 }
@@ -7318,13 +7320,13 @@ function processSpeech(thisObjectSpeaking, thisSpeechPassedIn, thisSpeechCode, i
                                 var allItemsToGive = [];
                                 var thisQuantity;
                                 for (var i = 0; i < itemsToGive.length; i++) {
-                                  console.log(itemsToGive[i]);
-                               
+                             
+
                                     if (!hasItemInInventory(itemsToGive[i].type, itemsToGive[i].quantity)) {
                                         allItemsFound = false;
                                     }
                                 }
-                                console.log(allItemsFound);
+                       
                                 if (allItemsFound) {
 
                                     if (questData[questId].whatIsRequiredForCompletion == "give") {
