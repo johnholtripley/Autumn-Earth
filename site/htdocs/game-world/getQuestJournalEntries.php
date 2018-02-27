@@ -23,7 +23,21 @@ $markupToOutput = '<ol>';
 
 $regions = array();
 
+$allProfessions = array();
+$professionsQuery = "SELECT * from tblprofessions";
+$professionsResult = mysql_query($professionsQuery) or die ();
+while ($row = mysql_fetch_array($professionsResult)) {
+    extract($row);
+  
+    $allProfessions[$professionID] = $professionName;
+    }
+    mysql_free_result($professionsResult);
+
+
+
+
 if($numberOfQuests>0) {
+
 
 
 $query = "SELECT tblquests.questid, tblquests.journaltitle, tblquests.journaldesc, tblquests.questregion, tblquests.itemsreceivedoncompletion, tblquests.titlegainedaftercompletion, tbltitles.titleName FROM tblquests left join tbltitles ON tblquests.titlegainedaftercompletion = tbltitles.titleid WHERE questid in (".implode(",",$activeQuests).")";
@@ -43,24 +57,35 @@ if($itemsreceivedoncompletion) {
  $markupToOutput .= '<h5>Rewards</h5>';
   $allRewards = json_decode($itemsreceivedoncompletion, true);
   foreach ($allRewards as $item) {
-        // check for $ for money:
-    if ($item['type'] == '$') {
-        $markupToOutput .= parseMoney($item['quantity']).' silver';
-    } else {
-        $quantity = 1;
+
+
+
+switch ($item['type']) {
+    case "$":
+       $markupToOutput .= parseMoney($item['quantity']).' silver';
+        break;
+    case "profession":
+        $markupToOutput .= '<p>You will learn the &quot;'.$allProfessions[($item["id"])].'&quot; profession</p>';
+    
+        break;
+        case "follower":
+        $followerQuery = "SELECT * from tblretinuefollowers where followerID='".$item["id"]."'";
+        $followerResult = mysql_query($followerQuery) or die ();
+while ($row = mysql_fetch_array($followerResult)) {
+    extract($row);
+     $markupToOutput .= '<p>You will gain a new follower: &quot;'.$followerName.'&quot;</p>';
+     $markupToOutput .= '<img src="/images/retinue/'.$item["id"].'.png">';
+}
+ mysql_free_result($followerResult);
+
+        break;
+    default:
+               $quantity = 1;
             // check for "/" for random:
   //      if (strpos($item, '/') !== false) {
 //$item = "unknown";
       //  } else {
-
-
-    
-    
- //   }
-
-
-
-    $markupToOutput .= '<div class="item"><img src="/images/game-world/inventory-items/'.$item['type'].'.png">';
+        $markupToOutput .= '<div class="item"><img src="/images/game-world/inventory-items/'.$item['type'].'.png">';
 $itemQuery = "SELECT itemid, shortname, description, pricecode from tblinventoryitems where itemid = '".$item['type']."'";
 $itemResult = mysql_query($itemQuery) or die ();
 while ($itemRow = mysql_fetch_array($itemResult)) {
@@ -74,10 +99,20 @@ mysql_free_result($itemResult);
 
 
 $markupToOutput .= '<span class="qty">'.$item['quantity'].'</span></div>';
+}
+
+
+
+
+
+
+
+
+
     }
 }
     
-  }
+  
 
 /*
 $markupToOutput .= '<img src="/images/game-world/inventory-items/'.$inventoryDataToSort[$j]['itemID'].$colourSuffix.'.png" '.$imgDataAttributes.' alt="'.$inventoryDataToSort[$j]['colourName'].$inventoryDataToSort[$j]['shortname'].'">';

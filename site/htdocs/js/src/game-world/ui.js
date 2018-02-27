@@ -238,6 +238,8 @@ var UI = {
     },
 
     showChangeInInventory: function(whichSlotsToUpdate) {
+        // check it wasn't a follower, money or profession added:
+     if(whichSlotsToUpdate.length>0) {
         var thisSlotsId, slotMarkup, thisSlotElem;
         // add a transition end detector to just the first element that will be changed:
         document.getElementById("slot" + whichSlotsToUpdate[0]).addEventListener(whichTransitionEvent, function removeSlotStatus(e) {
@@ -256,6 +258,7 @@ var UI = {
             thisSlotElem.innerHTML = slotMarkup;
             thisSlotElem.classList.add("changed")
         }
+    }
     },
 
 
@@ -2088,10 +2091,9 @@ var UI = {
         document.getElementById("retinueComplete" + whichPanel).classList.add("active");
     },
     showNewFollower: function(id, name) {
-        // #####
-        console.log("new follower " + id + " called " + name);
+       UI.showNotification('<p>You have gained a new follower called &quot;' + name + '&quot;</p>');
     },
     showNewProfession: function(id) {
-        showNotification('<p>You learned a new profession - #' + id + '</p>');
+        UI.showNotification('<p>You learned a new profession - #' + id + '</p>');
     }
 }

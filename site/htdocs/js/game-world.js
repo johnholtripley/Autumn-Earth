@@ -2118,10 +2118,7 @@ function canAddItemToInventory(itemObj) {
     for (var k = 0; k < itemObj.length; k++) {
         // check for any money items:
 
-
-
-
-        switch (itemObj[k].type) {
+       switch (itemObj[k].type) {
             case '$':
                 moneyToAdd += itemObj[k].quantity;
                 break;
@@ -2206,7 +2203,7 @@ function canAddItemToInventory(itemObj) {
         }
         if (followersAdded.length > 0) {
             for (var i = 0; i < followersAdded.length; i++) {
-                UI.showNewFollower(followersAdded[i].id, followersAdded[i].name);
+                UI.showNewFollower(followersAdded[i][0], followersAdded[i][1]);
                 // update database ########
             }
         }
@@ -2279,7 +2276,7 @@ function removeItemTypeFromInventory(itemType, amount) {
     if(typeof amount === "undefined") {
 var amount = 1;
     }
-    
+
     var quantityStillToRemove = amount;
     var quantityAvailableOnThisSlot;
     var inventoryKeysFound = getObjectKeysForInnerValue(hero.inventory, parseInt(itemType), "type");
@@ -3200,9 +3197,9 @@ function openQuest(questId) {
 
 
 
- var thisRewardObject = prepareInventoryObject(itemsToAdd[l]);
+            var thisRewardObject = prepareInventoryObject(itemsToAdd[l]);
 
-            
+
             allItemsToGive.push(thisRewardObject);
         }
         inventoryCheck = canAddItemToInventory(allItemsToGive);
@@ -3311,7 +3308,7 @@ function closeQuest(whichNPC, whichQuestId) {
          whichNPC.speechIndex--;
      }
      */
-     audio.playSound(soundEffects['questComplete'], 0);
+    audio.playSound(soundEffects['questComplete'], 0);
     removeFromJournal(whichQuestId);
 
 }
@@ -3330,32 +3327,23 @@ function giveQuestRewards(whichNPC, whichQuestId) {
 }
 
 function awardQuestRewards(whichNPC, questRewards, isACollectionQuest) {
-
     var allRewardItems = [];
-
     for (var i = 0; i < questRewards.length; i++) {
         // check for variation:
-     /*
-        var questPossibilities = questRewards[i].split("/");
-        var questRewardToUse = getRandomElementFromArray(questPossibilities);
-        */
+        /*
+           var questPossibilities = questRewards[i].split("/");
+           var questRewardToUse = getRandomElementFromArray(questPossibilities);
+           */
 
-// need to determine a way within the JSON to define random variants ##############
-var questRewardToUse = questRewards[i];
-
-        //  console.log(questRewardToUse);
-
-    
-
-             // build item object:
-            var thisRewardObject = prepareInventoryObject(questRewardToUse);
-
-           // if (thisRewardObject.length > 1) {
-                // might need to show the name of the item in the speech:           
-                thisSpeech = thisSpeech.replace(/##itemName##/i, currentActiveInventoryItems[parseInt(thisRewardObject.type)].shortname);
-          //  }
-          
-        
+        // need to determine a way within the JSON to define random variants ##############
+        var questRewardToUse = questRewards[i];
+        var thisRewardObject = prepareInventoryObject(questRewardToUse);
+        // if (thisRewardObject.length > 1) {
+        if (Number.isInteger(thisRewardObject.type)) {
+            // might need to show the name of the item in the speech:           
+            thisSpeech = thisSpeech.replace(/##itemName##/i, currentActiveInventoryItems[parseInt(thisRewardObject.type)].shortname);
+            //   }
+        }
         allRewardItems.push(thisRewardObject);
     }
 
@@ -3698,6 +3686,8 @@ var UI = {
     },
 
     showChangeInInventory: function(whichSlotsToUpdate) {
+        // check it wasn't a follower, money or profession added:
+     if(whichSlotsToUpdate.length>0) {
         var thisSlotsId, slotMarkup, thisSlotElem;
         // add a transition end detector to just the first element that will be changed:
         document.getElementById("slot" + whichSlotsToUpdate[0]).addEventListener(whichTransitionEvent, function removeSlotStatus(e) {
@@ -3716,6 +3706,7 @@ var UI = {
             thisSlotElem.innerHTML = slotMarkup;
             thisSlotElem.classList.add("changed")
         }
+    }
     },
 
 
@@ -5548,11 +5539,10 @@ var UI = {
         document.getElementById("retinueComplete" + whichPanel).classList.add("active");
     },
     showNewFollower: function(id, name) {
-        // #####
-        console.log("new follower " + id + " called " + name);
+       UI.showNotification('<p>You have gained a new follower called &quot;' + name + '&quot;</p>');
     },
     showNewProfession: function(id) {
-        showNotification('<p>You learned a new profession - #' + id + '</p>');
+        UI.showNotification('<p>You learned a new profession - #' + id + '</p>');
     }
 }
 function setupWeather() {

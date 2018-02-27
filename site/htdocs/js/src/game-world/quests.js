@@ -43,9 +43,9 @@ function openQuest(questId) {
 
 
 
- var thisRewardObject = prepareInventoryObject(itemsToAdd[l]);
+            var thisRewardObject = prepareInventoryObject(itemsToAdd[l]);
 
-            
+
             allItemsToGive.push(thisRewardObject);
         }
         inventoryCheck = canAddItemToInventory(allItemsToGive);
@@ -154,7 +154,7 @@ function closeQuest(whichNPC, whichQuestId) {
          whichNPC.speechIndex--;
      }
      */
-     audio.playSound(soundEffects['questComplete'], 0);
+    audio.playSound(soundEffects['questComplete'], 0);
     removeFromJournal(whichQuestId);
 
 }
@@ -173,32 +173,23 @@ function giveQuestRewards(whichNPC, whichQuestId) {
 }
 
 function awardQuestRewards(whichNPC, questRewards, isACollectionQuest) {
-
     var allRewardItems = [];
-
     for (var i = 0; i < questRewards.length; i++) {
         // check for variation:
-     /*
-        var questPossibilities = questRewards[i].split("/");
-        var questRewardToUse = getRandomElementFromArray(questPossibilities);
-        */
+        /*
+           var questPossibilities = questRewards[i].split("/");
+           var questRewardToUse = getRandomElementFromArray(questPossibilities);
+           */
 
-// need to determine a way within the JSON to define random variants ##############
-var questRewardToUse = questRewards[i];
-
-        //  console.log(questRewardToUse);
-
-    
-
-             // build item object:
-            var thisRewardObject = prepareInventoryObject(questRewardToUse);
-
-           // if (thisRewardObject.length > 1) {
-                // might need to show the name of the item in the speech:           
-                thisSpeech = thisSpeech.replace(/##itemName##/i, currentActiveInventoryItems[parseInt(thisRewardObject.type)].shortname);
-          //  }
-          
-        
+        // need to determine a way within the JSON to define random variants ##############
+        var questRewardToUse = questRewards[i];
+        var thisRewardObject = prepareInventoryObject(questRewardToUse);
+        // if (thisRewardObject.length > 1) {
+        if (Number.isInteger(thisRewardObject.type)) {
+            // might need to show the name of the item in the speech:           
+            thisSpeech = thisSpeech.replace(/##itemName##/i, currentActiveInventoryItems[parseInt(thisRewardObject.type)].shortname);
+            //   }
+        }
         allRewardItems.push(thisRewardObject);
     }
 

@@ -10,10 +10,7 @@ function canAddItemToInventory(itemObj) {
     for (var k = 0; k < itemObj.length; k++) {
         // check for any money items:
 
-
-
-
-        switch (itemObj[k].type) {
+       switch (itemObj[k].type) {
             case '$':
                 moneyToAdd += itemObj[k].quantity;
                 break;
@@ -98,7 +95,7 @@ function canAddItemToInventory(itemObj) {
         }
         if (followersAdded.length > 0) {
             for (var i = 0; i < followersAdded.length; i++) {
-                UI.showNewFollower(followersAdded[i].id, followersAdded[i].name);
+                UI.showNewFollower(followersAdded[i][0], followersAdded[i][1]);
                 // update database ########
             }
         }
@@ -171,7 +168,7 @@ function removeItemTypeFromInventory(itemType, amount) {
     if(typeof amount === "undefined") {
 var amount = 1;
     }
-    
+
     var quantityStillToRemove = amount;
     var quantityAvailableOnThisSlot;
     var inventoryKeysFound = getObjectKeysForInnerValue(hero.inventory, parseInt(itemType), "type");
