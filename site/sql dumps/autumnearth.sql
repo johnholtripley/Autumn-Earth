@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 26, 2018 at 04:06 PM
+-- Generation Time: Feb 27, 2018 at 04:11 PM
 -- Server version: 5.6.24
 -- PHP Version: 5.6.8
 
@@ -790,7 +790,7 @@ CREATE TABLE IF NOT EXISTS `tblmail` (
 
 INSERT INTO `tblmail` (`mailID`, `characterID`, `senderID`, `senderName`, `title`, `mailContents`, `sentTime`, `mailRead`, `attachment`, `attachmentTaken`, `isArchived`) VALUES
 (81, 18, 5, 'Eleaddai', 'elli to newmemberchar1', 'c to c', '2006-08-02 22:10:06', '1', '0', 0, 0),
-(83, 999, 18, 'murphy', 'Re: eleaddai to newmemberchar1', 'hi - have 2 pumpkins!', '2018-02-02 22:13:05', '1', ' [{\n\n                "type": 19,\n                "tileX": 12,\n                "tileY": 6,\n                "quantity": 2,\n                "quality": 100,\n                "durability": 100,\n                "currentWear": 0,\n                "effectiveness": 100,\n                "wrapped": 0,\n                "colour": 0,\n                "enchanted": 0,\n                "hallmark": 0,\n                "inscription": ""\n\n            }]', 0, 0),
+(83, 999, 18, 'murphy', 'Re: eleaddai to newmemberchar1', 'hi - have 2 pumpkins!', '2018-02-02 22:13:05', '1', ' [{\n\n                "type": 19,\n                                "quantity": 2,\n                "quality": 100,\n                "durability": 100,\n                "currentWear": 0,\n                "effectiveness": 100,\n                "wrapped": 0,\n                "colour": 0,\n                "enchanted": 0,\n                "hallmark": 0,\n                "inscription": ""\n\n            }]', 0, 0),
 (84, 18, 5, 'Eleaddai', 'Re: Re: elli to newmemberchar1', '[quote=newmemberchar1][quote=Eleaddai]c to c[/quote] m[/quote]xc', '2006-08-02 22:13:30', '2', '0', 0, 0),
 (85, 14, 5, 'Alice', 'alice to moderator', 'c to a', '2006-08-02 22:14:08', '1', '0', 0, 0),
 (86, 5, 14, 'moderator', 'Re: alice to moderator', '[quote=Alice]c to a[/quote]x', '2006-08-02 22:14:24', '2', '0', 0, 0),
@@ -1441,16 +1441,16 @@ CREATE TABLE IF NOT EXISTS `tblquests` (
 --
 
 INSERT INTO `tblquests` (`questID`, `journalTitle`, `journalDesc`, `questRegion`, `isRepeatable`, `childOf`, `startItemsReceived`, `itemsNeededForCompletion`, `itemsReceivedOnCompletion`, `whatIsRequiredForCompletion`, `titleGainedAfterCompletion`, `thresholdNeededForCompletion`, `subQuestsRequiredForCompletion`) VALUES
-(1, 'Pass the mordant', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 'Iylan', 0, NULL, '9', '9', '2x21/1x1/1x2/1x3', 'give', 4, '', NULL),
-(2, 'An unexpected journey', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 'Iylan', 0, NULL, '', '', '9,14,$10000', 'world', NULL, '', NULL),
+(1, 'Pass the mordant', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 'Iylan', 0, NULL, '[{"type":9,"colour":16}]', '9', '[{"type":"2/3/5","quantity":6},{"type":"follower"}]', 'give', 4, '', NULL),
+(2, 'An unexpected journey', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 'Iylan', 0, NULL, '', '', '[{"type":9},{"type":14},{"type":"$","quantity":10000}]', 'world', NULL, '', NULL),
 (3, 'A longer journey', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 'Iylan', 1, NULL, '', '', '', 'hero.stats.numberOfcardsFlipped', NULL, '+2', NULL),
-(4, 'A hero''s peregrination', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 'Iylan', 0, NULL, '5,9', '5x19', '2x21,9', 'possess', 7, '', NULL),
-(5, 'A much longer task', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 'Iylan', 0, NULL, '', NULL, '2x21,9', 'multi', 7, '', '6,7'),
+(4, 'A hero''s peregrination', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 'Iylan', 0, NULL, '[{"type":5},{"type":9,"colour":16}]', '5x19', '[{"type":9},{"type":21,"quantity":2}]', 'possess', 7, '', NULL),
+(5, 'A much longer task', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 'Iylan', 0, NULL, '', NULL, '[{"type":9},{"type":21,"quantity":2}]', 'multi', 7, '', '6,7'),
 (6, 'sub task 1', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 'Iylan', 0, NULL, '', '', '', 'world', NULL, '', NULL),
 (7, 'sub task 2', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 'Iylan', 0, NULL, '', '', '', 'hero.stats.numberOfcardsFlipped', NULL, '+2', NULL),
-(8, 'Win a card game', 'Beat NPC at cards, and got a rare chocobo card', 'Iylan', 0, NULL, '', '0', '36', '', NULL, '', NULL),
-(9, 'Find the wizard', 'Locate the wizard', 'Brythillion', 0, NULL, '', '0', '20', '', NULL, '', NULL),
-(10, 'Escort to Brythillion', 'Help a traveller find their way to Brythillion.', 'Brythillion', 0, NULL, '', '0', '20', 'escort', NULL, '', NULL);
+(8, 'Win a card game', 'Beat NPC at cards, and got a rare chocobo card', 'Iylan', 0, NULL, '', '0', '[{"type":36}]', '', NULL, '', NULL),
+(9, 'Find the wizard', 'Locate the wizard', 'Brythillion', 0, NULL, '', '0', '[{"type":20}]', '', NULL, '', NULL),
+(10, 'Escort to Brythillion', 'Help a traveller find their way to Brythillion.', 'Brythillion', 0, NULL, '', '0', '[{"type":20}]', 'escort', NULL, '', NULL);
 
 -- --------------------------------------------------------
 
