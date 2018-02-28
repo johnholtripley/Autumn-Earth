@@ -74,6 +74,15 @@ if($thisItem['type'] == "follower") {
 
 // check the follower isn't already defined:
 	if(!(isset($thisItem['id']))) {
+
+// only generate a new follower if it hasn't already created one
+
+		$checkAlreadyCreatedFollowerQuery = mysql_query("SELECT * from tblretinuefollowers where followerRewardFromQuestId = '".$questID."' and characterIdFollowing = '".$chr."'");
+$numRows = mysql_num_rows($checkAlreadyCreatedFollowerQuery);
+if($numRows == 0) {
+
+
+
 // generate new follower:
 include_once($_SERVER['DOCUMENT_ROOT']."/game-world/generateRetinueFollower.php");
 		
@@ -118,7 +127,7 @@ $itemReceivedJSON[$thisItemKey]['type'] = "follower";
 $itemReceivedJSON[$thisItemKey]['id'] = mysql_insert_id();
 $itemReceivedJSON[$thisItemKey]['name'] = htmlentities($newFollower[0]);
 
-
+}
 	}
 }
 	}
