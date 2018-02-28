@@ -9,6 +9,8 @@ $isAnUpdate = false;
 
 $chr = $_GET["chr"];
 
+
+
 if(isset($_GET["questID"])) {
     // it's set, just find the details for the quest and return it as an update
 $activeQuests = array($_GET["questID"]);

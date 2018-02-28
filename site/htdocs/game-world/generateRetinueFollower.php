@@ -5,14 +5,23 @@ include_once($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
 include_once($_SERVER['DOCUMENT_ROOT']."/includes/functions.php");
 
 $charactersName = "eleaddai";
+$debug = false;
+if(isset($_GET["debug"])) {
+$debug = true;
+}
 
 
+function generateFollower() {
+global $debug;
+
+if($debug) {
 include($_SERVER['DOCUMENT_ROOT']."/includes/retinue/male-first-names.php");
 include($_SERVER['DOCUMENT_ROOT']."/includes/retinue/female-first-names.php");
 include($_SERVER['DOCUMENT_ROOT']."/includes/retinue/human-surnames-medieval.php");
 $possibleMaleFirstNames = sortSequentialSyllables($maleFirstNameSyllables);
 $possibleFemaleFirstNames = sortSequentialSyllables($femaleFirstNameSyllables);
 $possibleSurnames = sortSequentialSyllables($surnamesNameSyllables);
+
 
 
 $maleName = selectSyllables($possibleMaleFirstNames,3,5);
@@ -24,14 +33,18 @@ $femaleName = ucfirst($femaleName);
 $surname = selectSyllables($possibleSurnames,3,5);
 $surname = ucfirst($surname);
 
+}
+
+if($debug) {
 echo "<h3>".$maleName." ".$surname." (male)</h3>";
-echo "<p>(/retinue/".$charactersName."/".cleanURL($maleName." ".$surname)."/)</p>";
+//echo "<p>(/retinue/".$charactersName."/".cleanURL($maleName." ".$surname)."/)</p>";
 echo "<h3>".$femaleName." ".$surname." (female)</h3>";
-echo "<p>(/retinue/".$charactersName."/".cleanURL($femaleName." ".$surname)."/)</p>";
+//echo "<p>(/retinue/".$charactersName."/".cleanURL($femaleName." ".$surname)."/)</p>";
+}
 
-
-
+if($debug) {
 echo"<h2>Anglo Saxon</h2>";
+}
 include($_SERVER['DOCUMENT_ROOT']."/includes/retinue/human-anglo-saxon-male.php");
 include($_SERVER['DOCUMENT_ROOT']."/includes/retinue/human-anglo-saxon-female.php");
 
@@ -47,17 +60,17 @@ $femaleName = selectSyllables($possibleAngloSaxonFemaleFirstNames,2,4);
 $femaleName = ucfirst($femaleName);
 
 
-
+if($debug) {
 echo "<h3>".$maleName." (male)</h3>";
-echo "<p>(/retinue/".$charactersName."/".cleanURL($maleName)."/)</p>";
+//echo "<p>(/retinue/".$charactersName."/".cleanURL($maleName)."/)</p>";
 echo "<h3>".$femaleName." (female)</h3>";
-echo "<p>(/retinue/".$charactersName."/".cleanURL($femaleName)."/)</p>";
+//echo "<p>(/retinue/".$charactersName."/".cleanURL($femaleName)."/)</p>";
+}
 
 
-
-
+if($debug) {
 echo"<h2>Elven</h2>";
-
+}
 include($_SERVER['DOCUMENT_ROOT']."/includes/retinue/elven-surname-prefix.php");
 include($_SERVER['DOCUMENT_ROOT']."/includes/retinue/elven-surname-suffix.php");
 
@@ -79,12 +92,28 @@ $elvenFemale = " ".$elvenSurname;
 
 $femaleElvenFirstName = "eila";
 $femaleElvenFirstName = ucfirst($femaleElvenFirstName);
-
+if($debug) {
 echo "<h3>".$femaleElvenFirstName." ".$elvenSurname." (female)</h3>";
-echo "<p>(/retinue/".$charactersName."/".cleanURL($femaleElvenFirstName." ".$elvenFemale)."/)</p>";
+//echo "<p>(/retinue/".$charactersName."/".cleanURL($femaleElvenFirstName." ".$elvenFemale)."/)</p>";
+}
 
 
 
+$sex = array("female","male");
+$race = "huldra";
+$thisFollowersSex = $sex[mt_rand(0, count($sex) - 1)];
+if($thisFollowersSex == "female") {
+$generatedName = $femaleName;
+} else {
+$generatedName = $maleName;	
+}
 
+$generatedName .= " ".$elvenSurname;
 
+return array($generatedName, $thisFollowersSex, $race);
+}
+if($debug) {
+	$newFollower = generateFollower();
+echo $newFollower[0];
+}
 ?>

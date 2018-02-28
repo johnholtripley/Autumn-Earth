@@ -63,6 +63,7 @@ const retinueAvailableQuestMap = document.getElementById('retinueAvailableQuestM
 const draggableFollower = document.getElementById('draggableFollower');
 const retinueQuestStart = document.getElementById('retinueQuestStart');
 const retinueQuestTimeRequired = document.getElementById('retinueQuestTimeRequired');
+const retinueList = document.getElementById('retinueList');
 
 
 var notificationQueue = [];

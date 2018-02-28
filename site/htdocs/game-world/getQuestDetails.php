@@ -2,7 +2,13 @@
 
 include($_SERVER['DOCUMENT_ROOT']."/includes/signalnoise.php");
 include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
+include($_SERVER['DOCUMENT_ROOT']."/includes/functions.php");
 $chr = $_GET["chr"];
+
+$homeBaseContinent = "eastern-continent";
+$homeBaseX = 200;
+$homeBaseY = 350;
+
 
 /*
 {
@@ -66,17 +72,51 @@ foreach ($itemReceivedJSON as $thisItemKey => $thisItem) {
 if($thisItem['type'] == "follower") {	
 
 
-// check not already defined:
+// check the follower isn't already defined:
 	if(!(isset($thisItem['id']))) {
 // generate new follower:
-		// #################
+include_once($_SERVER['DOCUMENT_ROOT']."/game-world/generateRetinueFollower.php");
 		
-	
+		// make sure name is unique for this character:
+do {
+		$newFollower = generateFollower();
+$checkFollowerQuery = mysql_query("SELECT * from tblretinuefollowers where followerName='".$newFollower[0]."'");
+$numRows = mysql_num_rows($checkFollowerQuery);
+} while ($numRows>0);
+
+// add to database with chr and followerRewardFromQuestId so the journal knows which follower to display:
+
+
+
+$followerName = $newFollower[0];
+$followerCleanURL = cleanURL($followerName);
+$characterIdFollowing = $chr;
+$activeQuestId = -1;
+$followerRewardFromQuestId = $questID;
+$questStartedTime = null;
+$followerSex = $newFollower[1];
+$followerRace = $newFollower[2];
+$currentContinent = $homeBaseContinent;
+$followerMapCoordinateX = $homeBaseX;
+$followerMapCoordinateY = $homeBaseY;
+
+    $insertQuery = "INSERT INTO tblretinuefollowers (followerName, followerCleanURL, characterIdFollowing, activeQuestId, isEnabled, followerRewardFromQuestId, questStartedTime, followerSex, followerRace, currentContinent, followerMapCoordinateX, followerMapCoordinateY)
+    VALUES ('".htmlentities($followerName)."','".$followerCleanURL."','".$characterIdFollowing."','".$activeQuestId."', '0', '".$followerRewardFromQuestId."','".$questStartedTime."','".$followerSex."','".$followerRace."','".$currentContinent."','".$followerMapCoordinateX."','".$followerMapCoordinateY."')";
+
+    $insertResult = mysql_query($insertQuery);
+   
+
+
+
+// create image in /images/retinue folder:
+    $followerImage = imagecreatefrompng('../images/retinue/source/'.cleanURL($followerRace).'-'.cleanURL($followerSex).'.png');
+imagepng($followerImage, '../images/retinue/' . mysql_insert_id() . '.png', 0);
+    imagedestroy($followerImage);
+
+// add the details to the JSON for the quest rewards:
 $itemReceivedJSON[$thisItemKey]['type'] = "follower";
-$itemReceivedJSON[$thisItemKey]['id'] = 3;
-$itemReceivedJSON[$thisItemKey]['name'] = "Tyrande Whisperspring";
-// add to database with chr and followerRewardFromQuestId so the journal knows which follower to display
-// ###### 
+$itemReceivedJSON[$thisItemKey]['id'] = mysql_insert_id();
+$itemReceivedJSON[$thisItemKey]['name'] = htmlentities($newFollower[0]);
 
 
 	}

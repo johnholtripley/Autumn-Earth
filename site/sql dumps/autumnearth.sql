@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 27, 2018 at 04:11 PM
+-- Generation Time: Feb 27, 2018 at 05:15 PM
 -- Server version: 5.6.24
 -- PHP Version: 5.6.8
 
@@ -1564,20 +1564,22 @@ CREATE TABLE IF NOT EXISTS `tblretinuefollowers` (
   `followerCleanURL` varchar(255) COLLATE utf8_bin NOT NULL,
   `characterIdFollowing` int(10) NOT NULL,
   `activeQuestId` int(10) DEFAULT '-1',
+  `followerRewardFromQuestId` int(11) DEFAULT NULL,
   `questStartedTime` datetime NOT NULL,
   `followerSex` varchar(6) COLLATE utf8_bin NOT NULL DEFAULT 'female',
   `currentContinent` varchar(255) COLLATE utf8_bin NOT NULL,
   `followerMapCoordinateX` int(20) NOT NULL,
   `followerMapCoordinateY` int(20) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
 -- Dumping data for table `tblretinuefollowers`
 --
 
-INSERT INTO `tblretinuefollowers` (`followerID`, `followerName`, `followerCleanURL`, `characterIdFollowing`, `activeQuestId`, `questStartedTime`, `followerSex`, `currentContinent`, `followerMapCoordinateX`, `followerMapCoordinateY`) VALUES
-(1, 'Eila Myrborn', 'eila-myrborn', 999, -1, '2018-02-25 14:09:48', 'female', 'eastern-continent', 200, 350),
-(2, 'Nellaith Wispfael', 'nellaith-wispfael', 999, -1, '2018-02-26 10:11:41', 'female', 'eastern-continent', 434, 379);
+INSERT INTO `tblretinuefollowers` (`followerID`, `followerName`, `followerCleanURL`, `characterIdFollowing`, `activeQuestId`, `followerRewardFromQuestId`, `questStartedTime`, `followerSex`, `currentContinent`, `followerMapCoordinateX`, `followerMapCoordinateY`) VALUES
+(1, 'Eila Myrborn', 'eila-myrborn', 999, 121, NULL, '2018-02-27 15:33:58', 'female', 'eastern-continent', 200, 350),
+(2, 'Nellaith Wispfael', 'nellaith-wispfael', 999, 128, NULL, '2018-02-27 15:33:48', 'female', 'eastern-continent', 200, 350),
+(3, 'Tyrande Whisperspring', 'tyrande-whisperspring', 999, -1, 1, '2018-02-27 15:33:48', 'female', 'eastern-continent', 200, 350);
 
 -- --------------------------------------------------------
 
@@ -1650,7 +1652,7 @@ CREATE TABLE IF NOT EXISTS `tblretinuequestsactive` (
   `questActiveId` int(11) NOT NULL,
   `questIdActiveOrComplete` int(10) NOT NULL,
   `characterId` int(10) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
 -- Dumping data for table `tblretinuequestsactive`
@@ -1680,7 +1682,11 @@ INSERT INTO `tblretinuequestsactive` (`questActiveId`, `questIdActiveOrComplete`
 (22, 123, 999),
 (23, 127, 999),
 (24, 124, 999),
-(25, 125, 999);
+(25, 125, 999),
+(26, 122, 999),
+(27, 126, 999),
+(28, 128, 999),
+(29, 121, 999);
 
 -- --------------------------------------------------------
 
@@ -2508,7 +2514,7 @@ ALTER TABLE `tblregions`
 -- AUTO_INCREMENT for table `tblretinuefollowers`
 --
 ALTER TABLE `tblretinuefollowers`
-  MODIFY `followerID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
+  MODIFY `followerID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT for table `tblretinuequests`
 --
@@ -2518,7 +2524,7 @@ ALTER TABLE `tblretinuequests`
 -- AUTO_INCREMENT for table `tblretinuequestsactive`
 --
 ALTER TABLE `tblretinuequestsactive`
-  MODIFY `questActiveId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=26;
+  MODIFY `questActiveId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=30;
 --
 -- AUTO_INCREMENT for table `tblretinuequesttypes`
 --

@@ -68,7 +68,7 @@ $completePanelsCreated = array();
 $retinuePanelCompleteOutput = '';
 
 $activeQuestsIds = array();
-  $query = "SELECT * FROM tblretinuefollowers left join tblretinuequests on tblretinuefollowers.activeQuestId = tblretinuequests.questID where tblretinuefollowers.characterIdFollowing='".$chr."'";
+  $query = "SELECT * FROM tblretinuefollowers left join tblretinuequests on tblretinuefollowers.activeQuestId = tblretinuequests.questID where tblretinuefollowers.characterIdFollowing='".$chr."' and isEnabled";
 
 
 

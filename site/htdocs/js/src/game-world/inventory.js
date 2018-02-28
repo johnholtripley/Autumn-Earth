@@ -7,22 +7,23 @@ function canAddItemToInventory(itemObj) {
     var moneyToAdd = 0;
     var followersAdded = [];
     var professionsAdded = [];
+    var followerMarkupToAdd;
     for (var k = 0; k < itemObj.length; k++) {
         // check for any money items:
 
-       switch (itemObj[k].type) {
+        switch (itemObj[k].type) {
             case '$':
                 moneyToAdd += itemObj[k].quantity;
                 break;
             case 'follower':
-            console.log("adding follower");
+
                 followersAdded.push([itemObj[k].id, itemObj[k].name]);
                 break;
             case 'profession':
                 professionsAdded.push(itemObj[k].id);
                 break;
             default:
-            console.log(itemObj[k].type);
+
                 var quantityAddedSoFar = 0;
                 // check if this type exist in the current inventory:
                 var inventoryKeysFound = getObjectKeysForInnerValue(inventoryClone, itemObj[k].type, "type");
@@ -98,7 +99,12 @@ function canAddItemToInventory(itemObj) {
         if (followersAdded.length > 0) {
             for (var i = 0; i < followersAdded.length; i++) {
                 UI.showNewFollower(followersAdded[i][0], followersAdded[i][1]);
-                // update database ########
+                // update database:
+                sendDataWithoutNeedingAResponse("/game-world/activateRetinueFollower.php?followerID=" + followersAdded[i][0]);
+                // show in retinue panel:
+
+                followerMarkupToAdd = '<li id="retinueFollower' + followersAdded[i][0] + '" class="available" data-locationx="200" data-locationy="350" data-activeonquest="-1"><div class="portrait"><img src="/images/retinue/' + followersAdded[i][0] + '.png" alt=""></div><h3>' + followersAdded[i][1] + '</h3><p>waiting for a quest</p></li>';
+                retinueList.insertAdjacentHTML('beforeend', followerMarkupToAdd);
             }
         }
 
@@ -123,8 +129,8 @@ function canAddItemToInventory(itemObj) {
 }
 
 function hasItemInInventory(itemType, amountNeeded) {
-    if(typeof amountNeeded === "undefined") {
-var amountNeeded = 1;
+    if (typeof amountNeeded === "undefined") {
+        var amountNeeded = 1;
     }
 
     var quantityFound = 0;
@@ -167,8 +173,8 @@ function hasItemTypeInInventory(itemGroupType) {
 function removeItemTypeFromInventory(itemType, amount) {
 
 
-    if(typeof amount === "undefined") {
-var amount = 1;
+    if (typeof amount === "undefined") {
+        var amount = 1;
     }
 
     var quantityStillToRemove = amount;
