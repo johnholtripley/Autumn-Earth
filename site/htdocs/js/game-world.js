@@ -522,6 +522,7 @@ function recipeSelectComponents(whichRecipe) {
     craftingSelectComponentsPanel.classList.add("active");
     var recipeId = whichRecipe.substring(6);
     var foundItemGroups;
+    var specificsAlreadyFound = [];
     var thisRecipe = hero.crafting[currentRecipePanelProfession].recipes[recipeId];
     var beingCreatedMarkup = '<img src="/images/game-world/inventory-items/' + thisRecipe.imageId + '.png" alt="' + thisRecipe.recipeName + '"><h3>' + thisRecipe.recipeName + '</h3><p>' + thisRecipe.recipeDescription + '</p><h4>Requires:</h4>';
     // find all components that the player has that are usable for this recipe as well:
@@ -531,7 +532,8 @@ function recipeSelectComponents(whichRecipe) {
     beingCreatedMarkup += '<ul>';
     for (var i = 0; i < componentsRequired.length; i++) {
         if (!(isNaN(componentsRequired[i]))) {
-            // specific item:
+            // specific item - make sure not already added this (if more than 1 quantity required):
+         if(specificsAlreadyFound.indexOf(componentsRequired[i]) === -1) {
             beingCreatedMarkup += '<li><img src="/images/game-world/inventory-items/' + componentsRequired[i] + '.png" alt="' + currentActiveInventoryItems[componentsRequired[i]].shortname + '">' + currentActiveInventoryItems[componentsRequired[i]].shortname + '</li>';
             foundItemGroups = findSlotItemIdInInventory(componentsRequired[i]);
             if (foundItemGroups.length > 0) {
@@ -540,6 +542,8 @@ function recipeSelectComponents(whichRecipe) {
                     componentsFound++;
                 }
             }
+            specificsAlreadyFound.push(componentsRequired[i]);
+        }
         } else {
             // item group:
             beingCreatedMarkup += '<li><img src="/images/game-world/inventory-items/' + componentsRequired[i] + '.png" alt="">' + currentItemGroupFilters[(componentsRequired[i])] + '</li>';
