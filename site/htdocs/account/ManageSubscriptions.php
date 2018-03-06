@@ -19,8 +19,8 @@ if (@$_SESSION['username']) {
 
 	// get user's account ID:
 	$query = "select * from tblacct where accountName='".$_SESSION['username']."'";
-	$result = mysql_query($query) or die ("couldn't execute query1");
-	$row = mysql_fetch_array($result);
+	$result = mysqli_query($connection, $query) or die ("couldn't execute query1");
+	$row = mysqli_fetch_array($result);
 	extract ($row);
 	
 	
@@ -39,14 +39,14 @@ if (@$_SESSION['username']) {
 		if (is_numeric($subscribethread)) {
 			// check if they are already subscribed:
 			$query = "select * from tblsubscribedthreads where accountID='".$accountID."' AND threadID='".$subscribethread."'";
-			$result = mysql_query($query) or die ("couldn't execute query3");
-			$numberofrows = mysql_num_rows($result);
+			$result = mysqli_query($connection, $query) or die ("couldn't execute query3");
+			$numberofrows = mysqli_num_rows($result);
 			if ($numberofrows > 0) {
 				echo '<p>you are already subscribed to this thread</p>';
 			} else {
 				$query = "insert into tblsubscribedthreads (accountID, threadID, status)
 				values ('".$accountID."','".$subscribethread."','0')";
-				$result = mysql_query($query) or die ("couldn't execute query4");
+				$result = mysqli_query($connection, $query) or die ("couldn't execute query4");
 				echo '<p>you have been subscribed to this thread</p>';
 			}
 		}
@@ -58,7 +58,7 @@ if (@$_SESSION['username']) {
 		if ($value != "unsubscribe" ) {
 			// unsubscribe the user from this thread:
 			$query = "DELETE FROM tblsubscribedthreads WHERE subthreadID='".$value."'";
-			$result = mysql_query($query) or die ("couldn't execute query5");
+			$result = mysqli_query($connection, $query) or die ("couldn't execute query5");
 		}
 		}
 		echo '<p>you have been removed from the selected thread(s)</p>';
@@ -71,9 +71,9 @@ if (@$_SESSION['username']) {
 	FROM tblSubscribedThreads
 	INNER JOIN tblThreads on tblSubscribedThreads.threadID = tblthreads.ThreadID
 	WHERE tblSubscribedThreads.accountID = ".$accountID." ORDER BY tblThreads.latestPostID";
-	$result = mysql_query($query) or die ("couldn't execute query2");
+	$result = mysqli_query($connection, $query) or die ("couldn't execute query2");
 	
-	$numberofrows = mysql_num_rows($result);
+	$numberofrows = mysqli_num_rows($result);
 	// check that something is returned
 	if ($numberofrows > 0) {
 	
@@ -84,7 +84,7 @@ if (@$_SESSION['username']) {
 		echo'<table cellspacing="0" cellpadding="0" class="StyledTable">';
 		// display output:
 		$checkcounter = 0;
-		while ($row = mysql_fetch_array($result)) {
+		while ($row = mysqli_fetch_array($result)) {
 		echo'<tr>';
 		extract($row);
 		echo '<td>'.$threadTitle.'</td>'.'<td>';

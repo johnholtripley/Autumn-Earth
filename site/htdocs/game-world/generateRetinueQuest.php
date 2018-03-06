@@ -118,13 +118,13 @@ $region = $regionNames[$continent][$regionColourIndex];
 // get a random (but suitable) type:
 $query = "SELECT * from tblretinuequesttypes where suitableFor like '%".$terrainType."%'";
 $questTypes = array();
-$result = mysql_query($query) or die ();
-if(mysql_num_rows($result)>0) {
+$result = mysqli_query($connection, $query) or die ();
+if(mysqli_num_rows($result)>0) {
 
-while ($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
+while ($row = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
     array_push($questTypes, $row);
 }
-mysql_free_result($result);
+mysqli_free_result($result);
 }
 
 $thisType = $questTypes[mt_rand(0, count($questTypes) - 1)];
@@ -154,27 +154,27 @@ $questReward  = '[{"type":2,"quantity":2,"quality":100,"durability":100,"current
 
 
 $query3 = "SELECT * from tblretinuequests where questCleanURL='".$questCleanURL."'";
-$result3 = mysql_query($query3);
-if(mysql_num_rows($result3)>0) {
+$result3 = mysqli_query($connection, $query3);
+if(mysqli_num_rows($result3)>0) {
 	$attempts = 2;
 $originalCleanURL = $questCleanURL;
 do {
 // check clean URL is unique:
 	$questCleanURL = $originalCleanURL.'-'.$attempts;
 $query3 = "SELECT * from tblretinuequests where questCleanURL='".$questCleanURL."'";
-$result3 = mysql_query($query3);
+$result3 = mysqli_query($connection, $query3);
 
 $attempts++;
-} while(mysql_num_rows($result3)>0);
+} while(mysqli_num_rows($result3)>0);
 }
 
-mysql_free_result($result3);
+mysqli_free_result($result3);
 
 // add to database:
-$query2 = "INSERT INTO tblretinuequests (questName, questCleanURL, questDescription, questType, continent, mapCoordinateX, mapCoordinateY, needsToReturnToBase, questDifficulty, questObstacles, questCostToStart, questPartOfCampaign, questNumberOfFollowersRequired, questNPCMinimumLevel, questReward, timeCreated, seed) VALUES ('".mysql_escape_string($questName)."','".$questCleanURL."','".mysql_escape_string($questDescription)."','".$questType."','".cleanURL($continent)."',".$mapCoordinateX.",".$mapCoordinateY.",".$needsToReturnToBase.",".$questDifficulty.",'".$questObstacles."',".$questCostToStart.",".$questPartOfCampaign.",".$questNumberOfFollowersRequired.",".$questNPCMinimumLevel.",'".$questReward."',NOW(),'".$storedSeed."')";
+$query2 = "INSERT INTO tblretinuequests (questName, questCleanURL, questDescription, questType, continent, mapCoordinateX, mapCoordinateY, needsToReturnToBase, questDifficulty, questObstacles, questCostToStart, questPartOfCampaign, questNumberOfFollowersRequired, questNPCMinimumLevel, questReward, timeCreated, seed) VALUES ('".mysqli_escape_string($questName)."','".$questCleanURL."','".mysqli_escape_string($questDescription)."','".$questType."','".cleanURL($continent)."',".$mapCoordinateX.",".$mapCoordinateY.",".$needsToReturnToBase.",".$questDifficulty.",'".$questObstacles."',".$questCostToStart.",".$questPartOfCampaign.",".$questNumberOfFollowersRequired.",".$questNPCMinimumLevel.",'".$questReward."',NOW(),'".$storedSeed."')";
 echo $query2;
 if(!$debug) {
-$result2 = mysql_query($query2);
+$result2 = mysqli_query($connection, $query2);
 }
 
 if($debug) {

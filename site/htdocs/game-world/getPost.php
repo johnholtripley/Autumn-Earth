@@ -66,11 +66,11 @@ $chr = 999;
 $hasUnReadPost = false;
 
   $query = "SELECT * FROM tblmail where characterID='".$chr."' and isArchived = false order by senttime DESC LIMIT 12";
-      $result = mysql_query($query) or die ();
-      if(mysql_num_rows($result)>0) {
+      $result = mysqli_query($connection, $query) or die ();
+      if(mysqli_num_rows($result)>0) {
       	$postPanelMarkup .= '<ol>';
       	$allSenderNames = array();
-      while ($row = mysql_fetch_array($result)) {
+      while ($row = mysqli_fetch_array($result)) {
       extract($row);
    if(!(in_array($senderName, $allSenderNames))) {
       array_push($allSenderNames, $senderName);
@@ -126,7 +126,7 @@ $allMessagePanels .= '</div></div>';
       }
       $postPanelMarkup .= '</ol>';
   }
-      mysql_free_result($result);
+      mysqli_free_result($result);
 $postPanelMarkup .= '</div>';
 $postPanelMarkup .= '<div id="sendPostPanel">';
 

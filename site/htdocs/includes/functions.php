@@ -629,14 +629,14 @@ function displayAuctionItemsEndingSoon( $itemLimit ) {
     and tblauctionitems.auctionclosed = 'true'
     ORDER BY tblauctionitems.endtime ASC
     LIMIT ".$itemLimit;
-    $result = mysql_query( $query ) or die ( "couldn't execute query" );
+    $result = mysqli_query($connection,  $query ) or die ( "couldn't execute query" );
  
-    $numberofrows = mysql_num_rows( $result );
+    $numberofrows = mysqli_num_rows( $result );
     if ( $numberofrows>0 ) {
  
  
  
-        while ( $row = mysql_fetch_array( $result ) ) {
+        while ( $row = mysqli_fetch_array( $result ) ) {
             extract( $row );
             $endTime = strtotime( $endTime );
             $timeToEnd = $endTime-time();
@@ -654,9 +654,9 @@ group by tblauctionbids.bidderid
 order by tblauctionbids.bidamount DESC limit 2
             ";
  
-            $result3 = mysql_query( $query3 ) or die ( "couldn't execute query3" );
+            $result3 = mysqli_query($connection,  $query3 ) or die ( "couldn't execute query3" );
  
-            $numberofrows3 = mysql_num_rows( $result3 );
+            $numberofrows3 = mysqli_num_rows( $result3 );
  
             switch ( $numberofrows3 ) {
             case 0:
@@ -665,18 +665,18 @@ order by tblauctionbids.bidamount DESC limit 2
                 break;
             case 1:
                 // get the one bidder's name:
-                $row3 = mysql_fetch_array( $result3 );
+                $row3 = mysqli_fetch_array( $result3 );
                 extract( $row3 );
                 $highbidder = $charName;
                 $currentprice = $startPrice;
                 break;
             case 2:
                 // determine current bid:
-                $row3 = mysql_fetch_array( $result3 );
+                $row3 = mysqli_fetch_array( $result3 );
                 extract( $row3 );
                 $highbid = $bidAmount;
                 $highbidder = $charName;
-                $row3b = mysql_fetch_array( $result3 );
+                $row3b = mysqli_fetch_array( $result3 );
                 extract( $row3b );
                 $secondhighbid = $bidAmount;
  
@@ -709,14 +709,14 @@ function displayAuctionNewestItems( $itemLimit ) {
     and tblauctionitems.auctionclosed = 'true'
     ORDER BY tblauctionitems.starttime DESC
     LIMIT ".$itemLimit;
-    $result = mysql_query( $query ) or die ( "couldn't execute query" );
+    $result = mysqli_query($connection,  $query ) or die ( "couldn't execute query" );
  
-    $numberofrows = mysql_num_rows( $result );
+    $numberofrows = mysqli_num_rows( $result );
     if ( $numberofrows>0 ) {
  
  
  
-        while ( $row = mysql_fetch_array( $result ) ) {
+        while ( $row = mysqli_fetch_array( $result ) ) {
             extract( $row );
             $endTime = strtotime( $endTime );
             $timeToEnd = $endTime-time();
@@ -734,9 +734,9 @@ group by tblauctionbids.bidderid
 order by tblauctionbids.bidamount DESC limit 2
             ";
  
-            $result3 = mysql_query( $query3 ) or die ( "couldn't execute query3" );
+            $result3 = mysqli_query($connection,  $query3 ) or die ( "couldn't execute query3" );
  
-            $numberofrows3 = mysql_num_rows( $result3 );
+            $numberofrows3 = mysqli_num_rows( $result3 );
  
             switch ( $numberofrows3 ) {
             case 0:
@@ -745,18 +745,18 @@ order by tblauctionbids.bidamount DESC limit 2
                 break;
             case 1:
                 // get the one bidder's name:
-                $row3 = mysql_fetch_array( $result3 );
+                $row3 = mysqli_fetch_array( $result3 );
                 extract( $row3 );
                 $highbidder = $charName;
                 $currentprice = $startPrice;
                 break;
             case 2:
                 // determine current bid:
-                $row3 = mysql_fetch_array( $result3 );
+                $row3 = mysqli_fetch_array( $result3 );
                 extract( $row3 );
                 $highbid = $bidAmount;
                 $highbidder = $charName;
-                $row3b = mysql_fetch_array( $result3 );
+                $row3b = mysqli_fetch_array( $result3 );
                 extract( $row3b );
                 $secondhighbid = $bidAmount;
  
@@ -827,14 +827,14 @@ function displayContractNewestItems( $itemLimit ) {
  
  
  
-    $result = mysql_query( $query ) or die ( "couldn't execute query" );
+    $result = mysqli_query($connection,  $query ) or die ( "couldn't execute query" );
  
-    $numberofrows = mysql_num_rows( $result );
+    $numberofrows = mysqli_num_rows( $result );
     if ( $numberofrows>0 ) {
  
  
  
-        while ( $row = mysql_fetch_array( $result ) ) {
+        while ( $row = mysqli_fetch_array( $result ) ) {
             extract( $row );
  
  
@@ -871,11 +871,11 @@ FROM tblcontracts
     ";
  
  
-                $innerresult = mysql_query( $query ) or die ( "couldn't execute inner query" );
+                $innerresult = mysqli_query($connection,  $query ) or die ( "couldn't execute inner query" );
  
-                $innernumberofrows = mysql_num_rows( $innerresult );
+                $innernumberofrows = mysqli_num_rows( $innerresult );
                 if ( $innernumberofrows>0 ) {
-                    $innerrow = mysql_fetch_array( $innerresult );
+                    $innerrow = mysqli_fetch_array( $innerresult );
                     extract( $innerrow );
                 }
  
@@ -894,11 +894,11 @@ order by tblcontractbids.bidAmount DESC limit 1
             ";
  
  
-                $innerresult = mysql_query( $query3 ) or die ( "couldn't execute inner query" );
+                $innerresult = mysqli_query($connection,  $query3 ) or die ( "couldn't execute inner query" );
  
-                $innernumberofrows = mysql_num_rows( $innerresult );
+                $innernumberofrows = mysqli_num_rows( $innerresult );
                 if ( $innernumberofrows>0 ) {
-                    $innerrow = mysql_fetch_array( $innerresult );
+                    $innerrow = mysqli_fetch_array( $innerresult );
                     extract( $innerrow );
                     echo "<p>Current best offer: ".formatCurrency( $bidAmount )."</p>";
                 } else {
@@ -923,11 +923,11 @@ order by tblcontractbids.bidAmount DESC limit 1
             ";
  
  
-                $innerresult = mysql_query( $query3 ) or die ( "couldn't execute inner query" );
+                $innerresult = mysqli_query($connection,  $query3 ) or die ( "couldn't execute inner query" );
  
-                $innernumberofrows = mysql_num_rows( $innerresult );
+                $innernumberofrows = mysqli_num_rows( $innerresult );
                 if ( $innernumberofrows>0 ) {
-                    $innerrow = mysql_fetch_array( $innerresult );
+                    $innerrow = mysqli_fetch_array( $innerresult );
                     extract( $innerrow );
                     echo "<p>Current best offer: ".formatCurrency( $bidAmount )."</p>";
                 } else {
@@ -961,14 +961,14 @@ function displayContractItemsEndingSoon( $itemLimit ) {
  
  
  
-    $result = mysql_query( $query ) or die ( "couldn't execute query" );
+    $result = mysqli_query($connection,  $query ) or die ( "couldn't execute query" );
  
-    $numberofrows = mysql_num_rows( $result );
+    $numberofrows = mysqli_num_rows( $result );
     if ( $numberofrows>0 ) {
  
  
  
-        while ( $row = mysql_fetch_array( $result ) ) {
+        while ( $row = mysqli_fetch_array( $result ) ) {
             extract( $row );
  
  
@@ -995,11 +995,11 @@ FROM tblcontracts
     ";
  
  
-                $innerresult = mysql_query( $query ) or die ( "couldn't execute inner query" );
+                $innerresult = mysqli_query($connection,  $query ) or die ( "couldn't execute inner query" );
  
-                $innernumberofrows = mysql_num_rows( $innerresult );
+                $innernumberofrows = mysqli_num_rows( $innerresult );
                 if ( $innernumberofrows>0 ) {
-                    $innerrow = mysql_fetch_array( $innerresult );
+                    $innerrow = mysqli_fetch_array( $innerresult );
                     extract( $innerrow );
                 }
  
@@ -1017,11 +1017,11 @@ order by tblcontractbids.bidAmount DESC limit 1
             ";
  
  
-                $innerresult = mysql_query( $query3 ) or die ( "couldn't execute inner query" );
+                $innerresult = mysqli_query($connection,  $query3 ) or die ( "couldn't execute inner query" );
  
-                $innernumberofrows = mysql_num_rows( $innerresult );
+                $innernumberofrows = mysqli_num_rows( $innerresult );
                 if ( $innernumberofrows>0 ) {
-                    $innerrow = mysql_fetch_array( $innerresult );
+                    $innerrow = mysqli_fetch_array( $innerresult );
                     extract( $innerrow );
                     echo "<p>Current best offer: ".formatCurrency( $bidAmount )."</p>";
                 } else {
@@ -1043,11 +1043,11 @@ order by tblcontractbids.bidAmount DESC limit 1
             ";
  
  
-                $innerresult = mysql_query( $query3 ) or die ( "couldn't execute inner query" );
+                $innerresult = mysqli_query($connection,  $query3 ) or die ( "couldn't execute inner query" );
  
-                $innernumberofrows = mysql_num_rows( $innerresult );
+                $innernumberofrows = mysqli_num_rows( $innerresult );
                 if ( $innernumberofrows>0 ) {
-                    $innerrow = mysql_fetch_array( $innerresult );
+                    $innerrow = mysqli_fetch_array( $innerresult );
                     extract( $innerrow );
                     echo "<p>Current best offer: ".formatCurrency( $bidAmount )."</p>";
                 } else {
@@ -1072,16 +1072,16 @@ function date_compare($a, $b) {
  
  
 function displayUpcomingEvents( $limit ) {
- 
+ global $connection;
 // http://stackoverflow.com/questions/5183630/calendar-recurring-repeating-events-best-storage-method#answer-16659802
  
      
     $query = "SELECT * from tblevents WHERE ((repeatsAnnually and ((dayofyear(now()) <= (dayofyear(eventstart)+eventdurationdays-1)) or (dayofyear(now()) <= (dayofyear(eventstart)+eventdurationdays-366)))) or ((repeatsAnnually = 0) and (date(now()) between (eventstart) and (eventstart+eventdurationdays)))) order by eventstart ASC limit ".$limit;
      
  
-    $result = mysql_query( $query ) or die ( "couldn't execute query" );
+    $result = mysqli_query($connection,  $query ) or die ( "couldn't execute query" );
  
-    $numberofrows = mysql_num_rows( $result );
+    $numberofrows = mysqli_num_rows( $result );
     if ( $numberofrows>0 ) {
  
 ?>
@@ -1091,7 +1091,7 @@ function displayUpcomingEvents( $limit ) {
  
  
 $eventData = [];
-while ($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
+while ($row = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
  
 // get the correct years for repeating events:
 if($row['repeatsAnnually'] > 0) {
@@ -1119,7 +1119,7 @@ if($yearPreviousEndTime >= date(time())) {
  
     array_push($eventData, $row);
 }
-mysql_free_result($result);
+mysqli_free_result($result);
  
 // sort by start date:
 usort($eventData, 'date_compare');
@@ -1153,16 +1153,16 @@ usort($eventData, 'date_compare');
 function displayDeepestDelvers() {
     // get all dungeons:
     $query = "select * from tbldungeonmapconfig";
-    $result = mysql_query( $query ) or die ( "couldn't execute query" );
+    $result = mysqli_query($connection,  $query ) or die ( "couldn't execute query" );
  
-    $numberofrows = mysql_num_rows( $result );
+    $numberofrows = mysqli_num_rows( $result );
     if ( $numberofrows>0 ) {
  
 ?>
     <ul>
         <?php
  
-        while ( $row = mysql_fetch_array( $result ) ) {
+        while ( $row = mysqli_fetch_array( $result ) ) {
             extract( $row );
  
             // get newest, deepest map for this map
@@ -1171,10 +1171,10 @@ from tbldungeonachievements
 inner join tblcharacters on tbldungeonachievements.charID = tblcharacters.charID
             where tbldungeonachievements.dungeonId='".$dungeonId."' order by tbldungeonachievements.mapReached DESC, tbldungeonachievements.timeStamp ASC limit 1";
  
-            $innerresult = mysql_query( $innerQuery ) or die ( "couldn't execute innerQuery" );
-            $innernumberofrows = mysql_num_rows( $innerresult );
+            $innerresult = mysqli_query($connection,  $innerQuery ) or die ( "couldn't execute innerQuery" );
+            $innernumberofrows = mysqli_num_rows( $innerresult );
             if ( $innernumberofrows>0 ) {
-                while ( $innerrow = mysql_fetch_array( $innerresult ) ) {
+                while ( $innerrow = mysqli_fetch_array( $innerresult ) ) {
                     extract( $innerrow );
  
  
@@ -1285,15 +1285,15 @@ $query = "select tblcharacters.404MagicSquareSum as magicSquareNumber, tblcharac
 from tblcharacters
 inner join tblacct on tblacct.currentCharID = tblcharacters.charID
 where tblacct.accountName='".$_SESSION['username']."'";
-$result = mysql_query($query) or die ("couldn't execute query");
+$result = mysqli_query($connection, $query) or die ("couldn't execute query");
      
  
      
-        $returned = mysql_num_rows($result);
+        $returned = mysqli_num_rows($result);
      
     if ($returned > 0) {
      
-    $row = mysql_fetch_array($result);
+    $row = mysqli_fetch_array($result);
      
         extract($row); 
 }
@@ -1322,7 +1322,7 @@ $b = rand(($a+1), ($c-$a));
 $saveString = $a."|".$b."|".$c;
  
     $query = "UPDATE tblcharacters SET 404MagicSquareSum='".$saveString."' WHERE charId = '" . $charID . "'";
-    $result = mysql_query($query) or die ("couldn't execute query");
+    $result = mysqli_query($connection, $query) or die ("couldn't execute query");
  
 } else {
     $magicNumberSplits = explode("|", $magicSquareNumber);

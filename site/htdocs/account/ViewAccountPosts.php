@@ -30,12 +30,12 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/functions.php");
 			//
 	// get accountID for this user:
 	$query = "SELECT accountID from tblacct WHERE accountName='".$accname."'";
-	$result = mysql_query($query) or die ("couldn't execute query2");
-	$numberofrows = mysql_num_rows($result);
+	$result = mysqli_query($connection, $query) or die ("couldn't execute query2");
+	$numberofrows = mysqli_num_rows($result);
 	// check that something is returned
 	if ($numberofrows > 0) {
 	
-	$row = mysql_fetch_array($result);
+	$row = mysqli_fetch_array($result);
 	
 	
 		extract($row);
@@ -53,10 +53,10 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/functions.php");
 	
 	
 	
-	$result = mysql_query($query) or die ("couldn't execute query3");
+	$result = mysqli_query($connection, $query) or die ("couldn't execute query3");
 	
 		
-	$numberofrows = mysql_num_rows($result);
+	$numberofrows = mysqli_num_rows($result);
 	// check that something is returned
 	if ($numberofrows > 0) {
 	
@@ -84,7 +84,7 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/functions.php");
 	
 		
 		$rowcount = 0;
-		while ($row = mysql_fetch_array($result)) {
+		while ($row = mysqli_fetch_array($result)) {
 		
 		if (($rowcount>= $startpoint) && ($rowcount<$endpoint)) {
 		// show these results

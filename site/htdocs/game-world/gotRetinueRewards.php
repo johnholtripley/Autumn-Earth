@@ -12,7 +12,7 @@ $newLocationY = $_GET["newLocationY"];
 // update the followers to new location, and set them as available
 
 $query = "UPDATE tblretinuefollowers SET activeQuestId='-1', followerMapCoordinateX='".$newLocationX."', followerMapCoordinateY='".$newLocationY."' where activeQuestId='".$questId."'";
-$result = mysql_query($query);
+$result = mysqli_query($connection, $query);
 
 
 

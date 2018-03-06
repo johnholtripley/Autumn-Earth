@@ -6,13 +6,13 @@
 
 <?php
 $query = "select * from tblNews WHERE status='1' order by timeAdded DESC limit 5";
-$result = mysql_query($query) or die ("couldn't execute query");
+$result = mysqli_query($connection, $query) or die ("couldn't execute query");
 
 
 
-if (mysql_num_rows($result) > 0) {
+if (mysqli_num_rows($result) > 0) {
 // get the first news item
-$row = mysql_fetch_array($result);
+$row = mysqli_fetch_array($result);
 extract($row);
 
 echo '<h3>'.$newsTitle.'</h3>';
@@ -37,7 +37,7 @@ $newcontent = smartPunctuation(substr($newsContent, 0, $pos)) . '<br /><a href="
 
 echo $newcontent."\n".'<br />';
 // get the rest:
-while ($row = mysql_fetch_array($result)) {
+while ($row = mysqli_fetch_array($result)) {
 echo '----------------';
 	extract($row);
 	$timeAdded = strtotime($timeAdded);

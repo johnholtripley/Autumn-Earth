@@ -30,10 +30,10 @@ $query = "select tblcharacters.404MagicSquareSum as magicSquareNumber, tblcharac
 from tblcharacters
 inner join tblacct on tblacct.currentCharID = tblcharacters.charID
 where tblacct.accountName='".$_SESSION['username']."'";
-$result = mysql_query($query) or die ("couldn't execute query");
-			$returned = mysql_num_rows($result);
+$result = mysqli_query($connection, $query) or die ("couldn't execute query");
+			$returned = mysqli_num_rows($result);
 		if ($returned > 0) {
-		$row = mysql_fetch_array($result);
+		$row = mysqli_fetch_array($result);
 			extract($row); 
 }
 if($magicSquareNumber != -1) {
@@ -58,27 +58,27 @@ $query = "select distinct tblposts.*, tblthreads.title AS threadtitle, tblthread
 FROM tblposts
 INNER JOIN tblthreads on tblposts.threadid = tblthreads.threadid
 where (((tblposts.postContent like '%".$searchterms."%') or (tblthreads.title like '%".$searchterms."%')) AND tblposts.status>0) order by tblthreads.creationtime DESC";
-$result = mysql_query($query) or die ("couldn't execute query1");
+$result = mysqli_query($connection, $query) or die ("couldn't execute query1");
 
 
 
-$numberofrows = mysql_num_rows($result);
+$numberofrows = mysqli_num_rows($result);
 // check that something is returned
 if ($numberofrows > 0) {
 
 
 // store this search as something was found:
 $query2 = "select * from tblsavedsearches where searchTerm='".$searchterms."'";
-$result2 = mysql_query($query2) or die ("couldn't execute query2");
-$numberofrows2 = mysql_num_rows($result2);
+$result2 = mysqli_query($connection, $query2) or die ("couldn't execute query2");
+$numberofrows2 = mysqli_num_rows($result2);
 if ($numberofrows2 > 0) {
 	// search already exists - increase count:
 	$query3 = "update tblsavedsearches set searchCount=searchCount+1 where searchTerm='".$searchterms."'";
-	$result3 = mysql_query($query3) or die ("couldn't execute query3");
+	$result3 = mysqli_query($connection, $query3) or die ("couldn't execute query3");
 } else {
 	// add new search:
 	$query3 = "insert into tblsavedsearches (searchTerm,searchCount) values ('".$searchterms."','1')";
-	$result3 = mysql_query($query3) or die ("couldn't execute query3");
+	$result3 = mysqli_query($connection, $query3) or die ("couldn't execute query3");
 }
 	
 	
@@ -107,7 +107,7 @@ if ($numberofrows2 > 0) {
 
 
 
-while ($row = mysql_fetch_array($result)) {
+while ($row = mysqli_fetch_array($result)) {
 
 if (($rowcount>= $startpoint) && ($rowcount<$endpoint)) {
 		// show these results
@@ -211,7 +211,7 @@ $rowcount++;
 } else {
 // save the search term with a zero count:
 $query5 = "insert into tblsavedsearches (searchTerm,searchCount) values ('".$searchterms."','0')";
-$result5 = mysql_query($query5) or die ("couldn't execute query5");
+$result5 = mysqli_query($connection, $query5) or die ("couldn't execute query5");
 
 
 
@@ -219,9 +219,9 @@ $result5 = mysql_query($query5) or die ("couldn't execute query5");
 
 // grab previous search terms:
 $query4 = "select searchTerm from tblsavedsearches where searchCount>0";
-$result4 = mysql_query($query4) or die ("couldn't execute query4");
+$result4 = mysqli_query($connection, $query4) or die ("couldn't execute query4");
 $previousSearches = array();
-while ($row4 = mysql_fetch_array($result4)) {
+while ($row4 = mysqli_fetch_array($result4)) {
 		array_push($previousSearches, strtolower($row4["searchTerm"]));
 }
 

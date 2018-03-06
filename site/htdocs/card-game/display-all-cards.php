@@ -14,11 +14,11 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/header.php");
 // get all card data:
 
 $query = "select * from tblcards";
-$result = mysql_query($query) or die ("couldn't execute query");
-if (mysql_num_rows($result) > 0) {
+$result = mysqli_query($connection, $query) or die ("couldn't execute query");
+if (mysqli_num_rows($result) > 0) {
 echo '<ol id="cardList">';
 $cardDataNeeded = array(array(null,null,null));
-while ($row = mysql_fetch_array($result)) {
+while ($row = mysqli_fetch_array($result)) {
 
 extract($row);
 

@@ -23,11 +23,11 @@ if (is_numeric($auctionitemID)) {
 	inner join tblinventoryitems on tblAuctionItems.itemID = tblinventoryitems.itemID
 	inner join tblcharacters on tblAuctionItems.sellerID = tblcharacters.charID
 	WHERE auctionID = '".$auctionitemID."'";
-	$result = mysql_query($query) or die ("couldn't execute query1");
+	$result = mysqli_query($connection, $query) or die ("couldn't execute query1");
 	
-	$numberofrows = mysql_num_rows($result);
+	$numberofrows = mysqli_num_rows($result);
 	if ($numberofrows>0) {
-		$row = mysql_fetch_array($result);
+		$row = mysqli_fetch_array($result);
 		extract($row);
 		$itemGraphic = $itemID;
 		$itemquantity = $quantity;
@@ -53,8 +53,8 @@ if (is_numeric($auctionitemID)) {
 			$query2 = "select COUNT(*) from tblauctionbids  
 where auctionID = '".$auctionitemID."'";
 
-			$result2 = mysql_query($query2) or die ("couldn't execute query2");
-			$row2 = mysql_fetch_row($result2);
+			$result2 = mysqli_query($connection, $query2) or die ("couldn't execute query2");
+			$row2 = mysqli_fetch_row($result2);
 			$numberofbids = $row2[0];
 			// get the highest 2 bids on this item:
 			// get the highest 2 bids from different bidders on this item:
@@ -67,9 +67,9 @@ where auctionID = '".$auctionitemID."'
 group by tblauctionbids.bidderID 
 order by tblauctionbids.bidAmount DESC limit 2
 			";
-			$result3 = mysql_query($query3) or die ("couldn't execute query3");
+			$result3 = mysqli_query($connection, $query3) or die ("couldn't execute query3");
 			
-			$numberofrows3 = mysql_num_rows($result3);
+			$numberofrows3 = mysqli_num_rows($result3);
 			
 			switch($numberofrows3) {
 				case 0:
@@ -78,18 +78,18 @@ order by tblauctionbids.bidAmount DESC limit 2
 				break;
 				case 1:
 				// get the one bidder's name:
-				$row3 = mysql_fetch_array($result3);
+				$row3 = mysqli_fetch_array($result3);
 				extract($row3);
 				$highbidder = $charName;
 				$currentprice = $startPrice;
 				break;
 				case 2:
 				// determine current bid:
-				$row3 = mysql_fetch_array($result3);
+				$row3 = mysqli_fetch_array($result3);
 				extract($row3);
 				$highbid = $bidAmount;
 				$highbidder = $charName;
-				$row3b = mysql_fetch_array($result3);
+				$row3b = mysqli_fetch_array($result3);
 				extract($row3b);
 				$secondhighbid = $bidAmount;
 			
@@ -122,15 +122,15 @@ order by tblauctionbids.bidAmount DESC limit 2
 from tblacct
 inner join tblcharacters on  tblacct.currentCharID = tblcharacters.charID
 where tblacct.accountName='".$_SESSION['username']."'";
-$result = mysql_query($query) or die ("couldn't execute query");
+$result = mysqli_query($connection, $query) or die ("couldn't execute query");
 	
 	
 	
-		$returned = mysql_num_rows($result);
+		$returned = mysqli_num_rows($result);
 	
 	if ($returned > 0) {
 	
-	$row = mysql_fetch_array($result);
+	$row = mysqli_fetch_array($result);
 	
 		
 			

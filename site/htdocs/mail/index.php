@@ -19,7 +19,7 @@ if ($_POST["subbutton"] == 'archive mail') {
 			if ($value != "unsubscribe" ) {
 				// unsubscribe the user from this thread:
 				$query = "UPDATE tblMail SET mailRead = '2' WHERE mailID='".$value."'";
-				$result = mysql_query($query) or die ("couldn't execute query0");
+				$result = mysqli_query($connection, $query) or die ("couldn't execute query0");
 			}
 		}
 		echo '<p>you have archived the selected mail item(s)</p>';
@@ -55,16 +55,16 @@ WHERE tblacct.accountName='".$_SESSION['username']."' AND tblMail.mailRead < '2'
 
 
 
-	$result = mysql_query($query) or die ("couldn't execute query2");
+	$result = mysqli_query($connection, $query) or die ("couldn't execute query2");
 	
-		$returned = mysql_num_rows($result);
+		$returned = mysqli_num_rows($result);
 	
 	if ($returned > 0) {
 	echo'<form name="Mailings" action="' . $thisurl . '" method="post">';
 	echo'<table cellspacing="0" cellpadding="0" class="StyledTable">';
 	echo'<tr><th>&nbsp;</th><th>To</th><th>From</th><th>Subject</th><th>Date Sent</th><th>move to archive</th></tr>';
 	$posti = 0;
-	while ($row = mysql_fetch_array($result)) {
+	while ($row = mysqli_fetch_array($result)) {
 		
 		extract($row);
 		if ($mailRead == '0') {

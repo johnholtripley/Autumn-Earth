@@ -6,12 +6,12 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
 
 
 $query = "SELECT * FROM tblcolours";
-$result = mysql_query($query) or die ();
+$result = mysqli_query($connection, $query) or die ();
 
 $outputJson = '{ "colourNames":[';
 
 
-while ($row = mysql_fetch_array($result)) {
+while ($row = mysqli_fetch_array($result)) {
 	extract($row);
 $outputJson .= '"'.$colourName.'",';
 }
@@ -22,5 +22,5 @@ $outputJson = rtrim($outputJson, ",");
 $outputJson .= ']}';
 
 echo $outputJson;
-mysql_free_result($result);
+mysqli_free_result($result);
 ?>

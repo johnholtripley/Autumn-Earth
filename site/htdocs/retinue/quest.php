@@ -21,10 +21,10 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/header.php");
 
 
 $query = "SELECT * from tblretinuequests where questCleanURL='".$_GET["questName"]."'";
-$result = mysql_query($query);
-if(mysql_num_rows($result)>0) {
+$result = mysqli_query($connection, $query);
+if(mysqli_num_rows($result)>0) {
 
-  	while ($row = mysql_fetch_array($result)) {
+  	while ($row = mysqli_fetch_array($result)) {
    
   		extract($row);
   		echo'<h2>'.$questName.'</h2>';
@@ -42,10 +42,10 @@ echo'</dl>';
 
 // see if any followers active on this:
 $query2 = "SELECT * from tblretinuefollowers inner join tblcharacters on tblcharacters.charId = tblretinuefollowers.characterIdFollowing WHERE activeQuestId = '".$questID."'";
-$result2 = mysql_query($query2);
-if(mysql_num_rows($result2)>0) {
+$result2 = mysqli_query($connection, $query2);
+if(mysqli_num_rows($result2)>0) {
 	echo '<p>Currently active on this quest:</p>';
-	  	while ($row = mysql_fetch_array($result2)) {
+	  	while ($row = mysqli_fetch_array($result2)) {
    
   		extract($row);
   echo '<h4><a href="/retinue/'.$charName.'/'.$followerCleanURL.'/">'.$followerName.'</a></h4>';
@@ -53,13 +53,13 @@ if(mysql_num_rows($result2)>0) {
 }
 
 
-mysql_free_result($result2);
+mysqli_free_result($result2);
 
 } else {
 	echo '<p>Sorry - couldn\'t find that quest</p>';
  header("HTTP/1.0 404 Not Found");
 }
-mysql_free_result($result);
+mysqli_free_result($result);
 ?>
 
 

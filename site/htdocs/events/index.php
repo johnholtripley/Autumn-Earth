@@ -17,14 +17,14 @@ echo'<h1>Events</h1>';
 
 $query = "select * from tblEvents where cleanURL='".$_GET["eventName"]."'";
 
-$result = mysql_query($query) or die ("couldn't execute query");
+$result = mysqli_query($connection, $query) or die ("couldn't execute query");
 
 
 
-if (mysql_num_rows($result) > 0) {
+if (mysqli_num_rows($result) > 0) {
 
 
-while ($row = mysql_fetch_array($result)) {
+while ($row = mysqli_fetch_array($result)) {
 
 	extract($row);
 echo '<div itemscope itemtype="http://schema.org/Event">';

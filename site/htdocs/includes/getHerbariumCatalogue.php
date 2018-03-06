@@ -33,8 +33,8 @@ if ($pos !== false) {
 }
 
 $query = "select * from tblplants ORDER BY timecreated DESC";
-$result = mysql_query($query) or die ("couldn't execute query");
-$numberOfEntries = mysql_num_rows($result);
+$result = mysqli_query($connection, $query) or die ("couldn't execute query");
+$numberOfEntries = mysqli_num_rows($result);
 
 
 $resultsperpage = 12;
@@ -62,7 +62,7 @@ if (($startpagenumber>0) && ($endpagenumber <= $totalpages)) {
 		if(($numberOfEntries>0) && (isset($isInitialPageRequest))) {
 	echo '<ul id="herbariumCatalogue" class="row medium-2up wide-4up widest-5up equalHeights paginatedBlock">';
 }
-		while ($row = mysql_fetch_array($result)) {
+		while ($row = mysqli_fetch_array($result)) {
 			if (($rowcount>= $startpoint) && ($rowcount<$endpoint)) {
 				extract($row);
 

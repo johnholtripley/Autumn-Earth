@@ -8,6 +8,6 @@ $mailId = substr($_GET["id"], 4);
 
 // mark this post item as read:
 $query = "UPDATE tblmail SET mailread='1' where MD5(mailId)='".$mailId."'";
-$result = mysql_query($query);
+$result = mysqli_query($connection, $query);
 
 ?>

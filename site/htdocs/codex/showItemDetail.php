@@ -41,10 +41,10 @@ if(isset($_GET["cleanURL"])) {
 $activeEvents = [];
 $eventsQuery = "SELECT eventid, title, cleanurl from tblevents";
 
-    $eventsResult = mysql_query( $eventsQuery ) or die ( "couldn't execute events query: ".$eventsQuery );
-$numberofrows = mysql_num_rows( $eventsResult );
+    $eventsResult = mysqli_query($connection,  $eventsQuery ) or die ( "couldn't execute events query: ".$eventsQuery );
+$numberofrows = mysqli_num_rows( $eventsResult );
   
- while ($row = mysql_fetch_array($eventsResult)) {
+ while ($row = mysqli_fetch_array($eventsResult)) {
   //extract($row);
   
 $activeEvents[($row['eventid'])] = [$row['title'],$row['cleanurl']];
@@ -56,7 +56,7 @@ $activeEvents[($row['eventid'])] = [$row['title'],$row['cleanurl']];
 
 }
     
-mysql_free_result($eventsResult);
+mysqli_free_result($eventsResult);
 
 
 
@@ -66,20 +66,20 @@ mysql_free_result($eventsResult);
 
 $coloursQuery = "SELECT * from tblcolours";
 $allColours = [];
-$colourResult = mysql_query($coloursQuery) or die ("recipes failed");
-while ($colourRow = mysql_fetch_array($colourResult)) {
+$colourResult = mysqli_query($connection, $coloursQuery) or die ("recipes failed");
+while ($colourRow = mysqli_fetch_array($colourResult)) {
   extract($colourRow);
   array_push($allColours, $colourName);
 }
 
 
-mysql_free_result($colourResult);
+mysqli_free_result($colourResult);
 
 $query = "select * from tblinventoryitems where cleanurl = '".$cleanURL."' and showinthecodex>0";
-$result = mysql_query($query) or die ("couldn't execute query");
+$result = mysqli_query($connection, $query) or die ("couldn't execute query");
 
-if(mysql_num_rows($result) > 0) {
-extract(mysql_fetch_array($result));
+if(mysqli_num_rows($result) > 0) {
+extract(mysqli_fetch_array($result));
 echo buildBreadCrumb('codex/items/'.$cleanURL,'The Codex/Item Index/'.$shortname);
 
 
@@ -125,11 +125,11 @@ if($activeDuringSeason>0) {
 
 $recipeQuery = "SELECT tblrecipes.*, tblprofessions.cleanurl as professionCleanURL, tblcolours.colourName, tblinventoryitems.itemid as productId, tblinventoryitems.shortname as recipeFallbackName, tblinventoryitems.description as recipeDescriptionFallback, tblinventoryitems.hasInherentColour as hasInherentColour FROM tblrecipes INNER JOIN tblprofessions on tblprofessions.professionid = tblrecipes.profession
 INNER JOIN tblinventoryitems on tblrecipes.creates = tblinventoryitems.itemid LEFT JOIN tblcolours on tblrecipes.defaultresultingcolour = tblcolours.colourid WHERE find_in_set('".$itemID."',tblrecipes.components) <> 0 OR find_in_set('".$itemGroup."',tblrecipes.components) <> 0";
-$recipeResult = mysql_query($recipeQuery) or die ("couldn't execute related query");
-if(mysql_num_rows($recipeResult) > 0) {
+$recipeResult = mysqli_query($connection, $recipeQuery) or die ("couldn't execute related query");
+if(mysqli_num_rows($recipeResult) > 0) {
   echo "<h4>Used in:</h4>";
   echo "<ul>";
-  while ($recipeRow = mysql_fetch_array($recipeResult)) {
+  while ($recipeRow = mysqli_fetch_array($recipeResult)) {
   extract($recipeRow);
 
 $thisColourPrefix = '';
@@ -156,12 +156,12 @@ echo "</ul>";
 // find related items:
 if($itemGroup) {
 $relatedQuery = "select * from tblinventoryitems where itemgroup = '".$itemGroup."' and showinthecodex>0 and itemid != '".$itemID."'";
-$relatedResult = mysql_query($relatedQuery) or die ("couldn't execute related query");
-if(mysql_num_rows($relatedResult) > 0) {
+$relatedResult = mysqli_query($connection, $relatedQuery) or die ("couldn't execute related query");
+if(mysqli_num_rows($relatedResult) > 0) {
 echo "<h4>Related items:</h4>";
 echo "<ul>";
 
-while ($relatedRow = mysql_fetch_array($relatedResult)) {
+while ($relatedRow = mysqli_fetch_array($relatedResult)) {
 	extract($relatedRow);
 	echo '<li><a href="/codex/items/'.$cleanURL.'">'.$shortname.'</a></li>';
 }

@@ -9,7 +9,7 @@ function cleanInput($input) {
     $output = strip_tags($input);
     // Clean up things like &amp;
     $output = html_entity_decode($output);
-    $output = mysql_escape_string($output);
+    $output = mysqli_escape_string($output);
     return $output;
 }	
 
@@ -58,13 +58,13 @@ if(isset($postedData['recipientID'])) {
         
 if($recipientCharacterID == null) {
     // look up to find the id:
-    $recipientCharacterID = mysql_result(mysql_query("SELECT charID from tblcharacters WHERE charName = '".$recipientCharacterName."'"),0);
+    $recipientCharacterID = mysqli_result(mysqli_query($connection, "SELECT charID from tblcharacters WHERE charName = '".$recipientCharacterName."'"),0);
 }
 
 if($recipientCharacterID) {
     $query = "INSERT INTO tblmail (senderID, senderName, characterID, title, mailContents, sentTime,mailRead,attachment,attachmentTaken)
     VALUES ('".$senderCharacterID."','".$postFromName."','".$recipientCharacterID."','".cleanInput($postSubject)."','".cleanInput($postMessage)."',NOW(),'0','".json_encode($attachment)."','0')";
-    $result = mysql_query($query);
+    $result = mysqli_query($connection, $query);
     $returnedResult = "false";
     if($result) {
         $returnedResult = "true";

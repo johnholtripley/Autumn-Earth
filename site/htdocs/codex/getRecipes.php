@@ -25,15 +25,15 @@ if(isset($_GET["profession"])) {
 } 
 
 $query = "select * from tblprofessions where cleanurl='".$thisProfession."'";
-$result = mysql_query($query) or die ("recipes failed");
-if(mysql_num_rows($result) == 0) {
+$result = mysqli_query($connection, $query) or die ("recipes failed");
+if(mysqli_num_rows($result) == 0) {
 echo "<p>Sorry, that profession wasn't found</p>";
 	 	header("HTTP/1.0 404 Not Found");
 
 } else {
 
 
-	extract(mysql_fetch_array($result));
+	extract(mysqli_fetch_array($result));
 
 
 // breadcrumb:
@@ -49,8 +49,8 @@ echo '<h2>'.$thisProfession.' recipes</h2>';
 
 $coloursQuery = "SELECT * from tblcolours";
 $allColours = [];
-$colourResult = mysql_query($coloursQuery) or die ("recipes failed");
-while ($colourRow = mysql_fetch_array($colourResult)) {
+$colourResult = mysqli_query($connection, $coloursQuery) or die ("recipes failed");
+while ($colourRow = mysqli_fetch_array($colourResult)) {
 	extract($colourRow);
 	array_push($allColours, $colourName);
 }
@@ -67,12 +67,12 @@ CASE WHEN tblrecipes.recipename IS NOT NULL THEN tblrecipes.recipename
 
 
 
-$result2 = mysql_query($query2) or die ("recipes failed:".$query2);
+$result2 = mysqli_query($connection, $query2) or die ("recipes failed:".$query2);
 
 
 echo '<div class="row medium-3up wide-5up equalHeights" id="recipeCards">';
 
-while ($row = mysql_fetch_array($result2)) {
+while ($row = mysqli_fetch_array($result2)) {
 	extract($row);
 echo '<div class="column" id="recipe'.$recipeID.'"><div>';
 $thisColour = '';
@@ -113,9 +113,9 @@ $componentNumbers .= $componentsSplit[$i].",";
 		// add group item
 
 $groupQuery = "select tblinventoryitems.itemgroup, tblinventoryitems.shortname as groupShortName, tblinventoryitems.cleanurl as groupcleanurl from tblinventoryitems where tblinventoryitems.itemgroup = '".$componentsSplit[$i]."'";
-$result4 = mysql_query($groupQuery) or die ("ingredients group failed");
+$result4 = mysqli_query($connection, $groupQuery) or die ("ingredients group failed");
 $thisGroupNameJoined = "";
-while ($componentsRow = mysql_fetch_array($result4)) {
+while ($componentsRow = mysqli_fetch_array($result4)) {
 	extract($componentsRow);
 	$thisGroupNameJoined .= '<a href="/codex/items/'.$groupcleanurl.'">'.$groupShortName.'</a>, ';
 }
@@ -138,9 +138,9 @@ if(($componentNumbers != "") || (count($groupItems)>0)) {
 echo '<p>Ingredients:</p><ol>';
 	if($componentNumbers != "") {
 $componentsQuery = "select tblinventoryitems.itemid, tblinventoryitems.shortname as innerShortName, tblinventoryitems.cleanurl as innerCleanURL from tblinventoryitems where tblinventoryitems.itemid in (".$componentNumbers.")";
-$result3 = mysql_query($componentsQuery) or die ("ingredients failed");
+$result3 = mysqli_query($connection, $componentsQuery) or die ("ingredients failed");
 
-while ($componentsRow = mysql_fetch_array($result3)) {
+while ($componentsRow = mysqli_fetch_array($result3)) {
 	extract($componentsRow);
 echo '<li>';
 

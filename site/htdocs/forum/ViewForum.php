@@ -17,12 +17,12 @@ $query = "select * from tblforums WHERE cleanurl = '".$forumID."'";
 
 
 
-$result = mysql_query($query) or die ("couldn't execute query");
+$result = mysqli_query($connection, $query) or die ("couldn't execute query");
 
-if (mysql_num_rows($result) > 0) {
+if (mysqli_num_rows($result) > 0) {
 
 
-$row = mysql_fetch_array($result);
+$row = mysqli_fetch_array($result);
 
 $forumID = $row["forumid"];
 
@@ -51,12 +51,12 @@ if (is_numeric($forumID)) {
 	//
 	// get forum title information:
 	$query = "SELECT * FROM tblforums WHERE forumid = " . $forumID;
-	$result = mysql_query($query) or die ("couldn't execute query");
+	$result = mysqli_query($connection, $query) or die ("couldn't execute query");
 	
-	$numberofrows = mysql_num_rows($result);
+	$numberofrows = mysqli_num_rows($result);
 	// check that something is returned
 	if ($numberofrows == "1") {
-		$row = mysql_fetch_array($result);
+		$row = mysqli_fetch_array($result);
 		extract($row);
 	
 	
@@ -91,10 +91,10 @@ if (is_numeric($forumID)) {
 FROM tblacct
 INNER JOIN tblthreads on tblacct.accountid = tblthreads.accountid
 WHERE tblthreads.forumid = " . $forumID . " AND tblthreads.status>0  ORDER BY sticky DESC, tblthreads.latestpostid DESC";
-	$result = mysql_query($query) or die ("couldn't execute query");
+	$result = mysqli_query($connection, $query) or die ("couldn't execute query");
 	
 		
-	$numberofrows = mysql_num_rows($result);
+	$numberofrows = mysqli_num_rows($result);
 	// check that something is returned
 	if ($numberofrows > 0) {
 	
@@ -123,7 +123,7 @@ WHERE tblthreads.forumid = " . $forumID . " AND tblthreads.status>0  ORDER BY st
 		
 		$rowcount = 0;
 		
-		while ($row = mysql_fetch_array($result)) {
+		while ($row = mysqli_fetch_array($result)) {
 		if (($rowcount>= $startpoint) && ($rowcount<$endpoint)) {
 		// show these results
 		extract($row);

@@ -74,8 +74,8 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
 $coloursQuery = "SELECT * from tblcolours";
 $allColours = [];
 $allItemGroups = [];
-$colourResult = mysql_query($coloursQuery) or die ("recipes failed");
-while ($colourRow = mysql_fetch_array($colourResult)) {
+$colourResult = mysqli_query($connection, $coloursQuery) or die ("recipes failed");
+while ($colourRow = mysqli_fetch_array($colourResult)) {
 	extract($colourRow);
 	array_push($allColours, $colourName);
 }
@@ -112,13 +112,13 @@ CASE WHEN tblrecipes.recipename IS NOT NULL THEN tblrecipes.recipename
 order by tblprofessions.professionid, finalRecipeName ASC";
 
 
-$result = mysql_query($query) or die ("recipes failed");
+$result = mysqli_query($connection, $query) or die ("recipes failed");
 
 
 $thisProfession = -1;
 
 
-while ($row = mysql_fetch_array($result)) {
+while ($row = mysqli_fetch_array($result)) {
 	extract($row);
 
     if($thisProfession != $profession) {
@@ -172,9 +172,9 @@ $thisRecipesFilters = "Miscellaneous";
 if(isset($createditemcategories)) {
 // get categories for this item:
 $catQuery = "SELECT * FROM tblitemcategories WHERE categoryid in (".$createditemcategories.")";
-$catResult = mysql_query($catQuery) or die ("categories failed");
+$catResult = mysqli_query($connection, $catQuery) or die ("categories failed");
  
-while ($catRow = mysql_fetch_array($catResult)) {
+while ($catRow = mysqli_fetch_array($catResult)) {
     extract($catRow);
     $thisRecipesFilters = $categoryName; 
 }
@@ -264,8 +264,8 @@ $groupQuery = rtrim($groupQuery, ",");
 $groupQuery .= ")";
 
 
-$groupResult = mysql_query($groupQuery) or die ("item groups failed");
-while ($groupRow = mysql_fetch_array($groupResult)) {
+$groupResult = mysqli_query($connection, $groupQuery) or die ("item groups failed");
+while ($groupRow = mysqli_fetch_array($groupResult)) {
     extract($groupRow);
     //echo $itemGroupCode." - ".$itemGroupDescription."<br />";
 

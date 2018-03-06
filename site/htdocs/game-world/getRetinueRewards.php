@@ -14,9 +14,9 @@ $chr = $_GET["chr"];
 $hasReward = false;
 $query = "SELECT * FROM tblretinuequests left join tblretinuequestsactive on tblretinuequestsactive.questIdActiveOrComplete = '".$questId."' where tblretinuequestsactive.characterId='".$chr."' and tblretinuequests.questID = '".$questId."'";
 
-      $result = mysql_query($query);
-if(mysql_num_rows($result)>0) {
-  while ($row = mysql_fetch_array($result)) {
+      $result = mysqli_query($connection, $query);
+if(mysqli_num_rows($result)>0) {
+  while ($row = mysqli_fetch_array($result)) {
     extract($row);
     if($questReward) {
     
@@ -38,9 +38,9 @@ if(mysql_num_rows($result)>0) {
 $followerIds = array();
 // get followers involved in this quest:
 $query2 = "SELECT * from tblretinuefollowers where activeQuestId = '".$questId."'";
-$result2 = mysql_query($query2);
-if(mysql_num_rows($result2)>0) {
-  while ($row2 = mysql_fetch_array($result2)) {
+$result2 = mysqli_query($connection, $query2);
+if(mysqli_num_rows($result2)>0) {
+  while ($row2 = mysqli_fetch_array($result2)) {
     extract($row2);
     array_push($followerIds, $followerID);
     }
@@ -58,7 +58,7 @@ echo ', "endLocationX": "'.$endLocationX.'"';
 echo ', "endLocationY": "'.$endLocationY.'"';
 echo ', "followerIds": "'.implode(",",$followerIds).'"}';
 
-mysql_free_result($result);
-mysql_free_result($result2);
+mysqli_free_result($result);
+mysqli_free_result($result2);
 
 ?>

@@ -15,8 +15,8 @@ $primarycharid = $_POST["primarycharid"];
 // get the character's name:
 $query = "SELECT charName from tblcharacters where charID = '".$primarycharid."'";
 
-$result5 = mysql_query($query) or die ("couldn't execute query");
-$row5 = mysql_fetch_array($result5);
+$result5 = mysqli_query($connection, $query) or die ("couldn't execute query");
+$row5 = mysqli_fetch_array($result5);
 extract($row5);
 
 // get this character's inventory
@@ -205,7 +205,7 @@ $filename = "../data/chr".$primarycharid."/base.txt";
 			// remove from tblMail
 			$thismail = $_POST["mailid"];
 			$query = "update tblmail set AttachmentType = '0', AttachmentQuantity = '0' where mailID='".$thismail."'";
-			$result = mysql_query($query) or die ("couldn't execute query1");
+			$result = mysqli_query($connection, $query) or die ("couldn't execute query1");
 			// add to inventory:
 			
 			
@@ -263,13 +263,13 @@ WHERE (tblacct.accountName='".$_SESSION['username']."' OR  tblMail.senderName='"
 
 
 
-$result = mysql_query($query) or die ("couldn't execute query2");
+$result = mysqli_query($connection, $query) or die ("couldn't execute query2");
 	
-		$returned = mysql_num_rows($result);
+		$returned = mysqli_num_rows($result);
 	
 	if ($returned > 0) {
 	
-	 $row = mysql_fetch_array($result);
+	 $row = mysqli_fetch_array($result);
 		
 		extract($row);
 	
@@ -338,16 +338,16 @@ $result = mysql_query($query) or die ("couldn't execute query2");
 
 		// has been read now, so set status to '1'
 		$query = "UPDATE tblMail SET mailRead = '1' WHERE mailID='".$mailarticle."'";
-		$result2 = mysql_query($query) or die ("couldn't execute query3");
+		$result2 = mysqli_query($connection, $query) or die ("couldn't execute query3");
 		// check if that was the last piece of un-read mail and update session value if needed
 		
 		$query = "SELECT tblMail.*, tblacct.accountID, tblacct.accountName as useracctid
 	FROM tblMail
 	INNER JOIN tblacct on tblMail.accountID = tblacct.accountID
 	WHERE tblacct.accountName='".$processedlogin."' and tblmail.mailread = '0'";
-		$result3 = mysql_query($query) or die ("couldn't execute query2");
+		$result3 = mysqli_query($connection, $query) or die ("couldn't execute query2");
 		
-			$returned3 = mysql_num_rows($result3);
+			$returned3 = mysqli_num_rows($result3);
 		
 		if ($returned3 == 0) {
 		 // user has no more mail un-read - alter session:

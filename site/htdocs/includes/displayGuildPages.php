@@ -1,14 +1,14 @@
 <?php
 
 $guildPagesQuery = "select * from tblFreeFormPages where guildID='".$guildID."'";
-$guildPagesResult = mysql_query($guildPagesQuery) or die ("couldn't execute query");
+$guildPagesResult = mysqli_query($connection, $guildPagesQuery) or die ("couldn't execute query");
 	
 		
-	$guildNumberofrows = mysql_num_rows($guildPagesResult);
+	$guildNumberofrows = mysqli_num_rows($guildPagesResult);
 	// check that something is returned
 	if ($guildNumberofrows > 0) {
 	echo '<ul>'."\n";
-	while ($guildRow = mysql_fetch_array($guildPagesResult)) {
+	while ($guildRow = mysqli_fetch_array($guildPagesResult)) {
 		extract($guildRow);
 		echo '<li>';
 		echo $freeformPageTitle;

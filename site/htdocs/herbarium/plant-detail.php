@@ -18,10 +18,10 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/header.php");
 
 
 $query = "select * from tblplants WHERE plantUrl = '".$_GET["plant"]."'";
-$result = mysql_query($query) or die ("couldn't execute query");
+$result = mysqli_query($connection, $query) or die ("couldn't execute query");
 
-if (mysql_num_rows($result) > 0) {
-$row = mysql_fetch_array($result);
+if (mysqli_num_rows($result) > 0) {
+$row = mysqli_fetch_array($result);
 extract($row);
 ?>
 

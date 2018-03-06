@@ -22,9 +22,9 @@ if (@$_SESSION['username']) {
 
 $query = "SELECT * from tblAcct WHERE accountname = '" . $_SESSION['username'] . "'";
 
-$result = mysql_query($query) or die ("couldn't execute query");
+$result = mysqli_query($connection, $query) or die ("couldn't execute query");
 
-$row = mysql_fetch_array($result);
+$row = mysqli_fetch_array($result);
 extract($row);
 $useraccount = $accountID;
 
@@ -61,9 +61,9 @@ INNER JOIN tblCharacters on tblCharacters.charID = tblacct.currentcharid
 INNER JOIN tbllocations on tblCharacters.location = tbllocations.locID
 WHERE accountname = '" . $_SESSION['username'] . "'";
 
-$result = mysql_query($query) or die ("couldn't execute query3");
-if(mysql_num_rows($result) >0) {
-$row = mysql_fetch_array($result);
+$result = mysqli_query($connection, $query) or die ("couldn't execute query3");
+if(mysqli_num_rows($result) >0) {
+$row = mysqli_fetch_array($result);
 extract($row);
 echo $currentLocation;
 } 
@@ -73,7 +73,7 @@ echo $currentLocation;
 
 
 $locationQuery = "SELECT * from tbllocations where locID != '".$currentLocationID."' order by locName ASC";
-$locresult = mysql_query($locationQuery) or die ("couldn't execute query3");
+$locresult = mysqli_query($connection, $locationQuery) or die ("couldn't execute query3");
 ?>
 
 <br>
@@ -85,8 +85,8 @@ $locresult = mysql_query($locationQuery) or die ("couldn't execute query3");
 
 $selectHtml = "";
 
-if(mysql_num_rows($locresult) >0) {
-while ($row = mysql_fetch_array($locresult)) {
+if(mysqli_num_rows($locresult) >0) {
+while ($row = mysqli_fetch_array($locresult)) {
 extract($row);
 $selectHtml .= '<option value="'.$locID.'">'.$locName.'</option>';
 } 

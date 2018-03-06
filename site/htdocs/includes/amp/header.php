@@ -11,10 +11,10 @@ if(isset($_GET["articleName"])) {
 $cleanURL = $_GET["articleName"];
 $thisBuiltURL = $thisBuiltURL."chronicle/".$cleanURL."/";
 $query ="select * from tblnews where cleanurl='".$cleanURL."'";
-$result = mysql_query($query) or die ("couldn't execute query1");
-    $numberofrows = mysql_num_rows($result);
+$result = mysqli_query($connection, $query) or die ("couldn't execute query1");
+    $numberofrows = mysqli_num_rows($result);
     if ($numberofrows > 0) {
-      $row = mysql_fetch_array($result);
+      $row = mysqli_fetch_array($result);
       extract ($row);
       $pagetitle = stripCode($newsTitle).' - Autumn Earth news';
     }

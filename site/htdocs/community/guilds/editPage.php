@@ -54,7 +54,7 @@ if ($_POST["publicPage"] == "1") {
 
     $query = "update tblFreeformPages SET pageContent = '".$postcontents."', textColour = '".$thisTextColour."', bgColour='".$thisBGColour."', freeformPageTitle='".$thisPageTitle."', public='".$processedPublic."',fontfamily='".$thisSelectedFont."', creationTime=NOW() WHERE pageID='".$thispageid."'";
 
-    $result = mysql_query($query) or die ("couldn't execute query");
+    $result = mysqli_query($connection, $query) or die ("couldn't execute query");
 $jsinclude = "htmlEditor";
 $onloadfunc = "editorSetup";
     include($_SERVER['DOCUMENT_ROOT']."/includes/header.php");
@@ -71,7 +71,7 @@ $onloadfunc = "editorSetup";
 
     $query = "update tblFreeformPages SET pageContent = '".$postcontents."', freeformPageTitle='".$thisPageTitle."', public='".$processedPublic."',fontfamily='".$thisSelectedFont."' WHERE pageID='".$thispageid."'";
 
-    $result = mysql_query($query) or die ("couldn't execute query");
+    $result = mysqli_query($connection, $query) or die ("couldn't execute query");
     $jsinclude = "htmlEditor";
 $onloadfunc = "editorSetup";
     include($_SERVER['DOCUMENT_ROOT']."/includes/header.php");
@@ -96,12 +96,12 @@ $hasAccess = false;
 			from tblFreeformPages
 			inner join tblGuilds on tblFreeformPages.guildID = tblGuilds.guildID
 			WHERE tblFreeformPages.status='1' AND tblFreeformPages.pageID='".$pageID."'";
-			$result = mysql_query($query) or die ("couldn't execute query");
+			$result = mysqli_query($connection, $query) or die ("couldn't execute query");
 			
 			
 			
-			if (mysql_num_rows($result) > 0) {
-			$row = mysql_fetch_array($result);
+			if (mysqli_num_rows($result) > 0) {
+			$row = mysqli_fetch_array($result);
 				extract($row);
 				
 				echo '<h1>'.$guildName.' guild pages</h1>'."\n";
@@ -114,8 +114,8 @@ $hasAccess = false;
 			from tblAcct
 			inner join tblGuildMembers on tblGuildMembers.charID = tblAcct.currentCharID
 			where tblAcct.accountName = '".$loggedInName."' and tblGuildMembers.guildID = '".$guildID."'";
-				$result2 = mysql_query($query2) or die ("couldn't execute query");
-			if (mysql_num_rows($result2) > 0) {
+				$result2 = mysqli_query($connection, $query2) or die ("couldn't execute query");
+			if (mysqli_num_rows($result2) > 0) {
 				$hasAccess = true; 
 			}
 		if ($hasAccess) {

@@ -25,10 +25,10 @@ if (@$_SESSION['username']) {
 	
 	
 	$query = "SELECT * from tblacct WHERE accountName='".$_SESSION['username']."'";
-	$result = mysql_query($query) or die ("couldn't execute query");
-			$returned = mysql_num_rows($result);
+	$result = mysqli_query($connection, $query) or die ("couldn't execute query");
+			$returned = mysqli_num_rows($result);
 			if ($returned > 0) {
-			$row = mysql_fetch_array($result);
+			$row = mysqli_fetch_array($result);
 			extract($row);
 			$senderid = $accountID;
 			}
@@ -39,16 +39,16 @@ $query = "SELECT tblMail.*, tblacct.accountID, tblacct.accountName as sentuser
 FROM tblMail
 INNER JOIN tblacct on tblMail.accountID = tblacct.accountID
 WHERE tblMail.senderID='".$senderid."' ORDER BY tblMail.sentTime DESC ";
-	$result = mysql_query($query) or die ("couldn't execute query2");
+	$result = mysqli_query($connection, $query) or die ("couldn't execute query2");
 	
-		$returned = mysql_num_rows($result);
+		$returned = mysqli_num_rows($result);
 	
 	if ($returned > 0) {
 	
 	echo'<table cellspacing="0" cellpadding="0" class="StyledTable">';
 	echo'<tr><th>To</th><th>Subject</th><th>Date Sent</th></tr>';
 
-	while ($row = mysql_fetch_array($result)) {
+	while ($row = mysqli_fetch_array($result)) {
 		extract($row);
 
 		echo '<tr>';

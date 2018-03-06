@@ -7,6 +7,7 @@ $database="autumnearth";
 $dbpk ="AsOiD";
 $resultsperpage = 10;
 $additionalAssets = "";
+$dbname = "autumnearth";
 
 
 $liveHost="185.116.212.163";

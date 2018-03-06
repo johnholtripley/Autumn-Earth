@@ -7,6 +7,6 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
 $mailId = $_GET["id"];
 
 $query = "UPDATE tblmail SET attachmentTaken='1' where MD5(mailId)='".$mailId."'";
-$result = mysql_query($query);
+$result = mysqli_query($connection, $query);
 
 ?>

@@ -20,11 +20,11 @@ if (is_numeric($whichpoll)) {
 $query = "select SUM(voteCount) AS totalcount from tblmainpollchoices where pollID='".$whichpoll."'";
 
 
-$result = mysql_query($query) or die ("couldn't execute query");
-$numberofrows = mysql_num_rows($result);
+$result = mysqli_query($connection, $query) or die ("couldn't execute query");
+$numberofrows = mysqli_num_rows($result);
 // check that something is returned
 if ($numberofrows > 0) {
-$row = mysql_fetch_array($result);
+$row = mysqli_fetch_array($result);
 $totalnumbervotes = $row['totalcount'];
 
 if ($totalnumbervotes > 0) {
@@ -33,13 +33,13 @@ $query2 = "select tblmainpoll.*, tblMainpollchoices.response, tblMainpollchoices
 from tblmainpoll
 inner join tblMainpollchoices on tblMainpollchoices.pollid = tblmainpoll.pollid
 where tblmainpoll.isCurrent = true";
-$result2 = mysql_query($query2) or die ("couldn't execute query");
+$result2 = mysqli_query($connection, $query2) or die ("couldn't execute query");
 
-$numberofrows2 = mysql_num_rows($result2);
+$numberofrows2 = mysqli_num_rows($result2);
 // check that something is returned
 if ($numberofrows2 > 0) {
 $firsttime = true;
-while ($row2 = mysql_fetch_array($result2)) {
+while ($row2 = mysqli_fetch_array($result2)) {
 				extract($row2);
 				if ($firsttime) {
 				

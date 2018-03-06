@@ -42,9 +42,9 @@ where auctionID = '".$auctionitemID."'
 group by tblauctionbids.bidderID 
 order by tblauctionbids.bidAmount DESC limit 2
 			";
-			$result3 = mysql_query($query3) or die ("couldn't execute query3");
+			$result3 = mysqli_query($connection, $query3) or die ("couldn't execute query3");
 			
-			$numberofrows3 = mysql_num_rows($result3);
+			$numberofrows3 = mysqli_num_rows($result3);
 			
 			switch($numberofrows3) {
 				case 0:
@@ -53,18 +53,18 @@ order by tblauctionbids.bidAmount DESC limit 2
 				break;
 				case 1:
 				// get the one bidder's name:
-				$row3 = mysql_fetch_array($result3);
+				$row3 = mysqli_fetch_array($result3);
 				extract($row3);
 				$highbidder = $charName;
 				$currentprice = $startPrice;
 				break;
 				case 2:
 				// determine current bid:
-				$row3 = mysql_fetch_array($result3);
+				$row3 = mysqli_fetch_array($result3);
 				extract($row3);
 				$highbid = $bidAmount;
 				$highbidder = $charName;
-				$row3b = mysql_fetch_array($result3);
+				$row3b = mysqli_fetch_array($result3);
 				extract($row3b);
 				$secondhighbid = $bidAmount;
 			
@@ -83,10 +83,10 @@ order by tblauctionbids.bidAmount DESC limit 2
  
  		// check how much money is available:
 		$query = "select money from tblcharacters where charid='".$thisbidderid."'";
-		$result = mysql_query($query) or die ("couldn't execute query");
-		$returned = mysql_num_rows($result);
+		$result = mysqli_query($connection, $query) or die ("couldn't execute query");
+		$returned = mysqli_num_rows($result);
 		if ($returned > 0) {
-			$row = mysql_fetch_array($result);
+			$row = mysqli_fetch_array($result);
 			$biddermoney = $row["money"];
 		}
  
@@ -114,11 +114,11 @@ if (is_numeric($goldamount) && is_numeric($silveramount)  && is_numeric($amounta
 	// enter bid
 	
 	$query = "insert into tblAuctionBids (auctionID, bidderID, bidAmount) values ('".$auctionitemID."','".$thisbidderid."','".$totalbidamount."')";
-	$result = mysql_query($query) or die ("couldn't execute query");
+	$result = mysqli_query($connection, $query) or die ("couldn't execute query");
 	
 	// remove money from character's inventory
 	$query = "update tblcharacters set money='".(($biddermoney+$amountalreadybid)-$totalbidamount)."' where charid='".$thisbidderid."'";
-	$result = mysql_query($query) or die ("couldn't execute query");
+	$result = mysqli_query($connection, $query) or die ("couldn't execute query");
 header("Location: BidSuccessful.php");
 
 	}
@@ -165,15 +165,15 @@ $query = "select tblacct.accountID, tblacct.accountName, tblacct.currentCharID, 
 from tblacct
 inner join tblcharacters on  tblacct.currentCharID = tblcharacters.charID
 where tblacct.accountName='".$_SESSION['username']."'";
-$result = mysql_query($query) or die ("couldn't execute query");
+$result = mysqli_query($connection, $query) or die ("couldn't execute query");
 	
 
 	
-		$returned = mysql_num_rows($result);
+		$returned = mysqli_num_rows($result);
 	
 	if ($returned > 0) {
 	
-	$row = mysql_fetch_array($result);
+	$row = mysqli_fetch_array($result);
 	
 		extract($row); 
 	
@@ -186,10 +186,10 @@ $result = mysql_query($query) or die ("couldn't execute query");
 			
 		
 			
-			$result2 = mysql_query($query2) or die ("couldn't execute query");
+			$result2 = mysqli_query($connection, $query2) or die ("couldn't execute query");
 			
 			$notseller = 0;
-			while ($row = mysql_fetch_array($result2)) {
+			while ($row = mysqli_fetch_array($result2)) {
 			extract($row);
 			
 			if ($charID == $sellerid) {
@@ -217,9 +217,9 @@ group by tblauctionbids.bidderID
 order by tblauctionbids.bidAmount DESC limit 2
 			";
 			
-			$result3 = mysql_query($query3) or die ("couldn't execute query3");
+			$result3 = mysqli_query($connection, $query3) or die ("couldn't execute query3");
 			
-			$numberofrows3 = mysql_num_rows($result3);
+			$numberofrows3 = mysqli_num_rows($result3);
 			
 			switch($numberofrows3) {
 				case 0:
@@ -228,18 +228,18 @@ order by tblauctionbids.bidAmount DESC limit 2
 				break;
 				case 1:
 				// get the one bidder's name:
-				$row3 = mysql_fetch_array($result3);
+				$row3 = mysqli_fetch_array($result3);
 				extract($row3);
 				$highbidder = $charName;
 				$currentprice = $startPrice;
 				break;
 				case 2:
 				// determine current bid:
-				$row3 = mysql_fetch_array($result3);
+				$row3 = mysqli_fetch_array($result3);
 				extract($row3);
 				$highbid = $bidAmount;
 				$highbidder = $charName;
-				$row3b = mysql_fetch_array($result3);
+				$row3b = mysqli_fetch_array($result3);
 				extract($row3b);
 				$secondhighbid = $bidAmount;
 			
@@ -257,12 +257,12 @@ order by tblauctionbids.bidAmount DESC limit 2
 	where bidderID='".$thisbidderid."' and auctionid='".$auctionitemID."'
 	order by bidAmount DESC";
 	
-	$result6 = mysql_query($query6) or die ("couldn't execute query6");
-	$numberofrows6 = mysql_num_rows($result6);
+	$result6 = mysqli_query($connection, $query6) or die ("couldn't execute query6");
+	$numberofrows6 = mysqli_num_rows($result6);
 	$amountAlreadyBid  = 0;
 	if ($numberofrows6 > 0) {
 	// this character has already bid on this item:
-		$row6 = mysql_fetch_array($result6);
+		$row6 = mysqli_fetch_array($result6);
 		$amountAlreadyBid = $row6["bidAmount"];
 		echo '<p>'.$thisCharName.' has already bid '.formatcurrency($amountAlreadyBid).' on this item, and so can bid up to '.formatcurrency(($amountAlreadyBid+$charsmoney)).'</p>'."\n";
 	}

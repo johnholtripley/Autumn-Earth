@@ -5,10 +5,10 @@ include_once($_SERVER['DOCUMENT_ROOT']."/includes/functions.php");
 
 
 $query = "select * from tblplants WHERE planturl = '".$_GET["plant"]."'";
-$result = mysql_query($query) or die ("couldn't execute query");
+$result = mysqli_query($connection, $query) or die ("couldn't execute query");
 
-if (mysql_num_rows($result) > 0) {
-$row = mysql_fetch_array($result);
+if (mysqli_num_rows($result) > 0) {
+$row = mysqli_fetch_array($result);
 extract($row);
 ?>
 
@@ -46,9 +46,9 @@ $latinNameSplit = explode(" ", $latinName);
 $genus = $latinNameSplit[0];
 $query = "SELECT planturl AS relatedplanturl, commonnamesjoined AS relatedcommonnamesjoined FROM tblplants WHERE latinname REGEXP '^(".$genus.")' AND isaquatic='".$isAquatic."' AND isnight='".$isNight."' AND plantid!='".$plantID."'";
 
-$result = mysql_query($query) or die ("couldn't execute query");
-if (mysql_num_rows($result) > 0) {
-$row = mysql_fetch_array($result);
+$result = mysqli_query($connection, $query) or die ("couldn't execute query");
+if (mysqli_num_rows($result) > 0) {
+$row = mysqli_fetch_array($result);
 extract($row);
 $relatedCommonNameSplit = explode("/", $relatedCommonNamesJoined);
 echo '<p>Related to <a href="/herbarium/'.$relatedPlantUrl.'">'.$relatedCommonNameSplit[0].'</a>.</p>';

@@ -14,11 +14,11 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/header.php");
 // get all card data:
 
 $query = "select * from tblcards";
-$result = mysql_query($query) or die ("couldn't execute query");
-if (mysql_num_rows($result) > 0) {
+$result = mysqli_query($connection, $query) or die ("couldn't execute query");
+if (mysqli_num_rows($result) > 0) {
 
 $cardDataNeeded = array(array(null,null,null));
-while ($row = mysql_fetch_array($result)) {
+while ($row = mysqli_fetch_array($result)) {
 
 extract($row);
 
@@ -42,13 +42,13 @@ $query = "select tblcharacters.currentCards as currentCards, tblcharacters.charI
 from tblcharacters
 inner join tblacct on tblacct.currentCharID = tblcharacters.charID
 where tblacct.accountName='".$_SESSION['username']."'";
-$result = mysql_query($query) or die ("couldn't execute query");
+$result = mysqli_query($connection, $query) or die ("couldn't execute query");
 
-		$returned = mysql_num_rows($result);
+		$returned = mysqli_num_rows($result);
 	
 	if ($returned > 0) {
 	
-	$row = mysql_fetch_array($result);
+	$row = mysqli_fetch_array($result);
 	
 		extract($row); 
 	

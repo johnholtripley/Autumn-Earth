@@ -28,9 +28,9 @@ if (@$_SESSION['username']) {
 FROM tblMail
 INNER JOIN tblacct on tblMail.accountID = tblacct.accountID
 WHERE tblacct.accountName='".$_SESSION['username']."' and tblmail.mailread = '0'";
-	$result2 = mysql_query($query) or die ("couldn't execute query2");
+	$result2 = mysqli_query($connection, $query) or die ("couldn't execute query2");
 	
-		$returned2 = mysql_num_rows($result2);
+		$returned2 = mysqli_num_rows($result2);
 	
 	if ($returned2 > 0) {
 		// user has new mail
@@ -83,9 +83,9 @@ WHERE tblacct.accountName='".$_SESSION['username']."' and tblmail.mailread = '0'
 		
 		
 		
-	$result = mysql_query($query) or die ("couldn't execute query");
+	$result = mysqli_query($connection, $query) or die ("couldn't execute query");
 	
-	$returned = mysql_num_rows($result);
+	$returned = mysqli_num_rows($result);
 	
 
 
@@ -94,7 +94,7 @@ WHERE tblacct.accountName='".$_SESSION['username']."' and tblmail.mailread = '0'
 
 
 
-		$row = mysql_fetch_array($result);
+		$row = mysqli_fetch_array($result);
 		extract($row);
 		
 	
@@ -125,9 +125,9 @@ if(!isset($accountType)) {
 FROM tblMail
 INNER JOIN tblacct on tblMail.accountID = tblacct.accountID
 WHERE tblacct.accountName='".$processedlogin."' and tblmail.mailread = '0'";
-	$result = mysql_query($query) or die ("couldn't execute query2");
+	$result = mysqli_query($connection, $query) or die ("couldn't execute query2");
 	
-		$returned = mysql_num_rows($result);
+		$returned = mysqli_num_rows($result);
 	
 	if ($returned > 0) {
 		// user has new mail

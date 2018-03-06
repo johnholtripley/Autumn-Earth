@@ -25,8 +25,8 @@ if ($pos !== false) {
 }
 
 $query = "select * from tblnews WHERE status='1' order by timeadded DESC";
-$result = mysql_query($query) or die ("couldn't execute query");
-$numberOfEntries = mysql_num_rows($result);
+$result = mysqli_query($connection, $query) or die ("couldn't execute query");
+$numberOfEntries = mysqli_num_rows($result);
 $resultsperpage = 5;
 $totalpages = ceil($numberOfEntries/$resultsperpage);
 if($endpagenumber > $totalpages) {
@@ -47,7 +47,7 @@ if (($startpagenumber>0) && ($endpagenumber <= $totalpages)) {
 		$rowcount = 0;
 		$animationOffset = 0;
 		$htmlOutput = "";
-		while ($row = mysql_fetch_array($result)) {
+		while ($row = mysqli_fetch_array($result)) {
 			if (($rowcount>= $startpoint) && ($rowcount<$endpoint)) {
 				extract($row);
 				$timeAdded = strtotime($timeAdded);

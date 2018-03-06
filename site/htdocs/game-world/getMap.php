@@ -50,15 +50,15 @@ $activeEvents = [];
 $activeEventsID = [];
 $eventsQuery = "SELECT cleanURL, eventID from tblevents WHERE ((repeatsAnnually and ((dayofyear(now()) between (dayofyear(eventstart)) and (dayofyear(eventstart)+eventdurationdays-1)) or (dayofyear(now()) between (dayofyear(eventstart) - 365) and (dayofyear(eventstart)+eventdurationdays-366)))) or ((repeatsAnnually = 0) and (date(now()) between (eventstart) and (eventstart+eventdurationdays))))";
 
-$eventsResult = mysql_query( $eventsQuery ) or die ( "couldn't execute events query: ".$eventsQuery );
-$numberofrows = mysql_num_rows( $eventsResult );
+$eventsResult = mysqli_query($connection,  $eventsQuery ) or die ( "couldn't execute events query: ".$eventsQuery );
+$numberofrows = mysqli_num_rows( $eventsResult );
 if ( $numberofrows>0 ) {
-    while ( $row = mysql_fetch_array( $eventsResult ) ) {
+    while ( $row = mysqli_fetch_array( $eventsResult ) ) {
     array_push($activeEvents, $row['cleanURL']);
     array_push($activeEventsID, $row['eventID']);
     }
 }
-mysql_free_result($eventsResult);
+mysqli_free_result($eventsResult);
 
 
 
@@ -171,7 +171,7 @@ return $variable;
 }
 
 function generatePositionsOfHiddenResourceNodes() {
-    global $mapData, $activeEvents, $activeEventsID, $clearTiles, $mapTilesY, $mapTilesX;
+    global $mapData, $activeEvents, $activeEventsID, $clearTiles, $mapTilesY, $mapTilesX, $connection;
 
  
 
@@ -254,16 +254,21 @@ foreach ($whichCategories as &$thisCategory) {
 
 if(count($whichCategories) > 0) {
 
+$activeEventsQuery = '';
+if(count($activeEventsID)>0) {
+$activeEventsQuery = 'activeduringseason in (".implode(",",$activeEventsID).") or ';
+}
+
 
 // query the database to find all node items of the relevant categories:
-$nodeQuery = "SELECT * from tblinventoryitems where (itemcategories in (".implode(",",$whichCategories).") ) and (activeduringseason in (".implode(",",$activeEventsID).") or activeduringseason IS NULL)";
+$nodeQuery = "SELECT * from tblinventoryitems where (itemcategories in (".implode(",",$whichCategories).") ) and (".$activeEventsQuery."activeduringseason IS NULL)";
 
 
 
-$nodeResult = mysql_query( $nodeQuery ) or die ( "couldn't execute events query: ".$nodeQuery );
-$numberofrows = mysql_num_rows( $nodeResult );
+$nodeResult = mysqli_query($connection,  $nodeQuery ) or die ( "couldn't execute node query: ".$nodeQuery );
+$numberofrows = mysqli_num_rows( $nodeResult );
 if ( $numberofrows>0 ) {
-    while ( $row = mysql_fetch_array( $nodeResult ) ) {
+    while ( $row = mysqli_fetch_array( $nodeResult ) ) {
         extract($row);
         // check action=='node' or not (if not, goes in contains)
         if($action == "node") {
@@ -277,7 +282,7 @@ array_push($possibleDyeableItems[$itemCategories],$itemID);
  
     }
 }
-mysql_free_result($nodeResult);
+mysqli_free_result($nodeResult);
 
 $maxAttemptsPerCategory = $mapTilesX * $mapTilesY / 4;
 
@@ -381,10 +386,10 @@ if(!$isPlayerHousing) {
 // see if there's any player housing on this map:
 $housingQuery = "SELECT * from tblplayerhousing where mapid = ".$map;
 
-$housingResult = mysql_query( $housingQuery ) or die ( "couldn't execute events query: ".$housingQuery );
-$numberOfHouses = mysql_num_rows( $housingResult );
+$housingResult = mysqli_query($connection,  $housingQuery ) or die ( "couldn't execute events query: ".$housingQuery );
+$numberOfHouses = mysqli_num_rows( $housingResult );
 if ( $numberOfHouses>0 ) {
-    while ( $row = mysql_fetch_array( $housingResult ) ) {
+    while ( $row = mysqli_fetch_array( $housingResult ) ) {
 
 $graphicsBeingUsed = array();
 
@@ -502,7 +507,7 @@ unset($housingData['map']['doors'][$key]);
 
     }
 }
-mysql_free_result($housingResult);
+mysqli_free_result($housingResult);
 
 
 
@@ -570,18 +575,18 @@ if ($hasProceduralContent !== false) {
             include_once($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
             // get random items that aren't locked to events:
             $query = "select itemid from tblinventoryitems where activeduringseason is null and showinthecodex = 1 order by rand() limit 10";
-$result = mysql_query( $query ) or die ( "couldn't execute events query: ".$query );
-        $numberofrows = mysql_num_rows( $result );
+$result = mysqli_query($connection,  $query ) or die ( "couldn't execute events query: ".$query );
+        $numberofrows = mysqli_num_rows( $result );
         $itemIds = [];
     if ( $numberofrows>0 ) {
-        while ( $row = mysql_fetch_array( $result ) ) {
+        while ( $row = mysqli_fetch_array( $result ) ) {
         $itemIds[$row['itemid']] = array(array());
            //array_push($itemIds, $row['itemid']);
 
         }
       
     }
-mysql_free_result($result);
+mysqli_free_result($result);
 $mapData['map']['shops'][$i]['uniqueItems'] = $itemIds;
         }
     }

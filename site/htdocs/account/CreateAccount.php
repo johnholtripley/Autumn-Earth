@@ -86,9 +86,9 @@ if ($_POST["createbutton"] == 'Create Account') {
 	// query to establish if account name is unique:
 
 	$query = "SELECT * FROM tblAcct WHERE accountName='" . $processedaccname . "'";
-	$result = mysql_query($query) or die ("couldn't execute query");
+	$result = mysqli_query($connection, $query) or die ("couldn't execute query");
 	
-	$returned = mysql_num_rows($result);
+	$returned = mysqli_num_rows($result);
 	
 	if ($returned > 0) {
 		// name already exists
@@ -103,11 +103,11 @@ if ($_POST["createbutton"] == 'Create Account') {
 		$randomuniqueid = md5(uniqid(mt_rand()));
 		// check to make sure this id hasn't already been used
 		$query2 = "select accountID from tblacct where uniqueID = '".$randomuniqueid."'";
-		$result2 = mysql_query($query2) or die ("Error - please try again later");
-		while (mysql_affected_rows()) {
+		$result2 = mysqli_query($connection, $query2) or die ("Error - please try again later");
+		while (mysqli_affected_rows()) {
 			$randomuniqueid = md5(uniqid(mt_rand()));
 			$query2 = "select accountID from tblacct where uniqueID = '".$randomuniqueid."'";
-			$result2 = mysql_query($query2) or die ("Error - please try again later");
+			$result2 = mysqli_query($connection, $query2) or die ("Error - please try again later");
 		}
 		
 		$usersIP = $_SERVER["REMOTE_ADDR"];
@@ -119,7 +119,7 @@ if ($_POST["createbutton"] == 'Create Account') {
 		
 		
 		
-		$result = mysql_query($query) or die ("couldn't execute query");
+		$result = mysqli_query($connection, $query) or die ("couldn't execute query");
 		
 		
 		// set session value:

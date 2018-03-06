@@ -20,12 +20,12 @@ $contractId = $_GET["contractId"];
 if(is_numeric($contractId)) {
 
 $query = "select * from tblcontracts where contractId = '".$contractId."'";
-$result = mysql_query($query) or die ("couldn't execute query");
+$result = mysqli_query($connection, $query) or die ("couldn't execute query");
 	
-	$numberofrows = mysql_num_rows($result);
+	$numberofrows = mysqli_num_rows($result);
 	// check that something is returned
-	if (mysql_num_rows($result) > 0) {
-		$row = mysql_fetch_array($result);
+	if (mysqli_num_rows($result) > 0) {
+		$row = mysqli_fetch_array($result);
 		extract($row);
 		$foundContract = true;
 }

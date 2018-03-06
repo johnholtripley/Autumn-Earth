@@ -20,15 +20,15 @@ $postcontents = str_ireplace("target=_blank","target=\"_blank\" rel=\""noopener\
 
 $query = "update tblposts SET postContent = '".$postcontents."',edited=NOW()
 WHERE postid='".$thispostid."'";
-$result = mysql_query($query) or die ("couldn't execute query");
+$result = mysqli_query($connection, $query) or die ("couldn't execute query");
 
 
 
 // check that the page passed is valid:
 $query = "SELECT * from tblposts WHERE tblposts.ThreadID = " . $threadlocID . " AND tblposts.status>0 ORDER BY tblposts.Sticky DESC, tblposts.CreationTime ASC";
-$result = mysql_query($query) or die ("couldn't execute query2");
+$result = mysqli_query($connection, $query) or die ("couldn't execute query2");
 
-$numberofrows = mysql_num_rows($result);
+$numberofrows = mysqli_num_rows($result);
 $totalpages = ceil($numberofrows/$resultsperpage);
 
 $pagenumber = $_GET["page"];
@@ -64,14 +64,14 @@ FROM tblposts
 INNER JOIN tblacct on tblacct.accountID = tblposts.accountID
 WHERE tblacct.accountname = '" . $thisuser . "' AND tblposts.postid='".$postid."'";
 
-$result = mysql_query($query) or die ("couldn't execute query");
+$result = mysqli_query($connection, $query) or die ("couldn't execute query");
 
-$returned = mysql_num_rows($result);
+$returned = mysqli_num_rows($result);
 	
 	if ($returned == 0) {
 	$error = "you cannot edit this post as it is not yours";
 	} else {
-	$row = mysql_fetch_array($result);
+	$row = mysqli_fetch_array($result);
 		extract($row);
 	$postedcontents = $postContent;
 	

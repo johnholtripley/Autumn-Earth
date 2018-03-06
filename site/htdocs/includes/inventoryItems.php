@@ -4,14 +4,14 @@
 
 // get the character's name:
 $query = "SELECT charName, money, currentbag, inventorystate from tblcharacters where charID = '".$primarycharid."'";
-$result5 = mysql_query($query) or die ("couldn't execute query");
-$row5 = mysql_fetch_array($result5);
+$result5 = mysqli_query($connection, $query) or die ("couldn't execute query");
+$row5 = mysqli_fetch_array($result5);
 
 
 
 
 
-	$returned5 = mysql_num_rows($result5);
+	$returned5 = mysqli_num_rows($result5);
 			if ($returned5 == 0) {
 			
 			echo'<div class="Error">Couldn\'t open inventory</div>';

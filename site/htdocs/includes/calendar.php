@@ -39,12 +39,12 @@ $thislastday = mktime(0,0,0,$thismonth,$monthdays,$thisyear);
 
 
 $query = "select * from tblEvents WHERE UNIX_TIMESTAMP(eventStart)<='".$thislastday."' AND UNIX_TIMESTAMP(eventEnd)>='".$thisdate."'";
-$result = mysql_query($query) or die ("couldn't execute query");
+$result = mysqli_query($connection, $query) or die ("couldn't execute query");
 
 // set up events
 $events = array();
 //
-while ($row = mysql_fetch_array($result)) {
+while ($row = mysqli_fetch_array($result)) {
 	extract($row);
 	array_push($events, array('startdate' => $eventStart, 'enddate' => $eventEnd, 'cssclass' => $css, 'tooltip' => $title, 'link' => $link));
 }
