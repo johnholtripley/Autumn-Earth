@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 27, 2018 at 05:15 PM
+-- Generation Time: Mar 05, 2018 at 05:49 PM
 -- Server version: 5.6.24
 -- PHP Version: 5.6.8
 
@@ -1497,16 +1497,16 @@ CREATE TABLE IF NOT EXISTS `tblrecipes` (
 --
 
 INSERT INTO `tblrecipes` (`recipeID`, `components`, `creates`, `prerequisite`, `profession`, `recipeName`, `recipeDescription`, `defaultResultingColour`) VALUES
-(0, '11,mrdt,2', 12, 0, 0, NULL, '', 1),
-(1, '11,mrdt,3', 12, 0, 0, NULL, '', 2),
-(2, '11,mrdt,5', 12, 0, 0, NULL, '', 4),
-(3, '11,mrdt,24', 7, 0, 0, NULL, '', NULL),
+(0, '11,mrdt,2,2', 12, 0, 0, NULL, '', 1),
+(1, '11,mrdt,3,3', 12, 0, 0, NULL, '', 2),
+(2, '11,mrdt,5,5', 12, 0, 0, NULL, '', 4),
+(3, '11,mrdt,24,24', 7, 0, 0, NULL, '', NULL),
 (4, '26,25', 28, 0, 0, NULL, '', NULL),
-(5, '11,mrdt,6', 12, 0, 0, NULL, '', 16),
+(5, '11,mrdt,6,6', 12, 0, 0, NULL, '', 16),
 (6, 'dye,dye', 12, 0, 0, 'Mix dyes', 'Mix 2 or more dyes to create new colours.', NULL),
 (7, '27', 26, 0, 0, 'Burn Wood', 'Produce Wood Ash by burning', NULL),
 (8, '14,dye', 14, 0, 0, 'Dye Linen', 'Colour some linen.', NULL),
-(9, '11,mrdt,23', 12, 0, 0, NULL, '', 6),
+(9, '11,mrdt,23,23', 12, 0, 0, NULL, '', 6),
 (10, '1', 14, 0, 1, NULL, '', NULL),
 (11, '15', 16, 0, 1, NULL, '', NULL),
 (12, '37,38,39', 40, 0, 4, NULL, '', 16),
@@ -1560,26 +1560,28 @@ INSERT INTO `tblregions` (`regionID`, `regionName`, `InWhichcontinent`) VALUES
 
 CREATE TABLE IF NOT EXISTS `tblretinuefollowers` (
   `followerID` int(11) NOT NULL,
-  `followerName` varchar(255) COLLATE utf8_bin NOT NULL,
+  `followerName` varchar(255) CHARACTER SET utf8mb4 NOT NULL,
   `followerCleanURL` varchar(255) COLLATE utf8_bin NOT NULL,
   `characterIdFollowing` int(10) NOT NULL,
   `activeQuestId` int(10) DEFAULT '-1',
   `followerRewardFromQuestId` int(11) DEFAULT NULL,
+  `isEnabled` tinyint(1) NOT NULL DEFAULT '0',
   `questStartedTime` datetime NOT NULL,
   `followerSex` varchar(6) COLLATE utf8_bin NOT NULL DEFAULT 'female',
+  `followerRace` varchar(128) COLLATE utf8_bin NOT NULL,
   `currentContinent` varchar(255) COLLATE utf8_bin NOT NULL,
   `followerMapCoordinateX` int(20) NOT NULL,
   `followerMapCoordinateY` int(20) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=60 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
 -- Dumping data for table `tblretinuefollowers`
 --
 
-INSERT INTO `tblretinuefollowers` (`followerID`, `followerName`, `followerCleanURL`, `characterIdFollowing`, `activeQuestId`, `followerRewardFromQuestId`, `questStartedTime`, `followerSex`, `currentContinent`, `followerMapCoordinateX`, `followerMapCoordinateY`) VALUES
-(1, 'Eila Myrborn', 'eila-myrborn', 999, 121, NULL, '2018-02-27 15:33:58', 'female', 'eastern-continent', 200, 350),
-(2, 'Nellaith Wispfael', 'nellaith-wispfael', 999, 128, NULL, '2018-02-27 15:33:48', 'female', 'eastern-continent', 200, 350),
-(3, 'Tyrande Whisperspring', 'tyrande-whisperspring', 999, -1, 1, '2018-02-27 15:33:48', 'female', 'eastern-continent', 200, 350);
+INSERT INTO `tblretinuefollowers` (`followerID`, `followerName`, `followerCleanURL`, `characterIdFollowing`, `activeQuestId`, `followerRewardFromQuestId`, `isEnabled`, `questStartedTime`, `followerSex`, `followerRace`, `currentContinent`, `followerMapCoordinateX`, `followerMapCoordinateY`) VALUES
+(1, 'Eila Myrborn', 'eila-myrborn', 999, -1, NULL, 1, '2018-02-27 15:33:58', 'female', 'huldra', 'eastern-continent', 622, 256),
+(2, 'Nellaith Wispfael', 'nellaith-wispfael', 999, -1, NULL, 1, '2018-02-28 16:51:03', 'female', 'huldra', 'eastern-continent', 626, 215),
+(59, 'Garmund  Wispmote', 'garmund-wispmote', 999, -1, 1, 1, '2018-02-28 16:51:03', 'male', 'huldra', 'eastern-continent', 626, 215);
 
 -- --------------------------------------------------------
 
@@ -1607,7 +1609,7 @@ CREATE TABLE IF NOT EXISTS `tblretinuequests` (
   `activeDuringSeason` int(11) DEFAULT NULL,
   `timeCreated` datetime NOT NULL,
   `seed` int(128) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=129 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=133 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
 -- Dumping data for table `tblretinuequests`
@@ -1640,7 +1642,11 @@ INSERT INTO `tblretinuequests` (`questID`, `questName`, `questCleanURL`, `questD
 (125, 'Showing the way', 'showing-the-way-3', 'Ensure purple is reached safely.', 'escort', 'eastern-continent', 434, 379, 0, 0, '', '0', 0, 1, 1, '[{"type":2,"quantity":2,"quality":100,"durability":100,"currentWear":0,"effectiveness":100,"colour":"0","enchanted":0,"hallmark":0,"inscription":""}]', NULL, '2018-02-23 16:54:32', 1519407382),
 (126, 'Climb the ladder', 'climb-the-ladder-2', 'Compete in a ranked card game tournament.', 'card tournament', 'eastern-continent', 488, 251, 1, 0, '', '0', 0, 1, 1, '[{"type":2,"quantity":2,"quality":100,"durability":100,"currentWear":0,"effectiveness":100,"colour":"0","enchanted":0,"hallmark":0,"inscription":""}]', NULL, '2018-02-23 16:54:33', 1519503788),
 (127, 'A long descent', 'a-long-descent-3', 'Enter the depths of dark green and face the unknown.', 'dungeon delve', 'eastern-continent', 316, 143, 0, 0, '', '0', 0, 1, 1, '[{"type":2,"quantity":2,"quality":100,"durability":100,"currentWear":0,"effectiveness":100,"colour":"0","enchanted":0,"hallmark":0,"inscription":""}]', NULL, '2018-02-23 16:54:33', 1519445491),
-(128, 'To the rescue', 'to-the-rescue-4', 'Black is in need. Get over there and help.', 'rescue', 'eastern-continent', 544, 238, 0, 0, '', '0', 0, 1, 1, '[{"type":2,"quantity":2,"quality":100,"durability":100,"currentWear":0,"effectiveness":100,"colour":"0","enchanted":0,"hallmark":0,"inscription":""}]', NULL, '2018-02-23 16:54:33', 1519479793);
+(128, 'To the rescue', 'to-the-rescue-4', 'Black is in need. Get over there and help.', 'rescue', 'eastern-continent', 544, 238, 0, 0, '', '0', 0, 1, 1, '[{"type":2,"quantity":2,"quality":100,"durability":100,"currentWear":0,"effectiveness":100,"colour":"0","enchanted":0,"hallmark":0,"inscription":""}]', NULL, '2018-02-23 16:54:33', 1519479793),
+(129, 'Bring home the goods', 'bring-home-the-goods-4', 'Gather what kelp you can.', 'resource gathering', 'eastern-continent', 608, 83, 0, 0, 'sea', '0', 0, 3, 1, '[{"type":2,"quantity":2,"quality":100,"durability":100,"currentWear":0,"effectiveness":100,"colour":"0","enchanted":0,"hallmark":0,"inscription":""}]', NULL, '2018-02-28 16:51:09', 1519901872),
+(130, 'All the fun of the fair', 'all-the-fun-of-the-fair-2', 'Enjoy yourself for a while.', 'travelling fair', 'eastern-continent', 547, 191, 0, 0, '', '0', 0, 1, 1, '[{"type":2,"quantity":2,"quality":100,"durability":100,"currentWear":0,"effectiveness":100,"colour":"0","enchanted":0,"hallmark":0,"inscription":""}]', NULL, '2018-02-28 16:51:11', 1519870483),
+(131, 'Mapping the wilds', 'mapping-the-wilds-2', 'Map out as much of the sea as you can.', 'cartography', 'eastern-continent', 629, 187, 0, 0, 'sea', '0', 0, 1, 1, '[{"type":2,"quantity":2,"quality":100,"durability":100,"currentWear":0,"effectiveness":100,"colour":"0","enchanted":0,"hallmark":0,"inscription":""}]', NULL, '2018-02-28 16:51:11', 1519929687),
+(132, 'Knock, knock', 'knock-knock', 'The post isn''t fast enough for this. Make haste.', 'delivery', 'eastern-continent', 467, 195, 0, 0, '', '0', 0, 2, 1, '[{"type":2,"quantity":2,"quality":100,"durability":100,"currentWear":0,"effectiveness":100,"colour":"0","enchanted":0,"hallmark":0,"inscription":""}]', NULL, '2018-02-28 16:51:12', 1519893591);
 
 -- --------------------------------------------------------
 
@@ -1652,7 +1658,7 @@ CREATE TABLE IF NOT EXISTS `tblretinuequestsactive` (
   `questActiveId` int(11) NOT NULL,
   `questIdActiveOrComplete` int(10) NOT NULL,
   `characterId` int(10) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
 -- Dumping data for table `tblretinuequestsactive`
@@ -1686,7 +1692,10 @@ INSERT INTO `tblretinuequestsactive` (`questActiveId`, `questIdActiveOrComplete`
 (26, 122, 999),
 (27, 126, 999),
 (28, 128, 999),
-(29, 121, 999);
+(29, 121, 999),
+(30, 119, 999),
+(31, 115, 999),
+(32, 117, 999);
 
 -- --------------------------------------------------------
 
@@ -2514,17 +2523,17 @@ ALTER TABLE `tblregions`
 -- AUTO_INCREMENT for table `tblretinuefollowers`
 --
 ALTER TABLE `tblretinuefollowers`
-  MODIFY `followerID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
+  MODIFY `followerID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=60;
 --
 -- AUTO_INCREMENT for table `tblretinuequests`
 --
 ALTER TABLE `tblretinuequests`
-  MODIFY `questID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=129;
+  MODIFY `questID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=133;
 --
 -- AUTO_INCREMENT for table `tblretinuequestsactive`
 --
 ALTER TABLE `tblretinuequestsactive`
-  MODIFY `questActiveId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=30;
+  MODIFY `questActiveId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=33;
 --
 -- AUTO_INCREMENT for table `tblretinuequesttypes`
 --

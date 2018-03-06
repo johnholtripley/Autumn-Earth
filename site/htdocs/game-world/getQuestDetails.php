@@ -48,11 +48,11 @@ $homeBaseY = 350;
 
 
 $query = "SELECT * FROM tblquests";
-$result = mysql_query($query) or die ();
+$result = mysqli_query($connection, $query) or die ();
 
 $outputJson = '{"quests": {';
 
-while ($row = mysql_fetch_array($result)) {
+while ($row = mysqli_fetch_array($result)) {
 	extract($row);
 	$outputJson .= '"'.$questID.'": {';
 	$outputJson .= '"journalTitle": "'.$journalTitle.'",';
@@ -77,8 +77,8 @@ if($thisItem['type'] == "follower") {
 
 // only generate a new follower if it hasn't already created one
 
-		$checkAlreadyCreatedFollowerQuery = mysql_query("SELECT * from tblretinuefollowers where followerRewardFromQuestId = '".$questID."' and characterIdFollowing = '".$chr."'");
-$numRows = mysql_num_rows($checkAlreadyCreatedFollowerQuery);
+		$checkAlreadyCreatedFollowerQuery = mysqli_query($connection, "SELECT * from tblretinuefollowers where followerRewardFromQuestId = '".$questID."' and characterIdFollowing = '".$chr."'");
+$numRows = mysqli_num_rows($checkAlreadyCreatedFollowerQuery);
 if($numRows == 0) {
 
 
@@ -89,8 +89,8 @@ include_once($_SERVER['DOCUMENT_ROOT']."/game-world/generateRetinueFollower.php"
 		// make sure name is unique for this character:
 do {
 		$newFollower = generateFollower();
-$checkFollowerQuery = mysql_query("SELECT * from tblretinuefollowers where followerName='".$newFollower[0]."'");
-$numRows = mysql_num_rows($checkFollowerQuery);
+$checkFollowerQuery = mysqli_query($connection, "SELECT * from tblretinuefollowers where followerName='".$newFollower[0]."'");
+$numRows = mysqli_num_rows($checkFollowerQuery);
 } while ($numRows>0);
 
 // add to database with chr and followerRewardFromQuestId so the journal knows which follower to display:
@@ -112,19 +112,19 @@ $followerMapCoordinateY = $homeBaseY;
     $insertQuery = "INSERT INTO tblretinuefollowers (followerName, followerCleanURL, characterIdFollowing, activeQuestId, isEnabled, followerRewardFromQuestId, questStartedTime, followerSex, followerRace, currentContinent, followerMapCoordinateX, followerMapCoordinateY)
     VALUES ('".htmlentities($followerName)."','".$followerCleanURL."','".$characterIdFollowing."','".$activeQuestId."', '0', '".$followerRewardFromQuestId."','".$questStartedTime."','".$followerSex."','".$followerRace."','".$currentContinent."','".$followerMapCoordinateX."','".$followerMapCoordinateY."')";
 
-    $insertResult = mysql_query($insertQuery);
+    $insertResult = mysqli_query($connection, $insertQuery);
    
 
 
 
 // create image in /images/retinue folder:
     $followerImage = imagecreatefrompng('../images/retinue/source/'.cleanURL($followerRace).'-'.cleanURL($followerSex).'.png');
-imagepng($followerImage, '../images/retinue/' . mysql_insert_id() . '.png', 0);
+imagepng($followerImage, '../images/retinue/' . mysqli_insert_id() . '.png', 0);
     imagedestroy($followerImage);
 
 // add the details to the JSON for the quest rewards:
 $itemReceivedJSON[$thisItemKey]['type'] = "follower";
-$itemReceivedJSON[$thisItemKey]['id'] = mysql_insert_id();
+$itemReceivedJSON[$thisItemKey]['id'] = mysqli_insert_id();
 $itemReceivedJSON[$thisItemKey]['name'] = htmlentities($newFollower[0]);
 
 }
@@ -144,9 +144,9 @@ $itemsReceivedOnCompletion = json_encode($itemReceivedJSON);
 
 
 $innerquery = "SELECT * from tblquestsstatus where charid='".$chr."' AND questid='".$questID."'";
-$innerresult = mysql_query($innerquery) or die ();
-if (mysql_num_rows($innerresult)>0) {
-$innerrow = mysql_fetch_array($innerresult);
+$innerresult = mysqli_query($connection, $innerquery) or die ();
+if (mysqli_num_rows($innerresult)>0) {
+$innerrow = mysqli_fetch_array($innerresult);
 extract($innerrow);
 	}
 
@@ -195,5 +195,5 @@ $outputJson = rtrim($outputJson, ",");
 $outputJson .= '}}';
 
 echo $outputJson;
-mysql_free_result($result);
+mysqli_free_result($result);
 ?>

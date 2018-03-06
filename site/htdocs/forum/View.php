@@ -10,7 +10,7 @@ if (is_numeric($threadID)) {
 	
 	// add to thread view count
 	$query = "UPDATE tblthreads SET viewcount = viewcount+1 WHERE threadid=" . $threadID;
-	$result = mysql_query($query) or die ("couldn't execute query");
+	$result = mysqli_query($connection, $query) or die ("couldn't execute query");
 	
 	
 	

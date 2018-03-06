@@ -37,9 +37,9 @@ if ($_POST["createbutton"] == 'Update Account') {
 	$pwordkey = $dbpk . strtolower(substr($eaccname, 0, 2));
 	
 	$query = "SELECT * FROM tblAcct WHERE accountName='" . $eaccname . "' AND password=AES_ENCRYPT('" . 		$processedpword . "','" . $pwordkey . "')";
-	$result = mysql_query($query) or die ("couldn't execute query1");
+	$result = mysqli_query($connection, $query) or die ("couldn't execute query1");
 	
-	$returned = mysql_num_rows($result);
+	$returned = mysqli_num_rows($result);
 	
 	if ($returned < 1) {
 		// name and password do not match
@@ -86,7 +86,7 @@ if ($_POST["createbutton"] == 'Update Account') {
 	
 	$query = "UPDATE tblacct SET email='" . $processedemailaddr . "', subscribeNews = '" . $processednews . "', subscribeUpdates='" . $processedupdates . "', signature = '".$processedsignature."', htmlemail = '".$processedhtmlemail."', emailalerts = '".$processedalerts."', currentCharID ='".$processedcharid."'
 	WHERE accountname = '" . $eaccname . "'";
-	$result = mysql_query($query) or die ("couldn't execute query2");
+	$result = mysqli_query($connection, $query) or die ("couldn't execute query2");
 	
 	
 	
@@ -110,12 +110,12 @@ if ($_POST["createbutton"] == 'Update Account') {
 
 // get data
 $query = "select * from tblacct where accountname = '" . $eaccname . "'";
-$result = mysql_query($query) or die ("couldn't execute query3");
+$result = mysqli_query($connection, $query) or die ("couldn't execute query3");
 
-$returned = mysql_num_rows($result);
+$returned = mysqli_num_rows($result);
 // check that something is returned
 if ($returned == "1") {
-$row = mysql_fetch_array($result);
+$row = mysqli_fetch_array($result);
 extract($row);
 
 $pemailaddr = stripslashes($email);
@@ -207,13 +207,13 @@ $query = "SELECT tblCharacters.*, tblacct.accountid, tblacct.accountname, tblacc
 from tblcharacters
 inner join tblacct on tblacct.accountid = tblcharacters.accountid
 WHERE tblacct.accountname='".$_SESSION['username']."'";
-	$result = mysql_query($query) or die ("couldn't execute query");
-$numberofrows = mysql_num_rows($result);
+	$result = mysqli_query($connection, $query) or die ("couldn't execute query");
+$numberofrows = mysqli_num_rows($result);
 
 	if ($numberofrows > 1) {
 	$c = 0;
 	// there is only characters associated with this account
-	while ($row = mysql_fetch_array($result)) {
+	while ($row = mysqli_fetch_array($result)) {
 	extract($row);
 	
 	if ($_POST["createbutton"] == 'Update Account') {
@@ -239,7 +239,7 @@ $numberofrows = mysql_num_rows($result);
 
 	
 	} else if ($numberofrows == 1) {
-	$row = mysql_fetch_array($result);
+	$row = mysqli_fetch_array($result);
 	extract($row);
 	echo '<img src="/data/chr'.$charID.'/portrait.jpg" class="characterPortrait" alt="'.$charName.'\'s portrait" />';
 	

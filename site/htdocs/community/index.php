@@ -32,10 +32,10 @@ $socialContent = array_merge($socialContent, $allTumblrImages);
 
 // get latest news:
 $newsQuery = "select * from tblNews WHERE status='1' order by timeAdded DESC limit 10";
-$result = mysql_query($newsQuery) or die ("couldn't execute query");
+$result = mysqli_query($connection, $newsQuery) or die ("couldn't execute query");
 
-if (mysql_num_rows($result) > 0) {
-  while ($row = mysql_fetch_array($result)) {
+if (mysqli_num_rows($result) > 0) {
+  while ($row = mysqli_fetch_array($result)) {
     extract($row);
     array_push($socialContent,array('<div class="chronicle"><a href="/chronicle/'.$cleanURL.'/"><h3>'.$newsTitle.'</h3><p>'.$newsSynopsis.'</p></a></div>',strtotime($timeAdded),"chronicle"));
   }

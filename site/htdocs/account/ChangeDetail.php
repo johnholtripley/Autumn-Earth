@@ -24,9 +24,9 @@ if ($_POST["changebutton"] == 'Update Account') {
 	$pwordkey = $dbpk . strtolower(substr($eaccname, 0, 2));
 	
 	$query = "SELECT * FROM tblAcct WHERE accountName='" . $eaccname . "' AND password=AES_ENCRYPT('" . 		$processedpword . "','" . $pwordkey . "')";
-	$result = mysql_query($query) or die ("couldn't execute query");
+	$result = mysqli_query($connection, $query) or die ("couldn't execute query");
 	
-	$returned = mysql_num_rows($result);
+	$returned = mysqli_num_rows($result);
 	
 	if ($returned < 1) {
 		// name and password do not match
@@ -56,7 +56,7 @@ if ($_POST["changebutton"] == 'Update Account') {
 	$pwordkey = $dbpk . strtolower(substr($eaccname, 0, 2));
 	
 	$query = "UPDATE tblacct SET password=AES_ENCRYPT('" . $processedpword . "','" . $pwordkey . "') WHERE accountname = '" . $eaccname . "'";
-	$result = mysql_query($query) or die ("couldn't execute query");
+	$result = mysqli_query($connection, $query) or die ("couldn't execute query");
 	header("Location: AccountUpdated.php");
 	}
 

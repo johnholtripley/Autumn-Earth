@@ -19,12 +19,12 @@ for($i=0;$i<count($allIds);$i++) {
 }
 
 $query = "SELECT * FROM tbltitles where titleid in (".$titleIdString.")";
-$result = mysql_query($query) or die ();
+$result = mysqli_query($connection, $query) or die ();
 
 
 $outputJson = '{';
 
-while ($row = mysql_fetch_array($result)) {
+while ($row = mysqli_fetch_array($result)) {
 	extract($row);
 	
 	$outputJson .= '"'.$titleID.'": "'.$titleName.'",';
@@ -38,5 +38,5 @@ $outputJson = rtrim($outputJson, ",");
 $outputJson .= '}';
 
 echo $outputJson;
-mysql_free_result($result);
+mysqli_free_result($result);
 ?>

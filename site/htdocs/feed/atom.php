@@ -4,9 +4,9 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
 include($_SERVER['DOCUMENT_ROOT']."/includes/functions.php");
 
 $query = "select * from tblnews WHERE status='1' order by timeadded DESC limit 5";
-$result = mysql_query($query) or die ("couldn't execute query");
+$result = mysqli_query($connection, $query) or die ("couldn't execute query");
 
-if (mysql_num_rows($result) > 0) {
+if (mysqli_num_rows($result) > 0) {
 
 header("Content-type: text/xml; charset=iso-8859-1");
 
@@ -26,7 +26,7 @@ echo '<feed xmlns="http://www.w3.org/2005/Atom">'."\n";
 	
 	// get each item:
 $isFirstTime = true;
-while ($row = mysql_fetch_array($result)) {
+while ($row = mysqli_fetch_array($result)) {
 
 	extract($row);
 	$timeAdded = strtotime($timeAdded);

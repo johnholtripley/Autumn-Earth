@@ -28,12 +28,12 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/header.php");
 <?php
 
 $query = "SELECT * from tblprofessions order by professionName ASC";
-$result = mysql_query($query) or die ("failed");
+$result = mysqli_query($connection, $query) or die ("failed");
 
 
 
 
-while ($row = mysql_fetch_array($result)) {
+while ($row = mysqli_fetch_array($result)) {
 	extract($row);
 
 echo'<h3>'.$professionName.'</h3>';
@@ -41,13 +41,13 @@ echo'<h3>'.$professionName.'</h3>';
 
 
 $query2 = "SELECT * from tblrecipes where profession = '".$professionID."'";
-$result2 = mysql_query($query2) or die ("failed 2");
-if(mysql_num_rows($result2) > 0) {
+$result2 = mysqli_query($connection, $query2) or die ("failed 2");
+if(mysqli_num_rows($result2) > 0) {
 echo'<ul>';
 echo'<li><a href="/codex/crafting/'.$cleanurl.'/recipes/">Recipes</a></li>';
 echo'</ul>';
 }
-mysql_free_result($result2);
+mysqli_free_result($result2);
 
 
 	}
@@ -55,7 +55,7 @@ mysql_free_result($result2);
 
 
 
-mysql_free_result($result);
+mysqli_free_result($result);
 ?>
 <hr>
 </div>

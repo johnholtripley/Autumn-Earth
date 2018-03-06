@@ -118,6 +118,6 @@ echo $additionalAssets;
 </body>
 </html>
 <?php
-mysql_close($connection);
+mysqli_close($connection);
 ob_end_flush();
 ?>

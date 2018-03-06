@@ -134,8 +134,8 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
       <button class="closePanel">close</button>
       <?php
       $query = "SELECT * FROM tblcollectionquests";
-      $result = mysql_query($query) or die ();
-      while ($row = mysql_fetch_array($result)) {
+      $result = mysqli_query($connection, $query) or die ();
+      while ($row = mysqli_fetch_array($result)) {
       extract($row);
       echo '<section id="collection-'.$cleanurl.'" data-collection="'.$cleanurl.'">';
       echo '<h2>'.$collectionQuestName.'</h2>';
@@ -143,7 +143,7 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
       echo '<ol></ol>';
       echo '</section>';
       }
-      mysql_free_result($result);
+      mysqli_free_result($result);
       ?>
     </div>
 

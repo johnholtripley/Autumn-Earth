@@ -28,30 +28,30 @@ VALUES ('" . $threadID . "','" . $useraccountID . "',NOW(),'" . $postcontents . 
 
 
 
-$result = mysql_query($query) or die ("couldn't execute query1");
+$result = mysqli_query($connection, $query) or die ("couldn't execute query1");
 
 // find what the id of this post was:
 
-$thispostid = mysql_insert_id();
+$thispostid = mysqli_insert_id();
 
 
 // update users post count:
 $query = "UPDATE tblacct SET postCount = postCount+1 WHERE accountID=" . $useraccountID;
-$result = mysql_query($query) or die ("couldn't execute query2");
+$result = mysqli_query($connection, $query) or die ("couldn't execute query2");
 
 // update thread's latest post id:
 $query = "UPDATE tblthreads SET latestPostID = ".$thispostid.", postcount = postcount+1 WHERE threadid=" . $threadID;
-$result = mysql_query($query) or die ("couldn't execute query3");
+$result = mysqli_query($connection, $query) or die ("couldn't execute query3");
 
 
 // check the user's subscriptions and add this thread to their list if required:
 			$query = "select * from tblsubscribedthreads where accountID='".$useraccountID."' AND threadID='".$threadID."'";
-			$result = mysql_query($query) or die ("couldn't execute query3");
-			$numberofrows = mysql_num_rows($result);
+			$result = mysqli_query($connection, $query) or die ("couldn't execute query3");
+			$numberofrows = mysqli_num_rows($result);
 			if ($numberofrows < 1) {
 				$query = "insert into tblsubscribedthreads (accountID, threadID, status)
 				values ('".$useraccountID."','".$threadID."','0')";
-				$result = mysql_query($query) or die ("couldn't execute query4");
+				$result = mysqli_query($connection, $query) or die ("couldn't execute query4");
 			}
 
 // notify other users if they have subscribed to this thread, but haven't returned
@@ -66,12 +66,12 @@ WHERE tblacct.accountID = tblsubscribedthreads.accountID AND tblthreads.ThreadID
 
 
 
-$result = mysql_query($query) or die ("couldn't execute query5");
-$numberofrows = mysql_num_rows($result);
+$result = mysqli_query($connection, $query) or die ("couldn't execute query5");
+$numberofrows = mysqli_num_rows($result);
 if ($numberofrows > 0) {
 // send emails
 
-	while ($row = mysql_fetch_array($result)) {
+	while ($row = mysqli_fetch_array($result)) {
 		extract($row);
 		if ($usermailpref == "1") {
 			// html email
@@ -110,7 +110,7 @@ if ($numberofrows > 0) {
 		if (mail($useremail,$subject,$message,$headers)) {
 		// set this user's status to 1 in the subscription table:
 		$query = "UPDATE tblsubscribedthreads SET status = '1' WHERE accountID='".$accountID."'";
-		$result = mysql_query($query) or die ("couldn't execute query7");
+		$result = mysqli_query($connection, $query) or die ("couldn't execute query7");
 		} 		
 	
 	}
@@ -120,9 +120,9 @@ if ($numberofrows > 0) {
 
 // determine which page this post will be on:
 $query = "SELECT * from tblposts WHERE tblposts.ThreadID = " . $threadID . " ORDER BY tblposts.Sticky DESC, tblposts.CreationTime ASC";
-$result = mysql_query($query) or die ("couldn't execute query6");
+$result = mysqli_query($connection, $query) or die ("couldn't execute query6");
 
-$numberofrows = mysql_num_rows($result);
+$numberofrows = mysqli_num_rows($result);
 
 // this post will be on the last page:
 $totalpages = ceil($numberofrows/$resultsperpage);
@@ -147,9 +147,9 @@ if ($_SESSION['username']) {
 
 // check the user's status to see if they can post:
 $query = "SELECT * from tblAcct WHERE accountname = '" . $_SESSION['username'] . "'";
-$result = mysql_query($query) or die ("couldn't execute query");
+$result = mysqli_query($connection, $query) or die ("couldn't execute query");
 
-$row = mysql_fetch_array($result);
+$row = mysqli_fetch_array($result);
 extract($row);
 
 $useraccount = $accountID;
@@ -168,8 +168,8 @@ $threadID = $_GET["thread"];
 	// check that they can post in this thread (ie. if it's locked, then they need to be a Mod or Admin)
 	
 	$query = "SELECT * from tblthreads WHERE threadid = ".$threadID;
-	$result = mysql_query($query) or die ("couldn't execute query");
-	$row = mysql_fetch_array($result);
+	$result = mysqli_query($connection, $query) or die ("couldn't execute query");
+	$row = mysqli_fetch_array($result);
 	extract($row);
 	
 
@@ -188,12 +188,12 @@ $threadID = $_GET["thread"];
 FROM tblposts
 INNER JOIN tblacct on tblacct.accountID = tblposts.accountID
 WHERE tblposts.postid='".$quoteid."'";
-		$result = mysql_query($query) or die ("couldn't execute query");
+		$result = mysqli_query($connection, $query) or die ("couldn't execute query");
 		
-		$numrows = mysql_num_rows($result);
+		$numrows = mysqli_num_rows($result);
 		
 		if ($numrows>0) {
-		$row = mysql_fetch_array($result);
+		$row = mysqli_fetch_array($result);
 		extract($row);
 		$quotedata = '[quote='.$acctusername.']'.stripCode($postContent).'[/quote]';
 		}

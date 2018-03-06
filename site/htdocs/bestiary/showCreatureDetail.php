@@ -42,10 +42,10 @@ if(isset($_GET["cleanURL"])) {
 
 $creatureResultQuery = "select tblcreatures.*, tblcreaturetypes.creaturetypename as creaturetype, tblcreaturetypes.creaturetypeurl as typeURL from tblcreatures INNER JOIN tblcreaturetypes on tblcreatures.creatureType = tblcreaturetypes.creaturetypename where tblcreatures.cleanurl = '".$cleanURL."'";
 
-    $creatureResult = mysql_query( $creatureResultQuery ) or die ( "couldn't execute events query: ".$creatureResultQuery );
-$numberofrows = mysql_num_rows( $creatureResult );
+    $creatureResult = mysqli_query($connection,  $creatureResultQuery ) or die ( "couldn't execute events query: ".$creatureResultQuery );
+$numberofrows = mysqli_num_rows( $creatureResult );
   if($numberofrows>0) {
- while ($row = mysql_fetch_array($creatureResult)) {
+ while ($row = mysqli_fetch_array($creatureResult)) {
   extract($row);
   
 
@@ -65,7 +65,7 @@ echo buildBreadCrumb('bestiary/'.$typeURL.'/'.$cleanURL,'The Bestiary/'.$creatur
     header("HTTP/1.0 404 Not Found");
 }
     
-mysql_free_result($creatureResult);
+mysqli_free_result($creatureResult);
 
 
 

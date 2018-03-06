@@ -24,7 +24,7 @@ inventorystate = '".$inventorystate."',
 money = '".$money."', minutesplayed = '".$minutesplayed."'
 WHERE charid='".$_POST['chrid']."'";
 
-if (mysql_query($query)) {
+if (mysqli_query($connection, $query)) {
 $BaseSavedOk = "true";
 } else {
 $BaseSavedOk = "false";

@@ -13,8 +13,8 @@ $articleId = $_GET["article"];
 if (!(is_numeric($articleId))) {
 // get the most recent news article and display that instead:
 $query = "select newsID, status, timeAdded from tblNews WHERE status='1' order by timeAdded DESC limit 1";
-$result = mysql_query($query) or die ("couldn't execute query");
-$row = mysql_fetch_array($result);
+$result = mysqli_query($connection, $query) or die ("couldn't execute query");
+$row = mysqli_fetch_array($result);
 $articleId = $row["newsID"];
 } 
 
@@ -22,16 +22,16 @@ $articleId = $row["newsID"];
 	//
 	// get forum title information:
 	$query = "SELECT * FROM tblnews WHERE status ='1' AND newsID = '".$articleId."'";
-	$result = mysql_query($query) or die ("couldn't execute query");
+	$result = mysqli_query($connection, $query) or die ("couldn't execute query");
 	
-	$numberofrows = mysql_num_rows($result);
+	$numberofrows = mysqli_num_rows($result);
 	// check that something is returned
 	if ($numberofrows < 1) {
 	// get latest news item
 	$query = "SELECT * from tblNews WHERE status='1' order by timeAdded DESC limit 1";
-	$result = mysql_query($query) or die ("couldn't execute query");
+	$result = mysqli_query($connection, $query) or die ("couldn't execute query");
 	}
-		$row = mysql_fetch_array($result);
+		$row = mysqli_fetch_array($result);
 		extract($row);
 		echo '<h1>'.$newsTitle.'</h1>';
 		$timeAdded = strtotime($timeAdded);

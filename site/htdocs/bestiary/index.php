@@ -23,11 +23,11 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/header.php");
 
 <?php
 $query = "select * from tblcreaturetypes";
-$result = mysql_query($query) or die ("couldn't execute query");
+$result = mysqli_query($connection, $query) or die ("couldn't execute query");
 
-if(mysql_num_rows($result) > 0) {
+if(mysqli_num_rows($result) > 0) {
 echo '<ul>';
-while ($row = mysql_fetch_array($result)) {
+while ($row = mysqli_fetch_array($result)) {
 	extract($row);
 echo '<li><a href="/bestiary/'.$creatureTypeURL.'/">'.$creatureTypeName.'</a></li>';
 
@@ -45,13 +45,13 @@ echo '</ul>';
 $letters = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
 for ($i=0;$i<count($letters);$i++) {
 $query = "select tblcreatures.*, tblcreaturetypes.creaturetypename as creaturetype, tblcreaturetypes.creaturetypeurl as typeURL from tblcreatures INNER JOIN tblcreaturetypes on tblcreatures.creatureType = tblcreaturetypes.creaturetypename where tblcreatures.creaturename LIKE '".$letters[$i]."%' ORDER BY tblcreatures.creaturename ASC";
-$result = mysql_query($query) or die ("couldn't execute query");
+$result = mysqli_query($connection, $query) or die ("couldn't execute query");
 
-if(mysql_num_rows($result) > 0) {
+if(mysqli_num_rows($result) > 0) {
 echo '<div class="column"><div>';
 echo '<h3>'.$letters[$i].'</h3>';
 echo '<ul>';
-while ($row = mysql_fetch_array($result)) {
+while ($row = mysqli_fetch_array($result)) {
 	extract($row);
 
 echo '<li><a href="/bestiary/'.$typeURL.'/'.$cleanURL.'/">'.$creatureName.'</a></li>';

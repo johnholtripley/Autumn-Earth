@@ -9,11 +9,11 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
 
 $returnString="error";
 $query="select * from tblcharacters where charid='".$_POST['chrid']."'";
-$result = mysql_query($query) or die ("couldn't execute query");
-	$numberofrows = mysql_num_rows($result);
+$result = mysqli_query($connection, $query) or die ("couldn't execute query");
+	$numberofrows = mysqli_num_rows($result);
 	// check that something is returned
 	if ($numberofrows == "1") {
-		$row = mysql_fetch_array($result);
+		$row = mysqli_fetch_array($result);
 		extract($row);
 		$returnString = htmlspecialchars_decode($gamestate);
 		$returnString .= '&journalsave='.htmlspecialchars_decode($journalstate);

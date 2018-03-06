@@ -4,9 +4,9 @@
 
 if (strpos($_SERVER['SERVER_NAME'], 'autumnearth.com') !== false) {
 
-  $connection = @mysql_connect($liveHost,$liveUser,$livePassword) or die ("Can't connect to server 1");
+  $connection = @mysqli_connect($liveHost,$liveUser,$livePassword) or die ("Can't connect to server 1");
 } else {
-  $connection = @mysql_connect($host,$user,$password) or die ("Can't connect to server 2");
+  $connection = @mysqli_connect($host,$user,$password) or die ("Can't connect to server 2");
 }
-$thisdatabase = @mysql_select_db($database,$connection) or die ("Can't select database");
+$thisdatabase = @mysqli_select_db($connection, $dbname) or die ("Can't select database");
 ?>

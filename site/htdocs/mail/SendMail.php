@@ -23,8 +23,8 @@ if ($_POST["refreshInv"] == "true") {
 		
 		
 		
-		$result = mysql_query($query) or die ("couldn't execute query");
-		$row = mysql_fetch_array($result);
+		$result = mysqli_query($connection, $query) or die ("couldn't execute query");
+		$row = mysqli_fetch_array($result);
 		extract($row);
 		
 		$mailfromname = $charName;
@@ -67,7 +67,7 @@ if ($_POST["refreshInv"] == "true") {
 	
 	$query = "INSERT INTO tblmail (accountID, senderID, senderName, characterID, title, mailContents, sentTime,mailRead,AttachmentType,AttachmentQuantity)
 	VALUES ('".$splitstring[0]."','".$senderid."','".$mailfromname."','".$splitstring[1]."','".$mailtitle."','".$postcontents."',NOW(),'0','".$invTypesubmitted."','".$invQuantitysubmitted."')";
-	$result = mysql_query($query) or die ("couldn't execute query");
+	$result = mysqli_query($connection, $query) or die ("couldn't execute query");
 	
 	
 if ($okToRemoveItem) {
@@ -117,10 +117,10 @@ removeItemFromInv($invcharId,$invslotToUse,$invQuantitysubmitted);
 		
 		// check how much money is available:
 		$query = "select money from tblcharacters where charid='".$invcharId."'";
-		$result = mysql_query($query) or die ("couldn't execute query");
-		$returned = mysql_num_rows($result);
+		$result = mysqli_query($connection, $query) or die ("couldn't execute query");
+		$returned = mysqli_num_rows($result);
 		if ($returned > 0) {
-			$row = mysql_fetch_array($result);
+			$row = mysqli_fetch_array($result);
 			$moneyavailable = $row["money"];
 		}
 		
@@ -150,13 +150,13 @@ removeItemFromInv($invcharId,$invslotToUse,$invQuantitysubmitted);
 		
 		$query = "INSERT INTO tblmail (accountID, senderID, senderName, characterID, title, mailContents, sentTime,mailRead,AttachmentType,AttachmentQuantity)
 VALUES ('".$replyid ."','".$senderid."','".$mailfromname."','".$replycharid."','".		$mailtitle."','".$postcontents."',NOW(),'0','".$invTypesubmitted."','".$invQuantitysubmitted."')";
-		$result = mysql_query($query) or die ("couldn't execute query");
+		$result = mysqli_query($connection, $query) or die ("couldn't execute query");
 		
 if ($okToRemoveItem) {
 	if ($moneyattached) {
 	// remove money:
 	$query = "update tblcharacters set money='".($moneyavailable-$invQuantitysubmitted)."' where charid='".$invcharId."'";
-	$result = mysql_query($query) or die ("couldn't execute query");
+	$result = mysqli_query($connection, $query) or die ("couldn't execute query");
 	
 	
 	
@@ -174,8 +174,8 @@ if ($okToRemoveItem) {
 		} else {
 			// get character name:
 			$query = "SELECT * from tblcharacters WHERE charID='".$mailfrom."'";
-			$result = mysql_query($query) or die ("couldn't execute query");
-			$row = mysql_fetch_array($result);
+			$result = mysqli_query($connection, $query) or die ("couldn't execute query");
+			$row = mysqli_fetch_array($result);
 			extract($row);
 			$mailfromname = $charName;
 		}
@@ -185,10 +185,10 @@ if ($okToRemoveItem) {
 		} else {
 			// get sender account id
 			$query = "SELECT * from tblacct WHERE accountName='".$_SESSION['username']."'";
-			$result = mysql_query($query) or die ("couldn't execute query");
-			$returned = mysql_num_rows($result);
+			$result = mysqli_query($connection, $query) or die ("couldn't execute query");
+			$returned = mysqli_num_rows($result);
 			if ($returned > 0) {
-				$row = mysql_fetch_array($result);
+				$row = mysqli_fetch_array($result);
 				extract($row);
 				$senderid = $accountID;
 			}
@@ -197,10 +197,10 @@ if ($okToRemoveItem) {
 			$returnednames = array();
 			// - for account names
 			$query = "SELECT * from tblacct WHERE accountName='".$mailto."'";
-			$result = mysql_query($query) or die ("couldn't execute query");
-			$returned = mysql_num_rows($result);
+			$result = mysqli_query($connection, $query) or die ("couldn't execute query");
+			$returned = mysqli_num_rows($result);
 			if ($returned > 0) {
-				$row = mysql_fetch_array($result);
+				$row = mysqli_fetch_array($result);
 				extract($row);
 				array_push($returnednames, array('id' => $accountID, 'charid' => '0', 'acctname' => $mailto));
 			} 
@@ -210,10 +210,10 @@ if ($okToRemoveItem) {
 			from tblacct
 			inner join tblcharacters on tblcharacters.accountid = tblacct.accountid
 			WHERE tblcharacters.charName='".$mailto."' AND tblcharacters.accountID != '".$senderid."'";
-			$result2 = mysql_query($query2) or die ("couldn't execute query");
-			$returned2 = mysql_num_rows($result2);
+			$result2 = mysqli_query($connection, $query2) or die ("couldn't execute query");
+			$returned2 = mysqli_num_rows($result2);
 			if ($returned2 > 0) {
-				while ($row2 = mysql_fetch_array($result2)) {
+				while ($row2 = mysqli_fetch_array($result2)) {
 					extract($row2);
 					array_push($returnednames, array('id' => $accountID, 'charid' => $charID, 'acctname' => $userName));
 				}
@@ -263,10 +263,10 @@ if ($okToRemoveItem) {
 			
 			// check how much money is available:
 			$query = "select money from tblcharacters where charid='".$invcharId."'";
-			$result = mysql_query($query) or die ("couldn't execute query");
-			$returned = mysql_num_rows($result);
+			$result = mysqli_query($connection, $query) or die ("couldn't execute query");
+			$returned = mysqli_num_rows($result);
 			if ($returned > 0) {
-				$row = mysql_fetch_array($result);
+				$row = mysqli_fetch_array($result);
 				$moneyavailable = $row["money"];
 			}
 	
@@ -281,13 +281,13 @@ if ($okToRemoveItem) {
 				$postcontents = htmlCharsToEntities($postcontents);
 				$query = "INSERT INTO tblmail (accountID, senderID, senderName, characterID, title, mailContents, sentTime,mailRead,AttachmentType,AttachmentQuantity)
 	VALUES ('".$returnednames[0]['id']."','".$senderid."','".$mailfromname."','".$invcharId."','".		$mailtitle."','".$postcontents."',NOW(),'0','".$invTypesubmitted."','".$invQuantitysubmitted."')";
-				$result = mysql_query($query) or die ("couldn't execute query");
+				$result = mysqli_query($connection, $query) or die ("couldn't execute query");
 				
 if ($okToRemoveItem) {
 if ($moneyattached) {
 	// remove money:
 	$query = "update tblcharacters set money='".($moneyavailable-$invQuantitysubmitted)."' where charid='".$invcharId."'";
-	$result = mysql_query($query) or die ("couldn't execute query");
+	$result = mysqli_query($connection, $query) or die ("couldn't execute query");
 	
 	
 	} else {
@@ -320,10 +320,10 @@ if ($moneyattached) {
 		FROM tblMail
 		INNER JOIN tblacct on tblMail.accountID = tblacct.accountID
 		WHERE tblMail.mailid = '".$replyto."'";
-		$result = mysql_query($query) or die ("couldn't execute query");
-		$returned = mysql_num_rows($result);
+		$result = mysqli_query($connection, $query) or die ("couldn't execute query");
+		$returned = mysqli_num_rows($result);
 		if ($returned > 0) {
-			$row = mysql_fetch_array($result);
+			$row = mysqli_fetch_array($result);
 			extract($row);
 			$mailtitle='Re: '.$title;
 			$mailto=$senderName;
@@ -428,7 +428,7 @@ if (@$_SESSION['username']) {
 			from tblcharacters
 			inner join tblacct on tblacct.accountid = tblcharacters.accountid
 			WHERE tblacct.accountname='".$_SESSION['username']."'";
-			$result = mysql_query($query) or die ("couldn't execute query");
+			$result = mysqli_query($connection, $query) or die ("couldn't execute query");
 			
 			echo '<label for="from">From </label><select onchange="charchange()" name="from" id="from">';
 			echo '<option value="0" ';
@@ -439,7 +439,7 @@ if (@$_SESSION['username']) {
 			echo '>';
 			echo $_SESSION['username'];
 			echo '</option>';
-			while ($row = mysql_fetch_array($result)) {
+			while ($row = mysqli_fetch_array($result)) {
 				extract($row);
 				echo '<option value="'.$charID.'"';
 				if ($mailfrom == $charID) {
@@ -470,8 +470,8 @@ on tblmail.characterID=tblcharacters.charID where tblmail.mailID = '".$replyto."
 
 
 
-			$result4 = mysql_query($query) or die ("couldn't execute query");
-			$row4 = mysql_fetch_array($result4);
+			$result4 = mysqli_query($connection, $query) or die ("couldn't execute query");
+			$row4 = mysqli_fetch_array($result4);
 			extract($row4);
 			// the new recipient account id = the old sender account id:
 			$recipaccountID = $senderID;
@@ -484,8 +484,8 @@ on tblmail.characterID=tblcharacters.charID where tblmail.mailID = '".$replyto."
 				$charname=$_SESSION['username'];
 				// find primary character id
 				$query = "SELECT currentCharID from tblacct where accountName = '".$charname."'";
-				$result8 = mysql_query($query) or die ("couldn't execute query");
-				$row8 = mysql_fetch_array($result8);
+				$result8 = mysqli_query($connection, $query) or die ("couldn't execute query");
+				$row8 = mysqli_fetch_array($result8);
 				extract($row8);
 				$primarycharid  = $currentCharID;
 			} else {
@@ -499,11 +499,11 @@ on tblmail.characterID=tblcharacters.charID where tblmail.mailID = '".$replyto."
 			// query to determine the new sender's character id:
 			$query="select * from tblcharacters WHERE accountID='".$senderID."' and
 			charName='".$originalsendername."'";
-			$result3 = mysql_query($query) or die ("couldn't execute query");
-			$returned3 = mysql_num_rows($result3);
+			$result3 = mysqli_query($connection, $query) or die ("couldn't execute query");
+			$returned3 = mysqli_num_rows($result3);
 			if ($returned3 > 0) {
 				// found the character name:
-				$row3 = mysql_fetch_array($result3);
+				$row3 = mysqli_fetch_array($result3);
 				extract($row3);
 				$charid = $charID;
 			} else {

@@ -38,15 +38,15 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
 $activeEvents = [];
 $eventsQuery = "SELECT eventid from tblevents WHERE ((repeatsAnnually and ((dayofyear(now()) between (dayofyear(eventstart)) and (dayofyear(eventstart)+eventdurationdays-1)) or (dayofyear(now()) between (dayofyear(eventstart) - 365) and (dayofyear(eventstart)+eventdurationdays-366)))) or ((repeatsAnnually = 0) and (date(now()) between (eventstart) and (eventstart+eventdurationdays))))";
 
-    $eventsResult = mysql_query( $eventsQuery ) or die ( "couldn't execute events query: ".$eventsQuery );
-$numberofrows = mysql_num_rows( $eventsResult );
+    $eventsResult = mysqli_query($connection,  $eventsQuery ) or die ( "couldn't execute events query: ".$eventsQuery );
+$numberofrows = mysqli_num_rows( $eventsResult );
     if ( $numberofrows>0 ) {
-        while ( $row = mysql_fetch_array( $eventsResult ) ) {
+        while ( $row = mysqli_fetch_array( $eventsResult ) ) {
             //extract( $row );
             array_push($activeEvents, $row['eventid']);
         }
     }
-mysql_free_result($eventsResult);
+mysqli_free_result($eventsResult);
 
 
 $activeSeasonQuery = 'activeduringseason is null';
@@ -72,16 +72,16 @@ $activeQuestsIds = array();
 
 
 
-      $result = mysql_query($query) or die ();
-      if(mysql_num_rows($result)>0) {
+      $result = mysqli_query($connection, $query) or die ();
+      if(mysqli_num_rows($result)>0) {
       	$retinuePanelOutput .= '<h2>Your retinue:</h2>';
      $retinuePanelOutput .= '<ol id="retinueList">';
 
 $followerData = array();
-while ($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
+while ($row = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
     array_push($followerData, $row);
 }
-mysql_free_result($result);
+mysqli_free_result($result);
 
 
 
@@ -186,13 +186,13 @@ $questPanelDetailsOutput = "";
 // get a pool of the latest available quests (all latest quests, that aren;t active or completed by this character)
       $questsQuery = "SELECT * from tblretinuequests where tblretinuequests.questID NOT IN (SELECT questIdActiveOrComplete from tblretinuequestsactive where characterId='".$chr."') and ".$activeSeasonQuery." order by timeCreated DESC limit 12";
 
-$questsResult = mysql_query($questsQuery) or die ();
+$questsResult = mysqli_query($connection, $questsQuery) or die ();
   $retinuePanelOutput .= '<h2>Available quests:</h2>';
   $retinuePanelOutput .= '<div id="retinueAvailableQuestMap"><img src="/images/world-maps/eastern-continent.jpg" id="activeContinent" alt="Eastern Continent">';
-if(mysql_num_rows($questsResult)>0) {
+if(mysqli_num_rows($questsResult)>0) {
 
 //	$retinuePanelOutput .= "<ol>";
-	while ($questsRow = mysql_fetch_array($questsResult)) {
+	while ($questsRow = mysqli_fetch_array($questsResult)) {
       extract($questsRow);
       // map is 700 x 450
       $returnToBaseClass='';
@@ -260,7 +260,7 @@ $retinuePanelOutput .= "<p>No quests currently available</p>";
 }
   $retinuePanelOutput .= '<p id="retinueQuestTimeRequired">Time required:</p>';
    $retinuePanelOutput .= '<button id="retinueQuestStart" disabled="disabled">Start quest</button>';
-mysql_free_result($questsResult);
+mysqli_free_result($questsResult);
 
 $retinuePanelOutput .= '<div id="retinueDetailWrapper">'.$questPanelDetailsOutput.'</div>';
 

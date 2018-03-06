@@ -28,12 +28,12 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/header.php");
 
 
 $forumQuery = "select * from tblthreads where tblthreads.status>0 order by tblthreads.creationtime DESC limit 5";
-$result = mysql_query($forumQuery) or die ("couldn't execute query");
+$result = mysqli_query($connection, $forumQuery) or die ("couldn't execute query");
 
-if (mysql_num_rows($result) > 0) {
+if (mysqli_num_rows($result) > 0) {
 
 	echo "<ul>";
-	while ($row = mysql_fetch_array($result)) {
+	while ($row = mysqli_fetch_array($result)) {
 		extract($row);
 		echo '<li><a href="/forum/'.$cleanURL.'/">'.$title.'</a></li>';
 	}
@@ -48,15 +48,15 @@ if (mysql_num_rows($result) > 0) {
 
 $communityQuery = "select tblguilds.*, tblfreeformpages.*, tblguilds.cleanurl as guildURL, tblfreeformpages.cleanurl as pageURL from tblfreeformpages inner join tblguilds on tblfreeformpages.guildid = tblguilds.guildid WHERE tblfreeformpages.public='1' order by tblfreeformpages.creationtime DESC limit 5";
 
-$result = mysql_query($communityQuery) or die ("couldn't execute query");
+$result = mysqli_query($connection, $communityQuery) or die ("couldn't execute query");
 
-if (mysql_num_rows($result) > 0) {
+if (mysqli_num_rows($result) > 0) {
 
 	echo "<ul>";
 
 
 
-	while ($row = mysql_fetch_array($result)) {
+	while ($row = mysqli_fetch_array($result)) {
 
 		extract($row);
 
@@ -78,11 +78,11 @@ if (mysql_num_rows($result) > 0) {
 <h4>Latest from the Chronicle</h4>
 <?php
 $newsQuery = "select * from tblnews WHERE status='1' order by timeadded DESC limit 5";
-$result = mysql_query($newsQuery) or die ("couldn't execute query");
+$result = mysqli_query($connection, $newsQuery) or die ("couldn't execute query");
 
-if (mysql_num_rows($result) > 0) {
+if (mysqli_num_rows($result) > 0) {
 	echo "<ul>";
-	while ($row = mysql_fetch_array($result)) {
+	while ($row = mysqli_fetch_array($result)) {
 		extract($row);
 		echo '<li><a href="/chronicle/'.$cleanURL.'/">'.$newsTitle.'</a></li>';
 

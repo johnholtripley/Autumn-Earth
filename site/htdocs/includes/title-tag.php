@@ -57,10 +57,10 @@ $thisBuiltURL = $thisBuiltURL."forum/".$cleanURL."/";
 		tblposts on tblthreads.threadid = tblposts.threadid
 		where tblthreads.cleanURL='".$cleanURL."' order by tblposts.CreationTime limit 1
 		";
-		$result = mysql_query($query) or die ("couldn't execute query1");
-		$numberofrows = mysql_num_rows($result);
+		$result = mysqli_query($connection, $query) or die ("couldn't execute query1");
+		$numberofrows = mysqli_num_rows($result);
 		if ($numberofrows > 0) {
-			$row = mysql_fetch_array($result);
+			$row = mysqli_fetch_array($result);
 			extract ($row);
 			$pagetitle = strip_tags($title).' - Autumn Earth community site';
 			$longDescription = strip_tags($postcontent);
@@ -70,10 +70,10 @@ $thisBuiltURL = $thisBuiltURL."forum/".$cleanURL."/";
 	
 if(isset($_GET["thread"])) {
 $query = "select * from tblthreads WHERE threadID = '".cleanURL($_GET["thread"])."'";
-$result = mysql_query($query) or die ("couldn't execute query1");
-		$numberofrows = mysql_num_rows($result);
+$result = mysqli_query($connection, $query) or die ("couldn't execute query1");
+		$numberofrows = mysqli_num_rows($result);
 		if ($numberofrows > 0) {
-			$row = mysql_fetch_array($result);
+			$row = mysqli_fetch_array($result);
 			extract ($row);
 		$thisBuiltURL = $thisBuiltURL."forum/".$cleanURL."/";
 			$pagetitle = strip_tags($title).' - Autumn Earth community site';
@@ -84,10 +84,10 @@ $result = mysql_query($query) or die ("couldn't execute query1");
 	//top level forum:
 
 $query = "select * from tblforums WHERE cleanURL = '".cleanURL($_GET["forum"])."'";
-$result = mysql_query($query) or die ("couldn't execute query1");
-		$numberofrows = mysql_num_rows($result);
+$result = mysqli_query($connection, $query) or die ("couldn't execute query1");
+		$numberofrows = mysqli_num_rows($result);
 		if ($numberofrows > 0) {
-			$row = mysql_fetch_array($result);
+			$row = mysqli_fetch_array($result);
 			extract ($row);
 		$thisBuiltURL = $thisBuiltURL."forum/".$cleanURL."/";
 			$pagetitle = strip_tags($title).' - Autumn Earth community site';
@@ -107,10 +107,10 @@ $result = mysql_query($query) or die ("couldn't execute query1");
 case "herbarium":
 if (isset($_GET["plant"])) {
 $query = "select * from tblplants WHERE plantUrl = '".cleanURL($_GET["plant"])."'";
-$result = mysql_query($query) or die ("couldn't execute query1");
-		$numberofrows = mysql_num_rows($result);
+$result = mysqli_query($connection, $query) or die ("couldn't execute query1");
+		$numberofrows = mysqli_num_rows($result);
 		if ($numberofrows > 0) {
-			$row = mysql_fetch_array($result);
+			$row = mysqli_fetch_array($result);
 			extract ($row);
 		$thisBuiltURL = $thisBuiltURL."herbarium/".$plantUrl."/";
 			$pagetitle = $latinName.' - ' .$commonNames. ' - Autumn Earth Herbarium';
@@ -121,10 +121,10 @@ $result = mysql_query($query) or die ("couldn't execute query1");
 		// herbarium home
 $needsSeoPagination = true;
 $query = "select * from tblplants limit 1";
-$result = mysql_query($query) or die ("couldn't execute query1");
-		$numberofrows = mysql_num_rows($result);
+$result = mysqli_query($connection, $query) or die ("couldn't execute query1");
+		$numberofrows = mysqli_num_rows($result);
 		if ($numberofrows > 0) {
-			$row = mysql_fetch_array($result);
+			$row = mysqli_fetch_array($result);
 			extract ($row);
 		}
 
@@ -143,10 +143,10 @@ case "codex":
 if (isset($_GET["cleanURL"])) {
 
 $query = "select * from tblinventoryitems where cleanurl = '".$_GET["cleanURL"]."' and showinthecodex>0";
-$result = mysql_query($query) or die ("couldn't execute query");
-$numberofrows = mysql_num_rows($result);
+$result = mysqli_query($connection, $query) or die ("couldn't execute query");
+$numberofrows = mysqli_num_rows($result);
 		if ($numberofrows > 0) {
-			$row = mysql_fetch_array($result);
+			$row = mysqli_fetch_array($result);
 			extract ($row);
 			$thisBuiltURL = $thisBuiltURL."codex/".$_GET["cleanURL"];
 		$pagetitle = $shortname.' in the Autumn Earth Codex';
@@ -171,10 +171,10 @@ break;
 $query = "select tblauctionitems.*, tblinventoryitems.* from tblauctionitems inner join tblinventoryitems on tblauctionitems.itemID = tblinventoryitems.itemID
  where tblauctionitems.auctionID='".$auctionId."'";
 
-$result = mysql_query($query) or die ("couldn't execute query1");
-		$numberofrows = mysql_num_rows($result);
+$result = mysqli_query($connection, $query) or die ("couldn't execute query1");
+		$numberofrows = mysqli_num_rows($result);
 		if ($numberofrows > 0) {
-			$row = mysql_fetch_array($result);
+			$row = mysqli_fetch_array($result);
 			extract ($row);
 $pagetitle = $shortname." for sale on the Autumn Earth Auction House";
 $longDescription = $description;
@@ -191,10 +191,10 @@ case "events":
 
 if(isset($_GET["eventName"])) {
 $query = "select * from tblEvents where cleanURL='".$_GET["eventName"]."'";
-$result = mysql_query($query) or die ("couldn't execute query");
+$result = mysqli_query($connection, $query) or die ("couldn't execute query");
 
-if (mysql_num_rows($result) > 0) {
-while ($row = mysql_fetch_array($result)) {
+if (mysqli_num_rows($result) > 0) {
+while ($row = mysqli_fetch_array($result)) {
 extract ($row);
 	$pagetitle = $title." - an Event in Autumn Earth";
 	$longDescription = strip_tags($eventContent);
@@ -225,10 +225,10 @@ $thisBuiltURL = $thisBuiltURL."chronicle/".$cleanURL."/";
 
 $longDescription = 'A news article from the Autumn Earth community site';
 $query ="select * from tblnews where cleanURL='".$cleanURL."'";
-$result = mysql_query($query) or die ("couldn't execute query1");
-		$numberofrows = mysql_num_rows($result);
+$result = mysqli_query($connection, $query) or die ("couldn't execute query1");
+		$numberofrows = mysqli_num_rows($result);
 		if ($numberofrows > 0) {
-			$row = mysql_fetch_array($result);
+			$row = mysqli_fetch_array($result);
 			extract ($row);
 			$pagetitle = strip_tags($newsTitle).' - Autumn Earth news';
 			$longDescription = strip_tags($newsContent);

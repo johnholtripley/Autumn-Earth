@@ -19,12 +19,12 @@ $fullCleanedURL = $forumURL."/".$threadURL;
 
 
 $query = "select threadid, cleanurl from tblthreads WHERE cleanurl = '".$fullCleanedURL."'";
-$result = mysql_query($query) or die ("couldn't execute query");
+$result = mysqli_query($connection, $query) or die ("couldn't execute query");
 
-if (mysql_num_rows($result) > 0) {
+if (mysqli_num_rows($result) > 0) {
 
 
-$row = mysql_fetch_array($result);
+$row = mysqli_fetch_array($result);
 
 $threadID = $row["threadid"];
 
@@ -57,14 +57,14 @@ INNER JOIN tblacct on tblsubscribedthreads.accountid = tblacct.accountid
 INNER JOIN tblthreads on tblsubscribedthreads.threadid = tblthreads.threadid
 WHERE tblacct.accountid = tblsubscribedthreads.accountid AND tblthreads.threadid = '".$threadID."' AND tblsubscribedthreads.status='1' AND tblacct.accountname = '".$_SESSION['username']."'";
 
-$result = mysql_query($query) or die ("couldn't execute query1");
-$numberofrows = mysql_num_rows($result);
+$result = mysqli_query($connection, $query) or die ("couldn't execute query1");
+$numberofrows = mysqli_num_rows($result);
 if ($numberofrows > 0) {
-$row = mysql_fetch_array($result);
+$row = mysqli_fetch_array($result);
 extract ($row);
 // update status
 $query = "update tblsubscribedthreads SET status='0' WHERE accountid='".$useracctid."' AND threadid='".$threadID."'";
-$result = mysql_query($query) or die ("couldn't execute query2");
+$result = mysqli_query($connection, $query) or die ("couldn't execute query2");
 }
 	}
 	
@@ -80,9 +80,9 @@ WHERE tblposts.threadid = " . $threadID . " ORDER BY tblposts.sticky DESC, tblpo
 
 
 	
-		$result = mysql_query($query) or die ("couldn't execute query3");
+		$result = mysqli_query($connection, $query) or die ("couldn't execute query3");
 	
-	$numberofrows = mysql_num_rows($result);
+	$numberofrows = mysqli_num_rows($result);
 	
 	
 // check that something is returned
@@ -108,7 +108,7 @@ WHERE tblposts.threadid = " . $threadID . " ORDER BY tblposts.sticky DESC, tblpo
 		$isfirsttime = true;
 		
 		$rowcount = 0;
-		while ($row = mysql_fetch_array($result)) {
+		while ($row = mysqli_fetch_array($result)) {
 		
 		if (($rowcount>= $startpoint) && ($rowcount<$endpoint)) {
 		// show these results

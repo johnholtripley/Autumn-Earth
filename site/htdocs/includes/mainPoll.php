@@ -10,13 +10,13 @@ $query = "select tblmainpoll.*, tblMainpollchoices.response, tblMainpollchoices.
 from tblmainpoll
 inner join tblMainpollchoices on tblMainpollchoices.pollid = tblmainpoll.pollid
 where tblmainpoll.isCurrent = true";
-$result = mysql_query($query) or die ("couldn't execute query");
+$result = mysqli_query($connection, $query) or die ("couldn't execute query");
 
-$numberofrows = mysql_num_rows($result);
+$numberofrows = mysqli_num_rows($result);
 // check that something is returned
 if ($numberofrows > 0) {
 $firsttime = true;
-while ($row = mysql_fetch_array($result)) {
+while ($row = mysqli_fetch_array($result)) {
 				extract($row);
 				if ($firsttime) {
 				// output form head:

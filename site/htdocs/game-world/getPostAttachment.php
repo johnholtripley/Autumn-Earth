@@ -11,9 +11,9 @@ $mailId = substr($_GET["id"], 11);
 $hasAttachment = false;
 $query = "SELECT * FROM tblmail where MD5(mailId)='".$mailId."'";
 
-      $result = mysql_query($query);
-if(mysql_num_rows($result)>0) {
-  while ($row = mysql_fetch_array($result)) {
+      $result = mysqli_query($connection, $query);
+if(mysqli_num_rows($result)>0) {
+  while ($row = mysqli_fetch_array($result)) {
     extract($row);
     if($attachment) {
       if(!$attachmentTaken) {
@@ -33,6 +33,6 @@ if($hasAttachment) {
   echo '{"item":"null"}';
 }
 
-mysql_free_result($result);
+mysqli_free_result($result);
 
 ?>

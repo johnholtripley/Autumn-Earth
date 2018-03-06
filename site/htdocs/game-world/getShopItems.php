@@ -80,16 +80,16 @@ $thisMapsRegion = $jsonData['region'];
 // get any Regional modifiers:
 $modifiersQuery = "SELECT * from tblregionalpricemodifiers WHERE whichregion = '".$thisMapsRegion ."'";
 $categoryModifier = array();
-    $modifiersResult = mysql_query( $modifiersQuery ) or die ( "couldn't execute query: ".$modifiersQuery );
-$numberofrows = mysql_num_rows( $modifiersResult );
+    $modifiersResult = mysqli_query($connection,  $modifiersQuery ) or die ( "couldn't execute query: ".$modifiersQuery );
+$numberofrows = mysqli_num_rows( $modifiersResult );
     if ( $numberofrows>0 ) {
-        while ( $modifierRow = mysql_fetch_array( $modifiersResult ) ) {
+        while ( $modifierRow = mysqli_fetch_array( $modifiersResult ) ) {
             extract( $modifierRow );
 
             $categoryModifier[$itemCategory] = floatval($priceModifier);
         }
     }
-mysql_free_result($modifiersResult);
+mysqli_free_result($modifiersResult);
 
 
 
@@ -102,12 +102,12 @@ $markupToOutput = '';
 // get colours:
 $coloursQuery = "SELECT * from tblcolours";
 $allColours = [];
-$colourResult = mysql_query($coloursQuery) or die ("recipes failed");
-while ($colourRow = mysql_fetch_array($colourResult)) {
+$colourResult = mysqli_query($connection, $coloursQuery) or die ("recipes failed");
+while ($colourRow = mysqli_fetch_array($colourResult)) {
     extract($colourRow);
     array_push($allColours, $colourName);
 }
-mysql_free_result($colourResult);
+mysqli_free_result($colourResult);
 // just use "primary" colours:
 $colourIndicesToUse = [1,2,4,5,6,8,16];
  
@@ -118,15 +118,15 @@ $colourIndicesToUse = [1,2,4,5,6,8,16];
 $activeEvents = [];
 $eventsQuery = "SELECT eventid from tblevents WHERE ((repeatsAnnually and ((dayofyear(now()) between (dayofyear(eventstart)) and (dayofyear(eventstart)+eventdurationdays-1)) or (dayofyear(now()) between (dayofyear(eventstart) - 365) and (dayofyear(eventstart)+eventdurationdays-366)))) or ((repeatsAnnually = 0) and (date(now()) between (eventstart) and (eventstart+eventdurationdays))))";
 
-    $eventsResult = mysql_query( $eventsQuery ) or die ( "couldn't execute events query: ".$eventsQuery );
-$numberofrows = mysql_num_rows( $eventsResult );
+    $eventsResult = mysqli_query($connection,  $eventsQuery ) or die ( "couldn't execute events query: ".$eventsQuery );
+$numberofrows = mysqli_num_rows( $eventsResult );
     if ( $numberofrows>0 ) {
-        while ( $row = mysql_fetch_array( $eventsResult ) ) {
+        while ( $row = mysqli_fetch_array( $eventsResult ) ) {
             //extract( $row );
             array_push($activeEvents, $row['eventid']);
         }
     }
-mysql_free_result($eventsResult);
+mysqli_free_result($eventsResult);
 
 
 $activeSeasonQuery = 'tblinventoryitems.activeduringseason is null';
@@ -145,12 +145,12 @@ if(count($jsonData['shops'][$i]["categories"]) > 0) {
 $query2 = "SELECT tblinventoryitems.* from tblinventoryitems where tblinventoryitems.itemcategories in (".implode(",",$jsonData['shops'][$i]["categories"]).") and tblinventoryitems.pricecode <= ".$shopSizePriceLimits[($jsonData['shops'][$i]["size"])]." and ".$activeSeasonQuery." and tblinventoryitems.showinthecodex = 1 order by tblinventoryitems.shortname ASC";
 // Get colour variants as well for relevant items
  
-$result2 = mysql_query($query2) or die ("failed:".$query2);
+$result2 = mysqli_query($connection, $query2) or die ("failed:".$query2);
  
-while ($row = mysql_fetch_array($result2, MYSQL_ASSOC)) {
+while ($row = mysqli_fetch_array($result2, MYSQLI_ASSOC)) {
     array_push($inventoryData, $row);
 }
-mysql_free_result($result2);
+mysqli_free_result($result2);
  
 }
 
@@ -165,8 +165,8 @@ if(count($jsonData['shops'][$i]["uniqueItems"])>0) {
  
 $query3 = "SELECT tblinventoryitems.* from tblinventoryitems where tblinventoryitems.itemID in (".$itemIdsToGet.") order by tblinventoryitems.shortname ASC";
  
-$result3 = mysql_query($query3) or die ("recipes failed:".$query3);
-while ($row = mysql_fetch_array($result3, MYSQL_ASSOC)) {
+$result3 = mysqli_query($connection, $query3) or die ("recipes failed:".$query3);
+while ($row = mysqli_fetch_array($result3, MYSQLI_ASSOC)) {
    
     // check if any of the unique data overides the defaults:
     $thisUniqueItem = $jsonData['shops'][$i]["uniqueItems"][$row["itemID"]];
@@ -179,7 +179,7 @@ array_push($inventoryData, $row);
     }
  
 }
-mysql_free_result($result3);
+mysqli_free_result($result3);
 }
  
  

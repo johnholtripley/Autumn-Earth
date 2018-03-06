@@ -23,9 +23,9 @@ if ($_POST["logincheck"] == 'posted') {
 	$pwordkey = "AsOiD" . strtolower(substr($processedlogin, 0, 2));
 	 $query = "SELECT * FROM tblAcct WHERE accountName='" . $processedlogin . "' AND password=AES_ENCRYPT('" . 		$processedpassword . "','" . $pwordkey . "')";
 	// $query = "SELECT * FROM tblAcct WHERE accountName='" . $processedlogin . "'";
-	$result = mysql_query($query) or die ("couldn't execute query");
+	$result = mysqli_query($connection, $query) or die ("couldn't execute query");
 	
-	$returned = mysql_num_rows($result);
+	$returned = mysqli_num_rows($result);
 	
 
 
@@ -33,7 +33,7 @@ if ($_POST["logincheck"] == 'posted') {
 	if ($returned > 0) {
 		// name exists, and passwords match
 		// check account type:
-		$row = mysql_fetch_array($result);
+		$row = mysqli_fetch_array($result);
 		extract($row);
 
 		switch ($accountType) {
@@ -52,9 +52,9 @@ if ($_POST["logincheck"] == 'posted') {
 		
 		// check for mail:
 			$query = "SELECT tblMail.*, tblacct.accountID, tblacct.accountName as useracctid FROM tblMail INNER JOIN tblacct on tblMail.accountID = tblacct.accountID WHERE tblacct.accountName='".$processedlogin."' and tblmail.mailread = '0'";
-	$result = mysql_query($query) or die ("couldn't execute query2");
+	$result = mysqli_query($connection, $query) or die ("couldn't execute query2");
 	
-		$returned = mysql_num_rows($result);
+		$returned = mysqli_num_rows($result);
 
 	if ($returned > 0) {
 		// user has new mail
@@ -140,7 +140,7 @@ if (isset($_POST["mainPollButton"])) {
 if ($_POST["mainPollButton"] == "Vote") {
 	$vote = $_POST["pollOption"];
 	$query = "update tblmainpollchoices set voteCount=voteCount+1 where choiceID='".$vote."'";
-	$result = mysql_query($query) or die ("couldn't execute poll query");
+	$result = mysqli_query($connection, $query) or die ("couldn't execute poll query");
 	header("Location: ViewPollResults.php?poll=".$_POST["pollID"]);
 	
 }

@@ -139,7 +139,7 @@ echo "<p>Tweeted content:<br>".nl2br($textString)."</p>";
 $query = "INSERT INTO tblplants (latinName,commonNames,commonNamesJoined,timeCreated,plantDesc,plantUrl,tweetedContent,isAquatic,isNight,plantSeed)
 VALUES ('" . $latinName . "','" . $commonNameString . "','" . $commonNamesJoined . "',NOW(),'".$startingText."','".$plantURL."','".$textString."','".$isAquatic."','".$isNight."','".$storedSeed."')";
 
-$result = mysql_query($query) or die ("couldn't execute tblplant query");
+$result = mysqli_query($connection, $query) or die ("couldn't execute tblplant query");
 //}
 
 
@@ -1209,18 +1209,18 @@ if(strpos($startingText, '++month++') !== false) {
 if(strpos($startingText, '++otherplants++') !== false) {
 	// find other plant names:
 	$plantNameQuery = "SELECT * from tblplants ORDER BY timeCreated DESC LIMIT 36";
-	$plantNameResult = mysql_query($plantNameQuery) or die ("couldn't execute query");
+	$plantNameResult = mysqli_query($connection, $plantNameQuery) or die ("couldn't execute query");
 	$otherPlantNames = array();
 	$otherPlantNameURLs = array();
-	if (mysql_num_rows($plantNameResult) > 0) {
-	  while ($row = mysql_fetch_array($plantNameResult)) {
+	if (mysqli_num_rows($plantNameResult) > 0) {
+	  while ($row = mysqli_fetch_array($plantNameResult)) {
 	    extract($row);
 	    $otherNames =  explode("/",$commonNamesJoined);
 	    array_push($otherPlantNames,$otherNames[0]);
 	    array_push($otherPlantNameURLs,$plantUrl);
 	  }
 	}
-	mysql_free_result($plantNameResult);
+	mysqli_free_result($plantNameResult);
 	$plantNamesUsed = mt_rand(0, count($otherPlantNames) - 1);
 	do {
 		$startingText = str_replace_first('++otherplants++', '<a href="https://www.autumnearth.com/herbarium/'.$otherPlantNameURLs[$plantNamesUsed].'/">'.$otherPlantNames[$plantNamesUsed].'</a>', $startingText);

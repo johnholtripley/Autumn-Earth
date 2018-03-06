@@ -34,9 +34,9 @@ $threadtitle = htmlCharsToEntities(cleanText($_POST["threadtitle"]));
 $threadURL = "";
 
 $forumURLQuery = "select tblforums.title as forumTitle from tblforums where forumID = '".$forumID."'";
-$result = mysql_query($forumURLQuery) or die ("couldn't execute query1");
-if (mysql_num_rows($result) > 0) {
-	while ($row = mysql_fetch_array($result)) {
+$result = mysqli_query($connection, $forumURLQuery) or die ("couldn't execute query1");
+if (mysqli_num_rows($result) > 0) {
+	while ($row = mysqli_fetch_array($result)) {
 
 	extract($row);
 	$threadURL = cleanURL($forumTitle)."/";
@@ -49,16 +49,16 @@ if (mysql_num_rows($result) > 0) {
 // make sure that cleanURL is unique:
 $tempURL = $threadURL.cleanURL($threadtitle);
 $checkQuery = "select * from tblthreads where cleanURL='".$tempURL."'";
-$result = mysql_query($checkQuery) or die ("couldn't execute query1");
-if (mysql_num_rows($result) > 0) {
-$i = mysql_num_rows($result) + 1;
+$result = mysqli_query($connection, $checkQuery) or die ("couldn't execute query1");
+if (mysqli_num_rows($result) > 0) {
+$i = mysqli_num_rows($result) + 1;
 do {
 $tryURL = $tempURL."-".$i;
 $checkQuery = "select * from tblthreads where cleanURL='".$tryURL."'";
-$result = mysql_query($checkQuery) or die ("couldn't execute query1");
+$result = mysqli_query($connection, $checkQuery) or die ("couldn't execute query1");
 
 $i++;
-} while (mysql_num_rows($result) > 0);
+} while (mysqli_num_rows($result) > 0);
 $cleanedURL = $tryURL;
 	} else {
 		$cleanedURL = $tempURL;
@@ -75,39 +75,39 @@ $cleanedURL = $tryURL;
 
 $query = "INSERT INTO tblthreads (forumID,accountID,viewcount,creationTime,title,cleanURL,status,sticky,postcount)
 VALUES ('" . $forumID . "','" . $useraccountID . "','0',NOW(),'".$threadtitle."','".$cleanedURL."','2','0','1')";
-$result = mysql_query($query) or die ("couldn't execute query1");
+$result = mysqli_query($connection, $query) or die ("couldn't execute query1");
 
 // find what the id of this thread was:
 
-$thisthreadid = mysql_insert_id();
+$thisthreadid = mysqli_insert_id();
 
 
 
 // add post
 $query = "INSERT INTO tblPosts (threadID,accountID,creationTime,postContent,status,sticky,edited)
 VALUES ('" . $thisthreadid . "','" . $useraccountID . "',NOW(),'" . $postcontents . "','1','0','0')";
-$result = mysql_query($query) or die ("couldn't execute query2");
+$result = mysqli_query($connection, $query) or die ("couldn't execute query2");
 
 // find what the id of this post was:
-$thispostid = mysql_insert_id();
+$thispostid = mysqli_insert_id();
 // insert this id into the thread table:
 $query = "UPDATE tblthreads SET latestPostID = ".$thispostid." WHERE threadid=" . $thisthreadid;
-$result = mysql_query($query) or die ("couldn't execute query3");
+$result = mysqli_query($connection, $query) or die ("couldn't execute query3");
 
 
 // update users post count:
 $query = "UPDATE tblacct SET postCount = postCount+1 WHERE accountID=" . $useraccountID;
-$result = mysql_query($query) or die ("couldn't execute query4");
+$result = mysqli_query($connection, $query) or die ("couldn't execute query4");
 
 
 // check the user's subscriptions and add this thread to their list if required:
 			$query = "select * from tblsubscribedthreads where accountID='".$useraccountID."' AND threadID='".$thisthreadid."'";
-			$result = mysql_query($query) or die ("couldn't execute query3");
-			$numberofrows = mysql_num_rows($result);
+			$result = mysqli_query($connection, $query) or die ("couldn't execute query3");
+			$numberofrows = mysqli_num_rows($result);
 			if ($numberofrows < 1) {
 				$query = "insert into tblsubscribedthreads (accountID, threadID, status)
 				values ('".$useraccountID."','".$thisthreadid."','0')";
-				$result = mysql_query($query) or die ("couldn't execute query4");
+				$result = mysqli_query($connection, $query) or die ("couldn't execute query4");
 			}
 
 // as a new thread this will be post #1, so don't need to pass which page this post will be on
@@ -136,9 +136,9 @@ if (@$_SESSION['username']) {
 
 $query = "SELECT * from tblAcct WHERE accountname = '" . $_SESSION['username'] . "'";
 
-$result = mysql_query($query) or die ("couldn't execute query");
+$result = mysqli_query($connection, $query) or die ("couldn't execute query");
 
-$row = mysql_fetch_array($result);
+$row = mysqli_fetch_array($result);
 extract($row);
 $useraccount = $accountID;
 
