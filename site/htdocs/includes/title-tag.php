@@ -166,7 +166,7 @@ break;
 
      case "auction":
     // if auction item show details for that
-
+if(isset($_GET["item"])) {
     $auctionId = $_GET["item"];
 $query = "select tblauctionitems.*, tblinventoryitems.* from tblauctionitems inner join tblinventoryitems on tblauctionitems.itemID = tblinventoryitems.itemID
  where tblauctionitems.auctionID='".$auctionId."'";
@@ -180,6 +180,10 @@ $pagetitle = $shortname." for sale on the Autumn Earth Auction House";
 $longDescription = $description;
 	$shareImagePath = "https://www.autumnearth.com/images/inventory/".$itemID.".jpg";
 		}
+	} else {
+			$pagetitle = 'Autumn Earth Auctions';
+		$longDescription = 'Auctions in the world of Autumn Earth';
+	}
         break;
           case "mail":
     // default
