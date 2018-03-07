@@ -622,6 +622,7 @@ $string = strtr($string, array('é' => 'e', 'è' => 'e'));
  
  
 function displayAuctionItemsEndingSoon( $itemLimit ) {
+    global $connection;
     $query = "SELECT tblauctionitems.*, tblinventoryitems.itemid, tblinventoryitems.shortname
     FROM tblauctionitems
     inner join tblinventoryitems on tblauctionitems.itemid = tblinventoryitems.itemid
@@ -667,7 +668,7 @@ order by tblauctionbids.bidamount DESC limit 2
                 // get the one bidder's name:
                 $row3 = mysqli_fetch_array( $result3 );
                 extract( $row3 );
-                $highbidder = $charName;
+                $highbidder = $charname;
                 $currentprice = $startPrice;
                 break;
             case 2:
@@ -675,7 +676,7 @@ order by tblauctionbids.bidamount DESC limit 2
                 $row3 = mysqli_fetch_array( $result3 );
                 extract( $row3 );
                 $highbid = $bidAmount;
-                $highbidder = $charName;
+                $highbidder = $charname;
                 $row3b = mysqli_fetch_array( $result3 );
                 extract( $row3b );
                 $secondhighbid = $bidAmount;
@@ -702,6 +703,7 @@ outputAuctionCard($itemID, $auctionID, $quantity, $shortname, $currentprice, $re
  
  
 function displayAuctionNewestItems( $itemLimit ) {
+        global $connection;
     $query = "SELECT tblauctionitems.*, tblinventoryitems.itemid, tblinventoryitems.shortname
     FROM tblauctionitems
     inner join tblinventoryitems on tblauctionitems.itemid = tblinventoryitems.itemid
@@ -747,7 +749,7 @@ order by tblauctionbids.bidamount DESC limit 2
                 // get the one bidder's name:
                 $row3 = mysqli_fetch_array( $result3 );
                 extract( $row3 );
-                $highbidder = $charName;
+                $highbidder = $charname;
                 $currentprice = $startPrice;
                 break;
             case 2:
@@ -755,7 +757,7 @@ order by tblauctionbids.bidamount DESC limit 2
                 $row3 = mysqli_fetch_array( $result3 );
                 extract( $row3 );
                 $highbid = $bidAmount;
-                $highbidder = $charName;
+                $highbidder = $charname;
                 $row3b = mysqli_fetch_array( $result3 );
                 extract( $row3b );
                 $secondhighbid = $bidAmount;
@@ -816,7 +818,7 @@ if ( $buyItNowPrice != '-1' ) {
  
  
 function displayContractNewestItems( $itemLimit ) {
- 
+     global $connection;
     $query = "SELECT tblcontracts.*, tblinventoryitems.itemID, tbllocations.locName as startLocName, tbllocations.locName as LocName, tblinventoryitems.shortname
     FROM tblcontracts
     inner join tblinventoryitems on tblcontracts.itemid = tblinventoryitems.itemid
@@ -946,7 +948,7 @@ order by tblcontractbids.bidAmount DESC limit 1
  
  
 function displayContractItemsEndingSoon( $itemLimit ) {
- 
+     global $connection;
     $query = "SELECT tblcontracts.*, tblinventoryitems.itemID, tbllocations.locName as startLocName, tbllocations.locName as LocName, tblinventoryitems.shortname
     FROM tblcontracts
     inner join tblinventoryitems on tblcontracts.itemid = tblinventoryitems.itemid
@@ -1151,6 +1153,7 @@ usort($eventData, 'date_compare');
  
  
 function displayDeepestDelvers() {
+        global $connection;
     // get all dungeons:
     $query = "select * from tbldungeonmapconfig";
     $result = mysqli_query($connection,  $query ) or die ( "couldn't execute query" );

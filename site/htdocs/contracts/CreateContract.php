@@ -9,8 +9,7 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/functions.php");
 
 
 include($_SERVER['DOCUMENT_ROOT']."/includes/header.php");
-include($_SERVER['DOCUMENT_ROOT']."/includes/login.php");
-include($_SERVER['DOCUMENT_ROOT']."/includes/search.php");
+
 echo '<br /><br />';
 
 // check if username exists in session or they've just logged in:
