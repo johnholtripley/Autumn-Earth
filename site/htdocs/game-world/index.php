@@ -18,14 +18,16 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
   <link rel="preconnect" href="//fonts.googleapis.com">
   <?php
   // link rel="preload" fonts
-  // favicons
-  // meta data
-  // social data
   ?>
   <link rel="canonical" href="https://www.autumnearth.com/" itemprop="url">
   <link href="https://plus.google.com/+Autumnearth" rel="publisher">
   <meta name="robots" content="noodp,noydir">
   <link href="https://fonts.googleapis.com/css?family=Lato%7CBree+Serif%7CIM+Fell+English" rel="stylesheet">
+  <?php
+    $thisBuiltURL = "https://www.autumnearth.com/game-world/";
+    $longDescription = "The game world of Autumn Earth";
+    $metaPageType = "game";
+  ?>
   <?php include($_SERVER['DOCUMENT_ROOT']."/includes/meta-content.php"); ?>
   <?php include($_SERVER['DOCUMENT_ROOT']."/game-world/getPost.php"); ?>
   <?php include($_SERVER['DOCUMENT_ROOT']."/game-world/getRetinueFollowers.php"); ?>

@@ -321,7 +321,7 @@ gulp.task('favicons', function() {
 // ----------------------------------
 
 
-
+var newVersionNumber;
 // read cache version number and increment it:
 gulp.task('cacheBusting', function() {
     fs.readFile('htdocs/includes/siteVersion.txt', 'utf8', function(err, data) {

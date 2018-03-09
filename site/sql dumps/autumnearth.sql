@@ -1,20 +1,22 @@
 -- phpMyAdmin SQL Dump
--- version 4.3.11
--- http://www.phpmyadmin.net
+-- version 4.7.4
+-- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 05, 2018 at 05:49 PM
--- Server version: 5.6.24
--- PHP Version: 5.6.8
+-- Generation Time: Mar 08, 2018 at 10:26 AM
+-- Server version: 10.1.30-MariaDB
+-- PHP Version: 7.0.27
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
+START TRANSACTION;
 SET time_zone = "+00:00";
 
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
+/*!40101 SET NAMES utf8mb4 */;
 
 --
 -- Database: `autumnearth`
@@ -26,7 +28,7 @@ SET time_zone = "+00:00";
 -- Table structure for table `tblacct`
 --
 
-CREATE TABLE IF NOT EXISTS `tblacct` (
+CREATE TABLE `tblacct` (
   `accountID` int(11) NOT NULL,
   `accountName` varchar(25) DEFAULT NULL,
   `accountStatus` char(1) DEFAULT NULL,
@@ -44,7 +46,7 @@ CREATE TABLE IF NOT EXISTS `tblacct` (
   `emailalerts` char(1) DEFAULT NULL,
   `uniqueID` varchar(255) DEFAULT NULL,
   `usersIPAddress` varchar(15) DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=52 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblacct`
@@ -70,7 +72,7 @@ INSERT INTO `tblacct` (`accountID`, `accountName`, `accountStatus`, `joinedTime`
 (36, 'dilly', '2', '2015-06-26 13:47:48', '0', 0, 1, 'john.holtripley@gmail.com', '2001-05-06 00:00:00', '1', '1', 'F', 'meowmeow', '1', '1', 'ee3645262904c31781e14a223ca94eef', '127.0.0.1'),
 (37, 'dilly2', '2', '2015-06-26 13:48:43', '0', 0, 1, 'john.holtripley@gmail.com', '2003-08-05 00:00:00', '1', '1', '', 'fgf ', '1', '1', 'f8a8d8c8d229b2fb3e670e2335c024ff', '127.0.0.1'),
 (38, 'dilly3', '2', '2015-06-26 13:49:44', '0', 0, 1, 'john.holtripley@gmail.com', '2002-08-08 00:00:00', '1', '1', '', 'meowmeowmeow', '1', '1', '96691fd1228ccac76e92a51376410290', '127.0.0.1'),
-(39, 'dilly4', '2', '2015-06-30 12:16:37', '0', 2, 14, 'john.holtripley@gmail.com', '2015-01-01 00:00:00', '1', '1', 'F', 'dilly''s sig', '1', '1', '9c8fe4a786a619ae2a79f8e7a30b0903', '127.0.0.1'),
+(39, 'dilly4', '2', '2015-06-30 12:16:37', '0', 2, 14, 'john.holtripley@gmail.com', '2015-01-01 00:00:00', '1', '1', 'F', 'dilly\'s sig', '1', '1', '9c8fe4a786a619ae2a79f8e7a30b0903', '127.0.0.1'),
 (40, 'dilly5', '2', '2015-07-01 12:49:57', '0', 0, 1, 'john.holtripley@gmail.com', '2015-01-01 00:00:00', '1', '1', 'F', 'hi', '1', '1', 'c10714bb83b8f9e435846ca4d7f4de5a', '127.0.0.1'),
 (41, 'dilly6', '2', '2015-07-01 12:52:56', '0', 0, 1, 'john.holtripley@gmail.com', '2015-01-01 00:00:00', '1', '1', '', 'dd', '1', '1', 'cc795b52a79da76c0ec6c2fb8a47139f', '127.0.0.1'),
 (42, 'dilly7', '2', '2015-07-01 12:56:40', '0', 0, 1, 'john.holtripley@gmail.com', '2015-01-01 00:00:00', '1', '1', 'q\r', 'dfd ', '1', '1', '5c06003a835996f6e991ba9c9d07f213', '127.0.0.1'),
@@ -80,8 +82,8 @@ INSERT INTO `tblacct` (`accountID`, `accountName`, `accountStatus`, `joinedTime`
 (46, 'dilly11', '2', '2015-07-01 13:07:28', '0', 0, 1, 'john.holtripley@gmail.com', '2001-05-01 00:00:00', '1', '1', 'nÝ|•ÇG©”ª !²n‹*', 'ddd sdas das dsad ', '1', '1', '1bf279b495f3db4e193db87bc53fcd60', '127.0.0.1'),
 (47, 'dilly12', '2', '2015-07-01 13:10:38', '0', 0, 1, 'john.holtripley@gmail.com', '2015-01-01 00:00:00', '1', '1', '`ézz[£WÝu\raôÝ§', 'dilly12', '1', '1', '0b6ad46b1589a181e0402562c0b1d9e1', '127.0.0.1'),
 (48, 'dilly20', '2', '2015-07-03 14:02:41', '0', 13, 15, 'john.holtripley@gmail.com', '2015-01-01 00:00:00', '1', '1', 'ÞÉ/ê;}6Ôx|Ökd', 'dilly20', '1', '1', '3dcbb605f6e3545f33d0e1fe54042f97', '127.0.0.1'),
-(49, 'dilly21', '2', '2015-07-03 14:03:09', '0', 0, 16, 'john.holtripley@gmail.com', '2015-01-01 00:00:00', '1', '1', 'œé+''ÍÍiffA`jÔ@', 'dilly21', '1', '1', '55561f21c5445a16e9e306fae400b08c', '127.0.0.1'),
-(50, 'dilly22', '2', '2015-08-04 15:10:24', '0', 0, 1, 'john.holtripley@gmail.com', '2007-04-03 00:00:00', '1', '1', '.{[ÄX%tl¢"ÔÉF', 'sdsd', '1', '1', 'fb4d713852301b8dff21ff63f376b45f', '127.0.0.1'),
+(49, 'dilly21', '2', '2015-07-03 14:03:09', '0', 0, 16, 'john.holtripley@gmail.com', '2015-01-01 00:00:00', '1', '1', 'œé+\'ÍÍiffA`jÔ@', 'dilly21', '1', '1', '55561f21c5445a16e9e306fae400b08c', '127.0.0.1'),
+(50, 'dilly22', '2', '2015-08-04 15:10:24', '0', 0, 1, 'john.holtripley@gmail.com', '2007-04-03 00:00:00', '1', '1', '.{[ÄX%tl¢\"ÔÉF', 'sdsd', '1', '1', 'fb4d713852301b8dff21ff63f376b45f', '127.0.0.1'),
 (51, 'test', '2', '2015-11-20 14:31:58', '0', 0, 1, 'john.holtripley@gmail.com', '2015-01-01 00:00:00', '1', '1', '®)ª¹ì?¨åÑ·“¯ä¥', '', '1', '1', '9c7129e26978a03b58eb1a6375c50067', '127.0.0.1');
 
 -- --------------------------------------------------------
@@ -90,12 +92,12 @@ INSERT INTO `tblacct` (`accountID`, `accountName`, `accountStatus`, `joinedTime`
 -- Table structure for table `tblauctionbids`
 --
 
-CREATE TABLE IF NOT EXISTS `tblauctionbids` (
+CREATE TABLE `tblauctionbids` (
   `bidID` int(11) NOT NULL,
   `auctionID` int(11) DEFAULT NULL,
   `bidderID` int(11) DEFAULT NULL,
   `bidAmount` int(11) DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblauctionbids`
@@ -129,7 +131,7 @@ INSERT INTO `tblauctionbids` (`bidID`, `auctionID`, `bidderID`, `bidAmount`) VAL
 -- Table structure for table `tblauctionitems`
 --
 
-CREATE TABLE IF NOT EXISTS `tblauctionitems` (
+CREATE TABLE `tblauctionitems` (
   `auctionID` int(11) NOT NULL,
   `startTime` datetime DEFAULT NULL,
   `endTime` datetime DEFAULT NULL,
@@ -140,7 +142,7 @@ CREATE TABLE IF NOT EXISTS `tblauctionitems` (
   `reservePrice` int(11) DEFAULT NULL,
   `startPrice` int(11) DEFAULT NULL,
   `auctionClosed` tinyint(1) DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblauctionitems`
@@ -163,13 +165,13 @@ INSERT INTO `tblauctionitems` (`auctionID`, `startTime`, `endTime`, `sellerID`, 
 -- Table structure for table `tblcards`
 --
 
-CREATE TABLE IF NOT EXISTS `tblcards` (
+CREATE TABLE `tblcards` (
   `cardID` int(11) NOT NULL,
   `cardAttack` int(2) NOT NULL,
   `cardDefense` int(2) NOT NULL,
   `cardName` varchar(255) COLLATE utf8_bin NOT NULL,
   `cardCraftingCost` int(10) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
 -- Dumping data for table `tblcards`
@@ -190,7 +192,7 @@ INSERT INTO `tblcards` (`cardID`, `cardAttack`, `cardDefense`, `cardName`, `card
 -- Table structure for table `tblcharacters`
 --
 
-CREATE TABLE IF NOT EXISTS `tblcharacters` (
+CREATE TABLE `tblcharacters` (
   `charID` int(11) NOT NULL,
   `accountID` int(11) DEFAULT NULL,
   `charName` varchar(25) DEFAULT NULL,
@@ -204,11 +206,11 @@ CREATE TABLE IF NOT EXISTS `tblcharacters` (
   `currentCards` longtext NOT NULL,
   `money` varchar(12) DEFAULT NULL,
   `house` int(11) NOT NULL DEFAULT '0',
-  `minutesplayed` int(11) unsigned DEFAULT NULL,
+  `minutesplayed` int(11) UNSIGNED DEFAULT NULL,
   `guildID` int(11) DEFAULT '0',
   `guildmembersince` date DEFAULT NULL,
   `404MagicSquareSum` varchar(255) NOT NULL DEFAULT '-1'
-) ENGINE=InnoDB AUTO_INCREMENT=1000 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblcharacters`
@@ -237,19 +239,19 @@ INSERT INTO `tblcharacters` (`charID`, `accountID`, `charName`, `location`, `gam
 -- Table structure for table `tblcollectionquests`
 --
 
-CREATE TABLE IF NOT EXISTS `tblcollectionquests` (
+CREATE TABLE `tblcollectionquests` (
   `collectionQuestID` int(11) NOT NULL,
   `collectionQuestName` varchar(128) NOT NULL,
   `cleanurl` varchar(128) NOT NULL,
   `collectionQuestLore` mediumtext NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblcollectionquests`
 --
 
 INSERT INTO `tblcollectionquests` (`collectionQuestID`, `collectionQuestName`, `cleanurl`, `collectionQuestLore`) VALUES
-(0, 'The Barrow Mines', 'the-barrow-mines', 'Thus they complained that he dwelt northmost of all a civil strife against rebels and anarchists within. In the earlier travellers; it is nothing to show that even there our discovery had ended, and that the siege must be connected with the sun and moon revolve, making day and saved the ship''s boat of Captain Gifford, and with Flanders, "while for the explorations made and to dress our need". '),
+(0, 'The Barrow Mines', 'the-barrow-mines', 'Thus they complained that he dwelt northmost of all a civil strife against rebels and anarchists within. In the earlier travellers; it is nothing to show that even there our discovery had ended, and that the siege must be connected with the sun and moon revolve, making day and saved the ship\'s boat of Captain Gifford, and with Flanders, \"while for the explorations made and to dress our need\". '),
 (1, 'The Anvil Plains', 'the-anvil-plains', 'After two years went by, King John and Philippa, in detail; the history of institutions there are two chief lords which have been profoundly different. For after all in Europe, of North Africa, of the world, where is so large, as it were Catholic mythology turned inside out and hung down even to Quito in Peru.');
 
 -- --------------------------------------------------------
@@ -258,10 +260,10 @@ INSERT INTO `tblcollectionquests` (`collectionQuestID`, `collectionQuestName`, `
 -- Table structure for table `tblcolours`
 --
 
-CREATE TABLE IF NOT EXISTS `tblcolours` (
+CREATE TABLE `tblcolours` (
   `colourID` int(11) NOT NULL,
   `colourName` varchar(128) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblcolours`
@@ -299,13 +301,13 @@ INSERT INTO `tblcolours` (`colourID`, `colourName`) VALUES
 -- Table structure for table `tblcontractbids`
 --
 
-CREATE TABLE IF NOT EXISTS `tblcontractbids` (
+CREATE TABLE `tblcontractbids` (
   `bidID` int(255) NOT NULL,
   `contractID` int(255) NOT NULL,
   `characterID` int(255) NOT NULL,
   `bidAmount` int(255) NOT NULL,
   `bidPlaced` datetime NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
 -- Dumping data for table `tblcontractbids`
@@ -324,7 +326,7 @@ INSERT INTO `tblcontractbids` (`bidID`, `contractID`, `characterID`, `bidAmount`
 -- Table structure for table `tblcontracts`
 --
 
-CREATE TABLE IF NOT EXISTS `tblcontracts` (
+CREATE TABLE `tblcontracts` (
   `contractID` int(255) NOT NULL,
   `contractStart` datetime NOT NULL,
   `contractEnd` datetime NOT NULL,
@@ -334,7 +336,7 @@ CREATE TABLE IF NOT EXISTS `tblcontracts` (
   `contractType` int(1) NOT NULL,
   `startLocation` int(255) NOT NULL,
   `endLocation` int(255) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
 -- Dumping data for table `tblcontracts`
@@ -351,13 +353,13 @@ INSERT INTO `tblcontracts` (`contractID`, `contractStart`, `contractEnd`, `chara
 -- Table structure for table `tblcreatures`
 --
 
-CREATE TABLE IF NOT EXISTS `tblcreatures` (
+CREATE TABLE `tblcreatures` (
   `creatureID` int(11) NOT NULL,
   `creatureName` varchar(255) DEFAULT NULL,
   `creatureDescription` longtext,
   `creatureType` varchar(128) NOT NULL,
   `cleanURL` varchar(128) DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblcreatures`
@@ -367,14 +369,14 @@ INSERT INTO `tblcreatures` (`creatureID`, `creatureName`, `creatureDescription`,
 (0, 'Pilcrow', 'A black bird with a curious fascination for anything with writing on.', 'Bird', 'pilcrow'),
 (1, 'Auroch', 'A surprisingly gentle herd animal given its enormous horns.', 'Animal', 'auroch'),
 (2, 'Ellyll', 'The Ellyllon are delightful little fairy folk.', 'Spirit', 'ellyll'),
-(3, 'Gobling', 'Anywhere underground, you''re bound to find some of these.', 'Denizen', 'gobling'),
+(3, 'Gobling', 'Anywhere underground, you\'re bound to find some of these.', 'Denizen', 'gobling'),
 (4, 'Eldritch', 'A dark, mischievous spirit. Worth avoiding if possible.', 'Spirit', 'eldritch'),
 (5, 'Ghast', 'A malevolent trapped soul.', 'Spirit', 'ghast'),
 (6, 'Guise', 'A shape shifter. ', 'Animal', 'guise'),
 (7, 'Dwarrow', 'Stocky types who love mining.', 'Denizen', 'dwarrow'),
 (8, 'Uldra', 'The Uldra (also called The Huldra, or Huldra-folk in some regions) are ancient beings.', 'Denizen', 'uldra'),
 (9, 'Spriggan', 'A real mischevious type', 'Denizen', 'spriggan'),
-(11, 'Inkling', 'No-one''s quite sure...', 'Denizen', 'inkling'),
+(11, 'Inkling', 'No-one\'s quite sure...', 'Denizen', 'inkling'),
 (12, 'Draugar', 'A reanimated being.', 'Spirit', 'draugar'),
 (13, 'Gnohm', 'Delightful little folk.', 'Denizen', 'gnohm'),
 (14, 'Hydratid', 'Aquatic creature.', 'Animal', 'hydratid'),
@@ -390,11 +392,11 @@ INSERT INTO `tblcreatures` (`creatureID`, `creatureName`, `creatureDescription`,
 -- Table structure for table `tblcreaturetypes`
 --
 
-CREATE TABLE IF NOT EXISTS `tblcreaturetypes` (
+CREATE TABLE `tblcreaturetypes` (
   `creatureTypeId` int(11) NOT NULL,
   `creatureTypeName` varchar(255) DEFAULT NULL,
   `creatureTypeURL` varchar(128) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblcreaturetypes`
@@ -413,13 +415,13 @@ INSERT INTO `tblcreaturetypes` (`creatureTypeId`, `creatureTypeName`, `creatureT
 -- Table structure for table `tbldungeonachievements`
 --
 
-CREATE TABLE IF NOT EXISTS `tbldungeonachievements` (
+CREATE TABLE `tbldungeonachievements` (
   `index` int(255) NOT NULL,
   `charId` int(255) NOT NULL,
   `dungeonId` int(255) NOT NULL,
   `mapReached` int(255) NOT NULL,
   `timeStamp` datetime NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
 -- Dumping data for table `tbldungeonachievements`
@@ -439,11 +441,11 @@ INSERT INTO `tbldungeonachievements` (`index`, `charId`, `dungeonId`, `mapReache
 -- Table structure for table `tbldungeonmapconfig`
 --
 
-CREATE TABLE IF NOT EXISTS `tbldungeonmapconfig` (
+CREATE TABLE `tbldungeonmapconfig` (
   `dungeonId` int(11) NOT NULL,
   `dungeonName` varchar(255) COLLATE utf8_bin NOT NULL,
   `cleanURL` varchar(255) COLLATE utf8_bin NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
 -- Dumping data for table `tbldungeonmapconfig`
@@ -460,7 +462,7 @@ INSERT INTO `tbldungeonmapconfig` (`dungeonId`, `dungeonName`, `cleanURL`) VALUE
 -- Table structure for table `tblevents`
 --
 
-CREATE TABLE IF NOT EXISTS `tblevents` (
+CREATE TABLE `tblevents` (
   `eventID` int(11) NOT NULL,
   `eventStart` date DEFAULT NULL,
   `eventDurationDays` int(11) NOT NULL,
@@ -469,7 +471,7 @@ CREATE TABLE IF NOT EXISTS `tblevents` (
   `summary` varchar(255) NOT NULL,
   `eventContent` longtext NOT NULL,
   `cleanURL` varchar(255) DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblevents`
@@ -488,7 +490,7 @@ INSERT INTO `tblevents` (`eventID`, `eventStart`, `eventDurationDays`, `repeatsA
 -- Table structure for table `tblforums`
 --
 
-CREATE TABLE IF NOT EXISTS `tblforums` (
+CREATE TABLE `tblforums` (
   `forumID` int(11) NOT NULL,
   `title` varchar(255) DEFAULT NULL,
   `cleanURL` varchar(255) NOT NULL,
@@ -496,7 +498,7 @@ CREATE TABLE IF NOT EXISTS `tblforums` (
   `imagePath` varchar(255) DEFAULT NULL,
   `status` char(1) DEFAULT NULL,
   `sticky` char(1) DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblforums`
@@ -504,7 +506,7 @@ CREATE TABLE IF NOT EXISTS `tblforums` (
 
 INSERT INTO `tblforums` (`forumID`, `title`, `cleanURL`, `description`, `imagePath`, `status`, `sticky`) VALUES
 (1, 'Bug Reports', 'bug-reports', 'Found a bug? Let us know about it here.', '/images/forum/bugforum.gif', '2', '1'),
-(2, 'Suggestions', 'suggestions', 'Thought of an improvement? Let us know what features you''d like to see in the next update.', '/images/forum/suggestforum.gif', '2', '1'),
+(2, 'Suggestions', 'suggestions', 'Thought of an improvement? Let us know what features you\'d like to see in the next update.', '/images/forum/suggestforum.gif', '2', '1'),
 (3, 'General Discussion', 'general-discussion', 'Want to meet other players? find and chat to them here.', '/images/forum/generalforum.gif', '2', '1');
 
 -- --------------------------------------------------------
@@ -513,7 +515,7 @@ INSERT INTO `tblforums` (`forumID`, `title`, `cleanURL`, `description`, `imagePa
 -- Table structure for table `tblfreeformpages`
 --
 
-CREATE TABLE IF NOT EXISTS `tblfreeformpages` (
+CREATE TABLE `tblfreeformpages` (
   `pageID` int(11) NOT NULL,
   `status` char(1) DEFAULT NULL,
   `pageContent` longtext,
@@ -525,16 +527,16 @@ CREATE TABLE IF NOT EXISTS `tblfreeformpages` (
   `public` char(1) DEFAULT '1',
   `creationTime` datetime NOT NULL,
   `fontfamily` varchar(255) DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblfreeformpages`
 --
 
 INSERT INTO `tblfreeformpages` (`pageID`, `status`, `pageContent`, `textColour`, `bgColour`, `freeformPageTitle`, `cleanURL`, `guildID`, `public`, `creationTime`, `fontfamily`) VALUES
-(1, '1', '&lt;P&gt;stuff&lt;/P&gt;\n&lt;P&gt;more stuff&lt;/P&gt;\n&lt;P style=&quot;TEXT-ALIGN: left&quot;&gt;and &lt;STRONG&gt;a bit more&lt;/STRONG&gt; stuff &lt;/P&gt;\n&lt;P&gt;and this&lt;/P&gt;', 'CCCCCC', '330000', 'guild page #1', 'guild-page-1', 1, '1', '2006-07-23 00:00:00', 'Georgia, ''Times New Roman'', Times, serif'),
-(2, '1', '&lt;P&gt;second stuff&lt;/P&gt;\r\n&lt;P&gt;more stuff&lt;/P&gt;\r\n&lt;P style=&quot;TEXT-ALIGN: left&quot;&gt;and &lt;STRONG&gt;a bit more&lt;/STRONG&gt; stuff &lt;/P&gt;\r\n&lt;P&gt;and this&lt;/P&gt;', 'CCCCCC', '330000', 'guild page #2', 'guild-page-2', 1, '1', '2006-07-23 00:00:00', 'Georgia, ''Times New Roman'', Times, serif'),
-(3, '1', '&lt;P&gt;earthen stuff&lt;/P&gt;\r\n&lt;P&gt;more stuff&lt;/P&gt;\r\n&lt;P style=&quot;TEXT-ALIGN: left&quot;&gt;and &lt;STRONG&gt;a bit more&lt;/STRONG&gt; stuff &lt;/P&gt;\r\n&lt;P&gt;and this&lt;/P&gt;', 'CCCCCC', '330000', 'earthen page', 'earthen-page', 2, '1', '2006-07-23 00:00:00', 'Georgia, ''Times New Roman'', Times, serif');
+(1, '1', '&lt;P&gt;stuff&lt;/P&gt;\n&lt;P&gt;more stuff&lt;/P&gt;\n&lt;P style=&quot;TEXT-ALIGN: left&quot;&gt;and &lt;STRONG&gt;a bit more&lt;/STRONG&gt; stuff &lt;/P&gt;\n&lt;P&gt;and this&lt;/P&gt;', 'CCCCCC', '330000', 'guild page #1', 'guild-page-1', 1, '1', '2006-07-23 00:00:00', 'Georgia, \'Times New Roman\', Times, serif'),
+(2, '1', '&lt;P&gt;second stuff&lt;/P&gt;\r\n&lt;P&gt;more stuff&lt;/P&gt;\r\n&lt;P style=&quot;TEXT-ALIGN: left&quot;&gt;and &lt;STRONG&gt;a bit more&lt;/STRONG&gt; stuff &lt;/P&gt;\r\n&lt;P&gt;and this&lt;/P&gt;', 'CCCCCC', '330000', 'guild page #2', 'guild-page-2', 1, '1', '2006-07-23 00:00:00', 'Georgia, \'Times New Roman\', Times, serif'),
+(3, '1', '&lt;P&gt;earthen stuff&lt;/P&gt;\r\n&lt;P&gt;more stuff&lt;/P&gt;\r\n&lt;P style=&quot;TEXT-ALIGN: left&quot;&gt;and &lt;STRONG&gt;a bit more&lt;/STRONG&gt; stuff &lt;/P&gt;\r\n&lt;P&gt;and this&lt;/P&gt;', 'CCCCCC', '330000', 'earthen page', 'earthen-page', 2, '1', '2006-07-23 00:00:00', 'Georgia, \'Times New Roman\', Times, serif');
 
 -- --------------------------------------------------------
 
@@ -542,11 +544,11 @@ INSERT INTO `tblfreeformpages` (`pageID`, `status`, `pageContent`, `textColour`,
 -- Table structure for table `tblfriendlist`
 --
 
-CREATE TABLE IF NOT EXISTS `tblfriendlist` (
+CREATE TABLE `tblfriendlist` (
   `friendlistID` int(11) NOT NULL,
   `characterID` int(11) DEFAULT NULL,
   `friendID` int(11) DEFAULT NULL
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblfriendlist`
@@ -562,11 +564,11 @@ INSERT INTO `tblfriendlist` (`friendlistID`, `characterID`, `friendID`) VALUES
 -- Table structure for table `tblguildmembers`
 --
 
-CREATE TABLE IF NOT EXISTS `tblguildmembers` (
+CREATE TABLE `tblguildmembers` (
   `guildMemberID` int(11) NOT NULL,
   `guildID` int(11) DEFAULT NULL,
   `charID` int(11) DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblguildmembers`
@@ -582,12 +584,12 @@ INSERT INTO `tblguildmembers` (`guildMemberID`, `guildID`, `charID`) VALUES
 -- Table structure for table `tblguilds`
 --
 
-CREATE TABLE IF NOT EXISTS `tblguilds` (
+CREATE TABLE `tblguilds` (
   `guildID` int(11) NOT NULL,
   `guildName` varchar(255) DEFAULT NULL,
   `cleanURL` varchar(255) DEFAULT NULL,
   `createdTime` datetime DEFAULT NULL
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblguilds`
@@ -603,7 +605,7 @@ INSERT INTO `tblguilds` (`guildID`, `guildName`, `cleanURL`, `createdTime`) VALU
 -- Table structure for table `tblinventoryitems`
 --
 
-CREATE TABLE IF NOT EXISTS `tblinventoryitems` (
+CREATE TABLE `tblinventoryitems` (
   `itemID` int(11) NOT NULL,
   `shortname` varchar(50) DEFAULT NULL,
   `description` varchar(255) DEFAULT NULL,
@@ -630,7 +632,7 @@ CREATE TABLE IF NOT EXISTS `tblinventoryitems` (
   `lockedToThisPlayer` tinyint(1) NOT NULL DEFAULT '0',
   `respawnRate` int(11) DEFAULT NULL,
   `activeDuringSeason` int(11) DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=61 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblinventoryitems`
@@ -648,7 +650,7 @@ INSERT INTO `tblinventoryitems` (`itemID`, `shortname`, `description`, `priceCod
 (10, 'Alum Mordant', 'A mordant used for brighter dyes.', '1', '20.0', '24.0', 0, 0, NULL, NULL, 'alum-mordant', '', '0', 0, 0, '0', 'mrdt', '2', NULL, 0, 8, 1, 1, 0, NULL, NULL),
 (11, 'Small Glass Bottle', '', '1', '20.0', '24.0', 0, 0, NULL, NULL, 'small-glass-bottle', '', '0', 0, 0, '0', '0', NULL, NULL, 0, 0, 0, 1, 0, NULL, NULL),
 (12, 'Dye', 'A standard pigment dye.', '4', '20.0', '24.0', 0, 0, NULL, NULL, 'dye', '', '0', 1, 0, '0', 'dye', '2', NULL, 0, 0, 0, 1, 0, NULL, NULL),
-(13, 'Dyer''s Cauldron', '', '1', '20.0', '24.0', 0, 0, NULL, NULL, 'dyers-cauldron', 'craft', '0', 0, 0, '0', '0', '2', NULL, 0, 0, 0, 1, 0, NULL, NULL),
+(13, 'Dyer\'s Cauldron', '', '1', '20.0', '24.0', 0, 0, NULL, NULL, 'dyers-cauldron', 'craft', '0', 0, 0, '0', '0', '2', NULL, 0, 0, 0, 1, 0, NULL, NULL),
 (14, 'Linen', 'A useful fabric.', '1', '20.0', '24.0', 0, 0, NULL, NULL, 'linen', '', '0', 1, 0, '0', '0', '3', NULL, 0, 0, 0, 1, 0, NULL, NULL),
 (15, 'Wool', 'Basic wool, unspun.', '1', '20.0', '24.0', 0, 0, NULL, NULL, 'wool', '', '0', 1, 0, '0', '0', '3', NULL, 0, 0, 0, 1, 0, NULL, NULL),
 (16, 'Woolen Yarn', 'Spun wool.', '1', '20.0', '24.0', 0, 0, NULL, NULL, 'yarn', '', '0', 1, 0, '0', '0', '3', NULL, 0, 0, 0, 1, 0, NULL, NULL),
@@ -665,8 +667,8 @@ INSERT INTO `tblinventoryitems` (`itemID`, `shortname`, `description`, `priceCod
 (27, 'Apple Wood', '', '4', '49.0', '81.0', 63, 63, NULL, NULL, 'apple-wood', '', '0', 0, 0, '0', '0', NULL, NULL, 0, 0, 0, 1, 0, NULL, NULL),
 (28, 'Lye', 'Used for bleaching', '4', '49.0', '81.0', 63, 63, NULL, NULL, 'lye', '', '0', 0, 0, '0', '0', NULL, NULL, 0, 8, 1, 1, 0, NULL, NULL),
 (29, 'Green Dye Recipe', 'Learn how to make a green dye.', '4', '49.0', '81.0', 63, 63, NULL, NULL, '', 'recipe', '9', 0, 0, '0', 'scribe', NULL, NULL, 0, 0, 0, 1, 0, NULL, NULL),
-(30, 'Weaver''s Loom', 'Tools for weaving and tailoring', '1', '20.0', '24.0', 0, 0, NULL, NULL, 'weavers-loom', 'craft', '1', 0, 0, '0', '0', NULL, NULL, 0, 0, 0, 1, 0, NULL, NULL),
-(31, 'Wrapped gift', 'Double click to see what''s inside. Contains: ##contains##', '4', '49.0', '81.0', 63, 63, NULL, NULL, 'wrapped-gift', 'container', '0', 0, 0, '0', '0', NULL, NULL, 0, 0, 0, 1, 0, NULL, NULL),
+(30, 'Weaver\'s Loom', 'Tools for weaving and tailoring', '1', '20.0', '24.0', 0, 0, NULL, NULL, 'weavers-loom', 'craft', '1', 0, 0, '0', '0', NULL, NULL, 0, 0, 0, 1, 0, NULL, NULL),
+(31, 'Wrapped gift', 'Double click to see what\'s inside. Contains: ##contains##', '4', '49.0', '81.0', 63, 63, NULL, NULL, 'wrapped-gift', 'container', '0', 0, 0, '0', '0', NULL, NULL, 0, 0, 0, 1, 0, NULL, NULL),
 (32, 'Book', '', '4', '12.0', '6.0', 20, 13, NULL, NULL, 'book', 'book', '0', 0, 0, '0', '0', NULL, NULL, 1, 0, 1, 1, 0, NULL, NULL),
 (33, 'Parchment', '', '4', '49.0', '81.0', 63, 63, NULL, NULL, 'parchment', 'book', '0', 0, 0, '0', '0', NULL, NULL, 1, 0, 1, 1, 0, NULL, NULL),
 (34, 'Chocobo Card', 'A chocobo card. Pweeeek!', '4', '49.0', '81.0', 63, 63, NULL, NULL, 'card-chocobo', 'card', '2', 0, 0, '0', '0', '', NULL, 0, 0, 0, 1, 0, NULL, NULL),
@@ -676,7 +678,7 @@ INSERT INTO `tblinventoryitems` (`itemID`, `shortname`, `description`, `priceCod
 (38, 'Acacia Resin', '', '4', '49.0', '81.0', 63, 63, NULL, NULL, 'acacia-resin', '', '0', 0, 0, '0', '0', NULL, NULL, 0, 0, 0, 1, 0, NULL, NULL),
 (39, 'Iron Gall', '', '4', '49.0', '81.0', 63, 63, NULL, NULL, 'iron-gall', '', '0', 0, 0, '0', '0', NULL, NULL, 0, 16, 1, 1, 0, NULL, NULL),
 (40, 'Ink', '', '4', '49.0', '81.0', 63, 63, NULL, NULL, 'ink', '', '0', 1, 0, '0', '0', NULL, NULL, 0, 0, 0, 1, 0, NULL, NULL),
-(41, 'Scribe''s Quill', '', '1', '20.0', '24.0', 0, 0, NULL, NULL, 'scribes-quill', 'inscribe', '0', 0, 0, '0', '0', '', NULL, 0, 0, 0, 1, 0, NULL, NULL),
+(41, 'Scribe\'s Quill', '', '1', '20.0', '24.0', 0, 0, NULL, NULL, 'scribes-quill', 'inscribe', '0', 0, 0, '0', '0', '', NULL, 0, 0, 0, 1, 0, NULL, NULL),
 (42, 'Inner Door Lever', '', '1', '35.0', '35.0', 33, 33, 56, 45, 'inner-door-lever', 'toggleInnerDoor', '0', 0, 0, '0', '0', '', NULL, 0, 0, 0, 0, 0, NULL, NULL),
 (43, 'Inner Door Key', '', '1', '10.0', '6.0', 12, 12, NULL, NULL, 'inner-door-key', 'key', '0', 0, 0, '0', '0', '', NULL, 0, 0, 0, 0, 0, NULL, NULL),
 (44, 'Ammonite', 'Fossilised mollusc', '1', '25.0', '31.0', 38, 38, NULL, NULL, 'collection-fossil', 'collection', 'the-barrow-mines', 0, 0, '0', '0', '', NULL, 0, 0, 0, 0, 0, NULL, NULL),
@@ -703,10 +705,10 @@ INSERT INTO `tblinventoryitems` (`itemID`, `shortname`, `description`, `priceCod
 -- Table structure for table `tblitemcategories`
 --
 
-CREATE TABLE IF NOT EXISTS `tblitemcategories` (
+CREATE TABLE `tblitemcategories` (
   `categoryID` int(11) NOT NULL,
   `categoryName` varchar(255) DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblitemcategories`
@@ -714,9 +716,9 @@ CREATE TABLE IF NOT EXISTS `tblitemcategories` (
 
 INSERT INTO `tblitemcategories` (`categoryID`, `categoryName`) VALUES
 (1, 'Plants and Herbs'),
-(2, 'Dyer''s Provisions'),
-(3, 'Tailor''s Provisions'),
-(4, 'Metalworker''s provisions'),
+(2, 'Dyer\'s Provisions'),
+(3, 'Tailor\'s Provisions'),
+(4, 'Metalworker\'s provisions'),
 (5, 'Books'),
 (6, 'House Deeds');
 
@@ -726,11 +728,11 @@ INSERT INTO `tblitemcategories` (`categoryID`, `categoryName`) VALUES
 -- Table structure for table `tblitemgroups`
 --
 
-CREATE TABLE IF NOT EXISTS `tblitemgroups` (
+CREATE TABLE `tblitemgroups` (
   `itemGroupID` int(11) NOT NULL,
   `itemGroupCode` varchar(255) DEFAULT NULL,
   `itemGroupDescription` varchar(255) DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblitemgroups`
@@ -749,10 +751,10 @@ INSERT INTO `tblitemgroups` (`itemGroupID`, `itemGroupCode`, `itemGroupDescripti
 -- Table structure for table `tbllocations`
 --
 
-CREATE TABLE IF NOT EXISTS `tbllocations` (
+CREATE TABLE `tbllocations` (
   `locID` int(255) NOT NULL,
   `locName` varchar(255) COLLATE utf8_bin NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
 -- Dumping data for table `tbllocations`
@@ -770,7 +772,7 @@ INSERT INTO `tbllocations` (`locID`, `locName`) VALUES
 -- Table structure for table `tblmail`
 --
 
-CREATE TABLE IF NOT EXISTS `tblmail` (
+CREATE TABLE `tblmail` (
   `mailID` int(11) NOT NULL,
   `characterID` int(11) DEFAULT NULL,
   `senderID` int(11) DEFAULT NULL,
@@ -782,7 +784,7 @@ CREATE TABLE IF NOT EXISTS `tblmail` (
   `attachment` longtext,
   `attachmentTaken` tinyint(1) NOT NULL DEFAULT '0',
   `isArchived` tinyint(1) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB AUTO_INCREMENT=940 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblmail`
@@ -790,7 +792,7 @@ CREATE TABLE IF NOT EXISTS `tblmail` (
 
 INSERT INTO `tblmail` (`mailID`, `characterID`, `senderID`, `senderName`, `title`, `mailContents`, `sentTime`, `mailRead`, `attachment`, `attachmentTaken`, `isArchived`) VALUES
 (81, 18, 5, 'Eleaddai', 'elli to newmemberchar1', 'c to c', '2006-08-02 22:10:06', '1', '0', 0, 0),
-(83, 999, 18, 'murphy', 'Re: eleaddai to newmemberchar1', 'hi - have 2 pumpkins!', '2018-02-02 22:13:05', '1', ' [{\n\n                "type": 19,\n                                "quantity": 2,\n                "quality": 100,\n                "durability": 100,\n                "currentWear": 0,\n                "effectiveness": 100,\n                "wrapped": 0,\n                "colour": 0,\n                "enchanted": 0,\n                "hallmark": 0,\n                "inscription": ""\n\n            }]', 0, 0),
+(83, 999, 18, 'murphy', 'Re: eleaddai to newmemberchar1', 'hi - have 2 pumpkins!', '2018-02-02 22:13:05', '1', ' [{\n\n                \"type\": 19,\n                                \"quantity\": 2,\n                \"quality\": 100,\n                \"durability\": 100,\n                \"currentWear\": 0,\n                \"effectiveness\": 100,\n                \"wrapped\": 0,\n                \"colour\": 0,\n                \"enchanted\": 0,\n                \"hallmark\": 0,\n                \"inscription\": \"\"\n\n            }]', 0, 0),
 (84, 18, 5, 'Eleaddai', 'Re: Re: elli to newmemberchar1', '[quote=newmemberchar1][quote=Eleaddai]c to c[/quote] m[/quote]xc', '2006-08-02 22:13:30', '2', '0', 0, 0),
 (85, 14, 5, 'Alice', 'alice to moderator', 'c to a', '2006-08-02 22:14:08', '1', '0', 0, 0),
 (86, 5, 14, 'moderator', 'Re: alice to moderator', '[quote=Alice]c to a[/quote]x', '2006-08-02 22:14:24', '2', '0', 0, 0),
@@ -891,13 +893,13 @@ INSERT INTO `tblmail` (`mailID`, `characterID`, `senderID`, `senderName`, `title
 (181, 13, 5, 'seawarrior', 'Re: Re: refresh test 2', 'thanks', '2007-01-10 22:54:13', '0', '0', 0, 0),
 (182, 49, 49, 'dilly21', 'hi dilly', 'hi - how are you?', '2015-07-03 14:04:44', '0', '0', 0, 0),
 (183, 49, 48, 'dilly20', 'dilly21', 'hi 21 - this is 20', '2015-07-03 14:05:11', '1', '0', 0, 0),
-(914, 999, -1, 'Lars the mordant fan', 'Pass the mordant', 'thanks for giving me that mordant, here''s some Card Pack.', '2018-02-14 12:07:15', '1', '[{"type":21,"quantity":2,"quality":100,"durability":100,"currentWear":0,"effectiveness":100,"colour":"0","enchanted":0,"hallmark":0,"inscription":""}]', 0, 0),
-(915, 999, -1, 'Lars the mordant fan', 'Pass the mordant', 'thanks for giving me that mordant, here''s some Wild Madder.', '2018-02-14 12:07:45', '1', '[{"type":2,"quantity":1,"quality":100,"durability":100,"currentWear":0,"effectiveness":100,"colour":"1","enchanted":0,"hallmark":0,"inscription":""}]', 0, 0),
-(916, 999, -1, 'Lars the mordant fan', 'Pass the mordant', 'thanks for giving me that mordant, here''s some Card Pack.', '2018-02-14 12:46:12', '1', '[{"type":21,"quantity":2,"quality":100,"durability":100,"currentWear":0,"effectiveness":100,"colour":"0","enchanted":0,"hallmark":0,"inscription":""}]', 0, 0),
-(917, 999, -1, 'Lars the mordant fan', 'Pass the mordant', 'thanks for giving me that mordant, here''s some Wild Madder.', '2018-02-14 16:25:00', '1', '[{"type":2,"quantity":1,"quality":100,"durability":100,"currentWear":0,"effectiveness":100,"colour":"1","enchanted":0,"hallmark":0,"inscription":""}]', 0, 0),
-(918, 999, -1, 'labourer3', 'collection-quest collection', 'Fantastic, you got them all', '2018-02-14 16:53:40', '1', '\n                \n                \n                [{"type":21,"quantity":2,"quality":100,"durability":100,"currentWear":0,"effectiveness":100,"colour":"0","enchanted":0,"hallmark":0,"inscription":""}, {\n                    "type": "$",\n                    "quantity": 3000\n                }]', 0, 0),
-(919, 999, -1, 'labourer3', 'the barrow mines collection', 'Fantastic, you got them all', '2018-02-15 08:34:09', '1', '[{"type":21,"quantity":2,"quality":100,"durability":100,"currentWear":0,"effectiveness":100,"colour":"0","enchanted":0,"hallmark":0,"inscription":""}, {"type":2,"quantity":1,"quality":100,"durability":100,"currentWear":0,"effectiveness":100,"colour":"1","enchanted":0,"hallmark":0,"inscription":""}]', 0, 0),
-(927, 999, 999, 'Eleaddai', 'just to give you this', '`Curiouser and curiouser!'' cried Alice (she was so much surprised, that for the moment she quite forgot how to speak good English); `now I''m opening out like the largest telescope that ever was! Good-bye, feet!'' (for when she looked down at her feet, they seemed to be almost out of sight, they were getting so far off). `Oh, my poor little feet, I wonder who will put on your shoes and stockings for you now, dears? I''m sure I shan''t be able! I shall be a great deal too far off to trouble myself about you: you must manage the best way you can; --but I must be kind to them,'' thought Alice, `or perhaps they won''t walk the way I want to go! Let me see: I''ll give them a new pair of boots every Christmas.'' ', '2018-02-15 12:40:38', '1', '0', 0, 0),
+(914, 999, -1, 'Lars the mordant fan', 'Pass the mordant', 'thanks for giving me that mordant, here\'s some Card Pack.', '2018-02-14 12:07:15', '1', '[{\"type\":21,\"quantity\":2,\"quality\":100,\"durability\":100,\"currentWear\":0,\"effectiveness\":100,\"colour\":\"0\",\"enchanted\":0,\"hallmark\":0,\"inscription\":\"\"}]', 0, 0),
+(915, 999, -1, 'Lars the mordant fan', 'Pass the mordant', 'thanks for giving me that mordant, here\'s some Wild Madder.', '2018-02-14 12:07:45', '1', '[{\"type\":2,\"quantity\":1,\"quality\":100,\"durability\":100,\"currentWear\":0,\"effectiveness\":100,\"colour\":\"1\",\"enchanted\":0,\"hallmark\":0,\"inscription\":\"\"}]', 0, 0),
+(916, 999, -1, 'Lars the mordant fan', 'Pass the mordant', 'thanks for giving me that mordant, here\'s some Card Pack.', '2018-02-14 12:46:12', '1', '[{\"type\":21,\"quantity\":2,\"quality\":100,\"durability\":100,\"currentWear\":0,\"effectiveness\":100,\"colour\":\"0\",\"enchanted\":0,\"hallmark\":0,\"inscription\":\"\"}]', 0, 0),
+(917, 999, -1, 'Lars the mordant fan', 'Pass the mordant', 'thanks for giving me that mordant, here\'s some Wild Madder.', '2018-02-14 16:25:00', '1', '[{\"type\":2,\"quantity\":1,\"quality\":100,\"durability\":100,\"currentWear\":0,\"effectiveness\":100,\"colour\":\"1\",\"enchanted\":0,\"hallmark\":0,\"inscription\":\"\"}]', 0, 0),
+(918, 999, -1, 'labourer3', 'collection-quest collection', 'Fantastic, you got them all', '2018-02-14 16:53:40', '1', '\n                \n                \n                [{\"type\":21,\"quantity\":2,\"quality\":100,\"durability\":100,\"currentWear\":0,\"effectiveness\":100,\"colour\":\"0\",\"enchanted\":0,\"hallmark\":0,\"inscription\":\"\"}, {\n                    \"type\": \"$\",\n                    \"quantity\": 3000\n                }]', 0, 0),
+(919, 999, -1, 'labourer3', 'the barrow mines collection', 'Fantastic, you got them all', '2018-02-15 08:34:09', '1', '[{\"type\":21,\"quantity\":2,\"quality\":100,\"durability\":100,\"currentWear\":0,\"effectiveness\":100,\"colour\":\"0\",\"enchanted\":0,\"hallmark\":0,\"inscription\":\"\"}, {\"type\":2,\"quantity\":1,\"quality\":100,\"durability\":100,\"currentWear\":0,\"effectiveness\":100,\"colour\":\"1\",\"enchanted\":0,\"hallmark\":0,\"inscription\":\"\"}]', 0, 0),
+(927, 999, 999, 'Eleaddai', 'just to give you this', '`Curiouser and curiouser!\' cried Alice (she was so much surprised, that for the moment she quite forgot how to speak good English); `now I\'m opening out like the largest telescope that ever was! Good-bye, feet!\' (for when she looked down at her feet, they seemed to be almost out of sight, they were getting so far off). `Oh, my poor little feet, I wonder who will put on your shoes and stockings for you now, dears? I\'m sure I shan\'t be able! I shall be a great deal too far off to trouble myself about you: you must manage the best way you can; --but I must be kind to them,\' thought Alice, `or perhaps they won\'t walk the way I want to go! Let me see: I\'ll give them a new pair of boots every Christmas.\' ', '2018-02-15 12:40:38', '1', '0', 0, 0),
 (928, 1, 999, 'Eleaddai', 'hi', 'dsf sdfsd', '2018-02-15 14:36:36', '0', '0', 0, 0),
 (929, 2, 999, 'Eleaddai', 'eer', ' sfsf', '2018-02-15 14:37:25', '0', '0', 0, 0),
 (930, 999, 999, 'Eleaddai', 'hi from me', 'hi', '2018-02-15 14:38:24', '1', '0', 0, 0),
@@ -909,7 +911,7 @@ INSERT INTO `tblmail` (`mailID`, `characterID`, `senderID`, `senderName`, `title
 (936, 999, 999, 'Eleaddai', 'subject', 'dfsf\\n\\ndsf\\n\\n\\ndsf', '2018-02-16 16:31:15', '1', '0', 0, 0),
 (937, 999, 999, 'Eleaddai', 'asdad', 'asdadasd aadasa aa', '2018-02-16 16:32:33', '1', '0', 0, 0),
 (938, 999, 999, 'Eleaddai', 'just testing some line breaks', '\\nsecond line\\n\\n\\n\\n\\n\\nmore\\n\\n\\nmore\\n\\nand some  here', '2018-02-16 16:58:39', '1', '0', 0, 0),
-(939, 999, -1, 'Retinue co-ordinator', 'Reward for Lay of the Land on island', 'Your followers continue to make you proud...', '2018-02-22 12:28:50', '1', '[{"type":2,"quantity":2,"quality":100,"durability":100,"currentWear":0,"effectiveness":100,"colour":"0","enchanted":0,"hallmark":0,"inscription":""}]', 1, 0);
+(939, 999, -1, 'Retinue co-ordinator', 'Reward for Lay of the Land on island', 'Your followers continue to make you proud...', '2018-02-22 12:28:50', '1', '[{\"type\":2,\"quantity\":2,\"quality\":100,\"durability\":100,\"currentWear\":0,\"effectiveness\":100,\"colour\":\"0\",\"enchanted\":0,\"hallmark\":0,\"inscription\":\"\"}]', 1, 0);
 
 -- --------------------------------------------------------
 
@@ -917,11 +919,11 @@ INSERT INTO `tblmail` (`mailID`, `characterID`, `senderID`, `senderName`, `title
 -- Table structure for table `tblmainpoll`
 --
 
-CREATE TABLE IF NOT EXISTS `tblmainpoll` (
+CREATE TABLE `tblmainpoll` (
   `pollID` int(11) NOT NULL,
   `question` varchar(255) DEFAULT NULL,
   `isCurrent` tinyint(1) DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblmainpoll`
@@ -938,12 +940,12 @@ INSERT INTO `tblmainpoll` (`pollID`, `question`, `isCurrent`) VALUES
 -- Table structure for table `tblmainpollchoices`
 --
 
-CREATE TABLE IF NOT EXISTS `tblmainpollchoices` (
+CREATE TABLE `tblmainpollchoices` (
   `choiceID` int(11) NOT NULL,
   `pollID` int(11) DEFAULT NULL,
   `response` varchar(255) DEFAULT NULL,
   `voteCount` int(11) DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblmainpollchoices`
@@ -952,7 +954,7 @@ CREATE TABLE IF NOT EXISTS `tblmainpollchoices` (
 INSERT INTO `tblmainpollchoices` (`choiceID`, `pollID`, `response`, `voteCount`) VALUES
 (1, 1, 'yes', 3),
 (2, 1, 'no', 4),
-(3, 1, 'don''t know', 9);
+(3, 1, 'don\'t know', 9);
 
 -- --------------------------------------------------------
 
@@ -960,7 +962,7 @@ INSERT INTO `tblmainpollchoices` (`choiceID`, `pollID`, `response`, `voteCount`)
 -- Table structure for table `tblnews`
 --
 
-CREATE TABLE IF NOT EXISTS `tblnews` (
+CREATE TABLE `tblnews` (
   `newsID` int(11) NOT NULL,
   `newsTitle` varchar(255) DEFAULT NULL,
   `cleanURL` varchar(255) DEFAULT NULL,
@@ -970,30 +972,30 @@ CREATE TABLE IF NOT EXISTS `tblnews` (
   `status` char(1) DEFAULT NULL,
   `timeAdded` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `postedBy` varchar(50) DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblnews`
 --
 
 INSERT INTO `tblnews` (`newsID`, `newsTitle`, `cleanURL`, `newsSynopsis`, `newsContent`, `bannerContent`, `status`, `timeAdded`, `postedBy`) VALUES
-(1, 'Spring is on its way', 'spring-is-on-its-way', 'Face towards the rising sun and travel eastwards', 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. [CONTINUE]Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.</p><p>\r\nLorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum <a href="/" title="click to view">dolore eu feugiat</a> nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.</p><p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.</p><h3>Lorem ipsum</h3><p>"Dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh", euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.</p>', '', '1', '2015-07-09 10:19:41', NULL),
-(2, 'New Year spectacular', 'new-year-spectacular', 'Fireworks and plenty of festive cheer', 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.</p><p>\r\nLorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum <a href="/" title="click to view">dolore eu feugiat</a> nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.</p><p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.</p><h3>Lorem ipsum</h3><p>"Dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh", euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.</p>', '', '1', '2009-07-09 10:19:48', 'The Mayor'),
-(3, 'more seasonal joy', 'more-seasonal-joy', 'brace yourselves!', 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. [CONTINUE]Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.</p><p>\r\nLorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum <a href="/" title="click to view">dolore eu feugiat</a> nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.</p><p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.</p><h3>Lorem ipsum</h3><p>"Dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh", euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.</p>', '', '1', '2015-07-09 10:19:54', NULL),
+(1, 'Spring is on its way', 'spring-is-on-its-way', 'Face towards the rising sun and travel eastwards', 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. [CONTINUE]Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.</p><p>\r\nLorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum <a href=\"/\" title=\"click to view\">dolore eu feugiat</a> nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.</p><p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.</p><h3>Lorem ipsum</h3><p>\"Dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh\", euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.</p>', '', '1', '2015-07-09 10:19:41', NULL),
+(2, 'New Year spectacular', 'new-year-spectacular', 'Fireworks and plenty of festive cheer', 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.</p><p>\r\nLorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum <a href=\"/\" title=\"click to view\">dolore eu feugiat</a> nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.</p><p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.</p><h3>Lorem ipsum</h3><p>\"Dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh\", euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.</p>', '', '1', '2009-07-09 10:19:48', 'The Mayor'),
+(3, 'more seasonal joy', 'more-seasonal-joy', 'brace yourselves!', 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. [CONTINUE]Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.</p><p>\r\nLorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum <a href=\"/\" title=\"click to view\">dolore eu feugiat</a> nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.</p><p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.</p><h3>Lorem ipsum</h3><p>\"Dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh\", euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.</p>', '', '1', '2015-07-09 10:19:54', NULL),
 (4, 'April Fools has been and gone', 'april-fools-has-been-and-gone', 'well, we missed that one...', 'april fools has been &quot;and&quot; gone again &raquo; arrow', '', '1', '2015-07-22 12:45:53', NULL),
 (5, 'Dragon flare', 'dragon-flare', 'Look up - in the sky', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque iaculis non elit a tempor. Nam commodo metus eget libero faucibus euismod. Vivamus interdum porta ante non finibus. Nam velit nisi, consectetur et tempor vitae, varius eu tortor. Duis ac eleifend libero, eu sagittis purus. Dragon nunc aliquam ut sapien sit amet molestie. Etiam pellentesque tristique vestibulum. Maecenas lacinia, arcu eu hendrerit eleifend, purus nulla ornare turpis, et bibendum sapien lectus non nulla. Ut facilisis lobortis nisi, id faucibus dolor molestie vel. Aliquam a mi at ligula accumsan pellentesque. Etiam pulvinar mauris ac justo semper efficitur. Ut lobortis egestas laoreet. Curabitur dui ex, placerat id nisl quis, malesuada consectetur lectus. Duis tincidunt congue commodo. In hac habitasse platea dictumst. ', '', '1', '2015-08-12 12:45:53', NULL),
-(6, 'Down the rabbit hole', 'down-the-rabbit-hole', 'Down, down', '<p>Alice was beginning to get very tired of sitting by her sister on the bank, and of having nothing to do: once or twice she had peeped into the book her sister was reading, but it had no pictures or conversations in it, &#8220;and what is the use of a book,&#8221; thought Alice &#8220;without pictures or conversation?&#8221;</p>\n<p>So she was considering in her own mind (as well as she could, for the hot day made her feel very sleepy and stupid), whether the pleasure of <a href="#">making a daisy-chain</a> would be worth the trouble of getting up and picking the daisies, when suddenly a White Rabbit with pink eyes ran close by her.</p>\n<p>There was nothing so <em>very</em> remarkable in that; nor did Alice think it so <em>very</em> much out of the way to hear the Rabbit say to itself, &#8220;Oh dear! Oh dear! I shall be late!&#8221; (when she thought it over afterwards, it occurred to her that she ought to have wondered at this, but at the time it all seemed quite natural); but when the Rabbit actually <em>took a watch out of its waistcoat-pocket</em>, and looked at it, and then hurried on, Alice started to her feet, for <a href="#">it flashed across her</a> mind that she had never before seen a rabbit with either a waistcoat-pocket, or a watch to take out of it, and burning with curiosity, she ran across the field after it, and fortunately was just in time to see it pop down a large rabbit-hole under the hedge.</p>\n<p>In another moment down went Alice after it, never once considering how in the world she was to get out again.</p>\n<h3>And then</h3>\n<p>The rabbit-hole went straight on like a tunnel for some way, and then dipped suddenly down, so suddenly that Alice had not a moment to think about stopping herself before she found herself falling down a very deep well.</p>\n<p>Either the well was very deep, or she fell very slowly, for she had plenty of time as she went down to look about her and to wonder what was going to happen next. First, she tried to look down and make out what she was coming to, but it was too dark to see anything; then she looked at the sides of the well, and noticed that they were filled with cupboards and book-shelves; here and there she saw maps and pictures hung upon pegs. She took down a jar from one of the shelves as she passed; it was labelled &#8220;<a href="#">ORANGE MARMALADE</a>&#8220;, but to her great disappointment it was empty: she did not like to drop the jar for fear of killing somebody, so managed to put it into one of the cupboards as she fell past it.</p>\n<p>&#8220;Well!&#8221; thought Alice to herself, &#8220;after such a fall as this, I shall think nothing of tumbling down stairs! How brave they&#8217;ll all think me at home! Why, I wouldn&#8217;t say anything about it, even if I fell off the top of the house!&#8221; (Which was very likely true.)</p>\n<p>Down, down, down. Would the fall <em>never</em> come to an end! &#8220;I wonder how many miles I&#8217;ve fallen by this time?&#8221; she said aloud. &#8220;I must be getting somewhere near the centre of the earth. Let me see: that would be four thousand miles down, I think &ndash; &#8221; (for, you see, Alice had learnt several things of this sort in her lessons in the schoolroom, and though this was not a <em>very</em> good opportunity for showing off her knowledge, as there was no one to listen to her, still it was good practice to say it over) &#8221; &ndash; yes, that&#8217;s about the right distance &ndash; but then I wonder what Latitude or Longitude I&#8217;ve got to?&#8221; (Alice had no idea what Latitude was, or Longitude either, but thought they were nice grand words to say.)</p>\n<h3>After that</h3>\n<p>Presently she began again. &#8220;I wonder if I shall fall right <em>through</em> the earth! How funny it&#8221;ll seem to come out among the people that walk with their heads downward! The Antipathies, I think &ndash; &#8221; (she was rather glad there <em>was</em> no one listening, this time, as it didn&#8217;t sound at all the right word) &#8221; &ndash; but I shall have to ask them what the name of the country is, you know. Please, Ma&#8217;am, is this New Zealand or Australia?&#8221; (and she tried to curtsey as she spoke &ndash; fancy <em>curtseying</em> as you&#8221;re falling through the air! Do you think you could manage it?) &#8220;And what an <a href="#">ignorant little girl</a> she&#8221;ll think me for asking! No, it&#8217;ll never do to ask: perhaps I shall see it written up somewhere.&#8221;</p>\n<p>Down, down, down. There was nothing else to do, so Alice soon began talking again. &#8220;Dinah&#8217;ll miss me very much to-night, I should think!&#8221; (Dinah was the cat.) &#8220;I hope they&#8217;ll remember her saucer of milk at tea-time. Dinah my dear! I wish you were down here with me! There are no mice in the air, I&#8217;m afraid, but you might catch a bat, and that&#8217;s very like a mouse, you know. But do cats eat bats, I wonder?&#8221; And here Alice began to get rather sleepy, and went on saying to herself, in a dreamy sort of way, &#8220;Do cats eat bats? Do cats eat bats?&#8221; and sometimes, &#8220;Do bats eat cats?&#8221; for, you see, as she couldn&#8217;t answer either question, it didn&#8217;t much matter which way she put it. She felt that she was dozing off, and had just begun to dream that she was walking hand in hand with Dinah, and saying to her very earnestly, &#8220;Now, Dinah, tell me the truth: did you ever eat a bat?&#8221; when suddenly, thump! thump! down she came upon a heap of sticks and dry leaves, and the fall was over.</p>\n<p>Alice was not a bit hurt, and she jumped up on to her feet in a moment: she looked up, but it was all dark overhead; before her was another long passage, and the White Rabbit was still in sight, hurrying down it. There was not a moment to be lost: away went Alice like the wind, and was just in time to hear it say, as it turned a corner, &#8220;Oh my ears and whiskers, how late it&#8217;s getting!&#8221; She was close behind it when she turned the corner, but the Rabbit was no longer to be seen: she found herself in a long, low hall, which was lit up by a row of lamps hanging from the roof.</p>\n<p>There were doors all round the hall, but they were all locked; and when Alice had been all the way down one side and up the other, trying every door, she walked sadly down the middle, wondering how she was ever to get out again.</p>\n<p>Suddenly she came upon a little three-legged table, all made of solid glass; there was nothing on it except a tiny golden key, and Alice&#8217;s first thought was that it might belong to one of the doors of the hall; but, alas! either the locks were too large, or the key was too small, but at any rate it would not open any of them. However, on the second time round, she came upon a low curtain she had not noticed before, and behind it was a little door about fifteen inches high: she tried the little golden key in the lock, and to her great delight it fitted!</p>', '', '1', '2016-03-02 08:23:36', NULL),
-(7, 'article 7', 'article-7', 'Down, down', '<p>Alice was beginning to get very tired of sitting by her sister on the bank, and of having nothing to do: once or twice she had peeped into the book her sister was reading, but it had no pictures or conversations in it, &#8220;and what is the use of a book,&#8221; thought Alice &#8220;without pictures or conversation?&#8221;</p>\r\n<p>So she was considering in her own mind (as well as she could, for the hot day made her feel very sleepy and stupid), whether the pleasure of <a href="#">making a daisy-chain</a> would be worth the trouble of getting up and picking the daisies, when suddenly a White Rabbit with pink eyes ran close by her.</p>\r\n<p>There was nothing so <em>very</em> remarkable in that; nor did Alice think it so <em>very</em> much out of the way to hear the Rabbit say to itself, &#8220;Oh dear! Oh dear! I shall be late!&#8221; (when she thought it over afterwards, it occurred to her that she ought to have wondered at this, but at the time it all seemed quite natural); but when the Rabbit actually <em>took a watch out of its waistcoat-pocket</em>, and looked at it, and then hurried on, Alice started to her feet, for <a href="#">it flashed across her</a> mind that she had never before seen a rabbit with either a waistcoat-pocket, or a watch to take out of it, and burning with curiosity, she ran across the field after it, and fortunately was just in time to see it pop down a large rabbit-hole under the hedge.</p>\r\n<p>In another moment down went Alice after it, never once considering how in the world she was to get out again.</p>\r\n<h3>And then</h3>\r\n<p>The rabbit-hole went straight on like a tunnel for some way, and then dipped suddenly down, so suddenly that Alice had not a moment to think about stopping herself before she found herself falling down a very deep well.</p>\r\n<p>Either the well was very deep, or she fell very slowly, for she had plenty of time as she went down to look about her and to wonder what was going to happen next. First, she tried to look down and make out what she was coming to, but it was too dark to see anything; then she looked at the sides of the well, and noticed that they were filled with cupboards and book-shelves; here and there she saw maps and pictures hung upon pegs. She took down a jar from one of the shelves as she passed; it was labelled &#8220;<a href="#">ORANGE MARMALADE</a>&#8220;, but to her great disappointment it was empty: she did not like to drop the jar for fear of killing somebody, so managed to put it into one of the cupboards as she fell past it.</p>\r\n<p>&#8220;Well!&#8221; thought Alice to herself, &#8220;after such a fall as this, I shall think nothing of tumbling down stairs! How brave they&#8217;ll all think me at home! Why, I wouldn&#8217;t say anything about it, even if I fell off the top of the house!&#8221; (Which was very likely true.)</p>\r\n<p>Down, down, down. Would the fall <em>never</em> come to an end! &#8220;I wonder how many miles I&#8217;ve fallen by this time?&#8221; she said aloud. &#8220;I must be getting somewhere near the centre of the earth. Let me see: that would be four thousand miles down, I think &ndash; &#8221; (for, you see, Alice had learnt several things of this sort in her lessons in the schoolroom, and though this was not a <em>very</em> good opportunity for showing off her knowledge, as there was no one to listen to her, still it was good practice to say it over) &#8221; &ndash; yes, that&#8217;s about the right distance &ndash; but then I wonder what Latitude or Longitude I&#8217;ve got to?&#8221; (Alice had no idea what Latitude was, or Longitude either, but thought they were nice grand words to say.)</p>\r\n<h3>After that</h3>\r\n<p>Presently she began again. &#8220;I wonder if I shall fall right <em>through</em> the earth! How funny it&#8221;ll seem to come out among the people that walk with their heads downward! The Antipathies, I think &ndash; &#8221; (she was rather glad there <em>was</em> no one listening, this time, as it didn&#8217;t sound at all the right word) &#8221; &ndash; but I shall have to ask them what the name of the country is, you know. Please, Ma&#8217;am, is this New Zealand or Australia?&#8221; (and she tried to curtsey as she spoke &ndash; fancy <em>curtseying</em> as you&#8221;re falling through the air! Do you think you could manage it?) &#8220;And what an <a href="#">ignorant little girl</a> she&#8221;ll think me for asking! No, it&#8217;ll never do to ask: perhaps I shall see it written up somewhere.&#8221;</p>\r\n<p>Down, down, down. There was nothing else to do, so Alice soon began talking again. &#8220;Dinah&#8217;ll miss me very much to-night, I should think!&#8221; (Dinah was the cat.) &#8220;I hope they&#8217;ll remember her saucer of milk at tea-time. Dinah my dear! I wish you were down here with me! There are no mice in the air, I&#8217;m afraid, but you might catch a bat, and that&#8217;s very like a mouse, you know. But do cats eat bats, I wonder?&#8221; And here Alice began to get rather sleepy, and went on saying to herself, in a dreamy sort of way, &#8220;Do cats eat bats? Do cats eat bats?&#8221; and sometimes, &#8220;Do bats eat cats?&#8221; for, you see, as she couldn&#8217;t answer either question, it didn&#8217;t much matter which way she put it. She felt that she was dozing off, and had just begun to dream that she was walking hand in hand with Dinah, and saying to her very earnestly, &#8220;Now, Dinah, tell me the truth: did you ever eat a bat?&#8221; when suddenly, thump! thump! down she came upon a heap of sticks and dry leaves, and the fall was over.</p>\r\n<p>Alice was not a bit hurt, and she jumped up on to her feet in a moment: she looked up, but it was all dark overhead; before her was another long passage, and the White Rabbit was still in sight, hurrying down it. There was not a moment to be lost: away went Alice like the wind, and was just in time to hear it say, as it turned a corner, &#8220;Oh my ears and whiskers, how late it&#8217;s getting!&#8221; She was close behind it when she turned the corner, but the Rabbit was no longer to be seen: she found herself in a long, low hall, which was lit up by a row of lamps hanging from the roof.</p>\r\n<p>There were doors all round the hall, but they were all locked; and when Alice had been all the way down one side and up the other, trying every door, she walked sadly down the middle, wondering how she was ever to get out again.</p>\r\n<p>Suddenly she came upon a little three-legged table, all made of solid glass; there was nothing on it except a tiny golden key, and Alice&#8217;s first thought was that it might belong to one of the doors of the hall; but, alas! either the locks were too large, or the key was too small, but at any rate it would not open any of them. However, on the second time round, she came upon a low curtain she had not noticed before, and behind it was a little door about fifteen inches high: she tried the little golden key in the lock, and to her great delight it fitted!</p>', '', '1', '2016-03-03 08:23:36', NULL),
-(8, 'article 8', 'article-8', 'Down, down', '<p>Alice was beginning to get very tired of sitting by her sister on the bank, and of having nothing to do: once or twice she had peeped into the book her sister was reading, but it had no pictures or conversations in it, &#8220;and what is the use of a book,&#8221; thought Alice &#8220;without pictures or conversation?&#8221;</p>\r\n<p>So she was considering in her own mind (as well as she could, for the hot day made her feel very sleepy and stupid), whether the pleasure of <a href="#">making a daisy-chain</a> would be worth the trouble of getting up and picking the daisies, when suddenly a White Rabbit with pink eyes ran close by her.</p>\r\n<p>There was nothing so <em>very</em> remarkable in that; nor did Alice think it so <em>very</em> much out of the way to hear the Rabbit say to itself, &#8220;Oh dear! Oh dear! I shall be late!&#8221; (when she thought it over afterwards, it occurred to her that she ought to have wondered at this, but at the time it all seemed quite natural); but when the Rabbit actually <em>took a watch out of its waistcoat-pocket</em>, and looked at it, and then hurried on, Alice started to her feet, for <a href="#">it flashed across her</a> mind that she had never before seen a rabbit with either a waistcoat-pocket, or a watch to take out of it, and burning with curiosity, she ran across the field after it, and fortunately was just in time to see it pop down a large rabbit-hole under the hedge.</p>\r\n<p>In another moment down went Alice after it, never once considering how in the world she was to get out again.</p>\r\n<h3>And then</h3>\r\n<p>The rabbit-hole went straight on like a tunnel for some way, and then dipped suddenly down, so suddenly that Alice had not a moment to think about stopping herself before she found herself falling down a very deep well.</p>\r\n<p>Either the well was very deep, or she fell very slowly, for she had plenty of time as she went down to look about her and to wonder what was going to happen next. First, she tried to look down and make out what she was coming to, but it was too dark to see anything; then she looked at the sides of the well, and noticed that they were filled with cupboards and book-shelves; here and there she saw maps and pictures hung upon pegs. She took down a jar from one of the shelves as she passed; it was labelled &#8220;<a href="#">ORANGE MARMALADE</a>&#8220;, but to her great disappointment it was empty: she did not like to drop the jar for fear of killing somebody, so managed to put it into one of the cupboards as she fell past it.</p>\r\n<p>&#8220;Well!&#8221; thought Alice to herself, &#8220;after such a fall as this, I shall think nothing of tumbling down stairs! How brave they&#8217;ll all think me at home! Why, I wouldn&#8217;t say anything about it, even if I fell off the top of the house!&#8221; (Which was very likely true.)</p>\r\n<p>Down, down, down. Would the fall <em>never</em> come to an end! &#8220;I wonder how many miles I&#8217;ve fallen by this time?&#8221; she said aloud. &#8220;I must be getting somewhere near the centre of the earth. Let me see: that would be four thousand miles down, I think &ndash; &#8221; (for, you see, Alice had learnt several things of this sort in her lessons in the schoolroom, and though this was not a <em>very</em> good opportunity for showing off her knowledge, as there was no one to listen to her, still it was good practice to say it over) &#8221; &ndash; yes, that&#8217;s about the right distance &ndash; but then I wonder what Latitude or Longitude I&#8217;ve got to?&#8221; (Alice had no idea what Latitude was, or Longitude either, but thought they were nice grand words to say.)</p>\r\n<h3>After that</h3>\r\n<p>Presently she began again. &#8220;I wonder if I shall fall right <em>through</em> the earth! How funny it&#8221;ll seem to come out among the people that walk with their heads downward! The Antipathies, I think &ndash; &#8221; (she was rather glad there <em>was</em> no one listening, this time, as it didn&#8217;t sound at all the right word) &#8221; &ndash; but I shall have to ask them what the name of the country is, you know. Please, Ma&#8217;am, is this New Zealand or Australia?&#8221; (and she tried to curtsey as she spoke &ndash; fancy <em>curtseying</em> as you&#8221;re falling through the air! Do you think you could manage it?) &#8220;And what an <a href="#">ignorant little girl</a> she&#8221;ll think me for asking! No, it&#8217;ll never do to ask: perhaps I shall see it written up somewhere.&#8221;</p>\r\n<p>Down, down, down. There was nothing else to do, so Alice soon began talking again. &#8220;Dinah&#8217;ll miss me very much to-night, I should think!&#8221; (Dinah was the cat.) &#8220;I hope they&#8217;ll remember her saucer of milk at tea-time. Dinah my dear! I wish you were down here with me! There are no mice in the air, I&#8217;m afraid, but you might catch a bat, and that&#8217;s very like a mouse, you know. But do cats eat bats, I wonder?&#8221; And here Alice began to get rather sleepy, and went on saying to herself, in a dreamy sort of way, &#8220;Do cats eat bats? Do cats eat bats?&#8221; and sometimes, &#8220;Do bats eat cats?&#8221; for, you see, as she couldn&#8217;t answer either question, it didn&#8217;t much matter which way she put it. She felt that she was dozing off, and had just begun to dream that she was walking hand in hand with Dinah, and saying to her very earnestly, &#8220;Now, Dinah, tell me the truth: did you ever eat a bat?&#8221; when suddenly, thump! thump! down she came upon a heap of sticks and dry leaves, and the fall was over.</p>\r\n<p>Alice was not a bit hurt, and she jumped up on to her feet in a moment: she looked up, but it was all dark overhead; before her was another long passage, and the White Rabbit was still in sight, hurrying down it. There was not a moment to be lost: away went Alice like the wind, and was just in time to hear it say, as it turned a corner, &#8220;Oh my ears and whiskers, how late it&#8217;s getting!&#8221; She was close behind it when she turned the corner, but the Rabbit was no longer to be seen: she found herself in a long, low hall, which was lit up by a row of lamps hanging from the roof.</p>\r\n<p>There were doors all round the hall, but they were all locked; and when Alice had been all the way down one side and up the other, trying every door, she walked sadly down the middle, wondering how she was ever to get out again.</p>\r\n<p>Suddenly she came upon a little three-legged table, all made of solid glass; there was nothing on it except a tiny golden key, and Alice&#8217;s first thought was that it might belong to one of the doors of the hall; but, alas! either the locks were too large, or the key was too small, but at any rate it would not open any of them. However, on the second time round, she came upon a low curtain she had not noticed before, and behind it was a little door about fifteen inches high: she tried the little golden key in the lock, and to her great delight it fitted!</p>', '', '1', '2016-03-04 08:23:36', NULL),
-(9, 'article 9', 'article-9', 'Spring rising and the end of winter dawns. Time to celebrate and join the festivities.', '<p>Alice was beginning to get very tired of sitting by her sister on the bank, and of having nothing to do: once or twice she had peeped into the book her sister was reading, but it had no pictures or conversations in it, &#8220;and what is the use of a book,&#8221; thought Alice &#8220;without pictures or conversation?&#8221;</p>\r\n<p>So she was considering in her own mind (as well as she could, for the hot day made her feel very sleepy and stupid), whether the pleasure of <a href="#">making a daisy-chain</a> would be worth the trouble of getting up and picking the daisies, when suddenly a White Rabbit with pink eyes ran close by her.</p>\r\n<p>There was nothing so <em>very</em> remarkable in that; nor did Alice think it so <em>very</em> much out of the way to hear the Rabbit say to itself, &#8220;Oh dear! Oh dear! I shall be late!&#8221; (when she thought it over afterwards, it occurred to her that she ought to have wondered at this, but at the time it all seemed quite natural); but when the Rabbit actually <em>took a watch out of its waistcoat-pocket</em>, and looked at it, and then hurried on, Alice started to her feet, for <a href="#">it flashed across her</a> mind that she had never before seen a rabbit with either a waistcoat-pocket, or a watch to take out of it, and burning with curiosity, she ran across the field after it, and fortunately was just in time to see it pop down a large rabbit-hole under the hedge.</p>\r\n<p>In another moment down went Alice after it, never once considering how in the world she was to get out again.</p>\r\n<h3>And then</h3>\r\n<p>The rabbit-hole went straight on like a tunnel for some way, and then dipped suddenly down, so suddenly that Alice had not a moment to think about stopping herself before she found herself falling down a very deep well.</p>\r\n<p>Either the well was very deep, or she fell very slowly, for she had plenty of time as she went down to look about her and to wonder what was going to happen next. First, she tried to look down and make out what she was coming to, but it was too dark to see anything; then she looked at the sides of the well, and noticed that they were filled with cupboards and book-shelves; here and there she saw maps and pictures hung upon pegs. She took down a jar from one of the shelves as she passed; it was labelled &#8220;<a href="#">ORANGE MARMALADE</a>&#8220;, but to her great disappointment it was empty: she did not like to drop the jar for fear of killing somebody, so managed to put it into one of the cupboards as she fell past it.</p>\r\n<p>&#8220;Well!&#8221; thought Alice to herself, &#8220;after such a fall as this, I shall think nothing of tumbling down stairs! How brave they&#8217;ll all think me at home! Why, I wouldn&#8217;t say anything about it, even if I fell off the top of the house!&#8221; (Which was very likely true.)</p>\r\n<p>Down, down, down. Would the fall <em>never</em> come to an end! &#8220;I wonder how many miles I&#8217;ve fallen by this time?&#8221; she said aloud. &#8220;I must be getting somewhere near the centre of the earth. Let me see: that would be four thousand miles down, I think &ndash; &#8221; (for, you see, Alice had learnt several things of this sort in her lessons in the schoolroom, and though this was not a <em>very</em> good opportunity for showing off her knowledge, as there was no one to listen to her, still it was good practice to say it over) &#8221; &ndash; yes, that&#8217;s about the right distance &ndash; but then I wonder what Latitude or Longitude I&#8217;ve got to?&#8221; (Alice had no idea what Latitude was, or Longitude either, but thought they were nice grand words to say.)</p>\r\n<h3>After that</h3>\r\n<p>Presently she began again. &#8220;I wonder if I shall fall right <em>through</em> the earth! How funny it&#8221;ll seem to come out among the people that walk with their heads downward! The Antipathies, I think &ndash; &#8221; (she was rather glad there <em>was</em> no one listening, this time, as it didn&#8217;t sound at all the right word) &#8221; &ndash; but I shall have to ask them what the name of the country is, you know. Please, Ma&#8217;am, is this New Zealand or Australia?&#8221; (and she tried to curtsey as she spoke &ndash; fancy <em>curtseying</em> as you&#8221;re falling through the air! Do you think you could manage it?) &#8220;And what an <a href="#">ignorant little girl</a> she&#8221;ll think me for asking! No, it&#8217;ll never do to ask: perhaps I shall see it written up somewhere.&#8221;</p>\r\n<p>Down, down, down. There was nothing else to do, so Alice soon began talking again. &#8220;Dinah&#8217;ll miss me very much to-night, I should think!&#8221; (Dinah was the cat.) &#8220;I hope they&#8217;ll remember her saucer of milk at tea-time. Dinah my dear! I wish you were down here with me! There are no mice in the air, I&#8217;m afraid, but you might catch a bat, and that&#8217;s very like a mouse, you know. But do cats eat bats, I wonder?&#8221; And here Alice began to get rather sleepy, and went on saying to herself, in a dreamy sort of way, &#8220;Do cats eat bats? Do cats eat bats?&#8221; and sometimes, &#8220;Do bats eat cats?&#8221; for, you see, as she couldn&#8217;t answer either question, it didn&#8217;t much matter which way she put it. She felt that she was dozing off, and had just begun to dream that she was walking hand in hand with Dinah, and saying to her very earnestly, &#8220;Now, Dinah, tell me the truth: did you ever eat a bat?&#8221; when suddenly, thump! thump! down she came upon a heap of sticks and dry leaves, and the fall was over.</p>\r\n<p>Alice was not a bit hurt, and she jumped up on to her feet in a moment: she looked up, but it was all dark overhead; before her was another long passage, and the White Rabbit was still in sight, hurrying down it. There was not a moment to be lost: away went Alice like the wind, and was just in time to hear it say, as it turned a corner, &#8220;Oh my ears and whiskers, how late it&#8217;s getting!&#8221; She was close behind it when she turned the corner, but the Rabbit was no longer to be seen: she found herself in a long, low hall, which was lit up by a row of lamps hanging from the roof.</p>\r\n<p>There were doors all round the hall, but they were all locked; and when Alice had been all the way down one side and up the other, trying every door, she walked sadly down the middle, wondering how she was ever to get out again.</p>\r\n<p>Suddenly she came upon a little three-legged table, all made of solid glass; there was nothing on it except a tiny golden key, and Alice&#8217;s first thought was that it might belong to one of the doors of the hall; but, alas! either the locks were too large, or the key was too small, but at any rate it would not open any of them. However, on the second time round, she came upon a low curtain she had not noticed before, and behind it was a little door about fifteen inches high: she tried the little golden key in the lock, and to her great delight it fitted!</p>', '', '1', '2016-03-06 08:24:36', NULL),
-(10, 'article 10', 'article-10', 'here''s something', '<p>Alice was beginning to get very tired of sitting by her sister on the bank, and of having nothing to do: once or twice she had peeped into the book her sister was reading, but it had no pictures or conversations in it, &#8220;and what is the use of a book,&#8221; thought Alice &#8220;without pictures or conversation?&#8221;</p>\r\n<p>So she was considering in her own mind (as well as she could, for the hot day made her feel very sleepy and stupid), whether the pleasure of <a href="#">making a daisy-chain</a> would be worth the trouble of getting up and picking the daisies, when suddenly a White Rabbit with pink eyes ran close by her.</p>\r\n<p>There was nothing so <em>very</em> remarkable in that; nor did Alice think it so <em>very</em> much out of the way to hear the Rabbit say to itself, &#8220;Oh dear! Oh dear! I shall be late!&#8221; (when she thought it over afterwards, it occurred to her that she ought to have wondered at this, but at the time it all seemed quite natural); but when the Rabbit actually <em>took a watch out of its waistcoat-pocket</em>, and looked at it, and then hurried on, Alice started to her feet, for <a href="#">it flashed across her</a> mind that she had never before seen a rabbit with either a waistcoat-pocket, or a watch to take out of it, and burning with curiosity, she ran across the field after it, and fortunately was just in time to see it pop down a large rabbit-hole under the hedge.</p>\r\n<p>In another moment down went Alice after it, never once considering how in the world she was to get out again.</p>\r\n<h3>And then</h3>\r\n<p>The rabbit-hole went straight on like a tunnel for some way, and then dipped suddenly down, so suddenly that Alice had not a moment to think about stopping herself before she found herself falling down a very deep well.</p>\r\n<p>Either the well was very deep, or she fell very slowly, for she had plenty of time as she went down to look about her and to wonder what was going to happen next. First, she tried to look down and make out what she was coming to, but it was too dark to see anything; then she looked at the sides of the well, and noticed that they were filled with cupboards and book-shelves; here and there she saw maps and pictures hung upon pegs. She took down a jar from one of the shelves as she passed; it was labelled &#8220;<a href="#">ORANGE MARMALADE</a>&#8220;, but to her great disappointment it was empty: she did not like to drop the jar for fear of killing somebody, so managed to put it into one of the cupboards as she fell past it.</p>\r\n<p>&#8220;Well!&#8221; thought Alice to herself, &#8220;after such a fall as this, I shall think nothing of tumbling down stairs! How brave they&#8217;ll all think me at home! Why, I wouldn&#8217;t say anything about it, even if I fell off the top of the house!&#8221; (Which was very likely true.)</p>\r\n<p>Down, down, down. Would the fall <em>never</em> come to an end! &#8220;I wonder how many miles I&#8217;ve fallen by this time?&#8221; she said aloud. &#8220;I must be getting somewhere near the centre of the earth. Let me see: that would be four thousand miles down, I think &ndash; &#8221; (for, you see, Alice had learnt several things of this sort in her lessons in the schoolroom, and though this was not a <em>very</em> good opportunity for showing off her knowledge, as there was no one to listen to her, still it was good practice to say it over) &#8221; &ndash; yes, that&#8217;s about the right distance &ndash; but then I wonder what Latitude or Longitude I&#8217;ve got to?&#8221; (Alice had no idea what Latitude was, or Longitude either, but thought they were nice grand words to say.)</p>\r\n<h3>After that</h3>\r\n<p>Presently she began again. &#8220;I wonder if I shall fall right <em>through</em> the earth! How funny it&#8221;ll seem to come out among the people that walk with their heads downward! The Antipathies, I think &ndash; &#8221; (she was rather glad there <em>was</em> no one listening, this time, as it didn&#8217;t sound at all the right word) &#8221; &ndash; but I shall have to ask them what the name of the country is, you know. Please, Ma&#8217;am, is this New Zealand or Australia?&#8221; (and she tried to curtsey as she spoke &ndash; fancy <em>curtseying</em> as you&#8221;re falling through the air! Do you think you could manage it?) &#8220;And what an <a href="#">ignorant little girl</a> she&#8221;ll think me for asking! No, it&#8217;ll never do to ask: perhaps I shall see it written up somewhere.&#8221;</p>\r\n<p>Down, down, down. There was nothing else to do, so Alice soon began talking again. &#8220;Dinah&#8217;ll miss me very much to-night, I should think!&#8221; (Dinah was the cat.) &#8220;I hope they&#8217;ll remember her saucer of milk at tea-time. Dinah my dear! I wish you were down here with me! There are no mice in the air, I&#8217;m afraid, but you might catch a bat, and that&#8217;s very like a mouse, you know. But do cats eat bats, I wonder?&#8221; And here Alice began to get rather sleepy, and went on saying to herself, in a dreamy sort of way, &#8220;Do cats eat bats? Do cats eat bats?&#8221; and sometimes, &#8220;Do bats eat cats?&#8221; for, you see, as she couldn&#8217;t answer either question, it didn&#8217;t much matter which way she put it. She felt that she was dozing off, and had just begun to dream that she was walking hand in hand with Dinah, and saying to her very earnestly, &#8220;Now, Dinah, tell me the truth: did you ever eat a bat?&#8221; when suddenly, thump! thump! down she came upon a heap of sticks and dry leaves, and the fall was over.</p>\r\n<p>Alice was not a bit hurt, and she jumped up on to her feet in a moment: she looked up, but it was all dark overhead; before her was another long passage, and the White Rabbit was still in sight, hurrying down it. There was not a moment to be lost: away went Alice like the wind, and was just in time to hear it say, as it turned a corner, &#8220;Oh my ears and whiskers, how late it&#8217;s getting!&#8221; She was close behind it when she turned the corner, but the Rabbit was no longer to be seen: she found herself in a long, low hall, which was lit up by a row of lamps hanging from the roof.</p>\r\n<p>There were doors all round the hall, but they were all locked; and when Alice had been all the way down one side and up the other, trying every door, she walked sadly down the middle, wondering how she was ever to get out again.</p>\r\n<p>Suddenly she came upon a little three-legged table, all made of solid glass; there was nothing on it except a tiny golden key, and Alice&#8217;s first thought was that it might belong to one of the doors of the hall; but, alas! either the locks were too large, or the key was too small, but at any rate it would not open any of them. However, on the second time round, she came upon a low curtain she had not noticed before, and behind it was a little door about fifteen inches high: she tried the little golden key in the lock, and to her great delight it fitted!</p>', '', '1', '2016-03-05 12:59:34', NULL);
+(6, 'Down the rabbit hole', 'down-the-rabbit-hole', 'Down, down', '<p>Alice was beginning to get very tired of sitting by her sister on the bank, and of having nothing to do: once or twice she had peeped into the book her sister was reading, but it had no pictures or conversations in it, &#8220;and what is the use of a book,&#8221; thought Alice &#8220;without pictures or conversation?&#8221;</p>\n<p>So she was considering in her own mind (as well as she could, for the hot day made her feel very sleepy and stupid), whether the pleasure of <a href=\"#\">making a daisy-chain</a> would be worth the trouble of getting up and picking the daisies, when suddenly a White Rabbit with pink eyes ran close by her.</p>\n<p>There was nothing so <em>very</em> remarkable in that; nor did Alice think it so <em>very</em> much out of the way to hear the Rabbit say to itself, &#8220;Oh dear! Oh dear! I shall be late!&#8221; (when she thought it over afterwards, it occurred to her that she ought to have wondered at this, but at the time it all seemed quite natural); but when the Rabbit actually <em>took a watch out of its waistcoat-pocket</em>, and looked at it, and then hurried on, Alice started to her feet, for <a href=\"#\">it flashed across her</a> mind that she had never before seen a rabbit with either a waistcoat-pocket, or a watch to take out of it, and burning with curiosity, she ran across the field after it, and fortunately was just in time to see it pop down a large rabbit-hole under the hedge.</p>\n<p>In another moment down went Alice after it, never once considering how in the world she was to get out again.</p>\n<h3>And then</h3>\n<p>The rabbit-hole went straight on like a tunnel for some way, and then dipped suddenly down, so suddenly that Alice had not a moment to think about stopping herself before she found herself falling down a very deep well.</p>\n<p>Either the well was very deep, or she fell very slowly, for she had plenty of time as she went down to look about her and to wonder what was going to happen next. First, she tried to look down and make out what she was coming to, but it was too dark to see anything; then she looked at the sides of the well, and noticed that they were filled with cupboards and book-shelves; here and there she saw maps and pictures hung upon pegs. She took down a jar from one of the shelves as she passed; it was labelled &#8220;<a href=\"#\">ORANGE MARMALADE</a>&#8220;, but to her great disappointment it was empty: she did not like to drop the jar for fear of killing somebody, so managed to put it into one of the cupboards as she fell past it.</p>\n<p>&#8220;Well!&#8221; thought Alice to herself, &#8220;after such a fall as this, I shall think nothing of tumbling down stairs! How brave they&#8217;ll all think me at home! Why, I wouldn&#8217;t say anything about it, even if I fell off the top of the house!&#8221; (Which was very likely true.)</p>\n<p>Down, down, down. Would the fall <em>never</em> come to an end! &#8220;I wonder how many miles I&#8217;ve fallen by this time?&#8221; she said aloud. &#8220;I must be getting somewhere near the centre of the earth. Let me see: that would be four thousand miles down, I think &ndash; &#8221; (for, you see, Alice had learnt several things of this sort in her lessons in the schoolroom, and though this was not a <em>very</em> good opportunity for showing off her knowledge, as there was no one to listen to her, still it was good practice to say it over) &#8221; &ndash; yes, that&#8217;s about the right distance &ndash; but then I wonder what Latitude or Longitude I&#8217;ve got to?&#8221; (Alice had no idea what Latitude was, or Longitude either, but thought they were nice grand words to say.)</p>\n<h3>After that</h3>\n<p>Presently she began again. &#8220;I wonder if I shall fall right <em>through</em> the earth! How funny it&#8221;ll seem to come out among the people that walk with their heads downward! The Antipathies, I think &ndash; &#8221; (she was rather glad there <em>was</em> no one listening, this time, as it didn&#8217;t sound at all the right word) &#8221; &ndash; but I shall have to ask them what the name of the country is, you know. Please, Ma&#8217;am, is this New Zealand or Australia?&#8221; (and she tried to curtsey as she spoke &ndash; fancy <em>curtseying</em> as you&#8221;re falling through the air! Do you think you could manage it?) &#8220;And what an <a href=\"#\">ignorant little girl</a> she&#8221;ll think me for asking! No, it&#8217;ll never do to ask: perhaps I shall see it written up somewhere.&#8221;</p>\n<p>Down, down, down. There was nothing else to do, so Alice soon began talking again. &#8220;Dinah&#8217;ll miss me very much to-night, I should think!&#8221; (Dinah was the cat.) &#8220;I hope they&#8217;ll remember her saucer of milk at tea-time. Dinah my dear! I wish you were down here with me! There are no mice in the air, I&#8217;m afraid, but you might catch a bat, and that&#8217;s very like a mouse, you know. But do cats eat bats, I wonder?&#8221; And here Alice began to get rather sleepy, and went on saying to herself, in a dreamy sort of way, &#8220;Do cats eat bats? Do cats eat bats?&#8221; and sometimes, &#8220;Do bats eat cats?&#8221; for, you see, as she couldn&#8217;t answer either question, it didn&#8217;t much matter which way she put it. She felt that she was dozing off, and had just begun to dream that she was walking hand in hand with Dinah, and saying to her very earnestly, &#8220;Now, Dinah, tell me the truth: did you ever eat a bat?&#8221; when suddenly, thump! thump! down she came upon a heap of sticks and dry leaves, and the fall was over.</p>\n<p>Alice was not a bit hurt, and she jumped up on to her feet in a moment: she looked up, but it was all dark overhead; before her was another long passage, and the White Rabbit was still in sight, hurrying down it. There was not a moment to be lost: away went Alice like the wind, and was just in time to hear it say, as it turned a corner, &#8220;Oh my ears and whiskers, how late it&#8217;s getting!&#8221; She was close behind it when she turned the corner, but the Rabbit was no longer to be seen: she found herself in a long, low hall, which was lit up by a row of lamps hanging from the roof.</p>\n<p>There were doors all round the hall, but they were all locked; and when Alice had been all the way down one side and up the other, trying every door, she walked sadly down the middle, wondering how she was ever to get out again.</p>\n<p>Suddenly she came upon a little three-legged table, all made of solid glass; there was nothing on it except a tiny golden key, and Alice&#8217;s first thought was that it might belong to one of the doors of the hall; but, alas! either the locks were too large, or the key was too small, but at any rate it would not open any of them. However, on the second time round, she came upon a low curtain she had not noticed before, and behind it was a little door about fifteen inches high: she tried the little golden key in the lock, and to her great delight it fitted!</p>', '', '1', '2016-03-02 08:23:36', NULL),
+(7, 'article 7', 'article-7', 'Down, down', '<p>Alice was beginning to get very tired of sitting by her sister on the bank, and of having nothing to do: once or twice she had peeped into the book her sister was reading, but it had no pictures or conversations in it, &#8220;and what is the use of a book,&#8221; thought Alice &#8220;without pictures or conversation?&#8221;</p>\r\n<p>So she was considering in her own mind (as well as she could, for the hot day made her feel very sleepy and stupid), whether the pleasure of <a href=\"#\">making a daisy-chain</a> would be worth the trouble of getting up and picking the daisies, when suddenly a White Rabbit with pink eyes ran close by her.</p>\r\n<p>There was nothing so <em>very</em> remarkable in that; nor did Alice think it so <em>very</em> much out of the way to hear the Rabbit say to itself, &#8220;Oh dear! Oh dear! I shall be late!&#8221; (when she thought it over afterwards, it occurred to her that she ought to have wondered at this, but at the time it all seemed quite natural); but when the Rabbit actually <em>took a watch out of its waistcoat-pocket</em>, and looked at it, and then hurried on, Alice started to her feet, for <a href=\"#\">it flashed across her</a> mind that she had never before seen a rabbit with either a waistcoat-pocket, or a watch to take out of it, and burning with curiosity, she ran across the field after it, and fortunately was just in time to see it pop down a large rabbit-hole under the hedge.</p>\r\n<p>In another moment down went Alice after it, never once considering how in the world she was to get out again.</p>\r\n<h3>And then</h3>\r\n<p>The rabbit-hole went straight on like a tunnel for some way, and then dipped suddenly down, so suddenly that Alice had not a moment to think about stopping herself before she found herself falling down a very deep well.</p>\r\n<p>Either the well was very deep, or she fell very slowly, for she had plenty of time as she went down to look about her and to wonder what was going to happen next. First, she tried to look down and make out what she was coming to, but it was too dark to see anything; then she looked at the sides of the well, and noticed that they were filled with cupboards and book-shelves; here and there she saw maps and pictures hung upon pegs. She took down a jar from one of the shelves as she passed; it was labelled &#8220;<a href=\"#\">ORANGE MARMALADE</a>&#8220;, but to her great disappointment it was empty: she did not like to drop the jar for fear of killing somebody, so managed to put it into one of the cupboards as she fell past it.</p>\r\n<p>&#8220;Well!&#8221; thought Alice to herself, &#8220;after such a fall as this, I shall think nothing of tumbling down stairs! How brave they&#8217;ll all think me at home! Why, I wouldn&#8217;t say anything about it, even if I fell off the top of the house!&#8221; (Which was very likely true.)</p>\r\n<p>Down, down, down. Would the fall <em>never</em> come to an end! &#8220;I wonder how many miles I&#8217;ve fallen by this time?&#8221; she said aloud. &#8220;I must be getting somewhere near the centre of the earth. Let me see: that would be four thousand miles down, I think &ndash; &#8221; (for, you see, Alice had learnt several things of this sort in her lessons in the schoolroom, and though this was not a <em>very</em> good opportunity for showing off her knowledge, as there was no one to listen to her, still it was good practice to say it over) &#8221; &ndash; yes, that&#8217;s about the right distance &ndash; but then I wonder what Latitude or Longitude I&#8217;ve got to?&#8221; (Alice had no idea what Latitude was, or Longitude either, but thought they were nice grand words to say.)</p>\r\n<h3>After that</h3>\r\n<p>Presently she began again. &#8220;I wonder if I shall fall right <em>through</em> the earth! How funny it&#8221;ll seem to come out among the people that walk with their heads downward! The Antipathies, I think &ndash; &#8221; (she was rather glad there <em>was</em> no one listening, this time, as it didn&#8217;t sound at all the right word) &#8221; &ndash; but I shall have to ask them what the name of the country is, you know. Please, Ma&#8217;am, is this New Zealand or Australia?&#8221; (and she tried to curtsey as she spoke &ndash; fancy <em>curtseying</em> as you&#8221;re falling through the air! Do you think you could manage it?) &#8220;And what an <a href=\"#\">ignorant little girl</a> she&#8221;ll think me for asking! No, it&#8217;ll never do to ask: perhaps I shall see it written up somewhere.&#8221;</p>\r\n<p>Down, down, down. There was nothing else to do, so Alice soon began talking again. &#8220;Dinah&#8217;ll miss me very much to-night, I should think!&#8221; (Dinah was the cat.) &#8220;I hope they&#8217;ll remember her saucer of milk at tea-time. Dinah my dear! I wish you were down here with me! There are no mice in the air, I&#8217;m afraid, but you might catch a bat, and that&#8217;s very like a mouse, you know. But do cats eat bats, I wonder?&#8221; And here Alice began to get rather sleepy, and went on saying to herself, in a dreamy sort of way, &#8220;Do cats eat bats? Do cats eat bats?&#8221; and sometimes, &#8220;Do bats eat cats?&#8221; for, you see, as she couldn&#8217;t answer either question, it didn&#8217;t much matter which way she put it. She felt that she was dozing off, and had just begun to dream that she was walking hand in hand with Dinah, and saying to her very earnestly, &#8220;Now, Dinah, tell me the truth: did you ever eat a bat?&#8221; when suddenly, thump! thump! down she came upon a heap of sticks and dry leaves, and the fall was over.</p>\r\n<p>Alice was not a bit hurt, and she jumped up on to her feet in a moment: she looked up, but it was all dark overhead; before her was another long passage, and the White Rabbit was still in sight, hurrying down it. There was not a moment to be lost: away went Alice like the wind, and was just in time to hear it say, as it turned a corner, &#8220;Oh my ears and whiskers, how late it&#8217;s getting!&#8221; She was close behind it when she turned the corner, but the Rabbit was no longer to be seen: she found herself in a long, low hall, which was lit up by a row of lamps hanging from the roof.</p>\r\n<p>There were doors all round the hall, but they were all locked; and when Alice had been all the way down one side and up the other, trying every door, she walked sadly down the middle, wondering how she was ever to get out again.</p>\r\n<p>Suddenly she came upon a little three-legged table, all made of solid glass; there was nothing on it except a tiny golden key, and Alice&#8217;s first thought was that it might belong to one of the doors of the hall; but, alas! either the locks were too large, or the key was too small, but at any rate it would not open any of them. However, on the second time round, she came upon a low curtain she had not noticed before, and behind it was a little door about fifteen inches high: she tried the little golden key in the lock, and to her great delight it fitted!</p>', '', '1', '2016-03-03 08:23:36', NULL),
+(8, 'article 8', 'article-8', 'Down, down', '<p>Alice was beginning to get very tired of sitting by her sister on the bank, and of having nothing to do: once or twice she had peeped into the book her sister was reading, but it had no pictures or conversations in it, &#8220;and what is the use of a book,&#8221; thought Alice &#8220;without pictures or conversation?&#8221;</p>\r\n<p>So she was considering in her own mind (as well as she could, for the hot day made her feel very sleepy and stupid), whether the pleasure of <a href=\"#\">making a daisy-chain</a> would be worth the trouble of getting up and picking the daisies, when suddenly a White Rabbit with pink eyes ran close by her.</p>\r\n<p>There was nothing so <em>very</em> remarkable in that; nor did Alice think it so <em>very</em> much out of the way to hear the Rabbit say to itself, &#8220;Oh dear! Oh dear! I shall be late!&#8221; (when she thought it over afterwards, it occurred to her that she ought to have wondered at this, but at the time it all seemed quite natural); but when the Rabbit actually <em>took a watch out of its waistcoat-pocket</em>, and looked at it, and then hurried on, Alice started to her feet, for <a href=\"#\">it flashed across her</a> mind that she had never before seen a rabbit with either a waistcoat-pocket, or a watch to take out of it, and burning with curiosity, she ran across the field after it, and fortunately was just in time to see it pop down a large rabbit-hole under the hedge.</p>\r\n<p>In another moment down went Alice after it, never once considering how in the world she was to get out again.</p>\r\n<h3>And then</h3>\r\n<p>The rabbit-hole went straight on like a tunnel for some way, and then dipped suddenly down, so suddenly that Alice had not a moment to think about stopping herself before she found herself falling down a very deep well.</p>\r\n<p>Either the well was very deep, or she fell very slowly, for she had plenty of time as she went down to look about her and to wonder what was going to happen next. First, she tried to look down and make out what she was coming to, but it was too dark to see anything; then she looked at the sides of the well, and noticed that they were filled with cupboards and book-shelves; here and there she saw maps and pictures hung upon pegs. She took down a jar from one of the shelves as she passed; it was labelled &#8220;<a href=\"#\">ORANGE MARMALADE</a>&#8220;, but to her great disappointment it was empty: she did not like to drop the jar for fear of killing somebody, so managed to put it into one of the cupboards as she fell past it.</p>\r\n<p>&#8220;Well!&#8221; thought Alice to herself, &#8220;after such a fall as this, I shall think nothing of tumbling down stairs! How brave they&#8217;ll all think me at home! Why, I wouldn&#8217;t say anything about it, even if I fell off the top of the house!&#8221; (Which was very likely true.)</p>\r\n<p>Down, down, down. Would the fall <em>never</em> come to an end! &#8220;I wonder how many miles I&#8217;ve fallen by this time?&#8221; she said aloud. &#8220;I must be getting somewhere near the centre of the earth. Let me see: that would be four thousand miles down, I think &ndash; &#8221; (for, you see, Alice had learnt several things of this sort in her lessons in the schoolroom, and though this was not a <em>very</em> good opportunity for showing off her knowledge, as there was no one to listen to her, still it was good practice to say it over) &#8221; &ndash; yes, that&#8217;s about the right distance &ndash; but then I wonder what Latitude or Longitude I&#8217;ve got to?&#8221; (Alice had no idea what Latitude was, or Longitude either, but thought they were nice grand words to say.)</p>\r\n<h3>After that</h3>\r\n<p>Presently she began again. &#8220;I wonder if I shall fall right <em>through</em> the earth! How funny it&#8221;ll seem to come out among the people that walk with their heads downward! The Antipathies, I think &ndash; &#8221; (she was rather glad there <em>was</em> no one listening, this time, as it didn&#8217;t sound at all the right word) &#8221; &ndash; but I shall have to ask them what the name of the country is, you know. Please, Ma&#8217;am, is this New Zealand or Australia?&#8221; (and she tried to curtsey as she spoke &ndash; fancy <em>curtseying</em> as you&#8221;re falling through the air! Do you think you could manage it?) &#8220;And what an <a href=\"#\">ignorant little girl</a> she&#8221;ll think me for asking! No, it&#8217;ll never do to ask: perhaps I shall see it written up somewhere.&#8221;</p>\r\n<p>Down, down, down. There was nothing else to do, so Alice soon began talking again. &#8220;Dinah&#8217;ll miss me very much to-night, I should think!&#8221; (Dinah was the cat.) &#8220;I hope they&#8217;ll remember her saucer of milk at tea-time. Dinah my dear! I wish you were down here with me! There are no mice in the air, I&#8217;m afraid, but you might catch a bat, and that&#8217;s very like a mouse, you know. But do cats eat bats, I wonder?&#8221; And here Alice began to get rather sleepy, and went on saying to herself, in a dreamy sort of way, &#8220;Do cats eat bats? Do cats eat bats?&#8221; and sometimes, &#8220;Do bats eat cats?&#8221; for, you see, as she couldn&#8217;t answer either question, it didn&#8217;t much matter which way she put it. She felt that she was dozing off, and had just begun to dream that she was walking hand in hand with Dinah, and saying to her very earnestly, &#8220;Now, Dinah, tell me the truth: did you ever eat a bat?&#8221; when suddenly, thump! thump! down she came upon a heap of sticks and dry leaves, and the fall was over.</p>\r\n<p>Alice was not a bit hurt, and she jumped up on to her feet in a moment: she looked up, but it was all dark overhead; before her was another long passage, and the White Rabbit was still in sight, hurrying down it. There was not a moment to be lost: away went Alice like the wind, and was just in time to hear it say, as it turned a corner, &#8220;Oh my ears and whiskers, how late it&#8217;s getting!&#8221; She was close behind it when she turned the corner, but the Rabbit was no longer to be seen: she found herself in a long, low hall, which was lit up by a row of lamps hanging from the roof.</p>\r\n<p>There were doors all round the hall, but they were all locked; and when Alice had been all the way down one side and up the other, trying every door, she walked sadly down the middle, wondering how she was ever to get out again.</p>\r\n<p>Suddenly she came upon a little three-legged table, all made of solid glass; there was nothing on it except a tiny golden key, and Alice&#8217;s first thought was that it might belong to one of the doors of the hall; but, alas! either the locks were too large, or the key was too small, but at any rate it would not open any of them. However, on the second time round, she came upon a low curtain she had not noticed before, and behind it was a little door about fifteen inches high: she tried the little golden key in the lock, and to her great delight it fitted!</p>', '', '1', '2016-03-04 08:23:36', NULL),
+(9, 'article 9', 'article-9', 'Spring rising and the end of winter dawns. Time to celebrate and join the festivities.', '<p>Alice was beginning to get very tired of sitting by her sister on the bank, and of having nothing to do: once or twice she had peeped into the book her sister was reading, but it had no pictures or conversations in it, &#8220;and what is the use of a book,&#8221; thought Alice &#8220;without pictures or conversation?&#8221;</p>\r\n<p>So she was considering in her own mind (as well as she could, for the hot day made her feel very sleepy and stupid), whether the pleasure of <a href=\"#\">making a daisy-chain</a> would be worth the trouble of getting up and picking the daisies, when suddenly a White Rabbit with pink eyes ran close by her.</p>\r\n<p>There was nothing so <em>very</em> remarkable in that; nor did Alice think it so <em>very</em> much out of the way to hear the Rabbit say to itself, &#8220;Oh dear! Oh dear! I shall be late!&#8221; (when she thought it over afterwards, it occurred to her that she ought to have wondered at this, but at the time it all seemed quite natural); but when the Rabbit actually <em>took a watch out of its waistcoat-pocket</em>, and looked at it, and then hurried on, Alice started to her feet, for <a href=\"#\">it flashed across her</a> mind that she had never before seen a rabbit with either a waistcoat-pocket, or a watch to take out of it, and burning with curiosity, she ran across the field after it, and fortunately was just in time to see it pop down a large rabbit-hole under the hedge.</p>\r\n<p>In another moment down went Alice after it, never once considering how in the world she was to get out again.</p>\r\n<h3>And then</h3>\r\n<p>The rabbit-hole went straight on like a tunnel for some way, and then dipped suddenly down, so suddenly that Alice had not a moment to think about stopping herself before she found herself falling down a very deep well.</p>\r\n<p>Either the well was very deep, or she fell very slowly, for she had plenty of time as she went down to look about her and to wonder what was going to happen next. First, she tried to look down and make out what she was coming to, but it was too dark to see anything; then she looked at the sides of the well, and noticed that they were filled with cupboards and book-shelves; here and there she saw maps and pictures hung upon pegs. She took down a jar from one of the shelves as she passed; it was labelled &#8220;<a href=\"#\">ORANGE MARMALADE</a>&#8220;, but to her great disappointment it was empty: she did not like to drop the jar for fear of killing somebody, so managed to put it into one of the cupboards as she fell past it.</p>\r\n<p>&#8220;Well!&#8221; thought Alice to herself, &#8220;after such a fall as this, I shall think nothing of tumbling down stairs! How brave they&#8217;ll all think me at home! Why, I wouldn&#8217;t say anything about it, even if I fell off the top of the house!&#8221; (Which was very likely true.)</p>\r\n<p>Down, down, down. Would the fall <em>never</em> come to an end! &#8220;I wonder how many miles I&#8217;ve fallen by this time?&#8221; she said aloud. &#8220;I must be getting somewhere near the centre of the earth. Let me see: that would be four thousand miles down, I think &ndash; &#8221; (for, you see, Alice had learnt several things of this sort in her lessons in the schoolroom, and though this was not a <em>very</em> good opportunity for showing off her knowledge, as there was no one to listen to her, still it was good practice to say it over) &#8221; &ndash; yes, that&#8217;s about the right distance &ndash; but then I wonder what Latitude or Longitude I&#8217;ve got to?&#8221; (Alice had no idea what Latitude was, or Longitude either, but thought they were nice grand words to say.)</p>\r\n<h3>After that</h3>\r\n<p>Presently she began again. &#8220;I wonder if I shall fall right <em>through</em> the earth! How funny it&#8221;ll seem to come out among the people that walk with their heads downward! The Antipathies, I think &ndash; &#8221; (she was rather glad there <em>was</em> no one listening, this time, as it didn&#8217;t sound at all the right word) &#8221; &ndash; but I shall have to ask them what the name of the country is, you know. Please, Ma&#8217;am, is this New Zealand or Australia?&#8221; (and she tried to curtsey as she spoke &ndash; fancy <em>curtseying</em> as you&#8221;re falling through the air! Do you think you could manage it?) &#8220;And what an <a href=\"#\">ignorant little girl</a> she&#8221;ll think me for asking! No, it&#8217;ll never do to ask: perhaps I shall see it written up somewhere.&#8221;</p>\r\n<p>Down, down, down. There was nothing else to do, so Alice soon began talking again. &#8220;Dinah&#8217;ll miss me very much to-night, I should think!&#8221; (Dinah was the cat.) &#8220;I hope they&#8217;ll remember her saucer of milk at tea-time. Dinah my dear! I wish you were down here with me! There are no mice in the air, I&#8217;m afraid, but you might catch a bat, and that&#8217;s very like a mouse, you know. But do cats eat bats, I wonder?&#8221; And here Alice began to get rather sleepy, and went on saying to herself, in a dreamy sort of way, &#8220;Do cats eat bats? Do cats eat bats?&#8221; and sometimes, &#8220;Do bats eat cats?&#8221; for, you see, as she couldn&#8217;t answer either question, it didn&#8217;t much matter which way she put it. She felt that she was dozing off, and had just begun to dream that she was walking hand in hand with Dinah, and saying to her very earnestly, &#8220;Now, Dinah, tell me the truth: did you ever eat a bat?&#8221; when suddenly, thump! thump! down she came upon a heap of sticks and dry leaves, and the fall was over.</p>\r\n<p>Alice was not a bit hurt, and she jumped up on to her feet in a moment: she looked up, but it was all dark overhead; before her was another long passage, and the White Rabbit was still in sight, hurrying down it. There was not a moment to be lost: away went Alice like the wind, and was just in time to hear it say, as it turned a corner, &#8220;Oh my ears and whiskers, how late it&#8217;s getting!&#8221; She was close behind it when she turned the corner, but the Rabbit was no longer to be seen: she found herself in a long, low hall, which was lit up by a row of lamps hanging from the roof.</p>\r\n<p>There were doors all round the hall, but they were all locked; and when Alice had been all the way down one side and up the other, trying every door, she walked sadly down the middle, wondering how she was ever to get out again.</p>\r\n<p>Suddenly she came upon a little three-legged table, all made of solid glass; there was nothing on it except a tiny golden key, and Alice&#8217;s first thought was that it might belong to one of the doors of the hall; but, alas! either the locks were too large, or the key was too small, but at any rate it would not open any of them. However, on the second time round, she came upon a low curtain she had not noticed before, and behind it was a little door about fifteen inches high: she tried the little golden key in the lock, and to her great delight it fitted!</p>', '', '1', '2016-03-06 08:24:36', NULL),
+(10, 'article 10', 'article-10', 'here\'s something', '<p>Alice was beginning to get very tired of sitting by her sister on the bank, and of having nothing to do: once or twice she had peeped into the book her sister was reading, but it had no pictures or conversations in it, &#8220;and what is the use of a book,&#8221; thought Alice &#8220;without pictures or conversation?&#8221;</p>\r\n<p>So she was considering in her own mind (as well as she could, for the hot day made her feel very sleepy and stupid), whether the pleasure of <a href=\"#\">making a daisy-chain</a> would be worth the trouble of getting up and picking the daisies, when suddenly a White Rabbit with pink eyes ran close by her.</p>\r\n<p>There was nothing so <em>very</em> remarkable in that; nor did Alice think it so <em>very</em> much out of the way to hear the Rabbit say to itself, &#8220;Oh dear! Oh dear! I shall be late!&#8221; (when she thought it over afterwards, it occurred to her that she ought to have wondered at this, but at the time it all seemed quite natural); but when the Rabbit actually <em>took a watch out of its waistcoat-pocket</em>, and looked at it, and then hurried on, Alice started to her feet, for <a href=\"#\">it flashed across her</a> mind that she had never before seen a rabbit with either a waistcoat-pocket, or a watch to take out of it, and burning with curiosity, she ran across the field after it, and fortunately was just in time to see it pop down a large rabbit-hole under the hedge.</p>\r\n<p>In another moment down went Alice after it, never once considering how in the world she was to get out again.</p>\r\n<h3>And then</h3>\r\n<p>The rabbit-hole went straight on like a tunnel for some way, and then dipped suddenly down, so suddenly that Alice had not a moment to think about stopping herself before she found herself falling down a very deep well.</p>\r\n<p>Either the well was very deep, or she fell very slowly, for she had plenty of time as she went down to look about her and to wonder what was going to happen next. First, she tried to look down and make out what she was coming to, but it was too dark to see anything; then she looked at the sides of the well, and noticed that they were filled with cupboards and book-shelves; here and there she saw maps and pictures hung upon pegs. She took down a jar from one of the shelves as she passed; it was labelled &#8220;<a href=\"#\">ORANGE MARMALADE</a>&#8220;, but to her great disappointment it was empty: she did not like to drop the jar for fear of killing somebody, so managed to put it into one of the cupboards as she fell past it.</p>\r\n<p>&#8220;Well!&#8221; thought Alice to herself, &#8220;after such a fall as this, I shall think nothing of tumbling down stairs! How brave they&#8217;ll all think me at home! Why, I wouldn&#8217;t say anything about it, even if I fell off the top of the house!&#8221; (Which was very likely true.)</p>\r\n<p>Down, down, down. Would the fall <em>never</em> come to an end! &#8220;I wonder how many miles I&#8217;ve fallen by this time?&#8221; she said aloud. &#8220;I must be getting somewhere near the centre of the earth. Let me see: that would be four thousand miles down, I think &ndash; &#8221; (for, you see, Alice had learnt several things of this sort in her lessons in the schoolroom, and though this was not a <em>very</em> good opportunity for showing off her knowledge, as there was no one to listen to her, still it was good practice to say it over) &#8221; &ndash; yes, that&#8217;s about the right distance &ndash; but then I wonder what Latitude or Longitude I&#8217;ve got to?&#8221; (Alice had no idea what Latitude was, or Longitude either, but thought they were nice grand words to say.)</p>\r\n<h3>After that</h3>\r\n<p>Presently she began again. &#8220;I wonder if I shall fall right <em>through</em> the earth! How funny it&#8221;ll seem to come out among the people that walk with their heads downward! The Antipathies, I think &ndash; &#8221; (she was rather glad there <em>was</em> no one listening, this time, as it didn&#8217;t sound at all the right word) &#8221; &ndash; but I shall have to ask them what the name of the country is, you know. Please, Ma&#8217;am, is this New Zealand or Australia?&#8221; (and she tried to curtsey as she spoke &ndash; fancy <em>curtseying</em> as you&#8221;re falling through the air! Do you think you could manage it?) &#8220;And what an <a href=\"#\">ignorant little girl</a> she&#8221;ll think me for asking! No, it&#8217;ll never do to ask: perhaps I shall see it written up somewhere.&#8221;</p>\r\n<p>Down, down, down. There was nothing else to do, so Alice soon began talking again. &#8220;Dinah&#8217;ll miss me very much to-night, I should think!&#8221; (Dinah was the cat.) &#8220;I hope they&#8217;ll remember her saucer of milk at tea-time. Dinah my dear! I wish you were down here with me! There are no mice in the air, I&#8217;m afraid, but you might catch a bat, and that&#8217;s very like a mouse, you know. But do cats eat bats, I wonder?&#8221; And here Alice began to get rather sleepy, and went on saying to herself, in a dreamy sort of way, &#8220;Do cats eat bats? Do cats eat bats?&#8221; and sometimes, &#8220;Do bats eat cats?&#8221; for, you see, as she couldn&#8217;t answer either question, it didn&#8217;t much matter which way she put it. She felt that she was dozing off, and had just begun to dream that she was walking hand in hand with Dinah, and saying to her very earnestly, &#8220;Now, Dinah, tell me the truth: did you ever eat a bat?&#8221; when suddenly, thump! thump! down she came upon a heap of sticks and dry leaves, and the fall was over.</p>\r\n<p>Alice was not a bit hurt, and she jumped up on to her feet in a moment: she looked up, but it was all dark overhead; before her was another long passage, and the White Rabbit was still in sight, hurrying down it. There was not a moment to be lost: away went Alice like the wind, and was just in time to hear it say, as it turned a corner, &#8220;Oh my ears and whiskers, how late it&#8217;s getting!&#8221; She was close behind it when she turned the corner, but the Rabbit was no longer to be seen: she found herself in a long, low hall, which was lit up by a row of lamps hanging from the roof.</p>\r\n<p>There were doors all round the hall, but they were all locked; and when Alice had been all the way down one side and up the other, trying every door, she walked sadly down the middle, wondering how she was ever to get out again.</p>\r\n<p>Suddenly she came upon a little three-legged table, all made of solid glass; there was nothing on it except a tiny golden key, and Alice&#8217;s first thought was that it might belong to one of the doors of the hall; but, alas! either the locks were too large, or the key was too small, but at any rate it would not open any of them. However, on the second time round, she came upon a low curtain she had not noticed before, and behind it was a little door about fifteen inches high: she tried the little golden key in the lock, and to her great delight it fitted!</p>', '', '1', '2016-03-05 12:59:34', NULL);
 INSERT INTO `tblnews` (`newsID`, `newsTitle`, `cleanURL`, `newsSynopsis`, `newsContent`, `bannerContent`, `status`, `timeAdded`, `postedBy`) VALUES
-(11, 'article 11', 'article-11', 'Down, down', '<p>Alice was beginning to get very tired of sitting by her sister on the bank, and of having nothing to do: once or twice she had peeped into the book her sister was reading, but it had no pictures or conversations in it, &#8220;and what is the use of a book,&#8221; thought Alice &#8220;without pictures or conversation?&#8221;</p>\r\n<p>So she was considering in her own mind (as well as she could, for the hot day made her feel very sleepy and stupid), whether the pleasure of <a href="#">making a daisy-chain</a> would be worth the trouble of getting up and picking the daisies, when suddenly a White Rabbit with pink eyes ran close by her.</p>\r\n<p>There was nothing so <em>very</em> remarkable in that; nor did Alice think it so <em>very</em> much out of the way to hear the Rabbit say to itself, &#8220;Oh dear! Oh dear! I shall be late!&#8221; (when she thought it over afterwards, it occurred to her that she ought to have wondered at this, but at the time it all seemed quite natural); but when the Rabbit actually <em>took a watch out of its waistcoat-pocket</em>, and looked at it, and then hurried on, Alice started to her feet, for <a href="#">it flashed across her</a> mind that she had never before seen a rabbit with either a waistcoat-pocket, or a watch to take out of it, and burning with curiosity, she ran across the field after it, and fortunately was just in time to see it pop down a large rabbit-hole under the hedge.</p>\r\n<p>In another moment down went Alice after it, never once considering how in the world she was to get out again.</p>\r\n<h3>And then</h3>\r\n<p>The rabbit-hole went straight on like a tunnel for some way, and then dipped suddenly down, so suddenly that Alice had not a moment to think about stopping herself before she found herself falling down a very deep well.</p>\r\n<p>Either the well was very deep, or she fell very slowly, for she had plenty of time as she went down to look about her and to wonder what was going to happen next. First, she tried to look down and make out what she was coming to, but it was too dark to see anything; then she looked at the sides of the well, and noticed that they were filled with cupboards and book-shelves; here and there she saw maps and pictures hung upon pegs. She took down a jar from one of the shelves as she passed; it was labelled &#8220;<a href="#">ORANGE MARMALADE</a>&#8220;, but to her great disappointment it was empty: she did not like to drop the jar for fear of killing somebody, so managed to put it into one of the cupboards as she fell past it.</p>\r\n<p>&#8220;Well!&#8221; thought Alice to herself, &#8220;after such a fall as this, I shall think nothing of tumbling down stairs! How brave they&#8217;ll all think me at home! Why, I wouldn&#8217;t say anything about it, even if I fell off the top of the house!&#8221; (Which was very likely true.)</p>\r\n<p>Down, down, down. Would the fall <em>never</em> come to an end! &#8220;I wonder how many miles I&#8217;ve fallen by this time?&#8221; she said aloud. &#8220;I must be getting somewhere near the centre of the earth. Let me see: that would be four thousand miles down, I think &ndash; &#8221; (for, you see, Alice had learnt several things of this sort in her lessons in the schoolroom, and though this was not a <em>very</em> good opportunity for showing off her knowledge, as there was no one to listen to her, still it was good practice to say it over) &#8221; &ndash; yes, that&#8217;s about the right distance &ndash; but then I wonder what Latitude or Longitude I&#8217;ve got to?&#8221; (Alice had no idea what Latitude was, or Longitude either, but thought they were nice grand words to say.)</p>\r\n<h3>After that</h3>\r\n<p>Presently she began again. &#8220;I wonder if I shall fall right <em>through</em> the earth! How funny it&#8221;ll seem to come out among the people that walk with their heads downward! The Antipathies, I think &ndash; &#8221; (she was rather glad there <em>was</em> no one listening, this time, as it didn&#8217;t sound at all the right word) &#8221; &ndash; but I shall have to ask them what the name of the country is, you know. Please, Ma&#8217;am, is this New Zealand or Australia?&#8221; (and she tried to curtsey as she spoke &ndash; fancy <em>curtseying</em> as you&#8221;re falling through the air! Do you think you could manage it?) &#8220;And what an <a href="#">ignorant little girl</a> she&#8221;ll think me for asking! No, it&#8217;ll never do to ask: perhaps I shall see it written up somewhere.&#8221;</p>\r\n<p>Down, down, down. There was nothing else to do, so Alice soon began talking again. &#8220;Dinah&#8217;ll miss me very much to-night, I should think!&#8221; (Dinah was the cat.) &#8220;I hope they&#8217;ll remember her saucer of milk at tea-time. Dinah my dear! I wish you were down here with me! There are no mice in the air, I&#8217;m afraid, but you might catch a bat, and that&#8217;s very like a mouse, you know. But do cats eat bats, I wonder?&#8221; And here Alice began to get rather sleepy, and went on saying to herself, in a dreamy sort of way, &#8220;Do cats eat bats? Do cats eat bats?&#8221; and sometimes, &#8220;Do bats eat cats?&#8221; for, you see, as she couldn&#8217;t answer either question, it didn&#8217;t much matter which way she put it. She felt that she was dozing off, and had just begun to dream that she was walking hand in hand with Dinah, and saying to her very earnestly, &#8220;Now, Dinah, tell me the truth: did you ever eat a bat?&#8221; when suddenly, thump! thump! down she came upon a heap of sticks and dry leaves, and the fall was over.</p>\r\n<p>Alice was not a bit hurt, and she jumped up on to her feet in a moment: she looked up, but it was all dark overhead; before her was another long passage, and the White Rabbit was still in sight, hurrying down it. There was not a moment to be lost: away went Alice like the wind, and was just in time to hear it say, as it turned a corner, &#8220;Oh my ears and whiskers, how late it&#8217;s getting!&#8221; She was close behind it when she turned the corner, but the Rabbit was no longer to be seen: she found herself in a long, low hall, which was lit up by a row of lamps hanging from the roof.</p>\r\n<p>There were doors all round the hall, but they were all locked; and when Alice had been all the way down one side and up the other, trying every door, she walked sadly down the middle, wondering how she was ever to get out again.</p>\r\n<p>Suddenly she came upon a little three-legged table, all made of solid glass; there was nothing on it except a tiny golden key, and Alice&#8217;s first thought was that it might belong to one of the doors of the hall; but, alas! either the locks were too large, or the key was too small, but at any rate it would not open any of them. However, on the second time round, she came upon a low curtain she had not noticed before, and behind it was a little door about fifteen inches high: she tried the little golden key in the lock, and to her great delight it fitted!</p>', '', '1', '2016-03-07 08:23:36', NULL),
-(12, 'article 12', 'article-12', 'Down, down', '<p>Alice was beginning to get very tired of sitting by her sister on the bank, and of having nothing to do: once or twice she had peeped into the book her sister was reading, but it had no pictures or conversations in it, &#8220;and what is the use of a book,&#8221; thought Alice &#8220;without pictures or conversation?&#8221;</p>\r\n<p>So she was considering in her own mind (as well as she could, for the hot day made her feel very sleepy and stupid), whether the pleasure of <a href="#">making a daisy-chain</a> would be worth the trouble of getting up and picking the daisies, when suddenly a White Rabbit with pink eyes ran close by her.</p>\r\n<p>There was nothing so <em>very</em> remarkable in that; nor did Alice think it so <em>very</em> much out of the way to hear the Rabbit say to itself, &#8220;Oh dear! Oh dear! I shall be late!&#8221; (when she thought it over afterwards, it occurred to her that she ought to have wondered at this, but at the time it all seemed quite natural); but when the Rabbit actually <em>took a watch out of its waistcoat-pocket</em>, and looked at it, and then hurried on, Alice started to her feet, for <a href="#">it flashed across her</a> mind that she had never before seen a rabbit with either a waistcoat-pocket, or a watch to take out of it, and burning with curiosity, she ran across the field after it, and fortunately was just in time to see it pop down a large rabbit-hole under the hedge.</p>\r\n<p>In another moment down went Alice after it, never once considering how in the world she was to get out again.</p>\r\n<h3>And then</h3>\r\n<p>The rabbit-hole went straight on like a tunnel for some way, and then dipped suddenly down, so suddenly that Alice had not a moment to think about stopping herself before she found herself falling down a very deep well.</p>\r\n<p>Either the well was very deep, or she fell very slowly, for she had plenty of time as she went down to look about her and to wonder what was going to happen next. First, she tried to look down and make out what she was coming to, but it was too dark to see anything; then she looked at the sides of the well, and noticed that they were filled with cupboards and book-shelves; here and there she saw maps and pictures hung upon pegs. She took down a jar from one of the shelves as she passed; it was labelled &#8220;<a href="#">ORANGE MARMALADE</a>&#8220;, but to her great disappointment it was empty: she did not like to drop the jar for fear of killing somebody, so managed to put it into one of the cupboards as she fell past it.</p>\r\n<p>&#8220;Well!&#8221; thought Alice to herself, &#8220;after such a fall as this, I shall think nothing of tumbling down stairs! How brave they&#8217;ll all think me at home! Why, I wouldn&#8217;t say anything about it, even if I fell off the top of the house!&#8221; (Which was very likely true.)</p>\r\n<p>Down, down, down. Would the fall <em>never</em> come to an end! &#8220;I wonder how many miles I&#8217;ve fallen by this time?&#8221; she said aloud. &#8220;I must be getting somewhere near the centre of the earth. Let me see: that would be four thousand miles down, I think &ndash; &#8221; (for, you see, Alice had learnt several things of this sort in her lessons in the schoolroom, and though this was not a <em>very</em> good opportunity for showing off her knowledge, as there was no one to listen to her, still it was good practice to say it over) &#8221; &ndash; yes, that&#8217;s about the right distance &ndash; but then I wonder what Latitude or Longitude I&#8217;ve got to?&#8221; (Alice had no idea what Latitude was, or Longitude either, but thought they were nice grand words to say.)</p>\r\n<h3>After that</h3>\r\n<p>Presently she began again. &#8220;I wonder if I shall fall right <em>through</em> the earth! How funny it&#8221;ll seem to come out among the people that walk with their heads downward! The Antipathies, I think &ndash; &#8221; (she was rather glad there <em>was</em> no one listening, this time, as it didn&#8217;t sound at all the right word) &#8221; &ndash; but I shall have to ask them what the name of the country is, you know. Please, Ma&#8217;am, is this New Zealand or Australia?&#8221; (and she tried to curtsey as she spoke &ndash; fancy <em>curtseying</em> as you&#8221;re falling through the air! Do you think you could manage it?) &#8220;And what an <a href="#">ignorant little girl</a> she&#8221;ll think me for asking! No, it&#8217;ll never do to ask: perhaps I shall see it written up somewhere.&#8221;</p>\r\n<p>Down, down, down. There was nothing else to do, so Alice soon began talking again. &#8220;Dinah&#8217;ll miss me very much to-night, I should think!&#8221; (Dinah was the cat.) &#8220;I hope they&#8217;ll remember her saucer of milk at tea-time. Dinah my dear! I wish you were down here with me! There are no mice in the air, I&#8217;m afraid, but you might catch a bat, and that&#8217;s very like a mouse, you know. But do cats eat bats, I wonder?&#8221; And here Alice began to get rather sleepy, and went on saying to herself, in a dreamy sort of way, &#8220;Do cats eat bats? Do cats eat bats?&#8221; and sometimes, &#8220;Do bats eat cats?&#8221; for, you see, as she couldn&#8217;t answer either question, it didn&#8217;t much matter which way she put it. She felt that she was dozing off, and had just begun to dream that she was walking hand in hand with Dinah, and saying to her very earnestly, &#8220;Now, Dinah, tell me the truth: did you ever eat a bat?&#8221; when suddenly, thump! thump! down she came upon a heap of sticks and dry leaves, and the fall was over.</p>\r\n<p>Alice was not a bit hurt, and she jumped up on to her feet in a moment: she looked up, but it was all dark overhead; before her was another long passage, and the White Rabbit was still in sight, hurrying down it. There was not a moment to be lost: away went Alice like the wind, and was just in time to hear it say, as it turned a corner, &#8220;Oh my ears and whiskers, how late it&#8217;s getting!&#8221; She was close behind it when she turned the corner, but the Rabbit was no longer to be seen: she found herself in a long, low hall, which was lit up by a row of lamps hanging from the roof.</p>\r\n<p>There were doors all round the hall, but they were all locked; and when Alice had been all the way down one side and up the other, trying every door, she walked sadly down the middle, wondering how she was ever to get out again.</p>\r\n<p>Suddenly she came upon a little three-legged table, all made of solid glass; there was nothing on it except a tiny golden key, and Alice&#8217;s first thought was that it might belong to one of the doors of the hall; but, alas! either the locks were too large, or the key was too small, but at any rate it would not open any of them. However, on the second time round, she came upon a low curtain she had not noticed before, and behind it was a little door about fifteen inches high: she tried the little golden key in the lock, and to her great delight it fitted!</p>', '', '1', '2016-03-08 08:23:36', NULL),
-(13, 'article 13', 'article-13', 'Down, down', '<p>Alice was beginning to get very tired of sitting by her sister on the bank, and of having nothing to do: once or twice she had peeped into the book her sister was reading, but it had no pictures or conversations in it, &#8220;and what is the use of a book,&#8221; thought Alice &#8220;without pictures or conversation?&#8221;</p>\r\n<p>So she was considering in her own mind (as well as she could, for the hot day made her feel very sleepy and stupid), whether the pleasure of <a href="#">making a daisy-chain</a> would be worth the trouble of getting up and picking the daisies, when suddenly a White Rabbit with pink eyes ran close by her.</p>\r\n<p>There was nothing so <em>very</em> remarkable in that; nor did Alice think it so <em>very</em> much out of the way to hear the Rabbit say to itself, &#8220;Oh dear! Oh dear! I shall be late!&#8221; (when she thought it over afterwards, it occurred to her that she ought to have wondered at this, but at the time it all seemed quite natural); but when the Rabbit actually <em>took a watch out of its waistcoat-pocket</em>, and looked at it, and then hurried on, Alice started to her feet, for <a href="#">it flashed across her</a> mind that she had never before seen a rabbit with either a waistcoat-pocket, or a watch to take out of it, and burning with curiosity, she ran across the field after it, and fortunately was just in time to see it pop down a large rabbit-hole under the hedge.</p>\r\n<p>In another moment down went Alice after it, never once considering how in the world she was to get out again.</p>\r\n<h3>And then</h3>\r\n<p>The rabbit-hole went straight on like a tunnel for some way, and then dipped suddenly down, so suddenly that Alice had not a moment to think about stopping herself before she found herself falling down a very deep well.</p>\r\n<p>Either the well was very deep, or she fell very slowly, for she had plenty of time as she went down to look about her and to wonder what was going to happen next. First, she tried to look down and make out what she was coming to, but it was too dark to see anything; then she looked at the sides of the well, and noticed that they were filled with cupboards and book-shelves; here and there she saw maps and pictures hung upon pegs. She took down a jar from one of the shelves as she passed; it was labelled &#8220;<a href="#">ORANGE MARMALADE</a>&#8220;, but to her great disappointment it was empty: she did not like to drop the jar for fear of killing somebody, so managed to put it into one of the cupboards as she fell past it.</p>\r\n<p>&#8220;Well!&#8221; thought Alice to herself, &#8220;after such a fall as this, I shall think nothing of tumbling down stairs! How brave they&#8217;ll all think me at home! Why, I wouldn&#8217;t say anything about it, even if I fell off the top of the house!&#8221; (Which was very likely true.)</p>\r\n<p>Down, down, down. Would the fall <em>never</em> come to an end! &#8220;I wonder how many miles I&#8217;ve fallen by this time?&#8221; she said aloud. &#8220;I must be getting somewhere near the centre of the earth. Let me see: that would be four thousand miles down, I think &ndash; &#8221; (for, you see, Alice had learnt several things of this sort in her lessons in the schoolroom, and though this was not a <em>very</em> good opportunity for showing off her knowledge, as there was no one to listen to her, still it was good practice to say it over) &#8221; &ndash; yes, that&#8217;s about the right distance &ndash; but then I wonder what Latitude or Longitude I&#8217;ve got to?&#8221; (Alice had no idea what Latitude was, or Longitude either, but thought they were nice grand words to say.)</p>\r\n<h3>After that</h3>\r\n<p>Presently she began again. &#8220;I wonder if I shall fall right <em>through</em> the earth! How funny it&#8221;ll seem to come out among the people that walk with their heads downward! The Antipathies, I think &ndash; &#8221; (she was rather glad there <em>was</em> no one listening, this time, as it didn&#8217;t sound at all the right word) &#8221; &ndash; but I shall have to ask them what the name of the country is, you know. Please, Ma&#8217;am, is this New Zealand or Australia?&#8221; (and she tried to curtsey as she spoke &ndash; fancy <em>curtseying</em> as you&#8221;re falling through the air! Do you think you could manage it?) &#8220;And what an <a href="#">ignorant little girl</a> she&#8221;ll think me for asking! No, it&#8217;ll never do to ask: perhaps I shall see it written up somewhere.&#8221;</p>\r\n<p>Down, down, down. There was nothing else to do, so Alice soon began talking again. &#8220;Dinah&#8217;ll miss me very much to-night, I should think!&#8221; (Dinah was the cat.) &#8220;I hope they&#8217;ll remember her saucer of milk at tea-time. Dinah my dear! I wish you were down here with me! There are no mice in the air, I&#8217;m afraid, but you might catch a bat, and that&#8217;s very like a mouse, you know. But do cats eat bats, I wonder?&#8221; And here Alice began to get rather sleepy, and went on saying to herself, in a dreamy sort of way, &#8220;Do cats eat bats? Do cats eat bats?&#8221; and sometimes, &#8220;Do bats eat cats?&#8221; for, you see, as she couldn&#8217;t answer either question, it didn&#8217;t much matter which way she put it. She felt that she was dozing off, and had just begun to dream that she was walking hand in hand with Dinah, and saying to her very earnestly, &#8220;Now, Dinah, tell me the truth: did you ever eat a bat?&#8221; when suddenly, thump! thump! down she came upon a heap of sticks and dry leaves, and the fall was over.</p>\r\n<p>Alice was not a bit hurt, and she jumped up on to her feet in a moment: she looked up, but it was all dark overhead; before her was another long passage, and the White Rabbit was still in sight, hurrying down it. There was not a moment to be lost: away went Alice like the wind, and was just in time to hear it say, as it turned a corner, &#8220;Oh my ears and whiskers, how late it&#8217;s getting!&#8221; She was close behind it when she turned the corner, but the Rabbit was no longer to be seen: she found herself in a long, low hall, which was lit up by a row of lamps hanging from the roof.</p>\r\n<p>There were doors all round the hall, but they were all locked; and when Alice had been all the way down one side and up the other, trying every door, she walked sadly down the middle, wondering how she was ever to get out again.</p>\r\n<p>Suddenly she came upon a little three-legged table, all made of solid glass; there was nothing on it except a tiny golden key, and Alice&#8217;s first thought was that it might belong to one of the doors of the hall; but, alas! either the locks were too large, or the key was too small, but at any rate it would not open any of them. However, on the second time round, she came upon a low curtain she had not noticed before, and behind it was a little door about fifteen inches high: she tried the little golden key in the lock, and to her great delight it fitted!</p>', '', '1', '2016-03-10 08:23:36', NULL),
-(14, 'article 14', 'article-14', 'Down, down', '<p>Alice was beginning to get very tired of sitting by her sister on the bank, and of having nothing to do: once or twice she had peeped into the book her sister was reading, but it had no pictures or conversations in it, &#8220;and what is the use of a book,&#8221; thought Alice &#8220;without pictures or conversation?&#8221;</p>\r\n<p>So she was considering in her own mind (as well as she could, for the hot day made her feel very sleepy and stupid), whether the pleasure of <a href="#">making a daisy-chain</a> would be worth the trouble of getting up and picking the daisies, when suddenly a White Rabbit with pink eyes ran close by her.</p>\r\n<p>There was nothing so <em>very</em> remarkable in that; nor did Alice think it so <em>very</em> much out of the way to hear the Rabbit say to itself, &#8220;Oh dear! Oh dear! I shall be late!&#8221; (when she thought it over afterwards, it occurred to her that she ought to have wondered at this, but at the time it all seemed quite natural); but when the Rabbit actually <em>took a watch out of its waistcoat-pocket</em>, and looked at it, and then hurried on, Alice started to her feet, for <a href="#">it flashed across her</a> mind that she had never before seen a rabbit with either a waistcoat-pocket, or a watch to take out of it, and burning with curiosity, she ran across the field after it, and fortunately was just in time to see it pop down a large rabbit-hole under the hedge.</p>\r\n<p>In another moment down went Alice after it, never once considering how in the world she was to get out again.</p>\r\n<h3>And then</h3>\r\n<p>The rabbit-hole went straight on like a tunnel for some way, and then dipped suddenly down, so suddenly that Alice had not a moment to think about stopping herself before she found herself falling down a very deep well.</p>\r\n<p>Either the well was very deep, or she fell very slowly, for she had plenty of time as she went down to look about her and to wonder what was going to happen next. First, she tried to look down and make out what she was coming to, but it was too dark to see anything; then she looked at the sides of the well, and noticed that they were filled with cupboards and book-shelves; here and there she saw maps and pictures hung upon pegs. She took down a jar from one of the shelves as she passed; it was labelled &#8220;<a href="#">ORANGE MARMALADE</a>&#8220;, but to her great disappointment it was empty: she did not like to drop the jar for fear of killing somebody, so managed to put it into one of the cupboards as she fell past it.</p>\r\n<p>&#8220;Well!&#8221; thought Alice to herself, &#8220;after such a fall as this, I shall think nothing of tumbling down stairs! How brave they&#8217;ll all think me at home! Why, I wouldn&#8217;t say anything about it, even if I fell off the top of the house!&#8221; (Which was very likely true.)</p>\r\n<p>Down, down, down. Would the fall <em>never</em> come to an end! &#8220;I wonder how many miles I&#8217;ve fallen by this time?&#8221; she said aloud. &#8220;I must be getting somewhere near the centre of the earth. Let me see: that would be four thousand miles down, I think &ndash; &#8221; (for, you see, Alice had learnt several things of this sort in her lessons in the schoolroom, and though this was not a <em>very</em> good opportunity for showing off her knowledge, as there was no one to listen to her, still it was good practice to say it over) &#8221; &ndash; yes, that&#8217;s about the right distance &ndash; but then I wonder what Latitude or Longitude I&#8217;ve got to?&#8221; (Alice had no idea what Latitude was, or Longitude either, but thought they were nice grand words to say.)</p>\r\n<h3>After that</h3>\r\n<p>Presently she began again. &#8220;I wonder if I shall fall right <em>through</em> the earth! How funny it&#8221;ll seem to come out among the people that walk with their heads downward! The Antipathies, I think &ndash; &#8221; (she was rather glad there <em>was</em> no one listening, this time, as it didn&#8217;t sound at all the right word) &#8221; &ndash; but I shall have to ask them what the name of the country is, you know. Please, Ma&#8217;am, is this New Zealand or Australia?&#8221; (and she tried to curtsey as she spoke &ndash; fancy <em>curtseying</em> as you&#8221;re falling through the air! Do you think you could manage it?) &#8220;And what an <a href="#">ignorant little girl</a> she&#8221;ll think me for asking! No, it&#8217;ll never do to ask: perhaps I shall see it written up somewhere.&#8221;</p>\r\n<p>Down, down, down. There was nothing else to do, so Alice soon began talking again. &#8220;Dinah&#8217;ll miss me very much to-night, I should think!&#8221; (Dinah was the cat.) &#8220;I hope they&#8217;ll remember her saucer of milk at tea-time. Dinah my dear! I wish you were down here with me! There are no mice in the air, I&#8217;m afraid, but you might catch a bat, and that&#8217;s very like a mouse, you know. But do cats eat bats, I wonder?&#8221; And here Alice began to get rather sleepy, and went on saying to herself, in a dreamy sort of way, &#8220;Do cats eat bats? Do cats eat bats?&#8221; and sometimes, &#8220;Do bats eat cats?&#8221; for, you see, as she couldn&#8217;t answer either question, it didn&#8217;t much matter which way she put it. She felt that she was dozing off, and had just begun to dream that she was walking hand in hand with Dinah, and saying to her very earnestly, &#8220;Now, Dinah, tell me the truth: did you ever eat a bat?&#8221; when suddenly, thump! thump! down she came upon a heap of sticks and dry leaves, and the fall was over.</p>\r\n<p>Alice was not a bit hurt, and she jumped up on to her feet in a moment: she looked up, but it was all dark overhead; before her was another long passage, and the White Rabbit was still in sight, hurrying down it. There was not a moment to be lost: away went Alice like the wind, and was just in time to hear it say, as it turned a corner, &#8220;Oh my ears and whiskers, how late it&#8217;s getting!&#8221; She was close behind it when she turned the corner, but the Rabbit was no longer to be seen: she found herself in a long, low hall, which was lit up by a row of lamps hanging from the roof.</p>\r\n<p>There were doors all round the hall, but they were all locked; and when Alice had been all the way down one side and up the other, trying every door, she walked sadly down the middle, wondering how she was ever to get out again.</p>\r\n<p>Suddenly she came upon a little three-legged table, all made of solid glass; there was nothing on it except a tiny golden key, and Alice&#8217;s first thought was that it might belong to one of the doors of the hall; but, alas! either the locks were too large, or the key was too small, but at any rate it would not open any of them. However, on the second time round, she came upon a low curtain she had not noticed before, and behind it was a little door about fifteen inches high: she tried the little golden key in the lock, and to her great delight it fitted!</p>', '', '1', '2016-03-08 08:23:36', NULL),
-(15, 'article 15', 'article-15', 'Donec vulputate, ipsum eu scelerisque scelerisque, massa risus molestie erat, a commodo urna sapien quis turpis. Quisque sit amet mattis arcu, et sodales sem. Aenean dictum neque semper, placerat mi ultricies, consequat orci. ', '<p>Alice was beginning to get very tired of sitting by her sister on the bank, and of having nothing to do: once or twice she had peeped into the book her sister was reading, but it had no pictures or conversations in it, &#8220;and what is the use of a book,&#8221; thought Alice &#8220;without pictures or conversation?&#8221;</p>\r\n<p>So she was considering in her own mind (as well as she could, for the hot day made her feel very sleepy and stupid), whether the pleasure of <a href="#">making a daisy-chain</a> would be worth the trouble of getting up and picking the daisies, when suddenly a White Rabbit with pink eyes ran close by her.</p>\r\n<p>There was nothing so <em>very</em> remarkable in that; nor did Alice think it so <em>very</em> much out of the way to hear the Rabbit say to itself, &#8220;Oh dear! Oh dear! I shall be late!&#8221; (when she thought it over afterwards, it occurred to her that she ought to have wondered at this, but at the time it all seemed quite natural); but when the Rabbit actually <em>took a watch out of its waistcoat-pocket</em>, and looked at it, and then hurried on, Alice started to her feet, for <a href="#">it flashed across her</a> mind that she had never before seen a rabbit with either a waistcoat-pocket, or a watch to take out of it, and burning with curiosity, she ran across the field after it, and fortunately was just in time to see it pop down a large rabbit-hole under the hedge.</p>\r\n<p>In another moment down went Alice after it, never once considering how in the world she was to get out again.</p>\r\n<h3>And then</h3>\r\n<p>The rabbit-hole went straight on like a tunnel for some way, and then dipped suddenly down, so suddenly that Alice had not a moment to think about stopping herself before she found herself falling down a very deep well.</p>\r\n<p>Either the well was very deep, or she fell very slowly, for she had plenty of time as she went down to look about her and to wonder what was going to happen next. First, she tried to look down and make out what she was coming to, but it was too dark to see anything; then she looked at the sides of the well, and noticed that they were filled with cupboards and book-shelves; here and there she saw maps and pictures hung upon pegs. She took down a jar from one of the shelves as she passed; it was labelled &#8220;<a href="#">ORANGE MARMALADE</a>&#8220;, but to her great disappointment it was empty: she did not like to drop the jar for fear of killing somebody, so managed to put it into one of the cupboards as she fell past it.</p>\r\n<p>&#8220;Well!&#8221; thought Alice to herself, &#8220;after such a fall as this, I shall think nothing of tumbling down stairs! How brave they&#8217;ll all think me at home! Why, I wouldn&#8217;t say anything about it, even if I fell off the top of the house!&#8221; (Which was very likely true.)</p>\r\n<p>Down, down, down. Would the fall <em>never</em> come to an end! &#8220;I wonder how many miles I&#8217;ve fallen by this time?&#8221; she said aloud. &#8220;I must be getting somewhere near the centre of the earth. Let me see: that would be four thousand miles down, I think &ndash; &#8221; (for, you see, Alice had learnt several things of this sort in her lessons in the schoolroom, and though this was not a <em>very</em> good opportunity for showing off her knowledge, as there was no one to listen to her, still it was good practice to say it over) &#8221; &ndash; yes, that&#8217;s about the right distance &ndash; but then I wonder what Latitude or Longitude I&#8217;ve got to?&#8221; (Alice had no idea what Latitude was, or Longitude either, but thought they were nice grand words to say.)</p>\r\n<h3>After that</h3>\r\n<p>Presently she began again. &#8220;I wonder if I shall fall right <em>through</em> the earth! How funny it&#8221;ll seem to come out among the people that walk with their heads downward! The Antipathies, I think &ndash; &#8221; (she was rather glad there <em>was</em> no one listening, this time, as it didn&#8217;t sound at all the right word) &#8221; &ndash; but I shall have to ask them what the name of the country is, you know. Please, Ma&#8217;am, is this New Zealand or Australia?&#8221; (and she tried to curtsey as she spoke &ndash; fancy <em>curtseying</em> as you&#8221;re falling through the air! Do you think you could manage it?) &#8220;And what an <a href="#">ignorant little girl</a> she&#8221;ll think me for asking! No, it&#8217;ll never do to ask: perhaps I shall see it written up somewhere.&#8221;</p>\r\n<p>Down, down, down. There was nothing else to do, so Alice soon began talking again. &#8220;Dinah&#8217;ll miss me very much to-night, I should think!&#8221; (Dinah was the cat.) &#8220;I hope they&#8217;ll remember her saucer of milk at tea-time. Dinah my dear! I wish you were down here with me! There are no mice in the air, I&#8217;m afraid, but you might catch a bat, and that&#8217;s very like a mouse, you know. But do cats eat bats, I wonder?&#8221; And here Alice began to get rather sleepy, and went on saying to herself, in a dreamy sort of way, &#8220;Do cats eat bats? Do cats eat bats?&#8221; and sometimes, &#8220;Do bats eat cats?&#8221; for, you see, as she couldn&#8217;t answer either question, it didn&#8217;t much matter which way she put it. She felt that she was dozing off, and had just begun to dream that she was walking hand in hand with Dinah, and saying to her very earnestly, &#8220;Now, Dinah, tell me the truth: did you ever eat a bat?&#8221; when suddenly, thump! thump! down she came upon a heap of sticks and dry leaves, and the fall was over.</p>\r\n<p>Alice was not a bit hurt, and she jumped up on to her feet in a moment: she looked up, but it was all dark overhead; before her was another long passage, and the White Rabbit was still in sight, hurrying down it. There was not a moment to be lost: away went Alice like the wind, and was just in time to hear it say, as it turned a corner, &#8220;Oh my ears and whiskers, how late it&#8217;s getting!&#8221; She was close behind it when she turned the corner, but the Rabbit was no longer to be seen: she found herself in a long, low hall, which was lit up by a row of lamps hanging from the roof.</p>\r\n<p>There were doors all round the hall, but they were all locked; and when Alice had been all the way down one side and up the other, trying every door, she walked sadly down the middle, wondering how she was ever to get out again.</p>\r\n<p>Suddenly she came upon a little three-legged table, all made of solid glass; there was nothing on it except a tiny golden key, and Alice&#8217;s first thought was that it might belong to one of the doors of the hall; but, alas! either the locks were too large, or the key was too small, but at any rate it would not open any of them. However, on the second time round, she came upon a low curtain she had not noticed before, and behind it was a little door about fifteen inches high: she tried the little golden key in the lock, and to her great delight it fitted!</p>', '', '1', '2016-03-14 17:29:37', NULL),
-(16, 'article 16', 'article-16', 'Here''s some news', '<p>Alice was beginning to get very tired of sitting by her sister on the bank, and of having nothing to do: once or twice she had peeped into the book her sister was reading, but it had no pictures or conversations in it, &#8220;and what is the use of a book,&#8221; thought Alice &#8220;without pictures or conversation?&#8221;</p>\r\n<p>So she was considering in her own mind (as well as she could, for the hot day made her feel very sleepy and stupid), whether the pleasure of <a href="#">making a daisy-chain</a> would be worth the trouble of getting up and picking the daisies, when suddenly a White Rabbit with pink eyes ran close by her.</p>\r\n<p>There was nothing so <em>very</em> remarkable in that; nor did Alice think it so <em>very</em> much out of the way to hear the Rabbit say to itself, &#8220;Oh dear! Oh dear! I shall be late!&#8221; (when she thought it over afterwards, it occurred to her that she ought to have wondered at this, but at the time it all seemed quite natural); but when the Rabbit actually <em>took a watch out of its waistcoat-pocket</em>, and looked at it, and then hurried on, Alice started to her feet, for <a href="#">it flashed across her</a> mind that she had never before seen a rabbit with either a waistcoat-pocket, or a watch to take out of it, and burning with curiosity, she ran across the field after it, and fortunately was just in time to see it pop down a large rabbit-hole under the hedge.</p>\r\n<p>In another moment down went Alice after it, never once considering how in the world she was to get out again.</p>\r\n<h3>And then</h3>\r\n<p>The rabbit-hole went straight on like a tunnel for some way, and then dipped suddenly down, so suddenly that Alice had not a moment to think about stopping herself before she found herself falling down a very deep well.</p>\r\n<p>Either the well was very deep, or she fell very slowly, for she had plenty of time as she went down to look about her and to wonder what was going to happen next. First, she tried to look down and make out what she was coming to, but it was too dark to see anything; then she looked at the sides of the well, and noticed that they were filled with cupboards and book-shelves; here and there she saw maps and pictures hung upon pegs. She took down a jar from one of the shelves as she passed; it was labelled &#8220;<a href="#">ORANGE MARMALADE</a>&#8220;, but to her great disappointment it was empty: she did not like to drop the jar for fear of killing somebody, so managed to put it into one of the cupboards as she fell past it.</p>\r\n<p>&#8220;Well!&#8221; thought Alice to herself, &#8220;after such a fall as this, I shall think nothing of tumbling down stairs! How brave they&#8217;ll all think me at home! Why, I wouldn&#8217;t say anything about it, even if I fell off the top of the house!&#8221; (Which was very likely true.)</p>\r\n<p>Down, down, down. Would the fall <em>never</em> come to an end! &#8220;I wonder how many miles I&#8217;ve fallen by this time?&#8221; she said aloud. &#8220;I must be getting somewhere near the centre of the earth. Let me see: that would be four thousand miles down, I think &ndash; &#8221; (for, you see, Alice had learnt several things of this sort in her lessons in the schoolroom, and though this was not a <em>very</em> good opportunity for showing off her knowledge, as there was no one to listen to her, still it was good practice to say it over) &#8221; &ndash; yes, that&#8217;s about the right distance &ndash; but then I wonder what Latitude or Longitude I&#8217;ve got to?&#8221; (Alice had no idea what Latitude was, or Longitude either, but thought they were nice grand words to say.)</p>\r\n<h3>After that</h3>\r\n<p>Presently she began again. &#8220;I wonder if I shall fall right <em>through</em> the earth! How funny it&#8221;ll seem to come out among the people that walk with their heads downward! The Antipathies, I think &ndash; &#8221; (she was rather glad there <em>was</em> no one listening, this time, as it didn&#8217;t sound at all the right word) &#8221; &ndash; but I shall have to ask them what the name of the country is, you know. Please, Ma&#8217;am, is this New Zealand or Australia?&#8221; (and she tried to curtsey as she spoke &ndash; fancy <em>curtseying</em> as you&#8221;re falling through the air! Do you think you could manage it?) &#8220;And what an <a href="#">ignorant little girl</a> she&#8221;ll think me for asking! No, it&#8217;ll never do to ask: perhaps I shall see it written up somewhere.&#8221;</p>\r\n<p>Down, down, down. There was nothing else to do, so Alice soon began talking again. &#8220;Dinah&#8217;ll miss me very much to-night, I should think!&#8221; (Dinah was the cat.) &#8220;I hope they&#8217;ll remember her saucer of milk at tea-time. Dinah my dear! I wish you were down here with me! There are no mice in the air, I&#8217;m afraid, but you might catch a bat, and that&#8217;s very like a mouse, you know. But do cats eat bats, I wonder?&#8221; And here Alice began to get rather sleepy, and went on saying to herself, in a dreamy sort of way, &#8220;Do cats eat bats? Do cats eat bats?&#8221; and sometimes, &#8220;Do bats eat cats?&#8221; for, you see, as she couldn&#8217;t answer either question, it didn&#8217;t much matter which way she put it. She felt that she was dozing off, and had just begun to dream that she was walking hand in hand with Dinah, and saying to her very earnestly, &#8220;Now, Dinah, tell me the truth: did you ever eat a bat?&#8221; when suddenly, thump! thump! down she came upon a heap of sticks and dry leaves, and the fall was over.</p>\r\n<p>Alice was not a bit hurt, and she jumped up on to her feet in a moment: she looked up, but it was all dark overhead; before her was another long passage, and the White Rabbit was still in sight, hurrying down it. There was not a moment to be lost: away went Alice like the wind, and was just in time to hear it say, as it turned a corner, &#8220;Oh my ears and whiskers, how late it&#8217;s getting!&#8221; She was close behind it when she turned the corner, but the Rabbit was no longer to be seen: she found herself in a long, low hall, which was lit up by a row of lamps hanging from the roof.</p>\r\n<p>There were doors all round the hall, but they were all locked; and when Alice had been all the way down one side and up the other, trying every door, she walked sadly down the middle, wondering how she was ever to get out again.</p>\r\n<p>Suddenly she came upon a little three-legged table, all made of solid glass; there was nothing on it except a tiny golden key, and Alice&#8217;s first thought was that it might belong to one of the doors of the hall; but, alas! either the locks were too large, or the key was too small, but at any rate it would not open any of them. However, on the second time round, she came upon a low curtain she had not noticed before, and behind it was a little door about fifteen inches high: she tried the little golden key in the lock, and to her great delight it fitted!</p>', 'placeholder.jpg', '1', '2016-03-30 08:57:00', 'The Mayor');
+(11, 'article 11', 'article-11', 'Down, down', '<p>Alice was beginning to get very tired of sitting by her sister on the bank, and of having nothing to do: once or twice she had peeped into the book her sister was reading, but it had no pictures or conversations in it, &#8220;and what is the use of a book,&#8221; thought Alice &#8220;without pictures or conversation?&#8221;</p>\r\n<p>So she was considering in her own mind (as well as she could, for the hot day made her feel very sleepy and stupid), whether the pleasure of <a href=\"#\">making a daisy-chain</a> would be worth the trouble of getting up and picking the daisies, when suddenly a White Rabbit with pink eyes ran close by her.</p>\r\n<p>There was nothing so <em>very</em> remarkable in that; nor did Alice think it so <em>very</em> much out of the way to hear the Rabbit say to itself, &#8220;Oh dear! Oh dear! I shall be late!&#8221; (when she thought it over afterwards, it occurred to her that she ought to have wondered at this, but at the time it all seemed quite natural); but when the Rabbit actually <em>took a watch out of its waistcoat-pocket</em>, and looked at it, and then hurried on, Alice started to her feet, for <a href=\"#\">it flashed across her</a> mind that she had never before seen a rabbit with either a waistcoat-pocket, or a watch to take out of it, and burning with curiosity, she ran across the field after it, and fortunately was just in time to see it pop down a large rabbit-hole under the hedge.</p>\r\n<p>In another moment down went Alice after it, never once considering how in the world she was to get out again.</p>\r\n<h3>And then</h3>\r\n<p>The rabbit-hole went straight on like a tunnel for some way, and then dipped suddenly down, so suddenly that Alice had not a moment to think about stopping herself before she found herself falling down a very deep well.</p>\r\n<p>Either the well was very deep, or she fell very slowly, for she had plenty of time as she went down to look about her and to wonder what was going to happen next. First, she tried to look down and make out what she was coming to, but it was too dark to see anything; then she looked at the sides of the well, and noticed that they were filled with cupboards and book-shelves; here and there she saw maps and pictures hung upon pegs. She took down a jar from one of the shelves as she passed; it was labelled &#8220;<a href=\"#\">ORANGE MARMALADE</a>&#8220;, but to her great disappointment it was empty: she did not like to drop the jar for fear of killing somebody, so managed to put it into one of the cupboards as she fell past it.</p>\r\n<p>&#8220;Well!&#8221; thought Alice to herself, &#8220;after such a fall as this, I shall think nothing of tumbling down stairs! How brave they&#8217;ll all think me at home! Why, I wouldn&#8217;t say anything about it, even if I fell off the top of the house!&#8221; (Which was very likely true.)</p>\r\n<p>Down, down, down. Would the fall <em>never</em> come to an end! &#8220;I wonder how many miles I&#8217;ve fallen by this time?&#8221; she said aloud. &#8220;I must be getting somewhere near the centre of the earth. Let me see: that would be four thousand miles down, I think &ndash; &#8221; (for, you see, Alice had learnt several things of this sort in her lessons in the schoolroom, and though this was not a <em>very</em> good opportunity for showing off her knowledge, as there was no one to listen to her, still it was good practice to say it over) &#8221; &ndash; yes, that&#8217;s about the right distance &ndash; but then I wonder what Latitude or Longitude I&#8217;ve got to?&#8221; (Alice had no idea what Latitude was, or Longitude either, but thought they were nice grand words to say.)</p>\r\n<h3>After that</h3>\r\n<p>Presently she began again. &#8220;I wonder if I shall fall right <em>through</em> the earth! How funny it&#8221;ll seem to come out among the people that walk with their heads downward! The Antipathies, I think &ndash; &#8221; (she was rather glad there <em>was</em> no one listening, this time, as it didn&#8217;t sound at all the right word) &#8221; &ndash; but I shall have to ask them what the name of the country is, you know. Please, Ma&#8217;am, is this New Zealand or Australia?&#8221; (and she tried to curtsey as she spoke &ndash; fancy <em>curtseying</em> as you&#8221;re falling through the air! Do you think you could manage it?) &#8220;And what an <a href=\"#\">ignorant little girl</a> she&#8221;ll think me for asking! No, it&#8217;ll never do to ask: perhaps I shall see it written up somewhere.&#8221;</p>\r\n<p>Down, down, down. There was nothing else to do, so Alice soon began talking again. &#8220;Dinah&#8217;ll miss me very much to-night, I should think!&#8221; (Dinah was the cat.) &#8220;I hope they&#8217;ll remember her saucer of milk at tea-time. Dinah my dear! I wish you were down here with me! There are no mice in the air, I&#8217;m afraid, but you might catch a bat, and that&#8217;s very like a mouse, you know. But do cats eat bats, I wonder?&#8221; And here Alice began to get rather sleepy, and went on saying to herself, in a dreamy sort of way, &#8220;Do cats eat bats? Do cats eat bats?&#8221; and sometimes, &#8220;Do bats eat cats?&#8221; for, you see, as she couldn&#8217;t answer either question, it didn&#8217;t much matter which way she put it. She felt that she was dozing off, and had just begun to dream that she was walking hand in hand with Dinah, and saying to her very earnestly, &#8220;Now, Dinah, tell me the truth: did you ever eat a bat?&#8221; when suddenly, thump! thump! down she came upon a heap of sticks and dry leaves, and the fall was over.</p>\r\n<p>Alice was not a bit hurt, and she jumped up on to her feet in a moment: she looked up, but it was all dark overhead; before her was another long passage, and the White Rabbit was still in sight, hurrying down it. There was not a moment to be lost: away went Alice like the wind, and was just in time to hear it say, as it turned a corner, &#8220;Oh my ears and whiskers, how late it&#8217;s getting!&#8221; She was close behind it when she turned the corner, but the Rabbit was no longer to be seen: she found herself in a long, low hall, which was lit up by a row of lamps hanging from the roof.</p>\r\n<p>There were doors all round the hall, but they were all locked; and when Alice had been all the way down one side and up the other, trying every door, she walked sadly down the middle, wondering how she was ever to get out again.</p>\r\n<p>Suddenly she came upon a little three-legged table, all made of solid glass; there was nothing on it except a tiny golden key, and Alice&#8217;s first thought was that it might belong to one of the doors of the hall; but, alas! either the locks were too large, or the key was too small, but at any rate it would not open any of them. However, on the second time round, she came upon a low curtain she had not noticed before, and behind it was a little door about fifteen inches high: she tried the little golden key in the lock, and to her great delight it fitted!</p>', '', '1', '2016-03-07 08:23:36', NULL),
+(12, 'article 12', 'article-12', 'Down, down', '<p>Alice was beginning to get very tired of sitting by her sister on the bank, and of having nothing to do: once or twice she had peeped into the book her sister was reading, but it had no pictures or conversations in it, &#8220;and what is the use of a book,&#8221; thought Alice &#8220;without pictures or conversation?&#8221;</p>\r\n<p>So she was considering in her own mind (as well as she could, for the hot day made her feel very sleepy and stupid), whether the pleasure of <a href=\"#\">making a daisy-chain</a> would be worth the trouble of getting up and picking the daisies, when suddenly a White Rabbit with pink eyes ran close by her.</p>\r\n<p>There was nothing so <em>very</em> remarkable in that; nor did Alice think it so <em>very</em> much out of the way to hear the Rabbit say to itself, &#8220;Oh dear! Oh dear! I shall be late!&#8221; (when she thought it over afterwards, it occurred to her that she ought to have wondered at this, but at the time it all seemed quite natural); but when the Rabbit actually <em>took a watch out of its waistcoat-pocket</em>, and looked at it, and then hurried on, Alice started to her feet, for <a href=\"#\">it flashed across her</a> mind that she had never before seen a rabbit with either a waistcoat-pocket, or a watch to take out of it, and burning with curiosity, she ran across the field after it, and fortunately was just in time to see it pop down a large rabbit-hole under the hedge.</p>\r\n<p>In another moment down went Alice after it, never once considering how in the world she was to get out again.</p>\r\n<h3>And then</h3>\r\n<p>The rabbit-hole went straight on like a tunnel for some way, and then dipped suddenly down, so suddenly that Alice had not a moment to think about stopping herself before she found herself falling down a very deep well.</p>\r\n<p>Either the well was very deep, or she fell very slowly, for she had plenty of time as she went down to look about her and to wonder what was going to happen next. First, she tried to look down and make out what she was coming to, but it was too dark to see anything; then she looked at the sides of the well, and noticed that they were filled with cupboards and book-shelves; here and there she saw maps and pictures hung upon pegs. She took down a jar from one of the shelves as she passed; it was labelled &#8220;<a href=\"#\">ORANGE MARMALADE</a>&#8220;, but to her great disappointment it was empty: she did not like to drop the jar for fear of killing somebody, so managed to put it into one of the cupboards as she fell past it.</p>\r\n<p>&#8220;Well!&#8221; thought Alice to herself, &#8220;after such a fall as this, I shall think nothing of tumbling down stairs! How brave they&#8217;ll all think me at home! Why, I wouldn&#8217;t say anything about it, even if I fell off the top of the house!&#8221; (Which was very likely true.)</p>\r\n<p>Down, down, down. Would the fall <em>never</em> come to an end! &#8220;I wonder how many miles I&#8217;ve fallen by this time?&#8221; she said aloud. &#8220;I must be getting somewhere near the centre of the earth. Let me see: that would be four thousand miles down, I think &ndash; &#8221; (for, you see, Alice had learnt several things of this sort in her lessons in the schoolroom, and though this was not a <em>very</em> good opportunity for showing off her knowledge, as there was no one to listen to her, still it was good practice to say it over) &#8221; &ndash; yes, that&#8217;s about the right distance &ndash; but then I wonder what Latitude or Longitude I&#8217;ve got to?&#8221; (Alice had no idea what Latitude was, or Longitude either, but thought they were nice grand words to say.)</p>\r\n<h3>After that</h3>\r\n<p>Presently she began again. &#8220;I wonder if I shall fall right <em>through</em> the earth! How funny it&#8221;ll seem to come out among the people that walk with their heads downward! The Antipathies, I think &ndash; &#8221; (she was rather glad there <em>was</em> no one listening, this time, as it didn&#8217;t sound at all the right word) &#8221; &ndash; but I shall have to ask them what the name of the country is, you know. Please, Ma&#8217;am, is this New Zealand or Australia?&#8221; (and she tried to curtsey as she spoke &ndash; fancy <em>curtseying</em> as you&#8221;re falling through the air! Do you think you could manage it?) &#8220;And what an <a href=\"#\">ignorant little girl</a> she&#8221;ll think me for asking! No, it&#8217;ll never do to ask: perhaps I shall see it written up somewhere.&#8221;</p>\r\n<p>Down, down, down. There was nothing else to do, so Alice soon began talking again. &#8220;Dinah&#8217;ll miss me very much to-night, I should think!&#8221; (Dinah was the cat.) &#8220;I hope they&#8217;ll remember her saucer of milk at tea-time. Dinah my dear! I wish you were down here with me! There are no mice in the air, I&#8217;m afraid, but you might catch a bat, and that&#8217;s very like a mouse, you know. But do cats eat bats, I wonder?&#8221; And here Alice began to get rather sleepy, and went on saying to herself, in a dreamy sort of way, &#8220;Do cats eat bats? Do cats eat bats?&#8221; and sometimes, &#8220;Do bats eat cats?&#8221; for, you see, as she couldn&#8217;t answer either question, it didn&#8217;t much matter which way she put it. She felt that she was dozing off, and had just begun to dream that she was walking hand in hand with Dinah, and saying to her very earnestly, &#8220;Now, Dinah, tell me the truth: did you ever eat a bat?&#8221; when suddenly, thump! thump! down she came upon a heap of sticks and dry leaves, and the fall was over.</p>\r\n<p>Alice was not a bit hurt, and she jumped up on to her feet in a moment: she looked up, but it was all dark overhead; before her was another long passage, and the White Rabbit was still in sight, hurrying down it. There was not a moment to be lost: away went Alice like the wind, and was just in time to hear it say, as it turned a corner, &#8220;Oh my ears and whiskers, how late it&#8217;s getting!&#8221; She was close behind it when she turned the corner, but the Rabbit was no longer to be seen: she found herself in a long, low hall, which was lit up by a row of lamps hanging from the roof.</p>\r\n<p>There were doors all round the hall, but they were all locked; and when Alice had been all the way down one side and up the other, trying every door, she walked sadly down the middle, wondering how she was ever to get out again.</p>\r\n<p>Suddenly she came upon a little three-legged table, all made of solid glass; there was nothing on it except a tiny golden key, and Alice&#8217;s first thought was that it might belong to one of the doors of the hall; but, alas! either the locks were too large, or the key was too small, but at any rate it would not open any of them. However, on the second time round, she came upon a low curtain she had not noticed before, and behind it was a little door about fifteen inches high: she tried the little golden key in the lock, and to her great delight it fitted!</p>', '', '1', '2016-03-08 08:23:36', NULL),
+(13, 'article 13', 'article-13', 'Down, down', '<p>Alice was beginning to get very tired of sitting by her sister on the bank, and of having nothing to do: once or twice she had peeped into the book her sister was reading, but it had no pictures or conversations in it, &#8220;and what is the use of a book,&#8221; thought Alice &#8220;without pictures or conversation?&#8221;</p>\r\n<p>So she was considering in her own mind (as well as she could, for the hot day made her feel very sleepy and stupid), whether the pleasure of <a href=\"#\">making a daisy-chain</a> would be worth the trouble of getting up and picking the daisies, when suddenly a White Rabbit with pink eyes ran close by her.</p>\r\n<p>There was nothing so <em>very</em> remarkable in that; nor did Alice think it so <em>very</em> much out of the way to hear the Rabbit say to itself, &#8220;Oh dear! Oh dear! I shall be late!&#8221; (when she thought it over afterwards, it occurred to her that she ought to have wondered at this, but at the time it all seemed quite natural); but when the Rabbit actually <em>took a watch out of its waistcoat-pocket</em>, and looked at it, and then hurried on, Alice started to her feet, for <a href=\"#\">it flashed across her</a> mind that she had never before seen a rabbit with either a waistcoat-pocket, or a watch to take out of it, and burning with curiosity, she ran across the field after it, and fortunately was just in time to see it pop down a large rabbit-hole under the hedge.</p>\r\n<p>In another moment down went Alice after it, never once considering how in the world she was to get out again.</p>\r\n<h3>And then</h3>\r\n<p>The rabbit-hole went straight on like a tunnel for some way, and then dipped suddenly down, so suddenly that Alice had not a moment to think about stopping herself before she found herself falling down a very deep well.</p>\r\n<p>Either the well was very deep, or she fell very slowly, for she had plenty of time as she went down to look about her and to wonder what was going to happen next. First, she tried to look down and make out what she was coming to, but it was too dark to see anything; then she looked at the sides of the well, and noticed that they were filled with cupboards and book-shelves; here and there she saw maps and pictures hung upon pegs. She took down a jar from one of the shelves as she passed; it was labelled &#8220;<a href=\"#\">ORANGE MARMALADE</a>&#8220;, but to her great disappointment it was empty: she did not like to drop the jar for fear of killing somebody, so managed to put it into one of the cupboards as she fell past it.</p>\r\n<p>&#8220;Well!&#8221; thought Alice to herself, &#8220;after such a fall as this, I shall think nothing of tumbling down stairs! How brave they&#8217;ll all think me at home! Why, I wouldn&#8217;t say anything about it, even if I fell off the top of the house!&#8221; (Which was very likely true.)</p>\r\n<p>Down, down, down. Would the fall <em>never</em> come to an end! &#8220;I wonder how many miles I&#8217;ve fallen by this time?&#8221; she said aloud. &#8220;I must be getting somewhere near the centre of the earth. Let me see: that would be four thousand miles down, I think &ndash; &#8221; (for, you see, Alice had learnt several things of this sort in her lessons in the schoolroom, and though this was not a <em>very</em> good opportunity for showing off her knowledge, as there was no one to listen to her, still it was good practice to say it over) &#8221; &ndash; yes, that&#8217;s about the right distance &ndash; but then I wonder what Latitude or Longitude I&#8217;ve got to?&#8221; (Alice had no idea what Latitude was, or Longitude either, but thought they were nice grand words to say.)</p>\r\n<h3>After that</h3>\r\n<p>Presently she began again. &#8220;I wonder if I shall fall right <em>through</em> the earth! How funny it&#8221;ll seem to come out among the people that walk with their heads downward! The Antipathies, I think &ndash; &#8221; (she was rather glad there <em>was</em> no one listening, this time, as it didn&#8217;t sound at all the right word) &#8221; &ndash; but I shall have to ask them what the name of the country is, you know. Please, Ma&#8217;am, is this New Zealand or Australia?&#8221; (and she tried to curtsey as she spoke &ndash; fancy <em>curtseying</em> as you&#8221;re falling through the air! Do you think you could manage it?) &#8220;And what an <a href=\"#\">ignorant little girl</a> she&#8221;ll think me for asking! No, it&#8217;ll never do to ask: perhaps I shall see it written up somewhere.&#8221;</p>\r\n<p>Down, down, down. There was nothing else to do, so Alice soon began talking again. &#8220;Dinah&#8217;ll miss me very much to-night, I should think!&#8221; (Dinah was the cat.) &#8220;I hope they&#8217;ll remember her saucer of milk at tea-time. Dinah my dear! I wish you were down here with me! There are no mice in the air, I&#8217;m afraid, but you might catch a bat, and that&#8217;s very like a mouse, you know. But do cats eat bats, I wonder?&#8221; And here Alice began to get rather sleepy, and went on saying to herself, in a dreamy sort of way, &#8220;Do cats eat bats? Do cats eat bats?&#8221; and sometimes, &#8220;Do bats eat cats?&#8221; for, you see, as she couldn&#8217;t answer either question, it didn&#8217;t much matter which way she put it. She felt that she was dozing off, and had just begun to dream that she was walking hand in hand with Dinah, and saying to her very earnestly, &#8220;Now, Dinah, tell me the truth: did you ever eat a bat?&#8221; when suddenly, thump! thump! down she came upon a heap of sticks and dry leaves, and the fall was over.</p>\r\n<p>Alice was not a bit hurt, and she jumped up on to her feet in a moment: she looked up, but it was all dark overhead; before her was another long passage, and the White Rabbit was still in sight, hurrying down it. There was not a moment to be lost: away went Alice like the wind, and was just in time to hear it say, as it turned a corner, &#8220;Oh my ears and whiskers, how late it&#8217;s getting!&#8221; She was close behind it when she turned the corner, but the Rabbit was no longer to be seen: she found herself in a long, low hall, which was lit up by a row of lamps hanging from the roof.</p>\r\n<p>There were doors all round the hall, but they were all locked; and when Alice had been all the way down one side and up the other, trying every door, she walked sadly down the middle, wondering how she was ever to get out again.</p>\r\n<p>Suddenly she came upon a little three-legged table, all made of solid glass; there was nothing on it except a tiny golden key, and Alice&#8217;s first thought was that it might belong to one of the doors of the hall; but, alas! either the locks were too large, or the key was too small, but at any rate it would not open any of them. However, on the second time round, she came upon a low curtain she had not noticed before, and behind it was a little door about fifteen inches high: she tried the little golden key in the lock, and to her great delight it fitted!</p>', '', '1', '2016-03-10 08:23:36', NULL),
+(14, 'article 14', 'article-14', 'Down, down', '<p>Alice was beginning to get very tired of sitting by her sister on the bank, and of having nothing to do: once or twice she had peeped into the book her sister was reading, but it had no pictures or conversations in it, &#8220;and what is the use of a book,&#8221; thought Alice &#8220;without pictures or conversation?&#8221;</p>\r\n<p>So she was considering in her own mind (as well as she could, for the hot day made her feel very sleepy and stupid), whether the pleasure of <a href=\"#\">making a daisy-chain</a> would be worth the trouble of getting up and picking the daisies, when suddenly a White Rabbit with pink eyes ran close by her.</p>\r\n<p>There was nothing so <em>very</em> remarkable in that; nor did Alice think it so <em>very</em> much out of the way to hear the Rabbit say to itself, &#8220;Oh dear! Oh dear! I shall be late!&#8221; (when she thought it over afterwards, it occurred to her that she ought to have wondered at this, but at the time it all seemed quite natural); but when the Rabbit actually <em>took a watch out of its waistcoat-pocket</em>, and looked at it, and then hurried on, Alice started to her feet, for <a href=\"#\">it flashed across her</a> mind that she had never before seen a rabbit with either a waistcoat-pocket, or a watch to take out of it, and burning with curiosity, she ran across the field after it, and fortunately was just in time to see it pop down a large rabbit-hole under the hedge.</p>\r\n<p>In another moment down went Alice after it, never once considering how in the world she was to get out again.</p>\r\n<h3>And then</h3>\r\n<p>The rabbit-hole went straight on like a tunnel for some way, and then dipped suddenly down, so suddenly that Alice had not a moment to think about stopping herself before she found herself falling down a very deep well.</p>\r\n<p>Either the well was very deep, or she fell very slowly, for she had plenty of time as she went down to look about her and to wonder what was going to happen next. First, she tried to look down and make out what she was coming to, but it was too dark to see anything; then she looked at the sides of the well, and noticed that they were filled with cupboards and book-shelves; here and there she saw maps and pictures hung upon pegs. She took down a jar from one of the shelves as she passed; it was labelled &#8220;<a href=\"#\">ORANGE MARMALADE</a>&#8220;, but to her great disappointment it was empty: she did not like to drop the jar for fear of killing somebody, so managed to put it into one of the cupboards as she fell past it.</p>\r\n<p>&#8220;Well!&#8221; thought Alice to herself, &#8220;after such a fall as this, I shall think nothing of tumbling down stairs! How brave they&#8217;ll all think me at home! Why, I wouldn&#8217;t say anything about it, even if I fell off the top of the house!&#8221; (Which was very likely true.)</p>\r\n<p>Down, down, down. Would the fall <em>never</em> come to an end! &#8220;I wonder how many miles I&#8217;ve fallen by this time?&#8221; she said aloud. &#8220;I must be getting somewhere near the centre of the earth. Let me see: that would be four thousand miles down, I think &ndash; &#8221; (for, you see, Alice had learnt several things of this sort in her lessons in the schoolroom, and though this was not a <em>very</em> good opportunity for showing off her knowledge, as there was no one to listen to her, still it was good practice to say it over) &#8221; &ndash; yes, that&#8217;s about the right distance &ndash; but then I wonder what Latitude or Longitude I&#8217;ve got to?&#8221; (Alice had no idea what Latitude was, or Longitude either, but thought they were nice grand words to say.)</p>\r\n<h3>After that</h3>\r\n<p>Presently she began again. &#8220;I wonder if I shall fall right <em>through</em> the earth! How funny it&#8221;ll seem to come out among the people that walk with their heads downward! The Antipathies, I think &ndash; &#8221; (she was rather glad there <em>was</em> no one listening, this time, as it didn&#8217;t sound at all the right word) &#8221; &ndash; but I shall have to ask them what the name of the country is, you know. Please, Ma&#8217;am, is this New Zealand or Australia?&#8221; (and she tried to curtsey as she spoke &ndash; fancy <em>curtseying</em> as you&#8221;re falling through the air! Do you think you could manage it?) &#8220;And what an <a href=\"#\">ignorant little girl</a> she&#8221;ll think me for asking! No, it&#8217;ll never do to ask: perhaps I shall see it written up somewhere.&#8221;</p>\r\n<p>Down, down, down. There was nothing else to do, so Alice soon began talking again. &#8220;Dinah&#8217;ll miss me very much to-night, I should think!&#8221; (Dinah was the cat.) &#8220;I hope they&#8217;ll remember her saucer of milk at tea-time. Dinah my dear! I wish you were down here with me! There are no mice in the air, I&#8217;m afraid, but you might catch a bat, and that&#8217;s very like a mouse, you know. But do cats eat bats, I wonder?&#8221; And here Alice began to get rather sleepy, and went on saying to herself, in a dreamy sort of way, &#8220;Do cats eat bats? Do cats eat bats?&#8221; and sometimes, &#8220;Do bats eat cats?&#8221; for, you see, as she couldn&#8217;t answer either question, it didn&#8217;t much matter which way she put it. She felt that she was dozing off, and had just begun to dream that she was walking hand in hand with Dinah, and saying to her very earnestly, &#8220;Now, Dinah, tell me the truth: did you ever eat a bat?&#8221; when suddenly, thump! thump! down she came upon a heap of sticks and dry leaves, and the fall was over.</p>\r\n<p>Alice was not a bit hurt, and she jumped up on to her feet in a moment: she looked up, but it was all dark overhead; before her was another long passage, and the White Rabbit was still in sight, hurrying down it. There was not a moment to be lost: away went Alice like the wind, and was just in time to hear it say, as it turned a corner, &#8220;Oh my ears and whiskers, how late it&#8217;s getting!&#8221; She was close behind it when she turned the corner, but the Rabbit was no longer to be seen: she found herself in a long, low hall, which was lit up by a row of lamps hanging from the roof.</p>\r\n<p>There were doors all round the hall, but they were all locked; and when Alice had been all the way down one side and up the other, trying every door, she walked sadly down the middle, wondering how she was ever to get out again.</p>\r\n<p>Suddenly she came upon a little three-legged table, all made of solid glass; there was nothing on it except a tiny golden key, and Alice&#8217;s first thought was that it might belong to one of the doors of the hall; but, alas! either the locks were too large, or the key was too small, but at any rate it would not open any of them. However, on the second time round, she came upon a low curtain she had not noticed before, and behind it was a little door about fifteen inches high: she tried the little golden key in the lock, and to her great delight it fitted!</p>', '', '1', '2016-03-08 08:23:36', NULL),
+(15, 'article 15', 'article-15', 'Donec vulputate, ipsum eu scelerisque scelerisque, massa risus molestie erat, a commodo urna sapien quis turpis. Quisque sit amet mattis arcu, et sodales sem. Aenean dictum neque semper, placerat mi ultricies, consequat orci. ', '<p>Alice was beginning to get very tired of sitting by her sister on the bank, and of having nothing to do: once or twice she had peeped into the book her sister was reading, but it had no pictures or conversations in it, &#8220;and what is the use of a book,&#8221; thought Alice &#8220;without pictures or conversation?&#8221;</p>\r\n<p>So she was considering in her own mind (as well as she could, for the hot day made her feel very sleepy and stupid), whether the pleasure of <a href=\"#\">making a daisy-chain</a> would be worth the trouble of getting up and picking the daisies, when suddenly a White Rabbit with pink eyes ran close by her.</p>\r\n<p>There was nothing so <em>very</em> remarkable in that; nor did Alice think it so <em>very</em> much out of the way to hear the Rabbit say to itself, &#8220;Oh dear! Oh dear! I shall be late!&#8221; (when she thought it over afterwards, it occurred to her that she ought to have wondered at this, but at the time it all seemed quite natural); but when the Rabbit actually <em>took a watch out of its waistcoat-pocket</em>, and looked at it, and then hurried on, Alice started to her feet, for <a href=\"#\">it flashed across her</a> mind that she had never before seen a rabbit with either a waistcoat-pocket, or a watch to take out of it, and burning with curiosity, she ran across the field after it, and fortunately was just in time to see it pop down a large rabbit-hole under the hedge.</p>\r\n<p>In another moment down went Alice after it, never once considering how in the world she was to get out again.</p>\r\n<h3>And then</h3>\r\n<p>The rabbit-hole went straight on like a tunnel for some way, and then dipped suddenly down, so suddenly that Alice had not a moment to think about stopping herself before she found herself falling down a very deep well.</p>\r\n<p>Either the well was very deep, or she fell very slowly, for she had plenty of time as she went down to look about her and to wonder what was going to happen next. First, she tried to look down and make out what she was coming to, but it was too dark to see anything; then she looked at the sides of the well, and noticed that they were filled with cupboards and book-shelves; here and there she saw maps and pictures hung upon pegs. She took down a jar from one of the shelves as she passed; it was labelled &#8220;<a href=\"#\">ORANGE MARMALADE</a>&#8220;, but to her great disappointment it was empty: she did not like to drop the jar for fear of killing somebody, so managed to put it into one of the cupboards as she fell past it.</p>\r\n<p>&#8220;Well!&#8221; thought Alice to herself, &#8220;after such a fall as this, I shall think nothing of tumbling down stairs! How brave they&#8217;ll all think me at home! Why, I wouldn&#8217;t say anything about it, even if I fell off the top of the house!&#8221; (Which was very likely true.)</p>\r\n<p>Down, down, down. Would the fall <em>never</em> come to an end! &#8220;I wonder how many miles I&#8217;ve fallen by this time?&#8221; she said aloud. &#8220;I must be getting somewhere near the centre of the earth. Let me see: that would be four thousand miles down, I think &ndash; &#8221; (for, you see, Alice had learnt several things of this sort in her lessons in the schoolroom, and though this was not a <em>very</em> good opportunity for showing off her knowledge, as there was no one to listen to her, still it was good practice to say it over) &#8221; &ndash; yes, that&#8217;s about the right distance &ndash; but then I wonder what Latitude or Longitude I&#8217;ve got to?&#8221; (Alice had no idea what Latitude was, or Longitude either, but thought they were nice grand words to say.)</p>\r\n<h3>After that</h3>\r\n<p>Presently she began again. &#8220;I wonder if I shall fall right <em>through</em> the earth! How funny it&#8221;ll seem to come out among the people that walk with their heads downward! The Antipathies, I think &ndash; &#8221; (she was rather glad there <em>was</em> no one listening, this time, as it didn&#8217;t sound at all the right word) &#8221; &ndash; but I shall have to ask them what the name of the country is, you know. Please, Ma&#8217;am, is this New Zealand or Australia?&#8221; (and she tried to curtsey as she spoke &ndash; fancy <em>curtseying</em> as you&#8221;re falling through the air! Do you think you could manage it?) &#8220;And what an <a href=\"#\">ignorant little girl</a> she&#8221;ll think me for asking! No, it&#8217;ll never do to ask: perhaps I shall see it written up somewhere.&#8221;</p>\r\n<p>Down, down, down. There was nothing else to do, so Alice soon began talking again. &#8220;Dinah&#8217;ll miss me very much to-night, I should think!&#8221; (Dinah was the cat.) &#8220;I hope they&#8217;ll remember her saucer of milk at tea-time. Dinah my dear! I wish you were down here with me! There are no mice in the air, I&#8217;m afraid, but you might catch a bat, and that&#8217;s very like a mouse, you know. But do cats eat bats, I wonder?&#8221; And here Alice began to get rather sleepy, and went on saying to herself, in a dreamy sort of way, &#8220;Do cats eat bats? Do cats eat bats?&#8221; and sometimes, &#8220;Do bats eat cats?&#8221; for, you see, as she couldn&#8217;t answer either question, it didn&#8217;t much matter which way she put it. She felt that she was dozing off, and had just begun to dream that she was walking hand in hand with Dinah, and saying to her very earnestly, &#8220;Now, Dinah, tell me the truth: did you ever eat a bat?&#8221; when suddenly, thump! thump! down she came upon a heap of sticks and dry leaves, and the fall was over.</p>\r\n<p>Alice was not a bit hurt, and she jumped up on to her feet in a moment: she looked up, but it was all dark overhead; before her was another long passage, and the White Rabbit was still in sight, hurrying down it. There was not a moment to be lost: away went Alice like the wind, and was just in time to hear it say, as it turned a corner, &#8220;Oh my ears and whiskers, how late it&#8217;s getting!&#8221; She was close behind it when she turned the corner, but the Rabbit was no longer to be seen: she found herself in a long, low hall, which was lit up by a row of lamps hanging from the roof.</p>\r\n<p>There were doors all round the hall, but they were all locked; and when Alice had been all the way down one side and up the other, trying every door, she walked sadly down the middle, wondering how she was ever to get out again.</p>\r\n<p>Suddenly she came upon a little three-legged table, all made of solid glass; there was nothing on it except a tiny golden key, and Alice&#8217;s first thought was that it might belong to one of the doors of the hall; but, alas! either the locks were too large, or the key was too small, but at any rate it would not open any of them. However, on the second time round, she came upon a low curtain she had not noticed before, and behind it was a little door about fifteen inches high: she tried the little golden key in the lock, and to her great delight it fitted!</p>', '', '1', '2016-03-14 17:29:37', NULL),
+(16, 'article 16', 'article-16', 'Here\'s some news', '<p>Alice was beginning to get very tired of sitting by her sister on the bank, and of having nothing to do: once or twice she had peeped into the book her sister was reading, but it had no pictures or conversations in it, &#8220;and what is the use of a book,&#8221; thought Alice &#8220;without pictures or conversation?&#8221;</p>\r\n<p>So she was considering in her own mind (as well as she could, for the hot day made her feel very sleepy and stupid), whether the pleasure of <a href=\"#\">making a daisy-chain</a> would be worth the trouble of getting up and picking the daisies, when suddenly a White Rabbit with pink eyes ran close by her.</p>\r\n<p>There was nothing so <em>very</em> remarkable in that; nor did Alice think it so <em>very</em> much out of the way to hear the Rabbit say to itself, &#8220;Oh dear! Oh dear! I shall be late!&#8221; (when she thought it over afterwards, it occurred to her that she ought to have wondered at this, but at the time it all seemed quite natural); but when the Rabbit actually <em>took a watch out of its waistcoat-pocket</em>, and looked at it, and then hurried on, Alice started to her feet, for <a href=\"#\">it flashed across her</a> mind that she had never before seen a rabbit with either a waistcoat-pocket, or a watch to take out of it, and burning with curiosity, she ran across the field after it, and fortunately was just in time to see it pop down a large rabbit-hole under the hedge.</p>\r\n<p>In another moment down went Alice after it, never once considering how in the world she was to get out again.</p>\r\n<h3>And then</h3>\r\n<p>The rabbit-hole went straight on like a tunnel for some way, and then dipped suddenly down, so suddenly that Alice had not a moment to think about stopping herself before she found herself falling down a very deep well.</p>\r\n<p>Either the well was very deep, or she fell very slowly, for she had plenty of time as she went down to look about her and to wonder what was going to happen next. First, she tried to look down and make out what she was coming to, but it was too dark to see anything; then she looked at the sides of the well, and noticed that they were filled with cupboards and book-shelves; here and there she saw maps and pictures hung upon pegs. She took down a jar from one of the shelves as she passed; it was labelled &#8220;<a href=\"#\">ORANGE MARMALADE</a>&#8220;, but to her great disappointment it was empty: she did not like to drop the jar for fear of killing somebody, so managed to put it into one of the cupboards as she fell past it.</p>\r\n<p>&#8220;Well!&#8221; thought Alice to herself, &#8220;after such a fall as this, I shall think nothing of tumbling down stairs! How brave they&#8217;ll all think me at home! Why, I wouldn&#8217;t say anything about it, even if I fell off the top of the house!&#8221; (Which was very likely true.)</p>\r\n<p>Down, down, down. Would the fall <em>never</em> come to an end! &#8220;I wonder how many miles I&#8217;ve fallen by this time?&#8221; she said aloud. &#8220;I must be getting somewhere near the centre of the earth. Let me see: that would be four thousand miles down, I think &ndash; &#8221; (for, you see, Alice had learnt several things of this sort in her lessons in the schoolroom, and though this was not a <em>very</em> good opportunity for showing off her knowledge, as there was no one to listen to her, still it was good practice to say it over) &#8221; &ndash; yes, that&#8217;s about the right distance &ndash; but then I wonder what Latitude or Longitude I&#8217;ve got to?&#8221; (Alice had no idea what Latitude was, or Longitude either, but thought they were nice grand words to say.)</p>\r\n<h3>After that</h3>\r\n<p>Presently she began again. &#8220;I wonder if I shall fall right <em>through</em> the earth! How funny it&#8221;ll seem to come out among the people that walk with their heads downward! The Antipathies, I think &ndash; &#8221; (she was rather glad there <em>was</em> no one listening, this time, as it didn&#8217;t sound at all the right word) &#8221; &ndash; but I shall have to ask them what the name of the country is, you know. Please, Ma&#8217;am, is this New Zealand or Australia?&#8221; (and she tried to curtsey as she spoke &ndash; fancy <em>curtseying</em> as you&#8221;re falling through the air! Do you think you could manage it?) &#8220;And what an <a href=\"#\">ignorant little girl</a> she&#8221;ll think me for asking! No, it&#8217;ll never do to ask: perhaps I shall see it written up somewhere.&#8221;</p>\r\n<p>Down, down, down. There was nothing else to do, so Alice soon began talking again. &#8220;Dinah&#8217;ll miss me very much to-night, I should think!&#8221; (Dinah was the cat.) &#8220;I hope they&#8217;ll remember her saucer of milk at tea-time. Dinah my dear! I wish you were down here with me! There are no mice in the air, I&#8217;m afraid, but you might catch a bat, and that&#8217;s very like a mouse, you know. But do cats eat bats, I wonder?&#8221; And here Alice began to get rather sleepy, and went on saying to herself, in a dreamy sort of way, &#8220;Do cats eat bats? Do cats eat bats?&#8221; and sometimes, &#8220;Do bats eat cats?&#8221; for, you see, as she couldn&#8217;t answer either question, it didn&#8217;t much matter which way she put it. She felt that she was dozing off, and had just begun to dream that she was walking hand in hand with Dinah, and saying to her very earnestly, &#8220;Now, Dinah, tell me the truth: did you ever eat a bat?&#8221; when suddenly, thump! thump! down she came upon a heap of sticks and dry leaves, and the fall was over.</p>\r\n<p>Alice was not a bit hurt, and she jumped up on to her feet in a moment: she looked up, but it was all dark overhead; before her was another long passage, and the White Rabbit was still in sight, hurrying down it. There was not a moment to be lost: away went Alice like the wind, and was just in time to hear it say, as it turned a corner, &#8220;Oh my ears and whiskers, how late it&#8217;s getting!&#8221; She was close behind it when she turned the corner, but the Rabbit was no longer to be seen: she found herself in a long, low hall, which was lit up by a row of lamps hanging from the roof.</p>\r\n<p>There were doors all round the hall, but they were all locked; and when Alice had been all the way down one side and up the other, trying every door, she walked sadly down the middle, wondering how she was ever to get out again.</p>\r\n<p>Suddenly she came upon a little three-legged table, all made of solid glass; there was nothing on it except a tiny golden key, and Alice&#8217;s first thought was that it might belong to one of the doors of the hall; but, alas! either the locks were too large, or the key was too small, but at any rate it would not open any of them. However, on the second time round, she came upon a low curtain she had not noticed before, and behind it was a little door about fifteen inches high: she tried the little golden key in the lock, and to her great delight it fitted!</p>', 'placeholder.jpg', '1', '2016-03-30 08:57:00', 'The Mayor');
 
 -- --------------------------------------------------------
 
@@ -1001,7 +1003,7 @@ INSERT INTO `tblnews` (`newsID`, `newsTitle`, `cleanURL`, `newsSynopsis`, `newsC
 -- Table structure for table `tblplants`
 --
 
-CREATE TABLE IF NOT EXISTS `tblplants` (
+CREATE TABLE `tblplants` (
   `plantID` int(11) NOT NULL,
   `latinName` varchar(255) COLLATE utf8_bin NOT NULL,
   `commonNames` varchar(512) COLLATE utf8_bin NOT NULL,
@@ -1013,7 +1015,7 @@ CREATE TABLE IF NOT EXISTS `tblplants` (
   `timeCreated` datetime NOT NULL,
   `plantSeed` int(255) NOT NULL,
   `commonNamesJoined` varchar(512) COLLATE utf8_bin NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=466 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
 -- Dumping data for table `tblplants`
@@ -1160,12 +1162,12 @@ INSERT INTO `tblplants` (`plantID`, `latinName`, `commonNames`, `plantDesc`, `pl
 (393, 'Concama caulefolium', 'Pouchbane or Pondquill', 'A common sea dwelling plant. It is only nursed up in our gardens. It flowers not until March, and the seed is ripe in April or May, yet the husks after they are ripe, opening themselves, will hold their seed with them for two or three months, and not shed them.', 'concama-caulefolium', 'Concama caulefolium\r\nPouchbane or Pondquill\r\nA common sea dwelling plant. It is only nursed up in our gardens.', 1, 0, '2018-01-08 13:43:16', 1515427110, 'Pouchbane/Pondquill'),
 (394, 'Pappocynum polystivatum', 'Which is also called Gillifern', 'This has divers weak but rough stalks, half a yard long, leaning downward, but set with winged leaves, longer and more pointed than those of Lintels, and whitish underneath; from the tops of these stalks arise up other slender stalks, naked without leaves unto the tops, where there grow many small flowers in manner of a spike, of a pale reddish colour with some blueness among them; after which rise up in their places, round, rough, and somewhat flat heads. The root is tough, and somewhat woody, yet lives and shoots a-new every year. It grows in this land, in divers woods. It flowers about the end of July, and beginning of August.', 'pappocynum-polystivatum', 'Pappocynum polystivatum\r\nWhich is also called Gillifern', 0, 0, '2018-01-08 13:43:19', 1515506300, 'Gillifern'),
 (395, 'Nobinum ringaris', 'Gillifern', 'This has divers weak but rough stalks, half a yard long, leaning downward, but set with winged leaves, longer and more pointed than those of Sweetfoil, and whitish underneath; from the tops of these stalks arise up other slender stalks, naked without leaves unto the tops, where there grow many small flowers in manner of a spike, of a pale reddish colour with some blueness among them; after which rise up in their places, round, rough, and somewhat flat heads. The root is tough, and somewhat woody, yet lives and shoots a-new every year. It grows in this land, in divers woods. It flowers about the end of July, and beginning of August.', 'nobinum-ringaris', 'Nobinum ringaris\r\nGillifern', 0, 0, '2018-01-08 13:43:33', 1515506300, 'Sweetfoil/Druidsbeard'),
-(396, 'Caerubus trilliana', 'Gillifern', 'This has divers weak but rough stalks, half a yard long, leaning downward, but set with winged leaves, longer and more pointed than those of <a href="https://www.autumnearth.com/herbarium/caerubus-trilliana">Wild blackbrome</a>, and whitish underneath; from the tops of these stalks arise up other slender stalks, naked without leaves unto the tops, where there grow many small flowers in manner of a spike, of a pale reddish colour with some blueness among them; after which rise up in their places, round, rough, and somewhat flat heads. The root is tough, and somewhat woody, yet lives and shoots a-new every year. It grows in this land, in divers woods. It flowers about the end of July, and beginning of August.', 'caerubus-trilliana', 'Caerubus trilliana\r\nGillifern\r\nThis has divers weak but rough stalks, half a yard long, leaning downward, but set with winged leaves, longer and more pointed than those of <a href="https://www.autumnearth.', 0, 0, '2018-01-08 13:51:15', 1515506300, 'Wild blackbrome'),
-(397, 'Rhantemine quifolium', 'Gillifern', 'This has divers weak but rough stalks, half a yard long, leaning downward, but set with winged leaves, longer and more pointed than those of <a href="https://www.autumnearth.com/herbarium/rhantemine-quifolium/">Mistlebloom</a>, and whitish underneath; from the tops of these stalks arise up other slender stalks, naked without leaves unto the tops, where there grow many small flowers in manner of a spike, of a pale reddish colour with some blueness among them; after which rise up in their places, round, rough, and somewhat flat heads. The root is tough, and somewhat woody, yet lives and shoots a-new every year. It grows in this land, in divers woods. It flowers about the end of July, and beginning of August.', 'rhantemine-quifolium', 'Rhantemine quifolium\r\nGillifern\r\nThis has divers weak but rough stalks, half a yard long, leaning downward, but set with winged leaves, longer and more pointed than those of <a href="https://www.autumnearth.', 0, 0, '2018-01-08 13:51:49', 1515506300, 'Mistlebloom'),
-(398, 'Xaltanus nucidense', 'Gillifern', 'This has divers weak but rough stalks, half a yard long, leaning downward, but set with winged leaves, longer and more pointed than those of <a href="https://www.autumnearth.com/herbarium/xaltanus-nucidense/">Songtether</a>, and whitish underneath; from the tops of these stalks arise up other slender stalks, naked without leaves unto the tops, where there grow many small flowers in manner of a spike, of a pale reddish colour with some blueness among them; after which rise up in their places, round, rough, and somewhat flat heads. The root is tough, and somewhat woody, yet lives and shoots a-new every year. It grows in this land, in divers woods. It flowers about the end of July, and beginning of August.', 'xaltanus-nucidense', 'Xaltanus nucidense\r\nGillifern\r\nThis has divers weak but rough stalks, half a yard long, leaning downward, but set with winged leaves, longer and more pointed than those of ', 0, 0, '2018-01-08 13:53:12', 1515506300, 'Songtether'),
-(399, 'Brosia tallium', 'Gillifern', 'This has divers weak but rough stalks, half a yard long, leaning downward, but set with winged leaves, longer and more pointed than those of <a href="https://www.autumnearth.com/herbarium/brosia-tallium/">Almsbalm</a>, and whitish underneath; from the tops of these stalks arise up other slender stalks, naked without leaves unto the tops, where there grow many small flowers in manner of a spike, of a pale reddish colour with some blueness among them; after which rise up in their places, round, rough, and somewhat flat heads. The root is tough, and somewhat woody, yet lives and shoots a-new every year. It grows in this land, in divers woods. It flowers about the end of July, and beginning of August.', 'brosia-tallium', 'Brosia tallium\r\nGillifern', 0, 0, '2018-01-08 13:53:43', 1515506300, 'Almsbalm/Gravefrage'),
-(400, 'Multinadentatas barea', 'Gillifern', 'This has divers weak but rough stalks, half a yard long, leaning downward, but set with winged leaves, longer and more pointed than those of <a href="https://www.autumnearth.com/herbarium/multinadentatas-barea/">Tatterberry</a>, and whitish underneath; from the tops of these stalks arise up other slender stalks, naked without leaves unto the tops, where there grow many small flowers in manner of a spike, of a pale reddish colour with some blueness among them; after which rise up in their places, round, rough, and somewhat flat heads. The root is tough, and somewhat woody, yet lives and shoots a-new every year. It grows in this land, in divers woods. It flowers about the end of July, and beginning of August.', 'multinadentatas-barea', 'Multinadentatas barea\r\nGillifern\r\nThis has divers weak but rough stalks, half a yard long, leaning downward, but set with winged leaves, longer and more pointed than those of Tatterberry, and whitish underneath; from the tops of these stalks arise up othe', 0, 0, '2018-01-08 13:54:09', 1515506300, 'Tatterberry/Covenbrake'),
-(401, 'Occimum rhantemisia', 'Gillifern', 'This has divers weak but rough stalks, half a yard long, leaning downward, but set with winged leaves, longer and more pointed than those of <a href="https://www.autumnearth.com/herbarium/occimum-rhantemisia/">Cairntorch</a>, and whitish underneath; from the tops of these stalks arise up other slender stalks, naked without leaves unto the tops, where there grow many small flowers in manner of a spike, of a pale reddish colour with some blueness among them; after which rise up in their places, round, rough, and somewhat flat heads. The root is tough, and somewhat woody, yet lives and shoots a-new every year. It grows in this land, in divers woods. It flowers about the end of July, and beginning of August.', 'occimum-rhantemisia', 'Occimum rhantemisia\r\nGillifern', 0, 0, '2018-01-08 13:55:24', 1515506300, 'Cairntorch/Scythereed/Dreadsleeves'),
+(396, 'Caerubus trilliana', 'Gillifern', 'This has divers weak but rough stalks, half a yard long, leaning downward, but set with winged leaves, longer and more pointed than those of <a href=\"https://www.autumnearth.com/herbarium/caerubus-trilliana\">Wild blackbrome</a>, and whitish underneath; from the tops of these stalks arise up other slender stalks, naked without leaves unto the tops, where there grow many small flowers in manner of a spike, of a pale reddish colour with some blueness among them; after which rise up in their places, round, rough, and somewhat flat heads. The root is tough, and somewhat woody, yet lives and shoots a-new every year. It grows in this land, in divers woods. It flowers about the end of July, and beginning of August.', 'caerubus-trilliana', 'Caerubus trilliana\r\nGillifern\r\nThis has divers weak but rough stalks, half a yard long, leaning downward, but set with winged leaves, longer and more pointed than those of <a href=\"https://www.autumnearth.', 0, 0, '2018-01-08 13:51:15', 1515506300, 'Wild blackbrome'),
+(397, 'Rhantemine quifolium', 'Gillifern', 'This has divers weak but rough stalks, half a yard long, leaning downward, but set with winged leaves, longer and more pointed than those of <a href=\"https://www.autumnearth.com/herbarium/rhantemine-quifolium/\">Mistlebloom</a>, and whitish underneath; from the tops of these stalks arise up other slender stalks, naked without leaves unto the tops, where there grow many small flowers in manner of a spike, of a pale reddish colour with some blueness among them; after which rise up in their places, round, rough, and somewhat flat heads. The root is tough, and somewhat woody, yet lives and shoots a-new every year. It grows in this land, in divers woods. It flowers about the end of July, and beginning of August.', 'rhantemine-quifolium', 'Rhantemine quifolium\r\nGillifern\r\nThis has divers weak but rough stalks, half a yard long, leaning downward, but set with winged leaves, longer and more pointed than those of <a href=\"https://www.autumnearth.', 0, 0, '2018-01-08 13:51:49', 1515506300, 'Mistlebloom'),
+(398, 'Xaltanus nucidense', 'Gillifern', 'This has divers weak but rough stalks, half a yard long, leaning downward, but set with winged leaves, longer and more pointed than those of <a href=\"https://www.autumnearth.com/herbarium/xaltanus-nucidense/\">Songtether</a>, and whitish underneath; from the tops of these stalks arise up other slender stalks, naked without leaves unto the tops, where there grow many small flowers in manner of a spike, of a pale reddish colour with some blueness among them; after which rise up in their places, round, rough, and somewhat flat heads. The root is tough, and somewhat woody, yet lives and shoots a-new every year. It grows in this land, in divers woods. It flowers about the end of July, and beginning of August.', 'xaltanus-nucidense', 'Xaltanus nucidense\r\nGillifern\r\nThis has divers weak but rough stalks, half a yard long, leaning downward, but set with winged leaves, longer and more pointed than those of ', 0, 0, '2018-01-08 13:53:12', 1515506300, 'Songtether'),
+(399, 'Brosia tallium', 'Gillifern', 'This has divers weak but rough stalks, half a yard long, leaning downward, but set with winged leaves, longer and more pointed than those of <a href=\"https://www.autumnearth.com/herbarium/brosia-tallium/\">Almsbalm</a>, and whitish underneath; from the tops of these stalks arise up other slender stalks, naked without leaves unto the tops, where there grow many small flowers in manner of a spike, of a pale reddish colour with some blueness among them; after which rise up in their places, round, rough, and somewhat flat heads. The root is tough, and somewhat woody, yet lives and shoots a-new every year. It grows in this land, in divers woods. It flowers about the end of July, and beginning of August.', 'brosia-tallium', 'Brosia tallium\r\nGillifern', 0, 0, '2018-01-08 13:53:43', 1515506300, 'Almsbalm/Gravefrage'),
+(400, 'Multinadentatas barea', 'Gillifern', 'This has divers weak but rough stalks, half a yard long, leaning downward, but set with winged leaves, longer and more pointed than those of <a href=\"https://www.autumnearth.com/herbarium/multinadentatas-barea/\">Tatterberry</a>, and whitish underneath; from the tops of these stalks arise up other slender stalks, naked without leaves unto the tops, where there grow many small flowers in manner of a spike, of a pale reddish colour with some blueness among them; after which rise up in their places, round, rough, and somewhat flat heads. The root is tough, and somewhat woody, yet lives and shoots a-new every year. It grows in this land, in divers woods. It flowers about the end of July, and beginning of August.', 'multinadentatas-barea', 'Multinadentatas barea\r\nGillifern\r\nThis has divers weak but rough stalks, half a yard long, leaning downward, but set with winged leaves, longer and more pointed than those of Tatterberry, and whitish underneath; from the tops of these stalks arise up othe', 0, 0, '2018-01-08 13:54:09', 1515506300, 'Tatterberry/Covenbrake'),
+(401, 'Occimum rhantemisia', 'Gillifern', 'This has divers weak but rough stalks, half a yard long, leaning downward, but set with winged leaves, longer and more pointed than those of <a href=\"https://www.autumnearth.com/herbarium/occimum-rhantemisia/\">Cairntorch</a>, and whitish underneath; from the tops of these stalks arise up other slender stalks, naked without leaves unto the tops, where there grow many small flowers in manner of a spike, of a pale reddish colour with some blueness among them; after which rise up in their places, round, rough, and somewhat flat heads. The root is tough, and somewhat woody, yet lives and shoots a-new every year. It grows in this land, in divers woods. It flowers about the end of July, and beginning of August.', 'occimum-rhantemisia', 'Occimum rhantemisia\r\nGillifern', 0, 0, '2018-01-08 13:55:24', 1515506300, 'Cairntorch/Scythereed/Dreadsleeves'),
 (402, 'Zollanum lanchier', 'Covenut, Dwarfwood or Cirrusclock', 'A rare sea dwelling plant. It grows wild in many low and wet grounds of this land, by brooks and the sides of running waters. And it flowers in November; after which the seed is quickly ripe, yet in its prime in December.', 'zollanum-lanchier', 'Zollanum lanchier\r\nCovenut, Dwarfwood or Cirrusclock\r\nA rare sea dwelling plant. It grows wild in many low and wet grounds of this land, by brooks and the sides of running waters. And it flowers in November; after which the seed is quickly ripe, yet in it', 1, 0, '2018-01-08 13:55:36', 1515465086, 'Covenut/Dwarfwood/Cirrusclock'),
 (403, 'Nuciolata siatanus', 'Bownut or Snowbrome', 'Every garden affords this so plentifully, that it needs no description. They are only nursed in the gardens in England, where they will grow very well. All Wormwoods usually flower in November, a little sooner or later.', 'nuciolata-siatanus', 'Nuciolata siatanus\r\nBownut or Snowbrome\r\nEvery garden affords this so plentifully, that it needs no description. They are only nursed in the gardens in England, where they will grow very well. All Wormwoods usually flower in November, a little sooner or l', 0, 0, '2018-01-08 14:23:33', 1515440653, 'Bownut/Snowbrome'),
 (404, 'Nuciolata siatanus', 'Bownut or Snowbrome', 'Every garden affords this so plentifully, that it needs no description. They are only nursed in the gardens in England, where they will grow very well. All Bownuts usually flower in November, a little sooner or later.', 'nuciolata-siatanus', 'Nuciolata siatanus\r\nBownut or Snowbrome\r\nEvery garden affords this so plentifully, that it needs no description. They are only nursed in the gardens in England, where they will grow very well. All Bownuts usually flower in November, a little sooner or lat', 0, 0, '2018-01-08 14:24:37', 1515440653, 'Bownut/Snowbrome'),
@@ -1179,8 +1181,8 @@ INSERT INTO `tblplants` (`plantID`, `latinName`, `commonNames`, `plantDesc`, `pl
 (412, 'Pomicama barbare', 'It is also called Greater whitethrift', ' The first grows in forests, on the heaths, and such like barren places: the bright red grows in the north parts of this land, as Lancashire, Yorkshire, &c. Greater whitethrifts are the food plants of the caterpillars of the Ragged mimic butterfly. It flowers in the end of April and May, and the seed is ripe in June. The roots are gathered for use, as well in the Spring before the leaves come forth, as in Winter or Spring.', 'pomicama-barbare', 'Pomicama barbare\r\nIt is also called Greater whitethrift\r\n The first grows in forests, on the heaths, and such like barren places: the bright red grows in the north parts of this land, as Lancashire, Yorkshire, &c.', 0, 0, '2018-01-08 16:27:46', 1515467643, 'Greater whitethrift'),
 (413, 'Dermenicus epappocynum', 'Also known as Morningdown or Common pearlapple', 'Both the tame and the wild are so well known, that they need no description. It grows in bogs and moorish places, and also on dry shady places, as Hampstead Heath, and elsewhere. It flowers at the latter end of July and August.', 'dermenicus-epappocynum', 'Dermenicus epappocynum\r\nAlso known as Morningdown or Common pearlapple\r\nBoth the tame and the wild are so well known, that they need no description. It grows in bogs and moorish places, and also on dry shady places, as Hampstead Heath, and elsewhere.', 0, 0, '2018-01-08 16:28:19', 1515518667, 'Morningdown/Common pearlapple'),
 (414, 'Saccharia cidensis', 'It is called Heliobonnet', 'This small plant never bears more than one leaf, but only when it rises up with his stalk, which thereon bears another, and seldom more, which are of a pale yellowish green colour, pointed, with many ribs or veins therein, like Plantain. At the top of the stalk grow many small white flowers, star fashion, smelling somewhat sweet; after which come small pale yellow berries, when they are ripe. The root is small, of the bigness of a rush, lying and creeping under the upper crust of the earth, shooting forth in divers places. They grow in meadow and pastures both wet and dry, and by the hedges. They flower in September.', 'saccharia-cidensis', 'Saccharia cidensis\r\nIt is called Heliobonnet', 0, 0, '2018-01-08 16:28:43', 1515512228, 'Heliobonnet'),
-(415, 'Concama caulefolium', 'It is called Heliobonnet', 'This small plant never bears more than one leaf, but only when it rises up with his stalk, which thereon bears another, and seldom more, which are of a pale yellowish green colour, pointed, with many ribs or veins therein, like <a href="https://www.autumnearth.com/herbarium/lutichum-prosolanum/">Doveseed</a>. At the top of the stalk grow many small white flowers, star fashion, smelling somewhat sweet; after which come small pale yellow berries, when they are ripe. The root is small, of the bigness of a rush, lying and creeping under the upper crust of the earth, shooting forth in divers places. They grow in meadow and pastures both wet and dry, and by the hedges. They flower in September.', 'concama-caulefolium', 'Concama caulefolium\r\nIt is called Heliobonnet', 1, 0, '2018-01-08 16:29:25', 1515512228, 'Pouchbane/Pondquill'),
-(416, 'Concama caulefolium', 'It is called Heliobonnet', 'This small plant never bears more than one leaf, but only when it rises up with his stalk, which thereon bears another, and seldom more, which are of a pale yellowish green colour, pointed, with many ribs or veins therein, like <a href="https://www.autumnearth.com/herbarium/multiacer-chillea/">Greater icethrift</a>. At the top of the stalk grow many small white flowers, star fashion, smelling somewhat sweet; after which come small pale yellow berries, when they are ripe. The root is small, of the bigness of a rush, lying and creeping under the upper crust of the earth, shooting forth in divers places. They grow in meadow and pastures both wet and dry, and by the hedges. They flower in September.', 'concama-caulefolium', 'Concama caulefolium\r\nIt is called Heliobonnet', 1, 0, '2018-01-08 16:30:42', 1515512228, 'Pouchbane/Pondquill'),
+(415, 'Concama caulefolium', 'It is called Heliobonnet', 'This small plant never bears more than one leaf, but only when it rises up with his stalk, which thereon bears another, and seldom more, which are of a pale yellowish green colour, pointed, with many ribs or veins therein, like <a href=\"https://www.autumnearth.com/herbarium/lutichum-prosolanum/\">Doveseed</a>. At the top of the stalk grow many small white flowers, star fashion, smelling somewhat sweet; after which come small pale yellow berries, when they are ripe. The root is small, of the bigness of a rush, lying and creeping under the upper crust of the earth, shooting forth in divers places. They grow in meadow and pastures both wet and dry, and by the hedges. They flower in September.', 'concama-caulefolium', 'Concama caulefolium\r\nIt is called Heliobonnet', 1, 0, '2018-01-08 16:29:25', 1515512228, 'Pouchbane/Pondquill'),
+(416, 'Concama caulefolium', 'It is called Heliobonnet', 'This small plant never bears more than one leaf, but only when it rises up with his stalk, which thereon bears another, and seldom more, which are of a pale yellowish green colour, pointed, with many ribs or veins therein, like <a href=\"https://www.autumnearth.com/herbarium/multiacer-chillea/\">Greater icethrift</a>. At the top of the stalk grow many small white flowers, star fashion, smelling somewhat sweet; after which come small pale yellow berries, when they are ripe. The root is small, of the bigness of a rush, lying and creeping under the upper crust of the earth, shooting forth in divers places. They grow in meadow and pastures both wet and dry, and by the hedges. They flower in September.', 'concama-caulefolium', 'Concama caulefolium\r\nIt is called Heliobonnet', 1, 0, '2018-01-08 16:30:42', 1515512228, 'Pouchbane/Pondquill'),
 (417, 'Necimum bulboreata', 'Greater hawbine', 'This grows a goodly tall straight tree, fraught with many boughs, and slender branches bending downward: the old being covered with discoloured chapped bark, and the younger being browner by much. The leaves at the first breaking out are crumpled, and afterwards like the beech leaves, but smaller and greener, and dented about the edges. It bears small short cat-skins, somewhat like those of the hazelnut-tree, which abide on the branches a long time, until growing ripe, they fall on the ground and their seed with them. It grows in moist, shadowy, grassy places of woods, in many places of this realm. It flowers and seeds from April to the end of May.', 'necimum-bulboreata', 'Necimum bulboreata\r\nGreater hawbine\r\nThis grows a goodly tall straight tree, fraught with many boughs, and slender branches bending downward: the old being covered with discoloured chapped bark, and the younger being browner by much.', 0, 0, '2018-01-08 16:32:41', 1515470018, 'Greater hawbine'),
 (418, 'Semperviria dicalea', 'It is called Marsh inksel', 'A rare sea dwelling plant. It grows by hedge and wall-sides, and often in the border and corner of fields, and in gardens also. It flowers in August and September, some earlier, and some later than the other.', 'semperviria-dicalea', 'Semperviria dicalea\r\nIt is called Marsh inksel\r\nA rare sea dwelling plant. It grows by hedge and wall-sides, and often in the border and corner of fields, and in gardens also. It flowers in August and September, some earlier, and some later than the other', 1, 0, '2018-01-08 16:37:28', 1515475754, 'Marsh inksel'),
 (419, 'Tronamosalix parviburnum', 'Springdew or Kitesedge', 'This has divers long leaves (some greater, some smaller) set upon a stalk, all of them dented about the edges, green above, and greyish underneath, and a little hairy withal. Among which arises up usually but one strong, round, hairy, brown stalk, two or three feet high, with smaller leaves set here and there upon it. At the top thereof grow many small red flowers, one above another, in long spikes; after which come rough heads of seed, hanging downwards, which will cleave to and stick upon garments, or any thing that shall rub against them. The knot is black, long, and somewhat woody, abiding many years, and shooting afresh every Summer; which root, though small, hath a reasonable good scent. It grows in many groves, and small low woods, in divers places of this land, as in Kent, Huntingdon, Cambridge, and Northamptonshire; as also near water-courses in other places. Springdews are the food plants of the caterpillars of the Clouded gatekeeper butterfly. It flowers in November and December, the seed being ripe shortly after.', 'tronamosalix-parviburnum', 'Tronamosalix parviburnum\r\nSpringdew or Kitesedge\r\nThis has divers long leaves (some greater, some smaller) set upon a stalk, all of them dented about the edges, green above, and greyish underneath, and a little hairy withal.', 0, 0, '2018-01-08 16:37:50', 1515506983, 'Springdew/Kitesedge'),
@@ -1200,7 +1202,7 @@ INSERT INTO `tblplants` (`plantID`, `latinName`, `commonNames`, `plantDesc`, `pl
 (432, 'Dendranthenigrum dentanalis', 'Also known as Sweet sevenpod or Wild abbeygrass', 'First, of the Sweet sevenpod, which rises up with square, hard, greenish stalks, sometimes brown, set with broad dark green leaves dented about the edges with notches somewhat resembling the leaves of the Wood Betony, but much larger too, for the most part set at a joint. The flowers are many, set at the tops of the stalks and branches, being round bellied and open at the brims, and divided into two parts, the uppermost being like a hood, and the lowermost like a hip hanging down, of a dark blue colour, which passing, there comes in their places small round heads with small points at the ends, wherein lie small and brownish seeds; the root is a thick bush of strings and shreds, growing from the head. They grow in sandy grounds, as in Tothill-fields by Westminster, and divers other places of this land. It flowers in November and December.', 'dendranthenigrum-dentanalis', 'Dendranthenigrum dentanalis\r\nAlso known as Sweet sevenpod or Wild abbeygrass', 0, 0, '2018-01-08 16:48:00', 1515474401, 'Sweet sevenpod/Wild abbeygrass'),
 (433, 'Florida squalinense', 'It is also called Wispclock or Wild hearthfingers', ' It grows in bogs and moorish places, and also on dry shady places, as Hampstead Heath, and elsewhere. It is well known to entice the Painted dagger butterfly. It must be sowed late, and flowers in the heart of Winter, being a very tender plant.', 'florida-squalinense', 'Florida squalinense\r\nIt is also called Wispclock or Wild hearthfingers\r\n It grows in bogs and moorish places, and also on dry shady places, as Hampstead Heath, and elsewhere. It is well known to entice the Painted dagger butterfly.', 0, 0, '2018-01-08 16:48:10', 1515459767, 'Wispclock/Wild hearthfingers'),
 (434, 'Brassiacernutans nadendron', 'Rainfrage', 'In regard the Garden Rocket is rather used as a sallad herb than to any physical purposes, I shall omit it, and only speak of the common wild Rocket. The description whereof take as follows. The common wild Rocket has longer and narrower leaves, much more divided into slender cuts and jags on both sides the middle rib than the garden kinds have; of a sad green colour, from among which rise up divers stalks two or three feet high, sometimes set with the like leaves, but smaller and smaller upwards, branched from the middle into divers stiff stalks, bearing sundry yellow flowers on them, made of four leaves a-piece, as the others are, which afterwards yield them small blueish seed, in small long pods, of a more bitter and hot biting taste than the garden kinds, as the leaves are also. It grows between Longford and Bow, and beyond Southwark, by the highway and parts adjacent. They flower and seed in May, June, and July, and their green leaves do in a manner abide fresh all the Autumn.', 'brassiacernutans-nadendron', 'Brassiacernutans nadendron\r\nRainfrage\r\nIn regard the Garden Rocket is rather used as a sallad herb than to any physical purposes, I shall omit it, and only speak of the common wild Rocket. The description whereof take as follows.', 0, 0, '2018-01-08 16:48:19', 1515459827, 'Rainfrage'),
-(435, 'Brosia tallium', 'Also known as Maidensfrond or Burburr', 'Of the many sorts of this herb two of them may be found growing in this nation; the first of which shoots forth one or two winged leaves, upon long brownish foot-stalks, which are doubled down at their first coming out of the ground; when they are fully opened they consist of seven leaves, most commonly of a sad green colour, dented about the edges, set on both sides the middle rib one against another, as the leaves of the ash tree; the stalk bears no leaves on the lower half of it; the upper half bears sometimes three or four, each consisting of five leaves, sometimes of three; on the top stand four or five flowers upon short foot-stalks, with long husks; the flowers are very like the flowers of <a href="https://www.autumnearth.com/herbarium/nuciolata-siatanus/">Bownut</a>, of a pale purplish colour, consisting of four leaves a-piece, after which come small pods, which contain the seed; the root is very smooth, white and shining; it does not grow downwards, but creeps along under the upper crust of the ground, and consists of divers small round knobs set together; towards the top of the stalk there grows some single leaves, by each of which comes a small cloven bulb, which when it is ripe, if it be set in the ground, it will grow to be a root. As for the other Coralwort, which grows in this nation, it is more scarce than this, being a very small plant, much like Crowfoot, therefore some think it to be one of the sorts of Crowfoot. I know not where to direct you to it, therefore I shall forbear the description. It grows in gardens, and flowers about the beginning and middle of August, and the seed is ripe in September. It flowers in the Spring-time, but the berries are not ripe until October, and abides on the branches all the Autumn, unless the blackbirds, and other birds, do devour them.', 'brosia-tallium', 'Brosia tallium\r\nAlso known as Maidensfrond or Burburr', 0, 0, '2018-01-08 16:49:07', 1515437249, 'Almsbalm/Gravefrage'),
+(435, 'Brosia tallium', 'Also known as Maidensfrond or Burburr', 'Of the many sorts of this herb two of them may be found growing in this nation; the first of which shoots forth one or two winged leaves, upon long brownish foot-stalks, which are doubled down at their first coming out of the ground; when they are fully opened they consist of seven leaves, most commonly of a sad green colour, dented about the edges, set on both sides the middle rib one against another, as the leaves of the ash tree; the stalk bears no leaves on the lower half of it; the upper half bears sometimes three or four, each consisting of five leaves, sometimes of three; on the top stand four or five flowers upon short foot-stalks, with long husks; the flowers are very like the flowers of <a href=\"https://www.autumnearth.com/herbarium/nuciolata-siatanus/\">Bownut</a>, of a pale purplish colour, consisting of four leaves a-piece, after which come small pods, which contain the seed; the root is very smooth, white and shining; it does not grow downwards, but creeps along under the upper crust of the ground, and consists of divers small round knobs set together; towards the top of the stalk there grows some single leaves, by each of which comes a small cloven bulb, which when it is ripe, if it be set in the ground, it will grow to be a root. As for the other Coralwort, which grows in this nation, it is more scarce than this, being a very small plant, much like Crowfoot, therefore some think it to be one of the sorts of Crowfoot. I know not where to direct you to it, therefore I shall forbear the description. It grows in gardens, and flowers about the beginning and middle of August, and the seed is ripe in September. It flowers in the Spring-time, but the berries are not ripe until October, and abides on the branches all the Autumn, unless the blackbirds, and other birds, do devour them.', 'brosia-tallium', 'Brosia tallium\r\nAlso known as Maidensfrond or Burburr', 0, 0, '2018-01-08 16:49:07', 1515437249, 'Almsbalm/Gravefrage'),
 (436, 'Tectophiilex trifidamine', 'Also known as Milkwheat or Autumn almsnare', 'The Milkwheat, from a black, thready and bushy root, sends forth many long single leaves, cut in on both sides into round dents almost to the middle, which is not so hard as that of polypody, each division being not always set opposite unto the other, cut between each, smooth, and of a light green on the upper side, and a dark blueish roughness on the back, folding or rolling itself inward at the first springing up. The wild kind grows in divers parts of this land plentifully by the field-sides, and untilled places. It flowers in June and July, and is ripe quickly after.', 'tectophiilex-trifidamine', 'Tectophiilex trifidamine\r\nAlso known as Milkwheat or Autumn almsnare', 0, 0, '2018-01-08 16:49:15', 1515519607, 'Milkwheat/Autumn almsnare'),
 (437, 'Phrolea parviri', 'Many know this as Icesorrel', 'This grows sometimes, with brownish stalks, and other whiles with green, to a man&rsquo;s height, having narrow green leaves snipped about the edges, somewhat like those of the peach-tree, or willow leaves, but not of such a white green colour. The tops of the stalks are furnished with many yellow star-like flowers, standing in green heads, which when they are fallen, and the seed ripe, which is somewhat long, small and of a brown colour, wrapped in down, is therefore carried away with the wind. The root is composed of fibres set together at a head, which perishes not in Spring, although the stalks dry away and no leaf appears in the Summer. The taste hereof is strong and unpleasant; and so is the smell also. The first grows in divers places of both the East and West counties, and as well in wet as in dry grounds; as near Longfield, by Gravesend, near Cobham in Kent, near Lillinstone in Kent, also in a chalk pit hard by a paper-mill not far from Dartford in Kent. The second grows also in divers places in Kent, as about Southfleet, and Longfield; upon Barton&rsquo;s hills in Bedfordshire; also not far from St. Albans, upon a piece of waste chalky ground, as you go out by Dunstable way towards Gorhambury. The flowers are particularly attractive to the bumble bee. It flowers, as was said before, almost every month throughout the year.', 'phrolea-parviri', 'Phrolea parviri\r\nMany know this as Icesorrel', 0, 0, '2018-01-08 16:49:34', 1515485426, 'Icesorrel'),
 (438, 'Temica quatichum', 'Covenberry', 'Covenberry is a small low herb, rising up usually but with one blackish green stalk a span high, or not much more, spread from the bottom into sundry branches, whereon are small and almost round yet pointed dark green leaves, finely snipped about the edges, two always set together, and very thick: At the joints with the leaves, from the middle upward, come forth small white flowers, marked with purple and yellow spots, or stripes; after which follow small round heads, with very small seed therein. The root is long, small and thready at the end. It is generally kept with us in gardens. They flower in Winter, and their seed is ripe quickly after.', 'temica-quatichum', 'Temica quatichum\r\nCovenberry', 0, 0, '2018-01-08 16:49:45', 1515488400, 'Covenberry'),
@@ -1238,13 +1240,13 @@ INSERT INTO `tblplants` (`plantID`, `latinName`, `commonNames`, `plantDesc`, `pl
 -- Table structure for table `tblplayerhousing`
 --
 
-CREATE TABLE IF NOT EXISTS `tblplayerhousing` (
+CREATE TABLE `tblplayerhousing` (
   `mapHousingID` int(11) NOT NULL,
   `characterID` int(10) NOT NULL,
   `mapID` int(10) NOT NULL,
   `northWestCornerTileX` int(3) NOT NULL,
   `northWestCornerTileY` int(3) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
 -- Dumping data for table `tblplayerhousing`
@@ -1259,7 +1261,7 @@ INSERT INTO `tblplayerhousing` (`mapHousingID`, `characterID`, `mapID`, `northWe
 -- Table structure for table `tblposts`
 --
 
-CREATE TABLE IF NOT EXISTS `tblposts` (
+CREATE TABLE `tblposts` (
   `postID` int(11) NOT NULL,
   `threadID` mediumint(9) NOT NULL DEFAULT '0',
   `accountID` int(11) NOT NULL DEFAULT '0',
@@ -1268,7 +1270,7 @@ CREATE TABLE IF NOT EXISTS `tblposts` (
   `status` char(1) DEFAULT NULL,
   `sticky` char(1) DEFAULT NULL,
   `edited` datetime DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=224 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblposts`
@@ -1295,7 +1297,7 @@ INSERT INTO `tblposts` (`postID`, `threadID`, `accountID`, `creationTime`, `post
 (133, 26, 13, '2006-07-23 09:18:09', '14', '1', '0', '0000-00-00 00:00:00'),
 (134, 26, 13, '2006-07-23 09:18:12', '15', '1', '0', '0000-00-00 00:00:00'),
 (135, 27, 13, '2006-07-23 09:19:35', 'this is very seroius...', '1', '0', '0000-00-00 00:00:00'),
-(136, 28, 13, '2006-07-23 09:20:57', 'so exciting all this, isn''t it?', '1', '0', '0000-00-00 00:00:00'),
+(136, 28, 13, '2006-07-23 09:20:57', 'so exciting all this, isn\'t it?', '1', '0', '0000-00-00 00:00:00'),
 (137, 26, 18, '2006-07-23 10:07:02', 'inserting link [link=location.co.uk]location.co.uk[/link]', '1', '0', '0000-00-00 00:00:00'),
 (138, 26, 18, '2006-07-23 10:07:41', 'john [u]holt[/u] john', '1', '0', '2006-07-23 10:07:48'),
 (139, 26, 18, '2006-07-23 10:13:28', 'adding a link [link=linklocation.co.uk]linklocation.co.uk[/link]', '1', '0', '0000-00-00 00:00:00'),
@@ -1315,20 +1317,20 @@ INSERT INTO `tblposts` (`postID`, `threadID`, `accountID`, `creationTime`, `post
 (153, 28, 13, '2006-07-23 16:29:25', 'admin repsonse # 3', '1', '0', '0000-00-00 00:00:00'),
 (154, 28, 5, '2006-07-23 16:30:24', '[u]seawarrior is back[/u]', '1', '0', '0000-00-00 00:00:00'),
 (155, 24, 5, '2006-07-27 13:23:03', 'a link to [link=http://www.google.co.uk]google[/link]', '1', '0', '0000-00-00 00:00:00'),
-(156, 31, 5, '2006-07-27 13:26:36', 'here''s a mail icon:\n\n[image=http://autumnearth.com/images/autumn-earth-old.gif]\ncool eh?', '1', '0', '2006-07-27 13:26:46'),
-(157, 31, 5, '2006-07-27 13:27:14', 'here''s a quick quote that i made up\r\n\r\n[quote = john]stuff john said[/quote]', '1', '0', '2006-07-27 13:28:20'),
+(156, 31, 5, '2006-07-27 13:26:36', 'here\'s a mail icon:\n\n[image=http://autumnearth.com/images/autumn-earth-old.gif]\ncool eh?', '1', '0', '2006-07-27 13:26:46'),
+(157, 31, 5, '2006-07-27 13:27:14', 'here\'s a quick quote that i made up\r\n\r\n[quote = john]stuff john said[/quote]', '1', '0', '2006-07-27 13:28:20'),
 (158, 31, 5, '2006-07-27 13:29:29', 'and a link to [link=http://www.flashkit.com]flashkit[/link] is here', '1', '0', '0000-00-00 00:00:00'),
-(159, 31, 5, '2006-07-27 13:32:52', 'a huuuuge image [b]with a link[/b]:\r\n\r\n\r\n\r\n\r\n[link=www.salmacis.co.uk]\r\n[/link][image=http://www.salmacis.co.uk/elements/splash_page531x531.jpg]but it''s been[ cropped', '1', '0', '2006-07-27 22:04:02'),
-(160, 31, 5, '2006-07-27 13:41:32', 'just this [image=''http://www.salmacis.co.uk/elements/lookingglass1b.jpg'']', '1', '0', '2006-07-27 13:52:30'),
+(159, 31, 5, '2006-07-27 13:32:52', 'a huuuuge image [b]with a link[/b]:\r\n\r\n\r\n\r\n\r\n[link=www.salmacis.co.uk]\r\n[/link][image=http://www.salmacis.co.uk/elements/splash_page531x531.jpg]but it\'s been[ cropped', '1', '0', '2006-07-27 22:04:02'),
+(160, 31, 5, '2006-07-27 13:41:32', 'just this [image=\'http://www.salmacis.co.uk/elements/lookingglass1b.jpg\']', '1', '0', '2006-07-27 13:52:30'),
 (161, 31, 13, '2006-07-27 18:25:59', 'badly nested tags:\n[b]bold text [/b][image = http://autumnearth.com/images/autumn-earth-old.gif]\n\nclose bold ', '1', '0', '2006-07-27 18:37:02'),
 (162, 31, 14, '2006-07-27 21:13:26', '[u] underlined [/u][image=http://autumnearth.com/images/autumn-earth-old.gif]\nnormal [b] bold[/b]', '1', '0', '0000-00-00 00:00:00'),
-(163, 31, 14, '2006-07-27 21:25:59', 'close bold  and i''ve then [h]added this[/h]', '1', '0', '2006-07-27 21:34:39'),
+(163, 31, 14, '2006-07-27 21:25:59', 'close bold  and i\'ve then [h]added this[/h]', '1', '0', '2006-07-27 21:34:39'),
 (164, 30, 14, '2006-07-27 21:35:14', '[quote=Administrator]...[/quote] and my bit :)', '1', '0', '0000-00-00 00:00:00'),
-(165, 31, 14, '2006-07-27 21:37:28', '[quote=seawarrior]here''s a mail icon:\r\n\r\n\r\ncool eh?[/quote] and my bit', '1', '0', '0000-00-00 00:00:00'),
-(166, 31, 14, '2006-07-27 21:39:23', '[quote=Moderator]here''s a mail icon:\r\n\r\n\r\ncool eh? and my bit[/quote] and yet another bit', '1', '0', '0000-00-00 00:00:00'),
+(165, 31, 14, '2006-07-27 21:37:28', '[quote=seawarrior]here\'s a mail icon:\r\n\r\n\r\ncool eh?[/quote] and my bit', '1', '0', '0000-00-00 00:00:00'),
+(166, 31, 14, '2006-07-27 21:39:23', '[quote=Moderator]here\'s a mail icon:\r\n\r\n\r\ncool eh? and my bit[/quote] and yet another bit', '1', '0', '0000-00-00 00:00:00'),
 (167, 31, 14, '2006-07-27 21:39:54', '[quote=seawarrior]and a link to flashkit is here[/quote] without link', '1', '0', '0000-00-00 00:00:00'),
 (168, 30, 5, '2006-07-27 21:55:23', '[e]invalid links [t] and [r]', '1', '0', '0000-00-00 00:00:00'),
-(169, 24, 5, '2006-07-28 07:45:33', '[quote=seawarrior]welcome everyone to this forum[/quote]\r\nnow i''ll add a link [link=http://www.google.com]http://www.google.com[/link]', '1', '0', '0000-00-00 00:00:00'),
+(169, 24, 5, '2006-07-28 07:45:33', '[quote=seawarrior]welcome everyone to this forum[/quote]\r\nnow i\'ll add a link [link=http://www.google.com]http://www.google.com[/link]', '1', '0', '0000-00-00 00:00:00'),
 (170, 24, 5, '2006-07-28 07:46:14', 'lots of space:\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\nend', '1', '0', '2006-07-28 08:41:42'),
 (171, 30, 5, '2006-07-28 09:07:14', 'mew post', '1', '0', '0000-00-00 00:00:00'),
 (172, 28, 5, '2006-07-28 21:21:35', 'dfdf', '1', '0', '0000-00-00 00:00:00'),
@@ -1359,11 +1361,11 @@ INSERT INTO `tblposts` (`postID`, `threadID`, `accountID`, `creationTime`, `post
 (197, 34, 5, '2006-08-13 12:18:38', 'stufff with [link=http://www.google.com]links [/link]and stuff ', '1', '0', '0000-00-00 00:00:00'),
 (198, 35, 5, '2006-08-13 12:22:03', 'xcxcxc[image=http://www.autumnearth.com/data/chr3/portait.jpg]xcxczxcsc ', '1', '0', '0000-00-00 00:00:00'),
 (199, 35, 5, '2006-10-26 19:38:26', '[link=http://www.goole.com]link[/link]', '1', '0', '0000-00-00 00:00:00'),
-(200, 28, 5, '2006-12-31 20:04:51', 'what''s all this then? is this john''s post?', '1', '0', '0000-00-00 00:00:00'),
-(201, 28, 5, '2006-12-31 20:21:06', '...hang on, what''s this one then?\r\n...oh, i get it :)', '1', '0', '0000-00-00 00:00:00'),
-(202, 25, 5, '2007-01-01 22:55:17', 'JOHN''S post', '1', '0', '0000-00-00 00:00:00'),
+(200, 28, 5, '2006-12-31 20:04:51', 'what\'s all this then? is this john\'s post?', '1', '0', '0000-00-00 00:00:00'),
+(201, 28, 5, '2006-12-31 20:21:06', '...hang on, what\'s this one then?\r\n...oh, i get it :)', '1', '0', '0000-00-00 00:00:00'),
+(202, 25, 5, '2007-01-01 22:55:17', 'JOHN\'S post', '1', '0', '0000-00-00 00:00:00'),
 (203, 25, 5, '2007-01-01 23:18:05', '[quote=Administrator]a bold message too[/quote] checking :)', '1', '0', '0000-00-00 00:00:00'),
-(204, 25, 5, '2007-01-11 21:36:36', '&quot;what''s all this then?&quot; he asked', '1', '0', '0000-00-00 00:00:00'),
+(204, 25, 5, '2007-01-11 21:36:36', '&quot;what\'s all this then?&quot; he asked', '1', '0', '0000-00-00 00:00:00'),
 (205, 34, 5, '2007-02-12 11:08:02', 'hiya', '1', '0', '0000-00-00 00:00:00'),
 (206, 36, 5, '2007-05-08 18:33:13', 'what components/tools do I need to start herbalism?', '1', '0', '0000-00-00 00:00:00'),
 (207, 34, 5, '2007-05-08 18:33:54', 'feeding pets? how does that work? ', '1', '0', '0000-00-00 00:00:00'),
@@ -1390,11 +1392,11 @@ INSERT INTO `tblposts` (`postID`, `threadID`, `accountID`, `creationTime`, `post
 -- Table structure for table `tblprofessions`
 --
 
-CREATE TABLE IF NOT EXISTS `tblprofessions` (
+CREATE TABLE `tblprofessions` (
   `professionID` int(11) NOT NULL,
   `professionName` varchar(128) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
   `cleanurl` varchar(128) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblprofessions`
@@ -1420,7 +1422,7 @@ INSERT INTO `tblprofessions` (`professionID`, `professionName`, `cleanurl`) VALU
 -- Table structure for table `tblquests`
 --
 
-CREATE TABLE IF NOT EXISTS `tblquests` (
+CREATE TABLE `tblquests` (
   `questID` int(11) NOT NULL,
   `journalTitle` varchar(128) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
   `journalDesc` varchar(255) DEFAULT NULL,
@@ -1434,23 +1436,23 @@ CREATE TABLE IF NOT EXISTS `tblquests` (
   `titleGainedAfterCompletion` int(11) DEFAULT NULL,
   `thresholdNeededForCompletion` varchar(128) NOT NULL,
   `subQuestsRequiredForCompletion` varchar(128) DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblquests`
 --
 
 INSERT INTO `tblquests` (`questID`, `journalTitle`, `journalDesc`, `questRegion`, `isRepeatable`, `childOf`, `startItemsReceived`, `itemsNeededForCompletion`, `itemsReceivedOnCompletion`, `whatIsRequiredForCompletion`, `titleGainedAfterCompletion`, `thresholdNeededForCompletion`, `subQuestsRequiredForCompletion`) VALUES
-(1, 'Pass the mordant', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 'Iylan', 0, NULL, '[{"type":9,"colour":16}]', '9', '[{"type":"2/3/5","quantity":6},{"type":"follower"}]', 'give', 4, '', NULL),
-(2, 'An unexpected journey', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 'Iylan', 0, NULL, '', '', '[{"type":9},{"type":14},{"type":"$","quantity":10000}]', 'world', NULL, '', NULL),
+(1, 'Pass the mordant', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 'Iylan', 0, NULL, '[{\"type\":9,\"colour\":16}]', '9', '[{\"type\":\"2/3/5\",\"quantity\":6},{\"type\":\"follower\"}]', 'give', 4, '', NULL),
+(2, 'An unexpected journey', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 'Iylan', 0, NULL, '', '', '[{\"type\":9},{\"type\":14},{\"type\":\"$\",\"quantity\":10000}]', 'world', NULL, '', NULL),
 (3, 'A longer journey', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 'Iylan', 1, NULL, '', '', '', 'hero.stats.numberOfcardsFlipped', NULL, '+2', NULL),
-(4, 'A hero''s peregrination', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 'Iylan', 0, NULL, '[{"type":5},{"type":9,"colour":16}]', '5x19', '[{"type":9},{"type":21,"quantity":2}]', 'possess', 7, '', NULL),
-(5, 'A much longer task', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 'Iylan', 0, NULL, '', NULL, '[{"type":9},{"type":21,"quantity":2}]', 'multi', 7, '', '6,7'),
+(4, 'A hero\'s peregrination', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 'Iylan', 0, NULL, '[{\"type\":5},{\"type\":9,\"colour\":16}]', '5x19', '[{\"type\":9},{\"type\":21,\"quantity\":2}]', 'possess', 7, '', NULL),
+(5, 'A much longer task', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 'Iylan', 0, NULL, '', NULL, '[{\"type\":9},{\"type\":21,\"quantity\":2}]', 'multi', 7, '', '6,7'),
 (6, 'sub task 1', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 'Iylan', 0, NULL, '', '', '', 'world', NULL, '', NULL),
 (7, 'sub task 2', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 'Iylan', 0, NULL, '', '', '', 'hero.stats.numberOfcardsFlipped', NULL, '+2', NULL),
-(8, 'Win a card game', 'Beat NPC at cards, and got a rare chocobo card', 'Iylan', 0, NULL, '', '0', '[{"type":36}]', '', NULL, '', NULL),
-(9, 'Find the wizard', 'Locate the wizard', 'Brythillion', 0, NULL, '', '0', '[{"type":20}]', '', NULL, '', NULL),
-(10, 'Escort to Brythillion', 'Help a traveller find their way to Brythillion.', 'Brythillion', 0, NULL, '', '0', '[{"type":20}]', 'escort', NULL, '', NULL);
+(8, 'Win a card game', 'Beat NPC at cards, and got a rare chocobo card', 'Iylan', 0, NULL, '', '0', '[{\"type\":36}]', '', NULL, '', NULL),
+(9, 'Find the wizard', 'Locate the wizard', 'Brythillion', 0, NULL, '', '0', '[{\"type\":20}]', '', NULL, '', NULL),
+(10, 'Escort to Brythillion', 'Help a traveller find their way to Brythillion.', 'Brythillion', 0, NULL, '', '0', '[{\"type\":20}]', 'escort', NULL, '', NULL);
 
 -- --------------------------------------------------------
 
@@ -1458,7 +1460,7 @@ INSERT INTO `tblquests` (`questID`, `journalTitle`, `journalDesc`, `questRegion`
 -- Table structure for table `tblquestsstatus`
 --
 
-CREATE TABLE IF NOT EXISTS `tblquestsstatus` (
+CREATE TABLE `tblquestsstatus` (
   `questStatusID` int(11) NOT NULL,
   `charID` int(11) DEFAULT NULL,
   `questID` int(11) DEFAULT NULL,
@@ -1466,7 +1468,7 @@ CREATE TABLE IF NOT EXISTS `tblquestsstatus` (
   `thresholdAtQuestStart` varchar(255) DEFAULT NULL,
   `hasBeenActivated` tinyint(1) DEFAULT '0',
   `hasBeenCompleted` tinyint(1) DEFAULT '0'
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblquestsstatus`
@@ -1481,7 +1483,7 @@ INSERT INTO `tblquestsstatus` (`questStatusID`, `charID`, `questID`, `isUnderway
 -- Table structure for table `tblrecipes`
 --
 
-CREATE TABLE IF NOT EXISTS `tblrecipes` (
+CREATE TABLE `tblrecipes` (
   `recipeID` int(11) NOT NULL,
   `components` varchar(255) DEFAULT NULL,
   `creates` int(11) DEFAULT NULL,
@@ -1490,7 +1492,7 @@ CREATE TABLE IF NOT EXISTS `tblrecipes` (
   `recipeName` varchar(255) DEFAULT NULL,
   `recipeDescription` varchar(255) DEFAULT NULL,
   `defaultResultingColour` int(11) DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblrecipes`
@@ -1518,7 +1520,7 @@ INSERT INTO `tblrecipes` (`recipeID`, `components`, `creates`, `prerequisite`, `
 -- Table structure for table `tblregionalpricemodifiers`
 --
 
-CREATE TABLE IF NOT EXISTS `tblregionalpricemodifiers` (
+CREATE TABLE `tblregionalpricemodifiers` (
   `modifierID` int(11) NOT NULL,
   `whichRegion` varchar(128) NOT NULL,
   `itemCategory` int(10) NOT NULL,
@@ -1538,11 +1540,11 @@ INSERT INTO `tblregionalpricemodifiers` (`modifierID`, `whichRegion`, `itemCateg
 -- Table structure for table `tblregions`
 --
 
-CREATE TABLE IF NOT EXISTS `tblregions` (
+CREATE TABLE `tblregions` (
   `regionID` int(11) NOT NULL,
   `regionName` varchar(128) NOT NULL,
   `InWhichcontinent` varchar(128) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblregions`
@@ -1558,7 +1560,7 @@ INSERT INTO `tblregions` (`regionID`, `regionName`, `InWhichcontinent`) VALUES
 -- Table structure for table `tblretinuefollowers`
 --
 
-CREATE TABLE IF NOT EXISTS `tblretinuefollowers` (
+CREATE TABLE `tblretinuefollowers` (
   `followerID` int(11) NOT NULL,
   `followerName` varchar(255) CHARACTER SET utf8mb4 NOT NULL,
   `followerCleanURL` varchar(255) COLLATE utf8_bin NOT NULL,
@@ -1572,16 +1574,16 @@ CREATE TABLE IF NOT EXISTS `tblretinuefollowers` (
   `currentContinent` varchar(255) COLLATE utf8_bin NOT NULL,
   `followerMapCoordinateX` int(20) NOT NULL,
   `followerMapCoordinateY` int(20) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=60 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
 -- Dumping data for table `tblretinuefollowers`
 --
 
 INSERT INTO `tblretinuefollowers` (`followerID`, `followerName`, `followerCleanURL`, `characterIdFollowing`, `activeQuestId`, `followerRewardFromQuestId`, `isEnabled`, `questStartedTime`, `followerSex`, `followerRace`, `currentContinent`, `followerMapCoordinateX`, `followerMapCoordinateY`) VALUES
-(1, 'Eila Myrborn', 'eila-myrborn', 999, -1, NULL, 1, '2018-02-27 15:33:58', 'female', 'huldra', 'eastern-continent', 622, 256),
-(2, 'Nellaith Wispfael', 'nellaith-wispfael', 999, -1, NULL, 1, '2018-02-28 16:51:03', 'female', 'huldra', 'eastern-continent', 626, 215),
-(59, 'Garmund  Wispmote', 'garmund-wispmote', 999, -1, 1, 1, '2018-02-28 16:51:03', 'male', 'huldra', 'eastern-continent', 626, 215);
+(1, 'Eila Myrborn', 'eila-myrborn', 999, -1, NULL, 1, '2018-03-07 12:58:48', 'female', 'huldra', 'eastern-continent', 467, 195),
+(2, 'Nellaith Wispfael', 'nellaith-wispfael', 999, 133, NULL, 1, '2018-03-08 09:25:00', 'female', 'huldra', 'eastern-continent', 467, 195),
+(59, 'Garmund  Wispmote', 'garmund-wispmote', 999, -1, 1, 1, '2018-03-07 14:51:40', 'male', 'huldra', 'eastern-continent', 553, 227);
 
 -- --------------------------------------------------------
 
@@ -1589,7 +1591,7 @@ INSERT INTO `tblretinuefollowers` (`followerID`, `followerName`, `followerCleanU
 -- Table structure for table `tblretinuequests`
 --
 
-CREATE TABLE IF NOT EXISTS `tblretinuequests` (
+CREATE TABLE `tblretinuequests` (
   `questID` int(11) NOT NULL,
   `questName` varchar(255) COLLATE utf8_bin NOT NULL,
   `questCleanURL` varchar(255) COLLATE utf8_bin NOT NULL,
@@ -1609,44 +1611,50 @@ CREATE TABLE IF NOT EXISTS `tblretinuequests` (
   `activeDuringSeason` int(11) DEFAULT NULL,
   `timeCreated` datetime NOT NULL,
   `seed` int(128) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=133 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
 -- Dumping data for table `tblretinuequests`
 --
 
 INSERT INTO `tblretinuequests` (`questID`, `questName`, `questCleanURL`, `questDescription`, `questType`, `continent`, `mapCoordinateX`, `mapCoordinateY`, `needsToReturnToBase`, `questDifficulty`, `questObstacles`, `questCostToStart`, `questPartOfCampaign`, `questNumberOfFollowersRequired`, `questNPCMinimumLevel`, `questReward`, `activeDuringSeason`, `timeCreated`, `seed`) VALUES
-(98, 'Lay of the Land on island', 'lay-of-the-land', 'Map out the region.', 'cartography', 'eastern-continent', 188, 36, 0, 0, 'sea', '0', 0, 1, 1, '[{"type":2,"quantity":2,"quality":100,"durability":100,"currentWear":0,"effectiveness":100,"colour":"0","enchanted":0,"hallmark":0,"inscription":""}]', NULL, '2018-02-21 17:01:00', 0),
-(99, 'All the fun of the fair', 'all-the-fun-of-the-fair', 'Enjoy yourself for a while.', 'travelling fair', 'eastern-continent', 413, 302, 0, 0, '', '0', 0, 1, 1, '[{"type":2,"quantity":2,"quality":100,"durability":100,"currentWear":0,"effectiveness":100,"colour":"0","enchanted":0,"hallmark":0,"inscription":""}]', NULL, '2018-02-21 17:01:06', 0),
-(101, 'Play your best hand at sea', 'play-your-best-hand', 'Be the best at cards.', 'card game', 'eastern-continent', 315, 39, 0, 0, 'sea', '0', 0, 1, 1, '[{"type":2,"quantity":2,"quality":100,"durability":100,"currentWear":0,"effectiveness":100,"colour":"0","enchanted":0,"hallmark":0,"inscription":""}]', NULL, '2018-02-22 12:34:31', 0),
-(102, 'Showing the way at sea', 'showing-the-way', 'Ensure the destination is reached safely.', 'escort', 'eastern-continent', 580, 93, 0, 0, 'sea', '0', 0, 1, 1, '[{"type":2,"quantity":2,"quality":100,"durability":100,"currentWear":0,"effectiveness":100,"colour":"0","enchanted":0,"hallmark":0,"inscription":""}]', NULL, '2018-02-22 12:34:33', 0),
-(104, 'Offering hope at sea', 'offering-hope', 'Future treaties are in your hands.', 'diplomacy', 'eastern-continent', 80, 83, 0, 0, 'sea', '0', 0, 1, 1, '[{"type":2,"quantity":2,"quality":100,"durability":100,"currentWear":0,"effectiveness":100,"colour":"0","enchanted":0,"hallmark":0,"inscription":""}]', NULL, '2018-02-22 12:41:02', 0),
-(106, 'Laying the foundations at sea', 'laying-the-foundations', 'Build up, strengthen and expand.', 'construction', 'eastern-continent', 75, 207, 0, 0, 'sea', '0', 0, 1, 1, '[{"type":2,"quantity":2,"quality":100,"durability":100,"currentWear":0,"effectiveness":100,"colour":"0","enchanted":0,"hallmark":0,"inscription":""}]', NULL, '2018-02-22 12:41:04', 0),
-(107, 'Climb the ladder at sea', 'climb-the-ladder', 'Compete in a ranked card game tournament.', 'card tournament', 'eastern-continent', 100, 292, 0, 0, 'sea', '0', 0, 1, 1, '[{"type":2,"quantity":2,"quality":100,"durability":100,"currentWear":0,"effectiveness":100,"colour":"0","enchanted":0,"hallmark":0,"inscription":""}]', NULL, '2018-02-22 12:41:04', 0),
-(109, 'A long descent', 'a-long-descent', 'Enter the depths of grey and face the unknown.', 'dungeon delve', 'eastern-continent', 443, 265, 0, 0, '', '0', 0, 1, 1, '[{"type":2,"quantity":2,"quality":100,"durability":100,"currentWear":0,"effectiveness":100,"colour":"0","enchanted":0,"hallmark":0,"inscription":""}]', NULL, '2018-02-22 15:04:51', 1519405704),
-(110, 'Showing the way', 'showing-the-way-2', 'Ensure dark green is reached safely.', 'escort', 'eastern-continent', 318, 203, 0, 0, '', '0', 0, 1, 1, '[{"type":2,"quantity":2,"quality":100,"durability":100,"currentWear":0,"effectiveness":100,"colour":"0","enchanted":0,"hallmark":0,"inscription":""}]', NULL, '2018-02-22 15:05:58', 1519350604),
-(111, 'Devoting some time', 'devoting-some-time', 'A journey of reverence.', 'pilgrimage', 'eastern-continent', 412, 126, 0, 0, '', '0', 0, 1, 1, '[{"type":2,"quantity":2,"quality":100,"durability":100,"currentWear":0,"effectiveness":100,"colour":"0","enchanted":0,"hallmark":0,"inscription":""}]', NULL, '2018-02-22 15:53:20', 1519355443),
-(112, 'Lay of the Land', 'lay-of-the-land-2', 'Map out as much of the sea as you can.', 'cartography', 'eastern-continent', 197, 156, 0, 0, 'sea', '0', 0, 1, 1, '[{"type":2,"quantity":2,"quality":100,"durability":100,"currentWear":0,"effectiveness":100,"colour":"0","enchanted":0,"hallmark":0,"inscription":""}]', NULL, '2018-02-22 15:53:22', 1519331255),
-(113, 'Mapping the wilds', 'mapping-the-wilds', 'Map out as much of the sea as you can.', 'cartography', 'eastern-continent', 575, 56, 0, 0, 'sea', '0', 0, 2, 1, '[{"type":2,"quantity":2,"quality":100,"durability":100,"currentWear":0,"effectiveness":100,"colour":"0","enchanted":0,"hallmark":0,"inscription":""}]', NULL, '2018-02-22 15:53:22', 1519381658),
-(114, 'Glue and thread', 'glue-and-thread', 'Make exquisite items.', 'crafting', 'eastern-continent', 501, 286, 0, 0, '', '0', 0, 1, 1, '[{"type":2,"quantity":2,"quality":100,"durability":100,"currentWear":0,"effectiveness":100,"colour":"0","enchanted":0,"hallmark":0,"inscription":""}]', NULL, '2018-02-22 15:53:23', 1519323162),
-(115, 'Bring home the goods', 'bring-home-the-goods', 'Gather what kelp you can.', 'resource gathering', 'eastern-continent', 611, 355, 0, 0, 'sea', '0', 0, 1, 1, '[{"type":2,"quantity":2,"quality":100,"durability":100,"currentWear":0,"effectiveness":100,"colour":"0","enchanted":0,"hallmark":0,"inscription":""}]', NULL, '2018-02-22 15:53:23', 1519340763),
-(116, 'To the rescue', 'to-the-rescue', 'The sea is in need. Get over there and help.', 'rescue', 'eastern-continent', 646, 218, 1, 0, 'sea', '0', 0, 1, 1, '[{"type":2,"quantity":2,"quality":100,"durability":100,"currentWear":0,"effectiveness":100,"colour":"0","enchanted":0,"hallmark":0,"inscription":""}]', NULL, '2018-02-23 14:27:46', 1519453612),
-(117, 'Bring home the goods', 'bring-home-the-goods-2', 'Gather what kelp you can.', 'resource gathering', 'eastern-continent', 626, 215, 0, 0, 'sea', '0', 0, 2, 1, '[{"type":2,"quantity":2,"quality":100,"durability":100,"currentWear":0,"effectiveness":100,"colour":"0","enchanted":0,"hallmark":0,"inscription":""}]', NULL, '2018-02-23 14:27:47', 1519492621),
-(118, 'To the rescue', 'to-the-rescue-2', 'The sea is in need. Get over there and help.', 'rescue', 'eastern-continent', 39, 158, 1, 0, 'sea', '0', 0, 1, 1, '[{"type":2,"quantity":2,"quality":100,"durability":100,"currentWear":0,"effectiveness":100,"colour":"0","enchanted":0,"hallmark":0,"inscription":""}]', NULL, '2018-02-23 14:27:48', 1519440525),
-(119, 'To the rescue', 'to-the-rescue-3', 'The sea is in need. Get over there and help.', 'rescue', 'eastern-continent', 582, 287, 0, 0, 'sea', '0', 0, 1, 1, '[{"type":2,"quantity":2,"quality":100,"durability":100,"currentWear":0,"effectiveness":100,"colour":"0","enchanted":0,"hallmark":0,"inscription":""}]', NULL, '2018-02-23 14:27:48', 1519459826),
-(120, 'Lay of the Land', 'lay-of-the-land-3', 'Map out the region', 'cartography', 'eastern-continent', 164, 275, 1, 0, 'sea', '0', 0, 1, 1, '[{"type":2,"quantity":2,"quality":100,"durability":100,"currentWear":0,"effectiveness":100,"colour":"0","enchanted":0,"hallmark":0,"inscription":""}]', NULL, '2018-02-23 14:27:48', 1519478027),
-(121, 'Get yer boots on', 'get-yer-boots-on', 'There''s plenty of salvage to be had in the sea.', 'salvage', 'eastern-continent', 622, 256, 0, 0, 'sea', '0', 0, 1, 1, '[{"type":2,"quantity":2,"quality":100,"durability":100,"currentWear":0,"effectiveness":100,"colour":"0","enchanted":0,"hallmark":0,"inscription":""}]', NULL, '2018-02-23 14:27:49', 1519494828),
-(122, 'A long descent', 'a-long-descent-2', 'Enter the depths of grey and face the unknown.', 'dungeon delve', 'eastern-continent', 370, 256, 1, 0, '', '0', 0, 1, 1, '[{"type":2,"quantity":2,"quality":100,"durability":100,"currentWear":0,"effectiveness":100,"colour":"0","enchanted":0,"hallmark":0,"inscription":""}]', NULL, '2018-02-23 14:27:49', 1519412430),
-(123, 'Lay of the Land', 'lay-of-the-land-4', 'Map out the region', 'cartography', 'eastern-continent', 126, 107, 0, 0, 'sea', '0', 0, 1, 1, '[{"type":2,"quantity":2,"quality":100,"durability":100,"currentWear":0,"effectiveness":100,"colour":"0","enchanted":0,"hallmark":0,"inscription":""}]', NULL, '2018-02-23 14:27:49', 1519431131),
-(124, 'Bring home the goods', 'bring-home-the-goods-3', 'Gather what kelp you can.', 'resource gathering', 'eastern-continent', 627, 28, 1, 0, 'sea', '0', 0, 2, 1, '[{"type":2,"quantity":2,"quality":100,"durability":100,"currentWear":0,"effectiveness":100,"colour":"0","enchanted":0,"hallmark":0,"inscription":""}]', 6, '2018-02-23 14:27:49', 1519447932),
-(125, 'Showing the way', 'showing-the-way-3', 'Ensure purple is reached safely.', 'escort', 'eastern-continent', 434, 379, 0, 0, '', '0', 0, 1, 1, '[{"type":2,"quantity":2,"quality":100,"durability":100,"currentWear":0,"effectiveness":100,"colour":"0","enchanted":0,"hallmark":0,"inscription":""}]', NULL, '2018-02-23 16:54:32', 1519407382),
-(126, 'Climb the ladder', 'climb-the-ladder-2', 'Compete in a ranked card game tournament.', 'card tournament', 'eastern-continent', 488, 251, 1, 0, '', '0', 0, 1, 1, '[{"type":2,"quantity":2,"quality":100,"durability":100,"currentWear":0,"effectiveness":100,"colour":"0","enchanted":0,"hallmark":0,"inscription":""}]', NULL, '2018-02-23 16:54:33', 1519503788),
-(127, 'A long descent', 'a-long-descent-3', 'Enter the depths of dark green and face the unknown.', 'dungeon delve', 'eastern-continent', 316, 143, 0, 0, '', '0', 0, 1, 1, '[{"type":2,"quantity":2,"quality":100,"durability":100,"currentWear":0,"effectiveness":100,"colour":"0","enchanted":0,"hallmark":0,"inscription":""}]', NULL, '2018-02-23 16:54:33', 1519445491),
-(128, 'To the rescue', 'to-the-rescue-4', 'Black is in need. Get over there and help.', 'rescue', 'eastern-continent', 544, 238, 0, 0, '', '0', 0, 1, 1, '[{"type":2,"quantity":2,"quality":100,"durability":100,"currentWear":0,"effectiveness":100,"colour":"0","enchanted":0,"hallmark":0,"inscription":""}]', NULL, '2018-02-23 16:54:33', 1519479793),
-(129, 'Bring home the goods', 'bring-home-the-goods-4', 'Gather what kelp you can.', 'resource gathering', 'eastern-continent', 608, 83, 0, 0, 'sea', '0', 0, 3, 1, '[{"type":2,"quantity":2,"quality":100,"durability":100,"currentWear":0,"effectiveness":100,"colour":"0","enchanted":0,"hallmark":0,"inscription":""}]', NULL, '2018-02-28 16:51:09', 1519901872),
-(130, 'All the fun of the fair', 'all-the-fun-of-the-fair-2', 'Enjoy yourself for a while.', 'travelling fair', 'eastern-continent', 547, 191, 0, 0, '', '0', 0, 1, 1, '[{"type":2,"quantity":2,"quality":100,"durability":100,"currentWear":0,"effectiveness":100,"colour":"0","enchanted":0,"hallmark":0,"inscription":""}]', NULL, '2018-02-28 16:51:11', 1519870483),
-(131, 'Mapping the wilds', 'mapping-the-wilds-2', 'Map out as much of the sea as you can.', 'cartography', 'eastern-continent', 629, 187, 0, 0, 'sea', '0', 0, 1, 1, '[{"type":2,"quantity":2,"quality":100,"durability":100,"currentWear":0,"effectiveness":100,"colour":"0","enchanted":0,"hallmark":0,"inscription":""}]', NULL, '2018-02-28 16:51:11', 1519929687),
-(132, 'Knock, knock', 'knock-knock', 'The post isn''t fast enough for this. Make haste.', 'delivery', 'eastern-continent', 467, 195, 0, 0, '', '0', 0, 2, 1, '[{"type":2,"quantity":2,"quality":100,"durability":100,"currentWear":0,"effectiveness":100,"colour":"0","enchanted":0,"hallmark":0,"inscription":""}]', NULL, '2018-02-28 16:51:12', 1519893591);
+(98, 'Lay of the Land on island', 'lay-of-the-land', 'Map out the region.', 'cartography', 'eastern-continent', 188, 36, 0, 0, 'sea', '0', 0, 1, 1, '[{\"type\":2,\"quantity\":2,\"quality\":100,\"durability\":100,\"currentWear\":0,\"effectiveness\":100,\"colour\":\"0\",\"enchanted\":0,\"hallmark\":0,\"inscription\":\"\"}]', NULL, '2018-02-21 17:01:00', 0),
+(99, 'All the fun of the fair', 'all-the-fun-of-the-fair', 'Enjoy yourself for a while.', 'travelling fair', 'eastern-continent', 413, 302, 0, 0, '', '0', 0, 1, 1, '[{\"type\":2,\"quantity\":2,\"quality\":100,\"durability\":100,\"currentWear\":0,\"effectiveness\":100,\"colour\":\"0\",\"enchanted\":0,\"hallmark\":0,\"inscription\":\"\"}]', NULL, '2018-02-21 17:01:06', 0),
+(101, 'Play your best hand at sea', 'play-your-best-hand', 'Be the best at cards.', 'card game', 'eastern-continent', 315, 39, 0, 0, 'sea', '0', 0, 1, 1, '[{\"type\":2,\"quantity\":2,\"quality\":100,\"durability\":100,\"currentWear\":0,\"effectiveness\":100,\"colour\":\"0\",\"enchanted\":0,\"hallmark\":0,\"inscription\":\"\"}]', NULL, '2018-02-22 12:34:31', 0),
+(102, 'Showing the way at sea', 'showing-the-way', 'Ensure the destination is reached safely.', 'escort', 'eastern-continent', 580, 93, 0, 0, 'sea', '0', 0, 1, 1, '[{\"type\":2,\"quantity\":2,\"quality\":100,\"durability\":100,\"currentWear\":0,\"effectiveness\":100,\"colour\":\"0\",\"enchanted\":0,\"hallmark\":0,\"inscription\":\"\"}]', NULL, '2018-02-22 12:34:33', 0),
+(104, 'Offering hope at sea', 'offering-hope', 'Future treaties are in your hands.', 'diplomacy', 'eastern-continent', 80, 83, 0, 0, 'sea', '0', 0, 1, 1, '[{\"type\":2,\"quantity\":2,\"quality\":100,\"durability\":100,\"currentWear\":0,\"effectiveness\":100,\"colour\":\"0\",\"enchanted\":0,\"hallmark\":0,\"inscription\":\"\"}]', NULL, '2018-02-22 12:41:02', 0),
+(106, 'Laying the foundations at sea', 'laying-the-foundations', 'Build up, strengthen and expand.', 'construction', 'eastern-continent', 75, 207, 0, 0, 'sea', '0', 0, 1, 1, '[{\"type\":2,\"quantity\":2,\"quality\":100,\"durability\":100,\"currentWear\":0,\"effectiveness\":100,\"colour\":\"0\",\"enchanted\":0,\"hallmark\":0,\"inscription\":\"\"}]', NULL, '2018-02-22 12:41:04', 0),
+(107, 'Climb the ladder at sea', 'climb-the-ladder', 'Compete in a ranked card game tournament.', 'card tournament', 'eastern-continent', 100, 292, 0, 0, 'sea', '0', 0, 1, 1, '[{\"type\":2,\"quantity\":2,\"quality\":100,\"durability\":100,\"currentWear\":0,\"effectiveness\":100,\"colour\":\"0\",\"enchanted\":0,\"hallmark\":0,\"inscription\":\"\"}]', NULL, '2018-02-22 12:41:04', 0),
+(109, 'A long descent', 'a-long-descent', 'Enter the depths of grey and face the unknown.', 'dungeon delve', 'eastern-continent', 443, 265, 0, 0, '', '0', 0, 1, 1, '[{\"type\":2,\"quantity\":2,\"quality\":100,\"durability\":100,\"currentWear\":0,\"effectiveness\":100,\"colour\":\"0\",\"enchanted\":0,\"hallmark\":0,\"inscription\":\"\"}]', NULL, '2018-02-22 15:04:51', 1519405704),
+(110, 'Showing the way', 'showing-the-way-2', 'Ensure dark green is reached safely.', 'escort', 'eastern-continent', 318, 203, 0, 0, '', '0', 0, 1, 1, '[{\"type\":2,\"quantity\":2,\"quality\":100,\"durability\":100,\"currentWear\":0,\"effectiveness\":100,\"colour\":\"0\",\"enchanted\":0,\"hallmark\":0,\"inscription\":\"\"}]', NULL, '2018-02-22 15:05:58', 1519350604),
+(111, 'Devoting some time', 'devoting-some-time', 'A journey of reverence.', 'pilgrimage', 'eastern-continent', 412, 126, 0, 0, '', '0', 0, 1, 1, '[{\"type\":2,\"quantity\":2,\"quality\":100,\"durability\":100,\"currentWear\":0,\"effectiveness\":100,\"colour\":\"0\",\"enchanted\":0,\"hallmark\":0,\"inscription\":\"\"}]', NULL, '2018-02-22 15:53:20', 1519355443),
+(112, 'Lay of the Land', 'lay-of-the-land-2', 'Map out as much of the sea as you can.', 'cartography', 'eastern-continent', 197, 156, 0, 0, 'sea', '0', 0, 1, 1, '[{\"type\":2,\"quantity\":2,\"quality\":100,\"durability\":100,\"currentWear\":0,\"effectiveness\":100,\"colour\":\"0\",\"enchanted\":0,\"hallmark\":0,\"inscription\":\"\"}]', NULL, '2018-02-22 15:53:22', 1519331255),
+(113, 'Mapping the wilds', 'mapping-the-wilds', 'Map out as much of the sea as you can.', 'cartography', 'eastern-continent', 575, 56, 0, 0, 'sea', '0', 0, 2, 1, '[{\"type\":2,\"quantity\":2,\"quality\":100,\"durability\":100,\"currentWear\":0,\"effectiveness\":100,\"colour\":\"0\",\"enchanted\":0,\"hallmark\":0,\"inscription\":\"\"}]', NULL, '2018-02-22 15:53:22', 1519381658),
+(114, 'Glue and thread', 'glue-and-thread', 'Make exquisite items.', 'crafting', 'eastern-continent', 501, 286, 0, 0, '', '0', 0, 1, 1, '[{\"type\":2,\"quantity\":2,\"quality\":100,\"durability\":100,\"currentWear\":0,\"effectiveness\":100,\"colour\":\"0\",\"enchanted\":0,\"hallmark\":0,\"inscription\":\"\"}]', NULL, '2018-02-22 15:53:23', 1519323162),
+(115, 'Bring home the goods', 'bring-home-the-goods', 'Gather what kelp you can.', 'resource gathering', 'eastern-continent', 611, 355, 0, 0, 'sea', '0', 0, 1, 1, '[{\"type\":2,\"quantity\":2,\"quality\":100,\"durability\":100,\"currentWear\":0,\"effectiveness\":100,\"colour\":\"0\",\"enchanted\":0,\"hallmark\":0,\"inscription\":\"\"}]', NULL, '2018-02-22 15:53:23', 1519340763),
+(116, 'To the rescue', 'to-the-rescue', 'The sea is in need. Get over there and help.', 'rescue', 'eastern-continent', 646, 218, 1, 0, 'sea', '0', 0, 1, 1, '[{\"type\":2,\"quantity\":2,\"quality\":100,\"durability\":100,\"currentWear\":0,\"effectiveness\":100,\"colour\":\"0\",\"enchanted\":0,\"hallmark\":0,\"inscription\":\"\"}]', NULL, '2018-02-23 14:27:46', 1519453612),
+(117, 'Bring home the goods', 'bring-home-the-goods-2', 'Gather what kelp you can.', 'resource gathering', 'eastern-continent', 626, 215, 0, 0, 'sea', '0', 0, 2, 1, '[{\"type\":2,\"quantity\":2,\"quality\":100,\"durability\":100,\"currentWear\":0,\"effectiveness\":100,\"colour\":\"0\",\"enchanted\":0,\"hallmark\":0,\"inscription\":\"\"}]', NULL, '2018-02-23 14:27:47', 1519492621),
+(118, 'To the rescue', 'to-the-rescue-2', 'The sea is in need. Get over there and help.', 'rescue', 'eastern-continent', 39, 158, 1, 0, 'sea', '0', 0, 1, 1, '[{\"type\":2,\"quantity\":2,\"quality\":100,\"durability\":100,\"currentWear\":0,\"effectiveness\":100,\"colour\":\"0\",\"enchanted\":0,\"hallmark\":0,\"inscription\":\"\"}]', NULL, '2018-02-23 14:27:48', 1519440525),
+(119, 'To the rescue', 'to-the-rescue-3', 'The sea is in need. Get over there and help.', 'rescue', 'eastern-continent', 582, 287, 0, 0, 'sea', '0', 0, 1, 1, '[{\"type\":2,\"quantity\":2,\"quality\":100,\"durability\":100,\"currentWear\":0,\"effectiveness\":100,\"colour\":\"0\",\"enchanted\":0,\"hallmark\":0,\"inscription\":\"\"}]', NULL, '2018-02-23 14:27:48', 1519459826),
+(120, 'Lay of the Land', 'lay-of-the-land-3', 'Map out the region', 'cartography', 'eastern-continent', 164, 275, 1, 0, 'sea', '0', 0, 1, 1, '[{\"type\":2,\"quantity\":2,\"quality\":100,\"durability\":100,\"currentWear\":0,\"effectiveness\":100,\"colour\":\"0\",\"enchanted\":0,\"hallmark\":0,\"inscription\":\"\"}]', NULL, '2018-02-23 14:27:48', 1519478027),
+(121, 'Get yer boots on', 'get-yer-boots-on', 'There\'s plenty of salvage to be had in the sea.', 'salvage', 'eastern-continent', 622, 256, 0, 0, 'sea', '0', 0, 1, 1, '[{\"type\":2,\"quantity\":2,\"quality\":100,\"durability\":100,\"currentWear\":0,\"effectiveness\":100,\"colour\":\"0\",\"enchanted\":0,\"hallmark\":0,\"inscription\":\"\"}]', NULL, '2018-02-23 14:27:49', 1519494828),
+(122, 'A long descent', 'a-long-descent-2', 'Enter the depths of grey and face the unknown.', 'dungeon delve', 'eastern-continent', 370, 256, 1, 0, '', '0', 0, 1, 1, '[{\"type\":2,\"quantity\":2,\"quality\":100,\"durability\":100,\"currentWear\":0,\"effectiveness\":100,\"colour\":\"0\",\"enchanted\":0,\"hallmark\":0,\"inscription\":\"\"}]', NULL, '2018-02-23 14:27:49', 1519412430),
+(123, 'Lay of the Land', 'lay-of-the-land-4', 'Map out the region', 'cartography', 'eastern-continent', 126, 107, 0, 0, 'sea', '0', 0, 1, 1, '[{\"type\":2,\"quantity\":2,\"quality\":100,\"durability\":100,\"currentWear\":0,\"effectiveness\":100,\"colour\":\"0\",\"enchanted\":0,\"hallmark\":0,\"inscription\":\"\"}]', NULL, '2018-02-23 14:27:49', 1519431131),
+(124, 'Bring home the goods', 'bring-home-the-goods-3', 'Gather what kelp you can.', 'resource gathering', 'eastern-continent', 627, 28, 1, 0, 'sea', '0', 0, 2, 1, '[{\"type\":2,\"quantity\":2,\"quality\":100,\"durability\":100,\"currentWear\":0,\"effectiveness\":100,\"colour\":\"0\",\"enchanted\":0,\"hallmark\":0,\"inscription\":\"\"}]', 6, '2018-02-23 14:27:49', 1519447932),
+(125, 'Showing the way', 'showing-the-way-3', 'Ensure purple is reached safely.', 'escort', 'eastern-continent', 434, 379, 0, 0, '', '0', 0, 1, 1, '[{\"type\":2,\"quantity\":2,\"quality\":100,\"durability\":100,\"currentWear\":0,\"effectiveness\":100,\"colour\":\"0\",\"enchanted\":0,\"hallmark\":0,\"inscription\":\"\"}]', NULL, '2018-02-23 16:54:32', 1519407382),
+(126, 'Climb the ladder', 'climb-the-ladder-2', 'Compete in a ranked card game tournament.', 'card tournament', 'eastern-continent', 488, 251, 1, 0, '', '0', 0, 1, 1, '[{\"type\":2,\"quantity\":2,\"quality\":100,\"durability\":100,\"currentWear\":0,\"effectiveness\":100,\"colour\":\"0\",\"enchanted\":0,\"hallmark\":0,\"inscription\":\"\"}]', NULL, '2018-02-23 16:54:33', 1519503788),
+(127, 'A long descent', 'a-long-descent-3', 'Enter the depths of dark green and face the unknown.', 'dungeon delve', 'eastern-continent', 316, 143, 0, 0, '', '0', 0, 1, 1, '[{\"type\":2,\"quantity\":2,\"quality\":100,\"durability\":100,\"currentWear\":0,\"effectiveness\":100,\"colour\":\"0\",\"enchanted\":0,\"hallmark\":0,\"inscription\":\"\"}]', NULL, '2018-02-23 16:54:33', 1519445491),
+(128, 'To the rescue', 'to-the-rescue-4', 'Black is in need. Get over there and help.', 'rescue', 'eastern-continent', 544, 238, 0, 0, '', '0', 0, 1, 1, '[{\"type\":2,\"quantity\":2,\"quality\":100,\"durability\":100,\"currentWear\":0,\"effectiveness\":100,\"colour\":\"0\",\"enchanted\":0,\"hallmark\":0,\"inscription\":\"\"}]', NULL, '2018-02-23 16:54:33', 1519479793),
+(129, 'Bring home the goods', 'bring-home-the-goods-4', 'Gather what kelp you can.', 'resource gathering', 'eastern-continent', 608, 83, 0, 0, 'sea', '0', 0, 3, 1, '[{\"type\":2,\"quantity\":2,\"quality\":100,\"durability\":100,\"currentWear\":0,\"effectiveness\":100,\"colour\":\"0\",\"enchanted\":0,\"hallmark\":0,\"inscription\":\"\"}]', NULL, '2018-02-28 16:51:09', 1519901872),
+(130, 'All the fun of the fair', 'all-the-fun-of-the-fair-2', 'Enjoy yourself for a while.', 'travelling fair', 'eastern-continent', 547, 191, 0, 0, '', '0', 0, 1, 1, '[{\"type\":2,\"quantity\":2,\"quality\":100,\"durability\":100,\"currentWear\":0,\"effectiveness\":100,\"colour\":\"0\",\"enchanted\":0,\"hallmark\":0,\"inscription\":\"\"}]', NULL, '2018-02-28 16:51:11', 1519870483),
+(131, 'Mapping the wilds', 'mapping-the-wilds-2', 'Map out as much of the sea as you can.', 'cartography', 'eastern-continent', 629, 187, 0, 0, 'sea', '0', 0, 1, 1, '[{\"type\":2,\"quantity\":2,\"quality\":100,\"durability\":100,\"currentWear\":0,\"effectiveness\":100,\"colour\":\"0\",\"enchanted\":0,\"hallmark\":0,\"inscription\":\"\"}]', NULL, '2018-02-28 16:51:11', 1519929687),
+(132, 'Knock, knock', 'knock-knock', 'The post isn\'t fast enough for this. Make haste.', 'delivery', 'eastern-continent', 467, 195, 0, 0, '', '0', 0, 2, 1, '[{\"type\":2,\"quantity\":2,\"quality\":100,\"durability\":100,\"currentWear\":0,\"effectiveness\":100,\"colour\":\"0\",\"enchanted\":0,\"hallmark\":0,\"inscription\":\"\"}]', NULL, '2018-02-28 16:51:12', 1519893591),
+(133, 'Lend a hand', 'lend-a-hand', 'The sea is in need. Get over there and help.', 'rescue', 'eastern-continent', 416, 224, 0, 0, 'sea', '0', 0, 1, 1, '[{\"type\":2,\"quantity\":2,\"quality\":100,\"durability\":100,\"currentWear\":0,\"effectiveness\":100,\"colour\":\"0\",\"enchanted\":0,\"hallmark\":0,\"inscription\":\"\"}]', NULL, '2018-03-07 14:51:15', 1520517165),
+(134, 'Bring home the goods', 'bring-home-the-goods-5', 'Gather what kelp you can.', 'resource gathering', 'eastern-continent', 429, 420, 0, 0, 'sea', '0', 0, 1, 1, '[{\"type\":2,\"quantity\":2,\"quality\":100,\"durability\":100,\"currentWear\":0,\"effectiveness\":100,\"colour\":\"0\",\"enchanted\":0,\"hallmark\":0,\"inscription\":\"\"}]', NULL, '2018-03-07 14:51:16', 1520483557),
+(135, 'Get yer boots on', 'get-yer-boots-on-2', 'There\'s plenty of salvage to be had in the sea.', 'salvage', 'eastern-continent', 557, 389, 0, 0, 'sea', '0', 0, 1, 1, '[{\"type\":2,\"quantity\":2,\"quality\":100,\"durability\":100,\"currentWear\":0,\"effectiveness\":100,\"colour\":\"0\",\"enchanted\":0,\"hallmark\":0,\"inscription\":\"\"}]', NULL, '2018-03-07 14:51:17', 1520445077),
+(136, 'Showing the way', 'showing-the-way-4', 'Ensure purple is reached safely.', 'escort', 'eastern-continent', 434, 395, 0, 0, '', '0', 0, 1, 1, '[{\"type\":2,\"quantity\":2,\"quality\":100,\"durability\":100,\"currentWear\":0,\"effectiveness\":100,\"colour\":\"0\",\"enchanted\":0,\"hallmark\":0,\"inscription\":\"\"}]', NULL, '2018-03-07 14:51:17', 1520490478),
+(137, 'Lay of the Land', 'lay-of-the-land-5', 'Map out as much of the sea as you can.', 'cartography', 'eastern-continent', 91, 403, 0, 0, 'sea', '0', 0, 1, 1, '[{\"type\":2,\"quantity\":2,\"quality\":100,\"durability\":100,\"currentWear\":0,\"effectiveness\":100,\"colour\":\"0\",\"enchanted\":0,\"hallmark\":0,\"inscription\":\"\"}]', NULL, '2018-03-07 14:51:18', 1520533424),
+(138, 'Across the plains...', 'across-the-plains', 'Large scale trade across vast distances.', 'merchant caravan', 'eastern-continent', 553, 227, 0, 0, '', '0', 0, 1, 1, '[{\"type\":2,\"quantity\":2,\"quality\":100,\"durability\":100,\"currentWear\":0,\"effectiveness\":100,\"colour\":\"0\",\"enchanted\":0,\"hallmark\":0,\"inscription\":\"\"}]', NULL, '2018-03-07 14:51:18', 1520487840);
 
 -- --------------------------------------------------------
 
@@ -1654,11 +1662,11 @@ INSERT INTO `tblretinuequests` (`questID`, `questName`, `questCleanURL`, `questD
 -- Table structure for table `tblretinuequestsactive`
 --
 
-CREATE TABLE IF NOT EXISTS `tblretinuequestsactive` (
+CREATE TABLE `tblretinuequestsactive` (
   `questActiveId` int(11) NOT NULL,
   `questIdActiveOrComplete` int(10) NOT NULL,
   `characterId` int(10) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
 -- Dumping data for table `tblretinuequestsactive`
@@ -1695,7 +1703,11 @@ INSERT INTO `tblretinuequestsactive` (`questActiveId`, `questIdActiveOrComplete`
 (29, 121, 999),
 (30, 119, 999),
 (31, 115, 999),
-(32, 117, 999);
+(32, 117, 999),
+(33, 130, 999),
+(34, 132, 999),
+(35, 138, 999),
+(36, 133, 999);
 
 -- --------------------------------------------------------
 
@@ -1703,13 +1715,13 @@ INSERT INTO `tblretinuequestsactive` (`questActiveId`, `questIdActiveOrComplete`
 -- Table structure for table `tblretinuequesttypes`
 --
 
-CREATE TABLE IF NOT EXISTS `tblretinuequesttypes` (
+CREATE TABLE `tblretinuequesttypes` (
   `questTypeID` int(11) NOT NULL,
   `questTypeName` varchar(255) COLLATE utf8_bin NOT NULL,
   `questTypeBaseTitleGrammar` mediumtext COLLATE utf8_bin NOT NULL,
   `questTypeBaseGrammar` longtext COLLATE utf8_bin NOT NULL,
   `suitableFor` varchar(255) COLLATE utf8_bin NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
 -- Dumping data for table `tblretinuequesttypes`
@@ -1719,9 +1731,9 @@ INSERT INTO `tblretinuequesttypes` (`questTypeID`, `questTypeName`, `questTypeBa
 (1, 'cartography', 'Lay of the Land|Mapping the wilds', 'Map out as much of ++region++ as you can.|Map out the region', 'land,sea,isle'),
 (2, 'card game', 'Play your best hand', 'Be the best at cards.', 'land, isle'),
 (3, 'card tournament', 'Climb the ladder', 'Compete in a ranked card game tournament.', 'land,isle'),
-(5, 'salvage', 'Get yer boots on', 'There''s plenty of salvage to be had in ++region++.', 'sea,isle'),
+(5, 'salvage', 'Get yer boots on', 'There\'s plenty of salvage to be had in ++region++.', 'sea,isle'),
 (6, 'rescue', 'To the rescue|Lend a hand', 'They need your help.|++region++ is in need. Get over there and help.', 'land,sea,isle'),
-(7, 'delivery', 'Knock, knock', 'The post isn''t fast enough for this. Make haste.', 'land,isle'),
+(7, 'delivery', 'Knock, knock', 'The post isn\'t fast enough for this. Make haste.', 'land,isle'),
 (8, 'escort', 'Showing the way', 'Ensure ++region++ is reached safely.', 'land,isle'),
 (9, 'construction', 'Laying the foundations', 'Build up, strengthen and expand.', 'land,isle'),
 (10, 'dungeon delve', 'A long descent', 'Enter the depths of ++region++ and face the unknown.', 'land,isle'),
@@ -1738,11 +1750,11 @@ INSERT INTO `tblretinuequesttypes` (`questTypeID`, `questTypeName`, `questTypeBa
 -- Table structure for table `tblsavedsearches`
 --
 
-CREATE TABLE IF NOT EXISTS `tblsavedsearches` (
+CREATE TABLE `tblsavedsearches` (
   `searchID` int(11) NOT NULL,
   `searchTerm` varchar(255) DEFAULT NULL,
   `searchCount` int(11) DEFAULT NULL
-) ENGINE=MyISAM AUTO_INCREMENT=194 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblsavedsearches`
@@ -1792,7 +1804,7 @@ INSERT INTO `tblsavedsearches` (`searchID`, `searchTerm`, `searchCount`) VALUES
 (43, 'feeding-pets', 0),
 (44, 'how does that work', 253),
 (45, 'does that work', 248),
-(46, 'dragon', 346),
+(46, 'dragon', 348),
 (47, 'autumn earth', 0),
 (48, 'autumn earth', 0),
 (49, 'autumn earth', 0),
@@ -1947,12 +1959,12 @@ INSERT INTO `tblsavedsearches` (`searchID`, `searchTerm`, `searchCount`) VALUES
 -- Table structure for table `tblsubscribedthreads`
 --
 
-CREATE TABLE IF NOT EXISTS `tblsubscribedthreads` (
+CREATE TABLE `tblsubscribedthreads` (
   `subthreadID` int(11) NOT NULL,
   `accountID` int(11) DEFAULT NULL,
   `threadID` int(11) DEFAULT NULL,
   `status` char(1) DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=54 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblsubscribedthreads`
@@ -1995,7 +2007,7 @@ INSERT INTO `tblsubscribedthreads` (`subthreadID`, `accountID`, `threadID`, `sta
 -- Table structure for table `tblthreads`
 --
 
-CREATE TABLE IF NOT EXISTS `tblthreads` (
+CREATE TABLE `tblthreads` (
   `threadID` int(11) NOT NULL,
   `forumID` int(11) DEFAULT NULL,
   `accountID` int(11) DEFAULT NULL,
@@ -2007,7 +2019,7 @@ CREATE TABLE IF NOT EXISTS `tblthreads` (
   `cleanURL` varchar(255) DEFAULT NULL,
   `latestPostID` int(11) DEFAULT NULL,
   `postcount` int(11) DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=51 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tblthreads`
@@ -2048,10 +2060,10 @@ INSERT INTO `tblthreads` (`threadID`, `forumID`, `accountID`, `viewCount`, `Crea
 -- Table structure for table `tbltitles`
 --
 
-CREATE TABLE IF NOT EXISTS `tbltitles` (
+CREATE TABLE `tbltitles` (
   `titleID` int(11) NOT NULL,
   `titleName` varchar(128) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tbltitles`
@@ -2075,7 +2087,8 @@ INSERT INTO `tbltitles` (`titleID`, `titleName`) VALUES
 -- Indexes for table `tblacct`
 --
 ALTER TABLE `tblacct`
-  ADD PRIMARY KEY (`accountID`), ADD UNIQUE KEY `accountName` (`accountName`);
+  ADD PRIMARY KEY (`accountID`),
+  ADD UNIQUE KEY `accountName` (`accountName`);
 
 --
 -- Indexes for table `tblauctionbids`
@@ -2099,13 +2112,15 @@ ALTER TABLE `tblcards`
 -- Indexes for table `tblcharacters`
 --
 ALTER TABLE `tblcharacters`
-  ADD PRIMARY KEY (`charID`), ADD UNIQUE KEY `charName` (`charName`);
+  ADD PRIMARY KEY (`charID`),
+  ADD UNIQUE KEY `charName` (`charName`);
 
 --
 -- Indexes for table `tblcollectionquests`
 --
 ALTER TABLE `tblcollectionquests`
-  ADD PRIMARY KEY (`collectionQuestID`), ADD UNIQUE KEY `cleanurl` (`cleanurl`);
+  ADD PRIMARY KEY (`collectionQuestID`),
+  ADD UNIQUE KEY `cleanurl` (`cleanurl`);
 
 --
 -- Indexes for table `tblcolours`
@@ -2129,13 +2144,15 @@ ALTER TABLE `tblcontracts`
 -- Indexes for table `tblcreatures`
 --
 ALTER TABLE `tblcreatures`
-  ADD PRIMARY KEY (`creatureID`), ADD KEY `creatureType` (`creatureType`);
+  ADD PRIMARY KEY (`creatureID`),
+  ADD KEY `creatureType` (`creatureType`);
 
 --
 -- Indexes for table `tblcreaturetypes`
 --
 ALTER TABLE `tblcreaturetypes`
-  ADD PRIMARY KEY (`creatureTypeId`), ADD UNIQUE KEY `creatureTypeName` (`creatureTypeName`);
+  ADD PRIMARY KEY (`creatureTypeId`),
+  ADD UNIQUE KEY `creatureTypeName` (`creatureTypeName`);
 
 --
 -- Indexes for table `tbldungeonachievements`
@@ -2171,7 +2188,8 @@ ALTER TABLE `tblfreeformpages`
 -- Indexes for table `tblfriendlist`
 --
 ALTER TABLE `tblfriendlist`
-  ADD PRIMARY KEY (`friendlistID`), ADD UNIQUE KEY `friendlistID` (`friendlistID`);
+  ADD PRIMARY KEY (`friendlistID`),
+  ADD UNIQUE KEY `friendlistID` (`friendlistID`);
 
 --
 -- Indexes for table `tblguildmembers`
@@ -2183,13 +2201,15 @@ ALTER TABLE `tblguildmembers`
 -- Indexes for table `tblguilds`
 --
 ALTER TABLE `tblguilds`
-  ADD UNIQUE KEY `guildID` (`guildID`), ADD UNIQUE KEY `guildName` (`guildName`);
+  ADD UNIQUE KEY `guildID` (`guildID`),
+  ADD UNIQUE KEY `guildName` (`guildName`);
 
 --
 -- Indexes for table `tblinventoryitems`
 --
 ALTER TABLE `tblinventoryitems`
-  ADD PRIMARY KEY (`itemID`), ADD KEY `itemGroup` (`itemGroup`);
+  ADD PRIMARY KEY (`itemID`),
+  ADD KEY `itemGroup` (`itemGroup`);
 
 --
 -- Indexes for table `tblitemcategories`
@@ -2201,13 +2221,16 @@ ALTER TABLE `tblitemcategories`
 -- Indexes for table `tblitemgroups`
 --
 ALTER TABLE `tblitemgroups`
-  ADD PRIMARY KEY (`itemGroupID`), ADD UNIQUE KEY `itemGroupCode` (`itemGroupCode`);
+  ADD PRIMARY KEY (`itemGroupID`),
+  ADD UNIQUE KEY `itemGroupCode` (`itemGroupCode`);
 
 --
 -- Indexes for table `tbllocations`
 --
 ALTER TABLE `tbllocations`
-  ADD PRIMARY KEY (`locID`), ADD UNIQUE KEY `locID` (`locID`), ADD KEY `locID_2` (`locID`);
+  ADD PRIMARY KEY (`locID`),
+  ADD UNIQUE KEY `locID` (`locID`),
+  ADD KEY `locID_2` (`locID`);
 
 --
 -- Indexes for table `tblmail`
@@ -2255,7 +2278,8 @@ ALTER TABLE `tblposts`
 -- Indexes for table `tblprofessions`
 --
 ALTER TABLE `tblprofessions`
-  ADD PRIMARY KEY (`professionID`), ADD UNIQUE KEY `professionName` (`professionName`);
+  ADD PRIMARY KEY (`professionID`),
+  ADD UNIQUE KEY `professionName` (`professionName`);
 
 --
 -- Indexes for table `tblquests`
@@ -2285,7 +2309,8 @@ ALTER TABLE `tblregionalpricemodifiers`
 -- Indexes for table `tblregions`
 --
 ALTER TABLE `tblregions`
-  ADD PRIMARY KEY (`regionID`), ADD UNIQUE KEY `regionName` (`regionName`);
+  ADD PRIMARY KEY (`regionID`),
+  ADD UNIQUE KEY `regionName` (`regionName`);
 
 --
 -- Indexes for table `tblretinuefollowers`
@@ -2309,7 +2334,8 @@ ALTER TABLE `tblretinuequestsactive`
 -- Indexes for table `tblretinuequesttypes`
 --
 ALTER TABLE `tblretinuequesttypes`
-  ADD PRIMARY KEY (`questTypeID`), ADD UNIQUE KEY `questTypeName` (`questTypeName`);
+  ADD PRIMARY KEY (`questTypeID`),
+  ADD UNIQUE KEY `questTypeName` (`questTypeName`);
 
 --
 -- Indexes for table `tblsavedsearches`
@@ -2343,222 +2369,266 @@ ALTER TABLE `tbltitles`
 -- AUTO_INCREMENT for table `tblacct`
 --
 ALTER TABLE `tblacct`
-  MODIFY `accountID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=52;
+  MODIFY `accountID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;
+
 --
 -- AUTO_INCREMENT for table `tblauctionbids`
 --
 ALTER TABLE `tblauctionbids`
-  MODIFY `bidID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=21;
+  MODIFY `bidID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+
 --
 -- AUTO_INCREMENT for table `tblauctionitems`
 --
 ALTER TABLE `tblauctionitems`
-  MODIFY `auctionID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=10;
+  MODIFY `auctionID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+
 --
 -- AUTO_INCREMENT for table `tblcards`
 --
 ALTER TABLE `tblcards`
-  MODIFY `cardID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=8;
+  MODIFY `cardID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
 --
 -- AUTO_INCREMENT for table `tblcharacters`
 --
 ALTER TABLE `tblcharacters`
-  MODIFY `charID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=1000;
+  MODIFY `charID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1000;
+
 --
 -- AUTO_INCREMENT for table `tblcollectionquests`
 --
 ALTER TABLE `tblcollectionquests`
-  MODIFY `collectionQuestID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
+  MODIFY `collectionQuestID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
 --
 -- AUTO_INCREMENT for table `tblcolours`
 --
 ALTER TABLE `tblcolours`
-  MODIFY `colourID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=25;
+  MODIFY `colourID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+
 --
 -- AUTO_INCREMENT for table `tblcontractbids`
 --
 ALTER TABLE `tblcontractbids`
-  MODIFY `bidID` int(255) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=6;
+  MODIFY `bidID` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
 --
 -- AUTO_INCREMENT for table `tblcontracts`
 --
 ALTER TABLE `tblcontracts`
-  MODIFY `contractID` int(255) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
+  MODIFY `contractID` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
 --
 -- AUTO_INCREMENT for table `tblcreatures`
 --
 ALTER TABLE `tblcreatures`
-  MODIFY `creatureID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=20;
+  MODIFY `creatureID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+
 --
 -- AUTO_INCREMENT for table `tblcreaturetypes`
 --
 ALTER TABLE `tblcreaturetypes`
-  MODIFY `creatureTypeId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=5;
+  MODIFY `creatureTypeId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
 --
 -- AUTO_INCREMENT for table `tbldungeonachievements`
 --
 ALTER TABLE `tbldungeonachievements`
-  MODIFY `index` int(255) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=7;
+  MODIFY `index` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
 --
 -- AUTO_INCREMENT for table `tbldungeonmapconfig`
 --
 ALTER TABLE `tbldungeonmapconfig`
-  MODIFY `dungeonId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
+  MODIFY `dungeonId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
 --
 -- AUTO_INCREMENT for table `tblevents`
 --
 ALTER TABLE `tblevents`
-  MODIFY `eventID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=9;
+  MODIFY `eventID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
 --
 -- AUTO_INCREMENT for table `tblforums`
 --
 ALTER TABLE `tblforums`
-  MODIFY `forumID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
+  MODIFY `forumID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
 --
 -- AUTO_INCREMENT for table `tblfreeformpages`
 --
 ALTER TABLE `tblfreeformpages`
-  MODIFY `pageID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
+  MODIFY `pageID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
 --
 -- AUTO_INCREMENT for table `tblfriendlist`
 --
 ALTER TABLE `tblfriendlist`
-  MODIFY `friendlistID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
+  MODIFY `friendlistID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
 --
 -- AUTO_INCREMENT for table `tblguildmembers`
 --
 ALTER TABLE `tblguildmembers`
-  MODIFY `guildMemberID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
+  MODIFY `guildMemberID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
 --
 -- AUTO_INCREMENT for table `tblguilds`
 --
 ALTER TABLE `tblguilds`
-  MODIFY `guildID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
+  MODIFY `guildID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
 --
 -- AUTO_INCREMENT for table `tblinventoryitems`
 --
 ALTER TABLE `tblinventoryitems`
-  MODIFY `itemID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=61;
+  MODIFY `itemID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=61;
+
 --
 -- AUTO_INCREMENT for table `tblitemcategories`
 --
 ALTER TABLE `tblitemcategories`
-  MODIFY `categoryID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=7;
+  MODIFY `categoryID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
 --
 -- AUTO_INCREMENT for table `tblitemgroups`
 --
 ALTER TABLE `tblitemgroups`
-  MODIFY `itemGroupID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=5;
+  MODIFY `itemGroupID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
 --
 -- AUTO_INCREMENT for table `tbllocations`
 --
 ALTER TABLE `tbllocations`
-  MODIFY `locID` int(255) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=5;
+  MODIFY `locID` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
 --
 -- AUTO_INCREMENT for table `tblmail`
 --
 ALTER TABLE `tblmail`
-  MODIFY `mailID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=940;
+  MODIFY `mailID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=940;
+
 --
 -- AUTO_INCREMENT for table `tblmainpoll`
 --
 ALTER TABLE `tblmainpoll`
-  MODIFY `pollID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
+  MODIFY `pollID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
 --
 -- AUTO_INCREMENT for table `tblmainpollchoices`
 --
 ALTER TABLE `tblmainpollchoices`
-  MODIFY `choiceID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
+  MODIFY `choiceID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
 --
 -- AUTO_INCREMENT for table `tblnews`
 --
 ALTER TABLE `tblnews`
-  MODIFY `newsID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=17;
+  MODIFY `newsID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+
 --
 -- AUTO_INCREMENT for table `tblplants`
 --
 ALTER TABLE `tblplants`
-  MODIFY `plantID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=466;
+  MODIFY `plantID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=466;
+
 --
 -- AUTO_INCREMENT for table `tblplayerhousing`
 --
 ALTER TABLE `tblplayerhousing`
-  MODIFY `mapHousingID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
+  MODIFY `mapHousingID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
 --
 -- AUTO_INCREMENT for table `tblposts`
 --
 ALTER TABLE `tblposts`
-  MODIFY `postID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=224;
+  MODIFY `postID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=224;
+
 --
 -- AUTO_INCREMENT for table `tblprofessions`
 --
 ALTER TABLE `tblprofessions`
-  MODIFY `professionID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=12;
+  MODIFY `professionID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+
 --
 -- AUTO_INCREMENT for table `tblquests`
 --
 ALTER TABLE `tblquests`
-  MODIFY `questID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=11;
+  MODIFY `questID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
 --
 -- AUTO_INCREMENT for table `tblquestsstatus`
 --
 ALTER TABLE `tblquestsstatus`
-  MODIFY `questStatusID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
+  MODIFY `questStatusID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
 --
 -- AUTO_INCREMENT for table `tblrecipes`
 --
 ALTER TABLE `tblrecipes`
-  MODIFY `recipeID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=14;
+  MODIFY `recipeID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+
 --
 -- AUTO_INCREMENT for table `tblregionalpricemodifiers`
 --
 ALTER TABLE `tblregionalpricemodifiers`
   MODIFY `modifierID` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `tblregions`
 --
 ALTER TABLE `tblregions`
-  MODIFY `regionID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
+  MODIFY `regionID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
 --
 -- AUTO_INCREMENT for table `tblretinuefollowers`
 --
 ALTER TABLE `tblretinuefollowers`
-  MODIFY `followerID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=60;
+  MODIFY `followerID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=60;
+
 --
 -- AUTO_INCREMENT for table `tblretinuequests`
 --
 ALTER TABLE `tblretinuequests`
-  MODIFY `questID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=133;
+  MODIFY `questID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=139;
+
 --
 -- AUTO_INCREMENT for table `tblretinuequestsactive`
 --
 ALTER TABLE `tblretinuequestsactive`
-  MODIFY `questActiveId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=33;
+  MODIFY `questActiveId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
+
 --
 -- AUTO_INCREMENT for table `tblretinuequesttypes`
 --
 ALTER TABLE `tblretinuequesttypes`
-  MODIFY `questTypeID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=17;
+  MODIFY `questTypeID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+
 --
 -- AUTO_INCREMENT for table `tblsavedsearches`
 --
 ALTER TABLE `tblsavedsearches`
-  MODIFY `searchID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=194;
+  MODIFY `searchID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=194;
+
 --
 -- AUTO_INCREMENT for table `tblsubscribedthreads`
 --
 ALTER TABLE `tblsubscribedthreads`
-  MODIFY `subthreadID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=54;
+  MODIFY `subthreadID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=54;
+
 --
 -- AUTO_INCREMENT for table `tblthreads`
 --
 ALTER TABLE `tblthreads`
-  MODIFY `threadID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=51;
+  MODIFY `threadID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
+
 --
 -- AUTO_INCREMENT for table `tbltitles`
 --
 ALTER TABLE `tbltitles`
-  MODIFY `titleID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=9;
+  MODIFY `titleID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
 --
 -- Constraints for dumped tables
 --
@@ -2567,13 +2637,14 @@ ALTER TABLE `tbltitles`
 -- Constraints for table `tblcreatures`
 --
 ALTER TABLE `tblcreatures`
-ADD CONSTRAINT `tblcreatures_ibfk_1` FOREIGN KEY (`creatureType`) REFERENCES `tblcreaturetypes` (`creatureTypeName`);
+  ADD CONSTRAINT `tblcreatures_ibfk_1` FOREIGN KEY (`creatureType`) REFERENCES `tblcreaturetypes` (`creatureTypeName`);
 
 --
 -- Constraints for table `tblinventoryitems`
 --
 ALTER TABLE `tblinventoryitems`
-ADD CONSTRAINT `tblinventoryitems_ibfk_1` FOREIGN KEY (`itemGroup`) REFERENCES `tblitemgroups` (`itemGroupCode`);
+  ADD CONSTRAINT `tblinventoryitems_ibfk_1` FOREIGN KEY (`itemGroup`) REFERENCES `tblitemgroups` (`itemGroupCode`);
+COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
