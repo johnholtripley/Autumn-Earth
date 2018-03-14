@@ -189,7 +189,13 @@ $questPanelDetailsOutput = "";
 $questsResult = mysqli_query($connection, $questsQuery) or die ();
   $retinuePanelOutput .= '<h2>Available quests:</h2>';
   $retinuePanelOutput .= '<div id="retinueAvailableQuestMap"><img src="/images/world-maps/eastern-continent.jpg" id="activeContinent" alt="Eastern Continent">';
-if(mysqli_num_rows($questsResult)>0) {
+if(mysqli_num_rows($questsResult)<6) {
+// get more:
+$retinueQuestsToGenerate = 6-mysqli_num_rows($questsResult);
+include($_SERVER['DOCUMENT_ROOT']."/game-world/generateRetinueQuest.php");
+// and get these now:
+$questsResult = mysqli_query($connection, $questsQuery) or die ();
+}
 
 //	$retinuePanelOutput .= "<ol>";
 	while ($questsRow = mysqli_fetch_array($questsResult)) {
@@ -255,9 +261,9 @@ $retinuePanelOutput .= '<div class="mapLocationTooltip" id="followerLocationTool
    $retinuePanelOutput .= '</div>';
  
  // $retinuePanelOutput .= "</ol>";
-} else {
-$retinuePanelOutput .= "<p>No quests currently available</p>";
-}
+//} else {
+//$retinuePanelOutput .= "<p>No quests currently available</p>";
+//}
   $retinuePanelOutput .= '<p id="retinueQuestTimeRequired">Time required:</p>';
    $retinuePanelOutput .= '<button id="retinueQuestStart" disabled="disabled">Start quest</button>';
 mysqli_free_result($questsResult);

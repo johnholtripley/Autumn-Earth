@@ -23,7 +23,10 @@ $debug = true;
   
     mt_srand($storedSeed);
 
-
+$howManyQuests = 1;
+if(isset($retinueQuestsToGenerate)) {
+$howManyQuests = $retinueQuestsToGenerate;
+}
 
 function replaceKeywords($phrase) {
     global $continent, $region, $terrainType;
@@ -60,7 +63,7 @@ function expandTitleGrammar($startingGrammar) {
 
 
 
-
+for($i=0;$i<$howManyQuests;$i++) {
 
 
 
@@ -171,11 +174,18 @@ $attempts++;
 mysqli_free_result($result3);
 
 // add to database:
-$query2 = "INSERT INTO tblretinuequests (questName, questCleanURL, questDescription, questType, continent, mapCoordinateX, mapCoordinateY, needsToReturnToBase, questDifficulty, questObstacles, questCostToStart, questPartOfCampaign, questNumberOfFollowersRequired, questNPCMinimumLevel, questReward, timeCreated, seed) VALUES ('".mysqli_escape_string($questName)."','".$questCleanURL."','".mysqli_escape_string($questDescription)."','".$questType."','".cleanURL($continent)."',".$mapCoordinateX.",".$mapCoordinateY.",".$needsToReturnToBase.",".$questDifficulty.",'".$questObstacles."',".$questCostToStart.",".$questPartOfCampaign.",".$questNumberOfFollowersRequired.",".$questNPCMinimumLevel.",'".$questReward."',NOW(),'".$storedSeed."')";
+$query2 = "INSERT INTO tblretinuequests (questName, questCleanURL, questDescription, questType, continent, mapCoordinateX, mapCoordinateY, needsToReturnToBase, questDifficulty, questObstacles, questCostToStart, questPartOfCampaign, questNumberOfFollowersRequired, questNPCMinimumLevel, questReward, timeCreated, seed) VALUES ('".mysqli_real_escape_string($connection,$questName)."','".$questCleanURL."','".mysqli_real_escape_string($connection,$questDescription)."','".$questType."','".cleanURL($continent)."',".$mapCoordinateX.",".$mapCoordinateY.",".$needsToReturnToBase.",".$questDifficulty.",'".$questObstacles."',".$questCostToStart.",".$questPartOfCampaign.",".$questNumberOfFollowersRequired.",".$questNPCMinimumLevel.",'".$questReward."',NOW(),'".$storedSeed."')";
+if($debug) {
 echo $query2;
+}
 if(!$debug) {
 $result2 = mysqli_query($connection, $query2);
 }
+
+
+}
+
+
 
 if($debug) {
 echo "<br>Seed: ".$storedSeed;
