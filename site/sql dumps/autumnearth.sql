@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 08, 2018 at 10:26 AM
+-- Generation Time: Mar 19, 2018 at 02:09 PM
 -- Server version: 10.1.30-MariaDB
 -- PHP Version: 7.0.27
 
@@ -1485,7 +1485,7 @@ INSERT INTO `tblquestsstatus` (`questStatusID`, `charID`, `questID`, `isUnderway
 
 CREATE TABLE `tblrecipes` (
   `recipeID` int(11) NOT NULL,
-  `components` varchar(255) DEFAULT NULL,
+  `components` longtext,
   `creates` int(11) DEFAULT NULL,
   `prerequisite` int(11) DEFAULT NULL,
   `profession` int(11) DEFAULT NULL,
@@ -1499,20 +1499,20 @@ CREATE TABLE `tblrecipes` (
 --
 
 INSERT INTO `tblrecipes` (`recipeID`, `components`, `creates`, `prerequisite`, `profession`, `recipeName`, `recipeDescription`, `defaultResultingColour`) VALUES
-(0, '11,mrdt,2,2', 12, 0, 0, NULL, '', 1),
-(1, '11,mrdt,3,3', 12, 0, 0, NULL, '', 2),
-(2, '11,mrdt,5,5', 12, 0, 0, NULL, '', 4),
-(3, '11,mrdt,24,24', 7, 0, 0, NULL, '', NULL),
-(4, '26,25', 28, 0, 0, NULL, '', NULL),
-(5, '11,mrdt,6,6', 12, 0, 0, NULL, '', 16),
-(6, 'dye,dye', 12, 0, 0, 'Mix dyes', 'Mix 2 or more dyes to create new colours.', NULL),
-(7, '27', 26, 0, 0, 'Burn Wood', 'Produce Wood Ash by burning', NULL),
-(8, '14,dye', 14, 0, 0, 'Dye Linen', 'Colour some linen.', NULL),
-(9, '11,mrdt,23,23', 12, 0, 0, NULL, '', 6),
-(10, '1', 14, 0, 1, NULL, '', NULL),
-(11, '15', 16, 0, 1, NULL, '', NULL),
-(12, '37,38,39', 40, 0, 4, NULL, '', 16),
-(13, '15', 49, 0, 1, NULL, '', NULL);
+(0, '[{\r\n			\"type\": 11,\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		},\r\n		{\r\n			\"type\": \"mrdt\",\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		},\r\n				{\r\n			\"type\": 2,\r\n			\"quantity\": 2,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		}\r\n	]', 12, 0, 0, NULL, '', 1),
+(1, '[{\r\n			\"type\": 11,\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		},\r\n		{\r\n			\"type\": \"mrdt\",\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		},\r\n				{\r\n			\"type\": 3,\r\n			\"quantity\": 2,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		}\r\n	]', 12, 0, 0, NULL, '', 2),
+(2, '[{\r\n			\"type\": 11,\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		},\r\n		{\r\n			\"type\": \"mrdt\",\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		},\r\n				{\r\n			\"type\": 5,\r\n			\"quantity\": 2,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		}\r\n	]', 12, 0, 0, NULL, '', 4),
+(3, '[{\r\n			\"type\": 11,\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		},\r\n		{\r\n			\"type\": \"mrdt\",\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		},\r\n				{\r\n			\"type\": 24,\r\n			\"quantity\": 2,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		}\r\n	]', 7, 0, 0, NULL, '', NULL),
+(4, '[{\r\n			\"type\": 26,\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		},\r\n		{\r\n			\"type\": 25,\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		}\r\n	]', 28, 0, 0, NULL, '', NULL),
+(5, '[{\r\n			\"type\": 11,\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		},\r\n		{\r\n			\"type\": \"mrdt\",\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		},\r\n				{\r\n			\"type\": 6,\r\n			\"quantity\": 2,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		}\r\n	]', 12, 0, 0, NULL, '', 16),
+(6, '[{\r\n			\"type\": \"dye\",\r\n			\"quantity\": 2,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		}\r\n	]', 12, 0, 0, 'Mix dyes', 'Mix 2 or more dyes to create new colours.', NULL),
+(7, '[{\r\n			\"type\": 27,\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		}\r\n	]', 26, 0, 0, 'Burn Wood', 'Produce Wood Ash by burning', NULL),
+(8, '[{\r\n			\"type\": \"dye\",\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		},\r\n		{\r\n			\"type\": 14,\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		}\r\n	]', 14, 0, 0, 'Dye Linen', 'Colour some linen.', NULL),
+(9, '[{\r\n			\"type\": 11,\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		},\r\n		{\r\n			\"type\": \"mrdt\",\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		},\r\n				{\r\n			\"type\": 23,\r\n			\"quantity\": 2,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		}\r\n	]', 12, 0, 0, NULL, '', 6),
+(10, '[{\r\n			\"type\": 1,\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		}\r\n	]', 14, 0, 1, NULL, '', NULL),
+(11, '[{\r\n			\"type\": 15,\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		}\r\n	]', 16, 0, 1, NULL, '', NULL),
+(12, '[{\r\n			\"type\": 37,\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		},{\r\n			\"type\": 38,\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		},{\r\n			\"type\": 39,\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		}\r\n	]', 40, 0, 4, NULL, '', 16),
+(13, '[{\r\n			\"type\": 15,\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		}\r\n	]', 49, 0, 1, NULL, '', NULL);
 
 -- --------------------------------------------------------
 
@@ -1581,9 +1581,9 @@ CREATE TABLE `tblretinuefollowers` (
 --
 
 INSERT INTO `tblretinuefollowers` (`followerID`, `followerName`, `followerCleanURL`, `characterIdFollowing`, `activeQuestId`, `followerRewardFromQuestId`, `isEnabled`, `questStartedTime`, `followerSex`, `followerRace`, `currentContinent`, `followerMapCoordinateX`, `followerMapCoordinateY`) VALUES
-(1, 'Eila Myrborn', 'eila-myrborn', 999, -1, NULL, 1, '2018-03-07 12:58:48', 'female', 'huldra', 'eastern-continent', 467, 195),
-(2, 'Nellaith Wispfael', 'nellaith-wispfael', 999, 133, NULL, 1, '2018-03-08 09:25:00', 'female', 'huldra', 'eastern-continent', 467, 195),
-(59, 'Garmund  Wispmote', 'garmund-wispmote', 999, -1, 1, 1, '2018-03-07 14:51:40', 'male', 'huldra', 'eastern-continent', 553, 227);
+(1, 'Eila Myrborn', 'eila-myrborn', 999, -1, NULL, 1, '2018-03-09 16:51:40', 'female', 'huldra', 'eastern-continent', 429, 420),
+(2, 'Nellaith Wispfael', 'nellaith-wispfael', 999, -1, NULL, 1, '2018-03-09 16:51:37', 'female', 'huldra', 'eastern-continent', 434, 395),
+(59, 'Garmund  Wispmote', 'garmund-wispmote', 999, -1, 1, 1, '2018-03-09 15:23:34', 'male', 'huldra', 'eastern-continent', 200, 350);
 
 -- --------------------------------------------------------
 
@@ -1630,31 +1630,13 @@ INSERT INTO `tblretinuequests` (`questID`, `questName`, `questCleanURL`, `questD
 (111, 'Devoting some time', 'devoting-some-time', 'A journey of reverence.', 'pilgrimage', 'eastern-continent', 412, 126, 0, 0, '', '0', 0, 1, 1, '[{\"type\":2,\"quantity\":2,\"quality\":100,\"durability\":100,\"currentWear\":0,\"effectiveness\":100,\"colour\":\"0\",\"enchanted\":0,\"hallmark\":0,\"inscription\":\"\"}]', NULL, '2018-02-22 15:53:20', 1519355443),
 (112, 'Lay of the Land', 'lay-of-the-land-2', 'Map out as much of the sea as you can.', 'cartography', 'eastern-continent', 197, 156, 0, 0, 'sea', '0', 0, 1, 1, '[{\"type\":2,\"quantity\":2,\"quality\":100,\"durability\":100,\"currentWear\":0,\"effectiveness\":100,\"colour\":\"0\",\"enchanted\":0,\"hallmark\":0,\"inscription\":\"\"}]', NULL, '2018-02-22 15:53:22', 1519331255),
 (113, 'Mapping the wilds', 'mapping-the-wilds', 'Map out as much of the sea as you can.', 'cartography', 'eastern-continent', 575, 56, 0, 0, 'sea', '0', 0, 2, 1, '[{\"type\":2,\"quantity\":2,\"quality\":100,\"durability\":100,\"currentWear\":0,\"effectiveness\":100,\"colour\":\"0\",\"enchanted\":0,\"hallmark\":0,\"inscription\":\"\"}]', NULL, '2018-02-22 15:53:22', 1519381658),
-(114, 'Glue and thread', 'glue-and-thread', 'Make exquisite items.', 'crafting', 'eastern-continent', 501, 286, 0, 0, '', '0', 0, 1, 1, '[{\"type\":2,\"quantity\":2,\"quality\":100,\"durability\":100,\"currentWear\":0,\"effectiveness\":100,\"colour\":\"0\",\"enchanted\":0,\"hallmark\":0,\"inscription\":\"\"}]', NULL, '2018-02-22 15:53:23', 1519323162),
-(115, 'Bring home the goods', 'bring-home-the-goods', 'Gather what kelp you can.', 'resource gathering', 'eastern-continent', 611, 355, 0, 0, 'sea', '0', 0, 1, 1, '[{\"type\":2,\"quantity\":2,\"quality\":100,\"durability\":100,\"currentWear\":0,\"effectiveness\":100,\"colour\":\"0\",\"enchanted\":0,\"hallmark\":0,\"inscription\":\"\"}]', NULL, '2018-02-22 15:53:23', 1519340763),
-(116, 'To the rescue', 'to-the-rescue', 'The sea is in need. Get over there and help.', 'rescue', 'eastern-continent', 646, 218, 1, 0, 'sea', '0', 0, 1, 1, '[{\"type\":2,\"quantity\":2,\"quality\":100,\"durability\":100,\"currentWear\":0,\"effectiveness\":100,\"colour\":\"0\",\"enchanted\":0,\"hallmark\":0,\"inscription\":\"\"}]', NULL, '2018-02-23 14:27:46', 1519453612),
-(117, 'Bring home the goods', 'bring-home-the-goods-2', 'Gather what kelp you can.', 'resource gathering', 'eastern-continent', 626, 215, 0, 0, 'sea', '0', 0, 2, 1, '[{\"type\":2,\"quantity\":2,\"quality\":100,\"durability\":100,\"currentWear\":0,\"effectiveness\":100,\"colour\":\"0\",\"enchanted\":0,\"hallmark\":0,\"inscription\":\"\"}]', NULL, '2018-02-23 14:27:47', 1519492621),
-(118, 'To the rescue', 'to-the-rescue-2', 'The sea is in need. Get over there and help.', 'rescue', 'eastern-continent', 39, 158, 1, 0, 'sea', '0', 0, 1, 1, '[{\"type\":2,\"quantity\":2,\"quality\":100,\"durability\":100,\"currentWear\":0,\"effectiveness\":100,\"colour\":\"0\",\"enchanted\":0,\"hallmark\":0,\"inscription\":\"\"}]', NULL, '2018-02-23 14:27:48', 1519440525),
-(119, 'To the rescue', 'to-the-rescue-3', 'The sea is in need. Get over there and help.', 'rescue', 'eastern-continent', 582, 287, 0, 0, 'sea', '0', 0, 1, 1, '[{\"type\":2,\"quantity\":2,\"quality\":100,\"durability\":100,\"currentWear\":0,\"effectiveness\":100,\"colour\":\"0\",\"enchanted\":0,\"hallmark\":0,\"inscription\":\"\"}]', NULL, '2018-02-23 14:27:48', 1519459826),
-(120, 'Lay of the Land', 'lay-of-the-land-3', 'Map out the region', 'cartography', 'eastern-continent', 164, 275, 1, 0, 'sea', '0', 0, 1, 1, '[{\"type\":2,\"quantity\":2,\"quality\":100,\"durability\":100,\"currentWear\":0,\"effectiveness\":100,\"colour\":\"0\",\"enchanted\":0,\"hallmark\":0,\"inscription\":\"\"}]', NULL, '2018-02-23 14:27:48', 1519478027),
-(121, 'Get yer boots on', 'get-yer-boots-on', 'There\'s plenty of salvage to be had in the sea.', 'salvage', 'eastern-continent', 622, 256, 0, 0, 'sea', '0', 0, 1, 1, '[{\"type\":2,\"quantity\":2,\"quality\":100,\"durability\":100,\"currentWear\":0,\"effectiveness\":100,\"colour\":\"0\",\"enchanted\":0,\"hallmark\":0,\"inscription\":\"\"}]', NULL, '2018-02-23 14:27:49', 1519494828),
-(122, 'A long descent', 'a-long-descent-2', 'Enter the depths of grey and face the unknown.', 'dungeon delve', 'eastern-continent', 370, 256, 1, 0, '', '0', 0, 1, 1, '[{\"type\":2,\"quantity\":2,\"quality\":100,\"durability\":100,\"currentWear\":0,\"effectiveness\":100,\"colour\":\"0\",\"enchanted\":0,\"hallmark\":0,\"inscription\":\"\"}]', NULL, '2018-02-23 14:27:49', 1519412430),
-(123, 'Lay of the Land', 'lay-of-the-land-4', 'Map out the region', 'cartography', 'eastern-continent', 126, 107, 0, 0, 'sea', '0', 0, 1, 1, '[{\"type\":2,\"quantity\":2,\"quality\":100,\"durability\":100,\"currentWear\":0,\"effectiveness\":100,\"colour\":\"0\",\"enchanted\":0,\"hallmark\":0,\"inscription\":\"\"}]', NULL, '2018-02-23 14:27:49', 1519431131),
-(124, 'Bring home the goods', 'bring-home-the-goods-3', 'Gather what kelp you can.', 'resource gathering', 'eastern-continent', 627, 28, 1, 0, 'sea', '0', 0, 2, 1, '[{\"type\":2,\"quantity\":2,\"quality\":100,\"durability\":100,\"currentWear\":0,\"effectiveness\":100,\"colour\":\"0\",\"enchanted\":0,\"hallmark\":0,\"inscription\":\"\"}]', 6, '2018-02-23 14:27:49', 1519447932),
-(125, 'Showing the way', 'showing-the-way-3', 'Ensure purple is reached safely.', 'escort', 'eastern-continent', 434, 379, 0, 0, '', '0', 0, 1, 1, '[{\"type\":2,\"quantity\":2,\"quality\":100,\"durability\":100,\"currentWear\":0,\"effectiveness\":100,\"colour\":\"0\",\"enchanted\":0,\"hallmark\":0,\"inscription\":\"\"}]', NULL, '2018-02-23 16:54:32', 1519407382),
-(126, 'Climb the ladder', 'climb-the-ladder-2', 'Compete in a ranked card game tournament.', 'card tournament', 'eastern-continent', 488, 251, 1, 0, '', '0', 0, 1, 1, '[{\"type\":2,\"quantity\":2,\"quality\":100,\"durability\":100,\"currentWear\":0,\"effectiveness\":100,\"colour\":\"0\",\"enchanted\":0,\"hallmark\":0,\"inscription\":\"\"}]', NULL, '2018-02-23 16:54:33', 1519503788),
 (127, 'A long descent', 'a-long-descent-3', 'Enter the depths of dark green and face the unknown.', 'dungeon delve', 'eastern-continent', 316, 143, 0, 0, '', '0', 0, 1, 1, '[{\"type\":2,\"quantity\":2,\"quality\":100,\"durability\":100,\"currentWear\":0,\"effectiveness\":100,\"colour\":\"0\",\"enchanted\":0,\"hallmark\":0,\"inscription\":\"\"}]', NULL, '2018-02-23 16:54:33', 1519445491),
-(128, 'To the rescue', 'to-the-rescue-4', 'Black is in need. Get over there and help.', 'rescue', 'eastern-continent', 544, 238, 0, 0, '', '0', 0, 1, 1, '[{\"type\":2,\"quantity\":2,\"quality\":100,\"durability\":100,\"currentWear\":0,\"effectiveness\":100,\"colour\":\"0\",\"enchanted\":0,\"hallmark\":0,\"inscription\":\"\"}]', NULL, '2018-02-23 16:54:33', 1519479793),
-(129, 'Bring home the goods', 'bring-home-the-goods-4', 'Gather what kelp you can.', 'resource gathering', 'eastern-continent', 608, 83, 0, 0, 'sea', '0', 0, 3, 1, '[{\"type\":2,\"quantity\":2,\"quality\":100,\"durability\":100,\"currentWear\":0,\"effectiveness\":100,\"colour\":\"0\",\"enchanted\":0,\"hallmark\":0,\"inscription\":\"\"}]', NULL, '2018-02-28 16:51:09', 1519901872),
-(130, 'All the fun of the fair', 'all-the-fun-of-the-fair-2', 'Enjoy yourself for a while.', 'travelling fair', 'eastern-continent', 547, 191, 0, 0, '', '0', 0, 1, 1, '[{\"type\":2,\"quantity\":2,\"quality\":100,\"durability\":100,\"currentWear\":0,\"effectiveness\":100,\"colour\":\"0\",\"enchanted\":0,\"hallmark\":0,\"inscription\":\"\"}]', NULL, '2018-02-28 16:51:11', 1519870483),
-(131, 'Mapping the wilds', 'mapping-the-wilds-2', 'Map out as much of the sea as you can.', 'cartography', 'eastern-continent', 629, 187, 0, 0, 'sea', '0', 0, 1, 1, '[{\"type\":2,\"quantity\":2,\"quality\":100,\"durability\":100,\"currentWear\":0,\"effectiveness\":100,\"colour\":\"0\",\"enchanted\":0,\"hallmark\":0,\"inscription\":\"\"}]', NULL, '2018-02-28 16:51:11', 1519929687),
-(132, 'Knock, knock', 'knock-knock', 'The post isn\'t fast enough for this. Make haste.', 'delivery', 'eastern-continent', 467, 195, 0, 0, '', '0', 0, 2, 1, '[{\"type\":2,\"quantity\":2,\"quality\":100,\"durability\":100,\"currentWear\":0,\"effectiveness\":100,\"colour\":\"0\",\"enchanted\":0,\"hallmark\":0,\"inscription\":\"\"}]', NULL, '2018-02-28 16:51:12', 1519893591),
-(133, 'Lend a hand', 'lend-a-hand', 'The sea is in need. Get over there and help.', 'rescue', 'eastern-continent', 416, 224, 0, 0, 'sea', '0', 0, 1, 1, '[{\"type\":2,\"quantity\":2,\"quality\":100,\"durability\":100,\"currentWear\":0,\"effectiveness\":100,\"colour\":\"0\",\"enchanted\":0,\"hallmark\":0,\"inscription\":\"\"}]', NULL, '2018-03-07 14:51:15', 1520517165),
-(134, 'Bring home the goods', 'bring-home-the-goods-5', 'Gather what kelp you can.', 'resource gathering', 'eastern-continent', 429, 420, 0, 0, 'sea', '0', 0, 1, 1, '[{\"type\":2,\"quantity\":2,\"quality\":100,\"durability\":100,\"currentWear\":0,\"effectiveness\":100,\"colour\":\"0\",\"enchanted\":0,\"hallmark\":0,\"inscription\":\"\"}]', NULL, '2018-03-07 14:51:16', 1520483557),
-(135, 'Get yer boots on', 'get-yer-boots-on-2', 'There\'s plenty of salvage to be had in the sea.', 'salvage', 'eastern-continent', 557, 389, 0, 0, 'sea', '0', 0, 1, 1, '[{\"type\":2,\"quantity\":2,\"quality\":100,\"durability\":100,\"currentWear\":0,\"effectiveness\":100,\"colour\":\"0\",\"enchanted\":0,\"hallmark\":0,\"inscription\":\"\"}]', NULL, '2018-03-07 14:51:17', 1520445077),
-(136, 'Showing the way', 'showing-the-way-4', 'Ensure purple is reached safely.', 'escort', 'eastern-continent', 434, 395, 0, 0, '', '0', 0, 1, 1, '[{\"type\":2,\"quantity\":2,\"quality\":100,\"durability\":100,\"currentWear\":0,\"effectiveness\":100,\"colour\":\"0\",\"enchanted\":0,\"hallmark\":0,\"inscription\":\"\"}]', NULL, '2018-03-07 14:51:17', 1520490478),
-(137, 'Lay of the Land', 'lay-of-the-land-5', 'Map out as much of the sea as you can.', 'cartography', 'eastern-continent', 91, 403, 0, 0, 'sea', '0', 0, 1, 1, '[{\"type\":2,\"quantity\":2,\"quality\":100,\"durability\":100,\"currentWear\":0,\"effectiveness\":100,\"colour\":\"0\",\"enchanted\":0,\"hallmark\":0,\"inscription\":\"\"}]', NULL, '2018-03-07 14:51:18', 1520533424),
-(138, 'Across the plains...', 'across-the-plains', 'Large scale trade across vast distances.', 'merchant caravan', 'eastern-continent', 553, 227, 0, 0, '', '0', 0, 1, 1, '[{\"type\":2,\"quantity\":2,\"quality\":100,\"durability\":100,\"currentWear\":0,\"effectiveness\":100,\"colour\":\"0\",\"enchanted\":0,\"hallmark\":0,\"inscription\":\"\"}]', NULL, '2018-03-07 14:51:18', 1520487840);
+(147, 'Bring home the goods', 'bring-home-the-goods', 'Gather what kelp you can.', 'resource gathering', 'eastern-continent', 54, 407, 0, 0, 'sea', '0', 0, 1, 1, '[{\"type\":2,\"quantity\":2,\"quality\":100,\"durability\":100,\"currentWear\":0,\"effectiveness\":100,\"colour\":\"0\",\"enchanted\":0,\"hallmark\":0,\"inscription\":\"\"}]', NULL, '2018-03-14 15:51:04', 1521083528),
+(148, 'Laying the foundations', 'laying-the-foundations-2', 'Build up, strengthen and expand.', 'construction', 'eastern-continent', 382, 308, 0, 0, '', '0', 0, 1, 1, '[{\"type\":2,\"quantity\":2,\"quality\":100,\"durability\":100,\"currentWear\":0,\"effectiveness\":100,\"colour\":\"0\",\"enchanted\":0,\"hallmark\":0,\"inscription\":\"\"}]', NULL, '2018-03-14 15:51:04', 1521083528),
+(149, 'Bring home the goods', 'bring-home-the-goods-2', 'Gather what kelp you can.', 'resource gathering', 'eastern-continent', 70, 198, 0, 0, 'sea', '0', 0, 1, 1, '[{\"type\":2,\"quantity\":2,\"quality\":100,\"durability\":100,\"currentWear\":0,\"effectiveness\":100,\"colour\":\"0\",\"enchanted\":0,\"hallmark\":0,\"inscription\":\"\"}]', NULL, '2018-03-14 15:51:04', 1521083528),
+(150, 'Mapping the wilds', 'mapping-the-wilds-2', 'Map out the region', 'cartography', 'eastern-continent', 652, 128, 0, 0, 'sea', '0', 0, 1, 1, '[{\"type\":2,\"quantity\":2,\"quality\":100,\"durability\":100,\"currentWear\":0,\"effectiveness\":100,\"colour\":\"0\",\"enchanted\":0,\"hallmark\":0,\"inscription\":\"\"}]', NULL, '2018-03-14 15:51:04', 1521083528),
+(151, 'Showing the way', 'showing-the-way-3', 'Ensure dark green is reached safely.', 'escort', 'eastern-continent', 246, 164, 0, 0, '', '0', 0, 1, 1, '[{\"type\":2,\"quantity\":2,\"quality\":100,\"durability\":100,\"currentWear\":0,\"effectiveness\":100,\"colour\":\"0\",\"enchanted\":0,\"hallmark\":0,\"inscription\":\"\"}]', NULL, '2018-03-14 15:51:04', 1521083528),
+(152, 'Lend a hand', 'lend-a-hand', 'The sea is in need. Get over there and help.', 'rescue', 'eastern-continent', 117, 310, 0, 0, 'sea', '0', 0, 3, 1, '[{\"type\":2,\"quantity\":2,\"quality\":100,\"durability\":100,\"currentWear\":0,\"effectiveness\":100,\"colour\":\"0\",\"enchanted\":0,\"hallmark\":0,\"inscription\":\"\"}]', NULL, '2018-03-14 15:51:04', 1521083528);
 
 -- --------------------------------------------------------
 
@@ -1707,7 +1689,10 @@ INSERT INTO `tblretinuequestsactive` (`questActiveId`, `questIdActiveOrComplete`
 (33, 130, 999),
 (34, 132, 999),
 (35, 138, 999),
-(36, 133, 999);
+(36, 133, 999),
+(37, 116, 999),
+(38, 136, 999),
+(39, 134, 999);
 
 -- --------------------------------------------------------
 
@@ -2591,13 +2576,13 @@ ALTER TABLE `tblretinuefollowers`
 -- AUTO_INCREMENT for table `tblretinuequests`
 --
 ALTER TABLE `tblretinuequests`
-  MODIFY `questID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=139;
+  MODIFY `questID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=153;
 
 --
 -- AUTO_INCREMENT for table `tblretinuequestsactive`
 --
 ALTER TABLE `tblretinuequestsactive`
-  MODIFY `questActiveId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
+  MODIFY `questActiveId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
 
 --
 -- AUTO_INCREMENT for table `tblretinuequesttypes`

@@ -124,9 +124,9 @@ if($activeDuringSeason>0) {
 // find any recipes this item is used in
 
 $recipeQuery = "SELECT tblrecipes.*, tblprofessions.cleanurl as professionCleanURL, tblcolours.colourName, tblinventoryitems.itemid as productId, tblinventoryitems.shortname as recipeFallbackName, tblinventoryitems.description as recipeDescriptionFallback, tblinventoryitems.hasInherentColour as hasInherentColour FROM tblrecipes INNER JOIN tblprofessions on tblprofessions.professionid = tblrecipes.profession
-INNER JOIN tblinventoryitems on tblrecipes.creates = tblinventoryitems.itemid LEFT JOIN tblcolours on tblrecipes.defaultresultingcolour = tblcolours.colourid WHERE find_in_set('\"type\": ".$itemID."',tblrecipes.components) <> 0 OR find_in_set('\"type\": ".$itemGroup."',tblrecipes.components) <> 0";
+INNER JOIN tblinventoryitems on tblrecipes.creates = tblinventoryitems.itemid LEFT JOIN tblcolours on tblrecipes.defaultresultingcolour = tblcolours.colourid WHERE tblrecipes.components REGEXP '\"type\":[[:space:]]?".$itemID."' <> 0 OR tblrecipes.components REGEXP '\"type\":[[:space:]]?".$itemGroup."' <> 0";
 $recipeResult = mysqli_query($connection, $recipeQuery) or die ("couldn't execute related query");
-echo $recipeQuery;
+
 if(mysqli_num_rows($recipeResult) > 0) {
   echo "<h4>Used in:</h4>";
   echo "<ul>";
