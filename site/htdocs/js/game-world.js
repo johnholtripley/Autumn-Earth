@@ -527,27 +527,27 @@ function recipeSelectComponents(whichRecipe) {
     var beingCreatedMarkup = '<img src="/images/game-world/inventory-items/' + thisRecipe.imageId + '.png" alt="' + thisRecipe.recipeName + '"><h3>' + thisRecipe.recipeName + '</h3><p>' + thisRecipe.recipeDescription + '</p><h4>Requires:</h4>';
     // find all components that the player has that are usable for this recipe as well:
     var availableComponentMarkup = '<h4>Available:</h4><ul>';
-    var componentsRequired = thisRecipe.components.split(",");
+    
     var componentsFound = 0;
     beingCreatedMarkup += '<ul>';
-    for (var i = 0; i < componentsRequired.length; i++) {
-        if (!(isNaN(componentsRequired[i]))) {
+    for (var i in thisRecipe.components) {
+        if (!(isNaN(thisRecipe.components[i].type))) {
             // specific item - make sure not already added this (if more than 1 quantity required):
-         if(specificsAlreadyFound.indexOf(componentsRequired[i]) === -1) {
-            beingCreatedMarkup += '<li><img src="/images/game-world/inventory-items/' + componentsRequired[i] + '.png" alt="' + currentActiveInventoryItems[componentsRequired[i]].shortname + '">' + currentActiveInventoryItems[componentsRequired[i]].shortname + '</li>';
-            foundItemGroups = findSlotItemIdInInventory(componentsRequired[i]);
+         if(specificsAlreadyFound.indexOf(thisRecipe.components[i].type) === -1) {
+            beingCreatedMarkup += '<li><img src="/images/game-world/inventory-items/' + thisRecipe.components[i].type + '.png" alt="' + currentActiveInventoryItems[thisRecipe.components[i].type].shortname + '">' + currentActiveInventoryItems[thisRecipe.components[i].type].shortname + '</li>';
+            foundItemGroups = findSlotItemIdInInventory(thisRecipe.components[i].type);
             if (foundItemGroups.length > 0) {
                 for (var j = 0; j < foundItemGroups.length; j++) {
                     availableComponentMarkup += '<li id="fromSlot'+foundItemGroups[j]+'">' + generateSlotMarkup(foundItemGroups[j]) + '</li>';
                     componentsFound++;
                 }
             }
-            specificsAlreadyFound.push(componentsRequired[i]);
+            specificsAlreadyFound.push(thisRecipe.components[i].type);
         }
         } else {
             // item group:
-            beingCreatedMarkup += '<li><img src="/images/game-world/inventory-items/' + componentsRequired[i] + '.png" alt="">' + currentItemGroupFilters[(componentsRequired[i])] + '</li>';
-            foundItemGroups = hasItemTypeInInventory(componentsRequired[i]);
+            beingCreatedMarkup += '<li><img src="/images/game-world/inventory-items/' + thisRecipe.components[i].type + '.png" alt="">' + currentItemGroupFilters[(thisRecipe.components[i].type)] + '</li>';
+            foundItemGroups = hasItemTypeInInventory(thisRecipe.components[i].type);
             if (foundItemGroups.length > 0) {
                 for (var j = 0; j < foundItemGroups.length; j++) {
                     availableComponentMarkup += '<li id="fromSlot'+foundItemGroups[j]+'">' + generateSlotMarkup(foundItemGroups[j]) + '</li>';
@@ -6160,10 +6160,10 @@ function findInventoryItemData() {
             // get what's created:
             itemIdsToGet.push(hero.crafting[i].recipes[(hero.crafting[i].filters['All'][j])].creates);
             // get components:
-            theseRecipeComponents = hero.crafting[i].recipes[(hero.crafting[i].filters['All'][j])].components.split(",");
-            for (var k = 0; k < theseRecipeComponents.length; k++) {
-                if (!(isNaN(theseRecipeComponents[k]))) {
-                    itemIdsToGet.push(theseRecipeComponents[k]);
+            
+            for (var k in hero.crafting[i].recipes[(hero.crafting[i].filters['All'][j])].components) {
+                if (!(isNaN(hero.crafting[i].recipes[(hero.crafting[i].filters['All'][j])].components[k].type))) {
+                    itemIdsToGet.push(hero.crafting[i].recipes[(hero.crafting[i].filters['All'][j])].components[k].type);
                 }
             }
         }

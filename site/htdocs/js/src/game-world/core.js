@@ -538,10 +538,10 @@ function findInventoryItemData() {
             // get what's created:
             itemIdsToGet.push(hero.crafting[i].recipes[(hero.crafting[i].filters['All'][j])].creates);
             // get components:
-            theseRecipeComponents = hero.crafting[i].recipes[(hero.crafting[i].filters['All'][j])].components.split(",");
-            for (var k = 0; k < theseRecipeComponents.length; k++) {
-                if (!(isNaN(theseRecipeComponents[k]))) {
-                    itemIdsToGet.push(theseRecipeComponents[k]);
+            
+            for (var k in hero.crafting[i].recipes[(hero.crafting[i].filters['All'][j])].components) {
+                if (!(isNaN(hero.crafting[i].recipes[(hero.crafting[i].filters['All'][j])].components[k].type))) {
+                    itemIdsToGet.push(hero.crafting[i].recipes[(hero.crafting[i].filters['All'][j])].components[k].type);
                 }
             }
         }

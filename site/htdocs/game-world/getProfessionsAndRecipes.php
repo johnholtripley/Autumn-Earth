@@ -154,7 +154,7 @@ $thisProfession = $profession;
     }
 	
 	$outputJson .= '"'.$recipeID.'":{';
-$outputJson .= '"components":"'.$components.'",';
+$outputJson .= '"components":'.$components.',';
 
 $componentsSplit = explode(",", $components);
 
