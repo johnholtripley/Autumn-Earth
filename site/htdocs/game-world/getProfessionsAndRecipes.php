@@ -157,11 +157,19 @@ $thisProfession = $profession;
 $outputJson .= '"components":"'.$components.'",';
 
 $componentsSplit = explode(",", $components);
-for ($i=0;$i<count($componentsSplit);$i++) {
-    if(!(is_numeric($componentsSplit[$i]))) {
 
 
-        array_push($allItemGroups, $componentsSplit[$i]);
+
+$componentObject = json_decode($components);
+
+foreach($componentObject as $key => $value) {
+
+
+
+    if(is_numeric($value->type)) {
+
+
+        array_push($allItemGroups, $value->type);
         }
     }
 
@@ -264,7 +272,10 @@ $groupQuery = rtrim($groupQuery, ",");
 $groupQuery .= ")";
 
 
+
+
 $groupResult = mysqli_query($connection, $groupQuery) or die ("item groups failed");
+
 while ($groupRow = mysqli_fetch_array($groupResult)) {
     extract($groupRow);
     //echo $itemGroupCode." - ".$itemGroupDescription."<br />";
