@@ -104,15 +104,21 @@ echo '</p>';
 $componentNumbers = "";
 $groupItems = [];
 $numberOfGroups = 0;
-$componentsSplit = explode(",", $components);
-for ($i=0;$i<count($componentsSplit);$i++) {
-	if(is_numeric($componentsSplit[$i])) {
-$componentNumbers .= $componentsSplit[$i].",";
+//$componentsSplit = explode(",", $components);
+
+$componentObject = json_decode($components);
+
+foreach($componentObject as $key => $value) {
+
+
+
+	if(is_numeric($value->type)) {
+$componentNumbers .= $value->type.",";
 	} else {
 
 		// add group item
 
-$groupQuery = "select tblinventoryitems.itemgroup, tblinventoryitems.shortname as groupShortName, tblinventoryitems.cleanurl as groupcleanurl from tblinventoryitems where tblinventoryitems.itemgroup = '".$componentsSplit[$i]."'";
+$groupQuery = "select tblinventoryitems.itemgroup, tblinventoryitems.shortname as groupShortName, tblinventoryitems.cleanurl as groupcleanurl from tblinventoryitems where tblinventoryitems.itemgroup = '".$value->type."'";
 $result4 = mysqli_query($connection, $groupQuery) or die ("ingredients group failed");
 $thisGroupNameJoined = "";
 while ($componentsRow = mysqli_fetch_array($result4)) {
