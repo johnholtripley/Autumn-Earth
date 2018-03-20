@@ -29,17 +29,16 @@
     }
 }
 
-#selectComponentsItemBeingCreated {
+.craftingColumn {
     background: #cecece;
     margin: 0 10px 0 0;
     float: left;
+    width: 246px;
+    color: #111;
 }
 
+
 #componentsAvailableForThisRecipe {
-    width: 246px;
-    background: #cecece;
-    margin: 0 10px 0 0;
-    float: left;
     ul {
         list-style: none;
         margin: 0;
@@ -93,5 +92,12 @@
         padding: 3px;
         margin-right: 12px;
         @include border-box;
+    }
+}
+
+#selectComponentsItemBeingCreated {
+    img.previewSlot {
+        // give them a more hand drawn feel:
+        @include filter(sepia(100%) opacity(30%));
     }
 }

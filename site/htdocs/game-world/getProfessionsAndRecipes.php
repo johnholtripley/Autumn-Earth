@@ -166,7 +166,7 @@ foreach($componentObject as $key => $value) {
 
 
 
-    if(is_numeric($value->type)) {
+    if(!is_numeric($value->type)) {
 
 
         array_push($allItemGroups, $value->type);
@@ -210,6 +210,7 @@ $thisProfessionsFilters["All"] = array($recipeID);
 
 
 $outputJson .= '"prerequisite":"'.$prerequisite.'",';
+$outputJson .= '"tier":"'.$recipeTier.'",';
 array_push($thisRecipeOrder, $recipeID);
 
 $thisColour = '';

@@ -236,8 +236,10 @@ $numberOfItemCategories: 20;
 }
 
 #craftingPanel {
-    left: 60px;
-    top: 528px;
+    left: 40%;
+    // place it at the same location as #craftingSelectComponentsPanel but offset to the left so they're side-by-side:
+    @include transform(translateX(-200px));
+    top: 230px;
     background: #222;
     color: #fff;
     @include togglePanel(0.8s);
@@ -276,8 +278,8 @@ $numberOfItemCategories: 20;
 
 #craftingSelectComponentsPanel {
     @include togglePanel(0.8s);
-    left: 60px;
-    top: 528px;
+    left: 40%;
+    top: 230px;
     background: #222;
     color: #fff;
 }

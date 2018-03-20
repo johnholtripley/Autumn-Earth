@@ -50,6 +50,18 @@
             "hallmark": 0,
             "inscription": ""
         },
+            "0-2": {
+            "type": 5,
+            "quantity": 9,
+            "quality": 40,
+            "durability": 100,
+            "currentWear": 0,
+            "effectiveness": 50,
+            "colour": 4,
+            "enchanted": 0,
+            "hallmark": 0,
+            "inscription": ""
+        },
         "0-3": {
             "type": 19,
             "quantity": 12,
@@ -70,6 +82,18 @@
             "currentWear": 0,
             "effectiveness": 100,
             "colour": 16,
+            "enchanted": 0,
+            "hallmark": 0,
+            "inscription": ""
+        },
+           "0-5": {
+            "type": 10,
+            "quantity": 3,
+            "quality": 100,
+            "durability": 100,
+            "currentWear": 0,
+            "effectiveness": 45,
+            "colour": 8,
             "enchanted": 0,
             "hallmark": 0,
             "inscription": ""
@@ -202,7 +226,7 @@
         "1-6": {
             "type": 13,
             "quantity": 1,
-            "quality": 100,
+            "quality": 40,
             "durability": 100,
             "currentWear": 0,
             "effectiveness": 100,

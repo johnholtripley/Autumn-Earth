@@ -11,6 +11,7 @@ const craftingPanel = document.getElementById('craftingPanel');
 const craftingSelectComponentsPanel = document.getElementById('craftingSelectComponentsPanel');
 const selectComponentsItemBeingCreated = document.getElementById('selectComponentsItemBeingCreated');
 const componentsAvailableForThisRecipe = document.getElementById('componentsAvailableForThisRecipe');
+const displayItemBeingCreated = document.getElementById('displayItemBeingCreated');
 const booksAndParchments = document.getElementById('booksAndParchments');
 const gameWrapper = document.getElementById('gameWrapper');
 const inventoryPanels = document.getElementById('inventoryPanels');
@@ -189,14 +190,14 @@ var UI = {
         UI.buildActionBar();
         UI.initRetinueTimers();
 
-
+/*
         if (hero.professionsKnown.length > 0) {
             // load and cache the first profession's recipe assets:
-            UI.populateRecipeList(hero.professionsKnown[0]);
+            UI.populateRecipeList(hero.professionsKnown[0],100);
             // but hide the panel initially:
             craftingPanel.classList.remove("active");
         }
-
+*/
         gameWrapper.onmousedown = UI.globalMouseDown;
         gameWrapper.onclick = UI.globalClick;
 
@@ -474,11 +475,13 @@ var UI = {
         cardAlbumList.innerHTML = cardAlbumMarkup;
     },
 
-    populateRecipeList: function(whichProfession) {
+    populateRecipeList: function(whichProfession,toolsQuality) {
+        
         if (currentRecipePanelProfession != whichProfession) {
             // clear previous searches:
             recipeSearch.value = '';
             clearRecipeSearch.classList.remove("active");
+            var recipeTiersPossibleForThisTool = findRecipeTierLevel(toolsQuality);
             var recipeMarkup = '<li id="noRecipesFound"><p>No recipes found.</p></li>';
             var thisRecipe;
             var filterMarkup = '';
@@ -486,7 +489,11 @@ var UI = {
 
             for (var i = 0; i < hero.crafting[whichProfession].sortOrder.length; i++) {
                 thisRecipe = hero.crafting[whichProfession].recipes[(hero.crafting[whichProfession].sortOrder[i])];
+
+// check this tool's quality is sufficent for this tier of recipe:
+if(recipeTiersPossibleForThisTool >= thisRecipe.tier) {
                 recipeMarkup += '<li class="active" id="recipe' + hero.crafting[whichProfession].sortOrder[i] + '"><img src="/images/game-world/inventory-items/' + thisRecipe.imageId + '.png" alt="' + thisRecipe.recipeName + '"><h3>' + thisRecipe.recipeName + '</h3><p>' + thisRecipe.recipeDescription + '</p></li>';
+            }
             }
 
             createRecipeList.innerHTML = recipeMarkup;

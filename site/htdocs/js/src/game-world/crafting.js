@@ -40,10 +40,10 @@ function recipeSearchAndFilter() {
             UI.highlightedRecipe = "";
         }
     }
-                 // resize the scroll bar (if it's used):
-if (thisDevicesScrollBarWidth > 0) {
-            recipeCustomScrollBar.init();
-        }
+    // resize the scroll bar (if it's used):
+    if (thisDevicesScrollBarWidth > 0) {
+        recipeCustomScrollBar.init();
+    }
 }
 
 function recipeSearchInput() {
@@ -67,33 +67,35 @@ function recipeSelectComponents(whichRecipe) {
     var foundItemGroups;
     var specificsAlreadyFound = [];
     var thisRecipe = hero.crafting[currentRecipePanelProfession].recipes[recipeId];
-    var beingCreatedMarkup = '<img src="/images/game-world/inventory-items/' + thisRecipe.imageId + '.png" alt="' + thisRecipe.recipeName + '"><h3>' + thisRecipe.recipeName + '</h3><p>' + thisRecipe.recipeDescription + '</p><h4>Requires:</h4>';
+    var beingCreatedMarkup = '<h4>Requires:</h4>';
     // find all components that the player has that are usable for this recipe as well:
     var availableComponentMarkup = '<h4>Available:</h4><ul>';
-    
+
     var componentsFound = 0;
+    var displayItemMarkup = '<img src="/images/game-world/inventory-items/' + thisRecipe.imageId + '.png" alt="' + thisRecipe.recipeName + '"><h3>' + thisRecipe.recipeName + '</h3><p>' + thisRecipe.recipeDescription + '</p>';
     beingCreatedMarkup += '<ul>';
     for (var i in thisRecipe.components) {
         if (!(isNaN(thisRecipe.components[i].type))) {
             // specific item - make sure not already added this (if more than 1 quantity required):
-         if(specificsAlreadyFound.indexOf(thisRecipe.components[i].type) === -1) {
-            beingCreatedMarkup += '<li><img src="/images/game-world/inventory-items/' + thisRecipe.components[i].type + '.png" alt="' + currentActiveInventoryItems[thisRecipe.components[i].type].shortname + '">' + currentActiveInventoryItems[thisRecipe.components[i].type].shortname + '</li>';
-            foundItemGroups = findSlotItemIdInInventory(thisRecipe.components[i].type);
-            if (foundItemGroups.length > 0) {
-                for (var j = 0; j < foundItemGroups.length; j++) {
-                    availableComponentMarkup += '<li id="fromSlot'+foundItemGroups[j]+'">' + generateSlotMarkup(foundItemGroups[j]) + '</li>';
-                    componentsFound++;
+            if (specificsAlreadyFound.indexOf(thisRecipe.components[i].type) === -1) {
+                beingCreatedMarkup += '<li><img class="previewSlot" src="/images/game-world/inventory-items/' + thisRecipe.components[i].type + '.png" alt="' + currentActiveInventoryItems[thisRecipe.components[i].type].shortname + '">' + currentActiveInventoryItems[thisRecipe.components[i].type].shortname + ' (' + thisRecipe.components[i].quantity + ')</li>';
+                foundItemGroups = findSlotItemIdInInventory(thisRecipe.components[i].type);
+                if (foundItemGroups.length > 0) {
+                    for (var j = 0; j < foundItemGroups.length; j++) {
+                        availableComponentMarkup += '<li id="fromSlot' + foundItemGroups[j] + '">' + generateSlotMarkup(foundItemGroups[j]) + '</li>';
+                        componentsFound++;
+                    }
                 }
+                specificsAlreadyFound.push(thisRecipe.components[i].type);
             }
-            specificsAlreadyFound.push(thisRecipe.components[i].type);
-        }
         } else {
             // item group:
-            beingCreatedMarkup += '<li><img src="/images/game-world/inventory-items/' + thisRecipe.components[i].type + '.png" alt="">' + currentItemGroupFilters[(thisRecipe.components[i].type)] + '</li>';
+            
+            beingCreatedMarkup += '<li><img class="previewSlot" src="/images/game-world/inventory-items/' + thisRecipe.components[i].type + '.png" alt="">' + currentItemGroupFilters[(thisRecipe.components[i].type)] + ' (' + thisRecipe.components[i].quantity + ')</li>';
             foundItemGroups = hasItemTypeInInventory(thisRecipe.components[i].type);
             if (foundItemGroups.length > 0) {
                 for (var j = 0; j < foundItemGroups.length; j++) {
-                    availableComponentMarkup += '<li id="fromSlot'+foundItemGroups[j]+'">' + generateSlotMarkup(foundItemGroups[j]) + '</li>';
+                    availableComponentMarkup += '<li id="fromSlot' + foundItemGroups[j] + '">' + generateSlotMarkup(foundItemGroups[j]) + '</li>';
                     componentsFound++;
                 }
             }
@@ -104,12 +106,17 @@ function recipeSelectComponents(whichRecipe) {
     }
     // add the dye slot, only if the created item can be dyed:
     if (currentActiveInventoryItems[thisRecipe.creates].dyeable > 0) {
-        beingCreatedMarkup += '<li><img src="/images/game-world/inventory-items/dye.png" alt="">Optional dye</li>';
+        beingCreatedMarkup += '<li><img class="previewSlot" src="/images/game-world/inventory-items/dye.png" alt="">Dye (optional)</li>';
     }
     // add the enchant slot:
-    beingCreatedMarkup += '<li><img src="/images/game-world/inventory-items/enchant.png" alt="">Imbue item (optional)</li>';
+    beingCreatedMarkup += '<li><img class="previewSlot" src="/images/game-world/inventory-items/enchant.png" alt="">Imbue item (optional)</li>';
     beingCreatedMarkup += '</ul>';
     availableComponentMarkup += '</ul>';
     selectComponentsItemBeingCreated.innerHTML = beingCreatedMarkup;
     componentsAvailableForThisRecipe.innerHTML = availableComponentMarkup;
+    displayItemBeingCreated.innerHTML = displayItemMarkup;
+}
+
+function findRecipeTierLevel(toolQuality) {
+    return toolQuality;
 }

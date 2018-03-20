@@ -125,8 +125,9 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
         Add components
       </div>
       <button class="closePanel">close</button>
-      <div id="componentsAvailableForThisRecipe"></div>
-      <div id="selectComponentsItemBeingCreated"></div>
+      <div class="craftingColumn"><div id="componentsAvailableForThisRecipe"></div></div>
+      <div class="craftingColumn"><div id="selectComponentsItemBeingCreated"></div></div>
+      <div class="craftingColumn"><div id="displayItemBeingCreated"></div><button>Create</button></div>   
     </div>
 
     <div id="booksAndParchments"></div>

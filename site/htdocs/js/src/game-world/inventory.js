@@ -270,6 +270,7 @@ function inventoryItemAction(whichSlot, whichAction, allActionValues) {
             canBeClicked = false;
         }
     }
+
     if (canBeClicked) {
         var whichActionSplit = whichAction.split(",");
         var allActionValuesSplit = allActionValues.split(",");
@@ -357,7 +358,7 @@ function inventoryItemAction(whichSlot, whichAction, allActionValues) {
                 case "craft":
                     if (hero.professionsKnown.indexOf(parseInt(whichActionValue)) != -1) {
                         audio.playSound(soundEffects['buttonClick'], 0);
-                        UI.populateRecipeList(whichActionValue);
+                        UI.populateRecipeList(whichActionValue,hero.inventory[whichSlotNumber].quality);
                     } else {
                         UI.showNotification("<p>You don't know this profession yet.</p>");
                     }
