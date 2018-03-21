@@ -70,19 +70,75 @@ function recipeSelectComponents(whichRecipe) {
     var beingCreatedMarkup = '<h4>Requires:</h4>';
     // find all components that the player has that are usable for this recipe as well:
     var availableComponentMarkup = '<h4>Available:</h4><ul>';
-
+    var thisItemAttributes, thisItemInfluences;
     var componentsFound = 0;
     var displayItemMarkup = '<img src="/images/game-world/inventory-items/' + thisRecipe.imageId + '.png" alt="' + thisRecipe.recipeName + '"><h3>' + thisRecipe.recipeName + '</h3><p>' + thisRecipe.recipeDescription + '</p>';
     beingCreatedMarkup += '<ul>';
+
+
+    // complete any undefined influences:
+    var totalInfluences = {
+        "durability": 0,
+        "effectiveness": 0,
+        "quality": 0,
+    };
+    var influencesWithDefinedValues = {
+        "durability": 0,
+        "effectiveness": 0,
+        "quality": 0,
+    };
+    var thisNumberOfComponents = thisRecipe.components.length;
     for (var i in thisRecipe.components) {
+        if (thisRecipe.components[i].influence != null) {
+            for (var j in thisRecipe.components[i].influence) {
+                totalInfluences[j] += thisRecipe.components[i].influence[j];
+                influencesWithDefinedValues[j]++;
+            }
+        }
+    }
+
+
+
+    for (var i in thisRecipe.components) {
+
+
+
+        thisItemInfluences = "<br>Effect: ";
+        if (typeof thisRecipe.components[i].influence["effectiveness"] !== "undefined") {
+            thisItemInfluences += thisRecipe.components[i].influence["effectiveness"];
+        } else {
+            thisItemInfluences += (100 - totalInfluences["effectiveness"]) / (thisNumberOfComponents - influencesWithDefinedValues["effectiveness"]);
+        }
+
+                thisItemInfluences += "<br>Dura: ";
+        if (typeof thisRecipe.components[i].influence["durability"] !== "undefined") {
+            thisItemInfluences += thisRecipe.components[i].influence["durability"];
+        } else {
+            thisItemInfluences += (100 - totalInfluences["durability"]) / (thisNumberOfComponents - influencesWithDefinedValues["durability"]);
+        }
+
+            thisItemInfluences += "<br>Qual: ";
+        if (typeof thisRecipe.components[i].influence["quality"] !== "undefined") {
+            thisItemInfluences += thisRecipe.components[i].influence["quality"];
+        } else {
+            thisItemInfluences += (100 - totalInfluences["quality"]) / (thisNumberOfComponents - influencesWithDefinedValues["quality"]);
+        }
+
+
+        /*
+                for (var j in thisRecipe.components[i].influence) {
+                    thisItemInfluences += j + ":" + thisRecipe.components[i].influence[j] + "<br>";
+                }
+        */
         if (!(isNaN(thisRecipe.components[i].type))) {
             // specific item - make sure not already added this (if more than 1 quantity required):
             if (specificsAlreadyFound.indexOf(thisRecipe.components[i].type) === -1) {
-                beingCreatedMarkup += '<li><img class="previewSlot" src="/images/game-world/inventory-items/' + thisRecipe.components[i].type + '.png" alt="' + currentActiveInventoryItems[thisRecipe.components[i].type].shortname + '">' + currentActiveInventoryItems[thisRecipe.components[i].type].shortname + ' (' + thisRecipe.components[i].quantity + ')</li>';
+                beingCreatedMarkup += '<li><img class="previewSlot" src="/images/game-world/inventory-items/' + thisRecipe.components[i].type + '.png" alt="' + currentActiveInventoryItems[thisRecipe.components[i].type].shortname + '">' + currentActiveInventoryItems[thisRecipe.components[i].type].shortname + ' (x' + thisRecipe.components[i].quantity + ')' + thisItemInfluences + '</li>';
                 foundItemGroups = findSlotItemIdInInventory(thisRecipe.components[i].type);
                 if (foundItemGroups.length > 0) {
                     for (var j = 0; j < foundItemGroups.length; j++) {
-                        availableComponentMarkup += '<li id="fromSlot' + foundItemGroups[j] + '">' + generateSlotMarkup(foundItemGroups[j]) + '</li>';
+                        thisItemAttributes = 'qual: ' + hero.inventory[foundItemGroups[j]].quality + ', dura: ' + hero.inventory[foundItemGroups[j]].durability + ', effect: ' + hero.inventory[foundItemGroups[j]].effectiveness;
+                        availableComponentMarkup += '<li id="fromSlot' + foundItemGroups[j] + '">' + generateSlotMarkup(foundItemGroups[j]) + thisItemAttributes + '</li>';
                         componentsFound++;
                     }
                 }
@@ -90,12 +146,13 @@ function recipeSelectComponents(whichRecipe) {
             }
         } else {
             // item group:
-            
-            beingCreatedMarkup += '<li><img class="previewSlot" src="/images/game-world/inventory-items/' + thisRecipe.components[i].type + '.png" alt="">' + currentItemGroupFilters[(thisRecipe.components[i].type)] + ' (' + thisRecipe.components[i].quantity + ')</li>';
+
+            beingCreatedMarkup += '<li><img class="previewSlot" src="/images/game-world/inventory-items/' + thisRecipe.components[i].type + '.png" alt="">' + currentItemGroupFilters[(thisRecipe.components[i].type)] + ' (x' + thisRecipe.components[i].quantity + ')' + thisItemInfluences + '</li>';
             foundItemGroups = hasItemTypeInInventory(thisRecipe.components[i].type);
             if (foundItemGroups.length > 0) {
                 for (var j = 0; j < foundItemGroups.length; j++) {
-                    availableComponentMarkup += '<li id="fromSlot' + foundItemGroups[j] + '">' + generateSlotMarkup(foundItemGroups[j]) + '</li>';
+                    thisItemAttributes = 'qual: ' + hero.inventory[foundItemGroups[j]].quality + ', dura: ' + hero.inventory[foundItemGroups[j]].durability + ', effect: ' + hero.inventory[foundItemGroups[j]].effectiveness;
+                    availableComponentMarkup += '<li id="fromSlot' + foundItemGroups[j] + '">' + generateSlotMarkup(foundItemGroups[j]) + thisItemAttributes + '</li>';
                     componentsFound++;
                 }
             }
@@ -118,5 +175,9 @@ function recipeSelectComponents(whichRecipe) {
 }
 
 function findRecipeTierLevel(toolQuality) {
-    return toolQuality;
+    // example quality -> tier output:
+    // 0->0.0, 5->0.0, 10->0.1, 15->0.1, 20->0.2, 25->0.3, 30->0.5, 35->0.6, 40->0.8, 45->1.1, 50->1.3, 55->1.6, 60->2.0, 65->2.4, 70->2.9, 75->3.4, 80->4.0, 85->4.7, 90->5.6, 95->6.9, 100->10.0
+    var diff = (toolQuality / 10);
+    var tierLevel = 10 - (Math.sqrt(100 - diff * diff));
+    return tierLevel;
 }
