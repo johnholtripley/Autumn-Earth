@@ -94,6 +94,13 @@ function recipeSelectComponents(whichRecipe) {
                 totalInfluences[j] += thisRecipe.components[i].influence[j];
                 influencesWithDefinedValues[j]++;
             }
+        } else {
+            // create the individual keys to be tested for later:
+            thisRecipe.components[i].influence = {
+"durability": undefined,
+"effectiveness": undefined,
+"quality": undefined
+            }
         }
     }
 
