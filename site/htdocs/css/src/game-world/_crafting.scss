@@ -96,15 +96,26 @@
 }
 
 #selectComponentsItemBeingCreated {
-    img.previewSlot {
+    .gradedItem img {
         // give them a more hand drawn feel:
-        @include filter(sepia(100%) opacity(30%));
+        @include filter(sepia(100%));
     }
 }
 
 
 
-.attributeGrades {
-    width: 30px;
-    height: 30px;
+.gradedItem {
+    position: relative;
+
+    img {
+        @include border-radius(100%);
+        position: absolute;
+        left: 5px;
+        top: 5px;
+    }
+    svg {
+    width: 56px;
+    height: 56px;
+  
+}
 }
