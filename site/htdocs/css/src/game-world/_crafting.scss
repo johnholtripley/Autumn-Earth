@@ -58,13 +58,13 @@
             width: 20px;
             height: 20px;
             line-height: 20px;
-            top: 31px;
+            top: 33px;
             text-align: center;
             color: #fff;
             cursor: default;
             font-size: 11px;
             pointer-events: none;
-            background: #000;
+            background: #333;
             @include border-radius(100%);
         }
         p {
@@ -108,7 +108,7 @@
 .gradedItem {
     position: relative;
     margin: 0 6px;
-display: inline-block;
+    display: inline-block;
     img {
         @include border-radius(100%);
         position: absolute;

@@ -645,10 +645,10 @@ function recipeSelectComponents(whichRecipe) {
     }
     // add the dye slot, only if the created item can be dyed:
     if (currentActiveInventoryItems[thisRecipe.creates].dyeable > 0) {
-        beingCreatedMarkup += '<li><img class="previewSlot" src="/images/game-world/inventory-items/dye.png" alt="">Dye (optional)</li>';
+        beingCreatedMarkup += '<li><img src="/images/game-world/inventory-items/dye.png" alt=""><p>Dye (optional)</p></li>';
     }
     // add the enchant slot:
-    beingCreatedMarkup += '<li><img class="previewSlot" src="/images/game-world/inventory-items/enchant.png" alt="">Imbue item (optional)</li>';
+    beingCreatedMarkup += '<li><img src="/images/game-world/inventory-items/enchant.png" alt=""><p>Imbue item (optional)</p></li>';
     beingCreatedMarkup += '</ul>';
     availableComponentMarkup += '</ul>';
     selectComponentsItemBeingCreated.innerHTML = beingCreatedMarkup;

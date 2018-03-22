@@ -224,16 +224,24 @@
 
 .primaryButton {
     cursor: url(../images/game-world/cursors/active.gif) 3 3, auto;
-    border: 0;
+
     background: #53160d;
     color: #fff;
     outline: none;
+    font-family: 'Bree Serif', Georgia, 'Times New Roman', Times, Palatino, serif;
+    @include text-shadow( -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000);
     text-transform: uppercase;
     margin: 6px auto;
     display: block;
     padding: 6px 16px;
+    font-size: 16px;
     border: 2px solid #967834;
-    @include transition(opacity 0.2s ease);
+    @include transition(opacity 0.2s ease, border-color 0.4s ease);
+    &:not([disabled]) {
+        @include attention() {
+            border-color: #fff;
+        }
+    }
     &:disabled {
         cursor: url(../images/game-world/cursors/default.gif) 3 3, auto;
         opacity: 0.4;
@@ -257,15 +265,15 @@
         transform: translateX(10%);
     }
     60% {
-       transform: translateX(0%); 
+        transform: translateX(0%);
     }
     70% {
-         transform: translateX(-5%);
+        transform: translateX(-5%);
     }
-     90% {
-         transform: translateX(5%);
+    90% {
+        transform: translateX(5%);
     }
-     100% {
+    100% {
         transform: translateX(0%);
     }
 }
