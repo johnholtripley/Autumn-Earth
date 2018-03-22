@@ -152,7 +152,7 @@ function recipeSelectComponents(whichRecipe) {
                     for (var j = 0; j < foundItemGroups.length; j++) {
                         thisItemAttributes = 'qual: ' + hero.inventory[foundItemGroups[j]].quality + ', dura: ' + hero.inventory[foundItemGroups[j]].durability + ', effect: ' + hero.inventory[foundItemGroups[j]].effectiveness;
 
-SVGoutput = '<svg class="attributeGrades" xmlns="http://www.w3.org/2000/svg" height="347.924" width="347.924" viewBox="0 0 347.924 347.924"><path d="M324.617 260.943a173.962 173.962 0 0 1-150.655 86.98 173.962 173.962 0 0 1-150.656-86.98l150.656-86.981z" fill="'+gradeAttribute(hero.inventory[foundItemGroups[j]].effectiveness)+'"/><path d="M23.306 260.943a173.962 173.962 0 0 1 0-173.962A173.962 173.962 0 0 1 173.962 0v173.962z" fill="'+gradeAttribute(hero.inventory[foundItemGroups[j]].quality)+'"/><path d="M173.962 0a173.962 173.962 0 0 1 150.655 86.98 173.962 173.962 0 0 1 0 173.963l-150.655-86.981z" fill="'+gradeAttribute(hero.inventory[foundItemGroups[j]].durability)+'"/></svg>';
+SVGoutput = '<svg class="attributeGrades" xmlns="http://www.w3.org/2000/svg" height="100" width="100" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50" fill="'+gradeAttribute(hero.inventory[foundItemGroups[j]].effectiveness)+'"/><path d="M6.699 75a50 50 0 0 1 0-50A50 50 0 0 1 50 0v50z" fill="'+gradeAttribute(hero.inventory[foundItemGroups[j]].quality)+'"/><path d="M50 0a50 50 0 0 1 43.301 25 50 50 0 0 1 0 50l-43.3-25z" fill="'+gradeAttribute(hero.inventory[foundItemGroups[j]].durability)+'"/></svg>';
 
 thisItemAttributes += SVGoutput;
 
@@ -172,7 +172,7 @@ thisItemAttributes += SVGoutput;
                     thisItemAttributes = 'qual: ' + hero.inventory[foundItemGroups[j]].quality + ', dura: ' + hero.inventory[foundItemGroups[j]].durability + ', effect: ' + hero.inventory[foundItemGroups[j]].effectiveness;
 
 
-SVGoutput = '<svg class="attributeGrades" xmlns="http://www.w3.org/2000/svg" height="347.924" width="347.924" viewBox="0 0 347.924 347.924"><path d="M324.617 260.943a173.962 173.962 0 0 1-150.655 86.98 173.962 173.962 0 0 1-150.656-86.98l150.656-86.981z" fill="'+gradeAttribute(hero.inventory[foundItemGroups[j]].effectiveness)+'"/><path d="M23.306 260.943a173.962 173.962 0 0 1 0-173.962A173.962 173.962 0 0 1 173.962 0v173.962z" fill="'+gradeAttribute(hero.inventory[foundItemGroups[j]].quality)+'"/><path d="M173.962 0a173.962 173.962 0 0 1 150.655 86.98 173.962 173.962 0 0 1 0 173.963l-150.655-86.981z" fill="'+gradeAttribute(hero.inventory[foundItemGroups[j]].durability)+'"/></svg>';
+SVGoutput = '<svg class="attributeGrades" xmlns="http://www.w3.org/2000/svg" height="100" width="100" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50" fill="'+gradeAttribute(hero.inventory[foundItemGroups[j]].effectiveness)+'"/><path d="M6.699 75a50 50 0 0 1 0-50A50 50 0 0 1 50 0v50z" fill="'+gradeAttribute(hero.inventory[foundItemGroups[j]].quality)+'"/><path d="M50 0a50 50 0 0 1 43.301 25 50 50 0 0 1 0 50l-43.3-25z" fill="'+gradeAttribute(hero.inventory[foundItemGroups[j]].durability)+'"/></svg>';
 
 thisItemAttributes += SVGoutput;
 
