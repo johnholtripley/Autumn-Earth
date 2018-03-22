@@ -110,53 +110,53 @@ function recipeSelectComponents(whichRecipe) {
     for (var i in thisRecipe.components) {
 
 
-thisItemInfluences = '';
-    //    thisItemInfluences = "<br>Effect: ";
+        thisItemInfluences = '';
+        //    thisItemInfluences = "<br>Effect: ";
         if (typeof thisRecipe.components[i].influence["effectiveness"] !== "undefined") {
-          //  thisItemInfluences += thisRecipe.components[i].influence["effectiveness"];
+            //  thisItemInfluences += thisRecipe.components[i].influence["effectiveness"];
             thisComponentEffectiveness = thisRecipe.components[i].influence["effectiveness"];
         } else {
-        //    thisItemInfluences += (100 - totalInfluences["effectiveness"]) / (thisNumberOfComponents - influencesWithDefinedValues["effectiveness"]);
-           thisComponentEffectiveness = (100 - totalInfluences["effectiveness"]) / (thisNumberOfComponents - influencesWithDefinedValues["effectiveness"]);
+            //    thisItemInfluences += (100 - totalInfluences["effectiveness"]) / (thisNumberOfComponents - influencesWithDefinedValues["effectiveness"]);
+            thisComponentEffectiveness = (100 - totalInfluences["effectiveness"]) / (thisNumberOfComponents - influencesWithDefinedValues["effectiveness"]);
         }
 
-       // thisItemInfluences += "<br>Dura: ";
+        // thisItemInfluences += "<br>Dura: ";
         if (typeof thisRecipe.components[i].influence["durability"] !== "undefined") {
-         //   thisItemInfluences += thisRecipe.components[i].influence["durability"];
+            //   thisItemInfluences += thisRecipe.components[i].influence["durability"];
             thisComponentDurability = thisRecipe.components[i].influence["durability"];
         } else {
-          //  thisItemInfluences += (100 - totalInfluences["durability"]) / (thisNumberOfComponents - influencesWithDefinedValues["durability"]);
+            //  thisItemInfluences += (100 - totalInfluences["durability"]) / (thisNumberOfComponents - influencesWithDefinedValues["durability"]);
             thisComponentDurability = (100 - totalInfluences["durability"]) / (thisNumberOfComponents - influencesWithDefinedValues["durability"]);
         }
 
-       // thisItemInfluences += "<br>Qual: ";
+        // thisItemInfluences += "<br>Qual: ";
         if (typeof thisRecipe.components[i].influence["quality"] !== "undefined") {
-          //  thisItemInfluences += thisRecipe.components[i].influence["quality"];
+            //  thisItemInfluences += thisRecipe.components[i].influence["quality"];
             thisComponentQuality = thisRecipe.components[i].influence["quality"];
         } else {
-          //  thisItemInfluences += (100 - totalInfluences["quality"]) / (thisNumberOfComponents - influencesWithDefinedValues["quality"]);
+            //  thisItemInfluences += (100 - totalInfluences["quality"]) / (thisNumberOfComponents - influencesWithDefinedValues["quality"]);
             thisComponentQuality = (100 - totalInfluences["quality"]) / (thisNumberOfComponents - influencesWithDefinedValues["quality"]);
         }
 
-requiredSVGoutput = '<svg xmlns="http://www.w3.org/2000/svg" height="100" width="100" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50" fill="'+gradeAttribute(thisComponentEffectiveness)+'"/><path d="M6.699 75a50 50 0 0 1 0-50A50 50 0 0 1 50 0v50z" fill="'+gradeAttribute(thisComponentQuality)+'"/><path d="M50 0a50 50 0 0 1 43.301 25 50 50 0 0 1 0 50l-43.3-25z" fill="'+gradeAttribute(thisComponentDurability)+'"/></svg>';
+        requiredSVGoutput = '<svg xmlns="http://www.w3.org/2000/svg" height="100" width="100" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50" fill="' + gradeAttribute(thisComponentEffectiveness) + '"/><path d="M6.699 75a50 50 0 0 1 0-50A50 50 0 0 1 50 0v50z" fill="' + gradeAttribute(thisComponentQuality) + '"/><path d="M50 0a50 50 0 0 1 43.301 25 50 50 0 0 1 0 50l-43.3-25z" fill="' + gradeAttribute(thisComponentDurability) + '"/></svg>';
 
 
 
-   
+
         if (!(isNaN(thisRecipe.components[i].type))) {
             // specific item - make sure not already added this (if more than 1 quantity required):
             if (specificsAlreadyFound.indexOf(thisRecipe.components[i].type) === -1) {
-                beingCreatedMarkup += '<li><div class="gradedItem">'+requiredSVGoutput+'<img src="/images/game-world/inventory-items/' + thisRecipe.components[i].type + '.png" alt="' + currentActiveInventoryItems[thisRecipe.components[i].type].shortname + '"></div>' + currentActiveInventoryItems[thisRecipe.components[i].type].shortname + ' (x' + thisRecipe.components[i].quantity + ')</li>';
+                beingCreatedMarkup += '<li><div class="gradedItem">' + requiredSVGoutput + '<img src="/images/game-world/inventory-items/' + thisRecipe.components[i].type + '.png" alt="' + currentActiveInventoryItems[thisRecipe.components[i].type].shortname + '"><p>' + currentActiveInventoryItems[thisRecipe.components[i].type].shortname +'</p><span class="qty">' + thisRecipe.components[i].quantity + '</span></div></li>';
                 foundItemGroups = findSlotItemIdInInventory(thisRecipe.components[i].type);
                 if (foundItemGroups.length > 0) {
                     for (var j = 0; j < foundItemGroups.length; j++) {
-                      //  thisItemAttributes = 'qual: ' + hero.inventory[foundItemGroups[j]].quality + ', dura: ' + hero.inventory[foundItemGroups[j]].durability + ', effect: ' + hero.inventory[foundItemGroups[j]].effectiveness;
+                        //  thisItemAttributes = 'qual: ' + hero.inventory[foundItemGroups[j]].quality + ', dura: ' + hero.inventory[foundItemGroups[j]].durability + ', effect: ' + hero.inventory[foundItemGroups[j]].effectiveness;
 
-SVGoutput = '<svg xmlns="http://www.w3.org/2000/svg" height="100" width="100" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50" fill="'+gradeAttribute(hero.inventory[foundItemGroups[j]].effectiveness)+'"/><path d="M6.699 75a50 50 0 0 1 0-50A50 50 0 0 1 50 0v50z" fill="'+gradeAttribute(hero.inventory[foundItemGroups[j]].quality)+'"/><path d="M50 0a50 50 0 0 1 43.301 25 50 50 0 0 1 0 50l-43.3-25z" fill="'+gradeAttribute(hero.inventory[foundItemGroups[j]].durability)+'"/></svg>';
+                        SVGoutput = '<svg xmlns="http://www.w3.org/2000/svg" height="100" width="100" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50" fill="' + gradeAttribute(hero.inventory[foundItemGroups[j]].effectiveness) + '"/><path d="M6.699 75a50 50 0 0 1 0-50A50 50 0 0 1 50 0v50z" fill="' + gradeAttribute(hero.inventory[foundItemGroups[j]].quality) + '"/><path d="M50 0a50 50 0 0 1 43.301 25 50 50 0 0 1 0 50l-43.3-25z" fill="' + gradeAttribute(hero.inventory[foundItemGroups[j]].durability) + '"/></svg>';
 
-//thisItemAttributes += SVGoutput;
+                        //thisItemAttributes += SVGoutput;
 
-                        availableComponentMarkup += '<li id="fromSlot' + foundItemGroups[j] + '"><div class="gradedItem">' + SVGoutput + generateSlotMarkup(foundItemGroups[j])  + '</div></li>';
+                        availableComponentMarkup += '<li id="fromSlot' + foundItemGroups[j] + '"><div class="gradedItem">' + SVGoutput + generateCraftingSlotMarkup(hero.inventory[foundItemGroups[j]]) + '</div></li>';
                         componentsFound++;
                     }
                 }
@@ -165,19 +165,19 @@ SVGoutput = '<svg xmlns="http://www.w3.org/2000/svg" height="100" width="100" vi
         } else {
             // item group:
 
-            beingCreatedMarkup += '<li><div class="gradedItem">'+requiredSVGoutput+'<img class="previewSlot" src="/images/game-world/inventory-items/' + thisRecipe.components[i].type + '.png" alt=""></div>' + currentItemGroupFilters[(thisRecipe.components[i].type)] + ' (x' + thisRecipe.components[i].quantity + ')</li>';
+            beingCreatedMarkup += '<li><div class="gradedItem">' + requiredSVGoutput + '<img class="previewSlot" src="/images/game-world/inventory-items/' + thisRecipe.components[i].type + '.png" alt=""><p>' + currentItemGroupFilters[(thisRecipe.components[i].type)] + '</p><span class="qty">' + thisRecipe.components[i].quantity + '</span></div></li>';
             foundItemGroups = hasItemTypeInInventory(thisRecipe.components[i].type);
             if (foundItemGroups.length > 0) {
                 for (var j = 0; j < foundItemGroups.length; j++) {
-                  //  thisItemAttributes = 'qual: ' + hero.inventory[foundItemGroups[j]].quality + ', dura: ' + hero.inventory[foundItemGroups[j]].durability + ', effect: ' + hero.inventory[foundItemGroups[j]].effectiveness;
+                    //  thisItemAttributes = 'qual: ' + hero.inventory[foundItemGroups[j]].quality + ', dura: ' + hero.inventory[foundItemGroups[j]].durability + ', effect: ' + hero.inventory[foundItemGroups[j]].effectiveness;
 
 
-SVGoutput = '<svg xmlns="http://www.w3.org/2000/svg" height="100" width="100" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50" fill="'+gradeAttribute(hero.inventory[foundItemGroups[j]].effectiveness)+'"/><path d="M6.699 75a50 50 0 0 1 0-50A50 50 0 0 1 50 0v50z" fill="'+gradeAttribute(hero.inventory[foundItemGroups[j]].quality)+'"/><path d="M50 0a50 50 0 0 1 43.301 25 50 50 0 0 1 0 50l-43.3-25z" fill="'+gradeAttribute(hero.inventory[foundItemGroups[j]].durability)+'"/></svg>';
+                    SVGoutput = '<svg xmlns="http://www.w3.org/2000/svg" height="100" width="100" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50" fill="' + gradeAttribute(hero.inventory[foundItemGroups[j]].effectiveness) + '"/><path d="M6.699 75a50 50 0 0 1 0-50A50 50 0 0 1 50 0v50z" fill="' + gradeAttribute(hero.inventory[foundItemGroups[j]].quality) + '"/><path d="M50 0a50 50 0 0 1 43.301 25 50 50 0 0 1 0 50l-43.3-25z" fill="' + gradeAttribute(hero.inventory[foundItemGroups[j]].durability) + '"/></svg>';
 
-//thisItemAttributes += SVGoutput;
+                    //thisItemAttributes += SVGoutput;
 
 
-                    availableComponentMarkup += '<li id="fromSlot' + foundItemGroups[j] + '"><div class="gradedItem">' + SVGoutput + generateSlotMarkup(foundItemGroups[j]) + '</div></li>';
+                    availableComponentMarkup += '<li id="fromSlot' + foundItemGroups[j] + '"><div class="gradedItem">' + SVGoutput + generateCraftingSlotMarkup(hero.inventory[foundItemGroups[j]]) + '</div></li>';
                     componentsFound++;
                 }
             }
@@ -226,4 +226,28 @@ function gradeAttribute(attributeValue) {
         if (attributeValue >= data.max) return data.grade;
     }
     return "#b41119";
+}
+
+
+
+
+
+function generateCraftingSlotMarkup(thisItemObject) {
+    var slotMarkup = '';
+    var theColourPrefix = "";
+    var thisFileColourSuffix = "";
+    var imageClassName = "";
+    var thisColourName = getColourName(thisItemObject.colour, thisItemObject.type);
+    if (thisColourName != "") {
+        theColourPrefix = thisColourName + " ";
+        thisFileColourSuffix = "-" + thisColourName.toLowerCase();
+    }
+    // check if it's a card:
+    if (currentActiveInventoryItems[thisItemObject.type].action == "card") {
+        imageClassName += 'players card';
+    }
+    slotMarkup += '<img src="/images/game-world/inventory-items/' + thisItemObject.type + thisFileColourSuffix + '.png" ' + 'alt="' + theColourPrefix + currentActiveInventoryItems[thisItemObject.type].shortname + '" class="' + imageClassName + '">';
+    slotMarkup += '<p>' + theColourPrefix + currentActiveInventoryItems[thisItemObject.type].shortname + '</p>';
+    slotMarkup += '<span class="qty">' + thisItemObject.quantity + '</span>';
+    return slotMarkup;
 }
