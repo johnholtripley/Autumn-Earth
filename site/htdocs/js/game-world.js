@@ -544,6 +544,7 @@ function recipeSelectComponents(whichRecipe) {
         "effectiveness": 0,
         "quality": 0,
     };
+    var SVGoutput, thisComponentDurability, thisComponentEffectiveness, thisComponentQuality;
     var thisNumberOfComponents = thisRecipe.components.length;
     for (var i in thisRecipe.components) {
         if (thisRecipe.components[i].influence != null) {
@@ -554,9 +555,9 @@ function recipeSelectComponents(whichRecipe) {
         } else {
             // create the individual keys to be tested for later:
             thisRecipe.components[i].influence = {
-"durability": undefined,
-"effectiveness": undefined,
-"quality": undefined
+                "durability": undefined,
+                "effectiveness": undefined,
+                "quality": undefined
             }
         }
     }
@@ -569,31 +570,36 @@ function recipeSelectComponents(whichRecipe) {
 
         thisItemInfluences = "<br>Effect: ";
         if (typeof thisRecipe.components[i].influence["effectiveness"] !== "undefined") {
-            thisItemInfluences += thisRecipe.components[i].influence["effectiveness"];
+          //  thisItemInfluences += thisRecipe.components[i].influence["effectiveness"];
+            thisComponentEffectiveness = thisRecipe.components[i].influence["effectiveness"];
         } else {
-            thisItemInfluences += (100 - totalInfluences["effectiveness"]) / (thisNumberOfComponents - influencesWithDefinedValues["effectiveness"]);
+         //   thisItemInfluences += (100 - totalInfluences["effectiveness"]) / (thisNumberOfComponents - influencesWithDefinedValues["effectiveness"]);
+            thisComponentEffectiveness = (100 - totalInfluences["effectiveness"]) / (thisNumberOfComponents - influencesWithDefinedValues["effectiveness"]);
         }
 
-                thisItemInfluences += "<br>Dura: ";
+        thisItemInfluences += "<br>Dura: ";
         if (typeof thisRecipe.components[i].influence["durability"] !== "undefined") {
-            thisItemInfluences += thisRecipe.components[i].influence["durability"];
+        //    thisItemInfluences += thisRecipe.components[i].influence["durability"];
+            thisComponentDurability = thisRecipe.components[i].influence["durability"];
         } else {
-            thisItemInfluences += (100 - totalInfluences["durability"]) / (thisNumberOfComponents - influencesWithDefinedValues["durability"]);
+         //   thisItemInfluences += (100 - totalInfluences["durability"]) / (thisNumberOfComponents - influencesWithDefinedValues["durability"]);
+            thisComponentDurability = (100 - totalInfluences["durability"]) / (thisNumberOfComponents - influencesWithDefinedValues["durability"]);
         }
 
-            thisItemInfluences += "<br>Qual: ";
+        thisItemInfluences += "<br>Qual: ";
         if (typeof thisRecipe.components[i].influence["quality"] !== "undefined") {
-            thisItemInfluences += thisRecipe.components[i].influence["quality"];
+          //  thisItemInfluences += thisRecipe.components[i].influence["quality"];
+            thisComponentQuality = thisRecipe.components[i].influence["quality"];
         } else {
-            thisItemInfluences += (100 - totalInfluences["quality"]) / (thisNumberOfComponents - influencesWithDefinedValues["quality"]);
+          //  thisItemInfluences += (100 - totalInfluences["quality"]) / (thisNumberOfComponents - influencesWithDefinedValues["quality"]);
+            thisComponentQuality = (100 - totalInfluences["quality"]) / (thisNumberOfComponents - influencesWithDefinedValues["quality"]);
         }
 
 
-        /*
-                for (var j in thisRecipe.components[i].influence) {
-                    thisItemInfluences += j + ":" + thisRecipe.components[i].influence[j] + "<br>";
-                }
-        */
+
+
+
+   
         if (!(isNaN(thisRecipe.components[i].type))) {
             // specific item - make sure not already added this (if more than 1 quantity required):
             if (specificsAlreadyFound.indexOf(thisRecipe.components[i].type) === -1) {
@@ -602,6 +608,11 @@ function recipeSelectComponents(whichRecipe) {
                 if (foundItemGroups.length > 0) {
                     for (var j = 0; j < foundItemGroups.length; j++) {
                         thisItemAttributes = 'qual: ' + hero.inventory[foundItemGroups[j]].quality + ', dura: ' + hero.inventory[foundItemGroups[j]].durability + ', effect: ' + hero.inventory[foundItemGroups[j]].effectiveness;
+
+SVGoutput = '<svg class="attributeGrades" xmlns="http://www.w3.org/2000/svg" height="347.924" width="347.924" viewBox="0 0 347.924 347.924"><path d="M324.617 260.943a173.962 173.962 0 0 1-150.655 86.98 173.962 173.962 0 0 1-150.656-86.98l150.656-86.981z" fill="'+gradeAttribute(hero.inventory[foundItemGroups[j]].effectiveness)+'"/><path d="M23.306 260.943a173.962 173.962 0 0 1 0-173.962A173.962 173.962 0 0 1 173.962 0v173.962z" fill="'+gradeAttribute(hero.inventory[foundItemGroups[j]].quality)+'"/><path d="M173.962 0a173.962 173.962 0 0 1 150.655 86.98 173.962 173.962 0 0 1 0 173.963l-150.655-86.981z" fill="'+gradeAttribute(hero.inventory[foundItemGroups[j]].durability)+'"/></svg>';
+
+thisItemAttributes += SVGoutput;
+
                         availableComponentMarkup += '<li id="fromSlot' + foundItemGroups[j] + '">' + generateSlotMarkup(foundItemGroups[j]) + thisItemAttributes + '</li>';
                         componentsFound++;
                     }
@@ -616,6 +627,13 @@ function recipeSelectComponents(whichRecipe) {
             if (foundItemGroups.length > 0) {
                 for (var j = 0; j < foundItemGroups.length; j++) {
                     thisItemAttributes = 'qual: ' + hero.inventory[foundItemGroups[j]].quality + ', dura: ' + hero.inventory[foundItemGroups[j]].durability + ', effect: ' + hero.inventory[foundItemGroups[j]].effectiveness;
+
+
+SVGoutput = '<svg class="attributeGrades" xmlns="http://www.w3.org/2000/svg" height="347.924" width="347.924" viewBox="0 0 347.924 347.924"><path d="M324.617 260.943a173.962 173.962 0 0 1-150.655 86.98 173.962 173.962 0 0 1-150.656-86.98l150.656-86.981z" fill="'+gradeAttribute(hero.inventory[foundItemGroups[j]].effectiveness)+'"/><path d="M23.306 260.943a173.962 173.962 0 0 1 0-173.962A173.962 173.962 0 0 1 173.962 0v173.962z" fill="'+gradeAttribute(hero.inventory[foundItemGroups[j]].quality)+'"/><path d="M173.962 0a173.962 173.962 0 0 1 150.655 86.98 173.962 173.962 0 0 1 0 173.963l-150.655-86.981z" fill="'+gradeAttribute(hero.inventory[foundItemGroups[j]].durability)+'"/></svg>';
+
+thisItemAttributes += SVGoutput;
+
+
                     availableComponentMarkup += '<li id="fromSlot' + foundItemGroups[j] + '">' + generateSlotMarkup(foundItemGroups[j]) + thisItemAttributes + '</li>';
                     componentsFound++;
                 }
@@ -644,6 +662,27 @@ function findRecipeTierLevel(toolQuality) {
     var diff = (toolQuality / 10);
     var tierLevel = 10 - (Math.sqrt(100 - diff * diff));
     return tierLevel;
+}
+
+function gradeAttribute(attributeValue) {
+    /*
+    Very poor 1-10
+    Poor 11-35
+    Average 36-65
+    Good 66-90
+    Exceptional 91-100
+    */
+    var map = [
+        { max: 91, grade: "#04752c" },
+        { max: 66, grade: "#82b11e" },
+        { max: 36, grade: "#b98c45" },
+        { max: 11, grade: "#ab471d" }
+    ];
+    for (var loop = 0; loop < map.length; loop++) {
+        var data = map[loop];
+        if (attributeValue >= data.max) return data.grade;
+    }
+    return "#b41119";
 }
 function scrollbarWidth() {
     // Add a temporary scrolling element to the DOM, then check the difference between its outer and inner elements

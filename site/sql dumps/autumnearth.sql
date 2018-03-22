@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 19, 2018 at 02:09 PM
+-- Generation Time: Mar 21, 2018 at 02:14 PM
 -- Server version: 10.1.30-MariaDB
 -- PHP Version: 7.0.27
 
@@ -740,8 +740,8 @@ CREATE TABLE `tblitemgroups` (
 
 INSERT INTO `tblitemgroups` (`itemGroupID`, `itemGroupCode`, `itemGroupDescription`) VALUES
 (0, '0', '0'),
-(1, 'mrdt', 'Any mordant'),
-(2, 'dye', 'Any dye'),
+(1, 'mrdt', 'Any Mordant'),
+(2, 'dye', 'Any Dye'),
 (3, 'scribe', 'Anything that a Scribe can copy'),
 (4, 'enchant', 'Any item with raw magical properties');
 
@@ -1489,6 +1489,7 @@ CREATE TABLE `tblrecipes` (
   `creates` int(11) DEFAULT NULL,
   `prerequisite` int(11) DEFAULT NULL,
   `profession` int(11) DEFAULT NULL,
+  `recipeTier` int(10) NOT NULL,
   `recipeName` varchar(255) DEFAULT NULL,
   `recipeDescription` varchar(255) DEFAULT NULL,
   `defaultResultingColour` int(11) DEFAULT NULL
@@ -1498,21 +1499,21 @@ CREATE TABLE `tblrecipes` (
 -- Dumping data for table `tblrecipes`
 --
 
-INSERT INTO `tblrecipes` (`recipeID`, `components`, `creates`, `prerequisite`, `profession`, `recipeName`, `recipeDescription`, `defaultResultingColour`) VALUES
-(0, '[{\r\n			\"type\": 11,\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		},\r\n		{\r\n			\"type\": \"mrdt\",\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		},\r\n				{\r\n			\"type\": 2,\r\n			\"quantity\": 2,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		}\r\n	]', 12, 0, 0, NULL, '', 1),
-(1, '[{\r\n			\"type\": 11,\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		},\r\n		{\r\n			\"type\": \"mrdt\",\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		},\r\n				{\r\n			\"type\": 3,\r\n			\"quantity\": 2,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		}\r\n	]', 12, 0, 0, NULL, '', 2),
-(2, '[{\r\n			\"type\": 11,\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		},\r\n		{\r\n			\"type\": \"mrdt\",\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		},\r\n				{\r\n			\"type\": 5,\r\n			\"quantity\": 2,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		}\r\n	]', 12, 0, 0, NULL, '', 4),
-(3, '[{\r\n			\"type\": 11,\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		},\r\n		{\r\n			\"type\": \"mrdt\",\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		},\r\n				{\r\n			\"type\": 24,\r\n			\"quantity\": 2,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		}\r\n	]', 7, 0, 0, NULL, '', NULL),
-(4, '[{\r\n			\"type\": 26,\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		},\r\n		{\r\n			\"type\": 25,\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		}\r\n	]', 28, 0, 0, NULL, '', NULL),
-(5, '[{\r\n			\"type\": 11,\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		},\r\n		{\r\n			\"type\": \"mrdt\",\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		},\r\n				{\r\n			\"type\": 6,\r\n			\"quantity\": 2,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		}\r\n	]', 12, 0, 0, NULL, '', 16),
-(6, '[{\r\n			\"type\": \"dye\",\r\n			\"quantity\": 2,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		}\r\n	]', 12, 0, 0, 'Mix dyes', 'Mix 2 or more dyes to create new colours.', NULL),
-(7, '[{\r\n			\"type\": 27,\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		}\r\n	]', 26, 0, 0, 'Burn Wood', 'Produce Wood Ash by burning', NULL),
-(8, '[{\r\n			\"type\": \"dye\",\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		},\r\n		{\r\n			\"type\": 14,\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		}\r\n	]', 14, 0, 0, 'Dye Linen', 'Colour some linen.', NULL),
-(9, '[{\r\n			\"type\": 11,\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		},\r\n		{\r\n			\"type\": \"mrdt\",\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		},\r\n				{\r\n			\"type\": 23,\r\n			\"quantity\": 2,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		}\r\n	]', 12, 0, 0, NULL, '', 6),
-(10, '[{\r\n			\"type\": 1,\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		}\r\n	]', 14, 0, 1, NULL, '', NULL),
-(11, '[{\r\n			\"type\": 15,\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		}\r\n	]', 16, 0, 1, NULL, '', NULL),
-(12, '[{\r\n			\"type\": 37,\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		},{\r\n			\"type\": 38,\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		},{\r\n			\"type\": 39,\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		}\r\n	]', 40, 0, 4, NULL, '', 16),
-(13, '[{\r\n			\"type\": 15,\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		}\r\n	]', 49, 0, 1, NULL, '', NULL);
+INSERT INTO `tblrecipes` (`recipeID`, `components`, `creates`, `prerequisite`, `profession`, `recipeTier`, `recipeName`, `recipeDescription`, `defaultResultingColour`) VALUES
+(0, '[{\r\n			\"type\": 11,\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": {\r\n		\"effectiveness\": 0,\r\n		\"durability\": 0,\r\n		\"quality\": 0\r\n	}\r\n		},\r\n		{\r\n			\"type\": \"mrdt\",\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": {\r\n		\"effectiveness\": 70\r\n	}\r\n\r\n		},\r\n				{\r\n			\"type\": 2,\r\n			\"quantity\": 2,\r\n			\"minQuality\": 0,\r\n			\"influence\": {\r\n			\"quality\": 70\r\n			}\r\n		}\r\n	]', 12, 0, 0, 10, NULL, '', 1),
+(1, '[{\r\n			\"type\": 11,\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": {\r\n		\"effectiveness\": 0,\r\n		\"durability\": 0,\r\n		\"quality\": 0\r\n	}\r\n		},\r\n		{\r\n			\"type\": \"mrdt\",\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": {\r\n		\"effectiveness\": 70\r\n	}\r\n		},\r\n				{\r\n			\"type\": 3,\r\n			\"quantity\": 2,\r\n			\"minQuality\": 0,\r\n			\"influence\": {\r\n			\"quality\": 70\r\n			}\r\n		}\r\n	]', 12, 0, 0, 10, NULL, '', 2),
+(2, '[{\r\n			\"type\": 11,\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": {\r\n		\"effectiveness\": 0,\r\n		\"durability\": 0,\r\n		\"quality\": 0\r\n	}\r\n		},\r\n		{\r\n			\"type\": \"mrdt\",\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": {\r\n		\"effectiveness\": 70\r\n	}\r\n		},\r\n				{\r\n			\"type\": 5,\r\n			\"quantity\": 2,\r\n			\"minQuality\": 0,\r\n			\"influence\": {\r\n			\"quality\": 70\r\n			}\r\n		}\r\n	]', 12, 0, 0, 10, NULL, '', 4),
+(3, '[{\r\n			\"type\": 11,\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": {\r\n		\"effectiveness\": 0,\r\n		\"durability\": 0,\r\n		\"quality\": 0\r\n	}\r\n		},\r\n		{\r\n			\"type\": \"mrdt\",\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": {\r\n		\"effectiveness\": 70\r\n	}\r\n		},\r\n				{\r\n			\"type\": 24,\r\n			\"quantity\": 2,\r\n			\"minQuality\": 0,\r\n			\"influence\": {\r\n			\"quality\": 70\r\n			}\r\n		}\r\n	]', 7, 0, 0, 10, NULL, '', NULL),
+(4, '[{\r\n			\"type\": 26,\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		},\r\n		{\r\n			\"type\": 25,\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		}\r\n	]', 28, 0, 0, 0, NULL, '', NULL),
+(5, '[{\r\n			\"type\": 11,\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": {\r\n		\"effectiveness\": 0,\r\n		\"durability\": 0,\r\n		\"quality\": 0\r\n	}\r\n		},\r\n		{\r\n			\"type\": \"mrdt\",\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		},\r\n				{\r\n			\"type\": 6,\r\n			\"quantity\": 2,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		}\r\n	]', 12, 0, 0, 0, NULL, '', 16),
+(6, '[{\r\n			\"type\": \"dye\",\r\n			\"quantity\": 2,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		}\r\n	]', 12, 0, 0, 0, 'Mix dyes', 'Mix 2 or more dyes to create new colours.', NULL),
+(7, '[{\r\n			\"type\": 27,\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		}\r\n	]', 26, 0, 0, 10, 'Burn Wood', 'Produce Wood Ash by burning', NULL),
+(8, '[{\r\n			\"type\": \"dye\",\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		},\r\n		{\r\n			\"type\": 14,\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		}\r\n	]', 14, 0, 0, 0, 'Dye Linen', 'Colour some linen.', NULL),
+(9, '[{\r\n			\"type\": 11,\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": {\r\n		\"effectiveness\": 0,\r\n		\"durability\": 0,\r\n		\"quality\": 0\r\n	}\r\n		},\r\n		{\r\n			\"type\": \"mrdt\",\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": {\r\n		\"effectiveness\": 70\r\n	}\r\n		},\r\n				{\r\n			\"type\": 23,\r\n			\"quantity\": 2,\r\n			\"minQuality\": 0,\r\n			\"influence\": {\r\n			\"quality\": 70\r\n			}\r\n		}\r\n	]', 12, 0, 0, 0, NULL, '', 6),
+(10, '[{\r\n			\"type\": 1,\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		}\r\n	]', 14, 0, 1, 0, NULL, '', NULL),
+(11, '[{\r\n			\"type\": 15,\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		}\r\n	]', 16, 0, 1, 0, NULL, '', NULL),
+(12, '[{\r\n			\"type\": 37,\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		},{\r\n			\"type\": 38,\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		},{\r\n			\"type\": 39,\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		}\r\n	]', 40, 0, 4, 0, NULL, '', 16),
+(13, '[{\r\n			\"type\": 15,\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		}\r\n	]', 49, 0, 1, 0, NULL, '', NULL);
 
 -- --------------------------------------------------------
 
