@@ -52,16 +52,20 @@
         margin: 0;
         padding: 0 0 6px 0;
         position: relative;
-            .qty {
+        .qty {
             position: absolute;
-            left: 0px;
-            width: 43px;
+            right: 0px;
+            width: 20px;
+            height: 20px;
+            line-height: 20px;
             top: 31px;
-            text-align: right;
+            text-align: center;
             color: #fff;
             cursor: default;
             font-size: 11px;
             pointer-events: none;
+            background: #000;
+            @include border-radius(100%);
         }
         p {
             display: inline-block;
@@ -76,14 +80,19 @@
         }
     }
     img {
-        background: url(../images/game-world/interface/inventory-slot.png) no-repeat 0% 50%;
+        background: #cecece;
         display: inline-block;
-        cursor: url(../images/game-world/cursors/active.gif) 3 3, auto;
         width: 46px;
         height: 46px;
-        padding: 3px;
+        padding: 2px;
         margin-right: 12px;
         @include border-box;
+    }
+}
+
+#componentsAvailableForThisRecipe {
+    img {
+        cursor: url(../images/game-world/cursors/active.gif) 3 3, auto;
     }
 }
 
@@ -98,17 +107,16 @@
 
 .gradedItem {
     position: relative;
-margin: 0 6px;
-
+    margin: 0 6px;
+display: inline-block;
     img {
         @include border-radius(100%);
         position: absolute;
-        left: 5px;
-        top: 5px;
+        left: 6px;
+        top: 6px;
     }
     svg {
-    width: 56px;
-    height: 56px;
-  
-}
+        width: 58px;
+        height: 58px;
+    }
 }

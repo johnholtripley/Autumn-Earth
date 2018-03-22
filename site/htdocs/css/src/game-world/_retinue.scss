@@ -236,23 +236,7 @@
     color: #fff;
 }
 
-#retinueQuestStart {
-     cursor: url(../images/game-world/cursors/active.gif) 3 3, auto;
-     border: 0;
-     background: #53160d;
-     color: #fff;
-     outline:none;
-     text-transform: uppercase;
-     margin: 6px auto;
-     display: block;
-     padding: 6px 16px;
-     border: 2px solid #967834;
-     @include transition(opacity 0.2s ease);
-     &:disabled {
-        cursor: url(../images/game-world/cursors/default.gif) 3 3, auto;
-        opacity: 0.4;
-     }
-}
+
 
 
 .retinueCompletePanel {

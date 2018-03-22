@@ -265,7 +265,7 @@ $retinuePanelOutput .= '<div class="mapLocationTooltip" id="followerLocationTool
 //$retinuePanelOutput .= "<p>No quests currently available</p>";
 //}
   $retinuePanelOutput .= '<p id="retinueQuestTimeRequired">Time required:</p>';
-   $retinuePanelOutput .= '<button id="retinueQuestStart" disabled="disabled">Start quest</button>';
+   $retinuePanelOutput .= '<button id="retinueQuestStart" class="primaryButton" disabled="disabled">Start quest</button>';
 mysqli_free_result($questsResult);
 
 $retinuePanelOutput .= '<div id="retinueDetailWrapper">'.$questPanelDetailsOutput.'</div>';

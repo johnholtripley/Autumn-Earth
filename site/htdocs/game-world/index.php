@@ -127,7 +127,7 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
       <button class="closePanel">close</button>
       <div class="craftingColumn"><div id="componentsAvailableForThisRecipe"></div></div>
       <div class="craftingColumn"><div id="selectComponentsItemBeingCreated"></div></div>
-      <div class="craftingColumn"><div id="displayItemBeingCreated"></div><button>Create</button></div>   
+      <div class="craftingColumn"><div id="displayItemBeingCreated"></div><button class="primaryButton" disabled="disabled">Create</button></div>   
     </div>
 
     <div id="booksAndParchments"></div>

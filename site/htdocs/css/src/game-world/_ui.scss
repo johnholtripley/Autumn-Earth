@@ -173,18 +173,18 @@
     opacity: 0;
     @include transition(opacity .4s ease-out);
     position: relative;
-    width :40px;
+    width: 40px;
     height: 40px;
     background: url(../images/game-world/interface/new-post.png) no-repeat 50% 50%;
     cursor: url(../images/game-world/cursors/default.gif) 3 3, auto;
-        @include attention() {
-            p {
-                opacity: 1;
-                pointer-events: auto;
-                @include transform(translateY(0));
-            }
-        }
+    @include attention() {
         p {
+            opacity: 1;
+            pointer-events: auto;
+            @include transform(translateY(0));
+        }
+    }
+    p {
         // tooltip
         background: #eee;
         z-index: 1;
@@ -204,6 +204,7 @@
         @include transition(all .25s ease-out);
     }
 }
+
 #newPost.active {
     opacity: 1;
 }
@@ -216,4 +217,55 @@
 
 .isoLeft {
     @include transform(skew(0deg, 26.6deg) scale(0.89443, 1));
+}
+
+
+
+
+.primaryButton {
+    cursor: url(../images/game-world/cursors/active.gif) 3 3, auto;
+    border: 0;
+    background: #53160d;
+    color: #fff;
+    outline: none;
+    text-transform: uppercase;
+    margin: 6px auto;
+    display: block;
+    padding: 6px 16px;
+    border: 2px solid #967834;
+    @include transition(opacity 0.2s ease);
+    &:disabled {
+        cursor: url(../images/game-world/cursors/default.gif) 3 3, auto;
+        opacity: 0.4;
+        &:hover {
+            // an animation to hint that it can't be clicked:
+            @include animation(not-allowed-shake 0.4s);
+        }
+    }
+}
+
+
+
+
+
+
+@include keyframes('not-allowed-shake') {
+    15% {
+        transform: translateX(-10%);
+    }
+    45% {
+        transform: translateX(10%);
+    }
+    60% {
+       transform: translateX(0%); 
+    }
+    70% {
+         transform: translateX(-5%);
+    }
+     90% {
+         transform: translateX(5%);
+    }
+     100% {
+        transform: translateX(0%);
+    }
 }

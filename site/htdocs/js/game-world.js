@@ -603,7 +603,7 @@ function recipeSelectComponents(whichRecipe) {
         if (!(isNaN(thisRecipe.components[i].type))) {
             // specific item - make sure not already added this (if more than 1 quantity required):
             if (specificsAlreadyFound.indexOf(thisRecipe.components[i].type) === -1) {
-                beingCreatedMarkup += '<li><div class="gradedItem">' + requiredSVGoutput + '<img src="/images/game-world/inventory-items/' + thisRecipe.components[i].type + '.png" alt="' + currentActiveInventoryItems[thisRecipe.components[i].type].shortname + '"><p>' + currentActiveInventoryItems[thisRecipe.components[i].type].shortname +'</p><span class="qty">' + thisRecipe.components[i].quantity + '</span></div></li>';
+                beingCreatedMarkup += '<li><div class="gradedItem">' + requiredSVGoutput + '<img src="/images/game-world/inventory-items/' + thisRecipe.components[i].type + '.png" alt="' + currentActiveInventoryItems[thisRecipe.components[i].type].shortname + '"><span class="qty">' + thisRecipe.components[i].quantity + '</span></div><p>' + currentActiveInventoryItems[thisRecipe.components[i].type].shortname +'</p></li>';
                 foundItemGroups = findSlotItemIdInInventory(thisRecipe.components[i].type);
                 if (foundItemGroups.length > 0) {
                     for (var j = 0; j < foundItemGroups.length; j++) {
@@ -622,7 +622,7 @@ function recipeSelectComponents(whichRecipe) {
         } else {
             // item group:
 
-            beingCreatedMarkup += '<li><div class="gradedItem">' + requiredSVGoutput + '<img class="previewSlot" src="/images/game-world/inventory-items/' + thisRecipe.components[i].type + '.png" alt=""><p>' + currentItemGroupFilters[(thisRecipe.components[i].type)] + '</p><span class="qty">' + thisRecipe.components[i].quantity + '</span></div></li>';
+            beingCreatedMarkup += '<li><div class="gradedItem">' + requiredSVGoutput + '<img class="previewSlot" src="/images/game-world/inventory-items/' + thisRecipe.components[i].type + '.png" alt=""><span class="qty">' + thisRecipe.components[i].quantity + '</span></div><p>' + currentItemGroupFilters[(thisRecipe.components[i].type)] + '</p></li>';
             foundItemGroups = hasItemTypeInInventory(thisRecipe.components[i].type);
             if (foundItemGroups.length > 0) {
                 for (var j = 0; j < foundItemGroups.length; j++) {
@@ -634,7 +634,7 @@ function recipeSelectComponents(whichRecipe) {
                     //thisItemAttributes += SVGoutput;
 
 
-                    availableComponentMarkup += '<li id="fromSlot' + foundItemGroups[j] + '"><div class="gradedItem">' + SVGoutput + generateCraftingSlotMarkup(hero.inventory[foundItemGroups[j]]) + '</div></li>';
+                    availableComponentMarkup += '<li id="fromSlot' + foundItemGroups[j] + '"><div class="gradedItem">' + SVGoutput + generateCraftingSlotMarkup(hero.inventory[foundItemGroups[j]]) + '</li>';
                     componentsFound++;
                 }
             }
@@ -704,8 +704,9 @@ function generateCraftingSlotMarkup(thisItemObject) {
         imageClassName += 'players card';
     }
     slotMarkup += '<img src="/images/game-world/inventory-items/' + thisItemObject.type + thisFileColourSuffix + '.png" ' + 'alt="' + theColourPrefix + currentActiveInventoryItems[thisItemObject.type].shortname + '" class="' + imageClassName + '">';
+    
+    slotMarkup += '<span class="qty">' + thisItemObject.quantity + '</span></div>';
     slotMarkup += '<p>' + theColourPrefix + currentActiveInventoryItems[thisItemObject.type].shortname + '</p>';
-    slotMarkup += '<span class="qty">' + thisItemObject.quantity + '</span>';
     return slotMarkup;
 }
 function scrollbarWidth() {
