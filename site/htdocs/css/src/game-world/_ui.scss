@@ -243,7 +243,7 @@
         }
     }
     &:disabled {
-        cursor: url(../images/game-world/cursors/default.gif) 3 3, auto;
+        cursor: url(../images/game-world/cursors/blocked.gif) 3 3, auto;
         opacity: 0.4;
         &:hover {
             // an animation to hint that it can't be clicked:
