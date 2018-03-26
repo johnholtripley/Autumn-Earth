@@ -75,7 +75,6 @@ function recipeSelectComponents(whichRecipe) {
     var displayItemMarkup = '<img src="/images/game-world/inventory-items/' + thisRecipe.imageId + '.png" alt="' + thisRecipe.recipeName + '"><h3>' + thisRecipe.recipeName + '</h3><p>' + thisRecipe.recipeDescription + '</p>';
     beingCreatedMarkup += '<ul>';
 
-
     // complete any undefined influences:
     var totalInfluences = {
         "durability": 0,
@@ -138,7 +137,6 @@ function recipeSelectComponents(whichRecipe) {
                 for (var j = 0; j < foundItemGroups.length; j++) {
                     SVGoutput = '<svg xmlns="http://www.w3.org/2000/svg" height="100" width="100" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50" fill="' + gradeAttribute(hero.inventory[foundItemGroups[j]].effectiveness) + '"/><path d="M6.699 75a50 50 0 0 1 0-50A50 50 0 0 1 50 0v50z" fill="' + gradeAttribute(hero.inventory[foundItemGroups[j]].quality) + '"/><path d="M50 0a50 50 0 0 1 43.301 25 50 50 0 0 1 0 50l-43.3-25z" fill="' + gradeAttribute(hero.inventory[foundItemGroups[j]].durability) + '"/></svg>';
                     availableComponentMarkup += '<li id="fromSlot' + foundItemGroups[j] + '"><div class="gradedItem">' + SVGoutput + generateCraftingSlotMarkup(hero.inventory[foundItemGroups[j]]) + '</div></li>';
-
                     // 'lock' this slot:
                     document.getElementById('slot' + foundItemGroups[j]).classList.add('locked');
                     componentsFound++;
@@ -203,10 +201,6 @@ function gradeAttribute(attributeValue) {
     }
     return "#b41119";
 }
-
-
-
-
 
 function generateCraftingSlotMarkup(thisItemObject) {
     var slotMarkup = '';
