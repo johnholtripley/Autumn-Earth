@@ -190,14 +190,14 @@ var UI = {
         UI.buildActionBar();
         UI.initRetinueTimers();
 
-/*
-        if (hero.professionsKnown.length > 0) {
-            // load and cache the first profession's recipe assets:
-            UI.populateRecipeList(hero.professionsKnown[0],100);
-            // but hide the panel initially:
-            craftingPanel.classList.remove("active");
-        }
-*/
+        /*
+                if (hero.professionsKnown.length > 0) {
+                    // load and cache the first profession's recipe assets:
+                    UI.populateRecipeList(hero.professionsKnown[0],100);
+                    // but hide the panel initially:
+                    craftingPanel.classList.remove("active");
+                }
+        */
         gameWrapper.onmousedown = UI.globalMouseDown;
         gameWrapper.onclick = UI.globalClick;
 
@@ -241,26 +241,26 @@ var UI = {
 
     showChangeInInventory: function(whichSlotsToUpdate) {
         // check it wasn't a follower, money or profession added:
-     if(whichSlotsToUpdate.length>0) {
-        var thisSlotsId, slotMarkup, thisSlotElem;
-        // add a transition end detector to just the first element that will be changed:
-        document.getElementById("slot" + whichSlotsToUpdate[0]).addEventListener(whichTransitionEvent, function removeSlotStatus(e) {
-            var elementList = document.querySelectorAll('#inventoryPanels .changed');
-            for (var i = 0; i < elementList.length; i++) {
-                elementList[i].classList.remove("changed");
+        if (whichSlotsToUpdate.length > 0) {
+            var thisSlotsId, slotMarkup, thisSlotElem;
+            // add a transition end detector to just the first element that will be changed:
+            document.getElementById("slot" + whichSlotsToUpdate[0]).addEventListener(whichTransitionEvent, function removeSlotStatus(e) {
+                var elementList = document.querySelectorAll('#inventoryPanels .changed');
+                for (var i = 0; i < elementList.length; i++) {
+                    elementList[i].classList.remove("changed");
+                }
+                // remove the event listener now:
+                return e.currentTarget.removeEventListener(whichTransitionEvent, removeSlotStatus, false);
+            }, false);
+            // loop through the slots that have changed and update their markup:
+            for (var j = 0; j < whichSlotsToUpdate.length; j++) {
+                thisSlotsId = whichSlotsToUpdate[j];
+                slotMarkup = generateSlotMarkup(thisSlotsId);
+                thisSlotElem = document.getElementById("slot" + thisSlotsId);
+                thisSlotElem.innerHTML = slotMarkup;
+                thisSlotElem.classList.add("changed")
             }
-            // remove the event listener now:
-            return e.currentTarget.removeEventListener(whichTransitionEvent, removeSlotStatus, false);
-        }, false);
-        // loop through the slots that have changed and update their markup:
-        for (var j = 0; j < whichSlotsToUpdate.length; j++) {
-            thisSlotsId = whichSlotsToUpdate[j];
-            slotMarkup = generateSlotMarkup(thisSlotsId);
-            thisSlotElem = document.getElementById("slot" + thisSlotsId);
-            thisSlotElem.innerHTML = slotMarkup;
-            thisSlotElem.classList.add("changed")
         }
-    }
     },
 
 
@@ -475,8 +475,8 @@ var UI = {
         cardAlbumList.innerHTML = cardAlbumMarkup;
     },
 
-    populateRecipeList: function(whichProfession,toolsQuality) {
-        
+    populateRecipeList: function(whichProfession, toolsQuality) {
+
         if (currentRecipePanelProfession != whichProfession) {
             // clear previous searches:
             recipeSearch.value = '';
@@ -490,10 +490,10 @@ var UI = {
             for (var i = 0; i < hero.crafting[whichProfession].sortOrder.length; i++) {
                 thisRecipe = hero.crafting[whichProfession].recipes[(hero.crafting[whichProfession].sortOrder[i])];
 
-// check this tool's quality is sufficent for this tier of recipe:
-if(recipeTiersPossibleForThisTool >= thisRecipe.tier) {
-                recipeMarkup += '<li class="active" id="recipe' + hero.crafting[whichProfession].sortOrder[i] + '"><img src="/images/game-world/inventory-items/' + thisRecipe.imageId + '.png" alt="' + thisRecipe.recipeName + '"><h3>' + thisRecipe.recipeName + '</h3><p>' + thisRecipe.recipeDescription + '</p></li>';
-            }
+                // check this tool's quality is sufficent for this tier of recipe:
+                if (recipeTiersPossibleForThisTool >= thisRecipe.tier) {
+                    recipeMarkup += '<li class="active" id="recipe' + hero.crafting[whichProfession].sortOrder[i] + '"><img src="/images/game-world/inventory-items/' + thisRecipe.imageId + '.png" alt="' + thisRecipe.recipeName + '"><h3>' + thisRecipe.recipeName + '</h3><p>' + thisRecipe.recipeDescription + '</p></li>';
+                }
             }
 
             createRecipeList.innerHTML = recipeMarkup;
@@ -924,37 +924,41 @@ if(recipeTiersPossibleForThisTool >= thisRecipe.tier) {
 
                     }
 
-                } else if (e.target.parentNode.id == "gatheringPanel") {
-                    if (activeAction == "gather") {
-                        gatheringStopped();
+                } else {
+                    switch (e.target.parentNode.id) {
+                        case 'gatheringPanel':
+                            if (activeAction == "gather") {
+                                gatheringStopped();
+                            }
+                            break;
+                        case 'surveyingPanel':
+                            if (activeAction == "survey") {
+                                surveyingStopped();
+                            }
+                            break;
+                        case 'inscriptionPanel':
+                            UI.resetInscriptionPanel();
+                            break;
+                        case 'chestPanel':
+                            UI.closeChest();
+                            break;
+                        case 'postPanel':
+                            UI.closePost();
+                            break;
+                        case 'retinuePanel':
+                            UI.closeRetinuePanel();
+                            break;
+                        case 'craftingSelectComponentsPanel':
+                            releaseLockedSlots();
+                            break;
                     }
-                } else if (e.target.parentNode.id == "surveyingPanel") {
-                    if (activeAction == "survey") {
-                        surveyingStopped();
-                    }
-                } else if (e.target.parentNode.id == "inscriptionPanel") {
-
-                    UI.resetInscriptionPanel();
-                } else if (e.target.parentNode.id == "chestPanel") {
-                    UI.closeChest();
-                } else if (e.target.parentNode.id == "postPanel") {
-                    UI.closePost();
-                } else if (e.target.parentNode.id == "retinuePanel") {
-                    UI.closeRetinuePanel();
                 }
             }
         }
         var thisNode = getNearestParentId(e.target);
         if (thisNode.id.substring(0, 6) == "scribe") {
             UI.processInscriptionClick(thisNode);
-
-
-
         }
-
-
-
-
     },
 
 
@@ -2099,7 +2103,7 @@ if(recipeTiersPossibleForThisTool >= thisRecipe.tier) {
         document.getElementById("retinueComplete" + whichPanel).classList.add("active");
     },
     showNewFollower: function(id, name) {
-       UI.showNotification('<p>You have gained a new follower called &quot;' + name + '&quot;</p>');
+        UI.showNotification('<p>You have gained a new follower called &quot;' + name + '&quot;</p>');
     },
     showNewProfession: function(id) {
         UI.showNotification('<p>You learned a new profession - #' + id + '</p>');

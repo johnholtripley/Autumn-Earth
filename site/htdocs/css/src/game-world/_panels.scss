@@ -84,6 +84,9 @@ $numberOfItemCategories: 20;
             opacity: 0;
         }
     }
+    &.locked {
+            cursor: url(../images/game-world/cursors/default.gif) 3 3, auto;
+    }
 
     p {
         // tooltip
@@ -111,6 +114,8 @@ $numberOfItemCategories: 20;
         }
     }
 }
+
+
 
 .closePanel {
     position: absolute;
@@ -522,6 +527,20 @@ $numberOfItemCategories: 20;
     @include transform-origin(0 100%);
     background: rgba(0, 0, 0, 0.7);
 }
+
+.lockedOverlay {
+    position: absolute;
+        left: 0px;
+    width: 40px;
+    height: 40px;
+    bottom: 0px;
+    border: 3px solid #ffa200;
+    @include border-radius(6px);
+    display: none;
+}
+.locked .lockedOverlay {
+display: block;
+    }
 
 #questJournal {
     @include togglePanel(0.4s);

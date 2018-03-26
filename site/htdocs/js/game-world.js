@@ -519,10 +519,10 @@ function recipeSearchClear() {
 }
 
 function recipeSelectComponents(whichRecipe) {
+    releaseLockedSlots();
     craftingSelectComponentsPanel.classList.add("active");
     var recipeId = whichRecipe.substring(6);
     var foundItemGroups;
-    var specificsAlreadyFound = [];
     var thisRecipe = hero.crafting[currentRecipePanelProfession].recipes[recipeId];
     var beingCreatedMarkup = '<h4>Requires:</h4>';
     // find all components that the player has that are usable for this recipe as well:
@@ -562,79 +562,55 @@ function recipeSelectComponents(whichRecipe) {
         }
     }
 
-
-
     for (var i in thisRecipe.components) {
-
-
         thisItemInfluences = '';
-        //    thisItemInfluences = "<br>Effect: ";
         if (typeof thisRecipe.components[i].influence["effectiveness"] !== "undefined") {
-            //  thisItemInfluences += thisRecipe.components[i].influence["effectiveness"];
+
             thisComponentEffectiveness = thisRecipe.components[i].influence["effectiveness"];
         } else {
-            //    thisItemInfluences += (100 - totalInfluences["effectiveness"]) / (thisNumberOfComponents - influencesWithDefinedValues["effectiveness"]);
+
             thisComponentEffectiveness = (100 - totalInfluences["effectiveness"]) / (thisNumberOfComponents - influencesWithDefinedValues["effectiveness"]);
         }
-
-        // thisItemInfluences += "<br>Dura: ";
         if (typeof thisRecipe.components[i].influence["durability"] !== "undefined") {
-            //   thisItemInfluences += thisRecipe.components[i].influence["durability"];
+
             thisComponentDurability = thisRecipe.components[i].influence["durability"];
         } else {
-            //  thisItemInfluences += (100 - totalInfluences["durability"]) / (thisNumberOfComponents - influencesWithDefinedValues["durability"]);
+
             thisComponentDurability = (100 - totalInfluences["durability"]) / (thisNumberOfComponents - influencesWithDefinedValues["durability"]);
         }
-
-        // thisItemInfluences += "<br>Qual: ";
         if (typeof thisRecipe.components[i].influence["quality"] !== "undefined") {
-            //  thisItemInfluences += thisRecipe.components[i].influence["quality"];
+
             thisComponentQuality = thisRecipe.components[i].influence["quality"];
         } else {
-            //  thisItemInfluences += (100 - totalInfluences["quality"]) / (thisNumberOfComponents - influencesWithDefinedValues["quality"]);
+
             thisComponentQuality = (100 - totalInfluences["quality"]) / (thisNumberOfComponents - influencesWithDefinedValues["quality"]);
         }
 
         requiredSVGoutput = '<svg xmlns="http://www.w3.org/2000/svg" height="100" width="100" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50" fill="' + gradeAttribute(thisComponentEffectiveness) + '"/><path d="M6.699 75a50 50 0 0 1 0-50A50 50 0 0 1 50 0v50z" fill="' + gradeAttribute(thisComponentQuality) + '"/><path d="M50 0a50 50 0 0 1 43.301 25 50 50 0 0 1 0 50l-43.3-25z" fill="' + gradeAttribute(thisComponentDurability) + '"/></svg>';
-
-
-
-
         if (!(isNaN(thisRecipe.components[i].type))) {
             // specific item - make sure not already added this (if more than 1 quantity required):
-            if (specificsAlreadyFound.indexOf(thisRecipe.components[i].type) === -1) {
-                beingCreatedMarkup += '<li><div class="gradedItem">' + requiredSVGoutput + '<img src="/images/game-world/inventory-items/' + thisRecipe.components[i].type + '.png" alt="' + currentActiveInventoryItems[thisRecipe.components[i].type].shortname + '"><span class="qty">' + thisRecipe.components[i].quantity + '</span></div><p>' + currentActiveInventoryItems[thisRecipe.components[i].type].shortname +'</p></li>';
-                foundItemGroups = findSlotItemIdInInventory(thisRecipe.components[i].type);
-                if (foundItemGroups.length > 0) {
-                    for (var j = 0; j < foundItemGroups.length; j++) {
-                        //  thisItemAttributes = 'qual: ' + hero.inventory[foundItemGroups[j]].quality + ', dura: ' + hero.inventory[foundItemGroups[j]].durability + ', effect: ' + hero.inventory[foundItemGroups[j]].effectiveness;
+            beingCreatedMarkup += '<li><div class="gradedItem">' + requiredSVGoutput + '<img src="/images/game-world/inventory-items/' + thisRecipe.components[i].type + '.png" alt="' + currentActiveInventoryItems[thisRecipe.components[i].type].shortname + '"><span class="qty">' + thisRecipe.components[i].quantity + '</span></div><p>' + currentActiveInventoryItems[thisRecipe.components[i].type].shortname + '</p></li>';
+            foundItemGroups = findSlotItemIdInInventory(thisRecipe.components[i].type);
+            if (foundItemGroups.length > 0) {
+                for (var j = 0; j < foundItemGroups.length; j++) {
+                    SVGoutput = '<svg xmlns="http://www.w3.org/2000/svg" height="100" width="100" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50" fill="' + gradeAttribute(hero.inventory[foundItemGroups[j]].effectiveness) + '"/><path d="M6.699 75a50 50 0 0 1 0-50A50 50 0 0 1 50 0v50z" fill="' + gradeAttribute(hero.inventory[foundItemGroups[j]].quality) + '"/><path d="M50 0a50 50 0 0 1 43.301 25 50 50 0 0 1 0 50l-43.3-25z" fill="' + gradeAttribute(hero.inventory[foundItemGroups[j]].durability) + '"/></svg>';
+                    availableComponentMarkup += '<li id="fromSlot' + foundItemGroups[j] + '"><div class="gradedItem">' + SVGoutput + generateCraftingSlotMarkup(hero.inventory[foundItemGroups[j]]) + '</div></li>';
 
-                        SVGoutput = '<svg xmlns="http://www.w3.org/2000/svg" height="100" width="100" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50" fill="' + gradeAttribute(hero.inventory[foundItemGroups[j]].effectiveness) + '"/><path d="M6.699 75a50 50 0 0 1 0-50A50 50 0 0 1 50 0v50z" fill="' + gradeAttribute(hero.inventory[foundItemGroups[j]].quality) + '"/><path d="M50 0a50 50 0 0 1 43.301 25 50 50 0 0 1 0 50l-43.3-25z" fill="' + gradeAttribute(hero.inventory[foundItemGroups[j]].durability) + '"/></svg>';
-
-                        //thisItemAttributes += SVGoutput;
-
-                        availableComponentMarkup += '<li id="fromSlot' + foundItemGroups[j] + '"><div class="gradedItem">' + SVGoutput + generateCraftingSlotMarkup(hero.inventory[foundItemGroups[j]]) + '</div></li>';
-                        componentsFound++;
-                    }
+                    // 'lock' this slot:
+                    document.getElementById('slot' + foundItemGroups[j]).classList.add('locked');
+                    componentsFound++;
                 }
-                specificsAlreadyFound.push(thisRecipe.components[i].type);
             }
         } else {
             // item group:
-
             beingCreatedMarkup += '<li><div class="gradedItem">' + requiredSVGoutput + '<img class="previewSlot" src="/images/game-world/inventory-items/' + thisRecipe.components[i].type + '.png" alt=""><span class="qty">' + thisRecipe.components[i].quantity + '</span></div><p>' + currentItemGroupFilters[(thisRecipe.components[i].type)] + '</p></li>';
             foundItemGroups = hasItemTypeInInventory(thisRecipe.components[i].type);
             if (foundItemGroups.length > 0) {
                 for (var j = 0; j < foundItemGroups.length; j++) {
-                    //  thisItemAttributes = 'qual: ' + hero.inventory[foundItemGroups[j]].quality + ', dura: ' + hero.inventory[foundItemGroups[j]].durability + ', effect: ' + hero.inventory[foundItemGroups[j]].effectiveness;
-
-
                     SVGoutput = '<svg xmlns="http://www.w3.org/2000/svg" height="100" width="100" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50" fill="' + gradeAttribute(hero.inventory[foundItemGroups[j]].effectiveness) + '"/><path d="M6.699 75a50 50 0 0 1 0-50A50 50 0 0 1 50 0v50z" fill="' + gradeAttribute(hero.inventory[foundItemGroups[j]].quality) + '"/><path d="M50 0a50 50 0 0 1 43.301 25 50 50 0 0 1 0 50l-43.3-25z" fill="' + gradeAttribute(hero.inventory[foundItemGroups[j]].durability) + '"/></svg>';
-
-                    //thisItemAttributes += SVGoutput;
-
-
                     availableComponentMarkup += '<li id="fromSlot' + foundItemGroups[j] + '"><div class="gradedItem">' + SVGoutput + generateCraftingSlotMarkup(hero.inventory[foundItemGroups[j]]) + '</li>';
+                    // 'lock' this slot:
+                    document.getElementById('slot' + foundItemGroups[j]).classList.add('locked');
                     componentsFound++;
                 }
             }
@@ -704,10 +680,18 @@ function generateCraftingSlotMarkup(thisItemObject) {
         imageClassName += 'players card';
     }
     slotMarkup += '<img src="/images/game-world/inventory-items/' + thisItemObject.type + thisFileColourSuffix + '.png" ' + 'alt="' + theColourPrefix + currentActiveInventoryItems[thisItemObject.type].shortname + '" class="' + imageClassName + '">';
-    
+
     slotMarkup += '<span class="qty">' + thisItemObject.quantity + '</span></div>';
     slotMarkup += '<p>' + theColourPrefix + currentActiveInventoryItems[thisItemObject.type].shortname + '</p>';
     return slotMarkup;
+}
+
+function releaseLockedSlots() {
+    // clear any locked elements:
+    var allLockedSlots = document.querySelectorAll('#inventoryPanels .locked');
+    for (var i = 0; i < allLockedSlots.length; i++) {
+        allLockedSlots[i].classList.remove("locked");
+    }
 }
 function scrollbarWidth() {
     // Add a temporary scrolling element to the DOM, then check the difference between its outer and inner elements
@@ -1051,7 +1035,7 @@ function gatheringComplete() {
         var generatedObject = gathering.node.contains[0];
         var quantityOfItem = Math.floor((gathering.purity / 100) * (gathering.node.maxQuantity - gathering.quantity));
         // console.log("gathered " + quantityOfItem + "x " + currentActiveInventoryItems[generatedObject.type].shortname + " of " + gathering.quality + " quality");
-        var createdMarkup = '<ol><li>';
+        var createdMarkup = '<ol><li>Yielded: ';
         // used in case the type or colour have any random choices:
         var possibleGatheredTypes = generatedObject.type.toString().split("/");
         var possibleGatheredColours = generatedObject.colour.toString().split("/");
@@ -2261,238 +2245,232 @@ function canAddItemToInventory(itemObj) {
     var followerMarkupToAdd;
     for (var k = 0; k < itemObj.length; k++) {
         // check for any money items:
-
         switch (itemObj[k].type) {
             case '$':
                 moneyToAdd += itemObj[k].quantity;
                 break;
             case 'follower':
-
                 followersAdded.push([itemObj[k].id, itemObj[k].name]);
                 break;
             case 'profession':
                 professionsAdded.push(itemObj[k].id);
                 break;
             default:
-
                 var quantityAddedSoFar = 0;
                 // check if this type exist in the current inventory:
                 var inventoryKeysFound = getObjectKeysForInnerValue(inventoryClone, itemObj[k].type, "type");
                 if (inventoryKeysFound.length > 0) {
                     // loop through keysFound and add to the slot maximum
                     for (var i = 0; i < inventoryKeysFound.length; i++) {
-                        if (itemAttributesMatch(inventoryClone[inventoryKeysFound[i]], itemObj[k])) {
-                            var quantityOnSlotAlready = inventoryClone[inventoryKeysFound[i]].quantity;
-                            var amountAddedToThisSlot = (maxNumberOfItemsPerSlot - quantityOnSlotAlready) > (itemObj[k].quantity - quantityAddedSoFar) ? (itemObj[k].quantity - quantityAddedSoFar) : maxNumberOfItemsPerSlot - quantityOnSlotAlready;
-                            quantityAddedSoFar += amountAddedToThisSlot;
-                            // add item to this slot:
-                            if (amountAddedToThisSlot > 0) {
-                                slotsUpdated.push((inventoryKeysFound[i]));
-                                inventoryClone[inventoryKeysFound[i]].quantity += amountAddedToThisSlot;
-                            }
-                            if (quantityAddedSoFar >= itemObj[k].quantity) {
-                                break;
-                            }
-                        }
-                    }
-                }
-                if (quantityAddedSoFar < itemObj[k].quantity) {
-                    // either filled all matching slots, or couldn't find any matching slots - find an empty slot
-                    outerLoop: for (var i = 0; i < hero.bags.length; i++) {
-                        var thisBagNumberOfSlots = currentActiveInventoryItems[hero.bags[i].type].actionValue;
-                        // loop through slots for each bag:
-                        for (var j = 0; j < thisBagNumberOfSlots; j++) {
-                            var thisSlotsID = i + '-' + j;
-                            if (!(thisSlotsID in inventoryClone)) {
-                                // empty slot:
-                                var amountAddedToThisSlot = maxNumberOfItemsPerSlot > (itemObj[k].quantity - quantityAddedSoFar) ? (itemObj[k].quantity - quantityAddedSoFar) : maxNumberOfItemsPerSlot;
-                                quantityAddedSoFar += amountAddedToThisSlot;
-                                // add item to this slot:
-                                slotsUpdated.push(thisSlotsID);
-                                inventoryClone[thisSlotsID] = new Object();
-                                inventoryClone[thisSlotsID].type = itemObj[k].type;
-                                inventoryClone[thisSlotsID].quantity = amountAddedToThisSlot;
-                                inventoryClone[thisSlotsID].quality = itemObj[k].quality;
-                                inventoryClone[thisSlotsID].durability = itemObj[k].durability;
-                                inventoryClone[thisSlotsID].currentWear = itemObj[k].currentWear;
-                                inventoryClone[thisSlotsID].effectiveness = itemObj[k].effectiveness;
-                                inventoryClone[thisSlotsID].wrapped = itemObj[k].wrapped;
-                                inventoryClone[thisSlotsID].colour = itemObj[k].colour;
-                                inventoryClone[thisSlotsID].enchanted = itemObj[k].enchanted;
-                                inventoryClone[thisSlotsID].hallmark = itemObj[k].hallmark;
-                                inventoryClone[thisSlotsID].inscription = {};
-                                inventoryClone[thisSlotsID].inscription.title = itemObj[k].inscription.title;
-                                inventoryClone[thisSlotsID].inscription.content = itemObj[k].inscription.content;
-                                inventoryClone[thisSlotsID].inscription.timeCreated = itemObj[k].inscription.timeCreated;
-                                if (quantityAddedSoFar >= itemObj[k].quantity) {
-                                    // stop both loops:
-                                    break outerLoop;
+                        // make sure the slot isn't locked:
+                        if (!(document.getElementById('slot' + inventoryKeysFound[i]).classList.contains('locked'))) {
+                                if (itemAttributesMatch(inventoryClone[inventoryKeysFound[i]], itemObj[k])) {
+                                    var quantityOnSlotAlready = inventoryClone[inventoryKeysFound[i]].quantity;
+                                    var amountAddedToThisSlot = (maxNumberOfItemsPerSlot - quantityOnSlotAlready) > (itemObj[k].quantity - quantityAddedSoFar) ? (itemObj[k].quantity - quantityAddedSoFar) : maxNumberOfItemsPerSlot - quantityOnSlotAlready;
+                                    quantityAddedSoFar += amountAddedToThisSlot;
+                                    // add item to this slot:
+                                    if (amountAddedToThisSlot > 0) {
+                                        slotsUpdated.push((inventoryKeysFound[i]));
+                                        inventoryClone[inventoryKeysFound[i]].quantity += amountAddedToThisSlot;
+                                    }
+                                    if (quantityAddedSoFar >= itemObj[k].quantity) {
+                                        break;
+                                    }
                                 }
                             }
                         }
                     }
+                    if (quantityAddedSoFar < itemObj[k].quantity) {
+                        // either filled all matching slots, or couldn't find any matching slots - find an empty slot
+                        outerLoop: for (var i = 0; i < hero.bags.length; i++) {
+                            var thisBagNumberOfSlots = currentActiveInventoryItems[hero.bags[i].type].actionValue;
+                            // loop through slots for each bag:
+                            for (var j = 0; j < thisBagNumberOfSlots; j++) {
+                                var thisSlotsID = i + '-' + j;
+                                if (!(thisSlotsID in inventoryClone)) {
+                                    // empty slot:
+                                    var amountAddedToThisSlot = maxNumberOfItemsPerSlot > (itemObj[k].quantity - quantityAddedSoFar) ? (itemObj[k].quantity - quantityAddedSoFar) : maxNumberOfItemsPerSlot;
+                                    quantityAddedSoFar += amountAddedToThisSlot;
+                                    // add item to this slot:
+                                    slotsUpdated.push(thisSlotsID);
+                                    inventoryClone[thisSlotsID] = new Object();
+                                    inventoryClone[thisSlotsID].type = itemObj[k].type;
+                                    inventoryClone[thisSlotsID].quantity = amountAddedToThisSlot;
+                                    inventoryClone[thisSlotsID].quality = itemObj[k].quality;
+                                    inventoryClone[thisSlotsID].durability = itemObj[k].durability;
+                                    inventoryClone[thisSlotsID].currentWear = itemObj[k].currentWear;
+                                    inventoryClone[thisSlotsID].effectiveness = itemObj[k].effectiveness;
+                                    inventoryClone[thisSlotsID].wrapped = itemObj[k].wrapped;
+                                    inventoryClone[thisSlotsID].colour = itemObj[k].colour;
+                                    inventoryClone[thisSlotsID].enchanted = itemObj[k].enchanted;
+                                    inventoryClone[thisSlotsID].hallmark = itemObj[k].hallmark;
+                                    inventoryClone[thisSlotsID].inscription = {};
+                                    inventoryClone[thisSlotsID].inscription.title = itemObj[k].inscription.title;
+                                    inventoryClone[thisSlotsID].inscription.content = itemObj[k].inscription.content;
+                                    inventoryClone[thisSlotsID].inscription.timeCreated = itemObj[k].inscription.timeCreated;
+                                    if (quantityAddedSoFar >= itemObj[k].quantity) {
+                                        // stop both loops:
+                                        break outerLoop;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (quantityAddedSoFar != itemObj[k].quantity) {
+                        allItemsAdded = false;
+                    }
                 }
-                if (quantityAddedSoFar != itemObj[k].quantity) {
-                    allItemsAdded = false;
+        }
+        if (allItemsAdded) {
+            // make the active inventory be the same as the amended one:
+            hero.inventory = JSON.parse(JSON.stringify(inventoryClone));
+            UI.updatePanelsAfterInventoryChange();
+            if (moneyToAdd > 0) {
+                hero.currency['money'] += moneyToAdd;
+                UI.updateCurrencies();
+                audio.playSound(soundEffects['coins'], 0);
+            }
+            if (followersAdded.length > 0) {
+                for (var i = 0; i < followersAdded.length; i++) {
+                    UI.showNewFollower(followersAdded[i][0], followersAdded[i][1]);
+                    // update database:
+                    sendDataWithoutNeedingAResponse("/game-world/activateRetinueFollower.php?followerID=" + followersAdded[i][0]);
+                    // show in retinue panel:
+                    followerMarkupToAdd = '<li id="retinueFollower' + followersAdded[i][0] + '" class="available" data-locationx="200" data-locationy="350" data-activeonquest="-1"><div class="portrait"><img src="/images/retinue/' + followersAdded[i][0] + '.png" alt=""></div><h3>' + followersAdded[i][1] + '</h3><p>waiting for a quest</p></li>';
+                    retinueList.insertAdjacentHTML('beforeend', followerMarkupToAdd);
                 }
+            }
+            if (professionsAdded.length > 0) {
+                for (var i = 0; i < professionsAdded.length; i++) {
+                    if (hero.professionsKnown.indexOf(professionsAdded[i]) == -1) {
+                        hero.professionsKnown.push(professionsAdded[i]);
+                        UI.showNewProfession(professionsAdded[i]);
+                    }
+                }
+            }
+            // return success, and the slots that were affected:
+            return [true, slotsUpdated];
+        } else {
+            // don't change the current inventory - return false:
+            return [false];
         }
     }
-    if (allItemsAdded) {
-        // make the active inventory be the same as the amended one:
-        hero.inventory = JSON.parse(JSON.stringify(inventoryClone));
-        UI.updatePanelsAfterInventoryChange();
-        if (moneyToAdd > 0) {
-            hero.currency['money'] += moneyToAdd;
-            UI.updateCurrencies();
-            audio.playSound(soundEffects['coins'], 0);
 
+    function hasItemInInventory(itemType, amountNeeded) {
+        if (typeof amountNeeded === "undefined") {
+            var amountNeeded = 1;
         }
-        if (followersAdded.length > 0) {
-            for (var i = 0; i < followersAdded.length; i++) {
-                UI.showNewFollower(followersAdded[i][0], followersAdded[i][1]);
-                // update database:
-                sendDataWithoutNeedingAResponse("/game-world/activateRetinueFollower.php?followerID=" + followersAdded[i][0]);
-                // show in retinue panel:
 
-                followerMarkupToAdd = '<li id="retinueFollower' + followersAdded[i][0] + '" class="available" data-locationx="200" data-locationy="350" data-activeonquest="-1"><div class="portrait"><img src="/images/retinue/' + followersAdded[i][0] + '.png" alt=""></div><h3>' + followersAdded[i][1] + '</h3><p>waiting for a quest</p></li>';
-                retinueList.insertAdjacentHTML('beforeend', followerMarkupToAdd);
+        var quantityFound = 0;
+        var inventoryKeysFound = getObjectKeysForInnerValue(hero.inventory, parseInt(itemType), "type");
+        if (inventoryKeysFound.length > 0) {
+            for (var i = 0; i < inventoryKeysFound.length; i++) {
+                quantityFound += hero.inventory[inventoryKeysFound[i]].quantity;
             }
         }
+        if (quantityFound >= amountNeeded) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
 
-        if (professionsAdded.length > 0) {
-            for (var i = 0; i < professionsAdded.length; i++) {
-                if (hero.professionsKnown.indexOf(professionsAdded[i]) == -1) {
-                    hero.professionsKnown.push(professionsAdded[i]);
-                    UI.showNewProfession(professionsAdded[i]);
+    function findSlotItemIdInInventory(itemType) {
+        var slotsFound = [];
+        for (var key in hero.inventory) {
+            if (hero.inventory[key].type == itemType) {
+                slotsFound.push(key);
+            }
+        }
+        return slotsFound;
+    }
+
+    function hasItemTypeInInventory(itemGroupType) {
+        var slotsFound = [];
+        for (var key in hero.inventory) {
+            if (currentActiveInventoryItems[hero.inventory[key].type].group == itemGroupType) {
+                slotsFound.push(key);
+            }
+        }
+        return slotsFound;
+    }
+
+
+
+    function removeItemTypeFromInventory(itemType, amount) {
+
+
+        if (typeof amount === "undefined") {
+            var amount = 1;
+        }
+
+        var quantityStillToRemove = amount;
+        var quantityAvailableOnThisSlot;
+        var inventoryKeysFound = getObjectKeysForInnerValue(hero.inventory, parseInt(itemType), "type");
+        if (inventoryKeysFound.length > 0) {
+            for (var i = 0; i < inventoryKeysFound.length; i++) {
+                quantityAvailableOnThisSlot = hero.inventory[inventoryKeysFound[i]].quantity;
+                if (quantityAvailableOnThisSlot > quantityStillToRemove) {
+                    removeFromInventory((inventoryKeysFound[i]), quantityStillToRemove);
+                    quantityStillToRemove = 0;
+                } else {
+                    removeFromInventory((inventoryKeysFound[i]), quantityAvailableOnThisSlot);
+                    quantityStillToRemove -= quantityAvailableOnThisSlot;
                 }
             }
         }
-
-
-
-        // return success, and the slots that were affected:
-        return [true, slotsUpdated];
-    } else {
-        // don't change the current inventory - return false:
-        return [false];
-    }
-}
-
-function hasItemInInventory(itemType, amountNeeded) {
-    if (typeof amountNeeded === "undefined") {
-        var amountNeeded = 1;
     }
 
-    var quantityFound = 0;
-    var inventoryKeysFound = getObjectKeysForInnerValue(hero.inventory, parseInt(itemType), "type");
-    if (inventoryKeysFound.length > 0) {
-        for (var i = 0; i < inventoryKeysFound.length; i++) {
-            quantityFound += hero.inventory[inventoryKeysFound[i]].quantity;
+    function addToInventory(whichSlot, itemObject) {
+        // make a copy not a reference:
+        hero.inventory[whichSlot] = JSON.parse(JSON.stringify(itemObject));
+        document.getElementById("slot" + whichSlot).innerHTML = generateSlotMarkup(whichSlot);
+    }
+
+    function removeFromInventory(whichSlot, amount) {
+        var thisCurrentQuantity = hero.inventory[whichSlot].quantity;
+        var thisSlotElem = document.getElementById("slot" + whichSlot);
+        if (thisCurrentQuantity - amount > 0) {
+            // just reduce quantity:
+            hero.inventory[whichSlot].quantity -= amount;
+            updateQuantity(whichSlot);
+        } else {
+            // remove the item:
+            delete hero.inventory[whichSlot];
+            // update visually:
+            thisSlotElem.innerHTML = '';
         }
     }
-    if (quantityFound >= amountNeeded) {
-        return true;
-    } else {
-        return false;
-    }
-}
 
-
-function findSlotItemIdInInventory(itemType) {
-    var slotsFound = [];
-    for (var key in hero.inventory) {
-        if (hero.inventory[key].type == itemType) {
-            slotsFound.push(key);
-        }
-    }
-    return slotsFound;
-}
-
-function hasItemTypeInInventory(itemGroupType) {
-    var slotsFound = [];
-    for (var key in hero.inventory) {
-        if (currentActiveInventoryItems[hero.inventory[key].type].group == itemGroupType) {
-            slotsFound.push(key);
-        }
-    }
-    return slotsFound;
-}
-
-
-
-function removeItemTypeFromInventory(itemType, amount) {
-
-
-    if (typeof amount === "undefined") {
-        var amount = 1;
-    }
-
-    var quantityStillToRemove = amount;
-    var quantityAvailableOnThisSlot;
-    var inventoryKeysFound = getObjectKeysForInnerValue(hero.inventory, parseInt(itemType), "type");
-    if (inventoryKeysFound.length > 0) {
-        for (var i = 0; i < inventoryKeysFound.length; i++) {
-            quantityAvailableOnThisSlot = hero.inventory[inventoryKeysFound[i]].quantity;
-            if (quantityAvailableOnThisSlot > quantityStillToRemove) {
-                removeFromInventory((inventoryKeysFound[i]), quantityStillToRemove);
-                quantityStillToRemove = 0;
-            } else {
-                removeFromInventory((inventoryKeysFound[i]), quantityAvailableOnThisSlot);
-                quantityStillToRemove -= quantityAvailableOnThisSlot;
-            }
-        }
-    }
-}
-
-function addToInventory(whichSlot, itemObject) {
-    // make a copy not a reference:
-    hero.inventory[whichSlot] = JSON.parse(JSON.stringify(itemObject));
-    document.getElementById("slot" + whichSlot).innerHTML = generateSlotMarkup(whichSlot);
-}
-
-function removeFromInventory(whichSlot, amount) {
-    var thisCurrentQuantity = hero.inventory[whichSlot].quantity;
-    var thisSlotElem = document.getElementById("slot" + whichSlot);
-    if (thisCurrentQuantity - amount > 0) {
-        // just reduce quantity:
-        hero.inventory[whichSlot].quantity -= amount;
-        updateQuantity(whichSlot);
-    } else {
-        // remove the item:
-        delete hero.inventory[whichSlot];
+    function updateQuantity(whichSlot) {
         // update visually:
-        thisSlotElem.innerHTML = '';
-    }
-}
-
-function updateQuantity(whichSlot) {
-    // update visually:
-    var thisSlotElem = document.getElementById("slot" + whichSlot);
-    for (var i = 0; i < thisSlotElem.childNodes.length; i++) {
-        if (thisSlotElem.childNodes[i].className == "qty") {
-            thisSlotElem.childNodes[i].innerHTML = hero.inventory[whichSlot].quantity;
-        }
-        if (thisSlotElem.childNodes[i].nodeName == "P") {
-            thisSlotElem.childNodes[i].childNodes[2].innerHTML = 'Sell price: ' + parseMoney(Math.ceil(hero.inventory[whichSlot].quantity * sellPriceModifier * inflationModifier * currentActiveInventoryItems[hero.inventory[whichSlot].type].priceCode, 0));
+        var thisSlotElem = document.getElementById("slot" + whichSlot);
+        for (var i = 0; i < thisSlotElem.childNodes.length; i++) {
+            if (thisSlotElem.childNodes[i].className == "qty") {
+                thisSlotElem.childNodes[i].innerHTML = hero.inventory[whichSlot].quantity;
+            }
+            if (thisSlotElem.childNodes[i].nodeName == "P") {
+                thisSlotElem.childNodes[i].childNodes[2].innerHTML = 'Sell price: ' + parseMoney(Math.ceil(hero.inventory[whichSlot].quantity * sellPriceModifier * inflationModifier * currentActiveInventoryItems[hero.inventory[whichSlot].type].priceCode, 0));
+            }
         }
     }
-}
 
-function itemAttributesMatch(item1, item2) {
-    if (item1.type == item2.type) {
-        if (item1.quality == item2.quality) {
-            if (item1.durability == item2.durability) {
-                if (item1.currentWear == item2.currentWear) {
-                    if (item1.effectiveness == item2.effectiveness) {
-                        if (item1.colour == item2.colour) {
-                            if (item1.enchanted == item2.enchanted) {
-                                if (item1.hallmark == item2.hallmark) {
-                                    if (item1.inscription.title == item2.inscription.title) {
-                                        if (item1.inscription.content == item2.inscription.content) {
-                                            if (item1.inscription.timeCreated == item2.inscription.timeCreated) {
-                                                if (item1.contains == item2.contains) {
-                                                    return true;
+    function itemAttributesMatch(item1, item2) {
+        if (item1.type == item2.type) {
+            if (item1.quality == item2.quality) {
+                if (item1.durability == item2.durability) {
+                    if (item1.currentWear == item2.currentWear) {
+                        if (item1.effectiveness == item2.effectiveness) {
+                            if (item1.colour == item2.colour) {
+                                if (item1.enchanted == item2.enchanted) {
+                                    if (item1.hallmark == item2.hallmark) {
+                                        if (item1.inscription.title == item2.inscription.title) {
+                                            if (item1.inscription.content == item2.inscription.content) {
+                                                if (item1.inscription.timeCreated == item2.inscription.timeCreated) {
+                                                    if (item1.contains == item2.contains) {
+                                                        return true;
+                                                    }
                                                 }
                                             }
                                         }
@@ -2504,337 +2482,336 @@ function itemAttributesMatch(item1, item2) {
                 }
             }
         }
-    }
-    return false;
-}
-
-
-
-function inventoryItemAction(whichSlot, whichAction, allActionValues) {
-    // remove the 'slot' prefix with the substring(4):
-    var whichSlotNumber = whichSlot.parentElement.id.substring(4);
-    // check if it has a cooldown:
-    var canBeClicked = true;
-    var whichActionValue;
-    if (typeof hero.inventory[whichSlotNumber].cooldown !== "undefined") {
-        if (hero.inventory[whichSlotNumber].cooldownTimer > 0) {
-            canBeClicked = false;
-        }
+        return false;
     }
 
-    if (canBeClicked) {
-        var whichActionSplit = whichAction.split(",");
-        var allActionValuesSplit = allActionValues.split(",");
-        for (var i = 0; i < whichActionSplit.length; i++) {
 
-            whichActionValue = allActionValuesSplit[i];
 
-            switch (whichActionSplit[i]) {
-                case "container":
-                    // check it has contents:
-                    if (typeof hero.inventory[whichSlotNumber].contains !== "undefined") {
-                        if ((hero.inventory[whichSlotNumber].contains.length == 1) && (hero.inventory[whichSlotNumber].quantity == 1)) {
-                            // if just a single wrapped item containing a single type of item, replace the wrapped with the contents:
-                            // (need to ensure that when creating containers that they can't hold more than maxNumberOfItemsPerSlot of an item type)
-                            hero.inventory[whichSlotNumber] = JSON.parse(JSON.stringify(hero.inventory[whichSlotNumber].contains[0]));
-                            document.getElementById("slot" + whichSlotNumber).innerHTML = generateSlotMarkup(whichSlotNumber);
-                            UI.showChangeInInventory([whichSlotNumber]);
-                        } else {
-                            var wrappedObject = JSON.parse(JSON.stringify(hero.inventory[whichSlotNumber]));
-                            removeFromInventory(whichSlotNumber, 1);
-                            var inventoryCheck = canAddItemToInventory(wrappedObject.contains);
-                            if (inventoryCheck[0]) {
-                                document.getElementById("slot" + whichSlotNumber).innerHTML = generateSlotMarkup(whichSlotNumber);
-                                UI.showChangeInInventory(inventoryCheck[1]);
-                            } else {
-                                // restore the wrapped item:
-                                hero.inventory[whichSlotNumber] = JSON.parse(JSON.stringify(wrappedObject));
-                                UI.showNotification("<p>You don't have room for all of these items.</p>");
-                            }
-                        }
-                    }
-                    break;
-                case "booster":
-                    openBoosterPack();
-                    removeFromInventory(whichSlotNumber, 1);
-                    break;
-                case "bag":
-                    UI.addNewBag(hero.inventory[whichSlotNumber]);
-                    audio.playSound(soundEffects['bagOpen'], 0);
-                    removeFromInventory(whichSlotNumber, 1);
-                    break;
-                case "home":
-                    var location = hero.inventory[whichSlotNumber].additional.split("|");
-                    jumpToLocation(location[0], location[1], location[2]);
-                    break;
-                case "inscribe":
-                    UI.openInscriptionPanel();
-                    break;
-                case "collection":
-                    // check if this zone key exists in the hero.collections object
-                    if (hero.collections.hasOwnProperty(whichActionValue)) {
-                        // find  in the array and make it negative ####
-                        var foundIndex = hero.collections[whichActionValue].required.indexOf(hero.inventory[whichSlotNumber].type);
-                        if (foundIndex != -1) {
-                            if (hero.collections[whichActionValue].required[foundIndex] > 0) {
-                                hero.collections[whichActionValue].required[foundIndex] = 0 - (hero.collections[whichActionValue].required[foundIndex]);
-                                // update the panel visually:
-                                document.getElementById(whichActionValue + '-' + hero.inventory[whichSlotNumber].type).classList.remove('notCollected');
-                                removeFromInventory(whichSlotNumber, 1);
-                            } else {
-                                UI.showNotification("<p>Already added to a collection</p>");
-                            }
-                        }
-                    }
-                    break;
-                case "card":
-                    hero.cards.unshift(whichActionValue);
-                    UI.updateCardAlbum();
-                    removeFromInventory(whichSlotNumber, 1);
-                    break;
-                case "questSet":
-                    if (!questData[whichActionValue].isUnderway) {
-                        questData[whichActionValue].isUnderway = true;
-                        addToJournal(whichActionValue);
-                    }
-                    break;
-                case "book":
-                    document.getElementById("book" + whichActionValue).classList.add("active");
-                    audio.playSound(soundEffects['bookOpen'], 0);
-                case "recipe":
-                    if (canLearnRecipe(whichActionValue)) {
-                        removeFromInventory(whichSlotNumber, 1);
-                    }
-                    break;
-                case "craft":
-                    if (hero.professionsKnown.indexOf(parseInt(whichActionValue)) != -1) {
-                        audio.playSound(soundEffects['buttonClick'], 0);
-                        UI.populateRecipeList(whichActionValue,hero.inventory[whichSlotNumber].quality);
-                    } else {
-                        UI.showNotification("<p>You don't know this profession yet.</p>");
-                    }
-                    break;
-                case "deed":
-                    // #####
-                    var actionValueSplit = whichActionValue.split('x');
-                    plotPlacement.width = actionValueSplit[0];
-                    plotPlacement.length = actionValueSplit[1];
-                    activeAction = "plotPlacement";
-                    document.addEventListener("mousemove", UI.movePlotPlacementOverlay, false);
-                    //document.removeEventListener("mousemove", UI.movePlotPlacementOverlay, false);
-                    break;
-            }
-        }
+    function inventoryItemAction(whichSlot, whichAction, allActionValues) {
+        // remove the 'slot' prefix with the substring(4):
+        var whichSlotNumber = whichSlot.parentElement.id.substring(4);
+        // check if it has a cooldown:
+        var canBeClicked = true;
+        var whichActionValue;
         if (typeof hero.inventory[whichSlotNumber].cooldown !== "undefined") {
-            hero.inventory[whichSlotNumber].cooldownTimer = hero.inventory[whichSlotNumber].cooldown;
+            if (hero.inventory[whichSlotNumber].cooldownTimer > 0) {
+                canBeClicked = false;
+            }
         }
-    }
-}
 
+        if (canBeClicked) {
+            var whichActionSplit = whichAction.split(",");
+            var allActionValuesSplit = allActionValues.split(",");
+            for (var i = 0; i < whichActionSplit.length; i++) {
 
+                whichActionValue = allActionValuesSplit[i];
 
-function additionalTooltipDetail(thisItemObject) {
-    // get any information that needs displaying in the tooltip:
-    var tooltipInformationToAdd = "";
-    switch (currentActiveInventoryItems[thisItemObject.type].action) {
-        case "recipe":
-            // check if it's known already:
-            var isKnown = false;
-            for (var i = 0; i < hero.recipesKnown.length; i++) {
-                if (hero.recipesKnown[i][0] == currentActiveInventoryItems[thisItemObject.type].actionValue) {
-                    isKnown = true;
+                switch (whichActionSplit[i]) {
+                    case "container":
+                        // check it has contents:
+                        if (typeof hero.inventory[whichSlotNumber].contains !== "undefined") {
+                            if ((hero.inventory[whichSlotNumber].contains.length == 1) && (hero.inventory[whichSlotNumber].quantity == 1)) {
+                                // if just a single wrapped item containing a single type of item, replace the wrapped with the contents:
+                                // (need to ensure that when creating containers that they can't hold more than maxNumberOfItemsPerSlot of an item type)
+                                hero.inventory[whichSlotNumber] = JSON.parse(JSON.stringify(hero.inventory[whichSlotNumber].contains[0]));
+                                document.getElementById("slot" + whichSlotNumber).innerHTML = generateSlotMarkup(whichSlotNumber);
+                                UI.showChangeInInventory([whichSlotNumber]);
+                            } else {
+                                var wrappedObject = JSON.parse(JSON.stringify(hero.inventory[whichSlotNumber]));
+                                removeFromInventory(whichSlotNumber, 1);
+                                var inventoryCheck = canAddItemToInventory(wrappedObject.contains);
+                                if (inventoryCheck[0]) {
+                                    document.getElementById("slot" + whichSlotNumber).innerHTML = generateSlotMarkup(whichSlotNumber);
+                                    UI.showChangeInInventory(inventoryCheck[1]);
+                                } else {
+                                    // restore the wrapped item:
+                                    hero.inventory[whichSlotNumber] = JSON.parse(JSON.stringify(wrappedObject));
+                                    UI.showNotification("<p>You don't have room for all of these items.</p>");
+                                }
+                            }
+                        }
+                        break;
+                    case "booster":
+                        openBoosterPack();
+                        removeFromInventory(whichSlotNumber, 1);
+                        break;
+                    case "bag":
+                        UI.addNewBag(hero.inventory[whichSlotNumber]);
+                        audio.playSound(soundEffects['bagOpen'], 0);
+                        removeFromInventory(whichSlotNumber, 1);
+                        break;
+                    case "home":
+                        var location = hero.inventory[whichSlotNumber].additional.split("|");
+                        jumpToLocation(location[0], location[1], location[2]);
+                        break;
+                    case "inscribe":
+                        UI.openInscriptionPanel();
+                        break;
+                    case "collection":
+                        // check if this zone key exists in the hero.collections object
+                        if (hero.collections.hasOwnProperty(whichActionValue)) {
+                            // find  in the array and make it negative ####
+                            var foundIndex = hero.collections[whichActionValue].required.indexOf(hero.inventory[whichSlotNumber].type);
+                            if (foundIndex != -1) {
+                                if (hero.collections[whichActionValue].required[foundIndex] > 0) {
+                                    hero.collections[whichActionValue].required[foundIndex] = 0 - (hero.collections[whichActionValue].required[foundIndex]);
+                                    // update the panel visually:
+                                    document.getElementById(whichActionValue + '-' + hero.inventory[whichSlotNumber].type).classList.remove('notCollected');
+                                    removeFromInventory(whichSlotNumber, 1);
+                                } else {
+                                    UI.showNotification("<p>Already added to a collection</p>");
+                                }
+                            }
+                        }
+                        break;
+                    case "card":
+                        hero.cards.unshift(whichActionValue);
+                        UI.updateCardAlbum();
+                        removeFromInventory(whichSlotNumber, 1);
+                        break;
+                    case "questSet":
+                        if (!questData[whichActionValue].isUnderway) {
+                            questData[whichActionValue].isUnderway = true;
+                            addToJournal(whichActionValue);
+                        }
+                        break;
+                    case "book":
+                        document.getElementById("book" + whichActionValue).classList.add("active");
+                        audio.playSound(soundEffects['bookOpen'], 0);
+                    case "recipe":
+                        if (canLearnRecipe(whichActionValue)) {
+                            removeFromInventory(whichSlotNumber, 1);
+                        }
+                        break;
+                    case "craft":
+                        if (hero.professionsKnown.indexOf(parseInt(whichActionValue)) != -1) {
+                            audio.playSound(soundEffects['buttonClick'], 0);
+                            UI.populateRecipeList(whichActionValue, hero.inventory[whichSlotNumber].quality);
+                        } else {
+                            UI.showNotification("<p>You don't know this profession yet.</p>");
+                        }
+                        break;
+                    case "deed":
+                        // #####
+                        var actionValueSplit = whichActionValue.split('x');
+                        plotPlacement.width = actionValueSplit[0];
+                        plotPlacement.length = actionValueSplit[1];
+                        activeAction = "plotPlacement";
+                        document.addEventListener("mousemove", UI.movePlotPlacementOverlay, false);
+                        //document.removeEventListener("mousemove", UI.movePlotPlacementOverlay, false);
+                        break;
                 }
             }
-            if (isKnown) {
-                tooltipInformationToAdd += " (already known)";
+            if (typeof hero.inventory[whichSlotNumber].cooldown !== "undefined") {
+                hero.inventory[whichSlotNumber].cooldownTimer = hero.inventory[whichSlotNumber].cooldown;
             }
-            break;
-        case "collection":
-            // see if the hero already has one in a collection:
-            var isKnown = false;
-            var whichZone = currentActiveInventoryItems[thisItemObject.type].actionValue;
-            if (hero.collections.hasOwnProperty(whichZone)) {
-                // key exists - collection is underway:
-                var foundIndex = hero.collections[whichZone].required.indexOf(thisItemObject.type);
-                if (foundIndex != -1) {
-                    if (hero.collections[whichZone].required[foundIndex] > 0) {
-                        tooltipInformationToAdd += " (needed for an active collection - double click to add)";
+        }
+    }
+
+
+
+    function additionalTooltipDetail(thisItemObject) {
+        // get any information that needs displaying in the tooltip:
+        var tooltipInformationToAdd = "";
+        switch (currentActiveInventoryItems[thisItemObject.type].action) {
+            case "recipe":
+                // check if it's known already:
+                var isKnown = false;
+                for (var i = 0; i < hero.recipesKnown.length; i++) {
+                    if (hero.recipesKnown[i][0] == currentActiveInventoryItems[thisItemObject.type].actionValue) {
+                        isKnown = true;
                     }
-                } else {
-                    // collection type is negative, so won't match the item type:
-                    tooltipInformationToAdd += " (already added to a collection)";
                 }
-            }
-            break;
-    }
-    return tooltipInformationToAdd;
-}
-
-function generateGenericSlotMarkup(thisItemObject) {
-
-    var slotMarkup = '';
-    var theColourPrefix = "";
-    var thisFileColourSuffix = "";
-    var imageClassName = "";
-    var thisColourName = getColourName(thisItemObject.colour, thisItemObject.type);
-    if (thisColourName != "") {
-        theColourPrefix = thisColourName + " ";
-        thisFileColourSuffix = "-" + thisColourName.toLowerCase();
-    }
-    var thisAction = currentActiveInventoryItems[thisItemObject.type].action;
-    var isABook = false;
-    if (thisAction) {
-        if (thisAction.indexOf("book") != -1) {
-            if (thisItemObject.inscription.content) {
-                isABook = true;
-
-            }
-        }
-    }
-    var dataActionMarkup = '';
-    if (thisAction) {
-        if (isABook) {
-            var booksActionValue;
-            // link this item up to the book panel using the unique hash:
-            var thisBooksHash = generateHash(thisItemObject.inscription.title + thisItemObject.colour + thisItemObject.type + thisItemObject.inscription.timeCreated);
-            // check if the item has multiple actions, and create the action value accordingly:
-            if (thisAction.indexOf(",") == -1) {
-                booksActionValue = thisBooksHash;
-            } else {
-                booksActionValue = currentActiveInventoryItems[thisItemObject.type].actionValue.replace("?", thisBooksHash);
-            }
-            dataActionMarkup = 'data-action="' + thisAction + '" data-action-value="' + booksActionValue + '" ';
-            UI.buildBook(thisItemObject, thisBooksHash);
-        } else {
-            dataActionMarkup = 'data-action="' + thisAction + '" data-action-value="' + currentActiveInventoryItems[thisItemObject.type].actionValue + '" ';
-        }
-    }
-
-    var thisCategories = currentActiveInventoryItems[thisItemObject.type].category.split(",");
-    for (var i = 0; i < thisCategories.length; i++) {
-        imageClassName += "itemCategory" + thisCategories[i] + " ";
-    }
-
-
-
-    // check if it's a card:
-    if (currentActiveInventoryItems[thisItemObject.type].action == "card") {
-        imageClassName += 'players card';
-    }
-
-    slotMarkup += '<img src="/images/game-world/inventory-items/' + thisItemObject.type + thisFileColourSuffix + '.png" ' + dataActionMarkup + 'alt="' + theColourPrefix + currentActiveInventoryItems[thisItemObject.type].shortname + '" class="' + imageClassName + '">';
-    if (isABook) {
-        var itemsDescription = "&quot;" + thisItemObject.inscription.title + "&quot;";
-    } else {
-        var itemsDescription = currentActiveInventoryItems[thisItemObject.type].description;
-    }
-    if (itemsDescription.indexOf('##contains##') != -1) {
-        // check it has got contains content:
-        if (typeof thisItemObject.contains !== "undefined") {
-            var containsItems = '';
-            for (var i = 0; i < thisItemObject.contains.length; i++) {
-                if (i != 0) {
-                    containsItems += ", ";
+                if (isKnown) {
+                    tooltipInformationToAdd += " (already known)";
                 }
-                containsItems += thisItemObject.contains[i].quantity + "x " + currentActiveInventoryItems[thisItemObject.contains[i].type].shortname;
-            }
-            itemsDescription = itemsDescription.replace('##contains##', containsItems);
-        }
-    }
-    slotMarkup += '<p><em>' + theColourPrefix + currentActiveInventoryItems[thisItemObject.type].shortname + ' </em>' + itemsDescription + ' ';
-    slotMarkup += '<span class="price">Sell price: ' + parseMoney(Math.ceil(thisItemObject.quantity * sellPriceModifier * inflationModifier * currentActiveInventoryItems[thisItemObject.type].priceCode, 0)) + '</span>';
-    slotMarkup += '<span class="price specialismPrice">Sell price: ' + parseMoney(Math.ceil(thisItemObject.quantity * sellPriceSpecialismModifier * inflationModifier * currentActiveInventoryItems[thisItemObject.type].priceCode, 0)) + '</span>';
-    slotMarkup += additionalTooltipDetail(thisItemObject) + '</p>';
-    slotMarkup += '<span class="qty">' + thisItemObject.quantity + '</span>';
-    slotMarkup += '<div class="coolDown"></div>';
-    return slotMarkup;
-}
-
-
-function generateSlotMarkup(thisSlotsId) {
-    return generateGenericSlotMarkup(hero.inventory[thisSlotsId]);
-}
-
-
-
-
-function inventorySplitStackSubmit(e) {
-    if (e) {
-        e.preventDefault();
-    }
-    var enteredValue = splitStackInput.value;
-    var isValid = true;
-    enteredValue = parseInt(enteredValue);
-    if (enteredValue < 1) {
-        isValid = false;
-    }
-    if (!(Number.isInteger(enteredValue))) {
-        isValid = false;
-    }
-    if (enteredValue > hero.inventory[UI.sourceSlot].quantity) {
-        isValid = false;
-    }
-    if (isValid) {
-        isSplitStackBeingDragged = true;
-
-        var thisNode = document.getElementById("slot" + UI.sourceSlot);
-        // clone this slot to draggableInventorySlot:
-        UI.activeDragObject = document.getElementById('draggableInventorySlot');
-        UI.activeDragObject.innerHTML = thisNode.innerHTML;
-        // remove from inventory data:
-        removeFromInventory(UI.sourceSlot, enteredValue);
-        UI.draggedInventoryObject.quantity = enteredValue;
-        // update visually to dragged clone:
-        for (var i = 0; i < UI.activeDragObject.childNodes.length; i++) {
-            if (UI.activeDragObject.childNodes[i].className == "qty") {
-                UI.activeDragObject.childNodes[i].innerHTML = UI.draggedInventoryObject.quantity;
                 break;
+            case "collection":
+                // see if the hero already has one in a collection:
+                var isKnown = false;
+                var whichZone = currentActiveInventoryItems[thisItemObject.type].actionValue;
+                if (hero.collections.hasOwnProperty(whichZone)) {
+                    // key exists - collection is underway:
+                    var foundIndex = hero.collections[whichZone].required.indexOf(thisItemObject.type);
+                    if (foundIndex != -1) {
+                        if (hero.collections[whichZone].required[foundIndex] > 0) {
+                            tooltipInformationToAdd += " (needed for an active collection - double click to add)";
+                        }
+                    } else {
+                        // collection type is negative, so won't match the item type:
+                        tooltipInformationToAdd += " (already added to a collection)";
+                    }
+                }
+                break;
+        }
+        return tooltipInformationToAdd;
+    }
+
+    function generateGenericSlotMarkup(thisItemObject) {
+
+        var slotMarkup = '';
+        var theColourPrefix = "";
+        var thisFileColourSuffix = "";
+        var imageClassName = "";
+        var thisColourName = getColourName(thisItemObject.colour, thisItemObject.type);
+        if (thisColourName != "") {
+            theColourPrefix = thisColourName + " ";
+            thisFileColourSuffix = "-" + thisColourName.toLowerCase();
+        }
+        var thisAction = currentActiveInventoryItems[thisItemObject.type].action;
+        var isABook = false;
+        if (thisAction) {
+            if (thisAction.indexOf("book") != -1) {
+                if (thisItemObject.inscription.content) {
+                    isABook = true;
+
+                }
             }
         }
-        UI.inDrag = true;
-        var clickedSlotRect = thisNode.getBoundingClientRect();
-        var pageScrollTopY = (window.pageYOffset || document.documentElement.scrollTop) - (document.documentElement.clientTop || 0);
-        // 3px padding on the slots:
-        objInitLeft = clickedSlotRect.left + 3;
-        objInitTop = clickedSlotRect.top + 3 + pageScrollTopY;
-        // +22 to centre the slot (half the slot width) under the cursor:
-        dragStartX = objInitLeft + 22;
-        dragStartY = objInitTop + 22;
-        UI.activeDragObject.style.cssText = "z-index:4;top: " + objInitTop + "px; left: " + objInitLeft + "px; transform: translate(0px, 0px);";
-        document.addEventListener("mousemove", UI.handleDrag, false);
-        document.addEventListener("mouseup", UI.endInventoryDrag, false);
+        var dataActionMarkup = '';
+        if (thisAction) {
+            if (isABook) {
+                var booksActionValue;
+                // link this item up to the book panel using the unique hash:
+                var thisBooksHash = generateHash(thisItemObject.inscription.title + thisItemObject.colour + thisItemObject.type + thisItemObject.inscription.timeCreated);
+                // check if the item has multiple actions, and create the action value accordingly:
+                if (thisAction.indexOf(",") == -1) {
+                    booksActionValue = thisBooksHash;
+                } else {
+                    booksActionValue = currentActiveInventoryItems[thisItemObject.type].actionValue.replace("?", thisBooksHash);
+                }
+                dataActionMarkup = 'data-action="' + thisAction + '" data-action-value="' + booksActionValue + '" ';
+                UI.buildBook(thisItemObject, thisBooksHash);
+            } else {
+                dataActionMarkup = 'data-action="' + thisAction + '" data-action-value="' + currentActiveInventoryItems[thisItemObject.type].actionValue + '" ';
+            }
+        }
+
+        var thisCategories = currentActiveInventoryItems[thisItemObject.type].category.split(",");
+        for (var i = 0; i < thisCategories.length; i++) {
+            imageClassName += "itemCategory" + thisCategories[i] + " ";
+        }
+
+
+
+        // check if it's a card:
+        if (currentActiveInventoryItems[thisItemObject.type].action == "card") {
+            imageClassName += 'players card';
+        }
+
+        slotMarkup += '<img src="/images/game-world/inventory-items/' + thisItemObject.type + thisFileColourSuffix + '.png" ' + dataActionMarkup + 'alt="' + theColourPrefix + currentActiveInventoryItems[thisItemObject.type].shortname + '" class="' + imageClassName + '">';
+        if (isABook) {
+            var itemsDescription = "&quot;" + thisItemObject.inscription.title + "&quot;";
+        } else {
+            var itemsDescription = currentActiveInventoryItems[thisItemObject.type].description;
+        }
+        if (itemsDescription.indexOf('##contains##') != -1) {
+            // check it has got contains content:
+            if (typeof thisItemObject.contains !== "undefined") {
+                var containsItems = '';
+                for (var i = 0; i < thisItemObject.contains.length; i++) {
+                    if (i != 0) {
+                        containsItems += ", ";
+                    }
+                    containsItems += thisItemObject.contains[i].quantity + "x " + currentActiveInventoryItems[thisItemObject.contains[i].type].shortname;
+                }
+                itemsDescription = itemsDescription.replace('##contains##', containsItems);
+            }
+        }
+        slotMarkup += '<p><em>' + theColourPrefix + currentActiveInventoryItems[thisItemObject.type].shortname + ' </em>' + itemsDescription + ' ';
+        slotMarkup += '<span class="price">Sell price: ' + parseMoney(Math.ceil(thisItemObject.quantity * sellPriceModifier * inflationModifier * currentActiveInventoryItems[thisItemObject.type].priceCode, 0)) + '</span>';
+        slotMarkup += '<span class="price specialismPrice">Sell price: ' + parseMoney(Math.ceil(thisItemObject.quantity * sellPriceSpecialismModifier * inflationModifier * currentActiveInventoryItems[thisItemObject.type].priceCode, 0)) + '</span>';
+        slotMarkup += additionalTooltipDetail(thisItemObject) + '</p>';
+        slotMarkup += '<span class="qty">' + thisItemObject.quantity + '</span>';
+
+        return slotMarkup;
     }
 
-    splitStackPanel.classList.remove("active");
-    // remove focus
-    document.activeElement.blur();
-}
 
-function inventorySplitStackCancel() {
-    splitStackPanel.classList.remove("active");
-    document.activeElement.blur();
-}
-
-
-function prepareInventoryObject(definedObject) {
-    var thisObject = {
-        "type": "$",
-        "quantity": 1,
-        "quality": 100,
-        "durability": 100,
-        "currentWear": 0,
-        "effectiveness": 100,
-        "colour": 0,
-        "enchanted": 0,
-        "hallmark": 0,
-        "inscription": ""
+    function generateSlotMarkup(thisSlotsId) {
+        return generateGenericSlotMarkup(hero.inventory[thisSlotsId]) + '<div class="coolDown"></div><div class="lockedOverlay" id="lockedOverlay' + thisSlotsId + '"></div>';
     }
-    // now copy in any defined attributes - this way don't need to waste space storing default values:
-    for (var attrname in definedObject) {
-        thisObject[attrname] = definedObject[attrname];
+
+
+
+
+    function inventorySplitStackSubmit(e) {
+        if (e) {
+            e.preventDefault();
+        }
+        var enteredValue = splitStackInput.value;
+        var isValid = true;
+        enteredValue = parseInt(enteredValue);
+        if (enteredValue < 1) {
+            isValid = false;
+        }
+        if (!(Number.isInteger(enteredValue))) {
+            isValid = false;
+        }
+        if (enteredValue > hero.inventory[UI.sourceSlot].quantity) {
+            isValid = false;
+        }
+        if (isValid) {
+            isSplitStackBeingDragged = true;
+
+            var thisNode = document.getElementById("slot" + UI.sourceSlot);
+            // clone this slot to draggableInventorySlot:
+            UI.activeDragObject = document.getElementById('draggableInventorySlot');
+            UI.activeDragObject.innerHTML = thisNode.innerHTML;
+            // remove from inventory data:
+            removeFromInventory(UI.sourceSlot, enteredValue);
+            UI.draggedInventoryObject.quantity = enteredValue;
+            // update visually to dragged clone:
+            for (var i = 0; i < UI.activeDragObject.childNodes.length; i++) {
+                if (UI.activeDragObject.childNodes[i].className == "qty") {
+                    UI.activeDragObject.childNodes[i].innerHTML = UI.draggedInventoryObject.quantity;
+                    break;
+                }
+            }
+            UI.inDrag = true;
+            var clickedSlotRect = thisNode.getBoundingClientRect();
+            var pageScrollTopY = (window.pageYOffset || document.documentElement.scrollTop) - (document.documentElement.clientTop || 0);
+            // 3px padding on the slots:
+            objInitLeft = clickedSlotRect.left + 3;
+            objInitTop = clickedSlotRect.top + 3 + pageScrollTopY;
+            // +22 to centre the slot (half the slot width) under the cursor:
+            dragStartX = objInitLeft + 22;
+            dragStartY = objInitTop + 22;
+            UI.activeDragObject.style.cssText = "z-index:4;top: " + objInitTop + "px; left: " + objInitLeft + "px; transform: translate(0px, 0px);";
+            document.addEventListener("mousemove", UI.handleDrag, false);
+            document.addEventListener("mouseup", UI.endInventoryDrag, false);
+        }
+
+        splitStackPanel.classList.remove("active");
+        // remove focus
+        document.activeElement.blur();
     }
-    return thisObject;
-}
+
+    function inventorySplitStackCancel() {
+        splitStackPanel.classList.remove("active");
+        document.activeElement.blur();
+    }
+
+
+    function prepareInventoryObject(definedObject) {
+        var thisObject = {
+            "type": "$",
+            "quantity": 1,
+            "quality": 100,
+            "durability": 100,
+            "currentWear": 0,
+            "effectiveness": 100,
+            "colour": 0,
+            "enchanted": 0,
+            "hallmark": 0,
+            "inscription": ""
+        }
+        // now copy in any defined attributes - this way don't need to waste space storing default values:
+        for (var attrname in definedObject) {
+            thisObject[attrname] = definedObject[attrname];
+        }
+        return thisObject;
+    }
 var KeyBindings = {
     'left': 65,
     'right': 68,
@@ -3796,14 +3773,14 @@ var UI = {
         UI.buildActionBar();
         UI.initRetinueTimers();
 
-/*
-        if (hero.professionsKnown.length > 0) {
-            // load and cache the first profession's recipe assets:
-            UI.populateRecipeList(hero.professionsKnown[0],100);
-            // but hide the panel initially:
-            craftingPanel.classList.remove("active");
-        }
-*/
+        /*
+                if (hero.professionsKnown.length > 0) {
+                    // load and cache the first profession's recipe assets:
+                    UI.populateRecipeList(hero.professionsKnown[0],100);
+                    // but hide the panel initially:
+                    craftingPanel.classList.remove("active");
+                }
+        */
         gameWrapper.onmousedown = UI.globalMouseDown;
         gameWrapper.onclick = UI.globalClick;
 
@@ -3847,26 +3824,26 @@ var UI = {
 
     showChangeInInventory: function(whichSlotsToUpdate) {
         // check it wasn't a follower, money or profession added:
-     if(whichSlotsToUpdate.length>0) {
-        var thisSlotsId, slotMarkup, thisSlotElem;
-        // add a transition end detector to just the first element that will be changed:
-        document.getElementById("slot" + whichSlotsToUpdate[0]).addEventListener(whichTransitionEvent, function removeSlotStatus(e) {
-            var elementList = document.querySelectorAll('#inventoryPanels .changed');
-            for (var i = 0; i < elementList.length; i++) {
-                elementList[i].classList.remove("changed");
+        if (whichSlotsToUpdate.length > 0) {
+            var thisSlotsId, slotMarkup, thisSlotElem;
+            // add a transition end detector to just the first element that will be changed:
+            document.getElementById("slot" + whichSlotsToUpdate[0]).addEventListener(whichTransitionEvent, function removeSlotStatus(e) {
+                var elementList = document.querySelectorAll('#inventoryPanels .changed');
+                for (var i = 0; i < elementList.length; i++) {
+                    elementList[i].classList.remove("changed");
+                }
+                // remove the event listener now:
+                return e.currentTarget.removeEventListener(whichTransitionEvent, removeSlotStatus, false);
+            }, false);
+            // loop through the slots that have changed and update their markup:
+            for (var j = 0; j < whichSlotsToUpdate.length; j++) {
+                thisSlotsId = whichSlotsToUpdate[j];
+                slotMarkup = generateSlotMarkup(thisSlotsId);
+                thisSlotElem = document.getElementById("slot" + thisSlotsId);
+                thisSlotElem.innerHTML = slotMarkup;
+                thisSlotElem.classList.add("changed")
             }
-            // remove the event listener now:
-            return e.currentTarget.removeEventListener(whichTransitionEvent, removeSlotStatus, false);
-        }, false);
-        // loop through the slots that have changed and update their markup:
-        for (var j = 0; j < whichSlotsToUpdate.length; j++) {
-            thisSlotsId = whichSlotsToUpdate[j];
-            slotMarkup = generateSlotMarkup(thisSlotsId);
-            thisSlotElem = document.getElementById("slot" + thisSlotsId);
-            thisSlotElem.innerHTML = slotMarkup;
-            thisSlotElem.classList.add("changed")
         }
-    }
     },
 
 
@@ -4081,8 +4058,8 @@ var UI = {
         cardAlbumList.innerHTML = cardAlbumMarkup;
     },
 
-    populateRecipeList: function(whichProfession,toolsQuality) {
-        
+    populateRecipeList: function(whichProfession, toolsQuality) {
+
         if (currentRecipePanelProfession != whichProfession) {
             // clear previous searches:
             recipeSearch.value = '';
@@ -4096,10 +4073,10 @@ var UI = {
             for (var i = 0; i < hero.crafting[whichProfession].sortOrder.length; i++) {
                 thisRecipe = hero.crafting[whichProfession].recipes[(hero.crafting[whichProfession].sortOrder[i])];
 
-// check this tool's quality is sufficent for this tier of recipe:
-if(recipeTiersPossibleForThisTool >= thisRecipe.tier) {
-                recipeMarkup += '<li class="active" id="recipe' + hero.crafting[whichProfession].sortOrder[i] + '"><img src="/images/game-world/inventory-items/' + thisRecipe.imageId + '.png" alt="' + thisRecipe.recipeName + '"><h3>' + thisRecipe.recipeName + '</h3><p>' + thisRecipe.recipeDescription + '</p></li>';
-            }
+                // check this tool's quality is sufficent for this tier of recipe:
+                if (recipeTiersPossibleForThisTool >= thisRecipe.tier) {
+                    recipeMarkup += '<li class="active" id="recipe' + hero.crafting[whichProfession].sortOrder[i] + '"><img src="/images/game-world/inventory-items/' + thisRecipe.imageId + '.png" alt="' + thisRecipe.recipeName + '"><h3>' + thisRecipe.recipeName + '</h3><p>' + thisRecipe.recipeDescription + '</p></li>';
+                }
             }
 
             createRecipeList.innerHTML = recipeMarkup;
@@ -4530,37 +4507,41 @@ if(recipeTiersPossibleForThisTool >= thisRecipe.tier) {
 
                     }
 
-                } else if (e.target.parentNode.id == "gatheringPanel") {
-                    if (activeAction == "gather") {
-                        gatheringStopped();
+                } else {
+                    switch (e.target.parentNode.id) {
+                        case 'gatheringPanel':
+                            if (activeAction == "gather") {
+                                gatheringStopped();
+                            }
+                            break;
+                        case 'surveyingPanel':
+                            if (activeAction == "survey") {
+                                surveyingStopped();
+                            }
+                            break;
+                        case 'inscriptionPanel':
+                            UI.resetInscriptionPanel();
+                            break;
+                        case 'chestPanel':
+                            UI.closeChest();
+                            break;
+                        case 'postPanel':
+                            UI.closePost();
+                            break;
+                        case 'retinuePanel':
+                            UI.closeRetinuePanel();
+                            break;
+                        case 'craftingSelectComponentsPanel':
+                            releaseLockedSlots();
+                            break;
                     }
-                } else if (e.target.parentNode.id == "surveyingPanel") {
-                    if (activeAction == "survey") {
-                        surveyingStopped();
-                    }
-                } else if (e.target.parentNode.id == "inscriptionPanel") {
-
-                    UI.resetInscriptionPanel();
-                } else if (e.target.parentNode.id == "chestPanel") {
-                    UI.closeChest();
-                } else if (e.target.parentNode.id == "postPanel") {
-                    UI.closePost();
-                } else if (e.target.parentNode.id == "retinuePanel") {
-                    UI.closeRetinuePanel();
                 }
             }
         }
         var thisNode = getNearestParentId(e.target);
         if (thisNode.id.substring(0, 6) == "scribe") {
             UI.processInscriptionClick(thisNode);
-
-
-
         }
-
-
-
-
     },
 
 
@@ -5705,7 +5686,7 @@ if(recipeTiersPossibleForThisTool >= thisRecipe.tier) {
         document.getElementById("retinueComplete" + whichPanel).classList.add("active");
     },
     showNewFollower: function(id, name) {
-       UI.showNotification('<p>You have gained a new follower called &quot;' + name + '&quot;</p>');
+        UI.showNotification('<p>You have gained a new follower called &quot;' + name + '&quot;</p>');
     },
     showNewProfession: function(id) {
         UI.showNotification('<p>You learned a new profession - #' + id + '</p>');

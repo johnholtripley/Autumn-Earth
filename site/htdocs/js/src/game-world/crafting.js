@@ -62,10 +62,10 @@ function recipeSearchClear() {
 }
 
 function recipeSelectComponents(whichRecipe) {
+    releaseLockedSlots();
     craftingSelectComponentsPanel.classList.add("active");
     var recipeId = whichRecipe.substring(6);
     var foundItemGroups;
-    var specificsAlreadyFound = [];
     var thisRecipe = hero.crafting[currentRecipePanelProfession].recipes[recipeId];
     var beingCreatedMarkup = '<h4>Requires:</h4>';
     // find all components that the player has that are usable for this recipe as well:
@@ -105,79 +105,55 @@ function recipeSelectComponents(whichRecipe) {
         }
     }
 
-
-
     for (var i in thisRecipe.components) {
-
-
         thisItemInfluences = '';
-        //    thisItemInfluences = "<br>Effect: ";
         if (typeof thisRecipe.components[i].influence["effectiveness"] !== "undefined") {
-            //  thisItemInfluences += thisRecipe.components[i].influence["effectiveness"];
+
             thisComponentEffectiveness = thisRecipe.components[i].influence["effectiveness"];
         } else {
-            //    thisItemInfluences += (100 - totalInfluences["effectiveness"]) / (thisNumberOfComponents - influencesWithDefinedValues["effectiveness"]);
+
             thisComponentEffectiveness = (100 - totalInfluences["effectiveness"]) / (thisNumberOfComponents - influencesWithDefinedValues["effectiveness"]);
         }
-
-        // thisItemInfluences += "<br>Dura: ";
         if (typeof thisRecipe.components[i].influence["durability"] !== "undefined") {
-            //   thisItemInfluences += thisRecipe.components[i].influence["durability"];
+
             thisComponentDurability = thisRecipe.components[i].influence["durability"];
         } else {
-            //  thisItemInfluences += (100 - totalInfluences["durability"]) / (thisNumberOfComponents - influencesWithDefinedValues["durability"]);
+
             thisComponentDurability = (100 - totalInfluences["durability"]) / (thisNumberOfComponents - influencesWithDefinedValues["durability"]);
         }
-
-        // thisItemInfluences += "<br>Qual: ";
         if (typeof thisRecipe.components[i].influence["quality"] !== "undefined") {
-            //  thisItemInfluences += thisRecipe.components[i].influence["quality"];
+
             thisComponentQuality = thisRecipe.components[i].influence["quality"];
         } else {
-            //  thisItemInfluences += (100 - totalInfluences["quality"]) / (thisNumberOfComponents - influencesWithDefinedValues["quality"]);
+
             thisComponentQuality = (100 - totalInfluences["quality"]) / (thisNumberOfComponents - influencesWithDefinedValues["quality"]);
         }
 
         requiredSVGoutput = '<svg xmlns="http://www.w3.org/2000/svg" height="100" width="100" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50" fill="' + gradeAttribute(thisComponentEffectiveness) + '"/><path d="M6.699 75a50 50 0 0 1 0-50A50 50 0 0 1 50 0v50z" fill="' + gradeAttribute(thisComponentQuality) + '"/><path d="M50 0a50 50 0 0 1 43.301 25 50 50 0 0 1 0 50l-43.3-25z" fill="' + gradeAttribute(thisComponentDurability) + '"/></svg>';
-
-
-
-
         if (!(isNaN(thisRecipe.components[i].type))) {
             // specific item - make sure not already added this (if more than 1 quantity required):
-            if (specificsAlreadyFound.indexOf(thisRecipe.components[i].type) === -1) {
-                beingCreatedMarkup += '<li><div class="gradedItem">' + requiredSVGoutput + '<img src="/images/game-world/inventory-items/' + thisRecipe.components[i].type + '.png" alt="' + currentActiveInventoryItems[thisRecipe.components[i].type].shortname + '"><span class="qty">' + thisRecipe.components[i].quantity + '</span></div><p>' + currentActiveInventoryItems[thisRecipe.components[i].type].shortname +'</p></li>';
-                foundItemGroups = findSlotItemIdInInventory(thisRecipe.components[i].type);
-                if (foundItemGroups.length > 0) {
-                    for (var j = 0; j < foundItemGroups.length; j++) {
-                        //  thisItemAttributes = 'qual: ' + hero.inventory[foundItemGroups[j]].quality + ', dura: ' + hero.inventory[foundItemGroups[j]].durability + ', effect: ' + hero.inventory[foundItemGroups[j]].effectiveness;
+            beingCreatedMarkup += '<li><div class="gradedItem">' + requiredSVGoutput + '<img src="/images/game-world/inventory-items/' + thisRecipe.components[i].type + '.png" alt="' + currentActiveInventoryItems[thisRecipe.components[i].type].shortname + '"><span class="qty">' + thisRecipe.components[i].quantity + '</span></div><p>' + currentActiveInventoryItems[thisRecipe.components[i].type].shortname + '</p></li>';
+            foundItemGroups = findSlotItemIdInInventory(thisRecipe.components[i].type);
+            if (foundItemGroups.length > 0) {
+                for (var j = 0; j < foundItemGroups.length; j++) {
+                    SVGoutput = '<svg xmlns="http://www.w3.org/2000/svg" height="100" width="100" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50" fill="' + gradeAttribute(hero.inventory[foundItemGroups[j]].effectiveness) + '"/><path d="M6.699 75a50 50 0 0 1 0-50A50 50 0 0 1 50 0v50z" fill="' + gradeAttribute(hero.inventory[foundItemGroups[j]].quality) + '"/><path d="M50 0a50 50 0 0 1 43.301 25 50 50 0 0 1 0 50l-43.3-25z" fill="' + gradeAttribute(hero.inventory[foundItemGroups[j]].durability) + '"/></svg>';
+                    availableComponentMarkup += '<li id="fromSlot' + foundItemGroups[j] + '"><div class="gradedItem">' + SVGoutput + generateCraftingSlotMarkup(hero.inventory[foundItemGroups[j]]) + '</div></li>';
 
-                        SVGoutput = '<svg xmlns="http://www.w3.org/2000/svg" height="100" width="100" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50" fill="' + gradeAttribute(hero.inventory[foundItemGroups[j]].effectiveness) + '"/><path d="M6.699 75a50 50 0 0 1 0-50A50 50 0 0 1 50 0v50z" fill="' + gradeAttribute(hero.inventory[foundItemGroups[j]].quality) + '"/><path d="M50 0a50 50 0 0 1 43.301 25 50 50 0 0 1 0 50l-43.3-25z" fill="' + gradeAttribute(hero.inventory[foundItemGroups[j]].durability) + '"/></svg>';
-
-                        //thisItemAttributes += SVGoutput;
-
-                        availableComponentMarkup += '<li id="fromSlot' + foundItemGroups[j] + '"><div class="gradedItem">' + SVGoutput + generateCraftingSlotMarkup(hero.inventory[foundItemGroups[j]]) + '</div></li>';
-                        componentsFound++;
-                    }
+                    // 'lock' this slot:
+                    document.getElementById('slot' + foundItemGroups[j]).classList.add('locked');
+                    componentsFound++;
                 }
-                specificsAlreadyFound.push(thisRecipe.components[i].type);
             }
         } else {
             // item group:
-
             beingCreatedMarkup += '<li><div class="gradedItem">' + requiredSVGoutput + '<img class="previewSlot" src="/images/game-world/inventory-items/' + thisRecipe.components[i].type + '.png" alt=""><span class="qty">' + thisRecipe.components[i].quantity + '</span></div><p>' + currentItemGroupFilters[(thisRecipe.components[i].type)] + '</p></li>';
             foundItemGroups = hasItemTypeInInventory(thisRecipe.components[i].type);
             if (foundItemGroups.length > 0) {
                 for (var j = 0; j < foundItemGroups.length; j++) {
-                    //  thisItemAttributes = 'qual: ' + hero.inventory[foundItemGroups[j]].quality + ', dura: ' + hero.inventory[foundItemGroups[j]].durability + ', effect: ' + hero.inventory[foundItemGroups[j]].effectiveness;
-
-
                     SVGoutput = '<svg xmlns="http://www.w3.org/2000/svg" height="100" width="100" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50" fill="' + gradeAttribute(hero.inventory[foundItemGroups[j]].effectiveness) + '"/><path d="M6.699 75a50 50 0 0 1 0-50A50 50 0 0 1 50 0v50z" fill="' + gradeAttribute(hero.inventory[foundItemGroups[j]].quality) + '"/><path d="M50 0a50 50 0 0 1 43.301 25 50 50 0 0 1 0 50l-43.3-25z" fill="' + gradeAttribute(hero.inventory[foundItemGroups[j]].durability) + '"/></svg>';
-
-                    //thisItemAttributes += SVGoutput;
-
-
                     availableComponentMarkup += '<li id="fromSlot' + foundItemGroups[j] + '"><div class="gradedItem">' + SVGoutput + generateCraftingSlotMarkup(hero.inventory[foundItemGroups[j]]) + '</li>';
+                    // 'lock' this slot:
+                    document.getElementById('slot' + foundItemGroups[j]).classList.add('locked');
                     componentsFound++;
                 }
             }
@@ -247,8 +223,16 @@ function generateCraftingSlotMarkup(thisItemObject) {
         imageClassName += 'players card';
     }
     slotMarkup += '<img src="/images/game-world/inventory-items/' + thisItemObject.type + thisFileColourSuffix + '.png" ' + 'alt="' + theColourPrefix + currentActiveInventoryItems[thisItemObject.type].shortname + '" class="' + imageClassName + '">';
-    
+
     slotMarkup += '<span class="qty">' + thisItemObject.quantity + '</span></div>';
     slotMarkup += '<p>' + theColourPrefix + currentActiveInventoryItems[thisItemObject.type].shortname + '</p>';
     return slotMarkup;
+}
+
+function releaseLockedSlots() {
+    // clear any locked elements:
+    var allLockedSlots = document.querySelectorAll('#inventoryPanels .locked');
+    for (var i = 0; i < allLockedSlots.length; i++) {
+        allLockedSlots[i].classList.remove("locked");
+    }
 }
