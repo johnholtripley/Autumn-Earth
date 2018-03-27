@@ -65,6 +65,7 @@ const draggableFollower = document.getElementById('draggableFollower');
 const retinueQuestStart = document.getElementById('retinueQuestStart');
 const retinueQuestTimeRequired = document.getElementById('retinueQuestTimeRequired');
 const retinueList = document.getElementById('retinueList');
+const startCrafting = document.getElementById('startCrafting');
 
 
 var notificationQueue = [];
@@ -167,6 +168,7 @@ var UI = {
         splitStackPanel.onsubmit = inventorySplitStackSubmit;
         shopSplitStackPanel.onsubmit = UI.shopSplitStackSubmit;
         toggleActiveCards.onclick = UI.toggleCardsDisplayed;
+        startCrafting.onclick = startCraftingProcess;
         document.getElementById('splitStackCancel').onclick = UI.inventorySplitStackCancel;
         document.getElementById('shopSplitStackCancel').onclick = UI.shopSplitStackCancel;
         toggleFullscreenSwitch.onchange = UI.toggleFullScreen;
@@ -338,7 +340,7 @@ var UI = {
             inventoryItemAction(e.target, thisItemsAction, e.target.getAttribute('data-action-value'));
         } else {
             var thisNode = getNearestParentId(e.target);
-
+console.log(thisNode.id);
             if (thisNode.id.substring(0, 6) == "recipe") {
                 recipeSelectComponents(thisNode.id);
             } else if (thisNode.id.substring(0, 4) == "shop") {

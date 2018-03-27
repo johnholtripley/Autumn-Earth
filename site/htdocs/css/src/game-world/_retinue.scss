@@ -254,10 +254,7 @@
     pointer-events: none;
     opacity: 0;
     @include transition(opacity 0.4s ease);
-    &.active {
-        opacity: 1;
-        pointer-events: auto;
-    }
+
     h2 {
 color: #fff;
 text-align:center;
@@ -289,3 +286,7 @@ text-transform:uppercase;
      outline:none;
     }
 }
+#retinuePanel.active .retinueCompletePanel.active {
+         opacity: 1;
+        pointer-events: auto;
+    }

@@ -63,14 +63,13 @@ function recipeSearchClear() {
 
 function recipeSelectComponents(whichRecipe) {
     releaseLockedSlots();
-
     craftingSelectComponentsPanel.classList.add("active");
     var recipeId = whichRecipe.substring(6);
     var foundItemGroups;
     var thisRecipe = hero.crafting[currentRecipePanelProfession].recipes[recipeId];
     craftingObject = {
         'componentsAdded': [],
-        'thisRecipeComponents': thisRecipe.components,
+        'thisRecipe': thisRecipe,
         'required': []
     }
     var componentsRequiredMarkup = '<h4>Requires:</h4><ul>';
@@ -240,9 +239,10 @@ function releaseLockedSlots() {
 }
 
 function addCraftingComponents(fromSlotId) {
-    console.log(craftingObject);
+    //console.log(craftingObject);
     var slotId = fromSlotId.substring(8);
     var amountUsed;
+
     // see how many of this type are still required:
     for (var i = 0; i < craftingObject.required.length; i++) {
         if (craftingObject.required[i].quantity > 0) {
@@ -255,8 +255,25 @@ function addCraftingComponents(fromSlotId) {
                 craftingObject.required[i].quantity -= amountUsed;
                 // keep track of what's been added (and from where) to remove it from the inventory if crafting goes ahead:
                 craftingObject.componentsAdded.push({ 'fromSlot': slotId, 'quantity': amountUsed });
+                // show this visually ######################
             }
         }
     }
     console.log(craftingObject.componentsAdded);
+    var allComponentsAdded = true;
+    // check if that's all of the crafting components added now:
+    for (var i = 0; i < craftingObject.required.length; i++) {
+        if (craftingObject.required[i].quantity > 0) {
+            allComponentsAdded = false;
+        }
+    }
+    if(allComponentsAdded) {
+        startCrafting.disabled = false;
+    }
+
+}
+
+function startCraftingProcess() {
+    console.log("crafting!");
+    console.log(craftingObject.thisRecipe);
 }
