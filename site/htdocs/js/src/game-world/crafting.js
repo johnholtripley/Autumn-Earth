@@ -241,7 +241,7 @@ function releaseLockedSlots() {
 function addCraftingComponents(fromSlotId) {
     //console.log(craftingObject);
     var slotId = fromSlotId.substring(8);
-    var amountUsed;
+    var amountUsed, thisQuantityDisplay;
 
     // see how many of this type are still required:
     for (var i = 0; i < craftingObject.required.length; i++) {
@@ -255,7 +255,12 @@ function addCraftingComponents(fromSlotId) {
                 craftingObject.required[i].quantity -= amountUsed;
                 // keep track of what's been added (and from where) to remove it from the inventory if crafting goes ahead:
                 craftingObject.componentsAdded.push({ 'fromSlot': slotId, 'quantity': amountUsed });
-                // show this visually ######################
+                // show the changed quantities in the Available panel:
+thisQuantityDisplay = document.querySelector('#'+fromSlotId+' .qty');
+                thisQuantityDisplay.classList.add('modified');
+                thisQuantityDisplay.textContent = hero.inventory[slotId].quantity - amountUsed;
+                // show the items added in the Required column:
+                // ###################
             }
         }
     }
@@ -276,4 +281,10 @@ function addCraftingComponents(fromSlotId) {
 function startCraftingProcess() {
     console.log("crafting!");
     console.log(craftingObject.thisRecipe);
+    // build new item object:
+    // use recipe influences in formula with added components
+    // build colour from components
+    // show short progress timer
+    // add to inventory (or post if full)
+    // remove used components
 }
