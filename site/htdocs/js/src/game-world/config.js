@@ -22,7 +22,10 @@ var postObject = {
     "active": false
 };
 var retinueObject = {
-    "active": true
+    "active": false
+};
+var craftingObject = {
+
 };
 var retinueBaseLocationX = 200;
 var retinueBaseLocationY = 350;

@@ -350,8 +350,9 @@ var UI = {
             } else if (thisNode.id.substring(0, 11) == "postMessage") {
                 UI.takePostAttachments(thisNode.id);
             } else if (thisNode.id.substring(0, 4) == "post") {
-
                 UI.readPostMessage(thisNode.id);
+            } else if (thisNode.id.substring(0, 8) == "fromSlot") {
+                addCraftingComponents(thisNode.id);
             }
         }
     },

@@ -2,7 +2,8 @@
     "currentMap": 2,
     "tileX": 24,
     "tileY": 27,
-    "bags": [{
+    "bags": [
+        {
             "type": 20,
             "quality": 100,
             "durability": 100,
@@ -12,7 +13,8 @@
             "enchanted": 0,
             "hallmark": 0,
             "inscription": ""
-        }, {
+        },
+        {
             "type": 17,
             "quality": 100,
             "durability": 100,
@@ -25,8 +27,10 @@
         }
 
     ],
-    "inventory": {
-        "0-0": {
+    "inventory":
+    {
+        "0-0":
+        {
             "type": 19,
             "quantity": 12,
             "quality": 100,
@@ -38,7 +42,8 @@
             "hallmark": 0,
             "inscription": ""
         },
-        "0-1": {
+        "0-1":
+        {
             "type": 5,
             "quantity": 18,
             "quality": 100,
@@ -50,7 +55,8 @@
             "hallmark": 0,
             "inscription": ""
         },
-            "0-2": {
+        "0-2":
+        {
             "type": 5,
             "quantity": 9,
             "quality": 40,
@@ -62,7 +68,8 @@
             "hallmark": 0,
             "inscription": ""
         },
-        "0-3": {
+        "0-3":
+        {
             "type": 19,
             "quantity": 12,
             "quality": 100,
@@ -74,7 +81,8 @@
             "hallmark": 0,
             "inscription": ""
         },
-        "0-4": {
+        "0-4":
+        {
             "type": 9,
             "quantity": 6,
             "quality": 100,
@@ -86,7 +94,8 @@
             "hallmark": 0,
             "inscription": ""
         },
-           "0-5": {
+        "0-5":
+        {
             "type": 10,
             "quantity": 3,
             "quality": 100,
@@ -98,7 +107,8 @@
             "hallmark": 0,
             "inscription": ""
         },
-                "0-7": {
+        "0-7":
+        {
             "type": 11,
             "quantity": 6,
             "quality": 100,
@@ -110,8 +120,21 @@
             "hallmark": 0,
             "inscription": ""
         },
-
-        "p0-2": {
+        "0-17":
+        {
+            "type": 5,
+            "quantity": 7,
+            "quality": 8,
+            "durability": 45,
+            "currentWear": 0,
+            "effectiveness": 100,
+            "colour": 4,
+            "enchanted": 0,
+            "hallmark": 0,
+            "inscription": ""
+        },
+        "p0-2":
+        {
             "type": 36,
             "quantity": 1,
             "quality": 100,
@@ -123,7 +146,8 @@
             "hallmark": 0,
             "inscription": ""
         },
-                "p0-3": {
+        "p0-3":
+        {
             "type": 55,
             "quantity": 1,
             "quality": 100,
@@ -133,13 +157,15 @@
             "colour": 0,
             "enchanted": 0,
             "hallmark": 0,
-               "inscription": {
+            "inscription":
+            {
                 "title": "A quest book",
                 "timeCreated": "1489052663553",
                 "content": "<section><h1>Chapter 1</h1><p>You've just started a new quest. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi non ultricies ipsum, a faucibus neque. Duis rutrum, nunc ac mattis vestibulum, lorem odio facilisis lectus, vel finibus tellus libero non quam. Ut sodales aliquet mauris, sit amet suscipit ante vulputate a. Nulla sed ex tempus lacus rutrum egestas sit amet et eros. Ut sit amet metus tortor. Nulla tincidunt luctus commodo. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae;</p><p>Curabitur ut est vitae quam vehicula efficitur nec at orci. Vivamus semper lectus nisi, et vehicula eros imperdiet viverra. Donec imperdiet magna lectus, sed tempus libero dapibus et. Ut non viverra nulla. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Curabitur turpis justo, vulputate a vehicula ut, pellentesque rutrum dolor. Proin et dolor dignissim, auctor purus vel, accumsan lorem. </p></section>"
             }
         },
-        "0-10": {
+        "0-10":
+        {
             "type": 33,
             "quantity": 10,
             "quality": 100,
@@ -151,7 +177,8 @@
             "hallmark": 0,
             "inscription": ""
         },
-        "0-12": {
+        "0-12":
+        {
             "type": 40,
             "quantity": 2,
             "quality": 100,
@@ -163,7 +190,8 @@
             "hallmark": 0,
             "inscription": ""
         },
-        "0-16": {
+        "0-16":
+        {
             "type": 40,
             "quantity": 2,
             "quality": 100,
@@ -175,7 +203,8 @@
             "hallmark": 0,
             "inscription": ""
         },
-        "1-1": {
+        "1-1":
+        {
             "type": 21,
             "quantity": 2,
             "quality": 100,
@@ -187,7 +216,8 @@
             "hallmark": 0,
             "inscription": ""
         },
-        "1-2": {
+        "1-2":
+        {
             "type": 21,
             "quantity": 1,
             "quality": 100,
@@ -199,7 +229,8 @@
             "hallmark": 0,
             "inscription": ""
         },
-        "1-4": {
+        "1-4":
+        {
             "type": 29,
             "quantity": 1,
             "quality": 100,
@@ -211,7 +242,8 @@
             "hallmark": 0,
             "inscription": ""
         },
-        "1-5": {
+        "1-5":
+        {
             "type": 30,
             "quantity": 1,
             "quality": 100,
@@ -223,7 +255,8 @@
             "hallmark": 0,
             "inscription": ""
         },
-        "1-6": {
+        "1-6":
+        {
             "type": 13,
             "quantity": 1,
             "quality": 100,
@@ -235,7 +268,8 @@
             "hallmark": 0,
             "inscription": ""
         },
-        "0-11": {
+        "0-11":
+        {
             "type": 20,
             "quantity": 1,
             "quality": 100,
@@ -247,7 +281,8 @@
             "hallmark": 0,
             "inscription": ""
         },
-        "1-7": {
+        "1-7":
+        {
             "type": 33,
             "quantity": 1,
             "quality": 100,
@@ -257,13 +292,15 @@
             "colour": 16,
             "enchanted": 0,
             "hallmark": 0,
-            "inscription": {
+            "inscription":
+            {
                 "title": "An old book",
                 "timeCreated": "1489052663553",
                 "content": "<section><h1>Chapter 1</h1><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi non ultricies ipsum, a faucibus neque. Duis rutrum, nunc ac mattis vestibulum, lorem odio facilisis lectus, vel finibus tellus libero non quam. Ut sodales aliquet mauris, sit amet suscipit ante vulputate a. Nulla sed ex tempus lacus rutrum egestas sit amet et eros. Ut sit amet metus tortor. Nulla tincidunt luctus commodo. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae;</p><p>Curabitur ut est vitae quam vehicula efficitur nec at orci. Vivamus semper lectus nisi, et vehicula eros imperdiet viverra. Donec imperdiet magna lectus, sed tempus libero dapibus et. Ut non viverra nulla. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Curabitur turpis justo, vulputate a vehicula ut, pellentesque rutrum dolor. Proin et dolor dignissim, auctor purus vel, accumsan lorem. </p></section>"
             }
         },
-        "1-8": {
+        "1-8":
+        {
             "type": 31,
             "quantity": 1,
             "quality": 100,
@@ -274,7 +311,8 @@
             "enchanted": 0,
             "hallmark": 0,
             "inscription": "",
-            "contains": [{
+            "contains": [
+            {
 
                 "type": 28,
                 "quantity": 1,
@@ -288,7 +326,8 @@
                 "inscription": ""
             }]
         },
-        "1-9": {
+        "1-9":
+        {
             "type": 32,
             "quantity": 1,
             "quality": 100,
@@ -298,13 +337,15 @@
             "colour": 16,
             "enchanted": 0,
             "hallmark": 0,
-            "inscription": {
+            "inscription":
+            {
                 "title": "Another old book",
                 "timeCreated": "1489052678002",
                 "content": "<section><h1>Chapter 1</h1><p>'Wow! wow! wow!' While the Owl had the door of which was the Hatter.</p><p> 'You ought to eat or drink under the window, she suddenly spread out her hand on the floor, and a bright brass plate with the dream of Wonderland of long ago: and how she would keep, through all her wonderful Adventures, till she got to do,' said the Pigeon in a natural way again.</p><p> That's all.' 'In that direction,' the Cat.</p></section><section><h1>Chapter 2</h1><p>'Off with her friend.</p><p> When she got to go and get ready to sink into the book her sister sat still just as well as if she were looking over their slates; 'but it sounds uncommon nonsense.' Alice didn't think that there was nothing so very tired of this.</p><p> I think it was,' the March Hare said—' 'I didn't!' the March Hare and the beak— Pray how did you call it purring, not growling,' said Alice.</p></section>"
             }
         },
-              "1-18": {
+        "1-18":
+        {
             "type": 53,
             "quantity": 1,
             "quality": 100,
@@ -318,7 +359,8 @@
             "additional": "2|4|4",
             "cooldown": 500
         },
-        "1-19": {
+        "1-19":
+        {
             "type": 32,
             "quantity": 5,
             "quality": 100,
@@ -332,7 +374,8 @@
         },
 
 
-        "1-10": {
+        "1-10":
+        {
             "type": 41,
             "quantity": 1,
             "quality": 100,
@@ -346,14 +389,16 @@
         }
     },
     "cards": [6, 5, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4],
-    "stats": {
+    "stats":
+    {
         "cardGamesWon": 2,
         "cardGamesLost": 4,
         "cardGamesDrawn": 0,
         "numberOfcardsFlipped": 8,
         "retinueMissionsCompleted": 0
     },
-    "settings": {
+    "settings":
+    {
         "soundVolume": 1,
         "musicVolume": 0
     },
@@ -373,9 +418,14 @@
         [13, 0]
     ],
     "totalGameTimePlayed": 0,
-    "fae": { "range": 4950, "speed": 4 },
-    "activePets": [0,1],
-    "allPets": [{
+    "fae":
+    {
+        "range": 4950,
+        "speed": 4
+    },
+    "activePets": [0, 1],
+    "allPets": [
+    {
         "name": "White Hen",
         "src": "white-hen.png",
         "width": 20,
@@ -389,8 +439,10 @@
         "facing": "s",
         "speed": 4,
         "inventorySize": 6,
-        "animation": {
-            "walk": {
+        "animation":
+        {
+            "walk":
+            {
                 "length": 1,
                 "n": 0,
                 "e": 1,
@@ -398,7 +450,8 @@
                 "w": 3
             }
         }
-    }, {
+    },
+    {
         "name": "Brown Hen",
         "src": "brown-hen.png",
         "width": 20,
@@ -412,8 +465,10 @@
         "facing": "e",
         "speed": 4,
         "inventorySize": 6,
-        "animation": {
-            "walk": {
+        "animation":
+        {
+            "walk":
+            {
                 "length": 1,
                 "n": 0,
                 "e": 1,
@@ -422,15 +477,46 @@
             }
         }
     }],
-    "currency": {
+    "currency":
+    {
         "money": 3412510,
         "cardDust": 12,
         "keys": []
     },
     "npcsFollowing": [],
     "lineOfSightRange": 20,
-    "collections": {
-        
+    "collections":
+    {
+
     },
-    "actions": [["Harmful extraction","gather",1,{"time":1500,"purity":10,"quality":-40}],["Gentle extraction","gather",1,{"time":1500,"purity":10,"quality":-50}],"-","-",["Dowse for metals","dowse",4,{"range":30}],["Survey for metals","survey",4,{"time":-500}],["Mineral extraction","gather",4,{"time":1500,"purity":10,"quality":-40}],"-","-",["Mount","mount",null,{"pet-name":"brown horse"}]]
+    "actions": [
+        ["Harmful extraction", "gather", 1,
+        {
+            "time": 1500,
+            "purity": 10,
+            "quality": -40
+        }],
+        ["Gentle extraction", "gather", 1,
+        {
+            "time": 1500,
+            "purity": 10,
+            "quality": -50
+        }], "-", "-", ["Dowse for metals", "dowse", 4,
+        {
+            "range": 30
+        }],
+        ["Survey for metals", "survey", 4,
+        {
+            "time": -500
+        }],
+        ["Mineral extraction", "gather", 4,
+        {
+            "time": 1500,
+            "purity": 10,
+            "quality": -40
+        }], "-", "-", ["Mount", "mount", null,
+        {
+            "pet-name": "brown horse"
+        }]
+    ]
 }

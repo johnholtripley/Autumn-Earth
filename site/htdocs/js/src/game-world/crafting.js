@@ -63,17 +63,22 @@ function recipeSearchClear() {
 
 function recipeSelectComponents(whichRecipe) {
     releaseLockedSlots();
+
     craftingSelectComponentsPanel.classList.add("active");
     var recipeId = whichRecipe.substring(6);
     var foundItemGroups;
     var thisRecipe = hero.crafting[currentRecipePanelProfession].recipes[recipeId];
-    var beingCreatedMarkup = '<h4>Requires:</h4>';
+    craftingObject = {
+        'componentsAdded': [],
+        'thisRecipeComponents': thisRecipe.components,
+        'required': []
+    }
+    var componentsRequiredMarkup = '<h4>Requires:</h4><ul>';
     // find all components that the player has that are usable for this recipe as well:
     var availableComponentMarkup = '<h4>Available:</h4><ul>';
     var thisItemAttributes, thisItemInfluences;
     var componentsFound = 0;
     var displayItemMarkup = '<img src="/images/game-world/inventory-items/' + thisRecipe.imageId + '.png" alt="' + thisRecipe.recipeName + '"><h3>' + thisRecipe.recipeName + '</h3><p>' + thisRecipe.recipeDescription + '</p>';
-    beingCreatedMarkup += '<ul>';
 
     // complete any undefined influences:
     var totalInfluences = {
@@ -131,7 +136,7 @@ function recipeSelectComponents(whichRecipe) {
         requiredSVGoutput = '<svg xmlns="http://www.w3.org/2000/svg" height="100" width="100" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50" fill="' + gradeAttribute(thisComponentEffectiveness) + '"/><path d="M6.699 75a50 50 0 0 1 0-50A50 50 0 0 1 50 0v50z" fill="' + gradeAttribute(thisComponentQuality) + '"/><path d="M50 0a50 50 0 0 1 43.301 25 50 50 0 0 1 0 50l-43.3-25z" fill="' + gradeAttribute(thisComponentDurability) + '"/></svg>';
         if (!(isNaN(thisRecipe.components[i].type))) {
             // specific item - make sure not already added this (if more than 1 quantity required):
-            beingCreatedMarkup += '<li><div class="gradedItem">' + requiredSVGoutput + '<img src="/images/game-world/inventory-items/' + thisRecipe.components[i].type + '.png" alt="' + currentActiveInventoryItems[thisRecipe.components[i].type].shortname + '"><span class="qty">' + thisRecipe.components[i].quantity + '</span></div><p>' + currentActiveInventoryItems[thisRecipe.components[i].type].shortname + '</p></li>';
+            componentsRequiredMarkup += '<li><div class="gradedItem">' + requiredSVGoutput + '<img src="/images/game-world/inventory-items/' + thisRecipe.components[i].type + '.png" alt="' + currentActiveInventoryItems[thisRecipe.components[i].type].shortname + '"><span class="qty">' + thisRecipe.components[i].quantity + '</span></div><p>' + currentActiveInventoryItems[thisRecipe.components[i].type].shortname + '</p></li>';
             foundItemGroups = findSlotItemIdInInventory(thisRecipe.components[i].type);
             if (foundItemGroups.length > 0) {
                 for (var j = 0; j < foundItemGroups.length; j++) {
@@ -144,7 +149,7 @@ function recipeSelectComponents(whichRecipe) {
             }
         } else {
             // item group:
-            beingCreatedMarkup += '<li><div class="gradedItem">' + requiredSVGoutput + '<img class="previewSlot" src="/images/game-world/inventory-items/' + thisRecipe.components[i].type + '.png" alt=""><span class="qty">' + thisRecipe.components[i].quantity + '</span></div><p>' + currentItemGroupFilters[(thisRecipe.components[i].type)] + '</p></li>';
+            componentsRequiredMarkup += '<li><div class="gradedItem">' + requiredSVGoutput + '<img class="previewSlot" src="/images/game-world/inventory-items/' + thisRecipe.components[i].type + '.png" alt=""><span class="qty">' + thisRecipe.components[i].quantity + '</span></div><p>' + currentItemGroupFilters[(thisRecipe.components[i].type)] + '</p></li>';
             foundItemGroups = hasItemTypeInInventory(thisRecipe.components[i].type);
             if (foundItemGroups.length > 0) {
                 for (var j = 0; j < foundItemGroups.length; j++) {
@@ -153,22 +158,25 @@ function recipeSelectComponents(whichRecipe) {
                     // 'lock' this slot:
                     document.getElementById('slot' + foundItemGroups[j]).classList.add('locked');
                     componentsFound++;
+                    //craftingObject.groupsFound.push(foundItemGroups);
                 }
             }
         }
+        craftingObject.required.push({ 'type': thisRecipe.components[i].type, 'quantity': thisRecipe.components[i].quantity });
     }
+
     if (componentsFound == 0) {
         availableComponentMarkup += "<li><p>You don't have any of the required components for this recipe.</p></li>";
     }
     // add the dye slot, only if the created item can be dyed:
     if (currentActiveInventoryItems[thisRecipe.creates].dyeable > 0) {
-        beingCreatedMarkup += '<li><img src="/images/game-world/inventory-items/dye.png" alt=""><p>Dye (optional)</p></li>';
+        componentsRequiredMarkup += '<li><img src="/images/game-world/inventory-items/dye.png" alt=""><p>Dye (optional)</p></li>';
     }
     // add the enchant slot:
-    beingCreatedMarkup += '<li><img src="/images/game-world/inventory-items/enchant.png" alt=""><p>Imbue item (optional)</p></li>';
-    beingCreatedMarkup += '</ul>';
+    componentsRequiredMarkup += '<li><img src="/images/game-world/inventory-items/enchant.png" alt=""><p>Imbue item (optional)</p></li>';
+    componentsRequiredMarkup += '</ul>';
     availableComponentMarkup += '</ul>';
-    selectComponentsItemBeingCreated.innerHTML = beingCreatedMarkup;
+    selectComponentsItemBeingCreated.innerHTML = componentsRequiredMarkup;
     componentsAvailableForThisRecipe.innerHTML = availableComponentMarkup;
     displayItemBeingCreated.innerHTML = displayItemMarkup;
 }
@@ -229,4 +237,26 @@ function releaseLockedSlots() {
     for (var i = 0; i < allLockedSlots.length; i++) {
         allLockedSlots[i].classList.remove("locked");
     }
+}
+
+function addCraftingComponents(fromSlotId) {
+    console.log(craftingObject);
+    var slotId = fromSlotId.substring(8);
+    var amountUsed;
+    // see how many of this type are still required:
+    for (var i = 0; i < craftingObject.required.length; i++) {
+        if (craftingObject.required[i].quantity > 0) {
+            // check by type and group:
+            if ((craftingObject.required[i].type == hero.inventory[slotId].type) || (craftingObject.required[i].type == currentActiveInventoryItems[hero.inventory[slotId].type].group)) {
+                amountUsed = craftingObject.required[i].quantity;
+                if (craftingObject.required[i].quantity > hero.inventory[slotId].quantity) {
+                    amountUsed = hero.inventory[slotId].quantity;
+                }
+                craftingObject.required[i].quantity -= amountUsed;
+                // keep track of what's been added (and from where) to remove it from the inventory if crafting goes ahead:
+                craftingObject.componentsAdded.push({ 'fromSlot': slotId, 'quantity': amountUsed });
+            }
+        }
+    }
+    console.log(craftingObject.componentsAdded);
 }
