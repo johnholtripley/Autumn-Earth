@@ -65,6 +65,7 @@
             font-size: 11px;
             pointer-events: none;
             background: #333;
+            @include transition(background 0.4s ease);
             &.modified {
                 background: #ffa200;
             }
@@ -121,5 +122,26 @@
     svg {
         width: 58px;
         height: 58px;
+    }
+}
+
+#craftingOutput {
+    width: 88px;
+    height: 44px;
+    margin: 6px auto;
+    padding: 22px 0;
+    @include border-radius(100%);
+    background: url(../images/game-world/interface/crafting-result-background.jpg) no-repeat 50% 50%;
+    img {
+        @include border-radius(100%);
+        display: block;
+        border: 2px solid #cecece;
+        margin: 0 auto;
+    }
+}
+
+#displayItemBeingCreated {
+    h3, p {
+        text-align: center;
     }
 }

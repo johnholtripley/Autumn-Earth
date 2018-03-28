@@ -70,26 +70,31 @@ function recipeSelectComponents(whichRecipe) {
     craftingObject = {
         'componentsAdded': [],
         'thisRecipe': thisRecipe,
-        'required': []
+        'required': [],
+        'componentInfluences': []
+      
+  
     }
     var componentsRequiredMarkup = '<h4>Requires:</h4><ul>';
     // find all components that the player has that are usable for this recipe as well:
     var availableComponentMarkup = '<h4>Available:</h4><ul>';
     var thisItemAttributes, thisItemInfluences;
     var componentsFound = 0;
-    var displayItemMarkup = '<img src="/images/game-world/inventory-items/' + thisRecipe.imageId + '.png" alt="' + thisRecipe.recipeName + '"><h3>' + thisRecipe.recipeName + '</h3><p>' + thisRecipe.recipeDescription + '</p>';
+    var displayItemMarkup = '<div id="craftingOutput"><img src="/images/game-world/inventory-items/' + thisRecipe.imageId + '.png" alt="' + thisRecipe.recipeName + '"></div><h3>' + thisRecipe.recipeName + '</h3><p>' + thisRecipe.recipeDescription + '</p>';
 
     // complete any undefined influences:
-    var totalInfluences = {
-        "durability": 0,
-        "effectiveness": 0,
-        "quality": 0,
-    };
     var influencesWithDefinedValues = {
         "durability": 0,
         "effectiveness": 0,
-        "quality": 0,
+        "quality": 0
     };
+    var totalInfluences = {
+        "durability": 0,
+        "effectiveness": 0,
+        "quality": 0
+    };
+    var tempInfluenceObject;
+   
     var SVGoutput, requiredSVGoutput, thisComponentDurability, thisComponentEffectiveness, thisComponentQuality;
     var thisNumberOfComponents = thisRecipe.components.length;
     for (var i in thisRecipe.components) {
@@ -131,6 +136,18 @@ function recipeSelectComponents(whichRecipe) {
 
             thisComponentQuality = (100 - totalInfluences["quality"]) / (thisNumberOfComponents - influencesWithDefinedValues["quality"]);
         }
+
+// store these values:
+
+
+
+
+
+craftingObject.componentInfluences[thisRecipe.components[i].type] = {    'effectiveness': thisComponentEffectiveness,    'durability': thisComponentDurability,    'quality': thisComponentQuality
+};
+
+
+
 
         requiredSVGoutput = '<svg xmlns="http://www.w3.org/2000/svg" height="100" width="100" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50" fill="' + gradeAttribute(thisComponentEffectiveness) + '"/><path d="M6.699 75a50 50 0 0 1 0-50A50 50 0 0 1 50 0v50z" fill="' + gradeAttribute(thisComponentQuality) + '"/><path d="M50 0a50 50 0 0 1 43.301 25 50 50 0 0 1 0 50l-43.3-25z" fill="' + gradeAttribute(thisComponentDurability) + '"/></svg>';
         if (!(isNaN(thisRecipe.components[i].type))) {
@@ -254,7 +271,7 @@ function addCraftingComponents(fromSlotId) {
                 }
                 craftingObject.required[i].quantity -= amountUsed;
                 // keep track of what's been added (and from where) to remove it from the inventory if crafting goes ahead:
-                craftingObject.componentsAdded.push({ 'fromSlot': slotId, 'quantity': amountUsed });
+                craftingObject.componentsAdded.push({ 'fromSlot': slotId, 'quantity': amountUsed, 'type': craftingObject.required[i].type });
                 // show the changed quantities in the Available panel:
 thisQuantityDisplay = document.querySelector('#'+fromSlotId+' .qty');
                 thisQuantityDisplay.classList.add('modified');
@@ -264,7 +281,7 @@ thisQuantityDisplay = document.querySelector('#'+fromSlotId+' .qty');
             }
         }
     }
-    console.log(craftingObject.componentsAdded);
+  //  console.log("---",craftingObject.componentsAdded,"---");
     var allComponentsAdded = true;
     // check if that's all of the crafting components added now:
     for (var i = 0; i < craftingObject.required.length; i++) {
@@ -274,12 +291,37 @@ thisQuantityDisplay = document.querySelector('#'+fromSlotId+' .qty');
     }
     if(allComponentsAdded) {
         startCrafting.disabled = false;
+        // display attributes of what will be crafted:
+        var outputQuality = 0;
+        var outputDurability = 0;
+        var outputEffectiveness = 0;
+console.log(craftingObject.componentsAdded);
+console.log(craftingObject.componentInfluences);
+var thisType;
+for (var i=0; i<craftingObject.componentsAdded.length;i++) {
+thisType = craftingObject.componentsAdded[i].type;
+// loop through if multiple quantities:
+for (var j=0;j<craftingObject.componentsAdded[i].quantity;j++) {
+outputQuality += determineAttributeValue(hero.inventory[(craftingObject.componentsAdded[i].fromSlot)].quantity, craftingObject.componentInfluences[thisType].quality);
+outputDurability += determineAttributeValue(hero.inventory[(craftingObject.componentsAdded[i].fromSlot)].durability, craftingObject.componentInfluences[thisType].durability);
+outputEffectiveness += determineAttributeValue(hero.inventory[(craftingObject.componentsAdded[i].fromSlot)].effectiveness, craftingObject.componentInfluences[thisType].effectiveness);
+}
+
+}
+
+console.log("OUTPUT:");
+console.log("quality: "+outputQuality+"%");
+console.log("durability: "+outputDurability+"%");
+console.log("effectiveness: "+outputEffectiveness+"%");
+
+
     }
 
 }
 
 function startCraftingProcess() {
     console.log("crafting!");
+    
     console.log(craftingObject.thisRecipe);
     // build new item object:
     // use recipe influences in formula with added components
@@ -287,4 +329,8 @@ function startCraftingProcess() {
     // show short progress timer
     // add to inventory (or post if full)
     // remove used components
+}
+
+function determineAttributeValue(itemValue, influenceAmount) {
+return Math.sqrt((itemValue * influenceAmount * influenceAmount)/100);
 }
