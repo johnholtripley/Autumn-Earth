@@ -4188,6 +4188,11 @@ console.log(thisNode.id);
     populateRecipeList: function(whichProfession, toolsQuality) {
 
         if (currentRecipePanelProfession != whichProfession) {
+// close the main crafting panel (in case it's open):
+releaseLockedSlots();
+craftingSelectComponentsPanel.classList.remove('active');
+
+
             // clear previous searches:
             recipeSearch.value = '';
             clearRecipeSearch.classList.remove("active");
