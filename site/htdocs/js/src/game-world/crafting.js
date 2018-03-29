@@ -69,6 +69,7 @@ function recipeSelectComponents(whichRecipe) {
     var thisRecipe = hero.crafting[currentRecipePanelProfession].recipes[recipeId];
     craftingObject = {
         'componentsAdded': [],
+        'whichRecipe': whichRecipe,
         'thisRecipe': thisRecipe,
         'required': [],
         'componentInfluences': [],
@@ -149,20 +150,11 @@ function recipeSelectComponents(whichRecipe) {
         }
 
         // store these values:
-
-
-
-
-
         craftingObject.componentInfluences[thisRecipe.components[i].type] = {
             'effectiveness': thisComponentEffectiveness,
             'durability': thisComponentDurability,
             'quality': thisComponentQuality
         };
-
-
-
-
         requiredSVGoutput = '<svg xmlns="http://www.w3.org/2000/svg" height="100" width="100" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50" fill="' + gradeAttribute(thisComponentEffectiveness) + '"/><path d="M6.699 75a50 50 0 0 1 0-50A50 50 0 0 1 50 0v50z" fill="' + gradeAttribute(thisComponentQuality) + '"/><path d="M50 0a50 50 0 0 1 43.301 25 50 50 0 0 1 0 50l-43.3-25z" fill="' + gradeAttribute(thisComponentDurability) + '"/></svg>';
         if (!(isNaN(thisRecipe.components[i].type))) {
             // specific item - make sure not already added this (if more than 1 quantity required):
@@ -333,9 +325,6 @@ function addCraftingComponents(fromSlotId) {
             craftingObject.finalItemName = newColourImageSuffix + ' ' + currentActiveInventoryItems[craftingObject.craftedItem.type].shortname;
             document.querySelector('#displayItemBeingCreated h3').innerText = craftingObject.finalItemName;
         }
-
-        console.log("final item object:");
-        console.log(craftingObject.craftedItem);
     }
 }
 
@@ -345,26 +334,24 @@ function startCraftingProcess() {
     // ########
 
     hero.stats.itemsCrafted++;
-    // add to inventory (or post if full)
-
-
+    // add to inventory (or post if full):
     inventoryCheck = canAddItemToInventory([craftingObject.craftedItem]);
     if (inventoryCheck[0]) {
-
         UI.showChangeInInventory(inventoryCheck[1]);
     } else {
         // send the item by post:
         var subjectLine = "Your crafted " + craftingObject.finalItemName;
-
         var message = "This is fine work";
         var whichNPC = "Artisan crafter";
         sendNPCPost('{"subject":"' + subjectLine + '","message":"' + message + '","senderID":"-1","recipientID":"' + characterId + '","fromName":"' + whichNPC + '"}', [craftingObject.craftedItem]);
         UI.showNotification("<p>Crafted item sent by post to you</p>");
     }
-
-
-    // remove used components
-    // ############
+    // remove used components:
+    for (var i = 0; i < craftingObject.componentsAdded.length; i++) {
+        removeFromInventory(craftingObject.componentsAdded[i].fromSlot, craftingObject.componentsAdded[i].quantity);
+    }
+    // update the available items:
+    recipeSelectComponents(craftingObject.whichRecipe);
 }
 
 function determineAttributeValue(itemValue, influenceAmount) {

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 21, 2018 at 02:14 PM
+-- Generation Time: Mar 29, 2018 at 03:34 PM
 -- Server version: 10.1.30-MariaDB
 -- PHP Version: 7.0.27
 
@@ -287,9 +287,10 @@ INSERT INTO `tblcolours` (`colourID`, `colourName`) VALUES
 (14, 'Celadon'),
 (15, 'Tawny'),
 (16, 'Black'),
+(17, 'Ruby/Maroon'),
 (18, '(dark yellow/amber)'),
 (19, '(dark orange/sienna)'),
-(20, '(dark blue/sapphire)'),
+(20, 'Sapphire'),
 (21, '(indigo/imperial purple)'),
 (22, '(dark green/emerald/olive)'),
 (23, '(dark brown/chestnut)'),
@@ -906,12 +907,13 @@ INSERT INTO `tblmail` (`mailID`, `characterID`, `senderID`, `senderName`, `title
 (931, 999, 999, 'Eleaddai', 'have a lovely weekend', 'Take a spoonful of it given at a time, and then the Opobalsamum, then the chamber being kept safe from putrefaction.', '2018-02-16 16:23:48', '0', '0', 0, 0),
 (932, 999, 999, 'Eleaddai', 'have a lovely weekend', 'They say it purges hot rheums, and provokes urine and the white of an opening quality, thereby carrying away those vapours which might otherwise annoy the brain and nerves, and helps the falling-sickness, astonishment, apoplexies, dulness of sight, want of it to the consumption of the spleen, it stops fluxes, the running of the body, especially such as have laboured under long chronical diseases.', '2018-02-16 16:23:55', '0', '0', 0, 0),
 (933, 999, 999, 'Eleaddai', 'have a lovely weekend', 'They purge gross and putrified humours, and sets the senses oppressed by cold, it remedies cold infirmities of the fresh flowers and leaves, and Wormwood, of each six drams, Indian Spikenard, Schenanth, Pepper white and red, Spodium, Rhubarb, of each one dram, Lapis Hematilis, the wool of a Hare toasted, of each half an ounce, Galbanum, Opopanax, and Galbanum be put in the head.', '2018-02-16 16:24:01', '0', '0', 0, 0),
-(934, 999, 999, 'Eleaddai', 'have a lovely weekend', 'An ounce at a time, at night going to bed; if that provoke not sleep, the next day boil it to the consumption of the roots of Smallage, Fennel, and Sparagus, of each two drams, Gum Arabic, Dragonâ€™s-blood of each one ounce, Canary Wine a whole summerâ€™s day to write more scholastically, the dose) must be consumed and with a Liquorice stick, if you cannot but know both what Vinegar to the heart, and weak stomachs, and helps all diseases coming of cold and moisture.', '2018-02-16 16:24:07', '0', '0', 0, 0),
+(934, 999, 999, 'Eleaddai', 'have a lovely weekend', 'An ounce at a time, at night going to bed; if that provoke not sleep, the next day boil it to the consumption of the roots of Smallage, Fennel, and Sparagus, of each two drams, Gum Arabic, Dragonâ€™s-blood of each one ounce, Canary Wine a whole summerâ€™s day to write more scholastically, the dose) must be consumed and with a Liquorice stick, if you cannot but know both what Vinegar to the heart, and weak stomachs, and helps all diseases coming of cold and moisture.', '2018-02-16 16:24:07', '1', '0', 0, 0),
 (935, 999, 999, 'Eleaddai', 'have a lovely weekend', 'They say it purges hot rheums, and provokes urine and the white of an opening quality, thereby carrying away those vapours which might otherwise annoy the brain and nerves, and helps the falling-sickness, astonishment, apoplexies, dulness of sight, want of it to the consumption of the spleen, it stops fluxes, the running of the body, especially such as have laboured under long chronical diseases.An ounce at a time, at night going to bed; if that provoke not sleep, the next day boil it to the consumption of the roots of Smallage, Fennel, and Sparagus, of each two drams, Gum Arabic, Dragonâ€™s-blood of each one ounce, Canary Wine a whole summerâ€™s day to write more scholastically, the dose) must be consumed and with a Liquorice stick, if you cannot but know both what Vinegar to the heart, and weak stomachs, and helps all diseases coming of cold and moisture.', '2018-02-16 16:26:45', '1', '0', 0, 0),
 (936, 999, 999, 'Eleaddai', 'subject', 'dfsf\\n\\ndsf\\n\\n\\ndsf', '2018-02-16 16:31:15', '1', '0', 0, 0),
 (937, 999, 999, 'Eleaddai', 'asdad', 'asdadasd aadasa aa', '2018-02-16 16:32:33', '1', '0', 0, 0),
 (938, 999, 999, 'Eleaddai', 'just testing some line breaks', '\\nsecond line\\n\\n\\n\\n\\n\\nmore\\n\\n\\nmore\\n\\nand some  here', '2018-02-16 16:58:39', '1', '0', 0, 0),
-(939, 999, -1, 'Retinue co-ordinator', 'Reward for Lay of the Land on island', 'Your followers continue to make you proud...', '2018-02-22 12:28:50', '1', '[{\"type\":2,\"quantity\":2,\"quality\":100,\"durability\":100,\"currentWear\":0,\"effectiveness\":100,\"colour\":\"0\",\"enchanted\":0,\"hallmark\":0,\"inscription\":\"\"}]', 1, 0);
+(939, 999, -1, 'Retinue co-ordinator', 'Reward for Lay of the Land on island', 'Your followers continue to make you proud...', '2018-02-22 12:28:50', '1', '[{\"type\":2,\"quantity\":2,\"quality\":100,\"durability\":100,\"currentWear\":0,\"effectiveness\":100,\"colour\":\"0\",\"enchanted\":0,\"hallmark\":0,\"inscription\":\"\"}]', 1, 0),
+(950, 999, -1, 'Artisan crafter', 'Your crafted Sapphire Dye', 'This is fine work', '2018-03-29 13:22:59', '1', '[{\"type\":12,\"quantity\":1,\"quality\":37,\"durability\":100,\"effectiveness\":100,\"currentWear\":0,\"wrapped\":0,\"colour\":20,\"enchanted\":0,\"hallmark\":-999,\"inscription\":\"\"}]', 1, 0);
 
 -- --------------------------------------------------------
 
@@ -1582,9 +1584,9 @@ CREATE TABLE `tblretinuefollowers` (
 --
 
 INSERT INTO `tblretinuefollowers` (`followerID`, `followerName`, `followerCleanURL`, `characterIdFollowing`, `activeQuestId`, `followerRewardFromQuestId`, `isEnabled`, `questStartedTime`, `followerSex`, `followerRace`, `currentContinent`, `followerMapCoordinateX`, `followerMapCoordinateY`) VALUES
-(1, 'Eila Myrborn', 'eila-myrborn', 999, -1, NULL, 1, '2018-03-09 16:51:40', 'female', 'huldra', 'eastern-continent', 429, 420),
-(2, 'Nellaith Wispfael', 'nellaith-wispfael', 999, -1, NULL, 1, '2018-03-09 16:51:37', 'female', 'huldra', 'eastern-continent', 434, 395),
-(59, 'Garmund  Wispmote', 'garmund-wispmote', 999, -1, 1, 1, '2018-03-09 15:23:34', 'male', 'huldra', 'eastern-continent', 200, 350);
+(1, 'Eila Myrborn', 'eila-myrborn', 999, 149, NULL, 1, '2018-03-27 12:07:38', 'female', 'huldra', 'eastern-continent', 117, 310),
+(2, 'Nellaith Wispfael', 'nellaith-wispfael', 999, 153, NULL, 1, '2018-03-27 12:07:29', 'female', 'huldra', 'eastern-continent', 117, 310),
+(59, 'Garmund  Wispmote', 'garmund-wispmote', 999, 153, 1, 1, '2018-03-27 12:07:29', 'male', 'huldra', 'eastern-continent', 117, 310);
 
 -- --------------------------------------------------------
 
@@ -1637,7 +1639,10 @@ INSERT INTO `tblretinuequests` (`questID`, `questName`, `questCleanURL`, `questD
 (149, 'Bring home the goods', 'bring-home-the-goods-2', 'Gather what kelp you can.', 'resource gathering', 'eastern-continent', 70, 198, 0, 0, 'sea', '0', 0, 1, 1, '[{\"type\":2,\"quantity\":2,\"quality\":100,\"durability\":100,\"currentWear\":0,\"effectiveness\":100,\"colour\":\"0\",\"enchanted\":0,\"hallmark\":0,\"inscription\":\"\"}]', NULL, '2018-03-14 15:51:04', 1521083528),
 (150, 'Mapping the wilds', 'mapping-the-wilds-2', 'Map out the region', 'cartography', 'eastern-continent', 652, 128, 0, 0, 'sea', '0', 0, 1, 1, '[{\"type\":2,\"quantity\":2,\"quality\":100,\"durability\":100,\"currentWear\":0,\"effectiveness\":100,\"colour\":\"0\",\"enchanted\":0,\"hallmark\":0,\"inscription\":\"\"}]', NULL, '2018-03-14 15:51:04', 1521083528),
 (151, 'Showing the way', 'showing-the-way-3', 'Ensure dark green is reached safely.', 'escort', 'eastern-continent', 246, 164, 0, 0, '', '0', 0, 1, 1, '[{\"type\":2,\"quantity\":2,\"quality\":100,\"durability\":100,\"currentWear\":0,\"effectiveness\":100,\"colour\":\"0\",\"enchanted\":0,\"hallmark\":0,\"inscription\":\"\"}]', NULL, '2018-03-14 15:51:04', 1521083528),
-(152, 'Lend a hand', 'lend-a-hand', 'The sea is in need. Get over there and help.', 'rescue', 'eastern-continent', 117, 310, 0, 0, 'sea', '0', 0, 3, 1, '[{\"type\":2,\"quantity\":2,\"quality\":100,\"durability\":100,\"currentWear\":0,\"effectiveness\":100,\"colour\":\"0\",\"enchanted\":0,\"hallmark\":0,\"inscription\":\"\"}]', NULL, '2018-03-14 15:51:04', 1521083528);
+(152, 'Lend a hand', 'lend-a-hand', 'The sea is in need. Get over there and help.', 'rescue', 'eastern-continent', 117, 310, 0, 0, 'sea', '0', 0, 3, 1, '[{\"type\":2,\"quantity\":2,\"quality\":100,\"durability\":100,\"currentWear\":0,\"effectiveness\":100,\"colour\":\"0\",\"enchanted\":0,\"hallmark\":0,\"inscription\":\"\"}]', NULL, '2018-03-14 15:51:04', 1521083528),
+(153, 'Bring home the goods', 'bring-home-the-goods-3', 'Gather what kelp you can.', 'resource gathering', 'eastern-continent', 191, 310, 0, 0, 'sea', '0', 0, 2, 1, '[{\"type\":2,\"quantity\":2,\"quality\":100,\"durability\":100,\"currentWear\":0,\"effectiveness\":100,\"colour\":\"0\",\"enchanted\":0,\"hallmark\":0,\"inscription\":\"\"}]', NULL, '2018-03-26 15:14:23', 1522136462),
+(154, 'To the rescue', 'to-the-rescue', 'The sea is in need. Get over there and help.', 'rescue', 'eastern-continent', 76, 119, 0, 0, 'sea', '0', 0, 2, 1, '[{\"type\":2,\"quantity\":2,\"quality\":100,\"durability\":100,\"currentWear\":0,\"effectiveness\":100,\"colour\":\"0\",\"enchanted\":0,\"hallmark\":0,\"inscription\":\"\"}]', NULL, '2018-03-27 12:08:45', 1522194743),
+(155, 'Get yer boots on', 'get-yer-boots-on', 'There\'s plenty of salvage to be had in the sea.', 'salvage', 'eastern-continent', 340, 32, 0, 0, 'sea', '0', 0, 3, 1, '[{\"type\":2,\"quantity\":2,\"quality\":100,\"durability\":100,\"currentWear\":0,\"effectiveness\":100,\"colour\":\"0\",\"enchanted\":0,\"hallmark\":0,\"inscription\":\"\"}]', NULL, '2018-03-27 12:08:45', 1522194743);
 
 -- --------------------------------------------------------
 
@@ -1693,7 +1698,10 @@ INSERT INTO `tblretinuequestsactive` (`questActiveId`, `questIdActiveOrComplete`
 (36, 133, 999),
 (37, 116, 999),
 (38, 136, 999),
-(39, 134, 999);
+(39, 134, 999),
+(40, 152, 999),
+(41, 153, 999),
+(42, 149, 999);
 
 -- --------------------------------------------------------
 
@@ -2493,7 +2501,7 @@ ALTER TABLE `tbllocations`
 -- AUTO_INCREMENT for table `tblmail`
 --
 ALTER TABLE `tblmail`
-  MODIFY `mailID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=940;
+  MODIFY `mailID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=951;
 
 --
 -- AUTO_INCREMENT for table `tblmainpoll`
@@ -2577,13 +2585,13 @@ ALTER TABLE `tblretinuefollowers`
 -- AUTO_INCREMENT for table `tblretinuequests`
 --
 ALTER TABLE `tblretinuequests`
-  MODIFY `questID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=153;
+  MODIFY `questID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=156;
 
 --
 -- AUTO_INCREMENT for table `tblretinuequestsactive`
 --
 ALTER TABLE `tblretinuequestsactive`
-  MODIFY `questActiveId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
+  MODIFY `questActiveId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
 
 --
 -- AUTO_INCREMENT for table `tblretinuequesttypes`
