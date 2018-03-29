@@ -68,6 +68,7 @@ const retinueList = document.getElementById('retinueList');
 const startCrafting = document.getElementById('startCrafting');
 
 
+
 var notificationQueue = [];
 var notificationIsShowing = false;
 

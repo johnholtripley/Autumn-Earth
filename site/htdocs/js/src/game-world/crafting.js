@@ -80,7 +80,7 @@ function recipeSelectComponents(whichRecipe) {
     var availableComponentMarkup = '<h4>Available:</h4><ul>';
     var thisItemAttributes, thisItemInfluences;
     var componentsFound = 0;
-    var displayItemMarkup = '<div id="craftingOutput"><img src="/images/game-world/inventory-items/' + thisRecipe.imageId + '.png" alt="' + thisRecipe.recipeName + '"></div><h3>' + thisRecipe.recipeName + '</h3><p>' + thisRecipe.recipeDescription + '</p>';
+    var displayItemMarkup = '<div id="craftingOutput"><div id="craftingOutputAttributes"></div><img src="/images/game-world/inventory-items/' + thisRecipe.imageId + '.png" alt="' + thisRecipe.recipeName + '"></div><h3>' + thisRecipe.recipeName + '</h3><p>' + thisRecipe.recipeDescription + '</p>';
 
     // complete any undefined influences:
     var influencesWithDefinedValues = {
@@ -313,7 +313,8 @@ function addCraftingComponents(fromSlotId) {
         console.log("durability: " + outputDurability + "%");
         console.log("effectiveness: " + outputEffectiveness + "%");
         // build SVG
-        // #########
+         var SVGoutput = '<svg xmlns="http://www.w3.org/2000/svg" height="100" width="100" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50" fill="' + gradeAttribute(outputEffectiveness) + '"/><path d="M6.699 75a50 50 0 0 1 0-50A50 50 0 0 1 50 0v50z" fill="' + gradeAttribute(outputQuality) + '"/><path d="M50 0a50 50 0 0 1 43.301 25 50 50 0 0 1 0 50l-43.3-25z" fill="' + gradeAttribute(outputDurability) + '"/></svg>';
+         document.getElementById('craftingOutputAttributes').innerHTML = SVGoutput;
     }
 }
 
