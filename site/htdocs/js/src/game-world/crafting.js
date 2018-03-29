@@ -128,24 +128,18 @@ function recipeSelectComponents(whichRecipe) {
     for (var i in thisRecipe.components) {
         thisItemInfluences = '';
         if (typeof thisRecipe.components[i].influence["effectiveness"] !== "undefined") {
-
             thisComponentEffectiveness = thisRecipe.components[i].influence["effectiveness"];
         } else {
-
             thisComponentEffectiveness = (100 - totalInfluences["effectiveness"]) / (thisNumberOfComponents - influencesWithDefinedValues["effectiveness"]);
         }
         if (typeof thisRecipe.components[i].influence["durability"] !== "undefined") {
-
             thisComponentDurability = thisRecipe.components[i].influence["durability"];
         } else {
-
             thisComponentDurability = (100 - totalInfluences["durability"]) / (thisNumberOfComponents - influencesWithDefinedValues["durability"]);
         }
         if (typeof thisRecipe.components[i].influence["quality"] !== "undefined") {
-
             thisComponentQuality = thisRecipe.components[i].influence["quality"];
         } else {
-
             thisComponentQuality = (100 - totalInfluences["quality"]) / (thisNumberOfComponents - influencesWithDefinedValues["quality"]);
         }
 
@@ -286,7 +280,6 @@ function addCraftingComponents(fromSlotId) {
             }
         }
     }
-    //  console.log("---",craftingObject.componentsAdded,"---");
     var allComponentsAdded = true;
     // check if that's all of the crafting components added now:
     for (var i = 0; i < craftingObject.required.length; i++) {
@@ -297,7 +290,6 @@ function addCraftingComponents(fromSlotId) {
     if (allComponentsAdded) {
         startCrafting.disabled = false;
         // display attributes of what will be crafted:
-
         var thisType;
         var coloursAdded = [];
         for (var i = 0; i < craftingObject.componentsAdded.length; i++) {
@@ -313,7 +305,7 @@ function addCraftingComponents(fromSlotId) {
         craftingObject.craftedItem.quality = Math.floor(craftingObject.craftedItem.quality);
         craftingObject.craftedItem.durability = Math.floor(craftingObject.craftedItem.durability);
         craftingObject.craftedItem.effectiveness = Math.floor(craftingObject.craftedItem.effectiveness);
-        // build SVG
+        // build SVG:
         var SVGoutput = '<svg xmlns="http://www.w3.org/2000/svg" height="100" width="100" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50" fill="' + gradeAttribute(craftingObject.craftedItem.effectiveness) + '"/><path d="M6.699 75a50 50 0 0 1 0-50A50 50 0 0 1 50 0v50z" fill="' + gradeAttribute(craftingObject.craftedItem.quality) + '"/><path d="M50 0a50 50 0 0 1 43.301 25 50 50 0 0 1 0 50l-43.3-25z" fill="' + gradeAttribute(craftingObject.craftedItem.durability) + '"/></svg>';
         document.getElementById('craftingOutputAttributes').innerHTML = SVGoutput;
         // determine colour:
@@ -332,6 +324,12 @@ function startCraftingProcess() {
 
     // show short progress timer:
     // ########
+
+
+
+    // play sound for the active profession:
+    audio.playSound(soundEffects[hero.crafting[currentRecipePanelProfession].name.toLowerCase()], 0);
+
 
     hero.stats.itemsCrafted++;
     // add to inventory (or post if full):
