@@ -67,7 +67,6 @@ function recipeSelectComponents(whichRecipe) {
     var recipeId = whichRecipe.substring(6);
     var foundItemGroups;
     var thisRecipe = hero.crafting[currentRecipePanelProfession].recipes[recipeId];
-    console.log(thisRecipe);
     craftingObject = {
         'componentsAdded': [],
         'thisRecipe': thisRecipe,
@@ -83,12 +82,10 @@ function recipeSelectComponents(whichRecipe) {
             'wrapped': 0,
             'colour': 0,
             'enchanted': 0,
-            'hallmark': 0-characterId,
+            'hallmark': 0 - characterId,
             'inscription': ""
-
-        }
-
-
+        },
+        'finalItemName': thisRecipe.recipeName
     }
     var componentsRequiredMarkup = '<h4>Requires:</h4><ul>';
     // find all components that the player has that are usable for this recipe as well:
@@ -96,7 +93,6 @@ function recipeSelectComponents(whichRecipe) {
     var thisItemAttributes, thisItemInfluences;
     var componentsFound = 0;
     var displayItemMarkup = '<div id="craftingOutput"><div id="craftingOutputAttributes"></div><img src="/images/game-world/inventory-items/' + thisRecipe.imageId + '.png" alt="' + thisRecipe.recipeName + '"></div><h3>' + thisRecipe.recipeName + '</h3><p>' + thisRecipe.recipeDescription + '</p>';
-
     // complete any undefined influences:
     var influencesWithDefinedValues = {
         "durability": 0,
@@ -277,7 +273,6 @@ function addCraftingComponents(fromSlotId) {
     //console.log(craftingObject);
     var slotId = fromSlotId.substring(8);
     var amountUsed, thisQuantityDisplay;
-
     // see how many of this type are still required:
     for (var i = 0; i < craftingObject.required.length; i++) {
         if (craftingObject.required[i].quantity > 0) {
@@ -312,37 +307,64 @@ function addCraftingComponents(fromSlotId) {
         // display attributes of what will be crafted:
 
         var thisType;
+        var coloursAdded = [];
         for (var i = 0; i < craftingObject.componentsAdded.length; i++) {
             thisType = craftingObject.componentsAdded[i].type;
             craftingObject.craftedItem.quality += determineAttributeValue(hero.inventory[(craftingObject.componentsAdded[i].fromSlot)].quantity, craftingObject.componentInfluences[thisType].quality);
             craftingObject.craftedItem.durability += determineAttributeValue(hero.inventory[(craftingObject.componentsAdded[i].fromSlot)].durability, craftingObject.componentInfluences[thisType].durability);
             craftingObject.craftedItem.effectiveness += determineAttributeValue(hero.inventory[(craftingObject.componentsAdded[i].fromSlot)].effectiveness, craftingObject.componentInfluences[thisType].effectiveness);
+            if (hero.inventory[(craftingObject.componentsAdded[i].fromSlot)].colour != 0) {
+                coloursAdded.push(hero.inventory[(craftingObject.componentsAdded[i].fromSlot)].colour);
+            }
         }
 
-
-craftingObject.craftedItem.quality = Math.floor(craftingObject.craftedItem.quality);
-craftingObject.craftedItem.durability = Math.floor(craftingObject.craftedItem.durability);
-craftingObject.craftedItem.effectiveness = Math.floor(craftingObject.craftedItem.effectiveness);
-
+        craftingObject.craftedItem.quality = Math.floor(craftingObject.craftedItem.quality);
+        craftingObject.craftedItem.durability = Math.floor(craftingObject.craftedItem.durability);
+        craftingObject.craftedItem.effectiveness = Math.floor(craftingObject.craftedItem.effectiveness);
         // build SVG
         var SVGoutput = '<svg xmlns="http://www.w3.org/2000/svg" height="100" width="100" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50" fill="' + gradeAttribute(craftingObject.craftedItem.effectiveness) + '"/><path d="M6.699 75a50 50 0 0 1 0-50A50 50 0 0 1 50 0v50z" fill="' + gradeAttribute(craftingObject.craftedItem.quality) + '"/><path d="M50 0a50 50 0 0 1 43.301 25 50 50 0 0 1 0 50l-43.3-25z" fill="' + gradeAttribute(craftingObject.craftedItem.durability) + '"/></svg>';
         document.getElementById('craftingOutputAttributes').innerHTML = SVGoutput;
+        // determine colour:
+        craftingObject.craftedItem.colour = mixColours(coloursAdded);
+        if (craftingObject.craftedItem.colour != craftingObject.thisRecipe.defaultColour) {
+            // change image and name prefix:
+            var newColourImageSuffix = getColourName(craftingObject.craftedItem.colour, craftingObject.craftedItem.type);
+            document.querySelector('#craftingOutput img').src = '/images/game-world/inventory-items/' + craftingObject.craftedItem.type + '-' + newColourImageSuffix.toLowerCase() + '.png';
+            craftingObject.finalItemName = newColourImageSuffix + ' ' + currentActiveInventoryItems[craftingObject.craftedItem.type].shortname;
+            document.querySelector('#displayItemBeingCreated h3').innerText = craftingObject.finalItemName;
+        }
 
-        // determine colour #######
         console.log("final item object:");
         console.log(craftingObject.craftedItem);
     }
 }
 
 function startCraftingProcess() {
-    console.log("crafting!");
-    console.log(craftingObject.thisRecipe);
-    // build new item object:
-    // use recipe influences in formula with added components
-    // build colour from components
-    // show short progress timer
+
+    // show short progress timer:
+    // ########
+
+    hero.stats.itemsCrafted++;
     // add to inventory (or post if full)
+
+
+    inventoryCheck = canAddItemToInventory([craftingObject.craftedItem]);
+    if (inventoryCheck[0]) {
+
+        UI.showChangeInInventory(inventoryCheck[1]);
+    } else {
+        // send the item by post:
+        var subjectLine = "Your crafted " + craftingObject.finalItemName;
+
+        var message = "This is fine work";
+        var whichNPC = "Artisan crafter";
+        sendNPCPost('{"subject":"' + subjectLine + '","message":"' + message + '","senderID":"-1","recipientID":"' + characterId + '","fromName":"' + whichNPC + '"}', [craftingObject.craftedItem]);
+        UI.showNotification("<p>Crafted item sent by post to you</p>");
+    }
+
+
     // remove used components
+    // ############
 }
 
 function determineAttributeValue(itemValue, influenceAmount) {

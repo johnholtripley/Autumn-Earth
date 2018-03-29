@@ -107,6 +107,19 @@
             "hallmark": 0,
             "inscription": ""
         },
+            "0-6":
+        {
+            "type": 8,
+            "quantity": 3,
+            "quality": 100,
+            "durability": 100,
+            "currentWear": 0,
+            "effectiveness": 45,
+            "colour": 0,
+            "enchanted": 0,
+            "hallmark": 0,
+            "inscription": ""
+        },
         "0-7":
         {
             "type": 11,
@@ -395,7 +408,8 @@
         "cardGamesLost": 4,
         "cardGamesDrawn": 0,
         "numberOfcardsFlipped": 8,
-        "retinueMissionsCompleted": 0
+        "retinueMissionsCompleted": 0,
+        "itemsCrafted": 0
     },
     "settings":
     {

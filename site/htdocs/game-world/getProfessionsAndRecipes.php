@@ -174,6 +174,7 @@ foreach($componentObject as $key => $value) {
     }
 
 $outputJson .= '"creates":"'.$creates.'",';
+$outputJson .= '"defaultColour":"'.$defaultResultingColour.'",';
 
 
 $thisRecipesFilters = "Miscellaneous";

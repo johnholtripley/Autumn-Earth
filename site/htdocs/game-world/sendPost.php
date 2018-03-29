@@ -5,11 +5,12 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
 
 
 function cleanInput($input) {
+    global $connection;
     // https://stackoverflow.com/questions/7128856/strip-out-html-and-special-characters
     $output = strip_tags($input);
     // Clean up things like &amp;
     $output = html_entity_decode($output);
-    $output = mysqli_escape_string($output);
+    $output = mysqli_escape_string($connection,$output);
     return $output;
 }	
 
@@ -42,6 +43,7 @@ $postFromName = 'Tester person';
 //if($_POST['postData']) {
 $recipientCharacterID = null;
 $recipientCharacterName = null;
+
 $postedData = json_decode($_POST['postData'],true);
 $postSubject = $postedData['subject'];
 $postMessage = $postedData['message'];

@@ -46,7 +46,7 @@ function retinueMissionCompleted(questId) {
                 var message = "Your followers continue to make you proud...";
                 var whichNPC = "Retinue co-ordinator";
                 sendNPCPost('{"subject":"' + subjectLine + '","message":"' + message + '","senderID":"-1","recipientID":"' + characterId + '","fromName":"' + whichNPC + '"}', data.item);
-                UI.showNotification("<p>Reward send by post to you</p>");
+                UI.showNotification("<p>Reward sent by post to you</p>");
             }
         } else {
             // no reward

@@ -2457,13 +2457,13 @@ function sendUserPost(postData) {
 }
 
 function sendNPCPost(postData, attachments) {
-    //console.log(postData);
+    console.log(postData);
     var postDataToSend = JSON.parse(postData);
 
     if (attachments) {
         postDataToSend['attachments'] = attachments;
     }
-
+console.log(JSON.stringify(postDataToSend));
     getJSONWithParams("/game-world/sendPost.php", 'postData=' + JSON.stringify(postDataToSend), function(data) {
         if (data.success) {
             // show new post notification:
