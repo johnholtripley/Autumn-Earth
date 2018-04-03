@@ -341,7 +341,6 @@ var UI = {
             inventoryItemAction(e.target, thisItemsAction, e.target.getAttribute('data-action-value'));
         } else {
             var thisNode = getNearestParentId(e.target);
-console.log(thisNode.id);
             if (thisNode.id.substring(0, 6) == "recipe") {
                 recipeSelectComponents(thisNode.id);
             } else if (thisNode.id.substring(0, 4) == "shop") {

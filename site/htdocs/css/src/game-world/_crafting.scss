@@ -40,8 +40,8 @@
 
 
 
-#selectComponentsItemBeingCreated,
-#componentsAvailableForThisRecipe {
+
+#componentsAvailableForThisRecipe, #gatheringOutputSlot {
     ul {
         list-style: none;
         margin: 0;
@@ -94,6 +94,83 @@
     }
 }
 
+#selectComponentsItemBeingCreated {
+        ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        border-top: 1px solid #b7b7b7;
+    }
+    li {
+        display: block;
+        margin: 0;
+        padding: 6px 0;
+        position: relative;
+        border-bottom: 1px solid #b7b7b7;
+        &:last-child {
+            border: 0;
+        }
+    }
+    svg {
+        width: 40px;
+        height: 40px;
+        display: inline-block;
+        margin-right: 8px;
+    }
+     img {
+      
+        display: inline-block;
+ @include border-radius(100%);
+        margin-right: 8px;
+      
+    }
+    .addedItemToRecipe {
+        background: #e4e4e4;
+        width:100%;
+    }
+    .attributeSlot {
+        
+        svg {
+            width: 58px;
+            height: 58px;
+        }
+        .qty {
+            position: absolute;
+            right: 0px;
+            width: 20px;
+            height: 20px;
+            line-height: 20px;
+            top: 33px;
+            text-align: center;
+            color: #fff;
+            cursor: default;
+            font-size: 11px;
+            pointer-events: none;
+            background: #333;
+            @include transition(background 0.4s ease);
+            &.modified {
+                background: #ffa200;
+            }
+            @include border-radius(100%);
+        }
+        img {
+         background: #cecece;
+        display: inline-block;
+        width: 46px;
+        height: 46px;
+        padding: 2px;
+        margin-right: 12px;
+        @include border-box;
+    }
+}
+    p {
+       display: inline-block;
+       font-size: 12px; 
+       margin: 0;
+       vertical-align: top;
+    }
+}
+
 #componentsAvailableForThisRecipe {
     img {
         cursor: url(../images/game-world/cursors/active.gif) 3 3, auto;
@@ -101,7 +178,7 @@
 }
 
 #selectComponentsItemBeingCreated {
-    .attributeSlot img {
+    img.planImage {
         // give them a more hand drawn feel:
         @include filter(sepia(100%));
     }
