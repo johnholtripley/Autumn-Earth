@@ -714,7 +714,7 @@ function releaseLockedSlots() {
     }
 }
 
-function addCraftingComponents(fromSlotId) {
+function addCraftingComponents(fromSlotId, isADoubleClick) {
     //console.log(craftingObject);
     var slotId = fromSlotId.substring(8);
     var amountUsed, thisQuantityDisplay, addedToSlot, thisTempAddedObject;
@@ -749,9 +749,30 @@ function addCraftingComponents(fromSlotId) {
                 }
 
 
-            } else {
+            } else if(isADoubleClick) {
                 console.log("replace existing?");
-                // ############
+                console.log(craftingObject.required[i].type);
+                console.log(craftingObject.componentsAdded);
+
+                // see if there's just one of this type already added:
+                var variantsOfThisTypeAlreadyAdded = 0;
+                var indexOfLastFound = -1;
+                for (var j = 0; j < craftingObject.componentsAdded.length; j++) {
+                    if (craftingObject.componentsAdded[j].type == craftingObject.required[i].type) {
+                        variantsOfThisTypeAlreadyAdded++;
+                        indexOfLastFound = j;
+                    }
+                }
+                // if it's just 1, then it's easy to replace with a double click:
+                if (variantsOfThisTypeAlreadyAdded == 1) {
+                    // make sure it's not from the same slot:
+                    if (craftingObject.componentsAdded[indexOfLastFound].fromSlot != slotId) {
+                        console.log("yes - replace");
+                        // remove and restore previous
+                        // add new
+                        // #################
+                    }
+                }
             }
         }
     }
@@ -4078,7 +4099,7 @@ var UI = {
             } else if (thisNode.id.substring(0, 4) == "post") {
                 UI.readPostMessage(thisNode.id);
             } else if (thisNode.id.substring(0, 8) == "fromSlot") {
-                addCraftingComponents(thisNode.id);
+                addCraftingComponents(thisNode.id, true);
             }
         }
     },
