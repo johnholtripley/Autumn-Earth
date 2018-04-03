@@ -720,7 +720,6 @@ function addCraftingComponents(fromSlotId, isADoubleClick) {
     var amountUsed, thisQuantityDisplay, addedToSlot, thisTempAddedObject;
     // see how many of this type are still required:
     for (var i = 0; i < craftingObject.required.length; i++) {
-
         // check by type and group:
         if ((craftingObject.required[i].type == hero.inventory[slotId].type) || (craftingObject.required[i].type == currentActiveInventoryItems[hero.inventory[slotId].type].group)) {
             if (craftingObject.required[i].quantity > 0) {
@@ -728,7 +727,6 @@ function addCraftingComponents(fromSlotId, isADoubleClick) {
                 if (craftingObject.required[i].quantity > hero.inventory[slotId].quantity) {
                     amountUsed = hero.inventory[slotId].quantity;
                 }
-
                 craftingObject.required[i].quantity -= amountUsed;
                 // keep track of what's been added (and from where) to remove it from the inventory if crafting goes ahead:
                 craftingObject.componentsAdded.push({ 'fromSlot': slotId, 'quantity': amountUsed, 'type': craftingObject.required[i].type });
@@ -747,11 +745,8 @@ function addCraftingComponents(fromSlotId, isADoubleClick) {
                     thisTempAddedObject.quantity = amountUsed;
                     addedToSlot.innerHTML += '<div class="addedItemToRecipe"><div class="attributeSlot">' + generateAttributeGraphicMarkup(hero.inventory[slotId].quality, hero.inventory[slotId].durability, hero.inventory[slotId].effectiveness) + generateCraftingSlotMarkup(thisTempAddedObject) + '</div>';
                 }
-
-
-            } else if(isADoubleClick) {
+            } else if (isADoubleClick) {
                 console.log("replace existing?");
-                console.log(craftingObject.required[i].type);
                 console.log(craftingObject.componentsAdded);
 
                 // see if there's just one of this type already added:
@@ -769,8 +764,24 @@ function addCraftingComponents(fromSlotId, isADoubleClick) {
                     if (craftingObject.componentsAdded[indexOfLastFound].fromSlot != slotId) {
                         console.log("yes - replace");
                         // remove and restore previous
+
+                        // remove visually from added component list:
+                        document.querySelector('#componentType' + craftingObject.required[i].type + ' .addedItemToRecipe').remove();
+                        // restore quantity visually:
+                        thisQuantityDisplay = document.querySelector('#fromSlot' + craftingObject.componentsAdded[indexOfLastFound].fromSlot + ' .qty');
+                        thisQuantityDisplay.classList.remove('modified');
+                        thisQuantityDisplay.textContent = hero.inventory[slotId].quantity;
+
+                        // restore the amount needed:
+                        craftingObject.required[i].quantity = craftingObject.componentsAdded[indexOfLastFound].quantity;
+
+                        // remove from added object:
+                        delete craftingObject.componentsAdded[indexOfLastFound];
+
+
                         // add new
                         // #################
+
                     }
                 }
             }
@@ -812,6 +823,12 @@ function addCraftingComponents(fromSlotId, isADoubleClick) {
             craftingObject.finalItemName = newColourImageSuffix + ' ' + currentActiveInventoryItems[craftingObject.craftedItem.type].shortname;
             document.querySelector('#displayItemBeingCreated h3').innerText = craftingObject.finalItemName;
         }
+    } else {
+        startCrafting.disabled = true;
+        // restore defaults:
+        document.getElementById('craftingOutputAttributes').innerHTML = '';
+        document.querySelector('#displayItemBeingCreated h3').innerText = craftingObject.thisRecipe.recipeName;
+        document.querySelector('#craftingOutput img').src = '/images/game-world/inventory-items/' + craftingObject.thisRecipe.imageId + '.png';
     }
 }
 
