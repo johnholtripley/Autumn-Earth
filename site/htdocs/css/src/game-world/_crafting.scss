@@ -101,7 +101,7 @@
 }
 
 #selectComponentsItemBeingCreated {
-    .gradedItem img {
+    .attributeSlot img {
         // give them a more hand drawn feel:
         @include filter(sepia(100%));
     }
@@ -109,7 +109,7 @@
 
 
 
-.gradedItem {
+.attributeSlot {
     position: relative;
     margin: 0 6px;
     display: inline-block;

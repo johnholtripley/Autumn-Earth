@@ -568,7 +568,7 @@ function recipeSelectComponents(whichRecipe) {
     };
     var tempInfluenceObject;
 
-    var SVGoutput, requiredSVGoutput, thisComponentDurability, thisComponentEffectiveness, thisComponentQuality;
+    var thisComponentDurability, thisComponentEffectiveness, thisComponentQuality;
     var thisNumberOfComponents = thisRecipe.components.length;
     for (var i in thisRecipe.components) {
         if (thisRecipe.components[i].influence != null) {
@@ -610,15 +610,15 @@ function recipeSelectComponents(whichRecipe) {
             'durability': thisComponentDurability,
             'quality': thisComponentQuality
         };
-        requiredSVGoutput = '<svg xmlns="http://www.w3.org/2000/svg" height="100" width="100" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50" fill="' + gradeAttribute(thisComponentEffectiveness) + '"/><path d="M6.699 75a50 50 0 0 1 0-50A50 50 0 0 1 50 0v50z" fill="' + gradeAttribute(thisComponentQuality) + '"/><path d="M50 0a50 50 0 0 1 43.301 25 50 50 0 0 1 0 50l-43.3-25z" fill="' + gradeAttribute(thisComponentDurability) + '"/></svg>';
+        
         if (!(isNaN(thisRecipe.components[i].type))) {
             // specific item - make sure not already added this (if more than 1 quantity required):
-            componentsRequiredMarkup += '<li><div class="gradedItem">' + requiredSVGoutput + '<img src="/images/game-world/inventory-items/' + thisRecipe.components[i].type + '.png" alt="' + currentActiveInventoryItems[thisRecipe.components[i].type].shortname + '"><span class="qty">' + thisRecipe.components[i].quantity + '</span></div><p>' + currentActiveInventoryItems[thisRecipe.components[i].type].shortname + '</p></li>';
+            componentsRequiredMarkup += '<li><div class="attributeSlot">' + generateAttributeGraphicMarkup(thisComponentQuality, thisComponentDurability, thisComponentEffectiveness) + '<img src="/images/game-world/inventory-items/' + thisRecipe.components[i].type + '.png" alt="' + currentActiveInventoryItems[thisRecipe.components[i].type].shortname + '"><span class="qty">' + thisRecipe.components[i].quantity + '</span></div><p>' + currentActiveInventoryItems[thisRecipe.components[i].type].shortname + '</p></li>';
             foundItemGroups = findSlotItemIdInInventory(thisRecipe.components[i].type);
             if (foundItemGroups.length > 0) {
                 for (var j = 0; j < foundItemGroups.length; j++) {
-                    SVGoutput = '<svg xmlns="http://www.w3.org/2000/svg" height="100" width="100" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50" fill="' + gradeAttribute(hero.inventory[foundItemGroups[j]].effectiveness) + '"/><path d="M6.699 75a50 50 0 0 1 0-50A50 50 0 0 1 50 0v50z" fill="' + gradeAttribute(hero.inventory[foundItemGroups[j]].quality) + '"/><path d="M50 0a50 50 0 0 1 43.301 25 50 50 0 0 1 0 50l-43.3-25z" fill="' + gradeAttribute(hero.inventory[foundItemGroups[j]].durability) + '"/></svg>';
-                    availableComponentMarkup += '<li id="fromSlot' + foundItemGroups[j] + '"><div class="gradedItem">' + SVGoutput + generateCraftingSlotMarkup(hero.inventory[foundItemGroups[j]]) + '</div></li>';
+                  
+                    availableComponentMarkup += '<li id="fromSlot' + foundItemGroups[j] + '"><div class="attributeSlot">' + generateAttributeGraphicMarkup(hero.inventory[foundItemGroups[j]].quality, hero.inventory[foundItemGroups[j]].durability, hero.inventory[foundItemGroups[j]].effectiveness) + generateCraftingSlotMarkup(hero.inventory[foundItemGroups[j]]) + '</div></li>';
                     // 'lock' this slot:
                     document.getElementById('slot' + foundItemGroups[j]).classList.add('locked');
                     componentsFound++;
@@ -626,12 +626,16 @@ function recipeSelectComponents(whichRecipe) {
             }
         } else {
             // item group:
-            componentsRequiredMarkup += '<li><div class="gradedItem">' + requiredSVGoutput + '<img class="previewSlot" src="/images/game-world/inventory-items/' + thisRecipe.components[i].type + '.png" alt=""><span class="qty">' + thisRecipe.components[i].quantity + '</span></div><p>' + currentItemGroupFilters[(thisRecipe.components[i].type)] + '</p></li>';
+            componentsRequiredMarkup += '<li><div class="attributeSlot">' + generateAttributeGraphicMarkup(thisComponentQuality, thisComponentDurability, thisComponentEffectiveness) + '<img class="previewSlot" src="/images/game-world/inventory-items/' + thisRecipe.components[i].type + '.png" alt=""><span class="qty">' + thisRecipe.components[i].quantity + '</span></div><p>' + currentItemGroupFilters[(thisRecipe.components[i].type)] + '</p></li>';
             foundItemGroups = hasItemTypeInInventory(thisRecipe.components[i].type);
             if (foundItemGroups.length > 0) {
                 for (var j = 0; j < foundItemGroups.length; j++) {
-                    SVGoutput = '<svg xmlns="http://www.w3.org/2000/svg" height="100" width="100" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50" fill="' + gradeAttribute(hero.inventory[foundItemGroups[j]].effectiveness) + '"/><path d="M6.699 75a50 50 0 0 1 0-50A50 50 0 0 1 50 0v50z" fill="' + gradeAttribute(hero.inventory[foundItemGroups[j]].quality) + '"/><path d="M50 0a50 50 0 0 1 43.301 25 50 50 0 0 1 0 50l-43.3-25z" fill="' + gradeAttribute(hero.inventory[foundItemGroups[j]].durability) + '"/></svg>';
-                    availableComponentMarkup += '<li id="fromSlot' + foundItemGroups[j] + '"><div class="gradedItem">' + SVGoutput + generateCraftingSlotMarkup(hero.inventory[foundItemGroups[j]]) + '</li>';
+              
+
+
+
+
+                    availableComponentMarkup += '<li id="fromSlot' + foundItemGroups[j] + '"><div class="attributeSlot">' + generateAttributeGraphicMarkup(hero.inventory[foundItemGroups[j]].quality, hero.inventory[foundItemGroups[j]].durability, hero.inventory[foundItemGroups[j]].effectiveness) + generateCraftingSlotMarkup(hero.inventory[foundItemGroups[j]]) + '</li>';
                     // 'lock' this slot:
                     document.getElementById('slot' + foundItemGroups[j]).classList.add('locked');
                     componentsFound++;
@@ -766,9 +770,8 @@ function addCraftingComponents(fromSlotId) {
         craftingObject.craftedItem.quality = Math.floor(craftingObject.craftedItem.quality);
         craftingObject.craftedItem.durability = Math.floor(craftingObject.craftedItem.durability);
         craftingObject.craftedItem.effectiveness = Math.floor(craftingObject.craftedItem.effectiveness);
-        // build SVG:
-        var SVGoutput = '<svg xmlns="http://www.w3.org/2000/svg" height="100" width="100" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50" fill="' + gradeAttribute(craftingObject.craftedItem.effectiveness) + '"/><path d="M6.699 75a50 50 0 0 1 0-50A50 50 0 0 1 50 0v50z" fill="' + gradeAttribute(craftingObject.craftedItem.quality) + '"/><path d="M50 0a50 50 0 0 1 43.301 25 50 50 0 0 1 0 50l-43.3-25z" fill="' + gradeAttribute(craftingObject.craftedItem.durability) + '"/></svg>';
-        document.getElementById('craftingOutputAttributes').innerHTML = SVGoutput;
+    
+        document.getElementById('craftingOutputAttributes').innerHTML = generateAttributeGraphicMarkup(craftingObject.craftedItem.quality, craftingObject.craftedItem.durability, craftingObject.craftedItem.effectiveness);
         // determine colour:
         craftingObject.craftedItem.colour = mixColours(coloursAdded);
         if (craftingObject.craftedItem.colour != craftingObject.thisRecipe.defaultColour) {
@@ -815,6 +818,10 @@ function startCraftingProcess() {
 
 function determineAttributeValue(itemValue, influenceAmount) {
     return Math.sqrt((itemValue * influenceAmount * influenceAmount) / 100);
+}
+
+function generateAttributeGraphicMarkup(thisQuality, thisDurability, thisEffectiveness) {
+return '<svg xmlns="http://www.w3.org/2000/svg" height="100" width="100" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50" fill="' + gradeAttribute(thisEffectiveness) + '"/><path d="M6.699 75a50 50 0 0 1 0-50A50 50 0 0 1 50 0v50z" fill="' + gradeAttribute(thisQuality) + '"/><path d="M50 0a50 50 0 0 1 43.301 25 50 50 0 0 1 0 50l-43.3-25z" fill="' + gradeAttribute(thisDurability) + '"/></svg>'
 }
 function scrollbarWidth() {
     // Add a temporary scrolling element to the DOM, then check the difference between its outer and inner elements
@@ -1174,8 +1181,9 @@ function gatheringComplete() {
             "hallmark": 0,
             "inscription": ""
         }
+        createdMarkup += '<div class="attributeSlot">'+generateAttributeGraphicMarkup(activeGatheredObject.quality, activeGatheredObject.durability, activeGatheredObject.effectiveness);
         createdMarkup += generateGenericSlotMarkup(activeGatheredObject);
-        createdMarkup += '</li></ol>';
+        createdMarkup += '</div></li></ol>';
         gatheringOutputSlot.innerHTML = createdMarkup;
     }
     gatheringStopped();
