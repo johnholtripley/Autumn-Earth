@@ -259,13 +259,15 @@ function addCraftingComponents(fromSlotId) {
     var amountUsed, thisQuantityDisplay, addedToSlot, thisTempAddedObject;
     // see how many of this type are still required:
     for (var i = 0; i < craftingObject.required.length; i++) {
-        if (craftingObject.required[i].quantity > 0) {
-            // check by type and group:
-            if ((craftingObject.required[i].type == hero.inventory[slotId].type) || (craftingObject.required[i].type == currentActiveInventoryItems[hero.inventory[slotId].type].group)) {
+
+        // check by type and group:
+        if ((craftingObject.required[i].type == hero.inventory[slotId].type) || (craftingObject.required[i].type == currentActiveInventoryItems[hero.inventory[slotId].type].group)) {
+            if (craftingObject.required[i].quantity > 0) {
                 amountUsed = craftingObject.required[i].quantity;
                 if (craftingObject.required[i].quantity > hero.inventory[slotId].quantity) {
                     amountUsed = hero.inventory[slotId].quantity;
                 }
+
                 craftingObject.required[i].quantity -= amountUsed;
                 // keep track of what's been added (and from where) to remove it from the inventory if crafting goes ahead:
                 craftingObject.componentsAdded.push({ 'fromSlot': slotId, 'quantity': amountUsed, 'type': craftingObject.required[i].type });
@@ -274,18 +276,21 @@ function addCraftingComponents(fromSlotId) {
                 thisQuantityDisplay.classList.add('modified');
                 thisQuantityDisplay.textContent = hero.inventory[slotId].quantity - amountUsed;
                 // show the items added in the Required column:
-                // ###################
                 addedToSlot = document.getElementById('componentType' + hero.inventory[slotId].type);
                 if (!addedToSlot) {
-                    // group
+                    // item group
                     addedToSlot = document.getElementById('componentType' + currentActiveInventoryItems[hero.inventory[slotId].type].group);
                 }
                 if (addedToSlot) {
                     thisTempAddedObject = JSON.parse(JSON.stringify(hero.inventory[slotId]));
                     thisTempAddedObject.quantity = amountUsed;
-                    addedToSlot.innerHTML += '<div class="addedItemToRecipe"><div class="attributeSlot">' + generateAttributeGraphicMarkup(hero.inventory[slotId].quality, hero.inventory[slotId].durability, hero.inventory[slotId].effectiveness) +generateCraftingSlotMarkup(thisTempAddedObject) + '</div>';
+                    addedToSlot.innerHTML += '<div class="addedItemToRecipe"><div class="attributeSlot">' + generateAttributeGraphicMarkup(hero.inventory[slotId].quality, hero.inventory[slotId].durability, hero.inventory[slotId].effectiveness) + generateCraftingSlotMarkup(thisTempAddedObject) + '</div>';
                 }
 
+
+            } else {
+                console.log("replace existing?");
+                // ############
             }
         }
     }
