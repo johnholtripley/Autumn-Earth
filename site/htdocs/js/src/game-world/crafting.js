@@ -294,6 +294,16 @@ function addCraftingComponents(fromSlotId, isADoubleClick) {
         thisTempAddedObject = JSON.parse(JSON.stringify(hero.inventory[slotId]));
         thisTempAddedObject.quantity = 1;
         document.getElementById('componentTypeAdditionalDye').innerHTML += '<div class="addedItemToRecipe">' + generateCraftingSlotMarkup(thisTempAddedObject) + '</div>';
+        // dyes will only account for 10% of the attributes:
+        // ##########
+        // adjust the already determined influences to add up to 90% to allow 10% for the dyes:
+        for (var i = 0; i < craftingObject.componentInfluences.length; i++) {
+            craftingObject.componentInfluences[i].durability *= 0.9;
+            craftingObject.componentInfluences[i].effectiveness *= 0.9;
+            craftingObject.componentInfluences[i].quality *= 0.9;
+        }
+        // add up all dye attributes, average and then * by 0.1
+        
     }
 
     var allComponentsAdded = true;
@@ -311,9 +321,13 @@ function addCraftingComponents(fromSlotId, isADoubleClick) {
         // display attributes of what will be crafted:
         var thisType;
         var coloursAdded = [];
+
+console.log(craftingObject.componentInfluences);
+
+
         for (var i = 0; i < craftingObject.componentsAdded.length; i++) {
             thisType = craftingObject.componentsAdded[i].type;
-            console.log(craftingObject.craftedItem.quality);
+      
             craftingObject.craftedItem.quality += determineAttributeValue(hero.inventory[(craftingObject.componentsAdded[i].fromSlot)].quality, craftingObject.componentInfluences[thisType].quality);
             craftingObject.craftedItem.durability += determineAttributeValue(hero.inventory[(craftingObject.componentsAdded[i].fromSlot)].durability, craftingObject.componentInfluences[thisType].durability);
             craftingObject.craftedItem.effectiveness += determineAttributeValue(hero.inventory[(craftingObject.componentsAdded[i].fromSlot)].effectiveness, craftingObject.componentInfluences[thisType].effectiveness);
