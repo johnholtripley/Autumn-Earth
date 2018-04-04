@@ -547,7 +547,8 @@ function recipeSelectComponents(whichRecipe) {
             'hallmark': 0 - characterId,
             'inscription': ""
         },
-        'finalItemName': thisRecipe.recipeName
+        'finalItemName': thisRecipe.recipeName,
+        'isCreating': false
     }
     var componentsRequiredMarkup = '<h4>Requires:</h4><ul>';
     // find all components that the player has that are usable for this recipe as well:
@@ -774,17 +775,30 @@ function addCraftingComponents(fromSlotId, isADoubleClick) {
     }
 }
 
-function startCraftingProcess() {
-
+function startCraftingTimer() {
     // show short progress timer:
-    // ########
-
-
-
+    craftingObject.timeRemaining = 100;
+    craftingObject.depletionSpeed = 0.5;
+    craftingObject.isCreating = true;
+    UI.updateCraftingPanel();
+    craftingTimeBarOuter.style.display = 'block';
+    // hide Create button:
+    startCrafting.style.display = 'none';
     // play sound for the active profession:
     audio.playSound(soundEffects[hero.crafting[currentRecipePanelProfession].name.toLowerCase()], 0);
 
+}
 
+function processCrafting() {
+    craftingObject.timeRemaining -= craftingObject.depletionSpeed;
+    if (craftingObject.timeRemaining <= 0) {
+        craftingObject.isCreating = false;
+        startCraftingProcess();
+    }
+    UI.updateCraftingPanel();
+}
+
+function startCraftingProcess() {
     hero.stats.itemsCrafted++;
     // add to inventory (or post if full):
     inventoryCheck = canAddItemToInventory([craftingObject.craftedItem]);
@@ -804,6 +818,9 @@ function startCraftingProcess() {
     }
     // update the available items:
     recipeSelectComponents(craftingObject.whichRecipe);
+    // restore Create button:
+    startCrafting.style.display = 'block';
+    craftingTimeBarOuter.style.display = 'none';
 }
 
 function determineAttributeValue(itemValue, influenceAmount) {
@@ -3798,6 +3815,8 @@ const gatheringBarPurity = document.querySelector('#gatheringPurityBar .progress
 const gatheringBarQuantity = document.querySelector('#gatheringQuantityBar .progressBar');
 const gatheringBarStability = document.querySelector('#gatheringBarStability .progressBar');
 const surveyingTimeBar = document.querySelector('#surveyingTimeBar .progressBar');
+const craftingTimeBar = document.querySelector('#craftingTimeBar .progressBar');
+const craftingTimeBarOuter = document.getElementById('craftingTimeBar');
 const gatheringOutputSlot = document.getElementById('gatheringOutputSlot');
 const surveyingPanel = document.getElementById('surveyingPanel');
 const questJournalEntries = document.getElementById('questJournalEntries');
@@ -3924,7 +3943,7 @@ var UI = {
         splitStackPanel.onsubmit = inventorySplitStackSubmit;
         shopSplitStackPanel.onsubmit = UI.shopSplitStackSubmit;
         toggleActiveCards.onclick = UI.toggleCardsDisplayed;
-        startCrafting.onclick = startCraftingProcess;
+        startCrafting.onclick = startCraftingTimer;
         document.getElementById('splitStackCancel').onclick = UI.inventorySplitStackCancel;
         document.getElementById('shopSplitStackCancel').onclick = UI.shopSplitStackCancel;
         toggleFullscreenSwitch.onchange = UI.toggleFullScreen;
@@ -5476,7 +5495,11 @@ craftingSelectComponentsPanel.classList.remove('active');
     },
 
     updateSurveyingPanel: function() {
-        surveyingTimeBar.style.width = surveying.timeRemaining + '%';
+        surveyingTimeBar.style.width = (100-surveying.timeRemaining) + '%';
+    },
+
+        updateCraftingPanel: function() {
+        craftingTimeBar.style.width = (craftingObject.timeRemaining) + '%';
     },
 
     addFromGathering: function() {
@@ -7280,6 +7303,9 @@ function update() {
     }
     if (retinueObject.active) {
         UI.updateRetinueTimers();
+    }
+    if(craftingObject.isCreating) {
+        processCrafting();
     }
 }
 

@@ -86,7 +86,8 @@ function recipeSelectComponents(whichRecipe) {
             'hallmark': 0 - characterId,
             'inscription': ""
         },
-        'finalItemName': thisRecipe.recipeName
+        'finalItemName': thisRecipe.recipeName,
+        'isCreating': false
     }
     var componentsRequiredMarkup = '<h4>Requires:</h4><ul>';
     // find all components that the player has that are usable for this recipe as well:
@@ -313,17 +314,30 @@ function addCraftingComponents(fromSlotId, isADoubleClick) {
     }
 }
 
-function startCraftingProcess() {
-
+function startCraftingTimer() {
     // show short progress timer:
-    // ########
-
-
-
+    craftingObject.timeRemaining = 100;
+    craftingObject.depletionSpeed = 0.5;
+    craftingObject.isCreating = true;
+    UI.updateCraftingPanel();
+    craftingTimeBarOuter.style.display = 'block';
+    // hide Create button:
+    startCrafting.style.display = 'none';
     // play sound for the active profession:
     audio.playSound(soundEffects[hero.crafting[currentRecipePanelProfession].name.toLowerCase()], 0);
 
+}
 
+function processCrafting() {
+    craftingObject.timeRemaining -= craftingObject.depletionSpeed;
+    if (craftingObject.timeRemaining <= 0) {
+        craftingObject.isCreating = false;
+        startCraftingProcess();
+    }
+    UI.updateCraftingPanel();
+}
+
+function startCraftingProcess() {
     hero.stats.itemsCrafted++;
     // add to inventory (or post if full):
     inventoryCheck = canAddItemToInventory([craftingObject.craftedItem]);
@@ -343,6 +357,9 @@ function startCraftingProcess() {
     }
     // update the available items:
     recipeSelectComponents(craftingObject.whichRecipe);
+    // restore Create button:
+    startCrafting.style.display = 'block';
+    craftingTimeBarOuter.style.display = 'none';
 }
 
 function determineAttributeValue(itemValue, influenceAmount) {

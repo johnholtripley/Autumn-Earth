@@ -88,7 +88,7 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
     <div id="surveyingPanel">
       <div class="draggableBar">Surveying&hellip;</div><button class="closePanel">close</button>
       <ul>
-        <li><p>Time</p><div id="surveyingTimeBar" class="progressBarWrapper"><div class="progressBar"></div></div></li>
+        <li><p>Surveying</p><div id="surveyingTimeBar" class="progressBarWrapper"><div class="progressBar"></div></div></li>
       </ul>
     </div>
     <div id="cardAlbum" class="active">
@@ -127,7 +127,7 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
       <button class="closePanel">close</button>
       <div class="craftingColumn"><div id="componentsAvailableForThisRecipe"></div></div>
       <div class="craftingColumn"><div id="selectComponentsItemBeingCreated"></div></div>
-      <div class="craftingColumn"><div id="displayItemBeingCreated"></div><button class="primaryButton" id="startCrafting" disabled="disabled">Create</button></div>   
+      <div class="craftingColumn"><div id="displayItemBeingCreated"></div><div id="craftingTimeBar" class="progressBarWrapper"><div class="progressBar"></div></div><button class="primaryButton" id="startCrafting" disabled="disabled">Create</button></div>   
     </div>
 
     <div id="booksAndParchments"></div>

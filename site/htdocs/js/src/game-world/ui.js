@@ -43,6 +43,8 @@ const gatheringBarPurity = document.querySelector('#gatheringPurityBar .progress
 const gatheringBarQuantity = document.querySelector('#gatheringQuantityBar .progressBar');
 const gatheringBarStability = document.querySelector('#gatheringBarStability .progressBar');
 const surveyingTimeBar = document.querySelector('#surveyingTimeBar .progressBar');
+const craftingTimeBar = document.querySelector('#craftingTimeBar .progressBar');
+const craftingTimeBarOuter = document.getElementById('craftingTimeBar');
 const gatheringOutputSlot = document.getElementById('gatheringOutputSlot');
 const surveyingPanel = document.getElementById('surveyingPanel');
 const questJournalEntries = document.getElementById('questJournalEntries');
@@ -169,7 +171,7 @@ var UI = {
         splitStackPanel.onsubmit = inventorySplitStackSubmit;
         shopSplitStackPanel.onsubmit = UI.shopSplitStackSubmit;
         toggleActiveCards.onclick = UI.toggleCardsDisplayed;
-        startCrafting.onclick = startCraftingProcess;
+        startCrafting.onclick = startCraftingTimer;
         document.getElementById('splitStackCancel').onclick = UI.inventorySplitStackCancel;
         document.getElementById('shopSplitStackCancel').onclick = UI.shopSplitStackCancel;
         toggleFullscreenSwitch.onchange = UI.toggleFullScreen;
@@ -1721,7 +1723,11 @@ craftingSelectComponentsPanel.classList.remove('active');
     },
 
     updateSurveyingPanel: function() {
-        surveyingTimeBar.style.width = surveying.timeRemaining + '%';
+        surveyingTimeBar.style.width = (100-surveying.timeRemaining) + '%';
+    },
+
+        updateCraftingPanel: function() {
+        craftingTimeBar.style.width = (craftingObject.timeRemaining) + '%';
     },
 
     addFromGathering: function() {

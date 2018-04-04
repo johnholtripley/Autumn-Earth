@@ -1351,6 +1351,9 @@ function update() {
     if (retinueObject.active) {
         UI.updateRetinueTimers();
     }
+    if(craftingObject.isCreating) {
+        processCrafting();
+    }
 }
 
 
