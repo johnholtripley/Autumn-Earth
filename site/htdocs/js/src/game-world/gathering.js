@@ -53,7 +53,7 @@ function gatheringComplete() {
             "hallmark": 0,
             "inscription": ""
         }
-        createdMarkup += '<div><div class="attributeSlot">'+generateAttributeGraphicMarkup(activeGatheredObject.quality, activeGatheredObject.durability, activeGatheredObject.effectiveness);
+        createdMarkup += '<div>';
         createdMarkup += generateCraftingSlotMarkup(activeGatheredObject);
         createdMarkup += '</div></li></ol>';
         gatheringOutputSlot.innerHTML = createdMarkup;

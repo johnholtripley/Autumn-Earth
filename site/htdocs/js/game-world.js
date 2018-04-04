@@ -617,7 +617,7 @@ function recipeSelectComponents(whichRecipe) {
             foundItemGroups = findSlotItemIdInInventory(thisRecipe.components[i].type);
             if (foundItemGroups.length > 0) {
                 for (var j = 0; j < foundItemGroups.length; j++) {
-                    availableComponentMarkup += '<li id="fromSlot' + foundItemGroups[j] + '"><div class="attributeSlot">' + generateAttributeGraphicMarkup(hero.inventory[foundItemGroups[j]].quality, hero.inventory[foundItemGroups[j]].durability, hero.inventory[foundItemGroups[j]].effectiveness) + generateCraftingSlotMarkup(hero.inventory[foundItemGroups[j]]) + '</div></li>';
+                    availableComponentMarkup += '<li id="fromSlot' + foundItemGroups[j] + '">' + generateCraftingSlotMarkup(hero.inventory[foundItemGroups[j]]) + '</li>';
                     // 'lock' this slot:
                     document.getElementById('slot' + foundItemGroups[j]).classList.add('locked');
                     componentsFound++;
@@ -629,7 +629,7 @@ function recipeSelectComponents(whichRecipe) {
             foundItemGroups = hasItemTypeInInventory(thisRecipe.components[i].type);
             if (foundItemGroups.length > 0) {
                 for (var j = 0; j < foundItemGroups.length; j++) {
-                    availableComponentMarkup += '<li id="fromSlot' + foundItemGroups[j] + '"><div class="attributeSlot">' + generateAttributeGraphicMarkup(hero.inventory[foundItemGroups[j]].quality, hero.inventory[foundItemGroups[j]].durability, hero.inventory[foundItemGroups[j]].effectiveness) + generateCraftingSlotMarkup(hero.inventory[foundItemGroups[j]]) + '</li>';
+                    availableComponentMarkup += '<li id="fromSlot' + foundItemGroups[j] + '">' + generateCraftingSlotMarkup(hero.inventory[foundItemGroups[j]]) + '</li>';
                     // 'lock' this slot:
                     document.getElementById('slot' + foundItemGroups[j]).classList.add('locked');
                     componentsFound++;
@@ -656,56 +656,6 @@ function recipeSelectComponents(whichRecipe) {
     displayItemBeingCreated.innerHTML = displayItemMarkup;
 }
 
-function findRecipeTierLevel(toolQuality) {
-    // example quality -> tier output:
-    // 0->0.0, 5->0.0, 10->0.1, 15->0.1, 20->0.2, 25->0.3, 30->0.5, 35->0.6, 40->0.8, 45->1.1, 50->1.3, 55->1.6, 60->2.0, 65->2.4, 70->2.9, 75->3.4, 80->4.0, 85->4.7, 90->5.6, 95->6.9, 100->10.0
-    var diff = (toolQuality / 10);
-    var tierLevel = 10 - (Math.sqrt(100 - diff * diff));
-    return tierLevel;
-}
-
-function gradeAttribute(attributeValue) {
-    /*
-    Very poor 1-10
-    Poor 11-35
-    Average 36-65
-    Good 66-90
-    Exceptional 91-100
-    */
-    var map = [
-        { max: 91, grade: "#04752c" },
-        { max: 66, grade: "#82b11e" },
-        { max: 36, grade: "#b98c45" },
-        { max: 11, grade: "#ab471d" }
-    ];
-    for (var loop = 0; loop < map.length; loop++) {
-        var data = map[loop];
-        if (attributeValue >= data.max) return data.grade;
-    }
-    return "#b41119";
-}
-
-function generateCraftingSlotMarkup(thisItemObject) {
-    var slotMarkup = '';
-    var theColourPrefix = "";
-    var thisFileColourSuffix = "";
-    var imageClassName = "";
-    var thisColourName = getColourName(thisItemObject.colour, thisItemObject.type);
-    if (thisColourName != "") {
-        theColourPrefix = thisColourName + " ";
-        thisFileColourSuffix = "-" + thisColourName.toLowerCase();
-    }
-    // check if it's a card:
-    if (currentActiveInventoryItems[thisItemObject.type].action == "card") {
-        imageClassName += 'players card';
-    }
-    slotMarkup += '<img src="/images/game-world/inventory-items/' + thisItemObject.type + thisFileColourSuffix + '.png" ' + 'alt="' + theColourPrefix + currentActiveInventoryItems[thisItemObject.type].shortname + '" class="' + imageClassName + '">';
-
-    slotMarkup += '<span class="qty">' + thisItemObject.quantity + '</span></div>';
-    slotMarkup += '<p>' + theColourPrefix + currentActiveInventoryItems[thisItemObject.type].shortname + '</p>';
-    return slotMarkup;
-}
-
 function releaseLockedSlots() {
     // clear any locked elements:
     var allLockedSlots = document.querySelectorAll('#inventoryPanels .locked');
@@ -724,7 +674,7 @@ function addCraftingComponents(fromSlotId, isADoubleClick) {
         okToAddThisComponent = false;
         if ((craftingObject.required[i].type == hero.inventory[slotId].type) || (craftingObject.required[i].type == currentActiveInventoryItems[hero.inventory[slotId].type].group)) {
             if (craftingObject.required[i].quantity > 0) {
-             okToAddThisComponent = true;
+                okToAddThisComponent = true;
             } else if (isADoubleClick) {
                 // see if there's just one of this type already added:
                 var variantsOfThisTypeAlreadyAdded = 0;
@@ -754,25 +704,25 @@ function addCraftingComponents(fromSlotId, isADoubleClick) {
                     }
                 }
             }
-            if(okToAddThisComponent) {
+            if (okToAddThisComponent) {
                 amountUsed = craftingObject.required[i].quantity;
-                        if (craftingObject.required[i].quantity > hero.inventory[slotId].quantity) {
-                            amountUsed = hero.inventory[slotId].quantity;
-                        }
-                        craftingObject.required[i].quantity -= amountUsed;
-                        craftingObject.componentsAdded.push({ 'fromSlot': slotId, 'quantity': amountUsed, 'type': craftingObject.required[i].type });
-                        thisQuantityDisplay = document.querySelector('#' + fromSlotId + ' .qty');
-                        thisQuantityDisplay.classList.add('modified');
-                        thisQuantityDisplay.textContent = hero.inventory[slotId].quantity - amountUsed;
-                        addedToSlot = document.getElementById('componentType' + hero.inventory[slotId].type);
-                        if (!addedToSlot) {
-                            addedToSlot = document.getElementById('componentType' + currentActiveInventoryItems[hero.inventory[slotId].type].group);
-                        }
-                        if (addedToSlot) {
-                            thisTempAddedObject = JSON.parse(JSON.stringify(hero.inventory[slotId]));
-                            thisTempAddedObject.quantity = amountUsed;
-                            addedToSlot.innerHTML += '<div class="addedItemToRecipe"><div class="attributeSlot">' + generateAttributeGraphicMarkup(hero.inventory[slotId].quality, hero.inventory[slotId].durability, hero.inventory[slotId].effectiveness) + generateCraftingSlotMarkup(thisTempAddedObject) + '</div>';
-                        }
+                if (craftingObject.required[i].quantity > hero.inventory[slotId].quantity) {
+                    amountUsed = hero.inventory[slotId].quantity;
+                }
+                craftingObject.required[i].quantity -= amountUsed;
+                craftingObject.componentsAdded.push({ 'fromSlot': slotId, 'quantity': amountUsed, 'type': craftingObject.required[i].type });
+                thisQuantityDisplay = document.querySelector('#' + fromSlotId + ' .qty');
+                thisQuantityDisplay.classList.add('modified');
+                thisQuantityDisplay.textContent = hero.inventory[slotId].quantity - amountUsed;
+                addedToSlot = document.getElementById('componentType' + hero.inventory[slotId].type);
+                if (!addedToSlot) {
+                    addedToSlot = document.getElementById('componentType' + currentActiveInventoryItems[hero.inventory[slotId].type].group);
+                }
+                if (addedToSlot) {
+                    thisTempAddedObject = JSON.parse(JSON.stringify(hero.inventory[slotId]));
+                    thisTempAddedObject.quantity = amountUsed;
+                    addedToSlot.innerHTML += '<div class="addedItemToRecipe">' + generateCraftingSlotMarkup(thisTempAddedObject) + '</div>';
+                }
             }
         }
     }
@@ -858,6 +808,57 @@ function startCraftingProcess() {
 
 function determineAttributeValue(itemValue, influenceAmount) {
     return Math.sqrt((itemValue * influenceAmount * influenceAmount) / 100);
+}
+
+function findRecipeTierLevel(toolQuality) {
+    // example quality -> tier output:
+    // 0->0.0, 5->0.0, 10->0.1, 15->0.1, 20->0.2, 25->0.3, 30->0.5, 35->0.6, 40->0.8, 45->1.1, 50->1.3, 55->1.6, 60->2.0, 65->2.4, 70->2.9, 75->3.4, 80->4.0, 85->4.7, 90->5.6, 95->6.9, 100->10.0
+    var diff = (toolQuality / 10);
+    var tierLevel = 10 - (Math.sqrt(100 - diff * diff));
+    return tierLevel;
+}
+
+function gradeAttribute(attributeValue) {
+    /*
+    Very poor 1-10
+    Poor 11-35
+    Average 36-65
+    Good 66-90
+    Exceptional 91-100
+    */
+    var map = [
+        { max: 91, grade: "#04752c" },
+        { max: 66, grade: "#82b11e" },
+        { max: 36, grade: "#b98c45" },
+        { max: 11, grade: "#ab471d" }
+    ];
+    for (var loop = 0; loop < map.length; loop++) {
+        var data = map[loop];
+        if (attributeValue >= data.max) return data.grade;
+    }
+    return "#b41119";
+}
+
+function generateCraftingSlotMarkup(thisItemObject) {
+    var slotMarkup = '<div class="attributeSlot">';
+    var theColourPrefix = "";
+    var thisFileColourSuffix = "";
+    var imageClassName = "";
+    var thisColourName = getColourName(thisItemObject.colour, thisItemObject.type);
+    if (thisColourName != "") {
+        theColourPrefix = thisColourName + " ";
+        thisFileColourSuffix = "-" + thisColourName.toLowerCase();
+    }
+    // check if it's a card:
+    if (currentActiveInventoryItems[thisItemObject.type].action == "card") {
+        imageClassName += 'players card';
+    }
+    slotMarkup += generateAttributeGraphicMarkup(thisItemObject.quality, thisItemObject.durability, thisItemObject.effectiveness);
+    slotMarkup += '<img src="/images/game-world/inventory-items/' + thisItemObject.type + thisFileColourSuffix + '.png" ' + 'alt="' + theColourPrefix + currentActiveInventoryItems[thisItemObject.type].shortname + '" class="' + imageClassName + '">';
+
+    slotMarkup += '<span class="qty">' + thisItemObject.quantity + '</span></div>';
+    slotMarkup += '<p>' + theColourPrefix + currentActiveInventoryItems[thisItemObject.type].shortname + '</p>';
+    return slotMarkup;
 }
 
 function generateAttributeGraphicMarkup(thisQuality, thisDurability, thisEffectiveness) {
@@ -1221,7 +1222,7 @@ function gatheringComplete() {
             "hallmark": 0,
             "inscription": ""
         }
-        createdMarkup += '<div><div class="attributeSlot">'+generateAttributeGraphicMarkup(activeGatheredObject.quality, activeGatheredObject.durability, activeGatheredObject.effectiveness);
+        createdMarkup += '<div>';
         createdMarkup += generateCraftingSlotMarkup(activeGatheredObject);
         createdMarkup += '</div></li></ol>';
         gatheringOutputSlot.innerHTML = createdMarkup;
