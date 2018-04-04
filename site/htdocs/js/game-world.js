@@ -755,7 +755,6 @@ function addCraftingComponents(fromSlotId, isADoubleClick) {
         thisTempAddedObject = JSON.parse(JSON.stringify(hero.inventory[slotId]));
         thisTempAddedObject.quantity = 1;
         document.getElementById('componentTypeAdditionalDye').innerHTML += '<div class="addedItemToRecipe">' + generateCraftingSlotMarkup(thisTempAddedObject) + '</div>';
-        console.log(craftingObject.componentsAdded);
     }
 
     var allComponentsAdded = true;
@@ -769,20 +768,21 @@ function addCraftingComponents(fromSlotId, isADoubleClick) {
 
 
     if (allComponentsAdded) {
-        startCrafting.disabled = false;
+        
         // display attributes of what will be crafted:
         var thisType;
         var coloursAdded = [];
         for (var i = 0; i < craftingObject.componentsAdded.length; i++) {
             thisType = craftingObject.componentsAdded[i].type;
-            craftingObject.craftedItem.quality += determineAttributeValue(hero.inventory[(craftingObject.componentsAdded[i].fromSlot)].quantity, craftingObject.componentInfluences[thisType].quality);
+            console.log(craftingObject.craftedItem.quality);
+            craftingObject.craftedItem.quality += determineAttributeValue(hero.inventory[(craftingObject.componentsAdded[i].fromSlot)].quality, craftingObject.componentInfluences[thisType].quality);
             craftingObject.craftedItem.durability += determineAttributeValue(hero.inventory[(craftingObject.componentsAdded[i].fromSlot)].durability, craftingObject.componentInfluences[thisType].durability);
             craftingObject.craftedItem.effectiveness += determineAttributeValue(hero.inventory[(craftingObject.componentsAdded[i].fromSlot)].effectiveness, craftingObject.componentInfluences[thisType].effectiveness);
             if (hero.inventory[(craftingObject.componentsAdded[i].fromSlot)].colour != 0) {
                 coloursAdded.push(hero.inventory[(craftingObject.componentsAdded[i].fromSlot)].colour);
             }
         }
-
+    
         craftingObject.craftedItem.quality = Math.floor(craftingObject.craftedItem.quality);
         craftingObject.craftedItem.durability = Math.floor(craftingObject.craftedItem.durability);
         craftingObject.craftedItem.effectiveness = Math.floor(craftingObject.craftedItem.effectiveness);
@@ -800,6 +800,7 @@ function addCraftingComponents(fromSlotId, isADoubleClick) {
             document.querySelector('#displayItemBeingCreated h3').innerText = craftingObject.thisRecipe.recipeName;
             document.querySelector('#craftingOutput img').src = '/images/game-world/inventory-items/' + craftingObject.thisRecipe.imageId + '.png';
         }
+        startCrafting.disabled = false;
     } else {
         startCrafting.disabled = true;
         // restore defaults:
@@ -834,6 +835,8 @@ function processCrafting() {
 
 function startCraftingProcess() {
     hero.stats.itemsCrafted++;
+    // unlock slots so new items can be stacked:
+    releaseLockedSlots();
     // add to inventory (or post if full):
     inventoryCheck = canAddItemToInventory([craftingObject.craftedItem]);
     if (inventoryCheck[0]) {
