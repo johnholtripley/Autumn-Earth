@@ -81,6 +81,19 @@
             "hallmark": 0,
             "inscription": ""
         },
+                "0-9":
+        {
+            "type": 12,
+            "quantity": 12,
+            "quality": 100,
+            "durability": 100,
+            "currentWear": 0,
+            "effectiveness": 100,
+            "colour": 1,
+            "enchanted": 0,
+            "hallmark": 0,
+            "inscription": ""
+        },
         "0-4":
         {
             "type": 9,
