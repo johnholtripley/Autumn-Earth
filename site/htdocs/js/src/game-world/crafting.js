@@ -87,7 +87,8 @@ function recipeSelectComponents(whichRecipe) {
             'inscription': ""
         },
         'finalItemName': thisRecipe.recipeName,
-        'isCreating': false
+        'isCreating': false,
+        'optionalDyeAdded': false
     }
     var componentsRequiredMarkup = '<h4>Requires:</h4><ul>';
     // find all components that the player has that are usable for this recipe as well:
@@ -287,23 +288,15 @@ function addCraftingComponents(fromSlotId, isADoubleClick) {
     }
     // see if it's an optional dye:
     if (currentActiveInventoryItems[hero.inventory[slotId].type].group == 'dye') {
-        craftingObject.componentsAdded.push({ 'fromSlot': slotId, 'quantity': amountUsed, 'type': 'dye' });
+        craftingObject.componentsAdded.push({ 'fromSlot': slotId, 'quantity': 1, 'type': 'dye' });
         thisQuantityDisplay = document.querySelector('#' + fromSlotId + ' .qty');
         thisQuantityDisplay.classList.add('modified');
         thisQuantityDisplay.textContent = hero.inventory[slotId].quantity - 1;
         thisTempAddedObject = JSON.parse(JSON.stringify(hero.inventory[slotId]));
         thisTempAddedObject.quantity = 1;
         document.getElementById('componentTypeAdditionalDye').innerHTML += '<div class="addedItemToRecipe">' + generateCraftingSlotMarkup(thisTempAddedObject) + '</div>';
-        // dyes will only account for 10% of the attributes:
-        // ##########
-        // adjust the already determined influences to add up to 90% to allow 10% for the dyes:
-        for (var i = 0; i < craftingObject.componentInfluences.length; i++) {
-            craftingObject.componentInfluences[i].durability *= 0.9;
-            craftingObject.componentInfluences[i].effectiveness *= 0.9;
-            craftingObject.componentInfluences[i].quality *= 0.9;
-        }
-        // add up all dye attributes, average and then * by 0.1
-        
+        craftingObject.optionalDyeAdded = true;
+
     }
 
     var allComponentsAdded = true;
@@ -314,20 +307,45 @@ function addCraftingComponents(fromSlotId, isADoubleClick) {
         }
     }
 
-
-
     if (allComponentsAdded) {
-        
+        // any optional dyes will only account for 10% of the attributes:   
+        if (craftingObject.optionalDyeAdded) {
+            // adjust the already determined influences to add up to 90% to allow 10% for the dyes:
+            for (var i in craftingObject.componentInfluences) {
+                craftingObject.componentInfluences[i].durability *= 0.9;
+                craftingObject.componentInfluences[i].effectiveness *= 0.9;
+                craftingObject.componentInfluences[i].quality *= 0.9;
+            }
+            // add up all dye attributes, average and then * by 0.1:
+            var numberOfDyesAdded = 0;
+            var dyeQuality = 0;
+            var dyeDurability = 0;
+            var dyeEffectiveness = 0;
+            for (var i in craftingObject.componentsAdded) {
+                if (craftingObject.componentsAdded[i].type == "dye") {
+                    numberOfDyesAdded++;
+                    dyeQuality += hero.inventory[(craftingObject.componentsAdded[i].fromSlot)].quality;
+                    dyeDurability += hero.inventory[(craftingObject.componentsAdded[i].fromSlot)].durability;
+                    dyeEffectiveness += hero.inventory[(craftingObject.componentsAdded[i].fromSlot)].effectiveness;
+                }
+            }
+            dyeQuality *= 0.1 / numberOfDyesAdded;
+            dyeDurability *= 0.1 / numberOfDyesAdded;
+            dyeEffectiveness *= 0.1 / numberOfDyesAdded;
+            craftingObject.componentInfluences['dye'] = {
+                'effectiveness': dyeEffectiveness,
+                'durability': dyeDurability,
+                'quality': dyeQuality
+            };
+        }
+
         // display attributes of what will be crafted:
         var thisType;
         var coloursAdded = [];
 
-console.log(craftingObject.componentInfluences);
-
-
         for (var i = 0; i < craftingObject.componentsAdded.length; i++) {
             thisType = craftingObject.componentsAdded[i].type;
-      
+
             craftingObject.craftedItem.quality += determineAttributeValue(hero.inventory[(craftingObject.componentsAdded[i].fromSlot)].quality, craftingObject.componentInfluences[thisType].quality);
             craftingObject.craftedItem.durability += determineAttributeValue(hero.inventory[(craftingObject.componentsAdded[i].fromSlot)].durability, craftingObject.componentInfluences[thisType].durability);
             craftingObject.craftedItem.effectiveness += determineAttributeValue(hero.inventory[(craftingObject.componentsAdded[i].fromSlot)].effectiveness, craftingObject.componentInfluences[thisType].effectiveness);
@@ -335,7 +353,7 @@ console.log(craftingObject.componentInfluences);
                 coloursAdded.push(hero.inventory[(craftingObject.componentsAdded[i].fromSlot)].colour);
             }
         }
-    
+
         craftingObject.craftedItem.quality = Math.floor(craftingObject.craftedItem.quality);
         craftingObject.craftedItem.durability = Math.floor(craftingObject.craftedItem.durability);
         craftingObject.craftedItem.effectiveness = Math.floor(craftingObject.craftedItem.effectiveness);
