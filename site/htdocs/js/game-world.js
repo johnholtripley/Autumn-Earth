@@ -2890,7 +2890,7 @@ function additionalTooltipDetail(thisItemObject) {
             // check if it's known already:
             var isKnown = false;
             for (var i = 0; i < hero.recipesKnown.length; i++) {
-                if (hero.recipesKnown[i][0] == currentActiveInventoryItems[thisItemObject.type].actionValue) {
+                if (hero.recipesKnown[i] == currentActiveInventoryItems[thisItemObject.type].actionValue) {
                     isKnown = true;
                 }
             }
@@ -6444,13 +6444,7 @@ function getQuestDetails() {
 
 
 function findProfessionsAndRecipes() {
-    var recipeIdsToGet = "";
-    for (var i = 0; i < hero.recipesKnown.length; i++) {
-        recipeIdsToGet += hero.recipesKnown[i][0] + "|";
-    }
-    // remove final pipe:
-    recipeIdsToGet = recipeIdsToGet.slice(0, -1);
-    loadProfessionsAndRecipes(recipeIdsToGet);
+    loadProfessionsAndRecipes(hero.recipesKnown.join("|"));
 }
 
 
@@ -8472,7 +8466,7 @@ function canLearnRecipe(recipeIndex) {
     if (hero.recipesKnown.indexOf(recipeIndex) === -1) {
         // check for pre-requisites
         // #####
-        hero.recipesKnown.push([parseInt(recipeIndex), 0]);
+        hero.recipesKnown.push(parseInt(recipeIndex));
         // need to show a notification
         // reload the recipe data
         // #####

@@ -388,7 +388,7 @@ function additionalTooltipDetail(thisItemObject) {
             // check if it's known already:
             var isKnown = false;
             for (var i = 0; i < hero.recipesKnown.length; i++) {
-                if (hero.recipesKnown[i][0] == currentActiveInventoryItems[thisItemObject.type].actionValue) {
+                if (hero.recipesKnown[i] == currentActiveInventoryItems[thisItemObject.type].actionValue) {
                     isKnown = true;
                 }
             }
