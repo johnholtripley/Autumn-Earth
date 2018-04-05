@@ -525,7 +525,7 @@ function recipeSearchClear() {
 
 function recipeSelectComponents(whichRecipe) {
     releaseLockedSlots();
-        craftingTimeBarOuter.style.display = 'none';
+    craftingTimeBarOuter.style.display = 'none';
     startCrafting.style.display = 'block';
     startCrafting.disabled = true;
     craftingSelectComponentsPanel.classList.add("active");
@@ -556,7 +556,7 @@ function recipeSelectComponents(whichRecipe) {
         },
         'finalItemName': thisRecipe.recipeName,
         'isCreating': false,
-        'optionalDyeAdded': false
+        'optionalDyeAdded': 0
     }
 
     var componentsRequiredMarkup = '<h4>Requires:</h4><ul>';
@@ -656,7 +656,7 @@ function recipeSelectComponents(whichRecipe) {
             }
         }
         craftingObject.required.push({ 'type': thisRecipe.components[i].type, 'quantity': thisRecipe.components[i].quantity });
-           if(!thisComponentFound) {
+        if (!thisComponentFound) {
             availableComponentMarkup += '<li class="componentMissing">You\'re missing a component type</li>';
         }
         if (thisRecipe.components[i].type != previousRecipeType) {
@@ -781,7 +781,7 @@ function addCraftingComponents(fromSlotId, isADoubleClick) {
             thisTempAddedObject = JSON.parse(JSON.stringify(hero.inventory[slotId]));
             thisTempAddedObject.quantity = 1;
             document.getElementById('componentTypeAdditionalDye').innerHTML += '<div class="addedItemToRecipe">' + generateCraftingSlotMarkup(thisTempAddedObject) + '</div>';
-            craftingObject.optionalDyeAdded = true;
+            craftingObject.optionalDyeAdded++;
         }
     }
 
@@ -796,7 +796,7 @@ function addCraftingComponents(fromSlotId, isADoubleClick) {
     if (allComponentsAdded) {
 
         // any optional dyes will only account for 10% of the attributes:   
-        if (craftingObject.optionalDyeAdded) {
+        if (craftingObject.optionalDyeAdded > 0) {
             // adjust the already determined influences to add up to 90% to allow 10% for the dyes:
             for (var i in craftingObject.componentInfluences) {
                 craftingObject.componentInfluences[i].durability *= 0.9;
@@ -878,9 +878,7 @@ function startCraftingTimer() {
     // hide Create button:
     startCrafting.style.display = 'none';
     // play sound for the active profession:
-    console.log(hero.crafting[currentRecipePanelProfession].name.toLowerCase());
     audio.playSound(soundEffects[hero.crafting[currentRecipePanelProfession].name.toLowerCase()], 0);
-
 }
 
 function processCrafting() {
@@ -908,6 +906,75 @@ function startCraftingProcess() {
         sendNPCPost('{"subject":"' + subjectLine + '","message":"' + message + '","senderID":"-1","recipientID":"' + characterId + '","fromName":"' + whichNPC + '"}', [craftingObject.craftedItem]);
         UI.showNotification("<p>Crafted item sent by post to you</p>");
     }
+
+    // check for hiddenResults to see if any empty containers (for example) need giving back to the player:
+    if (craftingObject.thisRecipe.hiddenCreates) {
+        var thisReturnedObject;
+        var returnedItems = craftingObject.thisRecipe.hiddenCreates.split(",");
+        for (var i = 0; i < returnedItems.length; i++) {
+            thisReturnedObject = {
+                "type": parseInt(returnedItems[i]),
+                "quantity": 1,
+                "quality": 100,
+                "durability": 100,
+                "currentWear": 0,
+                "effectiveness": 100,
+                "colour": 0,
+                "enchanted": 0,
+                "hallmark": 0,
+                "inscription": ""
+            }
+        }
+        inventoryCheck = canAddItemToInventory([thisReturnedObject]);
+        if (inventoryCheck[0]) {
+            UI.showChangeInInventory(inventoryCheck[1]);
+        } else {
+            // send the item by post:
+            var subjectLine = "Your returned crafting items";
+            var message = "Returned items";
+            var whichNPC = "Artisan crafter";
+            sendNPCPost('{"subject":"' + subjectLine + '","message":"' + message + '","senderID":"-1","recipientID":"' + characterId + '","fromName":"' + whichNPC + '"}', [thisReturnedObject]);
+            UI.showNotification("<p>Crafted item sent by post to you</p>");
+        }
+
+
+
+
+    }
+
+    // also check for any optional dyes and return the glass bottles for those:
+    if (craftingObject.optionalDyeAdded > 0) {
+        var thisReturnedObject = {
+            "type": 11,
+            "quantity": craftingObject.optionalDyeAdded,
+            "quality": 100,
+            "durability": 100,
+            "currentWear": 0,
+            "effectiveness": 100,
+            "colour": 0,
+            "enchanted": 0,
+            "hallmark": 0,
+            "inscription": ""
+        }
+        inventoryCheck = canAddItemToInventory([thisReturnedObject]);
+        if (inventoryCheck[0]) {
+            UI.showChangeInInventory(inventoryCheck[1]);
+        } else {
+            // send the item by post:
+            var subjectLine = "Your returned crafting items";
+            var message = "Returned items";
+            var whichNPC = "Artisan crafter";
+            sendNPCPost('{"subject":"' + subjectLine + '","message":"' + message + '","senderID":"-1","recipientID":"' + characterId + '","fromName":"' + whichNPC + '"}', [thisReturnedObject]);
+            UI.showNotification("<p>Crafted item sent by post to you</p>");
+        }
+
+
+
+
+    }
+
+
+
     // remove used components:
     for (var i = 0; i < craftingObject.componentsAdded.length; i++) {
         removeFromInventory(craftingObject.componentsAdded[i].fromSlot, craftingObject.componentsAdded[i].quantity);
