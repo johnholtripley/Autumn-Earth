@@ -19,6 +19,8 @@ function customScrollBar(element) {
     this.init = function() {
         this.translateY = 0;
         this.isBeingDragged = false;
+        // ensure it's scrolled to the top if contents change:
+        this.scrollingContent.scrollTop = 0;
         this.element.classList.remove("inActive");
         // hide the native scroll bar by making the content wider by the width of the scroll bar so its pushed off to the side:
         this.scrollingContent.style.width = (this.scrollingContent.offsetWidth + thisDevicesScrollBarWidth) + 'px';
@@ -45,6 +47,7 @@ function customScrollBar(element) {
             // restore natural width:
             this.scrollingContent.removeAttribute('style');
         }
+
     }
 
     this.contentScroll = function() {

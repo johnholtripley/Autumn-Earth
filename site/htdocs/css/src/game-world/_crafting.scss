@@ -33,11 +33,14 @@
     background: #cecece;
     margin: 0 10px 0 0;
     float: left;
-    width: 246px;
+    width: 320px;
     color: #111;
 }
 
-
+.craftingColumn~.craftingColumn {
+    // make subsequent columns narrower:
+    width: 246px;
+}
 
 
 
@@ -48,9 +51,6 @@
         padding: 0;
     }
     li {
-        display: block;
-        margin: 0;
-        padding: 0 0 6px 0;
         position: relative;
         .qty {
             position: absolute;
@@ -94,8 +94,29 @@
     }
 }
 
+#componentsAvailableForThisRecipe {
+    ul {
+        @include clearfix;
+        padding: 8px 0;
+        border-bottom: 1px solid #b7b7b7;
+    }
+    li {
+        
+        display: inline-block;
+        width: 33.33%;
+    }
+}
+
+#gatheringOutputSlot {
+    li {
+        display: block;
+        margin: 0;
+        padding: 0;
+    }
+}
+
 #selectComponentsItemBeingCreated {
-        ul {
+    ul {
         list-style: none;
         margin: 0;
         padding: 0;
@@ -117,21 +138,20 @@
         display: inline-block;
         margin-right: 8px;
     }
-     img {
-      
+    img {
+
         display: inline-block;
- @include border-radius(100%);
+        @include border-radius(100%);
         margin-right: 8px;
-      
     }
     .addedItemToRecipe {
         background: #e4e4e4;
-        width:100%;
+        width: 100%;
         margin: 0 0 1px 0;
         padding: 4px 0 2px 0;
     }
     .attributeSlot {
-        
+
         svg {
             width: 58px;
             height: 58px;
@@ -156,20 +176,20 @@
             @include border-radius(100%);
         }
         img {
-         background: #cecece;
-        display: inline-block;
-        width: 46px;
-        height: 46px;
-        padding: 2px;
-        margin-right: 12px;
-        @include border-box;
+            background: #cecece;
+            display: inline-block;
+            width: 46px;
+            height: 46px;
+            padding: 2px;
+            margin-right: 12px;
+            @include border-box;
+        }
     }
-}
     p {
-       display: inline-block;
-       font-size: 12px; 
-       margin: 0;
-       vertical-align: top;
+        display: inline-block;
+        font-size: 12px;
+        margin: 0;
+        vertical-align: top;
     }
 }
 

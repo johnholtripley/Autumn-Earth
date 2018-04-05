@@ -66,6 +66,8 @@ function recipeSelectComponents(whichRecipe) {
     startCrafting.disabled = true;
     craftingSelectComponentsPanel.classList.add("active");
     var recipeId = whichRecipe.substring(6);
+    var recipeRequiresADye = false;
+    var previousRecipeType = "-";
     var foundItemGroups;
     // make a copy so that influences don't get stored for next time:
     var thisRecipe = JSON.parse(JSON.stringify(hero.crafting[currentRecipePanelProfession].recipes[recipeId]));
@@ -132,7 +134,7 @@ function recipeSelectComponents(whichRecipe) {
             }
         }
     }
-//console.log(thisRecipe.components);
+    //console.log(thisRecipe.components);
     for (var i in thisRecipe.components) {
         thisItemInfluences = '';
         if (typeof thisRecipe.components[i].influence["effectiveness"] !== "undefined") {
@@ -157,8 +159,6 @@ function recipeSelectComponents(whichRecipe) {
             'durability': thisComponentDurability,
             'quality': thisComponentQuality
         };
-
-//console.log(thisComponentQuality+", "+thisComponentDurability+", "+thisComponentEffectiveness);
         if (!(isNaN(thisRecipe.components[i].type))) {
             // specific item - make sure not already added this (if more than 1 quantity required):
             componentsRequiredMarkup += '<li id="componentType' + thisRecipe.components[i].type + '">' + generateAttributeGraphicMarkup(thisComponentQuality, thisComponentDurability, thisComponentEffectiveness) + '<img src="/images/game-world/inventory-items/' + thisRecipe.components[i].type + '.png" class="planImage" alt="' + currentActiveInventoryItems[thisRecipe.components[i].type].shortname + '"><p>' + thisRecipe.components[i].quantity + 'x ' + currentActiveInventoryItems[thisRecipe.components[i].type].shortname + '</p></li>';
@@ -175,17 +175,25 @@ function recipeSelectComponents(whichRecipe) {
             // item group:
             componentsRequiredMarkup += '<li id="componentType' + thisRecipe.components[i].type + '">' + generateAttributeGraphicMarkup(thisComponentQuality, thisComponentDurability, thisComponentEffectiveness) + '<img class="previewSlot" src="/images/game-world/inventory-items/' + thisRecipe.components[i].type + '.png" class="planImage" alt=""><p>' + thisRecipe.components[i].quantity + 'x ' + currentItemGroupFilters[(thisRecipe.components[i].type)] + '</p></li>';
             foundItemGroups = hasItemTypeInInventory(thisRecipe.components[i].type);
+
+            if (thisRecipe.components[i].type == "dye") {
+                recipeRequiresADye = true;
+            }
             if (foundItemGroups.length > 0) {
                 for (var j = 0; j < foundItemGroups.length; j++) {
                     availableComponentMarkup += '<li id="fromSlot' + foundItemGroups[j] + '">' + generateCraftingSlotMarkup(hero.inventory[foundItemGroups[j]]) + '</li>';
                     // 'lock' this slot:
                     document.getElementById('slot' + foundItemGroups[j]).classList.add('locked');
                     componentsFound++;
-                    //craftingObject.groupsFound.push(foundItemGroups);
                 }
             }
         }
         craftingObject.required.push({ 'type': thisRecipe.components[i].type, 'quantity': thisRecipe.components[i].quantity });
+        console.log(previousRecipeType);
+        if(thisRecipe.components[i].type != previousRecipeType) {
+availableComponentMarkup += '</ul><ul>';
+        }
+        previousRecipeType = thisRecipe.components[i].type;
     }
 
     if (componentsFound == 0) {
@@ -195,12 +203,16 @@ function recipeSelectComponents(whichRecipe) {
     if (currentActiveInventoryItems[thisRecipe.creates].dyeable > 0) {
         componentsRequiredMarkup += '<li id="componentTypeAdditionalDye"><img src="/images/game-world/inventory-items/dye.png" alt=""><p>Dye (optional)</p></li>';
         // try and find any dyes that could be added to the recipe:
-        foundItemGroups = hasItemTypeInInventory('dye');
-        if (foundItemGroups.length > 0) {
-            for (var j = 0; j < foundItemGroups.length; j++) {
-                availableComponentMarkup += '<li id="fromSlot' + foundItemGroups[j] + '">' + generateCraftingSlotMarkup(hero.inventory[foundItemGroups[j]]) + '</li>';
-                // 'lock' this slot:
-                document.getElementById('slot' + foundItemGroups[j]).classList.add('locked');
+
+        // don't duplicate them if the recipe has a dye in it
+        if (!recipeRequiresADye) {
+            foundItemGroups = hasItemTypeInInventory('dye');
+            if (foundItemGroups.length > 0) {
+                for (var j = 0; j < foundItemGroups.length; j++) {
+                    availableComponentMarkup += '<li id="fromSlot' + foundItemGroups[j] + '">' + generateCraftingSlotMarkup(hero.inventory[foundItemGroups[j]]) + '</li>';
+                    // 'lock' this slot:
+                    document.getElementById('slot' + foundItemGroups[j]).classList.add('locked');
+                }
             }
         }
     }
@@ -223,7 +235,7 @@ function releaseLockedSlots() {
 }
 
 function addCraftingComponents(fromSlotId, isADoubleClick) {
-   
+
     var slotId = fromSlotId.substring(8);
     var amountUsed, thisQuantityDisplay, addedToSlot, thisTempAddedObject, okToAddThisComponent;
     var justAddedADye = false;
@@ -264,9 +276,8 @@ function addCraftingComponents(fromSlotId, isADoubleClick) {
                 }
             }
             if (okToAddThisComponent) {
-
-                if(currentActiveInventoryItems[hero.inventory[slotId].type].group == "dye") {
-justAddedADye = true;
+                if (currentActiveInventoryItems[hero.inventory[slotId].type].group == "dye") {
+                    justAddedADye = true;
                 }
                 amountUsed = craftingObject.required[i].quantity;
                 if (craftingObject.required[i].quantity > hero.inventory[slotId].quantity) {
@@ -292,17 +303,16 @@ justAddedADye = true;
     // see if it's an optional dye:
     if (currentActiveInventoryItems[hero.inventory[slotId].type].group == 'dye') {
         // make sure the dye wasn't just added as part of the recipe:
-     if(!justAddedADye) {   
-        craftingObject.componentsAdded.push({ 'fromSlot': slotId, 'quantity': 1, 'type': 'dye' });
-        thisQuantityDisplay = document.querySelector('#' + fromSlotId + ' .qty');
-        thisQuantityDisplay.classList.add('modified');
-        thisQuantityDisplay.textContent = hero.inventory[slotId].quantity - 1;
-        thisTempAddedObject = JSON.parse(JSON.stringify(hero.inventory[slotId]));
-        thisTempAddedObject.quantity = 1;
-        document.getElementById('componentTypeAdditionalDye').innerHTML += '<div class="addedItemToRecipe">' + generateCraftingSlotMarkup(thisTempAddedObject) + '</div>';
-        craftingObject.optionalDyeAdded = true;
-    }
-
+        if (!justAddedADye) {
+            craftingObject.componentsAdded.push({ 'fromSlot': slotId, 'quantity': 1, 'type': 'dye' });
+            thisQuantityDisplay = document.querySelector('#' + fromSlotId + ' .qty');
+            thisQuantityDisplay.classList.add('modified');
+            thisQuantityDisplay.textContent = hero.inventory[slotId].quantity - 1;
+            thisTempAddedObject = JSON.parse(JSON.stringify(hero.inventory[slotId]));
+            thisTempAddedObject.quantity = 1;
+            document.getElementById('componentTypeAdditionalDye').innerHTML += '<div class="addedItemToRecipe">' + generateCraftingSlotMarkup(thisTempAddedObject) + '</div>';
+            craftingObject.optionalDyeAdded = true;
+        }
     }
 
     var allComponentsAdded = true;
@@ -314,7 +324,7 @@ justAddedADye = true;
     }
 
     if (allComponentsAdded) {
-      
+
         // any optional dyes will only account for 10% of the attributes:   
         if (craftingObject.optionalDyeAdded) {
             // adjust the already determined influences to add up to 90% to allow 10% for the dyes:

@@ -483,9 +483,9 @@ var UI = {
     populateRecipeList: function(whichProfession, toolsQuality) {
 
         if (currentRecipePanelProfession != whichProfession) {
-// close the main crafting panel (in case it's open):
-releaseLockedSlots();
-craftingSelectComponentsPanel.classList.remove('active');
+            // close the main crafting panel (in case it's open):
+            releaseLockedSlots();
+            craftingSelectComponentsPanel.classList.remove('active');
 
 
             // clear previous searches:
@@ -1723,10 +1723,10 @@ craftingSelectComponentsPanel.classList.remove('active');
     },
 
     updateSurveyingPanel: function() {
-        surveyingTimeBar.style.width = (100-surveying.timeRemaining) + '%';
+        surveyingTimeBar.style.width = (100 - surveying.timeRemaining) + '%';
     },
 
-        updateCraftingPanel: function() {
+    updateCraftingPanel: function() {
         craftingTimeBar.style.width = (craftingObject.timeRemaining) + '%';
     },
 
