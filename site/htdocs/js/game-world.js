@@ -524,6 +524,8 @@ function recipeSearchClear() {
 
 function recipeSelectComponents(whichRecipe) {
     releaseLockedSlots();
+        craftingTimeBarOuter.style.display = 'none';
+    startCrafting.style.display = 'block';
     startCrafting.disabled = true;
     craftingSelectComponentsPanel.classList.add("active");
     var recipeId = whichRecipe.substring(6);
