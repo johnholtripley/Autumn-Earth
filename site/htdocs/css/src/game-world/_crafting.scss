@@ -104,6 +104,9 @@
         
         display: inline-block;
         width: 33.33%;
+        &#noComponentsAvailable {
+width: 100%;
+        }
     }
 }
 

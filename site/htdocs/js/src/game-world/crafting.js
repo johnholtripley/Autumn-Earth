@@ -190,14 +190,14 @@ function recipeSelectComponents(whichRecipe) {
         }
         craftingObject.required.push({ 'type': thisRecipe.components[i].type, 'quantity': thisRecipe.components[i].quantity });
         console.log(previousRecipeType);
-        if(thisRecipe.components[i].type != previousRecipeType) {
-availableComponentMarkup += '</ul><ul>';
+        if (thisRecipe.components[i].type != previousRecipeType) {
+            availableComponentMarkup += '</ul><ul>';
         }
         previousRecipeType = thisRecipe.components[i].type;
     }
 
     if (componentsFound == 0) {
-        availableComponentMarkup += '<li id="noComponentsAvailable"><p>You don\'t have any of the required components for this recipe.</p></li>';
+        availableComponentMarkup += '<li id="noComponentsAvailable"><p>You don\'t have any of the required components for this recipe.</p></li></ul><ul>';
     }
     // add the dye slot, only if the created item can be dyed:
     if (currentActiveInventoryItems[thisRecipe.creates].dyeable > 0) {
