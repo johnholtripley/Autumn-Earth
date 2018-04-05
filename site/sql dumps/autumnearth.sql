@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 04, 2018 at 02:31 PM
+-- Generation Time: Apr 04, 2018 at 05:54 PM
 -- Server version: 10.1.30-MariaDB
 -- PHP Version: 7.0.27
 
@@ -287,11 +287,11 @@ INSERT INTO `tblcolours` (`colourID`, `colourName`) VALUES
 (14, 'Celadon'),
 (15, 'Tawny'),
 (16, 'Black'),
-(17, 'Ruby/Maroon'),
-(18, '(dark yellow/amber)'),
-(19, '(dark orange/sienna)'),
+(17, 'Ruby'),
+(18, 'Amber'),
+(19, 'Sienna'),
 (20, 'Sapphire'),
-(21, '(indigo/imperial purple)'),
+(21, 'Indigo'),
 (22, '(dark green/emerald/olive)'),
 (23, '(dark brown/chestnut)'),
 (24, 'Grey');
@@ -1515,7 +1515,8 @@ INSERT INTO `tblrecipes` (`recipeID`, `components`, `creates`, `prerequisite`, `
 (10, '[{\r\n			\"type\": 1,\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		}\r\n	]', 14, 0, 1, 0, NULL, '', NULL),
 (11, '[{\r\n			\"type\": 15,\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		}\r\n	]', 16, 0, 1, 0, NULL, '', NULL),
 (12, '[{\r\n			\"type\": 37,\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		},{\r\n			\"type\": 38,\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		},{\r\n			\"type\": 39,\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		}\r\n	]', 40, 0, 4, 0, NULL, '', 16),
-(13, '[{\r\n			\"type\": 15,\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		}\r\n	]', 49, 0, 1, 0, NULL, '', NULL);
+(13, '[{\r\n			\"type\": 15,\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		}\r\n	]', 49, 0, 1, 0, NULL, '', NULL),
+(14, '[{\r\n			\"type\": \"dye\",\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		},\r\n		{\r\n			\"type\": 15,\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		}\r\n	]', 15, 0, 0, 0, 'Dye Wool', 'Colour some wool.', NULL);
 
 -- --------------------------------------------------------
 
@@ -2561,7 +2562,7 @@ ALTER TABLE `tblquestsstatus`
 -- AUTO_INCREMENT for table `tblrecipes`
 --
 ALTER TABLE `tblrecipes`
-  MODIFY `recipeID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `recipeID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `tblregionalpricemodifiers`

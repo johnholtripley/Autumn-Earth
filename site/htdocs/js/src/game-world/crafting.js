@@ -63,10 +63,12 @@ function recipeSearchClear() {
 
 function recipeSelectComponents(whichRecipe) {
     releaseLockedSlots();
+    startCrafting.disabled = true;
     craftingSelectComponentsPanel.classList.add("active");
     var recipeId = whichRecipe.substring(6);
     var foundItemGroups;
-    var thisRecipe = hero.crafting[currentRecipePanelProfession].recipes[recipeId];
+    // make a copy so that influences don't get stored for next time:
+    var thisRecipe = JSON.parse(JSON.stringify(hero.crafting[currentRecipePanelProfession].recipes[recipeId]));
     craftingObject = {
         'componentsAdded': [],
         'whichRecipe': whichRecipe,
@@ -90,6 +92,7 @@ function recipeSelectComponents(whichRecipe) {
         'isCreating': false,
         'optionalDyeAdded': false
     }
+
     var componentsRequiredMarkup = '<h4>Requires:</h4><ul>';
     // find all components that the player has that are usable for this recipe as well:
     var availableComponentMarkup = '<h4>Available:</h4><ul>';
@@ -102,6 +105,7 @@ function recipeSelectComponents(whichRecipe) {
         "effectiveness": 0,
         "quality": 0
     };
+
     var totalInfluences = {
         "durability": 0,
         "effectiveness": 0,
@@ -110,6 +114,8 @@ function recipeSelectComponents(whichRecipe) {
     var tempInfluenceObject;
 
     var thisComponentDurability, thisComponentEffectiveness, thisComponentQuality;
+
+
     var thisNumberOfComponents = thisRecipe.components.length;
     for (var i in thisRecipe.components) {
         if (thisRecipe.components[i].influence != null) {
@@ -126,7 +132,7 @@ function recipeSelectComponents(whichRecipe) {
             }
         }
     }
-
+//console.log(thisRecipe.components);
     for (var i in thisRecipe.components) {
         thisItemInfluences = '';
         if (typeof thisRecipe.components[i].influence["effectiveness"] !== "undefined") {
@@ -152,6 +158,7 @@ function recipeSelectComponents(whichRecipe) {
             'quality': thisComponentQuality
         };
 
+//console.log(thisComponentQuality+", "+thisComponentDurability+", "+thisComponentEffectiveness);
         if (!(isNaN(thisRecipe.components[i].type))) {
             // specific item - make sure not already added this (if more than 1 quantity required):
             componentsRequiredMarkup += '<li id="componentType' + thisRecipe.components[i].type + '">' + generateAttributeGraphicMarkup(thisComponentQuality, thisComponentDurability, thisComponentEffectiveness) + '<img src="/images/game-world/inventory-items/' + thisRecipe.components[i].type + '.png" class="planImage" alt="' + currentActiveInventoryItems[thisRecipe.components[i].type].shortname + '"><p>' + thisRecipe.components[i].quantity + 'x ' + currentActiveInventoryItems[thisRecipe.components[i].type].shortname + '</p></li>';
@@ -190,7 +197,7 @@ function recipeSelectComponents(whichRecipe) {
 
 
         // try and find any dyes that could be added to the recipe:
-        // ####
+      
         foundItemGroups = hasItemTypeInInventory('dye');
         if (foundItemGroups.length > 0) {
             for (var j = 0; j < foundItemGroups.length; j++) {
@@ -225,7 +232,7 @@ function releaseLockedSlots() {
 }
 
 function addCraftingComponents(fromSlotId, isADoubleClick) {
-    //console.log(craftingObject);
+   
     var slotId = fromSlotId.substring(8);
     var amountUsed, thisQuantityDisplay, addedToSlot, thisTempAddedObject, okToAddThisComponent;
     // see how many of this type are still required:
@@ -308,6 +315,7 @@ function addCraftingComponents(fromSlotId, isADoubleClick) {
     }
 
     if (allComponentsAdded) {
+      
         // any optional dyes will only account for 10% of the attributes:   
         if (craftingObject.optionalDyeAdded) {
             // adjust the already determined influences to add up to 90% to allow 10% for the dyes:
@@ -429,6 +437,7 @@ function startCraftingProcess() {
     // restore Create button:
     startCrafting.style.display = 'block';
     craftingTimeBarOuter.style.display = 'none';
+
 }
 
 function determineAttributeValue(itemValue, influenceAmount) {
