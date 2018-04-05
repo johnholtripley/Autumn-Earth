@@ -87,7 +87,7 @@ echo buildBreadCrumb('codex/items/'.$cleanURL,'The Codex/Item Index/'.$shortname
 
 echo '<h3>'.$shortname.'</h3>';
 echo '<img src="/images/game-world/inventory-items/'.$itemID.'.png" style="width: auto;" alt="'.$shortname.'">';
-echo '<p>'.$description.'</p>';
+echo '<p>'.str_replace("##contains##", "", $description).'</p>';
 
 
 

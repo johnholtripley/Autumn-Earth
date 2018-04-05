@@ -485,7 +485,7 @@ function generateGenericSlotMarkup(thisItemObject) {
                 }
                 containsItems += thisItemObject.contains[i].quantity + "x " + currentActiveInventoryItems[thisItemObject.contains[i].type].shortname;
             }
-            itemsDescription = itemsDescription.replace('##contains##', containsItems);
+            itemsDescription = itemsDescription.replace('##contains##', 'Contains: '+containsItems);
         }
     }
     slotMarkup += '<p><em>' + theColourPrefix + currentActiveInventoryItems[thisItemObject.type].shortname + ' </em>' + itemsDescription + ' ';
