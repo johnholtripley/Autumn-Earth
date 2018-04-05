@@ -416,6 +416,7 @@ function startCraftingTimer() {
     // hide Create button:
     startCrafting.style.display = 'none';
     // play sound for the active profession:
+    console.log(hero.crafting[currentRecipePanelProfession].name.toLowerCase());
     audio.playSound(soundEffects[hero.crafting[currentRecipePanelProfession].name.toLowerCase()], 0);
 
 }

@@ -18,7 +18,8 @@ var soundsToLoad = {
     'gather4': '../sounds/mining-NOT_MINE-wow.mp3',
     'rain': '../sounds/rain-NOT_MINE-youtube.mp3',
     'questComplete': '../sounds/quest-complete-NOT_MINE-wow.mp3',
-    'dyeing': '../sounds/dyeing-NOT_MINE-wow.mp3'
+    'dyeing': '../sounds/dyeing-NOT_MINE-wow.mp3',
+    'weaving': '../sounds/tailoring-NOT_MINE.mp3'
 };
 
 
@@ -877,6 +878,7 @@ function startCraftingTimer() {
     // hide Create button:
     startCrafting.style.display = 'none';
     // play sound for the active profession:
+    console.log(hero.crafting[currentRecipePanelProfession].name.toLowerCase());
     audio.playSound(soundEffects[hero.crafting[currentRecipePanelProfession].name.toLowerCase()], 0);
 
 }
