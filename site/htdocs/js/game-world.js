@@ -655,10 +655,7 @@ function recipeSelectComponents(whichRecipe) {
     // add the dye slot, only if the created item can be dyed:
     if (currentActiveInventoryItems[thisRecipe.creates].dyeable > 0) {
         componentsRequiredMarkup += '<li id="componentTypeAdditionalDye"><img src="/images/game-world/inventory-items/dye.png" alt=""><p>Dye (optional)</p></li>';
-
-
         // try and find any dyes that could be added to the recipe:
-      
         foundItemGroups = hasItemTypeInInventory('dye');
         if (foundItemGroups.length > 0) {
             for (var j = 0; j < foundItemGroups.length; j++) {
@@ -670,12 +667,6 @@ function recipeSelectComponents(whichRecipe) {
     }
     // add the enchant slot:
     componentsRequiredMarkup += '<li id="componentTypeAdditionalImbue"><img src="/images/game-world/inventory-items/enchant.png" alt=""><p>Imbue item (optional)</p></li>';
-
-
-
-
-
-
 
     componentsRequiredMarkup += '</ul>';
     availableComponentMarkup += '</ul>';
@@ -696,6 +687,7 @@ function addCraftingComponents(fromSlotId, isADoubleClick) {
    
     var slotId = fromSlotId.substring(8);
     var amountUsed, thisQuantityDisplay, addedToSlot, thisTempAddedObject, okToAddThisComponent;
+    var justAddedADye = false;
     // see how many of this type are still required:
     for (var i = 0; i < craftingObject.required.length; i++) {
         // check by type and group:
@@ -733,6 +725,10 @@ function addCraftingComponents(fromSlotId, isADoubleClick) {
                 }
             }
             if (okToAddThisComponent) {
+
+                if(currentActiveInventoryItems[hero.inventory[slotId].type].group == "dye") {
+justAddedADye = true;
+                }
                 amountUsed = craftingObject.required[i].quantity;
                 if (craftingObject.required[i].quantity > hero.inventory[slotId].quantity) {
                     amountUsed = hero.inventory[slotId].quantity;
@@ -756,6 +752,8 @@ function addCraftingComponents(fromSlotId, isADoubleClick) {
     }
     // see if it's an optional dye:
     if (currentActiveInventoryItems[hero.inventory[slotId].type].group == 'dye') {
+        // make sure the dye wasn't just added as part of the recipe:
+     if(!justAddedADye) {   
         craftingObject.componentsAdded.push({ 'fromSlot': slotId, 'quantity': 1, 'type': 'dye' });
         thisQuantityDisplay = document.querySelector('#' + fromSlotId + ' .qty');
         thisQuantityDisplay.classList.add('modified');
@@ -764,6 +762,7 @@ function addCraftingComponents(fromSlotId, isADoubleClick) {
         thisTempAddedObject.quantity = 1;
         document.getElementById('componentTypeAdditionalDye').innerHTML += '<div class="addedItemToRecipe">' + generateCraftingSlotMarkup(thisTempAddedObject) + '</div>';
         craftingObject.optionalDyeAdded = true;
+    }
 
     }
 
