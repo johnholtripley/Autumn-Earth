@@ -243,6 +243,9 @@ $numberOfItemCategories: 20;
     left: 40%;
     // place it at the same location as #craftingSelectComponentsPanel but offset to the left so they're side-by-side:
     @include transform(translateX(-200px));
+    @include mq($wide, 'max') {
+        @include transform(translateX(0px));
+    }
     top: 130px;
     background: #222;
     color: #fff;
