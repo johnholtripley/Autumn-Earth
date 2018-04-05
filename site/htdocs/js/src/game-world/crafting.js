@@ -115,9 +115,9 @@ function recipeSelectComponents(whichRecipe) {
         "effectiveness": 0,
         "quality": 0
     };
-    var tempInfluenceObject;
 
-    var thisComponentDurability, thisComponentEffectiveness, thisComponentQuality;
+
+    var thisComponentDurability, thisComponentEffectiveness, thisComponentQuality, thisComponentFound;
 
 
     var thisNumberOfComponents = thisRecipe.components.length;
@@ -138,6 +138,7 @@ function recipeSelectComponents(whichRecipe) {
     }
     //console.log(thisRecipe.components);
     for (var i in thisRecipe.components) {
+        thisComponentFound = false;
         thisItemInfluences = '';
         if (typeof thisRecipe.components[i].influence["effectiveness"] !== "undefined") {
             thisComponentEffectiveness = thisRecipe.components[i].influence["effectiveness"];
@@ -171,6 +172,7 @@ function recipeSelectComponents(whichRecipe) {
                     // 'lock' this slot:
                     document.getElementById('slot' + foundItemGroups[j]).classList.add('locked');
                     componentsFound++;
+                    thisComponentFound = true;
                 }
             }
         } else {
@@ -187,15 +189,19 @@ function recipeSelectComponents(whichRecipe) {
                     // 'lock' this slot:
                     document.getElementById('slot' + foundItemGroups[j]).classList.add('locked');
                     componentsFound++;
+                    thisComponentFound = true;
                 }
             }
         }
         craftingObject.required.push({ 'type': thisRecipe.components[i].type, 'quantity': thisRecipe.components[i].quantity });
-        console.log(previousRecipeType);
+           if(!thisComponentFound) {
+            availableComponentMarkup += '<li class="componentMissing">You\'re missing a component type</li>';
+        }
         if (thisRecipe.components[i].type != previousRecipeType) {
             availableComponentMarkup += '</ul><ul>';
         }
         previousRecipeType = thisRecipe.components[i].type;
+
     }
 
     if (componentsFound == 0) {
