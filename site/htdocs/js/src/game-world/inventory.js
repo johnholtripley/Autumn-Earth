@@ -141,6 +141,53 @@ function hasItemInInventory(itemType, amountNeeded) {
 }
 
 
+
+
+
+
+
+
+function hasItemsInInventory(itemsToAdd) {
+    // takes an array of objects and checks if all of them exist in the inventory:
+    // (if any value is undefined, it can be any value)
+    var allItemsFound = true;
+    var quantityForThisItemFound, allOfTheseAttributesMatch;
+    for (var i = 0; i < itemsToAdd.length; i++) {
+        if (typeof itemsToAdd[i].quantity === "undefined") {
+            itemsToAdd[i].quantity = 1;
+        }
+        quantityForThisItemFound = 0;
+        var inventoryKeysFound = getObjectKeysForInnerValue(hero.inventory, itemsToAdd[i].type, "type");
+        if (inventoryKeysFound.length > 0) {
+            for (var j = 0; j < inventoryKeysFound.length; j++) {
+                // check any defined values against this slot
+                for (var k in itemsToAdd[i]) {
+                    allOfTheseAttributesMatch = true;
+                    // ignore quantity attributes:
+                    if (k != "quantity") {
+                        console.log(hero.inventory[(inventoryKeysFound[j])][k] + "!=" + itemsToAdd[i][k]);
+                        if (hero.inventory[(inventoryKeysFound[j])][k] != itemsToAdd[i][k]) {
+                            allOfTheseAttributesMatch = false;
+                        }
+                    }
+                }
+                if (allOfTheseAttributesMatch) {
+                    quantityForThisItemFound += hero.inventory[(inventoryKeysFound[j])]['quantity'];
+                }
+            }
+        }
+        if (quantityForThisItemFound < itemsToAdd[i].quantity) {
+            allItemsFound = false;
+        }
+    }
+    return allItemsFound;
+}
+
+
+
+
+
+
 function findSlotItemIdInInventory(itemType) {
     var slotsFound = [];
     for (var key in hero.inventory) {
@@ -485,7 +532,7 @@ function generateGenericSlotMarkup(thisItemObject) {
                 }
                 containsItems += thisItemObject.contains[i].quantity + "x " + currentActiveInventoryItems[thisItemObject.contains[i].type].shortname;
             }
-            itemsDescription = itemsDescription.replace('##contains##', 'Contains: '+containsItems);
+            itemsDescription = itemsDescription.replace('##contains##', 'Contains: ' + containsItems);
         }
     }
     slotMarkup += '<p><em>' + theColourPrefix + currentActiveInventoryItems[thisItemObject.type].shortname + ' </em>' + itemsDescription + ' ';

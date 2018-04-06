@@ -2732,6 +2732,53 @@ function hasItemInInventory(itemType, amountNeeded) {
 }
 
 
+
+
+
+
+
+
+function hasItemsInInventory(itemsToAdd) {
+    // takes an array of objects and checks if all of them exist in the inventory:
+    // (if any value is undefined, it can be any value)
+    var allItemsFound = true;
+    var quantityForThisItemFound, allOfTheseAttributesMatch;
+    for (var i = 0; i < itemsToAdd.length; i++) {
+        if (typeof itemsToAdd[i].quantity === "undefined") {
+            itemsToAdd[i].quantity = 1;
+        }
+        quantityForThisItemFound = 0;
+        var inventoryKeysFound = getObjectKeysForInnerValue(hero.inventory, itemsToAdd[i].type, "type");
+        if (inventoryKeysFound.length > 0) {
+            for (var j = 0; j < inventoryKeysFound.length; j++) {
+                // check any defined values against this slot
+                for (var k in itemsToAdd[i]) {
+                    allOfTheseAttributesMatch = true;
+                    // ignore quantity attributes:
+                    if (k != "quantity") {
+                        console.log(hero.inventory[(inventoryKeysFound[j])][k] + "!=" + itemsToAdd[i][k]);
+                        if (hero.inventory[(inventoryKeysFound[j])][k] != itemsToAdd[i][k]) {
+                            allOfTheseAttributesMatch = false;
+                        }
+                    }
+                }
+                if (allOfTheseAttributesMatch) {
+                    quantityForThisItemFound += hero.inventory[(inventoryKeysFound[j])]['quantity'];
+                }
+            }
+        }
+        if (quantityForThisItemFound < itemsToAdd[i].quantity) {
+            allItemsFound = false;
+        }
+    }
+    return allItemsFound;
+}
+
+
+
+
+
+
 function findSlotItemIdInInventory(itemType) {
     var slotsFound = [];
     for (var key in hero.inventory) {
@@ -3076,7 +3123,7 @@ function generateGenericSlotMarkup(thisItemObject) {
                 }
                 containsItems += thisItemObject.contains[i].quantity + "x " + currentActiveInventoryItems[thisItemObject.contains[i].type].shortname;
             }
-            itemsDescription = itemsDescription.replace('##contains##', 'Contains: '+containsItems);
+            itemsDescription = itemsDescription.replace('##contains##', 'Contains: ' + containsItems);
         }
     }
     slotMarkup += '<p><em>' + theColourPrefix + currentActiveInventoryItems[thisItemObject.type].shortname + ' </em>' + itemsDescription + ' ';
@@ -6580,7 +6627,7 @@ function loadShopData(shopJSONData) {
 
 
 function getQuestJournal() {
-    getJSON("/game-world/getQuestJournalEntries.php?chr="+characterId, function(data) {
+    getJSON("/game-world/getQuestJournalEntries.php?chr=" + characterId, function(data) {
         UI.buildQuestJournal(data.markup, data.regions);
         findInventoryItemData();
     }, function(status) {
@@ -6656,7 +6703,7 @@ function findInventoryItemData() {
             // get what's created:
             itemIdsToGet.push(hero.crafting[i].recipes[(hero.crafting[i].filters['All'][j])].creates);
             // get components:
-            
+
             for (var k in hero.crafting[i].recipes[(hero.crafting[i].filters['All'][j])].components) {
                 if (!(isNaN(hero.crafting[i].recipes[(hero.crafting[i].filters['All'][j])].components[k].type))) {
                     itemIdsToGet.push(hero.crafting[i].recipes[(hero.crafting[i].filters['All'][j])].components[k].type);
@@ -7394,14 +7441,14 @@ function update() {
                 gatheringPanel.classList.remove("active");
                 gatheringStopped();
             }
-        } 
-         if (postObject.active) {
+        }
+        if (postObject.active) {
             if (!(isInRange(hero.x, hero.y, postObject.x, postObject.y, closeDialogueDistance / 2))) {
 
                 UI.closePost();
             }
         }
-                 if (retinueObject.active) {
+        if (retinueObject.active) {
             if (!(isInRange(hero.x, hero.y, retinueObject.x, retinueObject.y, closeDialogueDistance / 2))) {
 
                 UI.closeRetinuePanel();
@@ -7469,7 +7516,7 @@ function update() {
     if (retinueObject.active) {
         UI.updateRetinueTimers();
     }
-    if(craftingObject.isCreating) {
+    if (craftingObject.isCreating) {
         processCrafting();
     }
 }
@@ -7828,19 +7875,19 @@ function processSpeech(thisObjectSpeaking, thisSpeechPassedIn, thisSpeechCode, i
                                 var allItemsToGive = [];
                                 var thisQuantity;
                                 for (var i = 0; i < itemsToGive.length; i++) {
-                             
+
 
                                     if (!hasItemInInventory(itemsToGive[i].type, itemsToGive[i].quantity)) {
                                         allItemsFound = false;
                                     }
                                 }
-                       
+
                                 if (allItemsFound) {
 
                                     if (questData[questId].whatIsRequiredForCompletion == "give") {
                                         // remove items:
                                         for (var i = 0; i < itemsToGive.length; i++) {
-                                        
+
                                             removeItemTypeFromInventory(itemsToGive[i].type, itemsToGive[i].quantity);
                                         }
                                     }
@@ -7855,6 +7902,26 @@ function processSpeech(thisObjectSpeaking, thisSpeechPassedIn, thisSpeechCode, i
                                 }
 
                                 break;
+                            case "craft":
+                                // build object required:
+                                var theseCraftedObjects = [];
+                                var thisCraftedObject;
+                                for (var i = 0; i < questData[questId].itemsNeededForCompletion.length; i++) {
+                                    thisCraftedObject = JSON.parse(JSON.stringify(questData[questId].itemsNeededForCompletion[i]));
+                                    // make sure the player has crafted it:
+                                    thisCraftedObject.hallmark = 0 - characterId;
+                                    theseCraftedObjects.push(thisCraftedObject);
+                                }
+                                if (hasItemsInInventory(theseCraftedObjects)) {
+                                    thisSpeech = questSpeech[2];
+                                    closeQuest(thisObjectSpeaking, questId);
+                                } else {
+                                    // show 'underway' text:
+                                    thisSpeech = questSpeech[1];
+                                    // keep the NPC on this quest speech:
+                                    thisObjectSpeaking.speechIndex--;
+                                }
+                                break;
                             case "multi":
                                 var allSubQuestsRequired = questData[questId].subQuestsRequiredForCompletion.split(",");
                                 var allSubQuestsComplete = true;
@@ -7868,7 +7935,7 @@ function processSpeech(thisObjectSpeaking, thisSpeechPassedIn, thisSpeechCode, i
                                             var itemsToGive = questData[allSubQuestsRequired[k]].startItemsReceived.split(",");
                                             var allItemsToGive = [];
                                             for (var j = 0; j < itemsToGive.length; j++) {
-                                              
+
                                                 if (!hasItemInInventory(itemsToGive[i].type, itemsToGive[i].quantity)) {
                                                     allSubQuestsComplete = false;
                                                 }
@@ -7936,8 +8003,8 @@ function processSpeech(thisObjectSpeaking, thisSpeechPassedIn, thisSpeechCode, i
                                 var currentThresholdValue = accessDynamicVariable(questData[questId].whatIsRequiredForCompletion);
 
 
-console.log(thresholdValueAtStart);
-console.log(currentThresholdValue);
+                                console.log(thresholdValueAtStart);
+                                console.log(currentThresholdValue);
 
                                 var thisQuestIsComplete = false;
                                 // check if it's an absolute value to check for, or an increment (whether there is a '+' at the start):
@@ -8589,7 +8656,7 @@ function sendNPCPost(postData, attachments) {
     if (attachments) {
         postDataToSend['attachments'] = attachments;
     }
-console.log(JSON.stringify(postDataToSend));
+    console.log(JSON.stringify(postDataToSend));
     getJSONWithParams("/game-world/sendPost.php", 'postData=' + JSON.stringify(postDataToSend), function(data) {
         if (data.success) {
             // show new post notification:

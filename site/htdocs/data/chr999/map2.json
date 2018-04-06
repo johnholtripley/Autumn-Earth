@@ -698,6 +698,49 @@
             },
 
 
+ {
+                "name": "labourer11",
+                "src": "labourer10.png",
+                "width": 20,
+                "length": 20,
+                "spriteWidth": 75,
+                "spriteHeight": 85,
+                "centreX": 56,
+                "centreY": 73,
+                "tileX": 4,
+                "tileY": 27,
+                "movement": ["-"],
+                "facing": "e",
+                "walkThroughDoors": false,
+                "speed": 2,
+                "isCollidable": true,
+                "isMoving": false,
+                "speech": [
+                       ["Craft 3 linen|How's it going?|Great work", "quest", "12"],
+                    ["Nice crafting there", ""]
+                ],
+                "cardGameSpeech":
+                {
+                    "challenge": ["Do you play? Fancy a game then?", "play"],
+                    "win": ["Woo! I won!", ""],
+                    "lose": ["Ahh, you beat me...", ""],
+                    "draw": ["Well played", ""]
+                },
+                "cardSkill": 1,
+                "uniqueCards": [2, 2],
+                "baseCardPack": 0,
+                "animation":
+                {
+                    "walk":
+                    {
+                        "length": 1,
+                        "n": 2,
+                        "e": 3,
+                        "s": 0,
+                        "w": 1
+                    }
+                }
+            },
 
 
 
