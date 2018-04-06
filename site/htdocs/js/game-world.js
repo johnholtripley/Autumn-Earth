@@ -7868,6 +7868,7 @@ function processSpeech(thisObjectSpeaking, thisSpeechPassedIn, thisSpeechCode, i
                             case "give":
                             case "":
 
+/*
                                 // check items:
                                 var theseItemsNeededForCompletion = questData[questId].itemsNeededForCompletion;
                                 var allItemsFound = true;
@@ -7883,6 +7884,12 @@ function processSpeech(thisObjectSpeaking, thisSpeechPassedIn, thisSpeechCode, i
                                 }
 
                                 if (allItemsFound) {
+                                    */
+
+
+
+      
+                                if (hasItemsInInventory(questData[questId].itemsNeededForCompletion)) {
 
                                     if (questData[questId].whatIsRequiredForCompletion == "give") {
                                         // remove items:
