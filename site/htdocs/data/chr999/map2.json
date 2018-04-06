@@ -716,7 +716,7 @@
                 "isCollidable": true,
                 "isMoving": false,
                 "speech": [
-                       ["Craft 3 linen|How's it going?|Great work", "quest", "12"],
+                       ["Craft 3 linen. But make sure it's crimson. I love crimson.|How's it going?|Great work", "quest", "12"],
                     ["Nice crafting there", ""]
                 ],
                 "cardGameSpeech":
