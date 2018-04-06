@@ -2712,6 +2712,9 @@ function canAddItemToInventory(itemObj) {
     }
 }
 
+
+
+/*
 function hasItemInInventory(itemType, amountNeeded) {
     if (typeof amountNeeded === "undefined") {
         var amountNeeded = 1;
@@ -2730,7 +2733,7 @@ function hasItemInInventory(itemType, amountNeeded) {
         return false;
     }
 }
-
+*/
 
 
 
@@ -7866,7 +7869,7 @@ function processSpeech(thisObjectSpeaking, thisSpeechPassedIn, thisSpeechCode, i
                         switch (questData[questId].whatIsRequiredForCompletion) {
                             case "possess":
                             case "give":
-                            case "":     
+                            case "":
                                 if (hasItemsInInventory(questData[questId].itemsNeededForCompletion)) {
                                     if (questData[questId].whatIsRequiredForCompletion == "give") {
                                         // remove items:
@@ -7914,6 +7917,7 @@ function processSpeech(thisObjectSpeaking, thisSpeechPassedIn, thisSpeechCode, i
                                         case "possess":
                                         case "give":
                                         case "":
+                                            /*
                                             var theseItemsNeededForCompletion = questData[allSubQuestsRequired[k]].itemsNeededForCompletion;
                                             var itemsToGive = questData[allSubQuestsRequired[k]].startItemsReceived.split(",");
                                             var allItemsToGive = [];
@@ -7922,6 +7926,24 @@ function processSpeech(thisObjectSpeaking, thisSpeechPassedIn, thisSpeechCode, i
                                                 if (!hasItemInInventory(itemsToGive[i].type, itemsToGive[i].quantity)) {
                                                     allSubQuestsComplete = false;
                                                 }
+                                            }
+*/
+
+                                            if (!(hasItemsInInventory(questData[allSubQuestsRequired[k]].itemsNeededForCompletion))) {
+                                                allSubQuestsComplete = false;
+                                            }
+                                            break;
+                                        case "craft":
+                                            var theseCraftedObjects = [];
+                                            var thisCraftedObject;
+                                            for (var i = 0; i < questData[questId].itemsNeededForCompletion.length; i++) {
+                                                thisCraftedObject = JSON.parse(JSON.stringify(questData[questId].itemsNeededForCompletion[i]));
+                                                // make sure the player has crafted it:
+                                                thisCraftedObject.hallmark = 0 - characterId;
+                                                theseCraftedObjects.push(thisCraftedObject);
+                                            }
+                                            if (!(hasItemsInInventory(theseCraftedObjects))) {
+                                                allSubQuestsComplete = false;
                                             }
                                             break;
                                         case "world":
