@@ -166,26 +166,20 @@ function hasItemsInInventory(itemsToAdd) {
                     
                     // ignore quantity attributes:
                     if (k != "quantity") {
-                        console.log(hero.inventory[(inventoryKeysFound[j])][k] + "!=" + itemsToAdd[i][k]);
-
                         if (hero.inventory[(inventoryKeysFound[j])][k] != itemsToAdd[i][k]) {
                             allOfTheseAttributesMatch = false;
-                            console.log("failed.");
                         }
                     }
                 }
                 if (allOfTheseAttributesMatch) {
                     quantityForThisItemFound += hero.inventory[(inventoryKeysFound[j])]['quantity'];
-                    console.log(">"+quantityForThisItemFound);
                 }
             }
         }
-        console.log(quantityForThisItemFound +"<"+ itemsToAdd[i].quantity);
         if (quantityForThisItemFound < itemsToAdd[i].quantity) {
             allItemsFound = false;
         }
     }
-    console.log("allItemsFound",allItemsFound);
     return allItemsFound;
 }
 

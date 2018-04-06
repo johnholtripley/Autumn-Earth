@@ -1695,36 +1695,12 @@ function processSpeech(thisObjectSpeaking, thisSpeechPassedIn, thisSpeechCode, i
                         switch (questData[questId].whatIsRequiredForCompletion) {
                             case "possess":
                             case "give":
-                            case "":
-
-/*
-                                // check items:
-                                var theseItemsNeededForCompletion = questData[questId].itemsNeededForCompletion;
-                                var allItemsFound = true;
-                                var itemsToGive = questData[questId].startItemsReceived;
-                                var allItemsToGive = [];
-                                var thisQuantity;
-                                for (var i = 0; i < itemsToGive.length; i++) {
-
-
-                                    if (!hasItemInInventory(itemsToGive[i].type, itemsToGive[i].quantity)) {
-                                        allItemsFound = false;
-                                    }
-                                }
-
-                                if (allItemsFound) {
-                                    */
-
-
-
-      
+                            case "":     
                                 if (hasItemsInInventory(questData[questId].itemsNeededForCompletion)) {
-
                                     if (questData[questId].whatIsRequiredForCompletion == "give") {
                                         // remove items:
-                                        for (var i = 0; i < itemsToGive.length; i++) {
-
-                                            removeItemTypeFromInventory(itemsToGive[i].type, itemsToGive[i].quantity);
+                                        for (var i = 0; i < questData[questId].itemsNeededForCompletion.length; i++) {
+                                            removeItemTypeFromInventory(questData[questId].itemsNeededForCompletion[i].type, questData[questId].itemsNeededForCompletion[i].quantity);
                                         }
                                     }
                                     // close quest:
