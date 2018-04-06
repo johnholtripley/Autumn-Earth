@@ -2752,25 +2752,31 @@ function hasItemsInInventory(itemsToAdd) {
         if (inventoryKeysFound.length > 0) {
             for (var j = 0; j < inventoryKeysFound.length; j++) {
                 // check any defined values against this slot
+                allOfTheseAttributesMatch = true;
                 for (var k in itemsToAdd[i]) {
-                    allOfTheseAttributesMatch = true;
+                    
                     // ignore quantity attributes:
                     if (k != "quantity") {
                         console.log(hero.inventory[(inventoryKeysFound[j])][k] + "!=" + itemsToAdd[i][k]);
+
                         if (hero.inventory[(inventoryKeysFound[j])][k] != itemsToAdd[i][k]) {
                             allOfTheseAttributesMatch = false;
+                            console.log("failed.");
                         }
                     }
                 }
                 if (allOfTheseAttributesMatch) {
                     quantityForThisItemFound += hero.inventory[(inventoryKeysFound[j])]['quantity'];
+                    console.log(">"+quantityForThisItemFound);
                 }
             }
         }
+        console.log(quantityForThisItemFound +"<"+ itemsToAdd[i].quantity);
         if (quantityForThisItemFound < itemsToAdd[i].quantity) {
             allItemsFound = false;
         }
     }
+    console.log("allItemsFound",allItemsFound);
     return allItemsFound;
 }
 

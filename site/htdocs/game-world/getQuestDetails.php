@@ -153,14 +153,13 @@ extract($innerrow);
 	switch ($whatIsRequiredForCompletion) {
 		case "possess":
 		case "give":
-		
-		case "":
-		$outputJson .= '"itemsNeededForCompletion": "'.$itemsNeededForCompletion.'",';
-		
-		break;
 		case "craft":
+		case "":
 		$outputJson .= '"itemsNeededForCompletion": '.$itemsNeededForCompletion.',';
+		
 		break;
+		
+	
 
 		case "multi":
 		$outputJson .= '"subQuestsRequiredForCompletion": "'.$subQuestsRequiredForCompletion.'",';

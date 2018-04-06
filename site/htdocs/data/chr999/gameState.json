@@ -84,7 +84,7 @@
                 "0-9":
         {
             "type": 12,
-            "quantity": 2,
+            "quantity": 6,
             "quality": 100,
             "durability": 100,
             "currentWear": 0,

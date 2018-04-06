@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 05, 2018 at 12:10 PM
+-- Generation Time: Apr 06, 2018 at 01:58 PM
 -- Server version: 10.1.30-MariaDB
 -- PHP Version: 7.0.27
 
@@ -666,10 +666,10 @@ INSERT INTO `tblinventoryitems` (`itemID`, `shortname`, `description`, `priceCod
 (25, 'Spring water', '', '4', '49.0', '81.0', 63, 63, NULL, NULL, 'spring-water', '', '0', 0, 0, '0', '0', NULL, NULL, 0, 0, 0, 1, 0, NULL, NULL),
 (26, 'Wood Ash', '', '4', '49.0', '81.0', 63, 63, NULL, NULL, 'wood-ash', '', '0', 0, 0, '0', '0', NULL, NULL, 0, 0, 0, 1, 0, NULL, NULL),
 (27, 'Apple Wood', '', '4', '49.0', '81.0', 63, 63, NULL, NULL, 'apple-wood', '', '0', 0, 0, '0', '0', NULL, NULL, 0, 0, 0, 1, 0, NULL, NULL),
-(28, 'Lye', 'Used for bleaching', '4', '49.0', '81.0', 63, 63, NULL, NULL, 'lye', '', '0', 0, 0, '0', '0', NULL, NULL, 0, 8, 1, 1, 0, NULL, NULL),
+(28, 'Lye', 'Used for bleaching', '4', '49.0', '81.0', 63, 63, NULL, NULL, 'lye', '', '0', 0, 0, '0', 'dye', NULL, NULL, 0, 8, 1, 1, 0, NULL, NULL),
 (29, 'Green Dye Recipe', 'Learn how to make a green dye.', '4', '49.0', '81.0', 63, 63, NULL, NULL, '', 'recipe', '9', 0, 0, '0', 'scribe', NULL, NULL, 0, 0, 0, 1, 0, NULL, NULL),
 (30, 'Weaver\'s Loom', 'Tools for weaving and tailoring', '1', '20.0', '24.0', 0, 0, NULL, NULL, 'weavers-loom', 'craft', '1', 0, 0, '0', '0', NULL, NULL, 0, 0, 0, 1, 0, NULL, NULL),
-(31, 'Wrapped gift', 'Double click to see what\'s inside. Contains: ##contains##', '4', '49.0', '81.0', 63, 63, NULL, NULL, 'wrapped-gift', 'container', '0', 0, 0, '0', '0', NULL, NULL, 0, 0, 0, 1, 0, NULL, NULL),
+(31, 'Wrapped gift', 'Double click to see what\'s inside. ##contains##', '4', '49.0', '81.0', 63, 63, NULL, NULL, 'wrapped-gift', 'container', '0', 0, 0, '0', '0', NULL, NULL, 0, 0, 0, 1, 0, NULL, NULL),
 (32, 'Book', '', '4', '12.0', '6.0', 20, 13, NULL, NULL, 'book', 'book', '0', 0, 0, '0', '0', NULL, NULL, 1, 0, 1, 1, 0, NULL, NULL),
 (33, 'Parchment', '', '4', '49.0', '81.0', 63, 63, NULL, NULL, 'parchment', 'book', '0', 0, 0, '0', '0', NULL, NULL, 1, 0, 1, 1, 0, NULL, NULL),
 (34, 'Chocobo Card', 'A chocobo card. Pweeeek!', '4', '49.0', '81.0', 63, 63, NULL, NULL, 'card-chocobo', 'card', '2', 0, 0, '0', '0', '', NULL, 0, 0, 0, 1, 0, NULL, NULL),
@@ -1432,7 +1432,7 @@ CREATE TABLE `tblquests` (
   `isRepeatable` tinyint(1) NOT NULL,
   `childOf` int(11) DEFAULT NULL,
   `startItemsReceived` longtext,
-  `itemsNeededForCompletion` varchar(255) DEFAULT NULL,
+  `itemsNeededForCompletion` longtext,
   `itemsReceivedOnCompletion` longtext CHARACTER SET utf8 COLLATE utf8_bin,
   `whatIsRequiredForCompletion` varchar(128) NOT NULL,
   `titleGainedAfterCompletion` int(11) DEFAULT NULL,
@@ -1448,13 +1448,15 @@ INSERT INTO `tblquests` (`questID`, `journalTitle`, `journalDesc`, `questRegion`
 (1, 'Pass the mordant', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 'Iylan', 0, NULL, '[{\"type\":9,\"colour\":16}]', '9', '[{\"type\":\"2/3/5\",\"quantity\":6},{\"type\":\"follower\"}]', 'give', 4, '', NULL),
 (2, 'An unexpected journey', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 'Iylan', 0, NULL, '', '', '[{\"type\":9},{\"type\":14},{\"type\":\"$\",\"quantity\":10000}]', 'world', NULL, '', NULL),
 (3, 'A longer journey', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 'Iylan', 1, NULL, '', '', '', 'hero.stats.numberOfcardsFlipped', NULL, '+2', NULL),
-(4, 'A hero\'s peregrination', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 'Iylan', 0, NULL, '[{\"type\":5},{\"type\":9,\"colour\":16}]', '5x19', '[{\"type\":9},{\"type\":21,\"quantity\":2}]', 'possess', 7, '', NULL),
+(4, 'A hero\'s peregrination', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 'Iylan', 0, NULL, '[{\"type\":5},{\"type\":9,\"colour\":16}]', '[{\"type\":19,\"quantity\":5}]', '[{\"type\":9},{\"type\":21,\"quantity\":2}]', 'possess', 7, '', NULL),
 (5, 'A much longer task', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 'Iylan', 0, NULL, '', NULL, '[{\"type\":9},{\"type\":21,\"quantity\":2}]', 'multi', 7, '', '6,7'),
 (6, 'sub task 1', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 'Iylan', 0, NULL, '', '', '', 'world', NULL, '', NULL),
 (7, 'sub task 2', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque velit in ex ultricies, eget finibus dui vulputate. Aenean lobortis turpis vel tellus iaculis, sit amet accumsan nisl rhoncus. Etiam rhoncus sit amet libero nec bibendum.', 'Iylan', 0, NULL, '', '', '', 'hero.stats.numberOfcardsFlipped', NULL, '+2', NULL),
 (8, 'Win a card game', 'Beat NPC at cards, and got a rare chocobo card', 'Iylan', 0, NULL, '', '0', '[{\"type\":36}]', '', NULL, '', NULL),
 (9, 'Find the wizard', 'Locate the wizard', 'Brythillion', 0, NULL, '', '0', '[{\"type\":20}]', '', NULL, '', NULL),
-(10, 'Escort to Brythillion', 'Help a traveller find their way to Brythillion.', 'Brythillion', 0, NULL, '', '0', '[{\"type\":20}]', 'escort', NULL, '', NULL);
+(10, 'Escort to Brythillion', 'Help a traveller find their way to Brythillion.', 'Brythillion', 0, NULL, '', '0', '[{\"type\":20}]', 'escort', NULL, '', NULL),
+(11, 'Craft tutorial', 'Craft 5 items. Any items.', 'Brythillion', 0, NULL, '', '0', '[{\"type\":20}]', 'hero.stats.itemsCrafted', NULL, '+5', NULL),
+(12, 'Craft linen', 'Craft 3 linen. But make sure it\'s crimson', 'Brythillion', 0, NULL, '', '[{\"type\":14,\"quantity\":3,\"colour\":1}]', '[{\"type\":20}]', 'craft', NULL, '', NULL);
 
 -- --------------------------------------------------------
 
@@ -1489,6 +1491,7 @@ CREATE TABLE `tblrecipes` (
   `recipeID` int(11) NOT NULL,
   `components` longtext,
   `creates` int(11) DEFAULT NULL,
+  `hiddenCreates` int(11) DEFAULT NULL,
   `prerequisite` int(11) DEFAULT NULL,
   `profession` int(11) DEFAULT NULL,
   `recipeTier` int(10) NOT NULL,
@@ -1501,22 +1504,22 @@ CREATE TABLE `tblrecipes` (
 -- Dumping data for table `tblrecipes`
 --
 
-INSERT INTO `tblrecipes` (`recipeID`, `components`, `creates`, `prerequisite`, `profession`, `recipeTier`, `recipeName`, `recipeDescription`, `defaultResultingColour`) VALUES
-(0, '[{\r\n			\"type\": 11,\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": {\r\n		\"effectiveness\": 0,\r\n		\"durability\": 0,\r\n		\"quality\": 0\r\n	}\r\n		},\r\n		{\r\n			\"type\": \"mrdt\",\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": {\r\n		\"effectiveness\": 70\r\n	}\r\n\r\n		},\r\n				{\r\n			\"type\": 2,\r\n			\"quantity\": 2,\r\n			\"minQuality\": 0,\r\n			\"influence\": {\r\n			\"quality\": 70\r\n			}\r\n		}\r\n	]', 12, 0, 0, 10, NULL, '', 1),
-(1, '[{\r\n			\"type\": 11,\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": {\r\n		\"effectiveness\": 0,\r\n		\"durability\": 0,\r\n		\"quality\": 0\r\n	}\r\n		},\r\n		{\r\n			\"type\": \"mrdt\",\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": {\r\n		\"effectiveness\": 70\r\n	}\r\n		},\r\n				{\r\n			\"type\": 3,\r\n			\"quantity\": 2,\r\n			\"minQuality\": 0,\r\n			\"influence\": {\r\n			\"quality\": 70\r\n			}\r\n		}\r\n	]', 12, 0, 0, 10, NULL, '', 2),
-(2, '[{\r\n			\"type\": 11,\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": {\r\n		\"effectiveness\": 0,\r\n		\"durability\": 0,\r\n		\"quality\": 0\r\n	}\r\n		},\r\n		{\r\n			\"type\": \"mrdt\",\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": {\r\n		\"effectiveness\": 70\r\n	}\r\n		},\r\n				{\r\n			\"type\": 5,\r\n			\"quantity\": 2,\r\n			\"minQuality\": 0,\r\n			\"influence\": {\r\n			\"quality\": 70\r\n			}\r\n		}\r\n	]', 12, 0, 0, 10, NULL, '', 4),
-(3, '[{\r\n			\"type\": 11,\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": {\r\n		\"effectiveness\": 0,\r\n		\"durability\": 0,\r\n		\"quality\": 0\r\n	}\r\n		},\r\n		{\r\n			\"type\": \"mrdt\",\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": {\r\n		\"effectiveness\": 70\r\n	}\r\n		},\r\n				{\r\n			\"type\": 24,\r\n			\"quantity\": 2,\r\n			\"minQuality\": 0,\r\n			\"influence\": {\r\n			\"quality\": 70\r\n			}\r\n		}\r\n	]', 7, 0, 0, 10, NULL, '', NULL),
-(4, '[{\r\n			\"type\": 26,\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		},\r\n		{\r\n			\"type\": 25,\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		}\r\n	]', 28, 0, 0, 0, NULL, '', NULL),
-(5, '[{\r\n			\"type\": 11,\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": {\r\n		\"effectiveness\": 0,\r\n		\"durability\": 0,\r\n		\"quality\": 0\r\n	}\r\n		},\r\n		{\r\n			\"type\": \"mrdt\",\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		},\r\n				{\r\n			\"type\": 6,\r\n			\"quantity\": 2,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		}\r\n	]', 12, 0, 0, 0, NULL, '', 16),
-(6, '[{\r\n			\"type\": \"dye\",\r\n			\"quantity\": 2,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		}\r\n	]', 12, 0, 0, 0, 'Mix dyes', 'Mix 2 or more dyes to create new colours.', NULL),
-(7, '[{\r\n			\"type\": 27,\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		}\r\n	]', 26, 0, 0, 10, 'Burn Wood', 'Produce Wood Ash by burning', NULL),
-(8, '[{\r\n			\"type\": \"dye\",\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		},\r\n		{\r\n			\"type\": 14,\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		}\r\n	]', 14, 0, 0, 0, 'Dye Linen', 'Colour some linen.', NULL),
-(9, '[{\r\n			\"type\": 11,\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": {\r\n		\"effectiveness\": 0,\r\n		\"durability\": 0,\r\n		\"quality\": 0\r\n	}\r\n		},\r\n		{\r\n			\"type\": \"mrdt\",\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": {\r\n		\"effectiveness\": 70\r\n	}\r\n		},\r\n				{\r\n			\"type\": 23,\r\n			\"quantity\": 2,\r\n			\"minQuality\": 0,\r\n			\"influence\": {\r\n			\"quality\": 70\r\n			}\r\n		}\r\n	]', 12, 0, 0, 0, NULL, '', 6),
-(10, '[{\r\n			\"type\": 1,\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		}\r\n	]', 14, 0, 1, 0, NULL, '', NULL),
-(11, '[{\r\n			\"type\": 15,\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		}\r\n	]', 16, 0, 1, 0, NULL, '', NULL),
-(12, '[{\r\n			\"type\": 37,\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		},{\r\n			\"type\": 38,\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		},{\r\n			\"type\": 39,\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		}\r\n	]', 40, 0, 4, 0, NULL, '', 16),
-(13, '[{\r\n			\"type\": 15,\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		}\r\n	]', 49, 0, 1, 0, NULL, '', NULL),
-(14, '[{\r\n			\"type\": \"dye\",\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		},\r\n		{\r\n			\"type\": 15,\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		}\r\n	]', 15, 0, 0, 0, 'Dye Wool', 'Colour some wool.', NULL);
+INSERT INTO `tblrecipes` (`recipeID`, `components`, `creates`, `hiddenCreates`, `prerequisite`, `profession`, `recipeTier`, `recipeName`, `recipeDescription`, `defaultResultingColour`) VALUES
+(0, '[{\r\n			\"type\": 11,\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": {\r\n		\"effectiveness\": 0,\r\n		\"durability\": 0,\r\n		\"quality\": 0\r\n	}\r\n		},\r\n		{\r\n			\"type\": \"mrdt\",\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": {\r\n		\"effectiveness\": 70\r\n	}\r\n\r\n		},\r\n				{\r\n			\"type\": 2,\r\n			\"quantity\": 2,\r\n			\"minQuality\": 0,\r\n			\"influence\": {\r\n			\"quality\": 70\r\n			}\r\n		}\r\n	]', 12, NULL, 0, 0, 10, NULL, '', 1),
+(1, '[{\r\n			\"type\": 11,\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": {\r\n		\"effectiveness\": 0,\r\n		\"durability\": 0,\r\n		\"quality\": 0\r\n	}\r\n		},\r\n		{\r\n			\"type\": \"mrdt\",\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": {\r\n		\"effectiveness\": 70\r\n	}\r\n		},\r\n				{\r\n			\"type\": 3,\r\n			\"quantity\": 2,\r\n			\"minQuality\": 0,\r\n			\"influence\": {\r\n			\"quality\": 70\r\n			}\r\n		}\r\n	]', 12, NULL, 0, 0, 10, NULL, '', 2),
+(2, '[{\r\n			\"type\": 11,\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": {\r\n		\"effectiveness\": 0,\r\n		\"durability\": 0,\r\n		\"quality\": 0\r\n	}\r\n		},\r\n		{\r\n			\"type\": \"mrdt\",\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": {\r\n		\"effectiveness\": 70\r\n	}\r\n		},\r\n				{\r\n			\"type\": 5,\r\n			\"quantity\": 2,\r\n			\"minQuality\": 0,\r\n			\"influence\": {\r\n			\"quality\": 70\r\n			}\r\n		}\r\n	]', 12, NULL, 0, 0, 10, NULL, '', 4),
+(3, '[{\r\n			\"type\": 11,\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": {\r\n		\"effectiveness\": 0,\r\n		\"durability\": 0,\r\n		\"quality\": 0\r\n	}\r\n		},\r\n		{\r\n			\"type\": \"mrdt\",\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": {\r\n		\"effectiveness\": 70\r\n	}\r\n		},\r\n				{\r\n			\"type\": 24,\r\n			\"quantity\": 2,\r\n			\"minQuality\": 0,\r\n			\"influence\": {\r\n			\"quality\": 70\r\n			}\r\n		}\r\n	]', 7, NULL, 0, 0, 10, NULL, '', NULL),
+(4, '[{\r\n			\"type\": 26,\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		},\r\n		{\r\n			\"type\": 25,\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		}\r\n	]', 28, NULL, 0, 0, 0, NULL, '', NULL),
+(5, '[{\r\n			\"type\": 11,\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": {\r\n		\"effectiveness\": 0,\r\n		\"durability\": 0,\r\n		\"quality\": 0\r\n	}\r\n		},\r\n		{\r\n			\"type\": \"mrdt\",\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		},\r\n				{\r\n			\"type\": 6,\r\n			\"quantity\": 2,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		}\r\n	]', 12, NULL, 0, 0, 0, NULL, '', 16),
+(6, '[{\r\n			\"type\": \"dye\",\r\n			\"quantity\": 2,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		}\r\n	]', 12, NULL, 0, 0, 0, 'Mix dyes', 'Mix 2 or more dyes to create new colours.', NULL),
+(7, '[{\r\n			\"type\": 27,\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		}\r\n	]', 26, NULL, 0, 0, 10, 'Burn Wood', 'Produce Wood Ash by burning', NULL),
+(8, '[{\r\n			\"type\": \"dye\",\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		},\r\n		{\r\n			\"type\": 14,\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		}\r\n	]', 14, 11, 0, 0, 0, 'Dye Linen', 'Colour some linen.', NULL),
+(9, '[{\r\n			\"type\": 11,\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": {\r\n		\"effectiveness\": 0,\r\n		\"durability\": 0,\r\n		\"quality\": 0\r\n	}\r\n		},\r\n		{\r\n			\"type\": \"mrdt\",\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": {\r\n		\"effectiveness\": 70\r\n	}\r\n		},\r\n				{\r\n			\"type\": 23,\r\n			\"quantity\": 2,\r\n			\"minQuality\": 0,\r\n			\"influence\": {\r\n			\"quality\": 70\r\n			}\r\n		}\r\n	]', 12, NULL, 0, 0, 0, NULL, '', 6),
+(10, '[{\r\n			\"type\": 1,\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		}\r\n	]', 14, NULL, 0, 1, 0, NULL, '', NULL),
+(11, '[{\r\n			\"type\": 15,\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		}\r\n	]', 16, NULL, 0, 1, 0, NULL, '', NULL),
+(12, '[{\r\n			\"type\": 37,\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		},{\r\n			\"type\": 38,\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		},{\r\n			\"type\": 39,\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		}\r\n	]', 40, NULL, 0, 4, 0, NULL, '', 16),
+(13, '[{\r\n			\"type\": 15,\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		}\r\n	]', 49, NULL, 0, 1, 0, NULL, '', NULL),
+(14, '[{\r\n			\"type\": \"dye\",\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		},\r\n		{\r\n			\"type\": 15,\r\n			\"quantity\": 1,\r\n			\"minQuality\": 0,\r\n			\"influence\": null\r\n		}\r\n	]', 15, 11, 0, 0, 0, 'Dye Wool', 'Colour some wool.', NULL);
 
 -- --------------------------------------------------------
 
@@ -1585,9 +1588,9 @@ CREATE TABLE `tblretinuefollowers` (
 --
 
 INSERT INTO `tblretinuefollowers` (`followerID`, `followerName`, `followerCleanURL`, `characterIdFollowing`, `activeQuestId`, `followerRewardFromQuestId`, `isEnabled`, `questStartedTime`, `followerSex`, `followerRace`, `currentContinent`, `followerMapCoordinateX`, `followerMapCoordinateY`) VALUES
-(1, 'Eila Myrborn', 'eila-myrborn', 999, 149, NULL, 1, '2018-03-27 12:07:38', 'female', 'huldra', 'eastern-continent', 117, 310),
-(2, 'Nellaith Wispfael', 'nellaith-wispfael', 999, 153, NULL, 1, '2018-03-27 12:07:29', 'female', 'huldra', 'eastern-continent', 117, 310),
-(59, 'Garmund  Wispmote', 'garmund-wispmote', 999, 153, 1, 1, '2018-03-27 12:07:29', 'male', 'huldra', 'eastern-continent', 117, 310);
+(1, 'Eila Myrborn', 'eila-myrborn', 999, 154, NULL, 1, '2018-04-05 14:52:18', 'female', 'huldra', 'eastern-continent', 70, 198),
+(2, 'Nellaith Wispfael', 'nellaith-wispfael', 999, 154, NULL, 1, '2018-04-05 14:52:18', 'female', 'huldra', 'eastern-continent', 191, 310),
+(59, 'Garmund  Wispmote', 'garmund-wispmote', 999, 151, 1, 1, '2018-04-05 14:52:29', 'male', 'huldra', 'eastern-continent', 191, 310);
 
 -- --------------------------------------------------------
 
@@ -1643,7 +1646,9 @@ INSERT INTO `tblretinuequests` (`questID`, `questName`, `questCleanURL`, `questD
 (152, 'Lend a hand', 'lend-a-hand', 'The sea is in need. Get over there and help.', 'rescue', 'eastern-continent', 117, 310, 0, 0, 'sea', '0', 0, 3, 1, '[{\"type\":2,\"quantity\":2,\"quality\":100,\"durability\":100,\"currentWear\":0,\"effectiveness\":100,\"colour\":\"0\",\"enchanted\":0,\"hallmark\":0,\"inscription\":\"\"}]', NULL, '2018-03-14 15:51:04', 1521083528),
 (153, 'Bring home the goods', 'bring-home-the-goods-3', 'Gather what kelp you can.', 'resource gathering', 'eastern-continent', 191, 310, 0, 0, 'sea', '0', 0, 2, 1, '[{\"type\":2,\"quantity\":2,\"quality\":100,\"durability\":100,\"currentWear\":0,\"effectiveness\":100,\"colour\":\"0\",\"enchanted\":0,\"hallmark\":0,\"inscription\":\"\"}]', NULL, '2018-03-26 15:14:23', 1522136462),
 (154, 'To the rescue', 'to-the-rescue', 'The sea is in need. Get over there and help.', 'rescue', 'eastern-continent', 76, 119, 0, 0, 'sea', '0', 0, 2, 1, '[{\"type\":2,\"quantity\":2,\"quality\":100,\"durability\":100,\"currentWear\":0,\"effectiveness\":100,\"colour\":\"0\",\"enchanted\":0,\"hallmark\":0,\"inscription\":\"\"}]', NULL, '2018-03-27 12:08:45', 1522194743),
-(155, 'Get yer boots on', 'get-yer-boots-on', 'There\'s plenty of salvage to be had in the sea.', 'salvage', 'eastern-continent', 340, 32, 0, 0, 'sea', '0', 0, 3, 1, '[{\"type\":2,\"quantity\":2,\"quality\":100,\"durability\":100,\"currentWear\":0,\"effectiveness\":100,\"colour\":\"0\",\"enchanted\":0,\"hallmark\":0,\"inscription\":\"\"}]', NULL, '2018-03-27 12:08:45', 1522194743);
+(155, 'Get yer boots on', 'get-yer-boots-on', 'There\'s plenty of salvage to be had in the sea.', 'salvage', 'eastern-continent', 340, 32, 0, 0, 'sea', '0', 0, 3, 1, '[{\"type\":2,\"quantity\":2,\"quality\":100,\"durability\":100,\"currentWear\":0,\"effectiveness\":100,\"colour\":\"0\",\"enchanted\":0,\"hallmark\":0,\"inscription\":\"\"}]', NULL, '2018-03-27 12:08:45', 1522194743),
+(156, 'Get yer boots on', 'get-yer-boots-on-2', 'There\'s plenty of salvage to be had in the sea.', 'salvage', 'eastern-continent', 336, 61, 0, 0, 'sea', '0', 0, 3, 1, '[{\"type\":2,\"quantity\":2,\"quality\":100,\"durability\":100,\"currentWear\":0,\"effectiveness\":100,\"colour\":\"0\",\"enchanted\":0,\"hallmark\":0,\"inscription\":\"\"}]', NULL, '2018-04-05 15:06:53', 1522948488),
+(157, 'Mapping the wilds', 'mapping-the-wilds-3', 'Map out the region', 'cartography', 'eastern-continent', 319, 87, 0, 0, 'sea', '0', 0, 2, 1, '[{\"type\":2,\"quantity\":2,\"quality\":100,\"durability\":100,\"currentWear\":0,\"effectiveness\":100,\"colour\":\"0\",\"enchanted\":0,\"hallmark\":0,\"inscription\":\"\"}]', NULL, '2018-04-05 15:06:53', 1522948488);
 
 -- --------------------------------------------------------
 
@@ -1702,7 +1707,9 @@ INSERT INTO `tblretinuequestsactive` (`questActiveId`, `questIdActiveOrComplete`
 (39, 134, 999),
 (40, 152, 999),
 (41, 153, 999),
-(42, 149, 999);
+(42, 149, 999),
+(43, 154, 999),
+(44, 151, 999);
 
 -- --------------------------------------------------------
 
@@ -2550,7 +2557,7 @@ ALTER TABLE `tblprofessions`
 -- AUTO_INCREMENT for table `tblquests`
 --
 ALTER TABLE `tblquests`
-  MODIFY `questID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `questID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `tblquestsstatus`
@@ -2586,13 +2593,13 @@ ALTER TABLE `tblretinuefollowers`
 -- AUTO_INCREMENT for table `tblretinuequests`
 --
 ALTER TABLE `tblretinuequests`
-  MODIFY `questID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=156;
+  MODIFY `questID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=158;
 
 --
 -- AUTO_INCREMENT for table `tblretinuequestsactive`
 --
 ALTER TABLE `tblretinuequestsactive`
-  MODIFY `questActiveId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
+  MODIFY `questActiveId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
 
 --
 -- AUTO_INCREMENT for table `tblretinuequesttypes`
