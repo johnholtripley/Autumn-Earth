@@ -121,6 +121,9 @@ function canAddItemToInventory(itemObj) {
     }
 }
 
+
+
+/*
 function hasItemInInventory(itemType, amountNeeded) {
     if (typeof amountNeeded === "undefined") {
         var amountNeeded = 1;
@@ -139,7 +142,7 @@ function hasItemInInventory(itemType, amountNeeded) {
         return false;
     }
 }
-
+*/
 
 
 
