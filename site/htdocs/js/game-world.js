@@ -1600,7 +1600,7 @@ function accessDynamicVariable(variableToUse) {
     var variableComponents = variableToUse.split(".");
     var currentElement = window;
     for (var i = 0; i < variableComponents.length; i++) {
-        if (currentElement[variableComponents[i]]) {
+        if (typeof currentElement[variableComponents[i]] !== "undefined") {
             currentElement = currentElement[variableComponents[i]];
         }
     }
@@ -3735,7 +3735,7 @@ function openQuest(questId) {
                 break;
             default:
                 // threshold quest:
-                questData[questId].valueAtQuestStart = accessDynamicVariable(questData[questId].whatIsRequiredForCompletion);
+                questData[questId].valueAtQuestStart = accessDynamicVariable(questData[questId].whatIsRequiredForCompletion);           
                 break;
         }
         questData[questId].isUnderway = true;
@@ -3751,7 +3751,6 @@ function checkForEscortQuestEnd(whichNPC) {
         var destinationTileCentreY = getTileCentreCoordY(destination[2]);
         if (isInRange(whichNPC.x, whichNPC.y, destinationTileCentreX, destinationTileCentreY, destination[3] * tileW)) {
             // quest complete
-            console.log("escort quest complete!!");
             whichNPC.drawnFacing = turntoFace(whichNPC, hero);
             // remove the reference to it in the hero object:
             for (var i = 0; i < hero.npcsFollowing.length; i++) {
@@ -3827,7 +3826,7 @@ function awardQuestRewards(whichNPC, questRewards, isACollectionQuest) {
         var thisRewardObject = prepareInventoryObject(questRewardToUse);
  // check for variation:
 
-  var rewardTypePossibilities = questRewardToUse.type.split("/");
+  var rewardTypePossibilities = questRewardToUse.type.toString().split("/");
            thisRewardObject.type = getRandomElementFromArray(rewardTypePossibilities);
 
 
@@ -7935,6 +7934,11 @@ function processSpeech(thisObjectSpeaking, thisSpeechPassedIn, thisSpeechCode, i
                                 // threshold quest:
                                 var thresholdValueAtStart = questData[questId].valueAtQuestStart;
                                 var currentThresholdValue = accessDynamicVariable(questData[questId].whatIsRequiredForCompletion);
+
+
+console.log(thresholdValueAtStart);
+console.log(currentThresholdValue);
+
                                 var thisQuestIsComplete = false;
                                 // check if it's an absolute value to check for, or an increment (whether there is a '+' at the start):
                                 if (questData[questId].thresholdNeededForCompletion.charAt(0) == "+") {

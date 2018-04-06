@@ -91,7 +91,7 @@ function openQuest(questId) {
                 break;
             default:
                 // threshold quest:
-                questData[questId].valueAtQuestStart = accessDynamicVariable(questData[questId].whatIsRequiredForCompletion);
+                questData[questId].valueAtQuestStart = accessDynamicVariable(questData[questId].whatIsRequiredForCompletion);           
                 break;
         }
         questData[questId].isUnderway = true;
@@ -107,7 +107,6 @@ function checkForEscortQuestEnd(whichNPC) {
         var destinationTileCentreY = getTileCentreCoordY(destination[2]);
         if (isInRange(whichNPC.x, whichNPC.y, destinationTileCentreX, destinationTileCentreY, destination[3] * tileW)) {
             // quest complete
-            console.log("escort quest complete!!");
             whichNPC.drawnFacing = turntoFace(whichNPC, hero);
             // remove the reference to it in the hero object:
             for (var i = 0; i < hero.npcsFollowing.length; i++) {
@@ -183,7 +182,7 @@ function awardQuestRewards(whichNPC, questRewards, isACollectionQuest) {
         var thisRewardObject = prepareInventoryObject(questRewardToUse);
  // check for variation:
 
-  var rewardTypePossibilities = questRewardToUse.type.split("/");
+  var rewardTypePossibilities = questRewardToUse.type.toString().split("/");
            thisRewardObject.type = getRandomElementFromArray(rewardTypePossibilities);
 
 

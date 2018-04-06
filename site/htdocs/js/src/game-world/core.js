@@ -1810,6 +1810,11 @@ function processSpeech(thisObjectSpeaking, thisSpeechPassedIn, thisSpeechCode, i
                                 // threshold quest:
                                 var thresholdValueAtStart = questData[questId].valueAtQuestStart;
                                 var currentThresholdValue = accessDynamicVariable(questData[questId].whatIsRequiredForCompletion);
+
+
+console.log(thresholdValueAtStart);
+console.log(currentThresholdValue);
+
                                 var thisQuestIsComplete = false;
                                 // check if it's an absolute value to check for, or an increment (whether there is a '+' at the start):
                                 if (questData[questId].thresholdNeededForCompletion.charAt(0) == "+") {

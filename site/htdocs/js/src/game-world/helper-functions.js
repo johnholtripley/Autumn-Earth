@@ -155,7 +155,7 @@ function accessDynamicVariable(variableToUse) {
     var variableComponents = variableToUse.split(".");
     var currentElement = window;
     for (var i = 0; i < variableComponents.length; i++) {
-        if (currentElement[variableComponents[i]]) {
+        if (typeof currentElement[variableComponents[i]] !== "undefined") {
             currentElement = currentElement[variableComponents[i]];
         }
     }
