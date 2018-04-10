@@ -166,13 +166,29 @@ function hasItemsInInventory(itemsToAdd) {
                 // check any defined values against this slot
                 allOfTheseAttributesMatch = true;
                 for (var k in itemsToAdd[i]) {
-                    
-                    // ignore quantity attributes:
-                    if (k != "quantity") {
-                        if (hero.inventory[(inventoryKeysFound[j])][k] != itemsToAdd[i][k]) {
-                            allOfTheseAttributesMatch = false;
-                        }
+
+
+                    switch (k) {
+                        case 'quantity':
+                            // ignore quantity attributes:
+                            break;
+                            // these attributes can be greater than the defined values:
+                        case 'durability':
+                        case 'quality':
+                        case 'effectiveness':
+                            if (hero.inventory[(inventoryKeysFound[j])][k] < itemsToAdd[i][k]) {
+                                allOfTheseAttributesMatch = false;
+                            }
+                            break;
+                        default:
+                            if (hero.inventory[(inventoryKeysFound[j])][k] != itemsToAdd[i][k]) {
+                                allOfTheseAttributesMatch = false;
+                            }
+
                     }
+
+
+
                 }
                 if (allOfTheseAttributesMatch) {
                     quantityForThisItemFound += hero.inventory[(inventoryKeysFound[j])]['quantity'];

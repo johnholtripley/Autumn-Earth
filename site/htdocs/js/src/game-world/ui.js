@@ -1735,6 +1735,7 @@ var UI = {
         if (inventoryCheck[0]) {
             gatheringOutputSlot.innerHTML = "";
             UI.showChangeInInventory(inventoryCheck[1]);
+hero.stats.itemsGathered++;
             gatheringPanel.classList.remove('active');
         } else {
             UI.showNotification("<p>Oops - sorry, no room in your bags</p>");

@@ -435,7 +435,8 @@
         "cardGamesDrawn": 0,
         "numberOfcardsFlipped": 8,
         "retinueMissionsCompleted": 0,
-        "itemsCrafted": 0
+        "itemsCrafted": 0,
+"itemsGathered": 0
     },
     "settings":
     {
