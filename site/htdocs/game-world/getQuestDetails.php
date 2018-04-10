@@ -116,16 +116,19 @@ $followerMapCoordinateY = $homeBaseY;
    
 
 
-
 // create image in /images/retinue folder:
     $followerImage = imagecreatefrompng('../images/retinue/source/'.cleanURL($followerRace).'-'.cleanURL($followerSex).'.png');
-imagepng($followerImage, '../images/retinue/' . mysqli_insert_id() . '.png', 0);
+imagepng($followerImage, '../images/retinue/' . mysqli_insert_id($connection) . '.png', 0);
     imagedestroy($followerImage);
 
 // add the details to the JSON for the quest rewards:
 $itemReceivedJSON[$thisItemKey]['type'] = "follower";
-$itemReceivedJSON[$thisItemKey]['id'] = mysqli_insert_id();
+$itemReceivedJSON[$thisItemKey]['id'] = mysqli_insert_id($connection);
 $itemReceivedJSON[$thisItemKey]['name'] = htmlentities($newFollower[0]);
+
+
+
+
 
 }
 	}
