@@ -51,6 +51,21 @@ function relativeGameTime($time) {
 }
 
 
+
+
+// get colours:
+$coloursQuery = "SELECT * from tblcolours";
+$allColours = [];
+$colourResult = mysqli_query($connection, $coloursQuery) or die ("recipes failed");
+while ($colourRow = mysqli_fetch_array($colourResult)) {
+    extract($colourRow);
+    array_push($allColours, $colourName);
+}
+mysqli_free_result($colourResult);
+
+
+
+
 $allMessagePanels = '';
 $postPanelMarkup = '<div id="postPanel">';
 $postPanelMarkup .= '<div class="draggableBar">Post</div>';
@@ -94,6 +109,15 @@ if($firstElement->type == "$") {
 $inventoryImage = 'coins';
 } else {
 $inventoryImage = $firstElement->type;
+
+
+
+// check for colours:
+if($firstElement->colour > 0) {
+$inventoryImage .= '-'.strtolower($allColours[$firstElement->colour]);
+}
+
+
 }
 $postPanelMarkup .= '<img src="/images/game-world/inventory-items/'.$inventoryImage.'.png" alt=""><span class="qty">'.$firstElement->quantity.'</span>';
 
@@ -112,6 +136,10 @@ if($attachment) {
 $inventoryImage = 'coins';
 			} else {
 $inventoryImage = $thisAttachment->type;
+// check for colours:
+if($thisAttachment->colour > 0) {
+$inventoryImage .= '-'.strtolower($allColours[$thisAttachment->colour]);
+}
 			}
 $allMessagePanels .= '<div class="postSlot"><img src="/images/game-world/inventory-items/'.$inventoryImage.'.png" alt=""><span class="qty">'.$thisAttachment->quantity.'</span></div>';
 }

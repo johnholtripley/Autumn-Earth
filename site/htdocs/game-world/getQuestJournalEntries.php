@@ -25,6 +25,15 @@ $markupToOutput = '<ol>';
 }
 
 
+// get colours:
+$coloursQuery = "SELECT * from tblcolours";
+$allColours = [];
+$colourResult = mysqli_query($connection, $coloursQuery) or die ("recipes failed");
+while ($colourRow = mysqli_fetch_array($colourResult)) {
+    extract($colourRow);
+    array_push($allColours, $colourName);
+}
+mysqli_free_result($colourResult);
 
 $regions = array();
 
@@ -95,7 +104,17 @@ while ($row = mysqli_fetch_array($followerResult)) {
 $markupToOutput .= '<div class="item"><img src="/images/game-world/inventory-items/unknown.png">';
         } else {
               
-            $markupToOutput .= '<div class="item"><img src="/images/game-world/inventory-items/'.$item['type'].'.png">';
+
+$itemNameWithColour = $item['type'];
+// check for colours:
+if(isset($item['colour'])) {
+if($item['colour'] > 0) {
+$itemNameWithColour .= '-'.strtolower($allColours[($item['colour'])]);
+}
+}
+
+
+            $markupToOutput .= '<div class="item"><img src="/images/game-world/inventory-items/'.$itemNameWithColour.'.png">';
 $itemQuery = "SELECT itemid, shortname, description, pricecode from tblinventoryitems where itemid = '".$item['type']."'";
 $itemResult = mysqli_query($connection, $itemQuery) or die ();
 while ($itemRow = mysqli_fetch_array($itemResult)) {
