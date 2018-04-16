@@ -305,7 +305,8 @@ $containsContent = "";
 $colourContent = "0";
 $allItemsAreDyeable = true;
 $numberOfContains = mt_rand(1,count($possibleItems[$thisCategory]));
-for ($i=0;$i<count($numberOfContains);$i++) {
+
+for ($i=0;$i<$numberOfContains;$i++) {
     $thisItem = $possibleItems[$thisCategory][mt_rand(0, count($possibleItems[$thisCategory]) - 1)];
     if(!(in_array($thisItem, $possibleDyeableItems[$thisCategory]))) {
         $allItemsAreDyeable = false;
