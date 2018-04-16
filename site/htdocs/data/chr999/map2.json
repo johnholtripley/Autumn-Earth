@@ -6,7 +6,8 @@
         "isInside": false,
         "ambientSounds":
         {
-            "birdSong": "../sounds/bird-song.mp3"
+            "birdSong": "../sounds/bird-song.mp3",
+            "moreBirdSong": "../sounds/../sounds/gentle-bird-song.mp3"
         },
         "collisions": [
             [1, "d", "d", "d", 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],

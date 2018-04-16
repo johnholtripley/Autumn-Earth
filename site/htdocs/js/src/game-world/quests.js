@@ -10,7 +10,10 @@ function addToJournal(whichQuestId) {
 
 function removeFromJournal(whichQuestId) {
     var elementToRemove = document.getElementById("quest" + whichQuestId);
+    // check it exists, in case it was hidden from the Journal:
+    if(elementToRemove) {
     elementToRemove.remove();
+}
 }
 
 function declineQuest() {
