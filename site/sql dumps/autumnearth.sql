@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 06, 2018 at 04:05 PM
+-- Generation Time: Apr 13, 2018 at 12:06 PM
 -- Server version: 10.1.30-MariaDB
 -- PHP Version: 7.0.27
 
@@ -1588,9 +1588,10 @@ CREATE TABLE `tblretinuefollowers` (
 --
 
 INSERT INTO `tblretinuefollowers` (`followerID`, `followerName`, `followerCleanURL`, `characterIdFollowing`, `activeQuestId`, `followerRewardFromQuestId`, `isEnabled`, `questStartedTime`, `followerSex`, `followerRace`, `currentContinent`, `followerMapCoordinateX`, `followerMapCoordinateY`) VALUES
-(1, 'Eila Myrborn', 'eila-myrborn', 999, 154, NULL, 1, '2018-04-05 14:52:18', 'female', 'huldra', 'eastern-continent', 70, 198),
-(2, 'Nellaith Wispfael', 'nellaith-wispfael', 999, 154, NULL, 1, '2018-04-05 14:52:18', 'female', 'huldra', 'eastern-continent', 191, 310),
-(59, 'Garmund  Wispmote', 'garmund-wispmote', 999, 151, 1, 1, '2018-04-05 14:52:29', 'male', 'huldra', 'eastern-continent', 191, 310);
+(1, 'Eila Myrborn', 'eila-myrborn', 999, -1, NULL, 1, '2018-04-05 14:52:18', 'female', 'huldra', 'eastern-continent', 76, 119),
+(2, 'Nellaith Wispfael', 'nellaith-wispfael', 999, -1, NULL, 1, '2018-04-05 14:52:18', 'female', 'huldra', 'eastern-continent', 76, 119),
+(59, 'Garmund  Wispmote', 'garmund-wispmote', 999, -1, NULL, 1, '2018-04-05 14:52:29', 'male', 'huldra', 'eastern-continent', 246, 164),
+(67, 'Frith Airsong', 'frith-airsong', 999, -1, 1, 1, '0000-00-00 00:00:00', 'female', 'huldra', 'eastern-continent', 200, 350);
 
 -- --------------------------------------------------------
 
@@ -2587,7 +2588,7 @@ ALTER TABLE `tblregions`
 -- AUTO_INCREMENT for table `tblretinuefollowers`
 --
 ALTER TABLE `tblretinuefollowers`
-  MODIFY `followerID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=60;
+  MODIFY `followerID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=68;
 
 --
 -- AUTO_INCREMENT for table `tblretinuequests`

@@ -86,7 +86,12 @@ $bookType = "recipe";
 $numberOfSentences = 4;
 $numberOfParagraphs = 8;
 
+
+// remove non-end of sentence fullstops:
+$textSource = str_ireplace("St.", "SAINT**", $textSource);
+
 // isolate space and full stops:
+
 $textSource = str_ireplace(" ", "####", $textSource);
  $textSource = str_ireplace(".", "####.", $textSource);
 $textSplit = explode("####", $textSource);
@@ -164,6 +169,8 @@ if($replacePronouns) {
  $builtSentence = preg_replace( "/(?<!^)(?<![.!?]\s)\b[A-Z][\w]+\b/", "@@pronoun@@", $builtSentence );
 }
 
+// restore any non-end of word full stops
+$textSource = str_ireplace("SAINT**", "St.", $textSource);
 
 
 $outputText .= '<p>'.$builtSentence.'</p>';

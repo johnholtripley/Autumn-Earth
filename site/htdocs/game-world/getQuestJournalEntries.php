@@ -52,11 +52,14 @@ while ($row = mysqli_fetch_array($professionsResult)) {
 
 if($numberOfQuests>0) {
 
+// If journaldesc is NULL, it shouldn't be shown in the journal
 
-
-$query = "SELECT tblquests.questid, tblquests.journaltitle, tblquests.journaldesc, tblquests.questregion, tblquests.itemsreceivedoncompletion, tblquests.titlegainedaftercompletion, tbltitles.titleName FROM tblquests left join tbltitles ON tblquests.titlegainedaftercompletion = tbltitles.titleid WHERE questid in (".implode(",",$activeQuests).")";
+$query = "SELECT tblquests.questid, tblquests.journaltitle, tblquests.journaldesc, tblquests.questregion, tblquests.itemsreceivedoncompletion, tblquests.titlegainedaftercompletion, tbltitles.titleName FROM tblquests left join tbltitles ON tblquests.titlegainedaftercompletion = tbltitles.titleid WHERE questid in (".implode(",",$activeQuests).") and tblquests.journaldesc IS NOT NULL";
 
 $result = mysqli_query($connection, $query) or die ();
+
+if(mysqli_num_rows($result) > 0) {
+
 while ($row = mysqli_fetch_array($result)) {
     extract($row);
     $markupToOutput .= '<li class="active" id="quest'.$questid.'" data-region="'.$questregion.'">';
@@ -163,6 +166,7 @@ $markupToOutput .= '<p>"'.$titleName.'" title</p>';
     $markupToOutput .= '</li>';
     if (!in_array($questregion, $regions)) {
     array_push($regions, $questregion);
+}
 }
 }
 
