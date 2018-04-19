@@ -58,7 +58,6 @@ $fileToUse = "../data/chr".$playerId."/dungeon/".$dungeonName.$requestedMap.".js
 }
 
 
-
 //}
 
 $plotChests = false;
