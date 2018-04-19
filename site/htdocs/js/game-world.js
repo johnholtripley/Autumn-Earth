@@ -6229,8 +6229,8 @@ function init() {
         cartographyContext = cartographyCanvas.getContext('2d');
         offScreenCartographyCanvas = document.getElementById('offScreenCartographyCanvas');
         offScreenCartographyContext = offScreenCartographyCanvas.getContext('2d');
-        canvasMapImage = document.createElement('img');
-        canvasMapMaskImage = document.createElement('img');
+        canvasMapImage = new Image();
+        canvasMapMaskImage = new Image();
         UI.init();
         audio.init();
         // detect and set up input methods:

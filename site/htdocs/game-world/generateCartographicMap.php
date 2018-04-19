@@ -35,8 +35,9 @@ $playerId=$_GET["playerId"];
 $dungeonName="";
 $isADungeon = false;
 if(isset($_GET["dungeonName"])) {
-$dungeonName=$_GET["dungeonName"];
-
+  if($dungeonName!= "") {
+$dungeonName=$_GET["dungeonName"]."/";
+}
 }
 
 if($requestedMap<0) {
@@ -47,7 +48,7 @@ if($requestedMap<0) {
 //$fileToUse = "../data/chr".$playerId."/dungeon/".$dungeonName."/".$requestedMap.".xml";
 //} else {
   if($isADungeon) {
-$fileToUse = "../data/chr".$playerId."/dungeon/".$dungeonName."/".$requestedMap.".json";
+$fileToUse = "../data/chr".$playerId."/dungeon/".$dungeonName.$requestedMap.".json";
 } else {
 
   //$fileToUse = "../data/chr".$playerId."/map".$requestedMap.".json";
@@ -55,6 +56,9 @@ $fileToUse = "../data/chr".$playerId."/dungeon/".$dungeonName."/".$requestedMap.
   $fileToUse = $protocol.$_SERVER['SERVER_NAME']."/game-world/getMap.php?chr=".$playerId."&map=".$requestedMap;
 
 }
+
+
+
 //}
 
 $plotChests = false;
@@ -73,7 +77,11 @@ if (is_numeric($playerId)) {
     if (is_numeric($requestedMap)) {
 
 
-$mapFilename = "../data/chr".$playerId."/cartography/".$dungeonName."/".$requestedMap.".jpg";
+
+$mapFilename = "../data/chr".$playerId."/cartography/".$dungeonName.$requestedMap.".jpg";
+
+
+
   if ((is_file($mapFilename)) && (!$debug) && (!$update)) {
   
             header("Location: ".$protocol.$_SERVER['SERVER_NAME'] . "/".$mapFilename);
@@ -170,7 +178,7 @@ $mapCanvas = imagecreatetruecolor($canvaDimension, $canvaDimension);
 
 if($update) {
 // use previous map as the ground
-$originalMap = imagecreatefromjpeg("../data/chr".$playerId."/cartography/".$dungeonName."/".$session."/".$requestedMap.".jpg");
+$originalMap = imagecreatefromjpeg("../data/chr".$playerId."/cartography/".$dungeonName.$session."/".$requestedMap.".jpg");
 // double the size of this to match the newly drawn one:
 
 
@@ -875,6 +883,17 @@ $doorY = $doorEntranceY;
 
 //echo $doorX.",".$doorY."           ";
 
+
+// watch for unknowns: "?-1"
+if(!is_numeric($doorX)) {
+$doorX = 0;
+}
+if(!is_numeric($doorY)) {
+$doorY = 0;
+}
+
+
+
 $doorX = $doorX *$tileLineDimension;
 $doorY = ($mapMaxHeight -1 - $doorY)*$tileLineDimension;
 //}
@@ -1039,7 +1058,7 @@ if (!file_exists("../data/chr".$playerId."/cartography/".$dungeonName)) {
 
 
 if($isADungeon) {
-$mapFilename = "../data/chr".$playerId."/cartography/".$dungeonName."/".$requestedMap.".jpg";
+$mapFilename = "../data/chr".$playerId."/cartography/".$dungeonName.$requestedMap.".jpg";
 } else {
   $mapFilename = "../data/chr".$playerId."/cartography/map".$requestedMap.".jpg";
 }
