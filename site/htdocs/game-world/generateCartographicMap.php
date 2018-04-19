@@ -35,7 +35,7 @@ $playerId=$_GET["playerId"];
 $dungeonName="";
 $isADungeon = false;
 if(isset($_GET["dungeonName"])) {
-  if($dungeonName!= "") {
+  if($_GET["dungeonName"]!= "") {
 $dungeonName=$_GET["dungeonName"]."/";
 }
 }
@@ -120,6 +120,7 @@ xml_parser_free($xmlparser);
 
 
   // load json
+
 loadAndParseJSON($fileToUse);
 
 
