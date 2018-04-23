@@ -1,7 +1,8 @@
 <?php
 // get retinue followers for this character:
 
-
+$continentMapWidth = 700;
+$continentMapHeight = 450;
 
 
 // get from game state: ####
@@ -10,7 +11,7 @@ $homeBaseContinent = "eastern-continent";
 $homeBaseX = 200;
 $homeBaseY = 350;
 
-
+$revealedHexCoordinates = array('-3,2','-2,2','-2,1','-1,1','-2,3');
 
 
 // a list of possible obstacles and their required solution:
@@ -188,7 +189,43 @@ $questPanelDetailsOutput = "";
 
 $questsResult = mysqli_query($connection, $questsQuery) or die ();
   $retinuePanelOutput .= '<h2>Available quests:</h2>';
-  $retinuePanelOutput .= '<div id="retinueAvailableQuestMap"><img src="/images/world-maps/eastern-continent.jpg" id="activeContinent" alt="Eastern Continent">';
+  $retinuePanelOutput .= '<div id="retinueAvailableQuestMap"';
+  if($debug) {
+    // just make debug output easier:
+ $retinuePanelOutput .= ' style="position:relative;display:inline-block;"';
+  }
+  $retinuePanelOutput .= '><img src="/images/world-maps/eastern-continent.jpg" id="activeContinent" alt="Eastern Continent">';
+
+// plot hexes
+  $hexSize = 38;
+  // https://www.redblobgames.com/grids/hexagons/
+  $hexWidth = $hexSize * sqrt(3);
+  $hexHeight = $hexSize * 2;
+
+
+// pixel rounding:
+  $hexWidth = 66;
+
+$tilesToCoverHorizontally = 5;
+$tilesToCoverVertically = 3;
+
+  for($x=-$tilesToCoverHorizontally;$x<=$tilesToCoverHorizontally;$x++) {
+  for($y=-$tilesToCoverVertically;$y<=$tilesToCoverVertically;$y++) {
+  
+    $thisPositionX = $continentMapWidth/2 + $x * $hexWidth; 
+
+    $thisPositionY = $continentMapHeight/2 + $y * $hexHeight*3/4; 
+        if($y%2==0) {
+    $thisPositionX +=  $hexWidth/2;
+    }
+ if(!in_array($x.','.$y, $revealedHexCoordinates)){
+  $retinuePanelOutput.='<div class="undiscovered" style="left:'.(($thisPositionX/$continentMapWidth)*100).'%;top:'.(($thisPositionY/$continentMapHeight)*100).'%"></div>';
+}
+  
+}
+}
+
+
 if(mysqli_num_rows($questsResult)<6) {
 // get more:
 $retinueQuestsToGenerate = 6-mysqli_num_rows($questsResult);
@@ -200,12 +237,12 @@ $questsResult = mysqli_query($connection, $questsQuery) or die ();
 //	$retinuePanelOutput .= "<ol>";
 	while ($questsRow = mysqli_fetch_array($questsResult)) {
       extract($questsRow);
-      // map is 700 x 450
+      
       $returnToBaseClass='';
       if($needsToReturnToBase) {
 $returnToBaseClass = ' needsToReturnToBase';
       }
-$retinuePanelOutput .= '<button id="retinueQuestLocation'.($questID).'" class="mapLocation active'.$returnToBaseClass.'" style="left:'.(($mapCoordinateX/700)*100).'%;top:'.(($mapCoordinateY/450)*100).'%;"></button><div class="mapLocationTooltip" style="left:'.(($mapCoordinateX/700)*100).'%;top:'.(($mapCoordinateY/450)*100).'%;"><h4>'.$questName.'</h4><p>'.$questDescription.' (requires '.$questNumberOfFollowersRequired;
+$retinuePanelOutput .= '<button id="retinueQuestLocation'.($questID).'" class="mapLocation active'.$returnToBaseClass.'" style="left:'.(($mapCoordinateX/$continentMapWidth)*100).'%;top:'.(($mapCoordinateY/$continentMapHeight)*100).'%;"></button><div class="mapLocationTooltip" style="left:'.(($mapCoordinateX/$continentMapWidth)*100).'%;top:'.(($mapCoordinateY/$continentMapHeight)*100).'%;"><h4>'.$questName.'</h4><p>'.$questDescription.' (requires '.$questNumberOfFollowersRequired;
 
 if($questObstacles) {
   $retinuePanelOutput .= ' and ';
@@ -249,13 +286,13 @@ $questPanelDetailsOutput .= '</div>';
 
 // plot followers:
   foreach ($followerData as $followerKey => $thisFollower) {
-$retinuePanelOutput .= '<div class="followerLocation" style="left:'.(($thisFollower['followerMapCoordinateX']/700)*100).'%;top:'.(($thisFollower['followerMapCoordinateY']/450)*100).'%;" id="followerLocation'.$thisFollower['followerID'].'"><img src="/images/retinue/'.$thisFollower['followerID'].'.png" alt=""></div>';
-$retinuePanelOutput .= '<div class="mapLocationTooltip" id="followerLocationTooltip'.$thisFollower['followerID'].'" style="left:'.(($thisFollower['followerMapCoordinateX']/700)*100).'%;top:'.(($thisFollower['followerMapCoordinateY']/450)*100).'%;">'.$thisFollower['followerName'].'</div>';
+$retinuePanelOutput .= '<div class="followerLocation" style="left:'.(($thisFollower['followerMapCoordinateX']/$continentMapWidth)*100).'%;top:'.(($thisFollower['followerMapCoordinateY']/$continentMapHeight)*100).'%;" id="followerLocation'.$thisFollower['followerID'].'"><img src="/images/retinue/'.$thisFollower['followerID'].'.png" alt=""></div>';
+$retinuePanelOutput .= '<div class="mapLocationTooltip" id="followerLocationTooltip'.$thisFollower['followerID'].'" style="left:'.(($thisFollower['followerMapCoordinateX']/$continentMapWidth)*100).'%;top:'.(($thisFollower['followerMapCoordinateY']/$continentMapHeight)*100).'%;">'.$thisFollower['followerName'].'</div>';
   }
 
   // plot home base:
   
-  $retinuePanelOutput .= '<div id="homeBaseLocation" style="left:'.(($homeBaseX/700)*100).'%;top:'.(($homeBaseY/450)*100).'%;"></div>';
+  $retinuePanelOutput .= '<div id="homeBaseLocation" style="left:'.(($homeBaseX/$continentMapWidth)*100).'%;top:'.(($homeBaseY/$continentMapHeight)*100).'%;"></div>';
 
 
    $retinuePanelOutput .= '</div>';
@@ -279,7 +316,7 @@ $retinuePanelOutput .= '<div id="draggableFollower"></div>';
 
 
 if($debug) {
-  echo '<style>.mapWrapper{position:relative;max-width:400px;}.mapWrapper img{display:block;width:100%}.mapLocation{position:absolute;width:20px;height:20px;background:rgba(200,200,20,0.6);border:2px solid #fff;-webkit-border-radius:20px;-moz-border-radius:20px;border-radius:20px;-webkit-transform:translate(-10px, -10px);-moz-transform:translate(-10px, -10px);-o-transform:translate(-10px, -10px);transform:translate(-10px, -10px);z-index:1}@media only all{.mapLocation{-webkit-border-radius:1.25rem;-moz-border-radius:1.25rem;border-radius:1.25rem}}.mapLocation:hover+.mapLocationTooltip,.mapLocation:active+.mapLocationTooltip,.mapLocation:focus+.mapLocationTooltip{opacity:1}.mapLocationTooltip{pointer-events:none;opacity:0;-webkit-transition:opacity 0.4s ease;-moz-transition:opacity 0.4s ease;-o-transition:opacity 0.4s ease;transition:opacity 0.4s ease;padding:6px;position:absolute;width:200px;-webkit-transform:translate(15px, -10px);-moz-transform:translate(15px, -10px);-o-transform:translate(15px, -10px);transform:translate(15px, -10px);background:#572800;color:#fff;z-index:2}.mapLocationTooltip h4,.mapLocationTooltip p{margin:0;padding:0;font-size:11px}</style>';
+  echo '<style>.mapWrapper{position:relative;max-width:400px;}.mapWrapper img{display:block;width:100%}.mapLocation{position:absolute;width:20px;height:20px;background:rgba(200,200,20,0.6);border:2px solid #fff;-webkit-border-radius:20px;-moz-border-radius:20px;border-radius:20px;-webkit-transform:translate(-10px, -10px);-moz-transform:translate(-10px, -10px);-o-transform:translate(-10px, -10px);transform:translate(-10px, -10px);z-index:1}@media only all{.mapLocation{-webkit-border-radius:1.25rem;-moz-border-radius:1.25rem;border-radius:1.25rem}}.mapLocation:hover+.mapLocationTooltip,.mapLocation:active+.mapLocationTooltip,.mapLocation:focus+.mapLocationTooltip{opacity:1}.mapLocationTooltip{pointer-events:none;opacity:0;-webkit-transition:opacity 0.4s ease;-moz-transition:opacity 0.4s ease;-o-transition:opacity 0.4s ease;transition:opacity 0.4s ease;padding:6px;position:absolute;width:200px;-webkit-transform:translate(15px, -10px);-moz-transform:translate(15px, -10px);-o-transform:translate(15px, -10px);transform:translate(15px, -10px);background:#572800;color:#fff;z-index:2}.mapLocationTooltip h4,.mapLocationTooltip p{margin:0;padding:0;font-size:11px}.undiscovered{width:66px;height:76px;position:absolute;background:url(/images/world-maps/undiscovered.png);transform:translate(-50%,-50%)}.followerLocation{position:absolute;}</style>';
   echo $retinuePanelOutput;
   
 }

@@ -1,9 +1,11 @@
 #retinuePanel {
-    width: 322px;
+    width: 356px;
     left: 400px;
     top: 20px;
     background: #000;
     font-size: 13px;
+    // stop hexes overflowing:
+    overflow: hidden;
     @include togglePanel(0.4s);
     ol {
         margin: 0;
@@ -34,22 +36,19 @@
 #retinuePanel .portrait,
 #draggableFollower .portrait,
 .followerSlot {
-     
-        float: left;
-        display: block;
-        
-        width: 49px;
-        height: 53px;
-        padding: 7px 8px;
-        @include border-box;
-        img {
-            width: 33px;
-            height: 33px;
-            @include border-radius(33px);
-        }
-    
 
-  
+    float: left;
+    display: block;
+
+    width: 49px;
+    height: 53px;
+    padding: 7px 8px;
+    @include border-box;
+    img {
+        width: 33px;
+        height: 33px;
+        @include border-radius(33px);
+    }
 }
 
 #retinuePanel {
@@ -60,11 +59,10 @@
     .available .portrait {
         background-image: url(../images/game-world/interface/retinue/waiting-follower.png);
     }
-
 }
 
 #retinueList {
-          h3 {
+    h3 {
         padding: 5px 6px;
         margin: 0;
         font-size: 13px;
@@ -123,12 +121,12 @@
 }
 
 #homeBaseLocation {
-      position: absolute;
+    position: absolute;
     width: 28px;
     height: 28px;
     outline: none;
     padding: 0;
-       background: rgba(20, 200, 20, 0.6);
+    background: rgba(20, 200, 20, 0.6);
     border: 2px solid #fff;
     @include border-radius(20px);
     @include transform(translate(-14px, -14px));
@@ -137,20 +135,20 @@
 
 .followerLocation {
 
-    
-       
-        position: absolute;
-     
-        @include transform(translate(-10px, -10px));
-        img {
-              width: 20px;
+
+
+    position: absolute;
+
+    @include transform(translate(-10px, -10px));
+    img {
+        width: 20px;
         height: 20px;
         border: 2px solid #fff;
-        @include border-radius(20px); 
-         @include border-radius(20px);
-        }
-        z-index: 2;
-    
+        @include border-radius(20px);
+        @include border-radius(20px);
+    }
+    z-index: 2;
+
     &:hover {
         &+.mapLocationTooltip {
             opacity: 1;
@@ -222,6 +220,7 @@
     background: #000;
 }
 
+
 /*
 .dropFollowersPanel {
     clear: both;
@@ -243,11 +242,11 @@
     background: #36210c url(../images/game-world/interface/retinue/reward-chest.jpg) no-repeat 50% 0;
     border: 3px solid #fed308;
     position: absolute;
-    left:0;
-    top:50%;
+    left: 0;
+    top: 50%;
     @include transform(translateY(-50%));
-    width:100%;
-    z-index:3;
+    width: 100%;
+    z-index: 3;
     @include border-box;
     @include clearfix;
     padding: 100px 6px 12px 6px;
@@ -256,37 +255,48 @@
     @include transition(opacity 0.4s ease);
 
     h2 {
-color: #fff;
-text-align:center;
-font-size: 16px;
+        color: #fff;
+        text-align: center;
+        font-size: 16px;
     }
-    h3{
-      color: #fff;
-text-align:center;
-font-size: 14px;
+    h3 {
+        color: #fff;
+        text-align: center;
+        font-size: 14px;
 
-text-transform:uppercase;  
+        text-transform: uppercase;
     }
 
     .rewardSlot {
         @include inventorySlot();
-
     }
     .takeRewards {
-          cursor: url(../images/game-world/cursors/active.gif) 3 3, auto;
-     border: 0;
-     background: #53160d;
-     color: #fff;
-     text-transform: uppercase;
-     margin: 6px auto;
-     clear: both;
-     display: block;
-     padding: 6px 16px;
-     border: 2px solid #967834;
-     outline:none;
+        cursor: url(../images/game-world/cursors/active.gif) 3 3, auto;
+        border: 0;
+        background: #53160d;
+        color: #fff;
+        text-transform: uppercase;
+        margin: 6px auto;
+        clear: both;
+        display: block;
+        padding: 6px 16px;
+        border: 2px solid #967834;
+        outline: none;
     }
 }
+
 #retinuePanel.active .retinueCompletePanel.active {
-         opacity: 1;
-        pointer-events: auto;
-    }
+    opacity: 1;
+    pointer-events: auto;
+}
+
+
+
+.undiscovered {
+    width: 9.43%;
+    height: 16.89%;
+    position: absolute;
+    background: url(../images/world-maps/undiscovered.png);
+    @include background-size(cover);
+    @include transform(translate(-50%, -50%));
+}
