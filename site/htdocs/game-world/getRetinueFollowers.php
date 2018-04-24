@@ -230,7 +230,9 @@ $questsResult = mysqli_query($connection, $questsQuery) or die ();
     $thisPositionX +=  $hexWidth/2;
     }
  if(!in_array($x.','.$y, $revealedHexCoordinates)){
-  $retinuePanelOutput.='<div class="undiscovered" style="left:'.(($thisPositionX/$continentMapWidth)*100).'%;top:'.(($thisPositionY/$continentMapHeight)*100).'%"></div>';
+  // only those adjacent to already revealed hexes show be explorable:
+  // #######################
+  $retinuePanelOutput.='<div class="undiscovered explorable" id="undiscovered'.$x.'-'.$y.'" style="left:'.(($thisPositionX/$continentMapWidth)*100).'%;top:'.(($thisPositionY/$continentMapHeight)*100).'%"><p>Explore</p></div>';
 }
   
 }

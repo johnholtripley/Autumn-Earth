@@ -290,7 +290,7 @@
 }
 
 
-
+#retinuePanel {
 .undiscovered {
     width: 9.43%;
     height: 16.89%;
@@ -298,5 +298,22 @@
     background: url(../images/world-maps/undiscovered.png);
     @include background-size(cover);
     @include transform(translate(-50%, -50%));
+   p {
+    opacity: 0;
+    text-align: center;
+     width: 100%;
+    font-size: 9px;
+    padding: 35% 0 0 0;
     pointer-events: none;
+    margin: 0;
+    @include transition(opacity 0.4s ease);
+   }
+   &.explorable {
+    @include attention() {
+        p {
+            opacity: 1;
+        }
+    }
+   }
+}
 }
