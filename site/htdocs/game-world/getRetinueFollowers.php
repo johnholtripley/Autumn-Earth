@@ -11,8 +11,12 @@ $homeBaseContinent = "eastern-continent";
 $homeBaseX = 200;
 $homeBaseY = 350;
 
-$revealedHexCoordinates = array('-3,2','-2,2','-2,1','-1,1','-2,3');
 
+
+$gameStateString = file_get_contents("../data/chr".$chr."/gameState.json");
+$gameState = json_decode($gameStateString, true);
+
+$revealedHexCoordinates = $gameState['retinueMapAreasRevealed'];
 
 // a list of possible obstacles and their required solution:
 $obstacles = [
@@ -21,6 +25,17 @@ $obstacles = [
 
 
 
+
+
+// for hexes:
+  $hexSize = 38;
+  // https://www.redblobgames.com/grids/hexagons/
+  $hexWidth = $hexSize * sqrt(3);
+  $hexHeight = $hexSize * 2;
+// pixel rounding:
+  $hexWidth = 66;
+$tilesToCoverHorizontally = 5;
+$tilesToCoverVertically = 3;
 
 
 $debug = false;
@@ -188,6 +203,11 @@ $questPanelDetailsOutput = "";
       $questsQuery = "SELECT * from tblretinuequests where tblretinuequests.questID NOT IN (SELECT questIdActiveOrComplete from tblretinuequestsactive where characterId='".$chr."') and ".$activeSeasonQuery." order by timeCreated DESC limit 12";
 
 $questsResult = mysqli_query($connection, $questsQuery) or die ();
+
+
+
+
+
   $retinuePanelOutput .= '<h2>Available quests:</h2>';
   $retinuePanelOutput .= '<div id="retinueAvailableQuestMap"';
   if($debug) {
@@ -196,18 +216,9 @@ $questsResult = mysqli_query($connection, $questsQuery) or die ();
   }
   $retinuePanelOutput .= '><img src="/images/world-maps/eastern-continent.jpg" id="activeContinent" alt="Eastern Continent">';
 
+
+
 // plot hexes
-  $hexSize = 38;
-  // https://www.redblobgames.com/grids/hexagons/
-  $hexWidth = $hexSize * sqrt(3);
-  $hexHeight = $hexSize * 2;
-
-
-// pixel rounding:
-  $hexWidth = 66;
-
-$tilesToCoverHorizontally = 5;
-$tilesToCoverVertically = 3;
 
   for($x=-$tilesToCoverHorizontally;$x<=$tilesToCoverHorizontally;$x++) {
   for($y=-$tilesToCoverVertically;$y<=$tilesToCoverVertically;$y++) {
@@ -244,10 +255,13 @@ $returnToBaseClass = ' needsToReturnToBase';
       }
 $retinuePanelOutput .= '<button id="retinueQuestLocation'.($questID).'" class="mapLocation active'.$returnToBaseClass.'" style="left:'.(($mapCoordinateX/$continentMapWidth)*100).'%;top:'.(($mapCoordinateY/$continentMapHeight)*100).'%;"></button><div class="mapLocationTooltip" style="left:'.(($mapCoordinateX/$continentMapWidth)*100).'%;top:'.(($mapCoordinateY/$continentMapHeight)*100).'%;"><h4>'.$questName.'</h4><p>'.$questDescription.' (requires '.$questNumberOfFollowersRequired;
 
+
+
 if($questObstacles) {
   $retinuePanelOutput .= ' and ';
   $allObstacles = explode(",", $questObstacles);
   for ($i=0;$i<count($allObstacles);$i++) {
+
     $retinuePanelOutput .= $obstacles[($allObstacles[$i])].", ";
   }
     // remove last comma:

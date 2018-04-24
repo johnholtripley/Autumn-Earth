@@ -4,8 +4,7 @@
     top: 20px;
     background: #000;
     font-size: 13px;
-    // stop hexes overflowing:
-    overflow: hidden;
+
     @include togglePanel(0.4s);
     ol {
         margin: 0;
@@ -299,4 +298,5 @@
     background: url(../images/world-maps/undiscovered.png);
     @include background-size(cover);
     @include transform(translate(-50%, -50%));
+    pointer-events: none;
 }

@@ -1,9 +1,35 @@
 <?php
 
-include($_SERVER['DOCUMENT_ROOT']."/includes/signalnoise.php");
-include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
-include($_SERVER['DOCUMENT_ROOT']."/includes/functions.php");
+include_once($_SERVER['DOCUMENT_ROOT']."/includes/signalnoise.php");
+include_once($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
+include_once($_SERVER['DOCUMENT_ROOT']."/includes/functions.php");
 
+if(!isset($revealedHexCoordinates)) {
+    $chr = 999;
+$gameStateString = file_get_contents("../data/chr".$chr."/gameState.json");
+$gameState = json_decode($gameStateString, true);
+$revealedHexCoordinates = $gameState['retinueMapAreasRevealed'];
+$homeBaseX = 200;
+$homeBaseY = 350;
+}
+
+
+if(!isset($hexSize)) {
+// for hexes:
+  $hexSize = 38;
+  // https://www.redblobgames.com/grids/hexagons/
+  $hexWidth = $hexSize * sqrt(3);
+  $hexHeight = $hexSize * 2;
+// pixel rounding:
+  $hexWidth = 66;
+  $tilesToCoverHorizontally = 5;
+$tilesToCoverVertically = 3;
+}
+
+if(!isset($continentMapWidth)) {
+$continentMapWidth = 700;
+$continentMapHeight = 450;
+}
 
 // 1519377963 for island
 
@@ -27,6 +53,8 @@ $howManyQuests = 1;
 if(isset($retinueQuestsToGenerate)) {
 $howManyQuests = $retinueQuestsToGenerate;
 }
+
+
 
 function replaceKeywords($phrase) {
     global $continent, $region, $terrainType;
@@ -61,6 +89,11 @@ function expandTitleGrammar($startingGrammar) {
 
 
 
+// check that there are enough free tiles:
+if(count($revealedHexCoordinates) < $howManyQuests) {
+    $howManyQuests = count($revealedHexCoordinates);
+}
+
 
 
 for($i=0;$i<$howManyQuests;$i++) {
@@ -70,9 +103,32 @@ for($i=0;$i<$howManyQuests;$i++) {
 
 $continent  = "Eastern Continent";
 
-$mapCoordinateX  = mt_rand(25,675);
-$mapCoordinateY  = mt_rand(25,425);
 
+// pick a random revealed hex:
+$thisHex = $revealedHexCoordinates[mt_rand(0, count($revealedHexCoordinates) - 1)];
+
+
+
+$thisHexCoords = explode(",",$thisHex);
+
+
+    $mapCoordinateX = $continentMapWidth/2 + $thisHexCoords[0] * $hexWidth; 
+    $mapCoordinateY = $continentMapHeight/2 + $thisHexCoords[1] * $hexHeight*3/4; 
+
+        if($thisHexCoords[1]%2==0) {
+    $mapCoordinateX +=  $hexWidth/2;
+    }
+
+// that is the hex centre, pick a spot within a radius
+
+$offsetRadius = mt_rand(0,($hexWidth/2));
+$offsetAngle = deg2rad(mt_rand(0,360));
+
+$offsetX = $offsetRadius*cos($offsetAngle);
+$offsetY = $offsetRadius*sin($offsetAngle);
+
+$mapCoordinateX += $offsetX;
+$mapCoordinateY += $offsetY;
 
 // load image and determine if it's land or sea:
 $landMassImage = imagecreatefromgif("../images/world-maps/land-masses/".cleanURL($continent).".gif");
@@ -80,14 +136,14 @@ $colourIndex = imagecolorat($landMassImage, $mapCoordinateX, $mapCoordinateY);
 
 
 imagedestroy($landMassImage);
-$obstacles = array();
+$generationObstacles = array();
 
 $terrainType = "land";
 
 $isOnLand = true;
 if($colourIndex!=0) {
 // sea or island
-array_push($obstacles, "sea");
+array_push($generationObstacles, "sea");
 }
 
 if($colourIndex==1) {
@@ -145,7 +201,7 @@ $questType = $thisType['questTypeName'];
 $needsToReturnToBase  = "0";
 $questDifficulty  = "0";
 
-$questObstacles  = implode(",",$obstacles);
+$questObstacles  = implode(",",$generationObstacles);
 
 
 $questCostToStart  = "0";
@@ -153,7 +209,12 @@ $questPartOfCampaign  = "0";
 $followersRequiredWeighting = array(1,1,1,1,1,1,2,2,3);
 $questNumberOfFollowersRequired  = $followersRequiredWeighting[mt_rand(0, count($followersRequiredWeighting) - 1)];
 $questNPCMinimumLevel  = "1";
-$questReward  = '[{"type":2,"quantity":2,"quality":100,"durability":100,"currentWear":0,"effectiveness":100,"colour":"0","enchanted":0,"hallmark":0,"inscription":""}]';
+
+
+// quest reward should be greater the further it is from the home base: 
+$questDistanceFromHomeBase = sqrt((($homeBaseX-$mapCoordinateX)*($homeBaseX-$mapCoordinateX)) + (($homeBaseY-$mapCoordinateY)*($homeBaseY-$mapCoordinateY)))/$hexWidth;
+
+$questReward  = '[{"type":2,"quantity":'.ceil($questDistanceFromHomeBase).',"quality":100,"durability":100,"currentWear":0,"effectiveness":100,"colour":"0","enchanted":0,"hallmark":0,"inscription":""}]';
 
 
 $query3 = "SELECT * from tblretinuequests where questCleanURL='".$questCleanURL."'";

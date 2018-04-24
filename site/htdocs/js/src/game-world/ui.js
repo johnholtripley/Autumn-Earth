@@ -2007,6 +2007,7 @@ hero.stats.itemsGathered++;
             }
         }
         var thisPanelElement = document.getElementById("retinueQuestLocationDetail" + whichPanelId);
+
         retinueObject.followersRequired = thisPanelElement.getAttribute('data-requires');
         retinueObject.destinationLocationX = thisPanelElement.getAttribute('data-locationx');
         retinueObject.destinationLocationY = thisPanelElement.getAttribute('data-locationy');
