@@ -234,7 +234,7 @@ $questsResult = mysqli_query($connection, $questsQuery) or die ();
 
 
 $isExplorableClass = '';
-$isExplorableClass = ' explorable';
+
 for ($i=0;$i<count($revealedHexCoordinates);$i++) {
   $thisHex = explode(",",$revealedHexCoordinates[$i]);
   $xDiff = abs($thisHex[0] - $x);
