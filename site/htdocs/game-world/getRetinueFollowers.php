@@ -230,9 +230,23 @@ $questsResult = mysqli_query($connection, $questsQuery) or die ();
     $thisPositionX +=  $hexWidth/2;
     }
  if(!in_array($x.','.$y, $revealedHexCoordinates)){
-  // only those adjacent to already revealed hexes show be explorable:
-  // #######################
-  $retinuePanelOutput.='<div class="undiscovered explorable" id="undiscovered'.$x.'-'.$y.'" style="left:'.(($thisPositionX/$continentMapWidth)*100).'%;top:'.(($thisPositionY/$continentMapHeight)*100).'%"><p>Explore</p></div>';
+ 
+
+
+$isExplorableClass = '';
+$isExplorableClass = ' explorable';
+for ($i=0;$i<count($revealedHexCoordinates);$i++) {
+  $thisHex = explode(",",$revealedHexCoordinates[$i]);
+  $xDiff = abs($thisHex[0] - $x);
+  $yDiff = abs($thisHex[1] - $y);
+   // only those adjacent to already revealed hexes show be explorable - one value is the same and the other is +1 or -1 from that:
+  if (($xDiff + $yDiff) == 1) {
+$isExplorableClass = ' explorable';
+  }
+}
+
+
+  $retinuePanelOutput.='<div class="undiscovered'.$isExplorableClass.'" data-locationx="'.$thisPositionX.'" data-locationy="'.$thisPositionY.'" id="undiscovered_'.$x.'_'.$y.'" style="left:'.(($thisPositionX/$continentMapWidth)*100).'%;top:'.(($thisPositionY/$continentMapHeight)*100).'%"><p>Explore</p></div>';
 }
   
 }
@@ -321,7 +335,15 @@ $retinuePanelOutput .= '<div class="mapLocationTooltip" id="followerLocationTool
    $retinuePanelOutput .= '<button id="retinueQuestStart" class="primaryButton" disabled="disabled">Start quest</button>';
 mysqli_free_result($questsResult);
 
-$retinuePanelOutput .= '<div id="retinueDetailWrapper">'.$questPanelDetailsOutput.'</div>';
+$retinuePanelOutput .= '<div id="retinueDetailWrapper">'.$questPanelDetailsOutput;
+$retinuePanelOutput .= '<div id="retinueExplorePanel" class="retinueQuestLocationDetailPanel"><p>Explore this region.</p>';
+
+$retinuePanelOutput .= '<div class="followerSlot" id="dropFollowersPanelExplore1"></div>';
+$retinuePanelOutput .= '<div class="followerSlot" id="dropFollowersPanelExplore2"></div>';
+$retinuePanelOutput .= '<div class="followerSlot" id="dropFollowersPanelExplore3"></div>';
+
+$retinuePanelOutput .= '</div></div>';
+
 
 $retinuePanelOutput .= $retinuePanelCompleteOutput;
 

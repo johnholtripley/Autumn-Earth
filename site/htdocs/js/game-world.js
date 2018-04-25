@@ -4079,6 +4079,7 @@ const draggableFollower = document.getElementById('draggableFollower');
 const retinueQuestStart = document.getElementById('retinueQuestStart');
 const retinueQuestTimeRequired = document.getElementById('retinueQuestTimeRequired');
 const retinueList = document.getElementById('retinueList');
+const retinueExplorePanel = document.getElementById('retinueExplorePanel');
 const startCrafting = document.getElementById('startCrafting');
 
 
@@ -5747,7 +5748,7 @@ var UI = {
         if (inventoryCheck[0]) {
             gatheringOutputSlot.innerHTML = "";
             UI.showChangeInInventory(inventoryCheck[1]);
-hero.stats.itemsGathered++;
+            hero.stats.itemsGathered++;
             gatheringPanel.classList.remove('active');
         } else {
             UI.showNotification("<p>Oops - sorry, no room in your bags</p>");
@@ -5992,16 +5993,11 @@ hero.stats.itemsGathered++;
             "active": false
         };
     },
-    openRetinueDetailPanel: function(e) {
-
-        var whichPanelId = e.target.id.substring(20);
-        // get the corresponding panel:
-
+    resetRetinuePanels: function() {
         var siblingPanels = document.getElementsByClassName('retinueQuestLocationDetailPanel');
         for (i = 0; i < siblingPanels.length; i++) {
             siblingPanels[i].classList.remove("active");
         }
-        retinueObject.openQuestDetail = whichPanelId;
         // reset submit and time output:
         retinueQuestStart.disabled = true;
         retinueQuestTimeRequired.innerHTML = "Time required:";
@@ -6018,18 +6014,76 @@ hero.stats.itemsGathered++;
                 }
             }
         }
-        var thisPanelElement = document.getElementById("retinueQuestLocationDetail" + whichPanelId);
+    },
+    openRetinueDetailPanel: function(e) {
 
-        retinueObject.followersRequired = thisPanelElement.getAttribute('data-requires');
-        retinueObject.destinationLocationX = thisPanelElement.getAttribute('data-locationx');
-        retinueObject.destinationLocationY = thisPanelElement.getAttribute('data-locationy');
-        retinueObject.hasToReturnToBase = thisPanelElement.getAttribute('data-requiresreturn');
-        retinueObject.questName = thisPanelElement.getAttribute('data-questname');
-        retinueObject.followersAdded = [];
-        for (var i = 0; i < retinueObject.followersRequired; i++) {
-            retinueObject.followersAdded.push("null");
+
+        if (e.target.classList.contains('undiscovered')) {
+            if (e.target.classList.contains('explorable')) {
+
+                UI.resetRetinuePanels();
+
+
+                retinueExplorePanel.classList.add('active');
+
+
+                retinueObject.openQuestDetail = 'Exploring';
+
+                retinueObject.destinationLocationX = e.target.getAttribute('data-locationx');
+                retinueObject.destinationLocationY = e.target.getAttribute('data-locationy');
+                // determine distance to see how long and how many followers are required:
+
+                // 277 is about a third of the max distance from corner to corner of the map:
+                retinueObject.followersRequired = Math.ceil(getPythagorasDistance(retinueBaseLocationX, retinueBaseLocationY, retinueObject.destinationLocationX, retinueObject.destinationLocationY) / 277);
+                console.log(retinueObject.followersRequired);
+                // show the relevant follower slots:
+                var followerSlots = document.querySelectorAll('#retinueExplorePanel .followerSlot');
+
+                for (i = 0; i < followerSlots.length; ++i) {
+                    followerSlots[i].style.display = 'none';
+                }
+
+                for (var i = 1; i <= retinueObject.followersRequired; i++) {
+
+                    document.getElementById('dropFollowersPanelExplore' + i).style.display = 'block';
+                }
+
+
+
+                retinueObject.hasToReturnToBase = 1;
+                retinueObject.questName = 'Exploring'
+                retinueObject.followersAdded = [];
+                for (var i = 0; i < retinueObject.followersRequired; i++) {
+                    retinueObject.followersAdded.push("null");
+                }
+
+            }
+        } else {
+            // get the corresponding Quest panel:
+            var whichPanelId = e.target.id.substring(20);
+
+
+            UI.resetRetinuePanels();
+
+            retinueExplorePanel.classList.remove('active');
+            retinueObject.openQuestDetail = whichPanelId;
+
+            var thisPanelElement = document.getElementById("retinueQuestLocationDetail" + whichPanelId);
+
+            retinueObject.followersRequired = thisPanelElement.getAttribute('data-requires');
+            retinueObject.destinationLocationX = thisPanelElement.getAttribute('data-locationx');
+            retinueObject.destinationLocationY = thisPanelElement.getAttribute('data-locationy');
+
+
+
+            retinueObject.hasToReturnToBase = thisPanelElement.getAttribute('data-requiresreturn');
+            retinueObject.questName = thisPanelElement.getAttribute('data-questname');
+            retinueObject.followersAdded = [];
+            for (var i = 0; i < retinueObject.followersRequired; i++) {
+                retinueObject.followersAdded.push("null");
+            }
+            thisPanelElement.classList.add("active");
         }
-        thisPanelElement.classList.add("active");
     },
     endFollowerDrag: function(e) {
         var dropTargetNode = getNearestParentId(e.target);
