@@ -318,3 +318,9 @@
 }
 }
 
+
+#retinueExplorePanel {
+background: url(../images/game-world/interface/retinue/exploration-panel-bg.jpg) no-repeat 50% 0;
+@include background-size(100% auto);
+padding: 20px 10px;
+}
