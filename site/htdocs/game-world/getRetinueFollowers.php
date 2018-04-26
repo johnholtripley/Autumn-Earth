@@ -267,10 +267,20 @@ include($_SERVER['DOCUMENT_ROOT']."/game-world/generateRetinueQuest.php");
 $questsResult = mysqli_query($connection, $questsQuery) or die ();
 }
 
+
+
+
+
+
+
+
+
+
 //	$retinuePanelOutput .= "<ol>";
 	while ($questsRow = mysqli_fetch_array($questsResult)) {
       extract($questsRow);
-      
+      // don't plot epxlore 'quests':
+      if($questType != "Exploring") {
       $returnToBaseClass='';
       if($needsToReturnToBase) {
 $returnToBaseClass = ' needsToReturnToBase';
@@ -317,8 +327,22 @@ $questPanelDetailsOutput .= '<p>'.$questDescription.'</p>';
 
 $questPanelDetailsOutput .= '</div>';
 
-
+} 
   }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // plot followers:
   foreach ($followerData as $followerKey => $thisFollower) {

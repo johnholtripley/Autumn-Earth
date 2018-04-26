@@ -1,5 +1,5 @@
 #retinuePanel {
-    width: 356px;
+    width: 556px;
     left: 400px;
     top: 20px;
     background: #000;
@@ -323,7 +323,7 @@
 
 #retinueExplorePanel {
 background: url(../images/game-world/interface/retinue/exploration-panel-bg.jpg) no-repeat 50% 0;
-@include background-size(100% auto);
+@include background-size(cover);
 padding: 20px 0px;
 p {
     padding: 0 10px;
