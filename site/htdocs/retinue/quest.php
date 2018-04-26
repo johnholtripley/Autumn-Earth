@@ -19,6 +19,8 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/header.php");
 
 <?php
 
+// need to check for http://develop.ae/retinue/quest/Exploring/ ?
+// it sohludn't be linked to
 
 $query = "SELECT * from tblretinuequests where questCleanURL='".$_GET["questName"]."'";
 $result = mysqli_query($connection, $query);

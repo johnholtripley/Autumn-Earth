@@ -150,7 +150,13 @@ $thisQuestCompleteClass = ' active';
 
   } else {
  
-  $retinuePanelOutput .= '<p>active on "'.$thisFollower['questName'].'" <span class="retinueQuestTimer" data-minutes="'.($questTimes[($thisFollower['activeQuestId'])] - $thisFollower['completedSoFar']).'"></span></p>';
+if($thisFollower["questType"] == "Exploring") {
+$activeText = 'Exploring';
+} else {
+$activeText = 'Active on "'.$thisFollower['questName'].'"';
+}
+
+  $retinuePanelOutput .= '<p>'.$activeText.' <span class="retinueQuestTimer" data-minutes="'.($questTimes[($thisFollower['activeQuestId'])] - $thisFollower['completedSoFar']).'"></span></p>';
   if($debug) {
   $retinuePanelOutput .= $thisFollower['completedSoFar']." out of ".$questTimes[($thisFollower['activeQuestId'])] ."<br>";
   }
@@ -338,9 +344,9 @@ mysqli_free_result($questsResult);
 $retinuePanelOutput .= '<div id="retinueDetailWrapper">'.$questPanelDetailsOutput;
 $retinuePanelOutput .= '<div id="retinueExplorePanel" class="retinueQuestLocationDetailPanel"><p>Explore this region.</p>';
 
-$retinuePanelOutput .= '<div class="followerSlot" id="dropFollowersPanelExplore1"></div>';
-$retinuePanelOutput .= '<div class="followerSlot" id="dropFollowersPanelExplore2"></div>';
-$retinuePanelOutput .= '<div class="followerSlot" id="dropFollowersPanelExplore3"></div>';
+$retinuePanelOutput .= '<div class="followerSlot" id="dropFollowersPanelExplore-0"></div>';
+$retinuePanelOutput .= '<div class="followerSlot" id="dropFollowersPanelExplore-1"></div>';
+$retinuePanelOutput .= '<div class="followerSlot" id="dropFollowersPanelExplore-2"></div>';
 
 $retinuePanelOutput .= '</div></div>';
 

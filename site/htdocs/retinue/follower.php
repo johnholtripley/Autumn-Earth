@@ -57,7 +57,12 @@ if($activeQuestId != -1) {
   			if(mysqli_num_rows($result2)>0) {
   				$row = mysqli_fetch_array($result2);
   				extract($row);
-  				echo '<p>Currently on "<a href="/retinue/quest/'.$questCleanURL.'/">'.$questName.'</a>"<p>';
+          if($questType = 'Exploring') {
+echo '<p>Currently exploring</p>';
+          } else {
+echo '<p>Currently on "<a href="/retinue/quest/'.$questCleanURL.'/">'.$questName.'</a>"<p>';
+          }
+  				
   			}
   			mysqli_free_result($result2);
 

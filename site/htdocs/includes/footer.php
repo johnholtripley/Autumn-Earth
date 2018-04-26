@@ -58,6 +58,7 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/search.php");
 	<li><a href="https://twitter.com/HerbariumArcana">Twitter (Herbarium)</a></li>
 	<li><a href="https://www.youtube.com/c/autumnearth/" rel="me" itemprop="sameAs">YouTube</a></li>
 	<li><a href="https://autumnearth.tumblr.com/" rel="me" itemprop="sameAs">Tumblr</a></li>
+	<li><a href="https://discord.gg/YtKYbAD" rel="me" itemprop="sameAs">Discord</a></li>
 	<?php
 // https://plus.google.com/+Autumnearth if required
 	?>

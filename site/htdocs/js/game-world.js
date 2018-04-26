@@ -6035,7 +6035,7 @@ var UI = {
 
                 // 277 is about a third of the max distance from corner to corner of the map:
                 retinueObject.followersRequired = Math.ceil(getPythagorasDistance(retinueBaseLocationX, retinueBaseLocationY, retinueObject.destinationLocationX, retinueObject.destinationLocationY) / 277);
-                console.log(retinueObject.followersRequired);
+               
                 // show the relevant follower slots:
                 var followerSlots = document.querySelectorAll('#retinueExplorePanel .followerSlot');
 
@@ -6043,9 +6043,9 @@ var UI = {
                     followerSlots[i].style.display = 'none';
                 }
 
-                for (var i = 1; i <= retinueObject.followersRequired; i++) {
+                for (var i = 0; i < retinueObject.followersRequired; i++) {
 
-                    document.getElementById('dropFollowersPanelExplore' + i).style.display = 'block';
+                    document.getElementById('dropFollowersPanelExplore-' + i).style.display = 'block';
                 }
 
 
@@ -6056,6 +6056,9 @@ var UI = {
                 for (var i = 0; i < retinueObject.followersRequired; i++) {
                     retinueObject.followersAdded.push("null");
                 }
+                var hexCoordinates = e.target.id.split("_");
+                retinueObject.hexCoordX = hexCoordinates[1];
+                retinueObject.hexCoordY = hexCoordinates[2];
 
             }
         } else {
@@ -6154,10 +6157,22 @@ var UI = {
 
             document.getElementById('retinueFollower' + retinueObject.followersAdded[i]).setAttribute('data-activeonquest', retinueObject.openQuestDetail);
         }
-        sendDataWithoutNeedingAResponse("/game-world/updateRetinueQuest.php?questID=" + retinueObject.openQuestDetail + "&chr=999&followers=" + followersAssigned.join("|"));
+
+
+if(retinueObject.openQuestDetail == "Exploring") {
+
+sendDataWithoutNeedingAResponse("/game-world/generateExplorationRetinueQuest.php?chr="+characterId+"&followers=" + followersAssigned.join("|")+"&hexCoordX="+retinueObject.hexCoordX+"&hexCoordY="+retinueObject.hexCoordY);
+
+retinueExplorePanel.classList.remove("active");
+delete retinueObject.hexCoordX;
+delete retinueObject.hexCoordY;
+} else {
+
+        sendDataWithoutNeedingAResponse("/game-world/updateRetinueQuest.php?questID=" + retinueObject.openQuestDetail + "&chr="+characterId+"&followers=" + followersAssigned.join("|"));
         document.getElementById("retinueQuestLocationDetail" + retinueObject.openQuestDetail).classList.remove("active");
         // remove from the map:
         document.getElementById("retinueQuestLocation" + retinueObject.openQuestDetail).classList.remove("active");
+    }
         retinueQuestStart.disabled = true;
         retinueQuestTimeRequired.innerHTML = "Time required:";
         // clean up:

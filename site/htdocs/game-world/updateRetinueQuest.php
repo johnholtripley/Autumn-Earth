@@ -11,6 +11,12 @@ $allFollowers = explode("|",$_GET['followers']);
 
 
 
+
+
+
+
+
+
 $query = "UPDATE tblretinuefollowers SET activeQuestId='".$questID."', questStartedTime=NOW() where followerID IN(".implode(",",$allFollowers).")";
 $result = mysqli_query($connection, $query);
 
