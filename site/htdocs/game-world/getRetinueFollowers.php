@@ -1,4 +1,10 @@
 <?php
+
+
+include_once($_SERVER['DOCUMENT_ROOT']."/includes/signalnoise.php");
+include_once($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
+
+
 // get retinue followers for this character:
 
 $continentMapWidth = 700;
@@ -11,13 +17,24 @@ $homeBaseContinent = "eastern-continent";
 $homeBaseX = 200;
 $homeBaseY = 350;
 
-$protocol = stripos($_SERVER['SERVER_PROTOCOL'],'https') === true ? 'https://' : 'http://';
 
 
-$gameStateString = file_get_contents($protocol.$_SERVER['SERVER_NAME']."/game-world/getGameState.php?chr=".$chr);
-$gameState = json_decode($gameStateString, true);
 
-$revealedHexCoordinates = $gameState['retinueMapAreasRevealed'];
+$query = "SELECT retinueMapAreasRevealed from tblcharacters where charID='".$chr."'";
+
+   $result = mysqli_query($connection, $query);
+if(mysqli_num_rows($result)>0) {
+  while ($row = mysqli_fetch_array($result)) {
+    extract($row);
+  
+  }
+}
+
+$revealedHexCoordinates = json_decode($retinueMapAreasRevealed, true);
+
+
+
+
 
 // a list of possible obstacles and their required solution:
 $obstacles = [
