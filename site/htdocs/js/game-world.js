@@ -6363,7 +6363,8 @@ function init() {
 }
 
 function getHeroGameState() {
-    getJSON("/data/chr" + characterId + "/gameState.json", function(data) {
+    getJSON("/game-world/getGameState.php?chr="+characterId, function(data) {
+    //getJSON("/data/chr" + characterId + "/gameState.json", function(data) {
         //  thisMapData = data.map;
         // copy the data to the hero object:
         for (var attribute in data) {

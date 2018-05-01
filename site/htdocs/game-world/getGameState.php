@@ -1,3 +1,21 @@
+<?php
+
+include($_SERVER['DOCUMENT_ROOT']."/includes/signalnoise.php");
+include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
+
+header('Content-Type: application/json');
+
+
+$chr = $_GET['chr'];
+
+
+
+
+
+
+
+
+?>
 {
     "currentMap": 2,
     "tileX": 26,
@@ -81,7 +99,7 @@
             "hallmark": 0,
             "inscription": ""
         },
-                "0-9":
+        "0-9":
         {
             "type": 12,
             "quantity": 6,
@@ -94,7 +112,7 @@
             "hallmark": 0,
             "inscription": ""
         },
-           "0-8":
+        "0-8":
         {
             "type": 12,
             "quantity": 2,
@@ -133,7 +151,7 @@
             "hallmark": 0,
             "inscription": ""
         },
-            "0-6":
+        "0-6":
         {
             "type": 8,
             "quantity": 3,
@@ -437,7 +455,7 @@
         "retinueMissionsCompleted": 0,
         "retinueExplorationMissionsCompleted": 0,
         "itemsCrafted": 0,
-"itemsGathered": 0
+        "itemsGathered": 0
     },
     "settings":
     {
@@ -447,7 +465,7 @@
     "titlesEarned": [3, 7],
     "activeTitle": 3,
     "professionsKnown": [0, 1],
-    "recipesKnown": [0,1,2,3,10,11,7,6,12,13,8,14],
+    "recipesKnown": [0, 1, 2, 3, 10, 11, 7, 6, 12, 13, 8, 14],
     "totalGameTimePlayed": 0,
     "fae":
     {
@@ -516,7 +534,7 @@
     },
     "npcsFollowing": [],
     "lineOfSightRange": 20,
-    "retinueMapAreasRevealed": ["-3,2","-2,2","-2,1","-1,1","-2,3"],
+    "retinueMapAreasRevealed": ["-3,2", "-2,2", "-2,1", "-1,1", "-2,3"],
     "collections":
     {
 

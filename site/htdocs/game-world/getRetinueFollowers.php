@@ -11,9 +11,10 @@ $homeBaseContinent = "eastern-continent";
 $homeBaseX = 200;
 $homeBaseY = 350;
 
+$protocol = stripos($_SERVER['SERVER_PROTOCOL'],'https') === true ? 'https://' : 'http://';
 
 
-$gameStateString = file_get_contents("../data/chr".$chr."/gameState.json");
+$gameStateString = file_get_contents($protocol.$_SERVER['SERVER_NAME']."/game-world/getGameState.php?chr=".$chr);
 $gameState = json_decode($gameStateString, true);
 
 $revealedHexCoordinates = $gameState['retinueMapAreasRevealed'];
