@@ -46,13 +46,30 @@ if(mysqli_num_rows($result2)>0) {
     }
   }
 
+
+if($questType == "Exploring") {
+
+echo '{"explored":"'.$questReward.'",';
+  echo '"item":"null"';
+} else {
+
+
+
+
+
 if($hasReward) {
 	echo '{"item":';
+
+
+
 	echo $attachmentOutput;
 	
 } else {
   echo '{"item":"null"';
 }
+
+}
+
 
 echo ', "endLocationX": "'.$endLocationX.'"';
 echo ', "endLocationY": "'.$endLocationY.'"';

@@ -2178,7 +2178,11 @@ delete retinueObject.hexCoordY;
         if (e.target.className == 'takeRewards') {
             e.preventDefault();
             var parentPanel = getNearestParentId(e.target);
-            retinueMissionCompleted(parentPanel.id.substring(15));
+            retinueMissionCompleted(parentPanel.id.substring(15),false);
+        } else if (e.target.className == 'finishExploration') {
+            e.preventDefault();
+            var parentPanel = getNearestParentId(e.target);
+            retinueMissionCompleted(parentPanel.id.substring(15),true);
         }
 
     },

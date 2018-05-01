@@ -83,8 +83,7 @@
 
 
 #retinueAvailableQuestMap {
-    position: relative;
-    // stop hexes from spilling out:
+    position: relative; // stop hexes from spilling out:
     overflow: hidden;
     #activeContinent {
         display: block;
@@ -222,6 +221,7 @@
 }
 
 
+
 /*
 .dropFollowersPanel {
     clear: both;
@@ -241,6 +241,9 @@
 
 .retinueCompletePanel {
     background: #36210c url(../images/game-world/interface/retinue/reward-chest.jpg) no-repeat 50% 0;
+    &.exploration {
+        background-image: url(../images/game-world/interface/retinue/exploration-complete.jpg);
+    }
     border: 3px solid #fed308;
     position: absolute;
     left: 0;
@@ -271,7 +274,7 @@
     .rewardSlot {
         @include inventorySlot();
     }
-    .takeRewards {
+    .takeRewards, .finishExploration {
         cursor: url(../images/game-world/cursors/active.gif) 3 3, auto;
         border: 0;
         background: #53160d;
@@ -293,39 +296,44 @@
 
 
 #retinuePanel {
-.undiscovered {
-    width: 9.43%;
-    height: 16.89%;
-    position: absolute;
-    background: url(../images/world-maps/undiscovered.png);
-    @include background-size(cover);
-    @include transform(translate(-50%, -50%));
-   p {
-    opacity: 0;
-    text-align: center;
-     width: 100%;
-    font-size: 9px;
-    padding: 35% 0 0 0;
-    pointer-events: none;
-    margin: 0;
-    @include transition(opacity 0.4s ease);
-   }
-   &.explorable {
-    @include attention() {
+    .undiscovered {
+        width: 9.43%;
+        height: 16.89%;
+        position: absolute;
+        background: url(../images/game-world/interface/retinue/undiscovered.png);
+        @include background-size(cover);
+        @include transform(translate(-50%, -50%));
+        @include transition(opacity 0.8s ease);
+        opacity: 1;
         p {
-            opacity: 1;
+            opacity: 0;
+            text-align: center;
+            width: 100%;
+            font-size: 9px;
+            padding: 35% 0 0 0;
+            pointer-events: none;
+            margin: 0;
+            @include transition(opacity 0.4s ease);
+        }
+        &.explorable {
+            @include attention() {
+                p {
+                    opacity: 1;
+                }
+            }
+        }
+        &.explored {
+opacity: 0;
         }
     }
-   }
-}
 }
 
 
 #retinueExplorePanel {
-background: url(../images/game-world/interface/retinue/exploration-panel-bg.jpg) no-repeat 50% 0;
-@include background-size(cover);
-padding: 20px 0px;
-p {
-    padding: 0 10px;
-}
+    background: url(../images/game-world/interface/retinue/exploration-panel-bg.jpg) no-repeat 50% 0;
+    @include background-size(cover);
+    padding: 20px 0px;
+    p {
+        padding: 0 10px;
+    }
 }

@@ -165,11 +165,26 @@ $activeText = 'Active on "'.$thisFollower['questName'].'"';
 
 // don't create another panel if more than 1 follower is on this quest:
 if(!(in_array($thisFollower['activeQuestId'], $completePanelsCreated))) {
-$retinuePanelCompleteOutput .= '<div class="retinueCompletePanel'.$thisQuestCompleteClass.'" id="retinueComplete'.$thisFollower['activeQuestId'].'" data-questname="'.$thisFollower['questName'].'">';
+  
+
+$isExplorationQuest = false;
+$explorationQuestAddition = "";
+if($thisFollower["questType"] == "Exploring") {
+$isExplorationQuest = true;
+$explorationQuestAddition = " exploration";
+}
+
+$retinuePanelCompleteOutput .= '<div class="retinueCompletePanel'.$thisQuestCompleteClass.$explorationQuestAddition.'" id="retinueComplete'.$thisFollower['activeQuestId'].'" data-questname="'.$thisFollower['questName'].'">';
+if(!$isExplorationQuest) {
 $retinuePanelCompleteOutput .= '<h2>'.$thisFollower['questName'].'</h2>';
+} else {
+  $retinuePanelCompleteOutput .= '<h2>Exploration</h2>';
+}
 $retinuePanelCompleteOutput .= '<h3>complete</h3>';
+  if(!$isExplorationQuest) {
   if($thisFollower['questReward']) {
   $rewardObject = json_decode($thisFollower['questReward']);
+
   foreach ($rewardObject as &$thisReward) {
   if($thisReward->type == "$") {
   $inventoryImage = 'coins';
@@ -182,6 +197,10 @@ $retinuePanelCompleteOutput .= '<h3>complete</h3>';
   } else {
    $retinuePanelCompleteOutput .= '<button class="takeRewards">Complete</button>'; 
   }
+
+} else {
+  $retinuePanelCompleteOutput .= '<button class="finishExploration">Complete</button>'; 
+}
   
 $retinuePanelCompleteOutput .= '</div>';
 

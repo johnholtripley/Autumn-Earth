@@ -3965,10 +3965,16 @@ function getRetinueQuestTime(followerX, followerY, destinationX, destinationY, h
 }
 
 
-function retinueMissionCompleted(questId) {
+function retinueMissionCompleted(questId, isExplorationQuest) {
+    if (isExplorationQuest) {
 
+
+
+
+
+    }
     getJSON("/game-world/getRetinueRewards.php?id=" + questId + "&chr=" + characterId, function(data) {
-     
+
         if (data.item != "null") {
             // try and add to inventory:
             inventoryCheck = canAddItemToInventory(data.item);
@@ -3985,7 +3991,48 @@ function retinueMissionCompleted(questId) {
         } else {
             // no reward
         }
-        hero.stats.retinueMissionsCompleted++;
+        if (!isExplorationQuest) {
+            hero.stats.retinueMissionsCompleted++;
+        } else {
+            hero.stats.retinueExplorationMissionsCompleted++;
+            var thisHex = document.getElementById('undiscovered_' + data.explored);
+            // save this hex as being explored:
+            hero.retinueMapAreasRevealed.push(data.explored);
+            // needs pushing to database (whole of gamestate json needs to be moved to database) #####################
+
+
+
+
+
+            // make neighbouring hexes explorable:
+            var thisHexCoords = data.explored.split("_");
+            var thisNeighbouringHex;
+            for (var i = 0; i <= 1; i++) {
+                for (var j = 0; j <= 1; j++) {
+                    thisNeighbouringHex = document.getElementById('undiscovered_' + (parseInt(thisHexCoords[0]) + i) + "_" + (parseInt(thisHexCoords[1]) + j));
+                    if (thisNeighbouringHex) {
+                        thisNeighbouringHex.classList.add("explorable");
+                    }
+                }
+            }
+
+
+
+            
+
+            // create quest in that hex and plot it
+            // ###############
+
+
+
+
+
+            thisHex.classList.remove('explorable');
+            // fade hex out:
+            thisHex.classList.add('explored');
+        }
+
+        // release followers from this quest:
         var allFollowersOnThisQuest = data.followerIds.split(",");
         var newLocationX = (data.endLocationX / 700) * 100;
         var newLocationY = (data.endLocationY / 450) * 100;
@@ -6190,7 +6237,11 @@ delete retinueObject.hexCoordY;
         if (e.target.className == 'takeRewards') {
             e.preventDefault();
             var parentPanel = getNearestParentId(e.target);
-            retinueMissionCompleted(parentPanel.id.substring(15));
+            retinueMissionCompleted(parentPanel.id.substring(15),false);
+        } else if (e.target.className == 'finishExploration') {
+            e.preventDefault();
+            var parentPanel = getNearestParentId(e.target);
+            retinueMissionCompleted(parentPanel.id.substring(15),true);
         }
 
     },

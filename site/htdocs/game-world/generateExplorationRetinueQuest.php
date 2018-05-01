@@ -58,4 +58,8 @@ $exploreQuestId = mysqli_insert_id($connection);
 $query2 = "UPDATE tblretinuefollowers SET activeQuestId='".$exploreQuestId."', questStartedTime=NOW() where followerID IN(".implode(",",$allFollowers).")";
 $result = mysqli_query($connection, $query2);
 
+
+$query3 = "INSERT INTO tblretinuequestsactive (questIdActiveOrComplete, characterId) VALUES (".$exploreQuestId.",".$chr.")";
+$result3 = mysqli_query($connection, $query3);
+
 ?>
