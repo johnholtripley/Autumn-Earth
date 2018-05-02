@@ -64,14 +64,13 @@ function retinueMissionCompleted(questId, isExplorationQuest) {
             var thisHex = document.getElementById('undiscovered_' + data.explored);
             // save this hex as being explored:
             hero.retinueMapAreasRevealed.push(data.explored);
-            // needs pushing to database (whole of gamestate json needs to be moved to database) #####################
-
-
-
-
+            
+var thisHexCoords = data.explored.split("_");
+            // needs pushing to database:
+ sendDataWithoutNeedingAResponse("/game-world/updateGameState.php?chr="+characterId+"&action=add&field=retinueMapAreasRevealed&value="+encodeURIComponent('"'+thisHexCoords[0]+','+thisHexCoords[1]+'"'));
 
             // make neighbouring hexes explorable:
-            var thisHexCoords = data.explored.split("_");
+            
             var thisNeighbouringHex;
             for (var i = 0; i <= 1; i++) {
                 for (var j = 0; j <= 1; j++) {

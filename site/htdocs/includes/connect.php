@@ -9,4 +9,5 @@ if (strpos($_SERVER['SERVER_NAME'], 'autumnearth.com') !== false) {
   $connection = @mysqli_connect($host,$user,$password) or die ("Can't connect to server 2");
 }
 $thisdatabase = @mysqli_select_db($connection, $dbname) or die ("Can't select database");
+mysqli_set_charset($connection, "utf8");
 ?>
