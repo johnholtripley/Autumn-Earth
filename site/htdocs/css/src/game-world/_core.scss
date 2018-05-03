@@ -29,10 +29,12 @@ body {
 }
 
 #gameWorld {
+    /*
     image-rendering: -moz-crisp-edges;
     image-rendering: -webkit-crisp-edges;
     -ms-interpolation-mode: nearest-neighbor;
     image-rendering: pixelated;
+    */
     display: block;
 }
 
