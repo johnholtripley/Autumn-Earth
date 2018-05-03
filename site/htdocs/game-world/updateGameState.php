@@ -7,6 +7,13 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
 $chr = $_GET['chr'];
 
 
+
+// Is this the best way to do this?
+// or should specific scripts for specific actions be used?
+// ######################
+
+
+
 // get type of action:
 $action = $_GET['action'];
 
@@ -54,7 +61,8 @@ $result2 = mysqli_query($connection, $query2);
   
 }
 
-
+mysqli_free_result($result);
+mysqli_free_result($result2);
 
 
 ?>

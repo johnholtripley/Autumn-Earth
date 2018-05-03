@@ -222,6 +222,7 @@
 
 
 
+
 /*
 .dropFollowersPanel {
     clear: both;
@@ -300,7 +301,9 @@
         width: 9.43%;
         height: 16.89%;
         position: absolute;
-        background: url(../images/game-world/interface/retinue/undiscovered.png);
+        background-image: url(../images/game-world/interface/retinue/undiscovered.png);
+        background-repeat: no-repeat;
+        background-position: 50% 50%;
         @include background-size(cover);
         @include transform(translate(-50%, -50%));
         @include transition(opacity 0.8s ease);
@@ -323,7 +326,11 @@
             }
         }
         &.explored {
-opacity: 0;
+            opacity: 0;
+        }
+        &.beingExplored {
+ background-image: url(../images/game-world/interface/retinue/being-explored.png);
+ pointer-events: none;
         }
     }
 }

@@ -6200,7 +6200,8 @@ var UI = {
             retinueQuestTimers.push([document.querySelector('#retinueFollower' + retinueObject.followersAdded[i] + ' .retinueQuestTimer'), new Date().getTime() + (retinueObject.timeRequired) * 60 * 1000, ""]);
 
             followersAssigned.push(retinueObject.followersAdded[i]);
-
+console.log(retinueObject.questName);
+// undiscovered_0_1
             document.getElementById('retinueFollower' + retinueObject.followersAdded[i]).setAttribute('data-activeonquest', retinueObject.openQuestDetail);
         }
 
@@ -6210,6 +6211,7 @@ if(retinueObject.openQuestDetail == "Exploring") {
 sendDataWithoutNeedingAResponse("/game-world/generateExplorationRetinueQuest.php?chr="+characterId+"&followers=" + followersAssigned.join("|")+"&hexCoordX="+retinueObject.hexCoordX+"&hexCoordY="+retinueObject.hexCoordY);
 
 retinueExplorePanel.classList.remove("active");
+
 delete retinueObject.hexCoordX;
 delete retinueObject.hexCoordY;
 } else {

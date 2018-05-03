@@ -52,5 +52,5 @@ $outputJSON .= '}';
 
 echo $outputJSON;
 
-
+mysqli_free_result($result);
 ?>

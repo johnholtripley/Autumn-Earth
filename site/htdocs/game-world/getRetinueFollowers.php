@@ -33,7 +33,7 @@ if(mysqli_num_rows($result)>0) {
 $revealedHexCoordinates = json_decode($retinueMapAreasRevealed, true);
 
 
-
+mysqli_free_result($result);
 
 
 // a list of possible obstacles and their required solution:

@@ -4,11 +4,34 @@ include_once($_SERVER['DOCUMENT_ROOT']."/includes/signalnoise.php");
 include_once($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
 include_once($_SERVER['DOCUMENT_ROOT']."/includes/functions.php");
 
+
+$forceHex = null;
+if(!isset($_GET["forceHex"])) {
+$forceHex = urldecode($_GET["forceHex"]);
+}
+
+$isAjax = false;
+if(isset($_GET["isAjaxRequest"])) {
+$isAjax = true;
+}
+
+$debug = false;
+if(isset($_GET["debug"])) {
+$debug = true;
+}
+
+
 if(!isset($revealedHexCoordinates)) {
     $chr = 999;
-$gameStateString = file_get_contents("../data/chr".$chr."/gameState.json");
-$gameState = json_decode($gameStateString, true);
-$revealedHexCoordinates = $gameState['retinueMapAreasRevealed'];
+$query = "SELECT retinueMapAreasRevealed from tblcharacters where charID='".$chr."'";
+   $result = mysqli_query($connection, $query);
+if(mysqli_num_rows($result)>0) {
+  while ($row = mysqli_fetch_array($result)) {
+    extract($row);
+  
+  }
+}
+$revealedHexCoordinates = json_decode($retinueMapAreasRevealed, true);
 $homeBaseX = 200;
 $homeBaseY = 350;
 }
@@ -26,17 +49,19 @@ if(!isset($hexSize)) {
 $tilesToCoverVertically = 3;
 }
 
+
+
 if(!isset($continentMapWidth)) {
 $continentMapWidth = 700;
 $continentMapHeight = 450;
 }
 
+
+
+
 // 1519377963 for island
 
-$debug = false;
-if(isset($_GET["debug"])) {
-$debug = true;
-}
+
 
  if (isset($_GET["seed"])) {
         $storedSeed = intval($_GET["seed"]);
@@ -44,7 +69,7 @@ $debug = true;
     } else {
         // http://php.net/manual/en/function.mt_srand.php
         list($usec, $sec) = explode(' ', microtime());
-        $storedSeed       = floor((float) $sec + ((float) $usec * 100000));
+        $storedSeed = floor((float) $sec + ((float) $usec * 100000));
     }
   
     mt_srand($storedSeed);
@@ -104,9 +129,12 @@ for($i=0;$i<$howManyQuests;$i++) {
 $continent  = "Eastern Continent";
 
 
+if($forceHex == null) {
 // pick a random revealed hex:
 $thisHex = $revealedHexCoordinates[mt_rand(0, count($revealedHexCoordinates) - 1)];
-
+} else {
+$thisHex = $forceHex;
+}
 
 
 $thisHexCoords = explode(",",$thisHex);
@@ -238,8 +266,7 @@ mysqli_free_result($result3);
 $query2 = "INSERT INTO tblretinuequests (questName, questCleanURL, questDescription, questType, continent, mapCoordinateX, mapCoordinateY, needsToReturnToBase, questDifficulty, questObstacles, questCostToStart, questPartOfCampaign, questNumberOfFollowersRequired, questNPCMinimumLevel, questReward, timeCreated, seed) VALUES ('".mysqli_real_escape_string($connection,$questName)."','".$questCleanURL."','".mysqli_real_escape_string($connection,$questDescription)."','".$questType."','".cleanURL($continent)."',".$mapCoordinateX.",".$mapCoordinateY.",".$needsToReturnToBase.",".$questDifficulty.",'".$questObstacles."',".$questCostToStart.",".$questPartOfCampaign.",".$questNumberOfFollowersRequired.",".$questNPCMinimumLevel.",'".$questReward."',NOW(),'".$storedSeed."')";
 if($debug) {
 echo $query2;
-}
-if(!$debug) {
+} else {
 $result2 = mysqli_query($connection, $query2);
 }
 
@@ -252,6 +279,23 @@ if($debug) {
 echo "<br>Seed: ".$storedSeed;
 }
 
+if($isAjax) {
+// echo map markup
 
+/*
+<button id="retinueQuestLocation162" class="mapLocation active" style="left:40.571428571429%;top:64%;"></button>
+<div class="mapLocationTooltip" style="left:40.571428571429%;top:64%;"><h4>Knock, knock</h4><p>The post isn't fast enough for this. Make haste. (requires 2)</p></div>
+*/
+
+    // echo completed panel markup
+
+
+/*
+<div id="retinueQuestLocationDetail163" class="retinueQuestLocationDetailPanel" data-requires="1" data-locationx="213" data-locationy="278" data-requiresreturn="0" data-questname="Lend a hand"><h4>Lend a hand <span>(rescue)</span></h4><p>They need your help.</p><div class="rewardSlot"><img src="/images/game-world/inventory-items/2.png" alt=""><span class="qty">2</span></div><div class="followerSlot" id="dropFollowersPanel163-0"></div></div>
+*/
+
+
+    // ######
+}
 
 ?>

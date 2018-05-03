@@ -62,4 +62,9 @@ $result = mysqli_query($connection, $query2);
 $query3 = "INSERT INTO tblretinuequestsactive (questIdActiveOrComplete, characterId) VALUES (".$exploreQuestId.",".$chr.")";
 $result3 = mysqli_query($connection, $query3);
 
+
+mysqli_free_result($result);
+mysqli_free_result($result2);
+mysqli_free_result($result3);
+
 ?>
