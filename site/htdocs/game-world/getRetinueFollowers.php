@@ -161,7 +161,11 @@ foreach ($followerData as $followerKey => $thisFollower) {
 $thisQuestCompleteClass = '';
 
   if($thisFollower['completedSoFar'] >= $questTimes[($thisFollower['activeQuestId'])] ) {
+    if($thisFollower["questType"] == "Exploring") {
   $retinuePanelOutput .= '<p>COMPLETED "'.$thisFollower['questName'].'"</p>';
+} else {
+ $retinuePanelOutput .= '<p>COMPLETED exploration.</p>'; 
+}
 $thisQuestCompleteClass = ' active';
 
 
@@ -273,7 +277,6 @@ if(mysqli_num_rows($result)>0) {
   }
 }
 
-var_dump($hexesCurrentlyBeingExplored);
 
 // plot hexes
 

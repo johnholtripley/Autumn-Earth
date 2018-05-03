@@ -7,7 +7,7 @@ include_once($_SERVER['DOCUMENT_ROOT']."/includes/functions.php");
 
 $forceHex = null;
 if(!isset($_GET["forceHex"])) {
-$forceHex = urldecode($_GET["forceHex"]);
+$forceHex = $_GET["forceHex"];
 }
 
 $isAjax = false;
@@ -132,12 +132,14 @@ $continent  = "Eastern Continent";
 if($forceHex == null) {
 // pick a random revealed hex:
 $thisHex = $revealedHexCoordinates[mt_rand(0, count($revealedHexCoordinates) - 1)];
+$thisHexCoords = explode(",",$thisHex);
 } else {
 $thisHex = $forceHex;
+$thisHexCoords = explode("_",$thisHex);
 }
 
 
-$thisHexCoords = explode(",",$thisHex);
+
 
 
     $mapCoordinateX = $continentMapWidth/2 + $thisHexCoords[0] * $hexWidth; 

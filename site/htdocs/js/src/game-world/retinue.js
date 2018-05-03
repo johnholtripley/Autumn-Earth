@@ -89,7 +89,7 @@ var thisHexCoords = data.explored.split("_");
      
 
 
-   getJSON("/game-world/generateRetinueQuest.php?forceHex="+encodeURIComponent(thisHexCoords[0]+','+thisHexCoords[1])+"&isAjaxRequest=true", function(data) {
+   getJSON("/game-world/generateRetinueQuest.php?forceHex="+thisHexCoords[0]+'_'+thisHexCoords[1]+"&isAjaxRequest=true", function(data) {
  
         
 
