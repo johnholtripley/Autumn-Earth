@@ -63,6 +63,7 @@ const sendPostCharacter = document.getElementById('sendPostCharacter');
 const newPost = document.getElementById('newPost');
 const retinuePanel = document.getElementById('retinuePanel');
 const retinueAvailableQuestMap = document.getElementById('retinueAvailableQuestMap');
+const retinueDetailWrapper = document.getElementById('retinueDetailWrapper');
 const draggableFollower = document.getElementById('draggableFollower');
 const retinueQuestStart = document.getElementById('retinueQuestStart');
 const retinueQuestTimeRequired = document.getElementById('retinueQuestTimeRequired');
@@ -2142,8 +2143,11 @@ var UI = {
             retinueQuestTimers.push([document.querySelector('#retinueFollower' + retinueObject.followersAdded[i] + ' .retinueQuestTimer'), new Date().getTime() + (retinueObject.timeRequired) * 60 * 1000, ""]);
 
             followersAssigned.push(retinueObject.followersAdded[i]);
-console.log(retinueObject.questName);
-// undiscovered_0_1
+
+var thisHex = document.getElementById('undiscovered_'+retinueObject.hexCoordX+'_'+retinueObject.hexCoordY);
+thisHex.classList.remove('explorable');
+thisHex.classList.add('beingExplored');
+
             document.getElementById('retinueFollower' + retinueObject.followersAdded[i]).setAttribute('data-activeonquest', retinueObject.openQuestDetail);
         }
 

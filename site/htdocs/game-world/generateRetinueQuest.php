@@ -266,8 +266,10 @@ mysqli_free_result($result3);
 $query2 = "INSERT INTO tblretinuequests (questName, questCleanURL, questDescription, questType, continent, mapCoordinateX, mapCoordinateY, needsToReturnToBase, questDifficulty, questObstacles, questCostToStart, questPartOfCampaign, questNumberOfFollowersRequired, questNPCMinimumLevel, questReward, timeCreated, seed) VALUES ('".mysqli_real_escape_string($connection,$questName)."','".$questCleanURL."','".mysqli_real_escape_string($connection,$questDescription)."','".$questType."','".cleanURL($continent)."',".$mapCoordinateX.",".$mapCoordinateY.",".$needsToReturnToBase.",".$questDifficulty.",'".$questObstacles."',".$questCostToStart.",".$questPartOfCampaign.",".$questNumberOfFollowersRequired.",".$questNPCMinimumLevel.",'".$questReward."',NOW(),'".$storedSeed."')";
 if($debug) {
 echo $query2;
+$newQuestID = '1000';
 } else {
 $result2 = mysqli_query($connection, $query2);
+$newQuestID = mysqli_insert_id($connection);
 }
 
 
@@ -276,26 +278,57 @@ $result2 = mysqli_query($connection, $query2);
 
 
 if($debug) {
-echo "<br>Seed: ".$storedSeed;
+echo "<br>Seed: ".$storedSeed."<hr>";
 }
 
 if($isAjax) {
+
+$outputJSON = '{';
+
+
+
 // echo map markup
 
-/*
-<button id="retinueQuestLocation162" class="mapLocation active" style="left:40.571428571429%;top:64%;"></button>
-<div class="mapLocationTooltip" style="left:40.571428571429%;top:64%;"><h4>Knock, knock</h4><p>The post isn't fast enough for this. Make haste. (requires 2)</p></div>
-*/
+
+$outputJSON .= '"mapPin": "<button id=\"retinueQuestLocation'.$newQuestID.'\" class=\"mapLocation active\" style=\"left:'.(($mapCoordinateX/$continentMapWidth)*100).'%;top:'.(($mapCoordinateY/$continentMapHeight)*100).'%;\"></button><div class=\"mapLocationTooltip\" style=\"left:'.(($mapCoordinateX/$continentMapWidth)*100).'%;top:'.(($mapCoordinateY/$continentMapHeight)*100).'%;\"><h4>'.$questName.'</h4><p>'.$questDescription.' (requires '.$questNumberOfFollowersRequired.')</p></div>",';
 
     // echo completed panel markup
 
 
-/*
-<div id="retinueQuestLocationDetail163" class="retinueQuestLocationDetailPanel" data-requires="1" data-locationx="213" data-locationy="278" data-requiresreturn="0" data-questname="Lend a hand"><h4>Lend a hand <span>(rescue)</span></h4><p>They need your help.</p><div class="rewardSlot"><img src="/images/game-world/inventory-items/2.png" alt=""><span class="qty">2</span></div><div class="followerSlot" id="dropFollowersPanel163-0"></div></div>
-*/
+$outputJSON .= '"panelMarkup": "<div id=\"retinueQuestLocationDetail'.$newQuestID .'\" class=\"retinueQuestLocationDetailPanel\" data-requires=\"'.$questNumberOfFollowersRequired.'\" data-locationx=\"'.$mapCoordinateX.'\" data-locationy=\"'.$mapCoordinateY.'\" data-requiresreturn=\"'.$needsToReturnToBase.'\" data-questname=\"'.$questName.'\"><h4>'.$questName.' <span>('.$questType.')</span></h4><p>'.$questDescription.'</p>';
+
+
+
+  if($questReward) {
+  $rewardObject = json_decode($questReward);
+  foreach ($rewardObject as &$thisReward) {
+  if($thisReward->type == "$") {
+  $inventoryImage = 'coins';
+  } else {
+  $inventoryImage = $thisReward->type;
+  }
+  $outputJSON .= '<div class=\"rewardSlot\"><img src=\"/images/game-world/inventory-items/'.$inventoryImage.'.png\" alt=\"\"><span class=\"qty\">'.$thisReward->quantity.'</span></div>';
+  }
+  }
+
+
+
+
+
+ for ($i=0;$i<$questNumberOfFollowersRequired;$i++) {
+    $outputJSON .= '<div class=\"followerSlot\" id=\"dropFollowersPanel'.($newQuestID).'-'.$i.'\"></div>';
+  }
+
+
+$outputJSON .= '</div>"}';
 
 
     // ######
+header('Content-Type: application/json');
+
+echo $outputJSON;
+
+
 }
 
 ?>

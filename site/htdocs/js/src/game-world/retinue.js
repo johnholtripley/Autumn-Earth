@@ -85,8 +85,23 @@ var thisHexCoords = data.explored.split("_");
 
             
 
-            // create quest in that hex and plot it
-            // ###############
+            // create quest in that hex and plot it:
+     
+
+
+   getJSON("/game-world/generateRetinueQuest.php?forceHex="+encodeURIComponent(thisHexCoords[0]+','+thisHexCoords[1])+"&isAjaxRequest=true", function(data) {
+ 
+        
+
+
+retinueAvailableQuestMap.insertAdjacentHTML('beforeend', data.mapPin);
+retinueDetailWrapper.insertAdjacentHTML('beforeend', data.panelMarkup);
+
+
+        }, function(status) {
+            // error ###
+        });
+
 
 
 

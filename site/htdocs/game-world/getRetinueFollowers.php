@@ -261,6 +261,20 @@ $questsResult = mysqli_query($connection, $questsQuery) or die ();
 
 
 
+// find all open exploration quests for this character:
+
+$hexesCurrentlyBeingExplored = [];
+  $exploreQuery = 'select * from tblretinuefollowers inner join tblretinuequests on tblretinuefollowers.activeQuestId = tblretinuequests.questID where tblretinuefollowers.characterIdFollowing="'.$chr.'" and tblretinuequests.questType = "Exploring"';
+   $result = mysqli_query($connection, $query);
+if(mysqli_num_rows($result)>0) {
+  while ($row = mysqli_fetch_array($result)) {
+    extract($row);
+    array_push($hexesCurrentlyBeingExplored, $questName);
+  }
+}
+
+var_dump($hexesCurrentlyBeingExplored);
+
 // plot hexes
 
   for($x=-$tilesToCoverHorizontally;$x<=$tilesToCoverHorizontally;$x++) {
@@ -286,6 +300,11 @@ for ($i=0;$i<count($revealedHexCoordinates);$i++) {
   if (($xDiff + $yDiff) == 1) {
 $isExplorableClass = ' explorable';
   }
+}
+
+if(in_array($x.'_'.$y, $hexesCurrentlyBeingExplored)){
+  // already being explored:
+$isExplorableClass = ' beingExplored';
 }
 
 
