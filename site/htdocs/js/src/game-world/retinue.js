@@ -32,15 +32,7 @@ function getRetinueQuestTime(followerX, followerY, destinationX, destinationY, h
 
 
 function retinueMissionCompleted(questId, isExplorationQuest) {
-    if (isExplorationQuest) {
-
-
-
-
-
-    }
     getJSON("/game-world/getRetinueRewards.php?id=" + questId + "&chr=" + characterId, function(data) {
-
         if (data.item != "null") {
             // try and add to inventory:
             inventoryCheck = canAddItemToInventory(data.item);
@@ -64,13 +56,12 @@ function retinueMissionCompleted(questId, isExplorationQuest) {
             var thisHex = document.getElementById('undiscovered_' + data.explored);
             // save this hex as being explored:
             hero.retinueMapAreasRevealed.push(data.explored);
-            
-var thisHexCoords = data.explored.split("_");
+
+            var thisHexCoords = data.explored.split("_");
             // needs pushing to database:
- sendDataWithoutNeedingAResponse("/game-world/updateGameState.php?chr="+characterId+"&action=add&field=retinueMapAreasRevealed&value="+encodeURIComponent('"'+thisHexCoords[0]+','+thisHexCoords[1]+'"'));
+            sendDataWithoutNeedingAResponse("/game-world/updateGameState.php?chr=" + characterId + "&action=add&field=retinueMapAreasRevealed&value=" + encodeURIComponent('"' + thisHexCoords[0] + ',' + thisHexCoords[1] + '"'));
 
             // make neighbouring hexes explorable:
-            
             var thisNeighbouringHex;
             for (var i = 0; i <= 1; i++) {
                 for (var j = 0; j <= 1; j++) {
@@ -81,31 +72,13 @@ var thisHexCoords = data.explored.split("_");
                 }
             }
 
-
-
-            
-
             // create quest in that hex and plot it:
-     
-
-
-   getJSON("/game-world/generateRetinueQuest.php?forceHex="+thisHexCoords[0]+'_'+thisHexCoords[1]+"&isAjaxRequest=true", function(data) {
- 
-        
-
-
-retinueAvailableQuestMap.insertAdjacentHTML('beforeend', data.mapPin);
-retinueDetailWrapper.insertAdjacentHTML('beforeend', data.panelMarkup);
-
-
-        }, function(status) {
-            // error ###
-        });
-
-
-
-
-
+            getJSON("/game-world/generateRetinueQuest.php?forceHex=" + thisHexCoords[0] + '_' + thisHexCoords[1] + "&isAjaxRequest=true", function(data) {
+                retinueAvailableQuestMap.insertAdjacentHTML('beforeend', data.mapPin);
+                retinueDetailWrapper.insertAdjacentHTML('beforeend', data.panelMarkup);
+            }, function(status) {
+                // error ###
+            });
 
             thisHex.classList.remove('explorable');
             // fade hex out:

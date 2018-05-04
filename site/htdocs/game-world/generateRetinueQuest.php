@@ -158,9 +158,8 @@ if(count($activeEvents)>0) {
 
 
 
-/*
 
-// find all open quests for this character:
+// find all available quests for this character:
 $positionsAlreadyTaken = [];
   $checkAvilableQuestsQuery = "SELECT * from tblretinuequests where tblretinuequests.questID NOT IN (SELECT questIdActiveOrComplete from tblretinuequestsactive where characterId='".$chr."') and ".$activeSeasonQuery." order by timeCreated DESC limit 12";
 
@@ -176,6 +175,18 @@ if(mysqli_num_rows($checkAvilableQuestsResult)>0) {
 // convert these positions to hexes that already have quests in:
 // john ####
 for($i=0;$i<count($positionsAlreadyTaken);$i++) {
+
+/*
+  $mapCoordinateX = $continentMapWidth/2 + $thisHexCoords[0] * $hexWidth; 
+    $mapCoordinateY = $continentMapHeight/2 + $thisHexCoords[1] * $hexHeight*3/4; 
+   if($thisHexCoords[1]%2==0) {
+    $mapCoordinateX +=  $hexWidth/2;
+    }
+    */
+
+
+
+
   $thisHexY = ($positionsAlreadyTaken[$i][1] - $continentMapHeight/2)/$hexHeight*3/4; 
   $offset = 0;
    if($thisHexY%2==0) {
@@ -183,21 +194,20 @@ for($i=0;$i<count($positionsAlreadyTaken);$i++) {
     }
  $thisHexX = ($positionsAlreadyTaken[$i][0] - $offset - $continentMapWidth/2)/$hexWidth;
   
-echo $thisHexX.",".$thisHexY."<br>";
+//echo floor($thisHexX).",".ceil($thisHexY)."<br>";
 
+
+// remove this from revealedHexCoordinates so another quest won't be added here
+$hexToRemove = floor($thisHexX).",".ceil($thisHexY);
+// https://stackoverflow.com/questions/7225070/php-array-delete-by-value-not-key
+if (($key = array_search($hexToRemove, $revealedHexCoordinates)) !== false) {
+    unset($revealedHexCoordinates[$key]);
+    // update indexes if one has been removed:
+$revealedHexCoordinates = array_values($revealedHexCoordinates);
 }
 
-// remove these from revealedHexCoordinates;
-// ###########
 
-
-*/
-
-
-
-
-
-
+}
 
 
 
@@ -214,6 +224,10 @@ if(count($revealedHexCoordinates) > 0) {
 
 
 $continent  = "Eastern Continent";
+
+
+
+
 
 
 if($forceHex == null) {
@@ -235,6 +249,8 @@ $thisHexCoords = explode("_",$thisHex);
 // remove this from revealedHexCoordinates so another quest won't be added here
 $hexToRemove = $thisHexCoords[0].",".$thisHexCoords[1];
 
+// update indexes if one has been removed:
+$revealedHexCoordinates = array_values($revealedHexCoordinates);
 
 // https://stackoverflow.com/questions/7225070/php-array-delete-by-value-not-key
 if (($key = array_search($hexToRemove, $revealedHexCoordinates)) !== false) {

@@ -43,7 +43,7 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/header.php");
 <progress max="100" id="progessBar"><img src="/images/uploading.gif" alt="Uploading..."></progress>
 
 
-<input id="Filedata" class="fileInput" name="Filedata" data-multiple-caption="{count} files selected" multiple="" type="file">
+<input id="Filedata" class="fileInput" name="Filedata" data-multiple-caption="{count} files selected" multiple="" type="file" accept="image/*,capture=camera">
 <label class="fileInputLabel" for="Filedata">
 <span>Choose a file</span>
 </label>
