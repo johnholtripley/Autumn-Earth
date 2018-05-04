@@ -214,10 +214,6 @@ $revealedHexCoordinates = array_values($revealedHexCoordinates);
 
 
 
-
-
-
-
 for($i=0;$i<$howManyQuests;$i++) {
 if(count($revealedHexCoordinates) > 0) {
 
