@@ -6,9 +6,11 @@ include_once($_SERVER['DOCUMENT_ROOT']."/includes/functions.php");
 
 
 $forceHex = null;
-if(!isset($_GET["forceHex"])) {
+if(isset($_GET["forceHex"])) {
 $forceHex = $_GET["forceHex"];
 }
+
+
 
 $isAjax = false;
 if(isset($_GET["isAjaxRequest"])) {
@@ -121,8 +123,93 @@ if(count($revealedHexCoordinates) < $howManyQuests) {
 
 
 
-for($i=0;$i<$howManyQuests;$i++) {
 
+if(!isset($activeSeasonQuery)) {
+
+// get current active events:
+$activeEvents = [];
+$eventsQuery = "SELECT eventid from tblevents WHERE ((repeatsAnnually and ((dayofyear(now()) between (dayofyear(eventstart)) and (dayofyear(eventstart)+eventdurationdays-1)) or (dayofyear(now()) between (dayofyear(eventstart) - 365) and (dayofyear(eventstart)+eventdurationdays-366)))) or ((repeatsAnnually = 0) and (date(now()) between (eventstart) and (eventstart+eventdurationdays))))";
+
+    $eventsResult = mysqli_query($connection,  $eventsQuery ) or die ( "couldn't execute events query: ".$eventsQuery );
+$numberofrows = mysqli_num_rows( $eventsResult );
+    if ( $numberofrows>0 ) {
+        while ( $row = mysqli_fetch_array( $eventsResult ) ) {
+            //extract( $row );
+            array_push($activeEvents, $row['eventid']);
+        }
+    }
+mysqli_free_result($eventsResult);
+
+
+$activeSeasonQuery = 'activeduringseason is null';
+if(count($activeEvents)>0) {
+   $activeSeasonQuery = '(tblretinuequests.activeduringseason in ('.implode(",",$activeEvents).') or tblretinuequests.activeduringseason is null)'; 
+}
+
+}
+
+
+
+
+
+
+
+
+
+
+
+/*
+
+// find all open quests for this character:
+$positionsAlreadyTaken = [];
+  $checkAvilableQuestsQuery = "SELECT * from tblretinuequests where tblretinuequests.questID NOT IN (SELECT questIdActiveOrComplete from tblretinuequestsactive where characterId='".$chr."') and ".$activeSeasonQuery." order by timeCreated DESC limit 12";
+
+   $checkAvilableQuestsResult = mysqli_query($connection, $checkAvilableQuestsQuery);
+if(mysqli_num_rows($checkAvilableQuestsResult)>0) {
+  while ($row = mysqli_fetch_array($checkAvilableQuestsResult)) {
+    extract($row);
+    
+    array_push($positionsAlreadyTaken, [$mapCoordinateX,$mapCoordinateY]);
+  }
+}
+
+// convert these positions to hexes that already have quests in:
+// john ####
+for($i=0;$i<count($positionsAlreadyTaken);$i++) {
+  $thisHexY = ($positionsAlreadyTaken[$i][1] - $continentMapHeight/2)/$hexHeight*3/4; 
+  $offset = 0;
+   if($thisHexY%2==0) {
+    $offset =  $hexWidth/2;
+    }
+ $thisHexX = ($positionsAlreadyTaken[$i][0] - $offset - $continentMapWidth/2)/$hexWidth;
+  
+echo $thisHexX.",".$thisHexY."<br>";
+
+}
+
+// remove these from revealedHexCoordinates;
+// ###########
+
+
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+for($i=0;$i<$howManyQuests;$i++) {
+if(count($revealedHexCoordinates) > 0) {
 
 
 
@@ -139,15 +226,20 @@ $thisHexCoords = explode("_",$thisHex);
 }
 
 
-
-
-
     $mapCoordinateX = $continentMapWidth/2 + $thisHexCoords[0] * $hexWidth; 
     $mapCoordinateY = $continentMapHeight/2 + $thisHexCoords[1] * $hexHeight*3/4; 
-
-        if($thisHexCoords[1]%2==0) {
+   if($thisHexCoords[1]%2==0) {
     $mapCoordinateX +=  $hexWidth/2;
     }
+
+// remove this from revealedHexCoordinates so another quest won't be added here
+$hexToRemove = $thisHexCoords[0].",".$thisHexCoords[1];
+
+
+// https://stackoverflow.com/questions/7225070/php-array-delete-by-value-not-key
+if (($key = array_search($hexToRemove, $revealedHexCoordinates)) !== false) {
+    unset($revealedHexCoordinates[$key]);
+}
 
 // that is the hex centre, pick a spot within a radius
 
@@ -276,6 +368,7 @@ $newQuestID = mysqli_insert_id($connection);
 
 
 }
+}
 
 
 
@@ -325,7 +418,7 @@ $outputJSON .= '"panelMarkup": "<div id=\"retinueQuestLocationDetail'.$newQuestI
 $outputJSON .= '</div>"}';
 
 
-    // ######
+    
 header('Content-Type: application/json');
 
 echo $outputJSON;

@@ -2144,16 +2144,16 @@ var UI = {
 
             followersAssigned.push(retinueObject.followersAdded[i]);
 
-var thisHex = document.getElementById('undiscovered_'+retinueObject.hexCoordX+'_'+retinueObject.hexCoordY);
-thisHex.classList.remove('explorable');
-thisHex.classList.add('beingExplored');
+
 
             document.getElementById('retinueFollower' + retinueObject.followersAdded[i]).setAttribute('data-activeonquest', retinueObject.openQuestDetail);
         }
 
 
 if(retinueObject.openQuestDetail == "Exploring") {
-
+var thisHex = document.getElementById('undiscovered_'+retinueObject.hexCoordX+'_'+retinueObject.hexCoordY);
+thisHex.classList.remove('explorable');
+thisHex.classList.add('beingExplored');
 sendDataWithoutNeedingAResponse("/game-world/generateExplorationRetinueQuest.php?chr="+characterId+"&followers=" + followersAssigned.join("|")+"&hexCoordX="+retinueObject.hexCoordX+"&hexCoordY="+retinueObject.hexCoordY);
 
 retinueExplorePanel.classList.remove("active");

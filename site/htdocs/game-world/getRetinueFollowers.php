@@ -161,10 +161,11 @@ foreach ($followerData as $followerKey => $thisFollower) {
 $thisQuestCompleteClass = '';
 
   if($thisFollower['completedSoFar'] >= $questTimes[($thisFollower['activeQuestId'])] ) {
+    
     if($thisFollower["questType"] == "Exploring") {
-  $retinuePanelOutput .= '<p>COMPLETED "'.$thisFollower['questName'].'"</p>';
+   $retinuePanelOutput .= '<p>COMPLETED exploration.</p>'; 
 } else {
- $retinuePanelOutput .= '<p>COMPLETED exploration.</p>'; 
+$retinuePanelOutput .= '<p>COMPLETED "'.$thisFollower['questName'].'"</p>';
 }
 $thisQuestCompleteClass = ' active';
 
@@ -246,7 +247,7 @@ array_push($completePanelsCreated, $thisFollower['activeQuestId']);
 
 $questPanelDetailsOutput = "";
 
-// get a pool of the latest available quests (all latest quests, that aren;t active or completed by this character)
+// get a pool of the latest available quests (all latest quests, that aren't active or completed by this character)
       $questsQuery = "SELECT * from tblretinuequests where tblretinuequests.questID NOT IN (SELECT questIdActiveOrComplete from tblretinuequestsactive where characterId='".$chr."') and ".$activeSeasonQuery." order by timeCreated DESC limit 12";
 
 $questsResult = mysqli_query($connection, $questsQuery) or die ();
@@ -266,12 +267,11 @@ $questsResult = mysqli_query($connection, $questsQuery) or die ();
 
 
 // find all open exploration quests for this character:
-
 $hexesCurrentlyBeingExplored = [];
   $exploreQuery = 'select * from tblretinuefollowers inner join tblretinuequests on tblretinuefollowers.activeQuestId = tblretinuequests.questID where tblretinuefollowers.characterIdFollowing="'.$chr.'" and tblretinuequests.questType = "Exploring"';
-   $result = mysqli_query($connection, $query);
-if(mysqli_num_rows($result)>0) {
-  while ($row = mysqli_fetch_array($result)) {
+   $exploreResult = mysqli_query($connection, $exploreQuery);
+if(mysqli_num_rows($exploreResult)>0) {
+  while ($row = mysqli_fetch_array($exploreResult)) {
     extract($row);
     array_push($hexesCurrentlyBeingExplored, $questName);
   }
@@ -316,6 +316,9 @@ $isExplorableClass = ' beingExplored';
   
 }
 }
+
+
+
 
 
 if(mysqli_num_rows($questsResult)<6) {
