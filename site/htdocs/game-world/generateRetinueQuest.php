@@ -245,13 +245,15 @@ $thisHexCoords = explode("_",$thisHex);
 // remove this from revealedHexCoordinates so another quest won't be added here
 $hexToRemove = $thisHexCoords[0].",".$thisHexCoords[1];
 
-// update indexes if one has been removed:
-$revealedHexCoordinates = array_values($revealedHexCoordinates);
+
 
 // https://stackoverflow.com/questions/7225070/php-array-delete-by-value-not-key
 if (($key = array_search($hexToRemove, $revealedHexCoordinates)) !== false) {
     unset($revealedHexCoordinates[$key]);
 }
+
+// update indexes if one has been removed:
+$revealedHexCoordinates = array_values($revealedHexCoordinates);
 
 // that is the hex centre, pick a spot within a radius
 

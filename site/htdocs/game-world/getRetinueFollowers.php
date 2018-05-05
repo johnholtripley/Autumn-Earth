@@ -300,7 +300,7 @@ for ($i=0;$i<count($revealedHexCoordinates);$i++) {
   $xDiff = abs($thisHex[0] - $x);
   $yDiff = abs($thisHex[1] - $y);
    // only those adjacent to already revealed hexes show be explorable - one value is the same and the other is +1 or -1 from that:
-  if (($xDiff + $yDiff) == 1) {
+  if (($xDiff <=1) && ($yDiff <=1)) {
 $isExplorableClass = ' explorable';
   }
 }
