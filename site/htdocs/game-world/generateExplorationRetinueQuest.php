@@ -41,7 +41,7 @@ $tilesToCoverVertically = 3;
 $continent  = "Eastern Continent";
 
 // create entry in retinue quests table:
-$query = "INSERT INTO tblretinuequests (questName, questCleanURL, questDescription, questType, continent, mapCoordinateX, mapCoordinateY, needsToReturnToBase, questDifficulty, questObstacles, questCostToStart, questPartOfCampaign, questNumberOfFollowersRequired, questNPCMinimumLevel, questReward, timeCreated, seed) VALUES ('".$hexCoordX."_".$hexCoordY."','Exploring','Exploring','Exploring','".cleanURL($continent)."',".$mapCoordinateX.",".$mapCoordinateY.",1,0,'',0,0,".count($allFollowers).",1,'".$hexCoordX."_".$hexCoordY."',NOW(),-1)";
+$query = "INSERT INTO tblretinuequests (questName, questCleanURL, questDescription, questType, characterID, continent, mapCoordinateX, mapCoordinateY, needsToReturnToBase, questDifficulty, questObstacles, questCostToStart, questPartOfCampaign, questNumberOfFollowersRequired, questNPCMinimumLevel, questReward, timeCreated, seed) VALUES ('".$hexCoordX."_".$hexCoordY."','Exploring','Exploring','Exploring','".$chr."','".cleanURL($continent)."',".$mapCoordinateX.",".$mapCoordinateY.",1,0,'',0,0,".count($allFollowers).",1,'".$hexCoordX."_".$hexCoordY."',NOW(),-1)";
 if($debug) {
     echo $query;
 }

@@ -161,7 +161,7 @@ if(count($activeEvents)>0) {
 
 // find all available quests for this character:
 $positionsAlreadyTaken = [];
-  $checkAvilableQuestsQuery = "SELECT * from tblretinuequests where tblretinuequests.questID NOT IN (SELECT questIdActiveOrComplete from tblretinuequestsactive where characterId='".$chr."') and ".$activeSeasonQuery." order by timeCreated DESC limit 12";
+  $checkAvilableQuestsQuery = "SELECT * from tblretinuequests where tblretinuequests.questID NOT IN (SELECT questIdActiveOrComplete from tblretinuequestsactive where characterId='".$chr."') and ".$activeSeasonQuery." AND tblretinuequests.characterId = '".$chr."' AND tblretinuequests.questType != 'Exploring' order by timeCreated DESC limit 12";
 
    $checkAvilableQuestsResult = mysqli_query($connection, $checkAvilableQuestsQuery);
 if(mysqli_num_rows($checkAvilableQuestsResult)>0) {
@@ -208,7 +208,6 @@ $revealedHexCoordinates = array_values($revealedHexCoordinates);
 
 
 }
-
 
 
 
@@ -371,7 +370,7 @@ $attempts++;
 mysqli_free_result($result3);
 
 // add to database:
-$query2 = "INSERT INTO tblretinuequests (questName, questCleanURL, questDescription, questType, continent, mapCoordinateX, mapCoordinateY, needsToReturnToBase, questDifficulty, questObstacles, questCostToStart, questPartOfCampaign, questNumberOfFollowersRequired, questNPCMinimumLevel, questReward, timeCreated, seed) VALUES ('".mysqli_real_escape_string($connection,$questName)."','".$questCleanURL."','".mysqli_real_escape_string($connection,$questDescription)."','".$questType."','".cleanURL($continent)."',".$mapCoordinateX.",".$mapCoordinateY.",".$needsToReturnToBase.",".$questDifficulty.",'".$questObstacles."',".$questCostToStart.",".$questPartOfCampaign.",".$questNumberOfFollowersRequired.",".$questNPCMinimumLevel.",'".$questReward."',NOW(),'".$storedSeed."')";
+$query2 = "INSERT INTO tblretinuequests (questName, questCleanURL, questDescription, questType, characterId, continent, mapCoordinateX, mapCoordinateY, needsToReturnToBase, questDifficulty, questObstacles, questCostToStart, questPartOfCampaign, questNumberOfFollowersRequired, questNPCMinimumLevel, questReward, timeCreated, seed) VALUES ('".mysqli_real_escape_string($connection,$questName)."','".$questCleanURL."','".mysqli_real_escape_string($connection,$questDescription)."','".$questType."','".$chr."','".cleanURL($continent)."',".$mapCoordinateX.",".$mapCoordinateY.",".$needsToReturnToBase.",".$questDifficulty.",'".$questObstacles."',".$questCostToStart.",".$questPartOfCampaign.",".$questNumberOfFollowersRequired.",".$questNPCMinimumLevel.",'".$questReward."',NOW(),'".$storedSeed."')";
 if($debug) {
 echo $query2;
 $newQuestID = '1000';

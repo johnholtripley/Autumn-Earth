@@ -3940,6 +3940,9 @@ function getRetinueQuestTime(followerX, followerY, destinationX, destinationY, h
         thisTimeRequired += getPythagorasDistance(retinueBaseLocationX, retinueBaseLocationY, destinationX, destinationY);
     }
 
+
+
+
     var seconds = Math.floor((thisTimeRequired * 60) % 60);
     var minutes = Math.floor(thisTimeRequired % 60);
     var hours = Math.floor((thisTimeRequired / 60) % 24);
@@ -3997,8 +4000,8 @@ function retinueMissionCompleted(questId, isExplorationQuest) {
 
             // make neighbouring hexes explorable:
             var thisNeighbouringHex;
-            for (var i = 0; i <= 1; i++) {
-                for (var j = 0; j <= 1; j++) {
+            for (var i = -1; i <= 1; i++) {
+                for (var j = -1; j <= 1; j++) {
                     thisNeighbouringHex = document.getElementById('undiscovered_' + (parseInt(thisHexCoords[0]) + i) + "_" + (parseInt(thisHexCoords[1]) + j));
                     if (thisNeighbouringHex) {
                         thisNeighbouringHex.classList.add("explorable");

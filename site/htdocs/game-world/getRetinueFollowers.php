@@ -389,6 +389,35 @@ $questPanelDetailsOutput .= '<p>'.$questDescription.'</p>';
 
 $questPanelDetailsOutput .= '</div>';
 
+
+
+
+// add the completed panel so it's there ready if the quest is completed before a reload:
+$retinuePanelCompleteOutput .= '<div class="retinueCompletePanel" id="retinueComplete'.$questID.'" data-questname="'.$questName.'">';
+$retinuePanelCompleteOutput .= '<h2>'.$questName.'</h2>';
+$retinuePanelCompleteOutput .= '<h3>complete</h3>';
+
+ if($questReward) {
+  $rewardObject = json_decode($questReward);
+
+  foreach ($rewardObject as &$thisReward) {
+  if($thisReward->type == "$") {
+  $inventoryImage = 'coins';
+  } else {
+  $inventoryImage = $thisReward->type;
+  }
+  $retinuePanelCompleteOutput .= '<div class="rewardSlot"><img src="/images/game-world/inventory-items/'.$inventoryImage.'.png" alt=""><span class="qty">'.$thisReward->quantity.'</span></div>';
+  }
+  $retinuePanelCompleteOutput .= '<button class="takeRewards">Take all</button>';
+  } else {
+   $retinuePanelCompleteOutput .= '<button class="takeRewards">Complete</button>'; 
+  }
+ 
+$retinuePanelCompleteOutput .= '</div>';
+
+
+
+
 } 
   }
 
