@@ -63,8 +63,14 @@ $query3 = "INSERT INTO tblretinuequestsactive (questIdActiveOrComplete, characte
 $result3 = mysqli_query($connection, $query3);
 
 
-mysqli_free_result($result);
-mysqli_free_result($result2);
-mysqli_free_result($result3);
+
+
+
+$completedPanelMarkupJSON = '{"markup": "<div class=\"retinueCompletePanel exploration\" id=\"retinueComplete'.$exploreQuestId.'\" data-questname=\"'.$hexCoordX.'_'.$hexCoordY.'\"><h2>Exploration</h2><h3>complete</h3><button class=\"finishExploration\">Complete</button></div>",';
+$completedPanelMarkupJSON .= '"followers": "'.implode(",",$allFollowers).'",';
+$completedPanelMarkupJSON .= '"questId": "'.$exploreQuestId.'"}';
+
+header('Content-Type: application/json');
+echo $completedPanelMarkupJSON;
 
 ?>

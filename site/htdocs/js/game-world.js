@@ -6203,7 +6203,23 @@ if(retinueObject.openQuestDetail == "Exploring") {
 var thisHex = document.getElementById('undiscovered_'+retinueObject.hexCoordX+'_'+retinueObject.hexCoordY);
 thisHex.classList.remove('explorable');
 thisHex.classList.add('beingExplored');
-sendDataWithoutNeedingAResponse("/game-world/generateExplorationRetinueQuest.php?chr="+characterId+"&followers=" + followersAssigned.join("|")+"&hexCoordX="+retinueObject.hexCoordX+"&hexCoordY="+retinueObject.hexCoordY);
+getJSON("/game-world/generateExplorationRetinueQuest.php?chr="+characterId+"&followers=" + followersAssigned.join("|")+"&hexCoordX="+retinueObject.hexCoordX+"&hexCoordY="+retinueObject.hexCoordY, function(data) {
+
+
+if(data.markup) {
+  retinuePanel.insertAdjacentHTML('beforeend', data.markup);
+  // update the follower's panels with the correct quest id:
+  var thisQuestFollowers = data.followers.split(",");
+  console.log(data.followers);
+  for (i = 0; i < thisQuestFollowers.length; i++) {
+    
+document.getElementById('retinueFollower' + thisQuestFollowers[i]).setAttribute('data-activeonquest', data.questId);
+  }
+
+}
+    }, function(status) {
+        // error ####
+    });
 
 retinueExplorePanel.classList.remove("active");
 
