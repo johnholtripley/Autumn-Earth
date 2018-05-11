@@ -1,0 +1,143 @@
+<?php
+
+include($_SERVER['DOCUMENT_ROOT']."/includes/signalnoise.php");
+include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
+
+
+
+$chr = $_GET["chr"];
+
+
+
+$debug = false;
+if(isset($_GET["debug"])) {
+$debug = true;
+}
+
+
+
+
+$possibleBreedablePlants = [];
+
+// item category 1 is flowers:
+$query = 'select itemid from tblinventoryitems where itemcategories = 1 and action=""';
+$result = mysqli_query($connection, $query);
+if(mysqli_num_rows($result)>0) {
+  while ($row = mysqli_fetch_array($result)) {
+  	array_push($possibleBreedablePlants,$row['itemid']);
+  	}
+  }
+  mysqli_free_result($result);
+
+// array built so that "1-2": 3 means if species #1 and species #2 are bred, then the result is species #3
+// the smaller number is a;lways first in the key (eg. 1-2, not 2-1)
+
+
+
+// do each for flowers, herbs and trees ########
+
+
+
+ // sort the results so that they're different for each character, so it can't be spoiled:
+// (the player can always buy a particular seed that they're after if they want)
+mt_srand($chr);
+
+    
+
+$sortedPossibleBreedablePlants = $possibleBreedablePlants;
+
+function seededRandomSort($a, $b) {
+    if (mt_rand(0,1) == 0) {
+        return -1;
+    } else {
+    	return 1;
+    }
+}
+
+usort($sortedPossibleBreedablePlants, "seededRandomSort");
+
+$plantBreeding = [];
+ $arrayCounter = 0;
+ for ( $i = 0; $i < count($sortedPossibleBreedablePlants); $i++) {
+        for ( $j = 0; $j < count($sortedPossibleBreedablePlants); $j++) {
+            if ($i != $j) {
+            	if ($sortedPossibleBreedablePlants[$i] < $sortedPossibleBreedablePlants[$j]) {
+                    $thisKey = $sortedPossibleBreedablePlants[$i] . "-" . $sortedPossibleBreedablePlants[$j];
+                } else {
+                    $thisKey = $sortedPossibleBreedablePlants[$j] . "-" . $sortedPossibleBreedablePlants[$i];
+                }
+                if (!array_key_exists($thisKey, $plantBreeding)) {
+
+				do {
+                        $arrayCounter++;
+                        if ($arrayCounter >= count($sortedPossibleBreedablePlants)) {
+                            $arrayCounter = 0;
+                        }
+                        $thisResultType = $sortedPossibleBreedablePlants[$arrayCounter];
+                        // make sure this offspring isn't the same as either parent:
+
+                    } while (($thisResultType == $sortedPossibleBreedablePlants[$j]) || ($thisResultType == $sortedPossibleBreedablePlants[$i]));
+                    $plantBreeding[$thisKey] = $sortedPossibleBreedablePlants[$arrayCounter];
+
+
+                }
+            }
+        }
+    }
+
+
+if($debug) {
+ var_dump($plantBreeding);
+}
+
+
+
+
+if($debug) {
+// build output table:
+	     $markup = '<table style="background:#fff;position:absolute;left:20%;top:20%;">';
+    for ( $i = 0; $i <= count($possibleBreedablePlants); $i++) {
+        $markup .= '<tr>';
+        for ( $j = 0; $j <= count($possibleBreedablePlants); $j++) {
+            $markup .= '<td style="border:1px solid #cecece;padding:6px;">';
+            if ($i == 0) {
+                if ($j == 0) {
+                    $markup .= 'x';
+                } else {
+                    $markup .= '<img src="/images/game-world/inventory-items/' . $possibleBreedablePlants[$j - 1] . '.png">';
+                }
+            } else {
+                if ($j == 0) {
+                    $markup .= '<img src="/images/game-world/inventory-items/' . $possibleBreedablePlants[$i - 1] . '.png">';
+                } else {
+                    if ($i == $j) {
+                        $markup .= '<img src="/images/game-world/inventory-items/' . $possibleBreedablePlants[$i - 1] . '.png">';
+                    } else {
+                        if ($possibleBreedablePlants[$i - 1] < $possibleBreedablePlants[$j - 1]) {
+                            $thisKey = $possibleBreedablePlants[$i - 1] . "-" . $possibleBreedablePlants[$j - 1];
+                        } else {
+                            $thisKey = $possibleBreedablePlants[$j - 1] . "-" . $possibleBreedablePlants[$i - 1];
+                        }
+                        $markup .= '<img src="/images/game-world/inventory-items/' . $plantBreeding[$thisKey] . '.png">';
+                    }
+                }
+            }
+            $markup .= '</td>';
+        }
+        $markup .= '</tr>';
+    }
+    $markup .= '</table>';
+    echo $markup;
+}
+
+
+
+
+
+
+
+
+
+
+
+?>

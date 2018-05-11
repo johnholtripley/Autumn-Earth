@@ -790,10 +790,13 @@ var xhr = typeof XMLHttpRequest != 'undefined' ? new XMLHttpRequest() : new Acti
 
 
 
-
+/*
 
 function pseudoRandomNumberGenerator(seed) {
   // kudos https://gist.github.com/blixt/f17b47c62508be59987b
+  // use:
+  // const plantBreedingPRNG = new pseudoRandomNumberGenerator(1234);
+  // console.log(plantBreedingPRNG.nextFloat());
   this._seed = seed % 2147483647;
   if (this._seed <= 0) this._seed += 2147483646;
 }
@@ -810,7 +813,7 @@ pseudoRandomNumberGenerator.prototype.nextFloat = function (opt_minOrMax, opt_ma
 };
 
 
-
+*/
 
 
 

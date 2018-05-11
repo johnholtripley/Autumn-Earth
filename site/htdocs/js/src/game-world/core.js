@@ -751,7 +751,7 @@ function prepareGame() {
     fae.dz = 1;
     // fae.pulse = 0;
     setupWeather();
-    initialisePlantBreeding();
+   
     timeSinceLastFrameSwap = 0;
     currentAnimationFrame = 0;
     mapTransition = "in";
