@@ -584,6 +584,14 @@ pointer-events: auto;
     }
 }
 
+#horticulturePanel {
+ @include togglePanel(0.4s);
+    top: 40px;
+    background: #666;
+    left: 80px;
+    width: 400px;
+}
+
 #acceptQuestChoice {
     @include togglePanel(0.4s);
     left: 50%;

@@ -103,6 +103,12 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
       <canvas id="cartographyCanvas" width="246" height="246"></canvas>
       <canvas id="offScreenCartographyCanvas" class="offScreenCanvas" width="246" height="246"></canvas>
     </div>
+    <div id="horticulturePanel">
+      <div class="draggableBar">
+        <span id="cartographicTitle">Horticulture</span>
+      </div>
+      <button class="closePanel">close</button>
+    </div>
     <div id="craftingPanel">
       <div class="draggableBar">
         <span id="recipeTitleBar">Recipes</span>

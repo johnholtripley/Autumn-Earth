@@ -447,7 +447,7 @@ function loadShopData(shopJSONData) {
     getJSONWithParams("/game-world/getShopItems.php", shopJSONData, function(data) {
         thisMapShopItemIds = data.allItemIds;
         UI.buildShop(data.markup);
-        getQuestJournal();
+        getHorticultureData();
     }, function(status) {
         // try again:
         loadShopData(shopJSONData);
@@ -467,7 +467,16 @@ function getQuestJournal() {
 
 
 
-
+function getHorticultureData() {
+        getJSON("/game-world/getHorticulturalDetails.php?chr=" + characterId, function(data) {
+        UI.buildHorticulturePanel(data.markup);
+        hero.plantBreeding = data.plantBreeding;
+        getQuestJournal();
+    }, function(status) {
+        // try again:
+        getHorticultureData();
+    });
+}
 
 
 function findInventoryItemData() {

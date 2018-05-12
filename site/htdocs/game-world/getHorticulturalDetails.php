@@ -113,9 +113,9 @@ if($debug) {
 
 
 
-if($debug) {
+
 // build output table:
-	     $markup = '<table style="background:#fff;position:absolute;left:20%;top:20%;">';
+	     $markup = '<table>';
     for ( $i = 0; $i <= count($possibleBreedablePlants); $i++) {
         $markup .= '<tr>';
         for ( $j = 0; $j <= count($possibleBreedablePlants); $j++) {
@@ -153,12 +153,16 @@ $markup .= '<td><img src="/images/game-world/inventory-items/' . $plantBreeding[
         $markup .= '</tr>';
     }
     $markup .= '</table>';
+
+
+
+if($debug) {
     echo $markup;
+} else {
+    header('Content-Type: application/json');
+    $markup = str_replace('"', '\"', $markup);
+    echo '{"markup":"'.$markup.'","plantBreeding":'.json_encode($plantBreeding).'}';
 }
-
-
-
-
 
 
 

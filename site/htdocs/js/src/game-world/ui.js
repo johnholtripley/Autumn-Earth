@@ -70,6 +70,7 @@ const retinueQuestTimeRequired = document.getElementById('retinueQuestTimeRequir
 const retinueList = document.getElementById('retinueList');
 const retinueExplorePanel = document.getElementById('retinueExplorePanel');
 const startCrafting = document.getElementById('startCrafting');
+const horticulturePanel = document.getElementById('horticulturePanel');
 
 
 
@@ -2218,5 +2219,10 @@ delete retinueObject.hexCoordY;
     },
     showNewProfession: function(id) {
         UI.showNotification('<p>You learned a new profession - #' + id + '</p>');
-    }
+    },
+buildHorticulturePanel: function(panelMarkup) {
+    horticulturePanel.insertAdjacentHTML('beforeend', panelMarkup);
+    horticulturePanel.classList.add('active');
+}
+    
 }
