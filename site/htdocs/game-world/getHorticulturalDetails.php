@@ -18,16 +18,19 @@ $debug = true;
 
 
 $possibleBreedablePlants = [];
-
+$plantNames = [];
 // item category 1 is flowers:
-$query = 'select itemid from tblinventoryitems where itemcategories = 1 and action=""';
+$query = 'select itemid, shortname from tblinventoryitems where itemcategories = 1 and action=""';
 $result = mysqli_query($connection, $query);
 if(mysqli_num_rows($result)>0) {
   while ($row = mysqli_fetch_array($result)) {
   	array_push($possibleBreedablePlants,$row['itemid']);
+    $plantNames[($row['itemid'])] = $row['shortname'];
   	}
   }
   mysqli_free_result($result);
+
+
 
 // array built so that "1-2": 3 means if species #1 and species #2 are bred, then the result is species #3
 // the smaller number is a;lways first in the key (eg. 1-2, not 2-1)
@@ -35,6 +38,23 @@ if(mysqli_num_rows($result)>0) {
 
 
 // do each for flowers, herbs and trees ########
+
+
+
+// get which crosses the character knows:
+
+$plantCrossesKnown=[];
+
+$query2 = 'SELECT plantcrossesknown from tblcharacters where charid="'.$chr.'"';
+$result2 = mysqli_query($connection, $query2);
+if(mysqli_num_rows($result2)>0) {
+  while ($row = mysqli_fetch_array($result2)) {
+
+    $plantCrossesKnown = explode(",",$row['plantcrossesknown']);
+}
+}
+  mysqli_free_result($result2);
+
 
 
 
@@ -99,30 +119,36 @@ if($debug) {
     for ( $i = 0; $i <= count($possibleBreedablePlants); $i++) {
         $markup .= '<tr>';
         for ( $j = 0; $j <= count($possibleBreedablePlants); $j++) {
-            $markup .= '<td style="border:1px solid #cecece;padding:6px;">';
+           // $markup .= '<td style="border:1px solid #cecece;padding:6px;">';
             if ($i == 0) {
                 if ($j == 0) {
-                    $markup .= 'x';
+                    $markup .= '<td></td>';
                 } else {
-                    $markup .= '<img src="/images/game-world/inventory-items/' . $possibleBreedablePlants[$j - 1] . '.png">';
+                    $markup .= '<th><img src="/images/game-world/inventory-items/' . $possibleBreedablePlants[$j - 1] . '.png" title="'.$plantNames[($possibleBreedablePlants[$j - 1])].'"></th>';
                 }
             } else {
                 if ($j == 0) {
-                    $markup .= '<img src="/images/game-world/inventory-items/' . $possibleBreedablePlants[$i - 1] . '.png">';
+                    $markup .= '<th><img src="/images/game-world/inventory-items/' . $possibleBreedablePlants[$i - 1] . '.png" title="'.$plantNames[($possibleBreedablePlants[$i - 1] )].'"></th>';
                 } else {
                     if ($i == $j) {
-                        $markup .= '<img src="/images/game-world/inventory-items/' . $possibleBreedablePlants[$i - 1] . '.png">';
+                        $markup .= '<td><img src="/images/game-world/inventory-items/' . $possibleBreedablePlants[$i - 1] . '.png" title="'.$plantNames[($possibleBreedablePlants[$i - 1])].'"></td>';
                     } else {
                         if ($possibleBreedablePlants[$i - 1] < $possibleBreedablePlants[$j - 1]) {
                             $thisKey = $possibleBreedablePlants[$i - 1] . "-" . $possibleBreedablePlants[$j - 1];
                         } else {
                             $thisKey = $possibleBreedablePlants[$j - 1] . "-" . $possibleBreedablePlants[$i - 1];
                         }
-                        $markup .= '<img src="/images/game-world/inventory-items/' . $plantBreeding[$thisKey] . '.png">';
+                      
+                        if(in_array($thisKey, $plantCrossesKnown)) {
+$markup .= '<td><img src="/images/game-world/inventory-items/' . $plantBreeding[$thisKey] . '.png" title="'.$plantNames[($plantBreeding[$thisKey])].'"></td>';
+                        } else {
+                            $markup .= '<td>?</td>';
+                        }
+                        
                     }
                 }
             }
-            $markup .= '</td>';
+          //  $markup .= '</td>';
         }
         $markup .= '</tr>';
     }
