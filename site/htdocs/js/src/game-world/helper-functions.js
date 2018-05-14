@@ -1,76 +1,73 @@
-
-
-
-
 // find Iso coords from 2d coords:
 function findIsoCoordsX(x, y) {
-   // return Math.floor((mapTilesY * tileW/2) -y/2 + x/2);
-   return Math.floor((mapTilesY * tileW - y + x)/2);
+    // return Math.floor((mapTilesY * tileW/2) -y/2 + x/2);
+    return Math.floor((mapTilesY * tileW - y + x) / 2);
 }
+
 function findIsoCoordsY(x, y) {
     // the -tileH/2 is because the tile centre was at 0,0, and so the tip would be off the top of the screen
-//return Math.floor((x/4) + (y/4) - tileH/2);
-return Math.floor((x + y - (tileH * 2))/4);
+    //return Math.floor((x/4) + (y/4) - tileH/2);
+    return Math.floor((x + y - (tileH * 2)) / 4);
 }
 
 
 
 // find 2d coords from iso coords:
 function find2DCoordsX(isoX, isoY) {
-    return isoX + tileH + (2*isoY) - (mapTilesY*tileW)/2;
+    return isoX + tileH + (2 * isoY) - (mapTilesY * tileW) / 2;
 }
 
 function find2DCoordsY(isoX, isoY) {
-    return 2*isoY + tileH - isoX + (mapTilesY*tileW)/2;
+    return 2 * isoY + tileH - isoX + (mapTilesY * tileW) / 2;
 }
 
 function findIsoDepth(x, y, z) {
-// isoZ = 0.6 * z
+    // isoZ = 0.6 * z
 
 
-/*
-// METHOD #1 ------------------
-// works perfectly for non-z depths:
-return findIsoCoordsY(x,y);
-// ----------------------------
-*/
+    /*
+    // METHOD #1 ------------------
+    // works perfectly for non-z depths:
+    return findIsoCoordsY(x,y);
+    // ----------------------------
+    */
 
 
-/*
-// METHOD #2 ------------------
-// works well with z apart from clipped around the edges of tiles
-var tilePosition = getCurrentTileX(x) + (mapTilesX * getCurrentTileY(y));
-// weight the tile heavily to allow vertical depth within that range
-var adjustedTile = (tilePosition) * 999;
-// find position across tile
-var positionWithinTileX = x%tileW;
-var positionWithinTileY = y%tileH;
-// adjust by using iso position across the tile - weighting z depth more heavily:
-return adjustedTile+findIsoCoordsX(positionWithinTileX,positionWithinTileY)+findIsoCoordsY(positionWithinTileX,positionWithinTileY)+(z*z);
-// ----------------------------
-*/
+    /*
+    // METHOD #2 ------------------
+    // works well with z apart from clipped around the edges of tiles
+    var tilePosition = getCurrentTileX(x) + (mapTilesX * getCurrentTileY(y));
+    // weight the tile heavily to allow vertical depth within that range
+    var adjustedTile = (tilePosition) * 999;
+    // find position across tile
+    var positionWithinTileX = x%tileW;
+    var positionWithinTileY = y%tileH;
+    // adjust by using iso position across the tile - weighting z depth more heavily:
+    return adjustedTile+findIsoCoordsX(positionWithinTileX,positionWithinTileY)+findIsoCoordsY(positionWithinTileX,positionWithinTileY)+(z*z);
+    // ----------------------------
+    */
 
-/*
-// METHOD #3 ------------------
-// works well except for the back half of raised tiles
-var depth = findIsoCoordsY(x,(y+z));
-depth += findIsoCoordsY(x,y);
-//depth *= tileH/2;
- //   depth += z;
-if(z>0) {
-// just do this if it's in the top half of the tile:
-// ###########
-   // depth += tileH/2;
-}
-return depth;
-// ----------------------------
-*/
+    /*
+    // METHOD #3 ------------------
+    // works well except for the back half of raised tiles
+    var depth = findIsoCoordsY(x,(y+z));
+    depth += findIsoCoordsY(x,y);
+    //depth *= tileH/2;
+     //   depth += z;
+    if(z>0) {
+    // just do this if it's in the top half of the tile:
+    // ###########
+       // depth += tileH/2;
+    }
+    return depth;
+    // ----------------------------
+    */
 
 
-// METHOD #4 ------------------
-// works well, apart from back half of the tile
-return (findIsoCoordsY(x,y) * tileW/2) + (z * 2);
-// ----------------------------
+    // METHOD #4 ------------------
+    // works well, apart from back half of the tile
+    return (findIsoCoordsY(x, y) * tileW / 2) + (z * 2);
+    // ----------------------------
 
 
 
@@ -79,10 +76,11 @@ return (findIsoCoordsY(x,y) * tileW/2) + (z * 2);
 
 // find non-iso coords for a tile
 function getTileCentreCoordX(tileX) {
-    return tileX*tileW + tileW/2;
+    return tileX * tileW + tileW / 2;
 }
+
 function getTileCentreCoordY(tileY) {
-    return tileY*tileW + tileW/2;
+    return tileY * tileW + tileW / 2;
 }
 
 
@@ -90,6 +88,7 @@ function getTileCentreCoordY(tileY) {
 function getTileIsoCentreCoordX(tileX, tileY) {
     return tileW / 2 * (mapTilesY - tileY + tileX);
 }
+
 function getTileIsoCentreCoordY(tileX, tileY) {
     return tileH / 2 * (tileY + tileX);
 }
@@ -107,10 +106,11 @@ function getCurrentTileY(y) {
 
 // find current tile based on non-iso coords
 function getTileX(x) {
-    return Math.floor(x/tileW);
+    return Math.floor(x / tileW);
 }
+
 function getTileY(y) {
-    return Math.floor(y/tileW);
+    return Math.floor(y / tileW);
 }
 
 
@@ -124,6 +124,29 @@ function getXOffsetFromHeight(height) {
     return (Math.sqrt(2) / 2 * height);
 }
 
+function findItemWithinArmsLength() {
+    // check if there's a relevant item on the hero's tile, or at arm's length:
+    var armsLengthXTile = hero.tileX + relativeFacing[hero.facing]["x"];
+    var armsLengthYTile = hero.tileY + relativeFacing[hero.facing]["y"];
+    var foundItem = -1;
+    var thisItem;
+    for (var i = 0; i < thisMapData.items.length; i++) {
+        thisItem = thisMapData.items[i];
+        if (hero.tileX == thisItem.tileX) {
+            if (hero.tileY == thisItem.tileY) {
+                foundItem = i;
+                break;
+            }
+        }
+        if (armsLengthXTile == thisItem.tileX) {
+            if (armsLengthYTile == thisItem.tileY) {
+                foundItem = i;
+                break;
+            }
+        }
+    }
+    return foundItem;
+}
 
 /*
  function getObjectKeysForValue( testObject, value ) {
@@ -164,28 +187,28 @@ function accessDynamicVariable(variableToUse) {
 
 function getNearestParentId(thisNode) {
     // find the id of the parent if the passed in element doesn't have one:
-        while (!thisNode.id) {
-            thisNode = thisNode.parentNode;
-        }
-return thisNode;
+    while (!thisNode.id) {
+        thisNode = thisNode.parentNode;
     }
+    return thisNode;
+}
 
 
 
- function getObjectKeysForInnerValue( testObject, value, attribute ) {
-   // console.log("looking for "+value);
+function getObjectKeysForInnerValue(testObject, value, attribute) {
+    // console.log("looking for "+value);
     // return an array of all keys in the object that have a value that match the one passed in
-   var keysFound = [];
-    for(var prop in testObject) {
-        if( testObject.hasOwnProperty(prop)) {
-       //     console.log("checking:"+testObject[prop][attribute]);
-             if(testObject[prop][attribute] === value) {
+    var keysFound = [];
+    for (var prop in testObject) {
+        if (testObject.hasOwnProperty(prop)) {
+            //     console.log("checking:"+testObject[prop][attribute]);
+            if (testObject[prop][attribute] === value) {
 
-                 keysFound.push(prop);
-             }
+                keysFound.push(prop);
+            }
         }
-    }  
-   return keysFound;
+    }
+    return keysFound;
 }
 
 
@@ -217,7 +240,8 @@ function debounce(func, wait, immediate) {
     // https://davidwalsh.name/javascript-debounce-function
     var timeout;
     return function() {
-        var context = this, args = arguments;
+        var context = this,
+            args = arguments;
         var later = function() {
             timeout = null;
             if (!immediate) func.apply(context, args);
@@ -244,7 +268,7 @@ function isAnObjectCollision(obj1x, obj1y, obj1w, obj1h, obj2x, obj2y, obj2w, ob
 }
 
 
-const facingsPossible = ["n","e","s","w"];
+const facingsPossible = ["n", "e", "s", "w"];
 
 // useful for determining relative direction based on facing:
 var relativeFacing = {
@@ -268,11 +292,11 @@ var relativeFacing = {
 
 
 function getRandomInteger(min, max) {
-  return Math.floor(Math.random() * (max - min)) + min;
+    return Math.floor(Math.random() * (max - min)) + min;
 }
 
 function getRandomIntegerInclusive(min, max) {
-   return Math.floor(Math.random() * (max - min + 1)) + min;
+    return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
 function rollDice(quantity, sidedDice) {
@@ -286,7 +310,7 @@ function rollDice(quantity, sidedDice) {
 
 function getRandomKeyFromObject(object) {
     var keys = Object.keys(object)
-    return keys[ keys.length * Math.random() << 0];
+    return keys[keys.length * Math.random() << 0];
 }
 
 function isInRange(ax, ay, bx, by, ra) {
@@ -339,7 +363,7 @@ function turntoFaceTile(obj, tile2x, tile2y) {
         } else {
             return "s";
         }
-    } 
+    }
 }
 
 
@@ -429,22 +453,22 @@ function hasLineOfSight(startX, startY, endX, endY) {
     }
 
 
-// check the starting tile:
-   if (thisMapData.collisions[startY][startX] != 0) {
-                // tile is non-walkable;
+    // check the starting tile:
+    if (thisMapData.collisions[startY][startX] != 0) {
+        // tile is non-walkable;
+        return false;
+
+    }
+    if (needToCheckInnerDoors) {
+        thisInnerDoor = currentMap + "-" + startX + "-" + startY;
+        if (thisMapData.innerDoors.hasOwnProperty(thisInnerDoor)) {
+            // an Inner Door exists at this location:
+            if (!thisMapData.innerDoors[thisInnerDoor]['isOpen']) {
                 return false;
-                
+
             }
-                    if (needToCheckInnerDoors) {
-                thisInnerDoor = currentMap + "-" + startX + "-" + startY;
-                if (thisMapData.innerDoors.hasOwnProperty(thisInnerDoor)) {
-                    // an Inner Door exists at this location:
-                    if (!thisMapData.innerDoors[thisInnerDoor]['isOpen']) {
-                        return false;
-                        
-                    }
-                }
-            }
+        }
+    }
 
     // path direction calculation:
     if (deltaY < 0) {
@@ -575,13 +599,13 @@ function uniqueValues(a) {
     });
 }
 
-function sortByHighestValue(a,b) {
+function sortByHighestValue(a, b) {
     // highest first
-  if (a[0] < b[0])
-    return 1;
-  if (a[0] > b[0])
-    return -1;
-  return 0;
+    if (a[0] < b[0])
+        return 1;
+    if (a[0] > b[0])
+        return -1;
+    return 0;
 }
 
 function sortByLowestValue(a, b) {
@@ -638,10 +662,10 @@ function drawEllipse(ctx, x, y, w, h, filled, colour) {
 
 
 
-function drawCircle(fillStyle,x,y,radius) {
+function drawCircle(fillStyle, x, y, radius) {
     gameContext.fillStyle = fillStyle;
     gameContext.beginPath();
-    gameContext.arc(x,y,radius, 0, 2 * Math.PI);
+    gameContext.arc(x, y, radius, 0, 2 * Math.PI);
     gameContext.fill();
 }
 
@@ -724,9 +748,9 @@ var getJSON = function(url, successHandler, errorHandler) {
                     wasParsedOk = false;
                     errorHandler && errorHandler(status);
                 }
-                if(wasParsedOk) {
-                successHandler && successHandler(data);
-            }
+                if (wasParsedOk) {
+                    successHandler && successHandler(data);
+                }
             } else {
                 errorHandler && errorHandler(status);
             }
@@ -770,15 +794,15 @@ var getJSONWithParams = function(url, params, successHandler, errorHandler) {
 
 
 function sendDataWithoutNeedingAResponse(url) {
-// send data to the server, without needing to listen for a response:
-var xhr = typeof XMLHttpRequest != 'undefined' ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
+    // send data to the server, without needing to listen for a response:
+    var xhr = typeof XMLHttpRequest != 'undefined' ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
     xhr.open('get', url, true);
     xhr.send();
 }
 
-function postData(url,data) {
-// send data to the server, without needing to listen for a response:
-var xhr = typeof XMLHttpRequest != 'undefined' ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
+function postData(url, data) {
+    // send data to the server, without needing to listen for a response:
+    var xhr = typeof XMLHttpRequest != 'undefined' ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
 
     xhr.open('post', url, true);
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded;');
@@ -830,19 +854,19 @@ pseudoRandomNumberGenerator.prototype.nextFloat = function (opt_minOrMax, opt_ma
 // http://stackoverflow.com/questions/16560397/image-not-drawn-on-canvas-until-user-clicks
 // http://jsfiddle.net/gfcarv/26AmY/
 window.Loader = (function() {
-        var imageCount = 0;
+    var imageCount = 0;
     var loading = false;
     var total = 0;
 
     // this object will hold all image references
     var images = {};
 
-function reset() {
-     imageCount = 0;
-     loading = false;
-     total = 0;
-     images = {};
-}
+    function reset() {
+        imageCount = 0;
+        loading = false;
+        total = 0;
+        images = {};
+    }
 
     // user defined callback, called each time an image is loaded (if it is not defined the empty function wil be called)
     function onProgressUpdate() {};
@@ -851,7 +875,7 @@ function reset() {
 
     function onLoadImage(name) {
         ++imageCount;
-       //  console.log(name + " loaded");
+        //  console.log(name + " loaded");
 
         // call the user defined callback when an image is loaded
         onProgressUpdate(getProgress());
@@ -933,4 +957,3 @@ function reset() {
 })();
 
 // -----------------------------------------------------------
-

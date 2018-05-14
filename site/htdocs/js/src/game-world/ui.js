@@ -1574,26 +1574,7 @@ var UI = {
                             surveyingStopped();
                         }
                         // check if there's a relevant item on the hero's tile, or at arm's length:
-                        var armsLengthXTile = hero.tileX + relativeFacing[hero.facing]["x"];
-                        var armsLengthYTile = hero.tileY + relativeFacing[hero.facing]["y"];
-                        var foundItem = -1;
-                        var thisItem;
-                        for (var i = 0; i < thisMapData.items.length; i++) {
-                            thisItem = thisMapData.items[i];
-
-                            if (hero.tileX == thisItem.tileX) {
-                                if (hero.tileY == thisItem.tileY) {
-                                    foundItem = i;
-                                    break;
-                                }
-                            }
-                            if (armsLengthXTile == thisItem.tileX) {
-                                if (armsLengthYTile == thisItem.tileY) {
-                                    foundItem = i;
-                                    break;
-                                }
-                            }
-                        }
+                       var foundItem = findItemWithinArmsLength();
                         if (foundItem != -1) {
                             // found an item - check source node and the action match categories:
                             if (currentActiveInventoryItems[thisMapData.items[foundItem].type].category == thisNode.dataset.category) {
@@ -1684,8 +1665,19 @@ var UI = {
                     }
                     break;
 
-                    case "plant-breeding":
+                case "plant-breeding":
                     // #######
+                    if (activeAction == "survey") {
+                        surveyingStopped();
+                    }
+                    activeAction = "pollinating";
+
+                    var foundItem = findItemWithinArmsLength();
+                    
+                    if (foundItem != -1) {
+                        // found an item - check source node and the action match categories:
+                        console.log(currentActiveInventoryItems[thisMapData.items[foundItem].type].category);
+                    }
                     break;
                 case "survey":
                     // ok to switch to this from Dowsing
@@ -2029,7 +2021,7 @@ var UI = {
 
                 // 277 is about a third of the max distance from corner to corner of the map:
                 retinueObject.followersRequired = Math.ceil(getPythagorasDistance(retinueBaseLocationX, retinueBaseLocationY, retinueObject.destinationLocationX, retinueObject.destinationLocationY) / 277);
-               
+
                 // show the relevant follower slots:
                 var followerSlots = document.querySelectorAll('#retinueExplorePanel .followerSlot');
 
@@ -2155,39 +2147,39 @@ var UI = {
         }
 
 
-if(retinueObject.openQuestDetail == "Exploring") {
-var thisHex = document.getElementById('undiscovered_'+retinueObject.hexCoordX+'_'+retinueObject.hexCoordY);
-thisHex.classList.remove('explorable');
-thisHex.classList.add('beingExplored');
-getJSON("/game-world/generateExplorationRetinueQuest.php?chr="+characterId+"&followers=" + followersAssigned.join("|")+"&hexCoordX="+retinueObject.hexCoordX+"&hexCoordY="+retinueObject.hexCoordY, function(data) {
+        if (retinueObject.openQuestDetail == "Exploring") {
+            var thisHex = document.getElementById('undiscovered_' + retinueObject.hexCoordX + '_' + retinueObject.hexCoordY);
+            thisHex.classList.remove('explorable');
+            thisHex.classList.add('beingExplored');
+            getJSON("/game-world/generateExplorationRetinueQuest.php?chr=" + characterId + "&followers=" + followersAssigned.join("|") + "&hexCoordX=" + retinueObject.hexCoordX + "&hexCoordY=" + retinueObject.hexCoordY, function(data) {
 
 
-if(data.markup) {
-  retinuePanel.insertAdjacentHTML('beforeend', data.markup);
-  // update the follower's panels with the correct quest id:
-  var thisQuestFollowers = data.followers.split(",");
-  console.log(data.followers);
-  for (i = 0; i < thisQuestFollowers.length; i++) {
-    
-document.getElementById('retinueFollower' + thisQuestFollowers[i]).setAttribute('data-activeonquest', data.questId);
-  }
+                if (data.markup) {
+                    retinuePanel.insertAdjacentHTML('beforeend', data.markup);
+                    // update the follower's panels with the correct quest id:
+                    var thisQuestFollowers = data.followers.split(",");
+                    console.log(data.followers);
+                    for (i = 0; i < thisQuestFollowers.length; i++) {
 
-}
-    }, function(status) {
-        // error ####
-    });
+                        document.getElementById('retinueFollower' + thisQuestFollowers[i]).setAttribute('data-activeonquest', data.questId);
+                    }
 
-retinueExplorePanel.classList.remove("active");
+                }
+            }, function(status) {
+                // error ####
+            });
 
-delete retinueObject.hexCoordX;
-delete retinueObject.hexCoordY;
-} else {
+            retinueExplorePanel.classList.remove("active");
 
-        sendDataWithoutNeedingAResponse("/game-world/updateRetinueQuest.php?questID=" + retinueObject.openQuestDetail + "&chr="+characterId+"&followers=" + followersAssigned.join("|"));
-        document.getElementById("retinueQuestLocationDetail" + retinueObject.openQuestDetail).classList.remove("active");
-        // remove from the map:
-        document.getElementById("retinueQuestLocation" + retinueObject.openQuestDetail).classList.remove("active");
-    }
+            delete retinueObject.hexCoordX;
+            delete retinueObject.hexCoordY;
+        } else {
+
+            sendDataWithoutNeedingAResponse("/game-world/updateRetinueQuest.php?questID=" + retinueObject.openQuestDetail + "&chr=" + characterId + "&followers=" + followersAssigned.join("|"));
+            document.getElementById("retinueQuestLocationDetail" + retinueObject.openQuestDetail).classList.remove("active");
+            // remove from the map:
+            document.getElementById("retinueQuestLocation" + retinueObject.openQuestDetail).classList.remove("active");
+        }
         retinueQuestStart.disabled = true;
         retinueQuestTimeRequired.innerHTML = "Time required:";
         // clean up:
@@ -2205,11 +2197,11 @@ delete retinueObject.hexCoordY;
         if (e.target.className == 'takeRewards') {
             e.preventDefault();
             var parentPanel = getNearestParentId(e.target);
-            retinueMissionCompleted(parentPanel.id.substring(15),false);
+            retinueMissionCompleted(parentPanel.id.substring(15), false);
         } else if (e.target.className == 'finishExploration') {
             e.preventDefault();
             var parentPanel = getNearestParentId(e.target);
-            retinueMissionCompleted(parentPanel.id.substring(15),true);
+            retinueMissionCompleted(parentPanel.id.substring(15), true);
         }
 
     },
@@ -2224,9 +2216,9 @@ delete retinueObject.hexCoordY;
     showNewProfession: function(id) {
         UI.showNotification('<p>You learned a new profession - #' + id + '</p>');
     },
-buildHorticulturePanel: function(panelMarkup) {
-    horticulturePanel.insertAdjacentHTML('beforeend', panelMarkup);
-    horticulturePanel.classList.add('active');
-}
-    
+    buildHorticulturePanel: function(panelMarkup) {
+        horticulturePanel.insertAdjacentHTML('beforeend', panelMarkup);
+        horticulturePanel.classList.add('active');
+    }
+
 }
