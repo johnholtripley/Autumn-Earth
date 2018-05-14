@@ -5787,6 +5787,10 @@ var UI = {
                     if (foundItem != -1) {
                         // found an item - check source node and the action match categories:
                         console.log(currentActiveInventoryItems[thisMapData.items[foundItem].type].category);
+                        console.log(currentActiveInventoryItems[thisMapData.items[foundItem].type].action);
+                        // change the cursor to show it's targetting a plant:
+gameWrapper.classList.add('targetingPollen');
+                        // cat == 1 and action == ""
                     }
                     break;
                 case "survey":
