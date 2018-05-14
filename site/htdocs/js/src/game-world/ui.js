@@ -1683,6 +1683,10 @@ var UI = {
                         }
                     }
                     break;
+
+                    case "plant-breeding":
+                    // #######
+                    break;
                 case "survey":
                     // ok to switch to this from Dowsing
                     if (activeAction != "gather") {

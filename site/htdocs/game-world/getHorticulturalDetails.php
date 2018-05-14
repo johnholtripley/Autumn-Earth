@@ -19,8 +19,8 @@ $debug = true;
 
 $possibleBreedablePlants = [];
 $plantNames = [];
-// item category 1 is flowers:
-$query = 'select itemid, shortname from tblinventoryitems where itemcategories = 1 and action=""';
+// item category 1 is flowers: (use showInTheCodex to remove nodes etc)
+$query = 'select itemid, shortname from tblinventoryitems where itemcategories = 1 and showInTheCodex="1" order by shortname ASC';
 $result = mysqli_query($connection, $query);
 if(mysqli_num_rows($result)>0) {
   while ($row = mysqli_fetch_array($result)) {
@@ -50,7 +50,12 @@ $result2 = mysqli_query($connection, $query2);
 if(mysqli_num_rows($result2)>0) {
   while ($row = mysqli_fetch_array($result2)) {
 
-    $plantCrossesKnown = explode(",",$row['plantcrossesknown']);
+$plantCrossesString = $row['plantcrossesknown'];
+// remove [, ] and "
+$plantCrossesString = str_replace("[", "", $plantCrossesString);
+$plantCrossesString = str_replace("]", "", $plantCrossesString);
+$plantCrossesString = str_replace('"', '', $plantCrossesString);
+    $plantCrossesKnown = explode(",",$plantCrossesString);
 }
 }
   mysqli_free_result($result2);
@@ -124,14 +129,14 @@ if($debug) {
                 if ($j == 0) {
                     $markup .= '<td></td>';
                 } else {
-                    $markup .= '<th><img src="/images/game-world/inventory-items/' . $possibleBreedablePlants[$j - 1] . '.png" title="'.$plantNames[($possibleBreedablePlants[$j - 1])].'"></th>';
+                    $markup .= '<th><img src="/images/game-world/inventory-items/' . $possibleBreedablePlants[$j - 1] . '.png"><p>'.$plantNames[($possibleBreedablePlants[$j - 1])].'</p></th>';
                 }
             } else {
                 if ($j == 0) {
-                    $markup .= '<th><img src="/images/game-world/inventory-items/' . $possibleBreedablePlants[$i - 1] . '.png" title="'.$plantNames[($possibleBreedablePlants[$i - 1] )].'"></th>';
+                    $markup .= '<th><img src="/images/game-world/inventory-items/' . $possibleBreedablePlants[$i - 1] . '.png"><p>'.$plantNames[($possibleBreedablePlants[$i - 1] )].'</p></th>';
                 } else {
                     if ($i == $j) {
-                        $markup .= '<td><img src="/images/game-world/inventory-items/' . $possibleBreedablePlants[$i - 1] . '.png" title="'.$plantNames[($possibleBreedablePlants[$i - 1])].'"></td>';
+                        $markup .= '<td><img src="/images/game-world/inventory-items/' . $possibleBreedablePlants[$i - 1] . '.png"><p>'.$plantNames[($possibleBreedablePlants[$i - 1])].'</p></th>';
                     } else {
                         if ($possibleBreedablePlants[$i - 1] < $possibleBreedablePlants[$j - 1]) {
                             $thisKey = $possibleBreedablePlants[$i - 1] . "-" . $possibleBreedablePlants[$j - 1];
@@ -140,7 +145,7 @@ if($debug) {
                         }
                       
                         if(in_array($thisKey, $plantCrossesKnown)) {
-$markup .= '<td><img src="/images/game-world/inventory-items/' . $plantBreeding[$thisKey] . '.png" title="'.$plantNames[($plantBreeding[$thisKey])].'"></td>';
+$markup .= '<td><img src="/images/game-world/inventory-items/' . $plantBreeding[$thisKey] . '.png"><p>'.$plantNames[($plantBreeding[$thisKey])].'</p></th>';
                         } else {
                             $markup .= '<td>?</td>';
                         }
@@ -161,7 +166,7 @@ if($debug) {
 } else {
     header('Content-Type: application/json');
     $markup = str_replace('"', '\"', $markup);
-    echo '{"markup":"'.$markup.'","plantBreeding":'.json_encode($plantBreeding).'}';
+    echo '{"markup":"'.$markup.'"}';
 }
 
 

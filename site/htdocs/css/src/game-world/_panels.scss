@@ -589,7 +589,45 @@ pointer-events: auto;
     top: 40px;
     background: #666;
     left: 80px;
-    width: 400px;
+    //width: 400px;
+    table {
+        th, td {
+            padding:0;
+            text-align: center;
+            color: #fff;
+            position: relative;
+        }
+        img {
+            display: block;
+             &:hover+p {
+                // reveal tooltip
+                opacity: 1;
+                pointer-events: auto;
+                @include transform(translateY(0));
+            }
+        }
+         p {
+        // tooltip
+        background: #eee;
+        z-index: 1;
+        margin: 0;
+        bottom: 100%;
+        color: #000;
+        display: block;
+        left: 0;
+        min-width: 120px;
+        font-weight: normal;
+        opacity: 0;
+        padding: 8px;
+        pointer-events: none;
+        position: absolute;
+        font-size: 11px;
+        cursor: url(../images/game-world/cursors/default.gif) 3 3, auto;
+        @include transform(translateY(10px));
+        @include transition(all .25s ease-out);
+    
+    }
+    }
 }
 
 #acceptQuestChoice {

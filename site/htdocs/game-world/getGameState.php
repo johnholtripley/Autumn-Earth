@@ -35,6 +35,7 @@ $outputJSON .= '"titlesEarned": '.$titlesEarned.',';
 $outputJSON .= '"activeTitle": '.$activeTitle.',';
 $outputJSON .= '"professionsKnown": '.$professionsKnown.',';
 $outputJSON .= '"recipesKnown": '.$recipesKnown.',';
+$outputJSON .= '"plantCrossesKnown": '.$plantCrossesKnown.',';
 $outputJSON .= '"totalGameTimePlayed": '.$totalGameTimePlayed.',';
 $outputJSON .= '"fae": '.$fae.',';
 $outputJSON .= '"activePets": '.$activePets.',';
