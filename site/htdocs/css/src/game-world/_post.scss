@@ -48,7 +48,7 @@
             background: #8a6800;
         }
         @include attention() {
-            cursor: url(../images/game-world/cursors/active.gif) 3 3, auto;
+            cursor: url(../images/game-world/cursors/active.gif) 3 3, pointer;
         }
     }
     p {

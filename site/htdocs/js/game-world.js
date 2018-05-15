@@ -4057,7 +4057,7 @@ function retinueMissionCompleted(questId, isExplorationQuest) {
 
             var thisHexCoords = data.explored.split("_");
             // needs pushing to database:
-            sendDataWithoutNeedingAResponse("/game-world/updateGameState.php?chr=" + characterId + "&action=add&field=retinueMapAreasRevealed&value=" + encodeURIComponent('"' + thisHexCoords[0] + ',' + thisHexCoords[1] + '"'));
+           saveGame();
 
             // make neighbouring hexes explorable:
             var thisNeighbouringHex;
@@ -8891,7 +8891,7 @@ function sendNPCPost(postData, attachments) {
     if (attachments) {
         postDataToSend['attachments'] = attachments;
     }
-    console.log(JSON.stringify(postDataToSend));
+   // console.log(JSON.stringify(postDataToSend));
     getJSONWithParams("/game-world/sendPost.php", 'postData=' + JSON.stringify(postDataToSend), function(data) {
         if (data.success) {
             // show new post notification:
@@ -8907,6 +8907,40 @@ function sendNPCPost(postData, attachments) {
     });
 }
 
+function saveGame() {
+    // save game state:
+  
+// avoid circular references in the Hero object:
+// https://stackoverflow.com/questions/11616630/json-stringify-avoid-typeerror-converting-circular-structure-to-json/11616993#answer-11616993
+var cache = [];
+var heroJSONWithoutCircularReference = JSON.stringify(hero, function(key, value) {
+    if (typeof value === 'object' && value !== null) {
+        if (cache.indexOf(value) !== -1) {
+            // Circular reference found, discard key
+            return;
+        }
+        // Store value in our collection
+        cache.push(value);
+    }
+    return value;
+});
+cache = null; 
+
+        getJSONWithParams("/game-world/saveGameState.php", 'chr='+characterId+'+&postData=' + heroJSONWithoutCircularReference, function(data) {
+        if (data.success) {
+  
+           // no action ?
+        } else {
+           
+            // try again? ####
+        }
+    }, function(status) {
+   
+        // try again ? #######
+    });
+    // save map state:
+    // ##########
+}
 
 function draw() {
     if (gameMode == "mapLoading") {

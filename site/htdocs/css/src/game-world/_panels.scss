@@ -32,7 +32,7 @@ $numberOfItemCategories: 20;
     display: block;
     float: left;
     background: url(../images/game-world/interface/inventory-slot.png) no-repeat 50% 50%;
-    cursor: url(../images/game-world/cursors/active.gif) 3 3, auto;
+    cursor: url(../images/game-world/cursors/active.gif) 3 3, pointer;
     margin: 0;
     @include border-box;
     position: relative;
@@ -126,7 +126,7 @@ $numberOfItemCategories: 20;
     width: 19px;
     height: 19px;
     border: 0;
-    cursor: url(../images/game-world/cursors/active.gif) 3 3, auto;
+    cursor: url(../images/game-world/cursors/active.gif) 3 3, pointer;
     outline: none;
 }
 
@@ -296,7 +296,7 @@ $numberOfItemCategories: 20;
     color: #fff;
     border: 0;
     background: #682810;
-    cursor: url(../images/game-world/cursors/active.gif) 3 3, auto;
+    cursor: url(../images/game-world/cursors/active.gif) 3 3, pointer;
     &:disabled {
         background: #000;
         cursor: default;
@@ -333,7 +333,7 @@ $numberOfItemCategories: 20;
             display: block;
             float: left;
             background: url(../images/game-world/interface/inventory-slot.png) no-repeat 50% 50%;
-            cursor: url(../images/game-world/cursors/active.gif) 3 3, auto;
+            cursor: url(../images/game-world/cursors/active.gif) 3 3, pointer;
             margin: 0;
             @include border-box;
             position: relative;
@@ -636,7 +636,7 @@ pointer-events: auto;
     top: 50%;
     @include transform( translate(-50%, -50%));
     button {
-        cursor: url(../images/game-world/cursors/active.gif) 3 3, auto;
+        cursor: url(../images/game-world/cursors/active.gif) 3 3, pointer;
         background: #363636;
         @include transition(background 0.4s ease);
         border: 2px solid #cbbc9f;

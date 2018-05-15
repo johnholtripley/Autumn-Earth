@@ -20,7 +20,7 @@ $debug = true;
 $possibleBreedablePlants = [];
 $plantNames = [];
 // item category 1 is flowers: (use showInTheCodex to remove nodes etc)
-$query = 'select itemid, shortname from tblinventoryitems where itemcategories = 1 and showInTheCodex="1" order by shortname ASC';
+$query = 'select itemid, shortname from tblinventoryitems where itemcategories = 1 and action="" order by shortname ASC';
 $result = mysqli_query($connection, $query);
 if(mysqli_num_rows($result)>0) {
   while ($row = mysqli_fetch_array($result)) {

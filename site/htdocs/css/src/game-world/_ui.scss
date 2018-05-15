@@ -74,7 +74,7 @@
     -moz-border-radius: 4px 4px 0 0;
     border-radius: 4px 4px 0 0;
     @include transition(background .4s ease);
-    cursor: url(../images/game-world/cursors/active.gif) 3 3, auto;
+    cursor: url(../images/game-world/cursors/active.gif) 3 3, pointer;
     &.active {
         background: #000;
         cursor: url(../images/game-world/cursors/default.gif) 3 3, auto;
@@ -136,7 +136,7 @@
         background: transparent;
         &.active {
             @include attention() {
-                cursor: url(../images/game-world/cursors/active.gif) 3 3, auto;
+                cursor: url(../images/game-world/cursors/active.gif) 3 3, pointer;
             }
         }
         @include attention() {
@@ -223,7 +223,7 @@
 
 
 .primaryButton {
-    cursor: url(../images/game-world/cursors/active.gif) 3 3, auto;
+    cursor: url(../images/game-world/cursors/active.gif) 3 3, pointer;
 
     background: #53160d;
     color: #fff;

@@ -99,7 +99,7 @@
     outline: none;
     padding: 0;
 
-    cursor: url(../images/game-world/cursors/active.gif) 3 3, auto;
+    cursor: url(../images/game-world/cursors/active.gif) 3 3, pointer;
     background: rgba(200, 200, 20, 0.6);
     border: 2px solid #fff;
     @include border-radius(20px);
@@ -276,7 +276,7 @@
         @include inventorySlot();
     }
     .takeRewards, .finishExploration {
-        cursor: url(../images/game-world/cursors/active.gif) 3 3, auto;
+        cursor: url(../images/game-world/cursors/active.gif) 3 3, pointer;
         border: 0;
         background: #53160d;
         color: #fff;

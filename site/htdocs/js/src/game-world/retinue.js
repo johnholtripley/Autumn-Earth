@@ -62,7 +62,7 @@ function retinueMissionCompleted(questId, isExplorationQuest) {
 
             var thisHexCoords = data.explored.split("_");
             // needs pushing to database:
-            sendDataWithoutNeedingAResponse("/game-world/updateGameState.php?chr=" + characterId + "&action=add&field=retinueMapAreasRevealed&value=" + encodeURIComponent('"' + thisHexCoords[0] + ',' + thisHexCoords[1] + '"'));
+           saveGame();
 
             // make neighbouring hexes explorable:
             var thisNeighbouringHex;
