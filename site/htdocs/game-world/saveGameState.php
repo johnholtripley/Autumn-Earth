@@ -28,7 +28,7 @@ $query = "UPDATE tblcharacters SET ";
 // loop through and add all fields:
 
 for($i=0;$i<count($fieldsToUpdate); $i++) {
-  $query .= '"'.$fieldsToUpdate[$i].'" = "'.mysqli_real_escape_string($connection,json_encode($postedData[($fieldsToUpdate[$i])])).'", ';
+  $query .= $fieldsToUpdate[$i]." = '".mysqli_real_escape_string($connection,json_encode($postedData[($fieldsToUpdate[$i])]))."', ";
 }
 
 // remove last comma:
