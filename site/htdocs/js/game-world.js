@@ -6342,6 +6342,7 @@ gameWrapper.classList.add('targetingPollen');
 
 }
 function setupWeather() {
+
     if (!thisMapData.isInside) {
         // check if any outside weather is stored:
         if (outsideWeather != "") {
@@ -6367,6 +6368,7 @@ function setupWeather() {
             changeWeather("");
         }
     }
+    weatherLastChangedTime = hero.totalGameTimePlayed;
 }
 
 function checkForWeatherChange() {
@@ -6835,7 +6837,7 @@ function getShopData() {
         for (var i = 0; i < shopData.shops.length; i++) {
             shopData.shops[i].hash = generateHash(shopData.shops[i].name);
         }
-     
+
         loadShopData('shopData=' + JSON.stringify(shopData));
     }
 }
@@ -8945,8 +8947,7 @@ cache = null;
     // ##########
     // save UI state:
     // ##########
-    // save quest state:
-    // ##########
+  
 }
 
 function draw() {

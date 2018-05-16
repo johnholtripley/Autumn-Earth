@@ -1,4 +1,5 @@
 function setupWeather() {
+
     if (!thisMapData.isInside) {
         // check if any outside weather is stored:
         if (outsideWeather != "") {
@@ -24,6 +25,7 @@ function setupWeather() {
             changeWeather("");
         }
     }
+    weatherLastChangedTime = hero.totalGameTimePlayed;
 }
 
 function checkForWeatherChange() {
