@@ -389,7 +389,7 @@ function loadTitles() {
 function getColours() {
     getJSON("/game-world/getColours.php", function(data) {
         colourNames = data.colourNames;
-        getQuestDetails();
+         getHorticultureData();
     }, function(status) {
         // try again:
         getColours();
@@ -436,6 +436,7 @@ function getShopData() {
         for (var i = 0; i < shopData.shops.length; i++) {
             shopData.shops[i].hash = generateHash(shopData.shops[i].name);
         }
+     
         loadShopData('shopData=' + JSON.stringify(shopData));
     }
 }
@@ -447,7 +448,7 @@ function loadShopData(shopJSONData) {
     getJSONWithParams("/game-world/getShopItems.php", shopJSONData, function(data) {
         thisMapShopItemIds = data.allItemIds;
         UI.buildShop(data.markup);
-        getHorticultureData();
+        getQuestJournal();
     }, function(status) {
         // try again:
         loadShopData(shopJSONData);
@@ -471,7 +472,7 @@ function getHorticultureData() {
         getJSON("/game-world/getHorticulturalDetails.php?chr=" + characterId, function(data) {
         UI.buildHorticulturePanel(data.markup);
         
-        getQuestJournal();
+        getQuestDetails();
     }, function(status) {
         // try again:
         getHorticultureData();
@@ -2531,20 +2532,21 @@ var heroJSONWithoutCircularReference = JSON.stringify(hero, function(key, value)
     return value;
 });
 cache = null; 
-
         getJSONWithParams("/game-world/saveGameState.php", 'chr='+characterId+'+&postData=' + heroJSONWithoutCircularReference, function(data) {
-        if (data.success) {
-  
-           // no action ?
+        if (data.success == 'true') {
+             // all ok - no action ?
         } else {
            
-            // try again? ####
+            // try again? 
         }
     }, function(status) {
-   
-        // try again ? #######
+        // try again ? 
     });
     // save map state:
+    // ##########
+    // save UI state:
+    // ##########
+    // save quest state:
     // ##########
 }
 

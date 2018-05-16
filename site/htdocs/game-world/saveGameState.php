@@ -41,8 +41,17 @@ $query .= " where charID = '".$chr."'";
 if(!$debug) {
 
 $result = mysqli_query($connection, $query);
+ $returnedResult = "false";
+    if($result) {
+        $returnedResult = "true";
+    }
+
+
+header('Content-Type: application/json');
 // return success or fail:
-// ####
+echo '{"success":"'.$returnedResult.'"}';
+
+
 } else {
   echo $query;
 }

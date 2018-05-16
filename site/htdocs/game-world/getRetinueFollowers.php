@@ -295,6 +295,8 @@ if(mysqli_num_rows($exploreResult)>0) {
 
 $isExplorableClass = '';
 
+
+
 for ($i=0;$i<count($revealedHexCoordinates);$i++) {
   $thisHex = explode(",",$revealedHexCoordinates[$i]);
   $xDiff = abs($thisHex[0] - $x);

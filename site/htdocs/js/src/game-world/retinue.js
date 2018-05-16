@@ -57,10 +57,15 @@ function retinueMissionCompleted(questId, isExplorationQuest) {
         } else {
             hero.stats.retinueExplorationMissionsCompleted++;
             var thisHex = document.getElementById('undiscovered_' + data.explored);
-            // save this hex as being explored:
-            hero.retinueMapAreasRevealed.push(data.explored);
+       
 
             var thisHexCoords = data.explored.split("_");
+
+
+
+     // save this hex as being explored:
+            hero.retinueMapAreasRevealed.push(thisHexCoords[0]+","+thisHexCoords[1]);
+
             // needs pushing to database:
            saveGame();
 
