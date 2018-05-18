@@ -48,7 +48,7 @@ function init() {
 }
 
 function getHeroGameState() {
-    getJSON("/game-world/getGameState.php?chr="+characterId, function(data) {
+    getJSON("/game-world/getGameState.php?chr=" + characterId, function(data) {
         //  thisMapData = data.map;
         // copy the data to the hero object:
         for (var attribute in data) {
@@ -389,7 +389,7 @@ function loadTitles() {
 function getColours() {
     getJSON("/game-world/getColours.php", function(data) {
         colourNames = data.colourNames;
-         getHorticultureData();
+        getHorticultureData();
     }, function(status) {
         // try again:
         getColours();
@@ -469,9 +469,9 @@ function getQuestJournal() {
 
 
 function getHorticultureData() {
-        getJSON("/game-world/getHorticulturalDetails.php?chr=" + characterId, function(data) {
+    getJSON("/game-world/getHorticulturalDetails.php?chr=" + characterId, function(data) {
         UI.buildHorticulturePanel(data.markup);
-        
+
         getQuestDetails();
     }, function(status) {
         // try again:
@@ -596,6 +596,7 @@ function initialiseNPC(whichNPC) {
     thisMapData.npcs[whichNPC].forceNewMovementCheck = true;
     // used for making sure that pathfinding NPCs don't head straight back to the last place they visited:
     thisMapData.npcs[whichNPC].lastTargetDestination = "";
+    thisMapData.npcs[whichNPC].index = whichNPC;
 }
 
 function initialiseItem(whichItem) {
@@ -761,7 +762,7 @@ function prepareGame() {
     fae.dz = 1;
     // fae.pulse = 0;
     setupWeather();
-   
+
     timeSinceLastFrameSwap = 0;
     currentAnimationFrame = 0;
     mapTransition = "in";
@@ -2014,7 +2015,7 @@ function moveNPCs() {
     var thisNPC, newTile, thisNextMovement, oldNPCx, oldNPCy, thisOtherNPC, thisItem, thisNextMovement, thisNextMovementCode, thisInnerDoor;
     for (var i = 0; i < thisMapData.npcs.length; i++) {
         thisNPC = thisMapData.npcs[i];
-        // check this NPC is playing cards with the hero:
+        // check if this NPC is playing cards with the hero:
         if (typeof thisNPC.isPlayingCards === "undefined") {
             newTile = false;
             if (thisNPC.isMoving) {
@@ -2079,6 +2080,7 @@ function moveNPCs() {
                 }
 
                 // check for collisions against other NPCs:
+                var whichNPCShouldMoveOutOfTheWay;
                 for (var j = 0; j < thisMapData.npcs.length; j++) {
                     if (i != j) {
                         thisOtherNPC = thisMapData.npcs[j];
@@ -2086,6 +2088,23 @@ function moveNPCs() {
                             if (isAnObjectCollision(thisNPC.x, thisNPC.y, thisNPC.width, thisNPC.length, thisOtherNPC.x, thisOtherNPC.y, thisOtherNPC.width, thisOtherNPC.length)) {
                                 thisNPC.x = oldNPCx;
                                 thisNPC.y = oldNPCy;
+                                
+                                // work out which one should get out of the way (see if one of them is static and move the other if so)
+                                if (!thisNPC.isMoving) {
+                                    whichNPCShouldMoveOutOfTheWay = thisOtherNPC;
+                                } else if (!thisOtherNPC.isMoving) {
+                                    whichNPCShouldMoveOutOfTheWay = thisNPC;
+                                } else {
+                                    // give the one added to the map earlier precedence:
+                                    if (thisNPC.index < thisOtherNPC.index) {
+                                        whichNPCShouldMoveOutOfTheWay = thisOtherNPC;
+                                    } else {
+                                        whichNPCShouldMoveOutOfTheWay = thisNPC;
+                                    }
+                                }
+                                console.log(thisNPC.name + ' collided with ' + thisOtherNPC.name+" - "+whichNPCShouldMoveOutOfTheWay.name+" will move out of the way");
+                                
+                               
                             }
                         }
                     }
@@ -2498,7 +2517,7 @@ function sendNPCPost(postData, attachments) {
     if (attachments) {
         postDataToSend['attachments'] = attachments;
     }
-   // console.log(JSON.stringify(postDataToSend));
+    // console.log(JSON.stringify(postDataToSend));
     getJSONWithParams("/game-world/sendPost.php", 'postData=' + JSON.stringify(postDataToSend), function(data) {
         if (data.success) {
             // show new post notification:
@@ -2516,27 +2535,27 @@ function sendNPCPost(postData, attachments) {
 
 function saveGame() {
     // save game state:
-  
-// avoid circular references in the Hero object:
-// https://stackoverflow.com/questions/11616630/json-stringify-avoid-typeerror-converting-circular-structure-to-json/11616993#answer-11616993
-var cache = [];
-var heroJSONWithoutCircularReference = JSON.stringify(hero, function(key, value) {
-    if (typeof value === 'object' && value !== null) {
-        if (cache.indexOf(value) !== -1) {
-            // Circular reference found, discard key
-            return;
+
+    // avoid circular references in the Hero object:
+    // https://stackoverflow.com/questions/11616630/json-stringify-avoid-typeerror-converting-circular-structure-to-json/11616993#answer-11616993
+    var cache = [];
+    var heroJSONWithoutCircularReference = JSON.stringify(hero, function(key, value) {
+        if (typeof value === 'object' && value !== null) {
+            if (cache.indexOf(value) !== -1) {
+                // Circular reference found, discard key
+                return;
+            }
+            // Store value in our collection
+            cache.push(value);
         }
-        // Store value in our collection
-        cache.push(value);
-    }
-    return value;
-});
-cache = null; 
-        getJSONWithParams("/game-world/saveGameState.php", 'chr='+characterId+'+&postData=' + heroJSONWithoutCircularReference, function(data) {
+        return value;
+    });
+    cache = null;
+    getJSONWithParams("/game-world/saveGameState.php", 'chr=' + characterId + '+&postData=' + heroJSONWithoutCircularReference, function(data) {
         if (data.success == 'true') {
-             // all ok - no action ?
+            // all ok - no action ?
         } else {
-           
+
             // try again? 
         }
     }, function(status) {
@@ -2546,7 +2565,7 @@ cache = null;
     // ##########
     // save UI state:
     // ##########
-  
+
 }
 
 function draw() {

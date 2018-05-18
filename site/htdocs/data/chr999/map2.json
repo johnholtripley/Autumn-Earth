@@ -1010,6 +1010,61 @@
                 }
             },
             {
+                "name": "Warden2",
+                "src": "warden.png",
+                "width": 20,
+                "length": 20,
+                "spriteWidth": 76,
+                "spriteHeight": 87,
+                "centreX": 49,
+                "centreY": 76,
+                "tileX": 15,
+                "tileY": 27,
+                "movement": [
+                    ["find", "shop", "waitingAnimationName", 0],
+                    ["remove"],
+                    ["find", "shop", "waitingAnimationName", 360],
+                    ["talkToNeighbour"]
+                ],
+                "facing": "s",
+                "walkThroughDoors": false,
+                "speed": 2,
+                "isCollidable": true,
+                "isMoving": false,
+                "speech": [
+                    ["Need to keep an eye out...", ""]
+                ],
+                "cardGameSpeech":
+                {
+                    "challenge": ["Do you play? Fancy a game then?", "play"],
+                    "win": ["Woo! I won!", ""],
+                    "lose": ["Ahh, you beat me...", ""],
+                    "draw": ["Well played", ""]
+                },
+                "cardSkill": 1,
+                "uniqueCards": [2, 2],
+                "baseCardPack": 0,
+                "animation":
+                {
+                    "walk":
+                    {
+                        "length": 30,
+                        "n": 0,
+                        "e": 1,
+                        "s": 2,
+                        "w": 3
+                    },
+                    "wait":
+                    {
+                        "length": 1,
+                        "n": 0,
+                        "e": 1,
+                        "s": 2,
+                        "w": 3
+                    }
+                }
+            },
+            {
                 "name": "brown horse",
                 "src": "brown-horse.png",
                 "width": 36,
