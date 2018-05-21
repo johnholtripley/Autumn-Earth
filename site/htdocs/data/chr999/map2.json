@@ -963,7 +963,7 @@
                 "spriteHeight": 87,
                 "centreX": 49,
                 "centreY": 76,
-                "tileX": 14,
+                "tileX": 13,
                 "tileY": 27,
                 "movement": [
                     ["find", "shop", "waitingAnimationName", 0],
@@ -1018,7 +1018,7 @@
                 "spriteHeight": 87,
                 "centreX": 49,
                 "centreY": 76,
-                "tileX": 15,
+                "tileX": 14,
                 "tileY": 27,
                 "movement": [
                     ["find", "shop", "waitingAnimationName", 0],

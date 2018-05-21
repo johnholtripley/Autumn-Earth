@@ -2397,6 +2397,20 @@ function moveNPCs() {
                         thisNPC.forceNewMovementCheck = false;
                         break;
                 }
+                if(thisNPC.isMoving) {
+                    // ###### john
+                // check destination tile is clear:
+                var thisNPCsNextTile = relativeFacing[thisNPC.facing];
+                var newTileX = thisNPC.tileX + thisNPCsNextTile['x'];
+                var newTileY = thisNPC.tileY + thisNPCsNextTile['y'];
+               // console.log(thisNPC.index+":"+newTileX+", "+newTileY+" - "+tileIsClear(newTileX,newTileY));
+                if(!(tileIsClear(newTileX,newTileY))) {
+ thisNPC.isMoving = false;
+ thisNPC.forceNewMovementCheck = true;
+ thisNPC.currentAnimation = 'wait';
+ console.log(thisNPC.name+" blocked going from "+thisNPC.tileX+","+thisNPC.tileY+" to "+newTileX+","+newTileY);
+                }
+            }
             }
         }
     }
