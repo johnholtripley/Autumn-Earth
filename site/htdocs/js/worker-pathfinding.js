@@ -177,6 +177,20 @@ function findPath(startX, startY, endX, endY) {
 
 onmessage = function(e) {
     switch (e.data[0]) {
+        case 'tile':
+        var destinationX = e.data[1];
+        var destinationY = e.data[2];
+   var thisAgent = e.data[3];
+            thisMapData = e.data[4];
+            mapTilesY = thisMapData.terrain.length;
+            mapTilesX = thisMapData.terrain[0].length;
+        
+
+
+postMessage([thisAgent.name, findPath(thisAgent.tileX, thisAgent.tileY, destinationX, destinationY), destinationX+"-"+destinationY]);
+
+
+        break;
         case 'shop':
             var thisAgent = e.data[1];
             thisMapData = e.data[2];

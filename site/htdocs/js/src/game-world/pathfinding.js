@@ -1,6 +1,7 @@
 if (window.Worker) {
     var pathfindingWorker = new Worker('/js/worker-pathfinding.js');
     pathfindingWorker.onmessage = function(e) {
+
         var thisAgentsName = e.data[0];
         if (thisAgentsName == 'pet') {
             var thisPet = hero.allPets[hero.activePets[e.data[1]]];
@@ -16,7 +17,7 @@ if (window.Worker) {
                 thisPet.facing = e.data[2][0];
             }
         } else {
-
+console.log("pathfinding returned from Worker");
             // find which NPC this is:
             // http://stackoverflow.com/a/16100446/1054212
             var thisNPCsIndex = thisMapData.npcs.map(function(x) {
@@ -34,6 +35,7 @@ if (window.Worker) {
             if (typeof e.data[2] !== "undefined") {
                 // store the target tile so it doesn't try and go straight back to it after:
                 thisMapData.npcs[thisNPCsIndex].lastTargetDestination = e.data[2];
+                console.log("heading for "+e.data[2]);
             }
         }
     }

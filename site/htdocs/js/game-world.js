@@ -3325,6 +3325,7 @@ function updateLightMap() {
 if (window.Worker) {
     var pathfindingWorker = new Worker('/js/worker-pathfinding.js');
     pathfindingWorker.onmessage = function(e) {
+
         var thisAgentsName = e.data[0];
         if (thisAgentsName == 'pet') {
             var thisPet = hero.allPets[hero.activePets[e.data[1]]];
@@ -3340,7 +3341,7 @@ if (window.Worker) {
                 thisPet.facing = e.data[2][0];
             }
         } else {
-
+console.log("pathfinding returned from Worker");
             // find which NPC this is:
             // http://stackoverflow.com/a/16100446/1054212
             var thisNPCsIndex = thisMapData.npcs.map(function(x) {
@@ -3358,6 +3359,7 @@ if (window.Worker) {
             if (typeof e.data[2] !== "undefined") {
                 // store the target tile so it doesn't try and go straight back to it after:
                 thisMapData.npcs[thisNPCsIndex].lastTargetDestination = e.data[2];
+                console.log("heading for "+e.data[2]);
             }
         }
     }
@@ -8490,6 +8492,10 @@ function moveNPCs() {
                                 thisNPC.x = oldNPCx;
                                 thisNPC.y = oldNPCy;
                                 
+
+
+
+                                /*
                                 // work out which one should get out of the way (see if one of them is static and move the other if so)
                                 if (!thisNPC.isMoving) {
                                     whichNPCShouldMoveOutOfTheWay = thisOtherNPC;
@@ -8504,7 +8510,7 @@ function moveNPCs() {
                                     }
                                 }
                                 console.log(thisNPC.name + ' collided with ' + thisOtherNPC.name+" - "+whichNPCShouldMoveOutOfTheWay.name+" will move out of the way");
-                                
+                                */
                                
                             }
                         }
@@ -8806,10 +8812,95 @@ function moveNPCs() {
                 var newTileY = thisNPC.tileY + thisNPCsNextTile['y'];
                // console.log(thisNPC.index+":"+newTileX+", "+newTileY+" - "+tileIsClear(newTileX,newTileY));
                 if(!(tileIsClear(newTileX,newTileY))) {
- thisNPC.isMoving = false;
- thisNPC.forceNewMovementCheck = true;
- thisNPC.currentAnimation = 'wait';
+ //thisNPC.isMoving = false;
+ //thisNPC.forceNewMovementCheck = true;
+ //thisNPC.currentAnimation = 'wait';
  console.log(thisNPC.name+" blocked going from "+thisNPC.tileX+","+thisNPC.tileY+" to "+newTileX+","+newTileY);
+// if it's got a destination, add this blocked tile to the map, and re-path to that destination:
+if(thisNPC.lastTargetDestination != "") {
+    console.log("removing previous path",thisNPC.movement);
+
+
+// remove previous path:
+// start duplicated code
+
+                            var targetDestination = thisNPC.lastTargetDestination.split("-");
+                        //    thisNPC.drawnFacing = turntoFaceTile(thisNPC, targetDestination[0], targetDestination[1]);
+                            // find the "find" before this and remove all elements after that to this index:
+
+//not duplicate
+var pathEndIndex;
+// find the 'pathEnd' index:
+for (j = thisNPC.movement.length; j >= 0; j--) {
+//    console.log("checking:"+thisNPC.movement[j]);
+if(thisNPC.movement[j] == "pathEnd") {
+pathEndIndex = j;
+break;
+}
+}
+
+
+
+                            for (j = pathEndIndex; j >= 0; j--) {
+                                thisPreviousMovement = thisNPC.movement[j];
+                                if (typeof thisPreviousMovement !== 'string') {
+
+                                    if (thisPreviousMovement[0] == 'find') {
+                                        var numberOfElementsRemoved = pathEndIndex - (j);
+                                       // console.log("numberOfElementsRemoved"+numberOfElementsRemoved);
+                                        thisNPC.movement.splice(j + 1, numberOfElementsRemoved);
+                                        thisNPC.movementIndex = j;
+                                        thisNPC.isMoving = false;
+                                        thisNPC.forceNewMovementCheck = true;
+                                        delete thisNPC.waitingTimer;
+                                        break;
+                                    }
+                                }
+                            }
+// end duplicated code
+console.log("removed previous path: ",thisNPC.movement);
+
+
+
+thisNextMovement = thisNPC.movement[thisNPC.movementIndex];
+
+// start duplicated code
+if ((!thisNPC.waitingForAPath) && (typeof thisNPC.waitingTimer === "undefined")) {
+    // make a copy of the map data with that blocked tile marked
+var tempMapData = JSON.parse(JSON.stringify(thisMapData));
+tempMapData.collisions[newTileY][newTileX] = 1;
+
+                            pathfindingWorker.postMessage(['tile', targetDestination[0], targetDestination[1], thisNPC, tempMapData]);
+                            console.log("posted to Worker");
+                            // make sure to only request this once:
+                            thisNPC.isMoving = false;
+                            thisNPC.waitingForAPath = true;
+                            thisNPC.waitingTimer = 0;
+
+                            // play animation while waiting
+                            thisNPC.currentAnimation = 'wait';
+                            // thisNextMovement[2]
+                            // #######
+
+                            // keep the NPC waiting:
+                           // thisNPC.movementIndex--;
+                        } else {
+                            /*
+                            // check timer:
+                            thisNPC.waitingTimer++;
+                            if (thisNPC.waitingTimer > thisNextMovement[3]) {
+                                thisNPC.isMoving = true;
+                                thisNPC.currentAnimation = 'walk';
+                                delete thisNPC.waitingTimer;
+                            } else {
+                                // keep waiting until got a path, and the timer has expired
+                                thisNPC.movementIndex--;
+                                thisNPC.isMoving = false;
+                            }
+                            */
+                        }
+// end duplicated code
+}
                 }
             }
             }
