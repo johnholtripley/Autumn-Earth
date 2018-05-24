@@ -24,19 +24,23 @@ console.log("pathfinding returned from Worker");
                 return x.name;
             }).indexOf(thisAgentsName);  
              
+        //     console.log(JSON.parse(JSON.stringify(thisMapData.npcs[thisNPCsIndex].movement)));
             // insert the new path:
             // http://stackoverflow.com/a/7032717/1054212
             thisMapData.npcs[thisNPCsIndex].movement.splice.apply(thisMapData.npcs[thisNPCsIndex].movement, [thisMapData.npcs[thisNPCsIndex].movementIndex + 2, 0].concat(e.data[1]));
-
-
+    //    console.log(JSON.parse(JSON.stringify(thisMapData.npcs[thisNPCsIndex].movement)));
+//console.log((e.data[1]));
 
 
             thisMapData.npcs[thisNPCsIndex].waitingForAPath = false;
             if (typeof e.data[2] !== "undefined") {
                 // store the target tile so it doesn't try and go straight back to it after:
                 thisMapData.npcs[thisNPCsIndex].lastTargetDestination = e.data[2];
-                console.log("heading for "+e.data[2]);
+            //    console.log("heading for "+e.data[2]);
             }
+        //    console.log(thisMapData.npcs[thisNPCsIndex].movementIndex);
+          //  console.log(thisMapData.npcs[thisNPCsIndex].movement);
+         //   console.log(thisMapData.npcs[thisNPCsIndex].movement[(thisMapData.npcs[thisNPCsIndex].movementIndex)]);
         }
     }
 }
