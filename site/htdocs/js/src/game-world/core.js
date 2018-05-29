@@ -2412,28 +2412,15 @@ function moveNPCs() {
                         break;
                 }
                 if (thisNPC.isMoving && !thisNPC.hasJustGotNewPath) {
-
                     // check destination tile is clear:
                     var thisNPCsNextTile = relativeFacing[thisNPC.facing];
                     var newTileX = thisNPC.tileX + thisNPCsNextTile['x'];
                     var newTileY = thisNPC.tileY + thisNPCsNextTile['y'];
-                    // console.log(thisNPC.index+":"+newTileX+", "+newTileY+" - "+tileIsClear(newTileX,newTileY));
                     if (!(tileIsClear(newTileX, newTileY))) {
-                        //thisNPC.isMoving = false;
-                        //thisNPC.forceNewMovementCheck = true;
-                        //thisNPC.currentAnimation = 'wait';
-                        console.log(thisNPC.name + " blocked going from " + thisNPC.tileX + "," + thisNPC.tileY + " to " + newTileX + "," + newTileY);
                         // if it's got a destination, add this blocked tile to the map, and re-path to that destination:
                         if (thisNPC.lastTargetDestination != "") {
-
                             // remove previous path:
-                            // start duplicated code
-
                             var targetDestination = thisNPC.lastTargetDestination.split("-");
-                            //    thisNPC.drawnFacing = turntoFaceTile(thisNPC, targetDestination[0], targetDestination[1]);
-                            // find the "find" before this and remove all elements after that to this index:
-
-                            //not duplicate
                             var pathEndIndex;
                             // find the 'pathEnd' index:
                             for (j = thisNPC.movement.length; j >= 0; j--) {
@@ -2443,15 +2430,11 @@ function moveNPCs() {
                                     break;
                                 }
                             }
-
-
-
                             for (j = pathEndIndex; j >= 0; j--) {
                                 thisPreviousMovement = thisNPC.movement[j];
                                 // might not be a 'find', so check if reached the start of the array:
                                 // is there a neater way to remove the previous path? ###############
                                 if ((typeof thisPreviousMovement !== 'string') || (j == 0)) {
-
                                     if ((thisPreviousMovement[0] == 'find') || (j == 0)) {
                                         var numberOfElementsRemoved = pathEndIndex - (j);
                                         // console.log("numberOfElementsRemoved"+numberOfElementsRemoved);
@@ -2465,55 +2448,35 @@ function moveNPCs() {
                                     }
                                 }
                             }
-                            // end duplicated code
-
-
-
-
-
-                            // start duplicated code
                             if ((!thisNPC.waitingForAPath) && (typeof thisNPC.waitingTimer === "undefined")) {
-
-
                                 // make a copy of the map with that blocked tile and any surrounding tiles marked, so it doesn't move off and immediately collide at the next tile:
                                 var tempMapData = JSON.parse(JSON.stringify(thisMapData));
-
+                                var testTileX, testTileY;
                                 for (var k = -3; k <= 3; k++) {
                                     for (var l = -3; l <= 3; l++) {
-                                        if (!(tileIsClear(newTileX + k, newTileY + l))) {
-                                            tempMapData.collisions[newTileY + l][newTileX + k] = 1;
+
+                                        testTileX = newTileX + k;
+                                        testTileY = newTileY + l;
+                                        if ((testTileX > 0) && (testTileY > 0) && (testTileX < mapTilesX) && (testTileY < mapTilesY)) {
+                                            // no point checking if it's already blocked by terrain:
+                                            if (tempMapData.collisions[testTileY][testTileX] != 1) {
+                                                if (!(tileIsClear(testTileX, testTileY))) {
+                                                    tempMapData.collisions[testTileY][testTileX] = 1;
+                                                }
+                                            }
                                         }
                                     }
                                 }
-
-
-
-
-
-
                                 pathfindingWorker.postMessage(['tile', targetDestination[0], targetDestination[1], thisNPC, tempMapData]);
-
                                 // make sure to only request this once:
                                 thisNPC.isMoving = false;
                                 thisNPC.waitingForAPath = true;
                                 thisNPC.waitingTimer = 0;
-
                                 // play animation while waiting
                                 thisNPC.currentAnimation = 'wait';
-                                // thisNextMovement[2]
-                                // #######
-
+                                // #####
                                 // keep the NPC waiting:
                                 thisNPC.movementIndex--;
-                            } else {
-
-                                // check timer:
-                                /*
-                                       thisNPC.isMoving = true;
-                                       thisNPC.currentAnimation = 'walk';
-                                       delete thisNPC.waitingTimer;
-                                  */
-
                             }
                             // end duplicated code
                         }
