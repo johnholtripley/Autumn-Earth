@@ -3341,7 +3341,7 @@ if (window.Worker) {
                 thisPet.facing = e.data[2][0];
             }
         } else {
-console.log("pathfinding returned from Worker");
+//console.log("pathfinding returned from Worker");
             // find which NPC this is:
             // http://stackoverflow.com/a/16100446/1054212
             var thisNPCsIndex = thisMapData.npcs.map(function(x) {
@@ -4486,7 +4486,7 @@ var UI = {
     },
 
     showDialogue: function(thisObjectSpeaking, text) {
-
+UI.showUI();
         // check for random variation in text:
         var textToShow = getRandomElementFromArray(text.split("/"));
         if (activeObjectForDialogue != '') {
@@ -5106,6 +5106,7 @@ var UI = {
     },
 
     openShop: function(shopHash) {
+        UI.showUI();
         shopCurrentlyOpen = shopHash;
         document.getElementById("shop" + shopHash).classList.add("active");
         inventoryPanels.classList.add("shopSpecialism" + document.getElementById("shop" + shopHash).getAttribute('data-specialism'));
@@ -5572,6 +5573,7 @@ var UI = {
     },
 
     openChest: function(itemReference) {
+        UI.showUI();
         var contents = thisMapData.items[itemReference].contains;
         audio.playSound(soundEffects['chestOpen'], 0);
         // open chest animation (thisMapData.items[itemReference]) ####
@@ -5656,6 +5658,11 @@ var UI = {
     toggleUI: function() {
         interfaceWrapper.classList.toggle('active');
         interfaceIsVisible = !interfaceIsVisible;
+    },
+
+    showUI: function() {
+  interfaceWrapper.classList.add('active');
+        interfaceIsVisible = true;
     },
 
     buildActionBar: function() {
@@ -5955,6 +5962,7 @@ gameWrapper.classList.add('targetingPollen');
         cursorPositionY = e.pageY;
     },
     openPost: function(postObjectX, postObjectY) {
+        UI.showUI();
         // store the coordinates of the NPC or item that triggered this opening:
         postObject.x = postObjectX;
         postObject.y = postObjectY;
@@ -6084,6 +6092,7 @@ gameWrapper.classList.add('targetingPollen');
         }
     },
     openRetinuePanel: function(passedRetinueObject) {
+        UI.showUI();
         retinuePanel.classList.add("active");
         audio.playSound(soundEffects['bookOpen'], 0);
         retinueObject.active = true;

@@ -17,7 +17,7 @@ if (window.Worker) {
                 thisPet.facing = e.data[2][0];
             }
         } else {
-console.log("pathfinding returned from Worker");
+//console.log("pathfinding returned from Worker");
             // find which NPC this is:
             // http://stackoverflow.com/a/16100446/1054212
             var thisNPCsIndex = thisMapData.npcs.map(function(x) {
