@@ -35,6 +35,9 @@
     float: left;
     width: 320px;
     color: #111;
+    &:last-child {
+        margin-right: 0;
+    }
 }
 
 .craftingColumn~.craftingColumn {
