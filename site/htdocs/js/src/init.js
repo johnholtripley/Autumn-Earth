@@ -29,6 +29,7 @@ Promise.all([
 // service worker:
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('/serviceWorker.min.js', {
+    updateViaCache: 'imports',
     scope: '/'
   });
 }

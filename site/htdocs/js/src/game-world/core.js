@@ -1,6 +1,7 @@
 // service worker:
 if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('/game-world/serviceWorker.min.js', {
+         updateViaCache: 'imports',
         scope: '/game-world/'
     });
 }

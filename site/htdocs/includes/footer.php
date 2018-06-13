@@ -49,11 +49,22 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/search.php");
 	<div class="small-12 column">
 <p>&copy; 2004&ndash;<?php echo date("Y"); ?> Autumn Earth</p>
 <ul>
+	<li><a href="/support/">Help &amp; Support</a></li>
 	<li><a href="/colophon/">Colophon</a></li>
 	<li><a href="/cookies/">Cookies</a></li>
 	</ul>
-<ul itemscope="" itemtype="http://schema.org/Organization">
-	<meta itemprop="url" content="https://www.autumnearth.com">
+	<div itemscope="" itemtype="http://schema.org/Organization">
+		<meta itemprop="url" content="https://www.autumnearth.com">
+	<meta itemprop="logo" content="https://www.autumnearth.com/images/icons/android-chrome-192x192.png">
+	<span itemprop="contactPoint" itemscope="" itemtype="http://schema.org/ContactPoint">
+	<meta itemprop="url" content="https://www.autumnearth.com/support" />
+	<meta itemprop="contactType" content="customer service" />
+	</span>
+<ul>
+	
+
+
+
 	<li><a href="https://twitter.com/autumnearth/" rel="me" itemprop="sameAs">Twitter</a></li>
 	<li><a href="https://twitter.com/HerbariumArcana">Twitter (Herbarium)</a></li>
 	<li><a href="https://www.youtube.com/c/autumnearth/" rel="me" itemprop="sameAs">YouTube</a></li>
@@ -65,6 +76,7 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/search.php");
 	<li><a href="/feed/">RSS</a></li>
 	
 </ul>
+</div>
 
 
 	</div>

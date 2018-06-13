@@ -63,7 +63,7 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/title-tag.php");
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta http-equiv="Accept-CH" content="DPR,Width,Viewport-Width"> 
-
+<meta name="disabled-adaptations" content="watch">
 <?php
 // help Google index paginated pages behind the 'load more' links:
 // https://webmasters.googleblog.com/2014/02/infinite-scroll-search-friendly.html
