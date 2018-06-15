@@ -19,45 +19,117 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/header.php");
 <?php
 include($_SERVER['DOCUMENT_ROOT']."/includes/scriptorium/phonetic-dictionary.php");
 
+// phonemes:
+// http://www.speech.cs.cmu.edu/cgi-bin/cmudict
 
-$mappingRules = array("NG"=>"nk", "S"=>"z");
-$inputText = 'Four score and seven years ago our fathers brought forth on this continent, a new nation, conceived in Liberty, and dedicated to the proposition that all men are created equal. Now we are engaged in a great civil war, testing whether that nation, or any nation so conceived and so dedicated, can long endure. We are met on a great battle-field of that war. We have come to dedicate a portion of that field, as a final resting place for those who here gave their lives that that nation might live. It is altogether fitting and proper that we should do this. But, in a larger sense, we can not dedicate—we can not consecrate—we can not hallow—this ground. The brave men, living and dead, who struggled here, have consecrated it, far above our poor power to add or detract. The world will little note, nor long remember what we say here, but it can never forget what they did here. It is for us the living, rather, to be dedicated here to the unfinished work which they who fought here have thus far so nobly advanced. It is rather for us to be here dedicated to the great task remaining before us—that from these honored dead we take increased devotion to that cause for which they gave the last full measure of devotion—that we here highly resolve that these dead shall not have died in vain—that this nation, under God, shall have a new birth of freedom—and that government of the people, by the people, for the people, shall not perish from the earth.';
+$mappingRules = array("IH"=>"y", "UW"=>"oo", "T"=>"t", "K"=>"k", "NG"=>"n'");
+$inputText = 'Alice was beginning to get very tired of sitting by her sister on the bank, and of having nothing to do: once or twice she had peeped into the book her sister was reading, but it had no pictures or conversations in it, ‘and what is the use of a book,’ thought Alice ‘without pictures or conversations?’
+
+So she was considering in her own mind (as well as she could, for the hot day made her feel very sleepy and stupid), whether the pleasure of making a daisy-chain would be worth the trouble of getting up and picking the daisies, when suddenly a White Rabbit with pink eyes ran close by her.
+
+There was nothing so very remarkable in that; nor did Alice think it so very much out of the way to hear the Rabbit say to itself, ‘Oh dear! Oh dear! I shall be late!’ (when she thought it over afterwards, it occurred to her that she ought to have wondered at this, but at the time it all seemed quite natural); but when the Rabbit actually took a watch out of its waistcoat-pocket, and looked at it, and then hurried on, Alice started to her feet, for it flashed across her mind that she had never before seen a rabbit with either a waistcoat-pocket, or a watch to take out of it, and burning with curiosity, she ran across the field after it, and fortunately was just in time to see it pop down a large rabbit-hole under the hedge.
+
+In another moment down went Alice after it, never once considering how in the world she was to get out again.
+
+The rabbit-hole went straight on like a tunnel for some way, and then dipped suddenly down, so suddenly that Alice had not a moment to think about stopping herself before she found herself falling down a very deep well.
+
+Either the well was very deep, or she fell very slowly, for she had plenty of time as she went down to look about her and to wonder what was going to happen next. First, she tried to look down and make out what she was coming to, but it was too dark to see anything; then she looked at the sides of the well, and noticed that they were filled with cupboards and book-shelves; here and there she saw maps and pictures hung upon pegs. She took down a jar from one of the shelves as she passed; it was labelled ‘ORANGE MARMALADE’, but to her great disappointment it was empty: she did not like to drop the jar for fear of killing somebody, so managed to put it into one of the cupboards as she fell past it.
+
+‘Well!’ thought Alice to herself, ‘after such a fall as this, I shall think nothing of tumbling down stairs! How brave they’ll all think me at home! Why, I wouldn’t say anything about it, even if I fell off the top of the house!’ (Which was very likely true.)
+
+Down, down, down. Would the fall never come to an end! ‘I wonder how many miles I’ve fallen by this time?’ she said aloud. ‘I must be getting somewhere near the centre of the earth. Let me see: that would be four thousand miles down, I think—’ (for, you see, Alice had learnt several things of this sort in her lessons in the schoolroom, and though this was not a very good opportunity for showing off her knowledge, as there was no one to listen to her, still it was good practice to say it over) ‘—yes, that’s about the right distance—but then I wonder what Latitude or Longitude I’ve got to?’ (Alice had no idea what Latitude was, or Longitude either, but thought they were nice grand words to say.)
+
+Presently she began again. ‘I wonder if I shall fall right through the earth! How funny it’ll seem to come out among the people that walk with their heads downward! The Antipathies, I think—’ (she was rather glad there was no one listening, this time, as it didn’t sound at all the right word) ‘—but I shall have to ask them what the name of the country is, you know. Please, Ma’am, is this New Zealand or Australia?’ (and she tried to curtsey as she spoke—fancy curtseying as you’re falling through the air! Do you think you could manage it?) ‘And what an ignorant little girl she’ll think me for asking! No, it’ll never do to ask: perhaps I shall see it written up somewhere.’';
+
+// add spaces to emdashes so words attached to them get split correctly:
+$nextText = str_replace("—", " — ", $inputText);
 
 
-// remove tabs, duplicate spaces, line breaks etc  ####
-// explode on punctuation etc  ###
-$splitText = explode(" ", $inputText);
+
+$splitText = explode(" ", $nextText);
+
+
+$debug = false;
+$debug = true;
+
+echo '<style>.replaced {background:#444;}</style>';
 
 $outputText = '';
 
 foreach ($splitText as $key => $word) {
 	$thisKey = strtolower($word);
+	// remove (but store) trailing punctuation
+$storedPunctuation = '';
+if(strlen($thisKey > 1)) {
+if (ctype_punct(substr($thisKey, -1))) {
+	$storedPunctuation = substr($thisKey, -1);
+	$thisKey = substr($thisKey, 0, -1);
+}
+}
+
+
 	if (array_key_exists($thisKey, $phoneticDictionary)) {
 
 $theseLetters = explode("|",$phoneticDictionary[$thisKey][0]);
 $thesePhoenemes = explode("|",$phoneticDictionary[$thisKey][1]);
 $thisWordReplaced = '';
+$thisWordHasChanged = false;
 foreach ($thesePhoenemes as $thisPhonemeKey => $thisPhoneme) {
 	
 	// need to be able to have a rule that only applies at beginning or end of a word #####
-	
+
+$foundMatch = '';	
 foreach ($mappingRules as $mappingKey => $mappingValue) {
-}
+
 
 	if($thisPhoneme == $mappingKey) {
-$thisWordReplaced .= $mappingValue;
-	} else {
-		// use original letter:
-		$thisWordReplaced .= str_replace(":","",$theseLetters[$thisPhonemeKey]);
-	}
+//
+$foundMatch = $mappingValue;
+$thisWordHasChanged = true;
+	} 
 }
 
+if($foundMatch != '') {
+$thisWordReplaced .= $foundMatch;
+} else {
+	// use original letter:
+		$thisWordReplaced .= str_replace(":","",$theseLetters[$thisPhonemeKey]);
+}
+
+
+}
+
+
+// check for capitals:
+if(strtoupper(substr($thisKey, 0, 1)) == substr($word, 0, 1)) {
+$thisWordReplaced = ucfirst($thisWordReplaced);
+}
+
+if($debug) {
+if($thisWordHasChanged) {
+$outputText .= '<span class="replaced">';
+}
+}
 		$outputText .= $thisWordReplaced;
+		if($debug) {
+		if($thisWordHasChanged) {
+$outputText .= '</span>';
+}
+}
 	} else {
 	$outputText .= $word;
 	}
+	$outputText .= $storedPunctuation;
 	$outputText .= " ";
 }
+
+
+// restore any em dashes to not have spaces:
+
+$outputText = str_replace(" — ", "—", $outputText);
+
+echo $inputText;
+echo "<hr>";
 echo $outputText;
 
 
