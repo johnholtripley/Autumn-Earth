@@ -88,7 +88,7 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
     <div id="surveyingPanel">
       <div class="draggableBar">Surveying&hellip;</div><button class="closePanel">close</button>
       <ul>
-        <li><p>Surveying</p><div id="surveyingTimeBar" class="progressBarWrapper"><div class="progressBar"></div></div></li>
+        <li><p>Surveying&hellip;</p><div id="surveyingTimeBar" class="hourGlass"></div></li>
       </ul>
     </div>
     <div id="cardAlbum" class="active">

@@ -4163,7 +4163,7 @@ const gatheringBarQuality = document.querySelector('#gatheringQualityBar .progre
 const gatheringBarPurity = document.querySelector('#gatheringPurityBar .progressBar');
 const gatheringBarQuantity = document.querySelector('#gatheringQuantityBar .progressBar');
 const gatheringBarStability = document.querySelector('#gatheringBarStability .progressBar');
-const surveyingTimeBar = document.querySelector('#surveyingTimeBar .progressBar');
+const surveyingTimeBar = document.getElementById('surveyingTimeBar');
 const craftingTimeBarOuter = document.getElementById('craftingTimeBar');
 const gatheringOutputSlot = document.getElementById('gatheringOutputSlot');
 const surveyingPanel = document.getElementById('surveyingPanel');
@@ -5853,7 +5853,14 @@ var UI = {
     },
 
     updateSurveyingPanel: function() {
-        surveyingTimeBar.style.width = (100 - surveying.timeRemaining) + '%';
+       // surveyingTimeBar.style.width = (100 - surveying.timeRemaining) + '%';
+
+
+             // has 30 frames:
+        var frameRequired = ((surveying.timeRemaining) / 3.3333);
+        // hour glass background width is 92px for each frame:
+        frameRequired = (Math.floor(frameRequired)) * 92;
+        surveyingTimeBar.style.backgroundPosition = "-" + frameRequired + "px 0";
     },
 
     updateCraftingPanel: function() {
