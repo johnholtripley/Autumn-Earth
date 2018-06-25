@@ -150,7 +150,7 @@ self.addEventListener('fetch', function(event) {
                     .then(function(response) {
                         // NETWORK
                         // If the request is for an image, stash a copy of this image in the images cache
-                        if (request.headers.get('Accept').indexOf('image') !== -1) {
+                        if (request.url.match(/\.(jpe?g|png|gif|svg)$/)) {
                             var copy = response.clone();
                             stashInCache(imagesCacheName, request, copy);
                         }
@@ -165,7 +165,7 @@ self.addEventListener('fetch', function(event) {
                     .catch(function() {
                         // OFFLINE
                         // If the request is for an image, show an offline placeholder
-                        if (request.headers.get('Accept').indexOf('image') !== -1) {
+                        if (request.url.match(/\.(jpe?g|png|gif|svg)$/)) {
                             return caches.match(fallBackImage);
                         }
                     });
