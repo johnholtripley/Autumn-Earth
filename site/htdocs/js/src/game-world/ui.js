@@ -1710,7 +1710,7 @@ var UI = {
 
                             UI.updateSurveyingPanel();
                             // trigger a reflow to push the update without the transition:
-                            surveyingPanel.offsetHeight;
+                          //  surveyingPanel.offsetHeight;
                             surveyingPanel.classList.add('active');
                         } else {
                             surveyingStopped();

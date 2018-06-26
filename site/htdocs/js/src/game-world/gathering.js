@@ -73,13 +73,6 @@ function gatheringStopped() {
         gathering.node.state = "inactive";
     }
     if (gathering.node.isTemporary) {
-        // loop through hidden resources (of this type) and remove it:
-        for (var i = 0; i < thisMapData.hiddenResources[(currentActiveInventoryItems[gathering.node.type].category)].length; i++) {
-            if (thisMapData.hiddenResources[(currentActiveInventoryItems[gathering.node.type].category)][i] === gathering.node) {
-                thisMapData.hiddenResources[(currentActiveInventoryItems[gathering.node.type].category)].splice(i, 1);
-                break;
-            }
-        }
         // loop through items and remove it:
         for (var i = 0; i < thisMapData.items.length; i++) {
             if (thisMapData.items[i] === gathering.node) {

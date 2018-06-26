@@ -64,6 +64,9 @@ function surveyingComplete() {
                     thisMapData.items.push(thisResource);
                     initialiseItem(thisMapData.items.length - 1);
                     resourceFound = true;
+                    // remove it from the list now the node has been generated:
+
+                    thisMapData.hiddenResources[surveying.category].splice(i, 1);
                 } else {
                     console.log("Error - Couldn't place resource node");
                 }

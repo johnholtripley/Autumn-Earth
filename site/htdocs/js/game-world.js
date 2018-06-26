@@ -1226,6 +1226,9 @@ function surveyingComplete() {
                     thisMapData.items.push(thisResource);
                     initialiseItem(thisMapData.items.length - 1);
                     resourceFound = true;
+                    // remove it from the list now the node has been generated:
+
+                    thisMapData.hiddenResources[surveying.category].splice(i, 1);
                 } else {
                     console.log("Error - Couldn't place resource node");
                 }
@@ -1426,13 +1429,6 @@ function gatheringStopped() {
         gathering.node.state = "inactive";
     }
     if (gathering.node.isTemporary) {
-        // loop through hidden resources (of this type) and remove it:
-        for (var i = 0; i < thisMapData.hiddenResources[(currentActiveInventoryItems[gathering.node.type].category)].length; i++) {
-            if (thisMapData.hiddenResources[(currentActiveInventoryItems[gathering.node.type].category)][i] === gathering.node) {
-                thisMapData.hiddenResources[(currentActiveInventoryItems[gathering.node.type].category)].splice(i, 1);
-                break;
-            }
-        }
         // loop through items and remove it:
         for (var i = 0; i < thisMapData.items.length; i++) {
             if (thisMapData.items[i] === gathering.node) {
@@ -5831,7 +5827,7 @@ var UI = {
 
                             UI.updateSurveyingPanel();
                             // trigger a reflow to push the update without the transition:
-                            surveyingPanel.offsetHeight;
+                          //  surveyingPanel.offsetHeight;
                             surveyingPanel.classList.add('active');
                         } else {
                             surveyingStopped();

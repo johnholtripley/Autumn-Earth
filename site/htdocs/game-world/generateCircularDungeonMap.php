@@ -1737,9 +1737,9 @@ case "cavern":
 // php needs width not radius:
               $outputWidth = $delaunayVertices[$i]->proximityToNeighboursHorizontal * 2;
 
-          imagefilledellipse($outputCanvas, $delaunayVertices[$i]->x, $delaunayVertices[$i]->y, $outputWidth, $outputWidth, $nodeColour);
+          imagefilledellipse($outputCanvas, ($delaunayVertices[$i]->x), ($delaunayVertices[$i]->y), intval($outputWidth), intval($outputWidth), $nodeColour);
           // border:
-imageellipse($outputCanvas, $delaunayVertices[$i]->x, $delaunayVertices[$i]->y, $outputWidth, $outputWidth, imagecolorallocate($outputCanvas, 255, 255, 255));
+imageellipse($outputCanvas, $delaunayVertices[$i]->x, $delaunayVertices[$i]->y, intval($outputWidth), intval($outputWidth), imagecolorallocate($outputCanvas, 255, 255, 255));
 break;
 }
 
