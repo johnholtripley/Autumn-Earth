@@ -20,6 +20,7 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/header.php");
 <p>php, mysql, node ...</p>
 <p>hosted by ...</p>
 <p>stats by google</p>
+<p>the world is built using Blender, <a href="https://en.blender.org/index.php/Extensions:2.6/Py/Scripts/Curve/Sapling_Tree">Blender Sapling Add-On</a>, Photoshop, <a href="https://truebones.com/">TrueBones motion captures</a>, <a href="http://www.williammalone.com/articles/html5-animation-sprite-sheet-photoshop/">Will Mallone's Sprite Sheet Generator</a></p>
 <p>Include a <a href="https://en.wikipedia.org/wiki/Book_curse">book curse</a>.</p>
 </div>
 
