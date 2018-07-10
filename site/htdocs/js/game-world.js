@@ -8606,6 +8606,10 @@ function moveNPCs() {
                     thisNPC.movementIndex = 0;
                 }
                 thisNextMovement = thisNPC.movement[thisNPC.movementIndex];
+
+
+console.log(thisNextMovement);
+
                 if (typeof thisNextMovement !== 'string') {
                     // it's an array, get the first element as the code:
                     thisNextMovementCode = thisNextMovement[0];
@@ -8829,9 +8833,13 @@ function moveNPCs() {
                         break;
 
                     default:
-
-                        thisNPC.facing = thisNextMovement;
+if (typeof thisNextMovement !== 'string') {
+                      thisNPC.currentAnimation = thisNextMovement[0];
+                      thisNPC.isMoving = false;
+                    } else {
+                          thisNPC.facing = thisNextMovement;
                         thisNPC.forceNewMovementCheck = false;
+                    }
                         break;
                 }
                 if (thisNPC.isMoving && !thisNPC.hasJustGotNewPath) {

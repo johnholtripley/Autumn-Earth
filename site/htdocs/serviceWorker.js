@@ -103,11 +103,12 @@ self.addEventListener('fetch', function(event) {
     var request = event.request;
     var url = new URL(request.url);
 
+/*
   // Only deal with requests to my own server
         if (url.origin !== location.origin) {
             return;
         }
-
+*/
     // Ignore non-GET requests
     if (request.method !== 'GET') {
         return;

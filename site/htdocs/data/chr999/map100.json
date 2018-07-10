@@ -145,50 +145,19 @@
         ],
         "npcs": [
 
-            {
-                "name": "butterfly",
-                "src": "orange-butterfly.png",
-                "width": 15,
-                "length": 15,
-                "spriteWidth": 15,
-                "spriteHeight": 48,
-                "centreX": 7,
-                "centreY": 72,
-                "tileX": 11,
-                "tileY": 17,
-                "movement": [
-                    ["proximity", 4], "remove", "?"
-                ],
-                "facing": "w",
-                "walkThroughDoors": false,
-                "speed": 2,
-                "speech": "",
-                "isCollidable": false,
-                "isMoving": true,
-                "animation":
-                {
-                    "walk":
-                    {
-                        "length": 10,
-                        "n": 0,
-                        "e": 1,
-                        "s": 2,
-                        "w": 3
-                    }
-                }
-            },
+           
             {
                 "name": "hen",
                 "src": "hen-walking.png",
                 "width": 20,
                 "length": 20,
-                "spriteWidth": 32,
-                "spriteHeight": 31,
+                "spriteWidth": 34,
+                "spriteHeight": 37,
                 "centreX": 22,
                 "centreY": 22,
                 "tileX": 4,
-                "tileY": 3,
-                "movement": ["e","e","e","e","e","e","e","s","s","s","s","s","s","s","s","s","s","w","w","w","w","w","w","w","w","w","w","w","n","n","n","n","n","n","n","n","n","n","n"],
+                "tileY": 29,
+                "movement": ["e","e","e","e","e",["peck",1],"s","s","s","s","s","w","w","w","w","w","n","n","n","n","n"],
                 "facing": "e",
                 "walkThroughDoors": false,
                 "speed": 2,
@@ -201,21 +170,29 @@
                 "isMoving": true,
                 "animation":
                 {
-                    "walk":
-                    {
-                        "length": 24,
-                        "e": 0,
-                        "n": 1,
-                        "w": 2,
-                        "s": 3
-                    },
                     "wait":
                     {
                         "length": 1,
-                        "n": 0,
-                        "e": 1,
+                          "n": 0,
+                        "e": 1,                     
                         "s": 2,
-                        "w": 3
+                         "w": 3
+                    },
+                    "walk":
+                    {
+                        "length": 23,
+                          "n": 4,
+                        "e": 5,                     
+                        "s": 6,
+                         "w": 7
+                    },
+                    "peck":
+                    {
+                         "length": 51,
+                        "n": 8,
+                        "e": 9,
+                        "s": 10,
+                        "w": 11
                     }
                 }
             }
