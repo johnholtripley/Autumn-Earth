@@ -157,7 +157,7 @@
                 "centreY": 22,
                 "tileX": 4,
                 "tileY": 29,
-                "movement": ["e","?","?","?","?",["peck",1],"?","?","?","?","?","?","?","?","?","?",["peck",1]],
+                "movement": ["e","?","?","?","?",["animate","peck",1],"?","?","?","?","?","?","?","?","?","?",["animate","peck",1]],
                 "facing": "e",
                 "walkThroughDoors": false,
                 "speed": 2,

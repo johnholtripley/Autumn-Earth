@@ -2186,7 +2186,6 @@ function moveNPCs() {
                 thisNextMovement = thisNPC.movement[thisNPC.movementIndex];
 
 
-                console.log(thisNextMovement);
 
                 if (typeof thisNextMovement !== 'string') {
                     // it's an array, get the first element as the code:
@@ -2206,6 +2205,9 @@ function moveNPCs() {
                         thisNPC.forceNewMovementCheck = false;
                         break;
                     case '?':
+
+                        // this code must be able to be optimsed: ########
+
                         // see if it should turn:
                         if (getRandomIntegerInclusive(1, 3) == 1) {
                             // try turning left or right, otherwise back the way it came
@@ -2225,26 +2227,26 @@ function moveNPCs() {
                             }
                             switch (thisNPC.facing) {
                                 case "n":
-                                facingsToPickFrom.push("s");
-                                facingsToPickFrom.push("n");
-                                break;
-                                    case "s":
-                                facingsToPickFrom.push("n");
-                                facingsToPickFrom.push("s");
-                                break;
-                                  case "e":
-                                facingsToPickFrom.push("w");
-                                facingsToPickFrom.push("e");
-                                break;
-                                  case "w":
-                                facingsToPickFrom.push("e");
-                                facingsToPickFrom.push("w");
-                                break;
+                                    facingsToPickFrom.push("s");
+                                    facingsToPickFrom.push("n");
+                                    break;
+                                case "s":
+                                    facingsToPickFrom.push("n");
+                                    facingsToPickFrom.push("s");
+                                    break;
+                                case "e":
+                                    facingsToPickFrom.push("w");
+                                    facingsToPickFrom.push("e");
+                                    break;
+                                case "w":
+                                    facingsToPickFrom.push("e");
+                                    facingsToPickFrom.push("w");
+                                    break;
 
                             }
 
                             do {
-thisNPC.facing = facingsToPickFrom.shift();
+                                thisNPC.facing = facingsToPickFrom.shift();
                             } while (isATerrainCollision(thisNPC.x + (relativeFacing[thisNPC.facing]["x"] * tileW), thisNPC.y + (relativeFacing[thisNPC.facing]["y"] * tileW)))
                         }
 
@@ -2455,14 +2457,49 @@ thisNPC.facing = facingsToPickFrom.shift();
                         }
                         break;
 
-                    default:
-                        if (typeof thisNextMovement !== 'string') {
-                            thisNPC.currentAnimation = thisNextMovement[0];
-                            thisNPC.isMoving = false;
+                    case 'animate':
+                        
+                        console.log("reading", thisNPC.waitingTimer);
+                        if (typeof thisNPC.waitingTimer === "undefined") {
+                            thisNPC.currentAnimation = thisNextMovement[1];
+                            // needs to stay like this for the number of animation frames multiplied by the number of times the animation is required:
+                            // need to multiply by the frame rate ###########
+                            // john
+                            thisNPC.waitingTimer = thisNPC.animation[thisNPC.currentAnimation].length * thisNextMovement[2] * 4;
+                            
+                            console.log("setting: ", thisNPC.waitingTimer);
+                             thisNPC.movementIndex--;
+                             thisNPC.isMoving = false;
+                                thisNPC.forceNewMovementCheck = true;
                         } else {
-                            thisNPC.facing = thisNextMovement;
-                            thisNPC.forceNewMovementCheck = false;
+                            if (thisNPC.waitingTimer > 0) {
+
+                                thisNPC.waitingTimer--;
+                                 console.log("waiting: ", thisNPC.waitingTimer, currentAnimationFrame);
+                                // keep it on the waiting item to keep checking:
+                                thisNPC.movementIndex--;
+                                thisNPC.forceNewMovementCheck = true;
+                            } else {
+                                console.log("off you go");
+                                thisNPC.isMoving = true;
+                                thisNPC.forceNewMovementCheck = true;
+                                thisNPC.currentAnimation = "walk";
+                                delete thisNPC.waitingTimer;
+                            }
                         }
+
+
+
+
+
+                        break;
+
+
+                    default:
+
+                        thisNPC.facing = thisNextMovement;
+                        thisNPC.forceNewMovementCheck = false;
+
                         break;
                 }
                 if (thisNPC.isMoving && !thisNPC.hasJustGotNewPath) {
