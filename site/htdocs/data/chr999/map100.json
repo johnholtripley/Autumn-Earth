@@ -157,7 +157,7 @@
                 "centreY": 22,
                 "tileX": 4,
                 "tileY": 29,
-                "movement": ["e","e","e","e","e",["peck",1],"s","s","s","s","s","w","w","w","w","w","n","n","n","n","n"],
+                "movement": ["e","?","?","?","?",["peck",1],"?","?","?","?","?","?","?","?","?","?",["peck",1]],
                 "facing": "e",
                 "walkThroughDoors": false,
                 "speed": 2,

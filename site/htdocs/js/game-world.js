@@ -6423,7 +6423,7 @@ function changeWeather(newWeather) {
 // service worker:
 if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('/game-world/serviceWorker.min.js', {
-         updateViaCache: 'imports',
+        updateViaCache: 'imports',
         scope: '/game-world/'
     });
 }
@@ -8608,7 +8608,7 @@ function moveNPCs() {
                 thisNextMovement = thisNPC.movement[thisNPC.movementIndex];
 
 
-console.log(thisNextMovement);
+                console.log(thisNextMovement);
 
                 if (typeof thisNextMovement !== 'string') {
                     // it's an array, get the first element as the code:
@@ -8628,11 +8628,56 @@ console.log(thisNextMovement);
                         thisNPC.forceNewMovementCheck = false;
                         break;
                     case '?':
-                        do {
-                            // pick a random facing:
-                            thisNPC.facing = facingsPossible[Math.floor(Math.random() * facingsPossible.length)];
-                            // check that the target tile is walkable:
-                        } while (isATerrainCollision(thisNPC.x + (relativeFacing[thisNPC.facing]["x"] * tileW), thisNPC.y + (relativeFacing[thisNPC.facing]["y"] * tileW)));
+                        // see if it should turn:
+                        if (getRandomIntegerInclusive(1, 3) == 1) {
+                            // try turning left or right, otherwise back the way it came
+                            var facingsToPickFrom;
+                            if ((thisNPC.facing == "n") || (thisNPC.facing == "s")) {
+                                if (getRandomIntegerInclusive(1, 2) == 1) {
+                                    facingsToPickFrom = ["e", "w"];
+                                } else {
+                                    facingsToPickFrom = ["w", "e"];
+                                }
+                            } else {
+                                if (getRandomIntegerInclusive(1, 2) == 1) {
+                                    facingsToPickFrom = ["n", "s"];
+                                } else {
+                                    facingsToPickFrom = ["s", "n"];
+                                }
+                            }
+                            switch (thisNPC.facing) {
+                                case "n":
+                                facingsToPickFrom.push("s");
+                                facingsToPickFrom.push("n");
+                                break;
+                                    case "s":
+                                facingsToPickFrom.push("n");
+                                facingsToPickFrom.push("s");
+                                break;
+                                  case "e":
+                                facingsToPickFrom.push("w");
+                                facingsToPickFrom.push("e");
+                                break;
+                                  case "w":
+                                facingsToPickFrom.push("e");
+                                facingsToPickFrom.push("w");
+                                break;
+
+                            }
+
+                            do {
+thisNPC.facing = facingsToPickFrom.shift();
+                            } while (isATerrainCollision(thisNPC.x + (relativeFacing[thisNPC.facing]["x"] * tileW), thisNPC.y + (relativeFacing[thisNPC.facing]["y"] * tileW)))
+                        }
+
+
+                        /*
+                                                do {
+                                                    // pick a totally random facing:
+                                                    thisNPC.facing = facingsPossible[Math.floor(Math.random() * facingsPossible.length)];
+                                                    // check that the target tile is walkable:
+                                                } while (isATerrainCollision(thisNPC.x + (relativeFacing[thisNPC.facing]["x"] * tileW), thisNPC.y + (relativeFacing[thisNPC.facing]["y"] * tileW)));
+                                                */
                         thisNPC.forceNewMovementCheck = false;
                         break;
 
@@ -8833,13 +8878,13 @@ console.log(thisNextMovement);
                         break;
 
                     default:
-if (typeof thisNextMovement !== 'string') {
-                      thisNPC.currentAnimation = thisNextMovement[0];
-                      thisNPC.isMoving = false;
-                    } else {
-                          thisNPC.facing = thisNextMovement;
-                        thisNPC.forceNewMovementCheck = false;
-                    }
+                        if (typeof thisNextMovement !== 'string') {
+                            thisNPC.currentAnimation = thisNextMovement[0];
+                            thisNPC.isMoving = false;
+                        } else {
+                            thisNPC.facing = thisNextMovement;
+                            thisNPC.forceNewMovementCheck = false;
+                        }
                         break;
                 }
                 if (thisNPC.isMoving && !thisNPC.hasJustGotNewPath) {
