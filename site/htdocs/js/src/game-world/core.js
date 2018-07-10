@@ -2459,32 +2459,32 @@ function moveNPCs() {
 
                     case 'animate':
                         
-                        console.log("reading", thisNPC.waitingTimer);
-                        if (typeof thisNPC.waitingTimer === "undefined") {
+               
+                        if (typeof thisNPC.animationWaitingTimer === "undefined") {
                             thisNPC.currentAnimation = thisNextMovement[1];
                             // needs to stay like this for the number of animation frames multiplied by the number of times the animation is required:
                             // need to multiply by the frame rate ###########
+                            // also need the animation to start from its frame 0, not use the global frame
                             // john
-                            thisNPC.waitingTimer = thisNPC.animation[thisNPC.currentAnimation].length * thisNextMovement[2] * 4;
+                            thisNPC.animationWaitingTimer = thisNPC.animation[thisNPC.currentAnimation].length * thisNextMovement[2] * 5;
                             
-                            console.log("setting: ", thisNPC.waitingTimer);
+                         
                              thisNPC.movementIndex--;
                              thisNPC.isMoving = false;
                                 thisNPC.forceNewMovementCheck = true;
                         } else {
-                            if (thisNPC.waitingTimer > 0) {
+                            if (thisNPC.animationWaitingTimer > 0) {
 
-                                thisNPC.waitingTimer--;
-                                 console.log("waiting: ", thisNPC.waitingTimer, currentAnimationFrame);
+                                thisNPC.animationWaitingTimer--;
+                                 console.log("waiting: ", thisNPC.animationWaitingTimer, currentAnimationFrame);
                                 // keep it on the waiting item to keep checking:
                                 thisNPC.movementIndex--;
                                 thisNPC.forceNewMovementCheck = true;
                             } else {
-                                console.log("off you go");
-                                thisNPC.isMoving = true;
+                                                      thisNPC.isMoving = true;
                                 thisNPC.forceNewMovementCheck = true;
                                 thisNPC.currentAnimation = "walk";
-                                delete thisNPC.waitingTimer;
+                                delete thisNPC.animationWaitingTimer;
                             }
                         }
 
