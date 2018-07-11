@@ -2207,8 +2207,11 @@ function moveNPCs() {
 
                         // this code must be able to be optimsed: ########
 
-                        // see if it should turn:
-                        if (getRandomIntegerInclusive(1, 3) == 1) {
+                        // see if it should turn (randomly, or if destination tile is blocked):
+
+
+
+                        if ((getRandomIntegerInclusive(1, 3) == 1) || (!tileIsClear(thisNPC.tileX + relativeFacing[thisNPC.facing]["x"],thisNPC.tileY + relativeFacing[thisNPC.facing]["y"]))) {
                             // try turning left or right, otherwise back the way it came
                             var facingsToPickFrom;
                             if ((thisNPC.facing == "n") || (thisNPC.facing == "s")) {
@@ -2246,7 +2249,7 @@ function moveNPCs() {
 
                             do {
                                 thisNPC.facing = facingsToPickFrom.shift();
-                            } while (isATerrainCollision(thisNPC.x + (relativeFacing[thisNPC.facing]["x"] * tileW), thisNPC.y + (relativeFacing[thisNPC.facing]["y"] * tileW)))
+                            } while (!tileIsClear(thisNPC.tileX + relativeFacing[thisNPC.facing]["x"],thisNPC.tileY + relativeFacing[thisNPC.facing]["y"]))
                         }
 
 
@@ -2457,49 +2460,32 @@ function moveNPCs() {
                         break;
 
                     case 'animate':
-                        
-               
                         if (typeof thisNPC.animationWaitingTimer === "undefined") {
                             thisNPC.currentAnimation = thisNextMovement[1];
                             // needs to stay like this for the number of animation frames multiplied by the number of times the animation is required:
-                            // need to multiply by the frame rate ###########
-                            // also need the animation to start from its frame 0, not use the global frame
-                            // john
-                    //        thisNPC.animationWaitingTimer = (thisNPC.animation[thisNPC.currentAnimation].length * thisNextMovement[2]);
+                            // (also need the animation to start from its frame 0, not use the global frame so that it plays from the first frame of the animation)
                             thisNPC.animationWaitingTimer = currentAnimationFrame;
-                         
-                             thisNPC.movementIndex--;
-                             thisNPC.isMoving = false;
-                                thisNPC.forceNewMovementCheck = true;
+                            thisNPC.movementIndex--;
+                            thisNPC.isMoving = false;
+                            thisNPC.forceNewMovementCheck = true;
                         } else {
                             // the +1 is because the drawn frame needs +1 so that the first frame is 1 and not 0:
-                            if (currentAnimationFrame+1 < (thisNPC.animation[thisNPC.currentAnimation].length * thisNextMovement[2])+thisNPC.animationWaitingTimer) {
-
-                               
-                                 console.log("waiting: ", thisNPC.animationWaitingTimer, currentAnimationFrame);
+                            if (currentAnimationFrame + 1 < (thisNPC.animation[thisNPC.currentAnimation].length * thisNextMovement[2]) + thisNPC.animationWaitingTimer) {
                                 // keep it on the waiting item to keep checking:
                                 thisNPC.movementIndex--;
                                 thisNPC.forceNewMovementCheck = true;
                             } else {
-                                                      thisNPC.isMoving = true;
+                                thisNPC.isMoving = true;
                                 thisNPC.forceNewMovementCheck = true;
                                 thisNPC.currentAnimation = "walk";
                                 delete thisNPC.animationWaitingTimer;
                             }
                         }
-
-
-
-
-
                         break;
 
-
                     default:
-
                         thisNPC.facing = thisNextMovement;
                         thisNPC.forceNewMovementCheck = false;
-
                         break;
                 }
                 if (thisNPC.isMoving && !thisNPC.hasJustGotNewPath) {
@@ -2833,12 +2819,12 @@ function draw() {
             thisNPC = thisMapData.npcs[i];
 
 
-if (typeof thisNPC.animationWaitingTimer === "undefined") {
-    thisNPCOffsetCol = currentAnimationFrame % thisNPC["animation"][thisNPC.currentAnimation]["length"];
-} else {
-            // don't use the global animation timer, so that this animation plays from its own first frame through to its end:
-            thisNPCOffsetCol = currentAnimationFrame+1 - thisNPC.animationWaitingTimer;
-        }    
+            if (typeof thisNPC.animationWaitingTimer === "undefined") {
+                thisNPCOffsetCol = currentAnimationFrame % thisNPC["animation"][thisNPC.currentAnimation]["length"];
+            } else {
+                // don't use the global animation timer, so that this animation plays from its own first frame through to its end:
+                thisNPCOffsetCol = currentAnimationFrame + 1 - thisNPC.animationWaitingTimer;
+            }
 
             thisNPCOffsetRow = thisNPC["animation"][thisNPC.currentAnimation][thisNPC.drawnFacing];
             thisX = findIsoCoordsX(thisNPC.x, thisNPC.y);
