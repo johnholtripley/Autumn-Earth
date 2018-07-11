@@ -6798,7 +6798,6 @@ function loadTitles() {
 
 
     var allTitleIdsToGet = possibleTitleIds.concat(hero.titlesEarned).join("|");
-    // john
     getJSON("/game-world/getTitles.php?whichIds=" + allTitleIdsToGet, function(data) {
         possibleTitles = data;
 
@@ -8888,16 +8887,17 @@ function moveNPCs() {
                             // need to multiply by the frame rate ###########
                             // also need the animation to start from its frame 0, not use the global frame
                             // john
-                            thisNPC.animationWaitingTimer = thisNPC.animation[thisNPC.currentAnimation].length * thisNextMovement[2] * 5;
-                            
+                    //        thisNPC.animationWaitingTimer = (thisNPC.animation[thisNPC.currentAnimation].length * thisNextMovement[2]);
+                            thisNPC.animationWaitingTimer = currentAnimationFrame;
                          
                              thisNPC.movementIndex--;
                              thisNPC.isMoving = false;
                                 thisNPC.forceNewMovementCheck = true;
                         } else {
-                            if (thisNPC.animationWaitingTimer > 0) {
+                            // the +1 is because the drawn frame needs +1 so that the first frame is 1 and not 0:
+                            if (currentAnimationFrame+1 < (thisNPC.animation[thisNPC.currentAnimation].length * thisNextMovement[2])+thisNPC.animationWaitingTimer) {
 
-                                thisNPC.animationWaitingTimer--;
+                               
                                  console.log("waiting: ", thisNPC.animationWaitingTimer, currentAnimationFrame);
                                 // keep it on the waiting item to keep checking:
                                 thisNPC.movementIndex--;
@@ -9253,7 +9253,15 @@ function draw() {
 
         for (var i = 0; i < thisMapData.npcs.length; i++) {
             thisNPC = thisMapData.npcs[i];
-            thisNPCOffsetCol = currentAnimationFrame % thisNPC["animation"][thisNPC.currentAnimation]["length"];
+
+
+if (typeof thisNPC.animationWaitingTimer === "undefined") {
+    thisNPCOffsetCol = currentAnimationFrame % thisNPC["animation"][thisNPC.currentAnimation]["length"];
+} else {
+            // don't use the global animation timer, so that this animation plays from its own first frame through to its end:
+            thisNPCOffsetCol = currentAnimationFrame+1 - thisNPC.animationWaitingTimer;
+        }    
+
             thisNPCOffsetRow = thisNPC["animation"][thisNPC.currentAnimation][thisNPC.drawnFacing];
             thisX = findIsoCoordsX(thisNPC.x, thisNPC.y);
             thisY = findIsoCoordsY(thisNPC.x, thisNPC.y);
