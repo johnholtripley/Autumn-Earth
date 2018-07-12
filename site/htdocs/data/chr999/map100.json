@@ -154,10 +154,60 @@
                 "spriteHeight": 37,
                 "centreX": 22,
                 "centreY": 32,
-                "tileX": 2,
+                "tileX": 12,
                 "tileY": 29,
                 "movement": ["w","?","?","?","?",["animate","peck",1],"?","?","?","?","?","?","?","?","?","?",["animate","peck",1]],
                 "facing": "w",
+                "walkThroughDoors": false,
+                "speed": 2,
+                "speech": [
+                    ["", "sound", "hen"]
+
+                ],
+
+                "isCollidable": true,
+                "isMoving": true,
+                "animation":
+                {
+                    "wait":
+                    {
+                        "length": 1,
+                          "n": 0,
+                        "e": 1,                     
+                        "s": 2,
+                         "w": 3
+                    },
+                    "walk":
+                    {
+                        "length": 23,
+                          "n": 4,
+                        "e": 5,                     
+                        "s": 6,
+                         "w": 7
+                    },
+                    "peck":
+                    {
+                         "length": 51,
+                        "n": 8,
+                        "e": 9,
+                        "s": 10,
+                        "w": 11
+                    }
+                }
+            },
+                      {
+                "name": "white hen",
+                "src": "white-hen.png",
+                "width": 20,
+                "length": 20,
+                "spriteWidth": 33,
+                "spriteHeight": 38,
+                "centreX": 22,
+                "centreY": 32,
+                "tileX": 16,
+                "tileY": 32,
+                "movement": ["e","?","?","?","?","?","?","?","?","?",["animate","peck",1],"?","?","?","?","?",["animate","peck",1]],
+                "facing": "e",
                 "walkThroughDoors": false,
                 "speed": 2,
                 "speech": [
