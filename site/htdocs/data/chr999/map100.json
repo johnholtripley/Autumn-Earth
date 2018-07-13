@@ -146,8 +146,8 @@
 
            
             {
-                "name": "hen",
-                "src": "hen-walking.png",
+                "name": "brown hen",
+                "src": "brown-hen.png",
                 "width": 20,
                 "length": 20,
                 "spriteWidth": 34,
@@ -206,7 +206,7 @@
                 "centreY": 32,
                 "tileX": 16,
                 "tileY": 32,
-                "movement": ["e","?","?","?","?","?","?","?","?","?",["animate","peck",1],"?","?","?","?","?",["animate","peck",1]],
+                "movement": ["e","?","?","?","?","?","?","?","?","?",["animate","peck",2],"?","?","?","?","?",["animate","peck",1]],
                 "facing": "e",
                 "walkThroughDoors": false,
                 "speed": 2,

@@ -9245,7 +9245,7 @@ function draw() {
                 thisNPCOffsetCol = currentAnimationFrame % thisNPC["animation"][thisNPC.currentAnimation]["length"];
             } else {
                 // don't use the global animation timer, so that this animation plays from its own first frame through to its end:
-                thisNPCOffsetCol = currentAnimationFrame + 1 - thisNPC.animationWaitingTimer;
+                thisNPCOffsetCol = (currentAnimationFrame + 1 - thisNPC.animationWaitingTimer) % thisNPC["animation"][thisNPC.currentAnimation]["length"];
             }
 
             thisNPCOffsetRow = thisNPC["animation"][thisNPC.currentAnimation][thisNPC.drawnFacing];
