@@ -124,7 +124,8 @@ $size = getimagesize($_SERVER['DOCUMENT_ROOT'].'/images/banners/'.$bannerContent
 		
 		// remove any [CONTINUE] tag
 		$newsContent = str_ireplace('[CONTINUE]','',$newsContent);
-		echo '<div itemprop="description">'.$newsContent.'</div>';
+		// use article element to help trigger Reader Mode (https://erikrunyon.com/2018/06/designing-web-content-for-watchos/)
+		echo '<article itemprop="description">'.$newsContent.'</article>';
 	
 ?>
 

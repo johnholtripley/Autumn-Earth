@@ -56,12 +56,14 @@
         #mastHead {
             order: 1;
             position: static;
+            position: -webkit-sticky;
             position: sticky;
             z-index: 1;
         }
         #navigation {
             order: 2;
             position: static;
+            position: -webkit-sticky;
             position: sticky;
             z-index: 1;
             top: 0;

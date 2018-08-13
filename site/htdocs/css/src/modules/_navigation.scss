@@ -49,6 +49,7 @@
 
 @include mq($wide) {
 #footer {
+    position: -webkit-sticky;
     position: sticky;
     bottom: 0;
     background: #000;

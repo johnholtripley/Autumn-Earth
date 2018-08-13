@@ -255,7 +255,20 @@
            
         },
         "items": [
-           
+                 {
+
+                "type": 18,
+                "tileX": 34,
+                "tileY": 18
+
+            },
+                  {
+
+                "type": 61,
+                "tileX": 34,
+                "tileY": 19
+
+            }
 
         ],
         "hotspots": [
