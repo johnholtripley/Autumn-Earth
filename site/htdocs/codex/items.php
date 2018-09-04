@@ -28,7 +28,7 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/header.php");
 
 $letters = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
 for ($i=0;$i<count($letters);$i++) {
-$query = "select * from tblinventoryitems where shortname LIKE '".$letters[$i]."%' and showinthecodex>0";
+$query = "select * from tblinventoryitems where shortname LIKE '".$letters[$i]."%' and showinthecodex>0 order by shortname asc";
 $result = mysqli_query($connection, $query) or die ("couldn't execute query");
 
 if(mysqli_num_rows($result) > 0) {

@@ -29,7 +29,7 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/functions.php");
 //}
 
 function sendToTwitter() {
-	global $latinName, $startingText, $plantURL, $commonNameString, $commonNamesJoined, $isAquatic, $isNight, $storedSeed;
+	global $latinName, $startingText, $plantURL, $commonNameString, $commonNamesJoined, $isAquatic, $isNight, $storedSeed, $connection;
 
 
 
@@ -38,14 +38,14 @@ define("CONSUMER_KEY", "tullZGE4wkZibDnr6aXKuFGQ0");
 define("CONSUMER_SECRET","y1S7rffnenpYRJtDQxSv8a5bq3QhAAafqJzEaCQq0nDtw3XtAS");
 define("OAUTH_TOKEN", "703148355749171202-mwDglZzCgERUC6u7DshkqyPrK7nSrkK");
 define("OAUTH_SECRET", "7f8t7rXScvWIk1AgXe20Z6AA9vRCaG7Vp2wJM964bZMEj");
-$connection = new TwitterOAuth(CONSUMER_KEY, CONSUMER_SECRET, OAUTH_TOKEN, OAUTH_SECRET);
-$connection->setTimeouts(10, 15);
+$twitterConnection = new TwitterOAuth(CONSUMER_KEY, CONSUMER_SECRET, OAUTH_TOKEN, OAUTH_SECRET);
+$twitterConnection->setTimeouts(10, 15);
 
 /*
 if($isLive) {
 // try and get media url length
 // https://dev.twitter.com/rest/reference/get/help/configuration
-$config = $connection->get('help/configuration');
+$config = $twitterConnection->get('help/configuration');
 $mediaURLLength = intval($config->short_url_length_https);
 } else {
 	$mediaURLLength = 23;
@@ -55,7 +55,7 @@ $mediaURLLength = intval($config->short_url_length_https);
 // media links don't count towards the 140
 $mediaURLLength = 0;
 
-$media = $connection->upload('media/upload', ['media' => $_SERVER['DOCUMENT_ROOT'].'/images/herbarium/plants/'.$plantURL.'.jpg']);
+$media = $twitterConnection->upload('media/upload', ['media' => $_SERVER['DOCUMENT_ROOT'].'/images/herbarium/plants/'.$plantURL.'.jpg']);
 
 
 
@@ -65,9 +65,9 @@ $data = [
     'text' => 'An image generated in the style of a medieval Herbarium'
   ]
 ];
-$metadata = $connection->upload('media/metadata/create', $data, null, true);
+$metadata = $twitterConnection->upload('media/metadata/create', $data, null, true);
 
-//$status = $connection->post('statuses/update', ['status' => 'kitten', 'media_ids' => $media->media_id_string]);
+//$status = $twitterConnection->post('statuses/update', ['status' => 'kitten', 'media_ids' => $media->media_id_string]);
 
 
 
@@ -79,7 +79,7 @@ $parameters = [
 	     'alt_text' => $altText, 
 	    'media_id' => $media->media_id_string
 	];
-$result = $connection->post('media/metadata/create', $parameters);
+$result = $twitterConnection->post('media/metadata/create', $parameters);
 
 var_dump($result);
 */
@@ -122,12 +122,12 @@ echo "<p>Tweeted content:<br>".nl2br($textString)."</p>";
 	    'media_ids' => $media->media_id_string,
 	    'tweet_mode'=>'extended'
 	];
-	$result = $connection->post('statuses/update', $parameters);
-	if ($connection->getLastHttpCode() == 200) {
+	$result = $twitterConnection->post('statuses/update', $parameters);
+	if ($twitterConnection->getLastHttpCode() == 200) {
 	    // Tweet posted succesfully
 	} else {
 	    // Handle error case
-	    echo $connection->getLastHttpCode();
+	    echo $twitterConnection->getLastHttpCode();
 	    // email the error? ##########
 	}
 //}
