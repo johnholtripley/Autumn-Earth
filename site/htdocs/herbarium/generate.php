@@ -11,7 +11,7 @@
 // vary colour of petals between each individual flower head
 // add more leaf variation
 
-
+// Virtues text - replace illnesses, body parts, plant parts, god's names, other plant names, references to petal colours, common name, variant names
 
 // ---------------------------------------
 
@@ -996,8 +996,18 @@ $thisCommonName = substr($thisCommonName, 0, -1);
 }
 
 $thisCommonName .= $thisSecondCommonName;
+$thisCommonNameBeforePrefix = $thisCommonName;
 
-$shouldAddPrefix = mt_rand(1,44);
+function addPrefix($thisCommonName, $shouldForcePrefix) {
+	
+
+if($shouldForcePrefix) {
+$shouldAddPrefix = mt_rand(1,8);
+} else {
+	$shouldAddPrefix = mt_rand(1,44);
+}
+
+
 switch ($shouldAddPrefix) {
     case 1:
         $thisCommonName = "Lesser ".$thisCommonName;
@@ -1029,6 +1039,11 @@ case 7:
     default:
        $thisCommonName = ucfirst($thisCommonName);
 } 
+return $thisCommonName;
+}
+
+$thisCommonName = addPrefix($thisCommonName, false);
+
 
 // in case the first name has a space at the end, and the second at the start:
 $thisCommonName = str_replace("  ", " ", $thisCommonName);
@@ -1053,6 +1068,10 @@ if($i==0) {
 array_push($commonNames,$thisCommonName);
 }
 
+// make sure the primary Common Name hasn't got a prefix already:
+$variantCommonName = addPrefix($thisCommonNameBeforePrefix, true);
+
+
 $commonNameString = implode(", ",$commonNames);
 $commonNamesJoined = implode("/",$commonNames);
 if(count($commonNames)>1) {
@@ -1066,7 +1085,7 @@ if($randomDetail == 1) {
 // add in specific detail:
 	$commonNameString = substr($commonNameString, 0, $lastCommaPos)   ."; some call it".   substr($commonNameString, $lastCommaPos+1);
 } else {
-// replace last "," with a "or":
+// replace last "," with an "or":
 	
 	$commonNameString = substr($commonNameString, 0, $lastCommaPos)   ." or".   substr($commonNameString, $lastCommaPos+1);
 }
@@ -1110,8 +1129,10 @@ $insectDetails = findAndReplaceHashes($insectDetails)." ";
 }
 
 $startingText .= " ".$placeText ." ". $insectDetails . $timeText;
-//$startingText .= " ".$virtueText;
 
+if($debug){
+$startingText .= "<hr>".$virtueText;
+}
 // generate a butterfly:
 include($_SERVER['DOCUMENT_ROOT']."/includes/herbarium/butterfly-name-prefixes.php");
 include($_SERVER['DOCUMENT_ROOT']."/includes/herbarium/butterfly-name-suffixes.php");
@@ -1152,6 +1173,11 @@ $startingText = str_ireplace("++butterfly++", $combinedButterflyName, $startingT
 
 
 $startingText = str_ireplace("++commonname++", $primaryCommonName, $startingText);
+
+$startingText = str_ireplace("++variantcommonname++", $variantCommonName, $startingText);
+
+
+
 $primaryCommonNamePlural = $primaryCommonName."s";
 // catch special cases for plurals:
 if(substr($primaryCommonName, -4) == "foot") {
