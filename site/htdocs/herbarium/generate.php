@@ -17,6 +17,8 @@
 
 
 
+
+
 require_once $_SERVER['DOCUMENT_ROOT'].'/includes/third-party/twitterOAuth/twitteroauth-0.6.2/autoload.php';
 use Abraham\TwitterOAuth\TwitterOAuth;
 
@@ -172,6 +174,12 @@ if(isset($_GET["seed"])) {
 	$storedSeed = makeSeed();
 }
 mt_srand($storedSeed);
+
+
+$debug = false;
+if(isset($_GET["debug"])) {
+	$debug = true;
+}
 
 
 function quadBezier($im, $x1, $y1, $x2, $y2, $x3, $y3) {
@@ -709,11 +717,13 @@ for ($k=0;$k<count($numberOfFlowerVariationsToDraw);$k++) {
 
 
 
-
 foreach ($allLeaves as $thisLeaf) {
+
 	$thisPointX = $thisLeaf[0];
 	$thisPointY = $thisLeaf[1];
 	$thisRotation = $thisLeaf[2];
+
+		if(array_key_exists($thisPointX."_".$thisPointY,$lengthsOfNodes)) {
 	// Preserve transparency
 	//imagesavealpha(${'leaf0'} , true);
 
@@ -728,9 +738,11 @@ if($thisNodesLength == $thisMaxDepth) {
 	imagecopyresampled($plantCanvas, ${$whichElementToUse}, $thisPointX-($flowerWidth)/2, $thisPointY-($flowerHeight/2), 0, 0, $flowerWidth, $flowerHeight, $flowerWidth, $flowerHeight);
 } else {
 
+if($thisRotation != 0) {
 	$pngTransparency = imagecolorallocatealpha(${$whichElementToUse} , 0, 0, 0, 127);
 	imagefill(${$whichElementToUse} , 0, 0, $pngTransparency);
 
+/*
 // weird bug on live - if rotating more than 45 degrees it would add black where the transparency should be. So rotate twice - once to get as close as possible in whole 90 degree increments, and then the last bit:
 $steppedRotation  = 90 * floor($thisRotation/90);
 	$rotatedLeaf = imagerotate(${$whichElementToUse}, $steppedRotation, $pngTransparency);
@@ -738,12 +750,24 @@ $steppedRotation  = 90 * floor($thisRotation/90);
 $thisNextRotation = $thisRotation-$steppedRotation;
 $pngTransparency = imagecolorallocatealpha($rotatedLeaf , 255, 255, 255, 127);
 $rotatedLeaf = imagerotate($rotatedLeaf, $thisNextRotation, $pngTransparency);
+*/
+
+
+$rotatedLeaf = imagerotate(${$whichElementToUse}, $thisRotation, $pngTransparency);
+
 
 
 	$rotatedLeafWidth = imagesx($rotatedLeaf);
 	$rotatedLeafHeight = imagesy($rotatedLeaf);
 	imagecopyresampled($plantCanvas, $rotatedLeaf, $thisPointX-($rotatedLeafWidth)/2, $thisPointY-($rotatedLeafHeight/2), 0, 0, $rotatedLeafWidth, $rotatedLeafHeight, $rotatedLeafWidth, $rotatedLeafHeight);
 	imagedestroy($rotatedLeaf);
+} else {
+	// no need to roate them:
+	$rotatedLeafWidth = imagesx(${$whichElementToUse});
+	$rotatedLeafHeight = imagesy(${$whichElementToUse});
+	imagecopyresampled($plantCanvas, ${$whichElementToUse}, $thisPointX-($rotatedLeafWidth)/2, $thisPointY-($rotatedLeafHeight/2), 0, 0, $rotatedLeafWidth, $rotatedLeafHeight, $rotatedLeafWidth, $rotatedLeafHeight);
+}
+}
 }
 }
 
@@ -1288,7 +1312,9 @@ $lastError = error_get_last();
 
 if(stripos($lastError["file"], "generate.php") === false) {
 	// don't Tweet if any errors within this file (may be error reported in connection include for example):
+if(!$debug) {
 	sendToTwitter();
+}
 }
 
 
