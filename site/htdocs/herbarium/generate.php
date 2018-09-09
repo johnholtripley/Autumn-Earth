@@ -11,7 +11,7 @@
 // vary colour of petals between each individual flower head
 // add more leaf variation
 
-// Virtues text - replace illnesses, body parts, plant parts, god's names, other plant names, references to petal colours, common name, variant names
+// Virtues text - replace illnesses, body parts, plant parts, god's names, other plant names, regional names, peoples, references to petal colours, common name, variant names, regions, dates
 
 // ---------------------------------------
 
@@ -149,7 +149,49 @@ $result = mysqli_query($connection, $query) or die ("couldn't execute tblplant q
 
 }
 
+function addPrefix($thisCommonName, $shouldForcePrefix) {
+	
 
+if($shouldForcePrefix) {
+$shouldAddPrefix = mt_rand(1,8);
+} else {
+	$shouldAddPrefix = mt_rand(1,44);
+}
+
+
+switch ($shouldAddPrefix) {
+    case 1:
+        $thisCommonName = "Lesser ".$thisCommonName;
+        break;
+    case 2:
+         $thisCommonName = "Greater ".$thisCommonName;
+        break;
+            case 3:
+         $thisCommonName = "Common ".$thisCommonName;
+        break;
+                case 4:
+         $thisCommonName = "Wild ".$thisCommonName;
+        break;
+                  case 5:
+         $thisCommonName = "Trailing ".$thisCommonName;
+        break;
+      case 6:
+         $thisCommonName = "Marsh* ".$thisCommonName;
+        break;
+case 7:
+         $thisCommonName = "Autumn ".$thisCommonName;
+         break;
+         case 8:
+         $thisCommonName = "Sweet ".$thisCommonName;
+        break;
+            case 9:
+         $thisCommonName = "Our Lady's ".$thisCommonName;
+        break;
+    default:
+       $thisCommonName = ucfirst($thisCommonName);
+} 
+return $thisCommonName;
+}
 
 function capValues($val,$min,$max) {
 	if($val<$min) {
@@ -169,7 +211,7 @@ function makeSeed() {
 }
 
 if(isset($_GET["seed"])) {
-	$storedSeed = $_GET["seed"];
+	$storedSeed = intval($_GET["seed"]);
 } else {
 	$storedSeed = makeSeed();
 }
@@ -998,49 +1040,7 @@ $thisCommonName = substr($thisCommonName, 0, -1);
 $thisCommonName .= $thisSecondCommonName;
 $thisCommonNameBeforePrefix = $thisCommonName;
 
-function addPrefix($thisCommonName, $shouldForcePrefix) {
-	
 
-if($shouldForcePrefix) {
-$shouldAddPrefix = mt_rand(1,8);
-} else {
-	$shouldAddPrefix = mt_rand(1,44);
-}
-
-
-switch ($shouldAddPrefix) {
-    case 1:
-        $thisCommonName = "Lesser ".$thisCommonName;
-        break;
-    case 2:
-         $thisCommonName = "Greater ".$thisCommonName;
-        break;
-            case 3:
-         $thisCommonName = "Common ".$thisCommonName;
-        break;
-                case 4:
-         $thisCommonName = "Wild ".$thisCommonName;
-        break;
-                  case 5:
-         $thisCommonName = "Trailing ".$thisCommonName;
-        break;
-      case 6:
-         $thisCommonName = "Marsh* ".$thisCommonName;
-        break;
-case 7:
-         $thisCommonName = "Autumn ".$thisCommonName;
-         break;
-         case 8:
-         $thisCommonName = "Sweet ".$thisCommonName;
-        break;
-            case 9:
-         $thisCommonName = "Our Lady's ".$thisCommonName;
-        break;
-    default:
-       $thisCommonName = ucfirst($thisCommonName);
-} 
-return $thisCommonName;
-}
 
 $thisCommonName = addPrefix($thisCommonName, false);
 
@@ -1068,8 +1068,11 @@ if($i==0) {
 array_push($commonNames,$thisCommonName);
 }
 
-// make sure the primary Common Name hasn't got a prefix already:
+do {
 $variantCommonName = addPrefix($thisCommonNameBeforePrefix, true);
+} while ($variantCommonName == $primaryCommonName);
+$variantCommonName = str_ireplace("*", "", $variantCommonName);
+$variantCommonName = str_ireplace("^", "", $variantCommonName);
 
 
 $commonNameString = implode(", ",$commonNames);
@@ -1128,11 +1131,9 @@ $insectDetails = findAndReplaceHashes($insectDetails)." ";
 }
 }
 
-$startingText .= " ".$placeText ." ". $insectDetails . $timeText;
+ucfirst($startingText) .= " ".ucfirst($placeText) ." ". ucfirst($insectDetails) . ucfirst($timeText) . ucfirst($virtueText);
 
-if($debug){
-$startingText .= "<hr>".$virtueText;
-}
+
 // generate a butterfly:
 include($_SERVER['DOCUMENT_ROOT']."/includes/herbarium/butterfly-name-prefixes.php");
 include($_SERVER['DOCUMENT_ROOT']."/includes/herbarium/butterfly-name-suffixes.php");
@@ -1143,17 +1144,21 @@ $butterflyColour = $butterflyColourPrefixes[mt_rand(0,count($butterflyColourPref
 // make sure the first and last words aren't identical:
 } while ($thisButterflyName == $thisSecondButterflyName);
 $combinedButterflyName = $thisButterflyName." ".$thisSecondButterflyName;
+$combinedButterflyPluralName = $thisButterflyName." ".$thisSecondButterflyName;
 
 
 
 if($isNight == 1) {
 $combinedButterflyName .= " moth";
+$combinedButterflyPluralName .= " moths";
 } else {
 $combinedButterflyName .= " butterfly";
+$combinedButterflyPluralName .= " butterflies";
 }
 
 
 $combinedButterflyName = str_ireplace("++colour++", $butterflyColour, $combinedButterflyName);
+$combinedButterflyPluralName = str_ireplace("++colour++", $butterflyColour, $combinedButterflyPluralName);
 
 $shouldAddButterflyPrefix = mt_rand(1,30);
 switch ($shouldAddButterflyPrefix) {
@@ -1168,6 +1173,7 @@ switch ($shouldAddButterflyPrefix) {
 } 
 
 $startingText = str_ireplace("++butterfly++", $combinedButterflyName, $startingText);
+$startingText = str_ireplace("++butterflies++", $combinedButterflyPluralName, $startingText);
 
 
 
@@ -1183,6 +1189,25 @@ $primaryCommonNamePlural = $primaryCommonName."s";
 if(substr($primaryCommonName, -4) == "foot") {
 $primaryCommonNamePlural = substr($primaryCommonName, 0, -4)."feet";
 }
+if(substr($primaryCommonName, -2) == "ss") {
+    $primaryCommonNamePlural = $primaryCommonName."es";
+} else if(substr($primaryCommonName, -1) == "s") {
+    $primaryCommonNamePlural = $primaryCommonName;
+}
+
+
+
+
+if(substr($primaryCommonName, -1) == "y") {
+	// check letter before the Y isn't a vowel:
+	if((substr($primaryCommonName, -2, 1) != "a") && (substr($primaryCommonName, -2, 1) != "e") && (substr($primaryCommonName, -2, 1) != "i") && (substr($primaryCommonName, -2, 1) != "o") && (substr($primaryCommonName, -2, 1) != "u")) {
+    $primaryCommonNamePlural = substr($primaryCommonName, 0, -1)."ies";
+}
+}
+if(substr($primaryCommonName, -1) == "x") {
+    $primaryCommonNamePlural = $primaryCommonName."es";
+}
+
 $startingText = str_ireplace("++commonnameplural++", $primaryCommonNamePlural, $startingText);
 
 include($_SERVER['DOCUMENT_ROOT']."/includes/herbarium/petal-colours.php");

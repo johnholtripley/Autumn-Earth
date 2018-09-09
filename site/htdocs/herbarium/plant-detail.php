@@ -18,6 +18,7 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/header.php");
 
 
 $query = "select * from tblplants WHERE plantUrl = '".$_GET["plant"]."'";
+
 $result = mysqli_query($connection, $query) or die ("couldn't execute query");
 
 if (mysqli_num_rows($result) > 0) {

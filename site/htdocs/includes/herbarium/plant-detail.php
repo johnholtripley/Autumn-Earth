@@ -50,8 +50,8 @@ $result = mysqli_query($connection, $query) or die ("couldn't execute query");
 if (mysqli_num_rows($result) > 0) {
 $row = mysqli_fetch_array($result);
 extract($row);
-$relatedCommonNameSplit = explode("/", $relatedCommonNamesJoined);
-echo '<p>Related to <a href="/herbarium/'.$relatedPlantUrl.'">'.$relatedCommonNameSplit[0].'</a>.</p>';
+$relatedCommonNameSplit = explode("/", $relatedcommonnamesjoined);
+echo '<p>Related to <a href="/herbarium/'.$relatedplanturl.'">'.$relatedCommonNameSplit[0].'</a>.</p>';
 }
 ?>
 
