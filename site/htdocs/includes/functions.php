@@ -1562,6 +1562,10 @@ $htmlOutput .= '</li>';
  
  
 function findAndReplaceHashes($stringToCheck, &$json='') {
+    global $entriesAlreadyUsed;
+    if(!isset($entriesAlreadyUsed)) {
+        $entriesAlreadyUsed = [];
+    }
     if ($json == '') {
     global $json;
 }
@@ -1570,14 +1574,38 @@ function findAndReplaceHashes($stringToCheck, &$json='') {
     if(count($hashSplit) > 1) {
         for ($i=0;$i<count($hashSplit);$i++) {
             if(substr($hashSplit[$i],0,1) == "|") {
+                $needsToBeUnique = false;
                 // look for matching keys
                 $keyToMatch = substr($hashSplit[$i],1);
+                // a * denotes that this needs to unique and not repeated:
+                if(strrpos($keyToMatch, "*") !== false) {
+                    $needsToBeUnique = true;
+$keyToMatch = str_replace("*", "", $keyToMatch);
+                }
+                
                 if (array_key_exists($keyToMatch, $json)) {
-                    $whichReplaceElem = mt_rand(0,(count($json[$keyToMatch])-1));
-                    $replacementString = $json[$keyToMatch][$whichReplaceElem];
+
+if($needsToBeUnique) {
+    // see if this key has already been used:
+    do {
+  $whichReplaceElem = mt_rand(0,(count($json[$keyToMatch])-1));
+    $replacementString = $json[$keyToMatch][$whichReplaceElem];
+    } while (in_array($replacementString, $entriesAlreadyUsed));
+} else {
+    // just get a random entry:
+    $whichReplaceElem = mt_rand(0,(count($json[$keyToMatch])-1));
+    $replacementString = $json[$keyToMatch][$whichReplaceElem];
+}
+
+ array_push($entriesAlreadyUsed, $replacementString);
+
+                    
+                    
                     // check this substitution string to see if it has any hashes itself:
+
                     $replacementString = findAndReplaceHashes($replacementString); 
                     $hashSplit[$i] = $replacementString;
+                   
                 }
             }
         }

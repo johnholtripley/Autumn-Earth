@@ -10,6 +10,7 @@
 // add more flower variation
 // vary colour of petals between each individual flower head
 // add more leaf variation
+// pull in regions and gods from database
 
 // Virtues text - replace illnesses, body parts, plant parts, god's names, other plant names, regional names, peoples, references to petal colours, common name, variant names, regions, dates
 
@@ -1064,15 +1065,17 @@ $thisCommonName = str_ireplace("*", "", $thisCommonName);
 $thisCommonName = str_ireplace("^", "", $thisCommonName);
 if($i==0) {
 	$primaryCommonName = $thisCommonName;
-}
-array_push($commonNames,$thisCommonName);
-}
-
-do {
+	do {
 $variantCommonName = addPrefix($thisCommonNameBeforePrefix, true);
 } while ($variantCommonName == $primaryCommonName);
 $variantCommonName = str_ireplace("*", "", $variantCommonName);
 $variantCommonName = str_ireplace("^", "", $variantCommonName);
+$variantCommonName = str_replace("  ", " ", $variantCommonName);
+}
+array_push($commonNames,$thisCommonName);
+}
+
+
 
 
 $commonNameString = implode(", ",$commonNames);
@@ -1103,25 +1106,37 @@ if($isAquatic == 1) {
 	$whichBaseStringToUse = "origin-night";
 }
 
+
+$entriesAlreadyUsed = [];
 // pick a random item from the Origin to start from:
 $whichElem = mt_rand(0,(count($json[$whichBaseStringToUse])-1));
 $startingText = $json[$whichBaseStringToUse][$whichElem];
 $startingText = findAndReplaceHashes($startingText);
 
+
+$entriesAlreadyUsed = [];
+if($isAquatic != 1) {
 $whichPlaceElem = mt_rand(0,(count($json["place"])-1));
 $placeText = $json["place"][$whichPlaceElem];
+} else {
+	$whichPlaceElem = mt_rand(0,(count($json["place-aquatic"])-1));
+$placeText = $json["place-aquatic"][$whichPlaceElem];
+}
 $placeText = findAndReplaceHashes($placeText);
 
+$entriesAlreadyUsed = [];
 $whichTimeElem = mt_rand(0,(count($json["time"])-1));
 $timeText = $json["time"][$whichTimeElem];
 $timeText = findAndReplaceHashes($timeText);
 
+$entriesAlreadyUsed = [];
 $whichVirtuesElem = mt_rand(0,(count($json["virtues"])-1));
 $virtueText = $json["virtues"][$whichVirtuesElem];
 $virtueText = findAndReplaceHashes($virtueText);
 
 $insectDetails = "";
 
+$entriesAlreadyUsed = [];
 if($isAquatic != 1) {
 	// aquatic plants shouldn't refer to butterflies
 if(mt_rand(1,3) == 1) {
@@ -1131,7 +1146,9 @@ $insectDetails = findAndReplaceHashes($insectDetails)." ";
 }
 }
 
-ucfirst($startingText) .= " ".ucfirst($placeText) ." ". ucfirst($insectDetails) . ucfirst($timeText) . ucfirst($virtueText);
+$startingText = ucfirst($startingText);
+
+$startingText .= " ".ucfirst($placeText) ." ". ucfirst($insectDetails) . " ".ucfirst($timeText) . " ".ucfirst($virtueText);
 
 
 // generate a butterfly:

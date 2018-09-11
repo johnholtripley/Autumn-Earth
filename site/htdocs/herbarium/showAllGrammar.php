@@ -10,6 +10,18 @@ if(isset($_GET['whichGrammar'])) {
 $whichGrammar = $_GET['whichGrammar'];
 }
 
+function makeSeed() {
+    // http://php.net/manual/en/function.mt_srand.php
+  list($usec, $sec) = explode(' ', microtime());
+  return floor((float) $sec + ((float) $usec * 100000));
+}
+
+if(isset($_GET["seed"])) {
+    $storedSeed = intval($_GET["seed"]);
+} else {
+    $storedSeed = makeSeed();
+}
+mt_srand($storedSeed);
 
 
 function str_replace_first($from, $to, $subject) {
@@ -30,6 +42,10 @@ function random_key($array){
 
  
 function findAndReplaceHashes($stringToCheck, &$json='') {
+    global $entriesAlreadyUsed;
+    if(!isset($entriesAlreadyUsed)) {
+        $entriesAlreadyUsed = [];
+    }
     if ($json == '') {
     global $json;
 }
@@ -38,15 +54,39 @@ function findAndReplaceHashes($stringToCheck, &$json='') {
     if(count($hashSplit) > 1) {
         for ($i=0;$i<count($hashSplit);$i++) {
             if(substr($hashSplit[$i],0,1) == "|") {
+                $needsToBeUnique = false;
                 // look for matching keys
                 $keyToMatch = substr($hashSplit[$i],1);
+                // a * denotes that this needs to unique and not repeated:
+                if(strrpos($keyToMatch, "*") !== false) {
+                    $needsToBeUnique = true;
+$keyToMatch = str_replace("*", "", $keyToMatch);
+                }
+                
                 if (array_key_exists($keyToMatch, $json)) {
-                    $whichReplaceElem = mt_rand(0,(count($json[$keyToMatch])-1));
-                    $replacementString = $json[$keyToMatch][$whichReplaceElem];
+
+if($needsToBeUnique) {
+    // see if this key has already been used:
+
+    do {
+  $whichReplaceElem = mt_rand(0,(count($json[$keyToMatch])-1));
+    $replacementString = $json[$keyToMatch][$whichReplaceElem];
+    } while (in_array($replacementString, $entriesAlreadyUsed));
+} else {
+    // just get a random entry:
+    $whichReplaceElem = mt_rand(0,(count($json[$keyToMatch])-1));
+    $replacementString = $json[$keyToMatch][$whichReplaceElem];
+}
+
+ array_push($entriesAlreadyUsed, $replacementString);
+
+                    
+                    
                     // check this substitution string to see if it has any hashes itself:
 
                     $replacementString = findAndReplaceHashes($replacementString); 
                     $hashSplit[$i] = '<i>'.$replacementString.'</i>';
+                   
                 }
             }
         }
@@ -114,6 +154,8 @@ case 7:
 return $thisCommonName;
 }
 
+?><p><?php echo $storedSeed; ?></p><?php
+$entriesAlreadyUsed = [];
 
 // create description:
 $jsonResults = file_get_contents($_SERVER['DOCUMENT_ROOT'].'/includes/herbarium/description-grammar.json');
@@ -178,15 +220,19 @@ $thisCommonName = str_ireplace("*", "", $thisCommonName);
 $thisCommonName = str_ireplace("^", "", $thisCommonName);
 if($i==0) {
 	$primaryCommonName = $thisCommonName;
-}
-array_push($commonNames,$thisCommonName);
-}
-
-do {
+    do {
 $variantCommonName = addPrefix($thisCommonNameBeforePrefix, true);
 } while ($variantCommonName == $primaryCommonName);
 $variantCommonName = str_ireplace("*", "", $variantCommonName);
 $variantCommonName = str_ireplace("^", "", $variantCommonName);
+$variantCommonName = str_replace("  ", " ", $variantCommonName);
+}
+array_push($commonNames,$thisCommonName);
+}
+
+
+
+
 
 
 $commonNameString = implode(", ",$commonNames);
@@ -233,45 +279,72 @@ if($isAquatic == 1) {
 
 switch ($whichGrammar) {
     case 'place':
-    $placeText = '';
+    
 foreach ($json["place"] as $value) {
+    $placeText = '';
+    $entriesAlreadyUsed = [];
 $placeText .= '<p>'.ucfirst($value).'</p>';
-}
 $placeText = findAndReplaceHashes($placeText);
-        $startingText = " ".$placeText;
+$startingText .= $placeText;
+}
+
+        
+        $startingText .= "<h2>Aquatic:</h2>";
+
+foreach ($json["place-aquatic"] as $value) {
+     $placeText = '';
+    $entriesAlreadyUsed = [];
+$placeText .= '<p>'.ucfirst($value).'</p>';
+$placeText = findAndReplaceHashes($placeText);
+$startingText .= $placeText;
+}
+
+
+
+
         break;
         case 'insects':
-        $insectDetails = '';
+        
     foreach ($json["insectDetails"] as $value) {
+        $insectDetails = '';
 //$whichInsectElem = mt_rand(0,(count($json["insectDetails"])-1));
 $insectDetails .= '<p>'.ucfirst($value).'</p>';
-}
 $insectDetails = findAndReplaceHashes($insectDetails)." ";
-        $startingText = " ".$insectDetails;
+        $startingText .= $insectDetails;
+}
+
         break;
           case 'time':
-          $timeText = '';
+         
 foreach ($json["time"] as $value) {
+ $timeText = '';
 $timeText .= '<p>'.ucfirst($value).'</p>';
-}
 $timeText = findAndReplaceHashes($timeText);
-        $startingText = " ".$timeText;
+$startingText .= $timeText;
+}
+
+        
         break;
         case 'virtues':
-        $virtueText = '';
+        
 foreach ($json["virtues"] as $value) {
+    $virtueText = '';
 $virtueText .= '<p>'.ucfirst($value).'</p>';
-}
 $virtueText = findAndReplaceHashes($virtueText);
-        $startingText = " ".$virtueText;
+        $startingText .= $virtueText;
+}
+
         break;
         default:
-        $startingText = '';
+        
 
 foreach ($json[$whichBaseStringToUse] as $value) {
-$startingText .= '<p>'.ucfirst($value).'</p>';
+    $baseText = '';
+$baseText .= '<p>'.ucfirst($value).'</p>';
+$baseText = findAndReplaceHashes($baseText);
+$startingText .= $baseText;
 }
-$startingText = findAndReplaceHashes($startingText);
+
     }
 
 
@@ -460,6 +533,7 @@ body {
     padding: 24px;
 }
 </style>
+
 <ul>
     <li><a href="/herbarium/showAllGrammar.php?whichGrammar=insects">Insects</a></li>
 <li><a href="/herbarium/showAllGrammar.php?whichGrammar=time">Time</a></li>
