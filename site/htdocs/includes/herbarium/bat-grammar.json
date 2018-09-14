@@ -1,0 +1,9 @@
+{
+    "geography": ["madagascan"],
+    "prefix": ["greater", "lesser", "pygmy"],
+    "colour": ["dusky", "grey", "white", "black"],
+    "biologist": ["Temminck", "Beccari", "Underwood" ,"Soloman"],
+    "evocative": ["harpy", "ghost", "gloomy", "insular", "pallid", "false", "angulate", "acuminate", "arcuate", "spectral", "smoky", "swift"],
+    "physical": ["large-eared", "long-eared", "spotted-winged", "short-nosed", "#|colour#-bellied", "#|colour#-winged", "collared", "tailless", "horned", "long-tailed", "horn-skinned", "mouse-like", "mantled", "sheath-tailed", "stripe-faced", "trumpet-eared"],
+    "name": ["fruit bat", "nectar bat", "blossom bat", "subterranean bat", "cave bat", "flying fox", "serotine", "noctule", "pipistrelle"]
+}

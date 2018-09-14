@@ -154,12 +154,24 @@ case 7:
 return $thisCommonName;
 }
 
-?><p><?php echo $storedSeed; ?></p><?php
+?>
+<p><?php echo $storedSeed; ?></p>
+<?php
 $entriesAlreadyUsed = [];
 
 // create description:
 $jsonResults = file_get_contents($_SERVER['DOCUMENT_ROOT'].'/includes/herbarium/description-grammar.json');
 $json = json_decode($jsonResults, true);
+
+// get region names:
+$json['region'] = [];
+$queryRegions = "select * from tblregions";
+$resultRegions = mysqli_query($connection, $queryRegions) or die ("couldn't execute Regions query");
+while ($rowRegions = mysqli_fetch_array($resultRegions)) {
+    extract($rowRegions);
+    array_push($json['region'], $regionName);
+}
+
 
 // create common names:
 include($_SERVER['DOCUMENT_ROOT']."/includes/herbarium/common-name-prefixes.php");
@@ -303,6 +315,20 @@ $startingText .= $placeText;
 
 
         break;
+
+        case 'bats':
+        
+    foreach ($json["batDetails"] as $value) {
+        $batDetails = '';
+//$whichInsectElem = mt_rand(0,(count($json["batDetails"])-1));
+$batDetails .= '<p>'.ucfirst($value).'</p>';
+$batDetails = findAndReplaceHashes($batDetails)." ";
+        $startingText .= $batDetails;
+}
+
+        break;
+
+
         case 'insects':
         
     foreach ($json["insectDetails"] as $value) {
@@ -392,14 +418,77 @@ switch ($shouldAddButterflyPrefix) {
        $combinedButterflyPluralName = ucfirst($combinedButterflyPluralName);
 } 
 
-$startingText = str_ireplace("++butterfly++", $combinedButterflyName, $startingText);
+$startingText = str_ireplace("++butterfly++", '<i>'.$combinedButterflyName.'</i>', $startingText);
+$startingText = str_ireplace("++butterflies++", '<i>'.$combinedButterflyPluralName.'</i>', $startingText);
 
-$startingText = str_ireplace("++butterflies++", $combinedButterflyPluralName, $startingText);
+
+// construct a bat name:
+$combinedBatName = '';
+$batJsonResults = file_get_contents($_SERVER['DOCUMENT_ROOT'].'/includes/herbarium/bat-grammar.json');
+$batJson = json_decode($batJsonResults, true);
+$whichBatElem = mt_rand(0,(count($batJson['name'])-1));
+$combinedBatName = $batJson['name'][$whichBatElem];
+$batConnector = 'the ';
+$batExtendingName = '';
+switch (mt_rand(0,2)) {
+case 0:
+$batExtendingName = $batJson['prefix'][(mt_rand(0,(count($batJson['prefix'])-1)))];
+break;
+case 1:
+$batExtendingName = $batJson['colour'][(mt_rand(0,(count($batJson['colour'])-1)))];
+break;
+case 2:
+$batExtendingName = $batJson['evocative'][(mt_rand(0,(count($batJson['evocative'])-1)))];
+break;
+}
+$batPhysicalName = $batJson['physical'][(mt_rand(0,(count($batJson['physical'])-1)))];
+switch (mt_rand(0,4)) {
+case 0:
+$combinedBatName = $batExtendingName." ".$combinedBatName;
+break;
+case 1:
+$combinedBatName = $batPhysicalName." ".$combinedBatName;
+break;
+case 2:
+$combinedBatName = $batExtendingName." ".$batPhysicalName." ".$combinedBatName;
+break;
+}
+// potentially add a geographic or a biologist's name:
+$batModifer = mt_rand(0,6);
+switch ($batModifer) {
+    case 0:
+    $combinedBatName = $batJson['geography'][(mt_rand(0,(count($batJson['geography'])-1)))].' '.$combinedBatName;
+    break;
+    case 1:
+    $combinedBatName = $batJson['biologist'][(mt_rand(0,(count($batJson['biologist'])-1)))]."&apos;s ".$combinedBatName;;
+    // don't want a 'the' before the name:
+    $batConnector = '';
+    break;
+}
+
+// find any colours:
+$batColour = $batJson['colour'][(mt_rand(0,(count($batJson['colour'])-1)))];
+$combinedBatName = str_replace("#|colour#", $batColour, $combinedBatName);
+
+// if the bat just has a single word, then add 'common' to it:
+if(str_word_count($combinedBatName) < 2) {
+$combinedBatName = 'common '.$combinedBatName;
+}
+
+$combinedBatName = $batConnector . ucfirst($combinedBatName);
 
 
-$startingText = str_ireplace("++commonname++", $primaryCommonName, $startingText);
+$combinedBatPluralName = $combinedBatName.'s';
+$combinedBatPluralName = str_replace("the ", "", $combinedBatPluralName);
 
-$startingText = str_ireplace("++variantcommonname++", $variantCommonName, $startingText);
+
+$startingText = str_ireplace("++bat++", $combinedBatName, $startingText);
+$startingText = str_ireplace("++bats++", $combinedBatPluralName, $startingText);
+
+
+$startingText = str_ireplace("++commonname++", '<i>'.$primaryCommonName.'</i>', $startingText);
+
+$startingText = str_ireplace("++variantcommonname++", '<i>'.$variantCommonName.'</i>', $startingText);
 
 
 
@@ -507,7 +596,7 @@ if(strpos($startingText, '++otherplants++') !== false) {
         if($plantNamesUsed >= count($plantNamesUsed)) {
             $plantNamesUsed = 0;
         }
-    } while (strpos($startingText, '++plantNamesUsed++') !== false);
+    } while (strpos($startingText, '++otherplants++') !== false);
 }
 
 
@@ -536,12 +625,13 @@ body {
 
 <ul>
     <li><a href="/herbarium/showAllGrammar.php?whichGrammar=insects">Insects</a></li>
-<li><a href="/herbarium/showAllGrammar.php?whichGrammar=time">Time</a></li>
-<li><a href="/herbarium/showAllGrammar.php?whichGrammar=place">Place</a></li>
-
-<li><a href="/herbarium/showAllGrammar.php?whichGrammar=virtues">Virtues</a></li>
-<li><a href="/herbarium/showAllGrammar.php?whichGrammar=start">Start</a></li>
+    <li><a href="/herbarium/showAllGrammar.php?whichGrammar=bats">Bats</a></li>
+    <li><a href="/herbarium/showAllGrammar.php?whichGrammar=time">Time</a></li>
+    <li><a href="/herbarium/showAllGrammar.php?whichGrammar=place">Place</a></li>
+    <li><a href="/herbarium/showAllGrammar.php?whichGrammar=virtues">Virtues</a></li>
+    <li><a href="/herbarium/showAllGrammar.php?whichGrammar=start">Start</a></li>
 </ul>
 <?php
 echo $startingText;
 ?>
+

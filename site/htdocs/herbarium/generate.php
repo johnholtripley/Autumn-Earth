@@ -10,7 +10,7 @@
 // add more flower variation
 // vary colour of petals between each individual flower head
 // add more leaf variation
-// pull in regions and gods from database
+// pull in countries and gods (from Pantheon) from database
 
 // Virtues text - replace illnesses, body parts, plant parts, god's names, other plant names, regional names, peoples, references to petal colours, common name, variant names, regions, dates
 
@@ -1006,6 +1006,15 @@ $latinName = ucfirst(trim($latinName));
 $jsonResults = file_get_contents($_SERVER['DOCUMENT_ROOT'].'/includes/herbarium/description-grammar.json');
 $json = json_decode($jsonResults, true);
 
+// get region names:
+$json['region'] = [];
+$queryRegions = "select * from tblregions";
+$resultRegions = mysqli_query($connection, $queryRegions) or die ("couldn't execute Regions query");
+while ($rowRegions = mysqli_fetch_array($resultRegions)) {
+    extract($rowRegions);
+    array_push($json['region'], $regionName);
+}
+
 // create common names:
 include($_SERVER['DOCUMENT_ROOT']."/includes/herbarium/common-name-prefixes.php");
 include($_SERVER['DOCUMENT_ROOT']."/includes/herbarium/common-name-suffixes.php");
@@ -1140,9 +1149,25 @@ $entriesAlreadyUsed = [];
 if($isAquatic != 1) {
 	// aquatic plants shouldn't refer to butterflies
 if(mt_rand(1,3) == 1) {
+
+if($isNight == 1) {
+if(mt_rand(1,2) == 1) {
+// use a bat instead:
+$whichInsectElem = mt_rand(0,(count($json["batDetails"])-1));
+$insectDetails = $json["batDetails"][$whichInsectElem];
+$insectDetails = findAndReplaceHashes($insectDetails)." ";
+} else {
+$whichInsectElem = mt_rand(0,(count($json["insectDetails"])-1));
+$insectDetails = $json["insectDetails"][$whichInsectElem];
+$insectDetails = findAndReplaceHashes($insectDetails)." ";	
+}
+} else {
 $whichInsectElem = mt_rand(0,(count($json["insectDetails"])-1));
 $insectDetails = $json["insectDetails"][$whichInsectElem];
 $insectDetails = findAndReplaceHashes($insectDetails)." ";
+}
+
+
 }
 }
 
@@ -1192,6 +1217,69 @@ switch ($shouldAddButterflyPrefix) {
 $startingText = str_ireplace("++butterfly++", $combinedButterflyName, $startingText);
 $startingText = str_ireplace("++butterflies++", $combinedButterflyPluralName, $startingText);
 
+
+// construct a bat name:
+$combinedBatName = '';
+$batJsonResults = file_get_contents($_SERVER['DOCUMENT_ROOT'].'/includes/herbarium/bat-grammar.json');
+$batJson = json_decode($batJsonResults, true);
+$whichBatElem = mt_rand(0,(count($batJson['name'])-1));
+$combinedBatName = $batJson['name'][$whichBatElem];
+$batConnector = 'the ';
+$batExtendingName = '';
+switch (mt_rand(0,2)) {
+case 0:
+$batExtendingName = $batJson['prefix'][(mt_rand(0,(count($batJson['prefix'])-1)))];
+break;
+case 1:
+$batExtendingName = $batJson['colour'][(mt_rand(0,(count($batJson['colour'])-1)))];
+break;
+case 2:
+$batExtendingName = $batJson['evocative'][(mt_rand(0,(count($batJson['evocative'])-1)))];
+break;
+}
+$batPhysicalName = $batJson['physical'][(mt_rand(0,(count($batJson['physical'])-1)))];
+switch (mt_rand(0,4)) {
+case 0:
+$combinedBatName = $batExtendingName." ".$combinedBatName;
+break;
+case 1:
+$combinedBatName = $batPhysicalName." ".$combinedBatName;
+break;
+case 2:
+$combinedBatName = $batExtendingName." ".$batPhysicalName." ".$combinedBatName;
+break;
+}
+// potentially add a geographic or a biologist's name:
+$batModifer = mt_rand(0,6);
+switch ($batModifer) {
+    case 0:
+    $combinedBatName = $batJson['geography'][(mt_rand(0,(count($batJson['geography'])-1)))].' '.$combinedBatName;
+    break;
+    case 1:
+    $combinedBatName = $batJson['biologist'][(mt_rand(0,(count($batJson['biologist'])-1)))]."&apos;s ".$combinedBatName;;
+    // don't want a 'the' before the name:
+    $batConnector = '';
+    break;
+}
+
+// find any colours:
+$batColour = $batJson['colour'][(mt_rand(0,(count($batJson['colour'])-1)))];
+$combinedBatName = str_replace("#|colour#", $batColour, $combinedBatName);
+
+// if the bat just has a single word, then add 'common' to it:
+if(str_word_count($combinedBatName) < 2) {
+$combinedBatName = 'common '.$combinedBatName;
+}
+
+$combinedBatName = $batConnector . ucfirst($combinedBatName);
+
+
+$combinedBatPluralName = $combinedBatName.'s';
+$combinedBatPluralName = str_replace("the ", "", $combinedBatPluralName);
+
+
+$startingText = str_ireplace("++bat++", $combinedBatName, $startingText);
+$startingText = str_ireplace("++bats++", $combinedBatPluralName, $startingText);
 
 
 
@@ -1316,12 +1404,12 @@ if(strpos($startingText, '++otherplants++') !== false) {
 	$plantNamesUsed = mt_rand(0, count($otherPlantNames) - 1);
 	do {
 		$startingText = str_replace_first('++otherplants++', '<a href="https://www.autumnearth.com/herbarium/'.$otherPlantNameURLs[$plantNamesUsed].'/">'.$otherPlantNames[$plantNamesUsed].'</a>', $startingText);
-		// for any further occurences, use the subsequent month name to make more sense:
+	
 		$plantNamesUsed++;
 		if($plantNamesUsed >= count($plantNamesUsed)) {
 			$plantNamesUsed = 0;
 		}
-	} while (strpos($startingText, '++plantNamesUsed++') !== false);
+	} while (strpos($startingText, '++otherplants++') !== false);
 }
 
 $commonNameIntro = array(
@@ -1371,7 +1459,7 @@ drawPlant();
 
 echo '<img style="display:block;" src="/images/herbarium/plants/'.$plantURL.'.jpg" width="480" height="480" alt="'.$latinName.'">';
 echo '<p style="padding: 12px;display:inline-block;background:rgb('.$petalRed.','.$petalGreen.','.$petalBlue.')">Petal colour: '.$displayPetalColourName.'</p>';
-echo '<p>Associated with the '.$combinedButterflyName.'.</p>';
+echo '<p>Associated with the '.$combinedButterflyName.', and '.$combinedBatName.'.</p>';
 echo '<p style="font-size:0.7em;"><a href="'.explode("?", $_SERVER["REQUEST_URI"])[0].'?seed='.$storedSeed.'">Seed: '.$storedSeed.'</a></p>';
 echo '<p style="font-size:0.7em;"><a href="'.explode("?", $_SERVER["REQUEST_URI"])[0].'">New seed</a></p>';
 
