@@ -87,7 +87,7 @@ $result = $twitterConnection->post('media/metadata/create', $parameters);
 var_dump($result);
 */
 $textString = $latinName."\r\n".$commonNameString;
-$textString .= "\r\n".$startingText;
+$textString .= "\r\n".strip_tags($startingText);
 
 
 // twitter doesn't handle html entities:
@@ -668,11 +668,13 @@ quadBezier($plantCanvas, $previousX, $previousY,$thisPoint[0], $thisPoint[1], $t
 include($_SERVER['DOCUMENT_ROOT']."/includes/herbarium/leaf-colours.php");
 $thisLeafColour = $leafColours[mt_rand(0, count($leafColours) - 1)];
 
-$numberOfLeafVariationsToDraw = 1;
-$leafCanvasSize = 100;
+$numberOfLeafVariationsToDraw = 2;
+$leafCanvasWidth = 100;
+$leafCanvasHeight = 100;
 $leafInset = 10;
-for ($k=0;$k<count($numberOfLeafVariationsToDraw);$k++) {
-	${'leaf'.$k} = imagecreate($leafCanvasSize,$leafCanvasSize);
+for ($k=0;$k<$numberOfLeafVariationsToDraw;$k++) {
+
+	${'leaf'.$k} = imagecreate($leafCanvasWidth,$leafCanvasHeight);
 
 	$leafTrans = imagecolorallocate(${'leaf'.$k}, 0, 0, 0);
 	imagecolortransparent(${'leaf'.$k}, $leafTrans);
@@ -688,10 +690,10 @@ for ($k=0;$k<count($numberOfLeafVariationsToDraw);$k++) {
 
 	// ###
 	// leaf start needs to be the centre of the leaf image so it can be positioned correctly
-	quadBezier(${'leaf'.$k}, $leafCanvasSize/2, $leafCanvasSize/2, $leafCanvasSize-$leafInset, $leafCanvasSize/2-$leafInset, $leafCanvasSize/2,$leafInset);
-	quadBezier(${'leaf'.$k}, $leafCanvasSize/2, $leafCanvasSize/2, $leafInset, $leafCanvasSize/2-$leafInset, $leafCanvasSize/2,$leafInset);
-	imagefill(${'leaf'.$k}, $leafCanvasSize/2, $leafCanvasSize/2-$leafInset*2, ${'leafBrushColour'.$k});
-	imageline ( ${'leaf'.$k} , $leafCanvasSize/2, $leafCanvasSize/2 , $leafCanvasSize/2, $leafInset , imagecolorallocate(${'leaf'.$k}, 6,42,30 ));
+	quadBezier(${'leaf'.$k}, $leafCanvasWidth/2, $leafCanvasHeight/2, $leafCanvasWidth-$leafInset, $leafCanvasHeight/2-$leafInset, $leafCanvasWidth/2,$leafInset);
+	quadBezier(${'leaf'.$k}, $leafCanvasWidth/2, $leafCanvasHeight/2, $leafInset, $leafCanvasHeight/2-$leafInset, $leafCanvasWidth/2,$leafInset);
+	imagefill(${'leaf'.$k}, $leafCanvasWidth/2, $leafCanvasHeight/2-$leafInset*2, ${'leafBrushColour'.$k});
+	imageline ( ${'leaf'.$k} , $leafCanvasWidth/2, $leafCanvasHeight/2 , $leafCanvasWidth/2, $leafInset , imagecolorallocate(${'leaf'.$k}, 6,42,30 ));
 	// ###
 	
 }
@@ -1171,9 +1173,9 @@ $insectDetails = findAndReplaceHashes($insectDetails)." ";
 }
 }
 
-$startingText = ucfirst($startingText);
+$startingText = '<p>'.ucfirst($startingText).'</p>';
 
-$startingText .= " ".ucfirst($placeText) ." ". ucfirst($insectDetails) . " ".ucfirst($timeText) . " ".ucfirst($virtueText);
+$startingText .= '<p>'.ucfirst($placeText) .'</p><p>'. ucfirst($insectDetails) . '</p><p>'.ucfirst($timeText) . '</p><p>'.ucfirst($virtueText).'</p>';
 
 
 // generate a butterfly:
@@ -1206,12 +1208,15 @@ $shouldAddButterflyPrefix = mt_rand(1,30);
 switch ($shouldAddButterflyPrefix) {
     case 1:
         $combinedButterflyName = "Lesser ".$combinedButterflyName;
+        $combinedButterflyPluralName = "Lesser ".$combinedButterflyPluralName;
         break;
     case 2:
          $combinedButterflyName = "Common ".$combinedButterflyName;
+         $combinedButterflyPluralName = "Common ".$combinedButterflyPluralName;
         break;
     default:
        $combinedButterflyName = ucfirst($combinedButterflyName);
+       $combinedButterflyPluralName = ucfirst($combinedButterflyPluralName);
 } 
 
 $startingText = str_ireplace("++butterfly++", $combinedButterflyName, $startingText);
@@ -1274,7 +1279,11 @@ $combinedBatName = 'common '.$combinedBatName;
 $combinedBatName = $batConnector . ucfirst($combinedBatName);
 
 
-$combinedBatPluralName = $combinedBatName.'s';
+if(substr($combinedBatName, -1) == "x") {
+    $combinedBatPluralName = $combinedBatName."es";
+} else {
+   $combinedBatPluralName = $combinedBatName.'s'; 
+}
 $combinedBatPluralName = str_replace("the ", "", $combinedBatPluralName);
 
 

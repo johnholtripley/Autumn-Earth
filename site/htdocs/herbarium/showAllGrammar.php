@@ -478,7 +478,13 @@ $combinedBatName = 'common '.$combinedBatName;
 $combinedBatName = $batConnector . ucfirst($combinedBatName);
 
 
-$combinedBatPluralName = $combinedBatName.'s';
+if(substr($combinedBatName, -1) == "x") {
+    $combinedBatPluralName = $combinedBatName."es";
+} else {
+   $combinedBatPluralName = $combinedBatName.'s'; 
+}
+
+
 $combinedBatPluralName = str_replace("the ", "", $combinedBatPluralName);
 
 
