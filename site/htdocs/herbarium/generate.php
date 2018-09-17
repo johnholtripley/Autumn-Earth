@@ -713,7 +713,7 @@ $petalBrushSize = 2;
 
 
 
-$numberOfFlowerVariationsToDraw = 1;
+$numberOfFlowerVariationsToDraw = 4;
 $flowerCanvasSize = 90;
 for ($k=0;$k<$numberOfFlowerVariationsToDraw;$k++) {
 	${'flower'.$k} = imagecreate($flowerCanvasSize,$flowerCanvasSize);
