@@ -14,7 +14,7 @@
 // optional fruits. fruit colours. split out fruits from description and only use if the plant has any
 // night flowering descriptions
 // Virtues text - replace illnesses, body parts, plant parts, god's names, other plant names, regional names, peoples, references to petal colours, common name, variant names, regions, dates
-
+// colour variation for star petals
 // ---------------------------------------
 
 
@@ -33,7 +33,7 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/functions.php");
 //}
 
 function sendToTwitter() {
-	global $latinName, $startingText, $plantURL, $commonNameString, $commonNamesJoined, $isAquatic, $isNight, $storedSeed, $connection;
+	global $latinName, $startingText, $plantURL, $commonNameString, $commonNamesJoined, $isAquatic, $isNight, $storedSeed, $connection, $debug;
 
 include("auth.php");
 
@@ -117,7 +117,7 @@ echo "<p>Tweeted content:<br>".nl2br($textString)."</p>";
 
 
 
-//if($isLive) {
+if(!$debug) {
 	$parameters = [
 	    'status' => $textString,
 	    'media_ids' => $media->media_id_string,
@@ -131,17 +131,17 @@ echo "<p>Tweeted content:<br>".nl2br($textString)."</p>";
 	    echo $twitterConnection->getLastHttpCode();
 	    // email the error? ##########
 	}
-//}
+}
 
 
 
 
-//if(!$isLive) {
+if(!$debug) {
 $query = "INSERT INTO tblplants (latinName,commonNames,commonNamesJoined,timeCreated,plantDesc,plantUrl,tweetedContent,isAquatic,isNight,plantSeed)
 VALUES ('" . $latinName . "','" . $commonNameString . "','" . $commonNamesJoined . "',NOW(),'".$startingText."','".$plantURL."','".$textString."','".$isAquatic."','".$isNight."','".$storedSeed."')";
 
 $result = mysqli_query($connection, $query) or die ("couldn't execute tblplant query");
-//}
+}
 
 
 
@@ -773,8 +773,7 @@ for ($k=0;$k<$numberOfFlowerVariationsToDraw;$k++) {
 	${'flower'.$k} = imagecreate($flowerCanvasSize,$flowerCanvasSize);
 	$flowerTrans = imagecolorallocate(${'flower'.$k}, 0, 0, 0);
 	imagecolortransparent(${'flower'.$k}, $flowerTrans);
-	// draw central circle:
-//imagefilledellipse ( ${'flower'.$k} , $flowerCanvasSize/2 , $flowerCanvasSize/2 , $flowerCanvasSize/5, $flowerCanvasSize/5, imagecolorallocate(${'flower'.$k}, $petalRed, $petalGreen, $petalBlue) );
+
 
 $numberOfSpokes = mt_rand(5,12);
 $numberOfSpokes = 8;
@@ -785,7 +784,23 @@ $angleInc = 2*M_PI/$numberOfSpokes;
 $angleOffset = mt_rand(0,100)/100;
 
 $stalkColour = imagecolorallocate(${'flower'.$k}, 6,42,30 );
-$petalColour = imagecolorallocate(${'flower'.$k}, $petalRed, $petalGreen, $petalBlue );
+
+// create variation in the flower head colour:
+$darkenOrLighten = mt_rand(0,1);
+$colourAdjustAmount = mt_rand(4,11);
+if($darkenOrLighten == 0) {
+$colourAdjustAmount = 0-$colourAdjustAmount;
+}
+$thisPetalRed = $petalRed+$colourAdjustAmount;
+$thisPetalGreen = $petalGreen+$colourAdjustAmount;
+$thisPetalBlue = $petalBlue+$colourAdjustAmount;
+
+$thisPetalRed = capValues($thisPetalRed,0,255);
+$thisPetalGreen = capValues($thisPetalGreen,0,255);
+$thisPetalBlue = capValues($thisPetalBlue,0,255);
+
+
+$petalColour = imagecolorallocate(${'flower'.$k}, $thisPetalRed, $thisPetalGreen, $thisPetalBlue );
 
 for ($i=0; $i<$numberOfSpokes; $i++) {
 	$endX = $flowerCanvasSize/2 + $lengthOfSpoke*cos($angleInc*$i+$angleOffset);
@@ -1519,7 +1534,11 @@ drawPlant();
 echo '<img style="display:block;" src="/images/herbarium/plants/'.$plantURL.'.jpg" width="480" height="480" alt="'.$latinName.'">';
 echo '<p style="padding: 12px;display:inline-block;background:rgb('.$petalRed.','.$petalGreen.','.$petalBlue.')">Petal colour: '.$displayPetalColourName.'</p>';
 echo '<p>Associated with the '.$combinedButterflyName.', and '.$combinedBatName.'.</p>';
-echo '<p style="font-size:0.7em;"><a href="'.explode("?", $_SERVER["REQUEST_URI"])[0].'?seed='.$storedSeed.'">Seed: '.$storedSeed.'</a></p>';
+$debugQueryString = '';
+if($debug) {
+$debugQueryString = '&debug=true';
+}
+echo '<p style="font-size:0.7em;"><a href="'.explode("?", $_SERVER["REQUEST_URI"])[0].'?seed='.$storedSeed.$debugQueryString.'">Seed: '.$storedSeed.'</a></p>';
 echo '<p style="font-size:0.7em;"><a href="'.explode("?", $_SERVER["REQUEST_URI"])[0].'">New seed</a></p>';
 
 
@@ -1527,9 +1546,9 @@ $lastError = error_get_last();
 
 if(stripos($lastError["file"], "generate.php") === false) {
 	// don't Tweet if any errors within this file (may be error reported in connection include for example):
-if(!$debug) {
+
 	sendToTwitter();
-}
+
 }
 
 
