@@ -8,13 +8,14 @@
 // descriptions need more fullstops to allow content to break for twitter
 // descriptions need splitting out for aquatic and night flowering plants
 // add more flower variation
-// vary colour of petals between each individual flower head
 // add more leaf variation
 // pull in countries and gods (from Pantheon) from database
 // optional fruits. fruit colours. split out fruits from description and only use if the plant has any
 // night flowering descriptions
 // Virtues text - replace illnesses, body parts, plant parts, god's names, other plant names, regional names, peoples, references to petal colours, common name, variant names, regions, dates
 // colour variation for star petals
+// for the dandelion seed head, the angle offset of the stalk should be relative to the size of the seed head, so there's no overlap
+
 // ---------------------------------------
 
 
@@ -138,9 +139,9 @@ if(!$debug) {
 
 if(!$debug) {
 $query = "INSERT INTO tblplants (latinName,commonNames,commonNamesJoined,timeCreated,plantDesc,plantUrl,tweetedContent,isAquatic,isNight,plantSeed)
-VALUES ('" . $latinName . "','" . $commonNameString . "','" . $commonNamesJoined . "',NOW(),'".$startingText."','".$plantURL."','".$textString."','".$isAquatic."','".$isNight."','".$storedSeed."')";
+VALUES ('" . $latinName . "','" . $commonNameString . "','" . $commonNamesJoined . "',NOW(),'".$startingText."','".$plantURL."','".mysqli_real_escape_string($connection,$textString)."','".$isAquatic."','".$isNight."','".$storedSeed."')";
 
-$result = mysqli_query($connection, $query) or die ("couldn't execute tblplant query");
+$result = mysqli_query($connection, $query) or die ("couldn't execute tblplant query".$query);
 }
 
 
@@ -666,7 +667,7 @@ quadBezier($plantCanvas, $previousX, $previousY,$thisPoint[0], $thisPoint[1], $t
 include($_SERVER['DOCUMENT_ROOT']."/includes/herbarium/leaf-colours.php");
 $thisLeafColour = $leafColours[mt_rand(0, count($leafColours) - 1)];
 
-$numberOfLeafVariationsToDraw = 2;
+$numberOfLeafVariationsToDraw = 4;
 $leafCanvasWidth = 100;
 $leafCanvasHeight = 100;
 $leafInset = 10;
@@ -676,12 +677,32 @@ for ($k=0;$k<$numberOfLeafVariationsToDraw;$k++) {
 
 	$leafTrans = imagecolorallocate(${'leaf'.$k}, 0, 0, 0);
 	imagecolortransparent(${'leaf'.$k}, $leafTrans);
-	${'leafColour'.$k} = imagecolorallocate(${'leaf'.$k}, $thisLeafColour[0], $thisLeafColour[1], $thisLeafColour[2]);
+
+
+
+// create variation in the leaf colour:
+$darkenOrLighten = mt_rand(0,1);
+$colourAdjustAmount = mt_rand(4,24);
+if($darkenOrLighten == 0) {
+$colourAdjustAmount = 0-$colourAdjustAmount;
+}
+$thisLeafRed = $thisLeafColour[0]+$colourAdjustAmount;
+$thisLeafGreen = $thisLeafColour[1]+$colourAdjustAmount;
+$thisLeafBlue = $thisLeafColour[2]+$colourAdjustAmount;
+
+$thisLeafRed = capValues($thisLeafRed,0,255);
+$thisLeafGreen = capValues($thisLeafGreen,0,255);
+$thisLeafBlue = capValues($thisLeafBlue,0,255);
+
+
+
+
+	${'leafColour'.$k} = imagecolorallocate(${'leaf'.$k}, $thisLeafRed, $thisLeafGreen, $thisLeafBlue);
 
 	${'leafBrush'.$k} = imagecreate(6,6);
 	$leafBrushTrans = imagecolorallocate(${'leafBrush'.$k}, 0, 0, 0);
 	imagecolortransparent(${'leafBrush'.$k}, $leafBrushTrans);
-	${'leafBrushColour'.$k} = imagecolorallocate(${'leafBrush'.$k}, $thisLeafColour[0], $thisLeafColour[1], $thisLeafColour[2]);
+	${'leafBrushColour'.$k} = imagecolorallocate(${'leafBrush'.$k}, $thisLeafRed, $thisLeafGreen, $thisLeafBlue);
 	imagefilledellipse(${'leafBrush'.$k}, 3,3,6,6, ${'leafBrushColour'.$k});
 	imagesetbrush(${'leaf'.$k}, ${'leafBrush'.$k});
 
@@ -778,16 +799,16 @@ for ($k=0;$k<$numberOfFlowerVariationsToDraw;$k++) {
 $numberOfSpokes = mt_rand(5,12);
 $numberOfSpokes = 8;
 $lengthOfSpoke = 30;
-$spokeHeadRadius = 20;
+
 $angleInc = 2*M_PI/$numberOfSpokes;
 // make the stalks not be too vertical or horizontal:
-$angleOffset = mt_rand(0,100)/100;
+$angleOffset = mt_rand(20,100)/100;
 
 $stalkColour = imagecolorallocate(${'flower'.$k}, 6,42,30 );
 
 // create variation in the flower head colour:
 $darkenOrLighten = mt_rand(0,1);
-$colourAdjustAmount = mt_rand(4,11);
+$colourAdjustAmount = mt_rand(4,16);
 if($darkenOrLighten == 0) {
 $colourAdjustAmount = 0-$colourAdjustAmount;
 }
@@ -803,7 +824,9 @@ $thisPetalBlue = capValues($thisPetalBlue,0,255);
 $petalColour = imagecolorallocate(${'flower'.$k}, $thisPetalRed, $thisPetalGreen, $thisPetalBlue );
 
 for ($i=0; $i<$numberOfSpokes; $i++) {
-	$endX = $flowerCanvasSize/2 + $lengthOfSpoke*cos($angleInc*$i+$angleOffset);
+	$spokeHeadRadius = mt_rand(18,24);
+	$angleRandomiseOffset = mt_rand(-50,50)/250;
+	$endX = $flowerCanvasSize/2 + $lengthOfSpoke*cos($angleInc*$i+$angleOffset+$angleRandomiseOffset);
 $endY = $flowerCanvasSize/2 + $lengthOfSpoke*sin($angleInc*$i+$angleOffset);
 imageline ( ${'flower'.$k} , $flowerCanvasSize/2, $flowerCanvasSize/2 , $endX, $endY , $stalkColour);
 imagefilledellipse(${'flower'.$k}, $endX, $endY, $spokeHeadRadius, $spokeHeadRadius, $petalColour);
@@ -1158,7 +1181,7 @@ $commonNameString = implode(", ",$commonNames);
 $commonNamesJoined = implode("/",$commonNames);
 if(count($commonNames)>1) {
 	$lastCommaPos = strrpos($commonNameString, ",");
-	$randomDetail = mt_rand(1,8);
+	$randomDetail = mt_rand(1,9);
 
 if($randomDetail == 1) {
 // add in specific detail:
@@ -1166,6 +1189,12 @@ if($randomDetail == 1) {
 } else if($randomDetail == 2) {
 // add in specific detail:
 	$commonNameString = substr($commonNameString, 0, $lastCommaPos)   ."; some call it".   substr($commonNameString, $lastCommaPos+1);
+
+} else if($randomDetail == 3) {
+// add in specific detail:
+
+$commonNameString = substr($commonNameString, 0, $lastCommaPos)   ."; alchymists know it as".   substr($commonNameString, $lastCommaPos+1);
+
 } else {
 // replace last "," with an "or":
 	
