@@ -4,14 +4,15 @@
 
 // TO DO:
 // make the pictures look more hand drawn
-// add virtues to description
+// add leaves that start from the stem not just a terminal node
 // descriptions need more fullstops to allow content to break for twitter
 // descriptions need splitting out for aquatic and night flowering plants
 // add more flower variation
 // vary colour of petals between each individual flower head
 // add more leaf variation
 // pull in countries and gods (from Pantheon) from database
-
+// optional fruits. fruit colours. split out fruits from description and only use if the plant has any
+// night flowering descriptions
 // Virtues text - replace illnesses, body parts, plant parts, god's names, other plant names, regional names, peoples, references to petal colours, common name, variant names, regions, dates
 
 // ---------------------------------------
@@ -34,13 +35,10 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/functions.php");
 function sendToTwitter() {
 	global $latinName, $startingText, $plantURL, $commonNameString, $commonNamesJoined, $isAquatic, $isNight, $storedSeed, $connection;
 
+include("auth.php");
 
 
 
-define("CONSUMER_KEY", "tullZGE4wkZibDnr6aXKuFGQ0");
-define("CONSUMER_SECRET","y1S7rffnenpYRJtDQxSv8a5bq3QhAAafqJzEaCQq0nDtw3XtAS");
-define("OAUTH_TOKEN", "703148355749171202-mwDglZzCgERUC6u7DshkqyPrK7nSrkK");
-define("OAUTH_SECRET", "7f8t7rXScvWIk1AgXe20Z6AA9vRCaG7Vp2wJM964bZMEj");
 $twitterConnection = new TwitterOAuth(CONSUMER_KEY, CONSUMER_SECRET, OAUTH_TOKEN, OAUTH_SECRET);
 $twitterConnection->setTimeouts(10, 15);
 
@@ -1337,7 +1335,7 @@ $colourVariation = (mt_rand(1,40))-40;
 $colourVariation = (mt_rand(1,80))-40;
 }
 $lighterNames = array("light","bright","pale");
-$darkerNames = array("dark","deep");
+$darkerNames = array("dark","deep", "sombre");
 if($colourVariation>20) {
 	$displayPetalColourName = $lighterNames[mt_rand(0, count($lighterNames) - 1)]." ".$displayPetalColourName;
 } else if($colourVariation<-20) {
