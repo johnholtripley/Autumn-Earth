@@ -697,6 +697,13 @@ for ($k=0;$k<$numberOfLeafVariationsToDraw;$k++) {
 }
 
 
+
+// prepare flower graphic - pick a flower type:
+$whichFlowerType = mt_rand(1,2);
+
+switch ($whichFlowerType) {
+	case 1:
+// star petal type
 $petalBrushSize = 2;
 	$petalBrush = imagecreate($petalBrushSize,$petalBrushSize);
 	$petalBrushtrans = imagecolorallocate($petalBrush, 0, 0, 0);
@@ -705,10 +712,10 @@ $petalBrushSize = 2;
 	imagefilledellipse($petalBrush, $petalBrushSize/2, $petalBrushSize/2, $petalBrushSize,$petalBrushSize, $thisPetalColour);
 
 
-// prepare flower graphic:
+
 $numberOfFlowerVariationsToDraw = 1;
 $flowerCanvasSize = 90;
-for ($k=0;$k<count($numberOfFlowerVariationsToDraw);$k++) {
+for ($k=0;$k<$numberOfFlowerVariationsToDraw;$k++) {
 	${'flower'.$k} = imagecreate($flowerCanvasSize,$flowerCanvasSize);
 	$flowerTrans = imagecolorallocate(${'flower'.$k}, 0, 0, 0);
 	imagecolortransparent(${'flower'.$k}, $flowerTrans);
@@ -755,6 +762,48 @@ for ($k=0;$k<count($numberOfFlowerVariationsToDraw);$k++) {
 	imagefilledellipse ( ${'flower'.$k} , $centreX, $centreY , $flowerCanvasSize/6 , $flowerCanvasSize/6 , imagecolorallocate(${'flower'.$k}, 184,126,80 ) );
 	// end star draw routine
 }
+
+
+break;
+case 2:
+//radiating circles type (dandelion?)
+$numberOfFlowerVariationsToDraw = 3;
+$flowerCanvasSize = 90;
+for ($k=0;$k<$numberOfFlowerVariationsToDraw;$k++) {
+	${'flower'.$k} = imagecreate($flowerCanvasSize,$flowerCanvasSize);
+	$flowerTrans = imagecolorallocate(${'flower'.$k}, 0, 0, 0);
+	imagecolortransparent(${'flower'.$k}, $flowerTrans);
+	// draw central circle:
+//imagefilledellipse ( ${'flower'.$k} , $flowerCanvasSize/2 , $flowerCanvasSize/2 , $flowerCanvasSize/5, $flowerCanvasSize/5, imagecolorallocate(${'flower'.$k}, $petalRed, $petalGreen, $petalBlue) );
+
+$numberOfSpokes = mt_rand(5,12);
+$numberOfSpokes = 8;
+$lengthOfSpoke = 30;
+$spokeHeadRadius = 20;
+$angleInc = 2*M_PI/$numberOfSpokes;
+// make the stalks not be too vertical or horizontal:
+$angleOffset = mt_rand(0,100)/100;
+
+$stalkColour = imagecolorallocate(${'flower'.$k}, 6,42,30 );
+$petalColour = imagecolorallocate(${'flower'.$k}, $petalRed, $petalGreen, $petalBlue );
+
+for ($i=0; $i<$numberOfSpokes; $i++) {
+	$endX = $flowerCanvasSize/2 + $lengthOfSpoke*cos($angleInc*$i+$angleOffset);
+$endY = $flowerCanvasSize/2 + $lengthOfSpoke*sin($angleInc*$i+$angleOffset);
+imageline ( ${'flower'.$k} , $flowerCanvasSize/2, $flowerCanvasSize/2 , $endX, $endY , $stalkColour);
+imagefilledellipse(${'flower'.$k}, $endX, $endY, $spokeHeadRadius, $spokeHeadRadius, $petalColour);
+imageellipse(${'flower'.$k}, $endX, $endY, $spokeHeadRadius, $spokeHeadRadius, $stalkColour);
+}
+
+}
+
+
+break;
+}
+
+
+
+
 
 
 
@@ -923,7 +972,10 @@ imagecopy($imageResampled, $textureOverlay, 0, 0, 0, 0, $outputCanvaDimension, $
 	imagedestroy($plantCanvas);
 	imagedestroy($textureOverlay);
 	imagedestroy($imageResampled);
+
+if(isset($petalBrush)) {
 imagedestroy($petalBrush);
+}
 
 for ($i=0;$i<count($brushColours);$i++) {
 	for ($j=0;$j<count($brushSizes);$j++) {
