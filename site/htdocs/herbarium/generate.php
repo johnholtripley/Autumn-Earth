@@ -86,7 +86,10 @@ $result = $twitterConnection->post('media/metadata/create', $parameters);
 var_dump($result);
 */
 $textString = $latinName."\r\n".$commonNameString;
-$textString .= "\r\n".strip_tags($startingText);
+// removing the paragraph tags means a space is needed between the sentences:
+$startingTextCorrected = str_replace('</p>', ' ', $startingText);
+
+$textString .= "\r\n".strip_tags($startingTextCorrected);
 
 
 // twitter doesn't handle html entities:
@@ -138,6 +141,7 @@ if(!$debug) {
 
 
 if(!$debug) {
+
 $query = "INSERT INTO tblplants (latinName,commonNames,commonNamesJoined,timeCreated,plantDesc,plantUrl,tweetedContent,isAquatic,isNight,plantSeed)
 VALUES ('" . $latinName . "','" . $commonNameString . "','" . $commonNamesJoined . "',NOW(),'".$startingText."','".$plantURL."','".mysqli_real_escape_string($connection,$textString)."','".$isAquatic."','".$isNight."','".$storedSeed."')";
 
@@ -667,6 +671,13 @@ quadBezier($plantCanvas, $previousX, $previousY,$thisPoint[0], $thisPoint[1], $t
 include($_SERVER['DOCUMENT_ROOT']."/includes/herbarium/leaf-colours.php");
 $thisLeafColour = $leafColours[mt_rand(0, count($leafColours) - 1)];
 
+
+// prepare leaf graphic - pick a leaf type:
+$whichLeafType = mt_rand(1,2);
+switch ($whichLeafType) {
+	case 1:
+// simple broad leaf type
+
 $numberOfLeafVariationsToDraw = 4;
 $leafCanvasWidth = 100;
 $leafCanvasHeight = 100;
@@ -715,6 +726,54 @@ $thisLeafBlue = capValues($thisLeafBlue,0,255);
 	imageline ( ${'leaf'.$k} , $leafCanvasWidth/2, $leafCanvasHeight/2 , $leafCanvasWidth/2, $leafInset , imagecolorallocate(${'leaf'.$k}, 6,42,30 ));
 	// ###
 	
+}
+
+break;
+case 2:
+// radiating tear drop shape (clover?)
+
+$numberOfLeafVariationsToDraw = 1;
+$leafCanvasWidth = 100;
+$leafCanvasHeight = 100;
+
+for ($k=0;$k<$numberOfLeafVariationsToDraw;$k++) {
+
+	${'leaf'.$k} = imagecreate($leafCanvasWidth,$leafCanvasHeight);
+
+	$leafTrans = imagecolorallocate(${'leaf'.$k}, 0, 0, 0);
+	imagecolortransparent(${'leaf'.$k}, $leafTrans);
+
+// create variation in the leaf colour:
+$darkenOrLighten = mt_rand(0,1);
+$colourAdjustAmount = mt_rand(4,24);
+if($darkenOrLighten == 0) {
+$colourAdjustAmount = 0-$colourAdjustAmount;
+}
+$thisLeafRed = $thisLeafColour[0]+$colourAdjustAmount;
+$thisLeafGreen = $thisLeafColour[1]+$colourAdjustAmount;
+$thisLeafBlue = $thisLeafColour[2]+$colourAdjustAmount;
+
+$thisLeafRed = capValues($thisLeafRed,0,255);
+$thisLeafGreen = capValues($thisLeafGreen,0,255);
+$thisLeafBlue = capValues($thisLeafBlue,0,255);
+
+${'leafColour'.$k} = imagecolorallocate(${'leaf'.$k}, $thisLeafRed, $thisLeafGreen, $thisLeafBlue);
+
+	${'leafBrush'.$k} = imagecreate(6,6);
+	$leafBrushTrans = imagecolorallocate(${'leafBrush'.$k}, 0, 0, 0);
+	imagecolortransparent(${'leafBrush'.$k}, $leafBrushTrans);
+	${'leafBrushColour'.$k} = imagecolorallocate(${'leafBrush'.$k}, $thisLeafRed, $thisLeafGreen, $thisLeafBlue);
+	imagefilledellipse(${'leafBrush'.$k}, 3,3,6,6, ${'leafBrushColour'.$k});
+	imagesetbrush(${'leaf'.$k}, ${'leafBrush'.$k});
+
+	// draw multiple leaf heads rotating from the centre:
+	// john #########
+
+	}
+
+
+break;
+
 }
 
 
@@ -1020,7 +1079,7 @@ for ($i=0;$i<count($brushColours);$i++) {
 	imagedestroy(${'brushcol'.$i.'size'.$j});
 	}
 }
-for ($k=0;$k<count($numberOfLeafVariationsToDraw);$k++) {
+for ($k=0;$k<$numberOfLeafVariationsToDraw;$k++) {
 imagedestroy(${'leaf'.$k});
 imagedestroy(${'leafBrush'.$k});
 }
