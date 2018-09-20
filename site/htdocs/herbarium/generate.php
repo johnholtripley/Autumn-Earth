@@ -159,7 +159,7 @@ $result = mysqli_query($connection, $query) or die ("couldn't execute tblplant q
 
 
 
-function drawTeardrop($imageResource, $pointPosX, $pointPosY, $width, $height, $rotationDegrees, $outlineColour, $outlineThickness, $fillColour) {
+function drawPrimitive($primitiveType, $imageResource, $pointPosX, $pointPosY, $width, $height, $rotationDegrees, $outlineColour, $outlineThickness, $fillColour) {
 	// create a new image, so the fill doesn't get blocked by existing images underneath
 	// canvas is double size, so centre of it is the 0,0 position for rotation
 	$primativeCanvas = imagecreate($width*2,$height*2);
@@ -172,29 +172,36 @@ function drawTeardrop($imageResource, $pointPosX, $pointPosY, $width, $height, $
 	$thisColour = imagecolorallocate($primativeBrush, $outlineColour[0], $outlineColour[1], $outlineColour[2]);
 	imagefilledellipse($primativeBrush, $outlineThickness/2,$outlineThickness/2,$outlineThickness,$outlineThickness, $thisColour);
 	imagesetbrush($primativeCanvas, $primativeBrush);
+	
+
+	switch ($primitiveType) {
+	case 'teardrop':
 	quadBezier($primativeCanvas, $width, $height, $width*2, $height*2, $width,$height*2);
 	quadBezier($primativeCanvas, $width, $height, 0, $height*2, $width,$height*2);
+break;
+	case 'heart':
+	quadBezier($primativeCanvas, $width, $height, $width*2, $height*2, $width,$height*1.5);
+	quadBezier($primativeCanvas, $width, $height, 0, $height*2, $width,$height*1.5);
+break;
+}
+
 	if($fillColour != NULL) {
 		// if $fillColour is NULL, then don't fill:
-		imagefill($primativeCanvas, $width, $height+($height/2), imagecolorallocate($primativeCanvas, $fillColour[0],$fillColour[1], $fillColour[2]));
+		imagefill($primativeCanvas, $width, $height*1.3, imagecolorallocate($primativeCanvas, $fillColour[0],$fillColour[1], $fillColour[2]));
 	}
-
 
 	if($rotationDegrees != 0) {
 		$pngTransparency = imagecolorallocatealpha($primativeCanvas , 0, 0, 0, 127);
-	imagefill($primativeCanvas , 0, 0, $pngTransparency);
+		imagefill($primativeCanvas , 0, 0, $pngTransparency);
 		$rotatedPrimative = imagerotate($primativeCanvas, $rotationDegrees, $pngTransparency);
-imagecopy ($imageResource, $rotatedPrimative, $pointPosX-$width, $pointPosY-$height, 0, 0, $width*2, $height*2);
-imagedestroy($rotatedPrimative);
+		imagecopy ($imageResource, $rotatedPrimative, $pointPosX-$width, $pointPosY-$height, 0, 0, $width*2, $height*2);
+		imagedestroy($rotatedPrimative);
 	} else {
+		// draw this canvas to the source:
 		imagecopy ($imageResource, $primativeCanvas, $pointPosX-$width, $pointPosY-$height, 0, 0, $width*2, $height*2);
 	}
-
-	// draw this canvas to the source:
-	
 	imagedestroy($primativeBrush);
 	imagedestroy($primativeCanvas);
-	
 }
 
 
@@ -1047,10 +1054,10 @@ $rotatedLeaf = imagerotate(${$whichElementToUse}, $thisRotation, $pngTransparenc
 }
 
 
-drawTeardrop($plantCanvas, $canvaDimension/2, $canvaDimension/2, 120, 120, 0, [255,255,0], 6, [255,0,0]);
-drawTeardrop($plantCanvas, $canvaDimension/2, $canvaDimension/2, 120, 120, 90, [255,255,0], 6, [255,0,0]);
-drawTeardrop($plantCanvas, $canvaDimension/2, $canvaDimension/2, 120, 120, 180, [255,255,0], 6, [255,0,0]);
-drawTeardrop($plantCanvas, $canvaDimension/2, $canvaDimension/2, 120, 120, 270, [255,255,0], 6, [255,0,0]);
+drawPrimitive('teardrop',$plantCanvas, $canvaDimension/2, $canvaDimension/2, 120, 120, 0, [255,255,0], 6, [255,0,0]);
+drawPrimitive('heart',$plantCanvas, $canvaDimension/2, $canvaDimension/2, 120, 120, 90, [255,255,0], 6, [255,0,0]);
+drawPrimitive('teardrop',$plantCanvas, $canvaDimension/2, $canvaDimension/2, 120, 120, 180, [255,255,0], 6, [255,0,0]);
+drawPrimitive('heart',$plantCanvas, $canvaDimension/2, $canvaDimension/2, 120, 120, 270, [255,255,0], 6, [255,0,0]);
 
 
 
