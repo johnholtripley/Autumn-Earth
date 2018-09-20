@@ -15,6 +15,8 @@
 // Virtues text - replace illnesses, body parts, plant parts, god's names, other plant names, regional names, peoples, references to petal colours, common name, variant names, regions, dates
 // colour variation for star petals
 // for the dandelion seed head, the angle offset of the stalk should be relative to the size of the seed head, so there's no overlap
+// using the stepped brush sizes for the stem thicknesses shows where it jumps to the next size - it would be better to construct a single bezier curve for each edge and then fill the whole
+// create function for drawing primatives (teardrop, heart shape, egg shape, spiral, etc). pass in image to draw to, colour, size, rotation, filled (Y/N), outlined (Y/N), coords
 
 // ---------------------------------------
 
@@ -34,12 +36,8 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/functions.php");
 //}
 
 function sendToTwitter() {
-	global $latinName, $startingText, $plantURL, $commonNameString, $commonNamesJoined, $isAquatic, $isNight, $storedSeed, $connection, $debug;
-
-include("auth.php");
-
-
-
+	global $latinName, $startingText, $plantURL, $commonNameString, $commonNamesJoined, $isAquatic, $isNight, $storedSeed, $connection, $debug;include("auth.php");
+	
 $twitterConnection = new TwitterOAuth(CONSUMER_KEY, CONSUMER_SECRET, OAUTH_TOKEN, OAUTH_SECRET);
 $twitterConnection->setTimeouts(10, 15);
 
@@ -101,6 +99,7 @@ if(strlen($textString)>$characterLimit) {
 
 // ignore "St." - this shouldn't be the end of a sentence:
 $textString = str_replace("St. ", "+ST+", $textString);
+$textString = str_replace("viz. ", "+viz+", $textString);
 
 // find the first full stop before this limit
 $pos = strrpos($textString,".",0-(strlen($textString)-$characterLimit));
@@ -113,6 +112,7 @@ $textString = substr($textString, 0, $pos+1);
 
 // restore any St.:
 $textString = str_replace("+ST+", "St. ", $textString);
+$textString = str_replace("+viz+", "viz. ", $textString);
 
 }
 
@@ -153,11 +153,65 @@ $result = mysqli_query($connection, $query) or die ("couldn't execute tblplant q
 
 }
 
+
+
+
+
+
+
+function drawTeardrop($imageResource, $pointPosX, $pointPosY, $width, $height, $isRotated, $outlineColour, $outlineThickness, $fillColour) {
+
+// create a new image, so the fill doesn't get blocked by existing images underneath
+	// canvas is double size, so centre of it is the 0,0 position for rotation
+		$primativeCanvas = imagecreate($width*2,$height*2);
+	$primativeCanvasTrans = imagecolorallocate($primativeCanvas, 0, 0, 0);
+	imagecolortransparent($primativeCanvas, $primativeCanvasTrans);
+
+
+
+		$primativeBrush = imagecreate($outlineThickness,$outlineThickness);
+	$primativeBrushtrans = imagecolorallocate($primativeBrush, 0, 0, 0);
+	imagecolortransparent($primativeBrush, $primativeBrushtrans);
+	$thisColour = imagecolorallocate($primativeBrush, $outlineColour[0], $outlineColour[1], $outlineColour[2]);
+	imagefilledellipse($primativeBrush, $outlineThickness/2,$outlineThickness/2,$outlineThickness,$outlineThickness, $thisColour);
+imagesetbrush($primativeCanvas, $primativeBrush);
+
+
+//	quadBezier($primativeCanvas, $pointPosX, $pointPosY, $pointPosX+$width, $pointPosY+$height, $pointPosX,$pointPosY+$height);
+//	quadBezier($primativeCanvas, $pointPosX, $pointPosY, $pointPosX-$width, $pointPosY+$height, $pointPosX,$pointPosY+$height);
+
+
+quadBezier($primativeCanvas, $width, $height, $width*2, $height*2, $width,$height*2);
+quadBezier($primativeCanvas, $width, $height, 0, $height*2, $width,$height*2);
+
+
+	if($fillColour != NULL) {
+		// if $fillColour is NULL, then don't fill:
+		imagefill($primativeCanvas, $width, $height+($height/2), imagecolorallocate($primativeCanvas, $fillColour[0],$fillColour[1], $fillColour[2]));
+	}
+
+// draw this canvas to the source:
+	imagecopy ($imageResource, $primativeCanvas, $pointPosX-$width, $pointPosY-$height, 0, 0, $width*2, $height*2);
+
+
+imagedestroy($primativeBrush);
+imagedestroy($primativeCanvas);
+
+}
+
+
+
+
+
+
+
+
+
 function addPrefix($thisCommonName, $shouldForcePrefix) {
 	
 
 if($shouldForcePrefix) {
-$shouldAddPrefix = mt_rand(1,8);
+$shouldAddPrefix = mt_rand(1,10);
 } else {
 	$shouldAddPrefix = mt_rand(1,44);
 }
@@ -191,6 +245,9 @@ case 7:
             case 9:
          $thisCommonName = "Our Lady's ".$thisCommonName;
         break;
+case 10:
+$thisCommonName = "Creeping ".$thisCommonName;
+break;
     default:
        $thisCommonName = ucfirst($thisCommonName);
 } 
@@ -229,6 +286,7 @@ if(isset($_GET["debug"])) {
 
 
 function quadBezier($im, $x1, $y1, $x2, $y2, $x3, $y3) {
+	// x2 and y2 are the coords for the control point
 // php draw quad bezier:
 // https://spottedsun.com/quadratic-bezier-curve-in-php/
     $b = $pre1 = $pre2 = $pre3 = 0;
@@ -267,7 +325,15 @@ function createCommandString($axiom, $rules, $iterations) {
 		for ($j=0;$j<strlen($thisAxiom);$j++) {
 			$c = substr($thisAxiom,$j,1);
 			if(array_key_exists($c,$rules)) {
-				$result.=$rules[$c];
+				if(strrpos($rules[$c], "|") !== false) {
+$alternativeRule = explode("|",$rules[$c]);
+// add just 1 of the alternatives:
+$result.= $alternativeRule[mt_rand(0, count($alternativeRule) - 1)];
+
+				} else {
+					$result.=$rules[$c];
+				}
+				
 			} else {
 				// make sure leaves are only at terminal nodes: (is this test needed? leaves will alway be at the end of a sequence? ##)
 				if(!(($c=="L") && ($i!=$iterations))) {
@@ -304,6 +370,7 @@ $result = str_replace("X", "F", $result);
 	if($thisFSequence > 0) {
 		$commandString .= "F(".$thisFSequence .")";
 	}
+	
 return $commandString;
 }
 
@@ -311,7 +378,7 @@ return $commandString;
 function drawPlant() {
 	// thanks to http://www.kevs3d.co.uk/dev/lsystems/
 	global $iterations, $angle, $isAquatic, $isNight, $plantURL, $petalRed, $petalGreen, $petalBlue, $groundColour, $plantCanvas;
-	$canvaDimension = 2000;
+	$canvaDimension = 2500;
 	$outputCanvaDimension = 754;
 	$plantCanvas = imagecreatetruecolor($canvaDimension, $canvaDimension);
 	$groundColour = array(219, 215, 190);
@@ -355,14 +422,19 @@ for ($i=0;$i<count($rootColours);$i++) {
 	$axiom = "X";
 
 	// $allPossibleRules = array(array("X"=>"S2X[+X]X[-X]X"),array("X"=>"S2X[+X]X[-X][X]"),array("X"=>"S3XX-[-X+X+X]+[+X-X-X]"),array("X"=>"S2F[+X]F[-X]+X","F"=>"FF"),array("X"=>"S2F[+X][-X]FX","F"=>"FF"),array("X"=>"S2F-[[X]+X]+F[+FX]-X","F"=>"FF"));
-$allPossibleRules = array(array("X"=>"F","F"=>"FF[+FL][-FL][++FL][--FL]"), array("X"=>"F","F"=>"FF[+FFL][-FFL]"), array("X"=>"F","F"=>"FF[+FL][-FL]"));
+	// a pipe means 'or'
+$allPossibleRules = array(array("X"=>"F","F"=>"FF[+FL][-FL]|FF[+FFL][-FFL]"), array("X"=>"F","F"=>"FF[+FFL][-FFL]|FF[+FL][-FFL]|FF[+FFL][-FL]"), array("X"=>"F","F"=>"FF[+FL][-FL]|FF[++FL][-FL]|FF[+FL][--FL]"));
+
+
+
+
 
 	$allPossibleRuleIterations = array(4,3,4);
 $allPossibleRuleDistances = array(50,50,40);
 
 	//$startAngle = mt_rand (-20,20);
 	$startAngle = 0;
-	$angle = mt_rand(12,40);
+	$angle = mt_rand(22,40);
 
 
 
@@ -668,19 +740,29 @@ quadBezier($plantCanvas, $previousX, $previousY,$thisPoint[0], $thisPoint[1], $t
 
 // draw leaves:
 
+
+/*
+heart shaped bezier:
+	quadBezier(${'leaf'.$k}, $leafCanvasWidth/2, $leafCanvasHeight/2, $leafCanvasWidth-$leafInset, $leafCanvasHeight-$leafInset, $leafCanvasWidth/2,$leafInset);
+	quadBezier(${'leaf'.$k}, $leafCanvasWidth/2, $leafCanvasHeight/2, $leafInset, $leafCanvasHeight-$leafInset, $leafCanvasWidth/2,$leafInset);
+*/
+
 include($_SERVER['DOCUMENT_ROOT']."/includes/herbarium/leaf-colours.php");
 $thisLeafColour = $leafColours[mt_rand(0, count($leafColours) - 1)];
 
 
 // prepare leaf graphic - pick a leaf type:
 $whichLeafType = mt_rand(1,2);
+$whichLeafType = 1;
+
+
 switch ($whichLeafType) {
 	case 1:
 // simple broad leaf type
 
 $numberOfLeafVariationsToDraw = 4;
 $leafCanvasWidth = 100;
-$leafCanvasHeight = 100;
+$leafCanvasHeight = mt_rand(100,170);
 $leafInset = 10;
 for ($k=0;$k<$numberOfLeafVariationsToDraw;$k++) {
 
@@ -718,24 +800,27 @@ $thisLeafBlue = capValues($thisLeafBlue,0,255);
 	imagesetbrush(${'leaf'.$k}, ${'leafBrush'.$k});
 
 
-	// ###
+	
 	// leaf start needs to be the centre of the leaf image so it can be positioned correctly
 	quadBezier(${'leaf'.$k}, $leafCanvasWidth/2, $leafCanvasHeight/2, $leafCanvasWidth-$leafInset, $leafCanvasHeight/2-$leafInset, $leafCanvasWidth/2,$leafInset);
 	quadBezier(${'leaf'.$k}, $leafCanvasWidth/2, $leafCanvasHeight/2, $leafInset, $leafCanvasHeight/2-$leafInset, $leafCanvasWidth/2,$leafInset);
 	imagefill(${'leaf'.$k}, $leafCanvasWidth/2, $leafCanvasHeight/2-$leafInset*2, ${'leafBrushColour'.$k});
 	imageline ( ${'leaf'.$k} , $leafCanvasWidth/2, $leafCanvasHeight/2 , $leafCanvasWidth/2, $leafInset , imagecolorallocate(${'leaf'.$k}, 6,42,30 ));
-	// ###
+	
+	// can vary this to get heart shaped, double bladed and teardrop shapes ### 
+	
 	
 }
 
 break;
+/*
 case 2:
 // radiating tear drop shape (clover?)
 
 $numberOfLeafVariationsToDraw = 1;
 $leafCanvasWidth = 100;
-$leafCanvasHeight = 100;
-
+$leafCanvasHeight = 140;
+$leafInset = 10;
 for ($k=0;$k<$numberOfLeafVariationsToDraw;$k++) {
 
 	${'leaf'.$k} = imagecreate($leafCanvasWidth,$leafCanvasHeight);
@@ -767,13 +852,16 @@ ${'leafColour'.$k} = imagecolorallocate(${'leaf'.$k}, $thisLeafRed, $thisLeafGre
 	imagesetbrush(${'leaf'.$k}, ${'leafBrush'.$k});
 
 	// draw multiple leaf heads rotating from the centre:
+	quadBezier(${'leaf'.$k}, $leafCanvasWidth/2, $leafCanvasHeight/2, $leafCanvasWidth-$leafInset, $leafInset*2, $leafCanvasWidth/2,$leafInset);
+	quadBezier(${'leaf'.$k}, $leafCanvasWidth/2, $leafCanvasHeight/2, $leafInset, $leafInset*2, $leafCanvasWidth/2,$leafInset);
+	imagefill(${'leaf'.$k}, $leafCanvasWidth/2, $leafCanvasHeight/2-$leafInset*2, ${'leafBrushColour'.$k});
 	// john #########
 
 	}
 
 
 break;
-
+*/
 }
 
 
@@ -961,6 +1049,7 @@ $rotatedLeaf = imagerotate(${$whichElementToUse}, $thisRotation, $pngTransparenc
 }
 
 
+drawTeardrop($plantCanvas, $canvaDimension/2, $canvaDimension/2, 40, 120, false, [255,255,0], 6, [255,0,0]);
 
 
 
@@ -1059,6 +1148,11 @@ imagefilledrectangle($imageResampled, 0, 0, $outputCanvaDimension, $outputCanvaD
 imagecopyresampled($imageResampled, $plantCanvas, $destOffsetX, $destOffsetY, $limitMinX, $limitMinY, $outputCanvaDimension-($spacing*2), $outputCanvaDimension-($spacing*2), $longestSourceDimension, $longestSourceDimension);
 
 
+
+
+
+
+
 // add a texture overlay:
 	$textureOverlay = imagecreatefrompng($_SERVER['DOCUMENT_ROOT']."/images/herbarium/overlays/watercolour.png");
 imageAlphaBlending($textureOverlay, false);
@@ -1083,6 +1177,12 @@ for ($k=0;$k<$numberOfLeafVariationsToDraw;$k++) {
 imagedestroy(${'leaf'.$k});
 imagedestroy(${'leafBrush'.$k});
 }
+
+
+
+
+
+
 
 
 }
