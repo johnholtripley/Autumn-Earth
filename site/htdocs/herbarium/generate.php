@@ -18,6 +18,9 @@
 // using the stepped brush sizes for the stem thicknesses shows where it jumps to the next size - it would be better to construct a single bezier curve for each edge and then fill the whole
 // create function for drawing primatives (teardrop, heart shape, egg shape, spiral, etc). pass in image to draw to, colour, size, rotation, filled (Y/N), outlined (Y/N), coords
 
+
+// adjust primitive centre point after rotation so it's drawn in the correct position
+
 // ---------------------------------------
 
 
@@ -176,14 +179,14 @@ function drawPrimitive($primitiveType, $imageResource, $pointPosX, $pointPosY, $
 
 	switch ($primitiveType) {
 	case 'teardrop':
-	quadBezier($primativeCanvas, $width, $height, $width*2, $height*2, $width,$height*2);
-	quadBezier($primativeCanvas, $width, $height, 0, $height*2, $width,$height*2);
-break;
+		quadBezier($primativeCanvas, $width, $height, $width*2, $height*2, $width,$height*2);
+		quadBezier($primativeCanvas, $width, $height, 0, $height*2, $width,$height*2);
+		break;
 	case 'heart':
-	quadBezier($primativeCanvas, $width, $height, $width*2, $height*2, $width,$height*1.5);
-	quadBezier($primativeCanvas, $width, $height, 0, $height*2, $width,$height*1.5);
-break;
-}
+		quadBezier($primativeCanvas, $width, $height, $width*2, $height*2, $width,$height*1.5);
+		quadBezier($primativeCanvas, $width, $height, 0, $height*2, $width,$height*1.5);
+		break;
+	}
 
 	if($fillColour != NULL) {
 		// if $fillColour is NULL, then don't fill:
@@ -194,7 +197,11 @@ break;
 		$pngTransparency = imagecolorallocatealpha($primativeCanvas , 0, 0, 0, 127);
 		imagefill($primativeCanvas , 0, 0, $pngTransparency);
 		$rotatedPrimative = imagerotate($primativeCanvas, $rotationDegrees, $pngTransparency);
-		imagecopy ($imageResource, $rotatedPrimative, $pointPosX-$width, $pointPosY-$height, 0, 0, $width*2, $height*2);
+
+$rotatedPrimitiveWidth = imagesx($rotatedPrimative);
+	$rotatedPrimitiveHeight = imagesy($rotatedPrimative);
+// central point is changed in the rotation #########
+		imagecopy ($imageResource, $rotatedPrimative, $pointPosX-$width, $pointPosY-$height, 0, 0, $rotatedPrimitiveWidth, $rotatedPrimitiveHeight);
 		imagedestroy($rotatedPrimative);
 	} else {
 		// draw this canvas to the source:
@@ -1054,10 +1061,13 @@ $rotatedLeaf = imagerotate(${$whichElementToUse}, $thisRotation, $pngTransparenc
 }
 
 
-drawPrimitive('teardrop',$plantCanvas, $canvaDimension/2, $canvaDimension/2, 120, 120, 0, [255,255,0], 6, [255,0,0]);
-drawPrimitive('heart',$plantCanvas, $canvaDimension/2, $canvaDimension/2, 120, 120, 90, [255,255,0], 6, [255,0,0]);
-drawPrimitive('teardrop',$plantCanvas, $canvaDimension/2, $canvaDimension/2, 120, 120, 180, [255,255,0], 6, [255,0,0]);
-drawPrimitive('heart',$plantCanvas, $canvaDimension/2, $canvaDimension/2, 120, 120, 270, [255,255,0], 6, [255,0,0]);
+drawPrimitive('teardrop',$plantCanvas, $canvaDimension/2, $canvaDimension/2, 120, 180, 240, [255,255,0], 6, [255,0,0]);
+drawPrimitive('teardrop',$plantCanvas, $canvaDimension/2, $canvaDimension/2, 120, 180, 120, [255,255,0], 6, [255,0,0]);
+drawPrimitive('teardrop',$plantCanvas, $canvaDimension/2, $canvaDimension/2, 120, 180, 0, [255,255,0], 6, [255,0,0]);
+//drawPrimitive('teardrop',$plantCanvas, $canvaDimension/2, $canvaDimension/2, 120, 120, 0, [255,255,0], 6, [255,0,0]);
+//drawPrimitive('heart',$plantCanvas, $canvaDimension/2, $canvaDimension/2, 120, 120, 90, [255,255,0], 6, [255,0,0]);
+//drawPrimitive('teardrop',$plantCanvas, $canvaDimension/2, $canvaDimension/2, 120, 120, 180, [255,255,0], 6, [255,0,0]);
+//drawPrimitive('heart',$plantCanvas, $canvaDimension/2, $canvaDimension/2, 120, 120, 270, [255,255,0], 6, [255,0,0]);
 
 
 
