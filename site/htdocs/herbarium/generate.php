@@ -16,7 +16,7 @@
 // colour variation for star petals
 // for the dandelion seed head, the angle offset of the stalk should be relative to the size of the seed head, so there's no overlap
 // using the stepped brush sizes for the stem thicknesses shows where it jumps to the next size - it would be better to construct a single bezier curve for each edge and then fill the whole
-// create function for drawing primatives (teardrop, heart shape, egg shape, spiral, etc). pass in image to draw to, colour, size, rotation, filled (Y/N), outlined (Y/N), coords
+// create function for drawing primitives (teardrop, heart shape, egg shape, spiral, etc). pass in image to draw to, colour, size, rotation, filled (Y/N), outlined (Y/N), coords
 
 
 // adjust primitive centre point after rotation so it's drawn in the correct position
@@ -165,50 +165,50 @@ $result = mysqli_query($connection, $query) or die ("couldn't execute tblplant q
 function drawPrimitive($primitiveType, $imageResource, $pointPosX, $pointPosY, $width, $height, $rotationDegrees, $outlineColour, $outlineThickness, $fillColour) {
 	// create a new image, so the fill doesn't get blocked by existing images underneath
 	// canvas is double size, so centre of it is the 0,0 position for rotation
-	$primativeCanvas = imagecreate($width*2,$height*2);
-	$primativeCanvasTrans = imagecolorallocate($primativeCanvas, 0, 0, 0);
-	imagecolortransparent($primativeCanvas, $primativeCanvasTrans);
+	$primitiveCanvas = imagecreate($width*2,$height*2);
+	$primitiveCanvasTrans = imagecolorallocate($primitiveCanvas, 0, 0, 0);
+	imagecolortransparent($primitiveCanvas, $primitiveCanvasTrans);
 	// create brush for line:
-	$primativeBrush = imagecreate($outlineThickness,$outlineThickness);
-	$primativeBrushtrans = imagecolorallocate($primativeBrush, 0, 0, 0);
-	imagecolortransparent($primativeBrush, $primativeBrushtrans);
-	$thisColour = imagecolorallocate($primativeBrush, $outlineColour[0], $outlineColour[1], $outlineColour[2]);
-	imagefilledellipse($primativeBrush, $outlineThickness/2,$outlineThickness/2,$outlineThickness,$outlineThickness, $thisColour);
-	imagesetbrush($primativeCanvas, $primativeBrush);
+		 = imagecreate($outlineThickness,$outlineThickness);
+	$primitiveBrushtrans = imagecolorallocate($primitiveBrush, 0, 0, 0);
+	imagecolortransparent($primitiveBrush, $primitiveBrushtrans);
+	$thisColour = imagecolorallocate($primitiveBrush, $outlineColour[0], $outlineColour[1], $outlineColour[2]);
+	imagefilledellipse($primitiveBrush, $outlineThickness/2,$outlineThickness/2,$outlineThickness,$outlineThickness, $thisColour);
+	imagesetbrush($primitiveCanvas, $primitiveBrush);
 	
 
 	switch ($primitiveType) {
 	case 'teardrop':
-		quadBezier($primativeCanvas, $width, $height, $width*2, $height*2, $width,$height*2);
-		quadBezier($primativeCanvas, $width, $height, 0, $height*2, $width,$height*2);
+		quadBezier($primitiveCanvas, $width, $height, $width*2, $height*2, $width,$height*2);
+		quadBezier($primitiveCanvas, $width, $height, 0, $height*2, $width,$height*2);
 		break;
 	case 'heart':
-		quadBezier($primativeCanvas, $width, $height, $width*2, $height*2, $width,$height*1.5);
-		quadBezier($primativeCanvas, $width, $height, 0, $height*2, $width,$height*1.5);
+		quadBezier($primitiveCanvas, $width, $height, $width*2, $height*2, $width,$height*1.5);
+		quadBezier($primitiveCanvas, $width, $height, 0, $height*2, $width,$height*1.5);
 		break;
 	}
 
 	if($fillColour != NULL) {
 		// if $fillColour is NULL, then don't fill:
-		imagefill($primativeCanvas, $width, $height*1.3, imagecolorallocate($primativeCanvas, $fillColour[0],$fillColour[1], $fillColour[2]));
+		imagefill($primitiveCanvas, $width, $height*1.3, imagecolorallocate($primitiveCanvas, $fillColour[0],$fillColour[1], $fillColour[2]));
 	}
 
 	if($rotationDegrees != 0) {
-		$pngTransparency = imagecolorallocatealpha($primativeCanvas , 0, 0, 0, 127);
-		imagefill($primativeCanvas , 0, 0, $pngTransparency);
-		$rotatedPrimative = imagerotate($primativeCanvas, $rotationDegrees, $pngTransparency);
+		$pngTransparency = imagecolorallocatealpha($primitiveCanvas , 0, 0, 0, 127);
+		imagefill($primitiveCanvas , 0, 0, $pngTransparency);
+		$rotatedPrimitive = imagerotate($primitiveCanvas, $rotationDegrees, $pngTransparency);
 
-$rotatedPrimitiveWidth = imagesx($rotatedPrimative);
-	$rotatedPrimitiveHeight = imagesy($rotatedPrimative);
+$rotatedPrimitiveWidth = imagesx($rotatedPrimitive);
+	$rotatedPrimitiveHeight = imagesy($rotatedPrimitive);
 // central point is changed in the rotation #########
-		imagecopy ($imageResource, $rotatedPrimative, $pointPosX-$width, $pointPosY-$height, 0, 0, $rotatedPrimitiveWidth, $rotatedPrimitiveHeight);
-		imagedestroy($rotatedPrimative);
+		imagecopy ($imageResource, $rotatedPrimitive, $pointPosX-$width, $pointPosY-$height, 0, 0, $rotatedPrimitiveWidth, $rotatedPrimitiveHeight);
+		imagedestroy($rotatedPrimitive);
 	} else {
 		// draw this canvas to the source:
-		imagecopy ($imageResource, $primativeCanvas, $pointPosX-$width, $pointPosY-$height, 0, 0, $width*2, $height*2);
+		imagecopy ($imageResource, $primitiveCanvas, $pointPosX-$width, $pointPosY-$height, 0, 0, $width*2, $height*2);
 	}
-	imagedestroy($primativeBrush);
-	imagedestroy($primativeCanvas);
+	imagedestroy($primitiveBrush);
+	imagedestroy($primitiveCanvas);
 }
 
 
