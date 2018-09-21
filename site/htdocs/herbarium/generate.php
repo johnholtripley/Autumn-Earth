@@ -169,13 +169,12 @@ function drawPrimitive($primitiveType, $imageResource, $pointPosX, $pointPosY, $
 	$primitiveCanvasTrans = imagecolorallocate($primitiveCanvas, 0, 0, 0);
 	imagecolortransparent($primitiveCanvas, $primitiveCanvasTrans);
 	// create brush for line:
-		 = imagecreate($outlineThickness,$outlineThickness);
+	$primitiveBrush = imagecreate($outlineThickness,$outlineThickness);
 	$primitiveBrushtrans = imagecolorallocate($primitiveBrush, 0, 0, 0);
 	imagecolortransparent($primitiveBrush, $primitiveBrushtrans);
 	$thisColour = imagecolorallocate($primitiveBrush, $outlineColour[0], $outlineColour[1], $outlineColour[2]);
 	imagefilledellipse($primitiveBrush, $outlineThickness/2,$outlineThickness/2,$outlineThickness,$outlineThickness, $thisColour);
 	imagesetbrush($primitiveCanvas, $primitiveBrush);
-	
 
 	switch ($primitiveType) {
 	case 'teardrop':
@@ -197,11 +196,9 @@ function drawPrimitive($primitiveType, $imageResource, $pointPosX, $pointPosY, $
 		$pngTransparency = imagecolorallocatealpha($primitiveCanvas , 0, 0, 0, 127);
 		imagefill($primitiveCanvas , 0, 0, $pngTransparency);
 		$rotatedPrimitive = imagerotate($primitiveCanvas, $rotationDegrees, $pngTransparency);
-
-$rotatedPrimitiveWidth = imagesx($rotatedPrimitive);
-	$rotatedPrimitiveHeight = imagesy($rotatedPrimitive);
-// central point is changed in the rotation #########
-		imagecopy ($imageResource, $rotatedPrimitive, $pointPosX-$width, $pointPosY-$height, 0, 0, $rotatedPrimitiveWidth, $rotatedPrimitiveHeight);
+		$rotatedPrimitiveWidth = imagesx($rotatedPrimitive);
+		$rotatedPrimitiveHeight = imagesy($rotatedPrimitive);
+		imagecopy ($imageResource, $rotatedPrimitive, $pointPosX-$rotatedPrimitiveWidth/2, $pointPosY-$rotatedPrimitiveHeight/2, 0, 0, $rotatedPrimitiveWidth, $rotatedPrimitiveHeight);
 		imagedestroy($rotatedPrimitive);
 	} else {
 		// draw this canvas to the source:
