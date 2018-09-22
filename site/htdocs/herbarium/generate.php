@@ -159,11 +159,17 @@ $result = mysqli_query($connection, $query) or die ("couldn't execute tblplant q
 
 
 // https://stackoverflow.com/questions/20104611/find-new-coordinates-of-a-point-after-rotation#answer-20105467
-function rotateCoordsY($oldX, $oldY, $rotation) {
-return $oldY*cos(deg2rad($rotation)) - $oldX*sin(deg2rad($rotation));
+function rotateCoordsY($oldX, $oldY, $rotation, $centreOffsetX, $centreOffsetY) {
+	$translatedCoordX = $oldX - $centreOffsetX;
+	$translatedCoordY = $oldY - $centreOffsetY;
+	$rotatedCoordY = $translatedCoordY*cos(deg2rad($rotation)) - $translatedCoordX*sin(deg2rad($rotation));
+return ($rotatedCoordY + $centreOffsetY);
 }
-function rotateCoordsX($oldX, $oldY, $rotation) {
-return $oldY*sin(deg2rad($rotation)) + $oldX*cos(deg2rad($rotation));
+function rotateCoordsX($oldX, $oldY, $rotation, $centreOffsetX, $centreOffsetY) {
+		$translatedCoordX = $oldX - $centreOffsetX;
+	$translatedCoordY = $oldY - $centreOffsetY;
+$rotatedCoordX = $translatedCoordY*sin(deg2rad($rotation)) + $translatedCoordX*cos(deg2rad($rotation));
+return $rotatedCoordX + $centreOffsetX;
 }
 
 
@@ -189,21 +195,15 @@ function drawPrimitive($primitiveType, $imageResource, $pointPosX, $pointPosY, $
 	case 'teardrop':
 
 
-
-
+//quadBezier($primitiveCanvas, $width, $height, $width*2, $height*2, $width,$height*2);
+//quadBezier($primitiveCanvas, $width, $height, 0, $height*2, $width,$height*2);
 
 
 // need to translate the coords so the centre is 0,0 not $width,$height, and then translate back after the coord rotation
 	// ##################
 
-		//quadBezier($primitiveCanvas, $width, $height, $width*2, $height*2, $width,$height*2);
-
-quadBezier($primitiveCanvas, $width, $height, rotateCoordsX($width*2, $height*2,$rotationDegrees), rotateCoordsY($width*2, $height*2,$rotationDegrees), rotateCoordsX($width,$height*2,$rotationDegrees), rotateCoordsY($width,$height*2,$rotationDegrees));
-
-
-		//quadBezier($primitiveCanvas, $width, $height, 0, $height*2, $width,$height*2);
-
-quadBezier($primitiveCanvas, $width, $height, rotateCoordsX(0, $height*2,$rotationDegrees),rotateCoordsY(0, $height*2,$rotationDegrees), rotateCoordsX($width,$height*2,$rotationDegrees),rotateCoordsY($width,$height*2,$rotationDegrees));
+quadBezier($primitiveCanvas, $width, $height, rotateCoordsX($width*2, $height*2,$rotationDegrees,$width, $height), rotateCoordsY($width*2, $height*2,$rotationDegrees,$width, $height), rotateCoordsX($width,$height*2,$rotationDegrees,$width, $height), rotateCoordsY($width,$height*2,$rotationDegrees,$width, $height));
+quadBezier($primitiveCanvas, $width, $height, rotateCoordsX(0, $height*2,$rotationDegrees,$width, $height),rotateCoordsY(0, $height*2,$rotationDegrees,$width, $height), rotateCoordsX($width,$height*2,$rotationDegrees,$width, $height),rotateCoordsY($width,$height*2,$rotationDegrees,$width, $height));
 
 
 		break;
