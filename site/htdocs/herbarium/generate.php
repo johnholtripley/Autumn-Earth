@@ -903,10 +903,10 @@ drawPrimitive('teardrop',${'leaf'.$k}, $leafCanvasWidth/2, $leafCanvasHeight/2, 
 
 
 
-drawPrimitive('teardrop',${'leaf'.$k}, $leafCanvasWidth/2, $leafCanvasHeight/2, $leafCanvasWidth/4, $leafCanvasHeight/4, 70, [$thisLeafRed,$thisLeafGreen,$thisLeafBlue], 6, [$thisLeafRed,$thisLeafGreen,$thisLeafBlue]);
+drawPrimitive('teardrop',${'leaf'.$k}, $leafCanvasWidth/2, $leafCanvasHeight/2, $leafCanvasWidth/4, $leafCanvasHeight/4, 180, [$thisLeafRed,$thisLeafGreen,$thisLeafBlue], 6, [$thisLeafRed,$thisLeafGreen,$thisLeafBlue]);
 drawPrimitive('teardrop',${'leaf'.$k}, $leafCanvasWidth/2, $leafCanvasHeight/2, $leafCanvasWidth/4, $leafCanvasHeight/4, 0, [$thisLeafRed,$thisLeafGreen,$thisLeafBlue], 6, [$thisLeafRed,$thisLeafGreen,$thisLeafBlue]);
-drawPrimitive('teardrop',${'leaf'.$k}, $leafCanvasWidth/2, $leafCanvasHeight/2, $leafCanvasWidth/4, $leafCanvasHeight/4, 280, [$thisLeafRed,$thisLeafGreen,$thisLeafBlue], 6, [$thisLeafRed,$thisLeafGreen,$thisLeafBlue]);
-drawPrimitive('teardrop',${'leaf'.$k}, $leafCanvasWidth/2, $leafCanvasHeight/2, $leafCanvasWidth/4, $leafCanvasHeight/4, 30, [$thisLeafRed,$thisLeafGreen,$thisLeafBlue], 6, [$thisLeafRed,$thisLeafGreen,$thisLeafBlue]);
+drawPrimitive('teardrop',${'leaf'.$k}, $leafCanvasWidth/2, $leafCanvasHeight/2, $leafCanvasWidth/4, $leafCanvasHeight/4, 315, [$thisLeafRed,$thisLeafGreen,$thisLeafBlue], 6, [$thisLeafRed,$thisLeafGreen,$thisLeafBlue]);
+drawPrimitive('teardrop',${'leaf'.$k}, $leafCanvasWidth/2, $leafCanvasHeight/2, $leafCanvasWidth/4, $leafCanvasHeight/4, 90, [$thisLeafRed,$thisLeafGreen,$thisLeafBlue], 6, [$thisLeafRed,$thisLeafGreen,$thisLeafBlue]);
 
 
 	}
