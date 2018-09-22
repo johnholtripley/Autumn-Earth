@@ -19,7 +19,8 @@
 // create function for drawing primitives (teardrop, heart shape, egg shape, spiral, etc). pass in image to draw to, colour, size, rotation, filled (Y/N), outlined (Y/N), coords
 
 
-// primitve rotation needs to be worked out using maths - NOT the imagerotate function
+// need to determine rotated canvas size for primitives so edges aren't clipped
+// then fill primitives again
 
 // ---------------------------------------
 
@@ -160,6 +161,7 @@ $result = mysqli_query($connection, $query) or die ("couldn't execute tblplant q
 
 // https://stackoverflow.com/questions/20104611/find-new-coordinates-of-a-point-after-rotation#answer-20105467
 function rotateCoordsY($oldX, $oldY, $rotation, $centreOffsetX, $centreOffsetY) {
+	// need to translate the coords so the centre is 0,0 not $width,$height, and then translate back after the coord rotation
 	$translatedCoordX = $oldX - $centreOffsetX;
 	$translatedCoordY = $oldY - $centreOffsetY;
 	$rotatedCoordY = $translatedCoordY*cos(deg2rad($rotation)) - $translatedCoordX*sin(deg2rad($rotation));
@@ -176,6 +178,8 @@ return $rotatedCoordX + $centreOffsetX;
 
 
 function drawPrimitive($primitiveType, $imageResource, $pointPosX, $pointPosY, $width, $height, $rotationDegrees, $outlineColour, $outlineThickness, $fillColour) {
+
+
 	// create a new image, so the fill doesn't get blocked by existing images underneath
 	// canvas is double size, so centre of it is the 0,0 position for rotation
 	$primitiveCanvas = imagecreate($width*2,$height*2);
@@ -194,22 +198,26 @@ function drawPrimitive($primitiveType, $imageResource, $pointPosX, $pointPosY, $
 	switch ($primitiveType) {
 	case 'teardrop':
 
-
+// non rotated:
 //quadBezier($primitiveCanvas, $width, $height, $width*2, $height*2, $width,$height*2);
 //quadBezier($primitiveCanvas, $width, $height, 0, $height*2, $width,$height*2);
 
 
-// need to translate the coords so the centre is 0,0 not $width,$height, and then translate back after the coord rotation
-	// ##################
-
+// rotated:
 quadBezier($primitiveCanvas, $width, $height, rotateCoordsX($width*2, $height*2,$rotationDegrees,$width, $height), rotateCoordsY($width*2, $height*2,$rotationDegrees,$width, $height), rotateCoordsX($width,$height*2,$rotationDegrees,$width, $height), rotateCoordsY($width,$height*2,$rotationDegrees,$width, $height));
 quadBezier($primitiveCanvas, $width, $height, rotateCoordsX(0, $height*2,$rotationDegrees,$width, $height),rotateCoordsY(0, $height*2,$rotationDegrees,$width, $height), rotateCoordsX($width,$height*2,$rotationDegrees,$width, $height),rotateCoordsY($width,$height*2,$rotationDegrees,$width, $height));
 
 
 		break;
 	case 'heart':
-		quadBezier($primitiveCanvas, $width, $height, $width*2, $height*2, $width,$height*1.5);
-		quadBezier($primitiveCanvas, $width, $height, 0, $height*2, $width,$height*1.5);
+// non rotated:
+		//quadBezier($primitiveCanvas, $width, $height, $width*2, $height*2, $width,$height*1.5);
+		//quadBezier($primitiveCanvas, $width, $height, 0, $height*2, $width,$height*1.5);
+
+// rotated:
+quadBezier($primitiveCanvas, $width, $height, rotateCoordsX($width*2, $height*2,$rotationDegrees,$width, $height), rotateCoordsY($width*2, $height*2,$rotationDegrees,$width, $height), rotateCoordsX($width,$height*1.5,$rotationDegrees,$width, $height), rotateCoordsY($width,$height*1.5,$rotationDegrees,$width, $height));
+quadBezier($primitiveCanvas, $width, $height, rotateCoordsX(0, $height*2,$rotationDegrees,$width, $height), rotateCoordsY(0, $height*2,$rotationDegrees,$width, $height), rotateCoordsX($width,$height*1.5,$rotationDegrees,$width, $height), rotateCoordsY($width,$height*1.5,$rotationDegrees,$width, $height));
+
 		break;
 	}
 
@@ -904,9 +912,9 @@ drawPrimitive('teardrop',${'leaf'.$k}, $leafCanvasWidth/2, $leafCanvasHeight/2, 
 
 
 drawPrimitive('teardrop',${'leaf'.$k}, $leafCanvasWidth/2, $leafCanvasHeight/2, $leafCanvasWidth/4, $leafCanvasHeight/4, 180, [$thisLeafRed,$thisLeafGreen,$thisLeafBlue], 6, [$thisLeafRed,$thisLeafGreen,$thisLeafBlue]);
-drawPrimitive('teardrop',${'leaf'.$k}, $leafCanvasWidth/2, $leafCanvasHeight/2, $leafCanvasWidth/4, $leafCanvasHeight/4, 0, [$thisLeafRed,$thisLeafGreen,$thisLeafBlue], 6, [$thisLeafRed,$thisLeafGreen,$thisLeafBlue]);
+drawPrimitive('heart',${'leaf'.$k}, $leafCanvasWidth/2, $leafCanvasHeight/2, $leafCanvasWidth/4, $leafCanvasHeight/4, 0, [$thisLeafRed,$thisLeafGreen,$thisLeafBlue], 6, [$thisLeafRed,$thisLeafGreen,$thisLeafBlue]);
 drawPrimitive('teardrop',${'leaf'.$k}, $leafCanvasWidth/2, $leafCanvasHeight/2, $leafCanvasWidth/4, $leafCanvasHeight/4, 315, [$thisLeafRed,$thisLeafGreen,$thisLeafBlue], 6, [$thisLeafRed,$thisLeafGreen,$thisLeafBlue]);
-drawPrimitive('teardrop',${'leaf'.$k}, $leafCanvasWidth/2, $leafCanvasHeight/2, $leafCanvasWidth/4, $leafCanvasHeight/4, 90, [$thisLeafRed,$thisLeafGreen,$thisLeafBlue], 6, [$thisLeafRed,$thisLeafGreen,$thisLeafBlue]);
+drawPrimitive('heart',${'leaf'.$k}, $leafCanvasWidth/2, $leafCanvasHeight/2, $leafCanvasWidth/4, $leafCanvasHeight/4, 90, [$thisLeafRed,$thisLeafGreen,$thisLeafBlue], 6, [$thisLeafRed,$thisLeafGreen,$thisLeafBlue]);
 
 
 	}
