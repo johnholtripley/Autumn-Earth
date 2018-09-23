@@ -179,10 +179,16 @@ return $rotatedCoordX + $centreOffsetX;
 
 function drawPrimitive($primitiveType, $imageResource, $pointPosX, $pointPosY, $width, $height, $rotationDegrees, $outlineColour, $outlineThickness, $fillColour) {
 
+// make a larger canvas to allow for the rotation: (x sqrt of 2):
+$canvasWidth = $width*1.41*2;
+$canvasHeight = $height*1.41*2;
+
+$canvasCentreOffsetX = ($canvasWidth - $width)/2;
+$canvasCentreOffsetY = ($canvasHeight - $height)/2;
 
 	// create a new image, so the fill doesn't get blocked by existing images underneath
 	// canvas is double size, so centre of it is the 0,0 position for rotation
-	$primitiveCanvas = imagecreate($width*2,$height*2);
+	$primitiveCanvas = imagecreate($canvasWidth,$canvasHeight);
 	  //  imagealphablending($primitiveCanvas, false);
     // imagesavealpha($primitiveCanvas, true);
 	$primitiveCanvasTrans = imagecolorallocate($primitiveCanvas, 0, 0, 0);
@@ -238,7 +244,7 @@ quadBezier($primitiveCanvas, $width, $height, rotateCoordsX(0, $height*2,$rotati
 	} else {
 */
 		// draw this canvas to the source:
-		imagecopy($imageResource, $primitiveCanvas, $pointPosX-$width, $pointPosY-$height, 0, 0, $width*2, $height*2);
+		imagecopy($imageResource, $primitiveCanvas, $pointPosX, $pointPosY, 0, 0, $canvasWidth, $canvasHeight);
 /*	}
 */
 	imagedestroy($primitiveBrush);
