@@ -24,6 +24,9 @@
 // add draw primitive for line (rotated)
 
 
+
+
+
 // ---------------------------------------
 
 
@@ -184,8 +187,8 @@ function drawPrimitive($primitiveType, $imageResource, $pointPosX, $pointPosY, $
 $canvasWidth = $width*2;
 $canvasHeight = $height*2;
 
-// allow square root of 2 for rotations:
-$scalingForRotation = 0.707;
+$canvasWidth = max($canvasWidth, $canvasHeight);
+$canvasHeight = max($canvasWidth, $canvasHeight);
 
 	// create a new image, so the fill doesn't get blocked by existing images underneath
 	// canvas is double size, so centre of it is the 0,0 position for rotation
@@ -212,9 +215,9 @@ $scalingForRotation = 0.707;
 
 
 // rotated:
-quadBezier($primitiveCanvas, $width, $height, rotateCoordsX($width*2-($outlineThickness*2), $height*2-($outlineThickness*2),$rotationDegrees,$width, $height), rotateCoordsY($width*2-($outlineThickness*2), $height*2-($outlineThickness*2),$rotationDegrees,$width, $height), rotateCoordsX($width,$height*2-($outlineThickness*2),$rotationDegrees,$width, $height), rotateCoordsY($width,$height*2-($outlineThickness*2),$rotationDegrees,$width, $height));
-quadBezier($primitiveCanvas, $width, $height, rotateCoordsX(($outlineThickness*2), $height*2-($outlineThickness*2),$rotationDegrees,$width, $height),rotateCoordsY(($outlineThickness*2), $height*2-($outlineThickness*2),$rotationDegrees,$width, $height), rotateCoordsX($width,$height*2-($outlineThickness*2),$rotationDegrees,$width, $height),rotateCoordsY($width,$height*2-($outlineThickness*2),$rotationDegrees,$width, $height));
+quadBezier($primitiveCanvas, $canvasWidth/2, $canvasHeight/2, rotateCoordsX($canvasWidth/2+$width-($outlineThickness*2), $canvasHeight/2+$height-($outlineThickness*2),$rotationDegrees,$canvasWidth/2, $canvasHeight/2), rotateCoordsY($canvasWidth/2+$width-($outlineThickness*2), $height+$canvasHeight/2-($outlineThickness*2),$rotationDegrees,$canvasWidth/2, $canvasHeight/2), rotateCoordsX($canvasWidth/2,$height+$canvasHeight/2-($outlineThickness*2),$rotationDegrees,$canvasWidth/2, $canvasHeight/2), rotateCoordsY($canvasWidth/2,$height+$canvasHeight/2-($outlineThickness*2),$rotationDegrees,$canvasWidth/2, $canvasHeight/2));
 
+quadBezier($primitiveCanvas, $canvasWidth/2, $canvasHeight/2, rotateCoordsX($canvasWidth/2-$width+($outlineThickness*2), $canvasHeight/2+$height-($outlineThickness*2),$rotationDegrees,$canvasWidth/2, $canvasHeight/2), rotateCoordsY($canvasWidth/2-$width+($outlineThickness*2), $height+$canvasHeight/2-($outlineThickness*2),$rotationDegrees,$canvasWidth/2, $canvasHeight/2), rotateCoordsX($canvasWidth/2,$height+$canvasHeight/2-($outlineThickness*2),$rotationDegrees,$canvasWidth/2, $canvasHeight/2), rotateCoordsY($canvasWidth/2,$height+$canvasHeight/2-($outlineThickness*2),$rotationDegrees,$canvasWidth/2, $canvasHeight/2));
 
 		break;
 	case 'heart':
@@ -223,15 +226,16 @@ quadBezier($primitiveCanvas, $width, $height, rotateCoordsX(($outlineThickness*2
 		//quadBezier($primitiveCanvas, $width, $height, 0, $height*2, $width,$height*1.5);
 
 // rotated:
-quadBezier($primitiveCanvas, $width, $height, rotateCoordsX($width*2-($outlineThickness*2), $height*2-($outlineThickness*2),$rotationDegrees,$width, $height), rotateCoordsY($width*2-($outlineThickness*2), $height*2-($outlineThickness*2),$rotationDegrees,$width, $height), rotateCoordsX($width,$height*1.5-($outlineThickness*2),$rotationDegrees,$width, $height), rotateCoordsY($width,$height*1.5-($outlineThickness*2),$rotationDegrees,$width, $height));
-quadBezier($primitiveCanvas, $width, $height, rotateCoordsX(0+($outlineThickness*2), $height*2-($outlineThickness*2),$rotationDegrees,$width, $height), rotateCoordsY(0+($outlineThickness*2), $height*2-($outlineThickness*2),$rotationDegrees,$width, $height), rotateCoordsX($width,$height*1.5-($outlineThickness*2),$rotationDegrees,$width, $height), rotateCoordsY($width,$height*1.5-($outlineThickness*2),$rotationDegrees,$width, $height));
+quadBezier($primitiveCanvas, $canvasWidth/2, $canvasHeight/2, rotateCoordsX($canvasWidth/2+$width-($outlineThickness*2), $canvasHeight/2+$height-($outlineThickness*2),$rotationDegrees,$canvasWidth/2, $canvasHeight/2), rotateCoordsY($canvasWidth/2+$width-($outlineThickness*2), $height+$canvasHeight/2-($outlineThickness*2),$rotationDegrees,$canvasWidth/2, $canvasHeight/2), rotateCoordsX($canvasWidth/2,$height/2+$canvasHeight/2-($outlineThickness*2),$rotationDegrees,$canvasWidth/2, $canvasHeight/2), rotateCoordsY($canvasWidth/2,$height/2+$canvasHeight/2-($outlineThickness*2),$rotationDegrees,$canvasWidth/2, $canvasHeight/2));
+
+quadBezier($primitiveCanvas, $canvasWidth/2, $canvasHeight/2, rotateCoordsX($canvasWidth/2-$width+($outlineThickness*2), $canvasHeight/2+$height-($outlineThickness*2),$rotationDegrees,$canvasWidth/2, $canvasHeight/2), rotateCoordsY($canvasWidth/2-$width+($outlineThickness*2), $height+$canvasHeight/2-($outlineThickness*2),$rotationDegrees,$canvasWidth/2, $canvasHeight/2), rotateCoordsX($canvasWidth/2,$height/2+$canvasHeight/2-($outlineThickness*2),$rotationDegrees,$canvasWidth/2, $canvasHeight/2), rotateCoordsY($canvasWidth/2,$height/2+$canvasHeight/2-($outlineThickness*2),$rotationDegrees,$canvasWidth/2, $canvasHeight/2));
 
 		break;
 	}
 
 	if($fillColour != NULL) {
 		// if $fillColour is NULL, then don't fill:
-		imagefill($primitiveCanvas, rotateCoordsX($width, $height*1.3,$rotationDegrees,$width, $height), rotateCoordsY($width, $height*1.3,$rotationDegrees,$width, $height), imagecolorallocate($primitiveCanvas, $fillColour[0],$fillColour[1], $fillColour[2]));
+		imagefill($primitiveCanvas, rotateCoordsX($canvasWidth/2, $canvasHeight/2+$height/4,$rotationDegrees,$canvasWidth/2, $canvasHeight/2), rotateCoordsY($canvasWidth/2, $canvasHeight/2+$height/4,$rotationDegrees,$canvasWidth/2, $canvasHeight/2), imagecolorallocate($primitiveCanvas, $fillColour[0],$fillColour[1], $fillColour[2]));
 	}
 
 
@@ -246,8 +250,22 @@ quadBezier($primitiveCanvas, $width, $height, rotateCoordsX(0+($outlineThickness
 
 
 
+function createColourVariation($red, $green, $blue) {
+// create variation in the input colour:
+$darkenOrLighten = mt_rand(0,1);
+$colourAdjustAmount = mt_rand(4,24);
+if($darkenOrLighten == 0) {
+$colourAdjustAmount = 0-$colourAdjustAmount;
+}
+$red = $red+$colourAdjustAmount;
+$green = $green+$colourAdjustAmount;
+$blue = $blue+$colourAdjustAmount;
 
-
+$red = capValues($red,0,255);
+$green = capValues($green,0,255);
+$blue = capValues($blue,0,255);
+return [$red, $green, $blue];
+}
 
 
 
@@ -786,11 +804,7 @@ quadBezier($plantCanvas, $previousX, $previousY,$thisPoint[0], $thisPoint[1], $t
 // draw leaves:
 
 
-/*
-heart shaped bezier:
-	quadBezier(${'leaf'.$k}, $leafCanvasWidth/2, $leafCanvasHeight/2, $leafCanvasWidth-$leafInset, $leafCanvasHeight-$leafInset, $leafCanvasWidth/2,$leafInset);
-	quadBezier(${'leaf'.$k}, $leafCanvasWidth/2, $leafCanvasHeight/2, $leafInset, $leafCanvasHeight-$leafInset, $leafCanvasWidth/2,$leafInset);
-*/
+
 
 include($_SERVER['DOCUMENT_ROOT']."/includes/herbarium/leaf-colours.php");
 $thisLeafColour = $leafColours[mt_rand(0, count($leafColours) - 1)];
@@ -817,30 +831,18 @@ for ($k=0;$k<$numberOfLeafVariationsToDraw;$k++) {
 	imagecolortransparent(${'leaf'.$k}, $leafTrans);
 
 
-
-// create variation in the leaf colour:
-$darkenOrLighten = mt_rand(0,1);
-$colourAdjustAmount = mt_rand(4,24);
-if($darkenOrLighten == 0) {
-$colourAdjustAmount = 0-$colourAdjustAmount;
-}
-$thisLeafRed = $thisLeafColour[0]+$colourAdjustAmount;
-$thisLeafGreen = $thisLeafColour[1]+$colourAdjustAmount;
-$thisLeafBlue = $thisLeafColour[2]+$colourAdjustAmount;
-
-$thisLeafRed = capValues($thisLeafRed,0,255);
-$thisLeafGreen = capValues($thisLeafGreen,0,255);
-$thisLeafBlue = capValues($thisLeafBlue,0,255);
+$leafVariation = createColourVariation($thisLeafColour[0],$thisLeafColour[1],$thisLeafColour[2]);
 
 
 
 
-	${'leafColour'.$k} = imagecolorallocate(${'leaf'.$k}, $thisLeafRed, $thisLeafGreen, $thisLeafBlue);
+
+	${'leafColour'.$k} = imagecolorallocate(${'leaf'.$k}, $leafVariation[0], $leafVariation[1], $leafVariation[2]);
 
 	${'leafBrush'.$k} = imagecreate(6,6);
 	$leafBrushTrans = imagecolorallocate(${'leafBrush'.$k}, 0, 0, 0);
 	imagecolortransparent(${'leafBrush'.$k}, $leafBrushTrans);
-	${'leafBrushColour'.$k} = imagecolorallocate(${'leafBrush'.$k}, $thisLeafRed, $thisLeafGreen, $thisLeafBlue);
+	${'leafBrushColour'.$k} = imagecolorallocate(${'leafBrush'.$k}, $leafVariation[0], $leafVariation[1], $leafVariation[2]);
 	imagefilledellipse(${'leafBrush'.$k}, 3,3,6,6, ${'leafBrushColour'.$k});
 	imagesetbrush(${'leaf'.$k}, ${'leafBrush'.$k});
 
@@ -863,8 +865,8 @@ case 2:
 // radiating tear drop shape (clover?)
 
 $numberOfLeafVariationsToDraw = 4;
-$leafCanvasWidth = 200;
-$leafCanvasHeight = 240;
+$leafCanvasWidth = 120;
+$leafCanvasHeight = 120;
 
 for ($k=0;$k<$numberOfLeafVariationsToDraw;$k++) {
 
@@ -874,19 +876,10 @@ for ($k=0;$k<$numberOfLeafVariationsToDraw;$k++) {
 	$leafTrans = imagecolorallocate(${'leaf'.$k}, 0, 0, 0);
 	imagecolortransparent(${'leaf'.$k}, $leafTrans);
 
-// create variation in the leaf colour:
-$darkenOrLighten = mt_rand(0,1);
-$colourAdjustAmount = mt_rand(4,24);
-if($darkenOrLighten == 0) {
-$colourAdjustAmount = 0-$colourAdjustAmount;
-}
-$thisLeafRed = $thisLeafColour[0]+$colourAdjustAmount;
-$thisLeafGreen = $thisLeafColour[1]+$colourAdjustAmount;
-$thisLeafBlue = $thisLeafColour[2]+$colourAdjustAmount;
 
-$thisLeafRed = capValues($thisLeafRed,0,255);
-$thisLeafGreen = capValues($thisLeafGreen,0,255);
-$thisLeafBlue = capValues($thisLeafBlue,0,255);
+$leafVariation = createColourVariation($thisLeafColour[0],$thisLeafColour[1],$thisLeafColour[2]);
+
+
 
 //${'leafColour'.$k} = imagecolorallocate(${'leaf'.$k}, $thisLeafRed, $thisLeafGreen, $thisLeafBlue);
 
@@ -895,23 +888,19 @@ $leafHeadRotationOffset = mt_rand(0,20);
 
 
 
+$leafThickness = mt_rand(8,12);
 
-
+$numberOfLeafHeads = 3;
+$leafThickness = 4;
 
 for ($lh=0;$lh<$numberOfLeafHeads;$lh++) {
 	$thisLeafHeadRotation = ((360/$numberOfLeafHeads)*$lh)+$leafHeadRotationOffset;
 
-drawPrimitive('teardrop',${'leaf'.$k}, $leafCanvasWidth/2, $leafCanvasHeight/2, $leafCanvasWidth/4, $leafCanvasHeight/4, $thisLeafHeadRotation, [$thisLeafRed,$thisLeafGreen,$thisLeafBlue], 6, [$thisLeafRed,$thisLeafGreen,$thisLeafBlue]);
+drawPrimitive('teardrop',${'leaf'.$k}, $leafCanvasWidth/2, $leafCanvasHeight/2, $leafCanvasWidth/$leafThickness, $leafCanvasHeight/4, $thisLeafHeadRotation, [$leafVariation[0],$leafVariation[1],$leafVariation[2]], 6, [$leafVariation[0],$leafVariation[1],$leafVariation[2]]);
 }
 
 
-/*
 
-drawPrimitive('teardrop',${'leaf'.$k}, $leafCanvasWidth/2, $leafCanvasHeight/2, $leafCanvasWidth/4, $leafCanvasHeight/4, 180, [$thisLeafRed,$thisLeafGreen,$thisLeafBlue], 6, [$thisLeafRed,$thisLeafGreen,$thisLeafBlue]);
-drawPrimitive('heart',${'leaf'.$k}, $leafCanvasWidth/2, $leafCanvasHeight/2, $leafCanvasWidth/4, $leafCanvasHeight/4, 0, [$thisLeafRed,$thisLeafGreen,$thisLeafBlue], 6, [$thisLeafRed,$thisLeafGreen,$thisLeafBlue]);
-drawPrimitive('teardrop',${'leaf'.$k}, $leafCanvasWidth/2, $leafCanvasHeight/2, $leafCanvasWidth/4, $leafCanvasHeight/4, 315, [$thisLeafRed,$thisLeafGreen,$thisLeafBlue], 6, [$thisLeafRed,$thisLeafGreen,$thisLeafBlue]);
-drawPrimitive('heart',${'leaf'.$k}, $leafCanvasWidth/2, $leafCanvasHeight/2, $leafCanvasWidth/4, $leafCanvasHeight/4, 90, [$thisLeafRed,$thisLeafGreen,$thisLeafBlue], 6, [$thisLeafRed,$thisLeafGreen,$thisLeafBlue]);
-*/
 
 	}
 
@@ -927,12 +916,15 @@ $whichFlowerType = mt_rand(1,2);
 
 switch ($whichFlowerType) {
 	case 1:
+
+$petalVariation = createColourVariation($petalRed,$petalGreen,$petalBlue);
+
 // star petal type
 $petalBrushSize = 2;
 	$petalBrush = imagecreate($petalBrushSize,$petalBrushSize);
 	$petalBrushtrans = imagecolorallocate($petalBrush, 0, 0, 0);
 	imagecolortransparent($petalBrush, $petalBrushtrans);
-	$thisPetalColour = imagecolorallocate($petalBrush, $petalRed, $petalGreen, $petalBlue);
+	$thisPetalColour = imagecolorallocate($petalBrush, $petalVariation[0], $petalVariation[1], $petalVariation[2]);
 	imagefilledellipse($petalBrush, $petalBrushSize/2, $petalBrushSize/2, $petalBrushSize,$petalBrushSize, $thisPetalColour);
 
 
@@ -982,7 +974,7 @@ for ($k=0;$k<$numberOfFlowerVariationsToDraw;$k++) {
 	}
 	// draw to last point:
 	quadBezier(${'flower'.$k}, $previousX, $previousY,$petalPoints[$i][0], $petalPoints[$i][1], $petalPoints[$i+1][0],$petalPoints[$i+1][1]);
-	imagefill ( ${'flower'.$k}, $centreX+$petalBrushSize,$centreY+$petalBrushSize, imagecolorallocate(${'flower'.$k}, $petalRed, $petalGreen, $petalBlue) );
+	imagefill ( ${'flower'.$k}, $centreX+$petalBrushSize,$centreY+$petalBrushSize, imagecolorallocate(${'flower'.$k}, $petalVariation[0], $petalVariation[1], $petalVariation[2]) );
 	imagefilledellipse ( ${'flower'.$k} , $centreX, $centreY , $flowerCanvasSize/6 , $flowerCanvasSize/6 , imagecolorallocate(${'flower'.$k}, 184,126,80 ) );
 	// end star draw routine
 }
@@ -1009,22 +1001,14 @@ $angleOffset = mt_rand(20,100)/100;
 
 $stalkColour = imagecolorallocate(${'flower'.$k}, 6,42,30 );
 
-// create variation in the flower head colour:
-$darkenOrLighten = mt_rand(0,1);
-$colourAdjustAmount = mt_rand(4,16);
-if($darkenOrLighten == 0) {
-$colourAdjustAmount = 0-$colourAdjustAmount;
-}
-$thisPetalRed = $petalRed+$colourAdjustAmount;
-$thisPetalGreen = $petalGreen+$colourAdjustAmount;
-$thisPetalBlue = $petalBlue+$colourAdjustAmount;
 
-$thisPetalRed = capValues($thisPetalRed,0,255);
-$thisPetalGreen = capValues($thisPetalGreen,0,255);
-$thisPetalBlue = capValues($thisPetalBlue,0,255);
+$petalVariation = createColourVariation($petalRed,$petalGreen,$petalBlue);
 
 
-$petalColour = imagecolorallocate(${'flower'.$k}, $thisPetalRed, $thisPetalGreen, $thisPetalBlue );
+
+
+
+$petalColour = imagecolorallocate(${'flower'.$k}, $petalVariation[0], $petalVariation[1], $petalVariation[2] );
 
 for ($i=0; $i<$numberOfSpokes; $i++) {
 	$spokeHeadRadius = mt_rand(18,24);
