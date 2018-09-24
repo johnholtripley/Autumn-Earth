@@ -20,6 +20,7 @@
 
 
 // change star drawing to its own primitive drawing function
+// split teardrop and heart into own function so can pass in values for the heart's inset for example
 // add draw primitive for line (rotated)
 
 
@@ -211,8 +212,8 @@ $scalingForRotation = 0.707;
 
 
 // rotated:
-quadBezier($primitiveCanvas, $width, $height, rotateCoordsX($width*2-$outlineThickness, $height*2-$outlineThickness,$rotationDegrees,$width, $height), rotateCoordsY($width*2-$outlineThickness, $height*2-$outlineThickness,$rotationDegrees,$width, $height), rotateCoordsX($width,$height*2-$outlineThickness,$rotationDegrees,$width, $height), rotateCoordsY($width,$height*2-$outlineThickness,$rotationDegrees,$width, $height));
-quadBezier($primitiveCanvas, $width, $height, rotateCoordsX(0+$outlineThickness, $height*2-$outlineThickness,$rotationDegrees,$width, $height),rotateCoordsY(0+$outlineThickness, $height*2-$outlineThickness,$rotationDegrees,$width, $height), rotateCoordsX($width,$height*2-$outlineThickness,$rotationDegrees,$width, $height),rotateCoordsY($width,$height*2-$outlineThickness,$rotationDegrees,$width, $height));
+quadBezier($primitiveCanvas, $width, $height, rotateCoordsX($width*2-($outlineThickness*2), $height*2-($outlineThickness*2),$rotationDegrees,$width, $height), rotateCoordsY($width*2-($outlineThickness*2), $height*2-($outlineThickness*2),$rotationDegrees,$width, $height), rotateCoordsX($width,$height*2-($outlineThickness*2),$rotationDegrees,$width, $height), rotateCoordsY($width,$height*2-($outlineThickness*2),$rotationDegrees,$width, $height));
+quadBezier($primitiveCanvas, $width, $height, rotateCoordsX(($outlineThickness*2), $height*2-($outlineThickness*2),$rotationDegrees,$width, $height),rotateCoordsY(($outlineThickness*2), $height*2-($outlineThickness*2),$rotationDegrees,$width, $height), rotateCoordsX($width,$height*2-($outlineThickness*2),$rotationDegrees,$width, $height),rotateCoordsY($width,$height*2-($outlineThickness*2),$rotationDegrees,$width, $height));
 
 
 		break;
@@ -222,8 +223,8 @@ quadBezier($primitiveCanvas, $width, $height, rotateCoordsX(0+$outlineThickness,
 		//quadBezier($primitiveCanvas, $width, $height, 0, $height*2, $width,$height*1.5);
 
 // rotated:
-quadBezier($primitiveCanvas, $width, $height, rotateCoordsX($width*2-$outlineThickness, $height*2-$outlineThickness,$rotationDegrees,$width, $height), rotateCoordsY($width*2-$outlineThickness, $height*2-$outlineThickness,$rotationDegrees,$width, $height), rotateCoordsX($width,$height*1.5-$outlineThickness,$rotationDegrees,$width, $height), rotateCoordsY($width,$height*1.5-$outlineThickness,$rotationDegrees,$width, $height));
-quadBezier($primitiveCanvas, $width, $height, rotateCoordsX(0+$outlineThickness, $height*2-$outlineThickness,$rotationDegrees,$width, $height), rotateCoordsY(0+$outlineThickness, $height*2-$outlineThickness,$rotationDegrees,$width, $height), rotateCoordsX($width,$height*1.5-$outlineThickness,$rotationDegrees,$width, $height), rotateCoordsY($width,$height*1.5-$outlineThickness,$rotationDegrees,$width, $height));
+quadBezier($primitiveCanvas, $width, $height, rotateCoordsX($width*2-($outlineThickness*2), $height*2-($outlineThickness*2),$rotationDegrees,$width, $height), rotateCoordsY($width*2-($outlineThickness*2), $height*2-($outlineThickness*2),$rotationDegrees,$width, $height), rotateCoordsX($width,$height*1.5-($outlineThickness*2),$rotationDegrees,$width, $height), rotateCoordsY($width,$height*1.5-($outlineThickness*2),$rotationDegrees,$width, $height));
+quadBezier($primitiveCanvas, $width, $height, rotateCoordsX(0+($outlineThickness*2), $height*2-($outlineThickness*2),$rotationDegrees,$width, $height), rotateCoordsY(0+($outlineThickness*2), $height*2-($outlineThickness*2),$rotationDegrees,$width, $height), rotateCoordsX($width,$height*1.5-($outlineThickness*2),$rotationDegrees,$width, $height), rotateCoordsY($width,$height*1.5-($outlineThickness*2),$rotationDegrees,$width, $height));
 
 		break;
 	}
@@ -861,7 +862,7 @@ break;
 case 2:
 // radiating tear drop shape (clover?)
 
-$numberOfLeafVariationsToDraw = 1;
+$numberOfLeafVariationsToDraw = 4;
 $leafCanvasWidth = 200;
 $leafCanvasHeight = 240;
 
@@ -893,19 +894,14 @@ $numberOfLeafHeads = mt_rand(5,7);
 $leafHeadRotationOffset = mt_rand(0,20);
 
 
-$numberOfLeafHeads = 4;
-$leafHeadRotationOffset = 0;
-// BUG - works for 90 degree increments but not for others ##########
-// john
+
 
 
 
 for ($lh=0;$lh<$numberOfLeafHeads;$lh++) {
 	$thisLeafHeadRotation = ((360/$numberOfLeafHeads)*$lh)+$leafHeadRotationOffset;
-// teardrop doesn't fill correctly ####
-	// bug JOHN ##########
-	// http://develop.ae/herbarium/generate.php?seed=1537792616&debug=true
-drawPrimitive('heart',${'leaf'.$k}, $leafCanvasWidth/2, $leafCanvasHeight/2, $leafCanvasWidth/4, $leafCanvasHeight/4, $thisLeafHeadRotation, [$thisLeafRed,$thisLeafGreen,$thisLeafBlue], 6, [$thisLeafRed,$thisLeafGreen,$thisLeafBlue]);
+
+drawPrimitive('teardrop',${'leaf'.$k}, $leafCanvasWidth/2, $leafCanvasHeight/2, $leafCanvasWidth/4, $leafCanvasHeight/4, $thisLeafHeadRotation, [$thisLeafRed,$thisLeafGreen,$thisLeafBlue], 6, [$thisLeafRed,$thisLeafGreen,$thisLeafBlue]);
 }
 
 
