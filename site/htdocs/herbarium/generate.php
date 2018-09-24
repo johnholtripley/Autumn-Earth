@@ -19,9 +19,9 @@
 // create function for drawing primitives (teardrop, heart shape, egg shape, spiral, etc). pass in image to draw to, colour, size, rotation, filled (Y/N), outlined (Y/N), coords
 
 
-// need to determine rotated canvas size for primitives so edges aren't clipped
-// then fill primitives again
 // change star drawing to its own primitive drawing function
+// add draw primitive for line (rotated)
+
 
 // ---------------------------------------
 
@@ -235,19 +235,10 @@ quadBezier($primitiveCanvas, $width, $height, rotateCoordsX(0+$outlineThickness,
 
 
 
-/*
-	if($rotationDegrees != 0) {
-		$rotatedPrimitive = imagerotate($primitiveCanvas, $rotationDegrees, $primitiveCanvasTrans);
-		$rotatedPrimitiveWidth = imagesx($rotatedPrimitive);
-		$rotatedPrimitiveHeight = imagesy($rotatedPrimitive);
-		imagecopy($imageResource, $rotatedPrimitive, $pointPosX-$rotatedPrimitiveWidth/2, $pointPosY-$rotatedPrimitiveHeight/2, 0, 0, $rotatedPrimitiveWidth, $rotatedPrimitiveHeight);
-		imagedestroy($rotatedPrimitive);
-	} else {
-*/
+
 		// draw this canvas to the source:
 		imagecopy($imageResource, $primitiveCanvas, $pointPosX-$canvasWidth/2, $pointPosY-$canvasHeight/2, 0, 0, $canvasWidth, $canvasHeight);
-/*	}
-*/
+
 	imagedestroy($primitiveBrush);
 	imagedestroy($primitiveCanvas);
 }
@@ -908,21 +899,23 @@ $leafHeadRotationOffset = 0;
 // john
 
 
-/*
+
 for ($lh=0;$lh<$numberOfLeafHeads;$lh++) {
 	$thisLeafHeadRotation = ((360/$numberOfLeafHeads)*$lh)+$leafHeadRotationOffset;
-
-drawPrimitive('teardrop',${'leaf'.$k}, $leafCanvasWidth/2, $leafCanvasHeight/2, $leafCanvasWidth/4, $leafCanvasHeight/4, $thisLeafHeadRotation, [$thisLeafRed,$thisLeafGreen,$thisLeafBlue], 6, [$thisLeafRed,$thisLeafGreen,$thisLeafBlue]);
+// teardrop doesn't fill correctly ####
+	// bug JOHN ##########
+	// http://develop.ae/herbarium/generate.php?seed=1537792616&debug=true
+drawPrimitive('heart',${'leaf'.$k}, $leafCanvasWidth/2, $leafCanvasHeight/2, $leafCanvasWidth/4, $leafCanvasHeight/4, $thisLeafHeadRotation, [$thisLeafRed,$thisLeafGreen,$thisLeafBlue], 6, [$thisLeafRed,$thisLeafGreen,$thisLeafBlue]);
 }
-*/
 
 
+/*
 
 drawPrimitive('teardrop',${'leaf'.$k}, $leafCanvasWidth/2, $leafCanvasHeight/2, $leafCanvasWidth/4, $leafCanvasHeight/4, 180, [$thisLeafRed,$thisLeafGreen,$thisLeafBlue], 6, [$thisLeafRed,$thisLeafGreen,$thisLeafBlue]);
 drawPrimitive('heart',${'leaf'.$k}, $leafCanvasWidth/2, $leafCanvasHeight/2, $leafCanvasWidth/4, $leafCanvasHeight/4, 0, [$thisLeafRed,$thisLeafGreen,$thisLeafBlue], 6, [$thisLeafRed,$thisLeafGreen,$thisLeafBlue]);
 drawPrimitive('teardrop',${'leaf'.$k}, $leafCanvasWidth/2, $leafCanvasHeight/2, $leafCanvasWidth/4, $leafCanvasHeight/4, 315, [$thisLeafRed,$thisLeafGreen,$thisLeafBlue], 6, [$thisLeafRed,$thisLeafGreen,$thisLeafBlue]);
 drawPrimitive('heart',${'leaf'.$k}, $leafCanvasWidth/2, $leafCanvasHeight/2, $leafCanvasWidth/4, $leafCanvasHeight/4, 90, [$thisLeafRed,$thisLeafGreen,$thisLeafBlue], 6, [$thisLeafRed,$thisLeafGreen,$thisLeafBlue]);
-
+*/
 
 	}
 
@@ -1127,10 +1120,11 @@ drawPrimitive('teardrop',$plantCanvas, $canvaDimension/2, $canvaDimension/2, 120
 //drawPrimitive('teardrop',$plantCanvas, $canvaDimension/2, $canvaDimension/2, 120, 120, 180, [255,255,0], 6, [255,0,0]);
 //drawPrimitive('heart',$plantCanvas, $canvaDimension/2, $canvaDimension/2, 120, 120, 270, [255,255,0], 6, [255,0,0]);
 
-
+/*
 $rotatedLeafWidth = imagesx($leaf0);
 $rotatedLeafHeight = imagesy($leaf0);
 imagecopyresampled($plantCanvas, $leaf0, 100, 100, 0, 0, $rotatedLeafWidth, $rotatedLeafHeight, $rotatedLeafWidth, $rotatedLeafHeight);
+*/
 /*
 $rotatedLeaf = imagerotate($leaf0, 45, $pngTransparency);
 $rotatedLeafWidth = imagesx($rotatedLeaf);
