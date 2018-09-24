@@ -230,7 +230,7 @@ quadBezier($primitiveCanvas, $width, $height, rotateCoordsX(0+$outlineThickness,
 
 	if($fillColour != NULL) {
 		// if $fillColour is NULL, then don't fill:
-	//	imagefill($primitiveCanvas, $width, $height*1.3, imagecolorallocate($primitiveCanvas, $fillColour[0],$fillColour[1], $fillColour[2]));
+		imagefill($primitiveCanvas, rotateCoordsX($width, $height*1.3,$rotationDegrees,$width, $height), rotateCoordsY($width, $height*1.3,$rotationDegrees,$width, $height), imagecolorallocate($primitiveCanvas, $fillColour[0],$fillColour[1], $fillColour[2]));
 	}
 
 
