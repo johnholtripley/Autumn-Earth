@@ -21,6 +21,7 @@
 
 // need to determine rotated canvas size for primitives so edges aren't clipped
 // then fill primitives again
+// change star drawing to its own primitive drawing function
 
 // ---------------------------------------
 
@@ -179,12 +180,11 @@ return $rotatedCoordX + $centreOffsetX;
 
 function drawPrimitive($primitiveType, $imageResource, $pointPosX, $pointPosY, $width, $height, $rotationDegrees, $outlineColour, $outlineThickness, $fillColour) {
 
-// make a larger canvas to allow for the rotation: (x sqrt of 2):
-$canvasWidth = $width*1.41*2;
-$canvasHeight = $height*1.41*2;
+$canvasWidth = $width*2;
+$canvasHeight = $height*2;
 
-$canvasCentreOffsetX = ($canvasWidth - $width)/2;
-$canvasCentreOffsetY = ($canvasHeight - $height)/2;
+// allow square root of 2 for rotations:
+$scalingForRotation = 0.707;
 
 	// create a new image, so the fill doesn't get blocked by existing images underneath
 	// canvas is double size, so centre of it is the 0,0 position for rotation
@@ -205,13 +205,14 @@ $canvasCentreOffsetY = ($canvasHeight - $height)/2;
 	case 'teardrop':
 
 // non rotated:
-//quadBezier($primitiveCanvas, $width, $height, $width*2, $height*2, $width,$height*2);
-//quadBezier($primitiveCanvas, $width, $height, 0, $height*2, $width,$height*2);
+//quadBezier($primitiveCanvas, $width, $height, $width*2-$outlineThickness, $height*2-$outlineThickness, $width,$height*2-$outlineThickness);
+//quadBezier($primitiveCanvas, $width, $height, 0+$outlineThickness, $height*2-$outlineThickness, $width,$height*2-$outlineThickness);
+
 
 
 // rotated:
-quadBezier($primitiveCanvas, $width, $height, rotateCoordsX($width*2, $height*2,$rotationDegrees,$width, $height), rotateCoordsY($width*2, $height*2,$rotationDegrees,$width, $height), rotateCoordsX($width,$height*2,$rotationDegrees,$width, $height), rotateCoordsY($width,$height*2,$rotationDegrees,$width, $height));
-quadBezier($primitiveCanvas, $width, $height, rotateCoordsX(0, $height*2,$rotationDegrees,$width, $height),rotateCoordsY(0, $height*2,$rotationDegrees,$width, $height), rotateCoordsX($width,$height*2,$rotationDegrees,$width, $height),rotateCoordsY($width,$height*2,$rotationDegrees,$width, $height));
+quadBezier($primitiveCanvas, $width, $height, rotateCoordsX($width*2-$outlineThickness, $height*2-$outlineThickness,$rotationDegrees,$width, $height), rotateCoordsY($width*2-$outlineThickness, $height*2-$outlineThickness,$rotationDegrees,$width, $height), rotateCoordsX($width,$height*2-$outlineThickness,$rotationDegrees,$width, $height), rotateCoordsY($width,$height*2-$outlineThickness,$rotationDegrees,$width, $height));
+quadBezier($primitiveCanvas, $width, $height, rotateCoordsX(0+$outlineThickness, $height*2-$outlineThickness,$rotationDegrees,$width, $height),rotateCoordsY(0+$outlineThickness, $height*2-$outlineThickness,$rotationDegrees,$width, $height), rotateCoordsX($width,$height*2-$outlineThickness,$rotationDegrees,$width, $height),rotateCoordsY($width,$height*2-$outlineThickness,$rotationDegrees,$width, $height));
 
 
 		break;
@@ -221,8 +222,8 @@ quadBezier($primitiveCanvas, $width, $height, rotateCoordsX(0, $height*2,$rotati
 		//quadBezier($primitiveCanvas, $width, $height, 0, $height*2, $width,$height*1.5);
 
 // rotated:
-quadBezier($primitiveCanvas, $width, $height, rotateCoordsX($width*2, $height*2,$rotationDegrees,$width, $height), rotateCoordsY($width*2, $height*2,$rotationDegrees,$width, $height), rotateCoordsX($width,$height*1.5,$rotationDegrees,$width, $height), rotateCoordsY($width,$height*1.5,$rotationDegrees,$width, $height));
-quadBezier($primitiveCanvas, $width, $height, rotateCoordsX(0, $height*2,$rotationDegrees,$width, $height), rotateCoordsY(0, $height*2,$rotationDegrees,$width, $height), rotateCoordsX($width,$height*1.5,$rotationDegrees,$width, $height), rotateCoordsY($width,$height*1.5,$rotationDegrees,$width, $height));
+quadBezier($primitiveCanvas, $width, $height, rotateCoordsX($width*2-$outlineThickness, $height*2-$outlineThickness,$rotationDegrees,$width, $height), rotateCoordsY($width*2-$outlineThickness, $height*2-$outlineThickness,$rotationDegrees,$width, $height), rotateCoordsX($width,$height*1.5-$outlineThickness,$rotationDegrees,$width, $height), rotateCoordsY($width,$height*1.5-$outlineThickness,$rotationDegrees,$width, $height));
+quadBezier($primitiveCanvas, $width, $height, rotateCoordsX(0+$outlineThickness, $height*2-$outlineThickness,$rotationDegrees,$width, $height), rotateCoordsY(0+$outlineThickness, $height*2-$outlineThickness,$rotationDegrees,$width, $height), rotateCoordsX($width,$height*1.5-$outlineThickness,$rotationDegrees,$width, $height), rotateCoordsY($width,$height*1.5-$outlineThickness,$rotationDegrees,$width, $height));
 
 		break;
 	}
@@ -244,7 +245,7 @@ quadBezier($primitiveCanvas, $width, $height, rotateCoordsX(0, $height*2,$rotati
 	} else {
 */
 		// draw this canvas to the source:
-		imagecopy($imageResource, $primitiveCanvas, $pointPosX, $pointPosY, 0, 0, $canvasWidth, $canvasHeight);
+		imagecopy($imageResource, $primitiveCanvas, $pointPosX-$canvasWidth/2, $pointPosY-$canvasHeight/2, 0, 0, $canvasWidth, $canvasHeight);
 /*	}
 */
 	imagedestroy($primitiveBrush);
@@ -1129,7 +1130,7 @@ drawPrimitive('teardrop',$plantCanvas, $canvaDimension/2, $canvaDimension/2, 120
 
 $rotatedLeafWidth = imagesx($leaf0);
 $rotatedLeafHeight = imagesy($leaf0);
-imagecopyresampled($plantCanvas, $leaf0, 0, 0, 0, 0, $rotatedLeafWidth, $rotatedLeafHeight, $rotatedLeafWidth, $rotatedLeafHeight);
+imagecopyresampled($plantCanvas, $leaf0, 100, 100, 0, 0, $rotatedLeafWidth, $rotatedLeafHeight, $rotatedLeafWidth, $rotatedLeafHeight);
 /*
 $rotatedLeaf = imagerotate($leaf0, 45, $pngTransparency);
 $rotatedLeafWidth = imagesx($rotatedLeaf);
