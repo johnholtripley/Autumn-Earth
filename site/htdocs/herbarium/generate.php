@@ -23,9 +23,7 @@
 // pass in values for the heart's inset for example to better control shape
 
 
-// line draw needs to be rotated to be in centre of leaf:
-// http://develop.ae/herbarium/generate.php?seed=1537888862&debug=true
-
+// draw continuous curve for the stalk so it's a smooth curve, then fill
 
 
 // ---------------------------------------
@@ -184,7 +182,6 @@ return $rotatedCoordX + $centreOffsetX;
 
 
 function drawLine($imageResource, $startPointPosX, $startPointPosY, $length, $rotationDegrees, $outlineColour, $lineThickness) {
-
 // create brush for line:
 	$primitiveBrush = imagecreate($lineThickness,$lineThickness);
 	$primitiveBrushtrans = imagecolorallocate($primitiveBrush, 0, 0, 0);
@@ -192,17 +189,11 @@ function drawLine($imageResource, $startPointPosX, $startPointPosY, $length, $ro
 	$thisColour = imagecolorallocate($primitiveBrush, $outlineColour[0], $outlineColour[1], $outlineColour[2]);
 	imagefilledellipse($primitiveBrush, $lineThickness/2,$lineThickness/2,$lineThickness,$lineThickness, $thisColour);
 	imagesetbrush($imageResource, $primitiveBrush);
-
 $radians = deg2rad($rotationDegrees);
-
-$endPointX = $startPointPosX + cos($radians)*$length;
-$endPointY = $startPointPosY + sin($radians)*$length;
-
+$endPointX = $startPointPosX + sin($radians)*$length;
+$endPointY = $startPointPosY + cos($radians)*$length;
 imageline ( $imageResource , $startPointPosX , $startPointPosY , $endPointX , $endPointY , IMG_COLOR_BRUSHED );
-
 imagedestroy($primitiveBrush);
-	
-
 }
 
 
@@ -979,7 +970,7 @@ $darkenedOutlineColour = darkenColourVariation($leafVariation[0],$leafVariation[
 		$thisLeafHeadRotation = ((360/($numberOfLeafHeads+1))*$lh)+$leafHeadRotationOffset+90;
 		drawTeardrop(${'leaf'.$k}, $leafCanvasWidth/2, $leafCanvasHeight/2, $leafCanvasWidth/$leafThickness, $leafCanvasHeight/4, $thisLeafHeadRotation, [$darkenedOutlineColour[0],$darkenedOutlineColour[1],$darkenedOutlineColour[2]], 2, [$leafVariation[0],$leafVariation[1],$leafVariation[2]]);
 		// draw centre line:
-		drawLine(${'leaf'.$k}, $leafCanvasWidth/2, $leafCanvasHeight/2, $leafCanvasHeight/4, $thisLeafHeadRotation, [$darkenedOutlineColour[0],$darkenedOutlineColour[1],$darkenedOutlineColour[2]], 2);
+		drawLine(${'leaf'.$k}, $leafCanvasWidth/2, $leafCanvasHeight/2, ($leafCanvasHeight/4)*0.707, $thisLeafHeadRotation, [$darkenedOutlineColour[0],$darkenedOutlineColour[1],$darkenedOutlineColour[2]], 2);
 	}
 
 
