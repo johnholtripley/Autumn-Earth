@@ -19,9 +19,10 @@
 // create function for drawing primitives (teardrop, heart shape, egg shape, spiral, etc). pass in image to draw to, colour, size, rotation, filled (Y/N), outlined (Y/N), coords
 
 
-// change star drawing to its own primitive drawing function
+
 // pass in values for the heart's inset for example to better control shape
 
+// star drawing routine seems to start in the centre and draw a line out to the edge - http://develop.ae/herbarium/generate.php?seed=1537995547&debug=true
 
 // draw continuous curve for the stalk so it's a smooth curve, then fill
 
@@ -29,7 +30,15 @@
 // ---------------------------------------
 
 
+$debug = false;
+if(isset($_GET["debug"])) {
+	$debug = true;
+}
 
+
+if($debug) {
+$startTime = microtime(true);
+}
 
 
 require_once $_SERVER['DOCUMENT_ROOT'].'/includes/third-party/twitterOAuth/twitteroauth-0.6.2/autoload.php';
@@ -200,7 +209,54 @@ imagedestroy($primitiveBrush);
 
 
 
+function drawStar($imageResource, $centreX, $centreY, $points, $outerRadius, $innerRadius, $petalBrushSize, $outlineColour, $fillColour) {
+	
+	$outerRadius -= $petalBrushSize;
+	$petalBrush = imagecreate($petalBrushSize,$petalBrushSize);
+	$petalBrushtrans = imagecolorallocate($petalBrush, 0, 0, 0);
+	imagecolortransparent($petalBrush, $petalBrushtrans);
+	$thisPetalColour = imagecolorallocate($petalBrush, $outlineColour[0], $outlineColour[1], $outlineColour[2]);
+	imagefilledellipse($petalBrush, $petalBrushSize/2, $petalBrushSize/2, $petalBrushSize,$petalBrushSize, $thisPetalColour);
 
+
+	imagesetbrush($imageResource, $petalBrush);
+	// http://stackoverflow.com/questions/14580033/algorithm-for-drawing-a-5-point-star
+	$RAD_distance = ( 2 * pi() / $points);  
+	$RAD_half_PI = pi()/2; 
+	$petalPoints = array(array($centreX, $centreY));
+
+	for ($i=0; $i <= $points; $i++) {
+		$new_outer_RAD = ($i + 1) * $RAD_distance;     
+		$half_new_outer_RAD = $new_outer_RAD - ($RAD_distance / 2); 
+		// don't have this line for a poly (need for a star):
+		$midPointX = $centreX + round(cos($half_new_outer_RAD - $RAD_half_PI) * $innerRadius);
+		$midPointY = $centreY + round(sin($half_new_outer_RAD - $RAD_half_PI) * $innerRadius);
+		//imageline ( ${'flower'.$k} , $startX , $startY , $midPointX , $midPointY, IMG_COLOR_BRUSHED);
+		array_push($petalPoints, array($midPointX, $midPointY));
+		//
+		$nextPointX = $centreX + round(cos($new_outer_RAD - $RAD_half_PI) * $outerRadius);
+		$nextPointY = $centreY + round(sin($new_outer_RAD - $RAD_half_PI) * $outerRadius);
+		array_push($petalPoints, array($nextPointX, $nextPointY));
+		//	imageline ( ${'flower'.$k} , $midPointX , $midPointY , $nextPointX , $nextPointY ,IMG_COLOR_BRUSHED);
+	}
+	$previousX = $petalPoints[0][0];
+	$previousY = $petalPoints[0][1];
+	for ($i=0; $i < count($petalPoints)-2; $i++) {
+		$controlX = ($petalPoints[$i][0] + $petalPoints[$i+1][0]) / 2;
+		$controlY = ($petalPoints[$i][1] + $petalPoints[$i+1][1]) / 2;
+		quadBezier($imageResource, $previousX, $previousY, $petalPoints[$i][0], $petalPoints[$i][1], $controlX, $controlY);
+		$previousX = $controlX;
+		$previousY = $controlY;
+	}
+	// draw to last point:
+	quadBezier($imageResource, $previousX, $previousY,$petalPoints[$i][0], $petalPoints[$i][1], $petalPoints[$i+1][0],$petalPoints[$i+1][1]);
+
+if($fillColour != NULL) {
+	imagefill ( $imageResource, $centreX+$petalBrushSize,$centreY+$petalBrushSize, imagecolorallocate($imageResource, $fillColour[0], $fillColour[1], $fillColour[2]) );
+}
+
+imagedestroy($petalBrush);
+}
 
 
 
@@ -414,10 +470,7 @@ if(isset($_GET["seed"])) {
 mt_srand($storedSeed);
 
 
-$debug = false;
-if(isset($_GET["debug"])) {
-	$debug = true;
-}
+
 
 
 function quadBezier($im, $x1, $y1, $x2, $y2, $x3, $y3) {
@@ -989,66 +1042,25 @@ $whichFlowerType = mt_rand(1,2);
 switch ($whichFlowerType) {
 	case 1:
 
-$petalVariation = createColourVariation($petalRed,$petalGreen,$petalBlue);
 
-// star petal type
-$petalBrushSize = 2;
-	$petalBrush = imagecreate($petalBrushSize,$petalBrushSize);
-	$petalBrushtrans = imagecolorallocate($petalBrush, 0, 0, 0);
-	imagecolortransparent($petalBrush, $petalBrushtrans);
-	$thisPetalColour = imagecolorallocate($petalBrush, $petalVariation[0], $petalVariation[1], $petalVariation[2]);
-	imagefilledellipse($petalBrush, $petalBrushSize/2, $petalBrushSize/2, $petalBrushSize,$petalBrushSize, $thisPetalColour);
+
 
 
 
 $numberOfFlowerVariationsToDraw = 4;
 $flowerCanvasSize = 90;
 for ($k=0;$k<$numberOfFlowerVariationsToDraw;$k++) {
+	$petalVariation = createColourVariation($petalRed,$petalGreen,$petalBlue);
 	${'flower'.$k} = imagecreate($flowerCanvasSize,$flowerCanvasSize);
 	$flowerTrans = imagecolorallocate(${'flower'.$k}, 0, 0, 0);
 	imagecolortransparent(${'flower'.$k}, $flowerTrans);
 
+$darkenedOutlineColour = darkenColourVariation($petalVariation[0],$petalVariation[1],$petalVariation[2],50);
 
-	// draw star:
-	$centreX = $flowerCanvasSize/2;
-	$centreY =$flowerCanvasSize/2;
-	$points = mt_rand(6,12);
-	$outerRadius = ($flowerCanvasSize/2)-$petalBrushSize;
-	$innerRadius = 20;
-	imagesetbrush(${'flower'.$k}, $petalBrush);
-	// http://stackoverflow.com/questions/14580033/algorithm-for-drawing-a-5-point-star
-	$RAD_distance = ( 2 * pi() / $points);  
-	$RAD_half_PI = pi()/2; 
-	$petalPoints = array(array($centreX, $centreY));
+drawStar(${'flower'.$k}, $flowerCanvasSize/2, $flowerCanvasSize/2, mt_rand(6,12), ($flowerCanvasSize/2), 20, 2, [$darkenedOutlineColour[0],$darkenedOutlineColour[1],$darkenedOutlineColour[2]],[$petalVariation[0], $petalVariation[1], $petalVariation[2]]);
+	
+	imagefilledellipse ( ${'flower'.$k} , $flowerCanvasSize/2, $flowerCanvasSize/2 , $flowerCanvasSize/6 , $flowerCanvasSize/6 , imagecolorallocate(${'flower'.$k}, 184,126,80 ) );
 
-	for ($i=0; $i <= $points; $i++) {
-		$new_outer_RAD = ($i + 1) * $RAD_distance;     
-		$half_new_outer_RAD = $new_outer_RAD - ($RAD_distance / 2); 
-		// don't have this line for a poly (need for a star):
-		$midPointX = $centreX + round(cos($half_new_outer_RAD - $RAD_half_PI) * $innerRadius);
-		$midPointY = $centreY + round(sin($half_new_outer_RAD - $RAD_half_PI) * $innerRadius);
-		//imageline ( ${'flower'.$k} , $startX , $startY , $midPointX , $midPointY, IMG_COLOR_BRUSHED);
-		array_push($petalPoints, array($midPointX, $midPointY));
-		//
-		$nextPointX = $centreX + round(cos($new_outer_RAD - $RAD_half_PI) * $outerRadius);
-		$nextPointY = $centreY + round(sin($new_outer_RAD - $RAD_half_PI) * $outerRadius);
-		array_push($petalPoints, array($nextPointX, $nextPointY));
-		//	imageline ( ${'flower'.$k} , $midPointX , $midPointY , $nextPointX , $nextPointY ,IMG_COLOR_BRUSHED);
-	}
-	$previousX = $petalPoints[0][0];
-	$previousY = $petalPoints[0][1];
-	for ($i=0; $i < count($petalPoints)-2; $i++) {
-		$controlX = ($petalPoints[$i][0] + $petalPoints[$i+1][0]) / 2;
-		$controlY = ($petalPoints[$i][1] + $petalPoints[$i+1][1]) / 2;
-		quadBezier(${'flower'.$k}, $previousX, $previousY, $petalPoints[$i][0], $petalPoints[$i][1], $controlX, $controlY);
-		$previousX = $controlX;
-		$previousY = $controlY;
-	}
-	// draw to last point:
-	quadBezier(${'flower'.$k}, $previousX, $previousY,$petalPoints[$i][0], $petalPoints[$i][1], $petalPoints[$i+1][0],$petalPoints[$i+1][1]);
-	imagefill ( ${'flower'.$k}, $centreX+$petalBrushSize,$centreY+$petalBrushSize, imagecolorallocate(${'flower'.$k}, $petalVariation[0], $petalVariation[1], $petalVariation[2]) );
-	imagefilledellipse ( ${'flower'.$k} , $centreX, $centreY , $flowerCanvasSize/6 , $flowerCanvasSize/6 , imagecolorallocate(${'flower'.$k}, 184,126,80 ) );
-	// end star draw routine
 }
 
 
@@ -1878,6 +1890,13 @@ if(stripos($lastError["file"], "generate.php") === false) {
 
 	sendToTwitter();
 
+}
+
+
+
+if($debug) {
+$timeElapsedSecs = microtime(true) - $startTime;
+echo '<p style="font-size:0.7em;">Took '.$timeElapsedSecs.' seconds</p>';
 }
 
 
