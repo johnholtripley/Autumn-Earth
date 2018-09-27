@@ -22,7 +22,7 @@
 
 // pass in values for the heart's inset for example to better control shape
 
-
+// draw ellipse fill bug - http://develop.ae/herbarium/generate.php?seed=1538058200&debug=true
 
 // draw continuous curve for the stalk so it's a smooth curve, then fill
 
@@ -190,6 +190,44 @@ return $rotatedCoordX + $centreOffsetX;
 
 
 
+function drawEllipse($imageResource, $centreX, $centreY, $width, $height, $rotationDegrees, $brushSize, $outlineColour, $fillColour) {
+	$primitiveBrush = imagecreate($brushSize,$brushSize);
+	$primitiveBrushtrans = imagecolorallocate($primitiveBrush, 0, 0, 0);
+	imagecolortransparent($primitiveBrush, $primitiveBrushtrans);
+	$thisColour = imagecolorallocate($primitiveBrush, $outlineColour[0], $outlineColour[1], $outlineColour[2]);
+	imagefilledellipse($primitiveBrush, $brushSize/2,$brushSize/2,$brushSize,$brushSize, $thisColour);
+	imagesetbrush($imageResource, $primitiveBrush);
+	// thanks simon nuttall http://php.net/manual/en/function.imageellipse.php
+	$step=3;
+	$cosangle=cos(deg2rad($rotationDegrees));
+	$sinangle=sin(deg2rad($rotationDegrees));
+	$px=$width * $cosangle;
+	$py=$width * $sinangle;
+
+	for ($angle=$step; $angle<=(180+$step); $angle+=$step) {
+		$ox = $width * cos(deg2rad($angle));
+		$oy = $height * sin(deg2rad($angle));
+		$x = ($ox * $cosangle) - ($oy * $sinangle);
+		$y = ($ox * $sinangle) + ($oy * $cosangle);
+		if($fillColour != NULL) {
+			imagefilledpolygon($imageResource, [$centreX, $centreY, $centreX+$px, $centreY+$py, $centreX+$x, $centreY+$y], 3, imagecolorallocate($imageResource, $fillColour[0], $fillColour[1], $fillColour[2]));
+			imagefilledpolygon($imageResource, [$centreX, $centreY, $centreX-$px, $centreY-$py, $centreX-$x, $centreY-$y], 3, imagecolorallocate($imageResource, $fillColour[0], $fillColour[1], $fillColour[2]));
+		}
+		imageline($imageResource, $centreX+$px, $centreY+$py, $centreX+$x, $centreY+$y, IMG_COLOR_BRUSHED);
+		imageline($imageResource, $centreX-$px, $centreY-$py, $centreX-$x, $centreY-$y, IMG_COLOR_BRUSHED);
+		$px=$x;
+		$py=$y;
+	}
+
+/*
+	if($fillColour != NULL) {
+		imagefill ( $imageResource, $centreX,$centreY, imagecolorallocate($imageResource, $fillColour[0], $fillColour[1], $fillColour[2]) );
+	}
+*/
+	imagedestroy($primitiveBrush);
+}
+
+
 function drawLine($imageResource, $startPointPosX, $startPointPosY, $length, $rotationDegrees, $outlineColour, $lineThickness) {
 // create brush for line:
 	$primitiveBrush = imagecreate($lineThickness,$lineThickness);
@@ -209,14 +247,14 @@ imagedestroy($primitiveBrush);
 
 
 
-function drawStar($imageResource, $centreX, $centreY, $points, $outerRadius, $innerRadius, $petalBrushSize, $outlineColour, $fillColour) {
+function drawStar($imageResource, $centreX, $centreY, $points, $outerRadius, $innerRadius, $brushSize, $outlineColour, $fillColour) {
 	
-	$outerRadius -= $petalBrushSize;
-	$petalBrush = imagecreate($petalBrushSize,$petalBrushSize);
+	$outerRadius -= $brushSize;
+	$petalBrush = imagecreate($brushSize,$brushSize);
 	$petalBrushtrans = imagecolorallocate($petalBrush, 0, 0, 0);
 	imagecolortransparent($petalBrush, $petalBrushtrans);
 	$thisPetalColour = imagecolorallocate($petalBrush, $outlineColour[0], $outlineColour[1], $outlineColour[2]);
-	imagefilledellipse($petalBrush, $petalBrushSize/2, $petalBrushSize/2, $petalBrushSize,$petalBrushSize, $thisPetalColour);
+	imagefilledellipse($petalBrush, $brushSize/2, $brushSize/2, $brushSize,$brushSize, $thisPetalColour);
 
 
 	imagesetbrush($imageResource, $petalBrush);
@@ -257,7 +295,7 @@ $randomOffset = mt_rand(0,4);
 	quadBezier($imageResource, $previousX, $previousY,$petalPoints[$i][0], $petalPoints[$i][1], $petalPoints[$i+1][0],$petalPoints[$i+1][1]);
 
 if($fillColour != NULL) {
-	imagefill ( $imageResource, $centreX+$petalBrushSize,$centreY+$petalBrushSize, imagecolorallocate($imageResource, $fillColour[0], $fillColour[1], $fillColour[2]) );
+	imagefill ( $imageResource, $centreX+$brushSize,$centreY+$brushSize, imagecolorallocate($imageResource, $fillColour[0], $fillColour[1], $fillColour[2]) );
 }
 
 imagedestroy($petalBrush);
@@ -1042,16 +1080,10 @@ break;
 
 
 // prepare flower graphic - pick a flower type:
-$whichFlowerType = mt_rand(1,2);
+$whichFlowerType = mt_rand(1,3);
 
 switch ($whichFlowerType) {
 	case 1:
-
-
-
-
-
-
 $numberOfFlowerVariationsToDraw = 4;
 $flowerCanvasSize = 90;
 for ($k=0;$k<$numberOfFlowerVariationsToDraw;$k++) {
@@ -1059,13 +1091,9 @@ for ($k=0;$k<$numberOfFlowerVariationsToDraw;$k++) {
 	${'flower'.$k} = imagecreate($flowerCanvasSize,$flowerCanvasSize);
 	$flowerTrans = imagecolorallocate(${'flower'.$k}, 0, 0, 0);
 	imagecolortransparent(${'flower'.$k}, $flowerTrans);
-
 $darkenedOutlineColour = darkenColourVariation($petalVariation[0],$petalVariation[1],$petalVariation[2],50);
-
 drawStar(${'flower'.$k}, $flowerCanvasSize/2, $flowerCanvasSize/2, mt_rand(6,12), ($flowerCanvasSize/2), 20, 2, [$darkenedOutlineColour[0],$darkenedOutlineColour[1],$darkenedOutlineColour[2]],[$petalVariation[0], $petalVariation[1], $petalVariation[2]]);
-	
 	imagefilledellipse ( ${'flower'.$k} , $flowerCanvasSize/2, $flowerCanvasSize/2 , $flowerCanvasSize/6 , $flowerCanvasSize/6 , imagecolorallocate(${'flower'.$k}, 184,126,80 ) );
-
 }
 
 
@@ -1078,25 +1106,14 @@ for ($k=0;$k<$numberOfFlowerVariationsToDraw;$k++) {
 	${'flower'.$k} = imagecreate($flowerCanvasSize,$flowerCanvasSize);
 	$flowerTrans = imagecolorallocate(${'flower'.$k}, 0, 0, 0);
 	imagecolortransparent(${'flower'.$k}, $flowerTrans);
-
-
 $numberOfSpokes = mt_rand(5,12);
 $numberOfSpokes = 8;
 $lengthOfSpoke = 30;
-
 $angleInc = 2*M_PI/$numberOfSpokes;
 // make the stalks not be too vertical or horizontal:
 $angleOffset = mt_rand(20,100)/100;
-
 $stalkColour = imagecolorallocate(${'flower'.$k}, 6,42,30 );
-
-
 $petalVariation = createColourVariation($petalRed,$petalGreen,$petalBlue);
-
-
-
-
-
 $petalColour = imagecolorallocate(${'flower'.$k}, $petalVariation[0], $petalVariation[1], $petalVariation[2] );
 
 for ($i=0; $i<$numberOfSpokes; $i++) {
@@ -1113,6 +1130,49 @@ imageellipse(${'flower'.$k}, $endX, $endY, $spokeHeadRadius, $spokeHeadRadius, $
 
 
 break;
+
+
+
+
+	case 3:
+$numberOfFlowerVariationsToDraw = 4;
+$flowerCanvasSize = 200;
+for ($k=0;$k<$numberOfFlowerVariationsToDraw;$k++) {
+	$petalVariation = createColourVariation($petalRed,$petalGreen,$petalBlue);
+	${'flower'.$k} = imagecreate($flowerCanvasSize,$flowerCanvasSize);
+	$flowerTrans = imagecolorallocate(${'flower'.$k}, 0, 0, 0);
+	imagecolortransparent(${'flower'.$k}, $flowerTrans);
+$darkenedOutlineColour = darkenColourVariation($petalVariation[0],$petalVariation[1],$petalVariation[2],50);
+
+$numberOfPetals = mt_rand(4,9);
+$petalWidth = 20;
+$petalHeight = 40;
+
+
+/*
+for ($l=0;$l<$numberOfPetals;$l++) {
+	$thisRotation = 360/$numberOfPetals*$l;
+	// offset the petal around the centre:
+$radians = deg2rad($thisRotation);
+$thisOffsetCentreX = $flowerCanvasSize/2 + sin($radians)*$petalHeight/2;
+$thisOffsetCentreY = $flowerCanvasSize/2 + cos($radians)*$petalHeight/2;
+
+
+drawEllipse(${'flower'.$k}, $thisOffsetCentreX, $thisOffsetCentreY, $petalWidth, $petalHeight, $thisRotation, 2, [$darkenedOutlineColour[0],$darkenedOutlineColour[1],$darkenedOutlineColour[2]],[$petalVariation[0], $petalVariation[1], $petalVariation[2]]);
+}
+*/
+
+drawEllipse(${'flower'.$k}, $flowerCanvasSize/2, $flowerCanvasSize/2, $petalWidth, $petalHeight, 220, 2, [$darkenedOutlineColour[0],$darkenedOutlineColour[1],$darkenedOutlineColour[2]],[$petalVariation[0], $petalVariation[1], $petalVariation[2]]);
+drawEllipse(${'flower'.$k}, $flowerCanvasSize/2, $flowerCanvasSize/2, $petalWidth, $petalHeight, 90, 2, [$darkenedOutlineColour[0],$darkenedOutlineColour[1],$darkenedOutlineColour[2]],[$petalVariation[0], $petalVariation[1], $petalVariation[2]]);
+drawEllipse(${'flower'.$k}, $flowerCanvasSize/2, $flowerCanvasSize/2, $petalWidth, $petalHeight, 300, 2, [$darkenedOutlineColour[0],$darkenedOutlineColour[1],$darkenedOutlineColour[2]],[$petalVariation[0], $petalVariation[1], $petalVariation[2]]);
+
+	//imagefilledellipse ( ${'flower'.$k} , $flowerCanvasSize/2, $flowerCanvasSize/2 , $flowerCanvasSize/6 , $flowerCanvasSize/6 , imagecolorallocate(${'flower'.$k}, 184,126,80 ) );
+}
+break;
+
+
+
+
 }
 
 
