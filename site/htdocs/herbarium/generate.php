@@ -191,6 +191,7 @@ return $rotatedCoordX + $centreOffsetX;
 
 
 function drawEllipse($imageResource, $centreX, $centreY, $width, $height, $rotationDegrees, $brushSize, $outlineColour, $fillColour) {
+	
 	$primitiveBrush = imagecreate($brushSize,$brushSize);
 	$primitiveBrushtrans = imagecolorallocate($primitiveBrush, 0, 0, 0);
 	imagecolortransparent($primitiveBrush, $primitiveBrushtrans);
@@ -1145,20 +1146,18 @@ for ($k=0;$k<$numberOfFlowerVariationsToDraw;$k++) {
 	imagecolortransparent(${'flower'.$k}, $flowerTrans);
 $darkenedOutlineColour = darkenColourVariation($petalVariation[0],$petalVariation[1],$petalVariation[2],50);
 
-$numberOfPetals = mt_rand(4,9);
-$petalWidth = 20;
-$petalHeight = 40;
+$numberOfPetals = mt_rand(5,9);
+$petalWidth = 12;
+$petalHeight = 32;
 
 
 
 for ($l=0;$l<$numberOfPetals;$l++) {
 	$thisRotation = 360/$numberOfPetals*$l;
-	// offset the petal around the centre:
-$radians = deg2rad($thisRotation);
-$thisOffsetCentreX = $flowerCanvasSize/2 + sin($radians)*$petalHeight/2;
-$thisOffsetCentreY = $flowerCanvasSize/2 + cos($radians)*$petalHeight/2;
-
-
+	// offset the petal around a centre radius (not entirely sure why the +90 is needed here...):
+$radians = deg2rad($thisRotation+90);
+$thisOffsetCentreX = $flowerCanvasSize/2 + cos($radians)*$petalHeight*0.7;
+$thisOffsetCentreY = $flowerCanvasSize/2 + sin($radians)*$petalHeight*0.7;
 drawEllipse(${'flower'.$k}, $thisOffsetCentreX, $thisOffsetCentreY, $petalWidth, $petalHeight, $thisRotation, 2, [$darkenedOutlineColour[0],$darkenedOutlineColour[1],$darkenedOutlineColour[2]],[$petalVariation[0], $petalVariation[1], $petalVariation[2]]);
 }
 
@@ -1166,7 +1165,7 @@ drawEllipse(${'flower'.$k}, $thisOffsetCentreX, $thisOffsetCentreY, $petalWidth,
 
 
 
-	//imagefilledellipse ( ${'flower'.$k} , $flowerCanvasSize/2, $flowerCanvasSize/2 , $flowerCanvasSize/6 , $flowerCanvasSize/6 , imagecolorallocate(${'flower'.$k}, 184,126,80 ) );
+	imagefilledellipse ( ${'flower'.$k} , $flowerCanvasSize/2, $flowerCanvasSize/2 , $flowerCanvasSize/7 , $flowerCanvasSize/7 , imagecolorallocate(${'flower'.$k}, 184,126,80 ) );
 }
 break;
 
