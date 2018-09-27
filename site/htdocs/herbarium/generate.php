@@ -22,7 +22,7 @@
 
 // pass in values for the heart's inset for example to better control shape
 
-// star drawing routine seems to start in the centre and draw a line out to the edge - http://develop.ae/herbarium/generate.php?seed=1537995547&debug=true
+
 
 // draw continuous curve for the stalk so it's a smooth curve, then fill
 
@@ -160,7 +160,7 @@ if(!$debug) {
 if(!$debug) {
 
 $query = "INSERT INTO tblplants (latinName,commonNames,commonNamesJoined,timeCreated,plantDesc,plantUrl,tweetedContent,isAquatic,isNight,plantSeed)
-VALUES ('" . $latinName . "','" . $commonNameString . "','" . $commonNamesJoined . "',NOW(),'".$startingText."','".$plantURL."','".mysqli_real_escape_string($connection,$textString)."','".$isAquatic."','".$isNight."','".$storedSeed."')";
+VALUES ('" . $latinName . "','" . mysqli_real_escape_string($connection,$commonNameString) . "','" . mysqli_real_escape_string($connection,$commonNamesJoined) . "',NOW(),'".mysqli_real_escape_string($connection,$startingText)."','".$plantURL."','".mysqli_real_escape_string($connection,$textString)."','".$isAquatic."','".$isNight."','".$storedSeed."')";
 
 $result = mysqli_query($connection, $query) or die ("couldn't execute tblplant query".$query);
 }
@@ -223,16 +223,20 @@ function drawStar($imageResource, $centreX, $centreY, $points, $outerRadius, $in
 	// http://stackoverflow.com/questions/14580033/algorithm-for-drawing-a-5-point-star
 	$RAD_distance = ( 2 * pi() / $points);  
 	$RAD_half_PI = pi()/2; 
-	$petalPoints = array(array($centreX, $centreY));
+	$petalPoints = array();
 
-	for ($i=0; $i <= $points; $i++) {
+$randomOffset = mt_rand(0,4);
+
+	for ($i=$randomOffset; $i <= $points+$randomOffset; $i++) {
 		$new_outer_RAD = ($i + 1) * $RAD_distance;     
 		$half_new_outer_RAD = $new_outer_RAD - ($RAD_distance / 2); 
 		// don't have this line for a poly (need for a star):
 		$midPointX = $centreX + round(cos($half_new_outer_RAD - $RAD_half_PI) * $innerRadius);
 		$midPointY = $centreY + round(sin($half_new_outer_RAD - $RAD_half_PI) * $innerRadius);
 		//imageline ( ${'flower'.$k} , $startX , $startY , $midPointX , $midPointY, IMG_COLOR_BRUSHED);
+	
 		array_push($petalPoints, array($midPointX, $midPointY));
+
 		//
 		$nextPointX = $centreX + round(cos($new_outer_RAD - $RAD_half_PI) * $outerRadius);
 		$nextPointY = $centreY + round(sin($new_outer_RAD - $RAD_half_PI) * $outerRadius);
@@ -241,7 +245,8 @@ function drawStar($imageResource, $centreX, $centreY, $points, $outerRadius, $in
 	}
 	$previousX = $petalPoints[0][0];
 	$previousY = $petalPoints[0][1];
-	for ($i=0; $i < count($petalPoints)-2; $i++) {
+
+	for ($i=0; $i < count($petalPoints)-3; $i++) {
 		$controlX = ($petalPoints[$i][0] + $petalPoints[$i+1][0]) / 2;
 		$controlY = ($petalPoints[$i][1] + $petalPoints[$i+1][1]) / 2;
 		quadBezier($imageResource, $previousX, $previousY, $petalPoints[$i][0], $petalPoints[$i][1], $controlX, $controlY);
@@ -1438,6 +1443,25 @@ $thisSecondCommonName = $commonSuffixes[mt_rand(0,count($commonSuffixes)-1)];
 
 
 
+// in case the first name has a space at the end, and the second at the start:
+$thisCommonName = str_replace("  ", " ", $thisCommonName);
+
+$aquaticPos = strpos($thisCommonName, "*");
+if ($aquaticPos !== false) {
+	$isAquatic = 1;
+	}
+	$nightPos = strpos($thisCommonName, "^");
+if ($nightPos !== false) {
+	$isNight = 1;
+	}
+
+// remove any property markers now:
+$thisCommonName = str_ireplace("*", "", $thisCommonName);
+$thisCommonName = str_ireplace("^", "", $thisCommonName);
+
+
+
+
 // make sure any prefixes ending in '-' don't have a space after them - so don't have "bil lilly", it's "bililly" instead:
 if (substr($thisCommonName, -1, 1) == "-") {
 	$thisSecondCommonName = trim($thisSecondCommonName);
@@ -1457,23 +1481,11 @@ $thisCommonNameBeforePrefix = $thisCommonName;
 $thisCommonName = addPrefix($thisCommonName, false);
 
 
-// in case the first name has a space at the end, and the second at the start:
-$thisCommonName = str_replace("  ", " ", $thisCommonName);
-
-$aquaticPos = strpos($thisCommonName, "*");
-if ($aquaticPos !== false) {
-	$isAquatic = 1;
-	}
-	$nightPos = strpos($thisCommonName, "^");
-if ($nightPos !== false) {
-	$isNight = 1;
-	}
 
 
-	
-// remove any property markers:
-$thisCommonName = str_ireplace("*", "", $thisCommonName);
-$thisCommonName = str_ireplace("^", "", $thisCommonName);
+
+
+
 if($i==0) {
 	$primaryCommonName = $thisCommonName;
 	do {
