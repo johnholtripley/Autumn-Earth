@@ -22,7 +22,7 @@
 
 // pass in values for the heart's inset for example to better control shape
 
-// draw ellipse fill bug - http://develop.ae/herbarium/generate.php?seed=1538058200&debug=true
+// http://develop.ae/herbarium/generate.php?seed=1538058200&debug=true
 
 // draw continuous curve for the stalk so it's a smooth curve, then fill
 
@@ -198,7 +198,7 @@ function drawEllipse($imageResource, $centreX, $centreY, $width, $height, $rotat
 	imagefilledellipse($primitiveBrush, $brushSize/2,$brushSize/2,$brushSize,$brushSize, $thisColour);
 	imagesetbrush($imageResource, $primitiveBrush);
 	// thanks simon nuttall http://php.net/manual/en/function.imageellipse.php
-	$step=3;
+	$step=36;
 	$cosangle=cos(deg2rad($rotationDegrees));
 	$sinangle=sin(deg2rad($rotationDegrees));
 	$px=$width * $cosangle;
@@ -210,6 +210,7 @@ function drawEllipse($imageResource, $centreX, $centreY, $width, $height, $rotat
 		$x = ($ox * $cosangle) - ($oy * $sinangle);
 		$y = ($ox * $sinangle) + ($oy * $cosangle);
 		if($fillColour != NULL) {
+			// draw triangles:
 			imagefilledpolygon($imageResource, [$centreX, $centreY, $centreX+$px, $centreY+$py, $centreX+$x, $centreY+$y], 3, imagecolorallocate($imageResource, $fillColour[0], $fillColour[1], $fillColour[2]));
 			imagefilledpolygon($imageResource, [$centreX, $centreY, $centreX-$px, $centreY-$py, $centreX-$x, $centreY-$y], 3, imagecolorallocate($imageResource, $fillColour[0], $fillColour[1], $fillColour[2]));
 		}
@@ -1149,7 +1150,7 @@ $petalWidth = 20;
 $petalHeight = 40;
 
 
-/*
+
 for ($l=0;$l<$numberOfPetals;$l++) {
 	$thisRotation = 360/$numberOfPetals*$l;
 	// offset the petal around the centre:
@@ -1160,11 +1161,10 @@ $thisOffsetCentreY = $flowerCanvasSize/2 + cos($radians)*$petalHeight/2;
 
 drawEllipse(${'flower'.$k}, $thisOffsetCentreX, $thisOffsetCentreY, $petalWidth, $petalHeight, $thisRotation, 2, [$darkenedOutlineColour[0],$darkenedOutlineColour[1],$darkenedOutlineColour[2]],[$petalVariation[0], $petalVariation[1], $petalVariation[2]]);
 }
-*/
 
-drawEllipse(${'flower'.$k}, $flowerCanvasSize/2, $flowerCanvasSize/2, $petalWidth, $petalHeight, 220, 2, [$darkenedOutlineColour[0],$darkenedOutlineColour[1],$darkenedOutlineColour[2]],[$petalVariation[0], $petalVariation[1], $petalVariation[2]]);
-drawEllipse(${'flower'.$k}, $flowerCanvasSize/2, $flowerCanvasSize/2, $petalWidth, $petalHeight, 90, 2, [$darkenedOutlineColour[0],$darkenedOutlineColour[1],$darkenedOutlineColour[2]],[$petalVariation[0], $petalVariation[1], $petalVariation[2]]);
-drawEllipse(${'flower'.$k}, $flowerCanvasSize/2, $flowerCanvasSize/2, $petalWidth, $petalHeight, 300, 2, [$darkenedOutlineColour[0],$darkenedOutlineColour[1],$darkenedOutlineColour[2]],[$petalVariation[0], $petalVariation[1], $petalVariation[2]]);
+
+
+
 
 	//imagefilledellipse ( ${'flower'.$k} , $flowerCanvasSize/2, $flowerCanvasSize/2 , $flowerCanvasSize/6 , $flowerCanvasSize/6 , imagecolorallocate(${'flower'.$k}, 184,126,80 ) );
 }
