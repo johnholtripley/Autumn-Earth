@@ -18,11 +18,10 @@
 // using the stepped brush sizes for the stem thicknesses shows where it jumps to the next size - it would be better to construct a single bezier curve for each edge and then fill the whole
 // create function for drawing primitives (teardrop, heart shape, egg shape, spiral, etc). pass in image to draw to, colour, size, rotation, filled (Y/N), outlined (Y/N), coords
 
-
+// frond leaf style - http://develop.ae/herbarium/generate.php?seed=1538170244&debug=true
+// https://photos.google.com/album/AF1QipMPyS2pllZgjCpPZ9izvHTNytQAKYzAgOzveaIi/photo/AF1QipNFGtD2fdl7M0-RXBZzkOdA3hWKFTA-YwpHsmHM
 
 // pass in values for the heart's inset for example to better control shape
-
-// http://develop.ae/herbarium/generate.php?seed=1538058200&debug=true
 
 // draw continuous curve for the stalk so it's a smooth curve, then fill
 
@@ -301,6 +300,53 @@ if($fillColour != NULL) {
 }
 
 imagedestroy($petalBrush);
+}
+
+
+
+function drawPointedEllipse($imageResource, $pointPosX, $pointPosY, $width, $height, $rotationDegrees, $outlineColour, $outlineThickness, $fillColour) {
+	$canvasWidth = $width*2;
+$canvasHeight = $height*2;
+
+$canvasWidth = max($canvasWidth, $canvasHeight);
+$canvasHeight = max($canvasWidth, $canvasHeight);
+
+	$primitiveCanvas = imagecreate($canvasWidth,$canvasHeight);
+	  //  imagealphablending($primitiveCanvas, false);
+    // imagesavealpha($primitiveCanvas, true);
+	$primitiveCanvasTrans = imagecolorallocate($primitiveCanvas, 0, 0, 0);
+	imagecolortransparent($primitiveCanvas, $primitiveCanvasTrans);
+	// create brush for line:
+	$primitiveBrush = imagecreate($outlineThickness,$outlineThickness);
+	$primitiveBrushtrans = imagecolorallocate($primitiveBrush, 0, 0, 0);
+	imagecolortransparent($primitiveBrush, $primitiveBrushtrans);
+	$thisColour = imagecolorallocate($primitiveBrush, $outlineColour[0], $outlineColour[1], $outlineColour[2]);
+	imagefilledellipse($primitiveBrush, $outlineThickness/2,$outlineThickness/2,$outlineThickness,$outlineThickness, $thisColour);
+	imagesetbrush($primitiveCanvas, $primitiveBrush);
+
+// non-rotated:
+//quadBezier($primitiveCanvas, $canvasWidth/2, $canvasHeight/2, ($canvasWidth/2)+$width, ($canvasHeight/2)+$height/2, $canvasWidth/2,($canvasHeight/2)+$height);
+//quadBezier($primitiveCanvas, $canvasWidth/2, $canvasHeight/2, ($canvasWidth/2)-$width, ($canvasHeight/2)+$height/2, $canvasWidth/2,($canvasHeight/2)+$height);
+
+
+
+quadBezier($primitiveCanvas, $canvasWidth/2, $canvasHeight/2, rotateCoordsX(($canvasWidth/2)+$width, ($canvasHeight/2)+$height/2,$rotationDegrees,$canvasWidth/2, $canvasHeight/2),
+	rotateCoordsY(($canvasWidth/2)+$width, ($canvasHeight/2)+$height/2,$rotationDegrees,$canvasWidth/2, $canvasHeight/2), rotateCoordsX($canvasWidth/2,($canvasHeight/2)+$height,$rotationDegrees,$canvasWidth/2, $canvasHeight/2), rotateCoordsY($canvasWidth/2,($canvasHeight/2)+$height,$rotationDegrees,$canvasWidth/2, $canvasHeight/2));
+quadBezier($primitiveCanvas, $canvasWidth/2, $canvasHeight/2, rotateCoordsX(($canvasWidth/2)-$width, ($canvasHeight/2)+$height/2,$rotationDegrees,$canvasWidth/2, $canvasHeight/2),
+	rotateCoordsY(($canvasWidth/2)-$width, ($canvasHeight/2)+$height/2,$rotationDegrees,$canvasWidth/2, $canvasHeight/2), rotateCoordsX($canvasWidth/2,($canvasHeight/2)+$height,$rotationDegrees,$canvasWidth/2, $canvasHeight/2), rotateCoordsY($canvasWidth/2,($canvasHeight/2)+$height,$rotationDegrees,$canvasWidth/2, $canvasHeight/2));
+
+
+	if($fillColour != NULL) {
+		// if $fillColour is NULL, then don't fill:
+		imagefill($primitiveCanvas, rotateCoordsX($canvasWidth/2, $canvasHeight/2+$height/4,$rotationDegrees,$canvasWidth/2, $canvasHeight/2), rotateCoordsY($canvasWidth/2, $canvasHeight/2+$height/4,$rotationDegrees,$canvasWidth/2, $canvasHeight/2), imagecolorallocate($primitiveCanvas, $fillColour[0],$fillColour[1], $fillColour[2]));
+	}
+
+
+	// draw this canvas to the source:
+		imagecopy($imageResource, $primitiveCanvas, $pointPosX-$canvasWidth/2, $pointPosY-$canvasHeight/2, 0, 0, $canvasWidth, $canvasHeight);
+
+	imagedestroy($primitiveBrush);
+	imagedestroy($primitiveCanvas);
 }
 
 
@@ -981,7 +1027,7 @@ $thisLeafColour = $leafColours[mt_rand(0, count($leafColours) - 1)];
 
 
 // prepare leaf graphic - pick a leaf type:
-$whichLeafType = mt_rand(1,2);
+$whichLeafType = mt_rand(1,3);
 
 
 
@@ -1054,14 +1100,6 @@ for ($k=0;$k<$numberOfLeafVariationsToDraw;$k++) {
 	$numberOfLeafHeads = 5;
 	$leafThickness = 4;
 
-/*
-	for ($lh=0;$lh<$numberOfLeafHeads;$lh++) {
-		// add 1 to leafHeads number so there's an empty position for the stalk to attach to:
-		$thisLeafHeadRotation = ((360/($numberOfLeafHeads+1))*$lh)+$leafHeadRotationOffset+90;
-		drawTeardrop(${'leaf'.$k}, $leafCanvasWidth/2, $leafCanvasHeight/2, $leafCanvasWidth/$leafThickness, $leafCanvasHeight/4, $thisLeafHeadRotation, [$leafVariation[0],$leafVariation[1],$leafVariation[2]], 6, [$leafVariation[0],$leafVariation[1],$leafVariation[2]]);
-	}
-*/
-
 $darkenedOutlineColour = darkenColourVariation($leafVariation[0],$leafVariation[1],$leafVariation[2],50);
 	for ($lh=0;$lh<$numberOfLeafHeads;$lh++) {
 		// add 1 to leafHeads number so there's an empty position for the stalk to attach to:
@@ -1077,6 +1115,31 @@ $darkenedOutlineColour = darkenColourVariation($leafVariation[0],$leafVariation[
 
 }
 break;
+
+case 3:
+// multi fronded leaf
+$numberOfLeafVariationsToDraw = 1;
+$leafCanvasWidth = 120;
+$leafCanvasHeight = 180;
+
+for ($k=0;$k<$numberOfLeafVariationsToDraw;$k++) {
+
+	${'leaf'.$k} = imagecreate($leafCanvasWidth,$leafCanvasHeight);
+	imagealphablending(${'leaf'.$k}, false);
+	imagesavealpha(${'leaf'.$k}, true);
+	$leafTrans = imagecolorallocate(${'leaf'.$k}, 0, 0, 0);
+	imagecolortransparent(${'leaf'.$k}, $leafTrans);
+	$leafVariation = createColourVariation($thisLeafColour[0],$thisLeafColour[1],$thisLeafColour[2]);
+	$darkenedOutlineColour = darkenColourVariation($thisLeafColour[0],$thisLeafColour[1],$thisLeafColour[2],50);
+
+	
+
+drawPointedEllipse(${'leaf'.$k}, $leafCanvasWidth/2, $leafCanvasHeight/2, $leafCanvasWidth/6, $leafCanvasHeight/4, 180, [$darkenedOutlineColour[0],$darkenedOutlineColour[1],$darkenedOutlineColour[2]], 2, [$leafVariation[0],$leafVariation[1],$leafVariation[2]]);
+drawPointedEllipse(${'leaf'.$k}, $leafCanvasWidth/2, $leafCanvasHeight/2, $leafCanvasWidth/6, $leafCanvasHeight/4, 100, [$darkenedOutlineColour[0],$darkenedOutlineColour[1],$darkenedOutlineColour[2]], 2, [$leafVariation[0],$leafVariation[1],$leafVariation[2]]);
+drawPointedEllipse(${'leaf'.$k}, $leafCanvasWidth/2, $leafCanvasHeight/2, $leafCanvasWidth/6, $leafCanvasHeight/4, 260, [$darkenedOutlineColour[0],$darkenedOutlineColour[1],$darkenedOutlineColour[2]], 2, [$leafVariation[0],$leafVariation[1],$leafVariation[2]]);
+}
+break;
+
 }
 
 
