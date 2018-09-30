@@ -1136,15 +1136,28 @@ for ($k=0;$k<$numberOfLeafVariationsToDraw;$k++) {
 
 	$numberOfLeafBladePairs = 3;
 	$eachRotationVariation = 20;
+$brushSize = 4;
+
+// draw dark green outline:
 for ($l=1;$l<=$numberOfLeafBladePairs;$l++) {
-
 // draw sequentially rotated and staggered leaves:
-drawPointedEllipse(${'leaf'.$k}, $leafCanvasWidth/2, $leafCanvasHeight/2 - ($eachRotationVariation * ($numberOfLeafBladePairs-$l))/2, $leafCanvasWidth/6, $leafCanvasHeight/4, 180-($eachRotationVariation*$l), [$darkenedOutlineColour[0],$darkenedOutlineColour[1],$darkenedOutlineColour[2]], 2, [$leafVariation[0],$leafVariation[1],$leafVariation[2]]);
-drawPointedEllipse(${'leaf'.$k}, $leafCanvasWidth/2, $leafCanvasHeight/2 - ($eachRotationVariation * ($numberOfLeafBladePairs-$l))/2, $leafCanvasWidth/6, $leafCanvasHeight/4, 180+($eachRotationVariation*$l), [$darkenedOutlineColour[0],$darkenedOutlineColour[1],$darkenedOutlineColour[2]], 2, [$leafVariation[0],$leafVariation[1],$leafVariation[2]]);
+drawPointedEllipse(${'leaf'.$k}, $leafCanvasWidth/2, $leafCanvasHeight/2 - ($eachRotationVariation * ($numberOfLeafBladePairs-$l))/2, $leafCanvasWidth/6, $leafCanvasHeight/4, 180-($eachRotationVariation*$l), [$darkenedOutlineColour[0],$darkenedOutlineColour[1],$darkenedOutlineColour[2]], 2, [$darkenedOutlineColour[0],$darkenedOutlineColour[1],$darkenedOutlineColour[2]]);
+drawPointedEllipse(${'leaf'.$k}, $leafCanvasWidth/2, $leafCanvasHeight/2 - ($eachRotationVariation * ($numberOfLeafBladePairs-$l))/2, $leafCanvasWidth/6, $leafCanvasHeight/4, 180+($eachRotationVariation*$l), [$darkenedOutlineColour[0],$darkenedOutlineColour[1],$darkenedOutlineColour[2]], 2, [$darkenedOutlineColour[0],$darkenedOutlineColour[1],$darkenedOutlineColour[2]]);
 }
-
 // angle of 180 is 'up' away from the stalk
-drawPointedEllipse(${'leaf'.$k}, $leafCanvasWidth/2, $leafCanvasHeight/2 - ($eachRotationVariation * $numberOfLeafBladePairs)*0.7 , $leafCanvasWidth/6, $leafCanvasHeight/4, 180, [$darkenedOutlineColour[0],$darkenedOutlineColour[1],$darkenedOutlineColour[2]], 2, [$leafVariation[0],$leafVariation[1],$leafVariation[2]]);
+drawPointedEllipse(${'leaf'.$k}, $leafCanvasWidth/2, $leafCanvasHeight/2 - ($eachRotationVariation * $numberOfLeafBladePairs)*0.7 , $leafCanvasWidth/6, $leafCanvasHeight/4, 180, [$darkenedOutlineColour[0],$darkenedOutlineColour[1],$darkenedOutlineColour[2]], 2, [$darkenedOutlineColour[0],$darkenedOutlineColour[1],$darkenedOutlineColour[2]]);
+
+// draw inner light colour for a solid fill:
+for ($l=1;$l<=$numberOfLeafBladePairs;$l++) {
+// draw sequentially rotated and staggered leaves:
+drawPointedEllipse(${'leaf'.$k}, $leafCanvasWidth/2, $leafCanvasHeight/2 - ($eachRotationVariation * ($numberOfLeafBladePairs-$l))/2, $leafCanvasWidth/6-$brushSize, $leafCanvasHeight/4-$brushSize, 180-($eachRotationVariation*$l), [$leafVariation[0],$leafVariation[1],$leafVariation[2]], 2, [$leafVariation[0],$leafVariation[1],$leafVariation[2]]);
+drawPointedEllipse(${'leaf'.$k}, $leafCanvasWidth/2, $leafCanvasHeight/2 - ($eachRotationVariation * ($numberOfLeafBladePairs-$l))/2, $leafCanvasWidth/6-$brushSize, $leafCanvasHeight/4-$brushSize, 180+($eachRotationVariation*$l), [$leafVariation[0],$leafVariation[1],$leafVariation[2]], 2, [$leafVariation[0],$leafVariation[1],$leafVariation[2]]);
+}
+// angle of 180 is 'up' away from the stalk
+drawPointedEllipse(${'leaf'.$k}, $leafCanvasWidth/2, $leafCanvasHeight/2 - ($eachRotationVariation * $numberOfLeafBladePairs)*0.7 , $leafCanvasWidth/6-$brushSize, $leafCanvasHeight/4-$brushSize, 180, [$leafVariation[0],$leafVariation[1],$leafVariation[2]], 2, [$leafVariation[0],$leafVariation[1],$leafVariation[2]]);
+
+// draw centre line:
+		drawLine(${'leaf'.$k}, $leafCanvasWidth/2, $leafCanvasHeight/2, ($leafCanvasHeight/4)*1.4, 180, [$darkenedOutlineColour[0],$darkenedOutlineColour[1],$darkenedOutlineColour[2]], 2);
 
 }
 
