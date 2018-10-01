@@ -9,23 +9,21 @@
 // descriptions need splitting out for aquatic and night flowering plants
 // add more flower variation
 // add more leaf variation
-// pull in countries and gods (from Pantheon) from database
 // optional fruits. fruit colours. split out fruits from description and only use if the plant has any
 // night flowering descriptions
 // Virtues text - replace illnesses, body parts, plant parts, god's names, other plant names, regional names, peoples, references to petal colours, common name, variant names, regions, dates
-// colour variation for star petals
-// for the dandelion seed head, the angle offset of the stalk should be relative to the size of the seed head, so there's no overlap
-// using the stepped brush sizes for the stem thicknesses shows where it jumps to the next size - it would be better to construct a single bezier curve for each edge and then fill the whole
-// create function for drawing primitives (teardrop, heart shape, egg shape, spiral, etc). pass in image to draw to, colour, size, rotation, filled (Y/N), outlined (Y/N), coords
 
-// frond leaf style - http://develop.ae/herbarium/generate.php?seed=1538170244&debug=true
-// https://photos.google.com/album/AF1QipMPyS2pllZgjCpPZ9izvHTNytQAKYzAgOzveaIi/photo/AF1QipNFGtD2fdl7M0-RXBZzkOdA3hWKFTA-YwpHsmHM
+
+
+
+
+// drawElongatatedSshape
 
 // pass in values for the heart's inset for example to better control shape
 
 // draw continuous curve for the stalk so it's a smooth curve, then fill
 
-
+// add splotches and marks in the parchment
 // ---------------------------------------
 
 
@@ -1098,20 +1096,21 @@ $leafVariation = createColourVariation($thisLeafColour[0],$thisLeafColour[1],$th
 
 
 	${'leafColour'.$k} = imagecolorallocate(${'leaf'.$k}, $leafVariation[0], $leafVariation[1], $leafVariation[2]);
-
-	${'leafBrush'.$k} = imagecreate(6,6);
+$darkenedOutlineColour = darkenColourVariation($leafVariation[0],$leafVariation[1],$leafVariation[2],50);
+$thisLeafBrushSize = 4;
+	${'leafBrush'.$k} = imagecreate($thisLeafBrushSize,$thisLeafBrushSize);
 	$leafBrushTrans = imagecolorallocate(${'leafBrush'.$k}, 0, 0, 0);
 	imagecolortransparent(${'leafBrush'.$k}, $leafBrushTrans);
-	${'leafBrushColour'.$k} = imagecolorallocate(${'leafBrush'.$k}, $leafVariation[0], $leafVariation[1], $leafVariation[2]);
-	imagefilledellipse(${'leafBrush'.$k}, 3,3,6,6, ${'leafBrushColour'.$k});
+	${'leafBrushColour'.$k} = imagecolorallocate(${'leafBrush'.$k}, $darkenedOutlineColour[0], $darkenedOutlineColour[1], $darkenedOutlineColour[2]);
+	imagefilledellipse(${'leafBrush'.$k}, $thisLeafBrushSize/2,$thisLeafBrushSize/2,$thisLeafBrushSize,$thisLeafBrushSize, ${'leafBrushColour'.$k});
 	imagesetbrush(${'leaf'.$k}, ${'leafBrush'.$k});
 
-$darkenedOutlineColour = darkenColourVariation($leafVariation[0],$leafVariation[1],$leafVariation[2],50);
+
 	
 	// leaf start needs to be the centre of the leaf image so it can be positioned correctly
 	quadBezier(${'leaf'.$k}, $leafCanvasWidth/2, $leafCanvasHeight/2, $leafCanvasWidth-$leafInset, $leafCanvasHeight/2-$leafInset, $leafCanvasWidth/2,$leafInset);
 	quadBezier(${'leaf'.$k}, $leafCanvasWidth/2, $leafCanvasHeight/2, $leafInset, $leafCanvasHeight/2-$leafInset, $leafCanvasWidth/2,$leafInset);
-	imagefill(${'leaf'.$k}, $leafCanvasWidth/2, $leafCanvasHeight/2-$leafInset*2, ${'leafBrushColour'.$k});
+	imagefill(${'leaf'.$k}, $leafCanvasWidth/2, $leafCanvasHeight/4, ${'leafBrushColour'.$k});
 	//imageline ( ${'leaf'.$k} , $leafCanvasWidth/2, $leafCanvasHeight/2 , $leafCanvasWidth/2, $leafInset , imagecolorallocate(${'leaf'.$k}, 6,42,30 ));
 	
 // draw centre line:
@@ -1167,8 +1166,8 @@ break;
 case 3:
 // multi fronded leaf
 $numberOfLeafVariationsToDraw = 4;
-$leafCanvasWidth = 120;
-$leafCanvasHeight = 180;
+$leafCanvasWidth = 96;
+$leafCanvasHeight = 176;
 
 for ($k=0;$k<$numberOfLeafVariationsToDraw;$k++) {
 
@@ -1193,7 +1192,9 @@ drawPointedEllipse(${'leaf'.$k}, $leafCanvasWidth/2, $leafCanvasHeight/2 - ($eac
 drawPointedEllipse(${'leaf'.$k}, $leafCanvasWidth/2, $leafCanvasHeight/2 - ($eachRotationVariation * ($numberOfLeafBladePairs-$l))/2, $leafCanvasWidth/6, $leafCanvasHeight/4, 180+($eachRotationVariation*$l), [$darkenedOutlineColour[0],$darkenedOutlineColour[1],$darkenedOutlineColour[2]], 2, [$darkenedOutlineColour[0],$darkenedOutlineColour[1],$darkenedOutlineColour[2]]);
 }
 // angle of 180 is 'up' away from the stalk
-drawPointedEllipse(${'leaf'.$k}, $leafCanvasWidth/2, $leafCanvasHeight/2 - ($eachRotationVariation * $numberOfLeafBladePairs)*0.7 , $leafCanvasWidth/6, $leafCanvasHeight/4, 180, [$darkenedOutlineColour[0],$darkenedOutlineColour[1],$darkenedOutlineColour[2]], 2, [$darkenedOutlineColour[0],$darkenedOutlineColour[1],$darkenedOutlineColour[2]]);
+drawPointedEllipse(${'leaf'.$k}, $leafCanvasWidth/2, $leafCanvasHeight/2 - ($eachRotationVariation * $numberOfLeafBladePairs)*0.5 , $leafCanvasWidth/6, $leafCanvasHeight/4, 180, [$darkenedOutlineColour[0],$darkenedOutlineColour[1],$darkenedOutlineColour[2]], 2, [$darkenedOutlineColour[0],$darkenedOutlineColour[1],$darkenedOutlineColour[2]]);
+
+
 
 // draw inner light colour for a solid fill:
 for ($l=1;$l<=$numberOfLeafBladePairs;$l++) {
@@ -1202,7 +1203,10 @@ drawPointedEllipse(${'leaf'.$k}, $leafCanvasWidth/2, $leafCanvasHeight/2 - ($eac
 drawPointedEllipse(${'leaf'.$k}, $leafCanvasWidth/2, $leafCanvasHeight/2 - ($eachRotationVariation * ($numberOfLeafBladePairs-$l))/2, $leafCanvasWidth/6-$brushSize, $leafCanvasHeight/4-$brushSize, 180+($eachRotationVariation*$l), [$leafVariation[0],$leafVariation[1],$leafVariation[2]], 2, [$leafVariation[0],$leafVariation[1],$leafVariation[2]]);
 }
 // angle of 180 is 'up' away from the stalk
-drawPointedEllipse(${'leaf'.$k}, $leafCanvasWidth/2, $leafCanvasHeight/2 - ($eachRotationVariation * $numberOfLeafBladePairs)*0.7 , $leafCanvasWidth/6-$brushSize, $leafCanvasHeight/4-$brushSize, 180, [$leafVariation[0],$leafVariation[1],$leafVariation[2]], 2, [$leafVariation[0],$leafVariation[1],$leafVariation[2]]);
+drawPointedEllipse(${'leaf'.$k}, $leafCanvasWidth/2, $leafCanvasHeight/2 - ($eachRotationVariation * $numberOfLeafBladePairs)*0.5 , $leafCanvasWidth/6-$brushSize, $leafCanvasHeight/4-$brushSize, 180, [$leafVariation[0],$leafVariation[1],$leafVariation[2]], 2, [$leafVariation[0],$leafVariation[1],$leafVariation[2]]);
+
+// draw one near the base to overlap any lower fronds:
+drawPointedEllipse(${'leaf'.$k}, $leafCanvasWidth/2, $leafCanvasHeight/2 , $leafCanvasWidth/6-$brushSize, $leafCanvasHeight/4-$brushSize, 180, [$leafVariation[0],$leafVariation[1],$leafVariation[2]], 2, [$leafVariation[0],$leafVariation[1],$leafVariation[2]]);
 
 // draw centre line:
 	//	drawLine(${'leaf'.$k}, $leafCanvasWidth/2, $leafCanvasHeight/2, ($leafCanvasHeight/4)*1.4, 180, [$darkenedOutlineColour[0],$darkenedOutlineColour[1],$darkenedOutlineColour[2]], 2);
@@ -1618,6 +1622,16 @@ while ($rowRegions = mysqli_fetch_array($resultRegions)) {
     array_push($json['region'], $regionName);
 }
 
+// get gods names:
+$json['godsMale'] = [];
+$json['godsFemale'] = [];
+$queryPantheon = "select * from tblpantheon";
+$resultPantheon = mysqli_query($connection, $queryPantheon) or die ("couldn't execute Pantheon query");
+while ($rowPantheon = mysqli_fetch_array($resultPantheon)) {
+    extract($rowPantheon);
+    array_push($json['gods'.$godGender], $godName);
+}
+
 // create common names:
 include($_SERVER['DOCUMENT_ROOT']."/includes/herbarium/common-name-prefixes.php");
 include($_SERVER['DOCUMENT_ROOT']."/includes/herbarium/common-name-suffixes.php");
@@ -1651,9 +1665,23 @@ if ($nightPos !== false) {
 	$isNight = 1;
 	}
 
+
+
+$aquaticPos = strpos($thisSecondCommonName, "*");
+if ($aquaticPos !== false) {
+	$isAquatic = 1;
+	}
+	$nightPos = strpos($thisSecondCommonName, "^");
+if ($nightPos !== false) {
+	$isNight = 1;
+	}
+
+
 // remove any property markers now:
 $thisCommonName = str_ireplace("*", "", $thisCommonName);
 $thisCommonName = str_ireplace("^", "", $thisCommonName);
+$thisSecondCommonName = str_ireplace("*", "", $thisSecondCommonName);
+$thisSecondCommonName = str_ireplace("^", "", $thisSecondCommonName);
 
 
 

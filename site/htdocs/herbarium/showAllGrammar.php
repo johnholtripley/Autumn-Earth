@@ -184,6 +184,16 @@ while ($rowRegions = mysqli_fetch_array($resultRegions)) {
     array_push($json['region'], $regionName);
 }
 
+// get gods names:
+$json['godsMale'] = [];
+$json['godsFemale'] = [];
+$queryPantheon = "select * from tblpantheon";
+$resultPantheon = mysqli_query($connection, $queryPantheon) or die ("couldn't execute Pantheon query");
+while ($rowPantheon = mysqli_fetch_array($resultPantheon)) {
+    extract($rowPantheon);
+    array_push($json['gods'.$godGender], $godName);
+}
+
 
 // create common names:
 include($_SERVER['DOCUMENT_ROOT']."/includes/herbarium/common-name-prefixes.php");
