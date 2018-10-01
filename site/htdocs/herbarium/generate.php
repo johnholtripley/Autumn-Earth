@@ -248,6 +248,50 @@ imagedestroy($primitiveBrush);
 
 
 
+function drawSlightyCurvedLine($imageResource, $startPointPosX, $startPointPosY, $length, $rotationDegrees, $outlineColour, $lineThickness) {
+// create brush for line:
+	$primitiveBrush = imagecreate($lineThickness,$lineThickness);
+	$primitiveBrushtrans = imagecolorallocate($primitiveBrush, 0, 0, 0);
+	imagecolortransparent($primitiveBrush, $primitiveBrushtrans);
+	$thisColour = imagecolorallocate($primitiveBrush, $outlineColour[0], $outlineColour[1], $outlineColour[2]);
+	imagefilledellipse($primitiveBrush, $lineThickness/2,$lineThickness/2,$lineThickness,$lineThickness, $thisColour);
+	imagesetbrush($imageResource, $primitiveBrush);
+$radians = deg2rad($rotationDegrees);
+$endPointX = $startPointPosX + sin($radians)*$length;
+$endPointY = $startPointPosY + cos($radians)*$length;
+
+
+
+$controlPointX = ($startPointPosX + $endPointX)/2;
+$controlPointY = ($startPointPosY + $endPointY)/2;
+
+$offsetX = mt_rand(4,9);
+$offsetY = mt_rand(4,9);
+
+
+
+$offsetDirX = mt_rand(1,2);
+$offsetDirY = mt_rand(1,2);
+if($offsetDirX == 1) {
+$offsetX = 0 -$offsetX;
+}
+if($offsetDirY == 1) {
+$offsetY = 0 -$offsetY;
+}
+
+$controlPointX += $offsetX;
+$controlPointY += $offsetY;
+
+quadBezier($imageResource, $startPointPosX, $startPointPosY, $controlPointX, $controlPointY, $endPointX, $endPointY);
+
+
+imagedestroy($primitiveBrush);
+}
+
+
+
+
+
 function drawStar($imageResource, $centreX, $centreY, $points, $outerRadius, $innerRadius, $brushSize, $outlineColour, $fillColour) {
 	
 	$outerRadius -= $brushSize;
@@ -1062,14 +1106,18 @@ $leafVariation = createColourVariation($thisLeafColour[0],$thisLeafColour[1],$th
 	imagefilledellipse(${'leafBrush'.$k}, 3,3,6,6, ${'leafBrushColour'.$k});
 	imagesetbrush(${'leaf'.$k}, ${'leafBrush'.$k});
 
-
+$darkenedOutlineColour = darkenColourVariation($leafVariation[0],$leafVariation[1],$leafVariation[2],50);
 	
 	// leaf start needs to be the centre of the leaf image so it can be positioned correctly
 	quadBezier(${'leaf'.$k}, $leafCanvasWidth/2, $leafCanvasHeight/2, $leafCanvasWidth-$leafInset, $leafCanvasHeight/2-$leafInset, $leafCanvasWidth/2,$leafInset);
 	quadBezier(${'leaf'.$k}, $leafCanvasWidth/2, $leafCanvasHeight/2, $leafInset, $leafCanvasHeight/2-$leafInset, $leafCanvasWidth/2,$leafInset);
 	imagefill(${'leaf'.$k}, $leafCanvasWidth/2, $leafCanvasHeight/2-$leafInset*2, ${'leafBrushColour'.$k});
-	imageline ( ${'leaf'.$k} , $leafCanvasWidth/2, $leafCanvasHeight/2 , $leafCanvasWidth/2, $leafInset , imagecolorallocate(${'leaf'.$k}, 6,42,30 ));
+	//imageline ( ${'leaf'.$k} , $leafCanvasWidth/2, $leafCanvasHeight/2 , $leafCanvasWidth/2, $leafInset , imagecolorallocate(${'leaf'.$k}, 6,42,30 ));
 	
+// draw centre line:
+		drawSlightyCurvedLine(${'leaf'.$k}, $leafCanvasWidth/2, $leafCanvasHeight/2, ($leafCanvasHeight/2)*0.707, 180, [$darkenedOutlineColour[0],$darkenedOutlineColour[1],$darkenedOutlineColour[2]], 2);
+
+
 	// can vary this to get heart shaped, double bladed and teardrop shapes ### 
 	
 	
@@ -1106,7 +1154,7 @@ $darkenedOutlineColour = darkenColourVariation($leafVariation[0],$leafVariation[
 		$thisLeafHeadRotation = ((360/($numberOfLeafHeads+1))*$lh)+$leafHeadRotationOffset+90;
 		drawTeardrop(${'leaf'.$k}, $leafCanvasWidth/2, $leafCanvasHeight/2, $leafCanvasWidth/$leafThickness, $leafCanvasHeight/4, $thisLeafHeadRotation, [$darkenedOutlineColour[0],$darkenedOutlineColour[1],$darkenedOutlineColour[2]], 2, [$leafVariation[0],$leafVariation[1],$leafVariation[2]]);
 		// draw centre line:
-		drawLine(${'leaf'.$k}, $leafCanvasWidth/2, $leafCanvasHeight/2, ($leafCanvasHeight/4)*0.707, $thisLeafHeadRotation, [$darkenedOutlineColour[0],$darkenedOutlineColour[1],$darkenedOutlineColour[2]], 2);
+		drawSlightyCurvedLine(${'leaf'.$k}, $leafCanvasWidth/2, $leafCanvasHeight/2, ($leafCanvasHeight/4)*0.707, $thisLeafHeadRotation, [$darkenedOutlineColour[0],$darkenedOutlineColour[1],$darkenedOutlineColour[2]], 2);
 	}
 
 
@@ -1118,7 +1166,7 @@ break;
 
 case 3:
 // multi fronded leaf
-$numberOfLeafVariationsToDraw = 1;
+$numberOfLeafVariationsToDraw = 4;
 $leafCanvasWidth = 120;
 $leafCanvasHeight = 180;
 
@@ -1134,7 +1182,7 @@ for ($k=0;$k<$numberOfLeafVariationsToDraw;$k++) {
 
 	
 
-	$numberOfLeafBladePairs = 3;
+	$numberOfLeafBladePairs = mt_rand(2,4);
 	$eachRotationVariation = 20;
 $brushSize = 4;
 
@@ -1157,7 +1205,10 @@ drawPointedEllipse(${'leaf'.$k}, $leafCanvasWidth/2, $leafCanvasHeight/2 - ($eac
 drawPointedEllipse(${'leaf'.$k}, $leafCanvasWidth/2, $leafCanvasHeight/2 - ($eachRotationVariation * $numberOfLeafBladePairs)*0.7 , $leafCanvasWidth/6-$brushSize, $leafCanvasHeight/4-$brushSize, 180, [$leafVariation[0],$leafVariation[1],$leafVariation[2]], 2, [$leafVariation[0],$leafVariation[1],$leafVariation[2]]);
 
 // draw centre line:
-		drawLine(${'leaf'.$k}, $leafCanvasWidth/2, $leafCanvasHeight/2, ($leafCanvasHeight/4)*1.4, 180, [$darkenedOutlineColour[0],$darkenedOutlineColour[1],$darkenedOutlineColour[2]], 2);
+	//	drawLine(${'leaf'.$k}, $leafCanvasWidth/2, $leafCanvasHeight/2, ($leafCanvasHeight/4)*1.4, 180, [$darkenedOutlineColour[0],$darkenedOutlineColour[1],$darkenedOutlineColour[2]], 2);
+
+drawSlightyCurvedLine(${'leaf'.$k}, $leafCanvasWidth/2, $leafCanvasHeight/2, ($leafCanvasHeight/4)*1.4, 180, [$darkenedOutlineColour[0],$darkenedOutlineColour[1],$darkenedOutlineColour[2]], 2);
+
 
 }
 
