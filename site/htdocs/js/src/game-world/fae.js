@@ -22,6 +22,12 @@ function animateFae() {
             }
         }
     }
+    if (notificationIsShowing) {
+    // update the dialogue arrow to point to the fae:
+  //  notificationSpeechArrow.style.transform = "translateX("+(faeIsoX-(canvasWidth/2)+311)+"px)";
+  //  notificationSpeechArrow.style.transform = "translateX(-320px)";
+
+    }
 }
 
 function moveFae() {

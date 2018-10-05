@@ -63,7 +63,7 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
     </div>
 
     <p id="dialogue"></p>
-    <div id="notification"></div>
+    <div id="notification"><div id="notificationContent"></div><div id="notificationSpeechArrow"></div></div>
     <div id="displayZoneName"></div>
     <div id="inventoryPanels"></div>
     <div id="draggableInventorySlot"></div>

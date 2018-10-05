@@ -26,10 +26,10 @@
 #notification {
     pointer-events: none;
     position: absolute;
-    font-size: 24px;
+    font-size: 20px;
     color: #fff;
     left: 0;
-    top: 50%;
+    top: 55%;
     width: 100%;
     text-align: center;
     @include transform(translateY(-50%));

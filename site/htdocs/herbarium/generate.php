@@ -1705,9 +1705,17 @@ $thisCommonNameBeforePrefix = $thisCommonName;
 $thisCommonName = addPrefix($thisCommonName, false);
 
 
-
-
-
+// do another check in case the prefix has a marker:
+$aquaticPos = strpos($thisCommonName, "*");
+if ($aquaticPos !== false) {
+	$isAquatic = 1;
+	}
+	$nightPos = strpos($thisCommonName, "^");
+if ($nightPos !== false) {
+	$isNight = 1;
+	}
+$thisCommonName = str_ireplace("*", "", $thisCommonName);
+$thisCommonName = str_ireplace("^", "", $thisCommonName);
 
 
 if($i==0) {

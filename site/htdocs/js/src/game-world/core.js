@@ -768,6 +768,8 @@ function prepareGame() {
     mapTransition = "in";
     mapTransitionCurrentFrames = 1;
     gameMode = "play";
+
+    UI.showNotification("<p>testing what a notification looks like</p>");
 }
 
 
@@ -1556,6 +1558,12 @@ function checkForActions() {
                         // open the Retinue panel:
                         UI.openRetinuePanel(thisMapData.items[i]);
                         break;
+                    case "water":
+                        // if have a water carrying item equipped, then fill it
+                        console.log("adding water...");
+                        // if itemValue is -1, then can add an infinite amount of water
+                        // ######
+                    break;
                     default:
                         // try and pick it up:
                         inventoryCheck = canAddItemToInventory([thisMapData.items[i]]);

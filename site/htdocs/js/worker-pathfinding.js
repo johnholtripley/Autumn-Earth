@@ -49,6 +49,7 @@ function addNode(parentNode, tileX, tileY, endX, endY) {
         }
         // check for items:
         for (var i = 0; i < thisMapData.items.length; i++) {
+            // needs to see if the item is wider than a single tile #####
             if (thisMapData.items[i].tileX == tileX) {
                 if (thisMapData.items[i].tileY == tileY) {
                     isBlocked = true;
