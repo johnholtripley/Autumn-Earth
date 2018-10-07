@@ -574,7 +574,7 @@ var UI = {
             if (hero.inventory[droppedSlotId] == undefined) {
                 if (isSplitStackBeingDragged) {
                     // document.getElementById("slot" + UI.sourceSlot).innerHTML = '';
-                    addToInventory(droppedSlotId, UI.draggedInventoryObject);
+                    addToInventory(droppedSlotId, UI.draggedInventoryObject, true);
                     UI.droppedSuccessfully();
                 } else {
                     if (isFromAShop) {

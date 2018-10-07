@@ -103,6 +103,13 @@ echo '<p>'.str_replace("##contains##", "", $description).'</p>';
   	echo 'No';
   }
   echo'</dd>';
+   echo'<dt>Holdable:</dt><dd>';
+  if($holdable>0) {
+    echo 'Yes';
+  } else {
+    echo 'No';
+  }
+  echo'</dd>';
   echo'<dt>Inscribable:</dt><dd>';
     if($inscribable>0) {
   	echo 'Yes';

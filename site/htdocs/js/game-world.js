@@ -2722,6 +2722,7 @@ function canAddItemToInventory(itemObj) {
                                 inventoryClone[thisSlotsID].colour = itemObj[k].colour;
                                 inventoryClone[thisSlotsID].enchanted = itemObj[k].enchanted;
                                 inventoryClone[thisSlotsID].hallmark = itemObj[k].hallmark;
+                                inventoryClone[thisSlotsID].hash = createItemHash(itemObj[k].type, amountAddedToThisSlot);
                                 inventoryClone[thisSlotsID].inscription = {};
                                 inventoryClone[thisSlotsID].inscription.title = itemObj[k].inscription.title;
                                 inventoryClone[thisSlotsID].inscription.content = itemObj[k].inscription.content;
@@ -2906,9 +2907,17 @@ function removeItemTypeFromInventory(itemType, amount) {
     }
 }
 
-function addToInventory(whichSlot, itemObject) {
+function addToInventory(whichSlot, itemObject, forceNewHash = false) {
     // make a copy not a reference:
     hero.inventory[whichSlot] = JSON.parse(JSON.stringify(itemObject));
+
+    if ((typeof hero.inventory[whichSlot].hash === "undefined") || forceNewHash) {
+        // create one:
+        hero.inventory[whichSlot].hash = createItemHash(itemObject.type, itemObject.quantity);
+        console.log(itemObject.type, itemObject.quantity, hero.inventory[whichSlot].hash);
+    } else {
+        console.log("already", hero.inventory[whichSlot].hash);
+    }
     document.getElementById("slot" + whichSlot).innerHTML = generateSlotMarkup(whichSlot);
 }
 
@@ -3300,6 +3309,10 @@ function prepareInventoryObject(definedObject) {
         thisObject[attrname] = definedObject[attrname];
     }
     return thisObject;
+}
+
+function createItemHash(type, quantity) {
+ return ''+type+quantity+characterId+Date.now();
 }
 var KeyBindings = {
     'left': 65,
@@ -4697,7 +4710,7 @@ var UI = {
             if (hero.inventory[droppedSlotId] == undefined) {
                 if (isSplitStackBeingDragged) {
                     // document.getElementById("slot" + UI.sourceSlot).innerHTML = '';
-                    addToInventory(droppedSlotId, UI.draggedInventoryObject);
+                    addToInventory(droppedSlotId, UI.draggedInventoryObject, true);
                     UI.droppedSuccessfully();
                 } else {
                     if (isFromAShop) {
