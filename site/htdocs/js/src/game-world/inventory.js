@@ -392,6 +392,9 @@ function inventoryItemAction(whichSlot, whichAction, allActionValues) {
                 case "inscribe":
                     UI.openInscriptionPanel();
                     break;
+                    case "holdable":
+                    UI.holdItem(whichSlotNumber);
+                    break;
                 case "collection":
                     // check if this zone key exists in the hero.collections object
                     if (hero.collections.hasOwnProperty(whichActionValue)) {
@@ -505,6 +508,7 @@ function generateGenericSlotMarkup(thisItemObject) {
     }
     var thisAction = currentActiveInventoryItems[thisItemObject.type].action;
     var isABook = false;
+
     if (thisAction) {
         if (thisAction.indexOf("book") != -1) {
             if (thisItemObject.inscription.content) {
@@ -513,6 +517,13 @@ function generateGenericSlotMarkup(thisItemObject) {
             }
         }
     }
+
+var isHoldable = false;
+if(currentActiveInventoryItems[thisItemObject.type].holdable == 1) {
+isHoldable = true;
+}
+
+
     var dataActionMarkup = '';
     if (thisAction) {
         if (isABook) {
@@ -530,6 +541,9 @@ function generateGenericSlotMarkup(thisItemObject) {
         } else {
             dataActionMarkup = 'data-action="' + thisAction + '" data-action-value="' + currentActiveInventoryItems[thisItemObject.type].actionValue + '" ';
         }
+    }
+    if(isHoldable) {
+        dataActionMarkup = 'data-action="holdable" data-action-value="' + currentActiveInventoryItems[thisItemObject.type].action + '" ';
     }
 
     var thisCategories = currentActiveInventoryItems[thisItemObject.type].category.split(",");

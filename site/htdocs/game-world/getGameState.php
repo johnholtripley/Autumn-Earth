@@ -23,6 +23,7 @@ if(mysqli_num_rows($result)>0) {
   while ($row = mysqli_fetch_array($result)) {
     extract($row);
 
+$outputJSON .= '"characterName": "'.$charName.'",';
 $outputJSON .= '"currentMap": '.$currentMap.',';
 $outputJSON .= '"tileX": '.$tileX.',';
 $outputJSON .= '"tileY": '.$tileY.',';
@@ -35,6 +36,7 @@ $outputJSON .= '"titlesEarned": '.$titlesEarned.',';
 $outputJSON .= '"activeTitle": '.$activeTitle.',';
 $outputJSON .= '"professionsKnown": '.$professionsKnown.',';
 $outputJSON .= '"recipesKnown": '.$recipesKnown.',';
+$outputJSON .= '"holding": '.$holding.',';
 $outputJSON .= '"plantCrossesKnown": '.$plantCrossesKnown.',';
 $outputJSON .= '"totalGameTimePlayed": '.$totalGameTimePlayed.',';
 $outputJSON .= '"fae": '.$fae.',';

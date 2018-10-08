@@ -70,6 +70,8 @@ const retinueList = document.getElementById('retinueList');
 const retinueExplorePanel = document.getElementById('retinueExplorePanel');
 const startCrafting = document.getElementById('startCrafting');
 const horticulturePanel = document.getElementById('horticulturePanel');
+const characterPanel = document.getElementById('characterPanel');
+const holdingIcon = document.getElementById('holdingIcon');
 
 
 
@@ -106,6 +108,8 @@ var UI = {
     },
 
     buildInventoryInterface: function() {
+        document.getElementById('characterName').innerHTML = hero.characterName;
+        characterPanel.classList.add('active');
         var inventoryMarkup = '';
         var thisAction, thisBagNumberOfSlots, thisSlotsID, thisPanelName, thisPet, activeClass;
 
@@ -196,7 +200,7 @@ var UI = {
         UI.buildCollectionPanel();
         UI.buildActionBar();
         UI.initRetinueTimers();
-
+        UI.updateHeldItems();
         /*
                 if (hero.professionsKnown.length > 0) {
                     // load and cache the first profession's recipe assets:
@@ -2242,6 +2246,20 @@ var UI = {
     buildHorticulturePanel: function(panelMarkup) {
         horticulturePanel.insertAdjacentHTML('beforeend', panelMarkup);
         horticulturePanel.classList.add('active');
+    },
+    holdItem: function(whichSlot) {
+        hero.holding.hash = hero.inventory[whichSlot].hash;
+        hero.holding.type = hero.inventory[whichSlot].type;
+        UI.updateHeldItems();
+    },
+    updateHeldItems: function() {
+if(hero.holding.hash != '') {
+holdingIcon.innerHTML = '<img src="/images/game-world/inventory-items/'+hero.holding.type+'.png" alt="'+currentActiveInventoryItems[hero.holding.type].shortname+'">';
+} else {
+    holdingIcon.innerHTML = '';
+
+
+}
     }
 
 }

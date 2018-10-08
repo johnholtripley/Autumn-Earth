@@ -658,7 +658,26 @@ pointer-events: auto;
 
 
 
-
+#characterPanel {
+    @include togglePanel(0.4s);
+    top: 30px;
+    left: 30px;
+    #characterName {
+        pointer-events: none;
+         @include pxRem('padding-right', 24px);
+    }
+    #holdingIcon {
+        img {
+            display: block;
+            @include border-radius(50%);
+        }
+        border:3px solid #c9a55a;
+        background: #111;
+        @include border-radius(50%);
+        width: 40px;
+        height: 40px;
+    }
+}
 
 
 

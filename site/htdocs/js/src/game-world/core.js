@@ -1558,11 +1558,8 @@ function checkForActions() {
                         // open the Retinue panel:
                         UI.openRetinuePanel(thisMapData.items[i]);
                         break;
-                    case "water":
-                        // if have a water carrying item equipped, then fill it
-                        console.log("adding water...");
-                        // if itemValue is -1, then can add an infinite amount of water
-                        // ######
+                    case "source":
+                      // don't do anything - the equipped item will check for this item
                     break;
                     default:
                         // try and pick it up:

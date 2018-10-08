@@ -3045,6 +3045,9 @@ function inventoryItemAction(whichSlot, whichAction, allActionValues) {
                 case "inscribe":
                     UI.openInscriptionPanel();
                     break;
+                    case "holdable":
+                    UI.holdItem(whichSlotNumber);
+                    break;
                 case "collection":
                     // check if this zone key exists in the hero.collections object
                     if (hero.collections.hasOwnProperty(whichActionValue)) {
@@ -3158,6 +3161,7 @@ function generateGenericSlotMarkup(thisItemObject) {
     }
     var thisAction = currentActiveInventoryItems[thisItemObject.type].action;
     var isABook = false;
+
     if (thisAction) {
         if (thisAction.indexOf("book") != -1) {
             if (thisItemObject.inscription.content) {
@@ -3166,6 +3170,13 @@ function generateGenericSlotMarkup(thisItemObject) {
             }
         }
     }
+
+var isHoldable = false;
+if(currentActiveInventoryItems[thisItemObject.type].holdable == 1) {
+isHoldable = true;
+}
+
+
     var dataActionMarkup = '';
     if (thisAction) {
         if (isABook) {
@@ -3183,6 +3194,9 @@ function generateGenericSlotMarkup(thisItemObject) {
         } else {
             dataActionMarkup = 'data-action="' + thisAction + '" data-action-value="' + currentActiveInventoryItems[thisItemObject.type].actionValue + '" ';
         }
+    }
+    if(isHoldable) {
+        dataActionMarkup = 'data-action="holdable" data-action-value="' + currentActiveInventoryItems[thisItemObject.type].action + '" ';
     }
 
     var thisCategories = currentActiveInventoryItems[thisItemObject.type].category.split(",");
@@ -4206,6 +4220,8 @@ const retinueList = document.getElementById('retinueList');
 const retinueExplorePanel = document.getElementById('retinueExplorePanel');
 const startCrafting = document.getElementById('startCrafting');
 const horticulturePanel = document.getElementById('horticulturePanel');
+const characterPanel = document.getElementById('characterPanel');
+const holdingIcon = document.getElementById('holdingIcon');
 
 
 
@@ -4242,6 +4258,8 @@ var UI = {
     },
 
     buildInventoryInterface: function() {
+        document.getElementById('characterName').innerHTML = hero.characterName;
+        characterPanel.classList.add('active');
         var inventoryMarkup = '';
         var thisAction, thisBagNumberOfSlots, thisSlotsID, thisPanelName, thisPet, activeClass;
 
@@ -4332,7 +4350,7 @@ var UI = {
         UI.buildCollectionPanel();
         UI.buildActionBar();
         UI.initRetinueTimers();
-
+        UI.updateHeldItems();
         /*
                 if (hero.professionsKnown.length > 0) {
                     // load and cache the first profession's recipe assets:
@@ -6378,6 +6396,20 @@ var UI = {
     buildHorticulturePanel: function(panelMarkup) {
         horticulturePanel.insertAdjacentHTML('beforeend', panelMarkup);
         horticulturePanel.classList.add('active');
+    },
+    holdItem: function(whichSlot) {
+        hero.holding.hash = hero.inventory[whichSlot].hash;
+        hero.holding.type = hero.inventory[whichSlot].type;
+        UI.updateHeldItems();
+    },
+    updateHeldItems: function() {
+if(hero.holding.hash != '') {
+holdingIcon.innerHTML = '<img src="/images/game-world/inventory-items/'+hero.holding.type+'.png" alt="'+currentActiveInventoryItems[hero.holding.type].shortname+'">';
+} else {
+    holdingIcon.innerHTML = '';
+
+
+}
     }
 
 }
@@ -7999,11 +8031,8 @@ function checkForActions() {
                         // open the Retinue panel:
                         UI.openRetinuePanel(thisMapData.items[i]);
                         break;
-                    case "water":
-                        // if have a water carrying item equipped, then fill it
-                        console.log("adding water...");
-                        // if itemValue is -1, then can add an infinite amount of water
-                        // ######
+                    case "source":
+                      // don't do anything - the equipped item will check for this item
                     break;
                     default:
                         // try and pick it up:
