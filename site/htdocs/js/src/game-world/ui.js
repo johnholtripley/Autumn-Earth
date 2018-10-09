@@ -2296,9 +2296,9 @@ var UI = {
             if (currentActiveInventoryItems[hero.inventory[key].type].holdable == 1) {
 
                 if (counter === hero.holding.quickHoldIndex) {
-                    quickHoldMarkup += '<li id="quickHold'+counter+'" class="active">';
+                    quickHoldMarkup += '<li id="quickHold' + counter + '" class="active" data-type="'+hero.inventory[key].type+'" data-key="'+key+'">';
                 } else {
-                    quickHoldMarkup += '<li id="quickHold'+counter+'">';
+                    quickHoldMarkup += '<li id="quickHold' + counter + '" data-type="'+hero.inventory[key].type+'" data-key="'+key+'">';
                 }
                 quickHoldMarkup += '<img src="/images/game-world/inventory-items/' + hero.inventory[key].type + '.png" alt="' + currentActiveInventoryItems[hero.inventory[key].type].shortname + '"></li>';
                 counter++;
@@ -2307,15 +2307,34 @@ var UI = {
         quickHoldMarkup += '</ul>';
         quickHold.innerHTML = quickHoldMarkup;
         hero.quickHoldLength = counter;
-    }, moveQuickHold: function(whichDirection) {
-        document.getElementById('quickHold'+hero.holding.quickHoldIndex).classList.remove('active');
+    },
+    moveQuickHold: function(whichDirection) {
+        document.getElementById('quickHold' + hero.holding.quickHoldIndex).classList.remove('active');
         hero.holding.quickHoldIndex += whichDirection;
-        if(hero.holding.quickHoldIndex < 0) {
-           hero.holding.quickHoldIndex = hero.quickHoldLength-1;
-        } else if(hero.holding.quickHoldIndex >= hero.quickHoldLength) {
-           hero.holding.quickHoldIndex = 0;
+        if (hero.holding.quickHoldIndex < 0) {
+            hero.holding.quickHoldIndex = hero.quickHoldLength - 1;
+        } else if (hero.holding.quickHoldIndex >= hero.quickHoldLength) {
+            hero.holding.quickHoldIndex = 0;
         }
-        document.getElementById('quickHold'+hero.holding.quickHoldIndex).classList.add('active');
+        var newActiveElement = document.getElementById('quickHold' + hero.holding.quickHoldIndex);
+        newActiveElement.classList.add('active');
+        hero.holding.hash = hero.inventory[newActiveElement.dataset.key].hash;
+        hero.holding.type = newActiveElement.dataset.type;
+        UI.updateHeldItems();
+        quickHold.classList.add('active');
+        // remove this class as soon as it's fully faded in:
+        quickHold.addEventListener(
+            whichTransitionEvent,
+            function uiFadeInComplete(e) {
+                quickHold.classList.remove("active");
+                return e.currentTarget.removeEventListener(
+                    whichTransitionEvent,
+                    uiFadeInComplete,
+                    false
+                );
+            },
+            false
+        );
     }
 
 }

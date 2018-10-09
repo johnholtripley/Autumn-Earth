@@ -1,6 +1,7 @@
 #interface {
     @include transition(opacity 0.4s ease);
     opacity: 0;
+
     &.active {
         opacity: 1;
     }
@@ -18,6 +19,7 @@
     text-align: center;
     text-shadow: 0px 0px 2px rgba(0, 0, 0, 1);
     @include transform(translateY(-50%));
+
     &.active {
         @include animation(fadeOut 3s ease 0s 1 normal forwards);
     }
@@ -33,6 +35,7 @@
     width: 100%;
     text-align: center;
     @include transform(translateY(-50%));
+
     &.active {
         @include animation(fadeOut 3s ease 0s 1 normal forwards);
     }
@@ -42,12 +45,15 @@
     0 {
         opacity: 0;
     }
+
     10% {
         opacity: 1;
     }
+
     70% {
         opacity: 1;
     }
+
     100% {
         opacity: 0;
     }
@@ -75,6 +81,7 @@
     border-radius: 4px 4px 0 0;
     @include transition(background .4s ease);
     cursor: url(../images/game-world/cursors/active.gif) 3 3, pointer;
+
     &.active {
         background: #000;
         cursor: url(../images/game-world/cursors/default.gif) 3 3, auto;
@@ -88,7 +95,7 @@
     user-select: none;
     cursor: move;
     font-family: 'Bree Serif', Georgia, 'Times New Roman', Times, Palatino, serif;
-    @include text-shadow( -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000);
+    @include text-shadow(-1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000);
     text-transform: uppercase;
     font-size: 14px;
     border: 1px solid #53160d;
@@ -122,10 +129,12 @@
 #actionBar {
     display: inline-block;
     margin: 0 5%;
+
     ol {
         margin: 0;
         padding: 0;
     }
+
     li {
         display: inline-block;
         width: 40px;
@@ -134,11 +143,13 @@
         padding: 0;
         position: relative;
         background: transparent;
+
         &.active {
             @include attention() {
                 cursor: url(../images/game-world/cursors/active.gif) 3 3, pointer;
             }
         }
+
         @include attention() {
             p {
                 opacity: 1;
@@ -147,6 +158,7 @@
             }
         }
     }
+
     p {
         // tooltip
         background: #eee;
@@ -177,6 +189,7 @@
     height: 40px;
     background: url(../images/game-world/interface/new-post.png) no-repeat 50% 50%;
     cursor: url(../images/game-world/cursors/default.gif) 3 3, auto;
+
     @include attention() {
         p {
             opacity: 1;
@@ -184,6 +197,7 @@
             @include transform(translateY(0));
         }
     }
+
     p {
         // tooltip
         background: #eee;
@@ -229,7 +243,7 @@
     color: #fff;
     outline: none;
     font-family: 'Bree Serif', Georgia, 'Times New Roman', Times, Palatino, serif;
-    @include text-shadow( -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000);
+    @include text-shadow(-1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000);
     text-transform: uppercase;
     margin: 6px auto;
     display: block;
@@ -237,14 +251,17 @@
     font-size: 16px;
     border: 2px solid #967834;
     @include transition(opacity 0.2s ease, border-color 0.4s ease);
+
     &:not([disabled]) {
         @include attention() {
             border-color: #fff;
         }
     }
+
     &:disabled {
         cursor: url(../images/game-world/cursors/blocked.gif) 3 3, auto;
         opacity: 0.4;
+
         &:hover {
             // an animation to hint that it can't be clicked:
             // the issue is after the button is clicked, and if it's then disabled, the animation plays, and that feels wrong
@@ -284,7 +301,7 @@
 
 
 #gameWrapper.targetingPollen #worldWrapper {
-cursor: url(../images/game-world/cursors/targeting-pollen.gif) 0 0, auto;
+    cursor: url(../images/game-world/cursors/targeting-pollen.gif) 0 0, auto;
 }
 
 .hourGlass {
@@ -292,8 +309,9 @@ cursor: url(../images/game-world/cursors/targeting-pollen.gif) 0 0, auto;
     width: 92px;
     height: 186px;
 }
+
 #surveyingTimeBar {
-    clear:both;
+    clear: both;
 }
 
 
@@ -303,20 +321,35 @@ cursor: url(../images/game-world/cursors/targeting-pollen.gif) 0 0, auto;
     left: 50%;
     top: 40%;
     @include transform(translateX(-50%));
+    opacity: 0;
+    /* fade out speed: */
+    @include transition(opacity 3s ease);
+    @include transition-delay(3s);
+
+    &.active {
+        opacity: 1;
+        /* fade in speed: */
+        @include transition-duration(0s);
+        @include transition-delay(0s);
+    }
+
     ul {
         list-style: none;
         margin: 0;
         padding: 0;
     }
+
     li {
         display: inline-block;
         border: 3px solid #111;
         margin: 0 4px;
         @include transition(border 0.2s ease);
+
         &.active {
             border-color: #c9a55a;
         }
     }
+
     img {
         display: block;
     }
