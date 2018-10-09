@@ -323,8 +323,8 @@
     @include transform(translateX(-50%));
     opacity: 0;
     /* fade out speed: */
-    @include transition(opacity 3s ease);
-    @include transition-delay(3s);
+    @include transition(opacity 1.2s ease);
+    @include transition-delay(1s);
 
     &.active {
         opacity: 1;
