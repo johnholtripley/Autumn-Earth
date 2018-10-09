@@ -1247,6 +1247,15 @@ function update() {
             UI.toggleJournal();
             key[8] = false;
         }
+  if (key[9]) {
+            UI.moveQuickHold(-1);
+            key[9] = false;
+        }
+         if (key[10]) {
+            UI.moveQuickHold(1);
+            key[10] = false;
+        }
+
         checkHeroCollisions();
         var heroOldX = hero.tileX;
         var heroOldY = hero.tileY;

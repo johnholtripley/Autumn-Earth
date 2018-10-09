@@ -72,6 +72,7 @@ const startCrafting = document.getElementById('startCrafting');
 const horticulturePanel = document.getElementById('horticulturePanel');
 const characterPanel = document.getElementById('characterPanel');
 const holdingIcon = document.getElementById('holdingIcon');
+const quickHold = document.getElementById('quickHold');
 
 
 
@@ -201,6 +202,7 @@ var UI = {
         UI.buildActionBar();
         UI.initRetinueTimers();
         UI.updateHeldItems();
+        UI.updateQuickHold();
         /*
                 if (hero.professionsKnown.length > 0) {
                     // load and cache the first profession's recipe assets:
@@ -1378,6 +1380,8 @@ var UI = {
     updatePanelsAfterInventoryChange: function() {
         // called after any inventory add, remove or move so any panels can be updated to reflect the change
         UI.updateInscriptionPanel();
+        UI.checkHeldItem();
+        UI.updateQuickHold();
     },
 
     getGameSettings: function(e) {
@@ -1714,7 +1718,7 @@ var UI = {
 
                             UI.updateSurveyingPanel();
                             // trigger a reflow to push the update without the transition:
-                          //  surveyingPanel.offsetHeight;
+                            //  surveyingPanel.offsetHeight;
                             surveyingPanel.classList.add('active');
                         } else {
                             surveyingStopped();
@@ -1736,10 +1740,10 @@ var UI = {
     },
 
     updateSurveyingPanel: function() {
-       // surveyingTimeBar.style.width = (100 - surveying.timeRemaining) + '%';
+        // surveyingTimeBar.style.width = (100 - surveying.timeRemaining) + '%';
 
 
-             // has 30 frames:
+        // has 30 frames:
         var frameRequired = ((surveying.timeRemaining) / 3.3333);
         // hour glass background width is 92px for each frame:
         frameRequired = (Math.floor(frameRequired)) * 92;
@@ -2253,13 +2257,65 @@ var UI = {
         UI.updateHeldItems();
     },
     updateHeldItems: function() {
-if(hero.holding.hash != '') {
-holdingIcon.innerHTML = '<img src="/images/game-world/inventory-items/'+hero.holding.type+'.png" alt="'+currentActiveInventoryItems[hero.holding.type].shortname+'">';
-} else {
-    holdingIcon.innerHTML = '';
+        if (hero.holding.hash != '') {
+            holdingIcon.innerHTML = '<img src="/images/game-world/inventory-items/' + hero.holding.type + '.png" alt="' + currentActiveInventoryItems[hero.holding.type].shortname + '">';
+        } else {
+            holdingIcon.innerHTML = '';
 
 
-}
+        }
+    },
+    checkHeldItem: function() {
+        if (hero.holding.hash != '') {
+            // check that the currently held item still exists:
+            if (findSlotByHash(hero.holding.hash) == -1) {
+                // lost the hash - try and find by type instead:
+                var possibleSlots = findSlotItemIdInInventory(hero.holding.type);
+                if (possibleSlots.length > 0) {
+                    // update to this slot's hash:
+                    hero.holding.hash = hero.inventory[(possibleSlots[0])].hash;
+                    hero.holding.type = '';
+                } else {
+                    // unequip:
+                    hero.holding.hash = '';
+                    hero.holding.type = '';
+                    UI.updateHeldItems();
+                }
+            }
+        }
+    },
+    updateQuickHold: function() {
+        // find all holdable items and build the selectable interface:
+        var quickHoldMarkup = '<ul>';
+        var counter = 0;
+        // highlight the first if none selected:
+        if (hero.holding.quickHoldIndex == "") {
+            hero.holding.quickHoldIndex = 0;
+        }
+        for (var key in hero.inventory) {
+            if (currentActiveInventoryItems[hero.inventory[key].type].holdable == 1) {
+
+                if (counter === hero.holding.quickHoldIndex) {
+                    quickHoldMarkup += '<li id="quickHold'+counter+'" class="active">';
+                } else {
+                    quickHoldMarkup += '<li id="quickHold'+counter+'">';
+                }
+                quickHoldMarkup += '<img src="/images/game-world/inventory-items/' + hero.inventory[key].type + '.png" alt="' + currentActiveInventoryItems[hero.inventory[key].type].shortname + '"></li>';
+                counter++;
+            }
+        }
+        quickHoldMarkup += '</ul>';
+        quickHold.innerHTML = quickHoldMarkup;
+        hero.quickHoldLength = counter;
+    }, moveQuickHold: function(whichDirection) {
+        document.getElementById('quickHold'+hero.holding.quickHoldIndex).classList.remove('active');
+        hero.holding.quickHoldIndex += whichDirection;
+        if(hero.holding.quickHoldIndex < 0) {
+           hero.holding.quickHoldIndex = hero.quickHoldLength-1;
+        } else if(hero.holding.quickHoldIndex >= hero.quickHoldLength) {
+           hero.holding.quickHoldIndex = 0;
+        }
+        document.getElementById('quickHold'+hero.holding.quickHoldIndex).classList.add('active');
     }
 
 }

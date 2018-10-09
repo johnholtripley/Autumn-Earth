@@ -392,7 +392,7 @@ function inventoryItemAction(whichSlot, whichAction, allActionValues) {
                 case "inscribe":
                     UI.openInscriptionPanel();
                     break;
-                    case "holdable":
+                case "holdable":
                     UI.holdItem(whichSlotNumber);
                     break;
                 case "collection":
@@ -518,10 +518,10 @@ function generateGenericSlotMarkup(thisItemObject) {
         }
     }
 
-var isHoldable = false;
-if(currentActiveInventoryItems[thisItemObject.type].holdable == 1) {
-isHoldable = true;
-}
+    var isHoldable = false;
+    if (currentActiveInventoryItems[thisItemObject.type].holdable == 1) {
+        isHoldable = true;
+    }
 
 
     var dataActionMarkup = '';
@@ -542,7 +542,7 @@ isHoldable = true;
             dataActionMarkup = 'data-action="' + thisAction + '" data-action-value="' + currentActiveInventoryItems[thisItemObject.type].actionValue + '" ';
         }
     }
-    if(isHoldable) {
+    if (isHoldable) {
         dataActionMarkup = 'data-action="holdable" data-action-value="' + currentActiveInventoryItems[thisItemObject.type].action + '" ';
     }
 
@@ -673,5 +673,16 @@ function prepareInventoryObject(definedObject) {
 }
 
 function createItemHash(type, quantity) {
- return ''+type+quantity+characterId+Date.now();
+    return '' + type + quantity + characterId + Date.now();
+}
+
+function findSlotByHash(whichHash) {
+    var foundHashSlot = -1;
+    for (var key in hero.inventory) {
+        if (hero.inventory[key].hash == whichHash) {
+            foundHashSlot = key;
+            break;
+        }
+    }
+    return foundHashSlot;
 }

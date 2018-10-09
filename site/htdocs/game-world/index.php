@@ -237,6 +237,9 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
       <button id="questAccept">Accept</button>
     </div>
 
+    <div id="quickHold">
+    </div>
+
   </div>
   <div id="cardGameWrapper">
       <canvas id="cardGame" moz-opaque width="1008" height="612">
