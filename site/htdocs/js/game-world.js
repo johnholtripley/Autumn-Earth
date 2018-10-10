@@ -6425,6 +6425,17 @@ var UI = {
         hero.holding.hash = hero.inventory[whichSlot].hash;
         hero.holding.type = hero.inventory[whichSlot].type;
         UI.updateHeldItems();
+        
+        // update the quick held index:
+        var allQuickHoldElements = quickHold.querySelectorAll('li');
+        for (var i = 0; i < allQuickHoldElements.length; i++) {
+            if (allQuickHoldElements[i].dataset.hash == hero.holding.hash) {
+                hero.holding.quickHoldIndex = i;
+                break;
+            }
+        }
+UI.updateQuickHold();
+
     },
     updateHeldItems: function() {
         if (hero.holding.hash != '') {
@@ -6462,18 +6473,29 @@ var UI = {
         if (hero.holding.quickHoldIndex == "") {
             hero.holding.quickHoldIndex = 0;
         }
+        var keysFound = [];
         for (var key in hero.inventory) {
             if (currentActiveInventoryItems[hero.inventory[key].type].holdable == 1) {
-
-                if (counter === hero.holding.quickHoldIndex) {
-                    quickHoldMarkup += '<li id="quickHold' + counter + '" class="active" data-type="'+hero.inventory[key].type+'" data-key="'+key+'">';
-                } else {
-                    quickHoldMarkup += '<li id="quickHold' + counter + '" data-type="'+hero.inventory[key].type+'" data-key="'+key+'">';
-                }
-                quickHoldMarkup += '<img src="/images/game-world/inventory-items/' + hero.inventory[key].type + '.png" alt="' + currentActiveInventoryItems[hero.inventory[key].type].shortname + '"></li>';
-                counter++;
+                keysFound.push(key);
             }
         }
+        // sort this array so that the order is always preserved: (for ... in don't keep order)
+
+
+        keysFound = keysFound.sort();
+
+        for (var i = 0; i < keysFound.length; i++) {
+            key = keysFound[i];
+            if (counter === hero.holding.quickHoldIndex) {
+                quickHoldMarkup += '<li id="quickHold' + counter + '" class="active" data-type="' + hero.inventory[key].type + '" data-hash="' + hero.inventory[key].hash + '">';
+            } else {
+                quickHoldMarkup += '<li id="quickHold' + counter + '" data-type="' + hero.inventory[key].type + '" data-hash="' + hero.inventory[key].hash + '">';
+            }
+            quickHoldMarkup += '<img src="/images/game-world/inventory-items/' + hero.inventory[key].type + '.png" alt="' + currentActiveInventoryItems[hero.inventory[key].type].shortname + '"></li>';
+            counter++;
+
+        }
+
         quickHoldMarkup += '</ul>';
         quickHold.innerHTML = quickHoldMarkup;
         hero.quickHoldLength = counter;
@@ -6488,7 +6510,7 @@ var UI = {
         }
         var newActiveElement = document.getElementById('quickHold' + hero.holding.quickHoldIndex);
         newActiveElement.classList.add('active');
-        hero.holding.hash = hero.inventory[newActiveElement.dataset.key].hash;
+        hero.holding.hash = newActiveElement.dataset.hash;
         hero.holding.type = newActiveElement.dataset.type;
         UI.updateHeldItems();
         quickHold.classList.add('active');
