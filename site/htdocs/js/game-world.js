@@ -2658,6 +2658,9 @@ const Input = {
                     case KeyBindings.toggleToolRight:
                     key[10] = to;
                     break;
+                    case KeyBindings.tool:
+                    key[11] = to;
+                    break;
             }
         }
     }
@@ -7855,6 +7858,10 @@ function update() {
             UI.moveQuickHold(1);
             key[10] = false;
         }
+                if (key[11]) {
+            useActiveTool();
+            key[10] = false;
+        }
 
         checkHeroCollisions();
         var heroOldX = hero.tileX;
@@ -9342,6 +9349,10 @@ function saveGame() {
     // save UI state:
     // ##########
 
+}
+
+function useActiveTool() {
+    console.log("using tool",hero.holding.hash,hero.holding.type);
 }
 
 function draw() {

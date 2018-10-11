@@ -72,6 +72,9 @@ const Input = {
                     case KeyBindings.toggleToolRight:
                     key[10] = to;
                     break;
+                    case KeyBindings.tool:
+                    key[11] = to;
+                    break;
             }
         }
     }
