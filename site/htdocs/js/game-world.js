@@ -1562,7 +1562,12 @@ function getTileY(y) {
 
 
 function getElevation(tileX, tileY) {
-    return thisMapData.elevation[tileY][tileX];
+    if(typeof thisMapData.properties[tileY][tileX].elevation !== "undefined") {
+return thisMapData.properties[tileY][tileX].elevation;
+    } else {
+        return 0;
+    }
+    
 }
 
 

@@ -1899,12 +1899,12 @@ $terrainString .= ']';
 
 
 
-$elevationString = '"elevation": [';
+$elevationString = '"properties": [';
 
   for ($i = 0; $i < $mapTilesX; $i++) {   
   $elevationString .= '[';   
             for ($j = 0; $j < $mapTilesY; $j++) {
-               $elevationString.= '0, ';
+               $elevationString.= '{}, ';
                 }
                 // remove last comma:
 $elevationString = rtrim($elevationString, ', ');
