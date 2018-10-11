@@ -94,6 +94,10 @@ function loadCoreAssets() {
         name: "shadowImg",
         src: '/images/game-world/core/shadow-quarter.png'
     });
+        coreImagesToLoad.push({
+        name: "tilledEarth",
+        src: '/images/game-world/core/tilled.png'
+    });
     if (hasActivePet) {
         for (var i = 0; i < hero.activePets.length; i++) {
             coreImagesToLoad.push({
@@ -109,6 +113,7 @@ function loadCoreAssets() {
 function prepareCoreAssets() {
     heroImg = Loader.getImage("heroImg");
     shadowImg = Loader.getImage("shadowImg");
+    tilledEarth = Loader.getImage("tilledEarth");
     if (hasActivePet) {
         for (var i = 0; i < hero.activePets.length; i++) {
             activePetImages[i] = Loader.getImage("activePet" + hero.activePets[i]);
@@ -2802,6 +2807,15 @@ function draw() {
                     thisGraphicCentreX = thisMapData.graphics[(map[j][i])].centreX;
                     thisGraphicCentreY = thisMapData.graphics[(map[j][i])].centreY;
                     assetsToDraw.push([findIsoDepth(getTileCentreCoordX(i), getTileCentreCoordY(j), 0), "img", tileImages[(map[j][i])], Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2))]);
+                }
+                // look for tilled tiles:
+
+                if(thisMapData.properties[j][i].tilled == 1) {
+                      thisX = getTileIsoCentreCoordX(i, j);
+                    thisY = getTileIsoCentreCoordY(i, j);
+                    thisGraphicCentreX = tileW/2;
+                    thisGraphicCentreY = tileH/2;
+assetsToDraw.push([0, "img", tilledEarth, Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2))]);
                 }
             }
         }
