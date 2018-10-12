@@ -98,6 +98,10 @@ function loadCoreAssets() {
         name: "tilledEarth",
         src: '/images/game-world/core/tilled.png'
     });
+          coreImagesToLoad.push({
+        name: "addedWater",
+        src: '/images/game-world/core/added-water.png'
+    });
     if (hasActivePet) {
         for (var i = 0; i < hero.activePets.length; i++) {
             coreImagesToLoad.push({
@@ -114,6 +118,7 @@ function prepareCoreAssets() {
     heroImg = Loader.getImage("heroImg");
     shadowImg = Loader.getImage("shadowImg");
     tilledEarth = Loader.getImage("tilledEarth");
+    addedWater = Loader.getImage("addedWater");
     if (hasActivePet) {
         for (var i = 0; i < hero.activePets.length; i++) {
             activePetImages[i] = Loader.getImage("activePet" + hero.activePets[i]);
@@ -1262,7 +1267,7 @@ function update() {
         }
                 if (key[11]) {
             useActiveTool();
-            key[10] = false;
+            key[11] = false;
         }
 
         checkHeroCollisions();
@@ -2754,7 +2759,20 @@ function saveGame() {
 }
 
 function useActiveTool() {
-    console.log("using tool",hero.holding.hash,hero.holding.type);
+    if (hero.holding.type != "") {
+        switch (currentActiveInventoryItems[hero.holding.type].action) {
+            case "till":
+                tillEarth(hero.tileX + relativeFacing[hero.facing]["x"], hero.tileY + relativeFacing[hero.facing]["y"]);
+                break;
+                case "holds-liquid":
+                // check if next to a water source first: 
+                // ########
+                pourLiquid(hero.tileX + relativeFacing[hero.facing]["x"], hero.tileY + relativeFacing[hero.facing]["y"]);
+                break;
+        }
+    } else {
+        UI.showNotification("<p>I'm not holding anything&hellip;</p>");
+    }
 }
 
 function draw() {
@@ -2817,14 +2835,25 @@ function draw() {
                     assetsToDraw.push([findIsoDepth(getTileCentreCoordX(i), getTileCentreCoordY(j), 0), "img", tileImages[(map[j][i])], Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2))]);
                 }
                 // look for tilled tiles:
-
                 if(thisMapData.properties[j][i].tilled == 1) {
-                      thisX = getTileIsoCentreCoordX(i, j);
+                    thisX = getTileIsoCentreCoordX(i, j);
                     thisY = getTileIsoCentreCoordY(i, j);
                     thisGraphicCentreX = tileW/2;
                     thisGraphicCentreY = tileH/2;
-assetsToDraw.push([0, "img", tilledEarth, Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2))]);
+                    assetsToDraw.push([0, "img", tilledEarth, Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2))]);
                 }
+                // look for watered tiles:
+                 if(typeof thisMapData.properties[j][i].water !== "undefined") {
+                 if(thisMapData.properties[j][i].water.amount > 0) {
+                    thisX = getTileIsoCentreCoordX(i, j);
+                    thisY = getTileIsoCentreCoordY(i, j);
+                    thisGraphicCentreX = tileW/2;
+                    thisGraphicCentreY = tileH/2;
+                    for (var k=0; k<thisMapData.properties[j][i].water.amount;k++) {
+                    assetsToDraw.push([k+1, "img", addedWater, Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2))]);
+                }
+                 }
+             }
             }
         }
 
