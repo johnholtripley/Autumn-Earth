@@ -1338,32 +1338,32 @@ function moveFaeToDestination(x, y) {
 function tillEarth(tileX, tileY) {
     if (typeof thisMapData.properties[tileY][tileX].tilled !== "undefined") {
         if (thisMapData.properties[tileY][tileX].tilled == 1) {
-            // remove anything planted there ##
-    
+            // remove anything planted there #####
         }
         if (thisMapData.properties[tileY][tileX].tilled == 0) {
             thisMapData.properties[tileY][tileX].tilled = 1;
-           
         }
-          audio.playSound(soundEffects['digging'], 0);
+        audio.playSound(soundEffects['digging'], 0);
     }
-
 }
 
 function pourLiquid(tileX, tileY) {
-    // check how much liquid in this item's contains ####
-    // if not empty {
-    audio.playSound(soundEffects['pouring'], 0);
-    // }
-    if (typeof thisMapData.properties[tileY][tileX].water === "undefined") {
-        // create object:
-        thisMapData.properties[tileY][tileX].water = {};
+    var holdingItemsSlot = findSlotByHash(hero.holding.hash);
+    // check how much liquid in this item's contains:
+    if (hero.inventory[holdingItemsSlot].contains[0].quantity > 0) {
+        audio.playSound(soundEffects['pouring'], 0);
+        if (typeof thisMapData.properties[tileY][tileX].water === "undefined") {
+            // create object:
+            thisMapData.properties[tileY][tileX].water = {};
             thisMapData.properties[tileY][tileX].water.amount = 1;
             thisMapData.properties[tileY][tileX].water.time = hero.totalGameTimePlayed;
-        
+        } else {
+            thisMapData.properties[tileY][tileX].water.amount++;
+            checkWaterRunOff();
+        }
+        hero.inventory[holdingItemsSlot].contains[0].quantity--;
     } else {
-        thisMapData.properties[tileY][tileX].water.amount++;
-        checkWaterRunOff();
+        UI.showNotification("<p>that's empty</p>");
     }
 
 }
@@ -2699,7 +2699,10 @@ const Input = {
                     key[10] = to;
                     break;
                     case KeyBindings.tool:
-                    key[11] = to;
+                     key[11] = 0;
+                    if (type === "up") {
+                        key[11] = 1;
+                    }
                     break;
             }
         }
@@ -9398,14 +9401,29 @@ function saveGame() {
 
 function useActiveTool() {
     if (hero.holding.type != "") {
+        var armsReachTileX = hero.tileX + relativeFacing[hero.facing]["x"]
+        var armsReachTileY = hero.tileY + relativeFacing[hero.facing]["y"]
         switch (currentActiveInventoryItems[hero.holding.type].action) {
             case "till":
-                tillEarth(hero.tileX + relativeFacing[hero.facing]["x"], hero.tileY + relativeFacing[hero.facing]["y"]);
+                tillEarth(armsReachTileX, armsReachTileY);
                 break;
-                case "holds-liquid":
+            case "holds-liquid":
                 // check if next to a water source first: 
-                // ########
-                pourLiquid(hero.tileX + relativeFacing[hero.facing]["x"], hero.tileY + relativeFacing[hero.facing]["y"]);
+                var foundSource = false;
+                var holdingItemsSlot = findSlotByHash(hero.holding.hash);
+                var itemInFront = findItemWithinArmsLength();
+                if (itemInFront != -1) {
+                    if (currentActiveInventoryItems[thisMapData.items[itemInFront].type].action == "source") {
+                        foundSource = true;
+                        // fill it (make the actionValue maximum value) with the thing that this contains (defined by actionValue):
+                        hero.inventory[holdingItemsSlot].contains[0].type = currentActiveInventoryItems[thisMapData.items[itemInFront].type].actionValue;
+                        hero.inventory[holdingItemsSlot].contains[0].quantity = currentActiveInventoryItems[(hero.inventory[holdingItemsSlot].type)].actionValue;
+                        audio.playSound(soundEffects['pouring'], 0);
+                    }
+                }
+                if (!foundSource) {
+                    pourLiquid(armsReachTileX, armsReachTileY);
+                }
                 break;
         }
     } else {

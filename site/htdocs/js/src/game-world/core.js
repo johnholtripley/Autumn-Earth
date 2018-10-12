@@ -2760,14 +2760,29 @@ function saveGame() {
 
 function useActiveTool() {
     if (hero.holding.type != "") {
+        var armsReachTileX = hero.tileX + relativeFacing[hero.facing]["x"]
+        var armsReachTileY = hero.tileY + relativeFacing[hero.facing]["y"]
         switch (currentActiveInventoryItems[hero.holding.type].action) {
             case "till":
-                tillEarth(hero.tileX + relativeFacing[hero.facing]["x"], hero.tileY + relativeFacing[hero.facing]["y"]);
+                tillEarth(armsReachTileX, armsReachTileY);
                 break;
-                case "holds-liquid":
+            case "holds-liquid":
                 // check if next to a water source first: 
-                // ########
-                pourLiquid(hero.tileX + relativeFacing[hero.facing]["x"], hero.tileY + relativeFacing[hero.facing]["y"]);
+                var foundSource = false;
+                var holdingItemsSlot = findSlotByHash(hero.holding.hash);
+                var itemInFront = findItemWithinArmsLength();
+                if (itemInFront != -1) {
+                    if (currentActiveInventoryItems[thisMapData.items[itemInFront].type].action == "source") {
+                        foundSource = true;
+                        // fill it (make the actionValue maximum value) with the thing that this contains (defined by actionValue):
+                        hero.inventory[holdingItemsSlot].contains[0].type = currentActiveInventoryItems[thisMapData.items[itemInFront].type].actionValue;
+                        hero.inventory[holdingItemsSlot].contains[0].quantity = currentActiveInventoryItems[(hero.inventory[holdingItemsSlot].type)].actionValue;
+                        audio.playSound(soundEffects['pouring'], 0);
+                    }
+                }
+                if (!foundSource) {
+                    pourLiquid(armsReachTileX, armsReachTileY);
+                }
                 break;
         }
     } else {
