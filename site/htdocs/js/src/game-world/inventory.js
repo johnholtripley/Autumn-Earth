@@ -491,7 +491,20 @@ function additionalTooltipDetail(thisItemObject) {
                 }
             }
             break;
+
     }
+    if(currentActiveInventoryItems[thisItemObject.type].holdable > 0) {
+// check if it contains anything, and show how much if so:
+if(typeof thisItemObject.contains !== "undefined") {
+    if(thisItemObject.contains[0].quantity == 0) {
+tooltipInformationToAdd += " empty";
+    } else {
+       tooltipInformationToAdd += " contains "+thisItemObject.contains[0].quantity+"x "+currentActiveInventoryItems[thisItemObject.contains[0].type].shortname; 
+    }
+
+}
+    }
+
     return tooltipInformationToAdd;
 }
 
@@ -580,7 +593,8 @@ function generateGenericSlotMarkup(thisItemObject) {
     slotMarkup += '<p><em>' + theColourPrefix + currentActiveInventoryItems[thisItemObject.type].shortname + ' </em>' + itemsDescription + ' ';
     slotMarkup += '<span class="price">Sell price: ' + parseMoney(Math.ceil(thisItemObject.quantity * sellPriceModifier * inflationModifier * currentActiveInventoryItems[thisItemObject.type].priceCode, 0)) + '</span>';
     slotMarkup += '<span class="price specialismPrice">Sell price: ' + parseMoney(Math.ceil(thisItemObject.quantity * sellPriceSpecialismModifier * inflationModifier * currentActiveInventoryItems[thisItemObject.type].priceCode, 0)) + '</span>';
-    slotMarkup += additionalTooltipDetail(thisItemObject) + '</p>';
+
+    slotMarkup += '<span class="addtionalTooltip">'+additionalTooltipDetail(thisItemObject) + '</span></p>';
     slotMarkup += '<span class="qty">' + thisItemObject.quantity + '</span>';
 
     return slotMarkup;
@@ -685,4 +699,9 @@ function findSlotByHash(whichHash) {
         }
     }
     return foundHashSlot;
+}
+
+function updateAdditionalTooltip(whichSlotKey) {
+
+document.getElementById('slot'+whichSlotKey).querySelector('.addtionalTooltip').innerHTML = additionalTooltipDetail(hero.inventory[whichSlotKey]);
 }

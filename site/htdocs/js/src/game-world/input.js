@@ -26,8 +26,9 @@ const Input = {
     // called on key up and key down events
     changeKey: function(e, to, type) {
         var focussedTagType = document.activeElement.tagName;
+        var isContentEditable = document.activeElement.hasAttribute('contenteditable');
         // don't react to key presses if the currently focussed element is an input:
-        if ((focussedTagType != "INPUT") && (focussedTagType != "TEXTAREA") && (focussedTagType != "SELECT")) {
+        if ((focussedTagType != "INPUT") && (focussedTagType != "TEXTAREA") && (focussedTagType != "SELECT") && (!isContentEditable)) {
             switch (e.keyCode) {
                 case KeyBindings.left:
                     // prevent the page from scrolling:

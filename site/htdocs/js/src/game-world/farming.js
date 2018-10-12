@@ -19,12 +19,13 @@ function pourLiquid(tileX, tileY) {
             // create object:
             thisMapData.properties[tileY][tileX].water = {};
             thisMapData.properties[tileY][tileX].water.amount = 1;
-            thisMapData.properties[tileY][tileX].water.time = hero.totalGameTimePlayed;
         } else {
             thisMapData.properties[tileY][tileX].water.amount++;
             checkWaterRunOff();
         }
+        thisMapData.properties[tileY][tileX].water.time = hero.totalGameTimePlayed;
         hero.inventory[holdingItemsSlot].contains[0].quantity--;
+        updateAdditionalTooltip(holdingItemsSlot);
     } else {
         UI.showNotification("<p>that's empty</p>");
     }
@@ -34,5 +35,7 @@ function pourLiquid(tileX, tileY) {
 function checkWaterRunOff() {
     // see if any tiles are saturated and run the water into a neighbouring tile:
     // check elevation so water runs downwards
+    // do this recursively
+    // do this in a worker?
     // ########
 }

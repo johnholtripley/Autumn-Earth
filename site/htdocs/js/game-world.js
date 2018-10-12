@@ -1356,12 +1356,13 @@ function pourLiquid(tileX, tileY) {
             // create object:
             thisMapData.properties[tileY][tileX].water = {};
             thisMapData.properties[tileY][tileX].water.amount = 1;
-            thisMapData.properties[tileY][tileX].water.time = hero.totalGameTimePlayed;
         } else {
             thisMapData.properties[tileY][tileX].water.amount++;
             checkWaterRunOff();
         }
+        thisMapData.properties[tileY][tileX].water.time = hero.totalGameTimePlayed;
         hero.inventory[holdingItemsSlot].contains[0].quantity--;
+        updateAdditionalTooltip(holdingItemsSlot);
     } else {
         UI.showNotification("<p>that's empty</p>");
     }
@@ -1371,6 +1372,8 @@ function pourLiquid(tileX, tileY) {
 function checkWaterRunOff() {
     // see if any tiles are saturated and run the water into a neighbouring tile:
     // check elevation so water runs downwards
+    // do this recursively
+    // do this in a worker?
     // ########
 }
 function checkForGamePadInput() {
@@ -2652,8 +2655,9 @@ const Input = {
     // called on key up and key down events
     changeKey: function(e, to, type) {
         var focussedTagType = document.activeElement.tagName;
+        var isContentEditable = document.activeElement.hasAttribute('contenteditable');
         // don't react to key presses if the currently focussed element is an input:
-        if ((focussedTagType != "INPUT") && (focussedTagType != "TEXTAREA") && (focussedTagType != "SELECT")) {
+        if ((focussedTagType != "INPUT") && (focussedTagType != "TEXTAREA") && (focussedTagType != "SELECT") && (!isContentEditable)) {
             switch (e.keyCode) {
                 case KeyBindings.left:
                     // prevent the page from scrolling:
@@ -3201,7 +3205,20 @@ function additionalTooltipDetail(thisItemObject) {
                 }
             }
             break;
+
     }
+    if(currentActiveInventoryItems[thisItemObject.type].holdable > 0) {
+// check if it contains anything, and show how much if so:
+if(typeof thisItemObject.contains !== "undefined") {
+    if(thisItemObject.contains[0].quantity == 0) {
+tooltipInformationToAdd += " empty";
+    } else {
+       tooltipInformationToAdd += " contains "+thisItemObject.contains[0].quantity+"x "+currentActiveInventoryItems[thisItemObject.contains[0].type].shortname; 
+    }
+
+}
+    }
+
     return tooltipInformationToAdd;
 }
 
@@ -3290,7 +3307,8 @@ function generateGenericSlotMarkup(thisItemObject) {
     slotMarkup += '<p><em>' + theColourPrefix + currentActiveInventoryItems[thisItemObject.type].shortname + ' </em>' + itemsDescription + ' ';
     slotMarkup += '<span class="price">Sell price: ' + parseMoney(Math.ceil(thisItemObject.quantity * sellPriceModifier * inflationModifier * currentActiveInventoryItems[thisItemObject.type].priceCode, 0)) + '</span>';
     slotMarkup += '<span class="price specialismPrice">Sell price: ' + parseMoney(Math.ceil(thisItemObject.quantity * sellPriceSpecialismModifier * inflationModifier * currentActiveInventoryItems[thisItemObject.type].priceCode, 0)) + '</span>';
-    slotMarkup += additionalTooltipDetail(thisItemObject) + '</p>';
+
+    slotMarkup += '<span class="addtionalTooltip">'+additionalTooltipDetail(thisItemObject) + '</span></p>';
     slotMarkup += '<span class="qty">' + thisItemObject.quantity + '</span>';
 
     return slotMarkup;
@@ -3395,6 +3413,11 @@ function findSlotByHash(whichHash) {
         }
     }
     return foundHashSlot;
+}
+
+function updateAdditionalTooltip(whichSlotKey) {
+
+document.getElementById('slot'+whichSlotKey).querySelector('.addtionalTooltip').innerHTML = additionalTooltipDetail(hero.inventory[whichSlotKey]);
 }
 var KeyBindings = {
     'left': 65,
@@ -9419,6 +9442,7 @@ function useActiveTool() {
                         hero.inventory[holdingItemsSlot].contains[0].type = currentActiveInventoryItems[thisMapData.items[itemInFront].type].actionValue;
                         hero.inventory[holdingItemsSlot].contains[0].quantity = currentActiveInventoryItems[(hero.inventory[holdingItemsSlot].type)].actionValue;
                         audio.playSound(soundEffects['pouring'], 0);
+                        updateAdditionalTooltip(holdingItemsSlot);
                     }
                 }
                 if (!foundSource) {
