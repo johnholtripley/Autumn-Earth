@@ -19,7 +19,9 @@ var soundsToLoad = {
     'rain': '../sounds/rain-NOT_MINE-youtube.mp3',
     'questComplete': '../sounds/quest-complete-NOT_MINE-wow.mp3',
     'dyeing': '../sounds/dyeing-NOT_MINE-wow.mp3',
-    'weaving': '../sounds/tailoring-NOT_MINE.mp3'
+    'weaving': '../sounds/tailoring-NOT_MINE.mp3',
+    'pouring': '../sounds/pour-water-NOT_MINE.mp3',
+    'digging': '../sounds/digging-NOT_MINE.mp3'
 };
 
 
@@ -1337,18 +1339,22 @@ function tillEarth(tileX, tileY) {
     if (typeof thisMapData.properties[tileY][tileX].tilled !== "undefined") {
         if (thisMapData.properties[tileY][tileX].tilled == 1) {
             // remove anything planted there ##
-            // play sound ##
+    
         }
         if (thisMapData.properties[tileY][tileX].tilled == 0) {
             thisMapData.properties[tileY][tileX].tilled = 1;
-            // play sound ##
+           
         }
+          audio.playSound(soundEffects['digging'], 0);
     }
 
 }
 
 function pourLiquid(tileX, tileY) {
     // check how much liquid in this item's contains ####
+    // if not empty {
+    audio.playSound(soundEffects['pouring'], 0);
+    // }
     if (typeof thisMapData.properties[tileY][tileX].water === "undefined") {
         // create object:
         thisMapData.properties[tileY][tileX].water = {};
@@ -1364,6 +1370,7 @@ function pourLiquid(tileX, tileY) {
 
 function checkWaterRunOff() {
     // see if any tiles are saturated and run the water into a neighbouring tile:
+    // check elevation so water runs downwards
     // ########
 }
 function checkForGamePadInput() {

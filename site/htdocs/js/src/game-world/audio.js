@@ -18,7 +18,9 @@ var soundsToLoad = {
     'rain': '../sounds/rain-NOT_MINE-youtube.mp3',
     'questComplete': '../sounds/quest-complete-NOT_MINE-wow.mp3',
     'dyeing': '../sounds/dyeing-NOT_MINE-wow.mp3',
-    'weaving': '../sounds/tailoring-NOT_MINE.mp3'
+    'weaving': '../sounds/tailoring-NOT_MINE.mp3',
+    'pouring': '../sounds/pour-water-NOT_MINE.mp3',
+    'digging': '../sounds/digging-NOT_MINE.mp3'
 };
 
 

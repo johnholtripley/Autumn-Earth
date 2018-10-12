@@ -64,6 +64,9 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/title-tag.php");
 
 <meta http-equiv="Accept-CH" content="DPR,Width,Viewport-Width"> 
 <meta name="disabled-adaptations" content="watch">
+
+<?php // stop Edge auto-detecting phone numbers and making them links: ?>
+<meta name="format-detection" content="telephone=no">
 <?php
 // help Google index paginated pages behind the 'load more' links:
 // https://webmasters.googleblog.com/2014/02/infinite-scroll-search-friendly.html
