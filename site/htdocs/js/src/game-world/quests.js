@@ -186,7 +186,7 @@ function awardQuestRewards(whichNPC, questRewards, isACollectionQuest) {
  // check for variation:
 
   var rewardTypePossibilities = questRewardToUse.type.toString().split("/");
-           thisRewardObject.type = getRandomElementFromArray(rewardTypePossibilities);
+           thisRewardObject.type = parseInt(getRandomElementFromArray(rewardTypePossibilities));
 
 
 
