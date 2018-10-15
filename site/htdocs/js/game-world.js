@@ -1362,7 +1362,7 @@ function pourLiquid(tileX, tileY) {
         }
         thisMapData.properties[tileY][tileX].water.time = hero.totalGameTimePlayed;
         hero.inventory[holdingItemsSlot].contains[0].quantity--;
-        updateAdditionalTooltip(holdingItemsSlot);
+        updateGauge(holdingItemsSlot);
     } else {
         UI.showNotification("<p>that's empty</p>");
     }
@@ -3207,20 +3207,12 @@ function additionalTooltipDetail(thisItemObject) {
             break;
 
     }
-    if(currentActiveInventoryItems[thisItemObject.type].holdable > 0) {
-// check if it contains anything, and show how much if so:
-if(typeof thisItemObject.contains !== "undefined") {
-    if(thisItemObject.contains[0].quantity == 0) {
-tooltipInformationToAdd += " empty";
-    } else {
-       tooltipInformationToAdd += " contains "+thisItemObject.contains[0].quantity+"x "+currentActiveInventoryItems[thisItemObject.contains[0].type].shortname; 
-    }
 
-}
-    }
 
     return tooltipInformationToAdd;
 }
+
+
 
 function generateGenericSlotMarkup(thisItemObject) {
 
@@ -3308,7 +3300,8 @@ function generateGenericSlotMarkup(thisItemObject) {
     slotMarkup += '<span class="price">Sell price: ' + parseMoney(Math.ceil(thisItemObject.quantity * sellPriceModifier * inflationModifier * currentActiveInventoryItems[thisItemObject.type].priceCode, 0)) + '</span>';
     slotMarkup += '<span class="price specialismPrice">Sell price: ' + parseMoney(Math.ceil(thisItemObject.quantity * sellPriceSpecialismModifier * inflationModifier * currentActiveInventoryItems[thisItemObject.type].priceCode, 0)) + '</span>';
 
-    slotMarkup += '<span class="addtionalTooltip">'+additionalTooltipDetail(thisItemObject) + '</span></p>';
+    slotMarkup += additionalTooltipDetail(thisItemObject) + '</p>';
+    slotMarkup += addGauge(thisItemObject);
     slotMarkup += '<span class="qty">' + thisItemObject.quantity + '</span>';
 
     return slotMarkup;
@@ -3415,9 +3408,27 @@ function findSlotByHash(whichHash) {
     return foundHashSlot;
 }
 
-function updateAdditionalTooltip(whichSlotKey) {
 
-document.getElementById('slot'+whichSlotKey).querySelector('.addtionalTooltip').innerHTML = additionalTooltipDetail(hero.inventory[whichSlotKey]);
+function addGauge(thisItemObject) {
+    var gaugeMarkupToAdd = '';
+        if(currentActiveInventoryItems[thisItemObject.type].holdable > 0) {
+// check if it contains anything, and show a gauge if so:
+if(typeof thisItemObject.contains !== "undefined") {
+
+   //    tooltipInformationToAdd += " contains "+thisItemObject.contains[0].quantity+"x "+currentActiveInventoryItems[thisItemObject.contains[0].type].shortname; 
+
+   var gaugePercent = thisItemObject.contains[0].quantity / currentActiveInventoryItems[thisItemObject.type].actionValue * 100;
+gaugeMarkupToAdd += '<span class="gauge gauge'+currentActiveInventoryItems[thisItemObject.contains[0].type].shortname+'"><span style="width:'+gaugePercent+'+%"></span></span>';
+
+}
+    }
+    return gaugeMarkupToAdd;
+    }
+
+
+function updateGauge(whichSlotKey) {
+var gaugePercent = hero.inventory[whichSlotKey].contains[0].quantity / currentActiveInventoryItems[hero.inventory[whichSlotKey].type].actionValue * 100;
+document.getElementById('slot'+whichSlotKey).querySelector('.gauge span').style.width = gaugePercent+'%';
 }
 var KeyBindings = {
     'left': 65,
@@ -9442,7 +9453,7 @@ function useActiveTool() {
                         hero.inventory[holdingItemsSlot].contains[0].type = currentActiveInventoryItems[thisMapData.items[itemInFront].type].actionValue;
                         hero.inventory[holdingItemsSlot].contains[0].quantity = currentActiveInventoryItems[(hero.inventory[holdingItemsSlot].type)].actionValue;
                         audio.playSound(soundEffects['pouring'], 0);
-                        updateAdditionalTooltip(holdingItemsSlot);
+                        updateGauge(holdingItemsSlot);
                     }
                 }
                 if (!foundSource) {

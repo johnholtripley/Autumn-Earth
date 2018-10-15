@@ -2778,7 +2778,7 @@ function useActiveTool() {
                         hero.inventory[holdingItemsSlot].contains[0].type = currentActiveInventoryItems[thisMapData.items[itemInFront].type].actionValue;
                         hero.inventory[holdingItemsSlot].contains[0].quantity = currentActiveInventoryItems[(hero.inventory[holdingItemsSlot].type)].actionValue;
                         audio.playSound(soundEffects['pouring'], 0);
-                        updateAdditionalTooltip(holdingItemsSlot);
+                        updateGauge(holdingItemsSlot);
                     }
                 }
                 if (!foundSource) {

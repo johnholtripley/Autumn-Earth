@@ -113,6 +113,26 @@ $numberOfItemCategories: 20;
             font-style: normal;
         }
     }
+    .gauge {
+       width: 90%;
+margin: 0;
+position: absolute;
+left: 5%;
+border: 1px solid #666;
+bottom: 3px;
+
+        span {
+height: 6px;
+display: block;
+@include transition(width 0.4s ease);
+        }
+    }
+    .gaugeWater {
+        span {
+background: #459edd;
+        }
+    }
+
 }
 
 

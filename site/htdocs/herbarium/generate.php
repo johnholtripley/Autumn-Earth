@@ -14,7 +14,7 @@
 // Virtues text - replace illnesses, body parts, plant parts, god's names, other plant names, regional names, peoples, references to petal colours, common name, variant names, regions, dates
 
 
-
+// seed the drawing and description generation with the generated Genus so same genus plants will be similar
 
 
 // drawElongatatedSshape
