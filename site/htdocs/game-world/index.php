@@ -78,6 +78,7 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
     <div id="characterPanel">
       <div class="draggableBar"><div id="characterName"></div></div><button class="closePanel">close</button>
       <div id="holdingIcon"></div>
+      <div id="holdingGauge"><span></span></div>
     </div>
     <div id="gatheringPanel">
       <div class="draggableBar">Gathering</div><button class="closePanel">close</button>

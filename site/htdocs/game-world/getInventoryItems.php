@@ -41,6 +41,7 @@ $outputJson .= '"action":"'.$action.'",';
 $outputJson .= '"actionValue":"'.$actionValue.'",';
 $outputJson .= '"dyeable":"'.$dyeable.'",';
 $outputJson .= '"holdable":"'.$holdable.'",';
+$outputJson .= '"stackable":"'.$stackable.'",';
 $outputJson .= '"level":"'.$level.'",';
 $outputJson .= '"prerequisites":"'.$prerequisites.'",';
 $outputJson .= '"group":"'.$itemGroup.'",';

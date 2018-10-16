@@ -5,10 +5,12 @@ $numberOfItemCategories: 20;
     position: absolute;
     @include transition(opacity $duration ease);
     pointer-events: none;
+
     &.active {
         opacity: 1;
         pointer-events: auto;
     }
+
     @include mq($wide, 'max') {
         display: none;
         opacity: 1;
@@ -17,6 +19,7 @@ $numberOfItemCategories: 20;
         top: auto;
         max-width: 100%;
         clear: both;
+
         &.active {
             display: block;
             pointer-events: auto;
@@ -38,6 +41,7 @@ $numberOfItemCategories: 20;
     position: relative;
     box-shadow: 0 0 0 0 #eebb3f;
     @include transition(box-shadow 0.2s ease-in-out);
+
     .qty {
         position: absolute;
         right: 3px;
@@ -47,6 +51,7 @@ $numberOfItemCategories: 20;
         cursor: default;
         font-size: 11px;
         pointer-events: none;
+
         &:after {
             opacity: 0;
             pointer-events: none;
@@ -60,8 +65,10 @@ $numberOfItemCategories: 20;
             bottom: 0;
         }
     }
+
     img {
         display: block; // don't want :active otherwise the tooltip blocks dragging the item up a slot in Chrome
+
         // @include attention() {
         &:hover,
         &:focus {
@@ -73,19 +80,23 @@ $numberOfItemCategories: 20;
             }
         }
     }
+
     &.changed {
         box-shadow: 0 0 5px 3px #eebb3f;
         z-index: 1;
     }
+
     &.hidden {
+
         img,
         p,
         span {
             opacity: 0;
         }
     }
+
     &.locked {
-            cursor: url(../images/game-world/cursors/blocked.gif) 3 3, auto;
+        cursor: url(../images/game-world/cursors/blocked.gif) 3 3, auto;
     }
 
     p {
@@ -106,6 +117,7 @@ $numberOfItemCategories: 20;
         cursor: url(../images/game-world/cursors/default.gif) 3 3, auto;
         @include transform(translateY(10px));
         @include transition(all .25s ease-out);
+
         em {
             // tooltip item title
             display: block;
@@ -113,23 +125,25 @@ $numberOfItemCategories: 20;
             font-style: normal;
         }
     }
+
     .gauge {
-       width: 90%;
-margin: 0;
-position: absolute;
-left: 5%;
-border: 1px solid #666;
-bottom: 3px;
+        width: 90%;
+        margin: 0;
+        position: absolute;
+        left: 5%;
+        border: 1px solid #666;
+        bottom: 3px;
 
         span {
-height: 6px;
-display: block;
-@include transition(width 0.4s ease);
+            height: 6px;
+            display: block;
+            @include transition(width 0.4s ease);
         }
     }
+
     .gaugeWater {
         span {
-background: #459edd;
+            background: #459edd;
         }
     }
 
@@ -158,12 +172,15 @@ background: #459edd;
         left: 1060px;
         background: #53160d url(../images/game-world/interface/inventory-panel-bg.jpg) no-repeat 0 100%;
         z-index: 1;
+
         &:hover {
             // override inline z-index with !important:
             z-index: 3 !important;
         }
+
         @include togglePanel(0.4s);
         @include border-radius(3px);
+
         @include mq($wide) {
             @for $i from 2 through 6 {
                 &:nth-child(#{$i}) {
@@ -177,10 +194,12 @@ background: #459edd;
         &.shopSpecialism#{$i} .itemCategory#{$i}~.qty:after {
             opacity: 1;
         }
+
         &.shopSpecialism#{$i} .itemCategory#{$i}~p {
             .price {
                 display: none;
             }
+
             .specialismPrice {
                 display: inline-block;
                 color: #16952b;
@@ -198,9 +217,11 @@ background: #459edd;
     @include transform-origin(0 0);
     width: 44px;
     height: 44px;
+
     p {
         display: none;
     }
+
     .qty {
         position: absolute;
         right: 4px;
@@ -237,6 +258,7 @@ background: #459edd;
     }
 
     .price {}
+
     .specialismPrice {
         display: none;
     }
@@ -250,10 +272,12 @@ background: #459edd;
     background: #666;
     color: #fff;
     @include togglePanel(0.4s);
+
     #cartographicTitle {
         // allow the entire panel to be dragged even if dragging from the header text:
         pointer-events: none;
     }
+
     canvas {
         background: #ded49d url(../images/cartography/overlays/1.png) no-repeat 0 0;
     }
@@ -263,38 +287,47 @@ background: #459edd;
     left: 40%;
     // place it at the same location as #craftingSelectComponentsPanel but offset to the left so they're side-by-side:
     @include transform(translateX(-200px));
+
     @include mq($wide, 'max') {
         @include transform(translateX(0px));
     }
+
     top: 130px;
     background: #222;
     color: #fff;
     @include togglePanel(0.8s);
+
     #recipeTitleBar {
         // allow the entire panel to be dragged even if dragging from the header text:
         pointer-events: none;
     }
+
     ul {
         margin: 0;
         padding: 0;
         list-style: none;
+
         li {
             display: none;
             background: #666;
             @include transition(background 0.4s ease);
             padding: 6px 0;
+
             &.active {
                 display: block;
             }
+
             img {
                 display: inline-block; // define widths so the scrollbar knows the size while the images are loading:
                 width: 40px;
                 height: 40px;
             }
+
             &.highlighted {
                 background: #b4a435;
             }
         }
+
         h3,
         p {
             margin: 0;
@@ -317,6 +350,7 @@ background: #459edd;
     border: 0;
     background: #682810;
     cursor: url(../images/game-world/cursors/active.gif) 3 3, pointer;
+
     &:disabled {
         background: #000;
         cursor: default;
@@ -332,6 +366,7 @@ background: #459edd;
         top: 335px;
         background: #000;
         @include togglePanel(0.4s);
+
         img {
             @include attention() {
                 &+p {
@@ -341,10 +376,12 @@ background: #459edd;
                 }
             }
         }
+
         ol {
             padding: 0;
             margin: 0;
         }
+
         li {
             // slot
             width: 46px;
@@ -359,6 +396,7 @@ background: #459edd;
             position: relative;
             box-shadow: 0 0 0 0 #eebb3f;
             @include transition(box-shadow 0.2s ease-in-out);
+
             .qty {
                 position: absolute;
                 right: 3px;
@@ -369,14 +407,18 @@ background: #459edd;
                 font-size: 11px;
                 pointer-events: none;
             }
+
             img {
                 display: block;
             }
+
             &.changed {
                 box-shadow: 0 0 5px 3px #eebb3f;
                 z-index: 1;
             }
+
             &.hidden {
+
                 img,
                 p,
                 span {
@@ -384,6 +426,7 @@ background: #459edd;
                 }
             }
         }
+
         p {
             // tooltip
             background: #eee;
@@ -400,11 +443,14 @@ background: #459edd;
             position: absolute;
             font-size: 11px;
             cursor: url(../images/game-world/cursors/default.gif) 3 3, auto;
+
             .specialPrice {
                 color: #16952b;
             }
+
             @include transform(translateY(10px));
             @include transition(all .25s ease-out);
+
             em {
                 // tooltip item title
                 display: block;
@@ -423,28 +469,34 @@ background: #459edd;
     background: #53160d;
     color: #fff;
     z-index: 1;
+
     p {
         padding: 3px 8px 6px 8px;
         font-size: 12px;
         opacity: 0;
         @include transition(opacity 0.4s ease);
         pointer-events: none;
+
         &.active {
             opacity: 1;
             pointer-events: auto;
         }
     }
+
     li {
         background: none;
         display: inline-block;
     }
+
     img {
         display: inline-block;
         margin: 0 2px 2px 0;
     }
+
     .notCollected img {
         @include filter(sepia(100%) opacity(30%));
     }
+
     h2 {
         font-size: 14px;
         padding: 3px 8px 6px 8px;
@@ -453,11 +505,13 @@ background: #459edd;
 
 #gameSettings {
     @include togglePanel(0.6s);
+
     @include mq($wide) {
         left: 50%;
         top: 50%;
-        @include transform( translate(-50%, -50%));
+        @include transform(translate(-50%, -50%));
     }
+
     background: #000;
     color: #fff;
 }
@@ -485,12 +539,14 @@ background: #459edd;
         @include pxRem('padding', 12);
         list-style: none;
         margin: 0;
+
         li {
             background: none;
             @include clearfix;
             padding: 3px 0;
         }
     }
+
     p {
         @include pxRem('font-size', 12);
         display: block;
@@ -499,6 +555,7 @@ background: #459edd;
         margin: 0;
         padding: 0;
     }
+
     &.active .progressBar {
         // only show the transition when active - so initial values aren't animated to
         @include transition(width 0.1s ease);
@@ -536,8 +593,8 @@ background: #459edd;
 
 #surveyingTimeBar {
     .progressBar {
-    background-color: #517db4;
-}
+        background-color: #517db4;
+    }
 }
 
 
@@ -556,7 +613,7 @@ background: #459edd;
 
 .lockedOverlay {
     position: absolute;
-        left: 0px;
+    left: 0px;
     width: 40px;
     height: 40px;
     bottom: 0px;
@@ -566,10 +623,11 @@ background: #459edd;
     pointer-events: none;
     @include transition(opacity 0.4s ease);
 }
+
 .locked .lockedOverlay {
-opacity: 1;
-pointer-events: auto;
-    }
+    opacity: 1;
+    pointer-events: auto;
+}
 
 #questJournal {
     @include togglePanel(0.4s);
@@ -577,23 +635,28 @@ pointer-events: auto;
     background: #666;
     left: 1480px;
     width: 400px;
+
     ol {
         list-style: none;
         margin: 0;
         padding: 0;
     }
+
     li {
         background: #cecece;
         display: none;
         @include clearfix;
         border-bottom: 4px solid #666;
+
         &.active {
             display: block;
         }
     }
+
     p {
         font-size: 12px;
     }
+
     h4,
     h5 {
         margin: 0;
@@ -605,48 +668,54 @@ pointer-events: auto;
 }
 
 #horticulturePanel {
- @include togglePanel(0.4s);
+    @include togglePanel(0.4s);
     top: 793px;
     background: #666;
     left: 60px;
+
     //width: 400px;
     table {
-        th, td {
-            padding:0;
+
+        th,
+        td {
+            padding: 0;
             text-align: center;
             color: #fff;
             position: relative;
         }
+
         img {
             display: block;
-             &:hover+p {
+
+            &:hover+p {
                 // reveal tooltip
                 opacity: 1;
                 pointer-events: auto;
                 @include transform(translateY(0));
             }
         }
-         p {
-        // tooltip
-        background: #eee;
-        z-index: 1;
-        margin: 0;
-        bottom: 100%;
-        color: #000;
-        display: block;
-        left: 0;
-        min-width: 120px;
-        font-weight: normal;
-        opacity: 0;
-        padding: 8px;
-        pointer-events: none;
-        position: absolute;
-        font-size: 11px;
-        cursor: url(../images/game-world/cursors/default.gif) 3 3, auto;
-        @include transform(translateY(10px));
-        @include transition(all .25s ease-out);
-    
-    }
+
+        p {
+            // tooltip
+            background: #eee;
+            z-index: 1;
+            margin: 0;
+            bottom: 100%;
+            color: #000;
+            display: block;
+            left: 0;
+            min-width: 120px;
+            font-weight: normal;
+            opacity: 0;
+            padding: 8px;
+            pointer-events: none;
+            position: absolute;
+            font-size: 11px;
+            cursor: url(../images/game-world/cursors/default.gif) 3 3, auto;
+            @include transform(translateY(10px));
+            @include transition(all .25s ease-out);
+
+        }
     }
 }
 
@@ -654,7 +723,8 @@ pointer-events: auto;
     @include togglePanel(0.4s);
     left: 50%;
     top: 50%;
-    @include transform( translate(-50%, -50%));
+    @include transform(translate(-50%, -50%));
+
     button {
         cursor: url(../images/game-world/cursors/active.gif) 3 3, pointer;
         background: #363636;
@@ -669,6 +739,7 @@ pointer-events: auto;
         line-height: 1;
         font-family: Lato, "Trebuchet MS", trebuchet, arial, helvetica, sans-serif;
         outline: 0;
+
         @include attention() {
             background: #857d6e;
         }
@@ -682,22 +753,41 @@ pointer-events: auto;
     @include togglePanel(0.4s);
     top: 30px;
     left: 30px;
+
     #characterName {
         pointer-events: none;
-         @include pxRem('padding-right', 24px);
+        @include pxRem('padding-right', 24px);
     }
+
     #holdingIcon {
         img {
             display: block;
             @include border-radius(50%);
         }
+
         border:3px solid #c9a55a;
         background: #111;
         @include border-radius(50%);
         width: 40px;
         height: 40px;
     }
+
+    #holdingGauge {
+        opacity: 0;
+        @include transition(opacity 0.4s ease);  border: 2px solid #c9a55a;
+            background: #111;
+        &.active {
+            opacity: 1;
+        }
+        span {
+            height: 6px;
+            display: block;
+            @include transition(width 0.4s ease);
+          
+        }
+
+        &.gaugeWater span {
+            background: #459edd;
+        }
+    }
 }
-
-
-

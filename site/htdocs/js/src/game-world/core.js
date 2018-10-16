@@ -2779,6 +2779,7 @@ function useActiveTool() {
                         hero.inventory[holdingItemsSlot].contains[0].quantity = currentActiveInventoryItems[(hero.inventory[holdingItemsSlot].type)].actionValue;
                         audio.playSound(soundEffects['pouring'], 0);
                         updateGauge(holdingItemsSlot);
+                        UI.updateHeldItemGauge();
                     }
                 }
                 if (!foundSource) {

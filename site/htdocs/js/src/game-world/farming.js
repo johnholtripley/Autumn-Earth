@@ -26,6 +26,7 @@ function pourLiquid(tileX, tileY) {
         thisMapData.properties[tileY][tileX].water.time = hero.totalGameTimePlayed;
         hero.inventory[holdingItemsSlot].contains[0].quantity--;
         updateGauge(holdingItemsSlot);
+        UI.updateHeldItemGauge();
     } else {
         UI.showNotification("<p>that's empty</p>");
     }

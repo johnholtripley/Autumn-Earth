@@ -73,6 +73,7 @@ const horticulturePanel = document.getElementById('horticulturePanel');
 const characterPanel = document.getElementById('characterPanel');
 const holdingIcon = document.getElementById('holdingIcon');
 const quickHold = document.getElementById('quickHold');
+const holdingGauge = document.getElementById('holdingGauge');
 
 
 
@@ -2255,7 +2256,7 @@ var UI = {
         hero.holding.hash = hero.inventory[whichSlot].hash;
         hero.holding.type = hero.inventory[whichSlot].type;
         UI.updateHeldItems();
-        
+
         // update the quick held index:
         var allQuickHoldElements = quickHold.querySelectorAll('li');
         for (var i = 0; i < allQuickHoldElements.length; i++) {
@@ -2264,16 +2265,30 @@ var UI = {
                 break;
             }
         }
-UI.updateQuickHold();
+        UI.updateQuickHold();
 
     },
     updateHeldItems: function() {
         if (hero.holding.hash != '') {
             holdingIcon.innerHTML = '<img src="/images/game-world/inventory-items/' + hero.holding.type + '.png" alt="' + currentActiveInventoryItems[hero.holding.type].shortname + '">';
+            // check if a gauge is needed:
+            UI.updateHeldItemGauge();
         } else {
             holdingIcon.innerHTML = '';
+            holdingGauge.classList.remove('active');
 
-
+        }
+    },
+    updateHeldItemGauge: function() {
+        // check if it contains anything, and show a gauge if so:
+        var thisItemObject = hero.inventory[findSlotByHash(hero.holding.hash)];
+        if (typeof thisItemObject.contains !== "undefined") {
+            var gaugePercent = thisItemObject.contains[0].quantity / currentActiveInventoryItems[thisItemObject.type].actionValue * 100;
+            holdingGauge.className = 'gauge' + currentActiveInventoryItems[thisItemObject.contains[0].type].shortname;
+            holdingGauge.querySelector('span').style.width = gaugePercent + '%';
+            holdingGauge.classList.add('active');
+        } else {
+            holdingGauge.classList.remove('active');
         }
     },
     checkHeldItem: function() {
