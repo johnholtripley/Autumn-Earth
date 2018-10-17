@@ -2766,6 +2766,9 @@ function useActiveTool() {
             case "till":
                 tillEarth(armsReachTileX, armsReachTileY);
                 break;
+                case "seed":
+                  plantSeed(armsReachTileX, armsReachTileY);
+                break;
             case "holds-liquid":
                 // check if next to a water source first: 
                 var foundSource = false;

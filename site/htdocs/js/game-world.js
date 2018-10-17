@@ -1377,6 +1377,16 @@ function checkWaterRunOff() {
     // do this in a worker?
     // ########
 }
+
+function plantSeed(tileX, tileY) {
+if (thisMapData.properties[tileY][tileX].tilled == 1) {
+console.log("plant seed");
+audio.playSound(soundEffects['gather1'], 0);
+
+} else {
+     UI.showNotification("<p>that earth's not prepared yet</p>");
+}
+    }
 function checkForGamePadInput() {
     if (Input.isUsingGamePad) {
         // added these next 3 lines to prevent occassional errors in Chrome:
@@ -9456,6 +9466,9 @@ function useActiveTool() {
         switch (currentActiveInventoryItems[hero.holding.type].action) {
             case "till":
                 tillEarth(armsReachTileX, armsReachTileY);
+                break;
+                case "seed":
+                  plantSeed(armsReachTileX, armsReachTileY);
                 break;
             case "holds-liquid":
                 // check if next to a water source first: 

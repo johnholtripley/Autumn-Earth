@@ -40,3 +40,13 @@ function checkWaterRunOff() {
     // do this in a worker?
     // ########
 }
+
+function plantSeed(tileX, tileY) {
+if (thisMapData.properties[tileY][tileX].tilled == 1) {
+console.log("plant seed");
+audio.playSound(soundEffects['gather1'], 0);
+
+} else {
+     UI.showNotification("<p>that earth's not prepared yet</p>");
+}
+    }
