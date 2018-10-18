@@ -514,9 +514,12 @@ function findInventoryItemData() {
         itemIdsToGet.push(thisMapData.items[i].type);
         // check if any are containers or chests:
         if (typeof thisMapData.items[i].contains !== "undefined") {
+           
+            if(Array.isArray(thisMapData.items[i].contains)) {
             for (var j = 0; j < thisMapData.items[i].contains.length; j++) {
                 if (typeof thisMapData.items[i].contains[j].type !== "undefined") {
                     itemChoices = thisMapData.items[i].contains[j].type.toString().split("/");
+                   
                     for (var k = 0; k < itemChoices.length; k++) {
                         if (itemChoices[k] != "$") {
                             // make sure it's not money in a chest:
@@ -525,6 +528,13 @@ function findInventoryItemData() {
                     }
                 }
             }
+        } else {
+            // eg crop object, so get pollen, seed and fruit ids if specified:
+           
+            for(var j in thisMapData.items[i].contains) {
+itemIdsToGet.push(thisMapData.items[i].contains[j].type);
+            }
+        }
         }
     }
 
@@ -1265,10 +1275,10 @@ function update() {
             UI.moveQuickHold(1);
             key[10] = false;
         }
-                if (key[11]) {
-            useActiveTool();
-            key[11] = false;
-        }
+               
+            
+            
+        
 
         checkHeroCollisions();
         var heroOldX = hero.tileX;
@@ -1512,7 +1522,52 @@ function unlockInnerDoor(whichInnerDoor) {
 }
 
 
+function usedActiveTool() {
+    var usedToolSuccessfully = false;
+    if (hero.holding.type != "") {
+        var armsReachTileX = hero.tileX + relativeFacing[hero.facing]["x"]
+        var armsReachTileY = hero.tileY + relativeFacing[hero.facing]["y"]
+        switch (currentActiveInventoryItems[hero.holding.type].action) {
+            case "till":
+                if(successfullyTilledEarth(armsReachTileX, armsReachTileY)) {
+                    usedToolSuccessfully = true;
+                }
+                break;
+                case "seed":
+                  if(successfullyPlantSeed(armsReachTileX, armsReachTileY)) {
+                    usedToolSuccessfully = true;
+                  }
+                break;
+            case "holds-liquid":
+                // check if next to a water source first: 
+                var foundSource = false;
+                var holdingItemsSlot = findSlotByHash(hero.holding.hash);
+                var itemInFront = findItemWithinArmsLength();
+                if (itemInFront != -1) {
+                    if (currentActiveInventoryItems[thisMapData.items[itemInFront].type].action == "source") {
+                        foundSource = true;
+                        // fill it (make the actionValue maximum value) with the thing that this contains (defined by actionValue):
+                        hero.inventory[holdingItemsSlot].contains[0].type = currentActiveInventoryItems[thisMapData.items[itemInFront].type].actionValue;
+                        hero.inventory[holdingItemsSlot].contains[0].quantity = currentActiveInventoryItems[(hero.inventory[holdingItemsSlot].type)].actionValue;
+                        audio.playSound(soundEffects['pouring'], 0);
+                        updateGauge(holdingItemsSlot);
+                        UI.updateHeldItemGauge();
+                    }
+                }
+                if (!foundSource) {
+                    pourLiquid(armsReachTileX, armsReachTileY);
+                }
+                usedToolSuccessfully = true;
+                break;
+        }
+    } 
+    return usedToolSuccessfully;
+}
+
+
 function checkForActions() {
+    // check to see if a tool is equipped, and can be used:
+    if(!usedActiveTool()){
     var inventoryCheck = [];
     var slotMarkup, thisSlotsId, thisSlotElem, thisNPC;
     for (var i = 0; i < thisMapData.items.length; i++) {
@@ -1584,6 +1639,9 @@ function checkForActions() {
                     case "source":
                       // don't do anything - the equipped item will check for this item
                     break;
+                    case "crop":
+                    checkCrop(thisMapData.items[i]);
+                    break;
                     default:
                         // try and pick it up:
                         inventoryCheck = canAddItemToInventory([thisMapData.items[i]]);
@@ -1626,6 +1684,7 @@ function checkForActions() {
             }
         }
     }
+}
     // action processed, so cancel the key event:
     key[4] = 0;
 }
@@ -2758,42 +2817,7 @@ function saveGame() {
 
 }
 
-function useActiveTool() {
-    if (hero.holding.type != "") {
-        var armsReachTileX = hero.tileX + relativeFacing[hero.facing]["x"]
-        var armsReachTileY = hero.tileY + relativeFacing[hero.facing]["y"]
-        switch (currentActiveInventoryItems[hero.holding.type].action) {
-            case "till":
-                tillEarth(armsReachTileX, armsReachTileY);
-                break;
-                case "seed":
-                  plantSeed(armsReachTileX, armsReachTileY);
-                break;
-            case "holds-liquid":
-                // check if next to a water source first: 
-                var foundSource = false;
-                var holdingItemsSlot = findSlotByHash(hero.holding.hash);
-                var itemInFront = findItemWithinArmsLength();
-                if (itemInFront != -1) {
-                    if (currentActiveInventoryItems[thisMapData.items[itemInFront].type].action == "source") {
-                        foundSource = true;
-                        // fill it (make the actionValue maximum value) with the thing that this contains (defined by actionValue):
-                        hero.inventory[holdingItemsSlot].contains[0].type = currentActiveInventoryItems[thisMapData.items[itemInFront].type].actionValue;
-                        hero.inventory[holdingItemsSlot].contains[0].quantity = currentActiveInventoryItems[(hero.inventory[holdingItemsSlot].type)].actionValue;
-                        audio.playSound(soundEffects['pouring'], 0);
-                        updateGauge(holdingItemsSlot);
-                        UI.updateHeldItemGauge();
-                    }
-                }
-                if (!foundSource) {
-                    pourLiquid(armsReachTileX, armsReachTileY);
-                }
-                break;
-        }
-    } else {
-        UI.showNotification("<p>I'm not holding anything&hellip;</p>");
-    }
-}
+
 
 function draw() {
     if (gameMode == "mapLoading") {

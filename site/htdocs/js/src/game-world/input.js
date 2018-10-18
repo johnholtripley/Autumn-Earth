@@ -73,12 +73,7 @@ const Input = {
                     case KeyBindings.toggleToolRight:
                     key[10] = to;
                     break;
-                    case KeyBindings.tool:
-                     key[11] = 0;
-                    if (type === "up") {
-                        key[11] = 1;
-                    }
-                    break;
+                  
             }
         }
     }

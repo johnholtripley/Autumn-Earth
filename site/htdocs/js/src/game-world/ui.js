@@ -2313,11 +2313,11 @@ var UI = {
     updateQuickHold: function() {
         // find all holdable items and build the selectable interface:
         var quickHoldMarkup = '<ul>';
-        var counter = 0;
+        var counter = 1;
         // highlight the first if none selected:
-        if (hero.holding.quickHoldIndex == "") {
-            hero.holding.quickHoldIndex = 0;
-        }
+       // if (hero.holding.quickHoldIndex == "") {
+        //    hero.holding.quickHoldIndex = 0;
+        //}
         var keysFound = [];
         for (var key in hero.inventory) {
             if (currentActiveInventoryItems[hero.inventory[key].type].holdable == 1) {
@@ -2329,13 +2329,19 @@ var UI = {
 
         keysFound = keysFound.sort();
 
+// add unequip slot:
+quickHoldMarkup += '<li id="quickHold0" data-type="empty" data-hash=""><img src="/images/game-world/inventory-items/empty.png" alt="Empty"></li>';
+
         for (var i = 0; i < keysFound.length; i++) {
             key = keysFound[i];
+
+quickHoldMarkup += '<li id="quickHold' + counter + '" ';
+
             if (counter === hero.holding.quickHoldIndex) {
-                quickHoldMarkup += '<li id="quickHold' + counter + '" class="active" data-type="' + hero.inventory[key].type + '" data-hash="' + hero.inventory[key].hash + '">';
-            } else {
-                quickHoldMarkup += '<li id="quickHold' + counter + '" data-type="' + hero.inventory[key].type + '" data-hash="' + hero.inventory[key].hash + '">';
+                quickHoldMarkup += 'class="active" ';
             }
+                quickHoldMarkup += 'data-type="' + hero.inventory[key].type + '" data-hash="' + hero.inventory[key].hash + '">';
+            
             quickHoldMarkup += '<img src="/images/game-world/inventory-items/' + hero.inventory[key].type + '.png" alt="' + currentActiveInventoryItems[hero.inventory[key].type].shortname + '"></li>';
             counter++;
 
@@ -2355,8 +2361,15 @@ var UI = {
         }
         var newActiveElement = document.getElementById('quickHold' + hero.holding.quickHoldIndex);
         newActiveElement.classList.add('active');
-        hero.holding.hash = newActiveElement.dataset.hash;
+    if(hero.holding.quickHoldIndex == 0) {
+        // unequip:
+  hero.holding.hash = "";
+        hero.holding.type = "";
+} else {
+      hero.holding.hash = newActiveElement.dataset.hash;
         hero.holding.type = newActiveElement.dataset.type;
+}
+      
         UI.updateHeldItems();
         quickHold.classList.add('active');
         // remove this class as soon as it's fully faded in:

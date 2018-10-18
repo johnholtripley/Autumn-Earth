@@ -1335,7 +1335,7 @@ function moveFaeToDestination(x, y) {
     
 }
 
-function tillEarth(tileX, tileY) {
+function successfullyTilledEarth(tileX, tileY) {
     if (typeof thisMapData.properties[tileY][tileX].tilled !== "undefined") {
         if (thisMapData.properties[tileY][tileX].tilled == 1) {
             // remove anything planted there #####
@@ -1344,6 +1344,9 @@ function tillEarth(tileX, tileY) {
             thisMapData.properties[tileY][tileX].tilled = 1;
         }
         audio.playSound(soundEffects['digging'], 0);
+        return true;
+    } else {
+        return false;
     }
 }
 
@@ -1378,15 +1381,63 @@ function checkWaterRunOff() {
     // ########
 }
 
-function plantSeed(tileX, tileY) {
-if (thisMapData.properties[tileY][tileX].tilled == 1) {
-console.log("plant seed");
-audio.playSound(soundEffects['gather1'], 0);
-
-} else {
-     UI.showNotification("<p>that earth's not prepared yet</p>");
-}
+function successfullyPlantSeed(tileX, tileY) {
+    if (thisMapData.properties[tileY][tileX].tilled == 1) {
+        console.log("plant seed");
+        // reduce seed quantity in slot ###
+        audio.playSound(soundEffects['gather1'], 0);
+        return true;
+    } else {
+        // needs an explanation maybe? ##
+        return false;
     }
+}
+
+function checkCrop(itemObject) {
+
+    // check if scythe equipped ###
+    switch (itemObject.state) {
+        case 4:
+            // gather pollen
+            
+            if(typeof itemObject.contains.pollen !== "undefined") {
+            // receive pollen - use plant's quality, durability, effectiveness, and if dyeable, its colour
+
+var thisPollenObject = {
+    "type": itemObject.contains.pollen.type,
+    "quantity": itemObject.contains.pollen.quantity,
+    "quality": itemObject.quality,
+    "durability": itemObject.durability,
+    "effectiveness": itemObject.effectiveness
+};
+ if (currentActiveInventoryItems[itemObject.type].dyeable > 0) {
+thisPollenObject.colour = itemObject.colour;
+}
+
+thisPollenObject = prepareInventoryObject(thisPollenObject);
+
+
+   inventoryCheck = canAddItemToInventory([thisPollenObject]);
+            if (inventoryCheck[0]) {
+                 UI.showChangeInInventory(inventoryCheck[1]);
+                 delete itemObject.contains.pollen;
+            } else {
+                UI.showNotification("<p>Oops - sorry, no room in your bags</p>");
+            }
+            
+           
+            
+        }
+            break;
+        case 5:
+            console.log(itemObject.contains.seeds);
+            console.log(itemObject.contains.fruit);
+            // gather seeds
+            // gather fruit
+            // ###
+            break;
+    }
+}
 function checkForGamePadInput() {
     if (Input.isUsingGamePad) {
         // added these next 3 lines to prevent occassional errors in Chrome:
@@ -1428,7 +1479,7 @@ function checkForRespawns() {
             case "crop":
             //console.log("check re-spawn: " + hero.totalGameTimePlayed + "-" + thisMapData.items[i].timeLastHarvested + " (" + (hero.totalGameTimePlayed - thisMapData.items[i].timeLastHarvested) + ") >= " + currentActiveInventoryItems[thisMapData.items[i].type].respawnRate);
             if (parseInt(thisMapData.items[i].state) < 6) {
-
+// check water level ########
                  if (hero.totalGameTimePlayed - thisMapData.items[i].timeLastHarvested >= currentActiveInventoryItems[thisMapData.items[i].type].respawnRate) {
                         thisMapData.items[i].state ++;
                         thisMapData.items[i].timeLastHarvested = hero.totalGameTimePlayed;
@@ -2725,12 +2776,7 @@ const Input = {
                     case KeyBindings.toggleToolRight:
                     key[10] = to;
                     break;
-                    case KeyBindings.tool:
-                     key[11] = 0;
-                    if (type === "up") {
-                        key[11] = 1;
-                    }
-                    break;
+                  
             }
         }
     }
@@ -3464,7 +3510,6 @@ var KeyBindings = {
     'challenge': 67,
     'toggleUI': 9,
     'toggleJournal': 81,
-    'tool': 13,
     'toggleToolLeft': 219,
     'toggleToolRight': 221
 }
@@ -6591,11 +6636,11 @@ var UI = {
     updateQuickHold: function() {
         // find all holdable items and build the selectable interface:
         var quickHoldMarkup = '<ul>';
-        var counter = 0;
+        var counter = 1;
         // highlight the first if none selected:
-        if (hero.holding.quickHoldIndex == "") {
-            hero.holding.quickHoldIndex = 0;
-        }
+       // if (hero.holding.quickHoldIndex == "") {
+        //    hero.holding.quickHoldIndex = 0;
+        //}
         var keysFound = [];
         for (var key in hero.inventory) {
             if (currentActiveInventoryItems[hero.inventory[key].type].holdable == 1) {
@@ -6607,13 +6652,19 @@ var UI = {
 
         keysFound = keysFound.sort();
 
+// add unequip slot:
+quickHoldMarkup += '<li id="quickHold0" data-type="empty" data-hash=""><img src="/images/game-world/inventory-items/empty.png" alt="Empty"></li>';
+
         for (var i = 0; i < keysFound.length; i++) {
             key = keysFound[i];
+
+quickHoldMarkup += '<li id="quickHold' + counter + '" ';
+
             if (counter === hero.holding.quickHoldIndex) {
-                quickHoldMarkup += '<li id="quickHold' + counter + '" class="active" data-type="' + hero.inventory[key].type + '" data-hash="' + hero.inventory[key].hash + '">';
-            } else {
-                quickHoldMarkup += '<li id="quickHold' + counter + '" data-type="' + hero.inventory[key].type + '" data-hash="' + hero.inventory[key].hash + '">';
+                quickHoldMarkup += 'class="active" ';
             }
+                quickHoldMarkup += 'data-type="' + hero.inventory[key].type + '" data-hash="' + hero.inventory[key].hash + '">';
+            
             quickHoldMarkup += '<img src="/images/game-world/inventory-items/' + hero.inventory[key].type + '.png" alt="' + currentActiveInventoryItems[hero.inventory[key].type].shortname + '"></li>';
             counter++;
 
@@ -6633,8 +6684,15 @@ var UI = {
         }
         var newActiveElement = document.getElementById('quickHold' + hero.holding.quickHoldIndex);
         newActiveElement.classList.add('active');
-        hero.holding.hash = newActiveElement.dataset.hash;
+    if(hero.holding.quickHoldIndex == 0) {
+        // unequip:
+  hero.holding.hash = "";
+        hero.holding.type = "";
+} else {
+      hero.holding.hash = newActiveElement.dataset.hash;
         hero.holding.type = newActiveElement.dataset.type;
+}
+      
         UI.updateHeldItems();
         quickHold.classList.add('active');
         // remove this class as soon as it's fully faded in:
@@ -7227,9 +7285,12 @@ function findInventoryItemData() {
         itemIdsToGet.push(thisMapData.items[i].type);
         // check if any are containers or chests:
         if (typeof thisMapData.items[i].contains !== "undefined") {
+           
+            if(Array.isArray(thisMapData.items[i].contains)) {
             for (var j = 0; j < thisMapData.items[i].contains.length; j++) {
                 if (typeof thisMapData.items[i].contains[j].type !== "undefined") {
                     itemChoices = thisMapData.items[i].contains[j].type.toString().split("/");
+                   
                     for (var k = 0; k < itemChoices.length; k++) {
                         if (itemChoices[k] != "$") {
                             // make sure it's not money in a chest:
@@ -7238,6 +7299,13 @@ function findInventoryItemData() {
                     }
                 }
             }
+        } else {
+            // eg crop object, so get pollen, seed and fruit ids if specified:
+           
+            for(var j in thisMapData.items[i].contains) {
+itemIdsToGet.push(thisMapData.items[i].contains[j].type);
+            }
+        }
         }
     }
 
@@ -7978,10 +8046,10 @@ function update() {
             UI.moveQuickHold(1);
             key[10] = false;
         }
-                if (key[11]) {
-            useActiveTool();
-            key[11] = false;
-        }
+               
+            
+            
+        
 
         checkHeroCollisions();
         var heroOldX = hero.tileX;
@@ -8225,7 +8293,52 @@ function unlockInnerDoor(whichInnerDoor) {
 }
 
 
+function usedActiveTool() {
+    var usedToolSuccessfully = false;
+    if (hero.holding.type != "") {
+        var armsReachTileX = hero.tileX + relativeFacing[hero.facing]["x"]
+        var armsReachTileY = hero.tileY + relativeFacing[hero.facing]["y"]
+        switch (currentActiveInventoryItems[hero.holding.type].action) {
+            case "till":
+                if(successfullyTilledEarth(armsReachTileX, armsReachTileY)) {
+                    usedToolSuccessfully = true;
+                }
+                break;
+                case "seed":
+                  if(successfullyPlantSeed(armsReachTileX, armsReachTileY)) {
+                    usedToolSuccessfully = true;
+                  }
+                break;
+            case "holds-liquid":
+                // check if next to a water source first: 
+                var foundSource = false;
+                var holdingItemsSlot = findSlotByHash(hero.holding.hash);
+                var itemInFront = findItemWithinArmsLength();
+                if (itemInFront != -1) {
+                    if (currentActiveInventoryItems[thisMapData.items[itemInFront].type].action == "source") {
+                        foundSource = true;
+                        // fill it (make the actionValue maximum value) with the thing that this contains (defined by actionValue):
+                        hero.inventory[holdingItemsSlot].contains[0].type = currentActiveInventoryItems[thisMapData.items[itemInFront].type].actionValue;
+                        hero.inventory[holdingItemsSlot].contains[0].quantity = currentActiveInventoryItems[(hero.inventory[holdingItemsSlot].type)].actionValue;
+                        audio.playSound(soundEffects['pouring'], 0);
+                        updateGauge(holdingItemsSlot);
+                        UI.updateHeldItemGauge();
+                    }
+                }
+                if (!foundSource) {
+                    pourLiquid(armsReachTileX, armsReachTileY);
+                }
+                usedToolSuccessfully = true;
+                break;
+        }
+    } 
+    return usedToolSuccessfully;
+}
+
+
 function checkForActions() {
+    // check to see if a tool is equipped, and can be used:
+    if(!usedActiveTool()){
     var inventoryCheck = [];
     var slotMarkup, thisSlotsId, thisSlotElem, thisNPC;
     for (var i = 0; i < thisMapData.items.length; i++) {
@@ -8297,6 +8410,9 @@ function checkForActions() {
                     case "source":
                       // don't do anything - the equipped item will check for this item
                     break;
+                    case "crop":
+                    checkCrop(thisMapData.items[i]);
+                    break;
                     default:
                         // try and pick it up:
                         inventoryCheck = canAddItemToInventory([thisMapData.items[i]]);
@@ -8339,6 +8455,7 @@ function checkForActions() {
             }
         }
     }
+}
     // action processed, so cancel the key event:
     key[4] = 0;
 }
@@ -9471,42 +9588,7 @@ function saveGame() {
 
 }
 
-function useActiveTool() {
-    if (hero.holding.type != "") {
-        var armsReachTileX = hero.tileX + relativeFacing[hero.facing]["x"]
-        var armsReachTileY = hero.tileY + relativeFacing[hero.facing]["y"]
-        switch (currentActiveInventoryItems[hero.holding.type].action) {
-            case "till":
-                tillEarth(armsReachTileX, armsReachTileY);
-                break;
-                case "seed":
-                  plantSeed(armsReachTileX, armsReachTileY);
-                break;
-            case "holds-liquid":
-                // check if next to a water source first: 
-                var foundSource = false;
-                var holdingItemsSlot = findSlotByHash(hero.holding.hash);
-                var itemInFront = findItemWithinArmsLength();
-                if (itemInFront != -1) {
-                    if (currentActiveInventoryItems[thisMapData.items[itemInFront].type].action == "source") {
-                        foundSource = true;
-                        // fill it (make the actionValue maximum value) with the thing that this contains (defined by actionValue):
-                        hero.inventory[holdingItemsSlot].contains[0].type = currentActiveInventoryItems[thisMapData.items[itemInFront].type].actionValue;
-                        hero.inventory[holdingItemsSlot].contains[0].quantity = currentActiveInventoryItems[(hero.inventory[holdingItemsSlot].type)].actionValue;
-                        audio.playSound(soundEffects['pouring'], 0);
-                        updateGauge(holdingItemsSlot);
-                        UI.updateHeldItemGauge();
-                    }
-                }
-                if (!foundSource) {
-                    pourLiquid(armsReachTileX, armsReachTileY);
-                }
-                break;
-        }
-    } else {
-        UI.showNotification("<p>I'm not holding anything&hellip;</p>");
-    }
-}
+
 
 function draw() {
     if (gameMode == "mapLoading") {

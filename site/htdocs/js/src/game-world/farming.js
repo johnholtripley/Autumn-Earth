@@ -1,4 +1,4 @@
-function tillEarth(tileX, tileY) {
+function successfullyTilledEarth(tileX, tileY) {
     if (typeof thisMapData.properties[tileY][tileX].tilled !== "undefined") {
         if (thisMapData.properties[tileY][tileX].tilled == 1) {
             // remove anything planted there #####
@@ -7,6 +7,9 @@ function tillEarth(tileX, tileY) {
             thisMapData.properties[tileY][tileX].tilled = 1;
         }
         audio.playSound(soundEffects['digging'], 0);
+        return true;
+    } else {
+        return false;
     }
 }
 
@@ -41,12 +44,60 @@ function checkWaterRunOff() {
     // ########
 }
 
-function plantSeed(tileX, tileY) {
-if (thisMapData.properties[tileY][tileX].tilled == 1) {
-console.log("plant seed");
-audio.playSound(soundEffects['gather1'], 0);
-
-} else {
-     UI.showNotification("<p>that earth's not prepared yet</p>");
-}
+function successfullyPlantSeed(tileX, tileY) {
+    if (thisMapData.properties[tileY][tileX].tilled == 1) {
+        console.log("plant seed");
+        // reduce seed quantity in slot ###
+        audio.playSound(soundEffects['gather1'], 0);
+        return true;
+    } else {
+        // needs an explanation maybe? ##
+        return false;
     }
+}
+
+function checkCrop(itemObject) {
+
+    // check if scythe equipped ###
+    switch (itemObject.state) {
+        case 4:
+            // gather pollen
+            
+            if(typeof itemObject.contains.pollen !== "undefined") {
+            // receive pollen - use plant's quality, durability, effectiveness, and if dyeable, its colour
+
+var thisPollenObject = {
+    "type": itemObject.contains.pollen.type,
+    "quantity": itemObject.contains.pollen.quantity,
+    "quality": itemObject.quality,
+    "durability": itemObject.durability,
+    "effectiveness": itemObject.effectiveness
+};
+ if (currentActiveInventoryItems[itemObject.type].dyeable > 0) {
+thisPollenObject.colour = itemObject.colour;
+}
+
+thisPollenObject = prepareInventoryObject(thisPollenObject);
+
+
+   inventoryCheck = canAddItemToInventory([thisPollenObject]);
+            if (inventoryCheck[0]) {
+                 UI.showChangeInInventory(inventoryCheck[1]);
+                 delete itemObject.contains.pollen;
+            } else {
+                UI.showNotification("<p>Oops - sorry, no room in your bags</p>");
+            }
+            
+           
+            
+        }
+            break;
+        case 5:
+            console.log(itemObject.contains.seeds);
+            console.log(itemObject.contains.fruit);
+            // gather seeds
+            // gather fruit
+            // ###
+            break;
+    }
+}
