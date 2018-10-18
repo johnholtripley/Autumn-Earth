@@ -1416,13 +1416,25 @@ function checkForGamePadInput() {
 }
 function checkForRespawns() {
     for (var i = 0; i < thisMapData.items.length; i++) {
-        if (currentActiveInventoryItems[thisMapData.items[i].type].action == "node") {
-            if (thisMapData.items[i].state != "active") {
-                //console.log("check re-spawn: " + hero.totalGameTimePlayed + "-" + thisMapData.items[i].timeLastHarvested + " (" + (hero.totalGameTimePlayed - thisMapData.items[i].timeLastHarvested) + ") >= " + currentActiveInventoryItems[thisMapData.items[i].type].respawnRate);
-                if (hero.totalGameTimePlayed - thisMapData.items[i].timeLastHarvested >= currentActiveInventoryItems[thisMapData.items[i].type].respawnRate) {
-                    thisMapData.items[i].state = "active";
+        switch (currentActiveInventoryItems[thisMapData.items[i].type].action) {
+            case "node":
+                if (thisMapData.items[i].state != "active") {
+                    //console.log("check re-spawn: " + hero.totalGameTimePlayed + "-" + thisMapData.items[i].timeLastHarvested + " (" + (hero.totalGameTimePlayed - thisMapData.items[i].timeLastHarvested) + ") >= " + currentActiveInventoryItems[thisMapData.items[i].type].respawnRate);
+                    if (hero.totalGameTimePlayed - thisMapData.items[i].timeLastHarvested >= currentActiveInventoryItems[thisMapData.items[i].type].respawnRate) {
+                        thisMapData.items[i].state = "active";
+                    }
                 }
+                break;
+            case "crop":
+            //console.log("check re-spawn: " + hero.totalGameTimePlayed + "-" + thisMapData.items[i].timeLastHarvested + " (" + (hero.totalGameTimePlayed - thisMapData.items[i].timeLastHarvested) + ") >= " + currentActiveInventoryItems[thisMapData.items[i].type].respawnRate);
+            if (parseInt(thisMapData.items[i].state) < 6) {
+
+                 if (hero.totalGameTimePlayed - thisMapData.items[i].timeLastHarvested >= currentActiveInventoryItems[thisMapData.items[i].type].respawnRate) {
+                        thisMapData.items[i].state ++;
+                        thisMapData.items[i].timeLastHarvested = hero.totalGameTimePlayed;
+                    }
             }
+                break;
         }
     }
 }
