@@ -11,7 +11,7 @@ function checkForRespawns() {
                 break;
             case "crop":
             //console.log("check re-spawn: " + hero.totalGameTimePlayed + "-" + thisMapData.items[i].timeLastHarvested + " (" + (hero.totalGameTimePlayed - thisMapData.items[i].timeLastHarvested) + ") >= " + currentActiveInventoryItems[thisMapData.items[i].type].respawnRate);
-            if (parseInt(thisMapData.items[i].state) < 6) {
+            if (parseInt(thisMapData.items[i].state) < 5) {
 // check water level ########
                  if (hero.totalGameTimePlayed - thisMapData.items[i].timeLastHarvested >= currentActiveInventoryItems[thisMapData.items[i].type].respawnRate) {
                         thisMapData.items[i].state ++;

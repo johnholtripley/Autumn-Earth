@@ -38,7 +38,14 @@ $outputJson .= '"spriteWidth":"'.$spriteWidth.'",';
 $outputJson .= '"spriteHeight":"'.$spriteHeight.'",';
 $outputJson .= '"worldSrc":"'.$cleanURL.'",';
 $outputJson .= '"action":"'.$action.'",';
+// actionValue might be a string or an object:
+$actionValue = trim($actionValue);
+if(substr($actionValue, 0,1)=="{") {
+$outputJson .= '"actionValue":'.$actionValue.',';
+} else {
 $outputJson .= '"actionValue":"'.$actionValue.'",';
+}
+
 $outputJson .= '"dyeable":"'.$dyeable.'",';
 $outputJson .= '"holdable":"'.$holdable.'",';
 $outputJson .= '"stackable":"'.$stackable.'",';

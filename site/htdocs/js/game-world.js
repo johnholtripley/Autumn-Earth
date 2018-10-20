@@ -1382,15 +1382,63 @@ function checkWaterRunOff() {
 }
 
 function successfullyPlantSeed(tileX, tileY) {
+    var wasSuccessful = false;
     if (thisMapData.properties[tileY][tileX].tilled == 1) {
-        console.log("plant seed");
-        // reduce seed quantity in slot ###
+        var tileIsClear = true;
+        var thisItem;
+ for (var i = 0; i < thisMapData.items.length; i++) {
+thisItem = thisMapData.items[i];
+        if (hero.tileX == thisItem.tileX) {
+            if (hero.tileY == thisItem.tileY) {
+                tileIsClear = false;
+                break;
+            }
+        }
+ }
+
+if(tileIsClear){
+    var whichSlot = findSlotByHash(hero.holding.hash);
+    // create object from the seed's actionValue
+    var seedObject = currentActiveInventoryItems[hero.inventory[whichSlot].type].actionValue;
+ 
+seedObject.tileX = tileX;
+seedObject.tileY = tileY;
+seedObject.timeLastHarvested = hero.totalGameTimePlayed;
+
+if(currentActiveInventoryItems[hero.inventory[whichSlot].type].dyeable > 0) {
+seedObject.colour = hero.inventory[whichSlot].colour;
+}
+
+        thisMapData.items.push(seedObject);
+        
+
+initialiseItem(thisMapData.items.length - 1);
+
+console.log(thisMapData.items[0]);
+console.log(thisMapData.items[15]);
+
+
+        // reduce seed quantity in slot:
+        hero.inventory[whichSlot].quantity --;
+        if(hero.inventory[whichSlot].quantity == 0) {
+// stop 'holding' this now all gone:
+hero.holding.hash = '';
+hero.holding.type = '';
+
+        }
+        updateQuantity(whichSlot)
+UI.updateHeldItems();
+        
         audio.playSound(soundEffects['gather1'], 0);
-        return true;
+        wasSuccessful = true;
+    } else {
+        wasSuccessful = false;
+    }
     } else {
         // needs an explanation maybe? ##
-        return false;
+        wasSuccessful = false;
     }
+    return wasSuccessful;
 }
 
 function checkCrop(itemObject) {
@@ -1478,7 +1526,7 @@ function checkForRespawns() {
                 break;
             case "crop":
             //console.log("check re-spawn: " + hero.totalGameTimePlayed + "-" + thisMapData.items[i].timeLastHarvested + " (" + (hero.totalGameTimePlayed - thisMapData.items[i].timeLastHarvested) + ") >= " + currentActiveInventoryItems[thisMapData.items[i].type].respawnRate);
-            if (parseInt(thisMapData.items[i].state) < 6) {
+            if (parseInt(thisMapData.items[i].state) < 5) {
 // check water level ########
                  if (hero.totalGameTimePlayed - thisMapData.items[i].timeLastHarvested >= currentActiveInventoryItems[thisMapData.items[i].type].respawnRate) {
                         thisMapData.items[i].state ++;

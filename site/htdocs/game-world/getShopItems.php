@@ -109,7 +109,7 @@ while ($colourRow = mysqli_fetch_array($colourResult)) {
 }
 mysqli_free_result($colourResult);
 // just use "primary" colours:
-$colourIndicesToUse = [1,2,4,5,6,8,16];
+$colourIndicesToUse = [1,2,4,6,8,16];
  
 
 
@@ -198,11 +198,11 @@ mysqli_free_result($result3);
  
 
  
-$itemIdsThatNeedColourVariants = [12,40];
+$itemIdsThatNeedColourVariants = [12,40,66];
 $inventoryDataCount = count($inventoryData);
 for ($j=0;$j<$inventoryDataCount;$j++) {
     $inventoryData[$j]['colourName'] = "";
-    // check if this item needs colours (dyes, inks etc)
+    // check if this item needs colours (dyes, inks, seeds etc)
     if (in_array($inventoryData[$j]['itemID'], $itemIdsThatNeedColourVariants)) {
         $hasFoundAColourVariant = false;
         for ($k=0;$k<count($colourIndicesToUse);$k++) {
