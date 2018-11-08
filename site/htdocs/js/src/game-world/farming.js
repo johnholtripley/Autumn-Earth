@@ -1,7 +1,11 @@
 function successfullyTilledEarth(tileX, tileY) {
     if (typeof thisMapData.properties[tileY][tileX].tilled !== "undefined") {
         if (thisMapData.properties[tileY][tileX].tilled == 1) {
-            // remove anything planted there #####
+            // remove anything planted there
+            var itemAtLocation = findItemAtTile(tileX, tileY);
+            if (itemAtLocation != -1) {
+                thisMapData.items.splice(itemAtLocation, 1);
+            }
         }
         if (thisMapData.properties[tileY][tileX].tilled == 0) {
             thisMapData.properties[tileY][tileX].tilled = 1;
@@ -91,6 +95,21 @@ function successfullyPlantSeed(tileX, tileY) {
 function checkCrop(itemObject) {
 
     // check if scythe equipped ###
+
+    // check if pollen equipped ###
+if(currentActiveInventoryItems[(hero.holding.type)].action == "pollen") {
+if(itemObject.state == 4) {
+// cross fertilise:
+
+// mix colours:
+var thisPollenObject = findSlotByHash(hero.holding.hash);
+var pollenColour = hero.inventory[thisPollenObject].colour;
+var plantColour = itemObject.colour;
+console.log("cross fertilise",pollenColour, plantColour);
+}
+}
+
+
     switch (itemObject.state) {
         case 4:
             // gather pollen

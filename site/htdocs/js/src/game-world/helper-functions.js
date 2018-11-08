@@ -129,6 +129,23 @@ function getXOffsetFromHeight(height) {
     return (Math.sqrt(2) / 2 * height);
 }
 
+
+function findItemAtTile(tileX, tileY) {
+    var foundItem = -1;
+    var thisItem;
+    for (var i = 0; i < thisMapData.items.length; i++) {
+        thisItem = thisMapData.items[i];
+        if (tileX == thisItem.tileX) {
+            if (tileY == thisItem.tileY) {
+                foundItem = i;
+                break;
+            }
+        }
+    }
+    return foundItem;
+}
+
+
 function findItemWithinArmsLength() {
     // check if there's a relevant item on the hero's tile, or at arm's length:
     var armsLengthXTile = hero.tileX + relativeFacing[hero.facing]["x"];

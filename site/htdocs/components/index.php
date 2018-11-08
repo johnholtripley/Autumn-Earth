@@ -117,7 +117,8 @@ responsiveBackground('/images/placeholder.jpg', array(300,600,900));
 
 <h2>&lt;video&gt; element</h2>
 <div class="videoWrapper" style="padding-bottom: 60.88%;">
-  <video preload="auto" controls="controls" muted="muted" poster="/images/placeholder.jpg" playsinline>
+  <!-- use preload="auto" for videos that are very likely to be played /-->
+  <video preload="metadata" controls="controls" muted="muted" poster="/images/placeholder.jpg" playsinline>
     <source src="/videos/placeholder.mp4" type="video/mp4"></source>
     <source src="/videos/placeholder.webm" type="video/webm"></source>
     <source src="/videos/placeholder.ogv" type="video/ogg"></source>

@@ -1338,7 +1338,11 @@ function moveFaeToDestination(x, y) {
 function successfullyTilledEarth(tileX, tileY) {
     if (typeof thisMapData.properties[tileY][tileX].tilled !== "undefined") {
         if (thisMapData.properties[tileY][tileX].tilled == 1) {
-            // remove anything planted there #####
+            // remove anything planted there
+            var itemAtLocation = findItemAtTile(tileX, tileY);
+            if (itemAtLocation != -1) {
+                thisMapData.items.splice(itemAtLocation, 1);
+            }
         }
         if (thisMapData.properties[tileY][tileX].tilled == 0) {
             thisMapData.properties[tileY][tileX].tilled = 1;
@@ -1428,6 +1432,21 @@ function successfullyPlantSeed(tileX, tileY) {
 function checkCrop(itemObject) {
 
     // check if scythe equipped ###
+
+    // check if pollen equipped ###
+if(currentActiveInventoryItems[(hero.holding.type)].action == "pollen") {
+if(itemObject.state == 4) {
+// cross fertilise:
+
+// mix colours:
+var thisPollenObject = findSlotByHash(hero.holding.hash);
+var pollenColour = hero.inventory[thisPollenObject].colour;
+var plantColour = itemObject.colour;
+console.log("cross fertilise",pollenColour, plantColour);
+}
+}
+
+
     switch (itemObject.state) {
         case 4:
             // gather pollen
@@ -1724,6 +1743,23 @@ function getXOffsetFromHeight(height) {
     // for determining a shadow's offset (for example).
     return (Math.sqrt(2) / 2 * height);
 }
+
+
+function findItemAtTile(tileX, tileY) {
+    var foundItem = -1;
+    var thisItem;
+    for (var i = 0; i < thisMapData.items.length; i++) {
+        thisItem = thisMapData.items[i];
+        if (tileX == thisItem.tileX) {
+            if (tileY == thisItem.tileY) {
+                foundItem = i;
+                break;
+            }
+        }
+    }
+    return foundItem;
+}
+
 
 function findItemWithinArmsLength() {
     // check if there's a relevant item on the hero's tile, or at arm's length:
