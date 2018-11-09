@@ -481,7 +481,7 @@ function getQuestJournal() {
 function getHorticultureData() {
     getJSON("/game-world/getHorticulturalDetails.php?chr=" + characterId, function(data) {
         UI.buildHorticulturePanel(data.markup);
-
+hero.plantBreeding = data.data;
         getQuestDetails();
     }, function(status) {
         // try again:

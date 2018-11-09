@@ -17,7 +17,8 @@ for($i=0;$i<count($allIds);$i++) {
 	$itemIdString .= intval($allIds[$i]);
 }
 
-$query = "SELECT * FROM tblinventoryitems where itemid in (".$itemIdString.")";
+// get the required items, additionally get all plants so that the data for any resultant new species is available when breeding them:
+$query = "SELECT * FROM tblinventoryitems where itemid in (".$itemIdString.") or itemcategories = 1";
 $result = mysqli_query($connection, $query) or die ();
 
 

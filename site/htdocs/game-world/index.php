@@ -110,7 +110,7 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
     </div>
     <div id="horticulturePanel">
       <div class="draggableBar">
-        <span id="cartographicTitle">Horticulture</span>
+        <span>Horticulture</span>
       </div>
       <button class="closePanel">close</button>
     </div>

@@ -116,7 +116,7 @@ if($debug) {
 }
 
 
-
+$dataOutput = json_encode($plantBreeding);
 
 
 // build output table:
@@ -162,11 +162,15 @@ $markup .= '<td><img src="/images/game-world/inventory-items/' . $plantBreeding[
 
 
 if($debug) {
+echo '<hr>';
+echo $dataOutput;
+echo '<hr>';
+
     echo $markup;
 } else {
     header('Content-Type: application/json');
     $markup = str_replace('"', '\"', $markup);
-    echo '{"markup":"'.$markup.'"}';
+    echo '{"markup":"'.$markup.'", "data":'.$dataOutput.'}';
 }
 
 

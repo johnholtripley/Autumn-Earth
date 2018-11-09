@@ -286,6 +286,7 @@ function removeFromInventory(whichSlot, amount) {
 function updateQuantity(whichSlot) {
     // update visually:
     var thisSlotElem = document.getElementById("slot" + whichSlot);
+    // would querySelector be faster here? ########
     for (var i = 0; i < thisSlotElem.childNodes.length; i++) {
         if (thisSlotElem.childNodes[i].className == "qty") {
             thisSlotElem.childNodes[i].innerHTML = hero.inventory[whichSlot].quantity;
@@ -715,4 +716,18 @@ gaugeMarkupToAdd += '<span class="gauge gauge'+currentActiveInventoryItems[thisI
 function updateGauge(whichSlotKey) {
 var gaugePercent = hero.inventory[whichSlotKey].contains[0].quantity / currentActiveInventoryItems[hero.inventory[whichSlotKey].type].actionValue * 100;
 document.getElementById('slot'+whichSlotKey).querySelector('.gauge span').style.width = gaugePercent+'%';
+}
+
+
+function reducedHeldQuantity(whichSlot) {
+    hero.inventory[whichSlot].quantity--;
+    if (hero.inventory[whichSlot].quantity == 0) {
+        // stop 'holding' this now all gone:
+        hero.holding.hash = '';
+        hero.holding.type = '';
+        // remove inventory slot as well:
+        delete hero.inventory[whichSlot];
+        // update visually:
+        document.getElementById("slot" + whichSlot).innerHTML = '';
+    }
 }

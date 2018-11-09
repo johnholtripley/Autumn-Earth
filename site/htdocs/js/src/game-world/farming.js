@@ -64,21 +64,8 @@ function successfullyPlantSeed(tileX, tileY) {
             thisMapData.items.push(seedObject);
             initialiseItem(thisMapData.items.length - 1);
             // reduce seed quantity in slot:
-            hero.inventory[whichSlot].quantity--;
-            if (hero.inventory[whichSlot].quantity == 0) {
-                // stop 'holding' this now all gone:
-                hero.holding.hash = '';
-                hero.holding.type = '';
-                // remove inventory slot as well:
-
-
-                
-   delete hero.inventory[whichSlot];
-        // update visually:
-        document.getElementById("slot" + whichSlot).innerHTML = '';
-
-            }
-            updateQuantity(whichSlot)
+            reducedHeldQuantity(whichSlot);
+            updateQuantity(whichSlot);
             UI.updateHeldItems();
             audio.playSound(soundEffects['gather1'], 0);
             wasSuccessful = true;
@@ -93,62 +80,117 @@ function successfullyPlantSeed(tileX, tileY) {
 }
 
 function checkCrop(itemObject) {
-
+    var plantActedUpon = false;
     // check if scythe equipped ###
 
-    // check if pollen equipped ###
-if(currentActiveInventoryItems[(hero.holding.type)].action == "pollen") {
-if(itemObject.state == 4) {
-// cross fertilise:
+    // check if pollen equipped:
+    if (hero.holding.type != '') {
+        if (currentActiveInventoryItems[(hero.holding.type)].action == "pollen") {
+            if (itemObject.state == 4) {
+                // cross fertilise:
 
-// mix colours:
-var thisPollenObject = findSlotByHash(hero.holding.hash);
-var pollenColour = hero.inventory[thisPollenObject].colour;
-var plantColour = itemObject.colour;
-console.log("cross fertilise",pollenColour, plantColour);
-}
-}
+                plantActedUpon = true;
+
+                var whichSlot = findSlotByHash(hero.holding.hash);
+                // find resultant plant:
+                var pollenSpecies = hero.inventory[whichSlot].type;
+                var plantSpecies = itemObject.type;
+
+                var resultantPlantSpecies = plantSpecies;
+
+                if (pollenSpecies != plantSpecies) {
+                    console.log(pollenSpecies, plantSpecies);
+                    var resultantPlantKey;
+                    if (pollenSpecies < plantSpecies) {
+                        resultantPlantKey = pollenSpecies + '-' + plantSpecies;
+                    } else {
+                        resultantPlantKey = plantSpecies + '-' + pollenSpecies;
+                    }
+                    resultantPlantSpecies = hero.plantBreeding[resultantPlantKey];
+                }
+                console.log("result", resultantPlantSpecies);
+
+                // if the resultant plant can be coloured, mix pollen and parent plant colours:
+
+                if (currentActiveInventoryItems[resultantPlantSpecies].dyeable > 0) {
+
+                    var pollenColour = hero.inventory[whichSlot].colour;
+                    var plantColour = itemObject.colour;
+
+                    var resultantColour;
+                    if ((typeof plantColour === "undefined") && (typeof pollenColour === "undefined")) {
+                        // default to white:
+                        resultantColour = 9;
+                    } else {
+                        // if either is null, then just use the other:
+                        if (typeof plantColour === "undefined") {
+                            resultantColour = pollenColour;
+                        } else if (typeof pollenColour === "undefined") {
+                            resultantColour = plantColour;
+                        } else {
+                            resultantColour = mixColours(plantColour, pollenColour);
+                        }
+                    }
 
 
-    switch (itemObject.state) {
-        case 4:
-            // gather pollen
 
-            if (typeof itemObject.contains.pollen !== "undefined") {
-                // receive pollen - use plant's quality, durability, effectiveness, and if dyeable, its colour
-
-                var thisPollenObject = {
-                    "type": itemObject.contains.pollen.type,
-                    "quantity": itemObject.contains.pollen.quantity,
-                    "quality": itemObject.quality,
-                    "durability": itemObject.durability,
-                    "effectiveness": itemObject.effectiveness
-                };
-                if (currentActiveInventoryItems[itemObject.type].dyeable > 0) {
-                    thisPollenObject.colour = itemObject.colour;
+                    console.log(pollenColour, plantColour, resultantColour);
                 }
 
-                thisPollenObject = prepareInventoryObject(thisPollenObject);
 
 
-                inventoryCheck = canAddItemToInventory([thisPollenObject]);
-                if (inventoryCheck[0]) {
-                    UI.showChangeInInventory(inventoryCheck[1]);
-                    delete itemObject.contains.pollen;
-                } else {
-                    UI.showNotification("<p>Oops - sorry, no room in your bags</p>");
-                }
 
 
+                // remove the used pollen:
+                reducedHeldQuantity(whichSlot);
+                updateQuantity(whichSlot);
+                UI.updateHeldItems();
 
             }
-            break;
-        case 5:
-            console.log(itemObject.contains.seeds);
-            console.log(itemObject.contains.fruit);
-            // gather seeds
-            // gather fruit
-            // ###
-            break;
+        }
+    }
+
+    if (!plantActedUpon) {
+        switch (itemObject.state) {
+            case 4:
+                // gather pollen
+
+                if (typeof itemObject.contains.pollen !== "undefined") {
+                    // receive pollen - use plant's quality, durability, effectiveness, and if dyeable, its colour
+
+                    var thisPollenObject = {
+                        "type": itemObject.contains.pollen.type,
+                        "quantity": itemObject.contains.pollen.quantity,
+                        "quality": itemObject.quality,
+                        "durability": itemObject.durability,
+                        "effectiveness": itemObject.effectiveness
+                    };
+                    if (currentActiveInventoryItems[itemObject.type].dyeable > 0) {
+                        thisPollenObject.colour = itemObject.colour;
+                    }
+
+                    thisPollenObject = prepareInventoryObject(thisPollenObject);
+
+
+                    inventoryCheck = canAddItemToInventory([thisPollenObject]);
+                    if (inventoryCheck[0]) {
+                        UI.showChangeInInventory(inventoryCheck[1]);
+                        delete itemObject.contains.pollen;
+                    } else {
+                        UI.showNotification("<p>Oops - sorry, no room in your bags</p>");
+                    }
+
+
+
+                }
+                break;
+            case 5:
+                console.log(itemObject.contains.seeds);
+                console.log(itemObject.contains.fruit);
+                // gather seeds
+                // gather fruit
+                // ###
+                break;
+        }
     }
 }
