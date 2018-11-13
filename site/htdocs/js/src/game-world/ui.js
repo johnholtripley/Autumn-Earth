@@ -2270,7 +2270,12 @@ var UI = {
     },
     updateHeldItems: function() {
         if (hero.holding.hash != '') {
-            holdingIcon.innerHTML = '<img src="/images/game-world/inventory-items/' + hero.holding.type + '.png" alt="' + currentActiveInventoryItems[hero.holding.type].shortname + '">';
+            var thisFileColourSuffix = "";
+            var thisColourName = getColourName(hero.inventory[findSlotByHash(hero.holding.hash)].colour, hero.holding.type);
+            if (thisColourName != "") {
+                thisFileColourSuffix = "-" + thisColourName.toLowerCase();
+            }
+            holdingIcon.innerHTML = '<img src="/images/game-world/inventory-items/' + hero.holding.type + thisFileColourSuffix + '.png" alt="' + currentActiveInventoryItems[hero.holding.type].shortname + '">';
             // check if a gauge is needed:
             UI.updateHeldItemGauge();
         } else {
