@@ -7164,8 +7164,6 @@ function loadMap() {
 }
 
 
-
-
 function loadMapAssets() {
     imagesToLoad = [];
     var thisFileColourSuffix, thisColourName;
@@ -7242,6 +7240,7 @@ function loadMapAssets() {
             }
         }
         thisItemIdentifier = "item" + thisMapData.items[i].type + thisFileColourSuffix;
+
         // only add unique images:
         if (itemGraphicsToLoad.indexOf(thisItemIdentifier) == -1) {
             imagesToLoad.push({
@@ -7266,12 +7265,35 @@ function loadMapAssets() {
         }
     }
 
+    // check for seeds in inventory, and load the resultant plants:
+    var resultantPlantType;
+    for (var key in hero.inventory) {
+        if (currentActiveInventoryItems[(hero.inventory[key].type)].action == "seed") {
+            // resultant plant is held in the actionValue:
+            resultantPlantType = currentActiveInventoryItems[(hero.inventory[key].type)].actionValue.type;
+    // get colour name 
+            thisFileColourSuffix = "";
+            thisColourName = getColourName(hero.inventory[key].colour, resultantPlantType);
+            if (thisColourName != "") {
+                thisFileColourSuffix = "-" + thisColourName.toLowerCase();
+            }
+            thisItemIdentifier = "item" + resultantPlantType + thisFileColourSuffix;
+        
+            // only add unique images:
+            if (itemGraphicsToLoad.indexOf(thisItemIdentifier) == -1) {
+                imagesToLoad.push({
+                    name: thisItemIdentifier,
+                    src: "/images/game-world/items/" + currentActiveInventoryItems[resultantPlantType].worldSrc + thisFileColourSuffix + ".png"
+                });
+                itemGraphicsToLoad.push(thisItemIdentifier);
+            }
+        }
+    }
+
 
 
     Loader.preload(imagesToLoad, prepareGame, loadingProgress);
 }
-
-
 
 function loadTitles() {
 
@@ -9853,6 +9875,7 @@ function draw() {
                 thisColourName = getColourName(thisMapData.items[i].colour, thisMapData.items[i].type);
                 if (thisColourName != "") {
                     thisFileColourSuffix = "-" + thisColourName.toLowerCase();
+                    
                 }
             }
             thisItemIdentifier = "item" + thisMapData.items[i].type + thisFileColourSuffix;
