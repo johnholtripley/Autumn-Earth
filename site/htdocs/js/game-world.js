@@ -1502,7 +1502,7 @@ function checkCrop(itemObject) {
                         "durability": itemObject.durability,
                         "effectiveness": itemObject.effectiveness
                     };
-                    console.log(currentActiveInventoryItems[itemObject.type].dyeable);
+         
                     if (currentActiveInventoryItems[itemObject.type].dyeable > 0) {
             
                         if(typeof itemObject.colour !== "undefined") {
@@ -6791,7 +6791,7 @@ var UI = {
 
 // add unequip slot:
 quickHoldMarkup += '<li id="quickHold0" data-type="empty" data-hash=""><img src="/images/game-world/inventory-items/empty.png" alt="Empty"></li>';
-
+var thisFileColourSuffix, thisColourName;
         for (var i = 0; i < keysFound.length; i++) {
             key = keysFound[i];
 
@@ -6802,7 +6802,21 @@ quickHoldMarkup += '<li id="quickHold' + counter + '" ';
             }
                 quickHoldMarkup += 'data-type="' + hero.inventory[key].type + '" data-hash="' + hero.inventory[key].hash + '">';
             
-            quickHoldMarkup += '<img src="/images/game-world/inventory-items/' + hero.inventory[key].type + '.png" alt="' + currentActiveInventoryItems[hero.inventory[key].type].shortname + '"></li>';
+
+
+
+   thisFileColourSuffix = "";
+             thisColourName = getColourName(hero.inventory[key].colour, hero.inventory[key].type);
+            if (thisColourName != "") {
+                thisFileColourSuffix = "-" + thisColourName.toLowerCase();
+            }
+
+
+
+
+
+
+            quickHoldMarkup += '<img src="/images/game-world/inventory-items/' + hero.inventory[key].type + thisFileColourSuffix + '.png" alt="' + currentActiveInventoryItems[hero.inventory[key].type].shortname + '"></li>';
             counter++;
 
         }
