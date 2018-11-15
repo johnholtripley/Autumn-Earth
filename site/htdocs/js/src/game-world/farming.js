@@ -165,9 +165,16 @@ function checkCrop(itemObject) {
                         "durability": itemObject.durability,
                         "effectiveness": itemObject.effectiveness
                     };
+         
                     if (currentActiveInventoryItems[itemObject.type].dyeable > 0) {
+            
+                        if(typeof itemObject.colour !== "undefined") {
                         thisPollenObject.colour = itemObject.colour;
-                    }
+                    } 
+                }
+
+
+
 
                     thisPollenObject = prepareInventoryObject(thisPollenObject);
 
