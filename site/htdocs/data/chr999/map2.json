@@ -1335,10 +1335,6 @@
                 "seed": {
  "type": 66,
                     "quantity": 6
-                },
-                "fruit": {
-                     "type": 69,
-                    "quantity": 1
                 }
             }
     },

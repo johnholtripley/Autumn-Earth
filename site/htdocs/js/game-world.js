@@ -1427,6 +1427,11 @@ function checkCrop(itemObject) {
             if (itemObject.state == 4) {
                 // cross fertilise:
 
+
+
+// check this plant hasn't already got a seed ###############
+
+
                 plantActedUpon = true;
 
                 var whichSlot = findSlotByHash(hero.holding.hash);
@@ -1487,7 +1492,7 @@ function checkCrop(itemObject) {
 var seedType = currentActiveInventoryItems[resultantPlantSpecies].actionValue;
 
 var pollinatedSeedObject = {
-    "type": seedType,
+    "type": parseInt(seedType),
     "colour": resultantColour
 }
 // need to combine quality etc of the seed and plant ############
@@ -1563,8 +1568,10 @@ console.log(itemObject);
 if (typeof itemObject.contains.seed !== "undefined") {
   inventoryCheck = canAddItemToInventory([itemObject.contains.seed]);
                         if (inventoryCheck[0]) {
+                            UI.showChangeInInventory(inventoryCheck[1]);
                             console.log("harvested seed");
                            itemObject.contains.seed = {};
+                           // check if it's a new cross breed and add it to the known crosses ##############
                         } else {
                             UI.showNotification("<p>Oops - sorry, no room in your bags</p>");
                         }
