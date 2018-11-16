@@ -88,68 +88,64 @@ function checkCrop(itemObject) {
         if (currentActiveInventoryItems[(hero.holding.type)].action == "pollen") {
             console.log("pollinate " + itemObject.state + ":4");
             if (itemObject.state == 4) {
-                // cross fertilise:
-                // check this plant hasn't already got a seed:
+                // cross fertilise - check this plant hasn't already got a seed:
                 if (typeof itemObject.contains.seed !== "undefined") {
-                plantActedUpon = true;
-                var whichSlot = findSlotByHash(hero.holding.hash);
-                // need to find the plant for this pollen (held in actionValue):
-                var pollenSpecies = currentActiveInventoryItems[hero.inventory[whichSlot].type].actionValue;
-                var plantSpecies = itemObject.type;
-                // find resultant plant:
-                var resultantPlantSpecies = plantSpecies;
-                if (pollenSpecies != plantSpecies) {
-                    console.log(pollenSpecies, plantSpecies);
-                    var resultantPlantKey;
-                    if (pollenSpecies < plantSpecies) {
-                        resultantPlantKey = pollenSpecies + '-' + plantSpecies;
-                    } else {
-                        resultantPlantKey = plantSpecies + '-' + pollenSpecies;
-                    }
-                    resultantPlantSpecies = hero.plantBreeding[resultantPlantKey];
-                }
-                console.log("result", resultantPlantSpecies);
-                // if the resultant plant can be coloured, mix pollen and parent plant colours:
-                if (currentActiveInventoryItems[resultantPlantSpecies].dyeable > 0) {
-                    var pollenColour = hero.inventory[whichSlot].colour;
-                    var plantColour = itemObject.colour;
-                    var resultantColour;
-                    if ((typeof plantColour === "undefined") && (typeof pollenColour === "undefined")) {
-                        // default to white:
-                        resultantColour = 9;
-                    } else {
-                        // if either is null, then just use the other:
-                        if (typeof plantColour === "undefined") {
-                            resultantColour = pollenColour;
-                        } else if (typeof pollenColour === "undefined") {
-                            resultantColour = plantColour;
+                    plantActedUpon = true;
+                    var whichSlot = findSlotByHash(hero.holding.hash);
+                    // need to find the plant for this pollen (held in actionValue):
+                    var pollenSpecies = currentActiveInventoryItems[hero.inventory[whichSlot].type].actionValue;
+                    var plantSpecies = itemObject.type;
+                    // find resultant plant:
+                    var resultantPlantSpecies = plantSpecies;
+                    if (pollenSpecies != plantSpecies) {
+                        console.log(pollenSpecies, plantSpecies);
+                        var resultantPlantKey;
+                        if (pollenSpecies < plantSpecies) {
+                            resultantPlantKey = pollenSpecies + '-' + plantSpecies;
                         } else {
-                            resultantColour = mixColours(plantColour, pollenColour);
+                            resultantPlantKey = plantSpecies + '-' + pollenSpecies;
+                        }
+                        resultantPlantSpecies = hero.plantBreeding[resultantPlantKey];
+                    }
+                    console.log("result", resultantPlantSpecies);
+                    // if the resultant plant can be coloured, mix pollen and parent plant colours:
+                    if (currentActiveInventoryItems[resultantPlantSpecies].dyeable > 0) {
+                        var pollenColour = hero.inventory[whichSlot].colour;
+                        var plantColour = itemObject.colour;
+                        var resultantColour;
+                        if ((typeof plantColour === "undefined") && (typeof pollenColour === "undefined")) {
+                            // default to white:
+                            resultantColour = 9;
+                        } else {
+                            // if either is null, then just use the other:
+                            if (typeof plantColour === "undefined") {
+                                resultantColour = pollenColour;
+                            } else if (typeof pollenColour === "undefined") {
+                                resultantColour = plantColour;
+                            } else {
+                                resultantColour = mixColours(plantColour, pollenColour);
+                            }
                         }
                     }
-                    console.log(pollenColour, plantColour, resultantColour);
-                }
-                // needs to be the seed type, not the plant type ###########
-                var seedType = currentActiveInventoryItems[resultantPlantSpecies].actionValue;
-                var pollinatedSeedObject = {
-                    "type": parseInt(seedType),
-                    "colour": resultantColour
-                }
-                // need to combine quality etc of the seed and plant ############
-                pollinatedSeedObject = prepareInventoryObject(pollinatedSeedObject);
-                console.log(pollinatedSeedObject);
-                // add this to the parent plant's contains attribute:
-                console.log(itemObject);
-                itemObject.contains.seed = JSON.parse(JSON.stringify(pollinatedSeedObject));
-                console.log(itemObject);
-                // remove the used pollen:
-                reducedHeldQuantity(whichSlot);
-                updateQuantity(whichSlot);
-                UI.updateHeldItems();
-            } else {
-                UI.showNotification("<p>This has already been fertilised</p>");
-            }
+                    // needs to be the seed type, not the plant type:
+                    var seedType = currentActiveInventoryItems[resultantPlantSpecies].actionValue;
+                    var pollinatedSeedObject = {
+                        "type": parseInt(seedType),
+                        "colour": resultantColour
+                    }
 
+                    // need to combine quality etc of the seed and plant ############
+
+                    pollinatedSeedObject = prepareInventoryObject(pollinatedSeedObject);
+                    // add this to the parent plant's contains attribute:
+                    itemObject.contains.seed = JSON.parse(JSON.stringify(pollinatedSeedObject));
+                    // remove the used pollen:
+                    reducedHeldQuantity(whichSlot);
+                    updateQuantity(whichSlot);
+                    UI.updateHeldItems();
+                } else {
+                    UI.showNotification("<p>This has already been fertilised</p>");
+                }
             }
         }
     }
@@ -193,7 +189,9 @@ function checkCrop(itemObject) {
                         UI.showChangeInInventory(inventoryCheck[1]);
                         console.log("harvested seed");
                         itemObject.contains.seed = {};
+
                         // check if it's a new cross breed and add it to the known crosses ############
+
                     } else {
                         UI.showNotification("<p>Oops - sorry, no room in your bags</p>");
                     }
