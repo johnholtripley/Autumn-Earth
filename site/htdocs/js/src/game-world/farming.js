@@ -86,6 +86,7 @@ function checkCrop(itemObject) {
     // check if pollen equipped:
     if (hero.holding.type != '') {
         if (currentActiveInventoryItems[(hero.holding.type)].action == "pollen") {
+            console.log("pollinate "+itemObject.state+":4");
             if (itemObject.state == 4) {
                 // cross fertilise:
 
@@ -93,7 +94,11 @@ function checkCrop(itemObject) {
 
                 var whichSlot = findSlotByHash(hero.holding.hash);
                 // find resultant plant:
-                var pollenSpecies = hero.inventory[whichSlot].type;
+                
+// need to find the plant for this pollen (held in actionValue):
+                var pollenSpecies = currentActiveInventoryItems[hero.inventory[whichSlot].type].actionValue;
+
+
                 var plantSpecies = itemObject.type;
 
                 var resultantPlantSpecies = plantSpecies;
@@ -106,8 +111,11 @@ function checkCrop(itemObject) {
                     } else {
                         resultantPlantKey = plantSpecies + '-' + pollenSpecies;
                     }
+                    console.log(resultantPlantKey);
+                    console.log(hero.plantBreeding);
                     resultantPlantSpecies = hero.plantBreeding[resultantPlantKey];
                 }
+
                 console.log("result", resultantPlantSpecies);
 
                 // if the resultant plant can be coloured, mix pollen and parent plant colours:
@@ -137,8 +145,25 @@ function checkCrop(itemObject) {
                     console.log(pollenColour, plantColour, resultantColour);
                 }
 
+// needs to be the seed type, not the plant type ###########
 
+var seedType = currentActiveInventoryItems[resultantPlantSpecies].actionValue;
 
+var pollinatedSeedObject = {
+    "type": seedType,
+    "colour": resultantColour
+}
+// need to combine quality etc of the seed and plant ############
+pollinatedSeedObject = prepareInventoryObject(pollinatedSeedObject);
+
+console.log(pollinatedSeedObject);
+// add this to the parent plant's contains attribute:
+
+console.log(itemObject);
+
+itemObject.contains.seed = JSON.parse(JSON.stringify(pollinatedSeedObject));
+
+console.log(itemObject);
 
 
                 // remove the used pollen:
@@ -192,9 +217,24 @@ function checkCrop(itemObject) {
                 }
                 break;
             case 5:
-                console.log(itemObject.contains.seeds);
+            console.log("gathering seeds/fruit");
+                console.log(itemObject.contains.seed);
                 console.log(itemObject.contains.fruit);
-                // gather seeds
+
+
+// gather any seeds:
+if (typeof itemObject.contains.seed !== "undefined") {
+  inventoryCheck = canAddItemToInventory([itemObject.contains.seed]);
+                        if (inventoryCheck[0]) {
+                            console.log("harvested seed");
+                           itemObject.contains.seed = {};
+                        } else {
+                            UI.showNotification("<p>Oops - sorry, no room in your bags</p>");
+                        }
+                    }
+
+
+           
                 // gather fruit
                 // ###
                 break;
