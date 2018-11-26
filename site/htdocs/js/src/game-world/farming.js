@@ -139,12 +139,17 @@ function checkCrop(itemObject) {
                     pollinatedSeedObject = prepareInventoryObject(pollinatedSeedObject);
                     // add this to the parent plant's contains attribute:
                     itemObject.contains.seed = JSON.parse(JSON.stringify(pollinatedSeedObject));
+
+                    // store the parent types so when harvested, that cross can be added to known crosses:
+                    itemObject.contains.seed.crossBreedParents = resultantPlantKey;
+
+                    UI.showNotification("<p>Successfully pollinated</p>");
                     // remove the used pollen:
                     reducedHeldQuantity(whichSlot);
                     updateQuantity(whichSlot);
                     UI.updateHeldItems();
                 } else {
-                    UI.showNotification("<p>This has already been fertilised</p>");
+                    UI.showNotification("<p>This has already been pollinated</p>");
                 }
             }
         }
@@ -179,19 +184,33 @@ function checkCrop(itemObject) {
                 }
                 break;
             case 5:
-                console.log("gathering seeds/fruit");
-                console.log(itemObject.contains.seed);
-                console.log(itemObject.contains.fruit);
+                console.log("gathering seeds/fruit", itemObject.contains.seed, itemObject.contains.fruit);
                 // gather any seeds:
                 if (typeof itemObject.contains.seed !== "undefined") {
                     inventoryCheck = canAddItemToInventory([itemObject.contains.seed]);
                     if (inventoryCheck[0]) {
                         UI.showChangeInInventory(inventoryCheck[1]);
+
+
+                        // load in the world graphic for this plant so the hero can plant it straight away ###########
+
+                        // check if it's a new cross breed and add it to the known crosses:
+                        if (typeof itemObject.contains.seed.crossBreedParents !== "undefined") {
+                            var thisParentKey = itemObject.contains.seed.crossBreedParents;
+                            if (hero.plantCrossesKnown.indexOf(thisParentKey) === -1) {
+                                hero.plantCrossesKnown.push(thisParentKey);
+                                UI.showNotification("<p>Learnt a new cross breed&hellip;</p>");
+                                // update the horticulture panel:
+                                var horticulturePanelSlotsToUpdate = document.getElementsByClassName('parent' + thisParentKey);
+                                // there will only be 2 slots:
+                                horticulturePanelSlotsToUpdate[0].innerHTML = '<img src="/images/game-world/inventory-items/' + hero.plantBreeding[thisParentKey] + '.png"><p>' + currentActiveInventoryItems[hero.plantBreeding[thisParentKey]].shortname + '</p>';
+                                horticulturePanelSlotsToUpdate[1].innerHTML = '<img src="/images/game-world/inventory-items/' + hero.plantBreeding[thisParentKey] + '.png"><p>' + currentActiveInventoryItems[hero.plantBreeding[thisParentKey]].shortname + '</p>';
+                            }
+
+                        }
+
                         console.log("harvested seed");
                         itemObject.contains.seed = {};
-
-                        // check if it's a new cross breed and add it to the known crosses ############
-
                     } else {
                         UI.showNotification("<p>Oops - sorry, no room in your bags</p>");
                     }

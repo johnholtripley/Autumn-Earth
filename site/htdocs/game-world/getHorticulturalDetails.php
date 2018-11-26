@@ -150,7 +150,7 @@ $dataOutput = json_encode($plantBreeding);
                         if(in_array($thisKey, $plantCrossesKnown)) {
 $markup .= '<td><img src="/images/game-world/inventory-items/' . $plantBreeding[$thisKey] . '.png"><p>'.$plantNames[($plantBreeding[$thisKey])].'</p></th>';
                         } else {
-                            $markup .= '<td>?</td>';
+                            $markup .= '<td class="parent'.$thisKey.'">?</td>';
                         }
                         
                     }
