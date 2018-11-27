@@ -1529,7 +1529,24 @@ function checkCrop(itemObject) {
                         UI.showChangeInInventory(inventoryCheck[1]);
 
 
-                        // load in the world graphic for this plant so the hero can plant it straight away ###########
+                        // load in the world graphic for this plant so the hero can plant it straight away:
+
+var thisFileColourSuffix = "";
+            var thisColourName = getColourName(itemObject.contains.seed.colour, hero.plantBreeding[thisParentKey]);
+            if (thisColourName != "") {
+                thisFileColourSuffix = "-" + thisColourName.toLowerCase();
+            }
+            thisItemIdentifier = "item" + hero.plantBreeding[thisParentKey] + thisFileColourSuffix;
+
+console.log(thisItemIdentifier);
+
+
+//Loader.preload([{        name: thisItemIdentifier,        src: '/images/game-world/core/shadow-quarter.png'    }], prepareCoreAssets, loadingProgress);
+
+//itemImages[itemGraphicsToLoad[i]] = Loader.getImage(itemGraphicsToLoad[i]);
+
+
+
 
                         // check if it's a new cross breed and add it to the known crosses:
                         if (typeof itemObject.contains.seed.crossBreedParents !== "undefined") {
