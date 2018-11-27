@@ -129,12 +129,16 @@ function checkCrop(itemObject) {
                     }
                     // needs to be the seed type, not the plant type:
                     var seedType = currentActiveInventoryItems[resultantPlantSpecies].actionValue;
+                    // need to combine quality etc of the seed and plant:
                     var pollinatedSeedObject = {
                         "type": parseInt(seedType),
-                        "colour": resultantColour
+                        "colour": resultantColour,
+                        "quality": Math.ceil((itemObject.quality+hero.inventory[whichSlot].quality)/2),
+                        "durability": Math.ceil((itemObject.durability+hero.inventory[whichSlot].durability)/2),
+                        "effectiveness": Math.ceil((itemObject.effectiveness+hero.inventory[whichSlot].effectiveness)/2)
                     }
 
-                    // need to combine quality etc of the seed and plant ############
+                    
 
                     pollinatedSeedObject = prepareInventoryObject(pollinatedSeedObject);
                     // add this to the parent plant's contains attribute:
@@ -191,29 +195,20 @@ function checkCrop(itemObject) {
                     if (inventoryCheck[0]) {
                         UI.showChangeInInventory(inventoryCheck[1]);
 
-
+                        var thisParentKey = itemObject.contains.seed.crossBreedParents;
                         // load in the world graphic for this plant so the hero can plant it straight away:
-
-var thisFileColourSuffix = "";
-            var thisColourName = getColourName(itemObject.contains.seed.colour, hero.plantBreeding[thisParentKey]);
-            if (thisColourName != "") {
-                thisFileColourSuffix = "-" + thisColourName.toLowerCase();
-            }
-            thisItemIdentifier = "item" + hero.plantBreeding[thisParentKey] + thisFileColourSuffix;
-
-console.log(thisItemIdentifier);
-
-
-//Loader.preload([{        name: thisItemIdentifier,        src: '/images/game-world/core/shadow-quarter.png'    }], prepareCoreAssets, loadingProgress);
-
-//itemImages[itemGraphicsToLoad[i]] = Loader.getImage(itemGraphicsToLoad[i]);
-
-
-
+                        var thisFileColourSuffix = "";
+                        var thisColourName = getColourName(itemObject.contains.seed.colour, hero.plantBreeding[thisParentKey]);
+                        if (thisColourName != "") {
+                            thisFileColourSuffix = "-" + thisColourName.toLowerCase();
+                        }
+                        var thisItemIdentifier = "item" + hero.plantBreeding[thisParentKey] + thisFileColourSuffix;
+                        var fileSource = '/images/game-world/items/' + currentActiveInventoryItems[(hero.plantBreeding[thisParentKey])].worldSrc + thisFileColourSuffix + '.png';
+                        Loader.preload([{ name: thisItemIdentifier, src: fileSource }], function() { itemImages[thisItemIdentifier] = Loader.getImage(thisItemIdentifier) }, function() {});
+                        // (no progress indicator needed)
 
                         // check if it's a new cross breed and add it to the known crosses:
                         if (typeof itemObject.contains.seed.crossBreedParents !== "undefined") {
-                            var thisParentKey = itemObject.contains.seed.crossBreedParents;
                             if (hero.plantCrossesKnown.indexOf(thisParentKey) === -1) {
                                 hero.plantCrossesKnown.push(thisParentKey);
                                 UI.showNotification("<p>Learnt a new cross breed&hellip;</p>");

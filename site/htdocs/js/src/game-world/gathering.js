@@ -13,6 +13,9 @@ function checkForRespawns() {
             //console.log("check re-spawn: " + hero.totalGameTimePlayed + "-" + thisMapData.items[i].timeLastHarvested + " (" + (hero.totalGameTimePlayed - thisMapData.items[i].timeLastHarvested) + ") >= " + currentActiveInventoryItems[thisMapData.items[i].type].respawnRate);
             if (parseInt(thisMapData.items[i].state) < 5) {
 // check water level ########
+
+// check if pollinated and self-pollinate if not ############
+
                  if (hero.totalGameTimePlayed - thisMapData.items[i].timeLastHarvested >= currentActiveInventoryItems[thisMapData.items[i].type].respawnRate) {
                         thisMapData.items[i].state ++;
                         thisMapData.items[i].timeLastHarvested = hero.totalGameTimePlayed;
