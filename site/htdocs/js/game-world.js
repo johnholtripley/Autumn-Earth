@@ -252,9 +252,11 @@ function saveCartographyMask() {
 
 function getColourName(colour, itemType) {
     var colourName = "";
-    // check it's not got an inherent colour:
-    if (currentActiveInventoryItems[itemType].hasInherentColour != 1) {
-        colourName = colourNames[colour];
+    if (typeof colour !== "undefined") {
+        // check it's not got an inherent colour:
+        if (currentActiveInventoryItems[itemType].hasInherentColour != 1) {
+            colourName = colourNames[colour];
+        }
     }
     return colourName;
 }
@@ -1426,7 +1428,7 @@ function checkCrop(itemObject) {
             console.log("pollinate " + itemObject.state + ":4");
             if (itemObject.state == 4) {
                 // cross fertilise - check this plant hasn't already got a seed:
-                if (typeof itemObject.contains.seed !== "undefined") {
+                if (typeof itemObject.contains.seed === "undefined") {
                     plantActedUpon = true;
                     var whichSlot = findSlotByHash(hero.holding.hash);
                     // need to find the plant for this pollen (held in actionValue):
@@ -1535,15 +1537,17 @@ function checkCrop(itemObject) {
                         var thisParentKey = itemObject.contains.seed.crossBreedParents;
                         // load in the world graphic for this plant so the hero can plant it straight away:
                         var thisFileColourSuffix = "";
+                
                         var thisColourName = getColourName(itemObject.contains.seed.colour, hero.plantBreeding[thisParentKey]);
                         if (thisColourName != "") {
                             thisFileColourSuffix = "-" + thisColourName.toLowerCase();
                         }
                         var thisItemIdentifier = "item" + hero.plantBreeding[thisParentKey] + thisFileColourSuffix;
+                        if(typeof itemImages[thisItemIdentifier] === "undefined") {
                         var fileSource = '/images/game-world/items/' + currentActiveInventoryItems[(hero.plantBreeding[thisParentKey])].worldSrc + thisFileColourSuffix + '.png';
                         Loader.preload([{ name: thisItemIdentifier, src: fileSource }], function() { itemImages[thisItemIdentifier] = Loader.getImage(thisItemIdentifier) }, function() {});
                         // (no progress indicator needed)
-
+}
                         // check if it's a new cross breed and add it to the known crosses:
                         if (typeof itemObject.contains.seed.crossBreedParents !== "undefined") {
                             if (hero.plantCrossesKnown.indexOf(thisParentKey) === -1) {
@@ -1612,12 +1616,43 @@ function checkForRespawns() {
             if (parseInt(thisMapData.items[i].state) < 5) {
 // check water level ########
 
-// check if pollinated and self-pollinate if not ############
+
 
                  if (hero.totalGameTimePlayed - thisMapData.items[i].timeLastHarvested >= currentActiveInventoryItems[thisMapData.items[i].type].respawnRate) {
                         thisMapData.items[i].state ++;
                         thisMapData.items[i].timeLastHarvested = hero.totalGameTimePlayed;
                     }
+            } else {
+                // check if pollinated and self-pollinate if not:
+                if (typeof thisMapData.items[i].contains.seed === "undefined") {
+                    console.log("self pollinating");
+
+
+
+
+
+var seedType = currentActiveInventoryItems[(thisMapData.items[i].type)].actionValue;
+                // not as efficient than if pollinated manually:
+                    var pollinatedSeedObject = {
+                        "type": parseInt(seedType),
+                        "quality": Math.ceil(thisMapData.items[i].quality*0.8),
+                        "durability": Math.ceil(thisMapData.items[i].durability*0.8),
+                        "effectiveness": Math.ceil(thisMapData.items[i].effectiveness*0.8)
+                    }
+
+                    if(typeof thisMapData.items[i].colour !== "undefined") {
+pollinatedSeedObject.colour = thisMapData.items[i].colour;
+                    }
+
+
+                    console.log(pollinatedSeedObject);
+
+                    pollinatedSeedObject = prepareInventoryObject(pollinatedSeedObject);
+                    // add this to the parent plant's contains attribute:
+                    thisMapData.items[i].contains.seed = JSON.parse(JSON.stringify(pollinatedSeedObject));
+thisMapData.items[i].contains.seed.crossBreedParents = thisMapData.items[i].type;
+
+                }
             }
                 break;
         }

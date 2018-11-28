@@ -89,7 +89,7 @@ function checkCrop(itemObject) {
             console.log("pollinate " + itemObject.state + ":4");
             if (itemObject.state == 4) {
                 // cross fertilise - check this plant hasn't already got a seed:
-                if (typeof itemObject.contains.seed !== "undefined") {
+                if (typeof itemObject.contains.seed === "undefined") {
                     plantActedUpon = true;
                     var whichSlot = findSlotByHash(hero.holding.hash);
                     // need to find the plant for this pollen (held in actionValue):
@@ -198,15 +198,17 @@ function checkCrop(itemObject) {
                         var thisParentKey = itemObject.contains.seed.crossBreedParents;
                         // load in the world graphic for this plant so the hero can plant it straight away:
                         var thisFileColourSuffix = "";
+                
                         var thisColourName = getColourName(itemObject.contains.seed.colour, hero.plantBreeding[thisParentKey]);
                         if (thisColourName != "") {
                             thisFileColourSuffix = "-" + thisColourName.toLowerCase();
                         }
                         var thisItemIdentifier = "item" + hero.plantBreeding[thisParentKey] + thisFileColourSuffix;
+                        if(typeof itemImages[thisItemIdentifier] === "undefined") {
                         var fileSource = '/images/game-world/items/' + currentActiveInventoryItems[(hero.plantBreeding[thisParentKey])].worldSrc + thisFileColourSuffix + '.png';
                         Loader.preload([{ name: thisItemIdentifier, src: fileSource }], function() { itemImages[thisItemIdentifier] = Loader.getImage(thisItemIdentifier) }, function() {});
                         // (no progress indicator needed)
-
+}
                         // check if it's a new cross breed and add it to the known crosses:
                         if (typeof itemObject.contains.seed.crossBreedParents !== "undefined") {
                             if (hero.plantCrossesKnown.indexOf(thisParentKey) === -1) {

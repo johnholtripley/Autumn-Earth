@@ -14,12 +14,43 @@ function checkForRespawns() {
             if (parseInt(thisMapData.items[i].state) < 5) {
 // check water level ########
 
-// check if pollinated and self-pollinate if not ############
+
 
                  if (hero.totalGameTimePlayed - thisMapData.items[i].timeLastHarvested >= currentActiveInventoryItems[thisMapData.items[i].type].respawnRate) {
                         thisMapData.items[i].state ++;
                         thisMapData.items[i].timeLastHarvested = hero.totalGameTimePlayed;
                     }
+            } else {
+                // check if pollinated and self-pollinate if not:
+                if (typeof thisMapData.items[i].contains.seed === "undefined") {
+                    console.log("self pollinating");
+
+
+
+
+
+var seedType = currentActiveInventoryItems[(thisMapData.items[i].type)].actionValue;
+                // not as efficient than if pollinated manually:
+                    var pollinatedSeedObject = {
+                        "type": parseInt(seedType),
+                        "quality": Math.ceil(thisMapData.items[i].quality*0.8),
+                        "durability": Math.ceil(thisMapData.items[i].durability*0.8),
+                        "effectiveness": Math.ceil(thisMapData.items[i].effectiveness*0.8)
+                    }
+
+                    if(typeof thisMapData.items[i].colour !== "undefined") {
+pollinatedSeedObject.colour = thisMapData.items[i].colour;
+                    }
+
+
+                    console.log(pollinatedSeedObject);
+
+                    pollinatedSeedObject = prepareInventoryObject(pollinatedSeedObject);
+                    // add this to the parent plant's contains attribute:
+                    thisMapData.items[i].contains.seed = JSON.parse(JSON.stringify(pollinatedSeedObject));
+thisMapData.items[i].contains.seed.crossBreedParents = thisMapData.items[i].type;
+
+                }
             }
                 break;
         }

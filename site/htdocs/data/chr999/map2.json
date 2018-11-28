@@ -1331,10 +1331,6 @@
                 {"pollen": {
                     "type": 68,
                     "quantity": 6
-                }, 
-                "seed": {
- "type": 66,
-                    "quantity": 6
                 }
             }
     },

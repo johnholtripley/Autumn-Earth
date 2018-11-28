@@ -29,9 +29,11 @@
 
 function getColourName(colour, itemType) {
     var colourName = "";
-    // check it's not got an inherent colour:
-    if (currentActiveInventoryItems[itemType].hasInherentColour != 1) {
-        colourName = colourNames[colour];
+    if (typeof colour !== "undefined") {
+        // check it's not got an inherent colour:
+        if (currentActiveInventoryItems[itemType].hasInherentColour != 1) {
+            colourName = colourNames[colour];
+        }
     }
     return colourName;
 }
