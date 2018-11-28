@@ -48,7 +48,7 @@ pollinatedSeedObject.colour = thisMapData.items[i].colour;
                     pollinatedSeedObject = prepareInventoryObject(pollinatedSeedObject);
                     // add this to the parent plant's contains attribute:
                     thisMapData.items[i].contains.seed = JSON.parse(JSON.stringify(pollinatedSeedObject));
-//thisMapData.items[i].contains.seed.crossBreedParents = thisMapData.items[i].type;
+thisMapData.items[i].contains.seed.crossBreedParents = thisMapData.items[i].type;
 
                 }
             }

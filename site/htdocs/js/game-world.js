@@ -1539,33 +1539,39 @@ function checkCrop(itemObject) {
                         var thisFileColourSuffix = "";
                 
 
-console.log(itemObject.contains.seed.crossBreedParents);
-console.log(hero.plantBreeding[thisParentKey]);
-if(typeof hero.plantBreeding[thisParentKey] === "undefined") {
-// need to know the resulting plant type #######
+
+
+var resultingPlantType;
+if(itemObject.contains.seed.crossBreedParents.toString().indexOf("-") == -1) {
+resultingPlantType = itemObject.contains.seed.crossBreedParents;
+} else {
+    resultingPlantType = hero.plantBreeding[thisParentKey];
 }
 
-                        var thisColourName = getColourName(itemObject.contains.seed.colour, hero.plantBreeding[thisParentKey]);
+                        var thisColourName = getColourName(itemObject.contains.seed.colour, resultingPlantType);
                         if (thisColourName != "") {
                             thisFileColourSuffix = "-" + thisColourName.toLowerCase();
                         }
-                        var thisItemIdentifier = "item" + hero.plantBreeding[thisParentKey] + thisFileColourSuffix;
+                        var thisItemIdentifier = "item" + resultingPlantType + thisFileColourSuffix;
                         if(typeof itemImages[thisItemIdentifier] === "undefined") {
-                        var fileSource = '/images/game-world/items/' + currentActiveInventoryItems[(hero.plantBreeding[thisParentKey])].worldSrc + thisFileColourSuffix + '.png';
+                        var fileSource = '/images/game-world/items/' + currentActiveInventoryItems[(resultingPlantType)].worldSrc + thisFileColourSuffix + '.png';
                         Loader.preload([{ name: thisItemIdentifier, src: fileSource }], function() { itemImages[thisItemIdentifier] = Loader.getImage(thisItemIdentifier) }, function() {});
                         // (no progress indicator needed)
 }
                         // check if it's a new cross breed and add it to the known crosses:
                         if (typeof itemObject.contains.seed.crossBreedParents !== "undefined") {
+                            // checking for this twice now - could be tidied up ############## :
+                            if(itemObject.contains.seed.crossBreedParents.toString().indexOf("-") != -1) {
                             if (hero.plantCrossesKnown.indexOf(thisParentKey) === -1) {
                                 hero.plantCrossesKnown.push(thisParentKey);
                                 UI.showNotification("<p>Learnt a new cross breed&hellip;</p>");
                                 // update the horticulture panel:
                                 var horticulturePanelSlotsToUpdate = document.getElementsByClassName('parent' + thisParentKey);
                                 // there will only be 2 slots:
-                                horticulturePanelSlotsToUpdate[0].innerHTML = '<img src="/images/game-world/inventory-items/' + hero.plantBreeding[thisParentKey] + '.png"><p>' + currentActiveInventoryItems[hero.plantBreeding[thisParentKey]].shortname + '</p>';
-                                horticulturePanelSlotsToUpdate[1].innerHTML = '<img src="/images/game-world/inventory-items/' + hero.plantBreeding[thisParentKey] + '.png"><p>' + currentActiveInventoryItems[hero.plantBreeding[thisParentKey]].shortname + '</p>';
+                                horticulturePanelSlotsToUpdate[0].innerHTML = '<img src="/images/game-world/inventory-items/' + resultingPlantType + '.png"><p>' + currentActiveInventoryItems[hero.plantBreeding[thisParentKey]].shortname + '</p>';
+                                horticulturePanelSlotsToUpdate[1].innerHTML = '<img src="/images/game-world/inventory-items/' + resultingPlantType + '.png"><p>' + currentActiveInventoryItems[hero.plantBreeding[thisParentKey]].shortname + '</p>';
                             }
+                        }
 
                         }
 
@@ -1657,7 +1663,7 @@ pollinatedSeedObject.colour = thisMapData.items[i].colour;
                     pollinatedSeedObject = prepareInventoryObject(pollinatedSeedObject);
                     // add this to the parent plant's contains attribute:
                     thisMapData.items[i].contains.seed = JSON.parse(JSON.stringify(pollinatedSeedObject));
-//thisMapData.items[i].contains.seed.crossBreedParents = thisMapData.items[i].type;
+thisMapData.items[i].contains.seed.crossBreedParents = thisMapData.items[i].type;
 
                 }
             }
