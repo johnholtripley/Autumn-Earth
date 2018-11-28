@@ -61,6 +61,11 @@ function successfullyPlantSeed(tileX, tileY) {
             if (currentActiveInventoryItems[hero.inventory[whichSlot].type].dyeable > 0) {
                 seedObject.colour = hero.inventory[whichSlot].colour;
             }
+            // plant will have seed's attributes:
+            seedObject.quality = hero.inventory[whichSlot].quality;
+            seedObject.effectiveness = hero.inventory[whichSlot].effectiveness;
+            seedObject.durability = hero.inventory[whichSlot].durability;
+         
             thisMapData.items.push(seedObject);
             initialiseItem(thisMapData.items.length - 1);
             // reduce seed quantity in slot:
@@ -133,12 +138,15 @@ function checkCrop(itemObject) {
                     var pollinatedSeedObject = {
                         "type": parseInt(seedType),
                         "colour": resultantColour,
-                        "quality": Math.ceil((itemObject.quality+hero.inventory[whichSlot].quality)/2),
-                        "durability": Math.ceil((itemObject.durability+hero.inventory[whichSlot].durability)/2),
-                        "effectiveness": Math.ceil((itemObject.effectiveness+hero.inventory[whichSlot].effectiveness)/2)
+                        "quality": Math.ceil((itemObject.quality + hero.inventory[whichSlot].quality) / 2),
+                        "durability": Math.ceil((itemObject.durability + hero.inventory[whichSlot].durability) / 2),
+                        "effectiveness": Math.ceil((itemObject.effectiveness + hero.inventory[whichSlot].effectiveness) / 2)
                     }
 
-                    
+
+var maxSeeds = 6;
+// the number of seeds is an exponential amount based on the plant and pollen's quality and effectiveness:
+pollinatedSeedObject.quantity = Math.ceil(maxSeeds*((itemObject.quality*hero.inventory[whichSlot].quality/20000)+(itemObject.effectiveness*hero.inventory[whichSlot].effectiveness/20000)));
 
                     pollinatedSeedObject = prepareInventoryObject(pollinatedSeedObject);
                     // add this to the parent plant's contains attribute:
@@ -198,41 +206,41 @@ function checkCrop(itemObject) {
                         var thisParentKey = itemObject.contains.seed.crossBreedParents;
                         // load in the world graphic for this plant so the hero can plant it straight away:
                         var thisFileColourSuffix = "";
-                
 
 
 
-var resultingPlantType;
-if(itemObject.contains.seed.crossBreedParents.toString().indexOf("-") == -1) {
-resultingPlantType = itemObject.contains.seed.crossBreedParents;
-} else {
-    resultingPlantType = hero.plantBreeding[thisParentKey];
-}
+
+                        var resultingPlantType;
+                        if (itemObject.contains.seed.crossBreedParents.toString().indexOf("-") == -1) {
+                            resultingPlantType = itemObject.contains.seed.crossBreedParents;
+                        } else {
+                            resultingPlantType = hero.plantBreeding[thisParentKey];
+                        }
 
                         var thisColourName = getColourName(itemObject.contains.seed.colour, resultingPlantType);
                         if (thisColourName != "") {
                             thisFileColourSuffix = "-" + thisColourName.toLowerCase();
                         }
                         var thisItemIdentifier = "item" + resultingPlantType + thisFileColourSuffix;
-                        if(typeof itemImages[thisItemIdentifier] === "undefined") {
-                        var fileSource = '/images/game-world/items/' + currentActiveInventoryItems[(resultingPlantType)].worldSrc + thisFileColourSuffix + '.png';
-                        Loader.preload([{ name: thisItemIdentifier, src: fileSource }], function() { itemImages[thisItemIdentifier] = Loader.getImage(thisItemIdentifier) }, function() {});
-                        // (no progress indicator needed)
-}
+                        if (typeof itemImages[thisItemIdentifier] === "undefined") {
+                            var fileSource = '/images/game-world/items/' + currentActiveInventoryItems[(resultingPlantType)].worldSrc + thisFileColourSuffix + '.png';
+                            Loader.preload([{ name: thisItemIdentifier, src: fileSource }], function() { itemImages[thisItemIdentifier] = Loader.getImage(thisItemIdentifier) }, function() {});
+                            // (no progress indicator needed)
+                        }
                         // check if it's a new cross breed and add it to the known crosses:
                         if (typeof itemObject.contains.seed.crossBreedParents !== "undefined") {
                             // checking for this twice now - could be tidied up ############## :
-                            if(itemObject.contains.seed.crossBreedParents.toString().indexOf("-") != -1) {
-                            if (hero.plantCrossesKnown.indexOf(thisParentKey) === -1) {
-                                hero.plantCrossesKnown.push(thisParentKey);
-                                UI.showNotification("<p>Learnt a new cross breed&hellip;</p>");
-                                // update the horticulture panel:
-                                var horticulturePanelSlotsToUpdate = document.getElementsByClassName('parent' + thisParentKey);
-                                // there will only be 2 slots:
-                                horticulturePanelSlotsToUpdate[0].innerHTML = '<img src="/images/game-world/inventory-items/' + resultingPlantType + '.png"><p>' + currentActiveInventoryItems[hero.plantBreeding[thisParentKey]].shortname + '</p>';
-                                horticulturePanelSlotsToUpdate[1].innerHTML = '<img src="/images/game-world/inventory-items/' + resultingPlantType + '.png"><p>' + currentActiveInventoryItems[hero.plantBreeding[thisParentKey]].shortname + '</p>';
+                            if (itemObject.contains.seed.crossBreedParents.toString().indexOf("-") != -1) {
+                                if (hero.plantCrossesKnown.indexOf(thisParentKey) === -1) {
+                                    hero.plantCrossesKnown.push(thisParentKey);
+                                    UI.showNotification("<p>Learnt a new cross breed&hellip;</p>");
+                                    // update the horticulture panel:
+                                    var horticulturePanelSlotsToUpdate = document.getElementsByClassName('parent' + thisParentKey);
+                                    // there will only be 2 slots:
+                                    horticulturePanelSlotsToUpdate[0].innerHTML = '<img src="/images/game-world/inventory-items/' + resultingPlantType + '.png"><p>' + currentActiveInventoryItems[hero.plantBreeding[thisParentKey]].shortname + '</p>';
+                                    horticulturePanelSlotsToUpdate[1].innerHTML = '<img src="/images/game-world/inventory-items/' + resultingPlantType + '.png"><p>' + currentActiveInventoryItems[hero.plantBreeding[thisParentKey]].shortname + '</p>';
+                                }
                             }
-                        }
 
                         }
 

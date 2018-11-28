@@ -70,10 +70,13 @@ function canAddItemToInventory(itemObj) {
                                 inventoryClone[thisSlotsID].enchanted = itemObj[k].enchanted;
                                 inventoryClone[thisSlotsID].hallmark = itemObj[k].hallmark;
                                 inventoryClone[thisSlotsID].hash = createItemHash(itemObj[k].type, amountAddedToThisSlot);
-                                inventoryClone[thisSlotsID].inscription = {};
+                                inventoryClone[thisSlotsID].inscription = "";
+                                if(typeof itemObj[k].inscription !== "undefined") {
+                                    inventoryClone[thisSlotsID].inscription = {};
                                 inventoryClone[thisSlotsID].inscription.title = itemObj[k].inscription.title;
                                 inventoryClone[thisSlotsID].inscription.content = itemObj[k].inscription.content;
                                 inventoryClone[thisSlotsID].inscription.timeCreated = itemObj[k].inscription.timeCreated;
+                            }
                                 if (quantityAddedSoFar >= itemObj[k].quantity) {
                                     // stop both loops:
                                     break outerLoop;

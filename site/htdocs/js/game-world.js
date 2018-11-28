@@ -1400,6 +1400,11 @@ function successfullyPlantSeed(tileX, tileY) {
             if (currentActiveInventoryItems[hero.inventory[whichSlot].type].dyeable > 0) {
                 seedObject.colour = hero.inventory[whichSlot].colour;
             }
+            // plant will have seed's attributes:
+            seedObject.quality = hero.inventory[whichSlot].quality;
+            seedObject.effectiveness = hero.inventory[whichSlot].effectiveness;
+            seedObject.durability = hero.inventory[whichSlot].durability;
+         
             thisMapData.items.push(seedObject);
             initialiseItem(thisMapData.items.length - 1);
             // reduce seed quantity in slot:
@@ -1472,12 +1477,15 @@ function checkCrop(itemObject) {
                     var pollinatedSeedObject = {
                         "type": parseInt(seedType),
                         "colour": resultantColour,
-                        "quality": Math.ceil((itemObject.quality+hero.inventory[whichSlot].quality)/2),
-                        "durability": Math.ceil((itemObject.durability+hero.inventory[whichSlot].durability)/2),
-                        "effectiveness": Math.ceil((itemObject.effectiveness+hero.inventory[whichSlot].effectiveness)/2)
+                        "quality": Math.ceil((itemObject.quality + hero.inventory[whichSlot].quality) / 2),
+                        "durability": Math.ceil((itemObject.durability + hero.inventory[whichSlot].durability) / 2),
+                        "effectiveness": Math.ceil((itemObject.effectiveness + hero.inventory[whichSlot].effectiveness) / 2)
                     }
 
-                    
+
+var maxSeeds = 6;
+// the number of seeds is an exponential amount based on the plant and pollen's quality and effectiveness:
+pollinatedSeedObject.quantity = Math.ceil(maxSeeds*((itemObject.quality*hero.inventory[whichSlot].quality/20000)+(itemObject.effectiveness*hero.inventory[whichSlot].effectiveness/20000)));
 
                     pollinatedSeedObject = prepareInventoryObject(pollinatedSeedObject);
                     // add this to the parent plant's contains attribute:
@@ -1537,41 +1545,41 @@ function checkCrop(itemObject) {
                         var thisParentKey = itemObject.contains.seed.crossBreedParents;
                         // load in the world graphic for this plant so the hero can plant it straight away:
                         var thisFileColourSuffix = "";
-                
 
 
 
-var resultingPlantType;
-if(itemObject.contains.seed.crossBreedParents.toString().indexOf("-") == -1) {
-resultingPlantType = itemObject.contains.seed.crossBreedParents;
-} else {
-    resultingPlantType = hero.plantBreeding[thisParentKey];
-}
+
+                        var resultingPlantType;
+                        if (itemObject.contains.seed.crossBreedParents.toString().indexOf("-") == -1) {
+                            resultingPlantType = itemObject.contains.seed.crossBreedParents;
+                        } else {
+                            resultingPlantType = hero.plantBreeding[thisParentKey];
+                        }
 
                         var thisColourName = getColourName(itemObject.contains.seed.colour, resultingPlantType);
                         if (thisColourName != "") {
                             thisFileColourSuffix = "-" + thisColourName.toLowerCase();
                         }
                         var thisItemIdentifier = "item" + resultingPlantType + thisFileColourSuffix;
-                        if(typeof itemImages[thisItemIdentifier] === "undefined") {
-                        var fileSource = '/images/game-world/items/' + currentActiveInventoryItems[(resultingPlantType)].worldSrc + thisFileColourSuffix + '.png';
-                        Loader.preload([{ name: thisItemIdentifier, src: fileSource }], function() { itemImages[thisItemIdentifier] = Loader.getImage(thisItemIdentifier) }, function() {});
-                        // (no progress indicator needed)
-}
+                        if (typeof itemImages[thisItemIdentifier] === "undefined") {
+                            var fileSource = '/images/game-world/items/' + currentActiveInventoryItems[(resultingPlantType)].worldSrc + thisFileColourSuffix + '.png';
+                            Loader.preload([{ name: thisItemIdentifier, src: fileSource }], function() { itemImages[thisItemIdentifier] = Loader.getImage(thisItemIdentifier) }, function() {});
+                            // (no progress indicator needed)
+                        }
                         // check if it's a new cross breed and add it to the known crosses:
                         if (typeof itemObject.contains.seed.crossBreedParents !== "undefined") {
                             // checking for this twice now - could be tidied up ############## :
-                            if(itemObject.contains.seed.crossBreedParents.toString().indexOf("-") != -1) {
-                            if (hero.plantCrossesKnown.indexOf(thisParentKey) === -1) {
-                                hero.plantCrossesKnown.push(thisParentKey);
-                                UI.showNotification("<p>Learnt a new cross breed&hellip;</p>");
-                                // update the horticulture panel:
-                                var horticulturePanelSlotsToUpdate = document.getElementsByClassName('parent' + thisParentKey);
-                                // there will only be 2 slots:
-                                horticulturePanelSlotsToUpdate[0].innerHTML = '<img src="/images/game-world/inventory-items/' + resultingPlantType + '.png"><p>' + currentActiveInventoryItems[hero.plantBreeding[thisParentKey]].shortname + '</p>';
-                                horticulturePanelSlotsToUpdate[1].innerHTML = '<img src="/images/game-world/inventory-items/' + resultingPlantType + '.png"><p>' + currentActiveInventoryItems[hero.plantBreeding[thisParentKey]].shortname + '</p>';
+                            if (itemObject.contains.seed.crossBreedParents.toString().indexOf("-") != -1) {
+                                if (hero.plantCrossesKnown.indexOf(thisParentKey) === -1) {
+                                    hero.plantCrossesKnown.push(thisParentKey);
+                                    UI.showNotification("<p>Learnt a new cross breed&hellip;</p>");
+                                    // update the horticulture panel:
+                                    var horticulturePanelSlotsToUpdate = document.getElementsByClassName('parent' + thisParentKey);
+                                    // there will only be 2 slots:
+                                    horticulturePanelSlotsToUpdate[0].innerHTML = '<img src="/images/game-world/inventory-items/' + resultingPlantType + '.png"><p>' + currentActiveInventoryItems[hero.plantBreeding[thisParentKey]].shortname + '</p>';
+                                    horticulturePanelSlotsToUpdate[1].innerHTML = '<img src="/images/game-world/inventory-items/' + resultingPlantType + '.png"><p>' + currentActiveInventoryItems[hero.plantBreeding[thisParentKey]].shortname + '</p>';
+                                }
                             }
-                        }
 
                         }
 
@@ -1625,48 +1633,48 @@ function checkForRespawns() {
                 }
                 break;
             case "crop":
-            //console.log("check re-spawn: " + hero.totalGameTimePlayed + "-" + thisMapData.items[i].timeLastHarvested + " (" + (hero.totalGameTimePlayed - thisMapData.items[i].timeLastHarvested) + ") >= " + currentActiveInventoryItems[thisMapData.items[i].type].respawnRate);
-            if (parseInt(thisMapData.items[i].state) < 5) {
-// check water level ########
+             
+                if (parseInt(thisMapData.items[i].state) < 5) {
+                    // check water level ########
 
 
 
-                 if (hero.totalGameTimePlayed - thisMapData.items[i].timeLastHarvested >= currentActiveInventoryItems[thisMapData.items[i].type].respawnRate) {
-                        thisMapData.items[i].state ++;
+                    if (hero.totalGameTimePlayed - thisMapData.items[i].timeLastHarvested >= currentActiveInventoryItems[thisMapData.items[i].type].respawnRate) {
+                        thisMapData.items[i].state++;
                         thisMapData.items[i].timeLastHarvested = hero.totalGameTimePlayed;
                     }
-            } else {
-                // check if pollinated and self-pollinate if not:
-                if (typeof thisMapData.items[i].contains.seed === "undefined") {
-                    console.log("self pollinating");
+                } else {
+                    // check if pollinated and self-pollinate if not:
+                    
+                    if (typeof thisMapData.items[i].contains.seed === "undefined") {
+                        console.log("self pollinating");
 
+                        var seedType = currentActiveInventoryItems[(thisMapData.items[i].type)].actionValue;
+                        // not as efficient than if pollinated manually:
+                        var pollinatedSeedObject = {
+                            "type": parseInt(seedType),
+                            "quality": Math.ceil(thisMapData.items[i].quality * 0.8),
+                            "durability": Math.ceil(thisMapData.items[i].durability * 0.8),
+                            "effectiveness": Math.ceil(thisMapData.items[i].effectiveness * 0.8)
+                        }
+console.log(thisMapData.items[i]);
+                        if (typeof thisMapData.items[i].colour !== "undefined") {
+                            pollinatedSeedObject.colour = thisMapData.items[i].colour;
+                        }
 
+                        var maxSeeds = 6;
+                        // the number of seeds is an exponential amount based on the plant's quality and effectiveness:
+                        pollinatedSeedObject.quantity = Math.ceil(maxSeeds * ((thisMapData.items[i].quality * thisMapData.items[i].quality / 20000) + (thisMapData.items[i].effectiveness * thisMapData.items[i].effectiveness / 20000)));
 
+                        console.log(pollinatedSeedObject);
 
+                        pollinatedSeedObject = prepareInventoryObject(pollinatedSeedObject);
+                        // add this to the parent plant's contains attribute:
+                        thisMapData.items[i].contains.seed = JSON.parse(JSON.stringify(pollinatedSeedObject));
+                        thisMapData.items[i].contains.seed.crossBreedParents = thisMapData.items[i].type;
 
-var seedType = currentActiveInventoryItems[(thisMapData.items[i].type)].actionValue;
-                // not as efficient than if pollinated manually:
-                    var pollinatedSeedObject = {
-                        "type": parseInt(seedType),
-                        "quality": Math.ceil(thisMapData.items[i].quality*0.8),
-                        "durability": Math.ceil(thisMapData.items[i].durability*0.8),
-                        "effectiveness": Math.ceil(thisMapData.items[i].effectiveness*0.8)
                     }
-
-                    if(typeof thisMapData.items[i].colour !== "undefined") {
-pollinatedSeedObject.colour = thisMapData.items[i].colour;
-                    }
-
-
-                    console.log(pollinatedSeedObject);
-
-                    pollinatedSeedObject = prepareInventoryObject(pollinatedSeedObject);
-                    // add this to the parent plant's contains attribute:
-                    thisMapData.items[i].contains.seed = JSON.parse(JSON.stringify(pollinatedSeedObject));
-thisMapData.items[i].contains.seed.crossBreedParents = thisMapData.items[i].type;
-
                 }
-            }
                 break;
         }
     }
@@ -3052,10 +3060,13 @@ function canAddItemToInventory(itemObj) {
                                 inventoryClone[thisSlotsID].enchanted = itemObj[k].enchanted;
                                 inventoryClone[thisSlotsID].hallmark = itemObj[k].hallmark;
                                 inventoryClone[thisSlotsID].hash = createItemHash(itemObj[k].type, amountAddedToThisSlot);
-                                inventoryClone[thisSlotsID].inscription = {};
+                                inventoryClone[thisSlotsID].inscription = "";
+                                if(typeof itemObj[k].inscription !== "undefined") {
+                                    inventoryClone[thisSlotsID].inscription = {};
                                 inventoryClone[thisSlotsID].inscription.title = itemObj[k].inscription.title;
                                 inventoryClone[thisSlotsID].inscription.content = itemObj[k].inscription.content;
                                 inventoryClone[thisSlotsID].inscription.timeCreated = itemObj[k].inscription.timeCreated;
+                            }
                                 if (quantityAddedSoFar >= itemObj[k].quantity) {
                                     // stop both loops:
                                     break outerLoop;
