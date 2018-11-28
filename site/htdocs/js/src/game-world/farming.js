@@ -199,6 +199,13 @@ function checkCrop(itemObject) {
                         // load in the world graphic for this plant so the hero can plant it straight away:
                         var thisFileColourSuffix = "";
                 
+
+console.log(itemObject.contains.seed.crossBreedParents);
+console.log(hero.plantBreeding[thisParentKey]);
+if(typeof hero.plantBreeding[thisParentKey] === "undefined") {
+// need to know the resulting plant type #######
+}
+
                         var thisColourName = getColourName(itemObject.contains.seed.colour, hero.plantBreeding[thisParentKey]);
                         if (thisColourName != "") {
                             thisFileColourSuffix = "-" + thisColourName.toLowerCase();
