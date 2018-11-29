@@ -1292,6 +1292,7 @@
                  "state": "1",
                  "timeLastHarvested": 100,
                   "quality": 100,
+                  "additional": 1,
                 "durability": 100,
                 "effectiveness": 100,
                 "animation":

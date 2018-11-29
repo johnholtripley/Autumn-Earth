@@ -10,19 +10,28 @@ function checkForRespawns() {
                 }
                 break;
             case "crop":
-             
+
                 if (parseInt(thisMapData.items[i].state) < 5) {
-                    // check water level ########
-
-
-
+                    // check water level:
+                    var thisPlantPreferredWaterAmount = 0;
+                    if (typeof thisMapData.items[i].additional !== "undefined") {
+                        thisPlantPreferredWaterAmount = thisMapData.items[i].additional;
+                    }
+                    var waterDifference = Math.abs(getTileWaterAmount(thisMapData.items[i].tileX, thisMapData.items[i].tileY) - thisPlantPreferredWaterAmount);
                     if (hero.totalGameTimePlayed - thisMapData.items[i].timeLastHarvested >= currentActiveInventoryItems[thisMapData.items[i].type].respawnRate) {
+                        // deteriorate the plant if not at its optimum water level:
+                        thisMapData.items[i].quality -= 4 * waterDifference;
+                        thisMapData.items[i].effectiveness -= 4 * waterDifference;
+                        thisMapData.items[i].durability -= 4 * waterDifference;
+                        thisMapData.items[i].quality = capValues(thisMapData.items[i].quality, 1, 100);
+                        thisMapData.items[i].effectiveness = capValues(thisMapData.items[i].effectiveness, 1, 100);
+                        thisMapData.items[i].durability = capValues(thisMapData.items[i].durability, 1, 100);
                         thisMapData.items[i].state++;
                         thisMapData.items[i].timeLastHarvested = hero.totalGameTimePlayed;
                     }
                 } else {
                     // check if pollinated and self-pollinate if not:
-                    
+
                     if (typeof thisMapData.items[i].contains.seed === "undefined") {
                         console.log("self pollinating");
 
@@ -34,7 +43,7 @@ function checkForRespawns() {
                             "durability": Math.ceil(thisMapData.items[i].durability * 0.8),
                             "effectiveness": Math.ceil(thisMapData.items[i].effectiveness * 0.8)
                         }
-console.log(thisMapData.items[i]);
+                        console.log(thisMapData.items[i]);
                         if (typeof thisMapData.items[i].colour !== "undefined") {
                             pollinatedSeedObject.colour = thisMapData.items[i].colour;
                         }

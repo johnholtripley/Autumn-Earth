@@ -17,6 +17,14 @@ function successfullyTilledEarth(tileX, tileY) {
     }
 }
 
+function getTileWaterAmount(tileX, tileY) {
+    var waterAmount = 0;
+    if (typeof thisMapData.properties[tileY][tileX].water !== "undefined") {
+        waterAmount = thisMapData.properties[tileY][tileX].water.amount;
+    }
+    return waterAmount;
+}
+
 function pourLiquid(tileX, tileY) {
     var holdingItemsSlot = findSlotByHash(hero.holding.hash);
     // check how much liquid in this item's contains:
