@@ -110,9 +110,10 @@ function checkCrop(itemObject) {
                     var plantSpecies = itemObject.type;
                     // find resultant plant:
                     var resultantPlantSpecies = plantSpecies;
+                    var resultantPlantKey = plantSpecies;
                     if (pollenSpecies != plantSpecies) {
                         console.log(pollenSpecies, plantSpecies);
-                        var resultantPlantKey;
+                        
                         if (pollenSpecies < plantSpecies) {
                             resultantPlantKey = pollenSpecies + '-' + plantSpecies;
                         } else {
@@ -126,6 +127,7 @@ function checkCrop(itemObject) {
                         var pollenColour = hero.inventory[whichSlot].colour;
                         var plantColour = itemObject.colour;
                         var resultantColour;
+               
                         if ((typeof plantColour === "undefined") && (typeof pollenColour === "undefined")) {
                             // default to white:
                             resultantColour = 9;
@@ -139,6 +141,8 @@ function checkCrop(itemObject) {
                                 resultantColour = mixColours(plantColour, pollenColour);
                             }
                         }
+
+
                     }
                     // needs to be the seed type, not the plant type:
                     var seedType = currentActiveInventoryItems[resultantPlantSpecies].actionValue;

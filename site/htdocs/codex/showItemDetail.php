@@ -96,7 +96,11 @@ echo '<p>'.str_replace("##contains##", "", $description).'</p>';
  echo'<dl>';
   echo'<dt>Price:</dt><dd>'.$priceCode.'</dd>';
   echo'<dt>Level:</dt><dd>'.$level.'</dd>';
+if(($action == "crop") || ($action == "seed") || ($action == "pollen")) {
+echo'<dt>Multiple colours:</dt><dd>';
+} else {
   echo'<dt>Dyeable:</dt><dd>';
+}
   if($dyeable>0) {
   	echo 'Yes';
   } else {
@@ -110,6 +114,32 @@ echo '<p>'.str_replace("##contains##", "", $description).'</p>';
     echo 'No';
   }
   echo'</dd>';
+
+/*
+if($action == "crop") {
+echo'<dt>Preferred water amount:</dt><dd></dd>';
+}
+*/
+
+if($action == "seed") {
+
+$seedDetails = json_decode($actionValue, true);
+
+
+
+$plantQuery = "select * from tblinventoryitems where itemid = '".$seedDetails["type"]."' and showinthecodex>0";
+$plantResult = mysqli_query($connection, $plantQuery) or die ("couldn't execute plant query");
+
+if(mysqli_num_rows($plantResult) > 0) {
+$plantResults = mysqli_fetch_array($plantResult);
+echo'<dt>Grows into:</dt><dd><a href="/codex/items/'.$plantResults['cleanURL'].'/">'.$plantResults['shortname'].'</a></dd>';
+}
+
+
+
+}
+
+
   echo'<dt>Inscribable:</dt><dd>';
     if($inscribable>0) {
   	echo 'Yes';
