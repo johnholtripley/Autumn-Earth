@@ -3718,8 +3718,9 @@ if(typeof thisItemObject.contains !== "undefined") {
 
    //    tooltipInformationToAdd += " contains "+thisItemObject.contains[0].quantity+"x "+currentActiveInventoryItems[thisItemObject.contains[0].type].shortname; 
 
-   var gaugePercent = thisItemObject.contains[0].quantity / currentActiveInventoryItems[thisItemObject.type].actionValue * 100;
-gaugeMarkupToAdd += '<span class="gauge gauge'+currentActiveInventoryItems[thisItemObject.contains[0].type].shortname+'"><span style="width:'+gaugePercent+'+%"></span></span>';
+   var gaugePercent = thisItemObject.contains[0].quantity / parseInt(currentActiveInventoryItems[thisItemObject.type].actionValue) * 100;
+ 
+gaugeMarkupToAdd += '<span class="gauge gauge'+currentActiveInventoryItems[thisItemObject.contains[0].type].shortname+'"><span style="width:'+gaugePercent+'%"></span></span>';
 
 }
     }
@@ -3728,7 +3729,7 @@ gaugeMarkupToAdd += '<span class="gauge gauge'+currentActiveInventoryItems[thisI
 
 
 function updateGauge(whichSlotKey) {
-var gaugePercent = hero.inventory[whichSlotKey].contains[0].quantity / currentActiveInventoryItems[hero.inventory[whichSlotKey].type].actionValue * 100;
+var gaugePercent = hero.inventory[whichSlotKey].contains[0].quantity / parseInt(currentActiveInventoryItems[hero.inventory[whichSlotKey].type].actionValue) * 100;
 document.getElementById('slot'+whichSlotKey).querySelector('.gauge span').style.width = gaugePercent+'%';
 }
 
@@ -4694,6 +4695,7 @@ var UI = {
                 inventoryMarkup += '<li id="slot' + thisSlotsID + '">';
                 // check if that key exists in inventory:
                 if (thisSlotsID in hero.inventory) {
+                    console.log();
                     inventoryMarkup += generateSlotMarkup(thisSlotsID);
                     thisAction = currentActiveInventoryItems[hero.inventory[thisSlotsID].type].action;
                     // check for cooldown attribute, and add a timer if so:
