@@ -1,5 +1,8 @@
 'use strict';
 
+// from config.js:
+const tileW = 48;
+
 var thisMapData, mapTilesY, mapTilesX, thisAgentsIndex, uncheckedTiles, nodes;
 
 function isATerrainCollision(tileX, tileY) {
@@ -13,7 +16,7 @@ function isATerrainCollision(tileX, tileY) {
                 return 1;
                 break;
             default:
-                // not a collsiion (might be stairs or a door)
+                // not a collision (might be stairs or a door)
                 return 0;
         }
     }
@@ -22,85 +25,35 @@ function isATerrainCollision(tileX, tileY) {
 function addNode(parentNode, tileX, tileY, endX, endY) {
     // console.log(tileX+", "+tileY);
     if (!isATerrainCollision(tileX, tileY)) {
-        var isBlocked = false;
-        for (var i = 0; i < thisMapData.items.length; i++) {
-            if (thisMapData.items[i].tileX == tileX) {
-                if (thisMapData.items[i].tileY == tileY) {
-                    isBlocked = true;
+        var heuristic = Math.abs(tileX - endX) + Math.abs(tileY - endY);
+        var thisCost = parentNode.cost + 1;
+        var thisSummedCost = thisCost + heuristic;
+        if (typeof nodes[tileX + "-" + tileY] === "undefined") {
+            nodes[tileX + "-" + tileY] = {
+                x: tileX,
+                y: tileY,
+                parentX: parentNode.x,
+                parentY: parentNode.y,
+                cost: thisCost,
+                summedCost: thisSummedCost
+            }
+            for (var i = 0; i < uncheckedTiles.length; i++) {
+                if (thisSummedCost < uncheckedTiles[i].summedCost) {
+                    uncheckedTiles.splice(i, 0, nodes[tileX + "-" + tileY]);
+                    break;
                 }
             }
-        }
-        for (var i = 0; i < thisMapData.npcs.length; i++) {
-            // make sure other NPCs don't block - except for the any in the destination tile:
-            if (i != thisAgentsIndex) {
-                // only include stationary NPCS:
-                if (thisMapData.npcs[i].movement[thisMapData.npcs[i].movementIndex] == '-') {
-                    if (thisMapData.npcs[i].isCollidable) {
-                        if (!((tileX == endX) && (tileY == endY))) {
-                            if (parseInt(thisMapData.npcs[i].tileX) == parseInt(tileX)) {
-                                if (parseInt(thisMapData.npcs[i].tileY) == parseInt(tileY)) {
-                                    isBlocked = true;
-                                }
-                            }
-                        }
-                    }
-                }
+            if (i >= uncheckedTiles.length) {
+                // add to end of array:
+                uncheckedTiles.push(nodes[tileX + "-" + tileY]);
             }
-        }
-        // check for items:
-        for (var i = 0; i < thisMapData.items.length; i++) {
-            // needs to see if the item is wider than a single tile #####
-            if (thisMapData.items[i].tileX == tileX) {
-                if (thisMapData.items[i].tileY == tileY) {
-                    isBlocked = true;
-                }
-            }
-        }
-
-        // check for inner doors:
-        if (typeof thisMapData.innerDoors !== "undefined") {
-            for (var i in thisMapData.innerDoors) {
-                if (!thisMapData.innerDoors[i].isOpen) {
-                    if (thisMapData.innerDoors[i].tileX == tileX) {
-                        if (thisMapData.innerDoors[i].tileY == tileY) {
-                            isBlocked = true;
-                        }
-                    }
-                }
-            }
-        }
-
-        if (!isBlocked) {
-            var heuristic = Math.abs(tileX - endX) + Math.abs(tileY - endY);
-            var thisCost = parentNode.cost + 1;
-            var thisSummedCost = thisCost + heuristic;
-            if (typeof nodes[tileX + "-" + tileY] === "undefined") {
-                nodes[tileX + "-" + tileY] = {
-                    x: tileX,
-                    y: tileY,
-                    parentX: parentNode.x,
-                    parentY: parentNode.y,
-                    cost: thisCost,
-                    summedCost: thisSummedCost
-                }
-                for (var i = 0; i < uncheckedTiles.length; i++) {
-                    if (thisSummedCost < uncheckedTiles[i].summedCost) {
-                        uncheckedTiles.splice(i, 0, nodes[tileX + "-" + tileY]);
-                        break;
-                    }
-                }
-                if (i >= uncheckedTiles.length) {
-                    // add to end of array:
-                    uncheckedTiles.push(nodes[tileX + "-" + tileY]);
-                }
-            } else {
-                // check cost and change parent if this is faster
-                if (thisCost < nodes[tileX + "-" + tileY].cost) {
-                    nodes[tileX + "-" + tileY].cost = thisSummedCost;
-                    nodes[tileX + "-" + tileY].summedCost = thisCost;
-                    nodes[tileX + "-" + tileY].parentX = parentNode.x;
-                    nodes[tileX + "-" + tileY].parentY = parentNode.y;
-                }
+        } else {
+            // check cost and change parent if this is faster
+            if (thisCost < nodes[tileX + "-" + tileY].cost) {
+                nodes[tileX + "-" + tileY].cost = thisSummedCost;
+                nodes[tileX + "-" + tileY].summedCost = thisCost;
+                nodes[tileX + "-" + tileY].parentX = parentNode.x;
+                nodes[tileX + "-" + tileY].parentY = parentNode.y;
             }
         }
     }
@@ -123,6 +76,51 @@ function findPath(startX, startY, endX, endY) {
     uncheckedTiles.push(nodes[startX + "-" + startY]);
     var thisNode;
     var targetFound = false;
+    // prepare map - mark any items, static NPCs or closed inner doors as blocked tiles:
+    for (var i = 0; i < thisMapData.npcs.length; i++) {
+        // make sure other NPCs don't block - except for the any in the destination tile:
+        if (i != thisAgentsIndex) {
+            // only include stationary NPCS:
+            if (thisMapData.npcs[i].movement[thisMapData.npcs[i].movementIndex] == '-') {
+                if (thisMapData.npcs[i].isCollidable) {
+                    if (!((thisMapData.npcs[i].tileX == endX) && (thisMapData.npcs[i].tileY == endY))) {
+
+                        thisMapData.collisions[thisMapData.npcs[i].tileY][thisMapData.npcs[i].tileX] = 1;
+                    }
+                }
+            }
+        }
+    }
+    // check for items:
+    for (var i = 0; i < thisMapData.items.length; i++) {
+        thisMapData.collisions[thisMapData.items[i].tileY][thisMapData.items[i].tileX] = 1;
+        // needs to also see if the item is wider than a single tile:
+        // needs debugging ##############
+        if (thisMapData.items[i].width > tileW) {
+            for (var j = 1; j < thisMapData.items[i].width / tileW; j++) {
+                thisMapData.collisions[thisMapData.items[i].tileY][thisMapData.items[i].tileX + j] = 1;
+                thisMapData.collisions[thisMapData.items[i].tileY][thisMapData.items[i].tileX - j] = 1;
+            }
+        }
+        if (thisMapData.items[i].height > tileW) {
+            for (var j = 1; j < thisMapData.items[i].height / tileW; j++) {
+                thisMapData.collisions[thisMapData.items[i].tileY + j][thisMapData.items[i].tileX] = 1;
+                thisMapData.collisions[thisMapData.items[i].tileY - j][thisMapData.items[i].tileX] = 1;
+            }
+        }
+
+
+    }
+
+    // check for inner doors:
+    if (typeof thisMapData.innerDoors !== "undefined") {
+        for (var i in thisMapData.innerDoors) {
+            if (!thisMapData.innerDoors[i].isOpen) {
+                thisMapData.collisions[thisMapData.innerDoors[i].tileY][thisMapData.innerDoors[i].tileX] = 1;
+            }
+        }
+    }
+
     do {
         // get the next node:
         thisNode = uncheckedTiles.shift();
@@ -179,19 +177,19 @@ function findPath(startX, startY, endX, endY) {
 onmessage = function(e) {
     switch (e.data[0]) {
         case 'tile':
-        var destinationX = e.data[1];
-        var destinationY = e.data[2];
-   var thisAgent = e.data[3];
+            var destinationX = e.data[1];
+            var destinationY = e.data[2];
+            var thisAgent = e.data[3];
             thisMapData = e.data[4];
             mapTilesY = thisMapData.terrain.length;
             mapTilesX = thisMapData.terrain[0].length;
-        
 
 
-postMessage([thisAgent.name, findPath(thisAgent.tileX, thisAgent.tileY, destinationX, destinationY), destinationX+"-"+destinationY]);
+
+            postMessage([thisAgent.name, findPath(thisAgent.tileX, thisAgent.tileY, destinationX, destinationY), destinationX + "-" + destinationY]);
 
 
-        break;
+            break;
         case 'shop':
             var thisAgent = e.data[1];
             thisMapData = e.data[2];

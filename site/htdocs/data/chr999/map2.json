@@ -1286,6 +1286,35 @@
 
 
 {
+"type":76,
+"tileX": 8,
+                "tileY": 30
+    },
+    {
+"type":76,
+"tileX": 8,
+                "tileY": 32
+    },
+
+    {
+"type":77,
+"tileX": 9,
+                "tileY": 29
+    },
+      {
+"type":77,
+"tileX": 11,
+                "tileY": 29
+    },
+     {
+"type":77,
+"tileX": 14,
+                "tileY": 29
+    },
+
+
+
+{
 "type":67,
   "tileX": 7,
                 "tileY": 30,

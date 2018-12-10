@@ -3,7 +3,7 @@
     "prefix": ["greater", "lesser", "pygmy", "diminutive"],
     "colour": ["grey", "white", "black", "speckle"],
     "biologist": ["Temminck", "Beccari", "Underwood" ,"Soloman"],
-    "evocative": ["harpy", "ghost", "gloomy", "insular", "pallid", "false", "angulate", "acuminate", "arcuate", "spectral", "smoky", "swift", "siren", "emperor"],
+    "evocative": ["harpy", "ghost", "gloomy", "insular", "pallid", "false", "angulate", "acuminate", "arcuate", "spectral", "smoky", "swift", "siren", "emperor", "tomb"],
     "physical": ["large-eared", "long-eared", "spotted-winged", "short-nosed", "short-eared", "#|colour#-backed", "#|colour#-bellied", "#|colour#-winged", "collared", "tailless", "horned", "long-tailed", "horn-skinned", "mouse-like", "hairless", "mantled", "sheath-tailed", "stripe-faced", "trumpet-eared"],
     "name": ["fruit bat", "nectar bat", "blossom bat", "subterranean bat", "cave bat", "flying fox", "serotine", "noctule", "pipistrelle", "bat"]
 }
