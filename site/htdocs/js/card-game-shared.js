@@ -214,7 +214,7 @@ if (cardGameNameSpace.compareColours(cardGameNameSpace.playerColours[1], cardGam
 
     flipCard: function(cardRef, whichCards, currentPlayersTurn) {
         whichCards[cardRef].currentOwner = currentPlayersTurn;
-        whichCards[cardRef].flippedAnimation = 10;
+        whichCards[cardRef].flippedAnimation = 25;
         whichCards[cardRef].zIndex = 1;
         if(currentPlayersTurn == 2) {
              hero.stats.numberOfcardsFlipped ++;
@@ -523,7 +523,7 @@ if (cardGameNameSpace.compareColours(cardGameNameSpace.playerColours[1], cardGam
                     var offsetX = 0;
                     var offsetY = 0;
                     if (this.flippedAnimation > 0) {
-                        var randomAmount = this.flippedAnimation * 4;
+                        var randomAmount = this.flippedAnimation * 2;
                         offsetX = getRandomIntegerInclusive(0, randomAmount);
                         offsetY = getRandomIntegerInclusive(0, randomAmount);
                         this.flippedAnimation--;
