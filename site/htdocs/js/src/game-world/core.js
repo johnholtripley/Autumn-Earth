@@ -1639,6 +1639,10 @@ function checkForActions() {
                         // remove from map:
                         thisMapData.items.splice(i, 1);
                         break;
+                        case "gate":
+                         // toggle the visual state:
+                        thisMapData.items[i].state = thisMapData.items[i].state == "on" ? 'off' : 'on';
+                        break;
                     case "notice":
                         processSpeech(thisMapData.items[i], thisMapData.items[i].contains[0][0], thisMapData.items[i].contains[0][1], false, thisMapData.items[i].contains[0][2]);
                         break;
@@ -2987,6 +2991,7 @@ function draw() {
                     thisItemOffsetCol = (thisItem["animation"]['facing']["length"]) - 1;
                     thisItemOffsetRow = thisItem["animation"]['facing'][thisItem.facing];
                 }
+
                 assetsToDraw.push([findIsoDepth(thisItem.x, thisItem.y, thisItem.z), "sprite", itemImages[thisItemIdentifier], thisItemOffsetCol * thisItem.spriteWidth, thisItemOffsetRow * thisItem.spriteHeight, thisItem.spriteWidth, thisItem.spriteHeight, Math.floor(thisX - hero.isox - thisItem.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisItem.centreY + (canvasHeight / 2) - thisItem.z), thisItem.spriteWidth, thisItem.spriteHeight]);
             } else {
                 assetsToDraw.push([findIsoDepth(thisItem.x, thisItem.y, thisItem.z), "img", itemImages[thisItemIdentifier], Math.floor(thisX - hero.isox - thisItem.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisItem.centreY + (canvasHeight / 2) - thisItem.z)]);

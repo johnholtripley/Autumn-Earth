@@ -1285,34 +1285,52 @@
 
 
 
-{
-"type":76,
-"tileX": 8,
+            {
+                "type": 76,
+                "tileX": 8,
                 "tileY": 30
-    },
-    {
-"type":76,
-"tileX": 8,
+            },
+            {
+                "type": 76,
+                "tileX": 8,
                 "tileY": 32
-    },
+            },
 
-    {
-"type":77,
-"tileX": 9,
+            {
+                "type": 77,
+                "tileX": 9,
                 "tileY": 29
-    },
-      {
-"type":77,
-"tileX": 11,
+            },
+            {
+                "type": 77,
+                "tileX": 11,
                 "tileY": 29
-    },
-     {
-"type":77,
-"tileX": 14,
+            },
+            {
+                "type": 77,
+                "tileX": 14,
                 "tileY": 29
-    },
+            },
 
-
+            {
+                "type": 78,
+                "tileX": 9,
+                "tileY": 26,
+                "state": "off",
+                "animation":
+                {
+                    "off":
+                    {
+                        "length": 1,
+                        "row": 0
+                    },
+                    "on":
+                    {
+                        "length": 1,
+                        "row": 1
+                    }
+                }
+            },
 
 {
 "type":67,
