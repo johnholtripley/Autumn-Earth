@@ -148,10 +148,12 @@ function movePet() {
                     // check for collisions against items:
                     for (var j = 0; j < thisMapData.items.length; j++) {
                         thisItem = thisMapData.items[j];
+                     if(thisItem.isCollidable) {
                         if (isAnObjectCollision(thisPet.x, thisPet.y, thisPet.width, thisPet.length, thisItem.x, thisItem.y, thisItem.width, thisItem.length)) {
                             thisPet.x = oldPetX;
                             thisPet.y = oldPetY;
                         }
+                    }
                     }
 
                     // find the difference for this movement:

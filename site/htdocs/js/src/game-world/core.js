@@ -651,6 +651,12 @@ function initialiseItem(whichItem) {
     thisMapData.items[whichItem].centreY = currentActiveInventoryItems[thisMapData.items[whichItem].type].centreY;
     thisMapData.items[whichItem].spriteWidth = currentActiveInventoryItems[thisMapData.items[whichItem].type].spriteWidth;
     thisMapData.items[whichItem].spriteHeight = currentActiveInventoryItems[thisMapData.items[whichItem].type].spriteHeight;
+    thisMapData.items[whichItem].isCollidable = true;
+    if(currentActiveInventoryItems[thisMapData.items[whichItem].type].action == "gate") {
+if(thisMapData.items[whichItem].state == "open") {
+thisMapData.items[whichItem].isCollidable = false;
+}
+    }
     // check for node resources:
     if (currentActiveInventoryItems[thisMapData.items[whichItem].type].action == "node") {
         // use the saved value if it has one:
@@ -902,7 +908,9 @@ function tileIsClear(tileX, tileY) {
     for (var i = 0; i < thisMapData.items.length; i++) {
         if (tileX == thisMapData.items[i].tileX) {
             if (tileY == thisMapData.items[i].tileY) {
+             if(thisMapData.items[i].isCollidable) {
                 return false;
+            }
             }
         }
     }
@@ -1157,9 +1165,11 @@ function checkHeroCollisions() {
     // check for collisions against items:
     for (var i = 0; i < thisMapData.items.length; i++) {
         thisItem = thisMapData.items[i];
+     if(thisItem.isCollidable) {
         if (isAnObjectCollision(thisItem.x, thisItem.y, thisItem.width, thisItem.length, hero.x, hero.y, hero.width, hero.length)) {
             getHeroAsCloseAsPossibleToObject(thisItem.x, thisItem.y, thisItem.width, thisItem.length);
         }
+    }
     }
 
     // check against pets:
@@ -1641,7 +1651,9 @@ function checkForActions() {
                         break;
                         case "gate":
                          // toggle the visual state:
-                        thisMapData.items[i].state = thisMapData.items[i].state == "on" ? 'off' : 'on';
+                        thisMapData.items[i].state = thisMapData.items[i].state == "open" ? 'closed' : 'open';
+                        // toggle whether it will have collision done against it:
+                        thisMapData.items[i].isCollidable = thisMapData.items[i].isCollidable == true ? false : true;
                         break;
                     case "notice":
                         processSpeech(thisMapData.items[i], thisMapData.items[i].contains[0][0], thisMapData.items[i].contains[0][1], false, thisMapData.items[i].contains[0][2]);
@@ -2238,10 +2250,12 @@ function moveNPCs() {
                 // check for collisions against items:
                 for (var j = 0; j < thisMapData.items.length; j++) {
                     thisItem = thisMapData.items[j];
+                 if(thisItem.isCollidable) {
                     if (isAnObjectCollision(thisNPC.x, thisNPC.y, thisNPC.width, thisNPC.length, thisItem.x, thisItem.y, thisItem.width, thisItem.length)) {
                         thisNPC.x = oldNPCx;
                         thisNPC.y = oldNPCy;
                     }
+                }
                 }
 
 

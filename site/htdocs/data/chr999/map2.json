@@ -1293,7 +1293,7 @@
             {
                 "type": 76,
                 "tileX": 8,
-                "tileY": 32
+                "tileY": 34
             },
 
             {
@@ -1308,26 +1308,26 @@
             },
             {
                 "type": 77,
-                "tileX": 14,
+                "tileX": 13,
                 "tileY": 29
             },
 
             {
                 "type": 78,
-                "tileX": 9,
-                "tileY": 26,
-                "state": "off",
+                "tileX": 8,
+                "tileY": 32,
+                "state": "closed",
                 "animation":
                 {
-                    "off":
-                    {
-                        "length": 1,
-                        "row": 0
-                    },
-                    "on":
+                    "open":
                     {
                         "length": 1,
                         "row": 1
+                    },
+                    "closed":
+                    {
+                        "length": 1,
+                        "row": 0
                     }
                 }
             },
