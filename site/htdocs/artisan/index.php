@@ -19,9 +19,66 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/header.php");
 </head>
 
 <body>
+<h1>Artisan workshop</h1>
+<?php
 
 
 
+if (isset($_GET['account'])) {
+	// see if this account exists:
+
+$query = "select * from tblcharacters where cleanURL='".$_GET['account']."'";
+$result = mysqli_query($connection, $query) or die ("couldn't execute query");
+			$returned = mysqli_num_rows($result);
+		if ($returned > 0) {
+		$row = mysqli_fetch_array($result);
+			extract($row); 
+			echo '<h2>'.$charName.'&apos;s creations</h2>';
+			// get all uploaded Artisan items:
+			// #######
+} else {
+		echo '<p>Sorry - couldn\'t find that account</p>';
+ header("HTTP/1.0 404 Not Found");
+}
+
+mysqli_free_result($result);
+	
+}
+
+?>
+
+<?php 
+$shouldShowForm = false;
+
+
+if(isset($_SESSION['username'])){
+if (!isset($_GET['account'])) {
+$shouldShowForm = true;
+} else {
+	
+	// make sure the URL account and session account match:
+
+
+$query2 = "select tblcharacters.cleanURL from tblcharacters inner join tblacct on tblacct.currentCharID = tblcharacters.charID where tblacct.accountName='".$_SESSION['username']."'";
+
+$result2 = mysqli_query($connection, $query2) or die ("couldn't execute query2");
+$returned2 = mysqli_num_rows($result2);
+		if ($returned2 > 0) {
+			$row2 = mysqli_fetch_array($result2);
+	
+			if($row2['cleanURL'] == $_GET['account']) {
+$shouldShowForm = true;
+			}
+			}
+mysqli_free_result($result2);
+;
+
+}
+}
+
+if($shouldShowForm) {
+
+?>
 
 <form enctype="multipart/form-data" id="dragAndDropUpload" action="upload.php" method="post">
 <fieldset>
@@ -55,7 +112,10 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/header.php");
 </fieldset>
 </form>
 
+<?php 
 
+}
+?>
 
 
 

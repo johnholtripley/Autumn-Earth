@@ -24,7 +24,8 @@ if ($_POST["createbutton"] == 'Create Account') {
 		$error = "please enter a password";
 	}
 
-	if(!eregi("^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$", $_POST["emailaddr"])) {
+
+		if (!filter_var($_POST["emailaddr"], FILTER_VALIDATE_EMAIL)) {
 		$error = "please enter a valid email address";
 	}
 	

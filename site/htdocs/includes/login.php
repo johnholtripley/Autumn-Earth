@@ -24,10 +24,8 @@ if (@$_SESSION['username']) {
 	
 	
 	// check for mail:
-			$query = "SELECT tblMail.*, tblacct.accountID, tblacct.accountName as useracctid
-FROM tblMail
-INNER JOIN tblacct on tblMail.accountID = tblacct.accountID
-WHERE tblacct.accountName='".$_SESSION['username']."' and tblmail.mailread = '0'";
+			$query = "SELECT tblmail.*, tblacct.accountid, tblacct.accountname as useracctid FROM tblmail INNER JOIN tblacct on tblmail.characterid = tblacct.currentcharid WHERE tblacct.accountname='".$_SESSION['username']."' and tblmail.mailread = '0'";
+			
 	$result2 = mysqli_query($connection, $query) or die ("couldn't execute query2");
 	
 		$returned2 = mysqli_num_rows($result2);

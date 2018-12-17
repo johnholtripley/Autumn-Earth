@@ -375,7 +375,7 @@ RewriteRule    ^card-game/display/     card-game/display-all-cards.php      [NC,
 RewriteRule    ^card-game/learn/     card-game/how-to-play.php      [NC,L]
 
 
-
+RewriteRule    ^artisan/([A-Za-z0-9-]+)/?$    artisan/index.php?account=$1    [NC,L] 
 
 
 </IfModule>
