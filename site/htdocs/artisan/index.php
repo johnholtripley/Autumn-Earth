@@ -23,12 +23,33 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/header.php");
 <h1>Artisan workshop</h1>
 <?php
 
+// show the contents if a character name is provided, or one isn't provided, but the user is logged in (then show theirs)
 
-
+$characterNameToUse = '';
 if (isset($_GET['account'])) {
+$characterNameToUse = $_GET['account'];
+} else {
+	if(isset($_SESSION['username'])){
+
+	$query3 = "select tblcharacters.cleanURL from tblcharacters inner join tblacct on tblacct.currentCharID = tblcharacters.charID where tblacct.accountName='".$_SESSION['username']."'";
+	$result3 = mysqli_query($connection, $query3) or die ("couldn't execute query3");
+	$returned3 = mysqli_num_rows($result3);
+	if ($returned3 > 0) {
+
+		$row3 = mysqli_fetch_array($result3);
+		$characterNameToUse = $row3['cleanURL'];
+	}
+mysqli_free_result($result3);
+
+	}
+}
+
+
+
+if ($characterNameToUse != '') {
 	// see if this account exists:
 
-$query = "select * from tblcharacters where cleanURL='".$_GET['account']."'";
+$query = "select * from tblcharacters where cleanURL='".$characterNameToUse."'";
 $result = mysqli_query($connection, $query) or die ("couldn't execute query");
 			$returned = mysqli_num_rows($result);
 		if ($returned > 0) {
@@ -75,6 +96,13 @@ foreach ($filesFound as $fileName) {
 mysqli_free_result($result);
 	
 }
+
+
+
+
+
+
+
 
 ?>
 
