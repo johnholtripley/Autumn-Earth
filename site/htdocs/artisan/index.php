@@ -19,6 +19,7 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/header.php");
 </head>
 
 <body>
+	<div id="artisanSection">
 <h1>Artisan workshop</h1>
 <?php
 
@@ -36,6 +37,36 @@ $result = mysqli_query($connection, $query) or die ("couldn't execute query");
 			echo '<h2>'.$charName.'&apos;s creations</h2>';
 			// get all uploaded Artisan items:
 			// #######
+
+$filesFound = array();
+$dir = "../images/user-generated/chr".$charID."/";
+    if (is_dir($dir)) {
+    
+        if ($dirHandle = opendir($dir)) {
+            while (($file = readdir($dirHandle)) !== false) {
+                if (is_file($dir . '/' . $file)) {
+
+                    array_push($filesFound, $file);
+                    
+                }
+            }
+            closedir($dirHandle);
+        }
+    }
+    if(count($filesFound) < 1) {
+echo '<p>No items found.</p>';
+    } else {
+    
+foreach ($filesFound as $fileName) {
+    echo '<img src="'.$dir.$fileName.'" style="width:auto;height:auto;"><button class="deleteImageFile" data-filename="'.$fileName.'">delete</button>';
+}
+
+
+    }
+
+
+
+
 } else {
 		echo '<p>Sorry - couldn\'t find that account</p>';
  header("HTTP/1.0 404 Not Found");
@@ -117,7 +148,7 @@ if($shouldShowForm) {
 }
 ?>
 
-
+</div>
 
 
 <?php
