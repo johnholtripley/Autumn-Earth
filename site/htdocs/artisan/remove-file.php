@@ -4,6 +4,10 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/signalnoise.php");
 include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
 $fileWasDeleted = 'false';
 if(isset($_SESSION['username'])){
+
+
+// set to 'inactive' flag in DB ###
+
 	$query2 = "select tblcharacters.charID from tblcharacters inner join tblacct on tblacct.currentCharID = tblcharacters.charID where tblacct.accountName='".$_SESSION['username']."'";
 	$result2 = mysqli_query($connection, $query2) or die ("couldn't execute query2");
 	$returned2 = mysqli_num_rows($result2);

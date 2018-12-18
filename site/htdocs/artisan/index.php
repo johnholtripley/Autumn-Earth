@@ -61,6 +61,29 @@ $result = mysqli_query($connection, $query) or die ("couldn't execute query");
 			extract($row); 
 			echo '<h2>'.$charName.'&apos;s creations</h2>';
 			// get all uploaded Artisan items:
+			
+
+// get from DB:
+		$query4 = "select * from tblplayergeneratedcontent inner join tblcharacters on tblplayergeneratedcontent.characterID = tblcharacters.charID where tblcharacters.cleanURL='".$characterNameToUse."' and tblplayergeneratedcontent.isActive = 1";
+
+$result4 = mysqli_query($connection, $query4) or die ("couldn't execute query4");
+			$returned4 = mysqli_num_rows($result4);
+		if ($returned4 > 0) {
+			$dir = "../images/user-generated/chr".$charID."/";
+		  while ($row4 = mysqli_fetch_array($result4)) {
+    extract($row4);
+    
+      echo '<img src="'.$dir.$itemID.'-iso.jpg" style="width:auto;height:auto;"><button class="deleteImageFile" data-id="'.$itemID.'">delete</button>';
+     
+}
+			} else {
+				echo '<p>No items found.</p>';
+			}	
+
+
+
+
+/*
 			// #######
 
 $filesFound = array();
@@ -88,6 +111,7 @@ foreach ($filesFound as $fileName) {
 
 
     }
+    */
 
 
 

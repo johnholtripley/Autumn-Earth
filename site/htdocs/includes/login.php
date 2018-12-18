@@ -26,7 +26,7 @@ if (@$_SESSION['username']) {
 	// check for mail:
 			$query = "SELECT tblmail.*, tblacct.accountid, tblacct.accountname as useracctid FROM tblmail INNER JOIN tblacct on tblmail.characterid = tblacct.currentcharid WHERE tblacct.accountname='".$_SESSION['username']."' and tblmail.mailread = '0'";
 			
-	$result2 = mysqli_query($connection, $query) or die ("couldn't execute query2");
+	$result2 = mysqli_query($connection, $query) or die ("couldn't execute querylogin2");
 	
 		$returned2 = mysqli_num_rows($result2);
 	
@@ -121,9 +121,9 @@ if(!isset($accountType)) {
 		// check for mail:
 			$query = "SELECT tblMail.*, tblacct.accountID, tblacct.accountName as useracctid
 FROM tblMail
-INNER JOIN tblacct on tblMail.accountID = tblacct.accountID
+INNER JOIN tblacct on tblMail.characterID = tblacct.currentcharid
 WHERE tblacct.accountName='".$processedlogin."' and tblmail.mailread = '0'";
-	$result = mysqli_query($connection, $query) or die ("couldn't execute query2");
+	$result = mysqli_query($connection, $query) or die ("couldn't execute querymail2");
 	
 		$returned = mysqli_num_rows($result);
 	
@@ -153,7 +153,7 @@ WHERE tblacct.accountName='".$processedlogin."' and tblmail.mailread = '0'";
 	
 	if ($_SESSION['hasmail'] == "true" ) {
 	// show new mail icon
-	 echo '<p><a href="/mail/">You have new mail"></a></p>'."\n";
+	 echo '<p><a href="/mail/">You have new mail</a></p>'."\n";
 	}
 		
 		
