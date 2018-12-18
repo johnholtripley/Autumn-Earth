@@ -23,6 +23,10 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/header.php");
 <h1>Artisan workshop</h1>
 <?php
 
+// these SQL queries all do very similar things multiple times - needs tidying up #######
+
+
+
 // show the contents if a character name is provided, or one isn't provided, but the user is logged in (then show theirs)
 
 $characterNameToUse = '';
@@ -66,7 +70,7 @@ $dir = "../images/user-generated/chr".$charID."/";
         if ($dirHandle = opendir($dir)) {
             while (($file = readdir($dirHandle)) !== false) {
                 if (is_file($dir . '/' . $file)) {
-
+// check file/MIME type?
                     array_push($filesFound, $file);
                     
                 }

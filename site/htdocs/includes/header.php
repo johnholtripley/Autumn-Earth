@@ -51,7 +51,7 @@ if ($_POST["logincheck"] == 'posted') {
 		}
 		
 		// check for mail:
-			$query = "SELECT tblMail.*, tblacct.accountID, tblacct.accountName as useracctid FROM tblMail INNER JOIN tblacct on tblMail.accountID = tblacct.accountID WHERE tblacct.accountName='".$processedlogin."' and tblmail.mailread = '0'";
+			$query = "SELECT tblMail.*, tblacct.accountID, tblacct.accountName as useracctid FROM tblMail INNER JOIN tblacct on tblMail.characterID = tblacct.currentCharID WHERE tblacct.accountName='".$processedlogin."' and tblmail.mailread = '0'";
 	$result = mysqli_query($connection, $query) or die ("couldn't execute query2");
 	
 		$returned = mysqli_num_rows($result);
