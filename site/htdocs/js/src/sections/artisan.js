@@ -8,9 +8,9 @@ var artisan = {
     },
 
     removeFile: function(e) {
-        var whichFile = e.target.getAttribute('data-filename');
+        var whichFile = e.target.getAttribute('data-id');
         //confirm prompt #########
-        getJSON("/artisan/remove-file.php?filename=" + whichFile, function(data) {
+        getJSON("/artisan/remove-file.php?id=" + whichFile, function(data) {
             if (data) {
                 if (data.success == 'true') {
                     // if successful show it deleted:
