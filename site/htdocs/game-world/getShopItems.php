@@ -13,11 +13,12 @@ $buyPriceSpecialismModifier = 0.9;
 
 
  
-$json = $_POST['shopData'];
+//$json = $_POST['shopData'];
 
 /*
 $json ='{
 "mapNumber": 3,
+"chr": 999,
 "region": "Teldrassil",
 "shops": [
 {
@@ -65,17 +66,22 @@ $json ='{
 
 
 /*
-$json ='{"mapNumber":2,"region":"Teldrassil","shops":[{"name":"shop #1","uniqueItems":[],"specialism":2,"categories":[1,2],"size":"small","currency":"money","hash":2067019224},{"name":"shop #2","uniqueItems":{"14":[{"colour":3},{"colour":7}],"15":[{"colour":1,"inscription":"stuffffff"}]},"specialism":null,"categories":[3],"size":"small","currency":"money","hash":2067019225},{"name":"shop #3","uniqueItems":{"5":[[]],"9":[[]],"11":[[]],"12":[[]],"15":[[]],"20":[[]],"25":[[]],"27":[[]],"37":[[]],"52":[[]]},"specialism":null,"categories":[],"size":"small","currency":"money","hash":2067019226}]}';
+$json ='{"mapNumber":2,"chr":999,region":"Teldrassil","shops":[{"name":"shop #1","uniqueItems":[],"specialism":2,"categories":[1,2],"size":"small","currency":"money","hash":2067019224},{"name":"shop #2","uniqueItems":{"14":[{"colour":3},{"colour":7}],"15":[{"colour":1,"inscription":"stuffffff"}]},"specialism":null,"categories":[3],"size":"small","currency":"money","hash":2067019225},{"name":"shop #3","uniqueItems":{"5":[[]],"9":[[]],"11":[[]],"12":[[]],"15":[[]],"20":[[]],"25":[[]],"27":[[]],"37":[[]],"52":[[]]},"specialism":null,"categories":[],"size":"small","currency":"money","hash":2067019226}]}';
 */
 
  
- //$json = '{"mapNumber":2,"region":"Teldrassil","shops":[{"name":"architect deeds office","uniqueItems":[],"specialism":null,"categories":[6],"size":"large","currency":"money","hash":-551176652}]}';
+ //$json = '{"mapNumber":2,"chr":999,"region":"Teldrassil","shops":[{"name":"architect deeds office","uniqueItems":[],"specialism":null,"categories":[6],"size":"large","currency":"money","hash":-551176652}]}';
  
+
+// http://develop.ae/game-world/getShopitems.php
+ //$json = '{"chr":999,"mapNumber":"2","region":"Teldrassil","shops":[{"name":"shop #1","uniqueItems":[],"specialism":2,"categories":[1,2],"size":"small","currency":"money","hash":2067019224},{"name":"shop #2","uniqueItems":{"14":[{"colour":3},{"colour":7}],"15":[{"colour":1,"inscription":"stuffffff"}]},"specialism":null,"categories":[3],"size":"small","currency":"money","hash":2067019225},{"name":"shop #3","uniqueItems":{"2":[[]],"6":[[]],"11":[[]],"15":[[]],"17":[[]],"31":[[]],"33":[[]],"37":[[]],"70":[[]],"71":[[]]},"specialism":null,"categories":[],"size":"small","currency":"money","hash":2067019226},{"name":"architect deeds office","uniqueItems":[],"specialism":null,"categories":[6],"size":"large","currency":"money","hash":-551176652},{"name":"Farming Supplies","uniqueItems":[],"specialism":null,"categories":[8],"size":"medium","currency":"money","hash":1904598977},{"name":"User Generated Content","uniqueItems":"##usergenerated##","specialism":null,"categories":[],"size":"small","currency":"money","hash":1889001907},{"name":"Eleaddais architect deeds office","uniqueItems":[],"specialism":null,"categories":[3],"size":"large","currency":"money","hash":216204093}]}';
+ $json = '{"chr":999,"mapNumber":"2","region":"Teldrassil","shops":[{"name":"User Generated Content","uniqueItems":"##usergenerated##","specialism":null,"categories":[],"size":"small","currency":"money","hash":1889001907}]}';
  
 $jsonData = json_decode($json, true);
 $thisMapsRegion = $jsonData['region'];
+$chr = $jsonData['chr'];
 
- 
+
 
 // get any Regional modifiers:
 $modifiersQuery = "SELECT * from tblregionalpricemodifiers WHERE whichregion = '".$thisMapsRegion ."'";
@@ -112,7 +118,7 @@ mysqli_free_result($colourResult);
 $colourIndicesToUse = [1,2,4,6,8,16];
  
 
-
+ 
 
 // get current active events:
 $activeEvents = [];
@@ -136,6 +142,7 @@ if(count($activeEvents)>0) {
 
  
 for ($i=0;$i<count($jsonData['shops']);$i++) {
+
     $markupToOutput .= '<div class="shop" id="shop'.$jsonData['shops'][$i]["hash"].'" data-currency="'.$jsonData['shops'][$i]["currency"].'" data-specialism="'.$jsonData['shops'][$i]["specialism"].'">';
 $markupToOutput .= '<div class="draggableBar">'.$jsonData['shops'][$i]["name"].'</div><button class="closePanel">close</button><ol>';
 $inventoryData = [];
@@ -154,10 +161,18 @@ mysqli_free_result($result2);
  
 }
 
+
+if($jsonData['shops'][$i]["uniqueItems"] == '##usergenerated##') {
+    echo "got UGC";
+$UGCQuery = "select * from tblplayergeneratedcontent where characterID='".$chr."' and isActive='1'";
+} else {
 // get unique items:
  
 if(count($jsonData['shops'][$i]["uniqueItems"])>0) {
      
+
+
+
     $itemIdsToGet =implode(",",array_keys($jsonData['shops'][$i]["uniqueItems"]));
      
  
@@ -180,9 +195,10 @@ array_push($inventoryData, $row);
  
 }
 mysqli_free_result($result3);
+
 }
  
- 
+ }
  
  
 // check for items that need colour, add these to the list
@@ -257,20 +273,6 @@ $thisShopsSpecialism = $jsonData['shops'][$i]["specialism"];
  
  
 
-
-
-
-
-
-
-
-
-
-
-
-
-
- 
 for ($j=0;$j<count($inventoryDataToSort);$j++) {
     array_push($allItemIdsUsed, $inventoryDataToSort[$j]['itemID']);
 $markupToOutput .= '<li id="shopSlot'.$i.'-'.$j.'">';

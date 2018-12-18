@@ -199,6 +199,14 @@
                 "categories": [8],
                 "size": "medium",
                 "currency": "money"
+            },
+              {
+                "name": "User Generated Content",
+                "uniqueItems": "##usergenerated##",
+                "specialism": null,
+                "categories": [],
+                "size": "small",
+                "currency": "money"
             }
 
 
@@ -856,6 +864,51 @@
                 "isMoving": false,
                 "speech": [
                     ["Hi there - welcome!/Feel free to have a good look around, ##characterName##/Welcome, welcome!", "shop", "shop #3"]
+                ],
+                "cardGameSpeech":
+                {
+                    "challenge": ["Do you play? Fancy a game then?", "play"],
+                    "win": ["Woo! I won!", ""],
+                    "lose": ["Ahh, you beat me...", ""],
+                    "draw": ["Well played", ""]
+                },
+                "cardSkill": 1,
+                "uniqueCards": [2, 2],
+                "baseCardPack": 0,
+                "animation":
+                {
+                    "walk":
+                    {
+                        "length": 1,
+                        "n": 2,
+                        "e": 3,
+                        "s": 0,
+                        "w": 1
+                    }
+                }
+            },
+            
+
+
+   {
+                "name": "Hand crafted items shopkeeper",
+                "src": "shopkeeper1.png",
+                "width": 20,
+                "length": 20,
+                "spriteWidth": 75,
+                "spriteHeight": 85,
+                "centreX": 56,
+                "centreY": 73,
+                "tileX": 7,
+                "tileY": 27,
+                "movement": ["-"],
+                "facing": "s",
+                "walkThroughDoors": false,
+                "speed": 2,
+                "isCollidable": true,
+                "isMoving": false,
+                "speech": [
+                    ["Hi ##characterName##, let's have a look at your custom items, eh?", "shop", "User Generated Content"]
                 ],
                 "cardGameSpeech":
                 {
