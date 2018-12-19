@@ -12,9 +12,9 @@ $buyPriceSpecialismModifier = 0.9;
 
 
 
- 
-//$json = $_POST['shopData'];
-
+if(isset($_POST['shopData'])) { 
+$json = $_POST['shopData'];
+}
 /*
 $json ='{
 "mapNumber": 3,
@@ -75,7 +75,7 @@ $json ='{"mapNumber":2,"chr":999,region":"Teldrassil","shops":[{"name":"shop #1"
 
 // http://develop.ae/game-world/getShopitems.php
  //$json = '{"chr":999,"mapNumber":"2","region":"Teldrassil","shops":[{"name":"shop #1","uniqueItems":[],"specialism":2,"categories":[1,2],"size":"small","currency":"money","hash":2067019224},{"name":"shop #2","uniqueItems":{"14":[{"colour":3},{"colour":7}],"15":[{"colour":1,"inscription":"stuffffff"}]},"specialism":null,"categories":[3],"size":"small","currency":"money","hash":2067019225},{"name":"shop #3","uniqueItems":{"2":[[]],"6":[[]],"11":[[]],"15":[[]],"17":[[]],"31":[[]],"33":[[]],"37":[[]],"70":[[]],"71":[[]]},"specialism":null,"categories":[],"size":"small","currency":"money","hash":2067019226},{"name":"architect deeds office","uniqueItems":[],"specialism":null,"categories":[6],"size":"large","currency":"money","hash":-551176652},{"name":"Farming Supplies","uniqueItems":[],"specialism":null,"categories":[8],"size":"medium","currency":"money","hash":1904598977},{"name":"User Generated Content","uniqueItems":"##usergenerated##","specialism":null,"categories":[],"size":"small","currency":"money","hash":1889001907},{"name":"Eleaddais architect deeds office","uniqueItems":[],"specialism":null,"categories":[3],"size":"large","currency":"money","hash":216204093}]}';
- $json = '{"chr":999,"mapNumber":"2","region":"Teldrassil","shops":[{"name":"User Generated Content","uniqueItems":"##usergenerated##","specialism":null,"categories":[],"size":"small","currency":"money","hash":1889001907}]}';
+ //$json = '{"chr":999,"mapNumber":"2","region":"Teldrassil","shops":[{"name":"User Generated Content","uniqueItems":"##usergenerated##","specialism":null,"categories":[],"size":"small","currency":"money","hash":1889001907}]}';
  
 $jsonData = json_decode($json, true);
 $thisMapsRegion = $jsonData['region'];
@@ -162,22 +162,40 @@ mysqli_free_result($result2);
 }
 
 
+
+
+
+
 if($jsonData['shops'][$i]["uniqueItems"] == '##usergenerated##') {
-    echo "got UGC";
+   
+   /*
 $UGCQuery = "select * from tblplayergeneratedcontent where characterID='".$chr."' and isActive='1'";
+$UGCResult = mysqli_query($connection, $UGCQuery) or die ("UGC failed:".$UGCQuery);
+$baseItemTypes = array();
+while ($UGCRow = mysqli_fetch_array($UGCResult, MYSQLI_ASSOC)) {
+array_push($baseItemTypes, $UGCRow['itemType']);
+}
+mysqli_free_result($UGCResult);
+*/
+$query3 = "select tblinventoryitems.*, tblplayergeneratedcontent.itemID as UgcId from tblinventoryitems inner join tblplayergeneratedcontent on tblplayergeneratedcontent.itemType = tblinventoryitems.itemID where tblplayergeneratedcontent.isActive = '1' and tblplayergeneratedcontent.characterID='".$chr."'";
+
+
+
+//$query3 = "SELECT tblinventoryitems.* from tblinventoryitems where tblinventoryitems.itemID in (".implode(',',$baseItemTypes).") order by tblinventoryitems.shortname ASC";
+$result3 = mysqli_query($connection, $query3) or die ("recipes failed:".$query3);
+while ($row = mysqli_fetch_array($result3, MYSQLI_ASSOC)) {
+   
+    array_push($inventoryData, $row);
+    }
+    mysqli_free_result($result3);
+
 } else {
 // get unique items:
  
 if(count($jsonData['shops'][$i]["uniqueItems"])>0) {
      
+   $itemIdsToGet =implode(",",array_keys($jsonData['shops'][$i]["uniqueItems"]));
 
-
-
-    $itemIdsToGet =implode(",",array_keys($jsonData['shops'][$i]["uniqueItems"]));
-     
- 
- 
- 
 $query3 = "SELECT tblinventoryitems.* from tblinventoryitems where tblinventoryitems.itemID in (".$itemIdsToGet.") order by tblinventoryitems.shortname ASC";
  
 $result3 = mysqli_query($connection, $query3) or die ("recipes failed:".$query3);
@@ -318,7 +336,14 @@ if(isset($inventoryDataToSort[$j]['inscription'])) {
 $imgDataAttributes .= ' data-inscription="'.$inventoryDataToSort[$j]['inscription'].'"';
 }
  
-$markupToOutput .= '<img src="/images/game-world/inventory-items/'.$inventoryDataToSort[$j]['itemID'].$colourSuffix.'.png" '.$imgDataAttributes.' alt="'.$inventoryDataToSort[$j]['colourName'].$inventoryDataToSort[$j]['shortname'].'">';
+
+$imageFileSrc = '/images/game-world/inventory-items/'.$inventoryDataToSort[$j]['itemID'].$colourSuffix.'.png';
+if(isset($inventoryDataToSort[$j]['UgcId'])) {
+    // find path to UGC slot image:
+$imageFileSrc = '/images/user-generated/chr'.$chr.'/'.$inventoryDataToSort[$j]['UgcId'].'-slot.png';
+}
+
+$markupToOutput .= '<img src= "'.$imageFileSrc.'" '.$imgDataAttributes.' alt="'.$inventoryDataToSort[$j]['colourName'].$inventoryDataToSort[$j]['shortname'].'">';
 $markupToOutput .= '<p><em>'.$inventoryDataToSort[$j]['colourName'].$inventoryDataToSort[$j]['shortname'].'</em>'.$inventoryDataToSort[$j]['description']." ";
 $markupToOutput .= '<span class="price'.$specialPriceClass.'">Buy price: '.parseMoney($thisItemsPrice).'</span></p>';
 $markupToOutput .= '</li>';
