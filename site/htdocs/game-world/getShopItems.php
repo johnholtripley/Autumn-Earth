@@ -75,7 +75,11 @@ $json ='{"mapNumber":2,"chr":999,region":"Teldrassil","shops":[{"name":"shop #1"
 
 // http://develop.ae/game-world/getShopitems.php
  //$json = '{"chr":999,"mapNumber":"2","region":"Teldrassil","shops":[{"name":"shop #1","uniqueItems":[],"specialism":2,"categories":[1,2],"size":"small","currency":"money","hash":2067019224},{"name":"shop #2","uniqueItems":{"14":[{"colour":3},{"colour":7}],"15":[{"colour":1,"inscription":"stuffffff"}]},"specialism":null,"categories":[3],"size":"small","currency":"money","hash":2067019225},{"name":"shop #3","uniqueItems":{"2":[[]],"6":[[]],"11":[[]],"15":[[]],"17":[[]],"31":[[]],"33":[[]],"37":[[]],"70":[[]],"71":[[]]},"specialism":null,"categories":[],"size":"small","currency":"money","hash":2067019226},{"name":"architect deeds office","uniqueItems":[],"specialism":null,"categories":[6],"size":"large","currency":"money","hash":-551176652},{"name":"Farming Supplies","uniqueItems":[],"specialism":null,"categories":[8],"size":"medium","currency":"money","hash":1904598977},{"name":"User Generated Content","uniqueItems":"##usergenerated##","specialism":null,"categories":[],"size":"small","currency":"money","hash":1889001907},{"name":"Eleaddais architect deeds office","uniqueItems":[],"specialism":null,"categories":[3],"size":"large","currency":"money","hash":216204093}]}';
- //$json = '{"chr":999,"mapNumber":"2","region":"Teldrassil","shops":[{"name":"User Generated Content","uniqueItems":"##usergenerated##","specialism":null,"categories":[],"size":"small","currency":"money","hash":1889001907}]}';
+ 
+
+
+
+ $json = '{"chr":999,"mapNumber":"2","region":"Teldrassil","shops":[{"name":"User Generated Content","uniqueItems":"##usergenerated##","specialism":null,"categories":[],"size":"small","currency":"money","hash":1889001907}]}';
  
 $jsonData = json_decode($json, true);
 $thisMapsRegion = $jsonData['region'];
@@ -185,6 +189,12 @@ $query3 = "select tblinventoryitems.*, tblplayergeneratedcontent.itemID as UgcId
 $result3 = mysqli_query($connection, $query3) or die ("recipes failed:".$query3);
 while ($row = mysqli_fetch_array($result3, MYSQLI_ASSOC)) {
    
+// add contains for UGC content: #######
+    // {"ugc-id":"2","ugc-title":"Titian's Venus"}
+
+//$row['contains'] = "{'ugc-id':'".$row['UgcId']."','ugc-title':'".addslashes($row['UgcTitle'])."'}";
+
+
     array_push($inventoryData, $row);
     }
     mysqli_free_result($result3);
@@ -334,6 +344,14 @@ $imgDataAttributes .= ' data-contains="'.$inventoryDataToSort[$j]['contains'].'"
 }
 if(isset($inventoryDataToSort[$j]['inscription'])) {
 $imgDataAttributes .= ' data-inscription="'.$inventoryDataToSort[$j]['inscription'].'"';
+}
+
+if(isset($inventoryDataToSort[$j]['UgcId'])) {
+$imgDataAttributes .= ' data-ugcid="'.$inventoryDataToSort[$j]['UgcId'].'"';
+}
+
+if(isset($inventoryDataToSort[$j]['UgcTitle'])) {
+$imgDataAttributes .= ' data-ugctitle="'.addslashes($inventoryDataToSort[$j]['UgcTitle']).'"';
 }
  
 
