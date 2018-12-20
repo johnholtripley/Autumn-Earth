@@ -569,7 +569,14 @@ var UI = {
             if (thisSlotImageElement.hasAttribute('data-inscription')) {
                 thisBoughtObject.inscription = thisSlotImageElement.getAttribute('data-inscription');
             }
-            if (thisSlotImageElement.hasAttribute('data-contains')) {
+            // check for User Generated Content attributes and build the contains object from those if they exist:
+            if (thisSlotImageElement.hasAttribute('data-ugcid')) {
+                thisBoughtObject.contains = {};
+                thisBoughtObject.contains['ugc-id'] = thisSlotImageElement.getAttribute('data-ugcid');
+                if (thisSlotImageElement.hasAttribute('data-ugctitle')) {
+                    thisBoughtObject.contains['ugc-title'] = thisSlotImageElement.getAttribute('data-ugctitle');
+                }
+            } else if (thisSlotImageElement.hasAttribute('data-contains')) {
                 thisBoughtObject.contains = thisSlotImageElement.getAttribute('data-contains');
             }
         }
@@ -1044,7 +1051,6 @@ var UI = {
             } else if (thisSlotImageElement.hasAttribute('data-contains')) {
                 thisBoughtObject.contains = thisSlotImageElement.getAttribute('data-contains');
             }
-            console.log(thisBoughtObject);
             inventoryCheck = canAddItemToInventory([thisBoughtObject]);
             if (inventoryCheck[0]) {
                 hero.currency[thisCurrency] -= buyPriceForOne;

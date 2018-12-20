@@ -79,7 +79,7 @@ $json ='{"mapNumber":2,"chr":999,region":"Teldrassil","shops":[{"name":"shop #1"
 
 
 
- $json = '{"chr":999,"mapNumber":"2","region":"Teldrassil","shops":[{"name":"User Generated Content","uniqueItems":"##usergenerated##","specialism":null,"categories":[],"size":"small","currency":"money","hash":1889001907}]}';
+ //$json = '{"chr":999,"mapNumber":"2","region":"Teldrassil","shops":[{"name":"User Generated Content","uniqueItems":"##usergenerated##","specialism":null,"categories":[],"size":"small","currency":"money","hash":1889001907}]}';
  
 $jsonData = json_decode($json, true);
 $thisMapsRegion = $jsonData['region'];

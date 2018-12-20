@@ -105,11 +105,25 @@ $attachmentObject = json_decode($attachment);
 
 	// only want the first here:
 $firstElement = reset($attachmentObject);
+$isUGC = false;
 if($firstElement->type == "$") {
 $inventoryImage = 'coins';
 } else {
 $inventoryImage = $firstElement->type;
 
+// check to see if it's User Generated:
+if(isset($firstElement->contains)) {
+	
+	foreach($firstElement->contains as $key=>$value) {
+		if($key=='ugc-id') {
+			$isUGC = true;
+			$UGCid = $value;
+		}
+	}
+
+
+
+}
 
 
 // check for colours:
@@ -119,8 +133,12 @@ $inventoryImage .= '-'.strtolower($allColours[$firstElement->colour]);
 
 
 }
-$postPanelMarkup .= '<img src="/images/game-world/inventory-items/'.$inventoryImage.'.png" alt=""><span class="qty">'.$firstElement->quantity.'</span>';
 
+if($isUGC) {
+$postPanelMarkup .= '<img src="/images/user-generated/'.$UGCid.'-slot.png" alt=""><span class="qty">'.$firstElement->quantity.'</span>';
+} else {
+	$postPanelMarkup .= '<img src="/images/game-world/inventory-items/'.$inventoryImage.'.png" alt=""><span class="qty">'.$firstElement->quantity.'</span>';
+}
 }
 }
 $postPanelMarkup .= '</div><p>'.$senderName.' - '.$title.' - '.$timeAgo.'</p>';

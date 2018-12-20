@@ -3082,12 +3082,15 @@ function canAddItemToInventory(itemObj) {
                                 inventoryClone[thisSlotsID].hallmark = itemObj[k].hallmark;
                                 inventoryClone[thisSlotsID].hash = createItemHash(itemObj[k].type, amountAddedToThisSlot);
                                 inventoryClone[thisSlotsID].inscription = "";
-                                if(typeof itemObj[k].inscription !== "undefined") {
+                                if (typeof itemObj[k].inscription !== "undefined") {
                                     inventoryClone[thisSlotsID].inscription = {};
-                                inventoryClone[thisSlotsID].inscription.title = itemObj[k].inscription.title;
-                                inventoryClone[thisSlotsID].inscription.content = itemObj[k].inscription.content;
-                                inventoryClone[thisSlotsID].inscription.timeCreated = itemObj[k].inscription.timeCreated;
-                            }
+                                    inventoryClone[thisSlotsID].inscription.title = itemObj[k].inscription.title;
+                                    inventoryClone[thisSlotsID].inscription.content = itemObj[k].inscription.content;
+                                    inventoryClone[thisSlotsID].inscription.timeCreated = itemObj[k].inscription.timeCreated;
+                                }
+                                if (typeof itemObj[k].contains !== "undefined") {
+                                    inventoryClone[thisSlotsID].contains = JSON.parse(JSON.stringify(itemObj[k].contains));
+                                }
                                 if (quantityAddedSoFar >= itemObj[k].quantity) {
                                     // stop both loops:
                                     break outerLoop;
@@ -3578,30 +3581,30 @@ function generateGenericSlotMarkup(thisItemObject) {
         imageClassName += 'players card';
     }
 
-// check for User Generated Content:
-var isUGC = false;
-if(typeof thisItemObject.contains !== "undefined") {
-if(typeof thisItemObject.contains['ugc-id'] !== "undefined") {
-isUGC = true;
-}
-}
-var itemsDescription;
-if(!isUGC) {
-    slotMarkup += '<img src="/images/game-world/inventory-items/' + thisItemObject.type + thisFileColourSuffix + '.png" ' + dataActionMarkup + 'alt="' + theColourPrefix + currentActiveInventoryItems[thisItemObject.type].shortname + '" class="' + imageClassName + '">';
-      if (isABook) {
-         itemsDescription = "&quot;" + thisItemObject.inscription.title + "&quot;";
-    } else {
-         itemsDescription = currentActiveInventoryItems[thisItemObject.type].description;
+    // check for User Generated Content:
+    var isUGC = false;
+    if (typeof thisItemObject.contains !== "undefined") {
+        if (typeof thisItemObject.contains['ugc-id'] !== "undefined") {
+            isUGC = true;
+        }
     }
-} else {
-      slotMarkup += '<img src="/images/user-generated/' + thisItemObject.contains['ugc-id'] + '-slot.png" ' + dataActionMarkup + 'alt="' + theColourPrefix + currentActiveInventoryItems[thisItemObject.type].shortname + '" class="' + imageClassName + '">';
-      if(typeof thisItemObject.contains['ugc-title'] !== "undefined") {
- itemsDescription = thisItemObject.contains['ugc-title'];
-} else {
-     itemsDescription = currentActiveInventoryItems[thisItemObject.type].description;
-}
-  
-}
+    var itemsDescription;
+    if (!isUGC) {
+        slotMarkup += '<img src="/images/game-world/inventory-items/' + thisItemObject.type + thisFileColourSuffix + '.png" ' + dataActionMarkup + 'alt="' + theColourPrefix + currentActiveInventoryItems[thisItemObject.type].shortname + '" class="' + imageClassName + '">';
+        if (isABook) {
+            itemsDescription = "&quot;" + thisItemObject.inscription.title + "&quot;";
+        } else {
+            itemsDescription = currentActiveInventoryItems[thisItemObject.type].description;
+        }
+    } else {
+        slotMarkup += '<img src="/images/user-generated/' + thisItemObject.contains['ugc-id'] + '-slot.png" ' + dataActionMarkup + 'alt="' + theColourPrefix + currentActiveInventoryItems[thisItemObject.type].shortname + '" class="' + imageClassName + '">';
+        if (typeof thisItemObject.contains['ugc-title'] !== "undefined") {
+            itemsDescription = thisItemObject.contains['ugc-title'];
+        } else {
+            itemsDescription = currentActiveInventoryItems[thisItemObject.type].description;
+        }
+
+    }
     if (itemsDescription.indexOf('##contains##') != -1) {
         // check it has got contains content:
         if (typeof thisItemObject.contains !== "undefined") {
@@ -3730,25 +3733,25 @@ function findSlotByHash(whichHash) {
 
 function addGauge(thisItemObject) {
     var gaugeMarkupToAdd = '';
-        if(currentActiveInventoryItems[thisItemObject.type].holdable > 0) {
-// check if it contains anything, and show a gauge if so:
-if(typeof thisItemObject.contains !== "undefined") {
+    if (currentActiveInventoryItems[thisItemObject.type].holdable > 0) {
+        // check if it contains anything, and show a gauge if so:
+        if (typeof thisItemObject.contains !== "undefined") {
 
-   //    tooltipInformationToAdd += " contains "+thisItemObject.contains[0].quantity+"x "+currentActiveInventoryItems[thisItemObject.contains[0].type].shortname; 
+            //    tooltipInformationToAdd += " contains "+thisItemObject.contains[0].quantity+"x "+currentActiveInventoryItems[thisItemObject.contains[0].type].shortname; 
 
-   var gaugePercent = thisItemObject.contains[0].quantity / parseInt(currentActiveInventoryItems[thisItemObject.type].actionValue) * 100;
- 
-gaugeMarkupToAdd += '<span class="gauge gauge'+currentActiveInventoryItems[thisItemObject.contains[0].type].shortname+'"><span style="width:'+gaugePercent+'%"></span></span>';
+            var gaugePercent = thisItemObject.contains[0].quantity / parseInt(currentActiveInventoryItems[thisItemObject.type].actionValue) * 100;
 
-}
+            gaugeMarkupToAdd += '<span class="gauge gauge' + currentActiveInventoryItems[thisItemObject.contains[0].type].shortname + '"><span style="width:' + gaugePercent + '%"></span></span>';
+
+        }
     }
     return gaugeMarkupToAdd;
-    }
+}
 
 
 function updateGauge(whichSlotKey) {
-var gaugePercent = hero.inventory[whichSlotKey].contains[0].quantity / parseInt(currentActiveInventoryItems[hero.inventory[whichSlotKey].type].actionValue) * 100;
-document.getElementById('slot'+whichSlotKey).querySelector('.gauge span').style.width = gaugePercent+'%';
+    var gaugePercent = hero.inventory[whichSlotKey].contains[0].quantity / parseInt(currentActiveInventoryItems[hero.inventory[whichSlotKey].type].actionValue) * 100;
+    document.getElementById('slot' + whichSlotKey).querySelector('.gauge span').style.width = gaugePercent + '%';
 }
 
 
@@ -5159,7 +5162,14 @@ var UI = {
             if (thisSlotImageElement.hasAttribute('data-inscription')) {
                 thisBoughtObject.inscription = thisSlotImageElement.getAttribute('data-inscription');
             }
-            if (thisSlotImageElement.hasAttribute('data-contains')) {
+            // check for User Generated Content attributes and build the contains object from those if they exist:
+            if (thisSlotImageElement.hasAttribute('data-ugcid')) {
+                thisBoughtObject.contains = {};
+                thisBoughtObject.contains['ugc-id'] = thisSlotImageElement.getAttribute('data-ugcid');
+                if (thisSlotImageElement.hasAttribute('data-ugctitle')) {
+                    thisBoughtObject.contains['ugc-title'] = thisSlotImageElement.getAttribute('data-ugctitle');
+                }
+            } else if (thisSlotImageElement.hasAttribute('data-contains')) {
                 thisBoughtObject.contains = thisSlotImageElement.getAttribute('data-contains');
             }
         }
@@ -5634,7 +5644,6 @@ var UI = {
             } else if (thisSlotImageElement.hasAttribute('data-contains')) {
                 thisBoughtObject.contains = thisSlotImageElement.getAttribute('data-contains');
             }
-            console.log(thisBoughtObject);
             inventoryCheck = canAddItemToInventory([thisBoughtObject]);
             if (inventoryCheck[0]) {
                 hero.currency[thisCurrency] -= buyPriceForOne;
