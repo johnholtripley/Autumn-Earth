@@ -3578,12 +3578,30 @@ function generateGenericSlotMarkup(thisItemObject) {
         imageClassName += 'players card';
     }
 
+// check for User Generated Content:
+var isUGC = false;
+if(typeof thisItemObject.contains !== "undefined") {
+if(typeof thisItemObject.contains['ugc-id'] !== "undefined") {
+isUGC = true;
+}
+}
+var itemsDescription;
+if(!isUGC) {
     slotMarkup += '<img src="/images/game-world/inventory-items/' + thisItemObject.type + thisFileColourSuffix + '.png" ' + dataActionMarkup + 'alt="' + theColourPrefix + currentActiveInventoryItems[thisItemObject.type].shortname + '" class="' + imageClassName + '">';
-    if (isABook) {
-        var itemsDescription = "&quot;" + thisItemObject.inscription.title + "&quot;";
+      if (isABook) {
+         itemsDescription = "&quot;" + thisItemObject.inscription.title + "&quot;";
     } else {
-        var itemsDescription = currentActiveInventoryItems[thisItemObject.type].description;
+         itemsDescription = currentActiveInventoryItems[thisItemObject.type].description;
     }
+} else {
+      slotMarkup += '<img src="/images/user-generated/' + thisItemObject.contains['ugc-id'] + '-slot.png" ' + dataActionMarkup + 'alt="' + theColourPrefix + currentActiveInventoryItems[thisItemObject.type].shortname + '" class="' + imageClassName + '">';
+      if(typeof thisItemObject.contains['ugc-title'] !== "undefined") {
+ itemsDescription = thisItemObject.contains['ugc-title'];
+} else {
+     itemsDescription = currentActiveInventoryItems[thisItemObject.type].description;
+}
+  
+}
     if (itemsDescription.indexOf('##contains##') != -1) {
         // check it has got contains content:
         if (typeof thisItemObject.contains !== "undefined") {

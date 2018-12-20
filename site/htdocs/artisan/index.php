@@ -69,10 +69,11 @@ $result = mysqli_query($connection, $query) or die ("couldn't execute query");
 $result4 = mysqli_query($connection, $query4) or die ("couldn't execute query4");
 			$returned4 = mysqli_num_rows($result4);
 		if ($returned4 > 0) {
-			$dir = "../images/user-generated/chr".$charID."/";
+			//$dir = "../images/user-generated/chr".$charID."/";
+			$dir = "../images/user-generated/";
 		  while ($row4 = mysqli_fetch_array($result4)) {
     extract($row4);
-    
+    echo '<p>'.$itemTitle.'</p>';
       echo '<img src="'.$dir.$itemID.'-iso.jpg" style="width:auto;height:auto;"><button class="deleteImageFile" data-id="'.$itemID.'">delete</button>';
      
 }

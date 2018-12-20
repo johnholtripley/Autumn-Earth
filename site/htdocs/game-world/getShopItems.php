@@ -177,7 +177,7 @@ array_push($baseItemTypes, $UGCRow['itemType']);
 }
 mysqli_free_result($UGCResult);
 */
-$query3 = "select tblinventoryitems.*, tblplayergeneratedcontent.itemID as UgcId from tblinventoryitems inner join tblplayergeneratedcontent on tblplayergeneratedcontent.itemType = tblinventoryitems.itemID where tblplayergeneratedcontent.isActive = '1' and tblplayergeneratedcontent.characterID='".$chr."'";
+$query3 = "select tblinventoryitems.*, tblplayergeneratedcontent.itemID as UgcId, tblplayergeneratedcontent.itemTitle as UgcTitle from tblinventoryitems inner join tblplayergeneratedcontent on tblplayergeneratedcontent.itemType = tblinventoryitems.itemID where tblplayergeneratedcontent.isActive = '1' and tblplayergeneratedcontent.characterID='".$chr."'";
 
 
 
@@ -340,12 +340,18 @@ $imgDataAttributes .= ' data-inscription="'.$inventoryDataToSort[$j]['inscriptio
 $imageFileSrc = '/images/game-world/inventory-items/'.$inventoryDataToSort[$j]['itemID'].$colourSuffix.'.png';
 if(isset($inventoryDataToSort[$j]['UgcId'])) {
     // find path to UGC slot image:
-$imageFileSrc = '/images/user-generated/chr'.$chr.'/'.$inventoryDataToSort[$j]['UgcId'].'-slot.png';
+//$imageFileSrc = '/images/user-generated/chr'.$chr.'/'.$inventoryDataToSort[$j]['UgcId'].'-slot.png';
+$imageFileSrc = '/images/user-generated/'.$inventoryDataToSort[$j]['UgcId'].'-slot.png';
 }
 
 $markupToOutput .= '<img src= "'.$imageFileSrc.'" '.$imgDataAttributes.' alt="'.$inventoryDataToSort[$j]['colourName'].$inventoryDataToSort[$j]['shortname'].'">';
-$markupToOutput .= '<p><em>'.$inventoryDataToSort[$j]['colourName'].$inventoryDataToSort[$j]['shortname'].'</em>'.$inventoryDataToSort[$j]['description']." ";
-$markupToOutput .= '<span class="price'.$specialPriceClass.'">Buy price: '.parseMoney($thisItemsPrice).'</span></p>';
+$markupToOutput .= '<p><em>'.$inventoryDataToSort[$j]['colourName'].$inventoryDataToSort[$j]['shortname'].'</em>';
+if(isset($inventoryDataToSort[$j]['UgcTitle'])) {
+$markupToOutput .= $inventoryDataToSort[$j]['UgcTitle'];
+} else {
+    $markupToOutput .= $inventoryDataToSort[$j]['description'];
+}
+$markupToOutput .= ' <span class="price'.$specialPriceClass.'">Buy price: '.parseMoney($thisItemsPrice).'</span></p>';
 $markupToOutput .= '</li>';
  
 }
