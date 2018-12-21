@@ -3069,6 +3069,9 @@ function canAddItemToInventory(itemObj) {
                                 quantityAddedSoFar += amountAddedToThisSlot;
                                 // add item to this slot:
                                 slotsUpdated.push(thisSlotsID);
+
+                                inventoryClone[thisSlotsID] = JSON.parse(JSON.stringify(itemObj[k]));
+                                /*
                                 inventoryClone[thisSlotsID] = new Object();
                                 inventoryClone[thisSlotsID].type = itemObj[k].type;
                                 inventoryClone[thisSlotsID].quantity = amountAddedToThisSlot;
@@ -3091,6 +3094,7 @@ function canAddItemToInventory(itemObj) {
                                 if (typeof itemObj[k].contains !== "undefined") {
                                     inventoryClone[thisSlotsID].contains = JSON.parse(JSON.stringify(itemObj[k].contains));
                                 }
+                                */
                                 if (quantityAddedSoFar >= itemObj[k].quantity) {
                                     // stop both loops:
                                     break outerLoop;
