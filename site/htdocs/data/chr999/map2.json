@@ -910,6 +910,7 @@
                 "speech": [
                     ["Hi ##characterName##, let's have a look at your custom items, eh?", "shop", "User Generated Content"]
                 ],
+                "shopEmptySpeech": "Oh, it looks like you haven't created any custom items yet&hellip;",
                 "cardGameSpeech":
                 {
                     "challenge": ["Do you play? Fancy a game then?", "play"],

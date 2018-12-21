@@ -147,8 +147,7 @@ if(count($activeEvents)>0) {
  
 for ($i=0;$i<count($jsonData['shops']);$i++) {
 
-    $markupToOutput .= '<div class="shop" id="shop'.$jsonData['shops'][$i]["hash"].'" data-currency="'.$jsonData['shops'][$i]["currency"].'" data-specialism="'.$jsonData['shops'][$i]["specialism"].'">';
-$markupToOutput .= '<div class="draggableBar">'.$jsonData['shops'][$i]["name"].'</div><button class="closePanel">close</button><ol>';
+
 $inventoryData = [];
  
 if(count($jsonData['shops'][$i]["categories"]) > 0) {
@@ -294,8 +293,14 @@ foreach ($inventoryDataToSort as $sortkey => $sortrow) {
     $shortname[$sortkey]  = $sortrow['shortname'];
     $colour[$sortkey] = $sortrow['colourName'];
 }
+if(count($inventoryDataToSort) > 0) {
 array_multisort($shortname, SORT_ASC, $colour, SORT_ASC, $inventoryDataToSort);
- 
+
+    $markupToOutput .= '<div class="shop" id="shop'.$jsonData['shops'][$i]["hash"].'" data-currency="'.$jsonData['shops'][$i]["currency"].'" data-specialism="'.$jsonData['shops'][$i]["specialism"].'">';
+$markupToOutput .= '<div class="draggableBar">'.$jsonData['shops'][$i]["name"].'</div><button class="closePanel">close</button><ol>';
+
+
+ }
  
 $thisShopsSpecialism = $jsonData['shops'][$i]["specialism"];
  
@@ -374,7 +379,9 @@ $markupToOutput .= '</li>';
  
 }
  
+ if(count($inventoryDataToSort) > 0) {
 $markupToOutput .= '</ol></div></div>';
+}
  
 }
  

@@ -1757,7 +1757,18 @@ function processSpeech(thisObjectSpeaking, thisSpeechPassedIn, thisSpeechCode, i
                 thisObjectSpeaking.isMoving = true;
                 break;
             case "shop":
-                UI.openShop(generateHash(thisObjectSpeaking.speech[thisObjectSpeaking.speechIndex][2]));
+            // check if the shop is empty:
+
+                if(UI.openedShopSuccessfully(generateHash(thisObjectSpeaking.speech[thisObjectSpeaking.speechIndex][2]))) {
+//
+                } else {
+                    // shop is empty:
+                    if(typeof thisObjectSpeaking.shopEmptySpeech !== "undefined") {
+                    thisSpeech = thisObjectSpeaking.shopEmptySpeech;
+                }
+                }
+
+                
                 //thisObjectSpeaking.speechIndex--;
                 break;
             case "post":

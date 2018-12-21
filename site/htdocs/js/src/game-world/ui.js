@@ -998,11 +998,16 @@ var UI = {
         shopPanel.innerHTML = markup;
     },
 
-    openShop: function(shopHash) {
+    openedShopSuccessfully: function(shopHash) {
+     if(document.getElementById("shop" + shopHash)) {
         UI.showUI();
         shopCurrentlyOpen = shopHash;
         document.getElementById("shop" + shopHash).classList.add("active");
         inventoryPanels.classList.add("shopSpecialism" + document.getElementById("shop" + shopHash).getAttribute('data-specialism'));
+        return true;
+    } else {
+        return false;
+    }
     },
 
     closeShop: function() {
