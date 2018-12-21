@@ -113,16 +113,12 @@ $inventoryImage = $firstElement->type;
 
 // check to see if it's User Generated:
 if(isset($firstElement->contains)) {
-	
 	foreach($firstElement->contains as $key=>$value) {
 		if($key=='ugc-id') {
 			$isUGC = true;
 			$UGCid = $value;
 		}
 	}
-
-
-
 }
 
 
@@ -153,14 +149,36 @@ if($attachment) {
 			if($thisAttachment->type == "$") {
 $inventoryImage = 'coins';
 			} else {
+
+$isUGC = false;
+// check to see if it's User Generated:
+if(isset($thisAttachment->contains)) {
+	foreach($thisAttachment->contains as $key=>$value) {
+		if($key=='ugc-id') {
+			$isUGC = true;
+			$UGCid = $value;
+		}
+	}
+}
+
+
 $inventoryImage = $thisAttachment->type;
 // check for colours:
 if($thisAttachment->colour > 0) {
 $inventoryImage .= '-'.strtolower($allColours[$thisAttachment->colour]);
 }
 			}
+
+
+if($isUGC) {
+	$allMessagePanels .= '<div class="postSlot"><img src="/images/user-generated/'.$UGCid.'-slot.png" alt=""><span class="qty">'.$thisAttachment->quantity.'</span></div>';
+} else {
 $allMessagePanels .= '<div class="postSlot"><img src="/images/game-world/inventory-items/'.$inventoryImage.'.png" alt=""><span class="qty">'.$thisAttachment->quantity.'</span></div>';
 }
+
+}
+
+
 
 }
 }

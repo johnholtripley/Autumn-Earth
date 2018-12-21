@@ -329,6 +329,7 @@ function loadMapAssets() {
 
     itemGraphicsToLoad = [];
     var thisItemIdentifier = '';
+    var thisImagePath = '';
     for (var i = 0; i < thisMapData.items.length; i++) {
         // get colour name 
         thisFileColourSuffix = "";
@@ -339,12 +340,22 @@ function loadMapAssets() {
             }
         }
         thisItemIdentifier = "item" + thisMapData.items[i].type + thisFileColourSuffix;
+thisImagePath = "/images/game-world/items/" + currentActiveInventoryItems[thisMapData.items[i].type].worldSrc + thisFileColourSuffix + ".png";
+
+// check for User Generated Content:
+if(typeof thisMapData.items[i].contains !== "undefined") {
+if(typeof thisMapData.items[i].contains['ugc-id'] !== "undefined") {
+thisItemIdentifier = "item" + thisMapData.items[i].type + '_' + thisMapData.items[i].contains['ugc-id'];
+thisImagePath = "/images/user-generated/" + thisMapData.items[i].contains['ugc-id'] + "-iso.png";
+}
+}
+
 
         // only add unique images:
         if (itemGraphicsToLoad.indexOf(thisItemIdentifier) == -1) {
             imagesToLoad.push({
                 name: thisItemIdentifier,
-                src: "/images/game-world/items/" + currentActiveInventoryItems[thisMapData.items[i].type].worldSrc + thisFileColourSuffix + ".png"
+                src: thisImagePath
             });
             itemGraphicsToLoad.push(thisItemIdentifier);
         }
@@ -2995,7 +3006,22 @@ function draw() {
                     
                 }
             }
+            
+
+
             thisItemIdentifier = "item" + thisMapData.items[i].type + thisFileColourSuffix;
+
+
+
+// check for User Generated Content:
+if(typeof thisMapData.items[i].contains !== "undefined") {
+if(typeof thisMapData.items[i].contains['ugc-id'] !== "undefined") {
+thisItemIdentifier = "item" + thisMapData.items[i].type + '_' + thisMapData.items[i].contains['ugc-id'];
+}
+}
+
+
+
             if (typeof thisItem.animation !== "undefined") {
                 if (typeof thisItem.state !== "undefined") {
                     thisItemOffsetCol = (thisItem["animation"][thisItem.state]["length"]) - 1;
