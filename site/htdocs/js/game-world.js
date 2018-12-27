@@ -77,7 +77,7 @@ var audio = {
         audio[songName].appendChild(src);
         audio[songName + 'Gain'] = audioContext.createGain();
         // get this from the settings:      
-     
+
         audio[songName + 'Source'] = audioContext.createMediaElementSource(audio[songName]);
         audio[songName + 'Source'].connect(audio[songName + 'Gain']);
         audio[songName + 'Gain'].connect(audioContext.destination);
@@ -95,16 +95,29 @@ var audio = {
         }
     },
 
-    playSound: function(buffer, delay) {
+    playSound: function(buffer, delay, numberToPlay) {
+        if (typeof numberToPlay === "undefined") {
+            numberToPlay = 0;
+        }
         var source = audioContext.createBufferSource();
         source.buffer = buffer;
+        source.numberToPlay = numberToPlay;
         source.connect(soundGainNode);
+        source.addEventListener('ended', function soundEnded(e) {
+            if (this.numberToPlay > 1) {
+                audio.playSound(this.buffer, 0, this.numberToPlay - 1);
+            } else {
+                // remove this event listener now:
+                return e.currentTarget.removeEventListener('ended', soundEnded, false);
+            }
+        }, false);
         if (!source.start) {
             source.start = source.noteOn;
         } else {
             source.start(delay);
         }
     },
+
 
     playMusic: function(newTrack) {
 
@@ -143,7 +156,7 @@ var audio = {
     adjustEffectsVolume: function() {
         gameSettings.soundVolume = soundVolume.value;
         if (typeof soundGainNode !== "undefined") {
-            soundGainNode.gain.setValueAtTime(gameSettings.soundVolume,0);
+            soundGainNode.gain.setValueAtTime(gameSettings.soundVolume, 0);
         }
     },
 
@@ -1668,7 +1681,7 @@ function checkForRespawns() {
                     // check if pollinated and self-pollinate if not:
 
                     if (typeof thisMapData.items[i].contains.seed === "undefined") {
-                        console.log("self pollinating");
+                       
 
                         var seedType = currentActiveInventoryItems[(thisMapData.items[i].type)].actionValue;
                         // not as efficient than if pollinated manually:
@@ -1678,7 +1691,7 @@ function checkForRespawns() {
                             "durability": Math.ceil(thisMapData.items[i].durability * 0.8),
                             "effectiveness": Math.ceil(thisMapData.items[i].effectiveness * 0.8)
                         }
-                        console.log(thisMapData.items[i]);
+                      
                         if (typeof thisMapData.items[i].colour !== "undefined") {
                             pollinatedSeedObject.colour = thisMapData.items[i].colour;
                         }
@@ -1687,7 +1700,7 @@ function checkForRespawns() {
                         // the number of seeds is an exponential amount based on the plant's quality and effectiveness:
                         pollinatedSeedObject.quantity = Math.ceil(maxSeeds * ((thisMapData.items[i].quality * thisMapData.items[i].quality / 20000) + (thisMapData.items[i].effectiveness * thisMapData.items[i].effectiveness / 20000)));
 
-                        console.log(pollinatedSeedObject);
+                   
 
                         pollinatedSeedObject = prepareInventoryObject(pollinatedSeedObject);
                         // add this to the parent plant's contains attribute:

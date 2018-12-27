@@ -76,7 +76,7 @@ var audio = {
         audio[songName].appendChild(src);
         audio[songName + 'Gain'] = audioContext.createGain();
         // get this from the settings:      
-     
+
         audio[songName + 'Source'] = audioContext.createMediaElementSource(audio[songName]);
         audio[songName + 'Source'].connect(audio[songName + 'Gain']);
         audio[songName + 'Gain'].connect(audioContext.destination);
@@ -94,16 +94,29 @@ var audio = {
         }
     },
 
-    playSound: function(buffer, delay) {
+    playSound: function(buffer, delay, numberToPlay) {
+        if (typeof numberToPlay === "undefined") {
+            numberToPlay = 0;
+        }
         var source = audioContext.createBufferSource();
         source.buffer = buffer;
+        source.numberToPlay = numberToPlay;
         source.connect(soundGainNode);
+        source.addEventListener('ended', function soundEnded(e) {
+            if (this.numberToPlay > 1) {
+                audio.playSound(this.buffer, 0, this.numberToPlay - 1);
+            } else {
+                // remove this event listener now:
+                return e.currentTarget.removeEventListener('ended', soundEnded, false);
+            }
+        }, false);
         if (!source.start) {
             source.start = source.noteOn;
         } else {
             source.start(delay);
         }
     },
+
 
     playMusic: function(newTrack) {
 
@@ -142,7 +155,7 @@ var audio = {
     adjustEffectsVolume: function() {
         gameSettings.soundVolume = soundVolume.value;
         if (typeof soundGainNode !== "undefined") {
-            soundGainNode.gain.setValueAtTime(gameSettings.soundVolume,0);
+            soundGainNode.gain.setValueAtTime(gameSettings.soundVolume, 0);
         }
     },
 

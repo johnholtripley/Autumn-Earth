@@ -33,7 +33,7 @@ function checkForRespawns() {
                     // check if pollinated and self-pollinate if not:
 
                     if (typeof thisMapData.items[i].contains.seed === "undefined") {
-                        console.log("self pollinating");
+                       
 
                         var seedType = currentActiveInventoryItems[(thisMapData.items[i].type)].actionValue;
                         // not as efficient than if pollinated manually:
@@ -43,7 +43,7 @@ function checkForRespawns() {
                             "durability": Math.ceil(thisMapData.items[i].durability * 0.8),
                             "effectiveness": Math.ceil(thisMapData.items[i].effectiveness * 0.8)
                         }
-                        console.log(thisMapData.items[i]);
+                      
                         if (typeof thisMapData.items[i].colour !== "undefined") {
                             pollinatedSeedObject.colour = thisMapData.items[i].colour;
                         }
@@ -52,7 +52,7 @@ function checkForRespawns() {
                         // the number of seeds is an exponential amount based on the plant's quality and effectiveness:
                         pollinatedSeedObject.quantity = Math.ceil(maxSeeds * ((thisMapData.items[i].quality * thisMapData.items[i].quality / 20000) + (thisMapData.items[i].effectiveness * thisMapData.items[i].effectiveness / 20000)));
 
-                        console.log(pollinatedSeedObject);
+                   
 
                         pollinatedSeedObject = prepareInventoryObject(pollinatedSeedObject);
                         // add this to the parent plant's contains attribute:
