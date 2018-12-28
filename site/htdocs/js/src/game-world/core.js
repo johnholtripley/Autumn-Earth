@@ -226,6 +226,9 @@ function loadMapJSON(mapFilePath) {
             if (thisMapData.ambientSounds) {
                 audio.loadAmbientSounds(thisMapData.ambientSounds);
             }
+            if (thisMapData.hourChime) {
+audio.loadAmbientSounds({"hourChime": thisMapData.hourChime});
+            }
             fae.recentHotspots = [];
             findProfessionsAndRecipes();
         },

@@ -54,6 +54,7 @@ var loadBuffer = function(url, name) {
 
 var audio = {
     lastTrack: "",
+    playingHourChime: false,
     init: function() {
         try {
             window.AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -180,6 +181,17 @@ var audio = {
                     timeSinceLastAmbientSoundWasPlayed = hero.totalGameTimePlayed;
                     audio.playSound(soundEffects[getRandomKeyFromObject(thisMapData.ambientSounds)], 0);
                 }
+            }
+        }
+        if (thisMapData.hourChime) {
+            var now = new Date();
+            if (now.getMinutes() < 1) {
+                if (!audio.playingHourChime) {
+                    audio.playingHourChime = true;
+                    audio.playSound(soundEffects["hourChime"], 0, now.getHours());
+                }
+            } else {
+                audio.playingHourChime = false;
             }
         }
     }
@@ -7323,6 +7335,9 @@ function loadMapJSON(mapFilePath) {
             }
             if (thisMapData.ambientSounds) {
                 audio.loadAmbientSounds(thisMapData.ambientSounds);
+            }
+            if (thisMapData.hourChime) {
+audio.loadAmbientSounds({"hourChime": thisMapData.hourChime});
             }
             fae.recentHotspots = [];
             findProfessionsAndRecipes();

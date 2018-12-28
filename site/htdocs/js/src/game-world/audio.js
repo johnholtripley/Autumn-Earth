@@ -20,8 +20,7 @@ var soundsToLoad = {
     'dyeing': '../sounds/dyeing-NOT_MINE-wow.mp3',
     'weaving': '../sounds/tailoring-NOT_MINE.mp3',
     'pouring': '../sounds/pour-water-NOT_MINE.mp3',
-    'digging': '../sounds/digging-NOT_MINE.mp3',
-    'churchBell': '../sounds/church-bell-NOT_MINE.mp3'
+    'digging': '../sounds/digging-NOT_MINE.mp3'
 };
 
 
@@ -54,6 +53,7 @@ var loadBuffer = function(url, name) {
 
 var audio = {
     lastTrack: "",
+    playingHourChime: false,
     init: function() {
         try {
             window.AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -180,6 +180,17 @@ var audio = {
                     timeSinceLastAmbientSoundWasPlayed = hero.totalGameTimePlayed;
                     audio.playSound(soundEffects[getRandomKeyFromObject(thisMapData.ambientSounds)], 0);
                 }
+            }
+        }
+        if (thisMapData.hourChime) {
+            var now = new Date();
+            if (now.getMinutes() < 1) {
+                if (!audio.playingHourChime) {
+                    audio.playingHourChime = true;
+                    audio.playSound(soundEffects["hourChime"], 0, now.getHours());
+                }
+            } else {
+                audio.playingHourChime = false;
             }
         }
     }

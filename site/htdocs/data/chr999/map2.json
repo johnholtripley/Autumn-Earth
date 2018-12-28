@@ -9,6 +9,7 @@
             "birdSong": "../sounds/bird-song.mp3",
             "birdChirrup": "../sounds/chirrup.mp3"
         },
+        "hourChime": "../sounds/church-bell-NOT_MINE.mp3",
         "collisions": [
             [1, "d", "d", "d", 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
