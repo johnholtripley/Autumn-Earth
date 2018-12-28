@@ -187,7 +187,7 @@ var audio = {
             if (now.getMinutes() < 1) {
                 if (!audio.playingHourChime) {
                     audio.playingHourChime = true;
-                    audio.playSound(soundEffects["hourChime"], 0, now.getHours());
+                    audio.playSound(soundEffects["hourChime"], 0, keepWithinRange(now.getHours(), 1, 12));
                 }
             } else {
                 audio.playingHourChime = false;

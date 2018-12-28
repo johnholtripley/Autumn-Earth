@@ -196,6 +196,16 @@ function capValues(value, min, max) {
     return value;
 }
 
+function keepWithinRange(value, min, max) {
+       if (value < min) {
+        value += max;
+    }
+    if (value > max) {
+        value -= max;
+    }
+    return value;
+}
+
 function accessDynamicVariable(variableToUse) {
     var variableComponents = variableToUse.split(".");
     var currentElement = window;
