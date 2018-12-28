@@ -103,14 +103,15 @@ var audio = {
         source.buffer = buffer;
         source.numberToPlay = numberToPlay;
         source.connect(soundGainNode);
-        source.addEventListener('ended', function soundEnded(e) {
-            if (this.numberToPlay > 1) {
-                audio.playSound(this.buffer, 0, this.numberToPlay - 1);
-            } else {
-                // remove this event listener now:
+        if (numberToPlay > 1) {
+            source.addEventListener('ended', function soundEnded(e) {
+                if (this.numberToPlay > 1) {
+                    audio.playSound(this.buffer, 0, this.numberToPlay - 1);
+                }
+                // remove this event listener:
                 return e.currentTarget.removeEventListener('ended', soundEnded, false);
-            }
-        }, false);
+            }, false);
+        }
         if (!source.start) {
             source.start = source.noteOn;
         } else {
@@ -120,7 +121,6 @@ var audio = {
 
 
     playMusic: function(newTrack) {
-
         if (typeof audio.activeTrack !== "undefined") {
             if (audio.activeTrack != newTrack) {
 

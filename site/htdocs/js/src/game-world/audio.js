@@ -20,7 +20,8 @@ var soundsToLoad = {
     'dyeing': '../sounds/dyeing-NOT_MINE-wow.mp3',
     'weaving': '../sounds/tailoring-NOT_MINE.mp3',
     'pouring': '../sounds/pour-water-NOT_MINE.mp3',
-    'digging': '../sounds/digging-NOT_MINE.mp3'
+    'digging': '../sounds/digging-NOT_MINE.mp3',
+    'churchBell': '../sounds/church-bell-NOT_MINE.mp3'
 };
 
 
@@ -102,14 +103,15 @@ var audio = {
         source.buffer = buffer;
         source.numberToPlay = numberToPlay;
         source.connect(soundGainNode);
-        source.addEventListener('ended', function soundEnded(e) {
-            if (this.numberToPlay > 1) {
-                audio.playSound(this.buffer, 0, this.numberToPlay - 1);
-            } else {
-                // remove this event listener now:
+        if (numberToPlay > 1) {
+            source.addEventListener('ended', function soundEnded(e) {
+                if (this.numberToPlay > 1) {
+                    audio.playSound(this.buffer, 0, this.numberToPlay - 1);
+                }
+                // remove this event listener:
                 return e.currentTarget.removeEventListener('ended', soundEnded, false);
-            }
-        }, false);
+            }, false);
+        }
         if (!source.start) {
             source.start = source.noteOn;
         } else {
@@ -119,7 +121,6 @@ var audio = {
 
 
     playMusic: function(newTrack) {
-
         if (typeof audio.activeTrack !== "undefined") {
             if (audio.activeTrack != newTrack) {
 
