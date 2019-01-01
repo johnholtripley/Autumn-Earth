@@ -831,7 +831,7 @@ function prepareGame() {
     mapTransitionCurrentFrames = 1;
     gameMode = "play";
 
-    UI.showNotification("<p>testing what a notification looks like</p>");
+    UI.showNotification("<p>I'm just thinking about what a notification looks like&hellip;</p>");
 }
 
 

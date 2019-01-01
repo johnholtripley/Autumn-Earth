@@ -12,9 +12,11 @@
     max-width: 295px;
     font-family: Lato, "Trebuchet MS", trebuchet, arial, helvetica, sans-serif;
     @include togglePanel(0.4s);
+
     &.slowerFade {
         @include transition-duration(2s);
     }
+
     &:before {
         border-color: #cbbc9f transparent;
         border-style: solid;
@@ -26,6 +28,7 @@
         position: absolute;
         width: 0;
     }
+
     &:after {
         border-color: #363636 transparent;
         border-style: solid;
@@ -36,5 +39,35 @@
         left: 24px;
         position: absolute;
         width: 0;
+    }
+}
+
+#notification {
+    pointer-events: none;
+    position: absolute;
+    @include pxRem('font-size', 12px);
+    color: #fff;
+    left: 50%;
+    top: 25%;
+    width: 100%;
+    text-align: center;
+    @include transform(translate(-50%, -50%));
+    min-width: 20px;
+    max-width: 295px;
+    opacity: 0;
+    text-align: center;
+    padding: 32px 48px;
+    box-sizing: border-box;
+     background: url("/images/game-world/interface/thought-bubble.svg") no-repeat 50% 50%;
+    @include background-size(100%, 100%);
+    filter: drop-shadow(2px 2px 5px rgba(0, 0, 0, 0.69));
+
+    p {
+        padding: 0;
+        margin: 0;
+    }
+
+    &.active {
+        @include animation(fadeOut 3s ease 0s 1 normal forwards);
     }
 }
