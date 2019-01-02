@@ -600,7 +600,7 @@ var UI = {
                             audio.playSound(soundEffects['coins'], 0);
                             UI.droppedSuccessfully();
                         } else {
-                            UI.showNotification("<p>Not enough money</p>");
+                            UI.showNotification("<p>I don't have have enough money</p>");
                             UI.slideDraggedSlotBack();
                         }
                     } else {
@@ -627,7 +627,7 @@ var UI = {
                                 audio.playSound(soundEffects['coins'], 0);
                                 UI.droppedSuccessfully();
                             } else {
-                                UI.showNotification("<p>Not enough money</p>");
+                                UI.showNotification("<p>I don't have have enough money</p>");
                                 UI.slideDraggedSlotBack();
                             }
                         } else {
@@ -707,7 +707,7 @@ var UI = {
                     }
                     UI.droppedSuccessfully();
                 } else {
-                    UI.showNotification("<p>Not enough money</p>");
+                    UI.showNotification("<p>I don't have have enough money</p>");
                     UI.slideDraggedSlotBack();
                 }
             } else {
@@ -1063,7 +1063,7 @@ var UI = {
                 audio.playSound(soundEffects['coins'], 0);
                 UI.showChangeInInventory(inventoryCheck[1]);
             } else {
-                UI.showNotification("<p>Oops - sorry, no room in your bags</p>");
+                UI.showNotification("<p>I don't have room in my bags for that</p>");
             }
         } else {
             UI.showNotification("<p>Oops - sorry, not enough money</p>");
@@ -1210,7 +1210,7 @@ var UI = {
                 audio.playSound(soundEffects['coins'], 0);
                 UI.showChangeInInventory(inventoryCheck[1]);
             } else {
-                UI.showNotification("<p>Oops - sorry, no room in your bags</p>");
+                UI.showNotification("<p>I don't have room in my bags for that</p>");
             }
         }
         shopSplitStackPanel.classList.remove("active");
@@ -1393,7 +1393,7 @@ var UI = {
                     removeFromInventory(storedSelectedInkSlot, 1);
                     UI.updateInscriptionPanel();
                 } else {
-                    UI.showNotification("<p>Oops - sorry, no room in your bags</p>");
+                    UI.showNotification("<p>I don't have room in my bags for that</p>");
                 }
                 break;
         }
@@ -1557,7 +1557,7 @@ var UI = {
                     UI.showChangeInInventory(inventoryCheck[1]);
                     document.getElementById(chestSlotId).innerHTML = "";
                 } else {
-                    UI.showNotification("<p>Oops - sorry, no room in your bags</p>");
+                    UI.showNotification("<p>I don't have room in my bags for that</p>");
                 }
             }
         }
@@ -1668,7 +1668,7 @@ var UI = {
                                     activeAction = "gather";
                                 }
                             } else {
-                                UI.showNotification('<p>Wrong resource type for this action</p>');
+                                UI.showNotification('<p>I don\'t think that\'s the right resource type for this action</p>');
                             }
                             if (activeAction == "dowse") {
                                 activeAction = "";
@@ -1788,7 +1788,7 @@ var UI = {
             hero.stats.itemsGathered++;
             gatheringPanel.classList.remove('active');
         } else {
-            UI.showNotification("<p>Oops - sorry, no room in your bags</p>");
+            UI.showNotification("<p>I don't have room in my bags for that</p>");
         }
     },
 
@@ -1925,7 +1925,7 @@ var UI = {
                     // send notification that it's been added to database:
                     sendDataWithoutNeedingAResponse("/game-world/gotPostAttachment.php?id=" + data.id);
                 } else {
-                    UI.showNotification("<p>Oops - sorry, no room in your bags</p>");
+                    UI.showNotification("<p>I don't have room in my bags for that</p>");
                 }
             }
         }, function(status) {
@@ -2264,10 +2264,10 @@ var UI = {
         document.getElementById("retinueComplete" + whichPanel).classList.add("active");
     },
     showNewFollower: function(id, name) {
-        UI.showNotification('<p>You have gained a new follower called &quot;' + name + '&quot;</p>');
+        UI.showNotification('<p>I\'ve gained a new follower called &quot;' + name + '&quot;</p>');
     },
     showNewProfession: function(id) {
-        UI.showNotification('<p>You learned a new profession - #' + id + '</p>');
+        UI.showNotification('<p>I learned a new profession - #' + id + '</p>');
     },
     buildHorticulturePanel: function(panelMarkup) {
         horticulturePanel.insertAdjacentHTML('beforeend', panelMarkup);

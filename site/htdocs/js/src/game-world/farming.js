@@ -43,7 +43,7 @@ function pourLiquid(tileX, tileY) {
         updateGauge(holdingItemsSlot);
         UI.updateHeldItemGauge();
     } else {
-        UI.showNotification("<p>that's empty</p>");
+        UI.showNotification("<p>I need to refill this</p>");
     }
 
 }
@@ -73,7 +73,7 @@ function successfullyPlantSeed(tileX, tileY) {
             seedObject.quality = hero.inventory[whichSlot].quality;
             seedObject.effectiveness = hero.inventory[whichSlot].effectiveness;
             seedObject.durability = hero.inventory[whichSlot].durability;
-         
+
             thisMapData.items.push(seedObject);
             initialiseItem(thisMapData.items.length - 1);
             // reduce seed quantity in slot:
@@ -113,7 +113,7 @@ function checkCrop(itemObject) {
                     var resultantPlantKey = plantSpecies;
                     if (pollenSpecies != plantSpecies) {
                         console.log(pollenSpecies, plantSpecies);
-                        
+
                         if (pollenSpecies < plantSpecies) {
                             resultantPlantKey = pollenSpecies + '-' + plantSpecies;
                         } else {
@@ -127,7 +127,7 @@ function checkCrop(itemObject) {
                         var pollenColour = hero.inventory[whichSlot].colour;
                         var plantColour = itemObject.colour;
                         var resultantColour;
-               
+
                         if ((typeof plantColour === "undefined") && (typeof pollenColour === "undefined")) {
                             // default to white:
                             resultantColour = 9;
@@ -156,9 +156,9 @@ function checkCrop(itemObject) {
                     }
 
 
-var maxSeeds = 6;
-// the number of seeds is an exponential amount based on the plant and pollen's quality and effectiveness:
-pollinatedSeedObject.quantity = Math.ceil(maxSeeds*((itemObject.quality*hero.inventory[whichSlot].quality/20000)+(itemObject.effectiveness*hero.inventory[whichSlot].effectiveness/20000)));
+                    var maxSeeds = 6;
+                    // the number of seeds is an exponential amount based on the plant and pollen's quality and effectiveness:
+                    pollinatedSeedObject.quantity = Math.ceil(maxSeeds * ((itemObject.quality * hero.inventory[whichSlot].quality / 20000) + (itemObject.effectiveness * hero.inventory[whichSlot].effectiveness / 20000)));
 
                     pollinatedSeedObject = prepareInventoryObject(pollinatedSeedObject);
                     // add this to the parent plant's contains attribute:
@@ -167,13 +167,13 @@ pollinatedSeedObject.quantity = Math.ceil(maxSeeds*((itemObject.quality*hero.inv
                     // store the parent types so when harvested, that cross can be added to known crosses:
                     itemObject.contains.seed.crossBreedParents = resultantPlantKey;
 
-                    UI.showNotification("<p>Successfully pollinated</p>");
+                    UI.showNotification("<p>I've successfully pollinated that</p>");
                     // remove the used pollen:
                     reducedHeldQuantity(whichSlot);
                     updateQuantity(whichSlot);
                     UI.updateHeldItems();
                 } else {
-                    UI.showNotification("<p>This has already been pollinated</p>");
+                    UI.showNotification("<p>I've already pollinated that</p>");
                 }
             }
         }
@@ -203,7 +203,7 @@ pollinatedSeedObject.quantity = Math.ceil(maxSeeds*((itemObject.quality*hero.inv
                         UI.showChangeInInventory(inventoryCheck[1]);
                         delete itemObject.contains.pollen;
                     } else {
-                        UI.showNotification("<p>Oops - sorry, no room in your bags</p>");
+                        UI.showNotification("<p>I don't have room in my bags for that</p>");
                     }
                 }
                 break;
@@ -245,7 +245,7 @@ pollinatedSeedObject.quantity = Math.ceil(maxSeeds*((itemObject.quality*hero.inv
                             if (itemObject.contains.seed.crossBreedParents.toString().indexOf("-") != -1) {
                                 if (hero.plantCrossesKnown.indexOf(thisParentKey) === -1) {
                                     hero.plantCrossesKnown.push(thisParentKey);
-                                    UI.showNotification("<p>Learnt a new cross breed&hellip;</p>");
+                                    UI.showNotification("<p>I learnt a new cross breed&hellip;</p>");
                                     // update the horticulture panel:
                                     var horticulturePanelSlotsToUpdate = document.getElementsByClassName('parent' + thisParentKey);
                                     // there will only be 2 slots:
@@ -259,7 +259,7 @@ pollinatedSeedObject.quantity = Math.ceil(maxSeeds*((itemObject.quality*hero.inv
                         console.log("harvested seed");
                         itemObject.contains.seed = {};
                     } else {
-                        UI.showNotification("<p>Oops - sorry, no room in your bags</p>");
+                        UI.showNotification("<p>I don't have room in my bags for that</p>");
                     }
                 }
                 // gather fruit ###

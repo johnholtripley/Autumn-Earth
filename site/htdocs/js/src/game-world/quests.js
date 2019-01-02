@@ -219,6 +219,6 @@ function awardQuestRewards(whichNPC, questRewards, isACollectionQuest) {
         // add in the name of the item if required:
         message = message.replace(/##itemName##/i, currentActiveInventoryItems[parseInt(allRewardItems[0].type)].shortname);
         sendNPCPost('{"subject":"' + subjectLine + '","message":"' + message + '","senderID":"-1","recipientID":"' + characterId + '","fromName":"' + whichNPC.name + '"}', allRewardItems);
-        UI.showNotification("<p>Reward send by post to you</p>");
+        UI.showNotification("<p>My reward will be sent in the post</p>");
     }
 }

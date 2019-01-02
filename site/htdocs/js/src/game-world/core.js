@@ -832,6 +832,7 @@ function prepareGame() {
     gameMode = "play";
 
     UI.showNotification("<p>I'm just thinking about what a notification looks like&hellip;</p>");
+    
 }
 
 
@@ -1702,7 +1703,7 @@ function checkForActions() {
                             thisMapData.items.splice(i, 1);
                             UI.showChangeInInventory(inventoryCheck[1]);
                         } else {
-                            UI.showNotification("<p>Oops - sorry, no room in your bags</p>");
+                            UI.showNotification("<p>I don't have room in my bags for that</p>");
                         }
                 }
             }
@@ -2131,7 +2132,7 @@ function checkForTitlesAwarded(whichQuestId) {
         var thisTitle = questData[whichQuestId].titleGainedAfterCompletion;
         if (hero.titlesEarned.indexOf(thisTitle) == -1) {
             hero.titlesEarned.push(thisTitle);
-            UI.showNotification('<p>You earned the &quot;' + possibleTitles[thisTitle] + '&quot; title</p>');
+            UI.showNotification('<p>I earned the &quot;' + possibleTitles[thisTitle] + '&quot; title</p>');
         }
     }
 }

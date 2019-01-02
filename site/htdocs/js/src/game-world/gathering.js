@@ -86,7 +86,7 @@ function processGathering() {
 
 function gatheringComplete() {
     if (gathering.stability == 0) {
-        UI.showNotification('<p>Resource failed - nothing was gathered</p>');
+        UI.showNotification("<p>I couldn't gather anything from that</p>");
         gatheringPanel.classList.remove('active');
     } else {
         var generatedObject = gathering.node.contains[0];

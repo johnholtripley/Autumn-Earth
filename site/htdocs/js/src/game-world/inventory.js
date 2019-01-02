@@ -352,7 +352,7 @@ function inventoryItemAction(whichSlot, whichAction, allActionValues) {
 
     if (hero.inventory[whichSlotNumber].currentWear >= hero.inventory[whichSlotNumber].durability) {
         canBeClicked = false;
-        UI.showNotification("<p>Item needs repairing</p>");
+        UI.showNotification("<p>I need to repair this item first</p>");
     }
 
     if (canBeClicked) {
@@ -382,7 +382,7 @@ function inventoryItemAction(whichSlot, whichAction, allActionValues) {
                             } else {
                                 // restore the wrapped item:
                                 hero.inventory[whichSlotNumber] = JSON.parse(JSON.stringify(wrappedObject));
-                                UI.showNotification("<p>You don't have room for all of these items.</p>");
+                                UI.showNotification("<p>I don't have room for all of these items.</p>");
                             }
                         }
                     }
@@ -418,7 +418,7 @@ function inventoryItemAction(whichSlot, whichAction, allActionValues) {
                                 document.getElementById(whichActionValue + '-' + hero.inventory[whichSlotNumber].type).classList.remove('notCollected');
                                 removeFromInventory(whichSlotNumber, 1);
                             } else {
-                                UI.showNotification("<p>Already added to a collection</p>");
+                                UI.showNotification("<p>I already have that in a collection</p>");
                             }
                         }
                     }
@@ -447,7 +447,7 @@ function inventoryItemAction(whichSlot, whichAction, allActionValues) {
                         audio.playSound(soundEffects['buttonClick'], 0);
                         UI.populateRecipeList(whichActionValue, hero.inventory[whichSlotNumber].quality);
                     } else {
-                        UI.showNotification("<p>You don't know this profession yet.</p>");
+                        UI.showNotification("<p>I don't know this profession yet.</p>");
                     }
                     break;
                 case "deed":

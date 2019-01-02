@@ -75,7 +75,7 @@ function surveyingComplete() {
         }
     }
     if (!resourceFound) {
-        UI.showNotification('<p>No resources found</p>');
+        UI.showNotification("<p>I couldn't find any resources</p>");
     }
     surveyingStopped();
 }

@@ -80,7 +80,7 @@ function startCardGame(opponentNPC) {
         cardGameWrapper.classList.add("active");
         opponentNPC.isPlayingCards = true;
     } else {
-        UI.showNotification('<p>You don\'t have enough cards</p>');
+        UI.showNotification('<p>I don\'t have enough cards</p>');
     }
 }
 

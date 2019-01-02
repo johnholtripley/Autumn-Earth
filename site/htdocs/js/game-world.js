@@ -933,7 +933,7 @@ function startCraftingProcess() {
         var message = "This is fine work";
         var whichNPC = "Artisan crafter";
         sendNPCPost('{"subject":"' + subjectLine + '","message":"' + message + '","senderID":"-1","recipientID":"' + characterId + '","fromName":"' + whichNPC + '"}', [craftingObject.craftedItem]);
-        UI.showNotification("<p>Crafted item sent by post to you</p>");
+        UI.showNotification("<p>My crafted item is in the post</p>");
     }
 
     // check for hiddenResults to see if any empty containers (for example) need giving back to the player:
@@ -963,7 +963,7 @@ function startCraftingProcess() {
             var message = "Returned items";
             var whichNPC = "Artisan crafter";
             sendNPCPost('{"subject":"' + subjectLine + '","message":"' + message + '","senderID":"-1","recipientID":"' + characterId + '","fromName":"' + whichNPC + '"}', [thisReturnedObject]);
-            UI.showNotification("<p>Crafted item sent by post to you</p>");
+            UI.showNotification("<p>My crafted item is in the post</p>");
         }
 
 
@@ -994,7 +994,7 @@ function startCraftingProcess() {
             var message = "Returned items";
             var whichNPC = "Artisan crafter";
             sendNPCPost('{"subject":"' + subjectLine + '","message":"' + message + '","senderID":"-1","recipientID":"' + characterId + '","fromName":"' + whichNPC + '"}', [thisReturnedObject]);
-            UI.showNotification("<p>Crafted item sent by post to you</p>");
+            UI.showNotification("<p>My crafted item is in the post</p>");
         }
 
 
@@ -1266,7 +1266,7 @@ function surveyingComplete() {
         }
     }
     if (!resourceFound) {
-        UI.showNotification('<p>No resources found</p>');
+        UI.showNotification("<p>I couldn't find any resources</p>");
     }
     surveyingStopped();
 }
@@ -1407,7 +1407,7 @@ function pourLiquid(tileX, tileY) {
         updateGauge(holdingItemsSlot);
         UI.updateHeldItemGauge();
     } else {
-        UI.showNotification("<p>that's empty</p>");
+        UI.showNotification("<p>I need to refill this</p>");
     }
 
 }
@@ -1437,7 +1437,7 @@ function successfullyPlantSeed(tileX, tileY) {
             seedObject.quality = hero.inventory[whichSlot].quality;
             seedObject.effectiveness = hero.inventory[whichSlot].effectiveness;
             seedObject.durability = hero.inventory[whichSlot].durability;
-         
+
             thisMapData.items.push(seedObject);
             initialiseItem(thisMapData.items.length - 1);
             // reduce seed quantity in slot:
@@ -1477,7 +1477,7 @@ function checkCrop(itemObject) {
                     var resultantPlantKey = plantSpecies;
                     if (pollenSpecies != plantSpecies) {
                         console.log(pollenSpecies, plantSpecies);
-                        
+
                         if (pollenSpecies < plantSpecies) {
                             resultantPlantKey = pollenSpecies + '-' + plantSpecies;
                         } else {
@@ -1491,7 +1491,7 @@ function checkCrop(itemObject) {
                         var pollenColour = hero.inventory[whichSlot].colour;
                         var plantColour = itemObject.colour;
                         var resultantColour;
-               
+
                         if ((typeof plantColour === "undefined") && (typeof pollenColour === "undefined")) {
                             // default to white:
                             resultantColour = 9;
@@ -1520,9 +1520,9 @@ function checkCrop(itemObject) {
                     }
 
 
-var maxSeeds = 6;
-// the number of seeds is an exponential amount based on the plant and pollen's quality and effectiveness:
-pollinatedSeedObject.quantity = Math.ceil(maxSeeds*((itemObject.quality*hero.inventory[whichSlot].quality/20000)+(itemObject.effectiveness*hero.inventory[whichSlot].effectiveness/20000)));
+                    var maxSeeds = 6;
+                    // the number of seeds is an exponential amount based on the plant and pollen's quality and effectiveness:
+                    pollinatedSeedObject.quantity = Math.ceil(maxSeeds * ((itemObject.quality * hero.inventory[whichSlot].quality / 20000) + (itemObject.effectiveness * hero.inventory[whichSlot].effectiveness / 20000)));
 
                     pollinatedSeedObject = prepareInventoryObject(pollinatedSeedObject);
                     // add this to the parent plant's contains attribute:
@@ -1531,13 +1531,13 @@ pollinatedSeedObject.quantity = Math.ceil(maxSeeds*((itemObject.quality*hero.inv
                     // store the parent types so when harvested, that cross can be added to known crosses:
                     itemObject.contains.seed.crossBreedParents = resultantPlantKey;
 
-                    UI.showNotification("<p>Successfully pollinated</p>");
+                    UI.showNotification("<p>I've successfully pollinated that</p>");
                     // remove the used pollen:
                     reducedHeldQuantity(whichSlot);
                     updateQuantity(whichSlot);
                     UI.updateHeldItems();
                 } else {
-                    UI.showNotification("<p>This has already been pollinated</p>");
+                    UI.showNotification("<p>I've already pollinated that</p>");
                 }
             }
         }
@@ -1567,7 +1567,7 @@ pollinatedSeedObject.quantity = Math.ceil(maxSeeds*((itemObject.quality*hero.inv
                         UI.showChangeInInventory(inventoryCheck[1]);
                         delete itemObject.contains.pollen;
                     } else {
-                        UI.showNotification("<p>Oops - sorry, no room in your bags</p>");
+                        UI.showNotification("<p>I don't have room in my bags for that</p>");
                     }
                 }
                 break;
@@ -1609,7 +1609,7 @@ pollinatedSeedObject.quantity = Math.ceil(maxSeeds*((itemObject.quality*hero.inv
                             if (itemObject.contains.seed.crossBreedParents.toString().indexOf("-") != -1) {
                                 if (hero.plantCrossesKnown.indexOf(thisParentKey) === -1) {
                                     hero.plantCrossesKnown.push(thisParentKey);
-                                    UI.showNotification("<p>Learnt a new cross breed&hellip;</p>");
+                                    UI.showNotification("<p>I learnt a new cross breed&hellip;</p>");
                                     // update the horticulture panel:
                                     var horticulturePanelSlotsToUpdate = document.getElementsByClassName('parent' + thisParentKey);
                                     // there will only be 2 slots:
@@ -1623,7 +1623,7 @@ pollinatedSeedObject.quantity = Math.ceil(maxSeeds*((itemObject.quality*hero.inv
                         console.log("harvested seed");
                         itemObject.contains.seed = {};
                     } else {
-                        UI.showNotification("<p>Oops - sorry, no room in your bags</p>");
+                        UI.showNotification("<p>I don't have room in my bags for that</p>");
                     }
                 }
                 // gather fruit ###
@@ -1746,7 +1746,7 @@ function processGathering() {
 
 function gatheringComplete() {
     if (gathering.stability == 0) {
-        UI.showNotification('<p>Resource failed - nothing was gathered</p>');
+        UI.showNotification("<p>I couldn't gather anything from that</p>");
         gatheringPanel.classList.remove('active');
     } else {
         var generatedObject = gathering.node.contains[0];
@@ -2871,7 +2871,7 @@ function startCardGame(opponentNPC) {
         cardGameWrapper.classList.add("active");
         opponentNPC.isPlayingCards = true;
     } else {
-        UI.showNotification('<p>You don\'t have enough cards</p>');
+        UI.showNotification('<p>I don\'t have enough cards</p>');
     }
 }
 
@@ -3398,7 +3398,7 @@ function inventoryItemAction(whichSlot, whichAction, allActionValues) {
 
     if (hero.inventory[whichSlotNumber].currentWear >= hero.inventory[whichSlotNumber].durability) {
         canBeClicked = false;
-        UI.showNotification("<p>Item needs repairing</p>");
+        UI.showNotification("<p>I need to repair this item first</p>");
     }
 
     if (canBeClicked) {
@@ -3428,7 +3428,7 @@ function inventoryItemAction(whichSlot, whichAction, allActionValues) {
                             } else {
                                 // restore the wrapped item:
                                 hero.inventory[whichSlotNumber] = JSON.parse(JSON.stringify(wrappedObject));
-                                UI.showNotification("<p>You don't have room for all of these items.</p>");
+                                UI.showNotification("<p>I don't have room for all of these items.</p>");
                             }
                         }
                     }
@@ -3464,7 +3464,7 @@ function inventoryItemAction(whichSlot, whichAction, allActionValues) {
                                 document.getElementById(whichActionValue + '-' + hero.inventory[whichSlotNumber].type).classList.remove('notCollected');
                                 removeFromInventory(whichSlotNumber, 1);
                             } else {
-                                UI.showNotification("<p>Already added to a collection</p>");
+                                UI.showNotification("<p>I already have that in a collection</p>");
                             }
                         }
                     }
@@ -3493,7 +3493,7 @@ function inventoryItemAction(whichSlot, whichAction, allActionValues) {
                         audio.playSound(soundEffects['buttonClick'], 0);
                         UI.populateRecipeList(whichActionValue, hero.inventory[whichSlotNumber].quality);
                     } else {
-                        UI.showNotification("<p>You don't know this profession yet.</p>");
+                        UI.showNotification("<p>I don't know this profession yet.</p>");
                     }
                     break;
                 case "deed":
@@ -4507,7 +4507,7 @@ function awardQuestRewards(whichNPC, questRewards, isACollectionQuest) {
         // add in the name of the item if required:
         message = message.replace(/##itemName##/i, currentActiveInventoryItems[parseInt(allRewardItems[0].type)].shortname);
         sendNPCPost('{"subject":"' + subjectLine + '","message":"' + message + '","senderID":"-1","recipientID":"' + characterId + '","fromName":"' + whichNPC.name + '"}', allRewardItems);
-        UI.showNotification("<p>Reward send by post to you</p>");
+        UI.showNotification("<p>My reward will be sent in the post</p>");
     }
 }
 function getRetinueQuestTime(followerX, followerY, destinationX, destinationY, hasToReturnToBase) {
@@ -4559,7 +4559,7 @@ function retinueMissionCompleted(questId, isExplorationQuest) {
                 var message = "Your followers continue to make you proud...";
                 var whichNPC = "Retinue co-ordinator";
                 sendNPCPost('{"subject":"' + subjectLine + '","message":"' + message + '","senderID":"-1","recipientID":"' + characterId + '","fromName":"' + whichNPC + '"}', data.item);
-                UI.showNotification("<p>Reward sent by post to you</p>");
+                UI.showNotification("<p>My reward will be sent in the post</p>");
             }
         } else {
             // no reward
@@ -5232,7 +5232,7 @@ var UI = {
                             audio.playSound(soundEffects['coins'], 0);
                             UI.droppedSuccessfully();
                         } else {
-                            UI.showNotification("<p>Not enough money</p>");
+                            UI.showNotification("<p>I don't have have enough money</p>");
                             UI.slideDraggedSlotBack();
                         }
                     } else {
@@ -5259,7 +5259,7 @@ var UI = {
                                 audio.playSound(soundEffects['coins'], 0);
                                 UI.droppedSuccessfully();
                             } else {
-                                UI.showNotification("<p>Not enough money</p>");
+                                UI.showNotification("<p>I don't have have enough money</p>");
                                 UI.slideDraggedSlotBack();
                             }
                         } else {
@@ -5339,7 +5339,7 @@ var UI = {
                     }
                     UI.droppedSuccessfully();
                 } else {
-                    UI.showNotification("<p>Not enough money</p>");
+                    UI.showNotification("<p>I don't have have enough money</p>");
                     UI.slideDraggedSlotBack();
                 }
             } else {
@@ -5695,7 +5695,7 @@ var UI = {
                 audio.playSound(soundEffects['coins'], 0);
                 UI.showChangeInInventory(inventoryCheck[1]);
             } else {
-                UI.showNotification("<p>Oops - sorry, no room in your bags</p>");
+                UI.showNotification("<p>I don't have room in my bags for that</p>");
             }
         } else {
             UI.showNotification("<p>Oops - sorry, not enough money</p>");
@@ -5842,7 +5842,7 @@ var UI = {
                 audio.playSound(soundEffects['coins'], 0);
                 UI.showChangeInInventory(inventoryCheck[1]);
             } else {
-                UI.showNotification("<p>Oops - sorry, no room in your bags</p>");
+                UI.showNotification("<p>I don't have room in my bags for that</p>");
             }
         }
         shopSplitStackPanel.classList.remove("active");
@@ -6025,7 +6025,7 @@ var UI = {
                     removeFromInventory(storedSelectedInkSlot, 1);
                     UI.updateInscriptionPanel();
                 } else {
-                    UI.showNotification("<p>Oops - sorry, no room in your bags</p>");
+                    UI.showNotification("<p>I don't have room in my bags for that</p>");
                 }
                 break;
         }
@@ -6189,7 +6189,7 @@ var UI = {
                     UI.showChangeInInventory(inventoryCheck[1]);
                     document.getElementById(chestSlotId).innerHTML = "";
                 } else {
-                    UI.showNotification("<p>Oops - sorry, no room in your bags</p>");
+                    UI.showNotification("<p>I don't have room in my bags for that</p>");
                 }
             }
         }
@@ -6300,7 +6300,7 @@ var UI = {
                                     activeAction = "gather";
                                 }
                             } else {
-                                UI.showNotification('<p>Wrong resource type for this action</p>');
+                                UI.showNotification('<p>I don\'t think that\'s the right resource type for this action</p>');
                             }
                             if (activeAction == "dowse") {
                                 activeAction = "";
@@ -6420,7 +6420,7 @@ var UI = {
             hero.stats.itemsGathered++;
             gatheringPanel.classList.remove('active');
         } else {
-            UI.showNotification("<p>Oops - sorry, no room in your bags</p>");
+            UI.showNotification("<p>I don't have room in my bags for that</p>");
         }
     },
 
@@ -6557,7 +6557,7 @@ var UI = {
                     // send notification that it's been added to database:
                     sendDataWithoutNeedingAResponse("/game-world/gotPostAttachment.php?id=" + data.id);
                 } else {
-                    UI.showNotification("<p>Oops - sorry, no room in your bags</p>");
+                    UI.showNotification("<p>I don't have room in my bags for that</p>");
                 }
             }
         }, function(status) {
@@ -6896,10 +6896,10 @@ var UI = {
         document.getElementById("retinueComplete" + whichPanel).classList.add("active");
     },
     showNewFollower: function(id, name) {
-        UI.showNotification('<p>You have gained a new follower called &quot;' + name + '&quot;</p>');
+        UI.showNotification('<p>I\'ve gained a new follower called &quot;' + name + '&quot;</p>');
     },
     showNewProfession: function(id) {
-        UI.showNotification('<p>You learned a new profession - #' + id + '</p>');
+        UI.showNotification('<p>I learned a new profession - #' + id + '</p>');
     },
     buildHorticulturePanel: function(panelMarkup) {
         horticulturePanel.insertAdjacentHTML('beforeend', panelMarkup);
@@ -7952,6 +7952,7 @@ function prepareGame() {
     gameMode = "play";
 
     UI.showNotification("<p>I'm just thinking about what a notification looks like&hellip;</p>");
+    
 }
 
 
@@ -8822,7 +8823,7 @@ function checkForActions() {
                             thisMapData.items.splice(i, 1);
                             UI.showChangeInInventory(inventoryCheck[1]);
                         } else {
-                            UI.showNotification("<p>Oops - sorry, no room in your bags</p>");
+                            UI.showNotification("<p>I don't have room in my bags for that</p>");
                         }
                 }
             }
@@ -9251,7 +9252,7 @@ function checkForTitlesAwarded(whichQuestId) {
         var thisTitle = questData[whichQuestId].titleGainedAfterCompletion;
         if (hero.titlesEarned.indexOf(thisTitle) == -1) {
             hero.titlesEarned.push(thisTitle);
-            UI.showNotification('<p>You earned the &quot;' + possibleTitles[thisTitle] + '&quot; title</p>');
+            UI.showNotification('<p>I earned the &quot;' + possibleTitles[thisTitle] + '&quot; title</p>');
         }
     }
 }

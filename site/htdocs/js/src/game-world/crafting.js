@@ -442,7 +442,7 @@ function startCraftingProcess() {
         var message = "This is fine work";
         var whichNPC = "Artisan crafter";
         sendNPCPost('{"subject":"' + subjectLine + '","message":"' + message + '","senderID":"-1","recipientID":"' + characterId + '","fromName":"' + whichNPC + '"}', [craftingObject.craftedItem]);
-        UI.showNotification("<p>Crafted item sent by post to you</p>");
+        UI.showNotification("<p>My crafted item is in the post</p>");
     }
 
     // check for hiddenResults to see if any empty containers (for example) need giving back to the player:
@@ -472,7 +472,7 @@ function startCraftingProcess() {
             var message = "Returned items";
             var whichNPC = "Artisan crafter";
             sendNPCPost('{"subject":"' + subjectLine + '","message":"' + message + '","senderID":"-1","recipientID":"' + characterId + '","fromName":"' + whichNPC + '"}', [thisReturnedObject]);
-            UI.showNotification("<p>Crafted item sent by post to you</p>");
+            UI.showNotification("<p>My crafted item is in the post</p>");
         }
 
 
@@ -503,7 +503,7 @@ function startCraftingProcess() {
             var message = "Returned items";
             var whichNPC = "Artisan crafter";
             sendNPCPost('{"subject":"' + subjectLine + '","message":"' + message + '","senderID":"-1","recipientID":"' + characterId + '","fromName":"' + whichNPC + '"}', [thisReturnedObject]);
-            UI.showNotification("<p>Crafted item sent by post to you</p>");
+            UI.showNotification("<p>My crafted item is in the post</p>");
         }
 
 
