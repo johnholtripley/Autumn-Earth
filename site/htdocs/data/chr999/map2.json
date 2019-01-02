@@ -255,10 +255,10 @@
                 "src": "white-hen.png",
                 "width": 20,
                 "length": 20,
-                "spriteWidth": 28,
-                "spriteHeight": 34,
-                "centreX": 19,
-                "centreY": 28,
+                "spriteWidth": 34,
+                "spriteHeight": 37,
+                "centreX": 22,
+                "centreY": 32,
                 "tileX": 14,
                 "tileY": 3,
                 "movement": ["-"],
@@ -289,10 +289,10 @@
                 "src": "white-hen.png",
                 "width": 20,
                 "length": 20,
-                "spriteWidth": 28,
-                "spriteHeight": 34,
-                "centreX": 19,
-                "centreY": 28,
+                "spriteWidth": 34,
+                "spriteHeight": 37,
+                "centreX": 22,
+                "centreY": 32,
                 "tileX": 15,
                 "tileY": 3,
                 "movement": ["-"],
@@ -1634,7 +1634,7 @@
                 "centreY": 3,
                 "radius": 5,
                 "quest": 2,
-                "message": "you found the ancient standing stone site",
+                "message": "At last&mdash;I've found the ancient standing stone site",
                 "music": "elven-glade-WoW-NOT-MINE"
 
             },
@@ -1647,7 +1647,7 @@
                 "centreX": 14,
                 "centreY": 28,
                 "radius": 5,
-                "message": "you fote",
+                "message": "",
                 "music": "ambient-darnassus-WoW-NOT-MINE"
             }
 

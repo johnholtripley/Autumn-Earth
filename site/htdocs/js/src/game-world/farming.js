@@ -138,7 +138,7 @@ function checkCrop(itemObject) {
                             } else if (typeof pollenColour === "undefined") {
                                 resultantColour = plantColour;
                             } else {
-                                resultantColour = mixColours(plantColour, pollenColour);
+                                resultantColour = mixColours([plantColour, pollenColour]);
                             }
                         }
 
