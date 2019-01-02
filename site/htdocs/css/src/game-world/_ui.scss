@@ -34,14 +34,14 @@
     bottom: 50%;
     width: 100%;
     text-align: center;
-    @include transform(translate(-25%, -85px));
+    @include transform(translate(10px, -77px));
     min-width: 20px;
     max-width: 230px;
     opacity: 0;
     text-align: center;
     padding: 22px 43px;
     box-sizing: border-box;
-     background: url("/images/game-world/interface/thought-bubble.svg") no-repeat 50% 50%;
+    background: url("/images/game-world/interface/thought-bubble.svg") no-repeat 50% 50%;
     @include background-size(100%, 100%);
     filter: drop-shadow(2px 2px 5px rgba(0, 0, 0, 0.69));
 
@@ -52,6 +52,20 @@
 
     &.active {
         @include animation(fadeOut 3s ease 0s 1 normal forwards);
+    }
+
+    &:before {
+        content: '';
+        display: block;
+        width: 12px;
+        height: 12px;
+        @include border-radius(12px);
+        filter: drop-shadow(2px 2px 5px rgba(0, 0, 0, 0.69));
+        background: #363636;
+        border: 2px solid #cbbc9f;
+        position: absolute;
+        left: 0;
+        bottom: 0;
     }
 }
 
