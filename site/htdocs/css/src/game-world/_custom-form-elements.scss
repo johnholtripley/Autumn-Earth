@@ -126,7 +126,6 @@ input[type=range]:focus::-ms-fill-upper {
     top: 0;
     right: 0;
     width: 10px;
-    border-radius: 10px;
     height: 100%;
     background: rgba(0, 0, 0, 0.2);
     box-shadow: inset 0px 0px 5px 0px rgba(0, 0, 0, 0.75);
@@ -168,6 +167,7 @@ input[type=range]:focus::-ms-fill-upper {
     max-width: 100%;
     select {
         color: #fff;
+        background: #111;
         /* Make sure the select is wider than the container so we can clip the arrow */
         cursor: pointer;
         width: 100%;
@@ -179,10 +179,8 @@ input[type=range]:focus::-ms-fill-upper {
         -moz-appearance: none;
         text-indent: 0.01px;
         text-overflow: "";
-        background: none;
         border: none;
         outline: none;
-        /* Padding works surpringly well */
         padding: .4em 19% .4em .8em;
         font-family: helvetica, sans-serif;
         line-height: 1.2;

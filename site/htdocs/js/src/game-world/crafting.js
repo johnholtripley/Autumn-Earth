@@ -22,9 +22,10 @@ function recipeSearchAndFilter() {
     }
     // show those that are relevant:
     var numberBeingShown = 0;
+    var recipeFilterSplit = recipeFilter.value.split(",");
     for (i = 0; i < foundKeys.length; i++) {
         // only show those keys that are in this filter set:
-        if (recipeFilter.value.indexOf(foundKeys[i]) != -1) {
+        if (recipeFilterSplit.indexOf(foundKeys[i].toString()) != -1) {
             document.getElementById("recipe" + foundKeys[i]).classList.add('active');
             numberBeingShown++;
         }
