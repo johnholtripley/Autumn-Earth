@@ -106,6 +106,7 @@ $attachmentObject = json_decode($attachment);
 	// only want the first here:
 $firstElement = reset($attachmentObject);
 $isUGC = false;
+$isAGameCard = false;
 if($firstElement->type == "$") {
 $inventoryImage = 'coins';
 } else {
@@ -113,12 +114,19 @@ $inventoryImage = $firstElement->type;
 
 // check to see if it's User Generated:
 if(isset($firstElement->contains)) {
+if(intval($firstElement->type) == 34) {
+if(is_numeric($firstElement->contains)) {
+$isAGameCard = true;
+}
+} else {
+
 	foreach($firstElement->contains as $key=>$value) {
 		if($key=='ugc-id') {
 			$isUGC = true;
 			$UGCid = $value;
 		}
 	}
+}
 }
 
 
@@ -132,6 +140,8 @@ $inventoryImage .= '-'.strtolower($allColours[$firstElement->colour]);
 
 if($isUGC) {
 $postPanelMarkup .= '<img src="/images/user-generated/'.$UGCid.'-slot.png" alt=""><span class="qty">'.$firstElement->quantity.'</span>';
+} else if ($isAGameCard) {
+	$postPanelMarkup .= '<img src="/images/card-game/inventory-items/'.$firstElement->contains.'.png" alt=""><span class="qty">'.$firstElement->quantity.'</span>';
 } else {
 	$postPanelMarkup .= '<img src="/images/game-world/inventory-items/'.$inventoryImage.'.png" alt=""><span class="qty">'.$firstElement->quantity.'</span>';
 }
@@ -151,14 +161,25 @@ $inventoryImage = 'coins';
 			} else {
 
 $isUGC = false;
+$isAGameCard = false;
 // check to see if it's User Generated:
 if(isset($thisAttachment->contains)) {
+
+if(intval($firstElement->type) == 34) {
+if(is_numeric($firstElement->contains)) {
+$isAGameCard = true;
+}
+}else {
+
+
+
 	foreach($thisAttachment->contains as $key=>$value) {
 		if($key=='ugc-id') {
 			$isUGC = true;
 			$UGCid = $value;
 		}
 	}
+}
 }
 
 
@@ -172,6 +193,8 @@ $inventoryImage .= '-'.strtolower($allColours[$thisAttachment->colour]);
 
 if($isUGC) {
 	$allMessagePanels .= '<div class="postSlot"><img src="/images/user-generated/'.$UGCid.'-slot.png" alt=""><span class="qty">'.$thisAttachment->quantity.'</span></div>';
+	} else if ($isAGameCard) {
+	$allMessagePanels .= '<div class="postSlot"><img src="/images/card-game/inventory-items/'.$thisAttachment->contains.'.png" alt=""><span class="qty">'.$thisAttachment->quantity.'</span></div>';	
 } else {
 $allMessagePanels .= '<div class="postSlot"><img src="/images/game-world/inventory-items/'.$inventoryImage.'.png" alt=""><span class="qty">'.$thisAttachment->quantity.'</span></div>';
 }
