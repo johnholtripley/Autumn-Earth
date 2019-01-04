@@ -3575,6 +3575,7 @@ function generateGenericSlotMarkup(thisItemObject) {
     var isABook = false;
     var isACard = false;
     var rareCardSuffix = '';
+    var rareCardText = '';
 
     if (thisAction) {
         if (thisAction.indexOf("book") != -1) {
@@ -3629,6 +3630,7 @@ function generateGenericSlotMarkup(thisItemObject) {
         if(cardTypeId < 0) {
             cardTypeId = Math.abs(cardTypeId);
             rareCardSuffix = '-rare';
+            rareCardText = 'rare ';
         }
     }
 
@@ -3642,7 +3644,7 @@ function generateGenericSlotMarkup(thisItemObject) {
     var itemsDescription;
     if (!isUGC) {
         if(isACard) {
-itemsDescription = "A '"+cardGameNameSpace.allCardData[cardTypeId][2]+"' totem card";
+itemsDescription = "A "+rareCardText+"'"+cardGameNameSpace.allCardData[cardTypeId][2]+"' totem card";
 slotMarkup += '<img src="/images/card-game/inventory-items/' + cardTypeId + rareCardSuffix + '.png" ' + dataActionMarkup + 'alt="' + theColourPrefix + currentActiveInventoryItems[thisItemObject.type].shortname + '" class="' + imageClassName + '">';
         } else {
         slotMarkup += '<img src="/images/game-world/inventory-items/' + thisItemObject.type + thisFileColourSuffix + '.png" ' + dataActionMarkup + 'alt="' + theColourPrefix + currentActiveInventoryItems[thisItemObject.type].shortname + '" class="' + imageClassName + '">';
