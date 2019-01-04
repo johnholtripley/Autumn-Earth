@@ -141,7 +141,7 @@ $inventoryImage .= '-'.strtolower($allColours[$firstElement->colour]);
 if($isUGC) {
 $postPanelMarkup .= '<img src="/images/user-generated/'.$UGCid.'-slot.png" alt=""><span class="qty">'.$firstElement->quantity.'</span>';
 } else if ($isAGameCard) {
-	$postPanelMarkup .= '<img src="/images/card-game/inventory-items/'.$firstElement->contains.'.png" alt=""><span class="qty">'.$firstElement->quantity.'</span>';
+	$postPanelMarkup .= '<img src="/images/card-game/inventory-items/'.$firstElement->contains.'.png" alt="" class="players card"><span class="qty">'.$firstElement->quantity.'</span>';
 } else {
 	$postPanelMarkup .= '<img src="/images/game-world/inventory-items/'.$inventoryImage.'.png" alt=""><span class="qty">'.$firstElement->quantity.'</span>';
 }
@@ -164,7 +164,7 @@ $isUGC = false;
 $isAGameCard = false;
 // check to see if it's User Generated:
 if(isset($thisAttachment->contains)) {
-
+// or a card:
 if(intval($firstElement->type) == 34) {
 if(is_numeric($firstElement->contains)) {
 $isAGameCard = true;
@@ -194,7 +194,7 @@ $inventoryImage .= '-'.strtolower($allColours[$thisAttachment->colour]);
 if($isUGC) {
 	$allMessagePanels .= '<div class="postSlot"><img src="/images/user-generated/'.$UGCid.'-slot.png" alt=""><span class="qty">'.$thisAttachment->quantity.'</span></div>';
 	} else if ($isAGameCard) {
-	$allMessagePanels .= '<div class="postSlot"><img src="/images/card-game/inventory-items/'.$thisAttachment->contains.'.png" alt=""><span class="qty">'.$thisAttachment->quantity.'</span></div>';	
+	$allMessagePanels .= '<div class="postSlot"><img src="/images/card-game/inventory-items/'.$thisAttachment->contains.'.png" alt="" class="players card"><span class="qty">'.$thisAttachment->quantity.'</span></div>';	
 } else {
 $allMessagePanels .= '<div class="postSlot"><img src="/images/game-world/inventory-items/'.$inventoryImage.'.png" alt=""><span class="qty">'.$thisAttachment->quantity.'</span></div>';
 }

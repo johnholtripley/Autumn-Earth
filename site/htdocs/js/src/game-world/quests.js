@@ -201,6 +201,9 @@ function awardQuestRewards(whichNPC, questRewards, isACollectionQuest) {
         allRewardItems.push(thisRewardObject);
     }
 
+
+
+
     inventoryCheck = canAddItemToInventory(allRewardItems);
 
     if (inventoryCheck[0]) {

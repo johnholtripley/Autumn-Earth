@@ -3107,6 +3107,8 @@ function canAddItemToInventory(itemObj) {
                                 slotsUpdated.push(thisSlotsID);
 
                                 inventoryClone[thisSlotsID] = JSON.parse(JSON.stringify(itemObj[k]));
+                                inventoryClone[thisSlotsID].hash = createItemHash(itemObj[k].type, amountAddedToThisSlot);
+                                
                                 /*
                                 inventoryClone[thisSlotsID] = new Object();
                                 inventoryClone[thisSlotsID].type = itemObj[k].type;
@@ -4497,6 +4499,9 @@ function awardQuestRewards(whichNPC, questRewards, isACollectionQuest) {
 
         allRewardItems.push(thisRewardObject);
     }
+
+
+
 
     inventoryCheck = canAddItemToInventory(allRewardItems);
 

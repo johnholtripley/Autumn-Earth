@@ -8,7 +8,8 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/functions.php");
 $isAnUpdate = false;
 
 $chr = $_GET["chr"];
-
+$inflationModifier = 10;
+$sellPriceModifier = 0.7;
 
 
 if(isset($_GET["questID"])) {
@@ -116,14 +117,25 @@ $itemNameWithColour .= '-'.strtolower($allColours[($item['colour'])]);
 }
 }
 
+if(intval($item['type']) == 34) {
+    // is a game card:
+ $markupToOutput .= '<div class="item"><img class="players card" src="/images/card-game/inventory-items/'.$item['contains'].'.png">';
+} else {
+     $markupToOutput .= '<div class="item"><img src="/images/game-world/inventory-items/'.$itemNameWithColour.'.png">';
+}
 
-            $markupToOutput .= '<div class="item"><img src="/images/game-world/inventory-items/'.$itemNameWithColour.'.png">';
+
+           
 $itemQuery = "SELECT itemid, shortname, description, pricecode from tblinventoryitems where itemid = '".$item['type']."'";
 $itemResult = mysqli_query($connection, $itemQuery) or die ();
 while ($itemRow = mysqli_fetch_array($itemResult)) {
 $markupToOutput .= '<p><em>'.$itemRow['shortname'].'</em>';
 $markupToOutput .= $itemRow['description'];
-$markupToOutput .= '<span class="price">Sell price: '.parseMoney($itemRow['pricecode']).'</span>';
+$quantity = 1;
+if(isset($item['quantity'])) {
+$quantity = $item['quantity'];
+}
+$markupToOutput .= '<span class="price">Sell price: '.parseMoney($itemRow['pricecode'] * $sellPriceModifier * $inflationModifier * $quantity).'</span>';
 $markupToOutput .= '</p>';
     }
 mysqli_free_result($itemResult);
