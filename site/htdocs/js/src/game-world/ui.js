@@ -465,9 +465,26 @@ var UI = {
             // craft new card:
             // animation ############
             var cardType = thisNode.id.substring(8); 
-            hero.cards.unshift(cardType);
-            hero.currency.cardDust -= cardGameNameSpace.allCardData[cardType][3];
+       //     hero.cards.unshift(cardType);
+            // create card object:
+            var craftedCardObject = {
+                        "type": 34,
+                        "contains": cardType
+                        }
+craftedCardObject = prepareInventoryObject(craftedCardObject);
+
+
+inventoryCheck = canAddItemToInventory([craftedCardObject]);
+            if (inventoryCheck[0]) {
+hero.currency.cardDust -= cardGameNameSpace.allCardData[cardType][3];
             UI.updateCurrencies();UI.updateCardAlbum();
+            UI.showChangeInInventory(inventoryCheck[1]);
+        } else {
+            UI.showNotification("<p>I've don't have room in my bags for that</p>");
+        }
+
+
+            
         }
     },
 

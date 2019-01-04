@@ -424,7 +424,7 @@ function inventoryItemAction(whichSlot, whichAction, allActionValues) {
                     }
                     break;
                 case "card":
-                    hero.cards.unshift(whichActionValue);
+                    hero.cards.unshift(hero.inventory[whichSlotNumber].contains);
                     UI.updateCardAlbum();
                     removeFromInventory(whichSlotNumber, 1);
                     break;
@@ -524,6 +524,7 @@ function generateGenericSlotMarkup(thisItemObject) {
     }
     var thisAction = currentActiveInventoryItems[thisItemObject.type].action;
     var isABook = false;
+    var isACard = false;
 
     if (thisAction) {
         if (thisAction.indexOf("book") != -1) {
@@ -571,7 +572,9 @@ function generateGenericSlotMarkup(thisItemObject) {
 
     // check if it's a card:
     if (currentActiveInventoryItems[thisItemObject.type].action == "card") {
+        isACard = true;
         imageClassName += 'players card';
+        var cardTypeId = thisItemObject.contains;
     }
 
     // check for User Generated Content:
@@ -583,12 +586,17 @@ function generateGenericSlotMarkup(thisItemObject) {
     }
     var itemsDescription;
     if (!isUGC) {
+        if(isACard) {
+itemsDescription = "A '"+cardGameNameSpace.allCardData[cardTypeId][2]+"' totem card";
+slotMarkup += '<img src="/images/card-game/inventory-items/' + cardTypeId + '.png" ' + dataActionMarkup + 'alt="' + theColourPrefix + currentActiveInventoryItems[thisItemObject.type].shortname + '" class="' + imageClassName + '">';
+        } else {
         slotMarkup += '<img src="/images/game-world/inventory-items/' + thisItemObject.type + thisFileColourSuffix + '.png" ' + dataActionMarkup + 'alt="' + theColourPrefix + currentActiveInventoryItems[thisItemObject.type].shortname + '" class="' + imageClassName + '">';
         if (isABook) {
             itemsDescription = "&quot;" + thisItemObject.inscription.title + "&quot;";
         } else {
             itemsDescription = currentActiveInventoryItems[thisItemObject.type].description;
         }
+    }
     } else {
         slotMarkup += '<img src="/images/user-generated/' + thisItemObject.contains['ugc-id'] + '-slot.png" ' + dataActionMarkup + 'alt="' + theColourPrefix + currentActiveInventoryItems[thisItemObject.type].shortname + '" class="' + imageClassName + '">';
         if (typeof thisItemObject.contains['ugc-title'] !== "undefined") {
