@@ -98,8 +98,8 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
     </div>
     <div id="cardAlbum" class="active">
       <div class="draggableBar">Totem Card album</div>
-      <div id="cardAlbumList"></div>
-      <button id="toggleActiveCards">Show only collected cards</button>
+      <div id="cardAlbumList" class="showOnlyPlayers"></div>
+      <button id="toggleActiveCards">Craft cards</button>
     </div>
     <div id="cartographicPanel" class="active">
       <div class="draggableBar">

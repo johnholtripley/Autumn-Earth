@@ -2802,7 +2802,7 @@ function cardGamePlayer2Wins() {
     // player won
     hero.stats.cardGamesWon++;
     hero.currency.cardDust += 7;
-    UI.updateCurrencies();
+    UI.updateCurrencies();UI.updateCardAlbum();
     delete thisChallengeNPC.isPlayingCards;
     processPlayerWinSpeech(thisChallengeNPC, thisChallengeNPC.cardGameSpeech.lose[0], thisChallengeNPC.cardGameSpeech.lose[1]);
     closeCardGame();
@@ -2813,7 +2813,7 @@ function cardGamePlayer1Wins() {
     // player lost
     hero.stats.cardGamesLost++;
     hero.currency.cardDust += 1;
-    UI.updateCurrencies();
+    UI.updateCurrencies();UI.updateCardAlbum();
      delete thisChallengeNPC.isPlayingCards;
     processSpeech(thisChallengeNPC, thisChallengeNPC.cardGameSpeech.win[0], thisChallengeNPC.cardGameSpeech.win[1]);
     closeCardGame();
@@ -2823,7 +2823,7 @@ function cardGameIsDrawn() {
      console.log(thisChallengeNPC);
     hero.stats.cardGamesDrawn++;
     hero.currency.cardDust += 3;
-    UI.updateCurrencies();
+    UI.updateCurrencies();UI.updateCardAlbum();
      delete thisChallengeNPC.isPlayingCards;
     processSpeech(thisChallengeNPC, thisChallengeNPC.cardGameSpeech.draw[0], thisChallengeNPC.cardGameSpeech.draw[1]);
     closeCardGame();
@@ -4663,6 +4663,7 @@ const soundVolume = document.getElementById('soundVolume');
 const musicVolume = document.getElementById('musicVolume');
 const gameSettingsPanel = document.getElementById('gameSettings');
 const toggleActiveCards = document.getElementById('toggleActiveCards');
+const cardAlbum = document.getElementById('cardAlbum');
 const toggleFullscreenSwitch = document.getElementById('toggleFullScreen');
 const collectionQuestPanels = document.getElementById('collectionQuestPanels');
 const chestPanel = document.getElementById('chestPanel');
@@ -4758,7 +4759,7 @@ var UI = {
                 inventoryMarkup += '<li id="slot' + thisSlotsID + '">';
                 // check if that key exists in inventory:
                 if (thisSlotsID in hero.inventory) {
-                   
+
                     inventoryMarkup += generateSlotMarkup(thisSlotsID);
                     thisAction = currentActiveInventoryItems[hero.inventory[thisSlotsID].type].action;
                     // check for cooldown attribute, and add a timer if so:
@@ -4813,6 +4814,7 @@ var UI = {
         splitStackPanel.onsubmit = inventorySplitStackSubmit;
         shopSplitStackPanel.onsubmit = UI.shopSplitStackSubmit;
         toggleActiveCards.onclick = UI.toggleCardsDisplayed;
+        cardAlbum.onclick = UI.cardAlbumClick;
         startCrafting.onclick = startCraftingTimer;
         document.getElementById('splitStackCancel').onclick = inventorySplitStackCancel;
         document.getElementById('shopSplitStackCancel').onclick = UI.shopSplitStackCancel;
@@ -5083,6 +5085,25 @@ var UI = {
         }
     },
 
+    toggleCardsDisplayed: function(e) {
+        cardAlbumList.classList.toggle('showOnlyPlayers');
+        toggleActiveCards.innerHTML = (toggleActiveCards.innerHTML == 'Finish crafting' ? 'Craft cards' : 'Finish crafting');
+    },
+
+    cardAlbumClick: function(e) {
+
+        var thisNode = getNearestParentId(e.target);
+
+        if (thisNode.classList.contains('craftCard')) {
+            // craft new card:
+            // animation ############
+            var cardType = thisNode.id.substring(8); 
+            hero.cards.unshift(cardType);
+            hero.currency.cardDust -= cardGameNameSpace.allCardData[cardType][3];
+            UI.updateCurrencies();UI.updateCardAlbum();
+        }
+    },
+
     updateCardAlbum: function() {
         var cardAlbumMarkup = '<ul>';
         var thisCardsClass, thisCardsQuantityOutput, foundThisType, parentClass, typesFound = 0;
@@ -5107,7 +5128,14 @@ var UI = {
                 thisCardsQuantityOutput = '<span class="quantity">' + counts[i] + '</span>';
                 foundThisType = true;
             }
-            cardAlbumMarkup += '<li' + parentClass + '><img src="/images/card-game/cards/' + i + '.png" class="' + thisCardsClass + '" alt="' + cardGameNameSpace.allCardData[i][2] + ' card">' + thisCardsQuantityOutput + '</li>';
+            cardAlbumMarkup += '<li' + parentClass + '><img src="/images/card-game/cards/' + i + '.png" class="' + thisCardsClass + '" alt="' + cardGameNameSpace.allCardData[i][2] + ' card">' + thisCardsQuantityOutput;
+            
+            if (hero.currency.cardDust >= cardGameNameSpace.allCardData[i][3]) {
+                cardAlbumMarkup += '<button class="craftCard" id="cardCard' + i + '">Craft '+cardGameNameSpace.allCardData[i][2]+' ('+cardGameNameSpace.allCardData[i][3]+')</button>';
+            } else {
+                cardAlbumMarkup += '<span class="craftingCost">Needs ' + cardGameNameSpace.allCardData[i][3] + '</span>';
+            }
+            cardAlbumMarkup += '</li>';
 
             // check for rares - these are the negative of the standard card type:
             if ((counts[(0 - i)])) {
@@ -5632,15 +5660,15 @@ var UI = {
     },
 
     openedShopSuccessfully: function(shopHash) {
-     if(document.getElementById("shop" + shopHash)) {
-        UI.showUI();
-        shopCurrentlyOpen = shopHash;
-        document.getElementById("shop" + shopHash).classList.add("active");
-        inventoryPanels.classList.add("shopSpecialism" + document.getElementById("shop" + shopHash).getAttribute('data-specialism'));
-        return true;
-    } else {
-        return false;
-    }
+        if (document.getElementById("shop" + shopHash)) {
+            UI.showUI();
+            shopCurrentlyOpen = shopHash;
+            document.getElementById("shop" + shopHash).classList.add("active");
+            inventoryPanels.classList.add("shopSpecialism" + document.getElementById("shop" + shopHash).getAttribute('data-specialism'));
+            return true;
+        } else {
+            return false;
+        }
     },
 
     closeShop: function() {
@@ -6054,10 +6082,7 @@ var UI = {
         gameSettingsPanel.classList.add('active');
     },
 
-    toggleCardsDisplayed: function(e) {
-        cardAlbumList.classList.toggle('showOnlyPlayers');
-        toggleActiveCards.innerHTML = (toggleActiveCards.innerHTML == 'Show only collected cards' ? 'Show all cards' : 'Show only collected cards');
-    },
+
 
     buildCollectionPanel: function() {
         var collectionPanels = document.querySelectorAll('#collectionQuestPanels section');
@@ -6974,7 +6999,7 @@ var UI = {
         var quickHoldMarkup = '<ul>';
         var counter = 1;
         // highlight the first if none selected:
-       // if (hero.holding.quickHoldIndex == "") {
+        // if (hero.holding.quickHoldIndex == "") {
         //    hero.holding.quickHoldIndex = 0;
         //}
         var keysFound = [];
@@ -6988,24 +7013,24 @@ var UI = {
 
         keysFound = keysFound.sort();
 
-// add unequip slot:
-quickHoldMarkup += '<li id="quickHold0" data-type="empty" data-hash=""><img src="/images/game-world/inventory-items/empty.png" alt="Empty"></li>';
-var thisFileColourSuffix, thisColourName;
+        // add unequip slot:
+        quickHoldMarkup += '<li id="quickHold0" data-type="empty" data-hash=""><img src="/images/game-world/inventory-items/empty.png" alt="Empty"></li>';
+        var thisFileColourSuffix, thisColourName;
         for (var i = 0; i < keysFound.length; i++) {
             key = keysFound[i];
 
-quickHoldMarkup += '<li id="quickHold' + counter + '" ';
+            quickHoldMarkup += '<li id="quickHold' + counter + '" ';
 
             if (counter === hero.holding.quickHoldIndex) {
                 quickHoldMarkup += 'class="active" ';
             }
-                quickHoldMarkup += 'data-type="' + hero.inventory[key].type + '" data-hash="' + hero.inventory[key].hash + '">';
-            
+            quickHoldMarkup += 'data-type="' + hero.inventory[key].type + '" data-hash="' + hero.inventory[key].hash + '">';
 
 
 
-   thisFileColourSuffix = "";
-             thisColourName = getColourName(hero.inventory[key].colour, hero.inventory[key].type);
+
+            thisFileColourSuffix = "";
+            thisColourName = getColourName(hero.inventory[key].colour, hero.inventory[key].type);
             if (thisColourName != "") {
                 thisFileColourSuffix = "-" + thisColourName.toLowerCase();
             }
@@ -7034,15 +7059,15 @@ quickHoldMarkup += '<li id="quickHold' + counter + '" ';
         }
         var newActiveElement = document.getElementById('quickHold' + hero.holding.quickHoldIndex);
         newActiveElement.classList.add('active');
-    if(hero.holding.quickHoldIndex == 0) {
-        // unequip:
-  hero.holding.hash = "";
-        hero.holding.type = "";
-} else {
-      hero.holding.hash = newActiveElement.dataset.hash;
-        hero.holding.type = newActiveElement.dataset.type;
-}
-      
+        if (hero.holding.quickHoldIndex == 0) {
+            // unequip:
+            hero.holding.hash = "";
+            hero.holding.type = "";
+        } else {
+            hero.holding.hash = newActiveElement.dataset.hash;
+            hero.holding.type = newActiveElement.dataset.type;
+        }
+
         UI.updateHeldItems();
         quickHold.classList.add('active');
         // remove this class as soon as it's fully faded in:

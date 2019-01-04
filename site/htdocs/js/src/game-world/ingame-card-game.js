@@ -10,7 +10,7 @@ function cardGamePlayer2Wins() {
     // player won
     hero.stats.cardGamesWon++;
     hero.currency.cardDust += 7;
-    UI.updateCurrencies();
+    UI.updateCurrencies();UI.updateCardAlbum();
     delete thisChallengeNPC.isPlayingCards;
     processPlayerWinSpeech(thisChallengeNPC, thisChallengeNPC.cardGameSpeech.lose[0], thisChallengeNPC.cardGameSpeech.lose[1]);
     closeCardGame();
@@ -21,7 +21,7 @@ function cardGamePlayer1Wins() {
     // player lost
     hero.stats.cardGamesLost++;
     hero.currency.cardDust += 1;
-    UI.updateCurrencies();
+    UI.updateCurrencies();UI.updateCardAlbum();
      delete thisChallengeNPC.isPlayingCards;
     processSpeech(thisChallengeNPC, thisChallengeNPC.cardGameSpeech.win[0], thisChallengeNPC.cardGameSpeech.win[1]);
     closeCardGame();
@@ -31,7 +31,7 @@ function cardGameIsDrawn() {
      console.log(thisChallengeNPC);
     hero.stats.cardGamesDrawn++;
     hero.currency.cardDust += 3;
-    UI.updateCurrencies();
+    UI.updateCurrencies();UI.updateCardAlbum();
      delete thisChallengeNPC.isPlayingCards;
     processSpeech(thisChallengeNPC, thisChallengeNPC.cardGameSpeech.draw[0], thisChallengeNPC.cardGameSpeech.draw[1]);
     closeCardGame();
