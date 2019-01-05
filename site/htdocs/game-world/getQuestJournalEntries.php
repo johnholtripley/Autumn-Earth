@@ -119,7 +119,13 @@ $itemNameWithColour .= '-'.strtolower($allColours[($item['colour'])]);
 
 if(intval($item['type']) == 34) {
     // is a game card:
- $markupToOutput .= '<div class="item"><img class="players card" src="/images/card-game/inventory-items/'.$item['contains'].'.png">';
+
+$cardId = $item['contains'];
+if($cardId < 0) {
+$cardId = abs($cardId).'-rare';
+}
+
+ $markupToOutput .= '<div class="item"><img class="players card" src="/images/card-game/inventory-items/'.$cardId.'.png">';
 } else {
      $markupToOutput .= '<div class="item"><img src="/images/game-world/inventory-items/'.$itemNameWithColour.'.png">';
 }

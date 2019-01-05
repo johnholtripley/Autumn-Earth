@@ -21,7 +21,8 @@ var soundsToLoad = {
     'dyeing': '../sounds/dyeing-NOT_MINE-wow.mp3',
     'weaving': '../sounds/tailoring-NOT_MINE.mp3',
     'pouring': '../sounds/pour-water-NOT_MINE.mp3',
-    'digging': '../sounds/digging-NOT_MINE.mp3'
+    'digging': '../sounds/digging-NOT_MINE.mp3',
+    'cardCraft': '../sounds/craft-card-NOT_MINE-hearthstone.mp3'
 };
 
 
@@ -5112,33 +5113,27 @@ var UI = {
     },
 
     cardAlbumClick: function(e) {
-
         var thisNode = getNearestParentId(e.target);
-
         if (thisNode.classList.contains('craftCard')) {
             // craft new card:
             // animation ############
-            var cardType = thisNode.id.substring(8); 
-       //     hero.cards.unshift(cardType);
+            var cardType = thisNode.id.substring(8);
             // create card object:
             var craftedCardObject = {
-                        "type": 34,
-                        "contains": cardType
-                        }
-craftedCardObject = prepareInventoryObject(craftedCardObject);
-
-
-inventoryCheck = canAddItemToInventory([craftedCardObject]);
+                "type": 34,
+                "contains": cardType
+            }
+            craftedCardObject = prepareInventoryObject(craftedCardObject);
+            inventoryCheck = canAddItemToInventory([craftedCardObject]);
             if (inventoryCheck[0]) {
-hero.currency.cardDust -= cardGameNameSpace.allCardData[cardType][3];
-            UI.updateCurrencies();UI.updateCardAlbum();
-            UI.showChangeInInventory(inventoryCheck[1]);
-        } else {
-            UI.showNotification("<p>I've don't have room in my bags for that</p>");
-        }
-
-
-            
+                hero.currency.cardDust -= cardGameNameSpace.allCardData[cardType][3];
+                UI.updateCurrencies();
+                UI.updateCardAlbum();
+                UI.showChangeInInventory(inventoryCheck[1]);
+                audio.playSound(soundEffects['cardCraft'], 0);
+            } else {
+                UI.showNotification("<p>I've don't have room in my bags for that</p>");
+            }
         }
     },
 
@@ -5167,9 +5162,9 @@ hero.currency.cardDust -= cardGameNameSpace.allCardData[cardType][3];
                 foundThisType = true;
             }
             cardAlbumMarkup += '<li' + parentClass + '><img src="/images/card-game/cards/' + i + '.png" class="' + thisCardsClass + '" alt="' + cardGameNameSpace.allCardData[i][2] + ' card">' + thisCardsQuantityOutput;
-            
+
             if (hero.currency.cardDust >= cardGameNameSpace.allCardData[i][3]) {
-                cardAlbumMarkup += '<button class="craftCard" id="cardCard' + i + '">Craft '+cardGameNameSpace.allCardData[i][2]+' ('+cardGameNameSpace.allCardData[i][3]+')</button>';
+                cardAlbumMarkup += '<button class="craftCard" id="cardCard' + i + '">Craft ' + cardGameNameSpace.allCardData[i][2] + ' (' + cardGameNameSpace.allCardData[i][3] + ')</button>';
             } else {
                 cardAlbumMarkup += '<span class="craftingCost">Needs ' + cardGameNameSpace.allCardData[i][3] + '</span>';
             }
