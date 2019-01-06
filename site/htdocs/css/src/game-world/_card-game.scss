@@ -164,6 +164,7 @@ $albumCardRatio: 0.7142;
             .new {
                 // a card the player didn't have before:
                 @include box-shadow(0px 0px 18px 7px #d4a926);
+                display: block;
             }
 
             .flipper {

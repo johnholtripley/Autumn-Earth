@@ -219,7 +219,7 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
       <ol>
       <?php
       for ($i=0;$i<5;$i++) {
-      echo '<li class="cardFlip"><div class="flipper"><div class="front card players" id="boosterCard'.$i.'"></div><div class="back"><img src="/images/card-game/cards/back.png" alt="card back"></div></div></li>';
+      echo '<li class="cardFlip"><div class="flipper"><div class="front card players" id="boosterCard'.$i.'"></div><div class="back"><img src="/images/card-game/card-backs/0.jpg" alt="card back"></div></div></li>';
       }
       ?>
       </ol>
