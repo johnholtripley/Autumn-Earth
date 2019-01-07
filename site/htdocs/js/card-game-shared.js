@@ -55,20 +55,24 @@ return ((r1 - r2)*(r1 - r2)) + ((g1 - g2)*(g1 - g2)) + ((b1 - b2)*(b1 - b2));
     cardGameNameSpace.boardWidth = cardGameNameSpace.board[0].length;
     cardGameNameSpace.boardHeight = cardGameNameSpace.board.length;
     cardGameNameSpace.maxCardAnimationFrames = 10;
-    cardGameNameSpace.playerColours= ["", "#36bbed", "#ff00cc"];
+    cardGameNameSpace.playerColours= ["", "0", "3"];
 
 
-if (typeof playersCardBack !== "undefined") {
-   cardGameNameSpace.playerColours[2] =  playersCardBack;
+if (typeof hero.activeCardBack !== "undefined") {
+   cardGameNameSpace.playerColours[2] =  hero.activeCardBack;
 }
 if (typeof cardGameNameSpace.NPCCardBackColour !== "undefined") {
    cardGameNameSpace.playerColours[1] =  cardGameNameSpace.NPCCardBackColour;
 }
 
+if(cardGameNameSpace.playerColours[1] == cardGameNameSpace.playerColours[2]) {
+cardGameNameSpace.playerColours[1] = '0';
+}
+
 // check how similar the colours are:
 // http://stackoverflow.com/questions/1633828/distance-between-colours-in-php/1634206#1634206
 
-
+/*
 if (cardGameNameSpace.compareColours(cardGameNameSpace.playerColours[1], cardGameNameSpace.playerColours[2]) < 3500) {
 
 
@@ -85,6 +89,7 @@ if (cardGameNameSpace.compareColours(cardGameNameSpace.playerColours[1], cardGam
     }
 
 }
+*/
 
 
         cardGameNameSpace.allCardsThisGame = cardGameNameSpace.player1Cards.concat(cardGameNameSpace.player2Cards);
@@ -95,7 +100,8 @@ if (cardGameNameSpace.compareColours(cardGameNameSpace.playerColours[1], cardGam
 
 
 
-       
+       console.log("/images/card-game/card-backs/"+cardGameNameSpace.playerColours[1]+".jpg");
+       console.log("/images/card-game/card-backs/"+cardGameNameSpace.playerColours[2]+".jpg");
 
         cardGameNameSpace.imagesToLoad = [{
             name: "board",
@@ -106,7 +112,17 @@ if (cardGameNameSpace.compareColours(cardGameNameSpace.playerColours[1], cardGam
         }, {
             name: "current",
             src: "/images/card-game/current-player.png"
-        }];
+        },
+
+{
+      name: "player1Back",
+            src: "/images/card-game/card-backs/"+cardGameNameSpace.playerColours[1]+".jpg"
+},
+{
+      name: "player2Back",
+            src: "/images/card-game/card-backs/"+cardGameNameSpace.playerColours[2]+".jpg"
+}
+        ];
         // build cardGameNameSpace.imagesToLoad array dynamically for cards:
        
         for (var i = 0; i < cardGameNameSpace.numberOfCardTypes; i++) {
@@ -532,8 +548,17 @@ if (cardGameNameSpace.compareColours(cardGameNameSpace.playerColours[1], cardGam
                             this.zIndex = 0;
                         }
                     }
+
+
+
+cardGameNameSpace.gameContext.drawImage(cardGameNameSpace['player'+this.currentOwner+'Back'], this.x + offsetX, this.y + offsetY);
+
+/*
                     cardGameNameSpace.gameContext.fillStyle = cardGameNameSpace.playerColours[this.currentOwner];
                     cardGameNameSpace.gameContext.fillRect(this.x + offsetX, this.y + offsetY, cardGameNameSpace.cardWidth, cardGameNameSpace.cardHeight);
+*/
+
+
                   if(this.cardType>0) {
                     cardGameNameSpace.gameContext.drawImage(cardGameNameSpace.cardImages[this.cardType], this.x + offsetX, this.y + offsetY);
                 } else {
@@ -554,6 +579,8 @@ this.animationSequence = 0;
         }
         cardGameNameSpace.boardImage = Loader.getImage("board");
         cardGameNameSpace.currentCardSelectedImage = Loader.getImage("selected");
+        cardGameNameSpace.player1Back = Loader.getImage("player1Back");
+        cardGameNameSpace.player2Back = Loader.getImage("player2Back");
         cardGameNameSpace.currentCardSelected = {
             draw: function() {
                 if (cardGameNameSpace.currentlySelectedCard != -1) {

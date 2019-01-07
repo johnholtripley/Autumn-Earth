@@ -31,13 +31,14 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
   <?php include($_SERVER['DOCUMENT_ROOT']."/includes/meta-content.php"); ?>
   <?php include($_SERVER['DOCUMENT_ROOT']."/game-world/getPost.php"); ?>
   <?php include($_SERVER['DOCUMENT_ROOT']."/game-world/getRetinueFollowers.php"); ?>
-  <style>
+  <style id="playersCardBack">
     .card.players {
-    /* this hero's card back: */
-    background: #ec35ea;
+    /* the hero's active card back - replaced after getCardDetails returns: */
+    background-image: url(/images/card-game/card-backs/1.jpg);
   }
   </style>
-  <script>var playersCardBack = '#ec35ea';</script>
+
+ 
 </head>
 <body>
  
@@ -98,6 +99,15 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
     </div>
     <div id="cardAlbum" class="active">
       <div class="draggableBar">Totem Card album</div>
+
+
+      <div class="tabHeader">
+        <button class="tabs active" id="">Album</button>
+        <button class="tabs" id="">Backs</button>
+        <button class="tabs" id="">Crafting</button>
+      </div>
+
+
       <div id="cardAlbumList" class="showOnlyPlayers"></div>
       <button id="toggleActiveCards">Craft cards</button>
     </div>
@@ -219,7 +229,7 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
       <ol>
       <?php
       for ($i=0;$i<5;$i++) {
-      echo '<li class="cardFlip"><div class="flipper"><div class="front card players" id="boosterCard'.$i.'"></div><div class="back card players"><img src="/images/card-game/card-backs/blank.png" alt="card back"></div></div></li>';
+      echo '<li class="cardFlip"><div class="flipper"><div class="front card players" id="boosterCard'.$i.'"></div><div class="back"><img src="/images/card-game/card-backs/back.jpg" alt="card back"></div></div></li>';
       }
       ?>
       </ol>

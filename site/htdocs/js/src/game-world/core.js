@@ -131,8 +131,11 @@ function prepareCoreAssets() {
 
 
 function loadCardData() {
-    getJSON("/game-world/getCardDetails.php", function(data) {
+    getJSON("/game-world/getCardDetails.php?playerId=" + characterId, function(data) {
         cardGameNameSpace.allCardData = data.cards;
+        hero.cardBacks = data.backs;
+        hero.activeCardBack = data.activeBack;
+        UI.changeActiveCardBack();
         loadMap();
     }, function(status) {
         // error - try again:

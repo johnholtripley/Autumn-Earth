@@ -921,6 +921,7 @@
                 },
                 "cardSkill": 1,
                 "uniqueCards": [2, 2],
+                "cardBackColour": 4,
                 "baseCardPack": 0,
                 "animation":
                 {

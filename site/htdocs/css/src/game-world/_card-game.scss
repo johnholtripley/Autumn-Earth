@@ -15,12 +15,17 @@ $cardHeight: 102px;
 }
 
 .card {
+    -webkit-background-size: 100% 100%;
+    background-size: 100% 100%;
+    background-position: 50% 50%;
+    background-repeat: no-repeat;
+
     &.players {
-        background: #ff00cc;
+        background-color: #ff00cc;
     }
 
     &.npcs {
-        background: #ffcc00;
+        background-color: #ffcc00;
     }
 
 }

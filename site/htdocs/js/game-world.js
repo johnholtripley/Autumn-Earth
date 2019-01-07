@@ -5173,7 +5173,7 @@ var UI = {
             // check for rares - these are the negative of the standard card type:
             if ((counts[(0 - i)])) {
                 foundThisType = true;
-                cardAlbumMarkup += '<li class="rare"><div class="card players" style="background-image:url(/images/card-game/cards/' + (0 - i) + '.png)"></div><span class="quantity">' + counts[(0 - i)] + '</span></li>';
+                cardAlbumMarkup += '<li class="rare card players"><div style="background-image:url(/images/card-game/cards/' + (0 - i) + '.png)"></div><span class="quantity">' + counts[(0 - i)] + '</span></li>';
             }
             if (foundThisType) {
                 typesFound++;
@@ -5182,6 +5182,11 @@ var UI = {
         cardAlbumMarkup += '</ul>';
         cardAlbumMarkup += '<p>' + typesFound + ' types out of ' + (cardGameNameSpace.allCardData.length - 1) + '. Total individual cards: ' + hero.cards.length + '</p>';
         cardAlbumList.innerHTML = cardAlbumMarkup;
+    },
+
+    changeActiveCardBack: function() {
+      // change the CSS:
+        document.getElementById('playersCardBack').innerHTML = '.card.players {background-image: url(/images/card-game/card-backs/'+hero.activeCardBack+'.jpg);}';
     },
 
     populateRecipeList: function(whichProfession, toolsQuality) {
@@ -7310,8 +7315,11 @@ function prepareCoreAssets() {
 
 
 function loadCardData() {
-    getJSON("/game-world/getCardDetails.php", function(data) {
+    getJSON("/game-world/getCardDetails.php?playerId=" + characterId, function(data) {
         cardGameNameSpace.allCardData = data.cards;
+        hero.cardBacks = data.backs;
+        hero.activeCardBack = data.activeBack;
+        UI.changeActiveCardBack();
         loadMap();
     }, function(status) {
         // error - try again:
