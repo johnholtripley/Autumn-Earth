@@ -546,7 +546,12 @@ var UI = {
             if (hero.cardBacks[i] == hero.activeCardBack) {
                 cardAlbumMarkup += ' active';
             }
+            if(hero.cardBacks[i]<0) {
+// player generated content back:
+cardAlbumMarkup += '"><img src="/images/user-generated/' + Math.abs(hero.cardBacks[i]) + '-world.jpg"></li>';
+            } else {
             cardAlbumMarkup += '"><img src="/images/card-game/card-backs/' + hero.cardBacks[i] + '.jpg"></li>';
+        }
         }
         cardAlbumMarkup += '</ul>';
         cardAlbumMarkup += '<p>' + typesFound + ' types out of ' + (cardGameNameSpace.allCardData.length - 1) + '. Total individual cards: ' + hero.cards.length + '. Total backs: ' + hero.cardBacks.length + '</p>';
@@ -555,7 +560,11 @@ var UI = {
 
     changeActiveCardBack: function() {
         // change the CSS:
+        if(hero.activeCardBack<0) {
+ document.getElementById('playersCardBack').innerHTML = '.card.players {background-image: url(/images/user-generated/' + Math.abs(hero.activeCardBack) + '-world.jpg);}';
+        } else {
         document.getElementById('playersCardBack').innerHTML = '.card.players {background-image: url(/images/card-game/card-backs/' + hero.activeCardBack + '.jpg);}';
+    }
     },
 
     populateRecipeList: function(whichProfession, toolsQuality) {

@@ -430,6 +430,11 @@ function inventoryItemAction(whichSlot, whichAction, allActionValues) {
                     UI.updateCardAlbum();
                     removeFromInventory(whichSlotNumber, 1);
                     break;
+                    case "cardBack":
+                      hero.cardBacks.unshift(0-(hero.inventory[whichSlotNumber].contains['ugc-id']));
+                    UI.updateCardAlbum();
+                    removeFromInventory(whichSlotNumber, 1);
+                    break;
                 case "questSet":
                     if (!questData[whichActionValue].isUnderway) {
                         questData[whichActionValue].isUnderway = true;

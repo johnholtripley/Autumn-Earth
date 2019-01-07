@@ -3485,6 +3485,11 @@ function inventoryItemAction(whichSlot, whichAction, allActionValues) {
                     UI.updateCardAlbum();
                     removeFromInventory(whichSlotNumber, 1);
                     break;
+                    case "cardBack":
+                      hero.cardBacks.unshift(0-(hero.inventory[whichSlotNumber].contains['ugc-id']));
+                    UI.updateCardAlbum();
+                    removeFromInventory(whichSlotNumber, 1);
+                    break;
                 case "questSet":
                     if (!questData[whichActionValue].isUnderway) {
                         questData[whichActionValue].isUnderway = true;
@@ -5208,7 +5213,12 @@ var UI = {
             if (hero.cardBacks[i] == hero.activeCardBack) {
                 cardAlbumMarkup += ' active';
             }
+            if(hero.cardBacks[i]<0) {
+// player generated content back:
+cardAlbumMarkup += '"><img src="/images/user-generated/' + Math.abs(hero.cardBacks[i]) + '-world.jpg"></li>';
+            } else {
             cardAlbumMarkup += '"><img src="/images/card-game/card-backs/' + hero.cardBacks[i] + '.jpg"></li>';
+        }
         }
         cardAlbumMarkup += '</ul>';
         cardAlbumMarkup += '<p>' + typesFound + ' types out of ' + (cardGameNameSpace.allCardData.length - 1) + '. Total individual cards: ' + hero.cards.length + '. Total backs: ' + hero.cardBacks.length + '</p>';
@@ -5217,7 +5227,11 @@ var UI = {
 
     changeActiveCardBack: function() {
         // change the CSS:
+        if(hero.activeCardBack<0) {
+ document.getElementById('playersCardBack').innerHTML = '.card.players {background-image: url(/images/user-generated/' + Math.abs(hero.activeCardBack) + '-world.jpg);}';
+        } else {
         document.getElementById('playersCardBack').innerHTML = '.card.players {background-image: url(/images/card-game/card-backs/' + hero.activeCardBack + '.jpg);}';
+    }
     },
 
     populateRecipeList: function(whichProfession, toolsQuality) {
@@ -7564,7 +7578,7 @@ thisImagePath = "/images/game-world/items/" + currentActiveInventoryItems[thisMa
 if(typeof thisMapData.items[i].contains !== "undefined") {
 if(typeof thisMapData.items[i].contains['ugc-id'] !== "undefined") {
 thisItemIdentifier = "item" + thisMapData.items[i].type + '_' + thisMapData.items[i].contains['ugc-id'];
-thisImagePath = "/images/user-generated/" + thisMapData.items[i].contains['ugc-id'] + "-iso.png";
+thisImagePath = "/images/user-generated/" + thisMapData.items[i].contains['ugc-id'] + "-world.png";
 }
 }
 

@@ -352,7 +352,7 @@ thisImagePath = "/images/game-world/items/" + currentActiveInventoryItems[thisMa
 if(typeof thisMapData.items[i].contains !== "undefined") {
 if(typeof thisMapData.items[i].contains['ugc-id'] !== "undefined") {
 thisItemIdentifier = "item" + thisMapData.items[i].type + '_' + thisMapData.items[i].contains['ugc-id'];
-thisImagePath = "/images/user-generated/" + thisMapData.items[i].contains['ugc-id'] + "-iso.png";
+thisImagePath = "/images/user-generated/" + thisMapData.items[i].contains['ugc-id'] + "-world.png";
 }
 }
 

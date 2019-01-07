@@ -99,9 +99,10 @@ if (cardGameNameSpace.compareColours(cardGameNameSpace.playerColours[1], cardGam
         cardGameNameSpace.numberOfCardTypes = cardGameNameSpace.allCardsToLoadThisGame.length;
 
 
-
-       console.log("/images/card-game/card-backs/"+cardGameNameSpace.playerColours[1]+".jpg");
-       console.log("/images/card-game/card-backs/"+cardGameNameSpace.playerColours[2]+".jpg");
+cardGameNameSpace.playerCardPath = "/images/card-game/card-backs/"+cardGameNameSpace.playerColours[2]+".jpg";
+    if(cardGameNameSpace.playerColours[2]<0) {
+      cardGameNameSpace.playerCardPath = "/images/user-generated/"+Math.abs(cardGameNameSpace.playerColours[2])+"-world.jpg";  
+    }
 
         cardGameNameSpace.imagesToLoad = [{
             name: "board",
@@ -120,7 +121,7 @@ if (cardGameNameSpace.compareColours(cardGameNameSpace.playerColours[1], cardGam
 },
 {
       name: "player2Back",
-            src: "/images/card-game/card-backs/"+cardGameNameSpace.playerColours[2]+".jpg"
+            src: cardGameNameSpace.playerCardPath
 }
         ];
         // build cardGameNameSpace.imagesToLoad array dynamically for cards:
