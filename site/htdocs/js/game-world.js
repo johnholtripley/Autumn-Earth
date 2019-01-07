@@ -2804,6 +2804,13 @@ function cardGamePlayer2Wins() {
     hero.stats.cardGamesWon++;
     hero.currency.cardDust += 7;
     UI.updateCurrencies();UI.updateCardAlbum();
+    if(typeof thisChallengeNPC.cardBackId !== "undefined") {
+if(hero.cardBacks.indexOf(parseInt(thisChallengeNPC.cardBackId)) == -1) {
+hero.cardBacks.push(parseInt(thisChallengeNPC.cardBackId));
+UI.showNotification("<p>I've just won a new card back</p>");
+UI.updateCardAlbum();
+}
+    }
     delete thisChallengeNPC.isPlayingCards;
     processPlayerWinSpeech(thisChallengeNPC, thisChallengeNPC.cardGameSpeech.lose[0], thisChallengeNPC.cardGameSpeech.lose[1]);
     closeCardGame();
@@ -2865,7 +2872,7 @@ function startCardGame(opponentNPC) {
         cardGameNameSpace.player1Cards = opponentNPC.uniqueCards.concat(allCardPacks[opponentNPC.baseCardPack]).slice(0, 12);
         cardGameNameSpace.player1Skill = opponentNPC.cardSkill;
         if (opponentNPC.cardBackColour) {
-            cardGameNameSpace.NPCCardBackColour = opponentNPC.cardBackColour;
+            cardGameNameSpace.NPCCardBackColour = opponentNPC.cardBackId;
         } else {
             cardGameNameSpace.NPCCardBackColour = undefined;
         }
@@ -5179,8 +5186,15 @@ var UI = {
                 typesFound++;
             }
         }
+        for (var i = 0; i < hero.cardBacks.length; i++) {
+            cardAlbumMarkup += '<li class="cardBack';
+            if (hero.cardBacks[i] == hero.activeCardBack) {
+                cardAlbumMarkup += ' active';
+            }
+            cardAlbumMarkup += '"><img src="/images/card-game/card-backs/' + hero.cardBacks[i] + '.jpg"></li>';
+        }
         cardAlbumMarkup += '</ul>';
-        cardAlbumMarkup += '<p>' + typesFound + ' types out of ' + (cardGameNameSpace.allCardData.length - 1) + '. Total individual cards: ' + hero.cards.length + '</p>';
+        cardAlbumMarkup += '<p>' + typesFound + ' types out of ' + (cardGameNameSpace.allCardData.length - 1) + '. Total individual cards: ' + hero.cards.length + '. Total backs: '+hero.cardBacks.length+'</p>';
         cardAlbumList.innerHTML = cardAlbumMarkup;
     },
 

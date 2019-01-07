@@ -524,8 +524,15 @@ var UI = {
                 typesFound++;
             }
         }
+        for (var i = 0; i < hero.cardBacks.length; i++) {
+            cardAlbumMarkup += '<li class="cardBack';
+            if (hero.cardBacks[i] == hero.activeCardBack) {
+                cardAlbumMarkup += ' active';
+            }
+            cardAlbumMarkup += '"><img src="/images/card-game/card-backs/' + hero.cardBacks[i] + '.jpg"></li>';
+        }
         cardAlbumMarkup += '</ul>';
-        cardAlbumMarkup += '<p>' + typesFound + ' types out of ' + (cardGameNameSpace.allCardData.length - 1) + '. Total individual cards: ' + hero.cards.length + '</p>';
+        cardAlbumMarkup += '<p>' + typesFound + ' types out of ' + (cardGameNameSpace.allCardData.length - 1) + '. Total individual cards: ' + hero.cards.length + '. Total backs: '+hero.cardBacks.length+'</p>';
         cardAlbumList.innerHTML = cardAlbumMarkup;
     },
 
