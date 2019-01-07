@@ -78,7 +78,7 @@ function startCardGame(opponentNPC) {
         // combine the NPC's unique cards with their base pack and pick the first 12:
         cardGameNameSpace.player1Cards = opponentNPC.uniqueCards.concat(allCardPacks[opponentNPC.baseCardPack]).slice(0, 12);
         cardGameNameSpace.player1Skill = opponentNPC.cardSkill;
-        if (opponentNPC.cardBackColour) {
+        if (opponentNPC.cardBackId) {
             cardGameNameSpace.NPCCardBackColour = opponentNPC.cardBackId;
         } else {
             cardGameNameSpace.NPCCardBackColour = undefined;

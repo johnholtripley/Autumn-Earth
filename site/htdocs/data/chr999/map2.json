@@ -919,7 +919,7 @@
                     "lose": ["Ahh, you beat me...", ""],
                     "draw": ["Well played", ""]
                 },
-                "cardSkill": 1,
+                "cardSkill": 8,
                 "uniqueCards": [2, 2],
                 "cardBackId": 4,
                 "baseCardPack": 0,
