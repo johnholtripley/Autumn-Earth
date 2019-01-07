@@ -99,17 +99,12 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
     </div>
     <div id="cardAlbum" class="active">
       <div class="draggableBar">Totem Card album</div>
-
-
       <div class="tabHeader">
-        <button class="tabs active" id="">Album</button>
-        <button class="tabs" id="">Backs</button>
-        <button class="tabs" id="">Crafting</button>
+        <button class="tabs active" id="tabShowAlbum">Album</button>
+        <button class="tabs" id="tabShowBacks">Backs</button>
+        <button class="tabs" id="tabShowCrafting">Crafting</button>
       </div>
-
-
-      <div id="cardAlbumList" class="showOnlyPlayers"></div>
-      <button id="toggleActiveCards">Craft cards</button>
+      <div id="cardAlbumList" class="tabShowAlbum"></div>
     </div>
     <div id="cartographicPanel" class="active">
       <div class="draggableBar">

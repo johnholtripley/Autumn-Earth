@@ -31,6 +31,7 @@ const musicVolume = document.getElementById('musicVolume');
 const gameSettingsPanel = document.getElementById('gameSettings');
 const toggleActiveCards = document.getElementById('toggleActiveCards');
 const cardAlbum = document.getElementById('cardAlbum');
+const cardAlbumTabs = document.querySelectorAll('#cardAlbum .tabs');
 const toggleFullscreenSwitch = document.getElementById('toggleFullScreen');
 const collectionQuestPanels = document.getElementById('collectionQuestPanels');
 const chestPanel = document.getElementById('chestPanel');
@@ -180,7 +181,7 @@ var UI = {
         document.getElementById('craftingRecipeCreateButton').onclick = UI.craftingRecipeCreate;
         splitStackPanel.onsubmit = inventorySplitStackSubmit;
         shopSplitStackPanel.onsubmit = UI.shopSplitStackSubmit;
-        toggleActiveCards.onclick = UI.toggleCardsDisplayed;
+        //  toggleActiveCards.onclick = UI.toggleCardsDisplayed;
         cardAlbum.onclick = UI.cardAlbumClick;
         startCrafting.onclick = startCraftingTimer;
         document.getElementById('splitStackCancel').onclick = inventorySplitStackCancel;
@@ -452,11 +453,6 @@ var UI = {
         }
     },
 
-    toggleCardsDisplayed: function(e) {
-        cardAlbumList.classList.toggle('showOnlyPlayers');
-        toggleActiveCards.innerHTML = (toggleActiveCards.innerHTML == 'Finish crafting' ? 'Craft cards' : 'Finish crafting');
-    },
-
     cardAlbumClick: function(e) {
         var thisNode = getNearestParentId(e.target);
         if (thisNode.classList.contains('craftCard')) {
@@ -484,6 +480,22 @@ var UI = {
             hero.activeCardBack = thisNode.id.substring(8);
             UI.changeActiveCardBack()
             UI.updateCardAlbum();
+        } else if (thisNode.classList.contains('tabs')) {
+            for (var i = 0; i < cardAlbumTabs.length; i++) {
+                cardAlbumTabs[i].classList.remove('active');
+            }
+            thisNode.classList.add('active');
+            switch (thisNode.id) {
+                case 'tabShowAlbum':
+                    cardAlbumList.className = 'showAlbum';
+                    break;
+                case 'tabShowBacks':
+                    cardAlbumList.className = 'showBacks';
+                    break;
+                case 'tabShowCrafting':
+                    cardAlbumList.className = 'showCrafting';
+                    break;
+            }
         }
     },
 

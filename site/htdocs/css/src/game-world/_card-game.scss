@@ -55,26 +55,38 @@ $cardHeight: 102px;
 $albumCardRatio: 0.7142;
 
 #cardAlbumList {
-    li.rare {
+    li.rare,
+    li.inactive,
+    li.cardBack,
+    .craftingCost,
+    .craftCard {
         display: none;
     }
-
-    &.showOnlyPlayers {
-        // NOT crafting currently:
-        li.inactive {
-            display: none;
-        }
-
-        .craftingCost, .craftCard {
-            display: none;
-        }
-
+    &.showAlbum {
         li.rare {
             display: block;
         }
     }
 
+    &.showBacks {
+        li {
+            display: none;
+        }
+        li.cardBack {
+            display: block;
+            &.active {
+                @include box-shadow(0px 0px 6px 3px #d4a926);
+            }
+        }
+    }
 
+    &.showCrafting {
+        li.inactive,
+        .craftingCost,
+        .craftCard {
+            display: block;
+        }
+    }
 
     ul {
         margin: 0;
@@ -91,8 +103,8 @@ $albumCardRatio: 0.7142;
 
     li {
         width: $cardWidth*$albumCardRatio;
-    //    height: $cardHeight*$albumCardRatio;
-      //  background: #cecece;
+        //    height: $cardHeight*$albumCardRatio;
+        //  background: #cecece;
         display: block;
         float: left;
         margin: 0 4px 4px 0;
