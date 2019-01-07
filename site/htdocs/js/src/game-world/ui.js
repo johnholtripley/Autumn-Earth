@@ -479,6 +479,11 @@ var UI = {
             } else {
                 UI.showNotification("<p>I've don't have room in my bags for that</p>");
             }
+        } else if (thisNode.classList.contains('cardBack')) {
+            // set this back to be the active one:
+            hero.activeCardBack = thisNode.id.substring(8);
+            UI.changeActiveCardBack()
+            UI.updateCardAlbum();
         }
     },
 
@@ -525,30 +530,27 @@ var UI = {
             }
         }
         for (var i = 0; i < hero.cardBacks.length; i++) {
-            cardAlbumMarkup += '<li class="cardBack';
+            cardAlbumMarkup += '<li id="cardBack' + hero.cardBacks[i] + '" class="cardBack';
             if (hero.cardBacks[i] == hero.activeCardBack) {
                 cardAlbumMarkup += ' active';
             }
             cardAlbumMarkup += '"><img src="/images/card-game/card-backs/' + hero.cardBacks[i] + '.jpg"></li>';
         }
         cardAlbumMarkup += '</ul>';
-        cardAlbumMarkup += '<p>' + typesFound + ' types out of ' + (cardGameNameSpace.allCardData.length - 1) + '. Total individual cards: ' + hero.cards.length + '. Total backs: '+hero.cardBacks.length+'</p>';
+        cardAlbumMarkup += '<p>' + typesFound + ' types out of ' + (cardGameNameSpace.allCardData.length - 1) + '. Total individual cards: ' + hero.cards.length + '. Total backs: ' + hero.cardBacks.length + '</p>';
         cardAlbumList.innerHTML = cardAlbumMarkup;
     },
 
     changeActiveCardBack: function() {
-      // change the CSS:
-        document.getElementById('playersCardBack').innerHTML = '.card.players {background-image: url(/images/card-game/card-backs/'+hero.activeCardBack+'.jpg);}';
+        // change the CSS:
+        document.getElementById('playersCardBack').innerHTML = '.card.players {background-image: url(/images/card-game/card-backs/' + hero.activeCardBack + '.jpg);}';
     },
 
     populateRecipeList: function(whichProfession, toolsQuality) {
-
         if (currentRecipePanelProfession != whichProfession) {
             // close the main crafting panel (in case it's open):
             releaseLockedSlots();
             craftingSelectComponentsPanel.classList.remove('active');
-
-
             // clear previous searches:
             recipeSearch.value = '';
             clearRecipeSearch.classList.remove("active");
