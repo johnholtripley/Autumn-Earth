@@ -104,7 +104,7 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
         <button class="tabs" id="tabShowBacks">Backs</button>
         <button class="tabs" id="tabShowCrafting">Crafting</button>
       </div>
-      <div id="cardAlbumList" class="tabShowAlbum"></div>
+      <div id="cardAlbumList" class="showAlbum"></div>
     </div>
     <div id="cartographicPanel" class="active">
       <div class="draggableBar">
@@ -251,6 +251,7 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
       <canvas id="cardGame" moz-opaque width="1008" height="612">
         <img src="/images/card-game/no-canvas.jpg" alt="Card game">
       </canvas>
+      <button id="cardGameConcede">Concede</button>
   </div>
 </div>
 

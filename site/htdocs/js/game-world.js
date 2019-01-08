@@ -2799,6 +2799,12 @@ var allCardPacks = [
 //tempCardData = '{[[null, null, null],["5", "10", "Bomb"],["5", "10", "Chocobo"],["5", "10", "Mog"],["5", "10", "Cactuar"],["5", "10", "Shiva"],["5", "10", "Tonberry"],["5", "10", "Slime"]]}';
   //  cardGameNameSpace.allCardData = tempCardData;
 
+function cardGamePlayer2Concedes() {
+delete thisChallengeNPC.isPlayingCards;
+ processSpeech(thisChallengeNPC, thisChallengeNPC.cardGameSpeech.win[0], thisChallengeNPC.cardGameSpeech.win[1]);
+    closeCardGame();
+}
+
 function cardGamePlayer2Wins() {
     // player won
     hero.stats.cardGamesWon++;
@@ -2817,7 +2823,6 @@ UI.updateCardAlbum();
 }
 
 function cardGamePlayer1Wins() {
-    console.log(thisChallengeNPC);
     // player lost
     hero.stats.cardGamesLost++;
     hero.currency.cardDust += 1;
@@ -4743,6 +4748,7 @@ const characterPanel = document.getElementById('characterPanel');
 const holdingIcon = document.getElementById('holdingIcon');
 const quickHold = document.getElementById('quickHold');
 const holdingGauge = document.getElementById('holdingGauge');
+const cardGameConcede = document.getElementById('cardGameConcede');
 
 
 
@@ -4851,6 +4857,7 @@ var UI = {
         //  toggleActiveCards.onclick = UI.toggleCardsDisplayed;
         cardAlbum.onclick = UI.cardAlbumClick;
         startCrafting.onclick = startCraftingTimer;
+        cardGameConcede.onclick = cardGamePlayer2Concedes;
         document.getElementById('splitStackCancel').onclick = inventorySplitStackCancel;
         document.getElementById('shopSplitStackCancel').onclick = UI.shopSplitStackCancel;
         toggleFullscreenSwitch.onchange = UI.toggleFullScreen;
@@ -5221,6 +5228,9 @@ cardAlbumMarkup += '"><img src="/images/user-generated/' + Math.abs(hero.cardBac
         }
         }
         cardAlbumMarkup += '</ul>';
+
+cardAlbumMarkup += '<p id="dustCurrency">'+ hero.currency.cardDust + ' dust</p>';
+
         cardAlbumMarkup += '<p>' + typesFound + ' types out of ' + (cardGameNameSpace.allCardData.length - 1) + '. Total individual cards: ' + hero.cards.length + '. Total backs: ' + hero.cardBacks.length + '</p>';
         cardAlbumList.innerHTML = cardAlbumMarkup;
     },

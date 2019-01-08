@@ -8,9 +8,13 @@ $cardHeight: 102px;
     @include transform(translate(-400px, -243px));
     @include box-shadow(0px 12px 36px 0px #000);
     @include togglePanel(0.6s);
-
+    background: #000;
     canvas {
         width: 800px;
+    }
+    button {
+        margin: 3px auto;
+        display: block;
     }
 }
 
@@ -59,8 +63,13 @@ $albumCardRatio: 0.7142;
     li.inactive,
     li.cardBack,
     .craftingCost,
-    .craftCard {
+    .craftCard, #dustCurrency {
         display: none;
+    }
+    #dustCurrency {
+        background: #000 url(/images/game-world/interface/currency/card.png) no-repeat 6px 50%;
+        color: #fff;
+        padding: 6px 6px 6px 24px;
     }
     &.showAlbum {
         li.rare {
@@ -85,6 +94,9 @@ $albumCardRatio: 0.7142;
         .craftingCost,
         .craftCard {
             display: block;
+        }
+        #dustCurrency {
+            display:block;
         }
     }
 
@@ -113,6 +125,7 @@ $albumCardRatio: 0.7142;
         img {
             width: 100%;
             height: auto;
+            display: block;
         }
 
         .quantity {

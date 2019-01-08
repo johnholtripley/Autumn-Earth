@@ -76,6 +76,7 @@ const characterPanel = document.getElementById('characterPanel');
 const holdingIcon = document.getElementById('holdingIcon');
 const quickHold = document.getElementById('quickHold');
 const holdingGauge = document.getElementById('holdingGauge');
+const cardGameConcede = document.getElementById('cardGameConcede');
 
 
 
@@ -184,6 +185,7 @@ var UI = {
         //  toggleActiveCards.onclick = UI.toggleCardsDisplayed;
         cardAlbum.onclick = UI.cardAlbumClick;
         startCrafting.onclick = startCraftingTimer;
+        cardGameConcede.onclick = cardGamePlayer2Concedes;
         document.getElementById('splitStackCancel').onclick = inventorySplitStackCancel;
         document.getElementById('shopSplitStackCancel').onclick = UI.shopSplitStackCancel;
         toggleFullscreenSwitch.onchange = UI.toggleFullScreen;
@@ -554,6 +556,9 @@ cardAlbumMarkup += '"><img src="/images/user-generated/' + Math.abs(hero.cardBac
         }
         }
         cardAlbumMarkup += '</ul>';
+
+cardAlbumMarkup += '<p id="dustCurrency">'+ hero.currency.cardDust + ' dust</p>';
+
         cardAlbumMarkup += '<p>' + typesFound + ' types out of ' + (cardGameNameSpace.allCardData.length - 1) + '. Total individual cards: ' + hero.cards.length + '. Total backs: ' + hero.cardBacks.length + '</p>';
         cardAlbumList.innerHTML = cardAlbumMarkup;
     },

@@ -19,9 +19,7 @@ if (mysqli_num_rows($result) > 0) {
 echo '<ol id="cardList">';
 $cardDataNeeded = array(array(null,null,null));
 while ($row = mysqli_fetch_array($result)) {
-
 extract($row);
-
 ?>
 
 <li>

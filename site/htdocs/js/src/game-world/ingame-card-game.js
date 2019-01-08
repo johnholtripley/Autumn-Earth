@@ -6,6 +6,12 @@ var allCardPacks = [
 //tempCardData = '{[[null, null, null],["5", "10", "Bomb"],["5", "10", "Chocobo"],["5", "10", "Mog"],["5", "10", "Cactuar"],["5", "10", "Shiva"],["5", "10", "Tonberry"],["5", "10", "Slime"]]}';
   //  cardGameNameSpace.allCardData = tempCardData;
 
+function cardGamePlayer2Concedes() {
+delete thisChallengeNPC.isPlayingCards;
+ processSpeech(thisChallengeNPC, thisChallengeNPC.cardGameSpeech.win[0], thisChallengeNPC.cardGameSpeech.win[1]);
+    closeCardGame();
+}
+
 function cardGamePlayer2Wins() {
     // player won
     hero.stats.cardGamesWon++;
@@ -24,7 +30,6 @@ UI.updateCardAlbum();
 }
 
 function cardGamePlayer1Wins() {
-    console.log(thisChallengeNPC);
     // player lost
     hero.stats.cardGamesLost++;
     hero.currency.cardDust += 1;
