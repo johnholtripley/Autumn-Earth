@@ -74,7 +74,7 @@ $result4 = mysqli_query($connection, $query4) or die ("couldn't execute query4")
 		  while ($row4 = mysqli_fetch_array($result4)) {
     extract($row4);
     echo '<p>'.$itemTitle.'</p>';
-      echo '<img src="'.$dir.$itemID.'-iso.jpg" style="width:auto;height:auto;"><button class="deleteImageFile" data-id="'.$itemID.'">delete</button>';
+      echo '<img src="'.$dir.$itemID.'-world.jpg" style="width:auto;height:auto;"><button class="deleteImageFile" data-id="'.$itemID.'">delete</button>';
      
 }
 			} else {

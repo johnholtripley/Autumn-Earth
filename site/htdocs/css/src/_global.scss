@@ -210,10 +210,15 @@ a[href^="http"]:not([href*="autumnearth.com"]):after {
     height: 64px;
 }
 
-#cardList img {
+#cardList, #cardBackList {
+    img {
 width: 84px;
             height: 102px;
             background: teal;
+}
+}
+#cardBackList .alreadyGot img {
+@include box-shadow(0px 0px 18px 6px #d4a926);
 }
 
 .highlight {
