@@ -68,7 +68,8 @@ $numberOfItemCategories: 20;
 
     img {
         display: block; // don't want :active otherwise the tooltip blocks dragging the item up a slot in Chrome
-
+// prevent alt text flashing up:
+font-size: 0;
         // @include attention() {
         &:hover,
         &:focus {

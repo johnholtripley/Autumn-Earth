@@ -122,6 +122,7 @@ var audio = {
 
 
     playMusic: function(newTrack) {
+        console.log(newTrack, audio.activeTrack, audio.lastTrack);
         if (typeof audio.activeTrack !== "undefined") {
             if (audio.activeTrack != newTrack) {
 
@@ -143,7 +144,6 @@ var audio = {
             // make sure it wasn't just played:
             if (newTrack != audio.lastTrack) {
                 // nothing playing currently:
-
                 audio.initMusic(newTrack);
                 audio[newTrack].play();
                 audio.activeTrack = newTrack;
@@ -151,6 +151,21 @@ var audio = {
                 // set initial volume to match settings:
                 audio[audio.activeTrack + 'Gain'].gain.setValueAtTime(gameSettings.musicVolume, audioContext.currentTime);
             }
+        }
+    },
+
+    fadeOutMusic: function(whichTrack) {
+        if (typeof audio[whichTrack] !== undefined) {
+            //  audio[whichTrack].pause();
+            var fadeTime = 2.5;
+            var currentTime = audioContext.currentTime;
+            audio[whichTrack + 'Gain'].gain.linearRampToValueAtTime(gameSettings.musicVolume, currentTime);
+            audio[whichTrack + 'Gain'].gain.linearRampToValueAtTime(0, currentTime + fadeTime);
+            audio.lastTrack = '';
+            audio.activeTrack = undefined;
+            delete audio[whichTrack];
+            delete audio[whichTrack + 'Source'];
+            delete audio[whichTrack + 'Gain'];
         }
     },
 

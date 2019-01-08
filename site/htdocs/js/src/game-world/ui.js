@@ -520,12 +520,20 @@ var UI = {
             thisCardsQuantityOutput = '';
             parentClass = '';
             if (!(counts[i])) {
-                parentClass = ' class="inactive"';
+                parentClass = 'inactive';
             } else {
                 thisCardsQuantityOutput = '<span class="quantity">' + counts[i] + '</span>';
                 foundThisType = true;
             }
-            cardAlbumMarkup += '<li' + parentClass + '><img src="/images/card-game/cards/' + i + '.png" class="' + thisCardsClass + '" alt="' + cardGameNameSpace.allCardData[i][2] + ' card">' + thisCardsQuantityOutput;
+
+  // check for rares - these are the negative of the standard card type:
+            if ((counts[(0 - i)])) {
+                foundThisType = true;
+                cardAlbumMarkup += '<li class="rare card players"><div style="background-image:url(/images/card-game/cards/' + (0 - i) + '.png)"></div><span class="quantity">' + counts[(0 - i)] + '</span></li>';
+                parentClass += ' hasRare';
+            }
+
+            cardAlbumMarkup += '<li class="' + parentClass + '"><img src="/images/card-game/cards/' + i + '.png" class="' + thisCardsClass + '" alt="' + cardGameNameSpace.allCardData[i][2] + ' card">' + thisCardsQuantityOutput;
 
             if (hero.currency.cardDust >= cardGameNameSpace.allCardData[i][3]) {
                 cardAlbumMarkup += '<button class="craftCard" id="cardCard' + i + '">Craft ' + cardGameNameSpace.allCardData[i][2] + ' (' + cardGameNameSpace.allCardData[i][3] + ')</button>';
@@ -534,11 +542,7 @@ var UI = {
             }
             cardAlbumMarkup += '</li>';
 
-            // check for rares - these are the negative of the standard card type:
-            if ((counts[(0 - i)])) {
-                foundThisType = true;
-                cardAlbumMarkup += '<li class="rare card players"><div style="background-image:url(/images/card-game/cards/' + (0 - i) + '.png)"></div><span class="quantity">' + counts[(0 - i)] + '</span></li>';
-            }
+          
             if (foundThisType) {
                 typesFound++;
             }

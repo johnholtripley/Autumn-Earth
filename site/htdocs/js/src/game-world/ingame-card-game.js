@@ -91,6 +91,7 @@ function startCardGame(opponentNPC) {
         cardGameNameSpace.initialiseCardGame();
         cardGameWrapper.classList.add("active");
         opponentNPC.isPlayingCards = true;
+        audio.playMusic('card-game-NOT_MINE-Shuffle-or-Boogie');
     } else {
         UI.showNotification('<p>I don\'t have enough cards</p>');
     }
@@ -100,7 +101,7 @@ function startCardGame(opponentNPC) {
 
 function closeCardGame() {
     gameMode = "play";
-    
+    audio.fadeOutMusic('card-game-NOT_MINE-Shuffle-or-Boogie');
     cardGameWrapper.classList.remove("active");
     document.getElementById("cardGame").removeEventListener("click", cardGameNameSpace.canvasClick, false);
 }

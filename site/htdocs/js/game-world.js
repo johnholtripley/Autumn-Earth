@@ -123,6 +123,7 @@ var audio = {
 
 
     playMusic: function(newTrack) {
+        console.log(newTrack, audio.activeTrack, audio.lastTrack);
         if (typeof audio.activeTrack !== "undefined") {
             if (audio.activeTrack != newTrack) {
 
@@ -144,7 +145,6 @@ var audio = {
             // make sure it wasn't just played:
             if (newTrack != audio.lastTrack) {
                 // nothing playing currently:
-
                 audio.initMusic(newTrack);
                 audio[newTrack].play();
                 audio.activeTrack = newTrack;
@@ -152,6 +152,21 @@ var audio = {
                 // set initial volume to match settings:
                 audio[audio.activeTrack + 'Gain'].gain.setValueAtTime(gameSettings.musicVolume, audioContext.currentTime);
             }
+        }
+    },
+
+    fadeOutMusic: function(whichTrack) {
+        if (typeof audio[whichTrack] !== undefined) {
+            //  audio[whichTrack].pause();
+            var fadeTime = 2.5;
+            var currentTime = audioContext.currentTime;
+            audio[whichTrack + 'Gain'].gain.linearRampToValueAtTime(gameSettings.musicVolume, currentTime);
+            audio[whichTrack + 'Gain'].gain.linearRampToValueAtTime(0, currentTime + fadeTime);
+            audio.lastTrack = '';
+            audio.activeTrack = undefined;
+            delete audio[whichTrack];
+            delete audio[whichTrack + 'Source'];
+            delete audio[whichTrack + 'Gain'];
         }
     },
 
@@ -2884,6 +2899,7 @@ function startCardGame(opponentNPC) {
         cardGameNameSpace.initialiseCardGame();
         cardGameWrapper.classList.add("active");
         opponentNPC.isPlayingCards = true;
+        audio.playMusic('card-game-NOT_MINE-Shuffle-or-Boogie');
     } else {
         UI.showNotification('<p>I don\'t have enough cards</p>');
     }
@@ -2893,7 +2909,7 @@ function startCardGame(opponentNPC) {
 
 function closeCardGame() {
     gameMode = "play";
-    
+    audio.fadeOutMusic('card-game-NOT_MINE-Shuffle-or-Boogie');
     cardGameWrapper.classList.remove("active");
     document.getElementById("cardGame").removeEventListener("click", cardGameNameSpace.canvasClick, false);
 }
@@ -5192,12 +5208,20 @@ var UI = {
             thisCardsQuantityOutput = '';
             parentClass = '';
             if (!(counts[i])) {
-                parentClass = ' class="inactive"';
+                parentClass = 'inactive';
             } else {
                 thisCardsQuantityOutput = '<span class="quantity">' + counts[i] + '</span>';
                 foundThisType = true;
             }
-            cardAlbumMarkup += '<li' + parentClass + '><img src="/images/card-game/cards/' + i + '.png" class="' + thisCardsClass + '" alt="' + cardGameNameSpace.allCardData[i][2] + ' card">' + thisCardsQuantityOutput;
+
+  // check for rares - these are the negative of the standard card type:
+            if ((counts[(0 - i)])) {
+                foundThisType = true;
+                cardAlbumMarkup += '<li class="rare card players"><div style="background-image:url(/images/card-game/cards/' + (0 - i) + '.png)"></div><span class="quantity">' + counts[(0 - i)] + '</span></li>';
+                parentClass += ' hasRare';
+            }
+
+            cardAlbumMarkup += '<li class="' + parentClass + '"><img src="/images/card-game/cards/' + i + '.png" class="' + thisCardsClass + '" alt="' + cardGameNameSpace.allCardData[i][2] + ' card">' + thisCardsQuantityOutput;
 
             if (hero.currency.cardDust >= cardGameNameSpace.allCardData[i][3]) {
                 cardAlbumMarkup += '<button class="craftCard" id="cardCard' + i + '">Craft ' + cardGameNameSpace.allCardData[i][2] + ' (' + cardGameNameSpace.allCardData[i][3] + ')</button>';
@@ -5206,11 +5230,7 @@ var UI = {
             }
             cardAlbumMarkup += '</li>';
 
-            // check for rares - these are the negative of the standard card type:
-            if ((counts[(0 - i)])) {
-                foundThisType = true;
-                cardAlbumMarkup += '<li class="rare card players"><div style="background-image:url(/images/card-game/cards/' + (0 - i) + '.png)"></div><span class="quantity">' + counts[(0 - i)] + '</span></li>';
-            }
+          
             if (foundThisType) {
                 typesFound++;
             }

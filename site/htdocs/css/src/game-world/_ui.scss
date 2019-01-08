@@ -186,7 +186,11 @@
             }
         }
     }
-
+img {
+    display: block;
+   // prevent alt text showing:
+    font-size: 0;
+}
     p {
         // tooltip
         background: #eee;

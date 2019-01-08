@@ -771,10 +771,10 @@ this.animationSequence = 0;
                                 }
                             }
                             if (player2CardsShown > player1CardsShown) {
-                                cardGameNameSpace.playerColours[1] = "#665200";
+                           //     cardGameNameSpace.playerColours[1] = "#665200";
                                 cardGamePlayer2Wins();
                             } else if (player1CardsShown > player2CardsShown) {
-                                cardGameNameSpace.playerColours[2] = "#660052";
+                             //   cardGameNameSpace.playerColours[2] = "#660052";
                                 cardGamePlayer1Wins();
                             } else {
                                 cardGameIsDrawn();
