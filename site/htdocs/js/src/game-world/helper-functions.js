@@ -124,6 +124,48 @@ return thisMapData.properties[tileY][tileX].elevation;
 }
 
 
+function findRelativeWorldMapPosition(mapNumber) {
+    // find the relative position of the passed in map number to the current map in the worldMap array
+    var currentMapPosition = findWorldMapPosition(currentMap);
+    var targetMapPosition = findWorldMapPosition(mapNumber);
+    console.log(currentMapPosition);
+    console.log(targetMapPosition);
+    var xDiff = targetMapPosition[0] - currentMapPosition[0];
+    var yDiff = targetMapPosition[1] - currentMapPosition[1];
+    var worldXLength = worldMap[0].length;
+    var worldYLength = worldMap.length;
+    // wrap around:
+    if (xDiff >= worldXLength / 2) {
+        xDiff -= worldXLength;
+    }
+    if (xDiff <= 0 - (worldXLength / 2)) {
+        xDiff += worldXLength;
+    }
+    if (yDiff >= worldYLength / 2) {
+        yDiff -= worldYLength;
+    }
+    if (yDiff <= 0 - (worldYLength / 2)) {
+        yDiff += worldYLength;
+    }
+    return ([xDiff, yDiff]);
+}
+
+function findWorldMapPosition(requiredMapNumber) {
+    var currentMapIndexX, currentMapIndexY;
+    // find where the required map is in the array:
+    for (var i = 0; i < worldMap[0].length; i++) {
+        for (var j = 0; j < worldMap.length; j++) {
+            if (worldMap[j][i] == requiredMapNumber) {
+                currentMapIndexX = i;
+                currentMapIndexY = j;
+                break;
+            }
+        }
+    }
+    return [currentMapIndexX, currentMapIndexY];
+}
+
+
 function getXOffsetFromHeight(height) {
     // for determining a shadow's offset (for example).
     return (Math.sqrt(2) / 2 * height);

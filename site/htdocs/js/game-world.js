@@ -240,7 +240,7 @@ function updateCartographicMiniMap() {
 function initCartographicMap() {
   
     canvasMapImage.src = "/game-world/generateCartographicMap.php?playerId=" + characterId + "&dungeonName=" + randomDungeonName + "&plotChests=true&requestedMap=" + newMap;
-
+console.log(canvasMapImage.src);
     canvasMapImage.onload = function() {
         // load the mask (if any) so that previously uncovered areas are revealed:
         //console.log('getting mask - /game-world/getCartographicMapMask.php?chr=' + characterId + '&dungeonName=' + randomDungeonName + '&currentMap=' + newMap);
@@ -351,7 +351,7 @@ var timeSinceLastFrameSwap = 0;
 var currentAnimationFrame = 0;
 var animationUpdateTime = (1000 / animationFramesPerSecond);
 
-var gameCanvas, gameContext, gameMode, cartographyContext, cartographyCanvas, offScreenCartographyCanvas, offScreenCartographyContext, canvasMapImage, canvasMapImage, canvasMapMaskImage, heroImg, shadowImg, tilledEarth, addedWater, imagesToLoad, tileImages, npcImages, itemImages, backgroundImg, objInitLeft, objInitTop, dragStartX, dragStartY, inventoryCheck, timeSinceLastAmbientSoundWasPlayed, gameSettings, lightMap, lightMapOverlay, lightMapContext, activeGatheredObject, questResponseNPC, cursorPositionX, cursorPositionY;
+var gameCanvas, gameContext, gameMode, cartographyContext, cartographyCanvas, offScreenCartographyCanvas, offScreenCartographyContext, canvasMapImage, canvasMapImage, canvasMapMaskImage, heroImg, shadowImg, tilledEarth, addedWater, imagesToLoad, tileImages, npcImages, itemImages, backgroundImgs, objInitLeft, objInitTop, dragStartX, dragStartY, inventoryCheck, timeSinceLastAmbientSoundWasPlayed, gameSettings, lightMap, lightMapOverlay, lightMapContext, activeGatheredObject, questResponseNPC, cursorPositionX, cursorPositionY;
 var chestIdOpen = -1;
 var currentWeather = "";
 var outsideWeather = "";
@@ -504,6 +504,14 @@ var fae = {
     oscillateOffset: 0
 };
 
+const worldMap = [
+[10, 11, 12],
+[13, 14, 15],
+[16, 17, 18]
+];
+var visibleMaps = [10, 11, 13];
+const worldMapWidthPx = 2400;
+const worldMapHeightPx = 1200;
 
 function recipeSearchAndFilter() {
     // Convert to lowercase for search. Search name and if not, then description too
@@ -1938,6 +1946,48 @@ return thisMapData.properties[tileY][tileX].elevation;
         return 0;
     }
     
+}
+
+
+function findRelativeWorldMapPosition(mapNumber) {
+    // find the relative position of the passed in map number to the current map in the worldMap array
+    var currentMapPosition = findWorldMapPosition(currentMap);
+    var targetMapPosition = findWorldMapPosition(mapNumber);
+    console.log(currentMapPosition);
+    console.log(targetMapPosition);
+    var xDiff = targetMapPosition[0] - currentMapPosition[0];
+    var yDiff = targetMapPosition[1] - currentMapPosition[1];
+    var worldXLength = worldMap[0].length;
+    var worldYLength = worldMap.length;
+    // wrap around:
+    if (xDiff >= worldXLength / 2) {
+        xDiff -= worldXLength;
+    }
+    if (xDiff <= 0 - (worldXLength / 2)) {
+        xDiff += worldXLength;
+    }
+    if (yDiff >= worldYLength / 2) {
+        yDiff -= worldYLength;
+    }
+    if (yDiff <= 0 - (worldYLength / 2)) {
+        yDiff += worldYLength;
+    }
+    return ([xDiff, yDiff]);
+}
+
+function findWorldMapPosition(requiredMapNumber) {
+    var currentMapIndexX, currentMapIndexY;
+    // find where the required map is in the array:
+    for (var i = 0; i < worldMap[0].length; i++) {
+        for (var j = 0; j < worldMap.length; j++) {
+            if (worldMap[j][i] == requiredMapNumber) {
+                currentMapIndexX = i;
+                currentMapIndexY = j;
+                break;
+            }
+        }
+    }
+    return [currentMapIndexX, currentMapIndexY];
 }
 
 
@@ -7540,9 +7590,16 @@ function loadMapAssets() {
         });
     } else {
         imagesToLoad.push({
-            name: "backgroundImg",
+            name: "backgroundImg"+currentMap,
             src: '/images/game-world/maps/' + assetPath + '/bg.png'
         });
+        // load all visible maps:
+for(var i=0; i<visibleMaps.length;i++) {
+ imagesToLoad.push({
+            name: "backgroundImg"+visibleMaps[i],
+            src: '/images/game-world/maps/' + visibleMaps[i] + '/bg.png'
+        });
+}
     }
     tileGraphicsToLoad = thisMapData.graphics;
     for (var i = 0; i < tileGraphicsToLoad.length; i++) {
@@ -7977,7 +8034,12 @@ function prepareGame() {
         //  itemImages[itemGraphicsToLoad[i]].spriteWidth = Loader.getImage(itemGraphicsToLoad[i]).width;
         //  itemImages[itemGraphicsToLoad[i]].spriteHeight = Loader.getImage(itemGraphicsToLoad[i]).length;
     }
-    backgroundImg = Loader.getImage("backgroundImg");
+    //backgroundImg = Loader.getImage("backgroundImg");
+backgroundImgs = [];
+backgroundImgs[currentMap] = Loader.getImage("backgroundImg"+currentMap);
+for (var i = 0; i < visibleMaps.length; i++) {
+    backgroundImgs[(visibleMaps[i])] = Loader.getImage("backgroundImg"+visibleMaps[i]);
+}
     // initialise and position NPCs:
     for (var i = 0; i < thisMapData.npcs.length; i++) {
         initialiseNPC(i);
@@ -10327,7 +10389,28 @@ thisItemIdentifier = "item" + thisMapData.items[i].type + '_' + thisMapData.item
         // don't need to clear, as the background will overwrite anyway - this means there's less to process.
         // scroll background to match the top tip and left tip of the tile grid:
         // the 400px and 300px are "padding" the edges of the background graphics:
-        gameContext.drawImage(backgroundImg, Math.floor(getTileIsoCentreCoordX(0, mapTilesX - 1) - hero.isox - tileW / 2 - 400 + canvasWidth / 2), Math.floor(getTileIsoCentreCoordY(0, 0) - hero.isoy - tileH / 2 - 300 + canvasHeight / 2));
+    //    gameContext.drawImage(backgroundImg, Math.floor(getTileIsoCentreCoordX(0, mapTilesX - 1) - hero.isox - tileW / 2 - 400 + canvasWidth / 2), Math.floor(getTileIsoCentreCoordY(0, 0) - hero.isoy - tileH / 2 - 300 + canvasHeight / 2));
+
+
+var currentWorldMapPosX = Math.floor(getTileIsoCentreCoordX(0, mapTilesX - 1) - hero.isox - tileW / 2 + canvasWidth / 2);
+var currentWorldMapPosY = Math.floor(getTileIsoCentreCoordY(0, 0) - hero.isoy - tileH / 2 + canvasHeight / 2);
+    // draw the current map background in place:
+        gameContext.drawImage(backgroundImgs[currentMap], currentWorldMapPosX, currentWorldMapPosY);
+
+
+
+
+// find and draw any other visible maps:
+var thisMapOffset;
+for (var i=0; i<visibleMaps.length; i++) {
+    // needs to dynamically be the correct map img ####
+    thisMapOffset = findRelativeWorldMapPosition(visibleMaps[i]);
+
+gameContext.drawImage(backgroundImgs[(visibleMaps[i])], currentWorldMapPosX+(worldMapWidthPx/2*thisMapOffset[0]), currentWorldMapPosY+(worldMapHeightPx/2*thisMapOffset[1]));
+}
+
+
+
         // draw the sorted assets:
         for (var i = 0; i < assetsToDraw.length; i++) {
             switch (assetsToDraw[i][1]) {

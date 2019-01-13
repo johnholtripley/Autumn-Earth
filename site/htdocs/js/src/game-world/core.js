@@ -284,9 +284,16 @@ function loadMapAssets() {
         });
     } else {
         imagesToLoad.push({
-            name: "backgroundImg",
+            name: "backgroundImg"+currentMap,
             src: '/images/game-world/maps/' + assetPath + '/bg.png'
         });
+        // load all visible maps:
+for(var i=0; i<visibleMaps.length;i++) {
+ imagesToLoad.push({
+            name: "backgroundImg"+visibleMaps[i],
+            src: '/images/game-world/maps/' + visibleMaps[i] + '/bg.png'
+        });
+}
     }
     tileGraphicsToLoad = thisMapData.graphics;
     for (var i = 0; i < tileGraphicsToLoad.length; i++) {
@@ -721,7 +728,12 @@ function prepareGame() {
         //  itemImages[itemGraphicsToLoad[i]].spriteWidth = Loader.getImage(itemGraphicsToLoad[i]).width;
         //  itemImages[itemGraphicsToLoad[i]].spriteHeight = Loader.getImage(itemGraphicsToLoad[i]).length;
     }
-    backgroundImg = Loader.getImage("backgroundImg");
+    //backgroundImg = Loader.getImage("backgroundImg");
+backgroundImgs = [];
+backgroundImgs[currentMap] = Loader.getImage("backgroundImg"+currentMap);
+for (var i = 0; i < visibleMaps.length; i++) {
+    backgroundImgs[(visibleMaps[i])] = Loader.getImage("backgroundImg"+visibleMaps[i]);
+}
     // initialise and position NPCs:
     for (var i = 0; i < thisMapData.npcs.length; i++) {
         initialiseNPC(i);
@@ -3071,7 +3083,28 @@ thisItemIdentifier = "item" + thisMapData.items[i].type + '_' + thisMapData.item
         // don't need to clear, as the background will overwrite anyway - this means there's less to process.
         // scroll background to match the top tip and left tip of the tile grid:
         // the 400px and 300px are "padding" the edges of the background graphics:
-        gameContext.drawImage(backgroundImg, Math.floor(getTileIsoCentreCoordX(0, mapTilesX - 1) - hero.isox - tileW / 2 - 400 + canvasWidth / 2), Math.floor(getTileIsoCentreCoordY(0, 0) - hero.isoy - tileH / 2 - 300 + canvasHeight / 2));
+    //    gameContext.drawImage(backgroundImg, Math.floor(getTileIsoCentreCoordX(0, mapTilesX - 1) - hero.isox - tileW / 2 - 400 + canvasWidth / 2), Math.floor(getTileIsoCentreCoordY(0, 0) - hero.isoy - tileH / 2 - 300 + canvasHeight / 2));
+
+
+var currentWorldMapPosX = Math.floor(getTileIsoCentreCoordX(0, mapTilesX - 1) - hero.isox - tileW / 2 + canvasWidth / 2);
+var currentWorldMapPosY = Math.floor(getTileIsoCentreCoordY(0, 0) - hero.isoy - tileH / 2 + canvasHeight / 2);
+    // draw the current map background in place:
+        gameContext.drawImage(backgroundImgs[currentMap], currentWorldMapPosX, currentWorldMapPosY);
+
+
+
+
+// find and draw any other visible maps:
+var thisMapOffset;
+for (var i=0; i<visibleMaps.length; i++) {
+    // needs to dynamically be the correct map img ####
+    thisMapOffset = findRelativeWorldMapPosition(visibleMaps[i]);
+
+gameContext.drawImage(backgroundImgs[(visibleMaps[i])], currentWorldMapPosX+(worldMapWidthPx/2*thisMapOffset[0]), currentWorldMapPosY+(worldMapHeightPx/2*thisMapOffset[1]));
+}
+
+
+
         // draw the sorted assets:
         for (var i = 0; i < assetsToDraw.length; i++) {
             switch (assetsToDraw[i][1]) {
