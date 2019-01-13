@@ -3095,12 +3095,13 @@ var currentWorldMapPosY = Math.floor(getTileIsoCentreCoordY(0, 0) - hero.isoy - 
 
 
 // find and draw any other visible maps:
-var thisMapOffset;
+var thisdrawnMapOffset, thisdrawnMapOffsetPosX, thisdrawnMapOffsetPosY;
 for (var i=0; i<visibleMaps.length; i++) {
     // needs to dynamically be the correct map img ####
-    thisMapOffset = findRelativeWorldMapPosition(visibleMaps[i]);
-
-gameContext.drawImage(backgroundImgs[(visibleMaps[i])], currentWorldMapPosX+(worldMapWidthPx/2*thisMapOffset[0]), currentWorldMapPosY+(worldMapHeightPx/2*thisMapOffset[1]));
+    thisdrawnMapOffset = findRelativeWorldMapPosition(visibleMaps[i]);
+thisdrawnMapOffsetPosX = currentWorldMapPosX+(worldMapWidthPx/2*thisdrawnMapOffset[0]) - (worldMapWidthPx/2*thisdrawnMapOffset[1]);
+thisdrawnMapOffsetPosY = currentWorldMapPosY+(worldMapHeightPx/2*thisdrawnMapOffset[0]) + (worldMapHeightPx/2*thisdrawnMapOffset[1]);
+gameContext.drawImage(backgroundImgs[(visibleMaps[i])], thisdrawnMapOffsetPosX, thisdrawnMapOffsetPosY );
 }
 
 
