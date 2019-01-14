@@ -128,8 +128,6 @@ function findRelativeWorldMapPosition(mapNumber) {
     // find the relative position of the passed in map number to the current map in the worldMap array
     var currentMapPosition = findWorldMapPosition(currentMap);
     var targetMapPosition = findWorldMapPosition(mapNumber);
-    console.log(currentMapPosition);
-    console.log(targetMapPosition);
     var xDiff = targetMapPosition[0] - currentMapPosition[0];
     var yDiff = targetMapPosition[1] - currentMapPosition[1];
     var worldXLength = worldMap[0].length;

@@ -238,15 +238,11 @@ function updateCartographicMiniMap() {
 }
 
 function initCartographicMap() {
-  
     canvasMapImage.src = "/game-world/generateCartographicMap.php?playerId=" + characterId + "&dungeonName=" + randomDungeonName + "&plotChests=true&requestedMap=" + newMap;
-console.log(canvasMapImage.src);
     canvasMapImage.onload = function() {
         // load the mask (if any) so that previously uncovered areas are revealed:
-        //console.log('getting mask - /game-world/getCartographicMapMask.php?chr=' + characterId + '&dungeonName=' + randomDungeonName + '&currentMap=' + newMap);
-     
+        //console.log('getting mask - /game-world/getCartographicMapMask.php?chr=' + characterId + '&dungeonName=' + randomDungeonName + '&currentMap=' + newMap);   
         canvasMapMaskImage.src = '/game-world/getCartographicMapMask.php?chr=' + characterId + '&dungeonName=' + randomDungeonName + '&currentMap=' + newMap + '&cache=' + Date.now();
-    
         canvasMapMaskImage.onload = function() {        
             offScreenCartographyContext.clearRect(0, 0, 246, 246);
             offScreenCartographyContext.drawImage(canvasMapMaskImage, 0, 0);
@@ -257,9 +253,7 @@ console.log(canvasMapImage.src);
 
 function saveCartographyMask() {
     var dataURL = offScreenCartographyCanvas.toDataURL();
-    
     postData('/game-world/saveCartographicMapMask.php', 'chr=' + characterId + '&dungeonName=' + randomDungeonName + '&currentMap=' + currentMap + '&data=' + dataURL);
-
 }
 
 /*colourNames = ["",
@@ -1953,8 +1947,6 @@ function findRelativeWorldMapPosition(mapNumber) {
     // find the relative position of the passed in map number to the current map in the worldMap array
     var currentMapPosition = findWorldMapPosition(currentMap);
     var targetMapPosition = findWorldMapPosition(mapNumber);
-    console.log(currentMapPosition);
-    console.log(targetMapPosition);
     var xDiff = targetMapPosition[0] - currentMapPosition[0];
     var yDiff = targetMapPosition[1] - currentMapPosition[1];
     var worldXLength = worldMap[0].length;
@@ -7400,11 +7392,11 @@ function loadCoreAssets() {
         name: "shadowImg",
         src: '/images/game-world/core/shadow-quarter.png'
     });
-        coreImagesToLoad.push({
+    coreImagesToLoad.push({
         name: "tilledEarth",
         src: '/images/game-world/core/tilled.png'
     });
-          coreImagesToLoad.push({
+    coreImagesToLoad.push({
         name: "addedWater",
         src: '/images/game-world/core/added-water.png'
     });
@@ -7536,7 +7528,7 @@ function loadMapJSON(mapFilePath) {
                 audio.loadAmbientSounds(thisMapData.ambientSounds);
             }
             if (thisMapData.hourChime) {
-audio.loadAmbientSounds({"hourChime": thisMapData.hourChime});
+                audio.loadAmbientSounds({ "hourChime": thisMapData.hourChime });
             }
             fae.recentHotspots = [];
             findProfessionsAndRecipes();
@@ -7556,20 +7548,17 @@ function loadMap() {
         randomDungeonName = randomDungeons[Math.abs(newMap)];
         newMap = -1;
     } else {
-        //mapFilePath = '/data/chr' + characterId + '/map' + newMap + '.json';
-        mapFilePath = '/game-world/getMap.php?chr=' + characterId + '&map=' + newMap;
+
+      //  mapFilePath = '/game-world/getMap.php?chr=' + characterId + '&map=' + newMap;
+mapFilePath = '/game-world/getVisibleMaps.php?chr=' + characterId + '&maps=' + newMap+'|'+visibleMaps.join('|');
+
     }
     if (newMap < 0) {
         //   mapFilePath = '/game-world/generateDungeonMap.php?playerId=' + characterId + '&originatingMapId=' + currentMap + '&requestedMap=' + newMap + '&dungeonName=' + randomDungeonName + '&connectingDoorX=' + centreDoorX + '&connectingDoorY=' + centreDoorY;
 
         mapFilePath = '/game-world/generateCircularDungeonMap.php?dungeonName=' + randomDungeonName + '&requestedMap=' + newMap;
         //  mapFilePath = '/game-world/generateCircularDungeonMap.php?dungeonName='+randomDungeonName+'&requestedMap=' + newMap + '&seed=1512098741';
-
     }
-
-
-
-
     currentMap = newMap;
     loadMapJSON(mapFilePath);
 }
@@ -7590,16 +7579,16 @@ function loadMapAssets() {
         });
     } else {
         imagesToLoad.push({
-            name: "backgroundImg"+currentMap,
+            name: "backgroundImg" + currentMap,
             src: '/images/game-world/maps/' + assetPath + '/bg.png'
         });
         // load all visible maps:
-for(var i=0; i<visibleMaps.length;i++) {
- imagesToLoad.push({
-            name: "backgroundImg"+visibleMaps[i],
-            src: '/images/game-world/maps/' + visibleMaps[i] + '/bg.png'
-        });
-}
+        for (var i = 0; i < visibleMaps.length; i++) {
+            imagesToLoad.push({
+                name: "backgroundImg" + visibleMaps[i],
+                src: '/images/game-world/maps/' + visibleMaps[i] + '/bg.png'
+            });
+        }
     }
     tileGraphicsToLoad = thisMapData.graphics;
     for (var i = 0; i < tileGraphicsToLoad.length; i++) {
@@ -7659,15 +7648,15 @@ for(var i=0; i<visibleMaps.length;i++) {
             }
         }
         thisItemIdentifier = "item" + thisMapData.items[i].type + thisFileColourSuffix;
-thisImagePath = "/images/game-world/items/" + currentActiveInventoryItems[thisMapData.items[i].type].worldSrc + thisFileColourSuffix + ".png";
+        thisImagePath = "/images/game-world/items/" + currentActiveInventoryItems[thisMapData.items[i].type].worldSrc + thisFileColourSuffix + ".png";
 
-// check for User Generated Content:
-if(typeof thisMapData.items[i].contains !== "undefined") {
-if(typeof thisMapData.items[i].contains['ugc-id'] !== "undefined") {
-thisItemIdentifier = "item" + thisMapData.items[i].type + '_' + thisMapData.items[i].contains['ugc-id'];
-thisImagePath = "/images/user-generated/" + thisMapData.items[i].contains['ugc-id'] + "-world.png";
-}
-}
+        // check for User Generated Content:
+        if (typeof thisMapData.items[i].contains !== "undefined") {
+            if (typeof thisMapData.items[i].contains['ugc-id'] !== "undefined") {
+                thisItemIdentifier = "item" + thisMapData.items[i].type + '_' + thisMapData.items[i].contains['ugc-id'];
+                thisImagePath = "/images/user-generated/" + thisMapData.items[i].contains['ugc-id'] + "-world.png";
+            }
+        }
 
 
         // only add unique images:
@@ -7700,14 +7689,14 @@ thisImagePath = "/images/user-generated/" + thisMapData.items[i].contains['ugc-i
         if (currentActiveInventoryItems[(hero.inventory[key].type)].action == "seed") {
             // resultant plant is held in the actionValue:
             resultantPlantType = currentActiveInventoryItems[(hero.inventory[key].type)].actionValue.type;
-    // get colour name 
+            // get colour name 
             thisFileColourSuffix = "";
             thisColourName = getColourName(hero.inventory[key].colour, resultantPlantType);
             if (thisColourName != "") {
                 thisFileColourSuffix = "-" + thisColourName.toLowerCase();
             }
             thisItemIdentifier = "item" + resultantPlantType + thisFileColourSuffix;
-        
+
             // only add unique images:
             if (itemGraphicsToLoad.indexOf(thisItemIdentifier) == -1) {
                 imagesToLoad.push({
@@ -7833,7 +7822,7 @@ function getQuestJournal() {
 function getHorticultureData() {
     getJSON("/game-world/getHorticulturalDetails.php?chr=" + characterId, function(data) {
         UI.buildHorticulturePanel(data.markup);
-hero.plantBreeding = data.data;
+        hero.plantBreeding = data.data;
         getQuestDetails();
     }, function(status) {
         // try again:
@@ -7866,27 +7855,27 @@ function findInventoryItemData() {
         itemIdsToGet.push(thisMapData.items[i].type);
         // check if any are containers or chests:
         if (typeof thisMapData.items[i].contains !== "undefined") {
-           
-            if(Array.isArray(thisMapData.items[i].contains)) {
-            for (var j = 0; j < thisMapData.items[i].contains.length; j++) {
-                if (typeof thisMapData.items[i].contains[j].type !== "undefined") {
-                    itemChoices = thisMapData.items[i].contains[j].type.toString().split("/");
-                   
-                    for (var k = 0; k < itemChoices.length; k++) {
-                        if (itemChoices[k] != "$") {
-                            // make sure it's not money in a chest:
-                            itemIdsToGet.push(itemChoices[k]);
+
+            if (Array.isArray(thisMapData.items[i].contains)) {
+                for (var j = 0; j < thisMapData.items[i].contains.length; j++) {
+                    if (typeof thisMapData.items[i].contains[j].type !== "undefined") {
+                        itemChoices = thisMapData.items[i].contains[j].type.toString().split("/");
+
+                        for (var k = 0; k < itemChoices.length; k++) {
+                            if (itemChoices[k] != "$") {
+                                // make sure it's not money in a chest:
+                                itemIdsToGet.push(itemChoices[k]);
+                            }
                         }
                     }
                 }
+            } else {
+                // eg crop object, so get pollen, seed and fruit ids if specified:
+
+                for (var j in thisMapData.items[i].contains) {
+                    itemIdsToGet.push(thisMapData.items[i].contains[j].type);
+                }
             }
-        } else {
-            // eg crop object, so get pollen, seed and fruit ids if specified:
-           
-            for(var j in thisMapData.items[i].contains) {
-itemIdsToGet.push(thisMapData.items[i].contains[j].type);
-            }
-        }
         }
     }
 
@@ -7982,10 +7971,10 @@ function initialiseItem(whichItem) {
     thisMapData.items[whichItem].spriteWidth = currentActiveInventoryItems[thisMapData.items[whichItem].type].spriteWidth;
     thisMapData.items[whichItem].spriteHeight = currentActiveInventoryItems[thisMapData.items[whichItem].type].spriteHeight;
     thisMapData.items[whichItem].isCollidable = true;
-    if(currentActiveInventoryItems[thisMapData.items[whichItem].type].action == "gate") {
-if(thisMapData.items[whichItem].state == "open") {
-thisMapData.items[whichItem].isCollidable = false;
-}
+    if (currentActiveInventoryItems[thisMapData.items[whichItem].type].action == "gate") {
+        if (thisMapData.items[whichItem].state == "open") {
+            thisMapData.items[whichItem].isCollidable = false;
+        }
     }
     // check for node resources:
     if (currentActiveInventoryItems[thisMapData.items[whichItem].type].action == "node") {
@@ -8035,11 +8024,11 @@ function prepareGame() {
         //  itemImages[itemGraphicsToLoad[i]].spriteHeight = Loader.getImage(itemGraphicsToLoad[i]).length;
     }
     //backgroundImg = Loader.getImage("backgroundImg");
-backgroundImgs = [];
-backgroundImgs[currentMap] = Loader.getImage("backgroundImg"+currentMap);
-for (var i = 0; i < visibleMaps.length; i++) {
-    backgroundImgs[(visibleMaps[i])] = Loader.getImage("backgroundImg"+visibleMaps[i]);
-}
+    backgroundImgs = [];
+    backgroundImgs[currentMap] = Loader.getImage("backgroundImg" + currentMap);
+    for (var i = 0; i < visibleMaps.length; i++) {
+        backgroundImgs[(visibleMaps[i])] = Loader.getImage("backgroundImg" + visibleMaps[i]);
+    }
     // initialise and position NPCs:
     for (var i = 0; i < thisMapData.npcs.length; i++) {
         initialiseNPC(i);
@@ -8153,7 +8142,7 @@ for (var i = 0; i < visibleMaps.length; i++) {
     gameMode = "play";
 
     UI.showNotification("<p>I'm just thinking about what a notification looks like&hellip;</p>");
-    
+
 }
 
 
@@ -8244,9 +8233,9 @@ function tileIsClear(tileX, tileY) {
     for (var i = 0; i < thisMapData.items.length; i++) {
         if (tileX == thisMapData.items[i].tileX) {
             if (tileY == thisMapData.items[i].tileY) {
-             if(thisMapData.items[i].isCollidable) {
-                return false;
-            }
+                if (thisMapData.items[i].isCollidable) {
+                    return false;
+                }
             }
         }
     }
@@ -8501,11 +8490,11 @@ function checkHeroCollisions() {
     // check for collisions against items:
     for (var i = 0; i < thisMapData.items.length; i++) {
         thisItem = thisMapData.items[i];
-     if(thisItem.isCollidable) {
-        if (isAnObjectCollision(thisItem.x, thisItem.y, thisItem.width, thisItem.length, hero.x, hero.y, hero.width, hero.length)) {
-            getHeroAsCloseAsPossibleToObject(thisItem.x, thisItem.y, thisItem.width, thisItem.length);
+        if (thisItem.isCollidable) {
+            if (isAnObjectCollision(thisItem.x, thisItem.y, thisItem.width, thisItem.length, hero.x, hero.y, hero.width, hero.length)) {
+                getHeroAsCloseAsPossibleToObject(thisItem.x, thisItem.y, thisItem.width, thisItem.length);
+            }
         }
-    }
     }
 
     // check against pets:
@@ -8635,18 +8624,18 @@ function update() {
             UI.toggleJournal();
             key[8] = false;
         }
-  if (key[9]) {
+        if (key[9]) {
             UI.moveQuickHold(-1);
             key[9] = false;
         }
-         if (key[10]) {
+        if (key[10]) {
             UI.moveQuickHold(1);
             key[10] = false;
         }
-               
-            
-            
-        
+
+
+
+
 
         checkHeroCollisions();
         var heroOldX = hero.tileX;
@@ -8897,14 +8886,14 @@ function usedActiveTool() {
         var armsReachTileY = hero.tileY + relativeFacing[hero.facing]["y"]
         switch (currentActiveInventoryItems[hero.holding.type].action) {
             case "till":
-                if(successfullyTilledEarth(armsReachTileX, armsReachTileY)) {
+                if (successfullyTilledEarth(armsReachTileX, armsReachTileY)) {
                     usedToolSuccessfully = true;
                 }
                 break;
-                case "seed":
-                  if(successfullyPlantSeed(armsReachTileX, armsReachTileY)) {
+            case "seed":
+                if (successfullyPlantSeed(armsReachTileX, armsReachTileY)) {
                     usedToolSuccessfully = true;
-                  }
+                }
                 break;
             case "holds-liquid":
                 // check if next to a water source first: 
@@ -8928,137 +8917,137 @@ function usedActiveTool() {
                 usedToolSuccessfully = true;
                 break;
         }
-    } 
+    }
     return usedToolSuccessfully;
 }
 
 
 function checkForActions() {
     // check to see if a tool is equipped, and can be used:
-    if(!usedActiveTool()){
-    var inventoryCheck = [];
-    var slotMarkup, thisSlotsId, thisSlotElem, thisNPC;
-    for (var i = 0; i < thisMapData.items.length; i++) {
-        if (isInRange(hero.x, hero.y, thisMapData.items[i].x, thisMapData.items[i].y, (thisMapData.items[i].width / 2 + hero.width / 2 + 6))) {
-            if (isFacing(hero, thisMapData.items[i])) {
-                var actionValue = currentActiveInventoryItems[thisMapData.items[i].type].actionValue;
+    if (!usedActiveTool()) {
+        var inventoryCheck = [];
+        var slotMarkup, thisSlotsId, thisSlotElem, thisNPC;
+        for (var i = 0; i < thisMapData.items.length; i++) {
+            if (isInRange(hero.x, hero.y, thisMapData.items[i].x, thisMapData.items[i].y, (thisMapData.items[i].width / 2 + hero.width / 2 + 6))) {
+                if (isFacing(hero, thisMapData.items[i])) {
+                    var actionValue = currentActiveInventoryItems[thisMapData.items[i].type].actionValue;
 
-                switch (currentActiveInventoryItems[thisMapData.items[i].type].action) {
-                    case "static":
-                        // can't interact with it - do nothing
-                        break;
-                    case "nest":
-                        // can't interact with it - do nothing
-                        break;
-                    case "sound":
-                        audio.playSound(soundEffects[actionValue], 0);
-                        break;
-                    case "questToggle":
-                        // toggle value: (1 or 0)
-                        questData[actionValue].hasBeenActivated = Math.abs(questData[actionValue].hasBeenActivated - 1);
-                        break;
-                    case "questSet":
-                        questData[actionValue].hasBeenActivated = 1;
-                        break;
-                    case "questUnset":
-                        questData[actionValue].hasBeenActivated = 0;
-                        break;
-                    case "node":
-                        // handled by Action Bar - no effect here
-                        break;
-                    case "toggleInnerDoor":
-                        toggleInnerDoor(thisMapData.items[i].additional);
-                        audio.playSound(soundEffects['lever'], 0);
-                        // toggle the visual state:
-                        thisMapData.items[i].state = thisMapData.items[i].state == "on" ? 'off' : 'on';
-                        break;
-                    case "openInnerDoor":
-                        openInnerDoor(thisMapData.items[i].additional);
-                        break;
-                    case "closeInnerDoor":
-                        closeInnerDoor(thisMapData.items[i].additional);
-                        break;
-                    case "key":
-                        hero.currency.keys.push(thisMapData.items[i].additional);
-                        UI.updateCurrencies();
-                        audio.playSound(soundEffects['keys'], 0);
-                        // remove from map:
-                        thisMapData.items.splice(i, 1);
-                        break;
-                        case "gate":
-                         // toggle the visual state:
-                        thisMapData.items[i].state = thisMapData.items[i].state == "open" ? 'closed' : 'open';
-                        // toggle whether it will have collision done against it:
-                        thisMapData.items[i].isCollidable = thisMapData.items[i].isCollidable == true ? false : true;
-                        break;
-                    case "notice":
-                        processSpeech(thisMapData.items[i], thisMapData.items[i].contains[0][0], thisMapData.items[i].contains[0][1], false, thisMapData.items[i].contains[0][2]);
-                        break;
-                    case "sit":
-                        hero.facing = thisMapData.items[i].facing;
-                        console.log("switch to sit animation");
-                        break;
-                    case "chest":
-                        // open chest and show contents:
-                        UI.openChest(i);
-                        break;
-                    case "post":
-                        // open the Post panel:
-                        UI.openPost(thisMapData.items[i].x, thisMapData.items[i].y);
-                        break;
-                    case "retinue":
-                        // open the Retinue panel:
-                        UI.openRetinuePanel(thisMapData.items[i]);
-                        break;
-                    case "source":
-                      // don't do anything - the equipped item will check for this item
-                    break;
-                    case "crop":
-                    checkCrop(thisMapData.items[i]);
-                    break;
-                    default:
-                        // try and pick it up:
-                        inventoryCheck = canAddItemToInventory([thisMapData.items[i]]);
-                        if (inventoryCheck[0]) {
+                    switch (currentActiveInventoryItems[thisMapData.items[i].type].action) {
+                        case "static":
+                            // can't interact with it - do nothing
+                            break;
+                        case "nest":
+                            // can't interact with it - do nothing
+                            break;
+                        case "sound":
+                            audio.playSound(soundEffects[actionValue], 0);
+                            break;
+                        case "questToggle":
+                            // toggle value: (1 or 0)
+                            questData[actionValue].hasBeenActivated = Math.abs(questData[actionValue].hasBeenActivated - 1);
+                            break;
+                        case "questSet":
+                            questData[actionValue].hasBeenActivated = 1;
+                            break;
+                        case "questUnset":
+                            questData[actionValue].hasBeenActivated = 0;
+                            break;
+                        case "node":
+                            // handled by Action Bar - no effect here
+                            break;
+                        case "toggleInnerDoor":
+                            toggleInnerDoor(thisMapData.items[i].additional);
+                            audio.playSound(soundEffects['lever'], 0);
+                            // toggle the visual state:
+                            thisMapData.items[i].state = thisMapData.items[i].state == "on" ? 'off' : 'on';
+                            break;
+                        case "openInnerDoor":
+                            openInnerDoor(thisMapData.items[i].additional);
+                            break;
+                        case "closeInnerDoor":
+                            closeInnerDoor(thisMapData.items[i].additional);
+                            break;
+                        case "key":
+                            hero.currency.keys.push(thisMapData.items[i].additional);
+                            UI.updateCurrencies();
+                            audio.playSound(soundEffects['keys'], 0);
                             // remove from map:
                             thisMapData.items.splice(i, 1);
-                            UI.showChangeInInventory(inventoryCheck[1]);
-                        } else {
-                            UI.showNotification("<p>I don't have room in my bags for that</p>");
-                        }
+                            break;
+                        case "gate":
+                            // toggle the visual state:
+                            thisMapData.items[i].state = thisMapData.items[i].state == "open" ? 'closed' : 'open';
+                            // toggle whether it will have collision done against it:
+                            thisMapData.items[i].isCollidable = thisMapData.items[i].isCollidable == true ? false : true;
+                            break;
+                        case "notice":
+                            processSpeech(thisMapData.items[i], thisMapData.items[i].contains[0][0], thisMapData.items[i].contains[0][1], false, thisMapData.items[i].contains[0][2]);
+                            break;
+                        case "sit":
+                            hero.facing = thisMapData.items[i].facing;
+                            console.log("switch to sit animation");
+                            break;
+                        case "chest":
+                            // open chest and show contents:
+                            UI.openChest(i);
+                            break;
+                        case "post":
+                            // open the Post panel:
+                            UI.openPost(thisMapData.items[i].x, thisMapData.items[i].y);
+                            break;
+                        case "retinue":
+                            // open the Retinue panel:
+                            UI.openRetinuePanel(thisMapData.items[i]);
+                            break;
+                        case "source":
+                            // don't do anything - the equipped item will check for this item
+                            break;
+                        case "crop":
+                            checkCrop(thisMapData.items[i]);
+                            break;
+                        default:
+                            // try and pick it up:
+                            inventoryCheck = canAddItemToInventory([thisMapData.items[i]]);
+                            if (inventoryCheck[0]) {
+                                // remove from map:
+                                thisMapData.items.splice(i, 1);
+                                UI.showChangeInInventory(inventoryCheck[1]);
+                            } else {
+                                UI.showNotification("<p>I don't have room in my bags for that</p>");
+                            }
+                    }
                 }
             }
         }
-    }
 
-    // loop through NPCs:
-    for (var i = 0; i < thisMapData.npcs.length; i++) {
-        thisNPC = thisMapData.npcs[i];
-        if (thisNPC.speech) {
-            if (isInRange(hero.x, hero.y, thisNPC.x, thisNPC.y, (thisNPC.width + hero.width))) {
-                if (isFacing(hero, thisNPC)) {
-                    // if at the end of the NPC's speech list, or the dialogue isn't part of the NPC's normal speech list, then close the balloon with an action click:
-                    if ((thisNPC.speechIndex >= thisNPC.speech.length) || (canCloseDialogueBalloonNextClick && activeObjectForDialogue == thisNPC)) {
-                        thisNPC.speechIndex = 0;
-                        dialogue.classList.remove("active");
-                        activeObjectForDialogue = '';
-                        canCloseDialogueBalloonNextClick = false;
-                        if (shopCurrentlyOpen != -1) {
-                            UI.closeShop();
+        // loop through NPCs:
+        for (var i = 0; i < thisMapData.npcs.length; i++) {
+            thisNPC = thisMapData.npcs[i];
+            if (thisNPC.speech) {
+                if (isInRange(hero.x, hero.y, thisNPC.x, thisNPC.y, (thisNPC.width + hero.width))) {
+                    if (isFacing(hero, thisNPC)) {
+                        // if at the end of the NPC's speech list, or the dialogue isn't part of the NPC's normal speech list, then close the balloon with an action click:
+                        if ((thisNPC.speechIndex >= thisNPC.speech.length) || (canCloseDialogueBalloonNextClick && activeObjectForDialogue == thisNPC)) {
+                            thisNPC.speechIndex = 0;
+                            dialogue.classList.remove("active");
+                            activeObjectForDialogue = '';
+                            canCloseDialogueBalloonNextClick = false;
+                            if (shopCurrentlyOpen != -1) {
+                                UI.closeShop();
+                            }
+
+                        } else {
+                            var thisSpeech = thisNPC.speech[thisNPC.speechIndex][0];
+                            var thisSpeechCode = thisNPC.speech[thisNPC.speechIndex][1];
+                            thisNPC.drawnFacing = turntoFace(thisNPC, hero);
+                            processSpeech(thisNPC, thisSpeech, thisSpeechCode, true);
+                            thisNPC.speechIndex++;
                         }
-
-                    } else {
-                        var thisSpeech = thisNPC.speech[thisNPC.speechIndex][0];
-                        var thisSpeechCode = thisNPC.speech[thisNPC.speechIndex][1];
-                        thisNPC.drawnFacing = turntoFace(thisNPC, hero);
-                        processSpeech(thisNPC, thisSpeech, thisSpeechCode, true);
-                        thisNPC.speechIndex++;
                     }
                 }
             }
         }
     }
-}
     // action processed, so cancel the key event:
     key[4] = 0;
 }
@@ -9082,18 +9071,18 @@ function processSpeech(thisObjectSpeaking, thisSpeechPassedIn, thisSpeechCode, i
                 thisObjectSpeaking.isMoving = true;
                 break;
             case "shop":
-            // check if the shop is empty:
+                // check if the shop is empty:
 
-                if(UI.openedShopSuccessfully(generateHash(thisObjectSpeaking.speech[thisObjectSpeaking.speechIndex][2]))) {
-//
+                if (UI.openedShopSuccessfully(generateHash(thisObjectSpeaking.speech[thisObjectSpeaking.speechIndex][2]))) {
+                    //
                 } else {
                     // shop is empty:
-                    if(typeof thisObjectSpeaking.shopEmptySpeech !== "undefined") {
-                    thisSpeech = thisObjectSpeaking.shopEmptySpeech;
-                }
+                    if (typeof thisObjectSpeaking.shopEmptySpeech !== "undefined") {
+                        thisSpeech = thisObjectSpeaking.shopEmptySpeech;
+                    }
                 }
 
-                
+
                 //thisObjectSpeaking.speechIndex--;
                 break;
             case "post":
@@ -9597,12 +9586,12 @@ function moveNPCs() {
                 // check for collisions against items:
                 for (var j = 0; j < thisMapData.items.length; j++) {
                     thisItem = thisMapData.items[j];
-                 if(thisItem.isCollidable) {
-                    if (isAnObjectCollision(thisNPC.x, thisNPC.y, thisNPC.width, thisNPC.length, thisItem.x, thisItem.y, thisItem.width, thisItem.length)) {
-                        thisNPC.x = oldNPCx;
-                        thisNPC.y = oldNPCy;
+                    if (thisItem.isCollidable) {
+                        if (isAnObjectCollision(thisNPC.x, thisNPC.y, thisNPC.width, thisNPC.length, thisItem.x, thisItem.y, thisItem.width, thisItem.length)) {
+                            thisNPC.x = oldNPCx;
+                            thisNPC.y = oldNPCy;
+                        }
                     }
-                }
                 }
 
 
@@ -9685,7 +9674,7 @@ function moveNPCs() {
 
 
 
-                        if ((getRandomIntegerInclusive(1, 3) == 1) || (!tileIsClear(thisNPC.tileX + relativeFacing[thisNPC.facing]["x"],thisNPC.tileY + relativeFacing[thisNPC.facing]["y"]))) {
+                        if ((getRandomIntegerInclusive(1, 3) == 1) || (!tileIsClear(thisNPC.tileX + relativeFacing[thisNPC.facing]["x"], thisNPC.tileY + relativeFacing[thisNPC.facing]["y"]))) {
                             // try turning left or right, otherwise back the way it came
                             var facingsToPickFrom;
                             if ((thisNPC.facing == "n") || (thisNPC.facing == "s")) {
@@ -9723,7 +9712,7 @@ function moveNPCs() {
 
                             do {
                                 thisNPC.facing = facingsToPickFrom.shift();
-                            } while (!tileIsClear(thisNPC.tileX + relativeFacing[thisNPC.facing]["x"],thisNPC.tileY + relativeFacing[thisNPC.facing]["y"]))
+                            } while (!tileIsClear(thisNPC.tileX + relativeFacing[thisNPC.facing]["x"], thisNPC.tileY + relativeFacing[thisNPC.facing]["y"]))
                         }
 
 
@@ -10266,25 +10255,25 @@ function draw() {
                     assetsToDraw.push([findIsoDepth(getTileCentreCoordX(i), getTileCentreCoordY(j), 0), "img", tileImages[(map[j][i])], Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2))]);
                 }
                 // look for tilled tiles:
-                if(thisMapData.properties[j][i].tilled == 1) {
+                if (thisMapData.properties[j][i].tilled == 1) {
                     thisX = getTileIsoCentreCoordX(i, j);
                     thisY = getTileIsoCentreCoordY(i, j);
-                    thisGraphicCentreX = tileW/2;
-                    thisGraphicCentreY = tileH/2;
+                    thisGraphicCentreX = tileW / 2;
+                    thisGraphicCentreY = tileH / 2;
                     assetsToDraw.push([0, "img", tilledEarth, Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2))]);
                 }
                 // look for watered tiles:
-                 if(typeof thisMapData.properties[j][i].water !== "undefined") {
-                 if(thisMapData.properties[j][i].water.amount > 0) {
-                    thisX = getTileIsoCentreCoordX(i, j);
-                    thisY = getTileIsoCentreCoordY(i, j);
-                    thisGraphicCentreX = tileW/2;
-                    thisGraphicCentreY = tileH/2;
-                    for (var k=0; k<thisMapData.properties[j][i].water.amount;k++) {
-                    assetsToDraw.push([k+1, "img", addedWater, Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2))]);
+                if (typeof thisMapData.properties[j][i].water !== "undefined") {
+                    if (thisMapData.properties[j][i].water.amount > 0) {
+                        thisX = getTileIsoCentreCoordX(i, j);
+                        thisY = getTileIsoCentreCoordY(i, j);
+                        thisGraphicCentreX = tileW / 2;
+                        thisGraphicCentreY = tileH / 2;
+                        for (var k = 0; k < thisMapData.properties[j][i].water.amount; k++) {
+                            assetsToDraw.push([k + 1, "img", addedWater, Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2))]);
+                        }
+                    }
                 }
-                 }
-             }
             }
         }
 
@@ -10339,22 +10328,22 @@ function draw() {
                 thisColourName = getColourName(thisMapData.items[i].colour, thisMapData.items[i].type);
                 if (thisColourName != "") {
                     thisFileColourSuffix = "-" + thisColourName.toLowerCase();
-                    
+
                 }
             }
-            
+
 
 
             thisItemIdentifier = "item" + thisMapData.items[i].type + thisFileColourSuffix;
 
 
 
-// check for User Generated Content:
-if(typeof thisMapData.items[i].contains !== "undefined") {
-if(typeof thisMapData.items[i].contains['ugc-id'] !== "undefined") {
-thisItemIdentifier = "item" + thisMapData.items[i].type + '_' + thisMapData.items[i].contains['ugc-id'];
-}
-}
+            // check for User Generated Content:
+            if (typeof thisMapData.items[i].contains !== "undefined") {
+                if (typeof thisMapData.items[i].contains['ugc-id'] !== "undefined") {
+                    thisItemIdentifier = "item" + thisMapData.items[i].type + '_' + thisMapData.items[i].contains['ugc-id'];
+                }
+            }
 
 
 
@@ -10389,26 +10378,26 @@ thisItemIdentifier = "item" + thisMapData.items[i].type + '_' + thisMapData.item
         // don't need to clear, as the background will overwrite anyway - this means there's less to process.
         // scroll background to match the top tip and left tip of the tile grid:
         // the 400px and 300px are "padding" the edges of the background graphics:
-    //    gameContext.drawImage(backgroundImg, Math.floor(getTileIsoCentreCoordX(0, mapTilesX - 1) - hero.isox - tileW / 2 - 400 + canvasWidth / 2), Math.floor(getTileIsoCentreCoordY(0, 0) - hero.isoy - tileH / 2 - 300 + canvasHeight / 2));
+        //    gameContext.drawImage(backgroundImg, Math.floor(getTileIsoCentreCoordX(0, mapTilesX - 1) - hero.isox - tileW / 2 - 400 + canvasWidth / 2), Math.floor(getTileIsoCentreCoordY(0, 0) - hero.isoy - tileH / 2 - 300 + canvasHeight / 2));
 
 
-var currentWorldMapPosX = Math.floor(getTileIsoCentreCoordX(0, mapTilesX - 1) - hero.isox - tileW / 2 + canvasWidth / 2);
-var currentWorldMapPosY = Math.floor(getTileIsoCentreCoordY(0, 0) - hero.isoy - tileH / 2 + canvasHeight / 2);
-    // draw the current map background in place:
+        var currentWorldMapPosX = Math.floor(getTileIsoCentreCoordX(0, mapTilesX - 1) - hero.isox - tileW / 2 + canvasWidth / 2);
+        var currentWorldMapPosY = Math.floor(getTileIsoCentreCoordY(0, 0) - hero.isoy - tileH / 2 + canvasHeight / 2);
+        // draw the current map background in place:
         gameContext.drawImage(backgroundImgs[currentMap], currentWorldMapPosX, currentWorldMapPosY);
 
 
 
 
-// find and draw any other visible maps:
-var thisdrawnMapOffset, thisdrawnMapOffsetPosX, thisdrawnMapOffsetPosY;
-for (var i=0; i<visibleMaps.length; i++) {
-    // needs to dynamically be the correct map img ####
-    thisdrawnMapOffset = findRelativeWorldMapPosition(visibleMaps[i]);
-thisdrawnMapOffsetPosX = currentWorldMapPosX+(worldMapWidthPx/2*thisdrawnMapOffset[0]) - (worldMapWidthPx/2*thisdrawnMapOffset[1]);
-thisdrawnMapOffsetPosY = currentWorldMapPosY+(worldMapHeightPx/2*thisdrawnMapOffset[0]) + (worldMapHeightPx/2*thisdrawnMapOffset[1]);
-gameContext.drawImage(backgroundImgs[(visibleMaps[i])], thisdrawnMapOffsetPosX, thisdrawnMapOffsetPosY );
-}
+        // find and draw any other visible maps:
+        var thisdrawnMapOffset, thisdrawnMapOffsetPosX, thisdrawnMapOffsetPosY;
+        for (var i = 0; i < visibleMaps.length; i++) {
+            // needs to dynamically be the correct map img ####
+            thisdrawnMapOffset = findRelativeWorldMapPosition(visibleMaps[i]);
+            thisdrawnMapOffsetPosX = currentWorldMapPosX + (worldMapWidthPx / 2 * thisdrawnMapOffset[0]) - (worldMapWidthPx / 2 * thisdrawnMapOffset[1]);
+            thisdrawnMapOffsetPosY = currentWorldMapPosY + (worldMapHeightPx / 2 * thisdrawnMapOffset[0]) + (worldMapHeightPx / 2 * thisdrawnMapOffset[1]);
+            gameContext.drawImage(backgroundImgs[(visibleMaps[i])], thisdrawnMapOffsetPosX, thisdrawnMapOffsetPosY);
+        }
 
 
 

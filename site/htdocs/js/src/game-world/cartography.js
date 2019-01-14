@@ -24,15 +24,11 @@ function updateCartographicMiniMap() {
 }
 
 function initCartographicMap() {
-  
     canvasMapImage.src = "/game-world/generateCartographicMap.php?playerId=" + characterId + "&dungeonName=" + randomDungeonName + "&plotChests=true&requestedMap=" + newMap;
-console.log(canvasMapImage.src);
     canvasMapImage.onload = function() {
         // load the mask (if any) so that previously uncovered areas are revealed:
-        //console.log('getting mask - /game-world/getCartographicMapMask.php?chr=' + characterId + '&dungeonName=' + randomDungeonName + '&currentMap=' + newMap);
-     
+        //console.log('getting mask - /game-world/getCartographicMapMask.php?chr=' + characterId + '&dungeonName=' + randomDungeonName + '&currentMap=' + newMap);   
         canvasMapMaskImage.src = '/game-world/getCartographicMapMask.php?chr=' + characterId + '&dungeonName=' + randomDungeonName + '&currentMap=' + newMap + '&cache=' + Date.now();
-    
         canvasMapMaskImage.onload = function() {        
             offScreenCartographyContext.clearRect(0, 0, 246, 246);
             offScreenCartographyContext.drawImage(canvasMapMaskImage, 0, 0);
@@ -43,7 +39,5 @@ console.log(canvasMapImage.src);
 
 function saveCartographyMask() {
     var dataURL = offScreenCartographyCanvas.toDataURL();
-    
     postData('/game-world/saveCartographicMapMask.php', 'chr=' + characterId + '&dungeonName=' + randomDungeonName + '&currentMap=' + currentMap + '&data=' + dataURL);
-
 }
