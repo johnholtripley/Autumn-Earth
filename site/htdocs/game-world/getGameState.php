@@ -24,7 +24,7 @@ if(mysqli_num_rows($result)>0) {
     extract($row);
 
 $outputJSON .= '"characterName": "'.$charName.'",';
-$outputJSON .= '"currentMap": '.$currentMap.',';
+//$outputJSON .= '"currentMap": '.$currentMap.',';
 $outputJSON .= '"tileX": '.$tileX.',';
 $outputJSON .= '"tileY": '.$tileY.',';
 $outputJSON .= '"bags": '.$bags.',';

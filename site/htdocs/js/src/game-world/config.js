@@ -43,7 +43,7 @@ var activeDoorY = -1;
 const characterId = 999;
 var currentMap = 0;
 var newMap = 0;
-var thisMapData = '';
+var thisMapData = {};
 var mapTilesX = 0;
 var mapTilesY = 0;
 
@@ -167,3 +167,4 @@ const worldMap = [
 var visibleMaps = [10, 11, 13];
 const worldMapWidthPx = 2400;
 const worldMapHeightPx = 1200;
+const worldMapTileLength = 50;

@@ -104,7 +104,7 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/functions.php");
 
 <h2>&lt;picture&gt; element</h2>
 <?php
-picture('/images/placeholder.jpg', 'alt text', array(300,600,900));
+picture('/images/placeholder.jpg', 'alt text', array(300,600,900), true);
 ?>
 
 <h2>Responsive background-image</h2>

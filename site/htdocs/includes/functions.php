@@ -1401,11 +1401,13 @@ function imageResized($source, $widthRequired) {
         switch ($fileExtension) {
         case "jpg":
             imagejpeg($image, $_SERVER['DOCUMENT_ROOT'].$resizedPath, 85);
+
             break;
         case "png":
             imagepng($image, $_SERVER['DOCUMENT_ROOT'].$resizedPath, 0);
             break;
         }
+imagewebp($image, str_ireplace($fileExtension,'webp',$_SERVER['DOCUMENT_ROOT'].$resizedPath));
         imagedestroy($image);
         imagedestroy($sourceImage);
         return $resizedPath;
@@ -1419,17 +1421,37 @@ function imageResized($source, $widthRequired) {
  
 function picture($source, $alt, $breakpoints, $forceResize = false, $classOrProperty = '', &$addToBuffer = '') {
     global $fullSitePath;
+    $dotPos = strrpos($source, ".");
+    $fileExtension = substr(strtolower($source), $dotPos+1);
+        $thisFileType = 'image/jpeg';
+        if($fileExtension == 'png') {
+$thisFileType = 'image/png';
+        }
     $thisHtmlOutput = '<picture>';
     if(!$forceResize) {
         // don't use the original image size if true - use the picture element to force a resize of the image, and exclude the original
-        $thisHtmlOutput .= '<source media="(min-width: '.$breakpoints[(count($breakpoints)-1)].'px)" srcset="'.$source.'">';
+     //   $thisHtmlOutput .= '<source media="(min-width: '.$breakpoints[(count($breakpoints)-1)].'px)" srcset="'.str_ireplace($fileExtension,'webp',$source).'" type="image/webp">';
+        $thisHtmlOutput .= '<source media="(min-width: '.$breakpoints[(count($breakpoints)-1)].'px)" srcset="'.$source.'" type="'.$thisFileType.'">';
+        
     }
+
     for($i = count($breakpoints)-1; $i>=0;$i--) {
+        
+         $thisFilePath = imageResized($source,$breakpoints[$i]);
+  // output webp:
+          $thisHtmlOutput .= '<source ';
+        if($i>0) {
+            $thisHtmlOutput .= 'media="(min-width: '.$breakpoints[$i-1].'px)"';
+        }
+        $thisHtmlOutput .= ' srcset="'.str_ireplace($fileExtension,'webp',$thisFilePath).'" type="image/webp">';
+         
         $thisHtmlOutput .= '<source ';
         if($i>0) {
             $thisHtmlOutput .= 'media="(min-width: '.$breakpoints[$i-1].'px)"';
         }
-        $thisHtmlOutput .= ' srcset="'.imageResized($source,$breakpoints[$i]).'">';
+       
+        $thisHtmlOutput .= ' srcset="'.$thisFilePath.'" type="'.$thisFileType.'">';
+      
     }
     $thisHtmlOutput .= '<img src="'.$source.'" alt="'.$alt.'"'.$classOrProperty.'>';
     $thisHtmlOutput .= '</picture>';
