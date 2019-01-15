@@ -250,10 +250,7 @@ function loadMap() {
         randomDungeonName = randomDungeons[Math.abs(newMap)];
         newMap = -1;
     } else {
-
-      //  mapFilePath = '/game-world/getMap.php?chr=' + characterId + '&map=' + newMap;
-mapFilePath = '/game-world/getVisibleMaps.php?chr=' + characterId + '&maps=' + newMap+'|'+visibleMaps.join('|');
-
+        mapFilePath = '/game-world/getMap.php?chr=' + characterId + '&map=' + newMap;
     }
     if (newMap < 0) {
         //   mapFilePath = '/game-world/generateDungeonMap.php?playerId=' + characterId + '&originatingMapId=' + currentMap + '&requestedMap=' + newMap + '&dungeonName=' + randomDungeonName + '&connectingDoorX=' + centreDoorX + '&connectingDoorY=' + centreDoorY;
