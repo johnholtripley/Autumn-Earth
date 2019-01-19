@@ -3079,25 +3079,31 @@ function draw() {
         // the 400px and 300px are "padding" the edges of the background graphics:
         //    gameContext.drawImage(backgroundImg, Math.floor(getTileIsoCentreCoordX(0, mapTilesX - 1) - hero.isox - tileW / 2 - 400 + canvasWidth / 2), Math.floor(getTileIsoCentreCoordY(0, 0) - hero.isoy - tileH / 2 - 300 + canvasHeight / 2));
 
+var thisMapsGlobalOffsetX = thisMapData[currentMap].globalCoordinateTile0X * worldMapTileLength;
+var thisMapsGlobalOffsetY = thisMapData[currentMap].globalCoordinateTile0Y * worldMapTileLength;
 
-        var currentWorldMapPosX = Math.floor(getTileIsoCentreCoordX(0, mapTilesX - 1) - hero.isox - tileW / 2 + canvasWidth / 2);
-        var currentWorldMapPosY = Math.floor(getTileIsoCentreCoordY(0, 0) - hero.isoy - tileH / 2 + canvasHeight / 2);
+        var currentWorldMapPosX = Math.floor(getTileIsoCentreCoordX(0 + thisMapsGlobalOffsetX, mapTilesX - 1 + thisMapsGlobalOffsetY) - hero.isox - (tileW / 2) + (worldMapWidthPx/2));
+        var currentWorldMapPosY = Math.floor(getTileIsoCentreCoordY(0 + thisMapsGlobalOffsetX, 0 + thisMapsGlobalOffsetY) - hero.isoy - (tileH / 2));
         // draw the current map background in place:
         gameContext.drawImage(backgroundImgs[currentMap], currentWorldMapPosX, currentWorldMapPosY);
 
 
 
+// draw the current map background based on it's tile 0,0 and using its global position to offset
 
+
+/*
         // find and draw any other visible maps:
         var thisdrawnMapOffset, thisdrawnMapOffsetPosX, thisdrawnMapOffsetPosY;
         for (var i = 0; i < visibleMaps.length; i++) {
             // needs to dynamically be the correct map img ####
+            // get this from map data and remove findRelativeWorldMapPosition from helper function
             thisdrawnMapOffset = findRelativeWorldMapPosition(visibleMaps[i]);
             thisdrawnMapOffsetPosX = currentWorldMapPosX + (worldMapWidthPx / 2 * thisdrawnMapOffset[0]) - (worldMapWidthPx / 2 * thisdrawnMapOffset[1]);
             thisdrawnMapOffsetPosY = currentWorldMapPosY + (worldMapHeightPx / 2 * thisdrawnMapOffset[0]) + (worldMapHeightPx / 2 * thisdrawnMapOffset[1]);
             gameContext.drawImage(backgroundImgs[(visibleMaps[i])], thisdrawnMapOffsetPosX, thisdrawnMapOffsetPosY);
         }
-
+*/
 
 
         // draw the sorted assets:

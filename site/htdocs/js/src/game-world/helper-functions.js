@@ -137,6 +137,8 @@ function findMapNumberFromGlobalCoordinates(tileX, tileY) {
 return worldMap[Math.floor(tileY/worldMapTileLength)][Math.floor(tileX/worldMapTileLength)];
 }
 
+
+/*
 function findRelativeWorldMapPosition(mapNumber) {
     // find the relative position of the passed in map number to the current map in the worldMap array
     var currentMapPosition = findWorldMapPosition(currentMap);
@@ -175,6 +177,7 @@ function findWorldMapPosition(requiredMapNumber) {
     }
     return [currentMapIndexX, currentMapIndexY];
 }
+*/
 
 
 function getXOffsetFromHeight(height) {
