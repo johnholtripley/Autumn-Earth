@@ -115,15 +115,30 @@ function getTileY(y) {
 
 
 function getElevation(tileX, tileY) {
-    if(typeof thisMapData.properties[tileY][tileX].elevation !== "undefined") {
-return thisMapData.properties[tileY][tileX].elevation;
+    var thisMap = findMapNumberFromGlobalCoordinates(tileX, tileY);
+    var localTileX = getLocalCoordinatesX(tileX);
+    var localTileY = getLocalCoordinatesY(tileY);
+    if (typeof thisMapData[thisMap].properties[localTileY][localTileX].elevation !== "undefined") {
+        return thisMapData[thisMap].properties[localTileY][localTileX].elevation;
     } else {
         return 0;
     }
-    
+}
+
+function getLocalCoordinatesX(tileX) {
+    // get local map coordinates from global coordinates:
+    return tileX%worldMapTileLength;
+}
+function getLocalCoordinatesY(tileY) {
+    return tileY%worldMapTileLength;
+}
+
+function findMapNumberFromGlobalCoordinates(tileX, tileY) {
+return worldMap[Math.floor(tileY/worldMapTileLength)][Math.floor(tileX/worldMapTileLength)];
 }
 
 
+/*
 function findRelativeWorldMapPosition(mapNumber) {
     // find the relative position of the passed in map number to the current map in the worldMap array
     var currentMapPosition = findWorldMapPosition(currentMap);
@@ -162,6 +177,7 @@ function findWorldMapPosition(requiredMapNumber) {
     }
     return [currentMapIndexX, currentMapIndexY];
 }
+*/
 
 
 function getXOffsetFromHeight(height) {

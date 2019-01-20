@@ -11,6 +11,59 @@ if(isset($_GET["debug"])) {
     $debug = true;
 }
 
+$worldMap = array(
+array(10, 11, 12),
+array(13, 14, 15),
+array(16, 17, 18)
+);
+
+
+// helper functions: 
+/*
+function findRelativeWorldMapPosition($mapNumber) {
+    // find the relative position of the passed in map number to the current map in the worldMap array
+     $currentMapPosition = findWorldMapPosition($currentMap);
+     $targetMapPosition = findWorldMapPosition($mapNumber);
+     $xDiff = $targetMapPosition[0] - $currentMapPosition[0];
+     $yDiff = $targetMapPosition[1] - $currentMapPosition[1];
+     $worldXLength = count($worldMap[0]);
+     $worldYLength = count($worldMap);
+    // wrap around:
+    if ($xDiff >= $worldXLength / 2) {
+        $xDiff -= $worldXLength;
+    }
+    if ($xDiff <= 0 - ($worldXLength / 2)) {
+        $xDiff += $worldXLength;
+    }
+    if ($yDiff >= $worldYLength / 2) {
+        $yDiff -= $worldYLength;
+    }
+    if ($yDiff <= 0 - ($worldYLength / 2)) {
+        $yDiff += $worldYLength;
+    }
+    return (array($xDiff, $yDiff));
+}
+*/
+
+function findWorldMapPosition($requiredMapNumber) {
+    global $worldMap;
+    // find where the required map is in the array:
+    for ($i = 0; $i < count($worldMap[0]); $i++) {
+        for ($j = 0; $j < count($worldMap); $j++) {
+            if ($worldMap[$j][$i] == $requiredMapNumber) {
+                $currentMapIndexX = $i;
+                $currentMapIndexY = $j;
+                break;
+            }
+        }
+    }
+    return [$currentMapIndexX, $currentMapIndexY];
+}
+
+
+
+
+
 // get from logged in account ###
 $characterName = "Eleaddai";
 $characterClass = "Druid";
@@ -630,6 +683,15 @@ for ($i=0;$i<count($activeEvents);$i++) {
 // remove events data so it doesn't get passed to the game:
 unset($mapData['map']['eventSpecificContent']);
 }
+
+
+$globalPosition = findWorldMapPosition($map);
+// add map's global position:
+$mapData['map']['globalCoordinateTile0X'] = $globalPosition[0];
+$mapData['map']['globalCoordinateTile0Y'] = $globalPosition[1];
+
+
+
 
 //if(isset($mapData)) {
     echo json_encode($mapData);

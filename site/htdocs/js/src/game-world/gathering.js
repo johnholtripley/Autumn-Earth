@@ -1,69 +1,71 @@
 function checkForRespawns() {
-    for (var i = 0; i < thisMapData.items.length; i++) {
-        switch (currentActiveInventoryItems[thisMapData.items[i].type].action) {
+    for(var map in thisMapData) {
+    for (var i = 0; i < thisMapData[map].items.length; i++) {
+        switch (currentActiveInventoryItems[thisMapData[map].items[i].type].action) {
             case "node":
-                if (thisMapData.items[i].state != "active") {
-                    //console.log("check re-spawn: " + hero.totalGameTimePlayed + "-" + thisMapData.items[i].timeLastHarvested + " (" + (hero.totalGameTimePlayed - thisMapData.items[i].timeLastHarvested) + ") >= " + currentActiveInventoryItems[thisMapData.items[i].type].respawnRate);
-                    if (hero.totalGameTimePlayed - thisMapData.items[i].timeLastHarvested >= currentActiveInventoryItems[thisMapData.items[i].type].respawnRate) {
-                        thisMapData.items[i].state = "active";
+                if (thisMapData[map].items[i].state != "active") {
+                    //console.log("check re-spawn: " + hero.totalGameTimePlayed + "-" + thisMapData[map].items[i].timeLastHarvested + " (" + (hero.totalGameTimePlayed - thisMapData[map].items[i].timeLastHarvested) + ") >= " + currentActiveInventoryItems[thisMapData[map].items[i].type].respawnRate);
+                    if (hero.totalGameTimePlayed - thisMapData[map].items[i].timeLastHarvested >= currentActiveInventoryItems[thisMapData[map].items[i].type].respawnRate) {
+                        thisMapData[map].items[i].state = "active";
                     }
                 }
                 break;
             case "crop":
 
-                if (parseInt(thisMapData.items[i].state) < 5) {
+                if (parseInt(thisMapData[map].items[i].state) < 5) {
                     // check water level:
                     var thisPlantPreferredWaterAmount = 0;
-                    if (typeof thisMapData.items[i].additional !== "undefined") {
-                        thisPlantPreferredWaterAmount = thisMapData.items[i].additional;
+                    if (typeof thisMapData[map].items[i].additional !== "undefined") {
+                        thisPlantPreferredWaterAmount = thisMapData[map].items[i].additional;
                     }
-                    var waterDifference = Math.abs(getTileWaterAmount(thisMapData.items[i].tileX, thisMapData.items[i].tileY) - thisPlantPreferredWaterAmount);
-                    if (hero.totalGameTimePlayed - thisMapData.items[i].timeLastHarvested >= currentActiveInventoryItems[thisMapData.items[i].type].respawnRate) {
+                    var waterDifference = Math.abs(getTileWaterAmount(thisMapData[map].items[i].tileX, thisMapData[map].items[i].tileY) - thisPlantPreferredWaterAmount);
+                    if (hero.totalGameTimePlayed - thisMapData[map].items[i].timeLastHarvested >= currentActiveInventoryItems[thisMapData[map].items[i].type].respawnRate) {
                         // deteriorate the plant if not at its optimum water level:
-                        thisMapData.items[i].quality -= 4 * waterDifference;
-                        thisMapData.items[i].effectiveness -= 4 * waterDifference;
-                        thisMapData.items[i].durability -= 4 * waterDifference;
-                        thisMapData.items[i].quality = capValues(thisMapData.items[i].quality, 1, 100);
-                        thisMapData.items[i].effectiveness = capValues(thisMapData.items[i].effectiveness, 1, 100);
-                        thisMapData.items[i].durability = capValues(thisMapData.items[i].durability, 1, 100);
-                        thisMapData.items[i].state++;
-                        thisMapData.items[i].timeLastHarvested = hero.totalGameTimePlayed;
+                        thisMapData[map].items[i].quality -= 4 * waterDifference;
+                        thisMapData[map].items[i].effectiveness -= 4 * waterDifference;
+                        thisMapData[map].items[i].durability -= 4 * waterDifference;
+                        thisMapData[map].items[i].quality = capValues(thisMapData[map].items[i].quality, 1, 100);
+                        thisMapData[map].items[i].effectiveness = capValues(thisMapData[map].items[i].effectiveness, 1, 100);
+                        thisMapData[map].items[i].durability = capValues(thisMapData[map].items[i].durability, 1, 100);
+                        thisMapData[map].items[i].state++;
+                        thisMapData[map].items[i].timeLastHarvested = hero.totalGameTimePlayed;
                     }
                 } else {
                     // check if pollinated and self-pollinate if not:
 
-                    if (typeof thisMapData.items[i].contains.seed === "undefined") {
+                    if (typeof thisMapData[map].items[i].contains.seed === "undefined") {
                        
 
-                        var seedType = currentActiveInventoryItems[(thisMapData.items[i].type)].actionValue;
+                        var seedType = currentActiveInventoryItems[(thisMapData[map].items[i].type)].actionValue;
                         // not as efficient than if pollinated manually:
                         var pollinatedSeedObject = {
                             "type": parseInt(seedType),
-                            "quality": Math.ceil(thisMapData.items[i].quality * 0.8),
-                            "durability": Math.ceil(thisMapData.items[i].durability * 0.8),
-                            "effectiveness": Math.ceil(thisMapData.items[i].effectiveness * 0.8)
+                            "quality": Math.ceil(thisMapData[map].items[i].quality * 0.8),
+                            "durability": Math.ceil(thisMapData[map].items[i].durability * 0.8),
+                            "effectiveness": Math.ceil(thisMapData[map].items[i].effectiveness * 0.8)
                         }
                       
-                        if (typeof thisMapData.items[i].colour !== "undefined") {
-                            pollinatedSeedObject.colour = thisMapData.items[i].colour;
+                        if (typeof thisMapData[map].items[i].colour !== "undefined") {
+                            pollinatedSeedObject.colour = thisMapData[map].items[i].colour;
                         }
 
                         var maxSeeds = 6;
                         // the number of seeds is an exponential amount based on the plant's quality and effectiveness:
-                        pollinatedSeedObject.quantity = Math.ceil(maxSeeds * ((thisMapData.items[i].quality * thisMapData.items[i].quality / 20000) + (thisMapData.items[i].effectiveness * thisMapData.items[i].effectiveness / 20000)));
+                        pollinatedSeedObject.quantity = Math.ceil(maxSeeds * ((thisMapData[map].items[i].quality * thisMapData[map].items[i].quality / 20000) + (thisMapData[map].items[i].effectiveness * thisMapData[map].items[i].effectiveness / 20000)));
 
                    
 
                         pollinatedSeedObject = prepareInventoryObject(pollinatedSeedObject);
                         // add this to the parent plant's contains attribute:
-                        thisMapData.items[i].contains.seed = JSON.parse(JSON.stringify(pollinatedSeedObject));
-                        thisMapData.items[i].contains.seed.crossBreedParents = thisMapData.items[i].type;
+                        thisMapData[map].items[i].contains.seed = JSON.parse(JSON.stringify(pollinatedSeedObject));
+                        thisMapData[map].items[i].contains.seed.crossBreedParents = thisMapData[map].items[i].type;
 
                     }
                 }
                 break;
         }
     }
+}
 }
 
 
@@ -129,9 +131,9 @@ function gatheringStopped() {
     }
     if (gathering.node.isTemporary) {
         // loop through items and remove it:
-        for (var i = 0; i < thisMapData.items.length; i++) {
-            if (thisMapData.items[i] === gathering.node) {
-                thisMapData.items.splice(i, 1);
+        for (var i = 0; i < thisMapData[map].items.length; i++) {
+            if (thisMapData[map].items[i] === gathering.node) {
+                thisMapData[map].items.splice(i, 1);
                 break;
             }
         }
