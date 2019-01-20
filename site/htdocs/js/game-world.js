@@ -10398,9 +10398,8 @@ function draw() {
 
 var thisMapsGlobalOffsetX = thisMapData[currentMap].globalCoordinateTile0X * worldMapTileLength;
 var thisMapsGlobalOffsetY = thisMapData[currentMap].globalCoordinateTile0Y * worldMapTileLength;
-
-        var currentWorldMapPosX = Math.floor(getTileIsoCentreCoordX(0 + thisMapsGlobalOffsetX, mapTilesX - 1 + thisMapsGlobalOffsetY) - hero.isox - (tileW / 2) + (worldMapWidthPx/2));
-        var currentWorldMapPosY = Math.floor(getTileIsoCentreCoordY(0 + thisMapsGlobalOffsetX, 0 + thisMapsGlobalOffsetY) - hero.isoy - (tileH / 2));
+        var currentWorldMapPosX = Math.floor((canvasWidth / 2) + getTileIsoCentreCoordX(0 + thisMapsGlobalOffsetX, 0 + thisMapsGlobalOffsetY) - hero.isox - (worldMapWidthPx/2));
+        var currentWorldMapPosY = Math.floor((canvasHeight / 2) + getTileIsoCentreCoordY(0 + thisMapsGlobalOffsetX, 0 + thisMapsGlobalOffsetY) - hero.isoy - (tileH / 2));
         // draw the current map background in place:
         gameContext.drawImage(backgroundImgs[currentMap], currentWorldMapPosX, currentWorldMapPosY);
 
