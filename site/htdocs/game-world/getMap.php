@@ -690,7 +690,7 @@ $globalPosition = findWorldMapPosition($map);
 $mapData['map']['globalCoordinateTile0X'] = $globalPosition[0];
 $mapData['map']['globalCoordinateTile0Y'] = $globalPosition[1];
 
-
+$mapData['map']['mapId'] = $map;
 
 
 //if(isset($mapData)) {

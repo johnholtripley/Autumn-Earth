@@ -143,10 +143,8 @@ function loadCardData() {
     });
 }
 
-function loadMapJSON(mapFilePath) {
-    getJSON(mapFilePath, function(data) {
-            thisMapData[currentMap] = data.map;
-            var startTileOffsetX, startTileOffsetY;
+function processInitialMap() {
+    var startTileOffsetX, startTileOffsetY;
             var startTileOffsetXNum = 0;
             var startTileOffsetYNum = 0;
             // check for any "?" in the target door (for procedural levels):
@@ -234,6 +232,14 @@ function loadMapJSON(mapFilePath) {
             }
             fae.recentHotspots = [];
             findProfessionsAndRecipes();
+}
+
+function loadMapJSON(mapFilePath) {
+    getJSON(mapFilePath, function(data) {
+            thisMapData[data.map.mapId] = data.map;   
+            if(data.map.mapId == currentMap) {
+processInitialMap();
+            }
         },
         function(status) {
             // try again:
@@ -260,6 +266,10 @@ function loadMap() {
     }
     currentMap = newMap;
     loadMapJSON(mapFilePath);
+    // load other visible maps:
+    for (var i=0; i<visibleMaps.length; i++) {
+        loadMapJSON('/game-world/getMap.php?chr=' + characterId + '&map=' + visibleMaps[i]);
+    }
 }
 
 
@@ -819,12 +829,12 @@ function prepareGame() {
 
 
 
-
+console.log(hero.tileX,hero.tileY);
     // determine tile offset to centre the hero in the centre
-       hero.x = getTileCentreCoordX(hero.tileX);
+    hero.x = getTileCentreCoordX(hero.tileX);
     hero.y = getTileCentreCoordY(hero.tileY);
     hero.z = getElevation(hero.tileX, hero.tileY);
-
+console.log("hero z set");
     // initialise fae:
     fae.x = hero.x + tileW * 2;
     fae.y = hero.y + tileH * 2;
@@ -1455,7 +1465,8 @@ function update() {
 
 
 function heroIsInNewTile() {
-    hero.z = getElevation(getTileX(hero.x), getTileY(hero.y));
+    console.log(hero.tileX, hero.tileY);
+    hero.z = getElevation(hero.tileX, hero.tileY);
     //  if (currentMap < 0) {
     updateCartographicMiniMap();
     //  }
@@ -3075,36 +3086,29 @@ function draw() {
 
         assetsToDraw.sort(sortByLowestValue);
         // don't need to clear, as the background will overwrite anyway - this means there's less to process.
-        // scroll background to match the top tip and left tip of the tile grid:
-        // the 400px and 300px are "padding" the edges of the background graphics:
-        //    gameContext.drawImage(backgroundImg, Math.floor(getTileIsoCentreCoordX(0, mapTilesX - 1) - hero.isox - tileW / 2 - 400 + canvasWidth / 2), Math.floor(getTileIsoCentreCoordY(0, 0) - hero.isoy - tileH / 2 - 300 + canvasHeight / 2));
+      
 
-// draw it relative to the hero's position:
+        // draw the current map background based on it's tile 0,0 and using its global position to offset - relative to the hero's position:
 
-var thisMapsGlobalOffsetX = thisMapData[currentMap].globalCoordinateTile0X * worldMapTileLength;
-var thisMapsGlobalOffsetY = thisMapData[currentMap].globalCoordinateTile0Y * worldMapTileLength;
-        var currentWorldMapPosX = Math.floor((canvasWidth / 2) + getTileIsoCentreCoordX(0 + thisMapsGlobalOffsetX, 0 + thisMapsGlobalOffsetY) - hero.isox - (worldMapWidthPx/2));
-        var currentWorldMapPosY = Math.floor((canvasHeight / 2) + getTileIsoCentreCoordY(0 + thisMapsGlobalOffsetX, 0 + thisMapsGlobalOffsetY) - hero.isoy - (tileH / 2));
-        // draw the current map background in place:
-        gameContext.drawImage(backgroundImgs[currentMap], currentWorldMapPosX, currentWorldMapPosY);
+        var thisMapsGlobalOffsetX = thisMapData[currentMap].globalCoordinateTile0X * worldMapTileLength;
+        var thisMapsGlobalOffsetY = thisMapData[currentMap].globalCoordinateTile0Y * worldMapTileLength;
+                var currentWorldMapPosX = Math.floor((canvasWidth / 2) + getTileIsoCentreCoordX(0 + thisMapsGlobalOffsetX, 0 + thisMapsGlobalOffsetY) - hero.isox - (worldMapWidthPx/2));
+                var currentWorldMapPosY = Math.floor((canvasHeight / 2) + getTileIsoCentreCoordY(0 + thisMapsGlobalOffsetX, 0 + thisMapsGlobalOffsetY) - hero.isoy - (tileH / 2));
+                // draw the current map background in place:
+                gameContext.drawImage(backgroundImgs[currentMap], currentWorldMapPosX, currentWorldMapPosY);
 
-
-
-// draw the current map background based on it's tile 0,0 and using its global position to offset
-
-
-/*
         // find and draw any other visible maps:
-        var thisdrawnMapOffset, thisdrawnMapOffsetPosX, thisdrawnMapOffsetPosY;
         for (var i = 0; i < visibleMaps.length; i++) {
-            // needs to dynamically be the correct map img ####
-            // get this from map data and remove findRelativeWorldMapPosition from helper function
-            thisdrawnMapOffset = findRelativeWorldMapPosition(visibleMaps[i]);
-            thisdrawnMapOffsetPosX = currentWorldMapPosX + (worldMapWidthPx / 2 * thisdrawnMapOffset[0]) - (worldMapWidthPx / 2 * thisdrawnMapOffset[1]);
-            thisdrawnMapOffsetPosY = currentWorldMapPosY + (worldMapHeightPx / 2 * thisdrawnMapOffset[0]) + (worldMapHeightPx / 2 * thisdrawnMapOffset[1]);
-            gameContext.drawImage(backgroundImgs[(visibleMaps[i])], thisdrawnMapOffsetPosX, thisdrawnMapOffsetPosY);
+
+         thisMapsGlobalOffsetX = thisMapData[(visibleMaps[i])].globalCoordinateTile0X * worldMapTileLength;
+         thisMapsGlobalOffsetY = thisMapData[(visibleMaps[i])].globalCoordinateTile0Y * worldMapTileLength;
+                 currentWorldMapPosX = Math.floor((canvasWidth / 2) + getTileIsoCentreCoordX(0 + thisMapsGlobalOffsetX, 0 + thisMapsGlobalOffsetY) - hero.isox - (worldMapWidthPx/2));
+                 currentWorldMapPosY = Math.floor((canvasHeight / 2) + getTileIsoCentreCoordY(0 + thisMapsGlobalOffsetX, 0 + thisMapsGlobalOffsetY) - hero.isoy - (tileH / 2));
+                // draw the current map background in place:
+                gameContext.drawImage(backgroundImgs[(visibleMaps[i])], currentWorldMapPosX, currentWorldMapPosY);
         }
-*/
+
+
 
 
         // draw the sorted assets:

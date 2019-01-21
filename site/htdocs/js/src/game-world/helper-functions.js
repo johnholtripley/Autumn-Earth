@@ -118,6 +118,7 @@ function getElevation(tileX, tileY) {
     var thisMap = findMapNumberFromGlobalCoordinates(tileX, tileY);
     var localTileX = getLocalCoordinatesX(tileX);
     var localTileY = getLocalCoordinatesY(tileY);
+    console.log(thisMap, localTileX, localTileY);
     if (typeof thisMapData[thisMap].properties[localTileY][localTileX].elevation !== "undefined") {
         return thisMapData[thisMap].properties[localTileY][localTileX].elevation;
     } else {
