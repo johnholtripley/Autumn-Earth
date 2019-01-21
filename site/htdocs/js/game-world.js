@@ -1940,7 +1940,6 @@ function getElevation(tileX, tileY) {
     var thisMap = findMapNumberFromGlobalCoordinates(tileX, tileY);
     var localTileX = getLocalCoordinatesX(tileX);
     var localTileY = getLocalCoordinatesY(tileY);
-    console.log(thisMap, localTileX, localTileY);
     if (typeof thisMapData[thisMap].properties[localTileY][localTileX].elevation !== "undefined") {
         return thisMapData[thisMap].properties[localTileY][localTileX].elevation;
     } else {
@@ -7554,9 +7553,9 @@ function processInitialMap() {
 
 function loadMapJSON(mapFilePath) {
     getJSON(mapFilePath, function(data) {
-            thisMapData[data.map.mapId] = data.map;   
-            if(data.map.mapId == currentMap) {
-processInitialMap();
+            thisMapData[data.map.mapId] = data.map;
+            if (data.map.mapId == currentMap) {
+                processInitialMap();
             }
         },
         function(status) {
@@ -7577,15 +7576,13 @@ function loadMap() {
         mapFilePath = '/game-world/getMap.php?chr=' + characterId + '&map=' + newMap;
     }
     if (newMap < 0) {
-        //   mapFilePath = '/game-world/generateDungeonMap.php?playerId=' + characterId + '&originatingMapId=' + currentMap + '&requestedMap=' + newMap + '&dungeonName=' + randomDungeonName + '&connectingDoorX=' + centreDoorX + '&connectingDoorY=' + centreDoorY;
-
         mapFilePath = '/game-world/generateCircularDungeonMap.php?dungeonName=' + randomDungeonName + '&requestedMap=' + newMap;
         //  mapFilePath = '/game-world/generateCircularDungeonMap.php?dungeonName='+randomDungeonName+'&requestedMap=' + newMap + '&seed=1512098741';
     }
     currentMap = newMap;
     loadMapJSON(mapFilePath);
     // load other visible maps:
-    for (var i=0; i<visibleMaps.length; i++) {
+    for (var i = 0; i < visibleMaps.length; i++) {
         loadMapJSON('/game-world/getMap.php?chr=' + characterId + '&map=' + visibleMaps[i]);
     }
 }
@@ -8147,12 +8144,12 @@ function prepareGame() {
 
 
 
-console.log(hero.tileX,hero.tileY);
+
     // determine tile offset to centre the hero in the centre
     hero.x = getTileCentreCoordX(hero.tileX);
     hero.y = getTileCentreCoordY(hero.tileY);
     hero.z = getElevation(hero.tileX, hero.tileY);
-console.log("hero z set");
+
     // initialise fae:
     fae.x = hero.x + tileW * 2;
     fae.y = hero.y + tileH * 2;
@@ -8291,34 +8288,37 @@ function tileIsClear(tileX, tileY) {
 
 
 function isATerrainCollision(x, y) {
-    // check map bounds first:
-    var tileX = getTileX(x);
-    var tileY = getTileY(y);
-    if ((tileX < 0) || (tileY < 0) || (tileX >= mapTilesX) || (tileY >= mapTilesY)) {
-        // is out of the bounds of the current map:
+    var tileX = getLocalCoordinatesX(getTileX(x));
+    var tileY = getLocalCoordinatesX(getTileY(y));
+    var thisMap = findMapNumberFromGlobalCoordinates(tileX, tileY);
+    //if ((tileX < 0) || (tileY < 0) || (tileX >= mapTilesX) || (tileY >= mapTilesY)) {
+    // check if defined rather than boundaries as could be moving into an adjoining map:
+    if (typeof thisMapData[thisMap].collisions[tileY] === "undefined") {      
         return 1;
-    } else {
-        switch (thisMapData[currentMap].collisions[tileY][tileX]) {
-            case 1:
-                // is a collision:
-                return 1;
-                break;
-            case "<":
-            case ">":
-            case "^":
-            case "v":
-                // stairs
-                // #####
-                return 0;
-                break;
-            case "d":
-                // is a door:
-                return 0;
-                break;
-            default:
-                // not a collsiion:
-                return 0;
-        }
+    }
+    if (typeof thisMapData[thisMap].collisions[tileY][tileX] === "undefined") {
+        return 1;
+    }
+    switch (thisMapData[thisMap].collisions[tileY][tileX]) {
+        case 1:
+            // is a collision:
+            return 1;
+            break;
+        case "<":
+        case ">":
+        case "^":
+        case "v":
+            // stairs
+            // #####
+            return 0;
+            break;
+        case "d":
+            // is a door:
+            return 0;
+            break;
+        default:
+            // not a collsiion:
+            return 0;
     }
 }
 
@@ -8783,7 +8783,6 @@ function update() {
 
 
 function heroIsInNewTile() {
-    console.log(hero.tileX, hero.tileY);
     hero.z = getElevation(hero.tileX, hero.tileY);
     //  if (currentMap < 0) {
     updateCartographicMiniMap();
