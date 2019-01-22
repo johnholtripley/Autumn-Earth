@@ -16,6 +16,7 @@ array(10, 11, 12),
 array(13, 14, 15),
 array(16, 17, 18)
 );
+$worldMapTileLength = 50;
 
 
 // helper functions: 
@@ -98,6 +99,18 @@ $mapData = json_decode($mapDataFile, true);
 
 
 
+$globalPosition = findWorldMapPosition($map);
+// add map's global position:
+$mapData['map']['globalCoordinateTile0X'] = $globalPosition[0];
+$mapData['map']['globalCoordinateTile0Y'] = $globalPosition[1];
+
+$mapData['map']['mapId'] = $map;
+
+
+
+
+
+
 // check which events are active
 include_once($_SERVER['DOCUMENT_ROOT']."/includes/signalnoise.php");
 include_once($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
@@ -119,7 +132,41 @@ mysqli_free_result($eventsResult);
 
 
 
+// change local coordinates from JSON to global coordinates based on the map's position:
+// items:
+for ($i = 0; $i < count($mapData['map']['items']); $i++) {
+    $mapData['map']['items'][$i]['tileX'] += $globalPosition[0] * $worldMapTileLength;
+    $mapData['map']['items'][$i]['tileY'] += $globalPosition[1] * $worldMapTileLength;
+}
+// NPCs:
+for ($i = 0; $i < count($mapData['map']['npcs']); $i++) {
+    $mapData['map']['npcs'][$i]['tileX'] += $globalPosition[0] * $worldMapTileLength;
+    $mapData['map']['npcs'][$i]['tileY'] += $globalPosition[1] * $worldMapTileLength;
+}
+// doors ### ???
 
+
+
+// check seasonal content as well:
+for ($j=0;$j<count($activeEvents);$j++) {
+    if(isset($mapData['map']['eventSpecificContent'][($activeEvents[$j])])) {
+    $thisEvent = $mapData['map']['eventSpecificContent'][($activeEvents[$j])];
+        if(isset($thisEvent['npcs'])) {
+            for($i=0;$i<count($thisEvent['npcs']); $i++) {
+                $mapData['map']['eventSpecificContent'][($activeEvents[$j])]['npcs'][$i]['tileX'] += $globalPosition[0] * $worldMapTileLength;
+                $mapData['map']['eventSpecificContent'][($activeEvents[$j])]['npcs'][$i]['tileY'] += $globalPosition[1] * $worldMapTileLength;
+            }
+        }
+        if(isset($thisEvent['items'])) {
+            for($i=0;$i<count($thisEvent['items']); $i++) {
+                  $mapData['map']['eventSpecificContent'][($activeEvents[$j])]['items'][$i]['tileX'] += $globalPosition[0] * $worldMapTileLength;
+                $mapData['map']['eventSpecificContent'][($activeEvents[$j])]['items'][$i]['tileY'] += $globalPosition[1] * $worldMapTileLength;
+            }
+        }
+
+
+    }
+}
 
 
 
@@ -228,7 +275,7 @@ return $variable;
 }
 
 function generatePositionsOfHiddenResourceNodes() {
-    global $mapData, $activeEvents, $activeEventsID, $clearTiles, $mapTilesY, $mapTilesX, $connection;
+    global $mapData, $activeEvents, $activeEventsID, $clearTiles, $mapTilesY, $mapTilesX, $connection, $globalPosition, $worldMapTileLength;
 
  
 
@@ -407,11 +454,11 @@ $thisItemStability = capValues($thisItemStability, 20, 100);
 $thisItemPurity = capValues($thisItemPurity, 20, 100);
 $thisItemQuantity = capValues($thisItemQuantity, 3, 20);
 
-
+// tileX and tileY are global coordinates:
 $thisItemObject = array(
     "type"=>intval($possibleNodes[$thisCategory][mt_rand(0, count($possibleNodes[$thisCategory]) - 1)]),
-    "tileX"=>$thisX,
-    "tileY"=>$thisY,
+    "tileX"=>$thisX + $globalPosition[0] * $worldMapTileLength,
+    "tileY"=>$thisY + $globalPosition[1] * $worldMapTileLength,
     "quality"=> $thisItemQuality,
     "maxStability"=> $thisItemStability,
     "maxQuantity"=> $thisItemQuantity,
@@ -685,12 +732,7 @@ unset($mapData['map']['eventSpecificContent']);
 }
 
 
-$globalPosition = findWorldMapPosition($map);
-// add map's global position:
-$mapData['map']['globalCoordinateTile0X'] = $globalPosition[0];
-$mapData['map']['globalCoordinateTile0Y'] = $globalPosition[1];
 
-$mapData['map']['mapId'] = $map;
 
 
 //if(isset($mapData)) {
