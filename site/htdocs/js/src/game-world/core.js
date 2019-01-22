@@ -971,9 +971,11 @@ function tileIsClear(tileX, tileY) {
 
 
 function isATerrainCollision(x, y) {
-    var tileX = getLocalCoordinatesX(getTileX(x));
-    var tileY = getLocalCoordinatesX(getTileY(y));
-    var thisMap = findMapNumberFromGlobalCoordinates(tileX, tileY);
+    var globalTileX = getTileX(x);
+    var globalTileY = getTileY(y);
+    var tileX = getLocalCoordinatesX(globalTileX);
+    var tileY = getLocalCoordinatesX(globalTileY);
+    var thisMap = findMapNumberFromGlobalCoordinates(globalTileX, globalTileY);
     //if ((tileX < 0) || (tileY < 0) || (tileX >= mapTilesX) || (tileY >= mapTilesY)) {
     // check if defined rather than boundaries as could be moving into an adjoining map:
     if (typeof thisMapData[thisMap].collisions[tileY] === "undefined") {      
