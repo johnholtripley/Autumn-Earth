@@ -173,7 +173,16 @@
         "shops": [],
         "npcs": [],
         "doors": {},
-        "items": [],
+        "items": [
+   {
+
+                "type": 18,
+                "tileX": 49,
+                "tileY": 49
+
+            }
+
+],
         "hotspots": [],
         "hiddenResourceCategories": [4],
         "hiddenResourceTier": 7

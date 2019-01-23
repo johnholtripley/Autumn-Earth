@@ -143,8 +143,16 @@ for ($i = 0; $i < count($mapData['map']['npcs']); $i++) {
     $mapData['map']['npcs'][$i]['tileX'] += $globalPosition[0] * $worldMapTileLength;
     $mapData['map']['npcs'][$i]['tileY'] += $globalPosition[1] * $worldMapTileLength;
 }
-// doors ### ???
-
+// doors:
+foreach ($mapData['map']['doors'] as $key => $value) {
+$thisKeySplit = explode(",",$key);
+$thisNewX = intval($thisKeySplit[0])+$globalPosition[0] * $worldMapTileLength;
+$thisNewY = intval($thisKeySplit[1])+$globalPosition[1] * $worldMapTileLength;
+$newKey = $thisNewX .",".$thisNewY;
+// remove old key, and set new one:
+$mapData['map']['doors'][$newKey] = $mapData['map']['doors'][$key];
+unset($mapData['map']['doors'][$key]);
+}
 
 
 // check seasonal content as well:

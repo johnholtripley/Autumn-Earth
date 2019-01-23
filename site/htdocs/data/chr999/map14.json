@@ -172,7 +172,27 @@
         "weather": [""],
         "shops": [],
         "npcs": [],
-        "doors": {},
+             "doors":
+        {
+            "1,0":
+            {
+                "map": -1,
+                "startX": "?-1",
+                "startY": "?"
+            },
+            "2,0":
+            {
+                "map": -1,
+                "startX": "?",
+                "startY": "?"
+            },
+            "3,0":
+            {
+                "map": -1,
+                "startX": "?+1",
+                "startY": "?"
+            }
+        },
         "items": [   {
 
                 "type": 18,

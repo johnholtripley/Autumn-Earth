@@ -6,7 +6,7 @@ var timeSinceLastFrameSwap = 0;
 var currentAnimationFrame = 0;
 var animationUpdateTime = (1000 / animationFramesPerSecond);
 
-var gameCanvas, gameContext, gameMode, cartographyContext, cartographyCanvas, offScreenCartographyCanvas, offScreenCartographyContext, canvasMapImage, canvasMapImage, canvasMapMaskImage, heroImg, shadowImg, tilledEarth, addedWater, imagesToLoad, tileImages, npcImages, itemImages, backgroundImgs, objInitLeft, objInitTop, dragStartX, dragStartY, inventoryCheck, timeSinceLastAmbientSoundWasPlayed, gameSettings, lightMap, lightMapOverlay, lightMapContext, activeGatheredObject, questResponseNPC, cursorPositionX, cursorPositionY;
+var gameCanvas, gameContext, gameMode, cartographyContext, cartographyCanvas, offScreenCartographyCanvas, offScreenCartographyContext, canvasMapImage, canvasMapImage, canvasMapMaskImage, heroImg, shadowImg, tilledEarth, addedWater, imagesToLoad, tileImages, npcImages, itemImages, backgroundImgs, objInitLeft, objInitTop, dragStartX, dragStartY, inventoryCheck, timeSinceLastAmbientSoundWasPlayed, gameSettings, lightMap, lightMapOverlay, lightMapContext, activeGatheredObject, questResponseNPC, cursorPositionX, cursorPositionY, whichVisibleMap;
 var chestIdOpen = -1;
 var currentWeather = "";
 var outsideWeather = "";
@@ -164,7 +164,7 @@ const worldMap = [
 [13, 14, 15],
 [16, 17, 18]
 ];
-var visibleMaps = [10, 11, 13];
+var visibleMaps = [10, 11, 13, 14];
 const worldMapWidthPx = 2400;
 const worldMapHeightPx = 1200;
 const worldMapTileLength = 50;

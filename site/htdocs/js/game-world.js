@@ -345,7 +345,7 @@ var timeSinceLastFrameSwap = 0;
 var currentAnimationFrame = 0;
 var animationUpdateTime = (1000 / animationFramesPerSecond);
 
-var gameCanvas, gameContext, gameMode, cartographyContext, cartographyCanvas, offScreenCartographyCanvas, offScreenCartographyContext, canvasMapImage, canvasMapImage, canvasMapMaskImage, heroImg, shadowImg, tilledEarth, addedWater, imagesToLoad, tileImages, npcImages, itemImages, backgroundImgs, objInitLeft, objInitTop, dragStartX, dragStartY, inventoryCheck, timeSinceLastAmbientSoundWasPlayed, gameSettings, lightMap, lightMapOverlay, lightMapContext, activeGatheredObject, questResponseNPC, cursorPositionX, cursorPositionY;
+var gameCanvas, gameContext, gameMode, cartographyContext, cartographyCanvas, offScreenCartographyCanvas, offScreenCartographyContext, canvasMapImage, canvasMapImage, canvasMapMaskImage, heroImg, shadowImg, tilledEarth, addedWater, imagesToLoad, tileImages, npcImages, itemImages, backgroundImgs, objInitLeft, objInitTop, dragStartX, dragStartY, inventoryCheck, timeSinceLastAmbientSoundWasPlayed, gameSettings, lightMap, lightMapOverlay, lightMapContext, activeGatheredObject, questResponseNPC, cursorPositionX, cursorPositionY, whichVisibleMap;
 var chestIdOpen = -1;
 var currentWeather = "";
 var outsideWeather = "";
@@ -503,7 +503,7 @@ const worldMap = [
 [13, 14, 15],
 [16, 17, 18]
 ];
-var visibleMaps = [10, 11, 13];
+var visibleMaps = [10, 11, 13, 14];
 const worldMapWidthPx = 2400;
 const worldMapHeightPx = 1200;
 const worldMapTileLength = 50;
@@ -7462,93 +7462,93 @@ function loadCardData() {
 
 function processInitialMap() {
     var startTileOffsetX, startTileOffsetY;
-            var startTileOffsetXNum = 0;
-            var startTileOffsetYNum = 0;
-            // check for any "?" in the target door (for procedural levels):
-            if (hero.tileX.toString().indexOf("?") != -1) {
-                // check for +1 or -1 modifiers:
-                startTileOffsetX = hero.tileX.toString().substring(1);
-                if (startTileOffsetX.length > 0) {
-                    startTileOffsetXNum = parseInt(startTileOffsetX);
-                }
-                hero.tileX = thisMapData[currentMap].entrance[0] + startTileOffsetXNum;
+    var startTileOffsetXNum = 0;
+    var startTileOffsetYNum = 0;
+    // check for any "?" in the target door (for procedural levels):
+    if (hero.tileX.toString().indexOf("?") != -1) {
+        // check for +1 or -1 modifiers:
+        startTileOffsetX = hero.tileX.toString().substring(1);
+        if (startTileOffsetX.length > 0) {
+            startTileOffsetXNum = parseInt(startTileOffsetX);
+        }
+        hero.tileX = thisMapData[currentMap].entrance[0] + startTileOffsetXNum;
+    }
+    if (hero.tileY.toString().indexOf("?") != -1) {
+        startTileOffsetY = hero.tileY.toString().substring(1);
+        if (startTileOffsetY.length > 0) {
+            startTileOffsetYNum = parseInt(startTileOffsetY);
+        }
+        hero.tileY = thisMapData[currentMap].entrance[1] + startTileOffsetYNum;
+    }
+
+
+    // set up pet positions:
+    if (hasActivePet) {
+        var tileOffsetX = 0;
+        var tileOffsetY = 0;
+        switch (hero.facing) {
+            case "n":
+                tileOffsetY = 1;
+                break
+            case "s":
+                tileOffsetY = -1;
+                break
+            case "e":
+                tileOffsetX = -1;
+                break
+            case "w":
+                tileOffsetX = 1;
+                break
+        }
+
+        for (var i = 0; i < hero.activePets.length; i++) {
+            hero.allPets[hero.activePets[i]].tileX = hero.tileX + (tileOffsetX * (i + 1));
+            hero.allPets[hero.activePets[i]].tileY = hero.tileY + (tileOffsetY * (i + 1));
+
+
+
+            if (i == 0) {
+                hero.allPets[hero.activePets[i]].state = "moving";
+            } else {
+                // will be placed out of the normal map grid:
+                hero.allPets[hero.activePets[i]].state = "queuing";
             }
-            if (hero.tileY.toString().indexOf("?") != -1) {
-                startTileOffsetY = hero.tileY.toString().substring(1);
-                if (startTileOffsetY.length > 0) {
-                    startTileOffsetYNum = parseInt(startTileOffsetY);
-                }
-                hero.tileY = thisMapData[currentMap].entrance[1] + startTileOffsetYNum;
+            hero.allPets[hero.activePets[i]].facing = hero.facing;
+
+        }
+    }
+
+
+    mapTilesY = thisMapData[currentMap].terrain.length;
+    mapTilesX = thisMapData[currentMap].terrain[0].length;
+    if (previousZoneName != thisMapData[currentMap].zoneName) {
+        UI.showZoneName(thisMapData[currentMap].zoneName);
+        document.title = titleTagPrefix + ' - ' + thisMapData[currentMap].zoneName;
+        cartographicTitle.innerHTML = thisMapData[currentMap].zoneName;
+    }
+
+    initCartographicMap();
+
+    if (thisMapData[currentMap].showOnlyLineOfSight) {
+        // initialise the lightmap with default values:
+        lightMap = [];
+        for (var row = mapTilesY - 1; row >= 0; row--) {
+            var defaultRow = [];
+            for (var col = mapTilesX - 1; col >= 0; col--) {
+                defaultRow[col] = 0;
             }
-
-
-            // set up pet positions:
-            if (hasActivePet) {
-                var tileOffsetX = 0;
-                var tileOffsetY = 0;
-                switch (hero.facing) {
-                    case "n":
-                        tileOffsetY = 1;
-                        break
-                    case "s":
-                        tileOffsetY = -1;
-                        break
-                    case "e":
-                        tileOffsetX = -1;
-                        break
-                    case "w":
-                        tileOffsetX = 1;
-                        break
-                }
-
-                for (var i = 0; i < hero.activePets.length; i++) {
-                    hero.allPets[hero.activePets[i]].tileX = hero.tileX + (tileOffsetX * (i + 1));
-                    hero.allPets[hero.activePets[i]].tileY = hero.tileY + (tileOffsetY * (i + 1));
-
-
-
-                    if (i == 0) {
-                        hero.allPets[hero.activePets[i]].state = "moving";
-                    } else {
-                        // will be placed out of the normal map grid:
-                        hero.allPets[hero.activePets[i]].state = "queuing";
-                    }
-                    hero.allPets[hero.activePets[i]].facing = hero.facing;
-
-                }
-            }
-
-
-            mapTilesY = thisMapData[currentMap].terrain.length;
-            mapTilesX = thisMapData[currentMap].terrain[0].length;
-            if (previousZoneName != thisMapData[currentMap].zoneName) {
-                UI.showZoneName(thisMapData[currentMap].zoneName);
-                document.title = titleTagPrefix + ' - ' + thisMapData[currentMap].zoneName;
-                cartographicTitle.innerHTML = thisMapData[currentMap].zoneName;
-            }
-
-            initCartographicMap();
-
-            if (thisMapData[currentMap].showOnlyLineOfSight) {
-                // initialise the lightmap with default values:
-                lightMap = [];
-                for (var row = mapTilesY - 1; row >= 0; row--) {
-                    var defaultRow = [];
-                    for (var col = mapTilesX - 1; col >= 0; col--) {
-                        defaultRow[col] = 0;
-                    }
-                    lightMap[row] = defaultRow;
-                }
-                updateLightMap();
-            }
-            if (thisMapData[currentMap].ambientSounds) {
-                audio.loadAmbientSounds(thisMapData[currentMap].ambientSounds);
-            }
-            if (thisMapData[currentMap].hourChime) {
-                audio.loadAmbientSounds({ "hourChime": thisMapData[currentMap].hourChime });
-            }
-            fae.recentHotspots = [];
-            findProfessionsAndRecipes();
+            lightMap[row] = defaultRow;
+        }
+        updateLightMap();
+    }
+    if (thisMapData[currentMap].ambientSounds) {
+        audio.loadAmbientSounds(thisMapData[currentMap].ambientSounds);
+    }
+    if (thisMapData[currentMap].hourChime) {
+        audio.loadAmbientSounds({ "hourChime": thisMapData[currentMap].hourChime });
+    }
+    fae.recentHotspots = [];
+    findProfessionsAndRecipes();
 }
 
 function loadMapJSON(mapFilePath) {
@@ -7583,7 +7583,9 @@ function loadMap() {
     loadMapJSON(mapFilePath);
     // load other visible maps:
     for (var i = 0; i < visibleMaps.length; i++) {
-        loadMapJSON('/game-world/getMap.php?chr=' + characterId + '&map=' + visibleMaps[i]);
+        if (visibleMaps[i] != currentMap) {
+            loadMapJSON('/game-world/getMap.php?chr=' + characterId + '&map=' + visibleMaps[i]);
+        }
     }
 }
 
@@ -7985,41 +7987,41 @@ function initialiseNPC(whichNPC) {
 }
 
 function initialiseItem(whichItem) {
-    thisMapData[currentMap].items[whichItem].x = getTileCentreCoordX(thisMapData[currentMap].items[whichItem].tileX);
-    thisMapData[currentMap].items[whichItem].y = getTileCentreCoordY(thisMapData[currentMap].items[whichItem].tileY);
-    thisMapData[currentMap].items[whichItem].z = getElevation(thisMapData[currentMap].items[whichItem].tileX, thisMapData[currentMap].items[whichItem].tileY);
-    thisMapData[currentMap].items[whichItem].width = currentActiveInventoryItems[thisMapData[currentMap].items[whichItem].type].width;
-    thisMapData[currentMap].items[whichItem].length = currentActiveInventoryItems[thisMapData[currentMap].items[whichItem].type].length;
-    thisMapData[currentMap].items[whichItem].centreX = currentActiveInventoryItems[thisMapData[currentMap].items[whichItem].type].centreX;
-    thisMapData[currentMap].items[whichItem].centreY = currentActiveInventoryItems[thisMapData[currentMap].items[whichItem].type].centreY;
-    thisMapData[currentMap].items[whichItem].spriteWidth = currentActiveInventoryItems[thisMapData[currentMap].items[whichItem].type].spriteWidth;
-    thisMapData[currentMap].items[whichItem].spriteHeight = currentActiveInventoryItems[thisMapData[currentMap].items[whichItem].type].spriteHeight;
-    thisMapData[currentMap].items[whichItem].isCollidable = true;
-    if (currentActiveInventoryItems[thisMapData[currentMap].items[whichItem].type].action == "gate") {
-        if (thisMapData[currentMap].items[whichItem].state == "open") {
-            thisMapData[currentMap].items[whichItem].isCollidable = false;
+    whichItem.x = getTileCentreCoordX(whichItem.tileX);
+    whichItem.y = getTileCentreCoordY(whichItem.tileY);
+    whichItem.z = getElevation(whichItem.tileX, whichItem.tileY);
+    whichItem.width = currentActiveInventoryItems[whichItem.type].width;
+    whichItem.length = currentActiveInventoryItems[whichItem.type].length;
+    whichItem.centreX = currentActiveInventoryItems[whichItem.type].centreX;
+    whichItem.centreY = currentActiveInventoryItems[whichItem.type].centreY;
+    whichItem.spriteWidth = currentActiveInventoryItems[whichItem.type].spriteWidth;
+    whichItem.spriteHeight = currentActiveInventoryItems[whichItem.type].spriteHeight;
+    whichItem.isCollidable = true;
+    if (currentActiveInventoryItems[whichItem.type].action == "gate") {
+        if (whichItem.state == "open") {
+            whichItem.isCollidable = false;
         }
     }
     // check for node resources:
-    if (currentActiveInventoryItems[thisMapData[currentMap].items[whichItem].type].action == "node") {
+    if (currentActiveInventoryItems[whichItem.type].action == "node") {
         // use the saved value if it has one:
-        if (!thisMapData[currentMap].items[whichItem].timeLastHarvested) {
+        if (!whichItem.timeLastHarvested) {
             // otherwise, set it so it can be instantly harvested:
-            thisMapData[currentMap].items[whichItem].timeLastHarvested = hero.totalGameTimePlayed - currentActiveInventoryItems[thisMapData[currentMap].items[whichItem].type].respawnRate;
+            whichItem.timeLastHarvested = hero.totalGameTimePlayed - currentActiveInventoryItems[whichItem.type].respawnRate;
         }
 
         // add stability and quantity values if it doesn't have them
-        if (typeof thisMapData[currentMap].items[whichItem].stability === "undefined") {
-            thisMapData[currentMap].items[whichItem].stability = thisMapData[currentMap].items[whichItem].maxStability;
+        if (typeof whichItem.stability === "undefined") {
+            whichItem.stability = whichItem.maxStability;
         }
-        if (typeof thisMapData[currentMap].items[whichItem].quantity === "undefined") {
-            thisMapData[currentMap].items[whichItem].quantity = thisMapData[currentMap].items[whichItem].maxQuantity;
+        if (typeof whichItem.quantity === "undefined") {
+            whichItem.quantity = whichItem.maxQuantity;
         }
 
     }
-    if (currentActiveInventoryItems[thisMapData[currentMap].items[whichItem].type].action == "nest") {
-        thisMapData[currentMap].items[whichItem].timeLastSpawned = hero.totalGameTimePlayed;
-        thisMapData[currentMap].items[whichItem].spawnsRemaining = thisMapData[currentMap].items[whichItem].additional;
+    if (currentActiveInventoryItems[whichItem.type].action == "nest") {
+        whichItem.timeLastSpawned = hero.totalGameTimePlayed;
+        whichItem.spawnsRemaining = whichItem.additional;
     }
 }
 
@@ -8136,10 +8138,12 @@ function prepareGame() {
         hero.breadcrumb[i] = [hero.tileX, hero.tileY];
     }
 
+for (var m = 0; m < visibleMaps.length; m++) {
     // initialise items:
-    for (var i = 0; i < thisMapData[currentMap].items.length; i++) {
-        initialiseItem(i);
+    for (var i = 0; i < thisMapData[(visibleMaps[m])].items.length; i++) {
+        initialiseItem(thisMapData[(visibleMaps[m])].items[i]);
     }
+}
     activeObjectForDialogue = '';
 
 
@@ -8295,7 +8299,7 @@ function isATerrainCollision(x, y) {
     var thisMap = findMapNumberFromGlobalCoordinates(globalTileX, globalTileY);
     //if ((tileX < 0) || (tileY < 0) || (tileX >= mapTilesX) || (tileY >= mapTilesY)) {
     // check if defined rather than boundaries as could be moving into an adjoining map:
-    if (typeof thisMapData[thisMap].collisions[tileY] === "undefined") {      
+    if (typeof thisMapData[thisMap].collisions[tileY] === "undefined") {
         return 1;
     }
     if (typeof thisMapData[thisMap].collisions[tileY][tileX] === "undefined") {
@@ -8506,9 +8510,14 @@ function checkHeroCollisions() {
 
 
     var thisNPC, thisItem;
+
+ for (var m = 0; m < visibleMaps.length; m++) {
+            whichVisibleMap = visibleMaps[m];
+
+
     // check for collisions against NPCs:
-    for (var i = 0; i < thisMapData[currentMap].npcs.length; i++) {
-        thisNPC = thisMapData[currentMap].npcs[i];
+    for (var i = 0; i < thisMapData[whichVisibleMap].npcs.length; i++) {
+        thisNPC = thisMapData[whichVisibleMap].npcs[i];
         if (thisNPC.isCollidable) {
             if (isAnObjectCollision(thisNPC.x, thisNPC.y, thisNPC.width, thisNPC.length, hero.x, hero.y, hero.width, hero.length)) {
                 getHeroAsCloseAsPossibleToObject(thisNPC.x, thisNPC.y, thisNPC.width, thisNPC.length);
@@ -8517,14 +8526,17 @@ function checkHeroCollisions() {
     }
 
     // check for collisions against items:
-    for (var i = 0; i < thisMapData[currentMap].items.length; i++) {
-        thisItem = thisMapData[currentMap].items[i];
+    for (var i = 0; i < thisMapData[whichVisibleMap].items.length; i++) {
+        thisItem = thisMapData[whichVisibleMap].items[i];
         if (thisItem.isCollidable) {
             if (isAnObjectCollision(thisItem.x, thisItem.y, thisItem.width, thisItem.length, hero.x, hero.y, hero.width, hero.length)) {
                 getHeroAsCloseAsPossibleToObject(thisItem.x, thisItem.y, thisItem.width, thisItem.length);
             }
         }
     }
+
+
+}
 
     // check against pets:
     if (hasActivePet) {
@@ -10225,6 +10237,7 @@ function saveGame() {
 
 
 function draw() {
+
     if (gameMode == "mapLoading") {
         gameContext.fillStyle = "#000000";
         gameContext.fillRect(0, 0, canvasWidth, canvasHeight);
@@ -10329,102 +10342,107 @@ function draw() {
             }
         }
 
-        for (var i = 0; i < thisMapData[currentMap].npcs.length; i++) {
-            thisNPC = thisMapData[currentMap].npcs[i];
+
+     
+        for (var m = 0; m < visibleMaps.length; m++) {
+            whichVisibleMap = visibleMaps[m];
+
+            for (var i = 0; i < thisMapData[whichVisibleMap].npcs.length; i++) {
+                thisNPC = thisMapData[whichVisibleMap].npcs[i];
 
 
-            if (typeof thisNPC.animationWaitingTimer === "undefined") {
-                thisNPCOffsetCol = currentAnimationFrame % thisNPC["animation"][thisNPC.currentAnimation]["length"];
-            } else {
-                // don't use the global animation timer, so that this animation plays from its own first frame through to its end:
-                // (need modulo in case the animation is being played several times)
-                thisNPCOffsetCol = (currentAnimationFrame + 1 - thisNPC.animationWaitingTimer) % thisNPC["animation"][thisNPC.currentAnimation]["length"];
-            }
-
-            thisNPCOffsetRow = thisNPC["animation"][thisNPC.currentAnimation][thisNPC.drawnFacing];
-            thisX = findIsoCoordsX(thisNPC.x, thisNPC.y);
-            thisY = findIsoCoordsY(thisNPC.x, thisNPC.y);
-            //assetsToDraw.push([findIsoDepth(thisX, thisY), npcImages[i], Math.floor(thisX - hero.isox - thisNPC.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisNPC.centreY + (canvasHeight / 2))]);
-            thisNPCIdentifier = "npc" + thisMapData[currentMap].npcs[i].name;
-            assetsToDraw.push([findIsoDepth(thisNPC.x, thisNPC.y, thisNPC.z), "sprite", npcImages[thisNPCIdentifier], thisNPCOffsetCol * thisNPC.spriteWidth, thisNPCOffsetRow * thisNPC.spriteHeight, thisNPC.spriteWidth, thisNPC.spriteHeight, Math.floor(thisX - hero.isox - thisNPC.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisNPC.centreY + (canvasHeight / 2) - thisNPC.z), thisNPC.spriteWidth, thisNPC.spriteHeight]);
-        }
-        for (var i = 0; i < thisMapData[currentMap].items.length; i++) {
-            thisItem = thisMapData[currentMap].items[i];
-            thisX = findIsoCoordsX(thisItem.x, thisItem.y);
-            thisY = findIsoCoordsY(thisItem.x, thisItem.y);
-            thisFileColourSuffix = "";
-            if (thisMapData[currentMap].items[i].colour) {
-                thisColourName = getColourName(thisMapData[currentMap].items[i].colour, thisMapData[currentMap].items[i].type);
-                if (thisColourName != "") {
-                    thisFileColourSuffix = "-" + thisColourName.toLowerCase();
-
-                }
-            }
-
-
-
-            thisItemIdentifier = "item" + thisMapData[currentMap].items[i].type + thisFileColourSuffix;
-
-
-
-            // check for User Generated Content:
-            if (typeof thisMapData[currentMap].items[i].contains !== "undefined") {
-                if (typeof thisMapData[currentMap].items[i].contains['ugc-id'] !== "undefined") {
-                    thisItemIdentifier = "item" + thisMapData[currentMap].items[i].type + '_' + thisMapData[currentMap].items[i].contains['ugc-id'];
-                }
-            }
-
-
-
-            if (typeof thisItem.animation !== "undefined") {
-                if (typeof thisItem.state !== "undefined") {
-                    thisItemOffsetCol = (thisItem["animation"][thisItem.state]["length"]) - 1;
-                    thisItemOffsetRow = thisItem["animation"][thisItem.state]["row"];
+                if (typeof thisNPC.animationWaitingTimer === "undefined") {
+                    thisNPCOffsetCol = currentAnimationFrame % thisNPC["animation"][thisNPC.currentAnimation]["length"];
                 } else {
-                    // use facing:
-                    thisItemOffsetCol = (thisItem["animation"]['facing']["length"]) - 1;
-                    thisItemOffsetRow = thisItem["animation"]['facing'][thisItem.facing];
+                    // don't use the global animation timer, so that this animation plays from its own first frame through to its end:
+                    // (need modulo in case the animation is being played several times)
+                    thisNPCOffsetCol = (currentAnimationFrame + 1 - thisNPC.animationWaitingTimer) % thisNPC["animation"][thisNPC.currentAnimation]["length"];
                 }
 
-                assetsToDraw.push([findIsoDepth(thisItem.x, thisItem.y, thisItem.z), "sprite", itemImages[thisItemIdentifier], thisItemOffsetCol * thisItem.spriteWidth, thisItemOffsetRow * thisItem.spriteHeight, thisItem.spriteWidth, thisItem.spriteHeight, Math.floor(thisX - hero.isox - thisItem.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisItem.centreY + (canvasHeight / 2) - thisItem.z), thisItem.spriteWidth, thisItem.spriteHeight]);
-            } else {
-                assetsToDraw.push([findIsoDepth(thisItem.x, thisItem.y, thisItem.z), "img", itemImages[thisItemIdentifier], Math.floor(thisX - hero.isox - thisItem.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisItem.centreY + (canvasHeight / 2) - thisItem.z)]);
+                thisNPCOffsetRow = thisNPC["animation"][thisNPC.currentAnimation][thisNPC.drawnFacing];
+                thisX = findIsoCoordsX(thisNPC.x, thisNPC.y);
+                thisY = findIsoCoordsY(thisNPC.x, thisNPC.y);
+                //assetsToDraw.push([findIsoDepth(thisX, thisY), npcImages[i], Math.floor(thisX - hero.isox - thisNPC.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisNPC.centreY + (canvasHeight / 2))]);
+                thisNPCIdentifier = "npc" + thisMapData[whichVisibleMap].npcs[i].name;
+                assetsToDraw.push([findIsoDepth(thisNPC.x, thisNPC.y, thisNPC.z), "sprite", npcImages[thisNPCIdentifier], thisNPCOffsetCol * thisNPC.spriteWidth, thisNPCOffsetRow * thisNPC.spriteHeight, thisNPC.spriteWidth, thisNPC.spriteHeight, Math.floor(thisX - hero.isox - thisNPC.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisNPC.centreY + (canvasHeight / 2) - thisNPC.z), thisNPC.spriteWidth, thisNPC.spriteHeight]);
             }
-        }
 
-        if (thisMapData[currentMap].movingPlatforms) {
-            for (var i = 0; i < thisMapData[currentMap].movingPlatforms.length; i++) {
-                thisPlatform = thisMapData[currentMap].movingPlatforms[i];
-                thisX = findIsoCoordsX(thisPlatform.x, thisPlatform.y);
-                thisY = findIsoCoordsY(thisPlatform.x, thisPlatform.y);
-                thisGraphicCentreX = thisMapData[currentMap].graphics[thisPlatform.graphic].centreX;
-                thisGraphicCentreY = thisMapData[currentMap].graphics[thisPlatform.graphic].centreY;
-                assetsToDraw.push([findIsoDepth(thisPlatform.x, thisPlatform.y, thisPlatform.z), "img", tileImages[thisPlatform.graphic], Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2))]);
+
+
+            for (var i = 0; i < thisMapData[whichVisibleMap].items.length; i++) {
+                thisItem = thisMapData[whichVisibleMap].items[i];
+
+                thisX = findIsoCoordsX(thisItem.x, thisItem.y);
+                thisY = findIsoCoordsY(thisItem.x, thisItem.y);
+           //    console.log(whichVisibleMap+" - "+thisItem.type+" : "+thisX+", "+thisY+" : "+thisItem.x+", "+thisItem.y);
+                thisFileColourSuffix = "";
+                if (thisMapData[whichVisibleMap].items[i].colour) {
+                    thisColourName = getColourName(thisItem.colour, thisItem.type);
+                    if (thisColourName != "") {
+                        thisFileColourSuffix = "-" + thisColourName.toLowerCase();
+
+                    }
+                }
+                thisItemIdentifier = "item" + thisMapData[whichVisibleMap].items[i].type + thisFileColourSuffix;
+                // check for User Generated Content:
+                if (typeof thisMapData[whichVisibleMap].items[i].contains !== "undefined") {
+                    if (typeof thisMapData[whichVisibleMap].items[i].contains['ugc-id'] !== "undefined") {
+                        thisItemIdentifier = "item" + thisMapData[whichVisibleMap].items[i].type + '_' + thisMapData[whichVisibleMap].items[i].contains['ugc-id'];
+                    }
+                }
+                if (typeof thisItem.animation !== "undefined") {
+                    if (typeof thisItem.state !== "undefined") {
+                        thisItemOffsetCol = (thisItem["animation"][thisItem.state]["length"]) - 1;
+                        thisItemOffsetRow = thisItem["animation"][thisItem.state]["row"];
+                    } else {
+                        // use facing:
+                        thisItemOffsetCol = (thisItem["animation"]['facing']["length"]) - 1;
+                        thisItemOffsetRow = thisItem["animation"]['facing'][thisItem.facing];
+                    }
+                    assetsToDraw.push([findIsoDepth(thisItem.x, thisItem.y, thisItem.z), "sprite", itemImages[thisItemIdentifier], thisItemOffsetCol * thisItem.spriteWidth, thisItemOffsetRow * thisItem.spriteHeight, thisItem.spriteWidth, thisItem.spriteHeight, Math.floor(thisX - hero.isox - thisItem.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisItem.centreY + (canvasHeight / 2) - thisItem.z), thisItem.spriteWidth, thisItem.spriteHeight]);
+                } else {
+                    assetsToDraw.push([findIsoDepth(thisItem.x, thisItem.y, thisItem.z), "img", itemImages[thisItemIdentifier], Math.floor(thisX - hero.isox - thisItem.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisItem.centreY + (canvasHeight / 2) - thisItem.z)]);
+                }
             }
+
+            if (thisMapData[whichVisibleMap].movingPlatforms) {
+                for (var i = 0; i < thisMapData[whichVisibleMap].movingPlatforms.length; i++) {
+                    thisPlatform = thisMapData[whichVisibleMap].movingPlatforms[i];
+                    thisX = findIsoCoordsX(thisPlatform.x, thisPlatform.y);
+                    thisY = findIsoCoordsY(thisPlatform.x, thisPlatform.y);
+                    thisGraphicCentreX = thisMapData[whichVisibleMap].graphics[thisPlatform.graphic].centreX;
+                    thisGraphicCentreY = thisMapData[whichVisibleMap].graphics[thisPlatform.graphic].centreY;
+                    assetsToDraw.push([findIsoDepth(thisPlatform.x, thisPlatform.y, thisPlatform.z), "img", tileImages[thisPlatform.graphic], Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2))]);
+                }
+            }
+
+
+
         }
 
         assetsToDraw.sort(sortByLowestValue);
         // don't need to clear, as the background will overwrite anyway - this means there's less to process.
-      
+
 
         // draw the current map background based on it's tile 0,0 and using its global position to offset - relative to the hero's position:
-
-        var thisMapsGlobalOffsetX = thisMapData[currentMap].globalCoordinateTile0X * worldMapTileLength;
-        var thisMapsGlobalOffsetY = thisMapData[currentMap].globalCoordinateTile0Y * worldMapTileLength;
-                var currentWorldMapPosX = Math.floor((canvasWidth / 2) + getTileIsoCentreCoordX(0 + thisMapsGlobalOffsetX, 0 + thisMapsGlobalOffsetY) - hero.isox - (worldMapWidthPx/2));
-                var currentWorldMapPosY = Math.floor((canvasHeight / 2) + getTileIsoCentreCoordY(0 + thisMapsGlobalOffsetX, 0 + thisMapsGlobalOffsetY) - hero.isoy - (tileH / 2));
-                // draw the current map background in place:
-                gameContext.drawImage(backgroundImgs[currentMap], currentWorldMapPosX, currentWorldMapPosY);
-
+        /*
+                var thisMapsGlobalOffsetX = thisMapData[currentMap].globalCoordinateTile0X * worldMapTileLength;
+                var thisMapsGlobalOffsetY = thisMapData[currentMap].globalCoordinateTile0Y * worldMapTileLength;
+                        var currentWorldMapPosX = Math.floor((canvasWidth / 2) + getTileIsoCentreCoordX(0 + thisMapsGlobalOffsetX, 0 + thisMapsGlobalOffsetY) - hero.isox - (worldMapWidthPx/2));
+                        var currentWorldMapPosY = Math.floor((canvasHeight / 2) + getTileIsoCentreCoordY(0 + thisMapsGlobalOffsetX, 0 + thisMapsGlobalOffsetY) - hero.isoy - (tileH / 2));
+                        // draw the current map background in place:
+                        gameContext.drawImage(backgroundImgs[currentMap], currentWorldMapPosX, currentWorldMapPosY);
+                        */
+        var thisMapsGlobalOffsetX, thisMapsGlobalOffsetY, currentWorldMapPosX, currentWorldMapPosY;
         // find and draw any other visible maps:
         for (var i = 0; i < visibleMaps.length; i++) {
 
-         thisMapsGlobalOffsetX = thisMapData[(visibleMaps[i])].globalCoordinateTile0X * worldMapTileLength;
-         thisMapsGlobalOffsetY = thisMapData[(visibleMaps[i])].globalCoordinateTile0Y * worldMapTileLength;
-                 currentWorldMapPosX = Math.floor((canvasWidth / 2) + getTileIsoCentreCoordX(0 + thisMapsGlobalOffsetX, 0 + thisMapsGlobalOffsetY) - hero.isox - (worldMapWidthPx/2));
-                 currentWorldMapPosY = Math.floor((canvasHeight / 2) + getTileIsoCentreCoordY(0 + thisMapsGlobalOffsetX, 0 + thisMapsGlobalOffsetY) - hero.isoy - (tileH / 2));
-                // draw the current map background in place:
-                gameContext.drawImage(backgroundImgs[(visibleMaps[i])], currentWorldMapPosX, currentWorldMapPosY);
+            thisMapsGlobalOffsetX = thisMapData[(visibleMaps[i])].globalCoordinateTile0X * worldMapTileLength;
+            thisMapsGlobalOffsetY = thisMapData[(visibleMaps[i])].globalCoordinateTile0Y * worldMapTileLength;
+            currentWorldMapPosX = Math.floor((canvasWidth / 2) + getTileIsoCentreCoordX(0 + thisMapsGlobalOffsetX, 0 + thisMapsGlobalOffsetY) - hero.isox - (worldMapWidthPx / 2));
+            currentWorldMapPosY = Math.floor((canvasHeight / 2) + getTileIsoCentreCoordY(0 + thisMapsGlobalOffsetX, 0 + thisMapsGlobalOffsetY) - hero.isoy - (tileH / 2));
+            // draw the current map background in place:
+            gameContext.drawImage(backgroundImgs[(visibleMaps[i])], currentWorldMapPosX, currentWorldMapPosY);
         }
 
 
