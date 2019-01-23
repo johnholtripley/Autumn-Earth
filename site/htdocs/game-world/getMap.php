@@ -153,6 +153,11 @@ $newKey = $thisNewX .",".$thisNewY;
 $mapData['map']['doors'][$newKey] = $mapData['map']['doors'][$key];
 unset($mapData['map']['doors'][$key]);
 }
+// hotspots:
+for ($i = 0; $i < count($mapData['map']['hotspots']); $i++) {
+    $mapData['map']['hotspots'][$i]['centreX'] += $globalPosition[0] * $worldMapTileLength;
+    $mapData['map']['hotspots'][$i]['centreY'] += $globalPosition[1] * $worldMapTileLength;
+}
 
 
 // check seasonal content as well:
