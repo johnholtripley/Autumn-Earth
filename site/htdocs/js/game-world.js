@@ -3145,9 +3145,6 @@ const Input = {
     }
 }
 function canAddItemToInventory(itemObj) {
-
-console.log("canAddItemToInventory", itemObj);
-
     // takes an array of objects and checks if all of them can be added before adding any of them
     // make copy of inventory:
     var inventoryClone = JSON.parse(JSON.stringify(hero.inventory));
