@@ -206,23 +206,25 @@ function findItemWithinArmsLength() {
     // check if there's a relevant item on the hero's tile, or at arm's length:
     var armsLengthXTile = hero.tileX + relativeFacing[hero.facing]["x"];
     var armsLengthYTile = hero.tileY + relativeFacing[hero.facing]["y"];
-    var foundItem = -1;
+    var foundItem = null;
     var thisItem;
-    for (var i = 0; i < thisMapData.items.length; i++) {
-        thisItem = thisMapData.items[i];
+     for (var m = 0; m < visibleMaps.length; m++) {
+    for (var i = 0; i < thisMapData[(visibleMaps[m])].items.length; i++) {
+        thisItem = thisMapData[(visibleMaps[m])].items[i];
         if (hero.tileX == thisItem.tileX) {
             if (hero.tileY == thisItem.tileY) {
-                foundItem = i;
+                foundItem = thisItem;
                 break;
             }
         }
         if (armsLengthXTile == thisItem.tileX) {
             if (armsLengthYTile == thisItem.tileY) {
-                foundItem = i;
+                foundItem = thisItem;
                 break;
             }
         }
     }
+}
     return foundItem;
 }
 

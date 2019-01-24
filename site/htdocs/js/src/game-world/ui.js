@@ -1691,19 +1691,19 @@ cardAlbumMarkup += '<p id="dustCurrency">'+ hero.currency.cardDust + ' dust</p>'
                         }
                         // check if there's a relevant item on the hero's tile, or at arm's length:
                         var foundItem = findItemWithinArmsLength();
-                        if (foundItem != -1) {
+                        if (foundItem != null) {
                             // found an item - check source node and the action match categories:
-                            if (currentActiveInventoryItems[thisMapData.items[foundItem].type].category == thisNode.dataset.category) {
+                            if (currentActiveInventoryItems[foundItem.type].category == thisNode.dataset.category) {
                                 // check it's not still re-spawning:
-                                if (thisMapData.items[foundItem].state != "inactive") {
+                                if (foundItem.state != "inactive") {
                                     gathering.itemIndex = foundItem;
-                                    gathering.quality = parseInt(thisMapData.items[foundItem].quality);
+                                    gathering.quality = parseInt(foundItem.quality);
 
                                     gathering.quantity = 100;
-                                    gathering.maxQuantity = parseInt(thisMapData.items[foundItem].quantity);
-                                    gathering.purity = parseInt(thisMapData.items[foundItem].purity);
-                                    gathering.stability = parseInt(thisMapData.items[foundItem].stability);
-                                    gathering.node = thisMapData.items[foundItem];
+                                    gathering.maxQuantity = parseInt(foundItem.quantity);
+                                    gathering.purity = parseInt(foundItem.purity);
+                                    gathering.stability = parseInt(foundItem.stability);
+                                    gathering.node = foundItem;
                                     gathering.depletionTime = baseGatheringTime;
                                     // look for modifiers from the action:
                                     gathering.modifiers = hero.actions[thisNode.dataset.index][3];

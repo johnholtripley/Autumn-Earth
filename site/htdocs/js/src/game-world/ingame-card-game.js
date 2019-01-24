@@ -8,6 +8,7 @@ var allCardPacks = [
 
 function cardGamePlayer2Concedes() {
 delete thisChallengeNPC.isPlayingCards;
+console.log(thisChallengeNPC);
  processSpeech(thisChallengeNPC, thisChallengeNPC.cardGameSpeech.win[0], thisChallengeNPC.cardGameSpeech.win[1]);
     closeCardGame();
 }

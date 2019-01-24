@@ -2034,23 +2034,25 @@ function findItemWithinArmsLength() {
     // check if there's a relevant item on the hero's tile, or at arm's length:
     var armsLengthXTile = hero.tileX + relativeFacing[hero.facing]["x"];
     var armsLengthYTile = hero.tileY + relativeFacing[hero.facing]["y"];
-    var foundItem = -1;
+    var foundItem = null;
     var thisItem;
-    for (var i = 0; i < thisMapData.items.length; i++) {
-        thisItem = thisMapData.items[i];
+     for (var m = 0; m < visibleMaps.length; m++) {
+    for (var i = 0; i < thisMapData[(visibleMaps[m])].items.length; i++) {
+        thisItem = thisMapData[(visibleMaps[m])].items[i];
         if (hero.tileX == thisItem.tileX) {
             if (hero.tileY == thisItem.tileY) {
-                foundItem = i;
+                foundItem = thisItem;
                 break;
             }
         }
         if (armsLengthXTile == thisItem.tileX) {
             if (armsLengthYTile == thisItem.tileY) {
-                foundItem = i;
+                foundItem = thisItem;
                 break;
             }
         }
     }
+}
     return foundItem;
 }
 
@@ -2883,6 +2885,7 @@ var allCardPacks = [
 
 function cardGamePlayer2Concedes() {
 delete thisChallengeNPC.isPlayingCards;
+console.log(thisChallengeNPC);
  processSpeech(thisChallengeNPC, thisChallengeNPC.cardGameSpeech.win[0], thisChallengeNPC.cardGameSpeech.win[1]);
     closeCardGame();
 }
@@ -3142,6 +3145,9 @@ const Input = {
     }
 }
 function canAddItemToInventory(itemObj) {
+
+console.log("canAddItemToInventory", itemObj);
+
     // takes an array of objects and checks if all of them can be added before adding any of them
     // make copy of inventory:
     var inventoryClone = JSON.parse(JSON.stringify(hero.inventory));
@@ -6446,19 +6452,19 @@ cardAlbumMarkup += '<p id="dustCurrency">'+ hero.currency.cardDust + ' dust</p>'
                         }
                         // check if there's a relevant item on the hero's tile, or at arm's length:
                         var foundItem = findItemWithinArmsLength();
-                        if (foundItem != -1) {
+                        if (foundItem != null) {
                             // found an item - check source node and the action match categories:
-                            if (currentActiveInventoryItems[thisMapData.items[foundItem].type].category == thisNode.dataset.category) {
+                            if (currentActiveInventoryItems[foundItem.type].category == thisNode.dataset.category) {
                                 // check it's not still re-spawning:
-                                if (thisMapData.items[foundItem].state != "inactive") {
+                                if (foundItem.state != "inactive") {
                                     gathering.itemIndex = foundItem;
-                                    gathering.quality = parseInt(thisMapData.items[foundItem].quality);
+                                    gathering.quality = parseInt(foundItem.quality);
 
                                     gathering.quantity = 100;
-                                    gathering.maxQuantity = parseInt(thisMapData.items[foundItem].quantity);
-                                    gathering.purity = parseInt(thisMapData.items[foundItem].purity);
-                                    gathering.stability = parseInt(thisMapData.items[foundItem].stability);
-                                    gathering.node = thisMapData.items[foundItem];
+                                    gathering.maxQuantity = parseInt(foundItem.quantity);
+                                    gathering.purity = parseInt(foundItem.purity);
+                                    gathering.stability = parseInt(foundItem.stability);
+                                    gathering.node = foundItem;
                                     gathering.depletionTime = baseGatheringTime;
                                     // look for modifiers from the action:
                                     gathering.modifiers = hero.actions[thisNode.dataset.index][3];
@@ -7973,23 +7979,23 @@ function loadInventoryItemData(itemIdsToLoad) {
 
 
 function initialiseNPC(whichNPC) {
-    thisMapData[currentMap].npcs[whichNPC].x = getTileCentreCoordX(thisMapData[currentMap].npcs[whichNPC].tileX);
-    thisMapData[currentMap].npcs[whichNPC].y = getTileCentreCoordY(thisMapData[currentMap].npcs[whichNPC].tileY);
-    thisMapData[currentMap].npcs[whichNPC].z = getElevation(thisMapData[currentMap].npcs[whichNPC].tileX, thisMapData[currentMap].npcs[whichNPC].tileY);
-    thisMapData[currentMap].npcs[whichNPC].drawnFacing = thisMapData[currentMap].npcs[whichNPC].facing;
-    thisMapData[currentMap].npcs[whichNPC].dx = 0;
-    thisMapData[currentMap].npcs[whichNPC].dy = 0;
-    if (typeof thisMapData[currentMap].npcs[whichNPC].speechIndex === "undefined") {
-        thisMapData[currentMap].npcs[whichNPC].speechIndex = 0;
+    whichNPC.x = getTileCentreCoordX(whichNPC.tileX);
+    whichNPC.y = getTileCentreCoordY(whichNPC.tileY);
+    whichNPC.z = getElevation(whichNPC.tileX, whichNPC.tileY);
+    whichNPC.drawnFacing = whichNPC.facing;
+    whichNPC.dx = 0;
+    whichNPC.dy = 0;
+    if (typeof whichNPC.speechIndex === "undefined") {
+        whichNPC.speechIndex = 0;
     }
-    thisMapData[currentMap].npcs[whichNPC].currentAnimation = 'walk';
+    whichNPC.currentAnimation = 'walk';
     // set index to -1 so when it increases, it'll pick up the first (0) element:
-    thisMapData[currentMap].npcs[whichNPC].movementIndex = -1;
+    whichNPC.movementIndex = -1;
     // allow NPCs to pick up their facing without moving to that first tile:
-    thisMapData[currentMap].npcs[whichNPC].forceNewMovementCheck = true;
+    whichNPC.forceNewMovementCheck = true;
     // used for making sure that pathfinding NPCs don't head straight back to the last place they visited:
-    thisMapData[currentMap].npcs[whichNPC].lastTargetDestination = "";
-    // thisMapData[currentMap].npcs[whichNPC].index = whichNPC;
+    whichNPC.lastTargetDestination = "";
+    // whichNPC.index = whichNPC;
 }
 
 function initialiseItem(whichItem) {
@@ -8062,9 +8068,11 @@ function prepareGame() {
         backgroundImgs[(visibleMaps[i])] = Loader.getImage("backgroundImg" + visibleMaps[i]);
     }
     // initialise and position NPCs:
-    for (var i = 0; i < thisMapData[currentMap].npcs.length; i++) {
-        initialiseNPC(i);
+    for (var m = 0; m < visibleMaps.length; m++) {
+    for (var i = 0; i < thisMapData[(visibleMaps[m])].npcs.length; i++) {
+        initialiseNPC(thisMapData[(visibleMaps[m])].npcs[i]);
     }
+}
     // initialise pet:
     if (hasActivePet) {
         for (var i = 0; i < hero.activePets.length; i++) {
@@ -8175,7 +8183,7 @@ for (var m = 0; m < visibleMaps.length; m++) {
     mapTransitionCurrentFrames = 1;
     gameMode = "play";
 
-    UI.showNotification("<p>I'm just thinking about what a notification looks like&hellip;</p>");
+  //  UI.showNotification("<p>I'm just thinking about what a notification looks like&hellip;</p>");
 
 }
 
@@ -8232,12 +8240,31 @@ function changeMaps(doorX, doorY) {
 
 
 
-function tileIsClear(tileX, tileY) {
+function tileIsClear(globalTileX, globalTileY) {
+    /*
     if ((tileX < 0) || (tileY < 0) || (tileX >= mapTilesX) || (tileY >= mapTilesY)) {
         // is out of the bounds of the current map:
         return false;
     } else {
-        switch (thisMapData[currentMap].collisions[tileY][tileX]) {
+        */
+
+
+ //   var globalTileX = getTileX(x);
+ //   var globalTileY = getTileY(y);
+    var tileX = getLocalCoordinatesX(globalTileX);
+    var tileY = getLocalCoordinatesX(globalTileY);
+    var thisMap = findMapNumberFromGlobalCoordinates(globalTileX, globalTileY);
+    //if ((tileX < 0) || (tileY < 0) || (tileX >= mapTilesX) || (tileY >= mapTilesY)) {
+    // check if defined rather than boundaries as could be moving into an adjoining map:
+    if (typeof thisMapData[thisMap].collisions[tileY] === "undefined") {
+        return 1;
+    }
+    if (typeof thisMapData[thisMap].collisions[tileY][tileX] === "undefined") {
+        return 1;
+    }
+
+
+        switch (thisMapData[thisMap].collisions[tileY][tileX]) {
             case 1:
                 // is a collision:
                 return false;
@@ -8256,7 +8283,7 @@ function tileIsClear(tileX, tileY) {
             default:
                 //
         }
-    }
+    
     // check against hero:
     if (tileX == hero.tileX) {
         if (tileY == hero.tileY) {
@@ -8974,12 +9001,13 @@ function checkForActions() {
     if (!usedActiveTool()) {
         var inventoryCheck = [];
         var slotMarkup, thisSlotsId, thisSlotElem, thisNPC;
-        for (var i = 0; i < thisMapData[currentMap].items.length; i++) {
-            if (isInRange(hero.x, hero.y, thisMapData[currentMap].items[i].x, thisMapData[currentMap].items[i].y, (thisMapData[currentMap].items[i].width / 2 + hero.width / 2 + 6))) {
-                if (isFacing(hero, thisMapData[currentMap].items[i])) {
-                    var actionValue = currentActiveInventoryItems[thisMapData[currentMap].items[i].type].actionValue;
+        for (var m = 0; m < visibleMaps.length; m++) {
+        for (var i = 0; i < thisMapData[(visibleMaps[m])].items.length; i++) {
+            if (isInRange(hero.x, hero.y, thisMapData[(visibleMaps[m])].items[i].x, thisMapData[(visibleMaps[m])].items[i].y, (thisMapData[(visibleMaps[m])].items[i].width / 2 + hero.width / 2 + 6))) {
+                if (isFacing(hero, thisMapData[(visibleMaps[m])].items[i])) {
+                    var actionValue = currentActiveInventoryItems[thisMapData[(visibleMaps[m])].items[i].type].actionValue;
 
-                    switch (currentActiveInventoryItems[thisMapData[currentMap].items[i].type].action) {
+                    switch (currentActiveInventoryItems[thisMapData[(visibleMaps[m])].items[i].type].action) {
                         case "static":
                             // can't interact with it - do nothing
                             break;
@@ -9003,35 +9031,35 @@ function checkForActions() {
                             // handled by Action Bar - no effect here
                             break;
                         case "toggleInnerDoor":
-                            toggleInnerDoor(thisMapData[currentMap].items[i].additional);
+                            toggleInnerDoor(thisMapData[(visibleMaps[m])].items[i].additional);
                             audio.playSound(soundEffects['lever'], 0);
                             // toggle the visual state:
-                            thisMapData[currentMap].items[i].state = thisMapData[currentMap].items[i].state == "on" ? 'off' : 'on';
+                            thisMapData[(visibleMaps[m])].items[i].state = thisMapData[(visibleMaps[m])].items[i].state == "on" ? 'off' : 'on';
                             break;
                         case "openInnerDoor":
-                            openInnerDoor(thisMapData[currentMap].items[i].additional);
+                            openInnerDoor(thisMapData[(visibleMaps[m])].items[i].additional);
                             break;
                         case "closeInnerDoor":
-                            closeInnerDoor(thisMapData[currentMap].items[i].additional);
+                            closeInnerDoor(thisMapData[(visibleMaps[m])].items[i].additional);
                             break;
                         case "key":
-                            hero.currency.keys.push(thisMapData[currentMap].items[i].additional);
+                            hero.currency.keys.push(thisMapData[(visibleMaps[m])].items[i].additional);
                             UI.updateCurrencies();
                             audio.playSound(soundEffects['keys'], 0);
                             // remove from map:
-                            thisMapData[currentMap].items.splice(i, 1);
+                            thisMapData[(visibleMaps[m])].items.splice(i, 1);
                             break;
                         case "gate":
                             // toggle the visual state:
-                            thisMapData[currentMap].items[i].state = thisMapData[currentMap].items[i].state == "open" ? 'closed' : 'open';
+                            thisMapData[(visibleMaps[m])].items[i].state = thisMapData[(visibleMaps[m])].items[i].state == "open" ? 'closed' : 'open';
                             // toggle whether it will have collision done against it:
-                            thisMapData[currentMap].items[i].isCollidable = thisMapData[currentMap].items[i].isCollidable == true ? false : true;
+                            thisMapData[(visibleMaps[m])].items[i].isCollidable = thisMapData[(visibleMaps[m])].items[i].isCollidable == true ? false : true;
                             break;
                         case "notice":
-                            processSpeech(thisMapData[currentMap].items[i], thisMapData[currentMap].items[i].contains[0][0], thisMapData[currentMap].items[i].contains[0][1], false, thisMapData[currentMap].items[i].contains[0][2]);
+                            processSpeech(thisMapData[(visibleMaps[m])].items[i], thisMapData[(visibleMaps[m])].items[i].contains[0][0], thisMapData[(visibleMaps[m])].items[i].contains[0][1], false, thisMapData[(visibleMaps[m])].items[i].contains[0][2]);
                             break;
                         case "sit":
-                            hero.facing = thisMapData[currentMap].items[i].facing;
+                            hero.facing = thisMapData[(visibleMaps[m])].items[i].facing;
                             console.log("switch to sit animation");
                             break;
                         case "chest":
@@ -9040,24 +9068,25 @@ function checkForActions() {
                             break;
                         case "post":
                             // open the Post panel:
-                            UI.openPost(thisMapData[currentMap].items[i].x, thisMapData[currentMap].items[i].y);
+                            UI.openPost(thisMapData[(visibleMaps[m])].items[i].x, thisMapData[(visibleMaps[m])].items[i].y);
                             break;
                         case "retinue":
                             // open the Retinue panel:
-                            UI.openRetinuePanel(thisMapData[currentMap].items[i]);
+                            UI.openRetinuePanel(thisMapData[(visibleMaps[m])].items[i]);
                             break;
                         case "source":
                             // don't do anything - the equipped item will check for this item
                             break;
                         case "crop":
-                            checkCrop(thisMapData[currentMap].items[i]);
+                            checkCrop(thisMapData[(visibleMaps[m])].items[i]);
                             break;
                         default:
                             // try and pick it up:
-                            inventoryCheck = canAddItemToInventory([thisMapData[currentMap].items[i]]);
+                            console.log('pick up',thisMapData[(visibleMaps[m])].items[i]);
+                            inventoryCheck = canAddItemToInventory([thisMapData[(visibleMaps[m])].items[i]]);
                             if (inventoryCheck[0]) {
                                 // remove from map:
-                                thisMapData[currentMap].items.splice(i, 1);
+                                thisMapData[(visibleMaps[m])].items.splice(i, 1);
                                 UI.showChangeInInventory(inventoryCheck[1]);
                             } else {
                                 UI.showNotification("<p>I don't have room in my bags for that</p>");
@@ -9068,8 +9097,8 @@ function checkForActions() {
         }
 
         // loop through NPCs:
-        for (var i = 0; i < thisMapData[currentMap].npcs.length; i++) {
-            thisNPC = thisMapData[currentMap].npcs[i];
+        for (var i = 0; i < thisMapData[(visibleMaps[m])].npcs.length; i++) {
+            thisNPC = thisMapData[(visibleMaps[m])].npcs[i];
             if (thisNPC.speech) {
                 if (isInRange(hero.x, hero.y, thisNPC.x, thisNPC.y, (thisNPC.width + hero.width))) {
                     if (isFacing(hero, thisNPC)) {
@@ -9094,6 +9123,7 @@ function checkForActions() {
                 }
             }
         }
+    }
     }
     // action processed, so cancel the key event:
     key[4] = 0;
@@ -9458,8 +9488,9 @@ function updateItems() {
         [-1, 0]
     ];
     // check for any items that do anything based on time (eg. nests):
-    for (var i = 0; i < thisMapData[currentMap].items.length; i++) {
-        thisItem = thisMapData[currentMap].items[i];
+      for (var m = 0; m < visibleMaps.length; m++) {
+    for (var i = 0; i < thisMapData[(visibleMaps[m])].items.length; i++) {
+        thisItem = thisMapData[(visibleMaps[m])].items[i];
         if (currentActiveInventoryItems[thisItem.type].action == "nest") {
             if (thisItem.spawnsRemaining > 0) {
                 if (hero.totalGameTimePlayed - thisItem.timeLastSpawned >= currentActiveInventoryItems[thisItem.type].respawnRate) {
@@ -9471,8 +9502,8 @@ function updateItems() {
                     whichCreature.tileY = thisItem.tileY + whichStartPoint[1];
                     if (tileIsClear(whichCreature.tileX, whichCreature.tileY)) {
                         // create a copy so they are distinct:
-                        thisMapData[currentMap].npcs.push(JSON.parse(JSON.stringify(whichCreature)));
-                        initialiseNPC(thisMapData[currentMap].npcs.length - 1);
+                        thisMapData[(visibleMaps[m])].npcs.push(JSON.parse(JSON.stringify(whichCreature)));
+                        initialiseNPC(thisMapData[(visibleMaps[m])].npcs[(thisMapData[(visibleMaps[m])].npcs.length - 1)]);
                         thisItem.spawnsRemaining--;
                         // reset timer:
                         thisItem.timeLastSpawned = hero.totalGameTimePlayed;
@@ -9481,6 +9512,7 @@ function updateItems() {
             }
         }
     }
+}
 }
 
 function checkForTitlesAwarded(whichQuestId) {
@@ -9496,8 +9528,9 @@ function checkForTitlesAwarded(whichQuestId) {
 
 
 function checkForChallenges() {
-    for (var i = 0; i < thisMapData[currentMap].npcs.length; i++) {
-        thisChallengeNPC = thisMapData[currentMap].npcs[i];
+    for (var m = 0; m < visibleMaps.length; m++) {
+    for (var i = 0; i < thisMapData[(visibleMaps[m])].npcs.length; i++) {
+        thisChallengeNPC = thisMapData[(visibleMaps[m])].npcs[i];
         if (isInRange(hero.x, hero.y, thisChallengeNPC.x, thisChallengeNPC.y, (thisChallengeNPC.width + hero.width))) {
             if (isFacing(hero, thisChallengeNPC)) {
                 if (thisChallengeNPC.cardGameSpeech) {
@@ -9508,6 +9541,7 @@ function checkForChallenges() {
             }
         }
     }
+}
     // challenge processed, so cancel the key event:
     key[6] = 0;
 }

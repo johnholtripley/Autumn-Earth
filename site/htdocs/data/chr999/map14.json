@@ -183,7 +183,7 @@
                 "tileX": 4,
                 "tileY": 3,
                 "movement": ["-"],
-                "facing": "e",
+                "facing": "s",
                 "walkThroughDoors": false,
                 "speed": 2,
                 "isCollidable": true,
@@ -220,6 +220,12 @@
 
                 "type": 18,
                 "tileX": 2,
+                "tileY": 2
+
+            },{
+
+                "type": 19,
+                "tileX": 6,
                 "tileY": 2
 
             }],
