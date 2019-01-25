@@ -12,11 +12,7 @@ if(isset($_GET["debug"])) {
 }
 
 /*
-$worldMap = array(
-array(10, 11, 12),
-array(13, 14, 15),
-array(16, 17, 18)
-);
+
 */
 
 $jsonMapResults = file_get_contents($_SERVER['DOCUMENT_ROOT'].'/data/world-map.json');

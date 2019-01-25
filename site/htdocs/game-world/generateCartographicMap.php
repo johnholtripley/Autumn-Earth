@@ -1197,9 +1197,12 @@ for($i=0;$i<count($json['map']['collisions'][0]);$i++) {
 // replace door's "d" with 0 for being walkable:
 
 
+
+
 foreach ($json['map']['doors'] as $key => $value) {
 array_push($loadedDoorData, $key);
 }
+
 
  if(isset($json['map']['entrance'])) {
 $doorEntranceX = $json['map']['entrance'][1];
