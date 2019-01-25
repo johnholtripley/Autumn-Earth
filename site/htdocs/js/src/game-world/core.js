@@ -22,6 +22,19 @@ var debouncedResize = debounce(function() {
 window.addEventListener('resize', debouncedResize);
 
 
+function loadGlobalMapData() {
+   
+ getJSON("/data/world-map.json", function(data) {
+     
+       worldMap = data.worldMap;
+        init();
+    }, function(status) {
+        // error - try again:
+        loadGlobalMapData();
+    });
+}
+
+
 function init() {
     gameCanvas = document.getElementById("gameWorld");
     if (gameCanvas.getContext) {
@@ -142,6 +155,8 @@ function loadCardData() {
         loadCardData();
     });
 }
+
+
 
 function processInitialMap() {
     var startTileOffsetX, startTileOffsetY;
@@ -3310,7 +3325,7 @@ function draw() {
 
 // check if it cuts the mustard and supports Canvas:
 if (('querySelectorAll' in document && 'addEventListener' in window) && (!!window.HTMLCanvasElement)) {
-    init();
+    loadGlobalMapData();
 } else {
     // sorry message / fallback? #####
 }

@@ -159,11 +159,8 @@ var fae = {
     oscillateOffset: 0
 };
 
-const worldMap = [
-[10, 11, 12],
-[13, 14, 15],
-[16, 17, 18]
-];
+
+var worldMap = [];
 var visibleMaps = [10, 11, 13, 14];
 const worldMapWidthPx = 2400;
 const worldMapHeightPx = 1200;

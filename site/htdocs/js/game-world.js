@@ -497,11 +497,8 @@ var fae = {
     oscillateOffset: 0
 };
 
-const worldMap = [
-[10, 11, 12],
-[13, 14, 15],
-[16, 17, 18]
-];
+
+var worldMap = [];
 var visibleMaps = [10, 11, 13, 14];
 const worldMapWidthPx = 2400;
 const worldMapHeightPx = 1200;
@@ -7349,6 +7346,19 @@ var debouncedResize = debounce(function() {
 window.addEventListener('resize', debouncedResize);
 
 
+function loadGlobalMapData() {
+   
+ getJSON("/data/world-map.json", function(data) {
+     
+       worldMap = data.worldMap;
+        init();
+    }, function(status) {
+        // error - try again:
+        loadGlobalMapData();
+    });
+}
+
+
 function init() {
     gameCanvas = document.getElementById("gameWorld");
     if (gameCanvas.getContext) {
@@ -7469,6 +7479,8 @@ function loadCardData() {
         loadCardData();
     });
 }
+
+
 
 function processInitialMap() {
     var startTileOffsetX, startTileOffsetY;
@@ -10637,7 +10649,7 @@ function draw() {
 
 // check if it cuts the mustard and supports Canvas:
 if (('querySelectorAll' in document && 'addEventListener' in window) && (!!window.HTMLCanvasElement)) {
-    init();
+    loadGlobalMapData();
 } else {
     // sorry message / fallback? #####
 }
