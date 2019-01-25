@@ -9079,8 +9079,8 @@ function checkForActions() {
                             break;
                         default:
                             // try and pick it up:
-                            console.log('pick up',thisMapData[(visibleMaps[m])].items[i]);
-                            inventoryCheck = canAddItemToInventory([thisMapData[(visibleMaps[m])].items[i]]);
+                          
+                            inventoryCheck = canAddItemToInventory([prepareInventoryObject(thisMapData[(visibleMaps[m])].items[i])]);
                             if (inventoryCheck[0]) {
                                 // remove from map:
                                 thisMapData[(visibleMaps[m])].items.splice(i, 1);
