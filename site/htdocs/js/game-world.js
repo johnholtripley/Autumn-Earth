@@ -123,7 +123,6 @@ var audio = {
 
 
     playMusic: function(newTrack) {
-        console.log(newTrack, audio.activeTrack, audio.lastTrack);
         if (typeof audio.activeTrack !== "undefined") {
             if (audio.activeTrack != newTrack) {
 
@@ -2884,8 +2883,9 @@ var allCardPacks = [
   //  cardGameNameSpace.allCardData = tempCardData;
 
 function cardGamePlayer2Concedes() {
+  
 delete thisChallengeNPC.isPlayingCards;
-console.log(thisChallengeNPC);
+
  processSpeech(thisChallengeNPC, thisChallengeNPC.cardGameSpeech.win[0], thisChallengeNPC.cardGameSpeech.win[1]);
     closeCardGame();
 }
@@ -2956,6 +2956,7 @@ function processPlayerWinSpeech(thisChallengeNPC, thisSpeechPassedIn, thisSpeech
 
 
 function startCardGame(opponentNPC) {
+    console.log(opponentNPC.name);
     if (hero.cards.length >= 12) {
         cardGameNameSpace.player2Cards = hero.cards.slice(0, 12);
         // combine the NPC's unique cards with their base pack and pick the first 12:
@@ -7603,7 +7604,19 @@ function loadMapAssets() {
     imagesToLoad = [];
     var thisFileColourSuffix, thisColourName;
     var assetPath = currentMap;
-    if (currentMap < 0) {
+npcGraphicsToLoad = [];
+    var thisNPCIdentifier;
+itemGraphicsToLoad = [];
+    var thisItemIdentifier = '';
+    var thisImagePath = '';
+  var resultantPlantType;
+
+
+
+for (var m = 0; m < visibleMaps.length; m++) {
+
+
+    if (visibleMaps[m] < 0) {
         assetPath = 'dungeon/' + randomDungeonName;
     }
     if (newMap.toString().indexOf('housing') !== -1) {
@@ -7614,18 +7627,17 @@ function loadMapAssets() {
         });
     } else {
         imagesToLoad.push({
-            name: "backgroundImg" + currentMap,
+            name: "backgroundImg" + visibleMaps[m],
             src: '/images/game-world/maps/' + assetPath + '/bg.png'
         });
-        // load all visible maps:
-        for (var i = 0; i < visibleMaps.length; i++) {
+      
             imagesToLoad.push({
-                name: "backgroundImg" + visibleMaps[i],
-                src: '/images/game-world/maps/' + visibleMaps[i] + '/bg.png'
+                name: "backgroundImg" + visibleMaps[m],
+                src: '/images/game-world/maps/' + visibleMaps[m] + '/bg.png'
             });
-        }
+        
     }
-    tileGraphicsToLoad = thisMapData[currentMap].graphics;
+    tileGraphicsToLoad = thisMapData[visibleMaps[m]].graphics;
     for (var i = 0; i < tileGraphicsToLoad.length; i++) {
         if (tileGraphicsToLoad[i].src.indexOf('housing') !== -1) {
             imagesToLoad.push({
@@ -7640,27 +7652,26 @@ function loadMapAssets() {
         }
 
     }
-    npcGraphicsToLoad = [];
-    var thisNPCIdentifier;
-    for (var i = 0; i < thisMapData[currentMap].npcs.length; i++) {
-        thisNPCIdentifier = "npc" + thisMapData[currentMap].npcs[i].name;
+    
+    for (var i = 0; i < thisMapData[visibleMaps[m]].npcs.length; i++) {
+        thisNPCIdentifier = "npc" + thisMapData[visibleMaps[m]].npcs[i].name;
         if (npcGraphicsToLoad.indexOf(thisNPCIdentifier) == -1) {
             imagesToLoad.push({
                 name: thisNPCIdentifier,
-                src: "/images/game-world/npcs/" + thisMapData[currentMap].npcs[i].src
+                src: "/images/game-world/npcs/" + thisMapData[visibleMaps[m]].npcs[i].src
             });
             npcGraphicsToLoad.push(thisNPCIdentifier);
         }
     }
     // check for nests, and get the graphics for any creatures they will spawn:
-    for (var i = 0; i < thisMapData[currentMap].items.length; i++) {
-        if (currentActiveInventoryItems[thisMapData[currentMap].items[i].type].action == "nest") {
-            for (var j = 0; j < thisMapData[currentMap].items[i].contains.length; j++) {
-                thisNPCIdentifier = "npc" + thisMapData[currentMap].items[i].contains[j].name;
+    for (var i = 0; i < thisMapData[visibleMaps[m]].items.length; i++) {
+        if (currentActiveInventoryItems[thisMapData[visibleMaps[m]].items[i].type].action == "nest") {
+            for (var j = 0; j < thisMapData[visibleMaps[m]].items[i].contains.length; j++) {
+                thisNPCIdentifier = "npc" + thisMapData[visibleMaps[m]].items[i].contains[j].name;
                 if (npcGraphicsToLoad.indexOf(thisNPCIdentifier) == -1) {
                     imagesToLoad.push({
                         name: thisNPCIdentifier,
-                        src: "/images/game-world/npcs/" + thisMapData[currentMap].items[i].contains[j].src
+                        src: "/images/game-world/npcs/" + thisMapData[visibleMaps[m]].items[i].contains[j].src
                     });
                     npcGraphicsToLoad.push(thisNPCIdentifier);
                 }
@@ -7670,26 +7681,24 @@ function loadMapAssets() {
 
 
 
-    itemGraphicsToLoad = [];
-    var thisItemIdentifier = '';
-    var thisImagePath = '';
-    for (var i = 0; i < thisMapData[currentMap].items.length; i++) {
+    
+    for (var i = 0; i < thisMapData[visibleMaps[m]].items.length; i++) {
         // get colour name 
         thisFileColourSuffix = "";
-        if (thisMapData[currentMap].items[i].colour) {
-            thisColourName = getColourName(thisMapData[currentMap].items[i].colour, thisMapData[currentMap].items[i].type);
+        if (thisMapData[visibleMaps[m]].items[i].colour) {
+            thisColourName = getColourName(thisMapData[visibleMaps[m]].items[i].colour, thisMapData[visibleMaps[m]].items[i].type);
             if (thisColourName != "") {
                 thisFileColourSuffix = "-" + thisColourName.toLowerCase();
             }
         }
-        thisItemIdentifier = "item" + thisMapData[currentMap].items[i].type + thisFileColourSuffix;
-        thisImagePath = "/images/game-world/items/" + currentActiveInventoryItems[thisMapData[currentMap].items[i].type].worldSrc + thisFileColourSuffix + ".png";
+        thisItemIdentifier = "item" + thisMapData[visibleMaps[m]].items[i].type + thisFileColourSuffix;
+        thisImagePath = "/images/game-world/items/" + currentActiveInventoryItems[thisMapData[visibleMaps[m]].items[i].type].worldSrc + thisFileColourSuffix + ".png";
 
         // check for User Generated Content:
-        if (typeof thisMapData[currentMap].items[i].contains !== "undefined") {
-            if (typeof thisMapData[currentMap].items[i].contains['ugc-id'] !== "undefined") {
-                thisItemIdentifier = "item" + thisMapData[currentMap].items[i].type + '_' + thisMapData[currentMap].items[i].contains['ugc-id'];
-                thisImagePath = "/images/user-generated/" + thisMapData[currentMap].items[i].contains['ugc-id'] + "-world.png";
+        if (typeof thisMapData[visibleMaps[m]].items[i].contains !== "undefined") {
+            if (typeof thisMapData[visibleMaps[m]].items[i].contains['ugc-id'] !== "undefined") {
+                thisItemIdentifier = "item" + thisMapData[visibleMaps[m]].items[i].type + '_' + thisMapData[visibleMaps[m]].items[i].contains['ugc-id'];
+                thisImagePath = "/images/user-generated/" + thisMapData[visibleMaps[m]].items[i].contains['ugc-id'] + "-world.png";
             }
         }
 
@@ -7705,13 +7714,13 @@ function loadMapAssets() {
     }
 
     // check for hidden resources:
-    for (var i in thisMapData[currentMap].hiddenResources) {
-        for (var j in thisMapData[currentMap].hiddenResources[i]) {
-            thisItemIdentifier = "item" + thisMapData[currentMap].hiddenResources[i][j].type;
+    for (var i in thisMapData[visibleMaps[m]].hiddenResources) {
+        for (var j in thisMapData[visibleMaps[m]].hiddenResources[i]) {
+            thisItemIdentifier = "item" + thisMapData[visibleMaps[m]].hiddenResources[i][j].type;
             if (itemGraphicsToLoad.indexOf(thisItemIdentifier) == -1) {
                 imagesToLoad.push({
                     name: thisItemIdentifier,
-                    src: "/images/game-world/items/" + currentActiveInventoryItems[thisMapData[currentMap].hiddenResources[i][j].type].worldSrc + ".png"
+                    src: "/images/game-world/items/" + currentActiveInventoryItems[thisMapData[visibleMaps[m]].hiddenResources[i][j].type].worldSrc + ".png"
                 });
                 itemGraphicsToLoad.push(thisItemIdentifier);
             }
@@ -7719,7 +7728,7 @@ function loadMapAssets() {
     }
 
     // check for seeds in inventory, and load the resultant plants:
-    var resultantPlantType;
+  
     for (var key in hero.inventory) {
         if (currentActiveInventoryItems[(hero.inventory[key].type)].action == "seed") {
             // resultant plant is held in the actionValue:
@@ -7743,6 +7752,7 @@ function loadMapAssets() {
         }
     }
 
+}
 
 
     Loader.preload(imagesToLoad, prepareGame, loadingProgress);
@@ -9450,6 +9460,7 @@ function processSpeech(thisObjectSpeaking, thisSpeechPassedIn, thisSpeechCode, i
                 }
                 break;
             case "play":
+          
                 startCardGame(thisObjectSpeaking);
                 break;
             default:
@@ -9525,20 +9536,25 @@ function checkForTitlesAwarded(whichQuestId) {
 
 
 function checkForChallenges() {
+var thisNPC;
     for (var m = 0; m < visibleMaps.length; m++) {
-    for (var i = 0; i < thisMapData[(visibleMaps[m])].npcs.length; i++) {
-        thisChallengeNPC = thisMapData[(visibleMaps[m])].npcs[i];
-        if (isInRange(hero.x, hero.y, thisChallengeNPC.x, thisChallengeNPC.y, (thisChallengeNPC.width + hero.width))) {
-            if (isFacing(hero, thisChallengeNPC)) {
-                if (thisChallengeNPC.cardGameSpeech) {
-                    thisChallengeNPC.drawnFacing = turntoFace(thisChallengeNPC, hero);
-                    processSpeech(thisChallengeNPC, thisChallengeNPC.cardGameSpeech.challenge[0], thisChallengeNPC.cardGameSpeech.challenge[1]);
-                    break;
+        for (var i = 0; i < thisMapData[(visibleMaps[m])].npcs.length; i++) {
+            thisNPC = thisMapData[(visibleMaps[m])].npcs[i];
+ 
+            if (isInRange(hero.x, hero.y, thisNPC.x, thisNPC.y, (thisNPC.width + hero.width))) {
+             
+                if (isFacing(hero, thisNPC)) {
+                    if (thisNPC.cardGameSpeech) {
+                        thisNPC.drawnFacing = turntoFace(thisNPC, hero);
+                
+                        thisChallengeNPC = thisNPC;
+                        processSpeech(thisNPC, thisNPC.cardGameSpeech.challenge[0], thisNPC.cardGameSpeech.challenge[1]);
+                        break;
+                    }
                 }
             }
         }
     }
-}
     // challenge processed, so cancel the key event:
     key[6] = 0;
 }
@@ -10479,7 +10495,9 @@ function draw() {
             currentWorldMapPosX = Math.floor((canvasWidth / 2) + getTileIsoCentreCoordX(0 + thisMapsGlobalOffsetX, 0 + thisMapsGlobalOffsetY) - hero.isox - (worldMapWidthPx / 2));
             currentWorldMapPosY = Math.floor((canvasHeight / 2) + getTileIsoCentreCoordY(0 + thisMapsGlobalOffsetX, 0 + thisMapsGlobalOffsetY) - hero.isoy - (tileH / 2));
             // draw the current map background in place:
+         if(typeof backgroundImgs[(visibleMaps[i])] !== "undefined") {
             gameContext.drawImage(backgroundImgs[(visibleMaps[i])], currentWorldMapPosX, currentWorldMapPosY);
+        }
         }
 
 
@@ -10504,7 +10522,10 @@ function draw() {
                     break;
                 case "sprite":
                     // sprite image (needs slicing parameters):
+                 if(typeof assetsToDraw[i][2] !== "undefined") {
+                    // image has been loadeda
                     gameContext.drawImage(assetsToDraw[i][2], assetsToDraw[i][3], assetsToDraw[i][4], assetsToDraw[i][5], assetsToDraw[i][6], assetsToDraw[i][7], assetsToDraw[i][8], assetsToDraw[i][9], assetsToDraw[i][10]);
+                }
                     break;
                 case "dowsingRing":
                     gameContext.globalCompositeOperation = 'lighten';
@@ -10549,7 +10570,9 @@ function draw() {
                     break;
                 case "img":
                     // standard image:
+                    if(typeof assetsToDraw[i][2] !== "undefined") {
                     gameContext.drawImage(assetsToDraw[i][2], assetsToDraw[i][3], assetsToDraw[i][4]);
+                }
             }
         }
 

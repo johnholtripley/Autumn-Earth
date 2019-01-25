@@ -7,8 +7,9 @@ var allCardPacks = [
   //  cardGameNameSpace.allCardData = tempCardData;
 
 function cardGamePlayer2Concedes() {
+  
 delete thisChallengeNPC.isPlayingCards;
-console.log(thisChallengeNPC);
+
  processSpeech(thisChallengeNPC, thisChallengeNPC.cardGameSpeech.win[0], thisChallengeNPC.cardGameSpeech.win[1]);
     closeCardGame();
 }
@@ -79,6 +80,7 @@ function processPlayerWinSpeech(thisChallengeNPC, thisSpeechPassedIn, thisSpeech
 
 
 function startCardGame(opponentNPC) {
+    console.log(opponentNPC.name);
     if (hero.cards.length >= 12) {
         cardGameNameSpace.player2Cards = hero.cards.slice(0, 12);
         // combine the NPC's unique cards with their base pack and pick the first 12:

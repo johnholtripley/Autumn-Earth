@@ -172,8 +172,8 @@
         "weather": [""],
         "shops": [],
         "npcs": [      {
-                "name": "labourer",
-                "src": "labourer.png",
+                "name": "labourer map14",
+                "src": "labourer2.png",
                 "width": 20,
                 "length": 20,
                 "spriteWidth": 75,

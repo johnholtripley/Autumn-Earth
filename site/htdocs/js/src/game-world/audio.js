@@ -122,7 +122,6 @@ var audio = {
 
 
     playMusic: function(newTrack) {
-        console.log(newTrack, audio.activeTrack, audio.lastTrack);
         if (typeof audio.activeTrack !== "undefined") {
             if (audio.activeTrack != newTrack) {
 
