@@ -376,6 +376,8 @@ if($debug) {
 $usedEdges = array();
 $unusedEdges = $edges;
 
+if (count($unusedEdges)>0) {
+
 do {
 
 // ---------------------------------------------------
@@ -840,7 +842,7 @@ array_push($unusedEdges,$edges[$i]);
 } while (count($unusedEdges)>0);
 
 
-
+}
 
 
 
@@ -1084,7 +1086,7 @@ if($update) {
 } else {
 // Output image to the browser
 
-//  if(!$debug) {
+// if(!$debug) {
 header('Content-type: image/jpg');
 //}
   imagejpeg($imageResampled,null,100);
