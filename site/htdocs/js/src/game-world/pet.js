@@ -105,16 +105,7 @@ function movePet() {
                             break;
                     }
 
-                    // check for collisions against NPCs:
-                    for (var j = 0; j < thisMapData.npcs.length; j++) {
-                        thisNPC = thisMapData.npcs[j];
-                        if (thisNPC.isCollidable) {
-                            if (isAnObjectCollision(thisPet.x, thisPet.y, thisPet.width, thisPet.length, thisNPC.x, thisNPC.y, thisNPC.width, thisNPC.length)) {
-                                thisPet.x = oldPetX;
-                                thisPet.y = oldPetY;
-                            }
-                        }
-                    }
+
 
                     // check for collisions against other pets:
                     for (var j = 0; j < hero.activePets.length; j++) {
@@ -131,10 +122,25 @@ function movePet() {
                     }
 
 
+for (var m = 0; m < visibleMaps.length; m++) {
+                    // check for collisions against NPCs:
+
+                    for (var j = 0; j < thisMapData[visibleMaps[m]].npcs.length; j++) {
+                        thisNPC = thisMapData[visibleMaps[m]].npcs[j];
+                        if (thisNPC.isCollidable) {
+                            if (isAnObjectCollision(thisPet.x, thisPet.y, thisPet.width, thisPet.length, thisNPC.x, thisNPC.y, thisNPC.width, thisNPC.length)) {
+                                thisPet.x = oldPetX;
+                                thisPet.y = oldPetY;
+                            }
+                        }
+                    }
+
+
+
                     // check for inner doors:
-                    if (typeof thisMapData.innerDoors !== "undefined") {
-                        for (var i in thisMapData.innerDoors) {
-                            thisInnerDoor = thisMapData.innerDoors[i];
+                    if (typeof thisMapData[visibleMaps[m]].innerDoors !== "undefined") {
+                        for (var i in thisMapData[visibleMaps[m]].innerDoors) {
+                            thisInnerDoor = thisMapData[visibleMaps[m]].innerDoors[i];
                             if (!thisInnerDoor.isOpen) {
                                 if (isAnObjectCollision(getTileCentreCoordX(thisInnerDoor.tileX), getTileCentreCoordY(thisInnerDoor.tileY), tileW, tileW, thisPet.x, thisPet.y, thisPet.width, thisPet.length)) {
                                      thisPet.x = oldPetX;
@@ -146,8 +152,8 @@ function movePet() {
 
 
                     // check for collisions against items:
-                    for (var j = 0; j < thisMapData.items.length; j++) {
-                        thisItem = thisMapData.items[j];
+                    for (var j = 0; j < thisMapData[visibleMaps[m]].items.length; j++) {
+                        thisItem = thisMapData[visibleMaps[m]].items[j];
                      if(thisItem.isCollidable) {
                         if (isAnObjectCollision(thisPet.x, thisPet.y, thisPet.width, thisPet.length, thisItem.x, thisItem.y, thisItem.width, thisItem.length)) {
                             thisPet.x = oldPetX;
@@ -155,6 +161,8 @@ function movePet() {
                         }
                     }
                     }
+
+                }
 
                     // find the difference for this movement:
                     thisPet.dx += (thisPet.x - oldPetX);
@@ -202,16 +210,7 @@ function movePet() {
                                 break;
                         }
 
-                        // check for collisions against NPCs:
-                        for (var j = 0; j < thisMapData.npcs.length; j++) {
-                            thisNPC = thisMapData.npcs[j];
-                            if (thisNPC.isCollidable) {
-                                if (isAnObjectCollision(thisPet.x, thisPet.y, thisPet.width, thisPet.length, thisNPC.x, thisNPC.y, thisNPC.width, thisNPC.length)) {
-                                    thisPet.x = oldPetX;
-                                    thisPet.y = oldPetY;
-                                }
-                            }
-                        }
+              
 
                         // check for collisions against other pets:
                         for (var j = 0; j < hero.activePets.length; j++) {
@@ -229,14 +228,28 @@ function movePet() {
                             }
                         }
 
+                        for (var m = 0; m < visibleMaps.length; m++) {
+          // check for collisions against NPCs:
+                        for (var j = 0; j < thisMapData[visibleMaps[m]].npcs.length; j++) {
+                            thisNPC = thisMapData[visibleMaps[m]].npcs[j];
+                            if (thisNPC.isCollidable) {
+                                if (isAnObjectCollision(thisPet.x, thisPet.y, thisPet.width, thisPet.length, thisNPC.x, thisNPC.y, thisNPC.width, thisNPC.length)) {
+                                    thisPet.x = oldPetX;
+                                    thisPet.y = oldPetY;
+                                }
+                            }
+                        }
+
+
                         // check for collisions against items:
-                        for (var j = 0; j < thisMapData.items.length; j++) {
-                            thisItem = thisMapData.items[j];
+                        for (var j = 0; j < thisMapData[visibleMaps[m]].items.length; j++) {
+                            thisItem = thisMapData[visibleMaps[m]].items[j];
                             if (isAnObjectCollision(thisPet.x, thisPet.y, thisPet.width, thisPet.length, thisItem.x, thisItem.y, thisItem.width, thisItem.length)) {
                                 thisPet.x = oldPetX;
                                 thisPet.y = oldPetY;
                             }
                         }
+                    }
 
                         // find the difference for this movement:
                         thisPet.dx += (thisPet.x - oldPetX);
