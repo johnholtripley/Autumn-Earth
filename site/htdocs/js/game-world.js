@@ -4000,13 +4000,26 @@ if (window.Worker) {
 }
 function isAPetTerrainCollision(object, x, y) {
     // check map bounds first:
-    var tileX = getTileX(x);
-    var tileY = getTileY(y);
-    if ((tileX < 0) || (tileY < 0) || (tileX >= mapTilesX) || (tileY >= mapTilesY)) {
-        // is out of the bounds of the current map:
+
+
+
+
+    var globalTileX = getTileX(x);
+    var globalTileY = getTileY(y);
+    var tileX = getLocalCoordinatesX(globalTileX);
+    var tileY = getLocalCoordinatesX(globalTileY);
+    var thisMap = findMapNumberFromGlobalCoordinates(globalTileX, globalTileY);
+
+
+   
+       if (typeof thisMapData[thisMap].collisions[tileY] === "undefined") {
         return 1;
-    } else {
-        switch (thisMapData.collisions[tileY][tileX]) {
+    }
+    if (typeof thisMapData[thisMap].collisions[tileY][tileX] === "undefined") {
+        return 1;
+    }
+
+        switch (thisMapData[thisMap].collisions[tileY][tileX]) {
             case 1:
                 // is a collision:
                 return 1;
@@ -4031,7 +4044,7 @@ function isAPetTerrainCollision(object, x, y) {
                 // not a collsiion:
                 return 0;
         }
-    }
+    
 }
 
 
@@ -7414,8 +7427,8 @@ function getHeroGameState() {
             if (data.activePets.length > 0) {
                 hasActivePet = true;
             }
-            // hero.activePets = data.activePets;
-            // hero.allPets = data.allPets;
+          //   hero.activePets = data.activePets;
+          //   hero.allPets = data.allPets;
         }
         // copy the fae properties that will change into the main fae object:
         for (var attrname in data.fae) {
@@ -7540,14 +7553,16 @@ function processInitialMap() {
             hero.allPets[hero.activePets[i]].tileX = hero.tileX + (tileOffsetX * (i + 1));
             hero.allPets[hero.activePets[i]].tileY = hero.tileY + (tileOffsetY * (i + 1));
 
-
-
+/*
+// needed for Internal maps:
             if (i == 0) {
                 hero.allPets[hero.activePets[i]].state = "moving";
             } else {
                 // will be placed out of the normal map grid:
                 hero.allPets[hero.activePets[i]].state = "queuing";
             }
+*/
+            hero.allPets[hero.activePets[i]].state = "moving";
             hero.allPets[hero.activePets[i]].facing = hero.facing;
 
         }
@@ -8112,6 +8127,7 @@ function prepareGame() {
             hero.allPets[hero.activePets[i]].x = getTileCentreCoordX(hero.allPets[hero.activePets[i]].tileX);
             hero.allPets[hero.activePets[i]].y = getTileCentreCoordY(hero.allPets[hero.activePets[i]].tileY);
             // check these tiles are within the normal grid - if not use the pet in front's z depth:
+            // need to do this for Internal maps ######
       /*      if ((hero.allPets[hero.activePets[i]].tileX < 0) || (hero.allPets[hero.activePets[i]].tileY < 0) || (hero.allPets[hero.activePets[i]].tileX >= mapTilesX) || (hero.allPets[hero.activePets[i]].tileY >= mapTilesY)) {
                 hero.allPets[hero.activePets[i]].z = hero.allPets[hero.activePets[i - 1]].z;
 

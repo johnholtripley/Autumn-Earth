@@ -1,12 +1,25 @@
 function isAPetTerrainCollision(object, x, y) {
     // check map bounds first:
-    var tileX = getTileX(x);
-    var tileY = getTileY(y);
-    if ((tileX < 0) || (tileY < 0) || (tileX >= mapTilesX) || (tileY >= mapTilesY)) {
-        // is out of the bounds of the current map:
+
+
+
+
+    var globalTileX = getTileX(x);
+    var globalTileY = getTileY(y);
+    var tileX = getLocalCoordinatesX(globalTileX);
+    var tileY = getLocalCoordinatesX(globalTileY);
+    var thisMap = findMapNumberFromGlobalCoordinates(globalTileX, globalTileY);
+
+
+   
+       if (typeof thisMapData[thisMap].collisions[tileY] === "undefined") {
         return 1;
-    } else {
-        switch (thisMapData.collisions[tileY][tileX]) {
+    }
+    if (typeof thisMapData[thisMap].collisions[tileY][tileX] === "undefined") {
+        return 1;
+    }
+
+        switch (thisMapData[thisMap].collisions[tileY][tileX]) {
             case 1:
                 // is a collision:
                 return 1;
@@ -31,7 +44,7 @@ function isAPetTerrainCollision(object, x, y) {
                 // not a collsiion:
                 return 0;
         }
-    }
+    
 }
 
 
