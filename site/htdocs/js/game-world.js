@@ -7645,16 +7645,16 @@ function loadMapAssets() {
     var thisFileColourSuffix, thisColourName;
     var assetPath = currentMap;
 npcGraphicsToLoad = [];
-    var thisNPCIdentifier;
+    var thisNPCIdentifier, thisTerrainIdentifer;
 itemGraphicsToLoad = [];
     var thisItemIdentifier = '';
     var thisImagePath = '';
   var resultantPlantType;
-
+ tileGraphicsToLoad = [];
 
 
 for (var m = 0; m < visibleMaps.length; m++) {
-
+assetPath = visibleMaps[m];
 
     if (visibleMaps[m] < 0) {
         assetPath = 'dungeon/' + randomDungeonName;
@@ -7668,27 +7668,30 @@ for (var m = 0; m < visibleMaps.length; m++) {
     } else {
         imagesToLoad.push({
             name: "backgroundImg" + visibleMaps[m],
-            src: '/images/game-world/maps/' + assetPath + '/bg.png'
+            src: '/images/game-world/backgrounds/' + assetPath + '.png'
         });
       
-            imagesToLoad.push({
-                name: "backgroundImg" + visibleMaps[m],
-                src: '/images/game-world/maps/' + visibleMaps[m] + '/bg.png'
-            });
+           
         
     }
-    tileGraphicsToLoad = thisMapData[visibleMaps[m]].graphics;
-    for (var i = 0; i < tileGraphicsToLoad.length; i++) {
-        if (tileGraphicsToLoad[i].src.indexOf('housing') !== -1) {
+  //  tileGraphicsToLoad = thisMapData[visibleMaps[m]].graphics;
+    for (var i = 0; i < thisMapData[visibleMaps[m]].graphics.length; i++) {
+        thisTerrainIdentifer = thisMapData[visibleMaps[m]].graphics[i].src;
+        if (thisTerrainIdentifer.indexOf('housing') !== -1) {
             imagesToLoad.push({
-                name: "tile" + i,
-                src: "/images/game-world/maps/" + tileGraphicsToLoad[i].src
+                name: thisTerrainIdentifer,
+                src: "/images/game-world/" + thisMapData[visibleMaps[m]].graphics[i].src
             });
         } else {
+            
+            if (tileGraphicsToLoad.indexOf(thisTerrainIdentifer) == -1) {
             imagesToLoad.push({
-                name: "tile" + i,
-                src: "/images/game-world/maps/" + assetPath + "/" + tileGraphicsToLoad[i].src
+              //  name: "tile" + i,
+              name: thisTerrainIdentifer,
+                src: "/images/game-world/terrain/" + thisMapData[visibleMaps[m]].graphics[i].src
             });
+            tileGraphicsToLoad.push(thisTerrainIdentifer);
+            }
         }
 
     }
@@ -8092,9 +8095,12 @@ function prepareGame() {
 
     // get map image references:
     tileImages = [];
+   
     for (var i = 0; i < tileGraphicsToLoad.length; i++) {
-        tileImages[i] = Loader.getImage("tile" + i);
+        console.log("#",tileGraphicsToLoad[i]);
+        tileImages[tileGraphicsToLoad[i]] = Loader.getImage(tileGraphicsToLoad[i]);
     }
+   
     npcImages = [];
     for (var i = 0; i < npcGraphicsToLoad.length; i++) {
         npcImages[npcGraphicsToLoad[i]] = Loader.getImage(npcGraphicsToLoad[i]);
@@ -10376,7 +10382,7 @@ function draw() {
         var thisNPCOffsetCol = 0;
         var thisNPCOffsetRow = 0;
         var thisFileColourSuffix = '';
-        var thisColourName, thisItemIdentifier, thisPlatform, thisNPCIdentifier;
+        var thisColourName, thisItemIdentifier, thisPlatform, thisNPCIdentifier, thisTerrainIdentifer;
         var thisItemOffsetCol = 0;
         var thisItemOffsetRow = 0;
 
@@ -10392,9 +10398,11 @@ for (var m = 0; m < visibleMaps.length; m++) {
                 if (map[j][i] != "*") {
                     thisX = getTileIsoCentreCoordX(i + thisMapsGlobalOffsetX, j + thisMapsGlobalOffsetY);
                     thisY = getTileIsoCentreCoordY(i + thisMapsGlobalOffsetX, j + thisMapsGlobalOffsetY);
+                  
                     thisGraphicCentreX = thisMapData[visibleMaps[m]].graphics[(map[j][i])].centreX;
                     thisGraphicCentreY = thisMapData[visibleMaps[m]].graphics[(map[j][i])].centreY;
-                    assetsToDraw.push([findIsoDepth(getTileCentreCoordX(i + thisMapsGlobalOffsetX), getTileCentreCoordY(j + thisMapsGlobalOffsetY), 0), "img", tileImages[(map[j][i])], Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2))]);
+                    thisTerrainIdentifer = thisMapData[visibleMaps[m]].graphics[(map[j][i])].src;
+                    assetsToDraw.push([findIsoDepth(getTileCentreCoordX(i + thisMapsGlobalOffsetX), getTileCentreCoordY(j + thisMapsGlobalOffsetY), 0), "img", tileImages[thisTerrainIdentifer], Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2))]);
                 }
                 // look for tilled tiles:
                 if (thisMapData[visibleMaps[m]].properties[j][i].tilled == 1) {
