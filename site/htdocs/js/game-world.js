@@ -10372,7 +10372,7 @@ function draw() {
             assetsToDraw.push([fae.particles[i].depth, "faeParticle", Math.floor(fae.particles[i].isoX - hero.isox + (canvasWidth / 2)), Math.floor(fae.particles[i].isoY - hero.isoy + (canvasHeight / 2)), fae.particles[i].alpha]);
         }
 
-        var map = thisMapData[currentMap].terrain;
+        var map, thisMapsGlobalOffsetX, thisMapsGlobalOffsetY;
         var thisNPCOffsetCol = 0;
         var thisNPCOffsetRow = 0;
         var thisFileColourSuffix = '';
@@ -10380,19 +10380,24 @@ function draw() {
         var thisItemOffsetCol = 0;
         var thisItemOffsetRow = 0;
 
+for (var m = 0; m < visibleMaps.length; m++) {
+
+     map = thisMapData[visibleMaps[m]].terrain;
+       thisMapsGlobalOffsetX = thisMapData[(visibleMaps[m])].globalCoordinateTile0X * worldMapTileLength;
+            thisMapsGlobalOffsetY = thisMapData[(visibleMaps[m])].globalCoordinateTile0Y * worldMapTileLength;
         for (var i = 0; i < mapTilesX; i++) {
             for (var j = 0; j < mapTilesY; j++) {
                 // the tile coordinates should be positioned by i,j but the way the map is drawn, the reference in the array is j,i
                 // this makes the map array more readable when editing
                 if (map[j][i] != "*") {
-                    thisX = getTileIsoCentreCoordX(i, j);
-                    thisY = getTileIsoCentreCoordY(i, j);
-                    thisGraphicCentreX = thisMapData[currentMap].graphics[(map[j][i])].centreX;
-                    thisGraphicCentreY = thisMapData[currentMap].graphics[(map[j][i])].centreY;
-                    assetsToDraw.push([findIsoDepth(getTileCentreCoordX(i), getTileCentreCoordY(j), 0), "img", tileImages[(map[j][i])], Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2))]);
+                    thisX = getTileIsoCentreCoordX(i + thisMapsGlobalOffsetX, j + thisMapsGlobalOffsetY);
+                    thisY = getTileIsoCentreCoordY(i + thisMapsGlobalOffsetX, j + thisMapsGlobalOffsetY);
+                    thisGraphicCentreX = thisMapData[visibleMaps[m]].graphics[(map[j][i])].centreX;
+                    thisGraphicCentreY = thisMapData[visibleMaps[m]].graphics[(map[j][i])].centreY;
+                    assetsToDraw.push([findIsoDepth(getTileCentreCoordX(i + thisMapsGlobalOffsetX), getTileCentreCoordY(j + thisMapsGlobalOffsetY), 0), "img", tileImages[(map[j][i])], Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2))]);
                 }
                 // look for tilled tiles:
-                if (thisMapData[currentMap].properties[j][i].tilled == 1) {
+                if (thisMapData[visibleMaps[m]].properties[j][i].tilled == 1) {
                     thisX = getTileIsoCentreCoordX(i, j);
                     thisY = getTileIsoCentreCoordY(i, j);
                     thisGraphicCentreX = tileW / 2;
@@ -10400,19 +10405,20 @@ function draw() {
                     assetsToDraw.push([0, "img", tilledEarth, Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2))]);
                 }
                 // look for watered tiles:
-                if (typeof thisMapData[currentMap].properties[j][i].water !== "undefined") {
-                    if (thisMapData[currentMap].properties[j][i].water.amount > 0) {
+                if (typeof thisMapData[visibleMaps[m]].properties[j][i].water !== "undefined") {
+                    if (thisMapData[visibleMaps[m]].properties[j][i].water.amount > 0) {
                         thisX = getTileIsoCentreCoordX(i, j);
                         thisY = getTileIsoCentreCoordY(i, j);
                         thisGraphicCentreX = tileW / 2;
                         thisGraphicCentreY = tileH / 2;
-                        for (var k = 0; k < thisMapData[currentMap].properties[j][i].water.amount; k++) {
+                        for (var k = 0; k < thisMapData[visibleMaps[m]].properties[j][i].water.amount; k++) {
                             assetsToDraw.push([k + 1, "img", addedWater, Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2))]);
                         }
                     }
                 }
             }
         }
+    }
 
         if (typeof thisMapData[currentMap].innerDoors !== "undefined") {
             for (var i in thisMapData[currentMap].innerDoors) {
