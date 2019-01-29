@@ -376,8 +376,8 @@
             {
 
                 "type": 54,
-                "tileX": 13,
-                "tileY": 17,
+                "tileX": 42,
+                "tileY": 25,
                 "contains": [
                     ["Have you seen this wizard?", "quest", 9]
                 ]
