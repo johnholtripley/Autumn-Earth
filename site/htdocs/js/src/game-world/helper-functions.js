@@ -189,8 +189,9 @@ function getXOffsetFromHeight(height) {
 function findItemAtTile(tileX, tileY) {
     var foundItem = -1;
     var thisItem;
-    for (var i = 0; i < thisMapData.items.length; i++) {
-        thisItem = thisMapData.items[i];
+    var thisMap = findMapNumberFromGlobalCoordinates(tileX, tileY);
+    for (var i = 0; i < thisMapData[thisMap].items.length; i++) {
+        thisItem = thisMapData[thisMap].items[i];
         if (tileX == thisItem.tileX) {
             if (tileY == thisItem.tileY) {
                 foundItem = i;
@@ -208,23 +209,26 @@ function findItemWithinArmsLength() {
     var armsLengthYTile = hero.tileY + relativeFacing[hero.facing]["y"];
     var foundItem = null;
     var thisItem;
-     for (var m = 0; m < visibleMaps.length; m++) {
-    for (var i = 0; i < thisMapData[(visibleMaps[m])].items.length; i++) {
-        thisItem = thisMapData[(visibleMaps[m])].items[i];
-        if (hero.tileX == thisItem.tileX) {
-            if (hero.tileY == thisItem.tileY) {
-                foundItem = thisItem;
-                break;
+    for (var m = 0; m < visibleMaps.length; m++) {
+
+        for (var i = 0; i < thisMapData[(visibleMaps[m])].items.length; i++) {
+            thisItem = thisMapData[(visibleMaps[m])].items[i];
+       
+            if (hero.tileX == thisItem.tileX) {
+                if (hero.tileY == thisItem.tileY) {
+                    foundItem = thisItem;
+
+                    break;
+                }
             }
-        }
-        if (armsLengthXTile == thisItem.tileX) {
-            if (armsLengthYTile == thisItem.tileY) {
-                foundItem = thisItem;
-                break;
+            if (armsLengthXTile == thisItem.tileX) {
+                if (armsLengthYTile == thisItem.tileY) {
+                    foundItem = thisItem;
+                    break;
+                }
             }
         }
     }
-}
     return foundItem;
 }
 

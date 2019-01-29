@@ -84,6 +84,12 @@ function getHeroGameState() {
         for (var attrname in data.fae) {
             fae[attrname] = data.fae[attrname];
         }
+
+
+// determine current map:
+currentMap = findMapNumberFromGlobalCoordinates(hero.tileX, hero.tileY);
+
+
         //  hero.inventory = data.inventory;
         if (currentMap > 0) {
             //clean old procedural maps: (don't need a response here)
@@ -739,15 +745,9 @@ function initialiseItem(whichItem) {
 
 
 function prepareGame() {
-
-
-
-
     // get map image references:
     tileImages = [];
-   
     for (var i = 0; i < tileGraphicsToLoad.length; i++) {
-        console.log("#",tileGraphicsToLoad[i]);
         tileImages[tileGraphicsToLoad[i]] = Loader.getImage(tileGraphicsToLoad[i]);
     }
    
@@ -1536,9 +1536,10 @@ function update() {
 
 function heroIsInNewTile() {
     hero.z = getElevation(hero.tileX, hero.tileY);
-    //  if (currentMap < 0) {
+ 
     updateCartographicMiniMap();
-    //  }
+ 
+    currentMap = findMapNumberFromGlobalCoordinates(hero.tileX, hero.tileY);
     var thisHotspot, thisTileCentreX, thisTileCentreY;
     // check for hotspots:
     for (var i = 0; i < thisMapData[currentMap].hotspots.length; i++) {
@@ -1679,7 +1680,8 @@ function usedActiveTool() {
                 var foundSource = false;
                 var holdingItemsSlot = findSlotByHash(hero.holding.hash);
                 var itemInFront = findItemWithinArmsLength();
-                if (itemInFront != -1) {
+                if (itemInFront != null) {
+
                     if (currentActiveInventoryItems[thisMapData[currentMap].items[itemInFront].type].action == "source") {
                         foundSource = true;
                         // fill it (make the actionValue maximum value) with the thing that this contains (defined by actionValue):
@@ -3055,9 +3057,10 @@ for (var m = 0; m < visibleMaps.length; m++) {
                     assetsToDraw.push([findIsoDepth(getTileCentreCoordX(i + thisMapsGlobalOffsetX), getTileCentreCoordY(j + thisMapsGlobalOffsetY), 0), "img", tileImages[thisTerrainIdentifer], Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2))]);
                 }
                 // look for tilled tiles:
+                
                 if (thisMapData[visibleMaps[m]].properties[j][i].tilled == 1) {
-                    thisX = getTileIsoCentreCoordX(i, j);
-                    thisY = getTileIsoCentreCoordY(i, j);
+                    thisX = getTileIsoCentreCoordX(i+ thisMapsGlobalOffsetX, j+ thisMapsGlobalOffsetY);
+                    thisY = getTileIsoCentreCoordY(i+ thisMapsGlobalOffsetX, j+ thisMapsGlobalOffsetY);
                     thisGraphicCentreX = tileW / 2;
                     thisGraphicCentreY = tileH / 2;
                     assetsToDraw.push([0, "img", tilledEarth, Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2))]);
@@ -3065,8 +3068,8 @@ for (var m = 0; m < visibleMaps.length; m++) {
                 // look for watered tiles:
                 if (typeof thisMapData[visibleMaps[m]].properties[j][i].water !== "undefined") {
                     if (thisMapData[visibleMaps[m]].properties[j][i].water.amount > 0) {
-                        thisX = getTileIsoCentreCoordX(i, j);
-                        thisY = getTileIsoCentreCoordY(i, j);
+                        thisX = getTileIsoCentreCoordX(i+ thisMapsGlobalOffsetX, j+ thisMapsGlobalOffsetY);
+                        thisY = getTileIsoCentreCoordY(i+ thisMapsGlobalOffsetX, j+ thisMapsGlobalOffsetY);
                         thisGraphicCentreX = tileW / 2;
                         thisGraphicCentreY = tileH / 2;
                         for (var k = 0; k < thisMapData[visibleMaps[m]].properties[j][i].water.amount; k++) {

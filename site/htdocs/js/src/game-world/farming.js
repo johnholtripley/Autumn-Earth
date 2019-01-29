@@ -1,14 +1,17 @@
 function successfullyTilledEarth(tileX, tileY) {
-    if (typeof thisMapData.properties[tileY][tileX].tilled !== "undefined") {
-        if (thisMapData.properties[tileY][tileX].tilled == 1) {
+        var thisMap = findMapNumberFromGlobalCoordinates(tileX, tileY);
+    var localTileX = getLocalCoordinatesX(tileX);
+    var localTileY = getLocalCoordinatesX(tileY);
+    if (typeof thisMapData[thisMap].properties[localTileY][localTileX].tilled !== "undefined") {
+        if (thisMapData[thisMap].properties[localTileY][localTileX].tilled == 1) {
             // remove anything planted there
             var itemAtLocation = findItemAtTile(tileX, tileY);
             if (itemAtLocation != -1) {
-                thisMapData.items.splice(itemAtLocation, 1);
+                thisMapData[thisMap].items.splice(itemAtLocation, 1);
             }
         }
-        if (thisMapData.properties[tileY][tileX].tilled == 0) {
-            thisMapData.properties[tileY][tileX].tilled = 1;
+        if (thisMapData[thisMap].properties[localTileY][localTileX].tilled == 0) {
+            thisMapData[thisMap].properties[localTileY][localTileX].tilled = 1;
         }
         audio.playSound(soundEffects['digging'], 0);
         return true;
@@ -19,29 +22,39 @@ function successfullyTilledEarth(tileX, tileY) {
 
 function getTileWaterAmount(tileX, tileY) {
     var waterAmount = 0;
-    if (typeof thisMapData.properties[tileY][tileX].water !== "undefined") {
-        waterAmount = thisMapData.properties[tileY][tileX].water.amount;
+      var thisMap = findMapNumberFromGlobalCoordinates(tileX, tileY);
+    var tileX = getLocalCoordinatesX(tileX);
+    var tileY = getLocalCoordinatesX(tileY);
+    if (typeof thisMapData[thisMap].properties[tileY][tileX].water !== "undefined") {
+        waterAmount = thisMapData[thisMap].properties[tileY][tileX].water.amount;
     }
     return waterAmount;
 }
 
 function pourLiquid(tileX, tileY) {
     var holdingItemsSlot = findSlotByHash(hero.holding.hash);
+    var thisMap = findMapNumberFromGlobalCoordinates(tileX, tileY);
+    var tileX = getLocalCoordinatesX(tileX);
+    var tileY = getLocalCoordinatesX(tileY);
+    console.log(thisMap);
     // check how much liquid in this item's contains:
     if (hero.inventory[holdingItemsSlot].contains[0].quantity > 0) {
         audio.playSound(soundEffects['pouring'], 0);
-        if (typeof thisMapData.properties[tileY][tileX].water === "undefined") {
+      
+        console.log(thisMapData[thisMap].properties[tileY][tileX]);
+        if (typeof thisMapData[thisMap].properties[tileY][tileX].water === "undefined") {
             // create object:
-            thisMapData.properties[tileY][tileX].water = {};
-            thisMapData.properties[tileY][tileX].water.amount = 1;
+            thisMapData[thisMap].properties[tileY][tileX].water = {};
+            thisMapData[thisMap].properties[tileY][tileX].water.amount = 1;
         } else {
-            thisMapData.properties[tileY][tileX].water.amount++;
+            thisMapData[thisMap].properties[tileY][tileX].water.amount++;
             checkWaterRunOff();
         }
-        thisMapData.properties[tileY][tileX].water.time = hero.totalGameTimePlayed;
+        thisMapData[thisMap].properties[tileY][tileX].water.time = hero.totalGameTimePlayed;
         hero.inventory[holdingItemsSlot].contains[0].quantity--;
         updateGauge(holdingItemsSlot);
         UI.updateHeldItemGauge();
+         console.log(thisMapData[thisMap].properties[tileY][tileX]);
     } else {
         UI.showNotification("<p>I need to refill this</p>");
     }
