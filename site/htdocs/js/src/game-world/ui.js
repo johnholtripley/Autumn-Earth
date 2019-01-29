@@ -1560,20 +1560,20 @@ cardAlbumMarkup += '<p id="dustCurrency">'+ hero.currency.cardDust + ' dust</p>'
         thisParagraphNode.classList.add('active');
     },
 
-    openChest: function(itemReference) {
+    openChest: function(itemsMap,itemReference) {
         UI.showUI();
-        var contents = thisMapData.items[itemReference].contains;
+        var contents = thisMapData[itemsMap].items[itemReference].contains;
         audio.playSound(soundEffects['chestOpen'], 0);
         // open chest animation (thisMapData.items[itemReference]) ####
 
         // show container item name in the title:
-        chestTitle.innerHTML = currentActiveInventoryItems[(thisMapData.items[itemReference].type)].shortname;
+        chestTitle.innerHTML = currentActiveInventoryItems[(thisMapData[itemsMap].items[itemReference].type)].shortname;
 
         // build contents:
         var chestContents = '';
         var thisChestObject;
-        for (var i = 0; i < currentActiveInventoryItems[(thisMapData.items[itemReference].type)].actionValue; i++) {
-            chestContents += '<li id="chestSlot-' + itemReference + '-' + i + '">';
+        for (var i = 0; i < currentActiveInventoryItems[(thisMapData[itemsMap].items[itemReference].type)].actionValue; i++) {
+            chestContents += '<li id="chestSlot-' +itemReference + '-' + i + '-' + itemsMap+ '">';
             if (typeof contents[i] !== "undefined") {
                 if (contents[i] != "") {
                     if (contents[i].type == "$") {
@@ -1607,7 +1607,7 @@ cardAlbumMarkup += '<p id="dustCurrency">'+ hero.currency.cardDust + ' dust</p>'
             chestContents += '</li>';
         }
         chestSlotContents.innerHTML = chestContents;
-        chestIdOpen = itemReference;
+        chestIdOpen = itemReference+"-"+itemsMap;
         chestPanel.classList.add('active');
     },
 
@@ -1620,7 +1620,8 @@ cardAlbumMarkup += '<p id="dustCurrency">'+ hero.currency.cardDust + ' dust</p>'
 
     addFromChest: function(chestSlotId) {
         var itemDetails = chestSlotId.split("-");
-        var chestItemContains = thisMapData.items[(itemDetails[1])].contains;
+        var whichMap = itemDetails[3];
+        var chestItemContains = thisMapData[whichMap].items[(itemDetails[1])].contains;
         var whichChestItem = chestItemContains[(itemDetails[2])];
         if (typeof whichChestItem !== "undefined") {
             if (whichChestItem.type == "$") {
@@ -1628,12 +1629,12 @@ cardAlbumMarkup += '<p id="dustCurrency">'+ hero.currency.cardDust + ' dust</p>'
                 hero.currency.money += whichChestItem.quantity;
                 audio.playSound(soundEffects['coins'], 0);
                 UI.updateCurrencies();
-                thisMapData.items[(itemDetails[1])].contains[(itemDetails[2])] = "";
+                thisMapData[whichMap].items[(itemDetails[1])].contains[(itemDetails[2])] = "";
                 document.getElementById(chestSlotId).innerHTML = "";
             } else {
                 inventoryCheck = canAddItemToInventory([whichChestItem]);
                 if (inventoryCheck[0]) {
-                    thisMapData.items[(itemDetails[1])].contains[(itemDetails[2])] = "";
+                    thisMapData[whichMap].items[(itemDetails[1])].contains[(itemDetails[2])] = "";
                     UI.showChangeInInventory(inventoryCheck[1]);
                     document.getElementById(chestSlotId).innerHTML = "";
                 } else {
@@ -1696,7 +1697,8 @@ cardAlbumMarkup += '<p id="dustCurrency">'+ hero.currency.cardDust + ' dust</p>'
                             if (currentActiveInventoryItems[foundItem.type].category == thisNode.dataset.category) {
                                 // check it's not still re-spawning:
                                 if (foundItem.state != "inactive") {
-                                    gathering.itemIndex = foundItem;
+                                    gathering.itemObject = foundItem;
+                                    gathering.itemMap = findMapNumberFromGlobalCoordinates(foundItem.tileX, foundItem.tileY)
                                     gathering.quality = parseInt(foundItem.quality);
 
                                     gathering.quantity = 100;

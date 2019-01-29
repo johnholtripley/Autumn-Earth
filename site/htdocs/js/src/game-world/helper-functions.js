@@ -530,6 +530,11 @@ function parseMoney(amount) {
 
 function hasLineOfSight(startX, startY, endX, endY) {
 
+    var thisMap = findMapNumberFromGlobalCoordinates(startX, startY);
+  
+
+
+
     var nextX = startX;
     var nextY = startY;
     var pathY = [];
@@ -542,22 +547,23 @@ function hasLineOfSight(startX, startY, endX, endY) {
 
 
     var needToCheckInnerDoors = false;
-    if (typeof thisMapData.innerDoors !== "undefined") {
+    if (typeof thisMapData[thisMap].innerDoors !== "undefined") {
         needToCheckInnerDoors = true;
     }
 
-
+  var localTileX = getLocalCoordinatesX(startX);
+    var localTileY = getLocalCoordinatesY(startY);
     // check the starting tile:
-    if (thisMapData.collisions[startY][startX] != 0) {
+    if (thisMapData[thisMap].collisions[localTileY][localTileX] != 0) {
         // tile is non-walkable;
         return false;
 
     }
     if (needToCheckInnerDoors) {
-        thisInnerDoor = currentMap + "-" + startX + "-" + startY;
-        if (thisMapData.innerDoors.hasOwnProperty(thisInnerDoor)) {
+        thisInnerDoor = thisMap + "-" + localTileX + "-" + localTileY;
+        if (thisMapData[thisMap].innerDoors.hasOwnProperty(thisInnerDoor)) {
             // an Inner Door exists at this location:
-            if (!thisMapData.innerDoors[thisInnerDoor]['isOpen']) {
+            if (!thisMapData[thisMap].innerDoors[thisInnerDoor]['isOpen']) {
                 return false;
 
             }
@@ -590,16 +596,19 @@ function hasLineOfSight(startX, startY, endX, endY) {
             }
             nextX += stepX;
             fraction += deltaY;
-            if (thisMapData.collisions[nextY][nextX] != 0) {
+            thisMap = findMapNumberFromGlobalCoordinates(nextX, nextY);
+              localTileX = getLocalCoordinatesX(nextX);
+     localTileY = getLocalCoordinatesY(nextY);
+            if (thisMapData[thisMap].collisions[localTileY][localTileX] != 0) {
                 // tile is non-walkable:
                 return false;
                 break;
             }
             if (needToCheckInnerDoors) {
-                thisInnerDoor = currentMap + "-" + nextX + "-" + nextY;
-                if (thisMapData.innerDoors.hasOwnProperty(thisInnerDoor)) {
+                thisInnerDoor = thisMap + "-" + localTileX + "-" + localTileY;
+                if (thisMapData[thisMap].innerDoors.hasOwnProperty(thisInnerDoor)) {
                     // an Inner Door exists at this location:
-                    if (!thisMapData.innerDoors[thisInnerDoor]['isOpen']) {
+                    if (!thisMapData[thisMap].innerDoors[thisInnerDoor]['isOpen']) {
                         return false;
                         break;
                     }
@@ -621,16 +630,19 @@ function hasLineOfSight(startX, startY, endX, endY) {
             }
             nextY += stepY;
             fraction += deltaX;
-            if (thisMapData.collisions[nextY][nextX] != 0) {
+            thisMap = findMapNumberFromGlobalCoordinates(nextX, nextY);
+            localTileX = getLocalCoordinatesX(nextX);
+     localTileY = getLocalCoordinatesY(nextY);
+            if (thisMapData[thisMap].collisions[localTileY][localTileX] != 0) {
                 // tile is non-walkable;
                 return false;
                 break;
             }
             if (needToCheckInnerDoors) {
-                thisInnerDoor = currentMap + "-" + nextX + "-" + nextY;
-                if (thisMapData.innerDoors.hasOwnProperty(thisInnerDoor)) {
+                thisInnerDoor = thisMap + "-" + localTileX + "-" + localTileY;
+                if (thisMapData[thisMap].innerDoors.hasOwnProperty(thisInnerDoor)) {
                     // an Inner Door exists at this location:
-                    if (!thisMapData.innerDoors[thisInnerDoor]['isOpen']) {
+                    if (!thisMapData[thisMap].innerDoors[thisInnerDoor]['isOpen']) {
                         return false;
                         break;
                     }

@@ -71,8 +71,11 @@ function checkWaterRunOff() {
 
 function successfullyPlantSeed(tileX, tileY) {
     var wasSuccessful = false;
-    if (thisMapData.properties[tileY][tileX].tilled == 1) {
-        if (findItemWithinArmsLength() == -1) {
+     var thisMap = findMapNumberFromGlobalCoordinates(tileX, tileY);
+      var localTileX = getLocalCoordinatesX(tileX);
+    var localTileY = getLocalCoordinatesY(tileY);
+    if (thisMapData[thisMap].properties[localTileY][localTileX].tilled == 1) {
+        if (findItemWithinArmsLength() == null) {
             var whichSlot = findSlotByHash(hero.holding.hash);
             // create object from the seed's actionValue
             var seedObject = JSON.parse(JSON.stringify(currentActiveInventoryItems[hero.inventory[whichSlot].type].actionValue));
@@ -87,8 +90,8 @@ function successfullyPlantSeed(tileX, tileY) {
             seedObject.effectiveness = hero.inventory[whichSlot].effectiveness;
             seedObject.durability = hero.inventory[whichSlot].durability;
 
-            thisMapData.items.push(seedObject);
-            initialiseItem(thisMapData.items.length - 1);
+            thisMapData[thisMap].items.push(seedObject);
+            initialiseItem(thisMapData[thisMap].items[(thisMapData[thisMap].items.length - 1)]);
             // reduce seed quantity in slot:
             reducedHeldQuantity(whichSlot);
             updateQuantity(whichSlot);

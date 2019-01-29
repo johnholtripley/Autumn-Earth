@@ -105,10 +105,10 @@ function openQuest(questId) {
 
 function checkForEscortQuestEnd(whichNPC) {
     var destination = whichNPC.speech[whichNPC.speechIndex][3].split("|");
-    if (destination[0] == currentMap) {
-        var destinationTileCentreX = getTileCentreCoordX(destination[1]);
-        var destinationTileCentreY = getTileCentreCoordY(destination[2]);
-        if (isInRange(whichNPC.x, whichNPC.y, destinationTileCentreX, destinationTileCentreY, destination[3] * tileW)) {
+    // global coordinates are passed in here:
+        var destinationTileCentreX = getTileCentreCoordX(destination[0]);
+        var destinationTileCentreY = getTileCentreCoordY(destination[1]);
+        if (isInRange(whichNPC.x, whichNPC.y, destinationTileCentreX, destinationTileCentreY, destination[2] * tileW)) {
             // quest complete
             whichNPC.drawnFacing = turntoFace(whichNPC, hero);
             // remove the reference to it in the hero object:
@@ -129,7 +129,7 @@ function checkForEscortQuestEnd(whichNPC) {
             whichNPC.hasCompletedEscortQuest = true;
             delete whichNPC.following;
         }
-    }
+    
 }
 
 

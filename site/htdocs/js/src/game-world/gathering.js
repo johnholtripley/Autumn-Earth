@@ -131,9 +131,9 @@ function gatheringStopped() {
     }
     if (gathering.node.isTemporary) {
         // loop through items and remove it:
-        for (var i = 0; i < thisMapData[map].items.length; i++) {
-            if (thisMapData[map].items[i] === gathering.node) {
-                thisMapData[map].items.splice(i, 1);
+        for (var i = 0; i < thisMapData[gathering.itemMap].items.length; i++) {
+            if (thisMapData[gathering.itemMap].items[i] === gathering.node) {
+                thisMapData[gathering.itemMap].items.splice(i, 1);
                 break;
             }
         }

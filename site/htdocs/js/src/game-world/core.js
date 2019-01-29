@@ -1419,6 +1419,7 @@ function update() {
         checkHeroCollisions();
         var heroOldX = hero.tileX;
         var heroOldY = hero.tileY;
+        var chestIdSplit;
         hero.tileX = getTileX(hero.x);
         hero.tileY = getTileY(hero.y);
         if ((hero.tileX != heroOldX) || (hero.tileY != heroOldY)) {
@@ -1444,12 +1445,14 @@ function update() {
         }
         // check if a chest is open and close it if so:
         if (chestIdOpen != -1) {
-            if (!(isInRange(hero.x, hero.y, thisMapData[currentMap].items[chestIdOpen].x, thisMapData[currentMap].items[chestIdOpen].y, closeDialogueDistance / 2))) {
+            chestIdSplit = chestIdOpen.split("-");
+            if (!(isInRange(hero.x, hero.y, thisMapData[chestIdSplit[1]].items[chestIdSplit[0]].x, thisMapData[chestIdSplit[1]].items[chestIdSplit[0]].y, closeDialogueDistance / 2))) {
                 UI.closeChest();
             }
         }
         if (activeAction == "gather") {
-            if (!(isInRange(hero.x, hero.y, thisMapData[currentMap].items[gathering.itemIndex].x, thisMapData[currentMap].items[gathering.itemIndex].y, closeDialogueDistance / 2))) {
+            
+            if (!(isInRange(hero.x, hero.y, gathering.itemObject.x, gathering.itemObject.y, closeDialogueDistance / 2))) {
                 gatheringPanel.classList.remove("active");
                 gatheringStopped();
             }
@@ -1682,10 +1685,10 @@ function usedActiveTool() {
                 var itemInFront = findItemWithinArmsLength();
                 if (itemInFront != null) {
 
-                    if (currentActiveInventoryItems[thisMapData[currentMap].items[itemInFront].type].action == "source") {
+                    if (currentActiveInventoryItems[itemInFront.type].action == "source") {
                         foundSource = true;
                         // fill it (make the actionValue maximum value) with the thing that this contains (defined by actionValue):
-                        hero.inventory[holdingItemsSlot].contains[0].type = currentActiveInventoryItems[thisMapData[currentMap].items[itemInFront].type].actionValue;
+                        hero.inventory[holdingItemsSlot].contains[0].type = currentActiveInventoryItems[itemInFront.type].actionValue;
                         hero.inventory[holdingItemsSlot].contains[0].quantity = currentActiveInventoryItems[(hero.inventory[holdingItemsSlot].type)].actionValue;
                         audio.playSound(soundEffects['pouring'], 0);
                         updateGauge(holdingItemsSlot);
@@ -1771,7 +1774,7 @@ function checkForActions() {
                             break;
                         case "chest":
                             // open chest and show contents:
-                            UI.openChest(i);
+                            UI.openChest(visibleMaps[m],i);
                             break;
                         case "post":
                             // open the Post panel:

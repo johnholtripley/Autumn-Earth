@@ -1457,8 +1457,11 @@ function checkWaterRunOff() {
 
 function successfullyPlantSeed(tileX, tileY) {
     var wasSuccessful = false;
-    if (thisMapData.properties[tileY][tileX].tilled == 1) {
-        if (findItemWithinArmsLength() == -1) {
+     var thisMap = findMapNumberFromGlobalCoordinates(tileX, tileY);
+      var localTileX = getLocalCoordinatesX(tileX);
+    var localTileY = getLocalCoordinatesY(tileY);
+    if (thisMapData[thisMap].properties[localTileY][localTileX].tilled == 1) {
+        if (findItemWithinArmsLength() == null) {
             var whichSlot = findSlotByHash(hero.holding.hash);
             // create object from the seed's actionValue
             var seedObject = JSON.parse(JSON.stringify(currentActiveInventoryItems[hero.inventory[whichSlot].type].actionValue));
@@ -1473,8 +1476,8 @@ function successfullyPlantSeed(tileX, tileY) {
             seedObject.effectiveness = hero.inventory[whichSlot].effectiveness;
             seedObject.durability = hero.inventory[whichSlot].durability;
 
-            thisMapData.items.push(seedObject);
-            initialiseItem(thisMapData.items.length - 1);
+            thisMapData[thisMap].items.push(seedObject);
+            initialiseItem(thisMapData[thisMap].items[(thisMapData[thisMap].items.length - 1)]);
             // reduce seed quantity in slot:
             reducedHeldQuantity(whichSlot);
             updateQuantity(whichSlot);
@@ -1826,9 +1829,9 @@ function gatheringStopped() {
     }
     if (gathering.node.isTemporary) {
         // loop through items and remove it:
-        for (var i = 0; i < thisMapData[map].items.length; i++) {
-            if (thisMapData[map].items[i] === gathering.node) {
-                thisMapData[map].items.splice(i, 1);
+        for (var i = 0; i < thisMapData[gathering.itemMap].items.length; i++) {
+            if (thisMapData[gathering.itemMap].items[i] === gathering.node) {
+                thisMapData[gathering.itemMap].items.splice(i, 1);
                 break;
             }
         }
@@ -2367,6 +2370,11 @@ function parseMoney(amount) {
 
 function hasLineOfSight(startX, startY, endX, endY) {
 
+    var thisMap = findMapNumberFromGlobalCoordinates(startX, startY);
+  
+
+
+
     var nextX = startX;
     var nextY = startY;
     var pathY = [];
@@ -2379,22 +2387,23 @@ function hasLineOfSight(startX, startY, endX, endY) {
 
 
     var needToCheckInnerDoors = false;
-    if (typeof thisMapData.innerDoors !== "undefined") {
+    if (typeof thisMapData[thisMap].innerDoors !== "undefined") {
         needToCheckInnerDoors = true;
     }
 
-
+  var localTileX = getLocalCoordinatesX(startX);
+    var localTileY = getLocalCoordinatesY(startY);
     // check the starting tile:
-    if (thisMapData.collisions[startY][startX] != 0) {
+    if (thisMapData[thisMap].collisions[localTileY][localTileX] != 0) {
         // tile is non-walkable;
         return false;
 
     }
     if (needToCheckInnerDoors) {
-        thisInnerDoor = currentMap + "-" + startX + "-" + startY;
-        if (thisMapData.innerDoors.hasOwnProperty(thisInnerDoor)) {
+        thisInnerDoor = thisMap + "-" + localTileX + "-" + localTileY;
+        if (thisMapData[thisMap].innerDoors.hasOwnProperty(thisInnerDoor)) {
             // an Inner Door exists at this location:
-            if (!thisMapData.innerDoors[thisInnerDoor]['isOpen']) {
+            if (!thisMapData[thisMap].innerDoors[thisInnerDoor]['isOpen']) {
                 return false;
 
             }
@@ -2427,16 +2436,19 @@ function hasLineOfSight(startX, startY, endX, endY) {
             }
             nextX += stepX;
             fraction += deltaY;
-            if (thisMapData.collisions[nextY][nextX] != 0) {
+            thisMap = findMapNumberFromGlobalCoordinates(nextX, nextY);
+              localTileX = getLocalCoordinatesX(nextX);
+     localTileY = getLocalCoordinatesY(nextY);
+            if (thisMapData[thisMap].collisions[localTileY][localTileX] != 0) {
                 // tile is non-walkable:
                 return false;
                 break;
             }
             if (needToCheckInnerDoors) {
-                thisInnerDoor = currentMap + "-" + nextX + "-" + nextY;
-                if (thisMapData.innerDoors.hasOwnProperty(thisInnerDoor)) {
+                thisInnerDoor = thisMap + "-" + localTileX + "-" + localTileY;
+                if (thisMapData[thisMap].innerDoors.hasOwnProperty(thisInnerDoor)) {
                     // an Inner Door exists at this location:
-                    if (!thisMapData.innerDoors[thisInnerDoor]['isOpen']) {
+                    if (!thisMapData[thisMap].innerDoors[thisInnerDoor]['isOpen']) {
                         return false;
                         break;
                     }
@@ -2458,16 +2470,19 @@ function hasLineOfSight(startX, startY, endX, endY) {
             }
             nextY += stepY;
             fraction += deltaX;
-            if (thisMapData.collisions[nextY][nextX] != 0) {
+            thisMap = findMapNumberFromGlobalCoordinates(nextX, nextY);
+            localTileX = getLocalCoordinatesX(nextX);
+     localTileY = getLocalCoordinatesY(nextY);
+            if (thisMapData[thisMap].collisions[localTileY][localTileX] != 0) {
                 // tile is non-walkable;
                 return false;
                 break;
             }
             if (needToCheckInnerDoors) {
-                thisInnerDoor = currentMap + "-" + nextX + "-" + nextY;
-                if (thisMapData.innerDoors.hasOwnProperty(thisInnerDoor)) {
+                thisInnerDoor = thisMap + "-" + localTileX + "-" + localTileY;
+                if (thisMapData[thisMap].innerDoors.hasOwnProperty(thisInnerDoor)) {
                     // an Inner Door exists at this location:
-                    if (!thisMapData.innerDoors[thisInnerDoor]['isOpen']) {
+                    if (!thisMapData[thisMap].innerDoors[thisInnerDoor]['isOpen']) {
                         return false;
                         break;
                     }
@@ -4557,10 +4572,10 @@ function openQuest(questId) {
 
 function checkForEscortQuestEnd(whichNPC) {
     var destination = whichNPC.speech[whichNPC.speechIndex][3].split("|");
-    if (destination[0] == currentMap) {
-        var destinationTileCentreX = getTileCentreCoordX(destination[1]);
-        var destinationTileCentreY = getTileCentreCoordY(destination[2]);
-        if (isInRange(whichNPC.x, whichNPC.y, destinationTileCentreX, destinationTileCentreY, destination[3] * tileW)) {
+    // global coordinates are passed in here:
+        var destinationTileCentreX = getTileCentreCoordX(destination[0]);
+        var destinationTileCentreY = getTileCentreCoordY(destination[1]);
+        if (isInRange(whichNPC.x, whichNPC.y, destinationTileCentreX, destinationTileCentreY, destination[2] * tileW)) {
             // quest complete
             whichNPC.drawnFacing = turntoFace(whichNPC, hero);
             // remove the reference to it in the hero object:
@@ -4581,7 +4596,7 @@ function checkForEscortQuestEnd(whichNPC) {
             whichNPC.hasCompletedEscortQuest = true;
             delete whichNPC.following;
         }
-    }
+    
 }
 
 
@@ -6359,20 +6374,20 @@ cardAlbumMarkup += '<p id="dustCurrency">'+ hero.currency.cardDust + ' dust</p>'
         thisParagraphNode.classList.add('active');
     },
 
-    openChest: function(itemReference) {
+    openChest: function(itemsMap,itemReference) {
         UI.showUI();
-        var contents = thisMapData.items[itemReference].contains;
+        var contents = thisMapData[itemsMap].items[itemReference].contains;
         audio.playSound(soundEffects['chestOpen'], 0);
         // open chest animation (thisMapData.items[itemReference]) ####
 
         // show container item name in the title:
-        chestTitle.innerHTML = currentActiveInventoryItems[(thisMapData.items[itemReference].type)].shortname;
+        chestTitle.innerHTML = currentActiveInventoryItems[(thisMapData[itemsMap].items[itemReference].type)].shortname;
 
         // build contents:
         var chestContents = '';
         var thisChestObject;
-        for (var i = 0; i < currentActiveInventoryItems[(thisMapData.items[itemReference].type)].actionValue; i++) {
-            chestContents += '<li id="chestSlot-' + itemReference + '-' + i + '">';
+        for (var i = 0; i < currentActiveInventoryItems[(thisMapData[itemsMap].items[itemReference].type)].actionValue; i++) {
+            chestContents += '<li id="chestSlot-' +itemReference + '-' + i + '-' + itemsMap+ '">';
             if (typeof contents[i] !== "undefined") {
                 if (contents[i] != "") {
                     if (contents[i].type == "$") {
@@ -6406,7 +6421,7 @@ cardAlbumMarkup += '<p id="dustCurrency">'+ hero.currency.cardDust + ' dust</p>'
             chestContents += '</li>';
         }
         chestSlotContents.innerHTML = chestContents;
-        chestIdOpen = itemReference;
+        chestIdOpen = itemReference+"-"+itemsMap;
         chestPanel.classList.add('active');
     },
 
@@ -6419,7 +6434,8 @@ cardAlbumMarkup += '<p id="dustCurrency">'+ hero.currency.cardDust + ' dust</p>'
 
     addFromChest: function(chestSlotId) {
         var itemDetails = chestSlotId.split("-");
-        var chestItemContains = thisMapData.items[(itemDetails[1])].contains;
+        var whichMap = itemDetails[3];
+        var chestItemContains = thisMapData[whichMap].items[(itemDetails[1])].contains;
         var whichChestItem = chestItemContains[(itemDetails[2])];
         if (typeof whichChestItem !== "undefined") {
             if (whichChestItem.type == "$") {
@@ -6427,12 +6443,12 @@ cardAlbumMarkup += '<p id="dustCurrency">'+ hero.currency.cardDust + ' dust</p>'
                 hero.currency.money += whichChestItem.quantity;
                 audio.playSound(soundEffects['coins'], 0);
                 UI.updateCurrencies();
-                thisMapData.items[(itemDetails[1])].contains[(itemDetails[2])] = "";
+                thisMapData[whichMap].items[(itemDetails[1])].contains[(itemDetails[2])] = "";
                 document.getElementById(chestSlotId).innerHTML = "";
             } else {
                 inventoryCheck = canAddItemToInventory([whichChestItem]);
                 if (inventoryCheck[0]) {
-                    thisMapData.items[(itemDetails[1])].contains[(itemDetails[2])] = "";
+                    thisMapData[whichMap].items[(itemDetails[1])].contains[(itemDetails[2])] = "";
                     UI.showChangeInInventory(inventoryCheck[1]);
                     document.getElementById(chestSlotId).innerHTML = "";
                 } else {
@@ -6495,7 +6511,8 @@ cardAlbumMarkup += '<p id="dustCurrency">'+ hero.currency.cardDust + ' dust</p>'
                             if (currentActiveInventoryItems[foundItem.type].category == thisNode.dataset.category) {
                                 // check it's not still re-spawning:
                                 if (foundItem.state != "inactive") {
-                                    gathering.itemIndex = foundItem;
+                                    gathering.itemObject = foundItem;
+                                    gathering.itemMap = findMapNumberFromGlobalCoordinates(foundItem.tileX, foundItem.tileY)
                                     gathering.quality = parseInt(foundItem.quality);
 
                                     gathering.quantity = 100;
@@ -8786,6 +8803,7 @@ function update() {
         checkHeroCollisions();
         var heroOldX = hero.tileX;
         var heroOldY = hero.tileY;
+        var chestIdSplit;
         hero.tileX = getTileX(hero.x);
         hero.tileY = getTileY(hero.y);
         if ((hero.tileX != heroOldX) || (hero.tileY != heroOldY)) {
@@ -8811,12 +8829,14 @@ function update() {
         }
         // check if a chest is open and close it if so:
         if (chestIdOpen != -1) {
-            if (!(isInRange(hero.x, hero.y, thisMapData[currentMap].items[chestIdOpen].x, thisMapData[currentMap].items[chestIdOpen].y, closeDialogueDistance / 2))) {
+            chestIdSplit = chestIdOpen.split("-");
+            if (!(isInRange(hero.x, hero.y, thisMapData[chestIdSplit[1]].items[chestIdSplit[0]].x, thisMapData[chestIdSplit[1]].items[chestIdSplit[0]].y, closeDialogueDistance / 2))) {
                 UI.closeChest();
             }
         }
         if (activeAction == "gather") {
-            if (!(isInRange(hero.x, hero.y, thisMapData[currentMap].items[gathering.itemIndex].x, thisMapData[currentMap].items[gathering.itemIndex].y, closeDialogueDistance / 2))) {
+            
+            if (!(isInRange(hero.x, hero.y, gathering.itemObject.x, gathering.itemObject.y, closeDialogueDistance / 2))) {
                 gatheringPanel.classList.remove("active");
                 gatheringStopped();
             }
@@ -9049,10 +9069,10 @@ function usedActiveTool() {
                 var itemInFront = findItemWithinArmsLength();
                 if (itemInFront != null) {
 
-                    if (currentActiveInventoryItems[thisMapData[currentMap].items[itemInFront].type].action == "source") {
+                    if (currentActiveInventoryItems[itemInFront.type].action == "source") {
                         foundSource = true;
                         // fill it (make the actionValue maximum value) with the thing that this contains (defined by actionValue):
-                        hero.inventory[holdingItemsSlot].contains[0].type = currentActiveInventoryItems[thisMapData[currentMap].items[itemInFront].type].actionValue;
+                        hero.inventory[holdingItemsSlot].contains[0].type = currentActiveInventoryItems[itemInFront.type].actionValue;
                         hero.inventory[holdingItemsSlot].contains[0].quantity = currentActiveInventoryItems[(hero.inventory[holdingItemsSlot].type)].actionValue;
                         audio.playSound(soundEffects['pouring'], 0);
                         updateGauge(holdingItemsSlot);
@@ -9138,7 +9158,7 @@ function checkForActions() {
                             break;
                         case "chest":
                             // open chest and show contents:
-                            UI.openChest(i);
+                            UI.openChest(visibleMaps[m],i);
                             break;
                         case "post":
                             // open the Post panel:
