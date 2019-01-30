@@ -7907,17 +7907,33 @@ function loadProfessionsAndRecipes(recipeIdsToLoad) {
 
 function getShopData() {
     thisMapShopItemIds = '';
-    if (thisMapData[currentMap].shops.length == 0) {
-        findInventoryItemData();
-    } else {
-        var shopData = JSON.parse('{"chr": ' + characterId + ',"mapNumber": "' + currentMap + '","region":"' + thisMapData[currentMap].region + '","shops": ' + JSON.stringify(thisMapData[currentMap].shops) + '}');
-        // loop through shops and create hashes 
-        for (var i = 0; i < shopData.shops.length; i++) {
-            shopData.shops[i].hash = generateHash(shopData.shops[i].name);
-        }
 
-        loadShopData('shopData=' + JSON.stringify(shopData));
+
+
+
+ //   if (thisMapData[currentMap].shops.length == 0) {
+//        findInventoryItemData();
+//    } else {
+       
+
+
+       // var shopData = JSON.parse('{"chr": ' + characterId + ',"region":"' + thisMapData[currentMap].region + '","shops": ' + JSON.stringify(thisMapData[currentMap].shops) + '}');
+       var shopData = '{"chr": ' + characterId + ',"region":"' + thisMapData[currentMap].region + '","shops": [';
+var addedShopDataAlready = false;
+        // loop through shops and create hashes 
+        for (var m = 0; m < visibleMaps.length; m++) {
+        for (var i = 0; i < thisMapData[(visibleMaps[m])].shops.length; i++) {
+          thisMapData[(visibleMaps[m])].shops[i].hash = generateHash(thisMapData[(visibleMaps[m])].shops[i].name);
+          if(addedShopDataAlready) {
+            shopData += ",";
+          }
+          shopData += JSON.stringify(thisMapData[(visibleMaps[m])].shops[i]);
+          addedShopDataAlready = true;
+        }
     }
+    shopData += ']}';
+        loadShopData('shopData=' + shopData);
+ //   }
 }
 
 

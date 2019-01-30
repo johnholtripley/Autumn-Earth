@@ -15,6 +15,12 @@ $buyPriceSpecialismModifier = 0.9;
 if(isset($_POST['shopData'])) { 
 $json = $_POST['shopData'];
 }
+
+$debug = false;
+if(isset($_GET['debug'])) { 
+$debug = true;
+}
+
 /*
 $json ='{
 "mapNumber": 3,
@@ -66,7 +72,8 @@ $json ='{
 
 
 /*
-$json ='{"mapNumber":2,"chr":999,region":"Teldrassil","shops":[{"name":"shop #1","uniqueItems":[],"specialism":2,"categories":[1,2],"size":"small","currency":"money","hash":2067019224},{"name":"shop #2","uniqueItems":{"14":[{"colour":3},{"colour":7}],"15":[{"colour":1,"inscription":"stuffffff"}]},"specialism":null,"categories":[3],"size":"small","currency":"money","hash":2067019225},{"name":"shop #3","uniqueItems":{"5":[[]],"9":[[]],"11":[[]],"12":[[]],"15":[[]],"20":[[]],"25":[[]],"27":[[]],"37":[[]],"52":[[]]},"specialism":null,"categories":[],"size":"small","currency":"money","hash":2067019226}]}';
+
+$json ='{"mapNumber":2,"chr":999,"region":"Teldrassil","shops":[{"name":"shop #1","uniqueItems":[],"specialism":2,"categories":[1,2],"size":"small","currency":"money","hash":2067019224},{"name":"shop #2","uniqueItems":{"14":[{"colour":3},{"colour":7}],"15":[{"colour":1,"inscription":"stuffffff"}]},"specialism":null,"categories":[3],"size":"small","currency":"money","hash":2067019225},{"name":"shop #3","uniqueItems":{"5":[[]],"9":[[]],"11":[[]],"12":[[]],"15":[[]],"20":[[]],"25":[[]],"27":[[]],"37":[[]],"52":[[]]},"specialism":null,"categories":[],"size":"small","currency":"money","hash":2067019226}]}';
 */
 
  
@@ -81,6 +88,14 @@ $json ='{"mapNumber":2,"chr":999,region":"Teldrassil","shops":[{"name":"shop #1"
 
  //$json = '{"chr":999,"mapNumber":"2","region":"Teldrassil","shops":[{"name":"User Generated Content","uniqueItems":"##usergenerated##","specialism":null,"categories":[],"size":"small","currency":"money","hash":1889001907}]}';
  
+if($debug) {
+if(!isset($_POST['shopData'])) { 
+    $json ='{"chr": 999,"region":"Teldrassil","shops": [{"name":"shop #1","uniqueItems":[],"specialism":2,"categories":[1,2],"size":"small","currency":"money","hash":2067019224},{"name":"shop #2","uniqueItems":{"14":[{"colour":3},{"colour":7}],"15":[{"colour":1,"inscription":"stuffffff"}]},"specialism":null,"categories":[3],"size":"small","currency":"money","hash":2067019225},{"name":"shop #3","uniqueItems":{"11":[[]],"12":[[]],"20":[[]],"25":[[]],"31":[[]],"37":[[]],"41":[[]],"51":[[]],"60":[[]],"63":[[]]},"specialism":null,"categories":[],"size":"small","currency":"money","hash":2067019226},{"name":"architect deeds office","uniqueItems":[],"specialism":null,"categories":[6],"size":"large","currency":"money","hash":-551176652},{"name":"Farming Supplies","uniqueItems":[],"specialism":null,"categories":[8],"size":"medium","currency":"money","hash":1904598977},{"name":"User Generated Content","uniqueItems":"##usergenerated##","specialism":null,"categories":[],"size":"small","currency":"money","hash":1889001907},]}';
+}
+}
+
+
+
 $jsonData = json_decode($json, true);
 $thisMapsRegion = $jsonData['region'];
 $chr = $jsonData['chr'];
@@ -389,9 +404,14 @@ $markupToOutput .= '</ol></div></div>';
 // output all IDs used so they can be loaded into the game's inventory data:
 $allItemIdsUsed = array_unique($allItemIdsUsed);
 
+if($debug) {
+echo htmlentities($markupToOutput);
+} else {
+
 // create JSON response:
 echo '{"markup": ["'.addcslashes($markupToOutput, '"\\/').'"],"allItemIds": ["'.implode("|",$allItemIdsUsed).'"]}';
 //echo htmlentities($markupToOutput);
+}
  
  
 ?>
