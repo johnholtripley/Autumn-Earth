@@ -188,9 +188,180 @@
         }
        ],
         "weather": [""],
-        "shops": [],
-        "npcs": [ {
-                "name": "labourer2 map10",
+        "shops": [
+            {
+                "name": "shop #1",
+                "uniqueItems": [],
+                "specialism": 2,
+                "categories": [1, 2],
+                "size": "small",
+                "currency": "money"
+            },
+            {
+                "name": "shop #2",
+                "uniqueItems":
+                {
+                    "14": [
+                    {
+                        "colour": 3
+                    },
+                    {
+                        "colour": 7
+                    }],
+                    "15": [
+                    {
+                        "colour": 1,
+                        "inscription": "stuffffff"
+                    }]
+                },
+                "specialism": null,
+                "categories": [3],
+                "size": "small",
+                "currency": "money"
+            },
+            {
+                "name": "shop #3",
+                "uniqueItems": "##procedural##",
+                "specialism": null,
+                "categories": [],
+                "size": "small",
+                "currency": "money"
+            },
+            {
+                "name": "architect deeds office",
+                "uniqueItems": [],
+                "specialism": null,
+                "categories": [6],
+                "size": "large",
+                "currency": "money"
+            },
+               {
+                "name": "Farming Supplies",
+                "uniqueItems": [],
+                "specialism": null,
+                "categories": [8],
+                "size": "medium",
+                "currency": "money"
+            },
+              {
+                "name": "User Generated Content",
+                "uniqueItems": "##usergenerated##",
+                "specialism": null,
+                "categories": [],
+                "size": "small",
+                "currency": "money"
+            }
+
+
+
+
+
+
+        ],
+        "npcs": [
+
+            {
+                "name": "butterfly",
+                "src": "orange-butterfly.png",
+                "width": 15,
+                "length": 15,
+                "spriteWidth": 15,
+                "spriteHeight": 48,
+                "centreX": 7,
+                "centreY": 72,
+                "tileX": 11,
+                "tileY": 17,
+                "movement": [
+                    ["proximity", 4], "remove", "?"
+                ],
+                "facing": "w",
+                "walkThroughDoors": false,
+                "speed": 2,
+                "speech": "",
+                "isCollidable": false,
+                "isMoving": true,
+                "animation":
+                {
+                    "walk":
+                    {
+                        "length": 10,
+                        "n": 0,
+                        "e": 1,
+                        "s": 2,
+                        "w": 3
+                    }
+                }
+            },
+            {
+                "name": "hen",
+                "src": "white-hen.png",
+                "width": 20,
+                "length": 20,
+                "spriteWidth": 34,
+                "spriteHeight": 37,
+                "centreX": 22,
+                "centreY": 32,
+                "tileX": 14,
+                "tileY": 3,
+                "movement": ["-"],
+                "facing": "s",
+                "walkThroughDoors": false,
+                "speed": 2,
+                "speech": [
+                    ["", "sound", "hen"]
+
+                ],
+
+                "isCollidable": true,
+                "isMoving": false,
+                "animation":
+                {
+                    "walk":
+                    {
+                        "length": 1,
+                        "n": 0,
+                        "e": 1,
+                        "s": 2,
+                        "w": 3
+                    }
+                }
+            },
+            {
+                "name": "hen",
+                "src": "white-hen.png",
+                "width": 20,
+                "length": 20,
+                "spriteWidth": 34,
+                "spriteHeight": 37,
+                "centreX": 22,
+                "centreY": 32,
+                "tileX": 15,
+                "tileY": 3,
+                "movement": ["-"],
+                "facing": "s",
+                "walkThroughDoors": false,
+                "speed": 2,
+                "speech": [
+                    ["", "sound", "hen"]
+
+                ],
+
+                "isCollidable": true,
+                "isMoving": false,
+                "animation":
+                {
+                    "walk":
+                    {
+                        "length": 1,
+                        "n": 0,
+                        "e": 1,
+                        "s": 2,
+                        "w": 3
+                    }
+                }
+            },
+            {
+                "name": "labourer",
                 "src": "labourer.png",
                 "width": 20,
                 "length": 20,
@@ -198,10 +369,10 @@
                 "spriteHeight": 85,
                 "centreX": 56,
                 "centreY": 73,
-                "tileX": 41,
-                "tileY": 42,
+                "tileX": 8,
+                "tileY": 14,
                 "movement": ["-"],
-                "facing": "s",
+                "facing": "e",
                 "walkThroughDoors": false,
                 "speed": 2,
                 "isCollidable": true,
@@ -232,7 +403,961 @@
                         "w": 1
                     }
                 }
-            }],
+            },
+            {
+                "name": "labourer2",
+                "src": "labourer2.png",
+                "width": 20,
+                "length": 20,
+                "spriteWidth": 75,
+                "spriteHeight": 85,
+                "centreX": 56,
+                "centreY": 73,
+                "tileX": 12,
+                "tileY": 14,
+                "movement": ["-"],
+                "facing": "n",
+                "walkThroughDoors": false,
+                "speed": 2,
+                "isCollidable": true,
+                "isMoving": false,
+
+                "speech": [
+                    ["Flip at least 2 cards|quest open but not complete|complete - good work", "quest", "3"],
+                    ["after quest", ""]
+                ],
+                "cardGameSpeech":
+                {
+                    "challenge": ["Do you play? Fancy a game then?", "play"],
+                    "win": ["Woo! I won!", ""],
+                    "lose": ["Ahh, you beat me...", ""],
+                    "draw": ["Well played", ""]
+                },
+                "cardSkill": 1,
+                "uniqueCards": [2, 2],
+                "baseCardPack": 0,
+                "animation":
+                {
+                    "walk":
+                    {
+                        "length": 1,
+                        "n": 2,
+                        "e": 3,
+                        "s": 0,
+                        "w": 1
+                    }
+                }
+            },
+            {
+                "name": "Bob the mordant merchant",
+                "src": "labourer3.png",
+                "width": 20,
+                "length": 20,
+                "spriteWidth": 75,
+                "spriteHeight": 85,
+                "centreX": 56,
+                "centreY": 73,
+                "tileX": 15,
+                "tileY": 14,
+                "movement": ["-"],
+                "facing": "w",
+                "walkThroughDoors": false,
+                "speed": 2,
+                "isCollidable": true,
+                "isMoving": false,
+
+                "speech": [
+                    ["give this mordant to the green bloke please|the near by green bloke - over there|thanks for taking that over", "quest-no-close", "1"],
+                    ["that was really kind", ""]
+                ],
+                "cardGameSpeech":
+                {
+                    "challenge": ["Do you play? Fancy a game then?", "play"],
+                    "win": ["Woo! I won!", ""],
+                    "lose": ["Ahh, you beat me...", ""],
+                    "draw": ["Well played", ""]
+                },
+                "cardSkill": 1,
+                "uniqueCards": [2, 2],
+                "baseCardPack": 0,
+                "animation":
+                {
+                    "walk":
+                    {
+                        "length": 1,
+                        "n": 2,
+                        "e": 3,
+                        "s": 0,
+                        "w": 1
+                    }
+                }
+            },
+            {
+                "name": "Lars the mordant fan",
+                "src": "labourer4.png",
+                "width": 20,
+                "length": 20,
+                "spriteWidth": 75,
+                "spriteHeight": 85,
+                "centreX": 56,
+                "centreY": 73,
+                "tileX": 15,
+                "tileY": 10,
+                "movement": ["-"],
+                "facing": "s",
+                "walkThroughDoors": false,
+                "speed": 2,
+                "isCollidable": true,
+                "isMoving": false,
+
+                "speech": [
+                    ["I could really do with some mordant... I wonder if pink guy has any?|-|thanks for giving me that mordant, here's some ##itemName##.", "quest-no-open", "1"],
+                    ["that was really kind of you", ""]
+                ],
+                "cardGameSpeech":
+                {
+                    "challenge": ["Do you play? Fancy a game then?", "play"],
+                    "win": ["Woo! I won!", ""],
+                    "lose": ["Ahh, you beat me...", ""],
+                    "draw": ["Well played", ""]
+                },
+                "cardSkill": 1,
+                "uniqueCards": [2, 2],
+                "baseCardPack": 0,
+                "animation":
+                {
+                    "walk":
+                    {
+                        "length": 1,
+                        "n": 2,
+                        "e": 3,
+                        "s": 0,
+                        "w": 1
+                    }
+                }
+            },
+            {
+                "name": "labourer5",
+                "src": "labourer5.png",
+                "width": 20,
+                "length": 20,
+                "spriteWidth": 75,
+                "spriteHeight": 85,
+                "centreX": 56,
+                "centreY": 73,
+                "tileX": 11,
+                "tileY": 9,
+                "movement": ["-"],
+                "facing": "s",
+                "walkThroughDoors": false,
+                "speed": 2,
+                "isCollidable": true,
+                "isMoving": false,
+                "speech": [
+                    ["Touch that standing stone|Just touch it|Did you feel the power?", "quest", "2"],
+                    ["I like standing stones...", ""]
+                ],
+                "cardGameSpeech":
+                {
+                    "challenge": ["Do you play? Fancy a game then?", "play"],
+                    "win": ["Woo! I won!", ""],
+                    "lose": ["Ahh, you beat me...", ""],
+                    "draw": ["Well played", ""]
+                },
+                "cardSkill": 1,
+                "uniqueCards": [2, 2],
+                "baseCardPack": 0,
+                "animation":
+                {
+                    "walk":
+                    {
+                        "length": 1,
+                        "n": 2,
+                        "e": 3,
+                        "s": 0,
+                        "w": 1
+                    }
+                }
+            },
+            {
+                "name": "labourer6",
+                "src": "labourer6.png",
+                "width": 20,
+                "length": 20,
+                "spriteWidth": 75,
+                "spriteHeight": 85,
+                "centreX": 56,
+                "centreY": 73,
+                "tileX": 7,
+                "tileY": 9,
+                "movement": ["-"],
+                "facing": "s",
+                "walkThroughDoors": false,
+                "speed": 2,
+                "isCollidable": true,
+                "isMoving": false,
+                "speech": [
+                    ["flip 2 cards and go near the stone|near the stone and 2 cards - done it yet?|great stuff on both tasks", "quest", "5"],
+                    ["Great work", ""]
+                ],
+                "cardGameSpeech":
+                {
+                    "challenge": ["Do you play? Fancy a game then?", "play"],
+                    "win": ["Woo! I won!", ""],
+                    "lose": ["Ahh, you beat me...", ""],
+                    "draw": ["Well played", ""]
+                },
+                "cardSkill": 1,
+                "uniqueCards": [2, 2],
+                "baseCardPack": 0,
+                "animation":
+                {
+                    "walk":
+                    {
+                        "length": 1,
+                        "n": 2,
+                        "e": 3,
+                        "s": 0,
+                        "w": 1
+                    }
+                }
+            },
+            {
+                "name": "labourer8",
+                "src": "labourer8.png",
+                "width": 20,
+                "length": 20,
+                "spriteWidth": 75,
+                "spriteHeight": 85,
+                "centreX": 56,
+                "centreY": 73,
+                "tileX": 30,
+                "tileY": 32,
+                "movement": ["-", ["follow", "hero"], "-"],
+                "facing": "n",
+                "walkThroughDoors": false,
+                "speed": 2,
+                "isCollidable": true,
+                "isMoving": false,
+                "speech": [
+                    ["Hi ##characterName##, can you take me to Brythillion?|Are we there yet?|Thanks, I'd never have made it on my own.", "quest-optional", "10", "2|28|5|10", "another time maybe?", "", "you will? fantastic!", "move"],
+                    ["so kind of you thanks", ""]
+                ],
+                "cardGameSpeech":
+                {
+                    "challenge": ["Do you play? Fancy a game then?", "play"],
+                    "win": ["Woo! I won!", ""],
+                    "lose": ["Ahh, you beat me...", ""],
+                    "draw": ["Well played", ""]
+                },
+                "cardSkill": 1,
+                "uniqueCards": [2, 2],
+                "baseCardPack": 0,
+                "animation":
+                {
+                    "walk":
+                    {
+                        "length": 1,
+                        "n": 2,
+                        "e": 3,
+                        "s": 0,
+                        "w": 1
+                    }
+                }
+            },
+            {
+                "name": "labourer9",
+                "src": "labourer4.png",
+                "width": 20,
+                "length": 20,
+                "spriteWidth": 75,
+                "spriteHeight": 85,
+                "centreX": 56,
+                "centreY": 73,
+                "tileX": 14,
+                "tileY": 25,
+                "movement": ["-", "s", "s", "s", "s"],
+                "facing": "n",
+                "walkThroughDoors": false,
+                "speed": 2,
+                "isCollidable": true,
+                "isMoving": false,
+                "speech": [
+                    ["Can I go now?", "move,once"],
+                    ["please?", ""]
+                ],
+                "cardGameSpeech":
+                {
+                    "challenge": ["Do you play? Fancy a game then?", "play"],
+                    "win": ["Woo! I won!", ""],
+                    "lose": ["Ahh, you beat me...", ""],
+                    "draw": ["Well played", ""]
+                },
+                "cardSkill": 1,
+                "uniqueCards": [2, 2],
+                "baseCardPack": 0,
+                "animation":
+                {
+                    "walk":
+                    {
+                        "length": 1,
+                        "n": 2,
+                        "e": 3,
+                        "s": 0,
+                        "w": 1
+                    }
+                }
+            },
+
+
+
+
+
+           {
+                "name": "labourer10",
+                "src": "labourer9.png",
+                "width": 20,
+                "length": 20,
+                "spriteWidth": 75,
+                "spriteHeight": 85,
+                "centreX": 56,
+                "centreY": 73,
+                "tileX": 4,
+                "tileY": 29,
+                "movement": ["-"],
+                "facing": "e",
+                "walkThroughDoors": false,
+                "speed": 2,
+                "isCollidable": true,
+                "isMoving": false,
+                "speech": [
+                       ["Craft 5 items|How's it going?|Great work", "quest", "11"],
+                    ["Nice crafting there", ""]
+                ],
+                "cardGameSpeech":
+                {
+                    "challenge": ["Do you play? Fancy a game then?", "play"],
+                    "win": ["Woo! I won!", ""],
+                    "lose": ["Ahh, you beat me...", ""],
+                    "draw": ["Well played", ""]
+                },
+                "cardSkill": 1,
+                "uniqueCards": [2, 2],
+                "baseCardPack": 0,
+                "animation":
+                {
+                    "walk":
+                    {
+                        "length": 1,
+                        "n": 2,
+                        "e": 3,
+                        "s": 0,
+                        "w": 1
+                    }
+                }
+            },
+
+
+ {
+                "name": "labourer11",
+                "src": "labourer10.png",
+                "width": 20,
+                "length": 20,
+                "spriteWidth": 75,
+                "spriteHeight": 85,
+                "centreX": 56,
+                "centreY": 73,
+                "tileX": 4,
+                "tileY": 27,
+                "movement": ["-"],
+                "facing": "e",
+                "walkThroughDoors": false,
+                "speed": 2,
+                "isCollidable": true,
+                "isMoving": false,
+                "speech": [
+                       ["Craft 3 linen. But make sure it's crimson. I love crimson.|How's it going?|Great work", "quest", "12"],
+                    ["Nice crafting there", ""]
+                ],
+                "cardGameSpeech":
+                {
+                    "challenge": ["Do you play? Fancy a game then?", "play"],
+                    "win": ["Woo! I won!", ""],
+                    "lose": ["Ahh, you beat me...", ""],
+                    "draw": ["Well played", ""]
+                },
+                "cardSkill": 1,
+                "uniqueCards": [2, 2],
+                "baseCardPack": 0,
+                "animation":
+                {
+                    "walk":
+                    {
+                        "length": 1,
+                        "n": 2,
+                        "e": 3,
+                        "s": 0,
+                        "w": 1
+                    }
+                }
+            },
+
+
+
+            {
+                "name": "shopkeeper1",
+                "src": "shopkeeper1.png",
+                "width": 20,
+                "length": 20,
+                "spriteWidth": 75,
+                "spriteHeight": 85,
+                "centreX": 56,
+                "centreY": 73,
+                "tileX": 15,
+                "tileY": 2,
+                "movement": ["-"],
+                "facing": "s",
+                "walkThroughDoors": false,
+                "speed": 2,
+                "isCollidable": true,
+                "isMoving": false,
+                "speech": [
+                    ["Hi there - welcome!/Feel free to have a good look around, ##characterName##/Welcome, welcome!", "shop", "shop #1"]
+                ],
+                "cardGameSpeech":
+                {
+                    "challenge": ["Do you play? Fancy a game then?", "play"],
+                    "win": ["Woo! I won!", ""],
+                    "lose": ["Ahh, you beat me...", ""],
+                    "draw": ["Well played", ""]
+                },
+                "cardSkill": 1,
+                "uniqueCards": [2, 2],
+                "baseCardPack": 0,
+                "animation":
+                {
+                    "walk":
+                    {
+                        "length": 1,
+                        "n": 2,
+                        "e": 3,
+                        "s": 0,
+                        "w": 1
+                    }
+                }
+            },
+            {
+                "name": "shopkeeper2",
+                "src": "shopkeeper1.png",
+                "width": 20,
+                "length": 20,
+                "spriteWidth": 75,
+                "spriteHeight": 85,
+                "centreX": 56,
+                "centreY": 73,
+                "tileX": 9,
+                "tileY": 21,
+                "movement": ["-"],
+                "facing": "s",
+                "walkThroughDoors": false,
+                "speed": 2,
+                "isCollidable": true,
+                "isMoving": false,
+                "speech": [
+                    ["Hi there - welcome!/Feel free to have a good look around, ##characterName##/Welcome, welcome!", "shop", "shop #2"]
+                ],
+                "cardGameSpeech":
+                {
+                    "challenge": ["Do you play? Fancy a game then?", "play"],
+                    "win": ["Woo! I won!", ""],
+                    "lose": ["Ahh, you beat me...", ""],
+                    "draw": ["Well played", ""]
+                },
+                "cardSkill": 1,
+                "uniqueCards": [2, 2],
+                "baseCardPack": 0,
+                "animation":
+                {
+                    "walk":
+                    {
+                        "length": 1,
+                        "n": 2,
+                        "e": 3,
+                        "s": 0,
+                        "w": 1
+                    }
+                }
+            },
+            {
+                "name": "shopkeeper3",
+                "src": "shopkeeper1.png",
+                "width": 20,
+                "length": 20,
+                "spriteWidth": 75,
+                "spriteHeight": 85,
+                "centreX": 56,
+                "centreY": 73,
+                "tileX": 3,
+                "tileY": 24,
+                "movement": ["-"],
+                "facing": "e",
+                "walkThroughDoors": false,
+                "speed": 2,
+                "isCollidable": true,
+                "isMoving": false,
+                "speech": [
+                    ["Hi there - welcome!/Feel free to have a good look around, ##characterName##/Welcome, welcome!", "shop", "shop #3"]
+                ],
+                "cardGameSpeech":
+                {
+                    "challenge": ["Do you play? Fancy a game then?", "play"],
+                    "win": ["Woo! I won!", ""],
+                    "lose": ["Ahh, you beat me...", ""],
+                    "draw": ["Well played", ""]
+                },
+                "cardSkill": 1,
+                "uniqueCards": [2, 2],
+                "baseCardPack": 0,
+                "animation":
+                {
+                    "walk":
+                    {
+                        "length": 1,
+                        "n": 2,
+                        "e": 3,
+                        "s": 0,
+                        "w": 1
+                    }
+                }
+            },
+            
+
+
+   {
+                "name": "Hand crafted items shopkeeper",
+                "src": "shopkeeper1.png",
+                "width": 20,
+                "length": 20,
+                "spriteWidth": 75,
+                "spriteHeight": 85,
+                "centreX": 56,
+                "centreY": 73,
+                "tileX": 7,
+                "tileY": 27,
+                "movement": ["-"],
+                "facing": "s",
+                "walkThroughDoors": false,
+                "speed": 2,
+                "isCollidable": true,
+                "isMoving": false,
+                "speech": [
+                    ["Hi ##characterName##, let's have a look at your custom items, eh?", "shop", "User Generated Content"]
+                ],
+                "shopEmptySpeech": "Oh, it looks like you haven't created any custom items yet&hellip;",
+                "cardGameSpeech":
+                {
+                    "challenge": ["Do you play? Fancy a game then?", "play"],
+                    "win": ["Woo! I won!", ""],
+                    "lose": ["Ahh, you beat me...", ""],
+                    "draw": ["Well played", ""]
+                },
+                "cardSkill": 8,
+                "uniqueCards": [2, 2],
+                "cardBackId": 4,
+                "baseCardPack": 0,
+                "animation":
+                {
+                    "walk":
+                    {
+                        "length": 1,
+                        "n": 2,
+                        "e": 3,
+                        "s": 0,
+                        "w": 1
+                    }
+                }
+            },
+            {
+                "name": "Architect",
+                "src": "architect.png",
+                "width": 20,
+                "length": 20,
+                "spriteWidth": 75,
+                "spriteHeight": 85,
+                "centreX": 56,
+                "centreY": 73,
+                "tileX": 24,
+                "tileY": 21,
+                "movement": ["-"],
+                "facing": "e",
+                "walkThroughDoors": false,
+                "speed": 2,
+                "isCollidable": true,
+                "isMoving": false,
+                "speech": [
+                    ["Hi there ##characterName##, let's get you a house", "shop", "architect deeds office"]
+                ],
+                "cardGameSpeech":
+                {
+                    "challenge": ["Do you play? Fancy a game then?", "play"],
+                    "win": ["Woo! I won!", ""],
+                    "lose": ["Ahh, you beat me...", ""],
+                    "draw": ["Well played", ""]
+                },
+                "cardSkill": 1,
+                "uniqueCards": [2, 2],
+                "baseCardPack": 0,
+                "animation":
+                {
+                    "walk":
+                    {
+                        "length": 1,
+                        "n": 2,
+                        "e": 3,
+                        "s": 0,
+                        "w": 1
+                    }
+                }
+            },
+             {
+                "name": "Retinue Co-ordinator",
+                "src": "retinue.png",
+                "width": 20,
+                "length": 20,
+                "spriteWidth": 62,
+                "spriteHeight": 79,
+                "centreX": 40,
+                "centreY": 69,
+                "tileX": 26,
+                "tileY": 21,
+                "movement": ["-", ["follow", "hero"], "-"],
+                "facing": "s",
+                "walkThroughDoors": false,
+                "speed": 2,
+                "isCollidable": true,
+                "isMoving": false,
+                "speech": [
+                    ["Welcome ##characterClass##, I can help you co-ordinate your retinue&hellip;", "retinue"]
+                ],
+                "cardGameSpeech":
+                {
+                    "challenge": ["Do you play? Fancy a game then?", "play"],
+                    "win": ["Woo! I won!", ""],
+                    "lose": ["Ahh, you beat me...", ""],
+                    "draw": ["Well played", ""]
+                },
+                "cardSkill": 1,
+                "uniqueCards": [2, 2],
+                "baseCardPack": 0,
+                "animation":
+                {
+                    "walk":
+                    {
+                        "length": 1,
+                        "n": 0,
+                        "e": 1,
+                        "s": 2,
+                        "w": 3
+                    }
+                }
+            },
+
+  {
+                "name": "Farm shop keeper",
+                "src": "labourer11.png",
+                "width": 20,
+                "length": 20,
+                "spriteWidth": 75,
+                "spriteHeight": 85,
+                "centreX": 56,
+                "centreY": 73,
+                "tileX": 5,
+                "tileY": 30,
+                "movement": ["-"],
+                "facing": "e",
+                "walkThroughDoors": false,
+                "speed": 2,
+                "isCollidable": true,
+                "isMoving": false,
+                "speech": [
+                    ["Hi there - welcome!/Feel free to have a good look around, ##characterName##/Welcome, welcome!", "shop", "Farming Supplies"]
+                ],
+                "cardGameSpeech":
+                {
+                    "challenge": ["Do you play? Fancy a game then?", "play"],
+                    "win": ["Woo! I won!", ""],
+                    "lose": ["Ahh, you beat me...", ""],
+                    "draw": ["Well played", ""]
+                },
+                "cardSkill": 1,
+                "uniqueCards": [2, 2],
+                "baseCardPack": 0,
+                "animation":
+                {
+                    "walk":
+                    {
+                        "length": 1,
+                        "n": 2,
+                        "e": 3,
+                        "s": 0,
+                        "w": 1
+                    }
+                }
+            },
+
+
+            {
+                "name": "Warden",
+                "src": "warden.png",
+                "width": 20,
+                "length": 20,
+                "spriteWidth": 76,
+                "spriteHeight": 87,
+                "centreX": 49,
+                "centreY": 76,
+                "tileX": 13,
+                "tileY": 27,
+                "movement": [
+                    ["find", "shop", "waitingAnimationName", 0],
+                    ["remove"],
+                    ["find", "shop", "waitingAnimationName", 360],
+                    ["talkToNeighbour"]
+                ],
+                "facing": "s",
+                "walkThroughDoors": false,
+                "speed": 2,
+                "isCollidable": true,
+                "isMoving": false,
+                "speech": [
+                    ["Need to keep an eye out...", ""]
+                ],
+                "cardGameSpeech":
+                {
+                    "challenge": ["Do you play? Fancy a game then?", "play"],
+                    "win": ["Woo! I won!", ""],
+                    "lose": ["Ahh, you beat me...", ""],
+                    "draw": ["Well played", ""]
+                },
+                "cardSkill": 1,
+                "uniqueCards": [2, 2],
+                "baseCardPack": 0,
+                "animation":
+                {
+                    "walk":
+                    {
+                        "length": 30,
+                        "n": 0,
+                        "e": 1,
+                        "s": 2,
+                        "w": 3
+                    },
+                    "wait":
+                    {
+                        "length": 1,
+                        "n": 0,
+                        "e": 1,
+                        "s": 2,
+                        "w": 3
+                    }
+                }
+            },
+            {
+                "name": "Warden2",
+                "src": "warden.png",
+                "width": 20,
+                "length": 20,
+                "spriteWidth": 76,
+                "spriteHeight": 87,
+                "centreX": 49,
+                "centreY": 76,
+                "tileX": 14,
+                "tileY": 27,
+                "movement": [
+                    ["find", "shop", "waitingAnimationName", 0],
+                    ["remove"],
+                    ["find", "shop", "waitingAnimationName", 360],
+                    ["talkToNeighbour"]
+                ],
+                "facing": "s",
+                "walkThroughDoors": false,
+                "speed": 2,
+                "isCollidable": true,
+                "isMoving": false,
+                "speech": [
+                    ["Need to keep an eye out...", ""]
+                ],
+                "cardGameSpeech":
+                {
+                    "challenge": ["Do you play? Fancy a game then?", "play"],
+                    "win": ["Woo! I won!", ""],
+                    "lose": ["Ahh, you beat me...", ""],
+                    "draw": ["Well played", ""]
+                },
+                "cardSkill": 1,
+                "uniqueCards": [2, 2],
+                "baseCardPack": 0,
+                "animation":
+                {
+                    "walk":
+                    {
+                        "length": 30,
+                        "n": 0,
+                        "e": 1,
+                        "s": 2,
+                        "w": 3
+                    },
+                    "wait":
+                    {
+                        "length": 1,
+                        "n": 0,
+                        "e": 1,
+                        "s": 2,
+                        "w": 3
+                    }
+                }
+            },
+                       {
+                "name": "Warden3",
+                "src": "warden.png",
+                "width": 20,
+                "length": 20,
+                "spriteWidth": 76,
+                "spriteHeight": 87,
+                "centreX": 49,
+                "centreY": 76,
+                "tileX": 15,
+                "tileY": 27,
+                "movement": [
+                    ["find", "shop", "waitingAnimationName", 0],
+                    ["remove"],
+                    ["find", "shop", "waitingAnimationName", 360],
+                    ["talkToNeighbour"]
+                ],
+                "facing": "s",
+                "walkThroughDoors": false,
+                "speed": 2,
+                "isCollidable": true,
+                "isMoving": false,
+                "speech": [
+                    ["Need to keep an eye out...", ""]
+                ],
+                "cardGameSpeech":
+                {
+                    "challenge": ["Do you play? Fancy a game then?", "play"],
+                    "win": ["Woo! I won!", ""],
+                    "lose": ["Ahh, you beat me...", ""],
+                    "draw": ["Well played", ""]
+                },
+                "cardSkill": 1,
+                "uniqueCards": [2, 2],
+                "baseCardPack": 0,
+                "animation":
+                {
+                    "walk":
+                    {
+                        "length": 30,
+                        "n": 0,
+                        "e": 1,
+                        "s": 2,
+                        "w": 3
+                    },
+                    "wait":
+                    {
+                        "length": 1,
+                        "n": 0,
+                        "e": 1,
+                        "s": 2,
+                        "w": 3
+                    }
+                }
+            },
+            
+            {
+                "name": "brown horse",
+                "src": "brown-horse.png",
+                "width": 36,
+                "length": 94,
+                "spriteWidth": 127,
+                "spriteHeight": 120,
+                "centreX": 75,
+                "centreY": 96,
+                "tileX": 20,
+                "tileY": 28,
+                "movement": ["s", "s", "e", "e", "n", "n", "w", "w"],
+                "facing": "s",
+                "walkThroughDoors": false,
+                "speed": 1,
+                "speech": [
+                    ["", "sound", "horse"]
+
+                ],
+                "isCollidable": true,
+                "isMoving": true,
+                "animation":
+                {
+                    "walk":
+                    {
+                        "length": 1,
+                        "n": 0,
+                        "e": 1,
+                        "s": 2,
+                        "w": 3
+                    },
+                    "wait":
+                    {
+                        "length": 1,
+                        "n": 0,
+                        "e": 1,
+                        "s": 2,
+                        "w": 3
+                    }
+                }
+            },
+            {
+                "name": "Wizard searcher",
+                "src": "labourer7.png",
+                "width": 20,
+                "length": 20,
+                "spriteWidth": 75,
+                "spriteHeight": 85,
+                "centreX": 56,
+                "centreY": 73,
+                "tileX": 35,
+                "tileY": 13,
+                "movement": ["-"],
+                "facing": "s",
+                "walkThroughDoors": false,
+                "speed": 2,
+                "isCollidable": true,
+                "isMoving": false,
+                "speech": [
+                    ["Have you seen the poster?|Keep looking|You found him - good job", "quest-no-open", "9"],
+                    ["good job finding him", ""]
+                ],
+                "cardGameSpeech":
+                {
+                    "challenge": ["Do you play? Fancy a game then?", "play"],
+                    "win": ["Woo! I won!", ""],
+                    "lose": ["Ahh, you beat me...", ""],
+                    "draw": ["Well played", ""]
+                },
+                "cardSkill": 1,
+                "uniqueCards": [2, 2],
+                "baseCardPack": 0,
+                "animation":
+                {
+                    "walk":
+                    {
+                        "length": 1,
+                        "n": 2,
+                        "e": 3,
+                        "s": 0,
+                        "w": 1
+                    }
+                }
+            }
+
+        ],
         "doors": {},
         "items": [
    {
@@ -247,6 +1372,21 @@
                 "tileX": 45,
                 "tileY": 49
 
+            },  {
+                "type": 48,
+                "tileX": 43,
+                "tileY": 43,
+                "contains": [
+                {
+                    "type": 6
+                },
+                {
+                    "type": 2
+                },
+                {
+                    "type": "$",
+                    "quantity": 1000
+                }]
             }
 
 ],

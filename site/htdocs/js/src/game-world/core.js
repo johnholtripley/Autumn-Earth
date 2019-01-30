@@ -593,17 +593,21 @@ function findInventoryItemData() {
     for (var i = 0; i < hero.bags.length; i++) {
         itemIdsToGet.push(hero.bags[i].type);
     }
+
+
+
+    for (var m = 0; m < visibleMaps.length; m++) {
     // find items placed on this map:
     var itemChoices;
-    for (var i = 0; i < thisMapData[currentMap].items.length; i++) {
-        itemIdsToGet.push(thisMapData[currentMap].items[i].type);
+    for (var i = 0; i < thisMapData[(visibleMaps[m])].items.length; i++) {
+        itemIdsToGet.push(thisMapData[(visibleMaps[m])].items[i].type);
         // check if any are containers or chests:
-        if (typeof thisMapData[currentMap].items[i].contains !== "undefined") {
+        if (typeof thisMapData[(visibleMaps[m])].items[i].contains !== "undefined") {
 
-            if (Array.isArray(thisMapData[currentMap].items[i].contains)) {
-                for (var j = 0; j < thisMapData[currentMap].items[i].contains.length; j++) {
-                    if (typeof thisMapData[currentMap].items[i].contains[j].type !== "undefined") {
-                        itemChoices = thisMapData[currentMap].items[i].contains[j].type.toString().split("/");
+            if (Array.isArray(thisMapData[(visibleMaps[m])].items[i].contains)) {
+                for (var j = 0; j < thisMapData[(visibleMaps[m])].items[i].contains.length; j++) {
+                    if (typeof thisMapData[(visibleMaps[m])].items[i].contains[j].type !== "undefined") {
+                        itemChoices = thisMapData[(visibleMaps[m])].items[i].contains[j].type.toString().split("/");
 
                         for (var k = 0; k < itemChoices.length; k++) {
                             if (itemChoices[k] != "$") {
@@ -616,8 +620,8 @@ function findInventoryItemData() {
             } else {
                 // eg crop object, so get pollen, seed and fruit ids if specified:
 
-                for (var j in thisMapData[currentMap].items[i].contains) {
-                    itemIdsToGet.push(thisMapData[currentMap].items[i].contains[j].type);
+                for (var j in thisMapData[(visibleMaps[m])].items[i].contains) {
+                    itemIdsToGet.push(thisMapData[(visibleMaps[m])].items[i].contains[j].type);
                 }
             }
         }
@@ -625,12 +629,12 @@ function findInventoryItemData() {
 
     // find items in hidden resources (and their contents):
     var containsSplit;
-    for (var i in thisMapData[currentMap].hiddenResources) {
-        for (var j in thisMapData[currentMap].hiddenResources[i]) {
-            itemIdsToGet.push(thisMapData[currentMap].hiddenResources[i][j].type);
-            if (thisMapData[currentMap].hiddenResources[i][j].contains) {
-                for (var k in thisMapData[currentMap].hiddenResources[i][j].contains) {
-                    containsSplit = thisMapData[currentMap].hiddenResources[i][j].contains[k].type.split("/");
+    for (var i in thisMapData[(visibleMaps[m])].hiddenResources) {
+        for (var j in thisMapData[(visibleMaps[m])].hiddenResources[i]) {
+            itemIdsToGet.push(thisMapData[(visibleMaps[m])].hiddenResources[i][j].type);
+            if (thisMapData[(visibleMaps[m])].hiddenResources[i][j].contains) {
+                for (var k in thisMapData[(visibleMaps[m])].hiddenResources[i][j].contains) {
+                    containsSplit = thisMapData[(visibleMaps[m])].hiddenResources[i][j].contains[k].type.split("/");
                     for (var l = 0; l < containsSplit.length; l++) {
                         itemIdsToGet.push(containsSplit[l]);
                     }
@@ -640,6 +644,7 @@ function findInventoryItemData() {
             }
         }
     }
+}
 
     // find items in recipes:
     for (var i in hero.crafting) {
@@ -2271,8 +2276,9 @@ function jumpToLocation(mapId, tileX, tileY) {
 
 function moveNPCs() {
     var thisNPC, newTile, thisNextMovement, oldNPCx, oldNPCy, thisOtherNPC, thisItem, thisNextMovement, thisNextMovementCode, thisInnerDoor;
-    for (var i = 0; i < thisMapData[currentMap].npcs.length; i++) {
-        thisNPC = thisMapData[currentMap].npcs[i];
+for (var m = 0; m < visibleMaps.length; m++) {
+    for (var i = 0; i < thisMapData[(visibleMaps[m])].npcs.length; i++) {
+        thisNPC = thisMapData[(visibleMaps[m])].npcs[i];
 
         thisNPC.hasJustGotNewPath = false;
 
@@ -2347,9 +2353,12 @@ function moveNPCs() {
 
                 // check for collisions against other NPCs:
                 var whichNPCShouldMoveOutOfTheWay;
-                for (var j = 0; j < thisMapData[currentMap].npcs.length; j++) {
-                    if (i != j) {
-                        thisOtherNPC = thisMapData[currentMap].npcs[j];
+                for (var n = 0; n < visibleMaps.length; n++) {
+                for (var j = 0; j < thisMapData[(visibleMaps[n])].npcs.length; j++) {
+                    thisOtherNPC = thisMapData[(visibleMaps[n])].npcs[j];
+                    // are names unique? ########
+                    if (thisNPC.name != thisOtherNPC.name) {
+                        
                         if (thisOtherNPC.isCollidable) {
                             if (isAnObjectCollision(thisNPC.x, thisNPC.y, thisNPC.width, thisNPC.length, thisOtherNPC.x, thisOtherNPC.y, thisOtherNPC.width, thisOtherNPC.length)) {
                                 thisNPC.x = oldNPCx;
@@ -2379,6 +2388,7 @@ function moveNPCs() {
                         }
                     }
                 }
+            }
 
                 // check for collisions against items:
                 for (var j = 0; j < thisMapData[currentMap].items.length; j++) {
@@ -2822,6 +2832,7 @@ function moveNPCs() {
             }
         }
     }
+}
 }
 
 

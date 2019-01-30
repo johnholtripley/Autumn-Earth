@@ -340,7 +340,7 @@
             {
 
                 "type": 56,
-                "tileX": 30,
+                "tileX": 20,
                 "tileY": 20,
                 "facing": "s",
                 "animation":
@@ -359,7 +359,7 @@
              {
 
                 "type": 59,
-                "tileX": 27,
+                "tileX": 17,
                 "tileY": 20
 
             },
