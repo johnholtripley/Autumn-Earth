@@ -166,6 +166,7 @@ function giveQuestRewards(whichNPC, whichQuestId) {
     // give any reward to the player:
     if (questData[whichQuestId].itemsReceivedOnCompletion) {
         var questRewards = questData[whichQuestId].itemsReceivedOnCompletion;
+     
         awardQuestRewards(whichNPC, questRewards, false);
     }
     /*else {

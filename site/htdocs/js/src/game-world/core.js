@@ -683,6 +683,9 @@ function findInventoryItemData() {
         itemIdsToGet.push(thisMapShopItemIds);
     }
 
+
+    // check quest rewards ############
+
     // remove duplicates:
     itemIdsToGet = uniqueValues(itemIdsToGet);
     loadInventoryItemData(itemIdsToGet.join("|"));
