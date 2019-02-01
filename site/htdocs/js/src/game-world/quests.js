@@ -106,10 +106,13 @@ function openQuest(questId) {
 function checkForEscortQuestEnd(whichNPC) {
     var destination = whichNPC.speech[whichNPC.speechIndex][3].split("|");
     // global coordinates are passed in here:
+
         var destinationTileCentreX = getTileCentreCoordX(destination[0]);
         var destinationTileCentreY = getTileCentreCoordY(destination[1]);
+       
         if (isInRange(whichNPC.x, whichNPC.y, destinationTileCentreX, destinationTileCentreY, destination[2] * tileW)) {
             // quest complete
+        
             whichNPC.drawnFacing = turntoFace(whichNPC, hero);
             // remove the reference to it in the hero object:
             for (var i = 0; i < hero.npcsFollowing.length; i++) {
@@ -181,13 +184,17 @@ function awardQuestRewards(whichNPC, questRewards, isACollectionQuest) {
         var questRewardToUse = questRewards[i];
 
 
+var thisRewardObject = questRewardToUse;
+if(questRewardToUse.type != "follower") {
 
-
-        var thisRewardObject = prepareInventoryObject(questRewardToUse);
+ thisRewardObject = prepareInventoryObject(questRewardToUse);  
+ var rewardTypePossibilities = questRewardToUse.type.toString().split("/");
+thisRewardObject.type = parseInt(getRandomElementFromArray(rewardTypePossibilities));
+    }
  // check for variation:
 
-  var rewardTypePossibilities = questRewardToUse.type.toString().split("/");
-           thisRewardObject.type = parseInt(getRandomElementFromArray(rewardTypePossibilities));
+
+
 
 
 
@@ -202,8 +209,10 @@ function awardQuestRewards(whichNPC, questRewards, isACollectionQuest) {
         allRewardItems.push(thisRewardObject);
     }
 
-
-
+/*
+[{"type":"19/5","quantity":6},{"type":"follower"},{"type":"34","contains":5}]
+*/
+console.log(allRewardItems);
 
     inventoryCheck = canAddItemToInventory(allRewardItems);
 

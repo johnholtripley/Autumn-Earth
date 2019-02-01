@@ -171,6 +171,7 @@ $isAGameCard = false;
 // check to see if it's User Generated:
 if(isset($thisAttachment->contains)) {
 // or a card:
+	
 if(intval($firstElement->type) == 34) {
 if(is_numeric($firstElement->contains)) {
 $isAGameCard = true;
