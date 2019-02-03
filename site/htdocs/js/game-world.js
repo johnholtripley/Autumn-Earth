@@ -8955,12 +8955,57 @@ function update() {
 }
 
 
+function updateVisibleMaps() {
+    // john ###
+//    console.log(visibleMaps.join(","));
+// left screen edge would be hero.isox - (canvasWidth/2) but use full screen width to allow for padding and loading in before visible
+var leftEdgeIso = hero.isox - canvasWidth;
+var topEdgeIso = hero.isoy - canvasHeight;
+var rightEdgeIso = hero.isox + canvasWidth;
+var bottomEdgeIso = hero.isoy + canvasHeight;
+var leftEdge2D = find2DCoordsX(leftEdgeIso, topEdgeIso);
+var topEdge2D = find2DCoordsY(leftEdgeIso, topEdgeIso);
+
+var rightEdge2D = find2DCoordsX(rightEdgeIso, bottomEdgeIso);
+var bottomEdge2D = find2DCoordsY(rightEdgeIso, bottomEdgeIso);
+
+var mapDimension2D = worldMapTileLength * tileW;
+
+var leftEdgeMapPos = Math.floor(leftEdge2D/mapDimension2D);
+var topEdgeMapPos = Math.floor(topEdge2D/mapDimension2D);
+
+var rightEdgeMapPos = Math.floor(rightEdge2D/mapDimension2D);
+var bottomEdgeMapPos = Math.floor(bottomEdge2D/mapDimension2D);
+
+//console.log(leftEdgeMapPos, topEdgeMapPos);
+
+var newVisibleMaps = [];
+
+for(var i=leftEdgeMapPos;i<=rightEdgeMapPos;i++) {
+for(var j=topEdgeMapPos;j<=bottomEdgeMapPos;j++) {
+if(typeof worldMap[j][i] !== "undefined") {
+newVisibleMaps.push(worldMap[j][i]);
+} else {
+    // wrap around ####
+}
+}
+}
+console.log(newVisibleMaps.join(","));
+    // check for differences in visibleMaps array and load any new
+    // and unload any not required now
+
+}
+
 function heroIsInNewTile() {
     hero.z = getElevation(hero.tileX, hero.tileY);
  
     updateCartographicMiniMap();
  
     currentMap = findMapNumberFromGlobalCoordinates(hero.tileX, hero.tileY);
+
+    updateVisibleMaps();
+
+
     var thisHotspot, thisTileCentreX, thisTileCentreY;
     // check for hotspots:
     for (var i = 0; i < thisMapData[currentMap].hotspots.length; i++) {
@@ -9857,6 +9902,10 @@ for (var m = 0; m < visibleMaps.length; m++) {
                 thisNPC.tileY = getTileY(thisNPC.y);
                 if (typeof thisNPC.following !== "undefined") {
                     if (!thisNPC.forceNewMovementCheck) {
+
+
+
+
                         checkForEscortQuestEnd(thisNPC);
 
                     }
