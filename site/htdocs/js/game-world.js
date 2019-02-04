@@ -504,6 +504,7 @@ const worldMapWidthPx = 2400;
 const worldMapHeightPx = 1200;
 const worldMapTileLength = 50;
 
+var visibleMapsLoading = [];
 function recipeSearchAndFilter() {
     // Convert to lowercase for search. Search name and if not, then description too
 
@@ -7651,6 +7652,48 @@ function processInitialMap() {
     findProfessionsAndRecipes();
 }
 
+function empty() {
+    
+}
+
+function loadNewVisibleMapAssets(whichMap) {
+  if (whichMap < 0) {
+        whichMap = 'dungeon/' + randomDungeonName;
+    }
+      imagesToLoad.push({
+            name: "backgroundImg" + whichMap,
+            src: '/images/game-world/backgrounds/' + whichMap + '.png'
+        });
+      // doesn't need full loader - don't need progress or callback
+        Loader.preload(imagesToLoad, empty, loadingProgress);
+}
+
+function loadNewVisibleJSON(mapFilePath, whichNewMap) {
+        getJSON(mapFilePath, function(data) {
+         
+         visibleMaps.push(whichNewMap);
+         thisMapData[whichNewMap] = data.map;
+         loadNewVisibleMapAssets(whichNewMap);
+        },
+        function(status) {
+
+            loadNewVisibleJSON(mapFilePath, whichNewMap);
+        });
+}
+
+function loadNewVisibleMap(whichNewMap) {
+    if (visibleMapsLoading.indexOf(whichNewMap) === -1) {
+        visibleMapsLoading.push(whichNewMap);
+        var mapFilePath = '/game-world/getMap.php?chr=' + characterId + '&map=' + whichNewMap;
+        if (whichNewMap < 0) {
+            mapFilePath = '/game-world/generateCircularDungeonMap.php?dungeonName=' + randomDungeonName + '&requestedMap=' + whichNewMap;
+        }
+        loadNewVisibleJSON(mapFilePath, whichNewMap)
+    }
+}
+
+
+
 function loadMapJSON(mapFilePath) {
     getJSON(mapFilePath, function(data) {
             thisMapData[data.map.mapId] = data.map;
@@ -8992,7 +9035,18 @@ newVisibleMaps.push(worldMap[j][i]);
 }
 console.log(newVisibleMaps.join(","));
     // check for differences in visibleMaps array and load any new
+
+// https://stackoverflow.com/questions/1187518/how-to-get-the-difference-between-two-arrays-in-javascript
+var newMapsToLoad = newVisibleMaps.filter(function(i) {return visibleMaps.indexOf(i) < 0;});
+
+for(var i=0;i<newMapsToLoad.length;i++) {
+  
+loadNewVisibleMap(newMapsToLoad[i]);
+    
+}
+
     // and unload any not required now
+    // ####
 
 }
 
