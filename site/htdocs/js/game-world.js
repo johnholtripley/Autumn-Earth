@@ -7652,36 +7652,36 @@ function processInitialMap() {
     findProfessionsAndRecipes();
 }
 
-function empty() {
-    
-}
 
 function loadNewVisibleMapAssets(whichMap) {
-  if (whichMap < 0) {
+    if (whichMap < 0) {
         whichMap = 'dungeon/' + randomDungeonName;
     }
-      imagesToLoad.push({
-            name: "backgroundImg" + whichMap,
-            src: '/images/game-world/backgrounds/' + whichMap + '.png'
-        });
-      // doesn't need full loader - don't need progress or callback
-        Loader.preload(imagesToLoad, empty, loadingProgress);
+    // doesn't need full loader - don't need progress etc.:
+    var newBackground = new Image();
+    newBackground.onload = function() {
+        backgroundImgs[whichMap] = newBackground;
+    };
+    newBackground.onerror = function() {};
+    newBackground.src = '/images/game-world/backgrounds/' + whichMap + '.png';
+    // load any new NPCs ###
+    // load any new terrain ###
+    // load any new items ###
 }
 
 function loadNewVisibleJSON(mapFilePath, whichNewMap) {
-        getJSON(mapFilePath, function(data) {
-         
-         visibleMaps.push(whichNewMap);
-         thisMapData[whichNewMap] = data.map;
-         loadNewVisibleMapAssets(whichNewMap);
+    getJSON(mapFilePath, function(data) {
+            visibleMaps.push(whichNewMap);
+            thisMapData[whichNewMap] = data.map;
+            loadNewVisibleMapAssets(whichNewMap);
         },
         function(status) {
-
             loadNewVisibleJSON(mapFilePath, whichNewMap);
         });
 }
 
 function loadNewVisibleMap(whichNewMap) {
+    console.log("loading in "+whichNewMap);
     if (visibleMapsLoading.indexOf(whichNewMap) === -1) {
         visibleMapsLoading.push(whichNewMap);
         var mapFilePath = '/game-world/getMap.php?chr=' + characterId + '&map=' + whichNewMap;
@@ -8999,28 +8999,24 @@ function update() {
 
 
 function updateVisibleMaps() {
-    // john ###
-//    console.log(visibleMaps.join(","));
+
 // left screen edge would be hero.isox - (canvasWidth/2) but use full screen width to allow for padding and loading in before visible
 var leftEdgeIso = hero.isox - canvasWidth;
 var topEdgeIso = hero.isoy - canvasHeight;
 var rightEdgeIso = hero.isox + canvasWidth;
 var bottomEdgeIso = hero.isoy + canvasHeight;
-var leftEdge2D = find2DCoordsX(leftEdgeIso, topEdgeIso);
-var topEdge2D = find2DCoordsY(leftEdgeIso, topEdgeIso);
 
-var rightEdge2D = find2DCoordsX(rightEdgeIso, bottomEdgeIso);
-var bottomEdge2D = find2DCoordsY(rightEdgeIso, bottomEdgeIso);
+var leftEdge2D = find2DCoordsX(leftEdgeIso, hero.isoy);
+var topEdge2D = find2DCoordsY(hero.isox, topEdgeIso);
+var rightEdge2D = find2DCoordsX(rightEdgeIso, hero.isoy);
+var bottomEdge2D = find2DCoordsY(hero.isox, bottomEdgeIso);
 
 var mapDimension2D = worldMapTileLength * tileW;
 
 var leftEdgeMapPos = Math.floor(leftEdge2D/mapDimension2D);
 var topEdgeMapPos = Math.floor(topEdge2D/mapDimension2D);
-
 var rightEdgeMapPos = Math.floor(rightEdge2D/mapDimension2D);
 var bottomEdgeMapPos = Math.floor(bottomEdge2D/mapDimension2D);
-
-//console.log(leftEdgeMapPos, topEdgeMapPos);
 
 var newVisibleMaps = [];
 
@@ -9033,12 +9029,12 @@ newVisibleMaps.push(worldMap[j][i]);
 }
 }
 }
-console.log(newVisibleMaps.join(","));
+
     // check for differences in visibleMaps array and load any new
 
 // https://stackoverflow.com/questions/1187518/how-to-get-the-difference-between-two-arrays-in-javascript
 var newMapsToLoad = newVisibleMaps.filter(function(i) {return visibleMaps.indexOf(i) < 0;});
-
+//console.log("new maps:",newMapsToLoad);
 for(var i=0;i<newMapsToLoad.length;i++) {
   
 loadNewVisibleMap(newMapsToLoad[i]);
@@ -10676,6 +10672,9 @@ for (var m = 0; m < visibleMaps.length; m++) {
                     }
                 }
                 thisItemIdentifier = "item" + thisMapData[whichVisibleMap].items[i].type + thisFileColourSuffix;
+                if(whichVisibleMap==12) {
+    console.log(thisItem, itemImages[thisItemIdentifier]);
+}
                 // check for User Generated Content:
                 if (typeof thisMapData[whichVisibleMap].items[i].contains !== "undefined") {
                     if (typeof thisMapData[whichVisibleMap].items[i].contains['ugc-id'] !== "undefined") {
