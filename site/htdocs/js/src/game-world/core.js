@@ -274,14 +274,56 @@ function loadNewVisibleMapAssets(whichMap) {
     // load any new items ###
 }
 
+
+function processNewVisibleMapData(whichNewMap) {
+ for (var i = 0; i < thisMapData[whichNewMap].items.length; i++) {
+                initialiseItem(thisMapData[whichNewMap].items[i]);
+            }
+            loadNewVisibleMapAssets(whichNewMap);
+}
+
+function loadNewVisibleInventoryItemData(itemIdsToLoad, whichNewMap) {
+    if(itemIdsToLoad.length>0) {
+    getJSON("/game-world/getInventoryItems.php?whichIds=" + itemIdsToLoad, function(data) {
+       // currentActiveInventoryItems = data;
+       console.log(data);
+console.log(currentActiveInventoryItems);
+ for (var attrname in data) {
+        currentActiveInventoryItems[attrname] = data[attrname];
+    }
+
+console.log(currentActiveInventoryItems);
+
+      processNewVisibleMapData(whichNewMap);
+    }, function(status) {
+        // try again:
+        loadNewVisibleInventoryItemData(itemIdsToLoad, whichNewMap);
+    });
+} else {
+processNewVisibleMapData(whichNewMap)
+}
+}
+
+
+
+
 function loadNewVisibleJSON(mapFilePath, whichNewMap) {
     getJSON(mapFilePath, function(data) {
             visibleMaps.push(whichNewMap);
             thisMapData[whichNewMap] = data.map;
-            for (var i = 0; i < thisMapData[whichNewMap].items.length; i++) {
-                initialiseItem(thisMapData[whichNewMap].items[i]);
-            }
-            loadNewVisibleMapAssets(whichNewMap);
+            // find new items that require data:
+
+            var thisMapsItemIds = uniqueValues(getItemIdsForMap(whichNewMap));
+var newItemIds = [];
+for(var i=0;i<thisMapsItemIds.length;i++) {
+if (!(thisMapsItemIds[i] in currentActiveInventoryItems)) {
+newItemIds.push(thisMapsItemIds[i]);
+}
+}
+
+
+loadNewVisibleInventoryItemData(newItemIds, whichNewMap)
+      
         },
         function(status) {
             loadNewVisibleJSON(mapFilePath, whichNewMap);
@@ -635,6 +677,57 @@ function getHorticultureData() {
     });
 }
 
+function getItemIdsForMap(whichMap) {
+            // find items placed on this map:
+        var itemChoices;
+        var itemIdsToGet = [];
+        for (var i = 0; i < thisMapData[whichMap].items.length; i++) {
+            itemIdsToGet.push(thisMapData[whichMap].items[i].type);
+            // check if any are containers or chests:
+            if (typeof thisMapData[whichMap].items[i].contains !== "undefined") {
+
+                if (Array.isArray(thisMapData[whichMap].items[i].contains)) {
+                    for (var j = 0; j < thisMapData[whichMap].items[i].contains.length; j++) {
+                        if (typeof thisMapData[whichMap].items[i].contains[j].type !== "undefined") {
+                            itemChoices = thisMapData[whichMap].items[i].contains[j].type.toString().split("/");
+
+                            for (var k = 0; k < itemChoices.length; k++) {
+                                if (itemChoices[k] != "$") {
+                                    // make sure it's not money in a chest:
+                                    itemIdsToGet.push(parseInt(itemChoices[k]));
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    // eg crop object, so get pollen, seed and fruit ids if specified:
+
+                    for (var j in thisMapData[whichMap].items[i].contains) {
+                        itemIdsToGet.push(thisMapData[whichMap].items[i].contains[j].type);
+                    }
+                }
+            }
+        }
+
+        // find items in hidden resources (and their contents):
+        var containsSplit;
+        for (var i in thisMapData[whichMap].hiddenResources) {
+            for (var j in thisMapData[whichMap].hiddenResources[i]) {
+                itemIdsToGet.push(thisMapData[whichMap].hiddenResources[i][j].type);
+                if (thisMapData[whichMap].hiddenResources[i][j].contains) {
+                    for (var k in thisMapData[whichMap].hiddenResources[i][j].contains) {
+                        containsSplit = thisMapData[whichMap].hiddenResources[i][j].contains[k].type.split("/");
+                        for (var l = 0; l < containsSplit.length; l++) {
+                            itemIdsToGet.push(parseInt(containsSplit[l]));
+                        }
+
+                    }
+
+                }
+            }
+        }
+        return itemIdsToGet;
+}
 
 function findInventoryItemData() {
     var itemIdsToGet = [];
@@ -658,54 +751,9 @@ function findInventoryItemData() {
 
 
     for (var m = 0; m < visibleMaps.length; m++) {
-    // find items placed on this map:
-    var itemChoices;
-    for (var i = 0; i < thisMapData[(visibleMaps[m])].items.length; i++) {
-        itemIdsToGet.push(thisMapData[(visibleMaps[m])].items[i].type);
-        // check if any are containers or chests:
-        if (typeof thisMapData[(visibleMaps[m])].items[i].contains !== "undefined") {
-
-            if (Array.isArray(thisMapData[(visibleMaps[m])].items[i].contains)) {
-                for (var j = 0; j < thisMapData[(visibleMaps[m])].items[i].contains.length; j++) {
-                    if (typeof thisMapData[(visibleMaps[m])].items[i].contains[j].type !== "undefined") {
-                        itemChoices = thisMapData[(visibleMaps[m])].items[i].contains[j].type.toString().split("/");
-
-                        for (var k = 0; k < itemChoices.length; k++) {
-                            if (itemChoices[k] != "$") {
-                                // make sure it's not money in a chest:
-                                itemIdsToGet.push(itemChoices[k]);
-                            }
-                        }
-                    }
-                }
-            } else {
-                // eg crop object, so get pollen, seed and fruit ids if specified:
-
-                for (var j in thisMapData[(visibleMaps[m])].items[i].contains) {
-                    itemIdsToGet.push(thisMapData[(visibleMaps[m])].items[i].contains[j].type);
-                }
-            }
-        }
+itemIdsToGet = itemIdsToGet.concat(getItemIdsForMap(visibleMaps[m]));
     }
 
-    // find items in hidden resources (and their contents):
-    var containsSplit;
-    for (var i in thisMapData[(visibleMaps[m])].hiddenResources) {
-        for (var j in thisMapData[(visibleMaps[m])].hiddenResources[i]) {
-            itemIdsToGet.push(thisMapData[(visibleMaps[m])].hiddenResources[i][j].type);
-            if (thisMapData[(visibleMaps[m])].hiddenResources[i][j].contains) {
-                for (var k in thisMapData[(visibleMaps[m])].hiddenResources[i][j].contains) {
-                    containsSplit = thisMapData[(visibleMaps[m])].hiddenResources[i][j].contains[k].type.split("/");
-                    for (var l = 0; l < containsSplit.length; l++) {
-                        itemIdsToGet.push(containsSplit[l]);
-                    }
-
-                }
-
-            }
-        }
-    }
-}
 
     // find items in recipes:
     for (var i in hero.crafting) {
