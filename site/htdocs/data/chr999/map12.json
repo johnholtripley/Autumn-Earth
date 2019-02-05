@@ -174,8 +174,8 @@
         "npcs": [],
         "doors": {},
         "items": [{  "type": 18,
-                "tileX": 2,
-                "tileY": 46}],
+                "tileX": 0,
+                "tileY": 49}],
         "hotspots": [],
         "hiddenResourceCategories": [4],
         "hiddenResourceTier": 7

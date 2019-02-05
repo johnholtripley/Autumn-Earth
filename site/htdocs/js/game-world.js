@@ -7673,6 +7673,9 @@ function loadNewVisibleJSON(mapFilePath, whichNewMap) {
     getJSON(mapFilePath, function(data) {
             visibleMaps.push(whichNewMap);
             thisMapData[whichNewMap] = data.map;
+            for (var i = 0; i < thisMapData[whichNewMap].items.length; i++) {
+                initialiseItem(thisMapData[whichNewMap].items[i]);
+            }
             loadNewVisibleMapAssets(whichNewMap);
         },
         function(status) {
@@ -10673,7 +10676,8 @@ for (var m = 0; m < visibleMaps.length; m++) {
                 }
                 thisItemIdentifier = "item" + thisMapData[whichVisibleMap].items[i].type + thisFileColourSuffix;
                 if(whichVisibleMap==12) {
-    console.log(thisItem, itemImages[thisItemIdentifier]);
+   // console.log(thisItem, itemImages[thisItemIdentifier]);
+   console.log(thisItem.tileX,thisItem.tileY,hero.tileX,hero.tileY);
 }
                 // check for User Generated Content:
                 if (typeof thisMapData[whichVisibleMap].items[i].contains !== "undefined") {
