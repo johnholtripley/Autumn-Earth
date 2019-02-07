@@ -1698,7 +1698,9 @@ function checkForGamePadInput() {
     }
 }
 function checkForRespawns() {
-    for(var map in thisMapData) {
+  //  for(var map in thisMapData) {
+    for (var m = 0; m < visibleMaps.length; m++) {
+        var map = visibleMaps[m];
     for (var i = 0; i < thisMapData[map].items.length; i++) {
         switch (currentActiveInventoryItems[thisMapData[map].items[i].type].action) {
             case "node":
@@ -2576,6 +2578,13 @@ function sortByLowestValue(a, b) {
     };
 };
 */
+
+function removeElementFromArray(whichArray, whichElement) {
+    var index = whichArray.indexOf(whichElement);
+    if (index > -1) {
+        whichArray.splice(index, 1);
+    }
+}
 
 function getRandomElementFromArray(whichArray) {
     return whichArray[Math.floor(Math.random() * whichArray.length)];
@@ -7671,6 +7680,12 @@ function loadNewVisibleMapAssets(whichMap) {
 
 
 function processNewVisibleMapData(whichNewMap) {
+    visibleMaps.push(whichNewMap);
+console.log("loaded "+whichNewMap);
+console.log(typeof currentActiveInventoryItems[59]);
+removeElementFromArray(visibleMapsLoading, whichNewMap);
+
+
  for (var i = 0; i < thisMapData[whichNewMap].items.length; i++) {
                 initialiseItem(thisMapData[whichNewMap].items[i]);
             }
@@ -7679,15 +7694,15 @@ function processNewVisibleMapData(whichNewMap) {
 
 function loadNewVisibleInventoryItemData(itemIdsToLoad, whichNewMap) {
     if(itemIdsToLoad.length>0) {
-    getJSON("/game-world/getInventoryItems.php?whichIds=" + itemIdsToLoad, function(data) {
+    getJSON("/game-world/getInventoryItems.php?isAnUpdate=true&whichIds=" + itemIdsToLoad, function(data) {
        // currentActiveInventoryItems = data;
-       console.log(data);
-console.log(currentActiveInventoryItems);
+// append this new data in: 
  for (var attrname in data) {
         currentActiveInventoryItems[attrname] = data[attrname];
     }
 
-console.log(currentActiveInventoryItems);
+
+
 
       processNewVisibleMapData(whichNewMap);
     }, function(status) {
@@ -7704,13 +7719,15 @@ processNewVisibleMapData(whichNewMap)
 
 function loadNewVisibleJSON(mapFilePath, whichNewMap) {
     getJSON(mapFilePath, function(data) {
-            visibleMaps.push(whichNewMap);
+            
             thisMapData[whichNewMap] = data.map;
             // find new items that require data:
 
             var thisMapsItemIds = uniqueValues(getItemIdsForMap(whichNewMap));
 var newItemIds = [];
+
 for(var i=0;i<thisMapsItemIds.length;i++) {
+   
 if (!(thisMapsItemIds[i] in currentActiveInventoryItems)) {
 newItemIds.push(thisMapsItemIds[i]);
 }
@@ -9766,6 +9783,7 @@ function updateItems() {
       for (var m = 0; m < visibleMaps.length; m++) {
     for (var i = 0; i < thisMapData[(visibleMaps[m])].items.length; i++) {
         thisItem = thisMapData[(visibleMaps[m])].items[i];
+      
         if (currentActiveInventoryItems[thisItem.type].action == "nest") {
             if (thisItem.spawnsRemaining > 0) {
                 if (hero.totalGameTimePlayed - thisItem.timeLastSpawned >= currentActiveInventoryItems[thisItem.type].respawnRate) {
@@ -10723,10 +10741,7 @@ for (var m = 0; m < visibleMaps.length; m++) {
                     }
                 }
                 thisItemIdentifier = "item" + thisMapData[whichVisibleMap].items[i].type + thisFileColourSuffix;
-                if(whichVisibleMap==12) {
-   // console.log(thisItem, itemImages[thisItemIdentifier]);
-   console.log(thisItem.tileX,thisItem.tileY,hero.tileX,hero.tileY);
-}
+
                 // check for User Generated Content:
                 if (typeof thisMapData[whichVisibleMap].items[i].contains !== "undefined") {
                     if (typeof thisMapData[whichVisibleMap].items[i].contains['ugc-id'] !== "undefined") {

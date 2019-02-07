@@ -1,5 +1,7 @@
 function checkForRespawns() {
-    for(var map in thisMapData) {
+  //  for(var map in thisMapData) {
+    for (var m = 0; m < visibleMaps.length; m++) {
+        var map = visibleMaps[m];
     for (var i = 0; i < thisMapData[map].items.length; i++) {
         switch (currentActiveInventoryItems[thisMapData[map].items[i].type].action) {
             case "node":

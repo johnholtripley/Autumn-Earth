@@ -736,6 +736,13 @@ function sortByLowestValue(a, b) {
 };
 */
 
+function removeElementFromArray(whichArray, whichElement) {
+    var index = whichArray.indexOf(whichElement);
+    if (index > -1) {
+        whichArray.splice(index, 1);
+    }
+}
+
 function getRandomElementFromArray(whichArray) {
     return whichArray[Math.floor(Math.random() * whichArray.length)];
 }

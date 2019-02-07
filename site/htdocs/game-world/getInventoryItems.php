@@ -10,6 +10,11 @@ $whichIds = $_GET["whichIds"];
 $allIds = explode("|", $whichIds);
 $itemIdString="";
 
+$isAnUpdate = false;
+if(isset($_GET["isAnUpdate"])) {
+$isAnUpdate = true;
+}
+
 for($i=0;$i<count($allIds);$i++) {
 	if($i!=0) {
 		$itemIdString.=", ";
@@ -19,7 +24,11 @@ for($i=0;$i<count($allIds);$i++) {
 
 // get the required items, additionally get all plants and seeds so that the data for any resultant new species is available when breeding them:
 // (might need to change this for plants to fetch them when needed instead ####)
-$query = "SELECT * FROM tblinventoryitems where itemid in (".$itemIdString.") or itemcategories = 8 or itemcategories = 9";
+$plantAndSeedQuery = ' or itemcategories = 8 or itemcategories = 9';
+if($isAnUpdate) {
+$plantAndSeedQuery = '';
+}
+$query = "SELECT * FROM tblinventoryitems where itemid in (".$itemIdString.")" . $plantAndSeedQuery;
 $result = mysqli_query($connection, $query) or die ();
 
 
