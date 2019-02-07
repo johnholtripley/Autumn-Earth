@@ -272,13 +272,20 @@ function loadNewVisibleMapAssets(whichMap) {
     // load any new NPCs ###
     // load any new terrain ###
     // load any new items ###
+
+//console.log(thisMapData[whichMap],"new map assets for #"+whichMap);
+
+for(var i=0;i<thisMapData[whichMap].items.length;i++) {
+    console.log(thisMapData[whichMap].items[i].type);
+    // john
+}
+
 }
 
 
 function processNewVisibleMapData(whichNewMap) {
     visibleMaps.push(whichNewMap);
-console.log("loaded "+whichNewMap);
-console.log(typeof currentActiveInventoryItems[59]);
+
 removeElementFromArray(visibleMapsLoading, whichNewMap);
 
 
