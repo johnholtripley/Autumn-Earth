@@ -7671,19 +7671,33 @@ function loadNewVisibleMapAssets(whichMap) {
     newBackground.onload = function() {
         backgroundImgs[whichMap] = newBackground;
     };
-    newBackground.onerror = function() {};
+    newBackground.onerror = function() {
+        // error handling? ####
+    };
     newBackground.src = '/images/game-world/backgrounds/' + whichMap + '.png';
     // load any new NPCs ###
     // load any new terrain ###
-    // load any new items ###
+    // load any new nests NPCs ###
 
-//console.log(thisMapData[whichMap],"new map assets for #"+whichMap);
+// load items:
+    var thisPathAndIdentifer;
+    var newItemImagesToLoad = [];
+    for (var i = 0; i < thisMapData[whichMap].items.length; i++) {
 
-for(var i=0;i<thisMapData[whichMap].items.length;i++) {
-    console.log(thisMapData[whichMap].items[i].type);
-    // john
-}
-
+        thisPathAndIdentifer = getItemPathAndIdentifier(thisMapData[whichMap].items[i]);
+        console.log(thisPathAndIdentifer);
+        // only add unique images:
+        if (typeof itemImages[(thisPathAndIdentifer[1])] === "undefined") {
+            newItemImagesToLoad[(thisPathAndIdentifer[1])] = new Image();
+            newItemImagesToLoad[(thisPathAndIdentifer[1])].onload = function() {
+                itemImages[(thisPathAndIdentifer[1])] = newItemImagesToLoad[(thisPathAndIdentifer[1])];
+            };
+            newItemImagesToLoad[(thisPathAndIdentifer[1])].onerror = function() {
+                // error handling? ####
+            };
+            newItemImagesToLoad[(thisPathAndIdentifer[1])].src = thisPathAndIdentifer[0];
+        }
+    }
 }
 
 
@@ -7802,6 +7816,31 @@ function loadMap() {
 }
 
 
+function getItemPathAndIdentifier(whichItem) {
+       // get colour name 
+       var thisItemIdentifier, thisImagePath;
+        var thisFileColourSuffix = "";
+        if (whichItem.colour) {
+            thisColourName = getColourName(whichItem.colour, whichItem.type);
+            if (thisColourName != "") {
+                thisFileColourSuffix = "-" + thisColourName.toLowerCase();
+            }
+        }
+        thisItemIdentifier = "item" + whichItem.type + thisFileColourSuffix;
+        thisImagePath = "/images/game-world/items/" + currentActiveInventoryItems[whichItem.type].worldSrc + thisFileColourSuffix + ".png";
+
+        // check for User Generated Content:
+        if (typeof whichItem.contains !== "undefined") {
+            if (typeof whichItem.contains['ugc-id'] !== "undefined") {
+                thisItemIdentifier = "item" + whichItem.type + '_' + whichItem.contains['ugc-id'];
+                thisImagePath = "/images/user-generated/" + whichItem.contains['ugc-id'] + "-world.png";
+            }
+        }
+        return [thisImagePath, thisItemIdentifier];
+}
+
+
+
 function loadMapAssets() {
     imagesToLoad = [];
     var thisFileColourSuffix, thisColourName;
@@ -7868,6 +7907,7 @@ assetPath = visibleMaps[m];
             npcGraphicsToLoad.push(thisNPCIdentifier);
         }
     }
+
     // check for nests, and get the graphics for any creatures they will spawn:
     for (var i = 0; i < thisMapData[visibleMaps[m]].items.length; i++) {
         if (currentActiveInventoryItems[thisMapData[visibleMaps[m]].items[i].type].action == "nest") {
@@ -7885,36 +7925,19 @@ assetPath = visibleMaps[m];
     }
 
 
-
+var thisPathAndIdentifer;
     
     for (var i = 0; i < thisMapData[visibleMaps[m]].items.length; i++) {
-        // get colour name 
-        thisFileColourSuffix = "";
-        if (thisMapData[visibleMaps[m]].items[i].colour) {
-            thisColourName = getColourName(thisMapData[visibleMaps[m]].items[i].colour, thisMapData[visibleMaps[m]].items[i].type);
-            if (thisColourName != "") {
-                thisFileColourSuffix = "-" + thisColourName.toLowerCase();
-            }
-        }
-        thisItemIdentifier = "item" + thisMapData[visibleMaps[m]].items[i].type + thisFileColourSuffix;
-        thisImagePath = "/images/game-world/items/" + currentActiveInventoryItems[thisMapData[visibleMaps[m]].items[i].type].worldSrc + thisFileColourSuffix + ".png";
-
-        // check for User Generated Content:
-        if (typeof thisMapData[visibleMaps[m]].items[i].contains !== "undefined") {
-            if (typeof thisMapData[visibleMaps[m]].items[i].contains['ugc-id'] !== "undefined") {
-                thisItemIdentifier = "item" + thisMapData[visibleMaps[m]].items[i].type + '_' + thisMapData[visibleMaps[m]].items[i].contains['ugc-id'];
-                thisImagePath = "/images/user-generated/" + thisMapData[visibleMaps[m]].items[i].contains['ugc-id'] + "-world.png";
-            }
-        }
+     thisPathAndIdentifer = getItemPathAndIdentifier(thisMapData[visibleMaps[m]].items[i]);
 
 
         // only add unique images:
-        if (itemGraphicsToLoad.indexOf(thisItemIdentifier) == -1) {
+        if (itemGraphicsToLoad.indexOf(thisPathAndIdentifer[1]) == -1) {
             imagesToLoad.push({
-                name: thisItemIdentifier,
-                src: thisImagePath
+                name: thisPathAndIdentifer[1],
+                src: thisPathAndIdentifer[0]
             });
-            itemGraphicsToLoad.push(thisItemIdentifier);
+            itemGraphicsToLoad.push(thisPathAndIdentifer[1]);
         }
     }
 
