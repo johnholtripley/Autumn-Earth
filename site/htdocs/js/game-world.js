@@ -499,7 +499,7 @@ var fae = {
 
 
 var worldMap = [];
-var visibleMaps = [10, 11, 13, 14];
+var visibleMaps = [];
 const worldMapWidthPx = 2400;
 const worldMapHeightPx = 1200;
 const worldMapTileLength = 50;
@@ -7473,7 +7473,11 @@ function getHeroGameState() {
             hero[attribute] = data[attribute];
         }
 
+
+
+
         newMap = findMapNumberFromGlobalCoordinates(data.tileX, data.tileY);
+        visibleMaps.push(newMap);
         gameSettings = data.settings;
 
         timeSinceLastAmbientSoundWasPlayed = hero.totalGameTimePlayed + (minTimeBetweenAmbientSounds * 1.25);
@@ -7491,7 +7495,7 @@ function getHeroGameState() {
 
 
 // determine current map:
-currentMap = findMapNumberFromGlobalCoordinates(hero.tileX, hero.tileY);
+currentMap = newMap;
 
 
         //  hero.inventory = data.inventory;
@@ -7499,6 +7503,14 @@ currentMap = findMapNumberFromGlobalCoordinates(hero.tileX, hero.tileY);
             //clean old procedural maps: (don't need a response here)
             sendDataWithoutNeedingAResponse('/game-world/generateCircularDungeonMap.php?playerId=' + characterId + '&clearMaps=true');
         }
+
+    hero.x = getTileCentreCoordX(hero.tileX);
+    hero.y = getTileCentreCoordY(hero.tileY);
+    hero.isox = findIsoCoordsX(hero.x, hero.y);
+        hero.isoy = findIsoCoordsY(hero.x, hero.y);
+updateVisibleMaps();
+
+
         loadCoreAssets();
     }, function(status) {
         // error - try again:
@@ -7740,7 +7752,7 @@ for (var i = 0; i < thisMapData[whichMap].npcs.length; i++) {
     }
 }
 
-// load any nest NPCS:
+
 
 // check for nests, and get the graphics for any creatures they will spawn:
 for (var i = 0; i < thisMapData[whichMap].items.length; i++) {
@@ -7781,7 +7793,7 @@ function processNewVisibleMapData(whichNewMap) {
     }
 
 for (var i = 0; i < thisMapData[whichNewMap].npcs.length; i++) {
-    console.log(thisMapData[whichNewMap].npcs[i].name);
+  
     initialiseNPC(thisMapData[whichNewMap].npcs[i]);
 }
 
