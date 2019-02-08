@@ -272,7 +272,7 @@ function loadNewVisibleMapAssets(whichMap) {
     };
     newBackground.src = '/images/game-world/backgrounds/' + whichMap + '.png';
 
-    // load any new nests NPCs ###
+ 
 
 // load items:
     var thisPathAndIdentifer;
@@ -323,29 +323,40 @@ var thisNPCIdentifier;
 var newNPCImagesToLoad = [];
 for (var i = 0; i < thisMapData[whichMap].npcs.length; i++) {
     thisNPCIdentifier = "npc" + thisMapData[whichMap].npcs[i].name;
-
-
-
     if (typeof npcImages[thisNPCIdentifier] === "undefined") {
+        newNPCImagesToLoad[thisNPCIdentifier] = new Image();
+        newNPCImagesToLoad[thisNPCIdentifier].onload = function() {
+            npcImages[thisNPCIdentifier] = newNPCImagesToLoad[thisNPCIdentifier];
+        };
+        newNPCImagesToLoad[thisNPCIdentifier].onerror = function() {
+            // error handling? ####
+        };
+        newNPCImagesToLoad[thisNPCIdentifier].src = "/images/game-world/npcs/" + thisMapData[whichMap].npcs[i].src;
 
-
-  newNPCImagesToLoad[thisNPCIdentifier] = new Image();
-            newNPCImagesToLoad[thisNPCIdentifier].onload = function() {
-                npcImages[thisNPCIdentifier] = newNPCImagesToLoad[thisNPCIdentifier];
-            };
-            newNPCImagesToLoad[thisNPCIdentifier].onerror = function() {
-                // error handling? ####
-            };
-            newNPCImagesToLoad[thisNPCIdentifier].src = "/images/game-world/npcs/" + thisMapData[whichMap].npcs[i].src;
-
-
-
-       
     }
 }
 
+// load any nest NPCS:
 
+// check for nests, and get the graphics for any creatures they will spawn:
+for (var i = 0; i < thisMapData[whichMap].items.length; i++) {
+    if (currentActiveInventoryItems[thisMapData[whichMap].items[i].type].action == "nest") {
+        for (var j = 0; j < thisMapData[whichMap].items[i].contains.length; j++) {
+            thisNPCIdentifier = "npc" + thisMapData[whichMap].items[i].contains[j].name;
+             if (typeof npcImages[thisNPCIdentifier] === "undefined") {
+        newNPCImagesToLoad[thisNPCIdentifier] = new Image();
+        newNPCImagesToLoad[thisNPCIdentifier].onload = function() {
+            npcImages[thisNPCIdentifier] = newNPCImagesToLoad[thisNPCIdentifier];
+        };
+        newNPCImagesToLoad[thisNPCIdentifier].onerror = function() {
+            // error handling? ####
+        };
+        newNPCImagesToLoad[thisNPCIdentifier].src = "/images/game-world/npcs/" + thisMapData[whichMap].npcs[i].src;
 
+    }
+        }
+    }
+}
 
 
 
