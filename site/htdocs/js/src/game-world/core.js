@@ -271,8 +271,7 @@ function loadNewVisibleMapAssets(whichMap) {
         // error handling? ####
     };
     newBackground.src = '/images/game-world/backgrounds/' + whichMap + '.png';
-    // load any new NPCs ###
-    // load any new terrain ###
+
     // load any new nests NPCs ###
 
 // load items:
@@ -281,7 +280,7 @@ function loadNewVisibleMapAssets(whichMap) {
     for (var i = 0; i < thisMapData[whichMap].items.length; i++) {
 
         thisPathAndIdentifer = getItemPathAndIdentifier(thisMapData[whichMap].items[i]);
-        console.log(thisPathAndIdentifer);
+    
         // only add unique images:
         if (typeof itemImages[(thisPathAndIdentifer[1])] === "undefined") {
             newItemImagesToLoad[(thisPathAndIdentifer[1])] = new Image();
@@ -294,19 +293,88 @@ function loadNewVisibleMapAssets(whichMap) {
             newItemImagesToLoad[(thisPathAndIdentifer[1])].src = thisPathAndIdentifer[0];
         }
     }
+
+
+// load terrain:
+var thisTerrainIdentifer;
+var newTerrainImagesToLoad = [];
+for (var i = 0; i < thisMapData[whichMap].graphics.length; i++) {
+    thisTerrainIdentifer = thisMapData[whichMap].graphics[i].src;
+    if (typeof tileImages[thisTerrainIdentifer] === "undefined") {
+        newTerrainImagesToLoad[(thisTerrainIdentifer)] = new Image();
+        newTerrainImagesToLoad[(thisTerrainIdentifer)].onload = function() {
+            tileImages[(thisTerrainIdentifer)] = newTerrainImagesToLoad[(thisTerrainIdentifer)];
+        };
+        newTerrainImagesToLoad[(thisTerrainIdentifer)].onerror = function() {
+            // error handling? ####
+        };
+        if (thisTerrainIdentifer.indexOf('housing') !== -1) {
+            newTerrainImagesToLoad[(thisTerrainIdentifer)].src = "/images/game-world/" + thisMapData[whichMap].graphics[i].src;
+        } else {
+            newTerrainImagesToLoad[(thisTerrainIdentifer)].src = "/images/game-world/terrain/" + thisMapData[whichMap].graphics[i].src;
+        }
+
+    }
+}
+
+
+// load NPCs
+var thisNPCIdentifier;
+var newNPCImagesToLoad = [];
+for (var i = 0; i < thisMapData[whichMap].npcs.length; i++) {
+    thisNPCIdentifier = "npc" + thisMapData[whichMap].npcs[i].name;
+
+
+
+    if (typeof npcImages[thisNPCIdentifier] === "undefined") {
+
+
+  newNPCImagesToLoad[thisNPCIdentifier] = new Image();
+            newNPCImagesToLoad[thisNPCIdentifier].onload = function() {
+                npcImages[thisNPCIdentifier] = newNPCImagesToLoad[thisNPCIdentifier];
+            };
+            newNPCImagesToLoad[thisNPCIdentifier].onerror = function() {
+                // error handling? ####
+            };
+            newNPCImagesToLoad[thisNPCIdentifier].src = "/images/game-world/npcs/" + thisMapData[whichMap].npcs[i].src;
+
+
+
+       
+    }
+}
+
+
+
+
+
+
+
+
+
 }
 
 
 function processNewVisibleMapData(whichNewMap) {
     visibleMaps.push(whichNewMap);
 
-removeElementFromArray(visibleMapsLoading, whichNewMap);
+    removeElementFromArray(visibleMapsLoading, whichNewMap);
 
 
- for (var i = 0; i < thisMapData[whichNewMap].items.length; i++) {
-                initialiseItem(thisMapData[whichNewMap].items[i]);
-            }
-            loadNewVisibleMapAssets(whichNewMap);
+    for (var i = 0; i < thisMapData[whichNewMap].items.length; i++) {
+        initialiseItem(thisMapData[whichNewMap].items[i]);
+    }
+
+for (var i = 0; i < thisMapData[whichNewMap].npcs.length; i++) {
+    console.log(thisMapData[whichNewMap].npcs[i].name);
+    initialiseNPC(thisMapData[whichNewMap].npcs[i]);
+}
+
+    
+
+
+
+    loadNewVisibleMapAssets(whichNewMap);
 }
 
 function loadNewVisibleInventoryItemData(itemIdsToLoad, whichNewMap) {
@@ -3334,6 +3402,10 @@ for (var m = 0; m < visibleMaps.length; m++) {
                 thisNPC = thisMapData[whichVisibleMap].npcs[i];
 
 
+
+
+
+
                 if (typeof thisNPC.animationWaitingTimer === "undefined") {
                     thisNPCOffsetCol = currentAnimationFrame % thisNPC["animation"][thisNPC.currentAnimation]["length"];
                 } else {
@@ -3347,6 +3419,12 @@ for (var m = 0; m < visibleMaps.length; m++) {
                 thisY = findIsoCoordsY(thisNPC.x, thisNPC.y);
                 //assetsToDraw.push([findIsoDepth(thisX, thisY), npcImages[i], Math.floor(thisX - hero.isox - thisNPC.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisNPC.centreY + (canvasHeight / 2))]);
                 thisNPCIdentifier = "npc" + thisMapData[whichVisibleMap].npcs[i].name;
+
+
+if(whichVisibleMap == 12) {
+console.log(thisNPCIdentifier,npcImages[thisNPCIdentifier]);
+}
+
                 assetsToDraw.push([findIsoDepth(thisNPC.x, thisNPC.y, thisNPC.z), "sprite", npcImages[thisNPCIdentifier], thisNPCOffsetCol * thisNPC.spriteWidth, thisNPCOffsetRow * thisNPC.spriteHeight, thisNPC.spriteWidth, thisNPC.spriteHeight, Math.floor(thisX - hero.isox - thisNPC.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisNPC.centreY + (canvasHeight / 2) - thisNPC.z), thisNPC.spriteWidth, thisNPC.spriteHeight]);
             }
 

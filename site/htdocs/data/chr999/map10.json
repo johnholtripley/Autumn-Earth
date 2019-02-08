@@ -1224,47 +1224,7 @@
                 }
             },
             
-            {
-                "name": "brown horse",
-                "src": "brown-horse.png",
-                "width": 36,
-                "length": 94,
-                "spriteWidth": 127,
-                "spriteHeight": 120,
-                "centreX": 75,
-                "centreY": 96,
-                "tileX": 20,
-                "tileY": 28,
-                "movement": ["s", "s", "e", "e", "n", "n", "w", "w"],
-                "facing": "s",
-                "walkThroughDoors": false,
-                "speed": 1,
-                "speech": [
-                    ["", "sound", "horse"]
-
-                ],
-                "isCollidable": true,
-                "isMoving": true,
-                "animation":
-                {
-                    "walk":
-                    {
-                        "length": 1,
-                        "n": 0,
-                        "e": 1,
-                        "s": 2,
-                        "w": 3
-                    },
-                    "wait":
-                    {
-                        "length": 1,
-                        "n": 0,
-                        "e": 1,
-                        "s": 2,
-                        "w": 3
-                    }
-                }
-            },
+            
             {
                 "name": "Wizard searcher",
                 "src": "labourer7.png",
