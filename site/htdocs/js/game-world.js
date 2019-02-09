@@ -7801,6 +7801,40 @@ for (var i = 0; i < thisMapData[whichNewMap].npcs.length; i++) {
 
 
 
+// look for shops:
+
+
+    thisMapShopItemIds = '';
+     
+       var shopData = '{"chr": ' + characterId + ',"region":"' + thisMapData[whichNewMap].region + '","shops": [';
+var addedShopDataAlready = false;
+        // loop through shops and create hashes 
+       
+        for (var i = 0; i < thisMapData[whichNewMap].shops.length; i++) {
+          thisMapData[whichNewMap].shops[i].hash = generateHash(thisMapData[whichNewMap].shops[i].name);
+          if(addedShopDataAlready) {
+            shopData += ",";
+          }
+          shopData += JSON.stringify(thisMapData[whichNewMap].shops[i]);
+          addedShopDataAlready = true;
+        }
+    
+    shopData += ']}';
+        loadNewVisibleShopData('shopData=' + shopData);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     loadNewVisibleMapAssets(whichNewMap);
 }
 
@@ -8172,7 +8206,17 @@ var addedShopDataAlready = false;
  //   }
 }
 
-
+function loadNewVisibleShopData(shopJSONData) {
+    // post data with getJSONWithParams function
+    getJSONWithParams("/game-world/getShopItems.php", shopJSONData, function(data) {
+        thisMapShopItemIds = data.allItemIds;
+        UI.buildShop(data.markup);
+        
+    }, function(status) {
+        // try again:
+        loadNewVisibleShopData(shopJSONData);
+    });
+}
 
 function loadShopData(shopJSONData) {
     // post data with getJSONWithParams function
@@ -10848,9 +10892,7 @@ for (var m = 0; m < visibleMaps.length; m++) {
                 thisNPCIdentifier = "npc" + thisMapData[whichVisibleMap].npcs[i].name;
 
 
-if(whichVisibleMap == 12) {
-console.log(thisNPCIdentifier,npcImages[thisNPCIdentifier]);
-}
+
 
                 assetsToDraw.push([findIsoDepth(thisNPC.x, thisNPC.y, thisNPC.z), "sprite", npcImages[thisNPCIdentifier], thisNPCOffsetCol * thisNPC.spriteWidth, thisNPCOffsetRow * thisNPC.spriteHeight, thisNPC.spriteWidth, thisNPC.spriteHeight, Math.floor(thisX - hero.isox - thisNPC.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisNPC.centreY + (canvasHeight / 2) - thisNPC.z), thisNPC.spriteWidth, thisNPC.spriteHeight]);
             }

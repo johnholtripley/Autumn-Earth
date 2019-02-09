@@ -171,7 +171,28 @@
         { "src": "block.png", "centreX": 24, "centreY": 45 }
     ],
         "weather": [""],
-        "shops": [],
+        "shops": [  {
+                "name": "shop #2",
+                "uniqueItems":
+                {
+                    "14": [
+                    {
+                        "colour": 3
+                    },
+                    {
+                        "colour": 7
+                    }],
+                    "15": [
+                    {
+                        "colour": 1,
+                        "inscription": "stuffffff"
+                    }]
+                },
+                "specialism": null,
+                "categories": [3],
+                "size": "small",
+                "currency": "money"
+            }],
         "npcs": [{
                 "name": "brown horse",
                 "src": "brown-horse.png",
@@ -210,6 +231,47 @@
                         "e": 1,
                         "s": 2,
                         "w": 3
+                    }
+                }
+            },     {
+                "name": "shopkeeper2",
+                "src": "shopkeeper1.png",
+                "width": 20,
+                "length": 20,
+                "spriteWidth": 75,
+                "spriteHeight": 85,
+                "centreX": 56,
+                "centreY": 73,
+                "tileX": 2,
+                "tileY": 43,
+                "movement": ["-"],
+                "facing": "s",
+                "walkThroughDoors": false,
+                "speed": 2,
+                "isCollidable": true,
+                "isMoving": false,
+                "speech": [
+                    ["Hi there - welcome!/Feel free to have a good look around, ##characterName##/Welcome, welcome!", "shop", "shop #2"]
+                ],
+                "cardGameSpeech":
+                {
+                    "challenge": ["Do you play? Fancy a game then?", "play"],
+                    "win": ["Woo! I won!", ""],
+                    "lose": ["Ahh, you beat me...", ""],
+                    "draw": ["Well played", ""]
+                },
+                "cardSkill": 1,
+                "uniqueCards": [2, 2],
+                "baseCardPack": 0,
+                "animation":
+                {
+                    "walk":
+                    {
+                        "length": 1,
+                        "n": 2,
+                        "e": 3,
+                        "s": 0,
+                        "w": 1
                     }
                 }
             }],
