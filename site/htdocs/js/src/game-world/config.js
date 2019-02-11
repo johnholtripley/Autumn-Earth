@@ -159,6 +159,7 @@ var fae = {
     oscillateOffset: 0
 };
 
+var isOverWorldMap = true;
 
 var worldMap = [];
 var visibleMaps = [];

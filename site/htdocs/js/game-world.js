@@ -497,6 +497,7 @@ var fae = {
     oscillateOffset: 0
 };
 
+var isOverWorldMap = true;
 
 var worldMap = [];
 var visibleMaps = [];
@@ -1958,6 +1959,7 @@ function getTileY(y) {
 
 
 function getElevation(tileX, tileY) {
+    console.log(tileX, tileY);
     var thisMap = findMapNumberFromGlobalCoordinates(tileX, tileY);
     var localTileX = getLocalCoordinatesX(tileX);
     var localTileY = getLocalCoordinatesY(tileY);
@@ -7907,6 +7909,7 @@ function loadMapJSON(mapFilePath) {
             thisMapData[data.map.mapId] = data.map;
             if (data.map.mapId == currentMap) {
                 processInitialMap();
+                isOverWorldMap = !data.map.isInside;
             }
         },
         function(status) {
@@ -8825,7 +8828,7 @@ function isOnAPlatform(x, y) {
 
 function checkHeroCollisions() {
     var topLeftIsOnAPlatform, topRightIsOnAPlatform, bottomLeftIsOnAPlatform, bottomRightIsOnAPlatform, platformIsClear, leadingEdge1OnAPlatform, leadingEdge2OnAPlatform;
-
+/*
     if (key[2]) {
         // up
         leadingEdge1OnAPlatform = isOnAPlatform(hero.x - hero.width / 2, hero.y - hero.length / 2);
@@ -8939,7 +8942,7 @@ function checkHeroCollisions() {
             thisMapData[currentMap].movingPlatforms[bottomRightIsOnAPlatform].canMove = false;
         }
     }
-
+*/
 
     var thisNPC, thisItem;
 
@@ -9109,8 +9112,9 @@ function update() {
 
 
 
-
+        checkForWorldWrap(hero);
         checkHeroCollisions();
+       
         var heroOldX = hero.tileX;
         var heroOldY = hero.tileY;
         var chestIdSplit;
@@ -9164,6 +9168,11 @@ function update() {
 
             }
         }
+
+
+
+
+
     } else {
         if (jumpMapId == null) {
             // if jumping maps (eg with a home stone, then don't walk forwards)
@@ -9231,6 +9240,19 @@ function update() {
 }
 
 
+function checkForWorldWrap(whichObject) {
+// john ###
+    if (isOverWorldMap) {
+        if (whichObject.x < 0) {
+            whichObject.x += (worldMapWidthPx * worldMap[0].length);
+        }
+        if (whichObject.y < 0) {
+            whichObject.y += (worldMapWidthPx * worldMap.length);
+        }
+    }
+}
+
+
 function updateVisibleMaps() {
 
 // left screen edge would be hero.isox - (canvasWidth/2) but use full screen width to allow for padding and loading in before visible
@@ -9253,13 +9275,22 @@ var bottomEdgeMapPos = Math.floor(bottomEdge2D/mapDimension2D);
 
 var newVisibleMaps = [];
 
+var isValid;
 for(var i=leftEdgeMapPos;i<=rightEdgeMapPos;i++) {
 for(var j=topEdgeMapPos;j<=bottomEdgeMapPos;j++) {
+    isValid = false;
+if(typeof worldMap[j] !== "undefined") {
 if(typeof worldMap[j][i] !== "undefined") {
+isValid = true;
+} 
+}
+
+if(isValid) {
 newVisibleMaps.push(worldMap[j][i]);
 } else {
-    // wrap around ####
+   // wrap around #### 
 }
+
 }
 }
 

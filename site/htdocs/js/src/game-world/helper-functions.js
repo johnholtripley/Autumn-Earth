@@ -115,6 +115,7 @@ function getTileY(y) {
 
 
 function getElevation(tileX, tileY) {
+    console.log(tileX, tileY);
     var thisMap = findMapNumberFromGlobalCoordinates(tileX, tileY);
     var localTileX = getLocalCoordinatesX(tileX);
     var localTileY = getLocalCoordinatesY(tileY);
