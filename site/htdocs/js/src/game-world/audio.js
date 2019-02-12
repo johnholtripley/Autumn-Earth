@@ -189,23 +189,33 @@ var audio = {
     },
 
     checkForAmbientSounds: function() {
-        if (thisMapData.ambientSounds) {
-            if ((hero.totalGameTimePlayed - timeSinceLastAmbientSoundWasPlayed) > minTimeBetweenAmbientSounds) {
-                if (getRandomIntegerInclusive(1, 240) == 1) {
-                    timeSinceLastAmbientSoundWasPlayed = hero.totalGameTimePlayed;
-                    audio.playSound(soundEffects[getRandomKeyFromObject(thisMapData.ambientSounds)], 0);
+        var combinedVisbleAmbientSounds = [];
+        for (var m = 0; m < visibleMaps.length; m++) {
+            if (thisMapData[visibleMaps[m]].ambientSounds) {
+                for (var thisSound in thisMapData[visibleMaps[m]].ambientSounds) {
+                    if (!(thisSound in combinedVisbleAmbientSounds)) {
+                        combinedVisbleAmbientSounds[thisSound] = thisMapData[visibleMaps[m]].ambientSounds[thisSound];
+                    }
                 }
             }
         }
-        if (thisMapData.hourChime) {
-            var now = new Date();
-            if (now.getMinutes() < 1) {
-                if (!audio.playingHourChime) {
-                    audio.playingHourChime = true;
-                    audio.playSound(soundEffects["hourChime"], 0, keepWithinRange(now.getHours(), 1, 12));
+        if ((hero.totalGameTimePlayed - timeSinceLastAmbientSoundWasPlayed) > minTimeBetweenAmbientSounds) {
+            if (getRandomIntegerInclusive(1, 240) == 1) {
+                timeSinceLastAmbientSoundWasPlayed = hero.totalGameTimePlayed;
+                audio.playSound(soundEffects[getRandomKeyFromObject(combinedVisbleAmbientSounds)], 0);
+            }
+        }
+        for (var m = 0; m < visibleMaps.length; m++) {
+            if (thisMapData[visibleMaps[m]].hourChime) {
+                var now = new Date();
+                if (now.getMinutes() < 1) {
+                    if (!audio.playingHourChime) {
+                        audio.playingHourChime = true;
+                        audio.playSound(soundEffects["hourChime"], 0, keepWithinRange(now.getHours(), 1, 12));
+                    }
+                } else {
+                    audio.playingHourChime = false;
                 }
-            } else {
-                audio.playingHourChime = false;
             }
         }
     }

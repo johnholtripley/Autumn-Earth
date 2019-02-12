@@ -133,6 +133,10 @@ function loadCoreAssets() {
         name: "addedWater",
         src: '/images/game-world/core/added-water.png'
     });
+        coreImagesToLoad.push({
+        name: "ocean",
+        src: '/images/game-world/core/ocean.png'
+    });
     if (hasActivePet) {
         for (var i = 0; i < hero.activePets.length; i++) {
             coreImagesToLoad.push({
@@ -150,6 +154,8 @@ function prepareCoreAssets() {
     shadowImg = Loader.getImage("shadowImg");
     tilledEarth = Loader.getImage("tilledEarth");
     addedWater = Loader.getImage("addedWater");
+    ocean = Loader.getImage("ocean");
+    oceanPattern = gameContext.createPattern(ocean, "repeat");
     if (hasActivePet) {
         for (var i = 0; i < hero.activePets.length; i++) {
             activePetImages[i] = Loader.getImage("activePet" + hero.activePets[i]);
@@ -461,23 +467,23 @@ processNewVisibleMapData(whichNewMap)
 
 function loadNewVisibleJSON(mapFilePath, whichNewMap) {
     getJSON(mapFilePath, function(data) {
-            
+
             thisMapData[whichNewMap] = data.map;
             // find new items that require data:
 
             var thisMapsItemIds = uniqueValues(getItemIdsForMap(whichNewMap));
-var newItemIds = [];
+            var newItemIds = [];
 
-for(var i=0;i<thisMapsItemIds.length;i++) {
-   
-if (!(thisMapsItemIds[i] in currentActiveInventoryItems)) {
-newItemIds.push(thisMapsItemIds[i]);
-}
-}
+            for (var i = 0; i < thisMapsItemIds.length; i++) {
+
+                if (!(thisMapsItemIds[i] in currentActiveInventoryItems)) {
+                    newItemIds.push(thisMapsItemIds[i]);
+                }
+            }
 
 
-loadNewVisibleInventoryItemData(newItemIds, whichNewMap)
-      
+            loadNewVisibleInventoryItemData(newItemIds, whichNewMap)
+
         },
         function(status) {
             loadNewVisibleJSON(mapFilePath, whichNewMap);
@@ -485,7 +491,7 @@ loadNewVisibleInventoryItemData(newItemIds, whichNewMap)
 }
 
 function loadNewVisibleMap(whichNewMap) {
-    console.log("loading in "+whichNewMap);
+    //  console.log("loading in "+whichNewMap);
     if (visibleMapsLoading.indexOf(whichNewMap) === -1) {
         visibleMapsLoading.push(whichNewMap);
         var mapFilePath = '/game-world/getMap.php?chr=' + characterId + '&map=' + whichNewMap;
@@ -495,7 +501,6 @@ function loadNewVisibleMap(whichNewMap) {
         loadNewVisibleJSON(mapFilePath, whichNewMap)
     }
 }
-
 
 
 function loadMapJSON(mapFilePath) {
@@ -1237,27 +1242,20 @@ function changeMaps(doorX, doorY) {
 
 
 function tileIsClear(globalTileX, globalTileY) {
-    /*
-    if ((tileX < 0) || (tileY < 0) || (tileX >= mapTilesX) || (tileY >= mapTilesY)) {
-        // is out of the bounds of the current map:
-        return false;
-    } else {
-        */
-
-
- //   var globalTileX = getTileX(x);
- //   var globalTileY = getTileY(y);
+//    var globalTileX = getTileX(x);
+//    var globalTileY = getTileY(y);
     var tileX = getLocalCoordinatesX(globalTileX);
     var tileY = getLocalCoordinatesX(globalTileY);
+    if (isOverWorldMap) {
+        if ((globalTileX < 0) || (globalTileY < 0) || (globalTileX >= (worldMapTileLength * worldMap[0].length)) || (globalTileY >= (worldMapTileLength * worldMap.length))) {
+            return 1;
+        }
+    } else {
+        if ((tileX < 0) || (tileY < 0) || (tileX >= mapTilesX) || (tileY >= mapTilesY)) {
+            return 1;
+        }
+    }
     var thisMap = findMapNumberFromGlobalCoordinates(globalTileX, globalTileY);
-    //if ((tileX < 0) || (tileY < 0) || (tileX >= mapTilesX) || (tileY >= mapTilesY)) {
-    // check if defined rather than boundaries as could be moving into an adjoining map:
-    if (typeof thisMapData[thisMap].collisions[tileY] === "undefined") {
-        return 1;
-    }
-    if (typeof thisMapData[thisMap].collisions[tileY][tileX] === "undefined") {
-        return 1;
-    }
 
 
         switch (thisMapData[thisMap].collisions[tileY][tileX]) {
@@ -1319,21 +1317,33 @@ function tileIsClear(globalTileX, globalTileY) {
     return true;
 }
 
-
 function isATerrainCollision(x, y) {
     var globalTileX = getTileX(x);
     var globalTileY = getTileY(y);
     var tileX = getLocalCoordinatesX(globalTileX);
     var tileY = getLocalCoordinatesX(globalTileY);
+  
+    if (isOverWorldMap) {
+    
+        if ((globalTileX < 0) || (globalTileY < 0) || (globalTileX >= (worldMapTileLength * worldMap[0].length)) || (globalTileY >= (worldMapTileLength * worldMap.length))) {
+            return 1;
+        }
+    } else {
+        if ((tileX < 0) || (tileY < 0) || (tileX >= mapTilesX) || (tileY >= mapTilesY)) {
+            return 1;
+        }
+    }
     var thisMap = findMapNumberFromGlobalCoordinates(globalTileX, globalTileY);
-    //if ((tileX < 0) || (tileY < 0) || (tileX >= mapTilesX) || (tileY >= mapTilesY)) {
+
     // check if defined rather than boundaries as could be moving into an adjoining map:
+    /*
     if (typeof thisMapData[thisMap].collisions[tileY] === "undefined") {
         return 1;
     }
     if (typeof thisMapData[thisMap].collisions[tileY][tileX] === "undefined") {
         return 1;
     }
+    */
     switch (thisMapData[thisMap].collisions[tileY][tileX]) {
         case 1:
             // is a collision:
@@ -1356,8 +1366,6 @@ function isATerrainCollision(x, y) {
             return 0;
     }
 }
-
-
 
 
 function startDoorTransition() {
@@ -1422,7 +1430,7 @@ function isOnAPlatform(x, y) {
 
 function checkHeroCollisions() {
     var topLeftIsOnAPlatform, topRightIsOnAPlatform, bottomLeftIsOnAPlatform, bottomRightIsOnAPlatform, platformIsClear, leadingEdge1OnAPlatform, leadingEdge2OnAPlatform;
-/*
+
     if (key[2]) {
         // up
         leadingEdge1OnAPlatform = isOnAPlatform(hero.x - hero.width / 2, hero.y - hero.length / 2);
@@ -1437,6 +1445,7 @@ function checkHeroCollisions() {
             } else {
                 // platform not involved - find the tile's bottom edge
                 var tileCollidedWith = getTileY(hero.y - hero.length / 2);
+                console.log(tileCollidedWith);
                 var tileBottomEdge = (tileCollidedWith + 1) * tileW;
                 // use the +1 to make sure it's just clear of the collision tile
                 hero.y = tileBottomEdge + hero.length / 2 + 1;
@@ -1536,7 +1545,7 @@ function checkHeroCollisions() {
             thisMapData[currentMap].movingPlatforms[bottomRightIsOnAPlatform].canMove = false;
         }
     }
-*/
+
 
     var thisNPC, thisItem;
 
@@ -1706,7 +1715,7 @@ function update() {
 
 
 
-        checkForWorldWrap(hero);
+      //  checkForWorldWrap(hero);
         checkHeroCollisions();
        
         var heroOldX = hero.tileX;
@@ -1834,8 +1843,9 @@ function update() {
 }
 
 
+
+/*
 function checkForWorldWrap(whichObject) {
-// john ###
     if (isOverWorldMap) {
         if (whichObject.x < 0) {
             whichObject.x += (worldMapWidthPx * worldMap[0].length);
@@ -1845,7 +1855,7 @@ function checkForWorldWrap(whichObject) {
         }
     }
 }
-
+*/
 
 function updateVisibleMaps() {
 
@@ -3577,6 +3587,14 @@ for (var m = 0; m < visibleMaps.length; m++) {
         }
 
         assetsToDraw.sort(sortByLowestValue);
+
+
+gameContext.rect(0,0,canvasWidth,canvasHeight);
+gameContext.fillStyle = oceanPattern;
+gameContext.fill();
+
+
+
         // don't need to clear, as the background will overwrite anyway - this means there's less to process.
 
 
