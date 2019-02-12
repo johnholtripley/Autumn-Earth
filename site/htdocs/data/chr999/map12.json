@@ -170,7 +170,7 @@
         "graphics": [
         { "src": "block.png", "centreX": 24, "centreY": 45 }
     ],
-        "weather": [""],
+        "weather": ["", "rain"],
         "shops": [  {
                 "name": "shop #2",
                 "uniqueItems":

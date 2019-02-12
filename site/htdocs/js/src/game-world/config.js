@@ -10,6 +10,7 @@ var gameCanvas, gameContext, gameMode, cartographyContext, cartographyCanvas, of
 var chestIdOpen = -1;
 var currentWeather = "";
 var outsideWeather = "";
+var allPossibleWeather = [""];
 var weatherLastChangedTime = 0;
 const minTimeBetweenWeatherChanges = 5000;
 var interfaceIsVisible = true;

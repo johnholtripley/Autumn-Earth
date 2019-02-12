@@ -183,7 +183,7 @@
             "centreY": 187
         }
        ],
-        "weather": [""],
+         "weather": ["", "rain"],
         "shops": [ {
                 "name": "shop #1",
                 "uniqueItems": [],

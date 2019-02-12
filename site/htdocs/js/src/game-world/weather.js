@@ -1,19 +1,23 @@
 function setupWeather() {
-
-    if (!thisMapData[currentMap].isInside) {
+updatePossibleWeather();
+    if (isOverWorldMap) {
         // check if any outside weather is stored:
         if (outsideWeather != "") {
             changeWeather(outsideWeather);
         } else {
             var previousWeather = currentWeather;
-            if (thisMapData[currentMap].weather.length == 1) {
-                changeWeather(thisMapData[currentMap].weather[0]);
+
+
+
+
+            if (allPossibleWeather.length == 1) {
+                changeWeather(allPossibleWeather[0]);
             } else {
                 // check if previous weather is an option here, and use that if so:
-                if (thisMapData[currentMap].weather.indexOf(previousWeather) !== -1) {
+                if (allPossibleWeather.indexOf(previousWeather) !== -1) {
                     changeWeather(previousWeather);
                 } else {
-                    changeWeather(getRandomElementFromArray(thisMapData[currentMap].weather));
+                    changeWeather(getRandomElementFromArray(allPossibleWeather));
                 }
             }
         }
@@ -28,17 +32,28 @@ function setupWeather() {
     weatherLastChangedTime = hero.totalGameTimePlayed;
 }
 
+
+function updatePossibleWeather() {
+ allPossibleWeather = [];
+// console.log(visibleMaps,thisMapData);
+for (var m = 0; m < visibleMaps.length; m++) {
+ //   console.log(visibleMaps[m],"***",thisMapData[(visibleMaps[m])]);
+allPossibleWeather = allPossibleWeather.concat(thisMapData[(visibleMaps[m])].weather);
+}
+}
+
 function checkForWeatherChange() {
-    if (!thisMapData[currentMap].isInside) {
-        if (thisMapData[currentMap].weather.length > 1) {
+    if (isOverWorldMap) {
+        if (allPossibleWeather.length > 1) {
             if ((hero.totalGameTimePlayed - weatherLastChangedTime) > minTimeBetweenWeatherChanges) {
-                changeWeather(getRandomElementFromArray(thisMapData[currentMap].weather));
+                changeWeather(getRandomElementFromArray(allPossibleWeather));
             }
         }
     }
 }
 
 function changeWeather(newWeather) {
+    console.log(newWeather);
     if (newWeather != currentWeather) {
         weatherLastChangedTime = hero.totalGameTimePlayed;
         if (currentWeather != "") {

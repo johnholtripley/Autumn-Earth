@@ -390,6 +390,11 @@ function processNewVisibleMapData(whichNewMap) {
     removeElementFromArray(visibleMapsLoading, whichNewMap);
 
 
+
+
+
+
+
     for (var i = 0; i < thisMapData[whichNewMap].items.length; i++) {
         initialiseItem(thisMapData[whichNewMap].items[i]);
     }
@@ -433,7 +438,7 @@ var addedShopDataAlready = false;
 
 
 
-
+updatePossibleWeather();
 
 
 
@@ -1922,6 +1927,7 @@ function heroIsInNewTile() {
     currentMap = findMapNumberFromGlobalCoordinates(hero.tileX, hero.tileY);
 
     updateVisibleMaps();
+
 
 
     var thisHotspot, thisTileCentreX, thisTileCentreY;
