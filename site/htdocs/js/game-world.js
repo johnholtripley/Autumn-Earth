@@ -415,7 +415,7 @@ var randomDungeonName = "";
 var randomDungeons = ["", "the-dwarrow-mines", "the-barrow-mines"];
 var previousZoneName = "";
 
-var currentActiveInventoryItems = [];
+var currentActiveInventoryItems = {};
 var maxNumberOfItemsPerSlot = 20;
 var isSplitStackBeingDragged = false;
 
@@ -7821,7 +7821,7 @@ for (var i = 0; i < thisMapData[whichMap].items.length; i++) {
 
 
 function processNewVisibleMapData(whichNewMap) {
-    //console.log("processing visible data for map#" + whichNewMap);
+ //   console.log("processing visible data for map#" + whichNewMap);
     visibleMaps.push(whichNewMap);
     removeElementFromArray(visibleMapsLoading, whichNewMap);
     //console.log("current map: " + currentMap);
@@ -7832,7 +7832,10 @@ function processNewVisibleMapData(whichNewMap) {
  //   for (var key in thisMapData) {
   //      console.log("key: " + key);
  //   }
+ //console.log("this map's items:");
  //   console.log(thisMapData[whichNewMap].items);
+ //   console.log("currentActiveInventoryItems");
+ //   console.log(currentActiveInventoryItems);
     for (var i = 0; i < thisMapData[whichNewMap].items.length; i++) {
         initialiseItem(thisMapData[whichNewMap].items[i]);
     }
@@ -7865,12 +7868,15 @@ function processNewVisibleMapData(whichNewMap) {
 }
 
 function loadNewVisibleInventoryItemData(itemIdsToLoad, whichNewMap) {
- //   console.log("loading new inv data: " + itemIdsToLoad);
+
+  //  console.log("loading new inv data for map#"+whichNewMap+": " + itemIdsToLoad);
     if (itemIdsToLoad.length > 0) {
         getJSON("/game-world/getInventoryItems.php?isAnUpdate=true&whichIds=" + itemIdsToLoad, function(data) {
             // currentActiveInventoryItems = data;
             // append this new data in: 
+          //  console.log("inv data returned ########### "+whichNewMap);
             for (var attrname in data) {
+           //     console.log(attrname, data[attrname]);
                 currentActiveInventoryItems[attrname] = data[attrname];
             }
             processNewVisibleMapData(whichNewMap);
@@ -7900,7 +7906,7 @@ function loadNewVisibleJSON(mapFilePath, whichNewMap) {
                 }
             }
             //console.log("loadNewVisibleJSON "+newItemIds.join("."));
-            loadNewVisibleInventoryItemData(newItemIds, whichNewMap)
+            loadNewVisibleInventoryItemData(newItemIds.join("|"), whichNewMap)
         },
         function(status) {
             loadNewVisibleJSON(mapFilePath, whichNewMap);
