@@ -53,7 +53,6 @@ function checkForWeatherChange() {
 }
 
 function changeWeather(newWeather) {
-    console.log(newWeather);
     if (newWeather != currentWeather) {
         weatherLastChangedTime = hero.totalGameTimePlayed;
         if (currentWeather != "") {

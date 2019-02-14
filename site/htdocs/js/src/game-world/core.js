@@ -68,12 +68,12 @@ function getHeroGameState() {
         for (var attribute in data) {
             hero[attribute] = data[attribute];
         }
-
-
-
-
         newMap = findMapNumberFromGlobalCoordinates(data.tileX, data.tileY);
-        visibleMaps.push(newMap);
+     //   visibleMaps.push(newMap);
+
+
+//visibleMapsLoading = [newMap];
+
         gameSettings = data.settings;
 
         timeSinceLastAmbientSoundWasPlayed = hero.totalGameTimePlayed + (minTimeBetweenAmbientSounds * 1.25);
@@ -92,7 +92,7 @@ function getHeroGameState() {
 
 // determine current map:
 currentMap = newMap;
-
+visibleMaps.push(currentMap);
 
         //  hero.inventory = data.inventory;
         if (currentMap > 0) {
@@ -104,7 +104,7 @@ currentMap = newMap;
     hero.y = getTileCentreCoordY(hero.tileY);
     hero.isox = findIsoCoordsX(hero.x, hero.y);
         hero.isoy = findIsoCoordsY(hero.x, hero.y);
-updateVisibleMaps();
+//updateVisibleMaps();
 
 
         loadCoreAssets();
@@ -385,110 +385,86 @@ for (var i = 0; i < thisMapData[whichMap].items.length; i++) {
 
 
 function processNewVisibleMapData(whichNewMap) {
+    //console.log("processing visible data for map#" + whichNewMap);
     visibleMaps.push(whichNewMap);
-
     removeElementFromArray(visibleMapsLoading, whichNewMap);
+    //console.log("current map: " + currentMap);
+    //console.log("visible maps: " + visibleMaps.join(" , "));
+    //console.log("whichNewMap: " + whichNewMap);
+    //console.log(thisMapData[whichNewMap]);
 
-
-
-
-
-
-
+ //   for (var key in thisMapData) {
+  //      console.log("key: " + key);
+ //   }
+ //   console.log(thisMapData[whichNewMap].items);
     for (var i = 0; i < thisMapData[whichNewMap].items.length; i++) {
         initialiseItem(thisMapData[whichNewMap].items[i]);
     }
+    for (var i = 0; i < thisMapData[whichNewMap].npcs.length; i++) {
 
-for (var i = 0; i < thisMapData[whichNewMap].npcs.length; i++) {
-  
-    initialiseNPC(thisMapData[whichNewMap].npcs[i]);
-}
-
-    
-
-
-
-// look for shops:
-
-
+        initialiseNPC(thisMapData[whichNewMap].npcs[i]);
+    }
+    // look for shops:
     thisMapShopItemIds = '';
-     
-       var shopData = '{"chr": ' + characterId + ',"region":"' + thisMapData[whichNewMap].region + '","shops": [';
-var addedShopDataAlready = false;
-        // loop through shops and create hashes 
-       
-        for (var i = 0; i < thisMapData[whichNewMap].shops.length; i++) {
-          thisMapData[whichNewMap].shops[i].hash = generateHash(thisMapData[whichNewMap].shops[i].name);
-          if(addedShopDataAlready) {
+    var shopData = '{"chr": ' + characterId + ',"region":"' + thisMapData[whichNewMap].region + '","shops": [';
+    var addedShopDataAlready = false;
+    // loop through shops and create hashes 
+    for (var i = 0; i < thisMapData[whichNewMap].shops.length; i++) {
+        thisMapData[whichNewMap].shops[i].hash = generateHash(thisMapData[whichNewMap].shops[i].name);
+        if (addedShopDataAlready) {
             shopData += ",";
-          }
-          shopData += JSON.stringify(thisMapData[whichNewMap].shops[i]);
-          addedShopDataAlready = true;
         }
-    
+        shopData += JSON.stringify(thisMapData[whichNewMap].shops[i]);
+        addedShopDataAlready = true;
+    }
+
     shopData += ']}';
-        loadNewVisibleShopData('shopData=' + shopData);
-
-
-
-
-
-
-
-
-
-
-updatePossibleWeather();
-
-
-
+    loadNewVisibleShopData('shopData=' + shopData);
+    //console.log(10,thisMapData[10]);
+    //console.log(14,thisMapData[14]);
+    //console.log(thisMapData);
+    //console.log(11,thisMapData[11]);
+    updatePossibleWeather();
     loadNewVisibleMapAssets(whichNewMap);
 }
 
 function loadNewVisibleInventoryItemData(itemIdsToLoad, whichNewMap) {
-    if(itemIdsToLoad.length>0) {
-    getJSON("/game-world/getInventoryItems.php?isAnUpdate=true&whichIds=" + itemIdsToLoad, function(data) {
-       // currentActiveInventoryItems = data;
-// append this new data in: 
- for (var attrname in data) {
-        currentActiveInventoryItems[attrname] = data[attrname];
+ //   console.log("loading new inv data: " + itemIdsToLoad);
+    if (itemIdsToLoad.length > 0) {
+        getJSON("/game-world/getInventoryItems.php?isAnUpdate=true&whichIds=" + itemIdsToLoad, function(data) {
+            // currentActiveInventoryItems = data;
+            // append this new data in: 
+            for (var attrname in data) {
+                currentActiveInventoryItems[attrname] = data[attrname];
+            }
+            processNewVisibleMapData(whichNewMap);
+        }, function(status) {
+            // try again:
+            loadNewVisibleInventoryItemData(itemIdsToLoad, whichNewMap);
+        });
+    } else {
+        processNewVisibleMapData(whichNewMap)
     }
-
-
-
-
-      processNewVisibleMapData(whichNewMap);
-    }, function(status) {
-        // try again:
-        loadNewVisibleInventoryItemData(itemIdsToLoad, whichNewMap);
-    });
-} else {
-processNewVisibleMapData(whichNewMap)
-}
 }
 
 
 
 
 function loadNewVisibleJSON(mapFilePath, whichNewMap) {
+ //   console.log("loading JSON for " + whichNewMap);
     getJSON(mapFilePath, function(data) {
-
             thisMapData[whichNewMap] = data.map;
             // find new items that require data:
-
+            //console.log("loadNewVisibleJSON raw "+getItemIdsForMap(whichNewMap).join("."));
             var thisMapsItemIds = uniqueValues(getItemIdsForMap(whichNewMap));
             var newItemIds = [];
-
             for (var i = 0; i < thisMapsItemIds.length; i++) {
-
                 if (!(thisMapsItemIds[i] in currentActiveInventoryItems)) {
                     newItemIds.push(thisMapsItemIds[i]);
                 }
             }
-
-
+            //console.log("loadNewVisibleJSON "+newItemIds.join("."));
             loadNewVisibleInventoryItemData(newItemIds, whichNewMap)
-
         },
         function(status) {
             loadNewVisibleJSON(mapFilePath, whichNewMap);
@@ -496,14 +472,14 @@ function loadNewVisibleJSON(mapFilePath, whichNewMap) {
 }
 
 function loadNewVisibleMap(whichNewMap) {
-    //  console.log("loading in "+whichNewMap);
     if (visibleMapsLoading.indexOf(whichNewMap) === -1) {
         visibleMapsLoading.push(whichNewMap);
         var mapFilePath = '/game-world/getMap.php?chr=' + characterId + '&map=' + whichNewMap;
         if (whichNewMap < 0) {
             mapFilePath = '/game-world/generateCircularDungeonMap.php?dungeonName=' + randomDungeonName + '&requestedMap=' + whichNewMap;
         }
-        loadNewVisibleJSON(mapFilePath, whichNewMap)
+        loadNewVisibleJSON(mapFilePath, whichNewMap);
+        console.log("whichNewMap - loading in "+whichNewMap+" - "+visibleMapsLoading.indexOf(whichNewMap));
     }
 }
 
@@ -539,12 +515,16 @@ function loadMap() {
     }
     currentMap = newMap;
     loadMapJSON(mapFilePath);
+
     // load other visible maps:
+    updateVisibleMaps();
+    /*
     for (var i = 0; i < visibleMaps.length; i++) {
         if (visibleMaps[i] != currentMap) {
             loadMapJSON('/game-world/getMap.php?chr=' + characterId + '&map=' + visibleMaps[i]);
         }
     }
+    */
 }
 
 
@@ -884,11 +864,14 @@ function getItemIdsForMap(whichMap) {
                         }
                     }
                 } else {
+                    // make sure it's not UGC:
+                      if (typeof thisMapData[whichMap].items[i].contains['ugc-id'] === "undefined") {
                     // eg crop object, so get pollen, seed and fruit ids if specified:
 
                     for (var j in thisMapData[whichMap].items[i].contains) {
                         itemIdsToGet.push(thisMapData[whichMap].items[i].contains[j].type);
                     }
+                }
                 }
             }
         }
@@ -1006,6 +989,7 @@ function initialiseNPC(whichNPC) {
 }
 
 function initialiseItem(whichItem) {
+
     whichItem.x = getTileCentreCoordX(whichItem.tileX);
     whichItem.y = getTileCentreCoordY(whichItem.tileY);
     whichItem.z = getElevation(whichItem.tileX, whichItem.tileY);
@@ -1905,11 +1889,14 @@ newVisibleMaps.push(worldMap[j][i]);
 
     // check for differences in visibleMaps array and load any new
 
+
+
+
 // https://stackoverflow.com/questions/1187518/how-to-get-the-difference-between-two-arrays-in-javascript
 var newMapsToLoad = newVisibleMaps.filter(function(i) {return visibleMaps.indexOf(i) < 0;});
 //console.log("new maps:",newMapsToLoad);
 for(var i=0;i<newMapsToLoad.length;i++) {
-  
+ // console.log("loading in new map #"+newMapsToLoad[i]);
 loadNewVisibleMap(newMapsToLoad[i]);
     
 }

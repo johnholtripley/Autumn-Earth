@@ -281,12 +281,12 @@
              "doors": {},
         "items": [
 
-{
-"type": 80,
- "tileX": 6,
-                "tileY": 22,
-                "contains": {"ugc-id":"1","ugc-title":"titian"}
-    },
+                {
+                "type": 80,
+                 "tileX": 6,
+                        "tileY": 22,
+                        "contains": {"ugc-id":"1","ugc-title":"titian"}
+            },
 
             {
                 "type": 76,
