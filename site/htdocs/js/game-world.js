@@ -354,13 +354,19 @@ var timeSinceLastFrameSwap = 0;
 var currentAnimationFrame = 0;
 var animationUpdateTime = (1000 / animationFramesPerSecond);
 
-var gameCanvas, gameContext, gameMode, cartographyContext, cartographyCanvas, offScreenCartographyCanvas, offScreenCartographyContext, canvasMapImage, canvasMapImage, canvasMapMaskImage, heroImg, shadowImg, tilledEarth, addedWater, ocean, oceanPattern, imagesToLoad, tileImages, npcImages, itemImages, backgroundImgs, objInitLeft, objInitTop, dragStartX, dragStartY, inventoryCheck, timeSinceLastAmbientSoundWasPlayed, gameSettings, lightMap, lightMapOverlay, lightMapContext, activeGatheredObject, questResponseNPC, cursorPositionX, cursorPositionY, whichVisibleMap;
+var gameCanvas, gameContext, gameMode, cartographyContext, cartographyCanvas, offScreenCartographyCanvas, offScreenCartographyContext, canvasMapImage, canvasMapImage, canvasMapMaskImage, heroImg, shadowImg, tilledEarth, addedWater, ocean, oceanPattern, imagesToLoad, objInitLeft, objInitTop, dragStartX, dragStartY, inventoryCheck, timeSinceLastAmbientSoundWasPlayed, gameSettings, lightMap, lightMapOverlay, lightMapContext, activeGatheredObject, questResponseNPC, cursorPositionX, cursorPositionY, whichVisibleMap;
 var chestIdOpen = -1;
 var currentWeather = "";
 var outsideWeather = "";
 var allPossibleWeather = [""];
 var weatherLastChangedTime = 0;
 const minTimeBetweenWeatherChanges = 5000;
+
+var tileImages = [];
+var npcImages = [];
+var itemImages = [];
+var backgroundImgs = [];
+
 var interfaceIsVisible = true;
 var activeAction = "";
 var dowsing = {};
@@ -7393,9 +7399,9 @@ updatePossibleWeather();
 
 function updatePossibleWeather() {
  allPossibleWeather = [];
-// console.log(visibleMaps,thisMapData);
+
 for (var m = 0; m < visibleMaps.length; m++) {
- //   console.log(visibleMaps[m],"***",thisMapData[(visibleMaps[m])]);
+   // console.log(visibleMaps[m],"***",thisMapData[(visibleMaps[m])]);
 allPossibleWeather = allPossibleWeather.concat(thisMapData[(visibleMaps[m])].weather);
 }
 }
@@ -7522,7 +7528,7 @@ function getHeroGameState() {
 
 // determine current map:
 currentMap = newMap;
-visibleMaps.push(currentMap);
+
 
         //  hero.inventory = data.inventory;
         if (currentMap > 0) {
@@ -7720,7 +7726,7 @@ function loadNewVisibleMapAssets(whichMap) {
     };
     newBackground.src = '/images/game-world/backgrounds/' + whichMap + '.png';
 
- 
+
 
 // load items:
     var thisPathAndIdentifer;
@@ -7909,7 +7915,7 @@ function loadNewVisibleMap(whichNewMap) {
             mapFilePath = '/game-world/generateCircularDungeonMap.php?dungeonName=' + randomDungeonName + '&requestedMap=' + whichNewMap;
         }
         loadNewVisibleJSON(mapFilePath, whichNewMap);
-        console.log("whichNewMap - loading in "+whichNewMap+" - "+visibleMapsLoading.indexOf(whichNewMap));
+      //  console.log("whichNewMap - loading in "+whichNewMap+" - "+visibleMapsLoading.indexOf(whichNewMap));
     }
 }
 
@@ -7918,6 +7924,7 @@ function loadMapJSON(mapFilePath) {
     getJSON(mapFilePath, function(data) {
             thisMapData[data.map.mapId] = data.map;
             if (data.map.mapId == currentMap) {
+                visibleMaps.push(currentMap);
                 processInitialMap();
                 isOverWorldMap = !data.map.isInside;
             }
@@ -8461,17 +8468,17 @@ function initialiseItem(whichItem) {
 
 function prepareGame() {
     // get map image references:
-    tileImages = [];
+    
     for (var i = 0; i < tileGraphicsToLoad.length; i++) {
         tileImages[tileGraphicsToLoad[i]] = Loader.getImage(tileGraphicsToLoad[i]);
     }
    
-    npcImages = [];
+ 
     for (var i = 0; i < npcGraphicsToLoad.length; i++) {
         npcImages[npcGraphicsToLoad[i]] = Loader.getImage(npcGraphicsToLoad[i]);
 
     }
-    itemImages = [];
+
     for (var i = 0; i < itemGraphicsToLoad.length; i++) {
 
         itemImages[itemGraphicsToLoad[i]] = Loader.getImage(itemGraphicsToLoad[i]);
@@ -8480,7 +8487,7 @@ function prepareGame() {
         //  itemImages[itemGraphicsToLoad[i]].spriteHeight = Loader.getImage(itemGraphicsToLoad[i]).length;
     }
     //backgroundImg = Loader.getImage("backgroundImg");
-    backgroundImgs = [];
+    
     backgroundImgs[currentMap] = Loader.getImage("backgroundImg" + currentMap);
     for (var i = 0; i < visibleMaps.length; i++) {
         backgroundImgs[(visibleMaps[i])] = Loader.getImage("backgroundImg" + visibleMaps[i]);

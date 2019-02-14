@@ -35,9 +35,9 @@ updatePossibleWeather();
 
 function updatePossibleWeather() {
  allPossibleWeather = [];
-// console.log(visibleMaps,thisMapData);
+
 for (var m = 0; m < visibleMaps.length; m++) {
- //   console.log(visibleMaps[m],"***",thisMapData[(visibleMaps[m])]);
+   // console.log(visibleMaps[m],"***",thisMapData[(visibleMaps[m])]);
 allPossibleWeather = allPossibleWeather.concat(thisMapData[(visibleMaps[m])].weather);
 }
 }
