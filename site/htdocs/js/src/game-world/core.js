@@ -326,11 +326,11 @@ for (var i = 0; i < thisMapData[whichMap].graphics.length; i++) {
         newTerrainImagesToLoad[(thisTerrainIdentifer)].onerror = function() {
             // error handling? ####
         };
-        if (thisTerrainIdentifer.indexOf('housing') !== -1) {
-            newTerrainImagesToLoad[(thisTerrainIdentifer)].src = "/images/game-world/" + thisMapData[whichMap].graphics[i].src;
-        } else {
+     //   if (thisTerrainIdentifer.indexOf('housing') !== -1) {
+     //       newTerrainImagesToLoad[(thisTerrainIdentifer)].src = "/images/game-world/" + thisMapData[whichMap].graphics[i].src;
+     //   } else {
             newTerrainImagesToLoad[(thisTerrainIdentifer)].src = "/images/game-world/terrain/" + thisMapData[whichMap].graphics[i].src;
-        }
+     //   }
 
     }
 }
@@ -340,7 +340,7 @@ for (var i = 0; i < thisMapData[whichMap].graphics.length; i++) {
 var thisNPCIdentifier;
 var newNPCImagesToLoad = [];
 for (var i = 0; i < thisMapData[whichMap].npcs.length; i++) {
-    thisNPCIdentifier = "npc" + thisMapData[whichMap].npcs[i].name;
+    thisNPCIdentifier = "npc" + thisMapData[whichMap].npcs[i].src;
     if (typeof npcImages[thisNPCIdentifier] === "undefined") {
         newNPCImagesToLoad[thisNPCIdentifier] = new Image();
         newNPCImagesToLoad[thisNPCIdentifier].onload = function() {
@@ -360,7 +360,7 @@ for (var i = 0; i < thisMapData[whichMap].npcs.length; i++) {
 for (var i = 0; i < thisMapData[whichMap].items.length; i++) {
     if (currentActiveInventoryItems[thisMapData[whichMap].items[i].type].action == "nest") {
         for (var j = 0; j < thisMapData[whichMap].items[i].contains.length; j++) {
-            thisNPCIdentifier = "npc" + thisMapData[whichMap].items[i].contains[j].name;
+            thisNPCIdentifier = "npc" + thisMapData[whichMap].items[i].contains[j].src;
              if (typeof npcImages[thisNPCIdentifier] === "undefined") {
         newNPCImagesToLoad[thisNPCIdentifier] = new Image();
         newNPCImagesToLoad[thisNPCIdentifier].onload = function() {
@@ -597,12 +597,12 @@ assetPath = visibleMaps[m];
   //  tileGraphicsToLoad = thisMapData[visibleMaps[m]].graphics;
     for (var i = 0; i < thisMapData[visibleMaps[m]].graphics.length; i++) {
         thisTerrainIdentifer = thisMapData[visibleMaps[m]].graphics[i].src;
-        if (thisTerrainIdentifer.indexOf('housing') !== -1) {
-            imagesToLoad.push({
-                name: thisTerrainIdentifer,
-                src: "/images/game-world/" + thisMapData[visibleMaps[m]].graphics[i].src
-            });
-        } else {
+     //   if (thisTerrainIdentifer.indexOf('housing') !== -1) {
+     //       imagesToLoad.push({
+     //           name: thisTerrainIdentifer,
+    //            src: "/images/game-world/" + thisMapData[visibleMaps[m]].graphics[i].src
+     //       });
+    //    } else {
             
             if (tileGraphicsToLoad.indexOf(thisTerrainIdentifer) == -1) {
             imagesToLoad.push({
@@ -612,12 +612,12 @@ assetPath = visibleMaps[m];
             });
             tileGraphicsToLoad.push(thisTerrainIdentifer);
             }
-        }
+    //    }
 
     }
     
     for (var i = 0; i < thisMapData[visibleMaps[m]].npcs.length; i++) {
-        thisNPCIdentifier = "npc" + thisMapData[visibleMaps[m]].npcs[i].name;
+        thisNPCIdentifier = "npc" + thisMapData[visibleMaps[m]].npcs[i].src;
         if (npcGraphicsToLoad.indexOf(thisNPCIdentifier) == -1) {
             imagesToLoad.push({
                 name: thisNPCIdentifier,
@@ -631,7 +631,7 @@ assetPath = visibleMaps[m];
     for (var i = 0; i < thisMapData[visibleMaps[m]].items.length; i++) {
         if (currentActiveInventoryItems[thisMapData[visibleMaps[m]].items[i].type].action == "nest") {
             for (var j = 0; j < thisMapData[visibleMaps[m]].items[i].contains.length; j++) {
-                thisNPCIdentifier = "npc" + thisMapData[visibleMaps[m]].items[i].contains[j].name;
+                thisNPCIdentifier = "npc" + thisMapData[visibleMaps[m]].items[i].contains[j].src;
                 if (npcGraphicsToLoad.indexOf(thisNPCIdentifier) == -1) {
                     imagesToLoad.push({
                         name: thisNPCIdentifier,
@@ -2652,9 +2652,10 @@ function jumpToLocation(mapId, tileX, tileY) {
 }
 
 function moveNPCs() {
-    var thisNPC, newTile, thisNextMovement, oldNPCx, oldNPCy, thisOtherNPC, thisItem, thisNextMovement, thisNextMovementCode, thisInnerDoor;
+    var thisNPC, thisUniqueIdentifier, thisInnerUniqueIdentifier, newTile, thisNextMovement, oldNPCx, oldNPCy, thisOtherNPC, thisItem, thisNextMovement, thisNextMovementCode, thisInnerDoor;
 for (var m = 0; m < visibleMaps.length; m++) {
     for (var i = 0; i < thisMapData[(visibleMaps[m])].npcs.length; i++) {
+        thisUniqueIdentifier = m+"-"+i;
         thisNPC = thisMapData[(visibleMaps[m])].npcs[i];
 
         thisNPC.hasJustGotNewPath = false;
@@ -2733,8 +2734,8 @@ for (var m = 0; m < visibleMaps.length; m++) {
                 for (var n = 0; n < visibleMaps.length; n++) {
                 for (var j = 0; j < thisMapData[(visibleMaps[n])].npcs.length; j++) {
                     thisOtherNPC = thisMapData[(visibleMaps[n])].npcs[j];
-                    // are names unique? ########
-                    if (thisNPC.name != thisOtherNPC.name) {
+                    thisInnerUniqueIdentifier = n+"-"+j;
+                    if (thisUniqueIdentifier != thisInnerUniqueIdentifier) {
                         
                         if (thisOtherNPC.isCollidable) {
                             if (isAnObjectCollision(thisNPC.x, thisNPC.y, thisNPC.width, thisNPC.length, thisOtherNPC.x, thisOtherNPC.y, thisOtherNPC.width, thisOtherNPC.length)) {
@@ -3524,7 +3525,7 @@ for (var m = 0; m < visibleMaps.length; m++) {
                 thisX = findIsoCoordsX(thisNPC.x, thisNPC.y);
                 thisY = findIsoCoordsY(thisNPC.x, thisNPC.y);
                 //assetsToDraw.push([findIsoDepth(thisX, thisY), npcImages[i], Math.floor(thisX - hero.isox - thisNPC.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisNPC.centreY + (canvasHeight / 2))]);
-                thisNPCIdentifier = "npc" + thisMapData[whichVisibleMap].npcs[i].name;
+                thisNPCIdentifier = "npc" + thisMapData[whichVisibleMap].npcs[i].src;
 
 
 

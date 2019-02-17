@@ -517,6 +517,49 @@ $thisItemObject = array(
 
 if(!$isPlayerHousing) {
 
+// see if this player has any housing:
+ //   $externalHousingDataPath = $_SERVER['DOCUMENT_ROOT'].'/data/chr'.$chr.'/housing/external.json';
+
+//if (file_exists($externalHousingDataPath)) {
+    // john #######
+ //   $jsonHousingFile = file_get_contents($externalHousingDataPath);
+ //  $externalHousingMapJson = json_decode($jsonHousingFile, true);
+ //  $housingWidth = count($externalHousingMapJson['map']['collisions'][0]);
+ //  $housingHeight = count($externalHousingMapJson['map']['collisions']);
+   // see if any part of this falls within the requested map:
+
+
+$eastEdgeTile = $globalPosition[0]*$worldMapTileLength;
+$westEdgeTile = (($globalPosition[0]+1)*$worldMapTileLength)-1;
+$NorthEdgeTile = $globalPosition[1]*$worldMapTileLength;
+$SouthEdgeTile = (($globalPosition[1]+1)*$worldMapTileLength)-1;
+ 
+
+//echo $NorthEdgeTile.", ".$eastEdgeTile.", ".$SouthEdgeTile.", ".$westEdgeTile;
+ //  echo " - ".$housingWidth.", ".$housingHeight;
+
+
+   // house North edge >= $NorthEdgeTile
+   // house North edge  <= $SouthEdgeTile - housingHeight
+
+$housingQuery = "SELECT * from tblplayerhousing where northWestCornerTileY >= ".$NorthEdgeTile." and southEastCornerTileY <= ".$SouthEdgeTile." and northWestCornerTileX <= ".$westEdgeTile." and southEastCornerTileX >= ".$eastEdgeTile;
+$housingResult = mysqli_query($connection,  $housingQuery ) or die ( "couldn't execute events query: ".$housingQuery );
+$numberOfHouses = mysqli_num_rows( $housingResult );
+if ( $numberOfHouses>0 ) {
+    while ( $housingRow = mysqli_fetch_array( $housingResult ) ) {
+//var_dump($housingRow);
+    }
+    }
+    mysqli_free_result($housingResult);
+//} 
+
+
+
+
+
+
+/*
+
 
 // see if there's any player housing on this map:
 $housingQuery = "SELECT * from tblplayerhousing where mapid = ".$map;
@@ -644,7 +687,7 @@ unset($housingData['map']['doors'][$key]);
 }
 mysqli_free_result($housingResult);
 
-
+*/
 
 
 
