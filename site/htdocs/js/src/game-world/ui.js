@@ -1078,10 +1078,12 @@ cardAlbumMarkup += '<p id="dustCurrency">'+ hero.currency.cardDust + ' dust</p>'
     },
 
     buildShop: function(markup) {
-        shopPanel.innerHTML = markup;
+     //   shopPanel.innerHTML = markup;
+         shopPanel.insertAdjacentHTML('beforeend', markup);
     },
 
     openedShopSuccessfully: function(shopHash) {
+        console.log(shopHash);
         if (document.getElementById("shop" + shopHash)) {
             UI.showUI();
             shopCurrentlyOpen = shopHash;

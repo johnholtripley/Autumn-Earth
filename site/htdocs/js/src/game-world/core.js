@@ -302,8 +302,9 @@ function loadNewVisibleMapAssets(whichMap) {
         // only add unique images:
         if (typeof itemImages[(thisPathAndIdentifer[1])] === "undefined") {
             newItemImagesToLoad[(thisPathAndIdentifer[1])] = new Image();
+            newItemImagesToLoad[(thisPathAndIdentifer[1])].identifier = thisPathAndIdentifer[1];
             newItemImagesToLoad[(thisPathAndIdentifer[1])].onload = function() {
-                itemImages[(thisPathAndIdentifer[1])] = newItemImagesToLoad[(thisPathAndIdentifer[1])];
+                itemImages[this.identifier] = newItemImagesToLoad[this.identifier];
             };
             newItemImagesToLoad[(thisPathAndIdentifer[1])].onerror = function() {
                 // error handling? ####
@@ -320,8 +321,9 @@ for (var i = 0; i < thisMapData[whichMap].graphics.length; i++) {
     thisTerrainIdentifer = thisMapData[whichMap].graphics[i].src;
     if (typeof tileImages[thisTerrainIdentifer] === "undefined") {
         newTerrainImagesToLoad[(thisTerrainIdentifer)] = new Image();
+        newTerrainImagesToLoad[(thisTerrainIdentifer)].identifier = thisTerrainIdentifer;
         newTerrainImagesToLoad[(thisTerrainIdentifer)].onload = function() {
-            tileImages[(thisTerrainIdentifer)] = newTerrainImagesToLoad[(thisTerrainIdentifer)];
+            tileImages[this.identifier] = newTerrainImagesToLoad[this.identifier];
         };
         newTerrainImagesToLoad[(thisTerrainIdentifer)].onerror = function() {
             // error handling? ####
@@ -341,10 +343,14 @@ var thisNPCIdentifier;
 var newNPCImagesToLoad = [];
 for (var i = 0; i < thisMapData[whichMap].npcs.length; i++) {
     thisNPCIdentifier = "npc" + thisMapData[whichMap].npcs[i].src;
+
     if (typeof npcImages[thisNPCIdentifier] === "undefined") {
+      
         newNPCImagesToLoad[thisNPCIdentifier] = new Image();
+        newNPCImagesToLoad[thisNPCIdentifier].identifier = thisNPCIdentifier;
         newNPCImagesToLoad[thisNPCIdentifier].onload = function() {
-            npcImages[thisNPCIdentifier] = newNPCImagesToLoad[thisNPCIdentifier];
+            npcImages[this.identifier] = newNPCImagesToLoad[this.identifier];
+       
         };
         newNPCImagesToLoad[thisNPCIdentifier].onerror = function() {
             // error handling? ####
@@ -363,8 +369,9 @@ for (var i = 0; i < thisMapData[whichMap].items.length; i++) {
             thisNPCIdentifier = "npc" + thisMapData[whichMap].items[i].contains[j].src;
              if (typeof npcImages[thisNPCIdentifier] === "undefined") {
         newNPCImagesToLoad[thisNPCIdentifier] = new Image();
+        newNPCImagesToLoad[thisNPCIdentifier].identifier = thisNPCIdentifier;
         newNPCImagesToLoad[thisNPCIdentifier].onload = function() {
-            npcImages[thisNPCIdentifier] = newNPCImagesToLoad[thisNPCIdentifier];
+            npcImages[this.identifier] = newNPCImagesToLoad[this.identifier];
         };
         newNPCImagesToLoad[thisNPCIdentifier].onerror = function() {
             // error handling? ####
@@ -802,6 +809,7 @@ var addedShopDataAlready = false;
 
 function loadNewVisibleShopData(shopJSONData) {
     // post data with getJSONWithParams function
+
     getJSONWithParams("/game-world/getShopItems.php", shopJSONData, function(data) {
         thisMapShopItemIds = data.allItemIds;
         UI.buildShop(data.markup);
@@ -2240,11 +2248,14 @@ function processSpeech(thisObjectSpeaking, thisSpeechPassedIn, thisSpeechCode, i
                 break;
             case "shop":
                 // check if the shop is empty:
-
+console.log("open shop");
                 if (UI.openedShopSuccessfully(generateHash(thisObjectSpeaking.speech[thisObjectSpeaking.speechIndex][2]))) {
                     //
+
+          
                 } else {
                     // shop is empty:
+           
                     if (typeof thisObjectSpeaking.shopEmptySpeech !== "undefined") {
                         thisSpeech = thisObjectSpeaking.shopEmptySpeech;
                     }
