@@ -1085,13 +1085,15 @@ cardAlbumMarkup += '<p id="dustCurrency">'+ hero.currency.cardDust + ' dust</p>'
     openedShopSuccessfully: function(shopHash) {
         console.log(shopHash);
         if (document.getElementById("shop" + shopHash)) {
+            console.log("exists");
             UI.showUI();
             shopCurrentlyOpen = shopHash;
             document.getElementById("shop" + shopHash).classList.add("active");
             inventoryPanels.classList.add("shopSpecialism" + document.getElementById("shop" + shopHash).getAttribute('data-specialism'));
+            console.log("shop should be open");
             return true;
         } else {
-            return false;
+               return false;
         }
     },
 

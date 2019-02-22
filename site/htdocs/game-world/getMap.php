@@ -549,11 +549,21 @@ if ( $numberOfHouses>0 ) {
     while ( $housingRow = mysqli_fetch_array( $housingResult ) ) {
 //var_dump($housingRow);
 
+        $graphicsBeingUsed = array();
+
+for ($i=0;$i<count($mapData['map']['graphics']);$i++) {
+$graphicsBeingUsed[$mapData['map']['graphics'][$i]['src']] = $i;
+}
+
+
+
  extract($housingRow);
         // load in external housing
         $housingFile = file_get_contents('../data/chr'.$chr.'/housing/external.json');
         $housingData = json_decode($housingFile, true);
 
+    $thisHouseWidth = count($housingData['map']['terrain'][0]);
+        $thisHouseLength = count($housingData['map']['terrain']);
 
 // add items:
   for ($i=0;$i<count($housingData['map']['items']);$i++) {
@@ -614,6 +624,38 @@ unset($housingData['map']['doors'][$key]);
   }  
 
 
+  $graphicsForThisHouse = $housingData['map']['graphics'];
+
+
+$localNorthWestCornerTileX = $northWestCornerTileX - ($mapData['map']['globalCoordinateTile0X'] * $worldMapTileLength);
+$localNorthWestCornerTileY = $northWestCornerTileY - ($mapData['map']['globalCoordinateTile0Y'] * $worldMapTileLength);
+
+
+for ($i=0;$i<$thisHouseWidth;$i++) {
+    for ($j=0;$j<$thisHouseLength;$j++) {
+        // check if graphics are already used, if not add them to the list and map the id appropriately:
+        // don't overwrite underlying terrain with any "?" items in the housing data:
+        if($housingData['map']['terrain'][$j][$i] !== "?") {
+            if($housingData['map']['terrain'][$j][$i] === "*") {
+                $mapData['map']['terrain'][$j+$localNorthWestCornerTileY][$i+$localNorthWestCornerTileX] = "*";
+            } else {
+                // check if the same filename has already been added and use that reference instead to avoid duplicating images:
+                if(array_key_exists(($graphicsForThisHouse[($housingData['map']['terrain'][$j][$i])]['src']),$graphicsBeingUsed)) {
+                    // already being used, so use the reference already held:
+                    $mapData['map']['terrain'][$j+$localNorthWestCornerTileY][$i+$localNorthWestCornerTileX] = $graphicsBeingUsed[($graphicsForThisHouse[($housingData['map']['terrain'][$j][$i])]['src'])];
+                } else {
+                    // add and store for later:
+                    $numberOfGraphicsSoFar = count($graphicsBeingUsed);
+                    $mapData['map']['terrain'][$j+$localNorthWestCornerTileY][$i+$localNorthWestCornerTileX] = $numberOfGraphicsSoFar;
+                    $graphicsBeingUsed[($graphicsForThisHouse[($housingData['map']['terrain'][$j][$i])]['src'])] = $numberOfGraphicsSoFar;
+                    array_push($mapData['map']['graphics'],  $graphicsForThisHouse[$housingData['map']['terrain'][$j][$i]]  );
+                }
+            }
+            $mapData['map']['collisions'][$j+$localNorthWestCornerTileY][$i+$localNorthWestCornerTileX] = $housingData['map']['collisions'][$j][$i];
+            $mapData['map']['elevation'][$j+$localNorthWestCornerTileY][$i+$localNorthWestCornerTileX] = $housingData['map']['elevation'][$j][$i];
+        }
+    }
+}
   
 
     }

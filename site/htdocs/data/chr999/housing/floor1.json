@@ -29,12 +29,12 @@
         "graphics": [
 
             {
-                "src": "housing/dirt.png",
+                "src": "dirt.png",
                 "centreX": 24,
                 "centreY": 12
             },
             {
-                "src": "housing/block.png",
+                "src": "block.png",
                 "centreX": 24,
                 "centreY": 45
             }

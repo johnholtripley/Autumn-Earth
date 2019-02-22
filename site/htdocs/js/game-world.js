@@ -5937,13 +5937,15 @@ cardAlbumMarkup += '<p id="dustCurrency">'+ hero.currency.cardDust + ' dust</p>'
     openedShopSuccessfully: function(shopHash) {
         console.log(shopHash);
         if (document.getElementById("shop" + shopHash)) {
+            console.log("exists");
             UI.showUI();
             shopCurrentlyOpen = shopHash;
             document.getElementById("shop" + shopHash).classList.add("active");
             inventoryPanels.classList.add("shopSpecialism" + document.getElementById("shop" + shopHash).getAttribute('data-specialism'));
+            console.log("shop should be open");
             return true;
         } else {
-            return false;
+               return false;
         }
     },
 
@@ -7830,7 +7832,8 @@ for (var i = 0; i < thisMapData[whichMap].items.length; i++) {
 
 
 function processNewVisibleMapData(whichNewMap) {
- //   console.log("processing visible data for map#" + whichNewMap);
+
+ //   console.log("pushing to vsiibleMaps for map#" + whichNewMap);
     visibleMaps.push(whichNewMap);
     removeElementFromArray(visibleMapsLoading, whichNewMap);
     //console.log("current map: " + currentMap);
@@ -7867,7 +7870,7 @@ function processNewVisibleMapData(whichNewMap) {
     }
 
     shopData += ']}';
-    loadNewVisibleShopData('shopData=' + shopData);
+ //  loadNewVisibleShopData('shopData=' + shopData);
     //console.log(10,thisMapData[10]);
     //console.log(14,thisMapData[14]);
     //console.log(thisMapData);
@@ -7939,7 +7942,7 @@ function loadMapJSON(mapFilePath) {
     getJSON(mapFilePath, function(data) {
             thisMapData[data.map.mapId] = data.map;
             if (data.map.mapId == currentMap) {
-                visibleMaps.push(currentMap);
+               // visibleMaps.push(currentMap);
                 processInitialMap();
                 isOverWorldMap = !data.map.isInside;
             }
