@@ -352,14 +352,14 @@ for (var m = 0; m < visibleMaps.length; m++) {
                             thisPet.pathIndex++;
                             if (thisPet.pathIndex >= thisPet.foundPath.length) {
                                 // come to end of the path, try and find a new one:
-                                pathfindingWorker.postMessage(['petToHero', hero.allPets[hero.activePets[p]], thisMapData, thisPetsTarget.tileX, thisPetsTarget.tileY, p]);
+                                pathfindingWorker.postMessage(['petToHero', hero.allPets[hero.activePets[p]], thisMapData, thisPetsTarget.tileX, thisPetsTarget.tileY, p, visibleMaps, isOverWorldMap]);
                                 thisPet.state = "findingPath";
                                 thisPet.foundPath = '';
                             }
                         } else {
                             if (thisPet.state != 'findingPath') {
                                 // pathfind to hero
-                                pathfindingWorker.postMessage(['petToHero', hero.allPets[hero.activePets[p]], thisMapData, thisPetsTarget.tileX, thisPetsTarget.tileY, p]);
+                                pathfindingWorker.postMessage(['petToHero', hero.allPets[hero.activePets[p]], thisMapData, thisPetsTarget.tileX, thisPetsTarget.tileY, p, visibleMaps, isOverWorldMap]);
                                 thisPet.state = "findingPath";
                             }
                         }

@@ -18,12 +18,11 @@ loadGlobalMapData();
 
 
 
-var thisMapData, visibleMaps, mapTilesY, mapTilesX, thisAgentsIndex, uncheckedTiles, nodes, firstKey;
+var thisMapData, visibleMaps, mapTilesY, mapTilesX, thisAgentsIndex, uncheckedTiles, nodes, firstKey, isOverWorldMap;
 
 
-// needs loading dynamically: ###############
+// ideally load these in from a shared resource: ##
 const tileW = 48;
-var isOverWorldMap = true;
 const worldMapTileLength = 50;
 
 
@@ -53,9 +52,9 @@ function isATerrainCollision(tileX, tileY) {
 function isATerrainCollision(globalTileX, globalTileY) {
     var tileX = getLocalCoordinatesX(globalTileX);
     var tileY = getLocalCoordinatesX(globalTileY);
-  
+
     if (isOverWorldMap) {
-    
+
         if ((globalTileX < 0) || (globalTileY < 0) || (globalTileX >= (worldMapTileLength * worldMap[0].length)) || (globalTileY >= (worldMapTileLength * worldMap.length))) {
             return 1;
         }
@@ -157,18 +156,20 @@ function findPath(startX, startY, endX, endY) {
     var thisNode;
 
     var targetFound = false;
+    var localTileX, localTileY;
     // prepare map - mark any items, static NPCs or closed inner doors as blocked tiles:
     for (var m = 0; m < visibleMaps.length; m++) {
         for (var i = 0; i < thisMapData[(visibleMaps[m])].npcs.length; i++) {
-          
+
             // make sure other NPCs don't block - except for the any in the destination tile:
             if (thisMapData[(visibleMaps[m])].npcs.uniqueIndex != thisAgentsIndex) {
                 // only include stationary NPCS:
                 if (thisMapData[(visibleMaps[m])].npcs[i].movement[thisMapData[(visibleMaps[m])].npcs[i].movementIndex] == '-') {
                     if (thisMapData[(visibleMaps[m])].npcs[i].isCollidable) {
                         if (!((thisMapData[(visibleMaps[m])].npcs[i].tileX == endX) && (thisMapData[(visibleMaps[m])].npcs[i].tileY == endY))) {
-
-                            thisMapData[(visibleMaps[m])].collisions[thisMapData[(visibleMaps[m])].npcs[i].tileY][thisMapData[(visibleMaps[m])].npcs[i].tileX] = 1;
+                            localTileX = getLocalCoordinatesX(thisMapData[(visibleMaps[m])].npcs[i].tileX);
+                            localTileY = getLocalCoordinatesY(thisMapData[(visibleMaps[m])].npcs[i].tileY);
+                            thisMapData[(visibleMaps[m])].collisions[localTileY][localTileX] = 1;
                         }
                     }
                 }
@@ -177,19 +178,21 @@ function findPath(startX, startY, endX, endY) {
 
         // check for items:
         for (var i = 0; i < thisMapData[(visibleMaps[m])].items.length; i++) {
-            thisMapData[(visibleMaps[m])].collisions[thisMapData[(visibleMaps[m])].items[i].tileY][thisMapData[(visibleMaps[m])].items[i].tileX] = 1;
+            localTileX = getLocalCoordinatesX(thisMapData[(visibleMaps[m])].items[i].tileX);
+            localTileY = getLocalCoordinatesY(thisMapData[(visibleMaps[m])].items[i].tileY);
+            thisMapData[(visibleMaps[m])].collisions[localTileY][localTileX] = 1;
             // needs to also see if the item is wider than a single tile:
             // needs debugging ##############
             if (thisMapData[(visibleMaps[m])].items[i].width > tileW) {
                 for (var j = 1; j < thisMapData[(visibleMaps[m])].items[i].width / tileW; j++) {
-                    thisMapData[(visibleMaps[m])].collisions[thisMapData[(visibleMaps[m])].items[i].tileY][thisMapData[(visibleMaps[m])].items[i].tileX + j] = 1;
-                    thisMapData[(visibleMaps[m])].collisions[thisMapData[(visibleMaps[m])].items[i].tileY][thisMapData[(visibleMaps[m])].items[i].tileX - j] = 1;
+                    thisMapData[(visibleMaps[m])].collisions[localTileY][localTileX + j] = 1;
+                    thisMapData[(visibleMaps[m])].collisions[localTileY][localTileX - j] = 1;
                 }
             }
             if (thisMapData[(visibleMaps[m])].items[i].height > tileW) {
                 for (var j = 1; j < thisMapData[(visibleMaps[m])].items[i].height / tileW; j++) {
-                    thisMapData[(visibleMaps[m])].collisions[thisMapData[(visibleMaps[m])].items[i].tileY + j][thisMapData[(visibleMaps[m])].items[i].tileX] = 1;
-                    thisMapData[(visibleMaps[m])].collisions[thisMapData[(visibleMaps[m])].items[i].tileY - j][thisMapData[(visibleMaps[m])].items[i].tileX] = 1;
+                    thisMapData[(visibleMaps[m])].collisions[localTileY + j][localTileX] = 1;
+                    thisMapData[(visibleMaps[m])].collisions[localTileY - j][localTileX] = 1;
                 }
             }
 
@@ -200,7 +203,9 @@ function findPath(startX, startY, endX, endY) {
         if (typeof thisMapData[(visibleMaps[m])].innerDoors !== "undefined") {
             for (var i in thisMapData[(visibleMaps[m])].innerDoors) {
                 if (!thisMapData[(visibleMaps[m])].innerDoors[i].isOpen) {
-                    thisMapData[(visibleMaps[m])].collisions[thisMapData[(visibleMaps[m])].innerDoors[i].tileY][thisMapData[(visibleMaps[m])].innerDoors[i].tileX] = 1;
+                    localTileX = getLocalCoordinatesX(thisMapData[(visibleMaps[m])].innerDoors[i].tileX);
+                    localTileY = getLocalCoordinatesY(thisMapData[(visibleMaps[m])].innerDoors[i].tileY);
+                    thisMapData[(visibleMaps[m])].collisions[localTileY][localTileX] = 1;
                 }
             }
         }
@@ -269,10 +274,10 @@ onmessage = function(e) {
                 var thisAgent = e.data[3];
                 thisMapData = e.data[4];
                 visibleMaps = e.data[5];
-
+                isOverWorldMap = e.data[6];
 
                 // get first item in the thisMapData object:
-for (firstKey in thisMapData) break;
+                for (firstKey in thisMapData) break;
 
                 mapTilesY = thisMapData[firstKey].terrain.length;
                 mapTilesX = thisMapData[firstKey].terrain[0].length;
@@ -288,8 +293,8 @@ for (firstKey in thisMapData) break;
                 thisMapData = e.data[2];
 
                 visibleMaps = e.data[3];
-
-for (firstKey in thisMapData) break;
+                isOverWorldMap = e.data[4];
+                for (firstKey in thisMapData) break;
 
                 mapTilesY = thisMapData[firstKey].terrain.length;
                 mapTilesX = thisMapData[firstKey].terrain[0].length;
@@ -300,7 +305,7 @@ for (firstKey in thisMapData) break;
                 for (var m = 0; m < visibleMaps.length; m++) {
 
                     for (var i = 0; i < thisMapData[(visibleMaps[m])].npcs.length; i++) {
-                        
+
                         if (thisMapData[(visibleMaps[m])].npcs[i].uniqueIndex != thisAgentsIndex) {
                             // just make sure it's not checking its own shop (...just in case)
                             thisLoopNPC = thisMapData[(visibleMaps[m])].npcs[i];
@@ -313,9 +318,9 @@ for (firstKey in thisMapData) break;
                         }
                     }
                 }
-           //     console.log(shopsFound);
-           //     console.log(shopsFoundOnWhichMap);
-           //     console.log("-----------");
+                //     console.log(shopsFound);
+                //     console.log(shopsFoundOnWhichMap);
+                //     console.log("-----------");
                 if (shopsFound.length > 0) {
                     var chosenShopLocation, chosenShop;
                     do {
@@ -331,7 +336,8 @@ for (firstKey in thisMapData) break;
             case 'petToHero':
                 var thisAgent = e.data[1];
                 thisMapData = e.data[2];
-                visibleMaps = e.data[3];
+                visibleMaps = e.data[6];
+                isOverWorldMap = e.data[7];
                 // pet isn't an NPC:
                 thisAgentsIndex = -1;
                 for (firstKey in thisMapData) break;
@@ -344,10 +350,11 @@ for (firstKey in thisMapData) break;
                 var thisAgent = e.data[1];
                 thisMapData = e.data[2];
                 visibleMaps = e.data[3];
+                isOverWorldMap = e.data[4];
                 for (firstKey in thisMapData) break;
                 mapTilesY = thisMapData[firstKey].terrain.length;
                 mapTilesX = thisMapData[firstKey].terrain[0].length;
-         thisAgentsIndex = thisAgent.uniqueIndex;
+                thisAgentsIndex = thisAgent.uniqueIndex;
                 postMessage([thisAgent.uniqueIndex, findPath(thisAgent.tileX, thisAgent.tileY, thisAgent.following.tileX, thisAgent.following.tileY)]);
                 break;
         }

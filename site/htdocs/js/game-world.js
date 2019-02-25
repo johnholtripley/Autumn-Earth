@@ -4442,14 +4442,14 @@ for (var m = 0; m < visibleMaps.length; m++) {
                             thisPet.pathIndex++;
                             if (thisPet.pathIndex >= thisPet.foundPath.length) {
                                 // come to end of the path, try and find a new one:
-                                pathfindingWorker.postMessage(['petToHero', hero.allPets[hero.activePets[p]], thisMapData, thisPetsTarget.tileX, thisPetsTarget.tileY, p]);
+                                pathfindingWorker.postMessage(['petToHero', hero.allPets[hero.activePets[p]], thisMapData, thisPetsTarget.tileX, thisPetsTarget.tileY, p, visibleMaps, isOverWorldMap]);
                                 thisPet.state = "findingPath";
                                 thisPet.foundPath = '';
                             }
                         } else {
                             if (thisPet.state != 'findingPath') {
                                 // pathfind to hero
-                                pathfindingWorker.postMessage(['petToHero', hero.allPets[hero.activePets[p]], thisMapData, thisPetsTarget.tileX, thisPetsTarget.tileY, p]);
+                                pathfindingWorker.postMessage(['petToHero', hero.allPets[hero.activePets[p]], thisMapData, thisPetsTarget.tileX, thisPetsTarget.tileY, p, visibleMaps, isOverWorldMap]);
                                 thisPet.state = "findingPath";
                             }
                         }
@@ -8764,7 +8764,7 @@ function tileIsClear(globalTileX, globalTileY) {
 //    var globalTileX = getTileX(x);
 //    var globalTileY = getTileY(y);
     var tileX = getLocalCoordinatesX(globalTileX);
-    var tileY = getLocalCoordinatesX(globalTileY);
+    var tileY = getLocalCoordinatesY(globalTileY);
     if (isOverWorldMap) {
         if ((globalTileX < 0) || (globalTileY < 0) || (globalTileX >= (worldMapTileLength * worldMap[0].length)) || (globalTileY >= (worldMapTileLength * worldMap.length))) {
             return 1;
@@ -10395,7 +10395,7 @@ for (var m = 0; m < visibleMaps.length; m++) {
                     case 'find':
                         thisNPC.forceNewMovementCheck = true;
                         if ((!thisNPC.waitingForAPath) && (typeof thisNPC.waitingTimer === "undefined")) {
-                            pathfindingWorker.postMessage([thisNextMovement[1], thisNPC, thisMapData, visibleMaps]);
+                            pathfindingWorker.postMessage([thisNextMovement[1], thisNPC, thisMapData, visibleMaps, isOverWorldMap]);
                             // make sure to only request this once:
                             thisNPC.isMoving = false;
                             thisNPC.waitingForAPath = true;
@@ -10565,7 +10565,7 @@ for (var m = 0; m < visibleMaps.length; m++) {
                                 thisNPC.forceNewMovementCheck = true;
                                 if ((!thisNPC.waitingForAPath) && (typeof thisNPC.waitingTimer === "undefined")) {
 
-                                    pathfindingWorker.postMessage(["npcFindFollowing", thisNPC, thisMapData, visibleMaps]);
+                                    pathfindingWorker.postMessage(["npcFindFollowing", thisNPC, thisMapData, visibleMaps, isOverWorldMap]);
                                     // make sure to only request this once:
                                     thisNPC.isMoving = false;
                                     thisNPC.waitingForAPath = true;
@@ -10657,23 +10657,30 @@ for (var m = 0; m < visibleMaps.length; m++) {
                             if ((!thisNPC.waitingForAPath) && (typeof thisNPC.waitingTimer === "undefined")) {
                                 // make a copy of the map with that blocked tile and any surrounding tiles marked, so it doesn't move off and immediately collide at the next tile:
                                 var tempMapData = JSON.parse(JSON.stringify(thisMapData));
-                                var testTileX, testTileY;
+                                var testTileX, testTileY, localTestTileX, localTestTileY, whichTestMap;
                                 for (var k = -3; k <= 3; k++) {
                                     for (var l = -3; l <= 3; l++) {
 
                                         testTileX = newTileX + k;
                                         testTileY = newTileY + l;
-                                        if ((testTileX > 0) && (testTileY > 0) && (testTileX < mapTilesX) && (testTileY < mapTilesY)) {
-                                            // no point checking if it's already blocked by terrain:
-                                            if (tempMapData.collisions[testTileY][testTileX] != 1) {
+
+    
+
+                               
+                                           
                                                 if (!(tileIsClear(testTileX, testTileY))) {
-                                                    tempMapData.collisions[testTileY][testTileX] = 1;
+
+localTestTileX = getLocalCoordinatesX(testTileX);
+     localTestTileY = getLocalCoordinatesY(testTileY);
+     whichTestMap = findMapNumberFromGlobalCoordinates(testTileX, testTileY);
+
+                                                    tempMapData[whichTestMap].collisions[localTestTileX][localTestTileY] = 1;
                                                 }
-                                            }
-                                        }
+                                            
+                                        
                                     }
                                 }
-                                pathfindingWorker.postMessage(['tile', targetDestination[0], targetDestination[1], thisNPC, tempMapData, visibleMaps]);
+                                pathfindingWorker.postMessage(['tile', targetDestination[0], targetDestination[1], thisNPC, tempMapData, visibleMaps, isOverWorldMap]);
                                 // make sure to only request this once:
                                 thisNPC.isMoving = false;
                                 thisNPC.waitingForAPath = true;
