@@ -73,7 +73,7 @@ gulp.task('scripts', ['alternateScripts'],function() {
         .pipe(gulp.dest('htdocs/js'));
 });
 
-gulp.task('alternateScripts', ['gameScripts'], function() {
+gulp.task('alternateScripts', ['workerScripts'], function() {
     // minify predefined list of unique scripts:
     return gulp.src(['htdocs/**/*(serviceWorker.js|card-game.js|card-game-shared.js|worker-pathfinding.js|worker-lightmap.js)'])
         .pipe(rename({
@@ -81,6 +81,16 @@ gulp.task('alternateScripts', ['gameScripts'], function() {
         }))
         .pipe(uglify())
         .pipe(gulp.dest('htdocs/'));
+});
+
+gulp.task('workerScripts', ['gameScripts'], function() {
+    // minify predefined list of unique scripts:
+    return gulp.src(['htdocs/js/src/game-world/shared-worker-functions.js'])
+        .pipe(rename({
+            suffix: '.min'
+        }))
+        .pipe(uglify())
+        .pipe(gulp.dest('htdocs/js/'));
 });
 
 gulp.task('gameScripts',function() {

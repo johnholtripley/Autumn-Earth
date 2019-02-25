@@ -1002,6 +1002,9 @@ function initialiseNPC(whichNPC) {
     // used for making sure that pathfinding NPCs don't head straight back to the last place they visited:
     whichNPC.lastTargetDestination = "";
     // whichNPC.index = whichNPC;
+
+whichNPC.uniqueIndex = generateHash("npc"+whichNPC.x +"*"+whichNPC.y);
+
 }
 
 function initialiseItem(whichItem) {
@@ -1322,55 +1325,6 @@ function tileIsClear(globalTileX, globalTileY) {
     return true;
 }
 
-function isATerrainCollision(x, y) {
-    var globalTileX = getTileX(x);
-    var globalTileY = getTileY(y);
-    var tileX = getLocalCoordinatesX(globalTileX);
-    var tileY = getLocalCoordinatesX(globalTileY);
-  
-    if (isOverWorldMap) {
-    
-        if ((globalTileX < 0) || (globalTileY < 0) || (globalTileX >= (worldMapTileLength * worldMap[0].length)) || (globalTileY >= (worldMapTileLength * worldMap.length))) {
-            return 1;
-        }
-    } else {
-        if ((tileX < 0) || (tileY < 0) || (tileX >= mapTilesX) || (tileY >= mapTilesY)) {
-            return 1;
-        }
-    }
-    var thisMap = findMapNumberFromGlobalCoordinates(globalTileX, globalTileY);
-
-    // check if defined rather than boundaries as could be moving into an adjoining map:
-    /*
-    if (typeof thisMapData[thisMap].collisions[tileY] === "undefined") {
-        return 1;
-    }
-    if (typeof thisMapData[thisMap].collisions[tileY][tileX] === "undefined") {
-        return 1;
-    }
-    */
-    switch (thisMapData[thisMap].collisions[tileY][tileX]) {
-        case 1:
-            // is a collision:
-            return 1;
-            break;
-        case "<":
-        case ">":
-        case "^":
-        case "v":
-            // stairs
-            // #####
-            return 0;
-            break;
-        case "d":
-            // is a door:
-            return 0;
-            break;
-        default:
-            // not a collsiion:
-            return 0;
-    }
-}
 
 
 function startDoorTransition() {
@@ -2667,7 +2621,7 @@ function moveNPCs() {
     var thisNPC, thisUniqueIdentifier, thisInnerUniqueIdentifier, newTile, thisNextMovement, oldNPCx, oldNPCy, thisOtherNPC, thisItem, thisNextMovement, thisNextMovementCode, thisInnerDoor;
 for (var m = 0; m < visibleMaps.length; m++) {
     for (var i = 0; i < thisMapData[(visibleMaps[m])].npcs.length; i++) {
-        thisUniqueIdentifier = m+"-"+i;
+     //   thisUniqueIdentifier = m+"-"+i;
         thisNPC = thisMapData[(visibleMaps[m])].npcs[i];
 
         thisNPC.hasJustGotNewPath = false;
@@ -2746,8 +2700,8 @@ for (var m = 0; m < visibleMaps.length; m++) {
                 for (var n = 0; n < visibleMaps.length; n++) {
                 for (var j = 0; j < thisMapData[(visibleMaps[n])].npcs.length; j++) {
                     thisOtherNPC = thisMapData[(visibleMaps[n])].npcs[j];
-                    thisInnerUniqueIdentifier = n+"-"+j;
-                    if (thisUniqueIdentifier != thisInnerUniqueIdentifier) {
+                  //  thisInnerUniqueIdentifier = n+"-"+j;
+                    if (thisNPC.uniqueIndex != thisOtherNPC.uniqueIndex) {
                         
                         if (thisOtherNPC.isCollidable) {
                             if (isAnObjectCollision(thisNPC.x, thisNPC.y, thisNPC.width, thisNPC.length, thisOtherNPC.x, thisOtherNPC.y, thisOtherNPC.width, thisOtherNPC.length)) {
@@ -2930,7 +2884,7 @@ for (var m = 0; m < visibleMaps.length; m++) {
                     case 'find':
                         thisNPC.forceNewMovementCheck = true;
                         if ((!thisNPC.waitingForAPath) && (typeof thisNPC.waitingTimer === "undefined")) {
-                            pathfindingWorker.postMessage([thisNextMovement[1], thisNPC, thisMapData]);
+                            pathfindingWorker.postMessage([thisNextMovement[1], thisNPC, thisMapData, visibleMaps]);
                             // make sure to only request this once:
                             thisNPC.isMoving = false;
                             thisNPC.waitingForAPath = true;
@@ -3100,7 +3054,7 @@ for (var m = 0; m < visibleMaps.length; m++) {
                                 thisNPC.forceNewMovementCheck = true;
                                 if ((!thisNPC.waitingForAPath) && (typeof thisNPC.waitingTimer === "undefined")) {
 
-                                    pathfindingWorker.postMessage(["npcFindFollowing", thisNPC, thisMapData]);
+                                    pathfindingWorker.postMessage(["npcFindFollowing", thisNPC, thisMapData, visibleMaps]);
                                     // make sure to only request this once:
                                     thisNPC.isMoving = false;
                                     thisNPC.waitingForAPath = true;
@@ -3208,7 +3162,7 @@ for (var m = 0; m < visibleMaps.length; m++) {
                                         }
                                     }
                                 }
-                                pathfindingWorker.postMessage(['tile', targetDestination[0], targetDestination[1], thisNPC, tempMapData]);
+                                pathfindingWorker.postMessage(['tile', targetDestination[0], targetDestination[1], thisNPC, tempMapData, visibleMaps]);
                                 // make sure to only request this once:
                                 thisNPC.isMoving = false;
                                 thisNPC.waitingForAPath = true;
