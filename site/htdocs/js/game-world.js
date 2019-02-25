@@ -1986,16 +1986,59 @@ function getElevation(tileX, tileY) {
     }
 }
 
-function getLocalCoordinatesX(tileX) {
-    // get local map coordinates from global coordinates:
-    return tileX%worldMapTileLength;
-}
-function getLocalCoordinatesY(tileY) {
-    return tileY%worldMapTileLength;
-}
 
-function findMapNumberFromGlobalCoordinates(tileX, tileY) {
-return worldMap[Math.floor(tileY/worldMapTileLength)][Math.floor(tileX/worldMapTileLength)];
+
+
+
+
+function isATerrainCollision(x, y) {
+    var globalTileX = getTileX(x);
+    var globalTileY = getTileY(y);
+    var tileX = getLocalCoordinatesX(globalTileX);
+    var tileY = getLocalCoordinatesY(globalTileY);
+  
+    if (isOverWorldMap) {
+    
+        if ((globalTileX < 0) || (globalTileY < 0) || (globalTileX >= (worldMapTileLength * worldMap[0].length)) || (globalTileY >= (worldMapTileLength * worldMap.length))) {
+            return 1;
+        }
+    } else {
+        if ((tileX < 0) || (tileY < 0) || (tileX >= mapTilesX) || (tileY >= mapTilesY)) {
+            return 1;
+        }
+    }
+    var thisMap = findMapNumberFromGlobalCoordinates(globalTileX, globalTileY);
+
+    // check if defined rather than boundaries as could be moving into an adjoining map:
+    /*
+    if (typeof thisMapData[thisMap].collisions[tileY] === "undefined") {
+        return 1;
+    }
+    if (typeof thisMapData[thisMap].collisions[tileY][tileX] === "undefined") {
+        return 1;
+    }
+    */
+    switch (thisMapData[thisMap].collisions[tileY][tileX]) {
+        case 1:
+            // is a collision:
+            return 1;
+            break;
+        case "<":
+        case ">":
+        case "^":
+        case "v":
+            // stairs
+            // #####
+            return 0;
+            break;
+        case "d":
+            // is a door:
+            return 0;
+            break;
+        default:
+            // not a collsiion:
+            return 0;
+    }
 }
 
 
@@ -4007,26 +4050,38 @@ if (window.Worker) {
             }
         } else {
 //console.log("pathfinding returned from Worker");
-            // find which NPC this is:
-            // http://stackoverflow.com/a/16100446/1054212
-            var thisNPCsIndex = thisMapData.npcs.map(function(x) {
-                return x.name;
-            }).indexOf(thisAgentsName);  
-             
+   
+
+
+var thisNPC = null;
+for (var m = 0; m < visibleMaps.length; m++) {
+
+    for (var i = 0; i < thisMapData[(visibleMaps[m])].npcs.length; i++) {
+     //   console.log("checking "+thisMapData[(visibleMaps[m])].npcs[i].uniqueIndex+" is = "+thisAgentsName);
+     if(thisMapData[(visibleMaps[m])].npcs[i].uniqueIndex == thisAgentsName) {
+thisNPC = thisMapData[(visibleMaps[m])].npcs[i];
+console.log(thisNPC);
+     }
+        }
+    }
+
+             if(thisNPC != null) {
         //     console.log(JSON.parse(JSON.stringify(thisMapData.npcs[thisNPCsIndex].movement)));
             // insert the new path:
             // http://stackoverflow.com/a/7032717/1054212
-            thisMapData.npcs[thisNPCsIndex].movement.splice.apply(thisMapData.npcs[thisNPCsIndex].movement, [thisMapData.npcs[thisNPCsIndex].movementIndex + 2, 0].concat(e.data[1]));
+            thisNPC.movement.splice.apply(thisNPC.movement, [thisNPC.movementIndex + 2, 0].concat(e.data[1]));
     //    console.log(JSON.parse(JSON.stringify(thisMapData.npcs[thisNPCsIndex].movement)));
 //console.log((e.data[1]));
 
 
-            thisMapData.npcs[thisNPCsIndex].waitingForAPath = false;
+            thisNPC.waitingForAPath = false;
             if (typeof e.data[2] !== "undefined") {
                 // store the target tile so it doesn't try and go straight back to it after:
-                thisMapData.npcs[thisNPCsIndex].lastTargetDestination = e.data[2];
+                thisNPC.lastTargetDestination = e.data[2];
             //    console.log("heading for "+e.data[2]);
             }
+
+        }
         //    console.log(thisMapData.npcs[thisNPCsIndex].movementIndex);
           //  console.log(thisMapData.npcs[thisNPCsIndex].movement);
          //   console.log(thisMapData.npcs[thisNPCsIndex].movement[(thisMapData.npcs[thisNPCsIndex].movementIndex)]);
@@ -4825,54 +4880,16 @@ function retinueMissionCompleted(questId, isExplorationQuest) {
         retinueMissionCompleted(questId);
     });
 }
-function isATerrainCollision(x, y) {
-    var globalTileX = getTileX(x);
-    var globalTileY = getTileY(y);
-    var tileX = getLocalCoordinatesX(globalTileX);
-    var tileY = getLocalCoordinatesX(globalTileY);
-  
-    if (isOverWorldMap) {
-    
-        if ((globalTileX < 0) || (globalTileY < 0) || (globalTileX >= (worldMapTileLength * worldMap[0].length)) || (globalTileY >= (worldMapTileLength * worldMap.length))) {
-            return 1;
-        }
-    } else {
-        if ((tileX < 0) || (tileY < 0) || (tileX >= mapTilesX) || (tileY >= mapTilesY)) {
-            return 1;
-        }
-    }
-    var thisMap = findMapNumberFromGlobalCoordinates(globalTileX, globalTileY);
+function getLocalCoordinatesX(tileX) {
+    // get local map coordinates from global coordinates:
+    return tileX%worldMapTileLength;
+}
+function getLocalCoordinatesY(tileY) {
+    return tileY%worldMapTileLength;
+}
 
-    // check if defined rather than boundaries as could be moving into an adjoining map:
-    /*
-    if (typeof thisMapData[thisMap].collisions[tileY] === "undefined") {
-        return 1;
-    }
-    if (typeof thisMapData[thisMap].collisions[tileY][tileX] === "undefined") {
-        return 1;
-    }
-    */
-    switch (thisMapData[thisMap].collisions[tileY][tileX]) {
-        case 1:
-            // is a collision:
-            return 1;
-            break;
-        case "<":
-        case ">":
-        case "^":
-        case "v":
-            // stairs
-            // #####
-            return 0;
-            break;
-        case "d":
-            // is a door:
-            return 0;
-            break;
-        default:
-            // not a collsiion:
-            return 0;
-    }
+function findMapNumberFromGlobalCoordinates(tileX, tileY) {
+return worldMap[Math.floor(tileY/worldMapTileLength)][Math.floor(tileX/worldMapTileLength)];
 }
 
 // https://mathiasbynens.be/notes/xhr-responsetype-json

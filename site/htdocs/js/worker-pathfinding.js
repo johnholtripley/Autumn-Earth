@@ -15,10 +15,17 @@ function loadGlobalMapData() {
 var worldMap = '';
 loadGlobalMapData();
 
-// from config.js:
-const tileW = 48;
+
+
 
 var thisMapData, visibleMaps, mapTilesY, mapTilesX, thisAgentsIndex, uncheckedTiles, nodes, firstKey;
+
+
+// needs loading dynamically: ###############
+const tileW = 48;
+var isOverWorldMap = true;
+const worldMapTileLength = 50;
+
 
 /*
 function isATerrainCollision(tileX, tileY) {
@@ -38,6 +45,62 @@ function isATerrainCollision(tileX, tileY) {
     }
 }
 */
+
+
+
+
+
+function isATerrainCollision(globalTileX, globalTileY) {
+    var tileX = getLocalCoordinatesX(globalTileX);
+    var tileY = getLocalCoordinatesX(globalTileY);
+  
+    if (isOverWorldMap) {
+    
+        if ((globalTileX < 0) || (globalTileY < 0) || (globalTileX >= (worldMapTileLength * worldMap[0].length)) || (globalTileY >= (worldMapTileLength * worldMap.length))) {
+            return 1;
+        }
+    } else {
+        if ((tileX < 0) || (tileY < 0) || (tileX >= mapTilesX) || (tileY >= mapTilesY)) {
+            return 1;
+        }
+    }
+    var thisMap = findMapNumberFromGlobalCoordinates(globalTileX, globalTileY);
+
+    // check if defined rather than boundaries as could be moving into an adjoining map:
+    /*
+    if (typeof thisMapData[thisMap].collisions[tileY] === "undefined") {
+        return 1;
+    }
+    if (typeof thisMapData[thisMap].collisions[tileY][tileX] === "undefined") {
+        return 1;
+    }
+    */
+    switch (thisMapData[thisMap].collisions[tileY][tileX]) {
+        case 1:
+            // is a collision:
+            return 1;
+            break;
+        case "<":
+        case ">":
+        case "^":
+        case "v":
+            // stairs
+            // #####
+            return 0;
+            break;
+        case "d":
+            // is a door:
+            return 0;
+            break;
+        default:
+            // not a collsiion:
+            return 0;
+    }
+}
+
+
+
+
 
 function addNode(parentNode, tileX, tileY, endX, endY) {
     // console.log(tileX+", "+tileY);
@@ -216,7 +279,7 @@ for (firstKey in thisMapData) break;
 
 
 
-                postMessage([thisAgent.name, findPath(thisAgent.tileX, thisAgent.tileY, destinationX, destinationY), destinationX + "-" + destinationY]);
+                postMessage([thisAgent.uniqueIndex, findPath(thisAgent.tileX, thisAgent.tileY, destinationX, destinationY), destinationX + "-" + destinationY]);
 
 
                 break;
@@ -244,25 +307,25 @@ for (firstKey in thisMapData) break;
                             if (thisLoopNPC.speech) {
                                 if (thisLoopNPC.speech[thisLoopNPC.speechIndex][1] == "shop") {
                                     shopsFound.push(i);
-                                    shopsFoundOnWhichMap.push(m);
+                                    shopsFoundOnWhichMap.push(visibleMaps[m]);
                                 }
                             }
                         }
                     }
                 }
-                console.log(shopsFound);
-                console.log(shopsFoundOnWhichMap);
-                console.log("-----------");
+           //     console.log(shopsFound);
+           //     console.log(shopsFoundOnWhichMap);
+           //     console.log("-----------");
                 if (shopsFound.length > 0) {
                     var chosenShopLocation, chosenShop;
                     do {
                         chosenShop = Math.floor(Math.random() * shopsFound.length);
                         chosenShopLocation = thisMapData[(shopsFoundOnWhichMap[chosenShop])].npcs[(shopsFound[chosenShop])].tileX + "-" + thisMapData[(shopsFoundOnWhichMap[chosenShop])].npcs[(shopsFound[chosenShop])].tileY;
                     } while (chosenShopLocation == thisAgent.lastTargetDestination);
-                    postMessage([thisAgent.name, findPath(thisAgent.tileX, thisAgent.tileY, thisMapData[(shopsFoundOnWhichMap[chosenShop])].npcs[(shopsFound[chosenShop])].tileX, thisMapData[(shopsFoundOnWhichMap[chosenShop])].npcs[(shopsFound[chosenShop])].tileY), chosenShopLocation]);
+                    postMessage([thisAgent.uniqueIndex, findPath(thisAgent.tileX, thisAgent.tileY, thisMapData[(shopsFoundOnWhichMap[chosenShop])].npcs[(shopsFound[chosenShop])].tileX, thisMapData[(shopsFoundOnWhichMap[chosenShop])].npcs[(shopsFound[chosenShop])].tileY), chosenShopLocation]);
                 } else {
                     // stay still:
-                    postMessage([thisAgent.name, ["-", "pathEnd"], ""]);
+                    postMessage([thisAgent.uniqueIndex, ["-", "pathEnd"], ""]);
                 }
                 break;
             case 'petToHero':
@@ -285,7 +348,7 @@ for (firstKey in thisMapData) break;
                 mapTilesY = thisMapData[firstKey].terrain.length;
                 mapTilesX = thisMapData[firstKey].terrain[0].length;
          thisAgentsIndex = thisAgent.uniqueIndex;
-                postMessage([thisAgent.name, findPath(thisAgent.tileX, thisAgent.tileY, thisAgent.following.tileX, thisAgent.following.tileY)]);
+                postMessage([thisAgent.uniqueIndex, findPath(thisAgent.tileX, thisAgent.tileY, thisAgent.following.tileX, thisAgent.following.tileY)]);
                 break;
         }
     }
