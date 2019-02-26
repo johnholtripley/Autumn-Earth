@@ -10867,7 +10867,19 @@ function saveGame() {
 
 }
 
-
+function isVisibleOnScreen(isoX, isoY) {
+    // canvasWidth
+    var horizontalDistance = Math.abs(hero.isox - isoX);
+    var verticalDistance = Math.abs(hero.isoy - isoY);
+    // needs to take into account the item's width and height ######
+    if (horizontalDistance > (canvasWidth / 2)) {
+        return false;
+    }
+    if (verticalDistance > (canvasHeight / 2)) {
+        return false;
+    }
+    return true;
+}
 
 function draw() {
 
@@ -10903,7 +10915,9 @@ function draw() {
         thisX = findIsoCoordsX(fae.x, fae.y);
         thisY = findIsoCoordsY(fae.x, fae.y);
         fae.oscillateOffset = ((Math.sin(fae.dz) + 1) * 8) + fae.z + fae.zOffset;
-        assetsToDraw.push([findIsoDepth(fae.x, fae.y, fae.z), "faeCentre", Math.floor(thisX - hero.isox + (canvasWidth / 2)), Math.floor(thisY - hero.isoy + (canvasHeight / 2) - fae.oscillateOffset)]);
+        if (isVisibleOnScreen(thisX, thisY)) {
+            assetsToDraw.push([findIsoDepth(fae.x, fae.y, fae.z), "faeCentre", Math.floor(thisX - hero.isox + (canvasWidth / 2)), Math.floor(thisY - hero.isoy + (canvasHeight / 2) - fae.oscillateOffset)]);
+        }
 
         // draw fae particles:
         for (var i = 0; i < fae.particles.length; i++) {
@@ -10918,48 +10932,53 @@ function draw() {
         var thisItemOffsetCol = 0;
         var thisItemOffsetRow = 0;
 
-for (var m = 0; m < visibleMaps.length; m++) {
+        for (var m = 0; m < visibleMaps.length; m++) {
 
-     map = thisMapData[visibleMaps[m]].terrain;
-       thisMapsGlobalOffsetX = thisMapData[(visibleMaps[m])].globalCoordinateTile0X * worldMapTileLength;
+            map = thisMapData[visibleMaps[m]].terrain;
+            thisMapsGlobalOffsetX = thisMapData[(visibleMaps[m])].globalCoordinateTile0X * worldMapTileLength;
             thisMapsGlobalOffsetY = thisMapData[(visibleMaps[m])].globalCoordinateTile0Y * worldMapTileLength;
-        for (var i = 0; i < mapTilesX; i++) {
-            for (var j = 0; j < mapTilesY; j++) {
-                // the tile coordinates should be positioned by i,j but the way the map is drawn, the reference in the array is j,i
-                // this makes the map array more readable when editing
-                if (map[j][i] != "*") {
-                    thisX = getTileIsoCentreCoordX(i + thisMapsGlobalOffsetX, j + thisMapsGlobalOffsetY);
-                    thisY = getTileIsoCentreCoordY(i + thisMapsGlobalOffsetX, j + thisMapsGlobalOffsetY);
-                  
-                    thisGraphicCentreX = thisMapData[visibleMaps[m]].graphics[(map[j][i])].centreX;
-                    thisGraphicCentreY = thisMapData[visibleMaps[m]].graphics[(map[j][i])].centreY;
-                    thisTerrainIdentifer = thisMapData[visibleMaps[m]].graphics[(map[j][i])].src;
-                    assetsToDraw.push([findIsoDepth(getTileCentreCoordX(i + thisMapsGlobalOffsetX), getTileCentreCoordY(j + thisMapsGlobalOffsetY), 0), "img", tileImages[thisTerrainIdentifer], Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2))]);
-                }
-                // look for tilled tiles:
-                
-                if (thisMapData[visibleMaps[m]].properties[j][i].tilled == 1) {
-                    thisX = getTileIsoCentreCoordX(i+ thisMapsGlobalOffsetX, j+ thisMapsGlobalOffsetY);
-                    thisY = getTileIsoCentreCoordY(i+ thisMapsGlobalOffsetX, j+ thisMapsGlobalOffsetY);
-                    thisGraphicCentreX = tileW / 2;
-                    thisGraphicCentreY = tileH / 2;
-                    assetsToDraw.push([0, "img", tilledEarth, Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2))]);
-                }
-                // look for watered tiles:
-                if (typeof thisMapData[visibleMaps[m]].properties[j][i].water !== "undefined") {
-                    if (thisMapData[visibleMaps[m]].properties[j][i].water.amount > 0) {
-                        thisX = getTileIsoCentreCoordX(i+ thisMapsGlobalOffsetX, j+ thisMapsGlobalOffsetY);
-                        thisY = getTileIsoCentreCoordY(i+ thisMapsGlobalOffsetX, j+ thisMapsGlobalOffsetY);
-                        thisGraphicCentreX = tileW / 2;
-                        thisGraphicCentreY = tileH / 2;
-                        for (var k = 0; k < thisMapData[visibleMaps[m]].properties[j][i].water.amount; k++) {
-                            assetsToDraw.push([k + 1, "img", addedWater, Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2))]);
+            for (var i = 0; i < mapTilesX; i++) {
+                for (var j = 0; j < mapTilesY; j++) {
+                    // the tile coordinates should be positioned by i,j but the way the map is drawn, the reference in the array is j,i
+                    // this makes the map array more readable when editing
+                    if (map[j][i] != "*") {
+                        thisX = getTileIsoCentreCoordX(i + thisMapsGlobalOffsetX, j + thisMapsGlobalOffsetY);
+                        thisY = getTileIsoCentreCoordY(i + thisMapsGlobalOffsetX, j + thisMapsGlobalOffsetY);
+                        if (isVisibleOnScreen(thisX, thisY)) {
+                            thisGraphicCentreX = thisMapData[visibleMaps[m]].graphics[(map[j][i])].centreX;
+                            thisGraphicCentreY = thisMapData[visibleMaps[m]].graphics[(map[j][i])].centreY;
+                            thisTerrainIdentifer = thisMapData[visibleMaps[m]].graphics[(map[j][i])].src;
+                            assetsToDraw.push([findIsoDepth(getTileCentreCoordX(i + thisMapsGlobalOffsetX), getTileCentreCoordY(j + thisMapsGlobalOffsetY), 0), "img", tileImages[thisTerrainIdentifer], Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2))]);
+                        }
+                    }
+                    // look for tilled tiles:
+
+                    if (thisMapData[visibleMaps[m]].properties[j][i].tilled == 1) {
+                        thisX = getTileIsoCentreCoordX(i + thisMapsGlobalOffsetX, j + thisMapsGlobalOffsetY);
+                        thisY = getTileIsoCentreCoordY(i + thisMapsGlobalOffsetX, j + thisMapsGlobalOffsetY);
+                        if (isVisibleOnScreen(thisX, thisY)) {
+                            thisGraphicCentreX = tileW / 2;
+                            thisGraphicCentreY = tileH / 2;
+                            assetsToDraw.push([0, "img", tilledEarth, Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2))]);
+                        }
+                    }
+                    // look for watered tiles:
+                    if (typeof thisMapData[visibleMaps[m]].properties[j][i].water !== "undefined") {
+                        if (thisMapData[visibleMaps[m]].properties[j][i].water.amount > 0) {
+                            thisX = getTileIsoCentreCoordX(i + thisMapsGlobalOffsetX, j + thisMapsGlobalOffsetY);
+                            thisY = getTileIsoCentreCoordY(i + thisMapsGlobalOffsetX, j + thisMapsGlobalOffsetY);
+                            if (isVisibleOnScreen(thisX, thisY)) {
+                                thisGraphicCentreX = tileW / 2;
+                                thisGraphicCentreY = tileH / 2;
+                                for (var k = 0; k < thisMapData[visibleMaps[m]].properties[j][i].water.amount; k++) {
+                                    assetsToDraw.push([k + 1, "img", addedWater, Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2))]);
+                                }
+                            }
                         }
                     }
                 }
             }
         }
-    }
 
         if (typeof thisMapData[currentMap].innerDoors !== "undefined") {
             for (var i in thisMapData[currentMap].innerDoors) {
@@ -10967,9 +10986,11 @@ for (var m = 0; m < visibleMaps.length; m++) {
                 if (!thisMapData[currentMap].innerDoors[i]['isOpen']) {
                     thisX = getTileIsoCentreCoordX(thisMapData[currentMap].innerDoors[i]['tileX'], thisMapData[currentMap].innerDoors[i]['tileY']);
                     thisY = getTileIsoCentreCoordY(thisMapData[currentMap].innerDoors[i]['tileX'], thisMapData[currentMap].innerDoors[i]['tileY']);
-                    thisGraphicCentreX = thisMapData[currentMap].graphics[(thisMapData[currentMap].innerDoors[i]['graphic'])].centreX;
-                    thisGraphicCentreY = thisMapData[currentMap].graphics[(thisMapData[currentMap].innerDoors[i]['graphic'])].centreY;
-                    assetsToDraw.push([findIsoDepth(getTileCentreCoordX(thisMapData[currentMap].innerDoors[i]['tileX']), getTileCentreCoordY(thisMapData[currentMap].innerDoors[i]['tileY']), 0), "img", tileImages[(thisMapData[currentMap].innerDoors[i]['graphic'])], Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2))]);
+                    if (isVisibleOnScreen(thisX, thisY)) {
+                        thisGraphicCentreX = thisMapData[currentMap].graphics[(thisMapData[currentMap].innerDoors[i]['graphic'])].centreX;
+                        thisGraphicCentreY = thisMapData[currentMap].graphics[(thisMapData[currentMap].innerDoors[i]['graphic'])].centreY;
+                        assetsToDraw.push([findIsoDepth(getTileCentreCoordX(thisMapData[currentMap].innerDoors[i]['tileX']), getTileCentreCoordY(thisMapData[currentMap].innerDoors[i]['tileY']), 0), "img", tileImages[(thisMapData[currentMap].innerDoors[i]['graphic'])], Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2))]);
+                    }
                 }
             }
         }
@@ -10980,12 +11001,14 @@ for (var m = 0; m < visibleMaps.length; m++) {
                 thisNPCOffsetRow = hero.allPets[hero.activePets[i]]["animation"]["walk"][hero.allPets[hero.activePets[i]].facing];
                 thisX = findIsoCoordsX(hero.allPets[hero.activePets[i]].x, hero.allPets[hero.activePets[i]].y);
                 thisY = findIsoCoordsY(hero.allPets[hero.activePets[i]].x, hero.allPets[hero.activePets[i]].y);
-                assetsToDraw.push([findIsoDepth(hero.allPets[hero.activePets[i]].x, hero.allPets[hero.activePets[i]].y, hero.allPets[hero.activePets[i]].z), "sprite", activePetImages[i], thisNPCOffsetCol * hero.allPets[hero.activePets[i]].spriteWidth, thisNPCOffsetRow * hero.allPets[hero.activePets[i]].spriteHeight, hero.allPets[hero.activePets[i]].spriteWidth, hero.allPets[hero.activePets[i]].spriteHeight, Math.floor(thisX - hero.isox - hero.allPets[hero.activePets[i]].centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - hero.allPets[hero.activePets[i]].centreY + (canvasHeight / 2) - hero.allPets[hero.activePets[i]].z), hero.allPets[hero.activePets[i]].spriteWidth, hero.allPets[hero.activePets[i]].spriteHeight]);
+                if (isVisibleOnScreen(thisX, thisY)) {
+                    assetsToDraw.push([findIsoDepth(hero.allPets[hero.activePets[i]].x, hero.allPets[hero.activePets[i]].y, hero.allPets[hero.activePets[i]].z), "sprite", activePetImages[i], thisNPCOffsetCol * hero.allPets[hero.activePets[i]].spriteWidth, thisNPCOffsetRow * hero.allPets[hero.activePets[i]].spriteHeight, hero.allPets[hero.activePets[i]].spriteWidth, hero.allPets[hero.activePets[i]].spriteHeight, Math.floor(thisX - hero.isox - hero.allPets[hero.activePets[i]].centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - hero.allPets[hero.activePets[i]].centreY + (canvasHeight / 2) - hero.allPets[hero.activePets[i]].z), hero.allPets[hero.activePets[i]].spriteWidth, hero.allPets[hero.activePets[i]].spriteHeight]);
+                }
             }
         }
 
 
-     
+
         for (var m = 0; m < visibleMaps.length; m++) {
             whichVisibleMap = visibleMaps[m];
 
@@ -11008,13 +11031,15 @@ for (var m = 0; m < visibleMaps.length; m++) {
                 thisNPCOffsetRow = thisNPC["animation"][thisNPC.currentAnimation][thisNPC.drawnFacing];
                 thisX = findIsoCoordsX(thisNPC.x, thisNPC.y);
                 thisY = findIsoCoordsY(thisNPC.x, thisNPC.y);
-                //assetsToDraw.push([findIsoDepth(thisX, thisY), npcImages[i], Math.floor(thisX - hero.isox - thisNPC.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisNPC.centreY + (canvasHeight / 2))]);
-                thisNPCIdentifier = "npc" + thisMapData[whichVisibleMap].npcs[i].src;
+                if (isVisibleOnScreen(thisX, thisY)) {
+                    //assetsToDraw.push([findIsoDepth(thisX, thisY), npcImages[i], Math.floor(thisX - hero.isox - thisNPC.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisNPC.centreY + (canvasHeight / 2))]);
+                    thisNPCIdentifier = "npc" + thisMapData[whichVisibleMap].npcs[i].src;
 
 
 
 
-                assetsToDraw.push([findIsoDepth(thisNPC.x, thisNPC.y, thisNPC.z), "sprite", npcImages[thisNPCIdentifier], thisNPCOffsetCol * thisNPC.spriteWidth, thisNPCOffsetRow * thisNPC.spriteHeight, thisNPC.spriteWidth, thisNPC.spriteHeight, Math.floor(thisX - hero.isox - thisNPC.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisNPC.centreY + (canvasHeight / 2) - thisNPC.z), thisNPC.spriteWidth, thisNPC.spriteHeight]);
+                    assetsToDraw.push([findIsoDepth(thisNPC.x, thisNPC.y, thisNPC.z), "sprite", npcImages[thisNPCIdentifier], thisNPCOffsetCol * thisNPC.spriteWidth, thisNPCOffsetRow * thisNPC.spriteHeight, thisNPC.spriteWidth, thisNPC.spriteHeight, Math.floor(thisX - hero.isox - thisNPC.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisNPC.centreY + (canvasHeight / 2) - thisNPC.z), thisNPC.spriteWidth, thisNPC.spriteHeight]);
+                }
             }
 
 
@@ -11024,35 +11049,37 @@ for (var m = 0; m < visibleMaps.length; m++) {
 
                 thisX = findIsoCoordsX(thisItem.x, thisItem.y);
                 thisY = findIsoCoordsY(thisItem.x, thisItem.y);
-           //    console.log(whichVisibleMap+" - "+thisItem.type+" : "+thisX+", "+thisY+" : "+thisItem.x+", "+thisItem.y);
-                thisFileColourSuffix = "";
-                if (thisMapData[whichVisibleMap].items[i].colour) {
-                    thisColourName = getColourName(thisItem.colour, thisItem.type);
-                    if (thisColourName != "") {
-                        thisFileColourSuffix = "-" + thisColourName.toLowerCase();
+                if (isVisibleOnScreen(thisX, thisY)) {
+                    //    console.log(whichVisibleMap+" - "+thisItem.type+" : "+thisX+", "+thisY+" : "+thisItem.x+", "+thisItem.y);
+                    thisFileColourSuffix = "";
+                    if (thisMapData[whichVisibleMap].items[i].colour) {
+                        thisColourName = getColourName(thisItem.colour, thisItem.type);
+                        if (thisColourName != "") {
+                            thisFileColourSuffix = "-" + thisColourName.toLowerCase();
 
+                        }
                     }
-                }
-                thisItemIdentifier = "item" + thisMapData[whichVisibleMap].items[i].type + thisFileColourSuffix;
+                    thisItemIdentifier = "item" + thisMapData[whichVisibleMap].items[i].type + thisFileColourSuffix;
 
-                // check for User Generated Content:
-                if (typeof thisMapData[whichVisibleMap].items[i].contains !== "undefined") {
-                    if (typeof thisMapData[whichVisibleMap].items[i].contains['ugc-id'] !== "undefined") {
-                        thisItemIdentifier = "item" + thisMapData[whichVisibleMap].items[i].type + '_' + thisMapData[whichVisibleMap].items[i].contains['ugc-id'];
+                    // check for User Generated Content:
+                    if (typeof thisMapData[whichVisibleMap].items[i].contains !== "undefined") {
+                        if (typeof thisMapData[whichVisibleMap].items[i].contains['ugc-id'] !== "undefined") {
+                            thisItemIdentifier = "item" + thisMapData[whichVisibleMap].items[i].type + '_' + thisMapData[whichVisibleMap].items[i].contains['ugc-id'];
+                        }
                     }
-                }
-                if (typeof thisItem.animation !== "undefined") {
-                    if (typeof thisItem.state !== "undefined") {
-                        thisItemOffsetCol = (thisItem["animation"][thisItem.state]["length"]) - 1;
-                        thisItemOffsetRow = thisItem["animation"][thisItem.state]["row"];
+                    if (typeof thisItem.animation !== "undefined") {
+                        if (typeof thisItem.state !== "undefined") {
+                            thisItemOffsetCol = (thisItem["animation"][thisItem.state]["length"]) - 1;
+                            thisItemOffsetRow = thisItem["animation"][thisItem.state]["row"];
+                        } else {
+                            // use facing:
+                            thisItemOffsetCol = (thisItem["animation"]['facing']["length"]) - 1;
+                            thisItemOffsetRow = thisItem["animation"]['facing'][thisItem.facing];
+                        }
+                        assetsToDraw.push([findIsoDepth(thisItem.x, thisItem.y, thisItem.z), "sprite", itemImages[thisItemIdentifier], thisItemOffsetCol * thisItem.spriteWidth, thisItemOffsetRow * thisItem.spriteHeight, thisItem.spriteWidth, thisItem.spriteHeight, Math.floor(thisX - hero.isox - thisItem.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisItem.centreY + (canvasHeight / 2) - thisItem.z), thisItem.spriteWidth, thisItem.spriteHeight]);
                     } else {
-                        // use facing:
-                        thisItemOffsetCol = (thisItem["animation"]['facing']["length"]) - 1;
-                        thisItemOffsetRow = thisItem["animation"]['facing'][thisItem.facing];
+                        assetsToDraw.push([findIsoDepth(thisItem.x, thisItem.y, thisItem.z), "img", itemImages[thisItemIdentifier], Math.floor(thisX - hero.isox - thisItem.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisItem.centreY + (canvasHeight / 2) - thisItem.z)]);
                     }
-                    assetsToDraw.push([findIsoDepth(thisItem.x, thisItem.y, thisItem.z), "sprite", itemImages[thisItemIdentifier], thisItemOffsetCol * thisItem.spriteWidth, thisItemOffsetRow * thisItem.spriteHeight, thisItem.spriteWidth, thisItem.spriteHeight, Math.floor(thisX - hero.isox - thisItem.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisItem.centreY + (canvasHeight / 2) - thisItem.z), thisItem.spriteWidth, thisItem.spriteHeight]);
-                } else {
-                    assetsToDraw.push([findIsoDepth(thisItem.x, thisItem.y, thisItem.z), "img", itemImages[thisItemIdentifier], Math.floor(thisX - hero.isox - thisItem.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisItem.centreY + (canvasHeight / 2) - thisItem.z)]);
                 }
             }
 
@@ -11061,9 +11088,11 @@ for (var m = 0; m < visibleMaps.length; m++) {
                     thisPlatform = thisMapData[whichVisibleMap].movingPlatforms[i];
                     thisX = findIsoCoordsX(thisPlatform.x, thisPlatform.y);
                     thisY = findIsoCoordsY(thisPlatform.x, thisPlatform.y);
-                    thisGraphicCentreX = thisMapData[whichVisibleMap].graphics[thisPlatform.graphic].centreX;
-                    thisGraphicCentreY = thisMapData[whichVisibleMap].graphics[thisPlatform.graphic].centreY;
-                    assetsToDraw.push([findIsoDepth(thisPlatform.x, thisPlatform.y, thisPlatform.z), "img", tileImages[thisPlatform.graphic], Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2))]);
+                    if (isVisibleOnScreen(thisX, thisY)) {
+                        thisGraphicCentreX = thisMapData[whichVisibleMap].graphics[thisPlatform.graphic].centreX;
+                        thisGraphicCentreY = thisMapData[whichVisibleMap].graphics[thisPlatform.graphic].centreY;
+                        assetsToDraw.push([findIsoDepth(thisPlatform.x, thisPlatform.y, thisPlatform.z), "img", tileImages[thisPlatform.graphic], Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2))]);
+                    }
                 }
             }
 
@@ -11074,9 +11103,9 @@ for (var m = 0; m < visibleMaps.length; m++) {
         assetsToDraw.sort(sortByLowestValue);
 
 
-gameContext.rect(0,0,canvasWidth,canvasHeight);
-gameContext.fillStyle = oceanPattern;
-gameContext.fill();
+        gameContext.rect(0, 0, canvasWidth, canvasHeight);
+        gameContext.fillStyle = oceanPattern;
+        gameContext.fill();
 
 
 
@@ -11101,9 +11130,9 @@ gameContext.fill();
             currentWorldMapPosX = Math.floor((canvasWidth / 2) + getTileIsoCentreCoordX(0 + thisMapsGlobalOffsetX, 0 + thisMapsGlobalOffsetY) - hero.isox - (worldMapWidthPx / 2));
             currentWorldMapPosY = Math.floor((canvasHeight / 2) + getTileIsoCentreCoordY(0 + thisMapsGlobalOffsetX, 0 + thisMapsGlobalOffsetY) - hero.isoy - (tileH / 2));
             // draw the current map background in place:
-         if(typeof backgroundImgs[(visibleMaps[i])] !== "undefined") {
-            gameContext.drawImage(backgroundImgs[(visibleMaps[i])], currentWorldMapPosX, currentWorldMapPosY);
-        }
+            if (typeof backgroundImgs[(visibleMaps[i])] !== "undefined") {
+                gameContext.drawImage(backgroundImgs[(visibleMaps[i])], currentWorldMapPosX, currentWorldMapPosY);
+            }
         }
 
 
@@ -11128,10 +11157,10 @@ gameContext.fill();
                     break;
                 case "sprite":
                     // sprite image (needs slicing parameters):
-                 if(typeof assetsToDraw[i][2] !== "undefined") {
-                    // image has been loadeda
-                    gameContext.drawImage(assetsToDraw[i][2], assetsToDraw[i][3], assetsToDraw[i][4], assetsToDraw[i][5], assetsToDraw[i][6], assetsToDraw[i][7], assetsToDraw[i][8], assetsToDraw[i][9], assetsToDraw[i][10]);
-                }
+                    if (typeof assetsToDraw[i][2] !== "undefined") {
+                        // image has been loadeda
+                        gameContext.drawImage(assetsToDraw[i][2], assetsToDraw[i][3], assetsToDraw[i][4], assetsToDraw[i][5], assetsToDraw[i][6], assetsToDraw[i][7], assetsToDraw[i][8], assetsToDraw[i][9], assetsToDraw[i][10]);
+                    }
                     break;
                 case "dowsingRing":
                     gameContext.globalCompositeOperation = 'lighten';
@@ -11176,9 +11205,9 @@ gameContext.fill();
                     break;
                 case "img":
                     // standard image:
-                    if(typeof assetsToDraw[i][2] !== "undefined") {
-                    gameContext.drawImage(assetsToDraw[i][2], assetsToDraw[i][3], assetsToDraw[i][4]);
-                }
+                    if (typeof assetsToDraw[i][2] !== "undefined") {
+                        gameContext.drawImage(assetsToDraw[i][2], assetsToDraw[i][3], assetsToDraw[i][4]);
+                    }
             }
         }
 
