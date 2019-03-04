@@ -234,6 +234,7 @@ abbr {
 
 @font-face {
     font-family: Merriweather;
+    font-display: fallback;
     src: url('../fonts/merriweather_light-webfont.eot');
     src: url('../fonts/merriweather_light-webfont.eot?#iefix') format('embedded-opentype'),
     url('../fonts/merriweather_light-webfont.svg#merriweather_lightregular') format('svg'),
@@ -261,6 +262,7 @@ abbr {
 
 @font-face {
     font-family: Merriweather;
+    font-display: fallback;
     src: url('../fonts/merriweather-italic-webfont.eot');
     src: url('../fonts/merriweather-italic-webfont.eot?#iefix') format('embedded-opentype'),
     url('../fonts/merriweather-italic-webfont.svg#merriweatheritalic') format('svg'),
@@ -273,6 +275,7 @@ abbr {
 
 @font-face {
     font-family: AlegreyaSC;
+    font-display: fallback;
     src: url('../fonts/alegreyasc-regular-webfont.eot');
     src: url('../fonts/alegreyasc-regular-webfont.eot?#iefix') format('embedded-opentype'),
     url('../fonts/alegreyasc-regular-webfont.svg#AlegreyaSC') format('svg'),

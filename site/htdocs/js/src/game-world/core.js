@@ -62,31 +62,31 @@ function init() {
 }
 
 function getHeroGameState() {
-    getJSON("/game-world/getGameState.php?chr=" + characterId, function(data) {
+    getJSON("/game-world/getCoreData.php?chr=" + characterId, function(data) {
         //  thisMapData = data.map;
         // copy the data to the hero object:
-        for (var attribute in data) {
-            hero[attribute] = data[attribute];
+        for (var attribute in data.gameState) {
+            hero[attribute] = data.gameState[attribute];
         }
-        newMap = findMapNumberFromGlobalCoordinates(data.tileX, data.tileY);
+        newMap = findMapNumberFromGlobalCoordinates(data.gameState.tileX, data.gameState.tileY);
      //   visibleMaps.push(newMap);
 
 
 //visibleMapsLoading = [newMap];
 
-        gameSettings = data.settings;
+        gameSettings = data.gameState.settings;
 
         timeSinceLastAmbientSoundWasPlayed = hero.totalGameTimePlayed + (minTimeBetweenAmbientSounds * 1.25);
-        if (data.allPets) {
-            if (data.activePets.length > 0) {
+        if (data.gameState.allPets) {
+            if (data.gameState.activePets.length > 0) {
                 hasActivePet = true;
             }
           //   hero.activePets = data.activePets;
           //   hero.allPets = data.allPets;
         }
         // copy the fae properties that will change into the main fae object:
-        for (var attrname in data.fae) {
-            fae[attrname] = data.fae[attrname];
+        for (var attrname in data.gameState.fae) {
+            fae[attrname] = data.gameState.fae[attrname];
         }
 
 
@@ -105,6 +105,23 @@ currentMap = newMap;
     hero.isox = findIsoCoordsX(hero.x, hero.y);
         hero.isoy = findIsoCoordsY(hero.x, hero.y);
 //updateVisibleMaps();
+
+
+
+// john
+colourNames = data.colours.colourNames;
+     UI.buildHorticulturePanel(data.horticulture.markup);
+        hero.plantBreeding = data.horticulture.data;
+  questData = data.quests;
+ possibleTitles = data.titles;
+
+
+ cardGameNameSpace.allCardData = data.cards.cards;
+        hero.cardBacks = data.cards.backs;
+        hero.activeCardBack = data.cards.activeBack;
+        UI.changeActiveCardBack();
+
+
 
 
         loadCoreAssets();
@@ -161,24 +178,13 @@ function prepareCoreAssets() {
             activePetImages[i] = Loader.getImage("activePet" + hero.activePets[i]);
         }
     }
-    getColours();
+    loadMap();
 }
 
 
 
 
-function loadCardData() {
-    getJSON("/game-world/getCardDetails.php?playerId=" + characterId, function(data) {
-        cardGameNameSpace.allCardData = data.cards;
-        hero.cardBacks = data.backs;
-        hero.activeCardBack = data.activeBack;
-        UI.changeActiveCardBack();
-        loadMap();
-    }, function(status) {
-        // error - try again:
-        loadCardData();
-    });
-}
+
 
 
 
@@ -713,49 +719,10 @@ var thisPathAndIdentifer;
     Loader.preload(imagesToLoad, prepareGame, loadingProgress);
 }
 
-function loadTitles() {
-
-    var possibleTitleIds = [];
-    // loop through quests and get any titles needs:
-
-    for (var i in questData) {
-
-        if (questData[i].titleGainedAfterCompletion != "") {
-            possibleTitleIds.push(questData[i].titleGainedAfterCompletion);
-        }
-    }
 
 
-    var allTitleIdsToGet = possibleTitleIds.concat(hero.titlesEarned).join("|");
-    getJSON("/game-world/getTitles.php?whichIds=" + allTitleIdsToGet, function(data) {
-        possibleTitles = data;
 
-        loadCardData();
-    }, function(status) {
-        // try again:
-        loadTitles();
-    });
-}
 
-function getColours() {
-    getJSON("/game-world/getColours.php", function(data) {
-        colourNames = data.colourNames;
-        getHorticultureData();
-    }, function(status) {
-        // try again:
-        getColours();
-    });
-}
-
-function getQuestDetails() {
-    getJSON("/game-world/getQuestDetails.php?chr=" + characterId, function(data) {
-        questData = data.quests;
-        loadTitles();
-    }, function(status) {
-        // try again:
-        getQuestDetails();
-    });
-}
 
 
 function findProfessionsAndRecipes() {
@@ -846,16 +813,7 @@ function getQuestJournal() {
 
 
 
-function getHorticultureData() {
-    getJSON("/game-world/getHorticulturalDetails.php?chr=" + characterId, function(data) {
-        UI.buildHorticulturePanel(data.markup);
-        hero.plantBreeding = data.data;
-        getQuestDetails();
-    }, function(status) {
-        // try again:
-        getHorticultureData();
-    });
-}
+
 
 function getItemIdsForMap(whichMap) {
             // find items placed on this map:
