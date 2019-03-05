@@ -48,6 +48,7 @@ $possibleCurrentTitles = explode(",",   str_replace("[", "", str_replace("]", ""
 $outputJSON .= '"activeTitle": '.$activeTitle.',';
 $outputJSON .= '"professionsKnown": '.$professionsKnown.',';
 $outputJSON .= '"recipesKnown": '.$recipesKnown.',';
+$heroRecipesKnown =  explode(",",   str_replace("[", "", str_replace("]", "", $recipesKnown))         );
 $outputJSON .= '"holding": '.$holding.',';
 $outputJSON .= '"plantCrossesKnown": '.$plantCrossesKnown.',';
 $outputJSON .= '"totalGameTimePlayed": '.$totalGameTimePlayed.',';
@@ -497,11 +498,222 @@ mysqli_free_result($result2);
 
 
 
+// get Professions and Recipes:
 
 
-// include questJournal (needs to be standalone for any updates)
-// #######
+$coloursQuery = "SELECT * from tblcolours";
+$allColours = [];
+$allItemGroups = [];
+$colourResult = mysqli_query($connection, $coloursQuery) or die ("recipes failed");
+while ($colourRow = mysqli_fetch_array($colourResult)) {
+	extract($colourRow);
+	array_push($allColours, $colourName);
+}
 
+$outputJSON .= ',"recipes":{"professions": {';
+
+
+
+
+
+
+$itemIdString = implode(", ", $heroRecipesKnown);
+
+
+
+$query = "SELECT tblrecipes.*, tblprofessions.*, tblcolours.colourName, tblinventoryitems.itemid as productId, tblinventoryitems.itemcategories as createditemcategories,
+
+CASE WHEN tblrecipes.recipename IS NOT NULL THEN tblrecipes.recipename
+
+ WHEN tblrecipes.defaultresultingcolour IS NOT NULL AND tblinventoryitems.hasInherentColour IS NOT NULL THEN CONCAT_WS(' ',tblcolours.colourname, tblinventoryitems.shortname)
+  WHEN tblrecipes.recipename IS NULL THEN tblinventoryitems.shortname
+ END as 'finalRecipeName',
+ tblinventoryitems.description as recipeDescriptionFallback, tblinventoryitems.hasInherentColour as hasInherentColour FROM tblrecipes INNER JOIN tblprofessions on tblrecipes.profession = tblprofessions.professionid INNER JOIN tblinventoryitems on tblrecipes.creates = tblinventoryitems.itemid LEFT JOIN tblcolours on tblrecipes.defaultresultingcolour = tblcolours.colourid where tblrecipes.recipeid in (".$itemIdString.")
+order by tblprofessions.professionid, finalRecipeName ASC";
+
+
+$result = mysqli_query($connection, $query) or die ("recipes failed");
+
+
+$thisProfession = -1;
+
+
+while ($row = mysqli_fetch_array($result)) {
+	extract($row);
+
+    if($thisProfession != $profession) {
+if($thisProfession != -1) {
+    // if not first time:
+
+// remove last comma:
+$outputJSON = rtrim($outputJSON, ",");
+
+$outputJSON .= '},';
+$outputJSON .= '"sortOrder": ['.implode(",", $thisRecipeOrder).'],';
+ksort($thisProfessionsFilters);
+$outputJSON .= '"filters": '.json_encode($thisProfessionsFilters).',';
+$outputJSON .= '"filterOrder": [';
+//implode(",", array_keys($thisProfessionsFilters));
+$professionsKeys = array_keys($thisProfessionsFilters);
+
+foreach ($professionsKeys as $value) {
+    $outputJSON .= '"'.$value.'",';
+}
+// remove last comma:
+
+$outputJSON = rtrim($outputJSON, ",");
+$outputJSON .= ']';
+$outputJSON .= '},';
+} 
+$thisRecipeOrder = [];
+$thisProfessionsFilters = [];
+
+$outputJSON .= '"'.$profession.'": { "name": "'.$professionName.'", ';
+$outputJSON .= '"recipes": {';
+$thisProfession = $profession;
+    }
+	
+	$outputJSON .= '"'.$recipeID.'":{';
+$outputJSON .= '"components":'.$components.',';
+
+$componentsSplit = explode(",", $components);
+
+
+
+$componentObject = json_decode($components);
+
+foreach($componentObject as $key => $value) {
+
+
+
+    if(!is_numeric($value->type)) {
+
+
+        array_push($allItemGroups, $value->type);
+        }
+    }
+
+$outputJSON .= '"creates":"'.$creates.'",';
+$outputJSON .= '"hiddenCreates":"'.$hiddenCreates.'",';
+$outputJSON .= '"defaultColour":"'.$defaultResultingColour.'",';
+
+
+$thisRecipesFilters = "Miscellaneous";
+if(isset($createditemcategories)) {
+// get categories for this item:
+$catQuery = "SELECT * FROM tblitemcategories WHERE categoryid in (".$createditemcategories.")";
+$catResult = mysqli_query($connection, $catQuery) or die ("categories failed");
+ 
+while ($catRow = mysqli_fetch_array($catResult)) {
+    extract($catRow);
+    $thisRecipesFilters = $categoryName; 
+}
+} 
+
+
+if (array_key_exists($thisRecipesFilters, $thisProfessionsFilters)) {
+    array_push($thisProfessionsFilters[$thisRecipesFilters], $recipeID);
+} else {
+// add new key:
+$thisProfessionsFilters[$thisRecipesFilters] = array($recipeID);
+}
+
+// add this to the 'all' category
+if (array_key_exists("All", $thisProfessionsFilters)) {
+    array_push($thisProfessionsFilters["All"], $recipeID);
+} else {
+// add new key:
+$thisProfessionsFilters["All"] = array($recipeID);
+}
+
+
+
+
+
+
+$outputJSON .= '"prerequisite":"'.$prerequisite.'",';
+$outputJSON .= '"tier":"'.$recipeTier.'",';
+array_push($thisRecipeOrder, $recipeID);
+
+$thisColour = '';
+if($hasInherentColour<1) {
+if($defaultResultingColour>0) {
+	$thisColour = "-".strtolower($allColours[$defaultResultingColour]);
+}
+}
+
+
+
+$outputJSON .= '"recipeName":"'.$finalRecipeName.'",';
+
+
+$outputJSON .= '"imageId":"'.$productId.$thisColour.'",';
+
+if($recipeDescription == "") {
+$outputJSON .= '"recipeDescription":"'.$recipeDescriptionFallback.'"';
+} else {
+	$outputJSON .= '"recipeDescription":"'.$recipeDescription.'"';
+}
+
+$outputJSON .= '},';
+
+}
+// remove last comma:
+
+$outputJSON = rtrim($outputJSON, ",");
+
+
+$outputJSON .= '},';
+$outputJSON .= '"sortOrder": ['.implode(",", $thisRecipeOrder).'],';
+ksort($thisProfessionsFilters);
+$outputJSON .= '"filters": '.json_encode($thisProfessionsFilters).',';
+$outputJSON .= '"filterOrder": [';
+//implode(",", array_keys($thisProfessionsFilters));
+$professionsKeys = array_keys($thisProfessionsFilters);
+foreach ($professionsKeys as $value) {
+    $outputJSON .= '"'.$value.'",';
+}
+// remove last comma:
+
+$outputJSON = rtrim($outputJSON, ",");
+$outputJSON .= ']';
+
+
+$outputJSON .= '}}';
+
+
+if(count($allItemGroups)>0) {
+$outputJSON .= ',"itemGroups": {';
+
+$groupQuery = "select * from tblitemgroups where itemgroupcode in (";
+
+for($i=0;$i<count($allItemGroups);$i++) {
+$groupQuery .= '"'.$allItemGroups[$i].'",';
+}
+   
+$groupQuery = rtrim($groupQuery, ",");
+$groupQuery .= ")";
+
+
+
+
+$groupResult = mysqli_query($connection, $groupQuery) or die ("item groups failed");
+
+while ($groupRow = mysqli_fetch_array($groupResult)) {
+    extract($groupRow);
+    //echo $itemGroupCode." - ".$itemGroupDescription."<br />";
+
+$outputJSON .= '"'.$itemGroupCode.'": "'.$itemGroupDescription.'",';
+
+}
+$outputJSON = rtrim($outputJSON, ",");
+$outputJSON .= '}';
+
+}
+
+
+
+$outputJSON .= '}';
 
 
 

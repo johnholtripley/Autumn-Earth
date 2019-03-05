@@ -7619,7 +7619,7 @@ currentMap = newMap;
 
 
 
-// john
+
 colourNames = data.colours.colourNames;
      UI.buildHorticulturePanel(data.horticulture.markup);
         hero.plantBreeding = data.horticulture.data;
@@ -7632,7 +7632,8 @@ colourNames = data.colours.colourNames;
         hero.activeCardBack = data.cards.activeBack;
         UI.changeActiveCardBack();
 
-
+hero.crafting = data.recipes.professions;
+        currentItemGroupFilters = data.recipes.itemGroups;
 
 
         loadCoreAssets();
@@ -7789,7 +7790,8 @@ function processInitialMap() {
         audio.loadAmbientSounds({ "hourChime": thisMapData[currentMap].hourChime });
     }
     fae.recentHotspots = [];
-    findProfessionsAndRecipes();
+ //   findProfessionsAndRecipes();
+ getShopData();
 }
 
 
@@ -8235,7 +8237,7 @@ var thisPathAndIdentifer;
 
 
 
-
+/*
 function findProfessionsAndRecipes() {
     loadProfessionsAndRecipes(hero.recipesKnown.join("|"));
 }
@@ -8252,7 +8254,7 @@ function loadProfessionsAndRecipes(recipeIdsToLoad) {
         loadProfessionsAndRecipes(recipeIdsToLoad);
     });
 }
-
+*/
 
 
 function getShopData() {
