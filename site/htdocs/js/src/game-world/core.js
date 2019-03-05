@@ -1158,11 +1158,13 @@ for (var m = 0; m < visibleMaps.length; m++) {
 
 
 function removeMapAssets() {
-    for (var i = 0; i < tileGraphicsToLoad.length; i++) {
+
+
+    for (var i in tileGraphicsToLoad) {
         // remove the on error handler so it doesn't fire when the image is removed:
-        tileImages[i].onerror = '';
-        tileImages[i].src = '';
-        tileImages[i] = null;
+        tileImages[tileGraphicsToLoad[i]].onerror = '';
+        tileImages[tileGraphicsToLoad[i]].src = '';
+        tileImages[tileGraphicsToLoad[i]] = null;
     }
 
     for (var i in npcGraphicsToLoad) {
@@ -1175,9 +1177,14 @@ function removeMapAssets() {
         itemImages[itemGraphicsToLoad[i]].src = '';
         itemImages[itemGraphicsToLoad[i]] = null;
     }
-    backgroundImg.onerror = '';
-    backgroundImg.src = '';
-    backgroundImg = null;
+    for (var i in backgroundImgs) {
+        backgroundImgs[i].onerror = '';
+        backgroundImgs[i].src = '';
+        backgroundImgs[i] = null;
+    }
+
+
+
 }
 
 
@@ -1203,7 +1210,7 @@ function changeMaps(doorX, doorY) {
         hero.tileX = parseInt(doorX);
         hero.tileY = parseInt(doorY);
     }
-
+visibleMaps = [newMap];
     loadMap();
 }
 

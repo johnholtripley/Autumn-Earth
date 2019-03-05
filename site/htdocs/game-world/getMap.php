@@ -102,14 +102,19 @@ $hasEventContent = strrpos($mapDataFile, 'eventSpecificContent');
 $mapData = json_decode($mapDataFile, true);
 
 
+$isInside = $mapData['map']['isInside'];
 
+if(!$isInside) {
 $globalPosition = findWorldMapPosition($map);
 // add map's global position:
 $mapData['map']['globalCoordinateTile0X'] = $globalPosition[0];
 $mapData['map']['globalCoordinateTile0Y'] = $globalPosition[1];
 
 $mapData['map']['mapId'] = $map;
-
+} else {
+    // no global offset required:
+    $globalPosition = [0,0];
+}
 
 
 
@@ -515,13 +520,13 @@ $thisItemObject = array(
 }
 }
 
-if(!$isPlayerHousing) {
+if((!$isPlayerHousing) && (!$isInside)) {
 
 // see if this player has any housing:
  //   $externalHousingDataPath = $_SERVER['DOCUMENT_ROOT'].'/data/chr'.$chr.'/housing/external.json';
 
 //if (file_exists($externalHousingDataPath)) {
-    // john #######
+    
  //   $jsonHousingFile = file_get_contents($externalHousingDataPath);
  //  $externalHousingMapJson = json_decode($jsonHousingFile, true);
  //  $housingWidth = count($externalHousingMapJson['map']['collisions'][0]);
@@ -545,7 +550,7 @@ $SouthEdgeTile = (($globalPosition[1]+1)*$worldMapTileLength)-1;
 $housingQuery = "SELECT * from tblplayerhousing where northWestCornerTileY >= ".$NorthEdgeTile." and southEastCornerTileY <= ".$SouthEdgeTile." and northWestCornerTileX <= ".$westEdgeTile." and southEastCornerTileX >= ".$eastEdgeTile;
 $housingResult = mysqli_query($connection,  $housingQuery ) or die ( "couldn't execute events query: ".$housingQuery );
 $numberOfHouses = mysqli_num_rows( $housingResult );
-if ( $numberOfHouses>0 ) {
+if ( $numberOfHouses>0) {
     while ( $housingRow = mysqli_fetch_array( $housingResult ) ) {
 //var_dump($housingRow);
 

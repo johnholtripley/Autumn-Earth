@@ -28,7 +28,7 @@ for (var m = 0; m < visibleMaps.length; m++) {
      //   console.log("checking "+thisMapData[(visibleMaps[m])].npcs[i].uniqueIndex+" is = "+thisAgentsName);
      if(thisMapData[(visibleMaps[m])].npcs[i].uniqueIndex == thisAgentsName) {
 thisNPC = thisMapData[(visibleMaps[m])].npcs[i];
-console.log(thisNPC);
+//console.log(thisNPC);
      }
         }
     }
