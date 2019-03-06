@@ -110,13 +110,13 @@ $globalPosition = findWorldMapPosition($map);
 $mapData['map']['globalCoordinateTile0X'] = $globalPosition[0];
 $mapData['map']['globalCoordinateTile0Y'] = $globalPosition[1];
 
-$mapData['map']['mapId'] = $map;
+
 } else {
     // no global offset required:
     $globalPosition = [0,0];
 }
 
-
+$mapData['map']['mapId'] = $map;
 
 
 

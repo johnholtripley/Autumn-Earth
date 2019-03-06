@@ -6006,14 +6006,11 @@ cardAlbumMarkup += '<p id="dustCurrency">'+ hero.currency.cardDust + ' dust</p>'
     },
 
     openedShopSuccessfully: function(shopHash) {
-        console.log(shopHash);
-        if (document.getElementById("shop" + shopHash)) {
-            console.log("exists");
+          if (document.getElementById("shop" + shopHash)) {
             UI.showUI();
             shopCurrentlyOpen = shopHash;
             document.getElementById("shop" + shopHash).classList.add("active");
             inventoryPanels.classList.add("shopSpecialism" + document.getElementById("shop" + shopHash).getAttribute('data-specialism'));
-            console.log("shop should be open");
             return true;
         } else {
                return false;
@@ -7701,6 +7698,7 @@ function prepareCoreAssets() {
 
 
 function processInitialMap() {
+
     var startTileOffsetX, startTileOffsetY;
     var startTileOffsetXNum = 0;
     var startTileOffsetYNum = 0;
@@ -8020,10 +8018,15 @@ function loadNewVisibleMap(whichNewMap) {
 function loadMapJSON(mapFilePath) {
     getJSON(mapFilePath, function(data) {
             thisMapData[data.map.mapId] = data.map;
-            if (data.map.mapId == currentMap) {
-               // visibleMaps.push(currentMap);
+           // if (data.map.mapId == currentMap) {
+            currentMap = data.map.mapId;
+                visibleMaps.push(currentMap);
+                  
                 processInitialMap();
                 isOverWorldMap = !data.map.isInside;
+           // }
+           if(isOverWorldMap) {
+            updateVisibleMaps();
             }
         },
         function(status) {
@@ -8047,11 +8050,11 @@ function loadMap() {
         mapFilePath = '/game-world/generateCircularDungeonMap.php?dungeonName=' + randomDungeonName + '&requestedMap=' + newMap;
         //  mapFilePath = '/game-world/generateCircularDungeonMap.php?dungeonName='+randomDungeonName+'&requestedMap=' + newMap + '&seed=1512098741';
     }
-    currentMap = newMap;
+    
     loadMapJSON(mapFilePath);
 
     // load other visible maps:
-    updateVisibleMaps();
+    
     /*
     for (var i = 0; i < visibleMaps.length; i++) {
         if (visibleMaps[i] != currentMap) {
@@ -8721,7 +8724,7 @@ function changeMaps(doorX, doorY) {
         hero.tileX = parseInt(doorX);
         hero.tileY = parseInt(doorY);
     }
-visibleMaps = [newMap];
+visibleMaps = [];
     loadMap();
 }
 
@@ -11070,9 +11073,7 @@ function draw() {
         assetsToDraw.sort(sortByLowestValue);
 
 
-        gameContext.rect(0, 0, canvasWidth, canvasHeight);
-        gameContext.fillStyle = oceanPattern;
-        gameContext.fill();
+        
 
 
 
@@ -11088,8 +11089,19 @@ function draw() {
                         // draw the current map background in place:
                         gameContext.drawImage(backgroundImgs[currentMap], currentWorldMapPosX, currentWorldMapPosY);
                         */
+      
+
+
+if(isOverWorldMap) {
+
+// draw the sea:
+gameContext.rect(0, 0, canvasWidth, canvasHeight);
+        gameContext.fillStyle = oceanPattern;
+        gameContext.fill();
+
+
         var thisMapsGlobalOffsetX, thisMapsGlobalOffsetY, currentWorldMapPosX, currentWorldMapPosY;
-        // find and draw any other visible maps:
+        // find and draw any visible maps:
         for (var i = 0; i < visibleMaps.length; i++) {
 
             thisMapsGlobalOffsetX = thisMapData[(visibleMaps[i])].globalCoordinateTile0X * worldMapTileLength;
@@ -11101,7 +11113,25 @@ function draw() {
                 gameContext.drawImage(backgroundImgs[(visibleMaps[i])], currentWorldMapPosX, currentWorldMapPosY);
             }
         }
+} else {
+// draw a black background:
+   gameContext.fillStyle = "#000000";
+        gameContext.fillRect(0, 0, canvasWidth, canvasHeight);
+        gameContext.fill();
 
+/*
+      var thisMapsGlobalOffsetX = thisMapData[currentMap].terrain[0].length;
+                var thisMapsGlobalOffsetY = thisMapData[currentMap].terrain.length;
+                        var currentWorldMapPosX = Math.floor((canvasWidth / 2) + getTileIsoCentreCoordX(0 + thisMapsGlobalOffsetX, 0 + thisMapsGlobalOffsetY) - hero.isox);
+                        var currentWorldMapPosY = Math.floor((canvasHeight / 2) + getTileIsoCentreCoordY(0 + thisMapsGlobalOffsetX, 0 + thisMapsGlobalOffsetY) - hero.isoy - (tileH / 2));
+
+                        // draw the current map background in place:
+                        gameContext.drawImage(backgroundImgs[currentMap], currentWorldMapPosX, currentWorldMapPosY);
+                        */
+                        var thisMapTilesX = thisMapData[currentMap].terrain[0].length;
+                
+                         gameContext.drawImage(backgroundImgs[currentMap], Math.floor(getTileIsoCentreCoordX(0, thisMapTilesX - 1) - hero.isox - tileW / 2 + canvasWidth / 2), Math.floor(getTileIsoCentreCoordY(0, 0) - hero.isoy - tileH / 2 + canvasHeight / 2));
+}
 
 
 
