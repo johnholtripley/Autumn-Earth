@@ -9360,7 +9360,7 @@ loadNewVisibleMap(newMapsToLoad[i]);
 function heroIsInNewTile() {
     hero.z = getElevation(hero.tileX, hero.tileY);
  
-    updateCartographicMiniMap();
+  //  updateCartographicMiniMap();
  
     currentMap = findMapNumberFromGlobalCoordinates(hero.tileX, hero.tileY);
 
@@ -10905,8 +10905,14 @@ function draw() {
         for (var m = 0; m < visibleMaps.length; m++) {
 
             map = thisMapData[visibleMaps[m]].terrain;
+          
+            if(isOverWorldMap) {
             thisMapsGlobalOffsetX = thisMapData[(visibleMaps[m])].globalCoordinateTile0X * worldMapTileLength;
             thisMapsGlobalOffsetY = thisMapData[(visibleMaps[m])].globalCoordinateTile0Y * worldMapTileLength;
+        } else {
+            thisMapsGlobalOffsetX = 0;
+            thisMapsGlobalOffsetY = 0;
+        }
             for (var i = 0; i < mapTilesX; i++) {
                 for (var j = 0; j < mapTilesY; j++) {
                     // the tile coordinates should be positioned by i,j but the way the map is drawn, the reference in the array is j,i
@@ -11075,20 +11081,6 @@ function draw() {
 
         
 
-
-
-        // don't need to clear, as the background will overwrite anyway - this means there's less to process.
-
-
-        // draw the current map background based on it's tile 0,0 and using its global position to offset - relative to the hero's position:
-        /*
-                var thisMapsGlobalOffsetX = thisMapData[currentMap].globalCoordinateTile0X * worldMapTileLength;
-                var thisMapsGlobalOffsetY = thisMapData[currentMap].globalCoordinateTile0Y * worldMapTileLength;
-                        var currentWorldMapPosX = Math.floor((canvasWidth / 2) + getTileIsoCentreCoordX(0 + thisMapsGlobalOffsetX, 0 + thisMapsGlobalOffsetY) - hero.isox - (worldMapWidthPx/2));
-                        var currentWorldMapPosY = Math.floor((canvasHeight / 2) + getTileIsoCentreCoordY(0 + thisMapsGlobalOffsetX, 0 + thisMapsGlobalOffsetY) - hero.isoy - (tileH / 2));
-                        // draw the current map background in place:
-                        gameContext.drawImage(backgroundImgs[currentMap], currentWorldMapPosX, currentWorldMapPosY);
-                        */
       
 
 
@@ -11119,18 +11111,11 @@ gameContext.rect(0, 0, canvasWidth, canvasHeight);
         gameContext.fillRect(0, 0, canvasWidth, canvasHeight);
         gameContext.fill();
 
-/*
-      var thisMapsGlobalOffsetX = thisMapData[currentMap].terrain[0].length;
-                var thisMapsGlobalOffsetY = thisMapData[currentMap].terrain.length;
-                        var currentWorldMapPosX = Math.floor((canvasWidth / 2) + getTileIsoCentreCoordX(0 + thisMapsGlobalOffsetX, 0 + thisMapsGlobalOffsetY) - hero.isox);
-                        var currentWorldMapPosY = Math.floor((canvasHeight / 2) + getTileIsoCentreCoordY(0 + thisMapsGlobalOffsetX, 0 + thisMapsGlobalOffsetY) - hero.isoy - (tileH / 2));
 
-                        // draw the current map background in place:
-                        gameContext.drawImage(backgroundImgs[currentMap], currentWorldMapPosX, currentWorldMapPosY);
-                        */
                         var thisMapTilesX = thisMapData[currentMap].terrain[0].length;
-                
-                         gameContext.drawImage(backgroundImgs[currentMap], Math.floor(getTileIsoCentreCoordX(0, thisMapTilesX - 1) - hero.isox - tileW / 2 + canvasWidth / 2), Math.floor(getTileIsoCentreCoordY(0, 0) - hero.isoy - tileH / 2 + canvasHeight / 2));
+                if (typeof backgroundImgs[currentMap] !== "undefined") {
+                         gameContext.drawImage(backgroundImgs[currentMap], Math.floor(getTileIsoCentreCoordX(0, thisMapTilesX - 1) - hero.isox + tileW/2 + canvasWidth / 2), Math.floor(getTileIsoCentreCoordY(0, 0) - hero.isoy -(tileH/2) + canvasHeight / 2));
+                     }
 }
 
 
