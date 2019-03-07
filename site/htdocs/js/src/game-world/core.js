@@ -1731,7 +1731,7 @@ function update() {
                     break;
             }
         }
-        mapTransitionCurrentFrames++;
+        mapTransitionCurrentFrames+=2;
         if (mapTransitionCurrentFrames >= mapTransitionMaxFrames) {
             changeMaps(activeDoorX, activeDoorY);
         }
