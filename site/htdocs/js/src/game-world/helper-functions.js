@@ -135,18 +135,19 @@ function isATerrainCollision(x, y) {
     var globalTileY = getTileY(y);
     var tileX = getLocalCoordinatesX(globalTileX);
     var tileY = getLocalCoordinatesY(globalTileY);
-  
+  var thisMap;
     if (isOverWorldMap) {
     
         if ((globalTileX < 0) || (globalTileY < 0) || (globalTileX >= (worldMapTileLength * worldMap[0].length)) || (globalTileY >= (worldMapTileLength * worldMap.length))) {
             return 1;
         }
+          thisMap = findMapNumberFromGlobalCoordinates(globalTileX, globalTileY);
     } else {
         if ((tileX < 0) || (tileY < 0) || (tileX >= mapTilesX) || (tileY >= mapTilesY)) {
             return 1;
         }
     }
-    var thisMap = findMapNumberFromGlobalCoordinates(globalTileX, globalTileY);
+   thisMap = currentMap;
 
     // check if defined rather than boundaries as could be moving into an adjoining map:
     /*

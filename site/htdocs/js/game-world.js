@@ -1996,18 +1996,19 @@ function isATerrainCollision(x, y) {
     var globalTileY = getTileY(y);
     var tileX = getLocalCoordinatesX(globalTileX);
     var tileY = getLocalCoordinatesY(globalTileY);
-  
+  var thisMap;
     if (isOverWorldMap) {
     
         if ((globalTileX < 0) || (globalTileY < 0) || (globalTileX >= (worldMapTileLength * worldMap[0].length)) || (globalTileY >= (worldMapTileLength * worldMap.length))) {
             return 1;
         }
+          thisMap = findMapNumberFromGlobalCoordinates(globalTileX, globalTileY);
     } else {
         if ((tileX < 0) || (tileY < 0) || (tileX >= mapTilesX) || (tileY >= mapTilesY)) {
             return 1;
         }
     }
-    var thisMap = findMapNumberFromGlobalCoordinates(globalTileX, globalTileY);
+   thisMap = currentMap;
 
     // check if defined rather than boundaries as could be moving into an adjoining map:
     /*
@@ -8020,7 +8021,7 @@ function loadMapJSON(mapFilePath) {
             thisMapData[data.map.mapId] = data.map;
            // if (data.map.mapId == currentMap) {
             currentMap = data.map.mapId;
-                visibleMaps.push(currentMap);
+                visibleMaps.push(parseInt(currentMap));
                   
                 processInitialMap();
                 isOverWorldMap = !data.map.isInside;
@@ -8691,10 +8692,12 @@ function removeMapAssets() {
         itemImages[itemGraphicsToLoad[i]].src = '';
         itemImages[itemGraphicsToLoad[i]] = null;
     }
+
     for (var i in backgroundImgs) {
         backgroundImgs[i].onerror = '';
         backgroundImgs[i].src = '';
-        backgroundImgs[i] = null;
+       // backgroundImgs[i] = null;
+        delete backgroundImgs[i];
     }
 
 
@@ -8715,6 +8718,7 @@ function changeMaps(doorX, doorY) {
     if (jumpMapId == null) {
         var doorData = thisMapData[currentMap].doors;
         var whichDoor = doorX + "," + doorY;
+
         hero.tileX = doorData[whichDoor].startX;
         hero.tileY = doorData[whichDoor].startY;
         newMap = doorData[whichDoor].map;
@@ -9284,18 +9288,7 @@ function update() {
 
 
 
-/*
-function checkForWorldWrap(whichObject) {
-    if (isOverWorldMap) {
-        if (whichObject.x < 0) {
-            whichObject.x += (worldMapWidthPx * worldMap[0].length);
-        }
-        if (whichObject.y < 0) {
-            whichObject.y += (worldMapWidthPx * worldMap.length);
-        }
-    }
-}
-*/
+
 
 function updateVisibleMaps() {
 
@@ -9331,8 +9324,6 @@ isValid = true;
 
 if(isValid) {
 newVisibleMaps.push(worldMap[j][i]);
-} else {
-   // wrap around #### 
 }
 
 }
@@ -9345,6 +9336,9 @@ newVisibleMaps.push(worldMap[j][i]);
 
 // https://stackoverflow.com/questions/1187518/how-to-get-the-difference-between-two-arrays-in-javascript
 var newMapsToLoad = newVisibleMaps.filter(function(i) {return visibleMaps.indexOf(i) < 0;});
+
+
+
 //console.log("new maps:",newMapsToLoad);
 for(var i=0;i<newMapsToLoad.length;i++) {
  // console.log("loading in new map #"+newMapsToLoad[i]);
@@ -9361,11 +9355,11 @@ function heroIsInNewTile() {
     hero.z = getElevation(hero.tileX, hero.tileY);
  
   //  updateCartographicMiniMap();
- 
+ if(isOverWorldMap) {
     currentMap = findMapNumberFromGlobalCoordinates(hero.tileX, hero.tileY);
 
     updateVisibleMaps();
-
+}
 
 
     var thisHotspot, thisTileCentreX, thisTileCentreY;

@@ -141,6 +141,7 @@ mysqli_free_result($eventsResult);
 
 
 
+if(!$isInside) {
 // change local coordinates from JSON to global coordinates based on the map's position:
 // items:
 for ($i = 0; $i < count($mapData['map']['items']); $i++) {
@@ -190,6 +191,7 @@ for ($j=0;$j<count($activeEvents);$j++) {
     }
 }
 
+}
 
 
 
