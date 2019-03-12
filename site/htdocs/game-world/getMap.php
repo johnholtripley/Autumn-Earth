@@ -11,9 +11,18 @@ if(isset($_GET["debug"])) {
     $debug = true;
 }
 
-/*
 
-*/
+
+
+// Shop config: 
+$inflationModifier = 10;
+$sellPriceModifier = 0.7;
+$sellPriceSpecialismModifier = 0.8;
+$buyPriceSpecialismModifier = 0.9;
+
+
+
+
 
 $jsonMapResults = file_get_contents($_SERVER['DOCUMENT_ROOT'].'/data/world-map.json');
    $mapJson = json_decode($jsonMapResults, true);
@@ -49,6 +58,23 @@ function findRelativeWorldMapPosition($mapNumber) {
     return (array($xDiff, $yDiff));
 }
 */
+
+function generateHash($sourceString) {
+    // duplicate function in game world helper-functions:
+
+    // http://stackoverflow.com/questions/7616461/generate-a-hash-from-string-in-javascript-jquery
+    $hash = 0;
+    if (strlen($sourceString) === 0) {
+        return hash;
+    }
+    $allCharacters = str_split($sourceString);
+    for ($i = 0; $i < count($allCharacters); $i++) {
+        $chr = ord($allCharacters[$i]);
+        $hash = (($hash << 5) - $hash) + $chr;
+        $hash |= 0; // Convert to 32bit integer
+    }
+    return $hash;
+}
 
 function findWorldMapPosition($requiredMapNumber) {
     global $worldMap;
@@ -99,6 +125,10 @@ $mapDataFile = str_replace('##characterProfession##', $primaryProfession, $mapDa
 
 $hasProceduralContent = strrpos($mapDataFile, '##procedural##');
 $hasEventContent = strrpos($mapDataFile, 'eventSpecificContent');
+
+
+
+
 $mapData = json_decode($mapDataFile, true);
 
 
@@ -911,13 +941,38 @@ unset($mapData['map']['eventSpecificContent']);
 
 
 
+$jsonOutput = '{"mapData":'.json_encode($mapData);
+
+
+
+// determine Shop data:
+
+
+foreach ($mapData['map']['shops'] as &$thisShop) {
+
+    $thisShop['hash'] = generateHash($thisShop['name']);
+}
+
+// {"chr": 999,"region":"Teldrassil","shops": [{"name":"shop #1","uniqueItems":[],"specialism":2,"categories":[1,2],"size":"small","currency":"money","hash":2067019224}]}
+
+$thisMapsRegion = $mapData['map']['region'];
+
+
+
+
+
+
 
 
 //if(isset($mapData)) {
-    echo json_encode($mapData);
+$jsonOutput .= '}';
+    echo $jsonOutput;
 //} else {
 //    echo $mapDataFile;
 //}
+
+
+
 
 
 

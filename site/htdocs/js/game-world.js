@@ -7985,7 +7985,7 @@ function loadNewVisibleInventoryItemData(itemIdsToLoad, whichNewMap) {
 function loadNewVisibleJSON(mapFilePath, whichNewMap) {
  //   console.log("loading JSON for " + whichNewMap);
     getJSON(mapFilePath, function(data) {
-            thisMapData[whichNewMap] = data.map;
+            thisMapData[whichNewMap] = data.mapData.map;
             // find new items that require data:
             //console.log("loadNewVisibleJSON raw "+getItemIdsForMap(whichNewMap).join("."));
             var thisMapsItemIds = uniqueValues(getItemIdsForMap(whichNewMap));
@@ -8018,16 +8018,15 @@ function loadNewVisibleMap(whichNewMap) {
 
 function loadMapJSON(mapFilePath) {
     getJSON(mapFilePath, function(data) {
-            thisMapData[data.map.mapId] = data.map;
-           // if (data.map.mapId == currentMap) {
-            currentMap = data.map.mapId;
-                visibleMaps.push(parseInt(currentMap));
-                  
-                processInitialMap();
-                isOverWorldMap = !data.map.isInside;
-           // }
-           if(isOverWorldMap) {
-            updateVisibleMaps();
+            thisMapData[data.mapData.map.mapId] = data.mapData.map;
+            // if (data.mapData.mapId == currentMap) {
+            currentMap = data.mapData.map.mapId;
+            visibleMaps.push(parseInt(currentMap));
+            processInitialMap();
+            isOverWorldMap = !data.mapData.map.isInside;
+            // }
+            if (isOverWorldMap) {
+                updateVisibleMaps();
             }
         },
         function(status) {
@@ -8051,18 +8050,8 @@ function loadMap() {
         mapFilePath = '/game-world/generateCircularDungeonMap.php?dungeonName=' + randomDungeonName + '&requestedMap=' + newMap;
         //  mapFilePath = '/game-world/generateCircularDungeonMap.php?dungeonName='+randomDungeonName+'&requestedMap=' + newMap + '&seed=1512098741';
     }
-    
-    loadMapJSON(mapFilePath);
 
-    // load other visible maps:
-    
-    /*
-    for (var i = 0; i < visibleMaps.length; i++) {
-        if (visibleMaps[i] != currentMap) {
-            loadMapJSON('/game-world/getMap.php?chr=' + characterId + '&map=' + visibleMaps[i]);
-        }
-    }
-    */
+    loadMapJSON(mapFilePath);
 }
 
 
@@ -8288,6 +8277,10 @@ var addedShopDataAlready = false;
         }
     }
     shopData += ']}';
+
+
+
+
         loadShopData('shopData=' + shopData);
  //   }
 }
@@ -8451,6 +8444,7 @@ function loadInventoryItemData(itemIdsToLoad) {
         if (!inventoryInterfaceIsBuilt) {
             UI.buildInventoryInterface();
         }
+        // john
         loadMapAssets();
     }, function(status) {
         // try again:
@@ -8889,7 +8883,7 @@ function checkHeroCollisions() {
             } else {
                 // platform not involved - find the tile's bottom edge
                 var tileCollidedWith = getTileY(hero.y - hero.length / 2);
-                console.log(tileCollidedWith);
+          
                 var tileBottomEdge = (tileCollidedWith + 1) * tileW;
                 // use the +1 to make sure it's just clear of the collision tile
                 hero.y = tileBottomEdge + hero.length / 2 + 1;
