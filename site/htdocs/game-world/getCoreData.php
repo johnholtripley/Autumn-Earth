@@ -62,7 +62,7 @@ $outputJSON .= '"retinueMapAreasRevealed": '.$retinueMapAreasRevealed.',';
 $outputJSON .= '"collections": '.$collections.',';
 $outputJSON .= '"actions": '.$actions;
 $outputJSON .= '}';
-
+$activeQuests = explode(",",   str_replace("[", "", str_replace("]", "", $activeQuests))         );
   }
 
 
@@ -720,7 +720,8 @@ $outputJSON .= '}';
 
 
 
-
+// get journal content: 
+// #############
 
 
 

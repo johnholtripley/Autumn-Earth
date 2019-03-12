@@ -281,7 +281,8 @@ function processInitialMap() {
     }
     fae.recentHotspots = [];
  //   findProfessionsAndRecipes();
- getShopData();
+ //getShopData();
+ getQuestJournal();
 }
 
 
@@ -477,6 +478,8 @@ function loadNewVisibleJSON(mapFilePath, whichNewMap) {
  //   console.log("loading JSON for " + whichNewMap);
     getJSON(mapFilePath, function(data) {
             thisMapData[whichNewMap] = data.mapData.map;
+            thisMapShopItemIds = data.shops.allItemIds;
+        UI.buildShop(data.shops.markup);
             // find new items that require data:
             //console.log("loadNewVisibleJSON raw "+getItemIdsForMap(whichNewMap).join("."));
             var thisMapsItemIds = uniqueValues(getItemIdsForMap(whichNewMap));
@@ -513,6 +516,8 @@ function loadMapJSON(mapFilePath) {
             // if (data.mapData.mapId == currentMap) {
             currentMap = data.mapData.map.mapId;
             visibleMaps.push(parseInt(currentMap));
+              thisMapShopItemIds = data.shops.allItemIds;
+        UI.buildShop(data.shops.markup);
             processInitialMap();
             isOverWorldMap = !data.mapData.map.isInside;
             // }
@@ -741,6 +746,7 @@ function loadProfessionsAndRecipes(recipeIdsToLoad) {
 */
 
 
+/*
 function getShopData() {
     thisMapShopItemIds = '';
 
@@ -775,7 +781,10 @@ var addedShopDataAlready = false;
         loadShopData('shopData=' + shopData);
  //   }
 }
+*/
 
+
+/*
 function loadNewVisibleShopData(shopJSONData) {
     // post data with getJSONWithParams function
 
@@ -789,6 +798,9 @@ function loadNewVisibleShopData(shopJSONData) {
     });
 }
 
+
+
+/*
 function loadShopData(shopJSONData) {
     // post data with getJSONWithParams function
     getJSONWithParams("/game-world/getShopItems.php", shopJSONData, function(data) {
@@ -800,6 +812,7 @@ function loadShopData(shopJSONData) {
         loadShopData(shopJSONData);
     });
 }
+*/
 
 
 function getQuestJournal() {

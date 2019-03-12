@@ -2,7 +2,7 @@
 
 //include($_SERVER['DOCUMENT_ROOT']."/includes/signalnoise.php");
 //include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
-//include($_SERVER['DOCUMENT_ROOT']."/includes/functions.php");
+include($_SERVER['DOCUMENT_ROOT']."/includes/functions.php");
 
 $chr = $_GET["chr"];
 $map = $_GET["map"];
@@ -19,7 +19,7 @@ $inflationModifier = 10;
 $sellPriceModifier = 0.7;
 $sellPriceSpecialismModifier = 0.8;
 $buyPriceSpecialismModifier = 0.9;
-
+$shopSizePriceLimits = ["small"=>"5", "medium"=>"10", "large"=>"9999999999"];
 
 
 
@@ -956,22 +956,306 @@ foreach ($mapData['map']['shops'] as &$thisShop) {
 // {"chr": 999,"region":"Teldrassil","shops": [{"name":"shop #1","uniqueItems":[],"specialism":2,"categories":[1,2],"size":"small","currency":"money","hash":2067019224}]}
 
 $thisMapsRegion = $mapData['map']['region'];
+// get any Regional modifiers:
+$modifiersQuery = "SELECT * from tblregionalpricemodifiers WHERE whichregion = '".$thisMapsRegion ."'";
+$categoryModifier = array();
+    $modifiersResult = mysqli_query($connection,  $modifiersQuery ) or die ( "couldn't execute query: ".$modifiersQuery );
+$numberofrows = mysqli_num_rows( $modifiersResult );
+    if ( $numberofrows>0 ) {
+        while ( $modifierRow = mysqli_fetch_array( $modifiersResult ) ) {
+            extract( $modifierRow );
+
+            $categoryModifier[$itemCategory] = floatval($priceModifier);
+        }
+    }
+mysqli_free_result($modifiersResult);
+
+$shopAllItemIdsUsed = [];
+$shopMarkupToOutput = '';
+
+// get colours:
+$coloursQuery = "SELECT * from tblcolours";
+$allColours = [];
+$colourResult = mysqli_query($connection, $coloursQuery) or die ("recipes failed");
+while ($colourRow = mysqli_fetch_array($colourResult)) {
+    extract($colourRow);
+    array_push($allColours, $colourName);
+}
+mysqli_free_result($colourResult);
+// just use "primary" colours:
+$colourIndicesToUse = [1,2,4,6,8,16];
+ 
+
+// get active events:
+$activeSeasonQuery = 'tblinventoryitems.activeduringseason is null';
+if(count($activeEvents)>0) {
+   $activeSeasonQuery = '(tblinventoryitems.activeduringseason in ('.implode(",",$activeEventsId).') or tblinventoryitems.activeduringseason is null)'; 
+}
+
+
+
+
+for ($i=0;$i<count($mapData['map']['shops']);$i++) {
+
+
+$inventoryData = [];
+ 
+if(count($mapData['map']['shops'][$i]["categories"]) > 0) {
+
+$query2 = "SELECT tblinventoryitems.* from tblinventoryitems where tblinventoryitems.itemcategories in (".implode(",",$mapData['map']['shops'][$i]["categories"]).") and tblinventoryitems.pricecode <= ".$shopSizePriceLimits[($mapData['map']['shops'][$i]["size"])]." and ".$activeSeasonQuery." and tblinventoryitems.showinthecodex = 1 order by tblinventoryitems.shortname ASC";
+// Get colour variants as well for relevant items
+ 
+$result2 = mysqli_query($connection, $query2) or die ("failed:".$query2);
+ 
+while ($row = mysqli_fetch_array($result2, MYSQLI_ASSOC)) {
+    array_push($inventoryData, $row);
+}
+mysqli_free_result($result2);
+ 
+}
 
 
 
 
 
 
+if($mapData['map']['shops'][$i]["uniqueItems"] == '##usergenerated##') {
+   
+   /*
+$UGCQuery = "select * from tblplayergeneratedcontent where characterID='".$chr."' and isActive='1'";
+$UGCResult = mysqli_query($connection, $UGCQuery) or die ("UGC failed:".$UGCQuery);
+$baseItemTypes = array();
+while ($UGCRow = mysqli_fetch_array($UGCResult, MYSQLI_ASSOC)) {
+array_push($baseItemTypes, $UGCRow['itemType']);
+}
+mysqli_free_result($UGCResult);
+*/
+$query3 = "select tblinventoryitems.*, tblplayergeneratedcontent.itemID as UgcId, tblplayergeneratedcontent.itemTitle as UgcTitle from tblinventoryitems inner join tblplayergeneratedcontent on tblplayergeneratedcontent.itemType = tblinventoryitems.itemID where tblplayergeneratedcontent.isActive = '1' and tblplayergeneratedcontent.characterID='".$chr."'";
 
 
-//if(isset($mapData)) {
+
+//$query3 = "SELECT tblinventoryitems.* from tblinventoryitems where tblinventoryitems.itemID in (".implode(',',$baseItemTypes).") order by tblinventoryitems.shortname ASC";
+$result3 = mysqli_query($connection, $query3) or die ("recipes failed:".$query3);
+while ($row = mysqli_fetch_array($result3, MYSQLI_ASSOC)) {
+   
+// add contains for UGC content: #######
+    // {"ugc-id":"2","ugc-title":"Titian's Venus"}
+
+//$row['contains'] = "{'ugc-id':'".$row['UgcId']."','ugc-title':'".addslashes($row['UgcTitle'])."'}";
+
+
+    array_push($inventoryData, $row);
+    }
+    mysqli_free_result($result3);
+
+} else {
+// get unique items:
+ 
+if(count($mapData['map']['shops'][$i]["uniqueItems"])>0) {
+     
+   $itemIdsToGet =implode(",",array_keys($mapData['map']['shops'][$i]["uniqueItems"]));
+
+$query3 = "SELECT tblinventoryitems.* from tblinventoryitems where tblinventoryitems.itemID in (".$itemIdsToGet.") order by tblinventoryitems.shortname ASC";
+ 
+$result3 = mysqli_query($connection, $query3) or die ("recipes failed:".$query3);
+while ($row = mysqli_fetch_array($result3, MYSQLI_ASSOC)) {
+   
+    // check if any of the unique data overides the defaults:
+    $thisUniqueItem = $mapData['map']['shops'][$i]["uniqueItems"][$row["itemID"]];
+    for ($j=0;$j<count($thisUniqueItem);$j++) {
+foreach ($thisUniqueItem[$j] as $key => $value) {
+ $row[$key] = $value;
+}
+array_push($inventoryData, $row);
+ 
+    }
+ 
+}
+mysqli_free_result($result3);
+
+}
+ 
+ }
+ 
+ 
+// check for items that need colour, add these to the list
+// add a colourName attribute so that can be sorted rather than the numeric value
+// then sort
+ 
+ 
+/*
+ echo "<pre><code>";
+ var_dump($inventoryData);
+ echo "</code></pre>";
+ */
+ 
+
+ 
+$itemIdsThatNeedColourVariants = [12,40,66];
+$inventoryDataCount = count($inventoryData);
+for ($j=0;$j<$inventoryDataCount;$j++) {
+    $inventoryData[$j]['colourName'] = "";
+    // check if this item needs colours (dyes, inks, seeds etc)
+    if (in_array($inventoryData[$j]['itemID'], $itemIdsThatNeedColourVariants)) {
+        $hasFoundAColourVariant = false;
+        for ($k=0;$k<count($colourIndicesToUse);$k++) {
+            // make sure that an equivilent named item doesn't exist: 
+            $foundEquivilent = false;
+            for ($l=0;$l<count($inventoryData);$l++) {
+                if($l!=$j) {
+                    if($inventoryData[$j]['itemGroup'] == $inventoryData[$l]['itemGroup']) {
+                        if($inventoryData[$l]['colour'] == $colourIndicesToUse[$k]) {
+                            $foundEquivilent = true;
+                        }
+                    }
+                }
+            }
+            if(!$foundEquivilent) {
+                $newColourItem = $inventoryData[$j];
+                $newColourItem['colourName'] = $allColours[($colourIndicesToUse[$k])]." ";
+                $newColourItem['colour'] = $colourIndicesToUse[$k];
+                array_push($inventoryData, $newColourItem);
+                $hasFoundAColourVariant = true;
+            }
+        }
+        if($hasFoundAColourVariant) {
+            unset($inventoryData[$j]);
+        }
+    } else {
+        // see if its colour needs displaying:
+        if(($inventoryData[$j]['colour'] != 0) && ($inventoryData[$j]['hasInherentColour'] == 0)) {
+            $inventoryData[$j]['colourName'] = $allColours[$inventoryData[$j]['colour']]." ";
+        }
+    }
+}
+ 
+ 
+$inventoryDataToSort = array_values($inventoryData);
+ 
+ 
+ 
+// sort by shortname and then colour:
+// http://stackoverflow.com/questions/3232965/sort-multidimensional-array-by-multiple-keys/3233009#3233009
+unset($shortname);
+unset($colour);
+
+foreach ($inventoryDataToSort as $sortkey => $sortrow) {
+    $shortname[$sortkey]  = $sortrow['shortname'];
+    $colour[$sortkey] = $sortrow['colourName'];
+}
+if(count($inventoryDataToSort) > 0) {
+array_multisort($shortname, SORT_ASC, $colour, SORT_ASC, $inventoryDataToSort);
+
+    $shopMarkupToOutput .= '<div class="shop" id="shop'.$mapData['map']['shops'][$i]["hash"].'" data-currency="'.$mapData['map']['shops'][$i]["currency"].'" data-specialism="'.$mapData['map']['shops'][$i]["specialism"].'">';
+$shopMarkupToOutput .= '<div class="draggableBar">'.$mapData['map']['shops'][$i]["name"].'</div><button class="closePanel">close</button><ol>';
+
+
+ }
+ 
+$thisShopsSpecialism = $mapData['map']['shops'][$i]["specialism"];
+ 
+ 
+
+for ($j=0;$j<count($inventoryDataToSort);$j++) {
+    array_push($shopAllItemIdsUsed, $inventoryDataToSort[$j]['itemID']);
+$shopMarkupToOutput .= '<li id="shopSlot'.$i.'-'.$j.'">';
+$colourSuffix = '';
+if($inventoryDataToSort[$j]['colourName'] != '') {
+    $colourSuffix = '-'.strtolower(trim($inventoryDataToSort[$j]['colourName']));
+}
+ 
+$thisItemsPrice = intval($inventoryDataToSort[$j]['priceCode']);
+
+$specialPriceClass = '';
+if($thisShopsSpecialism) {
+// compare the specialism as a string:
+    if(strrpos($inventoryDataToSort[$j]['itemCategories'], ''.$thisShopsSpecialism) !== false) {
+    $thisItemsPrice = $thisItemsPrice*$sellPriceSpecialismModifier;
+    $specialPriceClass = ' specialPrice';
+   
+     
+}
+} 
+
+
+// check for regional price variation too
+if(isset($categoryModifier[($inventoryDataToSort[$j]['itemCategories'])])) {
+
+ $thisItemsPrice = $thisItemsPrice*$categoryModifier[($inventoryDataToSort[$j]['itemCategories'])];
+
+    $specialPriceClass = ' specialPrice';
+}
+
+
+ 
+$thisItemsPrice = ceil($thisItemsPrice * $inflationModifier);
+ 
+$imgDataAttributes = 'data-price="'.$thisItemsPrice.'"';
+$imgDataAttributes .= ' data-colour="'.$inventoryDataToSort[$j]['colour'].'"';
+$imgDataAttributes .= ' data-type="'.$inventoryDataToSort[$j]['itemID'].'"';
+ 
+if(isset($inventoryDataToSort[$j]['contains'])) {
+$imgDataAttributes .= ' data-contains="'.$inventoryDataToSort[$j]['contains'].'"';
+}
+if(isset($inventoryDataToSort[$j]['inscription'])) {
+$imgDataAttributes .= ' data-inscription="'.$inventoryDataToSort[$j]['inscription'].'"';
+}
+
+if(isset($inventoryDataToSort[$j]['UgcId'])) {
+$imgDataAttributes .= ' data-ugcid="'.$inventoryDataToSort[$j]['UgcId'].'"';
+}
+
+if(isset($inventoryDataToSort[$j]['UgcTitle'])) {
+$imgDataAttributes .= ' data-ugctitle="'.addslashes($inventoryDataToSort[$j]['UgcTitle']).'"';
+}
+ 
+
+$imageFileSrc = '/images/game-world/inventory-items/'.$inventoryDataToSort[$j]['itemID'].$colourSuffix.'.png';
+if(isset($inventoryDataToSort[$j]['UgcId'])) {
+    // find path to UGC slot image:
+//$imageFileSrc = '/images/user-generated/chr'.$chr.'/'.$inventoryDataToSort[$j]['UgcId'].'-slot.png';
+$imageFileSrc = '/images/user-generated/'.$inventoryDataToSort[$j]['UgcId'].'-slot.png';
+}
+
+$shopMarkupToOutput .= '<img src= "'.$imageFileSrc.'" '.$imgDataAttributes.' alt="'.$inventoryDataToSort[$j]['colourName'].$inventoryDataToSort[$j]['shortname'].'">';
+$shopMarkupToOutput .= '<p><em>'.$inventoryDataToSort[$j]['colourName'].$inventoryDataToSort[$j]['shortname'].'</em>';
+if(isset($inventoryDataToSort[$j]['UgcTitle'])) {
+$shopMarkupToOutput .= $inventoryDataToSort[$j]['UgcTitle'];
+} else {
+    $shopMarkupToOutput .= $inventoryDataToSort[$j]['description'];
+}
+$shopMarkupToOutput .= ' <span class="price'.$specialPriceClass.'">Buy price: '.parseMoney($thisItemsPrice).'</span></p>';
+$shopMarkupToOutput .= '</li>';
+ 
+}
+ 
+ if(count($inventoryDataToSort) > 0) {
+$shopMarkupToOutput .= '</ol></div></div>';
+}
+ 
+}
+ 
+ // allItemIds won't be needed when inventory items are added to this getMap script ##################
+// output all IDs used so they can be loaded into the game's inventory data:
+$shopAllItemIdsUsed = array_unique($shopAllItemIdsUsed);
+
+
+if($debug) {
+echo htmlentities($shopMarkupToOutput);
+} else {
+
+    
+$jsonOutput .= ',"shops":{"markup": ["'.addcslashes($shopMarkupToOutput, '"\\/').'"],"allItemIds": ["'.implode("|",$shopAllItemIdsUsed).'"]}';
+}
+
+// end shops
+
+
+
+
+
 $jsonOutput .= '}';
-    echo $jsonOutput;
-//} else {
-//    echo $mapDataFile;
-//}
-
-
+echo $jsonOutput;
 
 
 

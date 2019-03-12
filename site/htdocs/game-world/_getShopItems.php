@@ -121,8 +121,8 @@ mysqli_free_result($modifiersResult);
 
 $shopSizePriceLimits = ["small"=>"5", "medium"=>"10", "large"=>"9999999999"];
  
-$allItemIdsUsed = [];
-$markupToOutput = '';
+$shopAllItemIdsUsed = [];
+$shopMarkupToOutput = '';
  
 // get colours:
 $coloursQuery = "SELECT * from tblcolours";
@@ -311,8 +311,8 @@ foreach ($inventoryDataToSort as $sortkey => $sortrow) {
 if(count($inventoryDataToSort) > 0) {
 array_multisort($shortname, SORT_ASC, $colour, SORT_ASC, $inventoryDataToSort);
 
-    $markupToOutput .= '<div class="shop" id="shop'.$jsonData['shops'][$i]["hash"].'" data-currency="'.$jsonData['shops'][$i]["currency"].'" data-specialism="'.$jsonData['shops'][$i]["specialism"].'">';
-$markupToOutput .= '<div class="draggableBar">'.$jsonData['shops'][$i]["name"].'</div><button class="closePanel">close</button><ol>';
+    $shopMarkupToOutput .= '<div class="shop" id="shop'.$jsonData['shops'][$i]["hash"].'" data-currency="'.$jsonData['shops'][$i]["currency"].'" data-specialism="'.$jsonData['shops'][$i]["specialism"].'">';
+$shopMarkupToOutput .= '<div class="draggableBar">'.$jsonData['shops'][$i]["name"].'</div><button class="closePanel">close</button><ol>';
 
 
  }
@@ -322,8 +322,8 @@ $thisShopsSpecialism = $jsonData['shops'][$i]["specialism"];
  
 
 for ($j=0;$j<count($inventoryDataToSort);$j++) {
-    array_push($allItemIdsUsed, $inventoryDataToSort[$j]['itemID']);
-$markupToOutput .= '<li id="shopSlot'.$i.'-'.$j.'">';
+    array_push($shopAllItemIdsUsed, $inventoryDataToSort[$j]['itemID']);
+$shopMarkupToOutput .= '<li id="shopSlot'.$i.'-'.$j.'">';
 $colourSuffix = '';
 if($inventoryDataToSort[$j]['colourName'] != '') {
     $colourSuffix = '-'.strtolower(trim($inventoryDataToSort[$j]['colourName']));
@@ -382,35 +382,35 @@ if(isset($inventoryDataToSort[$j]['UgcId'])) {
 $imageFileSrc = '/images/user-generated/'.$inventoryDataToSort[$j]['UgcId'].'-slot.png';
 }
 
-$markupToOutput .= '<img src= "'.$imageFileSrc.'" '.$imgDataAttributes.' alt="'.$inventoryDataToSort[$j]['colourName'].$inventoryDataToSort[$j]['shortname'].'">';
-$markupToOutput .= '<p><em>'.$inventoryDataToSort[$j]['colourName'].$inventoryDataToSort[$j]['shortname'].'</em>';
+$shopMarkupToOutput .= '<img src= "'.$imageFileSrc.'" '.$imgDataAttributes.' alt="'.$inventoryDataToSort[$j]['colourName'].$inventoryDataToSort[$j]['shortname'].'">';
+$shopMarkupToOutput .= '<p><em>'.$inventoryDataToSort[$j]['colourName'].$inventoryDataToSort[$j]['shortname'].'</em>';
 if(isset($inventoryDataToSort[$j]['UgcTitle'])) {
-$markupToOutput .= $inventoryDataToSort[$j]['UgcTitle'];
+$shopMarkupToOutput .= $inventoryDataToSort[$j]['UgcTitle'];
 } else {
-    $markupToOutput .= $inventoryDataToSort[$j]['description'];
+    $shopMarkupToOutput .= $inventoryDataToSort[$j]['description'];
 }
-$markupToOutput .= ' <span class="price'.$specialPriceClass.'">Buy price: '.parseMoney($thisItemsPrice).'</span></p>';
-$markupToOutput .= '</li>';
+$shopMarkupToOutput .= ' <span class="price'.$specialPriceClass.'">Buy price: '.parseMoney($thisItemsPrice).'</span></p>';
+$shopMarkupToOutput .= '</li>';
  
 }
  
  if(count($inventoryDataToSort) > 0) {
-$markupToOutput .= '</ol></div></div>';
+$shopMarkupToOutput .= '</ol></div></div>';
 }
  
 }
  
  
 // output all IDs used so they can be loaded into the game's inventory data:
-$allItemIdsUsed = array_unique($allItemIdsUsed);
+$shopAllItemIdsUsed = array_unique($shopAllItemIdsUsed);
 
 if($debug) {
-echo htmlentities($markupToOutput);
+echo htmlentities($shopMarkupToOutput);
 } else {
 
 // create JSON response:
-echo '{"markup": ["'.addcslashes($markupToOutput, '"\\/').'"],"allItemIds": ["'.implode("|",$allItemIdsUsed).'"]}';
-//echo htmlentities($markupToOutput);
+echo '{"markup": ["'.addcslashes($shopMarkupToOutput, '"\\/').'"],"allItemIds": ["'.implode("|",$shopAllItemIdsUsed).'"]}';
+//echo htmlentities($shopMarkupToOutput);
 }
  
  
