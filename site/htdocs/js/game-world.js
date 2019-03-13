@@ -7633,6 +7633,8 @@ colourNames = data.colours.colourNames;
 hero.crafting = data.recipes.professions;
         currentItemGroupFilters = data.recipes.itemGroups;
 
+        UI.buildQuestJournal(data.journal.markup, data.journal.regions);
+
 
         loadCoreAssets();
     }, function(status) {
@@ -7791,7 +7793,8 @@ function processInitialMap() {
     fae.recentHotspots = [];
  //   findProfessionsAndRecipes();
  //getShopData();
- getQuestJournal();
+ //getQuestJournal();
+ findInventoryItemData();
 }
 
 
@@ -8324,6 +8327,8 @@ function loadShopData(shopJSONData) {
 */
 
 
+
+/*
 function getQuestJournal() {
     getJSON("/game-world/getQuestJournalEntries.php?chr=" + characterId, function(data) {
         UI.buildQuestJournal(data.markup, data.regions);
@@ -8333,7 +8338,7 @@ function getQuestJournal() {
         getQuestJournal();
     });
 }
-
+*/
 
 
 

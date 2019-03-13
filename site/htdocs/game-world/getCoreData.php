@@ -62,7 +62,19 @@ $outputJSON .= '"retinueMapAreasRevealed": '.$retinueMapAreasRevealed.',';
 $outputJSON .= '"collections": '.$collections.',';
 $outputJSON .= '"actions": '.$actions;
 $outputJSON .= '}';
-$activeQuests = explode(",",   str_replace("[", "", str_replace("]", "", $activeQuests))         );
+
+
+
+
+
+if($activeQuests == "[]") {
+$activeQuests = array();
+} else {
+	$activeQuests = explode(",",   str_replace("[", '', str_replace("]", '', $activeQuests))         );
+}
+
+
+
   }
 
 
@@ -473,15 +485,16 @@ $outputJSON .= '["'.$cardAttack.'", "'.$cardDefense.'", "'.$cardName.'", "'.$car
 $outputJSON = rtrim($outputJSON, ",");
 
 
+/*
 $query2 = "SELECT * FROM tblcharacters WHERE charID = '".$chr."'";
 $result2 = mysqli_query($connection, $query2) or die ();
 $row2 = mysqli_fetch_array($result2);
 extract($row2);
-
+*/
 
 $outputJSON .= '],"backs":';
-$outputJSON .= $row2['cardBacks'];
-$outputJSON .= ',"activeBack": "'.$row2['activeCardBack'].'"';
+$outputJSON .= $cardBacks;
+$outputJSON .= ',"activeBack": "'.$activeCardBack.'"';
 
 
 
@@ -492,7 +505,7 @@ $outputJSON .= '}';
 
 
 mysqli_free_result($result);
-mysqli_free_result($result2);
+
 
 
 
@@ -718,12 +731,20 @@ $outputJSON .= '}';
 
 
 
-
-
 // get journal content: 
-// #############
+$isAnUpdate = false;
+
+$numberOfQuests = count($activeQuests);
 
 
+$journalMarkupToOutput = '<ol>';
+
+include($_SERVER['DOCUMENT_ROOT']."/includes/questJournalEntry.php");
+
+$journalMarkupToOutput .= "</ol>";
+
+
+$outputJSON .= ',"journal":{"markup": ["'.addcslashes($journalMarkupToOutput, '"\\/').'"],"regions": '.json_encode($regions).'}';
 
 
 
