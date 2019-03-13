@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset=utf-8>
+		<title>three js</title>
+		<style>
+			* {padding:0; margin: 0; }
+			canvas { width: 100%; height: 100% }
+		</style>
+	</head>
+	<body>
+		<script src="three.js"></script>
+		<script>
+			var scene = new THREE.Scene();
+			var fieldOfView = 75;
+			var aspectRatio = window.innerWidth / window.innerHeight;
+			var nearClipping = 0.1;
+			var farClipping = 1000;
+var camera = new THREE.PerspectiveCamera( fieldOfView, aspectRatio, nearClipping, farClipping );
+
+var renderer = new THREE.WebGLRenderer();
+renderer.setPixelRatio( window.devicePixelRatio );
+renderer.setSize( window.innerWidth, window.innerHeight );
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap; // default THREE.PCFShadowMap
+document.body.appendChild( renderer.domElement );
+
+
+
+	// GROUND
+
+				var groundGeo = new THREE.PlaneBufferGeometry( 10000, 10000 );
+				var groundMat = new THREE.MeshLambertMaterial( { color: 0xffffff } );
+				groundMat.color.setHSL( 0.095, 1, 0.75 );
+
+				var ground = new THREE.Mesh( groundGeo, groundMat );
+				ground.position.y = - 33;
+				ground.rotation.x = - Math.PI / 2;
+				ground.receiveShadow = true;
+				scene.add( ground );
+
+
+var barrelGeometry = new THREE.PlaneGeometry( 1, 1, 32, 32 );
+var barrelMaterial = new THREE.MeshBasicMaterial( {color: 0xff78ff, side: THREE.DoubleSide} );
+var barrel = new THREE.Mesh( barrelGeometry, barrelMaterial );
+barrel.castShadow = true;
+barrel.receiveShadow = false;
+scene.add( barrel );
+plane.position.y = -0.5;
+
+// LIGHTS
+
+				hemiLight = new THREE.HemisphereLight( 0xffffff, 0xffffff, 0.6 );
+				hemiLight.color.setHSL( 0.6, 1, 0.6 );
+				hemiLight.groundColor.setHSL( 0.095, 1, 0.75 );
+				hemiLight.position.set( 0, 50, 0 );
+				scene.add( hemiLight );
+
+				hemiLightHelper = new THREE.HemisphereLightHelper( hemiLight, 10 );
+				scene.add( hemiLightHelper );
+
+				//
+
+				dirLight = new THREE.DirectionalLight( 0xffffff, 1 );
+				dirLight.color.setHSL( 0.1, 1, 0.95 );
+				dirLight.position.set( - 1, 1.75, 1 );
+				dirLight.position.multiplyScalar( 30 );
+				scene.add( dirLight );
+
+				dirLight.castShadow = true;
+
+				dirLight.shadow.mapSize.width = 2048;
+				dirLight.shadow.mapSize.height = 2048;
+
+				var d = 50;
+
+				dirLight.shadow.camera.left = - d;
+				dirLight.shadow.camera.right = d;
+				dirLight.shadow.camera.top = d;
+				dirLight.shadow.camera.bottom = - d;
+
+				dirLight.shadow.camera.far = 3500;
+				dirLight.shadow.bias = - 0.0001;
+
+
+
+
+camera.position.set( 0, 0, 250 );
+
+
+function animate() {
+	requestAnimationFrame( animate );
+	
+	// rotate cube:
+//	plane.rotation.x += 0.01;
+//plane.rotation.y += 0.01;
+	
+	renderer.render( scene, camera );
+}
+animate();
+
+		</script>
+	</body>
+</html>

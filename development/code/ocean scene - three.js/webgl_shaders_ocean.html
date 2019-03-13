@@ -54,7 +54,7 @@
         //		camera.position.set( 30, 30, 100 );
         // isometric camera: https://stackoverflow.com/questions/23450588/isometric-camera-with-three-js
         var aspect = window.innerWidth / window.innerHeight;
-        var d = 80;
+        var d = 32;
         camera = new THREE.OrthographicCamera( - d * aspect, d * aspect, d, - d, 1, 1000 );
         camera.position.set( d, d, d ); // all components equal
 				//
@@ -84,6 +84,27 @@
 				var sky = new THREE.Sky();
 				sky.scale.setScalar( 10000 );
 				scene.add( sky );
+				
+				
+				
+				
+				var img = new THREE.MeshBasicMaterial({ 
+        map:THREE.ImageUtils.loadTexture('screengrab.jpg')
+    });
+    img.map.needsUpdate = true;
+
+    // plane
+    var plane = new THREE.Mesh(new THREE.PlaneGeometry(50, 50),img);
+    plane.overdraw = true;
+    scene.add(plane);
+				
+				
+				
+				
+				
+				
+				
+				
 				var uniforms = sky.material.uniforms;
 				uniforms.turbidity.value = 10;
 				uniforms.rayleigh.value = 2;

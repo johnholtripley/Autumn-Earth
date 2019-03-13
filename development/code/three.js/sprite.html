@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset=utf-8>
+		<title>three js</title>
+		<style>
+			* {padding:0; margin: 0; }
+			canvas { width: 100%; height: 100% }
+		</style>
+	</head>
+	<body>
+		<script src="three.js"></script>
+		<script>
+			var scene = new THREE.Scene();
+			var fieldOfView = 75;
+			var aspectRatio = window.innerWidth / window.innerHeight;
+			var nearClipping = 0.1;
+			var farClipping = 1000;
+var camera = new THREE.PerspectiveCamera( fieldOfView, aspectRatio, nearClipping, farClipping );
+
+var renderer = new THREE.WebGLRenderer();
+renderer.setSize( window.innerWidth, window.innerHeight );
+document.body.appendChild( renderer.domElement );
+
+
+
+
+
+var spriteMap = new THREE.TextureLoader().load( "barrel.png" );
+var spriteMaterial = new THREE.SpriteMaterial( { map: spriteMap, color: 0xffffff } );
+var sprite = new THREE.Sprite( spriteMaterial );
+scene.add( sprite );
+
+sprite.position.x = 3;
+
+
+// move camera out a bit:
+camera.position.z = 15;
+
+
+function animate() {
+	requestAnimationFrame( animate );
+	
+	// rotate cube:
+//	plane.rotation.x += 0.01;
+//plane.rotation.y += 0.01;
+	
+	renderer.render( scene, camera );
+}
+animate();
+
+		</script>
+	</body>
+</html>
