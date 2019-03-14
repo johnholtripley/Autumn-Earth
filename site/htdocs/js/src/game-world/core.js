@@ -480,9 +480,10 @@ function loadNewVisibleMap(whichNewMap) {
     if (visibleMapsLoading.indexOf(whichNewMap) === -1) {
         visibleMapsLoading.push(whichNewMap);
         var mapFilePath = '/game-world/getMap.php?chr=' + characterId + '&map=' + whichNewMap;
-        if (whichNewMap < 0) {
+     /*   if (whichNewMap < 0) {
             mapFilePath = '/game-world/generateCircularDungeonMap.php?dungeonName=' + randomDungeonName + '&requestedMap=' + whichNewMap;
         }
+       */
         loadNewVisibleJSON(mapFilePath, whichNewMap);
         //  console.log("whichNewMap - loading in "+whichNewMap+" - "+visibleMapsLoading.indexOf(whichNewMap));
     }
@@ -513,20 +514,16 @@ function loadMapJSON(mapFilePath) {
 
 
 function loadMap() {
-    var mapFilePath;
+    var dungeonAppend = '';
     // check for newly entering a random dungeon:
     if ((newMap < 0) && (currentMap > 0)) {
         randomDungeonName = randomDungeons[Math.abs(newMap)];
         newMap = -1;
-    } else {
-        mapFilePath = '/game-world/getMap.php?chr=' + characterId + '&map=' + newMap;
     }
-    if (newMap < 0) {
-        mapFilePath = '/game-world/generateCircularDungeonMap.php?dungeonName=' + randomDungeonName + '&requestedMap=' + newMap;
-        //  mapFilePath = '/game-world/generateCircularDungeonMap.php?dungeonName='+randomDungeonName+'&requestedMap=' + newMap + '&seed=1512098741';
+    if (randomDungeonName != "") {
+        dungeonAppend = '&dungeonName=' + randomDungeonName;
     }
-
-    loadMapJSON(mapFilePath);
+    loadMapJSON('/game-world/getMap.php?chr=' + characterId + '&map=' + newMap + dungeonAppend);
 }
 
 

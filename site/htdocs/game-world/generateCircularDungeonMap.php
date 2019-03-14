@@ -1,18 +1,25 @@
 <?php
 
-include($_SERVER['DOCUMENT_ROOT'] . "/game-world/generateCircularDungeonMap-third-party-arrow-code.php");
-include($_SERVER['DOCUMENT_ROOT'] . "/includes/dungeonMapConfig.php");
-include($_SERVER['DOCUMENT_ROOT'] . "/game-world/generateBook.php");
+include_once($_SERVER['DOCUMENT_ROOT'] . "/game-world/generateCircularDungeonMap-third-party-arrow-code.php");
+include_once($_SERVER['DOCUMENT_ROOT'] . "/includes/dungeonMapConfig.php");
+include_once($_SERVER['DOCUMENT_ROOT'] . "/game-world/generateBook.php");
 
 if (isset($_GET["debug"])) {
-    $debug = true;
+    $proceduralDebug = true;
 } else {
-    $debug = false;
+    $proceduralDebug = false;
+}
+
+
+// see if this file is an include in getMap.php:
+$isIncluded = false;
+if (isset($isEmbeddedInGetMap)) {
+    $isIncluded = true;
 }
 
 $isFirstTime = true;
 
-if($debug) {
+if($proceduralDebug) {
 ?>
 <style>
 body, p {
@@ -362,7 +369,7 @@ function moveNodesApart()
 
 function outputConnections()
 {
-    global $nodeList, $jointList, $canvaDimension, $keyColours, $lockedJoints, $debug;
+    global $nodeList, $jointList, $canvaDimension, $keyColours, $lockedJoints, $proceduralDebug;
 
     $outputCanvas = imagecreatetruecolor($canvaDimension, $canvaDimension);
     $groundColour = array(219, 215, 190);
@@ -450,7 +457,7 @@ function outputConnections()
         }
 
 
-        if($debug) {
+        if($proceduralDebug) {
 
 
         echo "<br>joint from " . $thisJoint->nodeA . " (" . strtolower($nodeList[$thisJoint->nodeA]->type) . ") to " . $thisJoint->nodeB . " (" . strtolower($nodeList[$thisJoint->nodeB]->type) . ")";
@@ -461,7 +468,7 @@ echo " - is locked";
          
     }
 
-if($debug) {
+if($proceduralDebug) {
     echo '</div><div class="sequenceBlock">';
     ob_start();
     imagejpeg($outputCanvas, null, 100);
@@ -469,17 +476,25 @@ if($debug) {
     echo "<img src='data:image/jpeg;base64," . base64_encode($rawImageBytes) . "'>";
 }
     imagedestroy($outputCanvas);
- if($debug) {
+ if($proceduralDebug) {
     echo "</div>";
 }
 }
 
 function init()
 {
-    global $nodeList, $jointList, $canvaDimension, $keyColours, $storedSeed, $unadjustedSeed, $debug, $thisMapsId, $thisPlayersId, $dungeonName, $thisMapsId, $isFirstTime;
-
-    $thisMapsId = $_GET['requestedMap'];
+    global $nodeList, $jointList, $canvaDimension, $keyColours, $storedSeed, $unadjustedSeed, $proceduralDebug, $thisMapsId, $thisPlayersId, $dungeonName, $thisMapsId, $isFirstTime, $isIncluded, $map, $chr, $randomDungeonName;
+if($isIncluded) {
+$thisMapsId = $map;
+$thisPlayersId = $chr;
+} else {
+      $thisMapsId = $_GET['requestedMap'];
     $thisPlayersId = 999;
+        if(isset($_GET['chr'])) {
+    $thisPlayersId = $_GET['chr'];
+}
+}
+  
 
     $keyColours = array(
         array(255, 0, 64),
@@ -499,11 +514,18 @@ function init()
         list($usec, $sec) = explode(' ', microtime());
         $storedSeed       = floor((float) $sec + ((float) $usec * 100000));
     }
+
+    if($isIncluded) {
+$dungeonName = $randomDungeonName;
+    } else {
     $dungeonName = $_GET["dungeonName"];
+}
+
+
 
     
     $mapFilename = "../data/chr" . $thisPlayersId . "/dungeon/".$dungeonName."/" . $thisMapsId . '.json';
-    if ((is_file($mapFilename)) && !$debug) {
+    if ((is_file($mapFilename)) && !$proceduralDebug) {
         header("Location: /" . $mapFilename);
         die();
     }
@@ -517,7 +539,7 @@ function init()
 
 function growGrammar($thisGrammar, $iterations)
 {
-    global $debug;
+    global $proceduralDebug;
     $grammarTransformations = array(
         
         "X" => array("{O[K#]|,##OX}","{O[K#]|,}O##X","O{##X,}O[K#]"),
@@ -527,7 +549,7 @@ function growGrammar($thisGrammar, $iterations)
     );
     $currentKey = 0;
 
-if($debug) {
+if($proceduralDebug) {
     echo '<div class="sequenceBlock"><p>start grammar: ' . htmlentities($thisGrammar) . '<br>';
 }
     for ($i = 0; $i < $iterations; $i++) {
@@ -544,12 +566,12 @@ if($debug) {
 
                     $currentKey++;
                 }
-                if($debug) {
+                if($proceduralDebug) {
                 echo $thisCharacter . " => " . $thisTransform . " &hellip; ";
             }
                 $thisGrammar = substr_replace($thisGrammar, $thisTransform, $characterCounter, 1);
                 $characterCounter += strlen($thisTransform);
-             if($debug) {
+             if($proceduralDebug) {
                 echo " now " . htmlentities($thisGrammar) . "<br>";
             }
             }
@@ -561,7 +583,7 @@ if($debug) {
     $thisGrammar = str_replace("Z", "OO", $thisGrammar);
 
 
-if($debug) {
+if($proceduralDebug) {
     echo "final grammar: " . htmlentities($thisGrammar) . "</p>";
 }
     return $thisGrammar;
@@ -1021,7 +1043,7 @@ function findPartnerNode($activeNode)
 
 function canPathfindThroughDelaunayGraph($startNode, $endNode)
 {
-    global $allDelaunayEdges, $delaunayVertices, $verticesUsedOnDelaunayGraph, $edgesUsedOnDelaunayGraph, $delaunayTriangles, $nodesPlottedOnDelaunayGraph, $lockedJoints, $debug, $jointList;
+    global $allDelaunayEdges, $delaunayVertices, $verticesUsedOnDelaunayGraph, $edgesUsedOnDelaunayGraph, $delaunayTriangles, $nodesPlottedOnDelaunayGraph, $lockedJoints, $proceduralDebug, $jointList;
     // find start and end vertices:
     foreach ($delaunayVertices as $thisVertex) {
         if ($thisVertex->whichNode === $startNode) {
@@ -1168,7 +1190,7 @@ if(isset($firstNewNode)) {
 
 
     } else {
-        if($debug) {
+        if($proceduralDebug) {
         echo "<br>Didn't find path<br>";
     }
     }
@@ -1190,7 +1212,7 @@ function compareByEdges($a, $b)
 
 function plotConnectivityOnDelaunayGraph()
 {
-    global $centreVertex, $delaunayVertices, $nodeList, $jointList, $delaunayTriangles, $edgesUsedOnDelaunayGraph, $verticesUsedOnDelaunayGraph, $nodesPlottedOnDelaunayGraph, $connectionsPlottedOnDelaunayGraph, $allDelaunayEdges, $debug;
+    global $centreVertex, $delaunayVertices, $nodeList, $jointList, $delaunayTriangles, $edgesUsedOnDelaunayGraph, $verticesUsedOnDelaunayGraph, $nodesPlottedOnDelaunayGraph, $connectionsPlottedOnDelaunayGraph, $allDelaunayEdges, $proceduralDebug;
 
     // for each strand, plot the entire path out. mark used edges and whether a node has all of its connections used. pathfind to find unused edges
 
@@ -1349,7 +1371,7 @@ function plotConnectivityOnDelaunayGraph()
 
     } while (($connectionsRemainingToBePlotted > 0) && ($foundUnusedVertex));
     if (!$foundUnusedVertex) {
-        if($debug) {
+        if($proceduralDebug) {
         echo "FAILED... RESTARTING...<br>";
     
     }
@@ -1367,7 +1389,7 @@ function removeSharedTriangleEdges($triangle)
 
 function outputDelaunayGraph()
 {
-    global $canvaDimension, $delaunayVertices, $delaunayTriangles, $delaunayNodeRadius, $centreVertex, $edgesUsedOnDelaunayGraph, $keyColours, $lockedJoints, $debug;
+    global $canvaDimension, $delaunayVertices, $delaunayTriangles, $delaunayNodeRadius, $centreVertex, $edgesUsedOnDelaunayGraph, $keyColours, $lockedJoints, $proceduralDebug;
 
     $outputCanvas = imagecreatetruecolor($canvaDimension, $canvaDimension);
     $groundColour = array(219, 215, 190);
@@ -1477,7 +1499,7 @@ function outputDelaunayGraph()
         }
         imagefilledellipse($outputCanvas, $delaunayVertices[$i]->x, $delaunayVertices[$i]->y, $delaunayNodeRadius, $delaunayNodeRadius, $nodeColour);
     }
-    if($debug) {
+    if($proceduralDebug) {
     echo '<div class="sequenceBlock">';
     ob_start();
     imagejpeg($outputCanvas, null, 100);
@@ -1500,7 +1522,7 @@ function sortVerticesByConnections($a, $b)
 
 function createGridLayout()
     {
-    global $delaunayVertices, $verticesUsedOnDelaunayGraph, $edgesUsedOnDelaunayGraph, $allDelaunayEdges, $debug, $dungeonDetails, $dungeonName;
+    global $delaunayVertices, $verticesUsedOnDelaunayGraph, $edgesUsedOnDelaunayGraph, $allDelaunayEdges, $proceduralDebug, $dungeonDetails, $dungeonName;
     $maxNodeDimension = 140;
 
     $sortedVertices = $verticesUsedOnDelaunayGraph;
@@ -1682,7 +1704,7 @@ unset($allDelaunayEdges[$key]);
 function outputSizedNodesLayout()
 {
 
-    global $canvaDimension, $delaunayVertices, $delaunayTriangles, $delaunayNodeRadius, $centreVertex, $edgesUsedOnDelaunayGraph, $keyColours, $lockedJoints, $allDelaunayEdges, $verticesUsedOnDelaunayGraph, $requiredWidth, $requiredHeight, $minLeft, $minTop, $debug, $dungeonDetails, $dungeonName;
+    global $canvaDimension, $delaunayVertices, $delaunayTriangles, $delaunayNodeRadius, $centreVertex, $edgesUsedOnDelaunayGraph, $keyColours, $lockedJoints, $allDelaunayEdges, $verticesUsedOnDelaunayGraph, $requiredWidth, $requiredHeight, $minLeft, $minTop, $proceduralDebug, $dungeonDetails, $dungeonName;
 
     $outputCanvas = imagecreatetruecolor($canvaDimension, $canvaDimension);
     $groundColour = array(219, 215, 190);
@@ -1805,7 +1827,7 @@ $requiredHeight = $maxBottom - $minTop;
 
 
 
-if($debug) {
+if($proceduralDebug) {
     echo '<div class="sequenceBlock">';
     ob_start();
     imagejpeg($outputCanvas, null, 100);
@@ -1820,12 +1842,13 @@ if($debug) {
 
 
 function outputJSONContent() {
-global $debug, $map, $itemMap, $drawnTileDoors, $drawnTileKeys, $mapTilesX, $mapTilesY, $storedSeed, $thisMapsId, $thisPlayersId, $entranceX, $entranceY, $exitX, $exitY, $dungeonName, $dungeonDetails, $outputJSON, $templateGraphicsToAppend, $templateNPCsToAppend, $templateItemsToAppend, $templateHotspotsToAppend, $allTemplateJSON, $templateOffsetX, $templateOffsetY, $placedItems, $doorsJSON, $unadjustedSeed;
+global $proceduralDebug, $map, $itemMap, $drawnTileDoors, $drawnTileKeys, $mapTilesX, $mapTilesY, $storedSeed, $thisMapsId, $thisPlayersId, $entranceX, $entranceY, $exitX, $exitY, $dungeonName, $dungeonDetails, $outputJSON, $templateGraphicsToAppend, $templateNPCsToAppend, $templateItemsToAppend, $templateHotspotsToAppend, $allTemplateJSON, $templateOffsetX, $templateOffsetY, $placedItems, $doorsJSON, $unadjustedSeed;
 
 
 
 $outputJSON = '{"map":{"zoneName": "A Circular Dungeon: '.$unadjustedSeed.'",';
 $outputJSON .='"region": "Teldrassil", ';
+$outputJSON .='"isInside": true, ';
 if(isset($dungeonDetails[$dungeonName]['ambientSounds'])){
 
 $outputJSON .= '"ambientSounds": '.json_encode(json_decode($dungeonDetails[$dungeonName]['ambientSounds'])).',';
@@ -2121,13 +2144,13 @@ $outputJSON .= '"hiddenResourceTier": '.$resourceTier;
 
 //$outputJSON .= ',"showOnlyLineOfSight": true';
 $outputJSON .= '}}';
-if(!$debug) {
+if(!$proceduralDebug) {
     header("Content-Type: application/json");
 }
 
 
 
-if(!$debug) {
+if(!$proceduralDebug) {
 
 
 
@@ -2148,9 +2171,9 @@ if(!$debug) {
 
 
 function outputTileMap() {
-global $map, $mapTilesX, $mapTilesY, $canvaDimension, $drawnTileDoors, $debug, $keyColours, $drawnTileKeys;
+global $map, $mapTilesX, $mapTilesY, $canvaDimension, $drawnTileDoors, $proceduralDebug, $keyColours, $drawnTileKeys;
 
-if($debug) {
+if($proceduralDebug) {
     echo '<div class="sequenceBlock">';
 }
 
@@ -2246,7 +2269,7 @@ imagefilledellipse($outputCanvas, ($drawnTileKeys[$i][0])*$drawnTileSize+$drawnO
 imagefilledrectangle($outputCanvas,0,0,$canvaDimension,$drawnOffset,imagecolorallocate($outputCanvas, 60, 60, 60));
 imagefilledrectangle($outputCanvas,0,$canvaDimension-$drawnOffset,$canvaDimension,$canvaDimension,imagecolorallocate($outputCanvas, 60, 60, 60));
 */
-if($debug) {
+if($proceduralDebug) {
        ob_start();
     imagejpeg($outputCanvas, null, 100);
     $rawImageBytes = ob_get_clean();
@@ -2415,7 +2438,7 @@ $storePositionZero = $position[0];
 
 
    function findRelevantTemplates() {
-    global $dungeonName, $thisMapsId, $dungeonDetails, $thisMapsId, $drawnTileRooms, $map, $templateGraphicsToAppend, $templateNPCsToAppend, $templateItemsToAppend, $allTemplateJSON, $templateOffsetX, $templateOffsetY, $templateHotspotsToAppend, $debug;
+    global $dungeonName, $thisMapsId, $dungeonDetails, $thisMapsId, $drawnTileRooms, $map, $templateGraphicsToAppend, $templateNPCsToAppend, $templateItemsToAppend, $allTemplateJSON, $templateOffsetX, $templateOffsetY, $templateHotspotsToAppend, $proceduralDebug;
     // read contents of dir and find number of files:
     $dir = $_SERVER['DOCUMENT_ROOT']."/templates/dungeon/".$dungeonName."/";
     $filesFound = array();
@@ -2484,7 +2507,7 @@ $storePositionZero = $position[0];
             if ($templateJSON['template']['rotatable']) {
                 $rotation = mt_rand(1, 4);
                 $flip = mt_rand(1, 2);
-             //   if($debug) {echo "#".$i." - ".$rotation.", ".$flip.", type: ".$templateType."<br>";}
+             //   if($proceduralDebug) {echo "#".$i." - ".$rotation.", ".$flip.", type: ".$templateType."<br>";}
                 // case 1 is no rotation
                 switch ($rotation) {
                     case 2:
@@ -2873,7 +2896,7 @@ $storePositionZero = $position[0];
                                     }
                                 }
                                 if(!$overlapsExistingTemplate) {
-                                 //   if($debug) {echo "#".$i." - ".$thisTemplateOffsetX.", ".$thisTemplateOffsetY."<br>";}
+                                 //   if($proceduralDebug) {echo "#".$i." - ".$thisTemplateOffsetX.", ".$thisTemplateOffsetY."<br>";}
                                     array_push($templateOffsetX, $thisTemplateOffsetX);
                                     array_push($templateOffsetY, $thisTemplateOffsetY);
                                     array_push($allTemplateJSON, $templateJSON);
@@ -2981,7 +3004,7 @@ function gridHLine($xp, $yp, $w) {
 
 
 function gridTileGrid() {
-    global $requiredWidth, $requiredHeight, $mapTilesX, $mapTilesY, $canvaDimension, $delaunayVertices, $minLeft, $minTop, $edgesUsedOnDelaunayGraph, $allDelaunayEdges, $lockedJoints, $keyColours, $debug, $map, $itemMap, $drawnTileDoors, $drawnTileKeys, $entranceX, $entranceY, $exitX, $exitY, $drawnTileDoors, $drawnTileKeys, $drawnTileRooms, $dungeonDetails, $dungeonName, $jointList, $nodeList, $verticesUsedOnDelaunayGraph;
+    global $requiredWidth, $requiredHeight, $mapTilesX, $mapTilesY, $canvaDimension, $delaunayVertices, $minLeft, $minTop, $edgesUsedOnDelaunayGraph, $allDelaunayEdges, $lockedJoints, $keyColours, $proceduralDebug, $map, $itemMap, $drawnTileDoors, $drawnTileKeys, $entranceX, $entranceY, $exitX, $exitY, $drawnTileDoors, $drawnTileKeys, $drawnTileRooms, $dungeonDetails, $dungeonName, $jointList, $nodeList, $verticesUsedOnDelaunayGraph;
     // define the tile area to be used:
     $mapTilesX = 70;
     $mapTilesY = 70;
@@ -3220,7 +3243,7 @@ case "cavern":
 
 
 /*
-if($debug){
+if($proceduralDebug){
 echo'<hr><pre style="display:block;width:100%;clear:both;"><code>';
 var_dump($pointsToConnect);
 echo "</code></pre>";
@@ -3259,7 +3282,7 @@ outputTileMap();
 
 
 function bresenhamLinePath($x1,$y1,$x2,$y2) {
-       global $debug, $map;
+       global $proceduralDebug, $map;
 
    $dy = $y2 - $y1;
      $dx = $x2 - $x1;
@@ -3301,8 +3324,8 @@ function drawWonkyPath($from, $to) {
 
 
 
-    global $debug;
-/*    if($debug) {
+    global $proceduralDebug;
+/*    if($proceduralDebug) {
         echo "from ".$from[0].",".$from[1]." to ".$to[0].",".$to[1]."<br>";
     }
 */
@@ -3558,7 +3581,7 @@ function hLine($xp, $yp, $w, $elevation) {
 
 
 function createElevationMap() {
-    global $debug, $mapTilesX, $mapTilesY, $canvaDimension, $dungeonDetails, $dungeonName, $elevationMap;
+    global $proceduralDebug, $mapTilesX, $mapTilesY, $canvaDimension, $dungeonDetails, $dungeonName, $elevationMap;
 
     $drawnTileSize = 8; 
     $drawnOffset = 20;
@@ -3645,7 +3668,7 @@ $elevationMap = $newElevationMap;
     }
 
 }
-    if($debug) {
+    if($proceduralDebug) {
         $outputCanvas = imagecreatetruecolor($canvaDimension, $canvaDimension);
         $groundColour = array(219, 215, 190);
         $ground       = imagecolorallocate($outputCanvas, $groundColour[0], $groundColour[1], $groundColour[2]);
@@ -3686,17 +3709,18 @@ function getTileIsoCentreCoordY($tileX, $tileY) {
 }
 
 function outputIsometricView() {
-global $tileW,$tileH, $debug, $dungeonName, $outputJSON, $mapTilesX, $mapTilesY, $canvaDimension;
+global $tileW,$tileH, $proceduralDebug, $dungeonName, $outputJSON, $mapTilesX, $mapTilesY, $canvaDimension;
 $tileW = 48;
 $tileH = $tileW/2;
 
  
 
+
     echo '<div class="sequenceBlock wider">';
 
 
-$rootFolder = '../images/game-world/maps/dungeon/'.$dungeonName."/";
-$bgImage = imagecreatefrompng($rootFolder."bg.png");
+$rootFolder = '../images/game-world/terrain/';
+$bgImage = imagecreatefrompng('../images/game-world/backgrounds/'.$dungeonName.'.png');
 
 
 $canvasWidth =  imagesx($bgImage); 
@@ -3842,6 +3866,10 @@ $grownGrammar = "S{O[K#2]|,#2#O{#0#O[K#1#]|,}O{O[K#3#]|,}O#3#O[K#0#]|,}O#1#E";
 
     // random, grid, wonky-grid, offset-grid
     $layoutType = $dungeonDetails[$dungeonName]['underlyingGridLayout'];
+
+
+
+
     createDelaunayGraph($layoutType);
     if (($layoutType == "offset-grid") || ($layoutType == "grid")) {
        removeDiagonalEdges();
@@ -3861,25 +3889,25 @@ findRelevantTemplates();
 outputTileMap();
 addRandomItems();
 outputJSONContent();
-if($debug) {
+if($proceduralDebug) {
     outputIsometricView();
 }
 
 
-if($debug) {
+if($proceduralDebug) {
 echo '<code style="width:100%;clear:both;display:block;font-size:0.8em;">';
 echo htmlentities($outputJSON);
 } else {
     echo $outputJSON;
 }
 
-if($debug) {
+if($proceduralDebug) {
 echo '</code>';
 }
 
 
 
-if($debug) {
+if($proceduralDebug) {
 echo '<p style="clear:both;padding-top:20px;"><a href="' . explode("?", $_SERVER["REQUEST_URI"])[0] . '?debug=true&amp;dungeonName='.$dungeonName.'&amp;requestedMap='.$thisMapsId.'&amp;seed=' . $unadjustedSeed . '">' . $unadjustedSeed . '</a> | <a href="' . explode("?", $_SERVER["REQUEST_URI"])[0] . '?debug=true&amp;dungeonName='.$dungeonName.'&amp;requestedMap='.$thisMapsId.'">New seed</a></p>';
 }
 ?>

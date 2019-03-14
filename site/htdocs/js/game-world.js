@@ -7532,10 +7532,10 @@ window.addEventListener('resize', debouncedResize);
 
 
 function loadGlobalMapData() {
-   
- getJSON("/data/world-map.json", function(data) {
-     
-       worldMap = data.worldMap;
+
+    getJSON("/data/world-map.json", function(data) {
+
+        worldMap = data.worldMap;
         init();
     }, function(status) {
         // error - try again:
@@ -7578,10 +7578,10 @@ function getHeroGameState() {
             hero[attribute] = data.gameState[attribute];
         }
         newMap = findMapNumberFromGlobalCoordinates(data.gameState.tileX, data.gameState.tileY);
-     //   visibleMaps.push(newMap);
+        //   visibleMaps.push(newMap);
 
 
-//visibleMapsLoading = [newMap];
+        //visibleMapsLoading = [newMap];
 
         gameSettings = data.gameState.settings;
 
@@ -7590,8 +7590,8 @@ function getHeroGameState() {
             if (data.gameState.activePets.length > 0) {
                 hasActivePet = true;
             }
-          //   hero.activePets = data.activePets;
-          //   hero.allPets = data.allPets;
+            //   hero.activePets = data.activePets;
+            //   hero.allPets = data.allPets;
         }
         // copy the fae properties that will change into the main fae object:
         for (var attrname in data.gameState.fae) {
@@ -7599,8 +7599,8 @@ function getHeroGameState() {
         }
 
 
-// determine current map:
-currentMap = newMap;
+        // determine current map:
+        currentMap = newMap;
 
 
         //  hero.inventory = data.inventory;
@@ -7609,28 +7609,28 @@ currentMap = newMap;
             sendDataWithoutNeedingAResponse('/game-world/generateCircularDungeonMap.php?playerId=' + characterId + '&clearMaps=true');
         }
 
-    hero.x = getTileCentreCoordX(hero.tileX);
-    hero.y = getTileCentreCoordY(hero.tileY);
-    hero.isox = findIsoCoordsX(hero.x, hero.y);
+        hero.x = getTileCentreCoordX(hero.tileX);
+        hero.y = getTileCentreCoordY(hero.tileY);
+        hero.isox = findIsoCoordsX(hero.x, hero.y);
         hero.isoy = findIsoCoordsY(hero.x, hero.y);
-//updateVisibleMaps();
+        //updateVisibleMaps();
 
 
 
 
-colourNames = data.colours.colourNames;
-     UI.buildHorticulturePanel(data.horticulture.markup);
+        colourNames = data.colours.colourNames;
+        UI.buildHorticulturePanel(data.horticulture.markup);
         hero.plantBreeding = data.horticulture.data;
-  questData = data.quests;
- possibleTitles = data.titles;
+        questData = data.quests;
+        possibleTitles = data.titles;
 
 
- cardGameNameSpace.allCardData = data.cards.cards;
+        cardGameNameSpace.allCardData = data.cards.cards;
         hero.cardBacks = data.cards.backs;
         hero.activeCardBack = data.cards.activeBack;
         UI.changeActiveCardBack();
 
-hero.crafting = data.recipes.professions;
+        hero.crafting = data.recipes.professions;
         currentItemGroupFilters = data.recipes.itemGroups;
 
         UI.buildQuestJournal(data.journal.markup, data.journal.regions);
@@ -7662,7 +7662,7 @@ function loadCoreAssets() {
         name: "addedWater",
         src: '/images/game-world/core/added-water.png'
     });
-        coreImagesToLoad.push({
+    coreImagesToLoad.push({
         name: "ocean",
         src: '/images/game-world/core/ocean.png'
     });
@@ -7746,15 +7746,15 @@ function processInitialMap() {
             hero.allPets[hero.activePets[i]].tileX = hero.tileX + (tileOffsetX * (i + 1));
             hero.allPets[hero.activePets[i]].tileY = hero.tileY + (tileOffsetY * (i + 1));
 
-/*
-// needed for Internal maps:
-            if (i == 0) {
-                hero.allPets[hero.activePets[i]].state = "moving";
-            } else {
-                // will be placed out of the normal map grid:
-                hero.allPets[hero.activePets[i]].state = "queuing";
-            }
-*/
+            /*
+            // needed for Internal maps:
+                        if (i == 0) {
+                            hero.allPets[hero.activePets[i]].state = "moving";
+                        } else {
+                            // will be placed out of the normal map grid:
+                            hero.allPets[hero.activePets[i]].state = "queuing";
+                        }
+            */
             hero.allPets[hero.activePets[i]].state = "moving";
             hero.allPets[hero.activePets[i]].facing = hero.facing;
 
@@ -7791,12 +7791,8 @@ function processInitialMap() {
         audio.loadAmbientSounds({ "hourChime": thisMapData[currentMap].hourChime });
     }
     fae.recentHotspots = [];
- //   findProfessionsAndRecipes();
- //getShopData();
- //getQuestJournal();
- findInventoryItemData();
+    findInventoryItemData();
 }
-
 
 function loadNewVisibleMapAssets(whichMap) {
     if (whichMap < 0) {
@@ -7814,13 +7810,13 @@ function loadNewVisibleMapAssets(whichMap) {
 
 
 
-// load items:
+    // load items:
     var thisPathAndIdentifer;
     var newItemImagesToLoad = [];
     for (var i = 0; i < thisMapData[whichMap].items.length; i++) {
 
         thisPathAndIdentifer = getItemPathAndIdentifier(thisMapData[whichMap].items[i]);
-    
+
         // only add unique images:
         if (typeof itemImages[(thisPathAndIdentifer[1])] === "undefined") {
             newItemImagesToLoad[(thisPathAndIdentifer[1])] = new Image();
@@ -7836,74 +7832,74 @@ function loadNewVisibleMapAssets(whichMap) {
     }
 
 
-// load terrain:
-var thisTerrainIdentifer;
-var newTerrainImagesToLoad = [];
-for (var i = 0; i < thisMapData[whichMap].graphics.length; i++) {
-    thisTerrainIdentifer = thisMapData[whichMap].graphics[i].src;
-    if (typeof tileImages[thisTerrainIdentifer] === "undefined") {
-        newTerrainImagesToLoad[(thisTerrainIdentifer)] = new Image();
-        newTerrainImagesToLoad[(thisTerrainIdentifer)].identifier = thisTerrainIdentifer;
-        newTerrainImagesToLoad[(thisTerrainIdentifer)].onload = function() {
-            tileImages[this.identifier] = newTerrainImagesToLoad[this.identifier];
-        };
-        newTerrainImagesToLoad[(thisTerrainIdentifer)].onerror = function() {
-            // error handling? ####
-        };
-     //   if (thisTerrainIdentifer.indexOf('housing') !== -1) {
-     //       newTerrainImagesToLoad[(thisTerrainIdentifer)].src = "/images/game-world/" + thisMapData[whichMap].graphics[i].src;
-     //   } else {
+    // load terrain:
+    var thisTerrainIdentifer;
+    var newTerrainImagesToLoad = [];
+    for (var i = 0; i < thisMapData[whichMap].graphics.length; i++) {
+        thisTerrainIdentifer = thisMapData[whichMap].graphics[i].src;
+        if (typeof tileImages[thisTerrainIdentifer] === "undefined") {
+            newTerrainImagesToLoad[(thisTerrainIdentifer)] = new Image();
+            newTerrainImagesToLoad[(thisTerrainIdentifer)].identifier = thisTerrainIdentifer;
+            newTerrainImagesToLoad[(thisTerrainIdentifer)].onload = function() {
+                tileImages[this.identifier] = newTerrainImagesToLoad[this.identifier];
+            };
+            newTerrainImagesToLoad[(thisTerrainIdentifer)].onerror = function() {
+                // error handling? ####
+            };
+            //   if (thisTerrainIdentifer.indexOf('housing') !== -1) {
+            //       newTerrainImagesToLoad[(thisTerrainIdentifer)].src = "/images/game-world/" + thisMapData[whichMap].graphics[i].src;
+            //   } else {
             newTerrainImagesToLoad[(thisTerrainIdentifer)].src = "/images/game-world/terrain/" + thisMapData[whichMap].graphics[i].src;
-     //   }
+            //   }
 
-    }
-}
-
-
-// load NPCs
-var thisNPCIdentifier;
-var newNPCImagesToLoad = [];
-for (var i = 0; i < thisMapData[whichMap].npcs.length; i++) {
-    thisNPCIdentifier = "npc" + thisMapData[whichMap].npcs[i].src;
-
-    if (typeof npcImages[thisNPCIdentifier] === "undefined") {
-      
-        newNPCImagesToLoad[thisNPCIdentifier] = new Image();
-        newNPCImagesToLoad[thisNPCIdentifier].identifier = thisNPCIdentifier;
-        newNPCImagesToLoad[thisNPCIdentifier].onload = function() {
-            npcImages[this.identifier] = newNPCImagesToLoad[this.identifier];
-       
-        };
-        newNPCImagesToLoad[thisNPCIdentifier].onerror = function() {
-            // error handling? ####
-        };
-        newNPCImagesToLoad[thisNPCIdentifier].src = "/images/game-world/npcs/" + thisMapData[whichMap].npcs[i].src;
-
-    }
-}
-
-
-
-// check for nests, and get the graphics for any creatures they will spawn:
-for (var i = 0; i < thisMapData[whichMap].items.length; i++) {
-    if (currentActiveInventoryItems[thisMapData[whichMap].items[i].type].action == "nest") {
-        for (var j = 0; j < thisMapData[whichMap].items[i].contains.length; j++) {
-            thisNPCIdentifier = "npc" + thisMapData[whichMap].items[i].contains[j].src;
-             if (typeof npcImages[thisNPCIdentifier] === "undefined") {
-        newNPCImagesToLoad[thisNPCIdentifier] = new Image();
-        newNPCImagesToLoad[thisNPCIdentifier].identifier = thisNPCIdentifier;
-        newNPCImagesToLoad[thisNPCIdentifier].onload = function() {
-            npcImages[this.identifier] = newNPCImagesToLoad[this.identifier];
-        };
-        newNPCImagesToLoad[thisNPCIdentifier].onerror = function() {
-            // error handling? ####
-        };
-        newNPCImagesToLoad[thisNPCIdentifier].src = "/images/game-world/npcs/" + thisMapData[whichMap].npcs[i].src;
-
-    }
         }
     }
-}
+
+
+    // load NPCs
+    var thisNPCIdentifier;
+    var newNPCImagesToLoad = [];
+    for (var i = 0; i < thisMapData[whichMap].npcs.length; i++) {
+        thisNPCIdentifier = "npc" + thisMapData[whichMap].npcs[i].src;
+
+        if (typeof npcImages[thisNPCIdentifier] === "undefined") {
+
+            newNPCImagesToLoad[thisNPCIdentifier] = new Image();
+            newNPCImagesToLoad[thisNPCIdentifier].identifier = thisNPCIdentifier;
+            newNPCImagesToLoad[thisNPCIdentifier].onload = function() {
+                npcImages[this.identifier] = newNPCImagesToLoad[this.identifier];
+
+            };
+            newNPCImagesToLoad[thisNPCIdentifier].onerror = function() {
+                // error handling? ####
+            };
+            newNPCImagesToLoad[thisNPCIdentifier].src = "/images/game-world/npcs/" + thisMapData[whichMap].npcs[i].src;
+
+        }
+    }
+
+
+
+    // check for nests, and get the graphics for any creatures they will spawn:
+    for (var i = 0; i < thisMapData[whichMap].items.length; i++) {
+        if (currentActiveInventoryItems[thisMapData[whichMap].items[i].type].action == "nest") {
+            for (var j = 0; j < thisMapData[whichMap].items[i].contains.length; j++) {
+                thisNPCIdentifier = "npc" + thisMapData[whichMap].items[i].contains[j].src;
+                if (typeof npcImages[thisNPCIdentifier] === "undefined") {
+                    newNPCImagesToLoad[thisNPCIdentifier] = new Image();
+                    newNPCImagesToLoad[thisNPCIdentifier].identifier = thisNPCIdentifier;
+                    newNPCImagesToLoad[thisNPCIdentifier].onload = function() {
+                        npcImages[this.identifier] = newNPCImagesToLoad[this.identifier];
+                    };
+                    newNPCImagesToLoad[thisNPCIdentifier].onerror = function() {
+                        // error handling? ####
+                    };
+                    newNPCImagesToLoad[thisNPCIdentifier].src = "/images/game-world/npcs/" + thisMapData[whichMap].npcs[i].src;
+
+                }
+            }
+        }
+    }
 
 
 
@@ -7914,22 +7910,8 @@ for (var i = 0; i < thisMapData[whichMap].items.length; i++) {
 
 
 function processNewVisibleMapData(whichNewMap) {
-
- //   console.log("pushing to vsiibleMaps for map#" + whichNewMap);
     visibleMaps.push(whichNewMap);
     removeElementFromArray(visibleMapsLoading, whichNewMap);
-    //console.log("current map: " + currentMap);
-    //console.log("visible maps: " + visibleMaps.join(" , "));
-    //console.log("whichNewMap: " + whichNewMap);
-    //console.log(thisMapData[whichNewMap]);
-
- //   for (var key in thisMapData) {
-  //      console.log("key: " + key);
- //   }
- //console.log("this map's items:");
- //   console.log(thisMapData[whichNewMap].items);
- //   console.log("currentActiveInventoryItems");
- //   console.log(currentActiveInventoryItems);
     for (var i = 0; i < thisMapData[whichNewMap].items.length; i++) {
         initialiseItem(thisMapData[whichNewMap].items[i]);
     }
@@ -7950,27 +7932,21 @@ function processNewVisibleMapData(whichNewMap) {
         shopData += JSON.stringify(thisMapData[whichNewMap].shops[i]);
         addedShopDataAlready = true;
     }
-
     shopData += ']}';
- //  loadNewVisibleShopData('shopData=' + shopData);
-    //console.log(10,thisMapData[10]);
-    //console.log(14,thisMapData[14]);
-    //console.log(thisMapData);
-    //console.log(11,thisMapData[11]);
     updatePossibleWeather();
     loadNewVisibleMapAssets(whichNewMap);
 }
 
 function loadNewVisibleInventoryItemData(itemIdsToLoad, whichNewMap) {
 
-  //  console.log("loading new inv data for map#"+whichNewMap+": " + itemIdsToLoad);
+    //  console.log("loading new inv data for map#"+whichNewMap+": " + itemIdsToLoad);
     if (itemIdsToLoad.length > 0) {
         getJSON("/game-world/getInventoryItems.php?isAnUpdate=true&whichIds=" + itemIdsToLoad, function(data) {
             // currentActiveInventoryItems = data;
             // append this new data in: 
-          //  console.log("inv data returned ########### "+whichNewMap);
+            //  console.log("inv data returned ########### "+whichNewMap);
             for (var attrname in data) {
-           //     console.log(attrname, data[attrname]);
+                //     console.log(attrname, data[attrname]);
                 currentActiveInventoryItems[attrname] = data[attrname];
             }
             processNewVisibleMapData(whichNewMap);
@@ -7987,11 +7963,11 @@ function loadNewVisibleInventoryItemData(itemIdsToLoad, whichNewMap) {
 
 
 function loadNewVisibleJSON(mapFilePath, whichNewMap) {
- //   console.log("loading JSON for " + whichNewMap);
+    //   console.log("loading JSON for " + whichNewMap);
     getJSON(mapFilePath, function(data) {
             thisMapData[whichNewMap] = data.mapData.map;
             thisMapShopItemIds = data.shops.allItemIds;
-        UI.buildShop(data.shops.markup);
+            UI.buildShop(data.shops.markup);
             // find new items that require data:
             //console.log("loadNewVisibleJSON raw "+getItemIdsForMap(whichNewMap).join("."));
             var thisMapsItemIds = uniqueValues(getItemIdsForMap(whichNewMap));
@@ -8013,11 +7989,12 @@ function loadNewVisibleMap(whichNewMap) {
     if (visibleMapsLoading.indexOf(whichNewMap) === -1) {
         visibleMapsLoading.push(whichNewMap);
         var mapFilePath = '/game-world/getMap.php?chr=' + characterId + '&map=' + whichNewMap;
-        if (whichNewMap < 0) {
+     /*   if (whichNewMap < 0) {
             mapFilePath = '/game-world/generateCircularDungeonMap.php?dungeonName=' + randomDungeonName + '&requestedMap=' + whichNewMap;
         }
+       */
         loadNewVisibleJSON(mapFilePath, whichNewMap);
-      //  console.log("whichNewMap - loading in "+whichNewMap+" - "+visibleMapsLoading.indexOf(whichNewMap));
+        //  console.log("whichNewMap - loading in "+whichNewMap+" - "+visibleMapsLoading.indexOf(whichNewMap));
     }
 }
 
@@ -8028,8 +8005,8 @@ function loadMapJSON(mapFilePath) {
             // if (data.mapData.mapId == currentMap) {
             currentMap = data.mapData.map.mapId;
             visibleMaps.push(parseInt(currentMap));
-              thisMapShopItemIds = data.shops.allItemIds;
-        UI.buildShop(data.shops.markup);
+            thisMapShopItemIds = data.shops.allItemIds;
+            UI.buildShop(data.shops.markup);
             processInitialMap();
             isOverWorldMap = !data.mapData.map.isInside;
             // }
@@ -8046,356 +8023,240 @@ function loadMapJSON(mapFilePath) {
 
 
 function loadMap() {
-    var mapFilePath;
+    var dungeonAppend = '';
     // check for newly entering a random dungeon:
     if ((newMap < 0) && (currentMap > 0)) {
         randomDungeonName = randomDungeons[Math.abs(newMap)];
         newMap = -1;
-    } else {
-        mapFilePath = '/game-world/getMap.php?chr=' + characterId + '&map=' + newMap;
     }
-    if (newMap < 0) {
-        mapFilePath = '/game-world/generateCircularDungeonMap.php?dungeonName=' + randomDungeonName + '&requestedMap=' + newMap;
-        //  mapFilePath = '/game-world/generateCircularDungeonMap.php?dungeonName='+randomDungeonName+'&requestedMap=' + newMap + '&seed=1512098741';
+    if (randomDungeonName != "") {
+        dungeonAppend = '&dungeonName=' + randomDungeonName;
     }
-
-    loadMapJSON(mapFilePath);
+    loadMapJSON('/game-world/getMap.php?chr=' + characterId + '&map=' + newMap + dungeonAppend);
 }
 
 
 function getItemPathAndIdentifier(whichItem) {
-       // get colour name 
-       var thisItemIdentifier, thisImagePath;
-        var thisFileColourSuffix = "";
-        if (whichItem.colour) {
-            thisColourName = getColourName(whichItem.colour, whichItem.type);
-            if (thisColourName != "") {
-                thisFileColourSuffix = "-" + thisColourName.toLowerCase();
-            }
+    // get colour name 
+    var thisItemIdentifier, thisImagePath;
+    var thisFileColourSuffix = "";
+    if (whichItem.colour) {
+        thisColourName = getColourName(whichItem.colour, whichItem.type);
+        if (thisColourName != "") {
+            thisFileColourSuffix = "-" + thisColourName.toLowerCase();
         }
-        thisItemIdentifier = "item" + whichItem.type + thisFileColourSuffix;
-        thisImagePath = "/images/game-world/items/" + currentActiveInventoryItems[whichItem.type].worldSrc + thisFileColourSuffix + ".png";
+    }
+    thisItemIdentifier = "item" + whichItem.type + thisFileColourSuffix;
+    thisImagePath = "/images/game-world/items/" + currentActiveInventoryItems[whichItem.type].worldSrc + thisFileColourSuffix + ".png";
 
-        // check for User Generated Content:
-        if (typeof whichItem.contains !== "undefined") {
-            if (typeof whichItem.contains['ugc-id'] !== "undefined") {
-                thisItemIdentifier = "item" + whichItem.type + '_' + whichItem.contains['ugc-id'];
-                thisImagePath = "/images/user-generated/" + whichItem.contains['ugc-id'] + "-world.png";
-            }
+    // check for User Generated Content:
+    if (typeof whichItem.contains !== "undefined") {
+        if (typeof whichItem.contains['ugc-id'] !== "undefined") {
+            thisItemIdentifier = "item" + whichItem.type + '_' + whichItem.contains['ugc-id'];
+            thisImagePath = "/images/user-generated/" + whichItem.contains['ugc-id'] + "-world.png";
         }
-        return [thisImagePath, thisItemIdentifier];
+    }
+    return [thisImagePath, thisItemIdentifier];
 }
-
-
 
 function loadMapAssets() {
     imagesToLoad = [];
     var thisFileColourSuffix, thisColourName;
     var assetPath = currentMap;
-npcGraphicsToLoad = [];
+    npcGraphicsToLoad = [];
     var thisNPCIdentifier, thisTerrainIdentifer;
-itemGraphicsToLoad = [];
+    itemGraphicsToLoad = [];
     var thisItemIdentifier = '';
     var thisImagePath = '';
-  var resultantPlantType;
- tileGraphicsToLoad = [];
+    var resultantPlantType;
+    tileGraphicsToLoad = [];
 
 
-for (var m = 0; m < visibleMaps.length; m++) {
-assetPath = visibleMaps[m];
+    for (var m = 0; m < visibleMaps.length; m++) {
+        assetPath = visibleMaps[m];
 
-    if (visibleMaps[m] < 0) {
-        assetPath = 'dungeon/' + randomDungeonName;
-    }
-    if (newMap.toString().indexOf('housing') !== -1) {
-
-        imagesToLoad.push({
-            name: "backgroundImg",
-            src: '/images/game-world/maps/housing/bg-' + mapTilesX + 'x' + mapTilesY + '.png'
-        });
-    } else {
-        imagesToLoad.push({
-            name: "backgroundImg" + visibleMaps[m],
-            src: '/images/game-world/backgrounds/' + assetPath + '.png'
-        });
-      
-           
-        
-    }
-  //  tileGraphicsToLoad = thisMapData[visibleMaps[m]].graphics;
-    for (var i = 0; i < thisMapData[visibleMaps[m]].graphics.length; i++) {
-        thisTerrainIdentifer = thisMapData[visibleMaps[m]].graphics[i].src;
-     //   if (thisTerrainIdentifer.indexOf('housing') !== -1) {
-     //       imagesToLoad.push({
-     //           name: thisTerrainIdentifer,
-    //            src: "/images/game-world/" + thisMapData[visibleMaps[m]].graphics[i].src
-     //       });
-    //    } else {
-            
-            if (tileGraphicsToLoad.indexOf(thisTerrainIdentifer) == -1) {
-            imagesToLoad.push({
-              //  name: "tile" + i,
-              name: thisTerrainIdentifer,
-                src: "/images/game-world/terrain/" + thisMapData[visibleMaps[m]].graphics[i].src
-            });
-            tileGraphicsToLoad.push(thisTerrainIdentifer);
-            }
-    //    }
-
-    }
-    
-    for (var i = 0; i < thisMapData[visibleMaps[m]].npcs.length; i++) {
-        thisNPCIdentifier = "npc" + thisMapData[visibleMaps[m]].npcs[i].src;
-        if (npcGraphicsToLoad.indexOf(thisNPCIdentifier) == -1) {
-            imagesToLoad.push({
-                name: thisNPCIdentifier,
-                src: "/images/game-world/npcs/" + thisMapData[visibleMaps[m]].npcs[i].src
-            });
-            npcGraphicsToLoad.push(thisNPCIdentifier);
+        if (visibleMaps[m] < 0) {
+            assetPath = 'dungeon/' + randomDungeonName;
         }
-    }
+        if (newMap.toString().indexOf('housing') !== -1) {
 
-    // check for nests, and get the graphics for any creatures they will spawn:
-    for (var i = 0; i < thisMapData[visibleMaps[m]].items.length; i++) {
-        if (currentActiveInventoryItems[thisMapData[visibleMaps[m]].items[i].type].action == "nest") {
-            for (var j = 0; j < thisMapData[visibleMaps[m]].items[i].contains.length; j++) {
-                thisNPCIdentifier = "npc" + thisMapData[visibleMaps[m]].items[i].contains[j].src;
-                if (npcGraphicsToLoad.indexOf(thisNPCIdentifier) == -1) {
-                    imagesToLoad.push({
-                        name: thisNPCIdentifier,
-                        src: "/images/game-world/npcs/" + thisMapData[visibleMaps[m]].items[i].contains[j].src
-                    });
-                    npcGraphicsToLoad.push(thisNPCIdentifier);
+            imagesToLoad.push({
+                name: "backgroundImg",
+                src: '/images/game-world/maps/housing/bg-' + mapTilesX + 'x' + mapTilesY + '.png'
+            });
+        } else {
+            imagesToLoad.push({
+                name: "backgroundImg" + visibleMaps[m],
+                src: '/images/game-world/backgrounds/' + assetPath + '.png'
+            });
+
+
+
+        }
+        //  tileGraphicsToLoad = thisMapData[visibleMaps[m]].graphics;
+        for (var i = 0; i < thisMapData[visibleMaps[m]].graphics.length; i++) {
+            thisTerrainIdentifer = thisMapData[visibleMaps[m]].graphics[i].src;
+            //   if (thisTerrainIdentifer.indexOf('housing') !== -1) {
+            //       imagesToLoad.push({
+            //           name: thisTerrainIdentifer,
+            //            src: "/images/game-world/" + thisMapData[visibleMaps[m]].graphics[i].src
+            //       });
+            //    } else {
+
+            if (tileGraphicsToLoad.indexOf(thisTerrainIdentifer) == -1) {
+                imagesToLoad.push({
+                    //  name: "tile" + i,
+                    name: thisTerrainIdentifer,
+                    src: "/images/game-world/terrain/" + thisMapData[visibleMaps[m]].graphics[i].src
+                });
+                tileGraphicsToLoad.push(thisTerrainIdentifer);
+            }
+            //    }
+
+        }
+
+        for (var i = 0; i < thisMapData[visibleMaps[m]].npcs.length; i++) {
+            thisNPCIdentifier = "npc" + thisMapData[visibleMaps[m]].npcs[i].src;
+            if (npcGraphicsToLoad.indexOf(thisNPCIdentifier) == -1) {
+                imagesToLoad.push({
+                    name: thisNPCIdentifier,
+                    src: "/images/game-world/npcs/" + thisMapData[visibleMaps[m]].npcs[i].src
+                });
+                npcGraphicsToLoad.push(thisNPCIdentifier);
+            }
+        }
+
+        // check for nests, and get the graphics for any creatures they will spawn:
+        for (var i = 0; i < thisMapData[visibleMaps[m]].items.length; i++) {
+            if (currentActiveInventoryItems[thisMapData[visibleMaps[m]].items[i].type].action == "nest") {
+                for (var j = 0; j < thisMapData[visibleMaps[m]].items[i].contains.length; j++) {
+                    thisNPCIdentifier = "npc" + thisMapData[visibleMaps[m]].items[i].contains[j].src;
+                    if (npcGraphicsToLoad.indexOf(thisNPCIdentifier) == -1) {
+                        imagesToLoad.push({
+                            name: thisNPCIdentifier,
+                            src: "/images/game-world/npcs/" + thisMapData[visibleMaps[m]].items[i].contains[j].src
+                        });
+                        npcGraphicsToLoad.push(thisNPCIdentifier);
+                    }
                 }
             }
         }
-    }
 
 
-var thisPathAndIdentifer;
-    
-    for (var i = 0; i < thisMapData[visibleMaps[m]].items.length; i++) {
-     thisPathAndIdentifer = getItemPathAndIdentifier(thisMapData[visibleMaps[m]].items[i]);
+        var thisPathAndIdentifer;
 
+        for (var i = 0; i < thisMapData[visibleMaps[m]].items.length; i++) {
+            thisPathAndIdentifer = getItemPathAndIdentifier(thisMapData[visibleMaps[m]].items[i]);
 
-        // only add unique images:
-        if (itemGraphicsToLoad.indexOf(thisPathAndIdentifer[1]) == -1) {
-            imagesToLoad.push({
-                name: thisPathAndIdentifer[1],
-                src: thisPathAndIdentifer[0]
-            });
-            itemGraphicsToLoad.push(thisPathAndIdentifer[1]);
-        }
-    }
-
-    // check for hidden resources:
-    for (var i in thisMapData[visibleMaps[m]].hiddenResources) {
-        for (var j in thisMapData[visibleMaps[m]].hiddenResources[i]) {
-            thisItemIdentifier = "item" + thisMapData[visibleMaps[m]].hiddenResources[i][j].type;
-            if (itemGraphicsToLoad.indexOf(thisItemIdentifier) == -1) {
-                imagesToLoad.push({
-                    name: thisItemIdentifier,
-                    src: "/images/game-world/items/" + currentActiveInventoryItems[thisMapData[visibleMaps[m]].hiddenResources[i][j].type].worldSrc + ".png"
-                });
-                itemGraphicsToLoad.push(thisItemIdentifier);
-            }
-        }
-    }
-
-    // check for seeds in inventory, and load the resultant plants:
-  
-    for (var key in hero.inventory) {
-        if (currentActiveInventoryItems[(hero.inventory[key].type)].action == "seed") {
-            // resultant plant is held in the actionValue:
-            resultantPlantType = currentActiveInventoryItems[(hero.inventory[key].type)].actionValue.type;
-            // get colour name 
-            thisFileColourSuffix = "";
-            thisColourName = getColourName(hero.inventory[key].colour, resultantPlantType);
-            if (thisColourName != "") {
-                thisFileColourSuffix = "-" + thisColourName.toLowerCase();
-            }
-            thisItemIdentifier = "item" + resultantPlantType + thisFileColourSuffix;
 
             // only add unique images:
-            if (itemGraphicsToLoad.indexOf(thisItemIdentifier) == -1) {
+            if (itemGraphicsToLoad.indexOf(thisPathAndIdentifer[1]) == -1) {
                 imagesToLoad.push({
-                    name: thisItemIdentifier,
-                    src: "/images/game-world/items/" + currentActiveInventoryItems[resultantPlantType].worldSrc + thisFileColourSuffix + ".png"
+                    name: thisPathAndIdentifer[1],
+                    src: thisPathAndIdentifer[0]
                 });
-                itemGraphicsToLoad.push(thisItemIdentifier);
+                itemGraphicsToLoad.push(thisPathAndIdentifer[1]);
             }
         }
-    }
 
-}
+        // check for hidden resources:
+        for (var i in thisMapData[visibleMaps[m]].hiddenResources) {
+            for (var j in thisMapData[visibleMaps[m]].hiddenResources[i]) {
+                thisItemIdentifier = "item" + thisMapData[visibleMaps[m]].hiddenResources[i][j].type;
+                if (itemGraphicsToLoad.indexOf(thisItemIdentifier) == -1) {
+                    imagesToLoad.push({
+                        name: thisItemIdentifier,
+                        src: "/images/game-world/items/" + currentActiveInventoryItems[thisMapData[visibleMaps[m]].hiddenResources[i][j].type].worldSrc + ".png"
+                    });
+                    itemGraphicsToLoad.push(thisItemIdentifier);
+                }
+            }
+        }
+
+        // check for seeds in inventory, and load the resultant plants:
+
+        for (var key in hero.inventory) {
+            if (currentActiveInventoryItems[(hero.inventory[key].type)].action == "seed") {
+                // resultant plant is held in the actionValue:
+                resultantPlantType = currentActiveInventoryItems[(hero.inventory[key].type)].actionValue.type;
+                // get colour name 
+                thisFileColourSuffix = "";
+                thisColourName = getColourName(hero.inventory[key].colour, resultantPlantType);
+                if (thisColourName != "") {
+                    thisFileColourSuffix = "-" + thisColourName.toLowerCase();
+                }
+                thisItemIdentifier = "item" + resultantPlantType + thisFileColourSuffix;
+
+                // only add unique images:
+                if (itemGraphicsToLoad.indexOf(thisItemIdentifier) == -1) {
+                    imagesToLoad.push({
+                        name: thisItemIdentifier,
+                        src: "/images/game-world/items/" + currentActiveInventoryItems[resultantPlantType].worldSrc + thisFileColourSuffix + ".png"
+                    });
+                    itemGraphicsToLoad.push(thisItemIdentifier);
+                }
+            }
+        }
+
+    }
 
 
     Loader.preload(imagesToLoad, prepareGame, loadingProgress);
 }
 
-
-
-
-
-
-/*
-function findProfessionsAndRecipes() {
-    loadProfessionsAndRecipes(hero.recipesKnown.join("|"));
-}
-
-
-
-function loadProfessionsAndRecipes(recipeIdsToLoad) {
-    getJSON("/game-world/getProfessionsAndRecipes.php?whichIds=" + recipeIdsToLoad, function(data) {
-        hero.crafting = data.professions;
-        currentItemGroupFilters = data.itemGroups;
-        getShopData();
-    }, function(status) {
-        // try again:
-        loadProfessionsAndRecipes(recipeIdsToLoad);
-    });
-}
-*/
-
-
-/*
-function getShopData() {
-    thisMapShopItemIds = '';
-
-
-
-
- //   if (thisMapData[currentMap].shops.length == 0) {
-//        findInventoryItemData();
-//    } else {
-       
-
-
-       // var shopData = JSON.parse('{"chr": ' + characterId + ',"region":"' + thisMapData[currentMap].region + '","shops": ' + JSON.stringify(thisMapData[currentMap].shops) + '}');
-       var shopData = '{"chr": ' + characterId + ',"region":"' + thisMapData[currentMap].region + '","shops": [';
-var addedShopDataAlready = false;
-        // loop through shops and create hashes 
-        for (var m = 0; m < visibleMaps.length; m++) {
-        for (var i = 0; i < thisMapData[(visibleMaps[m])].shops.length; i++) {
-          thisMapData[(visibleMaps[m])].shops[i].hash = generateHash(thisMapData[(visibleMaps[m])].shops[i].name);
-          if(addedShopDataAlready) {
-            shopData += ",";
-          }
-          shopData += JSON.stringify(thisMapData[(visibleMaps[m])].shops[i]);
-          addedShopDataAlready = true;
-        }
-    }
-    shopData += ']}';
-
-
-
-
-        loadShopData('shopData=' + shopData);
- //   }
-}
-*/
-
-
-/*
-function loadNewVisibleShopData(shopJSONData) {
-    // post data with getJSONWithParams function
-
-    getJSONWithParams("/game-world/getShopItems.php", shopJSONData, function(data) {
-        thisMapShopItemIds = data.allItemIds;
-        UI.buildShop(data.markup);
-        
-    }, function(status) {
-        // try again:
-        loadNewVisibleShopData(shopJSONData);
-    });
-}
-
-
-
-/*
-function loadShopData(shopJSONData) {
-    // post data with getJSONWithParams function
-    getJSONWithParams("/game-world/getShopItems.php", shopJSONData, function(data) {
-        thisMapShopItemIds = data.allItemIds;
-        UI.buildShop(data.markup);
-        getQuestJournal();
-    }, function(status) {
-        // try again:
-        loadShopData(shopJSONData);
-    });
-}
-*/
-
-
-
-/*
-function getQuestJournal() {
-    getJSON("/game-world/getQuestJournalEntries.php?chr=" + characterId, function(data) {
-        UI.buildQuestJournal(data.markup, data.regions);
-        findInventoryItemData();
-    }, function(status) {
-        // try again:
-        getQuestJournal();
-    });
-}
-*/
-
-
-
-
 function getItemIdsForMap(whichMap) {
-            // find items placed on this map:
-        var itemChoices;
-        var itemIdsToGet = [];
-        for (var i = 0; i < thisMapData[whichMap].items.length; i++) {
-            itemIdsToGet.push(thisMapData[whichMap].items[i].type);
-            // check if any are containers or chests:
-            if (typeof thisMapData[whichMap].items[i].contains !== "undefined") {
+    // find items placed on this map:
+    var itemChoices;
+    var itemIdsToGet = [];
+    for (var i = 0; i < thisMapData[whichMap].items.length; i++) {
+        itemIdsToGet.push(thisMapData[whichMap].items[i].type);
+        // check if any are containers or chests:
+        if (typeof thisMapData[whichMap].items[i].contains !== "undefined") {
 
-                if (Array.isArray(thisMapData[whichMap].items[i].contains)) {
-                    for (var j = 0; j < thisMapData[whichMap].items[i].contains.length; j++) {
-                        if (typeof thisMapData[whichMap].items[i].contains[j].type !== "undefined") {
-                            itemChoices = thisMapData[whichMap].items[i].contains[j].type.toString().split("/");
+            if (Array.isArray(thisMapData[whichMap].items[i].contains)) {
+                for (var j = 0; j < thisMapData[whichMap].items[i].contains.length; j++) {
+                    if (typeof thisMapData[whichMap].items[i].contains[j].type !== "undefined") {
+                        itemChoices = thisMapData[whichMap].items[i].contains[j].type.toString().split("/");
 
-                            for (var k = 0; k < itemChoices.length; k++) {
-                                if (itemChoices[k] != "$") {
-                                    // make sure it's not money in a chest:
-                                    itemIdsToGet.push(parseInt(itemChoices[k]));
-                                }
+                        for (var k = 0; k < itemChoices.length; k++) {
+                            if (itemChoices[k] != "$") {
+                                // make sure it's not money in a chest:
+                                itemIdsToGet.push(parseInt(itemChoices[k]));
                             }
                         }
                     }
-                } else {
-                    // make sure it's not UGC:
-                      if (typeof thisMapData[whichMap].items[i].contains['ugc-id'] === "undefined") {
+                }
+            } else {
+                // make sure it's not UGC:
+                if (typeof thisMapData[whichMap].items[i].contains['ugc-id'] === "undefined") {
                     // eg crop object, so get pollen, seed and fruit ids if specified:
 
                     for (var j in thisMapData[whichMap].items[i].contains) {
                         itemIdsToGet.push(thisMapData[whichMap].items[i].contains[j].type);
                     }
                 }
-                }
             }
         }
+    }
 
-        // find items in hidden resources (and their contents):
-        var containsSplit;
-        for (var i in thisMapData[whichMap].hiddenResources) {
-            for (var j in thisMapData[whichMap].hiddenResources[i]) {
-                itemIdsToGet.push(thisMapData[whichMap].hiddenResources[i][j].type);
-                if (thisMapData[whichMap].hiddenResources[i][j].contains) {
-                    for (var k in thisMapData[whichMap].hiddenResources[i][j].contains) {
-                        containsSplit = thisMapData[whichMap].hiddenResources[i][j].contains[k].type.split("/");
-                        for (var l = 0; l < containsSplit.length; l++) {
-                            itemIdsToGet.push(parseInt(containsSplit[l]));
-                        }
-
+    // find items in hidden resources (and their contents):
+    var containsSplit;
+    for (var i in thisMapData[whichMap].hiddenResources) {
+        for (var j in thisMapData[whichMap].hiddenResources[i]) {
+            itemIdsToGet.push(thisMapData[whichMap].hiddenResources[i][j].type);
+            if (thisMapData[whichMap].hiddenResources[i][j].contains) {
+                for (var k in thisMapData[whichMap].hiddenResources[i][j].contains) {
+                    containsSplit = thisMapData[whichMap].hiddenResources[i][j].contains[k].type.split("/");
+                    for (var l = 0; l < containsSplit.length; l++) {
+                        itemIdsToGet.push(parseInt(containsSplit[l]));
                     }
 
                 }
+
             }
         }
-        return itemIdsToGet;
+    }
+    return itemIdsToGet;
 }
 
 function findInventoryItemData() {
@@ -8420,7 +8281,7 @@ function findInventoryItemData() {
 
 
     for (var m = 0; m < visibleMaps.length; m++) {
-itemIdsToGet = itemIdsToGet.concat(getItemIdsForMap(visibleMaps[m]));
+        itemIdsToGet = itemIdsToGet.concat(getItemIdsForMap(visibleMaps[m]));
     }
 
 
@@ -8462,7 +8323,6 @@ function loadInventoryItemData(itemIdsToLoad) {
         if (!inventoryInterfaceIsBuilt) {
             UI.buildInventoryInterface();
         }
-        // john
         loadMapAssets();
     }, function(status) {
         // try again:
@@ -8490,7 +8350,7 @@ function initialiseNPC(whichNPC) {
     whichNPC.lastTargetDestination = "";
     // whichNPC.index = whichNPC;
 
-whichNPC.uniqueIndex = generateHash("npc"+whichNPC.x +"*"+whichNPC.y);
+    whichNPC.uniqueIndex = generateHash("npc" + whichNPC.x + "*" + whichNPC.y);
 
 }
 
@@ -8537,12 +8397,12 @@ function initialiseItem(whichItem) {
 
 function prepareGame() {
     // get map image references:
-    
+
     for (var i = 0; i < tileGraphicsToLoad.length; i++) {
         tileImages[tileGraphicsToLoad[i]] = Loader.getImage(tileGraphicsToLoad[i]);
     }
-   
- 
+
+
     for (var i = 0; i < npcGraphicsToLoad.length; i++) {
         npcImages[npcGraphicsToLoad[i]] = Loader.getImage(npcGraphicsToLoad[i]);
 
@@ -8556,17 +8416,17 @@ function prepareGame() {
         //  itemImages[itemGraphicsToLoad[i]].spriteHeight = Loader.getImage(itemGraphicsToLoad[i]).length;
     }
     //backgroundImg = Loader.getImage("backgroundImg");
-    
+
     backgroundImgs[currentMap] = Loader.getImage("backgroundImg" + currentMap);
     for (var i = 0; i < visibleMaps.length; i++) {
         backgroundImgs[(visibleMaps[i])] = Loader.getImage("backgroundImg" + visibleMaps[i]);
     }
     // initialise and position NPCs:
     for (var m = 0; m < visibleMaps.length; m++) {
-    for (var i = 0; i < thisMapData[(visibleMaps[m])].npcs.length; i++) {
-        initialiseNPC(thisMapData[(visibleMaps[m])].npcs[i]);
+        for (var i = 0; i < thisMapData[(visibleMaps[m])].npcs.length; i++) {
+            initialiseNPC(thisMapData[(visibleMaps[m])].npcs[i]);
+        }
     }
-}
     // initialise pet:
     if (hasActivePet) {
         for (var i = 0; i < hero.activePets.length; i++) {
@@ -8575,13 +8435,13 @@ function prepareGame() {
             hero.allPets[hero.activePets[i]].y = getTileCentreCoordY(hero.allPets[hero.activePets[i]].tileY);
             // check these tiles are within the normal grid - if not use the pet in front's z depth:
             // need to do this for Internal maps ######
-      /*      if ((hero.allPets[hero.activePets[i]].tileX < 0) || (hero.allPets[hero.activePets[i]].tileY < 0) || (hero.allPets[hero.activePets[i]].tileX >= mapTilesX) || (hero.allPets[hero.activePets[i]].tileY >= mapTilesY)) {
-                hero.allPets[hero.activePets[i]].z = hero.allPets[hero.activePets[i - 1]].z;
+            /*      if ((hero.allPets[hero.activePets[i]].tileX < 0) || (hero.allPets[hero.activePets[i]].tileY < 0) || (hero.allPets[hero.activePets[i]].tileX >= mapTilesX) || (hero.allPets[hero.activePets[i]].tileY >= mapTilesY)) {
+                      hero.allPets[hero.activePets[i]].z = hero.allPets[hero.activePets[i - 1]].z;
 
-            } else {
-                */
-                hero.allPets[hero.activePets[i]].z = getElevation(hero.allPets[hero.activePets[i]].tileX, hero.allPets[hero.activePets[i]].tileY);
-          //  }
+                  } else {
+                      */
+            hero.allPets[hero.activePets[i]].z = getElevation(hero.allPets[hero.activePets[i]].tileX, hero.allPets[hero.activePets[i]].tileY);
+            //  }
             hero.allPets[hero.activePets[i]].dx = 0;
             hero.allPets[hero.activePets[i]].dy = 0;
             hero.allPets[hero.activePets[i]].foundPath = '';
@@ -8648,12 +8508,12 @@ function prepareGame() {
         hero.breadcrumb[i] = [hero.tileX, hero.tileY];
     }
 
-for (var m = 0; m < visibleMaps.length; m++) {
-    // initialise items:
-    for (var i = 0; i < thisMapData[(visibleMaps[m])].items.length; i++) {
-        initialiseItem(thisMapData[(visibleMaps[m])].items[i]);
+    for (var m = 0; m < visibleMaps.length; m++) {
+        // initialise items:
+        for (var i = 0; i < thisMapData[(visibleMaps[m])].items.length; i++) {
+            initialiseItem(thisMapData[(visibleMaps[m])].items[i]);
+        }
     }
-}
     activeObjectForDialogue = '';
 
 
@@ -8679,7 +8539,7 @@ for (var m = 0; m < visibleMaps.length; m++) {
     mapTransitionCurrentFrames = 1;
     gameMode = "play";
 
-  //  UI.showNotification("<p>I'm just thinking about what a notification looks like&hellip;</p>");
+    //  UI.showNotification("<p>I'm just thinking about what a notification looks like&hellip;</p>");
 
 }
 
@@ -8708,7 +8568,7 @@ function removeMapAssets() {
     for (var i in backgroundImgs) {
         backgroundImgs[i].onerror = '';
         backgroundImgs[i].src = '';
-       // backgroundImgs[i] = null;
+        // backgroundImgs[i] = null;
         delete backgroundImgs[i];
     }
 
@@ -8740,15 +8600,15 @@ function changeMaps(doorX, doorY) {
         hero.tileX = parseInt(doorX);
         hero.tileY = parseInt(doorY);
     }
-visibleMaps = [];
+    visibleMaps = [];
     loadMap();
 }
 
 
 
 function tileIsClear(globalTileX, globalTileY) {
-//    var globalTileX = getTileX(x);
-//    var globalTileY = getTileY(y);
+    //    var globalTileX = getTileX(x);
+    //    var globalTileY = getTileY(y);
     var tileX = getLocalCoordinatesX(globalTileX);
     var tileY = getLocalCoordinatesY(globalTileY);
     if (isOverWorldMap) {
@@ -8763,26 +8623,26 @@ function tileIsClear(globalTileX, globalTileY) {
     var thisMap = findMapNumberFromGlobalCoordinates(globalTileX, globalTileY);
 
 
-        switch (thisMapData[thisMap].collisions[tileY][tileX]) {
-            case 1:
-                // is a collision:
-                return false;
-                break;
-            case "<":
-            case ">":
-            case "^":
-            case "v":
-                // stairs
-                return false;
-                break;
-            case "d":
-                // is a door:
-                return false;
-                break;
-            default:
-                //
-        }
-    
+    switch (thisMapData[thisMap].collisions[tileY][tileX]) {
+        case 1:
+            // is a collision:
+            return false;
+            break;
+        case "<":
+        case ">":
+        case "^":
+        case "v":
+            // stairs
+            return false;
+            break;
+        case "d":
+            // is a door:
+            return false;
+            break;
+        default:
+            //
+    }
+
     // check against hero:
     if (tileX == hero.tileX) {
         if (tileY == hero.tileY) {
@@ -8901,7 +8761,7 @@ function checkHeroCollisions() {
             } else {
                 // platform not involved - find the tile's bottom edge
                 var tileCollidedWith = getTileY(hero.y - hero.length / 2);
-          
+
                 var tileBottomEdge = (tileCollidedWith + 1) * tileW;
                 // use the +1 to make sure it's just clear of the collision tile
                 hero.y = tileBottomEdge + hero.length / 2 + 1;
@@ -9005,32 +8865,32 @@ function checkHeroCollisions() {
 
     var thisNPC, thisItem;
 
- for (var m = 0; m < visibleMaps.length; m++) {
-            whichVisibleMap = visibleMaps[m];
+    for (var m = 0; m < visibleMaps.length; m++) {
+        whichVisibleMap = visibleMaps[m];
 
 
-    // check for collisions against NPCs:
-    for (var i = 0; i < thisMapData[whichVisibleMap].npcs.length; i++) {
-        thisNPC = thisMapData[whichVisibleMap].npcs[i];
-        if (thisNPC.isCollidable) {
-            if (isAnObjectCollision(thisNPC.x, thisNPC.y, thisNPC.width, thisNPC.length, hero.x, hero.y, hero.width, hero.length)) {
-                getHeroAsCloseAsPossibleToObject(thisNPC.x, thisNPC.y, thisNPC.width, thisNPC.length);
+        // check for collisions against NPCs:
+        for (var i = 0; i < thisMapData[whichVisibleMap].npcs.length; i++) {
+            thisNPC = thisMapData[whichVisibleMap].npcs[i];
+            if (thisNPC.isCollidable) {
+                if (isAnObjectCollision(thisNPC.x, thisNPC.y, thisNPC.width, thisNPC.length, hero.x, hero.y, hero.width, hero.length)) {
+                    getHeroAsCloseAsPossibleToObject(thisNPC.x, thisNPC.y, thisNPC.width, thisNPC.length);
+                }
             }
         }
-    }
 
-    // check for collisions against items:
-    for (var i = 0; i < thisMapData[whichVisibleMap].items.length; i++) {
-        thisItem = thisMapData[whichVisibleMap].items[i];
-        if (thisItem.isCollidable) {
-            if (isAnObjectCollision(thisItem.x, thisItem.y, thisItem.width, thisItem.length, hero.x, hero.y, hero.width, hero.length)) {
-                getHeroAsCloseAsPossibleToObject(thisItem.x, thisItem.y, thisItem.width, thisItem.length);
+        // check for collisions against items:
+        for (var i = 0; i < thisMapData[whichVisibleMap].items.length; i++) {
+            thisItem = thisMapData[whichVisibleMap].items[i];
+            if (thisItem.isCollidable) {
+                if (isAnObjectCollision(thisItem.x, thisItem.y, thisItem.width, thisItem.length, hero.x, hero.y, hero.width, hero.length)) {
+                    getHeroAsCloseAsPossibleToObject(thisItem.x, thisItem.y, thisItem.width, thisItem.length);
+                }
             }
         }
+
+
     }
-
-
-}
 
     // check against pets:
     if (hasActivePet) {
@@ -9171,9 +9031,9 @@ function update() {
 
 
 
-      //  checkForWorldWrap(hero);
+        //  checkForWorldWrap(hero);
         checkHeroCollisions();
-       
+
         var heroOldX = hero.tileX;
         var heroOldY = hero.tileY;
         var chestIdSplit;
@@ -9208,7 +9068,7 @@ function update() {
             }
         }
         if (activeAction == "gather") {
-            
+
             if (!(isInRange(hero.x, hero.y, gathering.itemObject.x, gathering.itemObject.y, closeDialogueDistance / 2))) {
                 gatheringPanel.classList.remove("active");
                 gatheringStopped();
@@ -9252,7 +9112,7 @@ function update() {
                     break;
             }
         }
-        mapTransitionCurrentFrames+=2;
+        mapTransitionCurrentFrames += 2;
         if (mapTransitionCurrentFrames >= mapTransitionMaxFrames) {
             changeMaps(activeDoorX, activeDoorY);
         }
@@ -9304,59 +9164,59 @@ function update() {
 
 function updateVisibleMaps() {
 
-// left screen edge would be hero.isox - (canvasWidth/2) but use full screen width to allow for padding and loading in before visible
-var leftEdgeIso = hero.isox - canvasWidth;
-var topEdgeIso = hero.isoy - canvasHeight;
-var rightEdgeIso = hero.isox + canvasWidth;
-var bottomEdgeIso = hero.isoy + canvasHeight;
+    // left screen edge would be hero.isox - (canvasWidth/2) but use full screen width to allow for padding and loading in before visible
+    var leftEdgeIso = hero.isox - canvasWidth;
+    var topEdgeIso = hero.isoy - canvasHeight;
+    var rightEdgeIso = hero.isox + canvasWidth;
+    var bottomEdgeIso = hero.isoy + canvasHeight;
 
-var leftEdge2D = find2DCoordsX(leftEdgeIso, hero.isoy);
-var topEdge2D = find2DCoordsY(hero.isox, topEdgeIso);
-var rightEdge2D = find2DCoordsX(rightEdgeIso, hero.isoy);
-var bottomEdge2D = find2DCoordsY(hero.isox, bottomEdgeIso);
+    var leftEdge2D = find2DCoordsX(leftEdgeIso, hero.isoy);
+    var topEdge2D = find2DCoordsY(hero.isox, topEdgeIso);
+    var rightEdge2D = find2DCoordsX(rightEdgeIso, hero.isoy);
+    var bottomEdge2D = find2DCoordsY(hero.isox, bottomEdgeIso);
 
-var mapDimension2D = worldMapTileLength * tileW;
+    var mapDimension2D = worldMapTileLength * tileW;
 
-var leftEdgeMapPos = Math.floor(leftEdge2D/mapDimension2D);
-var topEdgeMapPos = Math.floor(topEdge2D/mapDimension2D);
-var rightEdgeMapPos = Math.floor(rightEdge2D/mapDimension2D);
-var bottomEdgeMapPos = Math.floor(bottomEdge2D/mapDimension2D);
+    var leftEdgeMapPos = Math.floor(leftEdge2D / mapDimension2D);
+    var topEdgeMapPos = Math.floor(topEdge2D / mapDimension2D);
+    var rightEdgeMapPos = Math.floor(rightEdge2D / mapDimension2D);
+    var bottomEdgeMapPos = Math.floor(bottomEdge2D / mapDimension2D);
 
-var newVisibleMaps = [];
+    var newVisibleMaps = [];
 
-var isValid;
-for(var i=leftEdgeMapPos;i<=rightEdgeMapPos;i++) {
-for(var j=topEdgeMapPos;j<=bottomEdgeMapPos;j++) {
-    isValid = false;
-if(typeof worldMap[j] !== "undefined") {
-if(typeof worldMap[j][i] !== "undefined") {
-isValid = true;
-} 
-}
+    var isValid;
+    for (var i = leftEdgeMapPos; i <= rightEdgeMapPos; i++) {
+        for (var j = topEdgeMapPos; j <= bottomEdgeMapPos; j++) {
+            isValid = false;
+            if (typeof worldMap[j] !== "undefined") {
+                if (typeof worldMap[j][i] !== "undefined") {
+                    isValid = true;
+                }
+            }
 
-if(isValid) {
-newVisibleMaps.push(worldMap[j][i]);
-}
+            if (isValid) {
+                newVisibleMaps.push(worldMap[j][i]);
+            }
 
-}
-}
+        }
+    }
 
     // check for differences in visibleMaps array and load any new
 
 
 
 
-// https://stackoverflow.com/questions/1187518/how-to-get-the-difference-between-two-arrays-in-javascript
-var newMapsToLoad = newVisibleMaps.filter(function(i) {return visibleMaps.indexOf(i) < 0;});
+    // https://stackoverflow.com/questions/1187518/how-to-get-the-difference-between-two-arrays-in-javascript
+    var newMapsToLoad = newVisibleMaps.filter(function(i) { return visibleMaps.indexOf(i) < 0; });
 
 
 
-//console.log("new maps:",newMapsToLoad);
-for(var i=0;i<newMapsToLoad.length;i++) {
- // console.log("loading in new map #"+newMapsToLoad[i]);
-loadNewVisibleMap(newMapsToLoad[i]);
-    
-}
+    //console.log("new maps:",newMapsToLoad);
+    for (var i = 0; i < newMapsToLoad.length; i++) {
+        // console.log("loading in new map #"+newMapsToLoad[i]);
+        loadNewVisibleMap(newMapsToLoad[i]);
+
+    }
 
     // and unload any not required now
     // ####
@@ -9365,13 +9225,13 @@ loadNewVisibleMap(newMapsToLoad[i]);
 
 function heroIsInNewTile() {
     hero.z = getElevation(hero.tileX, hero.tileY);
- 
-  //  updateCartographicMiniMap();
- if(isOverWorldMap) {
-    currentMap = findMapNumberFromGlobalCoordinates(hero.tileX, hero.tileY);
 
-    updateVisibleMaps();
-}
+    //  updateCartographicMiniMap();
+    if (isOverWorldMap) {
+        currentMap = findMapNumberFromGlobalCoordinates(hero.tileX, hero.tileY);
+
+        updateVisibleMaps();
+    }
 
 
     var thisHotspot, thisTileCentreX, thisTileCentreY;
@@ -9543,128 +9403,128 @@ function checkForActions() {
         var inventoryCheck = [];
         var slotMarkup, thisSlotsId, thisSlotElem, thisNPC;
         for (var m = 0; m < visibleMaps.length; m++) {
-        for (var i = 0; i < thisMapData[(visibleMaps[m])].items.length; i++) {
-            if (isInRange(hero.x, hero.y, thisMapData[(visibleMaps[m])].items[i].x, thisMapData[(visibleMaps[m])].items[i].y, (thisMapData[(visibleMaps[m])].items[i].width / 2 + hero.width / 2 + 6))) {
-                if (isFacing(hero, thisMapData[(visibleMaps[m])].items[i])) {
-                    var actionValue = currentActiveInventoryItems[thisMapData[(visibleMaps[m])].items[i].type].actionValue;
+            for (var i = 0; i < thisMapData[(visibleMaps[m])].items.length; i++) {
+                if (isInRange(hero.x, hero.y, thisMapData[(visibleMaps[m])].items[i].x, thisMapData[(visibleMaps[m])].items[i].y, (thisMapData[(visibleMaps[m])].items[i].width / 2 + hero.width / 2 + 6))) {
+                    if (isFacing(hero, thisMapData[(visibleMaps[m])].items[i])) {
+                        var actionValue = currentActiveInventoryItems[thisMapData[(visibleMaps[m])].items[i].type].actionValue;
 
-                    switch (currentActiveInventoryItems[thisMapData[(visibleMaps[m])].items[i].type].action) {
-                        case "static":
-                            // can't interact with it - do nothing
-                            break;
-                        case "nest":
-                            // can't interact with it - do nothing
-                            break;
-                        case "sound":
-                            audio.playSound(soundEffects[actionValue], 0);
-                            break;
-                        case "questToggle":
-                            // toggle value: (1 or 0)
-                            questData[actionValue].hasBeenActivated = Math.abs(questData[actionValue].hasBeenActivated - 1);
-                            break;
-                        case "questSet":
-                            questData[actionValue].hasBeenActivated = 1;
-                            break;
-                        case "questUnset":
-                            questData[actionValue].hasBeenActivated = 0;
-                            break;
-                        case "node":
-                            // handled by Action Bar - no effect here
-                            break;
-                        case "toggleInnerDoor":
-                            toggleInnerDoor(thisMapData[(visibleMaps[m])].items[i].additional);
-                            audio.playSound(soundEffects['lever'], 0);
-                            // toggle the visual state:
-                            thisMapData[(visibleMaps[m])].items[i].state = thisMapData[(visibleMaps[m])].items[i].state == "on" ? 'off' : 'on';
-                            break;
-                        case "openInnerDoor":
-                            openInnerDoor(thisMapData[(visibleMaps[m])].items[i].additional);
-                            break;
-                        case "closeInnerDoor":
-                            closeInnerDoor(thisMapData[(visibleMaps[m])].items[i].additional);
-                            break;
-                        case "key":
-                            hero.currency.keys.push(thisMapData[(visibleMaps[m])].items[i].additional);
-                            UI.updateCurrencies();
-                            audio.playSound(soundEffects['keys'], 0);
-                            // remove from map:
-                            thisMapData[(visibleMaps[m])].items.splice(i, 1);
-                            break;
-                        case "gate":
-                            // toggle the visual state:
-                            thisMapData[(visibleMaps[m])].items[i].state = thisMapData[(visibleMaps[m])].items[i].state == "open" ? 'closed' : 'open';
-                            // toggle whether it will have collision done against it:
-                            thisMapData[(visibleMaps[m])].items[i].isCollidable = thisMapData[(visibleMaps[m])].items[i].isCollidable == true ? false : true;
-                            break;
-                        case "notice":
-                            processSpeech(thisMapData[(visibleMaps[m])].items[i], thisMapData[(visibleMaps[m])].items[i].contains[0][0], thisMapData[(visibleMaps[m])].items[i].contains[0][1], false, thisMapData[(visibleMaps[m])].items[i].contains[0][2]);
-                            break;
-                        case "sit":
-                            hero.facing = thisMapData[(visibleMaps[m])].items[i].facing;
-                            console.log("switch to sit animation");
-                            break;
-                        case "chest":
-                            // open chest and show contents:
-                            UI.openChest(visibleMaps[m],i);
-                            break;
-                        case "post":
-                            // open the Post panel:
-                            UI.openPost(thisMapData[(visibleMaps[m])].items[i].x, thisMapData[(visibleMaps[m])].items[i].y);
-                            break;
-                        case "retinue":
-                            // open the Retinue panel:
-                            UI.openRetinuePanel(thisMapData[(visibleMaps[m])].items[i]);
-                            break;
-                        case "source":
-                            // don't do anything - the equipped item will check for this item
-                            break;
-                        case "crop":
-                            checkCrop(thisMapData[(visibleMaps[m])].items[i]);
-                            break;
-                        default:
-                            // try and pick it up:
-                          
-                            inventoryCheck = canAddItemToInventory([prepareInventoryObject(thisMapData[(visibleMaps[m])].items[i])]);
-                            if (inventoryCheck[0]) {
+                        switch (currentActiveInventoryItems[thisMapData[(visibleMaps[m])].items[i].type].action) {
+                            case "static":
+                                // can't interact with it - do nothing
+                                break;
+                            case "nest":
+                                // can't interact with it - do nothing
+                                break;
+                            case "sound":
+                                audio.playSound(soundEffects[actionValue], 0);
+                                break;
+                            case "questToggle":
+                                // toggle value: (1 or 0)
+                                questData[actionValue].hasBeenActivated = Math.abs(questData[actionValue].hasBeenActivated - 1);
+                                break;
+                            case "questSet":
+                                questData[actionValue].hasBeenActivated = 1;
+                                break;
+                            case "questUnset":
+                                questData[actionValue].hasBeenActivated = 0;
+                                break;
+                            case "node":
+                                // handled by Action Bar - no effect here
+                                break;
+                            case "toggleInnerDoor":
+                                toggleInnerDoor(thisMapData[(visibleMaps[m])].items[i].additional);
+                                audio.playSound(soundEffects['lever'], 0);
+                                // toggle the visual state:
+                                thisMapData[(visibleMaps[m])].items[i].state = thisMapData[(visibleMaps[m])].items[i].state == "on" ? 'off' : 'on';
+                                break;
+                            case "openInnerDoor":
+                                openInnerDoor(thisMapData[(visibleMaps[m])].items[i].additional);
+                                break;
+                            case "closeInnerDoor":
+                                closeInnerDoor(thisMapData[(visibleMaps[m])].items[i].additional);
+                                break;
+                            case "key":
+                                hero.currency.keys.push(thisMapData[(visibleMaps[m])].items[i].additional);
+                                UI.updateCurrencies();
+                                audio.playSound(soundEffects['keys'], 0);
                                 // remove from map:
                                 thisMapData[(visibleMaps[m])].items.splice(i, 1);
-                                UI.showChangeInInventory(inventoryCheck[1]);
-                            } else {
-                                UI.showNotification("<p>I don't have room in my bags for that</p>");
-                            }
+                                break;
+                            case "gate":
+                                // toggle the visual state:
+                                thisMapData[(visibleMaps[m])].items[i].state = thisMapData[(visibleMaps[m])].items[i].state == "open" ? 'closed' : 'open';
+                                // toggle whether it will have collision done against it:
+                                thisMapData[(visibleMaps[m])].items[i].isCollidable = thisMapData[(visibleMaps[m])].items[i].isCollidable == true ? false : true;
+                                break;
+                            case "notice":
+                                processSpeech(thisMapData[(visibleMaps[m])].items[i], thisMapData[(visibleMaps[m])].items[i].contains[0][0], thisMapData[(visibleMaps[m])].items[i].contains[0][1], false, thisMapData[(visibleMaps[m])].items[i].contains[0][2]);
+                                break;
+                            case "sit":
+                                hero.facing = thisMapData[(visibleMaps[m])].items[i].facing;
+                                console.log("switch to sit animation");
+                                break;
+                            case "chest":
+                                // open chest and show contents:
+                                UI.openChest(visibleMaps[m], i);
+                                break;
+                            case "post":
+                                // open the Post panel:
+                                UI.openPost(thisMapData[(visibleMaps[m])].items[i].x, thisMapData[(visibleMaps[m])].items[i].y);
+                                break;
+                            case "retinue":
+                                // open the Retinue panel:
+                                UI.openRetinuePanel(thisMapData[(visibleMaps[m])].items[i]);
+                                break;
+                            case "source":
+                                // don't do anything - the equipped item will check for this item
+                                break;
+                            case "crop":
+                                checkCrop(thisMapData[(visibleMaps[m])].items[i]);
+                                break;
+                            default:
+                                // try and pick it up:
+
+                                inventoryCheck = canAddItemToInventory([prepareInventoryObject(thisMapData[(visibleMaps[m])].items[i])]);
+                                if (inventoryCheck[0]) {
+                                    // remove from map:
+                                    thisMapData[(visibleMaps[m])].items.splice(i, 1);
+                                    UI.showChangeInInventory(inventoryCheck[1]);
+                                } else {
+                                    UI.showNotification("<p>I don't have room in my bags for that</p>");
+                                }
+                        }
                     }
                 }
             }
-        }
 
-        // loop through NPCs:
-        for (var i = 0; i < thisMapData[(visibleMaps[m])].npcs.length; i++) {
-            thisNPC = thisMapData[(visibleMaps[m])].npcs[i];
-            if (thisNPC.speech) {
-                if (isInRange(hero.x, hero.y, thisNPC.x, thisNPC.y, (thisNPC.width + hero.width))) {
-                    if (isFacing(hero, thisNPC)) {
-                        // if at the end of the NPC's speech list, or the dialogue isn't part of the NPC's normal speech list, then close the balloon with an action click:
-                        if ((thisNPC.speechIndex >= thisNPC.speech.length) || (canCloseDialogueBalloonNextClick && activeObjectForDialogue == thisNPC)) {
-                            thisNPC.speechIndex = 0;
-                            dialogue.classList.remove("active");
-                            activeObjectForDialogue = '';
-                            canCloseDialogueBalloonNextClick = false;
-                            if (shopCurrentlyOpen != -1) {
-                                UI.closeShop();
+            // loop through NPCs:
+            for (var i = 0; i < thisMapData[(visibleMaps[m])].npcs.length; i++) {
+                thisNPC = thisMapData[(visibleMaps[m])].npcs[i];
+                if (thisNPC.speech) {
+                    if (isInRange(hero.x, hero.y, thisNPC.x, thisNPC.y, (thisNPC.width + hero.width))) {
+                        if (isFacing(hero, thisNPC)) {
+                            // if at the end of the NPC's speech list, or the dialogue isn't part of the NPC's normal speech list, then close the balloon with an action click:
+                            if ((thisNPC.speechIndex >= thisNPC.speech.length) || (canCloseDialogueBalloonNextClick && activeObjectForDialogue == thisNPC)) {
+                                thisNPC.speechIndex = 0;
+                                dialogue.classList.remove("active");
+                                activeObjectForDialogue = '';
+                                canCloseDialogueBalloonNextClick = false;
+                                if (shopCurrentlyOpen != -1) {
+                                    UI.closeShop();
+                                }
+
+                            } else {
+                                var thisSpeech = thisNPC.speech[thisNPC.speechIndex][0];
+                                var thisSpeechCode = thisNPC.speech[thisNPC.speechIndex][1];
+                                thisNPC.drawnFacing = turntoFace(thisNPC, hero);
+                                processSpeech(thisNPC, thisSpeech, thisSpeechCode, true);
+                                thisNPC.speechIndex++;
                             }
-
-                        } else {
-                            var thisSpeech = thisNPC.speech[thisNPC.speechIndex][0];
-                            var thisSpeechCode = thisNPC.speech[thisNPC.speechIndex][1];
-                            thisNPC.drawnFacing = turntoFace(thisNPC, hero);
-                            processSpeech(thisNPC, thisSpeech, thisSpeechCode, true);
-                            thisNPC.speechIndex++;
                         }
                     }
                 }
             }
         }
-    }
     }
     // action processed, so cancel the key event:
     key[4] = 0;
@@ -9690,14 +9550,14 @@ function processSpeech(thisObjectSpeaking, thisSpeechPassedIn, thisSpeechCode, i
                 break;
             case "shop":
                 // check if the shop is empty:
-console.log("open shop");
+                console.log("open shop");
                 if (UI.openedShopSuccessfully(generateHash(thisObjectSpeaking.speech[thisObjectSpeaking.speechIndex][2]))) {
                     //
 
-          
+
                 } else {
                     // shop is empty:
-           
+
                     if (typeof thisObjectSpeaking.shopEmptySpeech !== "undefined") {
                         thisSpeech = thisObjectSpeaking.shopEmptySpeech;
                     }
@@ -9997,7 +9857,7 @@ console.log("open shop");
                 }
                 break;
             case "play":
-          
+
                 startCardGame(thisObjectSpeaking);
                 break;
             default:
@@ -10033,32 +9893,32 @@ function updateItems() {
         [-1, 0]
     ];
     // check for any items that do anything based on time (eg. nests):
-      for (var m = 0; m < visibleMaps.length; m++) {
-    for (var i = 0; i < thisMapData[(visibleMaps[m])].items.length; i++) {
-        thisItem = thisMapData[(visibleMaps[m])].items[i];
-      
-        if (currentActiveInventoryItems[thisItem.type].action == "nest") {
-            if (thisItem.spawnsRemaining > 0) {
-                if (hero.totalGameTimePlayed - thisItem.timeLastSpawned >= currentActiveInventoryItems[thisItem.type].respawnRate) {
-                    // pick a random creature from all possible:
-                    whichCreature = thisItem.contains[(getRandomIntegerInclusive(1, thisItem.contains.length) - 1)];
-                    // find a clear space around the item:
-                    whichStartPoint = getRandomElementFromArray(startPointsPossible);
-                    whichCreature.tileX = thisItem.tileX + whichStartPoint[0];
-                    whichCreature.tileY = thisItem.tileY + whichStartPoint[1];
-                    if (tileIsClear(whichCreature.tileX, whichCreature.tileY)) {
-                        // create a copy so they are distinct:
-                        thisMapData[(visibleMaps[m])].npcs.push(JSON.parse(JSON.stringify(whichCreature)));
-                        initialiseNPC(thisMapData[(visibleMaps[m])].npcs[(thisMapData[(visibleMaps[m])].npcs.length - 1)]);
-                        thisItem.spawnsRemaining--;
-                        // reset timer:
-                        thisItem.timeLastSpawned = hero.totalGameTimePlayed;
+    for (var m = 0; m < visibleMaps.length; m++) {
+        for (var i = 0; i < thisMapData[(visibleMaps[m])].items.length; i++) {
+            thisItem = thisMapData[(visibleMaps[m])].items[i];
+
+            if (currentActiveInventoryItems[thisItem.type].action == "nest") {
+                if (thisItem.spawnsRemaining > 0) {
+                    if (hero.totalGameTimePlayed - thisItem.timeLastSpawned >= currentActiveInventoryItems[thisItem.type].respawnRate) {
+                        // pick a random creature from all possible:
+                        whichCreature = thisItem.contains[(getRandomIntegerInclusive(1, thisItem.contains.length) - 1)];
+                        // find a clear space around the item:
+                        whichStartPoint = getRandomElementFromArray(startPointsPossible);
+                        whichCreature.tileX = thisItem.tileX + whichStartPoint[0];
+                        whichCreature.tileY = thisItem.tileY + whichStartPoint[1];
+                        if (tileIsClear(whichCreature.tileX, whichCreature.tileY)) {
+                            // create a copy so they are distinct:
+                            thisMapData[(visibleMaps[m])].npcs.push(JSON.parse(JSON.stringify(whichCreature)));
+                            initialiseNPC(thisMapData[(visibleMaps[m])].npcs[(thisMapData[(visibleMaps[m])].npcs.length - 1)]);
+                            thisItem.spawnsRemaining--;
+                            // reset timer:
+                            thisItem.timeLastSpawned = hero.totalGameTimePlayed;
+                        }
                     }
                 }
             }
         }
     }
-}
 }
 
 function checkForTitlesAwarded(whichQuestId) {
@@ -10074,17 +9934,17 @@ function checkForTitlesAwarded(whichQuestId) {
 
 
 function checkForChallenges() {
-var thisNPC;
+    var thisNPC;
     for (var m = 0; m < visibleMaps.length; m++) {
         for (var i = 0; i < thisMapData[(visibleMaps[m])].npcs.length; i++) {
             thisNPC = thisMapData[(visibleMaps[m])].npcs[i];
- 
+
             if (isInRange(hero.x, hero.y, thisNPC.x, thisNPC.y, (thisNPC.width + hero.width))) {
-             
+
                 if (isFacing(hero, thisNPC)) {
                     if (thisNPC.cardGameSpeech) {
                         thisNPC.drawnFacing = turntoFace(thisNPC, hero);
-                
+
                         thisChallengeNPC = thisNPC;
                         processSpeech(thisNPC, thisNPC.cardGameSpeech.challenge[0], thisNPC.cardGameSpeech.challenge[1]);
                         break;
@@ -10106,575 +9966,575 @@ function jumpToLocation(mapId, tileX, tileY) {
 
 function moveNPCs() {
     var thisNPC, thisUniqueIdentifier, thisInnerUniqueIdentifier, newTile, thisNextMovement, oldNPCx, oldNPCy, thisOtherNPC, thisItem, thisNextMovement, thisNextMovementCode, thisInnerDoor;
-for (var m = 0; m < visibleMaps.length; m++) {
-    for (var i = 0; i < thisMapData[(visibleMaps[m])].npcs.length; i++) {
-     //   thisUniqueIdentifier = m+"-"+i;
-        thisNPC = thisMapData[(visibleMaps[m])].npcs[i];
+    for (var m = 0; m < visibleMaps.length; m++) {
+        for (var i = 0; i < thisMapData[(visibleMaps[m])].npcs.length; i++) {
+            //   thisUniqueIdentifier = m+"-"+i;
+            thisNPC = thisMapData[(visibleMaps[m])].npcs[i];
 
-        thisNPC.hasJustGotNewPath = false;
+            thisNPC.hasJustGotNewPath = false;
 
-        if (thisNPC.name == "Warden") {
-            // console.log(thisNPC.isMoving, thisNPC.forceNewMovementCheck, thisNPC.movement[thisNPC.movementIndex]);
-        }
+            if (thisNPC.name == "Warden") {
+                // console.log(thisNPC.isMoving, thisNPC.forceNewMovementCheck, thisNPC.movement[thisNPC.movementIndex]);
+            }
 
 
-        // check if this NPC is playing cards with the hero:
-        if (typeof thisNPC.isPlayingCards === "undefined") {
-            newTile = false;
-            if (thisNPC.isMoving) {
-                oldNPCx = thisNPC.x;
-                oldNPCy = thisNPC.y;
-                thisNPC.drawnFacing = thisNPC.facing;
-                switch (thisNPC.facing) {
-                    case 'n':
-                        thisNPC.y -= thisNPC.speed;
-                        // check for collisions:
-                        if ((isATerrainCollision(thisNPC.x - thisNPC.width / 2, thisNPC.y - thisNPC.length / 2)) || (isATerrainCollision(thisNPC.x + thisNPC.width / 2, thisNPC.y - thisNPC.length / 2))) {
-                            // find the tile's bottom edge
-                            var tileCollidedWith = getTileY(thisNPC.y - thisNPC.length / 2);
-                            var tileBottomEdge = (tileCollidedWith + 1) * tileW;
-                            // use the +1 to make sure it's just clear of the collision tile
-                            thisNPC.y = tileBottomEdge + thisNPC.length / 2 + 1;
+            // check if this NPC is playing cards with the hero:
+            if (typeof thisNPC.isPlayingCards === "undefined") {
+                newTile = false;
+                if (thisNPC.isMoving) {
+                    oldNPCx = thisNPC.x;
+                    oldNPCy = thisNPC.y;
+                    thisNPC.drawnFacing = thisNPC.facing;
+                    switch (thisNPC.facing) {
+                        case 'n':
+                            thisNPC.y -= thisNPC.speed;
+                            // check for collisions:
+                            if ((isATerrainCollision(thisNPC.x - thisNPC.width / 2, thisNPC.y - thisNPC.length / 2)) || (isATerrainCollision(thisNPC.x + thisNPC.width / 2, thisNPC.y - thisNPC.length / 2))) {
+                                // find the tile's bottom edge
+                                var tileCollidedWith = getTileY(thisNPC.y - thisNPC.length / 2);
+                                var tileBottomEdge = (tileCollidedWith + 1) * tileW;
+                                // use the +1 to make sure it's just clear of the collision tile
+                                thisNPC.y = tileBottomEdge + thisNPC.length / 2 + 1;
+                            }
+                            break;
+                        case 's':
+                            thisNPC.y += thisNPC.speed;
+                            // check for collisions:
+                            if ((isATerrainCollision(thisNPC.x - thisNPC.width / 2, thisNPC.y + thisNPC.length / 2)) || (isATerrainCollision(thisNPC.x + thisNPC.width / 2, thisNPC.y + thisNPC.length / 2))) {
+                                var tileCollidedWith = getTileY(thisNPC.y + thisNPC.length / 2);
+                                var tileTopEdge = (tileCollidedWith) * tileW;
+                                thisNPC.y = tileTopEdge - thisNPC.length / 2 - 1;
+                            }
+                            break;
+                        case 'w':
+                            thisNPC.x -= thisNPC.speed;
+                            // check for collisions:
+                            if ((isATerrainCollision(thisNPC.x - thisNPC.width / 2, thisNPC.y + thisNPC.length / 2)) || (isATerrainCollision(thisNPC.x - thisNPC.width / 2, thisNPC.y - thisNPC.length / 2))) {
+                                var tileCollidedWith = getTileX(thisNPC.x - thisNPC.width / 2);
+                                var tileRightEdge = (tileCollidedWith + 1) * tileW;
+                                thisNPC.x = tileRightEdge + thisNPC.width / 2 + 1;
+                            }
+                            break;
+                        case 'e':
+                            thisNPC.x += thisNPC.speed;
+                            // check for collisions:
+                            if ((isATerrainCollision(thisNPC.x + thisNPC.width / 2, thisNPC.y + thisNPC.length / 2)) || (isATerrainCollision(thisNPC.x + thisNPC.width / 2, thisNPC.y - thisNPC.length / 2))) {
+                                var tileCollidedWith = getTileX(thisNPC.x + thisNPC.width / 2);
+                                var tileLeftEdge = (tileCollidedWith) * tileW;
+                                thisNPC.x = tileLeftEdge - thisNPC.width / 2 - 1;
+                            }
+                            break;
+                    }
+
+                    // check for collision against hero:
+                    if (isAnObjectCollision(thisNPC.x, thisNPC.y, thisNPC.width, thisNPC.length, hero.x, hero.y, hero.width, hero.length)) {
+                        thisNPC.x = oldNPCx;
+                        thisNPC.y = oldNPCy;
+                    }
+
+                    // check for collision against pet:
+                    if (hasActivePet) {
+                        for (var j = 0; j < hero.activePets.length; j++) {
+                            if (isAnObjectCollision(thisNPC.x, thisNPC.y, thisNPC.width, thisNPC.length, hero.allPets[hero.activePets[j]].x, hero.allPets[hero.activePets[j]].y, hero.allPets[hero.activePets[j]].width, hero.allPets[hero.activePets[j]].length)) {
+                                thisNPC.x = oldNPCx;
+                                thisNPC.y = oldNPCy;
+                            }
                         }
-                        break;
-                    case 's':
-                        thisNPC.y += thisNPC.speed;
-                        // check for collisions:
-                        if ((isATerrainCollision(thisNPC.x - thisNPC.width / 2, thisNPC.y + thisNPC.length / 2)) || (isATerrainCollision(thisNPC.x + thisNPC.width / 2, thisNPC.y + thisNPC.length / 2))) {
-                            var tileCollidedWith = getTileY(thisNPC.y + thisNPC.length / 2);
-                            var tileTopEdge = (tileCollidedWith) * tileW;
-                            thisNPC.y = tileTopEdge - thisNPC.length / 2 - 1;
-                        }
-                        break;
-                    case 'w':
-                        thisNPC.x -= thisNPC.speed;
-                        // check for collisions:
-                        if ((isATerrainCollision(thisNPC.x - thisNPC.width / 2, thisNPC.y + thisNPC.length / 2)) || (isATerrainCollision(thisNPC.x - thisNPC.width / 2, thisNPC.y - thisNPC.length / 2))) {
-                            var tileCollidedWith = getTileX(thisNPC.x - thisNPC.width / 2);
-                            var tileRightEdge = (tileCollidedWith + 1) * tileW;
-                            thisNPC.x = tileRightEdge + thisNPC.width / 2 + 1;
-                        }
-                        break;
-                    case 'e':
-                        thisNPC.x += thisNPC.speed;
-                        // check for collisions:
-                        if ((isATerrainCollision(thisNPC.x + thisNPC.width / 2, thisNPC.y + thisNPC.length / 2)) || (isATerrainCollision(thisNPC.x + thisNPC.width / 2, thisNPC.y - thisNPC.length / 2))) {
-                            var tileCollidedWith = getTileX(thisNPC.x + thisNPC.width / 2);
-                            var tileLeftEdge = (tileCollidedWith) * tileW;
-                            thisNPC.x = tileLeftEdge - thisNPC.width / 2 - 1;
-                        }
-                        break;
-                }
+                    }
 
-                // check for collision against hero:
-                if (isAnObjectCollision(thisNPC.x, thisNPC.y, thisNPC.width, thisNPC.length, hero.x, hero.y, hero.width, hero.length)) {
-                    thisNPC.x = oldNPCx;
-                    thisNPC.y = oldNPCy;
-                }
+                    // check for collisions against other NPCs:
+                    var whichNPCShouldMoveOutOfTheWay;
+                    for (var n = 0; n < visibleMaps.length; n++) {
+                        for (var j = 0; j < thisMapData[(visibleMaps[n])].npcs.length; j++) {
+                            thisOtherNPC = thisMapData[(visibleMaps[n])].npcs[j];
+                            //  thisInnerUniqueIdentifier = n+"-"+j;
+                            if (thisNPC.uniqueIndex != thisOtherNPC.uniqueIndex) {
 
-                // check for collision against pet:
-                if (hasActivePet) {
-                    for (var j = 0; j < hero.activePets.length; j++) {
-                        if (isAnObjectCollision(thisNPC.x, thisNPC.y, thisNPC.width, thisNPC.length, hero.allPets[hero.activePets[j]].x, hero.allPets[hero.activePets[j]].y, hero.allPets[hero.activePets[j]].width, hero.allPets[hero.activePets[j]].length)) {
-                            thisNPC.x = oldNPCx;
-                            thisNPC.y = oldNPCy;
+                                if (thisOtherNPC.isCollidable) {
+                                    if (isAnObjectCollision(thisNPC.x, thisNPC.y, thisNPC.width, thisNPC.length, thisOtherNPC.x, thisOtherNPC.y, thisOtherNPC.width, thisOtherNPC.length)) {
+                                        thisNPC.x = oldNPCx;
+                                        thisNPC.y = oldNPCy;
+
+
+
+
+                                        /*
+                                        // work out which one should get out of the way (see if one of them is static and move the other if so)
+                                        if (!thisNPC.isMoving) {
+                                            whichNPCShouldMoveOutOfTheWay = thisOtherNPC;
+                                        } else if (!thisOtherNPC.isMoving) {
+                                            whichNPCShouldMoveOutOfTheWay = thisNPC;
+                                        } else {
+                                            // give the one added to the map earlier precedence:
+                                            if (thisNPC.index < thisOtherNPC.index) {
+                                                whichNPCShouldMoveOutOfTheWay = thisOtherNPC;
+                                            } else {
+                                                whichNPCShouldMoveOutOfTheWay = thisNPC;
+                                            }
+                                        }
+                                        console.log(thisNPC.name + ' collided with ' + thisOtherNPC.name+" - "+whichNPCShouldMoveOutOfTheWay.name+" will move out of the way");
+                                        */
+
+                                    }
+                                }
+                            }
                         }
+                    }
+
+                    // check for collisions against items:
+                    for (var j = 0; j < thisMapData[currentMap].items.length; j++) {
+                        thisItem = thisMapData[currentMap].items[j];
+                        if (thisItem.isCollidable) {
+                            if (isAnObjectCollision(thisNPC.x, thisNPC.y, thisNPC.width, thisNPC.length, thisItem.x, thisItem.y, thisItem.width, thisItem.length)) {
+                                thisNPC.x = oldNPCx;
+                                thisNPC.y = oldNPCy;
+                            }
+                        }
+                    }
+
+
+                    // check for inner doors:
+                    if (typeof thisMapData[currentMap].innerDoors !== "undefined") {
+                        for (var i in thisMapData[currentMap].innerDoors) {
+                            thisInnerDoor = thisMapData[currentMap].innerDoors[i];
+                            if (!thisInnerDoor.isOpen) {
+                                if (isAnObjectCollision(getTileCentreCoordX(thisInnerDoor.tileX), getTileCentreCoordY(thisInnerDoor.tileY), tileW, tileW, thisNPC.x, thisNPC.y, thisNPC.width, thisNPC.length)) {
+                                    thisNPC.x = oldNPCx;
+                                    thisNPC.y = oldNPCy;
+                                }
+                            }
+                        }
+                    }
+
+                    // find the difference for this movement:
+                    thisNPC.dx += (thisNPC.x - oldNPCx);
+                    thisNPC.dy += (thisNPC.y - oldNPCy);
+                    // see if it's at a new tile centre:
+
+                    if (Math.abs(thisNPC.dx) >= tileW) {
+                        if (thisNPC.dx > 0) {
+                            thisNPC.dx -= tileW;
+                        } else {
+                            thisNPC.dx += tileW;
+                        }
+                        newTile = true;
+
+                    }
+                    if (Math.abs(thisNPC.dy) >= tileW) {
+                        if (thisNPC.dy > 0) {
+                            thisNPC.dy -= tileW;
+                        } else {
+                            thisNPC.dy += tileW;
+                        }
+                        newTile = true;
                     }
                 }
 
-                // check for collisions against other NPCs:
-                var whichNPCShouldMoveOutOfTheWay;
-                for (var n = 0; n < visibleMaps.length; n++) {
-                for (var j = 0; j < thisMapData[(visibleMaps[n])].npcs.length; j++) {
-                    thisOtherNPC = thisMapData[(visibleMaps[n])].npcs[j];
-                  //  thisInnerUniqueIdentifier = n+"-"+j;
-                    if (thisNPC.uniqueIndex != thisOtherNPC.uniqueIndex) {
-                        
-                        if (thisOtherNPC.isCollidable) {
-                            if (isAnObjectCollision(thisNPC.x, thisNPC.y, thisNPC.width, thisNPC.length, thisOtherNPC.x, thisOtherNPC.y, thisOtherNPC.width, thisOtherNPC.length)) {
-                                thisNPC.x = oldNPCx;
-                                thisNPC.y = oldNPCy;
+                if (newTile || thisNPC.forceNewMovementCheck) {
+                    thisNPC.tileX = getTileX(thisNPC.x);
+                    thisNPC.tileY = getTileY(thisNPC.y);
+                    if (typeof thisNPC.following !== "undefined") {
+                        if (!thisNPC.forceNewMovementCheck) {
 
 
 
 
-                                /*
-                                // work out which one should get out of the way (see if one of them is static and move the other if so)
-                                if (!thisNPC.isMoving) {
-                                    whichNPCShouldMoveOutOfTheWay = thisOtherNPC;
-                                } else if (!thisOtherNPC.isMoving) {
-                                    whichNPCShouldMoveOutOfTheWay = thisNPC;
-                                } else {
-                                    // give the one added to the map earlier precedence:
-                                    if (thisNPC.index < thisOtherNPC.index) {
-                                        whichNPCShouldMoveOutOfTheWay = thisOtherNPC;
+                            checkForEscortQuestEnd(thisNPC);
+
+                        }
+                    }
+                    thisNPC.movementIndex++;
+                    if (thisNPC.movementIndex >= thisNPC.movement.length) {
+                        thisNPC.movementIndex = 0;
+                    }
+                    thisNextMovement = thisNPC.movement[thisNPC.movementIndex];
+
+
+
+                    if (typeof thisNextMovement !== 'string') {
+                        // it's an array, get the first element as the code:
+                        thisNextMovementCode = thisNextMovement[0];
+                    } else {
+                        thisNextMovementCode = thisNextMovement;
+                    }
+                    switch (thisNextMovementCode) {
+
+                        case '-':
+                            // stand still:
+
+
+
+
+                            thisNPC.isMoving = false;
+                            thisNPC.forceNewMovementCheck = false;
+                            break;
+                        case '?':
+
+                            // this code must be able to be optimsed: ########
+
+                            // see if it should turn (randomly, or if destination tile is blocked):
+
+
+
+                            if ((getRandomIntegerInclusive(1, 3) == 1) || (!tileIsClear(thisNPC.tileX + relativeFacing[thisNPC.facing]["x"], thisNPC.tileY + relativeFacing[thisNPC.facing]["y"]))) {
+                                // try turning left or right, otherwise back the way it came
+                                var facingsToPickFrom;
+                                if ((thisNPC.facing == "n") || (thisNPC.facing == "s")) {
+                                    if (getRandomIntegerInclusive(1, 2) == 1) {
+                                        facingsToPickFrom = ["e", "w"];
                                     } else {
-                                        whichNPCShouldMoveOutOfTheWay = thisNPC;
+                                        facingsToPickFrom = ["w", "e"];
+                                    }
+                                } else {
+                                    if (getRandomIntegerInclusive(1, 2) == 1) {
+                                        facingsToPickFrom = ["n", "s"];
+                                    } else {
+                                        facingsToPickFrom = ["s", "n"];
                                     }
                                 }
-                                console.log(thisNPC.name + ' collided with ' + thisOtherNPC.name+" - "+whichNPCShouldMoveOutOfTheWay.name+" will move out of the way");
-                                */
-
-                            }
-                        }
-                    }
-                }
-            }
-
-                // check for collisions against items:
-                for (var j = 0; j < thisMapData[currentMap].items.length; j++) {
-                    thisItem = thisMapData[currentMap].items[j];
-                    if (thisItem.isCollidable) {
-                        if (isAnObjectCollision(thisNPC.x, thisNPC.y, thisNPC.width, thisNPC.length, thisItem.x, thisItem.y, thisItem.width, thisItem.length)) {
-                            thisNPC.x = oldNPCx;
-                            thisNPC.y = oldNPCy;
-                        }
-                    }
-                }
-
-
-                // check for inner doors:
-                if (typeof thisMapData[currentMap].innerDoors !== "undefined") {
-                    for (var i in thisMapData[currentMap].innerDoors) {
-                        thisInnerDoor = thisMapData[currentMap].innerDoors[i];
-                        if (!thisInnerDoor.isOpen) {
-                            if (isAnObjectCollision(getTileCentreCoordX(thisInnerDoor.tileX), getTileCentreCoordY(thisInnerDoor.tileY), tileW, tileW, thisNPC.x, thisNPC.y, thisNPC.width, thisNPC.length)) {
-                                thisNPC.x = oldNPCx;
-                                thisNPC.y = oldNPCy;
-                            }
-                        }
-                    }
-                }
-
-                // find the difference for this movement:
-                thisNPC.dx += (thisNPC.x - oldNPCx);
-                thisNPC.dy += (thisNPC.y - oldNPCy);
-                // see if it's at a new tile centre:
-
-                if (Math.abs(thisNPC.dx) >= tileW) {
-                    if (thisNPC.dx > 0) {
-                        thisNPC.dx -= tileW;
-                    } else {
-                        thisNPC.dx += tileW;
-                    }
-                    newTile = true;
-
-                }
-                if (Math.abs(thisNPC.dy) >= tileW) {
-                    if (thisNPC.dy > 0) {
-                        thisNPC.dy -= tileW;
-                    } else {
-                        thisNPC.dy += tileW;
-                    }
-                    newTile = true;
-                }
-            }
-
-            if (newTile || thisNPC.forceNewMovementCheck) {
-                thisNPC.tileX = getTileX(thisNPC.x);
-                thisNPC.tileY = getTileY(thisNPC.y);
-                if (typeof thisNPC.following !== "undefined") {
-                    if (!thisNPC.forceNewMovementCheck) {
-
-
-
-
-                        checkForEscortQuestEnd(thisNPC);
-
-                    }
-                }
-                thisNPC.movementIndex++;
-                if (thisNPC.movementIndex >= thisNPC.movement.length) {
-                    thisNPC.movementIndex = 0;
-                }
-                thisNextMovement = thisNPC.movement[thisNPC.movementIndex];
-
-
-
-                if (typeof thisNextMovement !== 'string') {
-                    // it's an array, get the first element as the code:
-                    thisNextMovementCode = thisNextMovement[0];
-                } else {
-                    thisNextMovementCode = thisNextMovement;
-                }
-                switch (thisNextMovementCode) {
-
-                    case '-':
-                        // stand still:
-
-
-
-
-                        thisNPC.isMoving = false;
-                        thisNPC.forceNewMovementCheck = false;
-                        break;
-                    case '?':
-
-                        // this code must be able to be optimsed: ########
-
-                        // see if it should turn (randomly, or if destination tile is blocked):
-
-
-
-                        if ((getRandomIntegerInclusive(1, 3) == 1) || (!tileIsClear(thisNPC.tileX + relativeFacing[thisNPC.facing]["x"], thisNPC.tileY + relativeFacing[thisNPC.facing]["y"]))) {
-                            // try turning left or right, otherwise back the way it came
-                            var facingsToPickFrom;
-                            if ((thisNPC.facing == "n") || (thisNPC.facing == "s")) {
-                                if (getRandomIntegerInclusive(1, 2) == 1) {
-                                    facingsToPickFrom = ["e", "w"];
-                                } else {
-                                    facingsToPickFrom = ["w", "e"];
-                                }
-                            } else {
-                                if (getRandomIntegerInclusive(1, 2) == 1) {
-                                    facingsToPickFrom = ["n", "s"];
-                                } else {
-                                    facingsToPickFrom = ["s", "n"];
-                                }
-                            }
-                            switch (thisNPC.facing) {
-                                case "n":
-                                    facingsToPickFrom.push("s");
-                                    facingsToPickFrom.push("n");
-                                    break;
-                                case "s":
-                                    facingsToPickFrom.push("n");
-                                    facingsToPickFrom.push("s");
-                                    break;
-                                case "e":
-                                    facingsToPickFrom.push("w");
-                                    facingsToPickFrom.push("e");
-                                    break;
-                                case "w":
-                                    facingsToPickFrom.push("e");
-                                    facingsToPickFrom.push("w");
-                                    break;
-
-                            }
-
-                            do {
-                                thisNPC.facing = facingsToPickFrom.shift();
-                            } while (!tileIsClear(thisNPC.tileX + relativeFacing[thisNPC.facing]["x"], thisNPC.tileY + relativeFacing[thisNPC.facing]["y"]))
-                        }
-
-
-                        /*
-                                                do {
-                                                    // pick a totally random facing:
-                                                    thisNPC.facing = facingsPossible[Math.floor(Math.random() * facingsPossible.length)];
-                                                    // check that the target tile is walkable:
-                                                } while (isATerrainCollision(thisNPC.x + (relativeFacing[thisNPC.facing]["x"] * tileW), thisNPC.y + (relativeFacing[thisNPC.facing]["y"] * tileW)));
-                                                */
-                        thisNPC.forceNewMovementCheck = false;
-                        break;
-
-                    case 'find':
-                        thisNPC.forceNewMovementCheck = true;
-                        if ((!thisNPC.waitingForAPath) && (typeof thisNPC.waitingTimer === "undefined")) {
-                            pathfindingWorker.postMessage([thisNextMovement[1], thisNPC, thisMapData, visibleMaps, isOverWorldMap]);
-                            // make sure to only request this once:
-                            thisNPC.isMoving = false;
-                            thisNPC.waitingForAPath = true;
-                            thisNPC.waitingTimer = 0;
-
-                            // play animation while waiting
-                            thisNPC.currentAnimation = 'wait';
-                            // thisNextMovement[2]
-                            // #######
-
-                            // keep the NPC waiting:
-                            thisNPC.movementIndex--;
-                        } else {
-                            // check timer:
-                            thisNPC.waitingTimer++;
-                            if (thisNPC.waitingTimer > thisNextMovement[3]) {
-                                thisNPC.isMoving = true;
-                                // set this so it doesn't do the check for a tile being blocked before it's turned to its new facing:
-                                thisNPC.hasJustGotNewPath = true;
-                                thisNPC.currentAnimation = 'walk';
-                                delete thisNPC.waitingTimer;
-                            } else {
-                                // keep waiting until got a path, and the timer has expired
-                                thisNPC.movementIndex--;
-                                thisNPC.isMoving = false;
-                            }
-                        }
-                        break;
-
-                    case 'proximity':
-                        // wait for the hero to be nearby
-                        thisNPC.forceNewMovementCheck = true;
-                        var tileRadius = thisNextMovement[1];
-                        if ((isInRange(hero.x, hero.y, thisNPC.x, thisNPC.y, tileRadius * tileW))) {
-                            // pick up the next movement code on the next loop round:
-                            thisNPC.isMoving = true;
-                        } else {
-                            thisNPC.isMoving = false;
-                            // keep it on the waiting item to keep checking:
-                            thisNPC.movementIndex--;
-                        }
-                        break;
-
-                    case 'remove':
-                        // remove the element before, as well as this "remove" instruction (so 2 elements to be removed):
-                        thisNPC.movement.splice((thisNPC.movementIndex - 1), 2);
-                        break;
-
-                    case 'pathEnd':
-                        var thisPreviousMovement;
-                        // check if it's a escort quest NPC that's come to the end of their pathfinding path:
-                        if (typeof thisNPC.following !== "undefined") {
-                            for (j = thisNPC.movementIndex; j >= 0; j--) {
-                                thisPreviousMovement = thisNPC.movement[j];
-                                if (typeof thisPreviousMovement === 'string') {
-                                    if (thisPreviousMovement == 'following') {
-                                        var numberOfElementsRemoved = thisNPC.movementIndex - (j);
-                                        thisNPC.movement.splice(j + 1, numberOfElementsRemoved);
-                                        // this needs to be one more than the equivilient for 'find' types:
-                                        thisNPC.movementIndex -= (numberOfElementsRemoved + 1);
-                                        thisNPC.isMoving = true;
-                                        thisNPC.forceNewMovementCheck = true;
-                                        delete thisNPC.waitingTimer;
+                                switch (thisNPC.facing) {
+                                    case "n":
+                                        facingsToPickFrom.push("s");
+                                        facingsToPickFrom.push("n");
                                         break;
-                                    }
-                                }
-                            }
-                        } else {
-                            // it's a 'find' type movement that's just ended:
-                            var targetDestination = thisNPC.lastTargetDestination.split("-");
-                            thisNPC.drawnFacing = turntoFaceTile(thisNPC, targetDestination[0], targetDestination[1]);
-                            // find the "find" before this and remove all elements after that to this index:
-                            for (j = thisNPC.movementIndex; j >= 0; j--) {
-                                thisPreviousMovement = thisNPC.movement[j];
-                                if (typeof thisPreviousMovement !== 'string') {
-                                    if (thisPreviousMovement[0] == 'find') {
-                                        var numberOfElementsRemoved = thisNPC.movementIndex - (j);
-                                        thisNPC.movement.splice(j + 1, numberOfElementsRemoved);
-                                        thisNPC.movementIndex -= numberOfElementsRemoved;
-                                        thisNPC.isMoving = false;
-                                        thisNPC.forceNewMovementCheck = true;
-                                        delete thisNPC.waitingTimer;
+                                    case "s":
+                                        facingsToPickFrom.push("n");
+                                        facingsToPickFrom.push("s");
                                         break;
-                                    }
+                                    case "e":
+                                        facingsToPickFrom.push("w");
+                                        facingsToPickFrom.push("e");
+                                        break;
+                                    case "w":
+                                        facingsToPickFrom.push("e");
+                                        facingsToPickFrom.push("w");
+                                        break;
+
                                 }
+
+                                do {
+                                    thisNPC.facing = facingsToPickFrom.shift();
+                                } while (!tileIsClear(thisNPC.tileX + relativeFacing[thisNPC.facing]["x"], thisNPC.tileY + relativeFacing[thisNPC.facing]["y"]))
                             }
-                        }
-                        break;
 
-                    case 'talkToNeighbour':
-                        // find an adjacent NPC and get them to turn to face this NPC
-                        for (var j = 0; j < thisMapData[currentMap].npcs.length; j++) {
-                            if (i != j) {
-                                thisOtherNPC = thisMapData[currentMap].npcs[j];
-                                if (Math.abs(thisOtherNPC.tileX - thisNPC.tileX) <= 1) {
-                                    if (Math.abs(thisOtherNPC.tileY - thisNPC.tileY) <= 1) {
-                                        thisOtherNPC.drawnFacing = turntoFace(thisOtherNPC, thisNPC);
-                                    }
-                                }
-                            }
-                        }
-                        break;
 
-                    case 'follow':
-                        // initialise following another object:
+                            /*
+                                                    do {
+                                                        // pick a totally random facing:
+                                                        thisNPC.facing = facingsPossible[Math.floor(Math.random() * facingsPossible.length)];
+                                                        // check that the target tile is walkable:
+                                                    } while (isATerrainCollision(thisNPC.x + (relativeFacing[thisNPC.facing]["x"] * tileW), thisNPC.y + (relativeFacing[thisNPC.facing]["y"] * tileW)));
+                                                    */
+                            thisNPC.forceNewMovementCheck = false;
+                            break;
 
-                        switch (thisNextMovement[1]) {
-                            case 'hero':
-                                if (hero.npcsFollowing.length > 0) {
-                                    // already has an NPC following, so follow that:
-                                    thisNPC.following = hero.npcsFollowing[hero.npcsFollowing[(hero.npcsFollowing.length - 1)]];
-                                } else if (hero.activePets.length > 0) {
-                                    // follow the last pet:
-                                    thisNPC.following = hero.allPets[hero.activePets[(hero.activePets.length - 1)]];
-                                } else {
-                                    // follow the hero:
-                                    thisNPC.following = hero;
-                                }
-                                hero.npcsFollowing.push(thisNPC);
-                                thisNPC.movement[thisNPC.movementIndex] = "following";
-                                // keep it on the waiting item to keep checking:
-                                thisNPC.movementIndex--;
-                                thisNPC.forceNewMovementCheck = false;
-                                thisNPC.isMoving = true;
-                                break;
-                            default:
-                                //
-                        }
-                        break;
-                    case 'following':
-
-                        // is already following, need to process that movement - check proximity to target to see if pet should stop moving: 
-                        if ((isInRange(thisNPC.following.x, thisNPC.following.y, thisNPC.x, thisNPC.y, tileW * 2))) {
-                            thisNPC.isMoving = false;
-                            // keep it on the waiting item to keep checking:
-                            thisNPC.movementIndex--;
+                        case 'find':
                             thisNPC.forceNewMovementCheck = true;
-                        } else {
-                            thisNPC.isMoving = true;
-                            // check the breadcrumb for next direction:
-                            var breadcrumbFound = false;
-                            for (var k = 0; k < thisNPC.following.breadcrumb.length; k++) {
-                                if ((thisNPC.tileY) == thisNPC.following.breadcrumb[k][1]) {
-                                    if ((thisNPC.tileX - 1) == thisNPC.following.breadcrumb[k][0]) {
-                                        thisNPC.facing = "w";
-                                        breadcrumbFound = true;
-                                        break;
-                                    } else if ((thisNPC.tileX + 1) == thisNPC.following.breadcrumb[k][0]) {
-                                        thisNPC.facing = "e";
-                                        breadcrumbFound = true;
-                                        break;
-                                    }
-                                } else if ((thisNPC.tileX) == thisNPC.following.breadcrumb[k][0]) {
-                                    if ((thisNPC.tileY + 1) == thisNPC.following.breadcrumb[k][1]) {
-                                        thisNPC.facing = "s";
-                                        breadcrumbFound = true;
-                                        break;
-                                    } else if ((thisNPC.tileY - 1) == thisNPC.following.breadcrumb[k][1]) {
-                                        thisNPC.facing = "n";
-                                        breadcrumbFound = true;
-                                        break;
-                                    }
-                                }
-                            }
-
-                            if (!breadcrumbFound) {
-                                thisNPC.forceNewMovementCheck = true;
-                                if ((!thisNPC.waitingForAPath) && (typeof thisNPC.waitingTimer === "undefined")) {
-
-                                    pathfindingWorker.postMessage(["npcFindFollowing", thisNPC, thisMapData, visibleMaps, isOverWorldMap]);
-                                    // make sure to only request this once:
-                                    thisNPC.isMoving = false;
-                                    thisNPC.waitingForAPath = true;
-                                    // play animation while waiting
-                                    // thisNPC.currentAnimation = 'wait';
-                                    thisNPC.waitingTimer = 0;
-                                    // keep it on the waiting item to keep checking:
-                                    thisNPC.movementIndex--;
-                                } else {
-
-                                    thisNPC.isMoving = true;
-                                    //delete thisNPC.waitingTimer;
-                                    // thisNPC.currentAnimation = 'walk';
-                                }
-                            } else {
-                                // keep it on the waiting item to keep checking:
-                                thisNPC.movementIndex--;
-                                thisNPC.forceNewMovementCheck = false;
-                            }
-                        }
-                        break;
-
-                    case 'animate':
-                        if (typeof thisNPC.animationWaitingTimer === "undefined") {
-                            thisNPC.currentAnimation = thisNextMovement[1];
-                            // needs to stay like this for the number of animation frames multiplied by the number of times the animation is required:
-                            // (also need the animation to start from its frame 0, not use the global frame so that it plays from the first frame of the animation)
-                            thisNPC.animationWaitingTimer = currentAnimationFrame;
-                            thisNPC.movementIndex--;
-                            thisNPC.isMoving = false;
-                            thisNPC.forceNewMovementCheck = true;
-                        } else {
-                            // the +1 is because the drawn frame needs +1 so that the first frame is 1 and not 0:
-                            if (currentAnimationFrame + 1 < (thisNPC.animation[thisNPC.currentAnimation].length * thisNextMovement[2]) + thisNPC.animationWaitingTimer) {
-                                // keep it on the waiting item to keep checking:
-                                thisNPC.movementIndex--;
-                                thisNPC.forceNewMovementCheck = true;
-                            } else {
-                                thisNPC.isMoving = true;
-                                thisNPC.forceNewMovementCheck = true;
-                                thisNPC.currentAnimation = "walk";
-                                delete thisNPC.animationWaitingTimer;
-                            }
-                        }
-                        break;
-
-                    default:
-                        thisNPC.facing = thisNextMovement;
-                        thisNPC.forceNewMovementCheck = false;
-                        break;
-                }
-                if (thisNPC.isMoving && !thisNPC.hasJustGotNewPath) {
-                    // check destination tile is clear:
-                    var thisNPCsNextTile = relativeFacing[thisNPC.facing];
-                    var newTileX = thisNPC.tileX + thisNPCsNextTile['x'];
-                    var newTileY = thisNPC.tileY + thisNPCsNextTile['y'];
-                    if (!(tileIsClear(newTileX, newTileY))) {
-                        // if it's got a destination, add this blocked tile to the map, and re-path to that destination:
-                        if (thisNPC.lastTargetDestination != "") {
-                            // remove previous path:
-                            var targetDestination = thisNPC.lastTargetDestination.split("-");
-                            var pathEndIndex;
-                            // find the 'pathEnd' index:
-                            for (j = thisNPC.movement.length; j >= 0; j--) {
-                                //    console.log("checking:"+thisNPC.movement[j]);
-                                if (thisNPC.movement[j] == "pathEnd") {
-                                    pathEndIndex = j;
-                                    break;
-                                }
-                            }
-                            for (j = pathEndIndex; j >= 0; j--) {
-                                thisPreviousMovement = thisNPC.movement[j];
-                                // might not be a 'find', so check if reached the start of the array:
-                                // is there a neater way to remove the previous path? ###############
-                                if ((typeof thisPreviousMovement !== 'string') || (j == 0)) {
-                                    if ((thisPreviousMovement[0] == 'find') || (j == 0)) {
-                                        var numberOfElementsRemoved = pathEndIndex - (j);
-                                        // console.log("numberOfElementsRemoved"+numberOfElementsRemoved);
-                                        thisNPC.movement.splice(j + 1, numberOfElementsRemoved);
-                                        thisNPC.movementIndex = j;
-                                        //   console.log("end"+j);
-                                        thisNPC.isMoving = false;
-                                        thisNPC.forceNewMovementCheck = true;
-                                        delete thisNPC.waitingTimer;
-                                        break;
-                                    }
-                                }
-                            }
                             if ((!thisNPC.waitingForAPath) && (typeof thisNPC.waitingTimer === "undefined")) {
-                                // make a copy of the map with that blocked tile and any surrounding tiles marked, so it doesn't move off and immediately collide at the next tile:
-                                var tempMapData = JSON.parse(JSON.stringify(thisMapData));
-                                var testTileX, testTileY, localTestTileX, localTestTileY, whichTestMap;
-                                for (var k = -3; k <= 3; k++) {
-                                    for (var l = -3; l <= 3; l++) {
-
-                                        testTileX = newTileX + k;
-                                        testTileY = newTileY + l;
-
-    
-
-                               
-                                           
-                                                if (!(tileIsClear(testTileX, testTileY))) {
-
-localTestTileX = getLocalCoordinatesX(testTileX);
-     localTestTileY = getLocalCoordinatesY(testTileY);
-     whichTestMap = findMapNumberFromGlobalCoordinates(testTileX, testTileY);
-
-                                                    tempMapData[whichTestMap].collisions[localTestTileX][localTestTileY] = 1;
-                                                }
-                                            
-                                        
-                                    }
-                                }
-                                pathfindingWorker.postMessage(['tile', targetDestination[0], targetDestination[1], thisNPC, tempMapData, visibleMaps, isOverWorldMap]);
+                                pathfindingWorker.postMessage([thisNextMovement[1], thisNPC, thisMapData, visibleMaps, isOverWorldMap]);
                                 // make sure to only request this once:
                                 thisNPC.isMoving = false;
                                 thisNPC.waitingForAPath = true;
                                 thisNPC.waitingTimer = 0;
+
                                 // play animation while waiting
                                 thisNPC.currentAnimation = 'wait';
-                                // #####
+                                // thisNextMovement[2]
+                                // #######
+
                                 // keep the NPC waiting:
                                 thisNPC.movementIndex--;
+                            } else {
+                                // check timer:
+                                thisNPC.waitingTimer++;
+                                if (thisNPC.waitingTimer > thisNextMovement[3]) {
+                                    thisNPC.isMoving = true;
+                                    // set this so it doesn't do the check for a tile being blocked before it's turned to its new facing:
+                                    thisNPC.hasJustGotNewPath = true;
+                                    thisNPC.currentAnimation = 'walk';
+                                    delete thisNPC.waitingTimer;
+                                } else {
+                                    // keep waiting until got a path, and the timer has expired
+                                    thisNPC.movementIndex--;
+                                    thisNPC.isMoving = false;
+                                }
                             }
-                            // end duplicated code
+                            break;
+
+                        case 'proximity':
+                            // wait for the hero to be nearby
+                            thisNPC.forceNewMovementCheck = true;
+                            var tileRadius = thisNextMovement[1];
+                            if ((isInRange(hero.x, hero.y, thisNPC.x, thisNPC.y, tileRadius * tileW))) {
+                                // pick up the next movement code on the next loop round:
+                                thisNPC.isMoving = true;
+                            } else {
+                                thisNPC.isMoving = false;
+                                // keep it on the waiting item to keep checking:
+                                thisNPC.movementIndex--;
+                            }
+                            break;
+
+                        case 'remove':
+                            // remove the element before, as well as this "remove" instruction (so 2 elements to be removed):
+                            thisNPC.movement.splice((thisNPC.movementIndex - 1), 2);
+                            break;
+
+                        case 'pathEnd':
+                            var thisPreviousMovement;
+                            // check if it's a escort quest NPC that's come to the end of their pathfinding path:
+                            if (typeof thisNPC.following !== "undefined") {
+                                for (j = thisNPC.movementIndex; j >= 0; j--) {
+                                    thisPreviousMovement = thisNPC.movement[j];
+                                    if (typeof thisPreviousMovement === 'string') {
+                                        if (thisPreviousMovement == 'following') {
+                                            var numberOfElementsRemoved = thisNPC.movementIndex - (j);
+                                            thisNPC.movement.splice(j + 1, numberOfElementsRemoved);
+                                            // this needs to be one more than the equivilient for 'find' types:
+                                            thisNPC.movementIndex -= (numberOfElementsRemoved + 1);
+                                            thisNPC.isMoving = true;
+                                            thisNPC.forceNewMovementCheck = true;
+                                            delete thisNPC.waitingTimer;
+                                            break;
+                                        }
+                                    }
+                                }
+                            } else {
+                                // it's a 'find' type movement that's just ended:
+                                var targetDestination = thisNPC.lastTargetDestination.split("-");
+                                thisNPC.drawnFacing = turntoFaceTile(thisNPC, targetDestination[0], targetDestination[1]);
+                                // find the "find" before this and remove all elements after that to this index:
+                                for (j = thisNPC.movementIndex; j >= 0; j--) {
+                                    thisPreviousMovement = thisNPC.movement[j];
+                                    if (typeof thisPreviousMovement !== 'string') {
+                                        if (thisPreviousMovement[0] == 'find') {
+                                            var numberOfElementsRemoved = thisNPC.movementIndex - (j);
+                                            thisNPC.movement.splice(j + 1, numberOfElementsRemoved);
+                                            thisNPC.movementIndex -= numberOfElementsRemoved;
+                                            thisNPC.isMoving = false;
+                                            thisNPC.forceNewMovementCheck = true;
+                                            delete thisNPC.waitingTimer;
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                            break;
+
+                        case 'talkToNeighbour':
+                            // find an adjacent NPC and get them to turn to face this NPC
+                            for (var j = 0; j < thisMapData[currentMap].npcs.length; j++) {
+                                if (i != j) {
+                                    thisOtherNPC = thisMapData[currentMap].npcs[j];
+                                    if (Math.abs(thisOtherNPC.tileX - thisNPC.tileX) <= 1) {
+                                        if (Math.abs(thisOtherNPC.tileY - thisNPC.tileY) <= 1) {
+                                            thisOtherNPC.drawnFacing = turntoFace(thisOtherNPC, thisNPC);
+                                        }
+                                    }
+                                }
+                            }
+                            break;
+
+                        case 'follow':
+                            // initialise following another object:
+
+                            switch (thisNextMovement[1]) {
+                                case 'hero':
+                                    if (hero.npcsFollowing.length > 0) {
+                                        // already has an NPC following, so follow that:
+                                        thisNPC.following = hero.npcsFollowing[hero.npcsFollowing[(hero.npcsFollowing.length - 1)]];
+                                    } else if (hero.activePets.length > 0) {
+                                        // follow the last pet:
+                                        thisNPC.following = hero.allPets[hero.activePets[(hero.activePets.length - 1)]];
+                                    } else {
+                                        // follow the hero:
+                                        thisNPC.following = hero;
+                                    }
+                                    hero.npcsFollowing.push(thisNPC);
+                                    thisNPC.movement[thisNPC.movementIndex] = "following";
+                                    // keep it on the waiting item to keep checking:
+                                    thisNPC.movementIndex--;
+                                    thisNPC.forceNewMovementCheck = false;
+                                    thisNPC.isMoving = true;
+                                    break;
+                                default:
+                                    //
+                            }
+                            break;
+                        case 'following':
+
+                            // is already following, need to process that movement - check proximity to target to see if pet should stop moving: 
+                            if ((isInRange(thisNPC.following.x, thisNPC.following.y, thisNPC.x, thisNPC.y, tileW * 2))) {
+                                thisNPC.isMoving = false;
+                                // keep it on the waiting item to keep checking:
+                                thisNPC.movementIndex--;
+                                thisNPC.forceNewMovementCheck = true;
+                            } else {
+                                thisNPC.isMoving = true;
+                                // check the breadcrumb for next direction:
+                                var breadcrumbFound = false;
+                                for (var k = 0; k < thisNPC.following.breadcrumb.length; k++) {
+                                    if ((thisNPC.tileY) == thisNPC.following.breadcrumb[k][1]) {
+                                        if ((thisNPC.tileX - 1) == thisNPC.following.breadcrumb[k][0]) {
+                                            thisNPC.facing = "w";
+                                            breadcrumbFound = true;
+                                            break;
+                                        } else if ((thisNPC.tileX + 1) == thisNPC.following.breadcrumb[k][0]) {
+                                            thisNPC.facing = "e";
+                                            breadcrumbFound = true;
+                                            break;
+                                        }
+                                    } else if ((thisNPC.tileX) == thisNPC.following.breadcrumb[k][0]) {
+                                        if ((thisNPC.tileY + 1) == thisNPC.following.breadcrumb[k][1]) {
+                                            thisNPC.facing = "s";
+                                            breadcrumbFound = true;
+                                            break;
+                                        } else if ((thisNPC.tileY - 1) == thisNPC.following.breadcrumb[k][1]) {
+                                            thisNPC.facing = "n";
+                                            breadcrumbFound = true;
+                                            break;
+                                        }
+                                    }
+                                }
+
+                                if (!breadcrumbFound) {
+                                    thisNPC.forceNewMovementCheck = true;
+                                    if ((!thisNPC.waitingForAPath) && (typeof thisNPC.waitingTimer === "undefined")) {
+
+                                        pathfindingWorker.postMessage(["npcFindFollowing", thisNPC, thisMapData, visibleMaps, isOverWorldMap]);
+                                        // make sure to only request this once:
+                                        thisNPC.isMoving = false;
+                                        thisNPC.waitingForAPath = true;
+                                        // play animation while waiting
+                                        // thisNPC.currentAnimation = 'wait';
+                                        thisNPC.waitingTimer = 0;
+                                        // keep it on the waiting item to keep checking:
+                                        thisNPC.movementIndex--;
+                                    } else {
+
+                                        thisNPC.isMoving = true;
+                                        //delete thisNPC.waitingTimer;
+                                        // thisNPC.currentAnimation = 'walk';
+                                    }
+                                } else {
+                                    // keep it on the waiting item to keep checking:
+                                    thisNPC.movementIndex--;
+                                    thisNPC.forceNewMovementCheck = false;
+                                }
+                            }
+                            break;
+
+                        case 'animate':
+                            if (typeof thisNPC.animationWaitingTimer === "undefined") {
+                                thisNPC.currentAnimation = thisNextMovement[1];
+                                // needs to stay like this for the number of animation frames multiplied by the number of times the animation is required:
+                                // (also need the animation to start from its frame 0, not use the global frame so that it plays from the first frame of the animation)
+                                thisNPC.animationWaitingTimer = currentAnimationFrame;
+                                thisNPC.movementIndex--;
+                                thisNPC.isMoving = false;
+                                thisNPC.forceNewMovementCheck = true;
+                            } else {
+                                // the +1 is because the drawn frame needs +1 so that the first frame is 1 and not 0:
+                                if (currentAnimationFrame + 1 < (thisNPC.animation[thisNPC.currentAnimation].length * thisNextMovement[2]) + thisNPC.animationWaitingTimer) {
+                                    // keep it on the waiting item to keep checking:
+                                    thisNPC.movementIndex--;
+                                    thisNPC.forceNewMovementCheck = true;
+                                } else {
+                                    thisNPC.isMoving = true;
+                                    thisNPC.forceNewMovementCheck = true;
+                                    thisNPC.currentAnimation = "walk";
+                                    delete thisNPC.animationWaitingTimer;
+                                }
+                            }
+                            break;
+
+                        default:
+                            thisNPC.facing = thisNextMovement;
+                            thisNPC.forceNewMovementCheck = false;
+                            break;
+                    }
+                    if (thisNPC.isMoving && !thisNPC.hasJustGotNewPath) {
+                        // check destination tile is clear:
+                        var thisNPCsNextTile = relativeFacing[thisNPC.facing];
+                        var newTileX = thisNPC.tileX + thisNPCsNextTile['x'];
+                        var newTileY = thisNPC.tileY + thisNPCsNextTile['y'];
+                        if (!(tileIsClear(newTileX, newTileY))) {
+                            // if it's got a destination, add this blocked tile to the map, and re-path to that destination:
+                            if (thisNPC.lastTargetDestination != "") {
+                                // remove previous path:
+                                var targetDestination = thisNPC.lastTargetDestination.split("-");
+                                var pathEndIndex;
+                                // find the 'pathEnd' index:
+                                for (j = thisNPC.movement.length; j >= 0; j--) {
+                                    //    console.log("checking:"+thisNPC.movement[j]);
+                                    if (thisNPC.movement[j] == "pathEnd") {
+                                        pathEndIndex = j;
+                                        break;
+                                    }
+                                }
+                                for (j = pathEndIndex; j >= 0; j--) {
+                                    thisPreviousMovement = thisNPC.movement[j];
+                                    // might not be a 'find', so check if reached the start of the array:
+                                    // is there a neater way to remove the previous path? ###############
+                                    if ((typeof thisPreviousMovement !== 'string') || (j == 0)) {
+                                        if ((thisPreviousMovement[0] == 'find') || (j == 0)) {
+                                            var numberOfElementsRemoved = pathEndIndex - (j);
+                                            // console.log("numberOfElementsRemoved"+numberOfElementsRemoved);
+                                            thisNPC.movement.splice(j + 1, numberOfElementsRemoved);
+                                            thisNPC.movementIndex = j;
+                                            //   console.log("end"+j);
+                                            thisNPC.isMoving = false;
+                                            thisNPC.forceNewMovementCheck = true;
+                                            delete thisNPC.waitingTimer;
+                                            break;
+                                        }
+                                    }
+                                }
+                                if ((!thisNPC.waitingForAPath) && (typeof thisNPC.waitingTimer === "undefined")) {
+                                    // make a copy of the map with that blocked tile and any surrounding tiles marked, so it doesn't move off and immediately collide at the next tile:
+                                    var tempMapData = JSON.parse(JSON.stringify(thisMapData));
+                                    var testTileX, testTileY, localTestTileX, localTestTileY, whichTestMap;
+                                    for (var k = -3; k <= 3; k++) {
+                                        for (var l = -3; l <= 3; l++) {
+
+                                            testTileX = newTileX + k;
+                                            testTileY = newTileY + l;
+
+
+
+
+
+                                            if (!(tileIsClear(testTileX, testTileY))) {
+
+                                                localTestTileX = getLocalCoordinatesX(testTileX);
+                                                localTestTileY = getLocalCoordinatesY(testTileY);
+                                                whichTestMap = findMapNumberFromGlobalCoordinates(testTileX, testTileY);
+
+                                                tempMapData[whichTestMap].collisions[localTestTileX][localTestTileY] = 1;
+                                            }
+
+
+                                        }
+                                    }
+                                    pathfindingWorker.postMessage(['tile', targetDestination[0], targetDestination[1], thisNPC, tempMapData, visibleMaps, isOverWorldMap]);
+                                    // make sure to only request this once:
+                                    thisNPC.isMoving = false;
+                                    thisNPC.waitingForAPath = true;
+                                    thisNPC.waitingTimer = 0;
+                                    // play animation while waiting
+                                    thisNPC.currentAnimation = 'wait';
+                                    // #####
+                                    // keep the NPC waiting:
+                                    thisNPC.movementIndex--;
+                                }
+                                // end duplicated code
+                            }
                         }
                     }
                 }
             }
         }
     }
-}
 }
 
 
@@ -10911,14 +10771,14 @@ function draw() {
         for (var m = 0; m < visibleMaps.length; m++) {
 
             map = thisMapData[visibleMaps[m]].terrain;
-          
-            if(isOverWorldMap) {
-            thisMapsGlobalOffsetX = thisMapData[(visibleMaps[m])].globalCoordinateTile0X * worldMapTileLength;
-            thisMapsGlobalOffsetY = thisMapData[(visibleMaps[m])].globalCoordinateTile0Y * worldMapTileLength;
-        } else {
-            thisMapsGlobalOffsetX = 0;
-            thisMapsGlobalOffsetY = 0;
-        }
+
+            if (isOverWorldMap) {
+                thisMapsGlobalOffsetX = thisMapData[(visibleMaps[m])].globalCoordinateTile0X * worldMapTileLength;
+                thisMapsGlobalOffsetY = thisMapData[(visibleMaps[m])].globalCoordinateTile0Y * worldMapTileLength;
+            } else {
+                thisMapsGlobalOffsetX = 0;
+                thisMapsGlobalOffsetY = 0;
+            }
             for (var i = 0; i < mapTilesX; i++) {
                 for (var j = 0; j < mapTilesY; j++) {
                     // the tile coordinates should be positioned by i,j but the way the map is drawn, the reference in the array is j,i
@@ -11085,44 +10945,44 @@ function draw() {
         assetsToDraw.sort(sortByLowestValue);
 
 
-        
-
-      
 
 
-if(isOverWorldMap) {
-
-// draw the sea:
-gameContext.rect(0, 0, canvasWidth, canvasHeight);
-        gameContext.fillStyle = oceanPattern;
-        gameContext.fill();
 
 
-        var thisMapsGlobalOffsetX, thisMapsGlobalOffsetY, currentWorldMapPosX, currentWorldMapPosY;
-        // find and draw any visible maps:
-        for (var i = 0; i < visibleMaps.length; i++) {
 
-            thisMapsGlobalOffsetX = thisMapData[(visibleMaps[i])].globalCoordinateTile0X * worldMapTileLength;
-            thisMapsGlobalOffsetY = thisMapData[(visibleMaps[i])].globalCoordinateTile0Y * worldMapTileLength;
-            currentWorldMapPosX = Math.floor((canvasWidth / 2) + getTileIsoCentreCoordX(0 + thisMapsGlobalOffsetX, 0 + thisMapsGlobalOffsetY) - hero.isox - (worldMapWidthPx / 2));
-            currentWorldMapPosY = Math.floor((canvasHeight / 2) + getTileIsoCentreCoordY(0 + thisMapsGlobalOffsetX, 0 + thisMapsGlobalOffsetY) - hero.isoy - (tileH / 2));
-            // draw the current map background in place:
-            if (typeof backgroundImgs[(visibleMaps[i])] !== "undefined") {
-                gameContext.drawImage(backgroundImgs[(visibleMaps[i])], currentWorldMapPosX, currentWorldMapPosY);
+        if (isOverWorldMap) {
+
+            // draw the sea:
+            gameContext.rect(0, 0, canvasWidth, canvasHeight);
+            gameContext.fillStyle = oceanPattern;
+            gameContext.fill();
+
+
+            var thisMapsGlobalOffsetX, thisMapsGlobalOffsetY, currentWorldMapPosX, currentWorldMapPosY;
+            // find and draw any visible maps:
+            for (var i = 0; i < visibleMaps.length; i++) {
+
+                thisMapsGlobalOffsetX = thisMapData[(visibleMaps[i])].globalCoordinateTile0X * worldMapTileLength;
+                thisMapsGlobalOffsetY = thisMapData[(visibleMaps[i])].globalCoordinateTile0Y * worldMapTileLength;
+                currentWorldMapPosX = Math.floor((canvasWidth / 2) + getTileIsoCentreCoordX(0 + thisMapsGlobalOffsetX, 0 + thisMapsGlobalOffsetY) - hero.isox - (worldMapWidthPx / 2));
+                currentWorldMapPosY = Math.floor((canvasHeight / 2) + getTileIsoCentreCoordY(0 + thisMapsGlobalOffsetX, 0 + thisMapsGlobalOffsetY) - hero.isoy - (tileH / 2));
+                // draw the current map background in place:
+                if (typeof backgroundImgs[(visibleMaps[i])] !== "undefined") {
+                    gameContext.drawImage(backgroundImgs[(visibleMaps[i])], currentWorldMapPosX, currentWorldMapPosY);
+                }
+            }
+        } else {
+            // draw a black background:
+            gameContext.fillStyle = "#000000";
+            gameContext.fillRect(0, 0, canvasWidth, canvasHeight);
+            gameContext.fill();
+
+
+            var thisMapTilesX = thisMapData[currentMap].terrain[0].length;
+            if (typeof backgroundImgs[currentMap] !== "undefined") {
+                gameContext.drawImage(backgroundImgs[currentMap], Math.floor(getTileIsoCentreCoordX(0, thisMapTilesX - 1) - hero.isox + tileW / 2 + canvasWidth / 2), Math.floor(getTileIsoCentreCoordY(0, 0) - hero.isoy - (tileH / 2) + canvasHeight / 2));
             }
         }
-} else {
-// draw a black background:
-   gameContext.fillStyle = "#000000";
-        gameContext.fillRect(0, 0, canvasWidth, canvasHeight);
-        gameContext.fill();
-
-
-                        var thisMapTilesX = thisMapData[currentMap].terrain[0].length;
-                if (typeof backgroundImgs[currentMap] !== "undefined") {
-                         gameContext.drawImage(backgroundImgs[currentMap], Math.floor(getTileIsoCentreCoordX(0, thisMapTilesX - 1) - hero.isox + tileW/2 + canvasWidth / 2), Math.floor(getTileIsoCentreCoordY(0, 0) - hero.isoy -(tileH/2) + canvasHeight / 2));
-                     }
-}
 
 
 

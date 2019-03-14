@@ -12,6 +12,10 @@ if(isset($_GET["debug"])) {
 }
 
 
+$randomDungeonName = '';
+if(isset($_GET["dungeonName"])) {
+         $randomDungeonName = $_GET["dungeonName"];  
+}
 
 
 // Shop config: 
@@ -114,7 +118,16 @@ if(stripos($map, "housing") !== false) {
 
     $mapDataFile = file_get_contents('../data/chr' .  $housingDetails[1] . '/housing/' . $housingDetails[2] . '.json');
 } else {
+    if($map>0) {
     $mapDataFile = file_get_contents('../data/chr' .  $chr . '/map' . $map . '.json');
+} else {
+
+// get procedural map:
+    $isEmbeddedInGetMap = true;
+    include($_SERVER['DOCUMENT_ROOT'] . "/game-world/generateCircularDungeonMap.php");
+
+
+}
 }
 
 
