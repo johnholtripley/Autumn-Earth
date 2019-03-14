@@ -13,8 +13,12 @@ if(isset($_GET["debug"])) {
 
 
 $randomDungeonName = '';
+$randomDungeonSeed = '';
 if(isset($_GET["dungeonName"])) {
          $randomDungeonName = $_GET["dungeonName"];  
+}
+if(isset($_GET["seed"])) {
+         $randomDungeonSeed = $_GET["seed"];  
 }
 
 

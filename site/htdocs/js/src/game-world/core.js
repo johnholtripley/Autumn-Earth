@@ -192,7 +192,6 @@ function prepareCoreAssets() {
 
 
 function processInitialMap() {
-console.log("processInitialMap called");
     var startTileOffsetX, startTileOffsetY;
     var startTileOffsetXNum = 0;
     var startTileOffsetYNum = 0;
@@ -480,12 +479,7 @@ function loadNewVisibleMap(whichNewMap) {
     if (visibleMapsLoading.indexOf(whichNewMap) === -1) {
         visibleMapsLoading.push(whichNewMap);
         var mapFilePath = '/game-world/getMap.php?chr=' + characterId + '&map=' + whichNewMap;
-     /*   if (whichNewMap < 0) {
-            mapFilePath = '/game-world/generateCircularDungeonMap.php?dungeonName=' + randomDungeonName + '&requestedMap=' + whichNewMap;
-        }
-       */
         loadNewVisibleJSON(mapFilePath, whichNewMap);
-        //  console.log("whichNewMap - loading in "+whichNewMap+" - "+visibleMapsLoading.indexOf(whichNewMap));
     }
 }
 
@@ -493,23 +487,12 @@ function loadNewVisibleMap(whichNewMap) {
 function loadMapJSON(mapFilePath) {
     getJSON(mapFilePath, function(data) {
             thisMapData[data.mapData.map.mapId] = data.mapData.map;
-            // if (data.mapData.mapId == currentMap) {
             currentMap = data.mapData.map.mapId;
             visibleMaps.push(parseInt(currentMap));
             thisMapShopItemIds = data.shops.allItemIds;
             UI.buildShop(data.shops.markup);
-            console.log("got new map JSON");
-            console.log("currentMap: "+currentMap)
-            console.log(visibleMaps);
             processInitialMap();
             isOverWorldMap = !data.mapData.map.isInside;
-
-
-
-
-
-
-            // }
             if (isOverWorldMap) {
                 updateVisibleMaps();
             }
@@ -531,6 +514,7 @@ function loadMap() {
     }
     if (randomDungeonName != "") {
         dungeonAppend = '&dungeonName=' + randomDungeonName;
+        dungeonAppend += '&seed=1552609714';
     }
     loadMapJSON('/game-world/getMap.php?chr=' + characterId + '&map=' + newMap + dungeonAppend);
 }
@@ -3208,10 +3192,10 @@ function isVisibleOnScreen(isoX, isoY) {
     var horizontalDistance = Math.abs(hero.isox - isoX);
     var verticalDistance = Math.abs(hero.isoy - isoY);
     // needs to take into account the item's width and height ######
-    if (horizontalDistance > (canvasWidth / 2)) {
+    if (horizontalDistance > (canvasWidth / 2)+tileW) {
         return false;
     }
-    if (verticalDistance > (canvasHeight / 2)) {
+    if (verticalDistance > (canvasHeight / 2)+tileW) {
         return false;
     }
     return true;
@@ -3480,7 +3464,7 @@ function draw() {
 
             var thisMapTilesX = thisMapData[currentMap].terrain[0].length;
             if (typeof backgroundImgs[currentMap] !== "undefined") {
-                gameContext.drawImage(backgroundImgs[currentMap], Math.floor(getTileIsoCentreCoordX(0, thisMapTilesX - 1) - hero.isox + tileW / 2 + canvasWidth / 2), Math.floor(getTileIsoCentreCoordY(0, 0) - hero.isoy - (tileH / 2) + canvasHeight / 2));
+                gameContext.drawImage(backgroundImgs[currentMap], Math.floor(getTileIsoCentreCoordX(0, thisMapTilesX - 1) - hero.isox - tileW / 2 + canvasWidth / 2), Math.floor(getTileIsoCentreCoordY(0, 0) - hero.isoy - (tileH / 2) + canvasHeight / 2));
             }
         }
 

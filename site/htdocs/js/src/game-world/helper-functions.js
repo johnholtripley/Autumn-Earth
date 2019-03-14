@@ -128,36 +128,26 @@ function getElevation(tileX, tileY) {
 
 
 
-
-
 function isATerrainCollision(x, y) {
     var globalTileX = getTileX(x);
     var globalTileY = getTileY(y);
-    var tileX = getLocalCoordinatesX(globalTileX);
-    var tileY = getLocalCoordinatesY(globalTileY);
-  var thisMap;
+    var tileX, tileY;
+    var thisMap;
     if (isOverWorldMap) {
-    
+        tileX = getLocalCoordinatesX(globalTileX);
+        tileY = getLocalCoordinatesY(globalTileY);
         if ((globalTileX < 0) || (globalTileY < 0) || (globalTileX >= (worldMapTileLength * worldMap[0].length)) || (globalTileY >= (worldMapTileLength * worldMap.length))) {
             return 1;
         }
-          thisMap = findMapNumberFromGlobalCoordinates(globalTileX, globalTileY);
+        thisMap = findMapNumberFromGlobalCoordinates(globalTileX, globalTileY);
     } else {
+        tileX = globalTileX;
+        tileY = globalTileY;
         if ((tileX < 0) || (tileY < 0) || (tileX >= mapTilesX) || (tileY >= mapTilesY)) {
             return 1;
         }
     }
-   thisMap = currentMap;
-
-    // check if defined rather than boundaries as could be moving into an adjoining map:
-    /*
-    if (typeof thisMapData[thisMap].collisions[tileY] === "undefined") {
-        return 1;
-    }
-    if (typeof thisMapData[thisMap].collisions[tileY][tileX] === "undefined") {
-        return 1;
-    }
-    */
+    thisMap = currentMap;
     switch (thisMapData[thisMap].collisions[tileY][tileX]) {
         case 1:
             // is a collision:

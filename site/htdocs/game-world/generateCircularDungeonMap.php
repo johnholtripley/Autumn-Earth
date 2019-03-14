@@ -483,7 +483,7 @@ if($proceduralDebug) {
 
 function init()
 {
-    global $nodeList, $jointList, $canvaDimension, $keyColours, $storedSeed, $unadjustedSeed, $proceduralDebug, $thisMapsId, $thisPlayersId, $dungeonName, $thisMapsId, $isFirstTime, $isIncluded, $proceduralMap, $map, $chr, $randomDungeonName;
+    global $nodeList, $jointList, $canvaDimension, $keyColours, $storedSeed, $unadjustedSeed, $proceduralDebug, $thisMapsId, $thisPlayersId, $dungeonName, $thisMapsId, $isFirstTime, $isIncluded, $proceduralMap, $map, $chr, $randomDungeonName, $randomDungeonSeed;
 if($isIncluded) {
 $thisMapsId = intval($map);
 $thisPlayersId = $chr;
@@ -505,6 +505,23 @@ $thisPlayersId = $chr;
     $canvaDimension = 600;
     $nodeList       = array();
     $jointList      = array();
+
+
+if($isIncluded) {
+
+   if (($randomDungeonSeed != '') && $isFirstTime) {
+        $storedSeed = intval($_GET["seed"]);
+        // allow the seed to be regenerated if this seed fails:
+        $isFirstTime = false;
+    } else {
+        // http://php.net/manual/en/function.mt_srand.php
+        list($usec, $sec) = explode(' ', microtime());
+        $storedSeed       = floor((float) $sec + ((float) $usec * 100000));
+    }
+
+} else {
+
+
     if (isset($_GET["seed"]) && $isFirstTime) {
         $storedSeed = intval($_GET["seed"]);
         // allow the seed to be regenerated if this seed fails:
@@ -514,6 +531,7 @@ $thisPlayersId = $chr;
         list($usec, $sec) = explode(' ', microtime());
         $storedSeed       = floor((float) $sec + ((float) $usec * 100000));
     }
+}
 
     if($isIncluded) {
 $dungeonName = $randomDungeonName;
@@ -3728,8 +3746,8 @@ $bgImage = imagecreatefrompng('../images/game-world/backgrounds/'.$dungeonName.'
 $canvasWidth =  imagesx($bgImage); 
  $canvasHeight =  imagesy($bgImage); 
 
-$canvasOffsetX = 400;
-$canvasOffsetY = 300;
+$canvasOffsetX = 0;
+$canvasOffsetY = 0;
 
 $fullImage = imagecreatetruecolor(imagesx($bgImage), imagesy($bgImage));
 
