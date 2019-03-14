@@ -127,6 +127,9 @@ if(stripos($map, "housing") !== false) {
     include($_SERVER['DOCUMENT_ROOT'] . "/game-world/generateCircularDungeonMap.php");
 
 
+$mapDataFile = $thisMapDataJson;
+
+
 }
 }
 

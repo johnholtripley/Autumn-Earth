@@ -483,9 +483,9 @@ if($proceduralDebug) {
 
 function init()
 {
-    global $nodeList, $jointList, $canvaDimension, $keyColours, $storedSeed, $unadjustedSeed, $proceduralDebug, $thisMapsId, $thisPlayersId, $dungeonName, $thisMapsId, $isFirstTime, $isIncluded, $map, $chr, $randomDungeonName;
+    global $nodeList, $jointList, $canvaDimension, $keyColours, $storedSeed, $unadjustedSeed, $proceduralDebug, $thisMapsId, $thisPlayersId, $dungeonName, $thisMapsId, $isFirstTime, $isIncluded, $proceduralMap, $map, $chr, $randomDungeonName;
 if($isIncluded) {
-$thisMapsId = $map;
+$thisMapsId = intval($map);
 $thisPlayersId = $chr;
 } else {
       $thisMapsId = $_GET['requestedMap'];
@@ -524,9 +524,9 @@ $dungeonName = $randomDungeonName;
 
 
     
-    $mapFilename = "../data/chr" . $thisPlayersId . "/dungeon/".$dungeonName."/" . $thisMapsId . '.json';
-    if ((is_file($mapFilename)) && !$proceduralDebug) {
-        header("Location: /" . $mapFilename);
+    $proceduralMapFilename = "../data/chr" . $thisPlayersId . "/dungeon/".$dungeonName."/" . $thisMapsId . '.json';
+    if ((is_file($proceduralMapFilename)) && !$proceduralDebug && !$isIncluded) {
+        header("Location: /" . $proceduralMapFilename);
         die();
     }
 
@@ -1842,7 +1842,7 @@ if($proceduralDebug) {
 
 
 function outputJSONContent() {
-global $proceduralDebug, $map, $itemMap, $drawnTileDoors, $drawnTileKeys, $mapTilesX, $mapTilesY, $storedSeed, $thisMapsId, $thisPlayersId, $entranceX, $entranceY, $exitX, $exitY, $dungeonName, $dungeonDetails, $outputJSON, $templateGraphicsToAppend, $templateNPCsToAppend, $templateItemsToAppend, $templateHotspotsToAppend, $allTemplateJSON, $templateOffsetX, $templateOffsetY, $placedItems, $doorsJSON, $unadjustedSeed;
+global $proceduralDebug, $proceduralMap, $itemMap, $drawnTileDoors, $drawnTileKeys, $proceduralMapTilesX, $proceduralMapTilesY, $storedSeed, $thisMapsId, $thisPlayersId, $entranceX, $entranceY, $exitX, $exitY, $dungeonName, $dungeonDetails, $outputJSON, $templateGraphicsToAppend, $templateNPCsToAppend, $templateItemsToAppend, $templateHotspotsToAppend, $allTemplateJSON, $templateOffsetX, $templateOffsetY, $placedItems, $doorsJSON, $unadjustedSeed, $isIncluded;
 
 
 
@@ -1860,13 +1860,13 @@ $outputJSON .= '"entrance": ['.$entranceX.','.$entranceY.'],';
 $collisionsString ='"collisions": [';
 
 
-  for ($i = 0; $i < $mapTilesX; $i++) {   
+  for ($i = 0; $i < $proceduralMapTilesX; $i++) {   
   $collisionsString .= '[';   
-            for ($j = 0; $j < $mapTilesY; $j++) {
-        if($map[$i][$j] == "e") {
+            for ($j = 0; $j < $proceduralMapTilesY; $j++) {
+        if($proceduralMap[$i][$j] == "e") {
             // entrance or exit:
             $collisionsString.= '"d", ';
-        } else if($map[$i][$j] == "#") {
+        } else if($proceduralMap[$i][$j] == "#") {
             $collisionsString.= '1, ';
         } else {
             $collisionsString.= '0, ';
@@ -1886,13 +1886,13 @@ $collisionsString .= ']';
 
  $terrainString = '"terrain": [';
 
- for ($i = 0; $i < $mapTilesX; $i++) {   
+ for ($i = 0; $i < $proceduralMapTilesX; $i++) {   
   $terrainString .= '[';   
-            for ($j = 0; $j < $mapTilesY; $j++) {
+            for ($j = 0; $j < $proceduralMapTilesY; $j++) {
 
 
 
-switch ($map[$i][$j]) {
+switch ($proceduralMap[$i][$j]) {
     case "e":
         $terrainString.= '4, ';
         break;
@@ -1924,9 +1924,9 @@ $terrainString .= ']';
 
 $elevationString = '"properties": [';
 
-  for ($i = 0; $i < $mapTilesX; $i++) {   
+  for ($i = 0; $i < $proceduralMapTilesX; $i++) {   
   $elevationString .= '[';   
-            for ($j = 0; $j < $mapTilesY; $j++) {
+            for ($j = 0; $j < $proceduralMapTilesY; $j++) {
                $elevationString.= '{}, ';
                 }
                 // remove last comma:
@@ -2144,7 +2144,7 @@ $outputJSON .= '"hiddenResourceTier": '.$resourceTier;
 
 //$outputJSON .= ',"showOnlyLineOfSight": true';
 $outputJSON .= '}}';
-if(!$proceduralDebug) {
+if(!$proceduralDebug && !$isIncluded) {
     header("Content-Type: application/json");
 }
 
@@ -2154,8 +2154,8 @@ if(!$proceduralDebug) {
 
 
 
-  $mapFilename = "../data/chr" . $thisPlayersId . "/dungeon/".$dungeonName."/" . $thisMapsId . ".json";  
-    if(!($filename=fopen($mapFilename,"w"))) {
+  $proceduralMapFilename = "../data/chr" . $thisPlayersId . "/dungeon/".$dungeonName."/" . $thisMapsId . ".json";  
+    if(!($filename=fopen($proceduralMapFilename,"w"))) {
             // error handling?
         }
         fwrite($filename, $outputJSON); 
@@ -2171,7 +2171,7 @@ if(!$proceduralDebug) {
 
 
 function outputTileMap() {
-global $map, $mapTilesX, $mapTilesY, $canvaDimension, $drawnTileDoors, $proceduralDebug, $keyColours, $drawnTileKeys;
+global $proceduralMap, $proceduralMapTilesX, $proceduralMapTilesY, $canvaDimension, $drawnTileDoors, $proceduralDebug, $keyColours, $drawnTileKeys;
 
 if($proceduralDebug) {
     echo '<div class="sequenceBlock">';
@@ -2187,10 +2187,10 @@ $drawnOffset = 20;
 
 
 
-  for ($i = 0; $i < $mapTilesX; $i++) {      
-            for ($j = 0; $j < $mapTilesY; $j++) {
+  for ($i = 0; $i < $proceduralMapTilesX; $i++) {      
+            for ($j = 0; $j < $proceduralMapTilesY; $j++) {
         
-        switch ($map[$j][$i]) {
+        switch ($proceduralMap[$j][$i]) {
     case "#":
     // non-walkable tile:
        imagefilledrectangle($outputCanvas,($i)*$drawnTileSize+$drawnOffset,($j)*$drawnTileSize+$drawnOffset,($i+1)*$drawnTileSize+$drawnOffset,($j+1)*$drawnTileSize+$drawnOffset,  imagecolorallocate($outputCanvas, 75, 75, 75));
@@ -2283,13 +2283,13 @@ if($proceduralDebug) {
 
 
 function tileIsSurrounded($tileCheckX,$tileCheckY) {
-  global $map, $mapTilesX, $mapTilesY;
+  global $proceduralMap, $proceduralMapTilesX, $proceduralMapTilesY;
   $thisTileIsSurrounded = false;
   if($tileCheckX>=0) {
     if($tileCheckY>=0) {
-      if($tileCheckX<$mapTilesX) {
-        if($tileCheckY<$mapTilesY) {
-          if(($map[$tileCheckY][$tileCheckX] == "#") || ($map[$tileCheckY][$tileCheckX] == "-")){
+      if($tileCheckX<$proceduralMapTilesX) {
+        if($tileCheckY<$proceduralMapTilesY) {
+          if(($proceduralMap[$tileCheckY][$tileCheckX] == "#") || ($proceduralMap[$tileCheckY][$tileCheckX] == "-")){
             $thisTileIsSurrounded = true;
           }
         } else {
@@ -2438,7 +2438,7 @@ $storePositionZero = $position[0];
 
 
    function findRelevantTemplates() {
-    global $dungeonName, $thisMapsId, $dungeonDetails, $thisMapsId, $drawnTileRooms, $map, $templateGraphicsToAppend, $templateNPCsToAppend, $templateItemsToAppend, $allTemplateJSON, $templateOffsetX, $templateOffsetY, $templateHotspotsToAppend, $proceduralDebug;
+    global $dungeonName, $thisMapsId, $dungeonDetails, $thisMapsId, $drawnTileRooms, $proceduralMap, $templateGraphicsToAppend, $templateNPCsToAppend, $templateItemsToAppend, $allTemplateJSON, $templateOffsetX, $templateOffsetY, $templateHotspotsToAppend, $proceduralDebug;
     // read contents of dir and find number of files:
     $dir = $_SERVER['DOCUMENT_ROOT']."/templates/dungeon/".$dungeonName."/";
     $filesFound = array();
@@ -2461,11 +2461,11 @@ $storePositionZero = $position[0];
     for ($i = 0; $i < $numberOfTemplatesToUse; $i++) {
         $randomFile = mt_rand(0, count($filesFound) - 1);
         $templateName = explode(".json", $filesFound[$randomFile])[0];
-        $mapIdAbsolute = abs($thisMapsId);
+        $proceduralMapIdAbsolute = abs($thisMapsId);
         // check if this map level is within the min and max for this template:
         if (isset($dungeonDetails['the-barrow-mines']['levelLockedTemplates'][$templateName])) {
-            if ($mapIdAbsolute >= $dungeonDetails['the-barrow-mines']['levelLockedTemplates'][$templateName][0]) {
-                if ($mapIdAbsolute <= $dungeonDetails['the-barrow-mines']['levelLockedTemplates'][$templateName][1]) {
+            if ($proceduralMapIdAbsolute >= $dungeonDetails['the-barrow-mines']['levelLockedTemplates'][$templateName][0]) {
+                if ($proceduralMapIdAbsolute <= $dungeonDetails['the-barrow-mines']['levelLockedTemplates'][$templateName][1]) {
                     array_push($templatesToUse, $templateName);
                 }
             }
@@ -2710,7 +2710,7 @@ $storePositionZero = $position[0];
                                         // check it doesn't block the doors:
                                         for ($k = 0; $k < $templateWidth; $k++) {
                                             for ($j = 0; $j < $templateHeight; $j++) {
-                                                if($map[$j + $thisTemplateOffsetY][$k + $thisTemplateOffsetX] == "e") {
+                                                if($proceduralMap[$j + $thisTemplateOffsetY][$k + $thisTemplateOffsetX] == "e") {
                                                     $overlapsExistingStructure = true;
                                                 }
                                             }
@@ -2729,9 +2729,9 @@ $storePositionZero = $position[0];
                                                 // don't overwrite underlying terrain for any "?"s:
                                                 if($templateJSON['template']['terrain'][$j][$k] !== "?") {
                                                 if($templateJSON['template']['collisions'][$j][$k] == 1) {
-                                                    $map[$j + $thisTemplateOffsetY][$k + $thisTemplateOffsetX] = "#";
+                                                    $proceduralMap[$j + $thisTemplateOffsetY][$k + $thisTemplateOffsetX] = "#";
                                                 } else {
-                                                    $map[$j + $thisTemplateOffsetY][$k + $thisTemplateOffsetX] = ".";
+                                                    $proceduralMap[$j + $thisTemplateOffsetY][$k + $thisTemplateOffsetX] = ".";
                                                 }
                                             }
                                                 
@@ -2781,8 +2781,8 @@ $storePositionZero = $position[0];
                                     // -1 on the width as don't need to test the overlapping wall as it'll be over-written:
                                     for ($k = 0; $k < $templateWidth-1; $k++) {
                                         for ($j = 0; $j < $templateHeight; $j++) {
-                                            if(isset($map[$thisTemplateOffsetY+$j][$thisTemplateOffsetX+$k])){
-                                                if ($map[$thisTemplateOffsetY+$j][$thisTemplateOffsetX+$k] != "-") {
+                                            if(isset($proceduralMap[$thisTemplateOffsetY+$j][$thisTemplateOffsetX+$k])){
+                                                if ($proceduralMap[$thisTemplateOffsetY+$j][$thisTemplateOffsetX+$k] != "-") {
                                                     $isBlocked = true;
                                                 }
                                             } else {
@@ -2808,8 +2808,8 @@ $storePositionZero = $position[0];
                                 // 1 on the width as don't need to test the overlapping wall as it'll be over-written:
                                 for ($k = 1; $k < $templateWidth; $k++) {
                                     for ($j = 0; $j < $templateHeight; $j++) {
-                                        if(isset($map[$thisTemplateOffsetY+$j][$thisTemplateOffsetX+$k])){
-                                            if ($map[$thisTemplateOffsetY+$j][$thisTemplateOffsetX+$k] != "-") {
+                                        if(isset($proceduralMap[$thisTemplateOffsetY+$j][$thisTemplateOffsetX+$k])){
+                                            if ($proceduralMap[$thisTemplateOffsetY+$j][$thisTemplateOffsetX+$k] != "-") {
                                                 $isBlocked = true;
                                             }
                                         } else {
@@ -2837,8 +2837,8 @@ $storePositionZero = $position[0];
                                  for ($k = 0; $k < $templateWidth-1; $k++) {
                                     // 1 on the height as don't need to test the overlapping wall as it'll be over-written:
                                     for ($j = 1; $j < $templateHeight; $j++) {
-                                        if(isset($map[$thisTemplateOffsetY+$j][$thisTemplateOffsetX+$k])){
-                                            if ($map[$thisTemplateOffsetY+$j][$thisTemplateOffsetX+$k] != "-") {
+                                        if(isset($proceduralMap[$thisTemplateOffsetY+$j][$thisTemplateOffsetX+$k])){
+                                            if ($proceduralMap[$thisTemplateOffsetY+$j][$thisTemplateOffsetX+$k] != "-") {
                                                $isBlocked = true;
                                             }
                                         } else {
@@ -2867,8 +2867,8 @@ $storePositionZero = $position[0];
                                  for ($k = 0; $k < $templateWidth; $k++) {
                                     // -1 on the height as don't need to test the overlapping wall as it'll be over-written:
                                     for ($j = 0; $j < $templateHeight-1; $j++) {
-                                        if(isset($map[$thisTemplateOffsetY+$j][$thisTemplateOffsetX+$k])){
-                                            if ($map[$thisTemplateOffsetY+$j][$thisTemplateOffsetX+$k] != "-") {
+                                        if(isset($proceduralMap[$thisTemplateOffsetY+$j][$thisTemplateOffsetX+$k])){
+                                            if ($proceduralMap[$thisTemplateOffsetY+$j][$thisTemplateOffsetX+$k] != "-") {
                                                $isBlocked = true;
                                             }
                                         } else {
@@ -2907,9 +2907,9 @@ $storePositionZero = $position[0];
                                             // don't overwrite underlying terrain for any "?"s:
                                                 if($templateJSON['template']['terrain'][$j][$k] !== "?") {
                                             if($templateJSON['template']['collisions'][$j][$k] == 1) {
-                                                $map[$j + $thisTemplateOffsetY][$k + $thisTemplateOffsetX] = "#";
+                                                $proceduralMap[$j + $thisTemplateOffsetY][$k + $thisTemplateOffsetX] = "#";
                                             } else {
-                                                $map[$j + $thisTemplateOffsetY][$k + $thisTemplateOffsetX] = ".";
+                                                $proceduralMap[$j + $thisTemplateOffsetY][$k + $thisTemplateOffsetX] = ".";
                                             }
                                        }
                                             
@@ -2995,46 +2995,46 @@ function drawFilledGridCircle($xp, $yp, $radius) {
     }
 }
 function gridHLine($xp, $yp, $w) {
-    global $map;
+    global $proceduralMap;
     for ($i = 0;$i < $w;$i++) {
-        $map[$yp][$xp + $i] = ".";
+        $proceduralMap[$yp][$xp + $i] = ".";
     }
 }
 
 
 
 function gridTileGrid() {
-    global $requiredWidth, $requiredHeight, $mapTilesX, $mapTilesY, $canvaDimension, $delaunayVertices, $minLeft, $minTop, $edgesUsedOnDelaunayGraph, $allDelaunayEdges, $lockedJoints, $keyColours, $proceduralDebug, $map, $itemMap, $drawnTileDoors, $drawnTileKeys, $entranceX, $entranceY, $exitX, $exitY, $drawnTileDoors, $drawnTileKeys, $drawnTileRooms, $dungeonDetails, $dungeonName, $jointList, $nodeList, $verticesUsedOnDelaunayGraph;
+    global $requiredWidth, $requiredHeight, $proceduralMapTilesX, $proceduralMapTilesY, $canvaDimension, $delaunayVertices, $minLeft, $minTop, $edgesUsedOnDelaunayGraph, $allDelaunayEdges, $lockedJoints, $keyColours, $proceduralDebug, $proceduralMap, $itemMap, $drawnTileDoors, $drawnTileKeys, $entranceX, $entranceY, $exitX, $exitY, $drawnTileDoors, $drawnTileKeys, $drawnTileRooms, $dungeonDetails, $dungeonName, $jointList, $nodeList, $verticesUsedOnDelaunayGraph;
     // define the tile area to be used:
-    $mapTilesX = 70;
-    $mapTilesY = 70;
+    $proceduralMapTilesX = 70;
+    $proceduralMapTilesY = 70;
     // determine the ratio (-2 to allow 1 tile around each edge)
-    $ratio = max($mapTilesX-1, $mapTilesY-1) / max($requiredWidth, $requiredHeight);
+    $ratio = max($proceduralMapTilesX-1, $proceduralMapTilesY-1) / max($requiredWidth, $requiredHeight);
     // delaunay graph size * ratio = tile size
 
 
 // work out any space to centre the map:
     $tileMapWidth = floor($requiredWidth * $ratio);
     $tileMapHeight = floor($requiredHeight * $ratio);
-    $tileOffsetX = floor(($mapTilesX - $tileMapWidth)/2);
-    $tileOffsetY = floor(($mapTilesY - $tileMapHeight)/2);
+    $tileOffsetX = floor(($proceduralMapTilesX - $tileMapWidth)/2);
+    $tileOffsetY = floor(($proceduralMapTilesY - $tileMapHeight)/2);
 
 
 
   //  echo $ratio."<br>";
   //  echo $requiredWidth." x ".$requiredHeight."<br>";
 
-$map = array();
+$proceduralMap = array();
 $itemMap = array();
 $drawnTileRooms = array();
 $drawnTileDoors = array();
 $drawnTileKeys = array();
 
-    for ($i = 0; $i < $mapTilesX; $i++) {
-        $map[$i] = array();
+    for ($i = 0; $i < $proceduralMapTilesX; $i++) {
+        $proceduralMap[$i] = array();
         $itemMap[$i] = array();
-            for ($j = 0; $j < $mapTilesY; $j++) {
-            array_push($map[$i], "#");
+            for ($j = 0; $j < $proceduralMapTilesY; $j++) {
+            array_push($proceduralMap[$i], "#");
             array_push($itemMap[$i], "");
             }
         }
@@ -3078,7 +3078,7 @@ switch ($dungeonDetails[$dungeonName]['roomType']) {
     case "adjoining-rooms":
 for ($j = $leftTileEdge; $j < $rightTileEdge; $j++) {
 for ($k = $topTileEdge; $k < $bottomTileEdge; $k++) {
-$map[$k][$j] = ".";
+$proceduralMap[$k][$j] = ".";
 }
 }
 break;
@@ -3114,13 +3114,13 @@ break;
 }
 
 // make sure that the edges are still blocked:
-for ($i = 0; $i < $mapTilesX; $i++) {
-$map[0][$i] = "#";
-$map[$mapTilesY-1][$i] = "#";
+for ($i = 0; $i < $proceduralMapTilesX; $i++) {
+$proceduralMap[0][$i] = "#";
+$proceduralMap[$proceduralMapTilesY-1][$i] = "#";
 }
-for ($j = 0; $j < $mapTilesY; $j++) {
-$map[$j][0] = "#";
-$map[$j][$mapTilesX-1] = "#";
+for ($j = 0; $j < $proceduralMapTilesY; $j++) {
+$proceduralMap[$j][0] = "#";
+$proceduralMap[$j][$proceduralMapTilesX-1] = "#";
 }
 
 
@@ -3173,12 +3173,12 @@ $rightTileEdge = $storedEdge;
                         if($j<=$drawnTileRooms[$l][2]) {
                             if($k<=$drawnTileRooms[$l][3]) {
                                 $isInRoom = true;
-                                if($map[$k][$j] != ".") {
+                                if($proceduralMap[$k][$j] != ".") {
                                     // not already been plotted by the room, so it's a door:
-                                    $map[$k][$j] = "d";
+                                    $proceduralMap[$k][$j] = "d";
                                     // check if it's locked:
                                     if (isset($lockedJoints[("-" . $thisEdge->v1->whichNode->name."-" . $thisEdge->v0->whichNode->name)])) {
-                                        $map[$k][$j] = "D";
+                                        $proceduralMap[$k][$j] = "D";
                                         array_push($drawnTileDoors, array($j,$k, $lockedJoints[("-" . $thisEdge->v1->whichNode->name."-" . $thisEdge->v0->whichNode->name)]));
                                     } else {
                                         array_push($drawnTileDoors, array($j,$k, -1));
@@ -3192,14 +3192,14 @@ $rightTileEdge = $storedEdge;
             if(!$isInRoom) {
                 // make paths 3 wide at least:
                 if($leftTileEdge == $rightTileEdge) {
-                    $map[$k][$j-1] = ".";
-                    $map[$k][$j+1] = ".";
+                    $proceduralMap[$k][$j-1] = ".";
+                    $proceduralMap[$k][$j+1] = ".";
                 }
                 if($topTileEdge == $bottomTileEdge) {
-                    $map[$k-1][$j] = ".";
-                    $map[$k+1][$j] = ".";
+                    $proceduralMap[$k-1][$j] = ".";
+                    $proceduralMap[$k+1][$j] = ".";
                 }
-                $map[$k][$j] = ".";
+                $proceduralMap[$k][$j] = ".";
             }
         }
     }
@@ -3222,14 +3222,14 @@ case "cavern":
                     $roomCentreX = floor(($drawnTileRooms[$k][0]+$drawnTileRooms[$k][2])/2);
                     $roomCentreY = floor(($drawnTileRooms[$k][1]+$drawnTileRooms[$k][3])/2);
                     //echo " connecting (".$thisEdge->v0->whichNode->name.")".$roomCentreX.", ".$roomCentreY;
-                    $map[$roomCentreY][$roomCentreX] = "#";
+                    $proceduralMap[$roomCentreY][$roomCentreX] = "#";
                     array_push($pointsToConnect[(count($pointsToConnect) - 1)], array($roomCentreX,$roomCentreY));
                 }
                 if(($thisEdge->v1->whichNode->name === $drawnTileRooms[$k][4])) {
                     $roomCentreX = floor(($drawnTileRooms[$k][0]+$drawnTileRooms[$k][2])/2);
                     $roomCentreY = floor(($drawnTileRooms[$k][1]+$drawnTileRooms[$k][3])/2);
                     //echo " connecting (".$thisEdge->v1->whichNode->name.")".$roomCentreX.", ".$roomCentreY;
-                    $map[$roomCentreY][$roomCentreX] = "#";
+                    $proceduralMap[$roomCentreY][$roomCentreX] = "#";
                     array_push($pointsToConnect[(count($pointsToConnect) - 1)], array($roomCentreX,$roomCentreY));
                 }
             }
@@ -3268,10 +3268,10 @@ outputTileMap();
 
 
 // find blank tiles (tiles completely surrounded by non-walkable tiles):
- for ($i = 0; $i < $mapTilesX; $i++) {
- for ($j = 0; $j < $mapTilesY; $j++) {
+ for ($i = 0; $i < $proceduralMapTilesX; $i++) {
+ for ($j = 0; $j < $proceduralMapTilesY; $j++) {
   if(   (tileIsSurrounded($i-1,$j))  && (tileIsSurrounded($i+1,$j))  && (tileIsSurrounded($i-1,$j-1))  && (tileIsSurrounded($i-1,$j+1))  && (tileIsSurrounded($i+1,$j-1)) && (tileIsSurrounded($i+1,$j+1)) && (tileIsSurrounded($i,$j-1))  && (tileIsSurrounded($i,$j+1))      ) {
-  $map[$j][$i] = "-";
+  $proceduralMap[$j][$i] = "-";
   }
   }
   }
@@ -3282,7 +3282,7 @@ outputTileMap();
 
 
 function bresenhamLinePath($x1,$y1,$x2,$y2) {
-       global $proceduralDebug, $map;
+       global $proceduralDebug, $proceduralMap;
 
    $dy = $y2 - $y1;
      $dx = $x2 - $x1;
@@ -3290,7 +3290,7 @@ function bresenhamLinePath($x1,$y1,$x2,$y2) {
     if ($dx < 0) { $dx = -$dx;  $stepx = -1; } else { $stepx = 1; }
     $dy <<= 1;        // $dy is now 2*$dy
     $dx <<= 1;        // $dx is now 2*$dx
-    $map[$y1][$x1] = ".";
+    $proceduralMap[$y1][$x1] = ".";
     if ($dx > $dy) 
     {
          $fraction = $dy - ($dx >> 1);  // same as 2*$dy - $dx
@@ -3303,7 +3303,7 @@ function bresenhamLinePath($x1,$y1,$x2,$y2) {
            }
            $x1 += $stepx;
            $fraction += $dy;              // same as $fraction -= 2*$dy
-           $map[$y1][$x1] = ".";
+           $proceduralMap[$y1][$x1] = ".";
         }
      } else {
          $fraction = $dx - ($dy >> 1);
@@ -3314,7 +3314,7 @@ function bresenhamLinePath($x1,$y1,$x2,$y2) {
            }
            $y1 += $stepy;
            $fraction += $dx;
-           $map[$y1][$x1] = ".";
+           $proceduralMap[$y1][$x1] = ".";
         }
      }
 }
@@ -3346,7 +3346,7 @@ bresenhamLinePath($from[0],$from[1]-1,$to[0],$to[1]-1);
 
 
 function addRandomItems() {
-    global $map, $placedItems, $dungeonDetails, $dungeonName, $mapTilesX, $mapTilesY, $templateNPCsToAppend, $templateItemsToAppend;
+    global $proceduralMap, $placedItems, $dungeonDetails, $dungeonName, $proceduralMapTilesX, $proceduralMapTilesY, $templateNPCsToAppend, $templateItemsToAppend;
     
 
     $numberOfItems = mt_rand($dungeonDetails[$dungeonName]['randomItemsMin'], $dungeonDetails[$dungeonName]['randomItemsMax']);
@@ -3354,10 +3354,10 @@ function addRandomItems() {
 
 // find all clear tiles:
     $allSuitableCornerTiles = array();
-     for ($i = 1; $i < $mapTilesX-1; $i++) {      
-            for ($j = 1; $j < $mapTilesY-1; $j++) {
+     for ($i = 1; $i < $proceduralMapTilesX-1; $i++) {      
+            for ($j = 1; $j < $proceduralMapTilesY-1; $j++) {
         
-        if ($map[$j][$i] == ".") {
+        if ($proceduralMap[$j][$i] == ".") {
              // try and find an open space where 3 tiles on a corner are walkable while the 3 in the opposite corner aren't:
 
 $tileSouthWalkable = false;
@@ -3369,28 +3369,28 @@ $tileNorthEastWalkable = false;
 $tileSouthEastWalkable = false;
 $tileSouthWestWalkable = false;
 
-if ($map[$j+1][$i] == ".") {
+if ($proceduralMap[$j+1][$i] == ".") {
     $tileSouthWalkable = true;
 }
-if ($map[$j-1][$i] == ".") {
+if ($proceduralMap[$j-1][$i] == ".") {
     $tileNorthWalkable = true;
 }
-if ($map[$j][$i+1] == ".") {
+if ($proceduralMap[$j][$i+1] == ".") {
     $tileEastWalkable = true;
 }
-if ($map[$j][$i-1] == ".") {
+if ($proceduralMap[$j][$i-1] == ".") {
     $tileWestWalkable = true;
 }
-if ($map[$j-1][$i-1] == ".") {
+if ($proceduralMap[$j-1][$i-1] == ".") {
     $tileNorthWestWalkable = true;
 }
-if ($map[$j-1][$i+1] == ".") {
+if ($proceduralMap[$j-1][$i+1] == ".") {
     $tileNorthEastWalkable = true;
 }
-if ($map[$j+1][$i+1] == ".") {
+if ($proceduralMap[$j+1][$i+1] == ".") {
     $tileSouthEastWalkable = true;
 }
-if ($map[$j+1][$i-1] == ".") {
+if ($proceduralMap[$j+1][$i-1] == ".") {
     $tileSouthWestWalkable = true;
 }
 
@@ -3473,7 +3473,7 @@ echo"</pre></code>";
 
 
 function placeDoors() {
-    global $doorsJSON, $exitX, $exitY, $thisMapsId, $map, $thisPlayersId, $dungeonName, $entranceX, $entranceY, $dungeonDetails;
+    global $doorsJSON, $exitX, $exitY, $thisMapsId, $proceduralMap, $thisPlayersId, $dungeonName, $entranceX, $entranceY, $dungeonDetails;
 
 // place exit:
 $doorsJSON = '{';
@@ -3486,7 +3486,7 @@ for ($i=-1;$i<=1;$i++) {
         $doorsJSON .= "+1";
     }
     $doorsJSON .= '",  "startY": "?"},';
-    $map[$exitY][($exitX+$i)] = "e";
+    $proceduralMap[$exitY][($exitX+$i)] = "e";
 }
 
 /*
@@ -3496,6 +3496,8 @@ echo"</pre></code>";
 */
 
 $previousMap = $thisMapsId+1;
+
+
 
 if($previousMap == 0) {
  // get data from config:
@@ -3507,9 +3509,9 @@ $targetMap = $dungeonDetails[$dungeonName]['mapWhenLeavingTheDungeon'];
     $doorsJSON .= '"'.($entranceX+$i).','.($entranceY+1).'": {  "map": '.$targetMap.',  "startX": ';
          $doorsJSON .= ($exitX+$i);
     $doorsJSON .= ',  "startY": '.$exitY.'},';
-    $map[$entranceY+1][($entranceX+$i)] = "e";
+    $proceduralMap[$entranceY+1][($entranceX+$i)] = "e";
     // set the position that the hero wil start on to be blank:
-    $map[$entranceY][($entranceX+$i)] = ".";
+    $proceduralMap[$entranceY][($entranceX+$i)] = ".";
 }
    
 } else {
@@ -3532,8 +3534,8 @@ array_push($previousMapsExitDoors, array($thisDoorLocation[0],$thisDoorLocation[
 for ($i=-1;$i<=1;$i++) {
     // +1 on Y to place the doors just before the place the hero will start:
     $doorsJSON .= '"'.($entranceX+$i).','.($entranceY+1).'": {  "map": '.$previousMap.',  "startX": "'.$previousMapsExitDoors[($i+1)][0].'",  "startY": "'.$previousMapsExitDoors[($i+1)][1].'"},';
-    $map[$entranceY+1][($entranceX+$i)] = "e";
-    $map[$entranceY][($entranceX+$i)] = ".";
+    $proceduralMap[$entranceY+1][($entranceX+$i)] = "e";
+    $proceduralMap[$entranceY][($entranceX+$i)] = ".";
 }
 }
 
@@ -3581,15 +3583,15 @@ function hLine($xp, $yp, $w, $elevation) {
 
 
 function createElevationMap() {
-    global $proceduralDebug, $mapTilesX, $mapTilesY, $canvaDimension, $dungeonDetails, $dungeonName, $elevationMap;
+    global $proceduralDebug, $proceduralMapTilesX, $proceduralMapTilesY, $canvaDimension, $dungeonDetails, $dungeonName, $elevationMap;
 
     $drawnTileSize = 8; 
     $drawnOffset = 20;
 
     $maximumElevation = $dungeonDetails[$dungeonName]['maxElevation'];
 
-    for ($i = 0; $i < $mapTilesX; $i++) {      
-        for ($j = 0; $j < $mapTilesY; $j++) {
+    for ($i = 0; $i < $proceduralMapTilesX; $i++) {      
+        for ($j = 0; $j < $proceduralMapTilesY; $j++) {
             $elevationMap[$j][$i] = 0;
         }
     }
@@ -3600,8 +3602,8 @@ function createElevationMap() {
 
     for ($i = 0; $i < $elevationPoints; $i++) {
         // 
-//$elevationMap[mt_rand(0,$mapTilesY)][mt_rand(0,$mapTilesX)] = mt_rand(0,$maximumElevation);
-        drawFilledCircle(mt_rand(0,$mapTilesX),mt_rand(0,$mapTilesY),mt_rand(5,15),mt_rand(0,$maximumElevation));
+//$elevationMap[mt_rand(0,$proceduralMapTilesY)][mt_rand(0,$proceduralMapTilesX)] = mt_rand(0,$maximumElevation);
+        drawFilledCircle(mt_rand(0,$proceduralMapTilesX),mt_rand(0,$proceduralMapTilesY),mt_rand(5,15),mt_rand(0,$maximumElevation));
     }
 
     // smooth (// http://nic-gamedev.blogspot.co.uk/2013/02/simple-terrain-smoothing.html)
@@ -3609,8 +3611,8 @@ $numberOfPasses = 4;
 for ($i = 0; $i < $numberOfPasses; $i++) {
     $newElevationMap = $elevationMap;
     
-  for ($y = 0; $y < $mapTilesX; $y++) {
-  for ($x = 0; $x < $mapTilesY; $x++) {
+  for ($y = 0; $y < $proceduralMapTilesX; $y++) {
+  for ($x = 0; $x < $proceduralMapTilesY; $x++) {
      $adjacentSections = 0;
      $sectionsTotal = 0;
     if ($x - 1 > 0) {
@@ -3624,14 +3626,14 @@ for ($i = 0; $i < $numberOfPasses; $i++) {
         $adjacentSections++;
       }
 
-      if ($y + 1 < $mapTilesY) {
+      if ($y + 1 < $proceduralMapTilesY) {
         // Check down and to the left
         $sectionsTotal += $elevationMap[$x - 1][$y + 1];
         $adjacentSections++;
       }
     }
 
-    if ($x + 1 < $mapTilesX) {
+    if ($x + 1 < $proceduralMapTilesX) {
       // Check to right
 
       $sectionsTotal += $elevationMap[$x + 1][$y];
@@ -3643,7 +3645,7 @@ for ($i = 0; $i < $numberOfPasses; $i++) {
         $adjacentSections++;
       }
 
-      if ($y + 1 < $mapTilesY) {
+      if ($y + 1 < $proceduralMapTilesY) {
         // Check down and to the right
         $sectionsTotal += $elevationMap[$x + 1][$y + 1];
         $adjacentSections++;
@@ -3655,7 +3657,7 @@ for ($i = 0; $i < $numberOfPasses; $i++) {
       $sectionsTotal += $elevationMap[$x][$y - 1];
       $adjacentSections++;
     }
-    if ($y + 1 < $mapTilesY) {
+    if ($y + 1 < $proceduralMapTilesY) {
       // Check below
       $sectionsTotal += $elevationMap[$x][$y + 1];
       $adjacentSections++;
@@ -3674,8 +3676,8 @@ $elevationMap = $newElevationMap;
         $ground       = imagecolorallocate($outputCanvas, $groundColour[0], $groundColour[1], $groundColour[2]);
         imagefilledrectangle($outputCanvas, 0, 0, $canvaDimension, $canvaDimension, $ground);
 
-        for ($i = 0; $i < $mapTilesX; $i++) {      
-            for ($j = 0; $j < $mapTilesY; $j++) {
+        for ($i = 0; $i < $proceduralMapTilesX; $i++) {      
+            for ($j = 0; $j < $proceduralMapTilesY; $j++) {
                 $thisTilesColour = 255-(2.55*$elevationMap[$j][$i]);
           imagefilledrectangle($outputCanvas,($i)*$drawnTileSize+$drawnOffset,($j)*$drawnTileSize+$drawnOffset,($i+1)*$drawnTileSize+$drawnOffset,($j+1)*$drawnTileSize+$drawnOffset, imagecolorallocate($outputCanvas, $thisTilesColour, $thisTilesColour, $thisTilesColour));
         }
@@ -3699,8 +3701,8 @@ $elevationMap = $newElevationMap;
 
 
 function getTileIsoCentreCoordX($tileX, $tileY) {
-  global $tileW, $mapTilesY;
-    return $tileW / 2 * ($mapTilesY - $tileY + $tileX);
+  global $tileW, $proceduralMapTilesY;
+    return $tileW / 2 * ($proceduralMapTilesY - $tileY + $tileX);
 }
 
 function getTileIsoCentreCoordY($tileX, $tileY) {
@@ -3709,7 +3711,7 @@ function getTileIsoCentreCoordY($tileX, $tileY) {
 }
 
 function outputIsometricView() {
-global $tileW,$tileH, $proceduralDebug, $dungeonName, $outputJSON, $mapTilesX, $mapTilesY, $canvaDimension;
+global $tileW,$tileH, $proceduralDebug, $dungeonName, $outputJSON, $proceduralMapTilesX, $proceduralMapTilesY, $canvaDimension;
 $tileW = 48;
 $tileH = $tileW/2;
 
@@ -3739,8 +3741,8 @@ for ($i=0;$i<count($decodedJSON["map"]["graphics"]);$i++) {
 
 $isoMap = $decodedJSON["map"]["terrain"];
 // draw tiles
-for ( $i = 0; $i < $mapTilesX; $i++) {
-            for ( $j = 0; $j < $mapTilesY; $j++) {
+for ( $i = 0; $i < $proceduralMapTilesX; $i++) {
+            for ( $j = 0; $j < $proceduralMapTilesY; $j++) {
                 // the tile coordinates should be positioned by i,j but the way the map is drawn, the reference in the array is j,i
                 // this makes the map array more readable when editing
     if (is_numeric($isoMap[$j][$i])) {
@@ -3898,7 +3900,11 @@ if($proceduralDebug) {
 echo '<code style="width:100%;clear:both;display:block;font-size:0.8em;">';
 echo htmlentities($outputJSON);
 } else {
+    if($isIncluded) {
+$thisMapDataJson = $outputJSON;
+    } else {
     echo $outputJSON;
+}
 }
 
 if($proceduralDebug) {

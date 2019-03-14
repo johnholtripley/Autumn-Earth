@@ -192,7 +192,7 @@ function prepareCoreAssets() {
 
 
 function processInitialMap() {
-
+console.log("processInitialMap called");
     var startTileOffsetX, startTileOffsetY;
     var startTileOffsetXNum = 0;
     var startTileOffsetYNum = 0;
@@ -498,8 +498,17 @@ function loadMapJSON(mapFilePath) {
             visibleMaps.push(parseInt(currentMap));
             thisMapShopItemIds = data.shops.allItemIds;
             UI.buildShop(data.shops.markup);
+            console.log("got new map JSON");
+            console.log("currentMap: "+currentMap)
+            console.log(visibleMaps);
             processInitialMap();
             isOverWorldMap = !data.mapData.map.isInside;
+
+
+
+
+
+
             // }
             if (isOverWorldMap) {
                 updateVisibleMaps();
@@ -567,7 +576,7 @@ function loadMapAssets() {
         assetPath = visibleMaps[m];
 
         if (visibleMaps[m] < 0) {
-            assetPath = 'dungeon/' + randomDungeonName;
+            assetPath = randomDungeonName;
         }
         if (newMap.toString().indexOf('housing') !== -1) {
 
