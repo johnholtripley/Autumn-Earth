@@ -1767,11 +1767,14 @@ switch ($dungeonDetails[$dungeonName]['roomType']) {
 case "adjoining-rooms":
 
 
+if($proceduralDebug) {
+
+
         imagefilledrectangle($outputCanvas, $delaunayVertices[$i]->x - $delaunayVertices[$i]->proximityToNeighboursHorizontal, $delaunayVertices[$i]->y - $delaunayVertices[$i]->proximityToNeighboursVertical, $delaunayVertices[$i]->x + $delaunayVertices[$i]->proximityToNeighboursHorizontal, $delaunayVertices[$i]->y + $delaunayVertices[$i]->proximityToNeighboursVertical, $nodeColour);
 
 // border:
         imagerectangle($outputCanvas, $delaunayVertices[$i]->x - $delaunayVertices[$i]->proximityToNeighboursHorizontal, $delaunayVertices[$i]->y - $delaunayVertices[$i]->proximityToNeighboursVertical, $delaunayVertices[$i]->x + $delaunayVertices[$i]->proximityToNeighboursHorizontal, $delaunayVertices[$i]->y + $delaunayVertices[$i]->proximityToNeighboursVertical, imagecolorallocate($outputCanvas, 255, 255, 255));
-
+}
 break;
 case "cavern":
 // php needs width not radius:

@@ -295,6 +295,7 @@ function loadNewVisibleMapAssets(whichMap) {
     };
     newBackground.onerror = function() {
         // error handling? ####
+console.log("background failed to load");
     };
     newBackground.src = '/images/game-world/backgrounds/' + whichMap + '.png';
 
@@ -514,7 +515,7 @@ function loadMap() {
     }
     if (randomDungeonName != "") {
         dungeonAppend = '&dungeonName=' + randomDungeonName;
-        dungeonAppend += '&seed=1552609714';
+     //   dungeonAppend += '&seed=1552609714';
     }
     loadMapJSON('/game-world/getMap.php?chr=' + characterId + '&map=' + newMap + dungeonAppend);
 }
@@ -3304,23 +3305,31 @@ function draw() {
                     }
                 }
             }
-        }
+        
 
-        if (typeof thisMapData[currentMap].innerDoors !== "undefined") {
-            for (var i in thisMapData[currentMap].innerDoors) {
+        if (typeof thisMapData[visibleMaps[m]].innerDoors !== "undefined") {
+            var thisDoorImage;
+            for (var i in thisMapData[visibleMaps[m]].innerDoors) {
                 // check for open status to get the right graphic ###########
-                if (!thisMapData[currentMap].innerDoors[i]['isOpen']) {
-                    thisX = getTileIsoCentreCoordX(thisMapData[currentMap].innerDoors[i]['tileX'], thisMapData[currentMap].innerDoors[i]['tileY']);
-                    thisY = getTileIsoCentreCoordY(thisMapData[currentMap].innerDoors[i]['tileX'], thisMapData[currentMap].innerDoors[i]['tileY']);
+                if (!thisMapData[visibleMaps[m]].innerDoors[i]['isOpen']) {
+                    thisX = getTileIsoCentreCoordX(thisMapData[visibleMaps[m]].innerDoors[i]['tileX'], thisMapData[visibleMaps[m]].innerDoors[i]['tileY']);
+                    thisY = getTileIsoCentreCoordY(thisMapData[visibleMaps[m]].innerDoors[i]['tileX'], thisMapData[visibleMaps[m]].innerDoors[i]['tileY']);
                     if (isVisibleOnScreen(thisX, thisY)) {
-                        thisGraphicCentreX = thisMapData[currentMap].graphics[(thisMapData[currentMap].innerDoors[i]['graphic'])].centreX;
-                        thisGraphicCentreY = thisMapData[currentMap].graphics[(thisMapData[currentMap].innerDoors[i]['graphic'])].centreY;
-                        assetsToDraw.push([findIsoDepth(getTileCentreCoordX(thisMapData[currentMap].innerDoors[i]['tileX']), getTileCentreCoordY(thisMapData[currentMap].innerDoors[i]['tileY']), 0), "img", tileImages[(thisMapData[currentMap].innerDoors[i]['graphic'])], Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2))]);
+                       
+
+
+thisDoorImage = thisMapData[visibleMaps[m]].innerDoors[i]['graphic'];
+thisDoorImage = thisMapData[visibleMaps[m]].graphics[(thisDoorImage)].src;
+
+             
+                        thisGraphicCentreX = thisMapData[visibleMaps[m]].graphics[(thisMapData[visibleMaps[m]].innerDoors[i]['graphic'])].centreX;
+                        thisGraphicCentreY = thisMapData[visibleMaps[m]].graphics[(thisMapData[visibleMaps[m]].innerDoors[i]['graphic'])].centreY;
+                        assetsToDraw.push([findIsoDepth(getTileCentreCoordX(thisMapData[visibleMaps[m]].innerDoors[i]['tileX']), getTileCentreCoordY(thisMapData[visibleMaps[m]].innerDoors[i]['tileY']), 0), "img", tileImages[thisDoorImage], Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2))]);
                     }
                 }
             }
         }
-
+}
         if (hasActivePet) {
             for (var i = 0; i < hero.activePets.length; i++) {
                 thisNPCOffsetCol = currentAnimationFrame % hero.allPets[hero.activePets[i]]["animation"]["walk"]["length"];
@@ -3461,10 +3470,17 @@ function draw() {
             gameContext.fillRect(0, 0, canvasWidth, canvasHeight);
             gameContext.fill();
 
+// john #######
+         //   var thisMapTilesX = thisMapData[currentMap].terrain[0].length;
+        //     var thisMapTilesY = thisMapData[currentMap].terrain.length;
+        //    var backgroundImageWidth = (mapTilesX + mapTilesY) * tileW/2;
+        //    var backgroundImageHeight = backgroundImageWidth/2;
 
-            var thisMapTilesX = thisMapData[currentMap].terrain[0].length;
+
+// need to determine the offset for the top left corner of the map from the top left corner of the image #######
+
             if (typeof backgroundImgs[currentMap] !== "undefined") {
-                gameContext.drawImage(backgroundImgs[currentMap], Math.floor(getTileIsoCentreCoordX(0, thisMapTilesX - 1) - hero.isox - tileW / 2 + canvasWidth / 2), Math.floor(getTileIsoCentreCoordY(0, 0) - hero.isoy - (tileH / 2) + canvasHeight / 2));
+                gameContext.drawImage(backgroundImgs[currentMap], Math.floor(getTileIsoCentreCoordX(0, mapTilesY - 1) - hero.isox - tileW / 2 + canvasWidth / 2), Math.floor(getTileIsoCentreCoordY(0, 0) - hero.isoy - (tileH / 2) + canvasHeight / 2));
             }
         }
 
