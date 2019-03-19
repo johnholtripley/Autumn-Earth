@@ -7794,10 +7794,9 @@ function loadNewVisibleMapAssets(whichMap) {
     };
     newBackground.onerror = function() {
         // error handling? ####
-console.log("background failed to load");
+
     };
     newBackground.src = '/images/game-world/backgrounds/' + whichMap + '.png';
-
 
 
     // load items:
@@ -7909,6 +7908,9 @@ function processNewVisibleMapData(whichNewMap) {
 
         initialiseNPC(thisMapData[whichNewMap].npcs[i]);
     }
+
+
+    /*
     // look for shops:
     thisMapShopItemIds = '';
     var shopData = '{"chr": ' + characterId + ',"region":"' + thisMapData[whichNewMap].region + '","shops": [';
@@ -7923,6 +7925,8 @@ function processNewVisibleMapData(whichNewMap) {
         addedShopDataAlready = true;
     }
     shopData += ']}';
+
+    */
     updatePossibleWeather();
     loadNewVisibleMapAssets(whichNewMap);
 }
@@ -7956,12 +7960,13 @@ function loadNewVisibleJSON(mapFilePath, whichNewMap) {
     //   console.log("loading JSON for " + whichNewMap);
     getJSON(mapFilePath, function(data) {
             thisMapData[whichNewMap] = data.mapData.map;
-            thisMapShopItemIds = data.shops.allItemIds;
+         //   thisMapShopItemIds = data.shops.allItemIds;
             UI.buildShop(data.shops.markup);
             // find new items that require data:
             //console.log("loadNewVisibleJSON raw "+getItemIdsForMap(whichNewMap).join("."));
             var thisMapsItemIds = uniqueValues(getItemIdsForMap(whichNewMap));
-            var newItemIds = [];
+           // var newItemIds = [];
+            var newItemIds = data.shops.allItemIds;
             for (var i = 0; i < thisMapsItemIds.length; i++) {
                 if (!(thisMapsItemIds[i] in currentActiveInventoryItems)) {
                     newItemIds.push(thisMapsItemIds[i]);
