@@ -113,7 +113,12 @@ var UI = {
     },
 
     buildInventoryInterface: function() {
-        document.getElementById('characterName').innerHTML = hero.characterName;
+        var characterNameAndTitle = hero.characterName;
+        
+        if(hero.activeTitle != 0) {
+characterNameAndTitle += " - " + possibleTitles[hero.activeTitle];
+        }
+        document.getElementById('characterName').innerHTML = characterNameAndTitle;
         characterPanel.classList.add('active');
         var inventoryMarkup = '';
         var thisAction, thisBagNumberOfSlots, thisSlotsID, thisPanelName, thisPet, activeClass;
