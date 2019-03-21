@@ -1,6 +1,6 @@
 <?php
 
-// http://develop.ae/game-world/generateMapImage.php?mapId=10&playerId=999&sepia=true&tileX=25&tileY=12&radius=6&scale=0.5
+// http://develop.ae/game-world/generateMapImage.php?mapId=10&playerId=999&sepia=true&tileX=34&tileY=22&radius=12&scale=0.3&overlay=true
 
 $tileW = 48;
 $tileH = $tileW/2;
@@ -89,8 +89,7 @@ if (is_numeric($playerId)) {
         }
    
         $croppedImage = imagecreatetruecolor($scaledSize, $scaledSize);
-        $sourceX = 1500;
-        $sourceY = 700;
+
         $sourceX = getTileIsoCentreCoordX($_GET["tileX"],$_GET["tileY"])-$cropSize/2;
         $sourceY = getTileIsoCentreCoordY($_GET["tileX"],$_GET["tileY"])-$cropSize/2;
 if(isset($_GET["scale"])) {
@@ -100,6 +99,20 @@ if(isset($_GET["scale"])) {
 }
         
       }
+
+$ifRequiresOverlay = false;
+if(isset($_GET["overlay"])) {
+$ifRequiresOverlay = true;
+}
+if($ifRequiresOverlay) {
+  $overlayImage = imagecreatefrompng("../images/cartography/map-overlay.png");
+  imagealphablending($overlayImage, false);
+  imagesavealpha($croppedImage, true);
+  imagecopyresampled($croppedImage,$overlayImage,0,0,0,0,$scaledSize,$scaledSize,imagesx($overlayImage),imagesy($overlayImage));
+}
+
+
+      
 
 
       header('Content-Type: image/jpeg');
@@ -113,6 +126,9 @@ if(isset($_GET["scale"])) {
       imagedestroy($bgImage);
       imagedestroy($fullImage);
       imagedestroy($pencilSketchTile);
+      if($ifRequiresOverlay) {
+        imagedestroy($overlayImage);
+      }
 
       for ($i=0;$i<count($jsonData["map"]["graphics"]);$i++) {
         imagedestroy(${'assetImg'.$i});
