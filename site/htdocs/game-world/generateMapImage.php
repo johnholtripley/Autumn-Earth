@@ -1,6 +1,6 @@
 <?php
 
-// http://develop.ae/game-world/generateMapImage.php?mapId=10&playerId=999&sepia=true&tileX=34&tileY=22&radius=12&scale=0.3&overlay=true
+// http://develop.ae/game-world/generateMapImage.php?playerId=999&sepia=true&tileX=34&tileY=22&radius=12&scale=0.3&overlay=true
 
 
 // check file already exists and redirect if it does
@@ -14,7 +14,43 @@ $canvasWidth = 2400;
 $canvasHeight = 1200;
 
 $playerId=$_GET["playerId"];
+
+
+
+function findMapNumberFromGlobalCoordinates($tileX, $tileY) {
+  global $worldMap, $worldMapTileLength;
+return $worldMap[floor($tileY/$worldMapTileLength)][floor($tileX/$worldMapTileLength)];
+}
+
+
+
+if(isset($_GET["mapId"])) {
 $whichMap = $_GET["mapId"];
+} else {
+  // must be global coordinates passed in, so determine which map it relates to:
+  $jsonMapResults = file_get_contents($_SERVER['DOCUMENT_ROOT'].'/data/world-map.json');
+  $mapJson = json_decode($jsonMapResults, true);
+  $worldMap = $mapJson['worldMap'];
+  $worldMapTileLength = 50;
+  $whichMap = findMapNumberFromGlobalCoordinates($_GET["tileX"],$_GET["tileY"]);
+}
+
+
+
+$filePathToSave = "../data/chr".$playerId."/treasure-maps/".$whichMap."_".$_GET["tileX"]."_".$_GET["tileY"].".jpg";
+
+$debug = false;
+if(isset($_GET["debug"])) {
+  $debug = true;
+  }
+
+
+ if ((is_file($filePathToSave)) && !$debug) {
+        header("Location: /" . $filePathToSave);
+        die();
+    }
+
+
 
 $useSepia = false;
 if(isset($_GET["sepia"])) {
@@ -74,7 +110,7 @@ while ($row = mysqli_fetch_array($result2, MYSQLI_ASSOC)) {
 mysqli_free_result($result2);
 
 
-//var_dump($inventoryData);
+
    $map = $jsonData["map"]["terrain"];
       $mapTilesY = count($map);
       $mapTilesX = count($map[0]);
@@ -93,6 +129,9 @@ mysqli_free_result($result2);
 
 
 
+$allAssetsToDraw = [];
+
+
 // needs proper depth sorting with items and terrain:
   for ( $i = 0; $i < $mapTilesX; $i++) {
         for ( $j = 0; $j < $mapTilesY; $j++) {
@@ -106,8 +145,15 @@ mysqli_free_result($result2);
             $whichAsset = intval($map[$j][$i]);
             $thisGraphicCentreX = $jsonData["map"]["graphics"][$whichAsset]["centreX"];
             $thisGraphicCentreY = $jsonData["map"]["graphics"][$whichAsset]["centreY"];
-            // need to offset by half a tile to match starting hero position at tile centre:
-            imagecopy ( $fullImage, ${'assetImg'.$whichAsset}, floor($thisX - $thisGraphicCentreX), floor($thisY - $thisGraphicCentreY  + $tileH/2), 0, 0, imagesx(${'assetImg'.$whichAsset}), imagesy(${'assetImg'.$whichAsset}) );
+            
+
+
+          //  imagecopy ( $fullImage, ${'assetImg'.$whichAsset}, floor($thisX - $thisGraphicCentreX), floor($thisY - $thisGraphicCentreY  + $tileH/2), 0, 0, imagesx(${'assetImg'.$whichAsset}), imagesy(${'assetImg'.$whichAsset}) );
+
+
+array_push($allAssetsToDraw, array(${'assetImg'.$whichAsset}, floor($thisX - $thisGraphicCentreX), floor($thisY - $thisGraphicCentreY  + $tileH/2), 0, 0, imagesx(${'assetImg'.$whichAsset}), imagesy(${'assetImg'.$whichAsset})));
+
+
           }
         }
       }
@@ -126,11 +172,30 @@ mysqli_free_result($result2);
         $thisY = getTileIsoCentreCoordY($thisItem['tileX'], $thisItem['tileY']);
         $thisGraphicCentreX = intval($inventoryData[$thisItem["type"]]["centreX"]);
         $thisGraphicCentreY = intval($inventoryData[$thisItem["type"]]["centreY"]);
-        imagecopy ( $fullImage, ${'itemImg'.$i}, floor($thisX - $thisGraphicCentreX), floor($thisY - $thisGraphicCentreY), 0, 0, imagesx(${'itemImg'.$i}), imagesy(${'itemImg'.$i}) );
+  //      imagecopy ( $fullImage, ${'itemImg'.$i}, floor($thisX - $thisGraphicCentreX), floor($thisY - $thisGraphicCentreY), 0, 0, imagesx(${'itemImg'.$i}), imagesy(${'itemImg'.$i}) );
+
+array_push($allAssetsToDraw, array(${'itemImg'.$i}, floor($thisX - $thisGraphicCentreX), floor($thisY - $thisGraphicCentreY), 0, 0, imagesx(${'itemImg'.$i}), imagesy(${'itemImg'.$i})));
+
 
       }
    
     
+// sort by the Y position (depth sorting could be improved #########)
+
+function sortByYPos($a, $b) {
+  // depth is at index 2:
+    if ($a[2] == $b[2]) {
+        return 0;
+    }
+    return ($a[2] < $b[2]) ? -1 : 1;
+}
+
+usort($allAssetsToDraw,"sortByYPos");
+
+for ($i=0;$i<count($allAssetsToDraw);$i++) {
+  imagecopy($fullImage,$allAssetsToDraw[$i][0],$allAssetsToDraw[$i][1],$allAssetsToDraw[$i][2],$allAssetsToDraw[$i][3],$allAssetsToDraw[$i][4],$allAssetsToDraw[$i][5],$allAssetsToDraw[$i][6]);
+}
+
 
       if($useSepia) {
         // http://www.phpied.com/image-fun-with-php-part-2/
@@ -176,15 +241,27 @@ if($ifRequiresOverlay) {
 }
 
 
-      
 
+    
 
+ // if($debug){
       header('Content-Type: image/jpeg');
+   // }
        if(isset($_GET["radius"])) {
-        imagejpeg($croppedImage, NULL, 90);
+
+
+        if(!$debug){
+ imagejpeg($croppedImage, $filePathToSave, 90);
+      }
+      imagejpeg($croppedImage, NULL, 90);
         imagedestroy($croppedImage);
       } else {
-        imagejpeg($fullImage, NULL, 90);
+        if(!$debug){
+        
+    
+        imagejpeg($fullImage, $filePathToSave, 90);
+      }
+      imagejpeg($fullImage, NULL, 90);
       }
 
       imagedestroy($bgImage);
