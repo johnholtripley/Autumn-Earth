@@ -2,6 +2,12 @@
 
 // http://develop.ae/game-world/generateMapImage.php?mapId=10&playerId=999&sepia=true&tileX=34&tileY=22&radius=12&scale=0.3&overlay=true
 
+
+// check file already exists and redirect if it does
+
+include_once($_SERVER['DOCUMENT_ROOT']."/includes/signalnoise.php");
+include_once($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
+
 $tileW = 48;
 $tileH = $tileW/2;
 $canvasWidth = 2400;
@@ -38,26 +44,65 @@ if($whichMap < 0) {
 
 if (is_numeric($playerId)) {
     if (is_numeric($whichMap)) { 
+$jsonData = json_decode($json, true);
+
+$allItemTypesRequired = [];
+for ($i=0;$i<count($jsonData["map"]["items"]);$i++) {
+array_push($allItemTypesRequired, $jsonData["map"]["items"][$i]['type']);
+}
+
+$allItemTypesRequired = array_unique($allItemTypesRequired);
+
+
+
+//var_dump($allItemTypesRequired);
+
+
+
+$inventoryData = [];
+$query2 = "SELECT tblinventoryitems.* from tblinventoryitems where tblinventoryitems.itemID in (".implode(",",$allItemTypesRequired).") ";
+$result2 = mysqli_query($connection, $query2) or die ("failed:".$query2);
+ 
+while ($row = mysqli_fetch_array($result2, MYSQLI_ASSOC)) {
+   // array_push($inventoryData, $row);
+  $inventoryData[$row["itemID"]] = [];
+  $inventoryData[$row["itemID"]]["centreX"] = $row["centreX"];
+  $inventoryData[$row["itemID"]]["centreY"] = $row["centreY"];
+  $inventoryData[$row["itemID"]]["cleanURL"] = $row["cleanURL"];
+  $inventoryData[$row["itemID"]]["action"] = $row["action"];
+}
+mysqli_free_result($result2);
+
+
+//var_dump($inventoryData);
+   $map = $jsonData["map"]["terrain"];
+      $mapTilesY = count($map);
+      $mapTilesX = count($map[0]);
+
+
       $bgImage = imagecreatefrompng("../images/game-world/backgrounds/".$whichMap.".png");
       if($bgImage) {
       $fullImage = imagecreatetruecolor(imagesx($bgImage), imagesy($bgImage));
       imagecopy ( $fullImage, $bgImage, 0, 0, 0, 0, imagesx($bgImage), imagesy($bgImage) );
       $pencilSketchTile = imagecreatefromjpeg("../images/cartography/tile-sketch.jpg");
-      $jsonData = json_decode($json, true);
+      
       for ($i=0;$i<count($jsonData["map"]["graphics"]);$i++) {
         ${'assetImg'.$i} = imagecreatefrompng("../images/game-world/terrain/".$jsonData["map"]["graphics"][$i]["src"]);
       }
 
-      $map = $jsonData["map"]["terrain"];
-      $mapTilesY = count($map);
-      $mapTilesX = count($map[0]);
-      for ( $i = 0; $i < $mapTilesX; $i++) {
+
+
+
+// needs proper depth sorting with items and terrain:
+  for ( $i = 0; $i < $mapTilesX; $i++) {
         for ( $j = 0; $j < $mapTilesY; $j++) {
         // the tile coordinates should be positioned by i,j but the way the map is drawn, the reference in the array is j,i
         // this makes the map array more readable when editing
           if (is_numeric($map[$j][$i])) {
+
             $thisX = getTileIsoCentreCoordX($i, $j);
             $thisY = getTileIsoCentreCoordY($i, $j);
+         //  echo $i.",".$j." = ".$thisX.",".$thisY."<br>";
             $whichAsset = intval($map[$j][$i]);
             $thisGraphicCentreX = $jsonData["map"]["graphics"][$whichAsset]["centreX"];
             $thisGraphicCentreY = $jsonData["map"]["graphics"][$whichAsset]["centreY"];
@@ -67,6 +112,25 @@ if (is_numeric($playerId)) {
         }
       }
 
+
+
+
+
+
+      for ($i=0;$i<count($jsonData["map"]["items"]);$i++) {
+
+        $thisItem = $jsonData["map"]["items"][$i];
+        $thisItemURL = $inventoryData[$thisItem["type"]]["cleanURL"];
+        ${'itemImg'.$i} = imagecreatefrompng("../images/game-world/items/".$thisItemURL.".png");
+        $thisX = getTileIsoCentreCoordX($thisItem['tileX'], $thisItem['tileY']);
+        $thisY = getTileIsoCentreCoordY($thisItem['tileX'], $thisItem['tileY']);
+        $thisGraphicCentreX = intval($inventoryData[$thisItem["type"]]["centreX"]);
+        $thisGraphicCentreY = intval($inventoryData[$thisItem["type"]]["centreY"]);
+        imagecopy ( $fullImage, ${'itemImg'.$i}, floor($thisX - $thisGraphicCentreX), floor($thisY - $thisGraphicCentreY), 0, 0, imagesx(${'itemImg'.$i}), imagesy(${'itemImg'.$i}) );
+
+      }
+   
+    
 
       if($useSepia) {
         // http://www.phpied.com/image-fun-with-php-part-2/
@@ -132,6 +196,9 @@ if($ifRequiresOverlay) {
 
       for ($i=0;$i<count($jsonData["map"]["graphics"]);$i++) {
         imagedestroy(${'assetImg'.$i});
+      }
+      for ($i=0;$i<count($jsonData["map"]["items"]);$i++) {
+        imagedestroy(${'itemImg'.$i});
       }
       }
   }

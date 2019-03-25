@@ -1210,11 +1210,18 @@
         ],
         "doors": {},
         "items": [
+        {
+
+                "type": 18,
+                "tileX": 43,
+                "tileY": 27
+
+            },
    {
 
                 "type": 18,
-                "tileX": 49,
-                "tileY": 49
+                "tileX": 43,
+                "tileY": 26
 
             },{
 
