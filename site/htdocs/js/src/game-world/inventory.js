@@ -393,6 +393,9 @@ function inventoryItemAction(whichSlot, whichAction, allActionValues) {
                     openBoosterPack();
                     removeFromInventory(whichSlotNumber, 1);
                     break;
+                    case "treasureMap":
+                    UI.showTreasureMap(hero.inventory[whichSlotNumber].contains);
+                    break;
                 case "bag":
                     UI.addNewBag(hero.inventory[whichSlotNumber]);
                     audio.playSound(soundEffects['bagOpen'], 0);

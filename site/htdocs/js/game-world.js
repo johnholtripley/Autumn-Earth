@@ -3606,6 +3606,9 @@ function inventoryItemAction(whichSlot, whichAction, allActionValues) {
                     openBoosterPack();
                     removeFromInventory(whichSlotNumber, 1);
                     break;
+                    case "treasureMap":
+                    UI.showTreasureMap(hero.inventory[whichSlotNumber].contains);
+                    break;
                 case "bag":
                     UI.addNewBag(hero.inventory[whichSlotNumber]);
                     audio.playSound(soundEffects['bagOpen'], 0);
@@ -5028,10 +5031,9 @@ var UI = {
     },
 
     buildInventoryInterface: function() {
-        var characterNameAndTitle = hero.characterName;
-        
+        var characterNameAndTitle = hero.characterName;     
         if(hero.activeTitle != 0) {
-characterNameAndTitle += " - " + possibleTitles[hero.activeTitle];
+            characterNameAndTitle += " - " + possibleTitles[hero.activeTitle];
         }
         document.getElementById('characterName').innerHTML = characterNameAndTitle;
         characterPanel.classList.add('active');
@@ -7434,13 +7436,16 @@ cardAlbumMarkup += '<p id="dustCurrency">'+ hero.currency.cardDust + ' dust</p>'
     },
     createTreasureMap: function(mapId) {
       if(hero.activeTreasureMaps.indexOf(mapId) === -1) {
-        var markupToAdd = '<div class="treasureMap active"><div class="draggableBar">X marks the spot...<button class="closePanel">close</button></div>';
+        var markupToAdd = '<div class="treasureMap" id="treasureMap'+mapId+'"><div class="draggableBar">X marks the spot...</div><button class="closePanel">close</button>';
         var mapIdTiles = mapId.split("_");
         markupToAdd += '<img src="/game-world/generateMapImage.php?playerId='+characterId+'&sepia=true&tileX='+mapIdTiles[0]+'&tileY='+mapIdTiles[1]+'&radius=12&scale=0.3&overlay=true">';
         markupToAdd += '</div>';
         treasureMapPanels.insertAdjacentHTML('beforeend', markupToAdd);
         hero.activeTreasureMaps.push(mapId);
     }
+    },
+    showTreasureMap: function(mapId) {
+        document.getElementById('treasureMap'+mapId).classList.add("active");
     }
 }
 function setupWeather() {
@@ -7978,12 +7983,12 @@ function loadNewVisibleJSON(mapFilePath, whichNewMap) {
     //   console.log("loading JSON for " + whichNewMap);
     getJSON(mapFilePath, function(data) {
             thisMapData[whichNewMap] = data.mapData.map;
-         //   thisMapShopItemIds = data.shops.allItemIds;
+            //   thisMapShopItemIds = data.shops.allItemIds;
             UI.buildShop(data.shops.markup);
             // find new items that require data:
             //console.log("loadNewVisibleJSON raw "+getItemIdsForMap(whichNewMap).join("."));
             var thisMapsItemIds = uniqueValues(getItemIdsForMap(whichNewMap));
-           // var newItemIds = [];
+            // var newItemIds = [];
             var newItemIds = data.shops.allItemIds;
             for (var i = 0; i < thisMapsItemIds.length; i++) {
                 if (!(thisMapsItemIds[i] in currentActiveInventoryItems)) {
@@ -8037,7 +8042,7 @@ function loadMap() {
     }
     if (randomDungeonName != "") {
         dungeonAppend = '&dungeonName=' + randomDungeonName;
-     //   dungeonAppend += '&seed=1552609714';
+        //   dungeonAppend += '&seed=1552609714';
     }
     loadMapJSON('/game-world/getMap.php?chr=' + characterId + '&map=' + newMap + dungeonAppend);
 }
@@ -9359,7 +9364,6 @@ function unlockInnerDoor(whichInnerDoor) {
     // play sound ####
 }
 
-
 function usedActiveTool() {
     var usedToolSuccessfully = false;
     if (hero.holding.type != "") {
@@ -9367,8 +9371,78 @@ function usedActiveTool() {
         var armsReachTileY = hero.tileY + relativeFacing[hero.facing]["y"]
         switch (currentActiveInventoryItems[hero.holding.type].action) {
             case "till":
-                if (successfullyTilledEarth(armsReachTileX, armsReachTileY)) {
-                    usedToolSuccessfully = true;
+                // check for any treasure:
+                var treasureCoordinates, treasureCentreX, treasureCentreY, tryFacing, facingsRemaining, sourceTileX, sourceTileY, thisChest, thisChestsMap;
+                var foundTreasure = false;
+                for (var i = 0; i < hero.activeTreasureMaps.length; i++) {
+                    treasureCoordinates = hero.activeTreasureMaps[i].split("_");
+                    if (getPythagorasDistance(hero.tileX, hero.tileY, treasureCoordinates[0], treasureCoordinates[1]) < 2) {
+                        // add chest:
+                        thisChest = {
+                            "type": 48,
+                            "contains": [{
+                                    "type": 6
+                                },
+                                {
+                                    "type": 2
+                                },
+                                {
+                                    "type": "$",
+                                    "quantity": 5000
+                                }
+                            ]
+                        };
+
+                        tryFacing = hero.facing;
+                        switch (tryFacing) {
+                            case 'n':
+                                facingsRemaining = ['e', 'w', 's'];
+                                break;
+                            case 'e':
+                                facingsRemaining = ['n', 's', 'w'];
+                                break;
+                            case 's':
+                                facingsRemaining = ['n', 's', 'e'];
+                                break;
+                            case 'w':
+                                facingsRemaining = ['e', 'w', 'n'];
+                                break;
+                        }
+                        do {
+                            sourceTileX = hero.tileX + relativeFacing[tryFacing]["x"];
+                            sourceTileY = hero.tileY + relativeFacing[tryFacing]["y"];
+                            tryFacing = facingsRemaining.shift();
+                        } while (!tileIsClear(sourceTileX, sourceTileY) && (facingsRemaining.length > 0));
+                        if (facingsRemaining.length > 0) {
+                            // build chest:
+                            thisChest.tileX = sourceTileX;
+                            thisChest.tileY = sourceTileY;
+                            thisChestsMap = findMapNumberFromGlobalCoordinates(sourceTileX, sourceTileY);
+                            thisMapData[thisChestsMap].items.push(thisChest);
+                            initialiseItem(thisMapData[thisChestsMap].items[thisMapData[thisChestsMap].items.length - 1]);
+                           // find the map item in the inventory and remove that as well:
+                            for (var key in hero.inventory) {
+                                console.log(hero.inventory[key].contains + " == " + hero.activeTreasureMaps[i]);
+                                if (hero.inventory[key].contains == hero.activeTreasureMaps[i]) {
+                                    delete hero.inventory[key];
+                                    document.getElementById("slot" + key).innerHTML = '';
+                                }
+                            }
+                            // hide the treasure map panel:
+                            document.getElementById('treasureMap' + hero.activeTreasureMaps[i]).classList.remove("active");
+                            hero.activeTreasureMaps.splice(i, 1);
+                            foundTreasure = true;
+                            usedToolSuccessfully = true;
+                        } else {
+                            console.log("couldn't place chest");
+                        }
+                    }
+
+                }
+                if (!foundTreasure) {
+                    if (successfullyTilledEarth(armsReachTileX, armsReachTileY)) {
+                        usedToolSuccessfully = true;
+                    }
                 }
                 break;
             case "seed":
@@ -10715,10 +10789,10 @@ function isVisibleOnScreen(isoX, isoY) {
     var horizontalDistance = Math.abs(hero.isox - isoX);
     var verticalDistance = Math.abs(hero.isoy - isoY);
     // needs to take into account the item's width and height ######
-    if (horizontalDistance > (canvasWidth / 2)+tileW) {
+    if (horizontalDistance > (canvasWidth / 2) + tileW) {
         return false;
     }
-    if (verticalDistance > (canvasHeight / 2)+tileW) {
+    if (verticalDistance > (canvasHeight / 2) + tileW) {
         return false;
     }
     return true;
@@ -10827,26 +10901,26 @@ function draw() {
                     }
                 }
             }
-        
 
-        if (typeof thisMapData[visibleMaps[m]].innerDoors !== "undefined") {
-            var thisDoorImage;
-            for (var i in thisMapData[visibleMaps[m]].innerDoors) {
-                // check for open status to get the right graphic ###########
-                if (!thisMapData[visibleMaps[m]].innerDoors[i]['isOpen']) {
-                    thisX = getTileIsoCentreCoordX(thisMapData[visibleMaps[m]].innerDoors[i]['tileX'], thisMapData[visibleMaps[m]].innerDoors[i]['tileY']);
-                    thisY = getTileIsoCentreCoordY(thisMapData[visibleMaps[m]].innerDoors[i]['tileX'], thisMapData[visibleMaps[m]].innerDoors[i]['tileY']);
-                    if (isVisibleOnScreen(thisX, thisY)) {
-thisDoorImage = thisMapData[visibleMaps[m]].innerDoors[i]['graphic'];
-thisDoorImage = thisMapData[visibleMaps[m]].graphics[(thisDoorImage)].src;
-                        thisGraphicCentreX = thisMapData[visibleMaps[m]].graphics[(thisMapData[visibleMaps[m]].innerDoors[i]['graphic'])].centreX;
-                        thisGraphicCentreY = thisMapData[visibleMaps[m]].graphics[(thisMapData[visibleMaps[m]].innerDoors[i]['graphic'])].centreY;
-                        assetsToDraw.push([findIsoDepth(getTileCentreCoordX(thisMapData[visibleMaps[m]].innerDoors[i]['tileX']), getTileCentreCoordY(thisMapData[visibleMaps[m]].innerDoors[i]['tileY']), 0), "img", tileImages[thisDoorImage], Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2))]);
+
+            if (typeof thisMapData[visibleMaps[m]].innerDoors !== "undefined") {
+                var thisDoorImage;
+                for (var i in thisMapData[visibleMaps[m]].innerDoors) {
+                    // check for open status to get the right graphic ###########
+                    if (!thisMapData[visibleMaps[m]].innerDoors[i]['isOpen']) {
+                        thisX = getTileIsoCentreCoordX(thisMapData[visibleMaps[m]].innerDoors[i]['tileX'], thisMapData[visibleMaps[m]].innerDoors[i]['tileY']);
+                        thisY = getTileIsoCentreCoordY(thisMapData[visibleMaps[m]].innerDoors[i]['tileX'], thisMapData[visibleMaps[m]].innerDoors[i]['tileY']);
+                        if (isVisibleOnScreen(thisX, thisY)) {
+                            thisDoorImage = thisMapData[visibleMaps[m]].innerDoors[i]['graphic'];
+                            thisDoorImage = thisMapData[visibleMaps[m]].graphics[(thisDoorImage)].src;
+                            thisGraphicCentreX = thisMapData[visibleMaps[m]].graphics[(thisMapData[visibleMaps[m]].innerDoors[i]['graphic'])].centreX;
+                            thisGraphicCentreY = thisMapData[visibleMaps[m]].graphics[(thisMapData[visibleMaps[m]].innerDoors[i]['graphic'])].centreY;
+                            assetsToDraw.push([findIsoDepth(getTileCentreCoordX(thisMapData[visibleMaps[m]].innerDoors[i]['tileX']), getTileCentreCoordY(thisMapData[visibleMaps[m]].innerDoors[i]['tileY']), 0), "img", tileImages[thisDoorImage], Math.floor(thisX - hero.isox - thisGraphicCentreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisGraphicCentreY + (canvasHeight / 2))]);
+                        }
                     }
                 }
             }
         }
-}
         if (hasActivePet) {
             for (var i = 0; i < hero.activePets.length; i++) {
                 thisNPCOffsetCol = currentAnimationFrame % hero.allPets[hero.activePets[i]]["animation"]["walk"]["length"];
@@ -10987,14 +11061,8 @@ thisDoorImage = thisMapData[visibleMaps[m]].graphics[(thisDoorImage)].src;
             gameContext.fillRect(0, 0, canvasWidth, canvasHeight);
             gameContext.fill();
 
-// john #######
-         //   var thisMapTilesX = thisMapData[currentMap].terrain[0].length;
-        //     var thisMapTilesY = thisMapData[currentMap].terrain.length;
-        //    var backgroundImageWidth = (mapTilesX + mapTilesY) * tileW/2;
-        //    var backgroundImageHeight = backgroundImageWidth/2;
 
-
-// need to determine the offset for the top left corner of the map from the top left corner of the image #######
+            // need to determine the offset for the top left corner of the map from the top left corner of the image #######
 
             if (typeof backgroundImgs[currentMap] !== "undefined") {
                 gameContext.drawImage(backgroundImgs[currentMap], Math.floor(getTileIsoCentreCoordX(0, mapTilesY - 1) - hero.isox - tileW / 2 + canvasWidth / 2), Math.floor(getTileIsoCentreCoordY(0, 0) - hero.isoy - (tileH / 2) + canvasHeight / 2));
