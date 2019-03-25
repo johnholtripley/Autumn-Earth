@@ -7433,12 +7433,14 @@ cardAlbumMarkup += '<p id="dustCurrency">'+ hero.currency.cardDust + ' dust</p>'
         );
     },
     createTreasureMap: function(mapId) {
-        // check if exists in active, if not, add to active, and create:
+      if(hero.activeTreasureMaps.indexOf(mapId) === -1) {
         var markupToAdd = '<div class="treasureMap active"><div class="draggableBar">X marks the spot...<button class="closePanel">close</button></div>';
         var mapIdTiles = mapId.split("_");
         markupToAdd += '<img src="/game-world/generateMapImage.php?playerId='+characterId+'&sepia=true&tileX='+mapIdTiles[0]+'&tileY='+mapIdTiles[1]+'&radius=12&scale=0.3&overlay=true">';
         markupToAdd += '</div>';
         treasureMapPanels.insertAdjacentHTML('beforeend', markupToAdd);
+        hero.activeTreasureMaps.push(mapId);
+    }
     }
 }
 function setupWeather() {

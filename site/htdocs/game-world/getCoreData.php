@@ -50,6 +50,7 @@ $outputJSON .= '"professionsKnown": '.$professionsKnown.',';
 $outputJSON .= '"recipesKnown": '.$recipesKnown.',';
 $heroRecipesKnown =  explode(",",   str_replace("[", "", str_replace("]", "", $recipesKnown))         );
 $outputJSON .= '"holding": '.$holding.',';
+$outputJSON .= '"activeTreasureMaps": '.$activeTreasureMaps.',';
 $outputJSON .= '"plantCrossesKnown": '.$plantCrossesKnown.',';
 $outputJSON .= '"totalGameTimePlayed": '.$totalGameTimePlayed.',';
 $outputJSON .= '"fae": '.$fae.',';
