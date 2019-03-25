@@ -792,3 +792,12 @@ font-size: 0;
         }
     }
 }
+
+
+#treasureMapPanels {
+    .treasureMap {
+        @include togglePanel(0.4s);
+        left: 200px;
+        top: 180px;
+    }
+}

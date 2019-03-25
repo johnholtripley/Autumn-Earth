@@ -77,6 +77,7 @@ const holdingIcon = document.getElementById('holdingIcon');
 const quickHold = document.getElementById('quickHold');
 const holdingGauge = document.getElementById('holdingGauge');
 const cardGameConcede = document.getElementById('cardGameConcede');
+const treasureMapPanels = document.getElementById('treasureMapPanels');
 
 
 
@@ -139,6 +140,9 @@ characterNameAndTitle += " - " + possibleTitles[hero.activeTitle];
                     // check for cooldown attribute, and add a timer if so:
                     if (typeof hero.inventory[thisSlotsID].cooldown !== "undefined") {
                         hero.inventory[thisSlotsID].cooldownTimer = 0;
+                    }
+                    if(thisAction == "treasureMap") {
+UI.createTreasureMap(hero.inventory[thisSlotsID].contains);
                     }
                 } else {
                     inventoryMarkup += '';
@@ -2513,6 +2517,13 @@ cardAlbumMarkup += '<p id="dustCurrency">'+ hero.currency.cardDust + ' dust</p>'
             },
             false
         );
+    },
+    createTreasureMap: function(mapId) {
+        // check if exists in active, if not, add to active, and create:
+        var markupToAdd = '<div class="treasureMap active"><div class="draggableBar">X marks the spot...<button class="closePanel">close</button></div>';
+        var mapIdTiles = mapId.split("_");
+        markupToAdd += '<img src="/game-world/generateMapImage.php?playerId='+characterId+'&sepia=true&tileX='+mapIdTiles[0]+'&tileY='+mapIdTiles[1]+'&radius=12&scale=0.3&overlay=true">';
+        markupToAdd += '</div>';
+        treasureMapPanels.insertAdjacentHTML('beforeend', markupToAdd);
     }
-
 }

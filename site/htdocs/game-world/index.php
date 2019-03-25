@@ -76,6 +76,7 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
         <input type="submit" value="Ok">
       </fieldset>
     </form>
+    <div id="treasureMapPanels"></div>
     <div id="characterPanel">
       <div class="draggableBar"><div id="characterName"></div></div><button class="closePanel">close</button>
       <div id="holdingIcon"></div>
