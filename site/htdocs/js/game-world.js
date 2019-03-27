@@ -3222,6 +3222,7 @@ function canAddItemToInventory(itemObj) {
     var followersAdded = [];
     var professionsAdded = [];
     var followerMarkupToAdd;
+    var anyTreasureMaps = [];
     for (var k = 0; k < itemObj.length; k++) {
         // check for any money items:
         switch (itemObj[k].type) {
@@ -3235,6 +3236,13 @@ function canAddItemToInventory(itemObj) {
                 professionsAdded.push(itemObj[k].id);
                 break;
             default:
+
+
+
+if (currentActiveInventoryItems[itemObj[k].type].action == "treasureMap") {
+anyTreasureMaps.push(itemObj[k].contains);
+}
+
                 var quantityAddedSoFar = 0;
                 // check if this type exist in the current inventory:
                 var inventoryKeysFound = getObjectKeysForInnerValue(inventoryClone, itemObj[k].type, "type");
@@ -3338,6 +3346,11 @@ function canAddItemToInventory(itemObj) {
                     hero.professionsKnown.push(professionsAdded[i]);
                     UI.showNewProfession(professionsAdded[i]);
                 }
+            }
+        }
+        if (anyTreasureMaps.length > 0) {
+            for (var i = 0; i < anyTreasureMaps.length; i++) {
+                UI.createTreasureMap(anyTreasureMaps[i]);
             }
         }
         // return success, and the slots that were affected:

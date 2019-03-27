@@ -96,6 +96,7 @@ $allItemTypesRequired = array_unique($allItemTypesRequired);
 
 
 $inventoryData = [];
+if(count($jsonData["map"]["items"])>0) {
 $query2 = "SELECT tblinventoryitems.* from tblinventoryitems where tblinventoryitems.itemID in (".implode(",",$allItemTypesRequired).") ";
 $result2 = mysqli_query($connection, $query2) or die ("failed:".$query2);
  
@@ -108,6 +109,7 @@ while ($row = mysqli_fetch_array($result2, MYSQLI_ASSOC)) {
   $inventoryData[$row["itemID"]]["action"] = $row["action"];
 }
 mysqli_free_result($result2);
+}
 
 
 
