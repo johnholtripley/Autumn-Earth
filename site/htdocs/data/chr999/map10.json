@@ -1243,7 +1243,11 @@
                 {
                     "type": "$",
                     "quantity": 1000
-                }]
+                },
+                {
+                    "type": 82,
+                    "contains": "##procedural##"
+                    }]
             }
 
 ],

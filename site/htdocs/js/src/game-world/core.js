@@ -1909,6 +1909,7 @@ function usedActiveTool() {
                             // hide the treasure map panel:
                             document.getElementById('treasureMap' + hero.activeTreasureMaps[i]).classList.remove("active");
                             hero.activeTreasureMaps.splice(i, 1);
+                            audio.playSound(soundEffects['foundChest'], 0);
                             foundTreasure = true;
                             usedToolSuccessfully = true;
                         } else {

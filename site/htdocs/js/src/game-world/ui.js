@@ -362,9 +362,9 @@ UI.createTreasureMap(hero.inventory[thisSlotsID].contains);
 
     doubleClick: function(e) {
         var thisItemsAction = e.target.getAttribute('data-action');
-        if (thisItemsAction) {
-            inventoryItemAction(e.target, thisItemsAction, e.target.getAttribute('data-action-value'));
-        } else {
+    //    if (thisItemsAction) {
+    //        inventoryItemAction(e.target, thisItemsAction, e.target.getAttribute('data-action-value'));
+    //    } else {
             var thisNode = getNearestParentId(e.target);
             if (thisNode.id.substring(0, 6) == "recipe") {
                 recipeSelectComponents(thisNode.id);
@@ -381,7 +381,13 @@ UI.createTreasureMap(hero.inventory[thisSlotsID].contains);
             } else if (thisNode.id.substring(0, 8) == "fromSlot") {
                 addCraftingComponents(thisNode.id, true);
             }
+
+
+ if (thisItemsAction) {
+            inventoryItemAction(e.target, thisItemsAction, e.target.getAttribute('data-action-value'));
         }
+            
+     //   }
     },
 
     showDialogue: function(thisObjectSpeaking, text) {

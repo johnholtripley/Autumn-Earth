@@ -22,7 +22,8 @@ var soundsToLoad = {
     'weaving': '../sounds/tailoring-NOT_MINE.mp3',
     'pouring': '../sounds/pour-water-NOT_MINE.mp3',
     'digging': '../sounds/digging-NOT_MINE.mp3',
-    'cardCraft': '../sounds/craft-card-NOT_MINE-hearthstone.mp3'
+    'cardCraft': '../sounds/craft-card-NOT_MINE-hearthstone.mp3',
+    'foundChest': '../sounds/found-treasure-NOT_MINE-wow.mp3'
 };
 
 
@@ -5279,9 +5280,9 @@ UI.createTreasureMap(hero.inventory[thisSlotsID].contains);
 
     doubleClick: function(e) {
         var thisItemsAction = e.target.getAttribute('data-action');
-        if (thisItemsAction) {
-            inventoryItemAction(e.target, thisItemsAction, e.target.getAttribute('data-action-value'));
-        } else {
+    //    if (thisItemsAction) {
+    //        inventoryItemAction(e.target, thisItemsAction, e.target.getAttribute('data-action-value'));
+    //    } else {
             var thisNode = getNearestParentId(e.target);
             if (thisNode.id.substring(0, 6) == "recipe") {
                 recipeSelectComponents(thisNode.id);
@@ -5298,7 +5299,13 @@ UI.createTreasureMap(hero.inventory[thisSlotsID].contains);
             } else if (thisNode.id.substring(0, 8) == "fromSlot") {
                 addCraftingComponents(thisNode.id, true);
             }
+
+
+ if (thisItemsAction) {
+            inventoryItemAction(e.target, thisItemsAction, e.target.getAttribute('data-action-value'));
         }
+            
+     //   }
     },
 
     showDialogue: function(thisObjectSpeaking, text) {
@@ -9431,6 +9438,7 @@ function usedActiveTool() {
                             // hide the treasure map panel:
                             document.getElementById('treasureMap' + hero.activeTreasureMaps[i]).classList.remove("active");
                             hero.activeTreasureMaps.splice(i, 1);
+                            audio.playSound(soundEffects['foundChest'], 0);
                             foundTreasure = true;
                             usedToolSuccessfully = true;
                         } else {

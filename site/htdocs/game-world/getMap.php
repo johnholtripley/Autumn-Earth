@@ -862,14 +862,37 @@ generatePositionsOfHiddenResourceNodes();
 }
 
 
+
+function generateTreasureMap() {
+    global $worldMap, $chr;
+  
+
+
+// pick a random overworld map:
+    $randomRow = $worldMap[array_rand($worldMap)];
+    $randomMap = $randomRow[array_rand($randomRow)];
+ 
+
+$randomMapDataFile = file_get_contents('../data/chr' .  $chr . '/map' . $randomMap . '.json');
+$randomMapData = json_decode($randomMapDataFile, true);
+
+  // find a clear location on this map:
+    // ####
+    // john
+
+    return "13_12";
+}
+
+
 if ($hasProceduralContent !== false) {
     
     // check for any procedural elements that need to be added:
 
     for($i=0;$i<count($mapData['map']['items']); $i++) {
-        if(($mapData['map']['items'][$i]['type'] == 32) || ($mapData['map']['items'][$i]['type'] == 33)) {
+        
             if(isset($mapData['map']['items'][$i]['inscription'])) {
                 if($mapData['map']['items'][$i]['inscription'] == "##procedural##") {
+                    if(($mapData['map']['items'][$i]['type'] == 32) || ($mapData['map']['items'][$i]['type'] == 33)) {
                     // generate a book:
                     include_once($_SERVER['DOCUMENT_ROOT']."/game-world/generateBook.php");
                     $newTimeStamp = new DateTime();
@@ -878,8 +901,35 @@ if ($hasProceduralContent !== false) {
                     $mapData['map']['items'][$i]['inscription']['timeCreated'] = $newTimeStamp->getTimestamp();
                     $mapData['map']['items'][$i]['inscription']['content'] = createProceduralBook();
                 }
+                }
             }
-        }
+            if(isset($mapData['map']['items'][$i]['contains'])) {
+
+
+                if(count($mapData['map']['items'][$i]['contains']) >0) {
+// loop through items inside (eg. in a chest):
+                     for($j=0;$j<count($mapData['map']['items'][$i]['contains']); $j++) {
+if(isset($mapData['map']['items'][$i]['contains'][$j]['contains'])) {
+                            if($mapData['map']['items'][$i]['contains'][$j]['contains'] == "##procedural##") {
+                         if($mapData['map']['items'][$i]['contains'][$j]['type'] == 82) {
+
+                        $mapData['map']['items'][$i]['contains'][$j]['contains'] = generateTreasureMap();
+                    }
+
+}
+}
+                     }
+                } else {
+
+                    if($mapData['map']['items'][$i]['contains'] == "##procedural##") {
+                         if($mapData['map']['items'][$i]['type'] == 82) {
+
+                        $mapData['map']['items'][$i]['contains'] = generateTreasureMap();
+                    }
+                }
+            }
+            }
+        
     }
 
     for($i=0;$i<count($mapData['map']['npcs']); $i++) {

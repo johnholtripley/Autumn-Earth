@@ -21,7 +21,8 @@ var soundsToLoad = {
     'weaving': '../sounds/tailoring-NOT_MINE.mp3',
     'pouring': '../sounds/pour-water-NOT_MINE.mp3',
     'digging': '../sounds/digging-NOT_MINE.mp3',
-    'cardCraft': '../sounds/craft-card-NOT_MINE-hearthstone.mp3'
+    'cardCraft': '../sounds/craft-card-NOT_MINE-hearthstone.mp3',
+    'foundChest': '../sounds/found-treasure-NOT_MINE-wow.mp3'
 };
 
 
