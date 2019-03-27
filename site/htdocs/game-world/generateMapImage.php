@@ -12,6 +12,7 @@ $tileW = 48;
 $tileH = $tileW/2;
 $canvasWidth = 2400;
 $canvasHeight = 1200;
+$worldMapTileLength = 50;
 
 $playerId=$_GET["playerId"];
 
@@ -23,6 +24,9 @@ return $worldMap[floor($tileY/$worldMapTileLength)][floor($tileX/$worldMapTileLe
 }
 
 
+$requiredTileX = $_GET["tileX"];
+$requiredTileY = $_GET["tileY"];
+
 
 if(isset($_GET["mapId"])) {
 $whichMap = $_GET["mapId"];
@@ -32,12 +36,19 @@ $whichMap = $_GET["mapId"];
   $mapJson = json_decode($jsonMapResults, true);
   $worldMap = $mapJson['worldMap'];
   $worldMapTileLength = 50;
-  $whichMap = findMapNumberFromGlobalCoordinates($_GET["tileX"],$_GET["tileY"]);
+  $whichMap = findMapNumberFromGlobalCoordinates($requiredTileX,$requiredTileY);
+
+// convert to local coordinates:
+$requiredTileX = $requiredTileX%$worldMapTileLength;
+$requiredTileY = $requiredTileY%$worldMapTileLength;
+
+
+
 }
 
 
 
-$filePathToSave = "../data/chr".$playerId."/treasure-maps/".$whichMap."_".$_GET["tileX"]."_".$_GET["tileY"].".jpg";
+$filePathToSave = "../data/chr".$playerId."/treasure-maps/".$whichMap."_".$requiredTileX."_".$requiredTileY.".jpg";
 
 $debug = false;
 if(isset($_GET["debug"])) {
@@ -221,8 +232,8 @@ for ($i=0;$i<count($allAssetsToDraw);$i++) {
    
         $croppedImage = imagecreatetruecolor($scaledSize, $scaledSize);
 
-        $sourceX = getTileIsoCentreCoordX($_GET["tileX"],$_GET["tileY"])-$cropSize/2;
-        $sourceY = getTileIsoCentreCoordY($_GET["tileX"],$_GET["tileY"])-$cropSize/2;
+        $sourceX = getTileIsoCentreCoordX($requiredTileX,$requiredTileY)-$cropSize/2;
+        $sourceY = getTileIsoCentreCoordY($requiredTileX,$requiredTileY)-$cropSize/2;
 if(isset($_GET["scale"])) {
    imagecopyresampled($croppedImage,$fullImage,0,0,$sourceX,$sourceY,$scaledSize,$scaledSize,$cropSize,$cropSize);
 } else {
