@@ -169,8 +169,14 @@ imagecopy ( $fullImage, $seaImage, $i, $j, 0, 0, $seaImageWidth, $seaImageHeight
 }
 
 // add ornaments to the sea:
+// make these sensibly but randomly placed ###########
 $ornamentImage = imagecreatefrompng("../images/cartography/ornaments/ship.png");
 imagecopy ( $fullImage, $ornamentImage, 290, 60, 0, 0, imagesx($ornamentImage), imagesy($ornamentImage) );
+
+$ornamentImage2 = imagecreatefrompng("../images/cartography/ornaments/unicorn.png");
+imagecopy ( $fullImage, $ornamentImage2, 290, 860, 0, 0, imagesx($ornamentImage2), imagesy($ornamentImage2) );
+
+
 
       imagecopy ( $fullImage, $bgImage, $imagePadding, $imagePadding, 0, 0, $canvasSizeX, $canvasSizeY );
       $pencilSketchTile = imagecreatefromjpeg("../images/cartography/tile-sketch.jpg");
