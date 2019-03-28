@@ -14,6 +14,8 @@ $canvasWidth = 2400;
 $canvasHeight = 1200;
 $worldMapTileLength = 50;
 
+$imagePadding = 500;
+
 $playerId=$_GET["playerId"];
 
 
@@ -37,6 +39,9 @@ $whichMap = $_GET["mapId"];
   $worldMap = $mapJson['worldMap'];
   $worldMapTileLength = 50;
   $whichMap = findMapNumberFromGlobalCoordinates($requiredTileX,$requiredTileY);
+
+$globalRequiredTileX = $requiredTileX;
+$globalRequiredTileY = $requiredTileY;
 
 // convert to local coordinates:
 $requiredTileX = $requiredTileX%$worldMapTileLength;
@@ -107,8 +112,11 @@ $allItemTypesRequired = array_unique($allItemTypesRequired);
 
 
 $inventoryData = [];
-if(count($jsonData["map"]["items"])>0) {
-$query2 = "SELECT tblinventoryitems.* from tblinventoryitems where tblinventoryitems.itemID in (".implode(",",$allItemTypesRequired).") ";
+//if(count($jsonData["map"]["items"])>0) {
+//$query2 = "SELECT tblinventoryitems.* from tblinventoryitems where tblinventoryitems.itemID in (".implode(",",$allItemTypesRequired).") ";
+
+// load in ALL inventory item data, so that any items in Player Housing are also available:
+$query2 = "SELECT tblinventoryitems.* from tblinventoryitems";
 $result2 = mysqli_query($connection, $query2) or die ("failed:".$query2);
  
 while ($row = mysqli_fetch_array($result2, MYSQLI_ASSOC)) {
@@ -120,7 +128,7 @@ while ($row = mysqli_fetch_array($result2, MYSQLI_ASSOC)) {
   $inventoryData[$row["itemID"]]["action"] = $row["action"];
 }
 mysqli_free_result($result2);
-}
+//}
 
 
 
@@ -129,10 +137,42 @@ mysqli_free_result($result2);
       $mapTilesX = count($map[0]);
 
 
+
+
+
+
       $bgImage = imagecreatefrompng("../images/game-world/backgrounds/".$whichMap.".png");
       if($bgImage) {
-      $fullImage = imagecreatetruecolor(imagesx($bgImage), imagesy($bgImage));
-      imagecopy ( $fullImage, $bgImage, 0, 0, 0, 0, imagesx($bgImage), imagesy($bgImage) );
+
+$canvasSizeX = imagesx($bgImage)+($imagePadding*2);
+$canvasSizeY = imagesy($bgImage)+($imagePadding*2);
+
+      $fullImage = imagecreatetruecolor($canvasSizeX, $canvasSizeY);
+
+
+
+
+
+
+// $imagePadding
+
+
+
+// draw the sea underneath:
+      $seaImage = imagecreatefromjpeg("../images/cartography/ocean.jpg");
+      $seaImageWidth = imagesx($seaImage);
+      $seaImageHeight = imagesy($seaImage);
+      for($i=0;$i<$canvasSizeX;$i+=$seaImageWidth) {
+      for($j=0;$j<$canvasSizeY;$j+=$seaImageHeight) {
+imagecopy ( $fullImage, $seaImage, $i, $j, 0, 0, $seaImageWidth, $seaImageHeight );
+}
+}
+
+// add ornaments to the sea:
+$ornamentImage = imagecreatefrompng("../images/cartography/ornaments/ship.png");
+imagecopy ( $fullImage, $ornamentImage, 290, 60, 0, 0, imagesx($ornamentImage), imagesy($ornamentImage) );
+
+      imagecopy ( $fullImage, $bgImage, $imagePadding, $imagePadding, 0, 0, $canvasSizeX, $canvasSizeY );
       $pencilSketchTile = imagecreatefromjpeg("../images/cartography/tile-sketch.jpg");
       
       for ($i=0;$i<count($jsonData["map"]["graphics"]);$i++) {
@@ -152,8 +192,8 @@ $allAssetsToDraw = [];
         // this makes the map array more readable when editing
           if (is_numeric($map[$j][$i])) {
 
-            $thisX = getTileIsoCentreCoordX($i, $j);
-            $thisY = getTileIsoCentreCoordY($i, $j);
+            $thisX = getTileIsoCentreCoordX($i, $j) + $imagePadding;
+            $thisY = getTileIsoCentreCoordY($i, $j) + $imagePadding;
          //  echo $i.",".$j." = ".$thisX.",".$thisY."<br>";
             $whichAsset = intval($map[$j][$i]);
             $thisGraphicCentreX = $jsonData["map"]["graphics"][$whichAsset]["centreX"];
@@ -181,8 +221,8 @@ array_push($allAssetsToDraw, array(${'assetImg'.$whichAsset}, floor($thisX - $th
         $thisItem = $jsonData["map"]["items"][$i];
         $thisItemURL = $inventoryData[$thisItem["type"]]["cleanURL"];
         ${'itemImg'.$i} = imagecreatefrompng("../images/game-world/items/".$thisItemURL.".png");
-        $thisX = getTileIsoCentreCoordX($thisItem['tileX'], $thisItem['tileY']);
-        $thisY = getTileIsoCentreCoordY($thisItem['tileX'], $thisItem['tileY']);
+        $thisX = getTileIsoCentreCoordX($thisItem['tileX'], $thisItem['tileY']) + $imagePadding;
+        $thisY = getTileIsoCentreCoordY($thisItem['tileX'], $thisItem['tileY']) + $imagePadding;
         $thisGraphicCentreX = intval($inventoryData[$thisItem["type"]]["centreX"]);
         $thisGraphicCentreY = intval($inventoryData[$thisItem["type"]]["centreY"]);
   //      imagecopy ( $fullImage, ${'itemImg'.$i}, floor($thisX - $thisGraphicCentreX), floor($thisY - $thisGraphicCentreY), 0, 0, imagesx(${'itemImg'.$i}), imagesy(${'itemImg'.$i}) );
@@ -191,6 +231,91 @@ array_push($allAssetsToDraw, array(${'itemImg'.$i}, floor($thisX - $thisGraphicC
 
 
       }
+
+
+
+// get any player housing:
+
+      $playerHousingTerrainAssets = [];
+
+      $eastEdgeTile = $globalRequiredTileX + $_GET["radius"];
+      $westEdgeTile = $globalRequiredTileX - $_GET["radius"];
+      $NorthEdgeTile = $globalRequiredTileY - $_GET["radius"]; 
+      $SouthEdgeTile = $globalRequiredTileY + $_GET["radius"]; 
+
+
+
+$housingQuery = "SELECT * from tblplayerhousing where northWestCornerTileY <= ".$SouthEdgeTile." and southEastCornerTileY >= ".$NorthEdgeTile." and northWestCornerTileX <= ".$eastEdgeTile." and southEastCornerTileX >= ".$westEdgeTile;
+
+$housingResult = mysqli_query($connection,  $housingQuery ) or die ( "couldn't execute events query: ".$housingQuery );
+$numberOfHouses = mysqli_num_rows( $housingResult );
+
+if ( $numberOfHouses>0) {
+    while ( $housingRow = mysqli_fetch_array( $housingResult ) ) {
+
+  extract($housingRow);
+  // load in external housing
+  $housingFile = file_get_contents('../data/chr'.$characterID.'/housing/external.json');
+  $housingData = json_decode($housingFile, true);
+  $thisHouseWidth = count($housingData['map']['terrain'][0]);
+  $thisHouseLength = count($housingData['map']['terrain']);
+
+// get all terrain images for this:
+   for ($i=0;$i<count($housingData["map"]["graphics"]);$i++) {
+        ${'assetImg'.$characterID."_".$i} = imagecreatefrompng("../images/game-world/terrain/".$housingData["map"]["graphics"][$i]["src"]);
+        array_push($playerHousingTerrainAssets, 'assetImg'.$characterID."_".$i);
+      }
+      
+
+      // get all item images for this:
+   for ($i=0;$i<count($housingData["map"]["items"]);$i++) {
+
+        $thisItem = $housingData["map"]["items"][$i];
+        $thisItemURL = $inventoryData[$thisItem["type"]]["cleanURL"];
+        ${'itemImg'.$characterID."_".$i} = imagecreatefrompng("../images/game-world/items/".$thisItemURL.".png");
+
+$thisLocalHousingTileY = $thisItem['tileY'] + $northWestCornerTileY;
+$thisLocalHousingTileX = $thisItem['tileX'] + $northWestCornerTileX;
+
+        $thisX = getTileIsoCentreCoordX($thisLocalHousingTileX, $thisLocalHousingTileY) + $imagePadding;
+        $thisY = getTileIsoCentreCoordY($thisLocalHousingTileX, $thisLocalHousingTileY) + $imagePadding;
+        $thisGraphicCentreX = intval($inventoryData[$thisItem["type"]]["centreX"]);
+        $thisGraphicCentreY = intval($inventoryData[$thisItem["type"]]["centreY"]);
+  //      imagecopy ( $fullImage, ${'itemImg'.$i}, floor($thisX - $thisGraphicCentreX), floor($thisY - $thisGraphicCentreY), 0, 0, imagesx(${'itemImg'.$i}), imagesy(${'itemImg'.$i}) );
+
+array_push($allAssetsToDraw, array(${'itemImg'.$characterID."_".$i}, floor($thisX - $thisGraphicCentreX), floor($thisY - $thisGraphicCentreY), 0, 0, imagesx(${'itemImg'.$characterID."_".$i}), imagesy(${'itemImg'.$characterID."_".$i})));
+array_push($playerHousingTerrainAssets, 'itemImg'.$characterID."_".$i);
+
+
+      }
+
+
+
+
+for ($i=0;$i<$thisHouseWidth;$i++) {
+    for ($j=0;$j<$thisHouseLength;$j++) {
+$thisLocalHousingTileY = $j + $northWestCornerTileY;
+$thisLocalHousingTileX = $i + $northWestCornerTileX;
+  if (is_numeric($housingData['map']['terrain'][$j][$i])) {
+            $thisX = getTileIsoCentreCoordX($thisLocalHousingTileX, $thisLocalHousingTileY) + $imagePadding;
+            $thisY = getTileIsoCentreCoordY($thisLocalHousingTileX, $thisLocalHousingTileY) + $imagePadding;
+            $whichAsset = intval($housingData['map']['terrain'][$j][$i]);
+            $thisGraphicCentreX = $housingData["map"]["graphics"][$whichAsset]["centreX"];
+            $thisGraphicCentreY = $housingData["map"]["graphics"][$whichAsset]["centreY"];
+array_push($allAssetsToDraw, array(${'assetImg'.$characterID."_".$whichAsset}, floor($thisX - $thisGraphicCentreX), floor($thisY - $thisGraphicCentreY  + $tileH/2), 0, 0, imagesx(${'assetImg'.$characterID."_".$whichAsset}), imagesy(${'assetImg'.$characterID."_".$whichAsset})));
+
+
+          }
+
+
+
+    }
+  }
+
+
+      }
+    }
+mysqli_free_result($housingResult);
    
     
 // sort by the Y position (depth sorting could be improved #########)
@@ -226,8 +351,10 @@ for ($i=0;$i<count($allAssetsToDraw);$i++) {
              // crop the image
         $cropSize = $_GET["radius"] * $tileW;
         $scaledSize = $cropSize;
+        $scaledPadding = $imagePadding;
         if(isset($_GET["scale"])) {
         $scaledSize = $cropSize * $_GET["scale"];
+        $scaledPadding = $imagePadding * $_GET["scale"];
         }
    
         $croppedImage = imagecreatetruecolor($scaledSize, $scaledSize);
@@ -235,7 +362,8 @@ for ($i=0;$i<count($allAssetsToDraw);$i++) {
         $sourceX = getTileIsoCentreCoordX($requiredTileX,$requiredTileY)-$cropSize/2;
         $sourceY = getTileIsoCentreCoordY($requiredTileX,$requiredTileY)-$cropSize/2;
 if(isset($_GET["scale"])) {
-   imagecopyresampled($croppedImage,$fullImage,0,0,$sourceX,$sourceY,$scaledSize,$scaledSize,$cropSize,$cropSize);
+
+   imagecopyresampled($croppedImage,$fullImage,0,0,$sourceX+$imagePadding,$sourceY+$imagePadding,$scaledSize,$scaledSize,$cropSize,$cropSize);
 } else {
   imagecopy($croppedImage,$fullImage,0,0,$sourceX,$sourceY,$cropSize,$cropSize);
 }
@@ -278,6 +406,8 @@ if($ifRequiresOverlay) {
       }
 
       imagedestroy($bgImage);
+      imagedestroy($ornamentImage);
+      imagedestroy($seaImage);
       imagedestroy($fullImage);
       imagedestroy($pencilSketchTile);
       if($ifRequiresOverlay) {
@@ -290,6 +420,13 @@ if($ifRequiresOverlay) {
       for ($i=0;$i<count($jsonData["map"]["items"]);$i++) {
         imagedestroy(${'itemImg'.$i});
       }
+
+      for ($i=0;$i<count($playerHousingTerrainAssets);$i++) {
+        imagedestroy(${$playerHousingTerrainAssets[$i]});
+      }
+
+
+
       }
   }
 }

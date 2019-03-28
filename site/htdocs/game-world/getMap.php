@@ -82,20 +82,7 @@ function generateHash($sourceString) {
     return $hash;
 }
 
-function findWorldMapPosition($requiredMapNumber) {
-    global $worldMap;
-    // find where the required map is in the array:
-    for ($i = 0; $i < count($worldMap[0]); $i++) {
-        for ($j = 0; $j < count($worldMap); $j++) {
-            if ($worldMap[$j][$i] == $requiredMapNumber) {
-                $currentMapIndexX = $i;
-                $currentMapIndexY = $j;
-                break;
-            }
-        }
-    }
-    return [$currentMapIndexX, $currentMapIndexY];
-}
+
 
 
 
@@ -614,7 +601,7 @@ $graphicsBeingUsed[$mapData['map']['graphics'][$i]['src']] = $i;
 
  extract($housingRow);
         // load in external housing
-        $housingFile = file_get_contents('../data/chr'.$chr.'/housing/external.json');
+        $housingFile = file_get_contents('../data/chr'.$characterID.'/housing/external.json');
         $housingData = json_decode($housingFile, true);
 
     $thisHouseWidth = count($housingData['map']['terrain'][0]);
@@ -863,139 +850,7 @@ generatePositionsOfHiddenResourceNodes();
 
 
 
-function generateTreasureMap() {
-    global $worldMap, $chr, $activeEvents, $worldMapTileLength;
-  
 
-
-// pick a random overworld map:
-    $randomRow = $worldMap[array_rand($worldMap)];
-    $randomMap = $randomRow[array_rand($randomRow)];
- 
-
-$randomMapDataFile = file_get_contents('../data/chr' .  $chr . '/map' . $randomMap . '.json');
-$randomMapData = json_decode($randomMapDataFile, true);
-
-  // find a clear location on this map:
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// code duplicated from Resource placement - could be moved into a function? #####
-   // make sure not blocked by item, static npcs, or active  items or npcs:
-    $clearTiles = $randomMapData['map']['collisions'];
-    // loop through items and mark those tiles:
-    for($i=0;$i<count($randomMapData['map']['items']); $i++) {
-        $clearTiles[($randomMapData['map']['items'][$i]['tileY'])][($randomMapData['map']['items'][$i]['tileX'])] = '1';
-    }
-    // loop through and mark any static NPCs:
-    for($i=0;$i<count($randomMapData['map']['npcs']); $i++) {
-        if ($randomMapData['map']['npcs'][$i]['movement'][0] == '-') {
-            if ($randomMapData['map']['npcs'][$i]['isCollidable']) {
-                $clearTiles[($randomMapData['map']['npcs'][$i]['tileY'])][($randomMapData['map']['npcs'][$i]['tileX'])] = '1';
-            }
-        }
-    }
-    // check seasonal content as well:
-    for ($j=0;$j<count($activeEvents);$j++) {
-        if(isset($randomMapData['map']['eventSpecificContent'][($activeEvents[$j])])) {
-            $thisEvent = $randomMapData['map']['eventSpecificContent'][($activeEvents[$j])];
-
-            if(isset($thisEvent['hiddenResourceCategories'])) {
-                array_push($whichCategories, $thisEvent['hiddenResourceCategories']);
-            }
-
-            if(isset($thisEvent['items'])) {
-                for($i=0;$i<count($thisEvent['items']); $i++) {
-                    $clearTiles[($thisEvent['items'][$i]['tileY'])][($thisEvent['items'][$i]['tileX'])] = '1';
-                }
-            }
-
-            if(isset($thisEvent['npcs'])) {
-                for($i=0;$i<count($thisEvent['npcs']); $i++) {
-                    if ($thisEvent['npcs'][$i]['movement'][0] == '-') {
-                        if ($thisEvent['npcs'][$i]['isCollidable']) {
-                            $clearTiles[($thisEvent['npcs'][$i]['tileY'])][($thisEvent['npcs'][$i]['tileX'])] = '1';
-                        }
-                    }
-                }
-            }
-        }
-    }
-$mapTilesY = count($randomMapData['map']['terrain']);
-$mapTilesX = count($randomMapData['map']['terrain'][0]);
-// loop through clearTiles (inset from the edge by 1 though) and any that are blocked, mark the tiles immediately adjacent (N, E, S and W) as blocked as well, to allow space for the resource to be spawned
-// ie. 'clear' tiles are themselves and their ordinal neighbours clear:
-for ($i = 1; $i < $mapTilesX-1; $i++) {
-            for ( $j = 1; $j < $mapTilesY-1; $j++) {
-                if ($clearTiles[$j][$i] == "1") {
-                    // don't mark these as '1' otherwise it will then block their neighbours as well:
-                    $clearTiles[$j-1][$i] = "2";
-                    $clearTiles[$j+1][$i] = "2";
-                    $clearTiles[$j][$i+1] = "2";
-                    $clearTiles[$j][$i-1] = "2";
-                    }
-                }
-           }
-for ($i = 1; $i < $mapTilesX-1; $i++) {
-            for ( $j = 1; $j < $mapTilesY-1; $j++) {
-         if ($clearTiles[$j][$i] == "2") {
-$clearTiles[$j][$i] = "1";
-         }
-
-// save a fallback clear spot:
-          if ($clearTiles[$j][$i] == "0") {
-$fallBackThisX = $i;
-$fallBackThisY = $j;
-          }
-
-            }
-        }
-
-
-
-
-
-// try and find a more random spot:
-$foundAClearSpot = false;
-$foundNumberOfAttempts = 30;
-
-do {
-$thisX = mt_rand(0,$mapTilesX-1);
-        $thisY = mt_rand(0,$mapTilesY-1);
-        if($clearTiles[$thisY][$thisX] == '0') {
-            $foundAClearSpot = true;
-        }
-        $foundNumberOfAttempts --;
-} while (($foundAClearSpot == false) && ($foundNumberOfAttempts>0));
-
-if(!$foundAClearSpot) {
-   $thisX = $fallBackThisX;
-   $thisY = $fallBackThisY;
-} 
-
-// convert that to global coordinates:
-
-$mapPosition = findWorldMapPosition($randomMap);
-
-
-$globalPosX = $thisX + ($worldMapTileLength * $mapPosition[0]);
-$globalPosY = $thisY + ($worldMapTileLength * $mapPosition[1]);
-
-return $globalPosX."_".$globalPosY; 
-
-    
-}
 
 
 if ($hasProceduralContent !== false) {

@@ -16,6 +16,8 @@ if(!$debug) {
 header('Content-Type: application/json');
 }
 
+$worldMapTileLength = 50;
+
 $chr = $_GET['chr'];
 
 $outputJSON = '{';
@@ -364,6 +366,48 @@ $itemReceivedJSON[$thisItemKey]['name'] = htmlentities($newFollower[0]);
 }
 	}
 }
+
+
+
+if($thisItem['type'] == "82") {
+if(isset($thisItem['contains'])) {
+	if($thisItem['contains'] == "##procedural##") {
+
+
+if(!isset($worldMap)) {
+$jsonMapResults = file_get_contents($_SERVER['DOCUMENT_ROOT'].'/data/world-map.json');
+$mapJson = json_decode($jsonMapResults, true);
+$worldMap = $mapJson['worldMap'];
+}
+
+
+
+
+if(!isset($activeEvents)) {
+// get current active events:
+$activeEvents = [];
+$activeEventsID = [];
+$eventsQuery = "SELECT cleanURL, eventID from tblevents WHERE ((repeatsAnnually and ((dayofyear(now()) between (dayofyear(eventstart)) and (dayofyear(eventstart)+eventdurationdays-1)) or (dayofyear(now()) between (dayofyear(eventstart) - 365) and (dayofyear(eventstart)+eventdurationdays-366)))) or ((repeatsAnnually = 0) and (date(now()) between (eventstart) and (eventstart+eventdurationdays))))";
+
+$eventsResult = mysqli_query($connection,  $eventsQuery ) or die ( "couldn't execute events query: ".$eventsQuery );
+$numberofrows = mysqli_num_rows( $eventsResult );
+if ( $numberofrows>0 ) {
+    while ( $row = mysqli_fetch_array( $eventsResult ) ) {
+    array_push($activeEvents, $row['cleanURL']);
+    array_push($activeEventsID, $row['eventID']);
+    }
+}
+mysqli_free_result($eventsResult);
+}
+
+	//$thisItem['contains'] = generateTreasureMap();
+	$itemReceivedJSON[$thisItemKey]['contains'] = generateTreasureMap();
+}
+}
+}
+
+
+
 	}
 
 
