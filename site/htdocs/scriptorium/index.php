@@ -21,6 +21,21 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/navigation/the-world.php");
 ?>
 </ul>
 
+
+
+<style>
+#mastHead, h1, ul {
+	display: none !important;
+}
+</style>
+
+<?php
+include($_SERVER['DOCUMENT_ROOT']."/game-world/generatePoem.php");
+echo createProceduralPoem();die();
+?>
+
+
+
 <?php
 include($_SERVER['DOCUMENT_ROOT']."/game-world/generateBook.php");
 echo '<h1>'.createProceduralTitle().'</h1>';

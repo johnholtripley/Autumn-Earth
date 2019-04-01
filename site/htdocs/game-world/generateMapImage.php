@@ -47,9 +47,13 @@ $globalRequiredTileY = $requiredTileY;
 $requiredTileX = $requiredTileX%$worldMapTileLength;
 $requiredTileY = $requiredTileY%$worldMapTileLength;
 
-
-
 }
+
+
+$eastEdgeTile = $globalRequiredTileX + $_GET["radius"];
+$westEdgeTile = $globalRequiredTileX - $_GET["radius"];
+$NorthEdgeTile = $globalRequiredTileY - $_GET["radius"]; 
+$SouthEdgeTile = $globalRequiredTileY + $_GET["radius"]; 
 
 
 
@@ -154,9 +158,6 @@ $canvasSizeY = imagesy($bgImage)+($imagePadding*2);
 
 
 
-// $imagePadding
-
-
 
 // draw the sea underneath:
       $seaImage = imagecreatefromjpeg("../images/cartography/ocean.jpg");
@@ -244,10 +245,7 @@ array_push($allAssetsToDraw, array(${'itemImg'.$i}, floor($thisX - $thisGraphicC
 
       $playerHousingTerrainAssets = [];
 
-      $eastEdgeTile = $globalRequiredTileX + $_GET["radius"];
-      $westEdgeTile = $globalRequiredTileX - $_GET["radius"];
-      $NorthEdgeTile = $globalRequiredTileY - $_GET["radius"]; 
-      $SouthEdgeTile = $globalRequiredTileY + $_GET["radius"]; 
+
 
 
 

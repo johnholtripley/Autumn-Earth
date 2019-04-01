@@ -286,9 +286,9 @@ function addToInventory(whichSlot, itemObject, forceNewHash = false) {
     if ((typeof hero.inventory[whichSlot].hash === "undefined") || forceNewHash) {
         // create one:
         hero.inventory[whichSlot].hash = createItemHash(itemObject.type, itemObject.quantity);
-        console.log(itemObject.type, itemObject.quantity, hero.inventory[whichSlot].hash);
+     //   console.log(itemObject.type, itemObject.quantity, hero.inventory[whichSlot].hash);
     } else {
-        console.log("already", hero.inventory[whichSlot].hash);
+      //  console.log("already", hero.inventory[whichSlot].hash);
     }
     document.getElementById("slot" + whichSlot).innerHTML = generateSlotMarkup(whichSlot);
 }
