@@ -3500,9 +3500,9 @@ function addToInventory(whichSlot, itemObject, forceNewHash = false) {
     if ((typeof hero.inventory[whichSlot].hash === "undefined") || forceNewHash) {
         // create one:
         hero.inventory[whichSlot].hash = createItemHash(itemObject.type, itemObject.quantity);
-        console.log(itemObject.type, itemObject.quantity, hero.inventory[whichSlot].hash);
+     //   console.log(itemObject.type, itemObject.quantity, hero.inventory[whichSlot].hash);
     } else {
-        console.log("already", hero.inventory[whichSlot].hash);
+      //  console.log("already", hero.inventory[whichSlot].hash);
     }
     document.getElementById("slot" + whichSlot).innerHTML = generateSlotMarkup(whichSlot);
 }
@@ -7734,6 +7734,7 @@ function prepareCoreAssets() {
 
 
 function processInitialMap() {
+
     var startTileOffsetX, startTileOffsetY;
     var startTileOffsetXNum = 0;
     var startTileOffsetYNum = 0;
@@ -8571,6 +8572,7 @@ function prepareGame() {
     mapTransitionCurrentFrames = 1;
     gameMode = "play";
 
+checkForHotspots();
     //  UI.showNotification("<p>I'm just thinking about what a notification looks like&hellip;</p>");
 
 }
@@ -9255,18 +9257,8 @@ function updateVisibleMaps() {
 
 }
 
-function heroIsInNewTile() {
-    hero.z = getElevation(hero.tileX, hero.tileY);
-
-    //  updateCartographicMiniMap();
-    if (isOverWorldMap) {
-        currentMap = findMapNumberFromGlobalCoordinates(hero.tileX, hero.tileY);
-
-        updateVisibleMaps();
-    }
-
-
-    var thisHotspot, thisTileCentreX, thisTileCentreY;
+function checkForHotspots() {
+        var thisHotspot, thisTileCentreX, thisTileCentreY;
     // check for hotspots:
     for (var i = 0; i < thisMapData[currentMap].hotspots.length; i++) {
         thisHotspot = thisMapData[currentMap].hotspots[i];
@@ -9320,6 +9312,21 @@ function heroIsInNewTile() {
             }
         }
     }
+}
+
+function heroIsInNewTile() {
+    hero.z = getElevation(hero.tileX, hero.tileY);
+
+    //  updateCartographicMiniMap();
+    if (isOverWorldMap) {
+        currentMap = findMapNumberFromGlobalCoordinates(hero.tileX, hero.tileY);
+
+        updateVisibleMaps();
+    }
+
+
+checkForHotspots();
+
     if (fae.currentState == "wait") {
         // check if hero has moved far away, and return if so:
         if (!(isInRange(fae.x, fae.y, hero.x, hero.y, fae.abandonRadius))) {

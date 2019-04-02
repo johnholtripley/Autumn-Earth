@@ -8,14 +8,36 @@
 
 include_once($_SERVER['DOCUMENT_ROOT']."/includes/functions.php");
 
+// TO DO:
+
+// http://develop.ae/scriptorium/?seed=1554226629 - quote closing
+
+
+
+
+function removePunctuation($input) {
+  $output = str_replace(",", "", $input);
+  $output = str_replace(".", "", $output);
+return $output;
+}
 
 
 
 function createProceduralPoem() {
+$availablePunctuation = array(".", ",", "!", ";", "?", ":");
 
+ if (isset($_GET["seed"])) {
+        $storedSeed = intval($_GET["seed"]);
+    } else {
+        // http://php.net/manual/en/function.mt_srand.php
+        list($usec, $sec) = explode(' ', microtime());
+        $storedSeed       = floor((float) $sec + ((float) $usec * 100000));
+    }
+mt_srand($storedSeed);
+//echo '<p style="font-size:0.6em"><a href="/scriptorium/?seed='.$storedSeed.'">'.$storedSeed.'</a> | <a href="/scriptorium/">New seed</a></p>';
 
 //$textSource = file_get_contents($_SERVER['DOCUMENT_ROOT']."/includes/scriptorium/sources/the-canterbury-tales-by-geoffrey-chaucer.txt");
-$textSource = file_get_contents($_SERVER['DOCUMENT_ROOT']."/includes/scriptorium/sources/the-canterbury-tales-by-geoffrey-chaucer_TEST.txt");
+$textSource = file_get_contents($_SERVER['DOCUMENT_ROOT']."/includes/scriptorium/sources/the-canterbury-tales-by-geoffrey-chaucer_CHECKED.txt");
 
 
 // split on new line:
@@ -71,19 +93,35 @@ $numberOfPairsOfLines = 6;
 for ($i=0;$i<$numberOfPairsOfLines;$i++) {
 
    $thisPair = $rhymingPairs[mt_rand(0, count($rhymingPairs) - 1)];
+
+
+
    $thisPairSplit = explode(" ",$thisPair);
-$firstRhymingWord = $thisPairSplit[0];
-$secondRhymingWord = $thisPairSplit[1];
+$firstRhymingWord = removePunctuation($thisPairSplit[0]);
+$secondRhymingWord = removePunctuation($thisPairSplit[1]);
+
+
 
 // find a markov key that has this first word in:
 $firstMatchingKeys = array();
 $secondMatchingKeys = array();
 foreach ($markovSequence as $key => $value) {
-  if (strpos($key, $firstRhymingWord) !== false) {
+
+
+$keySplit = explode(" ", $key);
+
+$wordLookingFor = removePunctuation($keySplit[0]);
+
+
+
+
+if($wordLookingFor == $firstRhymingWord) {
+
 array_push($firstMatchingKeys, $key);
 
   }
-  if (strpos($key, $secondRhymingWord) !== false) {
+  if($wordLookingFor == $secondRhymingWord) {
+
 array_push($secondMatchingKeys, $key);
   }
 }
@@ -96,7 +134,14 @@ var_dump($secondMatchingKeys);
 */
 
 $firstLineKey = $firstMatchingKeys[mt_rand(0, count($firstMatchingKeys) - 1)];
+do {
 $secondLineKey = $secondMatchingKeys[mt_rand(0, count($secondMatchingKeys) - 1)];
+// make sure they're not the same word:
+} while ($firstLineKey == $secondLineKey);
+
+
+
+
 
 $thisFirstKeySplit = explode(" ",$firstLineKey);
 $builtSentence = $thisFirstKeySplit[1]." ".$thisFirstKeySplit[0];
@@ -120,7 +165,7 @@ $thisWord = $markovSequence[$thisKey][mt_rand(0,count($markovSequence[$thisKey])
 $secondBuiltSentence = $thisWord." ".$secondBuiltSentence;
 $thisKey = $thisKeySplit[1]." ".$thisWord;
 } while (array_key_exists($thisKey, $markovSequence));
-$secondBuiltSentence.="<br>";
+
 
 
 
@@ -131,69 +176,69 @@ echo "<br>".$secondLineKey."<hr>";
 var_dump($markovSequence[$firstLineKey]);
 */
 
-$outputText .= $builtSentence.$secondBuiltSentence;
+// check for any open brackets
 
+$thisNewSentence = $builtSentence.$secondBuiltSentence;
+
+if(strpos($thisNewSentence, "(") !== false) {
+if(strpos($thisNewSentence, ")") === false) {
+  // has an open, but no close
+$thisNewSentence .= ')';
+}
 }
 
-/*
-$textLength = count($textSplit);
-$startPhrases = array();
-$markovSequence = array();
-$i=0;
-$isAStartPhrase = true;
-do {
-  // get next 2 words:
-  if($textSplit[$i+1] != ".") {
-  $thisSecondOrder = $textSplit[$i]." ".$textSplit[$i+1];
-  if($isAStartPhrase) {
-    array_push($startPhrases, $thisSecondOrder);
-  }
-  if (array_key_exists($thisSecondOrder, $markovSequence)) {
-    array_push($markovSequence[($thisSecondOrder)],$textSplit[$i+2]);
-  } else {
-    $markovSequence[$thisSecondOrder] = array(($textSplit[$i+2]));
-  }
+if(strpos($thisNewSentence, ")") !== false) {
+if(strpos($thisNewSentence, "(") === false) {
+// has a close, but no open:
+  $thisNewSentence = str_replace(")", "", $thisNewSentence);
+}
+}
+
+
+// do the same thing for opening and closing quotes:
+if(strpos($thisNewSentence, "“") !== false) {
+if(strpos($thisNewSentence, "”") === false) {
+  // has an open, but no close
+$thisNewSentence .= '”';
+}
+}
+
+if(strpos($thisNewSentence, "”") !== false) {
+if(strpos($thisNewSentence, "“") === false) {
+// has a close, but no open:
+  $thisNewSentence = str_replace("”", "", $thisNewSentence);
 } else {
-  // skip the full stop
-  $i++;
-}
-  $isAStartPhrase = false;
-  if($textSplit[$i] == ".") {
-    $isAStartPhrase = true;
+  // check that the open comes before the close:
+  if(strpos($thisNewSentence, "“") > strpos($thisNewSentence, "”")) {
+// remove both:
+    $thisNewSentence = str_replace("“", "", $thisNewSentence);
+    $thisNewSentence = str_replace("”", "", $thisNewSentence);
   }
-  $i++;
-} while ($i < $textLength-2);
-
-
-
-$numberOfParagraphs = 1;
-$numberOfSentences = 4;
-
-
-
-for ($i=0;$i<$numberOfParagraphs;$i++) {
-  for ($j=0;$j<$numberOfSentences;$j++) {
-    $builtSentence = '';
-    $thisPair = $startPhrases[mt_rand(0, count($startPhrases) - 1)];
-  $builtSentence .= $thisPair;
-    do {
-      // split off second word:
-      $thisPairSplit = explode(" ",$thisPair);   
-      $thisWord = $markovSequence[$thisPair][mt_rand(0,count($markovSequence[$thisPair])-1)];
-      $builtSentence .= " ".$thisWord;
-      $thisPair = $thisPairSplit[1]." ".$thisWord;
-    } while ($thisWord != ".");
-$outputText .= '<p>'.$builtSentence.'</p>';
-
-  }
- $outputText .= '</section>';
 }
- $outputText = str_ireplace(" .", ". ", $outputText);
+}
 
 
-//remove all line breaks:
- $outputText = preg_replace( "/\r|\n/", "", $outputText );
-*/
+if($i == ($numberOfPairsOfLines-1)) {
+// check last character - make sure it's a '.'
+  $lastCharacter = substr($thisNewSentence, -1);
+  if(in_array($lastCharacter, $availablePunctuation)) {
+// force it to be a full stop:
+
+$thisNewSentence = substr($thisNewSentence, 0, -1);
+
+  } 
+  $thisNewSentence.=".";
+
+} else {
+  $thisNewSentence.="<br>";
+}
+
+
+$outputText .= $thisNewSentence;
+
+}
+
+
 
 
 return $outputText;

@@ -929,6 +929,14 @@ if(isset($mapData['map']['items'][$i]['contains'][$j]['contains'])) {
             $mapData['map']['npcs'][$i]['uniqueCards'] = array(rand(1, 5));
             $mapData['map']['npcs'][$i]['animation']["walk"] = array("length"=>"1", "n"=>"2", "e"=>"3", "s"=>"0", "w"=>"1");
         }
+
+        // check if speech is procedural:
+        if($mapData['map']['npcs'][$i]['speech'] == "##procedural##poem##") {
+
+include_once($_SERVER['DOCUMENT_ROOT']."/game-world/generatePoem.php");
+
+           $mapData['map']['npcs'][$i]['speech'] =  array([createProceduralPoem(), ""]);
+        }
     }
 
     for($i=0;$i<count($mapData['map']['shops']); $i++) {

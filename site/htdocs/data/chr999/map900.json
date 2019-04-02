@@ -37,7 +37,47 @@
         }],
         "weather": [""],
         "shops": [],
-        "npcs": [],
+        "npcs": [{
+                "name": "Poet",
+                "src": "labourer2.png",
+                "width": 20,
+                "length": 20,
+                "spriteWidth": 75,
+                "spriteHeight": 85,
+                "centreX": 56,
+                "centreY": 73,
+                "tileX": 4,
+                "tileY": 3,
+                "movement": ["-"],
+                "facing": "s",
+                "walkThroughDoors": false,
+                "speed": 2,
+                "isCollidable": true,
+                "isMoving": false,
+
+                "speech": "##procedural##poem##",
+                "cardGameSpeech":
+                {
+                    "challenge": ["Do you play? Fancy a game then?", "play"],
+                    "win": ["Woo! I won!", ""],
+                    "lose": ["Ahh, you beat me...", ""],
+                    "draw": ["Well played", ""]
+                },
+                "cardSkill": 1,
+                "uniqueCards": [2, 2],
+                "baseCardPack": 0,
+                "animation":
+                {
+                    "walk":
+                    {
+                        "length": 1,
+                        "n": 2,
+                        "e": 3,
+                        "s": 0,
+                        "w": 1
+                    }
+                }
+            }],
         "doors": {
 
    "5,6": {
@@ -60,7 +100,13 @@
                 "tileY": 2
             }
         ],
-        "hotspots": [],
+        "hotspots": [  {
+                "centreX": 5,
+                "centreY": 6,
+                "radius": 3,
+                "message": "",
+                "music": "tavern-WoW-NOT-MINE"
+            }],
         "hiddenResourceCategories": [],
         "hiddenResourceTier": 7
     }
