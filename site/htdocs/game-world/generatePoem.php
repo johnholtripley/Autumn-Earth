@@ -195,6 +195,34 @@ if(strpos($thisNewSentence, "(") === false) {
 }
 
 
+
+// fix quotes:
+
+$numberOfOpenQuotes = substr_count($thisNewSentence,'“');
+$numberOfCloseQuotes = substr_count($thisNewSentence,'”');
+
+
+// check they're in the right order:
+
+
+
+if($numberOfOpenQuotes > $numberOfCloseQuotes) {
+$thisNewSentence .= '”';
+}
+if($numberOfOpenQuotes < $numberOfCloseQuotes) {
+$thisNewSentence = '“'.$thisNewSentence;
+}
+
+
+
+// http://develop.ae/scriptorium/?seed=1554226629
+// http://develop.ae/scriptorium/?seed=1554266517
+
+
+
+
+
+/*
 // do the same thing for opening and closing quotes:
 if(strpos($thisNewSentence, "“") !== false) {
 if(strpos($thisNewSentence, "”") === false) {
@@ -216,6 +244,7 @@ if(strpos($thisNewSentence, "“") === false) {
   }
 }
 }
+*/
 
 
 if($i == ($numberOfPairsOfLines-1)) {
