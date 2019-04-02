@@ -18,6 +18,10 @@ header('Content-Type: application/json');
 
 $worldMapTileLength = 50;
 
+$homeBaseContinent = "eastern-continent";
+$homeBaseX = 200;
+$homeBaseY = 350;
+
 $chr = $_GET['chr'];
 
 $outputJSON = '{';
@@ -73,7 +77,7 @@ $outputJSON .= '}';
 if($activeQuests == "[]") {
 $activeQuests = array();
 } else {
-	$activeQuests = explode(",",   str_replace("[", '', str_replace("]", '', $activeQuests))         );
+	$activeQuests = explode(",",   str_replace("[", '', str_replace("]", '', $activeQuests)));
 }
 
 
@@ -101,7 +105,10 @@ mysqli_free_result($result);
 
 
 
+// check for any hired followers for this characters that were created more than 24 hours ago, and delete them:
 
+$checkHiredFollowerQuery = "DELETE from tblretinuefollowers where isHired='1' and characterIdFollowing='".$chr."' and generatedAtTime < DATE_SUB(NOW(), INTERVAL 24 HOUR)";
+$result = mysqli_query($connection, $checkHiredFollowerQuery) or die ("couldn't execute checkHiredFollowerQuery");
 
 
 
@@ -236,9 +243,7 @@ echo '<hr>';
 
 
 // getQuestDetails:
-$homeBaseContinent = "eastern-continent";
-$homeBaseX = 200;
-$homeBaseY = 350;
+
 
 
 
@@ -322,7 +327,7 @@ include_once($_SERVER['DOCUMENT_ROOT']."/game-world/generateRetinueFollower.php"
 		// make sure name is unique for this character:
 do {
 		$newFollower = generateFollower();
-$checkFollowerQuery = mysqli_query($connection, "SELECT * from tblretinuefollowers where followerName='".$newFollower[0]."'");
+$checkFollowerQuery = mysqli_query($connection, "SELECT * from tblretinuefollowers where followerName='".$newFollower[0]."' and characterIdFollowing='".$chr."'");
 $numRows = mysqli_num_rows($checkFollowerQuery);
 } while ($numRows>0);
 
@@ -336,19 +341,18 @@ $characterIdFollowing = $chr;
 $activeQuestId = -1;
 $followerRewardFromQuestId = $questID;
 $questStartedTime = null;
+$generatedAtTime = date("Y-m-d H:i:s");
 $followerSex = $newFollower[1];
 $followerRace = $newFollower[2];
 $currentContinent = $homeBaseContinent;
 $followerMapCoordinateX = $homeBaseX;
 $followerMapCoordinateY = $homeBaseY;
 
-    $insertQuery = "INSERT INTO tblretinuefollowers (followerName, followerCleanURL, characterIdFollowing, activeQuestId, isEnabled, followerRewardFromQuestId, questStartedTime, followerSex, followerRace, currentContinent, followerMapCoordinateX, followerMapCoordinateY)
-    VALUES ('".htmlentities($followerName)."','".$followerCleanURL."','".$characterIdFollowing."','".$activeQuestId."', '0', '".$followerRewardFromQuestId."','".$questStartedTime."','".$followerSex."','".$followerRace."','".$currentContinent."','".$followerMapCoordinateX."','".$followerMapCoordinateY."')";
+    $insertQuery = "INSERT INTO tblretinuefollowers (followerName, followerCleanURL, characterIdFollowing, activeQuestId, isEnabled, followerRewardFromQuestId, generatedAtTime, questStartedTime, followerSex, followerRace, currentContinent, followerMapCoordinateX, followerMapCoordinateY)
+    VALUES ('".htmlentities($followerName)."','".$followerCleanURL."','".$characterIdFollowing."','".$activeQuestId."', '0', '".$followerRewardFromQuestId."','".$generatedAtTime."','".$questStartedTime."','".$followerSex."','".$followerRace."','".$currentContinent."','".$followerMapCoordinateX."','".$followerMapCoordinateY."')";
 
     $insertResult = mysqli_query($connection, $insertQuery);
    
-
-
 // create image in /images/retinue folder:
     $followerImage = imagecreatefrompng('../images/retinue/source/'.cleanURL($followerRace).'-'.cleanURL($followerSex).'.png');
 imagepng($followerImage, '../images/retinue/' . mysqli_insert_id($connection) . '.png', 0);
@@ -358,10 +362,6 @@ imagepng($followerImage, '../images/retinue/' . mysqli_insert_id($connection) . 
 $itemReceivedJSON[$thisItemKey]['type'] = "follower";
 $itemReceivedJSON[$thisItemKey]['id'] = mysqli_insert_id($connection);
 $itemReceivedJSON[$thisItemKey]['name'] = htmlentities($newFollower[0]);
-
-
-
-
 
 }
 	}

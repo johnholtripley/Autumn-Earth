@@ -22,10 +22,16 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/navigation/the-world.php");
 </ul>
 
 
-
+<h1>A poem&hellip;</h1>
 <?php
 include($_SERVER['DOCUMENT_ROOT']."/game-world/generatePoem.php");
-echo createProceduralPoem();
+
+$poemOutput = explode('####',createProceduralPoem());
+
+for($i=0;$i<count($poemOutput);$i++) {
+	echo '<p>'.$poemOutput[$i].'</p>';
+}
+
 ?>
 
 

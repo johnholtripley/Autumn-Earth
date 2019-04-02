@@ -88,9 +88,11 @@ for ($j=$thisLineLength-1;$j>=0;$j--) {
 
 //var_dump($markovSequence);echo"<hr>";
 $outputText = '';
-$numberOfPairsOfLines = 6;
+$numberOfBlocks = 3;
+$numberOfPairsOfLinesPerBlock = 6;
 
-for ($i=0;$i<$numberOfPairsOfLines;$i++) {
+for ($h=0;$h<$numberOfBlocks;$h++) {
+for ($i=0;$i<$numberOfPairsOfLinesPerBlock;$i++) {
 
    $thisPair = $rhymingPairs[mt_rand(0, count($rhymingPairs) - 1)];
 
@@ -247,7 +249,7 @@ if(strpos($thisNewSentence, "“") === false) {
 */
 
 
-if($i == ($numberOfPairsOfLines-1)) {
+if($i == ($numberOfPairsOfLinesPerBlock-1)) {
 // check last character - make sure it's a '.'
   $lastCharacter = substr($thisNewSentence, -1);
   if(in_array($lastCharacter, $availablePunctuation)) {
@@ -264,6 +266,12 @@ $thisNewSentence = substr($thisNewSentence, 0, -1);
 
 
 $outputText .= $thisNewSentence;
+
+}
+
+if($h != ($numberOfBlocks-1)) {
+$outputText .= '####';
+}
 
 }
 

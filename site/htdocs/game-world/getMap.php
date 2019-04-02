@@ -11,6 +11,9 @@ if(isset($_GET["debug"])) {
     $debug = true;
 }
 
+$homeBaseContinent = "eastern-continent";
+$homeBaseX = 200;
+$homeBaseY = 350;
 
 $randomDungeonName = '';
 $randomDungeonSeed = '';
@@ -928,6 +931,80 @@ if(isset($mapData['map']['items'][$i]['contains'][$j]['contains'])) {
             $mapData['map']['npcs'][$i]['baseCardPack'] = 0;
             $mapData['map']['npcs'][$i]['uniqueCards'] = array(rand(1, 5));
             $mapData['map']['npcs'][$i]['animation']["walk"] = array("length"=>"1", "n"=>"2", "e"=>"3", "s"=>"0", "w"=>"1");
+        } else if($mapData['map']['npcs'][$i]['name'] == "##procedural##follower") {
+
+
+// check if a follower NPC for this character has already been created within the last 24 hours:
+
+
+$checkHiredFollowerQuery = mysqli_query($connection, "SELECT * from tblretinuefollowers where isHired='1' and characterIdFollowing='".$chr."' and generatedAtTime > DATE_SUB(NOW(), INTERVAL 24 HOUR)");
+$numRows = mysqli_num_rows($checkHiredFollowerQuery);
+if($numRows == 0) {
+
+// generate new follower:
+include_once($_SERVER['DOCUMENT_ROOT']."/game-world/generateRetinueFollower.php");
+        
+// make sure name is unique for this character:
+do {
+        $newFollower = generateFollower();
+$checkFollowerQuery = mysqli_query($connection, "SELECT * from tblretinuefollowers where followerName='".$newFollower[0]."' and characterIdFollowing='".$chr."'");
+$numRows = mysqli_num_rows($checkFollowerQuery);
+} while ($numRows>0);
+
+// add to database with chr and followerRewardFromQuestId so the journal knows which follower to display:
+$followerName = $newFollower[0];
+$followerCleanURL = cleanURL($followerName);
+$characterIdFollowing = $chr;
+$activeQuestId = -1;
+$followerRewardFromQuestId = null;
+$questStartedTime = null;
+$generatedAtTime = date("Y-m-d H:i:s");
+$followerSex = $newFollower[1];
+$followerRace = $newFollower[2];
+$currentContinent = $homeBaseContinent;
+$followerMapCoordinateX = $homeBaseX;
+$followerMapCoordinateY = $homeBaseY;
+
+    $insertQuery = "INSERT INTO tblretinuefollowers (followerName, followerCleanURL, characterIdFollowing, activeQuestId, isEnabled, followerRewardFromQuestId, generatedAtTime, questStartedTime, followerSex, followerRace, currentContinent, followerMapCoordinateX, followerMapCoordinateY, isHired)
+    VALUES ('".htmlentities($followerName)."','".$followerCleanURL."','".$characterIdFollowing."','".$activeQuestId."', '0', '".$followerRewardFromQuestId."','".$generatedAtTime."','".$questStartedTime."','".$followerSex."','".$followerRace."','".$currentContinent."','".$followerMapCoordinateX."','".$followerMapCoordinateY."',1)";
+    $insertResult = mysqli_query($connection, $insertQuery);
+// create image in /images/retinue folder:
+    $followerImage = imagecreatefrompng('../images/retinue/source/'.cleanURL($followerRace).'-'.cleanURL($followerSex).'.png');
+imagepng($followerImage, '../images/retinue/' . mysqli_insert_id($connection) . '.png', 0);
+    imagedestroy($followerImage);
+
+
+$mapData['map']['npcs'][$i]['name'] = $followerName;
+foreach ($mapData['map']['npcs'][$i]['speech'] as &$str) {
+    $str = str_replace('##name##', $followerName, $str);
+}
+
+} else {
+
+// use this one:
+//    $followerResult = mysqli_query($connection,  $checkHiredFollowerQuery ) or die ( "couldn't execute follower query: ".$checkHiredFollowerQuery );
+
+
+while ( $followerRow = mysqli_fetch_array( $checkHiredFollowerQuery ) ) {
+extract( $followerRow );
+$mapData['map']['npcs'][$i]['name'] = $followerName;
+
+
+
+foreach ($mapData['map']['npcs'][$i]['speech'] as &$str) {
+    $str = str_replace('##name##', $followerName, $str);
+}
+
+//array_push($mapData['map']['npcs'][$i]['speech'],[$followerName,""]);
+}
+
+
+}
+
+
+
+
+
         }
 
         // check if speech is procedural:
@@ -935,7 +1012,14 @@ if(isset($mapData['map']['items'][$i]['contains'][$j]['contains'])) {
 
 include_once($_SERVER['DOCUMENT_ROOT']."/game-world/generatePoem.php");
 
-           $mapData['map']['npcs'][$i]['speech'] =  array([createProceduralPoem(), ""]);
+$poemOutput = explode('####',createProceduralPoem());
+$poemTextContent = array();
+for($p=0;$p<count($poemOutput);$p++) {
+    array_push($poemTextContent, [$poemOutput[$p], ""]);
+    }
+
+$mapData['map']['npcs'][$i]['speech'] = $poemTextContent;
+         //  $mapData['map']['npcs'][$i]['speech'] =  array([createProceduralPoem(), ""]);
         }
     }
 
