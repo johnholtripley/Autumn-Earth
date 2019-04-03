@@ -58,6 +58,18 @@
     .available .portrait {
         background-image: url(../images/game-world/interface/retinue/waiting-follower.png);
     }
+    .hired {
+        position: relative;
+        &:after {
+            content: '';
+            width: 21px;
+            height: 27px;
+            background: url(../images/game-world/interface/retinue/follower-hired.png) no-repeat 50% 50%;
+            position: absolute;
+            bottom: -8px;
+            left: 29px;
+        }
+    }
 }
 
 #retinueList {
@@ -342,5 +354,40 @@
     padding: 20px 0px;
     p {
         padding: 0 10px;
+    }
+}
+
+.retinueFollowerRehire {
+    background: #111;
+    border: 3px solid #fed308;
+    text-align: center;
+    h3,
+    p {
+        color: #fff;
+        text-align: left;
+    }
+    button {
+        cursor: url(../images/game-world/cursors/active.gif) 3 3, pointer;
+        border: 0;
+        background: #53160d;
+        color: #fff;
+        text-transform: uppercase;
+        margin: 6px;
+        clear: both;
+        display: inline-block;
+        padding: 6px 16px;
+        border: 2px solid #967834;
+        outline: none;
+    }
+        opacity: 0;
+    position: absolute;
+    @include transition(opacity 0.4s ease);
+    pointer-events: none;
+left: 0;
+top: 50%;
+width: 100%;
+    &.active {
+        opacity: 1;
+        pointer-events: auto;
     }
 }

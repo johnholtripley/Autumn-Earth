@@ -2344,16 +2344,45 @@ cardAlbumMarkup += '<p id="dustCurrency">'+ hero.currency.cardDust + ' dust</p>'
         delete retinueObject.questName;
     },
     retinueSingleClick: function(e) {
-        if (e.target.className == 'takeRewards') {
-            e.preventDefault();
-            var parentPanel = getNearestParentId(e.target);
-            retinueMissionCompleted(parentPanel.id.substring(15), false);
-        } else if (e.target.className == 'finishExploration') {
-            e.preventDefault();
-            var parentPanel = getNearestParentId(e.target);
-            retinueMissionCompleted(parentPanel.id.substring(15), true);
-        }
+        var parentPanel = getNearestParentId(e.target);
+        switch (e.target.className) {
+            case 'takeRewards':
+                e.preventDefault();
+                retinueMissionCompleted(parentPanel.id.substring(15), false);
+                break;
+            case 'finishExploration':
+                e.preventDefault();
+                retinueMissionCompleted(parentPanel.id.substring(15), true);
+                break;
+            case 'reHireFollowerNo':
+                e.preventDefault();
+                // remove follower:
+             
+var whichFollower = e.target.getAttribute('data-follower');
+retinueList.removeChild(document.getElementById('retinueFollower'+whichFollower));
 
+   // ####
+                // john
+
+                sendDataWithoutNeedingAResponse("/game-world/removeHiredFollower.php?id=" + questId);
+
+                // close panel:       
+                parentPanel.classList.remove('active');
+                break;
+            case 'reHireFollowerYes':
+                e.preventDefault();
+                // remove money:
+                if (hero.currency.money >= costToRehireFollower) {
+                    hero.currency.money -= costToRehireFollower;
+                    UI.updateCurrencies();
+                    audio.playSound(soundEffects['coins'], 0);
+                } else {
+                    UI.showNotification('<p>I haven\'t got enough money</p>');
+                }
+                // close panel:       
+                parentPanel.classList.remove('active');
+                break;
+        }
     },
     retinueQuestComplete: function(whichTimer) {
         var thisNode = getNearestParentId(whichTimer);

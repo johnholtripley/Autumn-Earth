@@ -905,6 +905,7 @@ if(isset($mapData['map']['items'][$i]['contains'][$j]['contains'])) {
     }
 
     for($i=0;$i<count($mapData['map']['npcs']); $i++) {
+        $removeThisNPC = false;
         if($mapData['map']['npcs'][$i]['name'] == "##procedural##") {
             // create a procedural NPC:
             include_once($_SERVER['DOCUMENT_ROOT']."/includes/replaceImageHue.php");
@@ -987,15 +988,21 @@ foreach ($mapData['map']['npcs'][$i]['speech'] as &$str) {
 
 while ( $followerRow = mysqli_fetch_array( $checkHiredFollowerQuery ) ) {
 extract( $followerRow );
+
+if($isEnabled == '1') {
+// don't show this NPC as they're already active:
+
+    $removeThisNPC = true;
+} else {
 $mapData['map']['npcs'][$i]['name'] = $followerName;
-
-
-
 foreach ($mapData['map']['npcs'][$i]['speech'] as &$str) {
     $str = str_replace('##name##', $followerName, $str);
 }
+}
 
-//array_push($mapData['map']['npcs'][$i]['speech'],[$followerName,""]);
+
+
+
 }
 
 
@@ -1021,6 +1028,15 @@ for($p=0;$p<count($poemOutput);$p++) {
 $mapData['map']['npcs'][$i]['speech'] = $poemTextContent;
          //  $mapData['map']['npcs'][$i]['speech'] =  array([createProceduralPoem(), ""]);
         }
+
+
+if($removeThisNPC){
+        unset($mapData['map']['npcs'][$i]);
+
+}
+
+
+
     }
 
     for($i=0;$i<count($mapData['map']['shops']); $i++) {

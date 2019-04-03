@@ -109,6 +109,11 @@ function retinueMissionCompleted(questId, isExplorationQuest) {
             thisFollower.setAttribute('data-locationy', data.endLocationY);
             thisFollower.removeAttribute('data-activeonquest');
             document.querySelector('#retinueFollower' + allFollowersOnThisQuest[i] + ' p').innerHTML = 'waiting for a quest';
+ 
+            if(thisFollower.classList.contains('hired')) {
+// offer the option to rehire, or remove this follower:
+document.getElementById('retinueFollowerRehire'+allFollowersOnThisQuest[i]).classList.add('active');
+            }
         }
         document.getElementById('retinueComplete' + questId).classList.remove('active');
         // update database that these followers are available and with the new location:

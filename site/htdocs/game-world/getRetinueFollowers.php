@@ -3,6 +3,7 @@
 
 include_once($_SERVER['DOCUMENT_ROOT']."/includes/signalnoise.php");
 include_once($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
+include_once($_SERVER['DOCUMENT_ROOT']."/includes/functions.php");
 
 
 // get retinue followers for this character:
@@ -59,8 +60,8 @@ $tilesToCoverVertically = 3;
 $debug = false;
 if(isset($_GET["debug"])) {
   $debug = true;
-  include($_SERVER['DOCUMENT_ROOT']."/includes/signalnoise.php");
-include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
+//  include($_SERVER['DOCUMENT_ROOT']."/includes/signalnoise.php");
+// include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
 }
 
 
@@ -148,12 +149,17 @@ foreach ($followerData as $followerKey => $thisFollower) {
 foreach ($followerData as $followerKey => $thisFollower) {
   $availableClass='';
   if($thisFollower['activeQuestId'] == -1) {
-     $availableClass .= ' class="available"';
+     $availableClass .= 'available';
   } else {
     
   }
- $retinuePanelOutput .= '<li id="retinueFollower'.$thisFollower['followerID'].'"'.$availableClass.' data-locationx="'.$thisFollower['followerMapCoordinateX'].'" data-locationy="'.$thisFollower['followerMapCoordinateY'].'" data-activeonquest="'.$thisFollower['activeQuestId'].'">'; 
-  $retinuePanelOutput .= '<div class="portrait"><img src="/images/retinue/'.$thisFollower['followerID'].'.png" alt=""></div><h3>'.$thisFollower['followerName'].'</h3>';
+  $isHiredText = '';
+  if($thisFollower['isHired'] == 1) {
+ $availableClass .= ' hired';
+ $isHiredText = ' (hired)';
+  }
+ $retinuePanelOutput .= '<li id="retinueFollower'.$thisFollower['followerID'].'" class="'.$availableClass.'" data-locationx="'.$thisFollower['followerMapCoordinateX'].'" data-locationy="'.$thisFollower['followerMapCoordinateY'].'" data-activeonquest="'.$thisFollower['activeQuestId'].'">'; 
+  $retinuePanelOutput .= '<div class="portrait"><img src="/images/retinue/'.$thisFollower['followerID'].'.png" alt=""></div><h3>'.$thisFollower['followerName']. $isHiredText.'</h3>';
   if($thisFollower['activeQuestId'] == -1) {
   $retinuePanelOutput .= '<p>waiting for a quest</p>';
   } else {
@@ -231,6 +237,18 @@ array_push($completePanelsCreated, $thisFollower['activeQuestId']);
 }
 
 
+if($thisFollower['isHired'] == 1) {
+// create the re-hire panel so it's ready when needed:
+  $retinuePanelCompleteOutput .= '<div id="retinueFollowerRehire'.$thisFollower['followerID'].'" class="retinueFollowerRehire">';
+  $retinuePanelCompleteOutput .= '<div class="portrait"><img src="/images/retinue/'.$thisFollower['followerID'].'.png" alt=""></div>';
+  $retinuePanelCompleteOutput .= '<h3>Re-hire '.$thisFollower['followerName'].'?</h3>';
+  $retinuePanelCompleteOutput .= '<p>Costs '.parseMoney(110000).'</p>';
+  $retinuePanelCompleteOutput .= '<button class="reHireFollowerNo" data-follower="'.$thisFollower['followerID'].'">No</button>';
+  $retinuePanelCompleteOutput .= '<button class="reHireFollowerYes">Yes</button>';
+$retinuePanelCompleteOutput .= '</div>';
+}
+
+
 
   }
   $retinuePanelOutput .= '</li>';
@@ -302,7 +320,7 @@ for ($i=0;$i<count($revealedHexCoordinates);$i++) {
   $xDiff = abs($thisHex[0] - $x);
   $yDiff = abs($thisHex[1] - $y);
    // only those adjacent to already revealed hexes show be explorable - one value is the same and the other is +1 or -1 from that:
-  if (($xDiff <=1) && ($yDiff <=1)) {
+  if ((($xDiff == 0) && ($yDiff <=1)) || (($xDiff <=1) && ($yDiff ==0))) {
 $isExplorableClass = ' explorable';
   }
 }

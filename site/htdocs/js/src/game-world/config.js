@@ -36,6 +36,7 @@ var craftingObject = {
 };
 var retinueBaseLocationX = 200;
 var retinueBaseLocationY = 350;
+const costToRehireFollower = 110000;
 var jumpMapId = null;
 const titleTagPrefix = 'Autumn Earth';
 

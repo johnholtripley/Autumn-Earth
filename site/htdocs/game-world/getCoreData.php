@@ -105,9 +105,9 @@ mysqli_free_result($result);
 
 
 
-// check for any hired followers for this characters that were created more than 24 hours ago, and delete them:
+// check for any unhired followers for this characters that were created more than 24 hours ago, and delete them:
 
-$checkHiredFollowerQuery = "DELETE from tblretinuefollowers where isHired='1' and characterIdFollowing='".$chr."' and generatedAtTime < DATE_SUB(NOW(), INTERVAL 24 HOUR)";
+$checkHiredFollowerQuery = "DELETE from tblretinuefollowers where isHired='1' and characterIdFollowing='".$chr."' and isEnabled='0' and generatedAtTime < DATE_SUB(NOW(), INTERVAL 24 HOUR)";
 $result = mysqli_query($connection, $checkHiredFollowerQuery) or die ("couldn't execute checkHiredFollowerQuery");
 
 

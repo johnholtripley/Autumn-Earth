@@ -103,9 +103,9 @@ $sex = array("female","male");
 $race = "huldra";
 $thisFollowersSex = $sex[mt_rand(0, count($sex) - 1)];
 if($thisFollowersSex == "female") {
-$generatedName = $femaleName;
+$generatedName = trim($femaleName);
 } else {
-$generatedName = $maleName;	
+$generatedName = trim($maleName);	
 }
 
 $generatedName .= " ".$elvenSurname;
