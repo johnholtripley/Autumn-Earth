@@ -801,3 +801,35 @@ font-size: 0;
         top: 490px;
     }
 }
+
+#hireRetinueFollowerPanel {
+    @include togglePanel(0.4s);
+    left: calc(50% - 24px);
+    top: 50%;
+    font-size: 14px;
+    background: #53160d;
+    color: #fff;
+    z-index: 4;
+    p {
+         padding: 3px 8px 3px 8px;
+    }
+    button {
+        margin: 0 0 8px 8px;
+        cursor: url(../images/game-world/cursors/active.gif) 3 3, pointer;
+        border: 0;
+        background: #53160d;
+        color: #fff;
+        text-transform: uppercase;
+        margin: 6px;
+        clear: both;
+        display: inline-block;
+        padding: 6px 16px;
+        border: 2px solid #967834;
+        outline: none;
+    
+    }
+}
+
+#hireRetinueFollowerPanelContent {
+    padding: 3px 8px 6px 8px;
+}

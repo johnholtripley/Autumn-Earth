@@ -96,7 +96,8 @@
                 "isMoving": false,
 
                 "speech":  [
-                    ["Greetings - I'm ##name##, and I'm available to hire", ""]
+                    ["Greetings - I'm ##name##, and I'm available to hire", "hire"],
+                    ["It's an honour to work with you, ##characterName##", ""]
                 ],
                 "cardGameSpeech":
                 {

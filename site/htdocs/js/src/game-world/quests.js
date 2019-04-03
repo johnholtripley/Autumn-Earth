@@ -182,37 +182,24 @@ function awardQuestRewards(whichNPC, questRewards, isACollectionQuest) {
     var allRewardItems = [];
     for (var i = 0; i < questRewards.length; i++) {
         var questRewardToUse = questRewards[i];
-
-
-var thisRewardObject = questRewardToUse;
-if(questRewardToUse.type != "follower") {
-
- thisRewardObject = prepareInventoryObject(questRewardToUse);  
- var rewardTypePossibilities = questRewardToUse.type.toString().split("/");
-thisRewardObject.type = parseInt(getRandomElementFromArray(rewardTypePossibilities));
-    }
- // check for variation:
-
-
-
-
-
-
-    
+        var thisRewardObject = questRewardToUse;
+        if (questRewardToUse.type != "follower") {
+            thisRewardObject = prepareInventoryObject(questRewardToUse);
+            var rewardTypePossibilities = questRewardToUse.type.toString().split("/");
+            thisRewardObject.type = parseInt(getRandomElementFromArray(rewardTypePossibilities));
+        }
+        // check for variation:
         if (!(isNaN(thisRewardObject.type))) {
             // might need to show the name of the item in the speech:           
             thisSpeech = thisSpeech.replace(/##itemName##/i, currentActiveInventoryItems[parseInt(thisRewardObject.type)].shortname);
-            
         }
-
-
         allRewardItems.push(thisRewardObject);
     }
 
-/*
-[{"type":"19/5","quantity":6},{"type":"follower"},{"type":"34","contains":5}]
-*/
-console.log(allRewardItems);
+    /*
+    [{"type":"19/5","quantity":6},{"type":"follower"},{"type":"34","contains":5}]
+    */
+    //console.log(allRewardItems);
 
     inventoryCheck = canAddItemToInventory(allRewardItems);
 

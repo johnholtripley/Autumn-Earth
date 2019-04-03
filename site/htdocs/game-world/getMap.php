@@ -975,7 +975,11 @@ imagepng($followerImage, '../images/retinue/' . mysqli_insert_id($connection) . 
     imagedestroy($followerImage);
 
 
+
 $mapData['map']['npcs'][$i]['name'] = $followerName;
+$mapData['map']['npcs'][$i]['followerId'] = mysql_insert_id();
+
+
 foreach ($mapData['map']['npcs'][$i]['speech'] as &$str) {
     $str = str_replace('##name##', $followerName, $str);
 }
@@ -995,6 +999,7 @@ if($isEnabled == '1') {
     $removeThisNPC = true;
 } else {
 $mapData['map']['npcs'][$i]['name'] = $followerName;
+$mapData['map']['npcs'][$i]['followerId'] = $followerID;
 foreach ($mapData['map']['npcs'][$i]['speech'] as &$str) {
     $str = str_replace('##name##', $followerName, $str);
 }

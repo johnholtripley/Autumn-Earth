@@ -4716,37 +4716,24 @@ function awardQuestRewards(whichNPC, questRewards, isACollectionQuest) {
     var allRewardItems = [];
     for (var i = 0; i < questRewards.length; i++) {
         var questRewardToUse = questRewards[i];
-
-
-var thisRewardObject = questRewardToUse;
-if(questRewardToUse.type != "follower") {
-
- thisRewardObject = prepareInventoryObject(questRewardToUse);  
- var rewardTypePossibilities = questRewardToUse.type.toString().split("/");
-thisRewardObject.type = parseInt(getRandomElementFromArray(rewardTypePossibilities));
-    }
- // check for variation:
-
-
-
-
-
-
-    
+        var thisRewardObject = questRewardToUse;
+        if (questRewardToUse.type != "follower") {
+            thisRewardObject = prepareInventoryObject(questRewardToUse);
+            var rewardTypePossibilities = questRewardToUse.type.toString().split("/");
+            thisRewardObject.type = parseInt(getRandomElementFromArray(rewardTypePossibilities));
+        }
+        // check for variation:
         if (!(isNaN(thisRewardObject.type))) {
             // might need to show the name of the item in the speech:           
             thisSpeech = thisSpeech.replace(/##itemName##/i, currentActiveInventoryItems[parseInt(thisRewardObject.type)].shortname);
-            
         }
-
-
         allRewardItems.push(thisRewardObject);
     }
 
-/*
-[{"type":"19/5","quantity":6},{"type":"follower"},{"type":"34","contains":5}]
-*/
-console.log(allRewardItems);
+    /*
+    [{"type":"19/5","quantity":6},{"type":"follower"},{"type":"34","contains":5}]
+    */
+    //console.log(allRewardItems);
 
     inventoryCheck = canAddItemToInventory(allRewardItems);
 
@@ -4894,6 +4881,38 @@ document.getElementById('retinueFollowerRehire'+allFollowersOnThisQuest[i]).clas
         retinueMissionCompleted(questId);
     });
 }
+
+function hireNewFollower() {
+    if (hero.currency.money >= costToRehireFollower) {
+        hero.currency.money -= costToRehireFollower;
+        UI.updateCurrencies();
+        audio.playSound(soundEffects['coins'], 0);
+        var whichNPCIndex = hireRetinueFollowerPanel.getAttribute('data-NPC');
+        // find the relevant NPC:
+        var thisNPC;
+        var thisFollowerNPC = null;
+        for (var m = 0; m < visibleMaps.length; m++) {
+            for (var i = 0; i < thisMapData[(visibleMaps[m])].npcs.length; i++) {
+                thisNPC = thisMapData[(visibleMaps[m])].npcs[i];
+                if (thisNPC.uniqueIndex == whichNPCIndex) {
+                    thisFollowerNPC = thisNPC;
+                }
+            }
+        }
+        if (thisFollowerNPC !== null) {
+            // remove the hiring speech:
+            thisFollowerNPC.speech.splice(thisFollowerNPC.speechIndex, 1);
+            // update database:
+              sendDataWithoutNeedingAResponse("/game-world/activateRetinueFollower.php?followerID=" + thisFollowerNPC.followerId);
+               // show in retinue panel:
+                followerMarkupToAdd = '<li id="retinueFollower' + thisFollowerNPC.followerId + '" class="available" data-locationx="200" data-locationy="350" data-activeonquest="-1"><div class="portrait"><img src="/images/retinue/' + thisFollowerNPC.followerId + '.png" alt=""></div><h3>' + thisFollowerNPC.name + '</h3><p>waiting for a quest</p></li>';
+                retinueList.insertAdjacentHTML('beforeend', followerMarkupToAdd);
+        }
+    } else {
+        UI.showNotification('<p>I haven\'t got enough money</p>');
+    }
+    UI.closeHireFollowerPanel();
+}
 function getLocalCoordinatesX(tileX) {
     // get local map coordinates from global coordinates:
     return tileX%worldMapTileLength;
@@ -5015,6 +5034,8 @@ const quickHold = document.getElementById('quickHold');
 const holdingGauge = document.getElementById('holdingGauge');
 const cardGameConcede = document.getElementById('cardGameConcede');
 const treasureMapPanels = document.getElementById('treasureMapPanels');
+const hireRetinueFollowerPanel = document.getElementById('hireRetinueFollowerPanel');
+const hireRetinueFollowerPanelContent = document.getElementById('hireRetinueFollowerPanelContent');
 
 
 
@@ -5051,8 +5072,8 @@ var UI = {
     },
 
     buildInventoryInterface: function() {
-        var characterNameAndTitle = hero.characterName;     
-        if(hero.activeTitle != 0) {
+        var characterNameAndTitle = hero.characterName;
+        if (hero.activeTitle != 0) {
             characterNameAndTitle += " - " + possibleTitles[hero.activeTitle];
         }
         document.getElementById('characterName').innerHTML = characterNameAndTitle;
@@ -5077,8 +5098,8 @@ var UI = {
                     if (typeof hero.inventory[thisSlotsID].cooldown !== "undefined") {
                         hero.inventory[thisSlotsID].cooldownTimer = 0;
                     }
-                    if(thisAction == "treasureMap") {
-UI.createTreasureMap(hero.inventory[thisSlotsID].contains);
+                    if (thisAction == "treasureMap") {
+                        UI.createTreasureMap(hero.inventory[thisSlotsID].contains);
                     }
                 } else {
                     inventoryMarkup += '';
@@ -5133,9 +5154,11 @@ UI.createTreasureMap(hero.inventory[thisSlotsID].contains);
         cardGameConcede.onclick = cardGamePlayer2Concedes;
         document.getElementById('splitStackCancel').onclick = inventorySplitStackCancel;
         document.getElementById('shopSplitStackCancel').onclick = UI.shopSplitStackCancel;
+        document.getElementById('hireRetinueFollowerNo').onclick = UI.closeHireFollowerPanel;
+        document.getElementById('hireRetinueFollowerYes').onclick = hireNewFollower;
         toggleFullscreenSwitch.onchange = UI.toggleFullScreen;
         document.onfullscreenchange = UI.fullScreenChangeDetected;
-//        document.onmozfullscreenchange = UI.fullScreenChangeDetected;
+        //        document.onmozfullscreenchange = UI.fullScreenChangeDetected;
         document.onwebkitfullscreenchange = UI.fullScreenChangeDetected;
         soundVolume.onchange = audio.adjustEffectsVolume;
         musicVolume.onchange = audio.adjustMusicVolume;
@@ -5299,32 +5322,32 @@ UI.createTreasureMap(hero.inventory[thisSlotsID].contains);
 
     doubleClick: function(e) {
         var thisItemsAction = e.target.getAttribute('data-action');
-    //    if (thisItemsAction) {
-    //        inventoryItemAction(e.target, thisItemsAction, e.target.getAttribute('data-action-value'));
-    //    } else {
-            var thisNode = getNearestParentId(e.target);
-            if (thisNode.id.substring(0, 6) == "recipe") {
-                recipeSelectComponents(thisNode.id);
-            } else if (thisNode.id.substring(0, 4) == "shop") {
-                UI.buyFromShopSlot(thisNode.id);
-            } else if (thisNode.id.substring(0, 5) == "chest") {
-                UI.addFromChest(thisNode.id);
-            } else if (thisNode.id.substring(0, 9) == "gathering") {
-                UI.addFromGathering();
-            } else if (thisNode.id.substring(0, 11) == "postMessage") {
-                UI.takePostAttachments(thisNode.id);
-            } else if (thisNode.id.substring(0, 4) == "post") {
-                UI.readPostMessage(thisNode.id);
-            } else if (thisNode.id.substring(0, 8) == "fromSlot") {
-                addCraftingComponents(thisNode.id, true);
-            }
+        //    if (thisItemsAction) {
+        //        inventoryItemAction(e.target, thisItemsAction, e.target.getAttribute('data-action-value'));
+        //    } else {
+        var thisNode = getNearestParentId(e.target);
+        if (thisNode.id.substring(0, 6) == "recipe") {
+            recipeSelectComponents(thisNode.id);
+        } else if (thisNode.id.substring(0, 4) == "shop") {
+            UI.buyFromShopSlot(thisNode.id);
+        } else if (thisNode.id.substring(0, 5) == "chest") {
+            UI.addFromChest(thisNode.id);
+        } else if (thisNode.id.substring(0, 9) == "gathering") {
+            UI.addFromGathering();
+        } else if (thisNode.id.substring(0, 11) == "postMessage") {
+            UI.takePostAttachments(thisNode.id);
+        } else if (thisNode.id.substring(0, 4) == "post") {
+            UI.readPostMessage(thisNode.id);
+        } else if (thisNode.id.substring(0, 8) == "fromSlot") {
+            addCraftingComponents(thisNode.id, true);
+        }
 
 
- if (thisItemsAction) {
+        if (thisItemsAction) {
             inventoryItemAction(e.target, thisItemsAction, e.target.getAttribute('data-action-value'));
         }
-            
-     //   }
+
+        //   }
     },
 
     showDialogue: function(thisObjectSpeaking, text) {
@@ -5477,7 +5500,7 @@ UI.createTreasureMap(hero.inventory[thisSlotsID].contains);
                 foundThisType = true;
             }
 
-  // check for rares - these are the negative of the standard card type:
+            // check for rares - these are the negative of the standard card type:
             if ((counts[(0 - i)])) {
                 foundThisType = true;
                 cardAlbumMarkup += '<li class="rare card players"><div style="background-image:url(/images/card-game/cards/' + (0 - i) + '.png)"></div><span class="quantity">' + counts[(0 - i)] + '</span></li>';
@@ -5493,7 +5516,7 @@ UI.createTreasureMap(hero.inventory[thisSlotsID].contains);
             }
             cardAlbumMarkup += '</li>';
 
-          
+
             if (foundThisType) {
                 typesFound++;
             }
@@ -5503,16 +5526,16 @@ UI.createTreasureMap(hero.inventory[thisSlotsID].contains);
             if (hero.cardBacks[i] == hero.activeCardBack) {
                 cardAlbumMarkup += ' active';
             }
-            if(hero.cardBacks[i]<0) {
-// player generated content back:
-cardAlbumMarkup += '"><img src="/images/user-generated/' + Math.abs(hero.cardBacks[i]) + '-world.jpg"></li>';
+            if (hero.cardBacks[i] < 0) {
+                // player generated content back:
+                cardAlbumMarkup += '"><img src="/images/user-generated/' + Math.abs(hero.cardBacks[i]) + '-world.jpg"></li>';
             } else {
-            cardAlbumMarkup += '"><img src="/images/card-game/card-backs/' + hero.cardBacks[i] + '.jpg"></li>';
-        }
+                cardAlbumMarkup += '"><img src="/images/card-game/card-backs/' + hero.cardBacks[i] + '.jpg"></li>';
+            }
         }
         cardAlbumMarkup += '</ul>';
 
-cardAlbumMarkup += '<p id="dustCurrency">'+ hero.currency.cardDust + ' dust</p>';
+        cardAlbumMarkup += '<p id="dustCurrency">' + hero.currency.cardDust + ' dust</p>';
 
         cardAlbumMarkup += '<p>' + typesFound + ' types out of ' + (cardGameNameSpace.allCardData.length - 1) + '. Total individual cards: ' + hero.cards.length + '. Total backs: ' + hero.cardBacks.length + '</p>';
         cardAlbumList.innerHTML = cardAlbumMarkup;
@@ -5520,11 +5543,11 @@ cardAlbumMarkup += '<p id="dustCurrency">'+ hero.currency.cardDust + ' dust</p>'
 
     changeActiveCardBack: function() {
         // change the CSS:
-        if(hero.activeCardBack<0) {
- document.getElementById('playersCardBack').innerHTML = '.card.players {background-image: url(/images/user-generated/' + Math.abs(hero.activeCardBack) + '-world.jpg);}';
+        if (hero.activeCardBack < 0) {
+            document.getElementById('playersCardBack').innerHTML = '.card.players {background-image: url(/images/user-generated/' + Math.abs(hero.activeCardBack) + '-world.jpg);}';
         } else {
-        document.getElementById('playersCardBack').innerHTML = '.card.players {background-image: url(/images/card-game/card-backs/' + hero.activeCardBack + '.jpg);}';
-    }
+            document.getElementById('playersCardBack').innerHTML = '.card.players {background-image: url(/images/card-game/card-backs/' + hero.activeCardBack + '.jpg);}';
+        }
     },
 
     populateRecipeList: function(whichProfession, toolsQuality) {
@@ -6029,19 +6052,19 @@ cardAlbumMarkup += '<p id="dustCurrency">'+ hero.currency.cardDust + ' dust</p>'
     },
 
     buildShop: function(markup) {
-     //   shopPanel.innerHTML = markup;
-         shopPanel.insertAdjacentHTML('beforeend', markup);
+        //   shopPanel.innerHTML = markup;
+        shopPanel.insertAdjacentHTML('beforeend', markup);
     },
 
     openedShopSuccessfully: function(shopHash) {
-          if (document.getElementById("shop" + shopHash)) {
+        if (document.getElementById("shop" + shopHash)) {
             UI.showUI();
             shopCurrentlyOpen = shopHash;
             document.getElementById("shop" + shopHash).classList.add("active");
             inventoryPanels.classList.add("shopSpecialism" + document.getElementById("shop" + shopHash).getAttribute('data-specialism'));
             return true;
         } else {
-               return false;
+            return false;
         }
     },
 
@@ -6512,7 +6535,7 @@ cardAlbumMarkup += '<p id="dustCurrency">'+ hero.currency.cardDust + ' dust</p>'
         thisParagraphNode.classList.add('active');
     },
 
-    openChest: function(itemsMap,itemReference) {
+    openChest: function(itemsMap, itemReference) {
         UI.showUI();
         var contents = thisMapData[itemsMap].items[itemReference].contains;
         audio.playSound(soundEffects['chestOpen'], 0);
@@ -6525,7 +6548,7 @@ cardAlbumMarkup += '<p id="dustCurrency">'+ hero.currency.cardDust + ' dust</p>'
         var chestContents = '';
         var thisChestObject;
         for (var i = 0; i < currentActiveInventoryItems[(thisMapData[itemsMap].items[itemReference].type)].actionValue; i++) {
-            chestContents += '<li id="chestSlot-' +itemReference + '-' + i + '-' + itemsMap+ '">';
+            chestContents += '<li id="chestSlot-' + itemReference + '-' + i + '-' + itemsMap + '">';
             if (typeof contents[i] !== "undefined") {
                 if (contents[i] != "") {
                     if (contents[i].type == "$") {
@@ -6559,7 +6582,7 @@ cardAlbumMarkup += '<p id="dustCurrency">'+ hero.currency.cardDust + ' dust</p>'
             chestContents += '</li>';
         }
         chestSlotContents.innerHTML = chestContents;
-        chestIdOpen = itemReference+"-"+itemsMap;
+        chestIdOpen = itemReference + "-" + itemsMap;
         chestPanel.classList.add('active');
     },
 
@@ -7294,11 +7317,11 @@ cardAlbumMarkup += '<p id="dustCurrency">'+ hero.currency.cardDust + ' dust</p>'
             case 'reHireFollowerNo':
                 e.preventDefault();
                 // remove follower:
-             
-var whichFollower = e.target.getAttribute('data-follower');
-retinueList.removeChild(document.getElementById('retinueFollower'+whichFollower));
 
-   // ####
+                var whichFollower = e.target.getAttribute('data-follower');
+                retinueList.removeChild(document.getElementById('retinueFollower' + whichFollower));
+
+                // ####
                 // john
 
                 sendDataWithoutNeedingAResponse("/game-world/removeHiredFollower.php?id=" + questId);
@@ -7490,17 +7513,33 @@ retinueList.removeChild(document.getElementById('retinueFollower'+whichFollower)
         );
     },
     createTreasureMap: function(mapId) {
-      if(hero.activeTreasureMaps.indexOf(mapId) === -1) {
-        var markupToAdd = '<div class="treasureMap" id="treasureMap'+mapId+'"><div class="draggableBar">X marks the spot...</div><button class="closePanel">close</button>';
-        var mapIdTiles = mapId.split("_");
-        markupToAdd += '<img src="/game-world/generateMapImage.php?playerId='+characterId+'&sepia=true&tileX='+mapIdTiles[0]+'&tileY='+mapIdTiles[1]+'&radius=12&scale=0.3&overlay=true">';
-        markupToAdd += '</div>';
-        treasureMapPanels.insertAdjacentHTML('beforeend', markupToAdd);
-        hero.activeTreasureMaps.push(mapId);
-    }
+        if (hero.activeTreasureMaps.indexOf(mapId) === -1) {
+            var markupToAdd = '<div class="treasureMap" id="treasureMap' + mapId + '"><div class="draggableBar">X marks the spot...</div><button class="closePanel">close</button>';
+            var mapIdTiles = mapId.split("_");
+            markupToAdd += '<img src="/game-world/generateMapImage.php?playerId=' + characterId + '&sepia=true&tileX=' + mapIdTiles[0] + '&tileY=' + mapIdTiles[1] + '&radius=12&scale=0.3&overlay=true">';
+            markupToAdd += '</div>';
+            treasureMapPanels.insertAdjacentHTML('beforeend', markupToAdd);
+            hero.activeTreasureMaps.push(mapId);
+        }
     },
     showTreasureMap: function(mapId) {
-        document.getElementById('treasureMap'+mapId).classList.add("active");
+        document.getElementById('treasureMap' + mapId).classList.add("active");
+    },
+    openHireFollowerPanel: function(whichNPC) {
+
+
+
+
+
+        hireRetinueFollowerPanelContent.innerHTML = '<img src="/images/retinue/'+whichNPC.followerId+'.png" alt="">Would you like to hire ' + whichNPC.name + '?';
+        
+        hireRetinueFollowerPanel.classList.add('active');
+        hireRetinueFollowerPanel.setAttribute('data-NPC',whichNPC.uniqueIndex);
+    },
+    closeHireFollowerPanel: function() {
+        hireRetinueFollowerPanel.classList.remove('active');
+        dialogue.classList.add("slowerFade");
+        dialogue.classList.remove("active");
     }
 }
 function setupWeather() {
@@ -9694,20 +9733,14 @@ function processSpeech(thisObjectSpeaking, thisSpeechPassedIn, thisSpeechCode, i
                 break;
             case "shop":
                 // check if the shop is empty:
-                console.log("open shop");
                 if (UI.openedShopSuccessfully(generateHash(thisObjectSpeaking.speech[thisObjectSpeaking.speechIndex][2]))) {
                     //
-
-
                 } else {
                     // shop is empty:
-
                     if (typeof thisObjectSpeaking.shopEmptySpeech !== "undefined") {
                         thisSpeech = thisObjectSpeaking.shopEmptySpeech;
                     }
                 }
-
-
                 //thisObjectSpeaking.speechIndex--;
                 break;
             case "post":
@@ -9734,6 +9767,10 @@ function processSpeech(thisObjectSpeaking, thisSpeechPassedIn, thisSpeechCode, i
                     showNotification('<p>You gained a new follower</p>');
                 }
                 */
+                break;
+                case "hire":
+                UI.openHireFollowerPanel(thisObjectSpeaking);
+                thisObjectSpeaking.speechIndex--;
                 break;
             case "collection-quest":
                 var collectionQuestSpeech = thisSpeech.split("|");

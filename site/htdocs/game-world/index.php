@@ -212,7 +212,12 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
     <?php // defined in getRetinueFollowers.php ?>
     <?php echo $retinuePanelOutput; ?>
  
-
+    <div id="hireRetinueFollowerPanel">
+      <div class="draggableBar">Hire A Retinue Follower</div>
+      <div id="hireRetinueFollowerPanelContent"></div>
+      <p>Costs <?php echo parseMoney($amountToHireRetinueFollower); ?></p>
+      <button id="hireRetinueFollowerNo">No</button><button id="hireRetinueFollowerYes">Yes</button>
+    </div>
     <div id="chestPanel">
       <div class="draggableBar"><span id="chestTitle">Chest</span></div>
       <button class="closePanel">close</button>

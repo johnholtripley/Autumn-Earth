@@ -18,7 +18,7 @@ $homeBaseContinent = "eastern-continent";
 $homeBaseX = 200;
 $homeBaseY = 350;
 
-
+$amountToHireRetinueFollower = 110000;
 
 
 $query = "SELECT retinueMapAreasRevealed from tblcharacters where charID='".$chr."'";
@@ -242,7 +242,7 @@ if($thisFollower['isHired'] == 1) {
   $retinuePanelCompleteOutput .= '<div id="retinueFollowerRehire'.$thisFollower['followerID'].'" class="retinueFollowerRehire">';
   $retinuePanelCompleteOutput .= '<div class="portrait"><img src="/images/retinue/'.$thisFollower['followerID'].'.png" alt=""></div>';
   $retinuePanelCompleteOutput .= '<h3>Re-hire '.$thisFollower['followerName'].'?</h3>';
-  $retinuePanelCompleteOutput .= '<p>Costs '.parseMoney(110000).'</p>';
+  $retinuePanelCompleteOutput .= '<p>Costs '.parseMoney($amountToHireRetinueFollower).'</p>';
   $retinuePanelCompleteOutput .= '<button class="reHireFollowerNo" data-follower="'.$thisFollower['followerID'].'">No</button>';
   $retinuePanelCompleteOutput .= '<button class="reHireFollowerYes">Yes</button>';
 $retinuePanelCompleteOutput .= '</div>';

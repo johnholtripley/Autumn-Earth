@@ -2117,20 +2117,14 @@ function processSpeech(thisObjectSpeaking, thisSpeechPassedIn, thisSpeechCode, i
                 break;
             case "shop":
                 // check if the shop is empty:
-                console.log("open shop");
                 if (UI.openedShopSuccessfully(generateHash(thisObjectSpeaking.speech[thisObjectSpeaking.speechIndex][2]))) {
                     //
-
-
                 } else {
                     // shop is empty:
-
                     if (typeof thisObjectSpeaking.shopEmptySpeech !== "undefined") {
                         thisSpeech = thisObjectSpeaking.shopEmptySpeech;
                     }
                 }
-
-
                 //thisObjectSpeaking.speechIndex--;
                 break;
             case "post":
@@ -2157,6 +2151,10 @@ function processSpeech(thisObjectSpeaking, thisSpeechPassedIn, thisSpeechCode, i
                     showNotification('<p>You gained a new follower</p>');
                 }
                 */
+                break;
+                case "hire":
+                UI.openHireFollowerPanel(thisObjectSpeaking);
+                thisObjectSpeaking.speechIndex--;
                 break;
             case "collection-quest":
                 var collectionQuestSpeech = thisSpeech.split("|");

@@ -123,3 +123,35 @@ document.getElementById('retinueFollowerRehire'+allFollowersOnThisQuest[i]).clas
         retinueMissionCompleted(questId);
     });
 }
+
+function hireNewFollower() {
+    if (hero.currency.money >= costToRehireFollower) {
+        hero.currency.money -= costToRehireFollower;
+        UI.updateCurrencies();
+        audio.playSound(soundEffects['coins'], 0);
+        var whichNPCIndex = hireRetinueFollowerPanel.getAttribute('data-NPC');
+        // find the relevant NPC:
+        var thisNPC;
+        var thisFollowerNPC = null;
+        for (var m = 0; m < visibleMaps.length; m++) {
+            for (var i = 0; i < thisMapData[(visibleMaps[m])].npcs.length; i++) {
+                thisNPC = thisMapData[(visibleMaps[m])].npcs[i];
+                if (thisNPC.uniqueIndex == whichNPCIndex) {
+                    thisFollowerNPC = thisNPC;
+                }
+            }
+        }
+        if (thisFollowerNPC !== null) {
+            // remove the hiring speech:
+            thisFollowerNPC.speech.splice(thisFollowerNPC.speechIndex, 1);
+            // update database:
+              sendDataWithoutNeedingAResponse("/game-world/activateRetinueFollower.php?followerID=" + thisFollowerNPC.followerId);
+               // show in retinue panel:
+                followerMarkupToAdd = '<li id="retinueFollower' + thisFollowerNPC.followerId + '" class="available" data-locationx="200" data-locationy="350" data-activeonquest="-1"><div class="portrait"><img src="/images/retinue/' + thisFollowerNPC.followerId + '.png" alt=""></div><h3>' + thisFollowerNPC.name + '</h3><p>waiting for a quest</p></li>';
+                retinueList.insertAdjacentHTML('beforeend', followerMarkupToAdd);
+        }
+    } else {
+        UI.showNotification('<p>I haven\'t got enough money</p>');
+    }
+    UI.closeHireFollowerPanel();
+}
