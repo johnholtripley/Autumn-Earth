@@ -57,17 +57,17 @@ function retinueMissionCompleted(questId, isExplorationQuest) {
         } else {
             hero.stats.retinueExplorationMissionsCompleted++;
             var thisHex = document.getElementById('undiscovered_' + data.explored);
-       
+
 
             var thisHexCoords = data.explored.split("_");
 
 
 
-     // save this hex as being explored:
-            hero.retinueMapAreasRevealed.push(thisHexCoords[0]+","+thisHexCoords[1]);
+            // save this hex as being explored:
+            hero.retinueMapAreasRevealed.push(thisHexCoords[0] + "," + thisHexCoords[1]);
 
             // needs pushing to database:
-           saveGame();
+            saveGame();
 
             // make neighbouring hexes explorable:
             var thisNeighbouringHex;
@@ -109,10 +109,10 @@ function retinueMissionCompleted(questId, isExplorationQuest) {
             thisFollower.setAttribute('data-locationy', data.endLocationY);
             thisFollower.removeAttribute('data-activeonquest');
             document.querySelector('#retinueFollower' + allFollowersOnThisQuest[i] + ' p').innerHTML = 'waiting for a quest';
- 
-            if(thisFollower.classList.contains('hired')) {
-// offer the option to rehire, or remove this follower:
-document.getElementById('retinueFollowerRehire'+allFollowersOnThisQuest[i]).classList.add('active');
+
+            if (thisFollower.classList.contains('hired')) {
+                // offer the option to rehire, or remove this follower:
+                document.getElementById('retinueFollowerRehire' + allFollowersOnThisQuest[i]).classList.add('active');
             }
         }
         document.getElementById('retinueComplete' + questId).classList.remove('active');
@@ -145,10 +145,10 @@ function hireNewFollower() {
             // remove the hiring speech:
             thisFollowerNPC.speech.splice(thisFollowerNPC.speechIndex, 1);
             // update database:
-              sendDataWithoutNeedingAResponse("/game-world/activateRetinueFollower.php?followerID=" + thisFollowerNPC.followerId);
-               // show in retinue panel:
-                followerMarkupToAdd = '<li id="retinueFollower' + thisFollowerNPC.followerId + '" class="available" data-locationx="200" data-locationy="350" data-activeonquest="-1"><div class="portrait"><img src="/images/retinue/' + thisFollowerNPC.followerId + '.png" alt=""></div><h3>' + thisFollowerNPC.name + '</h3><p>waiting for a quest</p></li>';
-                retinueList.insertAdjacentHTML('beforeend', followerMarkupToAdd);
+            sendDataWithoutNeedingAResponse("/game-world/activateRetinueFollower.php?followerID=" + thisFollowerNPC.followerId);
+            // show in retinue panel:
+            var followerMarkupToAdd = '<li id="retinueFollower' + thisFollowerNPC.followerId + '" class="available" data-locationx="200" data-locationy="350" data-activeonquest="-1"><div class="portrait"><img src="/images/retinue/' + thisFollowerNPC.followerId + '.png" alt=""></div><h3>' + thisFollowerNPC.name + '</h3><p>waiting for a quest</p></li>';
+            retinueList.insertAdjacentHTML('beforeend', followerMarkupToAdd);
         }
     } else {
         UI.showNotification('<p>I haven\'t got enough money</p>');

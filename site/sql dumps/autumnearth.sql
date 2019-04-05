@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 02, 2019 at 06:35 PM
+-- Generation Time: Apr 03, 2019 at 07:00 PM
 -- Server version: 10.1.31-MariaDB
 -- PHP Version: 7.0.29
 
@@ -1769,11 +1769,11 @@ CREATE TABLE `tblretinuefollowers` (
 
 INSERT INTO `tblretinuefollowers` (`followerID`, `followerName`, `followerCleanURL`, `characterIdFollowing`, `activeQuestId`, `followerRewardFromQuestId`, `isEnabled`, `isHired`, `generatedAtTime`, `questStartedTime`, `followerSex`, `followerRace`, `currentContinent`, `followerMapCoordinateX`, `followerMapCoordinateY`) VALUES
 (1, 'Eila Myrborn', 'eila-myrborn', 999, -1, NULL, 1, 0, '0000-00-00 00:00:00', '2018-08-20 10:39:07', 'female', 'huldra', 'eastern-continent', 190, 344),
-(2, 'Nellaith Wispfael', 'nellaith-wispfael', 999, -1, NULL, 1, 0, '0000-00-00 00:00:00', '2018-08-20 10:39:07', 'female', 'huldra', 'eastern-continent', 190, 344),
-(59, 'Garmund  Wispmote', 'garmund-wispmote', 999, -1, NULL, 1, 0, '0000-00-00 00:00:00', '2018-08-20 10:39:07', 'male', 'huldra', 'eastern-continent', 190, 344),
-(67, 'Frith Airsong', 'frith-airsong', 999, -1, NULL, 1, 0, '0000-00-00 00:00:00', '2018-08-20 10:37:58', 'female', 'huldra', 'eastern-continent', 200, 350),
-(437, 'Ftrudis  Dewyn', 'ftrudis-dewyn', 999, -1, 1, 0, 0, '2019-04-02 17:29:15', '0000-00-00 00:00:00', 'female', 'huldra', 'eastern-continent', 200, 350),
-(438, 'Ofrun  Windlldan', 'ofrun-windlldan', 999, -1, 0, 0, 1, '2019-04-02 17:31:34', '0000-00-00 00:00:00', 'female', 'huldra', 'eastern-continent', 200, 350);
+(2, 'Nellaith Wispfael', 'nellaith-wispfael', 999, 296, NULL, 1, 0, '0000-00-00 00:00:00', '2019-04-03 17:48:34', 'female', 'huldra', 'eastern-continent', 190, 344),
+(59, 'Garmund  Wispmote', 'garmund-wispmote', 999, 296, NULL, 1, 0, '0000-00-00 00:00:00', '2019-04-03 17:48:34', 'male', 'huldra', 'eastern-continent', 190, 344),
+(67, 'Frith Airsong', 'frith-airsong', 999, -1, NULL, 1, 0, '0000-00-00 00:00:00', '2019-04-02 17:47:09', 'female', 'huldra', 'eastern-continent', 255, 341),
+(437, 'Ftrudis  Dewyn', 'ftrudis-dewyn', 999, -1, 1, 0, 0, '2019-04-02 13:29:15', '0000-00-00 00:00:00', 'female', 'huldra', 'eastern-continent', 200, 350),
+(439, 'Gladwidu Yewsong', 'gladwidu-yewsong', 999, 296, 0, 1, 1, '2019-04-03 17:31:34', '2019-04-03 17:48:34', 'male', 'huldra', 'eastern-continent', 200, 350);
 
 -- --------------------------------------------------------
 
@@ -1933,7 +1933,11 @@ INSERT INTO `tblretinuequestsactive` (`questActiveId`, `questIdActiveOrComplete`
 (89, 291, 999),
 (90, 295, 999),
 (91, 297, 999),
-(92, 285, 999);
+(92, 285, 999),
+(93, 284, 999),
+(94, 286, 999),
+(95, 288, 999),
+(96, 296, 999);
 
 -- --------------------------------------------------------
 
@@ -2850,7 +2854,7 @@ ALTER TABLE `tblregions`
 -- AUTO_INCREMENT for table `tblretinuefollowers`
 --
 ALTER TABLE `tblretinuefollowers`
-  MODIFY `followerID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=439;
+  MODIFY `followerID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=440;
 
 --
 -- AUTO_INCREMENT for table `tblretinuequests`
@@ -2862,7 +2866,7 @@ ALTER TABLE `tblretinuequests`
 -- AUTO_INCREMENT for table `tblretinuequestsactive`
 --
 ALTER TABLE `tblretinuequestsactive`
-  MODIFY `questActiveId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=93;
+  MODIFY `questActiveId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=97;
 
 --
 -- AUTO_INCREMENT for table `tblretinuequesttypes`

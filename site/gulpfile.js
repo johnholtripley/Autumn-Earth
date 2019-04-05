@@ -75,7 +75,7 @@ gulp.task('scripts', ['alternateScripts'],function() {
 
 gulp.task('alternateScripts', ['workerScripts'], function() {
     // minify predefined list of unique scripts:
-    return gulp.src(['htdocs/**/*(serviceWorker.js|card-game.js|card-game-shared.js|worker-pathfinding.js|worker-lightmap.js)'])
+    return gulp.src(['htdocs/**/*(serviceWorker.js|card-game.js|card-game-shared.js|worker-pathfinding.js|worker-lightmap.js|hnefatafl.js|hnefatafl-shared.js)'])
         .pipe(rename({
             suffix: '.min'
         }))
@@ -579,7 +579,7 @@ gulp.task('tidyUpCritical', ['generateCritical'], function() {
 // Watch
 gulp.task('watch', function() {
     gulp.watch('htdocs/css/src/**/*.scss', ['sass']);
-    gulp.watch(['htdocs/js/src/**/*.js','htdocs/js/worker-pathfinding.js','htdocs/js/card-game-shared.js'], ['scripts']);
+    gulp.watch(['htdocs/js/src/**/*.js','htdocs/js/worker-pathfinding.js','htdocs/js/card-game-shared.js','htdocs/js/hnefatafl-shared.js'], ['scripts']);
 });
 
 // testing task
