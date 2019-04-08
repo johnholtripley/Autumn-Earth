@@ -843,6 +843,13 @@ function initialiseNPC(whichNPC) {
 
     whichNPC.uniqueIndex = generateHash("npc" + whichNPC.x + "*" + whichNPC.y);
 
+  if (typeof whichNPC.reactionRange === "undefined") {
+        whichNPC.reactionRange = 1;
+    }
+
+
+
+
 }
 
 function initialiseItem(whichItem) {
@@ -1421,20 +1428,8 @@ function checkHeroCollisions() {
     }
 }
 
-
-
-function gameLoop() {
-    switch (gameMode) {
-        case "mapLoading":
-            //    console.log("loading map assets...");
-            break;
-        case "paused":
-            //
-            break;
-        case "cardGame":
-            cardGameNameSpace.update();
-            cardGameNameSpace.draw();
-            // keep the surrounding game world running:
+function updateSurroundingGameWorld() {
+      // keep the surrounding game world running:
             var now = window.performance.now();
             hero.totalGameTimePlayed++;
             var elapsed = (now - lastTime);
@@ -1455,6 +1450,25 @@ function gameLoop() {
             UI.updateCooldowns();
             // only need to draw if the game board doesn't cover the screen: ####
             draw();
+}
+
+function gameLoop() {
+    switch (gameMode) {
+        case "mapLoading":
+            //    console.log("loading map assets...");
+            break;
+        case "paused":
+            //
+            break;
+        case "cardGame":
+            cardGameNameSpace.update();
+            cardGameNameSpace.draw();
+          updateSurroundingGameWorld()
+            break;
+            case "hnefataflGame":
+            hnefataflNameSpace.update();
+            hnefataflNameSpace.draw();
+            updateSurroundingGameWorld()
             break;
         case "play":
             update();
@@ -2068,7 +2082,8 @@ function checkForActions() {
             for (var i = 0; i < thisMapData[(visibleMaps[m])].npcs.length; i++) {
                 thisNPC = thisMapData[(visibleMaps[m])].npcs[i];
                 if (thisNPC.speech) {
-                    if (isInRange(hero.x, hero.y, thisNPC.x, thisNPC.y, (thisNPC.width + hero.width))) {
+               //     if (isInRange(hero.x, hero.y, thisNPC.x, thisNPC.y, (thisNPC.width + hero.width))) {
+                    if (isInRange(hero.x, hero.y, thisNPC.x, thisNPC.y, (thisNPC.reactionRange * tileW))) {
                         if (isFacing(hero, thisNPC)) {
                             // if at the end of the NPC's speech list, or the dialogue isn't part of the NPC's normal speech list, then close the balloon with an action click:
                             if ((thisNPC.speechIndex >= thisNPC.speech.length) || (canCloseDialogueBalloonNextClick && activeObjectForDialogue == thisNPC)) {
@@ -2425,6 +2440,11 @@ function processSpeech(thisObjectSpeaking, thisSpeechPassedIn, thisSpeechCode, i
 
                 startCardGame(thisObjectSpeaking);
                 break;
+
+case "hnefatafl":
+ startHnefataflGame(thisObjectSpeaking);
+                break;
+
             default:
                 // nothing
         }

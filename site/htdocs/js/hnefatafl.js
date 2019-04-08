@@ -25,7 +25,7 @@ stats: []
 
 
 if ((cutsTheMustard) && (supportsCanvas())) {
-hnefataflNameSpace.initialiseCardGame();
+hnefataflNameSpace.initialisehnefataflGame();
 
  gameLoop();
         // preload all images:

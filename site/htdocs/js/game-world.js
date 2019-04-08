@@ -3053,6 +3053,7 @@ function closeCardGame() {
     document.getElementById("cardGame").removeEventListener("click", cardGameNameSpace.canvasClick, false);
 }
 
+/*
 function pickBestCardToTake(whichDeck) {
     // find the best opponent's card and give it to the winner
     var highestScoreSoFar = -1;
@@ -3068,6 +3069,7 @@ function pickBestCardToTake(whichDeck) {
     }
     return whichIndex;
 }
+*/
 
 function openBoosterPack() {
     // pick 5 random, but different, cards:
@@ -3132,6 +3134,96 @@ function revealBoosterCard(e) {
         }
     }
 }
+
+
+
+function hnefataflPlayer2Concedes() {
+  
+delete thisChallengeNPC.isPlayingCards;
+
+ processSpeech(thisChallengeNPC, thisChallengeNPC.cardGameSpeech.win[0], thisChallengeNPC.cardGameSpeech.win[1]);
+    closeHnefataflGame();
+}
+
+function hnefataflPlayer2Wins() {
+    // player won
+    hero.stats.cardGamesWon++;
+    hero.currency.cardDust += 7;
+    UI.updateCurrencies();UI.updateCardAlbum();
+
+    delete thisChallengeNPC.isPlayingCards;
+    processPlayerWinSpeech(thisChallengeNPC, thisChallengeNPC.cardGameSpeech.lose[0], thisChallengeNPC.cardGameSpeech.lose[1]);
+    closeHnefataflGame();
+}
+
+function hnefataflPlayer1Wins() {
+    // player lost
+    hero.stats.cardGamesLost++;
+    hero.currency.cardDust += 1;
+    UI.updateCurrencies();UI.updateCardAlbum();
+     delete thisChallengeNPC.isPlayingCards;
+    processSpeech(thisChallengeNPC, thisChallengeNPC.cardGameSpeech.win[0], thisChallengeNPC.cardGameSpeech.win[1]);
+    closeHnefataflGame();
+}
+
+function hnefataflIsDrawn() {
+     console.log(thisChallengeNPC);
+    hero.stats.cardGamesDrawn++;
+    hero.currency.cardDust += 3;
+    UI.updateCurrencies();UI.updateCardAlbum();
+     delete thisChallengeNPC.isPlayingCards;
+    processSpeech(thisChallengeNPC, thisChallengeNPC.cardGameSpeech.draw[0], thisChallengeNPC.cardGameSpeech.draw[1]);
+    closeHnefataflGame();
+}
+
+function processPlayerWinSpeech(thisChallengeNPC, thisSpeechPassedIn, thisSpeechCode) {
+    if (thisSpeechCode != "") {
+        var questSpeech = thisSpeechCode.split("|");
+        var questId = questSpeech[1];
+        if (questData[questId].hasBeenCompleted < 1) {
+            if (giveQuestRewards(questId)) {
+                if (questData[questId].isRepeatable > 0) {
+                    questData[questId].hasBeenCompleted = 0;
+                } else {
+                    questData[questId].hasBeenCompleted = 1;
+                }
+                UI.showDialogue(thisChallengeNPC, thisChallengeNPC.cardGameSpeech.lose[0] + questSpeech[2]);
+                canCloseDialogueBalloonNextClick = true;
+                checkForTitlesAwarded(questId);
+            }
+        } else {
+            // there was a quest, but it's been completed - just show ordinary text:
+            processSpeech(thisChallengeNPC, thisChallengeNPC.cardGameSpeech.lose[0], thisChallengeNPC.cardGameSpeech.lose[1]);
+        }
+    } else {
+        // no quest associated, just show ordinary text:
+        processSpeech(thisChallengeNPC, thisChallengeNPC.cardGameSpeech.lose[0], thisChallengeNPC.cardGameSpeech.lose[1]);
+    }
+}
+
+
+
+
+function startHnefataflGame(opponentNPC) {
+    console.log(opponentNPC.name);
+
+      
+        hnefataflNameSpace.initialisehnefataflGame();
+        hnefataflGameWrapper.classList.add("active");
+        opponentNPC.isPlayingCards = true;
+     //   audio.playMusic('card-game-NOT_MINE-Shuffle-or-Boogie');
+   
+}
+
+
+
+function closeHnefataflGame() {
+    gameMode = "play";
+ //   audio.fadeOutMusic('card-game-NOT_MINE-Shuffle-or-Boogie');
+    hnefataflGameWrapper.classList.remove("active");
+    document.getElementById("cardGame").removeEventListener("click", hnefataflNameSpace.canvasClick, false);
+}
+
 
 const Input = {
     isUsingGamePad: false,
@@ -8459,6 +8551,13 @@ function initialiseNPC(whichNPC) {
 
     whichNPC.uniqueIndex = generateHash("npc" + whichNPC.x + "*" + whichNPC.y);
 
+  if (typeof whichNPC.reactionRange === "undefined") {
+        whichNPC.reactionRange = 1;
+    }
+
+
+
+
 }
 
 function initialiseItem(whichItem) {
@@ -9037,20 +9136,8 @@ function checkHeroCollisions() {
     }
 }
 
-
-
-function gameLoop() {
-    switch (gameMode) {
-        case "mapLoading":
-            //    console.log("loading map assets...");
-            break;
-        case "paused":
-            //
-            break;
-        case "cardGame":
-            cardGameNameSpace.update();
-            cardGameNameSpace.draw();
-            // keep the surrounding game world running:
+function updateSurroundingGameWorld() {
+      // keep the surrounding game world running:
             var now = window.performance.now();
             hero.totalGameTimePlayed++;
             var elapsed = (now - lastTime);
@@ -9071,6 +9158,25 @@ function gameLoop() {
             UI.updateCooldowns();
             // only need to draw if the game board doesn't cover the screen: ####
             draw();
+}
+
+function gameLoop() {
+    switch (gameMode) {
+        case "mapLoading":
+            //    console.log("loading map assets...");
+            break;
+        case "paused":
+            //
+            break;
+        case "cardGame":
+            cardGameNameSpace.update();
+            cardGameNameSpace.draw();
+          updateSurroundingGameWorld()
+            break;
+            case "hnefataflGame":
+            hnefataflNameSpace.update();
+            hnefataflNameSpace.draw();
+            updateSurroundingGameWorld()
             break;
         case "play":
             update();
@@ -9684,7 +9790,8 @@ function checkForActions() {
             for (var i = 0; i < thisMapData[(visibleMaps[m])].npcs.length; i++) {
                 thisNPC = thisMapData[(visibleMaps[m])].npcs[i];
                 if (thisNPC.speech) {
-                    if (isInRange(hero.x, hero.y, thisNPC.x, thisNPC.y, (thisNPC.width + hero.width))) {
+               //     if (isInRange(hero.x, hero.y, thisNPC.x, thisNPC.y, (thisNPC.width + hero.width))) {
+                    if (isInRange(hero.x, hero.y, thisNPC.x, thisNPC.y, (thisNPC.reactionRange * tileW))) {
                         if (isFacing(hero, thisNPC)) {
                             // if at the end of the NPC's speech list, or the dialogue isn't part of the NPC's normal speech list, then close the balloon with an action click:
                             if ((thisNPC.speechIndex >= thisNPC.speech.length) || (canCloseDialogueBalloonNextClick && activeObjectForDialogue == thisNPC)) {
@@ -10041,6 +10148,11 @@ function processSpeech(thisObjectSpeaking, thisSpeechPassedIn, thisSpeechCode, i
 
                 startCardGame(thisObjectSpeaking);
                 break;
+
+case "hnefatafl":
+ startHnefataflGame(thisObjectSpeaking);
+                break;
+
             default:
                 // nothing
         }

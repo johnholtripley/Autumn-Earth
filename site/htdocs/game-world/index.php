@@ -259,9 +259,16 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
       </canvas>
       <button id="cardGameConcede">Concede</button>
   </div>
+  <div id="hnefataflGameWrapper">
+    <canvas id="hnefataflGame" moz-opaque width="612" height="612">
+      <img src="/images/card-game/no-canvas.jpg" alt="Hnefatafl game">
+    </canvas>
+    <button id="hnefataflConcede">Concede</button>
+  </div>
 </div>
 
 <script src="/js/card-game-shared.<?php echo $cacheVersion; ?>.js"></script>
+<script src="/js/hnefatafl-shared.<?php echo $cacheVersion; ?>.js"></script>
 <script src="/js/game-world.<?php echo $cacheVersion; ?>.js"></script>
  
 <?php include($_SERVER['DOCUMENT_ROOT']."/includes/google-analytics.php"); ?>

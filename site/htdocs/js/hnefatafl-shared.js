@@ -5,19 +5,19 @@
 
 
 
-var thisMovesScore, indexToCheck, indexesToRemove, whichMoveToMake, listOfPossibleBestMoves;
+//var thisMovesScore, indexToCheck, indexesToRemove, whichMoveToMake, listOfPossibleBestMoves;
 
 // name space the card game code so it doesn't cause conflicts with the core game code:
 var hnefataflNameSpace = {
-    'cardWidth': 84,
-    'cardHeight': 102,
+  //  'cardWidth': 84,
+  //  'cardHeight': 102,
     
 
     'board': [    ],
 
 
 
-    initialiseCardGame: function() {
+    initialisehnefataflGame: function() {
 
     // 'x' = void space
     // '#' = player 1 start position
@@ -72,7 +72,7 @@ var hnefataflNameSpace = {
         var y = e.clientY + document.body.scrollTop + document.documentElement.scrollTop - hnefataflNameSpace.outerCanvasTop - hnefataflNameSpace.pageLoadScroll;
         switch (hnefataflNameSpace.gameMode) {
             case "play":
-            case "cardGame":
+            case "hnefataflGame":
               
         }
     },
@@ -106,7 +106,7 @@ var hnefataflNameSpace = {
             hnefataflNameSpace.whoCanClick = hnefataflNameSpace.currentPlayersTurn;
             hnefataflNameSpace.gameMode = "play";
             if (typeof gameMode !== "undefined") {
-                gameMode = "cardGame";
+                gameMode = "hnefataflGame";
             }
             
                 

@@ -109,6 +109,7 @@ function closeCardGame() {
     document.getElementById("cardGame").removeEventListener("click", cardGameNameSpace.canvasClick, false);
 }
 
+/*
 function pickBestCardToTake(whichDeck) {
     // find the best opponent's card and give it to the winner
     var highestScoreSoFar = -1;
@@ -124,6 +125,7 @@ function pickBestCardToTake(whichDeck) {
     }
     return whichIndex;
 }
+*/
 
 function openBoosterPack() {
     // pick 5 random, but different, cards:

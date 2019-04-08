@@ -1,0 +1,18 @@
+
+
+#hnefataflGameWrapper {
+    z-index: 5;
+    left: 50%;
+    top: 50%;
+    @include transform(translate(-306px, -306px));
+    @include box-shadow(0px 12px 36px 0px #000);
+    @include togglePanel(0.6s);
+    background: #000;
+    canvas {
+        width: 612px;
+    }
+    button {
+        margin: 3px auto;
+        display: block;
+    }
+}
