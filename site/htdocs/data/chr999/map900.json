@@ -65,7 +65,7 @@
                     "challenge": ["No, Hnefatafl is the only game for me", ""]
                   
                 },
-                     "HnefataflSpeech":
+                     "hnefataflSpeech":
                 {
                         "win": ["Woo! I won!", ""],
                     "lose": ["Ahh, you beat me...", ""],

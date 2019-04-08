@@ -12,23 +12,30 @@ var hnefataflNameSpace = {
   //  'cardWidth': 84,
   //  'cardHeight': 102,
     
-
+'squareSize': 62,
+'boardInset': 28,
+'pieceGraphicalOffset': 12,
     'board': [    ],
 
 
 
     initialisehnefataflGame: function() {
 
-    // 'x' = void space
-    // '#' = player 1 start position
-    // '@' = player 2 start position
+    // '0' = void space
+    // '1' = player 1 (black) start position
+    // 'K' = player 2 king start position
+    // '2' = player 2 (white) start position
     hnefataflNameSpace.board = [
-        ['#', '#', 'x', 'x', 'x', '-', '-', 'x', 'x', 'x', 'x', 'x'],
-        ['#', '#', 'x', 'x', '-', '-', '-', '-', 'x', 'x', '@', '@'],
-        ['#', '#', 'x', '-', '-', '-', '-', '-', '-', 'x', '@', '@'],
-        ['#', '#', 'x', '-', '-', '-', '-', '-', '-', 'x', '@', '@'],
-        ['#', '#', 'x', 'x', '-', '-', '-', '-', 'x', 'x', '@', '@'],
-        ['x', 'x', 'x', 'x', 'x', '-', '-', 'x', 'x', 'x', '@', '@']
+        ['0', '0', '0', '1', '1', '1', '0', '0', '0'],
+        ['0', '0', '0', '0', '1', '0', '0', '0', '0'],
+        ['0', '0', '0', '0', '2', '0', '0', '0', '0'],
+        ['1', '0', '0', '0', '2', '0', '0', '0', '1'],
+        ['1', '1', '2', '2', 'K', '2', '2', '1', '1'],
+        ['1', '0', '0', '0', '2', '0', '0', '0', '1'],
+        ['0', '0', '0', '0', '2', '0', '0', '0', '0'],
+        ['0', '0', '0', '0', '1', '0', '0', '0', '0'],
+        ['0', '0', '0', '1', '1', '1', '0', '0', '0']
+      
     ];
 
     hnefataflNameSpace.boardWidth = hnefataflNameSpace.board[0].length;
@@ -39,6 +46,17 @@ var hnefataflNameSpace = {
         hnefataflNameSpace.imagesToLoad = [{
             name: "board",
             src: "/images/hnefatafl/board.jpg"
+        },
+        {
+             name: "white-piece",
+            src: "/images/hnefatafl/white-piece.png"
+        },  {
+             name: "black-piece",
+            src: "/images/hnefatafl/black-piece.png"
+        },
+          {
+             name: "king",
+            src: "/images/hnefatafl/king.png"
         }
 
 
@@ -94,6 +112,9 @@ var hnefataflNameSpace = {
         // set up image references:
    
         hnefataflNameSpace.boardImage = Loader.getImage("board");
+        hnefataflNameSpace.whitePieceImage = Loader.getImage("white-piece");
+        hnefataflNameSpace.kingImage = Loader.getImage("king");
+        hnefataflNameSpace.blackPieceImage = Loader.getImage("black-piece");
      
 
       
@@ -114,12 +135,33 @@ var hnefataflNameSpace = {
     },
 
     draw: function() {
-        //  hnefataflNameSpace.gameContext.clearRect(0, 0, hnefataflNameSpace.canvasWidth, hnefataflNameSpace.canvasHeight);
         // place board:
-       
+
         hnefataflNameSpace.gameContext.drawImage(hnefataflNameSpace.boardImage, 0, 0);
-   
-         
+        var thisPiece;
+        for (var i = 0; i < hnefataflNameSpace.board.length; i++) {
+            for (var j = 0; j < hnefataflNameSpace.board[0].length; j++) {
+                switch (hnefataflNameSpace.board[i][j]) {
+                    case '1':
+                        thisPiece = hnefataflNameSpace.blackPieceImage;
+                        break;
+                    case '2':
+                        thisPiece = hnefataflNameSpace.whitePieceImage;
+                        break;
+                    case 'K':
+                        thisPiece = hnefataflNameSpace.kingImage;
+                        break;
+                    default:
+                        thisPiece = ''
+                }
+
+                if (thisPiece != '') {
+                    hnefataflNameSpace.gameContext.drawImage(thisPiece, (i * hnefataflNameSpace.squareSize) + hnefataflNameSpace.boardInset - hnefataflNameSpace.pieceGraphicalOffset, (j * hnefataflNameSpace.squareSize) + hnefataflNameSpace.boardInset - hnefataflNameSpace.pieceGraphicalOffset);
+                }
+
+            }
+        }
+
     },
 
   

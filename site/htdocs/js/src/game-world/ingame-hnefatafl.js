@@ -1,6 +1,6 @@
 function hnefataflPlayer2Concedes() {
     delete thisChallengeNPC.isPlayingCards;
-    processSpeech(thisChallengeNPC, thisChallengeNPC.HnefataflSpeech.win[0], thisChallengeNPC.HnefataflSpeech.win[1]);
+    processSpeech(thisChallengeNPC, thisChallengeNPC.hnefataflSpeech.win[0], thisChallengeNPC.hnefataflSpeech.win[1]);
     closeHnefataflGame();
 }
 
@@ -11,7 +11,7 @@ function hnefataflPlayer2Wins() {
 
 
     delete thisChallengeNPC.isPlayingCards;
-    processPlayerWinSpeech(thisChallengeNPC, thisChallengeNPC.HnefataflSpeech.lose[0], thisChallengeNPC.HnefataflSpeech.lose[1]);
+    processPlayerWinSpeech(thisChallengeNPC, thisChallengeNPC.hnefataflSpeech.lose[0], thisChallengeNPC.hnefataflSpeech.lose[1]);
     closeHnefataflGame();
 }
 
@@ -21,7 +21,7 @@ function hnefataflPlayer1Wins() {
     hero.stats.hnefataflGamesPlayed++;
 
     delete thisChallengeNPC.isPlayingCards;
-    processSpeech(thisChallengeNPC, thisChallengeNPC.HnefataflSpeech.win[0], thisChallengeNPC.HnefataflSpeech.win[1]);
+    processSpeech(thisChallengeNPC, thisChallengeNPC.hnefataflSpeech.win[0], thisChallengeNPC.hnefataflSpeech.win[1]);
     closeHnefataflGame();
 }
 
@@ -32,7 +32,7 @@ function hnefataflIsDrawn() {
 
 
     delete thisChallengeNPC.isPlayingCards;
-    processSpeech(thisChallengeNPC, thisChallengeNPC.HnefataflSpeech.draw[0], thisChallengeNPC.HnefataflSpeech.draw[1]);
+    processSpeech(thisChallengeNPC, thisChallengeNPC.hnefataflSpeech.draw[0], thisChallengeNPC.hnefataflSpeech.draw[1]);
     closeHnefataflGame();
 }
 
@@ -47,17 +47,17 @@ function processPlayerWinSpeech(thisChallengeNPC, thisSpeechPassedIn, thisSpeech
                 } else {
                     questData[questId].hasBeenCompleted = 1;
                 }
-                UI.showDialogue(thisChallengeNPC, thisChallengeNPC.HnefataflSpeech.lose[0] + questSpeech[2]);
+                UI.showDialogue(thisChallengeNPC, thisChallengeNPC.hnefataflSpeech.lose[0] + questSpeech[2]);
                 canCloseDialogueBalloonNextClick = true;
                 checkForTitlesAwarded(questId);
             }
         } else {
             // there was a quest, but it's been completed - just show ordinary text:
-            processSpeech(thisChallengeNPC, thisChallengeNPC.HnefataflSpeech.lose[0], thisChallengeNPC.HnefataflSpeech.lose[1]);
+            processSpeech(thisChallengeNPC, thisChallengeNPC.hnefataflSpeech.lose[0], thisChallengeNPC.hnefataflSpeech.lose[1]);
         }
     } else {
         // no quest associated, just show ordinary text:
-        processSpeech(thisChallengeNPC, thisChallengeNPC.HnefataflSpeech.lose[0], thisChallengeNPC.HnefataflSpeech.lose[1]);
+        processSpeech(thisChallengeNPC, thisChallengeNPC.hnefataflSpeech.lose[0], thisChallengeNPC.hnefataflSpeech.lose[1]);
     }
 }
 
