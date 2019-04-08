@@ -19,7 +19,10 @@ var hero = {
 stats: []
 }
 
-
+hero.stats.hnefataflGamesPlayed = 0;
+hero.stats.hnefataflGamesDrawn = 0;
+hero.stats.hnefataflGamesLost = 0;
+hero.stats.hnefataflGamesWon = 0;
 
 // -----------------------------------------------------------
 

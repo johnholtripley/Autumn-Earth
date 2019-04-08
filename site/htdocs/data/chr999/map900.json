@@ -61,10 +61,10 @@
                 "isMoving": false,
 
                 "speech": [["Let's play, ##characterName##", "hnefatafl"]],
-                "cardGameSpeech":
+                "cardGameSpeech": "No, Hnefatafl is the only game for me",
+                     "HnefataflSpeech":
                 {
-                    "challenge": ["Do you play? Fancy a game then?", "play"],
-                    "win": ["Woo! I won!", ""],
+                        "win": ["Woo! I won!", ""],
                     "lose": ["Ahh, you beat me...", ""],
                     "draw": ["Well played", ""]
                 },

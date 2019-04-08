@@ -2442,6 +2442,7 @@ function processSpeech(thisObjectSpeaking, thisSpeechPassedIn, thisSpeechCode, i
                 break;
 
 case "hnefatafl":
+thisChallengeNPC = thisObjectSpeaking;
  startHnefataflGame(thisObjectSpeaking);
                 break;
 
@@ -2530,8 +2531,14 @@ function checkForChallenges() {
                     if (thisNPC.cardGameSpeech) {
                         thisNPC.drawnFacing = turntoFace(thisNPC, hero);
 
+console.log(typeof thisNPC.cardGameSpeech);
+if (typeof thisNPC.cardGameSpeech === 'object') {
                         thisChallengeNPC = thisNPC;
                         processSpeech(thisNPC, thisNPC.cardGameSpeech.challenge[0], thisNPC.cardGameSpeech.challenge[1]);
+                    } else {
+                         // this NPC doesn't play
+processSpeech(thisNPC, thisNPC.cardGameSpeech, "");
+                    }
                         break;
                     }
                 }

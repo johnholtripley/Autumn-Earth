@@ -2961,6 +2961,7 @@ delete thisChallengeNPC.isPlayingCards;
 function cardGamePlayer2Wins() {
     // player won
     hero.stats.cardGamesWon++;
+    hero.stats.cardGamesPlayed++;
     hero.currency.cardDust += 7;
     UI.updateCurrencies();UI.updateCardAlbum();
     if(typeof thisChallengeNPC.cardBackId !== "undefined") {
@@ -2978,6 +2979,7 @@ UI.updateCardAlbum();
 function cardGamePlayer1Wins() {
     // player lost
     hero.stats.cardGamesLost++;
+      hero.stats.cardGamesPlayed++;
     hero.currency.cardDust += 1;
     UI.updateCurrencies();UI.updateCardAlbum();
      delete thisChallengeNPC.isPlayingCards;
@@ -2988,6 +2990,7 @@ function cardGamePlayer1Wins() {
 function cardGameIsDrawn() {
      console.log(thisChallengeNPC);
     hero.stats.cardGamesDrawn++;
+      hero.stats.cardGamesPlayed++;
     hero.currency.cardDust += 3;
     UI.updateCurrencies();UI.updateCardAlbum();
      delete thisChallengeNPC.isPlayingCards;
@@ -3135,44 +3138,41 @@ function revealBoosterCard(e) {
     }
 }
 
-
-
 function hnefataflPlayer2Concedes() {
-  
-delete thisChallengeNPC.isPlayingCards;
-
- processSpeech(thisChallengeNPC, thisChallengeNPC.cardGameSpeech.win[0], thisChallengeNPC.cardGameSpeech.win[1]);
+    delete thisChallengeNPC.isPlayingCards;
+    processSpeech(thisChallengeNPC, thisChallengeNPC.HnefataflSpeech.win[0], thisChallengeNPC.HnefataflSpeech.win[1]);
     closeHnefataflGame();
 }
 
 function hnefataflPlayer2Wins() {
     // player won
-    hero.stats.cardGamesWon++;
-    hero.currency.cardDust += 7;
-    UI.updateCurrencies();UI.updateCardAlbum();
+    hero.stats.hnefataflGamesWon++;
+    hero.stats.hnefataflGamesPlayed++;
+
 
     delete thisChallengeNPC.isPlayingCards;
-    processPlayerWinSpeech(thisChallengeNPC, thisChallengeNPC.cardGameSpeech.lose[0], thisChallengeNPC.cardGameSpeech.lose[1]);
+    processPlayerWinSpeech(thisChallengeNPC, thisChallengeNPC.HnefataflSpeech.lose[0], thisChallengeNPC.HnefataflSpeech.lose[1]);
     closeHnefataflGame();
 }
 
 function hnefataflPlayer1Wins() {
     // player lost
-    hero.stats.cardGamesLost++;
-    hero.currency.cardDust += 1;
-    UI.updateCurrencies();UI.updateCardAlbum();
-     delete thisChallengeNPC.isPlayingCards;
-    processSpeech(thisChallengeNPC, thisChallengeNPC.cardGameSpeech.win[0], thisChallengeNPC.cardGameSpeech.win[1]);
+    hero.stats.hnefataflGamesLost++;
+    hero.stats.hnefataflGamesPlayed++;
+
+    delete thisChallengeNPC.isPlayingCards;
+    processSpeech(thisChallengeNPC, thisChallengeNPC.HnefataflSpeech.win[0], thisChallengeNPC.HnefataflSpeech.win[1]);
     closeHnefataflGame();
 }
 
 function hnefataflIsDrawn() {
-     console.log(thisChallengeNPC);
-    hero.stats.cardGamesDrawn++;
-    hero.currency.cardDust += 3;
-    UI.updateCurrencies();UI.updateCardAlbum();
-     delete thisChallengeNPC.isPlayingCards;
-    processSpeech(thisChallengeNPC, thisChallengeNPC.cardGameSpeech.draw[0], thisChallengeNPC.cardGameSpeech.draw[1]);
+
+    hero.stats.hnefataflGamesDrawn++;
+    hero.stats.hnefataflGamesPlayed++;
+
+
+    delete thisChallengeNPC.isPlayingCards;
+    processSpeech(thisChallengeNPC, thisChallengeNPC.HnefataflSpeech.draw[0], thisChallengeNPC.HnefataflSpeech.draw[1]);
     closeHnefataflGame();
 }
 
@@ -3187,17 +3187,17 @@ function processPlayerWinSpeech(thisChallengeNPC, thisSpeechPassedIn, thisSpeech
                 } else {
                     questData[questId].hasBeenCompleted = 1;
                 }
-                UI.showDialogue(thisChallengeNPC, thisChallengeNPC.cardGameSpeech.lose[0] + questSpeech[2]);
+                UI.showDialogue(thisChallengeNPC, thisChallengeNPC.HnefataflSpeech.lose[0] + questSpeech[2]);
                 canCloseDialogueBalloonNextClick = true;
                 checkForTitlesAwarded(questId);
             }
         } else {
             // there was a quest, but it's been completed - just show ordinary text:
-            processSpeech(thisChallengeNPC, thisChallengeNPC.cardGameSpeech.lose[0], thisChallengeNPC.cardGameSpeech.lose[1]);
+            processSpeech(thisChallengeNPC, thisChallengeNPC.HnefataflSpeech.lose[0], thisChallengeNPC.HnefataflSpeech.lose[1]);
         }
     } else {
         // no quest associated, just show ordinary text:
-        processSpeech(thisChallengeNPC, thisChallengeNPC.cardGameSpeech.lose[0], thisChallengeNPC.cardGameSpeech.lose[1]);
+        processSpeech(thisChallengeNPC, thisChallengeNPC.HnefataflSpeech.lose[0], thisChallengeNPC.HnefataflSpeech.lose[1]);
     }
 }
 
@@ -3207,24 +3207,22 @@ function processPlayerWinSpeech(thisChallengeNPC, thisSpeechPassedIn, thisSpeech
 function startHnefataflGame(opponentNPC) {
     console.log(opponentNPC.name);
 
-      
-        hnefataflNameSpace.initialisehnefataflGame();
-        hnefataflGameWrapper.classList.add("active");
-        opponentNPC.isPlayingCards = true;
-     //   audio.playMusic('card-game-NOT_MINE-Shuffle-or-Boogie');
-   
+
+    hnefataflNameSpace.initialisehnefataflGame();
+    hnefataflGameWrapper.classList.add("active");
+    opponentNPC.isPlayingCards = true;
+    //   audio.playMusic('card-game-NOT_MINE-Shuffle-or-Boogie');
+
 }
 
 
 
 function closeHnefataflGame() {
     gameMode = "play";
- //   audio.fadeOutMusic('card-game-NOT_MINE-Shuffle-or-Boogie');
+    //   audio.fadeOutMusic('card-game-NOT_MINE-Shuffle-or-Boogie');
     hnefataflGameWrapper.classList.remove("active");
     document.getElementById("cardGame").removeEventListener("click", hnefataflNameSpace.canvasClick, false);
 }
-
-
 const Input = {
     isUsingGamePad: false,
     gamePad: null,
@@ -5125,6 +5123,7 @@ const holdingIcon = document.getElementById('holdingIcon');
 const quickHold = document.getElementById('quickHold');
 const holdingGauge = document.getElementById('holdingGauge');
 const cardGameConcede = document.getElementById('cardGameConcede');
+const hnefataflConcede = document.getElementById('hnefataflConcede');
 const treasureMapPanels = document.getElementById('treasureMapPanels');
 const hireRetinueFollowerPanel = document.getElementById('hireRetinueFollowerPanel');
 const hireRetinueFollowerPanelContent = document.getElementById('hireRetinueFollowerPanelContent');
@@ -5244,6 +5243,7 @@ var UI = {
         cardAlbum.onclick = UI.cardAlbumClick;
         startCrafting.onclick = startCraftingTimer;
         cardGameConcede.onclick = cardGamePlayer2Concedes;
+        hnefataflConcede.onclick = hnefataflPlayer2Concedes;
         document.getElementById('splitStackCancel').onclick = inventorySplitStackCancel;
         document.getElementById('shopSplitStackCancel').onclick = UI.shopSplitStackCancel;
         document.getElementById('hireRetinueFollowerNo').onclick = UI.closeHireFollowerPanel;
@@ -10150,6 +10150,7 @@ function processSpeech(thisObjectSpeaking, thisSpeechPassedIn, thisSpeechCode, i
                 break;
 
 case "hnefatafl":
+thisChallengeNPC = thisObjectSpeaking;
  startHnefataflGame(thisObjectSpeaking);
                 break;
 
@@ -10238,8 +10239,14 @@ function checkForChallenges() {
                     if (thisNPC.cardGameSpeech) {
                         thisNPC.drawnFacing = turntoFace(thisNPC, hero);
 
+console.log(typeof thisNPC.cardGameSpeech);
+if (typeof thisNPC.cardGameSpeech === 'object') {
                         thisChallengeNPC = thisNPC;
                         processSpeech(thisNPC, thisNPC.cardGameSpeech.challenge[0], thisNPC.cardGameSpeech.challenge[1]);
+                    } else {
+                         // this NPC doesn't play
+processSpeech(thisNPC, thisNPC.cardGameSpeech, "");
+                    }
                         break;
                     }
                 }

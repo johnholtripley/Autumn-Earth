@@ -1,41 +1,38 @@
-
-
 function hnefataflPlayer2Concedes() {
-  
-delete thisChallengeNPC.isPlayingCards;
-
- processSpeech(thisChallengeNPC, thisChallengeNPC.cardGameSpeech.win[0], thisChallengeNPC.cardGameSpeech.win[1]);
+    delete thisChallengeNPC.isPlayingCards;
+    processSpeech(thisChallengeNPC, thisChallengeNPC.HnefataflSpeech.win[0], thisChallengeNPC.HnefataflSpeech.win[1]);
     closeHnefataflGame();
 }
 
 function hnefataflPlayer2Wins() {
     // player won
-    hero.stats.cardGamesWon++;
-    hero.currency.cardDust += 7;
-    UI.updateCurrencies();UI.updateCardAlbum();
+    hero.stats.hnefataflGamesWon++;
+    hero.stats.hnefataflGamesPlayed++;
+
 
     delete thisChallengeNPC.isPlayingCards;
-    processPlayerWinSpeech(thisChallengeNPC, thisChallengeNPC.cardGameSpeech.lose[0], thisChallengeNPC.cardGameSpeech.lose[1]);
+    processPlayerWinSpeech(thisChallengeNPC, thisChallengeNPC.HnefataflSpeech.lose[0], thisChallengeNPC.HnefataflSpeech.lose[1]);
     closeHnefataflGame();
 }
 
 function hnefataflPlayer1Wins() {
     // player lost
-    hero.stats.cardGamesLost++;
-    hero.currency.cardDust += 1;
-    UI.updateCurrencies();UI.updateCardAlbum();
-     delete thisChallengeNPC.isPlayingCards;
-    processSpeech(thisChallengeNPC, thisChallengeNPC.cardGameSpeech.win[0], thisChallengeNPC.cardGameSpeech.win[1]);
+    hero.stats.hnefataflGamesLost++;
+    hero.stats.hnefataflGamesPlayed++;
+
+    delete thisChallengeNPC.isPlayingCards;
+    processSpeech(thisChallengeNPC, thisChallengeNPC.HnefataflSpeech.win[0], thisChallengeNPC.HnefataflSpeech.win[1]);
     closeHnefataflGame();
 }
 
 function hnefataflIsDrawn() {
-     console.log(thisChallengeNPC);
-    hero.stats.cardGamesDrawn++;
-    hero.currency.cardDust += 3;
-    UI.updateCurrencies();UI.updateCardAlbum();
-     delete thisChallengeNPC.isPlayingCards;
-    processSpeech(thisChallengeNPC, thisChallengeNPC.cardGameSpeech.draw[0], thisChallengeNPC.cardGameSpeech.draw[1]);
+
+    hero.stats.hnefataflGamesDrawn++;
+    hero.stats.hnefataflGamesPlayed++;
+
+
+    delete thisChallengeNPC.isPlayingCards;
+    processSpeech(thisChallengeNPC, thisChallengeNPC.HnefataflSpeech.draw[0], thisChallengeNPC.HnefataflSpeech.draw[1]);
     closeHnefataflGame();
 }
 
@@ -50,17 +47,17 @@ function processPlayerWinSpeech(thisChallengeNPC, thisSpeechPassedIn, thisSpeech
                 } else {
                     questData[questId].hasBeenCompleted = 1;
                 }
-                UI.showDialogue(thisChallengeNPC, thisChallengeNPC.cardGameSpeech.lose[0] + questSpeech[2]);
+                UI.showDialogue(thisChallengeNPC, thisChallengeNPC.HnefataflSpeech.lose[0] + questSpeech[2]);
                 canCloseDialogueBalloonNextClick = true;
                 checkForTitlesAwarded(questId);
             }
         } else {
             // there was a quest, but it's been completed - just show ordinary text:
-            processSpeech(thisChallengeNPC, thisChallengeNPC.cardGameSpeech.lose[0], thisChallengeNPC.cardGameSpeech.lose[1]);
+            processSpeech(thisChallengeNPC, thisChallengeNPC.HnefataflSpeech.lose[0], thisChallengeNPC.HnefataflSpeech.lose[1]);
         }
     } else {
         // no quest associated, just show ordinary text:
-        processSpeech(thisChallengeNPC, thisChallengeNPC.cardGameSpeech.lose[0], thisChallengeNPC.cardGameSpeech.lose[1]);
+        processSpeech(thisChallengeNPC, thisChallengeNPC.HnefataflSpeech.lose[0], thisChallengeNPC.HnefataflSpeech.lose[1]);
     }
 }
 
@@ -70,20 +67,19 @@ function processPlayerWinSpeech(thisChallengeNPC, thisSpeechPassedIn, thisSpeech
 function startHnefataflGame(opponentNPC) {
     console.log(opponentNPC.name);
 
-      
-        hnefataflNameSpace.initialisehnefataflGame();
-        hnefataflGameWrapper.classList.add("active");
-        opponentNPC.isPlayingCards = true;
-     //   audio.playMusic('card-game-NOT_MINE-Shuffle-or-Boogie');
-   
+
+    hnefataflNameSpace.initialisehnefataflGame();
+    hnefataflGameWrapper.classList.add("active");
+    opponentNPC.isPlayingCards = true;
+    //   audio.playMusic('card-game-NOT_MINE-Shuffle-or-Boogie');
+
 }
 
 
 
 function closeHnefataflGame() {
     gameMode = "play";
- //   audio.fadeOutMusic('card-game-NOT_MINE-Shuffle-or-Boogie');
+    //   audio.fadeOutMusic('card-game-NOT_MINE-Shuffle-or-Boogie');
     hnefataflGameWrapper.classList.remove("active");
     document.getElementById("cardGame").removeEventListener("click", hnefataflNameSpace.canvasClick, false);
 }
-

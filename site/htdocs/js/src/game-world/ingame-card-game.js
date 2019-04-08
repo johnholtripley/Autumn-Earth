@@ -17,6 +17,7 @@ delete thisChallengeNPC.isPlayingCards;
 function cardGamePlayer2Wins() {
     // player won
     hero.stats.cardGamesWon++;
+    hero.stats.cardGamesPlayed++;
     hero.currency.cardDust += 7;
     UI.updateCurrencies();UI.updateCardAlbum();
     if(typeof thisChallengeNPC.cardBackId !== "undefined") {
@@ -34,6 +35,7 @@ UI.updateCardAlbum();
 function cardGamePlayer1Wins() {
     // player lost
     hero.stats.cardGamesLost++;
+      hero.stats.cardGamesPlayed++;
     hero.currency.cardDust += 1;
     UI.updateCurrencies();UI.updateCardAlbum();
      delete thisChallengeNPC.isPlayingCards;
@@ -44,6 +46,7 @@ function cardGamePlayer1Wins() {
 function cardGameIsDrawn() {
      console.log(thisChallengeNPC);
     hero.stats.cardGamesDrawn++;
+      hero.stats.cardGamesPlayed++;
     hero.currency.cardDust += 3;
     UI.updateCurrencies();UI.updateCardAlbum();
      delete thisChallengeNPC.isPlayingCards;
