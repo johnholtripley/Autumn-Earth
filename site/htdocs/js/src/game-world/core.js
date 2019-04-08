@@ -2524,21 +2524,12 @@ function checkForChallenges() {
     for (var m = 0; m < visibleMaps.length; m++) {
         for (var i = 0; i < thisMapData[(visibleMaps[m])].npcs.length; i++) {
             thisNPC = thisMapData[(visibleMaps[m])].npcs[i];
-
             if (isInRange(hero.x, hero.y, thisNPC.x, thisNPC.y, (thisNPC.width + hero.width))) {
-
                 if (isFacing(hero, thisNPC)) {
                     if (thisNPC.cardGameSpeech) {
                         thisNPC.drawnFacing = turntoFace(thisNPC, hero);
-
-console.log(typeof thisNPC.cardGameSpeech);
-if (typeof thisNPC.cardGameSpeech === 'object') {
                         thisChallengeNPC = thisNPC;
                         processSpeech(thisNPC, thisNPC.cardGameSpeech.challenge[0], thisNPC.cardGameSpeech.challenge[1]);
-                    } else {
-                         // this NPC doesn't play
-processSpeech(thisNPC, thisNPC.cardGameSpeech, "");
-                    }
                         break;
                     }
                 }
