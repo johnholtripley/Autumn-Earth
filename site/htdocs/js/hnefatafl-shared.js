@@ -1,25 +1,14 @@
 'use strict';
+// core game code shared between in-game world and standalone game
 
-// core card game code shared between in-game world and standalone card game
-
-
-
-
-//var thisMovesScore, indexToCheck, indexesToRemove, whichMoveToMake, listOfPossibleBestMoves;
-
-// name space the card game code so it doesn't cause conflicts with the core game code:
+// name space the game code so it doesn't cause conflicts with the game code:
 var hnefataflNameSpace = {
-    //  'cardWidth': 84,
-    //  'cardHeight': 102,
-
     'squareSize': 62,
     'boardInset': 28,
     'pieceGraphicalOffset': 12,
     'originalWidth': 612,
     'highlightSquare': [],
     'board': [],
-
-
 
     initialisehnefataflGame: function() {
 
@@ -43,8 +32,6 @@ var hnefataflNameSpace = {
         hnefataflNameSpace.boardWidth = hnefataflNameSpace.board[0].length;
         hnefataflNameSpace.boardHeight = hnefataflNameSpace.board.length;
 
-
-
         hnefataflNameSpace.imagesToLoad = [{
                 name: "board",
                 src: "/images/hnefatafl/board.jpg"
@@ -63,15 +50,12 @@ var hnefataflNameSpace = {
                 name: "king",
                 src: "/images/hnefatafl/king.png"
             }
-
-
         ];
 
         // click handler:
         document.getElementById("hnefataflGame").addEventListener("click", hnefataflNameSpace.canvasClick, false);
 
         hnefataflNameSpace.gameMode = "loading";
-        // gameLoop();
         // preload all images:
         Loader.preload(hnefataflNameSpace.imagesToLoad, hnefataflNameSpace.initCardGame, loadingProgress);
     },
@@ -85,9 +69,7 @@ var hnefataflNameSpace = {
         // hnefataflNameSpace.outerCanvasHeight = canvasElemCoords.bottom - canvasElemCoords.top;
         hnefataflNameSpace.outerCanvasHeight = hnefataflNameSpace.outerCanvasWidth;
         hnefataflNameSpace.pageLoadScroll = document.body.scrollTop + document.documentElement.scrollTop;
-        // console.log("canvas at " + hnefataflNameSpace.outerCanvasLeft + ", " + hnefataflNameSpace.outerCanvasTop + " at " + hnefataflNameSpace.pageLoadScroll + " - " + outerhnefataflNameSpace.canvasWidth + " x " + outerhnefataflNameSpace.canvasHeight);
     },
-
 
     canvasClick: function(e) {
         if (e) {
@@ -98,9 +80,6 @@ var hnefataflNameSpace = {
         switch (hnefataflNameSpace.gameMode) {
             case "play":
             case "hnefataflGame":
-
-                //var tileX = Math.floor((x*hnefataflNameSpace.scale-hnefataflNameSpace.boardInset)/hnefataflNameSpace.squareSize);
-                //var tileY = Math.floor((y*hnefataflNameSpace.scale-hnefataflNameSpace.boardInset)/hnefataflNameSpace.squareSize);
 
                 var positionOnCanvasX = x - hnefataflNameSpace.outerCanvasLeft;
                 var positionOnCanvasY = y - hnefataflNameSpace.outerCanvasTop;
@@ -114,49 +93,64 @@ var hnefataflNameSpace = {
                     if (hnefataflNameSpace.highlightSquare.length > 0) {
                         // check it's a legal move:
                         var isALegalMove = false;
+                        var movingFromX = hnefataflNameSpace.highlightSquare[0];
+                        var movingFromY = hnefataflNameSpace.highlightSquare[1];
+                        console.log("moving from " + movingFromX + "," + movingFromY + " to " + tileX + "," + tileY);
                         // it's in a straight line:
                         if (tileY == hnefataflNameSpace.highlightSquare[1]) {
                             // check it's not blocked
                             isALegalMove = true;
-                            console.log("moving from " + hnefataflNameSpace.highlightSquare[0] + "," + hnefataflNameSpace.highlightSquare[1] + " to " + tileX + "," + tileY);
-                            // needs to check the appropriate direction: ##########
-                            for (var i = hnefataflNameSpace.highlightSquare[0] + 1; i < tileX; i++) {
-                                console.log("checking " + i + "," + tileY + " : " + hnefataflNameSpace.board[tileY][i]);
-                                if (hnefataflNameSpace.board[tileY][i] != '0') {
-                                    isALegalMove = false;
+                            // needs to check the appropriate direction:
+                            if (tileX > movingFromX) {
+                                for (var i = movingFromX + 1; i < tileX; i++) {
+                                    console.log("checking " + i + "," + tileY + " : " + hnefataflNameSpace.board[tileY][i]);
+                                    if (hnefataflNameSpace.board[tileY][i] != '0') {
+                                        isALegalMove = false;
+                                    }
+                                }
+                            } else {
+                                for (var i = tileX; i < movingFromX; i++) {
+                                    console.log("checking " + i + "," + tileY + " : " + hnefataflNameSpace.board[tileY][i]);
+                                    if (hnefataflNameSpace.board[tileY][i] != '0') {
+                                        isALegalMove = false;
+                                    }
                                 }
                             }
-
-
                         } else if (tileX == hnefataflNameSpace.highlightSquare[0]) {
                             isALegalMove = true;
+                            // needs to check the appropriate direction:
+                            if (tileY > movingFromY) {
+                                for (var i = movingFromY + 1; i < tileY; i++) {
+                                    console.log("checking " + tileX + "," + i + " : " + hnefataflNameSpace.board[i][tileX]);
+                                    if (hnefataflNameSpace.board[i][tileX] != '0') {
+                                        isALegalMove = false;
+                                    }
+                                }
+                            } else {
+                                for (var i = tileY; i < movingFromY; i++) {
+                                    console.log("checking " + tileX + "," + i + " : " + hnefataflNameSpace.board[i][tileX]);
+                                    if (hnefataflNameSpace.board[i][tileX] != '0') {
+                                        isALegalMove = false;
+                                    }
+                                }
+                            }
                         }
-
-
 
                         if (isALegalMove) {
                             // move to that slot:
                             hnefataflNameSpace.board[tileY][tileX] = hnefataflNameSpace.board[(hnefataflNameSpace.highlightSquare[1])][(hnefataflNameSpace.highlightSquare[0])];
                             hnefataflNameSpace.board[(hnefataflNameSpace.highlightSquare[1])][(hnefataflNameSpace.highlightSquare[0])] = '0';
                         }
-
-
                     }
                     // de-select:
                     hnefataflNameSpace.highlightSquare = [];
 
                 }
                 // console.log(tileX,tileY,hnefataflNameSpace.board[tileY][tileX]);
-
         }
     },
 
-
-
-
-
     initCardGame: function() {
-
         hnefataflNameSpace.getCanvasPosition();
         hnefataflNameSpace.gameCanvas = document.getElementById("hnefataflGame");
         if (hnefataflNameSpace.gameCanvas.getContext) {
@@ -172,7 +166,6 @@ var hnefataflNameSpace = {
         hnefataflNameSpace.kingImage = Loader.getImage("king");
         hnefataflNameSpace.blackPieceImage = Loader.getImage("black-piece");
 
-
         hnefataflNameSpace.currentOpponent = 1;
         hnefataflNameSpace.isPlayer1AI = true;
         hnefataflNameSpace.aiIsWorking = -1;
@@ -183,9 +176,6 @@ var hnefataflNameSpace = {
         if (typeof gameMode !== "undefined") {
             gameMode = "hnefataflGame";
         }
-
-
-
     },
 
     draw: function() {
@@ -213,21 +203,14 @@ var hnefataflNameSpace = {
                     default:
                         thisPiece = ''
                 }
-
                 if (thisPiece != '') {
                     hnefataflNameSpace.gameContext.drawImage(thisPiece, (j * hnefataflNameSpace.squareSize) + hnefataflNameSpace.boardInset - hnefataflNameSpace.pieceGraphicalOffset, (i * hnefataflNameSpace.squareSize) + hnefataflNameSpace.boardInset - hnefataflNameSpace.pieceGraphicalOffset);
                 }
-
             }
         }
-
     },
-
-
 
     update: function() {
 
     }
-
-
 };
