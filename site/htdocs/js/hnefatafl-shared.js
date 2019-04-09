@@ -14,14 +14,14 @@ var hnefataflNameSpace = {
 
         // '0' = void space
         // 'b' = black start position
-        // 'K' = (white) king start position
+        // 'W' = (white) king start position
         // 'w' = white start position
         hnefataflNameSpace.board = [
             ['0', '0', '0', 'b', 'b', 'b', '0', '0', '0'],
             ['0', '0', '0', '0', 'b', '0', '0', '0', '0'],
             ['0', '0', '0', '0', 'w', '0', '0', '0', '0'],
             ['b', '0', '0', '0', 'w', '0', '0', '0', 'b'],
-            ['b', 'b', 'w', 'w', 'k', 'w', 'w', 'b', 'b'],
+            ['b', 'b', 'w', 'w', 'W', 'w', 'w', 'b', 'b'],
             ['b', '0', '0', '0', 'w', '0', '0', '0', 'b'],
             ['0', '0', '0', '0', 'w', '0', '0', '0', '0'],
             ['0', '0', '0', '0', 'b', '0', '0', '0', '0'],
@@ -38,6 +38,14 @@ var hnefataflNameSpace = {
             }, {
                 name: "highlight",
                 src: "/images/hnefatafl/highlight.png"
+            },
+            {
+                name: "active-white",
+                src: "/images/hnefatafl/active-player-white.png"
+            },
+            {
+                name: "active-black",
+                src: "/images/hnefatafl/active-player-black.png"
             },
             {
                 name: "white-piece",
@@ -87,8 +95,12 @@ var hnefataflNameSpace = {
                 var tileX = Math.floor(((hnefataflNameSpace.scale * positionOnCanvasX) - hnefataflNameSpace.boardInset) / hnefataflNameSpace.squareSize);
                 var tileY = Math.floor(((hnefataflNameSpace.scale * positionOnCanvasY) - hnefataflNameSpace.boardInset) / hnefataflNameSpace.squareSize);
 
-                if (hnefataflNameSpace.board[tileY][tileX] != '0') {
+                if (hnefataflNameSpace.board[tileY][tileX].toLowerCase() == hnefataflNameSpace.currentPlayer) {
+                    //check who's go it is:
+
+
                     hnefataflNameSpace.highlightSquare = [tileX, tileY];
+
                 } else {
                     if (hnefataflNameSpace.highlightSquare.length > 0) {
                         // check it's a legal move:
@@ -102,13 +114,15 @@ var hnefataflNameSpace = {
                             isALegalMove = true;
                             // needs to check the appropriate direction:
                             if (tileX > movingFromX) {
-                                for (var i = movingFromX + 1; i < tileX; i++) {
+
+                                for (var i = movingFromX + 1; i <= tileX; i++) {
                                     console.log("checking " + i + "," + tileY + " : " + hnefataflNameSpace.board[tileY][i]);
                                     if (hnefataflNameSpace.board[tileY][i] != '0') {
                                         isALegalMove = false;
                                     }
                                 }
                             } else {
+
                                 for (var i = tileX; i < movingFromX; i++) {
                                     console.log("checking " + i + "," + tileY + " : " + hnefataflNameSpace.board[tileY][i]);
                                     if (hnefataflNameSpace.board[tileY][i] != '0') {
@@ -120,7 +134,7 @@ var hnefataflNameSpace = {
                             isALegalMove = true;
                             // needs to check the appropriate direction:
                             if (tileY > movingFromY) {
-                                for (var i = movingFromY + 1; i < tileY; i++) {
+                                for (var i = movingFromY + 1; i <= tileY; i++) {
                                     console.log("checking " + tileX + "," + i + " : " + hnefataflNameSpace.board[i][tileX]);
                                     if (hnefataflNameSpace.board[i][tileX] != '0') {
                                         isALegalMove = false;
@@ -140,6 +154,13 @@ var hnefataflNameSpace = {
                             // move to that slot:
                             hnefataflNameSpace.board[tileY][tileX] = hnefataflNameSpace.board[(hnefataflNameSpace.highlightSquare[1])][(hnefataflNameSpace.highlightSquare[0])];
                             hnefataflNameSpace.board[(hnefataflNameSpace.highlightSquare[1])][(hnefataflNameSpace.highlightSquare[0])] = '0';
+                            // swap who's go it is:
+                            if (hnefataflNameSpace.currentPlayer == "w") {
+                                hnefataflNameSpace.currentPlayer = "b";
+                            } else {
+                                hnefataflNameSpace.currentPlayer = "w";
+                            }
+
                         }
                     }
                     // de-select:
@@ -162,11 +183,16 @@ var hnefataflNameSpace = {
         // set up image references:
         hnefataflNameSpace.boardImage = Loader.getImage("board");
         hnefataflNameSpace.highlightImage = Loader.getImage("highlight");
+        hnefataflNameSpace.activeWhiteImage = Loader.getImage("active-white");
+        hnefataflNameSpace.activeBlackImage = Loader.getImage("active-black");
         hnefataflNameSpace.whitePieceImage = Loader.getImage("white-piece");
         hnefataflNameSpace.kingImage = Loader.getImage("king");
         hnefataflNameSpace.blackPieceImage = Loader.getImage("black-piece");
 
-        hnefataflNameSpace.currentOpponent = 1;
+        hnefataflNameSpace.currentPlayer = "w";
+        // needs to be player's choice: ##########
+        hnefataflNameSpace.player1 = "w";
+        hnefataflNameSpace.player2 = "d";
         hnefataflNameSpace.isPlayer1AI = true;
         hnefataflNameSpace.aiIsWorking = -1;
         hnefataflNameSpace.waitForDrawUpdate = false;
@@ -180,8 +206,12 @@ var hnefataflNameSpace = {
 
     draw: function() {
         // place board:
-
         hnefataflNameSpace.gameContext.drawImage(hnefataflNameSpace.boardImage, 0, 0);
+        if (hnefataflNameSpace.currentPlayer == "w") {
+            hnefataflNameSpace.gameContext.drawImage(hnefataflNameSpace.activeWhiteImage, 0, 0);
+        } else {
+            hnefataflNameSpace.gameContext.drawImage(hnefataflNameSpace.activeBlackImage, 0, 0);
+        }
 
         if (hnefataflNameSpace.highlightSquare.length > 0) {
             hnefataflNameSpace.gameContext.drawImage(hnefataflNameSpace.highlightImage, (hnefataflNameSpace.highlightSquare[0] * hnefataflNameSpace.squareSize) + hnefataflNameSpace.boardInset, (hnefataflNameSpace.highlightSquare[1] * hnefataflNameSpace.squareSize) + hnefataflNameSpace.boardInset);
@@ -197,7 +227,7 @@ var hnefataflNameSpace = {
                     case 'w':
                         thisPiece = hnefataflNameSpace.whitePieceImage;
                         break;
-                    case 'k':
+                    case 'W':
                         thisPiece = hnefataflNameSpace.kingImage;
                         break;
                     default:
