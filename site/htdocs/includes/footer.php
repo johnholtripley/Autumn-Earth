@@ -34,6 +34,7 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/search.php");
 		</ul>
 	</li>
 	<li><a href="/contracts/CreateContract.php">Contracts</a></li>
+	<li><a href="/hnefatafl/">Hnefatafl</a></li>
 	<li><a href="/card-game/" aria-haspopup="true">Card game</a><button aria-controls="subNavCardGame"><span class="visibleHide">Toggle card game menu</span></button>
 		<ul id="subNavCardGame" aria-label="submenu">
 		<?php include($_SERVER['DOCUMENT_ROOT']."/includes/navigation/card-game.php"); ?>
