@@ -9,10 +9,12 @@ var hnefataflNameSpace = {
     'originalWidth': 612,
     'highlightSquare': [],
     'board': [],
+    'animatingPieces': {},
+    'pieceSpeed': 28,
 
     initialisehnefataflGame: function() {
 
-        // '0' = void space
+        // '0' = empty space
         // 'b' = black start position
         // 'W' = (white) king start position
         // 'w' = white start position
@@ -66,6 +68,10 @@ var hnefataflNameSpace = {
         hnefataflNameSpace.gameMode = "loading";
         // preload all images:
         Loader.preload(hnefataflNameSpace.imagesToLoad, hnefataflNameSpace.initCardGame, loadingProgress);
+    },
+
+    getTilePosition: function(tilePosition) {
+        return (tilePosition * hnefataflNameSpace.squareSize) + hnefataflNameSpace.boardInset;
     },
 
     getCanvasPosition: function() {
@@ -154,6 +160,8 @@ var hnefataflNameSpace = {
                             // move to that slot:
                             hnefataflNameSpace.board[tileY][tileX] = hnefataflNameSpace.board[(hnefataflNameSpace.highlightSquare[1])][(hnefataflNameSpace.highlightSquare[0])];
                             hnefataflNameSpace.board[(hnefataflNameSpace.highlightSquare[1])][(hnefataflNameSpace.highlightSquare[0])] = '0';
+                            // [currentPosX, currentPosY, destinationPosX, destinationPosY]:
+                            hnefataflNameSpace.animatingPieces[tileX + "_" + tileY] = [hnefataflNameSpace.getTilePosition(movingFromX), hnefataflNameSpace.getTilePosition(movingFromY), hnefataflNameSpace.getTilePosition(tileX), hnefataflNameSpace.getTilePosition(tileY)];
                             // swap who's go it is:
                             if (hnefataflNameSpace.currentPlayer == "w") {
                                 hnefataflNameSpace.currentPlayer = "b";
@@ -217,7 +225,7 @@ var hnefataflNameSpace = {
             hnefataflNameSpace.gameContext.drawImage(hnefataflNameSpace.highlightImage, (hnefataflNameSpace.highlightSquare[0] * hnefataflNameSpace.squareSize) + hnefataflNameSpace.boardInset, (hnefataflNameSpace.highlightSquare[1] * hnefataflNameSpace.squareSize) + hnefataflNameSpace.boardInset);
         }
 
-        var thisPiece;
+        var thisPiece, thisPositionX, thisPositionY;
         for (var i = 0; i < hnefataflNameSpace.board.length; i++) {
             for (var j = 0; j < hnefataflNameSpace.board[0].length; j++) {
                 switch (hnefataflNameSpace.board[i][j]) {
@@ -233,8 +241,53 @@ var hnefataflNameSpace = {
                     default:
                         thisPiece = ''
                 }
+
+
+
+
+
                 if (thisPiece != '') {
-                    hnefataflNameSpace.gameContext.drawImage(thisPiece, (j * hnefataflNameSpace.squareSize) + hnefataflNameSpace.boardInset - hnefataflNameSpace.pieceGraphicalOffset, (i * hnefataflNameSpace.squareSize) + hnefataflNameSpace.boardInset - hnefataflNameSpace.pieceGraphicalOffset);
+
+
+                    // see if it's moving:
+                    if (j + "_" + i in hnefataflNameSpace.animatingPieces) {
+                        // [currentPosX, currentPosY, destinationPosX, destinationPosY]:
+
+
+                    //    thisPositionX = (hnefataflNameSpace.animatingPieces[j + "_" + i][0] + hnefataflNameSpace.animatingPieces[j + "_" + i][2]) / 2;
+                    //    thisPositionY = (hnefataflNameSpace.animatingPieces[j + "_" + i][1] + hnefataflNameSpace.animatingPieces[j + "_" + i][3]) / 2;
+
+if((hnefataflNameSpace.animatingPieces[j + "_" + i][0] > hnefataflNameSpace.animatingPieces[j + "_" + i][2])) {
+hnefataflNameSpace.animatingPieces[j + "_" + i][0] -= hnefataflNameSpace.pieceSpeed;
+} else if((hnefataflNameSpace.animatingPieces[j + "_" + i][0] < hnefataflNameSpace.animatingPieces[j + "_" + i][2])) {
+hnefataflNameSpace.animatingPieces[j + "_" + i][0] += hnefataflNameSpace.pieceSpeed;
+} 
+
+if((hnefataflNameSpace.animatingPieces[j + "_" + i][1] - hnefataflNameSpace.animatingPieces[j + "_" + i][3]) >= hnefataflNameSpace.pieceSpeed) {
+hnefataflNameSpace.animatingPieces[j + "_" + i][1] -= hnefataflNameSpace.pieceSpeed;
+} else if((hnefataflNameSpace.animatingPieces[j + "_" + i][1] - hnefataflNameSpace.animatingPieces[j + "_" + i][3]) <= -hnefataflNameSpace.pieceSpeed) {
+hnefataflNameSpace.animatingPieces[j + "_" + i][1] += hnefataflNameSpace.pieceSpeed;
+} 
+
+                        hnefataflNameSpace.gameContext.drawImage(thisPiece, hnefataflNameSpace.animatingPieces[j + "_" + i][0] - hnefataflNameSpace.pieceGraphicalOffset, hnefataflNameSpace.animatingPieces[j + "_" + i][1] - hnefataflNameSpace.pieceGraphicalOffset);
+                     //   hnefataflNameSpace.animatingPieces[j + "_" + i][0] = thisPositionX;
+                     //   hnefataflNameSpace.animatingPieces[j + "_" + i][1] = thisPositionY;
+                     if(hnefataflNameSpace.animatingPieces[j + "_" + i][1] == hnefataflNameSpace.animatingPieces[j + "_" + i][3]) {
+                        if (Math.abs(hnefataflNameSpace.animatingPieces[j + "_" + i][0] - hnefataflNameSpace.animatingPieces[j + "_" + i][2]) < hnefataflNameSpace.pieceSpeed) {
+                            delete hnefataflNameSpace.animatingPieces[j + "_" + i];
+                        } 
+                    }
+                    if (j + "_" + i in hnefataflNameSpace.animatingPieces) {
+                    if(hnefataflNameSpace.animatingPieces[j + "_" + i][0] == hnefataflNameSpace.animatingPieces[j + "_" + i][2]) {
+                         if (Math.abs(hnefataflNameSpace.animatingPieces[j + "_" + i][1] - hnefataflNameSpace.animatingPieces[j + "_" + i][3]) < hnefataflNameSpace.pieceSpeed) {
+                            delete hnefataflNameSpace.animatingPieces[j + "_" + i];
+                        }
+                    }
+                }
+                    } else {
+
+                        hnefataflNameSpace.gameContext.drawImage(thisPiece, hnefataflNameSpace.getTilePosition(j) - hnefataflNameSpace.pieceGraphicalOffset, hnefataflNameSpace.getTilePosition(i) - hnefataflNameSpace.pieceGraphicalOffset);
+                    }
                 }
             }
         }
