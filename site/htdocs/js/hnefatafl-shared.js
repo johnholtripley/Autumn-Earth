@@ -162,6 +162,9 @@ var hnefataflNameSpace = {
                             hnefataflNameSpace.board[(hnefataflNameSpace.highlightSquare[1])][(hnefataflNameSpace.highlightSquare[0])] = '0';
                             // [currentPosX, currentPosY, destinationPosX, destinationPosY]:
                             hnefataflNameSpace.animatingPieces[tileX + "_" + tileY] = [hnefataflNameSpace.getTilePosition(movingFromX), hnefataflNameSpace.getTilePosition(movingFromY), hnefataflNameSpace.getTilePosition(tileX), hnefataflNameSpace.getTilePosition(tileY)];
+
+                            hnefataflNameSpace.checkForCapturedPieces(tileX, tileY, hnefataflNameSpace.currentPlayer);
+
                             // swap who's go it is:
                             if (hnefataflNameSpace.currentPlayer == "w") {
                                 hnefataflNameSpace.currentPlayer = "b";
@@ -177,6 +180,45 @@ var hnefataflNameSpace = {
                 }
                 // console.log(tileX,tileY,hnefataflNameSpace.board[tileY][tileX]);
         }
+    },
+
+    checkForCapturedPieces: function(whichTileX, whichTileY, whichPlayerMoved) {
+
+        var opposingPlayer;
+        if (whichPlayerMoved == "w") {
+            opposingPlayer = "b";
+        } else {
+            opposingPlayer = "w";
+        }
+
+        var directionsToCheck = [
+            [-1, 0],
+            [1, 0],
+            [0, -1],
+            [0, 1]
+        ];
+
+        var checkX, checkY, checkX2, checkY2;
+
+        for (var i = 0; i < directionsToCheck.length; i++) {
+            checkY = whichTileY + (directionsToCheck[i][0]);
+            checkX = whichTileX + (directionsToCheck[i][1]);
+
+            if (checkX > 0 && checkY > 0 && checkX < hnefataflNameSpace.board.length && checkY < hnefataflNameSpace.board.length) {
+                if (hnefataflNameSpace.board[checkY][checkX].toLowerCase() == opposingPlayer) {
+                    checkY2 = whichTileY + (directionsToCheck[i][0] * 2);
+                    checkX2 = whichTileX + (directionsToCheck[i][1] * 2);
+                    if (checkX2 > 0 && checkY2 > 0 && checkX2 < hnefataflNameSpace.board.length && checkY2 < hnefataflNameSpace.board.length) {
+                        if (hnefataflNameSpace.board[checkY2][checkX2].toLowerCase() == whichPlayerMoved) {
+                            // remove piece:
+                            hnefataflNameSpace.board[checkY][checkX] = '0';
+                        }
+                    }
+                }
+            }
+        }
+
+
     },
 
     initCardGame: function() {
@@ -254,36 +296,36 @@ var hnefataflNameSpace = {
                         // [currentPosX, currentPosY, destinationPosX, destinationPosY]:
 
 
-                    //    thisPositionX = (hnefataflNameSpace.animatingPieces[j + "_" + i][0] + hnefataflNameSpace.animatingPieces[j + "_" + i][2]) / 2;
-                    //    thisPositionY = (hnefataflNameSpace.animatingPieces[j + "_" + i][1] + hnefataflNameSpace.animatingPieces[j + "_" + i][3]) / 2;
+                        //    thisPositionX = (hnefataflNameSpace.animatingPieces[j + "_" + i][0] + hnefataflNameSpace.animatingPieces[j + "_" + i][2]) / 2;
+                        //    thisPositionY = (hnefataflNameSpace.animatingPieces[j + "_" + i][1] + hnefataflNameSpace.animatingPieces[j + "_" + i][3]) / 2;
 
-if((hnefataflNameSpace.animatingPieces[j + "_" + i][0] > hnefataflNameSpace.animatingPieces[j + "_" + i][2])) {
-hnefataflNameSpace.animatingPieces[j + "_" + i][0] -= hnefataflNameSpace.pieceSpeed;
-} else if((hnefataflNameSpace.animatingPieces[j + "_" + i][0] < hnefataflNameSpace.animatingPieces[j + "_" + i][2])) {
-hnefataflNameSpace.animatingPieces[j + "_" + i][0] += hnefataflNameSpace.pieceSpeed;
-} 
+                        if ((hnefataflNameSpace.animatingPieces[j + "_" + i][0] > hnefataflNameSpace.animatingPieces[j + "_" + i][2])) {
+                            hnefataflNameSpace.animatingPieces[j + "_" + i][0] -= hnefataflNameSpace.pieceSpeed;
+                        } else if ((hnefataflNameSpace.animatingPieces[j + "_" + i][0] < hnefataflNameSpace.animatingPieces[j + "_" + i][2])) {
+                            hnefataflNameSpace.animatingPieces[j + "_" + i][0] += hnefataflNameSpace.pieceSpeed;
+                        }
 
-if((hnefataflNameSpace.animatingPieces[j + "_" + i][1] - hnefataflNameSpace.animatingPieces[j + "_" + i][3]) >= hnefataflNameSpace.pieceSpeed) {
-hnefataflNameSpace.animatingPieces[j + "_" + i][1] -= hnefataflNameSpace.pieceSpeed;
-} else if((hnefataflNameSpace.animatingPieces[j + "_" + i][1] - hnefataflNameSpace.animatingPieces[j + "_" + i][3]) <= -hnefataflNameSpace.pieceSpeed) {
-hnefataflNameSpace.animatingPieces[j + "_" + i][1] += hnefataflNameSpace.pieceSpeed;
-} 
+                        if ((hnefataflNameSpace.animatingPieces[j + "_" + i][1] - hnefataflNameSpace.animatingPieces[j + "_" + i][3]) >= hnefataflNameSpace.pieceSpeed) {
+                            hnefataflNameSpace.animatingPieces[j + "_" + i][1] -= hnefataflNameSpace.pieceSpeed;
+                        } else if ((hnefataflNameSpace.animatingPieces[j + "_" + i][1] - hnefataflNameSpace.animatingPieces[j + "_" + i][3]) <= -hnefataflNameSpace.pieceSpeed) {
+                            hnefataflNameSpace.animatingPieces[j + "_" + i][1] += hnefataflNameSpace.pieceSpeed;
+                        }
 
                         hnefataflNameSpace.gameContext.drawImage(thisPiece, hnefataflNameSpace.animatingPieces[j + "_" + i][0] - hnefataflNameSpace.pieceGraphicalOffset, hnefataflNameSpace.animatingPieces[j + "_" + i][1] - hnefataflNameSpace.pieceGraphicalOffset);
-                     //   hnefataflNameSpace.animatingPieces[j + "_" + i][0] = thisPositionX;
-                     //   hnefataflNameSpace.animatingPieces[j + "_" + i][1] = thisPositionY;
-                     if(hnefataflNameSpace.animatingPieces[j + "_" + i][1] == hnefataflNameSpace.animatingPieces[j + "_" + i][3]) {
-                        if (Math.abs(hnefataflNameSpace.animatingPieces[j + "_" + i][0] - hnefataflNameSpace.animatingPieces[j + "_" + i][2]) < hnefataflNameSpace.pieceSpeed) {
-                            delete hnefataflNameSpace.animatingPieces[j + "_" + i];
-                        } 
-                    }
-                    if (j + "_" + i in hnefataflNameSpace.animatingPieces) {
-                    if(hnefataflNameSpace.animatingPieces[j + "_" + i][0] == hnefataflNameSpace.animatingPieces[j + "_" + i][2]) {
-                         if (Math.abs(hnefataflNameSpace.animatingPieces[j + "_" + i][1] - hnefataflNameSpace.animatingPieces[j + "_" + i][3]) < hnefataflNameSpace.pieceSpeed) {
-                            delete hnefataflNameSpace.animatingPieces[j + "_" + i];
+                        //   hnefataflNameSpace.animatingPieces[j + "_" + i][0] = thisPositionX;
+                        //   hnefataflNameSpace.animatingPieces[j + "_" + i][1] = thisPositionY;
+                        if (hnefataflNameSpace.animatingPieces[j + "_" + i][1] == hnefataflNameSpace.animatingPieces[j + "_" + i][3]) {
+                            if (Math.abs(hnefataflNameSpace.animatingPieces[j + "_" + i][0] - hnefataflNameSpace.animatingPieces[j + "_" + i][2]) < hnefataflNameSpace.pieceSpeed) {
+                                delete hnefataflNameSpace.animatingPieces[j + "_" + i];
+                            }
                         }
-                    }
-                }
+                        if (j + "_" + i in hnefataflNameSpace.animatingPieces) {
+                            if (hnefataflNameSpace.animatingPieces[j + "_" + i][0] == hnefataflNameSpace.animatingPieces[j + "_" + i][2]) {
+                                if (Math.abs(hnefataflNameSpace.animatingPieces[j + "_" + i][1] - hnefataflNameSpace.animatingPieces[j + "_" + i][3]) < hnefataflNameSpace.pieceSpeed) {
+                                    delete hnefataflNameSpace.animatingPieces[j + "_" + i];
+                                }
+                            }
+                        }
                     } else {
 
                         hnefataflNameSpace.gameContext.drawImage(thisPiece, hnefataflNameSpace.getTilePosition(j) - hnefataflNameSpace.pieceGraphicalOffset, hnefataflNameSpace.getTilePosition(i) - hnefataflNameSpace.pieceGraphicalOffset);
