@@ -182,7 +182,38 @@ var hnefataflNameSpace = {
                 // console.log(tileX,tileY,hnefataflNameSpace.board[tileY][tileX]);
         }
     },
+    checkVictoryConditions: function() {
+        var foundTheKing = false;
+        var kingIsOnAnEdge = false;
+        for (var i = 0; i < hnefataflNameSpace.board.length; i++) {
+            for (var j = 0; j < hnefataflNameSpace.board[0].length; j++) {
+                if (hnefataflNameSpace.board[i][j] == "W") {
+                    if ((i == 0) || (j == 0) || (i == (hnefataflNameSpace.board.length - 1)) || (j == (hnefataflNameSpace.board[0].length - 1))) {
+                        kingIsOnAnEdge = true;
+                        break;
+                    }
+                    foundTheKing = true;
+                }
+            }
+        }
+        if (!foundTheKing) {
+            hnefataflNameSpace.gameMode = "gameover";
+            if (hnefataflNameSpace.player2 == "b") {
+                hnefataflPlayer2Wins();
+            } else {
+                hnefataflPlayer1Wins();
+            }
+        }
+        if(kingIsOnAnEdge) {
+            hnefataflNameSpace.gameMode = "gameover";
+             if (hnefataflNameSpace.player2 == "w") {
+                hnefataflPlayer2Wins();
+            } else {
+                hnefataflPlayer1Wins();
+            }
+        }
 
+    },
     checkForCapturedPieces: function(whichTileX, whichTileY, whichPlayerMoved) {
 
         var opposingPlayer;
@@ -212,8 +243,8 @@ var hnefataflNameSpace = {
                     if (checkX2 > 0 && checkY2 > 0 && checkX2 < hnefataflNameSpace.board.length && checkY2 < hnefataflNameSpace.board.length) {
                         if (hnefataflNameSpace.board[checkY2][checkX2].toLowerCase() == whichPlayerMoved) {
                             // remove piece:
-                            hnefataflNameSpace.piecesToRemove.push([checkX,checkY]);
-                          //  hnefataflNameSpace.board[checkY][checkX] = '0';
+                            hnefataflNameSpace.piecesToRemove.push([checkX, checkY]);
+                            //  hnefataflNameSpace.board[checkY][checkX] = '0';
                         }
                     }
                 }
@@ -223,14 +254,15 @@ var hnefataflNameSpace = {
 
     },
 
-    checkForPiecesToRmove: function() {
-// remove pieces now animation has finished:
-if(hnefataflNameSpace.piecesToRemove.length>0) {
-for(var i=0;i<hnefataflNameSpace.piecesToRemove.length;i++) {
- hnefataflNameSpace.board[(hnefataflNameSpace.piecesToRemove[i][1])][(hnefataflNameSpace.piecesToRemove[i][0])] = '0';
- hnefataflNameSpace.piecesToRemove.splice(i, 1);
-}
-}
+    checkForPiecesToRemove: function() {
+        // remove pieces now animation has finished:
+        if (hnefataflNameSpace.piecesToRemove.length > 0) {
+            for (var i = 0; i < hnefataflNameSpace.piecesToRemove.length; i++) {
+                hnefataflNameSpace.board[(hnefataflNameSpace.piecesToRemove[i][1])][(hnefataflNameSpace.piecesToRemove[i][0])] = '0';
+                hnefataflNameSpace.piecesToRemove.splice(i, 1);
+            }
+        }
+        hnefataflNameSpace.checkVictoryConditions();
     },
 
     initCardGame: function() {
@@ -254,7 +286,7 @@ for(var i=0;i<hnefataflNameSpace.piecesToRemove.length;i++) {
         hnefataflNameSpace.currentPlayer = "w";
         // needs to be player's choice: ##########
         hnefataflNameSpace.player1 = "w";
-        hnefataflNameSpace.player2 = "d";
+        hnefataflNameSpace.player2 = "b";
         hnefataflNameSpace.isPlayer1AI = true;
         hnefataflNameSpace.aiIsWorking = -1;
         hnefataflNameSpace.waitForDrawUpdate = false;
@@ -326,14 +358,14 @@ for(var i=0;i<hnefataflNameSpace.piecesToRemove.length;i++) {
                         if (hnefataflNameSpace.animatingPieces[j + "_" + i][1] == hnefataflNameSpace.animatingPieces[j + "_" + i][3]) {
                             if (Math.abs(hnefataflNameSpace.animatingPieces[j + "_" + i][0] - hnefataflNameSpace.animatingPieces[j + "_" + i][2]) < hnefataflNameSpace.pieceSpeed) {
                                 delete hnefataflNameSpace.animatingPieces[j + "_" + i];
-                                hnefataflNameSpace.checkForPiecesToRmove();
+                                hnefataflNameSpace.checkForPiecesToRemove();
                             }
                         }
                         if (j + "_" + i in hnefataflNameSpace.animatingPieces) {
                             if (hnefataflNameSpace.animatingPieces[j + "_" + i][0] == hnefataflNameSpace.animatingPieces[j + "_" + i][2]) {
                                 if (Math.abs(hnefataflNameSpace.animatingPieces[j + "_" + i][1] - hnefataflNameSpace.animatingPieces[j + "_" + i][3]) < hnefataflNameSpace.pieceSpeed) {
                                     delete hnefataflNameSpace.animatingPieces[j + "_" + i];
-                                    hnefataflNameSpace.checkForPiecesToRmove();
+                                    hnefataflNameSpace.checkForPiecesToRemove();
                                 }
                             }
                         }
