@@ -198,6 +198,8 @@ var hnefataflNameSpace = {
         }
         if (!foundTheKing) {
             hnefataflNameSpace.gameMode = "gameover";
+            // show final board state:
+            hnefataflNameSpace.draw();
             if (hnefataflNameSpace.player2 == "b") {
                 hnefataflPlayer2Wins();
             } else {
@@ -206,6 +208,8 @@ var hnefataflNameSpace = {
         }
         if(kingIsOnAnEdge) {
             hnefataflNameSpace.gameMode = "gameover";
+               // show final board state:
+            hnefataflNameSpace.draw();
              if (hnefataflNameSpace.player2 == "w") {
                 hnefataflPlayer2Wins();
             } else {

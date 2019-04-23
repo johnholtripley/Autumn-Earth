@@ -25,9 +25,9 @@ function canAddItemToInventory(itemObj) {
 
 
 
-if (currentActiveInventoryItems[itemObj[k].type].action == "treasureMap") {
-anyTreasureMaps.push(itemObj[k].contains);
-}
+                if (currentActiveInventoryItems[itemObj[k].type].action == "treasureMap") {
+                    anyTreasureMaps.push(itemObj[k].contains);
+                }
 
                 var quantityAddedSoFar = 0;
                 // check if this type exist in the current inventory:
@@ -69,7 +69,7 @@ anyTreasureMaps.push(itemObj[k].contains);
 
                                 inventoryClone[thisSlotsID] = JSON.parse(JSON.stringify(itemObj[k]));
                                 inventoryClone[thisSlotsID].hash = createItemHash(itemObj[k].type, amountAddedToThisSlot);
-                                
+
                                 /*
                                 inventoryClone[thisSlotsID] = new Object();
                                 inventoryClone[thisSlotsID].type = itemObj[k].type;
@@ -286,9 +286,9 @@ function addToInventory(whichSlot, itemObject, forceNewHash = false) {
     if ((typeof hero.inventory[whichSlot].hash === "undefined") || forceNewHash) {
         // create one:
         hero.inventory[whichSlot].hash = createItemHash(itemObject.type, itemObject.quantity);
-     //   console.log(itemObject.type, itemObject.quantity, hero.inventory[whichSlot].hash);
+        //   console.log(itemObject.type, itemObject.quantity, hero.inventory[whichSlot].hash);
     } else {
-      //  console.log("already", hero.inventory[whichSlot].hash);
+        //  console.log("already", hero.inventory[whichSlot].hash);
     }
     document.getElementById("slot" + whichSlot).innerHTML = generateSlotMarkup(whichSlot);
 }
@@ -406,7 +406,7 @@ function inventoryItemAction(whichSlot, whichAction, allActionValues) {
                     openBoosterPack();
                     removeFromInventory(whichSlotNumber, 1);
                     break;
-                    case "treasureMap":
+                case "treasureMap":
                     UI.showTreasureMap(hero.inventory[whichSlotNumber].contains);
                     break;
                 case "bag":
@@ -446,8 +446,8 @@ function inventoryItemAction(whichSlot, whichAction, allActionValues) {
                     UI.updateCardAlbum();
                     removeFromInventory(whichSlotNumber, 1);
                     break;
-                    case "cardBack":
-                      hero.cardBacks.unshift(0-(hero.inventory[whichSlotNumber].contains['ugc-id']));
+                case "cardBack":
+                    hero.cardBacks.unshift(0 - (hero.inventory[whichSlotNumber].contains['ugc-id']));
                     UI.updateCardAlbum();
                     removeFromInventory(whichSlotNumber, 1);
                     break;
@@ -461,8 +461,11 @@ function inventoryItemAction(whichSlot, whichAction, allActionValues) {
                     document.getElementById("book" + whichActionValue).classList.add("active");
                     audio.playSound(soundEffects['bookOpen'], 0);
                 case "recipe":
-                    if (canLearnRecipe(whichActionValue)) {
+                    if (canLearnRecipe(hero.inventory[whichSlotNumber].contains)) {
                         removeFromInventory(whichSlotNumber, 1);
+                        UI.showNotification("<p>I learned a new recipe</p>");
+                    } else {
+                        UI.showNotification("<p>I already know that&hellip;</p>");
                     }
                     break;
                 case "craft":
@@ -500,7 +503,7 @@ function additionalTooltipDetail(thisItemObject) {
             // check if it's known already:
             var isKnown = false;
             for (var i = 0; i < hero.recipesKnown.length; i++) {
-                if (hero.recipesKnown[i] == currentActiveInventoryItems[thisItemObject.type].actionValue) {
+                if (hero.recipesKnown[i] == thisItemObject.contains) {
                     isKnown = true;
                 }
             }
@@ -601,7 +604,7 @@ function generateGenericSlotMarkup(thisItemObject) {
 
         imageClassName += 'players card';
         var cardTypeId = thisItemObject.contains;
-        if(cardTypeId < 0) {
+        if (cardTypeId < 0) {
             cardTypeId = Math.abs(cardTypeId);
             rareCardSuffix = '-rare';
             rareCardText = 'rare ';
@@ -617,17 +620,17 @@ function generateGenericSlotMarkup(thisItemObject) {
     }
     var itemsDescription;
     if (!isUGC) {
-        if(isACard) {
-itemsDescription = "A "+rareCardText+"'"+cardGameNameSpace.allCardData[cardTypeId][2]+"' totem card";
-slotMarkup += '<img src="/images/card-game/inventory-items/' + cardTypeId + rareCardSuffix + '.png" ' + dataActionMarkup + 'alt="' + theColourPrefix + currentActiveInventoryItems[thisItemObject.type].shortname + '" class="' + imageClassName + '">';
+        if (isACard) {
+            itemsDescription = "A " + rareCardText + "'" + cardGameNameSpace.allCardData[cardTypeId][2] + "' totem card";
+            slotMarkup += '<img src="/images/card-game/inventory-items/' + cardTypeId + rareCardSuffix + '.png" ' + dataActionMarkup + 'alt="' + theColourPrefix + currentActiveInventoryItems[thisItemObject.type].shortname + '" class="' + imageClassName + '">';
         } else {
-        slotMarkup += '<img src="/images/game-world/inventory-items/' + thisItemObject.type + thisFileColourSuffix + '.png" ' + dataActionMarkup + 'alt="' + theColourPrefix + currentActiveInventoryItems[thisItemObject.type].shortname + '" class="' + imageClassName + '">';
-        if (isABook) {
-            itemsDescription = "&quot;" + thisItemObject.inscription.title + "&quot;";
-        } else {
-            itemsDescription = currentActiveInventoryItems[thisItemObject.type].description;
+            slotMarkup += '<img src="/images/game-world/inventory-items/' + thisItemObject.type + thisFileColourSuffix + '.png" ' + dataActionMarkup + 'alt="' + theColourPrefix + currentActiveInventoryItems[thisItemObject.type].shortname + '" class="' + imageClassName + '">';
+            if (isABook) {
+                itemsDescription = "&quot;" + thisItemObject.inscription.title + "&quot;";
+            } else {
+                itemsDescription = currentActiveInventoryItems[thisItemObject.type].description;
+            }
         }
-    }
     } else {
         slotMarkup += '<img src="/images/user-generated/' + thisItemObject.contains['ugc-id'] + '-slot.png" ' + dataActionMarkup + 'alt="' + theColourPrefix + currentActiveInventoryItems[thisItemObject.type].shortname + '" class="' + imageClassName + '">';
         if (typeof thisItemObject.contains['ugc-title'] !== "undefined") {
@@ -650,7 +653,15 @@ slotMarkup += '<img src="/images/card-game/inventory-items/' + cardTypeId + rare
             itemsDescription = itemsDescription.replace('##contains##', 'Contains: ' + containsItems);
         }
     }
-    slotMarkup += '<p><em>' + theColourPrefix + currentActiveInventoryItems[thisItemObject.type].shortname + ' </em>' + itemsDescription + ' ';
+
+
+var thisObjectsName = currentActiveInventoryItems[thisItemObject.type].shortname;
+if(currentActiveInventoryItems[thisItemObject.type].action == "recipe") {
+thisObjectsName = allRecipes[thisItemObject.contains][0]+" "+thisObjectsName;
+itemsDescription += " (for the "+allRecipes[thisItemObject.contains][1]+" profession).";
+}
+
+    slotMarkup += '<p><em>' + theColourPrefix + thisObjectsName + ' </em>' + itemsDescription + ' ';
     slotMarkup += '<span class="price">Sell price: ' + parseMoney(Math.ceil(thisItemObject.quantity * sellPriceModifier * inflationModifier * currentActiveInventoryItems[thisItemObject.type].priceCode, 0)) + '</span>';
     slotMarkup += '<span class="price specialismPrice">Sell price: ' + parseMoney(Math.ceil(thisItemObject.quantity * sellPriceSpecialismModifier * inflationModifier * currentActiveInventoryItems[thisItemObject.type].priceCode, 0)) + '</span>';
 

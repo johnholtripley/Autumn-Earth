@@ -36,11 +36,64 @@
             "centreY": 45
         }],
         "weather": [""],
-        "shops": [],
+        "shops": [ {
+                "name": "inn",
+                "uniqueItems": {"29":[{"contains":9}]},
+                "specialism": null,
+                "categories": [],
+                "size": "small",
+                "currency": "money"
+            }],
         "npcs": [
 
 
+{
+                "name": "Innkeeper",
+                "src": "labourer3.png",
+                "width": 20,
+                "length": 20,
+                "spriteWidth": 75,
+                "spriteHeight": 85,
+                "centreX": 56,
+                "centreY": 73,
+                "tileX": 6,
+                "tileY": 3,
+                "movement": ["-"],
+                "facing": "s",
+                "walkThroughDoors": false,
+                "reactionRange": 2,
+                "speed": 2,
+                "isCollidable": true,
+                "isMoving": false,
 
+                "speech": [
+                    ["Welcome to my Inn. What can I get you? I might even share one of my secret recipes with you...", "shop", "inn"]
+                ],
+                "cardGameSpeech":  {
+                    "challenge": ["I don't have time for that.", ""]
+                  
+                },
+                     "hnefataflSpeech":
+                {
+                        "win": ["Woo! I won!", ""],
+                    "lose": ["Ahh, you beat me...", ""],
+                    "draw": ["Well played", ""]
+                },
+                "cardSkill": 1,
+                "uniqueCards": [2, 2],
+                "baseCardPack": 0,
+                "animation":
+                {
+                    "walk":
+                    {
+                        "length": 1,
+                        "n": 2,
+                        "e": 3,
+                        "s": 0,
+                        "w": 1
+                    }
+                }
+            },
 {
                 "name": "Hnefatafl player",
                 "src": "labourer6.png",

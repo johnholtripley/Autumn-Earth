@@ -1127,7 +1127,6 @@ var UI = {
     },
 
     buyFromShopSlot: function(slotId) {
-
         var thisSlotElement = document.getElementById(slotId);
         var thisSlotImageElement = thisSlotElement.firstElementChild;
         var thisShopPanelElement = thisSlotElement.parentNode.parentNode;
@@ -1158,9 +1157,13 @@ var UI = {
                     thisBoughtObject.contains['ugc-title'] = thisSlotImageElement.getAttribute('data-ugctitle');
                 }
             } else if (thisSlotImageElement.hasAttribute('data-contains')) {
+                console.log("has Contains", thisSlotImageElement.getAttribute('data-contains'));
                 thisBoughtObject.contains = thisSlotImageElement.getAttribute('data-contains');
             }
+            console.log(thisSlotImageElement.hasAttribute('data-contains'));
+            console.log(thisSlotImageElement);
             inventoryCheck = canAddItemToInventory([thisBoughtObject]);
+            console.log(thisBoughtObject);
             if (inventoryCheck[0]) {
                 hero.currency[thisCurrency] -= buyPriceForOne;
                 UI.updateCurrencies();

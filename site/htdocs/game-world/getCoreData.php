@@ -568,7 +568,41 @@ while ($colourRow = mysqli_fetch_array($colourResult)) {
 	array_push($allColours, $colourName);
 }
 
-$outputJSON .= ',"recipes":{"professions": {';
+
+
+
+
+$outputJSON .= ',"recipes":{"all": {';
+
+// get all recipes:
+// (could be optimised just to get the ones that will be encountered ########)
+$query = "SELECT tblrecipes.*, tblprofessions.*, tblcolours.colourName, tblinventoryitems.itemid as productId, tblinventoryitems.itemcategories as createditemcategories,
+CASE WHEN tblrecipes.recipename IS NOT NULL THEN tblrecipes.recipename
+ WHEN tblrecipes.defaultresultingcolour IS NOT NULL AND tblinventoryitems.hasInherentColour IS NOT NULL THEN CONCAT_WS(' ',tblcolours.colourname, tblinventoryitems.shortname)
+  WHEN tblrecipes.recipename IS NULL THEN tblinventoryitems.shortname
+ END as 'finalRecipeName',
+ tblinventoryitems.description as recipeDescriptionFallback, tblinventoryitems.hasInherentColour as hasInherentColour FROM tblrecipes INNER JOIN tblprofessions on tblrecipes.profession = tblprofessions.professionid INNER JOIN tblinventoryitems on tblrecipes.creates = tblinventoryitems.itemid LEFT JOIN tblcolours on tblrecipes.defaultresultingcolour = tblcolours.colourid
+order by tblprofessions.professionid, finalRecipeName ASC";
+$result = mysqli_query($connection, $query) or die ("recipes failed");
+
+while ($row = mysqli_fetch_array($result)) {
+	extract($row);
+$outputJSON .= '"'.$recipeID.'":["'.$finalRecipeName.'", "'.$professionName.'"],';
+}
+$outputJSON = rtrim($outputJSON, ",");
+mysqli_free_result($result);
+
+
+
+
+
+
+
+
+
+
+
+$outputJSON .= '},"professions": {';
 
 
 

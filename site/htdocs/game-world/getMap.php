@@ -1095,6 +1095,38 @@ $jsonOutput = '{"mapData":'.json_encode($mapData);
 
 
 
+
+
+
+
+$allRecipes = array();
+// get all recipes:
+// (could be optimised just to get the ones that will be encountered ########)
+$query = "SELECT tblrecipes.*, tblprofessions.*, tblcolours.colourName, tblinventoryitems.itemid as productId, tblinventoryitems.itemcategories as createditemcategories,
+CASE WHEN tblrecipes.recipename IS NOT NULL THEN tblrecipes.recipename
+ WHEN tblrecipes.defaultresultingcolour IS NOT NULL AND tblinventoryitems.hasInherentColour IS NOT NULL THEN CONCAT_WS(' ',tblcolours.colourname, tblinventoryitems.shortname)
+  WHEN tblrecipes.recipename IS NULL THEN tblinventoryitems.shortname
+ END as 'finalRecipeName',
+ tblinventoryitems.description as recipeDescriptionFallback, tblinventoryitems.hasInherentColour as hasInherentColour FROM tblrecipes INNER JOIN tblprofessions on tblrecipes.profession = tblprofessions.professionid INNER JOIN tblinventoryitems on tblrecipes.creates = tblinventoryitems.itemid LEFT JOIN tblcolours on tblrecipes.defaultresultingcolour = tblcolours.colourid
+order by tblprofessions.professionid, finalRecipeName ASC";
+$result = mysqli_query($connection, $query) or die ("recipes failed");
+
+while ($row = mysqli_fetch_array($result)) {
+    extract($row);
+$allRecipes[$recipeID] = array($finalRecipeName, $professionName);
+}
+mysqli_free_result($result);
+
+
+
+
+
+
+
+
+
+
+
 // determine Shop data:
 
 
@@ -1368,11 +1400,22 @@ $imageFileSrc = '/images/user-generated/'.$inventoryDataToSort[$j]['UgcId'].'-sl
 }
 
 $shopMarkupToOutput .= '<img src= "'.$imageFileSrc.'" '.$imgDataAttributes.' alt="'.$inventoryDataToSort[$j]['colourName'].$inventoryDataToSort[$j]['shortname'].'">';
-$shopMarkupToOutput .= '<p><em>'.$inventoryDataToSort[$j]['colourName'].$inventoryDataToSort[$j]['shortname'].'</em>';
+
+$thisShortName = $inventoryDataToSort[$j]['shortname'];
+$thisDescription = $inventoryDataToSort[$j]['description'];
+
+if($inventoryDataToSort[$j]['action'] == "recipe") {
+ $thisShortName = $allRecipes[$inventoryDataToSort[$j]['contains']][0]." ".$thisShortName;
+$thisDescription .= " (for the ".$allRecipes[$inventoryDataToSort[$j]['contains']][1]." profession).";
+}
+
+
+
+$shopMarkupToOutput .= '<p><em>'.$inventoryDataToSort[$j]['colourName'].$thisShortName.'</em>';
 if(isset($inventoryDataToSort[$j]['UgcTitle'])) {
 $shopMarkupToOutput .= $inventoryDataToSort[$j]['UgcTitle'];
 } else {
-    $shopMarkupToOutput .= $inventoryDataToSort[$j]['description'];
+    $shopMarkupToOutput .= $thisDescription;
 }
 $shopMarkupToOutput .= ' <span class="price'.$specialPriceClass.'">Buy price: '.parseMoney($thisItemsPrice).'</span></p>';
 $shopMarkupToOutput .= '</li>';

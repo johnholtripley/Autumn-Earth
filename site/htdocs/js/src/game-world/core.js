@@ -122,6 +122,7 @@ function getHeroGameState() {
         UI.changeActiveCardBack();
 
         hero.crafting = data.recipes.professions;
+        allRecipes = data.recipes.all;
         currentItemGroupFilters = data.recipes.itemGroups;
 
         UI.buildQuestJournal(data.journal.markup, data.journal.regions);
@@ -1199,6 +1200,8 @@ function startDoorTransition() {
     // if (currentMap < 0) {
     saveCartographyMask();
     // }
+    // delete shops so just the new ones can load in
+    shopPanel.innerHTML = '';
 }
 
 
@@ -3202,13 +3205,18 @@ function determinePlatformIncrements(whichPlatform) {
 
 function canLearnRecipe(recipeIndex) {
     var wasSuccessful = false;
+    
+
+console.log(hero.crafting);
+
     if (hero.recipesKnown.indexOf(recipeIndex) === -1) {
         // check for pre-requisites
         // #####
         hero.recipesKnown.push(parseInt(recipeIndex));
-        // need to show a notification
+     
         // reload the recipe data
         // #####
+        wasSuccessful = true;
     }
     return wasSuccessful;
 }
