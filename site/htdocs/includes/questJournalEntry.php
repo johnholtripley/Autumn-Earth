@@ -17,6 +17,8 @@ mysqli_free_result($colourResult);
 
 $regions = array();
 
+
+// get professions:
 $allProfessions = array();
 $professionsQuery = "SELECT * from tblprofessions";
 $professionsResult = mysqli_query($connection, $professionsQuery) or die ();
@@ -26,6 +28,24 @@ while ($row = mysqli_fetch_array($professionsResult)) {
     $allProfessions[$professionID] = $professionName;
     }
     mysqli_free_result($professionsResult);
+// get recipes:
+    $allRecipes = array();
+// get all recipes:
+// (could be optimised just to get the ones that will be encountered ########)
+$query = "SELECT tblrecipes.*, tblprofessions.*, tblcolours.colourName, tblinventoryitems.itemid as productId, tblinventoryitems.itemcategories as createditemcategories,
+CASE WHEN tblrecipes.recipename IS NOT NULL THEN tblrecipes.recipename
+ WHEN tblrecipes.defaultresultingcolour IS NOT NULL AND tblinventoryitems.hasInherentColour IS NOT NULL THEN CONCAT_WS(' ',tblcolours.colourname, tblinventoryitems.shortname)
+  WHEN tblrecipes.recipename IS NULL THEN tblinventoryitems.shortname
+ END as 'finalRecipeName',
+ tblinventoryitems.description as recipeDescriptionFallback, tblinventoryitems.hasInherentColour as hasInherentColour FROM tblrecipes INNER JOIN tblprofessions on tblrecipes.profession = tblprofessions.professionid INNER JOIN tblinventoryitems on tblrecipes.creates = tblinventoryitems.itemid LEFT JOIN tblcolours on tblrecipes.defaultresultingcolour = tblcolours.colourid
+order by tblprofessions.professionid, finalRecipeName ASC";
+$result = mysqli_query($connection, $query) or die ("recipes failed");
+
+while ($row = mysqli_fetch_array($result)) {
+    extract($row);
+$allRecipes[$recipeID] = array($finalRecipeName, $professionName);
+}
+mysqli_free_result($result);
 
 
 
@@ -111,11 +131,18 @@ $cardId = abs($cardId).'-rare';
 
 
            
-$itemQuery = "SELECT itemid, shortname, description, pricecode from tblinventoryitems where itemid = '".$item['type']."'";
+$itemQuery = "SELECT itemid, shortname, description, action, pricecode from tblinventoryitems where itemid = '".$item['type']."'";
 $itemResult = mysqli_query($connection, $itemQuery) or die ();
 while ($itemRow = mysqli_fetch_array($itemResult)) {
-$journalMarkupToOutput .= '<p><em>'.$itemRow['shortname'].'</em>';
-$journalMarkupToOutput .= $itemRow['description'];
+$thisShortName = $itemRow['shortname'];
+$thisDescription = $itemRow['description'];
+if($itemRow['action'] == "recipe") {
+ $thisShortName = $allRecipes[$item['contains']][0]." ".$thisShortName;
+$thisDescription .= " (for the ".$allRecipes[$item['contains']][1]." profession).";
+}
+
+$journalMarkupToOutput .= '<p><em>'.$thisShortName.'</em>';
+$journalMarkupToOutput .= $thisDescription;
 $quantity = 1;
 if(isset($item['quantity'])) {
 $quantity = $item['quantity'];
