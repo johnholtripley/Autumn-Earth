@@ -365,7 +365,7 @@ font-size: 0;
         width: 322px;
         left: 55%;
         top: 335px;
-        background: #000;
+        background: #000 url('../images/game-world/interface/inventory-panel-bg.jpg') 100% 100%;
         @include togglePanel(0.4s);
 
         img {

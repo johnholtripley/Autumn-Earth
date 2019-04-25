@@ -179,13 +179,14 @@ $isAGameCard = true;
 }else {
 
 
-
+if(!is_string($thisAttachment->contains)) {
 	foreach($thisAttachment->contains as $key=>$value) {
 		if($key=='ugc-id') {
 			$isUGC = true;
 			$UGCid = $value;
 		}
 	}
+}
 }
 }
 

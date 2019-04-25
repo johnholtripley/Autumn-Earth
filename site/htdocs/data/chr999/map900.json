@@ -38,7 +38,7 @@
         "weather": [""],
         "shops": [ {
                 "name": "inn",
-                "uniqueItems": {"29":[{"contains":9}]},
+                "uniqueItems": {"29":[{"contains":3}]},
                 "specialism": null,
                 "categories": [],
                 "size": "small",

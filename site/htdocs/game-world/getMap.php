@@ -85,6 +85,21 @@ function generateHash($sourceString) {
     return $hash;
 }
 
+include_once($_SERVER['DOCUMENT_ROOT']."/includes/signalnoise.php");
+include_once($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
+
+
+$query4 = 'SELECT * from tblcharacters where charid="'.$chr.'"';
+$result4 = mysqli_query($connection, $query4);
+if(mysqli_num_rows($result4)>0) {
+while ($row = mysqli_fetch_array($result4)) {
+    extract($row);
+    $characterName = $charName;
+    $recipesKnown = explode(",",   str_replace("[", "", str_replace("]", "", $recipesKnown)));
+
+    }
+    }
+    mysqli_free_result($result4);
 
 
 
@@ -92,7 +107,6 @@ function generateHash($sourceString) {
 
 
 // get from logged in account ###
-$characterName = "Eleaddai";
 $characterClass = "Druid";
 $primaryProfession = "Herbalist";
 
@@ -159,8 +173,7 @@ $mapData['map']['mapId'] = $map;
 
 
 // check which events are active
-include_once($_SERVER['DOCUMENT_ROOT']."/includes/signalnoise.php");
-include_once($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
+
 
 // get current active events:
 $activeEvents = [];
@@ -1158,7 +1171,7 @@ $shopMarkupToOutput = '';
 // get colours:
 $coloursQuery = "SELECT * from tblcolours";
 $allColours = [];
-$colourResult = mysqli_query($connection, $coloursQuery) or die ("recipes failed");
+$colourResult = mysqli_query($connection, $coloursQuery) or die ("colours failed");
 while ($colourRow = mysqli_fetch_array($colourResult)) {
     extract($colourRow);
     array_push($allColours, $colourName);
@@ -1217,7 +1230,7 @@ $query3 = "select tblinventoryitems.*, tblplayergeneratedcontent.itemID as UgcId
 
 
 //$query3 = "SELECT tblinventoryitems.* from tblinventoryitems where tblinventoryitems.itemID in (".implode(',',$baseItemTypes).") order by tblinventoryitems.shortname ASC";
-$result3 = mysqli_query($connection, $query3) or die ("recipes failed:".$query3);
+$result3 = mysqli_query($connection, $query3) or die ("tblinventoryitems failed:".$query3);
 while ($row = mysqli_fetch_array($result3, MYSQLI_ASSOC)) {
    
 // add contains for UGC content: #######
@@ -1239,7 +1252,7 @@ if(count($mapData['map']['shops'][$i]["uniqueItems"])>0) {
 
 $query3 = "SELECT tblinventoryitems.* from tblinventoryitems where tblinventoryitems.itemID in (".$itemIdsToGet.") order by tblinventoryitems.shortname ASC";
  
-$result3 = mysqli_query($connection, $query3) or die ("recipes failed:".$query3);
+$result3 = mysqli_query($connection, $query3) or die ("tblinventoryitems 2 failed:".$query3);
 while ($row = mysqli_fetch_array($result3, MYSQLI_ASSOC)) {
    
     // check if any of the unique data overides the defaults:
@@ -1407,6 +1420,12 @@ $thisDescription = $inventoryDataToSort[$j]['description'];
 if($inventoryDataToSort[$j]['action'] == "recipe") {
  $thisShortName = $allRecipes[$inventoryDataToSort[$j]['contains']][0]." ".$thisShortName;
 $thisDescription .= " (for the ".$allRecipes[$inventoryDataToSort[$j]['contains']][1]." profession).";
+
+
+if (in_array($inventoryDataToSort[$j]['contains'], $recipesKnown)) {
+    $thisDescription .= "(already known)";
+}
+
 }
 
 
