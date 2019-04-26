@@ -403,6 +403,12 @@ var UI = {
         if (activeObjectForDialogue != '') {
             dialogue.removeEventListener(whichTransitionEvent, UI.removeActiveDialogue, false);
         }
+        /*
+        if(typeof thisObjectSpeaking.name !== "undefined") {
+            // add NPC's name:
+textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
+        }
+        */
         dialogue.innerHTML = textToShow;
         dialogue.classList.remove("slowerFade");
         dialogue.classList.add("active");

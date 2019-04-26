@@ -38,7 +38,7 @@
         "weather": [""],
         "shops": [ {
                 "name": "inn",
-                "uniqueItems": {"29":[{"contains":3}]},
+                "uniqueItems": {"25":[{}],"29":[{"contains":3}]},
                 "specialism": null,
                 "categories": [],
                 "size": "small",
@@ -73,12 +73,7 @@
                     "challenge": ["I don't have time for that.", ""]
                   
                 },
-                     "hnefataflSpeech":
-                {
-                        "win": ["Woo! I won!", ""],
-                    "lose": ["Ahh, you beat me...", ""],
-                    "draw": ["Well played", ""]
-                },
+             
                 "cardSkill": 1,
                 "uniqueCards": [2, 2],
                 "baseCardPack": 0,
@@ -94,6 +89,55 @@
                     }
                 }
             },
+
+
+{
+                "name": "Inn card playing champion",
+                "src": "labourer5.png",
+                "width": 20,
+                "length": 20,
+                "spriteWidth": 75,
+                "spriteHeight": 85,
+                "centreX": 56,
+                "centreY": 73,
+                "tileX": 1,
+                "tileY": 1,
+                "movement": ["-"],
+                "facing": "e",
+                "walkThroughDoors": false,
+                "reactionRange": 2,
+                "speed": 2,
+                "isCollidable": true,
+                "isMoving": false,
+
+                "speech": [
+                    ["Let's play. I'm ready when you are", ""]
+                ],
+                "cardGameSpeech":    {
+                    "challenge": ["Let's go", "play"],
+                    "win": ["Woo! I won!", ""],
+                    "lose": ["Very well played - you beat me", ""],
+                    "draw": ["Well played", ""]
+                },
+             
+                "cardSkill": 1,
+                "uniqueCards": [2, 2],
+                "cardBackId": 6,
+                "baseCardPack": 0,
+                "animation":
+                {
+                    "walk":
+                    {
+                        "length": 1,
+                        "n": 2,
+                        "e": 3,
+                        "s": 0,
+                        "w": 1
+                    }
+                }
+            },
+
+
 {
                 "name": "Hnefatafl player",
                 "src": "labourer6.png",

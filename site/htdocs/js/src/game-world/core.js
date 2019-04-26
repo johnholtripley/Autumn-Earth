@@ -2224,6 +2224,10 @@ function processSpeech(thisObjectSpeaking, thisSpeechPassedIn, thisSpeechCode, i
                     // something like a notice:
                     questId = speechCodeExtraParameter;
                 }
+
+
+console.log(questData[questId].isUnderway);
+
                 if (questData[questId].isUnderway) {
                     // quest has been opened - check if it's complete:
                     if ((individualSpeechCodes[i] == "quest") || (individualSpeechCodes[i] == "quest-no-open") || (individualSpeechCodes[i] == "quest-optional")) {
@@ -2367,16 +2371,26 @@ function processSpeech(thisObjectSpeaking, thisSpeechPassedIn, thisSpeechCode, i
                                 break;
                             default:
                                 // threshold quest:
+
+
+
                                 var thresholdValueAtStart = questData[questId].valueAtQuestStart;
                                 var currentThresholdValue = accessDynamicVariable(questData[questId].whatIsRequiredForCompletion);
 
 
                                 console.log(thresholdValueAtStart);
                                 console.log(currentThresholdValue);
+                                console.log(questData[questId].thresholdNeededForCompletion );
 
                                 var thisQuestIsComplete = false;
-                                // check if it's an absolute value to check for, or an increment (whether there is a '+' at the start):
-                                if (questData[questId].thresholdNeededForCompletion.charAt(0) == "+") {
+
+
+// check if it's an array of values:
+if (questData[questId].thresholdNeededForCompletion.charAt(0) == "[") {
+console.log("is array");
+// array contents might not be in the same order - sort? ##########
+} else if (questData[questId].thresholdNeededForCompletion.charAt(0) == "+") {
+         // check if it's an absolute value to check for, or an increment (whether there is a '+' at the start):
                                     if (currentThresholdValue - thresholdValueAtStart >= questData[questId].thresholdNeededForCompletion) {
                                         thisQuestIsComplete = true;
                                     }
@@ -2426,6 +2440,9 @@ function processSpeech(thisObjectSpeaking, thisSpeechPassedIn, thisSpeechCode, i
                         thisObjectSpeaking.speechIndex--;
                     }
                 } else {
+
+
+
                     if ((individualSpeechCodes[i] == "quest") || (individualSpeechCodes[i] == "quest-no-close")) {
                         // ie. don't open the quest if it's "-no-open":
                         openQuest(questId);

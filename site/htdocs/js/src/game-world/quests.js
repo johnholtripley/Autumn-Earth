@@ -94,7 +94,7 @@ function openQuest(questId) {
                 break;
             default:
                 // threshold quest:
-                questData[questId].valueAtQuestStart = accessDynamicVariable(questData[questId].whatIsRequiredForCompletion);           
+                questData[questId].valueAtQuestStart = accessDynamicVariable(questData[questId].whatIsRequiredForCompletion);      
                 break;
         }
         questData[questId].isUnderway = true;
