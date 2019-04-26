@@ -116,7 +116,7 @@
                 "cardGameSpeech":    {
                     "challenge": ["Let's go", "play"],
                     "win": ["Woo! I won!", ""],
-                    "lose": ["Very well played - you beat me", ""],
+                    "lose": ["Very well played - you beat me. Here's my card back...", ""],
                     "draw": ["Well played", ""]
                 },
              

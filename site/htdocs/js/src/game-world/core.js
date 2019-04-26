@@ -844,7 +844,7 @@ function initialiseNPC(whichNPC) {
 
     whichNPC.uniqueIndex = generateHash("npc" + whichNPC.x + "*" + whichNPC.y);
 
-  if (typeof whichNPC.reactionRange === "undefined") {
+    if (typeof whichNPC.reactionRange === "undefined") {
         whichNPC.reactionRange = 1;
     }
 
@@ -1038,7 +1038,7 @@ function prepareGame() {
     mapTransitionCurrentFrames = 1;
     gameMode = "play";
 
-checkForHotspots();
+    checkForHotspots();
     //  UI.showNotification("<p>I'm just thinking about what a notification looks like&hellip;</p>");
 
 }
@@ -1432,27 +1432,27 @@ function checkHeroCollisions() {
 }
 
 function updateSurroundingGameWorld() {
-      // keep the surrounding game world running:
-            var now = window.performance.now();
-            hero.totalGameTimePlayed++;
-            var elapsed = (now - lastTime);
-            lastTime = now;
-            timeSinceLastFrameSwap += elapsed;
-            if (timeSinceLastFrameSwap > animationUpdateTime) {
-                currentAnimationFrame++;
-                timeSinceLastFrameSwap = 0;
-                animateFae();
-            }
-            moveFae();
-            moveNPCs();
-            movePet();
-            movePlatforms();
-            updateItems();
-            audio.checkForAmbientSounds();
-            checkForRespawns();
-            UI.updateCooldowns();
-            // only need to draw if the game board doesn't cover the screen: ####
-            draw();
+    // keep the surrounding game world running:
+    var now = window.performance.now();
+    hero.totalGameTimePlayed++;
+    var elapsed = (now - lastTime);
+    lastTime = now;
+    timeSinceLastFrameSwap += elapsed;
+    if (timeSinceLastFrameSwap > animationUpdateTime) {
+        currentAnimationFrame++;
+        timeSinceLastFrameSwap = 0;
+        animateFae();
+    }
+    moveFae();
+    moveNPCs();
+    movePet();
+    movePlatforms();
+    updateItems();
+    audio.checkForAmbientSounds();
+    checkForRespawns();
+    UI.updateCooldowns();
+    // only need to draw if the game board doesn't cover the screen: ####
+    draw();
 }
 
 function gameLoop() {
@@ -1466,9 +1466,9 @@ function gameLoop() {
         case "cardGame":
             cardGameNameSpace.update();
             cardGameNameSpace.draw();
-          updateSurroundingGameWorld()
+            updateSurroundingGameWorld()
             break;
-            case "hnefataflGame":
+        case "hnefataflGame":
             hnefataflNameSpace.update();
             hnefataflNameSpace.draw();
             updateSurroundingGameWorld()
@@ -1733,7 +1733,7 @@ function updateVisibleMaps() {
 }
 
 function checkForHotspots() {
-        var thisHotspot, thisTileCentreX, thisTileCentreY;
+    var thisHotspot, thisTileCentreX, thisTileCentreY;
     // check for hotspots:
     for (var i = 0; i < thisMapData[currentMap].hotspots.length; i++) {
         thisHotspot = thisMapData[currentMap].hotspots[i];
@@ -1800,7 +1800,7 @@ function heroIsInNewTile() {
     }
 
 
-checkForHotspots();
+    checkForHotspots();
 
     if (fae.currentState == "wait") {
         // check if hero has moved far away, and return if so:
@@ -1922,7 +1922,7 @@ function usedActiveTool() {
                             thisChestsMap = findMapNumberFromGlobalCoordinates(sourceTileX, sourceTileY);
                             thisMapData[thisChestsMap].items.push(thisChest);
                             initialiseItem(thisMapData[thisChestsMap].items[thisMapData[thisChestsMap].items.length - 1]);
-                           // find the map item in the inventory and remove that as well:
+                            // find the map item in the inventory and remove that as well:
                             for (var key in hero.inventory) {
                                 console.log(hero.inventory[key].contains + " == " + hero.activeTreasureMaps[i]);
                                 if (hero.inventory[key].contains == hero.activeTreasureMaps[i]) {
@@ -2085,7 +2085,7 @@ function checkForActions() {
             for (var i = 0; i < thisMapData[(visibleMaps[m])].npcs.length; i++) {
                 thisNPC = thisMapData[(visibleMaps[m])].npcs[i];
                 if (thisNPC.speech) {
-               //     if (isInRange(hero.x, hero.y, thisNPC.x, thisNPC.y, (thisNPC.width + hero.width))) {
+                    //     if (isInRange(hero.x, hero.y, thisNPC.x, thisNPC.y, (thisNPC.width + hero.width))) {
                     if (isInRange(hero.x, hero.y, thisNPC.x, thisNPC.y, (thisNPC.reactionRange * tileW))) {
                         if (isFacing(hero, thisNPC)) {
                             // if at the end of the NPC's speech list, or the dialogue isn't part of the NPC's normal speech list, then close the balloon with an action click:
@@ -2170,7 +2170,7 @@ function processSpeech(thisObjectSpeaking, thisSpeechPassedIn, thisSpeechCode, i
                 }
                 */
                 break;
-                case "hire":
+            case "hire":
                 UI.openHireFollowerPanel(thisObjectSpeaking);
                 thisObjectSpeaking.speechIndex--;
                 break;
@@ -2226,7 +2226,7 @@ function processSpeech(thisObjectSpeaking, thisSpeechPassedIn, thisSpeechCode, i
                 }
 
 
-console.log(questData[questId].isUnderway);
+                console.log(questData[questId].isUnderway);
 
                 if (questData[questId].isUnderway) {
                     // quest has been opened - check if it's complete:
@@ -2371,26 +2371,22 @@ console.log(questData[questId].isUnderway);
                                 break;
                             default:
                                 // threshold quest:
-
-
-
                                 var thresholdValueAtStart = questData[questId].valueAtQuestStart;
                                 var currentThresholdValue = accessDynamicVariable(questData[questId].whatIsRequiredForCompletion);
-
-
-                                console.log(thresholdValueAtStart);
-                                console.log(currentThresholdValue);
-                                console.log(questData[questId].thresholdNeededForCompletion );
-
                                 var thisQuestIsComplete = false;
-
-
-// check if it's an array of values:
-if (questData[questId].thresholdNeededForCompletion.charAt(0) == "[") {
-console.log("is array");
-// array contents might not be in the same order - sort? ##########
-} else if (questData[questId].thresholdNeededForCompletion.charAt(0) == "+") {
-         // check if it's an absolute value to check for, or an increment (whether there is a '+' at the start):
+                                // check if it's an array of values:
+                                if (questData[questId].thresholdNeededForCompletion.charAt(0) == "[") {
+                                    // convert all entries in current Value array to string so they can be checked against the required array elements (which will be all strings)
+                                    var currentThresholdValueString = currentThresholdValue.map(String);
+                                    var requiredArray = questData[questId].thresholdNeededForCompletion.replace('[', '').replace(']', '').split(",");
+                                    thisQuestIsComplete = true;
+                                    for (var r = 0; r < requiredArray.length; r++) {
+                                        if (currentThresholdValueString.indexOf(requiredArray[r]) === -1) {
+                                            thisQuestIsComplete = false;
+                                        }
+                                    }
+                                } else if (questData[questId].thresholdNeededForCompletion.charAt(0) == "+") {
+                                    // check if it's an absolute value to check for, or an increment (whether there is a '+' at the start):
                                     if (currentThresholdValue - thresholdValueAtStart >= questData[questId].thresholdNeededForCompletion) {
                                         thisQuestIsComplete = true;
                                     }
@@ -2461,9 +2457,9 @@ console.log("is array");
                 startCardGame(thisObjectSpeaking);
                 break;
 
-case "hnefatafl":
-thisChallengeNPC = thisObjectSpeaking;
- startHnefataflGame(thisObjectSpeaking);
+            case "hnefatafl":
+                thisChallengeNPC = thisObjectSpeaking;
+                startHnefataflGame(thisObjectSpeaking);
                 break;
 
             default:
@@ -3222,15 +3218,15 @@ function determinePlatformIncrements(whichPlatform) {
 
 function canLearnRecipe(recipeIndex) {
     var wasSuccessful = false;
-    
 
-console.log(hero.crafting);
+
+    console.log(hero.crafting);
 
     if (hero.recipesKnown.indexOf(recipeIndex) === -1) {
         // check for pre-requisites
         // #####
         hero.recipesKnown.push(parseInt(recipeIndex));
-     
+
         // reload the recipe data
         // #####
         wasSuccessful = true;
