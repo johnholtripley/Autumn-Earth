@@ -3151,7 +3151,7 @@ function hnefataflPlayer2Wins() {
 
 
     delete thisChallengeNPC.isPlayingCards;
-    processPlayerWinSpeech(thisChallengeNPC, thisChallengeNPC.hnefataflSpeech.lose[0], thisChallengeNPC.hnefataflSpeech.lose[1]);
+    processHnefataflPlayerWinSpeech(thisChallengeNPC, thisChallengeNPC.hnefataflSpeech.lose[0], thisChallengeNPC.hnefataflSpeech.lose[1]);
     closeHnefataflGame();
 }
 
@@ -3176,7 +3176,7 @@ function hnefataflIsDrawn() {
     closeHnefataflGame();
 }
 
-function processPlayerWinSpeech(thisChallengeNPC, thisSpeechPassedIn, thisSpeechCode) {
+function processHnefataflPlayerWinSpeech(thisChallengeNPC, thisSpeechPassedIn, thisSpeechCode) {
     if (thisSpeechCode != "") {
         var questSpeech = thisSpeechCode.split("|");
         var questId = questSpeech[1];
