@@ -245,6 +245,35 @@ for ($j=0;$j<count($activeEvents);$j++) {
 }
 
 
+// loop through doors and if pointing to an overWorld map, then change the coords to global:
+
+
+
+foreach ($mapData['map']['doors'] as $key => $value) {
+    // load this map and check if it's an over world map or not:
+if($value['map']>0) {
+
+$thisDoorJsonMapResults = file_get_contents('../data/chr' .  $chr . '/map' . $value['map'] . '.json');
+$thisDoorMapJson = json_decode($thisDoorJsonMapResults, true);
+
+
+if(!($thisDoorMapJson['map']['isInside'])) {
+// convert to global coordinates:
+    $thisDoorGlobalPosition = findWorldMapPosition($value['map']);
+
+
+$mapData['map']['doors'][$key]['startX'] += $thisDoorGlobalPosition[0] * $worldMapTileLength;
+ $mapData['map']['doors'][$key]['startY'] += $thisDoorGlobalPosition[1] * $worldMapTileLength;
+
+
+}
+
+}
+
+    }
+
+
+
 
 function pathIsConnected($targetX, $targetY) {
   //  echo "looking for ".$targetX . "_" . $targetY.": ";

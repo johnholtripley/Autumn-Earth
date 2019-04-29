@@ -197,6 +197,8 @@ function processInitialMap() {
     var startTileOffsetX, startTileOffsetY;
     var startTileOffsetXNum = 0;
     var startTileOffsetYNum = 0;
+
+
     // check for any "?" in the target door (for procedural levels):
     if (hero.tileX.toString().indexOf("?") != -1) {
         // check for +1 or -1 modifiers:
@@ -213,6 +215,7 @@ function processInitialMap() {
         }
         hero.tileY = thisMapData[currentMap].entrance[1] + startTileOffsetYNum;
     }
+
 
 
     // set up pet positions:
@@ -496,6 +499,7 @@ function loadMapJSON(mapFilePath) {
     getJSON(mapFilePath, function(data) {
             thisMapData[data.mapData.map.mapId] = data.mapData.map;
             currentMap = data.mapData.map.mapId;
+
             visibleMaps.push(parseInt(currentMap));
             thisMapShopItemIds = data.shops.allItemIds;
             UI.buildShop(data.shops.markup);
@@ -524,6 +528,7 @@ function loadMap() {
         dungeonAppend = '&dungeonName=' + randomDungeonName;
         //   dungeonAppend += '&seed=1552609714';
     }
+    
     loadMapJSON('/game-world/getMap.php?chr=' + characterId + '&map=' + newMap + dungeonAppend);
 }
 
@@ -1051,18 +1056,18 @@ function removeMapAssets() {
         // remove the on error handler so it doesn't fire when the image is removed:
         tileImages[tileGraphicsToLoad[i]].onerror = '';
         tileImages[tileGraphicsToLoad[i]].src = '';
-        tileImages[tileGraphicsToLoad[i]] = null;
+       delete tileImages[tileGraphicsToLoad[i]];
     }
 
     for (var i in npcGraphicsToLoad) {
         npcImages[npcGraphicsToLoad[i]].onerror = '';
         npcImages[npcGraphicsToLoad[i]].src = '';
-        npcImages[npcGraphicsToLoad[i]] = null;
+     delete npcImages[npcGraphicsToLoad[i]];
     }
     for (var i in itemGraphicsToLoad) {
         itemImages[itemGraphicsToLoad[i]].onerror = '';
         itemImages[itemGraphicsToLoad[i]].src = '';
-        itemImages[itemGraphicsToLoad[i]] = null;
+        delete itemImages[itemGraphicsToLoad[i]];
     }
 
     for (var i in backgroundImgs) {
@@ -1087,12 +1092,16 @@ function changeMaps(doorX, doorY) {
     previousZoneName = thisMapData[currentMap].zoneName;
     gameMode = "mapLoading";
     removeMapAssets();
+
+
+
     if (jumpMapId == null) {
         var doorData = thisMapData[currentMap].doors;
         var whichDoor = doorX + "," + doorY;
 
         hero.tileX = doorData[whichDoor].startX;
         hero.tileY = doorData[whichDoor].startY;
+        console.log('changeMaps',hero.tileX,hero.tileY);
         newMap = doorData[whichDoor].map;
     } else {
         newMap = jumpMapId;
@@ -3614,7 +3623,8 @@ function draw() {
                 case "sprite":
                     // sprite image (needs slicing parameters):
                     if (typeof assetsToDraw[i][2] !== "undefined") {
-                        // image has been loadeda
+                        // image has been loaded
+
                         gameContext.drawImage(assetsToDraw[i][2], assetsToDraw[i][3], assetsToDraw[i][4], assetsToDraw[i][5], assetsToDraw[i][6], assetsToDraw[i][7], assetsToDraw[i][8], assetsToDraw[i][9], assetsToDraw[i][10]);
                     }
                     break;
