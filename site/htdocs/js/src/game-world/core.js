@@ -1043,6 +1043,17 @@ function prepareGame() {
     mapTransitionCurrentFrames = 1;
     gameMode = "play";
 
+
+if(thisMapData[currentMap].musicOnEnter != '') {
+audio.playMusic(thisMapData[currentMap].musicOnEnter);
+} else {
+    console.log(audio,audio.activeTrack);
+  //  if music playing - fade out
+ if(typeof audio.activeTrack !== "undefined") {
+  audio.fadeOutMusic(audio.activeTrack, 6);
+}
+}
+
     checkForHotspots();
     //  UI.showNotification("<p>I'm just thinking about what a notification looks like&hellip;</p>");
 

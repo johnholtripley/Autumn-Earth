@@ -44,6 +44,7 @@ function cardGamePlayer1Wins() {
 }
 
 function cardGameIsDrawn() {
+    console.log("DRAWN");
      console.log(thisChallengeNPC);
     hero.stats.cardGamesDrawn++;
       hero.stats.cardGamesPlayed++;
@@ -107,7 +108,7 @@ function startCardGame(opponentNPC) {
 
 function closeCardGame() {
     gameMode = "play";
-    audio.fadeOutMusic('card-game-NOT_MINE-Shuffle-or-Boogie');
+    audio.fadeOutMusic('card-game-NOT_MINE-Shuffle-or-Boogie',2.5);
     cardGameWrapper.classList.remove("active");
     document.getElementById("cardGame").removeEventListener("click", cardGameNameSpace.canvasClick, false);
 }

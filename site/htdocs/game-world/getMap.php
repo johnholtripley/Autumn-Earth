@@ -153,6 +153,9 @@ $hasEventContent = strrpos($mapDataFile, 'eventSpecificContent');
 
 $mapData = json_decode($mapDataFile, true);
 
+if(!(isset($mapData['map']['musicOnEnter']))) {
+$mapData['map']['musicOnEnter'] = '';
+}
 
 $isInside = $mapData['map']['isInside'];
 

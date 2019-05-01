@@ -155,13 +155,16 @@ var audio = {
         }
     },
 
-    fadeOutMusic: function(whichTrack) {
+    fadeOutMusic: function(whichTrack, fadeTime) {
+
+
         if (typeof audio[whichTrack] !== undefined) {
             //  audio[whichTrack].pause();
-            var fadeTime = 2.5;
+            
             var currentTime = audioContext.currentTime;
             audio[whichTrack + 'Gain'].gain.linearRampToValueAtTime(gameSettings.musicVolume, currentTime);
             audio[whichTrack + 'Gain'].gain.linearRampToValueAtTime(0, currentTime + fadeTime);
+            audio[whichTrack].removeEventListener("ended", audio.removeMusic, false);
             audio.lastTrack = '';
             audio.activeTrack = undefined;
             delete audio[whichTrack];
@@ -2988,6 +2991,7 @@ function cardGamePlayer1Wins() {
 }
 
 function cardGameIsDrawn() {
+    console.log("DRAWN");
      console.log(thisChallengeNPC);
     hero.stats.cardGamesDrawn++;
       hero.stats.cardGamesPlayed++;
@@ -3051,7 +3055,7 @@ function startCardGame(opponentNPC) {
 
 function closeCardGame() {
     gameMode = "play";
-    audio.fadeOutMusic('card-game-NOT_MINE-Shuffle-or-Boogie');
+    audio.fadeOutMusic('card-game-NOT_MINE-Shuffle-or-Boogie',2.5);
     cardGameWrapper.classList.remove("active");
     document.getElementById("cardGame").removeEventListener("click", cardGameNameSpace.canvasClick, false);
 }
@@ -3221,7 +3225,7 @@ function closeHnefataflGame() {
     gameMode = "play";
     //   audio.fadeOutMusic('card-game-NOT_MINE-Shuffle-or-Boogie');
     hnefataflGameWrapper.classList.remove("active");
-    document.getElementById("cardGame").removeEventListener("click", hnefataflNameSpace.canvasClick, false);
+    document.getElementById("hnefataflGame").removeEventListener("click", hnefataflNameSpace.canvasClick, false);
 }
 const Input = {
     isUsingGamePad: false,
@@ -8772,6 +8776,17 @@ function prepareGame() {
     mapTransition = "in";
     mapTransitionCurrentFrames = 1;
     gameMode = "play";
+
+
+if(thisMapData[currentMap].musicOnEnter != '') {
+audio.playMusic(thisMapData[currentMap].musicOnEnter);
+} else {
+    console.log(audio,audio.activeTrack);
+  //  if music playing - fade out
+ if(typeof audio.activeTrack !== "undefined") {
+  audio.fadeOutMusic(audio.activeTrack, 6);
+}
+}
 
     checkForHotspots();
     //  UI.showNotification("<p>I'm just thinking about what a notification looks like&hellip;</p>");

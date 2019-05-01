@@ -154,13 +154,16 @@ var audio = {
         }
     },
 
-    fadeOutMusic: function(whichTrack) {
+    fadeOutMusic: function(whichTrack, fadeTime) {
+
+
         if (typeof audio[whichTrack] !== undefined) {
             //  audio[whichTrack].pause();
-            var fadeTime = 2.5;
+            
             var currentTime = audioContext.currentTime;
             audio[whichTrack + 'Gain'].gain.linearRampToValueAtTime(gameSettings.musicVolume, currentTime);
             audio[whichTrack + 'Gain'].gain.linearRampToValueAtTime(0, currentTime + fadeTime);
+            audio[whichTrack].removeEventListener("ended", audio.removeMusic, false);
             audio.lastTrack = '';
             audio.activeTrack = undefined;
             delete audio[whichTrack];

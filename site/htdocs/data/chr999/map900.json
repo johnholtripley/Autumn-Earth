@@ -2,6 +2,7 @@
     "map": {
         "zoneName": "The Old Inn",
         "region": "Teldrassil",
+        "musicOnEnter": "tavern-WoW-NOT-MINE",
         "isInside": true,
         "collisions": [
             [1, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -300,13 +301,7 @@
                 "tileY": 3
             }
         ],
-        "hotspots": [  {
-                "centreX": 5,
-                "centreY": 6,
-                "radius": 3,
-                "message": "",
-                "music": "tavern-WoW-NOT-MINE"
-            }],
+        "hotspots": [],
         "hiddenResourceCategories": [],
         "hiddenResourceTier": 7
     }

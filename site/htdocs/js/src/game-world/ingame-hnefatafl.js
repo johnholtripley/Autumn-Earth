@@ -81,5 +81,5 @@ function closeHnefataflGame() {
     gameMode = "play";
     //   audio.fadeOutMusic('card-game-NOT_MINE-Shuffle-or-Boogie');
     hnefataflGameWrapper.classList.remove("active");
-    document.getElementById("cardGame").removeEventListener("click", hnefataflNameSpace.canvasClick, false);
+    document.getElementById("hnefataflGame").removeEventListener("click", hnefataflNameSpace.canvasClick, false);
 }
