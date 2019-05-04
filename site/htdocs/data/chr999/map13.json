@@ -219,7 +219,49 @@
                         "w": 1
                     }
                 }
-            }],
+            },{
+            "name": "labourer3",
+            "src": "labourer3.png",
+            "width": 20,
+            "length": 20,
+            "spriteWidth": 75,
+            "spriteHeight": 85,
+            "centreX": 56,
+            "centreY": 73,
+            "tileX": 38,
+            "tileY": 20,
+            "movement": ["-"],
+            "facing": "w",
+            "walkThroughDoors": false,
+            "speed": 2,
+            "isCollidable": true,
+            "isMoving": false,
+            "speechIndex": 0,
+            "speech": [
+                ["Start a collection - it's fun|Still a few to get I see|Fantastic, you got them all", "collection-quest", "the-barrow-mines", [44, 45, 46], [{"type":21,"quantity":2},{"type":9}]],["well done on your collection",""]
+            ],
+            "cardGameSpeech":
+            {
+                "challenge": ["Do you play? Fancy a game then?", "play"],
+                "win": ["Woo! I won!", ""],
+                "lose": ["Ahh, you beat me...", ""],
+                "draw": ["Well played", ""]
+            },
+            "cardSkill": 1,
+            "uniqueCards": [2, 2],
+            "baseCardPack": 0,
+            "animation":
+            {
+                "walk":
+                {
+                    "length": 1,
+                    "n": 2,
+                    "e": 3,
+                    "s": 0,
+                    "w": 1
+                }
+            }
+        }],
         "doors": {
 
    "40,14": {
@@ -247,7 +289,19 @@
 
 
             },
-        "items": [],
+        "items": [{
+              "type": 44,
+                "tileX": 35,
+                "tileY": 20
+            },{
+              "type": 45,
+                "tileX": 35,
+                "tileY": 21
+            },{
+              "type": 46,
+                "tileX": 35,
+                "tileY": 22
+            }],
         "hotspots": [],
         "hiddenResourceCategories": [4],
         "hiddenResourceTier": 7

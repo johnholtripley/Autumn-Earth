@@ -204,7 +204,7 @@
             "isMoving": false,
             "speechIndex": 0,
             "speech": [
-                ["Start a collection - it's fun|Still a few to get I see|Fantastic, you got them all", "collection-quest", "the-barrow-mines", "2x21,9"]
+                ["Start a collection - it's fun|Still a few to get I see|Fantastic, you got them all", "collection-quest", "the-barrow-mines", [44, 45, 46], "2x21,9"]
             ],
             "cardGameSpeech":
             {
@@ -516,7 +516,7 @@
         }],
 "hiddenResourceCategories": [],
 "hiddenResourceTier": 1,
-        "showOnlyLineOfSight": true,
-        "collection": [44, 45, 46]
+        "showOnlyLineOfSight": true
+        
     }
 }

@@ -2139,6 +2139,7 @@ function processSpeech(thisObjectSpeaking, thisSpeechPassedIn, thisSpeechCode, i
     // thisObjectSpeaking could be an NPC, or could be an item object (if from a Notice for example)
     // thisSpeech is global so it can be edited in the close quest functions:
     thisSpeech = thisSpeechPassedIn;
+
     // isPartOfNPCsNormalSpeech is false if not set:
     isPartOfNPCsNormalSpeech = typeof isPartOfNPCsNormalSpeech !== 'undefined' ? isPartOfNPCsNormalSpeech : false;
     var individualSpeechCodes = thisSpeechCode.split(",");
@@ -2214,21 +2215,25 @@ function processSpeech(thisObjectSpeaking, thisSpeechPassedIn, thisSpeechCode, i
                     } else {
                         var thisFullSpeech = thisObjectSpeaking.speech[thisObjectSpeaking.speechIndex];
                         // complete:
-                        if (typeof thisFullSpeech[3] !== "undefined") {
-                            awardQuestRewards(thisObjectSpeaking, [thisFullSpeech[3]], true);
+                        if (typeof thisFullSpeech[4] !== "undefined") {
+                           
+                            awardQuestRewards(thisObjectSpeaking, thisFullSpeech[4], true);
                         }
                         thisSpeech = collectionQuestSpeech[2];
                         hero.collections[collectionQuestZoneName].complete = true;
                         UI.completeCollectionQuestPanel(collectionQuestZoneName);
+                        thisObjectSpeaking.speech.splice(thisObjectSpeaking.speechIndex, 1);
+     
                     }
                 } else {
                     // collection not started yet:
                     thisSpeech = collectionQuestSpeech[0];
                     hero.collections[collectionQuestZoneName] = {};
-                    hero.collections[collectionQuestZoneName].required = thisMapData[currentMap].collection;
+                    hero.collections[collectionQuestZoneName].required = thisObjectSpeaking.speech[thisObjectSpeaking.speechIndex][3];
                     hero.collections[collectionQuestZoneName].complete = false;
                     UI.initiateCollectionQuestPanel(collectionQuestZoneName);
                 }
+                thisObjectSpeaking.speechIndex--;
                 break;
 
             case "quest":
