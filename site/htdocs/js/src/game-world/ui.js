@@ -2019,6 +2019,10 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
                 newPost.classList.remove('active');
             }
         }
+        if (thisElement.hasAttribute('data-quest')) {
+            openQuest(thisElement.getAttribute('data-quest'));
+thisElement.removeAttribute('data-quest');
+        }
         var correspondingPostMessage = "postMessage" + whichElement.substr(4);
         document.getElementById(correspondingPostMessage).classList.add("active");
     },

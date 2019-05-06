@@ -460,6 +460,7 @@ function inventoryItemAction(whichSlot, whichAction, allActionValues) {
                 case "book":
                     document.getElementById("book" + whichActionValue).classList.add("active");
                     audio.playSound(soundEffects['bookOpen'], 0);
+                    break;
                 case "recipe":
                     if (canLearnRecipe(hero.inventory[whichSlotNumber].contains)) {
                         removeFromInventory(whichSlotNumber, 1);

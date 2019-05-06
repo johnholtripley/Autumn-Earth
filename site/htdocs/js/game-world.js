@@ -3769,6 +3769,7 @@ function inventoryItemAction(whichSlot, whichAction, allActionValues) {
                 case "book":
                     document.getElementById("book" + whichActionValue).classList.add("active");
                     audio.playSound(soundEffects['bookOpen'], 0);
+                    break;
                 case "recipe":
                     if (canLearnRecipe(hero.inventory[whichSlotNumber].contains)) {
                         removeFromInventory(whichSlotNumber, 1);
@@ -3796,12 +3797,9 @@ function inventoryItemAction(whichSlot, whichAction, allActionValues) {
                     break;
             }
         }
-        if(hero.inventory[whichSlotNumber]) {
-            // (check it wasn't just removed)
         if (typeof hero.inventory[whichSlotNumber].cooldown !== "undefined") {
             hero.inventory[whichSlotNumber].cooldownTimer = hero.inventory[whichSlotNumber].cooldown;
         }
-    }
     }
 }
 
@@ -7082,6 +7080,10 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
             if (document.querySelectorAll('#receivedPostPanel .unread').length == 0) {
                 newPost.classList.remove('active');
             }
+        }
+        if (thisElement.hasAttribute('data-quest')) {
+            openQuest(thisElement.getAttribute('data-quest'));
+thisElement.removeAttribute('data-quest');
         }
         var correspondingPostMessage = "postMessage" + whichElement.substr(4);
         document.getElementById(correspondingPostMessage).classList.add("active");
