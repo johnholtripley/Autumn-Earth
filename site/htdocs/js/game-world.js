@@ -9990,6 +9990,7 @@ function processSpeech(thisObjectSpeaking, thisSpeechPassedIn, thisSpeechCode, i
                 thisObjectSpeaking.speechIndex--;
                 break;
             case "collection-quest":
+            case "collection-quest-no-open":
                 var collectionQuestSpeech = thisSpeech.split("|");
                 var collectionQuestZoneName = thisObjectSpeaking.speech[thisObjectSpeaking.speechIndex][2];
                 // check if this zone key exists in the hero.collections object
@@ -10020,15 +10021,22 @@ function processSpeech(thisObjectSpeaking, thisSpeechPassedIn, thisSpeechCode, i
      
                     }
                 } else {
+                    if(individualSpeechCodes[i] != 'collection-quest-no-open') {
                     // collection not started yet:
                     thisSpeech = collectionQuestSpeech[0];
                     hero.collections[collectionQuestZoneName] = {};
                     hero.collections[collectionQuestZoneName].required = thisObjectSpeaking.speech[thisObjectSpeaking.speechIndex][3];
                     hero.collections[collectionQuestZoneName].complete = false;
                     UI.initiateCollectionQuestPanel(collectionQuestZoneName);
+                } else {
+                    thisSpeech = collectionQuestSpeech[1];
+                }
                 }
                 thisObjectSpeaking.speechIndex--;
                 break;
+
+                
+
 
             case "quest":
             case "quest-no-open":

@@ -528,7 +528,7 @@ function loadMap() {
         dungeonAppend = '&dungeonName=' + randomDungeonName;
         //   dungeonAppend += '&seed=1552609714';
     }
-    
+
     loadMapJSON('/game-world/getMap.php?chr=' + characterId + '&map=' + newMap + dungeonAppend);
 }
 
@@ -1044,14 +1044,14 @@ function prepareGame() {
     gameMode = "play";
 
 
-if(thisMapData[currentMap].musicOnEnter != '') {
-audio.playMusic(thisMapData[currentMap].musicOnEnter);
-} else {
-  //  if music playing - fade out
- if(typeof audio.activeTrack !== "undefined") {
-  audio.fadeOutMusic(audio.activeTrack, 6);
-}
-}
+    if (thisMapData[currentMap].musicOnEnter != '') {
+        audio.playMusic(thisMapData[currentMap].musicOnEnter);
+    } else {
+        //  if music playing - fade out
+        if (typeof audio.activeTrack !== "undefined") {
+            audio.fadeOutMusic(audio.activeTrack, 6);
+        }
+    }
 
     checkForHotspots();
     //  UI.showNotification("<p>I'm just thinking about what a notification looks like&hellip;</p>");
@@ -1066,13 +1066,13 @@ function removeMapAssets() {
         // remove the on error handler so it doesn't fire when the image is removed:
         tileImages[tileGraphicsToLoad[i]].onerror = '';
         tileImages[tileGraphicsToLoad[i]].src = '';
-       delete tileImages[tileGraphicsToLoad[i]];
+        delete tileImages[tileGraphicsToLoad[i]];
     }
 
     for (var i in npcGraphicsToLoad) {
         npcImages[npcGraphicsToLoad[i]].onerror = '';
         npcImages[npcGraphicsToLoad[i]].src = '';
-     delete npcImages[npcGraphicsToLoad[i]];
+        delete npcImages[npcGraphicsToLoad[i]];
     }
     for (var i in itemGraphicsToLoad) {
         itemImages[itemGraphicsToLoad[i]].onerror = '';
@@ -1111,7 +1111,7 @@ function changeMaps(doorX, doorY) {
 
         hero.tileX = doorData[whichDoor].startX;
         hero.tileY = doorData[whichDoor].startY;
-        console.log('changeMaps',hero.tileX,hero.tileY);
+        console.log('changeMaps', hero.tileX, hero.tileY);
         newMap = doorData[whichDoor].map;
     } else {
         newMap = jumpMapId;
@@ -2195,6 +2195,7 @@ function processSpeech(thisObjectSpeaking, thisSpeechPassedIn, thisSpeechCode, i
                 thisObjectSpeaking.speechIndex--;
                 break;
             case "collection-quest":
+            case "collection-quest-no-open":
                 var collectionQuestSpeech = thisSpeech.split("|");
                 var collectionQuestZoneName = thisObjectSpeaking.speech[thisObjectSpeaking.speechIndex][2];
                 // check if this zone key exists in the hero.collections object
@@ -2215,25 +2216,32 @@ function processSpeech(thisObjectSpeaking, thisSpeechPassedIn, thisSpeechCode, i
                         var thisFullSpeech = thisObjectSpeaking.speech[thisObjectSpeaking.speechIndex];
                         // complete:
                         if (typeof thisFullSpeech[4] !== "undefined") {
-                           
+
                             awardQuestRewards(thisObjectSpeaking, thisFullSpeech[4], true);
                         }
                         thisSpeech = collectionQuestSpeech[2];
                         hero.collections[collectionQuestZoneName].complete = true;
                         UI.completeCollectionQuestPanel(collectionQuestZoneName);
                         thisObjectSpeaking.speech.splice(thisObjectSpeaking.speechIndex, 1);
-     
+
                     }
                 } else {
-                    // collection not started yet:
-                    thisSpeech = collectionQuestSpeech[0];
-                    hero.collections[collectionQuestZoneName] = {};
-                    hero.collections[collectionQuestZoneName].required = thisObjectSpeaking.speech[thisObjectSpeaking.speechIndex][3];
-                    hero.collections[collectionQuestZoneName].complete = false;
-                    UI.initiateCollectionQuestPanel(collectionQuestZoneName);
+                    if (individualSpeechCodes[i] != 'collection-quest-no-open') {
+                        // collection not started yet:
+                        thisSpeech = collectionQuestSpeech[0];
+                        hero.collections[collectionQuestZoneName] = {};
+                        hero.collections[collectionQuestZoneName].required = thisObjectSpeaking.speech[thisObjectSpeaking.speechIndex][3];
+                        hero.collections[collectionQuestZoneName].complete = false;
+                        UI.initiateCollectionQuestPanel(collectionQuestZoneName);
+                    } else {
+                        thisSpeech = collectionQuestSpeech[1];
+                    }
                 }
                 thisObjectSpeaking.speechIndex--;
                 break;
+
+
+
 
             case "quest":
             case "quest-no-open":
