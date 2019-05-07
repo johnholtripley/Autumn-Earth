@@ -3792,6 +3792,21 @@ function inventoryItemAction(whichSlot, whichAction, allActionValues) {
                                             UI.showNotification("<p>I already know that&hellip;</p>");
                                         }
                                         break;
+                                        case 'collection-quest':
+                                                 var collectionQuestZoneName = hero.inventory[whichSlotNumber].additional[thisProperty].zoneName;
+                                                 console.log(hero.inventory[whichSlotNumber].additional[thisProperty]);
+                // check if this zone key exists in the hero.collections object
+                if (!(hero.collections.hasOwnProperty(collectionQuestZoneName))) {
+             
+               
+                    // collection not started yet:
+             
+                    hero.collections[collectionQuestZoneName] = {};
+                    hero.collections[collectionQuestZoneName].required = hero.inventory[whichSlotNumber].additional[thisProperty].required;
+                    hero.collections[collectionQuestZoneName].complete = false;
+                    UI.initiateCollectionQuestPanel(collectionQuestZoneName);
+                }
+                                        break;
                                 }
 
                             }

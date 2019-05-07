@@ -301,7 +301,14 @@
               "type": 46,
                 "tileX": 35,
                 "tileY": 22
-            }],
+            },
+            {"type":32,
+   "tileX": 35,
+                "tileY": 23,
+            "inscription":{"title":"Collection starting book","timeCreated":"1489052678546456002","content":"<section><h1>Chapter 1<\/h1><p>Start your collection now.<\/p><\/section>"},"additional":{"collection-quest":{
+"zoneName": "the-barrow-mines",
+"required": [44, 45, 46]
+}}}],
         "hotspots": [],
         "hiddenResourceCategories": [4],
         "hiddenResourceTier": 7
