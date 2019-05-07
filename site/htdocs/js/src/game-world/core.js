@@ -1047,7 +1047,6 @@ function prepareGame() {
 if(thisMapData[currentMap].musicOnEnter != '') {
 audio.playMusic(thisMapData[currentMap].musicOnEnter);
 } else {
-    console.log(audio,audio.activeTrack);
   //  if music playing - fade out
  if(typeof audio.activeTrack !== "undefined") {
   audio.fadeOutMusic(audio.activeTrack, 6);

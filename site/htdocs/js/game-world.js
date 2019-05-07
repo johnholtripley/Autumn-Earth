@@ -3767,8 +3767,38 @@ function inventoryItemAction(whichSlot, whichAction, allActionValues) {
                     }
                     break;
                 case "book":
-                    document.getElementById("book" + whichActionValue).classList.add("active");
-                    audio.playSound(soundEffects['bookOpen'], 0);
+                    // check it's not empty:
+
+                    if (hero.inventory[whichSlotNumber].inscription != "") {
+                        document.getElementById("book" + whichActionValue).classList.add("active");
+                        audio.playSound(soundEffects['bookOpen'], 0);
+                        // check if this book starts a quest or learns a recipe etc:
+
+                        if (typeof hero.inventory[whichSlotNumber].additional === "object") {
+
+                            for (var thisProperty in hero.inventory[whichSlotNumber].additional) {
+
+
+                                switch (thisProperty) {
+                                    case 'quest':
+                                        if (canOpenQuest(hero.inventory[whichSlotNumber].additional[thisProperty])) {
+                                            openQuest(hero.inventory[whichSlotNumber].additional[thisProperty]);
+                                        }
+                                        break;
+                                    case 'recipe':
+                                        if (canLearnRecipe(hero.inventory[whichSlotNumber].additional[thisProperty])) {
+                                            UI.showNotification("<p>I learned a new recipe</p>");
+                                        } else {
+                                            UI.showNotification("<p>I already know that&hellip;</p>");
+                                        }
+                                        break;
+                                }
+
+                            }
+
+                        }
+
+                    }
                     break;
                 case "recipe":
                     if (canLearnRecipe(hero.inventory[whichSlotNumber].contains)) {
@@ -3965,11 +3995,11 @@ function generateGenericSlotMarkup(thisItemObject) {
     }
 
 
-var thisObjectsName = currentActiveInventoryItems[thisItemObject.type].shortname;
-if(currentActiveInventoryItems[thisItemObject.type].action == "recipe") {
-thisObjectsName = allRecipes[thisItemObject.contains][0]+" "+thisObjectsName;
-itemsDescription += " (for the "+allRecipes[thisItemObject.contains][1]+" profession).";
-}
+    var thisObjectsName = currentActiveInventoryItems[thisItemObject.type].shortname;
+    if (currentActiveInventoryItems[thisItemObject.type].action == "recipe") {
+        thisObjectsName = allRecipes[thisItemObject.contains][0] + " " + thisObjectsName;
+        itemsDescription += " (for the " + allRecipes[thisItemObject.contains][1] + " profession).";
+    }
 
     slotMarkup += '<p><em>' + theColourPrefix + thisObjectsName + ' </em>' + itemsDescription + ' ';
     slotMarkup += '<span class="price">Sell price: ' + parseMoney(Math.ceil(thisItemObject.quantity * sellPriceModifier * inflationModifier * currentActiveInventoryItems[thisItemObject.type].priceCode, 0)) + '</span>';
@@ -4673,7 +4703,14 @@ function acceptQuest() {
     questResponseNPC = null;
 }
 
-
+function canOpenQuest(questId) {
+    if (!(questData[questId].isUnderway)) {
+        if ((questData[questId].hasBeenCompleted == "0") || (questData[questId].isRepeatable == "1")) {
+            return true;
+        }
+    }
+    return false;
+}
 
 function openQuest(questId) {
 
@@ -7082,8 +7119,12 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
             }
         }
         if (thisElement.hasAttribute('data-quest')) {
-            openQuest(thisElement.getAttribute('data-quest'));
-thisElement.removeAttribute('data-quest');
+            var whichQuest = thisElement.getAttribute('data-quest');
+         if(canOpenQuest(whichQuest)) {
+        openQuest(whichQuest);
+        }
+        
+
         }
         var correspondingPostMessage = "postMessage" + whichElement.substr(4);
         document.getElementById(correspondingPostMessage).classList.add("active");
@@ -8786,7 +8827,6 @@ function prepareGame() {
 if(thisMapData[currentMap].musicOnEnter != '') {
 audio.playMusic(thisMapData[currentMap].musicOnEnter);
 } else {
-    console.log(audio,audio.activeTrack);
   //  if music playing - fade out
  if(typeof audio.activeTrack !== "undefined") {
   audio.fadeOutMusic(audio.activeTrack, 6);

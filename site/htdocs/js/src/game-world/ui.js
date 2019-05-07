@@ -2020,8 +2020,12 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
             }
         }
         if (thisElement.hasAttribute('data-quest')) {
-            openQuest(thisElement.getAttribute('data-quest'));
-thisElement.removeAttribute('data-quest');
+            var whichQuest = thisElement.getAttribute('data-quest');
+         if(canOpenQuest(whichQuest)) {
+        openQuest(whichQuest);
+        }
+        
+
         }
         var correspondingPostMessage = "postMessage" + whichElement.substr(4);
         document.getElementById(correspondingPostMessage).classList.add("active");

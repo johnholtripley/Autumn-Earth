@@ -33,7 +33,14 @@ function acceptQuest() {
     questResponseNPC = null;
 }
 
-
+function canOpenQuest(questId) {
+    if (!(questData[questId].isUnderway)) {
+        if ((questData[questId].hasBeenCompleted == "0") || (questData[questId].isRepeatable == "1")) {
+            return true;
+        }
+    }
+    return false;
+}
 
 function openQuest(questId) {
 

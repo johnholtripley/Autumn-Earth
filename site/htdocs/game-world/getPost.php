@@ -99,17 +99,6 @@ $hasUnReadPost = true;
 $thisOpensQuest = '';
 if($opensQuest != '-1') {
 $thisOpensQuest = $opensQuest;
-$innerquery = "SELECT * from tblquestsstatus where charid='".$chr."' AND questid='".$opensQuest."'";
-$innerresult = mysqli_query($connection, $innerquery) or die ();
-if (mysqli_num_rows($innerresult)>0) {
-$innerrow = mysqli_fetch_array($innerresult);
-extract($innerrow);
-	
-	
-	if($hasBeenCompleted<1) {
-$thisOpensQuest = '';
-}
-}
 }
 
       $postPanelMarkup .= '<li ';
