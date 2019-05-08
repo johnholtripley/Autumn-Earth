@@ -1834,23 +1834,36 @@ return $globalPosX."_".$globalPosY;
 
 
 
-function createCatalogueMarkup($allIdsRequired, $catalogueName) {
+function createCatalogueMarkup($allIdsRequired, $catalogueName, $shouldShowImmediately) {
     global $connection;
-    // convert negatives to positives for thw query ########
+   
+
     $itemIdString = implode(", ", $allIdsRequired);
-$itemQuery = "SELECT * from tblinventoryitems where itemID in (".$itemIdString.")";
+     // convert negatives to positives for thw query:
+    $allPositiveIds = str_replace("-", "", $itemIdString);
+$itemQuery = "SELECT * from tblinventoryitems where itemID in (".$allPositiveIds.")";
 
 $itemResult = mysqli_query($connection,  $itemQuery ) or die ( "couldn't execute item query: ".$itemQuery );
 $numberofrows = mysqli_num_rows( $itemResult );
 $outputMarkup = '';
 if ( $numberofrows>0 ) {
-
-
-
-    $outputMarkup = '<div class="catalogue active"><div class="draggableBar">'.ucfirst(str_replace("-", " ", $catalogueName)).' catalogue</div><button class="closePanel">close</button><ul>';
+    $additionalClass = '';
+    if($shouldShowImmediately) {
+        $additionalClass = ' active';
+    }
+    $outputMarkup = '<div class="catalogue'.$additionalClass.'" id="catalogue'.$catalogueName.'"><div class="draggableBar">'.ucfirst(str_replace("-", " ", $catalogueName)).' catalogue</div><button class="closePanel">close</button><ul>';
     while ( $row = mysqli_fetch_array( $itemResult ) ) {
 extract($row);
- $outputMarkup .= '<li class="complete" data-id="'.$itemID.'">'.$shortname.'</li>';
+
+
+$isCompleteClass = '';
+// if the id passed in is negative, then this is complete:
+$negativeId = 0-$itemID;
+if (in_array($negativeId, $allIdsRequired)) {
+    $isCompleteClass = ' class="complete"';
+    }
+
+ $outputMarkup .= '<li'.$isCompleteClass.' data-id="'.$itemID.'">'.$shortname.'</li>';
 
     }
     $outputMarkup .= '</ul></div>';

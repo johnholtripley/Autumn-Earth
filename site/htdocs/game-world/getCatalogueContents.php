@@ -4,23 +4,14 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/signalnoise.php");
 include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
 include($_SERVER['DOCUMENT_ROOT']."/includes/functions.php");
 
-
-
 if(isset($_GET["itemIds"])) {
- 
 $idsRequired = $_GET["itemIds"];
-$allIdsRequired = explode("|",$idsRequired);
 $catalogueName = $_GET["name"];
+$allIdsRequired = explode("|",$idsRequired);
+$markupToOutput = createCatalogueMarkup($allIdsRequired, $catalogueName, 'active');
 
-echo createCatalogueMarkup($allIdsRequired, $catalogueName);
-
+echo '{"markup": "'.addcslashes($markupToOutput, '"\\/').'"}';
 
 } 
-
-
-
-
-
- 
  
 ?>

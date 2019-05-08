@@ -427,7 +427,7 @@ function inventoryItemAction(whichSlot, whichAction, allActionValues) {
                 case "collection":
                     // check if this zone key exists in the hero.collections object
                     if (hero.collections.hasOwnProperty(whichActionValue)) {
-                        // find  in the array and make it negative ####
+                        // find in the array and make it negative
                         var foundIndex = hero.collections[whichActionValue].required.indexOf(hero.inventory[whichSlotNumber].type);
                         if (foundIndex != -1) {
                             if (hero.collections[whichActionValue].required[foundIndex] > 0) {
@@ -439,6 +439,19 @@ function inventoryItemAction(whichSlot, whichAction, allActionValues) {
                                 UI.showNotification("<p>I already have that in a collection</p>");
                             }
                         }
+                    }
+                    break;
+                case "catalogue":
+                    var cataloguePanel = 'catalogue' + hero.inventory[whichSlotNumber].contains.catalogueName;
+                    if (document.getElementById(cataloguePanel)) {
+                        document.getElementById(cataloguePanel).classList.add('active');
+                        audio.playSound(soundEffects['bookOpen'], 0);
+                    } else {
+                        // create the Catalogue if it doesn't already exist:  
+                        var newCatalogue = { "name": hero.inventory[whichSlotNumber].contains.catalogueName, "ids": hero.inventory[whichSlotNumber].contains.required }
+                        hero.catalogues.push(newCatalogue);
+                        // create panel:
+                        getCatalogueMarkup(hero.inventory[whichSlotNumber].contains.required.join("|"), hero.inventory[whichSlotNumber].contains.catalogueName);
                     }
                     break;
                 case "card":
@@ -483,20 +496,20 @@ function inventoryItemAction(whichSlot, whichAction, allActionValues) {
                                             UI.showNotification("<p>I already know that&hellip;</p>");
                                         }
                                         break;
-                                        case 'collection-quest':
-                                                 var collectionQuestZoneName = hero.inventory[whichSlotNumber].additional[thisProperty].zoneName;
-                                                 console.log(hero.inventory[whichSlotNumber].additional[thisProperty]);
-                // check if this zone key exists in the hero.collections object
-                if (!(hero.collections.hasOwnProperty(collectionQuestZoneName))) {
-             
-               
-                    // collection not started yet:
-             
-                    hero.collections[collectionQuestZoneName] = {};
-                    hero.collections[collectionQuestZoneName].required = hero.inventory[whichSlotNumber].additional[thisProperty].required;
-                    hero.collections[collectionQuestZoneName].complete = false;
-                    UI.initiateCollectionQuestPanel(collectionQuestZoneName);
-                }
+                                    case 'collection-quest':
+                                        var collectionQuestZoneName = hero.inventory[whichSlotNumber].additional[thisProperty].zoneName;
+                                        console.log(hero.inventory[whichSlotNumber].additional[thisProperty]);
+                                        // check if this zone key exists in the hero.collections object
+                                        if (!(hero.collections.hasOwnProperty(collectionQuestZoneName))) {
+
+
+                                            // collection not started yet:
+
+                                            hero.collections[collectionQuestZoneName] = {};
+                                            hero.collections[collectionQuestZoneName].required = hero.inventory[whichSlotNumber].additional[thisProperty].required;
+                                            hero.collections[collectionQuestZoneName].complete = false;
+                                            UI.initiateCollectionQuestPanel(collectionQuestZoneName);
+                                        }
                                         break;
                                 }
 

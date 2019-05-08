@@ -182,7 +182,7 @@ $theseCatalogues = json_decode($catalogues, true);
 
           for ($i=0;$i<count($theseCatalogues);$i++) {
        
-            echo createCatalogueMarkup($theseCatalogues[$i]['ids'], $theseCatalogues[$i]['name']);
+            echo createCatalogueMarkup($theseCatalogues[$i]['ids'], $theseCatalogues[$i]['name'],'false');
           }
         }
         }

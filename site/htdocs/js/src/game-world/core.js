@@ -1885,6 +1885,17 @@ function unlockInnerDoor(whichInnerDoor) {
     // play sound ####
 }
 
+
+function getCatalogueMarkup(itemIds, catalogueName) {
+    getJSON('http://develop.ae/game-world/getCatalogueContents.php?itemIds=' + itemIds + '&name=' + catalogueName, function(data) {
+        catalogueQuestPanels.insertAdjacentHTML('beforeend', data.markup);
+         audio.playSound(soundEffects['bookOpen'], 0);
+    }, function(status) {
+        // try again:
+        getCatalogueMarkup(itemIds, catalogueName);
+    });
+}
+
 function usedActiveTool() {
     var usedToolSuccessfully = false;
     if (hero.holding.type != "") {

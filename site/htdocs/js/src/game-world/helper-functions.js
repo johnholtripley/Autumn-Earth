@@ -915,6 +915,30 @@ var getJSONWithParams = function(url, params, successHandler, errorHandler) {
 
 
 
+function sendGetData(url) {
+        // send data to the server, and get a response:
+    var xhr = typeof XMLHttpRequest != 'undefined' ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
+    xhr.open('get', url, true);
+   xhr.onreadystatechange = function() {
+        var status;
+        var data;
+        // https://xhr.spec.whatwg.org/#dom-xmlhttprequest-readystate
+        if (xhr.readyState == 4) { // `DONE`
+            status = xhr.status;
+            var wasParsedOk = true;
+            if (status == 200) {
+                    data = xhr.responseText;
+                    successHandler && successHandler(data);
+            } else {
+                errorHandler && errorHandler(status);
+            }
+        }
+    };
+    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhr.send();
+}
+
+
 function sendDataWithoutNeedingAResponse(url) {
     // send data to the server, without needing to listen for a response:
     var xhr = typeof XMLHttpRequest != 'undefined' ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
