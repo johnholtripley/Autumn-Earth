@@ -238,7 +238,7 @@
             "isMoving": false,
             "speechIndex": 0,
             "speech": [
-                ["Start a collection - it's fun|Still a few to get I see|Fantastic, you got them all", "collection-quest-no-open", "the-barrow-mines", [44, 45, 46], [{"type":21,"quantity":2},{"type":9}]],["well done on your collection",""]
+                ["Start a collection - it's fun|I love a collection. If you complete one, please show me.|Fantastic, you got them all", "collection-quest-no-open", "the-barrow-mines", [44, 45, 46], [{"type":21,"quantity":2},{"type":9}]],["well done on your collection",""]
             ],
             "cardGameSpeech":
             {

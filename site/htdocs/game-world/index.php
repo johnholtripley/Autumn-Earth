@@ -1,6 +1,7 @@
 <?php
 include($_SERVER['DOCUMENT_ROOT']."/includes/signalnoise.php");
 include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
+include($_SERVER['DOCUMENT_ROOT']."/includes/functions.php");
 ?>
 <!doctype html>
 <html lang="en-gb">
@@ -22,7 +23,7 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
   <link rel="canonical" href="https://www.autumnearth.com/" itemprop="url">
   <link href="https://plus.google.com/+Autumnearth" rel="publisher">
   <meta name="robots" content="noodp,noydir">
-  <link href="https://fonts.googleapis.com/css?family=Lato%7CBree+Serif%7CIM+Fell+English" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Lato%7CBree+Serif%7CIM+Fell+English%7CPrincess+Sofia" rel="stylesheet">
   <?php
     $thisBuiltURL = "https://www.autumnearth.com/game-world/";
     $longDescription = "The game world of Autumn Earth";
@@ -162,6 +163,29 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/connect.php");
       echo '<p>'.base64_encode($collectionQuestLore).'</p>';
       echo '<ol></ol>';
       echo '</section>';
+      }
+      mysqli_free_result($result);
+      ?>
+    </div>
+
+    <div id="catalogueQuestPanels">
+      <?php
+      $query = "SELECT * from tblcharacters where charID='".$chr."'";
+      $result = mysqli_query($connection, $query);
+      if(mysqli_num_rows($result)>0) {
+        while ($row = mysqli_fetch_array($result)) {
+          extract($row);
+         if($catalogues != '[]') { 
+          
+
+$theseCatalogues = json_decode($catalogues, true);
+
+          for ($i=0;$i<count($theseCatalogues);$i++) {
+       
+            echo createCatalogueMarkup($theseCatalogues[$i]['ids'], $theseCatalogues[$i]['name']);
+          }
+        }
+        }
       }
       mysqli_free_result($result);
       ?>

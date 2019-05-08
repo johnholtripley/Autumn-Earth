@@ -67,6 +67,7 @@ $outputJSON .= '"npcsFollowing": '.$npcsFollowing.',';
 $outputJSON .= '"lineOfSightRange": '.$lineOfSightRange.',';
 $outputJSON .= '"retinueMapAreasRevealed": '.$retinueMapAreasRevealed.',';
 $outputJSON .= '"collections": '.$collections.',';
+$outputJSON .= '"catalogues": '.$catalogues.',';
 $outputJSON .= '"actions": '.$actions;
 $outputJSON .= '}';
 

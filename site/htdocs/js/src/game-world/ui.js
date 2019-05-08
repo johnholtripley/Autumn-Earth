@@ -146,6 +146,9 @@ var UI = {
                     if (thisAction == "treasureMap") {
                         UI.createTreasureMap(hero.inventory[thisSlotsID].contains);
                     }
+                    if (thisAction == "catalogue") {
+                        UI.createCatalogue(hero.inventory[thisSlotsID].contains);
+                    }
                 } else {
                     inventoryMarkup += '';
                 }
@@ -2605,5 +2608,8 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
         hireRetinueFollowerPanel.classList.remove('active');
         dialogue.classList.add("slowerFade");
         dialogue.classList.remove("active");
+    },
+    createCatalogue: function(catalogueObject) {
+        console.log("create catalogue",catalogueObject);
     }
 }

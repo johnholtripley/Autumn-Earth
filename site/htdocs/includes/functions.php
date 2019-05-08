@@ -1834,7 +1834,30 @@ return $globalPosX."_".$globalPosY;
 
 
 
+function createCatalogueMarkup($allIdsRequired, $catalogueName) {
+    global $connection;
+    // convert negatives to positives for thw query ########
+    $itemIdString = implode(", ", $allIdsRequired);
+$itemQuery = "SELECT * from tblinventoryitems where itemID in (".$itemIdString.")";
 
+$itemResult = mysqli_query($connection,  $itemQuery ) or die ( "couldn't execute item query: ".$itemQuery );
+$numberofrows = mysqli_num_rows( $itemResult );
+$outputMarkup = '';
+if ( $numberofrows>0 ) {
+
+
+
+    $outputMarkup = '<div class="catalogue active"><div class="draggableBar">'.ucfirst(str_replace("-", " ", $catalogueName)).' catalogue</div><button class="closePanel">close</button><ul>';
+    while ( $row = mysqli_fetch_array( $itemResult ) ) {
+extract($row);
+ $outputMarkup .= '<li class="complete" data-id="'.$itemID.'">'.$shortname.'</li>';
+
+    }
+    $outputMarkup .= '</ul></div>';
+}
+mysqli_free_result($itemResult);
+return $outputMarkup;
+}
 
 
 
