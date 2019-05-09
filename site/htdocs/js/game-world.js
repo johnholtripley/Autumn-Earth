@@ -3781,8 +3781,8 @@ function inventoryItemAction(whichSlot, whichAction, allActionValues) {
                         audio.playSound(soundEffects['bookOpen'], 0);
                     } else {
                         // create the Catalogue if it doesn't already exist:  
-                        var newCatalogue = { "name": hero.inventory[whichSlotNumber].contains.catalogueName, "ids": hero.inventory[whichSlotNumber].contains.required, "complete": false }
-                        hero.catalogues.push(newCatalogue);
+                        var newCatalogue = { "ids": hero.inventory[whichSlotNumber].contains.required, "complete": false }
+                        hero.catalogues[hero.inventory[whichSlotNumber].contains.catalogueName] = newCatalogue;
                         // create panel:
                         getCatalogueMarkup(hero.inventory[whichSlotNumber].contains.required.join("|"), hero.inventory[whichSlotNumber].contains.catalogueName);
                     }
@@ -7028,19 +7028,16 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
 
                         var additionalText = '';
                         // check if it's required for a catalogue quest:
-                        for (var i = 0; i < hero.catalogues.length; i++) {
+                        for (var i in hero.catalogues) {
+                            console.log(hero.catalogues[i]);
                             if (!hero.catalogues[i].completed) {
                                 var indexPosition = hero.catalogues[i].ids.indexOf(foundItem.type);
                                 if (indexPosition !== -1) {
                                     // strike off the list visually:
-                                    document.querySelector("#catalogue" + hero.catalogues[i].name + " li[data-id='" + foundItem.type + "']").classList.add('complete');
+                                    document.querySelector("#catalogue" + i + " li[data-id='" + foundItem.type + "']").classList.add('complete');
                                     additionalText = '&mdash;I needed that for a catalogue';
-
-hero.catalogues[i].ids[indexPosition] = 0-foundItem.type;
-console.log(hero.catalogues);
-
+                                    hero.catalogues[i].ids[indexPosition] = 0 - foundItem.type;
                                 }
-
                             }
                         }
                         UI.showNotification("<p>That's a " + currentActiveInventoryItems[foundItem.type].shortname + additionalText + ".</p>");
@@ -9752,7 +9749,7 @@ function unlockInnerDoor(whichInnerDoor) {
 function getCatalogueMarkup(itemIds, catalogueName) {
     getJSON('http://develop.ae/game-world/getCatalogueContents.php?itemIds=' + itemIds + '&name=' + catalogueName, function(data) {
         catalogueQuestPanels.insertAdjacentHTML('beforeend', data.markup);
-         audio.playSound(soundEffects['bookOpen'], 0);
+        audio.playSound(soundEffects['bookOpen'], 0);
     }, function(status) {
         // try again:
         getCatalogueMarkup(itemIds, catalogueName);
@@ -10114,15 +10111,35 @@ function processSpeech(thisObjectSpeaking, thisSpeechPassedIn, thisSpeechCode, i
                 thisObjectSpeaking.speechIndex--;
                 break;
 
-case "catalogue":
-    var catalogueQuestSpeech = thisSpeech.split("|");
+            case "catalogue":
+                var catalogueQuestSpeech = thisSpeech.split("|");
                 var catalogueQuestName = thisObjectSpeaking.speech[thisObjectSpeaking.speechIndex][2];
+                console.log(catalogueQuestName);
                 // check if this zone key exists in the hero object
                 if (hero.catalogues.hasOwnProperty(catalogueQuestName)) {
                     // #### john
+
+
+                    var foundAPositive = false;
+                    for (var j in hero.catalogues[catalogueQuestName].ids) {
+                        if (hero.catalogues[catalogueQuestName].ids[j] > 0) {
+                            foundAPositive = true;
+                            break;
+                        }
+                    }
+                    if (foundAPositive) {
+                        // not complete yet:
+                        // thisSpeech = collectionQuestSpeech[1];
+                        console.log("active, but not complete yet");
+                    } else {
+                        console.log("it's complete");
+                    }
+
+                } else {
+                    console.log("not open yet");
                 }
-thisObjectSpeaking.speechIndex--;
-break;
+                thisObjectSpeaking.speechIndex--;
+                break;
 
 
             case "quest":

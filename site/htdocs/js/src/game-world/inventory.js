@@ -448,8 +448,8 @@ function inventoryItemAction(whichSlot, whichAction, allActionValues) {
                         audio.playSound(soundEffects['bookOpen'], 0);
                     } else {
                         // create the Catalogue if it doesn't already exist:  
-                        var newCatalogue = { "name": hero.inventory[whichSlotNumber].contains.catalogueName, "ids": hero.inventory[whichSlotNumber].contains.required, "complete": false }
-                        hero.catalogues.push(newCatalogue);
+                        var newCatalogue = { "ids": hero.inventory[whichSlotNumber].contains.required, "complete": false }
+                        hero.catalogues[hero.inventory[whichSlotNumber].contains.catalogueName] = newCatalogue;
                         // create panel:
                         getCatalogueMarkup(hero.inventory[whichSlotNumber].contains.required.join("|"), hero.inventory[whichSlotNumber].contains.catalogueName);
                     }

@@ -1877,19 +1877,16 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
 
                         var additionalText = '';
                         // check if it's required for a catalogue quest:
-                        for (var i = 0; i < hero.catalogues.length; i++) {
+                        for (var i in hero.catalogues) {
+                            console.log(hero.catalogues[i]);
                             if (!hero.catalogues[i].completed) {
                                 var indexPosition = hero.catalogues[i].ids.indexOf(foundItem.type);
                                 if (indexPosition !== -1) {
                                     // strike off the list visually:
-                                    document.querySelector("#catalogue" + hero.catalogues[i].name + " li[data-id='" + foundItem.type + "']").classList.add('complete');
+                                    document.querySelector("#catalogue" + i + " li[data-id='" + foundItem.type + "']").classList.add('complete');
                                     additionalText = '&mdash;I needed that for a catalogue';
-
-hero.catalogues[i].ids[indexPosition] = 0-foundItem.type;
-console.log(hero.catalogues);
-
+                                    hero.catalogues[i].ids[indexPosition] = 0 - foundItem.type;
                                 }
-
                             }
                         }
                         UI.showNotification("<p>That's a " + currentActiveInventoryItems[foundItem.type].shortname + additionalText + ".</p>");

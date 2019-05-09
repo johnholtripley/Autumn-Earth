@@ -1889,7 +1889,7 @@ function unlockInnerDoor(whichInnerDoor) {
 function getCatalogueMarkup(itemIds, catalogueName) {
     getJSON('http://develop.ae/game-world/getCatalogueContents.php?itemIds=' + itemIds + '&name=' + catalogueName, function(data) {
         catalogueQuestPanels.insertAdjacentHTML('beforeend', data.markup);
-         audio.playSound(soundEffects['bookOpen'], 0);
+        audio.playSound(soundEffects['bookOpen'], 0);
     }, function(status) {
         // try again:
         getCatalogueMarkup(itemIds, catalogueName);
@@ -2251,15 +2251,35 @@ function processSpeech(thisObjectSpeaking, thisSpeechPassedIn, thisSpeechCode, i
                 thisObjectSpeaking.speechIndex--;
                 break;
 
-case "catalogue":
-    var catalogueQuestSpeech = thisSpeech.split("|");
+            case "catalogue":
+                var catalogueQuestSpeech = thisSpeech.split("|");
                 var catalogueQuestName = thisObjectSpeaking.speech[thisObjectSpeaking.speechIndex][2];
+                console.log(catalogueQuestName);
                 // check if this zone key exists in the hero object
                 if (hero.catalogues.hasOwnProperty(catalogueQuestName)) {
                     // #### john
+
+
+                    var foundAPositive = false;
+                    for (var j in hero.catalogues[catalogueQuestName].ids) {
+                        if (hero.catalogues[catalogueQuestName].ids[j] > 0) {
+                            foundAPositive = true;
+                            break;
+                        }
+                    }
+                    if (foundAPositive) {
+                        // not complete yet:
+                        // thisSpeech = collectionQuestSpeech[1];
+                        console.log("active, but not complete yet");
+                    } else {
+                        console.log("it's complete");
+                    }
+
+                } else {
+                    console.log("not open yet");
                 }
-thisObjectSpeaking.speechIndex--;
-break;
+                thisObjectSpeaking.speechIndex--;
+                break;
 
 
             case "quest":
