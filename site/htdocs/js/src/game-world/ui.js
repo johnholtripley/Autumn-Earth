@@ -1878,7 +1878,7 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
                         var additionalText = '';
                         // check if it's required for a catalogue quest:
                         for (var i in hero.catalogues) {
-                            console.log(hero.catalogues[i]);
+                          
                             if (!hero.catalogues[i].completed) {
                                 var indexPosition = hero.catalogues[i].ids.indexOf(foundItem.type);
                                 if (indexPosition !== -1) {

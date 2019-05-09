@@ -338,7 +338,8 @@
                 "isCollidable": true,
                 "isMoving": false,
                 "speech": [
-                    ["Welcome ##characterClass##, let's check your catalogue&hellip;", "catalogue", "common-plants"]
+                    ["Hmm, come and speak to when you have a catalogue started|Still a few more to get|Ah, wonderful - you've got them all", "catalogue", "common-plants", [{"type":2}]],
+                    ["thanks for doing that for me", ""]
                 ],
                 "cardGameSpeech":
                 {

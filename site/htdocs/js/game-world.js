@@ -7029,7 +7029,7 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
                         var additionalText = '';
                         // check if it's required for a catalogue quest:
                         for (var i in hero.catalogues) {
-                            console.log(hero.catalogues[i]);
+                          
                             if (!hero.catalogues[i].completed) {
                                 var indexPosition = hero.catalogues[i].ids.indexOf(foundItem.type);
                                 if (indexPosition !== -1) {
@@ -10114,10 +10114,10 @@ function processSpeech(thisObjectSpeaking, thisSpeechPassedIn, thisSpeechCode, i
             case "catalogue":
                 var catalogueQuestSpeech = thisSpeech.split("|");
                 var catalogueQuestName = thisObjectSpeaking.speech[thisObjectSpeaking.speechIndex][2];
-                console.log(catalogueQuestName);
+           
                 // check if this zone key exists in the hero object
                 if (hero.catalogues.hasOwnProperty(catalogueQuestName)) {
-                    // #### john
+                  
 
 
                     var foundAPositive = false;
@@ -10129,14 +10129,24 @@ function processSpeech(thisObjectSpeaking, thisSpeechPassedIn, thisSpeechCode, i
                     }
                     if (foundAPositive) {
                         // not complete yet:
-                        // thisSpeech = collectionQuestSpeech[1];
-                        console.log("active, but not complete yet");
+                         thisSpeech = catalogueQuestSpeech[1];
+                      
                     } else {
-                        console.log("it's complete");
+                        //is complete
+                        thisSpeech = catalogueQuestSpeech[2];
+
+                     
+var thisFullSpeech = thisObjectSpeaking.speech[thisObjectSpeaking.speechIndex];
+                     
+                        if (typeof thisFullSpeech[3] !== "undefined") {
+                        awardQuestRewards(thisObjectSpeaking, thisFullSpeech[3], false);
+                    }
+                          hero.catalogues[catalogueQuestName].complete = true;
+                           thisObjectSpeaking.speech.splice(thisObjectSpeaking.speechIndex, 1);
                     }
 
                 } else {
-                    console.log("not open yet");
+                    thisSpeech = catalogueQuestSpeech[0];
                 }
                 thisObjectSpeaking.speechIndex--;
                 break;
