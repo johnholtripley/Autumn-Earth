@@ -10110,16 +10110,33 @@ function processSpeech(thisObjectSpeaking, thisSpeechPassedIn, thisSpeechCode, i
                 }
                 thisObjectSpeaking.speechIndex--;
                 break;
+            case "give":
+                var thisGiveSpeech = thisSpeech.split("|");
+                var itemsToAdd = thisObjectSpeaking.speech[thisObjectSpeaking.speechIndex][2];
+                var allItemsToGive = [];
+                for (var l = 0; l < itemsToAdd.length; l++) {
+                    var thisRewardObject = prepareInventoryObject(itemsToAdd[l]);
+                    allItemsToGive.push(thisRewardObject);
+                }
+                inventoryCheck = canAddItemToInventory(allItemsToGive);
+                if (inventoryCheck[0]) {
+                    thisSpeech = thisGiveSpeech[0];
+                    UI.showChangeInInventory(inventoryCheck[1]);
+                    thisObjectSpeaking.speech.splice(thisObjectSpeaking.speechIndex, 1);
+                    // knock this back one so to keep it in step with the removed item:
+                    thisObjectSpeaking.speechIndex--;
+                } else {
+                    thisSpeech = thisGiveSpeech[1];
+                    // keep the NPC trying to give the item:
+                    thisObjectSpeaking.speechIndex--;
+                }
+                break;
 
             case "catalogue":
                 var catalogueQuestSpeech = thisSpeech.split("|");
                 var catalogueQuestName = thisObjectSpeaking.speech[thisObjectSpeaking.speechIndex][2];
-           
                 // check if this zone key exists in the hero object
                 if (hero.catalogues.hasOwnProperty(catalogueQuestName)) {
-                  
-
-
                     var foundAPositive = false;
                     for (var j in hero.catalogues[catalogueQuestName].ids) {
                         if (hero.catalogues[catalogueQuestName].ids[j] > 0) {
@@ -10129,28 +10146,30 @@ function processSpeech(thisObjectSpeaking, thisSpeechPassedIn, thisSpeechCode, i
                     }
                     if (foundAPositive) {
                         // not complete yet:
-                         thisSpeech = catalogueQuestSpeech[1];
-                      
+                        thisSpeech = catalogueQuestSpeech[1];
                     } else {
-                        //is complete
+                        // is complete
                         thisSpeech = catalogueQuestSpeech[2];
-
-                     
-var thisFullSpeech = thisObjectSpeaking.speech[thisObjectSpeaking.speechIndex];
-                     
+                        var thisFullSpeech = thisObjectSpeaking.speech[thisObjectSpeaking.speechIndex];
                         if (typeof thisFullSpeech[3] !== "undefined") {
-                        awardQuestRewards(thisObjectSpeaking, thisFullSpeech[3], false);
+                            awardQuestRewards(thisObjectSpeaking, thisFullSpeech[3], false);
+                        }
+                        hero.catalogues[catalogueQuestName].complete = true;
+                        thisObjectSpeaking.speech.splice(thisObjectSpeaking.speechIndex, 1);
+                        // find the catalogue item in the inventory and remove it:
+                        for (var key in hero.inventory) {
+if(hero.inventory[key].type == 84) {
+if(hero.inventory[key].contains.catalogueName == catalogueQuestName) {
+removeFromInventory(key, 1);
+}
+}
+                        }
                     }
-                          hero.catalogues[catalogueQuestName].complete = true;
-                           thisObjectSpeaking.speech.splice(thisObjectSpeaking.speechIndex, 1);
-                    }
-
                 } else {
                     thisSpeech = catalogueQuestSpeech[0];
                 }
                 thisObjectSpeaking.speechIndex--;
                 break;
-
 
             case "quest":
             case "quest-no-open":
@@ -10167,7 +10186,7 @@ var thisFullSpeech = thisObjectSpeaking.speech[thisObjectSpeaking.speechIndex];
                 }
 
 
-                console.log(questData[questId].isUnderway);
+                //   console.log(questData[questId].isUnderway);
 
                 if (questData[questId].isUnderway) {
                     // quest has been opened - check if it's complete:

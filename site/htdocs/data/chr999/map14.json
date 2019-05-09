@@ -325,7 +325,7 @@
                 "src": "labourer3.png",
                 "width": 20,
                 "length": 20,
-                     "spriteWidth": 75,
+                "spriteWidth": 75,
                 "spriteHeight": 85,
                 "centreX": 56,
                 "centreY": 73,
@@ -338,8 +338,9 @@
                 "isCollidable": true,
                 "isMoving": false,
                 "speech": [
-                    ["Hmm, come and speak to when you have a catalogue started|Still a few more to get|Ah, wonderful - you've got them all", "catalogue", "common-plants", [{"type":2}]],
-                    ["thanks for doing that for me", ""]
+                ["Can you review a few items for me please?|Come back when you've got room for the catalogue", "give", [{"type":84,"quantity":1,"contains":{"catalogueName":"common-items","required":[18,56]}}]],
+                    ["Hmm, come and speak to when you have a catalogue started|Still a few more to get|Ah, wonderful - you've got them all", "catalogue", "common-items", [{"type":2}]],
+                    ["thanks for doing that for me ##characterName##", ""]
                 ],
                 "cardGameSpeech":
                 {
