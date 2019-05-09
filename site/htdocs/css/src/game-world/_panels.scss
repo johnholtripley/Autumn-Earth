@@ -866,16 +866,17 @@ font-size: 0;
                 @include transform(rotate(-1deg));
             }
 
-            &.complete {
-                &:after {
+  &:after {
                     content: "";
                     display: block;
-                    width: 120%;
+                    width: 0%;
                     position: absolute;
-                    left: -10%;
+                    right: -10%;
+                    @include transition(width 0.4s ease);
                     top: 50%;
                     border-bottom: 1px solid #000;
                     @include transform(rotate(-1.5deg));
+                    @include transform-origin(100% 0);
                 }
 
                 &:nth-of-type(2n):after {
@@ -886,6 +887,10 @@ font-size: 0;
                     transform: rotate(3deg);
                 }
 
+
+            &.complete:after {
+              
+width: 120%;
 
             }
         }

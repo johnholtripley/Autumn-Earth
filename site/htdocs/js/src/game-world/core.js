@@ -2251,7 +2251,15 @@ function processSpeech(thisObjectSpeaking, thisSpeechPassedIn, thisSpeechCode, i
                 thisObjectSpeaking.speechIndex--;
                 break;
 
-
+case "catalogue":
+    var catalogueQuestSpeech = thisSpeech.split("|");
+                var catalogueQuestName = thisObjectSpeaking.speech[thisObjectSpeaking.speechIndex][2];
+                // check if this zone key exists in the hero object
+                if (hero.catalogues.hasOwnProperty(catalogueQuestName)) {
+                    // #### john
+                }
+thisObjectSpeaking.speechIndex--;
+break;
 
 
             case "quest":

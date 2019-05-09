@@ -147,7 +147,7 @@ var UI = {
                     if (thisAction == "treasureMap") {
                         UI.createTreasureMap(hero.inventory[thisSlotsID].contains);
                     }
-                   
+
                 } else {
                     inventoryMarkup += '';
                 }
@@ -375,7 +375,7 @@ var UI = {
         //    } else {
 
         var thisNode = getNearestParentId(e.target);
-       
+
         if (thisNode.id.substring(0, 6) == "recipe") {
             recipeSelectComponents(thisNode.id);
         } else if (thisNode.id.substring(0, 4) == "shop") {
@@ -1818,7 +1818,7 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
                     break;
 
                 case "plant-breeding":
-                    // #######
+
                     if (activeAction == "survey") {
                         surveyingStopped();
                     }
@@ -1865,6 +1865,35 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
                     break;
                 case "mount":
                     // ###
+                    break;
+                case "identify":
+                    if (activeAction == "survey") {
+                        surveyingStopped();
+                    }
+                    var foundItem = findItemWithinArmsLength();
+                    if (foundItem != null) {
+
+
+
+                        var additionalText = '';
+                        // check if it's required for a catalogue quest:
+                        for (var i = 0; i < hero.catalogues.length; i++) {
+                            if (!hero.catalogues[i].completed) {
+                                var indexPosition = hero.catalogues[i].ids.indexOf(foundItem.type);
+                                if (indexPosition !== -1) {
+                                    // strike off the list visually:
+                                    document.querySelector("#catalogue" + hero.catalogues[i].name + " li[data-id='" + foundItem.type + "']").classList.add('complete');
+                                    additionalText = '&mdash;I needed that for a catalogue';
+
+hero.catalogues[i].ids[indexPosition] = 0-foundItem.type;
+console.log(hero.catalogues);
+
+                                }
+
+                            }
+                        }
+                        UI.showNotification("<p>That's a " + currentActiveInventoryItems[foundItem.type].shortname + additionalText + ".</p>");
+                    }
                     break;
             }
         }
@@ -2023,10 +2052,10 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
         }
         if (thisElement.hasAttribute('data-quest')) {
             var whichQuest = thisElement.getAttribute('data-quest');
-         if(canOpenQuest(whichQuest)) {
-        openQuest(whichQuest);
-        }
-        
+            if (canOpenQuest(whichQuest)) {
+                openQuest(whichQuest);
+            }
+
 
         }
         var correspondingPostMessage = "postMessage" + whichElement.substr(4);
@@ -2598,10 +2627,10 @@ textToShow = '<span>'+thisObjectSpeaking.name+'</span>'+textToShow;
 
 
 
-        hireRetinueFollowerPanelContent.innerHTML = '<img src="/images/retinue/'+whichNPC.followerId+'.png" alt="">Would you like to hire ' + whichNPC.name + '?';
-        
+        hireRetinueFollowerPanelContent.innerHTML = '<img src="/images/retinue/' + whichNPC.followerId + '.png" alt="">Would you like to hire ' + whichNPC.name + '?';
+
         hireRetinueFollowerPanel.classList.add('active');
-        hireRetinueFollowerPanel.setAttribute('data-NPC',whichNPC.uniqueIndex);
+        hireRetinueFollowerPanel.setAttribute('data-NPC', whichNPC.uniqueIndex);
     },
     closeHireFollowerPanel: function() {
         hireRetinueFollowerPanel.classList.remove('active');
