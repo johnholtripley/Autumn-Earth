@@ -23,7 +23,7 @@ include($_SERVER['DOCUMENT_ROOT']."/includes/functions.php");
   <link rel="canonical" href="https://www.autumnearth.com/" itemprop="url">
   <link href="https://plus.google.com/+Autumnearth" rel="publisher">
   <meta name="robots" content="noodp,noydir">
-  <link href="https://fonts.googleapis.com/css?family=Lato%7CBree+Serif%7CIM+Fell+English%7CPrincess+Sofia" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Lato%7CBree+Serif%7CIM+Fell+English%7CPrincess+Sofia&amp;font-display=swap" rel="stylesheet">
   <?php
     $thisBuiltURL = "https://www.autumnearth.com/game-world/";
     $longDescription = "The game world of Autumn Earth";

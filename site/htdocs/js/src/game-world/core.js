@@ -2298,11 +2298,12 @@ function processSpeech(thisObjectSpeaking, thisSpeechPassedIn, thisSpeechCode, i
                         thisObjectSpeaking.speech.splice(thisObjectSpeaking.speechIndex, 1);
                         // find the catalogue item in the inventory and remove it:
                         for (var key in hero.inventory) {
-if(hero.inventory[key].type == 84) {
-if(hero.inventory[key].contains.catalogueName == catalogueQuestName) {
-removeFromInventory(key, 1);
-}
-}
+                            if (hero.inventory[key].type == 84) {
+                                if (hero.inventory[key].contains.catalogueName == catalogueQuestName) {
+                                    removeFromInventory(key, 1);
+                                    break;
+                                }
+                            }
                         }
                     }
                 } else {

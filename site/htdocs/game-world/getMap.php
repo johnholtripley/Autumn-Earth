@@ -251,7 +251,7 @@ for ($j=0;$j<count($activeEvents);$j++) {
 // loop through doors and if pointing to an overWorld map, then change the coords to global:
 
 
-
+if($map > 0) {
 foreach ($mapData['map']['doors'] as $key => $value) {
     // load this map and check if it's an over world map or not:
 if($value['map']>0) {
@@ -274,6 +274,7 @@ $mapData['map']['doors'][$key]['startX'] += $thisDoorGlobalPosition[0] * $worldM
 }
 
     }
+}
 
 
 

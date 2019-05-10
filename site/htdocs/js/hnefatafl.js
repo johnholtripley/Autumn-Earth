@@ -88,3 +88,15 @@ function gameLoop() {
 }
 
 
+function hnefataflPlayer2Wins() {
+
+}
+
+function hnefataflPlayer1Wins() {
+    
+}
+
+
+function hnefataflIsDrawn() {
+    
+}

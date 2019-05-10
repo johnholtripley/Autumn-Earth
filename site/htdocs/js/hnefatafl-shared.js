@@ -87,101 +87,122 @@ var hnefataflNameSpace = {
     },
 
     canvasClick: function(e) {
+        var currentPlayerCanClick = true;
+        if (hnefataflNameSpace.isPlayer1AI) {
+            if (hnefataflNameSpace.player1 == hnefataflNameSpace.currentPlayer) {
+                currentPlayerCanClick = false;
+            }
+        }
+
         if (e) {
             e.preventDefault();
         }
-        var x = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
-        var y = e.clientY + document.body.scrollTop + document.documentElement.scrollTop - hnefataflNameSpace.pageLoadScroll;
-        switch (hnefataflNameSpace.gameMode) {
-            case "play":
-            case "hnefataflGame":
+        if (currentPlayerCanClick) {
+            var x = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
+            var y = e.clientY + document.body.scrollTop + document.documentElement.scrollTop - hnefataflNameSpace.pageLoadScroll;
+            switch (hnefataflNameSpace.gameMode) {
+                case "play":
+                case "hnefataflGame":
 
-                var positionOnCanvasX = x - hnefataflNameSpace.outerCanvasLeft;
-                var positionOnCanvasY = y - hnefataflNameSpace.outerCanvasTop;
+                    var positionOnCanvasX = x - hnefataflNameSpace.outerCanvasLeft;
+                    var positionOnCanvasY = y - hnefataflNameSpace.outerCanvasTop;
 
-                var tileX = Math.floor(((hnefataflNameSpace.scale * positionOnCanvasX) - hnefataflNameSpace.boardInset) / hnefataflNameSpace.squareSize);
-                var tileY = Math.floor(((hnefataflNameSpace.scale * positionOnCanvasY) - hnefataflNameSpace.boardInset) / hnefataflNameSpace.squareSize);
+                    var tileX = Math.floor(((hnefataflNameSpace.scale * positionOnCanvasX) - hnefataflNameSpace.boardInset) / hnefataflNameSpace.squareSize);
+                    var tileY = Math.floor(((hnefataflNameSpace.scale * positionOnCanvasY) - hnefataflNameSpace.boardInset) / hnefataflNameSpace.squareSize);
 
-                if (hnefataflNameSpace.board[tileY][tileX].toLowerCase() == hnefataflNameSpace.currentPlayer) {
-                    //check who's go it is:
+                    if (hnefataflNameSpace.board[tileY][tileX].toLowerCase() == hnefataflNameSpace.currentPlayer) {
+                        //check who's go it is:
 
 
-                    hnefataflNameSpace.highlightSquare = [tileX, tileY];
+                        hnefataflNameSpace.highlightSquare = [tileX, tileY];
 
-                } else {
-                    if (hnefataflNameSpace.highlightSquare.length > 0) {
-                        // check it's a legal move:
-                        var isALegalMove = false;
-                        var movingFromX = hnefataflNameSpace.highlightSquare[0];
-                        var movingFromY = hnefataflNameSpace.highlightSquare[1];
-                        console.log("moving from " + movingFromX + "," + movingFromY + " to " + tileX + "," + tileY);
-                        // it's in a straight line:
-                        if (tileY == hnefataflNameSpace.highlightSquare[1]) {
-                            // check it's not blocked
-                            isALegalMove = true;
-                            // needs to check the appropriate direction:
-                            if (tileX > movingFromX) {
+                    } else {
+                        if (hnefataflNameSpace.highlightSquare.length > 0) {
+                            // check it's a legal move:
+                            var isALegalMove = false;
+                            var movingFromX = hnefataflNameSpace.highlightSquare[0];
+                            var movingFromY = hnefataflNameSpace.highlightSquare[1];
+                            console.log("moving from " + movingFromX + "," + movingFromY + " to " + tileX + "," + tileY);
+                            // it's in a straight line:
+                            if (tileY == hnefataflNameSpace.highlightSquare[1]) {
+                                // check it's not blocked
+                                isALegalMove = true;
+                                // needs to check the appropriate direction:
+                                if (tileX > movingFromX) {
 
-                                for (var i = movingFromX + 1; i <= tileX; i++) {
-                                    console.log("checking " + i + "," + tileY + " : " + hnefataflNameSpace.board[tileY][i]);
-                                    if (hnefataflNameSpace.board[tileY][i] != '0') {
-                                        isALegalMove = false;
+                                    for (var i = movingFromX + 1; i <= tileX; i++) {
+                                        console.log("checking " + i + "," + tileY + " : " + hnefataflNameSpace.board[tileY][i]);
+                                        if (hnefataflNameSpace.board[tileY][i] != '0') {
+                                            isALegalMove = false;
+                                        }
+                                    }
+                                } else {
+
+                                    for (var i = tileX; i < movingFromX; i++) {
+                                        console.log("checking " + i + "," + tileY + " : " + hnefataflNameSpace.board[tileY][i]);
+                                        if (hnefataflNameSpace.board[tileY][i] != '0') {
+                                            isALegalMove = false;
+                                        }
                                     }
                                 }
-                            } else {
-
-                                for (var i = tileX; i < movingFromX; i++) {
-                                    console.log("checking " + i + "," + tileY + " : " + hnefataflNameSpace.board[tileY][i]);
-                                    if (hnefataflNameSpace.board[tileY][i] != '0') {
-                                        isALegalMove = false;
+                            } else if (tileX == hnefataflNameSpace.highlightSquare[0]) {
+                                isALegalMove = true;
+                                // needs to check the appropriate direction:
+                                if (tileY > movingFromY) {
+                                    for (var i = movingFromY + 1; i <= tileY; i++) {
+                                        console.log("checking " + tileX + "," + i + " : " + hnefataflNameSpace.board[i][tileX]);
+                                        if (hnefataflNameSpace.board[i][tileX] != '0') {
+                                            isALegalMove = false;
+                                        }
+                                    }
+                                } else {
+                                    for (var i = tileY; i < movingFromY; i++) {
+                                        console.log("checking " + tileX + "," + i + " : " + hnefataflNameSpace.board[i][tileX]);
+                                        if (hnefataflNameSpace.board[i][tileX] != '0') {
+                                            isALegalMove = false;
+                                        }
                                     }
                                 }
                             }
-                        } else if (tileX == hnefataflNameSpace.highlightSquare[0]) {
-                            isALegalMove = true;
-                            // needs to check the appropriate direction:
-                            if (tileY > movingFromY) {
-                                for (var i = movingFromY + 1; i <= tileY; i++) {
-                                    console.log("checking " + tileX + "," + i + " : " + hnefataflNameSpace.board[i][tileX]);
-                                    if (hnefataflNameSpace.board[i][tileX] != '0') {
-                                        isALegalMove = false;
-                                    }
-                                }
-                            } else {
-                                for (var i = tileY; i < movingFromY; i++) {
-                                    console.log("checking " + tileX + "," + i + " : " + hnefataflNameSpace.board[i][tileX]);
-                                    if (hnefataflNameSpace.board[i][tileX] != '0') {
-                                        isALegalMove = false;
-                                    }
-                                }
+
+                            if (isALegalMove) {
+                                hnefataflNameSpace.makeMove(movingFromX, movingFromY, tileX, tileY);
                             }
                         }
-
-                        if (isALegalMove) {
-                            // move to that slot:
-                            hnefataflNameSpace.board[tileY][tileX] = hnefataflNameSpace.board[(hnefataflNameSpace.highlightSquare[1])][(hnefataflNameSpace.highlightSquare[0])];
-                            hnefataflNameSpace.board[(hnefataflNameSpace.highlightSquare[1])][(hnefataflNameSpace.highlightSquare[0])] = '0';
-                            // [currentPosX, currentPosY, destinationPosX, destinationPosY]:
-                            hnefataflNameSpace.animatingPieces[tileX + "_" + tileY] = [hnefataflNameSpace.getTilePosition(movingFromX), hnefataflNameSpace.getTilePosition(movingFromY), hnefataflNameSpace.getTilePosition(tileX), hnefataflNameSpace.getTilePosition(tileY)];
-
-                            hnefataflNameSpace.checkForCapturedPieces(tileX, tileY, hnefataflNameSpace.currentPlayer);
-
-                            // swap who's go it is:
-                            if (hnefataflNameSpace.currentPlayer == "w") {
-                                hnefataflNameSpace.currentPlayer = "b";
-                            } else {
-                                hnefataflNameSpace.currentPlayer = "w";
-                            }
-
-                        }
+                        // de-select:
+                        hnefataflNameSpace.highlightSquare = [];
                     }
-                    // de-select:
-                    hnefataflNameSpace.highlightSquare = [];
-
-                }
-                // console.log(tileX,tileY,hnefataflNameSpace.board[tileY][tileX]);
+                    // console.log(tileX,tileY,hnefataflNameSpace.board[tileY][tileX]);
+            }
         }
     },
+
+
+    makeMove: function(fromX, fromY, toX, toY) {
+        // move to that slot:
+        hnefataflNameSpace.board[toY][toX] = hnefataflNameSpace.board[(fromY)][(fromX)];
+        hnefataflNameSpace.board[(fromY)][(fromX)] = '0';
+        // [currentPosX, currentPosY, destinationPosX, destinationPosY]:
+        hnefataflNameSpace.animatingPieces[toX + "_" + toY] = [hnefataflNameSpace.getTilePosition(fromX), hnefataflNameSpace.getTilePosition(fromY), hnefataflNameSpace.getTilePosition(toX), hnefataflNameSpace.getTilePosition(toY)];
+
+        hnefataflNameSpace.checkForCapturedPieces(toX, toY, hnefataflNameSpace.currentPlayer);
+
+        // swap who's go it is:
+        if (hnefataflNameSpace.currentPlayer == "w") {
+            hnefataflNameSpace.currentPlayer = "b";
+        } else {
+            hnefataflNameSpace.currentPlayer = "w";
+        }
+        /*
+                if (hnefataflNameSpace.isPlayer1AI) {
+                    if (hnefataflNameSpace.player1 == hnefataflNameSpace.currentPlayer) {
+                        hnefataflNameSpace.doAIMove();
+                    }
+                }
+          */
+    },
+
+
     checkVictoryConditions: function() {
         var foundTheKing = false;
         var kingIsOnAnEdge = false;
@@ -206,11 +227,11 @@ var hnefataflNameSpace = {
                 hnefataflPlayer1Wins();
             }
         }
-        if(kingIsOnAnEdge) {
+        if (kingIsOnAnEdge) {
             hnefataflNameSpace.gameMode = "gameover";
-               // show final board state:
+            // show final board state:
             hnefataflNameSpace.draw();
-             if (hnefataflNameSpace.player2 == "w") {
+            if (hnefataflNameSpace.player2 == "w") {
                 hnefataflPlayer2Wins();
             } else {
                 hnefataflPlayer1Wins();
@@ -240,11 +261,11 @@ var hnefataflNameSpace = {
             checkY = whichTileY + (directionsToCheck[i][0]);
             checkX = whichTileX + (directionsToCheck[i][1]);
 
-            if (checkX > 0 && checkY > 0 && checkX < hnefataflNameSpace.board.length && checkY < hnefataflNameSpace.board.length) {
+            if (checkX >= 0 && checkY >= 0 && checkX < hnefataflNameSpace.board.length && checkY < hnefataflNameSpace.board.length) {
                 if (hnefataflNameSpace.board[checkY][checkX].toLowerCase() == opposingPlayer) {
                     checkY2 = whichTileY + (directionsToCheck[i][0] * 2);
                     checkX2 = whichTileX + (directionsToCheck[i][1] * 2);
-                    if (checkX2 > 0 && checkY2 > 0 && checkX2 < hnefataflNameSpace.board.length && checkY2 < hnefataflNameSpace.board.length) {
+                    if (checkX2 >= 0 && checkY2 >= 0 && checkX2 < hnefataflNameSpace.board.length && checkY2 < hnefataflNameSpace.board.length) {
                         if (hnefataflNameSpace.board[checkY2][checkX2].toLowerCase() == whichPlayerMoved) {
                             // remove piece:
                             hnefataflNameSpace.piecesToRemove.push([checkX, checkY]);
@@ -293,13 +314,16 @@ var hnefataflNameSpace = {
         hnefataflNameSpace.player2 = "b";
         hnefataflNameSpace.isPlayer1AI = true;
         hnefataflNameSpace.aiIsWorking = -1;
-        hnefataflNameSpace.waitForDrawUpdate = false;
+        hnefataflNameSpace.AIisWaitingToMove = true;
 
         hnefataflNameSpace.whoCanClick = hnefataflNameSpace.currentPlayersTurn;
+
+
         hnefataflNameSpace.gameMode = "play";
         if (typeof gameMode !== "undefined") {
             gameMode = "hnefataflGame";
         }
+
     },
 
     draw: function() {
@@ -382,7 +406,74 @@ var hnefataflNameSpace = {
         }
     },
 
+
+
+    isEmpty: function(obj) {
+        for (var prop in obj) {
+            if (obj.hasOwnProperty(prop)) {
+                return false;
+            }
+        }
+
+        return JSON.stringify(obj) === JSON.stringify({});
+    },
+
+
     update: function() {
+
+        if (hnefataflNameSpace.isPlayer1AI) {
+            if (hnefataflNameSpace.player1 == hnefataflNameSpace.currentPlayer) {
+                if (hnefataflNameSpace.player1 == "w") {
+
+                    if (hnefataflNameSpace.AIisWaitingToMove) {
+
+                        hnefataflNameSpace.AIisWaitingToMove = false;
+                        hnefataflNameSpace.doAIMove();
+                    } else if (hnefataflNameSpace.isEmpty(hnefataflNameSpace.animatingPieces)) {
+                        hnefataflNameSpace.AIisWaitingToMove = true;
+                    }
+                }
+            }
+        }
+    },
+
+    doAIMove: function() {
+        console.log("ai go");
+
+
+
+
+        // find random piece:
+        var directionsToCheck = [
+            [-1, 0],
+            [1, 0],
+            [0, -1],
+            [0, 1]
+        ];
+        var destX, destY, moveX, moveY, checkY, checkX;
+        for (var i = 0; i < hnefataflNameSpace.board.length; i++) {
+            for (var j = 0; j < hnefataflNameSpace.board[0].length; j++) {
+                if (hnefataflNameSpace.board[i][j].toLowerCase() == hnefataflNameSpace.player1) {
+                    for (var k = 0; k < directionsToCheck.length; k++) {
+                        checkY = i + (directionsToCheck[k][0]);
+                        checkX = j + (directionsToCheck[k][1]);
+                        if (checkX >= 0 && checkY >= 0 && checkX < hnefataflNameSpace.board.length && checkY < hnefataflNameSpace.board.length) {
+                            if (hnefataflNameSpace.board[checkY][checkX] == '0') {
+                                destX = checkX;
+                                destY = checkY;
+                                moveX = j;
+                                moveY = i;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+
+
+        hnefataflNameSpace.makeMove(moveX, moveY, destX, destY);
+
 
     }
 };
