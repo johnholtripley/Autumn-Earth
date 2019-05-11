@@ -1,7 +1,6 @@
 'use strict';
 // core game code shared between in-game world and standalone game
 
-
 if (window.Worker) {
     var hnefataflWorker = new Worker('/js/worker-hnefatafl.js');
     hnefataflWorker.onmessage = function(e) {
@@ -9,7 +8,6 @@ if (window.Worker) {
         hnefataflNameSpace.makeMove(e.data[0], e.data[1], e.data[2], e.data[3]);
     }
 }
-
 
 // name space the game code so it doesn't cause conflicts with the game code:
 var hnefataflNameSpace = {
@@ -103,7 +101,6 @@ var hnefataflNameSpace = {
                 currentPlayerCanClick = false;
             }
         }
-
         if (e) {
             e.preventDefault();
         }
@@ -113,19 +110,13 @@ var hnefataflNameSpace = {
             switch (hnefataflNameSpace.gameMode) {
                 case "play":
                 case "hnefataflGame":
-
                     var positionOnCanvasX = x - hnefataflNameSpace.outerCanvasLeft;
                     var positionOnCanvasY = y - hnefataflNameSpace.outerCanvasTop;
-
                     var tileX = Math.floor(((hnefataflNameSpace.scale * positionOnCanvasX) - hnefataflNameSpace.boardInset) / hnefataflNameSpace.squareSize);
                     var tileY = Math.floor(((hnefataflNameSpace.scale * positionOnCanvasY) - hnefataflNameSpace.boardInset) / hnefataflNameSpace.squareSize);
-
                     if (hnefataflNameSpace.board[tileY][tileX].toLowerCase() == hnefataflNameSpace.currentPlayer) {
                         //check who's go it is:
-
-
                         hnefataflNameSpace.highlightSquare = [tileX, tileY];
-
                     } else {
                         if (hnefataflNameSpace.highlightSquare.length > 0) {
                             // check it's a legal move:
@@ -134,7 +125,7 @@ var hnefataflNameSpace = {
                             var movingFromY = hnefataflNameSpace.highlightSquare[1];
                             console.log("moving from " + movingFromX + "," + movingFromY + " to " + tileX + "," + tileY);
                             // it's in a straight line:
-                            if (tileY == hnefataflNameSpace.highlightSquare[1]) {
+                            if (tileY == movingFromY) {
                                 // check it's not blocked
                                 isALegalMove = true;
                                 // needs to check the appropriate direction:
@@ -155,7 +146,7 @@ var hnefataflNameSpace = {
                                         }
                                     }
                                 }
-                            } else if (tileX == hnefataflNameSpace.highlightSquare[0]) {
+                            } else if (tileX == movingFromX) {
                                 isALegalMove = true;
                                 // needs to check the appropriate direction:
                                 if (tileY > movingFromY) {
@@ -174,7 +165,6 @@ var hnefataflNameSpace = {
                                     }
                                 }
                             }
-
                             if (isALegalMove) {
                                 hnefataflNameSpace.makeMove(movingFromX, movingFromY, tileX, tileY);
                             }
@@ -182,7 +172,6 @@ var hnefataflNameSpace = {
                         // de-select:
                         hnefataflNameSpace.highlightSquare = [];
                     }
-                    // console.log(tileX,tileY,hnefataflNameSpace.board[tileY][tileX]);
             }
         }
     },
@@ -203,15 +192,7 @@ var hnefataflNameSpace = {
         } else {
             hnefataflNameSpace.currentPlayer = "w";
         }
-        /*
-                if (hnefataflNameSpace.isPlayer1AI) {
-                    if (hnefataflNameSpace.player1 == hnefataflNameSpace.currentPlayer) {
-                        hnefataflNameSpace.doAIMove();
-                    }
-                }
-          */
     },
-
 
     checkVictoryConditions: function() {
         var foundTheKing = false;
@@ -249,6 +230,7 @@ var hnefataflNameSpace = {
         }
 
     },
+    
     checkForCapturedPieces: function(whichTileX, whichTileY, whichPlayerMoved) {
         var opposingPlayer;
         if (whichPlayerMoved == "w") {
@@ -284,8 +266,6 @@ var hnefataflNameSpace = {
                 }
             }
         }
-
-
     },
 
     checkForPiecesToRemove: function() {
@@ -365,13 +345,7 @@ var hnefataflNameSpace = {
                         thisPiece = ''
                 }
 
-
-
-
-
                 if (thisPiece != '') {
-
-
                     // see if it's moving:
                     if (j + "_" + i in hnefataflNameSpace.animatingPieces) {
                         // [currentPosX, currentPosY, destinationPosX, destinationPosY]:
@@ -383,15 +357,12 @@ var hnefataflNameSpace = {
                         } else if ((hnefataflNameSpace.animatingPieces[j + "_" + i][0] < hnefataflNameSpace.animatingPieces[j + "_" + i][2])) {
                             hnefataflNameSpace.animatingPieces[j + "_" + i][0] += hnefataflNameSpace.pieceSpeed;
                         }
-
                         if ((hnefataflNameSpace.animatingPieces[j + "_" + i][1] - hnefataflNameSpace.animatingPieces[j + "_" + i][3]) >= hnefataflNameSpace.pieceSpeed) {
                             hnefataflNameSpace.animatingPieces[j + "_" + i][1] -= hnefataflNameSpace.pieceSpeed;
                         } else if ((hnefataflNameSpace.animatingPieces[j + "_" + i][1] - hnefataflNameSpace.animatingPieces[j + "_" + i][3]) <= -hnefataflNameSpace.pieceSpeed) {
                             hnefataflNameSpace.animatingPieces[j + "_" + i][1] += hnefataflNameSpace.pieceSpeed;
                         }
-
                         hnefataflNameSpace.gameContext.drawImage(thisPiece, hnefataflNameSpace.animatingPieces[j + "_" + i][0] - hnefataflNameSpace.pieceGraphicalOffset, hnefataflNameSpace.animatingPieces[j + "_" + i][1] - hnefataflNameSpace.pieceGraphicalOffset);
-
                         if (hnefataflNameSpace.animatingPieces[j + "_" + i][1] == hnefataflNameSpace.animatingPieces[j + "_" + i][3]) {
                             if (Math.abs(hnefataflNameSpace.animatingPieces[j + "_" + i][0] - hnefataflNameSpace.animatingPieces[j + "_" + i][2]) < hnefataflNameSpace.pieceSpeed) {
                                 delete hnefataflNameSpace.animatingPieces[j + "_" + i];
@@ -407,15 +378,12 @@ var hnefataflNameSpace = {
                             }
                         }
                     } else {
-
                         hnefataflNameSpace.gameContext.drawImage(thisPiece, hnefataflNameSpace.getTilePosition(j) - hnefataflNameSpace.pieceGraphicalOffset, hnefataflNameSpace.getTilePosition(i) - hnefataflNameSpace.pieceGraphicalOffset);
                     }
                 }
             }
         }
     },
-
-
 
     isEmpty: function(obj) {
         for (var prop in obj) {
@@ -425,7 +393,6 @@ var hnefataflNameSpace = {
         }
         return JSON.stringify(obj) === JSON.stringify({});
     },
-
 
     update: function() {
         if (hnefataflNameSpace.isPlayer1AI) {
