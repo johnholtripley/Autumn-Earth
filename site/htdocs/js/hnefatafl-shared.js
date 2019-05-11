@@ -1,6 +1,16 @@
 'use strict';
 // core game code shared between in-game world and standalone game
 
+
+if (window.Worker) {
+    var hnefataflWorker = new Worker('/js/worker-hnefatafl.js');
+    hnefataflWorker.onmessage = function(e) {
+        hnefataflNameSpace.aiIsWorking = false;
+        hnefataflNameSpace.makeMove(e.data[0], e.data[1], e.data[2], e.data[3]);
+    }
+}
+
+
 // name space the game code so it doesn't cause conflicts with the game code:
 var hnefataflNameSpace = {
     'squareSize': 62,
@@ -313,7 +323,7 @@ var hnefataflNameSpace = {
         hnefataflNameSpace.player1 = "w";
         hnefataflNameSpace.player2 = "b";
         hnefataflNameSpace.isPlayer1AI = true;
-        hnefataflNameSpace.aiIsWorking = -1;
+        hnefataflNameSpace.aiIsWorking = false;
         hnefataflNameSpace.AIisWaitingToMove = true;
 
         hnefataflNameSpace.whoCanClick = hnefataflNameSpace.currentPlayersTurn;
@@ -414,21 +424,19 @@ var hnefataflNameSpace = {
                 return false;
             }
         }
-
         return JSON.stringify(obj) === JSON.stringify({});
     },
 
 
     update: function() {
-
         if (hnefataflNameSpace.isPlayer1AI) {
             if (hnefataflNameSpace.player1 == hnefataflNameSpace.currentPlayer) {
                 if (hnefataflNameSpace.player1 == "w") {
-
                     if (hnefataflNameSpace.AIisWaitingToMove) {
-
-                        hnefataflNameSpace.AIisWaitingToMove = false;
-                        hnefataflNameSpace.doAIMove();
+                        if (!hnefataflNameSpace.aiIsWorking) {
+                            hnefataflNameSpace.AIisWaitingToMove = false;
+                            hnefataflNameSpace.doAIMove();
+                        }
                     } else if (hnefataflNameSpace.isEmpty(hnefataflNameSpace.animatingPieces)) {
                         hnefataflNameSpace.AIisWaitingToMove = true;
                     }
@@ -438,42 +446,7 @@ var hnefataflNameSpace = {
     },
 
     doAIMove: function() {
-        console.log("ai go");
-
-
-
-
-        // find random piece:
-        var directionsToCheck = [
-            [-1, 0],
-            [1, 0],
-            [0, -1],
-            [0, 1]
-        ];
-        var destX, destY, moveX, moveY, checkY, checkX;
-        for (var i = 0; i < hnefataflNameSpace.board.length; i++) {
-            for (var j = 0; j < hnefataflNameSpace.board[0].length; j++) {
-                if (hnefataflNameSpace.board[i][j].toLowerCase() == hnefataflNameSpace.player1) {
-                    for (var k = 0; k < directionsToCheck.length; k++) {
-                        checkY = i + (directionsToCheck[k][0]);
-                        checkX = j + (directionsToCheck[k][1]);
-                        if (checkX >= 0 && checkY >= 0 && checkX < hnefataflNameSpace.board.length && checkY < hnefataflNameSpace.board.length) {
-                            if (hnefataflNameSpace.board[checkY][checkX] == '0') {
-                                destX = checkX;
-                                destY = checkY;
-                                moveX = j;
-                                moveY = i;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-
-
-        hnefataflNameSpace.makeMove(moveX, moveY, destX, destY);
-
-
+        hnefataflNameSpace.aiIsWorking = true;
+        hnefataflWorker.postMessage([hnefataflNameSpace.board, hnefataflNameSpace.player1]);
     }
 };

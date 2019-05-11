@@ -5108,6 +5108,7 @@ function hireNewFollower() {
     }
     UI.closeHireFollowerPanel();
 }
+
 function getLocalCoordinatesX(tileX) {
     // get local map coordinates from global coordinates:
     return tileX%worldMapTileLength;
