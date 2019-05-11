@@ -250,7 +250,6 @@ var hnefataflNameSpace = {
 
     },
     checkForCapturedPieces: function(whichTileX, whichTileY, whichPlayerMoved) {
-
         var opposingPlayer;
         if (whichPlayerMoved == "w") {
             opposingPlayer = "b";
