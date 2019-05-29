@@ -63,3 +63,4 @@ site/htdocs/images/herbarium/plants
 cache_fluid
 development/graphics
 auth.php
+site/htdocs/includes/signalnoise.php
