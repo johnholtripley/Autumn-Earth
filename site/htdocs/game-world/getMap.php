@@ -157,6 +157,13 @@ if(!(isset($mapData['map']['musicOnEnter']))) {
 $mapData['map']['musicOnEnter'] = '';
 }
 
+if(!(isset($mapData['map']['backgroundOffsetX']))) {
+$mapData['map']['backgroundOffsetX'] = '0';
+}
+if(!(isset($mapData['map']['backgroundOffsetY']))) {
+$mapData['map']['backgroundOffsetY'] = '0';
+}
+
 $isInside = $mapData['map']['isInside'];
 
 if(!$isInside) {

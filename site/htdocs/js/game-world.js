@@ -1979,20 +1979,31 @@ function getTileY(y) {
     return Math.floor(y / tileW);
 }
 
-
 function getElevation(tileX, tileY) {
-    var thisMap = findMapNumberFromGlobalCoordinates(tileX, tileY);
-    var localTileX = getLocalCoordinatesX(tileX);
-    var localTileY = getLocalCoordinatesY(tileY);
-    if (typeof thisMapData[thisMap].properties[localTileY][localTileX].elevation !== "undefined") {
-        return thisMapData[thisMap].properties[localTileY][localTileX].elevation;
+    var localTileX, localTileY, thisMap;
+    if (isOverWorldMap) {
+        thisMap = findMapNumberFromGlobalCoordinates(tileX, tileY);
+        localTileX = getLocalCoordinatesX(tileX);
+        localTileY = getLocalCoordinatesY(tileY);
     } else {
-        return 0;
+        thisMap = currentMap;
+        localTileX = tileX;
+        localTileY = tileY;
+    }
+    switch (typeof thisMapData[thisMap].properties[localTileY][localTileX].elevation) {
+        case 'undefined':
+            return 0;
+            break;
+        case 'number':
+            return thisMapData[thisMap].properties[localTileY][localTileX].elevation;
+            break;
+        case 'string':
+            // it's a slope - work out how far across the tile the object is
+           
+            return 6;
+            break;
     }
 }
-
-
-
 
 function isATerrainCollision(x, y) {
     var globalTileX = getTileX(x);
@@ -11426,11 +11437,6 @@ function draw() {
             for (var i = 0; i < thisMapData[whichVisibleMap].npcs.length; i++) {
                 thisNPC = thisMapData[whichVisibleMap].npcs[i];
 
-
-
-
-
-
                 if (typeof thisNPC.animationWaitingTimer === "undefined") {
                     thisNPCOffsetCol = currentAnimationFrame % thisNPC["animation"][thisNPC.currentAnimation]["length"];
                 } else {
@@ -11445,10 +11451,6 @@ function draw() {
                 if (isVisibleOnScreen(thisX, thisY)) {
                     //assetsToDraw.push([findIsoDepth(thisX, thisY), npcImages[i], Math.floor(thisX - hero.isox - thisNPC.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisNPC.centreY + (canvasHeight / 2))]);
                     thisNPCIdentifier = "npc" + thisMapData[whichVisibleMap].npcs[i].src;
-
-
-
-
                     assetsToDraw.push([findIsoDepth(thisNPC.x, thisNPC.y, thisNPC.z), "sprite", npcImages[thisNPCIdentifier], thisNPCOffsetCol * thisNPC.spriteWidth, thisNPCOffsetRow * thisNPC.spriteHeight, thisNPC.spriteWidth, thisNPC.spriteHeight, Math.floor(thisX - hero.isox - thisNPC.centreX + (canvasWidth / 2)), Math.floor(thisY - hero.isoy - thisNPC.centreY + (canvasHeight / 2) - thisNPC.z), thisNPC.spriteWidth, thisNPC.spriteHeight]);
                 }
             }
@@ -11550,7 +11552,7 @@ function draw() {
             // need to determine the offset for the top left corner of the map from the top left corner of the image #######
 
             if (typeof backgroundImgs[currentMap] !== "undefined") {
-                gameContext.drawImage(backgroundImgs[currentMap], Math.floor(getTileIsoCentreCoordX(0, mapTilesY - 1) - hero.isox - tileW / 2 + canvasWidth / 2), Math.floor(getTileIsoCentreCoordY(0, 0) - hero.isoy - (tileH / 2) + canvasHeight / 2));
+                gameContext.drawImage(backgroundImgs[currentMap], Math.floor(getTileIsoCentreCoordX(0, mapTilesY - 1) -thisMapData[currentMap].backgroundOffsetX - hero.isox - tileW / 2 + canvasWidth / 2), Math.floor(getTileIsoCentreCoordY(0, 0) - hero.isoy -thisMapData[currentMap].backgroundOffsetY- (tileH / 2) + canvasHeight / 2));
             }
         }
 

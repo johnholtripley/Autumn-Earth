@@ -113,20 +113,31 @@ function getTileY(y) {
     return Math.floor(y / tileW);
 }
 
-
 function getElevation(tileX, tileY) {
-    var thisMap = findMapNumberFromGlobalCoordinates(tileX, tileY);
-    var localTileX = getLocalCoordinatesX(tileX);
-    var localTileY = getLocalCoordinatesY(tileY);
-    if (typeof thisMapData[thisMap].properties[localTileY][localTileX].elevation !== "undefined") {
-        return thisMapData[thisMap].properties[localTileY][localTileX].elevation;
+    var localTileX, localTileY, thisMap;
+    if (isOverWorldMap) {
+        thisMap = findMapNumberFromGlobalCoordinates(tileX, tileY);
+        localTileX = getLocalCoordinatesX(tileX);
+        localTileY = getLocalCoordinatesY(tileY);
     } else {
-        return 0;
+        thisMap = currentMap;
+        localTileX = tileX;
+        localTileY = tileY;
+    }
+    switch (typeof thisMapData[thisMap].properties[localTileY][localTileX].elevation) {
+        case 'undefined':
+            return 0;
+            break;
+        case 'number':
+            return thisMapData[thisMap].properties[localTileY][localTileX].elevation;
+            break;
+        case 'string':
+            // it's a slope - work out how far across the tile the object is
+           
+            return 6;
+            break;
     }
 }
-
-
-
 
 function isATerrainCollision(x, y) {
     var globalTileX = getTileX(x);
