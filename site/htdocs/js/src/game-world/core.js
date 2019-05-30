@@ -1111,7 +1111,7 @@ function changeMaps(doorX, doorY) {
 
         hero.tileX = doorData[whichDoor].startX;
         hero.tileY = doorData[whichDoor].startY;
-        console.log('changeMaps', hero.tileX, hero.tileY);
+//        console.log('changeMaps', hero.tileX, hero.tileY);
         newMap = doorData[whichDoor].map;
     } else {
         newMap = jumpMapId;
@@ -1561,6 +1561,9 @@ function update() {
 
         //  checkForWorldWrap(hero);
         checkHeroCollisions();
+
+
+        checkForSlopes(hero);
 
         var heroOldX = hero.tileX;
         var heroOldY = hero.tileY;

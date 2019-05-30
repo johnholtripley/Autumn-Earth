@@ -139,6 +139,44 @@ function getElevation(tileX, tileY) {
     }
 }
 
+function checkForSlopes(object) {
+
+     var globalTileX = object.tileX;
+    var globalTileY = object.tileY;
+    var tileX, tileY;
+    var thisMap;
+    if (isOverWorldMap) {
+        tileX = getLocalCoordinatesX(globalTileX);
+        tileY = getLocalCoordinatesY(globalTileY);
+        thisMap = findMapNumberFromGlobalCoordinates(globalTileX, globalTileY);
+    } else {
+        tileX = globalTileX;
+        tileY = globalTileY;
+        thisMap = currentMap;
+    }
+    // console.log("sslope"+tileX+","+tileY+","+thisMap+" = "+thisMapData[thisMap].collisions[tileY][tileX]);
+
+
+
+    switch (thisMapData[thisMap].collisions[tileY][tileX]) {
+            case ">":
+            
+            // is a horizontal slope
+            console.log(object.x%tileW);
+            var minMax = thisMapData[thisMap].properties[tileY][tileX].elevation.split(">");
+            object.z = minMax[0]+(minMax[1]*(tileW-(object.x%tileW))/tileW);
+            break;
+            case "<":
+              console.log(object.x%tileW);
+            var minMax = thisMapData[thisMap].properties[tileY][tileX].elevation.split(">");
+             object.z = minMax[0]+(minMax[1]*((object.x%tileW))/tileW);
+            break;
+        case "v":
+        // is a vertical slope 
+        break;
+    }
+}
+
 function isATerrainCollision(x, y) {
     var globalTileX = getTileX(x);
     var globalTileY = getTileY(y);
@@ -157,8 +195,9 @@ function isATerrainCollision(x, y) {
         if ((tileX < 0) || (tileY < 0) || (tileX >= mapTilesX) || (tileY >= mapTilesY)) {
             return 1;
         }
+        thisMap = currentMap;
     }
-    thisMap = currentMap;
+    
     switch (thisMapData[thisMap].collisions[tileY][tileX]) {
         case 1:
             // is a collision:
