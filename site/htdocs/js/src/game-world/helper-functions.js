@@ -131,11 +131,7 @@ function getElevation(tileX, tileY) {
         case 'number':
             return thisMapData[thisMap].properties[localTileY][localTileX].elevation;
             break;
-        case 'string':
-            // it's a slope - work out how far across the tile the object is
-           
-            return 6;
-            break;
+       
     }
 }
 
@@ -164,15 +160,26 @@ function checkForSlopes(object) {
             // is a horizontal slope
             console.log(object.x%tileW);
             var minMax = thisMapData[thisMap].properties[tileY][tileX].elevation.split(">");
-            object.z = minMax[0]+(minMax[1]*(tileW-(object.x%tileW))/tileW);
+            object.z = parseInt(minMax[0])+(parseInt(minMax[1])*(tileW-(object.x%tileW))/tileW);
             break;
             case "<":
               console.log(object.x%tileW);
             var minMax = thisMapData[thisMap].properties[tileY][tileX].elevation.split(">");
-             object.z = minMax[0]+(minMax[1]*((object.x%tileW))/tileW);
+             object.z = parseInt(minMax[0])+(parseInt(minMax[1])*((object.x%tileW))/tileW);
             break;
         case "v":
         // is a vertical slope 
+      var minMax = thisMapData[thisMap].properties[tileY][tileX].elevation.split(">");
+     console.log(object.y%tileW+" - "+minMax[0]+(parseInt(minMax[1])*(tileW-(object.y%tileW))/tileW));
+      
+            object.z = parseInt(minMax[0])+(parseInt(minMax[1])*(tileW-(object.y%tileW))/tileW);
+            break;
+case "^":
+  var minMax = thisMapData[thisMap].properties[tileY][tileX].elevation.split(">");
+     console.log(object.y%tileW+" - "+minMax[0]+(parseInt(minMax[1])*(tileW-(object.y%tileW))/tileW));
+      
+            object.z = parseInt(minMax[0])+(parseInt(minMax[1])*((object.y%tileW))/tileW);
+
         break;
     }
 }
