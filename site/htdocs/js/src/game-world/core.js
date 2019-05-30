@@ -1563,13 +1563,14 @@ function update() {
         checkHeroCollisions();
 
 
-        checkForSlopes(hero);
+    
 
         var heroOldX = hero.tileX;
         var heroOldY = hero.tileY;
         var chestIdSplit;
         hero.tileX = getTileX(hero.x);
         hero.tileY = getTileY(hero.y);
+            checkForSlopes(hero);
         if ((hero.tileX != heroOldX) || (hero.tileY != heroOldY)) {
             heroIsInNewTile();
         }
@@ -1812,7 +1813,7 @@ function checkForHotspots() {
 }
 
 function heroIsInNewTile() {
-    hero.z = getElevation(hero.tileX, hero.tileY);
+  //  hero.z = getElevation(hero.tileX, hero.tileY);
 
     //  updateCartographicMiniMap();
     if (isOverWorldMap) {

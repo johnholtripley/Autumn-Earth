@@ -181,6 +181,8 @@ case "^":
             object.z = parseInt(minMax[0])+(parseInt(minMax[1])*((object.y%tileW))/tileW);
 
         break;
+        default:
+        object.z = getElevation(object.tileX, object.tileY);
     }
 }
 
