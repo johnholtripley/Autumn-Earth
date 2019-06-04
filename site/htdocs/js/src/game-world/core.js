@@ -237,11 +237,14 @@ function processInitialMap() {
                 break
         }
 
+
+
         for (var i = 0; i < hero.activePets.length; i++) {
+
             hero.allPets[hero.activePets[i]].tileX = hero.tileX + (tileOffsetX * (i + 1));
             hero.allPets[hero.activePets[i]].tileY = hero.tileY + (tileOffsetY * (i + 1));
 
-            /*
+            if (!isOverWorldMap) {
             // needed for Internal maps:
                         if (i == 0) {
                             hero.allPets[hero.activePets[i]].state = "moving";
@@ -249,11 +252,16 @@ function processInitialMap() {
                             // will be placed out of the normal map grid:
                             hero.allPets[hero.activePets[i]].state = "queuing";
                         }
-            */
+            }
             hero.allPets[hero.activePets[i]].state = "moving";
             hero.allPets[hero.activePets[i]].facing = hero.facing;
 
         }
+
+
+
+
+
     }
 
 
@@ -932,20 +940,24 @@ function prepareGame() {
         }
     }
     // initialise pet:
+    var defaultElevation = hero.z;
     if (hasActivePet) {
         for (var i = 0; i < hero.activePets.length; i++) {
 
             hero.allPets[hero.activePets[i]].x = getTileCentreCoordX(hero.allPets[hero.activePets[i]].tileX);
             hero.allPets[hero.activePets[i]].y = getTileCentreCoordY(hero.allPets[hero.activePets[i]].tileY);
-            // check these tiles are within the normal grid - if not use the pet in front's z depth:
-            // need to do this for Internal maps ######
-            /*      if ((hero.allPets[hero.activePets[i]].tileX < 0) || (hero.allPets[hero.activePets[i]].tileY < 0) || (hero.allPets[hero.activePets[i]].tileX >= mapTilesX) || (hero.allPets[hero.activePets[i]].tileY >= mapTilesY)) {
-                      hero.allPets[hero.activePets[i]].z = hero.allPets[hero.activePets[i - 1]].z;
 
-                  } else {
-                      */
-            hero.allPets[hero.activePets[i]].z = getElevation(hero.allPets[hero.activePets[i]].tileX, hero.allPets[hero.activePets[i]].tileY);
-            //  }
+             if (!isOverWorldMap) {
+                 // check if it's not actual on the map:
+                 if ((hero.allPets[hero.activePets[i]].tileX < 0) || (hero.allPets[hero.activePets[i]].tileY < 0) || (hero.allPets[hero.activePets[i]].tileX >= mapTilesX) || (hero.allPets[hero.activePets[i]].tileY >= mapTilesY)) {
+                     hero.allPets[hero.activePets[i]].z = defaultElevation;
+                 } else {
+                     hero.allPets[hero.activePets[i]].z = getElevation(hero.allPets[hero.activePets[i]].tileX, hero.allPets[hero.activePets[i]].tileY);
+                 }
+             } else {
+                 hero.allPets[hero.activePets[i]].z = getElevation(hero.allPets[hero.activePets[i]].tileX, hero.allPets[hero.activePets[i]].tileY);
+             }
+  
             hero.allPets[hero.activePets[i]].dx = 0;
             hero.allPets[hero.activePets[i]].dy = 0;
             hero.allPets[hero.activePets[i]].foundPath = '';
@@ -1109,8 +1121,8 @@ function changeMaps(doorX, doorY) {
         var doorData = thisMapData[currentMap].doors;
         var whichDoor = doorX + "," + doorY;
 
-        hero.tileX = doorData[whichDoor].startX;
-        hero.tileY = doorData[whichDoor].startY;
+        hero.tileX = parseInt(doorData[whichDoor].startX);
+        hero.tileY = parseInt(doorData[whichDoor].startY);
 //        console.log('changeMaps', hero.tileX, hero.tileY);
         newMap = doorData[whichDoor].map;
     } else {
@@ -3236,6 +3248,7 @@ function moveNPCs() {
                         }
                     }
                 }
+                checkForSlopes(thisNPC);
             }
         }
     }

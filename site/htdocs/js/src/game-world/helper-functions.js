@@ -124,11 +124,14 @@ function getElevation(tileX, tileY) {
         localTileX = tileX;
         localTileY = tileY;
     }
-    if (typeof thisMapData[thisMap].properties[localTileY][localTileX].elevation == 'undefined') {
-        return 0;
-    } else {
-        return thisMapData[thisMap].properties[localTileY][localTileX].elevation;
+    var elevation = 0;
+
+    if (typeof thisMapData[thisMap].properties[localTileY][localTileX].elevation != 'undefined') {
+   
+        elevation = thisMapData[thisMap].properties[localTileY][localTileX].elevation;
     }
+
+    return elevation;
 }
 
 function checkForSlopes(object) {
