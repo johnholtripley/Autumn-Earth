@@ -141,7 +141,7 @@ var hero = {
     spriteWidth: 62,
     spriteHeight: 79,
     isMoving: false,
-    facing: 'n',
+    facing: 's',
     "animation": {
         "walk": {
             "length": 1,

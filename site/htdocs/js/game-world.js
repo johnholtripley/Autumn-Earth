@@ -493,7 +493,7 @@ var hero = {
     spriteWidth: 62,
     spriteHeight: 79,
     isMoving: false,
-    facing: 'n',
+    facing: 's',
     "animation": {
         "walk": {
             "length": 1,
@@ -8839,6 +8839,10 @@ function initialiseItem(whichItem) {
 
 
 function prepareGame() {
+
+
+
+
     // get map image references:
 
     for (var i = 0; i < tileGraphicsToLoad.length; i++) {
@@ -9052,16 +9056,25 @@ function changeMaps(doorX, doorY) {
         var doorData = thisMapData[currentMap].doors;
         var whichDoor = doorX + "," + doorY;
 
-        hero.tileX = parseInt(doorData[whichDoor].startX);
-        hero.tileY = parseInt(doorData[whichDoor].startY);
+        hero.tileX = doorData[whichDoor].startX;
+        hero.tileY = doorData[whichDoor].startY;
 //        console.log('changeMaps', hero.tileX, hero.tileY);
         newMap = doorData[whichDoor].map;
     } else {
         newMap = jumpMapId;
         jumpMapId = null;
-        hero.tileX = parseInt(doorX);
-        hero.tileY = parseInt(doorY);
+        hero.tileX = doorX;
+        hero.tileY = doorY;
     }
+
+
+if(hero.tileX != "?") {
+hero.tileX = parseInt(hero.tileX);
+}
+if(hero.tileY != "?") {
+hero.tileY = parseInt(hero.tileY);
+}
+
     visibleMaps = [];
     loadMap();
 }
