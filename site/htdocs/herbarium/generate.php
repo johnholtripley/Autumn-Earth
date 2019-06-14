@@ -117,11 +117,17 @@ $textString = str_replace("viz. ", "+viz+", $textString);
 
 // find the first full stop before this limit
 $pos = strrpos($textString,".",0-(strlen($textString)-$characterLimit));
+// also check for semicolons:
+$semiColonPos = strrpos($textString,";",0-(strlen($textString)-$characterLimit));
 if ($pos !== false) {
 $textString = substr($textString, 0, $pos+1);
 } else {
+	if ($semiColonPos !== false) {
+		$textString = substr($textString, 0, $semiColonPos+1);
+	} else {
 	// isn't room for the short description:
 	$textString = $latinName."\r\n".$commonNameString;
+}
 }
 
 // restore any St.:
