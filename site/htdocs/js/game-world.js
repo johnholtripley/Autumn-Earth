@@ -494,9 +494,16 @@ var hero = {
     spriteHeight: 83,
     isMoving: false,
     facing: 's',
+    currentAnimation: 'stand',
     "animation": {
         "walk": {
             "length": 19,
+            "n": 0,
+            "e": 1,
+            "s": 2,
+            "w": 3
+        }, "stand": {
+            "length": 1,
             "n": 0,
             "e": 1,
             "s": 2,
@@ -9620,6 +9627,11 @@ function update() {
         timeSinceLastFrameSwap = 0;
         animateFae();
     }
+    if(hero.isMoving) {
+hero.currentAnimation = 'walk';
+    } else {
+     hero.currentAnimation = 'stand';   
+    }
     moveFae();
     moveNPCs();
     movePet();
@@ -11396,8 +11408,8 @@ function draw() {
         hero.isox = findIsoCoordsX(hero.x, hero.y);
         hero.isoy = findIsoCoordsY(hero.x, hero.y);
 
-        var heroOffsetCol = currentAnimationFrame % hero["animation"]["walk"]["length"];
-        var heroOffsetRow = hero["animation"]["walk"][hero.facing];
+        var heroOffsetCol = currentAnimationFrame % hero["animation"][hero.currentAnimation]["length"];
+        var heroOffsetRow = hero["animation"][hero.currentAnimation][hero.facing];
         var assetsToDraw = [
             [findIsoDepth(hero.x, hero.y, hero.z), "sprite", heroImg, heroOffsetCol * hero.spriteWidth, heroOffsetRow * hero.spriteHeight, hero.spriteWidth, hero.spriteHeight, Math.floor(canvasWidth / 2 - hero.centreX), Math.floor(canvasHeight / 2 - hero.centreY - hero.z), hero.spriteWidth, hero.spriteHeight]
         ];

@@ -142,9 +142,16 @@ var hero = {
     spriteHeight: 83,
     isMoving: false,
     facing: 's',
+    currentAnimation: 'stand',
     "animation": {
         "walk": {
             "length": 19,
+            "n": 0,
+            "e": 1,
+            "s": 2,
+            "w": 3
+        }, "stand": {
+            "length": 1,
             "n": 0,
             "e": 1,
             "s": 2,
