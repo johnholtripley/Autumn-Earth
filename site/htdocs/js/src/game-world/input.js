@@ -20,6 +20,10 @@ const Input = {
             });
         }
 
+        if ("ontouchstart" in document.documentElement) {
+            Input.initTouchEvents();
+        }
+
 
     },
 
@@ -70,11 +74,31 @@ const Input = {
                 case KeyBindings.toggleToolLeft:
                     key[9] = to;
                     break;
-                    case KeyBindings.toggleToolRight:
+                case KeyBindings.toggleToolRight:
                     key[10] = to;
                     break;
-                  
             }
         }
+    },
+    initTouchEvents: function() {
+        /*
+        document.body.addEventListener("touchstart", function(e) {
+            // startPointX = e.touches[0].pageX;
+            // startPointY = e.touches[0].pageY;
+        }, false);
+        */
+        document.body.addEventListener("touchmove", function(e) {
+            // ignore multiple touches etc:
+            if (e.touches.length > 1 || e.scale && e.scale !== 1) {
+                return;
+            }
+            // stop the map being dragged (needs the passive: false to work):
+            e.preventDefault();
+            //   deltaX = e.touches[0].pageX - startPointX;
+            console.log("drag: " + e.touches[0].pageX + ", " + e.touches[0].pageY + " - client: " + e.touches[0].clientX + ", " + e.touches[0].clientY);
+        }, { passive: false });
+        document.body.addEventListener("touchend", function(e) {
+            console.log("tap: " + e.changedTouches[0].pageX + ", " + e.changedTouches[0].pageY + " - client: " + e.changedTouches[0].clientX + ", " + e.changedTouches[0].clientY);
+        }, false);
     }
 }
