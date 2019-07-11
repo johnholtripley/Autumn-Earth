@@ -7,13 +7,21 @@ if ('serviceWorker' in navigator) {
 }
 
 function sizeCanvasSize() {
-    // size it to the screen:
-    gameContext.canvas.width = window.innerWidth;
-    gameContext.canvas.height = window.innerHeight;
-    lightMapContext.canvas.width = window.innerWidth / 4;
-    lightMapContext.canvas.height = window.innerHeight / 4;
-    canvasWidth = window.innerWidth;
-    canvasHeight = window.innerHeight;
+    // size it to the screen (check to see if actual screen size is smaller for high resolution mobile)
+    var availableWidth = window.innerWidth;
+    var availableHeight = window.innerHeight;
+    if (screen.width < window.innerWidth) {
+        availableWidth = screen.width;
+    }
+    if (screen.height < window.innerHeight) {
+        availableHeight = screen.height;
+    }
+    gameContext.canvas.width = availableWidth;
+    gameContext.canvas.height = availableHeight;
+    lightMapContext.canvas.width = availableWidth / 4;
+    lightMapContext.canvas.height = availableHeight / 4;
+    canvasWidth = availableWidth;
+    canvasHeight = availableHeight;
 }
 
 var debouncedResize = debounce(function() {

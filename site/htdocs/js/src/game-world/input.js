@@ -95,10 +95,10 @@ const Input = {
             // stop the map being dragged (needs the passive: false to work):
             e.preventDefault();
             //   deltaX = e.touches[0].pageX - startPointX;
-            console.log("drag: " + e.touches[0].pageX + ", " + e.touches[0].pageY + " - client: " + e.touches[0].clientX + ", " + e.touches[0].clientY);
+            console.log("drag: client: " + e.touches[0].clientX + ", " + e.touches[0].clientY);
         }, { passive: false });
         document.body.addEventListener("touchend", function(e) {
-            console.log("tap: " + e.changedTouches[0].pageX + ", " + e.changedTouches[0].pageY + " - client: " + e.changedTouches[0].clientX + ", " + e.changedTouches[0].clientY);
+            console.log("tap: client: " + e.changedTouches[0].clientX + ", " + e.changedTouches[0].clientY);
         }, false);
     }
 }
