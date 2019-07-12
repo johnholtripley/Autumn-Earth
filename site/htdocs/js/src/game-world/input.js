@@ -7,16 +7,16 @@ const Input = {
         document.addEventListener('keydown', function(e) { Input.changeKey(e, 1, "down") });
         document.addEventListener('keyup', function(e) { Input.changeKey(e, 0, "up") });
 
-
         if (navigator.getGamepads || navigator.getGamepads()) {
 
             window.addEventListener("gamepadconnected", function() {
                 Input.isUsingGamePad = true;
-                Input.gamePad = navigator.getGamepads()[0];
+             //   Input.gamePad = navigator.getGamepads()[0];
+               
             });
             window.addEventListener("gamepaddisconnected", function(e) {
                 Input.isUsingGamePad = false;
-                Input.gamePad = null;
+              //  Input.gamePad = null;
             });
         }
 
@@ -95,10 +95,16 @@ const Input = {
             // stop the map being dragged (needs the passive: false to work):
             e.preventDefault();
             //   deltaX = e.touches[0].pageX - startPointX;
-            console.log("drag: client: " + e.touches[0].clientX + ", " + e.touches[0].clientY);
+           // console.log("drag: client: " + e.touches[0].clientX + ", " + e.touches[0].clientY);
+            moveHeroTowards(e.touches[0].clientX, e.touches[0].clientY);
         }, { passive: false });
         document.body.addEventListener("touchend", function(e) {
             console.log("tap: client: " + e.changedTouches[0].clientX + ", " + e.changedTouches[0].clientY);
+            // check if was dragging, and if so:
+            key[0] = false;
+            key[1] = false;
+            key[2] = false;
+            key[3] = false;
         }, false);
     }
 }

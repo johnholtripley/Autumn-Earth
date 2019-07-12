@@ -8,20 +8,20 @@ if ('serviceWorker' in navigator) {
 
 function sizeCanvasSize() {
     // size it to the screen (check to see if actual screen size is smaller for high resolution mobile)
-    var availableWidth = window.innerWidth;
-    var availableHeight = window.innerHeight;
+     availableScreenWidth = window.innerWidth;
+     availableScreenHeight = window.innerHeight;
     if (screen.width < window.innerWidth) {
-        availableWidth = screen.width;
+        availableScreenWidth = screen.width;
     }
     if (screen.height < window.innerHeight) {
-        availableHeight = screen.height;
+        availableScreenHeight = screen.height;
     }
-    gameContext.canvas.width = availableWidth;
-    gameContext.canvas.height = availableHeight;
-    lightMapContext.canvas.width = availableWidth / 4;
-    lightMapContext.canvas.height = availableHeight / 4;
-    canvasWidth = availableWidth;
-    canvasHeight = availableHeight;
+    gameContext.canvas.width = availableScreenWidth;
+    gameContext.canvas.height = availableScreenHeight;
+    lightMapContext.canvas.width = availableScreenWidth / 4;
+    lightMapContext.canvas.height = availableScreenHeight / 4;
+    canvasWidth = availableScreenWidth;
+    canvasHeight = availableScreenHeight;
 }
 
 var debouncedResize = debounce(function() {
@@ -1533,6 +1533,30 @@ function gameLoop() {
     window.requestAnimationFrame(gameLoop);
 }
 
+function moveHeroTowards(xCoord, yCoord) {
+    var xDiff = xCoord - (availableScreenWidth / 2);
+    var yDiff = yCoord - (availableScreenHeight / 2);
+    console.log(xDiff, yDiff);
+
+
+    if (xDiff < 0) {
+        if (yDiff < 0) {
+            key[0] = 1;
+        } else {
+            key[3] = 1;
+        }
+    } else {
+        if (yDiff < 0) {
+            key[2] = 1;
+        } else {
+            key[1] = 1;
+        }
+    }
+
+
+
+
+}
 
 function update() {
     checkForGamePadInput();

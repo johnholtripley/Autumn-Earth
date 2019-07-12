@@ -358,7 +358,7 @@ var timeSinceLastFrameSwap = 0;
 var currentAnimationFrame = 0;
 var animationUpdateTime = (1000 / animationFramesPerSecond);
 
-var gameCanvas, gameContext, gameMode, cartographyContext, cartographyCanvas, offScreenCartographyCanvas, offScreenCartographyContext, canvasMapImage, canvasMapImage, canvasMapMaskImage, heroImg, shadowImg, tilledEarth, addedWater, ocean, oceanPattern, imagesToLoad, objInitLeft, objInitTop, dragStartX, dragStartY, inventoryCheck, timeSinceLastAmbientSoundWasPlayed, gameSettings, lightMap, lightMapOverlay, lightMapContext, activeGatheredObject, questResponseNPC, cursorPositionX, cursorPositionY, whichVisibleMap, allRecipes;
+var gameCanvas, gameContext, gameMode, cartographyContext, cartographyCanvas, offScreenCartographyCanvas, offScreenCartographyContext, canvasMapImage, canvasMapImage, canvasMapMaskImage, heroImg, shadowImg, tilledEarth, addedWater, ocean, oceanPattern, imagesToLoad, objInitLeft, objInitTop, dragStartX, dragStartY, inventoryCheck, timeSinceLastAmbientSoundWasPlayed, gameSettings, lightMap, lightMapOverlay, lightMapContext, activeGatheredObject, questResponseNPC, cursorPositionX, cursorPositionY, whichVisibleMap, allRecipes, availableScreenWidth, availableScreenHeight;
 var chestIdOpen = -1;
 var currentWeather = "";
 var outsideWeather = "";
@@ -1703,29 +1703,29 @@ function checkCrop(itemObject) {
 function checkForGamePadInput() {
     if (Input.isUsingGamePad) {
         // added these next 3 lines to prevent occassional errors in Chrome:
-        if (typeof Input.gamePad !== "undefined") {
-            if (Input.gamePad !== null) {
-                if (typeof Input.gamePad.timestamp !== "undefined") {
+        //if (typeof navigator.getGamepads()[0] !== "undefined") {
+          //  if (navigator.getGamepads()[0] !== null) {
+            //    if (typeof navigator.getGamepads()[0].timestamp !== "undefined") {
                     // check if an update has happened since the last one that was acted on:
-                    if (Input.gamePad.timestamp != Input.gameLastPadTimeStamp) {
-                        Input.gameLastPadTimeStamp = Input.gamePad.timestamp;
+                    if (navigator.getGamepads()[0].timestamp != Input.gameLastPadTimeStamp) {
+                        Input.gameLastPadTimeStamp = navigator.getGamepads()[0].timestamp;
                         // left:
-                        key[0] = Input.gamePad.axes[1] <= -0.5;
+                        key[0] = navigator.getGamepads()[0].axes[0] <= -0.5;
                         // right:
-                        key[1] = Input.gamePad.axes[1] >= 0.5;
+                        key[1] = navigator.getGamepads()[0].axes[0] >= 0.5;
                         // up: 
-                        key[2] = Input.gamePad.axes[2] <= -0.5;
+                        key[2] = navigator.getGamepads()[0].axes[1] <= -0.5;
                         // down:
-                        key[3] = Input.gamePad.axes[2] >= 0.5;
+                        key[3] = navigator.getGamepads()[0].axes[1] >= 0.5;
                         // action (X):
-                        key[4] = Input.gamePad.buttons[2].value > 0;
+                        key[4] = navigator.getGamepads()[0].buttons[2].value > 0;
                         // shift (right shoulder 1):
-                        key[5] = Input.gamePad.buttons[7].value > 0;
+                        key[5] = navigator.getGamepads()[0].buttons[7].value > 0;
                     }
                 }
-            }
-        }
-    }
+         //   }
+     //   }
+ //   }
 }
 function checkForRespawns() {
   //  for(var map in thisMapData) {
@@ -3325,12 +3325,12 @@ const Input = {
         document.addEventListener('keydown', function(e) { Input.changeKey(e, 1, "down") });
         document.addEventListener('keyup', function(e) { Input.changeKey(e, 0, "up") });
 
-
         if (navigator.getGamepads || navigator.getGamepads()) {
 
             window.addEventListener("gamepadconnected", function() {
                 Input.isUsingGamePad = true;
-                Input.gamePad = navigator.getGamepads()[0];
+             //   Input.gamePad = navigator.getGamepads()[0];
+               
             });
             window.addEventListener("gamepaddisconnected", function(e) {
                 Input.isUsingGamePad = false;
@@ -3413,10 +3413,16 @@ const Input = {
             // stop the map being dragged (needs the passive: false to work):
             e.preventDefault();
             //   deltaX = e.touches[0].pageX - startPointX;
-            console.log("drag: client: " + e.touches[0].clientX + ", " + e.touches[0].clientY);
+           // console.log("drag: client: " + e.touches[0].clientX + ", " + e.touches[0].clientY);
+            moveHeroTowards(e.touches[0].clientX, e.touches[0].clientY);
         }, { passive: false });
         document.body.addEventListener("touchend", function(e) {
             console.log("tap: client: " + e.changedTouches[0].clientX + ", " + e.changedTouches[0].clientY);
+            // check if was dragging, and if so:
+            key[0] = false;
+            key[1] = false;
+            key[2] = false;
+            key[3] = false;
         }, false);
     }
 }
@@ -7970,20 +7976,20 @@ if ('serviceWorker' in navigator) {
 
 function sizeCanvasSize() {
     // size it to the screen (check to see if actual screen size is smaller for high resolution mobile)
-    var availableWidth = window.innerWidth;
-    var availableHeight = window.innerHeight;
+     availableScreenWidth = window.innerWidth;
+     availableScreenHeight = window.innerHeight;
     if (screen.width < window.innerWidth) {
-        availableWidth = screen.width;
+        availableScreenWidth = screen.width;
     }
     if (screen.height < window.innerHeight) {
-        availableHeight = screen.height;
+        availableScreenHeight = screen.height;
     }
-    gameContext.canvas.width = availableWidth;
-    gameContext.canvas.height = availableHeight;
-    lightMapContext.canvas.width = availableWidth / 4;
-    lightMapContext.canvas.height = availableHeight / 4;
-    canvasWidth = availableWidth;
-    canvasHeight = availableHeight;
+    gameContext.canvas.width = availableScreenWidth;
+    gameContext.canvas.height = availableScreenHeight;
+    lightMapContext.canvas.width = availableScreenWidth / 4;
+    lightMapContext.canvas.height = availableScreenHeight / 4;
+    canvasWidth = availableScreenWidth;
+    canvasHeight = availableScreenHeight;
 }
 
 var debouncedResize = debounce(function() {
@@ -9495,6 +9501,30 @@ function gameLoop() {
     window.requestAnimationFrame(gameLoop);
 }
 
+function moveHeroTowards(xCoord, yCoord) {
+    var xDiff = xCoord - (availableScreenWidth / 2);
+    var yDiff = yCoord - (availableScreenHeight / 2);
+    console.log(xDiff, yDiff);
+
+
+    if (xDiff < 0) {
+        if (yDiff < 0) {
+            key[0] = 1;
+        } else {
+            key[3] = 1;
+        }
+    } else {
+        if (yDiff < 0) {
+            key[2] = 1;
+        } else {
+            key[1] = 1;
+        }
+    }
+
+
+
+
+}
 
 function update() {
     checkForGamePadInput();
