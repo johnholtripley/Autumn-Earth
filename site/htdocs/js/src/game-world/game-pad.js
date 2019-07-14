@@ -6,6 +6,7 @@ function checkForGamePadInput() {
             //    if (typeof navigator.getGamepads()[0].timestamp !== "undefined") {
                     // check if an update has happened since the last one that was acted on:
                     if (navigator.getGamepads()[0].timestamp != Input.gameLastPadTimeStamp) {
+                        // chrome needs the full navigator method to get the updated details, not a reference
                         Input.gameLastPadTimeStamp = navigator.getGamepads()[0].timestamp;
                         // left:
                         key[0] = navigator.getGamepads()[0].axes[0] <= -0.5;

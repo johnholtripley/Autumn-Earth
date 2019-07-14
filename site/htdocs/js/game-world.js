@@ -1708,6 +1708,7 @@ function checkForGamePadInput() {
             //    if (typeof navigator.getGamepads()[0].timestamp !== "undefined") {
                     // check if an update has happened since the last one that was acted on:
                     if (navigator.getGamepads()[0].timestamp != Input.gameLastPadTimeStamp) {
+                        // chrome needs the full navigator method to get the updated details, not a reference
                         Input.gameLastPadTimeStamp = navigator.getGamepads()[0].timestamp;
                         // left:
                         key[0] = navigator.getGamepads()[0].axes[0] <= -0.5;
@@ -3334,7 +3335,7 @@ const Input = {
             });
             window.addEventListener("gamepaddisconnected", function(e) {
                 Input.isUsingGamePad = false;
-                Input.gamePad = null;
+              //  Input.gamePad = null;
             });
         }
 
@@ -9502,21 +9503,32 @@ function gameLoop() {
 }
 
 function moveHeroTowards(xCoord, yCoord) {
+    // eg. from drag on mobile
+    // run if the distance is far #### math.abs diff > half
     var xDiff = xCoord - (availableScreenWidth / 2);
     var yDiff = yCoord - (availableScreenHeight / 2);
     console.log(xDiff, yDiff);
 
 
+ key[0] = false;
+            key[1] = false;
+            key[2] = false;
+            key[3] = false;
+
     if (xDiff < 0) {
         if (yDiff < 0) {
+        
             key[0] = 1;
         } else {
+            
             key[3] = 1;
         }
     } else {
         if (yDiff < 0) {
+        
             key[2] = 1;
         } else {
+            
             key[1] = 1;
         }
     }

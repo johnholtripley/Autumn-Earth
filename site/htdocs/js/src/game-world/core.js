@@ -1534,21 +1534,32 @@ function gameLoop() {
 }
 
 function moveHeroTowards(xCoord, yCoord) {
+    // eg. from drag on mobile
+    // run if the distance is far #### math.abs diff > half
     var xDiff = xCoord - (availableScreenWidth / 2);
     var yDiff = yCoord - (availableScreenHeight / 2);
     console.log(xDiff, yDiff);
 
 
+ key[0] = false;
+            key[1] = false;
+            key[2] = false;
+            key[3] = false;
+
     if (xDiff < 0) {
         if (yDiff < 0) {
+        
             key[0] = 1;
         } else {
+            
             key[3] = 1;
         }
     } else {
         if (yDiff < 0) {
+        
             key[2] = 1;
         } else {
+            
             key[1] = 1;
         }
     }
