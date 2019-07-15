@@ -3418,12 +3418,15 @@ const Input = {
             moveHeroTowards(e.touches[0].clientX, e.touches[0].clientY);
         }, { passive: false });
         document.body.addEventListener("touchend", function(e) {
-            console.log("tap: client: " + e.changedTouches[0].clientX + ", " + e.changedTouches[0].clientY);
+        //    console.log("tap: client: " + e.changedTouches[0].clientX + ", " + e.changedTouches[0].clientY);
+
+        
             // check if was dragging, and if so:
             key[0] = false;
             key[1] = false;
             key[2] = false;
             key[3] = false;
+            key[5] = false;
         }, false);
     }
 }
@@ -9503,39 +9506,35 @@ function gameLoop() {
 }
 
 function moveHeroTowards(xCoord, yCoord) {
-    // eg. from drag on mobile
-    // run if the distance is far #### math.abs diff > half
+    // eg. from drag on mobile 
     var xDiff = xCoord - (availableScreenWidth / 2);
     var yDiff = yCoord - (availableScreenHeight / 2);
-    console.log(xDiff, yDiff);
-
-
- key[0] = false;
-            key[1] = false;
-            key[2] = false;
-            key[3] = false;
-
+    // run if the dragged distance is further from the hero:
+    key[5] = false;
+    if ((Math.abs(xDiff) > (availableScreenWidth / 4)) || (Math.abs(yDiff) > (availableScreenHeight / 4))) {
+        key[5] = true;
+    }
+    key[0] = false;
+    key[1] = false;
+    key[2] = false;
+    key[3] = false;
     if (xDiff < 0) {
         if (yDiff < 0) {
-        
+
             key[0] = 1;
         } else {
-            
+
             key[3] = 1;
         }
     } else {
         if (yDiff < 0) {
-        
+
             key[2] = 1;
         } else {
-            
+
             key[1] = 1;
         }
     }
-
-
-
-
 }
 
 function update() {

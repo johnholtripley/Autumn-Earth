@@ -99,12 +99,15 @@ const Input = {
             moveHeroTowards(e.touches[0].clientX, e.touches[0].clientY);
         }, { passive: false });
         document.body.addEventListener("touchend", function(e) {
-            console.log("tap: client: " + e.changedTouches[0].clientX + ", " + e.changedTouches[0].clientY);
+        //    console.log("tap: client: " + e.changedTouches[0].clientX + ", " + e.changedTouches[0].clientY);
+
+        
             // check if was dragging, and if so:
             key[0] = false;
             key[1] = false;
             key[2] = false;
             key[3] = false;
+            key[5] = false;
         }, false);
     }
 }
