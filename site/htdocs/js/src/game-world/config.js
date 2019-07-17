@@ -132,17 +132,17 @@ var hero = {
 
     width: 20,
     length: 20,
-    centreX: 50,
-    centreY: 67,
+    centreX: 51,
+    centreY: 68,
     speed: 4,
     //   animationFrameIndex: 0,
     //   timeSinceLastFrameSwap: 0,
     //   animationUpdateTime: (1000 / animationFramesPerSecond),
-    spriteWidth: 71,
-    spriteHeight: 83,
+    spriteWidth: 83,
+    spriteHeight: 88,
     isMoving: false,
     facing: 's',
-    currentAnimation: 'stand',
+    currentAnimation: 'idle',
     "animation": {
         "walk": {
             "length": 19,
@@ -150,8 +150,16 @@ var hero = {
             "e": 1,
             "s": 2,
             "w": 3
-        }, "stand": {
-            "length": 1,
+        },
+        "run": {
+            "length": 11,
+            "n": 0,
+            "e": 1,
+            "s": 2,
+            "w": 3
+        },
+        "idle": {
+            "length": 31,
             "n": 0,
             "e": 1,
             "s": 2,

@@ -1728,10 +1728,14 @@ function update() {
         timeSinceLastFrameSwap = 0;
         animateFae();
     }
-    if(hero.isMoving) {
-hero.currentAnimation = 'walk';
+    if (hero.isMoving) {
+        if (key[5]) {
+            hero.currentAnimation = 'run';
+        } else {
+            hero.currentAnimation = 'walk';
+        }
     } else {
-     hero.currentAnimation = 'stand';   
+        hero.currentAnimation = 'idle';
     }
     moveFae();
     moveNPCs();
@@ -3511,6 +3515,16 @@ function draw() {
 
         var heroOffsetCol = currentAnimationFrame % hero["animation"][hero.currentAnimation]["length"];
         var heroOffsetRow = hero["animation"][hero.currentAnimation][hero.facing];
+        // row needs the previous rows adding to it
+        // make dynamic ##############
+        // john
+        if(hero.currentAnimation == 'run') {
+heroOffsetRow += 4;
+        }
+        if(hero.currentAnimation == 'idle') {
+heroOffsetRow += 8;
+        }
+
         var assetsToDraw = [
             [findIsoDepth(hero.x, hero.y, hero.z), "sprite", heroImg, heroOffsetCol * hero.spriteWidth, heroOffsetRow * hero.spriteHeight, hero.spriteWidth, hero.spriteHeight, Math.floor(canvasWidth / 2 - hero.centreX), Math.floor(canvasHeight / 2 - hero.centreY - hero.z), hero.spriteWidth, hero.spriteHeight]
         ];
