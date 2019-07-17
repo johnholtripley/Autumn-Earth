@@ -146,6 +146,7 @@ var hero = {
     "animation": {
         "walk": {
             "length": 19,
+            "start-row": 0,
             "n": 0,
             "e": 1,
             "s": 2,
@@ -153,6 +154,7 @@ var hero = {
         },
         "run": {
             "length": 11,
+            "start-row": 4,
             "n": 0,
             "e": 1,
             "s": 2,
@@ -160,6 +162,7 @@ var hero = {
         },
         "idle": {
             "length": 31,
+            "start-row": 8,
             "n": 0,
             "e": 1,
             "s": 2,

@@ -8,8 +8,8 @@ if ('serviceWorker' in navigator) {
 
 function sizeCanvasSize() {
     // size it to the screen (check to see if actual screen size is smaller for high resolution mobile)
-     availableScreenWidth = window.innerWidth;
-     availableScreenHeight = window.innerHeight;
+    availableScreenWidth = window.innerWidth;
+    availableScreenHeight = window.innerHeight;
     if (screen.width < window.innerWidth) {
         availableScreenWidth = screen.width;
     }
@@ -253,13 +253,13 @@ function processInitialMap() {
             hero.allPets[hero.activePets[i]].tileY = hero.tileY + (tileOffsetY * (i + 1));
 
             if (!isOverWorldMap) {
-            // needed for Internal maps:
-                        if (i == 0) {
-                            hero.allPets[hero.activePets[i]].state = "moving";
-                        } else {
-                            // will be placed out of the normal map grid:
-                            hero.allPets[hero.activePets[i]].state = "queuing";
-                        }
+                // needed for Internal maps:
+                if (i == 0) {
+                    hero.allPets[hero.activePets[i]].state = "moving";
+                } else {
+                    // will be placed out of the normal map grid:
+                    hero.allPets[hero.activePets[i]].state = "queuing";
+                }
             }
             hero.allPets[hero.activePets[i]].state = "moving";
             hero.allPets[hero.activePets[i]].facing = hero.facing;
@@ -959,17 +959,17 @@ function prepareGame() {
             hero.allPets[hero.activePets[i]].x = getTileCentreCoordX(hero.allPets[hero.activePets[i]].tileX);
             hero.allPets[hero.activePets[i]].y = getTileCentreCoordY(hero.allPets[hero.activePets[i]].tileY);
 
-             if (!isOverWorldMap) {
-                 // check if it's not actual on the map:
-                 if ((hero.allPets[hero.activePets[i]].tileX < 0) || (hero.allPets[hero.activePets[i]].tileY < 0) || (hero.allPets[hero.activePets[i]].tileX >= mapTilesX) || (hero.allPets[hero.activePets[i]].tileY >= mapTilesY)) {
-                     hero.allPets[hero.activePets[i]].z = defaultElevation;
-                 } else {
-                     hero.allPets[hero.activePets[i]].z = getElevation(hero.allPets[hero.activePets[i]].tileX, hero.allPets[hero.activePets[i]].tileY);
-                 }
-             } else {
-                 hero.allPets[hero.activePets[i]].z = getElevation(hero.allPets[hero.activePets[i]].tileX, hero.allPets[hero.activePets[i]].tileY);
-             }
-  
+            if (!isOverWorldMap) {
+                // check if it's not actual on the map:
+                if ((hero.allPets[hero.activePets[i]].tileX < 0) || (hero.allPets[hero.activePets[i]].tileY < 0) || (hero.allPets[hero.activePets[i]].tileX >= mapTilesX) || (hero.allPets[hero.activePets[i]].tileY >= mapTilesY)) {
+                    hero.allPets[hero.activePets[i]].z = defaultElevation;
+                } else {
+                    hero.allPets[hero.activePets[i]].z = getElevation(hero.allPets[hero.activePets[i]].tileX, hero.allPets[hero.activePets[i]].tileY);
+                }
+            } else {
+                hero.allPets[hero.activePets[i]].z = getElevation(hero.allPets[hero.activePets[i]].tileX, hero.allPets[hero.activePets[i]].tileY);
+            }
+
             hero.allPets[hero.activePets[i]].dx = 0;
             hero.allPets[hero.activePets[i]].dy = 0;
             hero.allPets[hero.activePets[i]].foundPath = '';
@@ -1135,7 +1135,7 @@ function changeMaps(doorX, doorY) {
 
         hero.tileX = doorData[whichDoor].startX;
         hero.tileY = doorData[whichDoor].startY;
-//        console.log('changeMaps', hero.tileX, hero.tileY);
+        //        console.log('changeMaps', hero.tileX, hero.tileY);
         newMap = doorData[whichDoor].map;
     } else {
         newMap = jumpMapId;
@@ -1145,12 +1145,12 @@ function changeMaps(doorX, doorY) {
     }
 
 
-if(hero.tileX != "?") {
-hero.tileX = parseInt(hero.tileX);
-}
-if(hero.tileY != "?") {
-hero.tileY = parseInt(hero.tileY);
-}
+    if (hero.tileX != "?") {
+        hero.tileX = parseInt(hero.tileX);
+    }
+    if (hero.tileY != "?") {
+        hero.tileY = parseInt(hero.tileY);
+    }
 
     visibleMaps = [];
     loadMap();
@@ -1627,14 +1627,14 @@ function update() {
         checkHeroCollisions();
 
 
-    
+
 
         var heroOldX = hero.tileX;
         var heroOldY = hero.tileY;
         var chestIdSplit;
         hero.tileX = getTileX(hero.x);
         hero.tileY = getTileY(hero.y);
-            checkForSlopes(hero);
+        checkForSlopes(hero);
         if ((hero.tileX != heroOldX) || (hero.tileY != heroOldY)) {
             heroIsInNewTile();
         }
@@ -1886,7 +1886,7 @@ function checkForHotspots() {
 }
 
 function heroIsInNewTile() {
-  //  hero.z = getElevation(hero.tileX, hero.tileY);
+    //  hero.z = getElevation(hero.tileX, hero.tileY);
 
     //  updateCartographicMiniMap();
     if (isOverWorldMap) {
@@ -3509,22 +3509,10 @@ function draw() {
     } else {
         // get all assets to be drawn in a list
         var thisGraphicCentreX, thisGraphicCentreY, thisX, thisY, thisNPC, thisItem;
-
         hero.isox = findIsoCoordsX(hero.x, hero.y);
         hero.isoy = findIsoCoordsY(hero.x, hero.y);
-
         var heroOffsetCol = currentAnimationFrame % hero["animation"][hero.currentAnimation]["length"];
-        var heroOffsetRow = hero["animation"][hero.currentAnimation][hero.facing];
-        // row needs the previous rows adding to it
-        // make dynamic ##############
-        // john
-        if(hero.currentAnimation == 'run') {
-heroOffsetRow += 4;
-        }
-        if(hero.currentAnimation == 'idle') {
-heroOffsetRow += 8;
-        }
-
+        var heroOffsetRow = (hero["animation"][hero.currentAnimation][hero.facing]) + (hero["animation"][hero.currentAnimation]["start-row"]);
         var assetsToDraw = [
             [findIsoDepth(hero.x, hero.y, hero.z), "sprite", heroImg, heroOffsetCol * hero.spriteWidth, heroOffsetRow * hero.spriteHeight, hero.spriteWidth, hero.spriteHeight, Math.floor(canvasWidth / 2 - hero.centreX), Math.floor(canvasHeight / 2 - hero.centreY - hero.z), hero.spriteWidth, hero.spriteHeight]
         ];
@@ -3537,7 +3525,6 @@ heroOffsetRow += 8;
                     assetsToDraw.push([0, "plotPlacementOverlay"]);
                     break;
             }
-
         }
 
         // draw fae:
@@ -3768,7 +3755,7 @@ heroOffsetRow += 8;
             // need to determine the offset for the top left corner of the map from the top left corner of the image #######
 
             if (typeof backgroundImgs[currentMap] !== "undefined") {
-                gameContext.drawImage(backgroundImgs[currentMap], Math.floor(getTileIsoCentreCoordX(0, mapTilesY - 1) -thisMapData[currentMap].backgroundOffsetX - hero.isox - tileW / 2 + canvasWidth / 2), Math.floor(getTileIsoCentreCoordY(0, 0) - hero.isoy -thisMapData[currentMap].backgroundOffsetY- (tileH / 2) + canvasHeight / 2));
+                gameContext.drawImage(backgroundImgs[currentMap], Math.floor(getTileIsoCentreCoordX(0, mapTilesY - 1) - thisMapData[currentMap].backgroundOffsetX - hero.isox - tileW / 2 + canvasWidth / 2), Math.floor(getTileIsoCentreCoordY(0, 0) - hero.isoy - thisMapData[currentMap].backgroundOffsetY - (tileH / 2) + canvasHeight / 2));
             }
         }
 
