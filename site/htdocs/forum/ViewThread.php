@@ -69,13 +69,12 @@ $result = mysqli_query($connection, $query) or die ("couldn't execute query2");
 	}
 	
 	// get all the information required in one query:
-	$query = "SELECT tblposts.*, tblthreads.title AS threadTitle, tblthreads.status AS threadstatus, tblforums.title AS forumTitle, tblforums.imagepath, tblforums.forumid AS thisforumid, tblacct.accountname AS acctusername, tblacct.signature AS acctsignature, tblacct.currentcharid as currentcharid, tbllocations.locname AS charlocation, tblcharacters.charname AS charname 
+	$query = "SELECT tblposts.*, tblthreads.title AS threadTitle, tblthreads.status AS threadstatus, tblforums.title AS forumTitle, tblforums.imagepath, tblforums.forumid AS thisforumid, tblacct.accountname AS acctusername, tblacct.signature AS acctsignature, tblacct.currentcharid as currentcharid, tblcharacters.charname AS charname 
 FROM tblposts
 INNER JOIN tblthreads on tblposts.threadid = tblthreads.threadid
 INNER JOIN tblforums on tblthreads.forumid = tblforums.forumid
 INNER JOIN tblacct on tblacct.accountid = tblposts.accountid
 INNER JOIN tblcharacters on tblcharacters.charid = tblacct.currentcharid
-INNER JOIN tbllocations on tblcharacters.location = tbllocations.locid
 WHERE tblposts.threadid = " . $threadID . " ORDER BY tblposts.sticky DESC, tblposts.creationtime ASC";
 
 
@@ -148,7 +147,7 @@ WHERE tblposts.threadid = " . $threadID . " ORDER BY tblposts.sticky DESC, tblpo
 					echo 'This post has been hidden by a Moderator.';
 				}
 				echo '</p>'."\n";
-				echo '<img src="/data/chr'.$currentcharid.'/portrait.jpg" class="characterPortrait" alt="'.$acctusername.'\'s portrait" /><br />'."\n".'<strong>'.$charname.'</strong> - currently in '.$charlocation.'<br />'."\n";
+				echo '<img src="/data/chr'.$currentcharid.'/portrait.jpg" class="characterPortrait" alt="'.$acctusername.'\'s portrait" /><br />'."\n".'<strong>'.$charname.'</strong><br />'."\n";
 				echo '<em>'.parseCode(stripslashes($acctsignature)).'</em>';
 				if (isset($_SESSION['username'])) {
 				if (strtolower($acctusername) == strtolower($_SESSION['username'])) {

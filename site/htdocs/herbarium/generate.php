@@ -2048,7 +2048,7 @@ if(strpos($startingText, '++month++') !== false) {
 	do {
 		$startingText = str_replace_first('++month++', $allMonths[$nextMonth], $startingText);
 		// for any further occurences, use the subsequent month name to make more sense:
-		$nextMonth++;
+		$nextMonth+=mt_rand(1,2);
 		if($nextMonth >= count($allMonths)) {
 			$nextMonth = 0;
 		}

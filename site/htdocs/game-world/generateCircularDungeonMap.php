@@ -67,6 +67,7 @@ rarer items should be placed more often the deeper in to the dungeon the player 
 check the connectivity graph, if there is a short alternate path to the exit, then make that path a secret. 
 rotate entrance and exit doors for variation. 
 
+Look for any external edges and recursively add rooms on to any edge walls
 
 http://develop.ae/game-world/generateCircularDungeonMap.php?debug=true&dungeonName=the-barrow-mines&requestedMap=-1&seed=1513619057 - would be good to test wonky path on
 

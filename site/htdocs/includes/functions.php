@@ -331,21 +331,21 @@ function smartPunctuation( $toPunctuate ) {
  
  
     // do open quotes at string start:
-    $toPunctuate = ereg_replace( '(^)"(.)', "\\1&ldquo;\\2", $toPunctuate );
-    $toPunctuate = ereg_replace( '(([[:space:]])"(.))+', "\\2&ldquo;\\3", $toPunctuate );
+    $toPunctuate = preg_replace( '#(^)"(.)#', "\\1&ldquo;\\2", $toPunctuate );
+    $toPunctuate = preg_replace( '#(([[:space:]])"(.))+#', "\\2&ldquo;\\3", $toPunctuate );
  
  
     // do close quotes not at string end:
-    $toPunctuate = ereg_replace( '((.)"([[:space:]]))+', "\\2&rdquo;\\3", $toPunctuate );
+    $toPunctuate = preg_replace( '#((.)"([[:space:]]))+#', "\\2&rdquo;\\3", $toPunctuate );
     // do close quotes at string end:
-    $toPunctuate = ereg_replace( '(.)"($)', "\\1&rdquo;\\2", $toPunctuate );
+    $toPunctuate = preg_replace( '#(.)"($)#', "\\1&rdquo;\\2", $toPunctuate );
  
  
     // do apostrophes:
-    $toPunctuate = ereg_replace( '(.)\'(.)', "\\1&rsquo;\\2", $toPunctuate );
+    $toPunctuate = preg_replace( '#(.)\'(.)#', "\\1&rsquo;\\2", $toPunctuate );
  
     // convert any ... to ellipsis character:
-    $toPunctuate = str_ireplace( "...", "&hellip;", $toPunctuate );
+    $toPunctuate = str_ireplace( "#...#", "&hellip;", $toPunctuate );
  
     // convert any line breaks to <br>
     $toPunctuate = nl2br( $toPunctuate );
