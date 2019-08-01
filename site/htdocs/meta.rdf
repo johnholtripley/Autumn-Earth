@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dc= "http://purl.org/dc/elements/1.1/">
-<rdf:Description rdf:about="http://www.autumnearth.com/">
+<rdf:Description rdf:about="https://www.autumnearth.com/">
 <dc:contributor>Autumn Earth</dc:contributor>
 <dc:date>2011-01-01</dc:date>
 <dc:description>Website supporting Autumn Earth</dc:description>
 <dc:language>EN</dc:language>
 <dc:publisher>Autumn Earth</dc:publisher>
-<dc:source>http://www.autumnearth.com/</dc:source>
+<dc:source>https://www.autumnearth.com/</dc:source>
 </rdf:Description>
 </rdf:RDF>
